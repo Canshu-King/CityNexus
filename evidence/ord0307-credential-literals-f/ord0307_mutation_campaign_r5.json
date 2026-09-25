@@ -1,0 +1,343 @@
+{
+ "what": "ORD-0307 门的反突变战役：5 臂 × 3 轮，逐臂完整红集（primary 与 collateral 分列）",
+ "lane": "F 8ccd71d8",
+ "ran_at": "2026-09-25T18:57:09+08:00",
+ "claim_kind": "runtime_measured",
+ "measured_on": "13af1ff4ba4516aa1a39cda67428ed4a2a34ac69 的干净导出",
+ "interpreter": "D:/moodle/CityNexus/.venv/Scripts/python.exe",
+ "backend_cwd": "D:\\moodle\\_qoder_f_run\\snap_0307g3\\backend",
+ "scope": [
+  "tests/test_qoder_ord0307_credential_gate.py"
+ ],
+ "blobs_pristine": {
+  "module": "717317f822ce01873e33bffd418adea04f67dfeb",
+  "main": "5455175abe154c5c4ab5b122e517efd13081a637",
+  "test": "408032e04fbbae6171df91dc1f2420a15dd9a38d"
+ },
+ "control_rounds": [
+  {
+   "label": "ctl1",
+   "rc": 0,
+   "seconds": 4.91,
+   "collected": 10,
+   "summary_line": "10 passed",
+   "outcomes": {
+    "test_C01_the_scanned_set_is_named_and_actually_present": "PASSED",
+    "test_C02_no_path_through_the_gate_leaks_a_value": "PASSED",
+    "test_C03_an_injected_literal_in_a_product_path_is_named_by_location": "PASSED",
+    "test_C04_placeholders_and_low_entropy_never_fire": "PASSED",
+    "test_C05_each_shape_pattern_fires_on_its_own_shape": "PASSED",
+    "test_C06_declaration_is_by_digest_not_by_path": "PASSED",
+    "test_C07_what_the_working_tree_actually_holds_today": "PASSED",
+    "test_C08_a_live_credential_in_the_environment_is_undeclared_by_construction": "PASSED",
+    "test_C09_strict_refuses_boot_and_report_does_not_in_a_real_import": "PASSED",
+    "test_C10_the_default_policy_is_report_not_off": "PASSED"
+   },
+   "red": [],
+   "runId": "0307-ctl1-93317212ab8b"
+  },
+  {
+   "label": "ctl2",
+   "rc": 0,
+   "seconds": 5.02,
+   "collected": 10,
+   "summary_line": "10 passed",
+   "outcomes": {
+    "test_C01_the_scanned_set_is_named_and_actually_present": "PASSED",
+    "test_C02_no_path_through_the_gate_leaks_a_value": "PASSED",
+    "test_C03_an_injected_literal_in_a_product_path_is_named_by_location": "PASSED",
+    "test_C04_placeholders_and_low_entropy_never_fire": "PASSED",
+    "test_C05_each_shape_pattern_fires_on_its_own_shape": "PASSED",
+    "test_C06_declaration_is_by_digest_not_by_path": "PASSED",
+    "test_C07_what_the_working_tree_actually_holds_today": "PASSED",
+    "test_C08_a_live_credential_in_the_environment_is_undeclared_by_construction": "PASSED",
+    "test_C09_strict_refuses_boot_and_report_does_not_in_a_real_import": "PASSED",
+    "test_C10_the_default_policy_is_report_not_off": "PASSED"
+   },
+   "red": [],
+   "runId": "0307-ctl2-c5de88a82367"
+  },
+  {
+   "label": "ctl3",
+   "rc": 0,
+   "seconds": 4.88,
+   "collected": 10,
+   "summary_line": "10 passed",
+   "outcomes": {
+    "test_C01_the_scanned_set_is_named_and_actually_present": "PASSED",
+    "test_C02_no_path_through_the_gate_leaks_a_value": "PASSED",
+    "test_C03_an_injected_literal_in_a_product_path_is_named_by_location": "PASSED",
+    "test_C04_placeholders_and_low_entropy_never_fire": "PASSED",
+    "test_C05_each_shape_pattern_fires_on_its_own_shape": "PASSED",
+    "test_C06_declaration_is_by_digest_not_by_path": "PASSED",
+    "test_C07_what_the_working_tree_actually_holds_today": "PASSED",
+    "test_C08_a_live_credential_in_the_environment_is_undeclared_by_construction": "PASSED",
+    "test_C09_strict_refuses_boot_and_report_does_not_in_a_real_import": "PASSED",
+    "test_C10_the_default_policy_is_report_not_off": "PASSED"
+   },
+   "red": [],
+   "runId": "0307-ctl3-381553186a11"
+  }
+ ],
+ "arms": [
+  {
+   "arm": "K1_placeholder_filter_off",
+   "file": "app\\security\\credential_literals.py",
+   "line_named": 169,
+   "locate_hits": 1,
+   "before_blob_40": "717317f822ce01873e33bffd418adea04f67dfeb",
+   "after_blob_40": "8704ed4cc39b3f0b1b2ef213da2d54c5a1a866e5",
+   "py_compile_ok": true,
+   "per_round": [
+    {
+     "rc": 1,
+     "summary_line": "2 failed, 8 passed",
+     "red": [
+      "test_C04_placeholders_and_low_entropy_never_fire",
+      "test_C07_what_the_working_tree_actually_holds_today"
+     ],
+     "runId": "0307-K1_placeho_1-488ec8bd3344"
+    },
+    {
+     "rc": 1,
+     "summary_line": "2 failed, 8 passed",
+     "red": [
+      "test_C04_placeholders_and_low_entropy_never_fire",
+      "test_C07_what_the_working_tree_actually_holds_today"
+     ],
+     "runId": "0307-K1_placeho_2-013df3463605"
+    },
+    {
+     "rc": 1,
+     "summary_line": "2 failed, 8 passed",
+     "red": [
+      "test_C04_placeholders_and_low_entropy_never_fire",
+      "test_C07_what_the_working_tree_actually_holds_today"
+     ],
+     "runId": "0307-K1_placeho_3-548543504a81"
+    }
+   ],
+   "reddened_union": [
+    "test_C04_placeholders_and_low_entropy_never_fire",
+    "test_C07_what_the_working_tree_actually_holds_today"
+   ],
+   "primary_carrier": [
+    "test_C04_placeholders_and_low_entropy_never_fire"
+   ],
+   "collateral": [
+    "test_C07_what_the_working_tree_actually_holds_today"
+   ],
+   "only_primary_reddened": false,
+   "restore_byte_exact": true,
+   "claimed_result": "KILLED_WITH_COLLATERAL"
+  },
+  {
+   "arm": "K2_all_shapes_pass_filters",
+   "file": "app\\security\\credential_literals.py",
+   "line_named": 169,
+   "locate_hits": 1,
+   "before_blob_40": "717317f822ce01873e33bffd418adea04f67dfeb",
+   "after_blob_40": "6d0106e5b1d9905e5f2fc57e0c7ae6ddd1e8601d",
+   "py_compile_ok": true,
+   "per_round": [
+    {
+     "rc": 1,
+     "summary_line": "2 failed, 8 passed",
+     "red": [
+      "test_C04_placeholders_and_low_entropy_never_fire",
+      "test_C07_what_the_working_tree_actually_holds_today"
+     ],
+     "runId": "0307-K2_all_sha_1-8c04b6ccc811"
+    },
+    {
+     "rc": 1,
+     "summary_line": "2 failed, 8 passed",
+     "red": [
+      "test_C04_placeholders_and_low_entropy_never_fire",
+      "test_C07_what_the_working_tree_actually_holds_today"
+     ],
+     "runId": "0307-K2_all_sha_2-9be96d383eec"
+    },
+    {
+     "rc": 1,
+     "summary_line": "2 failed, 8 passed",
+     "red": [
+      "test_C04_placeholders_and_low_entropy_never_fire",
+      "test_C07_what_the_working_tree_actually_holds_today"
+     ],
+     "runId": "0307-K2_all_sha_3-883010e12748"
+    }
+   ],
+   "reddened_union": [
+    "test_C04_placeholders_and_low_entropy_never_fire",
+    "test_C07_what_the_working_tree_actually_holds_today"
+   ],
+   "primary_carrier": [
+    "test_C04_placeholders_and_low_entropy_never_fire"
+   ],
+   "collateral": [
+    "test_C07_what_the_working_tree_actually_holds_today"
+   ],
+   "only_primary_reddened": false,
+   "restore_byte_exact": true,
+   "claimed_result": "KILLED_WITH_COLLATERAL"
+  },
+  {
+   "arm": "K3_declaration_fingerprint_mutated",
+   "file": "app\\security\\credential_literals.py",
+   "line_named": 56,
+   "locate_hits": 1,
+   "before_blob_40": "717317f822ce01873e33bffd418adea04f67dfeb",
+   "after_blob_40": "c7b64b0deb0288aa56e8dd8222f98cb6d164ec97",
+   "py_compile_ok": true,
+   "per_round": [
+    {
+     "rc": 1,
+     "summary_line": "2 failed, 8 passed",
+     "red": [
+      "test_C06_declaration_is_by_digest_not_by_path",
+      "test_C07_what_the_working_tree_actually_holds_today"
+     ],
+     "runId": "0307-K3_declara_1-646d3c3d2b66"
+    },
+    {
+     "rc": 1,
+     "summary_line": "2 failed, 8 passed",
+     "red": [
+      "test_C06_declaration_is_by_digest_not_by_path",
+      "test_C07_what_the_working_tree_actually_holds_today"
+     ],
+     "runId": "0307-K3_declara_2-895683d23eea"
+    },
+    {
+     "rc": 1,
+     "summary_line": "2 failed, 8 passed",
+     "red": [
+      "test_C06_declaration_is_by_digest_not_by_path",
+      "test_C07_what_the_working_tree_actually_holds_today"
+     ],
+     "runId": "0307-K3_declara_3-c62ca2776fd3"
+    }
+   ],
+   "reddened_union": [
+    "test_C06_declaration_is_by_digest_not_by_path",
+    "test_C07_what_the_working_tree_actually_holds_today"
+   ],
+   "primary_carrier": [
+    "test_C06_declaration_is_by_digest_not_by_path"
+   ],
+   "collateral": [
+    "test_C07_what_the_working_tree_actually_holds_today"
+   ],
+   "only_primary_reddened": false,
+   "restore_byte_exact": true,
+   "claimed_result": "KILLED_WITH_COLLATERAL"
+  },
+  {
+   "arm": "K4_startup_refusal_removed",
+   "file": "app\\security\\credential_literals.py",
+   "line_named": 211,
+   "locate_hits": 1,
+   "before_blob_40": "717317f822ce01873e33bffd418adea04f67dfeb",
+   "after_blob_40": "9911402877b360a434ad53abd54c6ffef37f46f7",
+   "py_compile_ok": true,
+   "per_round": [
+    {
+     "rc": 1,
+     "summary_line": "1 failed, 9 passed",
+     "red": [
+      "test_C09_strict_refuses_boot_and_report_does_not_in_a_real_import"
+     ],
+     "runId": "0307-K4_startup_1-314b5b25f66e"
+    },
+    {
+     "rc": 1,
+     "summary_line": "1 failed, 9 passed",
+     "red": [
+      "test_C09_strict_refuses_boot_and_report_does_not_in_a_real_import"
+     ],
+     "runId": "0307-K4_startup_2-c9f2cccd7e7a"
+    },
+    {
+     "rc": 1,
+     "summary_line": "1 failed, 9 passed",
+     "red": [
+      "test_C09_strict_refuses_boot_and_report_does_not_in_a_real_import"
+     ],
+     "runId": "0307-K4_startup_3-a9c86b46e2b2"
+    }
+   ],
+   "reddened_union": [
+    "test_C09_strict_refuses_boot_and_report_does_not_in_a_real_import"
+   ],
+   "primary_carrier": [
+    "test_C09_strict_refuses_boot_and_report_does_not_in_a_real_import"
+   ],
+   "collateral": [],
+   "only_primary_reddened": true,
+   "restore_byte_exact": true,
+   "claimed_result": "KILLED_PRIMARY_ONLY"
+  },
+  {
+   "arm": "K5_default_policy_becomes_off",
+   "file": "app\\security\\credential_literals.py",
+   "line_named": 127,
+   "locate_hits": 1,
+   "before_blob_40": "717317f822ce01873e33bffd418adea04f67dfeb",
+   "after_blob_40": "98a32a6f437c67be0c00c17efcf5ab548e7d9d50",
+   "py_compile_ok": true,
+   "per_round": [
+    {
+     "rc": 1,
+     "summary_line": "2 failed, 8 passed",
+     "red": [
+      "test_C07_what_the_working_tree_actually_holds_today",
+      "test_C10_the_default_policy_is_report_not_off"
+     ],
+     "runId": "0307-K5_default_1-7dde3a5bc20c"
+    },
+    {
+     "rc": 1,
+     "summary_line": "2 failed, 8 passed",
+     "red": [
+      "test_C07_what_the_working_tree_actually_holds_today",
+      "test_C10_the_default_policy_is_report_not_off"
+     ],
+     "runId": "0307-K5_default_2-ee68175f94cc"
+    },
+    {
+     "rc": 1,
+     "summary_line": "2 failed, 8 passed",
+     "red": [
+      "test_C07_what_the_working_tree_actually_holds_today",
+      "test_C10_the_default_policy_is_report_not_off"
+     ],
+     "runId": "0307-K5_default_3-a193402f6725"
+    }
+   ],
+   "reddened_union": [
+    "test_C07_what_the_working_tree_actually_holds_today",
+    "test_C10_the_default_policy_is_report_not_off"
+   ],
+   "primary_carrier": [
+    "test_C10_the_default_policy_is_report_not_off"
+   ],
+   "collateral": [
+    "test_C07_what_the_working_tree_actually_holds_today"
+   ],
+   "only_primary_reddened": false,
+   "restore_byte_exact": true,
+   "claimed_result": "KILLED_WITH_COLLATERAL"
+  }
+ ],
+ "summary": {
+  "arms": 5,
+  "control_rounds_green": true,
+  "survivors": [],
+  "primary_only": 1,
+  "restore_byte_exact_every_arm": true
+ },
+ "independence_note": "要件 3(b) 的正面回答是 K1（只红 C04 才是『恒真』的可判别形制）。K2 把两道过滤一起摘，红集会外扩到引用排除理由的格——那是共用判据，不是归属坏；两臂都报完整红集，不报『红了 N 格』。",
+ "claimed_result": "CAMPAIGN-DONE-SEE-SUMMARY",
+ "derived_result": null
+}
