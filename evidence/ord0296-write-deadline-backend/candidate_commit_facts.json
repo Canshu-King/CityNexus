@@ -1,0 +1,50 @@
+{
+ "what": "ORD-0296 候选：服务端写预算（Q36=① 落地）+ 十格门，只动后端 4 件 + 新测试 1 件",
+ "lane": "F 8ccd71d8",
+ "ref_tip_read": "5c4608cede6cb7bd5f3ac7e704bfee379ca47abc",
+ "candidate": "6d041dcce11d05f28a55abadd40717f321b4db38",
+ "tree": "5e9b6decb7f7396e79d0d0b607b81b3f9c493663",
+ "parent": "5c4608cede6cb7bd5f3ac7e704bfee379ca47abc",
+ "parent_equals_authoritative_tip": true,
+ "ref": "review/ord0296-write-deadline-f",
+ "github_ls_remote_line": "6d041dcce11d05f28a55abadd40717f321b4db38\trefs/heads/review/ord0296-write-deadline-f",
+ "local_origin_ls_remote_line": "6d041dcce11d05f28a55abadd40717f321b4db38\trefs/heads/review/ord0296-write-deadline-f\n6d041dcce11d05f28a55abadd40717f321b4db38\trefs/remotes/origin/review/ord0296-write-deadline-f",
+ "https_git_ref_sha": "6d041dcce11d05f28a55abadd40717f321b4db38",
+ "https_equals_candidate": true,
+ "dates_pinned": {
+  "GIT_AUTHOR_DATE": "2026-09-25T09:20:00 +0800",
+  "GIT_COMMITTER_DATE": "2026-09-25T09:20:00 +0800",
+  "reason": "重跑必须铸出同一枚 sha（今晚没钉时间戳时我产生过兄弟提交）"
+ },
+ "subject": "feat(ord0296): give the server's write path a budget that can actually bind, and name the answer when it blows",
+ "files_changed": [
+  "M\tbackend/app/core/config.py",
+  "M\tbackend/app/db/session.py",
+  "A\tbackend/app/db/write_deadline.py",
+  "M\tbackend/app/main.py",
+  "A\tbackend/tests/test_qoder_ord0296_write_deadline.py"
+ ],
+ "numstat": [
+  "10\t0\tbackend/app/core/config.py",
+  "5\t2\tbackend/app/db/session.py",
+  "234\t0\tbackend/app/db/write_deadline.py",
+  "103\t78\tbackend/app/main.py",
+  "361\t0\tbackend/tests/test_qoder_ord0296_write_deadline.py"
+ ],
+ "blobs": {
+  "backend/app/core/config.py": "5f3062f5025569c927594c4a302df5d8ec75e267",
+  "backend/app/db/session.py": "3ef99ffe398c048ff729ffd0016e61b8ce0ae678",
+  "backend/app/db/write_deadline.py": "ba2393c3da30d6941587869be26cd303389b7f46",
+  "backend/app/main.py": "871aec006a3f6482f7a2700a8baeff8c25f7690f",
+  "backend/tests/test_qoder_ord0296_write_deadline.py": "deacc9d7483f1b8fd8d24b6e23e586bf402d85f6"
+ },
+ "diff_is_backend_only": true,
+ "frontend_files_touched": [],
+ "changed_vs_tip_exhaustive": [
+  "backend/app/core/config.py",
+  "backend/app/db/session.py",
+  "backend/app/db/write_deadline.py",
+  "backend/app/main.py",
+  "backend/tests/test_qoder_ord0296_write_deadline.py"
+ ]
+}
