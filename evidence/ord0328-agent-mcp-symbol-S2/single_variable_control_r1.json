@@ -1,0 +1,92 @@
+{
+ "schema": "CNX_ORD0328_SINGLE_VARIABLE_CONTROL_V1",
+ "at_local": "2026-09-26T04:14:31+0800",
+ "candidate": "0f8b925facabc9df57bab600b86d999dd515bf94",
+ "tip": "65df31df96cfb8a954f5feb36484710a883e1597",
+ "injected_change": "write agent-mcp/citynexus_mcp/schemas.py back to the mainline blob 097d12c7fafdcfdc84fe34d7e263181f0d480ba3 (the only difference between the two trees)",
+ "blobs": {
+  "schema_on_candidate": "f284a42d7b19e7e6cf10ddd010a2468a506b9cdf",
+  "schema_on_tip": "097d12c7fafdcfdc84fe34d7e263181f0d480ba3",
+  "test_file": "cfc4e1ef16867a2164cdcea4e139a119cc8db45d"
+ },
+ "readings": {
+  "candidate_as_shipped": {
+   "whole_collect": {
+    "exit": 0,
+    "collected": 1319,
+    "passed": 0,
+    "failed": 0,
+    "collect_errors": 0,
+    "error_modules": []
+   },
+   "r20_collect": {
+    "exit": 0,
+    "collected": 1,
+    "passed": 0,
+    "failed": 0,
+    "collect_errors": 0,
+    "error_modules": []
+   },
+   "r20_run": {
+    "exit": 0,
+    "collected": 0,
+    "passed": 1,
+    "failed": 0,
+    "collect_errors": 0,
+    "error_modules": []
+   }
+  },
+  "schemas_reverted_only": {
+   "whole_collect": {
+    "exit": 2,
+    "collected": 1318,
+    "passed": 0,
+    "failed": 0,
+    "collect_errors": 1,
+    "error_modules": [
+     "tests/test_v18_hermes_r20_transport_reliability_probe.py"
+    ]
+   },
+   "r20_collect": {
+    "exit": 2,
+    "collected": 0,
+    "passed": 0,
+    "failed": 0,
+    "collect_errors": 1,
+    "error_modules": [
+     "tests/test_v18_hermes_r20_transport_reliability_probe.py"
+    ]
+   },
+   "r20_run": {
+    "exit": 2,
+    "collected": 0,
+    "passed": 0,
+    "failed": 0,
+    "collect_errors": 1,
+    "error_modules": [
+     "tests/test_v18_hermes_r20_transport_reliability_probe.py"
+    ]
+   }
+  }
+ },
+ "checks": {
+  "fixed_r20_collects": true,
+  "fixed_r20_runs_and_passes": true,
+  "fixed_whole_suite_still_clean": true,
+  "reverted_r20_fails_to_collect": true,
+  "reverted_whole_suite_gate_breaks": true,
+  "single_variable_only": true,
+  "throwaway_dirs_removed": true
+ },
+ "tree_difference_measured": {
+  "files_in_fixed_tree": 468,
+  "files_in_reverted_tree": 468,
+  "paths_differing": [
+   "agent-mcp/citynexus_mcp/schemas.py"
+  ],
+  "method": "git hash-object --no-filters over every file of both throwaway exports"
+ },
+ "derived_ok": true,
+ "verdict": "ORD0328_SYMBOL_IS_THE_SOLE_GATE_R20_UNBLOCKED",
+ "repo_writes": 0
+}
