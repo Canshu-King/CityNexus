@@ -1,0 +1,100 @@
+{
+ "schema": "CNX_ORD0337_IMPACT_MAP_V1",
+ "order": "ORD-0337",
+ "state": "PRE-AUTHORISATION-NO-CODE-PUSHED",
+ "lane": "S2-hermes-port",
+ "live_tip_read_this_run": "f45489c6d17f16973faad161618789237ac3814e",
+ "experiment_commit_local_only": "103f2890650db6764dd1166fa2bee16e257496a2",
+ "refs_pushed_by_this_measurement": 0,
+ "impact_map": [
+  "1. Routes: POST /api/v1/agent/tools/{tool_name} and /api/v1/agent/tools/v2/{tool_name} overwrite the body's agent_id with the server principal at backend/app/main.py:1102 and backend/app/main.py:1122, so the adapter's value never reaches the gateway as identity.",
+  "2. Principal resolution: backend/app/agent/principal.py:49 states the caller's agent_id is not an input; the actor id comes from backend/app/core/config.py:40 (default citynexus-local-agent).",
+  "3. The one predicate that names MCP callers, backend/app/agent/gateway.py:331, is fed that server actor id (backend/app/agent/gateway.py:330), so _agent_id() cannot flip the native PLAN_ONLY boundary; only CITYNEXUS_AGENT_PRINCIPAL_ID can.",
+  "4. What _agent_id() does change: measured by driving the real FastMCP object - the wire hint goes from mcp-client to the CITYNEXUS_AGENT_ID value, and on the current line that env var has no effect at all.",
+  "5. Existing tests that would go red: none. The HTTP-level witness backend/tests/test_agent_principal_boundary.py already proves the body id is untrusted and the audit actor is the server principal, and it stays 2 passed / 0 failed on the experiment.",
+  "6. Product suite: whole collected 1342 with 0 collection errors, harness 72 of 72 passed, exit 0 on the experiment - identical to the landed line.",
+  "7. What the user sees on failure: nothing changes. No frontend cell, no status text and no error code reads the adapter hint; the gateway's own agent_id fields (backend/app/agent/gateway.py:528) are built from the overwritten principal.",
+  "8. Correction to my own ORD-0334 table row: it said the same file's _agent_id() 'changes principal identity'. Measured against the current line that is wrong - it changes an untrusted hint. The row was written before ORD-0330 and ORD-0336 landed the server-side boundary, so the concern is now closed by evidence, not by argument.",
+  "9. runtime_identity.py needs no port at all: the blob is identical on both lines (cb14edcc8747e906503ed8241cc0baa80d1d04e7), so the only remaining blocker for ORD-0337 is the anonymous uncommitted edit in the shared worktree, which is still dirty and is on no ref.",
+  "10. Recommendation, not a decision: ORD-0337 is worth at most a validation-lane convenience (naming the principal in locally driven adapter calls, 2 new witnesses). If you want the MCP caller to matter to the product boundary, that is a different order - it would have to change main.py's overwrite or add a scoped credential, which is F's land and yours to sequence."
+ ],
+ "measurements": {
+  "wire_agent_id_from_the_real_mcp_object": {
+   "experiment_env_unset": {
+    "tool": "inspect_journey",
+    "agent_id_on_wire": "mcp-client",
+    "request_id": "ord0337-driver-1",
+    "call_tool_returned": "([TextContent(type='text', text='{\\n  \"tool\": \"inspect_journey\",\\n  \"ok\": true\\n"
+   },
+   "experiment_env_hermes_test": {
+    "tool": "inspect_journey",
+    "agent_id_on_wire": "hermes-test",
+    "request_id": "ord0337-driver-1",
+    "call_tool_returned": "([TextContent(type='text', text='{\\n  \"tool\": \"inspect_journey\",\\n  \"ok\": true\\n"
+   },
+   "landed_tip_env_hermes_test": {
+    "tool": "inspect_journey",
+    "agent_id_on_wire": "mcp-client",
+    "request_id": "ord0337-driver-1",
+    "call_tool_returned": "([TextContent(type='text', text='{\\n  \"tool\": \"inspect_journey\",\\n  \"ok\": true\\n"
+   }
+  },
+  "existing_http_boundary_witness": {
+   "exit": 0,
+   "passed": 2,
+   "failed": 0,
+   "errors": 0,
+   "collected": 0,
+   "failed_tests": [],
+   "tail": "2 passed, 2 warnings in 1.70s"
+  },
+  "agent_mcp_suite_with_the_identity_form": {
+   "exit": 0,
+   "passed": 16,
+   "failed": 0,
+   "errors": 0,
+   "collected": 0,
+   "failed_tests": [],
+   "tail": "16 passed in 1.41s"
+  }
+ },
+ "gate_on_experiment": {
+  "generation": "103f2890650db6764dd1166fa2bee16e257496a2",
+  "harness_files": 22,
+  "whole_collected": 1342,
+  "whole_collect_errors": 0,
+  "harness_collected": 72,
+  "harness_passed": 72,
+  "exit": 0,
+  "verdict": "HERMES_GATE_GREEN whole_collected=1342 harness_collected=72 harness_passed=72"
+ },
+ "blob_compare": {
+  "runtime_identity_on_line": "cb14edcc8747e906503ed8241cc0baa80d1d04e7",
+  "runtime_identity_on_hermes": "cb14edcc8747e906503ed8241cc0baa80d1d04e7",
+  "server_py_on_line": "759b59e80665c1a80e82948ca88ac87a8ea831f2",
+  "server_py_on_hermes": "6b4da1b9b939b16dfb2384f808741029dd798a51"
+ },
+ "checks": {
+  "identity_form_changes_only_the_wire_hint": true,
+  "no_existing_test_reddens": true,
+  "the_line_already_refuses_the_hint": true,
+  "harness_untouched_by_the_identity_form": true,
+  "identity_form_adds_exactly_two_witnesses": true,
+  "runtime_identity_needs_no_port": true,
+  "the_anonymous_dirty_edit_is_still_there": true
+ },
+ "checks_met": "7_of_7",
+ "verdict": "ORD0337_IMPACT_MAP_COMPLETE_IDENTITY_FORM_IS_WIRE_HINT_ONLY 7_of_7",
+ "verdict_derivation": "each check compares two artifacts read in this run (the driver capture, the boundary suite receipt, the gate receipt, git plumbing). No check is a written constant.",
+ "discipline": {
+  "refs_pushed": 0,
+  "authoritative_branch_moved": 0,
+  "product_files_written_in_the_repo": 0,
+  "experiment_is_local_detached_worktree": true,
+  "model_calls_made": 0,
+  "credentials_printed": 0,
+  "live_or_preview_db_touched": 0,
+  "junctions_created": 0
+ },
+ "derived_result": null
+}
