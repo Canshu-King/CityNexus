@@ -1,0 +1,3 @@
+version Q43_r4 | input C:\Users\仓鼠王\AppData\Local\Temp\q43r4_bus.md 3111 B
+claims checked 12 | exempt {} | overall Q43_GATE_RED | findings 1 ['NUMBER_WITHOUT_COORDINATE']
+  line 19 F3_bare_numeric_claim NUMBER_WITHOUT_COORDINATE | 0 件 | no class matched
