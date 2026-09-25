@@ -1,0 +1,171 @@
+{
+ "schema": "CNX_CMDR_DERIVATION_V2",
+ "order": "ORD-0301",
+ "lane": "HJ-P3 aad2d1f2",
+ "artifact": {
+  "path": "evidence/ord0301-screen-speaks-range-hjp3/RECEIPT_O0301-1500.json",
+  "contents_sha": "9035e162b69f171de7a5d57ec30fdeddd58f0e7e",
+  "recomputed_git_sha1": "9035e162b69f171de7a5d57ec30fdeddd58f0e7e",
+  "recomputed_equals_cited": true,
+  "bytes": 97514
+ },
+ "rows_under_key": "cells",
+ "rows_total": 8,
+ "T_A_rows_missing_a_side": [
+  3,
+  6
+ ],
+ "T_B_rows_not_naming_who_answered": [
+  0,
+  1,
+  2,
+  3,
+  5,
+  6,
+  7
+ ],
+ "T_C_duration_tested_as_a_pair": true,
+ "per_row": [
+  {
+   "row_index": 0,
+   "keys": [
+    "id",
+    "measured",
+    "measured_on",
+    "verdict",
+    "why"
+   ],
+   "server_field_count": 97,
+   "screen_field_count": 8,
+   "who_answered_fields": [],
+   "T_A_both_sides": true,
+   "T_B_names_who_answered": false
+  },
+  {
+   "row_index": 1,
+   "keys": [
+    "id",
+    "measured",
+    "measured_on",
+    "verdict",
+    "why"
+   ],
+   "server_field_count": 167,
+   "screen_field_count": 10,
+   "who_answered_fields": [],
+   "T_A_both_sides": true,
+   "T_B_names_who_answered": false
+  },
+  {
+   "row_index": 2,
+   "keys": [
+    "id",
+    "measured",
+    "measured_on",
+    "verdict",
+    "why"
+   ],
+   "server_field_count": 9,
+   "screen_field_count": 2,
+   "who_answered_fields": [],
+   "T_A_both_sides": true,
+   "T_B_names_who_answered": false
+  },
+  {
+   "row_index": 3,
+   "keys": [
+    "id",
+    "measured",
+    "measured_on",
+    "verdict",
+    "why"
+   ],
+   "server_field_count": 6,
+   "screen_field_count": 0,
+   "who_answered_fields": [],
+   "T_A_both_sides": false,
+   "T_B_names_who_answered": false
+  },
+  {
+   "row_index": 4,
+   "keys": [
+    "id",
+    "measured",
+    "measured_on",
+    "verdict",
+    "why"
+   ],
+   "server_field_count": 42,
+   "screen_field_count": 4,
+   "who_answered_fields": [
+    "measured.who_answered_per_the_probes[0]",
+    "measured.who_answered_per_the_probes[1]"
+   ],
+   "T_A_both_sides": true,
+   "T_B_names_who_answered": true
+  },
+  {
+   "row_index": 5,
+   "keys": [
+    "id",
+    "measured",
+    "measured_on",
+    "verdict",
+    "why"
+   ],
+   "server_field_count": 56,
+   "screen_field_count": 5,
+   "who_answered_fields": [],
+   "T_A_both_sides": true,
+   "T_B_names_who_answered": false
+  },
+  {
+   "row_index": 6,
+   "keys": [
+    "id",
+    "measured",
+    "measured_on",
+    "verdict",
+    "why"
+   ],
+   "server_field_count": 0,
+   "screen_field_count": 0,
+   "who_answered_fields": [],
+   "T_A_both_sides": false,
+   "T_B_names_who_answered": false
+  },
+  {
+   "row_index": 7,
+   "keys": [
+    "id",
+    "measured",
+    "measured_on",
+    "verdict",
+    "why"
+   ],
+   "server_field_count": 73,
+   "screen_field_count": 2,
+   "who_answered_fields": [],
+   "T_A_both_sides": true,
+   "T_B_names_who_answered": false
+  }
+ ],
+ "rulers": {
+  "q38": {
+   "exit_code": 0,
+   "verdict_line": "cells 8 | overall Q38_GATE_GREEN | hard 0 [] | soft 0 []"
+  },
+  "q43": {
+   "exit_code": 3,
+   "verdict_line": "claims checked 636 | overall Q43_GATE_RED | findings 622 ['BARE_NUMBER_WITHOUT_COORDINATE', 'CONSTANT_VALUE_CLAIM_WITHOUT_COORDINATE']"
+  }
+ },
+ "decisions": {
+  "artifact_exists_at_that_exact_path_and_rehashes": true,
+  "table_rows_found": true,
+  "T_A_every_row_judges_both_sides": false,
+  "T_B_every_row_says_who_answered": false,
+  "T_C_duration_claim_has_a_pair": true
+ },
+ "scope": "What the table proves about its own rows. It does not sign derived_result (red team's), and it does not decide ORD-0302's wording - it only says which rows can support a wording rule and which cannot."
+}
