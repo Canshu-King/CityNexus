@@ -1,0 +1,1398 @@
+{
+  "order": "ORD-0274",
+  "cell": "B2 (Q19 iii)",
+  "arm": "b3_landed_primary_writebackend",
+  "arm_kind": "b3_offline",
+  "session": "1a986a24 HJ-P1",
+  "base": "http://127.0.0.1:8981",
+  "started_at": "2026-09-25T02:39:55.277Z",
+  "viewport": [
+    390,
+    844
+  ],
+  "draft_key": "citynexus.v8.trial_draft",
+  "install_mode": "two_navigations",
+  "write_mode": "answer",
+  "forbidden_moves_taken": {
+    "unregister_called": 0,
+    "cache_clear_called": 0
+  },
+  "phases": {
+    "P0": {
+      "pointer": {
+        "root": "dist",
+        "ok": true
+      },
+      "mode": {
+        "written": "answer",
+        "readBack": "answer"
+      },
+      "install_mode": "two_navigations",
+      "nav1": {
+        "label": "P0-nav1-install",
+        "at": 1790303995542,
+        "status": 200
+      },
+      "nav2": {
+        "label": "P0-nav2-take-control",
+        "at": 1790304010585,
+        "status": 200
+      },
+      "navigations_used": 2,
+      "snapshot": {
+        "href": "http://127.0.0.1:8981/v8/hub",
+        "marker": null,
+        "scripts": [
+          "/assets/index-xKIGmoBz.js"
+        ],
+        "docNonce": "rgpe73uqjtc",
+        "fields": {
+          "目的地": {
+            "tag": "INPUT",
+            "type": "text",
+            "value": ""
+          },
+          "抵达地点": {
+            "tag": "INPUT",
+            "type": "text",
+            "value": ""
+          },
+          "离开地点": {
+            "tag": "INPUT",
+            "type": "text",
+            "value": ""
+          },
+          "抵达时间": {
+            "tag": "INPUT",
+            "type": "datetime-local",
+            "value": "2026-09-26T10:00"
+          },
+          "离开时间": {
+            "tag": "INPUT",
+            "type": "datetime-local",
+            "value": "2026-09-28T20:00"
+          },
+          "#5": {
+            "tag": "INPUT",
+            "type": "text",
+            "value": "CN"
+          },
+          "#6": {
+            "tag": "INPUT",
+            "type": "text",
+            "value": "Asia/Shanghai"
+          },
+          "#7": {
+            "tag": "INPUT",
+            "type": "text",
+            "value": "CNY"
+          }
+        },
+        "fieldCount": 8,
+        "draft": {
+          "step": 1,
+          "draft": {
+            "cityName": "",
+            "countryCode": "CN",
+            "timezone": "Asia/Shanghai",
+            "startAt": "2026-09-26T10:00",
+            "endAt": "2026-09-28T20:00",
+            "arrivalLocation": "",
+            "departureLocation": "",
+            "budgetMajor": 3000,
+            "stayBudgetMajor": 1000,
+            "currency": "CNY",
+            "partySize": 2,
+            "rooms": 1,
+            "pace": "relaxed",
+            "interests": [],
+            "specialRequirements": ""
+          }
+        },
+        "draftError": null,
+        "headings": [
+          "用你自己的城市试用 CITYNEXUS",
+          "新建行程",
+          "三步完成。选择目的地、告诉我们怎么玩，剩下的交给 CityNexus。",
+          "EN",
+          "1",
+          "目的地与时间",
+          "2",
+          "3"
+        ],
+        "leafCount": 21,
+        "controller": true,
+        "registrations": [
+          {
+            "scope": "/",
+            "installing": null,
+            "waiting": null,
+            "active": "/v10-sw.js"
+          }
+        ],
+        "lifecycle": [
+          {
+            "ev": "document-start",
+            "t": 8,
+            "href": "http://127.0.0.1:8981/v8/hub",
+            "marker": null
+          }
+        ]
+      }
+    },
+    "P1": {
+      "typed": {
+        "city": "北京",
+        "arrival": "北京南站",
+        "departure": "北京西站",
+        "startAt": "2026-10-05T09:30",
+        "endAt": "2026-10-07T18:00",
+        "budget": "480",
+        "stay": "150",
+        "special": "只看免费和便宜的地方"
+      },
+      "fills": [
+        {
+          "why": "city",
+          "idx": 0,
+          "ph": "例如：天津、东京、新加坡",
+          "wrote": 2,
+          "after": {
+            "len": 2,
+            "value": "北京"
+          }
+        },
+        {
+          "why": "arrival",
+          "idx": 1,
+          "ph": "例如：北京站 / 机场",
+          "wrote": 4,
+          "after": {
+            "len": 4,
+            "value": "北京南站"
+          }
+        },
+        {
+          "why": "departure",
+          "idx": 2,
+          "ph": "例如：北京站 / 机场",
+          "wrote": 4,
+          "after": {
+            "len": 4,
+            "value": "北京西站"
+          }
+        },
+        {
+          "why": "startAt",
+          "type": "datetime-local",
+          "idx": 0,
+          "before": "2026-09-26T10:00",
+          "wrote": 16,
+          "after": {
+            "len": 16,
+            "value": "2026-10-05T09:30"
+          }
+        },
+        {
+          "why": "endAt",
+          "type": "datetime-local",
+          "idx": 1,
+          "before": "2026-09-28T20:00",
+          "wrote": 16,
+          "after": {
+            "len": 16,
+            "value": "2026-10-07T18:00"
+          }
+        },
+        {
+          "why": "stayBudget",
+          "skipped": "no empty visible field matched",
+          "needle": "住宿"
+        },
+        {
+          "why": "budget",
+          "skipped": "no empty visible field matched",
+          "needle": "总预算|预算"
+        },
+        {
+          "why": "specialRequirements",
+          "idx": 4,
+          "ph": "例如：我妈妈坐轮椅；每天走路不超过 3000 米",
+          "wrote": 10,
+          "after": {
+            "len": 10,
+            "value": "只看免费和便宜的地方"
+          }
+        }
+      ],
+      "stepChecks": [
+        {
+          "label": "before first 下一步",
+          "draft_step": 1,
+          "missing_hint": [],
+          "fieldCount": 8,
+          "marker": null,
+          "headings": [
+            "用你自己的城市试用 CITYNEXUS",
+            "新建行程",
+            "三步完成。选择目的地、告诉我们怎么玩，剩下的交给 CityNexus。",
+            "EN",
+            "1",
+            "目的地与时间"
+          ]
+        },
+        {
+          "label": "after first 下一步",
+          "draft_step": 2,
+          "missing_hint": [],
+          "fieldCount": 5,
+          "marker": null,
+          "headings": [
+            "用你自己的城市试用 CITYNEXUS",
+            "新建行程",
+            "三步完成。选择目的地、告诉我们怎么玩，剩下的交给 CityNexus。",
+            "EN",
+            "✓",
+            "2"
+          ]
+        },
+        {
+          "label": "after second 下一步",
+          "draft_step": 3,
+          "missing_hint": [],
+          "fieldCount": 0,
+          "marker": null,
+          "headings": [
+            "用你自己的城市试用 CITYNEXUS",
+            "新建行程",
+            "三步完成。选择目的地、告诉我们怎么玩，剩下的交给 CityNexus。",
+            "EN",
+            "✓",
+            "✓"
+          ]
+        }
+      ],
+      "afterStep1": {
+        "label": "before first 下一步",
+        "draft_step": 1,
+        "missing_hint": [],
+        "fieldCount": 8,
+        "marker": null,
+        "headings": [
+          "用你自己的城市试用 CITYNEXUS",
+          "新建行程",
+          "三步完成。选择目的地、告诉我们怎么玩，剩下的交给 CityNexus。",
+          "EN",
+          "1",
+          "目的地与时间"
+        ]
+      },
+      "step2Fields": [
+        {
+          "tag": "INPUT",
+          "type": "number",
+          "ph": null,
+          "value": "2"
+        },
+        {
+          "tag": "INPUT",
+          "type": "number",
+          "ph": null,
+          "value": "1"
+        },
+        {
+          "tag": "INPUT",
+          "type": "number",
+          "ph": null,
+          "value": "3000"
+        },
+        {
+          "tag": "INPUT",
+          "type": "number",
+          "ph": null,
+          "value": "1000"
+        },
+        {
+          "tag": "TEXTAREA",
+          "type": "textarea",
+          "ph": "例如：我妈妈坐轮椅；每天走路不超过 3000 米",
+          "value": ""
+        }
+      ],
+      "step2Buttons": [
+        "EN",
+        "轻松",
+        "适中",
+        "紧凑",
+        "美食",
+        "自然",
+        "人文",
+        "海边",
+        "购物",
+        "亲子",
+        "返回",
+        "下一步",
+        "使用封存的演示行程"
+      ],
+      "partyStepper": {
+        "clicked": false
+      }
+    },
+    "P2": {
+      "snapshot": {
+        "href": "http://127.0.0.1:8981/v8/hub",
+        "marker": null,
+        "scripts": [
+          "/assets/index-xKIGmoBz.js"
+        ],
+        "docNonce": "rgpe73uqjtc",
+        "fields": {},
+        "fieldCount": 0,
+        "draft": {
+          "step": 3,
+          "draft": {
+            "cityName": "北京",
+            "countryCode": "CN",
+            "timezone": "Asia/Shanghai",
+            "startAt": "2026-10-05T09:30",
+            "endAt": "2026-10-07T18:00",
+            "arrivalLocation": "北京南站",
+            "departureLocation": "北京西站",
+            "budgetMajor": 3000,
+            "stayBudgetMajor": 1000,
+            "currency": "CNY",
+            "partySize": 2,
+            "rooms": 1,
+            "pace": "relaxed",
+            "interests": [],
+            "specialRequirements": "只看免费和便宜的地方"
+          }
+        },
+        "draftError": null,
+        "headings": [
+          "用你自己的城市试用 CITYNEXUS",
+          "新建行程",
+          "三步完成。选择目的地、告诉我们怎么玩，剩下的交给 CityNexus。",
+          "EN",
+          "✓",
+          "✓",
+          "3",
+          "确认创建"
+        ],
+        "leafCount": 29,
+        "controller": true,
+        "registrations": [
+          {
+            "scope": "/",
+            "installing": null,
+            "waiting": null,
+            "active": "/v10-sw.js"
+          }
+        ],
+        "lifecycle": [
+          {
+            "ev": "document-start",
+            "t": 8,
+            "href": "http://127.0.0.1:8981/v8/hub",
+            "marker": null
+          }
+        ]
+      },
+      "confirm_box": [
+        79,
+        652,
+        291,
+        44
+      ]
+    },
+    "P3": {
+      "pointer": {
+        "root": "dist",
+        "ok": true
+      },
+      "back_to_installed_for_the_write": {
+        "root": "dist",
+        "ok": true
+      },
+      "mode": {
+        "written": "answer",
+        "readBack": "answer"
+      },
+      "submit": {
+        "found": true,
+        "label": "确认创建",
+        "disabled": false,
+        "point": [
+          225,
+          674
+        ],
+        "hitIsSelf": true,
+        "tapped": true
+      },
+      "created_wait": [
+        {
+          "atMs": 4012,
+          "journey_id": "afa84d3e-9c4a-4a4d-a943-24288f433996",
+          "nav_labels": [
+            "今天",
+            "行程",
+            "地图",
+            "Copilot",
+            "我的"
+          ],
+          "leafCount": 56,
+          "headings": [
+            "菜单",
+            "/",
+            "今天",
+            "跟随系统"
+          ]
+        }
+      ],
+      "retry_presses": [],
+      "next_bundle_expected": "index-IbbdpA3f.js",
+      "journey_id": "afa84d3e-9c4a-4a4d-a943-24288f433996",
+      "retry_presses_made": 0,
+      "nav_labels_at_creation": [
+        "今天",
+        "行程",
+        "地图",
+        "Copilot",
+        "我的"
+      ],
+      "assets": {
+        "asset_root": "dist",
+        "read_back_ok": true
+      },
+      "update_trigger": {
+        "updated": true,
+        "via": "registration.update() after the trip was written"
+      },
+      "before_action": {
+        "marker": null,
+        "scripts": [
+          "/assets/index-xKIGmoBz.js"
+        ],
+        "docNonce": "rgpe73uqjtc",
+        "fields": {
+          "旅行需求": {
+            "tag": "TEXTAREA",
+            "type": "textarea",
+            "value": ""
+          }
+        },
+        "draft": {
+          "step": 3,
+          "draft": {
+            "cityName": "北京",
+            "countryCode": "CN",
+            "timezone": "Asia/Shanghai",
+            "startAt": "2026-10-05T09:30",
+            "endAt": "2026-10-07T18:00",
+            "arrivalLocation": "北京南站",
+            "departureLocation": "北京西站",
+            "budgetMajor": 3000,
+            "stayBudgetMajor": 1000,
+            "currency": "CNY",
+            "partySize": 2,
+            "rooms": 1,
+            "pace": "relaxed",
+            "interests": [],
+            "specialRequirements": "只看免费和便宜的地方"
+          }
+        },
+        "leafCount": 56,
+        "registrations": [
+          {
+            "scope": "/",
+            "installing": "installing",
+            "waiting": null,
+            "active": "/v10-sw.js"
+          }
+        ]
+      },
+      "the_one_navigation": {
+        "skipped": "these arms get no navigation after the write"
+      },
+      "watch": [
+        {
+          "atMs": 4006,
+          "atEpoch": 1790304041976,
+          "marker": "ORD-0297-next",
+          "scripts": [
+            "/assets/index-IbbdpA3f.js"
+          ],
+          "docNonce": "7yeg4cl6vxp",
+          "registrations": [
+            {
+              "scope": "/",
+              "installing": null,
+              "waiting": null,
+              "active": "/v10-sw.js"
+            }
+          ],
+          "controller": true,
+          "leafCount": 47,
+          "headings": [
+            "菜单",
+            "/",
+            "今天",
+            "跟随系统",
+            "EN",
+            "BE",
+            "早上好",
+            "北京之旅"
+          ],
+          "fieldCount": 0,
+          "draft_present": true,
+          "lifecycle": [
+            {
+              "ev": "document-start",
+              "t": 1026,
+              "href": "http://127.0.0.1:8981/v8/hub",
+              "marker": null
+            }
+          ]
+        }
+      ],
+      "watch_started_at_epoch": 1790304037970,
+      "converged_atMs": 4006,
+      "after": {
+        "href": "http://127.0.0.1:8981/v8/hub",
+        "marker": "ORD-0297-next",
+        "scripts": [
+          "/assets/index-IbbdpA3f.js"
+        ],
+        "docNonce": "7yeg4cl6vxp",
+        "fields": {},
+        "fieldCount": 0,
+        "draft": {
+          "step": 3,
+          "draft": {
+            "cityName": "北京",
+            "countryCode": "CN",
+            "timezone": "Asia/Shanghai",
+            "startAt": "2026-10-05T09:30",
+            "endAt": "2026-10-07T18:00",
+            "arrivalLocation": "北京南站",
+            "departureLocation": "北京西站",
+            "budgetMajor": 3000,
+            "stayBudgetMajor": 1000,
+            "currency": "CNY",
+            "partySize": 2,
+            "rooms": 1,
+            "pace": "relaxed",
+            "interests": [],
+            "specialRequirements": "只看免费和便宜的地方"
+          }
+        },
+        "draftError": null,
+        "headings": [
+          "菜单",
+          "/",
+          "今天",
+          "跟随系统",
+          "EN",
+          "BE",
+          "早上好",
+          "北京之旅"
+        ],
+        "leafCount": 47,
+        "controller": true,
+        "registrations": [
+          {
+            "scope": "/",
+            "installing": null,
+            "waiting": null,
+            "active": "/v10-sw.js"
+          }
+        ],
+        "lifecycle": [
+          {
+            "ev": "document-start",
+            "t": 1026,
+            "href": "http://127.0.0.1:8981/v8/hub",
+            "marker": null
+          }
+        ]
+      },
+      "after_written": {
+        "marker": "ORD-0297-next",
+        "scripts": [
+          "/assets/index-IbbdpA3f.js"
+        ],
+        "docNonce": "7yeg4cl6vxp",
+        "fields": {},
+        "draft": {
+          "step": 3,
+          "draft": {
+            "cityName": "北京",
+            "countryCode": "CN",
+            "timezone": "Asia/Shanghai",
+            "startAt": "2026-10-05T09:30",
+            "endAt": "2026-10-07T18:00",
+            "arrivalLocation": "北京南站",
+            "departureLocation": "北京西站",
+            "budgetMajor": 3000,
+            "stayBudgetMajor": 1000,
+            "currency": "CNY",
+            "partySize": 2,
+            "rooms": 1,
+            "pace": "relaxed",
+            "interests": [],
+            "specialRequirements": "只看免费和便宜的地方"
+          }
+        },
+        "headings": [
+          "菜单",
+          "/",
+          "今天",
+          "跟随系统",
+          "EN",
+          "BE",
+          "早上好",
+          "北京之旅"
+        ],
+        "registrations": [
+          {
+            "scope": "/",
+            "installing": null,
+            "waiting": null,
+            "active": "/v10-sw.js"
+          }
+        ],
+        "leafCount": 47
+      },
+      "nav_events_total": 10,
+      "nav_events_mine": [
+        "P0-nav1-install",
+        "P0-nav2-take-control"
+      ]
+    },
+    "P4": {
+      "offline_at_epoch": 1790304042227,
+      "first_screen_offline": {
+        "href": "http://127.0.0.1:8981/v8/hub",
+        "marker": "ORD-0297-next",
+        "scripts": [
+          "/assets/index-IbbdpA3f.js"
+        ],
+        "leafCount": 47,
+        "bodyChars": 651,
+        "headings": [
+          "菜单",
+          "/",
+          "今天",
+          "跟随系统",
+          "EN",
+          "BE",
+          "早上好",
+          "北京之旅"
+        ],
+        "docNonce": "7yeg4cl6vxp",
+        "controller": true,
+        "registrations": [
+          {
+            "scope": "/",
+            "installing": null,
+            "waiting": null,
+            "active": "/v10-sw.js"
+          }
+        ],
+        "nav_labels": [
+          "今天",
+          "行程",
+          "地图",
+          "Copilot",
+          "我的"
+        ]
+      },
+      "in_app_nav_offline": [
+        {
+          "label": "行程",
+          "found": true,
+          "tapped": true,
+          "hit_label": "行程",
+          "href_before": "http://127.0.0.1:8981/v8/hub",
+          "href_after": "http://127.0.0.1:8981/v8/trips",
+          "path_changed": true,
+          "marker": "ORD-0297-next",
+          "scripts": [
+            "/assets/index-IbbdpA3f.js"
+          ],
+          "leafCount": 19,
+          "bodyChars": 114,
+          "headings": [
+            "菜单",
+            "/",
+            "行程",
+            "跟随系统"
+          ]
+        },
+        {
+          "label": "地图",
+          "found": true,
+          "tapped": true,
+          "hit_label": "地图",
+          "href_before": "http://127.0.0.1:8981/v8/trips",
+          "href_after": "http://127.0.0.1:8981/v8/map",
+          "path_changed": true,
+          "marker": "ORD-0297-next",
+          "scripts": [
+            "/assets/index-IbbdpA3f.js"
+          ],
+          "leafCount": 31,
+          "bodyChars": 271,
+          "headings": [
+            "菜单",
+            "/",
+            "地图",
+            "跟随系统"
+          ]
+        },
+        {
+          "label": "Copilot",
+          "found": true,
+          "tapped": true,
+          "hit_label": "Copilot",
+          "href_before": "http://127.0.0.1:8981/v8/map",
+          "href_after": "http://127.0.0.1:8981/v8/agent",
+          "path_changed": true,
+          "marker": "ORD-0297-next",
+          "scripts": [
+            "/assets/index-IbbdpA3f.js"
+          ],
+          "leafCount": 30,
+          "bodyChars": 334,
+          "headings": [
+            "菜单",
+            "/",
+            "Copilot",
+            "跟随系统"
+          ]
+        }
+      ],
+      "reload_offline": {
+        "http_status": 200,
+        "href": "http://127.0.0.1:8981/v8/agent",
+        "marker": "ORD-0297-next",
+        "scripts": [
+          "/assets/index-IbbdpA3f.js"
+        ],
+        "leafCount": 6,
+        "bodyChars": 91,
+        "headings": [
+          "连接",
+          "网络不可用",
+          "这一发请求没能出去，也没有收到任何回答，所以这是网络问题。你的行程数据没有丢失，已保存的只读副本还能看。请检查网络后重试。",
+          "看已保存的只读副本",
+          "重试",
+          "归因详情"
+        ],
+        "doc_nonce_before": "7yeg4cl6vxp",
+        "doc_nonce_after": "2ceouovvm9i"
+      },
+      "origin_saw_during_offline": {
+        "readable": true,
+        "count": 6,
+        "sample": [
+          {
+            "kind": "static",
+            "path": "/v10-sw.js",
+            "shell_root": "D:\\moodle\\_qoder_hjp1_o207_20260922\\o297\\landed_next\\frontend\\dist",
+            "asset_root": "D:\\moodle\\_qoder_hjp1_o207_20260922\\o297\\landed_next\\frontend\\dist",
+            "served": "v10-sw.js",
+            "html_at_js_url": false,
+            "t": 1790304042.227,
+            "iso": "2026-09-25T10:40:42+0800"
+          },
+          {
+            "kind": "static",
+            "path": "/workbox-6923124b.js",
+            "shell_root": "D:\\moodle\\_qoder_hjp1_o207_20260922\\o297\\landed_next\\frontend\\dist",
+            "asset_root": "D:\\moodle\\_qoder_hjp1_o207_20260922\\o297\\landed_next\\frontend\\dist",
+            "served": "workbox-6923124b.js",
+            "html_at_js_url": false,
+            "t": 1790304042.231,
+            "iso": "2026-09-25T10:40:42+0800"
+          },
+          {
+            "kind": "static",
+            "path": "/v10-sw.js",
+            "shell_root": "D:\\moodle\\_qoder_hjp1_o207_20260922\\o297\\landed_next\\frontend\\dist",
+            "asset_root": "D:\\moodle\\_qoder_hjp1_o207_20260922\\o297\\landed_next\\frontend\\dist",
+            "served": "v10-sw.js",
+            "html_at_js_url": false,
+            "t": 1790304064.853,
+            "iso": "2026-09-25T10:41:04+0800"
+          },
+          {
+            "kind": "static",
+            "path": "/workbox-6923124b.js",
+            "shell_root": "D:\\moodle\\_qoder_hjp1_o207_20260922\\o297\\landed_next\\frontend\\dist",
+            "asset_root": "D:\\moodle\\_qoder_hjp1_o207_20260922\\o297\\landed_next\\frontend\\dist",
+            "served": "workbox-6923124b.js",
+            "html_at_js_url": false,
+            "t": 1790304064.856,
+            "iso": "2026-09-25T10:41:04+0800"
+          },
+          {
+            "kind": "static",
+            "path": "/v10-sw.js",
+            "shell_root": "D:\\moodle\\_qoder_hjp1_o207_20260922\\o297\\landed_next\\frontend\\dist",
+            "asset_root": "D:\\moodle\\_qoder_hjp1_o207_20260922\\o297\\landed_next\\frontend\\dist",
+            "served": "v10-sw.js",
+            "html_at_js_url": false,
+            "t": 1790304066.526,
+            "iso": "2026-09-25T10:41:06+0800"
+          },
+          {
+            "kind": "static",
+            "path": "/workbox-6923124b.js",
+            "shell_root": "D:\\moodle\\_qoder_hjp1_o207_20260922\\o297\\landed_next\\frontend\\dist",
+            "asset_root": "D:\\moodle\\_qoder_hjp1_o207_20260922\\o297\\landed_next\\frontend\\dist",
+            "served": "workbox-6923124b.js",
+            "html_at_js_url": false,
+            "t": 1790304066.528,
+            "iso": "2026-09-25T10:41:06+0800"
+          }
+        ]
+      },
+      "summary": {
+        "first_bodyChars": 651,
+        "nav_steps": 3,
+        "nav_changed": 3,
+        "reload_bodyChars": 91,
+        "origin_hits_offline": 6
+      }
+    }
+  },
+  "instrument": {
+    "pageErrors": [],
+    "navEvents": [
+      {
+        "at": 1790303995465,
+        "mine": true,
+        "label": "P0-nav1-install"
+      },
+      {
+        "at": 1790303995482,
+        "href": "http://127.0.0.1:8981/v8/hub",
+        "mine": false
+      },
+      {
+        "at": 1790304010547,
+        "mine": true,
+        "label": "P0-nav2-take-control"
+      },
+      {
+        "at": 1790304010555,
+        "href": "http://127.0.0.1:8981/v8/hub",
+        "mine": false
+      },
+      {
+        "at": 1790304034429,
+        "href": "http://127.0.0.1:8981/v8/hub",
+        "mine": false
+      },
+      {
+        "at": 1790304039055,
+        "href": "http://127.0.0.1:8981/v8/hub",
+        "mine": false
+      },
+      {
+        "at": 1790304051263,
+        "href": "http://127.0.0.1:8981/v8/trips",
+        "mine": false
+      },
+      {
+        "at": 1790304055779,
+        "href": "http://127.0.0.1:8981/v8/map",
+        "mine": false
+      },
+      {
+        "at": 1790304060297,
+        "href": "http://127.0.0.1:8981/v8/agent",
+        "mine": false
+      },
+      {
+        "at": 1790304064808,
+        "href": "http://127.0.0.1:8981/v8/agent",
+        "mine": false
+      }
+    ],
+    "probe_smoke": {
+      "ok": true,
+      "href": "about:blank",
+      "marker": null,
+      "leafCount": 0
+    },
+    "apiEvents": [
+      {
+        "atEpoch": 1790303995613,
+        "ev": "request",
+        "m": "GET",
+        "p": "/api/v1/demo/scene"
+      },
+      {
+        "atEpoch": 1790303995730,
+        "ev": "response",
+        "m": "GET",
+        "p": "/api/v1/demo/scene",
+        "s": 200
+      },
+      {
+        "atEpoch": 1790304010602,
+        "ev": "request",
+        "m": "GET",
+        "p": "/api/v1/demo/scene"
+      },
+      {
+        "atEpoch": 1790304010606,
+        "ev": "response",
+        "m": "GET",
+        "p": "/api/v1/demo/scene",
+        "s": 200
+      },
+      {
+        "atEpoch": 1790304033943,
+        "ev": "request",
+        "m": "POST",
+        "p": "/api/v1/travelers"
+      },
+      {
+        "atEpoch": 1790304033962,
+        "ev": "response",
+        "m": "POST",
+        "p": "/api/v1/travelers",
+        "s": 201
+      },
+      {
+        "atEpoch": 1790304033962,
+        "ev": "request",
+        "m": "POST",
+        "p": "/api/v1/journeys"
+      },
+      {
+        "atEpoch": 1790304033990,
+        "ev": "response",
+        "m": "POST",
+        "p": "/api/v1/journeys",
+        "s": 201
+      },
+      {
+        "atEpoch": 1790304033990,
+        "ev": "request",
+        "m": "GET",
+        "p": "/api/v1/travelers/726005df-c98b-4d18-a1f4-4c94d52404e8/preferences"
+      },
+      {
+        "atEpoch": 1790304034017,
+        "ev": "response",
+        "m": "GET",
+        "p": "/api/v1/travelers/726005df-c98b-4d18-a1f4-4c94d52404e8/preferences",
+        "s": 200
+      },
+      {
+        "atEpoch": 1790304034017,
+        "ev": "request",
+        "m": "PUT",
+        "p": "/api/v1/travelers/726005df-c98b-4d18-a1f4-4c94d52404e8/preferences"
+      },
+      {
+        "atEpoch": 1790304034023,
+        "ev": "response",
+        "m": "PUT",
+        "p": "/api/v1/travelers/726005df-c98b-4d18-a1f4-4c94d52404e8/preferences",
+        "s": 200
+      },
+      {
+        "atEpoch": 1790304034023,
+        "ev": "request",
+        "m": "GET",
+        "p": "/api/v1/travelers/726005df-c98b-4d18-a1f4-4c94d52404e8/preferences"
+      },
+      {
+        "atEpoch": 1790304034026,
+        "ev": "response",
+        "m": "GET",
+        "p": "/api/v1/travelers/726005df-c98b-4d18-a1f4-4c94d52404e8/preferences",
+        "s": 200
+      },
+      {
+        "atEpoch": 1790304034027,
+        "ev": "request",
+        "m": "POST",
+        "p": "/api/v1/journeys/afa84d3e-9c4a-4a4d-a943-24288f433996/stay-options/generate"
+      },
+      {
+        "atEpoch": 1790304034297,
+        "ev": "response",
+        "m": "POST",
+        "p": "/api/v1/journeys/afa84d3e-9c4a-4a4d-a943-24288f433996/stay-options/generate",
+        "s": 200
+      },
+      {
+        "atEpoch": 1790304034298,
+        "ev": "request",
+        "m": "GET",
+        "p": "/api/v1/journeys/afa84d3e-9c4a-4a4d-a943-24288f433996/experience"
+      },
+      {
+        "atEpoch": 1790304034311,
+        "ev": "response",
+        "m": "GET",
+        "p": "/api/v1/journeys/afa84d3e-9c4a-4a4d-a943-24288f433996/experience",
+        "s": 200
+      },
+      {
+        "atEpoch": 1790304034311,
+        "ev": "request",
+        "m": "GET",
+        "p": "/api/v1/journeys/afa84d3e-9c4a-4a4d-a943-24288f433996/replans"
+      },
+      {
+        "atEpoch": 1790304034314,
+        "ev": "request",
+        "m": "GET",
+        "p": "/api/v1/journeys/afa84d3e-9c4a-4a4d-a943-24288f433996/plans"
+      },
+      {
+        "atEpoch": 1790304034314,
+        "ev": "request",
+        "m": "GET",
+        "p": "/api/v1/journeys/afa84d3e-9c4a-4a4d-a943-24288f433996/twin"
+      },
+      {
+        "atEpoch": 1790304034324,
+        "ev": "response",
+        "m": "GET",
+        "p": "/api/v1/journeys/afa84d3e-9c4a-4a4d-a943-24288f433996/twin",
+        "s": 200
+      },
+      {
+        "atEpoch": 1790304034340,
+        "ev": "response",
+        "m": "GET",
+        "p": "/api/v1/journeys/afa84d3e-9c4a-4a4d-a943-24288f433996/replans",
+        "s": 200
+      },
+      {
+        "atEpoch": 1790304034340,
+        "ev": "response",
+        "m": "GET",
+        "p": "/api/v1/journeys/afa84d3e-9c4a-4a4d-a943-24288f433996/plans",
+        "s": 200
+      },
+      {
+        "atEpoch": 1790304034341,
+        "ev": "request",
+        "m": "GET",
+        "p": "/api/v1/travelers/726005df-c98b-4d18-a1f4-4c94d52404e8/agent-policy"
+      },
+      {
+        "atEpoch": 1790304034341,
+        "ev": "request",
+        "m": "GET",
+        "p": "/api/v1/journeys/afa84d3e-9c4a-4a4d-a943-24288f433996/wallet"
+      },
+      {
+        "atEpoch": 1790304034341,
+        "ev": "request",
+        "m": "GET",
+        "p": "/api/v1/journeys/afa84d3e-9c4a-4a4d-a943-24288f433996/offline-snapshot"
+      },
+      {
+        "atEpoch": 1790304034341,
+        "ev": "request",
+        "m": "GET",
+        "p": "/api/v1/agent/runtime-status"
+      },
+      {
+        "atEpoch": 1790304034353,
+        "ev": "response",
+        "m": "GET",
+        "p": "/api/v1/journeys/afa84d3e-9c4a-4a4d-a943-24288f433996/wallet",
+        "s": 200
+      },
+      {
+        "atEpoch": 1790304034354,
+        "ev": "response",
+        "m": "GET",
+        "p": "/api/v1/travelers/726005df-c98b-4d18-a1f4-4c94d52404e8/agent-policy",
+        "s": 200
+      },
+      {
+        "atEpoch": 1790304034372,
+        "ev": "response",
+        "m": "GET",
+        "p": "/api/v1/journeys/afa84d3e-9c4a-4a4d-a943-24288f433996/offline-snapshot",
+        "s": 200
+      },
+      {
+        "atEpoch": 1790304034377,
+        "ev": "response",
+        "m": "GET",
+        "p": "/api/v1/agent/runtime-status",
+        "s": 200
+      },
+      {
+        "atEpoch": 1790304034428,
+        "ev": "request",
+        "m": "GET",
+        "p": "/api/v1/demo/scene"
+      },
+      {
+        "atEpoch": 1790304034429,
+        "ev": "request",
+        "m": "GET",
+        "p": "/api/v1/journeys/afa84d3e-9c4a-4a4d-a943-24288f433996/agent-feed"
+      },
+      {
+        "atEpoch": 1790304034429,
+        "ev": "request",
+        "m": "GET",
+        "p": "/api/v1/journeys/afa84d3e-9c4a-4a4d-a943-24288f433996/agent-feed"
+      },
+      {
+        "atEpoch": 1790304034429,
+        "ev": "request",
+        "m": "GET",
+        "p": "/api/v1/places"
+      },
+      {
+        "atEpoch": 1790304034429,
+        "ev": "request",
+        "m": "GET",
+        "p": "/api/v1/agent/runtime-status"
+      },
+      {
+        "atEpoch": 1790304034438,
+        "ev": "response",
+        "m": "GET",
+        "p": "/api/v1/demo/scene",
+        "s": 200
+      },
+      {
+        "atEpoch": 1790304034441,
+        "ev": "response",
+        "m": "GET",
+        "p": "/api/v1/journeys/afa84d3e-9c4a-4a4d-a943-24288f433996/agent-feed",
+        "s": 200
+      },
+      {
+        "atEpoch": 1790304034442,
+        "ev": "response",
+        "m": "GET",
+        "p": "/api/v1/places",
+        "s": 200
+      },
+      {
+        "atEpoch": 1790304034449,
+        "ev": "response",
+        "m": "GET",
+        "p": "/api/v1/journeys/afa84d3e-9c4a-4a4d-a943-24288f433996/agent-feed",
+        "s": 200
+      },
+      {
+        "atEpoch": 1790304034455,
+        "ev": "response",
+        "m": "GET",
+        "p": "/api/v1/agent/runtime-status",
+        "s": 200
+      },
+      {
+        "atEpoch": 1790304039126,
+        "ev": "request",
+        "m": "GET",
+        "p": "/api/v1/journeys/afa84d3e-9c4a-4a4d-a943-24288f433996/experience"
+      },
+      {
+        "atEpoch": 1790304039139,
+        "ev": "response",
+        "m": "GET",
+        "p": "/api/v1/journeys/afa84d3e-9c4a-4a4d-a943-24288f433996/experience",
+        "s": 200
+      },
+      {
+        "atEpoch": 1790304039140,
+        "ev": "request",
+        "m": "GET",
+        "p": "/api/v1/journeys/afa84d3e-9c4a-4a4d-a943-24288f433996/replans"
+      },
+      {
+        "atEpoch": 1790304039152,
+        "ev": "request",
+        "m": "GET",
+        "p": "/api/v1/demo/scene"
+      },
+      {
+        "atEpoch": 1790304039153,
+        "ev": "request",
+        "m": "GET",
+        "p": "/api/v1/journeys/afa84d3e-9c4a-4a4d-a943-24288f433996/agent-feed"
+      },
+      {
+        "atEpoch": 1790304039153,
+        "ev": "request",
+        "m": "GET",
+        "p": "/api/v1/journeys/afa84d3e-9c4a-4a4d-a943-24288f433996/agent-feed"
+      },
+      {
+        "atEpoch": 1790304039153,
+        "ev": "request",
+        "m": "GET",
+        "p": "/api/v1/journeys/afa84d3e-9c4a-4a4d-a943-24288f433996/plans"
+      },
+      {
+        "atEpoch": 1790304039153,
+        "ev": "request",
+        "m": "GET",
+        "p": "/api/v1/journeys/afa84d3e-9c4a-4a4d-a943-24288f433996/twin"
+      },
+      {
+        "atEpoch": 1790304039156,
+        "ev": "response",
+        "m": "GET",
+        "p": "/api/v1/journeys/afa84d3e-9c4a-4a4d-a943-24288f433996/agent-feed",
+        "s": 200
+      },
+      {
+        "atEpoch": 1790304039169,
+        "ev": "response",
+        "m": "GET",
+        "p": "/api/v1/demo/scene",
+        "s": 200
+      },
+      {
+        "atEpoch": 1790304039169,
+        "ev": "response",
+        "m": "GET",
+        "p": "/api/v1/journeys/afa84d3e-9c4a-4a4d-a943-24288f433996/replans",
+        "s": 200
+      },
+      {
+        "atEpoch": 1790304039173,
+        "ev": "request",
+        "m": "GET",
+        "p": "/api/v1/travelers/726005df-c98b-4d18-a1f4-4c94d52404e8/agent-policy"
+      },
+      {
+        "atEpoch": 1790304039173,
+        "ev": "request",
+        "m": "GET",
+        "p": "/api/v1/journeys/afa84d3e-9c4a-4a4d-a943-24288f433996/wallet"
+      },
+      {
+        "atEpoch": 1790304039173,
+        "ev": "request",
+        "m": "GET",
+        "p": "/api/v1/journeys/afa84d3e-9c4a-4a4d-a943-24288f433996/offline-snapshot"
+      },
+      {
+        "atEpoch": 1790304039173,
+        "ev": "request",
+        "m": "GET",
+        "p": "/api/v1/agent/runtime-status"
+      },
+      {
+        "atEpoch": 1790304039183,
+        "ev": "response",
+        "m": "GET",
+        "p": "/api/v1/journeys/afa84d3e-9c4a-4a4d-a943-24288f433996/offline-snapshot",
+        "s": 200
+      },
+      {
+        "atEpoch": 1790304039216,
+        "ev": "response",
+        "m": "GET",
+        "p": "/api/v1/journeys/afa84d3e-9c4a-4a4d-a943-24288f433996/wallet",
+        "s": 200
+      },
+      {
+        "atEpoch": 1790304039216,
+        "ev": "response",
+        "m": "GET",
+        "p": "/api/v1/journeys/afa84d3e-9c4a-4a4d-a943-24288f433996/plans",
+        "s": 200
+      },
+      {
+        "atEpoch": 1790304039216,
+        "ev": "response",
+        "m": "GET",
+        "p": "/api/v1/journeys/afa84d3e-9c4a-4a4d-a943-24288f433996/agent-feed",
+        "s": 200
+      },
+      {
+        "atEpoch": 1790304039216,
+        "ev": "response",
+        "m": "GET",
+        "p": "/api/v1/journeys/afa84d3e-9c4a-4a4d-a943-24288f433996/twin",
+        "s": 200
+      },
+      {
+        "atEpoch": 1790304039230,
+        "ev": "response",
+        "m": "GET",
+        "p": "/api/v1/travelers/726005df-c98b-4d18-a1f4-4c94d52404e8/agent-policy",
+        "s": 200
+      },
+      {
+        "atEpoch": 1790304039237,
+        "ev": "response",
+        "m": "GET",
+        "p": "/api/v1/agent/runtime-status",
+        "s": 200
+      },
+      {
+        "atEpoch": 1790304064854,
+        "ev": "request",
+        "m": "GET",
+        "p": "/api/v1/journeys/afa84d3e-9c4a-4a4d-a943-24288f433996/experience"
+      },
+      {
+        "atEpoch": 1790304064854,
+        "ev": "requestfailed",
+        "m": "GET",
+        "p": "/api/v1/journeys/afa84d3e-9c4a-4a4d-a943-24288f433996/experience",
+        "why": "net::ERR_INTERNET_DISCONNECTED"
+      },
+      {
+        "atEpoch": 1790304064855,
+        "ev": "request",
+        "m": "GET",
+        "p": "/api/v1/health"
+      },
+      {
+        "atEpoch": 1790304064856,
+        "ev": "requestfailed",
+        "m": "GET",
+        "p": "/api/v1/health",
+        "why": "net::ERR_INTERNET_DISCONNECTED"
+      }
+    ]
+  },
+  "next1": {
+    "found": true,
+    "label": "下一步",
+    "disabled": false,
+    "point": [
+      195,
+      674
+    ],
+    "hitIsSelf": true,
+    "tapped": true
+  },
+  "next2": {
+    "found": true,
+    "label": "下一步",
+    "disabled": false,
+    "point": [
+      225,
+      674
+    ],
+    "hitIsSelf": true,
+    "tapped": true
+  },
+  "ended_at": "2026-09-25T02:41:11.959Z"
+}
