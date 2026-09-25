@@ -48,6 +48,8 @@ type Reading = {
   sentence_seconds_named: number | null;
   had_network_blame: boolean | null;
   surface_not_judged?: string;
+  /** the rendered words themselves, head only: a label derived from the text is not the text */
+  screen_text_head?: string | null;
   server_said: "answered-200" | "never-answered" | "answered-late" | string;
   keys_seen: string[];
   verdict: string;
@@ -184,6 +186,7 @@ test.describe.serial("ORD-0281 keyed write deadline", () => {
     record("TA", {
       arm: "TA", clicked: started, settled_at: out.at, elapsed_ms: out.at - started,
       on_screen: out.kind, sentence_seconds_named: out.named, had_network_blame: out.had_network_blame,
+      screen_text_head: out.text.slice(0, 170),
       server_said: "answered-200", keys_seen: leg.seen.map((s) => s.key ?? ""),
       verdict: out.kind === "success" && !out.had_network_blame ? "MET" : "NOT_MET",
     });
@@ -207,6 +210,7 @@ test.describe.serial("ORD-0281 keyed write deadline", () => {
     record("TB", {
       arm: "TB", clicked: started, settled_at: out.at, elapsed_ms: out.at - started,
       on_screen: out.kind, sentence_seconds_named: out.named, had_network_blame: out.had_network_blame,
+      screen_text_head: out.text.slice(0, 170),
       server_said: "never-answered", keys_seen: leg.seen.map((s) => s.key ?? ""),
       verdict:
         out.kind === "bound-sentence" &&
@@ -246,6 +250,7 @@ test.describe.serial("ORD-0281 keyed write deadline", () => {
     record("TC", {
       arm: "TC", clicked: started, settled_at: out.at, elapsed_ms: elapsed,
       on_screen: out.kind, sentence_seconds_named: out.named, had_network_blame: out.had_network_blame,
+      screen_text_head: out.text.slice(0, 170),
       server_said: "never-answered", keys_seen: leg.seen.map((s) => s.key ?? ""),
       verdict:
         out.kind === "bound-sentence" &&
@@ -282,7 +287,7 @@ test.describe.serial("ORD-0281 keyed write deadline", () => {
     record("TD", {
       arm: "TD", clicked: started, settled_at: second.at, elapsed_ms: second.at - started,
       on_screen: second.kind, sentence_seconds_named: second.named,
-      had_network_blame: second.had_network_blame,
+      had_network_blame: second.had_network_blame, screen_text_head: second.text.slice(0, 170),
       server_said: "never-answered", keys_seen: keys,
       verdict:
         first.kind === "bound-sentence" && second.kind === "bound-sentence" && keys.length === 2 &&
