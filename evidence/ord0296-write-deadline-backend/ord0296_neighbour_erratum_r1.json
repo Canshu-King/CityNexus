@@ -1,0 +1,32 @@
+{
+ "what": "ORD-0296 第二枚勘误：我收据里的邻居回归是手打的数，且与账本里那一枚不一致",
+ "lane": "F 8ccd71d8",
+ "read_at": "2026-09-25T09:43:50+08:00",
+ "was": {
+  "receipt_r1_C9_neighbour_result": "23 passed（手打，4 个模块）",
+  "receipt_r2_C9_neighbour_result": "23 passed（同一枚字面量被带到 r2）",
+  "ledger_block_said": "22 passed（另一次 5 模块合跑，我照当时的屏幕抄的）",
+  "why_wrong": "两处都不是工件：一个数出现在两份文本里而互相不等，说明至少有一处是抄的"
+ },
+ "now": {
+  "artifact": "evidence/ord0296-write-deadline-backend/neighbour_regression_r1.json",
+  "per_module": {
+   "test_qoder_ord0296_write_deadline.py": "10 passed, 2 warnings in 2.51s",
+   "test_qoder_ord0272_continuation.py": "8 passed, 2 warnings in 3.63s",
+   "test_qoder_ord0287_k8_carrier.py": "2 passed, 2 warnings in 1.81s",
+   "test_agent_mission_runtime.py": "2 passed, 2 warnings in 1.92s",
+   "test_v16_integration.py": "9 passed, 2 warnings in 1.91s",
+   "test_v18_2_agent_productization.py": "4 passed in 1.08s"
+  },
+  "combined": "35 passed, 2 warnings in 4.95s",
+  "combined_red": [],
+  "receipt": "evidence/ord0296-write-deadline-backend/ord0296_receipt_r3.json",
+  "how_derived": "C9 的 measured 现在逐模块记摘要行与 red 名单，不再出现任何手打合计"
+ },
+ "unchanged": {
+  "candidate": "6d041dcce11d05f28a55abadd40717f321b4db38",
+  "gate_cells_passing": "10 passed（本次重跑，同一棵导出树）",
+  "note": "只补读数来源，不改任何判级：C1–C13 的 verdict 一枚没动"
+ },
+ "handling": "r1/r2 不覆盖不删；r3 走新文件名；生成器里 C9 改成从 neighbour_regression_r1.json 取，所以这一类「手打合计」以后由工具当场拒（同一文件里不再出现第二处邻居合计）。"
+}
