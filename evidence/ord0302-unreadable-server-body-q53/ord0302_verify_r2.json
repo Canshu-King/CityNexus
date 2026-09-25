@@ -1,0 +1,154 @@
+{
+ "ref": {
+  "name": "heads/review/0302-unreadable-server-body-b3",
+  "tip": "2f191eb5fd1682a53cf95f883c7200f00cbb6ebe",
+  "ancestry": "ahead",
+  "commits_ahead": 6,
+  "commits_behind": 0
+ },
+ "receipt": {
+  "blob40": "63c4421d69bb8f7be334f11ccc5b083c96e4f420",
+  "candidate_tip": "2f191eb5fd1682a53cf95f883c7200f00cbb6ebe",
+  "tip_is_the_ref": true,
+  "base_tip": "13af1ff4ba4516aa1a39cda67428ed4a2a34ac69",
+  "cells": 12,
+  "derived_all_null": true,
+  "product_bytes_changed": 0
+ },
+ "counter_arms": {
+  "ca_unsafe_read": {
+   "intended": "N1",
+   "red": [
+    "N1"
+   ],
+   "only_intended": true
+  },
+  "ca_null_on_network": {
+   "intended": "N3",
+   "red": [
+    "N3"
+   ],
+   "only_intended": true
+  },
+  "ca_x5_no_block": {
+   "intended": "X1",
+   "red": [
+    "X1"
+   ],
+   "only_intended": true
+  },
+  "ca_x5_soft_promise": {
+   "intended": "X1",
+   "red": [
+    "X1"
+   ],
+   "only_intended": true
+  }
+ },
+ "x5_rows": {
+  "R19_④_200_empty_body": {
+   "status": "NO_PLANS_PRODUCED",
+   "promise_in_copy": true,
+   "details_count": 1,
+   "reason": "",
+   "origin": "",
+   "raw_rendered": {
+    "http_status": "200",
+    "content-type": "application/json",
+    "bytes": "0",
+    "body": ""
+   },
+   "raw_expected": {
+    "http_status": "200",
+    "content-type": "application/json",
+    "bytes": "0",
+    "body": ""
+   }
+  },
+  "R20_④_200_json_empty_object": {
+   "status": "NO_PLANS_PRODUCED",
+   "promise_in_copy": true,
+   "details_count": 1,
+   "reason": "",
+   "origin": "",
+   "raw_rendered": {
+    "http_status": "200",
+    "content-type": "application/json",
+    "bytes": "2",
+    "body": "{}"
+   },
+   "raw_expected": {
+    "http_status": "200",
+    "content-type": "application/json",
+    "bytes": "2",
+    "body": "{}"
+   }
+  },
+  "R21_④_200_json_array": {
+   "status": "NO_PLANS_PRODUCED",
+   "promise_in_copy": true,
+   "details_count": 1,
+   "reason": "",
+   "origin": "",
+   "raw_rendered": {
+    "http_status": "200",
+    "content-type": "application/json",
+    "bytes": "2",
+    "body": "[]"
+   },
+   "raw_expected": {
+    "http_status": "200",
+    "content-type": "application/json",
+    "bytes": "2",
+    "body": "[]"
+   }
+  },
+  "R22_④_200_text_plain_payload": {
+   "status": "NO_PLANS_PRODUCED",
+   "promise_in_copy": true,
+   "details_count": 1,
+   "reason": "",
+   "origin": "",
+   "raw_rendered": {
+    "http_status": "200",
+    "content-type": "text/plain; charset=utf-8",
+    "bytes": "33",
+    "body": "plans are not available right now"
+   },
+   "raw_expected": {
+    "http_status": "200",
+    "content-type": "text/plain; charset=utf-8",
+    "bytes": "33",
+    "body": "plans are not available right now"
+   }
+  },
+  "R23_④_200_mission_unusable_status": {
+   "status": "NO_PLANS_PRODUCED",
+   "promise_in_copy": true,
+   "details_count": 1,
+   "reason": "",
+   "origin": "",
+   "raw_rendered": {
+    "http_status": "200",
+    "content-type": "application/json",
+    "bytes": "110",
+    "body": "{\"mission\":{\"id\":\"ord0302-mission\",\"status\":\"FAILED_UPSTREAM\",\"failure_reason\":null,\"reasoning_summary\":null}}"
+   },
+   "raw_expected": {
+    "http_status": "200",
+    "content-type": "application/json",
+    "bytes": "110",
+    "body": "{\"mission\":{\"id\":\"ord0302-mission\",\"status\":\"FAILED_UPSTREAM\",\"failure_reason\":null,\"reasoning_summary\":null}}"
+   }
+  }
+ },
+ "x5_invariant_holds_for_every_row": false,
+ "rows_named": [
+  "R19_④_200_empty_body",
+  "R20_④_200_json_empty_object",
+  "R21_④_200_json_array",
+  "R22_④_200_text_plain_payload",
+  "R23_④_200_mission_unusable_status"
+ ],
+ "mismatches": []
+}
