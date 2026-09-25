@@ -1,0 +1,194 @@
+{
+ "arm": "dep_spec_nonjson_422",
+ "run_id": "P3-222816",
+ "intent_declared_before": "A5 non-JSON body at the SAME status as A3: separates \"the body was not JSON\" from \"it was a 4xx\"",
+ "tip": "7856e03f6238da3000976eb6e690a448dfa39b9a",
+ "scenario": "spec",
+ "proxy_mode": "answer_spec",
+ "spec": {
+  "name": "nonjson_422",
+  "status": 422,
+  "reason": "Unprocessable Entity",
+  "content_type": "text/plain; charset=utf-8",
+  "body": "Request validation failed"
+ },
+ "lock_plan": null,
+ "rig": {
+  "backend_pid": 30780,
+  "proxy_pid": 21604,
+  "face_pid": 63064,
+  "face_port": 8653,
+  "all_up": true,
+  "identity_two_sided": true,
+  "journey_id": "43f159c4-4c40-4525-aecb-0d7ee1d47780",
+  "seed": {
+   "places_before": 0,
+   "demo_places_before": 0,
+   "seeded_by_this_call": true,
+   "demo_places_after": 8
+  },
+  "db": "D:\\moodle\\_hjp3_0301p3_0925\\p3_dep.s3db",
+  "access_log": "p3_backend_access_222817.log",
+  "rig_state_file": "p3_rig_state_dep_answer_spec_222817.json"
+ },
+ "node_rc": 0,
+ "node_tail": [
+  [
+   "{\"scenario\":\"spec\",\"status\":\"HTTP_422\",\"title\":\"这个要求被明确拒绝\",\"label\":\"这台设备自己的读数（服务器没给句子）\",\"reason\":\"agent/commands -> HTTP 422\",\"details\":1,\"opened_label_rendered\":\"这台设备自己的读数（服务器没给句子）\",\"origin\":\"device\",\"fetch_rejected\":false,\"page_saw\":422,\"pair_id\":\"hjp3p3-709a655b58234db6\",\"body_parsed\":false,\"parse_err\":\"SyntaxError\"}"
+  ]
+ ],
+ "wall_seconds": 5,
+ "pairing": [
+  {
+   "leg": "43f159c4-4c40-4525-aecb-0d7ee1d47780/agent/commands",
+   "pair_id": "hjp3p3-709a655b58234db6",
+   "one_request_one_id": true,
+   "server_side_from_the_same_hop": {
+    "recorded": true,
+    "reached_upstream": false,
+    "answered_by": "instrument_origin_per_spec",
+    "status": 422,
+    "content_type": "text/plain; charset=utf-8",
+    "bytes": 25,
+    "body_parses_as_json": false,
+    "top_level_keys": null,
+    "body_head": "Request validation failed",
+    "elapsed_ms": 0,
+    "request_mutation": null,
+    "spec_name": "nonjson_422"
+   },
+   "screen_side_from_the_page": {
+    "fetch_rejected": false,
+    "status": 422,
+    "ok": false,
+    "content_type": "text/plain; charset=utf-8",
+    "elapsed_ms": 10,
+    "app_read_the_body": {
+     "url": "http://127.0.0.1:8653/api/v1/journeys/43f159c4-4c40-4525-aecb-0d7ee1d47780/agent/commands",
+     "status": 422,
+     "pair_id": "hjp3p3-709a655b58234db6",
+     "content_type": "text/plain; charset=utf-8",
+     "at_wall": "2026-09-25T14:28:25.838Z",
+     "parsed": false,
+     "error_name": "SyntaxError",
+     "error_message": "Unexpected token 'R', \"Request va\"... is not valid JSON"
+    },
+    "body_parse_failed": true,
+    "body_parsed": false,
+    "browser_stack": {
+     "url": "/api/v1/journeys/43f159c4-4c40-4525-aecb-0d7ee1d47780/agent/commands",
+     "status": 422,
+     "pair_id": "hjp3p3-709a655b58234db6",
+     "content_type": "text/plain; charset=utf-8",
+     "failure": null,
+     "at_wall": "2026-09-25T14:28:25.838Z"
+    }
+   },
+   "both_ends_agree_on_status": true,
+   "both_ends_agree_on_json_class": true
+  }
+ ],
+ "write_legs_with_a_5xx_or_4xx": [
+  {
+   "leg": "43f159c4-4c40-4525-aecb-0d7ee1d47780/agent/commands",
+   "status": 422,
+   "answered_by": "instrument_origin_per_spec",
+   "json": false,
+   "page_saw": 422,
+   "rejected": false
+  }
+ ],
+ "screen_as_painted_before_tapping": {
+  "result_card_painted": "这个要求被明确拒绝\n\n服务端说明了原因（见“技术详情”）。你的行程没有被改动，按原因调整条件或换个说法再试。\n\n技术详情",
+  "result_card_text_content": "这个要求被明确拒绝服务端说明了原因（见“技术详情”）。你的行程没有被改动，按原因调整条件或换个说法再试。技术详情这台设备自己的读数（服务器没给句子）agent/commands -> HTTP 422",
+  "card_title_painted": "这个要求被明确拒绝",
+  "card_body_painted": "服务端说明了原因（见“技术详情”）。你的行程没有被改动，按原因调整条件或换个说法再试。",
+  "reason_label_painted": "",
+  "reason_value_painted": "",
+  "reason_label_text_content": "这台设备自己的读数（服务器没给句子）",
+  "reason_value_text_content": "agent/commands -> HTTP 422",
+  "details_elements_present": 1,
+  "details_open_attribute": false,
+  "detail_toggle_present": true,
+  "network_card_painted": false,
+  "http_failed_card_painted": false,
+  "refused_card_painted": true,
+  "server_attribution_painted": false,
+  "device_attribution_painted": false,
+  "unreadable_answer_note_painted": false,
+  "whole_page_contains_server_label": false,
+  "whole_page_contains_device_label": true,
+  "next_step_painted": null,
+  "cross_check_data_result_status": "HTTP_422",
+  "cross_check_data_reason_origin": "device"
+ },
+ "screen_as_painted_after_tapping_detail": {
+  "result_card_painted": "这个要求被明确拒绝\n\n服务端说明了原因（见“技术详情”）。你的行程没有被改动，按原因调整条件或换个说法再试。\n\n技术详情\n这台设备自己的读数（服务器没给句子）\nagent/commands -> HTTP 422",
+  "result_card_text_content": "这个要求被明确拒绝服务端说明了原因（见“技术详情”）。你的行程没有被改动，按原因调整条件或换个说法再试。技术详情这台设备自己的读数（服务器没给句子）agent/commands -> HTTP 422",
+  "card_title_painted": "这个要求被明确拒绝",
+  "card_body_painted": "服务端说明了原因（见“技术详情”）。你的行程没有被改动，按原因调整条件或换个说法再试。",
+  "reason_label_painted": "这台设备自己的读数（服务器没给句子）",
+  "reason_value_painted": "agent/commands -> HTTP 422",
+  "reason_label_text_content": "这台设备自己的读数（服务器没给句子）",
+  "reason_value_text_content": "agent/commands -> HTTP 422",
+  "details_elements_present": 1,
+  "details_open_attribute": true,
+  "detail_toggle_present": true,
+  "network_card_painted": false,
+  "http_failed_card_painted": false,
+  "refused_card_painted": true,
+  "server_attribution_painted": false,
+  "device_attribution_painted": true,
+  "unreadable_answer_note_painted": false,
+  "whole_page_contains_server_label": false,
+  "whole_page_contains_device_label": true,
+  "next_step_painted": null,
+  "cross_check_data_result_status": "HTTP_422",
+  "cross_check_data_reason_origin": "device"
+ },
+ "detail_block_open_attempt": {
+  "clicked": true,
+  "was_already_open": false,
+  "details_open_after": true
+ },
+ "screen": {
+  "result_card_painted": "这个要求被明确拒绝\n\n服务端说明了原因（见“技术详情”）。你的行程没有被改动，按原因调整条件或换个说法再试。\n\n技术详情",
+  "result_card_text_content": "这个要求被明确拒绝服务端说明了原因（见“技术详情”）。你的行程没有被改动，按原因调整条件或换个说法再试。技术详情这台设备自己的读数（服务器没给句子）agent/commands -> HTTP 422",
+  "card_title_painted": "这个要求被明确拒绝",
+  "card_body_painted": "服务端说明了原因（见“技术详情”）。你的行程没有被改动，按原因调整条件或换个说法再试。",
+  "reason_label_painted": "",
+  "reason_value_painted": "",
+  "reason_label_text_content": "这台设备自己的读数（服务器没给句子）",
+  "reason_value_text_content": "agent/commands -> HTTP 422",
+  "details_elements_present": 1,
+  "details_open_attribute": false,
+  "detail_toggle_present": true,
+  "network_card_painted": false,
+  "http_failed_card_painted": false,
+  "refused_card_painted": true,
+  "server_attribution_painted": false,
+  "device_attribution_painted": false,
+  "unreadable_answer_note_painted": false,
+  "whole_page_contains_server_label": false,
+  "whole_page_contains_device_label": true,
+  "next_step_painted": null,
+  "cross_check_data_result_status": "HTTP_422",
+  "cross_check_data_reason_origin": "device"
+ },
+ "page_errors": [],
+ "waited_ms": 3717,
+ "sample_tail": [
+  {
+   "ms": 566,
+   "status": "HTTP_422",
+   "details": 1,
+   "busy": false
+  }
+ ],
+ "access_log_witness": {
+  "present": true,
+  "path": "p3_backend_access_222817.log",
+  "lines_naming_the_leg": 0,
+  "lines": []
+ }
+}
