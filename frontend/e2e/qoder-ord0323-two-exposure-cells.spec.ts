@@ -338,3 +338,177 @@ test("N3_confirm_fold_carries_the_attempt_reading_not_the_attempt_s_words — �
 function clean(value: string): string {
   return String(value ?? "").replace(/\s+/g, " ").trim();
 }
+
+/* ------------------------------------------------------------------ N4: the eight legs D numbered.
+ * T05-T13 of `evidence/ord0320-triage-d/ord0320_triage_r2.json` are eight catch sites plus the technical
+ * fold, and all nine carried the same reply's sentence to the screen through `error.message`. One test
+ * walks the legs with a route plan that changes per leg: every leg asserts its own needle is nowhere in
+ * the DOM, and its own measured status is in the slot that leg writes to -- which is what makes the
+ * reading attributable to the leg instead of to the page.
+ */
+const NEEDLES: Record<string, string> = {
+  T06: "import_forbidden_leg_t06",
+  T07: "memory_forbidden_token_9f3c the traveller's own words were refused",
+  T08: "inbox_forbidden_token_4b71 the review queue is not ready",
+  T09: "text_extract_forbidden_leg_t09",
+  T10: "vision_forbidden_leg_t10",
+  T11: "smart_apply_forbidden_leg_t11",
+  T12: "confirm_forbidden_token_c258 the commitment was rejected",
+  T13: "patch_forbidden_leg_t13",
+};
+
+type Leg = {
+  cell: string;
+  match: string;
+  method: string;
+  status: number;
+  slot: "message" | "queue" | "fold";
+  trigger: "none" | "manual" | "paste" | "vision" | "review_smart" | "review_confirm" | "review_patch";
+};
+
+const LEGS: Leg[] = [
+  {cell: "T06", match: "/inbox/import", method: "POST", status: 502, slot: "message", trigger: "manual"},
+  {cell: "T07", match: "/memory", method: "GET", status: 500, slot: "message", trigger: "none"},
+  {cell: "T08", match: "/inbox", method: "GET", status: 503, slot: "queue", trigger: "none"},
+  {cell: "T09", match: "/inbox/text-extract", method: "POST", status: 504, slot: "message", trigger: "paste"},
+  {cell: "T10", match: "/inbox/vision", method: "POST", status: 507, slot: "message", trigger: "vision"},
+  {cell: "T11", match: "/smart-apply", method: "POST", status: 506, slot: "message", trigger: "review_smart"},
+  {cell: "T12", match: "/confirm", method: "POST", status: 509, slot: "fold", trigger: "review_confirm"},
+  {cell: "T13", match: "PATCH_INBOX", method: "PATCH", status: 511, slot: "message", trigger: "review_patch"},
+];
+
+const draftRow = {
+  id: "ORD0323-D3",
+  artifact_type: "STRUCTURED_JSON",
+  extracted: {title: "天津西 → 北京南 高铁", reservation_type: "RAIL"},
+  status: "NEEDS_REVIEW",
+  unresolved_fields: [],
+  extraction_mode: "RULE",
+  interpretation: {anchor_role: "MID_TRIP", anchor_role_confidence: 0.8, payment_status: null, reasoning_summary: null, semantic_target: null},
+  smart_intake: {decision: "AUTO_APPLY", reasons: [], conflicts: [], resolved_target: null, role_confidence: 0.5},
+};
+
+async function drive(page: Page, trigger: Leg["trigger"]): Promise<void> {
+  if (trigger === "manual") {
+    await page.getByTestId("inbox-tab-manual").click();
+    await page.getByTestId("manual-title").fill("天津西 → 北京南 高铁");
+    await page.getByTestId("manual-from").fill("天津");
+    await page.getByTestId("manual-to").fill("北京");
+    await page.getByTestId("manual-submit").click();
+    return;
+  }
+  if (trigger === "paste" || trigger === "vision") {
+    await page.getByTestId("inbox-tab-paste").click();
+    if (trigger === "paste") {
+      await page.locator("textarea").first().fill("9月26日 天津西→北京南 G8901 二等座 07:30");
+      await page.getByRole("button", {name: "提取文本草稿"}).click();
+      return;
+    }
+    await page.locator("input[type=file]").first().setInputFiles({
+      name: "ticket.png",
+      mimeType: "image/png",
+      buffer: Buffer.from(
+        "89504e470d0a1a0a0000000d49484452000000010000000108060000001f15c4890000000a49444154789c636000000200" +
+        "0100ffff03000006000557bfabd40000000049454e44ae426082", "hex"),
+    });
+    await page.getByRole("button", {name: "提取图片草稿"}).click();
+    return;
+  }
+  await page.getByTestId("inbox-open-review").first().click();
+  if (trigger === "review_smart") await page.getByTestId("v13-2-smart-apply").click();
+  if (trigger === "review_confirm") await page.getByTestId("v13-2-confirm").click();
+  if (trigger === "review_patch") await page.getByTestId("v13-2-save-corrections").click();
+}
+
+test("N4_eight_catch_sites_no_longer_carry_the_reply_s_words — 八条腿各自：自己那句原话不在屏上，自己那次读数还在屏上", async ({
+  page,
+}) => {
+  test.setTimeout(420_000);
+  const arm = "N4";
+  const id = await journeyId(page);
+  let active: Leg | null = null;
+
+  await page.route("**/api/v1/journeys/**", async (r: Route) => {
+    const path = new URL(r.request().url()).pathname;
+    const method = r.request().method();
+    const leg = active;
+    if (!leg) return r.fallback();
+    const mine =
+      leg.match === "PATCH_INBOX"
+        ? method === "PATCH" && /\/inbox\/[A-Za-z0-9-]+$/.test(path)
+        : method === leg.method && path.endsWith(leg.match);
+    if (mine) {
+      await r.fulfill({
+        status: leg.status,
+        contentType: "application/json",
+        body: jsonBody({error: {message: NEEDLES[leg.cell]}, detail: NEEDLES[leg.cell]}),
+      });
+      return;
+    }
+    if (path.endsWith("/inbox") && method === "GET") {
+      await r.fulfill({status: 200, contentType: "application/json", body: jsonBody({drafts: [draftRow]})});
+      return;
+    }
+    return r.fallback();
+  });
+
+  const slotOf = (slot: Leg["slot"]) =>
+    slot === "message"
+      ? page.locator(".v10-inbox-message").first()
+      : slot === "queue"
+        ? page.getByTestId("inbox-pending-error")
+        : page.getByTestId("inbox-confirm-detail");
+
+  const legs: Record<string, unknown>[] = [];
+  for (const leg of LEGS) {
+    active = leg;
+    await boot(page, id);
+    await page.goto("/v8/bookings", {waitUntil: "load"});
+    await expect(
+      page.getByTestId("v13-2-memory"),
+      node(arm, `${leg.cell}: the wallet panel never rendered, so no leg below it can be judged`),
+    ).toBeVisible({timeout: 30_000});
+    if (leg.trigger !== "none") await drive(page, leg.trigger);
+    const slot = slotOf(leg.slot);
+    await expect(
+      slot,
+      node(arm, `${leg.cell}: the leg was refused but its slot shows nothing at all -- an empty screen is not an honest screen`),
+    ).toBeVisible({timeout: 30_000});
+    if (leg.slot === "fold") await slot.locator("summary").click();
+    const text = clean(await slot.textContent());
+    const foldCode = leg.slot === "fold" ? clean(await slot.locator("code").innerText()) : "";
+    const dom = await domReading(page);
+    const found = Object.entries(NEEDLES)
+      .filter(([, n]) => dom.root.includes(n) || dom.body.includes(n))
+      .map(([c]) => c);
+    const foreign = LEGS.filter((o) => o.cell !== leg.cell)
+      .map((o) => String(o.status))
+      .filter((s) => text.includes(s));
+    legs.push({
+      cell: leg.cell,
+      route: leg.match,
+      method: leg.method,
+      status_asked: leg.status,
+      slot_text: text,
+      fold_code: foldCode,
+      needles_found: found,
+      foreign_status_found: foreign,
+    });
+    /* NEGATIVE -- nobody's reply sentence, from any leg, reaches the DOM. */
+    expect(found, node(arm, `${leg.cell}: a reply's own words are on the screen again (${JSON.stringify(found)}); the slot reads "${text}"`)).toEqual([]);
+    /* POSITIVE -- this leg's own reading, in this leg's own slot, and nobody else's. */
+    expect(text.includes(String(leg.status)),
+      node(arm, `${leg.cell}: the slot no longer states the status this device measured for THIS request (${text})`)).toBe(true);
+    expect(foreign,
+      node(arm, `${leg.cell}: the slot is showing another leg's reading (${JSON.stringify(foreign)}) -- one status for many requests (${text})`)).toEqual([]);
+    if (leg.slot !== "message") {
+      expect(text.includes("application/json"),
+        node(arm, `${leg.cell}: the machine slot lost the content type this device measured (${text})`)).toBe(true);
+    }
+    expect(/inbox request rejected/i.test(text),
+      node(arm, `${leg.cell}: the carrier's own internal token reached the traveller (${text})`)).toBe(false);
+  }
+  active = null;
+  readings[arm] = {legs, leg_count: legs.length, needle_count: Object.keys(NEEDLES).length};
+  expect(legs.length, node(arm, "not every leg ran")).toBe(LEGS.length);
+});
