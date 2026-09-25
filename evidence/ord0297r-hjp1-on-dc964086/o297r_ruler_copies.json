@@ -1,0 +1,97 @@
+{
+ "policy": "the ruler itself is not duplicated into this package; it is addressed by blob id on the arbiter's ref path, and the copy executed here was fetched by that id and re-hashed",
+ "rulers": [
+  {
+   "script": "receipt_cell_derivation_check_r2.py",
+   "what_it_judges": "Q38 cell-derivation",
+   "expected_blob40": "91ae8b1ec55f5c19122af11bf775df14580955e4",
+   "present_locally": true,
+   "bytes": 18867,
+   "local_sha1_matches_expected": true,
+   "selftest_rc": 0,
+   "selftest_tail": "r_any_key cells 2 got Q38_GATE_GREEN [] | want Q38_GATE_GREEN [] -> ok",
+   "judged_object": "o297r_measured_object.json",
+   "cells_counted_by_ruler": 4,
+   "overall": "Q38_GATE_GREEN",
+   "hard": "0",
+   "soft": "0",
+   "judged_object_top_level_key_count": 13,
+   "judged_object_top_level_keys": [
+    "arms",
+    "base_tip",
+    "bases",
+    "cells",
+    "claim_semantics",
+    "derived_result_is_null_everywhere",
+    "instrument",
+    "not_run",
+    "order",
+    "ref_tip_read",
+    "selftest_duplicate_why",
+    "verifier",
+    "why_this_round_exists"
+   ],
+   "verbatim_output_file": "gate_r2_on_receipt.txt"
+  },
+  {
+   "script": "claim_coordinate_check_r3.py",
+   "what_it_judges": "Q43 claim-coordinate",
+   "expected_blob40": "e653e597c2e6fd74a5f8d3be65fe60e017b03017",
+   "present_locally": true,
+   "bytes": 11765,
+   "local_sha1_matches_expected": true,
+   "selftest_rc": 0,
+   "selftest_tail": "laims 3 got Q43_GATE_CLEAN [] | want Q43_GATE_CLEAN [] -> ok",
+   "judged_object": "o297r_measured_object.json",
+   "summary": {
+    "claims_checked": 207,
+    "overall": "Q43_GATE_RED",
+    "findings": "169"
+   },
+   "verbatim_output_file": "gate_r3_on_receipt.txt",
+   "q50_scope_note": null,
+   "ledger_block_summary": "absent (block not inserted yet)",
+   "on_json_receipt": {
+    "rc": 3,
+    "summary": {
+     "claims_checked": 207,
+     "overall": "Q43_GATE_RED",
+     "findings": "169"
+    },
+    "scope": "RULER_OUT_OF_SCOPE per Q50=1 (issuecomment-5829176662, COMMANDER_RELAYED) -- a number inside a machine-generated table is not prose written for a human",
+    "verbatim_output_file": "gate_r3_on_receipt.txt"
+   }
+  },
+  {
+   "script": "claim_coordinate_check_r4b.py",
+   "what_it_judges": "Q43 claim-coordinate, the successor the arbiter shipped after this order was written",
+   "expected_blob40": "efa6b7a383e094e2ede89f5dd8565b12feed0171",
+   "present_locally": true,
+   "bytes": 10862,
+   "local_sha1_matches_expected": true,
+   "selftest_rc": 0,
+   "selftest_tail": "s\": 1, \"findings\": [ \"NUMBER_WITHOUT_COORDINATE\" ], \"exempt\": {} } ] }",
+   "judged_object": "o297r_measured_object.json",
+   "summary": {
+    "claims_checked": 163,
+    "exempt": "{\"YEAR\": 21, \"HTTP_STATUS\": 10, \"IDENTIFIER_PART\": 13}",
+    "overall": "Q43_GATE_RED",
+    "findings": "118"
+   },
+   "verbatim_output_file": "gate_r4b_on_receipt.txt",
+   "q50_scope_note": "machine-generated tables are RULER_OUT_OF_SCOPE for this gauge, per issuecomment-5829176662",
+   "ledger_block_summary": "absent (block not inserted yet)",
+   "on_json_receipt": {
+    "rc": 3,
+    "summary": {
+     "claims_checked": 163,
+     "exempt": "{\"YEAR\": 21, \"HTTP_STATUS\": 10, \"IDENTIFIER_PART\": 13}",
+     "overall": "Q43_GATE_RED",
+     "findings": "118"
+    },
+    "scope": "RULER_OUT_OF_SCOPE per Q50=1 (issuecomment-5829176662, COMMANDER_RELAYED) -- a number inside a machine-generated table is not prose written for a human",
+    "verbatim_output_file": "gate_r4b_on_receipt.txt"
+   }
+  }
+ ]
+}
