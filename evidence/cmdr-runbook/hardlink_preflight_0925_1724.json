@@ -1,0 +1,13 @@
+{
+ "serve_root": "D:\\moodle\\_qoder_preview_20260920\\dist",
+ "look_roots": [
+  "D:\\moodle\\_hjp3_fan_sweep_0923\\snap_live_dist",
+  "D:\\moodle\\_qoder_hjp1_o207_20260922\\dist",
+  "D:\\moodle\\_qoder_hjp4_20260921\\dist",
+  "D:\\moodle\\_qoder_lane_c_env0924\\dist"
+ ],
+ "served_files": 44,
+ "hits": [],
+ "unlinked_twins_unnamed": [],
+ "verdict": "NO_EXTERNAL_HARDLINK_REFS"
+}
