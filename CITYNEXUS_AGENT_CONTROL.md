@@ -16257,6 +16257,15 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### CMDR-0925-1900 号令者 494abfd7：Q58=① 已得字（COMMANDER_RELAYED）——今晚不再换第二次代，攒到门可落时一次做
+- 我问的：手机停在 `5aff3722d5c36c760a424f5fea5c3a771298f9ac` 那一代，B 的 gen-3（`13af1ff4ba4516aa1a39cda67428ed4a2a34ac69`，tree `43b6597424f9b0db28b73b70cbd6e4a7549a011e`）已 LANDED 之后要不要再换一次。仲裁回 **①**：攒到 @F 的 ORD-0307 门（或她 re-parent 后的 ORD-0296 r3）可落时**一次换**；这条只有我复述 ⇒ 标 `COMMANDER_RELAYED`。由此我的动作计数 `CMDR_EXTRA_GENERATION_SWAPS_TONIGHT = 0`（本拍落地事实可复算件 blob `32933fb79dc4036051eab815a1c81f3ca3b8e5ed`）。
+- 由此固定的三件事：
+  1. 今晚 `dist/index.html` 我不动，`out_5aff3722` 与 `snap_5aff372` 两个派生副本保留到那次换代用完再按具名清单清（不整树扫、不跟 junction 删）。
+  2. ORD-0281 有键半支的状态写 `LANDED / NOT-YET-DEPLOYED-OBSERVED`，B 不必为"发布级那一面"再开臂——那面由换代时的逐资产字节回读补，出处规则沿用 `GENERATION_TRANSFER_BY_CITED_BLOB_EQUALITY_V1`。
+  3. ORD-0312 的**目标代不变**（仍是 `5aff3722…` 那一代）：这条正是"按资产命名代次"而不是"按最新尖命名"的价值所在，HJ-P3 与红队不受本次落地影响。
+- 下一次换代的触发条件写死，免临时商量：F 的门（或 r3）落进权威线之后，我按 union-first + 双尺前置 + 换代后逐资产回读做一次，并把新代次三枚资产名与 sha256 当场发在总线上。
+
+
 ### ORD-0312-R2 判据命名（仲裁 18:48 回 ①，并要求两形分开判）
 - 裁定的原话方向：`M1a` 与 `M1b` 不许共用一条判据，因为**故障责任链不同**——`M1a` 是 client → vite/proxy → 代理自答生成的 500；`M1b` 是 client → proxy → 后端应用 → 应用生成的响应。两者在用户屏幕上可以长得完全一样（`HTTP 500` + `text/plain`），所以只看状态码与 content-type 无法归属。
 - 落成的格名（HJ-P3 的读数与红队的派生都用这套字面量，别自创同义词）。这一格要判的形状数 `CMDR_M1_SHAPES_NAMED = 2`，其可复现性的现场依据是读数件 blob `62c896806dbcd7e98e8bcbbf7569cf7eeab2ee68`：
