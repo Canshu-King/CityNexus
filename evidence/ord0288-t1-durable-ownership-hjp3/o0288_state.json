@@ -1,0 +1,39 @@
+{
+ "measured_on": "dc964086c9d412573ac19d70b24b30e6c3ee6168",
+ "measured_on_how_read": "git ls-remote refs/heads/mirror/integration-frontend-apple-pass1 re-read 2026-09-25T16:16:59+0800; backend exported with git archive",
+ "seed": {
+  "places_after": 16,
+  "demo_places": 0,
+  "seeded_by_this_call": true
+ },
+ "seed_rc": 0,
+ "db": "D:\\moodle\\_hjp3_0288t1_0925\\t1.s3db",
+ "backends": [
+  {
+   "tag": "A",
+   "pid": 37392,
+   "port": 8611,
+   "tree": "D:\\moodle\\_hjp3_0288t1_0925\\backend",
+   "db": "D:\\moodle\\_hjp3_0288t1_0925\\t1.s3db",
+   "listening": true,
+   "exited": false,
+   "cmdline_at_start": "D:/moodle/CityNexus/.venv/Scripts/python.exe -m uvicorn app.main:app --host 127.0.0.1 --port 8611 --log-level info"
+  },
+  {
+   "tag": "B",
+   "pid": 44668,
+   "port": 8612,
+   "tree": "D:\\moodle\\_hjp3_0288t1_0925\\backend",
+   "db": "D:\\moodle\\_hjp3_0288t1_0925\\t1.s3db",
+   "listening": true,
+   "exited": false,
+   "cmdline_at_start": "D:/moodle/CityNexus/.venv/Scripts/python.exe -m uvicorn app.main:app --host 127.0.0.1 --port 8612 --log-level info"
+  }
+ ],
+ "both_processes_share_one_file": true,
+ "hardlink_audit_pristine": {
+  "files_checked": 305,
+  "nlink_gt_1": [],
+  "verdict": "PRIVATE_COPY"
+ }
+}
