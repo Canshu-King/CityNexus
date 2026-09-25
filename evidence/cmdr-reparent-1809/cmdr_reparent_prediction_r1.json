@@ -1,0 +1,75 @@
+{
+ "schema": "CNX_CMDR_REPARENT_PREDICTION_V1",
+ "at_local": "2026-09-25T18:10:13+00:00+08",
+ "tool": "live_checks\\derive_reparent_prediction_r1.py",
+ "tool_sha1": "ebaa6950f340716529eb3530c1e9079325622ecb",
+ "interpreter": "C:\\Users\\仓鼠王\\AppData\\Local\\Programs\\Python\\Python310\\python.exe",
+ "repo": "D:\\moodle\\CityNexus",
+ "commands": [
+  "git rev-parse <ref>",
+  "git rev-parse <ref>^",
+  "git merge-base refs/cmdr/tip <ref>",
+  "git merge-tree --write-tree refs/cmdr/tip <ref>",
+  "git diff --name-only --no-renames 5aff3722d5c36c760a424f5fea5c3a771298f9ac <predicted_tree>"
+ ],
+ "new_tip": "5aff3722d5c36c760a424f5fea5c3a771298f9ac",
+ "old_tip": "dc964086c9d412573ac19d70b24b30e6c3ee6168",
+ "tip_verified_locally": true,
+ "read_only_discipline": {
+  "refs_pushed": 0,
+  "authority_line_moved": 0,
+  "worktree_written": 0,
+  "note": "candidates live only in local refs/cmdr/*; nothing was merged, checked out or pushed"
+ },
+ "per_candidate": [
+  {
+   "order_and_lane": "ORD-0296 r3 / F",
+   "ref": "refs/cmdr/f_r3",
+   "remote_branch": "review/ord0296-write-deadline-f-r3",
+   "candidate_sha": "fd8eaf3644b66b44c44ce3178a7babac2bf561c0",
+   "cited_by_lane": "fd8eaf3644b66b44c44ce3178a7babac2bf561c0",
+   "sha_matches_citation": true,
+   "parent": "dc964086c9d412573ac19d70b24b30e6c3ee6168",
+   "parent_equals_old_tip": true,
+   "merge_base_with_new_tip": "dc964086c9d412573ac19d70b24b30e6c3ee6168",
+   "merge_base_equals_old_tip": true,
+   "ff_only_possible_onto_new_tip": true,
+   "merge_tree_exit": 0,
+   "predicted_tree": "14e84a31f28e60a73c9e9d95ded94f22d1724d77",
+   "conflict_section_lines": 0,
+   "conflict_section": [],
+   "predicted_tree_vs_tip_files": [
+    "backend/tests/test_qoder_ord0296_write_deadline.py"
+   ],
+   "predicted_tree_vs_tip_file_count": 1,
+   "stderr": null
+  },
+  {
+   "order_and_lane": "ORD-0281 gen-2 / B",
+   "ref": "refs/cmdr/b_gen2",
+   "remote_branch": "review/0281-write-deadline-keyed-b2",
+   "candidate_sha": "64d14b205263ec03fd4810b1b0877418495b87b0",
+   "cited_by_lane": "64d14b205263ec03fd4810b1b0877418495b87b0",
+   "sha_matches_citation": true,
+   "parent": "dc964086c9d412573ac19d70b24b30e6c3ee6168",
+   "parent_equals_old_tip": true,
+   "merge_base_with_new_tip": "dc964086c9d412573ac19d70b24b30e6c3ee6168",
+   "merge_base_equals_old_tip": true,
+   "ff_only_possible_onto_new_tip": true,
+   "merge_tree_exit": 0,
+   "predicted_tree": "826b647efdbb93e66e7672420afa333ea73508fc",
+   "conflict_section_lines": 0,
+   "conflict_section": [],
+   "predicted_tree_vs_tip_files": [
+    "frontend/e2e/qoder-ord0281-keyed-write-deadline.spec.ts",
+    "frontend/src/features/execution/LiveRecovery.tsx",
+    "frontend/src/features/recovery/V14RecoveryTruthPanel.tsx",
+    "frontend/src/lib/readDeadline.ts",
+    "frontend/src/lib/writeDeadline.ts"
+   ],
+   "predicted_tree_vs_tip_file_count": 5,
+   "stderr": null
+  }
+ ],
+ "scope": "This proves the merge shape only: it says the two candidates can be taken onto the new tip without conflict and which product files that would change. It does NOT certify either candidate's own gates - those belong to their lanes' re-run, and the levels to the verifier."
+}
