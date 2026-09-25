@@ -1,0 +1,69 @@
+{
+ "schema": "CNX_ORD0325_FOLLOWUP_READINGS_V1",
+ "how": "每条行号都来自 git grep -n <尖> 与 git show <落地 commit>，不是我照账本抄",
+ "facts": {
+  "tip_now": "5d7335721106c20092dd4d90181bb99accd0a32b",
+  "ord0325_landing": "c1bea4c20ea8cd5f1cc5c9d87053c005b2a24400",
+  "landing_is_ancestor_of_tip": true,
+  "v8_hunks_touched_by_my_landing": [
+   17,
+   85,
+   154,
+   193,
+   274,
+   530,
+   963,
+   1092,
+   1626
+  ],
+  "my_landing_diff_lines_matching_map_or_gesture_words": {
+   "count": 3,
+   "lines": [
+    "+  await choose.scrollIntoViewIfNeeded();",
+    "+  await target.scrollIntoViewIfNeeded();",
+    "+  await retry.scrollIntoViewIfNeeded();"
+   ]
+  },
+  "gesture_spec_old_name_mentions": [
+   {
+    "line": 20,
+    "kind": "注释/字段",
+    "text": "* This replaces `ord0104-one-finger-on-the-map-scrolls-the-page`, whose criterion (\"a one-finger swipe"
+   },
+   {
+    "line": 417,
+    "kind": "注释/字段",
+    "text": "replaces: \"ord0104-one-finger-on-the-map-scrolls-the-page (criterion reversed by ORD-0134 ②)\","
+   }
+  ],
+  "gesture_spec_test_fail_carriers": 0,
+  "gesture_spec_test_nodes": [
+   "frontend/e2e/qoder-map-gesture-ownership.spec.ts:146 :: test(\"ord0134-map-gesture-ownership — 拖地图地图动、拖页面页面动，各不抢对方的手势"
+  ],
+  "sheet_busy_declare": [
+   "frontend/src/features/planning/PlanWithAiSheet.tsx:379 :: const [busy, setBusy] = useState(false);"
+  ],
+  "sheet_busy_writes": [
+   "frontend/src/features/planning/PlanWithAiSheet.tsx:526 :: setBusy(true);",
+   "frontend/src/features/planning/PlanWithAiSheet.tsx:837 :: setBusy(false);"
+  ],
+  "sheet_reentrance_guard": [
+   "frontend/src/features/planning/PlanWithAiSheet.tsx:513 :: if (runningRef.current) return;"
+  ],
+  "sheet_single_release": [
+   "frontend/src/features/planning/PlanWithAiSheet.tsx:836 :: runningRef.current = false;"
+  ],
+  "sheet_inFlightRef_hits": 0,
+  "inFlightRef_files_on_line": "NONE",
+  "candidate_db6ac1d_is_ancestor_of_tip": false,
+  "guard_author_commits": [
+   "dc690d74 2026-09-23 13:02:34 +0800 fix(frontend): refuse the second tap synchronously, and give the summary a finger-sized target (ORD-0246, ORD-0247)"
+  ],
+  "same_tick_gate_nodes": [
+   "frontend/e2e/qoder-same-tick-double-tap-plans-once.spec.ts:130 :: test(\"ord0246-1-a-same-tick-double-tap-creates-one-run-and-one-row — 同",
+   "frontend/e2e/qoder-same-tick-double-tap-plans-once.spec.ts:174 :: test(\"ord0246-2-the-guard-is-one-shot-a-settled-run-does-not-block-the",
+   "frontend/e2e/qoder-same-tick-double-tap-plans-once.spec.ts:232 :: test(\"ord0246-3-the-refused-click-is-silent-and-does-not-hurt-the-run "
+  ],
+  "e2e_files_naming_0266_on_the_line": []
+ }
+}
