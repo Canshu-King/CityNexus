@@ -1,0 +1,4 @@
+serve=D:\moodle\_qoder_preview_20260920\dist  index bytes=1200  refs=4 -> /assets/index-CtuiCkKf.js, /assets/index-I45CQek8.css, /favicon.svg, /manifest.webmanifest
+
+look_roots_passed_in=0 roots_actually_measured=0 white_page_waiting=0
+NOT_MEASURED: no --look root with a readable index.html -- this is NOT a pass. (r1 exited 0 here and printed ALL_SELF_REFERENTIAL over zero roots examined)
