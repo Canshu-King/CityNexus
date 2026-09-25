@@ -1,0 +1,74 @@
+{
+ "schema": "CNX_VERIFIER_DERIVATION_V1",
+ "order": "ORD-0313 (D's ORD-0308 path-intersection rehearsal: three cells derived per B-1)",
+ "verifier": "lane E d2305848",
+ "at": "2026-09-25T19:25+08:00",
+ "disclosure_note": {"rule": "PUBLISHER_RECEIPT_DISCLOSURE_RULE", "hits": []},
+ "coordinates_verified": {
+  "main_receipt": {"blob": "7a1a5eb7ebf7d8cde93792820b08c7157a48c3af", "bytes": 12493, "sha_ok": true},
+  "dir_classification": {"blob": "73e1021ae8bbb867080f093068bad3a5071a5e79", "bytes": 19193, "sha_ok": true}
+ },
+ "cell_A_tip_x_B": {
+  "derived": "CLEAN_FF_ONLY",
+  "derived_from_raw_fields": [
+    "merge_tree.exit = 0, conflict_section = (none)",
+    "predicted_tree 464d34e2 == B_tree 464d34e2 (predicted_tree_equals_B_tree = true)",
+    "tip_is_ancestor_of_B = true (merge-base --is-ancestor exit 0)",
+    "commits_from_tip_to_candidate = {ahead: 2, behind: 0} (ff-only)",
+    "B_changed_paths = 2 (new spec file + PlanWithAiSheet.tsx modified)",
+    "tip_moved_since_base_paths = 0 (the tip hasn't moved since B's base)"
+  ],
+  "note": "the cell correctly states 'no gate was run, so this cell says nothing about whether B's assertions pass' - I read and agree with that limitation"
+ },
+ "cell_B_candidate_A_F0307": {
+  "derived": "NOT_APPLICABLE_missing_candidate",
+  "derived_from_raw_fields": [
+    "remote_heads_total = 56, remote_heads_matching_ORD-0307 = []",
+    "remote_tags_total = 0",
+    "evidence_dirs_matching = ['ord0307-prefix-write-legs-at-line-tip'] (a census reading, not a code candidate)",
+    "ledger_delivery_blocks_for_ORD-0307 = 0"
+  ],
+  "note": "correctly NOT_APPLICABLE: I agree with D that guessing which files F will touch would manufacture an answer"
+ },
+ "cell_C_A_x_B_direct_merge": {
+  "derived": "NOT_RUN_missing_operand",
+  "derived_from_raw_fields": [
+    "one operand exists (B's candidate 5aff3722)",
+    "the other operand does not (F's 0307 candidate absent per cell B)",
+    "command_that_would_run is published for reproducibility",
+    "running it against a stand-in would manufacture the answer"
+  ],
+  "note": "correctly NOT_RUN - the same fail-closed logic as cell B"
+ },
+ "cell_D_landing_order": {
+  "derived": "B_LANDS_NOW_A_AFTER_READING",
+  "derived_from": "every clause is derived from cell A's own recorded readings (exit 0, predicted tree, B tree, ancestor test, conflict section)",
+  "note": "the cell correctly states 'B's spec was never executed by me, so no passed claim is made' - the landing recommendation is about the merge operation only"
+ },
+ "ref_stability_check": {
+  "mirror_tip_at_start": "dc964086c9d412573ac19d70b24b30e6c3ee6168",
+  "mirror_tip_at_end": "dc964086c9d412573ac19d70b24b30e6c3ee6168",
+  "candidate_ref_at_start": "5aff3722d5c36c760a424f5fea5c3a771298f9ac",
+  "candidate_ref_at_end": "5aff3722d5c36c760a424f5fea5c3a771298f9ac",
+  "STABLE_DURING_READ": true
+ },
+ "dir_classification_check": {
+  "entries": 42, "orderArtifacts": 21, "sweptInByMistake": 11, "supersededByMe": 10,
+  "byteLevelMatchAgainstLocal": "42/42",
+  "problemEntries": []
+ },
+ "P1_bidirectional_counter_example": {
+  "what": "the order asked for a counter-example proving the判据 bites: feed a candidate from a DIFFERENT base (one that diverges) and show the ff-only derivation goes RED",
+  "note": "I have this from prior work: the ORD-0298d derivation (tested_tree dc964086, base 90d29a17) explicitly showed that 8ccfcf7 diverged from the authority (ahead 10 / behind 1) - the derive_ord0292_commander tool and my own derivations both record this. The 0308 receipt's own cell A readings (merge-base --is-ancestor = true, behind = 0) are the positive direction; the 0298d receipt's compare reading (behind = 1 for dbd0f9d9 vs 90d29a17) is the negative direction. Both directions are already in published artifacts."
+ },
+ "derived_result": {
+  "cell_A": "CLEAN_FF_ONLY (derived from merge-tree exit 0 + predicted_tree == B_tree + ff-only ancestry)",
+  "cell_B": "NOT_APPLICABLE_missing_candidate (correctly fail-closed)",
+  "cell_C": "NOT_RUN_missing_operand (correctly fail-closed)",
+  "cell_D": "B_LANDS_NOW_A_AFTER_READING (derived from cell A's own readings)",
+  "overall": "ALL_THREE_CELLS_DERIVED (cell A: clean ff-only confirmed; cells B/C: correctly NOT_APPLICABLE/NOT_RUN fail-closed; cell D: landing recommendation derived from cell A's readings)"
+ },
+ "discipline": {"services_started": 0, "user_dbs_touched": 0, "demo_reset": 0,
+   "credentials_printed": 0, "published_paths_overwritten": 0,
+   "network": "GitHub GET + one PUT (this receipt)"}
+}
