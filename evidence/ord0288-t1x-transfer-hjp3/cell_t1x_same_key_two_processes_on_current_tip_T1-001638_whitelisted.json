@@ -1,0 +1,119 @@
+{
+ "arm": "t1x_same_key_two_processes_on_current_tip",
+ "run_id": "T1-001638",
+ "measured_on": "2344145ce6342b6ac32ac4d0955c0f524d8c9320",
+ "journey_id": "473c1bd6-7eae-40e4-bc04-96114a369db8",
+ "processes": [
+  {
+   "tag": "A",
+   "pid": 6940,
+   "port": 8621,
+   "tree": "D:\\moodle\\_hjp3_0288t1x_0926\\backend",
+   "db": "D:\\moodle\\_hjp3_0288t1x_0926\\t1x.s3db",
+   "listening": true,
+   "exited": false,
+   "cmdline_at_start": "D:/moodle/CityNexus/.venv/Scripts/python.exe -m uvicorn app.main:app --host 127.0.0.1 --port 8621 --log-level info"
+  },
+  {
+   "tag": "B",
+   "pid": 53760,
+   "port": 8622,
+   "tree": "D:\\moodle\\_hjp3_0288t1x_0926\\backend",
+   "db": "D:\\moodle\\_hjp3_0288t1x_0926\\t1x.s3db",
+   "listening": true,
+   "exited": false,
+   "cmdline_at_start": "D:/moodle/CityNexus/.venv/Scripts/python.exe -m uvicorn app.main:app --host 127.0.0.1 --port 8622 --log-level info"
+  }
+ ],
+ "steps": [
+  {
+   "intent": "first send on process A",
+   "response": {
+    "url": "http://127.0.0.1:8621/api/v1/journeys/473c1bd6-7eae-40e4-bc04-96114a369db8/plans/generate",
+    "method": "POST",
+    "request_body": {
+     "candidate_count": 3
+    },
+    "sent_headers": {
+     "Idempotency-Key": "ord0288-t1x-001638"
+    },
+    "status": 422,
+    "content_type": "application/json",
+    "bytes": 1443,
+    "body_sha256_64_hex": "b0505a6ca0b4f957574ab61903612d088b1fbd3f1e37f3aedd8bf1ffc95f0e04",
+    "response_bytes": 1443,
+    "response_received": true,
+    "elapsed_ms": 19,
+    "at": "00:16:38",
+    "http_error": "HTTP Error 422: Unprocessable Entity"
+   }
+  },
+  {
+   "intent": "same key same body on process B (a different OS process, one shared file)",
+   "response": {
+    "url": "http://127.0.0.1:8622/api/v1/journeys/473c1bd6-7eae-40e4-bc04-96114a369db8/plans/generate",
+    "method": "POST",
+    "request_body": {
+     "candidate_count": 3
+    },
+    "sent_headers": {
+     "Idempotency-Key": "ord0288-t1x-001638"
+    },
+    "status": 422,
+    "content_type": "application/json",
+    "bytes": 1443,
+    "body_sha256_64_hex": "0af39f3d8406b1d80ddec2a0e618df9ffefc9feff31a43910af38f039a15784a",
+    "response_bytes": 1443,
+    "response_received": true,
+    "elapsed_ms": 17,
+    "at": "00:16:38",
+    "http_error": "HTTP Error 422: Unprocessable Entity"
+   },
+   "replay_identical_payload": false,
+   "same_status": true
+  }
+ ],
+ "extra": {
+  "key": "ord0288-t1x-001638",
+  "expected_per_the_arbiter": "observe durable ownership (no preset verdict)"
+ },
+ "durable_read_after": {
+  "connection_uri": "file:D:/moodle/_hjp3_0288t1x_0926/t1x.s3db?mode=ro",
+  "db_exists": true,
+  "idempotency_keys": [
+   {
+    "key": "plans.generate:ord0288-t1x-001638",
+    "operation": "plans.generate",
+    "request_hash_head": "{\"candidate_coun",
+    "response_status": 422,
+    "response_json_bytes": 1424,
+    "created_at": "2026-09-25T16:16:38.909503+00:00",
+    "expires_at": "2026-10-02T16:16:38.909503+00:00"
+   }
+  ],
+  "counts": {
+   "plan_versions": 0,
+   "journeys": 2,
+   "journey_missions": 0,
+   "audit_logs": 5,
+   "replan_proposals": 0
+  },
+  "total_idempotency_rows_all_keys": 1,
+  "names_the_store": "D:\\moodle\\_hjp3_0288t1x_0926\\t1x.s3db",
+  "this_arms_keys": [
+   "ord0288-t1x-001638",
+   "ord0288-t1x-b-001638"
+  ],
+  "rows_for_this_arms_keys": [
+   {
+    "key": "plans.generate:ord0288-t1x-001638",
+    "operation": "plans.generate",
+    "request_hash_head": "{\"candidate_coun",
+    "response_status": 422,
+    "response_json_bytes": 1424,
+    "created_at": "2026-09-25T16:16:38.909503+00:00",
+    "expires_at": "2026-10-02T16:16:38.909503+00:00"
+   }
+  ]
+ }
+}
