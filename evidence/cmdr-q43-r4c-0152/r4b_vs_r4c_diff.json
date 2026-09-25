@@ -1,0 +1,104 @@
+{
+ "schema": "CNX_CMDR_Q43_R4B_VS_R4C_DIFF_V1",
+ "lane": "commander 494abfd7",
+ "at_local": "2026-09-26T02:54:29+0800",
+ "ruler_r4b": "claim_coordinate_check_r4b.py",
+ "ruler_r4c_blob": "08f7d3249528b019d1c431770f662aeec91eb2f2",
+ "reason": "lane D e345b9d6 reported line-number lists landing in the PORT exemption bucket; reproduced here as a per-file differential",
+ "rows": [
+  {
+   "file": "_note_out.txt",
+   "bytes_on_disk": 4420,
+   "r4b": {
+    "claims": 2,
+    "exempt": {
+     "HTTP_STATUS": 3,
+     "PORT": 2
+    },
+    "overall": "Q43_GATE_GREEN",
+    "findings": 0
+   },
+   "r4c": {
+    "claims": 2,
+    "exempt": {
+     "HTTP_STATUS": 3,
+     "PORT": 2
+    },
+    "overall": "Q43_GATE_GREEN",
+    "findings": 0
+   },
+   "verdict_unchanged": true,
+   "claims_unchanged": true,
+   "bucket_delta": {
+    "HTTP_STATUS": 0,
+    "PORT": 0
+   }
+  },
+  {
+   "file": "p3_block",
+   "bytes_on_disk": 13456,
+   "r4b": {
+    "claims": 33,
+    "exempt": {
+     "YEAR": 2,
+     "PORT": 4,
+     "HTTP_STATUS": 4
+    },
+    "overall": "Q43_GATE_GREEN",
+    "findings": 0
+   },
+   "r4c": {
+    "claims": 33,
+    "exempt": {
+     "YEAR": 2,
+     "PORT": 3,
+     "LINE_REF": 1,
+     "HTTP_STATUS": 4
+    },
+    "overall": "Q43_GATE_GREEN",
+    "findings": 0
+   },
+   "verdict_unchanged": true,
+   "claims_unchanged": true,
+   "bucket_delta": {
+    "HTTP_STATUS": 0,
+    "LINE_REF": 1,
+    "YEAR": 0,
+    "PORT": -1
+   }
+  },
+  {
+   "file": "b5_block",
+   "bytes_on_disk": 7475,
+   "r4b": {
+    "claims": 13,
+    "exempt": {
+     "IDENTIFIER_PART": 2
+    },
+    "overall": "Q43_GATE_GREEN",
+    "findings": 0
+   },
+   "r4c": {
+    "claims": 13,
+    "exempt": {
+     "IDENTIFIER_PART": 2
+    },
+    "overall": "Q43_GATE_GREEN",
+    "findings": 0
+   },
+   "verdict_unchanged": true,
+   "claims_unchanged": true,
+   "bucket_delta": {
+    "IDENTIFIER_PART": 0
+   }
+  }
+ ],
+ "derived": {
+  "no_retroactive_finding_change": true,
+  "no_claim_count_change": true,
+  "line_ref_bucket_now_visible": true,
+  "n_files": 3
+ },
+ "claim_kind": "differential_measured",
+ "claimed_result": "3 files compared; verdicts unchanged=True; claims unchanged=True; LINE_REF visible=True"
+}
