@@ -1,0 +1,195 @@
+{
+ "batch": "batch3",
+ "stamped": "2026-09-25T15:59:27+0800",
+ "run_ids": [
+  "o297r-b3_primary-154949",
+  "o297r-b3_control_partial-155122",
+  "o297r-a_never_reconnects-155239",
+  "o297r-a_control_update_lands-155433"
+ ],
+ "why_superseded": "this batch is the batch that found the confound: with the covering element now named, the A arm's offline navigation is blocked by BUTTON.v8-primary-button (data-testid=plan-ai-submit, aria-disabled=true) inside DIV.v8-sheet-backdrop -- a plan-AI sheet my own walk left open. A modal sitting over the bottom bar is by design, so '0 of 3 destinations' would have described my leftover UI state and not the generation under test. The instrument now normalises that state before the outage and records it as a precondition; batch 4 is measured with it in place.",
+ "instrument_change": "added closeOpenSheet()/sheetState() before ctx.setOffline(true) on every P4 arm, phases.P4.precondition + ui_state_before_offline recorded, and the deriver treats a nav still covered at that moment as ARM_INVALID rather than as a product verdict",
+ "readings_of_these_rounds": [
+  {
+   "run_id": "o297r-b3_primary-154949",
+   "arm": "o297r-b3_primary-154949",
+   "offline_first_bodyChars": 651,
+   "offline_first_marker": "ORD-0297r-next",
+   "offline_first_executed": [
+    "/assets/index-jVHM43pf.js"
+   ],
+   "nav_steps": 3,
+   "nav_found": 3,
+   "nav_tapped": 3,
+   "nav_path_changed": 3,
+   "nav_hit_test_was_self": [
+    true,
+    true,
+    true
+   ],
+   "nav_disabled": [
+    false,
+    false,
+    false
+   ],
+   "nav_blocked_by": [],
+   "nav_bodyChars_after_each": [
+    114,
+    271,
+    334
+   ],
+   "reload_bodyChars": 91,
+   "reload_marker": "ORD-0297r-next",
+   "reload_executed": [
+    "/assets/index-jVHM43pf.js"
+   ],
+   "origin_html_at_js_urls": []
+  },
+  {
+   "run_id": "o297r-b3_control_partial-155122",
+   "arm": "o297r-b3_control_partial-155122",
+   "offline_first_bodyChars": 0,
+   "offline_first_marker": null,
+   "offline_first_executed": [
+    "/assets/index-jVHM43pf.js"
+   ],
+   "nav_steps": 0,
+   "nav_found": 0,
+   "nav_tapped": 0,
+   "nav_path_changed": 0,
+   "nav_hit_test_was_self": [],
+   "nav_disabled": [],
+   "nav_blocked_by": [],
+   "nav_bodyChars_after_each": [],
+   "reload_bodyChars": 0,
+   "reload_marker": null,
+   "reload_executed": [
+    "/assets/index-jVHM43pf.js"
+   ],
+   "origin_html_at_js_urls": []
+  },
+  {
+   "run_id": "o297r-a_never_reconnects-155239",
+   "arm": "o297r-a_never_reconnects-155239",
+   "offline_first_bodyChars": 789,
+   "offline_first_marker": null,
+   "offline_first_executed": [
+    "/assets/index--q2k569d.js"
+   ],
+   "nav_steps": 3,
+   "nav_found": 3,
+   "nav_tapped": 0,
+   "nav_path_changed": 0,
+   "nav_hit_test_was_self": [
+    false,
+    false,
+    false
+   ],
+   "nav_disabled": [
+    false,
+    false,
+    false
+   ],
+   "nav_blocked_by": [
+    [
+     "BUTTON",
+     "v8-primary-button",
+     null,
+     "开始规划",
+     null,
+     false
+    ],
+    [
+     "BUTTON",
+     "v8-primary-button",
+     null,
+     "开始规划",
+     null,
+     false
+    ],
+    [
+     "BUTTON",
+     "v8-primary-button",
+     null,
+     "开始规划",
+     null,
+     false
+    ]
+   ],
+   "nav_bodyChars_after_each": [
+    789,
+    789,
+    789
+   ],
+   "reload_bodyChars": 91,
+   "reload_marker": "ORD-0297r-next",
+   "reload_executed": [
+    "/assets/index-jVHM43pf.js"
+   ],
+   "origin_html_at_js_urls": []
+  },
+  {
+   "run_id": "o297r-a_control_update_lands-155433",
+   "artifact": "MISSING o297r_arm_o297r-a_control_update_lands-155433.json"
+  }
+ ],
+ "what_these_readings_are": "recomputed from these rounds' own artifacts at seal time so a superseded batch stays auditable; they are readings, not verdicts -- no cell was derived from them and neither ruler ran over them",
+ "instrument_that_produced_them": {
+  "per_run_fingerprints": [],
+  "all_runs_same_bytes": false,
+  "hash_of_the_file_at_seal_time_which_is_NOT_this_batch": "bafd7fd335568fd1ec34b86dd42f17a6f2ace643"
+ },
+ "moved_or_missing": {
+  "moved": [
+   "b2_o297r-a_control_update_lands-155433.json",
+   "b2_o297r-a_never_reconnects-155239.json",
+   "b2_o297r-b3_control_partial-155122.json",
+   "b2_o297r-b3_primary-154949.json",
+   "o297r_arm_o297r-a_control_update_lands-155433.json",
+   "o297r_arm_o297r-a_never_reconnects-155239.json",
+   "o297r_arm_o297r-b3_control_partial-155122.json",
+   "o297r_arm_o297r-b3_primary-154949.json",
+   "o297r_requests_o297r-a_control_update_lands-155433.jsonl",
+   "o297r_requests_o297r-a_never_reconnects-155239.jsonl",
+   "o297r_requests_o297r-b3_control_partial-155122.jsonl",
+   "o297r_requests_o297r-b3_primary-154949.jsonl",
+   "o297r_run_o297r-a_control_update_lands-155433.json",
+   "o297r_run_o297r-a_never_reconnects-155239.json",
+   "o297r_run_o297r-b3_control_partial-155122.json",
+   "o297r_run_o297r-b3_primary-154949.json",
+   "o297r_stdout_o297r-a_control_update_lands-155433.json",
+   "o297r_stdout_o297r-a_never_reconnects-155239.json",
+   "o297r_stdout_o297r-b3_control_partial-155122.json",
+   "o297r_stdout_o297r-b3_primary-154949.json"
+  ],
+  "not_present": [
+   "b2_o297r-a_control_update_lands-155433.json",
+   "o297r_arm_o297r-a_control_update_lands-155433.json",
+   "o297r_requests_o297r-a_control_update_lands-155433.jsonl",
+   "o297r_run_o297r-a_control_update_lands-155433.json",
+   "o297r_stdout_o297r-a_control_update_lands-155433.json"
+  ]
+ },
+ "folder_now_holds": [
+  "b2_o297r-a_never_reconnects-155239.json",
+  "b2_o297r-b3_control_partial-155122.json",
+  "b2_o297r-b3_primary-154949.json",
+  "o297r_arm_o297r-a_never_reconnects-155239.json",
+  "o297r_arm_o297r-b3_control_partial-155122.json",
+  "o297r_arm_o297r-b3_primary-154949.json",
+  "o297r_requests_o297r-a_never_reconnects-155239.jsonl",
+  "o297r_requests_o297r-b3_control_partial-155122.jsonl",
+  "o297r_requests_o297r-b3_primary-154949.jsonl",
+  "o297r_run_o297r-a_never_reconnects-155239.json",
+  "o297r_run_o297r-b3_control_partial-155122.json",
+  "o297r_run_o297r-b3_primary-154949.json",
+  "o297r_stdout_o297r-a_never_reconnects-155239.json",
+  "o297r_stdout_o297r-b3_control_partial-155122.json",
+  "o297r_stdout_o297r-b3_primary-154949.json"
+ ],
+ "field_provenance": {
+  "readings_of_these_rounds.origin_html_at_js_urls": "computed here from the round's own in-artifact 12-event sample of origin traffic, so an empty list in this note is NOT a claim that the origin served no HTML at a .js URL -- the full request log is a separate artifact and the judged receipt reads that one",
+  "instrument_that_produced_them": "the runner began fingerprinting the instrument file only from batch 4; an empty per-run list here means no fingerprint was taken at the time, not that the batch was inconsistent",
+  "stamped": "2026-09-25T16:07:04+0800"
+ }
+}
