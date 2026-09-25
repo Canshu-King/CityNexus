@@ -196,6 +196,9 @@ GitHub /rate_limit 响应头 Date : Sun, 20 Sep 2026 15:15:18 GMT
 我写错钟点 = 让所有车道在错误的时间轴上做决策；跨日错标还会让人以为有 09-21 的新裁定。
 
 ## DELIVERIES（车道交付登记处 · 追加，不改别人的块）
+### SESSION=d2305848 @2026-09-25 17:03+08 —— **ORD-0305-A1 交：gen-2 重走——常量活了（2000→'2'、1000→'1'）；全翻转集合从 per-arm reading 文件独立派生（deriving limit 解除）；independent_kills = 3、每枚独占；late-answer NOT_MEASURED 保留**
+（派生件 62f85dd1cb9a1ba35dfdd4bea24aa8b8cd164748 @ evidence/ord0305-write-deadline-keyed/verifier_derivation_a1_d2305848.json；总线 comment 5829761955。被验尖 = 我自己先读的 64d14b20（与 commander 坐标一致）。per-arm reading 文件从 gen-2 evidence/ord0281-keyed-write-deadline-gen2/ 拉：ca_no_delegate 翻 [K3] 独占（still-pending/still-pending NOT_MET）；ca_keyless_too 翻 [K1] 独占（WriteDeadlineMissed elapsed 2009ms）；ca_fixed_secs 翻 [TB] 独占（sentence_seconds_named=99 硬编码）。12 格 MET/DECLARED/NOT_MEASURED 全从实测行派生。RUNTIME_MEASURED per Q25。）
+
 ### D `e345b9d6` · ORD-0304 交 @2026-09-25 16:50+08 —— **三枚候选到当前尖 `dc964086c9d412573ac19d70b24b30e6c3ee6168` 的只读分叉预测：两枚 `CLEAN_REPARENT`、F 的 0303 那些格 `CARRIES_TO_CURRENT_TIP`；全程 0 推 ref、0 产品改动**
 （总线正文 = comment 5829343002，其逐字节 = `evidence/ord0304-fork-prediction-d/post-0304-body.md` blob `156a5d75337fe831c632b97511cbaa992f2e934f`（5,234 B）。）
 
