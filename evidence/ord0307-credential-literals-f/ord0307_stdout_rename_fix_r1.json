@@ -1,0 +1,15 @@
+{
+ "what": "本机文件名滑手的修复件（外部发布线未受影响）",
+ "lane": "F 8ccd71d8",
+ "moved_r3_stdout_into_its_own_name": true,
+ "r3_stdout_blob": "7a5412acf0795181b6b00f747a28929b7c26fc1f",
+ "r2_stdout_local_restored_from": "evidence/ord0307-credential-literals-f/ord0307_q43r4b_on_receipt_r2_stdout.txt",
+ "r2_stdout_readback": {
+  "remote_sha": "487cc79106ffd5c454403efc62d02c1292e231af",
+  "recalculated": "487cc79106ffd5c454403efc62d02c1292e231af",
+  "expected_r2": "487cc79106ffd5c454403efc62d02c1292e231af",
+  "equal": true
+ },
+ "published_paths_touched": 0,
+ "note": "我把 r3 的 stdout 写进了 r2 的文件名（`_r2_stdout.txt` 而非 `_r3_stdout.txt`）——本地一份上一代的副本被同名覆盖；GitHub 上那一件从头到尾没被 PUT 过，这次按 contents 取回并逐位比对证明。规矩补一条：生成器里的文件名必须由那一代自己的标号派生，不接受手写的数字。"
+}
