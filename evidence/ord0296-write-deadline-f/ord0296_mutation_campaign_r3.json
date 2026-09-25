@@ -1,0 +1,935 @@
+{
+ "schema": "CNX_ORD0296_TEN_ARM_CAMPAIGN_R3_V1",
+ "lane": "F 8ccd71d8",
+ "at_local": "2026-09-26T03:44:48+0800",
+ "what": "ORD-0296 门体十臂反突变战役 · 第 3 代：号令者 03:33 那块说尖动了，所以我不跟他争 blob 推理，直接把十臂在现读的尖上再跑一遍（配方仍从早上那批脚本 AST 取出）",
+ "supersedes": {
+  "r2": {
+   "path": "evidence/ord0296-write-deadline-f/ord0296_mutation_campaign_r2.json",
+   "blob": "1a150babea33fc80aa1ab4151c017823c30bac9c",
+   "generation_bound_to": "2344145ce6342b6ac32ac4d0955c0f524d8c9320",
+   "kept_on_shelf_untouched": true
+  },
+  "why_a_new_file_not_an_edit": "Q57 与'已发布路径 0 覆盖'：换代就出新文件名，旧件一字不动"
+ },
+ "measurement_scope": {
+  "scope": "backend 写期限门体 test_qoder_ord0296_write_deadline.py 的 10 臂击杀面（产品码只在快照里被改）",
+  "generation": "65df31df96cfb8a954f5feb36484710a883e1597",
+  "artifact": "evidence/ord0296-write-deadline-f/ord0296_mutation_campaign_r3.json",
+  "measurement_method": "git archive 65df31d 导出 backend/data/contracts/tools 到 snap_0296c_65df31d，D:/moodle/CityNexus/.venv/Scripts/python.exe 3.12.14 逐臂 3 轮 pytest（单变量字面替换 + py_compile + 逐臂字节还原回验），控制轮先跑；collect-only 分母 11 格"
+ },
+ "gate_file_blob_at_generation": "f3cf05e8fe75cf9322c6eddc1ae6ffbdea8d0f93",
+ "collected_cells": [
+  "test_G10_the_budget_belongs_to_one_request_not_one_connection",
+  "test_G11_importing_the_app_is_what_arms_the_door",
+  "test_G1_shipped_default_is_strictly_above_the_measured_busy_timeout",
+  "test_G2_door_is_RED_when_the_deadline_sits_at_or_below_busy_timeout",
+  "test_G3_door_is_GREEN_one_millisecond_above_it",
+  "test_G4_the_lock_wait_is_written_in_exactly_one_place",
+  "test_G5_a_scenario_override_moves_one_route_and_names_every_other_case",
+  "test_G6_lost_lock_after_the_budget_answers_under_its_own_name",
+  "test_G7_lost_lock_inside_the_budget_stays_todays_error",
+  "test_G8_the_answer_is_registered_and_carries_the_servers_own_words",
+  "test_G9_the_normal_write_path_is_unchanged"
+ ],
+ "preflight_anchor_check": [
+  {
+   "arm": "M1_reachability_is_not_strict",
+   "anchor_hits_at_this_generation": 1,
+   "file": "app/db/write_deadline.py",
+   "named_nodes_absent_at_this_generation": []
+  },
+  {
+   "arm": "M2_no_named_conversion",
+   "anchor_hits_at_this_generation": 1,
+   "file": "app/db/write_deadline.py",
+   "named_nodes_absent_at_this_generation": []
+  },
+  {
+   "arm": "M3_always_renames_the_lock_failure",
+   "anchor_hits_at_this_generation": 1,
+   "file": "app/db/write_deadline.py",
+   "named_nodes_absent_at_this_generation": []
+  },
+  {
+   "arm": "M4_startup_door_disabled",
+   "anchor_hits_at_this_generation": 1,
+   "file": "app/db/write_deadline.py",
+   "named_nodes_absent_at_this_generation": []
+  },
+  {
+   "arm": "M5_lock_wait_copied_a_second_time",
+   "anchor_hits_at_this_generation": 1,
+   "file": "app/db/session.py",
+   "named_nodes_absent_at_this_generation": []
+  },
+  {
+   "arm": "M6_scenario_override_ignored",
+   "anchor_hits_at_this_generation": 1,
+   "file": "app/db/write_deadline.py",
+   "named_nodes_absent_at_this_generation": []
+  },
+  {
+   "arm": "M7_deadline_answer_status_is_500",
+   "anchor_hits_at_this_generation": 1,
+   "file": "app/main.py",
+   "named_nodes_absent_at_this_generation": []
+  },
+  {
+   "arm": "M8_effective_cap_ignores_the_budget",
+   "anchor_hits_at_this_generation": 1,
+   "file": "app/db/write_deadline.py",
+   "named_nodes_absent_at_this_generation": []
+  },
+  {
+   "arm": "M9_budget_shared_across_scenarios",
+   "anchor_hits_at_this_generation": 1,
+   "file": "app/db/write_deadline.py",
+   "named_nodes_absent_at_this_generation": []
+  },
+  {
+   "arm": "M10_malformed_override_crashes_instead_of_naming",
+   "anchor_hits_at_this_generation": 1,
+   "file": "app/db/write_deadline.py",
+   "named_nodes_absent_at_this_generation": []
+  }
+ ],
+ "control_rounds": [
+  {
+   "round": "control1",
+   "rc": 0,
+   "seconds": 4.05,
+   "red": [],
+   "summary_line": "11 passed, 2 warnings in 3.30s"
+  },
+  {
+   "round": "control2",
+   "rc": 0,
+   "seconds": 4.54,
+   "red": [],
+   "summary_line": "11 passed, 2 warnings in 3.61s"
+  },
+  {
+   "round": "control3",
+   "rc": 0,
+   "seconds": 4.22,
+   "red": [],
+   "summary_line": "11 passed, 2 warnings in 3.37s"
+  }
+ ],
+ "campaign_valid": true,
+ "arms": [
+  {
+   "arm": "M1_reachability_is_not_strict",
+   "file": "app/db/write_deadline.py",
+   "why": "把「严格大于」松成「大于等于」 ⇒ 相等那一档必须被判成不可达，门要当场红",
+   "hunks": 1,
+   "py_compile_ok": true,
+   "before_blob_40": "ba2393c3da30d6941587869be26cd303389b7f46",
+   "after_blob_40": "da4e10f3989d833303af4ed7bcc0883adfe38119",
+   "shape": "h1:f91abcd24b",
+   "tested_tree_sha40": "65df31df96cfb8a954f5feb36484710a883e1597",
+   "triples": [
+    {
+     "sha": "65df31df96cfb8a954f5feb36484710a883e1597",
+     "file_blob_before": "ba2393c3da30d6941587869be26cd303389b7f46",
+     "file_blob_after": "da4e10f3989d833303af4ed7bcc0883adfe38119",
+     "nodeid": "tests/test_qoder_ord0296_write_deadline.py::test_G2_door_is_RED_when_the_deadline_sits_at_or_below_busy_timeout",
+     "shape": "h1:f91abcd24b"
+    }
+   ],
+   "per_round": [
+    {
+     "round": 1,
+     "rc": 1,
+     "seconds": 4.34,
+     "red": [
+      "test_G2_door_is_RED_when_the_deadline_sits_at_or_below_busy_timeout"
+     ],
+     "summary_line": "1 failed, 10 passed, 2 warnings in 3.53s"
+    },
+    {
+     "round": 2,
+     "rc": 1,
+     "seconds": 4.43,
+     "red": [
+      "test_G2_door_is_RED_when_the_deadline_sits_at_or_below_busy_timeout"
+     ],
+     "summary_line": "1 failed, 10 passed, 2 warnings in 3.55s"
+    },
+    {
+     "round": 3,
+     "rc": 1,
+     "seconds": 4.37,
+     "red": [
+      "test_G2_door_is_RED_when_the_deadline_sits_at_or_below_busy_timeout"
+     ],
+     "summary_line": "1 failed, 10 passed, 2 warnings in 3.60s"
+    }
+   ],
+   "always_red_all_rounds": true,
+   "expected_red": [
+    "test_G2_door_is_RED_when_the_deadline_sits_at_or_below_busy_timeout"
+   ],
+   "carriers_removed": [
+    "test_G2_door_is_RED_when_the_deadline_sits_at_or_below_busy_timeout"
+   ],
+   "collateral_carriers_added_after_r1_recipe": [],
+   "unexpected_red": [],
+   "red_union_over_rounds": [
+    "test_G2_door_is_RED_when_the_deadline_sits_at_or_below_busy_timeout"
+   ],
+   "expected_green_stayed_green": true,
+   "restored_byte_exact": true,
+   "claimed_result": "NAMED_RED_EVERY_ROUND（点名的 1 格 1/3 轮恒红；意外红 0；意外绿 0）",
+   "derived_result": null
+  },
+  {
+   "arm": "M2_no_named_conversion",
+   "file": "app/db/write_deadline.py",
+   "why": "删掉超期那一支的改名 ⇒ 用户仍只能拿到没有内容的 500，G6 必红",
+   "hunks": 1,
+   "py_compile_ok": true,
+   "before_blob_40": "ba2393c3da30d6941587869be26cd303389b7f46",
+   "after_blob_40": "3c604dd7d3e9f518a59b7f03fe2ea3858ba81984",
+   "shape": "h1:3647c5a4c4",
+   "tested_tree_sha40": "65df31df96cfb8a954f5feb36484710a883e1597",
+   "triples": [
+    {
+     "sha": "65df31df96cfb8a954f5feb36484710a883e1597",
+     "file_blob_before": "ba2393c3da30d6941587869be26cd303389b7f46",
+     "file_blob_after": "3c604dd7d3e9f518a59b7f03fe2ea3858ba81984",
+     "nodeid": "tests/test_qoder_ord0296_write_deadline.py::test_G6_lost_lock_after_the_budget_answers_under_its_own_name",
+     "shape": "h1:3647c5a4c4"
+    }
+   ],
+   "per_round": [
+    {
+     "round": 1,
+     "rc": 1,
+     "seconds": 4.87,
+     "red": [
+      "test_G6_lost_lock_after_the_budget_answers_under_its_own_name"
+     ],
+     "summary_line": "1 failed, 10 passed, 2 warnings in 3.92s"
+    },
+    {
+     "round": 2,
+     "rc": 1,
+     "seconds": 4.67,
+     "red": [
+      "test_G6_lost_lock_after_the_budget_answers_under_its_own_name"
+     ],
+     "summary_line": "1 failed, 10 passed, 2 warnings in 3.74s"
+    },
+    {
+     "round": 3,
+     "rc": 1,
+     "seconds": 4.56,
+     "red": [
+      "test_G6_lost_lock_after_the_budget_answers_under_its_own_name"
+     ],
+     "summary_line": "1 failed, 10 passed, 2 warnings in 3.66s"
+    }
+   ],
+   "always_red_all_rounds": true,
+   "expected_red": [
+    "test_G6_lost_lock_after_the_budget_answers_under_its_own_name"
+   ],
+   "carriers_removed": [
+    "test_G6_lost_lock_after_the_budget_answers_under_its_own_name"
+   ],
+   "collateral_carriers_added_after_r1_recipe": [],
+   "unexpected_red": [],
+   "red_union_over_rounds": [
+    "test_G6_lost_lock_after_the_budget_answers_under_its_own_name"
+   ],
+   "expected_green_stayed_green": true,
+   "restored_byte_exact": true,
+   "claimed_result": "NAMED_RED_EVERY_ROUND（点名的 1 格 1/3 轮恒红；意外红 0；意外绿 0）",
+   "derived_result": null
+  },
+  {
+   "arm": "M3_always_renames_the_lock_failure",
+   "file": "app/db/write_deadline.py",
+   "why": "不看预算一律改名 ⇒ 今天的错误被冒充成「期限」，G7 必红（这一臂是 G6 的反向对照）",
+   "hunks": 1,
+   "py_compile_ok": true,
+   "before_blob_40": "ba2393c3da30d6941587869be26cd303389b7f46",
+   "after_blob_40": "231c30ecd7a194959c33957bfc4ef4148e896bb0",
+   "shape": "h1:f882f021e9",
+   "tested_tree_sha40": "65df31df96cfb8a954f5feb36484710a883e1597",
+   "triples": [
+    {
+     "sha": "65df31df96cfb8a954f5feb36484710a883e1597",
+     "file_blob_before": "ba2393c3da30d6941587869be26cd303389b7f46",
+     "file_blob_after": "231c30ecd7a194959c33957bfc4ef4148e896bb0",
+     "nodeid": "tests/test_qoder_ord0296_write_deadline.py::test_G7_lost_lock_inside_the_budget_stays_todays_error",
+     "shape": "h1:f882f021e9"
+    }
+   ],
+   "per_round": [
+    {
+     "round": 1,
+     "rc": 1,
+     "seconds": 4.53,
+     "red": [
+      "test_G7_lost_lock_inside_the_budget_stays_todays_error"
+     ],
+     "summary_line": "1 failed, 10 passed, 2 warnings in 3.62s"
+    },
+    {
+     "round": 2,
+     "rc": 1,
+     "seconds": 4.43,
+     "red": [
+      "test_G7_lost_lock_inside_the_budget_stays_todays_error"
+     ],
+     "summary_line": "1 failed, 10 passed, 2 warnings in 3.52s"
+    },
+    {
+     "round": 3,
+     "rc": 1,
+     "seconds": 4.57,
+     "red": [
+      "test_G7_lost_lock_inside_the_budget_stays_todays_error"
+     ],
+     "summary_line": "1 failed, 10 passed, 2 warnings in 3.56s"
+    }
+   ],
+   "always_red_all_rounds": true,
+   "expected_red": [
+    "test_G7_lost_lock_inside_the_budget_stays_todays_error"
+   ],
+   "carriers_removed": [
+    "test_G7_lost_lock_inside_the_budget_stays_todays_error"
+   ],
+   "collateral_carriers_added_after_r1_recipe": [],
+   "unexpected_red": [],
+   "red_union_over_rounds": [
+    "test_G7_lost_lock_inside_the_budget_stays_todays_error"
+   ],
+   "expected_green_stayed_green": true,
+   "restored_byte_exact": true,
+   "claimed_result": "NAMED_RED_EVERY_ROUND（点名的 1 格 1/3 轮恒红；意外红 0；意外绿 0）",
+   "derived_result": null
+  },
+  {
+   "arm": "M4_startup_door_disabled",
+   "file": "app/db/write_deadline.py",
+   "why": "门只算不拦 ⇒ 不合规的配置能启动，G2 的红就没人接住",
+   "hunks": 1,
+   "py_compile_ok": true,
+   "before_blob_40": "ba2393c3da30d6941587869be26cd303389b7f46",
+   "after_blob_40": "38b86a7c7efd1c7c309e6745cb8777a594e4d531",
+   "shape": "h1:8a27965c4b",
+   "tested_tree_sha40": "65df31df96cfb8a954f5feb36484710a883e1597",
+   "triples": [
+    {
+     "sha": "65df31df96cfb8a954f5feb36484710a883e1597",
+     "file_blob_before": "ba2393c3da30d6941587869be26cd303389b7f46",
+     "file_blob_after": "38b86a7c7efd1c7c309e6745cb8777a594e4d531",
+     "nodeid": "tests/test_qoder_ord0296_write_deadline.py::test_G2_door_is_RED_when_the_deadline_sits_at_or_below_busy_timeout",
+     "shape": "h1:8a27965c4b"
+    },
+    {
+     "sha": "65df31df96cfb8a954f5feb36484710a883e1597",
+     "file_blob_before": "ba2393c3da30d6941587869be26cd303389b7f46",
+     "file_blob_after": "38b86a7c7efd1c7c309e6745cb8777a594e4d531",
+     "nodeid": "tests/test_qoder_ord0296_write_deadline.py::test_G5_a_scenario_override_moves_one_route_and_names_every_other_case",
+     "shape": "h1:8a27965c4b"
+    }
+   ],
+   "per_round": [
+    {
+     "round": 1,
+     "rc": 1,
+     "seconds": 4.95,
+     "red": [
+      "test_G11_importing_the_app_is_what_arms_the_door",
+      "test_G2_door_is_RED_when_the_deadline_sits_at_or_below_busy_timeout",
+      "test_G5_a_scenario_override_moves_one_route_and_names_every_other_case"
+     ],
+     "summary_line": "3 failed, 8 passed, 2 warnings in 4.11s"
+    },
+    {
+     "round": 2,
+     "rc": 1,
+     "seconds": 4.7,
+     "red": [
+      "test_G11_importing_the_app_is_what_arms_the_door",
+      "test_G2_door_is_RED_when_the_deadline_sits_at_or_below_busy_timeout",
+      "test_G5_a_scenario_override_moves_one_route_and_names_every_other_case"
+     ],
+     "summary_line": "3 failed, 8 passed, 2 warnings in 4.03s"
+    },
+    {
+     "round": 3,
+     "rc": 1,
+     "seconds": 4.99,
+     "red": [
+      "test_G11_importing_the_app_is_what_arms_the_door",
+      "test_G2_door_is_RED_when_the_deadline_sits_at_or_below_busy_timeout",
+      "test_G5_a_scenario_override_moves_one_route_and_names_every_other_case"
+     ],
+     "summary_line": "3 failed, 8 passed, 2 warnings in 4.10s"
+    }
+   ],
+   "always_red_all_rounds": true,
+   "expected_red": [
+    "test_G2_door_is_RED_when_the_deadline_sits_at_or_below_busy_timeout",
+    "test_G5_a_scenario_override_moves_one_route_and_names_every_other_case"
+   ],
+   "carriers_removed": [
+    "test_G2_door_is_RED_when_the_deadline_sits_at_or_below_busy_timeout",
+    "test_G5_a_scenario_override_moves_one_route_and_names_every_other_case"
+   ],
+   "collateral_carriers_added_after_r1_recipe": [
+    {
+     "cell": "test_G11_importing_the_app_is_what_arms_the_door",
+     "introduced_by_commit": "30a5f90e 09-25 19:45 test(ord0296): carry the G11 startup-wiring cell onto tip 7856e03f (byte-identical blob, zero overlap with this generation's five frontend paths)",
+     "present_in_r1_era_gate": false,
+     "present_at_this_generation": true
+    }
+   ],
+   "unexpected_red": [],
+   "red_union_over_rounds": [
+    "test_G11_importing_the_app_is_what_arms_the_door",
+    "test_G2_door_is_RED_when_the_deadline_sits_at_or_below_busy_timeout",
+    "test_G5_a_scenario_override_moves_one_route_and_names_every_other_case"
+   ],
+   "expected_green_stayed_green": true,
+   "restored_byte_exact": true,
+   "claimed_result": "NAMED_RED_EVERY_ROUND（点名的 2 格 2/3 轮恒红；意外红 0；意外绿 0）",
+   "derived_result": null
+  },
+  {
+   "arm": "M5_lock_wait_copied_a_second_time",
+   "file": "app/db/session.py",
+   "why": "把 30000 再抄一份内联（0281 T-c 点名的形状）⇒ 单一来源那格必红",
+   "hunks": 1,
+   "py_compile_ok": true,
+   "before_blob_40": "3ef99ffe398c048ff729ffd0016e61b8ce0ae678",
+   "after_blob_40": "09a280ee4f1a5c3483d17b4edb8734a763791307",
+   "shape": "h1:2c1e1c177d",
+   "tested_tree_sha40": "65df31df96cfb8a954f5feb36484710a883e1597",
+   "triples": [
+    {
+     "sha": "65df31df96cfb8a954f5feb36484710a883e1597",
+     "file_blob_before": "3ef99ffe398c048ff729ffd0016e61b8ce0ae678",
+     "file_blob_after": "09a280ee4f1a5c3483d17b4edb8734a763791307",
+     "nodeid": "tests/test_qoder_ord0296_write_deadline.py::test_G4_the_lock_wait_is_written_in_exactly_one_place",
+     "shape": "h1:2c1e1c177d"
+    }
+   ],
+   "per_round": [
+    {
+     "round": 1,
+     "rc": 1,
+     "seconds": 4.57,
+     "red": [
+      "test_G4_the_lock_wait_is_written_in_exactly_one_place"
+     ],
+     "summary_line": "1 failed, 10 passed, 2 warnings in 3.66s"
+    },
+    {
+     "round": 2,
+     "rc": 1,
+     "seconds": 4.82,
+     "red": [
+      "test_G4_the_lock_wait_is_written_in_exactly_one_place"
+     ],
+     "summary_line": "1 failed, 10 passed, 2 warnings in 4.04s"
+    },
+    {
+     "round": 3,
+     "rc": 1,
+     "seconds": 4.6,
+     "red": [
+      "test_G4_the_lock_wait_is_written_in_exactly_one_place"
+     ],
+     "summary_line": "1 failed, 10 passed, 2 warnings in 3.69s"
+    }
+   ],
+   "always_red_all_rounds": true,
+   "expected_red": [
+    "test_G4_the_lock_wait_is_written_in_exactly_one_place"
+   ],
+   "carriers_removed": [
+    "test_G4_the_lock_wait_is_written_in_exactly_one_place"
+   ],
+   "collateral_carriers_added_after_r1_recipe": [],
+   "unexpected_red": [],
+   "red_union_over_rounds": [
+    "test_G4_the_lock_wait_is_written_in_exactly_one_place"
+   ],
+   "expected_green_stayed_green": true,
+   "restored_byte_exact": true,
+   "claimed_result": "NAMED_RED_EVERY_ROUND（点名的 1 格 1/3 轮恒红；意外红 0；意外绿 0）",
+   "derived_result": null
+  },
+  {
+   "arm": "M6_scenario_override_ignored",
+   "file": "app/db/write_deadline.py",
+   "why": "「按场景可配」变成口号 ⇒ 覆盖那格必红",
+   "hunks": 1,
+   "py_compile_ok": true,
+   "before_blob_40": "ba2393c3da30d6941587869be26cd303389b7f46",
+   "after_blob_40": "9db8a453ddb4d906132797e105ca725f2e8c1c8d",
+   "shape": "h1:1b7ddd1839",
+   "tested_tree_sha40": "65df31df96cfb8a954f5feb36484710a883e1597",
+   "triples": [
+    {
+     "sha": "65df31df96cfb8a954f5feb36484710a883e1597",
+     "file_blob_before": "ba2393c3da30d6941587869be26cd303389b7f46",
+     "file_blob_after": "9db8a453ddb4d906132797e105ca725f2e8c1c8d",
+     "nodeid": "tests/test_qoder_ord0296_write_deadline.py::test_G5_a_scenario_override_moves_one_route_and_names_every_other_case",
+     "shape": "h1:1b7ddd1839"
+    }
+   ],
+   "per_round": [
+    {
+     "round": 1,
+     "rc": 1,
+     "seconds": 5.53,
+     "red": [
+      "test_G5_a_scenario_override_moves_one_route_and_names_every_other_case"
+     ],
+     "summary_line": "1 failed, 10 passed, 2 warnings in 4.42s"
+    },
+    {
+     "round": 2,
+     "rc": 1,
+     "seconds": 5.81,
+     "red": [
+      "test_G5_a_scenario_override_moves_one_route_and_names_every_other_case"
+     ],
+     "summary_line": "1 failed, 10 passed, 2 warnings in 4.73s"
+    },
+    {
+     "round": 3,
+     "rc": 1,
+     "seconds": 5.83,
+     "red": [
+      "test_G5_a_scenario_override_moves_one_route_and_names_every_other_case"
+     ],
+     "summary_line": "1 failed, 10 passed, 2 warnings in 4.80s"
+    }
+   ],
+   "always_red_all_rounds": true,
+   "expected_red": [
+    "test_G5_a_scenario_override_moves_one_route_and_names_every_other_case"
+   ],
+   "carriers_removed": [
+    "test_G5_a_scenario_override_moves_one_route_and_names_every_other_case"
+   ],
+   "collateral_carriers_added_after_r1_recipe": [],
+   "unexpected_red": [],
+   "red_union_over_rounds": [
+    "test_G5_a_scenario_override_moves_one_route_and_names_every_other_case"
+   ],
+   "expected_green_stayed_green": true,
+   "restored_byte_exact": true,
+   "claimed_result": "NAMED_RED_EVERY_ROUND（点名的 1 格 1/3 轮恒红；意外红 0；意外绿 0）",
+   "derived_result": null
+  },
+  {
+   "arm": "M7_deadline_answer_status_is_500",
+   "file": "app/main.py",
+   "why": "把服务端那句「我没写完」降级成 500 ⇒ 与框架裸 500 无法区分，G8 必红",
+   "hunks": 1,
+   "py_compile_ok": true,
+   "before_blob_40": "5455175abe154c5c4ab5b122e517efd13081a637",
+   "after_blob_40": "49860da88d331533c43624f78ca1adada01ad2bd",
+   "shape": "h1:38670ba1e7",
+   "tested_tree_sha40": "65df31df96cfb8a954f5feb36484710a883e1597",
+   "triples": [
+    {
+     "sha": "65df31df96cfb8a954f5feb36484710a883e1597",
+     "file_blob_before": "5455175abe154c5c4ab5b122e517efd13081a637",
+     "file_blob_after": "49860da88d331533c43624f78ca1adada01ad2bd",
+     "nodeid": "tests/test_qoder_ord0296_write_deadline.py::test_G8_the_answer_is_registered_and_carries_the_servers_own_words",
+     "shape": "h1:38670ba1e7"
+    }
+   ],
+   "per_round": [
+    {
+     "round": 1,
+     "rc": 1,
+     "seconds": 5.28,
+     "red": [
+      "test_G8_the_answer_is_registered_and_carries_the_servers_own_words"
+     ],
+     "summary_line": "1 failed, 10 passed, 2 warnings in 4.27s"
+    },
+    {
+     "round": 2,
+     "rc": 1,
+     "seconds": 4.7,
+     "red": [
+      "test_G8_the_answer_is_registered_and_carries_the_servers_own_words"
+     ],
+     "summary_line": "1 failed, 10 passed, 2 warnings in 3.77s"
+    },
+    {
+     "round": 3,
+     "rc": 1,
+     "seconds": 4.71,
+     "red": [
+      "test_G8_the_answer_is_registered_and_carries_the_servers_own_words"
+     ],
+     "summary_line": "1 failed, 10 passed, 2 warnings in 3.75s"
+    }
+   ],
+   "always_red_all_rounds": true,
+   "expected_red": [
+    "test_G8_the_answer_is_registered_and_carries_the_servers_own_words"
+   ],
+   "carriers_removed": [
+    "test_G8_the_answer_is_registered_and_carries_the_servers_own_words"
+   ],
+   "collateral_carriers_added_after_r1_recipe": [],
+   "unexpected_red": [],
+   "red_union_over_rounds": [
+    "test_G8_the_answer_is_registered_and_carries_the_servers_own_words"
+   ],
+   "expected_green_stayed_green": true,
+   "restored_byte_exact": true,
+   "claimed_result": "NAMED_RED_EVERY_ROUND（点名的 1 格 1/3 轮恒红；意外红 0；意外绿 0）",
+   "derived_result": null
+  },
+  {
+   "arm": "M8_effective_cap_ignores_the_budget",
+   "file": "app/db/write_deadline.py",
+   "why": "期限不再约束实际等待 ⇒ 那格里 min(...) 的断言必红",
+   "hunks": 1,
+   "py_compile_ok": true,
+   "before_blob_40": "ba2393c3da30d6941587869be26cd303389b7f46",
+   "after_blob_40": "22d5983875caa0e56f7623c57429d789c92aa699",
+   "shape": "h1:015583bce1",
+   "tested_tree_sha40": "65df31df96cfb8a954f5feb36484710a883e1597",
+   "triples": [
+    {
+     "sha": "65df31df96cfb8a954f5feb36484710a883e1597",
+     "file_blob_before": "ba2393c3da30d6941587869be26cd303389b7f46",
+     "file_blob_after": "22d5983875caa0e56f7623c57429d789c92aa699",
+     "nodeid": "tests/test_qoder_ord0296_write_deadline.py::test_G5_a_scenario_override_moves_one_route_and_names_every_other_case",
+     "shape": "h1:015583bce1"
+    }
+   ],
+   "per_round": [
+    {
+     "round": 1,
+     "rc": 1,
+     "seconds": 4.82,
+     "red": [
+      "test_G5_a_scenario_override_moves_one_route_and_names_every_other_case"
+     ],
+     "summary_line": "1 failed, 10 passed, 2 warnings in 4.01s"
+    },
+    {
+     "round": 2,
+     "rc": 1,
+     "seconds": 4.9,
+     "red": [
+      "test_G5_a_scenario_override_moves_one_route_and_names_every_other_case"
+     ],
+     "summary_line": "1 failed, 10 passed, 2 warnings in 4.02s"
+    },
+    {
+     "round": 3,
+     "rc": 1,
+     "seconds": 5.0,
+     "red": [
+      "test_G5_a_scenario_override_moves_one_route_and_names_every_other_case"
+     ],
+     "summary_line": "1 failed, 10 passed, 2 warnings in 4.08s"
+    }
+   ],
+   "always_red_all_rounds": true,
+   "expected_red": [
+    "test_G5_a_scenario_override_moves_one_route_and_names_every_other_case"
+   ],
+   "carriers_removed": [
+    "test_G5_a_scenario_override_moves_one_route_and_names_every_other_case"
+   ],
+   "collateral_carriers_added_after_r1_recipe": [],
+   "unexpected_red": [],
+   "red_union_over_rounds": [
+    "test_G5_a_scenario_override_moves_one_route_and_names_every_other_case"
+   ],
+   "expected_green_stayed_green": true,
+   "restored_byte_exact": true,
+   "claimed_result": "NAMED_RED_EVERY_ROUND（点名的 1 格 1/3 轮恒红；意外红 0；意外绿 0）",
+   "derived_result": null
+  },
+  {
+   "arm": "M9_budget_shared_across_scenarios",
+   "file": "app/db/write_deadline.py",
+   "why": "预算按连接共享 ⇒ 上一条请求替这一条超时，G10 必红",
+   "hunks": 1,
+   "py_compile_ok": true,
+   "before_blob_40": "ba2393c3da30d6941587869be26cd303389b7f46",
+   "after_blob_40": "391c778bc3a9a21322802e13fee52d75879e4e51",
+   "shape": "h1:08fd82503a",
+   "tested_tree_sha40": "65df31df96cfb8a954f5feb36484710a883e1597",
+   "triples": [
+    {
+     "sha": "65df31df96cfb8a954f5feb36484710a883e1597",
+     "file_blob_before": "ba2393c3da30d6941587869be26cd303389b7f46",
+     "file_blob_after": "391c778bc3a9a21322802e13fee52d75879e4e51",
+     "nodeid": "tests/test_qoder_ord0296_write_deadline.py::test_G10_the_budget_belongs_to_one_request_not_one_connection",
+     "shape": "h1:08fd82503a"
+    }
+   ],
+   "per_round": [
+    {
+     "round": 1,
+     "rc": 1,
+     "seconds": 4.5,
+     "red": [
+      "test_G10_the_budget_belongs_to_one_request_not_one_connection"
+     ],
+     "summary_line": "1 failed, 10 passed, 2 warnings in 3.85s"
+    },
+    {
+     "round": 2,
+     "rc": 1,
+     "seconds": 4.49,
+     "red": [
+      "test_G10_the_budget_belongs_to_one_request_not_one_connection"
+     ],
+     "summary_line": "1 failed, 10 passed, 2 warnings in 3.90s"
+    },
+    {
+     "round": 3,
+     "rc": 1,
+     "seconds": 4.44,
+     "red": [
+      "test_G10_the_budget_belongs_to_one_request_not_one_connection"
+     ],
+     "summary_line": "1 failed, 10 passed, 2 warnings in 3.78s"
+    }
+   ],
+   "always_red_all_rounds": true,
+   "expected_red": [
+    "test_G10_the_budget_belongs_to_one_request_not_one_connection"
+   ],
+   "carriers_removed": [
+    "test_G10_the_budget_belongs_to_one_request_not_one_connection"
+   ],
+   "collateral_carriers_added_after_r1_recipe": [],
+   "unexpected_red": [],
+   "red_union_over_rounds": [
+    "test_G10_the_budget_belongs_to_one_request_not_one_connection"
+   ],
+   "expected_green_stayed_green": true,
+   "restored_byte_exact": true,
+   "claimed_result": "NAMED_RED_EVERY_ROUND（点名的 1 格 1/3 轮恒红；意外红 0；意外绿 0）",
+   "derived_result": null
+  },
+  {
+   "arm": "M10_malformed_override_crashes_instead_of_naming",
+   "file": "app/db/write_deadline.py",
+   "why": "畸形覆盖从「具名配置判级」退回成 import 期崩溃 ⇒ 门那一档断言必红（0296 自查加的一臂）",
+   "hunks": 1,
+   "py_compile_ok": true,
+   "before_blob_40": "ba2393c3da30d6941587869be26cd303389b7f46",
+   "after_blob_40": "ca336ee9d685d578a0920b66445b4810c50dfee4",
+   "shape": "h1:456e55e640",
+   "tested_tree_sha40": "65df31df96cfb8a954f5feb36484710a883e1597",
+   "triples": [
+    {
+     "sha": "65df31df96cfb8a954f5feb36484710a883e1597",
+     "file_blob_before": "ba2393c3da30d6941587869be26cd303389b7f46",
+     "file_blob_after": "ca336ee9d685d578a0920b66445b4810c50dfee4",
+     "nodeid": "tests/test_qoder_ord0296_write_deadline.py::test_G5_a_scenario_override_moves_one_route_and_names_every_other_case",
+     "shape": "h1:456e55e640"
+    }
+   ],
+   "per_round": [
+    {
+     "round": 1,
+     "rc": 1,
+     "seconds": 4.42,
+     "red": [
+      "test_G5_a_scenario_override_moves_one_route_and_names_every_other_case"
+     ],
+     "summary_line": "1 failed, 10 passed, 2 warnings in 3.76s"
+    },
+    {
+     "round": 2,
+     "rc": 1,
+     "seconds": 4.52,
+     "red": [
+      "test_G5_a_scenario_override_moves_one_route_and_names_every_other_case"
+     ],
+     "summary_line": "1 failed, 10 passed, 2 warnings in 3.67s"
+    },
+    {
+     "round": 3,
+     "rc": 1,
+     "seconds": 4.65,
+     "red": [
+      "test_G5_a_scenario_override_moves_one_route_and_names_every_other_case"
+     ],
+     "summary_line": "1 failed, 10 passed, 2 warnings in 4.01s"
+    }
+   ],
+   "always_red_all_rounds": true,
+   "expected_red": [
+    "test_G5_a_scenario_override_moves_one_route_and_names_every_other_case"
+   ],
+   "carriers_removed": [
+    "test_G5_a_scenario_override_moves_one_route_and_names_every_other_case"
+   ],
+   "collateral_carriers_added_after_r1_recipe": [],
+   "unexpected_red": [],
+   "red_union_over_rounds": [
+    "test_G5_a_scenario_override_moves_one_route_and_names_every_other_case"
+   ],
+   "expected_green_stayed_green": true,
+   "restored_byte_exact": true,
+   "claimed_result": "NAMED_RED_EVERY_ROUND（点名的 1 格 1/3 轮恒红；意外红 0；意外绿 0）",
+   "derived_result": null
+  }
+ ],
+ "summary": {
+  "arms_total": 10,
+  "rounds_per_arm": 3,
+  "survivors": [],
+  "unexpected_red_total": 0,
+  "all_named_nodes_present": true,
+  "all_anchors_unique": true,
+  "restored_byte_exact_all": true,
+  "control_rounds_green": true
+ },
+ "transfer_check_r1_to_this_generation": {
+  "rule": "GENERATION_TRANSFER_BY_CITED_BLOB_EQUALITY_V1：只有被试文件字节相等，早上那轮的读数才算量在这一代",
+  "per_arm": [
+   {
+    "arm": "M1_reachability_is_not_strict",
+    "file": "app/db/write_deadline.py",
+    "r1_before_blob_40": "ba2393c3da30d6941587869be26cd303389b7f46",
+    "blob_at_this_generation": "ba2393c3da30d6941587869be26cd303389b7f46",
+    "byte_identical_so_r1_reading_transfers": true
+   },
+   {
+    "arm": "M2_no_named_conversion",
+    "file": "app/db/write_deadline.py",
+    "r1_before_blob_40": "ba2393c3da30d6941587869be26cd303389b7f46",
+    "blob_at_this_generation": "ba2393c3da30d6941587869be26cd303389b7f46",
+    "byte_identical_so_r1_reading_transfers": true
+   },
+   {
+    "arm": "M3_always_renames_the_lock_failure",
+    "file": "app/db/write_deadline.py",
+    "r1_before_blob_40": "ba2393c3da30d6941587869be26cd303389b7f46",
+    "blob_at_this_generation": "ba2393c3da30d6941587869be26cd303389b7f46",
+    "byte_identical_so_r1_reading_transfers": true
+   },
+   {
+    "arm": "M4_startup_door_disabled",
+    "file": "app/db/write_deadline.py",
+    "r1_before_blob_40": "ba2393c3da30d6941587869be26cd303389b7f46",
+    "blob_at_this_generation": "ba2393c3da30d6941587869be26cd303389b7f46",
+    "byte_identical_so_r1_reading_transfers": true
+   },
+   {
+    "arm": "M5_lock_wait_copied_a_second_time",
+    "file": "app/db/session.py",
+    "r1_before_blob_40": "3ef99ffe398c048ff729ffd0016e61b8ce0ae678",
+    "blob_at_this_generation": "3ef99ffe398c048ff729ffd0016e61b8ce0ae678",
+    "byte_identical_so_r1_reading_transfers": true
+   },
+   {
+    "arm": "M6_scenario_override_ignored",
+    "file": "app/db/write_deadline.py",
+    "r1_before_blob_40": "ba2393c3da30d6941587869be26cd303389b7f46",
+    "blob_at_this_generation": "ba2393c3da30d6941587869be26cd303389b7f46",
+    "byte_identical_so_r1_reading_transfers": true
+   },
+   {
+    "arm": "M7_deadline_answer_status_is_500",
+    "file": "app/main.py",
+    "r1_before_blob_40": "871aec006a3f6482f7a2700a8baeff8c25f7690f",
+    "blob_at_this_generation": "5455175abe154c5c4ab5b122e517efd13081a637",
+    "byte_identical_so_r1_reading_transfers": false
+   },
+   {
+    "arm": "M8_effective_cap_ignores_the_budget",
+    "file": "app/db/write_deadline.py",
+    "r1_before_blob_40": "ba2393c3da30d6941587869be26cd303389b7f46",
+    "blob_at_this_generation": "ba2393c3da30d6941587869be26cd303389b7f46",
+    "byte_identical_so_r1_reading_transfers": true
+   },
+   {
+    "arm": "M9_budget_shared_across_scenarios",
+    "file": "app/db/write_deadline.py",
+    "r1_before_blob_40": "ba2393c3da30d6941587869be26cd303389b7f46",
+    "blob_at_this_generation": "ba2393c3da30d6941587869be26cd303389b7f46",
+    "byte_identical_so_r1_reading_transfers": true
+   },
+   {
+    "arm": "M10_malformed_override_crashes_instead_of_naming",
+    "file": "app/db/write_deadline.py",
+    "r1_before_blob_40": "ba2393c3da30d6941587869be26cd303389b7f46",
+    "blob_at_this_generation": "ba2393c3da30d6941587869be26cd303389b7f46",
+    "byte_identical_so_r1_reading_transfers": true
+   }
+  ],
+  "arms_transferring": 9,
+  "arms_total": 10,
+  "note": "9/10 臂的被试文件字节与早上相同 ⇒ 其余臂本代重跑不是重复劳动"
+ },
+ "r1_generation_binding": {
+  "r1_snapshot_present_on_disk": true,
+  "r1_gate_blob_if_snapshot_exists": "f3cf05e8fe75cf9322c6eddc1ae6ffbdea8d0f93",
+  "r1_artifact_recorded_its_own_tree_sha": false
+ },
+ "generation_delta_vs_r1": {
+  "r1_generated_at": "2026-09-25T09:12:55+08:00",
+  "r1_cells_collected": null,
+  "r2_cells_collected": 11,
+  "r1_survivors": [],
+  "r2_survivors": [],
+  "r1_unexpected_red_total": 0,
+  "r2_unexpected_red_total": 0,
+  "product_files_changed_between_the_two_generations": "NOT_MEASURED：r1 件内没记自己的 tested_tree，而磁盘上那个快照目录今晚被我复用过一次（加 G11 那一趟），所以它的磁盘字节不代表早上的被试面 ⇒ 早上的代次锚只能用件内 per-arm before_blob_40 立（见 transfer_check_r1_to_this_generation）",
+  "gate_cell_counts": {
+   "at_r1_era_commit": 10,
+   "at_this_generation": 11,
+   "r1_gate_blob": "deacc9d7483f1b8fd8d24b6e23e586bf402d85f6",
+   "this_generation_gate_blob": "f3cf05e8fe75cf9322c6eddc1ae6ffbdea8d0f93"
+  },
+  "r1_tested_tree_recorded_by_r1_itself": false,
+  "why_each_arm_does_not_transfer": [
+   {
+    "arm": "M7_deadline_answer_status_is_500",
+    "file": "app/main.py",
+    "blob_at_r1_era_commit": "871aec006a3f6482f7a2700a8baeff8c25f7690f",
+    "blob_at_this_generation": "5455175abe154c5c4ab5b122e517efd13081a637",
+    "commits_touching_that_file_in_between": [
+     "7856e03f 09-25 19:05 feat(ord0307): put the literal-credential startup gate on a candidate cut from the current tip (tree + environment scan, report default, 10 cells + 5 counter-arms)"
+    ]
+   }
+  ]
+ },
+ "limits": [
+  "本代没重跑全量 A/B（号令者早上那轮的红节点集合比对属于候选交付，不属于这次战役）；战役只回答一件事：这 10 处保护拆掉后，有没有一格替它红、并且归属唯一",
+  "survivors / KILLED 一律不自我签级（B-1）：本件只有 claimed_result，derived_result 留 null"
+ ],
+ "discipline": {
+  "product_bytes_changed_in_the_authoritative_tree": 0,
+  "refs_pushed": 0,
+  "authoritative_branch_moved": 0,
+  "user_databases_opened": 0,
+  "demo_reset_calls": 0,
+  "credential_values_printed": 0,
+  "shared_ledger_bytes_written_by_lane": 0,
+  "evidence_paths_overwritten": 0
+ },
+ "claim_kind": "runtime_measured_on_the_tip_read_at_handover",
+ "claimed_result": "65df31d 这一代：10 臂 × 3 轮，点名的格 10/10 臂恒红，survivors 0（无），意外红 0 格，控制轮 3 轮全绿 = True，逐臂字节还原 True，锚点在本代各出现 1 次 = True，点名格全在本代 11 格清单内 = True",
+ "derived_result": null
+}
