@@ -619,7 +619,7 @@ test("N6_Q68b_a_sentence_only_refusal_is_not_presentation_as_a_code — 编号�
      branch would also answer "no prose in the slot", so it is asserted as a positive, not assumed. */
   expect(
     noCodeAnyWording,
-    node(arm, `the screen names no absence of a machine code in either sanctioned wording (${{cardAll.slice(0, 240)}}) -- an invented code and a silent slot are both wrong`),
+    node(arm, `the screen names no absence of a machine code in either sanctioned wording (${cardAll.slice(0, 240)}}) -- an invented code and a silent slot are both wrong`),
   ).toBe(true);
   /* CMDR 0323 B, second half: the old fallback rendered the sentence truncated and uppercased. That form
      may not survive anywhere on the page except the attributed fold that holds the original. */
