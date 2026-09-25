@@ -1,0 +1,66 @@
+{
+ "tip": "dc964086c9d412573ac19d70b24b30e6c3ee6168",
+ "tip_present_in_this_object_store": 0,
+ "repo_path_used_for_archive": "D:\\moodle\\_qoder_integration_20260919",
+ "note": "this repo directory is the integration lane's clone; the ARCHIVE is read from the commit object, so a dirty working tree here cannot change what was exported -- the check below is export-vs-commit, never export-vs-worktree",
+ "trees": {
+  "base_backend": {
+   "root": "o297r/base_backend/backend",
+   "exported_from_commit": "dc964086c9d412573ac19d70b24b30e6c3ee6168",
+   "files_compared_against_that_commit": 320,
+   "match": 320,
+   "mismatch": 0
+  },
+  "prev_base": {
+   "root": "o297r/prev_base/backend",
+   "exported_from_commit": "5c4608cede6cb7bd5f3ac7e704bfee379ca47abc",
+   "files_compared_against_that_commit": 318,
+   "match": 318,
+   "mismatch": 0
+  },
+  "landed_src": {
+   "root": "o297r/landed/frontend/src",
+   "exported_from_commit": "dc964086c9d412573ac19d70b24b30e6c3ee6168",
+   "files_compared_against_that_commit": 76,
+   "match": 76,
+   "mismatch": 0
+  },
+  "landed_next_src": {
+   "root": "o297r/landed_next/frontend/src",
+   "exported_from_commit": "dc964086c9d412573ac19d70b24b30e6c3ee6168",
+   "files_compared_against_that_commit": 76,
+   "match": 75,
+   "mismatch": 1
+  }
+ },
+ "summary": {
+  "files_compared_total": 790,
+  "mismatches": 1,
+  "mismatch_detail": [
+   {
+    "tree": "landed_next_src",
+    "path": "frontend/src/main.tsx",
+    "exported_blob": "5a9e9259582837c5fbc58a4c42029b82c79b7a87",
+    "tip_blob": "63a08b2344c72526758d639dd655bd55b5ef3047"
+   }
+  ],
+  "paths_not_in_the_commit": 121,
+  "paths_not_in_the_commit_by_kind": {
+   "bytecode the running interpreter wrote (__pycache__ / .pyc)": 121
+  },
+  "unexplained_extra_paths": [],
+  "expected_mismatch": "exactly one: landed_next's frontend/src/main.tsx, which carries the one-line generation marker this order's second generation is built from. Any other mismatch would mean I ran a tree that is not the tip.",
+  "stamped": "2026-09-25T16:56:20+0800"
+ },
+ "named_file_spot_check": {
+  "path": "frontend/src/features/planning/PlanWithAiSheet.tsx",
+  "tip_blob": "fd5f6e5ba2771a8d12669b9bec1ba91590970701",
+  "exported_blob": "fd5f6e5ba2771a8d12669b9bec1ba91590970701",
+  "command": "git -C D:\\moodle\\_qoder_integration_20260919 rev-parse dc964086c9d412573ac19d70b24b30e6c3ee6168:frontend/src/features/planning/PlanWithAiSheet.tsx"
+ },
+ "commander_pre_image_at_this_tip": {
+  "quoted_by_commander": "c22cf42506a4175db992bde387ed8d9c6f1ffb9d",
+  "equals_tip_blob": false,
+  "meaning": "if false, the pre-image the commander quoted is from a different hop than the tip I ran on -- that is a fact about the order's coordinates, not something to smooth over"
+ }
+}
