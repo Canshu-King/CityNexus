@@ -143,6 +143,20 @@ def main() -> int:
         f"{(rd.get('R_SCHEMA_01_class') or {}).get('rule', 'NOT_IN_RECEIPT')}`）：行全经产品 API 造，判据只看渲染文字/HTTP/线格式。"
     )
     add("")
+    coll = rd.get("collection") or {}
+    if coll:
+        add(
+            f"**收集数（本代重测，rc 从命令回来）**：Playwright `{coll['playwright_total_line']}` ⇒ 判据节点 "
+            f"{coll['playwright_node_count']}；后端 `{coll['backend_collected_line']}` ⇒ {coll['backend_collected']} "
+            f"（`{coll['commands']['playwright_list']['rc']}` / `{coll['commands']['backend_collect_only']['rc']}`）"
+        )
+    groups = (rd.get("landing_groups") or {}).get("counts")
+    if groups:
+        add(
+            f"**落地按组取**（同一枚冻结尖）：{groups['total']} 件 = 主线 {groups['landing']}（`frontend/**`）"
+            f" + 车道脚手架 {groups['lane_scaffolding']}（`review/**`）；冻结之后这条分组仍是按组取的依据，我不再动 ref"
+        )
+    add("")
     if a.published:
         rows = [l.split("\t") for l in Path(a.published).read_text(encoding="utf-8").splitlines() if l.strip()]
         add(
