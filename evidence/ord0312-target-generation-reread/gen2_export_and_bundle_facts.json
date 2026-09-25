@@ -1,0 +1,56 @@
+{
+ "ran_at_local": "2026-09-26T03:59:00+0800",
+ "tip": "9a669c8bec863fadf31d5158f4a1be66aec49f23",
+ "paths_exported": [
+  "backend",
+  "frontend",
+  "data",
+  "contracts"
+ ],
+ "seconds_export": 0.3,
+ "sheet_blob_recomputed_40_hex": "fc4d6111dc013008b610a240aab096deebe2436f",
+ "sheet_blob_expected": "fc4d6111dc013008b610a240aab096deebe2436f",
+ "sheet_blob_matches_the_tip": true,
+ "guarded_detail_reads": 2,
+ "unguarded_detail_reads": 0,
+ "data_dir_present": true,
+ "contracts_dir_present": true,
+ "guarded_bundle": {
+  "asset": "index-JMSnur7a.js",
+  "bytes": 1257770,
+  "sha256_64_hex": "3edfd5df8d45b5d26c451bd4a5f1658a7a3c6c82fb584b4ab121c5339d027111",
+  "seconds_build": 9.9,
+  "markers": {
+   "network_card_wording": true,
+   "device_note_for_network_branch": true,
+   "http_branch_wording": true,
+   "technical_detail_wording": true
+  }
+ },
+ "mutant_bundle": {
+  "asset": "index-C7GzJT9h.js",
+  "bytes": 1257768,
+  "sha256_64_hex": "325bef6fd8d5339c340a7c1c8af46bce2373f51e9a4cfe11bb6a704aabce5a5e",
+  "seconds_build": 13.6
+ },
+ "verdict": {
+  "the_two_bundles_are_different_bytes": true,
+  "the_mutant_sheet_blob_differs_from_the_shipped_one": true,
+  "the_guarded_tree_is_the_tip": true,
+  "both_trees_can_seed": true,
+  "ALL_HOLD": true
+ },
+ "bundle": {
+  "asset": "index-JMSnur7a.js",
+  "bytes": 1257770,
+  "sha256_64_hex": "3edfd5df8d45b5d26c451bd4a5f1658a7a3c6c82fb584b4ab121c5339d027111",
+  "seconds_build": 9.9,
+  "markers": {
+   "network_card_wording": true,
+   "device_note_for_network_branch": true,
+   "http_branch_wording": true,
+   "technical_detail_wording": true
+  }
+ },
+ "seconds_build": 9.9
+}
