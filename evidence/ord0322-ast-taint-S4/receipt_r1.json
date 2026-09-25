@@ -1,0 +1,1171 @@
+{
+ "generation": "30de4ebe409f49c5e25f4758cb2e5f4e90764a4f",
+ "ruler_supersedes": {
+  "r3": "44e062e6ce9c7b5d97d78e09e432072da102292c",
+  "r3_selftest": "3b42290b6f66492dfa6355f59db360408ccab882",
+  "r3_capture_tip": "5e0b53bd7cdc7455ae931148b54b889684a207d1"
+ },
+ "ruler": {
+  "path": "live_checks/ui_exposure_taint_ast_r1.cjs",
+  "bytes": 56795,
+  "sha1_of_bytes": "6ddd78175550d18d46d521175c3f4fe74e40c2e1"
+ },
+ "e_fixtures": {
+  "e0319r2_A_rename_last_part.tsx": {
+   "shelf_path": "evidence/ord0319-q64-r2-attack-d2305848/e0319r2_A_rename_last_part.tsx",
+   "shelf_blob": "4c1bdae7f371ae96f580a7e590331c95ba04715e",
+   "bytes_extracted": 344,
+   "git_hash_object_equals_shelf_blob": true,
+   "expected": "RED",
+   "r4_observed_hits": 1,
+   "r4_observed": "RED",
+   "r4_rules_lines": [
+    "UPSTREAM_TEXT_VIA_HELPER_TO_DOM@8"
+   ],
+   "r4_chains": [
+    ":2 upstream read (body as { detail?: unknown } | null)?.detail -> :2 `detail` = (body as { detail?: unknown } | null)?.detail -> :3 serverReasonSentence() returns detail -> :6 passed through failureNote() -> :6 `out` = {failureReason: failureNote( serverReasonSentence(body), \"fb\")} -> :8 read further as value of it -> :8 rendered here"
+   ],
+   "r3_observed_hits": 1,
+   "r3_observed": "RED",
+   "assertion_met": true
+  },
+  "e0319r2_B_destructure_hop.tsx": {
+   "shelf_path": "evidence/ord0319-q64-r2-attack-d2305848/e0319r2_B_destructure_hop.tsx",
+   "shelf_blob": "ace904808257b02b002c63e424e8bdc6855623f6",
+   "bytes_extracted": 295,
+   "git_hash_object_equals_shelf_blob": true,
+   "expected": "RED",
+   "r4_observed_hits": 1,
+   "r4_observed": "RED",
+   "r4_rules_lines": [
+    "UPSTREAM_TEXT_VIA_HELPER_TO_DOM@7"
+   ],
+   "r4_chains": [
+    ":2 upstream read (body as { detail?: unknown } | null)?.detail -> :2 `detail` = (body as { detail?: unknown } | null)?.detail -> :3 serverReasonSentence() returns detail -> :6 `sentence` = serverReasonSentence(body) -> :7 rendered here"
+   ],
+   "r3_observed_hits": 1,
+   "r3_observed": "RED",
+   "assertion_met": true
+  },
+  "e0319r2_C_paren_alias.tsx": {
+   "shelf_path": "evidence/ord0319-q64-r2-attack-d2305848/e0319r2_C_paren_alias.tsx",
+   "shelf_blob": "c6ef79c50cea55e3024b8dfe79ff8273bf24c16e",
+   "bytes_extracted": 351,
+   "git_hash_object_equals_shelf_blob": true,
+   "expected": "RED",
+   "r4_observed_hits": 1,
+   "r4_observed": "RED",
+   "r4_rules_lines": [
+    "UPSTREAM_TEXT_VIA_HELPER_TO_DOM@8"
+   ],
+   "r4_chains": [
+    ":2 upstream read (body as { detail?: unknown } | null)?.detail -> :2 `detail` = (body as { detail?: unknown } | null)?.detail -> :3 serverReasonSentence() returns detail -> :6 passed through failureNote() -> :6 `out` = {failureReason: failureNote( serverReasonSentence(body), \"fb\")} -> :8 read further as text of it -> :8 rendered here"
+   ],
+   "r3_observed_hits": 1,
+   "r3_observed": "RED",
+   "assertion_met": true
+  },
+  "e0319r2_D_control_clean.tsx": {
+   "shelf_path": "evidence/ord0319-q64-r2-attack-d2305848/e0319r2_D_control_clean.tsx",
+   "shelf_blob": "aac913740eb191e453144ea0d2e253a8611e5883",
+   "bytes_extracted": 187,
+   "git_hash_object_equals_shelf_blob": true,
+   "expected": "CLEAN",
+   "r4_observed_hits": 0,
+   "r4_observed": "CLEAN",
+   "r4_rules_lines": [],
+   "r4_chains": [],
+   "r3_observed_hits": 0,
+   "r3_observed": "CLEAN",
+   "assertion_met": true
+  },
+  "e0319r3_E1_bracket_read.tsx": {
+   "shelf_path": "evidence/ord0319-q64-r3-attack-d2305848/e0319r3_E1_bracket_read.tsx",
+   "shelf_blob": "95547a73642cd9959c62548b0195bc6a54967398",
+   "bytes_extracted": 282,
+   "git_hash_object_equals_shelf_blob": true,
+   "expected": "RED",
+   "r4_observed_hits": 1,
+   "r4_observed": "RED",
+   "r4_rules_lines": [
+    "UPSTREAM_TEXT_VIA_HELPER_TO_DOM@7"
+   ],
+   "r4_chains": [
+    ":2 upstream read body[\"detail\"] -> :2 `d` = body[\"detail\"] -> :3 serverReasonSentence() returns d -> :6 passed through note() -> :6 `r` = {failureReason: note(serverReasonSentence(body))} -> :7 read further as text of it -> :7 rendered here"
+   ],
+   "r3_observed_hits": 0,
+   "r3_observed": "CLEAN",
+   "assertion_met": true
+  },
+  "e0319r3_E2_forwarding_helper.tsx": {
+   "shelf_path": "evidence/ord0319-q64-r3-attack-d2305848/e0319r3_E2_forwarding_helper.tsx",
+   "shelf_blob": "b2f507455e610dd639e882f72651be8e120953c8",
+   "bytes_extracted": 342,
+   "git_hash_object_equals_shelf_blob": true,
+   "expected": "RED",
+   "r4_observed_hits": 1,
+   "r4_observed": "RED",
+   "r4_rules_lines": [
+    "UPSTREAM_TEXT_VIA_HELPER_TO_DOM@8"
+   ],
+   "r4_chains": [
+    ":2 upstream read (body as { detail?: unknown } | null)?.detail -> :2 `detail` = (body as { detail?: unknown } | null)?.detail -> :3 serverReasonSentence() returns detail -> :6 wrap() returns serverReasonSentence(b) -> :7 `s` = wrap(body) -> :8 rendered here"
+   ],
+   "r3_observed_hits": 0,
+   "r3_observed": "CLEAN",
+   "assertion_met": true
+  },
+  "e0319r3_E3_control_attribute_only.tsx": {
+   "shelf_path": "evidence/ord0319-q64-r3-attack-d2305848/e0319r3_E3_control_attribute_only.tsx",
+   "shelf_blob": "b5fda05334fd0b5088571cb7cd6394ea088be8c5",
+   "bytes_extracted": 375,
+   "git_hash_object_equals_shelf_blob": true,
+   "expected": "CLEAN",
+   "r4_observed_hits": 0,
+   "r4_observed": "CLEAN",
+   "r4_rules_lines": [],
+   "r4_chains": [],
+   "r3_observed_hits": 0,
+   "r3_observed": "CLEAN",
+   "assertion_met": true
+  }
+ },
+ "selftest": {
+  "rc": 0,
+  "verdict": "SELFTEST_PASS",
+  "n_fixtures": 20,
+  "n_assertions_met": 20,
+  "typescript": "5.9.3",
+  "n_clean_expected": 7,
+  "n_bad_expected": 13
+ },
+ "selftest_fixtures": {
+  "clean_whitelist_only.tsx": {
+   "blob_sha1_of_embedded_bytes": "96257b74705577d84de5ee76ee34851aefa3314b",
+   "bytes": 101,
+   "expected": 0,
+   "observed": 0,
+   "hits": [],
+   "assertion_met": true
+  },
+  "clean_literal_helper.tsx": {
+   "blob_sha1_of_embedded_bytes": "b9a2e2a60f31e2da9dd340cf5679ca0f4470e75a",
+   "bytes": 219,
+   "expected": 0,
+   "observed": 0,
+   "hits": [],
+   "assertion_met": true
+  },
+  "bad_direct_optional_chain.tsx": {
+   "blob_sha1_of_embedded_bytes": "50f655826b84125f6eee55d20f8e5b6b089fe37f",
+   "bytes": 65,
+   "expected": 1,
+   "observed": 1,
+   "hits": [
+    "UPSTREAM_READ_DIRECT"
+   ],
+   "assertion_met": true
+  },
+  "bad_helper_taint.tsx": {
+   "blob_sha1_of_embedded_bytes": "23bfee63bef79afdc7395f7dad57fca1275592f7",
+   "bytes": 351,
+   "expected": 1,
+   "observed": 1,
+   "hits": [
+    "UPSTREAM_TEXT_VIA_HELPER_TO_DOM"
+   ],
+   "assertion_met": true
+  },
+  "bad_dangerous_html.tsx": {
+   "blob_sha1_of_embedded_bytes": "0682fabc2c74b14d5b1348829458336918f48c26",
+   "bytes": 54,
+   "expected": 1,
+   "observed": 1,
+   "hits": [
+    "DANGEROUS_HTML"
+   ],
+   "assertion_met": true
+  },
+  "clean_tainted_but_attribute_only.tsx": {
+   "blob_sha1_of_embedded_bytes": "1ec593591e20e3b8c2e49ea84c30733fa83e9137",
+   "bytes": 373,
+   "expected": 0,
+   "observed": 0,
+   "hits": [],
+   "assertion_met": true
+  },
+  "bad_raw_body.tsx": {
+   "blob_sha1_of_embedded_bytes": "670b7f820c433d944e649bdba6ad277d17104a86",
+   "bytes": 34,
+   "expected": 1,
+   "observed": 1,
+   "hits": [
+    "RAW_BODY_TO_DOM"
+   ],
+   "assertion_met": true
+  },
+  "bad_rename_last_part.tsx": {
+   "blob_sha1_of_embedded_bytes": "99165e44be3c5cebdf0c10c3b3f230aeabc6940f",
+   "bytes": 330,
+   "expected": 1,
+   "observed": 1,
+   "hits": [
+    "UPSTREAM_TEXT_VIA_HELPER_TO_DOM"
+   ],
+   "assertion_met": true
+  },
+  "bad_bare_local_hop.tsx": {
+   "blob_sha1_of_embedded_bytes": "34c6793315bbd5ebd2d12130591a0bd37bbd5e57",
+   "bytes": 281,
+   "expected": 1,
+   "observed": 1,
+   "hits": [
+    "UPSTREAM_TEXT_VIA_HELPER_TO_DOM"
+   ],
+   "assertion_met": true
+  },
+  "bad_paren_alias.tsx": {
+   "blob_sha1_of_embedded_bytes": "19bd286df8612b9689aa4e3f26f07c65868d0eb3",
+   "bytes": 337,
+   "expected": 1,
+   "observed": 1,
+   "hits": [
+    "UPSTREAM_TEXT_VIA_HELPER_TO_DOM"
+   ],
+   "assertion_met": true
+  },
+  "clean_bare_local_from_literal.tsx": {
+   "blob_sha1_of_embedded_bytes": "76300e363781cc7ab15b515599a80b5ae0566343",
+   "bytes": 185,
+   "expected": 0,
+   "observed": 0,
+   "hits": [],
+   "assertion_met": true
+  },
+  "clean_untainted_value_name.tsx": {
+   "blob_sha1_of_embedded_bytes": "ca235ea39acf7bf8987488beac67ac037331ae43",
+   "bytes": 119,
+   "expected": 0,
+   "observed": 0,
+   "hits": [],
+   "assertion_met": true
+  },
+  "bad_helper_taint_multiline.tsx": {
+   "blob_sha1_of_embedded_bytes": "0fa3b220cdffa0af4e96b111137d3b85c5d430e7",
+   "bytes": 380,
+   "expected": 1,
+   "observed": 1,
+   "hits": [
+    "UPSTREAM_TEXT_VIA_HELPER_TO_DOM"
+   ],
+   "assertion_met": true
+  },
+  "e0319r2_A_rename_last_part.tsx": {
+   "blob_sha1_of_embedded_bytes": "4c1bdae7f371ae96f580a7e590331c95ba04715e",
+   "bytes": 344,
+   "expected": 1,
+   "observed": 1,
+   "hits": [
+    "UPSTREAM_TEXT_VIA_HELPER_TO_DOM"
+   ],
+   "assertion_met": true,
+   "equals_shelf_blob": true
+  },
+  "e0319r2_B_destructure_hop.tsx": {
+   "blob_sha1_of_embedded_bytes": "ace904808257b02b002c63e424e8bdc6855623f6",
+   "bytes": 295,
+   "expected": 1,
+   "observed": 1,
+   "hits": [
+    "UPSTREAM_TEXT_VIA_HELPER_TO_DOM"
+   ],
+   "assertion_met": true,
+   "equals_shelf_blob": true
+  },
+  "e0319r2_C_paren_alias.tsx": {
+   "blob_sha1_of_embedded_bytes": "c6ef79c50cea55e3024b8dfe79ff8273bf24c16e",
+   "bytes": 351,
+   "expected": 1,
+   "observed": 1,
+   "hits": [
+    "UPSTREAM_TEXT_VIA_HELPER_TO_DOM"
+   ],
+   "assertion_met": true,
+   "equals_shelf_blob": true
+  },
+  "e0319r2_D_control_clean.tsx": {
+   "blob_sha1_of_embedded_bytes": "aac913740eb191e453144ea0d2e253a8611e5883",
+   "bytes": 187,
+   "expected": 0,
+   "observed": 0,
+   "hits": [],
+   "assertion_met": true,
+   "equals_shelf_blob": true
+  },
+  "e0319r3_E1_bracket_read.tsx": {
+   "blob_sha1_of_embedded_bytes": "95547a73642cd9959c62548b0195bc6a54967398",
+   "bytes": 282,
+   "expected": 1,
+   "observed": 1,
+   "hits": [
+    "UPSTREAM_TEXT_VIA_HELPER_TO_DOM"
+   ],
+   "assertion_met": true,
+   "equals_shelf_blob": true
+  },
+  "e0319r3_E2_forwarding_helper.tsx": {
+   "blob_sha1_of_embedded_bytes": "b2f507455e610dd639e882f72651be8e120953c8",
+   "bytes": 342,
+   "expected": 1,
+   "observed": 1,
+   "hits": [
+    "UPSTREAM_TEXT_VIA_HELPER_TO_DOM"
+   ],
+   "assertion_met": true,
+   "equals_shelf_blob": true
+  },
+  "e0319r3_E3_control_attribute_only.tsx": {
+   "blob_sha1_of_embedded_bytes": "b5fda05334fd0b5088571cb7cd6394ea088be8c5",
+   "bytes": 375,
+   "expected": 0,
+   "observed": 0,
+   "hits": [],
+   "assertion_met": true,
+   "equals_shelf_blob": true
+  }
+ },
+ "r3_clean_fixtures_all_assertion_met": true,
+ "r3_clean_fixtures": {
+  "clean_whitelist_only.tsx": 0,
+  "clean_literal_helper.tsx": 0,
+  "clean_tainted_but_attribute_only.tsx": 0,
+  "clean_bare_local_from_literal.tsx": 0,
+  "clean_untainted_value_name.tsx": 0
+ },
+ "baseline_tip_cell": {
+  "command": "node ui_exposure_taint_ast_r1.cjs --ref 30de4ebe409f49c5e25f4758cb2e5f4e90764a4f --path frontend/src/features/planning/PlanWithAiSheet.tsx",
+  "r3_capture_blob": "5e0b53bd7cdc7455ae931148b54b889684a207d1",
+  "r3_capture_cells": [
+   "UPSTREAM_TEXT_VIA_HELPER_TO_DOM@frontend/src/features/planning/PlanWithAiSheet.tsx:1016"
+  ],
+  "r4_cells": [
+   "UPSTREAM_TEXT_VIA_HELPER_TO_DOM@frontend/src/features/planning/PlanWithAiSheet.tsx:989",
+   "UPSTREAM_TEXT_VIA_HELPER_TO_DOM@frontend/src/features/planning/PlanWithAiSheet.tsx:1016"
+  ],
+  "r3_cell_preserved": true,
+  "r4_total": 2,
+  "r3_total": 1,
+  "extra_cells": [
+   [
+    "frontend/src/features/planning/PlanWithAiSheet.tsx",
+    989,
+    "UPSTREAM_TEXT_VIA_HELPER_TO_DOM"
+   ]
+  ],
+  "exactly_equal_to_capture": false,
+  "files_scanned": 1,
+  "parse_diagnostics": 0,
+  "depth_cut_lookups": 0,
+  "chains": {
+   "frontend/src/features/planning/PlanWithAiSheet.tsx:989": ":154 upstream read (body as { detail?: unknown } | null)?.detail -> :154 `detail` = (body as { detail?: unknown } | null)?.detail -> :155 .slice(...) passes it on -> :155 .toUpperCase(...) passes it on -> :155 serverReasonCode() returns typeof detail === \"string\" ? detail.slice(0, 60).toUpperCase() : \"\" -> :635 interpolated into `BLOCKED:${serverReasonCode(unreadable) || `PLACES_HTTP_${placesResponse.statu... -> :634 state `result` written by setResult(...) -> :816 result.status was handed to statusCopy() as `status` -> :197 .toUpperCase(...) passes it on -> :197 `s` = (status || \"\").toUpperCase() -> :201 .slice(...) passes it on -> :201 `code` = s.slice(\"BLOCKED:\".length) -> :207 interpolated into `${known.zh}（服务器给的原因编号：${code}）` -> :203 statusCopy() returns { title: zh ? \"这次排不出方案：数据不够，不是你说的不对\" : \"No plan this time: the data is short, ... -> :816 `copy` = result ? statusCopy(result.status, zh, result.planCount ?? 0) : null -> :989 rendered here",
+   "frontend/src/features/planning/PlanWithAiSheet.tsx:1016": ":162 upstream read (body as { detail?: unknown } | null)?.detail -> :162 `detail` = (body as { detail?: unknown } | null)?.detail -> :163 serverReasonSentence() returns detail -> :576 serverReasonSentence(body) was handed to failureNote() as `serverText` -> :182 failureNote() returns serverText ? { text: serverText, from: \"server\" } : { text: deviceText, from: ... -> :568 state `result` written by setResult(...) -> :1016 rendered here"
+  }
+ },
+ "behaviour_probe_cell_989": {
+  "region_taken_from": "frontend/src/features/planning/PlanWithAiSheet.tsx:109-335 (git archive 30de4ebe409f, working tree untouched)",
+  "input_body": {
+   "error": {
+    "hint": "x"
+   },
+   "detail": "行程过长，无法在三天预算内排出方案"
+  },
+  "serverReasonCode_returned": "行程过长，无法在三天预算内排出方案",
+  "copy_body_that_would_render": "服务器回的原因编号是 行程过长，无法在三天预算内排出方案，这条我们还没有本地文案，所以不替你解释它——原话在\"技术详情\"里。",
+  "carries_the_servers_own_words": true,
+  "conclusion": "SERVER_WORDS_REACH_THE_DOM"
+ },
+ "full_tree_diff_vs_r3": {
+  "files_scanned": 74,
+  "r3_cells": 25,
+  "r4_cells": 26,
+  "common_lines": 3,
+  "r4_total_minus_r3_total": 1,
+  "lost_count": 22,
+  "new_count": 23,
+  "lost_that_are_not_dom_sinks": 21,
+  "lost_that_are_dom_sinks": [
+   "frontend/src/main.tsx:1066"
+  ],
+  "depth_cut_lookups_total": 56,
+  "same_line_rule_drift": [
+   {
+    "cell": "frontend/src/components/ProductErrorBoundary.tsx:104",
+    "r3_rules": [
+     "UPSTREAM_READ_DIRECT"
+    ],
+    "r4_rules": [
+     "UPSTREAM_EXCEPTION_TO_DOM"
+    ]
+   },
+   {
+    "cell": "frontend/src/features/inbox/JourneyInboxWorkbench.tsx:691",
+    "r3_rules": [
+     "RAW_TEXT_INTERPOLATION"
+    ],
+    "r4_rules": [
+     "UPSTREAM_EXCEPTION_TO_DOM"
+    ]
+   },
+   {
+    "cell": "frontend/src/features/planning/PlanWithAiSheet.tsx:1016",
+    "r3_rules": [
+     "UPSTREAM_TEXT_VIA_HELPER_TO_DOM"
+    ],
+    "r4_rules": [
+     "UPSTREAM_TEXT_VIA_HELPER_TO_DOM"
+    ]
+   }
+  ],
+  "lost_cells": [
+   {
+    "cell": "frontend/src/app/V8Experience.tsx:320",
+    "r3_rule": [
+     "RAW_BODY_TO_DOM"
+    ],
+    "r4_reports_this_line": false,
+    "is_a_dom_sink": false,
+    "line_text": "* Slicing the raw ISO string (``start_at.slice(11, 16)``) shows UTC wall time",
+    "interpolates": null,
+    "lane_note": "inside a JSDoc comment block (r3's RAW_BODY_TO_DOM pattern matched the prose `raw ISO string ... slice(` at V8Experience.tsx:320, not code)",
+    "r3_pattern_that_fired": [
+     "RAW_BODY_TO_DOM"
+    ],
+    "r3_matched_span": [
+     {
+      "rule": "RAW_BODY_TO_DOM",
+      "matched": "raw ISO string (``start_at.slice(",
+      "match_starts_on_line": 320,
+      "match_ends_on_line": 320
+     }
+    ],
+    "interpolated_value_is_non_prose": false
+   },
+   {
+    "cell": "frontend/src/app/V8Experience.tsx:833",
+    "r3_rule": [
+     "UPSTREAM_READ_DIRECT"
+    ],
+    "r4_reports_this_line": false,
+    "is_a_dom_sink": false,
+    "line_text": "? { message: error.message, name: error.name }",
+    "interpolates": null,
+    "lane_note": "an object literal handed to setSealedDemoDetail, not a DOM write; the same value renders at V8Experience.tsx:2596-2599 and r4 reports that cell",
+    "r3_pattern_that_fired": [],
+    "r3_matched_span": [
+     {
+      "rule": "UPSTREAM_READ_DIRECT",
+      "matched": "{ message: error.message, name: error.name }",
+      "match_starts_on_line": 833,
+      "match_ends_on_line": 833
+     }
+    ],
+    "interpolated_value_is_non_prose": false
+   },
+   {
+    "cell": "frontend/src/app/V8Experience.tsx:1028",
+    "r3_rule": [
+     "UPSTREAM_READ_DIRECT"
+    ],
+    "r4_reports_this_line": false,
+    "is_a_dom_sink": false,
+    "line_text": "} else {",
+    "interpolates": null,
+    "lane_note": "the `} else {` brace line before setMessage(error.message) at V8Experience.tsx:1030; the render is at :1385/:1562 and r4 reports both",
+    "r3_pattern_that_fired": [],
+    "r3_matched_span": [
+     {
+      "rule": "UPSTREAM_READ_DIRECT",
+      "matched": "{ |         setMessage( |           error instanceof Error ? error.message : t(\"shell.loadError\"), |         ); |       }",
+      "match_starts_on_line": 1028,
+      "match_ends_on_line": 1032
+     }
+    ],
+    "interpolated_value_is_non_prose": false
+   },
+   {
+    "cell": "frontend/src/features/agent/AgentComposer.tsx:95",
+    "r3_rule": [
+     "UPSTREAM_READ_DIRECT"
+    ],
+    "r4_reports_this_line": false,
+    "is_a_dom_sink": false,
+    "line_text": "{ role: \"assistant\", text: response.message, response },",
+    "interpolates": null,
+    "lane_note": "a message object built for setMessages, not a DOM write; the render of the same value is AgentComposer.tsx:185 and r4 reports it",
+    "r3_pattern_that_fired": [],
+    "r3_matched_span": [
+     {
+      "rule": "UPSTREAM_READ_DIRECT",
+      "matched": "{ role: \"assistant\", text: response.message, response }",
+      "match_starts_on_line": 95,
+      "match_ends_on_line": 95
+     }
+    ],
+    "interpolated_value_is_non_prose": false
+   },
+   {
+    "cell": "frontend/src/features/agent/CopilotDock.tsx:615",
+    "r3_rule": [
+     "UPSTREAM_READ_DIRECT"
+    ],
+    "r4_reports_this_line": false,
+    "is_a_dom_sink": false,
+    "line_text": "setMessages((current) => [...current, { role: \"assistant\", text: response.message, response }]);",
+    "interpolates": null,
+    "lane_note": "a message object built for setMessages, not a DOM write; CopilotDock.tsx:450 and :770 are the render sites and r4 reports both",
+    "r3_pattern_that_fired": [],
+    "r3_matched_span": [
+     {
+      "rule": "UPSTREAM_READ_DIRECT",
+      "matched": "{ role: \"assistant\", text: response.message, response }",
+      "match_starts_on_line": 615,
+      "match_ends_on_line": 615
+     }
+    ],
+    "interpolated_value_is_non_prose": false
+   },
+   {
+    "cell": "frontend/src/features/discovery/DestinationPreparationPanel.tsx:75",
+    "r3_rule": [
+     "UPSTREAM_READ_DIRECT"
+    ],
+    "r4_reports_this_line": false,
+    "is_a_dom_sink": false,
+    "line_text": "} catch (error) {",
+    "interpolates": null,
+    "lane_note": "a `} catch (error) {` line; the renders are DestinationPreparationPanel.tsx:346/:469/:522 and r4 reports all three",
+    "r3_pattern_that_fired": [],
+    "r3_matched_span": [
+     {
+      "rule": "UPSTREAM_READ_DIRECT",
+      "matched": "{ |           /* A read that failed is not a job that failed: name it and keep the last real reading. */ |           setActionError( |             error instanceof Error ? error.message : zh ? \"读取准备进度失败。\" : \"Reading the ",
+      "match_starts_on_line": 75,
+      "match_ends_on_line": 80
+     }
+    ],
+    "interpolated_value_is_non_prose": false
+   },
+   {
+    "cell": "frontend/src/features/discovery/DestinationPreparationPanel.tsx:99",
+    "r3_rule": [
+     "UPSTREAM_READ_DIRECT"
+    ],
+    "r4_reports_this_line": false,
+    "is_a_dom_sink": false,
+    "line_text": "} catch (error) {",
+    "interpolates": null,
+    "lane_note": "a `} catch (error) {` line, same file, covered at :346/:469/:522",
+    "r3_pattern_that_fired": [],
+    "r3_matched_span": [
+     {
+      "rule": "UPSTREAM_READ_DIRECT",
+      "matched": "{ |       setCapability(null); |       setCapabilityError( |         error instanceof Error ? error.message : zh ? \"这次没有读到能力判定。\" : \"The capability read failed.\", |       ); |     }",
+      "match_starts_on_line": 99,
+      "match_ends_on_line": 104
+     }
+    ],
+    "interpolated_value_is_non_prose": false
+   },
+   {
+    "cell": "frontend/src/features/discovery/DestinationPreparationPanel.tsx:120",
+    "r3_rule": [
+     "UPSTREAM_READ_DIRECT"
+    ],
+    "r4_reports_this_line": false,
+    "is_a_dom_sink": false,
+    "line_text": "} catch (error) {",
+    "interpolates": null,
+    "lane_note": "a `} catch (error) {` line, same file, covered at :346/:469/:522",
+    "r3_pattern_that_fired": [],
+    "r3_matched_span": [
+     {
+      "rule": "UPSTREAM_READ_DIRECT",
+      "matched": "{ |       setActionError( |         error instanceof Error ? error.message : zh ? \"没能开始准备。\" : \"Could not start preparing.\", |       ); |     }",
+      "match_starts_on_line": 120,
+      "match_ends_on_line": 124
+     }
+    ],
+    "interpolated_value_is_non_prose": false
+   },
+   {
+    "cell": "frontend/src/features/discovery/DestinationPreparationPanel.tsx:137",
+    "r3_rule": [
+     "UPSTREAM_READ_DIRECT"
+    ],
+    "r4_reports_this_line": false,
+    "is_a_dom_sink": false,
+    "line_text": "} catch (error) {",
+    "interpolates": null,
+    "lane_note": "a `} catch (error) {` line, same file, covered at :346/:469/:522",
+    "r3_pattern_that_fired": [],
+    "r3_matched_span": [
+     {
+      "rule": "UPSTREAM_READ_DIRECT",
+      "matched": "{ |       setActionError( |         error instanceof Error ? error.message : zh ? \"没能停止这次准备。\" : \"Could not stop this preparation.\", |       ); |     }",
+      "match_starts_on_line": 137,
+      "match_ends_on_line": 141
+     }
+    ],
+    "interpolated_value_is_non_prose": false
+   },
+   {
+    "cell": "frontend/src/features/execution/LiveRecovery.tsx:234",
+    "r3_rule": [
+     "UPSTREAM_READ_DIRECT"
+    ],
+    "r4_reports_this_line": false,
+    "is_a_dom_sink": false,
+    "line_text": "if (!r.ok) {",
+    "interpolates": null,
+    "lane_note": "an `if (!r.ok) {` line. The flow it pointed at is real but the value cannot reach the DOM: LiveRecovery.tsx:240 passes it through humanReplanReason (:68-94), whose every return is a string literal and which only tests the raw string with .includes() - control dependence, never data. r4 staying clean here is a data-flow proof, not a miss",
+    "r3_pattern_that_fired": [],
+    "r3_matched_span": [
+     {
+      "rule": "UPSTREAM_READ_DIRECT",
+      "matched": "{ |         const body = await r.json().catch(() => null); |         const raw = |           body?.error?.message ?? |           body?.detail ?? |           (zh ? \"暂时无法接受这个调整。\" : \"Could not accept this change.\"); |      ",
+      "match_starts_on_line": 234,
+      "match_ends_on_line": 242
+     }
+    ],
+    "interpolated_value_is_non_prose": false
+   },
+   {
+    "cell": "frontend/src/features/inbox/JourneyInboxWorkbench.tsx:307",
+    "r3_rule": [
+     "UPSTREAM_READ_DIRECT"
+    ],
+    "r4_reports_this_line": false,
+    "is_a_dom_sink": false,
+    "line_text": "} catch (error) {",
+    "interpolates": null,
+    "lane_note": "a `} catch (error) {` line; the renders of the same state are JourneyInboxWorkbench.tsx:687/:691/:731 and r4 reports all three",
+    "r3_pattern_that_fired": [],
+    "r3_matched_span": [
+     {
+      "rule": "UPSTREAM_READ_DIRECT",
+      "matched": "{ |       setMessage(error instanceof Error ? error.message : t(\"inbox.memoryLoadError\")); |     }",
+      "match_starts_on_line": 307,
+      "match_ends_on_line": 309
+     }
+    ],
+    "interpolated_value_is_non_prose": false
+   },
+   {
+    "cell": "frontend/src/features/inbox/JourneyInboxWorkbench.tsx:317",
+    "r3_rule": [
+     "UPSTREAM_READ_DIRECT"
+    ],
+    "r4_reports_this_line": false,
+    "is_a_dom_sink": false,
+    "line_text": "} catch (error) {",
+    "interpolates": null,
+    "lane_note": "a `} catch (error) {` line, same file, covered at :687/:691/:731",
+    "r3_pattern_that_fired": [],
+    "r3_matched_span": [
+     {
+      "rule": "UPSTREAM_READ_DIRECT",
+      "matched": "{ |       setMessage(error instanceof Error ? error.message : t(\"inbox.memoryLoadError\")); |     }",
+      "match_starts_on_line": 317,
+      "match_ends_on_line": 319
+     }
+    ],
+    "interpolated_value_is_non_prose": false
+   },
+   {
+    "cell": "frontend/src/features/inbox/JourneyInboxWorkbench.tsx:336",
+    "r3_rule": [
+     "UPSTREAM_READ_DIRECT"
+    ],
+    "r4_reports_this_line": false,
+    "is_a_dom_sink": false,
+    "line_text": "} catch (error) {",
+    "interpolates": null,
+    "lane_note": "a `} catch (error) {` line, same file, covered at :687/:691/:731",
+    "r3_pattern_that_fired": [],
+    "r3_matched_span": [
+     {
+      "rule": "UPSTREAM_READ_DIRECT",
+      "matched": "{ |       setPending(null); |       setPendingError( |         error instanceof Error ? error.message : t(\"inbox.pendingUnreadable\"), |       ); |       return []; |     }",
+      "match_starts_on_line": 336,
+      "match_ends_on_line": 342
+     }
+    ],
+    "interpolated_value_is_non_prose": false
+   },
+   {
+    "cell": "frontend/src/features/inbox/JourneyInboxWorkbench.tsx:386",
+    "r3_rule": [
+     "UPSTREAM_READ_DIRECT"
+    ],
+    "r4_reports_this_line": false,
+    "is_a_dom_sink": false,
+    "line_text": "} catch (error) {",
+    "interpolates": null,
+    "lane_note": "a `} catch (error) {` line, same file, covered at :687/:691/:731",
+    "r3_pattern_that_fired": [],
+    "r3_matched_span": [
+     {
+      "rule": "UPSTREAM_READ_DIRECT",
+      "matched": "{ |       setMessage(error instanceof Error ? error.message : t(\"inbox.textFailed\")); |     }",
+      "match_starts_on_line": 386,
+      "match_ends_on_line": 388
+     }
+    ],
+    "interpolated_value_is_non_prose": false
+   },
+   {
+    "cell": "frontend/src/features/inbox/JourneyInboxWorkbench.tsx:407",
+    "r3_rule": [
+     "UPSTREAM_READ_DIRECT"
+    ],
+    "r4_reports_this_line": false,
+    "is_a_dom_sink": false,
+    "line_text": "} catch (error) {",
+    "interpolates": null,
+    "lane_note": "a `} catch (error) {` line, same file, covered at :687/:691/:731",
+    "r3_pattern_that_fired": [],
+    "r3_matched_span": [
+     {
+      "rule": "UPSTREAM_READ_DIRECT",
+      "matched": "{ |       setMessage(error instanceof Error ? error.message : t(\"inbox.imageFailed\")); |     }",
+      "match_starts_on_line": 407,
+      "match_ends_on_line": 409
+     }
+    ],
+    "interpolated_value_is_non_prose": false
+   },
+   {
+    "cell": "frontend/src/features/inbox/JourneyInboxWorkbench.tsx:435",
+    "r3_rule": [
+     "UPSTREAM_READ_DIRECT"
+    ],
+    "r4_reports_this_line": false,
+    "is_a_dom_sink": false,
+    "line_text": "} catch (error) {",
+    "interpolates": null,
+    "lane_note": "a `} catch (error) {` line, same file, covered at :687/:691/:731",
+    "r3_pattern_that_fired": [],
+    "r3_matched_span": [
+     {
+      "rule": "UPSTREAM_READ_DIRECT",
+      "matched": "{ |       setMessage(error instanceof Error ? error.message : t(\"inbox.smartApplyFailed\")); |     }",
+      "match_starts_on_line": 435,
+      "match_ends_on_line": 437
+     }
+    ],
+    "interpolated_value_is_non_prose": false
+   },
+   {
+    "cell": "frontend/src/features/inbox/JourneyInboxWorkbench.tsx:459",
+    "r3_rule": [
+     "UPSTREAM_READ_DIRECT"
+    ],
+    "r4_reports_this_line": false,
+    "is_a_dom_sink": false,
+    "line_text": "} catch (error) {",
+    "interpolates": null,
+    "lane_note": "a `} catch (error) {` line, same file, covered at :687/:691/:731",
+    "r3_pattern_that_fired": [],
+    "r3_matched_span": [
+     {
+      "rule": "UPSTREAM_READ_DIRECT",
+      "matched": "{ |       failure = error instanceof Error ? error.message : t(\"inbox.confirmFailed\"); |     }",
+      "match_starts_on_line": 459,
+      "match_ends_on_line": 461
+     }
+    ],
+    "interpolated_value_is_non_prose": false
+   },
+   {
+    "cell": "frontend/src/features/inbox/JourneyInboxWorkbench.tsx:517",
+    "r3_rule": [
+     "UPSTREAM_READ_DIRECT"
+    ],
+    "r4_reports_this_line": false,
+    "is_a_dom_sink": false,
+    "line_text": "} catch (error) {",
+    "interpolates": null,
+    "lane_note": "a `} catch (error) {` line, same file, covered at :687/:691/:731",
+    "r3_pattern_that_fired": [],
+    "r3_matched_span": [
+     {
+      "rule": "UPSTREAM_READ_DIRECT",
+      "matched": "{ |       setMessage(error instanceof Error ? error.message : t(\"inbox.correctionsFailed\")); |     }",
+      "match_starts_on_line": 517,
+      "match_ends_on_line": 519
+     }
+    ],
+    "interpolated_value_is_non_prose": false
+   },
+   {
+    "cell": "frontend/src/features/planning/PlanComparison.tsx:92",
+    "r3_rule": [
+     "UPSTREAM_READ_DIRECT"
+    ],
+    "r4_reports_this_line": false,
+    "is_a_dom_sink": false,
+    "line_text": "if (!response.ok) {",
+    "interpolates": null,
+    "lane_note": "an `if (!response.ok) {` line; the render is PlanComparison.tsx:260 and r4 reports it",
+    "r3_pattern_that_fired": [],
+    "r3_matched_span": [
+     {
+      "rule": "UPSTREAM_READ_DIRECT",
+      "matched": "{ |         const body = await response.json().catch(() => null); |         setError( |           body?.error?.message ?? |             body?.detail ?? |             (zh ? \"这个方案暂时不能采用。\" : \"This plan could not be chosen.\"",
+      "match_starts_on_line": 92,
+      "match_ends_on_line": 100
+     }
+    ],
+    "interpolated_value_is_non_prose": false
+   },
+   {
+    "cell": "frontend/src/features/stay/HotelsPanel.tsx:91",
+    "r3_rule": [
+     "UPSTREAM_READ_DIRECT"
+    ],
+    "r4_reports_this_line": false,
+    "is_a_dom_sink": false,
+    "line_text": "if (!r.ok) {",
+    "interpolates": null,
+    "lane_note": "an `if (!r.ok) {` line; the render is HotelsPanel.tsx:229 and r4 reports it",
+    "r3_pattern_that_fired": [],
+    "r3_matched_span": [
+     {
+      "rule": "UPSTREAM_READ_DIRECT",
+      "matched": "{ |         const body = await r.json().catch(() => null); |         const raw = String(body?.error?.message ?? body?.detail ?? \"\"); |         // A hotel whose check-in / check-out windows cannot coexist with the |      ",
+      "match_starts_on_line": 91,
+      "match_ends_on_line": 107
+     }
+    ],
+    "interpolated_value_is_non_prose": false
+   },
+   {
+    "cell": "frontend/src/lib/failureAttribution.ts:160",
+    "r3_rule": [
+     "UPSTREAM_READ_DIRECT"
+    ],
+    "r4_reports_this_line": false,
+    "is_a_dom_sink": false,
+    "line_text": "\"retry\", \"failure.originInvalidResponse\", null, error.content_type ?? `empty ${error.body_kind} body`);",
+    "interpolates": null,
+    "lane_note": "r3's `{...}` matcher caught the braces of a template hole in a module that contains no JSX and no DOM write at all (sink_count 0, measured by sink_probe); the value crosses files into the attribution store, which is outside any per-file scope, r3's included",
+    "r3_pattern_that_fired": [],
+    "r3_matched_span": [
+     {
+      "rule": "UPSTREAM_READ_DIRECT",
+      "matched": "{error.body_kind}",
+      "match_starts_on_line": 160,
+      "match_ends_on_line": 160
+     }
+    ],
+    "interpolated_value_is_non_prose": false
+   },
+   {
+    "cell": "frontend/src/main.tsx:1066",
+    "r3_rule": [
+     "UPSTREAM_EXCEPTION_TO_DOM"
+    ],
+    "r4_reports_this_line": false,
+    "is_a_dom_sink": true,
+    "line_text": "<strong>Persisted tool trace · {agentRun.tool_steps.length} calls</strong>",
+    "interpolates": "agentRun.tool_steps.length",
+    "lane_note": "a real JSX text sink, but what it interpolates is `agentRun.tool_steps.length` - a number. r3 fired because its UPSTREAM_EXCEPTION_TO_DOM alternative `(stack|exception|trace)\\b.*\\{` matched the English word `trace` in the static label \"Persisted tool trace\" two characters earlier; the matched pattern is reported beside this cell",
+    "r3_pattern_that_fired": [
+     "UPSTREAM_EXCEPTION_TO_DOM"
+    ],
+    "r3_matched_span": [
+     {
+      "rule": "UPSTREAM_EXCEPTION_TO_DOM",
+      "matched": "trace · {",
+      "match_starts_on_line": 1066,
+      "match_ends_on_line": 1066
+     }
+    ],
+    "interpolated_value_is_non_prose": true
+   }
+  ],
+  "new_cells": [
+   {
+    "cell": "frontend/src/app/V8Experience.tsx:1282",
+    "r4_rule": [
+     "RAW_BODY_TO_DOM"
+    ],
+    "is_a_dom_sink": true,
+    "line_text": "{copy.body}",
+    "lane_note": ""
+   },
+   {
+    "cell": "frontend/src/app/V8Experience.tsx:1385",
+    "r4_rule": [
+     "UPSTREAM_EXCEPTION_TO_DOM"
+    ],
+    "is_a_dom_sink": true,
+    "line_text": "<p>{message ?? t(\"shell.noJourney\")}</p>",
+    "lane_note": ""
+   },
+   {
+    "cell": "frontend/src/app/V8Experience.tsx:1562",
+    "r4_rule": [
+     "UPSTREAM_EXCEPTION_TO_DOM"
+    ],
+    "is_a_dom_sink": true,
+    "line_text": "{message}",
+    "lane_note": ""
+   },
+   {
+    "cell": "frontend/src/components/ProductErrorBoundary.tsx:105",
+    "r4_rule": [
+     "UPSTREAM_EXCEPTION_TO_DOM"
+    ],
+    "is_a_dom_sink": true,
+    "line_text": "{info ? `\\n${info}` : \"\"}",
+    "lane_note": ""
+   },
+   {
+    "cell": "frontend/src/features/agent/AgentComposer.tsx:185",
+    "r4_rule": [
+     "UPSTREAM_EXCEPTION_TO_DOM"
+    ],
+    "is_a_dom_sink": true,
+    "line_text": "{error && <p className=\"v8-message error\">{error}</p>}",
+    "lane_note": ""
+   },
+   {
+    "cell": "frontend/src/features/agent/AgentRunRail.tsx:18",
+    "r4_rule": [
+     "UPSTREAM_READ_DIRECT"
+    ],
+    "is_a_dom_sink": true,
+    "line_text": "{step.detail && <small>{step.detail}</small>}",
+    "lane_note": "NAME_ONLY: the only reason this fires is the field name `detail` on `step.detail`, where `step` is a prop element (`detail?: ReactNode` declared at AgentRunRail.tsx:16) whose callers live in other files, so no in-file data flow proves or refutes it. Conservative over-report, kept because r4 does not get to assume an unseen prop is clean; flagged for the reviewer rather than silently dropped"
+   },
+   {
+    "cell": "frontend/src/features/agent/CopilotDock.tsx:450",
+    "r4_rule": [
+     "UPSTREAM_EXCEPTION_TO_DOM"
+    ],
+    "is_a_dom_sink": true,
+    "line_text": "{actionState && <p className=\"cn-copilot-action-state\" role=\"status\">{actionState}</p>}",
+    "lane_note": ""
+   },
+   {
+    "cell": "frontend/src/features/agent/CopilotDock.tsx:770",
+    "r4_rule": [
+     "UPSTREAM_EXCEPTION_TO_DOM"
+    ],
+    "is_a_dom_sink": true,
+    "line_text": "{error && <p className=\"cn-copilot-error\" role=\"alert\">{error}</p>}",
+    "lane_note": ""
+   },
+   {
+    "cell": "frontend/src/features/discovery/DestinationPreparationPanel.tsx:346",
+    "r4_rule": [
+     "UPSTREAM_EXCEPTION_TO_DOM"
+    ],
+    "is_a_dom_sink": true,
+    "line_text": "{capabilityError}",
+    "lane_note": ""
+   },
+   {
+    "cell": "frontend/src/features/discovery/DestinationPreparationPanel.tsx:469",
+    "r4_rule": [
+     "UPSTREAM_EXCEPTION_TO_DOM"
+    ],
+    "is_a_dom_sink": true,
+    "line_text": "{serverMessage}",
+    "lane_note": ""
+   },
+   {
+    "cell": "frontend/src/features/discovery/DestinationPreparationPanel.tsx:522",
+    "r4_rule": [
+     "UPSTREAM_EXCEPTION_TO_DOM"
+    ],
+    "is_a_dom_sink": true,
+    "line_text": "{actionError}",
+    "lane_note": ""
+   },
+   {
+    "cell": "frontend/src/features/discovery/RealCityDiscoveryPanel.tsx:150",
+    "r4_rule": [
+     "UPSTREAM_EXCEPTION_TO_DOM"
+    ],
+    "is_a_dom_sink": true,
+    "line_text": "{error && <div className=\"v8-message\" role=\"alert\">{error}</div>}",
+    "lane_note": ""
+   },
+   {
+    "cell": "frontend/src/features/inbox/JourneyInboxWorkbench.tsx:687",
+    "r4_rule": [
+     "UPSTREAM_EXCEPTION_TO_DOM"
+    ],
+    "is_a_dom_sink": true,
+    "line_text": "{message && <p className=\"v10-inbox-message\" role=\"status\">{message}</p>}",
+    "lane_note": ""
+   },
+   {
+    "cell": "frontend/src/features/inbox/JourneyInboxWorkbench.tsx:731",
+    "r4_rule": [
+     "UPSTREAM_EXCEPTION_TO_DOM"
+    ],
+    "is_a_dom_sink": true,
+    "line_text": "<code> {pendingError}</code>{\" \"}",
+    "lane_note": ""
+   },
+   {
+    "cell": "frontend/src/features/planning/PlanComparison.tsx:260",
+    "r4_rule": [
+     "RAW_BODY_TO_DOM"
+    ],
+    "is_a_dom_sink": true,
+    "line_text": "{error}",
+    "lane_note": ""
+   },
+   {
+    "cell": "frontend/src/features/planning/PlanWithAiSheet.tsx:989",
+    "r4_rule": [
+     "UPSTREAM_TEXT_VIA_HELPER_TO_DOM"
+    ],
+    "is_a_dom_sink": true,
+    "line_text": "<p>{copy.body}</p>",
+    "lane_note": "the fourth live shape: `serverReasonCode` (:147-156) returns `detail.slice(0, 60).toUpperCase()`, it is embedded in `BLOCKED:${...}` (:635), the state reaches `statusCopy` (:816) and the sentence 「服务器回的原因编号是 X」 (:207) renders at :989 - the server's own words shown in a slot labelled as a code. Proven behaviourally by running the two functions extracted verbatim from the generation, see behaviour_probe_cell_989"
+   },
+   {
+    "cell": "frontend/src/features/recovery/RecoveryRequiredPanel.tsx:166",
+    "r4_rule": [
+     "RAW_BODY_TO_DOM"
+    ],
+    "is_a_dom_sink": true,
+    "line_text": "{message}",
+    "lane_note": ""
+   },
+   {
+    "cell": "frontend/src/features/recovery/V14RecoveryTruthPanel.tsx:162",
+    "r4_rule": [
+     "UPSTREAM_EXCEPTION_TO_DOM"
+    ],
+    "is_a_dom_sink": true,
+    "line_text": "{message && <p role=\"status\">{message}</p>}",
+    "lane_note": ""
+   },
+   {
+    "cell": "frontend/src/features/stay/HotelsPanel.tsx:229",
+    "r4_rule": [
+     "RAW_BODY_TO_DOM"
+    ],
+    "is_a_dom_sink": true,
+    "line_text": "<p className=\"role-alert\" data-testid=\"hotel-error\" role=\"alert\">{error}</p>",
+    "lane_note": ""
+   },
+   {
+    "cell": "frontend/src/features/studio/V12TripStudioPanel.tsx:106",
+    "r4_rule": [
+     "UPSTREAM_EXCEPTION_TO_DOM"
+    ],
+    "is_a_dom_sink": true,
+    "line_text": "{(previewMutation.error || acceptMutation.error) && <p className=\"v12-studio-error\"><AlertTriangle size={14} /> {(previewMutation.error ?? acceptMutat",
+    "lane_note": ""
+   },
+   {
+    "cell": "frontend/src/features/trip/ActivityDetail.tsx:206",
+    "r4_rule": [
+     "RAW_BODY_TO_DOM"
+    ],
+    "is_a_dom_sink": true,
+    "line_text": "{openingKnown",
+    "lane_note": "PROVIDER_WORDING: `opening?.raw` - the opening-hours string as the provider wrote it, rendered into a <dd>. r3 never saw it because there is no helper and no forbidden field name in its list"
+   },
+   {
+    "cell": "frontend/src/main.tsx:968",
+    "r4_rule": [
+     "UPSTREAM_TEXT_VIA_HELPER_TO_DOM"
+    ],
+    "is_a_dom_sink": true,
+    "line_text": "<p data-testid={testIds.journeyStatus}>ERROR · {error}</p>",
+    "lane_note": ""
+   },
+   {
+    "cell": "frontend/src/main.tsx:992",
+    "r4_rule": [
+     "UPSTREAM_TEXT_VIA_HELPER_TO_DOM"
+    ],
+    "is_a_dom_sink": true,
+    "line_text": "{error && <p className=\"error-note\">{error}</p>}",
+    "lane_note": ""
+   }
+  ]
+ },
+ "cross_surface": {
+  "surfaceA": {
+   "cwd": "D:/moodle/_qoder_lane_S4_0926/work",
+   "node": "node (PATH)",
+   "rc": 0,
+   "verdict": "SELFTEST_PASS",
+   "assertions_met": 20,
+   "ruler_sha1": "6ddd78175550d18d46d521175c3f4fe74e40c2e1"
+  },
+  "surfaceB": {
+   "cwd": "D:/moodle/CityNexus",
+   "node": "C:/Program Files/nodejs/node.exe",
+   "rc": 0,
+   "verdict": "SELFTEST_PASS",
+   "assertions_met": 20,
+   "ruler_sha1": "6ddd78175550d18d46d521175c3f4fe74e40c2e1"
+  },
+  "payload_identical": true,
+  "ruler_bytes_unchanged_by_running": true,
+  "limit": "one node install exists on this box (C:/Program Files/nodejs, v24.14.0), so the two surfaces differ by cwd and by how node is invoked, not by engine; this is stated rather than glossed"
+ },
+ "product_untouched": {
+  "command": "git -C D:/moodle/CityNexus status --porcelain frontend",
+  "output_lines": 0,
+  "output": ""
+ },
+ "assertions": {
+  "e_shapes_all_red": true,
+  "e_controls_all_clean": true,
+  "r3_selftest_20_assertions_met": true,
+  "r3_five_clean_fixtures_net": true,
+  "shelf_bytes_match_for_all_seven": true,
+  "embedded_bytes_match_shelf": true,
+  "baseline_r3_cell_preserved": true,
+  "baseline_exactly_one_cell_as_capture": false,
+  "tree_no_line_lost": false,
+  "tree_lost_cells_all_explained": true,
+  "tree_every_lost_cell_carries_evidence": true,
+  "tree_no_sinking_in_count": true,
+  "cross_surface_both_pass_and_identical": true,
+  "product_untouched": true
+ },
+ "derived_verdicts": {
+  "e_shapes_all_red": "MET",
+  "e_controls_all_clean": "MET",
+  "r3_selftest_20_assertions_met": "MET",
+  "r3_five_clean_fixtures_net": "MET",
+  "shelf_bytes_match_for_all_seven": "MET",
+  "embedded_bytes_match_shelf": "MET",
+  "baseline_r3_cell_preserved": "MET",
+  "baseline_exactly_one_cell_as_capture": "NOT_MET",
+  "tree_no_line_lost": "NOT_MET",
+  "tree_lost_cells_all_explained": "MET",
+  "tree_every_lost_cell_carries_evidence": "MET",
+  "tree_no_sinking_in_count": "MET",
+  "cross_surface_both_pass_and_identical": "MET",
+  "product_untouched": "MET"
+ },
+ "unmet": [
+  "baseline_exactly_one_cell_as_capture",
+  "tree_no_line_lost"
+ ],
+ "claim_kind": "recomputation",
+ "claimed_result": "r4 20/20 selftest on two surfaces; E shapes 5/5 red, controls 2/2 clean; tip 2 cell(s) (r3 cell preserved=True, equal-to-capture=False); tree r3 25 -> r4 26 cells, lines lost=22 (of which DOM sinks: ['frontend/src/main.tsx:1066']); product frontend dirty lines=0"
+}
