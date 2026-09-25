@@ -1,0 +1,876 @@
+{
+  "generatedBy": "e345b9d6",
+  "order": "ORD-0292 (re-run this lane's own reverse-mutation arms on the current generation)",
+  "orders": [
+    "ORD-0278 resume carries mission_id + Idempotency-Key",
+    "ORD-0253 client half: both legs carry the key"
+  ],
+  "runTag": "0298c-on-dbd0f9d",
+  "at": "2026-09-25T09:55:19+0800",
+  "candidate_ref": {
+    "ref": "refs/heads/review/0278-0253-on-6d041dcc",
+    "tip_under_test": "dbd0f9d9c7313aa9fe0c583150f35549e5e92c93",
+    "ref_tip_after_tooling_commits": "dbd0f9d9c7313aa9fe0c583150f35549e5e92c93",
+    "frontend_files_moved_between_them": [],
+    "externally_readable_ls_remote_line": "dbd0f9d9c7313aa9fe0c583150f35549e5e92c93\trefs/heads/review/0278-0253-on-6d041dcc"
+  },
+  "superseded_frozen_ref": {
+    "ref": "refs/heads/review/0278-0253-on-45b0a5e",
+    "tip": "0671704546f9c9ea1d1b57627b059124c7800803",
+    "externally_readable_ls_remote_line": "0671704546f9c9ea1d1b57627b059124c7800803\trefs/heads/review/0278-0253-on-45b0a5e",
+    "push_stopped_at": "frozen by the commander's ORD-0292 order and still frozen: ORD-0298 cut a new ref instead of moving this one, so the two generations keep their own coordinates"
+  },
+  "authoritative_tip_under_test": {
+    "ref": "refs/heads/mirror/integration-frontend-apple-pass1",
+    "tip": "6d041dcce11d05f28a55abadd40717f321b4db38"
+  },
+  "tested_tree": "dbd0f9d9c7313aa9fe0c583150f35549e5e92c93",
+  "tooling_commit": "dbd0f9d9c7313aa9fe0c583150f35549e5e92c93",
+  "tooling_vs_tested_tree": {
+    "frontend_files_moved": [],
+    "identical_under_test": true,
+    "worktree_dirty_frontend": [],
+    "worktree_clean_for_frontend": true,
+    "reading": "the arms mutate frontend/ only, so the kills are evidence about `tested_tree` even though the scripts run from a tooling commit on top of it -- but only if that list is empty, which is measured here rather than promised"
+  },
+  "generation_compare": {
+    "frozen_tree": "0671704546f9c9ea1d1b57627b059124c7800803",
+    "landed_tip": "6d041dcce11d05f28a55abadd40717f321b4db38",
+    "tested_tree": "dbd0f9d9c7313aa9fe0c583150f35549e5e92c93",
+    "frontend_tree_object": {
+      "0671704546f9c9ea1d1b57627b059124c7800803": "bcdd7d79e3da25341f968b3ed9ff28dcab59d49d",
+      "6d041dcce11d05f28a55abadd40717f321b4db38": "fa3d73edc6dca05728b03753ab61af335efc6d91",
+      "dbd0f9d9c7313aa9fe0c583150f35549e5e92c93": "c9623f46cace7a9c069ad9c36bfa395f9ffa790a"
+    },
+    "frontend_files_tracked": {
+      "0671704546f9c9ea1d1b57627b059124c7800803": 182,
+      "6d041dcce11d05f28a55abadd40717f321b4db38": 181,
+      "dbd0f9d9c7313aa9fe0c583150f35549e5e92c93": 183
+    },
+    "files_differing_across_the_three": 10,
+    "files_equal_to_frozen_tree": 179,
+    "identical_under_test": [
+      "frontend/src/api/citynexus.ts",
+      "frontend/src/app/V8Experience.tsx",
+      "frontend/src/lib/inFlightWrites.ts",
+      "frontend/src/main.tsx"
+    ],
+    "rows": [
+      {
+        "path": "frontend/e2e/qoder-continuation-owner.spec.ts",
+        "sha256_at_frozen_tree": "8e6eddd169015db8e837eeb70357e7b78d7dea38435394131c1cb417f93cd2e7",
+        "sha256_at_landed_tip": "dad78692c2380dff861722b353bb59c3b68d2c37fd3736139db6c8f563d878a9",
+        "sha256_under_test": "8e6eddd169015db8e837eeb70357e7b78d7dea38435394131c1cb417f93cd2e7",
+        "equals_frozen_tree": true,
+        "equals_landed_tip": false,
+        "lines_vs_landed_tip": "37\t8\tfrontend/e2e/qoder-continuation-owner.spec.ts",
+        "lines_vs_frozen_tree": "0\t0\t(no diff)"
+      },
+      {
+        "path": "frontend/e2e/qoder-continuation-resume-carries-identity.spec.ts",
+        "sha256_at_frozen_tree": "f9428f38450f6139837762f49885cc33534dff32bad8b83c49209a8ebad00e75",
+        "sha256_at_landed_tip": "ABSENT",
+        "sha256_under_test": "f9428f38450f6139837762f49885cc33534dff32bad8b83c49209a8ebad00e75",
+        "equals_frozen_tree": true,
+        "equals_landed_tip": false,
+        "lines_vs_landed_tip": "344\t0\tfrontend/e2e/qoder-continuation-resume-carries-identity.spec.ts",
+        "lines_vs_frozen_tree": "0\t0\t(no diff)"
+      },
+      {
+        "path": "frontend/e2e/qoder-sheet-legs-carry-idempotency-key.spec.ts",
+        "sha256_at_frozen_tree": "1a472ff1d854ec7cd240ce4cfcaae83e2684d4bd83a10c87d55d7f9f48b5e6cb",
+        "sha256_at_landed_tip": "ABSENT",
+        "sha256_under_test": "1a472ff1d854ec7cd240ce4cfcaae83e2684d4bd83a10c87d55d7f9f48b5e6cb",
+        "equals_frozen_tree": true,
+        "equals_landed_tip": false,
+        "lines_vs_landed_tip": "275\t0\tfrontend/e2e/qoder-sheet-legs-carry-idempotency-key.spec.ts",
+        "lines_vs_frozen_tree": "0\t0\t(no diff)"
+      },
+      {
+        "path": "frontend/src/api/citynexus.ts",
+        "sha256_at_frozen_tree": "3e252fdd78dc5ba9026d8f2786ad241ead8c2af63c47a894a802a135b16b5e7d",
+        "sha256_at_landed_tip": "e1726d907802e71bf8e0e90749dc2bfba77bece455629b1c931b9bc8acf5ccda",
+        "sha256_under_test": "e1726d907802e71bf8e0e90749dc2bfba77bece455629b1c931b9bc8acf5ccda",
+        "equals_frozen_tree": false,
+        "equals_landed_tip": true,
+        "lines_vs_landed_tip": "0\t0\t(no diff)",
+        "lines_vs_frozen_tree": "10\t0\tfrontend/src/api/citynexus.ts"
+      },
+      {
+        "path": "frontend/src/api/journeyContinuation.ts",
+        "sha256_at_frozen_tree": "081c8491a206c984934b241196eba10f91f2e50570a91e488309442f975f9ece",
+        "sha256_at_landed_tip": "ca527c269d7db5685c23a4c7d7ee383692350ac9d06d232587124f340457e526",
+        "sha256_under_test": "081c8491a206c984934b241196eba10f91f2e50570a91e488309442f975f9ece",
+        "equals_frozen_tree": true,
+        "equals_landed_tip": false,
+        "lines_vs_landed_tip": "67\t0\tfrontend/src/api/journeyContinuation.ts",
+        "lines_vs_frozen_tree": "0\t0\t(no diff)"
+      },
+      {
+        "path": "frontend/src/app/V8Experience.tsx",
+        "sha256_at_frozen_tree": "1563697b315de5ba6e1c87c7f830d1d88abac8e90395e3e348bd18df7483f36c",
+        "sha256_at_landed_tip": "8c4eb4efede259746fedcec96e9d72bca6974668bcf2a17df8c7e97db542a0cf",
+        "sha256_under_test": "e31d5d750c6a7ee5f8b14b7b73690443f48437c8449c41ff3589519e8f1541bf",
+        "equals_frozen_tree": false,
+        "equals_landed_tip": false,
+        "lines_vs_landed_tip": "77\t10\tfrontend/src/app/V8Experience.tsx",
+        "lines_vs_frozen_tree": "10\t0\tfrontend/src/app/V8Experience.tsx"
+      },
+      {
+        "path": "frontend/src/features/planning/PlanWithAiSheet.tsx",
+        "sha256_at_frozen_tree": "6a2e742627b341be4a7654acb87d8a81aac26a029dc9ffd86c8e194b505154b7",
+        "sha256_at_landed_tip": "aa212a6e3ded2d58685feeb0267df468e18c447223aa38def371d5e3e172ecb7",
+        "sha256_under_test": "6a2e742627b341be4a7654acb87d8a81aac26a029dc9ffd86c8e194b505154b7",
+        "equals_frozen_tree": true,
+        "equals_landed_tip": false,
+        "lines_vs_landed_tip": "25\t2\tfrontend/src/features/planning/PlanWithAiSheet.tsx",
+        "lines_vs_frozen_tree": "0\t0\t(no diff)"
+      },
+      {
+        "path": "frontend/src/i18n/LocaleContext.tsx",
+        "sha256_at_frozen_tree": "098761742f69a7d98e7c18d3dbe5a4110edbf87088dcf316b494f81b5ad7833f",
+        "sha256_at_landed_tip": "bd31e0a891364b94eb356cbfa83f33b5bd787165d70dcc7de32dd4714de4283c",
+        "sha256_under_test": "098761742f69a7d98e7c18d3dbe5a4110edbf87088dcf316b494f81b5ad7833f",
+        "equals_frozen_tree": true,
+        "equals_landed_tip": false,
+        "lines_vs_landed_tip": "34\t3\tfrontend/src/i18n/LocaleContext.tsx",
+        "lines_vs_frozen_tree": "0\t0\t(no diff)"
+      },
+      {
+        "path": "frontend/src/lib/inFlightWrites.ts",
+        "sha256_at_frozen_tree": "ABSENT",
+        "sha256_at_landed_tip": "d8a114cbed0b5cabe3e4f7a8378339d8c255ed399a63cb4a20383907b824ad88",
+        "sha256_under_test": "d8a114cbed0b5cabe3e4f7a8378339d8c255ed399a63cb4a20383907b824ad88",
+        "equals_frozen_tree": false,
+        "equals_landed_tip": true,
+        "lines_vs_landed_tip": "0\t0\t(no diff)",
+        "lines_vs_frozen_tree": "58\t0\tfrontend/src/lib/inFlightWrites.ts"
+      },
+      {
+        "path": "frontend/src/main.tsx",
+        "sha256_at_frozen_tree": "ef752ca8070c30781234d65d63ea3c96f725c37cd414346f0ecc8af1bd6058b9",
+        "sha256_at_landed_tip": "9d8e36c0e5e1a39c4291dfa6d299ffc789c8632d12440402f76cb601354c6f8b",
+        "sha256_under_test": "9d8e36c0e5e1a39c4291dfa6d299ffc789c8632d12440402f76cb601354c6f8b",
+        "equals_frozen_tree": false,
+        "equals_landed_tip": true,
+        "lines_vs_landed_tip": "0\t0\t(no diff)",
+        "lines_vs_frozen_tree": "38\t9\tfrontend/src/main.tsx"
+      }
+    ],
+    "reading": "the frontend/** files listed in `identical_under_test` are the ones this tip does NOT carry byte-for-byte from the frozen tree; for each, `lines_vs_landed_tip` is what this lane re-added and `lines_vs_frozen_tree` is what the landed line added underneath it. Every other tracked frontend file has the same git blob id in all three trees, which is what the counts assert."
+  },
+  "pristine_files_match_tested_tree": {
+    "journeyContinuation.ts": {
+      "path": "frontend/src/api/journeyContinuation.ts",
+      "sha256": "081c8491a206c984934b241196eba10f91f2e50570a91e488309442f975f9ece",
+      "equals_blob_at_tested_tree": true
+    },
+    "V8Experience.tsx": {
+      "path": "frontend/src/app/V8Experience.tsx",
+      "sha256": "e31d5d750c6a7ee5f8b14b7b73690443f48437c8449c41ff3589519e8f1541bf",
+      "equals_blob_at_tested_tree": true
+    },
+    "PlanWithAiSheet.tsx": {
+      "path": "frontend/src/features/planning/PlanWithAiSheet.tsx",
+      "sha256": "6a2e742627b341be4a7654acb87d8a81aac26a029dc9ffd86c8e194b505154b7",
+      "equals_blob_at_tested_tree": true
+    }
+  },
+  "gate_round": {
+    "file": "review/evidence/ord0298c-gate-round-dbd0f9d.json",
+    "tip": "dbd0f9d9c7313aa9fe0c583150f35549e5e92c93",
+    "tip_equals_tested_tree": true,
+    "triple_keys": 14,
+    "reading": "every arm below re-states the (exact_sha, nodeid) key it was green under in this round, so a kill can only be read against a node that was measured green on the same tree"
+  },
+  "verifierNote": "claimed_result is self-reported; derived_result / direct_red / collateral_red are WRITTEN_BY_VERIFIER",
+  "manualControlsAlreadyRecorded": "before this batch: removing the leg-2 header reddened all three ORD-0253 nodes and the tree restored clean -- the same shape is re-measured here as K253_LEG2_KEY_DROPPED",
+  "filesBefore": {
+    "journeyContinuation.ts": "081c8491a206c984934b241196eba10f91f2e50570a91e488309442f975f9ece",
+    "V8Experience.tsx": "e31d5d750c6a7ee5f8b14b7b73690443f48437c8449c41ff3589519e8f1541bf",
+    "PlanWithAiSheet.tsx": "6a2e742627b341be4a7654acb87d8a81aac26a029dc9ffd86c8e194b505154b7"
+  },
+  "arms": [
+    {
+      "name": "K278_NO_MISSION_ID_IN_BODY",
+      "ownerNode": "ord0278-positive-the-resume-request-carries-both-keys",
+      "why": "the resumed batch no longer says whose it is: the server can replay it but cannot bind it to the interrupted round, which is the half this order was opened for  Measured on this tip: anchor 1 hit in frontend/src/api/journeyContinuation.ts, -28 bytes changed (7392 -> 7364), mutant e8cae1f91429. Baseline run run301322 (_run301322.db, port 4940) read GREEN; the same spec with the mutant in place ran as run301343 (_run301343.db, port 4941) and put 1 node(s) in RED [ord0278-positive-the-resume-request-carries-both-keys] out of 4. After the arm the file hashed 081c8491a206, which equals the tested tree's blob 081c8491a206.",
+      "intent": "the resumed batch no longer says whose it is: the server can replay it but cannot bind it to the interrupted round, which is the half this order was opened for",
+      "file": "D:\\moodle\\_qoder_d_lane_20260923\\frontend\\src\\api\\journeyContinuation.ts",
+      "derived_from": "this arm's own readings; the one no other arm can quote is the mutant hash: arm_shape_digest_12=e8cae1f91429 · attempt.db=_run301343.db · baseline.db=_run301322.db · attempt.port=4941 · baseline.port=4940",
+      "triple": {
+        "exact_sha": "dbd0f9d9c7313aa9fe0c583150f35549e5e92c93",
+        "nodeid": "e2e/qoder-continuation-resume-carries-identity.spec.ts :: ord0278-positive-the-resume-request-carries-both-keys",
+        "nodeid_root": "D:/moodle/_qoder_d_lane_20260923/frontend",
+        "run_shape": "cwd=D:/moodle/_qoder_d_lane_20260923/frontend (the nodeid root above), whole owner spec e2e/qoder-continuation-resume-carries-identity.spec.ts with ONE guarded mutation live in frontend/src/api/journeyContinuation.ts, 1 worker, mobile 390x844, command=python review/run_spec.py e2e/qoder-continuation-resume-carries-identity.spec.ts 4941, run_id=run301343, fresh _run301343.db, ports 4941; verdict taken from the `K278_NO_MISSION_ID_IN_BODY` redSet below, log run-run301343.log"
+      },
+      "same_key_precondition": {
+        "key": "dbd0f9d9c7313aa9fe0c583150f35549e5e92c93 :: e2e/qoder-continuation-resume-carries-identity.spec.ts :: ord0278-positive-the-resume-request-carries-both-keys",
+        "was_green_under_this_key_in_the_gate_round": true,
+        "gate_round_file": "review/evidence/ord0298c-gate-round-dbd0f9d.json",
+        "gate_round_tip": "dbd0f9d9c7313aa9fe0c583150f35549e5e92c93",
+        "gate_round_verdict_for_this_key": "ok",
+        "baseline_owner_verdict_this_batch": "GREEN",
+        "arm_shape_digest": "e8cae1f914296326e7c431caae741bd5340f2915f9a5f3a68b2c542fa6b8255a",
+        "arm_shape_digest_12": "e8cae1f91429",
+        "reading": "an arm only counts as a kill on this generation if the identical (sha :: spec :: title) string is present in the green round, that round's line read `ok`, and this batch's own baseline run of the same spec read GREEN before the mutant went in -- three independent readings, none of them inherited from an earlier tip"
+      },
+      "restore_proof": {
+        "file": "frontend/src/api/journeyContinuation.ts",
+        "digest_before_mutant": "081c8491a206c984934b241196eba10f91f2e50570a91e488309442f975f9ece",
+        "digest_mutated": "e8cae1f914296326e7c431caae741bd5340f2915f9a5f3a68b2c542fa6b8255a",
+        "digest_mutated_12": "e8cae1f91429",
+        "digest_after_restore": "081c8491a206c984934b241196eba10f91f2e50570a91e488309442f975f9ece",
+        "digest_after_restore_12": "081c8491a206",
+        "digest_as_committed_in_tested_tree": "081c8491a206c984934b241196eba10f91f2e50570a91e488309442f975f9ece",
+        "digest_as_committed_in_tested_tree_12": "081c8491a206",
+        "roundtrip_equal": true,
+        "restored_to_tested_tree_bytes": true,
+        "file_bytes_before": 7392,
+        "file_bytes_under_mutant": 7364,
+        "file_bytes_after_restore": 7392,
+        "bytes_delta": -28,
+        "guard_reports_bytes_changed": true,
+        "owner_spec_ran_to_completion_under_the_mutant": true
+      },
+      "anchor_hits": 1,
+      "bytes_changed": true,
+      "bytes_delta": -28,
+      "mutated_sha256": "e8cae1f914296326e7c431caae741bd5340f2915f9a5f3a68b2c542fa6b8255a",
+      "restored_exact": true,
+      "baseline": {
+        "label": "baseline-owner-spec",
+        "spec": "e2e/qoder-continuation-resume-carries-identity.spec.ts",
+        "exitCode": 0,
+        "runId": "run301322",
+        "port": 4940,
+        "log": "run-run301322.log",
+        "tallies": [
+          "5 passed (19.4s)"
+        ],
+        "db": "_run301322.db",
+        "db_exists": true,
+        "stackStarted": true,
+        "missingNodes": [],
+        "nodes": {
+          "ord0278-positive-the-resume-request-carries-both-keys": "GREEN",
+          "ord0278-negative-no-marker-sends-nothing": "GREEN",
+          "ord0278-negative-off-page-sends-nothing": "GREEN",
+          "ord0278-negative-refused-keeps-the-marker-and-says-whose-words-these-are": "GREEN"
+        }
+      },
+      "attempt": {
+        "label": "mutated-owner-spec",
+        "spec": "e2e/qoder-continuation-resume-carries-identity.spec.ts",
+        "exitCode": 1,
+        "runId": "run301343",
+        "port": 4941,
+        "log": "run-run301343.log",
+        "tallies": [
+          "1 failed",
+          "4 passed (22.3s)"
+        ],
+        "db": "_run301343.db",
+        "db_exists": true,
+        "stackStarted": true,
+        "missingNodes": [],
+        "nodes": {
+          "ord0278-positive-the-resume-request-carries-both-keys": "RED",
+          "ord0278-negative-no-marker-sends-nothing": "GREEN",
+          "ord0278-negative-off-page-sends-nothing": "GREEN",
+          "ord0278-negative-refused-keeps-the-marker-and-says-whose-words-these-are": "GREEN"
+        }
+      },
+      "redSet": [
+        "ord0278-positive-the-resume-request-carries-both-keys"
+      ],
+      "exclusiveToOwner": true,
+      "claimed_result": "KILLED"
+    },
+    {
+      "name": "K278_TWO_KEYS_MERGED",
+      "ownerNode": "ord0278-positive-the-resume-request-carries-both-keys",
+      "why": "the ruling's 'two keys, never merged' violated in the direction that looks harmless: one name standing in for both, so 'same mission, different request' and 'same request, resent' collapse in storage  Measured on this tip: anchor 1 hit in frontend/src/api/journeyContinuation.ts, -5 bytes changed (7392 -> 7387), mutant 13c42505c5af. Baseline run run301366 (_run301366.db, port 4942) read GREEN; the same spec with the mutant in place ran as run301386 (_run301386.db, port 4943) and put 1 node(s) in RED [ord0278-positive-the-resume-request-carries-both-keys] out of 4. After the arm the file hashed 081c8491a206, which equals the tested tree's blob 081c8491a206.",
+      "intent": "the ruling's 'two keys, never merged' violated in the direction that looks harmless: one name standing in for both, so 'same mission, different request' and 'same request, resent' collapse in storage",
+      "file": "D:\\moodle\\_qoder_d_lane_20260923\\frontend\\src\\api\\journeyContinuation.ts",
+      "derived_from": "this arm's own readings; the one no other arm can quote is the mutant hash: arm_shape_digest_12=13c42505c5af · attempt.db=_run301386.db · baseline.db=_run301366.db · attempt.port=4943 · baseline.port=4942",
+      "triple": {
+        "exact_sha": "dbd0f9d9c7313aa9fe0c583150f35549e5e92c93",
+        "nodeid": "e2e/qoder-continuation-resume-carries-identity.spec.ts :: ord0278-positive-the-resume-request-carries-both-keys",
+        "nodeid_root": "D:/moodle/_qoder_d_lane_20260923/frontend",
+        "run_shape": "cwd=D:/moodle/_qoder_d_lane_20260923/frontend (the nodeid root above), whole owner spec e2e/qoder-continuation-resume-carries-identity.spec.ts with ONE guarded mutation live in frontend/src/api/journeyContinuation.ts, 1 worker, mobile 390x844, command=python review/run_spec.py e2e/qoder-continuation-resume-carries-identity.spec.ts 4943, run_id=run301386, fresh _run301386.db, ports 4943; verdict taken from the `K278_TWO_KEYS_MERGED` redSet below, log run-run301386.log"
+      },
+      "same_key_precondition": {
+        "key": "dbd0f9d9c7313aa9fe0c583150f35549e5e92c93 :: e2e/qoder-continuation-resume-carries-identity.spec.ts :: ord0278-positive-the-resume-request-carries-both-keys",
+        "was_green_under_this_key_in_the_gate_round": true,
+        "gate_round_file": "review/evidence/ord0298c-gate-round-dbd0f9d.json",
+        "gate_round_tip": "dbd0f9d9c7313aa9fe0c583150f35549e5e92c93",
+        "gate_round_verdict_for_this_key": "ok",
+        "baseline_owner_verdict_this_batch": "GREEN",
+        "arm_shape_digest": "13c42505c5aff6a4c3df3ec75f13db9d870751aa4e719eeb2f6248a87217e8cf",
+        "arm_shape_digest_12": "13c42505c5af",
+        "reading": "an arm only counts as a kill on this generation if the identical (sha :: spec :: title) string is present in the green round, that round's line read `ok`, and this batch's own baseline run of the same spec read GREEN before the mutant went in -- three independent readings, none of them inherited from an earlier tip"
+      },
+      "restore_proof": {
+        "file": "frontend/src/api/journeyContinuation.ts",
+        "digest_before_mutant": "081c8491a206c984934b241196eba10f91f2e50570a91e488309442f975f9ece",
+        "digest_mutated": "13c42505c5aff6a4c3df3ec75f13db9d870751aa4e719eeb2f6248a87217e8cf",
+        "digest_mutated_12": "13c42505c5af",
+        "digest_after_restore": "081c8491a206c984934b241196eba10f91f2e50570a91e488309442f975f9ece",
+        "digest_after_restore_12": "081c8491a206",
+        "digest_as_committed_in_tested_tree": "081c8491a206c984934b241196eba10f91f2e50570a91e488309442f975f9ece",
+        "digest_as_committed_in_tested_tree_12": "081c8491a206",
+        "roundtrip_equal": true,
+        "restored_to_tested_tree_bytes": true,
+        "file_bytes_before": 7392,
+        "file_bytes_under_mutant": 7387,
+        "file_bytes_after_restore": 7392,
+        "bytes_delta": -5,
+        "guard_reports_bytes_changed": true,
+        "owner_spec_ran_to_completion_under_the_mutant": true
+      },
+      "anchor_hits": 1,
+      "bytes_changed": true,
+      "bytes_delta": -5,
+      "mutated_sha256": "13c42505c5aff6a4c3df3ec75f13db9d870751aa4e719eeb2f6248a87217e8cf",
+      "restored_exact": true,
+      "baseline": {
+        "label": "baseline-owner-spec",
+        "spec": "e2e/qoder-continuation-resume-carries-identity.spec.ts",
+        "exitCode": 0,
+        "runId": "run301366",
+        "port": 4942,
+        "log": "run-run301366.log",
+        "tallies": [
+          "5 passed (17.9s)"
+        ],
+        "db": "_run301366.db",
+        "db_exists": true,
+        "stackStarted": true,
+        "missingNodes": [],
+        "nodes": {
+          "ord0278-positive-the-resume-request-carries-both-keys": "GREEN",
+          "ord0278-negative-no-marker-sends-nothing": "GREEN",
+          "ord0278-negative-off-page-sends-nothing": "GREEN",
+          "ord0278-negative-refused-keeps-the-marker-and-says-whose-words-these-are": "GREEN"
+        }
+      },
+      "attempt": {
+        "label": "mutated-owner-spec",
+        "spec": "e2e/qoder-continuation-resume-carries-identity.spec.ts",
+        "exitCode": 1,
+        "runId": "run301386",
+        "port": 4943,
+        "log": "run-run301386.log",
+        "tallies": [
+          "1 failed",
+          "4 passed (18.8s)"
+        ],
+        "db": "_run301386.db",
+        "db_exists": true,
+        "stackStarted": true,
+        "missingNodes": [],
+        "nodes": {
+          "ord0278-positive-the-resume-request-carries-both-keys": "RED",
+          "ord0278-negative-no-marker-sends-nothing": "GREEN",
+          "ord0278-negative-off-page-sends-nothing": "GREEN",
+          "ord0278-negative-refused-keeps-the-marker-and-says-whose-words-these-are": "GREEN"
+        }
+      },
+      "redSet": [
+        "ord0278-positive-the-resume-request-carries-both-keys"
+      ],
+      "exclusiveToOwner": true,
+      "claimed_result": "KILLED"
+    },
+    {
+      "name": "K278_CLEAR_BEFORE_SEND",
+      "ownerNode": "ord0269-cell1-reveals-and-names-its-boundary",
+      "why": "clause 5's forbidden shape -- the record is erased AHEAD of the send, so a run interrupted after this press is unfindable again. (v1 measured this arm with a different edit: moving the post-await clear out of its condition still erased after the send, which is a different defect and cell 1 correctly ignored it. That mutant was wrong, not the gate.)  Measured on this tip: anchor 1 hit in frontend/src/app/V8Experience.tsx, 47 bytes changed (170208 -> 170255), mutant 66a6193027f8. Baseline run run301405 (_run301405.db, port 4944) read GREEN; the same spec with the mutant in place ran as run301425 (_run301425.db, port 4945) and put 1 node(s) in RED [ord0269-cell1-reveals-and-names-its-boundary] out of 4. After the arm the file hashed e31d5d750c6a, which equals the tested tree's blob e31d5d750c6a.",
+      "intent": "clause 5's forbidden shape -- the record is erased AHEAD of the send, so a run interrupted after this press is unfindable again. (v1 measured this arm with a different edit: moving the post-await clear out of its condition still erased after the send, which is a different defect and cell 1 correctly ignored it. That mutant was wrong, not the gate.)",
+      "file": "D:\\moodle\\_qoder_d_lane_20260923\\frontend\\src\\app\\V8Experience.tsx",
+      "derived_from": "this arm's own readings; the one no other arm can quote is the mutant hash: arm_shape_digest_12=66a6193027f8 · attempt.db=_run301425.db · baseline.db=_run301405.db · attempt.port=4945 · baseline.port=4944",
+      "triple": {
+        "exact_sha": "dbd0f9d9c7313aa9fe0c583150f35549e5e92c93",
+        "nodeid": "e2e/qoder-continuation-owner.spec.ts :: ord0269-cell1-reveals-and-names-its-boundary",
+        "nodeid_root": "D:/moodle/_qoder_d_lane_20260923/frontend",
+        "run_shape": "cwd=D:/moodle/_qoder_d_lane_20260923/frontend (the nodeid root above), whole owner spec e2e/qoder-continuation-owner.spec.ts with ONE guarded mutation live in frontend/src/app/V8Experience.tsx, 1 worker, mobile 390x844, command=python review/run_spec.py e2e/qoder-continuation-owner.spec.ts 4945, run_id=run301425, fresh _run301425.db, ports 4945; verdict taken from the `K278_CLEAR_BEFORE_SEND` redSet below, log run-run301425.log"
+      },
+      "same_key_precondition": {
+        "key": "dbd0f9d9c7313aa9fe0c583150f35549e5e92c93 :: e2e/qoder-continuation-owner.spec.ts :: ord0269-cell1-reveals-and-names-its-boundary",
+        "was_green_under_this_key_in_the_gate_round": true,
+        "gate_round_file": "review/evidence/ord0298c-gate-round-dbd0f9d.json",
+        "gate_round_tip": "dbd0f9d9c7313aa9fe0c583150f35549e5e92c93",
+        "gate_round_verdict_for_this_key": "ok",
+        "baseline_owner_verdict_this_batch": "GREEN",
+        "arm_shape_digest": "66a6193027f8ca238153654fbd4a80b46096d876ee6388d73c17af74a5b527b5",
+        "arm_shape_digest_12": "66a6193027f8",
+        "reading": "an arm only counts as a kill on this generation if the identical (sha :: spec :: title) string is present in the green round, that round's line read `ok`, and this batch's own baseline run of the same spec read GREEN before the mutant went in -- three independent readings, none of them inherited from an earlier tip"
+      },
+      "restore_proof": {
+        "file": "frontend/src/app/V8Experience.tsx",
+        "digest_before_mutant": "e31d5d750c6a7ee5f8b14b7b73690443f48437c8449c41ff3589519e8f1541bf",
+        "digest_mutated": "66a6193027f8ca238153654fbd4a80b46096d876ee6388d73c17af74a5b527b5",
+        "digest_mutated_12": "66a6193027f8",
+        "digest_after_restore": "e31d5d750c6a7ee5f8b14b7b73690443f48437c8449c41ff3589519e8f1541bf",
+        "digest_after_restore_12": "e31d5d750c6a",
+        "digest_as_committed_in_tested_tree": "e31d5d750c6a7ee5f8b14b7b73690443f48437c8449c41ff3589519e8f1541bf",
+        "digest_as_committed_in_tested_tree_12": "e31d5d750c6a",
+        "roundtrip_equal": true,
+        "restored_to_tested_tree_bytes": true,
+        "file_bytes_before": 170208,
+        "file_bytes_under_mutant": 170255,
+        "file_bytes_after_restore": 170208,
+        "bytes_delta": 47,
+        "guard_reports_bytes_changed": true,
+        "owner_spec_ran_to_completion_under_the_mutant": true
+      },
+      "anchor_hits": 1,
+      "bytes_changed": true,
+      "bytes_delta": 47,
+      "mutated_sha256": "66a6193027f8ca238153654fbd4a80b46096d876ee6388d73c17af74a5b527b5",
+      "restored_exact": true,
+      "baseline": {
+        "label": "baseline-owner-spec",
+        "spec": "e2e/qoder-continuation-owner.spec.ts",
+        "exitCode": 0,
+        "runId": "run301405",
+        "port": 4944,
+        "log": "run-run301405.log",
+        "tallies": [
+          "5 passed (17.7s)"
+        ],
+        "db": "_run301405.db",
+        "db_exists": true,
+        "stackStarted": true,
+        "missingNodes": [],
+        "nodes": {
+          "ord0269-cell1-reveals-and-names-its-boundary": "GREEN",
+          "ord0269-cell3-feed-failure-and-page-exclusion-are-named": "GREEN",
+          "ord0269-r6-page-exclusion-yields-no-conclusion": "GREEN",
+          "ord0269-r4-a-brand-new-journey-shows-nothing": "GREEN"
+        }
+      },
+      "attempt": {
+        "label": "mutated-owner-spec",
+        "spec": "e2e/qoder-continuation-owner.spec.ts",
+        "exitCode": 1,
+        "runId": "run301425",
+        "port": 4945,
+        "log": "run-run301425.log",
+        "tallies": [
+          "1 failed",
+          "4 passed (17.7s)"
+        ],
+        "db": "_run301425.db",
+        "db_exists": true,
+        "stackStarted": true,
+        "missingNodes": [],
+        "nodes": {
+          "ord0269-cell1-reveals-and-names-its-boundary": "RED",
+          "ord0269-cell3-feed-failure-and-page-exclusion-are-named": "GREEN",
+          "ord0269-r6-page-exclusion-yields-no-conclusion": "GREEN",
+          "ord0269-r4-a-brand-new-journey-shows-nothing": "GREEN"
+        }
+      },
+      "redSet": [
+        "ord0269-cell1-reveals-and-names-its-boundary"
+      ],
+      "exclusiveToOwner": true,
+      "claimed_result": "KILLED"
+    },
+    {
+      "name": "K278_SILENCE_ON_NON_ACCEPT",
+      "ownerNode": "ord0278-negative-refused-keeps-the-marker-and-says-whose-words-these-are",
+      "why": "a refusal, timeout or dead transport paints no word and leaves the card standing -- the 'never silence' half of the reveal  Measured on this tip: anchor 1 hit in frontend/src/app/V8Experience.tsx, 33 bytes changed (170208 -> 170241), mutant 5ac2179b8813. Baseline run run301443 (_run301443.db, port 4946) read GREEN; the same spec with the mutant in place ran as run301463 (_run301463.db, port 4947) and put 1 node(s) in RED [ord0278-negative-refused-keeps-the-marker-and-says-whose-words-these-are] out of 4. After the arm the file hashed e31d5d750c6a, which equals the tested tree's blob e31d5d750c6a.",
+      "intent": "a refusal, timeout or dead transport paints no word and leaves the card standing -- the 'never silence' half of the reveal",
+      "file": "D:\\moodle\\_qoder_d_lane_20260923\\frontend\\src\\app\\V8Experience.tsx",
+      "derived_from": "this arm's own readings; the one no other arm can quote is the mutant hash: arm_shape_digest_12=5ac2179b8813 · attempt.db=_run301463.db · baseline.db=_run301443.db · attempt.port=4947 · baseline.port=4946",
+      "triple": {
+        "exact_sha": "dbd0f9d9c7313aa9fe0c583150f35549e5e92c93",
+        "nodeid": "e2e/qoder-continuation-resume-carries-identity.spec.ts :: ord0278-negative-refused-keeps-the-marker-and-says-whose-words-these-are",
+        "nodeid_root": "D:/moodle/_qoder_d_lane_20260923/frontend",
+        "run_shape": "cwd=D:/moodle/_qoder_d_lane_20260923/frontend (the nodeid root above), whole owner spec e2e/qoder-continuation-resume-carries-identity.spec.ts with ONE guarded mutation live in frontend/src/app/V8Experience.tsx, 1 worker, mobile 390x844, command=python review/run_spec.py e2e/qoder-continuation-resume-carries-identity.spec.ts 4947, run_id=run301463, fresh _run301463.db, ports 4947; verdict taken from the `K278_SILENCE_ON_NON_ACCEPT` redSet below, log run-run301463.log"
+      },
+      "same_key_precondition": {
+        "key": "dbd0f9d9c7313aa9fe0c583150f35549e5e92c93 :: e2e/qoder-continuation-resume-carries-identity.spec.ts :: ord0278-negative-refused-keeps-the-marker-and-says-whose-words-these-are",
+        "was_green_under_this_key_in_the_gate_round": true,
+        "gate_round_file": "review/evidence/ord0298c-gate-round-dbd0f9d.json",
+        "gate_round_tip": "dbd0f9d9c7313aa9fe0c583150f35549e5e92c93",
+        "gate_round_verdict_for_this_key": "ok",
+        "baseline_owner_verdict_this_batch": "GREEN",
+        "arm_shape_digest": "5ac2179b88139199320e289768c23f0012382a5cc192751c9ea5449d0e909530",
+        "arm_shape_digest_12": "5ac2179b8813",
+        "reading": "an arm only counts as a kill on this generation if the identical (sha :: spec :: title) string is present in the green round, that round's line read `ok`, and this batch's own baseline run of the same spec read GREEN before the mutant went in -- three independent readings, none of them inherited from an earlier tip"
+      },
+      "restore_proof": {
+        "file": "frontend/src/app/V8Experience.tsx",
+        "digest_before_mutant": "e31d5d750c6a7ee5f8b14b7b73690443f48437c8449c41ff3589519e8f1541bf",
+        "digest_mutated": "5ac2179b88139199320e289768c23f0012382a5cc192751c9ea5449d0e909530",
+        "digest_mutated_12": "5ac2179b8813",
+        "digest_after_restore": "e31d5d750c6a7ee5f8b14b7b73690443f48437c8449c41ff3589519e8f1541bf",
+        "digest_after_restore_12": "e31d5d750c6a",
+        "digest_as_committed_in_tested_tree": "e31d5d750c6a7ee5f8b14b7b73690443f48437c8449c41ff3589519e8f1541bf",
+        "digest_as_committed_in_tested_tree_12": "e31d5d750c6a",
+        "roundtrip_equal": true,
+        "restored_to_tested_tree_bytes": true,
+        "file_bytes_before": 170208,
+        "file_bytes_under_mutant": 170241,
+        "file_bytes_after_restore": 170208,
+        "bytes_delta": 33,
+        "guard_reports_bytes_changed": true,
+        "owner_spec_ran_to_completion_under_the_mutant": true
+      },
+      "anchor_hits": 1,
+      "bytes_changed": true,
+      "bytes_delta": 33,
+      "mutated_sha256": "5ac2179b88139199320e289768c23f0012382a5cc192751c9ea5449d0e909530",
+      "restored_exact": true,
+      "baseline": {
+        "label": "baseline-owner-spec",
+        "spec": "e2e/qoder-continuation-resume-carries-identity.spec.ts",
+        "exitCode": 0,
+        "runId": "run301443",
+        "port": 4946,
+        "log": "run-run301443.log",
+        "tallies": [
+          "5 passed (18.0s)"
+        ],
+        "db": "_run301443.db",
+        "db_exists": true,
+        "stackStarted": true,
+        "missingNodes": [],
+        "nodes": {
+          "ord0278-positive-the-resume-request-carries-both-keys": "GREEN",
+          "ord0278-negative-no-marker-sends-nothing": "GREEN",
+          "ord0278-negative-off-page-sends-nothing": "GREEN",
+          "ord0278-negative-refused-keeps-the-marker-and-says-whose-words-these-are": "GREEN"
+        }
+      },
+      "attempt": {
+        "label": "mutated-owner-spec",
+        "spec": "e2e/qoder-continuation-resume-carries-identity.spec.ts",
+        "exitCode": 1,
+        "runId": "run301463",
+        "port": 4947,
+        "log": "run-run301463.log",
+        "tallies": [
+          "1 failed",
+          "4 passed (37.9s)"
+        ],
+        "db": "_run301463.db",
+        "db_exists": true,
+        "stackStarted": true,
+        "missingNodes": [],
+        "nodes": {
+          "ord0278-positive-the-resume-request-carries-both-keys": "GREEN",
+          "ord0278-negative-no-marker-sends-nothing": "GREEN",
+          "ord0278-negative-off-page-sends-nothing": "GREEN",
+          "ord0278-negative-refused-keeps-the-marker-and-says-whose-words-these-are": "RED"
+        }
+      },
+      "redSet": [
+        "ord0278-negative-refused-keeps-the-marker-and-says-whose-words-these-are"
+      ],
+      "exclusiveToOwner": true,
+      "claimed_result": "KILLED"
+    },
+    {
+      "name": "K253_LEG2_KEY_DROPPED",
+      "ownerNode": "ord0253-both-legs-of-one-intent-share-one-key",
+      "why": "the pre-fix shape: the leg the server actually reads arrives with no identity, so the receipt machinery never sees the phone's own press  Measured on this tip: anchor 1 hit in frontend/src/features/planning/PlanWithAiSheet.tsx, -126 bytes changed (45674 -> 45548), mutant 0c60a2f0ca6d. Baseline run run301502 (_run301502.db, port 4948) read GREEN; the same spec with the mutant in place ran as run301517 (_run301517.db, port 4949) and put 3 node(s) in RED [ord0253-a-burst-consumes-no-key, ord0253-both-legs-of-one-intent-share-one-key, ord0253-each-intent-mints-a-fresh-key] out of 3. After the arm the file hashed 6a2e742627b3, which equals the tested tree's blob 6a2e742627b3.",
+      "intent": "the pre-fix shape: the leg the server actually reads arrives with no identity, so the receipt machinery never sees the phone's own press",
+      "file": "D:\\moodle\\_qoder_d_lane_20260923\\frontend\\src\\features\\planning\\PlanWithAiSheet.tsx",
+      "derived_from": "this arm's own readings; the one no other arm can quote is the mutant hash: arm_shape_digest_12=0c60a2f0ca6d · attempt.db=_run301517.db · baseline.db=_run301502.db · attempt.port=4949 · baseline.port=4948",
+      "triple": {
+        "exact_sha": "dbd0f9d9c7313aa9fe0c583150f35549e5e92c93",
+        "nodeid": "e2e/qoder-sheet-legs-carry-idempotency-key.spec.ts :: ord0253-both-legs-of-one-intent-share-one-key",
+        "nodeid_root": "D:/moodle/_qoder_d_lane_20260923/frontend",
+        "run_shape": "cwd=D:/moodle/_qoder_d_lane_20260923/frontend (the nodeid root above), whole owner spec e2e/qoder-sheet-legs-carry-idempotency-key.spec.ts with ONE guarded mutation live in frontend/src/features/planning/PlanWithAiSheet.tsx, 1 worker, mobile 390x844, command=python review/run_spec.py e2e/qoder-sheet-legs-carry-idempotency-key.spec.ts 4949, run_id=run301517, fresh _run301517.db, ports 4949; verdict taken from the `K253_LEG2_KEY_DROPPED` redSet below, log run-run301517.log"
+      },
+      "same_key_precondition": {
+        "key": "dbd0f9d9c7313aa9fe0c583150f35549e5e92c93 :: e2e/qoder-sheet-legs-carry-idempotency-key.spec.ts :: ord0253-both-legs-of-one-intent-share-one-key",
+        "was_green_under_this_key_in_the_gate_round": true,
+        "gate_round_file": "review/evidence/ord0298c-gate-round-dbd0f9d.json",
+        "gate_round_tip": "dbd0f9d9c7313aa9fe0c583150f35549e5e92c93",
+        "gate_round_verdict_for_this_key": "ok",
+        "baseline_owner_verdict_this_batch": "GREEN",
+        "arm_shape_digest": "0c60a2f0ca6d74f737c09568490ac160e129c24b72bea04efe18c335eae8796b",
+        "arm_shape_digest_12": "0c60a2f0ca6d",
+        "reading": "an arm only counts as a kill on this generation if the identical (sha :: spec :: title) string is present in the green round, that round's line read `ok`, and this batch's own baseline run of the same spec read GREEN before the mutant went in -- three independent readings, none of them inherited from an earlier tip"
+      },
+      "restore_proof": {
+        "file": "frontend/src/features/planning/PlanWithAiSheet.tsx",
+        "digest_before_mutant": "6a2e742627b341be4a7654acb87d8a81aac26a029dc9ffd86c8e194b505154b7",
+        "digest_mutated": "0c60a2f0ca6d74f737c09568490ac160e129c24b72bea04efe18c335eae8796b",
+        "digest_mutated_12": "0c60a2f0ca6d",
+        "digest_after_restore": "6a2e742627b341be4a7654acb87d8a81aac26a029dc9ffd86c8e194b505154b7",
+        "digest_after_restore_12": "6a2e742627b3",
+        "digest_as_committed_in_tested_tree": "6a2e742627b341be4a7654acb87d8a81aac26a029dc9ffd86c8e194b505154b7",
+        "digest_as_committed_in_tested_tree_12": "6a2e742627b3",
+        "roundtrip_equal": true,
+        "restored_to_tested_tree_bytes": true,
+        "file_bytes_before": 45674,
+        "file_bytes_under_mutant": 45548,
+        "file_bytes_after_restore": 45674,
+        "bytes_delta": -126,
+        "guard_reports_bytes_changed": true,
+        "owner_spec_ran_to_completion_under_the_mutant": true
+      },
+      "anchor_hits": 1,
+      "bytes_changed": true,
+      "bytes_delta": -126,
+      "mutated_sha256": "0c60a2f0ca6d74f737c09568490ac160e129c24b72bea04efe18c335eae8796b",
+      "restored_exact": true,
+      "baseline": {
+        "label": "baseline-owner-spec",
+        "spec": "e2e/qoder-sheet-legs-carry-idempotency-key.spec.ts",
+        "exitCode": 0,
+        "runId": "run301502",
+        "port": 4948,
+        "log": "run-run301502.log",
+        "tallies": [
+          "4 passed (13.8s)"
+        ],
+        "db": "_run301502.db",
+        "db_exists": true,
+        "stackStarted": true,
+        "missingNodes": [],
+        "nodes": {
+          "ord0253-both-legs-of-one-intent-share-one-key": "GREEN",
+          "ord0253-each-intent-mints-a-fresh-key": "GREEN",
+          "ord0253-a-burst-consumes-no-key": "GREEN"
+        }
+      },
+      "attempt": {
+        "label": "mutated-owner-spec",
+        "spec": "e2e/qoder-sheet-legs-carry-idempotency-key.spec.ts",
+        "exitCode": 1,
+        "runId": "run301517",
+        "port": 4949,
+        "log": "run-run301517.log",
+        "tallies": [
+          "3 failed",
+          "1 passed (15.7s)"
+        ],
+        "db": "_run301517.db",
+        "db_exists": true,
+        "stackStarted": true,
+        "missingNodes": [],
+        "nodes": {
+          "ord0253-both-legs-of-one-intent-share-one-key": "RED",
+          "ord0253-each-intent-mints-a-fresh-key": "RED",
+          "ord0253-a-burst-consumes-no-key": "RED"
+        }
+      },
+      "redSet": [
+        "ord0253-a-burst-consumes-no-key",
+        "ord0253-both-legs-of-one-intent-share-one-key",
+        "ord0253-each-intent-mints-a-fresh-key"
+      ],
+      "exclusiveToOwner": false,
+      "claimed_result": "KILLED"
+    },
+    {
+      "name": "K253_LEG1_KEY_DROPPED",
+      "ownerNode": "ord0253-both-legs-of-one-intent-share-one-key",
+      "why": "only one leg of one press carries the identity, so the two disagree about whose send this is -- 'one intent, one key' broken across the legs rather than dropped from both  Measured on this tip: anchor 1 hit in frontend/src/features/planning/PlanWithAiSheet.tsx, -74 bytes changed (45674 -> 45600), mutant fe5ab9f5c935. Baseline run run301534 (_run301534.db, port 4950) read GREEN; the same spec with the mutant in place ran as run301549 (_run301549.db, port 4951) and put 3 node(s) in RED [ord0253-a-burst-consumes-no-key, ord0253-both-legs-of-one-intent-share-one-key, ord0253-each-intent-mints-a-fresh-key] out of 3. After the arm the file hashed 6a2e742627b3, which equals the tested tree's blob 6a2e742627b3.",
+      "intent": "only one leg of one press carries the identity, so the two disagree about whose send this is -- 'one intent, one key' broken across the legs rather than dropped from both",
+      "file": "D:\\moodle\\_qoder_d_lane_20260923\\frontend\\src\\features\\planning\\PlanWithAiSheet.tsx",
+      "derived_from": "this arm's own readings; the one no other arm can quote is the mutant hash: arm_shape_digest_12=fe5ab9f5c935 · attempt.db=_run301549.db · baseline.db=_run301534.db · attempt.port=4951 · baseline.port=4950",
+      "triple": {
+        "exact_sha": "dbd0f9d9c7313aa9fe0c583150f35549e5e92c93",
+        "nodeid": "e2e/qoder-sheet-legs-carry-idempotency-key.spec.ts :: ord0253-both-legs-of-one-intent-share-one-key",
+        "nodeid_root": "D:/moodle/_qoder_d_lane_20260923/frontend",
+        "run_shape": "cwd=D:/moodle/_qoder_d_lane_20260923/frontend (the nodeid root above), whole owner spec e2e/qoder-sheet-legs-carry-idempotency-key.spec.ts with ONE guarded mutation live in frontend/src/features/planning/PlanWithAiSheet.tsx, 1 worker, mobile 390x844, command=python review/run_spec.py e2e/qoder-sheet-legs-carry-idempotency-key.spec.ts 4951, run_id=run301549, fresh _run301549.db, ports 4951; verdict taken from the `K253_LEG1_KEY_DROPPED` redSet below, log run-run301549.log"
+      },
+      "same_key_precondition": {
+        "key": "dbd0f9d9c7313aa9fe0c583150f35549e5e92c93 :: e2e/qoder-sheet-legs-carry-idempotency-key.spec.ts :: ord0253-both-legs-of-one-intent-share-one-key",
+        "was_green_under_this_key_in_the_gate_round": true,
+        "gate_round_file": "review/evidence/ord0298c-gate-round-dbd0f9d.json",
+        "gate_round_tip": "dbd0f9d9c7313aa9fe0c583150f35549e5e92c93",
+        "gate_round_verdict_for_this_key": "ok",
+        "baseline_owner_verdict_this_batch": "GREEN",
+        "arm_shape_digest": "fe5ab9f5c9359460837231f0c8746966c0ee97b4b888bace3a51a873b8444dea",
+        "arm_shape_digest_12": "fe5ab9f5c935",
+        "reading": "an arm only counts as a kill on this generation if the identical (sha :: spec :: title) string is present in the green round, that round's line read `ok`, and this batch's own baseline run of the same spec read GREEN before the mutant went in -- three independent readings, none of them inherited from an earlier tip"
+      },
+      "restore_proof": {
+        "file": "frontend/src/features/planning/PlanWithAiSheet.tsx",
+        "digest_before_mutant": "6a2e742627b341be4a7654acb87d8a81aac26a029dc9ffd86c8e194b505154b7",
+        "digest_mutated": "fe5ab9f5c9359460837231f0c8746966c0ee97b4b888bace3a51a873b8444dea",
+        "digest_mutated_12": "fe5ab9f5c935",
+        "digest_after_restore": "6a2e742627b341be4a7654acb87d8a81aac26a029dc9ffd86c8e194b505154b7",
+        "digest_after_restore_12": "6a2e742627b3",
+        "digest_as_committed_in_tested_tree": "6a2e742627b341be4a7654acb87d8a81aac26a029dc9ffd86c8e194b505154b7",
+        "digest_as_committed_in_tested_tree_12": "6a2e742627b3",
+        "roundtrip_equal": true,
+        "restored_to_tested_tree_bytes": true,
+        "file_bytes_before": 45674,
+        "file_bytes_under_mutant": 45600,
+        "file_bytes_after_restore": 45674,
+        "bytes_delta": -74,
+        "guard_reports_bytes_changed": true,
+        "owner_spec_ran_to_completion_under_the_mutant": true
+      },
+      "anchor_hits": 1,
+      "bytes_changed": true,
+      "bytes_delta": -74,
+      "mutated_sha256": "fe5ab9f5c9359460837231f0c8746966c0ee97b4b888bace3a51a873b8444dea",
+      "restored_exact": true,
+      "baseline": {
+        "label": "baseline-owner-spec",
+        "spec": "e2e/qoder-sheet-legs-carry-idempotency-key.spec.ts",
+        "exitCode": 0,
+        "runId": "run301534",
+        "port": 4950,
+        "log": "run-run301534.log",
+        "tallies": [
+          "4 passed (14.3s)"
+        ],
+        "db": "_run301534.db",
+        "db_exists": true,
+        "stackStarted": true,
+        "missingNodes": [],
+        "nodes": {
+          "ord0253-both-legs-of-one-intent-share-one-key": "GREEN",
+          "ord0253-each-intent-mints-a-fresh-key": "GREEN",
+          "ord0253-a-burst-consumes-no-key": "GREEN"
+        }
+      },
+      "attempt": {
+        "label": "mutated-owner-spec",
+        "spec": "e2e/qoder-sheet-legs-carry-idempotency-key.spec.ts",
+        "exitCode": 1,
+        "runId": "run301549",
+        "port": 4951,
+        "log": "run-run301549.log",
+        "tallies": [
+          "3 failed",
+          "1 passed (15.1s)"
+        ],
+        "db": "_run301549.db",
+        "db_exists": true,
+        "stackStarted": true,
+        "missingNodes": [],
+        "nodes": {
+          "ord0253-both-legs-of-one-intent-share-one-key": "RED",
+          "ord0253-each-intent-mints-a-fresh-key": "RED",
+          "ord0253-a-burst-consumes-no-key": "RED"
+        }
+      },
+      "redSet": [
+        "ord0253-a-burst-consumes-no-key",
+        "ord0253-both-legs-of-one-intent-share-one-key",
+        "ord0253-each-intent-mints-a-fresh-key"
+      ],
+      "exclusiveToOwner": false,
+      "claimed_result": "KILLED"
+    },
+    {
+      "name": "K253_ONE_KEY_FOR_ALL_INTENTS",
+      "ownerNode": "ord0253-each-intent-mints-a-fresh-key",
+      "why": "the key stops being per intent and becomes a per-session constant: both legs still agree, so only the second-press node can see it -- which is what that node exists for  Measured on this tip: anchor 1 hit in frontend/src/features/planning/PlanWithAiSheet.tsx, 11 bytes changed (45674 -> 45685), mutant 2aba1f33cc8a. Baseline run run301566 (_run301566.db, port 4952) read GREEN; the same spec with the mutant in place ran as run301580 (_run301580.db, port 4953) and put 3 node(s) in RED [ord0253-a-burst-consumes-no-key, ord0253-both-legs-of-one-intent-share-one-key, ord0253-each-intent-mints-a-fresh-key] out of 3. After the arm the file hashed 6a2e742627b3, which equals the tested tree's blob 6a2e742627b3.",
+      "intent": "the key stops being per intent and becomes a per-session constant: both legs still agree, so only the second-press node can see it -- which is what that node exists for",
+      "file": "D:\\moodle\\_qoder_d_lane_20260923\\frontend\\src\\features\\planning\\PlanWithAiSheet.tsx",
+      "derived_from": "this arm's own readings; the one no other arm can quote is the mutant hash: arm_shape_digest_12=2aba1f33cc8a · attempt.db=_run301580.db · baseline.db=_run301566.db · attempt.port=4953 · baseline.port=4952",
+      "triple": {
+        "exact_sha": "dbd0f9d9c7313aa9fe0c583150f35549e5e92c93",
+        "nodeid": "e2e/qoder-sheet-legs-carry-idempotency-key.spec.ts :: ord0253-each-intent-mints-a-fresh-key",
+        "nodeid_root": "D:/moodle/_qoder_d_lane_20260923/frontend",
+        "run_shape": "cwd=D:/moodle/_qoder_d_lane_20260923/frontend (the nodeid root above), whole owner spec e2e/qoder-sheet-legs-carry-idempotency-key.spec.ts with ONE guarded mutation live in frontend/src/features/planning/PlanWithAiSheet.tsx, 1 worker, mobile 390x844, command=python review/run_spec.py e2e/qoder-sheet-legs-carry-idempotency-key.spec.ts 4953, run_id=run301580, fresh _run301580.db, ports 4953; verdict taken from the `K253_ONE_KEY_FOR_ALL_INTENTS` redSet below, log run-run301580.log"
+      },
+      "same_key_precondition": {
+        "key": "dbd0f9d9c7313aa9fe0c583150f35549e5e92c93 :: e2e/qoder-sheet-legs-carry-idempotency-key.spec.ts :: ord0253-each-intent-mints-a-fresh-key",
+        "was_green_under_this_key_in_the_gate_round": true,
+        "gate_round_file": "review/evidence/ord0298c-gate-round-dbd0f9d.json",
+        "gate_round_tip": "dbd0f9d9c7313aa9fe0c583150f35549e5e92c93",
+        "gate_round_verdict_for_this_key": "ok",
+        "baseline_owner_verdict_this_batch": "GREEN",
+        "arm_shape_digest": "2aba1f33cc8a9f0f98b07aa5a6426994b8cd4bab32896ddc1c42da81e9cddab8",
+        "arm_shape_digest_12": "2aba1f33cc8a",
+        "reading": "an arm only counts as a kill on this generation if the identical (sha :: spec :: title) string is present in the green round, that round's line read `ok`, and this batch's own baseline run of the same spec read GREEN before the mutant went in -- three independent readings, none of them inherited from an earlier tip"
+      },
+      "restore_proof": {
+        "file": "frontend/src/features/planning/PlanWithAiSheet.tsx",
+        "digest_before_mutant": "6a2e742627b341be4a7654acb87d8a81aac26a029dc9ffd86c8e194b505154b7",
+        "digest_mutated": "2aba1f33cc8a9f0f98b07aa5a6426994b8cd4bab32896ddc1c42da81e9cddab8",
+        "digest_mutated_12": "2aba1f33cc8a",
+        "digest_after_restore": "6a2e742627b341be4a7654acb87d8a81aac26a029dc9ffd86c8e194b505154b7",
+        "digest_after_restore_12": "6a2e742627b3",
+        "digest_as_committed_in_tested_tree": "6a2e742627b341be4a7654acb87d8a81aac26a029dc9ffd86c8e194b505154b7",
+        "digest_as_committed_in_tested_tree_12": "6a2e742627b3",
+        "roundtrip_equal": true,
+        "restored_to_tested_tree_bytes": true,
+        "file_bytes_before": 45674,
+        "file_bytes_under_mutant": 45685,
+        "file_bytes_after_restore": 45674,
+        "bytes_delta": 11,
+        "guard_reports_bytes_changed": true,
+        "owner_spec_ran_to_completion_under_the_mutant": true
+      },
+      "anchor_hits": 1,
+      "bytes_changed": true,
+      "bytes_delta": 11,
+      "mutated_sha256": "2aba1f33cc8a9f0f98b07aa5a6426994b8cd4bab32896ddc1c42da81e9cddab8",
+      "restored_exact": true,
+      "baseline": {
+        "label": "baseline-owner-spec",
+        "spec": "e2e/qoder-sheet-legs-carry-idempotency-key.spec.ts",
+        "exitCode": 0,
+        "runId": "run301566",
+        "port": 4952,
+        "log": "run-run301566.log",
+        "tallies": [
+          "4 passed (13.6s)"
+        ],
+        "db": "_run301566.db",
+        "db_exists": true,
+        "stackStarted": true,
+        "missingNodes": [],
+        "nodes": {
+          "ord0253-both-legs-of-one-intent-share-one-key": "GREEN",
+          "ord0253-each-intent-mints-a-fresh-key": "GREEN",
+          "ord0253-a-burst-consumes-no-key": "GREEN"
+        }
+      },
+      "attempt": {
+        "label": "mutated-owner-spec",
+        "spec": "e2e/qoder-sheet-legs-carry-idempotency-key.spec.ts",
+        "exitCode": 1,
+        "runId": "run301580",
+        "port": 4953,
+        "log": "run-run301580.log",
+        "tallies": [
+          "3 failed",
+          "1 passed (14.9s)"
+        ],
+        "db": "_run301580.db",
+        "db_exists": true,
+        "stackStarted": true,
+        "missingNodes": [],
+        "nodes": {
+          "ord0253-both-legs-of-one-intent-share-one-key": "RED",
+          "ord0253-each-intent-mints-a-fresh-key": "RED",
+          "ord0253-a-burst-consumes-no-key": "RED"
+        }
+      },
+      "redSet": [
+        "ord0253-a-burst-consumes-no-key",
+        "ord0253-both-legs-of-one-intent-share-one-key",
+        "ord0253-each-intent-mints-a-fresh-key"
+      ],
+      "exclusiveToOwner": false,
+      "claimed_result": "KILLED"
+    }
+  ],
+  "filesAfter": {
+    "journeyContinuation.ts": "081c8491a206c984934b241196eba10f91f2e50570a91e488309442f975f9ece",
+    "V8Experience.tsx": "e31d5d750c6a7ee5f8b14b7b73690443f48437c8449c41ff3589519e8f1541bf",
+    "PlanWithAiSheet.tsx": "6a2e742627b341be4a7654acb87d8a81aac26a029dc9ffd86c8e194b505154b7"
+  },
+  "treeUnchangedByThisRun": true,
+  "allArmsKilled": true,
+  "allArmsRestoredToTestedTreeBytes": true,
+  "allArmsCarryAGreenSameKeyPrecondition": true
+}
