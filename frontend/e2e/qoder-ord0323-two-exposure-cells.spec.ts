@@ -134,7 +134,10 @@ test("N1_boundary_panel_keeps_its_own_readings_and_drops_the_failure_prose â€” è
   await expect(panel, node(arm, "the render never threw, so the boundary had nothing to say and every claim below would be vacuous")).toBeVisible({
     timeout: 30_000,
   });
-  await page.getByTestId("error-detail-fold").locator("summary").click();
+  /* The fold is opened by structure, not by a testid of my own: the same arm has to be able to speak on
+     the pre-fix file, and there it hung for the whole budget waiting for an element the old screen never
+     had (measured in the first pass, shape `cell1_baseline_sink`). */
+  await panel.locator("details").locator("summary").click();
   const detail = ((await page.getByTestId("error-detail").textContent()) ?? "").trim();
   const dom = await domReading(page);
   readings[arm] = {
