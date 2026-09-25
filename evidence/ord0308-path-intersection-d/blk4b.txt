@@ -1,0 +1,6 @@
+version Q43_r4 | input review/ledger_block_e345b9d6_0308.md 6001 B
+claims checked 19 | exempt {"YEAR": 1, "PORT": 4} | overall Q43_GATE_RED | findings 4 ['NUMBER_WITHOUT_COORDINATE']
+  line 19 F3_bare_numeric_claim NUMBER_WITHOUT_COORDINATE | 15 件 | no class matched
+  line 19 F3_bare_numeric_claim NUMBER_WITHOUT_COORDINATE | 4 件 | no class matched
+  line 19 F3_bare_numeric_claim NUMBER_WITHOUT_COORDINATE | 18 件 | no class matched
+  line 19 F3_bare_numeric_claim NUMBER_WITHOUT_COORDINATE | 4 件 | no class matched
