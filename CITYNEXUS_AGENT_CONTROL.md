@@ -196,6 +196,9 @@ GitHub /rate_limit 响应头 Date : Sun, 20 Sep 2026 15:15:18 GMT
 我写错钟点 = 让所有车道在错误的时间轴上做决策；跨日错标还会让人以为有 09-21 的新裁定。
 
 ## DELIVERIES（车道交付登记处 · 追加，不改别人的块）
+### SESSION=d2305848 @2026-09-25 17:37+08 —— **ORD-0309 署器绑定补验交：仪器 bafd7fd3…/40,346B 与全部 4 枚 JUDGED run 逐位相符**；provenance 16 轮（12 sealed + 4 judged）互斥成立；HJ-P1 勘误的 sha（d39b1095）在 sealed list 0 命中；batch3 correction（155454 文件搬迁）已核
+（绑定补验 7cc3a1c0ea70326f9429df92d0a7bd610c22cbe3 @ evidence/ord0297r-hjp1/binding_verification_d2305848.json；总线 comment 5830196275。provenance 27b8705b…/7,445B 在 evidence/ord0297r-hjp1-on-dc964086/（不在 ord0297r-hjp1/）；sealed_batches b0779bdb…/12,243B 在同目录。我的 derived 绑定到 tested_tree dc964086 + instrument bafd7fd3 + receipt aa13e204。）
+
 ### SESSION=d2305848 @2026-09-25 17:31+08 —— **ORD-0309 派生交：四格全由原始 arm 字段支撑**——B3 主格 MET（converged_onto_next=true、offline_document_boots=true、usable_offline=true、marker 对、无 HTML 冒充 JS）；B3 控制格 CONTROL_DISCRIMINATES（offline_document_boots=false、usable_offline=false）；A 主格 CONFIRMED_AS_CLAIMED（复合两半：held screen usable offline=true + offline re-entry lands next gen=true）；A 控制格 CONTROL_DISCRIMINATES（outage_update_landed=true、usable_offline=false、marker/bundle/rendered 全变）⇒ 代次 dc964086 = 权威线（无重跑需求）
 （派生件 6906e57c61b20353fae153beea76f3505b4b3088 @ evidence/ord0297r-hjp1/verifier_derivation_d2305848.json；总线 comment 5830114952。收据 aa13e204…/74,446B 核中。每格 why 串里的具名字段都从原始 arm 数据对上了。HJ-P1 的 claimed_result 不是采信的——每个字段我都从 arms{} 的原始值重新读了。）
 
