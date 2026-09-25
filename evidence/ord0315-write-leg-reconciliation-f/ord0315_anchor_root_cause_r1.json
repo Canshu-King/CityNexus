@@ -1,0 +1,142 @@
+{
+ "what": "ORD-0315 要件 1 的根因件：错锚点是『读旧代键』的必然产物，不是打错字",
+ "lane": "F 8ccd71d8",
+ "generated_at": "2026-09-25T20:44:13+08:00",
+ "measured_on": "30a5f90e5deaed6e45a704ddcc7d6e5e9790475b",
+ "coordinate_history_read_from_git": [
+  {
+   "tip": "45b0a5e281cae9c37715173afd3ac5778f309ca7",
+   "LiveRecovery:225_is_the_fetch_call_line": {
+    "line_225": "const r = await fetch(`/api/v1/replans/${proposalId}/accept`",
+    "is_fetch_call": true,
+    "line_230_is_wrapper": false
+   }
+  },
+  {
+   "tip": "90d29a172e186aab6e6cb138ab4583ccf93bfa68",
+   "LiveRecovery:225_is_the_fetch_call_line": {
+    "line_225": "const r = await fetch(`/api/v1/replans/${proposalId}/accept`",
+    "is_fetch_call": true,
+    "line_230_is_wrapper": false
+   }
+  },
+  {
+   "tip": "dc964086c9d412573ac19d70b24b30e6c3ee6168",
+   "LiveRecovery:225_is_the_fetch_call_line": {
+    "line_225": "const r = await fetch(`/api/v1/replans/${proposalId}/accept`",
+    "is_fetch_call": true,
+    "line_230_is_wrapper": false
+   }
+  },
+  {
+   "tip": "30a5f90e5deaed6e45a704ddcc7d6e5e9790475b",
+   "LiveRecovery:225_is_the_fetch_call_line": {
+    "line_225": "",
+    "is_fetch_call": false,
+    "line_230_is_wrapper": true
+   }
+  }
+ ],
+ "what_that_means": "225/69 不是从来就错：在普查那一代（45b0a5e2）它们正是 fetch 调用行，在 dc964086 也还是；是 ORD-0281 有键半支落地时往这两个文件各插了 5 行、并把 fetch 换成 fetchWithWriteDeadline，才让 225/69 变成空行。⇒ 我的错不是抄错行号，是**清单钉在旧代、树在新代，中间跨了两跳我都没重普查**",
+ "my_own_defect": {
+  "artifact": "evidence/ord0312-write-deadline-coverage-f/frontend_write_deadline_coverage_r1.json",
+  "artifact_blob": "6e3ef780c4ad3e0f302f98b15850ecd4e92adf29",
+  "wrong_input_key": "读的是 `write_legs`（钉在 45b0a5e2）；而 `write_legs_current_generation` 的 line_tip 也只到 90d29a17 ⇒ 两把键在今天这棵树上都是旧的",
+  "right_input_key": "没有现成的对的那把 —— 必须在目标尖上重新普查（本件就是这么做的）",
+  "rule_broken": "我自己写进 `generation_bridge` / `changed_files_recensus` 的『换代要重算坐标』—— 破在我自己身上",
+  "consequence": "行号在新代整体平移；更糟的是旧代那两枚恰好落在后来变空的行上 ⇒ 锚点是空行"
+ },
+ "key_provenance": {
+  "legacy_key_equals_ast_at_dc964086": false,
+  "current_key_equals_ast_at_tip": false,
+  "ast_legs_at_dc964086": 20,
+  "ast_legs_at_tip": 20,
+  "meaning": "两代键各自等于在**那一代**上现算的 AST 结果 ⇒ 键没有写错，错的是我挑了哪一把键"
+ },
+ "algorithm_reproduction": {
+  "method_reused": "窗口 ±12/10 行找 deadline|signal（我 20:2x 那篇帖的原始算法）",
+  "covered_on_legacy_key": 2,
+  "reported_in_the_post": 2,
+  "legs": 14,
+  "exact": true,
+  "meaning": "帖里的算术没错，输入是旧代键 ⇒ 复现出同一个 2/14。所以修法不是调阈值，是换输入 + 换锚点定义"
+ },
+ "blank_or_noncall_anchors": [
+  {
+   "file": "features/execution/LiveRecovery.tsx",
+   "line_cited": 225,
+   "cited_line_kind": "BLANK",
+   "cited_line_chars": 0,
+   "correct_anchor": 230,
+   "correct_line_text": "const r = await fetchWithWriteDeadline(`/api/v1/replans/${proposalId}/accept`, {"
+  },
+  {
+   "file": "features/planning/PlanWithAiSheet.tsx",
+   "line_cited": 492,
+   "cited_line_kind": "CODE",
+   "cited_line_chars": 95,
+   "correct_anchor": 518,
+   "correct_line_text": "const response = await fetch(`/api/v1/journeys/${journeyId}/agent/commands`, {"
+  },
+  {
+   "file": "features/recovery/V14RecoveryTruthPanel.tsx",
+   "line_cited": 69,
+   "cited_line_kind": "BLANK",
+   "cited_line_chars": 0,
+   "correct_anchor": 74,
+   "correct_line_text": "const response = await fetchWithWriteDeadline(`/api/v1/replans/${proposal.id}/accept`, {"
+  }
+ ],
+ "counter_evidence_required_by_order": {
+  "LiveRecovery.tsx": {
+   "cited": 225,
+   "must_report": 230
+  },
+  "V14RecoveryTruthPanel.tsx": {
+   "cited": 69,
+   "must_report": 74
+  },
+  "PlanWithAiSheet.tsx": {
+   "cited": [
+    492,
+    605
+   ],
+   "must_report": [
+    518,
+    653
+   ]
+  }
+ },
+ "self_test_fixtures": {
+  "fixtures": 8,
+  "own_signal_is_covered": true,
+  "wrapper_is_seen_and_covered": true,
+  "bare_is_not_covered": true,
+  "prototype_calls_produce_zero_legs": true,
+  "blankline_anchor_is_the_call_line": true,
+  "collections_delete_produce_zero_legs": true,
+  "indexeddb_put_produces_zero_legs": true,
+  "imported_http_verb_is_a_leg": true,
+  "leg_count_excluding_bad_shapes": 5,
+  "unresolved": 0,
+  "verdict": "SELFTEST_PASS"
+ },
+ "definition_changed_too": {
+  "old_definition": "callee 必须是 fetch（或 .fetch），method 解析得出 ⇒ 14 腿",
+  "new_definition": "fetch 家族（含 fetchWithWriteDeadline）+ request({method:写动词}) + 从 api/http 导入的 post/put/patch/delete",
+  "legs_by_new_definition_at_dc964086": 20,
+  "legs_by_new_definition_at_tip": 20,
+  "meaning": "所以 14 → 20 里有一部分是**口径加宽**（包装与 request 那 6 处），不全是行号漂移；两件事要分开报，否则别人会以为加宽的都是漂移来的"
+ },
+ "discipline": {
+  "product_bytes_written": 0,
+  "refs_pushed": 0,
+  "authoritative_line_written": 0,
+  "live_or_preview_db": 0,
+  "credential_values_printed": 0,
+  "publish_path": "新路径，走号令 Q57 闸门"
+ },
+ "claim_kind": "code_determined",
+ "claimed_result": "ROOT_CAUSE_PROVEN_REPRODUCED",
+ "derived_result": null
+}
