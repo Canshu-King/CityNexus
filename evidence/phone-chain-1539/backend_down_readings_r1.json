@@ -1,0 +1,35 @@
+{
+ "schema": "CNX_CMDR_LIVE_READING_V1",
+ "taken_at": "2026-09-25 15:39:47 +0800",
+ "claim": "the phone preview chain's API side is not served: nothing listens on the backend port, so the vite preview proxy answers the API calls itself",
+ "readings": {
+  "GET /api/v1/demo/scene via vite preview": "500 0",
+  "curl exit": 23,
+  "GET /api/v1/demo/scene direct to backend port": "000 0",
+  "curl exit (7 = connection refused)": 7,
+  "GET /api/v1/health via vite preview": "500",
+  "netstat lines matching the backend port LISTENING": [],
+  "netstat exit code (1 = no matching line)": 1,
+  "recent proxy-error lines in the preview log": [
+   "\u001b[2m15:37:10\u001b[22m \u001b[31m\u001b[1m[vite]\u001b[22m\u001b[39m \u001b[31mhttp proxy error: /api/v1/demo/scene\u001b[39m",
+   "Error: connect ECONNREFUSED 127.0.0.1:8000",
+   "\u001b[2m15:39:45\u001b[22m \u001b[31m\u001b[1m[vite]\u001b[22m\u001b[39m \u001b[31mhttp proxy error: /api/v1/demo/scene\u001b[39m",
+   "Error: connect ECONNREFUSED 127.0.0.1:8000",
+   "\u001b[2m15:39:47\u001b[22m \u001b[31m\u001b[1m[vite]\u001b[22m\u001b[39m \u001b[31mhttp proxy error: /api/v1/health\u001b[39m",
+   "Error: connect ECONNREFUSED 127.0.0.1:8000"
+  ],
+  "preview db files": {
+   "_preview.db": {
+    "bytes": 6828032,
+    "mtime": "2026-09-21 01:46:44"
+   },
+   "_preview.db-wal": {
+    "bytes": 4272472,
+    "mtime": "2026-09-21 02:40:46"
+   }
+  }
+ },
+ "log_file": "D:\\moodle\\_qoder_preview_20260920\\run\\preview_restart_1626.log",
+ "how_to_recheck": "逐条重跑同一文件里的命令即可；端口与状态码都在这份读数字段里，不在正文里",
+ "scope": "Observation only. No process was started or stopped, no database was opened for writing, no file other than this report was created."
+}
