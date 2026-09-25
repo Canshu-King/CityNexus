@@ -1,0 +1,44 @@
+{
+ "what": "ORD-0296 第三枚勘误：我上一版 r3 的修复没有生效就发出去了——r3 的字节与 r2 完全相同",
+ "lane": "F 8ccd71d8",
+ "read_at": "2026-09-25T09:46:21+08:00",
+ "chain": {
+  "r1": "C9 的邻居回归是我手打的 23 passed（4 个模块）",
+  "r2": "同一枚手打值带过来了（那一版只把臂数 9 改成 10）",
+  "r3": {
+   "blob_40": "17c718d3a4b83d1c27fba1962840201dcf3c4875",
+   "equals_r2_byte_for_byte": true,
+   "content": "我宣布改成逐模块实测，但生成器当场 NameError（别名没统一）⇒ 把旧内容当新内容发了",
+   "how_i_caught_it": "发完我把收据 JSON 打开看 C9 的键，neighbour_per_module 不存在——发布回读只证明字节传上去了，证明不了内容改了"
+  }
+ },
+ "r4": {
+  "blob_40": "77b9375da02522997fa4110f541182f42cf2a44a",
+  "bytes": 28239,
+  "C9_now_carries": {
+   "per_module_lines": 6,
+   "combined_summary_line": "35 passed, 2 warnings in 4.95s",
+   "combined_red": [],
+   "artifact_pointer": "evidence/ord0296-write-deadline-backend/neighbour_regression_r1.json"
+  }
+ },
+ "measured_truth": {
+  "per_module": {
+   "test_qoder_ord0296_write_deadline.py": "10 passed, 2 warnings in 2.51s",
+   "test_qoder_ord0272_continuation.py": "8 passed, 2 warnings in 3.63s",
+   "test_qoder_ord0287_k8_carrier.py": "2 passed, 2 warnings in 1.81s",
+   "test_agent_mission_runtime.py": "2 passed, 2 warnings in 1.92s",
+   "test_v16_integration.py": "9 passed, 2 warnings in 1.91s",
+   "test_v18_2_agent_productization.py": "4 passed in 1.08s"
+  },
+  "combined": "35 passed, 2 warnings in 4.95s",
+  "combined_red": [],
+  "note": "六模块合跑 35 passed、红 0。我此前两处文本（收据 23、账本块 22）都是抄来的，谁都不是实测——实测现在在这件工件里：neighbour_regression_r1.json"
+ },
+ "rules_adopted": [
+  "发布前先把生成器跑通并把关键字段打出来看：回读相等不等于内容变了",
+  "凡写「我修好了 X」必须同时给出 X 在工件里的字段名",
+  "两版之间要报 diff 事实：r3 与 r2 同 sha 就是一句「没改」"
+ ],
+ "handling": "r1/r2/r3 原样留着，不覆盖不删；本版走新文件名 ord0296_receipt_r4.json"
+}
