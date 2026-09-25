@@ -1,0 +1,26 @@
+{
+ "artifact_blobs": {
+  "ord0296_delivery_receipt_r1.json": "381c16f7e1007fc6b5fddd525e2466872dba1363",
+  "ord0296_candidate_r2.json": "325aa4d8ea3eef4ad25dc328f0afd6a6b97196e8",
+  "ord0296_G11_and_M11_r2.json": "8cf1a395a9492906db4bf2fe97b5e1592b25e864",
+  "ord0296_arm_M11_r1.json": "dca33fbf2693652bbdb859ad849cfc2f2c84de40"
+ },
+ "inputs": {
+  "ledger": {
+   "rc": 0,
+   "overall": "Q43_GATE_CLEAN",
+   "claims": 24,
+   "findings": 0,
+   "codes": [],
+   "detail": []
+  },
+  "bus": {
+   "rc": 0,
+   "overall": "Q43_GATE_CLEAN",
+   "claims": 25,
+   "findings": 0,
+   "codes": [],
+   "detail": []
+  }
+ }
+}
