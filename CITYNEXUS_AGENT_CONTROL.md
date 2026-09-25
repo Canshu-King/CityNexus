@@ -196,6 +196,9 @@ GitHub /rate_limit 响应头 Date : Sun, 20 Sep 2026 15:15:18 GMT
 我写错钟点 = 让所有车道在错误的时间轴上做决策；跨日错标还会让人以为有 09-21 的新裁定。
 
 ## DELIVERIES（车道交付登记处 · 追加，不改别人的块）
+### SESSION=d2305848 @2026-09-25 16:20+08 —— **ORD-0305 派生交：常量活了（2000→屏上'2'、1000→'1'、elapsed 跟走）**；3 枚反件各归各、独立击杀 = 3；late-answer NOT_MEASURED 原样保留；12 格全部由实测行派生
+（派生件 16bfbf78cda8c7fefd0553fcd98de12045ea2c7e @ evidence/ord0305-write-deadline-keyed/verifier_derivation_d2305848.json；总线 comment 5829235408。五件工件核中：writeDeadline.ts 1d67e725…/7,122B（候选树内重算相符）、readDeadline.ts be04016a…/3,393B、arms f29a74d3…/38,304B、reading TB 8edd744e…/545B、TC 09c6aceb…/594B。candidate tip 02da4602 我自己先读。诚实声明：收据未发布每枚突变的全红集矩阵，我能派生目标格翻了但不能独立验证只有目标格红了——写成 deriving limit。代际账：RUNTIME_MEASURED（Q25），候选代事实，合并后 PlanWithAiSheet 可能冲突需重测。late-answer NOT_MEASURED 不代补。）
+
 ### SESSION=d2305848 @2026-09-25 15:16+08 —— **ORD-0273 代际绑定核查交：5/8 门文件在 dc964086 与 45b0a5e2 之间 blob 不同 ⇒ Q24 NOT_TRANSFERABLE_GENERATION**——v5/v6/v7 读数不折算到当前权威线；需在 dc964086 重跑同两支 spec 才闭
 （收据 262e955f02ff174c19f9098b5b5be431b70e2921 @ evidence/ord0295-census-second-observer/ord0273_gen_binding_d2305848.json；总线 comment 5828470104。5 枚差异文件全是 intervening orders（0272/0273/0280）的落点：owner spec、journeyContinuation、V8Experience、PlanWithAiSheet、LocaleContext；3 枚 match 也在收据里。我的 v5/v6/v7 派生已交且你已确认；跨四代 redSet 逐枚相同 ⇒ 牙齿稳定，但每代击杀各立各的 run。可以照 45b0a5e2 samegen 程序在 dc964086 重跑，等你放窗。）
 
@@ -16027,6 +16030,91 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### CMDR-0925-1625 追加判据（改 ORD-0302 与 ORD-0306 两单的要件，不改投递方任何已发布件）
+
+**一、ORD-0302 增加第二枚具名格 X-5（同一枚文件、同一次落地，不给第二张单）**
+
+我亲测派生 HJ-P3 的 ORD-0301 pass 2（`evidence/ord0301-cmdr-derivation/derivation_p2_r2.json` blob `400f446a5f35be9db8b20d45773bf92b1c377939`，仪表 blob `9f53fffa34a554a75f1fd35242ae6b600d56552d`；行源 `evidence/ord0301-screen-speaks-range-hjp3/table_O0301_p2_24rows.json` blob `a07059852b57828cfb68f80b81bf273341aac11e`）时量到一枚新形状：
+
+X-5 = **屏上的句子指挥旅行者去看「技术详情」，而同一屏的 `<details>` 元素计数为 0**。命中的行：`R19_④_200_empty_body`、`R20_④_200_json_empty_object`、`R21_④_200_json_array`、`R22_④_200_text_plain_payload`、`R23_④_200_mission_unusable_status`；正控（details 计数 > 0 因而未被判）：`R5`、`R6`、`R7`、`R8`、`R14`、`R16`。文案出处在源码里可指：`frontend/src/features/planning/PlanWithAiSheet.tsx` 在尖 `dc964086c9d4…` 的 `:287`（`NO_PLANS_PRODUCED` 分支那句「原因原文在“技术详情”里」），渲染门在 `:937` 的 `<details className="plan-ai-detail">`。
+
+代次归属（这条决定它现在是否在用户手机上活着）：pass 2 的全部读数是在 `90d29a172e186aab6e6cb138ab4583ccf93bfa68` 那一代量的（投递方在件里写死 `measured_on` 与 `bundle_under_test.asset = index-BN1w-xlK.js`）。**整枚 blob 在两尖之间不等**（`c22cf42506a4175db992bde387ed8d9c6f1ffb9d` → `fd5f6e5ba2771a8d12669bde387ed8d9c…` 的正式值见检查件），所以我不主张 blob 级携载；我做的是**区域级**比对：把三处片段各自取行切片算 sha1——文案片段（旧 `:282-292` / 新 `:282-292`）、details 渲染片段（旧 `:913-923` / 新 `:936-946`）、渲染条件片段（旧 `:912-918` / 新 `:935-941`）——**三对 sha1 逐位相同**，两尖之间该文件的真实代码差只有 ORD-0253 的幂等键搬运。检查件 `evidence/ord0301-cmdr-derivation/gen_transfer_x5_region_check_r1.json` blob `473c4186383d38cd6d7e54f3570fc1b93408093f`。⇒ 结论按最窄口径写：**X-5 在两尖之间由区域字节相等携载，故它在我 15:19 部署的那一代上仍然成立；但"手机上亲眼看到"这一格仍是 NOT-DEPLOYED-OBSERVED，换代后要 HJ-P3 或红队在目标代重读一次。**
+
+给 ORD-0302 的追加要件（B 做，别扩到第三枚文件）：
+1. 要么让那句话不再承诺不存在的块，要么让该分支真的渲染出可点的块；**两选一都要有正反两读**：服务端字段 + 渲染文字（屏幕里出现「技术详情」四字 ⇒ `<details>` 计数必须 ≥ 1；计数为 0 ⇒ 句子里不得出现该承诺）。
+2. 杀手反件具名：把渲染门或文案任一方向改掉，必须且只能让那一格红（不许"全红"交卷）。
+3. X-5 与原来的 null-body 那一格同文件同行域，**一次候选、一次落地**；不要分两笔让 D 的分叉表面对两枚互相覆盖的候选。
+
+**二、ORD-0306 的行数更正：是 5 行不是 4 行**
+
+我 16:10 写 ORD-0306 时按 pass 1 报的 4 行（`R10`、`R12`、`R13`、`R17`）。pass 2 的 24 行重排后，`painted_first_line` 仍为空的行是 **5 行**：`R10_④_upstream_absent`、`R12_⑤_silent_write_leg`、`R13_⑤_silent_read_leg`、`R17_⓪_headers_then_truncated_body`、`R24_⑤_client_deadline_first_server_answers_later`（且这 5 行 `verdict` 一律 `NOT_MEASURED`）。⇒ @HJ-P3：多出来的 `R24` 也要按同一口径办（要么给行内画文，要么点名缺哪枚仪表），**别只补我点名的前 4 行**。
+
+**三、我一条猜测被证伪，按实报**：我预期 pass 1/pass 2 会出现同名行指代不同观测（因为总线正文里写了「③→R17,R18」「⑤→R13,R24」）。派生结果：两批共 14 枚同名行，**指纹（run_id, policy_stamp, verdict）逐枚相同**，另 10 枚是 pass 2 新增 ⇒ 行名在批次间是稳定的，裸 `R17` 可以继续引用。这一条不用任何人改东西。
+
+纪律：本拍权威线未移动、0 ref 推送、产品码未改、`demo/reset` 未执行、`_live`/`_preview` 未读写、凭据 0 打印；新建的只有 `evidence/ord0301-cmdr-derivation/` 下三枚新路径工件。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
+### 📱 aad2d1f2 (SESSION=aad2d1f2) P3 · **ORD-0301 补交（pass 2）：号令者 14:4x 那条第四节原文点名的 **④「答了 200 但 payload 空或畸形」** 我第一遍一行都没量 —— 认这个漏；另把 ③ 补成单子写的 `route.abort()`、把 ⑤ 补成"客户端期限先到、服务器事后才答"。表从 17 行长到 24 行** @2026-09-25T15:5x+08
+
+**先认账**：我第一遍按自己归纳的"五类"交表，比单子的范围窄在三处 —— ④ 完全没做；③ 只做了"端口拔掉/源站断线"，没做单子点名的 `route.abort()`；⑤ 只做了"服务器一直不答"，没做单子写的"**事后才答**"。这三处是我的口径问题，不是产品没给机会。
+
+**补的 7 行（同一代 `90d29a172e18`、同一枚私有构建 `index-BN1w-xlK.js`，新端口 8571–8575、一次性库重建、journey 本批新建，没有复用 pass 1 的任何一行）**
+```text
+R18 ｜ ③ 浏览器这一发根本没拿到 HTTP 回答（route.abort 掐掉那一腿） ｜ 服务端 None · — · None B · 8 ms · 谁答的=none ｜ 屏上 '连不上服务端' ｜ 归给网络=True ｜ details=0 ｜ 判 HONEST
+R19 ｜ ④ 答了 200 但正文是空的 ｜ 服务端 200 · application/json · 0 B · 255 ms · 谁答的=my-origin ｜ 屏上 '没有生成可行方案' ｜ 归给网络=False ｜ details=0 ｜ 判 HONEST
+R20 ｜ ④ 答了 200 但正文是 {} ｜ 服务端 200 · application/json · 2 B · 259 ms · 谁答的=my-origin ｜ 屏上 '没有生成可行方案' ｜ 归给网络=False ｜ details=0 ｜ 判 HONEST
+R21 ｜ ④ 答了 200 但正文是 []（类型就不对） ｜ 服务端 200 · application/json · 2 B · 257 ms · 谁答的=my-origin ｜ 屏上 '没有生成可行方案' ｜ 归给网络=False ｜ details=0 ｜ 判 HONEST
+R22 ｜ ④ 答了 200 但正文是 text/plain 一句话 ｜ 服务端 200 · text/plain; charset=utf-8 · 21 B · 254 ms · 谁答的=my-origin ｜ 屏上 '没有生成可行方案' ｜ 归给网络=False ｜ details=0 ｜ 判 HONEST
+R23 ｜ ④ 答了 200、JSON 也对，但 mission.status 是屏幕词表里没有的值 ｜ 服务端 200 · application/json · 159 B · 256 ms · 谁答的=my-origin ｜ 屏上 '没有生成可行方案' ｜ 归给网络=False ｜ details=0 ｜ 判 HONEST
+R24 ｜ ⑤ 客户端 12 s 期限先到，服务器那一发在之后才完成 ｜ 服务端 None · — · None B · None ms · 谁答的=my-origin ｜ 屏上 '（无结局卡）' ｜ 归给网络=False ｜ details=1 ｜ 判 NOT_MEASURED
+```
+
+**④ 这一类：按你写的判据它是绿的，但另一句话我不替你藏**
+```text
+五枚 200（正文 0B/2B/2B/21B/159B）屏幕上全是同一句 '没有生成可行方案'，data-result-status 全是 'NO_PLANS_PRODUCED'（五枚同一句=True）。
+  · 没有任何一行把原因归给网络 = True ⇒ 按"服务器答了就不许归给网络"这五格 HONEST，我不改判。
+  · 但「技术详情」块在 DOM 里 0 个（五枚全 0 = True），也没有任何原因标签/值 ⇒ 屏幕断言了一个具体原因（'没有生成可行方案'），底下零证据。
+  · 你说最在意我把 C2 那格"这是我们猜的"一起吞掉报上去 —— 同一件事在 ④ 里从**另一条代码路**发生：'NO_PLANS_PRODUCED' 这条分支自己就不渲染 details，不需要 helper 抛穿。
+  · 两种读法都在件里（C9 的 verdict 名按后者写），**判哪一层归你，我不替你选**。
+```
+
+**③ 与 ⑤ 各补一枚，口径对齐单子原文**
+```text
+③ 只掐被点那一腿的 route.abort：浏览器侧 'TypeError: Failed to fetch' / 网络层 'net::ERR_FAILED' / 8 ms，无 HTTP 状态 ⇒ 屏上 '连不上服务端' ⇒ 判 HONEST。
+   这行是 pass 1 那批 MISLEADS 的**配对反证**：同一句话在"真没人答"时是诚实的 ⇒ ①那批的错不能靠删文案来修。
+⑤ 源站被声明为读腿延迟 20000 ms 再答；浏览器 12007 ms 处自己期限（'AbortError: signal is aborted without reason'），屏上 '没有回音 /  / 等了 12 秒，这台服务器一个字也没回答 /  / 这一'；
+   源站 15:33:52 记下这一发写不进去：'[WinError 10053] 你的主机中的软件中止了一个已建立的连接。' ⇒ 期限比答案早 7993 ms，答案存在但已无处投递。
+```
+
+**类别覆盖（机械派生，不是我口头保证）** `{"① 应用答了一个不带 envelope 的服务器错误": ["R1", "R2", "R3", "R4"], "② 代理或网关自己答、应用根本没参与": ["R10", "R11", "R9"], "③ 真·传输失败（服务器确实没答）": ["R17", "R18"], "④ 答了 200 但 payload 空或畸形": ["R19", "R20", "R21", "R22", "R23"], "⑤ 客户端期限先到、服务器事后才答": ["R13", "R24"], "本单范围之外、同一枚病的延伸读数（我自己加的，不当判据）": ["R12", "R15", "R16"], "正控与信封阶梯（证明\"引用得了\"这一半）": ["R14", "R5", "R6", "R7", "R8"]}`；每条点名类别都有行 = True；表里 24 行没有一行落在类别之外 = True；判定合计 MISLEADS 7 ／ HONEST 12 ／ NOT_MEASURED 5。
+
+**现场一件必须报（不是我做的）**：在服预览那一代在本批中间被换过 —— pass 1 我记到 sha256 `7aa9afc77bcb` / mtime 2026-09-25T08:33:06+0800 / 引用 `index-xKIGmoBz.js`；pass 2 变成 sha256 `3f9947140cac` / mtime 2026-09-25T15:17:09+0800 / 引用 `index--q2k569d.js`。
+我所有面的 --outDir 都是我自己的私有目录（两批同一枚 sha256 `956ca81c8811`），对那个路径只做过一次读（哈希它），0 写 0 改名 0 重启；4781/4782 的监听进程创建时间 2026-09-24T16:25:57、2026-09-24T16:35:33 都早于我任何一批。
+**但新代 `index--q2k569d.js` 上这一格还红不红：我没测，不替它签**（同一把尺换一棵树我随时能开）。
+
+**本批自曝三件（都另发新件，不覆盖不删）**
+1) 这 7 臂**第一次执行全部作废**：runner 里端口还是 pass 1 的硬编码，而那张面我在 pass 1 收尾时已经停了 —— 作废 run id O0301-153130、O0301-153136、O0301-153142、O0301-153148、O0301-153154、O0301-153159、O0301-153205；那几发只留下 probe 与源站记录、没有 cell，所以没有任何读数来自它们，我把它们也当新件上架（说明写在发布器里）。修法是端口一律从当前 rig 的 state 读。
+2) 我在同一个表达式里把切片写成了单字符下标（少一个冒号），于是"作废名单"把全部 22 枚 probe 都圈了进来 —— 靠发布前的同名冲突闸当场拒住（collisions 58 -> 0 之后才放行），没有真的盖掉 pass 1 的任何名字。这与我 0300 那笔同路径覆盖是同一族病，这次被闸拦住了。
+3) 源里的反斜杠字面量被 shell 吃掉两次（blob 头里的零字节、正则里的数字类别），写出的仪器一度含 NUL 字节 / 正则失效；已改成不放反斜杠字面量，零字节用 bytes 构造。
+
+**尺子（本批自跑，交前先跑我自己的件）** `live_checks/receipt_cell_derivation_check_r2.py --receipt RECEIPT_O0301P2-1540_r2.json --min-cells 5 --expect Q38_GATE_GREEN` → cells 5 | overall Q38_GATE_GREEN | hard 0 [] | soft 0 [] ｜ 原文输出在 `q38_ruler_p2_r2.txt`
+（pass 1 那 8 格的尺输出是 `q38_ruler_run1.txt`；两批都各跑各的件，不拿一份尺结果替另一份说话。）
+
+**EVIDENCE_INTEGRITY_GATE_V1 我怎么落的（也把自己旧件里的不合规说清楚）**
+```text
+① 本块与总线帖里每个坐标都是 40 位全字；整目录逐件全字清单已上架 = `evidence_manifest_full40_r2.json` （blob 210819b37f6ef89d0ad92974d3f638993842a5ff · 列了 165 件 · 4,870,647 B · 读于尖 3dfdfa64fcdc9dd9efda2d4f50889b34406c26e9；清单故意不含它自己，理由写在件的 self_reference 字段里）。
+② pass 1 的两条 prose 坐标行里我印过 12 位短前缀（分别 5 与 6 处）—— 已发布不重写，现一律声明为**显示用**，权威以那枚清单件为准（清单里 `earlier_prose_coordinate_lines` 把这个数量也打了出来，不是我口头认）。
+③ 布尔闸三向（件：`immutability_check_final.json` blob a10c10e78f03f460e37f3fb3b7b1c7a5df59aba5）：正控 = pass-1 尖（3267f2a0c90e279606d64277540b1b9580ab5047）上那 97 件到今天尖（4730253b1c6c2e3846c183da2a63587596fba63c）仍逐名同 blob ⇒ 0 覆盖 0 删除；反控 = 我把不同字节推向两个已用名（`o0301p2_o0301_receipt_p2.py`、`publish_plan_p2.json`）时**闸当场拒绝**，我改用 _r2 新名，其中收据的 r2 就是 `076cadca5cb23f5a243095c52fe06d5b0fa434f6`；突变/边界 = 同名且字节相同它只记 skip 不重推（本批 skip 57 件），所以它不是"见名就拒"。
+④ 本批关键件全字：`RECEIPT_O0301P2-1540_r2.json` 076cadca5cb23f5a243095c52fe06d5b0fa434f6 ｜ `RECEIPT_O0301P2-1540.md` e4b4a1d706643adfcc3de49633e2fac0268fdae6 ｜ `table_O0301_p2_24rows.json` a07059852b57828cfb68f80b81bf273341aac11e ｜ `q38_ruler_p2_r2.txt` 831b6f493b297ac3ee9b06b119ad598eead14b15。
+```
+
+坐标（脚本从分支 tree 读回，非手抄）：`Canshu-King/CityNexus @ commander/control` 读回 commit 尖 `b9836b383ce0943a4bb6fec9d74f859d645e3902` · 其 tree `c4475657d7d124991c7f7c989736030c017f4633` · `evidence/ord0301-screen-speaks-range-hjp3/` 共 169 件（合计 4,918,694 B）· 每个 blob 都是 40 位全字（EVIDENCE_INTEGRITY_GATE_V1：短前缀只允许出现在清单件的 display_prefix 字段里）。关键件：`immutability_check.json` 479 B `24ce18fdb7fcd1de7dfe7709eb01560467188c4f` · `RECEIPT_O0301P2-1540_r2.json` 17,933 B `076cadca5cb23f5a243095c52fe06d5b0fa434f6` · `RECEIPT_O0301P2-1540.md` 8,829 B `e4b4a1d706643adfcc3de49633e2fac0268fdae6` · `table_O0301_p2_24rows.json` 165,021 B `a07059852b57828cfb68f80b81bf273341aac11e` · `q38_ruler_p2_r2.txt` 721 B `831b6f493b297ac3ee9b06b119ad598eead14b15` · `q38_ruler_run1.txt` 990 B `cf464b372a7edff4aba3219e5425798f953a6b8a` · `RECEIPT_O0301-1500.json` 97,514 B `9035e162b69f171de7a5d57ec30fdeddd58f0e7e` · `RECEIPT_O0301-1500.md` 17,313 B `9898cfa6455a22634b0b3688906f3bb9358ea412` · `tip_moved_readback.json` 1,938 B `55246d35fb7f19c59557e87c3a9c47aeb45c24c8` · `evidence_manifest_full40_r2.json` 44,911 B `210819b37f6ef89d0ad92974d3f638993842a5ff` · `immutability_check_final.json` 766 B `a10c10e78f03f460e37f3fb3b7b1c7a5df59aba5`。探针 `GET /git/blobs/e4b4a1d706643adfcc3de49633e2fac0268fdae6` → 与本机字节重算 sha1 相等 = True。
+
+**边界**：一次性库 `D:\moodle\_hjp3_0301_0925\o0301.s3db`（与本目录里 pass 1 那枚同名文件**不是同一枚**——起面先删再由产品自己的 `ensure_schema()` 重建）；`_live.db`/`_preview.db` 0 读写、`demo/reset` 0 次、`git apply` 0 次、凭据 0 打印；端口 8571–8576 全新，收尾七口全空（`teardown_O0301P2_r1.txt`，这次一开始就落盘）；产品字节 0 改动；**已发布路径 0 覆盖**（本批 58 件全是新名字，与架上 165 件同名冲突为 0，闸在 `publish_plan_p2.json` 里）。
+**状态**：0301 补交完，两批合起来 24 行、13 格、`derived_result` 全 null。0288 T-1(a)/(b) 仍按"等仲裁归属字"挂着，我不自启。
+
 ### CMDR-0925-1615b 上一条勘误块的补字（我自己写坏了半句，不牵连任何车道）
 
 CMDR-0925-1615 里那句「r4b（blob 见本块末尾）」是占位符没替换成功留下的坏句：替换步骤要先从 GitHub 回读 blob，而那次回读 404（分支刚被我自己的 PUT 移动）。
