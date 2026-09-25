@@ -1,0 +1,146 @@
+{
+ "cells": [
+  {
+   "derived_from": "hunk_headers=[] · keyed_call_site_line=678 · covers=False · 0281_module_blob_at_tip=1d67e725ebb3348bbeb70d743793388ed36ed9d9 · 0281_importers=[\"frontend/src/features/execution/LiveRecovery.tsx\", \"frontend/src/features/recovery/V14RecoveryTruthPanel.tsx\"]",
+   "derived_from_key": "derived_from",
+   "id": "0",
+   "own_hits": [
+    "1aea861b887273f70ec6cf726369c36a1398786e",
+    "1d67e725ebb3348bbeb70d743793388ed36ed9d9",
+    "60000",
+    "678",
+    "CLIENT_WRITE_DEADLINE_MS",
+    "KEYLESS_WRITE_DEADLINE_MS",
+    "LiveRecovery.tsx",
+    "V14RecoveryTruthPanel.tsx",
+    "keylessWriteDeadline.ts",
+    "writeDeadline.ts"
+   ],
+   "own_token_count": 32,
+   "unique_hits": [
+    "1d67e725ebb3348bbeb70d743793388ed36ed9d9",
+    "678",
+    "LiveRecovery.tsx",
+    "V14RecoveryTruthPanel.tsx"
+   ],
+   "verdict": "KEYED_LEG_UNTOUCHED",
+   "why": "这一笔提交只碰无键那一支：`plans/generate` 的调用点在第 678 行，本提交在该文件里的 hunk 起点是 （无），没有任何一枚覆盖到 678 ± 的区间。两枚形状分开具名：0281 有键那一支（`plans/generate`：仍走裸 fetch，期限由 0281 自己管） = 线上 `frontend/src/lib/writeDeadline.ts`（blob `1d67e725ebb3348bbeb70d743793388ed36ed9d9`，常数 `export const CLIENT_WRITE_DEADLINE_MS = 60_000`，只被 `frontend/src/features/execution/LiveRecovery.tsx`, `frontend/src/features/recovery/V14RecoveryTruthPanel.tsx` 引用）；0288/0310 无键那一支（`agent/commands`：本单新加的具名设备期限） = 本单新建 `frontend/src/lib/keylessWriteDeadline.ts`（blob `1aea861b887273f70ec6cf726369c36a1398786e`，常数 `KEYLESS_WRITE_DEADLINE_MS = 60000`）。两枚数值同为 60000 ms 但各管各的调用点，本单没有替 0281 交卷，也没有改它一个字节：被测那一代里根本没有那枚文件（`absent_from_my_tested_tree=true`），它是我在生成之后按线尖的只读 `git show` 读到的。",
+   "why_source": "why",
+   "why_token_count": 13
+  },
+  {
+   "derived_from": "clean: elapsed=60107 constant=60000 · probe: K0310_DERIVATION_PROBE_CONSTANT_TO_7S elapsed=7131 verdict=HOLDING_AS_EXPECTED",
+   "derived_from_key": "derived_from",
+   "id": "1",
+   "own_hits": [
+    "1",
+    "60",
+    "60000",
+    "60107",
+    "7",
+    "7000",
+    "7131",
+    "HOLDING_AS_EXPECTED",
+    "K0310_DERIVATION_PROBE_CONSTANT_TO_7S"
+   ],
+   "own_token_count": 27,
+   "unique_hits": [
+    "7131"
+   ],
+   "verdict": "NUMBER_AND_TIMER_SHARE_ONE_SOURCE",
+   "why": "常数是 `KEYLESS_WRITE_DEADLINE_MS = 60000`（`frontend/src/lib/keylessWriteDeadline.ts` 里一处定义，屏幕秒数与计时器都从它取）。干净轮 `runId=run335277` 实测等待 60107 ms，屏幕那句里的秒数是 `60`；把常数改小到 7000 的那一枚探针臂（K0310_DERIVATION_PROBE_CONSTANT_TO_7S，轮次 `runId=run335765`）里，屏幕那句跟着变成 `7` 秒、实测等待变成 7131 ms、`post_count=1`，且该臂判 HOLDING_AS_EXPECTED（仍绿）—— 两处一起动才叫同源，这就是 0281 那对 TB/TC 反件先例的形制。",
+   "why_source": "why",
+   "why_token_count": 12
+  },
+  {
+   "derived_from": "rows=[\"这一支停在具名的 UNKNOWN_*，不是 NETWORK / CANCELLED\", \"句子里有「结果未知」\", \"句子里明说这不是「没发生」（未知 ≠ 没发生）\", \"句子里明说这一笔不能靠同一把键补问（整句，不是提到键就算）\", \"屏幕上那个秒数 == 常数换算（同一个来源）\", \"实际等待时长与同一个常数一致（既没提前也没有不触发）\", \"归因标签说的是这台设备，不是「服务器给出的原因」\", \"技术详情块仍在（不是靠藏起来避免说谎）\", \"四种被禁止的说法一个都没出现\", \"客户端没有自动补发第二发\"] · origin=device · status=UNKNOWN_KEYLESS_WRITE_DEADLINE",
+   "derived_from_key": "derived_from",
+   "id": "2",
+   "own_hits": [
+    "1",
+    "60",
+    "60107",
+    "UNKNOWN_KEYLESS_WRITE_DEADLINE",
+    "qoder-ord0310-keyless-write-deadline.spec.ts"
+   ],
+   "own_token_count": 22,
+   "unique_hits": [
+    "CANCELLED",
+    "NETWORK",
+    "UNKNOWN_",
+    "UNKNOWN_KEYLESS_WRITE_DEADLINE"
+   ],
+   "verdict": "TWO_CLAUSES_PRESENT_FORBIDDEN_ABSENT",
+   "why": "屏上两件事都在：`status=UNKNOWN_KEYLESS_WRITE_DEADLINE` 的卡片正文（前 60 字）「这一笔的结果未知（不是没发生） 这台设备停止等待了，而请求已经发出去，服务器那边可能还在做。这条路线不收幂等键，所以这一」里同时出现「结果未知」与逐字「不能靠同一把键补问」；归因标签 `origin=device`、`label=这台设备自己的读数（服务器没给句子）`（不是「服务器给出的原因」），`detail_block_attached=true`；四个禁句（已取消 / 没有发生 / 再试一次 / 连不上服务端）在这枚 10 行判据里逐条判缺，实测等待 60107 ms、`post_count=1`（判据所在文件 `frontend/e2e/qoder-ord0310-keyless-write-deadline.spec.ts`，blob `61fa23882dc0936ea29d08e12d15d1d936157049`）。",
+   "why_source": "why",
+   "why_token_count": 7
+  },
+  {
+   "derived_from": "db_file=C:\\Users\\仓鼠王\\AppData\\Local\\Temp\\cnx_pytest_4hlgea2f\\suite.db table=idempotency_keys K1={from:0,to:0,missions+3}",
+   "derived_from_key": "derived_from",
+   "id": "3",
+   "own_hits": [
+    "0",
+    "3",
+    "suite.db"
+   ],
+   "own_token_count": 37,
+   "unique_hits": [
+    "3",
+    "suite.db"
+   ],
+   "verdict": "NO_KEY_ADDS_ZERO_RECEIPT_ROWS_AND_THREE_MISSIONS",
+   "why": "不带键连发三发：`idempotency_keys` 从 0 到 0（+0），而 `journey_missions` 同轮 +3 且三个 mission id 互不相同；带一把形制正确的键仍 +0（K2），说明「请求里有个头」不是凭条。库文件具名：`C:\\Users\\仓鼠王\\AppData\\Local\\Temp\\cnx_pytest_4hlgea2f\\suite.db`。",
+   "why_source": "why",
+   "why_token_count": 3
+  },
+  {
+   "derived_from": "killed=5 of 5 killers · survived=0 · probe_holding=1 · every_arm_parsed_a_node=True · restored=True · tree_unchanged=True",
+   "derived_from_key": "derived_from",
+   "id": "4",
+   "own_hits": [
+    "0",
+    "1",
+    "1aea861b887273f70ec6cf726369c36a1398786e",
+    "3bb6a39067a380c2f75629fd7562f0de8f5d2f2a",
+    "4810",
+    "5",
+    "6",
+    "61fa23882dc0936ea29d08e12d15d1d936157049",
+    "_run335277.db",
+    "bb2111362c00272d056e0a709bf73a1009366716",
+    "qoder-ord0310-keyless-write-deadline.spec.ts"
+   ],
+   "own_token_count": 42,
+   "unique_hits": [
+    "5"
+   ],
+   "verdict": "ARMS_RESTORED_TREE_UNCHANGED",
+   "why": "6 枚臂里 5 枚击杀、0 枚存活、1 枚探针按预期绿；每臂带自己的 (sha, nodeid, shape) 与还原前后 12 位摘要，`restored=true`、`tree_unchanged=true`、`every_arm_parsed_a_node=true`。绿轮坐标：`runId=run335277`、库 `_run335277.db`、端口 4810。四枚被测工件的 blob：`frontend/src/lib/keylessWriteDeadline.ts`=1aea861b887273f70ec6cf726369c36a1398786e、`frontend/src/features/planning/PlanWithAiSheet.tsx`=3bb6a39067a380c2f75629fd7562f0de8f5d2f2a、`frontend/e2e/qoder-ord0310-keyless-write-deadline.spec.ts`=61fa23882dc0936ea29d08e12d15d1d936157049、`backend/tests/test_qoder_ord0310_keyless_leg_receipts.py`=bb2111362c00272d056e0a709bf73a1009366716。`claimed_result` 是本车道观测，`derived_result` 一律留 null 给红队，等级不由本车道签。",
+   "why_source": "why",
+   "why_token_count": 15
+  }
+ ],
+ "cells_found": 5,
+ "exit": 0,
+ "findings": [],
+ "hard_codes": [],
+ "hard_count": 0,
+ "info_count": 0,
+ "meaning": "no shared literal and every sentence names its own readings",
+ "overall": "Q38_GATE_GREEN",
+ "receipt": {
+  "blob_sha1": "b7029fd3a8c806a3dceb6143133480a587c5c5f0",
+  "bytes": 25055,
+  "path": "_scratch_0310/ord0310_keyless_deadline_receipt_r1.json"
+ },
+ "soft_codes": [],
+ "soft_count": 0,
+ "unique_reading_counts": {
+  "0": 15,
+  "1": 9,
+  "2": 6,
+  "3": 13,
+  "4": 15
+ }
+}
