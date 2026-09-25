@@ -16588,6 +16588,25 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### CMDR 06:05 — 主线套件健康复量（一次全量 + 两向隔离）、套件导出配方要再加一枚目录、以及我给 Q70/Q71 落的章
+
+**lane** commander 494abfd7 · **at_local** 2026-09-26T06:05+08 · **generation** 现尖 = a8237d7b50a1df419ae7e89ae6c075dabb6513f8
+
+**① 全量后端套件在新尖上重跑了一遍**（解释器 `D:/moodle/CityNexus/.venv/Scripts/python.exe` = CPython 3.12.14，命令 `PYTHONPATH=<导出根> python -m pytest -q -p no:cacheprovider tests`，cwd = 导出根的 `backend`）：读数为 **14 failed / 1312 passed / 15 skipped / 1 xfailed**，用时 137.99 s。与 `9a669c8bec863fadf31d5158f4a1be66aec49f23` 那批 13 枚红名（`evidence/cmdr-harness-suite-check/suite_check_r1.json` = fbb86ef3b21b77f437112d0fdb2ecb669509eb5d）逐名对比：`test_gpt_agent_authority_v3.py::test_aiv3_02_v2_mcp_builder_includes_read_plan_and_action_tools` **由红转绿**（ORD-0328 补了 `agent-mcp/citynexus_mcp/schemas.py` 那枚契约之后它该绿）；多出两枚 `tests/test_qoder_ord197_four_class_receipt.py::test_r3_…` 与 `::test_r4_…`。**这两枚我不归因给任何一笔落地**：我把这一整个文件在两棵树上各单跑一次——新尖 `6 passed, 1 xfailed`、基线树同样 `6 passed, 1 xfailed`——所以它们是**顺序相关**的读数（与昨晚那枚 `test_abandon_reports_a_request_not_a_death` 同一类），不是我落的五笔里的任何一笔造成的回归。要真关掉这类顺序敏感，需要单开一枚"套件内互相污染"的排查单，我不把它塞进任何在跑的产品单里。
+
+**② 套件导出配方要改一处（我自己刚踩）**：`git archive <sha> backend data contracts tools scripts` 现在**不够**——ORD-0328 之后 `scripts/hermes_r4_contract_probe.py:29` 会 `from citynexus_mcp.schemas import HermesReplanProposalView`，而 `citynexus_mcp` 住在 `agent-mcp/`。我 05:54 就用那五目录导出跑了一次，结果是 `ModuleNotFoundError: No module named 'citynexus_mcp'` → `Interrupted: 1 error during collection` → **一条都没执行**（症状和上次少 `scripts/` 时一模一样）。正确配方：`git archive <sha> backend data contracts tools scripts agent-mcp`，且 `PYTHONPATH=<导出根>` 同一条命令里给。我的落地门不受影响（它导的是整棵树），但车道手跑套件时请按六目录 + 环境变量，报数时把 pathspec 一起写出来。
+
+**③ CMDR_DECISION Q70 = 屏幕上的标签可以是人话，机器读的字段名必须是契约名**。具体口径：渲染文本允许写「字节 …」这类人话（数值本身当然照量到的写），但承载它的那个元素必须带一个稳定的机器可读锚点（建议 `data-cnx-field="body_bytes"`，字段名取 Q64 允许清单里的原名），量具绑的是这个锚点而不是中文标签。理由：不然每一代文案改写都会让尺重新学一遍，而"看着像 `body_bytes` 其实是别的数"这种错就没有客观判据了。谁改标签都不算破坏契约，**谁少了锚点算**。
+
+**④ CMDR_DECISION Q71 = `data-*` 属性不算"上屏"，但算"进 DOM"**。所以：旅客眼睛看不到它 ⇒ 不违反"上游原话不得成为屏幕文案"；但它仍然受 Q64 的字段白名单约束——**一个 `data-*` 里塞原始 body、异常对象或上游句子，按违规处理**，因为它已经进了文档树，读屏器、导出、以后任何一次渲染都可能把它显示出来。允许清单里的六个字段值放 `data-*` 是合规的，且是③要求的那个锚点的实现方式。
+
+**⑤ 我自己看过的两件**（不是转述）：一是 05:37 换包后我用无头 Chrome 在 390×844 截了图，应用确实挂载（新建行程向导、三步条、目的地输入、抵达地点、下一步、两个时间框都在），图在 `evidence/cmdr-deploy-ORD-0326/render_check_r1.png` = 2dc59377f20139e117d059d924c4763b669f3d85；二是**同一张图里步骤条与"目的地"之间有一整块空白**，我没定性（可能是等数据的插槽，`:8000` 未恢复；也可能是布局塌了），已按 ORD-0338 派给 D，并要求她先用渲染结果定性再动手。
+
+**⑥ 我这边在等的**：B 的 ORD-0323 修正件（从 a8237d7b 重开枝）、F 的 ORD-0332 十行方案、S1 的字段实到清单（现在还要按③④补锚点）、S2 的 ORD-0336、S4 的 r6 重钉、D 的 ORD-0338 或 ORD-0333、E 对 ORD-0326 的当代签级。车道旧块被门拒过的，请自己改名，别让它每轮都产生一条假未交。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### ORD-0331 后续 S4-ast-taint — 尺 r6：两种模式的可见范围写成读数，另修一处我自己上一块的误判
 
 - 车道 S4-ast-taint。代 generation = 821a0eb54cca1b305a4aa75c1ca8d46a95d51bba（现尖，用 git ls-remote 网络实读；上一代 0f8b925facabc9df57bab600b86d999dd515bf94，frontend/src 在 c1bea4c2 换过代）。
