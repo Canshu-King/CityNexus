@@ -1,0 +1,510 @@
+{
+ "schema": "CNX_ORD0323_ARMS_R1",
+ "order": "ORD-0323",
+ "lane": "B c01d72a3",
+ "at_local": "2026-09-26T04:04:53+0800",
+ "measurement_scope": {
+  "generation": {
+   "baseline_tip": "9a669c8bec863fadf31d5158f4a1be66aec49f23",
+   "candidate": "e302e4c433712284a23c1c0ab11147fe105e1e22",
+   "commits_between": 2,
+   "baseline_provenance": "the tip the commander named in ORD-0323 (9a669c8b), re-read with git ls-remote before this run"
+  },
+  "tree": "D:\\moodle\\_qoder_b_lane_20260923",
+  "spec": "e2e/qoder-ord0323-two-exposure-cells.spec.ts",
+  "ports": {
+   "fixed": {
+    "frontend": 4460,
+    "backend": 42460
+   },
+   "cell1_baseline_sink": {
+    "frontend": 4461,
+    "backend": 42461
+   },
+   "cell1_leak_beside_fields": {
+    "frontend": 4462,
+    "backend": 42462
+   },
+   "cell1_fields_gone": {
+    "frontend": 4463,
+    "backend": 42463
+   },
+   "cell2_baseline_throw": {
+    "frontend": 4464,
+    "backend": 42464
+   },
+   "cell2_leak_beside_fields": {
+    "frontend": 4465,
+    "backend": 42465
+   },
+   "cell2_fields_blind": {
+    "frontend": 4466,
+    "backend": 42466
+   }
+  },
+  "database_per_run": "one sqlite file per run id, named by CITYNEXUS_DATABASE_URL",
+  "mode": "CITYNEXUS_E2E_AUTHORITATIVE=1, AI disabled, both servers started by each invocation"
+ },
+ "files": {
+  "ProductErrorBoundary.tsx": {
+   "candidate_sha256": "b908ac3084837ec212d66e33828f0ee8a2d81a2d4c2a8c85a6cd19201f484d94",
+   "baseline_sha256": "bc05b338335a50c2caaeb403285de2a1f0a33caf1ba2b0a20216d0e12785d5dd"
+  },
+  "JourneyInboxWorkbench.tsx": {
+   "candidate_sha256": "39fbded34355fe36bde076b4adbf856c6dfe2a0503a78e45f2b25898e2e90851",
+   "baseline_sha256": "1a5682fa0bded168e5b44e8682f5b0929fc4796b688385a621eaabb26da6e5f9"
+  }
+ },
+ "shapes": {
+  "fixed": {
+   "rc": 0,
+   "reporter_outcomes": {
+    "N1": "passed",
+    "N2": "passed",
+    "N3": "passed"
+   },
+   "report": "ord0323_0323fix0317.json",
+   "log": "ord0323_0323fix0317.log",
+   "run_id": "0323fix0317",
+   "evidence_dir": "D:\\moodle\\_qoder_b_ord0323_20260926\\e2e_0323fix0317\\ord0323",
+   "mutant_digests": {
+    "boundary": "b908ac3084837ec2",
+    "workbench": "39fbded34355fe36"
+   },
+   "per_arm": {
+    "N1": "passed",
+    "N2": "passed",
+    "N3": "passed"
+   },
+   "expected": {
+    "N1": "passed",
+    "N2": "passed",
+    "N3": "passed"
+   },
+   "intended": null,
+   "meets_expectation": true,
+   "arms_without_a_reading": [],
+   "reporter_and_evidence_agree": true
+  },
+  "cell1_baseline_sink": {
+   "rc": 1,
+   "reporter_outcomes": {
+    "N1": "failed",
+    "N2": "passed",
+    "N3": "passed"
+   },
+   "report": "ord0323_0323c1b0317.json",
+   "log": "ord0323_0323c1b0317.log",
+   "run_id": "0323c1b0317",
+   "evidence_dir": "D:\\moodle\\_qoder_b_ord0323_20260926\\e2e_0323c1b0317\\ord0323",
+   "mutant_digests": {
+    "boundary": "bc05b338335a50c2",
+    "workbench": "39fbded34355fe36"
+   },
+   "per_arm": {
+    "N1": "failed",
+    "N2": "passed",
+    "N3": "passed"
+   },
+   "expected": {
+    "N1": "failed",
+    "N2": "passed",
+    "N3": "passed"
+   },
+   "intended": null,
+   "meets_expectation": true,
+   "arms_without_a_reading": [],
+   "reporter_and_evidence_agree": true
+  },
+  "cell1_leak_beside_fields": {
+   "rc": 1,
+   "reporter_outcomes": {
+    "N1": "failed",
+    "N2": "passed",
+    "N3": "passed"
+   },
+   "report": "ord0323_0323c1l0317.json",
+   "log": "ord0323_0323c1l0317.log",
+   "run_id": "0323c1l0317",
+   "evidence_dir": "D:\\moodle\\_qoder_b_ord0323_20260926\\e2e_0323c1l0317\\ord0323",
+   "mutant_digests": {
+    "boundary": "15136a1ae600d388",
+    "workbench": "39fbded34355fe36"
+   },
+   "per_arm": {
+    "N1": "failed",
+    "N2": "passed",
+    "N3": "passed"
+   },
+   "expected": {
+    "N1": "failed",
+    "N2": "passed",
+    "N3": "passed"
+   },
+   "intended": "negative_only",
+   "meets_expectation": true,
+   "arms_without_a_reading": [],
+   "reporter_and_evidence_agree": true
+  },
+  "cell1_fields_gone": {
+   "rc": 1,
+   "reporter_outcomes": {
+    "N1": "failed",
+    "N2": "passed",
+    "N3": "passed"
+   },
+   "report": "ord0323_0323c1f0317.json",
+   "log": "ord0323_0323c1f0317.log",
+   "run_id": "0323c1f0317",
+   "evidence_dir": "D:\\moodle\\_qoder_b_ord0323_20260926\\e2e_0323c1f0317\\ord0323",
+   "mutant_digests": {
+    "boundary": "28c415141eda35e7",
+    "workbench": "39fbded34355fe36"
+   },
+   "per_arm": {
+    "N1": "failed",
+    "N2": "passed",
+    "N3": "passed"
+   },
+   "expected": {
+    "N1": "failed",
+    "N2": "passed",
+    "N3": "passed"
+   },
+   "intended": "positive_only",
+   "meets_expectation": true,
+   "arms_without_a_reading": [],
+   "reporter_and_evidence_agree": true
+  },
+  "cell2_baseline_throw": {
+   "rc": 1,
+   "reporter_outcomes": {
+    "N1": "passed",
+    "N2": "failed",
+    "N3": "failed"
+   },
+   "report": "ord0323_0323c2b0317.json",
+   "log": "ord0323_0323c2b0317.log",
+   "run_id": "0323c2b0317",
+   "evidence_dir": "D:\\moodle\\_qoder_b_ord0323_20260926\\e2e_0323c2b0317\\ord0323",
+   "mutant_digests": {
+    "boundary": "b908ac3084837ec2",
+    "workbench": "1a5682fa0bded168"
+   },
+   "per_arm": {
+    "N1": "passed",
+    "N2": "failed",
+    "N3": "failed"
+   },
+   "expected": {
+    "N1": "passed",
+    "N2": "failed",
+    "N3": "failed"
+   },
+   "intended": null,
+   "meets_expectation": true,
+   "arms_without_a_reading": [],
+   "reporter_and_evidence_agree": true
+  },
+  "cell2_leak_beside_fields": {
+   "rc": 1,
+   "reporter_outcomes": {
+    "N1": "passed",
+    "N2": "failed",
+    "N3": "failed"
+   },
+   "report": "ord0323_0323c2l0317.json",
+   "log": "ord0323_0323c2l0317.log",
+   "run_id": "0323c2l0317",
+   "evidence_dir": "D:\\moodle\\_qoder_b_ord0323_20260926\\e2e_0323c2l0317\\ord0323",
+   "mutant_digests": {
+    "boundary": "b908ac3084837ec2",
+    "workbench": "773377b1e240f4fe"
+   },
+   "per_arm": {
+    "N1": "passed",
+    "N2": "failed",
+    "N3": "failed"
+   },
+   "expected": {
+    "N1": "passed",
+    "N2": "failed",
+    "N3": "failed"
+   },
+   "intended": "negative_only",
+   "meets_expectation": true,
+   "arms_without_a_reading": [],
+   "reporter_and_evidence_agree": true
+  },
+  "cell2_fields_blind": {
+   "rc": 1,
+   "reporter_outcomes": {
+    "N1": "passed",
+    "N2": "failed",
+    "N3": "failed"
+   },
+   "report": "ord0323_0323c2f0317.json",
+   "log": "ord0323_0323c2f0317.log",
+   "run_id": "0323c2f0317",
+   "evidence_dir": "D:\\moodle\\_qoder_b_ord0323_20260926\\e2e_0323c2f0317\\ord0323",
+   "mutant_digests": {
+    "boundary": "b908ac3084837ec2",
+    "workbench": "4329543daae8cabf"
+   },
+   "per_arm": {
+    "N1": "passed",
+    "N2": "failed",
+    "N3": "failed"
+   },
+   "expected": {
+    "N1": "passed",
+    "N2": "failed",
+    "N3": "failed"
+   },
+   "intended": "positive_only",
+   "meets_expectation": true,
+   "arms_without_a_reading": [],
+   "reporter_and_evidence_agree": true
+  }
+ },
+ "per_arm_readings": {
+  "fixed": {
+   "N1": {
+    "panel_copy": "Something went wrong hereYour trip data has not been lost. You can retry this screen or go back to Today.Try againBack to TodayReload the appTechnical detailcaught_at=2026-09-25T20:03:28.362Z route=/v8/bookings failures_caught_here=1 online_at_this_device=yes failure_text_rendered=no",
+    "error_detail_text": "caught_at=2026-09-25T20:03:28.362Z\nroute=/v8/bookings\nfailures_caught_here=1\nonline_at_this_device=yes\nfailure_text_rendered=no",
+    "console_error_count": 1,
+    "console_error_head": [
+     "%o\n\n%s\n\n%s\n TypeError: Cannot read properties of undefined (reading 'length')\n    at http://127.0.0.1:4460/src/features/inbox/JourneyInboxWorkbench.tsx:949:82\n    at Array.map (<anonymous>)\n    at JourneyInboxWorkbench ("
+    ],
+    "overlay_hosts": [
+     "div#root",
+     "script"
+    ],
+    "leaked_needles_still_on_screen": [],
+    "test_status": "passed"
+   },
+   "N2": {
+    "message_text": "这台设备收到的回复读不成这条请求要的结果（HTTP 500，内容类型 application/json）。",
+    "pending_text": "待审清单读不出来： 这台设备收到的回复读不成这条请求要的结果（HTTP 503，内容类型 application/json）。 重读清单",
+    "leaked_needles_still_on_screen": [],
+    "test_status": "passed"
+   },
+   "N3": {
+    "fold_summary": "技术详情",
+    "fold_text": "技术详情这台设备收到的回复读不成这条请求要的结果（HTTP 500，内容类型 application/json）。",
+    "fold_code_visible": "这台设备收到的回复读不成这条请求要的结果（HTTP 500，内容类型 application/json）。",
+    "status_line": "服务器没有把这条判为通过，它现在说：需审核。",
+    "leaked_needles_still_on_screen": [],
+    "test_status": "passed"
+   }
+  },
+  "cell1_baseline_sink": {
+   "N1": {
+    "panel_copy": "Something went wrong hereYour trip data has not been lost. You can retry this screen or go back to Today.Try againBack to TodayReload the appTechnical detailCannot read properties of undefined (reading 'length') at JourneyInboxWorkbench (http://127.0.0.1:4461/src/features/inbox/JourneyInboxWorkbench.tsx:157:41) at div (<anonymous>) at div (<anonymous>) at main (<anonymous>) at div (<anonymous>) at V8Experience (http://127.0.0.1:4461/src/app/V8Experience.tsx:297:29) at ProductErrorBoundary (http://127.0.0.1:4461/src/components/ProductErrorBoundary.tsx:29:5) at App (<anonymo",
+    "error_detail_text": "Cannot read properties of undefined (reading 'length')\n\n    at JourneyInboxWorkbench (http://127.0.0.1:4461/src/features/inbox/JourneyInboxWorkbench.tsx:157:41)\n    at div (<anonymous>)\n    at div (<anonymous>)\n    at main (<anonymous>)\n    at div (<anonymous>)\n    at V8Experience (http://127.0.0.1:4461/src/app/V8Experience.tsx:297:29)\n    at ProductErrorBoundary (http://127.0.0.1:4461/src/components/ProductErrorBoundary.tsx:29:5)\n    at App (<anonymo",
+    "console_error_count": 1,
+    "console_error_head": [
+     "%o\n\n%s\n\n%s\n TypeError: Cannot read properties of undefined (reading 'length')\n    at http://127.0.0.1:4461/src/features/inbox/JourneyInboxWorkbench.tsx:949:82\n    at Array.map (<anonymous>)\n    at JourneyInboxWorkbench ("
+    ],
+    "overlay_hosts": [
+     "div#root",
+     "script"
+    ],
+    "leaked_needles_still_on_screen": [
+     "Cannot read",
+     "JourneyInboxWorkbench"
+    ],
+    "test_status": "failed",
+    "error_head": "Error: e2e/qoder-ord0323-two-exposure-cells.spec.ts :: N1 — the fold no longer states which screen failed; it reads \"Cannot read properties of undefined (reading 'length') at JourneyInboxWorkbench (http://127.0.0.1:4461/src/features/inbox/JourneyInboxWorkbench.tsx:157:41) at div (<anonymous>) at div (<a\" \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m Expected: \u001b[32mtrue\u001b[39m Received: \u001b[31mfalse\u001b[39m"
+   },
+   "N2": {
+    "message_text": "这台设备收到的回复读不成这条请求要的结果（HTTP 500，内容类型 application/json）。",
+    "pending_text": "待审清单读不出来： 这台设备收到的回复读不成这条请求要的结果（HTTP 503，内容类型 application/json）。 重读清单",
+    "leaked_needles_still_on_screen": [],
+    "test_status": "passed"
+   },
+   "N3": {
+    "fold_summary": "技术详情",
+    "fold_text": "技术详情这台设备收到的回复读不成这条请求要的结果（HTTP 500，内容类型 application/json）。",
+    "fold_code_visible": "这台设备收到的回复读不成这条请求要的结果（HTTP 500，内容类型 application/json）。",
+    "status_line": "服务器没有把这条判为通过，它现在说：需审核。",
+    "leaked_needles_still_on_screen": [],
+    "test_status": "passed"
+   }
+  },
+  "cell1_leak_beside_fields": {
+   "N1": {
+    "panel_copy": "Something went wrong hereYour trip data has not been lost. You can retry this screen or go back to Today.Try againBack to TodayReload the appTechnical detailcaught_at=2026-09-25T20:03:55.129Z route=/v8/bookings failures_caught_here=1 online_at_this_device=yes failure_text_rendered=noCannot read properties of undefined (reading 'length')",
+    "error_detail_text": "caught_at=2026-09-25T20:03:55.129Z\nroute=/v8/bookings\nfailures_caught_here=1\nonline_at_this_device=yes\nfailure_text_rendered=noCannot read properties of undefined (reading 'length')",
+    "console_error_count": 1,
+    "console_error_head": [
+     "%o\n\n%s\n\n%s\n TypeError: Cannot read properties of undefined (reading 'length')\n    at http://127.0.0.1:4462/src/features/inbox/JourneyInboxWorkbench.tsx:949:82\n    at Array.map (<anonymous>)\n    at JourneyInboxWorkbench ("
+    ],
+    "overlay_hosts": [
+     "div#root",
+     "script"
+    ],
+    "leaked_needles_still_on_screen": [
+     "Cannot read"
+    ],
+    "test_status": "failed",
+    "error_head": "Error: e2e/qoder-ord0323-two-exposure-cells.spec.ts :: N1 — the boundary is printing what it was handed again ([\"Cannot read\"]); the screen reads \"Something went wrong hereYour trip data has not been lost. You can retry this screen or go back to Today.Try againBack to TodayReload the appTechnical detailcaught_at=2026-09-25T20:03:55.129Z route=/v8/bookings failures_caught_here=1 online\" \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // deep equality\u001b[22m \u001b[32m- Expected - 1\u001b[39m \u001b[31m+ Received + 3\u001b[39m \u001b[32m- Array []\u001b[39m \u001b[31m+ Array [\u001b[39m \u001b[31m+ \"Cann"
+   },
+   "N2": {
+    "message_text": "这台设备收到的回复读不成这条请求要的结果（HTTP 500，内容类型 application/json）。",
+    "pending_text": "待审清单读不出来： 这台设备收到的回复读不成这条请求要的结果（HTTP 503，内容类型 application/json）。 重读清单",
+    "leaked_needles_still_on_screen": [],
+    "test_status": "passed"
+   },
+   "N3": {
+    "fold_summary": "技术详情",
+    "fold_text": "技术详情这台设备收到的回复读不成这条请求要的结果（HTTP 500，内容类型 application/json）。",
+    "fold_code_visible": "这台设备收到的回复读不成这条请求要的结果（HTTP 500，内容类型 application/json）。",
+    "status_line": "服务器没有把这条判为通过，它现在说：需审核。",
+    "leaked_needles_still_on_screen": [],
+    "test_status": "passed"
+   }
+  },
+  "cell1_fields_gone": {
+   "N1": {
+    "panel_copy": "Something went wrong hereYour trip data has not been lost. You can retry this screen or go back to Today.Try againBack to TodayReload the appTechnical detailfailure_text_rendered=no",
+    "error_detail_text": "failure_text_rendered=no",
+    "console_error_count": 1,
+    "console_error_head": [
+     "%o\n\n%s\n\n%s\n TypeError: Cannot read properties of undefined (reading 'length')\n    at http://127.0.0.1:4463/src/features/inbox/JourneyInboxWorkbench.tsx:949:82\n    at Array.map (<anonymous>)\n    at JourneyInboxWorkbench ("
+    ],
+    "overlay_hosts": [
+     "div#root",
+     "script"
+    ],
+    "leaked_needles_still_on_screen": [],
+    "test_status": "failed",
+    "error_head": "Error: e2e/qoder-ord0323-two-exposure-cells.spec.ts :: N1 — the fold no longer states which screen failed; it reads \"failure_text_rendered=no\" \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m Expected: \u001b[32mtrue\u001b[39m Received: \u001b[31mfalse\u001b[39m"
+   },
+   "N2": {
+    "message_text": "这台设备收到的回复读不成这条请求要的结果（HTTP 500，内容类型 application/json）。",
+    "pending_text": "待审清单读不出来： 这台设备收到的回复读不成这条请求要的结果（HTTP 503，内容类型 application/json）。 重读清单",
+    "leaked_needles_still_on_screen": [],
+    "test_status": "passed"
+   },
+   "N3": {
+    "fold_summary": "技术详情",
+    "fold_text": "技术详情这台设备收到的回复读不成这条请求要的结果（HTTP 500，内容类型 application/json）。",
+    "fold_code_visible": "这台设备收到的回复读不成这条请求要的结果（HTTP 500，内容类型 application/json）。",
+    "status_line": "服务器没有把这条判为通过，它现在说：需审核。",
+    "leaked_needles_still_on_screen": [],
+    "test_status": "passed"
+   }
+  },
+  "cell2_baseline_throw": {
+   "N1": {
+    "panel_copy": "Something went wrong hereYour trip data has not been lost. You can retry this screen or go back to Today.Try againBack to TodayReload the appTechnical detailcaught_at=2026-09-25T20:04:22.914Z route=/v8/bookings failures_caught_here=1 online_at_this_device=yes failure_text_rendered=no",
+    "error_detail_text": "caught_at=2026-09-25T20:04:22.914Z\nroute=/v8/bookings\nfailures_caught_here=1\nonline_at_this_device=yes\nfailure_text_rendered=no",
+    "console_error_count": 1,
+    "console_error_head": [
+     "%o\n\n%s\n\n%s\n TypeError: Cannot read properties of undefined (reading 'length')\n    at http://127.0.0.1:4464/src/features/inbox/JourneyInboxWorkbench.tsx:943:82\n    at Array.map (<anonymous>)\n    at JourneyInboxWorkbench ("
+    ],
+    "overlay_hosts": [
+     "div#root",
+     "script"
+    ],
+    "leaked_needles_still_on_screen": [],
+    "test_status": "passed"
+   },
+   "N2": {
+    "message_text": "memory_forbidden_token_9f3c the traveller's own words were refused",
+    "pending_text": "待审清单读不出来： inbox_forbidden_token_4b71 the review queue is not ready 重读清单",
+    "leaked_needles_still_on_screen": [
+     "memory_forbidden_token_9f3c the traveller's own words were refused",
+     "inbox_forbidden_token_4b71 the review queue is not ready"
+    ],
+    "test_status": "failed",
+    "error_head": "Error: e2e/qoder-ord0323-two-exposure-cells.spec.ts :: N2 — the memory slot no longer states the status and content type this device got (memory_forbidden_token_9f3c the traveller's own words were refused) \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m Expected: \u001b[32mtrue\u001b[39m Received: \u001b[31mfalse\u001b[39m"
+   },
+   "N3": {
+    "fold_summary": "技术详情",
+    "fold_text": "技术详情confirm_forbidden_token_c258 the commitment was rejected",
+    "fold_code_visible": "confirm_forbidden_token_c258 the commitment was rejected",
+    "status_line": "服务器没有把这条判为通过，它现在说：需审核。",
+    "leaked_needles_still_on_screen": [
+     "confirm_forbidden_token_c258 the commitment was rejected"
+    ],
+    "test_status": "failed",
+    "error_head": "Error: e2e/qoder-ord0323-two-exposure-cells.spec.ts :: N3 — the confirmation fold no longer states what this device measured about the attempt (技术详情confirm_forbidden_token_c258 the commitment was rejected) \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m Expected: \u001b[32mtrue\u001b[39m Received: \u001b[31mfalse\u001b[39m"
+   }
+  },
+  "cell2_leak_beside_fields": {
+   "N1": {
+    "panel_copy": "Something went wrong hereYour trip data has not been lost. You can retry this screen or go back to Today.Try againBack to TodayReload the appTechnical detailcaught_at=2026-09-25T20:04:36.539Z route=/v8/bookings failures_caught_here=1 online_at_this_device=yes failure_text_rendered=no",
+    "error_detail_text": "caught_at=2026-09-25T20:04:36.539Z\nroute=/v8/bookings\nfailures_caught_here=1\nonline_at_this_device=yes\nfailure_text_rendered=no",
+    "console_error_count": 1,
+    "console_error_head": [
+     "%o\n\n%s\n\n%s\n TypeError: Cannot read properties of undefined (reading 'length')\n    at http://127.0.0.1:4465/src/features/inbox/JourneyInboxWorkbench.tsx:950:82\n    at Array.map (<anonymous>)\n    at JourneyInboxWorkbench ("
+    ],
+    "overlay_hosts": [
+     "div#root",
+     "script"
+    ],
+    "leaked_needles_still_on_screen": [],
+    "test_status": "passed"
+   },
+   "N2": {
+    "message_text": "这台设备收到的回复读不成这条请求要的结果（HTTP 500，内容类型 application/json）。 memory_forbidden_token_9f3c the traveller's own words were refused",
+    "pending_text": "待审清单读不出来： 这台设备收到的回复读不成这条请求要的结果（HTTP 503，内容类型 application/json）。 inbox_forbidden_token_4b71 the review queue is not ready 重读清单",
+    "leaked_needles_still_on_screen": [
+     "memory_forbidden_token_9f3c the traveller's own words were refused",
+     "inbox_forbidden_token_4b71 the review queue is not ready"
+    ],
+    "test_status": "failed",
+    "error_head": "Error: e2e/qoder-ord0323-two-exposure-cells.spec.ts :: N2 — the panel is repeating the reply again ([\"memory_forbidden_token_9f3c the traveller's own words were refused\",\"inbox_forbidden_token_4b71 the review queue is not ready\"]); memory reads \"这台设备收到的回复读不成这条请求要的结果（HTTP 500，内容类型 application/json）。 memory_forbidden_token_9f3c the traveller's own words were refused\" and the queue reads \"待审清单读不出来： 这台设备收到的回复读不成这条请求要的结果（HTTP 503，内容类型 application/json）。 inbox_forbidden_token_4b71 the review queue is not ready 重读清单\" \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m"
+   },
+   "N3": {
+    "fold_summary": "技术详情",
+    "fold_text": "技术详情这台设备收到的回复读不成这条请求要的结果（HTTP 500，内容类型 application/json）。 confirm_forbidden_token_c258 the commitment was rejected",
+    "fold_code_visible": "这台设备收到的回复读不成这条请求要的结果（HTTP 500，内容类型 application/json）。 confirm_forbidden_token_c258 the commitment was rejected",
+    "status_line": "服务器没有把这条判为通过，它现在说：需审核。",
+    "leaked_needles_still_on_screen": [
+     "confirm_forbidden_token_c258 the commitment was rejected"
+    ],
+    "test_status": "failed",
+    "error_head": "Error: e2e/qoder-ord0323-two-exposure-cells.spec.ts :: N3 — the confirmation fold is repeating the reply again ([\"confirm_forbidden_token_c258 the commitment was rejected\"]); it reads \"技术详情这台设备收到的回复读不成这条请求要的结果（HTTP 500，内容类型 application/json）。 confirm_forbidden_token_c258 the commitment was rejected\" \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // deep equality\u001b[22m \u001b[32m- Expected - 1\u001b[39m \u001b[31m+ Received + 3\u001b[39m \u001b[32m- Array []\u001b[39m \u001b[31m+ Array [\u001b[39m \u001b[31m+ \"confirm_forbidden_token_c258 the commitment was rejected\",\u001b[39m \u001b[31m+ ]\u001b[39m"
+   }
+  },
+  "cell2_fields_blind": {
+   "N1": {
+    "panel_copy": "Something went wrong hereYour trip data has not been lost. You can retry this screen or go back to Today.Try againBack to TodayReload the appTechnical detailcaught_at=2026-09-25T20:04:50.196Z route=/v8/bookings failures_caught_here=1 online_at_this_device=yes failure_text_rendered=no",
+    "error_detail_text": "caught_at=2026-09-25T20:04:50.196Z\nroute=/v8/bookings\nfailures_caught_here=1\nonline_at_this_device=yes\nfailure_text_rendered=no",
+    "console_error_count": 1,
+    "console_error_head": [
+     "%o\n\n%s\n\n%s\n TypeError: Cannot read properties of undefined (reading 'length')\n    at http://127.0.0.1:4466/src/features/inbox/JourneyInboxWorkbench.tsx:949:82\n    at Array.map (<anonymous>)\n    at JourneyInboxWorkbench ("
+    ],
+    "overlay_hosts": [
+     "div#root",
+     "script"
+    ],
+    "leaked_needles_still_on_screen": [],
+    "test_status": "passed"
+   },
+   "N2": {
+    "message_text": "这台设备收到的回复读不成这条请求要的结果，请再看一次。",
+    "pending_text": "待审清单读不出来： 这台设备收到的回复读不成这条请求要的结果，请再看一次。 重读清单",
+    "leaked_needles_still_on_screen": [],
+    "test_status": "failed",
+    "error_head": "Error: e2e/qoder-ord0323-two-exposure-cells.spec.ts :: N2 — the memory slot no longer states the status and content type this device got (这台设备收到的回复读不成这条请求要的结果，请再看一次。) \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m Expected: \u001b[32mtrue\u001b[39m Received: \u001b[31mfalse\u001b[39m"
+   },
+   "N3": {
+    "fold_summary": "技术详情",
+    "fold_text": "技术详情这台设备收到的回复读不成这条请求要的结果，请再看一次。",
+    "fold_code_visible": "这台设备收到的回复读不成这条请求要的结果，请再看一次。",
+    "status_line": "服务器没有把这条判为通过，它现在说：需审核。",
+    "leaked_needles_still_on_screen": [],
+    "test_status": "failed",
+    "error_head": "Error: e2e/qoder-ord0323-two-exposure-cells.spec.ts :: N3 — the confirmation fold no longer states what this device measured about the attempt (技术详情这台设备收到的回复读不成这条请求要的结果，请再看一次。) \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m Expected: \u001b[32mtrue\u001b[39m Received: \u001b[31mfalse\u001b[39m"
+   }
+  }
+ },
+ "verdict": "TEETH_AND_BASELINE",
+ "interpretation_limit": "each shape's own evidence files are the readings; this file only aggregates them. derived_result stays null: signing a level belongs to the red team (B-1).",
+ "claimed_result": null,
+ "derived_result": null
+}
