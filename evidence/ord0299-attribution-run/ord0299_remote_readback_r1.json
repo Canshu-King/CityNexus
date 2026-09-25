@@ -1,0 +1,57 @@
+{
+ "at": "2026-09-25T09:30:47+08:00",
+ "lane": "B c01d72a3",
+ "order": "ORD-0299 step 4 (make the candidate externally readable)",
+ "branch": "review/0280-attribution-label-r2",
+ "tip": "549ac8f1b20bc04e70eadbd238ade737eefbff01",
+ "parent_on_my_tree": "5c4608cede6cb7bd5f3ac7e704bfee379ca47abc",
+ "landed_tip": "5c4608cede6cb7bd5f3ac7e704bfee379ca47abc",
+ "push": {
+  "rc": 0,
+  "tail": [
+   "Everything up-to-date"
+  ],
+  "force_used": false,
+  "refs_touched": [
+   "review/0280-attribution-label-r2:review/0280-attribution-label-r2"
+  ]
+ },
+ "ls_remote_line_verbatim": "549ac8f1b20bc04e70eadbd238ade737eefbff01\trefs/heads/review/0280-attribution-label-r2",
+ "ls_remote_matches_tip": true,
+ "commit_api": {
+  "http": 200,
+  "parents": [
+   "5c4608cede6cb7bd5f3ac7e704bfee379ca47abc"
+  ],
+  "tree": "1b26f48ada6a8ecc13dcc3dc82bbff6ca0c22f11",
+  "parent_is_landed_tip_ff_only": true
+ },
+ "contents_byte_readback": [
+  {
+   "path": "frontend/src/features/planning/PlanWithAiSheet.tsx",
+   "ref": "549ac8f1b20bc04e70eadbd238ade737eefbff01",
+   "expected_blob_from_my_tree": "c22cf42506a4175db992bde387ed8d9c6f1ffb9d",
+   "http": 200,
+   "remote_size": 47470,
+   "remote_blob_sha1": "c22cf42506a4175db992bde387ed8d9c6f1ffb9d",
+   "my_tree_blob": "c22cf42506a4175db992bde387ed8d9c6f1ffb9d",
+   "my_tree_size": 47470,
+   "identical_bytes": true
+  },
+  {
+   "path": "frontend/e2e/qoder-ord0280-attribution-label-speaks-for-itself.spec.ts",
+   "ref": "549ac8f1b20bc04e70eadbd238ade737eefbff01",
+   "expected_blob_from_my_tree": "0edae5cf262833e996bbfc3b56f60d0548ca3e3f",
+   "http": 200,
+   "remote_size": 12134,
+   "remote_blob_sha1": "0edae5cf262833e996bbfc3b56f60d0548ca3e3f",
+   "my_tree_blob": "0edae5cf262833e996bbfc3b56f60d0548ca3e3f",
+   "my_tree_size": 12134,
+   "identical_bytes": true
+  }
+ ],
+ "old_ref_untouched_line": "48827a9d6402aaabffc5ff47b1540407fafed620\trefs/heads/review/0280-attribution-label",
+ "worktree_clean_for_these_paths": "clean",
+ "verdict": "REMOTE_COORDINATE_PROVEN",
+ "derived_result": null
+}
