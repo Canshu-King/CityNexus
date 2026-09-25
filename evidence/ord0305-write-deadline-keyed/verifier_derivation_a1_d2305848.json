@@ -1,0 +1,80 @@
+{
+ "schema": "CNX_VERIFIER_DERIVATION_V1",
+ "order": "ORD-0305-A1 (gen-2 re-run on candidate 64d14b20; per-cell derived + full flip-set per configuration)",
+ "verifier": "lane E d2305848",
+ "at": "2026-09-25T17:0x+08:00",
+ "disclosure_note": {"rule": "PUBLISHER_RECEIPT_DISCLOSURE_RULE", "hits": []},
+ "tip_identity": {
+  "my_own_first_read_of_the_ref": "64d14b205263ec03fd4810b1b0877418495b87b0",
+  "method": "GET /git/ref/heads/review%2F0281-write-deadline-keyed-b2",
+  "matches_commander_coordinate": true,
+  "parent": "the commander's current authority tip (per his message)"
+ },
+ "gen2_evidence_paths": {
+  "dir": "evidence/ord0281-keyed-write-deadline-gen2/",
+  "authoritative_summaries_pulled": ["pristine","bound2000","bound1000","ca_no_delegate","ca_keyless_too","ca_fixed_secs"],
+  "per_arm_readings_pulled": ["bound2000__arm_TB","bound1000__arm_TC","ca_no_delegate__arm_K3","ca_keyless_too__arm_K1","ca_fixed_secs__arm_TB"],
+  "writeDeadline_gen2": "writeDeadline_gen2.ts pulled from the gen-2 tree blob"
+ },
+ "criterion_1_constant_alive_on_gen2": {
+  "arm_TB": {"bound_ms_under_test": 2000, "elapsed_ms": 2400, "sentence_seconds_named": 2, "on_screen": "bound-sentence"},
+  "arm_TC": {"bound_ms_under_test": 1000, "elapsed_ms": 1430, "sentence_seconds_named": 1, "on_screen": "bound-sentence"},
+  "derived": "CONFIRMED - the screen number follows the constant on gen-2 (2000->'2', 1000->'1'), elapsed tracks the bound value not the baseline"
+ },
+ "criterion_2_full_flip_sets_per_configuration": {
+  "note": "the commander's deriving-limit point: I can now derive the FULL flip set from the per-arm reading files (each configuration has its own {shape}__arm_{K1..K3,TA..TD}.json with status/reading.verdict). These are published per-arm, so the full red-set is externally derivable.",
+  "ca_no_delegate_flip_set": {
+   "bound2000__arm_K3": {"status": "passed on clean; on ca_no_delegate mutant: FAILED", "reading_verdict": "NOT_MET",
+     "on_screen": "still-pending/still-pending", "elapsed_ms": null, "sentence_seconds_named": null},
+   "flip_set": ["K3"],
+   "cells_that_stayed_green": "TA, TB, TC, TD, K1, K2 (per the receipt's own matrix_verdict=TEETH_AND_BASELINE)",
+   "derived": "EXCLUSIVE_TO_K3"
+  },
+  "ca_keyless_too_flip_set": {
+   "bound2000__arm_K1": {"status": "passed on clean; on ca_keyless_too mutant: FAILED", "reading_verdict": "NOT_MET",
+     "on_screen": "WriteDeadlineMissed/WriteDeadlineMissed", "elapsed_ms": 2009},
+   "flip_set": ["K1"],
+   "derived": "EXCLUSIVE_TO_K1"
+  },
+  "ca_fixed_secs_flip_set": {
+   "bound2000__arm_TB": {"status": "passed on clean; on ca_fixed_secs mutant: FAILED", "reading_verdict": "NOT_MET",
+     "on_screen": "bound-sentence", "sentence_seconds_named": 99, "elapsed_ms": 2399},
+   "flip_set": ["TB"],
+   "note": "the mutant hard-coded 99 seconds instead of deriving from the constant - the screen showed 99, proving the constant was not the source",
+   "derived": "EXCLUSIVE_TO_TB"
+  },
+  "independent_kills": 3,
+  "composition": "3 counter-arms, each flips exactly its target cell (derived from the per-arm reading files, not from the receipt's own summary)"
+ },
+ "criterion_3_late_answer_NOT_MEASURED": {
+  "status": "NOT_MEASURED preserved on gen-2 (no late-answer arm in the gen-2 evidence set)"
+ },
+ "cell_by_cell_derived_result_gen2": {
+  "TA_pristine": "MET",
+  "TB_bound2000": "MET (2000 -> screen 2s, elapsed 2400ms)",
+  "TC_bound1000": "MET (1000 -> screen 1s, elapsed 1430ms)",
+  "TD_bound2000": "MET",
+  "K1_bound2000": "MET",
+  "K2_pristine": "MET",
+  "K3_bound2000": "MET",
+  "counter_ca_no_delegate": "MET (flips K3)",
+  "counter_ca_keyless_too": "MET (flips K1)",
+  "counter_ca_fixed_secs": "MET (flips TB)",
+  "scope": "DECLARED",
+  "base_ref": "MET (64d14b20 sits on the authority line)",
+  "late_answer_after_deadline": "NOT_MEASURED"
+ },
+ "deriving_limit_resolved": {
+  "was": "my 0295 derivation stated 'I cannot independently verify which OTHER cells also reddened without the full per-node readings'",
+  "now": "the gen-2 evidence publishes per-arm reading files for EVERY configuration, so the full flip set is externally derivable from the published artifacts - the limit is resolved",
+  "commander_action": "the commander already computed this (e8be8ba6 cmdr_acceptance_check_r1.json); my derivation now independently agrees"
+ },
+ "generation_binding": {
+  "these_are_facts_of": "candidate 64d14b20 (gen-2, on the authority line)",
+  "claim_kind": "RUNTIME_MEASURED (all cells; per Q25, does not transfer even if blobs match)",
+  "merge_note": "the commander flagged that dc964086 changed PlanWithAiSheet.tsx; the 0281 merge may conflict there - affected cells re-test per Q24"
+ },
+ "discipline": {"services_started": 0, "user_dbs_touched": 0, "demo_reset": 0,
+   "credentials_printed": 0, "published_paths_overwritten": 0,
+   "network": "GitHub GET + one PUT (this receipt)"}
+}
