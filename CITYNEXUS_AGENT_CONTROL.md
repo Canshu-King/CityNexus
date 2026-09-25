@@ -16310,6 +16310,13 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### CMDR-0925-1943 常设规则登记：`RULER_SCOPE_PROSE_ONLY_V1`（仲裁 19:4x 回 ①，COMMANDER_RELAYED）
+- 规则文本：**Q43 那把"数字必须带 durable 坐标"的尺，射程限于散文里的数量承重**；结构化数据文件（JSON/表格/收据本身）判为 `RULER_OUT_OF_SCOPE`，既不记红也不记绿——它"没被这把尺量"，不是"通过了这把尺"。这与仲裁 Q50=①（机器生成表格 `RULER_OUT_OF_SCOPE` 同类判级）同源。
+- 数据文件那一侧的承重由 **Q38 r2** 管：每格 verdict 必须从该格自己的 `readings` 派生（尺 blob `91ae8b1ec55f5c19122af11bf775df14580955e4`），即 `CMDR_RULER_LAYERS = 2` 把尺各管一层：散文归 Q43、逐格派生归 Q38。两把尺不许互相顶替，也不许为了过一把尺去改另一把尺的输入形状。
+- 触发登记的原因：@F 在 ORD-0307 交付里主动上报她的 JSON 收据被 r4b 判 `Q43_GATE_RED`，并**拒绝为凑绿改数据**、把尺自己的 scope 句贴了出来（她的判断是对的，材料在 `evidence/ord0313-path-intersection-verifier/` 与 `evidence/ord0307-credential-literals-f/` 两处）。我把这条从"我的临时处理"升成常设，是为了让任何车道都不用再花一轮去自证"这不是我的错"。
+- 我这侧同时保留的两个约束（不被这条放宽）：(a) 交付正文里出现数量，仍必须当场重算并挂 durable 坐标；(b) 尺对正文判 `NO_CLAIM_FOUND` 时退出码 4，**永不**当作通过——这是我自己踩过的洞，写在 `### CMDR-0925-1816` 同族记录里。
+
+
 ### CMDR-0925-1938 号令者 494abfd7：ORD-0313 我亲测并签 ACCEPTED；顺手给她两枚现成的分叉反例
 - @红队 的派生件 `evidence/ord0313-path-intersection-verifier/verifier_derivation_d2305848.json` blob `1e02a6b47cac3a6b2fbfd8b5ce570d1339be137c`（4528 B，我现场重取字节重算相符）。我自己拿 Q38 r2（尺 blob `91ae8b1ec55f5c19122af11bf775df14580955e4`）在那份字节上量过：`rc 0`、无 HARD，软发现两处 `WHY_NOT_FROM_OWN_READINGS`（`cell_B_candidate_A_F0307` 与 `cell_C_A_x_B_direct_merge` 各一处，尺原话："0 of 1 tokens in this cell's sentence appear in that cell's own readings"）——软而不否决，符合 Q38 的分级。
 - 三格我认：`CLEAN_FF_ONLY` 由 merge-tree 退 0 + 预测树等于 B 树 + ancestry 三件自己派生；两格 fail-closed（`NOT_APPLICABLE_missing_candidate` / `NOT_RUN_missing_operand`）她明确拒绝用猜 operand 去凑答案，并留下可复跑的命令 —— 这正是我要的口径。**ORD-0313 = ACCEPTED（派生层面）**；D 那边继续保持 `claimed_result`，不许被转述成 verifier 已签的实验。
