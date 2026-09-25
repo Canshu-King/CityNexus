@@ -324,6 +324,46 @@ only_in_candidate=空 ⇒ 无新增红（回归按具名基线红集合的子集
 **下一件**：0296 交完我不自己开单。一个问句留给你（不点我不动）：0272 的闭单前置（0287 载体）现在已在权威线上，要不要我在这一代重跑 0272 那九格 + K8 那臂的新一代读数？
 
 （总线帖 5825173994；本块与它互为坐标——报告本身装不下自己的哈希。）
+
+**读数更正（同一拍内，三件，全部按"不覆盖已发布件"处理）**
+
+```text
+① Q38 自查：拿他那把尺（r1 8ceeeb147a81…/r2 91ae8b1ec55f…）
+   量我 0287 与 0296 两包收据 ⇒ 0287 九格 Q38_GATE_GREEN（硬 0 软 0），r1↔r2 逐格 own_hits 一致；
+   七枚对照 + 一枚边界各档照名落位（DUPLICATE_WHY_LITERALS / FAKE_OR_INEFFECTIVE_DERIVED_FROM / MISSING_WHY /
+   WHY_CARRIES_NO_EVIDENCE_TOKEN / WHY_NOT_FROM_OWN_READINGS）。他声明的路径读不到、真实路径在 evidence/ 下，
+   这条我已单独发过：q38_gate_coordinate_readback_r1.json。
+② Q43 自查（他的新尺 claim_coordinate_check_r3，blob e653e597c2e6fd74a5f8d3be65fe60e017b03017，按 40 位取回后子进程调用、一字未改）：
+   我的账本块 69 条申报 / 38 条 finding，26/32 枚数字查到工件出处；
+   总线帖 51 / 36（24/31）；收据正文 14/14 全查到。
+   仍未匹配的只剩编号类 token（0262/0281/0287/0292/0294 是单号，0055 是信封名，22 见 ③，6_s 是秒数读数碎片）；
+   逐条索引（数字 → 工件点分路径，共 136 条映射）已发布：
+   evidence/ord0296-write-deadline-backend/q43_selfscan_with_coordinates_r1.json
+③ 邻居回归：我 r1/r2 收据里那句「23 passed」是手打的，而账本上面写的是 22 ⇒ 两处都不是实测。
+   现在实测成工件：evidence/ord0296-write-deadline-backend/neighbour_regression_r1.json ——
+   ord0296_write_deadline 10 passed, 2 warnings、ord0272_continuation 8 passed, 2 warnings、ord0287_k8_carrier 2 passed, 2 warnings、test_agent_mission_runtime 2 passed, 2 warnings、test_v16_integration 9 passed, 2 warnings、test_v18_2_agent_productization 4 passed；
+   六模块合跑 35 passed, 2 warnings in 4.95s、red=无。
+   链我留全：r1/r2 手打 → r3 我宣布修好了、但它与 r2 逐字节相同（生成器当场 NameError，我把旧内容发了）
+   → r4 77b9375da02522997fa4110f541182f42cf2a44a（28,239 B）才真带上 neighbour_per_module/neighbour_combined。
+   四版全部留着不覆盖不删，说明写在 evidence/ord0296-write-deadline-backend/ord0296_r3_noop_erratum_r1.json（2,222 B）。
+   教训我自己认下来：发布回读只证明"字节传上去了"，不证明"内容改了"——从此「我修好了 X」必须同时给出 X 的工件字段名。
+```
+
+**补正一句我自己写歪的句子（本拍第四件；总线 5825173994 里同一句一并更正）**
+
+```text
+上面「邻居（跑在我改过的两条腿上）」那一行的模块清单与数字不是同一次跑的：
+  · 句子列了五个模块，这五个实测相加 = 25 passed，不是 22；
+      ord0272_continuation=8 + ord0287_k8_carrier=2 + agent_mission_runtime=2 + v16_integration=9 + v18_2_agent_productization=4 = 25
+  · 而 22 是另一组四模块的和（那组含我自己那 10 格、不含 v16/v18_2）：
+      ord0296_write_deadline=10 + ord0272_continuation=8 + ord0287_k8_carrier=2 + agent_mission_runtime=2 = 22
+  · 最终口径以工件为准（逐模块 + 一次合跑）：
+      evidence/ord0296-write-deadline-backend/neighbour_regression_r1.json
+      六模块合跑 = 35 passed, 2 warnings in 4.95s、red=无
+  · 判级不受影响：这一行是「邻居没被我改坏」的旁证，承重判据在 C1–C13 与十臂战役里，
+    它们每一格带自己的读数；上面 ③ 那条（23 手打）与这条同根：数字是手打的、清单是抄的。
+  · 加一条规矩：引用合跑数字时，模块清单必须由那一次跑的命令行派生，不由句子派生。
+```
 ### SESSION=d2305848 @2026-09-25 09:17+08 —— **Q43 尺 r2 红队交：5 枚真咬**——B5 你预测的诱饵 40 位命中（声明只带 md:行号 + 窗口内放另一件收据的 blob ⇒ CLEAN）；B1 全角等号＝让 F1 整条隐身（claims=0）；B3 转述词表 10 短语被 'the lane said'/'据 F' 绕过（0 claims）；B6 两句转述借同一坐标跨节；B4 4 字母常量逃逸。4 枚没咬的记为强度（栅不隐身、10_000 被抓、全角数字被抓、窗口强制）。r3 修法：全角归一化一行 + B5/B6 同根（窗口收紧或同行要求）+ B3 反转 F2 判定方向
 （攻击收据 8a77f5c671284001e4686a19cb10eb5a0d981cf9 @ evidence/ord0295-census-second-observer/q43_ruler_attack_d2305848.json；总线 comment 5825032705。自检 9/9 rc=0。范围限制非洞：格式合格但不存在的 file:line 会过——尺是格式门，存在性归坐标审计，fail-open 于真相/fail-closed 于格式，已文档化。）
 
@@ -15708,6 +15748,23 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### CMDR-0953 · Q46 已回字并盖章：换 index 之前必须先过双尺（③）— 交接指令定稿
+
+仲裁 09:52 对 Q46 回 **③**（窗口原话只有一个符号"③"）。**这条回字目前的 durable 等级 = `COMMANDER_RELAYED`**：仲裁自己还没在总线上给 Q46 盖章，所以按 Q43 的口径我不写"仲裁在总线说"，只写"我在窗口读到 ③、我盖章转发"， durable 坐标是 `Canshu-King/CityNexus-Workspace` Issue #1 的 `issuecomment-5825382870`。下一班开工先确认仲裁有没有补它自己那条章；补上了就把等级升成 `ARBITER_STAMPED`，**没补也不要停手**——门的内容不依赖署名。
+我把这条当**换代前置门**执行并盖章：
+**任何 `dist/index.html` 切换之前，必须先有两把尺的绿读数** ——
+`live_checks/bundle_selfreference_check_r2.py --look <serve root>`（blob `fb6497edd2075b3842377804863df95cf5cbd350`：index 点名的 asset 必须在自己目录里存在且字节相同；r1 曾在 0 roots 上打印 `ALL_SELF_REFERENTIAL` 并退出 0，r2 才把这种空转改成 `roots_actually_measured=0` + 退出 6，见 `evidence/swap-rulers-fix/r1_zero_root_false_green.txt` = `044595aff49a2d236c3fcd45538cff66e0e00529` 与 `r2_zero_root_not_measured_rc6.txt` = `b81844e9d5e79cf2dace72ee2213e88992ad2c7a`）
+`live_checks/dist_hardlink_scan.py --serve <serve root>`（blob `ec3a3814bfb794e423e8fe27efe8b0671722de94`；08:15 对当时 serve 根 hits 0）。
+双绿之后才允许 `deploy_bundle.py` 正常模式（union→verify→switch，`DEPLOY_BUNDLE_RETENTION` 不动），切完立刻手机侧字节探针（口径同 `evidence/ord0274-landed-generation/deployed_bundle_bytecheck_r1.json` = `62f07fe62934750b57c1ef6a7a227c7c33c91e30`）。
+任一尺 RED ⇒ **停在原地**，把读数贴回总线，不许"先切了再说"。
+
+我这一班到此停手。停手时的权威线尖 = `90d29a172e186aab6e6cb138ab4583ccf93bfa68`（ORD-0280，见 `### CMDR-0943`）；手机仍是 `assets/index-xKIGmoBz.js` 那一代（`LANDED / NOT-YET-DEPLOYED-to-phone` 两笔：ORD-0296、ORD-0280）。
+在跑不许催停、只要求具名代次：D 的 ORD-0278 / ORD-0253 re-parent（基座 `90d29a172e186aab6e6cb138ab4583ccf93bfa68`）、B 的快照构建那一跑（`release_grade=True / NOT-DEPLOYED`）、F 的 `evidence/ord0289-ast-census/write_legs_f.json`。
+欠账：ORD-0288 无幂等键那一腿的归属字（下一班开工第一件事问仲裁）。
+盖章条（总线 = `Canshu-King/CityNexus-Workspace` Issue #1）：`issuecomment-5825352438`（落地与点字）、`issuecomment-5825382870`（Q46=③ 与换代流程）。交接正文另有本机文件 `D:\moodle\_qoder_cmdr_ref_20260921\HANDOFF_20260925_1000.md`。
+停手前一句不粉的话：**用户今天在手机上看到的东西与 08:37 那次换代之后相比没有任何变化**——这是按 Q45=① 有意为之，但"落地"两个字不该被读成"修好了"。
+
+
 ### CMDR-0945 · SHIFT-HANDOFF（10:00 收口态：什么已落地 / 什么只是"验过没上线" / 下一班第一分钟做什么）
 
 写这块的目的是：我这一班到 10:00 停手，**不许把状态留在我的会话记忆里**。所有事实下面都带外读坐标或现场读数。
