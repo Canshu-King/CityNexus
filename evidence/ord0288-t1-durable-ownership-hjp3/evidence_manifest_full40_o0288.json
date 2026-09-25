@@ -1,0 +1,360 @@
+{
+ "generated_at_local": "2026-09-25T17:36:55+0800",
+ "repo": "Canshu-King/CityNexus",
+ "branch": "commander/control",
+ "commit_tip": "1d190ca035d3cd1fdfabdf70d3a9a24ba856bccd",
+ "tree": "0fccdf0f92fc94a812e33974a908c87a64239565",
+ "prefix": "evidence/ord0288-t1-durable-ownership-hjp3",
+ "count": 58,
+ "self_reference": "this manifest lists what is on the branch, so it lists the state before itself was pushed; its own blob is reported in the delivery post",
+ "files": [
+  {
+   "path": "evidence/ord0288-t1-durable-ownership-hjp3/RECEIPT_O0288T1-1610.json",
+   "blob_sha1_40_hex": "4d5a23ff6d6edc3b504fe9ecb3c63b80ec8afa63",
+   "size": 14844,
+   "display_prefix": "4d5a23ff6d6e"
+  },
+  {
+   "path": "evidence/ord0288-t1-durable-ownership-hjp3/RECEIPT_O0288T1-1610_r2.json",
+   "blob_sha1_40_hex": "95f6c34a4c8c08af14ea400c48647f239ebfba76",
+   "size": 23565,
+   "display_prefix": "95f6c34a4c8c"
+  },
+  {
+   "path": "evidence/ord0288-t1-durable-ownership-hjp3/RECEIPT_O0288T1-1610_r3.json",
+   "blob_sha1_40_hex": "0552d020fdada8e3b2ef35c4eb69cdefbcd24d15",
+   "size": 25519,
+   "display_prefix": "0552d020fdad"
+  },
+  {
+   "path": "evidence/ord0288-t1-durable-ownership-hjp3/RECEIPT_O0288T1-1610_r4.json",
+   "blob_sha1_40_hex": "4659e47ca097f696f1a1465aa1da4eae42ecb4ce",
+   "size": 30039,
+   "display_prefix": "4659e47ca097"
+  },
+  {
+   "path": "evidence/ord0288-t1-durable-ownership-hjp3/RECEIPT_O0288T1-1610_r5.json",
+   "blob_sha1_40_hex": "8f372728fe158b507059a4e3c8ebb6fc6f525a0d",
+   "size": 33417,
+   "display_prefix": "8f372728fe15"
+  },
+  {
+   "path": "evidence/ord0288-t1-durable-ownership-hjp3/RECEIPT_O0288T1-1610_r6.json",
+   "blob_sha1_40_hex": "287c20ffb8eecb3cfc18aa4c7100be8b967b461f",
+   "size": 34964,
+   "display_prefix": "287c20ffb8ee"
+  },
+  {
+   "path": "evidence/ord0288-t1-durable-ownership-hjp3/RECEIPT_O0288T1-1610_r7.json",
+   "blob_sha1_40_hex": "c111f887db01c0c667fb419850fa658094f7b355",
+   "size": 38501,
+   "display_prefix": "c111f887db01"
+  },
+  {
+   "path": "evidence/ord0288-t1-durable-ownership-hjp3/RECEIPT_O0288T1-1730.json",
+   "blob_sha1_40_hex": "429a5de3872d87f98a2532b23a8ed3e35426747e",
+   "size": 39787,
+   "display_prefix": "429a5de3872d"
+  },
+  {
+   "path": "evidence/ord0288-t1-durable-ownership-hjp3/RECEIPT_O0288T1-1730.md",
+   "blob_sha1_40_hex": "459b8f60f19a4c9aab59c485cc7a781fd58b4006",
+   "size": 15769,
+   "display_prefix": "459b8f60f19a"
+  },
+  {
+   "path": "evidence/ord0288-t1-durable-ownership-hjp3/boundary_proof_O0288T1.json",
+   "blob_sha1_40_hex": "91a1a7ed9b8d78e270d4ad534f27cd83a4826520",
+   "size": 3936,
+   "display_prefix": "91a1a7ed9b8d"
+  },
+  {
+   "path": "evidence/ord0288-t1-durable-ownership-hjp3/boundary_proof_O0288T1_r2.json",
+   "blob_sha1_40_hex": "00fba8b33a837dc7596516d40ad03617a7bf67fe",
+   "size": 4746,
+   "display_prefix": "00fba8b33a83"
+  },
+  {
+   "path": "evidence/ord0288-t1-durable-ownership-hjp3/cell_t1_crash_mutant_mut_crash.json",
+   "blob_sha1_40_hex": "0a561b28df78def77593f4dfae0cf9543181eab3",
+   "size": 4959,
+   "display_prefix": "0a561b28df78"
+  },
+  {
+   "path": "evidence/ord0288-t1-durable-ownership-hjp3/cell_t1_signature_mutant_mut_sig.json",
+   "blob_sha1_40_hex": "bf3d4bcb272afe3c50e0cb38343d68201a49190f",
+   "size": 4763,
+   "display_prefix": "bf3d4bcb272a"
+  },
+  {
+   "path": "evidence/ord0288-t1-durable-ownership-hjp3/cell_t1_wrong_carrier_mutant_mut_sig_wrong.json",
+   "blob_sha1_40_hex": "a4315a7296589a9dd500ac64d2eaea028b2eb09e",
+   "size": 4327,
+   "display_prefix": "a4315a729658"
+  },
+  {
+   "path": "evidence/ord0288-t1-durable-ownership-hjp3/cell_t1a_replay_after_a_process_restart_T1-162443.json",
+   "blob_sha1_40_hex": "7bc4c4ff0e946791fe6833e70d38ecca34bbe85c",
+   "size": 8103,
+   "display_prefix": "7bc4c4ff0e94"
+  },
+  {
+   "path": "evidence/ord0288-t1-durable-ownership-hjp3/cell_t1a_same_key_concurrent_two_processes_T1-162438.json",
+   "blob_sha1_40_hex": "04317804ba880f6376d9b026342e963ba5cb63fd",
+   "size": 8069,
+   "display_prefix": "04317804ba88"
+  },
+  {
+   "path": "evidence/ord0288-t1-durable-ownership-hjp3/cell_t1a_same_key_different_body_T1-162438.json",
+   "blob_sha1_40_hex": "2adf7c797c848417219495e9151009726a5f647a",
+   "size": 3429,
+   "display_prefix": "2adf7c797c84"
+  },
+  {
+   "path": "evidence/ord0288-t1-durable-ownership-hjp3/cell_t1a_same_key_two_processes_T1-162438.json",
+   "blob_sha1_40_hex": "d459d3291d7c5a4910c76f1cc3b826167470e24d",
+   "size": 6998,
+   "display_prefix": "d459d3291d7c"
+  },
+  {
+   "path": "evidence/ord0288-t1-durable-ownership-hjp3/cell_t1b_error_path_records_response_status_T1-162439.json",
+   "blob_sha1_40_hex": "5c45cdc1350fc5cb668bf77c059a90d178bed8d3",
+   "size": 9885,
+   "display_prefix": "5c45cdc1350f"
+  },
+  {
+   "path": "evidence/ord0288-t1-durable-ownership-hjp3/cell_t1b_failure_before_the_claim_leaves_no_row_T1-162439.json",
+   "blob_sha1_40_hex": "3f1e3d1ee184295d1d5407f6c750bbb2702a8d45",
+   "size": 6329,
+   "display_prefix": "3f1e3d1ee184"
+  },
+  {
+   "path": "evidence/ord0288-t1-durable-ownership-hjp3/discarded_t1a_replay_after_a_process_restart_T1-162319.json",
+   "blob_sha1_40_hex": "b4b94face31f35d777059c197a74b05756088295",
+   "size": 3500,
+   "display_prefix": "b4b94face31f"
+  },
+  {
+   "path": "evidence/ord0288-t1-durable-ownership-hjp3/discarded_t1a_same_key_concurrent_two_processes_T1-162314.json",
+   "blob_sha1_40_hex": "e605cab87d25d45ad9c58627a2bcb1f08bf85969",
+   "size": 5207,
+   "display_prefix": "e605cab87d25"
+  },
+  {
+   "path": "evidence/ord0288-t1-durable-ownership-hjp3/discarded_t1a_same_key_different_body_T1-162314.json",
+   "blob_sha1_40_hex": "28e14292a5211f905ba77c528c2c2297f9a312c3",
+   "size": 1721,
+   "display_prefix": "28e14292a521"
+  },
+  {
+   "path": "evidence/ord0288-t1-durable-ownership-hjp3/discarded_t1a_same_key_two_processes_T1-162314.json",
+   "blob_sha1_40_hex": "d0e2fbf0f10229315928261c4f6e93e4e6081e8e",
+   "size": 5290,
+   "display_prefix": "d0e2fbf0f102"
+  },
+  {
+   "path": "evidence/ord0288-t1-durable-ownership-hjp3/discarded_t1b_error_path_records_response_status_T1-162314.json",
+   "blob_sha1_40_hex": "82ee50e6d89b13f9a30f6fc6d27b73edac2fc6fb",
+   "size": 5868,
+   "display_prefix": "82ee50e6d89b"
+  },
+  {
+   "path": "evidence/ord0288-t1-durable-ownership-hjp3/discarded_t1b_failure_before_the_claim_leaves_no_row_T1-162314.json",
+   "blob_sha1_40_hex": "10f75569547343a2e9869a2123c719f1e8518b9f",
+   "size": 1726,
+   "display_prefix": "10f755695473"
+  },
+  {
+   "path": "evidence/ord0288-t1-durable-ownership-hjp3/gate_refusal_recorded_o0288.json",
+   "blob_sha1_40_hex": "922d79a8249bcd931cfa52c3497ef868714f3c11",
+   "size": 1924,
+   "display_prefix": "922d79a8249b"
+  },
+  {
+   "path": "evidence/ord0288-t1-durable-ownership-hjp3/gate_selftest_publish_o0288.json",
+   "blob_sha1_40_hex": "df48044593553f6b970b183c96fc7117646206fc",
+   "size": 1373,
+   "display_prefix": "df4804459355"
+  },
+  {
+   "path": "evidence/ord0288-t1-durable-ownership-hjp3/instruments",
+   "blob_sha1_40_hex": "ca84ca492775f5c8694d3d874fb22d3c7395da30",
+   "size": null,
+   "display_prefix": "ca84ca492775"
+  },
+  {
+   "path": "evidence/ord0288-t1-durable-ownership-hjp3/instruments/o0288_arms.py",
+   "blob_sha1_40_hex": "e6e6c52bec323e55614da7f7ce7e0b0df7ef7007",
+   "size": 12456,
+   "display_prefix": "e6e6c52bec32"
+  },
+  {
+   "path": "evidence/ord0288-t1-durable-ownership-hjp3/instruments/o0288_md.py",
+   "blob_sha1_40_hex": "75fddc641c521bd8a87ce9a542b13dac5c7e0b92",
+   "size": 15306,
+   "display_prefix": "75fddc641c52"
+  },
+  {
+   "path": "evidence/ord0288-t1-durable-ownership-hjp3/instruments/o0288_md_final.py",
+   "blob_sha1_40_hex": "513aefc85407e451861e2743f5628f0c7e8b4fab",
+   "size": 27915,
+   "display_prefix": "513aefc85407"
+  },
+  {
+   "path": "evidence/ord0288-t1-durable-ownership-hjp3/instruments/o0288_md_final_r2.py",
+   "blob_sha1_40_hex": "ee0098303d9653f86394e7f9f59b780bf05fb1e9",
+   "size": 27934,
+   "display_prefix": "ee0098303d96"
+  },
+  {
+   "path": "evidence/ord0288-t1-durable-ownership-hjp3/instruments/o0288_mutants.py",
+   "blob_sha1_40_hex": "651ddbe814c28c2b655df09469498ded20dad019",
+   "size": 10022,
+   "display_prefix": "651ddbe814c2"
+  },
+  {
+   "path": "evidence/ord0288-t1-durable-ownership-hjp3/instruments/o0288_receipt.py",
+   "blob_sha1_40_hex": "9bfb203e400ae2cb39b2cde3b4ef183e689b55c5",
+   "size": 20747,
+   "display_prefix": "9bfb203e400a"
+  },
+  {
+   "path": "evidence/ord0288-t1-durable-ownership-hjp3/instruments/o0288_receipt_final.py",
+   "blob_sha1_40_hex": "1b2c73767327ff74ee7404f3f2c44afb451f7df5",
+   "size": 5279,
+   "display_prefix": "1b2c73767327"
+  },
+  {
+   "path": "evidence/ord0288-t1-durable-ownership-hjp3/instruments/o0288_receipt_r2.py",
+   "blob_sha1_40_hex": "24635c453cd7363d5780f472c5e852221d5f6fbf",
+   "size": 15750,
+   "display_prefix": "24635c453cd7"
+  },
+  {
+   "path": "evidence/ord0288-t1-durable-ownership-hjp3/instruments/o0288_receipt_r3.py",
+   "blob_sha1_40_hex": "24dbb6eae94ab9ee0494d79710018e038e5ed6a9",
+   "size": 7350,
+   "display_prefix": "24dbb6eae94a"
+  },
+  {
+   "path": "evidence/ord0288-t1-durable-ownership-hjp3/instruments/o0288_receipt_r4.py",
+   "blob_sha1_40_hex": "aee209142f5c0de67161720dbcaa537cabb2a366",
+   "size": 9211,
+   "display_prefix": "aee209142f5c"
+  },
+  {
+   "path": "evidence/ord0288-t1-durable-ownership-hjp3/instruments/o0288_receipt_r5.py",
+   "blob_sha1_40_hex": "5d038dabbf10163a538d0ebaacd2d2e6c31f0eb2",
+   "size": 4804,
+   "display_prefix": "5d038dabbf10"
+  },
+  {
+   "path": "evidence/ord0288-t1-durable-ownership-hjp3/instruments/o0288_receipt_r6.py",
+   "blob_sha1_40_hex": "77ecc956af512c554bf0decacb254a83cd7c9444",
+   "size": 5467,
+   "display_prefix": "77ecc956af51"
+  },
+  {
+   "path": "evidence/ord0288-t1-durable-ownership-hjp3/instruments/o0288_receipt_r7.py",
+   "blob_sha1_40_hex": "145ae01a1303807a9a11ebdd19156cb34bdb63d4",
+   "size": 4232,
+   "display_prefix": "145ae01a1303"
+  },
+  {
+   "path": "evidence/ord0288-t1-durable-ownership-hjp3/instruments/o0288_rig.py",
+   "blob_sha1_40_hex": "209be2d93663ad154e1f7affcd2b82154ae5bfb3",
+   "size": 11225,
+   "display_prefix": "209be2d93663"
+  },
+  {
+   "path": "evidence/ord0288-t1-durable-ownership-hjp3/instruments/o0288_teardown_recover.py",
+   "blob_sha1_40_hex": "ca48fb742a0e33d3b72b48332e4dc607c102c9a1",
+   "size": 4916,
+   "display_prefix": "ca48fb742a0e"
+  },
+  {
+   "path": "evidence/ord0288-t1-durable-ownership-hjp3/mutant_arms.json",
+   "blob_sha1_40_hex": "3d4358ed17984d840e148bf9522dc487ce3e4ac3",
+   "size": 14433,
+   "display_prefix": "3d4358ed1798"
+  },
+  {
+   "path": "evidence/ord0288-t1-durable-ownership-hjp3/o0288_pids.json",
+   "blob_sha1_40_hex": "8201e96646aa68c0abde1665a22245a6bf204c7e",
+   "size": 24,
+   "display_prefix": "8201e96646aa"
+  },
+  {
+   "path": "evidence/ord0288-t1-durable-ownership-hjp3/o0288_state.json",
+   "blob_sha1_40_hex": "8c05a77f0f606ae08c453c9619edd30a012cefda",
+   "size": 1226,
+   "display_prefix": "8c05a77f0f60"
+  },
+  {
+   "path": "evidence/ord0288-t1-durable-ownership-hjp3/q38_ruler_O0288T1-1730.txt",
+   "blob_sha1_40_hex": "343a95cdde6d4fc0a5bd307508d3ae9878d7e2f3",
+   "size": 908,
+   "display_prefix": "343a95cdde6d"
+  },
+  {
+   "path": "evidence/ord0288-t1-durable-ownership-hjp3/restart_A.json",
+   "blob_sha1_40_hex": "28ddf1c06b7cc22a1bd6a216a79d7661c1266886",
+   "size": 323,
+   "display_prefix": "28ddf1c06b7c"
+  },
+  {
+   "path": "evidence/ord0288-t1-durable-ownership-hjp3/seed_any.py",
+   "blob_sha1_40_hex": "b499d69331efac695e7a84ad50a0028a5a7d2302",
+   "size": 415,
+   "display_prefix": "b499d69331ef"
+  },
+  {
+   "path": "evidence/ord0288-t1-durable-ownership-hjp3/seed_helper.py",
+   "blob_sha1_40_hex": "3805df39eccd76b4e2443e2b7b823df8ed5acadb",
+   "size": 565,
+   "display_prefix": "3805df39eccd"
+  },
+  {
+   "path": "evidence/ord0288-t1-durable-ownership-hjp3/seed_journey.json",
+   "blob_sha1_40_hex": "cdb439b5f9407a756da35d8b3d5c3470b0d78137",
+   "size": 163,
+   "display_prefix": "cdb439b5f940"
+  },
+  {
+   "path": "evidence/ord0288-t1-durable-ownership-hjp3/teardown_O0288T1_171101.json",
+   "blob_sha1_40_hex": "91bc11dd463c541dccfb96dcb88f701d69232a0d",
+   "size": 185,
+   "display_prefix": "91bc11dd463c"
+  },
+  {
+   "path": "evidence/ord0288-t1-durable-ownership-hjp3/teardown_O0288T1_171350.json",
+   "blob_sha1_40_hex": "91bc11dd463c541dccfb96dcb88f701d69232a0d",
+   "size": 185,
+   "display_prefix": "91bc11dd463c"
+  },
+  {
+   "path": "evidence/ord0288-t1-durable-ownership-hjp3/teardown_O0288T1_171902.json",
+   "blob_sha1_40_hex": "91bc11dd463c541dccfb96dcb88f701d69232a0d",
+   "size": 185,
+   "display_prefix": "91bc11dd463c"
+  },
+  {
+   "path": "evidence/ord0288-t1-durable-ownership-hjp3/teardown_O0288T1_172754.json",
+   "blob_sha1_40_hex": "91bc11dd463c541dccfb96dcb88f701d69232a0d",
+   "size": 185,
+   "display_prefix": "91bc11dd463c"
+  },
+  {
+   "path": "evidence/ord0288-t1-durable-ownership-hjp3/teardown_O0288T1_round1_restored_from_console.txt",
+   "blob_sha1_40_hex": "1c5fe82a39d2792870c7a541d6387b9e2d75f7a8",
+   "size": 3256,
+   "display_prefix": "1c5fe82a39d2"
+  },
+  {
+   "path": "evidence/ord0288-t1-durable-ownership-hjp3/teardown_O0288T1_round2_overwrote_round1.json",
+   "blob_sha1_40_hex": "91bc11dd463c541dccfb96dcb88f701d69232a0d",
+   "size": 185,
+   "display_prefix": "91bc11dd463c"
+  }
+ ]
+}
