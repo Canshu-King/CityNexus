@@ -1,0 +1,273 @@
+{
+ "order": "ORD-0308",
+ "lane": "D e345b9d6",
+ "kind": "read_only_path_intersection_rehearsal",
+ "generated_at": "2026-09-25T17:19:17+08:00",
+ "commands_used": [
+  "git ls-remote --heads/--tags <url>",
+  "git fetch --no-write-fetch-head <url> <tip ref> <candidate ref>",
+  "git merge-tree --write-tree <a> <b>",
+  "git diff --name-status/-U0 <a> <b>",
+  "git merge-base [--is-ancestor] <a> <b>",
+  "GET /repos/Canshu-King/CityNexus/contents/evidence?ref=commander/control"
+ ],
+ "line_tip": {
+  "ref": "refs/heads/mirror/integration-frontend-apple-pass1",
+  "sha": "dc964086c9d412573ac19d70b24b30e6c3ee6168",
+  "frontend_tree": "a53c7303c6d1513010ff91ecf9c022591c3e513c",
+  "commit_subject": "review(ORD-0298 second hop): derive the conclusion from the measurement, and let r3 grade my prose"
+ },
+ "triples": [
+  {
+   "exact_sha": "5aff3722d5c36c760a424f5fea5c3a771298f9ac",
+   "nodeid": "e2e/qoder-ord0302-unreadable-server-body.spec.ts :: ord0302-N1",
+   "shape": [
+    "real-seed",
+    "chromium"
+   ]
+  },
+  {
+   "exact_sha": "5aff3722d5c36c760a424f5fea5c3a771298f9ac",
+   "nodeid": "e2e/qoder-ord0302-unreadable-server-body.spec.ts :: ord0302-N2",
+   "shape": [
+    "real-seed",
+    "chromium"
+   ]
+  },
+  {
+   "exact_sha": "5aff3722d5c36c760a424f5fea5c3a771298f9ac",
+   "nodeid": "e2e/qoder-ord0302-unreadable-server-body.spec.ts :: ord0302-N3",
+   "shape": [
+    "real-seed",
+    "chromium"
+   ]
+  },
+  {
+   "exact_sha": "NO_CANDIDATE_SHA",
+   "nodeid": "NOT_APPLICABLE_missing_candidate",
+   "shape": [
+    "real-seed",
+    "chromium"
+   ]
+  },
+  {
+   "exact_sha": "5aff3722d5c36c760a424f5fea5c3a771298f9ac",
+   "nodeid": "NOT_RUN_missing_operand",
+   "shape": [
+    "real-seed",
+    "chromium"
+   ]
+  },
+  {
+   "exact_sha": "dc964086c9d412573ac19d70b24b30e6c3ee6168",
+   "nodeid": "recommendation",
+   "shape": [
+    "real-seed",
+    "chromium"
+   ]
+  }
+ ],
+ "cells": [
+  {
+   "id": "A_tip_x_B",
+   "exact_sha": "dc964086c9d412573ac19d70b24b30e6c3ee6168",
+   "nodeid": "e2e/qoder-ord0302-unreadable-server-body.spec.ts :: ord0302-N1",
+   "shape": [
+    "real-seed",
+    "chromium"
+   ],
+   "triples": [
+    {
+     "exact_sha": "5aff3722d5c36c760a424f5fea5c3a771298f9ac",
+     "nodeid": "e2e/qoder-ord0302-unreadable-server-body.spec.ts :: ord0302-N1",
+     "shape": [
+      "real-seed",
+      "chromium"
+     ]
+    },
+    {
+     "exact_sha": "5aff3722d5c36c760a424f5fea5c3a771298f9ac",
+     "nodeid": "e2e/qoder-ord0302-unreadable-server-body.spec.ts :: ord0302-N2",
+     "shape": [
+      "real-seed",
+      "chromium"
+     ]
+    },
+    {
+     "exact_sha": "5aff3722d5c36c760a424f5fea5c3a771298f9ac",
+     "nodeid": "e2e/qoder-ord0302-unreadable-server-body.spec.ts :: ord0302-N3",
+     "shape": [
+      "real-seed",
+      "chromium"
+     ]
+    }
+   ],
+   "operand_a": {
+    "role": "line tip",
+    "ref": "refs/heads/mirror/integration-frontend-apple-pass1",
+    "sha": "dc964086c9d412573ac19d70b24b30e6c3ee6168"
+   },
+   "operand_b": {
+    "role": "B ORD-0302 candidate",
+    "ref": "refs/heads/review/0302-unreadable-server-body-b",
+    "sha": "5aff3722d5c36c760a424f5fea5c3a771298f9ac",
+    "parent": "3d9dcb8a7918dca4178fd3bbb8cca0f730e05c35",
+    "author_date": "2026-09-25T17:02:14+08:00",
+    "subject": "fix(frontend): a card that points at 技术详情 must render one (ORD-0302 X-5)"
+   },
+   "merge_tree": {
+    "command": "git merge-tree --write-tree dc964086c9d412573ac19d70b24b30e6c3ee6168 5aff3722d5c36c760a424f5fea5c3a771298f9ac",
+    "exit": 0,
+    "raw_stdout": "464d34e2e7bce3043f2e5356ce0e46e465be7abc\n",
+    "raw_stderr": "",
+    "predicted_tree": "464d34e2e7bce3043f2e5356ce0e46e465be7abc",
+    "conflict_section": "(none)"
+   },
+   "readings": {
+    "merge_base_tip_b": "dc964086c9d412573ac19d70b24b30e6c3ee6168",
+    "tip_is_ancestor_of_B": true,
+    "B_changed_paths": [
+     "A\tfrontend/e2e/qoder-ord0302-unreadable-server-body.spec.ts",
+     "M\tfrontend/src/features/planning/PlanWithAiSheet.tsx"
+    ],
+    "B_line_ranges": {
+     "frontend/e2e/qoder-ord0302-unreadable-server-body.spec.ts": [
+      "frontend/e2e/qoder-ord0302-unreadable-server-body.spec.ts:1-277"
+     ],
+     "frontend/src/features/planning/PlanWithAiSheet.tsx": [
+      "frontend/src/features/planning/PlanWithAiSheet.tsx:147",
+      "frontend/src/features/planning/PlanWithAiSheet.tsx:155",
+      "frontend/src/features/planning/PlanWithAiSheet.tsx:730-734",
+      "frontend/src/features/planning/PlanWithAiSheet.tsx:737-739",
+      "frontend/src/features/planning/PlanWithAiSheet.tsx:754-763"
+     ]
+    },
+    "B_raw_hunk_headers_are_published_separately_in": "ord0308-B-raw-hunks.out",
+    "tip_moved_since_base_paths": 0,
+    "commits_from_tip_to_candidate": {
+     "ahead": 2,
+     "behind": 0,
+     "chain": [
+      {
+       "sha": "5aff372",
+       "subject": "fix(frontend): a card that points at 技术详情 must render one (ORD-0302 X-5)"
+      },
+      {
+       "sha": "3d9dcb8",
+       "subject": "fix(frontend): an unreadable server answer stays an HTTP answer, not a network claim (ORD-0302)"
+      }
+     ]
+    },
+    "predicted_tree_equals_B_tree": true,
+    "B_tree": "464d34e2e7bce3043f2e5356ce0e46e465be7abc",
+    "conflict_section": "(none)"
+   },
+   "verdict": "CLEAN_REPARENT_ff_only",
+   "path_intersection_rows": [
+    {
+     "path": "frontend/e2e/qoder-ord0302-unreadable-server-body.spec.ts",
+     "B_side_line_ranges": [
+      "frontend/e2e/qoder-ord0302-unreadable-server-body.spec.ts:1-277"
+     ],
+     "A_side_line_ranges": "NOT_APPLICABLE_missing_candidate",
+     "in_intersection": "UNKNOWN_one_operand_missing"
+    },
+    {
+     "path": "frontend/src/features/planning/PlanWithAiSheet.tsx",
+     "B_side_line_ranges": [
+      "frontend/src/features/planning/PlanWithAiSheet.tsx:147",
+      "frontend/src/features/planning/PlanWithAiSheet.tsx:155",
+      "frontend/src/features/planning/PlanWithAiSheet.tsx:730-734",
+      "frontend/src/features/planning/PlanWithAiSheet.tsx:737-739",
+      "frontend/src/features/planning/PlanWithAiSheet.tsx:754-763"
+     ],
+     "A_side_line_ranges": "NOT_APPLICABLE_missing_candidate",
+     "in_intersection": "UNKNOWN_one_operand_missing"
+    }
+   ],
+   "why": "merge-tree returned exit 0 with the single line `464d34e2e7bce3043f2e5356ce0e46e465be7abc` and an empty remainder, and that tree equals the candidate's own tree `464d34e2e7bce3043f2e5356ce0e46e465be7abc`. `git merge-base --is-ancestor dc964086c9d412573ac19d70b24b30e6c3ee6168 5aff3722d5c36c760a424f5fea5c3a771298f9ac` exits 0 (0 = true) and `git rev-list --count dc964086c9d412573ac19d70b24b30e6c3ee6168..5aff3722d5c36c760a424f5fea5c3a771298f9ac` = 2 while `5aff3722d5c36c760a424f5fea5c3a771298f9ac..dc964086c9d412573ac19d70b24b30e6c3ee6168` = 0, so the candidate sits 2 commit(s) on top of the tip and nothing behind it: the landing is a fast-forward, not a merge, and there is no conflict section to quote. The 2 commit(s) are: `5aff372` fix(frontend): a card that points at 技术详情 must render one (ORD-0302 X-5); `3d9dcb8` fix(frontend): an unreadable server answer stays an HTTP answer, not a network claim (ORD-0302). B moves 2 path(s): `frontend/e2e/qoder-ord0302-unreadable-server-body.spec.ts`, `frontend/src/features/planning/PlanWithAiSheet.tsx`. Node titles are read out of the candidate's own spec rather than assumed: `e2e/qoder-ord0302-unreadable-server-body.spec.ts :: ord0302-N1` (the ternary branch keyed on that arm) => `a non-JSON 5xx stays an HTTP answer with a visible device reading`; `e2e/qoder-ord0302-unreadable-server-body.spec.ts :: ord0302-N2` (the ternary branch keyed on that arm) => `a 4xx with the server's sentence still quotes it verbatim (positive control)`; `e2e/qoder-ord0302-unreadable-server-body.spec.ts :: ord0302-N3` (the ternary's final else branch) => ``. No gate was run here, so this cell says nothing about whether B's assertions pass."
+  },
+  {
+   "id": "B_candidate_A_F0307",
+   "exact_sha": "NO_CANDIDATE_SHA",
+   "nodeid": "NOT_APPLICABLE_missing_candidate",
+   "shape": [
+    "real-seed",
+    "chromium"
+   ],
+   "verdict": "NOT_APPLICABLE_missing_candidate",
+   "doors_probed": {
+    "probed_against_this_repo_tip": "refs/heads/mirror/integration-frontend-apple-pass1",
+    "remote_heads_total": {
+     "count": 56,
+     "verbatim_inventory": "ord0308-remote-heads.tsv:1-56",
+     "command": "git ls-remote --heads https://github.com/Canshu-King/CityNexus.git"
+    },
+    "remote_heads_matching_ORD-0307": [],
+    "remote_tags_total": 0,
+    "remote_tags_matching_ORD-0307": [],
+    "evidence_dirs_on_commander_control_matching_ORD-0307": [
+     "ord0307-prefix-write-legs-at-line-tip"
+    ],
+    "files_inside_those_dirs": {
+     "ord0307-prefix-write-legs-at-line-tip": [
+      "write_legs_at_line_tip_r1.json"
+     ]
+    },
+    "ledger_delivery_blocks_for_ORD-0307": 0,
+    "ledger_order_block_head": "### ORD-0307 → F `8ccd71d8`（号令者 494abfd7 下发 · 2026-09-25 16:1x+08）字面量凭据的**常驻启动门**（只判存在与位置，绝不打印内容）  为什么现在派：那把已经外泄的网关 key 还活在树里（轮换只能用户做，我不催）；在它能被换掉之前，产品面至少要有一枚**开机就拒**的门， 而不是等人工 revi"
+   },
+   "why": "F's ORD-0307 has an order block in the ledger but no deliverable to merge: `git ls-remote --heads` printed 56 heads and 0 of them match `ORD-0307`; `git ls-remote --tags` printed 0 tags. The only `ORD-0307`-named thing on `commander/control` is `evidence/ord0307-prefix-write-legs-at-line-tip` whose file list is {\"ord0307-prefix-write-legs-at-line-tip\": [\"write_legs_at_line_tip_r1.json\"]} -- a census reading, not a code candidate, and it reports zero candidate paths. So this cell is `NOT_APPLICABLE_missing_candidate`: I am not guessing which files F will touch."
+  },
+  {
+   "id": "C_A_x_B_direct_merge",
+   "exact_sha": "5aff3722d5c36c760a424f5fea5c3a771298f9ac",
+   "nodeid": "NOT_RUN_missing_operand",
+   "shape": [
+    "real-seed",
+    "chromium"
+   ],
+   "verdict": "NOT_RUN_missing_operand",
+   "command_that_would_run": "git merge-tree --write-tree <F-0307 candidate sha> 5aff3722d5c36c760a424f5fea5c3a771298f9ac",
+   "why": "The third merge-tree is the one the order actually cares about, and it cannot be run: one operand exists (5aff3722d5c36c760a424f5fea5c3a771298f9ac, B's ORD-0302 candidate) and the other does not (cell B printed 0 heads matching 0307 out of 56). Running it against a stand-in would manufacture the answer, so the cell stays NOT_RUN and is re-askable the moment F's ref appears."
+  },
+  {
+   "id": "D_landing_order",
+   "exact_sha": "dc964086c9d412573ac19d70b24b30e6c3ee6168",
+   "nodeid": "recommendation",
+   "shape": [
+    "real-seed",
+    "chromium"
+   ],
+   "verdict": "B_LANDS_NOW_A_AFTER_READING",
+   "one_line": "B 可以先落（ff-only 到 dc964086c9d412573ac19d70b24b30e6c3ee6168，预测树 = B 自己的树 464d34e2e7bce3043f2e5356ce0e46e465be7abc，conflict 段为空）；F 的 0307 等到 ref 出现再量一次 A×B，我不替它排序。",
+   "criterion_source": "cell A readings: merge_tree.exit, merge_tree.predicted_tree vs `git rev-parse <B>^{tree}`, merge-base --is-ancestor, and B's own parent",
+   "why": "Every clause in that sentence is derived from cell A's recorded readings in this same file (exit 0, predicted tree 464d34e2e7bce3043f2e5356ce0e46e465be7abc, B tree 464d34e2e7bce3043f2e5356ce0e46e465be7abc, ancestor test exit 0, conflict section \"(none)\"). Nothing here says the landing is approved or that B's gate passes -- B's spec was never executed by me, so no `passed` claim is made."
+  }
+ ],
+ "ref_stability": {
+  "verdict": "STABLE_DURING_READ",
+  "moved": {},
+  "sha_pairs": {
+   "refs/heads/mirror/integration-frontend-apple-pass1": {
+    "at_read_start": "dc964086c9d412573ac19d70b24b30e6c3ee6168",
+    "at_read_end": "dc964086c9d412573ac19d70b24b30e6c3ee6168"
+   },
+   "refs/heads/review/0302-unreadable-server-body-b": {
+    "at_read_start": "5aff3722d5c36c760a424f5fea5c3a771298f9ac",
+    "at_read_end": "5aff3722d5c36c760a424f5fea5c3a771298f9ac"
+   }
+  },
+  "note": "a moved operand means the receipt below describes the start-of-read sha; re-run before landing"
+ },
+ "discipline": {
+  "refs_pushed": 0,
+  "local_refs_written": 0,
+  "authority_line_moved": 0,
+  "product_files_written": 0,
+  "gates_executed": 0,
+  "demo_reset": 0,
+  "credentials_printed": 0,
+  "note": "fetch used --no-write-fetch-head, so FETCH_HEAD was not written either; operands were addressed by sha afterwards"
+ }
+}
