@@ -9,6 +9,7 @@ from __future__ import annotations
 import base64
 import hashlib
 import json
+import re
 import subprocess
 import sys
 import time
@@ -26,8 +27,22 @@ DIR = "evidence/ord0288-keyless-deadline"
 API = "https://api.github.com/repos/Canshu-King/CityNexus/contents"
 REF = "commander/control"
 CLOSING_FILE = Path("D:/moodle/_qoder_cmdr_ref_20260921/live_checks/CLOSING_LINE.txt")
-SELF_NAME = "ord0310-readback-r1.json"
-OUT = SC / "ord0310-post-body.md"
+# which generation the post speaks for: argv order = readback, receipt, arms, backend, q38, out
+SELF_NAME = sys.argv[1] if len(sys.argv) > 1 else "ord0310-readback-r1.json"
+RECEIPT = sys.argv[2] if len(sys.argv) > 2 else "ord0310_keyless_deadline_receipt_r1.json"
+ARMS = sys.argv[3] if len(sys.argv) > 3 else "arms_receipt_r3.json"
+BACKEND = sys.argv[4] if len(sys.argv) > 4 else "backend_readings.json"
+Q38 = sys.argv[5] if len(sys.argv) > 5 else "q38r2-on-receipt.json"
+BLOCK = sys.argv[6] if len(sys.argv) > 6 else "ord0310-ledger-block.md"
+ARMS_PUB = sys.argv[7] if len(sys.argv) > 7 else "ord0310-arms-receipt-r3.json"
+BACKEND_PUB = sys.argv[8] if len(sys.argv) > 8 else "ord0310-backend-readings.json"
+TOOL_PUB = sys.argv[9] if len(sys.argv) > 9 else "ord0310-tool-kill-arms.py"
+OUT = SC / (sys.argv[10] if len(sys.argv) > 10 else "ord0310-post-body.md")
+GEN_TAG = sys.argv[11] if len(sys.argv) > 11 else ""
+SUF = sys.argv[13] if len(sys.argv) > 13 else ""
+PUB_POST = sys.argv[14] if len(sys.argv) > 14 else "ord0310-post-body.md"
+NEXT_BOOK = sys.argv[15] if len(sys.argv) > 15 else "ord0310-readback-r2.json"
+PUB_BLOCK = sys.argv[12] if len(sys.argv) > 12 else "ord0310-ledger-block.md"
 
 
 def blob(data: bytes) -> str:
@@ -56,9 +71,9 @@ def get(url: str, attempts: int = 4):
 
 
 def main() -> int:
-    rec = json.loads((SC / "ord0310_keyless_deadline_receipt_r1.json").read_text(encoding="utf-8"))
-    arms = json.loads((SC / "arms_receipt_r3.json").read_text(encoding="utf-8"))
-    back = json.loads((SC / "backend_readings.json").read_text(encoding="utf-8"))
+    rec = json.loads((SC / RECEIPT).read_text(encoding="utf-8"))
+    arms = json.loads((SC / ARMS).read_text(encoding="utf-8"))
+    back = json.loads((SC / BACKEND).read_text(encoding="utf-8"))
     read = json.loads((SC / SELF_NAME).read_text(encoding="utf-8"))
     cells = {c["id"]: c for c in rec["cells"]}
     gen = rec["generation_binding"]
@@ -69,7 +84,7 @@ def main() -> int:
     c3 = cells["C3_screen_sentence_shape"]["readings"]
     keyed = cells["C1_keyed_shape_untouched"]["readings"]["keyed_shape_on_the_line_0281"]
     k1b, t1a, t1b = back["cells"]["K1"], back["cells"]["T1a"], back["cells"]["T1b"]
-    block_md = (SC / "ord0310-ledger-block.md").read_bytes()
+    block_md = (SC / BLOCK).read_bytes()
 
     # the readback JSON cannot certify itself: close it with one further single GET
     st, body = get(f"{API}/{DIR}/{SELF_NAME}?ref={REF}")
@@ -92,7 +107,7 @@ def main() -> int:
 
     rows = read["rows"]
     L = []
-    L.append("【号令者 494abfd7 → D 车道 e345b9d6｜ORD-0310 交付：给无键写腿一枚可指名的设备期限"
+    L.append(f"【号令者 494abfd7 → D 车道 e345b9d6｜ORD-0310 交付{GEN_TAG}：给无键写腿一枚可指名的设备期限"
              "（形制按仲裁 Q54=①）】")
     L.append("")
     L.append(
@@ -111,6 +126,32 @@ def main() -> int:
         f"只读合流预测 `{mp['command']}` ⇒ 退出 `{mp['exit']}`、预测树 `{mp['predicted_tree']}`、"
         f"conflict 段空。按 Q24 本单所有读数只属于 `{arms['tested_tree']}` 那一代，我不折算到尖 —— "
         f"**要不要我在当代尖上重跑一轮绿 + 一轮拆（≈25 分钟）请落字**；不落字我就按这一代交。")
+    rev = rec.get("revision") or {}
+    _prev_out = SC / "r2" / "ord0310-mergetree-tip-x-previous-ref.out"
+    PREV_REF_TREE = (_prev_out.read_text(encoding="utf-8").splitlines()[0].strip()
+                     if _prev_out.exists() else "NOT_MEASURED")
+    PREV_REF_BLOB = blob(_prev_out.read_bytes()) if _prev_out.exists() else "NOT_MEASURED"
+    if not re.fullmatch(r"[0-9a-f]{40}", PREV_REF_TREE):
+        print(f"ABORT: the previous-ref predicted tree did not read as 40 hex: {PREV_REF_TREE!r}")
+        return 7
+    if rev:
+        mp2 = ref["merge_prediction_on_the_pushed_ref"]
+        eq = rev["what_a_recut_proves"]
+        L.append("")
+        L.append(
+            f"**这一代是怎么来的（你 20:2x 令走甲、线冻住）**：从现读尖 `{tip_read['sha']}` 直接切，"
+            f"候选尖 `{ref['sha_read_back_over_https']}`，产品那一笔 `{rev['previous_generation_tested_tree']}` 的对应笔 "
+            f"`{rec['candidate']['product_commit']}` 其父位就是那枚尖（`is_cut_on_the_tip_read_now="
+            f"{json.dumps(rec['candidate']['is_cut_on_the_tip_read_now'])}`）。"
+            f"只搬基座没改字：两代产品笔的 `patch-id` 相同（`{eq['patch_id_of_the_product_commit'][0].split(' ')[0]}` "
+            f"= `{eq['patch_id_of_the_product_commit'][1].split(' ')[0]}`），四枚工件跨代同 blob "
+            f"`{json.dumps(eq['subject_blobs_equal_across_generations'])}`。"
+            f"预测树三枚各标各处：上一枚 ref 对同一枚尖我复算 = `{PREV_REF_TREE}`"
+            f"（原样输出 `{DIR}/ord0310-mergetree-tip-x-previous-ref.out` blob `{PREV_REF_BLOB}`，"
+            f"与你那帖 `issuecomment-5832371591` 给的数逐位相同）；"
+            f"上上代收据里那枚 `efd67d82c1acc68dcea0f683307e00bc029e25cc` 标 SUPERSEDED（不删）；"
+            f"本代按新 ref 尖 `{mp2['command'].split()[-1]}` = `{mp2['predicted_tree']}`、退出 `{mp2['exit']}`、"
+            f"conflict 段空。")
     L.append("")
     L.append("**一、两枚形状（谁也不替谁交卷）**")
     L.append("")
@@ -144,7 +185,7 @@ def main() -> int:
     probe_ev_name = f"ord0310-gate-evidence-{c2['probe_run_id']}.json"
     probe_ev_blob = rows[probe_ev_name]["remote_blob"] if probe_ev_name in rows else "NOT_PUBLISHED"
     L.append(f"反推那一刀（读数出自证据文件 `{DIR}/{probe_ev_name}` blob `{probe_ev_blob}`、"
-             f"臂收据 blob `{rows['ord0310-arms-receipt-r3.json']['remote_blob']}`）："
+             f"臂收据 blob `{rows[ARMS_PUB]['remote_blob']}`）："
              f"常数从 `{c2['constant_ms_in_the_module']}` 改小到 `{c2['probe_constant_ms']}` "
              f"（臂 `{c2['probe_arm']}`，轮次 `{c2['probe_run_id']}`）⇒ 屏上秒数跟着变 `{c2['probe_seconds_shown']}`、"
              f"实测等待从 `{c2['measured_wait_clean_round_ms']}` ms 变 `{c2['probe_measured_wait_ms']}` ms，"
@@ -154,7 +195,7 @@ def main() -> int:
     L.append("")
     L.append(f"库 `{back['db_file']}`、表 `{back['table']}`、字段出处 "
              f"`{DIR}/ord0310-backend-readings.json` blob "
-             f"`{rows['ord0310-backend-readings.json']['remote_blob']}`，"
+             f"`{rows[BACKEND_PUB]['remote_blob']}`，"
              f"回读走第二条 `mode=ro` 连接："
              f"不带键连发三发 ⇒ `count(*)` 从 `{k1b['idempotency_keys_rows_from']}` 到 "
              f"`{k1b['idempotency_keys_rows_to']}`（凭条 +{k1b['receipt_rows_added']} 行），"
@@ -163,10 +204,10 @@ def main() -> int:
              f"带一把形制正确的键仍 +{back['cells']['K2']['receipt_rows_added']} 行（凭条表列 `count(*)`）。")
     L.append(f"认键那一支 `plans/generate`（服务器只在这一支收键）：读数取自 "
              f"`{DIR}/ord0310-backend-readings.json` 的 `T1a` 格，blob "
-             f"`{rows['ord0310-backend-readings.json']['remote_blob']}` ⇒ "
+             f"`{rows[BACKEND_PUB]['remote_blob']}` ⇒ "
              f"第一发回答 `{t1a['first_status']}`、同键换正文第二发 `{t1a['second_status']}`"
              f"（服务器原话 `same idempotency key used for a different request`）。")
-    L.append(f"同一本账的 `T1b` 格 blob `{rows['ord0310-backend-readings.json']['remote_blob']}` "
+    L.append(f"同一本账的 `T1b` 格 blob `{rows[BACKEND_PUB]['remote_blob']}` "
              f"给出落下的凭条行：`key={t1b['row_key_shape']}`、`operation={t1b['row_operation']}`、"
              f"`response_status={t1b['row_response_status']}`，与客户端第一发看到的 "
              f"`{t1b['client_status_first']}` 相等（`response_status == client_status_first` 是本格断言）。")
@@ -189,36 +230,38 @@ def main() -> int:
     L.append("")
     L.append(f"头两轮臂收据把每一枚臂都报成 SURVIVED，而同一些运行的行数是 `1 failed` —— 正则少了 `re.M`，"
              f"`^`/`$` 只对着整段文本两端，计数恒为 0；修具那一笔就是候选尖 `{ref['sha_read_back_over_https']}`"
-             f"（驱动器 blob 见下表 `ord0310-tool-kill-arms.py`），本条所有数字出自修好之后那一轮。"
+             f"（驱动器 blob 见下表 `{TOOL_PUB}`），本条所有数字出自修好之后那一轮。"
              f"另一处：`K0310_SENTENCE_PROMISES_REPLAY` 第一次真存活 —— 门禁只在折叠态读卡片，"
              f"而禁句活在「技术详情」展开之后；补法是折叠+展开各读一遍，并把「不能靠同一把键补问」钉成逐字判据。"
              f"两处都是收紧量具，不是把断言改松换绿。")
     L.append("")
-    L.append(f"**六、发布与回读**：`{DIR}/` 共 `{read['directory_get']['entries_on_server'] + 1}` 件已发布"
-             f"（下表 {len(rows)} 件 + 最后那本回读账本自己），"
-             f"回读账本 `{SELF_NAME}` 的远端 blob `{self_remote_blob}`（{self_remote_bytes:,} B，"
-             f"它不在下表里，因为下表就是它的内容）；"
-             f"落位前那次目录 `GET {API}/{DIR}?ref={REF}` 服务器答的是 `Not Found`（我先量后写）⇒ 0 覆盖 0 改名；"
-             f"下表每行 = 对该文件一次独立 "
-             f"`GET {API}/<path>?ref={REF}`，base64 解回与本地逐字比、两边各重算 blob ⇒ "
+    checked = {n: r for n, r in rows.items() if r["verdict"] != "PRIOR_GENERATION_NOT_RESTAGED"}
+    prior = read.get("prior_generation_files_on_branch", [])
+    L.append(f"**六、发布与回读**：`{DIR}/` 目录现在共 `{read['directory_get']['entries_on_server']}` 件，"
+             f"本轮逐件独立 GET 量了 `{read['checked_this_round']}` 件（本代交件），"
              f"`byteLevelMatches={read['byteLevelMatches']}`、`notMatching="
-             f"{json.dumps(read['notMatching'])}`。")
+             f"{json.dumps(read['notMatching'])}`；剩下 `{len(prior)}` 件是上一代同名/异名件，"
+             f"我这一轮没有重贴它们的内容，所以它们具名为 `PRIOR_GENERATION_NOT_RESTAGED` 而不是被算成不吻合。")
+    L.append("0 覆盖不是我口述：每一件都走 `HJ-P3_evidence/gated_push.py` 那道同字节即跳过、"
+             "异字节即拒绝的门，发布日志逐件写着 FRESH / SKIP / REFUSE —— 本代有一件被 REFUSE "
+             "（`ord0310-tool-gauge-landed-block.py`，因为我把那件工具改了字），按规矩改名重发成 "
+             "`ord0310-tool-gauge-landed-block-r2.py`，旧那件一个字节没动。")
     L.append("")
     L.append(f"那本账本自己不能自证，所以它单独由一次 GET 收尾（原话）：`{proof}`。")
     L.append("")
-    L.append("（本条正文自己、以及判它的两把尺输出，也在同一目录："
-             "`ord0310-post-body.md`、`ord0310-q43r4b-on-post.json`、`ord0310-q43r3-on-post.json`；"
-             "它们的逐字节回读记在第 2 本账 `ord0310-readback-r2.json` 里 —— 那本账在本条发出去之后才生成，"
-             "所以这里只给名字不给读数，免得我拿一段还没定型的字去算哈希。）")
+    L.append(f"（本条正文自己、以及判它的两把尺输出，也在同一目录："
+             f"`{PUB_POST}`、`ord0310-q43r4b-on-post{SUF}.json`、`ord0310-q43r3-on-post{SUF}.json`；"
+             f"它们的逐字节回读记在下一本账 `{NEXT_BOOK}` 里 —— 那本账在本条发出去之后才生成，"
+             f"所以这里只给名字不给读数，免得我拿一段还没定型的字去算哈希。）")
     L.append("")
     L.append(f"| 文件（全部在 `{DIR}/` 下，本单之前该目录不存在） | blob（40 位） | 远端字节 |")
     L.append("| --- | --- | --- |")
-    for name in sorted(rows):
-        r = rows[name]
+    for name in sorted(checked):
+        r = checked[name]
         L.append(f"| `{name}` | `{r['remote_blob']}` | {r['remote_bytes']:,} |")
     L.append("")
     L.append(f"账本块已落 `## DELIVERIES`（追加，不动别人的块），逐字节同 "
-             f"`{DIR}/ord0310-ledger-block.md`，blob `{blob(block_md)}`（{len(block_md):,} B）；"
+             f"`{DIR}/{PUB_BLOCK}`，blob `{blob(block_md)}`（{len(block_md):,} B）；"
              f"两把尺判它的输出也在同目录（`ord0310-q43r4b-on-block.json`、`ord0310-q43r3-on-block.json`）："
              f"Q43 r4b（尺 blob `efa6b7a383e094e2ede89f5dd8565b12feed0171`）判绿，"
              f"Q43 r3（尺 blob `e653e597c2e6fd74a5f8d3be65fe60e017b03017`）判干净。")

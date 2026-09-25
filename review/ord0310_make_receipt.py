@@ -108,9 +108,9 @@ def merge_prediction(tip: str, code: str) -> dict:
             "stderr": proc.stderr.strip()}
 
 
-def generation_of(tip: str, code: str) -> dict:
+def generation_of(tip: str, code: str, base: str = "") -> dict:
     """Where this candidate sits relative to the line that was read, and what landing would do."""
-    parent = git("rev-parse", f"{code}^")
+    parent = base or git("rev-parse", f"{code}^")
     fork = git("merge-base", parent, tip)
     theirs = git("diff", "--name-only", fork, tip).splitlines()
     mine = git("diff", "--name-only", fork, code).splitlines()
@@ -123,6 +123,12 @@ def generation_of(tip: str, code: str) -> dict:
         "tip_is_descendant_of_the_fork": subprocess.run(
             ["git", "merge-base", "--is-ancestor", fork, tip],
             cwd=ROOT, capture_output=True).returncode == 0,
+        # the interesting question once the lane's own work has been landed: is what I am measuring
+        # sitting on top of the line (a superset), or beside it?
+        "authority_tip_is_ancestor_of_this_tree": subprocess.run(
+            ["git", "merge-base", "--is-ancestor", tip, code],
+            cwd=ROOT, capture_output=True).returncode == 0,
+        "files_this_tree_adds_on_top_of_the_tip": git("diff", "--name-only", tip, code).splitlines(),
         "commits_on_the_line_since_the_fork": git("log", "--format=%h %s", f"{fork}..{tip}").splitlines(),
         "files_the_line_changed_since_the_fork": theirs,
         "files_my_candidate_changed_since_the_fork": mine,
@@ -155,6 +161,16 @@ def keyed_shape_at_tip(tip: str, code: str) -> dict:
     }
 
 
+def grep_lines(rev: str, path: str, pattern: str) -> list:
+    """`git grep -n` at a rev, returned as (line_number, stripped_text) so a claim names its own line."""
+    rows = []
+    for line in git("grep", "-n", pattern, rev, "--", path).splitlines():
+        parts = line.split(":", 3)
+        if len(parts) == 4:
+            rows.append([int(parts[2]), parts[3].strip()[:70]])
+    return rows
+
+
 def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--code-sha", required=True)
@@ -162,7 +178,26 @@ def main() -> int:
     ap.add_argument("--backend", default=str(SC / "backend_readings.json"))
     ap.add_argument("--out", default=str(SC / "ord0310_keyless_deadline_receipt_r1.json"))
     ap.add_argument("--pushed-ref", default="refs/heads/review/ord0310-keyless-deadline-d")
+    ap.add_argument("--supersedes-receipt", default="",
+                    help="blob of the previous-generation receipt this one replaces (never deleted)")
+    ap.add_argument("--raw-dir", default="",
+                    help="where to write the raw .out/.tsv artifacts (defaults to the receipt's own folder)")
+    ap.add_argument("--previous-generation-sha", default="",
+                    help="the tested tree of the previous generation, to prove a re-cut moved only the base")
+    ap.add_argument("--base", default="",
+                    help="the line commit this candidate is cut from (defaults to code^)")
+    ap.add_argument("--product-commit", default="",
+                    help="the commit inside the candidate that carries the product change (patch-id source)")
+    ap.add_argument("--previous-product-commit", default="",
+                    help="its counterpart in the previous generation, for the patch-id pair")
+    ap.add_argument("--supersedes-predicted-tree", default="",
+                    help="predicted tree of the previous generation, marked SUPERSEDED rather than removed")
+    ap.add_argument("--generation-label", default="",
+                    help="what this generation is, spelled out; it goes into the block heading, so it "
+                         "must not be a literal left over from an earlier generation")
     args = ap.parse_args()
+    RAW = Path(args.raw_dir) if args.raw_dir else SC
+    RAW.mkdir(parents=True, exist_ok=True)
 
     code = args.code_sha.strip()
     arms = json.loads(Path(args.arms).read_text(encoding="utf-8"))
@@ -175,7 +210,8 @@ def main() -> int:
     subprocess.run(["git", "fetch", "--no-write-fetch-head", "--quiet", URL, tip],
                    cwd=ROOT, capture_output=True)
     tip_api, tip_api_raw = remote_tip_via_api()
-    generation = generation_of(tip, code)
+    base = args.base or git("rev-parse", f"{code}^")
+    generation = generation_of(tip, code, base)
     keyed = keyed_shape_at_tip(tip, code)
     parent = git("rev-parse", f"{code}^")
 
@@ -187,7 +223,7 @@ def main() -> int:
     module_src = Path(ROOT / MODULE).read_text(encoding="utf-8")
     constant = int(re.search(r"KEYLESS_WRITE_DEADLINE_MS = (\d+)_?(\d*)", module_src).group(0)
                    .split("=")[1].replace("_", "").rstrip(";").strip())
-    keyed_hunks = [h for h in re.findall(r"^@@ [^\n]*", git("diff", "-U0", parent, code, "--", SHEET),
+    keyed_hunks = [h for h in re.findall(r"^@@ [^\n]*", git("diff", "-U0", base, code, "--", SHEET),
                                           flags=re.M)]
     keyed_call_line = next((i for i, line in enumerate(Path(ROOT / SHEET).read_text(encoding="utf-8")
                                                        .splitlines(), 1)
@@ -210,8 +246,9 @@ def main() -> int:
             "verdict": "KEYED_LEG_UNTOUCHED",
             "readings": {
                 "parent_of_the_code_commit": parent,
+                "base_cut_from": base,
                 "authoritative_tip_read_now": tip,
-                "files_changed_by_this_commit": git("diff", "--name-only", parent, code).splitlines(),
+                "files_changed_by_this_candidate": git("diff", "--name-only", base, code).splitlines(),
                 "hunk_headers_in_the_sheet": keyed_hunks,
                 "keyed_call_site_line": keyed_call_line,
                 "any_hunk_covers_the_keyed_call_site": touched_keyed,
@@ -234,8 +271,13 @@ def main() -> int:
                    f"{SHAPE_LABELS['keyless']} = 本单新建 `{MODULE}`（blob `{blob(MODULE, code)}`，"
                    f"常数 `KEYLESS_WRITE_DEADLINE_MS = {constant}`）。"
                    f"两枚数值同为 {constant} ms 但各管各的调用点，本单没有替 0281 交卷，也没有改它一个字节："
-                   f"被测那一代里根本没有那枚文件（`absent_from_my_tested_tree="
-                   f"{json.dumps(keyed['absent_from_my_tested_tree'])}`），它是我在生成之后按线尖的只读 `git show` 读到的。",
+                   + (f"被测那一代里根本没有那枚文件（`absent_from_my_tested_tree=true`），"
+                      f"它是我在量完之后按线尖的只读 `git show` 读到的。"
+                      if keyed["absent_from_my_tested_tree"] else
+                      f"这一代它就在树里（`{KEYED_MODULE}` 在本候选里的 blob = "
+                      f"`{git('rev-parse', str(code) + ':' + KEYED_MODULE)}`，与线尖那一枚"
+                      f"`{keyed['blob_at_tip']}` 同值），而本道那一笔提交的改动清单里没有它："
+                      f"{json.dumps(git('diff', '--name-only', base, code).splitlines(), ensure_ascii=False)}。"),
         },
         {
             "id": "C2_single_named_constant",
@@ -355,6 +397,62 @@ def main() -> int:
                    f"`{SPEC_PATH}`={blob(SPEC_PATH, code)}、`{BACKEND_TEST}`={blob(BACKEND_TEST, code)}。"
                    f"`claimed_result` 是本车道观测，`derived_result` 一律留 null 给红队，等级不由本车道签。",
         },
+        {
+            "id": "C6_deadline_is_the_criterion_not_signal",
+            "triple": {"exact_sha": code, "nodeid": f"{SPEC_PATH} :: K3 反控：旅行者按取消时，期限不许冒充用户",
+                       "shape": ["chromium"]},
+            "verdict": "SIGNAL_PRECEDED_THIS_ORDER_SO_IT_IS_NOT_THE_DISCRIMINATOR",
+            "readings": {
+                "signal_option_lines_at_the_tip": grep_lines(tip, SHEET, "signal,"),
+                "post_call_sites_at_the_tip": grep_lines(tip, SHEET, "await fetch("),
+                "keyless_leg_wrapped_in_this_tree": grep_lines(code, SHEET, "fetchWithKeylessWriteDeadline("),
+                "wrapper_preserves_the_callers_signal": grep_lines(code, MODULE, "init.signal"),
+                "deadline_branch": grep_lines(code, SHEET, "UNKNOWN_KEYLESS_WRITE_DEADLINE"),
+                "cancel_branch": grep_lines(code, SHEET, "CANCELLED_AFTER_SEND"),
+                "k3_node_clean_round": arms["clean_round"]["nodes"].get(
+                    "K3 反控：旅行者按取消时，期限不许冒充用户", "NOT_FOUND"),
+                "arm_that_breaks_the_distinction": next(
+                    {"arm": a["arm"], "red_nodes": a["red_nodes"], "claimed": a["claimed_result"]}
+                    for a in arms["arms"] if a["arm"] == "K0310_DEADLINE_IMPERSONATES_TRAVELLER"),
+                # the two-sided witness the commander asked for: keep the caller's `signal`, delete the
+                # deadline. K1 has to go red while K2/K3 stay green, or the criterion is really about aborts
+                "signal_but_no_deadline_arm": next(
+                    ({"arm": a["arm"], "nodes": a["attempt"]["nodes"], "claimed": a["claimed_result"],
+                      "restored": a["restored_to_tested_tree_bytes"], "anchor_hits": a["anchor_hits"],
+                      "sizes": a["sizes"]}
+                     for a in arms["arms"]
+                     if a["arm"] == "K0310_KEYLESS_LEG_HAS_SIGNAL_BUT_NO_DEADLINE"),
+                    "ARM_NOT_IN_THIS_BATCH"),
+                "premise_proof": (lambda p: {
+                    "file": "ord0310-signal-vs-deadline-proof.out", "exists": p.exists(),
+                    "bytes": p.stat().st_size if p.exists() else 0,
+                    "blob": hashlib.sha1(b"blob %d\0" % len(p.read_bytes()) + p.read_bytes()).hexdigest()
+                    if p.exists() else "NOT_WRITTEN"})(RAW / "ord0310-signal-vs-deadline-proof.out"),
+            },
+            "derived_from": f"tip signal lines={json.dumps(grep_lines(tip, SHEET, 'signal,'))} · "
+                            f"deadline branch={json.dumps(grep_lines(code, SHEET, 'UNKNOWN_KEYLESS_WRITE_DEADLINE'))} · "
+                            f"cancel branch={json.dumps(grep_lines(code, SHEET, 'CANCELLED_AFTER_SEND'))} · "
+                            f"K3={arms['clean_round']['nodes'].get('K3 反控：旅行者按取消时，期限不许冒充用户', 'NOT_FOUND')} · "
+                            f"impersonation arm red_nodes="
+                            f"{json.dumps(next(a['red_nodes'] for a in arms['arms'] if a['arm'] == 'K0310_DEADLINE_IMPERSONATES_TRAVELLER'), ensure_ascii=False)}",
+            "why": f"号令者 20:2x 那条新事实我复算成立并可指名：在这枚尖 `{tip}` 上两条 POST 的选项对象"
+                   f"**本来就带 `signal`**（`{SHEET}` 的第 "
+                   f"{', '.join(str(n) for n, _t in grep_lines(tip, SHEET, 'signal,'))} 行就是 `signal,`；"
+                   f"两处调用点在第 "
+                   f"{', '.join(str(n) for n, _t in grep_lines(tip, SHEET, 'await fetch('))} 行）。"
+                   f"所以本单加的东西不是 signal，是**期限**：wrapper 原样接住调用方的信号"
+                   f"（`{MODULE}` 第 "
+                   f"{', '.join(str(n) for n, _t in grep_lines(code, MODULE, 'init.signal'))} 行读 `init.signal`），"
+                   f"到点才由 `firedHere` 抛 `KeylessWriteDeadlineMissed`，屏上落 "
+                   f"`{grep_lines(code, SHEET, 'UNKNOWN_KEYLESS_WRITE_DEADLINE')[:1]}` 那一支；"
+                   f"旅行者自己按取消仍走取消那一支（`CANCELLED_AFTER_SEND`，"
+                   f"`{SHEET}` 第 "
+                   f"{', '.join(str(n) for n, _t in grep_lines(code, SHEET, 'CANCELLED_AFTER_SEND'))} 行）。"
+                   f"判据按**到点**写而不按**有没有 signal** 写，并且这一条有牙齿：K3 反控本轮判 "
+                   f"{arms['clean_round']['nodes'].get('K3 反控：旅行者按取消时，期限不许冒充用户', 'NOT_FOUND')}，"
+                   f"而把 `firedHere` 判定拆掉的臂 "
+                   f"`K0310_DEADLINE_IMPERSONATES_TRAVELLER` 实测红的正是 K3 那一枚节点。",
+        },
     ]
 
     pushed, pushed_raw = ref_read_raw(args.pushed_ref)
@@ -376,6 +474,13 @@ def main() -> int:
         "per_subject_file_blob": per_file,
         "what_differs_between_tested_tree_and_the_push": git("diff", "--name-only", code, pushed).splitlines()
         if pushed else [],
+        # the commander grades the landing on the ref as it stands now, so predict on that sha too
+        "merge_prediction_on_the_pushed_ref": merge_prediction(tip, pushed),
+        "subject_blob_equal_to_previous_generation": {
+            f: {"previous_generation_blob": git("rev-parse", f"{args.previous_generation_sha}:{f}")
+                if args.previous_generation_sha else "",
+                "this_generation_blob": git("rev-parse", f"{code}:{f}")}
+            for f in subjects} if args.previous_generation_sha else "NO_PRIOR_GENERATION_PASSED",
     }
 
     tip_recheck, tip_recheck_raw = remote_tip()
@@ -402,8 +507,53 @@ def main() -> int:
                     "按 Q24 我不把这一代的读数折算到线尖：要当代数，需要把候选重父到尖上再跑一轮绿 + 一轮拆。"
                     "合流是否会冲突不靠嘴说，看 `merge_prediction`（只读，0 移动任何 ref）。",
         },
-        "candidate": {"code_sha": code, "parent": parent, "tools_sha": git("rev-parse", "HEAD"),
-                      "is_child_of_the_tip_read_now": parent == tip},
+        "candidate": {"code_sha": code, "parent": parent, "base_cut_from": base,
+                      "product_commit": args.product_commit or code,
+                      "tools_sha": git("rev-parse", "HEAD"),
+                      # two different questions, so two different fields: was the *commit* cut on the
+                      # tip I read, and is the *declared base* that same tip. gen-r3 landed with the
+                      # second one printed next to two equal shas, which read as a contradiction.
+                      "is_parent_the_tip_read_now": parent == tip,
+                      "is_declared_base_the_tip_read_now": base == tip},
+        "revision": {
+            "generation": args.generation_label or "NO_GENERATION_LABEL_PASSED",
+            "previous_generation_tested_tree": args.previous_generation_sha or "NOT_PASSED",
+            "previous_generation_receipt_blob": args.supersedes_receipt or "NOT_PASSED",
+            "previous_predicted_tree": {
+                "sha": args.supersedes_predicted_tree or "NOT_PASSED",
+                "status": "SUPERSEDED_BY_THIS_GENERATION_NOT_DELETED",
+                "why": "那枚预测树是对上一代被测尖算的；号令者按 ref 当下尖重量出的是 "
+                       f"{ref_readback['merge_prediction_on_the_pushed_ref']['predicted_tree']}"
+                       "（见 candidate_ref_readback.merge_prediction_on_the_pushed_ref）"},
+            "tested_tree_vs_product_commit": {
+                "arms_tested_tree": arms["tested_tree"], "candidate_tip": code,
+                "product_commit": args.product_commit or code,
+                "per_subject_blob": {f: {"at_tested_tree": git("rev-parse", f"{arms['tested_tree']}:{f}"),
+                                         "at_candidate_tip": git("rev-parse", f"{code}:{f}")}
+                                     for f in subjects},
+                "all_equal": all(git("rev-parse", f"{arms['tested_tree']}:{f}")
+                                 == git("rev-parse", f"{code}:{f}") for f in subjects),
+                "note": "臂与绿轮跑的就是本道分支尖这一枚树；这里逐枚证明四件被测工件在它上面"
+                        "与收据所称的候选尖同 blob，所以 `--code-sha` 用分支尖不改变被量字节。",
+            },
+            "what_a_recut_proves": {
+                "subject_blobs_equal_across_generations": all(
+                    v["previous_generation_blob"] == v["this_generation_blob"]
+                    for v in (ref_readback["subject_blob_equal_to_previous_generation"] or {}).values())
+                if isinstance(ref_readback["subject_blob_equal_to_previous_generation"], dict) else "NOT_PASSED",
+                "patch_id_of_the_product_commit": [
+                    subprocess.run(f"git show {args.previous_product_commit} | git patch-id --stable",
+                                   shell=True, cwd=ROOT, capture_output=True, text=True,
+                                   encoding="utf-8").stdout.strip(),
+                    subprocess.run(f"git show {args.product_commit or code} | git patch-id --stable",
+                                   shell=True, cwd=ROOT, capture_output=True, text=True,
+                                   encoding="utf-8").stdout.strip()],
+                # once the commander has landed the commit, this generation's product commit IS the
+                # previous generation's, so a patch-id "pair" would be one commit compared with itself
+                # and prove nothing; the cross-generation claim then belongs to the earlier receipt.
+                "is_a_self_comparison": (args.previous_product_commit or "") == (args.product_commit or code),
+            },
+        },
         "candidate_ref_readback": ref_readback,
         "gates": {
             "frontend_spec": {"path": SPEC_PATH, "run_shape": ["chromium"],
@@ -442,17 +592,18 @@ def main() -> int:
     out.parent.mkdir(parents=True, exist_ok=True)
     out.write_text(json.dumps(payload, ensure_ascii=False, indent=1) + "\n", encoding="utf-8", newline="\n")
     print(f"wrote {out} {out.stat().st_size} B")
-    print(f"tip={tip} parent==tip? {payload['candidate']['is_child_of_the_tip_read_now']} "
+    print(f"tip={tip} parent==tip? {payload['candidate']['is_parent_the_tip_read_now']} "
+          f"base==tip? {payload['candidate']['is_declared_base_the_tip_read_now']} "
           f"killed={arms['killed']}/{arms['arms_total'] - arms['probes']} restored={arms['all_arms_restored_to_tested_tree_bytes']}")
     mp = generation["merge_prediction"]
-    (SC / "ord0310-mergetree-tip-x-candidate.out").write_text(
+    (RAW / "ord0310-mergetree-tip-x-candidate.out").write_text(
         f"$ {mp['command']}\nexit={mp['exit']}\nstdout line 1 (predicted tree): {mp['predicted_tree']}\n"
         f"stdout after line 1 (the conflict section, empty means no conflict):\n{mp['raw_after_first_line']}\n"
         f"stderr:\n{mp['stderr']}\n"
         f"note: read-only prediction; it writes blobs/trees into the object store and moves 0 refs. "
         f"Rendered in the same process run that produced {out.name}, so the numbers cannot drift apart.\n",
         encoding="utf-8", newline="\n")
-    (SC / "ord0310-tip-read.out").write_text(
+    (RAW / "ord0310-tip-read.out").write_text(
         tip_raw + "\n" + tip_api_raw + "\n" + pushed_raw + "\n" + tip_recheck_raw + "\n"
         f"parsed: tip={tip} tip_via_api={tip_api} agree={tip == tip_api} recheck={tip_recheck} "
         f"stable={tip == tip_recheck} pushed_candidate={pushed}\n",
@@ -462,12 +613,12 @@ def main() -> int:
     rows += [f"my_candidate_moves_since_fork\t{p}\n" for p in generation["files_my_candidate_changed_since_the_fork"]]
     rows += (["intersection\tNONE\n"] if not generation["intersection_between_their_files_and_mine"]
              else [f"intersection\t{p}\n" for p in generation["intersection_between_their_files_and_mine"]])
-    (SC / "ord0310-path-disjointness.tsv").write_text("".join(rows), encoding="utf-8", newline="\n")
+    (RAW / "ord0310-path-disjointness.tsv").write_text("".join(rows), encoding="utf-8", newline="\n")
     for name in ("ord0310-mergetree-tip-x-candidate.out", "ord0310-tip-read.out",
                  "ord0310-path-disjointness.tsv"):
-        p = SC / name
+        p = RAW / name
         print(f"wrote {p} {p.stat().st_size} B")
-    print(f"secret scan in the raw files: hits={sum('ghp_' in p.read_text(encoding='utf-8') for p in SC.glob('ord0310-*.out'))}")
+    print(f"secret scan in the raw files: hits={sum('ghp_' in p.read_text(encoding='utf-8') for p in RAW.glob('ord0310-*.out'))}")
     return 0
 
 

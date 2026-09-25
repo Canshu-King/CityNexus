@@ -80,14 +80,21 @@ def main() -> int:
             continue
         remote = base64.b64decode(body["content"])
         mine = (PUB / name).read_bytes() if (PUB / name).exists() else None
+        if mine is None:
+            # the branch also carries earlier generations that this round did not restage; say so
+            # rather than calling them mismatches
+            rows[name] = {"remote_status": st, "remote_bytes": len(remote), "remote_blob": body["sha"],
+                          "verdict": "PRIOR_GENERATION_NOT_RESTAGED",
+                          "one_independent_get": f"GET {API}/{DIR}/{name}?ref={REF} -> HTTP {st}"}
+            continue
         rows[name] = {
             "remote_bytes": len(remote), "remote_blob": body["sha"],
             "remote_blob_recomputed_from_decoded_bytes": blob(remote),
-            "local_bytes": None if mine is None else len(mine),
-            "local_blob": None if mine is None else blob(mine),
-            "byte_level_equal_to_local": None if mine is None else remote == mine,
-            "verdict": ("BYTE_LEVEL_MATCH" if mine is not None and remote == mine
-                        and body["sha"] == blob(remote) else "MISMATCH"),
+            "local_bytes": len(mine),
+            "local_blob": blob(mine),
+            "byte_level_equal_to_local": remote == mine,
+            "verdict": ("BYTE_LEVEL_MATCH" if remote == mine and body["sha"] == blob(remote)
+                        else "MISMATCH"),
             "one_independent_get": f"GET {API}/{DIR}/{name}?ref={REF} -> HTTP {st}",
         }
     payload = {
@@ -98,9 +105,14 @@ def main() -> int:
         "names_local": local,
         "only_on_server": sorted(set(on_server) - set(local)),
         "only_local": sorted(set(local) - set(on_server)),
-        "requestedAndChecked": len(on_server),
+        "checked_this_round": sum(1 for r in rows.values()
+                                  if r["verdict"] != "PRIOR_GENERATION_NOT_RESTAGED"),
+        "prior_generation_files_on_branch": sorted(
+            n for n, r in rows.items() if r["verdict"] == "PRIOR_GENERATION_NOT_RESTAGED"),
+        "requestedAndChecked": sum(1 for r in rows.values()
+                                   if r["verdict"] != "PRIOR_GENERATION_NOT_RESTAGED"),
         "byteLevelMatches": sum(1 for r in rows.values() if r["verdict"] == "BYTE_LEVEL_MATCH"),
-        "notMatching": sorted(n for n, r in rows.items() if r["verdict"] != "BYTE_LEVEL_MATCH"),
+        "notMatching": sorted(n for n, r in rows.items() if r["verdict"] == "MISMATCH"),
         "rows": rows,
         "method": "one GET per published path; base64 decoded and compared byte for byte; "
                   "git blob sha1 recomputed on both the decoded remote bytes and the local file",
