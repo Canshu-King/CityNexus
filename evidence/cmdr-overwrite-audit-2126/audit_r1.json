@@ -1,0 +1,469 @@
+{
+ "schema": "CNX_CMDR_EVIDENCE_OVERWRITE_AUDIT_V1",
+ "lane": "commander 494abfd7",
+ "at_local": "2026-09-25T21:26:57+0800",
+ "question": "how many evidence paths were written more than once today, and whose claim of 'published paths are never overwritten' survives that count",
+ "history_source": "git log --since=2026-09-25 00:00 +0800 --name-only origin/cmdcontrol (the branch's own object store, not a lane's word)",
+ "commits_on_the_branch_today": 1755,
+ "evidence_paths_written": 1552,
+ "evidence_file_writes_total": 1599,
+ "commander_own": {
+  "paths": 29,
+  "writes": 29,
+  "paths_written_more_than_once": 0,
+  "verdict": "0 覆盖 holds for the commander's paths, and it is now proven by counting commits per path rather than asserted"
+ },
+ "lanes": {
+  "paths_written_more_than_once": 17,
+  "writes_into_those_paths": 64,
+  "of_which_tool_code_paths": 3,
+  "tool_code_paths_list": [
+   "evidence/ord0281-keyed-write-deadline/ord0281_receipt.py",
+   "evidence/ord0302-unreadable-server-body-r2/ord0302_verify_r2.py",
+   "evidence/ord0302-unreadable-server-body/ord0302_deliver.py"
+  ]
+ },
+ "per_path": {
+  "evidence/ord0302-unreadable-server-body/ord0302_index.json": {
+   "writes": 11,
+   "distinct_blobs": 11,
+   "per_commit": [
+    {
+     "commit": "aab203524e8f",
+     "blob": "9ed7a7edcb680da4147ba0fb654de50df0c606d8",
+     "at": "17:13"
+    },
+    {
+     "commit": "a001556a0806",
+     "blob": "52d0da5bbd75e10a465e71772abcfe7dbc5a47c2",
+     "at": "17:22"
+    },
+    {
+     "commit": "e40412b8f153",
+     "blob": "fddb93bbcf3e9f40d3f1227f8a45cfbd89e6fda1",
+     "at": "17:25"
+    },
+    {
+     "commit": "b6844c80e321",
+     "blob": "11f05f294f1771022db372ce5511e79ef20e20ff",
+     "at": "17:29"
+    },
+    {
+     "commit": "6604996c5ae3",
+     "blob": "af2463404c5d7905b5717a595aeb3bd04b05ff78",
+     "at": "17:32"
+    },
+    {
+     "commit": "513ffc838dc5",
+     "blob": "0762c08ef07317c6b2b4464d36f78e87ee65e916",
+     "at": "17:36"
+    },
+    {
+     "commit": "33bd3484602d",
+     "blob": "b571909ed3d1e34f29a89cfee2995cc731cfbb3e",
+     "at": "17:40"
+    },
+    {
+     "commit": "af75b06fa397",
+     "blob": "1147b4079515342354ebf335227fa8f76c7bdc85",
+     "at": "17:40"
+    },
+    {
+     "commit": "6cc85d2e7f8e",
+     "blob": "425c7e3a2698b95fa7ce1b139aa30f689d0deeb1",
+     "at": "17:42"
+    },
+    {
+     "commit": "b5cc757f13fe",
+     "blob": "dff55e902409c1e0b085ba2ba3e60213e5003d66",
+     "at": "17:46"
+    },
+    {
+     "commit": "1c1787d48288",
+     "blob": "b45636c110578ad6b4dd8d2d54fe7a9431b2367a",
+     "at": "17:48"
+    }
+   ]
+  },
+  "evidence/ord0302-unreadable-server-body/ord0302_receipt.json": {
+   "writes": 8,
+   "distinct_blobs": 8,
+   "per_commit": [
+    {
+     "commit": "24b21c2415f2",
+     "blob": "2091721a6f6f44b84abb1f566bf6826ecc708625",
+     "at": "17:07"
+    },
+    {
+     "commit": "180dfeb6e6ce",
+     "blob": "282b9430186e1b12f0993b922235684ea9d472bb",
+     "at": "17:19"
+    },
+    {
+     "commit": "cc5772e6180d",
+     "blob": "f395a274ebf9ab6a324079384de7e52043cd1098",
+     "at": "17:26"
+    },
+    {
+     "commit": "38a9ffcbd2dd",
+     "blob": "44e329677e5f79d1669151b2ef636a65ea1142b2",
+     "at": "17:27"
+    },
+    {
+     "commit": "29cf19d847dd",
+     "blob": "145a8f09800dc40c0dd38e5e8f905517a56016ac",
+     "at": "17:30"
+    },
+    {
+     "commit": "8828c0749a42",
+     "blob": "283519dbf537471f8ffdf19d7e07223832b0d35f",
+     "at": "17:34"
+    },
+    {
+     "commit": "dae9d6e43d44",
+     "blob": "36ab9fb7f3fe3cb4cc0306be5e7d384fb4d3c8ef",
+     "at": "17:38"
+    },
+    {
+     "commit": "b0b24348dbc9",
+     "blob": "910b78a9587fc96c714b4ab0bc01c70ed777b06c",
+     "at": "17:40"
+    }
+   ]
+  },
+  "evidence/ord0302-unreadable-server-body/ord0302_deliver.py": {
+   "writes": 7,
+   "distinct_blobs": 7,
+   "per_commit": [
+    {
+     "commit": "d2f3228eba7c",
+     "blob": "9a988d4521ef4fed6275cc3dc5a7ef4e21ccef46",
+     "at": "17:13"
+    },
+    {
+     "commit": "b64bde660c86",
+     "blob": "55a8e1eedcbae84f3cbc38d3ce1a4c6c58306947",
+     "at": "17:21"
+    },
+    {
+     "commit": "8f7abc31e8c1",
+     "blob": "f235b5ff828ddab4ef48b13c363489ce7defb9c5",
+     "at": "17:25"
+    },
+    {
+     "commit": "0a2f0f142a4e",
+     "blob": "fc03183395c89ae16e05ebee6304b447f4cc2411",
+     "at": "17:28"
+    },
+    {
+     "commit": "7b82452609f9",
+     "blob": "2db7bc0c534fd8980399635034d4af8a5147bb0e",
+     "at": "17:32"
+    },
+    {
+     "commit": "80efe147a092",
+     "blob": "5f940be6c5b45c2d5f03caad57e179df8acf90d3",
+     "at": "17:36"
+    },
+    {
+     "commit": "a0b46f523746",
+     "blob": "de7f5684333b17f00fda4d0eb4df4a62c1bdc6ef",
+     "at": "17:40"
+    }
+   ]
+  },
+  "evidence/ord0302-unreadable-server-body-q53/ord0302_index.json": {
+   "writes": 6,
+   "distinct_blobs": 6,
+   "per_commit": [
+    {
+     "commit": "5bb814cd9b02",
+     "blob": "7673ce60a56c3e9b787344d63a134e05f81a4292",
+     "at": "20:58"
+    },
+    {
+     "commit": "12d2802efa12",
+     "blob": "8199f941662dae1fa3314a082adff94d2db6a227",
+     "at": "20:58"
+    },
+    {
+     "commit": "12704dcc0fb6",
+     "blob": "141a95c60973fdd653963b8c4311b6c7228c7a93",
+     "at": "21:01"
+    },
+    {
+     "commit": "5db3da4e91d4",
+     "blob": "8c1447ab4e0e1d1cacb0ca67845bc72343bcfcde",
+     "at": "21:10"
+    },
+    {
+     "commit": "477c80946dad",
+     "blob": "592f38b90fe10cf527044ca0e0da4169a7bd2130",
+     "at": "21:12"
+    },
+    {
+     "commit": "9e3a0d4b94a7",
+     "blob": "7e5e223bd938608423fd8e101d61a49629a0b6d1",
+     "at": "21:13"
+    }
+   ]
+  },
+  "evidence/ord0302-unreadable-server-body-q53/ord0302_receipt.json": {
+   "writes": 5,
+   "distinct_blobs": 5,
+   "per_commit": [
+    {
+     "commit": "26e1d38b3b6c",
+     "blob": "3d77dc8f8a325d1a58b3168bf541f7ddbdc46642",
+     "at": "20:50"
+    },
+    {
+     "commit": "24ac4bced852",
+     "blob": "63c4421d69bb8f7be334f11ccc5b083c96e4f420",
+     "at": "20:58"
+    },
+    {
+     "commit": "afaadf5827cc",
+     "blob": "39a9cd141cc0d5d28d237f4dc9505b4686d5a71b",
+     "at": "21:10"
+    },
+    {
+     "commit": "6edc6b9d3e68",
+     "blob": "f920f2e79dbe47d6bb81433b07826697c394911d",
+     "at": "21:12"
+    },
+    {
+     "commit": "d98633e1c78c",
+     "blob": "a650fe1fdd04ff6f6bd7d2fffdcebf0a3c36cd09",
+     "at": "21:13"
+    }
+   ]
+  },
+  "evidence/ord0302-unreadable-server-body-r2/ord0302_index.json": {
+   "writes": 4,
+   "distinct_blobs": 4,
+   "per_commit": [
+    {
+     "commit": "2b56ef1d3a6c",
+     "blob": "212591329e3e7408241a2f4ab5b1f23d4ad3d568",
+     "at": "19:23"
+    },
+    {
+     "commit": "d7b6e0a772d8",
+     "blob": "eada6fb87904a4d5acdb4276b5501827974136aa",
+     "at": "19:24"
+    },
+    {
+     "commit": "4c6b291c2e45",
+     "blob": "9b2773cb6d850f6ad9ce75b0408fb8793f04b266",
+     "at": "19:26"
+    },
+    {
+     "commit": "5e2aff57416c",
+     "blob": "70e2e94f9b74594d2b749f79dceb622f101dedd1",
+     "at": "19:29"
+    }
+   ]
+  },
+  "evidence/ord0281-keyed-write-deadline/ord0281_index.json": {
+   "writes": 3,
+   "distinct_blobs": 3,
+   "per_commit": [
+    {
+     "commit": "9cc8c468d4ed",
+     "blob": "aae7966127af6211cb790c5d7e013711f339802a",
+     "at": "15:36"
+    },
+    {
+     "commit": "f2e8568622ac",
+     "blob": "65e1e36ad852813cdfc7951aabb3260fbb930ce0",
+     "at": "15:40"
+    },
+    {
+     "commit": "da31f1e5ee89",
+     "blob": "ff81bde16582d4d7f280954d10a63f1b6ed8b870",
+     "at": "15:45"
+    }
+   ]
+  },
+  "evidence/ord0300-c2-pairing-hjp3/evidence_manifest_full40_c2.json": {
+   "writes": 2,
+   "distinct_blobs": 2,
+   "per_commit": [
+    {
+     "commit": "eb719aa8d30c",
+     "blob": "983e39b6072a00569b61bbe23bdec38377a670ce",
+     "at": "20:52"
+    },
+    {
+     "commit": "1751bb51a2f4",
+     "blob": "3f7b2cd25a0a5ac5215c789942094ef09eda92d4",
+     "at": "21:16"
+    }
+   ]
+  },
+  "evidence/ord0314-0281-gen3-derivation-d2305848/verifier_derivation_a2_d2305848.json": {
+   "writes": 2,
+   "distinct_blobs": 2,
+   "per_commit": [
+    {
+     "commit": "ce07e3ef5ae5",
+     "blob": "eaf50b3632c46c9d2195db6b7286395e094ac2b4",
+     "at": "21:07"
+    },
+    {
+     "commit": "76ad543f373c",
+     "blob": "993a3753b34911e73527b691168b6bfb8062cb17",
+     "at": "21:10"
+    }
+   ]
+  },
+  "evidence/ord0302-unreadable-server-body-r2/ord0302_verify_r2.py": {
+   "writes": 2,
+   "distinct_blobs": 2,
+   "per_commit": [
+    {
+     "commit": "d76faa8d3184",
+     "blob": "74481cd433410d76151951e74a7ac9b2a59e84f2",
+     "at": "19:26"
+    },
+    {
+     "commit": "d20066f1ca5d",
+     "blob": "68fbfaa236c4d671ba4bdb4521c04407ff2f1a4c",
+     "at": "19:28"
+    }
+   ]
+  },
+  "evidence/ord0302-unreadable-server-body-r2/ord0302_receipt.json": {
+   "writes": 2,
+   "distinct_blobs": 2,
+   "per_commit": [
+    {
+     "commit": "5daec2a4c02b",
+     "blob": "66f185980b40e24c3a0f095db2aafb9bb3f975ab",
+     "at": "19:17"
+    },
+    {
+     "commit": "7a1e0600e664",
+     "blob": "ff0310d93eb63c0d73faca12b60c2706b8674b07",
+     "at": "19:24"
+    }
+   ]
+  },
+  "evidence/ord0281-keyed-write-deadline-gen3/ord0281_index.json": {
+   "writes": 2,
+   "distinct_blobs": 2,
+   "per_commit": [
+    {
+     "commit": "d8ecb877a692",
+     "blob": "3e773d7b97b7f59ea20921a8136c41eab197be2f",
+     "at": "18:48"
+    },
+    {
+     "commit": "9db92a823395",
+     "blob": "ff3a966d0360c65ae2f25da4ff1ffa390ebe6e20",
+     "at": "18:55"
+    }
+   ]
+  },
+  "evidence/ord0288-t1-durable-ownership-hjp3/evidence_manifest_full40_o0288_r2.json": {
+   "writes": 2,
+   "distinct_blobs": 2,
+   "per_commit": [
+    {
+     "commit": "2958288b8926",
+     "blob": "5ac1c5900840f4eff682b610ba2eb6f8fe231434",
+     "at": "17:45"
+    },
+    {
+     "commit": "fd39c8f6c273",
+     "blob": "6747b51fc7d41582920a7c350e9c29f51c978252",
+     "at": "18:01"
+    }
+   ]
+  },
+  "evidence/ord0281-keyed-write-deadline/ord0281_receipt.py": {
+   "writes": 2,
+   "distinct_blobs": 2,
+   "per_commit": [
+    {
+     "commit": "21910f6514b3",
+     "blob": "065fef6ce61990b93d2b26fbe20a5eecd49ca20b",
+     "at": "15:35"
+    },
+    {
+     "commit": "5619775c7b45",
+     "blob": "7c13e504a9678c0c58e6a5f250002d04cff94c7c",
+     "at": "15:45"
+    }
+   ]
+  },
+  "evidence/ord0281-keyed-write-deadline/ord0281_keyed_receipt.json": {
+   "writes": 2,
+   "distinct_blobs": 2,
+   "per_commit": [
+    {
+     "commit": "0ed6586b74ca",
+     "blob": "14dba30160d0a1cc6f6c520423504384127edb2c",
+     "at": "15:24"
+    },
+    {
+     "commit": "00617d25c457",
+     "blob": "f29a74d3e84ae78d80ccdb0b6caf9f48d3fada30",
+     "at": "15:42"
+    }
+   ]
+  },
+  "evidence/ord0300-hjp3-write-cells/q38_ruler_expect.json": {
+   "writes": 2,
+   "distinct_blobs": 2,
+   "per_commit": [
+    {
+     "commit": "51f33a1fea55",
+     "blob": "2d2c3e809fd7be995e087a357ed8f4b3cbeda2aa",
+     "at": "10:43"
+    },
+    {
+     "commit": "19406dc6f7b3",
+     "blob": "2d1397140b61d0da0909f1a5803dad9f76665079",
+     "at": "10:56"
+    }
+   ]
+  },
+  "evidence/ord0300-hjp3-write-cells/RECEIPT_O0300-2610.json": {
+   "writes": 2,
+   "distinct_blobs": 2,
+   "per_commit": [
+    {
+     "commit": "1bc2d8b80df4",
+     "blob": "40a508e7fb4f3f482b6cb51c269584e983056254",
+     "at": "10:42"
+    },
+    {
+     "commit": "cfd07c617f94",
+     "blob": "6e93836db5b6a5322b4b7d8c77e0e240c0aaf894",
+     "at": "10:56"
+    }
+   ]
+  }
+ },
+ "self_reports_checked": {
+  "HJ-P3_issuecomment_5833146997": "she named evidence/ord0300-c2-pairing-hjp3/evidence_manifest_full40_c2.json as written twice; this audit counts that path at 2 writes with 2 distinct blobs - her self-report reproduces independently",
+  "lane_E_a2": "verifier_derivation_a2_d2305848.json carries 2 writes / 2 distinct blobs. Not self-reported before this audit; the first bytes remain addressable by blob, so nothing was destroyed - the rule break is the silent replacement, not data loss."
+ },
+ "convention_I_state_as_commander": {
+  "self_growing_manifests": "an index/receipt that lists files added after it was written MAY be rewritten, but each rewrite has to be cited by its new 40-hex in the next post - the carrier of a claim is a blob, never a filename",
+  "tool_code": "a path holding measurement code (.py/.js/.ts) MUST NOT be rewritten; revisions get a new filename, because that file is what makes someone else able to re-run the gauge",
+  "commander_side": "publish_evidence_gated_r1.py keeps refusing same-path/different-bytes and prints both blobs plus the path's commit list when it does"
+ },
+ "discipline": {
+  "refs_pushed": 0,
+  "authoritative_branch_moved": 0,
+  "evidence_paths_overwritten_by_me": 0,
+  "databases_opened": 0,
+  "credential_values_printed": 0
+ },
+ "claim_kind": "git_history_determined",
+ "claimed_result": "1552 evidence paths written today across 1599 writes; 17 of them more than once; 0 of those are mine (zero)",
+ "derived_result": null
+}
