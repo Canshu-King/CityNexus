@@ -1,0 +1,1641 @@
+{
+  "order": "ORD-0297r",
+  "base_tip": "dc964086c9d412573ac19d70b24b30e6c3ee6168",
+  "why_this_round_exists": "the authoritative line moved two hops since ORD-0297; four files under frontend/src differ between 5c4608ce and dc964086, so by Q24 the earlier readings are a previous generation's, not this line's",
+  "ref_tip_read": {
+    "read_at_local": "2026-09-25T15:30:29+0800",
+    "order": "ORD-0297r",
+    "expected_claimed_tip": "dc964086c9d412573ac19d70b24b30e6c3ee6168",
+    "previous_round_base": "5c4608cede6cb7bd5f3ac7e704bfee379ca47abc",
+    "path1_ssh443": {
+      "rc": 0,
+      "verbatim_lines": [
+        "7d22cd0eb7840121ba42a5ba363e1a4c7ca1a7e7\trefs/heads/master",
+        "dc964086c9d412573ac19d70b24b30e6c3ee6168\trefs/heads/mirror/integration-frontend-apple-pass1"
+      ],
+      "stderr_head": ""
+    },
+    "path2_https_api": {
+      "mirror/integration-frontend-apple-pass1": {
+        "http": 200,
+        "ref": "refs/heads/mirror/integration-frontend-apple-pass1",
+        "sha": "dc964086c9d412573ac19d70b24b30e6c3ee6168",
+        "ls_remote_form": "dc964086c9d412573ac19d70b24b30e6c3ee6168\trefs/heads/mirror/integration-frontend-apple-pass1"
+      },
+      "master": {
+        "http": 200,
+        "ref": "refs/heads/master",
+        "sha": "7d22cd0eb7840121ba42a5ba363e1a4c7ca1a7e7",
+        "ls_remote_form": "7d22cd0eb7840121ba42a5ba363e1a4c7ca1a7e7\trefs/heads/master"
+      }
+    },
+    "both_paths_agree": true,
+    "claimed_tip_confirmed_by_both_paths": true,
+    "first_read_was_wrong_because": {
+      "command": "git ls-remote origin refs/heads/master (in _qoder_integration_20260919)",
+      "what_origin_is_here": "D:/moodle/CityNexus",
+      "returned": [
+        "7d22cd0eb7840121ba42a5ba363e1a4c7ca1a7e7\trefs/heads/master"
+      ],
+      "consequence": "that master is a different line (346 commits behind the landed one, read via the compare API), so it cannot serve as ref_tip_read for this order"
+    },
+    "ancestry": {
+      "prev_is_ancestor_of_claimed": true,
+      "commits_between": 12,
+      "meaning": "returncode 0 means ancestor; the command prints nothing either way, so stdout is not consulted (an earlier check of mine read empty stdout as 'True' and was wrong in the other direction)"
+    },
+    "file_blobs": {
+      "frontend/src/features/planning/PlanWithAiSheet.tsx": {
+        "prev": "4c3821b7129320d7940237d33c5f7dd14742f292",
+        "claimed": "fd5f6e5ba2771a8d12669b9bec1ba91590970701",
+        "changed": true,
+        "commander_quoted_prev": "4c3821b7129320d7940237d33c5f7dd14742f292"
+      },
+      "frontend/src/api/journeyContinuation.ts": {
+        "prev": "a52f77fc39fd1202b484b42aeab54b2357c65de8",
+        "claimed": "358141e6250aeae361aeae4d9df06f80e1417cf0",
+        "changed": true,
+        "commander_quoted_prev": null
+      },
+      "frontend/src/app/V8Experience.tsx": {
+        "prev": "a1eccc6b32e5cab6334811cd243a52e75641b890",
+        "claimed": "17ef83b6ec58b4190f483733501ea1b973336d5f",
+        "changed": true,
+        "commander_quoted_prev": null
+      },
+      "frontend/src/i18n/LocaleContext.tsx": {
+        "prev": "3b04cfaeaeb75088d5818bf28697e8d0dd61bb0b",
+        "claimed": "ece74118543434e855b874420dcc075df31f4f05",
+        "changed": true,
+        "commander_quoted_prev": null
+      }
+    },
+    "planwithai_commander_pre_image": {
+      "quoted": "c22cf42506a4175db992bde387ed8d9c6f1ffb9d",
+      "found_at_previous_base": "4c3821b7129320d7940237d33c5f7dd14742f292",
+      "where_the_quoted_value_lives": [
+        "60e5587302d86cedd12a5bd493ad015bd77913c1 feat(frontend): the sheet's submission carries one transport identity on both legs (ORD-0253 client half)",
+        "90d29a172e186aab6e6cb138ab4583ccf93bfa68 fix(frontend): let the attribution label speak only for the server (ORD-0280)",
+        "549ac8f1b20bc04e70eadbd238ade737eefbff01 fix(frontend): let the attribution label speak only for the server (ORD-0280)"
+      ]
+    }
+  },
+  "bases": {
+    "repo_used_for_archive": "D:\\moodle\\_qoder_integration_20260919",
+    "old_base": "5c4608cede6cb7bd5f3ac7e704bfee379ca47abc",
+    "new_base": "dc964086c9d412573ac19d70b24b30e6c3ee6168",
+    "both_commits_present_locally": true,
+    "named_files": {
+      "PlanWithAiSheet.tsx": [
+        "frontend/src/features/planning/PlanWithAiSheet.tsx"
+      ],
+      "journeyContinuation.ts": [
+        "frontend/src/api/journeyContinuation.ts"
+      ],
+      "V8Experience.tsx": [
+        "frontend/src/app/V8Experience.tsx"
+      ],
+      "LocaleContext.tsx": [
+        "frontend/src/i18n/LocaleContext.tsx"
+      ]
+    },
+    "files_found": [
+      "frontend/src/api/journeyContinuation.ts",
+      "frontend/src/app/V8Experience.tsx",
+      "frontend/src/features/planning/PlanWithAiSheet.tsx",
+      "frontend/src/i18n/LocaleContext.tsx"
+    ],
+    "blob_pairs": {
+      "frontend/src/api/journeyContinuation.ts": {
+        "old": "a52f77fc39fd1202b484b42aeab54b2357c65de8",
+        "new": "358141e6250aeae361aeae4d9df06f80e1417cf0",
+        "changed": true
+      },
+      "frontend/src/app/V8Experience.tsx": {
+        "old": "a1eccc6b32e5cab6334811cd243a52e75641b890",
+        "new": "17ef83b6ec58b4190f483733501ea1b973336d5f",
+        "changed": true
+      },
+      "frontend/src/features/planning/PlanWithAiSheet.tsx": {
+        "old": "4c3821b7129320d7940237d33c5f7dd14742f292",
+        "new": "fd5f6e5ba2771a8d12669b9bec1ba91590970701",
+        "changed": true,
+        "commander_quoted_pre_image": "c22cf42506a4175db992bde387ed8d9c6f1ffb9d",
+        "commander_pre_image_matches_this_tree": false
+      },
+      "frontend/src/i18n/LocaleContext.tsx": {
+        "old": "3b04cfaeaeb75088d5818bf28697e8d0dd61bb0b",
+        "new": "ece74118543434e855b874420dcc075df31f4f05",
+        "changed": true
+      }
+    },
+    "frontend_files_changed": 8,
+    "frontend_src_changed": [
+      "frontend/src/api/journeyContinuation.ts",
+      "frontend/src/app/V8Experience.tsx",
+      "frontend/src/features/planning/PlanWithAiSheet.tsx",
+      "frontend/src/i18n/LocaleContext.tsx"
+    ],
+    "all_files_changed": 23,
+    "old_is_ancestor_of_new_returncode": 0,
+    "old_is_ancestor_of_new": true,
+    "commits_between": [
+      "dc96408|2026-09-25 10:13:12 +0800|review(ORD-0298 second hop): derive the conclusion from the measurement, and let r3 grade my prose",
+      "12fc54a|2026-09-25 09:45:19 +0800|review(ledger): the ORD-0298 delivery block plus a landing-time addendum",
+      "ca5fbd4|2026-09-25 09:39:51 +0800|review(ORD-0298): the delivery block, and the gauge runs that made its numbers checkable",
+      "cb4aaa0|2026-09-25 09:17:07 +0800|review(ORD-0298): the arms sentence has to carry a number, not a boolean",
+      "3000af7|2026-09-25 09:07:12 +0800|review(ORD-0298): name both refs in the receipt, and a post builder that renders the three-way table",
+      "a41018d|2026-09-25 09:04:56 +0800|review(ORD-0298): a batch that will not grade a gate on someone else's socket",
+      "e6435ed|2026-09-25 08:56:06 +0800|review(ORD-0298): a re-parent needs a per-file tree table, and each arm has to cite its own numbers",
+      "8bf3893|2026-09-25 08:50:38 +0800|review(ORD-0298): bring the generation-0292 measurement drivers onto this ref",
+      "e59c5bf|2026-09-25 05:32:55 +0800|feat(frontend): a continuation press carries the round it resumes (ORD-0278)",
+      "60e5587|2026-09-25 05:09:51 +0800|feat(frontend): the sheet's submission carries one transport identity on both legs (ORD-0253 client half)",
+      "90d29a1|2026-09-25 07:20:05 +0800|fix(frontend): let the attribution label speak only for the server (ORD-0280)",
+      "6d041dc|2026-09-25 09:20:00 +0800|feat(ord0296): give the server's write path a budget that can actually bind, and name the answer when it blows"
+    ],
+    "commits_between_count": 12,
+    "github_ref_read": {
+      "ref": "refs/heads/mirror/integration-frontend-apple-pass1",
+      "object_sha": "dc964086c9d412573ac19d70b24b30e6c3ee6168",
+      "equals_second_base": true
+    },
+    "planwithai_crosscheck": {
+      "github_contents_sha": "fd5f6e5ba2771a8d12669b9bec1ba91590970701",
+      "git_show_recomputed_sha1": "fd5f6e5ba2771a8d12669b9bec1ba91590970701",
+      "local_equals_github": true,
+      "bytes": 49063,
+      "local_bytes": 49063
+    }
+  },
+  "verifier": "1a986a24 HJ-P1",
+  "claim_semantics": "claimed_result is mine and computed from the fields printed beside it; derived_result is null on every cell because closure belongs to the red team's reading, not the deliverer's (B-1)",
+  "instrument": {
+    "arms": "o297r_arms.cjs",
+    "runner": "o297r_run.py",
+    "origin": "o297r_origin.py",
+    "spec": "o297r_arms.json",
+    "builder": "o297r_build.py",
+    "marker_channel": "read from the build receipt (ORD-0297r-next); the previous round's instrument compared a stale literal from an earlier order, which silently killed that channel"
+  },
+  "cells": {
+    "B3_offline_after_convergence": {
+      "claim_under_test": "On base dc964086: a traveller whose client converged onto the next generation of the SAME base, holding a real trip, stays usable offline on that generation",
+      "claimed_result": "CLAIMED_MET_ON_BASE_DC964086",
+      "derived_result": null,
+      "claim_scope_limit": null,
+      "why": "arm=b3_primary; kind=b3_offline; run_id=o297r-b3_primary-160049; run_started_at=2026-09-25T16:00:49+0800; base_tip=dc964086c9d412573ac19d70b24b30e6c3ee6168; backend_tree=D:\\moodle\\_qoder_hjp1_o207_20260922\\o297r\\base_backend\\backend; expected_marker=ORD-0297r-next; generation_pair=index--q2k569d.js (installed) vs index-jVHM43pf.js (next); instrument_ok=true; probe_smoke={\"ok\": true, \"href\": \"about:blank\", \"marker\": null, \"leafCount\": 0}; instrument_self_errors=[]; pageErrors=[]; arm_exit=0; arm_wall_s=89.4; converged_by_executed_bundle=true; converged_by_marker=true; marker_after_transition=ORD-0297r-next; executed_after_transition=[\"index-jVHM43pf.js\"]; update_trigger={\"updated\": true, \"via\": \"registration.update() after the trip was written\"}; outage_update_attempt=NOT_MEASURED; outage_update_landed=false; asset_root_written=dist; pointer_read_back_ok=true; instrument_navigations=[\"P0-nav1-install\", \"P0-nav2-take-control\"]; offline_first_bodyChars=651; offline_first_leafCount=47; offline_first_marker=ORD-0297r-next; offline_first_executed=[\"index-jVHM43pf.js\"]; nav_tapped_of_steps=3/3; nav_path_changed=3; nav_bodyChars=[114, 271, 334]; nav_blockers=[\"行程: tapped, path changed\", \"地图: tapped, path changed\", \"Copilot: tapped, path changed\"]; instrument_fingerprint={\"path\": \"o297r_arms.cjs\", \"bytes\": 40346, \"sha256\": \"a84cd3738a33bdf21cd6637b004493cd37fba0bce0894e67573a84e349f40da9\", \"git_blob_sha1\": \"bafd7fd335568fd1ec34b86dd42f17a6f2ace643\"}; nav_executed_per_screen=[[\"index-jVHM43pf.js\"], [\"index-jVHM43pf.js\"], [\"index-jVHM43pf.js\"]]; reload_bodyChars=91; reload_http_status=200; reload_executed=[\"index-jVHM43pf.js\"]; reload_marker=ORD-0297r-next; offline_document_boots=true; offline_reload_is_app_notice=true; offline_app_names_saved_copy=true; usable_offline=true; usable_on_held_generation=false; precondition_offline=NAV_CLEAR_BEFORE_OUTAGE; sheet_boxes_over_nav_before_offline=0; usable_offline_strict_200_chars=false; stays_on_new_generation_offline=true; stayed_on_installed_generation_offline=false; origin_hits_during_outage_total=5; page_level_hits_during_outage=0; worker_update_hits_during_outage=[\"/v10-sw.js\", \"/workbox-6923124b.js\"]; origin_html_at_js_urls=[]; journeys_rows=0 before / 1 after; journey_id=577079e3-b2db-4abf-9f47-389c3a25222f; tables_measured=55; one_shot_db=o297r_run/o297r-b3_primary-160049/one_shot_o297r-b3_primary-160049.sqlite3 (deleted with the arm directory; rundir_deleted=True, db_leftovers=[]); rundir_deleted=true; nav_labels_at_creation=[\"今天\", \"行程\", \"地图\", \"Copilot\", \"我的\"]; retry_presses=0; arm_invalid_reason=None; control_arm=b3_control_partial; control_run_id=o297r-b3_control_partial-160314; control_differs_on=[\"offline_document_boots\", \"usable_offline\"] | rendered during the outage: {\"first_screen\": [\"菜单\", \"/\", \"今天\", \"跟随系统\", \"EN\", \"BE\", \"下午好\", \"北京之旅\"], \"after_reload\": [\"连接\", \"网络不可用\", \"这一发请求没能出去，也没有收到任何回答，所以这是网络问题。你的行程数据没有丢失，已保存的只读副本还能看。请检查网络后重试。\", \"看已保存的只读副本\", \"重试\", \"归因详情\"]}",
+      "controls": [
+        {
+          "arm": "b3_control_partial",
+          "run_id": "o297r-b3_control_partial-160314",
+          "discriminating_field": "offline_document_boots",
+          "primary_measured": true,
+          "control_measured": false
+        },
+        {
+          "arm": "b3_control_partial",
+          "run_id": "o297r-b3_control_partial-160314",
+          "discriminating_field": "usable_offline",
+          "primary_measured": true,
+          "control_measured": false
+        }
+      ],
+      "control_verdict": "CONTROL_DISCRIMINATES",
+      "triples": [
+        {
+          "sha": "dc964086c9d412573ac19d70b24b30e6c3ee6168",
+          "nodeid": "b3_primary",
+          "run_id": "o297r-b3_primary-160049",
+          "shape": "one arm of o297r: 390x844 touch / zh-CN persistent profile / one-shot SQLite named for the run under the arm dir / ports {\"backend\": 9120, \"origin\": 9121} / origin serves shell from current_root.txt and /assets from asset_root.txt / instrument bytes named in the receipt",
+          "instrument_git_blob_sha1": "bafd7fd335568fd1ec34b86dd42f17a6f2ace643",
+          "executed_offline": [
+            "index-jVHM43pf.js"
+          ],
+          "offline_marker": "ORD-0297r-next",
+          "bodyChars": 651
+        },
+        {
+          "sha": "dc964086c9d412573ac19d70b24b30e6c3ee6168",
+          "nodeid": "b3_control_partial",
+          "run_id": "o297r-b3_control_partial-160314",
+          "shape": "one arm of o297r: 390x844 touch / zh-CN persistent profile / one-shot SQLite named for the run under the arm dir / ports {\"backend\": 9120, \"origin\": 9121} / origin serves shell from current_root.txt and /assets from asset_root.txt / instrument bytes named in the receipt",
+          "instrument_git_blob_sha1": "bafd7fd335568fd1ec34b86dd42f17a6f2ace643",
+          "executed_offline": [
+            "index-jVHM43pf.js"
+          ],
+          "offline_marker": null,
+          "bodyChars": 0
+        }
+      ],
+      "same_key_precondition": "same walk, same typed draft, same base tree, same instrument bytes and the same outage window on both arms; the arms differ only in the field their cell is about -- B3: which root serves /assets/ after the swap (dist vs dist); A: whether a handover is attempted inside the outage (attempted on b3_control_partial: NOT_MEASURED)",
+      "isolation": {
+        "b3_primary": {
+          "rundir_deleted": true,
+          "db_leftovers": [],
+          "profile_leftovers": false,
+          "ports_final": {
+            "backend": [],
+            "origin": []
+          }
+        },
+        "b3_control_partial": {
+          "rundir_deleted": true,
+          "db_leftovers": [],
+          "profile_leftovers": false,
+          "ports_final": {
+            "backend": [],
+            "origin": []
+          }
+        }
+      },
+      "durable_read_back": {
+        "journeys_rows": [
+          1,
+          1
+        ],
+        "tables_measured": [
+          55,
+          55
+        ],
+        "one_shot_db": [
+          "o297r_run/o297r-b3_primary-160049/one_shot_o297r-b3_primary-160049.sqlite3 (deleted with the arm directory; rundir_deleted=True, db_leftovers=[])",
+          "o297r_run/o297r-b3_control_partial-160314/one_shot_o297r-b3_control_partial-160314.sqlite3 (deleted with the arm directory; rundir_deleted=True, db_leftovers=[])"
+        ],
+        "run_ids": {
+          "b3_primary": "o297r-b3_primary-160049",
+          "b3_control_partial": "o297r-b3_control_partial-160314"
+        }
+      }
+    },
+    "A_never_reconnected": {
+      "claim_under_test": "On base dc964086: a device that never reconnects after the server moved on without retaining its bundles must still be usable offline on the generation it holds",
+      "claimed_result": "CLAIMED_RED_NEVER_RECONNECTED_BROKEN__HELD_SCREEN_USABLE_OFFLINE+OFFLINE_REENTRY_LEFT_HELD_GEN",
+      "derived_result": null,
+      "claim_scope_limit": "browserContext.setOffline(true) does not stop the service worker's own update fetch (measured in this lane on the previous base: worker update requests are still logged during the outage). So this arm does not establish what a radio-off device would do; what it establishes is the pair named in claimed_result -- whether the screen the device holds is usable, and which generation an offline re-entry serves.",
+      "why": "arm=a_never_reconnects; kind=a_never_reconnects; run_id=o297r-a_never_reconnects-160433; run_started_at=2026-09-25T16:04:33+0800; base_tip=dc964086c9d412573ac19d70b24b30e6c3ee6168; backend_tree=D:\\moodle\\_qoder_hjp1_o207_20260922\\o297r\\base_backend\\backend; expected_marker=ORD-0297r-next; generation_pair=index--q2k569d.js (installed) vs index-jVHM43pf.js (next); instrument_ok=true; probe_smoke={\"ok\": true, \"href\": \"about:blank\", \"marker\": null, \"leafCount\": 0}; instrument_self_errors=[]; pageErrors=[]; arm_exit=0; arm_wall_s=127.2; converged_by_executed_bundle=false; converged_by_marker=false; marker_after_transition=None; executed_after_transition=[\"index--q2k569d.js\"]; update_trigger={\"deferred\": \"no update attempted while online; the control attempts one inside the outage\"}; outage_update_attempt=NOT_MEASURED; outage_update_landed=false; asset_root_written=dist; pointer_read_back_ok=true; instrument_navigations=[\"P0-nav1-install\", \"P0-nav2-take-control\"]; offline_first_bodyChars=703; offline_first_leafCount=50; offline_first_marker=None; offline_first_executed=[\"index--q2k569d.js\"]; nav_tapped_of_steps=3/3; nav_path_changed=3; nav_bodyChars=[166, 323, 386]; nav_blockers=[\"行程: tapped, path changed\", \"地图: tapped, path changed\", \"Copilot: tapped, path changed\"]; instrument_fingerprint={\"path\": \"o297r_arms.cjs\", \"bytes\": 40346, \"sha256\": \"a84cd3738a33bdf21cd6637b004493cd37fba0bce0894e67573a84e349f40da9\", \"git_blob_sha1\": \"bafd7fd335568fd1ec34b86dd42f17a6f2ace643\"}; nav_executed_per_screen=[[\"index--q2k569d.js\"], [\"index--q2k569d.js\"], [\"index--q2k569d.js\"]]; reload_bodyChars=91; reload_http_status=200; reload_executed=[\"index-jVHM43pf.js\"]; reload_marker=ORD-0297r-next; offline_document_boots=true; offline_reload_is_app_notice=true; offline_app_names_saved_copy=true; usable_offline=true; usable_on_held_generation=true; precondition_offline=NAV_CLEAR_BEFORE_OUTAGE; sheet_boxes_over_nav_before_offline=1; usable_offline_strict_200_chars=false; stays_on_new_generation_offline=false; stayed_on_installed_generation_offline=false; origin_hits_during_outage_total=10; page_level_hits_during_outage=4; worker_update_hits_during_outage=[\"/v10-sw.js\", \"/workbox-6923124b.js\"]; origin_html_at_js_urls=[]; journeys_rows=0 before / 1 after; journey_id=eeed9def-da5b-4702-8084-21a6b493750a; tables_measured=55; one_shot_db=o297r_run/o297r-a_never_reconnects-160433/one_shot_o297r-a_never_reconnects-160433.sqlite3 (deleted with the arm directory; rundir_deleted=True, db_leftovers=[]); rundir_deleted=true; nav_labels_at_creation=[\"今天\", \"行程\", \"地图\", \"Copilot\", \"我的\"]; retry_presses=0; arm_invalid_reason=None; control_arm=a_control_update_lands; control_run_id=o297r-a_control_update_lands-160653; control_differs_on=[\"usable_offline\", \"offline_first_marker\", \"outage_update_landed\"] | rendered during the outage: {\"first_screen\": [\"菜单\", \"/\", \"今天\", \"跟随系统\", \"EN\", \"BE\", \"知道了\", \"下午好\"], \"after_reload\": [\"连接\", \"网络不可用\", \"这一发请求没能出去，也没有收到任何回答，所以这是网络问题。你的行程数据没有丢失，已保存的只读副本还能看。请检查网络后重试。\", \"看已保存的只读副本\", \"重试\", \"归因详情\"]}",
+      "controls": [
+        {
+          "arm": "a_control_update_lands",
+          "run_id": "o297r-a_control_update_lands-160653",
+          "discriminating_field": "usable_offline",
+          "primary_measured": true,
+          "control_measured": false
+        },
+        {
+          "arm": "a_control_update_lands",
+          "run_id": "o297r-a_control_update_lands-160653",
+          "discriminating_field": "offline_first_marker",
+          "primary_measured": null,
+          "control_measured": "ORD-0297r-next"
+        },
+        {
+          "arm": "a_control_update_lands",
+          "run_id": "o297r-a_control_update_lands-160653",
+          "discriminating_field": "outage_update_landed",
+          "primary_measured": false,
+          "control_measured": true
+        }
+      ],
+      "control_verdict": "CONTROL_DISCRIMINATES",
+      "triples": [
+        {
+          "sha": "dc964086c9d412573ac19d70b24b30e6c3ee6168",
+          "nodeid": "a_never_reconnects",
+          "run_id": "o297r-a_never_reconnects-160433",
+          "shape": "one arm of o297r: 390x844 touch / zh-CN persistent profile / one-shot SQLite named for the run under the arm dir / ports {\"backend\": 9120, \"origin\": 9121} / origin serves shell from current_root.txt and /assets from asset_root.txt / instrument bytes named in the receipt",
+          "instrument_git_blob_sha1": "bafd7fd335568fd1ec34b86dd42f17a6f2ace643",
+          "executed_offline": [
+            "index--q2k569d.js"
+          ],
+          "offline_marker": null,
+          "bodyChars": 703
+        },
+        {
+          "sha": "dc964086c9d412573ac19d70b24b30e6c3ee6168",
+          "nodeid": "a_control_update_lands",
+          "run_id": "o297r-a_control_update_lands-160653",
+          "shape": "one arm of o297r: 390x844 touch / zh-CN persistent profile / one-shot SQLite named for the run under the arm dir / ports {\"backend\": 9120, \"origin\": 9121} / origin serves shell from current_root.txt and /assets from asset_root.txt / instrument bytes named in the receipt",
+          "instrument_git_blob_sha1": "bafd7fd335568fd1ec34b86dd42f17a6f2ace643",
+          "executed_offline": [
+            "index-jVHM43pf.js"
+          ],
+          "offline_marker": "ORD-0297r-next",
+          "bodyChars": 91
+        }
+      ],
+      "same_key_precondition": "same walk, same typed draft, same base tree, same instrument bytes and the same outage window on both arms; the arms differ only in the field their cell is about -- B3: which root serves /assets/ after the swap (dist vs dist); A: whether a handover is attempted inside the outage (attempted on a_control_update_lands: {'updated': True, 'ms': 25, 'at_epoch': 1790323740574})",
+      "isolation": {
+        "a_never_reconnects": {
+          "rundir_deleted": true,
+          "db_leftovers": [],
+          "profile_leftovers": false,
+          "ports_final": {
+            "backend": [],
+            "origin": []
+          }
+        },
+        "a_control_update_lands": {
+          "rundir_deleted": true,
+          "db_leftovers": [],
+          "profile_leftovers": false,
+          "ports_final": {
+            "backend": [],
+            "origin": []
+          }
+        }
+      },
+      "durable_read_back": {
+        "journeys_rows": [
+          1,
+          1
+        ],
+        "tables_measured": [
+          55,
+          55
+        ],
+        "one_shot_db": [
+          "o297r_run/o297r-a_never_reconnects-160433/one_shot_o297r-a_never_reconnects-160433.sqlite3 (deleted with the arm directory; rundir_deleted=True, db_leftovers=[])",
+          "o297r_run/o297r-a_control_update_lands-160653/one_shot_o297r-a_control_update_lands-160653.sqlite3 (deleted with the arm directory; rundir_deleted=True, db_leftovers=[])"
+        ],
+        "run_ids": {
+          "a_never_reconnects": "o297r-a_never_reconnects-160433",
+          "a_control_update_lands": "o297r-a_control_update_lands-160653"
+        }
+      }
+    },
+    "B3_control_partial_deploy": {
+      "claim_under_test": "The discriminating control on base dc964086: identical walk and trigger, one configured byte -- the asset root stays on the previous generation while the shell moves forward, i.e. the deploy that does not retain bundles",
+      "claimed_result": "CONTROL_DISCRIMINATES_BY_offline_document_boots+usable_offline",
+      "primary_cell": "B3_offline_after_convergence",
+      "discriminating_fields": [
+        {
+          "field": "offline_document_boots",
+          "primary_measured": true,
+          "control_measured": false
+        },
+        {
+          "field": "usable_offline",
+          "primary_measured": true,
+          "control_measured": false
+        }
+      ],
+      "derived_result": null,
+      "why": "arm=b3_control_partial; kind=b3_control_partial; run_id=o297r-b3_control_partial-160314; run_started_at=2026-09-25T16:03:14+0800; base_tip=dc964086c9d412573ac19d70b24b30e6c3ee6168; backend_tree=D:\\moodle\\_qoder_hjp1_o207_20260922\\o297r\\base_backend\\backend; expected_marker=ORD-0297r-next; generation_pair=index--q2k569d.js (installed) vs index-jVHM43pf.js (next); instrument_ok=true; probe_smoke={\"ok\": true, \"href\": \"about:blank\", \"marker\": null, \"leafCount\": 0}; instrument_self_errors=[]; pageErrors=[]; arm_exit=0; arm_wall_s=66.7; converged_by_executed_bundle=true; converged_by_marker=false; marker_after_transition=None; executed_after_transition=[\"index-jVHM43pf.js\"]; update_trigger={\"updated\": true, \"via\": \"registration.update() after the trip was written\"}; outage_update_attempt=NOT_MEASURED; outage_update_landed=false; asset_root_written=dist; pointer_read_back_ok=true; instrument_navigations=[\"P0-nav1-install\", \"P0-nav2-take-control\"]; offline_first_bodyChars=0; offline_first_leafCount=0; offline_first_marker=None; offline_first_executed=[\"index-jVHM43pf.js\"]; nav_tapped_of_steps=0/0; nav_path_changed=0; nav_bodyChars=[]; nav_blockers=[]; instrument_fingerprint={\"path\": \"o297r_arms.cjs\", \"bytes\": 40346, \"sha256\": \"a84cd3738a33bdf21cd6637b004493cd37fba0bce0894e67573a84e349f40da9\", \"git_blob_sha1\": \"bafd7fd335568fd1ec34b86dd42f17a6f2ace643\"}; nav_executed_per_screen=[]; reload_bodyChars=0; reload_http_status=200; reload_executed=[\"index-jVHM43pf.js\"]; reload_marker=None; offline_document_boots=false; offline_reload_is_app_notice=false; offline_app_names_saved_copy=false; usable_offline=false; usable_on_held_generation=false; precondition_offline=NAV_CLEAR_BEFORE_OUTAGE; sheet_boxes_over_nav_before_offline=0; usable_offline_strict_200_chars=false; stays_on_new_generation_offline=true; stayed_on_installed_generation_offline=false; origin_hits_during_outage_total=2; page_level_hits_during_outage=0; worker_update_hits_during_outage=[\"/v10-sw.js\", \"/workbox-6923124b.js\"]; origin_html_at_js_urls=[\"/assets/JourneyMap-C0NSafoP.js\", \"/assets/index-jVHM43pf.js\", \"/assets/maplibre-gl-CiduR3ZC.js\"]; journeys_rows=0 before / 1 after; journey_id=99b3a7e8-53a4-4ea7-9262-4920a960776e; tables_measured=55; one_shot_db=o297r_run/o297r-b3_control_partial-160314/one_shot_o297r-b3_control_partial-160314.sqlite3 (deleted with the arm directory; rundir_deleted=True, db_leftovers=[]); rundir_deleted=true; nav_labels_at_creation=[\"今天\", \"行程\", \"地图\", \"Copilot\", \"我的\"]; retry_presses=0; arm_invalid_reason=None; primary_arm=b3_primary; primary_run_id=o297r-b3_primary-160049; differs_from_primary_on=[\"offline_document_boots\", \"usable_offline\"] | rendered during the outage: {\"first_screen\": [], \"after_reload\": []}",
+      "triples": [
+        {
+          "sha": "dc964086c9d412573ac19d70b24b30e6c3ee6168",
+          "nodeid": "B3_control_partial_deploy",
+          "run_id": "o297r-b3_control_partial-160314",
+          "shape": "one arm of o297r: 390x844 touch / zh-CN persistent profile / one-shot SQLite named for the run under the arm dir / ports {\"backend\": 9120, \"origin\": 9121} / origin serves shell from current_root.txt and /assets from asset_root.txt / instrument bytes named in the receipt",
+          "instrument_git_blob_sha1": "bafd7fd335568fd1ec34b86dd42f17a6f2ace643",
+          "executed_offline": [
+            "index-jVHM43pf.js"
+          ],
+          "offline_marker": null,
+          "bodyChars": 0
+        }
+      ],
+      "same_key_precondition": "same walk, same typed draft, same base tree, same instrument bytes and the same outage window on both arms; the arms differ only in the field their cell is about -- B3: which root serves /assets/ after the swap (dist vs dist); A: whether a handover is attempted inside the outage (attempted on b3_control_partial: NOT_MEASURED)",
+      "isolation": {
+        "b3_control_partial": {
+          "rundir_deleted": true,
+          "db_leftovers": [],
+          "profile_leftovers": false,
+          "ports_final": {
+            "backend": [],
+            "origin": []
+          }
+        }
+      }
+    },
+    "A_control_update_lands": {
+      "claim_under_test": "The teeth for A on base dc964086: same walk, same no-retention deploy, but the worker is allowed to land its update INSIDE the outage, which is the only way to test whether 'never reconnected' is a protection",
+      "claimed_result": "CONTROL_DISCRIMINATES_BY_usable_offline+offline_first_marker+outage_update_landed",
+      "primary_cell": "A_never_reconnected",
+      "discriminating_fields": [
+        {
+          "field": "usable_offline",
+          "primary_measured": true,
+          "control_measured": false
+        },
+        {
+          "field": "offline_first_marker",
+          "primary_measured": null,
+          "control_measured": "ORD-0297r-next"
+        },
+        {
+          "field": "outage_update_landed",
+          "primary_measured": false,
+          "control_measured": true
+        }
+      ],
+      "derived_result": null,
+      "why": "arm=a_control_update_lands; kind=a_control_update_lands; run_id=o297r-a_control_update_lands-160653; run_started_at=2026-09-25T16:06:53+0800; base_tip=dc964086c9d412573ac19d70b24b30e6c3ee6168; backend_tree=D:\\moodle\\_qoder_hjp1_o207_20260922\\o297r\\base_backend\\backend; expected_marker=ORD-0297r-next; generation_pair=index--q2k569d.js (installed) vs index-jVHM43pf.js (next); instrument_ok=true; probe_smoke={\"ok\": true, \"href\": \"about:blank\", \"marker\": null, \"leafCount\": 0}; instrument_self_errors=[]; pageErrors=[]; arm_exit=0; arm_wall_s=138.8; converged_by_executed_bundle=false; converged_by_marker=false; marker_after_transition=None; executed_after_transition=[\"index--q2k569d.js\"]; update_trigger={\"deferred\": \"no update attempted while online; the control attempts one inside the outage\"}; outage_update_attempt={\"updated\": true, \"ms\": 25, \"at_epoch\": 1790323740574}; outage_update_landed=true; asset_root_written=dist; pointer_read_back_ok=true; instrument_navigations=[\"P0-nav1-install\", \"P0-nav2-take-control\"]; offline_first_bodyChars=91; offline_first_leafCount=6; offline_first_marker=ORD-0297r-next; offline_first_executed=[\"index-jVHM43pf.js\"]; nav_tapped_of_steps=0/0; nav_path_changed=0; nav_bodyChars=[]; nav_blockers=[]; instrument_fingerprint={\"path\": \"o297r_arms.cjs\", \"bytes\": 40346, \"sha256\": \"a84cd3738a33bdf21cd6637b004493cd37fba0bce0894e67573a84e349f40da9\", \"git_blob_sha1\": \"bafd7fd335568fd1ec34b86dd42f17a6f2ace643\"}; nav_executed_per_screen=[]; reload_bodyChars=91; reload_http_status=200; reload_executed=[\"index-jVHM43pf.js\"]; reload_marker=ORD-0297r-next; offline_document_boots=true; offline_reload_is_app_notice=true; offline_app_names_saved_copy=true; usable_offline=false; usable_on_held_generation=false; precondition_offline=NAV_CLEAR_BEFORE_OUTAGE; sheet_boxes_over_nav_before_offline=1; usable_offline_strict_200_chars=false; stays_on_new_generation_offline=true; stayed_on_installed_generation_offline=false; origin_hits_during_outage_total=14; page_level_hits_during_outage=4; worker_update_hits_during_outage=[\"/v10-sw.js\", \"/workbox-6923124b.js\"]; origin_html_at_js_urls=[]; journeys_rows=0 before / 1 after; journey_id=5533aa7c-771a-4934-9cfc-b2a1c0075aed; tables_measured=55; one_shot_db=o297r_run/o297r-a_control_update_lands-160653/one_shot_o297r-a_control_update_lands-160653.sqlite3 (deleted with the arm directory; rundir_deleted=True, db_leftovers=[]); rundir_deleted=true; nav_labels_at_creation=[\"今天\", \"行程\", \"地图\", \"Copilot\", \"我的\"]; retry_presses=0; arm_invalid_reason=None; primary_arm=a_never_reconnects; primary_run_id=o297r-a_never_reconnects-160433; differs_from_primary_on=[\"usable_offline\", \"offline_first_marker\", \"outage_update_landed\"] | rendered during the outage: {\"first_screen\": [\"连接\", \"网络不可用\", \"这一发请求没能出去，也没有收到任何回答，所以这是网络问题。你的行程数据没有丢失，已保存的只读副本还能看。请检查网络后重试。\", \"看已保存的只读副本\", \"重试\", \"归因详情\"], \"after_reload\": [\"连接\", \"网络不可用\", \"这一发请求没能出去，也没有收到任何回答，所以这是网络问题。你的行程数据没有丢失，已保存的只读副本还能看。请检查网络后重试。\", \"看已保存的只读副本\", \"重试\", \"归因详情\"]}",
+      "triples": [
+        {
+          "sha": "dc964086c9d412573ac19d70b24b30e6c3ee6168",
+          "nodeid": "A_control_update_lands",
+          "run_id": "o297r-a_control_update_lands-160653",
+          "shape": "one arm of o297r: 390x844 touch / zh-CN persistent profile / one-shot SQLite named for the run under the arm dir / ports {\"backend\": 9120, \"origin\": 9121} / origin serves shell from current_root.txt and /assets from asset_root.txt / instrument bytes named in the receipt",
+          "instrument_git_blob_sha1": "bafd7fd335568fd1ec34b86dd42f17a6f2ace643",
+          "executed_offline": [
+            "index-jVHM43pf.js"
+          ],
+          "offline_marker": "ORD-0297r-next",
+          "bodyChars": 91
+        }
+      ],
+      "same_key_precondition": "same walk, same typed draft, same base tree, same instrument bytes and the same outage window on both arms; the arms differ only in the field their cell is about -- B3: which root serves /assets/ after the swap (dist vs dist); A: whether a handover is attempted inside the outage (attempted on a_control_update_lands: {'updated': True, 'ms': 25, 'at_epoch': 1790323740574})",
+      "isolation": {
+        "a_control_update_lands": {
+          "rundir_deleted": true,
+          "db_leftovers": [],
+          "profile_leftovers": false,
+          "ports_final": {
+            "backend": [],
+            "origin": []
+          }
+        }
+      }
+    }
+  },
+  "arms": {
+    "a_control_update_lands": {
+      "arm": "a_control_update_lands",
+      "kind": "a_control_update_lands",
+      "cells_this_arm_judges": [
+        "A_control_update_lands"
+      ],
+      "run_id": "o297r-a_control_update_lands-160653",
+      "run_id_started_at": "2026-09-25T16:06:53+0800",
+      "all_run_ids_for_this_arm": [
+        "o297r-a_control_update_lands-155454",
+        "o297r-a_control_update_lands-160653"
+      ],
+      "artifacts": {
+        "run": "o297r_run_o297r-a_control_update_lands-160653.json",
+        "arm": "o297r_arm_o297r-a_control_update_lands-160653.json",
+        "origin_events": "o297r_requests_o297r-a_control_update_lands-160653.jsonl"
+      },
+      "base_tip": "dc964086c9d412573ac19d70b24b30e6c3ee6168",
+      "next_label": "dc964086c9d412573ac19d70b24b30e6c3ee6168 + inert marker line (ORD-0297r-next)",
+      "expected_marker": "ORD-0297r-next",
+      "instrument": {
+        "path": "o297r_arms.cjs",
+        "bytes": 40346,
+        "sha256": "a84cd3738a33bdf21cd6637b004493cd37fba0bce0894e67573a84e349f40da9",
+        "git_blob_sha1": "bafd7fd335568fd1ec34b86dd42f17a6f2ace643"
+      },
+      "arm_artifact_correction": null,
+      "backend_tree": "D:\\moodle\\_qoder_hjp1_o207_20260922\\o297r\\base_backend\\backend",
+      "old_bundle": "index--q2k569d.js",
+      "new_bundle": "index-jVHM43pf.js",
+      "shape": "one arm of o297r: 390x844 touch / zh-CN persistent profile / one-shot SQLite named for the run under the arm dir / ports {\"backend\": 9120, \"origin\": 9121} / origin serves shell from current_root.txt and /assets from asset_root.txt / instrument bytes named in the receipt",
+      "fatal": null,
+      "arm_invalid_reason": null,
+      "arm_exit": 0,
+      "arm_wall_s": 138.8,
+      "probe_smoke": {
+        "ok": true,
+        "href": "about:blank",
+        "marker": null,
+        "leafCount": 0
+      },
+      "instrument_self_errors": [],
+      "pageErrors": [],
+      "journey_id": "5533aa7c-771a-4934-9cfc-b2a1c0075aed",
+      "retry_presses_made": 0,
+      "nav_labels_at_creation": [
+        "今天",
+        "行程",
+        "地图",
+        "Copilot",
+        "我的"
+      ],
+      "update_trigger": {
+        "deferred": "no update attempted while online; the control attempts one inside the outage"
+      },
+      "outage_update_attempt": {
+        "updated": true,
+        "ms": 25,
+        "at_epoch": 1790323740574
+      },
+      "precondition_offline": "NAV_CLEAR_BEFORE_OUTAGE",
+      "ui_state_before_offline": {
+        "before": {
+          "visible_boxes": [
+            {
+              "cls": "plan-ai-sheet",
+              "testid": null,
+              "rect": [
+                0,
+                401,
+                390,
+                443
+              ],
+              "over_nav_slots": 3
+            }
+          ],
+          "box_count": 1,
+          "boxes_over_nav": 1
+        },
+        "control": {
+          "needed": true,
+          "control_found": true,
+          "control": "×",
+          "testid": null,
+          "point": [
+            282,
+            452
+          ],
+          "pressed": true
+        },
+        "after": {
+          "visible_boxes": [],
+          "box_count": 0,
+          "boxes_over_nav": 0
+        },
+        "nav_clear": true
+      },
+      "asset_root_written": "dist",
+      "pointer_read_back_ok": true,
+      "executed_after_transition": [
+        "index--q2k569d.js"
+      ],
+      "marker_after_transition": null,
+      "instrument_navigations": [
+        "P0-nav1-install",
+        "P0-nav2-take-control"
+      ],
+      "offline_first_bodyChars": 91,
+      "offline_first_leafCount": 6,
+      "offline_first_marker": "ORD-0297r-next",
+      "offline_first_scripts": [
+        "index-jVHM43pf.js"
+      ],
+      "offline_first_rendered": [
+        "连接",
+        "网络不可用",
+        "这一发请求没能出去，也没有收到任何回答，所以这是网络问题。你的行程数据没有丢失，已保存的只读副本还能看。请检查网络后重试。",
+        "看已保存的只读副本",
+        "重试",
+        "归因详情"
+      ],
+      "nav_steps": 0,
+      "nav_tapped": 0,
+      "nav_found": 0,
+      "nav_path_changed": 0,
+      "nav_bodyChars": [],
+      "nav_tap_evidence": [],
+      "nav_executed": [],
+      "nav_blockers": [],
+      "reload_bodyChars": 91,
+      "reload_bundles": [
+        "index-jVHM43pf.js"
+      ],
+      "reload_marker": "ORD-0297r-next",
+      "reload_http_status": 200,
+      "reload_rendered": [
+        "连接",
+        "网络不可用",
+        "这一发请求没能出去，也没有收到任何回答，所以这是网络问题。你的行程数据没有丢失，已保存的只读副本还能看。请检查网络后重试。",
+        "看已保存的只读副本",
+        "重试",
+        "归因详情"
+      ],
+      "origin_hits_during_offline": 14,
+      "page_level_hits_offline": [
+        {
+          "kind": "static",
+          "path": "/index.html"
+        },
+        {
+          "kind": "static",
+          "path": "/assets/maplibre-gl-CiduR3ZC.js"
+        },
+        {
+          "kind": "static",
+          "path": "/assets/JourneyMap-C0NSafoP.js"
+        },
+        {
+          "kind": "static",
+          "path": "/assets/index-jVHM43pf.js"
+        }
+      ],
+      "worker_update_hits_offline": [
+        "/v10-sw.js",
+        "/workbox-6923124b.js"
+      ],
+      "origin_html_at_js_urls": [],
+      "journeys_rows_before": 0,
+      "journeys_rows_after": 1,
+      "tables_measured": 55,
+      "isolation": {
+        "rundir_deleted": true,
+        "db_leftovers": [],
+        "profile_leftovers": false,
+        "ports_final": {
+          "backend": [],
+          "origin": []
+        }
+      },
+      "db_file": "o297r_run/o297r-a_control_update_lands-160653/one_shot_o297r-a_control_update_lands-160653.sqlite3 (deleted with the arm directory; rundir_deleted=True, db_leftovers=[])",
+      "converged_by_executed_bundle": false,
+      "converged_by_marker": false,
+      "converged_onto_next": false,
+      "stays_on_new_generation_offline": true,
+      "stayed_on_installed_generation_offline": false,
+      "offline_document_boots": true,
+      "offline_reload_is_app_notice": true,
+      "offline_app_names_saved_copy": true,
+      "usable_offline_strict": false,
+      "usable_offline": false,
+      "usable_on_held_generation": false,
+      "no_page_origin_contact_offline": false,
+      "outage_update_landed": true,
+      "worker_update_hits_during_outage": true,
+      "instrument_ok": true
+    },
+    "a_never_reconnects": {
+      "arm": "a_never_reconnects",
+      "kind": "a_never_reconnects",
+      "cells_this_arm_judges": [
+        "A_never_reconnected"
+      ],
+      "run_id": "o297r-a_never_reconnects-160433",
+      "run_id_started_at": "2026-09-25T16:04:33+0800",
+      "all_run_ids_for_this_arm": [
+        "o297r-a_never_reconnects-160433"
+      ],
+      "artifacts": {
+        "run": "o297r_run_o297r-a_never_reconnects-160433.json",
+        "arm": "o297r_arm_o297r-a_never_reconnects-160433.json",
+        "origin_events": "o297r_requests_o297r-a_never_reconnects-160433.jsonl"
+      },
+      "base_tip": "dc964086c9d412573ac19d70b24b30e6c3ee6168",
+      "next_label": "dc964086c9d412573ac19d70b24b30e6c3ee6168 + inert marker line (ORD-0297r-next)",
+      "expected_marker": "ORD-0297r-next",
+      "instrument": {
+        "path": "o297r_arms.cjs",
+        "bytes": 40346,
+        "sha256": "a84cd3738a33bdf21cd6637b004493cd37fba0bce0894e67573a84e349f40da9",
+        "git_blob_sha1": "bafd7fd335568fd1ec34b86dd42f17a6f2ace643"
+      },
+      "arm_artifact_correction": null,
+      "backend_tree": "D:\\moodle\\_qoder_hjp1_o207_20260922\\o297r\\base_backend\\backend",
+      "old_bundle": "index--q2k569d.js",
+      "new_bundle": "index-jVHM43pf.js",
+      "shape": "one arm of o297r: 390x844 touch / zh-CN persistent profile / one-shot SQLite named for the run under the arm dir / ports {\"backend\": 9120, \"origin\": 9121} / origin serves shell from current_root.txt and /assets from asset_root.txt / instrument bytes named in the receipt",
+      "fatal": null,
+      "arm_invalid_reason": null,
+      "arm_exit": 0,
+      "arm_wall_s": 127.2,
+      "probe_smoke": {
+        "ok": true,
+        "href": "about:blank",
+        "marker": null,
+        "leafCount": 0
+      },
+      "instrument_self_errors": [],
+      "pageErrors": [],
+      "journey_id": "eeed9def-da5b-4702-8084-21a6b493750a",
+      "retry_presses_made": 0,
+      "nav_labels_at_creation": [
+        "今天",
+        "行程",
+        "地图",
+        "Copilot",
+        "我的"
+      ],
+      "update_trigger": {
+        "deferred": "no update attempted while online; the control attempts one inside the outage"
+      },
+      "outage_update_attempt": "NOT_MEASURED",
+      "precondition_offline": "NAV_CLEAR_BEFORE_OUTAGE",
+      "ui_state_before_offline": {
+        "before": {
+          "visible_boxes": [
+            {
+              "cls": "plan-ai-sheet",
+              "testid": null,
+              "rect": [
+                0,
+                401,
+                390,
+                443
+              ],
+              "over_nav_slots": 3
+            }
+          ],
+          "box_count": 1,
+          "boxes_over_nav": 1
+        },
+        "control": {
+          "needed": true,
+          "control_found": true,
+          "control": "×",
+          "testid": null,
+          "point": [
+            282,
+            452
+          ],
+          "pressed": true
+        },
+        "after": {
+          "visible_boxes": [],
+          "box_count": 0,
+          "boxes_over_nav": 0
+        },
+        "nav_clear": true
+      },
+      "asset_root_written": "dist",
+      "pointer_read_back_ok": true,
+      "executed_after_transition": [
+        "index--q2k569d.js"
+      ],
+      "marker_after_transition": null,
+      "instrument_navigations": [
+        "P0-nav1-install",
+        "P0-nav2-take-control"
+      ],
+      "offline_first_bodyChars": 703,
+      "offline_first_leafCount": 50,
+      "offline_first_marker": null,
+      "offline_first_scripts": [
+        "index--q2k569d.js"
+      ],
+      "offline_first_rendered": [
+        "菜单",
+        "/",
+        "今天",
+        "跟随系统",
+        "EN",
+        "BE",
+        "知道了",
+        "下午好"
+      ],
+      "nav_steps": 3,
+      "nav_tapped": 3,
+      "nav_found": 3,
+      "nav_path_changed": 3,
+      "nav_bodyChars": [
+        166,
+        323,
+        386
+      ],
+      "nav_tap_evidence": [
+        {
+          "label": "行程",
+          "found_on_screen": true,
+          "tapped": true,
+          "hit_test_was_self": true,
+          "button_disabled": false,
+          "press_point": [
+            119,
+            813
+          ],
+          "hit_label": "行程",
+          "covered_by": {
+            "tag": "BUTTON",
+            "cls": "",
+            "testid": "nav-trips",
+            "aria_disabled": null,
+            "text": "行程",
+            "outer": "<button data-testid=\"nav-trips\" class=\"\"><svg aria-hidden=\"true\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\"",
+            "in_nav": true,
+            "owner_chain": [
+              "BUTTON",
+              "NAV.v8-mobile-nav",
+              "DIV.v8-product-shell",
+              "DIV#root",
+              "BODY",
+              "HTML"
+            ]
+          },
+          "button_rect": {
+            "x": 81,
+            "y": 789,
+            "w": 76,
+            "h": 48
+          },
+          "viewport": [
+            390,
+            844
+          ],
+          "scroll_settled": 2,
+          "buttons_visible_when_not_found": []
+        },
+        {
+          "label": "地图",
+          "found_on_screen": true,
+          "tapped": true,
+          "hit_test_was_self": true,
+          "button_disabled": false,
+          "press_point": [
+            195,
+            813
+          ],
+          "hit_label": "地图",
+          "covered_by": {
+            "tag": "BUTTON",
+            "cls": "",
+            "testid": "nav-map",
+            "aria_disabled": null,
+            "text": "地图",
+            "outer": "<button data-testid=\"nav-map\" class=\"\"><svg aria-hidden=\"true\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\" s",
+            "in_nav": true,
+            "owner_chain": [
+              "BUTTON",
+              "NAV.v8-mobile-nav",
+              "DIV.v8-product-shell",
+              "DIV#root",
+              "BODY",
+              "HTML"
+            ]
+          },
+          "button_rect": {
+            "x": 157,
+            "y": 789,
+            "w": 76,
+            "h": 48
+          },
+          "viewport": [
+            390,
+            844
+          ],
+          "scroll_settled": 2,
+          "buttons_visible_when_not_found": []
+        },
+        {
+          "label": "Copilot",
+          "found_on_screen": true,
+          "tapped": true,
+          "hit_test_was_self": true,
+          "button_disabled": false,
+          "press_point": [
+            271,
+            813
+          ],
+          "hit_label": "Copilot",
+          "covered_by": {
+            "tag": "BUTTON",
+            "cls": "",
+            "testid": "nav-agent",
+            "aria_disabled": null,
+            "text": "Copilot",
+            "outer": "<button data-testid=\"nav-agent\" class=\"\"><svg aria-hidden=\"true\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\"",
+            "in_nav": true,
+            "owner_chain": [
+              "BUTTON",
+              "NAV.v8-mobile-nav",
+              "DIV.v8-product-shell",
+              "DIV#root",
+              "BODY",
+              "HTML"
+            ]
+          },
+          "button_rect": {
+            "x": 233,
+            "y": 789,
+            "w": 76,
+            "h": 48
+          },
+          "viewport": [
+            390,
+            844
+          ],
+          "scroll_settled": 2,
+          "buttons_visible_when_not_found": []
+        }
+      ],
+      "nav_executed": [
+        [
+          "index--q2k569d.js"
+        ],
+        [
+          "index--q2k569d.js"
+        ],
+        [
+          "index--q2k569d.js"
+        ]
+      ],
+      "nav_blockers": [
+        "行程: tapped, path changed",
+        "地图: tapped, path changed",
+        "Copilot: tapped, path changed"
+      ],
+      "reload_bodyChars": 91,
+      "reload_bundles": [
+        "index-jVHM43pf.js"
+      ],
+      "reload_marker": "ORD-0297r-next",
+      "reload_http_status": 200,
+      "reload_rendered": [
+        "连接",
+        "网络不可用",
+        "这一发请求没能出去，也没有收到任何回答，所以这是网络问题。你的行程数据没有丢失，已保存的只读副本还能看。请检查网络后重试。",
+        "看已保存的只读副本",
+        "重试",
+        "归因详情"
+      ],
+      "origin_hits_during_offline": 10,
+      "page_level_hits_offline": [
+        {
+          "kind": "static",
+          "path": "/index.html"
+        },
+        {
+          "kind": "static",
+          "path": "/assets/maplibre-gl-CiduR3ZC.js"
+        },
+        {
+          "kind": "static",
+          "path": "/assets/JourneyMap-C0NSafoP.js"
+        },
+        {
+          "kind": "static",
+          "path": "/assets/index-jVHM43pf.js"
+        }
+      ],
+      "worker_update_hits_offline": [
+        "/v10-sw.js",
+        "/workbox-6923124b.js"
+      ],
+      "origin_html_at_js_urls": [],
+      "journeys_rows_before": 0,
+      "journeys_rows_after": 1,
+      "tables_measured": 55,
+      "isolation": {
+        "rundir_deleted": true,
+        "db_leftovers": [],
+        "profile_leftovers": false,
+        "ports_final": {
+          "backend": [],
+          "origin": []
+        }
+      },
+      "db_file": "o297r_run/o297r-a_never_reconnects-160433/one_shot_o297r-a_never_reconnects-160433.sqlite3 (deleted with the arm directory; rundir_deleted=True, db_leftovers=[])",
+      "converged_by_executed_bundle": false,
+      "converged_by_marker": false,
+      "converged_onto_next": false,
+      "stays_on_new_generation_offline": false,
+      "stayed_on_installed_generation_offline": false,
+      "offline_document_boots": true,
+      "offline_reload_is_app_notice": true,
+      "offline_app_names_saved_copy": true,
+      "usable_offline_strict": false,
+      "usable_offline": true,
+      "usable_on_held_generation": true,
+      "no_page_origin_contact_offline": false,
+      "outage_update_landed": false,
+      "worker_update_hits_during_outage": true,
+      "instrument_ok": true
+    },
+    "b3_control_partial": {
+      "arm": "b3_control_partial",
+      "kind": "b3_control_partial",
+      "cells_this_arm_judges": [
+        "B3_control_partial_deploy"
+      ],
+      "run_id": "o297r-b3_control_partial-160314",
+      "run_id_started_at": "2026-09-25T16:03:14+0800",
+      "all_run_ids_for_this_arm": [
+        "o297r-b3_control_partial-160314"
+      ],
+      "artifacts": {
+        "run": "o297r_run_o297r-b3_control_partial-160314.json",
+        "arm": "o297r_arm_o297r-b3_control_partial-160314.json",
+        "origin_events": "o297r_requests_o297r-b3_control_partial-160314.jsonl"
+      },
+      "base_tip": "dc964086c9d412573ac19d70b24b30e6c3ee6168",
+      "next_label": "dc964086c9d412573ac19d70b24b30e6c3ee6168 + inert marker line (ORD-0297r-next)",
+      "expected_marker": "ORD-0297r-next",
+      "instrument": {
+        "path": "o297r_arms.cjs",
+        "bytes": 40346,
+        "sha256": "a84cd3738a33bdf21cd6637b004493cd37fba0bce0894e67573a84e349f40da9",
+        "git_blob_sha1": "bafd7fd335568fd1ec34b86dd42f17a6f2ace643"
+      },
+      "arm_artifact_correction": null,
+      "backend_tree": "D:\\moodle\\_qoder_hjp1_o207_20260922\\o297r\\base_backend\\backend",
+      "old_bundle": "index--q2k569d.js",
+      "new_bundle": "index-jVHM43pf.js",
+      "shape": "one arm of o297r: 390x844 touch / zh-CN persistent profile / one-shot SQLite named for the run under the arm dir / ports {\"backend\": 9120, \"origin\": 9121} / origin serves shell from current_root.txt and /assets from asset_root.txt / instrument bytes named in the receipt",
+      "fatal": null,
+      "arm_invalid_reason": null,
+      "arm_exit": 0,
+      "arm_wall_s": 66.7,
+      "probe_smoke": {
+        "ok": true,
+        "href": "about:blank",
+        "marker": null,
+        "leafCount": 0
+      },
+      "instrument_self_errors": [],
+      "pageErrors": [],
+      "journey_id": "99b3a7e8-53a4-4ea7-9262-4920a960776e",
+      "retry_presses_made": 0,
+      "nav_labels_at_creation": [
+        "今天",
+        "行程",
+        "地图",
+        "Copilot",
+        "我的"
+      ],
+      "update_trigger": {
+        "updated": true,
+        "via": "registration.update() after the trip was written"
+      },
+      "outage_update_attempt": "NOT_MEASURED",
+      "precondition_offline": "NAV_CLEAR_BEFORE_OUTAGE",
+      "ui_state_before_offline": {
+        "before": {
+          "visible_boxes": [],
+          "box_count": 0,
+          "boxes_over_nav": 0
+        },
+        "control": {
+          "needed": false
+        },
+        "after": {
+          "visible_boxes": [],
+          "box_count": 0,
+          "boxes_over_nav": 0
+        },
+        "nav_clear": true
+      },
+      "asset_root_written": "dist",
+      "pointer_read_back_ok": true,
+      "executed_after_transition": [
+        "index-jVHM43pf.js"
+      ],
+      "marker_after_transition": null,
+      "instrument_navigations": [
+        "P0-nav1-install",
+        "P0-nav2-take-control"
+      ],
+      "offline_first_bodyChars": 0,
+      "offline_first_leafCount": 0,
+      "offline_first_marker": null,
+      "offline_first_scripts": [
+        "index-jVHM43pf.js"
+      ],
+      "offline_first_rendered": [],
+      "nav_steps": 0,
+      "nav_tapped": 0,
+      "nav_found": 0,
+      "nav_path_changed": 0,
+      "nav_bodyChars": [],
+      "nav_tap_evidence": [],
+      "nav_executed": [],
+      "nav_blockers": [],
+      "reload_bodyChars": 0,
+      "reload_bundles": [
+        "index-jVHM43pf.js"
+      ],
+      "reload_marker": null,
+      "reload_http_status": 200,
+      "reload_rendered": [],
+      "origin_hits_during_offline": 2,
+      "page_level_hits_offline": [],
+      "worker_update_hits_offline": [
+        "/v10-sw.js",
+        "/workbox-6923124b.js"
+      ],
+      "origin_html_at_js_urls": [
+        "/assets/JourneyMap-C0NSafoP.js",
+        "/assets/index-jVHM43pf.js",
+        "/assets/maplibre-gl-CiduR3ZC.js"
+      ],
+      "journeys_rows_before": 0,
+      "journeys_rows_after": 1,
+      "tables_measured": 55,
+      "isolation": {
+        "rundir_deleted": true,
+        "db_leftovers": [],
+        "profile_leftovers": false,
+        "ports_final": {
+          "backend": [],
+          "origin": []
+        }
+      },
+      "db_file": "o297r_run/o297r-b3_control_partial-160314/one_shot_o297r-b3_control_partial-160314.sqlite3 (deleted with the arm directory; rundir_deleted=True, db_leftovers=[])",
+      "converged_by_executed_bundle": true,
+      "converged_by_marker": false,
+      "converged_onto_next": true,
+      "stays_on_new_generation_offline": true,
+      "stayed_on_installed_generation_offline": false,
+      "offline_document_boots": false,
+      "offline_reload_is_app_notice": false,
+      "offline_app_names_saved_copy": false,
+      "usable_offline_strict": false,
+      "usable_offline": false,
+      "usable_on_held_generation": false,
+      "no_page_origin_contact_offline": true,
+      "outage_update_landed": false,
+      "worker_update_hits_during_outage": true,
+      "instrument_ok": true
+    },
+    "b3_primary": {
+      "arm": "b3_primary",
+      "kind": "b3_offline",
+      "cells_this_arm_judges": [
+        "B3_offline_after_convergence"
+      ],
+      "run_id": "o297r-b3_primary-160049",
+      "run_id_started_at": "2026-09-25T16:00:49+0800",
+      "all_run_ids_for_this_arm": [
+        "o297r-b3_primary-160049"
+      ],
+      "artifacts": {
+        "run": "o297r_run_o297r-b3_primary-160049.json",
+        "arm": "o297r_arm_o297r-b3_primary-160049.json",
+        "origin_events": "o297r_requests_o297r-b3_primary-160049.jsonl"
+      },
+      "base_tip": "dc964086c9d412573ac19d70b24b30e6c3ee6168",
+      "next_label": "dc964086c9d412573ac19d70b24b30e6c3ee6168 + inert marker line (ORD-0297r-next)",
+      "expected_marker": "ORD-0297r-next",
+      "instrument": {
+        "path": "o297r_arms.cjs",
+        "bytes": 40346,
+        "sha256": "a84cd3738a33bdf21cd6637b004493cd37fba0bce0894e67573a84e349f40da9",
+        "git_blob_sha1": "bafd7fd335568fd1ec34b86dd42f17a6f2ace643"
+      },
+      "arm_artifact_correction": null,
+      "backend_tree": "D:\\moodle\\_qoder_hjp1_o207_20260922\\o297r\\base_backend\\backend",
+      "old_bundle": "index--q2k569d.js",
+      "new_bundle": "index-jVHM43pf.js",
+      "shape": "one arm of o297r: 390x844 touch / zh-CN persistent profile / one-shot SQLite named for the run under the arm dir / ports {\"backend\": 9120, \"origin\": 9121} / origin serves shell from current_root.txt and /assets from asset_root.txt / instrument bytes named in the receipt",
+      "fatal": null,
+      "arm_invalid_reason": null,
+      "arm_exit": 0,
+      "arm_wall_s": 89.4,
+      "probe_smoke": {
+        "ok": true,
+        "href": "about:blank",
+        "marker": null,
+        "leafCount": 0
+      },
+      "instrument_self_errors": [],
+      "pageErrors": [],
+      "journey_id": "577079e3-b2db-4abf-9f47-389c3a25222f",
+      "retry_presses_made": 0,
+      "nav_labels_at_creation": [
+        "今天",
+        "行程",
+        "地图",
+        "Copilot",
+        "我的"
+      ],
+      "update_trigger": {
+        "updated": true,
+        "via": "registration.update() after the trip was written"
+      },
+      "outage_update_attempt": "NOT_MEASURED",
+      "precondition_offline": "NAV_CLEAR_BEFORE_OUTAGE",
+      "ui_state_before_offline": {
+        "before": {
+          "visible_boxes": [],
+          "box_count": 0,
+          "boxes_over_nav": 0
+        },
+        "control": {
+          "needed": false
+        },
+        "after": {
+          "visible_boxes": [],
+          "box_count": 0,
+          "boxes_over_nav": 0
+        },
+        "nav_clear": true
+      },
+      "asset_root_written": "dist",
+      "pointer_read_back_ok": true,
+      "executed_after_transition": [
+        "index-jVHM43pf.js"
+      ],
+      "marker_after_transition": "ORD-0297r-next",
+      "instrument_navigations": [
+        "P0-nav1-install",
+        "P0-nav2-take-control"
+      ],
+      "offline_first_bodyChars": 651,
+      "offline_first_leafCount": 47,
+      "offline_first_marker": "ORD-0297r-next",
+      "offline_first_scripts": [
+        "index-jVHM43pf.js"
+      ],
+      "offline_first_rendered": [
+        "菜单",
+        "/",
+        "今天",
+        "跟随系统",
+        "EN",
+        "BE",
+        "下午好",
+        "北京之旅"
+      ],
+      "nav_steps": 3,
+      "nav_tapped": 3,
+      "nav_found": 3,
+      "nav_path_changed": 3,
+      "nav_bodyChars": [
+        114,
+        271,
+        334
+      ],
+      "nav_tap_evidence": [
+        {
+          "label": "行程",
+          "found_on_screen": true,
+          "tapped": true,
+          "hit_test_was_self": true,
+          "button_disabled": false,
+          "press_point": [
+            119,
+            813
+          ],
+          "hit_label": "行程",
+          "covered_by": {
+            "tag": "BUTTON",
+            "cls": "",
+            "testid": "nav-trips",
+            "aria_disabled": null,
+            "text": "行程",
+            "outer": "<button data-testid=\"nav-trips\" class=\"\"><svg aria-hidden=\"true\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\"",
+            "in_nav": true,
+            "owner_chain": [
+              "BUTTON",
+              "NAV.v8-mobile-nav",
+              "DIV.v8-product-shell",
+              "DIV#root",
+              "BODY",
+              "HTML"
+            ]
+          },
+          "button_rect": {
+            "x": 81,
+            "y": 789,
+            "w": 76,
+            "h": 48
+          },
+          "viewport": [
+            390,
+            844
+          ],
+          "scroll_settled": 2,
+          "buttons_visible_when_not_found": []
+        },
+        {
+          "label": "地图",
+          "found_on_screen": true,
+          "tapped": true,
+          "hit_test_was_self": true,
+          "button_disabled": false,
+          "press_point": [
+            195,
+            813
+          ],
+          "hit_label": "地图",
+          "covered_by": {
+            "tag": "BUTTON",
+            "cls": "",
+            "testid": "nav-map",
+            "aria_disabled": null,
+            "text": "地图",
+            "outer": "<button data-testid=\"nav-map\" class=\"\"><svg aria-hidden=\"true\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\" s",
+            "in_nav": true,
+            "owner_chain": [
+              "BUTTON",
+              "NAV.v8-mobile-nav",
+              "DIV.v8-product-shell",
+              "DIV#root",
+              "BODY",
+              "HTML"
+            ]
+          },
+          "button_rect": {
+            "x": 157,
+            "y": 789,
+            "w": 76,
+            "h": 48
+          },
+          "viewport": [
+            390,
+            844
+          ],
+          "scroll_settled": 2,
+          "buttons_visible_when_not_found": []
+        },
+        {
+          "label": "Copilot",
+          "found_on_screen": true,
+          "tapped": true,
+          "hit_test_was_self": true,
+          "button_disabled": false,
+          "press_point": [
+            271,
+            813
+          ],
+          "hit_label": "Copilot",
+          "covered_by": {
+            "tag": "BUTTON",
+            "cls": "",
+            "testid": "nav-agent",
+            "aria_disabled": null,
+            "text": "Copilot",
+            "outer": "<button data-testid=\"nav-agent\" class=\"\"><svg aria-hidden=\"true\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\"",
+            "in_nav": true,
+            "owner_chain": [
+              "BUTTON",
+              "NAV.v8-mobile-nav",
+              "DIV.v8-product-shell",
+              "DIV#root",
+              "BODY",
+              "HTML"
+            ]
+          },
+          "button_rect": {
+            "x": 233,
+            "y": 789,
+            "w": 76,
+            "h": 48
+          },
+          "viewport": [
+            390,
+            844
+          ],
+          "scroll_settled": 2,
+          "buttons_visible_when_not_found": []
+        }
+      ],
+      "nav_executed": [
+        [
+          "index-jVHM43pf.js"
+        ],
+        [
+          "index-jVHM43pf.js"
+        ],
+        [
+          "index-jVHM43pf.js"
+        ]
+      ],
+      "nav_blockers": [
+        "行程: tapped, path changed",
+        "地图: tapped, path changed",
+        "Copilot: tapped, path changed"
+      ],
+      "reload_bodyChars": 91,
+      "reload_bundles": [
+        "index-jVHM43pf.js"
+      ],
+      "reload_marker": "ORD-0297r-next",
+      "reload_http_status": 200,
+      "reload_rendered": [
+        "连接",
+        "网络不可用",
+        "这一发请求没能出去，也没有收到任何回答，所以这是网络问题。你的行程数据没有丢失，已保存的只读副本还能看。请检查网络后重试。",
+        "看已保存的只读副本",
+        "重试",
+        "归因详情"
+      ],
+      "origin_hits_during_offline": 5,
+      "page_level_hits_offline": [],
+      "worker_update_hits_offline": [
+        "/v10-sw.js",
+        "/workbox-6923124b.js"
+      ],
+      "origin_html_at_js_urls": [],
+      "journeys_rows_before": 0,
+      "journeys_rows_after": 1,
+      "tables_measured": 55,
+      "isolation": {
+        "rundir_deleted": true,
+        "db_leftovers": [],
+        "profile_leftovers": false,
+        "ports_final": {
+          "backend": [],
+          "origin": []
+        }
+      },
+      "db_file": "o297r_run/o297r-b3_primary-160049/one_shot_o297r-b3_primary-160049.sqlite3 (deleted with the arm directory; rundir_deleted=True, db_leftovers=[])",
+      "converged_by_executed_bundle": true,
+      "converged_by_marker": true,
+      "converged_onto_next": true,
+      "stays_on_new_generation_offline": true,
+      "stayed_on_installed_generation_offline": false,
+      "offline_document_boots": true,
+      "offline_reload_is_app_notice": true,
+      "offline_app_names_saved_copy": true,
+      "usable_offline_strict": false,
+      "usable_offline": true,
+      "usable_on_held_generation": false,
+      "no_page_origin_contact_offline": true,
+      "outage_update_landed": false,
+      "worker_update_hits_during_outage": true,
+      "instrument_ok": true
+    }
+  },
+  "not_run": {},
+  "selftest_duplicate_why": {
+    "cells": 4,
+    "distinct_why_strings": 4,
+    "duplicates": [],
+    "result": "PASS"
+  },
+  "derived_result_is_null_everywhere": true,
+  "gate_q38_r2_a": {
+    "script": "receipt_cell_derivation_check_r2.py",
+    "blob40": "91ae8b1ec55f5c19122af11bf775df14580955e4",
+    "local_sha1_matches_blob_id": true,
+    "blob_meta_size": 18867,
+    "selftest_rc": 0,
+    "selftest_tail": "r_any_key cells 2 got Q38_GATE_GREEN [] | want Q38_GATE_GREEN [] -> ok",
+    "rc": 0,
+    "parsed": {
+      "cells_found": 4,
+      "overall": "Q38_GATE_GREEN",
+      "hard": "0",
+      "soft": "0",
+      "cells": [
+        {
+          "cell": "B3_offline_after_convergence",
+          "why_tokens": 34,
+          "own_hits": 11,
+          "unique_hits": 0,
+          "shares_why_with": "[]"
+        },
+        {
+          "cell": "A_never_reconnected",
+          "why_tokens": 37,
+          "own_hits": 11,
+          "unique_hits": 0,
+          "shares_why_with": "[]"
+        },
+        {
+          "cell": "B3_control_partial_deploy",
+          "why_tokens": 30,
+          "own_hits": 6,
+          "unique_hits": 0,
+          "shares_why_with": "[]"
+        },
+        {
+          "cell": "A_control_update_lands",
+          "why_tokens": 32,
+          "own_hits": 8,
+          "unique_hits": 0,
+          "shares_why_with": "[]"
+        }
+      ]
+    },
+    "judged_object_top_level_keys": [
+      "arms",
+      "base_tip",
+      "bases",
+      "cells",
+      "claim_semantics",
+      "derived_result_is_null_everywhere",
+      "instrument",
+      "not_run",
+      "order",
+      "ref_tip_read",
+      "selftest_duplicate_why",
+      "verifier",
+      "why_this_round_exists"
+    ],
+    "judged_object_top_level_key_count": 13,
+    "cells_in_judged_object": [
+      "A_control_update_lands",
+      "A_never_reconnected",
+      "B3_control_partial_deploy",
+      "B3_offline_after_convergence"
+    ],
+    "stderr_head": ""
+  },
+  "gate_q38_r2_verbatim_a": "receipt o297r_measured_object.json 67487 B blob_sha1 9b8b7cb7bfd9f3d9ba37fe73351386dc2209802e\ncells 4 | overall Q38_GATE_GREEN | hard 0 [] | soft 0 []\n  cell B3_offline_after_convergence | why_source why | why tokens 34 | own hits 11 | unique hits 0 | shares why with []\n  cell A_never_reconnected | why_source why | why tokens 37 | own hits 11 | unique hits 0 | shares why with []\n  cell B3_control_partial_deploy | why_source why | why tokens 30 | own hits 6 | unique hits 0 | shares why with []\n  cell A_control_update_lands | why_source why | why tokens 32 | own hits 8 | unique hits 0 | shares why with []\nmeaning: no shared literal and every sentence names its own readings\n",
+  "gate_q43_r3_a": {
+    "o297r_measured_object.json": {
+      "blob40": "e653e597c2e6fd74a5f8d3be65fe60e017b03017",
+      "local_sha1_matches_blob_id": true,
+      "selftest_rc": 0,
+      "selftest_tail": "laims 3 got Q43_GATE_CLEAN [] | want Q43_GATE_CLEAN [] -> ok",
+      "rc": 3,
+      "summary": {
+        "claims_checked": 207,
+        "overall": "Q43_GATE_RED",
+        "findings": "169"
+      },
+      "stderr_head": ""
+    },
+    "o297r_ledger_block_for_q43.txt": "absent (block not inserted yet)"
+  },
+  "gate_measured_object": {
+    "file": "o297r_measured_object_b.json",
+    "blob40": "aa13e20472870e4f5b5d5a49d3edf5f6b8b574f2",
+    "note": "the bytes both rulers ran over, frozen as its own published file; this receipt gained gate fields afterwards so it no longer hashes to that value"
+  },
+  "gate_q38_r2_b": {
+    "script": "receipt_cell_derivation_check_r2.py",
+    "blob40": "91ae8b1ec55f5c19122af11bf775df14580955e4",
+    "local_sha1_matches_blob_id": true,
+    "blob_meta_size": 18867,
+    "selftest_rc": 0,
+    "selftest_tail": "r_any_key cells 2 got Q38_GATE_GREEN [] | want Q38_GATE_GREEN [] -> ok",
+    "rc": 0,
+    "parsed": {
+      "cells_found": 4,
+      "overall": "Q38_GATE_GREEN",
+      "hard": "0",
+      "soft": "0",
+      "cells": [
+        {
+          "cell": "B3_offline_after_convergence",
+          "why_tokens": 34,
+          "own_hits": 11,
+          "unique_hits": 0,
+          "shares_why_with": "[]"
+        },
+        {
+          "cell": "A_never_reconnected",
+          "why_tokens": 37,
+          "own_hits": 11,
+          "unique_hits": 0,
+          "shares_why_with": "[]"
+        },
+        {
+          "cell": "B3_control_partial_deploy",
+          "why_tokens": 30,
+          "own_hits": 6,
+          "unique_hits": 0,
+          "shares_why_with": "[]"
+        },
+        {
+          "cell": "A_control_update_lands",
+          "why_tokens": 32,
+          "own_hits": 8,
+          "unique_hits": 0,
+          "shares_why_with": "[]"
+        }
+      ]
+    },
+    "judged_object_top_level_keys": [
+      "arms",
+      "base_tip",
+      "bases",
+      "cells",
+      "claim_semantics",
+      "derived_result_is_null_everywhere",
+      "gate_measured_object",
+      "gate_q38_r2_a",
+      "gate_q38_r2_b",
+      "gate_q38_r2_verbatim_a",
+      "gate_q38_r2_verbatim_b",
+      "gate_q43_r3_a",
+      "gate_q43_r3_b",
+      "instrument",
+      "not_run",
+      "order",
+      "ref_tip_read",
+      "selftest_duplicate_why",
+      "verifier",
+      "why_this_round_exists"
+    ],
+    "judged_object_top_level_key_count": 20,
+    "cells_in_judged_object": [
+      "A_control_update_lands",
+      "A_never_reconnected",
+      "B3_control_partial_deploy",
+      "B3_offline_after_convergence"
+    ],
+    "stderr_head": ""
+  },
+  "gate_q38_r2_verbatim_b": "receipt o297r_measured_object_b.json 74446 B blob_sha1 aa13e20472870e4f5b5d5a49d3edf5f6b8b574f2\ncells 4 | overall Q38_GATE_GREEN | hard 0 [] | soft 0 []\n  cell B3_offline_after_convergence | why_source why | why tokens 34 | own hits 11 | unique hits 0 | shares why with []\n  cell A_never_reconnected | why_source why | why tokens 37 | own hits 11 | unique hits 0 | shares why with []\n  cell B3_control_partial_deploy | why_source why | why tokens 30 | own hits 6 | unique hits 0 | shares why with []\n  cell A_control_update_lands | why_source why | why tokens 32 | own hits 8 | unique hits 0 | shares why with []\nmeaning: no shared literal and every sentence names its own readings\n",
+  "gate_q43_r3_b": {
+    "o297r_measured_object_b.json": {
+      "blob40": "e653e597c2e6fd74a5f8d3be65fe60e017b03017",
+      "local_sha1_matches_blob_id": true,
+      "selftest_rc": 0,
+      "selftest_tail": "laims 3 got Q43_GATE_CLEAN [] | want Q43_GATE_CLEAN [] -> ok",
+      "rc": 3,
+      "summary": {
+        "claims_checked": 232,
+        "overall": "Q43_GATE_RED",
+        "findings": "186"
+      },
+      "stderr_head": ""
+    },
+    "o297r_ledger_block_for_q43.txt": {
+      "blob40": "e653e597c2e6fd74a5f8d3be65fe60e017b03017",
+      "local_sha1_matches_blob_id": true,
+      "selftest_rc": 0,
+      "selftest_tail": "laims 3 got Q43_GATE_CLEAN [] | want Q43_GATE_CLEAN [] -> ok",
+      "rc": 0,
+      "summary": {
+        "claims_checked": 59,
+        "overall": "Q43_GATE_CLEAN",
+        "findings": "0"
+      },
+      "stderr_head": ""
+    }
+  }
+}
