@@ -1,0 +1,49 @@
+{
+ "file": "e2e/qoder-ord0280-attribution-label-speaks-for-itself.spec.ts",
+ "arms": {
+  "C2": {
+   "want": "server",
+   "read": {
+    "status": "BLOCKED:BUDGET_INFEASIBLE",
+    "label": "服务器给出的原因",
+    "origin": "server",
+    "reason": "预算与停留上限无法同时满足，未生成方案。",
+    "legs": [
+     "GET /plans(baseline)",
+     "GET /api/v1/places?city_code=CN-TIANJIN",
+     "GET /plans(baseline)",
+     "POST /api/v1/journeys/a366d0aa-23a7-457c-8067-e43d988a0393/agent/commands",
+     "GET /plans(baseline)",
+     "GET /api/v1/places?city_code=CN-TIANJIN",
+     "POST /api/v1/journeys/a366d0aa-23a7-457c-8067-e43d988a0393/plans/generate"
+    ]
+   },
+   "rows": [
+    {
+     "claim": "label and origin agree",
+     "ok": true,
+     "got": {
+      "label": "服务器给出的原因",
+      "origin": "server"
+     }
+    },
+    {
+     "claim": "the server's own words are passed through verbatim",
+     "ok": true,
+     "got": {
+      "reason": "预算与停留上限无法同时满足，未生成方案。",
+      "expected": "预算与停留上限无法同时满足，未生成方案。"
+     }
+    },
+    {
+     "claim": "a device-composed reading is still visible (this is not a mute-the-number fix)",
+     "ok": true,
+     "got": {
+      "reason": "预算与停留上限无法同时满足，未生成方案。"
+     }
+    }
+   ]
+  }
+ },
+ "server_label_zh": "服务器给出的原因"
+}
