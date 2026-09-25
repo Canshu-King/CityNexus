@@ -1,0 +1,27 @@
+{
+ "corrects": "teardown_note.json field junction_removed_with_rmdir_and_target_intact",
+ "what_r1_claimed": "True, at the time of writing",
+ "what_was_true_then": "the junction LINK still existed; my check had counted entries in the TARGET directory, so it proved the target was healthy and said nothing about the link",
+ "what_r2_measured_now": {
+  "link_exists_after_rmdir": "False",
+  "target_entries": 399,
+  "command": "cmd /c rmdir on the junction (removes the link only), then Test-Path on both paths",
+  "removal_time_local": "2026-09-25T11:14:16.1766890+08:00"
+ },
+ "verdict": "target intact (399 entries) and link now actually removed; r1 is left published and untouched, this file is the correction",
+ "rule_this_teaches": "a boolean named after two conditions must measure BOTH - I measured the second one and asserted the first",
+ "ports_now": {
+  "8551": [],
+  "8552": [],
+  "8553": [],
+  "8554": [],
+  "8555": [],
+  "8556": []
+ },
+ "recorded_pids_from_this_rig": {
+  "backend": 16912,
+  "face": 11356,
+  "silent_origin": 51572,
+  "silent_face": 51904
+ }
+}
