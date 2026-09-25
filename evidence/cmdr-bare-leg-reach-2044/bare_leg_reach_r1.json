@@ -1,0 +1,324 @@
+{
+ "schema": "CNX_CMDR_BARE_LEG_REACH_V1",
+ "lane": "commander 494abfd7",
+ "at_local": "2026-09-25T20:44:17+0800",
+ "question": "of the write legs with no client deadline, how many are in the bundle the phone is serving right now - that is what decides whether Q60' is a user-visible gap",
+ "tip": "30a5f90e5deaed6e45a704ddcc7d6e5e9790475b",
+ "inputs": {
+  "reconciliation_artifact": "1731358d86e71215aa6757a07ec14b3dfec14c45",
+  "my_scan_artifact_file": "_cmdr_write_legs_30a5f90e.json",
+  "union_sites": 20,
+  "covered_by_mine": 2,
+  "wrapper_covered_named_by_anchor_reread": 2,
+  "bare_sites_used": 18
+ },
+ "surface": {
+  "entry_asset": "assets/index-DWgtVWb0.js",
+  "origin_bytes": 1255094,
+  "origin_sha256": "1c90b81eca9e8947b05821586b6c1d2af2ff69487f266006d3d7ae16bd74c51c",
+  "proxy_bytes": 1255094,
+  "proxy_sha256": "1c90b81eca9e8947b05821586b6c1d2af2ff69487f266006d3d7ae16bd74c51c",
+  "two_surfaces_byte_identical": true,
+  "proxy_auth_handling": "credential read from FILE PATH D:\\moodle\\_qoder_preview_20260920\\run\\preview_auth.txt, TAB-split, sent as one Authorization header; no byte of it printed or stored here",
+  "origin_content_type": "text/javascript",
+  "proxy_content_type": "text/javascript"
+ },
+ "bare_anchors_not_canonical": [
+  {
+   "file": "features/execution/LiveRecovery.tsx",
+   "line": 225,
+   "method": "see reconciliation"
+  },
+  {
+   "file": "features/notifications/PushCapabilityCard.tsx",
+   "line": 56,
+   "method": "POST"
+  },
+  {
+   "file": "features/planning/PlanComparison.tsx",
+   "line": 88,
+   "method": "POST"
+  },
+  {
+   "file": "features/planning/PlanWithAiSheet.tsx",
+   "line": 492,
+   "method": "see reconciliation"
+  },
+  {
+   "file": "features/planning/PlanWithAiSheet.tsx",
+   "line": 605,
+   "method": "see reconciliation"
+  },
+  {
+   "file": "features/recovery/RecoveryRequiredPanel.tsx",
+   "line": 26,
+   "method": "POST"
+  },
+  {
+   "file": "features/recovery/V14RecoveryTruthPanel.tsx",
+   "line": 69,
+   "method": "see reconciliation"
+  },
+  {
+   "file": "features/simulation/simulationAdapter.ts",
+   "line": 229,
+   "method": "POST"
+  },
+  {
+   "file": "features/simulation/simulationAdapter.ts",
+   "line": 296,
+   "method": "POST"
+  },
+  {
+   "file": "features/simulation/simulationAdapter.ts",
+   "line": 335,
+   "method": "POST"
+  },
+  {
+   "file": "features/simulation/simulationAdapter.ts",
+   "line": 376,
+   "method": "POST"
+  },
+  {
+   "file": "features/stay/HotelsPanel.tsx",
+   "line": 63,
+   "method": "POST"
+  },
+  {
+   "file": "features/stay/HotelsPanel.tsx",
+   "line": 64,
+   "method": "POST"
+  },
+  {
+   "file": "features/stay/HotelsPanel.tsx",
+   "line": 87,
+   "method": "POST"
+  },
+  {
+   "file": "lib/inFlightWrites.ts",
+   "line": 57,
+   "method": "DELETE"
+  },
+  {
+   "file": "lib/offlineJourney.ts",
+   "line": 43,
+   "method": "PUT"
+  },
+  {
+   "file": "lib/offlineJourney.ts",
+   "line": 55,
+   "method": "PUT"
+  },
+  {
+   "file": "main.tsx",
+   "line": 1706,
+   "method": "DELETE"
+  }
+ ],
+ "per_file_reach": {
+  "features/execution/LiveRecovery.tsx": {
+   "markers_taken_from_tip_bytes": [
+    "../../lib/disruptionState",
+    "有一处地点临时关闭",
+    "A stop is temporarily closed",
+    "天气影响行程",
+    "Weather is affecting the trip",
+    "行程时间有变化"
+   ],
+   "markers_found_in_shipped_bundle": [
+    "有一处地点临时关闭",
+    "A stop is temporarily closed",
+    "天气影响行程",
+    "Weather is affecting the trip",
+    "行程时间有变化"
+   ],
+   "verdict": "PRESENT_in_shipped_bundle",
+   "hit_ratio": "5/6"
+  },
+  "features/notifications/PushCapabilityCard.tsx": {
+   "markers_taken_from_tip_bytes": [
+    "RECORD_ONLY",
+    "push_capability()",
+    "${value}${\"=\".repeat((4 - (value.length % 4)) % 4)}",
+    ").replace(/_/g, ",
+    "still checking",
+    "/api/v1/travelers/${travelerId}/push-config"
+   ],
+   "markers_found_in_shipped_bundle": [
+    "RECORD_ONLY"
+   ],
+   "verdict": "PRESENT_in_shipped_bundle",
+   "hit_ratio": "1/6"
+  },
+  "features/planning/PlanComparison.tsx": {
+   "markers_taken_from_tip_bytes": [
+    "比较候选方案 -> 采用方案",
+    "${currency} ${major.toLocaleString(\"zh-CN\")}",
+    "${currency} ${major.toLocaleString(\"en-GB\")}",
+    "within",
+    "/api/v1/journeys/${journeyId}/plans/${planId}/select",
+    ", headers: { Accept: "
+   ],
+   "markers_found_in_shipped_bundle": [
+    "within"
+   ],
+   "verdict": "PRESENT_in_shipped_bundle",
+   "hit_ratio": "1/6"
+  },
+  "features/planning/PlanWithAiSheet.tsx": {
+   "markers_taken_from_tip_bytes": [
+    "POST /agent/commands",
+    "no stage signal",
+    "../../api/journeyContinuation",
+    "baseline",
+    "request",
+    "verify"
+   ],
+   "markers_found_in_shipped_bundle": [
+    "baseline",
+    "request",
+    "verify"
+   ],
+   "verdict": "PRESENT_in_shipped_bundle",
+   "hit_ratio": "3/6"
+  },
+  "features/recovery/RecoveryRequiredPanel.tsx": {
+   "markers_taken_from_tip_bytes": [
+    "Trip evidence needs re-syncing",
+    "No safe alternative is available",
+    "Your trip needs a decision",
+    "The mobility evidence for this plan has expired. Generate fresh options before you continue.",
+    "A replan was attempted for ${recovery?.capability_code ?? \"the new requirement\"} and produced no feasible alternative. The current plan stays unverified.",
+    "A new hard requirement (${recovery?.capability_code ?? \"accessibility need\"}) means the current plan can no longer be confirmed as safe. Your existing plan has not been changed."
+   ],
+   "markers_found_in_shipped_bundle": [
+    "Trip evidence needs re-syncing",
+    "No safe alternative is available",
+    "Your trip needs a decision",
+    "The mobility evidence for this plan has expired. Generate fresh options before you continue."
+   ],
+   "verdict": "PRESENT_in_shipped_bundle",
+   "hit_ratio": "4/6"
+  },
+  "features/recovery/V14RecoveryTruthPanel.tsx": {
+   "markers_taken_from_tip_bytes": [
+    "No cost change",
+    "${value > 0 ? \"+\" : \"−\"}${formatMinorMoney(Math.abs(value), currency, \"en-US\")}",
+    "/api/v1/replans/${proposal.id}/accept",
+    "v14-ui-${proposal.id}",
+    "Recovery acceptance failed",
+    "Recovery accepted · the child PlanVersion is now authoritative."
+   ],
+   "markers_found_in_shipped_bundle": [
+    "No cost change",
+    "Recovery acceptance failed",
+    "Recovery accepted · the child PlanVersion is now authoritative."
+   ],
+   "verdict": "PRESENT_in_shipped_bundle",
+   "hit_ratio": "3/6"
+  },
+  "features/simulation/simulationAdapter.ts": {
+   "markers_taken_from_tip_bytes": [
+    "cityNexusApi",
+    "occurred_at",
+    "the request was invalid",
+    "HTTP ${error.status}",
+    "这台部署没有开模拟舞台（服务器要求 CITYNEXUS_DEMO_MODE=true）。它明确拒绝，并且说没有任何数据被删除。",
+    "This deployment is not a simulation stage (the server requires CITYNEXUS_DEMO_MODE=true). It refused and says nothing was deleted."
+   ],
+   "markers_found_in_shipped_bundle": [
+    "occurred_at",
+    "这台部署没有开模拟舞台（服务器要求 CITYNEXUS_DEMO_MODE=true）。它明确拒绝，并且说没有任何数据被删除。",
+    "This deployment is not a simulation stage (the server requires CITYNEXUS_DEMO_MODE=true). It refused and says nothing was deleted."
+   ],
+   "verdict": "PRESENT_in_shipped_bundle",
+   "hit_ratio": "3/6"
+  },
+  "features/stay/HotelsPanel.tsx": {
+   "markers_taken_from_tip_bytes": [
+    "/api/v1/journeys/${journeyId}/stays/offers/capture",
+    "/api/v1/journeys/${journeyId}/stay-options/${optionId}/select",
+    "这家住宿的入住/退房时间和你已确认的行程冲突，无法在不改动行程的情况下采用。换一家试试。",
+    "This stay's check-in / check-out windows clash with your confirmed itinerary, so it cannot be used without changing your trip. Try another one.",
+    "暂时无法选择这家住宿。",
+    "Could not choose this stay."
+   ],
+   "markers_found_in_shipped_bundle": [
+    "这家住宿的入住/退房时间和你已确认的行程冲突，无法在不改动行程的情况下采用。换一家试试。",
+    "This stay's check-in / check-out windows clash with your confirmed itinerary, so it cannot be used without changing your trip. Try another one.",
+    "暂时无法选择这家住宿。",
+    "Could not choose this stay."
+   ],
+   "verdict": "PRESENT_in_shipped_bundle",
+   "hit_ratio": "4/6"
+  },
+  "lib/inFlightWrites.ts": {
+   "markers_taken_from_tip_bytes": [
+    "as soon as it is safe"
+   ],
+   "markers_found_in_shipped_bundle": [],
+   "verdict": "marker_missed_NOT_proven_absent",
+   "hit_ratio": "0/1"
+  },
+  "lib/offlineJourney.ts": {
+   "markers_taken_from_tip_bytes": [
+    "citynexus-offline"
+   ],
+   "markers_found_in_shipped_bundle": [
+    "citynexus-offline"
+   ],
+   "verdict": "PRESENT_in_shipped_bundle",
+   "hit_ratio": "1/1"
+  },
+  "main.tsx": {
+   "markers_taken_from_tip_bytes": [
+    "react-dom/client",
+    "./lib/queryClient",
+    "./lib/money",
+    "./lib/inFlightWrites",
+    "./v10.css",
+    "./api/citynexus"
+   ],
+   "markers_found_in_shipped_bundle": [],
+   "verdict": "marker_missed_NOT_proven_absent",
+   "hit_ratio": "0/6"
+  }
+ },
+ "reading": {
+  "files_involved": 11,
+  "files_present_in_the_shipped_bundle": 9,
+  "marker_missed_never_reported_as_absent": [
+   "lib/inFlightWrites.ts",
+   "main.tsx"
+  ],
+  "why_absence_cannot_be_claimed": "main.tsx is in this bucket and main.tsx necessarily ships (it is the entry that mounts the app) - so a missed marker measures nothing about the bundle. Only the positive verdicts are used; the two misses are named so nobody reads them as 'not on the phone'.",
+  "files_not_measurable": [],
+  "shipped_files": [
+   "features/execution/LiveRecovery.tsx",
+   "features/notifications/PushCapabilityCard.tsx",
+   "features/planning/PlanComparison.tsx",
+   "features/planning/PlanWithAiSheet.tsx",
+   "features/recovery/RecoveryRequiredPanel.tsx",
+   "features/recovery/V14RecoveryTruthPanel.tsx",
+   "features/simulation/simulationAdapter.ts",
+   "features/stay/HotelsPanel.tsx",
+   "lib/offlineJourney.ts"
+  ],
+  "why_no_headline_leg_count": "the two instruments' anchors are not canonicalised onto call lines yet (her comment-line and blank-line anchors sit in this union next to my call-line ones, and two of her anchors duplicate two of my legs), so a leg COUNT from this union would be a made-up number. Per-file presence in the served bundle is anchor-independent, so that is what this receipt claims. Canonicalising the site list is exactly ORD-0315's job."
+ },
+ "caveats": [
+  "presence of a UI literal proves the module SHIPPED, not that a user can reach the press in the current demo state; reachability of a button still needs the phone-side run, which is HJ-P3's lane",
+  "this measures the origin and the proxy surface; the tunnel is a third surface and was checked for liveness separately at the same minute (evidence/cmdr-phone-chain-2039/health_r1.json)"
+ ],
+ "discipline": {
+  "surfaces_started_or_stopped": 0,
+  "databases_opened": 0,
+  "refs_pushed": 0,
+  "authoritative_branch_moved": 0,
+  "demo_reset_calls": 0,
+  "credential_values_printed": 0
+ },
+ "claim_kind": "deployment_determined",
+ "claimed_result": "9 of 11 files holding bare legs carry a literal that IS in the bundle the phone is serving now; 2 missed their markers and are explicitly NOT called absent; 0 had no usable marker",
+ "derived_result": null
+}
