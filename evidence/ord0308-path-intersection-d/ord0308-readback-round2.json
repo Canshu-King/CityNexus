@@ -1,0 +1,167 @@
+[
+ {
+  "name": "ord0308-A-x-B-not-run.out",
+  "localBytes": 531,
+  "localBlob": "c0bddf38a8f0f4a6700a135ccd24d71484d1b523",
+  "putAccepted": false,
+  "getHttpStatus": 200,
+  "remoteBytes": 531,
+  "remoteBlob": "c0bddf38a8f0f4a6700a135ccd24d71484d1b523",
+  "verdict": "BYTE_LEVEL_MATCH",
+  "put_stdout_tail": "already identical - nothing to push"
+ },
+ {
+  "name": "ord0308-B-raw-hunks.out",
+  "localBytes": 562,
+  "localBlob": "41a943c6fd1220f6a39fc9c7bc37c6d543ee52a9",
+  "putAccepted": false,
+  "getHttpStatus": 200,
+  "remoteBytes": 562,
+  "remoteBlob": "41a943c6fd1220f6a39fc9c7bc37c6d543ee52a9",
+  "verdict": "BYTE_LEVEL_MATCH",
+  "put_stdout_tail": "already identical - nothing to push"
+ },
+ {
+  "name": "ord0308-candidate-A-absence-ledger.out",
+  "localBytes": 1680,
+  "localBlob": "7fe21f36db3a197f7c7a9fc83adf133c7c6314bc",
+  "putAccepted": false,
+  "getHttpStatus": 200,
+  "remoteBytes": 1680,
+  "remoteBlob": "7fe21f36db3a197f7c7a9fc83adf133c7c6314bc",
+  "verdict": "BYTE_LEVEL_MATCH",
+  "put_stdout_tail": "already identical - nothing to push"
+ },
+ {
+  "name": "ord0308-mergetree-tip-x-B.out",
+  "localBytes": 185,
+  "localBlob": "1d48b31b17067508b77e939e4be8916d4190858b",
+  "putAccepted": false,
+  "getHttpStatus": 200,
+  "remoteBytes": 185,
+  "remoteBlob": "1d48b31b17067508b77e939e4be8916d4190858b",
+  "verdict": "BYTE_LEVEL_MATCH",
+  "put_stdout_tail": "already identical - nothing to push"
+ },
+ {
+  "name": "ord0308-path-intersection-rows.tsv",
+  "localBytes": 661,
+  "localBlob": "ef0e006e8b7574adf10db35f1b301c223d8dac77",
+  "putAccepted": false,
+  "getHttpStatus": 200,
+  "remoteBytes": 661,
+  "remoteBlob": "ef0e006e8b7574adf10db35f1b301c223d8dac77",
+  "verdict": "BYTE_LEVEL_MATCH",
+  "put_stdout_tail": "already identical - nothing to push"
+ },
+ {
+  "name": "ord0308-post-body.md",
+  "localBytes": 11726,
+  "localBlob": "2cc2e4cd76dbbe9b3126502095f15a9b129fe3de",
+  "putAccepted": true,
+  "getHttpStatus": 200,
+  "remoteBytes": 11726,
+  "remoteBlob": "2cc2e4cd76dbbe9b3126502095f15a9b129fe3de",
+  "verdict": "BYTE_LEVEL_MATCH",
+  "put_stdout_tail": "local bytes 11726 | remote size 11726 | sha1 2cc2e4cd76dbbe9b"
+ },
+ {
+  "name": "ord0308-q38r2-on-receipt.json",
+  "localBytes": 5038,
+  "localBlob": "f34ded81763d43532967e9a4fa54a3c0a60d1d4c",
+  "putAccepted": false,
+  "getHttpStatus": 200,
+  "remoteBytes": 5038,
+  "remoteBlob": "f34ded81763d43532967e9a4fa54a3c0a60d1d4c",
+  "verdict": "BYTE_LEVEL_MATCH",
+  "put_stdout_tail": "already identical - nothing to push"
+ },
+ {
+  "name": "ord0308-q43r3-on-post.json",
+  "localBytes": 582,
+  "localBlob": "34f3516d5df9af030a120df95cf81af40f500403",
+  "putAccepted": true,
+  "getHttpStatus": 200,
+  "remoteBytes": 582,
+  "remoteBlob": "34f3516d5df9af030a120df95cf81af40f500403",
+  "verdict": "BYTE_LEVEL_MATCH",
+  "put_stdout_tail": "local bytes 582 | remote size 582 | sha1 34f3516d5df9af03"
+ },
+ {
+  "name": "ord0308-q43r3-on-receipt.json",
+  "localBytes": 959,
+  "localBlob": "8b0c39dd3729a61463516fc6c390102bf1501a3b",
+  "putAccepted": false,
+  "getHttpStatus": 200,
+  "remoteBytes": 959,
+  "remoteBlob": "8b0c39dd3729a61463516fc6c390102bf1501a3b",
+  "verdict": "BYTE_LEVEL_MATCH",
+  "put_stdout_tail": "already identical - nothing to push"
+ },
+ {
+  "name": "ord0308-q43r4b-on-post.json",
+  "localBytes": 482,
+  "localBlob": "81cc86010a241844779a4e1e227597871ce17d00",
+  "putAccepted": true,
+  "getHttpStatus": 200,
+  "remoteBytes": 482,
+  "remoteBlob": "81cc86010a241844779a4e1e227597871ce17d00",
+  "verdict": "BYTE_LEVEL_MATCH",
+  "put_stdout_tail": "local bytes 482 | remote size 482 | sha1 81cc86010a241844"
+ },
+ {
+  "name": "ord0308-q43r4b-on-receipt.json",
+  "localBytes": 549,
+  "localBlob": "4b505f89008d212afb9d06b8e3d28802a9931955",
+  "putAccepted": false,
+  "getHttpStatus": 200,
+  "remoteBytes": 549,
+  "remoteBlob": "4b505f89008d212afb9d06b8e3d28802a9931955",
+  "verdict": "BYTE_LEVEL_MATCH",
+  "put_stdout_tail": "already identical - nothing to push"
+ },
+ {
+  "name": "ord0308-remote-heads.tsv",
+  "localBytes": 4668,
+  "localBlob": "d9ee7de7eb5dadeaf324ab19cf9516c94d2a4ade",
+  "putAccepted": false,
+  "getHttpStatus": 200,
+  "remoteBytes": 4668,
+  "remoteBlob": "d9ee7de7eb5dadeaf324ab19cf9516c94d2a4ade",
+  "verdict": "BYTE_LEVEL_MATCH",
+  "put_stdout_tail": "already identical - nothing to push"
+ },
+ {
+  "name": "ord0308-tip-x-B-conflict-section.out",
+  "localBytes": 140,
+  "localBlob": "93732fbb4eb3bdb534215e94bfc089245fc6748c",
+  "putAccepted": false,
+  "getHttpStatus": 200,
+  "remoteBytes": 140,
+  "remoteBlob": "93732fbb4eb3bdb534215e94bfc089245fc6748c",
+  "verdict": "BYTE_LEVEL_MATCH",
+  "put_stdout_tail": "already identical - nothing to push"
+ },
+ {
+  "name": "ord0308-triples.tsv",
+  "localBytes": 662,
+  "localBlob": "75712b808b730a5eba3f1bce54114d682f1b5717",
+  "putAccepted": false,
+  "getHttpStatus": 200,
+  "remoteBytes": 662,
+  "remoteBlob": "75712b808b730a5eba3f1bce54114d682f1b5717",
+  "verdict": "BYTE_LEVEL_MATCH",
+  "put_stdout_tail": "already identical - nothing to push"
+ },
+ {
+  "name": "ord0308_path_intersection_d_r1.json",
+  "localBytes": 12493,
+  "localBlob": "7a1a5eb7ebf7d8cde93792820b08c7157a48c3af",
+  "putAccepted": false,
+  "getHttpStatus": 200,
+  "remoteBytes": 12493,
+  "remoteBlob": "7a1a5eb7ebf7d8cde93792820b08c7157a48c3af",
+  "verdict": "BYTE_LEVEL_MATCH",
+  "put_stdout_tail": "already identical - nothing to push"
+ }
+]
