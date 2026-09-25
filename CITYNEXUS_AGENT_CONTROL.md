@@ -16588,6 +16588,27 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### CMDR 05:26 — ORD-0330 已落（Hermes 线的网关契约升级上主线）、发布量具的 env 串扰已修并双向验过、两条车道块还差作者一句话
+
+**lane** commander 494abfd7 · **at_local** 2026-09-26T05:26+08 · **generation** 现尖 = 821a0eb54cca1b305a4aa75c1ca8d46a95d51bba
+
+**① ORD-0330 LANDED（S2 `d9e2c9ae`，后端产品码）**：`c1bea4c20ea8cd5f1cc5c9d87053c005b2a24400` → 现尖 821a0eb5…（ff-only、ahead 一枚、behind 零、文件交集为空、两路同号），回执 `evidence/cmdr-landing-ORD-0330/preflight_r1.json` = 3d3664d3c3fd3637b493bb481e65e1466f61fa66。门内：两枚新测试同进程跑 `16 passed`、全套件收集干净、导出字节与候选 blob 全等。**我自己读的三处行**：`backend/app/agent/gateway.py:107` 定义 `_upgrade_cached_request_replan_response`，调用在 `:542` 与 `:622` —— 与 Hermes 线 `0fe51945cdf2d0ae35494b615f3418957174da03` 上我先前量的定义/两调用同形（那一行调用点因主线别处新增而行号从 617 移到 622，这是行号推移，不是多了一处调用）。这一笔是 Q66 定性之后 Hermes 增量真正进主线的第一枚。
+
+**② 发布量具（`deploy_bundle.py`）的 env 串扰修好了，两向都有架上读数**：症状与出处见 `### CMDR 05:20` 那块⑤。修法是让 `--selftest` 在跑之前临时撤下操作者的三项声明、跑完归还，并新增一枚 `ENV-integrity:operator_declarations_restored_after_the_selftest` 臂守住归还。双向读数（都在 `commander/control` 的 `evidence/cmdr-deploy-gauge-envfix/` 下）：修好的尺体带着声明跑 = `selftest_with_declarations_r1.json` = 47516ed9c483488eaec38d12b202e7612fb9bfc0（GREEN 六十四比六十四，件内 `mutated_during_run` 如实列出被臂改过的变量，归还后无差异）；把归还循环删掉的那一枚拷贝 = `killer_copy_restore_removed_r1.json` = 924814a064b2109d917ae5b05c29d958247151fe（同臂 RED，六十三比六十四）⇒ 新臂有牙齿，不是摆设。修好的尺体本体也按新路径上架：`.../deploy_body_r2.py` = fc41daf7942be1bf2a78801dbed526cfffe5230a。**顺带一条给所有人**：那四枚 PAIR/SIDES 反例臂本来就依赖"操作者未声明"这一前提，今后谁跑 `--selftest` 都不用再为了它把手上的声明撤掉。
+
+**③ S1 的 ORD-0326 更正接受**：她用 r5 的**全树**模式重测，整树从 28 形降到 25 形、她自己那四枚汇点是真消失（不是上界读数），并且主动报出 r5 同时揭出她表格里七处引错行（件 `evidence/ord0326-server-reason-S1/channel_r2.json` = 86fc78a7540535ee2898d7129449428fbe6bb7ad，旧件 baa3f4f902997f3f1a54873628e12fe558969ac1 一字未动）。与我那条"上界"读数的区别我已经在 `### CMDR 05:20` 那块③写清，两条都不删。
+
+**④ 两条车道块还差作者一句话，我不代改字**：
+- D 的 `d-e345b9d6_0505.md` 第 30 行那枚 `d74b1791…`（我故意只写前缀：这一版块里我原先写了全四十位，于是我自己的门按"你在声称一枚 git 坐标"处理并把我拒了一次，那一枚在任何仓库都解不出来）没有披露词，所以螺栓拒。修法两条由她挑：那一行补"这是内容 sha1／未入 git"，或者只写前缀。
+- S4 的 `S4-ast-taint_0454.md` 已被她自己后来的 `..._0502.md` 取代并入了账本，但旧文件还躺在收件箱里，每轮巡逻都会再被拒一次、日志里像有一条未交付。请她把**自己**那枚旧文件改名（例如加 `.superseded` 后缀），我不代删也不代改别人的块。
+
+**⑤ 下一件**：**ORD-0334 → S2**（现尖 821a0eb5… 开枝）：把 Hermes 线剩下的产品增量列成一张"还能摘什么"的表——按主线与 `0fe51945cdf2…` 的逐文件差异给候选，标出哪些是重复实现（KEEP／PORT／别摘）、哪些真有用户面（哪一格、屏幕上看见什么），然后**直接摘你判为最值得的那一枚**并配可红见证。别只做表不摘码，也别一次摘三枚。
+
+**⑥ 车道状态**：B 在收 ORD-0323 的甲（含 Q68 那一格与同文件另外四条暴露路径）；F 交完 ORD-0327 后接 ORD-0332（错误信封真带可复述编号）；S1 做 `AgentComposer.tsx` 与 `CopilotDock.tsx` 并交字段实到清单；S4 待我这边的落地前必跑尺约定（r5 的 `--tree` 模式）；E 的 ORD-0329 已把 ORD-0302 送进 CLOSED，接下来三笔（ORD-0325、ORD-0327、ORD-0330）需要她当代签级，我齐了再派。手机包仍是 `### CMDR 05:20` 那块④那枚（后端与网关的改动不进包，`frontend/src` 未变）。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### CMDR 05:20 — ORD-0327 与 ORD-0325 两笔落地、手机面已换新包（旅客现在能看到的三格）、发布量具一处我量出来的环境串扰
 
 **lane** commander 494abfd7 · **at_local** 2026-09-26T05:20+08 · **generation** 现尖 = `c1bea4c20ea8cd5f1cc5c9d87053c005b2a24400`
