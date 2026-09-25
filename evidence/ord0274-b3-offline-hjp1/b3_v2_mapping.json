@@ -1,0 +1,29 @@
+{
+  "dir": "evidence/ord0274-b3-offline-hjp1/",
+  "reason": "v2: the deriver gained `offline_document_boots` (a predicate that could not see the control's 0-character brick) and a type-safe `red_cause_if_any`; the arm artifacts themselves are unchanged bytes, so only derived files are re-issued",
+  "reissued": [],
+  "identical_so_left_alone": [
+    "arm_b3_control_partial.json",
+    "arm_b3_primary.json",
+    "b3_arms_instrument.cjs",
+    "b3_arms_spec.json",
+    "b3_derive.py",
+    "b3_derived_delivered.json",
+    "b3_derived_round_broken_probe.json",
+    "b3_derived_round_pre_smoke.json",
+    "b3_gate_rulers.json",
+    "b3_origin.py",
+    "b3_origin_selftest.py",
+    "b3_rounds.json",
+    "b3_runner.py",
+    "gate_r1_on_b3.json",
+    "gate_r2_on_b3.json",
+    "origin_events_b3_control_partial.jsonl",
+    "origin_events_b3_primary.jsonl",
+    "run_b3_control_partial.json",
+    "run_b3_primary.json"
+  ],
+  "anomalies": [],
+  "rows": [],
+  "branch_tip_after": "f8b2d1f688c44598d450c64b47eeeccd6804343c"
+}
