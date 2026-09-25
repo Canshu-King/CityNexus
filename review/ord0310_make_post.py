@@ -314,6 +314,10 @@ def main() -> int:
              f"两处都是收紧量具，不是把断言改松换绿。")
     if ERRATUM:
         er = json.loads((SC / ERRATUM).read_text(encoding="utf-8"))
+        refs_out = SC / "r4" / "ord0310-tools-ref-read-2.out"
+        refs_parsed = json.loads([l for l in refs_out.read_text(encoding="utf-8").splitlines()
+                                  if l.startswith("parsed:")][0][len("parsed:"):].strip())
+        TOOLS_R5 = refs_parsed["refs/heads/review/ord0310-tools-r5"]
         d1, d2, d3 = er["defects"][0], er["defects"][1], er["defects"][2]
         L.append("")
         L.append(
@@ -341,7 +345,16 @@ def main() -> int:
             f"`{er['corrected_artifacts']['q38_r2']['soft']}`；"
             f"被勘误那两件 0 覆盖 0 改名，仍在原位。机器可读 was/now："
             f"`{DIR}/ord0310-erratum-r1.json` blob `{blob((SC / 'ord0310-erratum-r1.json').read_bytes())}`。"
-            f"另有第四枚同类（`C6.premise_proof` 指错目录，上一段刚说过），我没再补块，写在这里。")
+            f"另有第四枚同类（`C6.premise_proof` 指错目录，上一段刚说过），我没再补块，写在这里。"
+            f" 勘误块自己也在 `## DELIVERIES` 里（`{DIR}/ord0310-ledger-block-erratum-r1.md` blob "
+            f"`{rows['ord0310-ledger-block-erratum-r1.md']['remote_blob']}`，两把尺判的是从账本回读出来的那份字节）。"
+            f"量具改动不塞进被量那一代：逐件字节冻结在 "
+            f"`refs/heads/review/ord0310-tools-r5` = `{TOOLS_R5}`，五枚 ref 同一趟 "
+            f"`git ls-remote` 的原样输出是 `{DIR}/ord0310-tools-ref-read-2.out` blob "
+            f"`{rows['ord0310-tools-ref-read-2.out']['remote_blob']}` —— 里面同时回读着 "
+            f"`refs/heads/review/ord0310-tools-r3b` = "
+            f"`{refs_parsed['refs/heads/review/ord0310-tools-r3b']}`，即勘误块引的那枚等式仍然成立；"
+            f"被量的 `{ref['ref']}` 仍是 `{ref['sha_read_back_over_https']}`。")
     L.append("")
     checked = {n: r for n, r in rows.items() if r["verdict"] != "PRIOR_GENERATION_NOT_RESTAGED"}
     prior = read.get("prior_generation_files_on_branch", [])
@@ -363,8 +376,7 @@ def main() -> int:
                  + (f"另有 {len(transport)} 件在**发出 PUT 之前**就死于链路 "
                     f"（`SSL: UNEXPECTED_EOF_WHILE_READING`，闸门 fail-closed），我按老规矩只手工重试"
                     f"那几件、并把它们记成传输异常而不是凭据问题：重试件全部 FRESH+MATCH，"
-                    f"日志 `{DIR}/{PUBLISH_LOG.split(',')[0].replace('log-', '')}` 与 "
-                    f"`{DIR}/{PUBLISH_LOG.split(',')[-1]}` 逐件写着。"
+                    f"日志逐件写着：" + "、".join(f"`{DIR}/{n}`" for n in PUBLISH_LOG.split(",")) + "。"
                     if transport else ""))
     else:
         L.append("0 覆盖不是我口述：每一件都走 `HJ-P3_evidence/gated_push.py` 那道同字节即跳过、"
@@ -417,7 +429,7 @@ def main() -> int:
                        ("claim_coordinate_check_r3.py", "q43r3")):
         proc = subprocess.run(["D:/moodle/CityNexus/.venv/Scripts/python.exe",
                                f"D:/moodle/_qoder_cmdr_ref_20260921/live_checks/{ruler}",
-                               "--text", str(OUT), "--out", str(SC / f"ord0310-{tag}-on-post.json")],
+                               "--text", str(OUT), "--out", str(SC / f"ord0310-{tag}-on-post{SUF}.json")],
                               capture_output=True, text=True, encoding="utf-8", errors="replace")
         line = next((l for l in proc.stdout.splitlines() if "overall" in l), proc.stdout[:200])
         print(f"{tag}: exit={proc.returncode} | {line}")
