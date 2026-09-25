@@ -1,0 +1,195 @@
+{
+ "cells": [
+  {
+   "derived_from": null,
+   "derived_from_key": null,
+   "id": "S1_K1_green_on_authoritative_line",
+   "own_hits": [],
+   "own_token_count": 15,
+   "unique_hits": [],
+   "verdict": "OK1",
+   "why": null,
+   "why_source": "absent",
+   "why_token_count": 0
+  },
+  {
+   "derived_from": null,
+   "derived_from_key": null,
+   "id": "S2_K1_red_when_guard_removed",
+   "own_hits": [],
+   "own_token_count": 23,
+   "unique_hits": [],
+   "verdict": "OK2",
+   "why": null,
+   "why_source": "absent",
+   "why_token_count": 0
+  },
+  {
+   "derived_from": null,
+   "derived_from_key": null,
+   "id": "S3_K2_positive_control_green_both_states",
+   "own_hits": [
+    "0",
+    "1",
+    "2",
+    "894c6d54e345dabdc4050a38f413fdaaa1a92748"
+   ],
+   "own_token_count": 27,
+   "unique_hits": [],
+   "verdict": "POSITIVE_CONTROL_GREEN_IN_BOTH_STATES",
+   "why": "载体文件 blob 894c6d54e345dabdc4050a38f413fdaaa1a92748 的 [0, 0] (守卫在位) 与 [0, 0] (守卫拆掉) 两侧 rc 全 0，两态汇总行分别是 '1 passed, 2 warnings in 1.60s' / '1 passed, 2 warnings in 1.90s'",
+   "why_source": "why",
+   "why_token_count": 4
+  },
+  {
+   "derived_from": null,
+   "derived_from_key": null,
+   "id": "S4_mutation_is_one_line_and_compiles",
+   "own_hits": [
+    "11416",
+    "11417",
+    "416ea4f210e967130710a900cdecd20e7a1b5eca",
+    "4770",
+    "7",
+    "784599fdb406b4242c2d202868b5eefd10861287",
+    "8"
+   ],
+   "own_token_count": 10,
+   "unique_hits": [],
+   "verdict": "SINGLE_HUNK_SINGLE_PREDICATE",
+   "why": "@@ -4770,8 +4770,7 @@ 这一枚 hunk 把行数从 11417 改成 11416，blob 416ea4f210e967130710a900cdecd20e7a1b5eca → 784599fdb406b4242c2d202868b5eefd10861287，py_compile_ok=True",
+   "why_source": "why",
+   "why_token_count": 7
+  },
+  {
+   "derived_from": null,
+   "derived_from_key": null,
+   "id": "S5_tree_restored_byte_exact",
+   "own_hits": [
+    "416ea4f210e967130710a900cdecd20e7a1b5eca"
+   ],
+   "own_token_count": 3,
+   "unique_hits": [],
+   "verdict": "TREE_RESTORED_BYTE_EXACT",
+   "why": "2 轮逐轮还原 [True, True]，末态 main.py 读回 416ea4f210e967130710a900cdecd20e7a1b5eca 与落地代 416ea4f210e967130710a900cdecd20e7a1b5eca 相等：True",
+   "why_source": "why",
+   "why_token_count": 3
+  },
+  {
+   "derived_from": null,
+   "derived_from_key": null,
+   "id": "S6_candidate_is_test_only_on_authoritative_parent",
+   "own_hits": [
+    "0",
+    "220",
+    "45b0a5e281cae9c37715173afd3ac5778f309ca7",
+    "c31ba195d94ae6ab0cd0a50e17470bebc7587f44",
+    "test_qoder_ord0287_k8_carrier.py"
+   ],
+   "own_token_count": 12,
+   "unique_hits": [],
+   "verdict": "TEST_ONLY_ON_AUTHORITATIVE_PARENT",
+   "why": "c31ba195d94ae6ab0cd0a50e17470bebc7587f44 的父是 45b0a5e281cae9c37715173afd3ac5778f309ca7（先读到的权威尖 45b0a5e281cae9c37715173afd3ac5778f309ca7），改动清单只有 backend/tests/test_qoder_ord0287_k8_carrier.py，numstat '220\\t0\\tbackend/tests/test_qoder_ord0287_k8_carrier.py'，产品路径 0 件",
+   "why_source": "why",
+   "why_token_count": 5
+  },
+  {
+   "derived_from": null,
+   "derived_from_key": null,
+   "id": "S7_frozen_tip_is_externally_readable",
+   "own_hits": [
+    "00",
+    "08",
+    "09",
+    "2026",
+    "38",
+    "51",
+    "c31ba195d94ae6ab0cd0a50e17470bebc7587f44"
+   ],
+   "own_token_count": 13,
+   "unique_hits": [],
+   "verdict": "FROZEN_TIP_EXTERNALLY_READABLE",
+   "why": "ls-remote 与 https 两条路都回 c31ba195d94ae6ab0cd0a50e17470bebc7587f44，与申报的 frozen_tip c31ba195d94ae6ab0cd0a50e17470bebc7587f44 相等：True（复校于 2026-09-25T07:51:38+08:00）",
+   "why_source": "why",
+   "why_token_count": 7
+  },
+  {
+   "derived_from": null,
+   "derived_from_key": null,
+   "id": "S8_verbatim_port_is_refused_at_import",
+   "own_hits": [
+    "0",
+    "1",
+    "2",
+    "416ea4f210e967130710a900cdecd20e7a1b5eca",
+    "ad13f4395e3405ce722ae8660836f3c2aaa29df2",
+    "f7f311b86a87b6462e3fe5a4cdef6f851d82dd50",
+    "test_qoder_ord0272_continuation.py"
+   ],
+   "own_token_count": 13,
+   "unique_hits": [],
+   "verdict": "VERBATIM_PORT_REFUSED_BY_IMPORT",
+   "why": "416ea4f210e967130710a900cdecd20e7a1b5eca 里 _fill_plan_generation_receipts 命中 0 处、ad13f4395e3405ce722ae8660836f3c2aaa29df2 里 2 处 ⇒ 原样 append 的 f7f311b86a87b6462e3fe5a4cdef6f851d82dd50 rc=1，同棵拷贝树同解释器下权威线自己的 tests/test_qoder_ord0272_continuation.py::test_G1_one_mi rc=0",
+   "why_source": "why",
+   "why_token_count": 7
+  },
+  {
+   "derived_from": null,
+   "derived_from_key": null,
+   "id": "S9_two_state_repeats_on_the_github_export",
+   "own_hits": [
+    "0",
+    "1",
+    "416ea4f210e967130710a900cdecd20e7a1b5eca",
+    "894c6d54e345dabdc4050a38f413fdaaa1a92748"
+   ],
+   "own_token_count": 33,
+   "unique_hits": [],
+   "verdict": "TWO_STATE_REPRODUCED_ON_EXPORT",
+   "why": "导出树 blob 416ea4f210e967130710a900cdecd20e7a1b5eca + 载体 894c6d54e345dabdc4050a38f413fdaaa1a92748：守卫在位 rc [0, 0]、拆掉 rc [1, 1]，跑完末态 416ea4f210e967130710a900cdecd20e7a1b5eca",
+   "why_source": "why",
+   "why_token_count": 4
+  }
+ ],
+ "cells_found": 9,
+ "exit": 3,
+ "findings": [
+  {
+   "cell": "S1_K1_green_on_authoritative_line",
+   "code": "MISSING_WHY",
+   "detail": "no why field, verdict too short to be prose, no paired map entry",
+   "hard": true
+  },
+  {
+   "cell": "S2_K1_red_when_guard_removed",
+   "code": "MISSING_WHY",
+   "detail": "no why field, verdict too short to be prose, no paired map entry",
+   "hard": true
+  }
+ ],
+ "hard_codes": [
+  "MISSING_WHY"
+ ],
+ "hard_count": 2,
+ "info_count": 0,
+ "meaning": "at least one cell cannot be read as its own evidence",
+ "overall": "Q38_GATE_RED_HARD",
+ "receipt": {
+  "blob_sha1": "aca2f9a83c8ba1c7b87c17d3d5105d089f11bcea",
+  "bytes": 12341,
+  "path": "D:/moodle/_qoder_f_run/o225_receipts/killer_missing_why_short_verdict.json"
+ },
+ "soft_codes": [],
+ "soft_count": 0,
+ "unique_reading_counts": {
+  "S1_K1_green_on_authoritative_line": 0,
+  "S2_K1_red_when_guard_removed": 0,
+  "S3_K2_positive_control_green_both_states": 1,
+  "S4_mutation_is_one_line_and_compiles": 6,
+  "S5_tree_restored_byte_exact": 1,
+  "S6_candidate_is_test_only_on_authoritative_parent": 3,
+  "S7_frozen_tip_is_externally_readable": 8,
+  "S8_verbatim_port_is_refused_at_import": 4,
+  "S9_two_state_repeats_on_the_github_export": 1
+ }
+}
