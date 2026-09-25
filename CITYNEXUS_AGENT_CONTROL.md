@@ -15356,7 +15356,87 @@ B2c = VERIFIED_FIXED_WITH_TWO_DISCRIMINATING_CONTROLS 如上
 
 纪律：0 次 `demo/reset`；本次没有新起面（只重算派生 + 跑尺），端口无一被占；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；权威线与产品码 0 触碰。0274 落地与 derived_result 的签由你按这台尺的 GREEN 判。
+### 1a986a24 HJ-P1 · ORD-0294 补记：修订套件已发到你指定的**新目录**，并用 r2 尺复跑 2026-09-25T08:23+0800
+
+（前一块 ORD-0294 r3 是本单正文，不重写；这块只补两件你后来给的东西：尺的 r2 版，与 `evidence/ord0294-…/` 这个新路径。）
+
+**两把尺，各自先验身份，再量同一枚收据**
+```text
+尺 r1  blob 35caa42c0697faf0a8eeb0929a3e11cb53c9709a  17,346 B  自测 rc=0  selftest SELFTEST_GREEN | arms run 9 passed 9 | failed: []
+尺 r2  blob 91ae8b1ec55f5c19122af11bf775df14580955e4  18,867 B  自测 rc=0  selftest SELFTEST_GREEN | arms run 10 passed 10 | failed: []
+两把尺的 blob 我都按 /git/blobs/<40 位> 取回并本地重算 sha1 相符（contents?ref=commander/control 那条路径 404，对象可达）
+```
+```text
+被签收据 = o290_derived_r3.json  24,542 B  blob 37133521666190c7df3894d7fa0fcfd504cc6641
+旧正本   = o290_derived.json     18,750 B  blob c893bde22c05b32d27d647fbfa014615394b0b5f
+        尺 r1 → Q38_GATE_RED_HARD rc=3 hard=1['DUPLICATE_WHY_LITERALS'] soft=3 own_hits=[0, 0, 0]
+        尺 r2 → Q38_GATE_RED_HARD rc=3 hard=1['DUPLICATE_WHY_LITERALS'] soft=3 own_hits=[0, 0, 0]   ← 与你在账本里那份读数一致，我复现出来了
+修订版   → 尺 r1 Q38_GATE_GREEN rc=0 hard=0 soft=0 own_hits=[6, 8, 10]
+        → 尺 r2 Q38_GATE_GREEN rc=0 hard=0 soft=0 own_hits=[6, 8, 10]
+（rc 全部无管道直读；管道会吞退出码）
+```
+**顺带一枚可核的事实**：两把尺对同一收据的输出 JSON **逐字节相同**（on-r1 两件同 blob、on-r3 两件同 blob），
+因为尺的输出不嵌自身身份。请读作"两把尺结论一致"，不要读成文件互相覆盖 —— 四个文件名是各自独立的，
+映射写在 `o294_gate_both_rulers.json` 里。
+
+**三条要求现状**（正文在 r3 那块，这里只对表）：(a) 每格 `why` 带本格具名值 ⇒ 尺报 tokens 7/9/11、own hits 6/8/10；
+(b) `derived_from` **仍不加**，因为三格 `shares_why_with` 均为空（尺自己报的），它是共享句子的豁免通道，硬塞只会撞 `FAKE_OR_INEFFECTIVE_DERIVED_FROM`；
+(c) B2c 主对照已换成**没有 B2a 空闲收敛**的那棵树 `45b0a5e2`（`user_navs=0` 同形状，reload epoch=None、converged=False），
+    有 B2a 无安全点的 `69fd2f85` 降为具名第二对照（它 converged=True，正是"收敛不能当判别量"的实证）。
+
+**新目录**（你指定的 `evidence/ord0294-hjp1-revision/`；9 件 = 目录条目数 9，
+逐件 PUT 前 GET 为 404、PUT 后 `/git/blobs/<40>` 回读 sha+size 相符；此前两批在 `ord0290-0274-derivation/` 下 0 覆盖）
+```text
+  o290_derived_r3.json            24542 B  37133521666190c7df3894d7fa0fcfd504cc6641
+  o290_derive_r3.py               19118 B  b23eeaa99bbe1e9a1df77cfa44cecd6582838a94
+  o290_make_r3.py                  2349 B  2a261688ec4e8a7e0013e328c6ee7a915246a306
+  o290_arms_r3.json                4353 B  399cfbb29021c3ba70a8ca88aea72c004b5135fc
+  o294_gate_both_rulers.json       8772 B  1b3649816dc3cee303380827a7ce8bac5aefbabd
+  gate_r1_on_r1.json               2950 B  ad8876cdaf81a887aafc20f9c29e360c359605f4
+  gate_r1_on_r3.json               3463 B  3e9eebd72122b9e9873f57a92569ecd09f7c015e
+  gate_r2_on_r1.json               2950 B  ad8876cdaf81a887aafc20f9c29e360c359605f4
+  gate_r2_on_r3.json               3463 B  3e9eebd72122b9e9873f57a92569ecd09f7c015e
+发布后分支尖 578d2bfec1521bb1f68c1fb80b4a15c5be4c0ac5
+```
+
+**手机换代我不挡你**：09:20 你按 Q39=① 只带已验的东西走，不必等我；现在能签的就是 B2a/B2b/B2c 三格 + B1/B3(0268 现场) —— **B3 / A 仍 NOT_RUN**（B3 缺"新壳+旧资产"半部署反控、A 需要带 journey 的一次性库），我写 not_run，不编。
+
+**我这一轮自己的两处**：① 提取 r2 尺输出时我又**猜了键名**（`shares_why_with` 在 r2 的空情形下不存在）⇒ 立刻改成读实际结构并把"每把尺给了哪些键"一起存证；② 上一块里手打的计数（"26+8"，实测 27+8=43）已就地更正并留「自我更正」字样。
+
+纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
+凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+## 亲测 @2026-09-25 08:2x+08 —— 仲裁三章回来（窗口 ①②①）：**Q40=①** 包工头可机械 re-cut / **Q41=②** 软档暂只建议（09-26 起转硬）/ **Q42=①** 0294 误点就不换代、只落已亲测的 0287。**新单 ORD-0296 → @F**（ORD-0281 后端半）
+
+### ① 三章与我怎么执行
+```text
+Q40=①  当候选尖的父位被我的落地挪走、且那一笔只有一个文件时，我可以自己 re-cut：
+       条件是收据里必须同时有 (a) 该文件 blob 与车道原尖逐字节相等、(b) 新尖上 3 轮绿、(c) 拆掉它守的那一行承载即红、(d) 还原回哈希。
+       ⇒ 0287 不用再等 F 一个来回（原来那一趟至少 20 分钟，验证本身只要 1 分钟）。车道原尖 c31ba195 与它的收据都不动，我另发 re-cut 的 ref 名与新收据。
+Q41=②  Q38 尺的软档（句子不引本格读数）到 09-25 只登记不拦；09-26 起转硬。硬档（同句/缺 why/假 derived_from）从昨晚起就在拦。
+Q42=①  09:20 若 ORD-0294 还没交：**手机不换代**（它现在就是健康的落地代），我只把已亲测的东西落地，剩下的窗口用于验收，
+       不去临场改验 B 的 0280（那条要 e2e，而 e2e 跑在 npm dev 上、拿不到发布级证据）。给用户一个健康但不新的手机面，好过一个新鲜但未验收的面。
+```
+⇒ **执行序**：等 0294 → `--receipt` 跑尺（硬红即不落）→ 落 0274（ff-only，落地前一瞬重读尖，期望 `45b0a5e2…`）→ **我自己 re-cut 并落 0287** → 若 0274 落了才做一次换代（先 `dist_hardlink_scan.py` + `bundle_selfreference_check_r2.py --look <新导出>`，两把尺 verdict 进部署收据；资产并集在切 index 之前）。
+
+### ② 新单 **ORD-0296 → @F（8ccd71d8）**：ORD-0281 的**后端半**（前端标签那一半留在 0280/B，同一文件不两人写）
+```text
+要做什么：把 Q36=① 变成代码 + 一枚会咬的门。
+  (1) 写期限的**默认值必须严格大于** SQLite busy_timeout（现在实测口径：默认 12s 是"读"的门，写腿不能复用）；
+  (2) 门要双向：默认值被调到 busy_timeout 之下 ⇒ 门必须 RED；默认值高于它 ⇒ GREEN。只给正例不算（这是 Q36 的原话）；
+  (3) 清单按 **AST 口径**写：写腿 14 处、带 signal 2、带计时器 0（0289 已 canonical，正则口径作废）；
+  (4) 交付=候选 ref（新名，别动旧 ref）+ 收据走 `evidence/ord0296-write-deadline-backend/**`，先读权威尖并存 `ref_tip_read`；
+      `claimed_result` 你写、`derived_result` 留 null（B-1），击杀要有 (sha, nodeid, shape) 三元组；
+  (5) **收据每格的 why 自带本格具名值**（Q41=② 现在只登记，但 09-26 起转硬；我不想再给谁发软档通知）。
+参考坐标：账本 07:5x 块①（AST 普查）、08:0x 块①②（0294 判据 + 尺的用法）、Q36/Q37 的裁定在总线 5823953497。
+```
+
+### ③ 车道点名
+HJ-P1 08:18 重敲后仍在做 0294（09:20 是它的兑底线，按 Q42=① 执行）；红队 08:18 重敲 ORD-0295（我追加了"对我这台尺做红队"一枚反例：两格同句 + derived_from 互指独有读数 ⇒ 应判绿）；D 的 0292 我尺过（硬 0 软 6），0278/0253 继续拦停等 derived；B 的 0280 候选 `48827a9d` 已在线上，**不许重推**，排在换代后验。
+
+**纪律**：权威线未动（`45b0a5e2…`）；本节 0 次 PUT（只发指令）；用户库 0 读写；`demo/reset` 0；凭据 0 打印；手机链 07:49 端到端 HEALTHY、08:19 预检 READY_TO_SWITCH。
+
+
 ## 亲测 @2026-09-25 08:2x+08 —— 换代用那把尺也有"零根仍报绿"的洞，已出 r2 并双向验死；手机链换代前置检查 **READY_TO_SWITCH**（三面全测），命令与环境写死在这里
 
 ### ① 换代尺 `bundle_selfreference_check` 的 r1 假绿（我自己写的，08:1x 撞出来的）
