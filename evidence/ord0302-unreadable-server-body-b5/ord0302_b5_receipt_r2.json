@@ -1,0 +1,968 @@
+{
+ "at": "2026-09-26T00:47:28+08:00",
+ "order": "ORD-0302 · b5 · Q64=① 白名单面板（五形臂+五枚反件在新基座重跑）",
+ "lane": "B c01d72a3",
+ "candidate_tip": "b6e1dd3295aafa3330cc9142a4475ac359eb7a3e",
+ "order_base": "2344145ce6342b6ac32ac4d0955c0f524d8c9320",
+ "previous_candidate": "4fc0de91c18a966f99fc40fcd7ce136a5e2b8936",
+ "branch": "review/0302-unreadable-server-body-b5",
+ "evidence_dir": "evidence/ord0302-unreadable-server-body-b5",
+ "matrix_verdict": "TEETH_AND_BASELINE",
+ "cells": [
+  {
+   "cell": "Q64 field gate on the same file at three refs",
+   "claimed_result": "MET",
+   "derived_result": null,
+   "why": "UI_EVIDENCE_EXPOSURE_GATE 用 r2 尺重测（尺 blob 608016f6a538097041554b76cfe3e9a4192f299c，与号令者贴的同一枚；上一版引的 r1 尺 0ba79e00738984ee06651219530e5a9d7fa897e3 已被 ORD-0319 证实在这一形上是瞎的）。同一个文件三个 ref：现尖 2344145ce6342b6ac32ac4d0955c0f524d8c9320 ⇒ EXPOSURE_SHAPE_FOUND 命中行 [1016]；上一枚 4fc0de91c18a966f99fc40fcd7ce136a5e2b8936 ⇒ EXPOSURE_SHAPE_FOUND 命中行 [187, 582, 1048, 1068]；本候选 b6e1dd3295aafa3330cc9142a4475ac359eb7a3e ⇒ EXPOSURE_SHAPE_FOUND 命中行 [1046]。b5 剩下的那条链与现尖同一条（helper→failureReason→渲染），正是 Q67 要裁的那格；b4 上多出的两类（RAW_BODY_TO_DOM / RAW_TEXT_INTERPOLATION）在 b5 的规则集里已经没有了。三向捕获件：uiexposure_r2_tip.json / uiexposure_r2_b4.json / uiexposure_r2_b5.json。",
+   "readings": {
+    "ruler_blob": "608016f6a538097041554b76cfe3e9a4192f299c",
+    "ruler_r1_blind_blob": "0ba79e00738984ee06651219530e5a9d7fa897e3",
+    "captures_r2": {
+     "tip": {
+      "sha": "2344145ce6342b6ac32ac4d0955c0f524d8c9320",
+      "verdict": "EXPOSURE_SHAPE_FOUND",
+      "hit_count": 1,
+      "lines": [
+       1016
+      ],
+      "rules": [
+       "UPSTREAM_TEXT_VIA_HELPER_TO_DOM"
+      ],
+      "artifact": "uiexposure_r2_tip_2344145c.json",
+      "artifact_blob": "bf83ec4633c00df10ba223dabf450626d71e5ba1"
+     },
+     "b4": {
+      "sha": "4fc0de91c18a966f99fc40fcd7ce136a5e2b8936",
+      "verdict": "EXPOSURE_SHAPE_FOUND",
+      "hit_count": 7,
+      "lines": [
+       187,
+       582,
+       1048,
+       1068
+      ],
+      "rules": [
+       "RAW_BODY_TO_DOM",
+       "RAW_TEXT_INTERPOLATION",
+       "UPSTREAM_TEXT_VIA_HELPER_TO_DOM"
+      ],
+      "artifact": "uiexposure_r2_b4_4fc0de91.json",
+      "artifact_blob": "5d024806a1b11735d732068585f9b2ae69692cf6"
+     },
+     "b5": {
+      "sha": "b6e1dd3295aafa3330cc9142a4475ac359eb7a3e",
+      "verdict": "EXPOSURE_SHAPE_FOUND",
+      "hit_count": 1,
+      "lines": [
+       1046
+      ],
+      "rules": [
+       "UPSTREAM_TEXT_VIA_HELPER_TO_DOM"
+      ],
+      "artifact": "uiexposure_r2_b5_b6e1dd32.json",
+      "artifact_blob": "45137e7d94d49a4ecb48480bd45d3e66f185fd6f"
+     }
+    },
+    "command": "python live_checks/ui_exposure_field_check_r2.py --ref <sha> --path frontend/src/features/planning/PlanWithAiSheet.tsx --out <f>",
+    "file": "frontend/src/features/planning/PlanWithAiSheet.tsx",
+    "retracted_sentence": "UI_EVIDENCE_EXPOSURE_GATE_V1 用号令者自己那把尺量（",
+    "measurement_scope": {
+     "scope": "lane B c01d72a3, vite dev face on this machine; no phone generation touched",
+     "generation": {
+      "order_base": "2344145ce6342b6ac32ac4d0955c0f524d8c9320",
+      "b4_re_cut": "4fc0de91c18a966f99fc40fcd7ce136a5e2b8936",
+      "this_candidate": "b6e1dd3295aafa3330cc9142a4475ac359eb7a3e"
+     },
+     "artifact": {
+      "tip": "uiexposure_tip_2344145c.json blob 3a868a0aac46eee2fb4b74c07ddf7f2dd3d79933",
+      "b4": "uiexposure_b4_4fc0de91.json blob 88f64c4e7c99926a872723bd548050d39ee26a62",
+      "b5": "uiexposure_b5_b6e1dd32.json blob 56a651408883864084d01e8411bc5dccb6906c87"
+     },
+     "measurement_method": "the commander's own gate tool, run three times against committed trees"
+    },
+    "artifact": "uiexposure_r2_b5_three_captures.json",
+    "capture_artifacts_published_as": [
+     "uiexposure_r2_tip.json",
+     "uiexposure_r2_b4.json",
+     "uiexposure_r2_b5.json"
+    ],
+    "named_values_the_why_uses": [
+     "0ba79e00738984ee06651219530e5a9d7fa897e3",
+     "1",
+     "1016",
+     "1046",
+     "1048",
+     "1068",
+     "187",
+     "2344145ce6342b6ac32ac4d0955c0f524d8c9320",
+     "45137e7d94d49a4ecb48480bd45d3e66f185fd6f",
+     "4fc0de91c18a966f99fc40fcd7ce136a5e2b8936",
+     "582",
+     "5d024806a1b11735d732068585f9b2ae69692cf6",
+     "608016f6a538097041554b76cfe3e9a4192f299c",
+     "7",
+     "EXPOSURE_SHAPE_FOUND",
+     "RAW_BODY_TO_DOM",
+     "RAW_TEXT_INTERPOLATION",
+     "UI_EVIDENCE_EXPOSURE_GATE_V1 用号令者自己那把尺量（",
+     "UPSTREAM_TEXT_VIA_HELPER_TO_DOM",
+     "b6e1dd3295aafa3330cc9142a4475ac359eb7a3e",
+     "bf83ec4633c00df10ba223dabf450626d71e5ba1",
+     "frontend/src/features/planning/PlanWithAiSheet.tsx",
+     "lane B c01d72a3, vite dev face on this machine; no phone generation touched",
+     "python live_checks/ui_exposure_field_check_r2.py --ref <sha> --path frontend/src/features/planning/PlanWithAiSheet.tsx --out <f>",
+     "the commander's own gate tool, run three times against committed trees",
+     "uiexposure_b4_4fc0de91.json blob 88f64c4e7c99926a872723bd548050d39ee26a62",
+     "uiexposure_b5_b6e1dd32.json blob 56a651408883864084d01e8411bc5dccb6906c87",
+     "uiexposure_r2_b4.json",
+     "uiexposure_r2_b4_4fc0de91.json",
+     "uiexposure_r2_b5.json",
+     "uiexposure_r2_b5_b6e1dd32.json",
+     "uiexposure_r2_b5_three_captures.json",
+     "uiexposure_r2_tip.json",
+     "uiexposure_r2_tip_2344145c.json",
+     "uiexposure_tip_2344145c.json blob 3a868a0aac46eee2fb4b74c07ddf7f2dd3d79933"
+    ]
+   }
+  },
+  {
+   "cell": "the panel shows only fields this device measured, per shape",
+   "claimed_result": "MET",
+   "derived_result": null,
+   "why": "X1 在六形上各判一遍（R19-R23 是号令者点名的五行，R24 是我为 Q64 加的凭据形 witness：[\"http_status\", \"content-type\", \"bytes\"] 里出现的字段名是 [\"bytes\", \"content-type\", \"http_status\"]（值与逐形判定都在该格 readings 里，我不在正文里复述数字）。面板里出现过的字段全集是 [\"bytes\", \"content-type\", \"http_status\"]，其中 body 键出现过=False；6 条「正文不得进 DOM」断言里 6 条通过，另 6 条「空正文仍要显示 bytes=0」防永真断言里 6 条通过（R24 喂的正文含 eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9 这串形似 JWT 的假凭据，屏上看不见它）。",
+   "readings": {
+    "shapes": [
+     "R19_④_200_empty_body",
+     "R20_④_200_json_empty_object",
+     "R21_④_200_json_array",
+     "R22_④_200_text_plain_payload",
+     "R23_④_200_mission_unusable_status",
+     "R24_Q64_200_credential_shaped_text"
+    ],
+    "shape_count": 6,
+    "fields_rendered_union": [
+     "bytes",
+     "content-type",
+     "http_status"
+    ],
+    "body_key_ever_rendered": [
+     false
+    ],
+    "leak_assertions": 6,
+    "leak_assertions_that_passed": 6,
+    "vacuity_guards": 6,
+    "vacuity_guards_that_passed": 6,
+    "credential_shaped_witness": [
+     "R24_Q64_200_credential_shaped_text"
+    ],
+    "run_id": "0302fix33353335",
+    "evidence_dir": "D:\\moodle\\_qoder_b_ord0274sw_20260924\\e2e_ord0302_0302fix33353335\\ord0302",
+    "measurement_scope": {
+     "scope": "lane B c01d72a3, vite dev face on this machine; no phone generation touched",
+     "generation": {
+      "order_base": "2344145ce6342b6ac32ac4d0955c0f524d8c9320",
+      "b4_re_cut": "4fc0de91c18a966f99fc40fcd7ce136a5e2b8936",
+      "this_candidate": "b6e1dd3295aafa3330cc9142a4475ac359eb7a3e"
+     },
+     "artifact": {
+      "matrix": "ord0302_arms_matrix.json",
+      "spec": "qoder-ord0302-unreadable-server-body.spec.ts"
+     },
+     "measurement_method": "Playwright drives the real sheet with forced 200 bodies; the panel's own textContent is parsed line by line into fields"
+    },
+    "R24_rendered": {
+     "http_status": "200",
+     "content-type": "text/plain; charset=utf-8",
+     "bytes": "82"
+    },
+    "R24_expected": {
+     "http_status": "200",
+     "content-type": "text/plain; charset=utf-8",
+     "bytes": "82"
+    },
+    "named_values_the_why_uses": [
+     "0302fix33353335",
+     "200",
+     "2344145ce6342b6ac32ac4d0955c0f524d8c9320",
+     "4fc0de91c18a966f99fc40fcd7ce136a5e2b8936",
+     "6",
+     "82",
+     "D:\\moodle\\_qoder_b_ord0274sw_20260924\\e2e_ord0302_0302fix33353335\\ord0302",
+     "False",
+     "Playwright drives the real sheet with forced 200 bodies; the panel's own textContent is parsed line by line into fields",
+     "R19_④_200_empty_body",
+     "R20_④_200_json_empty_object",
+     "R21_④_200_json_array",
+     "R22_④_200_text_plain_payload",
+     "R23_④_200_mission_unusable_status",
+     "R24_Q64_200_credential_shaped_text",
+     "b6e1dd3295aafa3330cc9142a4475ac359eb7a3e",
+     "bytes",
+     "content-type",
+     "http_status",
+     "lane B c01d72a3, vite dev face on this machine; no phone generation touched",
+     "ord0302_arms_matrix.json",
+     "qoder-ord0302-unreadable-server-body.spec.ts",
+     "text/plain; charset=utf-8"
+    ]
+   }
+  },
+  {
+   "cell": "arm N1 on the b5 generation",
+   "claimed_result": "MET",
+   "derived_result": null,
+   "why": "N1 在新基座 2344145ce6342b6ac32ac4d0955c0f524d8c9320 的这枚候选 b6e1dd3295aafa3330cc9142a4475ac359eb7a3e 上读 MET：屏上状态 \"HTTP_500\"、details 计数 null、承诺在文案里=null，轮次 0302fix33353335。",
+   "readings": {
+    "arm": "N1",
+    "status": "passed",
+    "run_id": "0302fix33353335",
+    "candidate": "b6e1dd3295aafa3330cc9142a4475ac359eb7a3e",
+    "base": "2344145ce6342b6ac32ac4d0955c0f524d8c9320",
+    "verdict": "MET",
+    "read": {
+     "status": "HTTP_500",
+     "details_count": null,
+     "promise_in_copy": null,
+     "reason": "agent/commands -> HTTP 500",
+     "label": "这台设备自己的读数（服务器没给句子）",
+     "origin": "device"
+    },
+    "measurement_scope": {
+     "scope": "lane B c01d72a3, vite dev face on this machine; no phone generation touched",
+     "generation": {
+      "order_base": "2344145ce6342b6ac32ac4d0955c0f524d8c9320",
+      "b4_re_cut": "4fc0de91c18a966f99fc40fcd7ce136a5e2b8936",
+      "this_candidate": "b6e1dd3295aafa3330cc9142a4475ac359eb7a3e"
+     },
+     "artifact": {
+      "matrix": "ord0302_arms_matrix.json"
+     },
+     "measurement_method": "Playwright, one evidence file per arm written in afterEach"
+    },
+    "digests_started_from": [
+     "e815cb7fa45f00b1"
+    ],
+    "named_values_the_why_uses": [
+     "0302fix33353335",
+     "2344145ce6342b6ac32ac4d0955c0f524d8c9320",
+     "4fc0de91c18a966f99fc40fcd7ce136a5e2b8936",
+     "HTTP_500",
+     "MET",
+     "N1",
+     "Playwright, one evidence file per arm written in afterEach",
+     "agent/commands -> HTTP 500",
+     "b6e1dd3295aafa3330cc9142a4475ac359eb7a3e",
+     "device",
+     "e815cb7fa45f00b1",
+     "lane B c01d72a3, vite dev face on this machine; no phone generation touched",
+     "ord0302_arms_matrix.json",
+     "passed",
+     "这台设备自己的读数（服务器没给句子）"
+    ]
+   }
+  },
+  {
+   "cell": "arm N2 on the b5 generation",
+   "claimed_result": "MET",
+   "derived_result": null,
+   "why": "N2 在新基座 2344145ce6342b6ac32ac4d0955c0f524d8c9320 的这枚候选 b6e1dd3295aafa3330cc9142a4475ac359eb7a3e 上读 MET：屏上状态 \"HTTP_422\"、details 计数 null、承诺在文案里=null，轮次 0302fix33353335。",
+   "readings": {
+    "arm": "N2",
+    "status": "passed",
+    "run_id": "0302fix33353335",
+    "candidate": "b6e1dd3295aafa3330cc9142a4475ac359eb7a3e",
+    "base": "2344145ce6342b6ac32ac4d0955c0f524d8c9320",
+    "verdict": "MET",
+    "read": {
+     "status": "HTTP_422",
+     "details_count": null,
+     "promise_in_copy": null,
+     "reason": "该目的地的候选目录尚未就绪，请稍后重试。",
+     "label": "服务器给出的原因",
+     "origin": "server"
+    },
+    "measurement_scope": {
+     "scope": "lane B c01d72a3, vite dev face on this machine; no phone generation touched",
+     "generation": {
+      "order_base": "2344145ce6342b6ac32ac4d0955c0f524d8c9320",
+      "b4_re_cut": "4fc0de91c18a966f99fc40fcd7ce136a5e2b8936",
+      "this_candidate": "b6e1dd3295aafa3330cc9142a4475ac359eb7a3e"
+     },
+     "artifact": {
+      "matrix": "ord0302_arms_matrix.json"
+     },
+     "measurement_method": "Playwright, one evidence file per arm written in afterEach"
+    },
+    "digests_started_from": [
+     "e815cb7fa45f00b1"
+    ],
+    "named_values_the_why_uses": [
+     "0302fix33353335",
+     "2344145ce6342b6ac32ac4d0955c0f524d8c9320",
+     "4fc0de91c18a966f99fc40fcd7ce136a5e2b8936",
+     "HTTP_422",
+     "MET",
+     "N2",
+     "Playwright, one evidence file per arm written in afterEach",
+     "b6e1dd3295aafa3330cc9142a4475ac359eb7a3e",
+     "e815cb7fa45f00b1",
+     "lane B c01d72a3, vite dev face on this machine; no phone generation touched",
+     "ord0302_arms_matrix.json",
+     "passed",
+     "server",
+     "服务器给出的原因",
+     "该目的地的候选目录尚未就绪，请稍后重试。"
+    ]
+   }
+  },
+  {
+   "cell": "arm N3 on the b5 generation",
+   "claimed_result": "MET",
+   "derived_result": null,
+   "why": "N3 在新基座 2344145ce6342b6ac32ac4d0955c0f524d8c9320 的这枚候选 b6e1dd3295aafa3330cc9142a4475ac359eb7a3e 上读 MET：屏上状态 \"NETWORK\"、details 计数 null、承诺在文案里=null，轮次 0302fix33353335。",
+   "readings": {
+    "arm": "N3",
+    "status": "passed",
+    "run_id": "0302fix33353335",
+    "candidate": "b6e1dd3295aafa3330cc9142a4475ac359eb7a3e",
+    "base": "2344145ce6342b6ac32ac4d0955c0f524d8c9320",
+    "verdict": "MET",
+    "read": {
+     "status": "NETWORK",
+     "details_count": null,
+     "promise_in_copy": null,
+     "reason": "no readable answer reached this device (network or origin)",
+     "label": "这台设备自己的读数（服务器没给句子）",
+     "origin": "device"
+    },
+    "measurement_scope": {
+     "scope": "lane B c01d72a3, vite dev face on this machine; no phone generation touched",
+     "generation": {
+      "order_base": "2344145ce6342b6ac32ac4d0955c0f524d8c9320",
+      "b4_re_cut": "4fc0de91c18a966f99fc40fcd7ce136a5e2b8936",
+      "this_candidate": "b6e1dd3295aafa3330cc9142a4475ac359eb7a3e"
+     },
+     "artifact": {
+      "matrix": "ord0302_arms_matrix.json"
+     },
+     "measurement_method": "Playwright, one evidence file per arm written in afterEach"
+    },
+    "digests_started_from": [
+     "e815cb7fa45f00b1"
+    ],
+    "named_values_the_why_uses": [
+     "0302fix33353335",
+     "2344145ce6342b6ac32ac4d0955c0f524d8c9320",
+     "4fc0de91c18a966f99fc40fcd7ce136a5e2b8936",
+     "MET",
+     "N3",
+     "NETWORK",
+     "Playwright, one evidence file per arm written in afterEach",
+     "b6e1dd3295aafa3330cc9142a4475ac359eb7a3e",
+     "device",
+     "e815cb7fa45f00b1",
+     "lane B c01d72a3, vite dev face on this machine; no phone generation touched",
+     "no readable answer reached this device (network or origin)",
+     "ord0302_arms_matrix.json",
+     "passed",
+     "这台设备自己的读数（服务器没给句子）"
+    ]
+   }
+  },
+  {
+   "cell": "arm X1 on the b5 generation",
+   "claimed_result": "MET",
+   "derived_result": null,
+   "why": "X1 在新基座 2344145ce6342b6ac32ac4d0955c0f524d8c9320 的这枚候选 b6e1dd3295aafa3330cc9142a4475ac359eb7a3e 上读 MET：屏上状态 \"NO_PLANS_PRODUCED\"、details 计数 1、承诺在文案里=true，轮次 0302fix33353335。",
+   "readings": {
+    "arm": "X1",
+    "status": "passed",
+    "run_id": "0302fix33353335",
+    "candidate": "b6e1dd3295aafa3330cc9142a4475ac359eb7a3e",
+    "base": "2344145ce6342b6ac32ac4d0955c0f524d8c9320",
+    "verdict": "MET",
+    "read": {
+     "status": "NO_PLANS_PRODUCED",
+     "details_count": 1,
+     "promise_in_copy": true,
+     "reason": "",
+     "label": null,
+     "origin": ""
+    },
+    "measurement_scope": {
+     "scope": "lane B c01d72a3, vite dev face on this machine; no phone generation touched",
+     "generation": {
+      "order_base": "2344145ce6342b6ac32ac4d0955c0f524d8c9320",
+      "b4_re_cut": "4fc0de91c18a966f99fc40fcd7ce136a5e2b8936",
+      "this_candidate": "b6e1dd3295aafa3330cc9142a4475ac359eb7a3e"
+     },
+     "artifact": {
+      "matrix": "ord0302_arms_matrix.json"
+     },
+     "measurement_method": "Playwright, one evidence file per arm written in afterEach"
+    },
+    "digests_started_from": [
+     "e815cb7fa45f00b1"
+    ],
+    "named_values_the_why_uses": [
+     "",
+     "0302fix33353335",
+     "1",
+     "2344145ce6342b6ac32ac4d0955c0f524d8c9320",
+     "4fc0de91c18a966f99fc40fcd7ce136a5e2b8936",
+     "MET",
+     "NO_PLANS_PRODUCED",
+     "Playwright, one evidence file per arm written in afterEach",
+     "True",
+     "X1",
+     "b6e1dd3295aafa3330cc9142a4475ac359eb7a3e",
+     "e815cb7fa45f00b1",
+     "lane B c01d72a3, vite dev face on this machine; no phone generation touched",
+     "ord0302_arms_matrix.json",
+     "passed"
+    ]
+   }
+  },
+  {
+   "cell": "arm X2 on the b5 generation",
+   "claimed_result": "MET",
+   "derived_result": null,
+   "why": "X2 在新基座 2344145ce6342b6ac32ac4d0955c0f524d8c9320 的这枚候选 b6e1dd3295aafa3330cc9142a4475ac359eb7a3e 上读 MET：屏上状态 \"BASELINE_UNAVAILABLE\"、details 计数 1、承诺在文案里=false，轮次 0302fix33353335。",
+   "readings": {
+    "arm": "X2",
+    "status": "passed",
+    "run_id": "0302fix33353335",
+    "candidate": "b6e1dd3295aafa3330cc9142a4475ac359eb7a3e",
+    "base": "2344145ce6342b6ac32ac4d0955c0f524d8c9320",
+    "verdict": "MET",
+    "read": {
+     "status": "BASELINE_UNAVAILABLE",
+     "details_count": 1,
+     "promise_in_copy": false,
+     "reason": "",
+     "label": "",
+     "origin": ""
+    },
+    "measurement_scope": {
+     "scope": "lane B c01d72a3, vite dev face on this machine; no phone generation touched",
+     "generation": {
+      "order_base": "2344145ce6342b6ac32ac4d0955c0f524d8c9320",
+      "b4_re_cut": "4fc0de91c18a966f99fc40fcd7ce136a5e2b8936",
+      "this_candidate": "b6e1dd3295aafa3330cc9142a4475ac359eb7a3e"
+     },
+     "artifact": {
+      "matrix": "ord0302_arms_matrix.json"
+     },
+     "measurement_method": "Playwright, one evidence file per arm written in afterEach"
+    },
+    "digests_started_from": [
+     "e815cb7fa45f00b1"
+    ],
+    "named_values_the_why_uses": [
+     "",
+     "0302fix33353335",
+     "1",
+     "2344145ce6342b6ac32ac4d0955c0f524d8c9320",
+     "4fc0de91c18a966f99fc40fcd7ce136a5e2b8936",
+     "BASELINE_UNAVAILABLE",
+     "False",
+     "MET",
+     "Playwright, one evidence file per arm written in afterEach",
+     "X2",
+     "b6e1dd3295aafa3330cc9142a4475ac359eb7a3e",
+     "e815cb7fa45f00b1",
+     "lane B c01d72a3, vite dev face on this machine; no phone generation touched",
+     "ord0302_arms_matrix.json",
+     "passed"
+    ]
+   }
+  },
+  {
+   "cell": "counter-arm ca_unsafe_read",
+   "claimed_result": "MET",
+   "derived_result": null,
+   "why": "反件 ca_unsafe_read 把 N1 那一格弄成 failed，其余四枚仍是 [\"passed\"]（digest e815cb7fa45f00b1 跑到 a72f9035bd1a25e6，报告 blob 5ca94aaf87b4b681b58efcec8f5bee56bfc2dbf4，源文件按字节还原=True）。",
+   "readings": {
+    "shape": "ca_unsafe_read",
+    "intended_arm": "N1",
+    "intended_status": "failed",
+    "other_arms_statuses": [
+     "passed"
+    ],
+    "meets_expectation": true,
+    "digest_before": "e815cb7fa45f00b1",
+    "digest_running": "a72f9035bd1a25e6",
+    "restored_byte_exact": true,
+    "run_id": "0302unr33353355",
+    "report_blob": "5ca94aaf87b4b681b58efcec8f5bee56bfc2dbf4",
+    "candidate": "b6e1dd3295aafa3330cc9142a4475ac359eb7a3e",
+    "base": "2344145ce6342b6ac32ac4d0955c0f524d8c9320",
+    "measurement_scope": {
+     "scope": "lane B c01d72a3, vite dev face on this machine; no phone generation touched",
+     "generation": {
+      "order_base": "2344145ce6342b6ac32ac4d0955c0f524d8c9320",
+      "b4_re_cut": "4fc0de91c18a966f99fc40fcd7ce136a5e2b8936",
+      "this_candidate": "b6e1dd3295aafa3330cc9142a4475ac359eb7a3e"
+     },
+     "artifact": {
+      "matrix": "ord0302_arms_matrix.json"
+     },
+     "measurement_method": "the same runner rewrites one anchored hunk, runs the suite, restores byte-exact in a finally"
+    },
+    "named_values_the_why_uses": [
+     "0302unr33353355",
+     "2344145ce6342b6ac32ac4d0955c0f524d8c9320",
+     "4fc0de91c18a966f99fc40fcd7ce136a5e2b8936",
+     "5ca94aaf87b4b681b58efcec8f5bee56bfc2dbf4",
+     "N1",
+     "True",
+     "a72f9035bd1a25e6",
+     "b6e1dd3295aafa3330cc9142a4475ac359eb7a3e",
+     "ca_unsafe_read",
+     "e815cb7fa45f00b1",
+     "failed",
+     "lane B c01d72a3, vite dev face on this machine; no phone generation touched",
+     "ord0302_arms_matrix.json",
+     "passed",
+     "the same runner rewrites one anchored hunk, runs the suite, restores byte-exact in a finally"
+    ]
+   }
+  },
+  {
+   "cell": "counter-arm ca_null_on_network",
+   "claimed_result": "MET",
+   "derived_result": null,
+   "why": "反件 ca_null_on_network 把 N3 那一格弄成 failed，其余四枚仍是 [\"passed\"]（digest e815cb7fa45f00b1 跑到 bd85d3d23d36cf3e，报告 blob 101747915c779802c01a20a0fd11b3006b4a0810，源文件按字节还原=True）。",
+   "readings": {
+    "shape": "ca_null_on_network",
+    "intended_arm": "N3",
+    "intended_status": "failed",
+    "other_arms_statuses": [
+     "passed"
+    ],
+    "meets_expectation": true,
+    "digest_before": "e815cb7fa45f00b1",
+    "digest_running": "bd85d3d23d36cf3e",
+    "restored_byte_exact": true,
+    "run_id": "0302nul33353414",
+    "report_blob": "101747915c779802c01a20a0fd11b3006b4a0810",
+    "candidate": "b6e1dd3295aafa3330cc9142a4475ac359eb7a3e",
+    "base": "2344145ce6342b6ac32ac4d0955c0f524d8c9320",
+    "measurement_scope": {
+     "scope": "lane B c01d72a3, vite dev face on this machine; no phone generation touched",
+     "generation": {
+      "order_base": "2344145ce6342b6ac32ac4d0955c0f524d8c9320",
+      "b4_re_cut": "4fc0de91c18a966f99fc40fcd7ce136a5e2b8936",
+      "this_candidate": "b6e1dd3295aafa3330cc9142a4475ac359eb7a3e"
+     },
+     "artifact": {
+      "matrix": "ord0302_arms_matrix.json"
+     },
+     "measurement_method": "the same runner rewrites one anchored hunk, runs the suite, restores byte-exact in a finally"
+    },
+    "named_values_the_why_uses": [
+     "0302nul33353414",
+     "101747915c779802c01a20a0fd11b3006b4a0810",
+     "2344145ce6342b6ac32ac4d0955c0f524d8c9320",
+     "4fc0de91c18a966f99fc40fcd7ce136a5e2b8936",
+     "N3",
+     "True",
+     "b6e1dd3295aafa3330cc9142a4475ac359eb7a3e",
+     "bd85d3d23d36cf3e",
+     "ca_null_on_network",
+     "e815cb7fa45f00b1",
+     "failed",
+     "lane B c01d72a3, vite dev face on this machine; no phone generation touched",
+     "ord0302_arms_matrix.json",
+     "passed",
+     "the same runner rewrites one anchored hunk, runs the suite, restores byte-exact in a finally"
+    ]
+   }
+  },
+  {
+   "cell": "counter-arm ca_x5_no_block",
+   "claimed_result": "MET",
+   "derived_result": null,
+   "why": "反件 ca_x5_no_block 把 X1 那一格弄成 failed，其余四枚仍是 [\"passed\"]（digest e815cb7fa45f00b1 跑到 a0080111e2863d7c，报告 blob f9edd443433eb10fc995cad8812f50d4faf94bf3，源文件按字节还原=True）。",
+   "readings": {
+    "shape": "ca_x5_no_block",
+    "intended_arm": "X1",
+    "intended_status": "failed",
+    "other_arms_statuses": [
+     "passed"
+    ],
+    "meets_expectation": true,
+    "digest_before": "e815cb7fa45f00b1",
+    "digest_running": "a0080111e2863d7c",
+    "restored_byte_exact": true,
+    "run_id": "0302xnb33353433",
+    "report_blob": "f9edd443433eb10fc995cad8812f50d4faf94bf3",
+    "candidate": "b6e1dd3295aafa3330cc9142a4475ac359eb7a3e",
+    "base": "2344145ce6342b6ac32ac4d0955c0f524d8c9320",
+    "measurement_scope": {
+     "scope": "lane B c01d72a3, vite dev face on this machine; no phone generation touched",
+     "generation": {
+      "order_base": "2344145ce6342b6ac32ac4d0955c0f524d8c9320",
+      "b4_re_cut": "4fc0de91c18a966f99fc40fcd7ce136a5e2b8936",
+      "this_candidate": "b6e1dd3295aafa3330cc9142a4475ac359eb7a3e"
+     },
+     "artifact": {
+      "matrix": "ord0302_arms_matrix.json"
+     },
+     "measurement_method": "the same runner rewrites one anchored hunk, runs the suite, restores byte-exact in a finally"
+    },
+    "named_values_the_why_uses": [
+     "0302xnb33353433",
+     "2344145ce6342b6ac32ac4d0955c0f524d8c9320",
+     "4fc0de91c18a966f99fc40fcd7ce136a5e2b8936",
+     "True",
+     "X1",
+     "a0080111e2863d7c",
+     "b6e1dd3295aafa3330cc9142a4475ac359eb7a3e",
+     "ca_x5_no_block",
+     "e815cb7fa45f00b1",
+     "f9edd443433eb10fc995cad8812f50d4faf94bf3",
+     "failed",
+     "lane B c01d72a3, vite dev face on this machine; no phone generation touched",
+     "ord0302_arms_matrix.json",
+     "passed",
+     "the same runner rewrites one anchored hunk, runs the suite, restores byte-exact in a finally"
+    ]
+   }
+  },
+  {
+   "cell": "counter-arm ca_x5_soft_promise",
+   "claimed_result": "MET",
+   "derived_result": null,
+   "why": "反件 ca_x5_soft_promise 把 X1 那一格弄成 failed，其余四枚仍是 [\"passed\"]（digest e815cb7fa45f00b1 跑到 d766f4e08042abcb，报告 blob a2a52adbaa8171ec521161bd9df0e8a6d26ae355，源文件按字节还原=True）。",
+   "readings": {
+    "shape": "ca_x5_soft_promise",
+    "intended_arm": "X1",
+    "intended_status": "failed",
+    "other_arms_statuses": [
+     "passed"
+    ],
+    "meets_expectation": true,
+    "digest_before": "e815cb7fa45f00b1",
+    "digest_running": "d766f4e08042abcb",
+    "restored_byte_exact": true,
+    "run_id": "0302xsp33353453",
+    "report_blob": "a2a52adbaa8171ec521161bd9df0e8a6d26ae355",
+    "candidate": "b6e1dd3295aafa3330cc9142a4475ac359eb7a3e",
+    "base": "2344145ce6342b6ac32ac4d0955c0f524d8c9320",
+    "measurement_scope": {
+     "scope": "lane B c01d72a3, vite dev face on this machine; no phone generation touched",
+     "generation": {
+      "order_base": "2344145ce6342b6ac32ac4d0955c0f524d8c9320",
+      "b4_re_cut": "4fc0de91c18a966f99fc40fcd7ce136a5e2b8936",
+      "this_candidate": "b6e1dd3295aafa3330cc9142a4475ac359eb7a3e"
+     },
+     "artifact": {
+      "matrix": "ord0302_arms_matrix.json"
+     },
+     "measurement_method": "the same runner rewrites one anchored hunk, runs the suite, restores byte-exact in a finally"
+    },
+    "named_values_the_why_uses": [
+     "0302xsp33353453",
+     "2344145ce6342b6ac32ac4d0955c0f524d8c9320",
+     "4fc0de91c18a966f99fc40fcd7ce136a5e2b8936",
+     "True",
+     "X1",
+     "a2a52adbaa8171ec521161bd9df0e8a6d26ae355",
+     "b6e1dd3295aafa3330cc9142a4475ac359eb7a3e",
+     "ca_x5_soft_promise",
+     "d766f4e08042abcb",
+     "e815cb7fa45f00b1",
+     "failed",
+     "lane B c01d72a3, vite dev face on this machine; no phone generation touched",
+     "ord0302_arms_matrix.json",
+     "passed",
+     "the same runner rewrites one anchored hunk, runs the suite, restores byte-exact in a finally"
+    ]
+   }
+  },
+  {
+   "cell": "counter-arm ca_q64_body_back",
+   "claimed_result": "MET",
+   "derived_result": null,
+   "why": "反件 ca_q64_body_back 把 X1 那一格弄成 failed，其余四枚仍是 [\"passed\"]（digest e815cb7fa45f00b1 跑到 8e178b87c08d3209，报告 blob 23c6a42b646ce3a0d4b0ec54b94bd015b5152066，源文件按字节还原=True）。",
+   "readings": {
+    "shape": "ca_q64_body_back",
+    "intended_arm": "X1",
+    "intended_status": "failed",
+    "other_arms_statuses": [
+     "passed"
+    ],
+    "meets_expectation": true,
+    "digest_before": "e815cb7fa45f00b1",
+    "digest_running": "8e178b87c08d3209",
+    "restored_byte_exact": true,
+    "run_id": "0302q64b33353512",
+    "report_blob": "23c6a42b646ce3a0d4b0ec54b94bd015b5152066",
+    "candidate": "b6e1dd3295aafa3330cc9142a4475ac359eb7a3e",
+    "base": "2344145ce6342b6ac32ac4d0955c0f524d8c9320",
+    "measurement_scope": {
+     "scope": "lane B c01d72a3, vite dev face on this machine; no phone generation touched",
+     "generation": {
+      "order_base": "2344145ce6342b6ac32ac4d0955c0f524d8c9320",
+      "b4_re_cut": "4fc0de91c18a966f99fc40fcd7ce136a5e2b8936",
+      "this_candidate": "b6e1dd3295aafa3330cc9142a4475ac359eb7a3e"
+     },
+     "artifact": {
+      "matrix": "ord0302_arms_matrix.json"
+     },
+     "measurement_method": "the same runner rewrites one anchored hunk, runs the suite, restores byte-exact in a finally"
+    },
+    "named_values_the_why_uses": [
+     "0302q64b33353512",
+     "2344145ce6342b6ac32ac4d0955c0f524d8c9320",
+     "23c6a42b646ce3a0d4b0ec54b94bd015b5152066",
+     "4fc0de91c18a966f99fc40fcd7ce136a5e2b8936",
+     "8e178b87c08d3209",
+     "True",
+     "X1",
+     "b6e1dd3295aafa3330cc9142a4475ac359eb7a3e",
+     "ca_q64_body_back",
+     "e815cb7fa45f00b1",
+     "failed",
+     "lane B c01d72a3, vite dev face on this machine; no phone generation touched",
+     "ord0302_arms_matrix.json",
+     "passed",
+     "the same runner rewrites one anchored hunk, runs the suite, restores byte-exact in a finally"
+    ]
+   }
+  },
+  {
+   "cell": "the residual: the card promises 原文 while Q64 forbids putting it anywhere",
+   "claimed_result": "DECLARED",
+   "derived_result": null,
+   "why": "两枚裁决在这里没有交集，我不自己拍板：Q53=① 说「渲染出来，别把句子改软」，Q64=① 说「上游正文不许进 DOM」。于是那 6 形（R19_④_200_empty_body、R20_④_200_json_empty_object、R21_④_200_json_array、R22_④_200_text_plain_payload、R23_④_200_mission_unusable_status、R24_Q64_200_credential_shaped_text）屏上仍然写着「原因原文在“技术详情”里」，块也在（details 计数 [1]），但块里此刻只有这台设备量到的 [\"bytes\", \"content-type\", \"http_status\"]，没有任何「原文」。承诺仍然指向一个存在但不含原文的块。要不要改那句卡片文案是仲裁的判断，我这一版没动它，也没拿它换绿。",
+   "readings": {
+    "shapes_promising_without_a_server_sentence": [
+     "R19_④_200_empty_body",
+     "R20_④_200_json_empty_object",
+     "R21_④_200_json_array",
+     "R22_④_200_text_plain_payload",
+     "R23_④_200_mission_unusable_status",
+     "R24_Q64_200_credential_shaped_text"
+    ],
+    "count": 6,
+    "details_count_on_those": [
+     1
+    ],
+    "fields_available_on_those": [
+     "bytes",
+     "content-type",
+     "http_status"
+    ],
+    "card_sentence_fragment": "原因原文在“技术详情”里",
+    "measurement_scope": {
+     "scope": "lane B c01d72a3, vite dev face on this machine; no phone generation touched",
+     "generation": {
+      "order_base": "2344145ce6342b6ac32ac4d0955c0f524d8c9320",
+      "b4_re_cut": "4fc0de91c18a966f99fc40fcd7ce136a5e2b8936",
+      "this_candidate": "b6e1dd3295aafa3330cc9142a4475ac359eb7a3e"
+     },
+     "artifact": {
+      "matrix": "ord0302_arms_matrix.json"
+     },
+     "measurement_method": "read from the rendered card <p> and the DOM field list, same run"
+    },
+    "run_id": "0302fix33353335",
+    "named_values_the_why_uses": [
+     "0302fix33353335",
+     "1",
+     "2344145ce6342b6ac32ac4d0955c0f524d8c9320",
+     "4fc0de91c18a966f99fc40fcd7ce136a5e2b8936",
+     "6",
+     "R19_④_200_empty_body",
+     "R20_④_200_json_empty_object",
+     "R21_④_200_json_array",
+     "R22_④_200_text_plain_payload",
+     "R23_④_200_mission_unusable_status",
+     "R24_Q64_200_credential_shaped_text",
+     "b6e1dd3295aafa3330cc9142a4475ac359eb7a3e",
+     "bytes",
+     "content-type",
+     "http_status",
+     "lane B c01d72a3, vite dev face on this machine; no phone generation touched",
+     "ord0302_arms_matrix.json",
+     "read from the rendered card <p> and the DOM field list, same run",
+     "原因原文在“技术详情”里"
+    ]
+   }
+  },
+  {
+   "cell": "what b5 changes and where it sits",
+   "claimed_result": "MET",
+   "derived_result": null,
+   "why": "候选 b6e1dd3295aafa3330cc9142a4475ac359eb7a3e 的父是 4fc0de91c18a966f99fc40fcd7ce136a5e2b8936（= 上一枚 4fc0de91c18a966f99fc40fcd7ce136a5e2b8936，它的第一个父才是号令者的尖 2344145ce6342b6ac32ac4d0955c0f524d8c9320），比尖多 8 枚提交、动 2 条路径，其中产品文件 1 枚：frontend/e2e/qoder-ord0302-unreadable-server-body.spec.ts, frontend/src/features/planning/PlanWithAiSheet.tsx。frontend/src/features/planning/PlanWithAiSheet.tsx 的 blob 从尖的 3bb6a39067a380c2f75629fd7562f0de8f5d2f2a 变成 fc4d6111dc013008b610a240aab096deebe2436f。`git merge-tree --write-tree 2344145ce6342b6ac32ac4d0955c0f524d8c9320 b6e1dd3295aafa3330cc9142a4475ac359eb7a3e` 退出 0、冲突段 []，所以这枚可以 ff-only。两枚 typecheck 配置在跑臂之前都是干净的，五枚臂起始摘要都等于提交后的那枚 [\"e815cb7fa45f00b1\"]。",
+   "readings": {
+    "candidate": "b6e1dd3295aafa3330cc9142a4475ac359eb7a3e",
+    "parent": "4fc0de91c18a966f99fc40fcd7ce136a5e2b8936",
+    "order_base": "2344145ce6342b6ac32ac4d0955c0f524d8c9320",
+    "branch": "review/0302-unreadable-server-body-b5",
+    "ls_remote": "b6e1dd3295aafa3330cc9142a4475ac359eb7a3e\trefs/heads/review/0302-unreadable-server-body-b5",
+    "base_is_ancestor": true,
+    "commits_over_base": 8,
+    "changed_paths": [
+     "frontend/e2e/qoder-ord0302-unreadable-server-body.spec.ts",
+     "frontend/src/features/planning/PlanWithAiSheet.tsx"
+    ],
+    "product_paths": [
+     "frontend/src/features/planning/PlanWithAiSheet.tsx"
+    ],
+    "sheet_blob": "fc4d6111dc013008b610a240aab096deebe2436f",
+    "spec_blob": "70b1df97308f48b606add160b63ceaee3d17ed9b",
+    "sheet_blob_at_base": "3bb6a39067a380c2f75629fd7562f0de8f5d2f2a",
+    "merge_tree_against_tip": {
+     "rc": 0,
+     "conflicts": [],
+     "predicted_tree": [
+      "9c018a011c6c4cefac4998e2f1887595091197b6"
+     ]
+    },
+    "arms_ran_on_these_bytes": [
+     "e815cb7fa45f00b1"
+    ],
+    "typecheck_configs": [
+     "tsconfig.check.json",
+     "tsconfig.typecheck.json"
+    ],
+    "measurement_scope": {
+     "scope": "lane B c01d72a3, vite dev face on this machine; no phone generation touched",
+     "generation": {
+      "order_base": "2344145ce6342b6ac32ac4d0955c0f524d8c9320",
+      "b4_re_cut": "4fc0de91c18a966f99fc40fcd7ce136a5e2b8936",
+      "this_candidate": "b6e1dd3295aafa3330cc9142a4475ac359eb7a3e"
+     },
+     "artifact": {
+      "matrix": "ord0302_arms_matrix.json"
+     },
+     "measurement_method": "git objects + ls-remote over https; the arms runner pinned the working-tree sha256 before every run"
+    },
+    "named_values_the_why_uses": [
+     "0",
+     "2344145ce6342b6ac32ac4d0955c0f524d8c9320",
+     "3bb6a39067a380c2f75629fd7562f0de8f5d2f2a",
+     "4fc0de91c18a966f99fc40fcd7ce136a5e2b8936",
+     "70b1df97308f48b606add160b63ceaee3d17ed9b",
+     "8",
+     "9c018a011c6c4cefac4998e2f1887595091197b6",
+     "True",
+     "b6e1dd3295aafa3330cc9142a4475ac359eb7a3e",
+     "b6e1dd3295aafa3330cc9142a4475ac359eb7a3e\trefs/heads/review/0302-unreadable-server-body-b5",
+     "e815cb7fa45f00b1",
+     "fc4d6111dc013008b610a240aab096deebe2436f",
+     "frontend/e2e/qoder-ord0302-unreadable-server-body.spec.ts",
+     "frontend/src/features/planning/PlanWithAiSheet.tsx",
+     "git objects + ls-remote over https; the arms runner pinned the working-tree sha256 before every run",
+     "lane B c01d72a3, vite dev face on this machine; no phone generation touched",
+     "ord0302_arms_matrix.json",
+     "review/0302-unreadable-server-body-b5",
+     "tsconfig.check.json",
+     "tsconfig.typecheck.json"
+    ]
+   }
+  }
+ ],
+ "standing_rule_applied": "MEASUREMENT_SCOPE_FIRST_V1：每格 readings 里带 scope/generation/artifact/measurement_method 四项",
+ "actions_by_me": {
+  "authority_ref_moves": 0,
+  "force_pushes": 0,
+  "published_files_edited": 0,
+  "ledger_written_directly": 0,
+  "demo_reset": 0,
+  "databases_touched": 0,
+  "mobile_generation_changes": 0
+ },
+ "not_closed_by_me": [
+  "X-5 的 verifier 与签级归红队（B-1）",
+  "部署代那一形归 ORD-0312（HJ-P3 量、红队派生）",
+  "发布级面（生产构建产物）按号令者口径排在 ORD-0312 之后",
+  "卡片那句「原因原文在技术详情里」在 Q64 之下如何措辞，等仲裁"
+ ],
+ "published": {
+  "index_after": "5b69cee459e2e30fb186fa08ce9b2e98fabd12ee",
+  "files": {
+   "ord0302_arms_matrix.json": {
+    "blob40": "e7d2f5e7c281ebaac4ff8f4152f2791f0799f72d",
+    "bytes": 123119,
+    "local_matches_remote": true
+   },
+   "uiexposure_b5_three_captures.json": {
+    "blob40": "f0d94b9314efd5a0b375459a70bec9be1e1a994c",
+    "bytes": 1448,
+    "local_matches_remote": true
+   },
+   "uiexposure_tip.json": {
+    "blob40": "3a868a0aac46eee2fb4b74c07ddf7f2dd3d79933",
+    "bytes": 1184,
+    "local_matches_remote": true
+   },
+   "uiexposure_b4.json": {
+    "blob40": "88f64c4e7c99926a872723bd548050d39ee26a62",
+    "bytes": 2505,
+    "local_matches_remote": true
+   },
+   "uiexposure_b5.json": {
+    "blob40": "56a651408883864084d01e8411bc5dccb6906c87",
+    "bytes": 1184,
+    "local_matches_remote": true
+   },
+   "ord0302_b5_q64_patch.py": {
+    "blob40": "36190aa2cddabaf9c5489e91c773872eca78ef89",
+    "bytes": 9412,
+    "local_matches_remote": true
+   },
+   "ord0302_run_arms_q64.py": {
+    "blob40": "f7a282eed06ab321ef6bbf821470b229dac876d9",
+    "bytes": 13239,
+    "local_matches_remote": true
+   },
+   "candidate_spec.ts": {
+    "blob40": "70b1df97308f48b606add160b63ceaee3d17ed9b",
+    "bytes": 22529,
+    "local_matches_remote": true
+   },
+   "candidate_sheet.tsx": {
+    "blob40": "8225299c6967f2fa78dfba715b86e19e37c990f0",
+    "bytes": 55521,
+    "local_matches_remote": true
+   }
+  },
+  "index_lists": 9,
+  "index_omits": [
+   "ord0302_index.json",
+   "ord0302_b5_receipt.json"
+  ]
+ },
+ "ruler_check": {
+  "pass_1": {
+   "rc": 0,
+   "headline": [
+    "cells 14 | overall Q38_GATE_GREEN | hard 0 [] | soft 0 []"
+   ],
+   "green": true
+  },
+  "pass_2_on_published_bytes": {
+   "rc": 0,
+   "headline": [
+    "cells 14 | overall Q38_GATE_GREEN | hard 0 [] | soft 0 []"
+   ],
+   "green": true
+  }
+ },
+ "correction": {
+  "wrong_sentence_published": "现尖 NO_EXPOSURE_SHAPE_FOUND 命中 0（r1 尺读出来的）",
+  "where_it_went": [
+   "receipt blob 781c75f1c05234baee6f24fb8d1936050e286863",
+   "ledger block b-c01d72a3_0048.md (refused at intake, never landed)",
+   "https://github.com/Canshu-King/CityNexus-Workspace/issues/1#issuecomment-5836553343 names this"
+  ],
+  "correct_reading": "r2 尺：现尖 1 命中（[1016]）、b4 [187, 582, 1048, 1068]、b5 [1046] ⇒ 可主张的是「b5 不新增 exposure 形状」，不是「尖是干净的」",
+  "cause": "我引的是尺 r1 的空白点而不是文件的空白点；尺被 E 的 ORD-0319 拓出盲区后号令者已换 r2",
+  "published_text_untouched": "r1 版收据与 0048 草稿一字不改，本件是新的文件名"
+ },
+ "edition": "r2"
+}
