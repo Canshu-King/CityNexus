@@ -1,0 +1,1428 @@
+{
+ "schema": "CNX_ORD0323_RECEIPT_R1",
+ "order": "ORD-0323",
+ "lane": "B c01d72a3",
+ "commander": "494abfd7",
+ "at_local": "2026-09-26T07:16:42+0800",
+ "measurement_scope_first": {
+  "scope": "lane B c01d72a3 本机 vite dev 面；手机代次未动；权威线未动",
+  "generation": {
+   "ordered_base": "9a669c8bec863fadf31d5158f4a1be66aec49f23",
+   "candidate": "499522db0903790c3eaba5837bf8e8e3764b7463",
+   "live_tip": "f45489c6d17f16973faad161618789237ac3814e",
+   "commits_on_branch": 13,
+   "gap_to_live_tip": 8
+  },
+  "artifacts": {
+   "arms_matrix": "evidence/ord0323-two-exposure-cells/ord0323_arms_matrix_r3.json",
+   "r3_readings": "evidence/ord0323-two-exposure-cells/ord0323_r3_readings_r2.json",
+   "instrument": "evidence/ord0323-two-exposure-cells/ord0323_run_arms.py",
+   "per_arm_evidence_count": 187
+  },
+  "measurement_method": "Playwright 真机面（每个形状一次全新 run id 与独立 sqlite 库）+ 号令者自己的 r3 图案尺 + git ls-remote/merge-tree 只读预测"
+ },
+ "revision": "r2",
+ "erratum_from_r1": {
+  "what": "r1 quoted five blob ids that I computed by re-hashing captured `git show` stdout; that capture strips the file's final newline, so those ids were sha1s of a truncated byte string and resolved in no repository. This revision quotes git's own blob ids (rev-parse). No cell's verdict, reading or wording changed for any other reason.",
+  "was_now": {
+   "spec@candidate": {
+    "r1_wrong": "5ad8f7a2ea848d4c6885e614420d6a5eb1016caf",
+    "r2_true": "c7bdadac30ce3182a6acd195a21f03a7430f9b83"
+   },
+   "ProductErrorBoundary@base": {
+    "r1_wrong": "bd4aeb91bb2b97915bf142dadb5d1c902d338269",
+    "r2_true": "9ebcd97969102e95bfecc1c78995570409dd0964"
+   },
+   "ProductErrorBoundary@candidate": {
+    "r1_wrong": "806af5c3d8c6c947af8bf9ec1a89179d9dca9ae4",
+    "r2_true": "e8073263167f1eac165441d633e808156914ca84"
+   },
+   "JourneyInboxWorkbench@base": {
+    "r1_wrong": "4bdfc24d2f8aab3df253d1dd633efa93be20ab3b",
+    "r2_true": "b4bdf4b809478ccadd7951895a39e966852620a8"
+   },
+   "JourneyInboxWorkbench@candidate": {
+    "r1_wrong": "cfe97f215df421640c986ea454a6b2ae6bdf0558",
+    "r2_true": "3ac7e6a7b575128721355b744c6487f5106524d8"
+   }
+  },
+  "superseded_file_left_untouched": "evidence/ord0323-two-exposure-cells/ord0323_receipt_r1.json"
+ },
+ "cells": [
+  {
+   "cell": "格一 ProductErrorBoundary.tsx 的两向断言",
+   "claimed_result": "MET",
+   "derived_result": null,
+   "why": "格一原样把接来的两样东西印在屏幕上：异常正文与组件帧。把尖上那份文件放回工作树、跑同一枚 N1，屏幕上量到 \"Cannot read properties of undefined (reading '\"，命中指针 [\"Cannot read\", \"JourneyInboxWorkbench\"]（帧里带 http:// 开头的源文件路径与行列号，来自这台设备的构建目录）。本候选 N1 得 passed，折子里只剩这台设备自己量的五项 'caught_at=2026-09-25T22:39:39.597Z\\nroute=/v8/bookings\\nfailures_c'，命中 []；同一趟 console 仍收到 1 条错误，屏幕外挂元素 [\"div#root\", \"script\"] —— 没有覆盖层替我把原文再印一遍。两向各配一枚反件：只把原文放回（字段仍全）N1 得 failed、命中 [\"Cannot read\"]、报错句 'Error: e2e/qoder-ord0323-two-exposure-cells.spec.ts :: N'；只拆字段（原文仍不在）N1 得 failed、命中 []、报错句 'Error: e2e/qoder-ord0323-two-exposure-cells.spec.ts :: N'。两枚反件都不许把 N2/N3 变红，矩阵逐条记着。",
+   "readings": {
+    "file": "frontend/src/components/ProductErrorBoundary.tsx",
+    "order_named_lines": "104-105",
+    "baseline_blob": "9ebcd97969102e95bfecc1c78995570409dd0964",
+    "candidate_blob": "e8073263167f1eac165441d633e808156914ca84",
+    "fixed_N1_status": "passed",
+    "fixed_fold_text": "caught_at=2026-09-25T22:39:39.597Z\nroute=/v8/bookings\nfailures_caught_here=1\nonline_at_this_device=yes\nfailure_text_rendered=no",
+    "fixed_leaks": [],
+    "fixed_console_error_count": 1,
+    "fixed_overlay_hosts": [
+     "div#root",
+     "script"
+    ],
+    "baseline_shape_leaks": [
+     "Cannot read",
+     "JourneyInboxWorkbench"
+    ],
+    "baseline_shape_fold_text": "Cannot read properties of undefined (reading 'length')\n\n    at JourneyInboxWorkbench (http://127.0.0.1:4481/src/features/inbox/JourneyInboxWorkbench.tsx:163:41)\n    at div (<anonymous>)\n    at div (<anonymous>)\n    at main (<anonymous>)\n    at div (<anonymous>)\n    at V8Experience (http://127.0.0.1:4481/src/app/V8Experience.tsx:297:29)\n    at ProductErrorBoundary (http://127.0.0.1:4481/src/components/ProductErrorBoundary.tsx:29:5)\n    at App (<anonymo",
+    "baseline_status": "failed",
+    "baseline_leaks": [
+     "Cannot read"
+    ],
+    "baseline_error_head": "Error: e2e/qoder-ord0323-two-exposure-cells.spec.ts :: N1 — the boundary is printing what it was handed again ([\"Cannot read\"]); the screen reads \"Something went wrong hereYour trip data has not been lost. You can retry this screen or go back to Today.Try againBack to TodayReload the appTechnical detailcaught_at=2026-09-25T22:40:23.544Z route=/v8/bookings failures_caught_here=1 online\" \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // deep equality\u001b[22m \u001b[32m- Expected - 1\u001b[39m \u001b[31m+ Received + 3\u001b[39m \u001b[32m- Array []\u001b[39m \u001b[31m+ Array [\u001b[39m \u001b[31m+ \"Cann",
+    "fields_gone_status": "failed",
+    "fields_gone_leaks": [],
+    "fields_gone_error_head": "Error: e2e/qoder-ord0323-two-exposure-cells.spec.ts :: N1 — the fold no longer states which screen failed; it reads \"failure_text_rendered=no\" \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m Expected: \u001b[32mtrue\u001b[39m Received: \u001b[31mfalse\u001b[39m",
+    "arms_matrix": "evidence/ord0323-two-exposure-cells/ord0323_arms_matrix_r3.json",
+    "evidence": [
+     "evidence/ord0323-two-exposure-cells/arm__r2_fixed__N1.json",
+     "evidence/ord0323-two-exposure-cells/arm__r2_cell1_baseline_sink__N1.json",
+     "evidence/ord0323-two-exposure-cells/arm__r2_cell1_leak_beside_fields__N1.json",
+     "evidence/ord0323-two-exposure-cells/arm__r2_cell1_fields_gone__N1.json"
+    ],
+    "named_values_the_why_uses": [
+     "1",
+     "104-105",
+     "9ebcd97969102e95bfecc1c78995570409dd0964",
+     "Cannot read",
+     "Cannot read properties of undefined (reading 'length')\n\n    at JourneyInboxWorkbench (http://127.0.0.1:4481/src/features/inbox/JourneyInboxWorkbench.tsx:163:41)\n    at div (<anonymous>)\n    at div (<anonymous>)\n    at main (<anonymous>)\n    at div (<anonymous>)\n    at V8Experience (http://127.0.0.1:4481/src/app/V8Experience.tsx:297:29)\n    at ProductErrorBoundary (http://127.0.0.1:4481/src/components/ProductErrorBoundary.tsx:29:5)\n    at App (<anonymo",
+     "Error: e2e/qoder-ord0323-two-exposure-cells.spec.ts :: N1 — the boundary is printing what it was handed again ([\"Cannot read\"]); the screen reads \"Something went wrong hereYour trip data has not been lost. You can retry this screen or go back to Today.Try againBack to TodayReload the appTechnical detailcaught_at=2026-09-25T22:40:23.544Z route=/v8/bookings failures_caught_here=1 online\" \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // deep equality\u001b[22m \u001b[32m- Expected - 1\u001b[39m \u001b[31m+ Received + 3\u001b[39m \u001b[32m- Array []\u001b[39m \u001b[31m+ Array [\u001b[39m \u001b[31m+ \"Cann",
+     "Error: e2e/qoder-ord0323-two-exposure-cells.spec.ts :: N1 — the fold no longer states which screen failed; it reads \"failure_text_rendered=no\" \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m Expected: \u001b[32mtrue\u001b[39m Received: \u001b[31mfalse\u001b[39m",
+     "JourneyInboxWorkbench",
+     "caught_at=2026-09-25T22:39:39.597Z\nroute=/v8/bookings\nfailures_caught_here=1\nonline_at_this_device=yes\nfailure_text_rendered=no",
+     "div#root",
+     "e8073263167f1eac165441d633e808156914ca84",
+     "evidence/ord0323-two-exposure-cells/arm__r2_cell1_baseline_sink__N1.json",
+     "evidence/ord0323-two-exposure-cells/arm__r2_cell1_fields_gone__N1.json",
+     "evidence/ord0323-two-exposure-cells/arm__r2_cell1_leak_beside_fields__N1.json",
+     "evidence/ord0323-two-exposure-cells/arm__r2_fixed__N1.json",
+     "evidence/ord0323-two-exposure-cells/ord0323_arms_matrix_r3.json",
+     "failed",
+     "frontend/src/components/ProductErrorBoundary.tsx",
+     "passed",
+     "script"
+    ]
+   }
+  },
+  {
+   "cell": "格二 JourneyInboxWorkbench.tsx 的两向断言（三个出屏口）",
+   "claimed_result": "MET",
+   "derived_result": null,
+   "why": "格二的原话出口在 :88：它把回复里的句子重铸成这条腿自己的话，再由 687 的状态行、691 的确认折、731 的待审警告三处印出来。把尖上那份文件放回工作树：N2 得 failed、屏幕量到 [\"memory_forbidden_token_9f3c the traveller's own words were refused\", \"inbox_forbidden_token_4b71 the review queue is not ready\"]，N3 屏幕量到 [\"confirm_forbidden_token_c258 the commitment was rejected\"] —— 三处出屏口都被这枚反件证实确实在用。本候选 N2/N3 都 passed，状态行读 '服务器自己报错了（HTTP 500）。这是它那边的问题，不是你填错了什么'、待审读 '待审清单读不出来： http_status=503 cont'、确认折读 '技术详情服务器自己报错了（HTTP 500）。这是它那边的问题，不是你填'，三处命中 []；允许字段两侧各自带着 500/503 与 application/json，且两条腿不许互换。只把原话加在设备句旁边（字段仍全）：N2/N3 得 passed/passed、命中 []；只拆字段（原话仍不在）：N2/N3 得 failed/failed、命中 []、报错句 'Error: e2e/qoder-ord0323-two-exposure-cells.spec.ts ' —— 两观测量各自可红，不互替。",
+   "readings": {
+    "file": "frontend/src/features/inbox/JourneyInboxWorkbench.tsx",
+    "order_named": ":88 与出屏口 687/691/731",
+    "baseline_blob": "b4bdf4b809478ccadd7951895a39e966852620a8",
+    "candidate_blob": "3ac7e6a7b575128721355b744c6487f5106524d8",
+    "fixed_N2_status": "passed",
+    "fixed_N3_status": "passed",
+    "fixed_message_text": "服务器自己报错了（HTTP 500）。这是它那边的问题，不是你填错了什么。可以重试；如果一直这样，稍后再来。",
+    "fixed_pending_text": "待审清单读不出来： http_status=503 content_type=application/json evidence=HTTP_RESPONSE 重读清单",
+    "fixed_fold_text": "技术详情服务器自己报错了（HTTP 500）。这是它那边的问题，不是你填错了什么。可以重试；如果一直这样，稍后再来。 · http_status=500 content_type=application/json evidence=HTTP_RESPONSE",
+    "fixed_leaks": [],
+    "baseline_shape_N2_status": "failed",
+    "baseline_shape_N2_leaks": [
+     "memory_forbidden_token_9f3c the traveller's own words were refused",
+     "inbox_forbidden_token_4b71 the review queue is not ready"
+    ],
+    "baseline_shape_N3_leaks": [
+     "confirm_forbidden_token_c258 the commitment was rejected"
+    ],
+    "baseline_N2_status": "passed",
+    "baseline_N3_status": "passed",
+    "baseline_N2_leaks": [],
+    "fields_blind_N2_status": "failed",
+    "fields_blind_N3_status": "failed",
+    "fields_blind_N2_leaks": [],
+    "fields_blind_N2_error_head": "Error: e2e/qoder-ord0323-two-exposure-cells.spec.ts :: N2 — the memory slot no longer states the status this device measured (文本提取失败。) \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m Expected: \u001b[32mtrue\u001b[39m Received: \u001b[31mfalse\u001b[39m",
+    "fields_blind_N3_error_head": "Error: e2e/qoder-ord0323-two-exposure-cells.spec.ts :: N3 — the confirmation fold no longer states what this device measured about the attempt (技术详情文本提取失败。 · http_status=none content_type=none evidence=none) \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m Expected: \u001b[32mtrue\u001b[39m Received: \u001b[31mfalse\u001b[39m",
+    "arms_matrix": "evidence/ord0323-two-exposure-cells/ord0323_arms_matrix_r3.json",
+    "evidence": [
+     "evidence/ord0323-two-exposure-cells/arm__r2_fixed__N2.json",
+     "evidence/ord0323-two-exposure-cells/arm__r2_fixed__N3.json",
+     "evidence/ord0323-two-exposure-cells/arm__r2_cell2_baseline_throw__N2.json",
+     "evidence/ord0323-two-exposure-cells/arm__r2_cell2_baseline_throw__N3.json",
+     "evidence/ord0323-two-exposure-cells/arm__r2_cell2_status_frozen__N2.json",
+     "evidence/ord0323-two-exposure-cells/arm__r2_cell2_status_frozen__N3.json",
+     "evidence/ord0323-two-exposure-cells/arm__r2_cell2_fields_blind__N2.json",
+     "evidence/ord0323-two-exposure-cells/arm__r2_cell2_fields_blind__N3.json"
+    ],
+    "named_values_the_why_uses": [
+     "3ac7e6a7b575128721355b744c6487f5106524d8",
+     ":88 与出屏口 687/691/731",
+     "Error: e2e/qoder-ord0323-two-exposure-cells.spec.ts :: N2 — the memory slot no longer states the status this device measured (文本提取失败。) \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m Expected: \u001b[32mtrue\u001b[39m Received: \u001b[31mfalse\u001b[39m",
+     "Error: e2e/qoder-ord0323-two-exposure-cells.spec.ts :: N3 — the confirmation fold no longer states what this device measured about the attempt (技术详情文本提取失败。 · http_status=none content_type=none evidence=none) \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m Expected: \u001b[32mtrue\u001b[39m Received: \u001b[31mfalse\u001b[39m",
+     "b4bdf4b809478ccadd7951895a39e966852620a8",
+     "confirm_forbidden_token_c258 the commitment was rejected",
+     "evidence/ord0323-two-exposure-cells/arm__r2_cell2_baseline_throw__N2.json",
+     "evidence/ord0323-two-exposure-cells/arm__r2_cell2_baseline_throw__N3.json",
+     "evidence/ord0323-two-exposure-cells/arm__r2_cell2_fields_blind__N2.json",
+     "evidence/ord0323-two-exposure-cells/arm__r2_cell2_fields_blind__N3.json",
+     "evidence/ord0323-two-exposure-cells/arm__r2_cell2_status_frozen__N2.json",
+     "evidence/ord0323-two-exposure-cells/arm__r2_cell2_status_frozen__N3.json",
+     "evidence/ord0323-two-exposure-cells/arm__r2_fixed__N2.json",
+     "evidence/ord0323-two-exposure-cells/arm__r2_fixed__N3.json",
+     "evidence/ord0323-two-exposure-cells/ord0323_arms_matrix_r3.json",
+     "failed",
+     "frontend/src/features/inbox/JourneyInboxWorkbench.tsx",
+     "inbox_forbidden_token_4b71 the review queue is not ready",
+     "memory_forbidden_token_9f3c the traveller's own words were refused",
+     "passed",
+     "待审清单读不出来： http_status=503 content_type=application/json evidence=HTTP_RESPONSE 重读清单",
+     "技术详情服务器自己报错了（HTTP 500）。这是它那边的问题，不是你填错了什么。可以重试；如果一直这样，稍后再来。 · http_status=500 content_type=application/json evidence=HTTP_RESPONSE",
+     "服务器自己报错了（HTTP 500）。这是它那边的问题，不是你填错了什么。可以重试；如果一直这样，稍后再来。"
+    ]
+   }
+  },
+  {
+   "cell": "要件③：r3 尺量我自己那一枚，改前/改后命中行",
+   "claimed_result": "MET",
+   "derived_result": null,
+   "why": "尺是他那把，逐位回验：本地 44e062e6ce9c7b5d97d78e09e432072da102292c 与他贴的 44e062e6ce9c7b5d97d78e09e432072da102292c 相同，自检 SELFTEST_PASS。同一枚文件在尖 9a669c8bec863fadf31d5158f4a1be66aec49f23 与候选 499522db0903790c3eaba5837bf8e8e3764b7463 上各跑一次：改前 11 命中、改后 1。按 (rule, file, snippet) 认形而不是认行号，消掉的形状是 [\"UPSTREAM_READ_DIRECT@ProductErrorBoundary.tsx:[104]\", \"RAW_TEXT_INTERPOLATION@JourneyInboxWorkbench.tsx:[691]\", \"UPSTREAM_READ_DIRECT@JourneyInboxWorkbench.tsx:[307, 317, 336, 386, 407, 435, 459, 517]\"] —— 正是他点名的两行；新增形状 []；改后仍报 1 类。尺只认图案，句子内容归 e2e 两向断言。",
+   "readings": {
+    "ruler_blob_commander": "44e062e6ce9c7b5d97d78e09e432072da102292c",
+    "ruler_blob_measured": "44e062e6ce9c7b5d97d78e09e432072da102292c",
+    "ruler_selftest": "SELFTEST_PASS",
+    "before": {
+     "verdict": "EXPOSURE_SHAPE_FOUND",
+     "hit_count": 11,
+     "hits": [
+      "RAW_TEXT_INTERPOLATION@JourneyInboxWorkbench.tsx:691",
+      "UPSTREAM_READ_DIRECT@JourneyInboxWorkbench.tsx:307",
+      "UPSTREAM_READ_DIRECT@JourneyInboxWorkbench.tsx:317",
+      "UPSTREAM_READ_DIRECT@JourneyInboxWorkbench.tsx:336",
+      "UPSTREAM_READ_DIRECT@JourneyInboxWorkbench.tsx:386",
+      "UPSTREAM_READ_DIRECT@JourneyInboxWorkbench.tsx:407",
+      "UPSTREAM_READ_DIRECT@JourneyInboxWorkbench.tsx:435",
+      "UPSTREAM_READ_DIRECT@JourneyInboxWorkbench.tsx:459",
+      "UPSTREAM_READ_DIRECT@JourneyInboxWorkbench.tsx:517",
+      "UPSTREAM_READ_DIRECT@ProductErrorBoundary.tsx:104",
+      "UPSTREAM_TEXT_VIA_HELPER_TO_DOM@PlanWithAiSheet.tsx:1046"
+     ]
+    },
+    "after": {
+     "verdict": "EXPOSURE_SHAPE_FOUND",
+     "hit_count": 1,
+     "hits": [
+      "UPSTREAM_TEXT_VIA_HELPER_TO_DOM@PlanWithAiSheet.tsx:1048"
+     ]
+    },
+    "shapes_gone": [
+     {
+      "rule": "UPSTREAM_READ_DIRECT",
+      "file": "ProductErrorBoundary.tsx",
+      "snippet": "{String(error?.message || error)}",
+      "lines_before": [
+       104
+      ]
+     },
+     {
+      "rule": "RAW_TEXT_INTERPOLATION",
+      "file": "JourneyInboxWorkbench.tsx",
+      "snippet": "<code>{rawDetail}</code>",
+      "lines_before": [
+       691
+      ]
+     },
+     {
+      "rule": "UPSTREAM_READ_DIRECT",
+      "file": "JourneyInboxWorkbench.tsx",
+      "snippet": "} catch (error) {",
+      "lines_before": [
+       307,
+       317,
+       336,
+       386,
+       407,
+       435,
+       459,
+       517
+      ]
+     }
+    ],
+    "shapes_new": [],
+    "renumbered": [
+     {
+      "rule": "UPSTREAM_TEXT_VIA_HELPER_TO_DOM",
+      "file": "PlanWithAiSheet.tsx",
+      "snippet": "<code data-testid=\"plan-ai-reason\">{result.failureReason.text}</code>",
+      "lines_before": [
+       1046
+      ],
+      "lines_after": [
+       1048
+      ],
+      "line_delta": [
+       2
+      ]
+     }
+    ],
+    "reading": "before 11 hit(s) -> after 1 hit(s); 3 shape(s) gone, 0 new, 1 unchanged shape occurrence(s) renumbered by [2] line(s)",
+    "cell1_after": [],
+    "candidate": "499522db0903790c3eaba5837bf8e8e3764b7463",
+    "base": "9a669c8bec863fadf31d5158f4a1be66aec49f23",
+    "artifact": "evidence/ord0323-two-exposure-cells/ord0323_r3_readings_r2.json",
+    "before_artifact": "evidence/ord0323-two-exposure-cells/r3_before_9a669c8b.json",
+    "after_artifact": "evidence/ord0323-two-exposure-cells/r3_after_candidate_r2.json",
+    "named_values_the_why_uses": [
+     "1",
+     "104",
+     "1046",
+     "1048",
+     "11",
+     "2",
+     "307",
+     "317",
+     "336",
+     "386",
+     "407",
+     "435",
+     "44e062e6ce9c7b5d97d78e09e432072da102292c",
+     "459",
+     "499522db0903790c3eaba5837bf8e8e3764b7463",
+     "517",
+     "691",
+     "9a669c8bec863fadf31d5158f4a1be66aec49f23",
+     "<code data-testid=\"plan-ai-reason\">{result.failureReason.text}</code>",
+     "<code>{rawDetail}</code>",
+     "EXPOSURE_SHAPE_FOUND",
+     "JourneyInboxWorkbench.tsx",
+     "PlanWithAiSheet.tsx",
+     "ProductErrorBoundary.tsx",
+     "RAW_TEXT_INTERPOLATION",
+     "RAW_TEXT_INTERPOLATION@JourneyInboxWorkbench.tsx:691",
+     "SELFTEST_PASS",
+     "UPSTREAM_READ_DIRECT",
+     "UPSTREAM_READ_DIRECT@JourneyInboxWorkbench.tsx:307",
+     "UPSTREAM_READ_DIRECT@JourneyInboxWorkbench.tsx:317",
+     "UPSTREAM_READ_DIRECT@JourneyInboxWorkbench.tsx:336",
+     "UPSTREAM_READ_DIRECT@JourneyInboxWorkbench.tsx:386",
+     "UPSTREAM_READ_DIRECT@JourneyInboxWorkbench.tsx:407",
+     "UPSTREAM_READ_DIRECT@JourneyInboxWorkbench.tsx:435",
+     "UPSTREAM_READ_DIRECT@JourneyInboxWorkbench.tsx:459",
+     "UPSTREAM_READ_DIRECT@JourneyInboxWorkbench.tsx:517",
+     "UPSTREAM_READ_DIRECT@ProductErrorBoundary.tsx:104",
+     "UPSTREAM_TEXT_VIA_HELPER_TO_DOM",
+     "UPSTREAM_TEXT_VIA_HELPER_TO_DOM@PlanWithAiSheet.tsx:1046",
+     "UPSTREAM_TEXT_VIA_HELPER_TO_DOM@PlanWithAiSheet.tsx:1048",
+     "before 11 hit(s) -> after 1 hit(s); 3 shape(s) gone, 0 new, 1 unchanged shape occurrence(s) renumbered by [2] line(s)",
+     "evidence/ord0323-two-exposure-cells/ord0323_r3_readings_r2.json",
+     "evidence/ord0323-two-exposure-cells/r3_after_candidate_r2.json",
+     "evidence/ord0323-two-exposure-cells/r3_before_9a669c8b.json",
+     "{String(error?.message || error)}",
+     "} catch (error) {"
+    ]
+   }
+  },
+  {
+   "cell": "要件①⑤：代次、分支与权威线",
+   "claimed_result": "MET",
+   "derived_result": null,
+   "why": "基线按他点名的那一枚现读 9a669c8bec863fadf31d5158f4a1be66aec49f23，候选 499522db0903790c3eaba5837bf8e8e3764b7463 在其上 13 笔；分支只开新名 review/0323-ten-cells-b，ls-remote 回读 499522db0903790c3eaba5837bf8e8e3764b7463，我这趟 push 命令里只出现这一枚 ref（[\"refs/heads/review/0323-ten-cells-b\"]），无 force。权威线 refs/heads/mirror/integration-frontend-apple-pass1 在我两次读取之间从 f45489c6d17f 走到 f45489c6d17f16973faad161618789237ac3814e（f45489c6 06:06 lane-S2 ORD-0336 (lane S2 d9e2c9ae): MCP server carries the three non-identity Hermes forms，不是我：那个 commit 的作者与标题记在 readings 里，里面没有我的候选），[] 一并列出。线与线的关系：我的基线是新尖的祖先，差 8 笔，那 128 个文件里前端 8 个，我那两格在两尖上的 blob 逐位相同（9ebcd97969102e95bfecc1c78995570409dd0964、b4bdf4b809478ccadd7951895a39e966852620a8），merge-tree 对新尖预测退出 0、冲突行 0。我没有自作主张换基座；要落到 f45489c6d17f16973faad161618789237ac3814e 只把这 13 笔平移，三枚 blob 不变，平移后我重跑整套反件再报数。",
+   "readings": {
+    "order_named_base": "9a669c8bec863fadf31d5158f4a1be66aec49f23",
+    "candidate": "499522db0903790c3eaba5837bf8e8e3764b7463",
+    "branch": "review/0323-ten-cells-b",
+    "remote_readback": "499522db0903790c3eaba5837bf8e8e3764b7463",
+    "commits_on_branch": 13,
+    "authority_ref_watched": "refs/heads/mirror/integration-frontend-apple-pass1",
+    "live_tip_now": "f45489c6d17f16973faad161618789237ac3814e",
+    "live_tip_meta": "f45489c6 06:06 lane-S2 ORD-0336 (lane S2 d9e2c9ae): MCP server carries the three non-identity Hermes forms",
+    "gap_commits": 8,
+    "tip_files_touched": 128,
+    "tip_frontend_files": 8,
+    "cell1_blob_at_both": {
+     "at_ordered_base": "9ebcd97969102e95bfecc1c78995570409dd0964",
+     "at_live_tip": "9ebcd97969102e95bfecc1c78995570409dd0964"
+    },
+    "cell2_blob_at_both": {
+     "at_ordered_base": "b4bdf4b809478ccadd7951895a39e966852620a8",
+     "at_live_tip": "b4bdf4b809478ccadd7951895a39e966852620a8"
+    },
+    "merge_tree": {
+     "rc": 0,
+     "predicted_tree": "f95b4871bd05838e258211025d9b7c9f0d74fe77",
+     "conflict_lines": 0
+    },
+    "refs_read_before_and_after": {
+     "before": {
+      "refs/heads/cmdr/land-ord0302-b5": "9a669c8bec863fadf31d5158f4a1be66aec49f23",
+      "refs/heads/commander/control": "26ed9e30679da50c7cbaf2a026d665b45dbfefb4",
+      "refs/heads/mirror/integration-frontend-apple-pass1": "f45489c6d17f16973faad161618789237ac3814e"
+     },
+     "after": {
+      "refs/heads/cmdr/land-ord0302-b5": "9a669c8bec863fadf31d5158f4a1be66aec49f23",
+      "refs/heads/commander/control": "26ed9e30679da50c7cbaf2a026d665b45dbfefb4",
+      "refs/heads/mirror/integration-frontend-apple-pass1": "f45489c6d17f16973faad161618789237ac3814e"
+     }
+    },
+    "moved_during_my_run": {},
+    "push_targets_only": [
+     "refs/heads/review/0323-ten-cells-b"
+    ],
+    "moves_are_mine": true,
+    "authority_ref_moves_by_me": 0,
+    "force_pushes_by_me": 0,
+    "named_values_the_why_uses": [
+     "0",
+     "128",
+     "13",
+     "26ed9e30679da50c7cbaf2a026d665b45dbfefb4",
+     "499522db0903790c3eaba5837bf8e8e3764b7463",
+     "8",
+     "9a669c8bec863fadf31d5158f4a1be66aec49f23",
+     "9ebcd97969102e95bfecc1c78995570409dd0964",
+     "True",
+     "b4bdf4b809478ccadd7951895a39e966852620a8",
+     "f45489c6 06:06 lane-S2 ORD-0336 (lane S2 d9e2c9ae): MCP server carries the three non-identity Hermes forms",
+     "f45489c6d17f16973faad161618789237ac3814e",
+     "f95b4871bd05838e258211025d9b7c9f0d74fe77",
+     "refs/heads/mirror/integration-frontend-apple-pass1",
+     "refs/heads/review/0323-ten-cells-b",
+     "review/0323-ten-cells-b"
+    ]
+   }
+  },
+  {
+   "cell": "要件④：没有靠改断言换绿、没有跳过",
+   "claimed_result": "MET",
+   "derived_result": null,
+   "why": "本单自己署名的提交 10 笔、动到 4 枚文件：[\"frontend/e2e/qoder-ord0323-two-exposure-cells.spec.ts\", \"frontend/src/components/ProductErrorBoundary.tsx\", \"frontend/src/features/inbox/JourneyInboxWorkbench.tsx\", \"frontend/src/features/planning/PlanWithAiSheet.tsx\"]；候选落在现尖上，所以「具名基线..候选」这段是 13 笔、116 枚文件与基线不同，其中不是我这单的 3 笔（[\"09dffbb70c15\", \"0f8b925facab\", \"65df31df96cf\"]）我不算进自己名下。我这 4 枚里既有 e2e 文件 1 枚（本单新 spec [\"frontend/e2e/qoder-ord0323-two-exposure-cells.spec.ts\"]），动到的既有 e2e 文件 0 枚；spec 里 skip/fixme 命中行 []（空集）；expect( 出现 44 次，spec blob c7bdadac30ce3182a6acd195a21f03a7430f9b83。第二笔提交只把开折子的定位器换成结构性定位并撤掉我加的 testid，目的是让尖上那份文件也能被同一枚臂量到（第一趟那格超时、一条读数都没有），不是把红改成绿；断言一条没减。",
+   "readings": {
+    "spec": "frontend/e2e/qoder-ord0323-two-exposure-cells.spec.ts",
+    "spec_blob": "c7bdadac30ce3182a6acd195a21f03a7430f9b83",
+    "expect_calls": 44,
+    "skip_or_fixme_lines": [],
+    "own_commits": [
+     "499522db0903",
+     "678c8edd6e15",
+     "670b80b82d30",
+     "784164582f6e",
+     "e9dbd2b7032e",
+     "0f1f3292160b",
+     "e6c402eb66f1",
+     "a0c146bb921e",
+     "ba7fc670991c",
+     "d842d2b8cd81"
+    ],
+    "own_commit_count": 10,
+    "own_file_count": 4,
+    "files_changed_by_this_order": [
+     "frontend/e2e/qoder-ord0323-two-exposure-cells.spec.ts",
+     "frontend/src/components/ProductErrorBoundary.tsx",
+     "frontend/src/features/inbox/JourneyInboxWorkbench.tsx",
+     "frontend/src/features/planning/PlanWithAiSheet.tsx"
+    ],
+    "commits_between_base_and_candidate": 13,
+    "files_differing_base_to_candidate": 116,
+    "commits_carried_by_the_base_not_mine": [
+     "09dffbb70c15",
+     "0f8b925facab",
+     "65df31df96cf"
+    ],
+    "pre_existing_e2e_touched": [],
+    "second_commit_reason": "第一趟 cell1_baseline_sink 里 N1 超时：那枚反件把整份文件换回尖上的版本，而我的臂用只有本候选才有的 data-testid 开折子。改成按结构开折，并把那个 testid 从产品改动里撤掉。",
+    "reporter_of_the_measured_run": "evidence/ord0323-two-exposure-cells/playwright_report__r2_fixed.json",
+    "named_values_the_why_uses": [
+     "09dffbb70c15",
+     "0f1f3292160b",
+     "0f8b925facab",
+     "10",
+     "116",
+     "13",
+     "4",
+     "44",
+     "499522db0903",
+     "65df31df96cf",
+     "670b80b82d30",
+     "678c8edd6e15",
+     "784164582f6e",
+     "a0c146bb921e",
+     "ba7fc670991c",
+     "c7bdadac30ce3182a6acd195a21f03a7430f9b83",
+     "d842d2b8cd81",
+     "e6c402eb66f1",
+     "e9dbd2b7032e",
+     "evidence/ord0323-two-exposure-cells/playwright_report__r2_fixed.json",
+     "frontend/e2e/qoder-ord0323-two-exposure-cells.spec.ts",
+     "frontend/src/components/ProductErrorBoundary.tsx",
+     "frontend/src/features/inbox/JourneyInboxWorkbench.tsx",
+     "frontend/src/features/planning/PlanWithAiSheet.tsx",
+     "第一趟 cell1_baseline_sink 里 N1 超时：那枚反件把整份文件换回尖上的版本，而我的臂用只有本候选才有的 data-testid 开折子。改成按结构开折，并把那个 testid 从产品改动里撤掉。"
+    ]
+   }
+  },
+  {
+   "cell": "要件③补测：取代 r3 的 r4（AST 汇绑定）在同一格上的前后读数",
+   "claimed_result": "MET",
+   "derived_result": null,
+   "why": "r4 的尺身我按 blob 认：eb262f59e54d5142ad0e8041704e751eac473ace 与 S4 上架的 eb262f59e54d5142ad0e8041704e751eac473ace 逐位相同，typescript 5.9.3，自检 SELFTEST_PASS 20/20。两代同一对文件各量一次：尖 9a669c8bec863fadf31d5158f4a1be66aec49f23 上报 7 形，全是我这两格里被点名的行（[\"UPSTREAM_EXCEPTION_TO_DOM@JourneyInboxWorkbench.tsx:687[jsx-text]\", \"UPSTREAM_EXCEPTION_TO_DOM@JourneyInboxWorkbench.tsx:691[jsx-text]\", \"UPSTREAM_EXCEPTION_TO_DOM@JourneyInboxWorkbench.tsx:731[jsx-text]\", \"UPSTREAM_EXCEPTION_TO_DOM@ProductErrorBoundary.tsx:104[jsx-text]\", \"UPSTREAM_EXCEPTION_TO_DOM@ProductErrorBoundary.tsx:105[jsx-text]\", \"UPSTREAM_TEXT_VIA_HELPER_TO_DOM@PlanWithAiSheet.tsx:1019[jsx-text]\", \"UPSTREAM_TEXT_VIA_HELPER_TO_DOM@PlanWithAiSheet.tsx:1046[jsx-text]\"]）；本候选 499522db0903790c3eaba5837bf8e8e3764b7463 上报 2 形，按文件分是 [{\"file\": \"JourneyInboxWorkbench.tsx\", \"lines_before\": [687, 691, 731], \"lines_after\": [], \"shift_if_same_count\": null}, {\"file\": \"PlanWithAiSheet.tsx\", \"lines_before\": [1019, 1046], \"lines_after\": [1021, 1048], \"shift_if_same_count\": 2}, {\"file\": \"ProductErrorBoundary.tsx\", \"lines_before\": [104, 105], \"lines_after\": [], \"shift_if_same_count\": null}] —— 格一从 2 形到 0 形，格二那三形还在，行号被我自己新增的 None 行推下去（{\"before\": [687, 691, 731], \"after\": []}）。r4 判的是流不是内容：一个汇只要可能被交给 `error.message`，它就报形，不论这句话里此刻装的是谁的词。所以这一格要么按 r4 关掉那八个 catch 站点（见下一格的方向请示），要么由 e2e 那两向断言判内容 —— 内容侧我的读数是 \"r4 decides by flow, not by content: a sink that can be handed `error.message` is reported no matter what this lane's own error now carries in it. Whi。",
+   "readings": {
+    "ruler_blob_published_by_S4": "eb262f59e54d5142ad0e8041704e751eac473ace",
+    "ruler_blob_measured_here": "eb262f59e54d5142ad0e8041704e751eac473ace",
+    "ruler_typescript": "5.9.3",
+    "ruler_selftest": "SELFTEST_PASS",
+    "selftest_assertions": "20/20",
+    "supersedes_r3": "44e062e6ce9c7b5d97d78e09e432072da102292c",
+    "before": {
+     "verdict": "EXPOSURE_SHAPE_FOUND",
+     "hit_count": 7,
+     "cells": [
+      "UPSTREAM_EXCEPTION_TO_DOM@JourneyInboxWorkbench.tsx:687[jsx-text]",
+      "UPSTREAM_EXCEPTION_TO_DOM@JourneyInboxWorkbench.tsx:691[jsx-text]",
+      "UPSTREAM_EXCEPTION_TO_DOM@JourneyInboxWorkbench.tsx:731[jsx-text]",
+      "UPSTREAM_EXCEPTION_TO_DOM@ProductErrorBoundary.tsx:104[jsx-text]",
+      "UPSTREAM_EXCEPTION_TO_DOM@ProductErrorBoundary.tsx:105[jsx-text]",
+      "UPSTREAM_TEXT_VIA_HELPER_TO_DOM@PlanWithAiSheet.tsx:1019[jsx-text]",
+      "UPSTREAM_TEXT_VIA_HELPER_TO_DOM@PlanWithAiSheet.tsx:1046[jsx-text]"
+     ],
+     "truncated": 0,
+     "files_failed": 0
+    },
+    "after": {
+     "verdict": "EXPOSURE_SHAPE_FOUND",
+     "hit_count": 2,
+     "cells": [
+      "UPSTREAM_TEXT_VIA_HELPER_TO_DOM@PlanWithAiSheet.tsx:1021[jsx-text]",
+      "UPSTREAM_TEXT_VIA_HELPER_TO_DOM@PlanWithAiSheet.tsx:1048[jsx-text]"
+     ],
+     "truncated": 0,
+     "files_failed": 0
+    },
+    "per_file_lines": [
+     {
+      "file": "JourneyInboxWorkbench.tsx",
+      "lines_before": [
+       687,
+       691,
+       731
+      ],
+      "lines_after": [],
+      "shift_if_same_count": null
+     },
+     {
+      "file": "PlanWithAiSheet.tsx",
+      "lines_before": [
+       1019,
+       1046
+      ],
+      "lines_after": [
+       1021,
+       1048
+      ],
+      "shift_if_same_count": 2
+     },
+     {
+      "file": "ProductErrorBoundary.tsx",
+      "lines_before": [
+       104,
+       105
+      ],
+      "lines_after": [],
+      "shift_if_same_count": null
+     }
+    ],
+    "traces_remaining": [
+     ":148 upstream read (body as { error?: Record<string, unknown> } | null)?.error off body -> :148 `error` = (body as { error?: Record<string, unknown> } | null)?.error -> :151 read off error through a computed key -> :151 `value` = error[key] -> :152 .trim(...) passes it on -> :152 .toUpperCase(...) passes it on -> :152 serverReasonCode() returns value.trim().toUpperCase() -> :664 interpolated into `BLOCKED:${serverReasonCode(unreadable) || `PLACES_HTTP_${placesResponse.statu... -> :663 state `result` written by setResult(...) -> :848 result.status was handed to statusCopy() as `status` -> :207 .toUpperCase(...) passes it on -> :207 `s` = (status || \"\").toUpperCase() -> :211 .slice(...) passes it on -> :211 `code` = s.slice(\"BLOCKED:\".length) -> :217 interpolated into `${known.zh}（服务器给的原因编号：${code}）` -> :213 statusCopy() returns { title: zh ? \"这次排不出方案：数据不够，不是你说的不对\" : \"No plan this time: the data is short, ... -> :848 `copy` = result ? statusCopy(result.status, zh, result.planCount ?? 0) : null -> :1021 rendered here",
+     ":164 upstream read (body as { detail?: unknown } | null)?.detail -> :164 `detail` = (body as { detail?: unknown } | null)?.detail -> :165 serverReasonSentence() returns detail -> :604 serverReasonSentence(body) was handed to failureNote() as `serverText` -> :192 failureNote() returns serverText ? { text: serverText, from: \"server\" } : { text: deviceText, from: ... -> :596 state `result` written by setResult(...) -> :1048 rendered here"
+    ],
+    "reading": "sink-bound shapes at the tip 7, at the candidate 2; by shape identity 2 cleared and 0 new; per file [{\"f\": \"JourneyInboxWorkbench.tsx\", \"before\": 3, \"after\": 0}, {\"f\": \"PlanWithAiSheet.tsx\", \"before\": 2, \"after\": 2}, {\"f\": \"ProductErrorBoundary.tsx\", \"before\": 2, \"after\": 0}]; depth-cut truncation 0",
+    "gone": [
+     "UPSTREAM_EXCEPTION_TO_DOM@JourneyInboxWorkbench.tsx:687[jsx-text]",
+     "UPSTREAM_EXCEPTION_TO_DOM@JourneyInboxWorkbench.tsx:691[jsx-text]",
+     "UPSTREAM_EXCEPTION_TO_DOM@JourneyInboxWorkbench.tsx:731[jsx-text]",
+     "UPSTREAM_EXCEPTION_TO_DOM@ProductErrorBoundary.tsx:104[jsx-text]",
+     "UPSTREAM_EXCEPTION_TO_DOM@ProductErrorBoundary.tsx:105[jsx-text]",
+     "UPSTREAM_TEXT_VIA_HELPER_TO_DOM@PlanWithAiSheet.tsx:1019[jsx-text]",
+     "UPSTREAM_TEXT_VIA_HELPER_TO_DOM@PlanWithAiSheet.tsx:1046[jsx-text]"
+    ],
+    "remaining": [
+     "UPSTREAM_TEXT_VIA_HELPER_TO_DOM@PlanWithAiSheet.tsx:1021[jsx-text]",
+     "UPSTREAM_TEXT_VIA_HELPER_TO_DOM@PlanWithAiSheet.tsx:1048[jsx-text]"
+    ],
+    "artifact": "evidence/ord0323-two-exposure-cells/ord0323_r4_readings_r2.json",
+    "before_artifact": "evidence/ord0323-two-exposure-cells/r4_before_9a669c8b.json",
+    "after_artifact": "evidence/ord0323-two-exposure-cells/r4_after_candidate_r2.json",
+    "generator": "evidence/ord0323-two-exposure-cells/ord0323_r4_readings_r2.py",
+    "named_values_the_why_uses": [
+     "0",
+     "1019",
+     "1021",
+     "104",
+     "1046",
+     "1048",
+     "105",
+     "2",
+     "20/20",
+     "44e062e6ce9c7b5d97d78e09e432072da102292c",
+     "5.9.3",
+     "687",
+     "691",
+     "7",
+     "731",
+     ":148 upstream read (body as { error?: Record<string, unknown> } | null)?.error off body -> :148 `error` = (body as { error?: Record<string, unknown> } | null)?.error -> :151 read off error through a computed key -> :151 `value` = error[key] -> :152 .trim(...) passes it on -> :152 .toUpperCase(...) passes it on -> :152 serverReasonCode() returns value.trim().toUpperCase() -> :664 interpolated into `BLOCKED:${serverReasonCode(unreadable) || `PLACES_HTTP_${placesResponse.statu... -> :663 state `result` written by setResult(...) -> :848 result.status was handed to statusCopy() as `status` -> :207 .toUpperCase(...) passes it on -> :207 `s` = (status || \"\").toUpperCase() -> :211 .slice(...) passes it on -> :211 `code` = s.slice(\"BLOCKED:\".length) -> :217 interpolated into `${known.zh}（服务器给的原因编号：${code}）` -> :213 statusCopy() returns { title: zh ? \"这次排不出方案：数据不够，不是你说的不对\" : \"No plan this time: the data is short, ... -> :848 `copy` = result ? statusCopy(result.status, zh, result.planCount ?? 0) : null -> :1021 rendered here",
+     ":164 upstream read (body as { detail?: unknown } | null)?.detail -> :164 `detail` = (body as { detail?: unknown } | null)?.detail -> :165 serverReasonSentence() returns detail -> :604 serverReasonSentence(body) was handed to failureNote() as `serverText` -> :192 failureNote() returns serverText ? { text: serverText, from: \"server\" } : { text: deviceText, from: ... -> :596 state `result` written by setResult(...) -> :1048 rendered here",
+     "EXPOSURE_SHAPE_FOUND",
+     "JourneyInboxWorkbench.tsx",
+     "PlanWithAiSheet.tsx",
+     "ProductErrorBoundary.tsx",
+     "SELFTEST_PASS",
+     "UPSTREAM_EXCEPTION_TO_DOM@JourneyInboxWorkbench.tsx:687[jsx-text]",
+     "UPSTREAM_EXCEPTION_TO_DOM@JourneyInboxWorkbench.tsx:691[jsx-text]",
+     "UPSTREAM_EXCEPTION_TO_DOM@JourneyInboxWorkbench.tsx:731[jsx-text]",
+     "UPSTREAM_EXCEPTION_TO_DOM@ProductErrorBoundary.tsx:104[jsx-text]",
+     "UPSTREAM_EXCEPTION_TO_DOM@ProductErrorBoundary.tsx:105[jsx-text]",
+     "UPSTREAM_TEXT_VIA_HELPER_TO_DOM@PlanWithAiSheet.tsx:1019[jsx-text]",
+     "UPSTREAM_TEXT_VIA_HELPER_TO_DOM@PlanWithAiSheet.tsx:1021[jsx-text]",
+     "UPSTREAM_TEXT_VIA_HELPER_TO_DOM@PlanWithAiSheet.tsx:1046[jsx-text]",
+     "UPSTREAM_TEXT_VIA_HELPER_TO_DOM@PlanWithAiSheet.tsx:1048[jsx-text]",
+     "eb262f59e54d5142ad0e8041704e751eac473ace",
+     "evidence/ord0323-two-exposure-cells/ord0323_r4_readings_r2.json",
+     "evidence/ord0323-two-exposure-cells/ord0323_r4_readings_r2.py",
+     "evidence/ord0323-two-exposure-cells/r4_after_candidate_r2.json",
+     "evidence/ord0323-two-exposure-cells/r4_before_9a669c8b.json",
+     "sink-bound shapes at the tip 7, at the candidate 2; by shape identity 2 cleared and 0 new; per file [{\"f\": \"JourneyInboxWorkbench.tsx\", \"before\": 3, \"after\": 0}, {\"f\": \"PlanWithAiSheet.tsx\", \"before\": 2, \"after\": 2}, {\"f\": \"ProductErrorBoundary.tsx\", \"before\": 2, \"after\": 0}]; depth-cut truncation 0"
+    ]
+   }
+  },
+  {
+   "cell": "要件②扩到 D 数出的九格（T05-T13）与 Q68 那一格：逐臂双向",
+   "claimed_result": "MET",
+   "derived_result": null,
+   "why": "D 的分桶把钱包那枚文件数成九格：{\"T05\": 691, \"T06\": 307, \"T07\": 317, \"T08\": 336, \"T09\": 386, \"T10\": 407, \"T11\": 435, \"T12\": 459, \"T13\": 517}（T05 是折子，T06-T13 是八个 catch 站点，锚点行与逐行依据在她件 36feb4ae91c61dcadecc117ed3a741ad46052210 的 rows）。第一趟我只闭了源头 :[88] 那一行（同一句在候选上现读 []），r4 仍报 3 形：汇接的还是 `error.message` 这条流，而被拒的回复也可能以 fetch 的 TypeError 或正文解析异常走进同一个汇。这一趟八个站点全部改走产品**已有**的通道（classifyReadFailure + copyFor 查表），没有一个站点把异常正文写进渲染态；机器位只放这台设备量到的 http_status / content_type / evidence kind。八条腿各一枚臂、各自一次全新状态码 {\"T06\": 502, \"T07\": 500, \"T08\": 503, \"T09\": 504, \"T10\": 507, \"T11\": 506, \"T12\": 509, \"T13\": 511}，逐臂读数：屏上有原话的腿 []、缺自己状态的腿 []、把别腿状态顶上的腿 []。归因单独钉一枚反件（所有机器位印成 503）：问 503 的腿 [\"T06\", \"T07\", \"T08\", \"T09\", \"T10\", \"T11\", \"T13\"] 照过，其余 [\"T12\"] 立刻红 —— 说不清自己是哪条请求的汇不算量到。Q68 那一格是另一枚尺（r4）看得见、r3 看不见的形：\"frontend/src/features/planning/PlanWithAiSheet.tsx\" 改前 :[155] 那行在服务器没给编号时退回 `detail.slice(0, 60).toUpperCase()`，把句子截断大写后塞进「服务器回的原因编号是 …」（同一行式在候选上现读 []）。两臂各判一半：给了真编号的卡片仍显示编号（True，读数 \"这次排不出方案：数据不够，不是你说的不对服务器回的原因编号是 ZZ_Q68_SERVER_CODE，这条我们还没有本地文案，所以不替你解释它——原话在\\\"技术详情\\\"里。技术详情服务器\"）；只给句子的卡片，编号位上没有句子（True），而句子仍在带标签的技术详情里（True / 标签在不在 True）。反件只把删掉的退回行放回去：Q68a passed 保持绿、Q68b failed 变红 —— 修的是「句子不许冒充编号」，不是「把那格清空」。",
+   "readings": {
+    "triage_artifact": "evidence/ord0320-triage-d/ord0320_triage_r2.json",
+    "triage_blob": "36feb4ae91c61dcadecc117ed3a741ad46052210",
+    "cells_named_by_D": {
+     "T05": 691,
+     "T06": 307,
+     "T07": 317,
+     "T08": 336,
+     "T09": 386,
+     "T10": 407,
+     "T11": 435,
+     "T12": 459,
+     "T13": 517
+    },
+    "file": "frontend/src/features/inbox/JourneyInboxWorkbench.tsx",
+    "blob_at_candidate_parent": "3ac7e6a7b575128721355b744c6487f5106524d8",
+    "blob_at_candidate": "3ac7e6a7b575128721355b744c6487f5106524d8",
+    "leg_keys": [
+     "T06",
+     "T07",
+     "T08",
+     "T09",
+     "T10",
+     "T11",
+     "T12",
+     "T13"
+    ],
+    "asked_status_per_leg": {
+     "T06": 502,
+     "T07": 500,
+     "T08": 503,
+     "T09": 504,
+     "T10": 507,
+     "T11": 506,
+     "T12": 509,
+     "T13": 511
+    },
+    "legs_with_a_needle_on_screen": [],
+    "legs_missing_their_own_status": [],
+    "legs_showing_another_leg_status": [],
+    "slot_texts": {
+     "T06": "服务器自己报错了（HTTP 502）。这是它那边的问题，不是你填错了什么。可以重试；如果一直这样，稍后再来。",
+     "T07": "服务器自己报错了（HTTP 500）。这是它那边的问题，不是你填错了什么。可以重试；如果一直这样，稍后再来。",
+     "T08": "待审清单读不出来： http_status=503 content_type=application/json evidence=HTTP_RESPONSE 重读清单",
+     "T09": "服务器自己报错了（HTTP 504）。这是它那边的问题，不是你填错了什么。可以重试；如果一直这样，稍后再来。",
+     "T10": "服务器自己报错了（HTTP 507）。这是它那边的问题，不是你填错了什么。可以重试；如果一直这样，稍后再来。",
+     "T11": "服务器自己报错了（HTTP 506）。这是它那边的问题，不是你填错了什么。可以重试；如果一直这样，稍后再来。",
+     "T12": "技术详情服务器自己报错了（HTTP 509）。这是它那边的问题，不是你填错了什么。可以重试；如果一直这样，稍后再来。 · http_status=509 content_type=application/json evidence=HTTP_RESPONSE",
+     "T13": "服务器自己报错了（HTTP 511）。这是它那边的问题，不是你填错了什么。可以重试；如果一直这样，稍后再来。"
+    },
+    "frozen_shape": {
+     "legs_still_green": [
+      "T06",
+      "T07",
+      "T08",
+      "T09",
+      "T10",
+      "T11",
+      "T13"
+     ],
+     "legs_reddened": [
+      "T12"
+     ],
+     "arm_status": {
+      "T06": "passed",
+      "T07": "passed",
+      "T08": "passed",
+      "T09": "passed",
+      "T10": "passed",
+      "T11": "passed",
+      "T12": "failed",
+      "T13": "passed"
+     }
+    },
+    "q68": {
+     "file": "frontend/src/features/planning/PlanWithAiSheet.tsx",
+     "code_arm_card": "这次排不出方案：数据不够，不是你说的不对服务器回的原因编号是 ZZ_Q68_SERVER_CODE，这条我们还没有本地文案，所以不替你解释它——原话在\"技术详情\"里。技术详情服务器给出的原因q68_forbidden_prose_行程过长无法在三日预算内排布这台设备自己量到的回读字段http_status=200 content-type=application/json bytes=108 照原话再试一次",
+     "code_in_card": true,
+     "prose_arm_code_slot": false,
+     "prose_arm_fold": "q68_forbidden_prose_行程过长无法在三日预算内排布",
+     "prose_arm_attributed": true,
+     "prose_arm_label": true,
+     "slot_back": {
+      "Q68a": "passed",
+      "Q68b": "failed"
+     },
+     "ruling": "Q68=「编号槽只准放编号」；句子按 Q67=① 留在带归因标签的技术详情里"
+    },
+    "named_source_lines": {
+     "cell2_origin_throw": {
+      "file": "frontend/src/features/inbox/JourneyInboxWorkbench.tsx",
+      "at_ordered_base": [
+       88
+      ],
+      "at_candidate": []
+     },
+     "q68_prose_into_code_slot": {
+      "file": "frontend/src/features/planning/PlanWithAiSheet.tsx",
+      "at_ordered_base": [
+       155
+      ],
+      "at_candidate": []
+     }
+    },
+    "arms_matrix": "evidence/ord0323-two-exposure-cells/ord0323_arms_matrix_r3.json",
+    "named_values_the_why_uses": [
+     "155",
+     "307",
+     "317",
+     "336",
+     "36feb4ae91c61dcadecc117ed3a741ad46052210",
+     "386",
+     "3ac7e6a7b575128721355b744c6487f5106524d8",
+     "407",
+     "435",
+     "459",
+     "500",
+     "502",
+     "503",
+     "504",
+     "506",
+     "507",
+     "509",
+     "511",
+     "517",
+     "691",
+     "88",
+     "False",
+     "Q68=「编号槽只准放编号」；句子按 Q67=① 留在带归因标签的技术详情里",
+     "T06",
+     "T07",
+     "T08",
+     "T09",
+     "T10",
+     "T11",
+     "T12",
+     "T13",
+     "True",
+     "evidence/ord0320-triage-d/ord0320_triage_r2.json",
+     "evidence/ord0323-two-exposure-cells/ord0323_arms_matrix_r3.json",
+     "failed",
+     "frontend/src/features/inbox/JourneyInboxWorkbench.tsx",
+     "frontend/src/features/planning/PlanWithAiSheet.tsx",
+     "passed",
+     "q68_forbidden_prose_行程过长无法在三日预算内排布",
+     "待审清单读不出来： http_status=503 content_type=application/json evidence=HTTP_RESPONSE 重读清单",
+     "技术详情服务器自己报错了（HTTP 509）。这是它那边的问题，不是你填错了什么。可以重试；如果一直这样，稍后再来。 · http_status=509 content_type=application/json evidence=HTTP_RESPONSE",
+     "服务器自己报错了（HTTP 500）。这是它那边的问题，不是你填错了什么。可以重试；如果一直这样，稍后再来。",
+     "服务器自己报错了（HTTP 502）。这是它那边的问题，不是你填错了什么。可以重试；如果一直这样，稍后再来。",
+     "服务器自己报错了（HTTP 504）。这是它那边的问题，不是你填错了什么。可以重试；如果一直这样，稍后再来。",
+     "服务器自己报错了（HTTP 506）。这是它那边的问题，不是你填错了什么。可以重试；如果一直这样，稍后再来。",
+     "服务器自己报错了（HTTP 507）。这是它那边的问题，不是你填错了什么。可以重试；如果一直这样，稍后再来。",
+     "服务器自己报错了（HTTP 511）。这是它那边的问题，不是你填错了什么。可以重试；如果一直这样，稍后再来。",
+     "这次排不出方案：数据不够，不是你说的不对服务器回的原因编号是 ZZ_Q68_SERVER_CODE，这条我们还没有本地文案，所以不替你解释它——原话在\"技术详情\"里。技术详情服务器给出的原因q68_forbidden_prose_行程过长无法在三日预算内排布这台设备自己量到的回读字段http_status=200 content-type=application/json bytes=108 照原话再试一次"
+    ]
+   }
+  },
+  {
+   "cell": "代次：两格候选、上一枚十格候选与本候选的字节关系",
+   "claimed_result": "MET",
+   "derived_result": null,
+   "why": "扩单要求基线现读。两格候选 e302e4c433712284a23c1c0ab11147fe105e1e22 挂在 review/0323-two-exposure-cells-b，架上回读 e302e4c433712284a23c1c0ab11147fe105e1e22，那枚 ref 我不移动也不 force（已发布坐标不重写）；十格候选重切到他当下的尖 678c8edd6e1511f1840f2384e310b94007837bd8（f45489c6 06:06 lane-S2 ORD-0336 (lane S2 d9e2c9ae): MCP server carries the three non-identity Hermes forms）之上 = 499522db0903790c3eaba5837bf8e8e3764b7463，分支新名 review/0323-ten-cells-b。逐枚说字节，不说空话：从两格候选到本候选，[{\"file\": \"frontend/src/components/ProductErrorBoundary.tsx\", \"identical\": true}, {\"file\": \"frontend/src/features/inbox/JourneyInboxWorkbench.tsx\", \"identical\": false}, {\"file\": \"frontend/e2e/qoder-ord0323-two-exposure-cells.spec.ts\", \"identical\": false}] —— 只有 `frontend/src/components/ProductErrorBoundary.tsx` 那枚逐位相同；格二那枚文件不同，是这趟按扩单把八个 catch 站点收进既有通道（就是要改的），spec 不同是这趟按 Q71 扩仪器；两格候选上的那些臂与读数不折算进本候选，本候选的矩阵、四把尺、e2e 全在 499522db0903790c3eaba5837bf8e8e3764b7463 上重跑。",
+   "readings": {
+    "ordered_base": "9a669c8bec863fadf31d5158f4a1be66aec49f23",
+    "prev_candidate": "e302e4c433712284a23c1c0ab11147fe105e1e22",
+    "prev_branch": "review/0323-two-exposure-cells-b",
+    "prev_remote_readback": "e302e4c433712284a23c1c0ab11147fe105e1e22",
+    "candidate": "499522db0903790c3eaba5837bf8e8e3764b7463",
+    "branch": "review/0323-ten-cells-b",
+    "candidate_parent": "678c8edd6e1511f1840f2384e310b94007837bd8",
+    "parent_meta": "f45489c6 06:06 lane-S2 ORD-0336 (lane S2 d9e2c9ae): MCP server carries the three non-identity Hermes forms",
+    "blob_rows_prev_two_cell_candidate_to_here": [
+     {
+      "file": "frontend/src/components/ProductErrorBoundary.tsx",
+      "at_prev_candidate": "e8073263167f1eac165441d633e808156914ca84",
+      "at_candidate": "e8073263167f1eac165441d633e808156914ca84",
+      "byte_identical": true
+     },
+     {
+      "file": "frontend/src/features/inbox/JourneyInboxWorkbench.tsx",
+      "at_prev_candidate": "4e4cd8e22927a032af69fb9ab0f24f862f3950dc",
+      "at_candidate": "3ac7e6a7b575128721355b744c6487f5106524d8",
+      "byte_identical": false
+     },
+     {
+      "file": "frontend/e2e/qoder-ord0323-two-exposure-cells.spec.ts",
+      "at_prev_candidate": "519aec1f432a363c881102d3768fda9b9b51ff84",
+      "at_candidate": "c7bdadac30ce3182a6acd195a21f03a7430f9b83",
+      "byte_identical": false
+     }
+    ],
+    "recut_same": {
+     "frontend/src/components/ProductErrorBoundary.tsx": true,
+     "frontend/src/features/inbox/JourneyInboxWorkbench.tsx": false,
+     "frontend/e2e/qoder-ord0323-two-exposure-cells.spec.ts": false
+    },
+    "force_pushes_by_me": 0,
+    "refs_created_by_me": [
+     "review/0323-two-exposure-cells-b",
+     "review/0323-ten-cells-b"
+    ],
+    "named_values_the_why_uses": [
+     "0",
+     "3ac7e6a7b575128721355b744c6487f5106524d8",
+     "499522db0903790c3eaba5837bf8e8e3764b7463",
+     "4e4cd8e22927a032af69fb9ab0f24f862f3950dc",
+     "519aec1f432a363c881102d3768fda9b9b51ff84",
+     "678c8edd6e1511f1840f2384e310b94007837bd8",
+     "9a669c8bec863fadf31d5158f4a1be66aec49f23",
+     "False",
+     "True",
+     "c7bdadac30ce3182a6acd195a21f03a7430f9b83",
+     "e302e4c433712284a23c1c0ab11147fe105e1e22",
+     "e8073263167f1eac165441d633e808156914ca84",
+     "f45489c6 06:06 lane-S2 ORD-0336 (lane S2 d9e2c9ae): MCP server carries the three non-identity Hermes forms",
+     "frontend/e2e/qoder-ord0323-two-exposure-cells.spec.ts",
+     "frontend/src/components/ProductErrorBoundary.tsx",
+     "frontend/src/features/inbox/JourneyInboxWorkbench.tsx",
+     "review/0323-ten-cells-b",
+     "review/0323-two-exposure-cells-b"
+    ]
+   }
+  },
+  {
+   "cell": "要件③：r5 在整棵模块图上量两代（现行尺是下一格的 r6）",
+   "claimed_result": "MET",
+   "derived_result": null,
+   "why": "号令者点的尺是 r3（44e062e6ce9c7b5d97d78e09e432072da102292c），但它已被 S4 的 r4/r5 血缘取代；r5 的用法按号令者自己那条实测：只有 --tree 建模块图，逐文件跑等于复现 r4。所以两代都用 git archive 导出 frontend 再 --tree 量：全树 28 → 23（差 -5），我这三枚文件上 7 → 2 个格子。按格子 id 数，7 个消失、2 个只在新代出现；按形状身份（文件+规则，不含行号）数才是可主张的那个数：[\"JourneyInboxWorkbench.tsx[UPSTREAM_EXCEPTION_TO_DOM]\", \"ProductErrorBoundary.tsx[UPSTREAM_EXCEPTION_TO_DOM]\"] 清除 2 形、新增 []，形数变化 18 → 16，差额由 PlanWithAiSheet 的行号位移解释 —— PlanWithAiSheet.tsx 那两形（改后 1021/1048，改前 1019/1046）就是 Q67=① 裁过的合规归属链：serverReasonSentence 的服务器原话经 failureReason 渲染在带「服务器给出的原因」标签的技术详情里。本单不改它，行号差 2 只是我在同文件上方新增/删除行的位移。 全树里不属于我这三枚文件的变动文件 []（0 枚），所以「差 -5」全在本单名下。 同一代的 r3/r4 交叉核对：11→1 与 7→2。",
+   "readings": {
+    "ruler": {
+     "path": "evidence/ord0331-ast-crossfile-S4/ui_exposure_taint_ast_r2.cjs",
+     "published_blob": "ff98091cf3accb0d836ae25ba49820170b92d932",
+     "local_git_hash_object": "ff98091cf3accb0d836ae25ba49820170b92d932",
+     "sha1_over_bytes": "3bafd65d239db51fd21f5b315115e3110ef89081",
+     "bytes": 85052,
+     "selftest": "SELFTEST_PASS",
+     "selftest_fixtures": 20,
+     "lineage": "r1 正则 -> r2 -> r3 (44e062e6) -> r4 AST 逐文件 (eb262f59) -> r5 AST + 模块图",
+     "usage_note": "r5 只在 --tree 模式下建模块图；逐文件跑会精确复现 r4 的答案（号令者实测）。所以本件的口径是 --tree，且不从共享工作树读依赖：两代都用 git archive 导出。"
+    },
+    "generations": {
+     "before": "9a669c8bec863fadf31d5158f4a1be66aec49f23",
+     "after": "499522db0903790c3eaba5837bf8e8e3764b7463",
+     "exported_with": "git archive <ref> frontend | tar -x -C <dir>",
+     "scanned": "frontend/src"
+    },
+    "tree_wide": {
+     "before_hits": 28,
+     "after_hits": 23,
+     "delta": -5,
+     "changed_files_outside_my_three": [],
+     "reading": "28 -> 23 (delta -5), 和 9 个变动的格子里 0 个文件不属于本单"
+    },
+    "in_my_three_files": {
+     "before": [
+      "JourneyInboxWorkbench.tsx:687[UPSTREAM_EXCEPTION_TO_DOM]",
+      "JourneyInboxWorkbench.tsx:691[UPSTREAM_EXCEPTION_TO_DOM]",
+      "JourneyInboxWorkbench.tsx:731[UPSTREAM_EXCEPTION_TO_DOM]",
+      "PlanWithAiSheet.tsx:1019[UPSTREAM_TEXT_VIA_HELPER_TO_DOM]",
+      "PlanWithAiSheet.tsx:1046[UPSTREAM_TEXT_VIA_HELPER_TO_DOM]",
+      "ProductErrorBoundary.tsx:104[UPSTREAM_EXCEPTION_TO_DOM]",
+      "ProductErrorBoundary.tsx:105[UPSTREAM_EXCEPTION_TO_DOM]"
+     ],
+     "after": [
+      "PlanWithAiSheet.tsx:1021[UPSTREAM_TEXT_VIA_HELPER_TO_DOM]",
+      "PlanWithAiSheet.tsx:1048[UPSTREAM_TEXT_VIA_HELPER_TO_DOM]"
+     ],
+     "cell_ids_gone": [
+      "JourneyInboxWorkbench.tsx:687[UPSTREAM_EXCEPTION_TO_DOM]",
+      "JourneyInboxWorkbench.tsx:691[UPSTREAM_EXCEPTION_TO_DOM]",
+      "JourneyInboxWorkbench.tsx:731[UPSTREAM_EXCEPTION_TO_DOM]",
+      "PlanWithAiSheet.tsx:1019[UPSTREAM_TEXT_VIA_HELPER_TO_DOM]",
+      "PlanWithAiSheet.tsx:1046[UPSTREAM_TEXT_VIA_HELPER_TO_DOM]",
+      "ProductErrorBoundary.tsx:104[UPSTREAM_EXCEPTION_TO_DOM]",
+      "ProductErrorBoundary.tsx:105[UPSTREAM_EXCEPTION_TO_DOM]"
+     ],
+     "cell_ids_untouched": [],
+     "cell_ids_only_at_candidate": [
+      "PlanWithAiSheet.tsx:1021[UPSTREAM_TEXT_VIA_HELPER_TO_DOM]",
+      "PlanWithAiSheet.tsx:1048[UPSTREAM_TEXT_VIA_HELPER_TO_DOM]"
+     ],
+     "counts": {
+      "before": 7,
+      "after": 2,
+      "gone": 7,
+      "untouched": 0,
+      "only_at_candidate": 2
+     },
+     "by_shape_identity": {
+      "before": [
+       "ActivityDetail.tsx[RAW_BODY_TO_DOM]",
+       "AgentComposer.tsx[UPSTREAM_EXCEPTION_TO_DOM]",
+       "AgentRunRail.tsx[UPSTREAM_READ_DIRECT]",
+       "CopilotDock.tsx[UPSTREAM_EXCEPTION_TO_DOM]",
+       "DestinationPreparationPanel.tsx[UPSTREAM_EXCEPTION_TO_DOM]",
+       "HotelsPanel.tsx[RAW_BODY_TO_DOM]",
+       "JourneyInboxWorkbench.tsx[UPSTREAM_EXCEPTION_TO_DOM]",
+       "PlanComparison.tsx[RAW_BODY_TO_DOM]",
+       "PlanWithAiSheet.tsx[UPSTREAM_TEXT_VIA_HELPER_TO_DOM]",
+       "ProductErrorBoundary.tsx[UPSTREAM_EXCEPTION_TO_DOM]",
+       "RealCityDiscoveryPanel.tsx[UPSTREAM_EXCEPTION_TO_DOM]",
+       "RecoveryRequiredPanel.tsx[RAW_BODY_TO_DOM]",
+       "SimulationPanel.tsx[UPSTREAM_TEXT_VIA_HELPER_TO_DOM]",
+       "V12TripStudioPanel.tsx[UPSTREAM_EXCEPTION_TO_DOM]",
+       "V14RecoveryTruthPanel.tsx[UPSTREAM_EXCEPTION_TO_DOM]",
+       "V8Experience.tsx[UPSTREAM_EXCEPTION_TO_DOM]",
+       "V8Experience.tsx[UPSTREAM_TEXT_VIA_HELPER_TO_DOM]",
+       "main.tsx[UPSTREAM_TEXT_VIA_HELPER_TO_DOM]"
+      ],
+      "after": [
+       "ActivityDetail.tsx[RAW_BODY_TO_DOM]",
+       "AgentComposer.tsx[UPSTREAM_EXCEPTION_TO_DOM]",
+       "AgentRunRail.tsx[UPSTREAM_READ_DIRECT]",
+       "CopilotDock.tsx[UPSTREAM_EXCEPTION_TO_DOM]",
+       "DestinationPreparationPanel.tsx[UPSTREAM_EXCEPTION_TO_DOM]",
+       "HotelsPanel.tsx[RAW_BODY_TO_DOM]",
+       "PlanComparison.tsx[RAW_BODY_TO_DOM]",
+       "PlanWithAiSheet.tsx[UPSTREAM_TEXT_VIA_HELPER_TO_DOM]",
+       "RealCityDiscoveryPanel.tsx[UPSTREAM_EXCEPTION_TO_DOM]",
+       "RecoveryRequiredPanel.tsx[RAW_BODY_TO_DOM]",
+       "SimulationPanel.tsx[UPSTREAM_TEXT_VIA_HELPER_TO_DOM]",
+       "V12TripStudioPanel.tsx[UPSTREAM_EXCEPTION_TO_DOM]",
+       "V14RecoveryTruthPanel.tsx[UPSTREAM_EXCEPTION_TO_DOM]",
+       "V8Experience.tsx[UPSTREAM_EXCEPTION_TO_DOM]",
+       "V8Experience.tsx[UPSTREAM_TEXT_VIA_HELPER_TO_DOM]",
+       "main.tsx[UPSTREAM_TEXT_VIA_HELPER_TO_DOM]"
+      ],
+      "cleared": [
+       "JourneyInboxWorkbench.tsx[UPSTREAM_EXCEPTION_TO_DOM]",
+       "ProductErrorBoundary.tsx[UPSTREAM_EXCEPTION_TO_DOM]"
+      ],
+      "new": []
+     }
+    },
+    "reading": "tree-wide 28 -> 23 (delta -5); my three files 7 -> 2 格; 按 shape 身份 2 形清除 / 0 形新增 / 0 形未动; 树内其它文件变动 0",
+    "remaining_meaning": "PlanWithAiSheet.tsx 那两形（改后 1021/1048，改前 1019/1046）就是 Q67=① 裁过的合规归属链：serverReasonSentence 的服务器原话经 failureReason 渲染在带「服务器给出的原因」标签的技术详情里。本单不改它，行号差 2 只是我在同文件上方新增/删除行的位移。",
+    "artifact": "evidence/ord0323-two-exposure-cells/ord0323_r5_readings_r1.json",
+    "before_tree": "evidence/ord0323-two-exposure-cells/r5_before_tree.json",
+    "after_tree": "evidence/ord0323-two-exposure-cells/r5_after_tree.json",
+    "cross_check": {
+     "r3_before": 11,
+     "r3_after": 1,
+     "r4_before": 7,
+     "r4_after": 2
+    },
+    "named_values_the_why_uses": [
+     "-5",
+     "0",
+     "1",
+     "11",
+     "2",
+     "20",
+     "23",
+     "28",
+     "28 -> 23 (delta -5), 和 9 个变动的格子里 0 个文件不属于本单",
+     "3bafd65d239db51fd21f5b315115e3110ef89081",
+     "499522db0903790c3eaba5837bf8e8e3764b7463",
+     "7",
+     "85052",
+     "9a669c8bec863fadf31d5158f4a1be66aec49f23",
+     "ActivityDetail.tsx[RAW_BODY_TO_DOM]",
+     "AgentComposer.tsx[UPSTREAM_EXCEPTION_TO_DOM]",
+     "AgentRunRail.tsx[UPSTREAM_READ_DIRECT]",
+     "CopilotDock.tsx[UPSTREAM_EXCEPTION_TO_DOM]",
+     "DestinationPreparationPanel.tsx[UPSTREAM_EXCEPTION_TO_DOM]",
+     "HotelsPanel.tsx[RAW_BODY_TO_DOM]",
+     "JourneyInboxWorkbench.tsx:687[UPSTREAM_EXCEPTION_TO_DOM]",
+     "JourneyInboxWorkbench.tsx:691[UPSTREAM_EXCEPTION_TO_DOM]",
+     "JourneyInboxWorkbench.tsx:731[UPSTREAM_EXCEPTION_TO_DOM]",
+     "JourneyInboxWorkbench.tsx[UPSTREAM_EXCEPTION_TO_DOM]",
+     "PlanComparison.tsx[RAW_BODY_TO_DOM]",
+     "PlanWithAiSheet.tsx 那两形（改后 1021/1048，改前 1019/1046）就是 Q67=① 裁过的合规归属链：serverReasonSentence 的服务器原话经 failureReason 渲染在带「服务器给出的原因」标签的技术详情里。本单不改它，行号差 2 只是我在同文件上方新增/删除行的位移。",
+     "PlanWithAiSheet.tsx:1019[UPSTREAM_TEXT_VIA_HELPER_TO_DOM]",
+     "PlanWithAiSheet.tsx:1021[UPSTREAM_TEXT_VIA_HELPER_TO_DOM]",
+     "PlanWithAiSheet.tsx:1046[UPSTREAM_TEXT_VIA_HELPER_TO_DOM]",
+     "PlanWithAiSheet.tsx:1048[UPSTREAM_TEXT_VIA_HELPER_TO_DOM]",
+     "PlanWithAiSheet.tsx[UPSTREAM_TEXT_VIA_HELPER_TO_DOM]",
+     "ProductErrorBoundary.tsx:104[UPSTREAM_EXCEPTION_TO_DOM]",
+     "ProductErrorBoundary.tsx:105[UPSTREAM_EXCEPTION_TO_DOM]",
+     "ProductErrorBoundary.tsx[UPSTREAM_EXCEPTION_TO_DOM]",
+     "RealCityDiscoveryPanel.tsx[UPSTREAM_EXCEPTION_TO_DOM]",
+     "RecoveryRequiredPanel.tsx[RAW_BODY_TO_DOM]",
+     "SELFTEST_PASS",
+     "SimulationPanel.tsx[UPSTREAM_TEXT_VIA_HELPER_TO_DOM]",
+     "V12TripStudioPanel.tsx[UPSTREAM_EXCEPTION_TO_DOM]",
+     "V14RecoveryTruthPanel.tsx[UPSTREAM_EXCEPTION_TO_DOM]",
+     "V8Experience.tsx[UPSTREAM_EXCEPTION_TO_DOM]",
+     "V8Experience.tsx[UPSTREAM_TEXT_VIA_HELPER_TO_DOM]",
+     "evidence/ord0323-two-exposure-cells/ord0323_r5_readings_r1.json",
+     "evidence/ord0323-two-exposure-cells/r5_after_tree.json",
+     "evidence/ord0323-two-exposure-cells/r5_before_tree.json",
+     "evidence/ord0331-ast-crossfile-S4/ui_exposure_taint_ast_r2.cjs",
+     "ff98091cf3accb0d836ae25ba49820170b92d932",
+     "frontend/src",
+     "git archive <ref> frontend | tar -x -C <dir>",
+     "main.tsx[UPSTREAM_TEXT_VIA_HELPER_TO_DOM]",
+     "r1 正则 -> r2 -> r3 (44e062e6) -> r4 AST 逐文件 (eb262f59) -> r5 AST + 模块图",
+     "r5 只在 --tree 模式下建模块图；逐文件跑会精确复现 r4 的答案（号令者实测）。所以本件的口径是 --tree，且不从共享工作树读依赖：两代都用 git archive 导出。",
+     "tree-wide 28 -> 23 (delta -5); my three files 7 -> 2 格; 按 shape 身份 2 形清除 / 0 形新增 / 0 形未动; 树内其它文件变动 0"
+    ]
+   }
+  },
+  {
+   "cell": "要件③的现行尺：r6 在同一对代次上复量，并逐位对 r5 的差",
+   "claimed_result": "MET",
+   "derived_result": null,
+   "why": "尺换成号令者现在手上那把 r6：本地 6a251d3a6bea70329e06581384a81d5ef54c96a6 与他发布的 6a251d3a6bea70329e06581384a81d5ef54c96a6 逐位相同（他那份路径 evidence/ord0331-ast-crossfile-S4/ui_exposure_taint_ast_r3.cjs 在 commit f3614b5c 上的 blob 也是这一枚，已 rev-parse 回验），自检 SELFTEST_PASS，模式臂 2/2。口径不自称，抄尺自己写的 scope：{\"before\": \"module-graph: relative imports, index files, re-exports and namespace imports resolved (--tree)\", \"after\": \"module-graph: relative imports, index files, re-exports and namespace imports resolved (--tree)\", \"before_note\": \"this mode is the one the pre-landing gate must run: it can both cl。两代都用 git archive 导出后 --tree 量：全树 27 → 22（差 -5），我这三枚 7 → 2 格，按形状身份清除 [\"JourneyInboxWorkbench.tsx[UPSTREAM_EXCEPTION_TO_DOM]\", \"ProductErrorBoundary.tsx[UPSTREAM_EXCEPTION_TO_DOM]\"] 共 2 形、新增 0 形，树内不属于这三枚的变动文件 0 枚。与 r5 的逐项对照记在件里：{\"before_same\": false, \"after_same\": false, \"my_cells_before_same\": true, \"my_cells_after_same\": true}；两把尺只在树级差 1 枚（r5 多报 [\"V8Experience.tsx:1314[UPSTREAM_TEXT_VIA_HELPER_TO_DOM]\"]，代次两侧同差 = True），我这三枚文件的格子集合在两把尺上逐位相同，所以本单主张的那个差不依赖选哪把尺；那枚差额落在别人的文件上，我不裁它是真红还是假红。",
+   "readings": {
+    "ruler": {
+     "published_path": "evidence/ord0331-ast-crossfile-S4/ui_exposure_taint_ast_r3.cjs",
+     "published_blob": "6a251d3a6bea70329e06581384a81d5ef54c96a6",
+     "local_git_hash_object": "6a251d3a6bea70329e06581384a81d5ef54c96a6",
+     "bytes": 101413,
+     "added_by_commit": "f3614b5c",
+     "blob_at_published_path": "6a251d3a6bea70329e06581384a81d5ef54c96a6",
+     "selftest": "SELFTEST_PASS",
+     "n_fixtures": 20,
+     "n_mode_arms": 2,
+     "n_mode_arms_met": 2,
+     "n_cross_file_arms_met": 7,
+     "supersedes": "ui_exposure_taint_ast_r2.cjs (r5, same decision, scope reporting added)",
+     "supersedes_blob": "ff98091cf3accb0d836ae25ba49820170b92d932",
+     "also_supersedes_r4": {
+      "file": "ui_exposure_taint_ast_r1.cjs",
+      "blob": "eb262f59e54d5142ad0e8041704e751eac473ace"
+     },
+     "mode_arms": {
+      "F_per_file_over_reports_where_the_helper_exonerates": {
+       "assertion_met": true,
+       "modes_differ": true,
+       "scope_in_per_file_report": "per-file: no module graph is built here (--file / --ref --path)",
+       "scope_in_graph_report": "module-graph: relative imports, index files, re-exports and namespace imports resolved (--tree)",
+       "per_file_cells": [
+        "panels/Panel.tsx:5 UPSTREAM_TEXT_VIA_HELPER_TO_DOM"
+       ],
+       "graph_cells": []
+      },
+      "G_per_file_under_reports_poison_arriving_as_an_imported_value": {
+       "assertion_met": true,
+       "modes_differ": true,
+       "scope_in_per_file_report": "per-file: no module graph is built here (--file / --ref --path)",
+       "scope_in_graph_report": "module-graph: relative imports, index files, re-exports and namespace imports resolved (--tree)",
+       "per_file_cells": [],
+       "graph_cells": [
+        "panels/Show.tsx:3 UPSTREAM_READ_DIRECT"
+       ]
+      }
+     }
+    },
+    "mode": {
+     "used": "--tree",
+     "why": "r6 自己的 mode_arms 判 --file/--ref 既不是 --tree 的上界也不是下界；逐文件跑答的是另一个问题",
+     "scope_as_the_ruler_reports_it": {
+      "before": "module-graph: relative imports, index files, re-exports and namespace imports resolved (--tree)",
+      "after": "module-graph: relative imports, index files, re-exports and namespace imports resolved (--tree)",
+      "before_note": "this mode is the one the pre-landing gate must run: it can both clear a value a helper rebuilds from device wording and condemn a value that arrives through an import",
+      "upper_bound_claim": null
+     }
+    },
+    "generations": {
+     "before": "9a669c8bec863fadf31d5158f4a1be66aec49f23",
+     "after": "499522db0903790c3eaba5837bf8e8e3764b7463",
+     "exported_with": "git archive <ref> frontend | tar -x -C <dir>",
+     "scanned": "frontend/src"
+    },
+    "tree_wide": {
+     "before_hits": 27,
+     "after_hits": 22,
+     "delta": -5,
+     "changed_files_outside_my_three": []
+    },
+    "in_my_three_files": {
+     "before": [
+      "JourneyInboxWorkbench.tsx:687[UPSTREAM_EXCEPTION_TO_DOM]",
+      "JourneyInboxWorkbench.tsx:691[UPSTREAM_EXCEPTION_TO_DOM]",
+      "JourneyInboxWorkbench.tsx:731[UPSTREAM_EXCEPTION_TO_DOM]",
+      "PlanWithAiSheet.tsx:1019[UPSTREAM_TEXT_VIA_HELPER_TO_DOM]",
+      "PlanWithAiSheet.tsx:1046[UPSTREAM_TEXT_VIA_HELPER_TO_DOM]",
+      "ProductErrorBoundary.tsx:104[UPSTREAM_EXCEPTION_TO_DOM]",
+      "ProductErrorBoundary.tsx:105[UPSTREAM_EXCEPTION_TO_DOM]"
+     ],
+     "after": [
+      "PlanWithAiSheet.tsx:1021[UPSTREAM_TEXT_VIA_HELPER_TO_DOM]",
+      "PlanWithAiSheet.tsx:1048[UPSTREAM_TEXT_VIA_HELPER_TO_DOM]"
+     ],
+     "cell_ids_gone": [
+      "JourneyInboxWorkbench.tsx:687[UPSTREAM_EXCEPTION_TO_DOM]",
+      "JourneyInboxWorkbench.tsx:691[UPSTREAM_EXCEPTION_TO_DOM]",
+      "JourneyInboxWorkbench.tsx:731[UPSTREAM_EXCEPTION_TO_DOM]",
+      "PlanWithAiSheet.tsx:1019[UPSTREAM_TEXT_VIA_HELPER_TO_DOM]",
+      "PlanWithAiSheet.tsx:1046[UPSTREAM_TEXT_VIA_HELPER_TO_DOM]",
+      "ProductErrorBoundary.tsx:104[UPSTREAM_EXCEPTION_TO_DOM]",
+      "ProductErrorBoundary.tsx:105[UPSTREAM_EXCEPTION_TO_DOM]"
+     ],
+     "cell_ids_untouched": [],
+     "cell_ids_only_at_candidate": [
+      "PlanWithAiSheet.tsx:1021[UPSTREAM_TEXT_VIA_HELPER_TO_DOM]",
+      "PlanWithAiSheet.tsx:1048[UPSTREAM_TEXT_VIA_HELPER_TO_DOM]"
+     ],
+     "counts": {
+      "before": 7,
+      "after": 2,
+      "gone": 7,
+      "untouched": 0,
+      "only_at_candidate": 2
+     },
+     "by_shape_identity": {
+      "before": [
+       "ActivityDetail.tsx[RAW_BODY_TO_DOM]",
+       "AgentComposer.tsx[UPSTREAM_EXCEPTION_TO_DOM]",
+       "AgentRunRail.tsx[UPSTREAM_READ_DIRECT]",
+       "CopilotDock.tsx[UPSTREAM_EXCEPTION_TO_DOM]",
+       "DestinationPreparationPanel.tsx[UPSTREAM_EXCEPTION_TO_DOM]",
+       "HotelsPanel.tsx[RAW_BODY_TO_DOM]",
+       "JourneyInboxWorkbench.tsx[UPSTREAM_EXCEPTION_TO_DOM]",
+       "PlanComparison.tsx[RAW_BODY_TO_DOM]",
+       "PlanWithAiSheet.tsx[UPSTREAM_TEXT_VIA_HELPER_TO_DOM]",
+       "ProductErrorBoundary.tsx[UPSTREAM_EXCEPTION_TO_DOM]",
+       "RealCityDiscoveryPanel.tsx[UPSTREAM_EXCEPTION_TO_DOM]",
+       "RecoveryRequiredPanel.tsx[RAW_BODY_TO_DOM]",
+       "SimulationPanel.tsx[UPSTREAM_TEXT_VIA_HELPER_TO_DOM]",
+       "V12TripStudioPanel.tsx[UPSTREAM_EXCEPTION_TO_DOM]",
+       "V14RecoveryTruthPanel.tsx[UPSTREAM_EXCEPTION_TO_DOM]",
+       "V8Experience.tsx[UPSTREAM_EXCEPTION_TO_DOM]",
+       "V8Experience.tsx[UPSTREAM_TEXT_VIA_HELPER_TO_DOM]",
+       "main.tsx[UPSTREAM_TEXT_VIA_HELPER_TO_DOM]"
+      ],
+      "after": [
+       "ActivityDetail.tsx[RAW_BODY_TO_DOM]",
+       "AgentComposer.tsx[UPSTREAM_EXCEPTION_TO_DOM]",
+       "AgentRunRail.tsx[UPSTREAM_READ_DIRECT]",
+       "CopilotDock.tsx[UPSTREAM_EXCEPTION_TO_DOM]",
+       "DestinationPreparationPanel.tsx[UPSTREAM_EXCEPTION_TO_DOM]",
+       "HotelsPanel.tsx[RAW_BODY_TO_DOM]",
+       "PlanComparison.tsx[RAW_BODY_TO_DOM]",
+       "PlanWithAiSheet.tsx[UPSTREAM_TEXT_VIA_HELPER_TO_DOM]",
+       "RealCityDiscoveryPanel.tsx[UPSTREAM_EXCEPTION_TO_DOM]",
+       "RecoveryRequiredPanel.tsx[RAW_BODY_TO_DOM]",
+       "SimulationPanel.tsx[UPSTREAM_TEXT_VIA_HELPER_TO_DOM]",
+       "V12TripStudioPanel.tsx[UPSTREAM_EXCEPTION_TO_DOM]",
+       "V14RecoveryTruthPanel.tsx[UPSTREAM_EXCEPTION_TO_DOM]",
+       "V8Experience.tsx[UPSTREAM_EXCEPTION_TO_DOM]",
+       "V8Experience.tsx[UPSTREAM_TEXT_VIA_HELPER_TO_DOM]",
+       "main.tsx[UPSTREAM_TEXT_VIA_HELPER_TO_DOM]"
+      ],
+      "cleared": [
+       "JourneyInboxWorkbench.tsx[UPSTREAM_EXCEPTION_TO_DOM]",
+       "ProductErrorBoundary.tsx[UPSTREAM_EXCEPTION_TO_DOM]"
+      ],
+      "new": []
+     }
+    },
+    "reading": "r6 --tree 全树 27 -> 22 (delta -5); 我这三枚 7 -> 2 格; 按 shape 身份 2 形清除 / 0 形新增; 树内不属于我的文件变动 0; 与 r5 逐项一致 = False",
+    "cross_check_against_r5": {
+     "r5_artifact": "ord0323_r5_readings.json",
+     "r5_tree_wide": [
+      28,
+      23
+     ],
+     "r6_tree_wide": [
+      27,
+      22
+     ],
+     "r5_reading": "tree-wide 28 -> 23 (delta -5); my three files 7 -> 2 格; 按 shape 身份 2 形清除 / 0 形新增 / 0 形未动; 树内其它文件变动 0",
+     "agreement": {
+      "before_same": false,
+      "after_same": false,
+      "my_cells_before_same": true,
+      "my_cells_after_same": true
+     },
+     "all_agree": false,
+     "cells_only_r5_reports": {
+      "before": [
+       "V8Experience.tsx:1314[UPSTREAM_TEXT_VIA_HELPER_TO_DOM]"
+      ],
+      "after": [
+       "V8Experience.tsx:1314[UPSTREAM_TEXT_VIA_HELPER_TO_DOM]"
+      ]
+     },
+     "cells_only_r6_reports": {
+      "before": [],
+      "after": []
+     },
+     "the_same_difference_on_both_generations": true
+    },
+    "artifact": "evidence/ord0323-two-exposure-cells/ord0323_r6_readings_r1.json",
+    "before_tree": "evidence/ord0323-two-exposure-cells/r6_before_tree.json",
+    "after_tree": "evidence/ord0323-two-exposure-cells/r6_after_tree.json",
+    "named_values_the_why_uses": [
+     "--tree",
+     "-5",
+     "0",
+     "101413",
+     "2",
+     "20",
+     "22",
+     "23",
+     "27",
+     "28",
+     "499522db0903790c3eaba5837bf8e8e3764b7463",
+     "6a251d3a6bea70329e06581384a81d5ef54c96a6",
+     "7",
+     "9a669c8bec863fadf31d5158f4a1be66aec49f23",
+     "ActivityDetail.tsx[RAW_BODY_TO_DOM]",
+     "AgentComposer.tsx[UPSTREAM_EXCEPTION_TO_DOM]",
+     "AgentRunRail.tsx[UPSTREAM_READ_DIRECT]",
+     "CopilotDock.tsx[UPSTREAM_EXCEPTION_TO_DOM]",
+     "DestinationPreparationPanel.tsx[UPSTREAM_EXCEPTION_TO_DOM]",
+     "False",
+     "HotelsPanel.tsx[RAW_BODY_TO_DOM]",
+     "JourneyInboxWorkbench.tsx:687[UPSTREAM_EXCEPTION_TO_DOM]",
+     "JourneyInboxWorkbench.tsx:691[UPSTREAM_EXCEPTION_TO_DOM]",
+     "JourneyInboxWorkbench.tsx:731[UPSTREAM_EXCEPTION_TO_DOM]",
+     "JourneyInboxWorkbench.tsx[UPSTREAM_EXCEPTION_TO_DOM]",
+     "PlanComparison.tsx[RAW_BODY_TO_DOM]",
+     "PlanWithAiSheet.tsx:1019[UPSTREAM_TEXT_VIA_HELPER_TO_DOM]",
+     "PlanWithAiSheet.tsx:1021[UPSTREAM_TEXT_VIA_HELPER_TO_DOM]",
+     "PlanWithAiSheet.tsx:1046[UPSTREAM_TEXT_VIA_HELPER_TO_DOM]",
+     "PlanWithAiSheet.tsx:1048[UPSTREAM_TEXT_VIA_HELPER_TO_DOM]",
+     "PlanWithAiSheet.tsx[UPSTREAM_TEXT_VIA_HELPER_TO_DOM]",
+     "ProductErrorBoundary.tsx:104[UPSTREAM_EXCEPTION_TO_DOM]",
+     "ProductErrorBoundary.tsx:105[UPSTREAM_EXCEPTION_TO_DOM]",
+     "ProductErrorBoundary.tsx[UPSTREAM_EXCEPTION_TO_DOM]",
+     "RealCityDiscoveryPanel.tsx[UPSTREAM_EXCEPTION_TO_DOM]",
+     "RecoveryRequiredPanel.tsx[RAW_BODY_TO_DOM]",
+     "SELFTEST_PASS",
+     "SimulationPanel.tsx[UPSTREAM_TEXT_VIA_HELPER_TO_DOM]",
+     "True",
+     "V12TripStudioPanel.tsx[UPSTREAM_EXCEPTION_TO_DOM]",
+     "V14RecoveryTruthPanel.tsx[UPSTREAM_EXCEPTION_TO_DOM]",
+     "V8Experience.tsx:1314[UPSTREAM_TEXT_VIA_HELPER_TO_DOM]",
+     "V8Experience.tsx[UPSTREAM_EXCEPTION_TO_DOM]",
+     "V8Experience.tsx[UPSTREAM_TEXT_VIA_HELPER_TO_DOM]",
+     "eb262f59e54d5142ad0e8041704e751eac473ace",
+     "evidence/ord0323-two-exposure-cells/ord0323_r6_readings_r1.json",
+     "evidence/ord0323-two-exposure-cells/r6_after_tree.json",
+     "evidence/ord0323-two-exposure-cells/r6_before_tree.json",
+     "evidence/ord0331-ast-crossfile-S4/ui_exposure_taint_ast_r3.cjs",
+     "f3614b5c",
+     "ff98091cf3accb0d836ae25ba49820170b92d932",
+     "frontend/src",
+     "git archive <ref> frontend | tar -x -C <dir>",
+     "main.tsx[UPSTREAM_TEXT_VIA_HELPER_TO_DOM]",
+     "module-graph: relative imports, index files, re-exports and namespace imports resolved (--tree)",
+     "ord0323_r5_readings.json",
+     "panels/Panel.tsx:5 UPSTREAM_TEXT_VIA_HELPER_TO_DOM",
+     "panels/Show.tsx:3 UPSTREAM_READ_DIRECT",
+     "per-file: no module graph is built here (--file / --ref --path)",
+     "r6 --tree 全树 27 -> 22 (delta -5); 我这三枚 7 -> 2 格; 按 shape 身份 2 形清除 / 0 形新增; 树内不属于我的文件变动 0; 与 r5 逐项一致 = False",
+     "r6 自己的 mode_arms 判 --file/--ref 既不是 --tree 的上界也不是下界；逐文件跑答的是另一个问题",
+     "this mode is the one the pre-landing gate must run: it can both clear a value a helper rebuilds from device wording and condemn a value that arrives through an import",
+     "tree-wide 28 -> 23 (delta -5); my three files 7 -> 2 格; 按 shape 身份 2 形清除 / 0 形新增 / 0 形未动; 树内其它文件变动 0",
+     "ui_exposure_taint_ast_r1.cjs",
+     "ui_exposure_taint_ast_r2.cjs (r5, same decision, scope reporting added)"
+    ]
+   }
+  },
+  {
+   "cell": "要件②补：Q71 口径下属性也算屏幕，这一腿量到了什么、没量到什么",
+   "claimed_result": "MET",
+   "derived_result": null,
+   "why": "Q71 说 data-* / aria-* 算进 DOM，而 textContent 看不见属性，所以每枚臂现在把整页的属性对单独扫一遍。本候选逐臂命中：{\"N1\": [], \"N2\": [], \"N3\": [], \"T06\": [], \"T07\": [], \"T08\": [], \"T09\": [], \"T10\": [], \"T11\": [], \"T12\": [], \"T13\": []}（全空），Q68b 另判大写截断那一形：false。采集控制（不然这一腿是装饰）：Q68a 那趟扫到 126 对属性、并能从里面点名被测卡片自己那枚 data-testid = true。同时如实报这一腿的位置：两枚基线反件（[\"cell1_baseline_sink\", \"cell2_baseline_throw\"]）在属性上同样 0 命中——改前那三处是把原话写在正文里的，所以属性这一腿**不是**本单的牙齿，它只把『我量过的面比判据要求的面窄』这件事补平；判这十格仍靠正文那一腿与逐臂状态位。",
+   "readings": {
+    "instrument_patch": [
+     "evidence/ord0323-two-exposure-cells/ord0323_widen_q71.py",
+     "evidence/ord0323-two-exposure-cells/ord0323_widen_q71_r2.py"
+    ],
+    "pairs_swept_per_arm": {
+     "N1": 12,
+     "N2": 63,
+     "N3": 73,
+     "T06": 73,
+     "T07": 63,
+     "T08": 63,
+     "T09": 63,
+     "T10": 63,
+     "T11": 72,
+     "T12": 73,
+     "T13": 72,
+     "Q68a": 126,
+     "Q68b": 124
+    },
+    "candidate_hits_per_arm": {
+     "N1": [],
+     "N2": [],
+     "N3": [],
+     "T06": [],
+     "T07": [],
+     "T08": [],
+     "T09": [],
+     "T10": [],
+     "T11": [],
+     "T12": [],
+     "T13": []
+    },
+    "q68b_uppercased_prose_in_attributes": false,
+    "q68a_control_sweep_names_the_tested_card": true,
+    "q68a_control_pairs_read": 126,
+    "baseline_attribute_hits": {
+     "cell1_baseline_sink": {
+      "N1": [],
+      "N2": [],
+      "N3": []
+     },
+     "cell2_baseline_throw": {
+      "N1": [],
+      "N2": [],
+      "N3": []
+     }
+    },
+    "arms_matrix": "evidence/ord0323-two-exposure-cells/ord0323_arms_matrix_r3.json",
+    "named_values_the_why_uses": [
+     "12",
+     "124",
+     "126",
+     "63",
+     "72",
+     "73",
+     "False",
+     "True",
+     "evidence/ord0323-two-exposure-cells/ord0323_arms_matrix_r3.json",
+     "evidence/ord0323-two-exposure-cells/ord0323_widen_q71.py",
+     "evidence/ord0323-two-exposure-cells/ord0323_widen_q71_r2.py"
+    ]
+   }
+  },
+  {
+   "cell": "如实报的残留（本单没点名，我也没动）",
+   "claimed_result": "REPORTED_NOT_FIXED",
+   "derived_result": null,
+   "why": "两件如实报上去、我没有顺手改。其一，frontend/src/features/inbox/JourneyInboxWorkbench.tsx 的 {\"json_parse\": [106], \"reason_field\": [400], \"reasoning_summary\": [740, 823]} 这几行也能把非本单的原文带上屏（未设防的 json 解析异常、服务器的 `reason` 字段、`reasoning_summary`）—— 不在本单点名的十格里，D 的分桶另有归类，我只读数不动手。其二，frontend/src/components/ProductErrorBoundary.tsx 的文案语言取自浏览器偏好（量到 'Something went wrong hereY'）而不是这台设备已存的 zh-CN，同一屏两处来源不同，量到了没改。另：格一那枚折子里我留了一枚改前从未出现的指针 unresolved_fields（V8 报的是被访问的属性名 length），它没有牙齿，我没把它算进反件证据，也没删那条断言。",
+   "readings": {
+    "adjacent": {
+     "requestJson_unguarded_json_parse": {
+      "file": "frontend/src/features/inbox/JourneyInboxWorkbench.tsx",
+      "lines": [
+       106
+      ],
+      "text": [
+       "const payload = (await response.json()) as T;"
+      ]
+     },
+     "showResult_server_reason_to_message": {
+      "file": "frontend/src/features/inbox/JourneyInboxWorkbench.tsx",
+      "lines": [
+       400
+      ],
+      "text": [
+       ": result.reason ?? `${t(\"inbox.extractionStatus\")} ${result.status}`,"
+      ]
+     },
+     "reasoning_summary_to_dom": {
+      "file": "frontend/src/features/inbox/JourneyInboxWorkbench.tsx",
+      "lines": [
+       740,
+       823
+      ],
+      "text": [
+       "{item.reasoning_summary && <p>{item.reasoning_summary}</p>}",
+       "{draft.interpretation?.reasoning_summary && <p>{draft.interpretation.reasoning_summary}</p>}"
+      ]
+     },
+     "boundary_copy_locale_source": {
+      "file": "frontend/src/components/ProductErrorBoundary.tsx",
+      "lines": [
+       59
+      ],
+      "text": [
+       "const lang = (typeof navigator !== \"undefined\" && navigator.language) || \"en\";"
+      ]
+     }
+    },
+    "cell2_r3_hits_after": 1,
+    "order_named_source_line": ":88",
+    "order_named_sinks": "687/691/731",
+    "boundary_copy_language_reading": "Something went wrong hereYour trip data has not been lost. You can retry this screen or go back to Today.Try againBack to TodayReload the appTechnical detailcaught_at=2026-09-25T22:39:39.597Z route=/v8/bookings failures_caught_here=1 online_at_this_device=yes failure_text_rendered=no",
+    "q67_still_open": "格二所在文件与 ORD-0302 的 :1046 那条链无关，但 Q67 仍没裁",
+    "receipt": "evidence/ord0323-two-exposure-cells/ord0323_receipt_r3.json",
+    "named_values_the_why_uses": [
+     "1",
+     "106",
+     "400",
+     "59",
+     "687/691/731",
+     "740",
+     "823",
+     ": result.reason ?? `${t(\"inbox.extractionStatus\")} ${result.status}`,",
+     ":88",
+     "Something went wrong hereYour trip data has not been lost. You can retry this screen or go back to Today.Try againBack to TodayReload the appTechnical detailcaught_at=2026-09-25T22:39:39.597Z route=/v8/bookings failures_caught_here=1 online_at_this_device=yes failure_text_rendered=no",
+     "const lang = (typeof navigator !== \"undefined\" && navigator.language) || \"en\";",
+     "const payload = (await response.json()) as T;",
+     "evidence/ord0323-two-exposure-cells/ord0323_receipt_r3.json",
+     "frontend/src/components/ProductErrorBoundary.tsx",
+     "frontend/src/features/inbox/JourneyInboxWorkbench.tsx",
+     "{draft.interpretation?.reasoning_summary && <p>{draft.interpretation.reasoning_summary}</p>}",
+     "{item.reasoning_summary && <p>{item.reasoning_summary}</p>}",
+     "格二所在文件与 ORD-0302 的 :1046 那条链无关，但 Q67 仍没裁"
+    ]
+   }
+  }
+ ],
+ "ruler_reuse_proof": {
+  "blob_equal": true,
+  "selftest": "SELFTEST_PASS"
+ },
+ "arms_verdict_from_matrix": {
+  "N1": "passed",
+  "N2": "passed",
+  "N3": "passed",
+  "T06": "passed",
+  "T07": "passed",
+  "T08": "passed",
+  "T09": "passed",
+  "T10": "passed",
+  "T11": "passed",
+  "T12": "passed",
+  "T13": "passed",
+  "Q68a": "passed",
+  "Q68b": "passed"
+ },
+ "matrix_verdict": "TEETH_AND_BASELINE",
+ "verdict_vocabulary_used": [
+  "MET",
+  "REPORTED_NOT_FIXED"
+ ],
+ "claimed_result": "两格各自双向断言成立；r3 点名的两行命中清零；候选只在新分支，权威线未动",
+ "derived_result": null,
+ "note": "claimed_result 是我自己的主张，等级归红队（B-1）。derived_result 留空。"
+}
