@@ -1,0 +1,652 @@
+{
+ "order": "ORD-0310",
+ "lane": "D e345b9d6",
+ "generated_at": "2026-09-25T21:46:49+08:00",
+ "tested_tree": "30de4ebe409f49c5e25f4758cb2e5f4e90764a4f",
+ "spec": "e2e/qoder-ord0310-keyless-write-deadline.spec.ts",
+ "gate_command": "python review/run_spec.py qoder-ord0310-keyless-write-deadline <port>   (CNX_LANE_ROOT=D:\\moodle\\_qoder_d_lane_20260923)",
+ "clean_round": {
+  "label": "clean-round",
+  "gateExit": 0,
+  "nodes": {
+   "K1 无键写腿到点：屏幕说结果未知、不能补问，秒数与计时器同源": "GREEN",
+   "K2 正控：服务器两秒内答完时，这枚期限不碰正常结局": "GREEN",
+   "K3 反控：旅行者按取消时，期限不许冒充用户": "GREEN"
+  },
+  "tallies": [
+   "4 passed (1.5m)",
+   "4 passed (1.5m)"
+  ],
+  "runId": "run342959",
+  "db": "_run342959.db",
+  "port": 5610,
+  "lastLine": "exit=0 log=D:\\moodle\\_qoder_d_lane_20260923/review/run-run342959.log"
+ },
+ "arms_total": 7,
+ "killed": 6,
+ "survived": 0,
+ "probes": 1,
+ "all_arms_restored_to_tested_tree_bytes": true,
+ "tree_unchanged_by_this_run": true,
+ "every_arm_parsed_at_least_one_node": true,
+ "all_arms_carry_a_green_same_key_precondition": true,
+ "arms": [
+  {
+   "arm": "K0310_DEADLINE_RENAMED_AS_CANCEL",
+   "kind": "kill",
+   "file": "frontend/src/features/planning/PlanWithAiSheet.tsx",
+   "triple": {
+    "exact_sha": "30de4ebe409f49c5e25f4758cb2e5f4e90764a4f",
+    "nodeid": "e2e/qoder-ord0310-keyless-write-deadline.spec.ts :: K1 无键写腿到点：屏幕说结果未知、不能补问，秒数与计时器同源",
+    "shape": [
+     "chromium"
+    ]
+   },
+   "anchor_hits": 1,
+   "expected_anchor_hits": 1,
+   "bytes_changed": true,
+   "sizes": {
+    "before": 52799,
+    "during_mutation": 52789,
+    "delta_bytes": -10,
+    "after_restore": 52799
+   },
+   "hashes_12": {
+    "before": "5be3b4735aa4",
+    "mutant": "cb721e2fa113",
+    "after_restore": "5be3b4735aa4"
+   },
+   "clean_round": {
+    "runId": "run342959",
+    "db": "_run342959.db",
+    "port": 5610,
+    "owner_node_state": "GREEN"
+   },
+   "same_key_precondition_holds": true,
+   "attempt": {
+    "label": "K0310_DEADLINE_RENAMED_AS_CANCEL",
+    "gateExit": 1,
+    "nodes": {
+     "K1 无键写腿到点：屏幕说结果未知、不能补问，秒数与计时器同源": "RED",
+     "K2 正控：服务器两秒内答完时，这枚期限不碰正常结局": "GREEN",
+     "K3 反控：旅行者按取消时，期限不许冒充用户": "GREEN"
+    },
+    "tallies": [
+     "1 failed",
+     "3 passed (2.1m)",
+     "1 failed",
+     "3 passed (2.1m)"
+    ],
+    "runId": "run343053",
+    "db": "_run343053.db",
+    "port": 5620,
+    "lastLine": "exit=1 log=D:\\moodle\\_qoder_d_lane_20260923/review/run-run343053.log"
+   },
+   "red_nodes": [
+    "K1 无键写腿到点：屏幕说结果未知、不能补问，秒数与计时器同源"
+   ],
+   "restored_to_tested_tree_bytes": true,
+   "screen_reading_from_this_run": {
+    "K2": {
+     "verdict": "MET",
+     "elapsed_ms": 233,
+     "post_count": 1,
+     "deadline_constant_ms": null,
+     "status": "HTTP_500",
+     "card_text": "服务端处理失败 这次是服务端出错，不是你的需求有问题。行程未被改动，可稍后重试；反复出现请保留“技术详情”。 技术详情 服务器给出的原因 这一趟的模型通道没开，没排出方案。",
+     "reason_text": "这一趟的模型通道没开，没排出方案。",
+     "origin": "server",
+     "label": "服务器给出的原因",
+     "detail_block_attached": true,
+     "failed_claims": []
+    },
+    "K3": {
+     "verdict": "MET",
+     "elapsed_ms": null,
+     "post_count": 1,
+     "deadline_constant_ms": null,
+     "status": "CANCELLED_AFTER_SEND",
+     "card_text": "已中止后续核对 请求本身已经发出去了，可能已经生成方案。请先刷新确认，不要重复提交。",
+     "reason_text": "",
+     "origin": "",
+     "label": "",
+     "detail_block_attached": false,
+     "failed_claims": []
+    }
+   },
+   "claimed_result": "KILLED",
+   "derived_result": null,
+   "why": "把期限那一发改写成旅行者熟悉的「已取消」形状——正是 Q54 禁的那句话。"
+  },
+  {
+   "arm": "K0310_DEVICE_NOTE_UNDER_SERVER_LABEL",
+   "kind": "kill",
+   "file": "frontend/src/features/planning/PlanWithAiSheet.tsx",
+   "triple": {
+    "exact_sha": "30de4ebe409f49c5e25f4758cb2e5f4e90764a4f",
+    "nodeid": "e2e/qoder-ord0310-keyless-write-deadline.spec.ts :: K1 无键写腿到点：屏幕说结果未知、不能补问，秒数与计时器同源",
+    "shape": [
+     "chromium"
+    ]
+   },
+   "anchor_hits": 1,
+   "expected_anchor_hits": 1,
+   "bytes_changed": true,
+   "sizes": {
+    "before": 52799,
+    "during_mutation": 52831,
+    "delta_bytes": 32,
+    "after_restore": 52799
+   },
+   "hashes_12": {
+    "before": "5be3b4735aa4",
+    "mutant": "316537e6eb48",
+    "after_restore": "5be3b4735aa4"
+   },
+   "clean_round": {
+    "runId": "run342959",
+    "db": "_run342959.db",
+    "port": 5610,
+    "owner_node_state": "GREEN"
+   },
+   "same_key_precondition_holds": true,
+   "attempt": {
+    "label": "K0310_DEVICE_NOTE_UNDER_SERVER_LABEL",
+    "gateExit": 1,
+    "nodes": {
+     "K1 无键写腿到点：屏幕说结果未知、不能补问，秒数与计时器同源": "RED",
+     "K2 正控：服务器两秒内答完时，这枚期限不碰正常结局": "GREEN",
+     "K3 反控：旅行者按取消时，期限不许冒充用户": "GREEN"
+    },
+    "tallies": [
+     "1 failed",
+     "3 passed (1.6m)",
+     "1 failed",
+     "3 passed (1.6m)"
+    ],
+    "runId": "run343182",
+    "db": "_run343182.db",
+    "port": 5630,
+    "lastLine": "exit=1 log=D:\\moodle\\_qoder_d_lane_20260923/review/run-run343182.log"
+   },
+   "red_nodes": [
+    "K1 无键写腿到点：屏幕说结果未知、不能补问，秒数与计时器同源"
+   ],
+   "restored_to_tested_tree_bytes": true,
+   "screen_reading_from_this_run": {
+    "K2": {
+     "verdict": "MET",
+     "elapsed_ms": 209,
+     "post_count": 1,
+     "deadline_constant_ms": null,
+     "status": "HTTP_500",
+     "card_text": "服务端处理失败 这次是服务端出错，不是你的需求有问题。行程未被改动，可稍后重试；反复出现请保留“技术详情”。 技术详情 服务器给出的原因 这一趟的模型通道没开，没排出方案。",
+     "reason_text": "这一趟的模型通道没开，没排出方案。",
+     "origin": "server",
+     "label": "服务器给出的原因",
+     "detail_block_attached": true,
+     "failed_claims": []
+    },
+    "K3": {
+     "verdict": "MET",
+     "elapsed_ms": null,
+     "post_count": 1,
+     "deadline_constant_ms": null,
+     "status": "CANCELLED_AFTER_SEND",
+     "card_text": "已中止后续核对 请求本身已经发出去了，可能已经生成方案。请先刷新确认，不要重复提交。",
+     "reason_text": "",
+     "origin": "",
+     "label": "",
+     "detail_block_attached": false,
+     "failed_claims": []
+    }
+   },
+   "claimed_result": "KILLED",
+   "derived_result": null,
+   "why": "把设备自己拼的句子挂到「服务器给出的原因」标签下（0280 那一族在本单的复发形）。"
+  },
+  {
+   "arm": "K0310_SENTENCE_PROMISES_REPLAY",
+   "kind": "kill",
+   "file": "frontend/src/lib/keylessWriteDeadline.ts",
+   "triple": {
+    "exact_sha": "30de4ebe409f49c5e25f4758cb2e5f4e90764a4f",
+    "nodeid": "e2e/qoder-ord0310-keyless-write-deadline.spec.ts :: K1 无键写腿到点：屏幕说结果未知、不能补问，秒数与计时器同源",
+    "shape": [
+     "chromium"
+    ]
+   },
+   "anchor_hits": 1,
+   "expected_anchor_hits": 1,
+   "bytes_changed": true,
+   "sizes": {
+    "before": 5266,
+    "during_mutation": 5250,
+    "delta_bytes": -16,
+    "after_restore": 5266
+   },
+   "hashes_12": {
+    "before": "97fcf86907c5",
+    "mutant": "b9a1727677a9",
+    "after_restore": "97fcf86907c5"
+   },
+   "clean_round": {
+    "runId": "run342959",
+    "db": "_run342959.db",
+    "port": 5610,
+    "owner_node_state": "GREEN"
+   },
+   "same_key_precondition_holds": true,
+   "attempt": {
+    "label": "K0310_SENTENCE_PROMISES_REPLAY",
+    "gateExit": 1,
+    "nodes": {
+     "K1 无键写腿到点：屏幕说结果未知、不能补问，秒数与计时器同源": "RED",
+     "K2 正控：服务器两秒内答完时，这枚期限不碰正常结局": "GREEN",
+     "K3 反控：旅行者按取消时，期限不许冒充用户": "GREEN"
+    },
+    "tallies": [
+     "1 failed",
+     "3 passed (2.0m)",
+     "1 failed",
+     "3 passed (2.0m)"
+    ],
+    "runId": "run343283",
+    "db": "_run343283.db",
+    "port": 5640,
+    "lastLine": "exit=1 log=D:\\moodle\\_qoder_d_lane_20260923/review/run-run343283.log"
+   },
+   "red_nodes": [
+    "K1 无键写腿到点：屏幕说结果未知、不能补问，秒数与计时器同源"
+   ],
+   "restored_to_tested_tree_bytes": true,
+   "screen_reading_from_this_run": {
+    "K2": {
+     "verdict": "MET",
+     "elapsed_ms": 252,
+     "post_count": 1,
+     "deadline_constant_ms": null,
+     "status": "HTTP_500",
+     "card_text": "服务端处理失败 这次是服务端出错，不是你的需求有问题。行程未被改动，可稍后重试；反复出现请保留“技术详情”。 技术详情 服务器给出的原因 这一趟的模型通道没开，没排出方案。",
+     "reason_text": "这一趟的模型通道没开，没排出方案。",
+     "origin": "server",
+     "label": "服务器给出的原因",
+     "detail_block_attached": true,
+     "failed_claims": []
+    },
+    "K3": {
+     "verdict": "MET",
+     "elapsed_ms": null,
+     "post_count": 1,
+     "deadline_constant_ms": null,
+     "status": "CANCELLED_AFTER_SEND",
+     "card_text": "已中止后续核对 请求本身已经发出去了，可能已经生成方案。请先刷新确认，不要重复提交。",
+     "reason_text": "",
+     "origin": "",
+     "label": "",
+     "detail_block_attached": false,
+     "failed_claims": []
+    }
+   },
+   "claimed_result": "KILLED",
+   "derived_result": null,
+   "why": "未知被写成「没有发生」并承诺可补问，同时把带秒数的那半句抹掉——三处判据一起该红。"
+  },
+  {
+   "arm": "K0310_DEADLINE_IMPERSONATES_TRAVELLER",
+   "kind": "kill",
+   "file": "frontend/src/lib/keylessWriteDeadline.ts",
+   "triple": {
+    "exact_sha": "30de4ebe409f49c5e25f4758cb2e5f4e90764a4f",
+    "nodeid": "e2e/qoder-ord0310-keyless-write-deadline.spec.ts :: K3 反控：旅行者按取消时，期限不许冒充用户",
+    "shape": [
+     "chromium"
+    ]
+   },
+   "anchor_hits": 1,
+   "expected_anchor_hits": 1,
+   "bytes_changed": true,
+   "sizes": {
+    "before": 5266,
+    "during_mutation": 5299,
+    "delta_bytes": 33,
+    "after_restore": 5266
+   },
+   "hashes_12": {
+    "before": "97fcf86907c5",
+    "mutant": "cd77d66e69c8",
+    "after_restore": "97fcf86907c5"
+   },
+   "clean_round": {
+    "runId": "run342959",
+    "db": "_run342959.db",
+    "port": 5610,
+    "owner_node_state": "GREEN"
+   },
+   "same_key_precondition_holds": true,
+   "attempt": {
+    "label": "K0310_DEADLINE_IMPERSONATES_TRAVELLER",
+    "gateExit": 1,
+    "nodes": {
+     "K1 无键写腿到点：屏幕说结果未知、不能补问，秒数与计时器同源": "GREEN",
+     "K2 正控：服务器两秒内答完时，这枚期限不碰正常结局": "GREEN",
+     "K3 反控：旅行者按取消时，期限不许冒充用户": "RED"
+    },
+    "tallies": [
+     "1 failed",
+     "3 passed (1.8m)",
+     "1 failed",
+     "3 passed (1.8m)"
+    ],
+    "runId": "run343403",
+    "db": "_run343403.db",
+    "port": 5650,
+    "lastLine": "exit=1 log=D:\\moodle\\_qoder_d_lane_20260923/review/run-run343403.log"
+   },
+   "red_nodes": [
+    "K3 反控：旅行者按取消时，期限不许冒充用户"
+   ],
+   "restored_to_tested_tree_bytes": true,
+   "screen_reading_from_this_run": {
+    "K1": {
+     "verdict": "MET",
+     "elapsed_ms": 60349,
+     "post_count": 1,
+     "deadline_constant_ms": 60000,
+     "status": "UNKNOWN_KEYLESS_WRITE_DEADLINE",
+     "card_text": "这一笔的结果未知（不是没发生） 这台设备停止等待了，而请求已经发出去，服务器那边可能还在做。这条路线不收幂等键，所以这一笔既没有可回读的凭条，也不能靠同一把键补问。先刷新核对结果，不要重复提交。 技术详情 这台设备自己的读数（服务器没给句子） POST /api/v1/journeys/c96859f4-94c6-4472-b544-c01dffd46ebd/agent/commands -- 这",
+     "reason_text": "POST /api/v1/journeys/c96859f4-94c6-4472-b544-c01dffd46ebd/agent/commands -- 这台设备等到 60 秒就停下来了。这一笔的结果未知，不是没发生：请求已经发出去了，服务器可能还在做。也不能靠同一把键补问：这条路线不认幂等键，它没有收下这把键，没有可回读的凭条。",
+     "origin": "device",
+     "label": "这台设备自己的读数（服务器没给句子）",
+     "detail_block_attached": true,
+     "failed_claims": []
+    },
+    "K2": {
+     "verdict": "MET",
+     "elapsed_ms": 229,
+     "post_count": 1,
+     "deadline_constant_ms": null,
+     "status": "HTTP_500",
+     "card_text": "服务端处理失败 这次是服务端出错，不是你的需求有问题。行程未被改动，可稍后重试；反复出现请保留“技术详情”。 技术详情 服务器给出的原因 这一趟的模型通道没开，没排出方案。",
+     "reason_text": "这一趟的模型通道没开，没排出方案。",
+     "origin": "server",
+     "label": "服务器给出的原因",
+     "detail_block_attached": true,
+     "failed_claims": []
+    },
+    "K3": {
+     "verdict": "NOT_MET",
+     "elapsed_ms": null,
+     "post_count": 1,
+     "deadline_constant_ms": null,
+     "status": "UNKNOWN_KEYLESS_WRITE_DEADLINE",
+     "card_text": "这一笔的结果未知（不是没发生） 这台设备停止等待了，而请求已经发出去，服务器那边可能还在做。这条路线不收幂等键，所以这一笔既没有可回读的凭条，也不能靠同一把键补问。先刷新核对结果，不要重复提交。 技术详情 这台设备自己的读数（服务器没给句子） POST /api/v1/journeys/c96859f4-94c6-4472-b544-c01dffd46ebd/agent/commands -- 这",
+     "reason_text": "POST /api/v1/journeys/c96859f4-94c6-4472-b544-c01dffd46ebd/agent/commands -- 这台设备等到 60 秒就停下来了。这一笔的结果未知，不是没发生：请求已经发出去了，服务器可能还在做。也不能靠同一把键补问：这条路线不认幂等键，它没有收下这把键，没有可回读的凭条。",
+     "origin": "device",
+     "label": "这台设备自己的读数（服务器没给句子）",
+     "detail_block_attached": true,
+     "failed_claims": [
+      "旅行者自己按的取消仍是取消，不是期限",
+      "取消那一格没有被 UNKNOWN_* 顶替"
+     ]
+    }
+   },
+   "claimed_result": "KILLED",
+   "derived_result": null,
+   "why": "让旅行者自己的取消也走 firedHere ⇒ 期限冒充用户，K3 必须红。"
+  },
+  {
+   "arm": "K0310_TIMER_FIRES_BEFORE_THE_CONSTANT",
+   "kind": "kill",
+   "file": "frontend/src/lib/keylessWriteDeadline.ts",
+   "triple": {
+    "exact_sha": "30de4ebe409f49c5e25f4758cb2e5f4e90764a4f",
+    "nodeid": "e2e/qoder-ord0310-keyless-write-deadline.spec.ts :: K1 无键写腿到点：屏幕说结果未知、不能补问，秒数与计时器同源",
+    "shape": [
+     "chromium"
+    ]
+   },
+   "anchor_hits": 1,
+   "expected_anchor_hits": 1,
+   "bytes_changed": true,
+   "sizes": {
+    "before": 5266,
+    "during_mutation": 5257,
+    "delta_bytes": -9,
+    "after_restore": 5266
+   },
+   "hashes_12": {
+    "before": "97fcf86907c5",
+    "mutant": "e93670faf523",
+    "after_restore": "97fcf86907c5"
+   },
+   "clean_round": {
+    "runId": "run342959",
+    "db": "_run342959.db",
+    "port": 5610,
+    "owner_node_state": "GREEN"
+   },
+   "same_key_precondition_holds": true,
+   "attempt": {
+    "label": "K0310_TIMER_FIRES_BEFORE_THE_CONSTANT",
+    "gateExit": 1,
+    "nodes": {
+     "K1 无键写腿到点：屏幕说结果未知、不能补问，秒数与计时器同源": "RED",
+     "K2 正控：服务器两秒内答完时，这枚期限不碰正常结局": "RED",
+     "K3 反控：旅行者按取消时，期限不许冒充用户": "RED"
+    },
+    "tallies": [
+     "3 failed",
+     "1 passed (1.5m)",
+     "3 failed",
+     "1 passed (1.5m)"
+    ],
+    "runId": "run343517",
+    "db": "_run343517.db",
+    "port": 5660,
+    "lastLine": "exit=1 log=D:\\moodle\\_qoder_d_lane_20260923/review/run-run343517.log"
+   },
+   "red_nodes": [
+    "K1 无键写腿到点：屏幕说结果未知、不能补问，秒数与计时器同源",
+    "K2 正控：服务器两秒内答完时，这枚期限不碰正常结局",
+    "K3 反控：旅行者按取消时，期限不许冒充用户"
+   ],
+   "restored_to_tested_tree_bytes": true,
+   "screen_reading_from_this_run": {},
+   "claimed_result": "KILLED",
+   "derived_result": null,
+   "why": "计时器不再用那枚常数（这里直接 0 ms）⇒ 屏幕上那个数字还对、实际等待时长早就脱钩，K1 里「等待时长与常数一致」那条必须红。"
+  },
+  {
+   "arm": "K0310_KEYLESS_LEG_HAS_SIGNAL_BUT_NO_DEADLINE",
+   "kind": "kill",
+   "file": "frontend/src/features/planning/PlanWithAiSheet.tsx",
+   "triple": {
+    "exact_sha": "30de4ebe409f49c5e25f4758cb2e5f4e90764a4f",
+    "nodeid": "e2e/qoder-ord0310-keyless-write-deadline.spec.ts :: K1 无键写腿到点：屏幕说结果未知、不能补问，秒数与计时器同源",
+    "shape": [
+     "chromium"
+    ]
+   },
+   "anchor_hits": 1,
+   "expected_anchor_hits": 1,
+   "bytes_changed": true,
+   "sizes": {
+    "before": 52799,
+    "during_mutation": 52775,
+    "delta_bytes": -24,
+    "after_restore": 52799
+   },
+   "hashes_12": {
+    "before": "5be3b4735aa4",
+    "mutant": "60a33e329b94",
+    "after_restore": "5be3b4735aa4"
+   },
+   "clean_round": {
+    "runId": "run342959",
+    "db": "_run342959.db",
+    "port": 5610,
+    "owner_node_state": "GREEN"
+   },
+   "same_key_precondition_holds": true,
+   "attempt": {
+    "label": "K0310_KEYLESS_LEG_HAS_SIGNAL_BUT_NO_DEADLINE",
+    "gateExit": 1,
+    "nodes": {
+     "K1 无键写腿到点：屏幕说结果未知、不能补问，秒数与计时器同源": "RED",
+     "K2 正控：服务器两秒内答完时，这枚期限不碰正常结局": "GREEN",
+     "K3 反控：旅行者按取消时，期限不许冒充用户": "GREEN"
+    },
+    "tallies": [
+     "1 failed",
+     "3 passed (3.8m)",
+     "1 failed",
+     "3 passed (3.8m)"
+    ],
+    "runId": "run343607",
+    "db": "_run343607.db",
+    "port": 5670,
+    "lastLine": "exit=1 log=D:\\moodle\\_qoder_d_lane_20260923/review/run-run343607.log"
+   },
+   "red_nodes": [
+    "K1 无键写腿到点：屏幕说结果未知、不能补问，秒数与计时器同源"
+   ],
+   "restored_to_tested_tree_bytes": true,
+   "screen_reading_from_this_run": {
+    "K2": {
+     "verdict": "MET",
+     "elapsed_ms": 265,
+     "post_count": 1,
+     "deadline_constant_ms": null,
+     "status": "HTTP_500",
+     "card_text": "服务端处理失败 这次是服务端出错，不是你的需求有问题。行程未被改动，可稍后重试；反复出现请保留“技术详情”。 技术详情 服务器给出的原因 这一趟的模型通道没开，没排出方案。",
+     "reason_text": "这一趟的模型通道没开，没排出方案。",
+     "origin": "server",
+     "label": "服务器给出的原因",
+     "detail_block_attached": true,
+     "failed_claims": []
+    },
+    "K3": {
+     "verdict": "MET",
+     "elapsed_ms": null,
+     "post_count": 1,
+     "deadline_constant_ms": null,
+     "status": "CANCELLED_AFTER_SEND",
+     "card_text": "已中止后续核对 请求本身已经发出去了，可能已经生成方案。请先刷新确认，不要重复提交。",
+     "reason_text": "",
+     "origin": "",
+     "label": "",
+     "detail_block_attached": false,
+     "failed_claims": []
+    }
+   },
+   "claimed_result": "KILLED",
+   "derived_result": null,
+   "why": "号令者 20:5x 要的那枚双臂自证：把外层包装拆掉，`signal` 一个不少地留在选项对象里（那一发的 init 里本来就有 `signal,`），只是期限没有了。若判据是「有没有 signal」，这一枚会绿；实测 K1 必须红、K3 必须仍绿，所以判据确实是「期限到了」，而拆包装也没有动到旅行者自己的取消那一支。"
+  },
+  {
+   "arm": "K0310_DERIVATION_PROBE_CONSTANT_TO_7S",
+   "kind": "probe_expect_green",
+   "file": "frontend/src/lib/keylessWriteDeadline.ts",
+   "triple": {
+    "exact_sha": "30de4ebe409f49c5e25f4758cb2e5f4e90764a4f",
+    "nodeid": "e2e/qoder-ord0310-keyless-write-deadline.spec.ts :: K1 无键写腿到点：屏幕说结果未知、不能补问，秒数与计时器同源",
+    "shape": [
+     "chromium"
+    ]
+   },
+   "anchor_hits": 1,
+   "expected_anchor_hits": 1,
+   "bytes_changed": true,
+   "sizes": {
+    "before": 5266,
+    "during_mutation": 5265,
+    "delta_bytes": -1,
+    "after_restore": 5266
+   },
+   "hashes_12": {
+    "before": "97fcf86907c5",
+    "mutant": "aa12f55724d3",
+    "after_restore": "97fcf86907c5"
+   },
+   "clean_round": {
+    "runId": "run342959",
+    "db": "_run342959.db",
+    "port": 5610,
+    "owner_node_state": "GREEN"
+   },
+   "same_key_precondition_holds": true,
+   "attempt": {
+    "label": "K0310_DERIVATION_PROBE_CONSTANT_TO_7S",
+    "gateExit": 0,
+    "nodes": {
+     "K1 无键写腿到点：屏幕说结果未知、不能补问，秒数与计时器同源": "GREEN",
+     "K2 正控：服务器两秒内答完时，这枚期限不碰正常结局": "GREEN",
+     "K3 反控：旅行者按取消时，期限不许冒充用户": "GREEN"
+    },
+    "tallies": [
+     "4 passed (2.8m)",
+     "4 passed (2.8m)"
+    ],
+    "runId": "run343841",
+    "db": "_run343841.db",
+    "port": 5680,
+    "lastLine": "exit=0 log=D:\\moodle\\_qoder_d_lane_20260923/review/run-run343841.log"
+   },
+   "red_nodes": [],
+   "restored_to_tested_tree_bytes": true,
+   "screen_reading_from_this_run": {
+    "K1": {
+     "verdict": "MET",
+     "elapsed_ms": 7548,
+     "post_count": 1,
+     "deadline_constant_ms": 7000,
+     "status": "UNKNOWN_KEYLESS_WRITE_DEADLINE",
+     "card_text": "这一笔的结果未知（不是没发生） 这台设备停止等待了，而请求已经发出去，服务器那边可能还在做。这条路线不收幂等键，所以这一笔既没有可回读的凭条，也不能靠同一把键补问。先刷新核对结果，不要重复提交。 技术详情 这台设备自己的读数（服务器没给句子） POST /api/v1/journeys/32592e20-040b-4f0d-87e2-14d04f1072e9/agent/commands -- 这",
+     "reason_text": "POST /api/v1/journeys/32592e20-040b-4f0d-87e2-14d04f1072e9/agent/commands -- 这台设备等到 7 秒就停下来了。这一笔的结果未知，不是没发生：请求已经发出去了，服务器可能还在做。也不能靠同一把键补问：这条路线不认幂等键，它没有收下这把键，没有可回读的凭条。",
+     "origin": "device",
+     "label": "这台设备自己的读数（服务器没给句子）",
+     "detail_block_attached": true,
+     "failed_claims": []
+    },
+    "K2": {
+     "verdict": "MET",
+     "elapsed_ms": 192,
+     "post_count": 1,
+     "deadline_constant_ms": null,
+     "status": "HTTP_500",
+     "card_text": "服务端处理失败 这次是服务端出错，不是你的需求有问题。行程未被改动，可稍后重试；反复出现请保留“技术详情”。 技术详情 服务器给出的原因 这一趟的模型通道没开，没排出方案。",
+     "reason_text": "这一趟的模型通道没开，没排出方案。",
+     "origin": "server",
+     "label": "服务器给出的原因",
+     "detail_block_attached": true,
+     "failed_claims": []
+    },
+    "K3": {
+     "verdict": "MET",
+     "elapsed_ms": null,
+     "post_count": 1,
+     "deadline_constant_ms": null,
+     "status": "CANCELLED_AFTER_SEND",
+     "card_text": "已中止后续核对 请求本身已经发出去了，可能已经生成方案。请先刷新确认，不要重复提交。",
+     "reason_text": "",
+     "origin": "",
+     "label": "",
+     "detail_block_attached": false,
+     "failed_claims": []
+    }
+   },
+   "claimed_result": "HOLDING_AS_EXPECTED",
+   "derived_result": null,
+   "why": "常数改小：这一格应仍绿，且屏幕上那个秒数与实际等待时长一起跟着变（同源证明）。"
+  }
+ ],
+ "discipline": {
+  "refs_pushed": 0,
+  "authority_line_moved": 0,
+  "demo_reset": 0,
+  "user_db_reads_writes": 0,
+  "credentials_printed": 0,
+  "note": "claimed_result is observation by this lane; derived_result belongs to the verifier and stays null here"
+ }
+}
