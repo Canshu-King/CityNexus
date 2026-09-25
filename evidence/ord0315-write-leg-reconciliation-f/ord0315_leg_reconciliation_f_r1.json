@@ -1,0 +1,383 @@
+{
+ "what": "ORD-0315 · 写腿普查与清单合一：一把能同时看见 fetch 与包装写的尺，锚点只能落在调用行",
+ "lane": "F 8ccd71d8",
+ "generated_at": "2026-09-25T20:44:21+08:00",
+ "measured_on": "30a5f90e5deaed6e45a704ddcc7d6e5e9790475b",
+ "target_tip_in_order": "30a5f90e5deaed6e45a704ddcc7d6e5e9790475b",
+ "tip_matches_order": true,
+ "instrument": {
+  "tool": "o315_ast_census.cjs（node + typescript 5.9.3 AST；不是正则+窗口）",
+  "definition": "写腿 = fetch 家族（含 fetchWithWriteDeadline 这类包装）或 request({method:<写动词>}) 或 从 api/http 模块导入的 post/put/patch/delete；动词必须解析得出，解析不出一律进 unresolved 不猜；锚点 = CallExpression 起始行，且工具对锚点**硬断言**（空行/注释行/该行没有被调用名 ⇒ 直接 throw）",
+  "files_scanned": 73,
+  "legs": 20,
+  "unresolved_not_counted": 6,
+  "covered": 4,
+  "bare": 16
+ },
+ "selftest_two_way": {
+  "fixtures": 8,
+  "assertions": {
+   "own_signal_is_covered": true,
+   "wrapper_is_seen_and_covered": true,
+   "bare_is_not_covered": true,
+   "prototype_calls_produce_zero_legs": true,
+   "blankline_anchor_is_the_call_line": true,
+   "collections_delete_produce_zero_legs": true,
+   "indexeddb_put_produces_zero_legs": true,
+   "imported_http_verb_is_a_leg": true,
+   "leg_count_excluding_bad_shapes": 5,
+   "unresolved": 0,
+   "verdict": "SELFTEST_PASS"
+  },
+  "verdict": "SELFTEST_PASS",
+  "what_each_fixture_pins": {
+   "own_signal_is_covered": "选项自带 signal ⇒ 判已覆盖（对应 PlanWithAiSheet.tsx:518/:653）",
+   "wrapper_is_seen_and_covered": "包一层 fetchWithWriteDeadline ⇒ 判已覆盖（他那把尺看不见这类）",
+   "bare_is_not_covered": "裸 fetch 无期限 ⇒ 判未覆盖（不把默认值当期限）",
+   "prototype_calls_produce_zero_legs": "obj.toString()/Object.prototype.toLocaleString.call ⇒ 0 腿（他那台第一次跑死在这里、错数 23）",
+   "blankline_anchor_is_the_call_line": "调用前一行是空行 ⇒ 锚点必须是调用行本身（225/69 那一类构造性不可能）",
+   "collections_delete_produce_zero_legs": "Set/Map.delete ⇒ 0 腿",
+   "indexeddb_put_produces_zero_legs": "IndexedDB objectStore.put/delete ⇒ 0 腿",
+   "imported_http_verb_is_a_leg": "从 api/http 导入的 post('/api/…') ⇒ 算一条腿"
+  }
+ },
+ "requirement_1_counter_evidence": {
+  "pass": true,
+  "detail": {
+   "LiveRecovery.tsx": {
+    "must_not_be": 225,
+    "tool_reports": [
+     230
+    ]
+   },
+   "V14RecoveryTruthPanel.tsx": {
+    "must_not_be": 69,
+    "tool_reports": [
+     74
+    ]
+   },
+   "PlanWithAiSheet.tsx": {
+    "must_not_be": [
+     492,
+     605
+    ],
+    "tool_reports": [
+     518,
+     653
+    ]
+   }
+  },
+  "meaning": "号令要求的两枚反证成立；不是我手动改的数，是锚点定义改成了调用行"
+ },
+ "union_with_his_instrument": {
+  "mine": 20,
+  "his": 16,
+  "agreed": 12,
+  "only_mine": [
+   "api/travelerPreferences.ts:69",
+   "api/v12Authoritative.ts:52",
+   "api/v12Authoritative.ts:63",
+   "api/v12Authoritative.ts:77",
+   "api/v12Authoritative.ts:88",
+   "features/discovery/RealCityDiscoveryPanel.tsx:103",
+   "features/execution/LiveRecovery.tsx:230",
+   "features/recovery/V14RecoveryTruthPanel.tsx:74"
+  ],
+  "only_his": [
+   "lib/inFlightWrites.ts:57",
+   "lib/offlineJourney.ts:43",
+   "lib/offlineJourney.ts:55",
+   "main.tsx:1706"
+  ],
+  "union_as_computed": 24,
+  "disagreement_read": {
+   "only_mine_reason": "其中 2 枚是他那把尺的具名盲区（fetchWithWriteDeadline 不是 fetch 标识符）；另外 6 枚是 request({method:'POST'}) 与 api/travelerPreferences 这类包装写调用",
+   "only_his_reason": "他那 4 枚经逐行读原文判定**不是网络写**：lib/inFlightWrites.ts:57 是 `return () => quietListeners.delete(then)`；main.tsx:1706 是 `caches.delete(name)`；lib/offlineJourney.ts:43/:55 是 `await database.journeys.put(snapshot)`（IndexedDB）。我的尺现在对这三族各有反例 fixture ⇒ 不进清单，所以并集从 24 收成 20 条候选（20 = 12 双方一致 + 8 只在我这边）"
+  },
+  "i_am_not_asking_his_number_to_change": "我不要求他改数；我把两侧读数与逐行原文都留着，谁要判就都看得见"
+ },
+ "per_site_four_questions": [
+  {
+   "site": "api/travelerPreferences.ts:69",
+   "q1_verb": "PUT",
+   "q1b_verb_how": "request-wrapper",
+   "q2_deadline_source": "none",
+   "q2b_where": null,
+   "q3_wrapper": "request",
+   "q4_order_ownership": [
+    "无（不在任何已具名单号的改动路径里）"
+   ],
+   "anchor_line_text": "await request(`/api/v1/travelers/${travelerId}/preferences`, {",
+   "url": "/api/v1/travelers/${…}"
+  },
+  {
+   "site": "api/v12Authoritative.ts:52",
+   "q1_verb": "POST",
+   "q1b_verb_how": "request-wrapper",
+   "q2_deadline_source": "none",
+   "q2b_where": null,
+   "q3_wrapper": "request",
+   "q4_order_ownership": [
+    "无（不在任何已具名单号的改动路径里）"
+   ],
+   "anchor_line_text": "request<PreviewResponse>(`/journeys/${journeyId}/trip-studio/preview`, {",
+   "url": "/journeys/${…}"
+  },
+  {
+   "site": "api/v12Authoritative.ts:63",
+   "q1_verb": "POST",
+   "q1b_verb_how": "request-wrapper",
+   "q2_deadline_source": "none",
+   "q2b_where": null,
+   "q3_wrapper": "request",
+   "q4_order_ownership": [
+    "无（不在任何已具名单号的改动路径里）"
+   ],
+   "anchor_line_text": "request<TripStudioAcceptResponse>(`/journeys/${journeyId}/trip-studio/accept`, {",
+   "url": "/journeys/${…}"
+  },
+  {
+   "site": "api/v12Authoritative.ts:77",
+   "q1_verb": "POST",
+   "q1b_verb_how": "request-wrapper",
+   "q2_deadline_source": "none",
+   "q2b_where": null,
+   "q3_wrapper": "request",
+   "q4_order_ownership": [
+    "无（不在任何已具名单号的改动路径里）"
+   ],
+   "anchor_line_text": "return request<AuthoritativeComposeResponse>(",
+   "url": "/journeys/${…}"
+  },
+  {
+   "site": "api/v12Authoritative.ts:88",
+   "q1_verb": "POST",
+   "q1b_verb_how": "request-wrapper",
+   "q2_deadline_source": "none",
+   "q2b_where": null,
+   "q3_wrapper": "request",
+   "q4_order_ownership": [
+    "无（不在任何已具名单号的改动路径里）"
+   ],
+   "anchor_line_text": "return request<JourneyTwin>(",
+   "url": "/journeys/${…}"
+  },
+  {
+   "site": "features/discovery/RealCityDiscoveryPanel.tsx:103",
+   "q1_verb": "POST",
+   "q1b_verb_how": "request-wrapper",
+   "q2_deadline_source": "none",
+   "q2b_where": null,
+   "q3_wrapper": "request",
+   "q4_order_ownership": [
+    "无（不在任何已具名单号的改动路径里）"
+   ],
+   "anchor_line_text": "const next = await request<DiscoveryResponse>(`/api/v1/journeys/${journeyId}/real-city/intelligence`, {",
+   "url": "/api/v1/journeys/${…}"
+  },
+  {
+   "site": "features/execution/LiveRecovery.tsx:230",
+   "q1_verb": "POST",
+   "q1b_verb_how": "fetch-ish/literal",
+   "q2_deadline_source": "wrapper",
+   "q2b_where": "fetchWithWriteDeadline",
+   "q3_wrapper": "fetchWithWriteDeadline",
+   "q4_order_ownership": [
+    "ORD-0281(有键半支·产码)"
+   ],
+   "anchor_line_text": "const r = await fetchWithWriteDeadline(`/api/v1/replans/${proposalId}/accept`, {",
+   "url": "/api/v1/replans/${…}"
+  },
+  {
+   "site": "features/notifications/PushCapabilityCard.tsx:56",
+   "q1_verb": "POST",
+   "q1b_verb_how": "fetch-ish/literal",
+   "q2_deadline_source": "none",
+   "q2b_where": null,
+   "q3_wrapper": null,
+   "q4_order_ownership": [
+    "无（不在任何已具名单号的改动路径里）"
+   ],
+   "anchor_line_text": "const response = await fetch(`/api/v1/travelers/${travelerId}/push-subscriptions`, {",
+   "url": "/api/v1/travelers/${…}"
+  },
+  {
+   "site": "features/planning/PlanComparison.tsx:88",
+   "q1_verb": "POST",
+   "q1b_verb_how": "fetch-ish/literal",
+   "q2_deadline_source": "none",
+   "q2b_where": null,
+   "q3_wrapper": null,
+   "q4_order_ownership": [
+    "无（不在任何已具名单号的改动路径里）"
+   ],
+   "anchor_line_text": "const response = await fetch(",
+   "url": "/api/v1/journeys/${…}"
+  },
+  {
+   "site": "features/planning/PlanWithAiSheet.tsx:518",
+   "q1_verb": "POST",
+   "q1b_verb_how": "fetch-ish/literal",
+   "q2_deadline_source": "options_signal",
+   "q2b_where": "同一 options 对象",
+   "q3_wrapper": null,
+   "q4_order_ownership": [
+    "无（不在任何已具名单号的改动路径里）"
+   ],
+   "anchor_line_text": "const response = await fetch(`/api/v1/journeys/${journeyId}/agent/commands`, {",
+   "url": "/api/v1/journeys/${…}"
+  },
+  {
+   "site": "features/planning/PlanWithAiSheet.tsx:653",
+   "q1_verb": "POST",
+   "q1b_verb_how": "fetch-ish/literal",
+   "q2_deadline_source": "options_signal",
+   "q2b_where": "同一 options 对象",
+   "q3_wrapper": null,
+   "q4_order_ownership": [
+    "无（不在任何已具名单号的改动路径里）"
+   ],
+   "anchor_line_text": "const generate = await fetch(",
+   "url": "/api/v1/journeys/${…}"
+  },
+  {
+   "site": "features/recovery/RecoveryRequiredPanel.tsx:26",
+   "q1_verb": "POST",
+   "q1b_verb_how": "fetch-ish/literal",
+   "q2_deadline_source": "none",
+   "q2b_where": null,
+   "q3_wrapper": null,
+   "q4_order_ownership": [
+    "无（不在任何已具名单号的改动路径里）"
+   ],
+   "anchor_line_text": "return fetch(path, {",
+   "url": "<path>"
+  },
+  {
+   "site": "features/recovery/V14RecoveryTruthPanel.tsx:74",
+   "q1_verb": "POST",
+   "q1b_verb_how": "fetch-ish/literal",
+   "q2_deadline_source": "wrapper",
+   "q2b_where": "fetchWithWriteDeadline",
+   "q3_wrapper": "fetchWithWriteDeadline",
+   "q4_order_ownership": [
+    "ORD-0281(有键半支·产码)"
+   ],
+   "anchor_line_text": "const response = await fetchWithWriteDeadline(`/api/v1/replans/${proposal.id}/accept`, {",
+   "url": "/api/v1/replans/${…}"
+  },
+  {
+   "site": "features/simulation/simulationAdapter.ts:229",
+   "q1_verb": "POST",
+   "q1b_verb_how": "fetch-ish/literal",
+   "q2_deadline_source": "none",
+   "q2b_where": null,
+   "q3_wrapper": null,
+   "q4_order_ownership": [
+    "无（不在任何已具名单号的改动路径里）"
+   ],
+   "anchor_line_text": "const response = await fetch(\"/api/v1/demo/reset\", {",
+   "url": "/api/v1/demo/reset"
+  },
+  {
+   "site": "features/simulation/simulationAdapter.ts:296",
+   "q1_verb": "POST",
+   "q1b_verb_how": "fetch-ish/literal",
+   "q2_deadline_source": "none",
+   "q2b_where": null,
+   "q3_wrapper": null,
+   "q4_order_ownership": [
+    "无（不在任何已具名单号的改动路径里）"
+   ],
+   "anchor_line_text": "const response = await fetch(`/api/v1/journeys/${journeyId}/activities/${activityId}/${step}`, {",
+   "url": "/api/v1/journeys/${…}"
+  },
+  {
+   "site": "features/simulation/simulationAdapter.ts:335",
+   "q1_verb": "POST",
+   "q1b_verb_how": "fetch-ish/literal",
+   "q2_deadline_source": "none",
+   "q2b_where": null,
+   "q3_wrapper": null,
+   "q4_order_ownership": [
+    "无（不在任何已具名单号的改动路径里）"
+   ],
+   "anchor_line_text": "const response = await fetch(`/api/v1/demo/${action}`, {",
+   "url": "/api/v1/demo/${…}"
+  },
+  {
+   "site": "features/simulation/simulationAdapter.ts:376",
+   "q1_verb": "POST",
+   "q1b_verb_how": "fetch-ish/literal",
+   "q2_deadline_source": "none",
+   "q2b_where": null,
+   "q3_wrapper": null,
+   "q4_order_ownership": [
+    "无（不在任何已具名单号的改动路径里）"
+   ],
+   "anchor_line_text": "const response = await fetch(`/api/v1/journeys/${journeyId}/events`, {",
+   "url": "/api/v1/journeys/${…}"
+  },
+  {
+   "site": "features/stay/HotelsPanel.tsx:63",
+   "q1_verb": "POST",
+   "q1b_verb_how": "fetch-ish/literal",
+   "q2_deadline_source": "none",
+   "q2b_where": null,
+   "q3_wrapper": null,
+   "q4_order_ownership": [
+    "无（不在任何已具名单号的改动路径里）"
+   ],
+   "anchor_line_text": "await fetch(`/api/v1/journeys/${journeyId}/stays/offers/capture`, { method: \"POST\" });",
+   "url": "/api/v1/journeys/${…}"
+  },
+  {
+   "site": "features/stay/HotelsPanel.tsx:64",
+   "q1_verb": "POST",
+   "q1b_verb_how": "fetch-ish/literal",
+   "q2_deadline_source": "none",
+   "q2b_where": null,
+   "q3_wrapper": null,
+   "q4_order_ownership": [
+    "无（不在任何已具名单号的改动路径里）"
+   ],
+   "anchor_line_text": "await fetch(`/api/v1/journeys/${journeyId}/stay-options/generate`, { method: \"POST\" });",
+   "url": "/api/v1/journeys/${…}"
+  },
+  {
+   "site": "features/stay/HotelsPanel.tsx:87",
+   "q1_verb": "POST",
+   "q1b_verb_how": "fetch-ish/literal",
+   "q2_deadline_source": "none",
+   "q2b_where": null,
+   "q3_wrapper": null,
+   "q4_order_ownership": [
+    "无（不在任何已具名单号的改动路径里）"
+   ],
+   "anchor_line_text": "const r = await fetch(",
+   "url": "/api/v1/journeys/${…}"
+  }
+ ],
+ "summary_by_deadline_source": {
+  "none": 16,
+  "wrapper": 2,
+  "options_signal": 2
+ },
+ "what_i_fixed_about_my_own_instrument": [
+  "读错键：上一版覆盖率帖读的是 `write_legs`（旧代 45b0a5e2 的行号）而不是 `write_legs_current_generation` ⇒ 行号整体平移，两枚恰好落在新代的空行上（225/69）。根因件见 ord0315_anchor_root_cause_r1.json",
+  "窗口启发式换成了 AST 锚点：±12/10 行找 deadline|signal 会把**邻行注释**和**别的函数的 signal** 算进来",
+  "我自己新加宽规则时先数出 26 条（含 4 条非网络写），是这次新增的 collections/idb 两枚反例把它咬回 20 条 ⇒ 同一个错我在一小时内犯了两次量级不同的版本，两次都是靠 fixture 而不是靠我记得"
+ ],
+ "boundary": {
+  "product_bytes_written": 0,
+  "refs_pushed": 0,
+  "authoritative_line_written": 0,
+  "live_or_preview_db_reads_or_writes": 0,
+  "credential_values_printed": 0,
+  "published_paths_overwritten": 0
+ },
+ "for_the_q60_prime_question": "若『客户端期限』判是要件：裸的有 16 处（清单在 per_site_four_questions 里逐条带 url 与归属），当下确实带期限的有 4 处，两把尺并集里双方一致的 12 处；若判不是要件，请把『已有期限』限定成ORD-0281 有键半支在 b0efbe87d0f99d178f58b9e288c92c1785da6572 命名过的那两条形状，别让它变成对整棵前端的断言。",
+ "claim_kind": "code_determined",
+ "claimed_result": "ANCHORS_ON_CALL_LINES_AND_UNION_RECOMPUTED_SELFTEST_BOTH_WAYS",
+ "derived_result": null
+}
