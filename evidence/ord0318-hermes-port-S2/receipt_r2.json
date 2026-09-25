@@ -1,0 +1,244 @@
+{
+ "schema": "CNX_ORD0318_HERMES_PORT_RECEIPT_V2",
+ "lane": "S2-hermes-port",
+ "order": "ORD-0318",
+ "revised_per": "commander 494abfd7 order at 03:15 (content stands, shape re-cut)",
+ "at_local": "2026-09-26T03:31:40+0800",
+ "generation": "9a669c8bec863fadf31d5158f4a1be66aec49f23",
+ "generation_note": "the authoritative tip moved from 30de4ebe409f49c5e25f4758cb2e5f4e90764a4f to 9a669c8bec863fadf31d5158f4a1be66aec49f23 (ORD-0302 landing) at 03:22 while r2 was being cut; r2 keeps the ordered base, r3 is the same content re-cut onto the live tip so the landing is a fast-forward",
+ "hermes_ref": "refs/heads/hermes/validation-0212",
+ "hermes_ref_now_points_to": "5de4f770e4624154c485c8caa2161c677fcd304b",
+ "hermes_source_commit_used": "0fe51945cdf2d0ae35494b615f3418957174da03",
+ "candidates": {
+  "r1_superseded": {
+   "sha": "afbbf5be3256d76eac0453ab3ad8e6dd1356d7cc",
+   "parent": "30de4ebe409f49c5e25f4758cb2e5f4e90764a4f",
+   "paths": 109,
+   "status_tally": {
+    "A": 109
+   },
+   "added_lines": 19688,
+   "deleted_lines": 0,
+   "buckets": {
+    "backend/tests": 21,
+    "reports/hermes": 21,
+    "scripts": 67
+   },
+   "product_paths_in_diff": 0,
+   "ancestor_check": "parent_is_ancestor=True",
+   "ahead_behind_vs_parent": {
+    "behind": 0,
+    "ahead": 1
+   },
+   "merge_tree_vs_parent": {
+    "exit": 0,
+    "tree": "8e1f36256e7673c6bd1a3187d11c093e6aedbdd4",
+    "conflict_entries": 0
+   }
+  },
+  "r2_as_ordered": {
+   "sha": "0ff20610f19e412ef01f821e252c5b490002d2de",
+   "parent": "30de4ebe409f49c5e25f4758cb2e5f4e90764a4f",
+   "paths": 107,
+   "status_tally": {
+    "A": 107
+   },
+   "added_lines": 19549,
+   "deleted_lines": 0,
+   "buckets": {
+    "backend/tests": 19,
+    "reports/hermes": 21,
+    "scripts": 67
+   },
+   "product_paths_in_diff": 0,
+   "ancestor_check": "parent_is_ancestor=True",
+   "ahead_behind_vs_parent": {
+    "behind": 0,
+    "ahead": 1
+   },
+   "merge_tree_vs_parent": {
+    "exit": 0,
+    "tree": "e2ffb62894835aff618da17ab47678411593096a",
+    "conflict_entries": 0
+   }
+  },
+  "r3_recut_on_live_tip": {
+   "sha": "65df31df96cfb8a954f5feb36484710a883e1597",
+   "parent": "9a669c8bec863fadf31d5158f4a1be66aec49f23",
+   "paths": 107,
+   "status_tally": {
+    "A": 107
+   },
+   "added_lines": 19549,
+   "deleted_lines": 0,
+   "buckets": {
+    "backend/tests": 19,
+    "reports/hermes": 21,
+    "scripts": 67
+   },
+   "product_paths_in_diff": 0,
+   "ancestor_check": "parent_is_ancestor=True",
+   "ahead_behind_vs_parent": {
+    "behind": 0,
+    "ahead": 1
+   },
+   "merge_tree_vs_parent": {
+    "exit": 0,
+    "tree": "e4dfe540e9c1f01f8cb39503386d31c9f42267a8",
+    "conflict_entries": 0
+   }
+  }
+ },
+ "r2_vs_r3_ported_content_diff": {
+  "command": "git diff --name-only 0ff20610f19e412ef01f821e252c5b490002d2de 65df31df96cfb8a954f5feb36484710a883e1597 -- scripts backend/tests reports/hermes",
+  "differing_paths": 0
+ },
+ "enumeration_rule": "git ls-tree -r --name-only 0fe51945cdf2d0ae35494b615f3418957174da03 | grep -i hermes",
+ "files_listed": 108,
+ "files_written": 108,
+ "blob_equality_all": true,
+ "per_tree_blob_tally": {
+  "export": {
+   "MATCH_PREEXISTING_ON_TIP": 1,
+   "MATCH_NEW_VS_TIP": 107
+  },
+  "worktree_r2": {
+   "MATCH_PREEXISTING_ON_TIP": 1,
+   "MATCH_NEW_VS_TIP": 107
+  },
+  "worktree_r3": {
+   "MATCH_PREEXISTING_ON_TIP": 1,
+   "MATCH_NEW_VS_TIP": 107
+  }
+ },
+ "clean_arm_files": 20,
+ "clean_arm_passed": 58,
+ "full_suite_collect_clean": true,
+ "collect_exit": 0,
+ "collected": 58,
+ "collect_errors": 0,
+ "test_exit": 0,
+ "passed": 58,
+ "failed": 0,
+ "arms": {
+  "fullsuite_baseline": {
+   "exit": 0,
+   "error_lines": 0,
+   "collected": 1261,
+   "wallclock": "3.87 s"
+  },
+  "fullsuite_ported": {
+   "exit": 0,
+   "error_lines": 0,
+   "collected": 1318,
+   "wallclock": "5.99 s"
+  },
+  "collect20": {
+   "exit": 0,
+   "error_lines": 0,
+   "collected": 58,
+   "wallclock": "0.55 s"
+  },
+  "clean20": {
+   "exit": 0,
+   "error_lines": 0,
+   "passed": 58,
+   "failed": 0,
+   "skipped": 0,
+   "wallclock": "0.64 s"
+  }
+ },
+ "skipped_named_exclusions": {
+  "dropped_from_this_port": [
+   {
+    "file": "backend/tests/test_hermes_r5_cached_replan_compatibility.py",
+    "reason": "needs a product symbol this lane may not invent",
+    "observed_error": "ImportError: cannot import name '_upgrade_cached_request_replan_response' from 'app.agent.gateway'",
+    "symbol_home_on_hermes_line": "backend/app/agent/gateway.py:107 (called at :542 and :617)",
+    "corrected_attribution": "feasibility_r1.json recorded on_hermes=false; git grep on 0fe51945cdf2d0ae35494b615f3418957174da03 finds the definition, so the symbol exists on the Hermes line and only the mainline lacks it"
+   },
+   {
+    "file": "backend/tests/test_v18_hermes_r20_transport_reliability_probe.py",
+    "reason": "reaches a class in the MCP adapter package that the mainline lacks",
+    "observed_error": "ModuleNotFoundError: No module named 'citynexus_mcp' (and with the tip's own agent-mcp on PYTHONPATH: ImportError: cannot import name 'HermesReplanProposalView')",
+    "chain": "backend/tests/test_v18_hermes_r20_transport_reliability_probe.py -> scripts/hermes_r20_transport_reliability_probe.py:11 -> scripts/hermes_r4_contract_probe.py:29 -> citynexus_mcp.schemas.HermesReplanProposalView",
+    "symbol_home_on_hermes_line": "agent-mcp/citynexus_mcp/schemas.py:51",
+    "corrected_attribution": "feasibility_r1.json pointed at backend/tests/... and implied a backend/app gap; that test file has 0 occurrences of the symbol, and the gap lives in agent-mcp/, so Group B's home is agent-mcp/citynexus_mcp/schemas.py, not backend/app/"
+   }
+  ],
+  "wording": "these two files are NOT shipped on this branch: they are not skipped tests, they are untransplanted this round until the two symbols exist on the mainline",
+  "model_dependent_stance": "the 36-file grep count is unchanged from r1, but the two backend/tests inside it (test_v18_hermes_r9_mcp_context_probe.py, test_v18_hermes_r10_tool_planning_probe.py) make no model call and the commander ran them himself at 03:15; they are therefore INSIDE the clean arm here, and their 5 tests are part of the 58"
+ },
+ "suite_arithmetic": {
+  "baseline_no_port": 1261,
+  "after_port": 1318,
+  "added": 57,
+  "clean_arm_passed": 58,
+  "reconciliation": "58 tests in the 20 shipped files, but only 57 added to the suite, because backend/tests/test_v18_hermes_native_client.py is byte-identical on the tip already and its 1 test is already counted in the 1261 baseline"
+ },
+ "export_tree": {
+  "root": "D:/moodle/_qoder_cmdr_ref_20260921/_s2_hermes_r3_port",
+  "recipe": "git archive 9a669c8bec863fadf31d5158f4a1be66aec49f23 backend data contracts tools | tar -x, then per-file git cat-file blob 0fe51945cdf2d0ae35494b615f3418957174da03:<path> for the 108 shipped paths",
+  "cwd": "D:/moodle/_qoder_cmdr_ref_20260921/_s2_hermes_r3_port/backend",
+  "env": "PYTHONPATH=<export root>; python -X utf8 -m pytest -q",
+  "interpreter": "D:/moodle/CityNexus/.venv/Scripts/python.exe (Python 3.12.14)",
+  "shared_hardlink_junction": "none"
+ },
+ "product_bytes_changed": 0,
+ "authoritative_branch_attribution": {
+  "read_by_this_lane": [
+   {
+    "at": "03:18 +08 (r1 close-out)",
+    "tip": "30de4ebe409f49c5e25f4758cb2e5f4e90764a4f"
+   },
+   {
+    "at": "03:25 +08 (r2 push read-back)",
+    "tip": "9a669c8bec863fadf31d5158f4a1be66aec49f23"
+   }
+  ],
+  "what_moved": "ORD-0302 landed at 03:22:25 +08 by the commander (subject names lane B c01d72a3 as the content source); its diff touches only frontend/src and frontend/e2e - 0 paths overlap this port's 107 and backend/tests was untouched",
+  "moved_by_this_lane": 0
+ },
+ "shared_repo_state": {
+  "porcelain_backend_data_contracts_tools": [
+   " M backend/app/agent/runtime_identity.py",
+   " M backend/app/main.py"
+  ],
+  "porcelain_xy_columns": [
+   " M",
+   " M"
+  ],
+  "porcelain_reader_format_ok": true,
+  "preexisting_before_this_lane": [
+   " M backend/app/agent/runtime_identity.py",
+   " M backend/app/main.py"
+  ],
+  "attribution": "both belong to the eac/v19.2.2-realphone-codegate worktree checked out in D:/moodle/CityNexus; unchanged by this lane in r1, r2 and r3"
+ },
+ "checks": {
+  "all_108_paths_blob_equal_in_all_three_trees": true,
+  "clean_arm_collected_and_passed_with_zero_errors": true,
+  "full_suite_collect_clean_after_port": true,
+  "r3_carries_no_product_bytes": true,
+  "r2_and_r3_ported_content_identical": true,
+  "r3_lands_as_fast_forward_on_live_tip": true,
+  "live_tip_still_equals_r3_parent": true,
+  "porcelain_shared_repo_equals_preexisting": true
+ },
+ "verdict": "R2_R3_PORT_CLEAN_58_PASSED_FULL_SUITE_COLLECT_CLEAN",
+ "verdict_derivation": "verdict = the all-green string iff every key in checks is true; each check is computed from the arm logs, the three per-file TSVs, the diff numstat and a live ls-remote in this run - no literal pass token is written",
+ "discipline": {
+  "product_bytes_changed": 0,
+  "authoritative_branch_moved": 0,
+  "demo_reset": 0,
+  "credentials_printed": 0,
+  "model_calls_made": 0,
+  "live_or_preview_db_touched": 0,
+  "other_lane_worktrees_touched": 0,
+  "ledger_written_by_lane": 0,
+  "junctions_created": 0,
+  "previously_pushed_candidates_rewritten": 0
+ },
+ "claim_kind": "git_and_pytest_determined",
+ "derived_result": "r3 65df31df96cfb8a954f5feb36484710a883e1597 = live tip 9a669c8bec863fadf31d5158f4a1be66aec49f23 + 107 added harness files ({\"A\": 107}, 19549 added lines, 0 deleted, 0 product paths); 108/108 shipped files byte-equal to 0fe51945cdf2d0ae35494b615f3418957174da03 in all three trees; pytest on the live-tip export: clean arm 20 files -> 58 collected / 58 passed / 0 failed / 0 error lines (exit 0); whole-suite collection 1261 before the port vs 1318 after (exit 0, 0 error lines) -> the global gate stays green"
+}
