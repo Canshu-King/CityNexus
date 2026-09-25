@@ -1,0 +1,79 @@
+{
+ "tool": "cmdr_recut_r1.py",
+ "line": "origin/mirror/integration-frontend-apple-pass1",
+ "tip": "9b84a5fea9e7b38f3cace4160508f7a1b46c1418",
+ "base": "821a0eb54cca1b305a4aa75c1ca8d46a95d51bba",
+ "fixtures": {
+  "cand_A": "6ea9079d22b964d7645e9c68593598ea8c706ee9",
+  "tip_B": "96c7da36b97871d68895b510f0af7f095d27ce05",
+  "cand_B": "be33e4375d06fd59a7a2b26d47123dba5f25b764",
+  "tip_C": "8215297206da90cd075717866ae789b36dc7e20f",
+  "cand_C": "ec979f28247e3cc274d50ffe9db503f997e08ecf",
+  "cand_D": "98b21cd9ada5f142ae4b6d8f7005df3b1094b880"
+ },
+ "recut_A": "c3c44a8a322562c65b80774e44fdc13218d9d57f",
+ "checks": [
+  {
+   "arm": "A.verdict_RECUT_OK",
+   "holds": true,
+   "reading": "RECUT_OK"
+  },
+  {
+   "arm": "A.all_files_identical",
+   "holds": true,
+   "reading": [
+    [
+     "ProductErrorBoundary.tsx",
+     true
+    ]
+   ]
+  },
+  {
+   "arm": "A.cand_really_changed_the_file",
+   "holds": true,
+   "reading": "non-vacuity: lane blob != base blob"
+  },
+  {
+   "arm": "A.parents_are_tip_then_cand",
+   "holds": true,
+   "reading": [
+    "9b84a5fea9e7b38f3cace4160508f7a1b46c1418",
+    "6ea9079d22b964d7645e9c68593598ea8c706ee9"
+   ]
+  },
+  {
+   "arm": "B.refused_to_claim_a_clean_recut",
+   "holds": true,
+   "reading": "MERGE_TREE_REFUSED"
+  },
+  {
+   "arm": "B.exit_nonzero",
+   "holds": true,
+   "reading": "rc=4"
+  },
+  {
+   "arm": "C.refused_because_the_lane_blob_did_not_survive",
+   "holds": true,
+   "reading": "REFUSED_AUTO_MERGED auto=['frontend/src/components/ProductErrorBoundary.tsx']"
+  },
+  {
+   "arm": "C.the_refusal_names_the_file_not_a_crash",
+   "holds": true,
+   "reading": "rc=5"
+  },
+  {
+   "arm": "D.declines_when_ff_is_possible",
+   "holds": true,
+   "reading": "FAST_FORWARD_POSSIBLE cand=98b21cd9ada5 tip=9b84a5fea9e7 -> the candidate already sits on the tip;\n       land it direct"
+  }
+ ],
+ "arms": {
+  "A": "RECUT_OK",
+  "B": "MERGE_TREE_REFUSED",
+  "C": "REFUSED_AUTO_MERGED",
+  "D": "FAST_FORWARD_POSSIBLE"
+ },
+ "all_holds": true,
+ "n_checks": 9,
+ "n_holds": 9
+}
