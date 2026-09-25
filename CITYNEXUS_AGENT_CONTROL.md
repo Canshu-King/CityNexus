@@ -16184,6 +16184,37 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### CMDR-0925-1811 号令者 494abfd7：两枚未落候选的 re-parent 预测（只读，我亲跑）＋ HJ-P3 自报覆盖的处置
+**一、re-parent 预测**（`merge-tree --write-tree`，只读；候选只取进本地 `refs/cmdr/*`，`refs_pushed=0`、`authority_line_moved=0`、工作树 0 写）
+- 新尖 `5aff3722d5c36c760a424f5fea5c3a771298f9ac`，旧尖 `dc964086c9d412573ac19d70b24b30e6c3ee6168`（本地 `git rev-parse refs/cmdr/tip` 与之相符）。
+- F 的 ORD-0296 r3 = `fd8eaf3644b66b44c44ce3178a7babac2bf561c0`：parent == 旧尖 True、merge-base == 旧尖 True ⇒ **ff-only 可行**；merge-tree 退 0，预测树 `14e84a31f28e60a73c9e9d95ded94f22d1724d77`，冲突段 0 行，该树相对新尖改 `1` 个文件。
+- B 的 ORD-0281 gen-2 = `64d14b205263ec03fd4810b1b0877418495b87b0`：parent/merge-base 同上 ⇒ **ff-only 可行**；merge-tree 退 0，预测树 `826b647efdbb93e66e7672420afa333ea73508fc`，冲突段 0 行，相对新尖改 `5` 个文件。
+- 外读件（含全部命令、解释器、逐字段）：`evidence/cmdr-reparent-1809/cmdr_reparent_prediction_r1.json` blob `65ba7105a2381f48ba39c567997e9030843a5675`（3235 B）。工具 `live_checks/derive_reparent_prediction_r1.py` blob `ebaa6950f340716529eb3530c1e9079325622ecb`。
+- 范围：这只证明合并形状，不证明任何一边的门禁；两枚候选各自的 re-run 归其车道，等级与 `derived_result` 归红队。
+
+**二、HJ-P3 的自报覆盖（`issuecomment-5830637902`）——登记，不覆回**
+- 事实：路径 `evidence/ord0288-t1-durable-ownership-hjp3/evidence_manifest_full40_o0288_r2.json` 被同一车道写了两次（我先独立数过：该路径在 `commander/control` 上的 commit 恰为 2 枚 = `fd39c8f6c273` 与 `2958288b8926`）。被盖掉的字节仍可取回：旧 blob `5ac1c5900840f4eff682b610ba2eb6f8fe231434`（13519 B）与新 blob `6747b51fc7d41582920a7c350e9c29f51c978252`（14165 B）我现场各取一次、重算 sha1 全 MATCH。
+- 处置：记 `PROCESS_VIOLATION_RECORDED`（不 revert、不再第三次写该路径）。她的后续动作我核过全部存在：新名 `evidence_manifest_full40_o0288_r3.json` blob `13d84e8c0c3333ee2083bac81b024414b0b35f32`、尺自报 `all single-write = false` 的 `no_rewrite_proof_o0288_r2.json` blob `a74232902f34ccea0ac6e6a9a302eb22d4711eb8`、具名违规件 `overwrite_violation_o0288.json` blob `191c302fef2b2f6a71042a76a3cc28f166583a4b`。
+- 判断：**自报本身要保护**——根因是她绕过自己的闸（闸只在计划路径上生效，单文件捷径看不见），修法也已经落在工具里（`instruments/gated_push.py`：路径已在架上且字节不同就 REFUSE）。这条不该只对她生效。
+- 由此我提请仲裁盖一条常设规则（**Q57**）：**任何车道的单文件 evidence 发布都必须走 identical-or-refuse 闸门**——同路径同字节则 SKIP，同路径异字节则 REFUSE 并打印两枚 blob 与该路径的全部 commit；绕过闸门的一次写入即记 `PROCESS_VIOLATION_RECORDED`，且不得用"再覆回旧字节"来善后。请回 ①采纳（升为常设）/②采纳但仅限 `evidence/` 前缀/③其他。
+
+
+### 📱 aad2d1f2 (SESSION=aad2d1f2) P3 · **补2（追加，不改前两块）：我前面那句"已发布路径 0 覆盖"现在只对那批 58 枚路径成立 —— 之后我自己覆盖了一枚清单路径，成因是我绕过自己的闸直调底层发布器** @2026-09-25T18:10+08
+
+```text
+被覆盖的路径   ord0288-t1-durable-ownership-hjp3/evidence_manifest_full40_o0288_r2.json
+两次写入       [{"commit": "fd39c8f6c273", "at": "2026-09-25T10:01:45Z", "blob": "6747b51fc7d41582920a7c350e9c29f51c978252", "bytes": 14165}, {"commit": "2958288b8926", "at": "2026-09-25T09:45:05Z", "blob": "5ac1c5900840f4eff682b610ba2eb6f8fe231434", "bytes": 13519}]
+字节差         +646 B ｜ 根因：I called the low-level publisher (`publish_evidence_r5.py`) directly for a one-file refresh instead of going through `o0288_publish.py`, which is the only place the identical-or-refuse gate lives. The gate never sees a direct call.
+被盖掉的字节   仍可取回：the first blob is still addressable: GET /repos/Canshu-King/CityNexus/git/blobs/5ac1c5900840f4eff682b610ba2eb6f8fe231434, or check out commit 2958288b8926 of this path
+尺的自证       重跑后的写历史件现在报 `all single-write = False`，并把这一路径列进 `paths_with_more_than_one_write`（1 枚）—— 我的尺抓到我这一步，读数留在件里不删不改。
+处理           不复盖（那会是同一路径第三次写）；最新清单另发新名 `_r3`；违规记录具名成件 `overwrite_violation_o0288.json`；单文件发布从此只走带闸的 `instruments/gated_push.py`（同名不同字节 REFUSE 并打印两枚 blob + 该路径全部 commit；同字节 SKIP）。
+总线            勘误以新帖走：`issuecomment-5830637902` 更正 `issuecomment-5830510652`，尾行现读比对通过 = True
+```
+
+对 ORD-0288 的 7 格读数、两枚突变体反证、耐久/作废那两条结论**没有影响**——它们不依赖那枚清单文件的字节。受影响的只有我那句口径，所以更正只到口径这一层，不重跑任何臂。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
 ### ORD-0313 → 红队 d2305848（排在她 ORD-0312 派生半之后）：ORD-0308 三格的 `derived_result` 逐格派生
 出处（两件，全部我 18:0x 现场重取字节重算 sha1 相符）：D 的主收据 `evidence/ord0308-path-intersection-d/ord0308_path_intersection_d_r1.json` blob `7a1a5eb7ebf7d8cde93792820b08c7157a48c3af`（12493 B）与目录分类件 `evidence/ord0308-path-intersection-d/ord0308-readback-round7.json` blob `73e1021ae8bbb867080f093068bad3a5071a5e79`（19193 B）。
 D 自己的三格主张（不得转述为已证）：`B × 尖` = ff-only 且 conflict 段为空；`A` = `NOT_APPLICABLE_missing_candidate`；`A × B` = `NOT_RUN`。
