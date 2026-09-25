@@ -1,0 +1,332 @@
+{
+ "file": "e2e/qoder-ord0302-unreadable-server-body.spec.ts",
+ "arm": "X1",
+ "runId": "0302unr05050533",
+ "status": "passed",
+ "expectation": "passed",
+ "reading": {
+  "want": "raw",
+  "force_shape": "five HTTP 200 bodies on both write legs (R19-R23)",
+  "shape_count": 5,
+  "per_shape": {
+   "R19_④_200_empty_body": {
+    "status": "NO_PLANS_PRODUCED",
+    "promise_in_copy": true,
+    "details_count": 1,
+    "reason": "",
+    "origin": "",
+    "raw_rendered": {
+     "http_status": "200",
+     "content-type": "application/json",
+     "bytes": "0",
+     "body": ""
+    },
+    "raw_expected": {
+     "http_status": "200",
+     "content-type": "application/json",
+     "bytes": "0",
+     "body": ""
+    }
+   },
+   "R20_④_200_json_empty_object": {
+    "status": "NO_PLANS_PRODUCED",
+    "promise_in_copy": true,
+    "details_count": 1,
+    "reason": "",
+    "origin": "",
+    "raw_rendered": {
+     "http_status": "200",
+     "content-type": "application/json",
+     "bytes": "2",
+     "body": "{}"
+    },
+    "raw_expected": {
+     "http_status": "200",
+     "content-type": "application/json",
+     "bytes": "2",
+     "body": "{}"
+    }
+   },
+   "R21_④_200_json_array": {
+    "status": "NO_PLANS_PRODUCED",
+    "promise_in_copy": true,
+    "details_count": 1,
+    "reason": "",
+    "origin": "",
+    "raw_rendered": {
+     "http_status": "200",
+     "content-type": "application/json",
+     "bytes": "2",
+     "body": "[]"
+    },
+    "raw_expected": {
+     "http_status": "200",
+     "content-type": "application/json",
+     "bytes": "2",
+     "body": "[]"
+    }
+   },
+   "R22_④_200_text_plain_payload": {
+    "status": "NO_PLANS_PRODUCED",
+    "promise_in_copy": true,
+    "details_count": 1,
+    "reason": "",
+    "origin": "",
+    "raw_rendered": {
+     "http_status": "200",
+     "content-type": "text/plain; charset=utf-8",
+     "bytes": "33",
+     "body": "plans are not available right now"
+    },
+    "raw_expected": {
+     "http_status": "200",
+     "content-type": "text/plain; charset=utf-8",
+     "bytes": "33",
+     "body": "plans are not available right now"
+    }
+   },
+   "R23_④_200_mission_unusable_status": {
+    "status": "NO_PLANS_PRODUCED",
+    "promise_in_copy": true,
+    "details_count": 1,
+    "reason": "",
+    "origin": "",
+    "raw_rendered": {
+     "http_status": "200",
+     "content-type": "application/json",
+     "bytes": "110",
+     "body": "{\"mission\":{\"id\":\"ord0302-mission\",\"status\":\"FAILED_UPSTREAM\",\"failure_reason\":null,\"reasoning_summary\":null}}"
+    },
+    "raw_expected": {
+     "http_status": "200",
+     "content-type": "application/json",
+     "bytes": "110",
+     "body": "{\"mission\":{\"id\":\"ord0302-mission\",\"status\":\"FAILED_UPSTREAM\",\"failure_reason\":null,\"reasoning_summary\":null}}"
+    }
+   }
+  },
+  "read": {
+   "status": "NO_PLANS_PRODUCED",
+   "promise_in_copy": true,
+   "details_count": 1,
+   "reason": "",
+   "origin": "",
+   "raw_rendered": {
+    "http_status": "200",
+    "content-type": "application/json",
+    "bytes": "2",
+    "body": "[]"
+   },
+   "raw_expected": {
+    "http_status": "200",
+    "content-type": "application/json",
+    "bytes": "2",
+    "body": "[]"
+   },
+   "shape_count": 5
+  },
+  "verdict": "MET",
+  "rows": [
+   {
+    "claim": "R19_④_200_empty_body: the card's promise and the DOM agree (promise => block exists)",
+    "ok": true,
+    "got": {
+     "promise_in_copy": true,
+     "details_count": 1
+    }
+   },
+   {
+    "claim": "R19_④_200_empty_body: this is the shape X-5 named",
+    "ok": true,
+    "got": {
+     "status": "NO_PLANS_PRODUCED"
+    }
+   },
+   {
+    "claim": "R19_④_200_empty_body: its block carries the raw reading, field for field, unedited",
+    "ok": true,
+    "got": {
+     "expected": {
+      "http_status": "200",
+      "content-type": "application/json",
+      "bytes": "0",
+      "body": ""
+     },
+     "rendered": {
+      "http_status": "200",
+      "content-type": "application/json",
+      "bytes": "0",
+      "body": ""
+     }
+    }
+   },
+   {
+    "claim": "R19_④_200_empty_body: the copy still points there (Q53=①: render it, keep the pointer)",
+    "ok": true,
+    "got": {
+     "promise_in_copy": true
+    }
+   },
+   {
+    "claim": "R20_④_200_json_empty_object: the card's promise and the DOM agree (promise => block exists)",
+    "ok": true,
+    "got": {
+     "promise_in_copy": true,
+     "details_count": 1
+    }
+   },
+   {
+    "claim": "R20_④_200_json_empty_object: this is the shape X-5 named",
+    "ok": true,
+    "got": {
+     "status": "NO_PLANS_PRODUCED"
+    }
+   },
+   {
+    "claim": "R20_④_200_json_empty_object: its block carries the raw reading, field for field, unedited",
+    "ok": true,
+    "got": {
+     "expected": {
+      "http_status": "200",
+      "content-type": "application/json",
+      "bytes": "2",
+      "body": "{}"
+     },
+     "rendered": {
+      "http_status": "200",
+      "content-type": "application/json",
+      "bytes": "2",
+      "body": "{}"
+     }
+    }
+   },
+   {
+    "claim": "R20_④_200_json_empty_object: the copy still points there (Q53=①: render it, keep the pointer)",
+    "ok": true,
+    "got": {
+     "promise_in_copy": true
+    }
+   },
+   {
+    "claim": "R21_④_200_json_array: the card's promise and the DOM agree (promise => block exists)",
+    "ok": true,
+    "got": {
+     "promise_in_copy": true,
+     "details_count": 1
+    }
+   },
+   {
+    "claim": "R21_④_200_json_array: this is the shape X-5 named",
+    "ok": true,
+    "got": {
+     "status": "NO_PLANS_PRODUCED"
+    }
+   },
+   {
+    "claim": "R21_④_200_json_array: its block carries the raw reading, field for field, unedited",
+    "ok": true,
+    "got": {
+     "expected": {
+      "http_status": "200",
+      "content-type": "application/json",
+      "bytes": "2",
+      "body": "[]"
+     },
+     "rendered": {
+      "http_status": "200",
+      "content-type": "application/json",
+      "bytes": "2",
+      "body": "[]"
+     }
+    }
+   },
+   {
+    "claim": "R21_④_200_json_array: the copy still points there (Q53=①: render it, keep the pointer)",
+    "ok": true,
+    "got": {
+     "promise_in_copy": true
+    }
+   },
+   {
+    "claim": "R22_④_200_text_plain_payload: the card's promise and the DOM agree (promise => block exists)",
+    "ok": true,
+    "got": {
+     "promise_in_copy": true,
+     "details_count": 1
+    }
+   },
+   {
+    "claim": "R22_④_200_text_plain_payload: this is the shape X-5 named",
+    "ok": true,
+    "got": {
+     "status": "NO_PLANS_PRODUCED"
+    }
+   },
+   {
+    "claim": "R22_④_200_text_plain_payload: its block carries the raw reading, field for field, unedited",
+    "ok": true,
+    "got": {
+     "expected": {
+      "http_status": "200",
+      "content-type": "text/plain; charset=utf-8",
+      "bytes": "33",
+      "body": "plans are not available right now"
+     },
+     "rendered": {
+      "http_status": "200",
+      "content-type": "text/plain; charset=utf-8",
+      "bytes": "33",
+      "body": "plans are not available right now"
+     }
+    }
+   },
+   {
+    "claim": "R22_④_200_text_plain_payload: the copy still points there (Q53=①: render it, keep the pointer)",
+    "ok": true,
+    "got": {
+     "promise_in_copy": true
+    }
+   },
+   {
+    "claim": "R23_④_200_mission_unusable_status: the card's promise and the DOM agree (promise => block exists)",
+    "ok": true,
+    "got": {
+     "promise_in_copy": true,
+     "details_count": 1
+    }
+   },
+   {
+    "claim": "R23_④_200_mission_unusable_status: this is the shape X-5 named",
+    "ok": true,
+    "got": {
+     "status": "NO_PLANS_PRODUCED"
+    }
+   },
+   {
+    "claim": "R23_④_200_mission_unusable_status: its block carries the raw reading, field for field, unedited",
+    "ok": true,
+    "got": {
+     "expected": {
+      "http_status": "200",
+      "content-type": "application/json",
+      "bytes": "110",
+      "body": "{\"mission\":{\"id\":\"ord0302-mission\",\"status\":\"FAILED_UPSTREAM\",\"failure_reason\":null,\"reasoning_summary\":null}}"
+     },
+     "rendered": {
+      "http_status": "200",
+      "content-type": "application/json",
+      "bytes": "110",
+      "body": "{\"mission\":{\"id\":\"ord0302-mission\",\"status\":\"FAILED_UPSTREAM\",\"failure_reason\":null,\"reasoning_summary\":null}}"
+     }
+    }
+   },
+   {
+    "claim": "R23_④_200_mission_unusable_status: the copy still points there (Q53=①: render it, keep the pointer)",
+    "ok": true,
+    "got": {
+     "promise_in_copy": true
+    }
+   }
+  ]
+ }
+}
