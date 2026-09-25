@@ -1,0 +1,3 @@
+serve=D:\moodle\_qoder_preview_20260920\dist  index bytes=1200  refs=4 -> /assets/index-CtuiCkKf.js, /assets/index-I45CQek8.css, /favicon.svg, /manifest.webmanifest
+
+checked=0 white_page_waiting=0
