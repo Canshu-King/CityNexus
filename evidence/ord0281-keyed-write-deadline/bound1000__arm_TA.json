@@ -1,0 +1,24 @@
+{
+ "file": "e2e/qoder-ord0281-keyed-write-deadline.spec.ts",
+ "runId": "0281p31651",
+ "bound_ms_under_test": 1000,
+ "baseline_ms_declared": 2000,
+ "pristine_tree": false,
+ "arm": "TA",
+ "status": "passed",
+ "expectation": "passed",
+ "reading": {
+  "arm": "TA",
+  "clicked": 1790320681682,
+  "settled_at": 1790320682085,
+  "elapsed_ms": 403,
+  "on_screen": "success",
+  "sentence_seconds_named": null,
+  "had_network_blame": false,
+  "server_said": "answered-200",
+  "keys_seen": [
+   "accept-ord0281-proposal"
+  ],
+  "verdict": "MET"
+ }
+}
