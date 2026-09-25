@@ -332,30 +332,12 @@ test("B1 采用方案被拒（409）：原话不上屏、三行读数在屏", as
 
 /* ------------------------------------------------------------ T-C 外壳横幅 */
 
-test("C1 建行程后的住宿搜索被拒：banner 不印 error.message，改印本机读数", async ({ page }) => {
-  test.setTimeout(300_000);
-  const arm = "T-C1";
+/** Walk the trial wizard to its review step (no trip created yet). */
+async function walkToReview(page: Page, arm: string) {
   await page.addInitScript(() => {
     localStorage.clear();
     localStorage.setItem("citynexus.locale", "zh-CN");
   });
-  /* The generating call is answered empty on the way in, so the trip is created and Today shows the
-     block with its own retry; the retry is then refused. `retryStaySearch`'s catch is the sink the
-     order names -- the one that used to print `error.message`. */
-  let generateMode = "empty";
-  const emptyBody = JSON.stringify({ top_k: [], generation: { outcome: "CATALOG_EMPTY" } });
-  const refuseBody = refusalBody({
-    error: {
-      code: "VALIDATION_ERROR",
-      message: LEAK,
-      details: { errors: [{ loc: ["body", "stay_budget"], msg: LEAK, type: "value_error" }] },
-    },
-  });
-  await page.route(/\/api\/v1\/journeys\/[^/]+\/stay-options\/generate(\?|$)/, (route) =>
-    generateMode === "empty"
-      ? route.fulfill({ status: 200, contentType: "application/json", body: emptyBody })
-      : refuse(route, 422, refuseBody),
-  );
   await page.goto("/v8/hub", { waitUntil: "load" });
   await page.waitForSelector('[data-testid="trial-setup"]', { timeout: 30_000 });
   await page.fill('[data-testid="trial-city"]', "天津");
@@ -368,6 +350,24 @@ test("C1 建行程后的住宿搜索被拒：banner 不印 error.message，改�
   await page.fill('[data-testid="trial-budget"]', "1500");
   await page.getByTestId("trial-next").click();
   await expect(page.getByTestId("trial-step3-body"), node(arm, "确认页没有出来")).toBeVisible({ timeout: 20_000 });
+}
+
+test("C1 建行程后的住宿搜索被拒：banner 不印 error.message，改印本机读数", async ({ page }) => {
+  test.setTimeout(300_000);
+  const arm = "T-C1";
+  /* The generating call is answered empty on the way in, so the trip is created and Today shows the
+     block with its own retry; the retry is then refused. That retry's catch (`retryStaySearch`) is
+     one of the two sinks that printed `error.message`; the other is `createJourney`'s own catch, and
+     C1 cannot reach it -- an arm aimed at that line stayed green here until C2 was added. */
+  let generateMode = "empty";
+  const emptyBody = JSON.stringify({ top_k: [], generation: { outcome: "CATALOG_EMPTY" } });
+  const refuseBody = refusalBody();
+  await page.route(/\/api\/v1\/journeys\/[^/]+\/stay-options\/generate(\?|$)/, (route) =>
+    generateMode === "empty"
+      ? route.fulfill({ status: 200, contentType: "application/json", body: emptyBody })
+      : refuse(route, 422, refuseBody),
+  );
+  await walkToReview(page, arm);
   await page.getByTestId("trial-create").click();
   await expect(page.getByTestId("today-heading"), node(arm, "行程没有建成，横幅无从出现")).toBeVisible({
     timeout: 180_000,
@@ -398,6 +398,50 @@ test("C1 建行程后的住宿搜索被拒：banner 不印 error.message，改�
     page_text: await visibleText(page),
   };
   expect(readings[arm].page_text.includes(JWT), node(arm, "假凭据形状出现在屏上")).toBe(false);
+});
+
+test("C2 建行程这一步本身被拒：向导里的拒绝句也不印上游原话", async ({ page }) => {
+  test.setTimeout(300_000);
+  const arm = "T-C2";
+  const createBody = JSON.stringify({
+    detail: LEAK,
+    error: {
+      code: "VALIDATION_ERROR",
+      message: "Request validation failed",
+      details: { errors: [{ loc: ["body", "budget"], msg: `${LEAK}（字段级原文）`, type: "value_error" }] },
+    },
+  });
+  /* The journey POST itself is refused, so the wizard stays on screen and `createJourney`'s catch
+     feeds the message into the block above the confirm button. This is the sink whose `error.message`
+     carried every `loc: msg` pair verbatim. */
+  await page.route(/\/api\/v1\/journeys(\?|$)/, (route) =>
+    route.request().method() === "POST"
+      ? refuse(route, 422, createBody)
+      : route.fallback(),
+  );
+  await walkToReview(page, arm);
+  await page.getByTestId("trial-create").click();
+  const refusal = page.getByTestId("trial-create-error");
+  await expect(refusal, node(arm, "创建被拒后向导没有给出任何拒绝块")).toBeVisible({ timeout: 60_000 });
+  const refusalText = clean(await refusal.innerText());
+  const pageText = await visibleText(page);
+  for (const forbidden of [LEAK, JWT]) {
+    expect(
+      pageText.includes(forbidden),
+      node(arm, `上游正文（或假凭据形状）仍在了屏上：${forbidden.slice(0, 20)}… ${pageText.slice(0, 300)}`),
+    ).toBe(false);
+  }
+  expect(
+    refusalText.includes("服务器拒绝了这一步（HTTP 422）"),
+    node(arm, `向导块没说自己那句人话，实读=${refusalText}`),
+  ).toBe(true);
+  readings[arm] = {
+    refusal_block: refusalText,
+    page_text: pageText,
+    raw_facts_block_on_this_surface: await page.getByTestId("shell-message-raw-facts").count(),
+    note: "向导遮罩这一屏只有外壳横幅才渲染读数块；此处主张的是『原话不上屏 + 句子是本机的』，"
+          + "读数块仍在 C1 那枚外壳横幅上主张",
+  };
 });
 
 test.afterAll(async () => {
