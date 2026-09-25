@@ -1,0 +1,156 @@
+{
+ "what": "号令 relay（= 账本 CMDR-0925-1845 的复述）逐条在现场权威尖上的重放",
+ "lane": "F 8ccd71d8",
+ "generated_at": "2026-09-25T19:54:46+08:00",
+ "read_from": "GitHub 现场（Canshu-King/CityNexus @mirror/integration-frontend-apple-pass1 / commander/control），不是本机导出树",
+ "live_tip": "30a5f90e5deaed6e45a704ddcc7d6e5e9790475b",
+ "note_on_relay_lag": "这条 relay 复述的是 18:45 那一拍；其间号令自己又推了两跳并落了本门（账本 CMDR-0925-1920）。所以本件不按『收到新令』处理，而是把每条主张拿到当下尖上重放，给他可复算的读数。",
+ "ancestry": {
+  "prev_tip_is_ancestor_of_live_rc": 0,
+  "my_r5_is_ancestor_of_live_rc": 0,
+  "my_r5_equals_live_tip": true,
+  "note": "rc 0 = 是祖先（只读 git merge-base --is-ancestor；本地 refs/cmdr/* 承接，未动任何人的分支）"
+ },
+ "landing_state": {
+  "r5_is_now_the_tip": true,
+  "tip": "30a5f90e5deaed6e45a704ddcc7d6e5e9790475b",
+  "my_r5_candidate": "30a5f90e5deaed6e45a704ddcc7d6e5e9790475b",
+  "previous_tip_named_in_1934": "7856e03f6238da3000976eb6e690a448dfa39b9a"
+ },
+ "ruling_a": {
+  "asked": "把那 3 个文件切进候选 ref（建议 review/ord0307-credential-gate-f），号令 ff-only 落",
+  "done": true,
+  "ref": "refs/heads/review/ord0307-credential-gate-f",
+  "candidate_commit": "7856e03f6238da3000976eb6e690a448dfa39b9a",
+  "already_landed_by_commander": "现场权威尖 == 我那枚候选 ⇒ (a) 不但执行了，他也已落地；三枚文件在尖上逐个 contents 回读：",
+  "files_at_tip": {
+   "backend/app/security/credential_literals.py": {
+    "http": 200,
+    "blob_at_tip": "717317f822ce01873e33bffd418adea04f67dfeb",
+    "equals_what_i_delivered": true
+   },
+   "backend/app/main.py": {
+    "http": 200,
+    "blob_at_tip": "5455175abe154c5c4ab5b122e517efd13081a637",
+    "equals_what_i_delivered": true
+   },
+   "backend/tests/test_qoder_ord0307_credential_gate.py": {
+    "http": 200,
+    "blob_at_tip": "408032e04fbbae6171df91dc1f2420a15dd9a38d",
+    "equals_what_i_delivered": true
+   }
+  }
+ },
+ "ruling_b": {
+  "asked": "默认保持 report；ENV_DECLARATIONS 留空且不许被改回去（环境档未申报计数不靠申报消绿）",
+  "done": true,
+  "reading_on_landed_tree": {
+   "ENV_DECLARATIONS_is_empty": true,
+   "policy_default": "report",
+   "policy_explicit_strict": "strict",
+   "tree": {
+    "files": 371,
+    "hits": 2,
+    "product": 0,
+    "undeclared": 0,
+    "verdict": "LIVE_CREDENTIAL_IN_ENVIRONMENT"
+   },
+   "env": {
+    "present": 1,
+    "undeclared": 1,
+    "names": [
+     "DEEPSEEK_API_KEY"
+    ],
+    "lengths": [
+     35
+    ],
+    "fingerprints": [
+     "4cabe6bcaff4"
+    ]
+   }
+  },
+  "guarded_by": "C10（默认档必须是 report）+ K5（改成 off 即红）；C08 断言环境档只出 name/length/指纹 + K3 反证申报指纹改一位即作废"
+ },
+ "requirement_4_agreement": {
+  "mine_just_now": {
+   "env_present": 1,
+   "env_undeclared": 1,
+   "lengths": [
+    35
+   ],
+   "fingerprints": [
+    "4cabe6bcaff4"
+   ]
+  },
+  "his_receipt_blob": "a2bf7f4a600d974b03f76e1b093c8910e4b2147b",
+  "agree_on": [
+   "presence True",
+   "length 35",
+   "token_fp 4cabe6bcaff4"
+  ],
+  "extra_layer_his": "HKCU\\Environment 里同一枚（只有用户能轮换，我 0 读 0 写）"
+ },
+ "signed_level": {
+  "who": "红队（B-1：交付方不自宣 derived_result）",
+  "queued_after": [
+   "ORD-0312",
+   "ORD-0313"
+  ],
+  "my_side": "5 臂反件与逐臂 (sha,nodeid,shape) 都在收据 r3 里等它签"
+ },
+ "ord0296_receipt_he_still_lists_as_owed": {
+  "claim": "『ORD-0296 r3 那枚收据仍欠，记得随 re-parent 一并落』",
+  "fact": "架上已有那枚 r3 收据，且随每次搬家补到当代；逐件远端 blob 与本机重算比对：",
+  "rack_readback": {
+   "ord0296_candidate_r3.json": {
+    "http": 200,
+    "remote_blob": "42ed3dd976b49b9f23f6e65b6acf6c85c19eddc0",
+    "matches_local": true
+   },
+   "ord0296_candidate_r4.json": {
+    "http": 200,
+    "remote_blob": "cbb2828df8d18ee454d35d884cf81baf1801388a",
+    "matches_local": true
+   },
+   "ord0296_candidate_r5.json": {
+    "http": 200,
+    "remote_blob": "e4b487db31179c58909e846ec269a887ea53b6e8",
+    "matches_local": true
+   },
+   "ord0296_r5_same_generation_r1.json": {
+    "http": 200,
+    "remote_blob": "51a634705545366e5fc163e5cbd8e26e59e14ba1",
+    "matches_local": true
+   }
+  },
+  "still_open": "要落地的是 r5（父 = 现场尖）；r3/r4 的父已被超掉，保留不重推"
+ },
+ "refs_snapshot": {
+  "review/ord0307-credential-gate-f": {
+   "http": 200,
+   "sha": "7856e03f6238da3000976eb6e690a448dfa39b9a"
+  },
+  "review/ord0296-write-deadline-f-r5": {
+   "http": 200,
+   "sha": "30a5f90e5deaed6e45a704ddcc7d6e5e9790475b"
+  },
+  "review/ord0296-write-deadline-f-r4": {
+   "http": 200,
+   "sha": "9f06fb5f0e85a679d65e284411b7b82370913b12"
+  },
+  "review/ord0296-write-deadline-f-r3": {
+   "http": 200,
+   "sha": "fd8eaf3644b66b44c44ce3178a7babac2bf561c0"
+  }
+ },
+ "discipline": {
+  "credential_values_printed": 0,
+  "authoritative_line_written": 0,
+  "refs_pushed_this_note": 0,
+  "demo_reset": 0,
+  "live_or_preview_db": 0,
+  "registry_reads_or_writes": 0
+ },
+ "claim_kind": "code_determined",
+ "derived_result": null
+}
