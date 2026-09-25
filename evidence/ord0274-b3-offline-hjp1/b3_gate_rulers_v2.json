@@ -1,0 +1,79 @@
+{
+  "receipt": "o2b3_derived_delivered.json",
+  "correction": "v2 -- the first file assumed JSON output and recorded 'UNPARSEABLE'; the ruler emits text",
+  "why_the_first_file_is_left_alone": "a published path is never overwritten; both files are readable and the difference is named here",
+  "rulers": {
+    "r1": {
+      "blob40": "35caa42c0697faf0a8eeb0929a3e11cb53c9709a",
+      "local_sha1_matches_blob_id": true,
+      "blob_meta": "size=17346",
+      "selftest_rc": 0,
+      "selftest_tail": "map_entry cells 2 got Q38_GATE_GREEN [] | want Q38_GATE_GREEN [] -> ok",
+      "receipt_measured_rc": 0,
+      "parsed_from_text": {
+        "overall": "Q38_GATE_GREEN",
+        "cells_found": 2,
+        "hard": "0 []",
+        "soft": "0 []",
+        "cells": [
+          {
+            "id": "B3_offline_after_convergence",
+            "why_source": "why",
+            "why": "tokens 21",
+            "own": "hits 13",
+            "unique": "hits 0",
+            "shares": "why with []"
+          },
+          {
+            "id": "B3_control_partial_deploy",
+            "why_source": "why",
+            "why": "tokens 17",
+            "own": "hits 9",
+            "unique": "hits 0",
+            "shares": "why with []"
+          }
+        ],
+        "meaning": "no shared literal and every sentence names its own readings"
+      },
+      "raw_stdout_file": "gate_r1_on_b3_v2.txt",
+      "raw_stdout_bytes": 457,
+      "stderr_head": ""
+    },
+    "r2": {
+      "blob40": "91ae8b1ec55f5c19122af11bf775df14580955e4",
+      "local_sha1_matches_blob_id": true,
+      "blob_meta": "size=18867",
+      "selftest_rc": 0,
+      "selftest_tail": "r_any_key cells 2 got Q38_GATE_GREEN [] | want Q38_GATE_GREEN [] -> ok",
+      "receipt_measured_rc": 0,
+      "parsed_from_text": {
+        "overall": "Q38_GATE_GREEN",
+        "cells_found": 2,
+        "hard": "0 []",
+        "soft": "0 []",
+        "cells": [
+          {
+            "id": "B3_offline_after_convergence",
+            "why_source": "why",
+            "why": "tokens 21",
+            "own": "hits 13",
+            "unique": "hits 0",
+            "shares": "why with []"
+          },
+          {
+            "id": "B3_control_partial_deploy",
+            "why_source": "why",
+            "why": "tokens 17",
+            "own": "hits 9",
+            "unique": "hits 0",
+            "shares": "why with []"
+          }
+        ],
+        "meaning": "no shared literal and every sentence names its own readings"
+      },
+      "raw_stdout_file": "gate_r2_on_b3_v2.txt",
+      "raw_stdout_bytes": 457,
+      "stderr_head": ""
+    }
+  }
+}
