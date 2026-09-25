@@ -1,0 +1,36 @@
+{
+ "A_new_path": {
+  "decision": "CREATED",
+  "commit": "2edb3fe054ca9ec9470131baedf0f41fb8713c60",
+  "blob": "3c76bbb6a156596e975dccf57c17c675139f7fb1",
+  "readback_blob": "3c76bbb6a156596e975dccf57c17c675139f7fb1",
+  "proof": "BYTE-LEVEL MATCH",
+  "bytes": 96
+ },
+ "B_same_bytes": {
+  "decision": "SKIP_IDENTICAL",
+  "blob": "3c76bbb6a156596e975dccf57c17c675139f7fb1",
+  "bytes": 96
+ },
+ "C_different_bytes": {
+  "decision": "REFUSE_OVERWRITE",
+  "on_branch": "3c76bbb6a156596e975dccf57c17c675139f7fb1",
+  "proposed": "c96dbc7e75e5f4abd18e37a37c01952175f60142",
+  "bytes_on_branch": 96,
+  "bytes_proposed": 137,
+  "commits": [
+   [
+    "2edb3fe054ca",
+    "2026-09-25T10:24:18Z"
+   ]
+  ]
+ },
+ "D_after_state": {
+  "blob": "3c76bbb6a156596e975dccf57c17c675139f7fb1",
+  "bytes": 96,
+  "still_arm_A_bytes": true,
+  "arm_C_never_landed": true
+ },
+ "verdict": "SELFTEST_PASS",
+ "scope": "Three arms, two directions: a new path is written, identical bytes are skipped, different bytes are refused and the branch is left holding the original bytes. The refusal path prints both blobs and the path's commit list so the operator moves to a new filename instead of forcing."
+}
