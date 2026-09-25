@@ -1,0 +1,199 @@
+{
+ "at": "2026-09-25T09:26:25+08:00",
+ "order": "ORD-0281 step 0 (keyed denominator)",
+ "lane": "B c01d72a3",
+ "measured_against": {
+  "landed_tip": "5c4608cede6cb7bd5f3ac7e704bfee379ca47abc",
+  "tree": "git archive of frontend/src from the landed tip",
+  "my_candidate_tip_for_reference": "549ac8f1b20bc04e70eadbd238ade737eefbff01"
+ },
+ "instrument": "TypeScript compiler API 5.9 via node; the first pass under-reported because StringLiteral.value is undefined on a plain parsed file in this version, so verbs were read from .text (the v1 output is kept on disk, superseded not deleted)",
+ "counts": {
+  "files_scanned": 72,
+  "write_sites_with_a_literal_verb": 47,
+  "keyed_write_sites": 6,
+  "keyed_reaching_the_wrapper": 4,
+  "keyed_bypassing_it": 2
+ },
+ "same_keyed_set_on_my_lane_tree": true,
+ "keyed_sites": [
+  {
+   "file": "api/citynexus.ts",
+   "line": 855,
+   "callee": "requestJson",
+   "verb": "POST",
+   "verb_shape": "literal",
+   "keyed": true,
+   "key_source": "{ \"Idempotency-Key\": idempotencyKey }",
+   "signal": false,
+   "has_body": true,
+   "defined_in": "captureBooking",
+   "via_client_helper": true,
+   "text": "requestJson(\"/journeys/\" + journeyId + \"/transactions\", {\n      method: \"POST\",\n      headers: { \"Idempotency-Key\": idempotencyKey },\n      body: JSON.stringify({\n        booking_id: booking.id,\n     "
+  },
+  {
+   "file": "api/citynexus.ts",
+   "line": 1167,
+   "callee": "requestJson",
+   "verb": "POST",
+   "verb_shape": "literal",
+   "keyed": true,
+   "key_source": "idempotencyKey ? { \"Idempotency-Key\": idempotencyKey } : undefined",
+   "signal": false,
+   "has_body": true,
+   "defined_in": "generateReplans",
+   "via_client_helper": true,
+   "text": "requestJson<ReplanProposal>(\"/journeys/\" + journeyId + \"/replans\", {\n      method: \"POST\",\n      headers: idempotencyKey ? { \"Idempotency-Key\": idempotencyKey } : undefined,\n      body: JSON.stringify"
+  },
+  {
+   "file": "api/citynexus.ts",
+   "line": 1179,
+   "callee": "requestJson",
+   "verb": "POST",
+   "verb_shape": "literal",
+   "keyed": true,
+   "key_source": "{ \"Idempotency-Key\": idempotencyKey }",
+   "signal": false,
+   "has_body": false,
+   "defined_in": "acceptReplan",
+   "via_client_helper": true,
+   "text": "requestJson<AcceptReplanResponse>(\"/replans/\" + proposalId + \"/accept\", {\n      method: \"POST\",\n      headers: { \"Idempotency-Key\": idempotencyKey },\n    })"
+  },
+  {
+   "file": "api/citynexus.ts",
+   "line": 1186,
+   "callee": "requestJson",
+   "verb": "POST",
+   "verb_shape": "literal",
+   "keyed": true,
+   "key_source": "idempotencyKey ? { \"Idempotency-Key\": idempotencyKey } : undefined",
+   "signal": false,
+   "has_body": false,
+   "defined_in": "rejectReplan",
+   "via_client_helper": true,
+   "text": "requestJson<ReplanProposal>(\"/replans/\" + proposalId + \"/reject\", {\n      method: \"POST\",\n      headers: idempotencyKey ? { \"Idempotency-Key\": idempotencyKey } : undefined,\n    })"
+  },
+  {
+   "file": "features/execution/LiveRecovery.tsx",
+   "line": 225,
+   "callee": "fetch",
+   "verb": "POST",
+   "verb_shape": "literal",
+   "keyed": true,
+   "key_source": "{ \"Idempotency-Key\": `accept-${proposalId}` }",
+   "signal": false,
+   "has_body": false,
+   "defined_in": "LiveRecovery",
+   "via_client_helper": false,
+   "text": "fetch(`/api/v1/replans/${proposalId}/accept`, {\n        method: \"POST\",\n        headers: { \"Idempotency-Key\": `accept-${proposalId}` },\n      })"
+  },
+  {
+   "file": "features/recovery/V14RecoveryTruthPanel.tsx",
+   "line": 69,
+   "callee": "fetch",
+   "verb": "POST",
+   "verb_shape": "literal",
+   "keyed": true,
+   "key_source": "{\n          \"Content-Type\": \"application/json\",\n          \"Idempotency-Key\": `v14-ui-${proposal.id}`,\n        }",
+   "signal": false,
+   "has_body": false,
+   "defined_in": "V14RecoveryTruthPanel",
+   "via_client_helper": false,
+   "text": "fetch(`/api/v1/replans/${proposal.id}/accept`, {\n        method: \"POST\",\n        headers: {\n          \"Content-Type\": \"application/json\",\n          \"Idempotency-Key\": `v14-ui-${proposal.id}`,\n        "
+  }
+ ],
+ "readdeadline_lines_on_landed_tip": {
+  "write_branch_passthrough": 44,
+  "constant_declared_at": 15,
+  "value_as_written": "12_000"
+ },
+ "key_stability_at_the_consumers": [
+  {
+   "file": "demo/goldenScenario.ts",
+   "line": 45,
+   "key_expression_as_written": "\"frontend-golden-capture-\" + booking.id",
+   "context_checked_within": [
+    42,
+    48
+   ],
+   "t_d_reads": "stable across retry and reload"
+  },
+  {
+   "file": "features/simulation/SimulationPanel.tsx",
+   "line": 605,
+   "key_expression_as_written": "newKey(),",
+   "context_checked_within": [
+    602,
+    608
+   ],
+   "t_d_reads": "PER ATTEMPT: a fresh UUID each call, so a retry is a different request"
+  },
+  {
+   "file": "features/simulation/SimulationPanel.tsx",
+   "line": 653,
+   "key_expression_as_written": "keyFor(`accept:${proposalId}`)",
+   "context_checked_within": [
+    650,
+    656
+   ],
+   "t_d_reads": "stable across retry, lost on reload (a useRef map)"
+  },
+  {
+   "file": "main.tsx",
+   "line": 888,
+   "key_expression_as_written": "\"frontend-replan-accept-\" + selectedProposal.id",
+   "context_checked_within": [
+    885,
+    891
+   ],
+   "t_d_reads": "stable across retry and reload"
+  },
+  {
+   "file": "features/simulation/SimulationPanel.tsx",
+   "line": 679,
+   "key_expression_as_written": "keyFor(`reject:${proposalId}`)",
+   "context_checked_within": [
+    676,
+    682
+   ],
+   "t_d_reads": "stable across retry, lost on reload (a useRef map)"
+  },
+  {
+   "file": "main.tsx",
+   "line": 937,
+   "key_expression_as_written": "cityNexusApi.rejectReplan(selectedProposal.id)",
+   "context_checked_within": [
+    934,
+    940
+   ],
+   "t_d_reads": "NO KEY on this surface -- that leg is ORD-0288's, not this order's"
+  },
+  {
+   "file": "features/execution/LiveRecovery.tsx",
+   "line": 227,
+   "key_expression_as_written": "\"Idempotency-Key\": `accept-${proposalId}`",
+   "context_checked_within": [
+    224,
+    230
+   ],
+   "t_d_reads": "stable across retry and reload (derived from the proposal id)"
+  },
+  {
+   "file": "features/recovery/V14RecoveryTruthPanel.tsx",
+   "line": 73,
+   "key_expression_as_written": "\"Idempotency-Key\": `v14-ui-${proposal.id}`",
+   "context_checked_within": [
+    70,
+    76
+   ],
+   "t_d_reads": "stable across retry and reload (derived from the proposal id)"
+  }
+ ],
+ "key_stability_counts": {
+  "stable": 6,
+  "per_attempt": 1,
+  "no_key_on_that_surface": 1
+ },
+ "consumers": [],
+ "derived_result": null
+}
