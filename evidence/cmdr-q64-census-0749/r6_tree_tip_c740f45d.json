@@ -1,0 +1,1997 @@
+{
+ "schema": "CNX_CMDR_UI_EVIDENCE_EXPOSURE_GATE_V1_R6",
+ "ruler": {
+  "name": "ui_exposure_taint_ast_r3.cjs",
+  "supersedes": "ui_exposure_taint_ast_r2.cjs (r5, same decision, scope reporting added)",
+  "supersedes_blob": "ff98091cf3accb0d836ae25ba49820170b92d932",
+  "also_supersedes_r4": {
+   "file": "ui_exposure_taint_ast_r1.cjs",
+   "blob": "eb262f59e54d5142ad0e8041704e751eac473ace"
+  },
+  "rule_lineage": "r1 regex -> r2 regex -> r3 regex -> r4 AST per-file -> r5 AST with the module graph",
+  "order": "ORD-0331",
+  "also_supersedes": {
+   "r3": "ui_exposure_field_check_r3.py",
+   "r3_blob": "44e062e6ce9c7b5d97d78e09e432072da102292c"
+  },
+  "generation": "r5 / AST taint + module graph"
+ },
+ "typescript": "5.9.3",
+ "scope": "module-graph: relative imports, index files, re-exports and namespace imports resolved (--tree)",
+ "scope_note": "this mode is the one the pre-landing gate must run: it can both clear a value a helper rebuilds from device wording and condemn a value that arrives through an import",
+ "method": "whole-graph module resolution: relative specifiers, .ts/.tsx and index files, `export ... from`, `export * from`, default and namespace imports. An import binding is answered by the exporting file's own data flow, so a helper that returns the answer's words reaches the cell in the file that prints it. Package specifiers are recorded unresolved, never guessed at.",
+ "standing_rule": "Q64=1 (arbiter): data reaching UI / screenshot / evidence artifacts must pass source classification -> allowed fields -> render. mask is a helper, never the first gate.",
+ "allowed_fields": [
+  "http_status",
+  "content_type",
+  "body_bytes",
+  "response_received",
+  "elapsed_ms",
+  "request_id"
+ ],
+ "forbidden": [
+  "raw body",
+  "raw detail",
+  "raw exception",
+  "the answer's own words reaching the DOM by any route, including across a file boundary"
+ ],
+ "tree": "D:/moodle/_qoder_cmdr_ref_20260921/live_checks/_build_ord0323_0339/frontend/src",
+ "modules_in_graph": 76,
+ "files_found": 76,
+ "rules_fired": [
+  "RAW_BODY_TO_DOM",
+  "UPSTREAM_EXCEPTION_TO_DOM",
+  "UPSTREAM_READ_DIRECT",
+  "UPSTREAM_TEXT_VIA_HELPER_TO_DOM"
+ ],
+ "per_rule": {
+  "UPSTREAM_TEXT_VIA_HELPER_TO_DOM": 6,
+  "UPSTREAM_READ_DIRECT": 1,
+  "UPSTREAM_EXCEPTION_TO_DOM": 6,
+  "RAW_BODY_TO_DOM": 2
+ },
+ "unresolved_import_specs": [
+  {
+   "from": "app/V8Experience.tsx",
+   "spec": "react"
+  },
+  {
+   "from": "features/inbox/JourneyInboxWorkbench.tsx",
+   "spec": "react"
+  },
+  {
+   "from": "lib/sceneClock.ts",
+   "spec": "@tanstack/react-query"
+  },
+  {
+   "from": "lib/waitClock.ts",
+   "spec": "react"
+  },
+  {
+   "from": "api/candidateRejections.ts",
+   "spec": "@tanstack/react-query"
+  },
+  {
+   "from": "i18n/LocaleContext.tsx",
+   "spec": "react"
+  },
+  {
+   "from": "components/v8/MapPanel.tsx",
+   "spec": "react"
+  },
+  {
+   "from": "features/agent/AgentComposer.tsx",
+   "spec": "react"
+  },
+  {
+   "from": "features/agent/CopilotDock.tsx",
+   "spec": "react"
+  },
+  {
+   "from": "features/discovery/DestinationPreparationPanel.tsx",
+   "spec": "react"
+  },
+  {
+   "from": "features/discovery/RealCityDiscoveryPanel.tsx",
+   "spec": "react"
+  },
+  {
+   "from": "api/v12Authoritative.ts",
+   "spec": "@tanstack/react-query"
+  },
+  {
+   "from": "features/execution/LiveRecovery.tsx",
+   "spec": "react"
+  },
+  {
+   "from": "api/v10Execution.ts",
+   "spec": "@tanstack/react-query"
+  },
+  {
+   "from": "features/execution/V12AuthoritativeJourneyPanel.tsx",
+   "spec": "react"
+  },
+  {
+   "from": "features/inbox/BookingArtifactScanner.tsx",
+   "spec": "react"
+  },
+  {
+   "from": "features/trip/TripItinerary.tsx",
+   "spec": "react"
+  },
+  {
+   "from": "features/notifications/PushCapabilityCard.tsx",
+   "spec": "react"
+  },
+  {
+   "from": "features/planning/PlanComparison.tsx",
+   "spec": "react"
+  },
+  {
+   "from": "features/planning/PlanWithAiSheet.tsx",
+   "spec": "react"
+  },
+  {
+   "from": "features/recovery/RecoveryRequiredPanel.tsx",
+   "spec": "react"
+  },
+  {
+   "from": "features/recovery/V14PreventivePanel.tsx",
+   "spec": "react"
+  },
+  {
+   "from": "features/recovery/V14RecoveryTruthPanel.tsx",
+   "spec": "react"
+  },
+  {
+   "from": "features/setup/JourneyTrialSetup.tsx",
+   "spec": "react"
+  },
+  {
+   "from": "features/simulation/SimulationPanel.tsx",
+   "spec": "@tanstack/react-query"
+  },
+  {
+   "from": "features/simulation/SimulationPanel.tsx",
+   "spec": "react"
+  },
+  {
+   "from": "features/simulation/SimulationPanel.tsx",
+   "spec": "react-dom"
+  },
+  {
+   "from": "features/stay/HotelsPanel.tsx",
+   "spec": "react"
+  },
+  {
+   "from": "features/studio/SortableActivityList.tsx",
+   "spec": "@dnd-kit/sortable"
+  },
+  {
+   "from": "features/studio/SortableActivityList.tsx",
+   "spec": "react"
+  },
+  {
+   "from": "features/studio/SortableActivityList.tsx",
+   "spec": "@dnd-kit/core"
+  },
+  {
+   "from": "features/studio/V12TripStudioPanel.tsx",
+   "spec": "react"
+  },
+  {
+   "from": "main.tsx",
+   "spec": "react"
+  },
+  {
+   "from": "main.tsx",
+   "spec": "xstate"
+  },
+  {
+   "from": "main.tsx",
+   "spec": "react-dom/client"
+  }
+ ],
+ "unresolved_import_count": 35,
+ "parse_diagnostics_total": 0,
+ "resolution_depth_cap": 150,
+ "crossing_budget": 24,
+ "crossing_cuts": 0,
+ "resolution_truncated_total": 56,
+ "truncated_meaning": "how many lookups ran out of depth and had to answer unknown - a clean verdict with a nonzero value is not a proven clean verdict",
+ "per_file": [
+  {
+   "file": "api/candidateRejections.ts",
+   "hits": 0,
+   "parse_diagnostics": 0,
+   "depth_cut_lookups": 0,
+   "imports": 1,
+   "exports": 4,
+   "graph": {
+    "bindings": 35,
+    "functions": 11,
+    "call_sites": 30,
+    "state_pairs": [],
+    "sinks": 0
+   }
+  },
+  {
+   "file": "api/citynexus.ts",
+   "hits": 0,
+   "parse_diagnostics": 0,
+   "depth_cut_lookups": 0,
+   "imports": 5,
+   "exports": 2,
+   "graph": {
+    "bindings": 171,
+    "functions": 55,
+    "call_sites": 92,
+    "state_pairs": [],
+    "sinks": 0
+   }
+  },
+  {
+   "file": "api/journeyContinuation.ts",
+   "hits": 0,
+   "parse_diagnostics": 0,
+   "depth_cut_lookups": 0,
+   "imports": 0,
+   "exports": 5,
+   "graph": {
+    "bindings": 33,
+    "functions": 12,
+    "call_sites": 23,
+    "state_pairs": [],
+    "sinks": 0
+   }
+  },
+  {
+   "file": "api/travelerPreferences.ts",
+   "hits": 0,
+   "parse_diagnostics": 0,
+   "depth_cut_lookups": 0,
+   "imports": 1,
+   "exports": 2,
+   "graph": {
+    "bindings": 20,
+    "functions": 7,
+    "call_sites": 17,
+    "state_pairs": [],
+    "sinks": 0
+   }
+  },
+  {
+   "file": "api/useContinuationState.ts",
+   "hits": 0,
+   "parse_diagnostics": 0,
+   "depth_cut_lookups": 0,
+   "imports": 5,
+   "exports": 1,
+   "graph": {
+    "bindings": 15,
+    "functions": 3,
+    "call_sites": 6,
+    "state_pairs": [],
+    "sinks": 0
+   }
+  },
+  {
+   "file": "api/v10Execution.ts",
+   "hits": 0,
+   "parse_diagnostics": 0,
+   "depth_cut_lookups": 0,
+   "imports": 2,
+   "exports": 4,
+   "graph": {
+    "bindings": 12,
+    "functions": 6,
+    "call_sites": 8,
+    "state_pairs": [],
+    "sinks": 0
+   }
+  },
+  {
+   "file": "api/v12Authoritative.ts",
+   "hits": 0,
+   "parse_diagnostics": 0,
+   "depth_cut_lookups": 0,
+   "imports": 5,
+   "exports": 6,
+   "graph": {
+    "bindings": 28,
+    "functions": 12,
+    "call_sites": 19,
+    "state_pairs": [],
+    "sinks": 0
+   }
+  },
+  {
+   "file": "app/V8Experience.tsx",
+   "hits": 1,
+   "parse_diagnostics": 0,
+   "depth_cut_lookups": 0,
+   "imports": 92,
+   "exports": 1,
+   "graph": {
+    "bindings": 673,
+    "functions": 198,
+    "call_sites": 868,
+    "state_pairs": [
+     "route/setRoute",
+     "route/setRoute",
+     "data/setData",
+     "data/setData",
+     "mode/setMode",
+     "mode/setMode",
+     "comparison/setComparison",
+     "comparison/setComparison",
+     "policy/setPolicy",
+     "policy/setPolicy",
+     "runtimeStatus/setRuntimeStatus",
+     "runtimeStatus/setRuntimeStatus",
+     "busy/setBusy",
+     "busy/setBusy",
+     "banner/setBanner",
+     "banner/setBanner",
+     "artifactImportedAt/setArtifactImportedAt",
+     "artifactImportedAt/setArtifactImportedAt",
+     "sheetOpen/setSheetOpen",
+     "sheetOpen/setSheetOpen",
+     "navOpen/setNavOpen",
+     "navOpen/setNavOpen",
+     "alertsOpen/setAlertsOpen",
+     "alertsOpen/setAlertsOpen",
+     "wallet/setWallet",
+     "wallet/setWallet",
+     "offline/setOffline",
+     "offline/setOffline",
+     "handledEventIds/setHandledEventIds",
+     "handledEventIds/setHandledEventIds",
+     "decodedArtifactText/setDecodedArtifactText",
+     "decodedArtifactText/setDecodedArtifactText",
+     "setupOpen/setSetupOpen",
+     "setupOpen/setSetupOpen",
+     "planAiOpen/setPlanAiOpen",
+     "planAiOpen/setPlanAiOpen",
+     "detailActivityId/setDetailActivityId",
+     "detailActivityId/setDetailActivityId",
+     "failure/setFailure",
+     "failure/setFailure",
+     "showCachedCopy/setShowCachedCopy",
+     "showCachedCopy/setShowCachedCopy",
+     "cachedCopySaved/setCachedCopySaved",
+     "cachedCopySaved/setCachedCopySaved",
+     "setupBusy/setSetupBusy",
+     "setupBusy/setSetupBusy",
+     "createPhase/setCreatePhase",
+     "createPhase/setCreatePhase",
+     "createStartedAt/setCreateStartedAt",
+     "createStartedAt/setCreateStartedAt",
+     "journeyCreated/setJourneyCreated",
+     "journeyCreated/setJourneyCreated",
+     "stoppedWaiting/setStoppedWaiting",
+     "stoppedWaiting/setStoppedWaiting",
+     "staySearch/setStaySearch",
+     "staySearch/setStaySearch",
+     "stayOutcome/setStayOutcome",
+     "stayOutcome/setStayOutcome",
+     "stayAttempts/setStayAttempts",
+     "stayAttempts/setStayAttempts",
+     "themeChoice/setThemeChoiceState",
+     "themeChoice/setThemeChoiceState",
+     "sealedDemoUnavailable/setSealedDemoUnavailable",
+     "sealedDemoUnavailable/setSealedDemoUnavailable",
+     "sealedDemoDetail/setSealedDemoDetail",
+     "sealedDemoDetail/setSealedDemoDetail",
+     "tab/setTab",
+     "tab/setTab",
+     "resuming/setResuming",
+     "resuming/setResuming",
+     "resumeOutcome/setResumeOutcome",
+     "resumeOutcome/setResumeOutcome",
+     "advisoryDismissed/setAdvisoryDismissed",
+     "advisoryDismissed/setAdvisoryDismissed",
+     "mapReportsNoLocation/setMapReportsNoLocation",
+     "mapReportsNoLocation/setMapReportsNoLocation",
+     "draftImpact/setDraftImpact",
+     "draftImpact/setDraftImpact",
+     "input/setInput",
+     "input/setInput",
+     "parseError/setParseError",
+     "parseError/setParseError",
+     "showAdvanced/setShowAdvanced",
+     "showAdvanced/setShowAdvanced"
+    ],
+    "sinks": 377
+   }
+  },
+  {
+   "file": "app/v8Types.ts",
+   "hits": 0,
+   "parse_diagnostics": 0,
+   "depth_cut_lookups": 0,
+   "imports": 1,
+   "exports": 1,
+   "graph": {
+    "bindings": 2,
+    "functions": 0,
+    "call_sites": 0,
+    "state_pairs": [],
+    "sinks": 0
+   }
+  },
+  {
+   "file": "components/JourneyMap.tsx",
+   "hits": 0,
+   "parse_diagnostics": 0,
+   "depth_cut_lookups": 0,
+   "imports": 10,
+   "exports": 1,
+   "graph": {
+    "bindings": 59,
+    "functions": 18,
+    "call_sites": 47,
+    "state_pairs": [],
+    "sinks": 1
+   }
+  },
+  {
+   "file": "components/ProductErrorBoundary.tsx",
+   "hits": 0,
+   "parse_diagnostics": 0,
+   "depth_cut_lookups": 0,
+   "imports": 3,
+   "exports": 1,
+   "graph": {
+    "bindings": 22,
+    "functions": 8,
+    "call_sites": 14,
+    "state_pairs": [],
+    "sinks": 7
+   }
+  },
+  {
+   "file": "components/RawFactsPanel.tsx",
+   "hits": 0,
+   "parse_diagnostics": 0,
+   "depth_cut_lookups": 0,
+   "imports": 2,
+   "exports": 1,
+   "graph": {
+    "bindings": 7,
+    "functions": 2,
+    "call_sites": 2,
+    "state_pairs": [],
+    "sinks": 2
+   }
+  },
+  {
+   "file": "components/v8/Icon.tsx",
+   "hits": 0,
+   "parse_diagnostics": 0,
+   "depth_cut_lookups": 0,
+   "imports": 1,
+   "exports": 1,
+   "graph": {
+    "bindings": 5,
+    "functions": 1,
+    "call_sites": 0,
+    "state_pairs": [],
+    "sinks": 0
+   }
+  },
+  {
+   "file": "components/v8/MapPanel.tsx",
+   "hits": 0,
+   "parse_diagnostics": 0,
+   "depth_cut_lookups": 0,
+   "imports": 8,
+   "exports": 2,
+   "graph": {
+    "bindings": 82,
+    "functions": 30,
+    "call_sites": 86,
+    "state_pairs": [
+     "noLocation/setNoLocation",
+     "noLocation/setNoLocation",
+     "tilesUnavailable/setTilesUnavailable",
+     "tilesUnavailable/setTilesUnavailable"
+    ],
+    "sinks": 10
+   }
+  },
+  {
+   "file": "contracts/journeyTwin.ts",
+   "hits": 0,
+   "parse_diagnostics": 0,
+   "depth_cut_lookups": 0,
+   "imports": 1,
+   "exports": 0,
+   "graph": {
+    "bindings": 2,
+    "functions": 1,
+    "call_sites": 0,
+    "state_pairs": [],
+    "sinks": 0
+   }
+  },
+  {
+   "file": "contracts/replan.ts",
+   "hits": 0,
+   "parse_diagnostics": 0,
+   "depth_cut_lookups": 0,
+   "imports": 0,
+   "exports": 0,
+   "graph": {
+    "bindings": 0,
+    "functions": 0,
+    "call_sites": 0,
+    "state_pairs": [],
+    "sinks": 0
+   }
+  },
+  {
+   "file": "contracts/testIds.ts",
+   "hits": 0,
+   "parse_diagnostics": 0,
+   "depth_cut_lookups": 0,
+   "imports": 0,
+   "exports": 1,
+   "graph": {
+    "bindings": 1,
+    "functions": 0,
+    "call_sites": 0,
+    "state_pairs": [],
+    "sinks": 0
+   }
+  },
+  {
+   "file": "demo/goldenScenario.ts",
+   "hits": 0,
+   "parse_diagnostics": 0,
+   "depth_cut_lookups": 0,
+   "imports": 6,
+   "exports": 3,
+   "graph": {
+    "bindings": 34,
+    "functions": 7,
+    "call_sites": 18,
+    "state_pairs": [],
+    "sinks": 0
+   }
+  },
+  {
+   "file": "features/agent/AgentComposer.tsx",
+   "hits": 0,
+   "parse_diagnostics": 0,
+   "depth_cut_lookups": 0,
+   "imports": 14,
+   "exports": 1,
+   "graph": {
+    "bindings": 68,
+    "functions": 21,
+    "call_sites": 100,
+    "state_pairs": [
+     "message/setMessage",
+     "message/setMessage",
+     "messages/setMessages",
+     "messages/setMessages",
+     "sending/setSending",
+     "sending/setSending",
+     "error/setError",
+     "error/setError",
+     "failureFacts/setFailureFacts",
+     "failureFacts/setFailureFacts"
+    ],
+    "sinks": 52
+   }
+  },
+  {
+   "file": "features/agent/AgentRunRail.tsx",
+   "hits": 1,
+   "parse_diagnostics": 0,
+   "depth_cut_lookups": 0,
+   "imports": 1,
+   "exports": 1,
+   "graph": {
+    "bindings": 4,
+    "functions": 2,
+    "call_sites": 1,
+    "state_pairs": [],
+    "sinks": 4
+   }
+  },
+  {
+   "file": "features/agent/CopilotDock.tsx",
+   "hits": 0,
+   "parse_diagnostics": 0,
+   "depth_cut_lookups": 0,
+   "imports": 18,
+   "exports": 2,
+   "graph": {
+    "bindings": 215,
+    "functions": 81,
+    "call_sites": 243,
+    "state_pairs": [
+     "events/setEvents",
+     "events/setEvents",
+     "runState/setRunState",
+     "runState/setRunState",
+     "actionState/setActionState",
+     "actionState/setActionState",
+     "actionFacts/setActionFacts",
+     "actionFacts/setActionFacts",
+     "streamError/setStreamError",
+     "streamError/setStreamError",
+     "open/setOpen",
+     "open/setOpen",
+     "yieldToSurface/setYieldToSurface",
+     "yieldToSurface/setYieldToSurface",
+     "draft/setDraft",
+     "draft/setDraft",
+     "sending/setSending",
+     "sending/setSending",
+     "messages/setMessages",
+     "messages/setMessages",
+     "error/setError",
+     "error/setError",
+     "sendFacts/setSendFacts",
+     "sendFacts/setSendFacts",
+     "executed/setExecuted",
+     "executed/setExecuted",
+     "restOverlap/setRestOverlap",
+     "restOverlap/setRestOverlap"
+    ],
+    "sinks": 72
+   }
+  },
+  {
+   "file": "features/discovery/DestinationPreparationPanel.tsx",
+   "hits": 3,
+   "parse_diagnostics": 0,
+   "depth_cut_lookups": 56,
+   "imports": 9,
+   "exports": 1,
+   "graph": {
+    "bindings": 65,
+    "functions": 25,
+    "call_sites": 91,
+    "state_pairs": [
+     "query/setQuery",
+     "query/setQuery",
+     "capability/setCapability",
+     "capability/setCapability",
+     "capabilityError/setCapabilityError",
+     "capabilityError/setCapabilityError",
+     "checking/setChecking",
+     "checking/setChecking",
+     "job/setJob",
+     "job/setJob",
+     "actionError/setActionError",
+     "actionError/setActionError",
+     "busy/setBusy",
+     "busy/setBusy"
+    ],
+    "sinks": 48
+   }
+  },
+  {
+   "file": "features/discovery/RealCityDiscoveryPanel.tsx",
+   "hits": 1,
+   "parse_diagnostics": 0,
+   "depth_cut_lookups": 0,
+   "imports": 5,
+   "exports": 1,
+   "graph": {
+    "bindings": 42,
+    "functions": 11,
+    "call_sites": 100,
+    "state_pairs": [
+     "goal/setGoal",
+     "goal/setGoal",
+     "mode/setMode",
+     "mode/setMode",
+     "result/setResult",
+     "result/setResult",
+     "busy/setBusy",
+     "busy/setBusy",
+     "error/setError",
+     "error/setError"
+    ],
+    "sinks": 71
+   }
+  },
+  {
+   "file": "features/execution/LiveRecovery.tsx",
+   "hits": 0,
+   "parse_diagnostics": 0,
+   "depth_cut_lookups": 0,
+   "imports": 12,
+   "exports": 2,
+   "graph": {
+    "bindings": 94,
+    "functions": 28,
+    "call_sites": 95,
+    "state_pairs": [
+     "proposals/setProposals",
+     "proposals/setProposals",
+     "busy/setBusy",
+     "busy/setBusy",
+     "message/setMessage",
+     "message/setMessage",
+     "disruptions/setDisruptions",
+     "disruptions/setDisruptions"
+    ],
+    "sinks": 38
+   }
+  },
+  {
+   "file": "features/execution/V10LiveExecutionPanel.tsx",
+   "hits": 0,
+   "parse_diagnostics": 0,
+   "depth_cut_lookups": 0,
+   "imports": 10,
+   "exports": 1,
+   "graph": {
+    "bindings": 20,
+    "functions": 2,
+    "call_sites": 26,
+    "state_pairs": [],
+    "sinks": 20
+   }
+  },
+  {
+   "file": "features/execution/V12AuthoritativeJourneyPanel.tsx",
+   "hits": 0,
+   "parse_diagnostics": 0,
+   "depth_cut_lookups": 0,
+   "imports": 11,
+   "exports": 1,
+   "graph": {
+    "bindings": 41,
+    "functions": 11,
+    "call_sites": 40,
+    "state_pairs": [
+     "busy/setBusy",
+     "busy/setBusy"
+    ],
+    "sinks": 19
+   }
+  },
+  {
+   "file": "features/execution/V12StatePrimitives.tsx",
+   "hits": 0,
+   "parse_diagnostics": 0,
+   "depth_cut_lookups": 0,
+   "imports": 9,
+   "exports": 9,
+   "graph": {
+    "bindings": 49,
+    "functions": 10,
+    "call_sites": 25,
+    "state_pairs": [],
+    "sinks": 25
+   }
+  },
+  {
+   "file": "features/inbox/BookingArtifactScanner.tsx",
+   "hits": 0,
+   "parse_diagnostics": 0,
+   "depth_cut_lookups": 0,
+   "imports": 5,
+   "exports": 1,
+   "graph": {
+    "bindings": 20,
+    "functions": 8,
+    "call_sites": 20,
+    "state_pairs": [
+     "active/setActive",
+     "active/setActive",
+     "value/setValue",
+     "value/setValue"
+    ],
+    "sinks": 6
+   }
+  },
+  {
+   "file": "features/inbox/JourneyInboxWorkbench.tsx",
+   "hits": 0,
+   "parse_diagnostics": 0,
+   "depth_cut_lookups": 0,
+   "imports": 12,
+   "exports": 2,
+   "graph": {
+    "bindings": 205,
+    "functions": 75,
+    "call_sites": 327,
+    "state_pairs": [
+     "text/setText",
+     "text/setText",
+     "image/setImage",
+     "image/setImage",
+     "draft/setDraft",
+     "draft/setDraft",
+     "pending/setPending",
+     "pending/setPending",
+     "pendingError/setPendingError",
+     "pendingError/setPendingError",
+     "confirmDetail/setConfirmDetail",
+     "confirmDetail/setConfirmDetail",
+     "memory/setMemory",
+     "memory/setMemory",
+     "message/setMessage",
+     "message/setMessage",
+     "busy/setBusy",
+     "busy/setBusy",
+     "role/setRole",
+     "role/setRole",
+     "scheduledDeparture/setScheduledDeparture",
+     "scheduledDeparture/setScheduledDeparture",
+     "scheduledArrival/setScheduledArrival",
+     "scheduledArrival/setScheduledArrival",
+     "manualOpen/setManualOpen",
+     "manualOpen/setManualOpen",
+     "manualType/setManualType",
+     "manualType/setManualType",
+     "manualTitle/setManualTitle",
+     "manualTitle/setManualTitle",
+     "manualRef/setManualRef",
+     "manualRef/setManualRef",
+     "manualFrom/setManualFrom",
+     "manualFrom/setManualFrom",
+     "manualTo/setManualTo",
+     "manualTo/setManualTo",
+     "manualDepart/setManualDepart",
+     "manualDepart/setManualDepart",
+     "manualArrive/setManualArrive",
+     "manualArrive/setManualArrive",
+     "manualAmount/setManualAmount",
+     "manualAmount/setManualAmount"
+    ],
+    "sinks": 105
+   }
+  },
+  {
+   "file": "features/intelligence/ControlTowerPanel.tsx",
+   "hits": 0,
+   "parse_diagnostics": 0,
+   "depth_cut_lookups": 0,
+   "imports": 3,
+   "exports": 1,
+   "graph": {
+    "bindings": 11,
+    "functions": 3,
+    "call_sites": 33,
+    "state_pairs": [],
+    "sinks": 24
+   }
+  },
+  {
+   "file": "features/mobility/MobilitySheet.tsx",
+   "hits": 0,
+   "parse_diagnostics": 0,
+   "depth_cut_lookups": 0,
+   "imports": 6,
+   "exports": 1,
+   "graph": {
+    "bindings": 22,
+    "functions": 7,
+    "call_sites": 22,
+    "state_pairs": [],
+    "sinks": 9
+   }
+  },
+  {
+   "file": "features/notifications/PushCapabilityCard.tsx",
+   "hits": 0,
+   "parse_diagnostics": 0,
+   "depth_cut_lookups": 0,
+   "imports": 3,
+   "exports": 1,
+   "graph": {
+    "bindings": 25,
+    "functions": 8,
+    "call_sites": 37,
+    "state_pairs": [
+     "config/setConfig",
+     "config/setConfig",
+     "message/setMessage",
+     "message/setMessage",
+     "unreadable/setUnreadable",
+     "unreadable/setUnreadable"
+    ],
+    "sinks": 4
+   }
+  },
+  {
+   "file": "features/planning/PlanComparison.tsx",
+   "hits": 0,
+   "parse_diagnostics": 0,
+   "depth_cut_lookups": 0,
+   "imports": 6,
+   "exports": 1,
+   "graph": {
+    "bindings": 63,
+    "functions": 11,
+    "call_sites": 48,
+    "state_pairs": [
+     "busyId/setBusyId",
+     "busyId/setBusyId",
+     "banner/setBanner",
+     "banner/setBanner"
+    ],
+    "sinks": 21
+   }
+  },
+  {
+   "file": "features/planning/PlanWithAiSheet.tsx",
+   "hits": 2,
+   "parse_diagnostics": 0,
+   "depth_cut_lookups": 0,
+   "imports": 8,
+   "exports": 1,
+   "graph": {
+    "bindings": 143,
+    "functions": 49,
+    "call_sites": 164,
+    "state_pairs": [
+     "text/setText",
+     "text/setText",
+     "placeNames/setPlaceNames",
+     "placeNames/setPlaceNames",
+     "namesRead/setNamesRead",
+     "namesRead/setNamesRead",
+     "busy/setBusy",
+     "busy/setBusy",
+     "requestTooShort/setRequestTooShort",
+     "requestTooShort/setRequestTooShort",
+     "phase/setPhase",
+     "phase/setPhase",
+     "elapsed/setElapsed",
+     "elapsed/setElapsed",
+     "aiState/setAiState",
+     "aiState/setAiState",
+     "result/setResult",
+     "result/setResult"
+    ],
+    "sinks": 41
+   }
+  },
+  {
+   "file": "features/recovery/RecoveryRequiredPanel.tsx",
+   "hits": 1,
+   "parse_diagnostics": 0,
+   "depth_cut_lookups": 0,
+   "imports": 2,
+   "exports": 1,
+   "graph": {
+    "bindings": 29,
+    "functions": 9,
+    "call_sites": 33,
+    "state_pairs": [
+     "busy/setBusy",
+     "busy/setBusy",
+     "message/setMessage",
+     "message/setMessage",
+     "acknowledged/setAcknowledged",
+     "acknowledged/setAcknowledged"
+    ],
+    "sinks": 9
+   }
+  },
+  {
+   "file": "features/recovery/V14PreventivePanel.tsx",
+   "hits": 0,
+   "parse_diagnostics": 0,
+   "depth_cut_lookups": 0,
+   "imports": 3,
+   "exports": 1,
+   "graph": {
+    "bindings": 33,
+    "functions": 12,
+    "call_sites": 29,
+    "state_pairs": [
+     "run/setRun",
+     "run/setRun",
+     "experience/setExperience",
+     "experience/setExperience",
+     "available/setAvailable",
+     "available/setAvailable"
+    ],
+    "sinks": 17
+   }
+  },
+  {
+   "file": "features/recovery/V14RecoveryTruthPanel.tsx",
+   "hits": 1,
+   "parse_diagnostics": 0,
+   "depth_cut_lookups": 0,
+   "imports": 6,
+   "exports": 1,
+   "graph": {
+    "bindings": 32,
+    "functions": 9,
+    "call_sites": 25,
+    "state_pairs": [
+     "proposal/setProposal",
+     "proposal/setProposal",
+     "busy/setBusy",
+     "busy/setBusy",
+     "message/setMessage",
+     "message/setMessage"
+    ],
+    "sinks": 19
+   }
+  },
+  {
+   "file": "features/setup/JourneyTrialSetup.tsx",
+   "hits": 0,
+   "parse_diagnostics": 0,
+   "depth_cut_lookups": 0,
+   "imports": 7,
+   "exports": 7,
+   "graph": {
+    "bindings": 195,
+    "functions": 79,
+    "call_sites": 207,
+    "state_pairs": [
+     "touched/setTouched",
+     "touched/setTouched",
+     "step/setStep",
+     "step/setStep",
+     "advanced/setAdvanced",
+     "advanced/setAdvanced",
+     "createAttemptFailed/setCreateAttemptFailed",
+     "createAttemptFailed/setCreateAttemptFailed",
+     "spokenReason/setSpokenReason",
+     "spokenReason/setSpokenReason",
+     "spokenKey/setSpokenKey",
+     "spokenKey/setSpokenKey",
+     "draft/setDraft",
+     "draft/setDraft",
+     "roomsTouched/setRoomsTouched",
+     "roomsTouched/setRoomsTouched"
+    ],
+    "sinks": 113
+   }
+  },
+  {
+   "file": "features/simulation/simulationAdapter.ts",
+   "hits": 0,
+   "parse_diagnostics": 0,
+   "depth_cut_lookups": 0,
+   "imports": 1,
+   "exports": 12,
+   "graph": {
+    "bindings": 110,
+    "functions": 34,
+    "call_sites": 67,
+    "state_pairs": [],
+    "sinks": 0
+   }
+  },
+  {
+   "file": "features/simulation/SimulationPanel.tsx",
+   "hits": 1,
+   "parse_diagnostics": 0,
+   "depth_cut_lookups": 0,
+   "imports": 25,
+   "exports": 2,
+   "graph": {
+    "bindings": 155,
+    "functions": 55,
+    "call_sites": 191,
+    "state_pairs": [
+     "running/setRunning",
+     "running/setRunning",
+     "lastEventId/setLastEventId",
+     "lastEventId/setLastEventId",
+     "outcome/setOutcome",
+     "outcome/setOutcome",
+     "bookIndex/setBookIndex",
+     "bookIndex/setBookIndex",
+     "bottom/setBottom",
+     "bottom/setBottom",
+     "open/setOpen",
+     "open/setOpen"
+    ],
+    "sinks": 31
+   }
+  },
+  {
+   "file": "features/stay/HotelsPanel.tsx",
+   "hits": 0,
+   "parse_diagnostics": 0,
+   "depth_cut_lookups": 0,
+   "imports": 7,
+   "exports": 1,
+   "graph": {
+    "bindings": 42,
+    "functions": 10,
+    "call_sites": 32,
+    "state_pairs": [
+     "options/setOptions",
+     "options/setOptions",
+     "busy/setBusy",
+     "busy/setBusy",
+     "banner/setBanner",
+     "banner/setBanner",
+     "chosen/setChosen",
+     "chosen/setChosen"
+    ],
+    "sinks": 27
+   }
+  },
+  {
+   "file": "features/stay/StayExplorer.tsx",
+   "hits": 0,
+   "parse_diagnostics": 0,
+   "depth_cut_lookups": 0,
+   "imports": 6,
+   "exports": 1,
+   "graph": {
+    "bindings": 52,
+    "functions": 12,
+    "call_sites": 49,
+    "state_pairs": [],
+    "sinks": 42
+   }
+  },
+  {
+   "file": "features/studio/SortableActivityList.tsx",
+   "hits": 0,
+   "parse_diagnostics": 0,
+   "depth_cut_lookups": 0,
+   "imports": 14,
+   "exports": 1,
+   "graph": {
+    "bindings": 38,
+    "functions": 5,
+    "call_sites": 17,
+    "state_pairs": [
+     "items/setItems",
+     "items/setItems"
+    ],
+    "sinks": 5
+   }
+  },
+  {
+   "file": "features/studio/V12TripStudioPanel.tsx",
+   "hits": 1,
+   "parse_diagnostics": 0,
+   "depth_cut_lookups": 0,
+   "imports": 14,
+   "exports": 1,
+   "graph": {
+    "bindings": 39,
+    "functions": 15,
+    "call_sites": 51,
+    "state_pairs": [
+     "draftOrder/setDraftOrder",
+     "draftOrder/setDraftOrder",
+     "preview/setPreview",
+     "preview/setPreview"
+    ],
+    "sinks": 24
+   }
+  },
+  {
+   "file": "features/traveler-twin/TwinPanel.tsx",
+   "hits": 0,
+   "parse_diagnostics": 0,
+   "depth_cut_lookups": 0,
+   "imports": 4,
+   "exports": 1,
+   "graph": {
+    "bindings": 21,
+    "functions": 6,
+    "call_sites": 19,
+    "state_pairs": [],
+    "sinks": 20
+   }
+  },
+  {
+   "file": "features/trip/ActivityDetail.tsx",
+   "hits": 1,
+   "parse_diagnostics": 0,
+   "depth_cut_lookups": 0,
+   "imports": 3,
+   "exports": 1,
+   "graph": {
+    "bindings": 59,
+    "functions": 14,
+    "call_sites": 50,
+    "state_pairs": [],
+    "sinks": 34
+   }
+  },
+  {
+   "file": "features/trip/TripItinerary.tsx",
+   "hits": 0,
+   "parse_diagnostics": 0,
+   "depth_cut_lookups": 0,
+   "imports": 6,
+   "exports": 1,
+   "graph": {
+    "bindings": 63,
+    "functions": 17,
+    "call_sites": 49,
+    "state_pairs": [
+     "activeDay/setActiveDay",
+     "activeDay/setActiveDay",
+     "week/setWeek",
+     "week/setWeek"
+    ],
+    "sinks": 29
+   }
+  },
+  {
+   "file": "generated/api.ts",
+   "hits": 0,
+   "parse_diagnostics": 0,
+   "depth_cut_lookups": 0,
+   "imports": 0,
+   "exports": 0,
+   "graph": {
+    "bindings": 190,
+    "functions": 190,
+    "call_sites": 0,
+    "state_pairs": [],
+    "sinks": 0
+   }
+  },
+  {
+   "file": "i18n/LocaleContext.tsx",
+   "hits": 0,
+   "parse_diagnostics": 0,
+   "depth_cut_lookups": 0,
+   "imports": 6,
+   "exports": 3,
+   "graph": {
+    "bindings": 31,
+    "functions": 12,
+    "call_sites": 16,
+    "state_pairs": [
+     "locale/setLocaleState",
+     "locale/setLocaleState"
+    ],
+    "sinks": 1
+   }
+  },
+  {
+   "file": "i18n/travelerLabels.ts",
+   "hits": 0,
+   "parse_diagnostics": 0,
+   "depth_cut_lookups": 0,
+   "imports": 0,
+   "exports": 11,
+   "graph": {
+    "bindings": 57,
+    "functions": 14,
+    "call_sites": 31,
+    "state_pairs": [],
+    "sinks": 0
+   }
+  },
+  {
+   "file": "i18n/tripOperations.ts",
+   "hits": 0,
+   "parse_diagnostics": 0,
+   "depth_cut_lookups": 0,
+   "imports": 0,
+   "exports": 1,
+   "graph": {
+    "bindings": 0,
+    "functions": 0,
+    "call_sites": 0,
+    "state_pairs": [],
+    "sinks": 0
+   }
+  },
+  {
+   "file": "lib/budgetEvidence.ts",
+   "hits": 0,
+   "parse_diagnostics": 0,
+   "depth_cut_lookups": 0,
+   "imports": 0,
+   "exports": 6,
+   "graph": {
+    "bindings": 26,
+    "functions": 7,
+    "call_sites": 10,
+    "state_pairs": [],
+    "sinks": 0
+   }
+  },
+  {
+   "file": "lib/disruptionState.ts",
+   "hits": 0,
+   "parse_diagnostics": 0,
+   "depth_cut_lookups": 0,
+   "imports": 0,
+   "exports": 3,
+   "graph": {
+    "bindings": 9,
+    "functions": 3,
+    "call_sites": 8,
+    "state_pairs": [],
+    "sinks": 0
+   }
+  },
+  {
+   "file": "lib/executionWindow.ts",
+   "hits": 0,
+   "parse_diagnostics": 0,
+   "depth_cut_lookups": 0,
+   "imports": 1,
+   "exports": 2,
+   "graph": {
+    "bindings": 16,
+    "functions": 4,
+    "call_sites": 7,
+    "state_pairs": [],
+    "sinks": 0
+   }
+  },
+  {
+   "file": "lib/failureAttribution.ts",
+   "hits": 0,
+   "parse_diagnostics": 0,
+   "depth_cut_lookups": 0,
+   "imports": 2,
+   "exports": 10,
+   "graph": {
+    "bindings": 49,
+    "functions": 10,
+    "call_sites": 26,
+    "state_pairs": [],
+    "sinks": 0
+   }
+  },
+  {
+   "file": "lib/inFlightWrites.ts",
+   "hits": 0,
+   "parse_diagnostics": 0,
+   "depth_cut_lookups": 0,
+   "imports": 0,
+   "exports": 4,
+   "graph": {
+    "bindings": 12,
+    "functions": 9,
+    "call_sites": 7,
+    "state_pairs": [],
+    "sinks": 0
+   }
+  },
+  {
+   "file": "lib/keylessWriteDeadline.ts",
+   "hits": 0,
+   "parse_diagnostics": 0,
+   "depth_cut_lookups": 0,
+   "imports": 0,
+   "exports": 6,
+   "graph": {
+    "bindings": 27,
+    "functions": 6,
+    "call_sites": 12,
+    "state_pairs": [],
+    "sinks": 0
+   }
+  },
+  {
+   "file": "lib/money.ts",
+   "hits": 0,
+   "parse_diagnostics": 0,
+   "depth_cut_lookups": 0,
+   "imports": 0,
+   "exports": 4,
+   "graph": {
+    "bindings": 12,
+    "functions": 4,
+    "call_sites": 8,
+    "state_pairs": [],
+    "sinks": 0
+   }
+  },
+  {
+   "file": "lib/offlineJourney.ts",
+   "hits": 0,
+   "parse_diagnostics": 0,
+   "depth_cut_lookups": 0,
+   "imports": 2,
+   "exports": 3,
+   "graph": {
+    "bindings": 11,
+    "functions": 4,
+    "call_sites": 8,
+    "state_pairs": [],
+    "sinks": 0
+   }
+  },
+  {
+   "file": "lib/queryClient.ts",
+   "hits": 0,
+   "parse_diagnostics": 0,
+   "depth_cut_lookups": 0,
+   "imports": 1,
+   "exports": 1,
+   "graph": {
+    "bindings": 2,
+    "functions": 0,
+    "call_sites": 0,
+    "state_pairs": [],
+    "sinks": 0
+   }
+  },
+  {
+   "file": "lib/rawFacts.ts",
+   "hits": 0,
+   "parse_diagnostics": 0,
+   "depth_cut_lookups": 0,
+   "imports": 0,
+   "exports": 5,
+   "graph": {
+    "bindings": 14,
+    "functions": 5,
+    "call_sites": 7,
+    "state_pairs": [],
+    "sinks": 0
+   }
+  },
+  {
+   "file": "lib/readDeadline.ts",
+   "hits": 0,
+   "parse_diagnostics": 0,
+   "depth_cut_lookups": 0,
+   "imports": 1,
+   "exports": 5,
+   "graph": {
+    "bindings": 19,
+    "functions": 5,
+    "call_sites": 11,
+    "state_pairs": [],
+    "sinks": 0
+   }
+  },
+  {
+   "file": "lib/sceneClock.ts",
+   "hits": 0,
+   "parse_diagnostics": 0,
+   "depth_cut_lookups": 0,
+   "imports": 2,
+   "exports": 9,
+   "graph": {
+    "bindings": 44,
+    "functions": 14,
+    "call_sites": 16,
+    "state_pairs": [],
+    "sinks": 0
+   }
+  },
+  {
+   "file": "lib/v8Formatting.ts",
+   "hits": 0,
+   "parse_diagnostics": 0,
+   "depth_cut_lookups": 0,
+   "imports": 1,
+   "exports": 2,
+   "graph": {
+    "bindings": 8,
+    "functions": 2,
+    "call_sites": 2,
+    "state_pairs": [],
+    "sinks": 0
+   }
+  },
+  {
+   "file": "lib/viewTransition.ts",
+   "hits": 0,
+   "parse_diagnostics": 0,
+   "depth_cut_lookups": 0,
+   "imports": 0,
+   "exports": 1,
+   "graph": {
+    "bindings": 5,
+    "functions": 2,
+    "call_sites": 3,
+    "state_pairs": [],
+    "sinks": 0
+   }
+  },
+  {
+   "file": "lib/visualViewport.ts",
+   "hits": 0,
+   "parse_diagnostics": 0,
+   "depth_cut_lookups": 0,
+   "imports": 0,
+   "exports": 1,
+   "graph": {
+    "bindings": 12,
+    "functions": 5,
+    "call_sites": 15,
+    "state_pairs": [],
+    "sinks": 0
+   }
+  },
+  {
+   "file": "lib/waitClock.ts",
+   "hits": 0,
+   "parse_diagnostics": 0,
+   "depth_cut_lookups": 0,
+   "imports": 2,
+   "exports": 1,
+   "graph": {
+    "bindings": 8,
+    "functions": 4,
+    "call_sites": 9,
+    "state_pairs": [
+     "elapsed/setElapsed",
+     "elapsed/setElapsed"
+    ],
+    "sinks": 0
+   }
+  },
+  {
+   "file": "lib/writeDeadline.ts",
+   "hits": 0,
+   "parse_diagnostics": 0,
+   "depth_cut_lookups": 0,
+   "imports": 0,
+   "exports": 9,
+   "graph": {
+    "bindings": 35,
+    "functions": 10,
+    "call_sites": 21,
+    "state_pairs": [],
+    "sinks": 0
+   }
+  },
+  {
+   "file": "main.tsx",
+   "hits": 2,
+   "parse_diagnostics": 0,
+   "depth_cut_lookups": 0,
+   "imports": 43,
+   "exports": 0,
+   "graph": {
+    "bindings": 358,
+    "functions": 130,
+    "call_sites": 524,
+    "state_pairs": [
+     "workflowState/setWorkflowState",
+     "workflowState/setWorkflowState",
+     "session/setSession",
+     "session/setSession",
+     "places/setPlaces",
+     "places/setPlaces",
+     "agentPolicy/setAgentPolicy",
+     "agentPolicy/setAgentPolicy",
+     "agentFeed/setAgentFeed",
+     "agentFeed/setAgentFeed",
+     "agentCommand/setAgentCommand",
+     "agentCommand/setAgentCommand",
+     "requestedAutonomy/setRequestedAutonomy",
+     "requestedAutonomy/setRequestedAutonomy",
+     "mission/setMission",
+     "mission/setMission",
+     "agentRun/setAgentRun",
+     "agentRun/setAgentRun",
+     "guardianStatus/setGuardianStatus",
+     "guardianStatus/setGuardianStatus",
+     "resilience/setResilience",
+     "resilience/setResilience",
+     "providerMesh/setProviderMesh",
+     "providerMesh/setProviderMesh",
+     "serverDecision/setServerDecision",
+     "serverDecision/setServerDecision",
+     "confirmationRequired/setConfirmationRequired",
+     "confirmationRequired/setConfirmationRequired",
+     "approvalId/setApprovalId",
+     "approvalId/setApprovalId",
+     "routeEvidence/setRouteEvidence",
+     "routeEvidence/setRouteEvidence",
+     "reflectSummary/setReflectSummary",
+     "reflectSummary/setReflectSummary",
+     "travelerTwin/setTravelerTwin",
+     "travelerTwin/setTravelerTwin",
+     "proposals/setProposals",
+     "proposals/setProposals",
+     "selectedProposalId/setSelectedProposalId",
+     "selectedProposalId/setSelectedProposalId",
+     "eventId/setEventId",
+     "eventId/setEventId",
+     "simulatorOpen/setSimulatorOpen",
+     "simulatorOpen/setSimulatorOpen",
+     "replanRejected/setReplanRejected",
+     "replanRejected/setReplanRejected",
+     "loading/setLoading",
+     "loading/setLoading",
+     "busy/setBusy",
+     "busy/setBusy",
+     "error/setError",
+     "error/setError",
+     "lastAction/setLastAction",
+     "lastAction/setLastAction",
+     "liveOperations/setLiveOperations",
+     "liveOperations/setLiveOperations"
+    ],
+    "sinks": 154
+   }
+  },
+  {
+   "file": "mocks/handlers.ts",
+   "hits": 0,
+   "parse_diagnostics": 0,
+   "depth_cut_lookups": 0,
+   "imports": 2,
+   "exports": 2,
+   "graph": {
+    "bindings": 5,
+    "functions": 1,
+    "call_sites": 2,
+    "state_pairs": [],
+    "sinks": 0
+   }
+  },
+  {
+   "file": "routes/v8Routes.ts",
+   "hits": 0,
+   "parse_diagnostics": 0,
+   "depth_cut_lookups": 0,
+   "imports": 0,
+   "exports": 2,
+   "graph": {
+    "bindings": 2,
+    "functions": 0,
+    "call_sites": 0,
+    "state_pairs": [],
+    "sinks": 0
+   }
+  },
+  {
+   "file": "state/journeyModeMachine.ts",
+   "hits": 0,
+   "parse_diagnostics": 0,
+   "depth_cut_lookups": 0,
+   "imports": 1,
+   "exports": 1,
+   "graph": {
+    "bindings": 2,
+    "functions": 0,
+    "call_sites": 2,
+    "state_pairs": [],
+    "sinks": 0
+   }
+  },
+  {
+   "file": "stories/V10Primitives.stories.tsx",
+   "hits": 0,
+   "parse_diagnostics": 0,
+   "depth_cut_lookups": 0,
+   "imports": 6,
+   "exports": 2,
+   "graph": {
+    "bindings": 11,
+    "functions": 2,
+    "call_sites": 0,
+    "state_pairs": [],
+    "sinks": 0
+   }
+  },
+  {
+   "file": "stories/V12ExecutionStates.stories.tsx",
+   "hits": 0,
+   "parse_diagnostics": 0,
+   "depth_cut_lookups": 0,
+   "imports": 4,
+   "exports": 2,
+   "graph": {
+    "bindings": 12,
+    "functions": 3,
+    "call_sites": 4,
+    "state_pairs": [],
+    "sinks": 1
+   }
+  },
+  {
+   "file": "stories/V12StatePrimitives.stories.tsx",
+   "hits": 0,
+   "parse_diagnostics": 0,
+   "depth_cut_lookups": 0,
+   "imports": 11,
+   "exports": 1,
+   "graph": {
+    "bindings": 13,
+    "functions": 1,
+    "call_sites": 0,
+    "state_pairs": [],
+    "sinks": 0
+   }
+  },
+  {
+   "file": "theme.ts",
+   "hits": 0,
+   "parse_diagnostics": 0,
+   "depth_cut_lookups": 0,
+   "imports": 0,
+   "exports": 7,
+   "graph": {
+    "bindings": 22,
+    "functions": 12,
+    "call_sites": 21,
+    "state_pairs": [],
+    "sinks": 0
+   }
+  }
+ ],
+ "hits": [
+  {
+   "rule": "UPSTREAM_TEXT_VIA_HELPER_TO_DOM",
+   "line": 2609,
+   "sink": "jsx-text",
+   "origin_kind": "raw-body",
+   "function_boundaries": 2,
+   "snippet": "{resumeOutcome.serverReason}",
+   "taint_trace": [
+    ":151 upstream read detail.error off detail",
+    ":150 `serverReason` = (typeof detail?.error?.message === \"string\" ? detail.error.message : null) ?? ...",
+    ":154 continuePendingPlan() returns { kind: \"refused\", httpStatus: response.status, serverReason }",
+    ":2273 came back from continuePendingPlan imported from ../api/journeyContinuation",
+    ":2273 `outcome` = continuePendingPlan({ journeyId: data.journey.id, missionId, idempotencyKey: c...",
+    ":2285 state `resumeOutcome` written by setResumeOutcome(...)",
+    ":2609 rendered here"
+   ],
+   "taint_chain": ":151 upstream read detail.error off detail -> :150 `serverReason` = (typeof detail?.error?.message === \"string\" ? detail.error.message : null) ?? ... -> :154 continuePendingPlan() returns { kind: \"refused\", httpStatus: response.status, serverReason } -> :2273 came back from continuePendingPlan imported from ../api/journeyContinuation -> :2273 `outcome` = continuePendingPlan({ journeyId: data.journey.id, missionId, idempotencyKey: c... -> :2285 state `resumeOutcome` written by setResumeOutcome(...) -> :2609 rendered here",
+   "file": "app/V8Experience.tsx"
+  },
+  {
+   "rule": "UPSTREAM_READ_DIRECT",
+   "line": 18,
+   "sink": "jsx-text",
+   "origin_kind": "prose",
+   "function_boundaries": 0,
+   "snippet": "{step.detail && <small>{step.detail}</small>}",
+   "taint_trace": [
+    ":18 upstream read step.detail",
+    ":18 rendered here"
+   ],
+   "taint_chain": ":18 upstream read step.detail -> :18 rendered here",
+   "file": "features/agent/AgentRunRail.tsx"
+  },
+  {
+   "rule": "UPSTREAM_EXCEPTION_TO_DOM",
+   "line": 346,
+   "sink": "jsx-text",
+   "origin_kind": "exception",
+   "function_boundaries": 0,
+   "snippet": "{capabilityError}",
+   "taint_trace": [
+    ":102 upstream read error.message off error",
+    ":101 state `capabilityError` written by setCapabilityError(...)",
+    ":346 rendered here"
+   ],
+   "taint_chain": ":102 upstream read error.message off error -> :101 state `capabilityError` written by setCapabilityError(...) -> :346 rendered here",
+   "file": "features/discovery/DestinationPreparationPanel.tsx"
+  },
+  {
+   "rule": "UPSTREAM_EXCEPTION_TO_DOM",
+   "line": 469,
+   "sink": "jsx-text",
+   "origin_kind": "exception",
+   "function_boundaries": 0,
+   "snippet": "{serverMessage}",
+   "taint_trace": [
+    ":293 upstream read (serverError as { message?: unknown }).message off serverError",
+    ":293 passed through String()",
+    ":291 `serverMessage` = serverError && typeof serverError === \"object\" ? String((serverError as { mess...",
+    ":469 rendered here"
+   ],
+   "taint_chain": ":293 upstream read (serverError as { message?: unknown }).message off serverError -> :293 passed through String() -> :291 `serverMessage` = serverError && typeof serverError === \"object\" ? String((serverError as { mess... -> :469 rendered here",
+   "file": "features/discovery/DestinationPreparationPanel.tsx"
+  },
+  {
+   "rule": "UPSTREAM_EXCEPTION_TO_DOM",
+   "line": 522,
+   "sink": "jsx-text",
+   "origin_kind": "exception",
+   "function_boundaries": 0,
+   "snippet": "{actionError}",
+   "taint_trace": [
+    ":139 upstream read error.message off error",
+    ":138 state `actionError` written by setActionError(...)",
+    ":522 rendered here"
+   ],
+   "taint_chain": ":139 upstream read error.message off error -> :138 state `actionError` written by setActionError(...) -> :522 rendered here",
+   "file": "features/discovery/DestinationPreparationPanel.tsx"
+  },
+  {
+   "rule": "UPSTREAM_EXCEPTION_TO_DOM",
+   "line": 150,
+   "sink": "jsx-text",
+   "origin_kind": "exception",
+   "function_boundaries": 0,
+   "snippet": "{error && <div className=\"v8-message\" role=\"alert\">{error}</div>}",
+   "taint_trace": [
+    ":110 upstream read cause.message off cause",
+    ":110 `message` = cause instanceof Error ? cause.message : \"\"",
+    ":116 state `error` written by setError(...)",
+    ":150 rendered here"
+   ],
+   "taint_chain": ":110 upstream read cause.message off cause -> :110 `message` = cause instanceof Error ? cause.message : \"\" -> :116 state `error` written by setError(...) -> :150 rendered here",
+   "file": "features/discovery/RealCityDiscoveryPanel.tsx"
+  },
+  {
+   "rule": "UPSTREAM_TEXT_VIA_HELPER_TO_DOM",
+   "line": 1021,
+   "sink": "jsx-text",
+   "origin_kind": "raw-body",
+   "function_boundaries": 3,
+   "snippet": "<p>{copy.body}</p>",
+   "taint_trace": [
+    ":148 upstream read (body as { error?: Record<string, unknown> } | null)?.error off body",
+    ":148 `error` = (body as { error?: Record<string, unknown> } | null)?.error",
+    ":151 read off error through a computed key",
+    ":151 `value` = error[key]",
+    ":152 .trim(...) passes it on",
+    ":152 .toUpperCase(...) passes it on",
+    ":152 serverReasonCode() returns value.trim().toUpperCase()",
+    ":664 interpolated into `BLOCKED:${serverReasonCode(unreadable) || `PLACES_HTTP_${placesResponse.statu...",
+    ":663 state `result` written by setResult(...)",
+    ":848 result.status was handed to statusCopy() as `status`",
+    ":207 .toUpperCase(...) passes it on",
+    ":207 `s` = (status || \"\").toUpperCase()",
+    ":211 .slice(...) passes it on",
+    ":211 `code` = s.slice(\"BLOCKED:\".length)",
+    ":217 interpolated into `${known.zh}（服务器给的原因编号：${code}）`",
+    ":213 statusCopy() returns { title: zh ? \"这次排不出方案：数据不够，不是你说的不对\" : \"No plan this time: the data is short, ...",
+    ":848 `copy` = result ? statusCopy(result.status, zh, result.planCount ?? 0) : null",
+    ":1021 rendered here"
+   ],
+   "taint_chain": ":148 upstream read (body as { error?: Record<string, unknown> } | null)?.error off body -> :148 `error` = (body as { error?: Record<string, unknown> } | null)?.error -> :151 read off error through a computed key -> :151 `value` = error[key] -> :152 .trim(...) passes it on -> :152 .toUpperCase(...) passes it on -> :152 serverReasonCode() returns value.trim().toUpperCase() -> :664 interpolated into `BLOCKED:${serverReasonCode(unreadable) || `PLACES_HTTP_${placesResponse.statu... -> :663 state `result` written by setResult(...) -> :848 result.status was handed to statusCopy() as `status` -> :207 .toUpperCase(...) passes it on -> :207 `s` = (status || \"\").toUpperCase() -> :211 .slice(...) passes it on -> :211 `code` = s.slice(\"BLOCKED:\".length) -> :217 interpolated into `${known.zh}（服务器给的原因编号：${code}）` -> :213 statusCopy() returns { title: zh ? \"这次排不出方案：数据不够，不是你说的不对\" : \"No plan this time: the data is short, ... -> :848 `copy` = result ? statusCopy(result.status, zh, result.planCount ?? 0) : null -> :1021 rendered here",
+   "file": "features/planning/PlanWithAiSheet.tsx"
+  },
+  {
+   "rule": "UPSTREAM_TEXT_VIA_HELPER_TO_DOM",
+   "line": 1048,
+   "sink": "jsx-text",
+   "origin_kind": "prose",
+   "function_boundaries": 3,
+   "snippet": "<code data-testid=\"plan-ai-reason\">{result.failureReason.text}</code>",
+   "taint_trace": [
+    ":164 upstream read (body as { detail?: unknown } | null)?.detail",
+    ":164 `detail` = (body as { detail?: unknown } | null)?.detail",
+    ":165 serverReasonSentence() returns detail",
+    ":604 serverReasonSentence(body) was handed to failureNote() as `serverText`",
+    ":192 failureNote() returns serverText ? { text: serverText, from: \"server\" } : { text: deviceText, from: ...",
+    ":596 state `result` written by setResult(...)",
+    ":1048 rendered here"
+   ],
+   "taint_chain": ":164 upstream read (body as { detail?: unknown } | null)?.detail -> :164 `detail` = (body as { detail?: unknown } | null)?.detail -> :165 serverReasonSentence() returns detail -> :604 serverReasonSentence(body) was handed to failureNote() as `serverText` -> :192 failureNote() returns serverText ? { text: serverText, from: \"server\" } : { text: deviceText, from: ... -> :596 state `result` written by setResult(...) -> :1048 rendered here",
+   "file": "features/planning/PlanWithAiSheet.tsx"
+  },
+  {
+   "rule": "RAW_BODY_TO_DOM",
+   "line": 166,
+   "sink": "jsx-text",
+   "origin_kind": "raw-body",
+   "function_boundaries": 0,
+   "snippet": "{message}",
+   "taint_trace": [
+    ":69 upstream read body?.error off body",
+    ":68 state `message` written by setMessage(...)",
+    ":166 rendered here"
+   ],
+   "taint_chain": ":69 upstream read body?.error off body -> :68 state `message` written by setMessage(...) -> :166 rendered here",
+   "file": "features/recovery/RecoveryRequiredPanel.tsx"
+  },
+  {
+   "rule": "UPSTREAM_EXCEPTION_TO_DOM",
+   "line": 162,
+   "sink": "jsx-text",
+   "origin_kind": "exception",
+   "function_boundaries": 0,
+   "snippet": "{message && <p role=\"status\">{message}</p>}",
+   "taint_trace": [
+    ":93 upstream read error.message off error",
+    ":89 state `message` written by setMessage(...)",
+    ":162 rendered here"
+   ],
+   "taint_chain": ":93 upstream read error.message off error -> :89 state `message` written by setMessage(...) -> :162 rendered here",
+   "file": "features/recovery/V14RecoveryTruthPanel.tsx"
+  },
+  {
+   "rule": "UPSTREAM_TEXT_VIA_HELPER_TO_DOM",
+   "line": 934,
+   "sink": "jsx-text",
+   "origin_kind": "raw-body",
+   "function_boundaries": 6,
+   "snippet": "{zh ? outcome.zh : outcome.en}",
+   "taint_trace": [
+    ":38 upstream read (error as { body?: unknown }).body off error",
+    ":38 `raw` = (error as { body?: unknown }).body",
+    ":39 bodyOf() returns raw as ErrorBody",
+    ":118 read further as error of it",
+    ":118 `details` = bodyOf(error)?.error?.details ?? {}",
+    ":119 read further as retry_after_ms of it",
+    ":119 `ms` = typeof details.retry_after_ms === \"number\" ? details.retry_after_ms : null",
+    ":121 passed through Math.round()",
+    ":121 interpolated into `（约 ${Math.round(ms)} 毫秒后再试）`",
+    ":121 retryHint() returns ms <= 0 ? \"（现在就可以再试）\" : `（约 ${Math.round(ms)} 毫秒后再试）`",
+    ":130 `extra` = busy ? retryHint(error) : fields",
+    ":131 passed through hit.zh()",
+    ":131 describeFailure() returns { code, status, zh: hit.zh(status, extra), en: hit.en(status, extra) }",
+    ":751 came back from describeFailure imported from ./simulationAdapter",
+    ":751 `named` = describeFailure(error)",
+    ":752 state `outcome` written by setOutcome(...)",
+    ":934 rendered here"
+   ],
+   "taint_chain": ":38 upstream read (error as { body?: unknown }).body off error -> :38 `raw` = (error as { body?: unknown }).body -> :39 bodyOf() returns raw as ErrorBody -> :118 read further as error of it -> :118 `details` = bodyOf(error)?.error?.details ?? {} -> :119 read further as retry_after_ms of it -> :119 `ms` = typeof details.retry_after_ms === \"number\" ? details.retry_after_ms : null -> :121 passed through Math.round() -> :121 interpolated into `（约 ${Math.round(ms)} 毫秒后再试）` -> :121 retryHint() returns ms <= 0 ? \"（现在就可以再试）\" : `（约 ${Math.round(ms)} 毫秒后再试）` -> :130 `extra` = busy ? retryHint(error) : fields -> :131 passed through hit.zh() -> :131 describeFailure() returns { code, status, zh: hit.zh(status, extra), en: hit.en(status, extra) } -> :751 came back from describeFailure imported from ./simulationAdapter -> :751 `named` = describeFailure(error) -> :752 state `outcome` written by setOutcome(...) -> :934 rendered here",
+   "file": "features/simulation/SimulationPanel.tsx"
+  },
+  {
+   "rule": "UPSTREAM_EXCEPTION_TO_DOM",
+   "line": 106,
+   "sink": "jsx-text",
+   "origin_kind": "exception",
+   "function_boundaries": 0,
+   "snippet": "{(previewMutation.error || acceptMutation.error) && <p className=\"v12-studio-error\"><AlertTriangle size={14} /> {(previe",
+   "taint_trace": [
+    ":106 upstream read (previewMutation.error ?? acceptMutation.error)?.message off previewMutation.error ?? acceptMutation.error",
+    ":106 rendered here"
+   ],
+   "taint_chain": ":106 upstream read (previewMutation.error ?? acceptMutation.error)?.message off previewMutation.error ?? acceptMutation.error -> :106 rendered here",
+   "file": "features/studio/V12TripStudioPanel.tsx"
+  },
+  {
+   "rule": "RAW_BODY_TO_DOM",
+   "line": 206,
+   "sink": "jsx-text",
+   "origin_kind": "raw-body",
+   "function_boundaries": 0,
+   "snippet": "{openingKnown",
+   "taint_trace": [
+    ":207 upstream read opening?.raw",
+    ":206 rendered here"
+   ],
+   "taint_chain": ":207 upstream read opening?.raw -> :206 rendered here",
+   "file": "features/trip/ActivityDetail.tsx"
+  },
+  {
+   "rule": "UPSTREAM_TEXT_VIA_HELPER_TO_DOM",
+   "line": 968,
+   "sink": "jsx-text",
+   "origin_kind": "exception",
+   "function_boundaries": 1,
+   "snippet": "<p data-testid={testIds.journeyStatus}>ERROR · {error}</p>",
+   "taint_trace": [
+    ":138 upstream read error.message off error",
+    ":138 errorMessage() returns error instanceof Error ? error.message : \"CityNexus request failed\"",
+    ":946 state `error` written by setError(...)",
+    ":968 rendered here"
+   ],
+   "taint_chain": ":138 upstream read error.message off error -> :138 errorMessage() returns error instanceof Error ? error.message : \"CityNexus request failed\" -> :946 state `error` written by setError(...) -> :968 rendered here",
+   "file": "main.tsx"
+  },
+  {
+   "rule": "UPSTREAM_TEXT_VIA_HELPER_TO_DOM",
+   "line": 992,
+   "sink": "jsx-text",
+   "origin_kind": "exception",
+   "function_boundaries": 1,
+   "snippet": "{error && <p className=\"error-note\">{error}</p>}",
+   "taint_trace": [
+    ":138 upstream read error.message off error",
+    ":138 errorMessage() returns error instanceof Error ? error.message : \"CityNexus request failed\"",
+    ":946 state `error` written by setError(...)",
+    ":992 rendered here"
+   ],
+   "taint_chain": ":138 upstream read error.message off error -> :138 errorMessage() returns error instanceof Error ? error.message : \"CityNexus request failed\" -> :946 state `error` written by setError(...) -> :992 rendered here",
+   "file": "main.tsx"
+  }
+ ],
+ "verdict": "EXPOSURE_SHAPE_FOUND",
+ "interpretation_limit": "a hit names a shape to justify, not a defect verdict; unresolved_import_specs lists what this run could not see through",
+ "claim_kind": "pattern_determined",
+ "claimed_result": "EXPOSURE_SHAPE_FOUND over 76 modules: 15 hit(s) [\"UPSTREAM_TEXT_VIA_HELPER_TO_DOM@app/V8Experience.tsx:2609\",\"UPSTREAM_READ_DIRECT@features/agent/AgentRunRail.tsx:18\",\"UPSTREAM_EXCEPTION_TO_DOM@features/discovery/DestinationPreparationPanel.tsx:346\",\"UPSTREAM_EXCEPTION_TO_DOM@features/discovery/DestinationPreparationPanel.tsx:469\",\"UPSTREAM_EXCEPTION_TO_DOM@features/discovery/DestinationPreparationPanel.tsx:522\",\"UPSTREAM_EXCEPTION_TO_DOM@featu",
+ "derived_result": null
+}
