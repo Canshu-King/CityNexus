@@ -1,0 +1,529 @@
+{
+  "config": {
+    "argv": [
+      "C:\\Program Files\\nodejs\\node.exe",
+      "D:\\moodle\\_qoder_b_lane_20260923\\frontend\\node_modules\\@playwright\\test\\cli.js",
+      "test",
+      "-c",
+      "playwright.config.ts",
+      "e2e/qoder-ord0280-attribution-label-speaks-for-itself.spec.ts",
+      "--reporter=json"
+    ],
+    "configFile": "D:\\moodle\\_qoder_b_lane_20260923\\frontend\\playwright.config.ts",
+    "rootDir": "D:/moodle/_qoder_b_lane_20260923/frontend/e2e",
+    "failOnFlakyTests": false,
+    "forbidOnly": false,
+    "fullyParallel": false,
+    "globalSetup": "D:\\moodle\\_qoder_b_lane_20260923\\frontend\\e2e\\_qoderAuthoritativeSetup.ts",
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "actualWorkers": 1
+    },
+    "preserveOutput": "always",
+    "projects": [
+      {
+        "outputDir": "D:/moodle/_qoder_b_lane_20260923/frontend/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "real-seed",
+        "name": "real-seed",
+        "testDir": "D:/moodle/_qoder_b_lane_20260923/frontend/e2e",
+        "testIgnore": [
+          "/[\\\\/]e2e[\\\\/]legacy[\\\\/]/"
+        ],
+        "testMatch": [
+          "/_qoderRealSeed\\.setup\\.ts/"
+        ],
+        "timeout": 60000
+      },
+      {
+        "outputDir": "D:/moodle/_qoder_b_lane_20260923/frontend/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "chromium",
+        "name": "chromium",
+        "testDir": "D:/moodle/_qoder_b_lane_20260923/frontend/e2e",
+        "testIgnore": [
+          "/[\\\\/]e2e[\\\\/]legacy[\\\\/]/"
+        ],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 60000
+      }
+    ],
+    "quiet": false,
+    "reporter": [
+      [
+        "json"
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "shard": null,
+    "tags": [],
+    "updateSnapshots": "missing",
+    "updateSourceMethod": "patch",
+    "version": "1.63.0",
+    "workers": 1,
+    "webServer": null
+  },
+  "suites": [
+    {
+      "title": "_qoderRealSeed.setup.ts",
+      "file": "_qoderRealSeed.setup.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "seed a real journey through the product API",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "real-seed",
+              "projectName": "real-seed",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 5393,
+                  "errors": [],
+                  "stdout": [
+                    {
+                      "text": "[qoder-real-seed] journey=a366d0aa-23a7-457c-8067-e43d988a0393 options=4 chosen=dd524b29-935a-4589-88be-d8d462905c81 (Haihe Riverside Hotel)\n"
+                    },
+                    {
+                      "text": "[qoder-real-seed] trialWizard=false live-journey-current=true\n"
+                    }
+                  ],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-09-25T00:48:08.293Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "e5b963f3c8f6099f74d0-d425156f0efa8e024368",
+          "file": "_qoderRealSeed.setup.ts",
+          "line": 110,
+          "column": 1
+        }
+      ]
+    },
+    {
+      "title": "qoder-ord0280-attribution-label-speaks-for-itself.spec.ts",
+      "file": "qoder-ord0280-attribution-label-speaks-for-itself.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "ord0280-A1 agent/commands refused with NO server sentence does not wear the attribution label",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "failed",
+                  "duration": 1358,
+                  "error": {
+                    "message": "Error: e2e/qoder-ord0280-attribution-label-speaks-for-itself.spec.ts :: A1 — FAILED: label and origin agree :: {\"want\":\"device\",\"label\":\"服务器给出的原因\",\"origin\":\"server\",\"reason\":\"agent/commands -> HTTP 500\"}\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // deep equality\u001b[22m\n\n\u001b[32m- Expected  -  1\u001b[39m\n\u001b[31m+ Received  + 10\u001b[39m\n\n\u001b[32m- Array []\u001b[39m\n\u001b[31m+ Array [\u001b[39m\n\u001b[31m+   Object {\u001b[39m\n\u001b[31m+     \"claim\": \"label and origin agree\",\u001b[39m\n\u001b[31m+     \"got\": Object {\u001b[39m\n\u001b[31m+       \"label\": \"服务器给出的原因\",\u001b[39m\n\u001b[31m+       \"origin\": \"server\",\u001b[39m\n\u001b[31m+     },\u001b[39m\n\u001b[31m+     \"ok\": false,\u001b[39m\n\u001b[31m+   },\u001b[39m\n\u001b[31m+ ]\u001b[39m",
+                    "stack": "Error: e2e/qoder-ord0280-attribution-label-speaks-for-itself.spec.ts :: A1 — FAILED: label and origin agree :: {\"want\":\"device\",\"label\":\"服务器给出的原因\",\"origin\":\"server\",\"reason\":\"agent/commands -> HTTP 500\"}\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // deep equality\u001b[22m\n\n\u001b[32m- Expected  -  1\u001b[39m\n\u001b[31m+ Received  + 10\u001b[39m\n\n\u001b[32m- Array []\u001b[39m\n\u001b[31m+ Array [\u001b[39m\n\u001b[31m+   Object {\u001b[39m\n\u001b[31m+     \"claim\": \"label and origin agree\",\u001b[39m\n\u001b[31m+     \"got\": Object {\u001b[39m\n\u001b[31m+       \"label\": \"服务器给出的原因\",\u001b[39m\n\u001b[31m+       \"origin\": \"server\",\u001b[39m\n\u001b[31m+     },\u001b[39m\n\u001b[31m+     \"ok\": false,\u001b[39m\n\u001b[31m+   },\u001b[39m\n\u001b[31m+ ]\u001b[39m\n    at judge (D:\\moodle\\_qoder_b_lane_20260923\\frontend\\e2e\\qoder-ord0280-attribution-label-speaks-for-itself.spec.ts:176:5)\n    at D:\\moodle\\_qoder_b_lane_20260923\\frontend\\e2e\\qoder-ord0280-attribution-label-speaks-for-itself.spec.ts:189:34",
+                    "location": {
+                      "file": "D:\\moodle\\_qoder_b_lane_20260923\\frontend\\e2e\\qoder-ord0280-attribution-label-speaks-for-itself.spec.ts",
+                      "column": 5,
+                      "line": 176
+                    },
+                    "snippet": "\u001b[0m \u001b[90m 174 |\u001b[39m     node(\u001b[33mNODE\u001b[39m\u001b[33m,\u001b[39m \u001b[32m`${bad.length ? \"FAILED: \" + bad.map((b) => b.claim).join(\"; \") : \"ok\"} :: `\u001b[39m \u001b[33m+\u001b[39m\n \u001b[90m 175 |\u001b[39m       \u001b[33mJSON\u001b[39m\u001b[33m.\u001b[39mstringify({ want\u001b[33m,\u001b[39m label\u001b[33m:\u001b[39m read\u001b[33m.\u001b[39mlabel\u001b[33m,\u001b[39m origin\u001b[33m:\u001b[39m read\u001b[33m.\u001b[39morigin\u001b[33m,\u001b[39m reason\u001b[33m:\u001b[39m read\u001b[33m.\u001b[39mreason }))\u001b[33m,\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 176 |\u001b[39m   )\u001b[33m.\u001b[39mtoEqual([])\u001b[33m;\u001b[39m\n \u001b[90m     |\u001b[39m     \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 177 |\u001b[39m   \u001b[36mreturn\u001b[39m rows\u001b[33m;\u001b[39m\n \u001b[90m 178 |\u001b[39m }\n \u001b[90m 179 |\u001b[39m\u001b[0m"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "D:\\moodle\\_qoder_b_lane_20260923\\frontend\\e2e\\qoder-ord0280-attribution-label-speaks-for-itself.spec.ts",
+                        "column": 5,
+                        "line": 176
+                      },
+                      "message": "Error: e2e/qoder-ord0280-attribution-label-speaks-for-itself.spec.ts :: A1 — FAILED: label and origin agree :: {\"want\":\"device\",\"label\":\"服务器给出的原因\",\"origin\":\"server\",\"reason\":\"agent/commands -> HTTP 500\"}\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // deep equality\u001b[22m\n\n\u001b[32m- Expected  -  1\u001b[39m\n\u001b[31m+ Received  + 10\u001b[39m\n\n\u001b[32m- Array []\u001b[39m\n\u001b[31m+ Array [\u001b[39m\n\u001b[31m+   Object {\u001b[39m\n\u001b[31m+     \"claim\": \"label and origin agree\",\u001b[39m\n\u001b[31m+     \"got\": Object {\u001b[39m\n\u001b[31m+       \"label\": \"服务器给出的原因\",\u001b[39m\n\u001b[31m+       \"origin\": \"server\",\u001b[39m\n\u001b[31m+     },\u001b[39m\n\u001b[31m+     \"ok\": false,\u001b[39m\n\u001b[31m+   },\u001b[39m\n\u001b[31m+ ]\u001b[39m\n\n  174 |     node(NODE, `${bad.length ? \"FAILED: \" + bad.map((b) => b.claim).join(\"; \") : \"ok\"} :: ` +\n  175 |       JSON.stringify({ want, label: read.label, origin: read.origin, reason: read.reason })),\n> 176 |   ).toEqual([]);\n      |     ^\n  177 |   return rows;\n  178 | }\n  179 |\n    at judge (D:\\moodle\\_qoder_b_lane_20260923\\frontend\\e2e\\qoder-ord0280-attribution-label-speaks-for-itself.spec.ts:176:5)\n    at D:\\moodle\\_qoder_b_lane_20260923\\frontend\\e2e\\qoder-ord0280-attribution-label-speaks-for-itself.spec.ts:189:34"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-09-25T00:48:14.308Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "D:\\moodle\\_qoder_b_lane_20260923\\frontend\\test-results\\qoder-ord0280-attribution--f2e1b--wear-the-attribution-label-chromium\\error-context.md"
+                    },
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "D:\\moodle\\_qoder_b_lane_20260923\\frontend\\test-results\\qoder-ord0280-attribution--f2e1b--wear-the-attribution-label-chromium\\error-context.md"
+                    }
+                  ],
+                  "errorLocation": {
+                    "file": "D:\\moodle\\_qoder_b_lane_20260923\\frontend\\e2e\\qoder-ord0280-attribution-label-speaks-for-itself.spec.ts",
+                    "column": 5,
+                    "line": 176
+                  }
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "f049cfe10d705ed53724-6b49201ce412d81ad832",
+          "file": "qoder-ord0280-attribution-label-speaks-for-itself.spec.ts",
+          "line": 185,
+          "column": 1
+        },
+        {
+          "title": "ord0280-A2 agent/commands refused WITH a server sentence shows it verbatim under the label",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 2,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1388,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-09-25T00:48:16.336Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "f049cfe10d705ed53724-d5cbfccf0555027f4479",
+          "file": "qoder-ord0280-attribution-label-speaks-for-itself.spec.ts",
+          "line": 193,
+          "column": 1
+        },
+        {
+          "title": "ord0280-B1 GET /places unreadable with NO sentence is named as this device's reading",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 2,
+                  "parallelIndex": 0,
+                  "status": "failed",
+                  "duration": 1459,
+                  "error": {
+                    "message": "Error: e2e/qoder-ord0280-attribution-label-speaks-for-itself.spec.ts :: B1 — FAILED: label and origin agree :: {\"want\":\"device\",\"label\":\"服务器给出的原因\",\"origin\":\"server\",\"reason\":\"GET /places -> HTTP 502\"}\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // deep equality\u001b[22m\n\n\u001b[32m- Expected  -  1\u001b[39m\n\u001b[31m+ Received  + 10\u001b[39m\n\n\u001b[32m- Array []\u001b[39m\n\u001b[31m+ Array [\u001b[39m\n\u001b[31m+   Object {\u001b[39m\n\u001b[31m+     \"claim\": \"label and origin agree\",\u001b[39m\n\u001b[31m+     \"got\": Object {\u001b[39m\n\u001b[31m+       \"label\": \"服务器给出的原因\",\u001b[39m\n\u001b[31m+       \"origin\": \"server\",\u001b[39m\n\u001b[31m+     },\u001b[39m\n\u001b[31m+     \"ok\": false,\u001b[39m\n\u001b[31m+   },\u001b[39m\n\u001b[31m+ ]\u001b[39m",
+                    "stack": "Error: e2e/qoder-ord0280-attribution-label-speaks-for-itself.spec.ts :: B1 — FAILED: label and origin agree :: {\"want\":\"device\",\"label\":\"服务器给出的原因\",\"origin\":\"server\",\"reason\":\"GET /places -> HTTP 502\"}\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // deep equality\u001b[22m\n\n\u001b[32m- Expected  -  1\u001b[39m\n\u001b[31m+ Received  + 10\u001b[39m\n\n\u001b[32m- Array []\u001b[39m\n\u001b[31m+ Array [\u001b[39m\n\u001b[31m+   Object {\u001b[39m\n\u001b[31m+     \"claim\": \"label and origin agree\",\u001b[39m\n\u001b[31m+     \"got\": Object {\u001b[39m\n\u001b[31m+       \"label\": \"服务器给出的原因\",\u001b[39m\n\u001b[31m+       \"origin\": \"server\",\u001b[39m\n\u001b[31m+     },\u001b[39m\n\u001b[31m+     \"ok\": false,\u001b[39m\n\u001b[31m+   },\u001b[39m\n\u001b[31m+ ]\u001b[39m\n    at judge (D:\\moodle\\_qoder_b_lane_20260923\\frontend\\e2e\\qoder-ord0280-attribution-label-speaks-for-itself.spec.ts:176:5)\n    at D:\\moodle\\_qoder_b_lane_20260923\\frontend\\e2e\\qoder-ord0280-attribution-label-speaks-for-itself.spec.ts:216:34",
+                    "location": {
+                      "file": "D:\\moodle\\_qoder_b_lane_20260923\\frontend\\e2e\\qoder-ord0280-attribution-label-speaks-for-itself.spec.ts",
+                      "column": 5,
+                      "line": 176
+                    },
+                    "snippet": "\u001b[0m \u001b[90m 174 |\u001b[39m     node(\u001b[33mNODE\u001b[39m\u001b[33m,\u001b[39m \u001b[32m`${bad.length ? \"FAILED: \" + bad.map((b) => b.claim).join(\"; \") : \"ok\"} :: `\u001b[39m \u001b[33m+\u001b[39m\n \u001b[90m 175 |\u001b[39m       \u001b[33mJSON\u001b[39m\u001b[33m.\u001b[39mstringify({ want\u001b[33m,\u001b[39m label\u001b[33m:\u001b[39m read\u001b[33m.\u001b[39mlabel\u001b[33m,\u001b[39m origin\u001b[33m:\u001b[39m read\u001b[33m.\u001b[39morigin\u001b[33m,\u001b[39m reason\u001b[33m:\u001b[39m read\u001b[33m.\u001b[39mreason }))\u001b[33m,\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 176 |\u001b[39m   )\u001b[33m.\u001b[39mtoEqual([])\u001b[33m;\u001b[39m\n \u001b[90m     |\u001b[39m     \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 177 |\u001b[39m   \u001b[36mreturn\u001b[39m rows\u001b[33m;\u001b[39m\n \u001b[90m 178 |\u001b[39m }\n \u001b[90m 179 |\u001b[39m\u001b[0m"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "D:\\moodle\\_qoder_b_lane_20260923\\frontend\\e2e\\qoder-ord0280-attribution-label-speaks-for-itself.spec.ts",
+                        "column": 5,
+                        "line": 176
+                      },
+                      "message": "Error: e2e/qoder-ord0280-attribution-label-speaks-for-itself.spec.ts :: B1 — FAILED: label and origin agree :: {\"want\":\"device\",\"label\":\"服务器给出的原因\",\"origin\":\"server\",\"reason\":\"GET /places -> HTTP 502\"}\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // deep equality\u001b[22m\n\n\u001b[32m- Expected  -  1\u001b[39m\n\u001b[31m+ Received  + 10\u001b[39m\n\n\u001b[32m- Array []\u001b[39m\n\u001b[31m+ Array [\u001b[39m\n\u001b[31m+   Object {\u001b[39m\n\u001b[31m+     \"claim\": \"label and origin agree\",\u001b[39m\n\u001b[31m+     \"got\": Object {\u001b[39m\n\u001b[31m+       \"label\": \"服务器给出的原因\",\u001b[39m\n\u001b[31m+       \"origin\": \"server\",\u001b[39m\n\u001b[31m+     },\u001b[39m\n\u001b[31m+     \"ok\": false,\u001b[39m\n\u001b[31m+   },\u001b[39m\n\u001b[31m+ ]\u001b[39m\n\n  174 |     node(NODE, `${bad.length ? \"FAILED: \" + bad.map((b) => b.claim).join(\"; \") : \"ok\"} :: ` +\n  175 |       JSON.stringify({ want, label: read.label, origin: read.origin, reason: read.reason })),\n> 176 |   ).toEqual([]);\n      |     ^\n  177 |   return rows;\n  178 | }\n  179 |\n    at judge (D:\\moodle\\_qoder_b_lane_20260923\\frontend\\e2e\\qoder-ord0280-attribution-label-speaks-for-itself.spec.ts:176:5)\n    at D:\\moodle\\_qoder_b_lane_20260923\\frontend\\e2e\\qoder-ord0280-attribution-label-speaks-for-itself.spec.ts:216:34"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-09-25T00:48:17.844Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "D:\\moodle\\_qoder_b_lane_20260923\\frontend\\test-results\\qoder-ord0280-attribution--759dc-ed-as-this-device-s-reading-chromium\\error-context.md"
+                    },
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "D:\\moodle\\_qoder_b_lane_20260923\\frontend\\test-results\\qoder-ord0280-attribution--759dc-ed-as-this-device-s-reading-chromium\\error-context.md"
+                    }
+                  ],
+                  "errorLocation": {
+                    "file": "D:\\moodle\\_qoder_b_lane_20260923\\frontend\\e2e\\qoder-ord0280-attribution-label-speaks-for-itself.spec.ts",
+                    "column": 5,
+                    "line": 176
+                  }
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "f049cfe10d705ed53724-73451a021098d5fa32c2",
+          "file": "qoder-ord0280-attribution-label-speaks-for-itself.spec.ts",
+          "line": 205,
+          "column": 1
+        },
+        {
+          "title": "ord0280-B2 GET /places refused with a detail sentence quotes the server",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 3,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1339,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-09-25T00:48:19.803Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "f049cfe10d705ed53724-c44c4a7f2eb3a94a4427",
+          "file": "qoder-ord0280-attribution-label-speaks-for-itself.spec.ts",
+          "line": 220,
+          "column": 1
+        },
+        {
+          "title": "ord0280-C1 plans/generate refused with NO sentence is not the server's reason",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 3,
+                  "parallelIndex": 0,
+                  "status": "failed",
+                  "duration": 1420,
+                  "error": {
+                    "message": "Error: e2e/qoder-ord0280-attribution-label-speaks-for-itself.spec.ts :: C1 — FAILED: label and origin agree :: {\"want\":\"device\",\"label\":\"服务器给出的原因\",\"origin\":\"server\",\"reason\":\"POST /plans/generate -> HTTP 422\"}\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // deep equality\u001b[22m\n\n\u001b[32m- Expected  -  1\u001b[39m\n\u001b[31m+ Received  + 10\u001b[39m\n\n\u001b[32m- Array []\u001b[39m\n\u001b[31m+ Array [\u001b[39m\n\u001b[31m+   Object {\u001b[39m\n\u001b[31m+     \"claim\": \"label and origin agree\",\u001b[39m\n\u001b[31m+     \"got\": Object {\u001b[39m\n\u001b[31m+       \"label\": \"服务器给出的原因\",\u001b[39m\n\u001b[31m+       \"origin\": \"server\",\u001b[39m\n\u001b[31m+     },\u001b[39m\n\u001b[31m+     \"ok\": false,\u001b[39m\n\u001b[31m+   },\u001b[39m\n\u001b[31m+ ]\u001b[39m",
+                    "stack": "Error: e2e/qoder-ord0280-attribution-label-speaks-for-itself.spec.ts :: C1 — FAILED: label and origin agree :: {\"want\":\"device\",\"label\":\"服务器给出的原因\",\"origin\":\"server\",\"reason\":\"POST /plans/generate -> HTTP 422\"}\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // deep equality\u001b[22m\n\n\u001b[32m- Expected  -  1\u001b[39m\n\u001b[31m+ Received  + 10\u001b[39m\n\n\u001b[32m- Array []\u001b[39m\n\u001b[31m+ Array [\u001b[39m\n\u001b[31m+   Object {\u001b[39m\n\u001b[31m+     \"claim\": \"label and origin agree\",\u001b[39m\n\u001b[31m+     \"got\": Object {\u001b[39m\n\u001b[31m+       \"label\": \"服务器给出的原因\",\u001b[39m\n\u001b[31m+       \"origin\": \"server\",\u001b[39m\n\u001b[31m+     },\u001b[39m\n\u001b[31m+     \"ok\": false,\u001b[39m\n\u001b[31m+   },\u001b[39m\n\u001b[31m+ ]\u001b[39m\n    at judge (D:\\moodle\\_qoder_b_lane_20260923\\frontend\\e2e\\qoder-ord0280-attribution-label-speaks-for-itself.spec.ts:176:5)\n    at D:\\moodle\\_qoder_b_lane_20260923\\frontend\\e2e\\qoder-ord0280-attribution-label-speaks-for-itself.spec.ts:249:34",
+                    "location": {
+                      "file": "D:\\moodle\\_qoder_b_lane_20260923\\frontend\\e2e\\qoder-ord0280-attribution-label-speaks-for-itself.spec.ts",
+                      "column": 5,
+                      "line": 176
+                    },
+                    "snippet": "\u001b[0m \u001b[90m 174 |\u001b[39m     node(\u001b[33mNODE\u001b[39m\u001b[33m,\u001b[39m \u001b[32m`${bad.length ? \"FAILED: \" + bad.map((b) => b.claim).join(\"; \") : \"ok\"} :: `\u001b[39m \u001b[33m+\u001b[39m\n \u001b[90m 175 |\u001b[39m       \u001b[33mJSON\u001b[39m\u001b[33m.\u001b[39mstringify({ want\u001b[33m,\u001b[39m label\u001b[33m:\u001b[39m read\u001b[33m.\u001b[39mlabel\u001b[33m,\u001b[39m origin\u001b[33m:\u001b[39m read\u001b[33m.\u001b[39morigin\u001b[33m,\u001b[39m reason\u001b[33m:\u001b[39m read\u001b[33m.\u001b[39mreason }))\u001b[33m,\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 176 |\u001b[39m   )\u001b[33m.\u001b[39mtoEqual([])\u001b[33m;\u001b[39m\n \u001b[90m     |\u001b[39m     \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 177 |\u001b[39m   \u001b[36mreturn\u001b[39m rows\u001b[33m;\u001b[39m\n \u001b[90m 178 |\u001b[39m }\n \u001b[90m 179 |\u001b[39m\u001b[0m"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "D:\\moodle\\_qoder_b_lane_20260923\\frontend\\e2e\\qoder-ord0280-attribution-label-speaks-for-itself.spec.ts",
+                        "column": 5,
+                        "line": 176
+                      },
+                      "message": "Error: e2e/qoder-ord0280-attribution-label-speaks-for-itself.spec.ts :: C1 — FAILED: label and origin agree :: {\"want\":\"device\",\"label\":\"服务器给出的原因\",\"origin\":\"server\",\"reason\":\"POST /plans/generate -> HTTP 422\"}\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // deep equality\u001b[22m\n\n\u001b[32m- Expected  -  1\u001b[39m\n\u001b[31m+ Received  + 10\u001b[39m\n\n\u001b[32m- Array []\u001b[39m\n\u001b[31m+ Array [\u001b[39m\n\u001b[31m+   Object {\u001b[39m\n\u001b[31m+     \"claim\": \"label and origin agree\",\u001b[39m\n\u001b[31m+     \"got\": Object {\u001b[39m\n\u001b[31m+       \"label\": \"服务器给出的原因\",\u001b[39m\n\u001b[31m+       \"origin\": \"server\",\u001b[39m\n\u001b[31m+     },\u001b[39m\n\u001b[31m+     \"ok\": false,\u001b[39m\n\u001b[31m+   },\u001b[39m\n\u001b[31m+ ]\u001b[39m\n\n  174 |     node(NODE, `${bad.length ? \"FAILED: \" + bad.map((b) => b.claim).join(\"; \") : \"ok\"} :: ` +\n  175 |       JSON.stringify({ want, label: read.label, origin: read.origin, reason: read.reason })),\n> 176 |   ).toEqual([]);\n      |     ^\n  177 |   return rows;\n  178 | }\n  179 |\n    at judge (D:\\moodle\\_qoder_b_lane_20260923\\frontend\\e2e\\qoder-ord0280-attribution-label-speaks-for-itself.spec.ts:176:5)\n    at D:\\moodle\\_qoder_b_lane_20260923\\frontend\\e2e\\qoder-ord0280-attribution-label-speaks-for-itself.spec.ts:249:34"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-09-25T00:48:21.302Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "D:\\moodle\\_qoder_b_lane_20260923\\frontend\\test-results\\qoder-ord0280-attribution--70b68--is-not-the-server-s-reason-chromium\\error-context.md"
+                    },
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "D:\\moodle\\_qoder_b_lane_20260923\\frontend\\test-results\\qoder-ord0280-attribution--70b68--is-not-the-server-s-reason-chromium\\error-context.md"
+                    }
+                  ],
+                  "errorLocation": {
+                    "file": "D:\\moodle\\_qoder_b_lane_20260923\\frontend\\e2e\\qoder-ord0280-attribution-label-speaks-for-itself.spec.ts",
+                    "column": 5,
+                    "line": 176
+                  }
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "f049cfe10d705ed53724-fc14d2e94a1c8fd91a2d",
+          "file": "qoder-ord0280-attribution-label-speaks-for-itself.spec.ts",
+          "line": 233,
+          "column": 1
+        },
+        {
+          "title": "ord0280-C2 plans/generate refused with a message quotes it exactly",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 4,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1447,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-09-25T00:48:23.321Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "f049cfe10d705ed53724-688ab0862f3ca12e33b8",
+          "file": "qoder-ord0280-attribution-label-speaks-for-itself.spec.ts",
+          "line": 252,
+          "column": 1
+        },
+        {
+          "title": "ord0280-D the <2-places count this screen measured is a device statement too",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 4,
+                  "parallelIndex": 0,
+                  "status": "failed",
+                  "duration": 1420,
+                  "error": {
+                    "message": "Error: e2e/qoder-ord0280-attribution-label-speaks-for-itself.spec.ts :: D — FAILED: label and origin agree :: {\"want\":\"device\",\"label\":\"服务器给出的原因\",\"origin\":\"server\",\"reason\":\"GET /places?city_code=CN-TIANJIN -> 0 places\"}\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // deep equality\u001b[22m\n\n\u001b[32m- Expected  -  1\u001b[39m\n\u001b[31m+ Received  + 10\u001b[39m\n\n\u001b[32m- Array []\u001b[39m\n\u001b[31m+ Array [\u001b[39m\n\u001b[31m+   Object {\u001b[39m\n\u001b[31m+     \"claim\": \"label and origin agree\",\u001b[39m\n\u001b[31m+     \"got\": Object {\u001b[39m\n\u001b[31m+       \"label\": \"服务器给出的原因\",\u001b[39m\n\u001b[31m+       \"origin\": \"server\",\u001b[39m\n\u001b[31m+     },\u001b[39m\n\u001b[31m+     \"ok\": false,\u001b[39m\n\u001b[31m+   },\u001b[39m\n\u001b[31m+ ]\u001b[39m",
+                    "stack": "Error: e2e/qoder-ord0280-attribution-label-speaks-for-itself.spec.ts :: D — FAILED: label and origin agree :: {\"want\":\"device\",\"label\":\"服务器给出的原因\",\"origin\":\"server\",\"reason\":\"GET /places?city_code=CN-TIANJIN -> 0 places\"}\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // deep equality\u001b[22m\n\n\u001b[32m- Expected  -  1\u001b[39m\n\u001b[31m+ Received  + 10\u001b[39m\n\n\u001b[32m- Array []\u001b[39m\n\u001b[31m+ Array [\u001b[39m\n\u001b[31m+   Object {\u001b[39m\n\u001b[31m+     \"claim\": \"label and origin agree\",\u001b[39m\n\u001b[31m+     \"got\": Object {\u001b[39m\n\u001b[31m+       \"label\": \"服务器给出的原因\",\u001b[39m\n\u001b[31m+       \"origin\": \"server\",\u001b[39m\n\u001b[31m+     },\u001b[39m\n\u001b[31m+     \"ok\": false,\u001b[39m\n\u001b[31m+   },\u001b[39m\n\u001b[31m+ ]\u001b[39m\n    at judge (D:\\moodle\\_qoder_b_lane_20260923\\frontend\\e2e\\qoder-ord0280-attribution-label-speaks-for-itself.spec.ts:176:5)\n    at D:\\moodle\\_qoder_b_lane_20260923\\frontend\\e2e\\qoder-ord0280-attribution-label-speaks-for-itself.spec.ts:281:33",
+                    "location": {
+                      "file": "D:\\moodle\\_qoder_b_lane_20260923\\frontend\\e2e\\qoder-ord0280-attribution-label-speaks-for-itself.spec.ts",
+                      "column": 5,
+                      "line": 176
+                    },
+                    "snippet": "\u001b[0m \u001b[90m 174 |\u001b[39m     node(\u001b[33mNODE\u001b[39m\u001b[33m,\u001b[39m \u001b[32m`${bad.length ? \"FAILED: \" + bad.map((b) => b.claim).join(\"; \") : \"ok\"} :: `\u001b[39m \u001b[33m+\u001b[39m\n \u001b[90m 175 |\u001b[39m       \u001b[33mJSON\u001b[39m\u001b[33m.\u001b[39mstringify({ want\u001b[33m,\u001b[39m label\u001b[33m:\u001b[39m read\u001b[33m.\u001b[39mlabel\u001b[33m,\u001b[39m origin\u001b[33m:\u001b[39m read\u001b[33m.\u001b[39morigin\u001b[33m,\u001b[39m reason\u001b[33m:\u001b[39m read\u001b[33m.\u001b[39mreason }))\u001b[33m,\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 176 |\u001b[39m   )\u001b[33m.\u001b[39mtoEqual([])\u001b[33m;\u001b[39m\n \u001b[90m     |\u001b[39m     \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 177 |\u001b[39m   \u001b[36mreturn\u001b[39m rows\u001b[33m;\u001b[39m\n \u001b[90m 178 |\u001b[39m }\n \u001b[90m 179 |\u001b[39m\u001b[0m"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "D:\\moodle\\_qoder_b_lane_20260923\\frontend\\e2e\\qoder-ord0280-attribution-label-speaks-for-itself.spec.ts",
+                        "column": 5,
+                        "line": 176
+                      },
+                      "message": "Error: e2e/qoder-ord0280-attribution-label-speaks-for-itself.spec.ts :: D — FAILED: label and origin agree :: {\"want\":\"device\",\"label\":\"服务器给出的原因\",\"origin\":\"server\",\"reason\":\"GET /places?city_code=CN-TIANJIN -> 0 places\"}\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // deep equality\u001b[22m\n\n\u001b[32m- Expected  -  1\u001b[39m\n\u001b[31m+ Received  + 10\u001b[39m\n\n\u001b[32m- Array []\u001b[39m\n\u001b[31m+ Array [\u001b[39m\n\u001b[31m+   Object {\u001b[39m\n\u001b[31m+     \"claim\": \"label and origin agree\",\u001b[39m\n\u001b[31m+     \"got\": Object {\u001b[39m\n\u001b[31m+       \"label\": \"服务器给出的原因\",\u001b[39m\n\u001b[31m+       \"origin\": \"server\",\u001b[39m\n\u001b[31m+     },\u001b[39m\n\u001b[31m+     \"ok\": false,\u001b[39m\n\u001b[31m+   },\u001b[39m\n\u001b[31m+ ]\u001b[39m\n\n  174 |     node(NODE, `${bad.length ? \"FAILED: \" + bad.map((b) => b.claim).join(\"; \") : \"ok\"} :: ` +\n  175 |       JSON.stringify({ want, label: read.label, origin: read.origin, reason: read.reason })),\n> 176 |   ).toEqual([]);\n      |     ^\n  177 |   return rows;\n  178 | }\n  179 |\n    at judge (D:\\moodle\\_qoder_b_lane_20260923\\frontend\\e2e\\qoder-ord0280-attribution-label-speaks-for-itself.spec.ts:176:5)\n    at D:\\moodle\\_qoder_b_lane_20260923\\frontend\\e2e\\qoder-ord0280-attribution-label-speaks-for-itself.spec.ts:281:33"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-09-25T00:48:24.889Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "D:\\moodle\\_qoder_b_lane_20260923\\frontend\\test-results\\qoder-ord0280-attribution--64aa2-d-is-a-device-statement-too-chromium\\error-context.md"
+                    },
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "D:\\moodle\\_qoder_b_lane_20260923\\frontend\\test-results\\qoder-ord0280-attribution--64aa2-d-is-a-device-statement-too-chromium\\error-context.md"
+                    }
+                  ],
+                  "errorLocation": {
+                    "file": "D:\\moodle\\_qoder_b_lane_20260923\\frontend\\e2e\\qoder-ord0280-attribution-label-speaks-for-itself.spec.ts",
+                    "column": 5,
+                    "line": 176
+                  }
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "f049cfe10d705ed53724-f9ed79ab89673c3b1263",
+          "file": "qoder-ord0280-attribution-label-speaks-for-itself.spec.ts",
+          "line": 272,
+          "column": 1
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2026-09-25T00:48:04.541Z",
+    "duration": 23019.246,
+    "expected": 4,
+    "skipped": 0,
+    "unexpected": 4,
+    "flaky": 0
+  }
+}
