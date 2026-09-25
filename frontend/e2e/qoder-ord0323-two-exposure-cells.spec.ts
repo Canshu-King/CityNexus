@@ -654,6 +654,9 @@ for (const leg of LEGS) {
     const found = Object.entries(NEEDLES)
       .filter(([, n]) => dom.root.includes(n) || dom.body.includes(n))
       .map(([c]) => c);
+    const foundInAttrs = Object.entries(NEEDLES)
+      .filter(([, n]) => dom.attrs.includes(n))
+      .map(([c]) => c);
     const foreign = LEGS.filter((o) => o.cell !== leg.cell).map((o) => String(o.status)).filter((x) => text.includes(x));
     readings[arm] = {
       cell: leg.cell,
@@ -663,10 +666,13 @@ for (const leg of LEGS) {
       slot_text: text,
       status_in_slot: text.includes(String(leg.status)),
       needles_found: found,
+      needles_found_in_attributes: foundInAttrs,
+      attribute_pairs_swept: dom.attr_pairs,
       foreign_status_found: foreign,
       internal_token_on_screen: /inbox request rejected/i.test(text),
     };
     expect(found, node(arm, `${leg.cell}: a reply's own words are on the screen (${JSON.stringify(found)}); the slot reads "${text}"`)).toEqual([]);
+    expect(foundInAttrs, node(arm, `${leg.cell}: Q71 counts an attribute as the screen -- a reply's words sit in a data / aria value (${JSON.stringify(foundInAttrs)} of ${String(dom.attr_pairs)} pairs swept)`)).toEqual([]);
     expect(text.includes(String(leg.status)),
       node(arm, `${leg.cell}: the slot no longer states the status this device measured for THIS request (${text})`)).toBe(true);
     expect(foreign,
