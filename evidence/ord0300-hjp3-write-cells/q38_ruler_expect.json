@@ -1,0 +1,120 @@
+{
+ "cells": [
+  {
+   "derived_from": null,
+   "derived_from_key": null,
+   "id": "0",
+   "own_hits": [
+    "21",
+    "30000",
+    "45000",
+    "500",
+    "8"
+   ],
+   "own_token_count": 18,
+   "unique_hits": [],
+   "verdict": "NOT_200_BUT_UNNAMED_STILL",
+   "why": "POST agent/commands on 90d29a17 answered HTTP 500 with content-type \"text/plain; charset=utf-8\" and 21 bytes, and the body carries no envelope at all (error_code=None, error_message=None, body starts 'Internal Server Error'), so the answer still has no name a client could read; ORD-0296's own numbers explain why - budget 45000 ms against a wait capped at busy_timeout 30000 ms, so one lost lock surfaces at <=30000 ms, before the budget is spent",
+   "why_source": "why",
+   "why_token_count": 8
+  },
+  {
+   "derived_from": null,
+   "derived_from_key": null,
+   "id": "1",
+   "own_hits": [
+    "0",
+    "21",
+    "32330",
+    "32762",
+    "500",
+    "NETWORK"
+   ],
+   "own_token_count": 10,
+   "unique_hits": [],
+   "verdict": "SERVER_ANSWERED_BUT_SCREEN_SAYS_UNREACHABLE",
+   "why": "the card painted \"连不上服务端\" (cross-check attribute data-result-status='NETWORK') while the response object for the same leg was HTTP 500 of 21 B at 32330 ms, and 0 <details> regions exist, so there is no technical detail to open at all; the identical card appears with no fetch wrapper installed (first seen at 32762 ms, data-result-status='NETWORK'), so this is the product's sentence about a server that did answer.",
+   "why_source": "why",
+   "why_token_count": 6
+  },
+  {
+   "derived_from": null,
+   "derived_from_key": null,
+   "id": "2",
+   "own_hits": [
+    "34",
+    "422",
+    "f1fc2072"
+   ],
+   "own_token_count": 7,
+   "unique_hits": [],
+   "verdict": "SERVER_SENTENCE_QUOTED_VERBATIM_WHEN_ONE_EXISTS",
+   "why": "read through a second read-only connection, journey_missions.failure_reason for row f1fc2072 is 'DeepSeek API key is not configured' (34 chars) and the text painted under the label \"服务器给出的原因\" is 'DeepSeek API key is not configured' (34 chars), equal under == (True); a punctuation drift (\"DeepSeek  API  key  \") and a suffix drift (\"d。\") are both refused, while a substring test would have accepted the suffix - that is why this cell carries the two controls. The same run's other leg answered 422 with error_code 'VALIDATION_ERROR' and error_message 'No feasible plan candidates ', which is NOT what the screen quoted, so the quoted sentence is traceable to the 34-char DB column and not to that body",
+   "why_source": "why",
+   "why_token_count": 4
+  },
+  {
+   "derived_from": null,
+   "derived_from_key": null,
+   "id": "3",
+   "own_hits": [
+    "1",
+    "10",
+    "20",
+    "22",
+    "231",
+    "28",
+    "60000",
+    "703",
+    "8553"
+   ],
+   "own_token_count": 15,
+   "unique_hits": [],
+   "verdict": "WRITE_LEG_STILL_UNBOUNDED",
+   "why": "against the selective origin on port 8553 (which answered 22 reads and swallowed 1 writes at 10:20:28) the POST left at 703 ms and had no status and no client error after 60000 ms across 231 samples, and no client-deadline sentence was ever painted - so on 90d29a17 the write leg still has no bound of its own, and this reading is a duration observation, not an assertion (Q25)",
+   "why_source": "why",
+   "why_token_count": 10
+  },
+  {
+   "derived_from": null,
+   "derived_from_key": null,
+   "id": "4",
+   "own_hits": [
+    "15",
+    "19927",
+    "200",
+    "30000",
+    "45000",
+    "500"
+   ],
+   "own_token_count": 60,
+   "unique_hits": [],
+   "verdict": "NAMED_503_NOT_REACHED_IN_TWO_SCHEDULES",
+   "why": "the two-window schedules (20s+20s and 20s+45s) both let the request finish its writes once it had the lock: the 45 s run waited 19927 ms and SUCCEEDED with 200, then plans/generate settled in 15 ms, so no second wait ever lost the lock; with deadline_ms 45000 above busy_timeout 30000, one failed wait surfaces at <= 30000 ms, i.e. before the budget is spent, which is why the plain HTTP 500 is what a traveller sees instead of the named answer",
+   "why_source": "why",
+   "why_token_count": 8
+  }
+ ],
+ "cells_found": 5,
+ "exit": 0,
+ "findings": [],
+ "hard_codes": [],
+ "hard_count": 0,
+ "info_count": 0,
+ "meaning": "no shared literal and every sentence names its own readings",
+ "overall": "Q38_GATE_GREEN",
+ "receipt": {
+  "blob_sha1": "40a508e7fb4f3f482b6cb51c269584e983056254",
+  "bytes": 11921,
+  "path": "_hjp3_0300_0925/RECEIPT_O0300-2610.json"
+ },
+ "soft_codes": [],
+ "soft_count": 0,
+ "unique_reading_counts": {
+  "0": 4,
+  "1": 4,
+  "2": 5,
+  "3": 10,
+  "4": 27
+ }
+}
