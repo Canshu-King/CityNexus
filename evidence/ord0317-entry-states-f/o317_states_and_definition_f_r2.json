@@ -1,0 +1,1085 @@
+{
+ "schema": "CNX_ORD0317_ANCHOR_SWAP_AND_PER_GENERATION_V1",
+ "lane": "F 8ccd71d8",
+ "at_local": "2026-09-26T03:31:58+0800",
+ "why": "号令者 03:1x 那块把 ORD-0317 ② 的对照表升到 r3（把「取消通道」与「期限」分开），并要我下一枚欠件按新尖现读。本件做两件事：把对照锚从 r2 表换到 r3 表（数字不变、引用变），并把我自己的尺在三代上各跑一遍——因为这条线在半小时内动了两次。",
+ "supersedes": {
+  "what_changed": "只有对照锚与代次范围：r1 引 fba4e01a4e7ad9833a5b4fc35920b8a089ae9525（r2 表）且只量一代；本件引 66d90bfbb2ed583a7ad726b1bb593142afba818d（r3 表）并量三代。",
+  "r1_stays_on_shelf": {
+   "path": "evidence/ord0317-entry-states-f/o317_states_and_definition_f_r1.json",
+   "blob": "83d4507487d814381f5e866926ca011c91536adc",
+   "overwritten": false
+  }
+ },
+ "measurement_scope": {
+  "scope": "前端网络写入口（fetch / fetch 家族包装 / request({method}) / 模块内动词助手，凡能到达 fetch 的都算），并与号令者 r3 表那 11 枚直调形做逐行投影",
+  "generation": "9a669c8bec863fadf31d5158f4a1be66aec49f23",
+  "artifact": "evidence/ord0317-entry-states-f/o317_states_and_definition_f_r2.json",
+  "measurement_method": "TypeScript 编译器 AST（o317b_entry_scope_states.cjs，双向自检 SELFTEST_PASS 才出数） 逐代跑 `git archive <generation> frontend/src` 的导出；对照面 = 号令者 r3 表按 file:line（helper 行按其入口集合）逐行投影"
+ },
+ "tip_read_twice": {
+  "first": "9a669c8bec863fadf31d5158f4a1be66aec49f23",
+  "moved_again_before_publish": false
+ },
+ "per_generation": {
+  "2344145": {
+   "generation": "2344145ce6342b6ac32ac4d0955c0f524d8c9320",
+   "gate_file_blobs": {
+    "app/main.py": "5455175abe154c5c4ab5b122e517efd13081a637",
+    "frontend/src": "52ef1902fd1fdafbd0b743d8c0535306ea5905c1"
+   },
+   "files_scanned": 74,
+   "rows_total": 21,
+   "state_counts": {
+    "key": {
+     "无键": 17,
+     "有键": 4
+    },
+    "cancel": {
+     "不可取消或测不出": 19,
+     "可取消": 2
+    },
+    "deadline": {
+     "无期限": 18,
+     "有期限": 3
+    },
+    "must_wait": {
+     "必须等待": 18,
+     "不必无限等待": 3
+    },
+    "recoverable": {
+     "不可恢复(读不回也补问不了)": 15,
+     "可恢复": 6
+    }
+   },
+   "denominators": {
+    "rows_total": 21,
+    "network_effect_proven": 21,
+    "deadline_enforced": 3,
+    "no_deadline": 18,
+    "signal_but_no_deadline": 1,
+    "keyed": 4,
+    "unkeyed": 17,
+    "must_wait": 18
+   },
+   "site_set": [
+    "api/travelerPreferences.ts#69",
+    "api/v12Authoritative.ts#52",
+    "api/v12Authoritative.ts#63",
+    "api/v12Authoritative.ts#77",
+    "api/v12Authoritative.ts#88",
+    "features/discovery/RealCityDiscoveryPanel.tsx#103",
+    "features/execution/LiveRecovery.tsx#230",
+    "features/notifications/PushCapabilityCard.tsx#56",
+    "features/planning/PlanComparison.tsx#88",
+    "features/planning/PlanWithAiSheet.tsx#538",
+    "features/planning/PlanWithAiSheet.tsx#678",
+    "features/recovery/RecoveryRequiredPanel.tsx#64",
+    "features/recovery/RecoveryRequiredPanel.tsx#95",
+    "features/recovery/V14RecoveryTruthPanel.tsx#74",
+    "features/simulation/simulationAdapter.ts#229",
+    "features/simulation/simulationAdapter.ts#296",
+    "features/simulation/simulationAdapter.ts#335",
+    "features/simulation/simulationAdapter.ts#376",
+    "features/stay/HotelsPanel.tsx#63",
+    "features/stay/HotelsPanel.tsx#64",
+    "features/stay/HotelsPanel.tsx#87"
+   ],
+   "projection_onto_his_r3_subset": {
+    "BOUNDED_BY_TIMER": 0,
+    "SIGNAL_NO_TIMER": 1,
+    "NONE": 10,
+    "NOT_MEASURED": 0
+   },
+   "per_row_agreement": 11,
+   "per_row_total": 11,
+   "per_row": [
+    {
+     "his_site": "features/notifications/PushCapabilityCard.tsx:56",
+     "his_label_r3": "NONE",
+     "match_mode": "exact_site",
+     "my_sites_this_generation": [
+      "features/notifications/PushCapabilityCard.tsx#56"
+     ],
+     "my_verdicts": [
+      "NONE"
+     ],
+     "collapsed": "NONE",
+     "agrees_with_his_label": true
+    },
+    {
+     "his_site": "features/planning/PlanComparison.tsx:88",
+     "his_label_r3": "NONE",
+     "match_mode": "exact_site",
+     "my_sites_this_generation": [
+      "features/planning/PlanComparison.tsx#88"
+     ],
+     "my_verdicts": [
+      "NONE"
+     ],
+     "collapsed": "NONE",
+     "agrees_with_his_label": true
+    },
+    {
+     "his_site": "features/planning/PlanWithAiSheet.tsx:678",
+     "his_label_r3": "SIGNAL_NO_TIMER",
+     "match_mode": "exact_site",
+     "my_sites_this_generation": [
+      "features/planning/PlanWithAiSheet.tsx#678"
+     ],
+     "my_verdicts": [
+      "SIGNAL_NO_TIMER"
+     ],
+     "collapsed": "SIGNAL_NO_TIMER",
+     "agrees_with_his_label": true
+    },
+    {
+     "his_site": "features/recovery/RecoveryRequiredPanel.tsx:26",
+     "his_label_r3": "NONE",
+     "match_mode": "helper_line_split_into_entry_points",
+     "my_sites_this_generation": [
+      "features/recovery/RecoveryRequiredPanel.tsx#64"
+     ],
+     "my_verdicts": [
+      "NONE"
+     ],
+     "collapsed": "NONE",
+     "agrees_with_his_label": true
+    },
+    {
+     "his_site": "features/simulation/simulationAdapter.ts:229",
+     "his_label_r3": "NONE",
+     "match_mode": "exact_site",
+     "my_sites_this_generation": [
+      "features/simulation/simulationAdapter.ts#229"
+     ],
+     "my_verdicts": [
+      "NONE"
+     ],
+     "collapsed": "NONE",
+     "agrees_with_his_label": true
+    },
+    {
+     "his_site": "features/simulation/simulationAdapter.ts:296",
+     "his_label_r3": "NONE",
+     "match_mode": "exact_site",
+     "my_sites_this_generation": [
+      "features/simulation/simulationAdapter.ts#296"
+     ],
+     "my_verdicts": [
+      "NONE"
+     ],
+     "collapsed": "NONE",
+     "agrees_with_his_label": true
+    },
+    {
+     "his_site": "features/simulation/simulationAdapter.ts:335",
+     "his_label_r3": "NONE",
+     "match_mode": "exact_site",
+     "my_sites_this_generation": [
+      "features/simulation/simulationAdapter.ts#335"
+     ],
+     "my_verdicts": [
+      "NONE"
+     ],
+     "collapsed": "NONE",
+     "agrees_with_his_label": true
+    },
+    {
+     "his_site": "features/simulation/simulationAdapter.ts:376",
+     "his_label_r3": "NONE",
+     "match_mode": "exact_site",
+     "my_sites_this_generation": [
+      "features/simulation/simulationAdapter.ts#376"
+     ],
+     "my_verdicts": [
+      "NONE"
+     ],
+     "collapsed": "NONE",
+     "agrees_with_his_label": true
+    },
+    {
+     "his_site": "features/stay/HotelsPanel.tsx:63",
+     "his_label_r3": "NONE",
+     "match_mode": "exact_site",
+     "my_sites_this_generation": [
+      "features/stay/HotelsPanel.tsx#63"
+     ],
+     "my_verdicts": [
+      "NONE"
+     ],
+     "collapsed": "NONE",
+     "agrees_with_his_label": true
+    },
+    {
+     "his_site": "features/stay/HotelsPanel.tsx:64",
+     "his_label_r3": "NONE",
+     "match_mode": "exact_site",
+     "my_sites_this_generation": [
+      "features/stay/HotelsPanel.tsx#64"
+     ],
+     "my_verdicts": [
+      "NONE"
+     ],
+     "collapsed": "NONE",
+     "agrees_with_his_label": true
+    },
+    {
+     "his_site": "features/stay/HotelsPanel.tsx:87",
+     "his_label_r3": "NONE",
+     "match_mode": "exact_site",
+     "my_sites_this_generation": [
+      "features/stay/HotelsPanel.tsx#87"
+     ],
+     "my_verdicts": [
+      "NONE"
+     ],
+     "collapsed": "NONE",
+     "agrees_with_his_label": true
+    }
+   ],
+   "identity_map_from_base_generation": {
+    "features/notifications/PushCapabilityCard.tsx#56": [
+     [
+      "features/notifications/PushCapabilityCard.tsx",
+      "POST",
+      "/api/v1/travelers/${…}/push-subscriptions"
+     ]
+    ],
+    "features/planning/PlanComparison.tsx#88": [
+     [
+      "features/planning/PlanComparison.tsx",
+      "POST",
+      "/api/v1/journeys/${…}/plans/${…}/select"
+     ]
+    ],
+    "features/planning/PlanWithAiSheet.tsx#678": [
+     [
+      "features/planning/PlanWithAiSheet.tsx",
+      "POST",
+      "/api/v1/journeys/${…}/plans/generate"
+     ]
+    ],
+    "features/recovery/RecoveryRequiredPanel.tsx#26": [
+     [
+      "features/recovery/RecoveryRequiredPanel.tsx",
+      "POST",
+      "/api/v1/journeys/${…}/plans/generate"
+     ],
+     [
+      "features/recovery/RecoveryRequiredPanel.tsx",
+      "POST",
+      "/api/v1/journeys/${…}/recovery/acknowledge"
+     ]
+    ],
+    "features/simulation/simulationAdapter.ts#229": [
+     [
+      "features/simulation/simulationAdapter.ts",
+      "POST",
+      "/api/v1/demo/reset"
+     ]
+    ],
+    "features/simulation/simulationAdapter.ts#296": [
+     [
+      "features/simulation/simulationAdapter.ts",
+      "POST",
+      "/api/v1/journeys/${…}/activities/${…}/${…}"
+     ]
+    ],
+    "features/simulation/simulationAdapter.ts#335": [
+     [
+      "features/simulation/simulationAdapter.ts",
+      "POST",
+      "/api/v1/demo/${…}"
+     ]
+    ],
+    "features/simulation/simulationAdapter.ts#376": [
+     [
+      "features/simulation/simulationAdapter.ts",
+      "POST",
+      "/api/v1/journeys/${…}/events"
+     ]
+    ],
+    "features/stay/HotelsPanel.tsx#63": [
+     [
+      "features/stay/HotelsPanel.tsx",
+      "POST",
+      "/api/v1/journeys/${…}/stays/offers/capture"
+     ]
+    ],
+    "features/stay/HotelsPanel.tsx#64": [
+     [
+      "features/stay/HotelsPanel.tsx",
+      "POST",
+      "/api/v1/journeys/${…}/stay-options/generate"
+     ]
+    ],
+    "features/stay/HotelsPanel.tsx#87": [
+     [
+      "features/stay/HotelsPanel.tsx",
+      "POST",
+      "/api/v1/journeys/${…}/stay-options/${…}/select"
+     ]
+    ]
+   }
+  },
+  "30de4eb": {
+   "generation": "30de4ebe409f49c5e25f4758cb2e5f4e90764a4f",
+   "gate_file_blobs": {
+    "app/main.py": "5455175abe154c5c4ab5b122e517efd13081a637",
+    "frontend/src": "52ef1902fd1fdafbd0b743d8c0535306ea5905c1"
+   },
+   "files_scanned": 74,
+   "rows_total": 21,
+   "state_counts": {
+    "key": {
+     "无键": 17,
+     "有键": 4
+    },
+    "cancel": {
+     "不可取消或测不出": 19,
+     "可取消": 2
+    },
+    "deadline": {
+     "无期限": 18,
+     "有期限": 3
+    },
+    "must_wait": {
+     "必须等待": 18,
+     "不必无限等待": 3
+    },
+    "recoverable": {
+     "不可恢复(读不回也补问不了)": 15,
+     "可恢复": 6
+    }
+   },
+   "denominators": {
+    "rows_total": 21,
+    "network_effect_proven": 21,
+    "deadline_enforced": 3,
+    "no_deadline": 18,
+    "signal_but_no_deadline": 1,
+    "keyed": 4,
+    "unkeyed": 17,
+    "must_wait": 18
+   },
+   "site_set": [
+    "api/travelerPreferences.ts#69",
+    "api/v12Authoritative.ts#52",
+    "api/v12Authoritative.ts#63",
+    "api/v12Authoritative.ts#77",
+    "api/v12Authoritative.ts#88",
+    "features/discovery/RealCityDiscoveryPanel.tsx#103",
+    "features/execution/LiveRecovery.tsx#230",
+    "features/notifications/PushCapabilityCard.tsx#56",
+    "features/planning/PlanComparison.tsx#88",
+    "features/planning/PlanWithAiSheet.tsx#538",
+    "features/planning/PlanWithAiSheet.tsx#678",
+    "features/recovery/RecoveryRequiredPanel.tsx#64",
+    "features/recovery/RecoveryRequiredPanel.tsx#95",
+    "features/recovery/V14RecoveryTruthPanel.tsx#74",
+    "features/simulation/simulationAdapter.ts#229",
+    "features/simulation/simulationAdapter.ts#296",
+    "features/simulation/simulationAdapter.ts#335",
+    "features/simulation/simulationAdapter.ts#376",
+    "features/stay/HotelsPanel.tsx#63",
+    "features/stay/HotelsPanel.tsx#64",
+    "features/stay/HotelsPanel.tsx#87"
+   ],
+   "projection_onto_his_r3_subset": {
+    "BOUNDED_BY_TIMER": 0,
+    "SIGNAL_NO_TIMER": 1,
+    "NONE": 10,
+    "NOT_MEASURED": 0
+   },
+   "per_row_agreement": 11,
+   "per_row_total": 11,
+   "per_row": [
+    {
+     "his_site": "features/notifications/PushCapabilityCard.tsx:56",
+     "his_label_r3": "NONE",
+     "match_mode": "exact_site",
+     "my_sites_this_generation": [
+      "features/notifications/PushCapabilityCard.tsx#56"
+     ],
+     "my_verdicts": [
+      "NONE"
+     ],
+     "collapsed": "NONE",
+     "agrees_with_his_label": true
+    },
+    {
+     "his_site": "features/planning/PlanComparison.tsx:88",
+     "his_label_r3": "NONE",
+     "match_mode": "exact_site",
+     "my_sites_this_generation": [
+      "features/planning/PlanComparison.tsx#88"
+     ],
+     "my_verdicts": [
+      "NONE"
+     ],
+     "collapsed": "NONE",
+     "agrees_with_his_label": true
+    },
+    {
+     "his_site": "features/planning/PlanWithAiSheet.tsx:678",
+     "his_label_r3": "SIGNAL_NO_TIMER",
+     "match_mode": "exact_site",
+     "my_sites_this_generation": [
+      "features/planning/PlanWithAiSheet.tsx#678"
+     ],
+     "my_verdicts": [
+      "SIGNAL_NO_TIMER"
+     ],
+     "collapsed": "SIGNAL_NO_TIMER",
+     "agrees_with_his_label": true
+    },
+    {
+     "his_site": "features/recovery/RecoveryRequiredPanel.tsx:26",
+     "his_label_r3": "NONE",
+     "match_mode": "helper_line_split_into_entry_points",
+     "my_sites_this_generation": [
+      "features/recovery/RecoveryRequiredPanel.tsx#64"
+     ],
+     "my_verdicts": [
+      "NONE"
+     ],
+     "collapsed": "NONE",
+     "agrees_with_his_label": true
+    },
+    {
+     "his_site": "features/simulation/simulationAdapter.ts:229",
+     "his_label_r3": "NONE",
+     "match_mode": "exact_site",
+     "my_sites_this_generation": [
+      "features/simulation/simulationAdapter.ts#229"
+     ],
+     "my_verdicts": [
+      "NONE"
+     ],
+     "collapsed": "NONE",
+     "agrees_with_his_label": true
+    },
+    {
+     "his_site": "features/simulation/simulationAdapter.ts:296",
+     "his_label_r3": "NONE",
+     "match_mode": "exact_site",
+     "my_sites_this_generation": [
+      "features/simulation/simulationAdapter.ts#296"
+     ],
+     "my_verdicts": [
+      "NONE"
+     ],
+     "collapsed": "NONE",
+     "agrees_with_his_label": true
+    },
+    {
+     "his_site": "features/simulation/simulationAdapter.ts:335",
+     "his_label_r3": "NONE",
+     "match_mode": "exact_site",
+     "my_sites_this_generation": [
+      "features/simulation/simulationAdapter.ts#335"
+     ],
+     "my_verdicts": [
+      "NONE"
+     ],
+     "collapsed": "NONE",
+     "agrees_with_his_label": true
+    },
+    {
+     "his_site": "features/simulation/simulationAdapter.ts:376",
+     "his_label_r3": "NONE",
+     "match_mode": "exact_site",
+     "my_sites_this_generation": [
+      "features/simulation/simulationAdapter.ts#376"
+     ],
+     "my_verdicts": [
+      "NONE"
+     ],
+     "collapsed": "NONE",
+     "agrees_with_his_label": true
+    },
+    {
+     "his_site": "features/stay/HotelsPanel.tsx:63",
+     "his_label_r3": "NONE",
+     "match_mode": "exact_site",
+     "my_sites_this_generation": [
+      "features/stay/HotelsPanel.tsx#63"
+     ],
+     "my_verdicts": [
+      "NONE"
+     ],
+     "collapsed": "NONE",
+     "agrees_with_his_label": true
+    },
+    {
+     "his_site": "features/stay/HotelsPanel.tsx:64",
+     "his_label_r3": "NONE",
+     "match_mode": "exact_site",
+     "my_sites_this_generation": [
+      "features/stay/HotelsPanel.tsx#64"
+     ],
+     "my_verdicts": [
+      "NONE"
+     ],
+     "collapsed": "NONE",
+     "agrees_with_his_label": true
+    },
+    {
+     "his_site": "features/stay/HotelsPanel.tsx:87",
+     "his_label_r3": "NONE",
+     "match_mode": "exact_site",
+     "my_sites_this_generation": [
+      "features/stay/HotelsPanel.tsx#87"
+     ],
+     "my_verdicts": [
+      "NONE"
+     ],
+     "collapsed": "NONE",
+     "agrees_with_his_label": true
+    }
+   ],
+   "identity_map_from_base_generation": {
+    "features/notifications/PushCapabilityCard.tsx#56": [
+     [
+      "features/notifications/PushCapabilityCard.tsx",
+      "POST",
+      "/api/v1/travelers/${…}/push-subscriptions"
+     ]
+    ],
+    "features/planning/PlanComparison.tsx#88": [
+     [
+      "features/planning/PlanComparison.tsx",
+      "POST",
+      "/api/v1/journeys/${…}/plans/${…}/select"
+     ]
+    ],
+    "features/planning/PlanWithAiSheet.tsx#678": [
+     [
+      "features/planning/PlanWithAiSheet.tsx",
+      "POST",
+      "/api/v1/journeys/${…}/plans/generate"
+     ]
+    ],
+    "features/recovery/RecoveryRequiredPanel.tsx#26": [
+     [
+      "features/recovery/RecoveryRequiredPanel.tsx",
+      "POST",
+      "/api/v1/journeys/${…}/plans/generate"
+     ],
+     [
+      "features/recovery/RecoveryRequiredPanel.tsx",
+      "POST",
+      "/api/v1/journeys/${…}/recovery/acknowledge"
+     ]
+    ],
+    "features/simulation/simulationAdapter.ts#229": [
+     [
+      "features/simulation/simulationAdapter.ts",
+      "POST",
+      "/api/v1/demo/reset"
+     ]
+    ],
+    "features/simulation/simulationAdapter.ts#296": [
+     [
+      "features/simulation/simulationAdapter.ts",
+      "POST",
+      "/api/v1/journeys/${…}/activities/${…}/${…}"
+     ]
+    ],
+    "features/simulation/simulationAdapter.ts#335": [
+     [
+      "features/simulation/simulationAdapter.ts",
+      "POST",
+      "/api/v1/demo/${…}"
+     ]
+    ],
+    "features/simulation/simulationAdapter.ts#376": [
+     [
+      "features/simulation/simulationAdapter.ts",
+      "POST",
+      "/api/v1/journeys/${…}/events"
+     ]
+    ],
+    "features/stay/HotelsPanel.tsx#63": [
+     [
+      "features/stay/HotelsPanel.tsx",
+      "POST",
+      "/api/v1/journeys/${…}/stays/offers/capture"
+     ]
+    ],
+    "features/stay/HotelsPanel.tsx#64": [
+     [
+      "features/stay/HotelsPanel.tsx",
+      "POST",
+      "/api/v1/journeys/${…}/stay-options/generate"
+     ]
+    ],
+    "features/stay/HotelsPanel.tsx#87": [
+     [
+      "features/stay/HotelsPanel.tsx",
+      "POST",
+      "/api/v1/journeys/${…}/stay-options/${…}/select"
+     ]
+    ]
+   }
+  },
+  "9a669c8": {
+   "generation": "9a669c8bec863fadf31d5158f4a1be66aec49f23",
+   "gate_file_blobs": {
+    "app/main.py": "5455175abe154c5c4ab5b122e517efd13081a637",
+    "frontend/src": "1a657259f26028ff17b5cdc65c0aab9553bf4ecc"
+   },
+   "files_scanned": 74,
+   "rows_total": 21,
+   "state_counts": {
+    "key": {
+     "无键": 17,
+     "有键": 4
+    },
+    "cancel": {
+     "不可取消或测不出": 19,
+     "可取消": 2
+    },
+    "deadline": {
+     "无期限": 18,
+     "有期限": 3
+    },
+    "must_wait": {
+     "必须等待": 18,
+     "不必无限等待": 3
+    },
+    "recoverable": {
+     "不可恢复(读不回也补问不了)": 15,
+     "可恢复": 6
+    }
+   },
+   "denominators": {
+    "rows_total": 21,
+    "network_effect_proven": 21,
+    "deadline_enforced": 3,
+    "no_deadline": 18,
+    "signal_but_no_deadline": 1,
+    "keyed": 4,
+    "unkeyed": 17,
+    "must_wait": 18
+   },
+   "site_set": [
+    "api/travelerPreferences.ts#69",
+    "api/v12Authoritative.ts#52",
+    "api/v12Authoritative.ts#63",
+    "api/v12Authoritative.ts#77",
+    "api/v12Authoritative.ts#88",
+    "features/discovery/RealCityDiscoveryPanel.tsx#103",
+    "features/execution/LiveRecovery.tsx#230",
+    "features/notifications/PushCapabilityCard.tsx#56",
+    "features/planning/PlanComparison.tsx#88",
+    "features/planning/PlanWithAiSheet.tsx#547",
+    "features/planning/PlanWithAiSheet.tsx#705",
+    "features/recovery/RecoveryRequiredPanel.tsx#64",
+    "features/recovery/RecoveryRequiredPanel.tsx#95",
+    "features/recovery/V14RecoveryTruthPanel.tsx#74",
+    "features/simulation/simulationAdapter.ts#229",
+    "features/simulation/simulationAdapter.ts#296",
+    "features/simulation/simulationAdapter.ts#335",
+    "features/simulation/simulationAdapter.ts#376",
+    "features/stay/HotelsPanel.tsx#63",
+    "features/stay/HotelsPanel.tsx#64",
+    "features/stay/HotelsPanel.tsx#87"
+   ],
+   "projection_onto_his_r3_subset": {
+    "BOUNDED_BY_TIMER": 0,
+    "SIGNAL_NO_TIMER": 1,
+    "NONE": 10,
+    "NOT_MEASURED": 0
+   },
+   "per_row_agreement": 11,
+   "per_row_total": 11,
+   "per_row": [
+    {
+     "his_site": "features/notifications/PushCapabilityCard.tsx:56",
+     "his_label_r3": "NONE",
+     "match_mode": "exact_site",
+     "my_sites_this_generation": [
+      "features/notifications/PushCapabilityCard.tsx#56"
+     ],
+     "my_verdicts": [
+      "NONE"
+     ],
+     "collapsed": "NONE",
+     "agrees_with_his_label": true
+    },
+    {
+     "his_site": "features/planning/PlanComparison.tsx:88",
+     "his_label_r3": "NONE",
+     "match_mode": "exact_site",
+     "my_sites_this_generation": [
+      "features/planning/PlanComparison.tsx#88"
+     ],
+     "my_verdicts": [
+      "NONE"
+     ],
+     "collapsed": "NONE",
+     "agrees_with_his_label": true
+    },
+    {
+     "his_site": "features/planning/PlanWithAiSheet.tsx:678",
+     "his_label_r3": "SIGNAL_NO_TIMER",
+     "match_mode": "line_drift_reanchored_by_file_verb_full_url",
+     "my_sites_this_generation": [
+      "features/planning/PlanWithAiSheet.tsx#705"
+     ],
+     "my_verdicts": [
+      "SIGNAL_NO_TIMER"
+     ],
+     "collapsed": "SIGNAL_NO_TIMER",
+     "agrees_with_his_label": true
+    },
+    {
+     "his_site": "features/recovery/RecoveryRequiredPanel.tsx:26",
+     "his_label_r3": "NONE",
+     "match_mode": "helper_line_split_into_entry_points",
+     "my_sites_this_generation": [
+      "features/recovery/RecoveryRequiredPanel.tsx#64"
+     ],
+     "my_verdicts": [
+      "NONE"
+     ],
+     "collapsed": "NONE",
+     "agrees_with_his_label": true
+    },
+    {
+     "his_site": "features/simulation/simulationAdapter.ts:229",
+     "his_label_r3": "NONE",
+     "match_mode": "exact_site",
+     "my_sites_this_generation": [
+      "features/simulation/simulationAdapter.ts#229"
+     ],
+     "my_verdicts": [
+      "NONE"
+     ],
+     "collapsed": "NONE",
+     "agrees_with_his_label": true
+    },
+    {
+     "his_site": "features/simulation/simulationAdapter.ts:296",
+     "his_label_r3": "NONE",
+     "match_mode": "exact_site",
+     "my_sites_this_generation": [
+      "features/simulation/simulationAdapter.ts#296"
+     ],
+     "my_verdicts": [
+      "NONE"
+     ],
+     "collapsed": "NONE",
+     "agrees_with_his_label": true
+    },
+    {
+     "his_site": "features/simulation/simulationAdapter.ts:335",
+     "his_label_r3": "NONE",
+     "match_mode": "exact_site",
+     "my_sites_this_generation": [
+      "features/simulation/simulationAdapter.ts#335"
+     ],
+     "my_verdicts": [
+      "NONE"
+     ],
+     "collapsed": "NONE",
+     "agrees_with_his_label": true
+    },
+    {
+     "his_site": "features/simulation/simulationAdapter.ts:376",
+     "his_label_r3": "NONE",
+     "match_mode": "exact_site",
+     "my_sites_this_generation": [
+      "features/simulation/simulationAdapter.ts#376"
+     ],
+     "my_verdicts": [
+      "NONE"
+     ],
+     "collapsed": "NONE",
+     "agrees_with_his_label": true
+    },
+    {
+     "his_site": "features/stay/HotelsPanel.tsx:63",
+     "his_label_r3": "NONE",
+     "match_mode": "exact_site",
+     "my_sites_this_generation": [
+      "features/stay/HotelsPanel.tsx#63"
+     ],
+     "my_verdicts": [
+      "NONE"
+     ],
+     "collapsed": "NONE",
+     "agrees_with_his_label": true
+    },
+    {
+     "his_site": "features/stay/HotelsPanel.tsx:64",
+     "his_label_r3": "NONE",
+     "match_mode": "exact_site",
+     "my_sites_this_generation": [
+      "features/stay/HotelsPanel.tsx#64"
+     ],
+     "my_verdicts": [
+      "NONE"
+     ],
+     "collapsed": "NONE",
+     "agrees_with_his_label": true
+    },
+    {
+     "his_site": "features/stay/HotelsPanel.tsx:87",
+     "his_label_r3": "NONE",
+     "match_mode": "exact_site",
+     "my_sites_this_generation": [
+      "features/stay/HotelsPanel.tsx#87"
+     ],
+     "my_verdicts": [
+      "NONE"
+     ],
+     "collapsed": "NONE",
+     "agrees_with_his_label": true
+    }
+   ],
+   "identity_map_from_base_generation": {
+    "features/notifications/PushCapabilityCard.tsx#56": [
+     [
+      "features/notifications/PushCapabilityCard.tsx",
+      "POST",
+      "/api/v1/travelers/${…}/push-subscriptions"
+     ]
+    ],
+    "features/planning/PlanComparison.tsx#88": [
+     [
+      "features/planning/PlanComparison.tsx",
+      "POST",
+      "/api/v1/journeys/${…}/plans/${…}/select"
+     ]
+    ],
+    "features/planning/PlanWithAiSheet.tsx#678": [
+     [
+      "features/planning/PlanWithAiSheet.tsx",
+      "POST",
+      "/api/v1/journeys/${…}/plans/generate"
+     ]
+    ],
+    "features/recovery/RecoveryRequiredPanel.tsx#26": [
+     [
+      "features/recovery/RecoveryRequiredPanel.tsx",
+      "POST",
+      "/api/v1/journeys/${…}/plans/generate"
+     ],
+     [
+      "features/recovery/RecoveryRequiredPanel.tsx",
+      "POST",
+      "/api/v1/journeys/${…}/recovery/acknowledge"
+     ]
+    ],
+    "features/simulation/simulationAdapter.ts#229": [
+     [
+      "features/simulation/simulationAdapter.ts",
+      "POST",
+      "/api/v1/demo/reset"
+     ]
+    ],
+    "features/simulation/simulationAdapter.ts#296": [
+     [
+      "features/simulation/simulationAdapter.ts",
+      "POST",
+      "/api/v1/journeys/${…}/activities/${…}/${…}"
+     ]
+    ],
+    "features/simulation/simulationAdapter.ts#335": [
+     [
+      "features/simulation/simulationAdapter.ts",
+      "POST",
+      "/api/v1/demo/${…}"
+     ]
+    ],
+    "features/simulation/simulationAdapter.ts#376": [
+     [
+      "features/simulation/simulationAdapter.ts",
+      "POST",
+      "/api/v1/journeys/${…}/events"
+     ]
+    ],
+    "features/stay/HotelsPanel.tsx#63": [
+     [
+      "features/stay/HotelsPanel.tsx",
+      "POST",
+      "/api/v1/journeys/${…}/stays/offers/capture"
+     ]
+    ],
+    "features/stay/HotelsPanel.tsx#64": [
+     [
+      "features/stay/HotelsPanel.tsx",
+      "POST",
+      "/api/v1/journeys/${…}/stay-options/generate"
+     ]
+    ],
+    "features/stay/HotelsPanel.tsx#87": [
+     [
+      "features/stay/HotelsPanel.tsx",
+      "POST",
+      "/api/v1/journeys/${…}/stay-options/${…}/select"
+     ]
+    ]
+   }
+  }
+ },
+ "commander_r3_reference": {
+  "blob": "66d90bfbb2ed583a7ad726b1bb593142afba818d",
+  "generation": "2344145ce6342b6ac32ac4d0955c0f524d8c9320",
+  "entries_total": 11,
+  "counts": {
+   "bounded": 0,
+   "cancel_only": 1,
+   "none": 10
+  },
+  "vocabulary": [
+   "OPTION_TIMEOUT",
+   "SIGNAL_NO_TIMER",
+   "SIGNAL_NO_TIMER_VIA_PARAM",
+   "CALLER_SUPPLIES_<timer-ish param>",
+   "ABORTSIGNAL_TIMEOUT_IN_WRAPPER",
+   "DEADLINE_WORD_IN_WRAPPER",
+   "NONE"
+  ]
+ },
+ "commander_recount_of_my_r1": {
+  "blob": "1178ce64c25c28d026c0aad0936ba3177b25700e",
+  "comparisons_equal": 10,
+  "comparisons_total": 10,
+  "his_first_pass_defect_disclosed": "my first version of this recount compared against field names I invented (keyed/unkeyed/bounded, booleans) and reported SUMMARY_DOES_NOT_REPRODUCE with mine=0 for every row-based count. That was my instrument, not her data: her rows carry row['states'] with Chinese labels and her summary is {dim:{label:count}}. I printed her schema inventory first, then wrote this; the earlier verdict is disclosed here rather than deleted."
+ },
+ "entry_identity_drift": {
+  "note": "同一批入口、行号会漂：站点键用 (文件, verb, 路径) 重锚，行号只算这一代的属性（ORD-0315 那条教训）",
+  "rows_not_matched_by_exact_site": {
+   "2344145": [
+    "features/recovery/RecoveryRequiredPanel.tsx:26 -> features/recovery/RecoveryRequiredPanel.tsx#64 [helper_line_split_into_entry_points]"
+   ],
+   "30de4eb": [
+    "features/recovery/RecoveryRequiredPanel.tsx:26 -> features/recovery/RecoveryRequiredPanel.tsx#64 [helper_line_split_into_entry_points]"
+   ],
+   "9a669c8": [
+    "features/planning/PlanWithAiSheet.tsx:678 -> features/planning/PlanWithAiSheet.tsx#705 [line_drift_reanchored_by_file_verb_full_url]",
+    "features/recovery/RecoveryRequiredPanel.tsx:26 -> features/recovery/RecoveryRequiredPanel.tsx#64 [helper_line_split_into_entry_points]"
+   ]
+  },
+  "identity_used": {
+   "features/notifications/PushCapabilityCard.tsx#56": [
+    [
+     "features/notifications/PushCapabilityCard.tsx",
+     "POST",
+     "/api/v1/travelers/${…}/push-subscriptions"
+    ]
+   ],
+   "features/planning/PlanComparison.tsx#88": [
+    [
+     "features/planning/PlanComparison.tsx",
+     "POST",
+     "/api/v1/journeys/${…}/plans/${…}/select"
+    ]
+   ],
+   "features/planning/PlanWithAiSheet.tsx#678": [
+    [
+     "features/planning/PlanWithAiSheet.tsx",
+     "POST",
+     "/api/v1/journeys/${…}/plans/generate"
+    ]
+   ],
+   "features/recovery/RecoveryRequiredPanel.tsx#26": [
+    [
+     "features/recovery/RecoveryRequiredPanel.tsx",
+     "POST",
+     "/api/v1/journeys/${…}/plans/generate"
+    ],
+    [
+     "features/recovery/RecoveryRequiredPanel.tsx",
+     "POST",
+     "/api/v1/journeys/${…}/recovery/acknowledge"
+    ]
+   ],
+   "features/simulation/simulationAdapter.ts#229": [
+    [
+     "features/simulation/simulationAdapter.ts",
+     "POST",
+     "/api/v1/demo/reset"
+    ]
+   ],
+   "features/simulation/simulationAdapter.ts#296": [
+    [
+     "features/simulation/simulationAdapter.ts",
+     "POST",
+     "/api/v1/journeys/${…}/activities/${…}/${…}"
+    ]
+   ],
+   "features/simulation/simulationAdapter.ts#335": [
+    [
+     "features/simulation/simulationAdapter.ts",
+     "POST",
+     "/api/v1/demo/${…}"
+    ]
+   ],
+   "features/simulation/simulationAdapter.ts#376": [
+    [
+     "features/simulation/simulationAdapter.ts",
+     "POST",
+     "/api/v1/journeys/${…}/events"
+    ]
+   ],
+   "features/stay/HotelsPanel.tsx#63": [
+    [
+     "features/stay/HotelsPanel.tsx",
+     "POST",
+     "/api/v1/journeys/${…}/stays/offers/capture"
+    ]
+   ],
+   "features/stay/HotelsPanel.tsx#64": [
+    [
+     "features/stay/HotelsPanel.tsx",
+     "POST",
+     "/api/v1/journeys/${…}/stay-options/generate"
+    ]
+   ],
+   "features/stay/HotelsPanel.tsx#87": [
+    [
+     "features/stay/HotelsPanel.tsx",
+     "POST",
+     "/api/v1/journeys/${…}/stay-options/${…}/select"
+    ]
+   ]
+  }
+ },
+ "what_moves_and_what_does_not": {
+  "rows_identical_across_generations": false,
+  "site_sets_by_generation": {
+   "2344145": 21,
+   "30de4eb": 21,
+   "9a669c8": 21
+  },
+  "bounded_count_by_generation": {
+   "2344145": 3,
+   "30de4eb": 3,
+   "9a669c8": 3
+  },
+  "main_py_blob_by_generation": {
+   "2344145": "5455175abe154c5c4ab5b122e517efd13081a637",
+   "30de4eb": "5455175abe154c5c4ab5b122e517efd13081a637",
+   "9a669c8": "5455175abe154c5c4ab5b122e517efd13081a637"
+  },
+  "reading": "写腿清单本身这几代没动（同一批入口）；动的是 `backend/app/main.py` 的字节 ⇒ 凡是拿 main.py 当被试面的读数都必须带代次，这正是我自己 ORD-0296 M7 那臂的教训"
+ },
+ "discipline": {
+  "product_bytes_changed": 0,
+  "refs_pushed": 0,
+  "authoritative_branch_moved": 0,
+  "user_databases_opened": 0,
+  "demo_reset_calls": 0,
+  "credential_values_printed": 0,
+  "shared_ledger_bytes_written_by_lane": 0,
+  "evidence_paths_overwritten": 0
+ },
+ "claim_kind": "measured_per_generation_at_the_tips_named_in_this_file",
+ "claimed_result": "三代同一把尺：2344145:21 行/有界 3/无界 18、30de4eb:21 行/有界 3/无界 18、9a669c8:21 行/有界 3/无界 18；投影到号令者 r3 那 11 枚直调形：{\"BOUNDED_BY_TIMER\": 0, \"SIGNAL_NO_TIMER\": 1, \"NONE\": 10, \"NOT_MEASURED\": 0}，与他件 66d90bfbb2ed583a7ad726b1bb593142afba818d 的 有界 0／只带取消 1／NONE 10 全等；他 recount 我 r1 的比较 10/10 条 equal。",
+ "derived_result": null
+}
