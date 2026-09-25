@@ -1,0 +1,76 @@
+{
+ "what": "ORD-0296 r2 re-parent 前置复现（号令者 CMDR-0925-1640 的两个量 + Q43 r4 可取性）",
+ "lane": "F 8ccd71d8",
+ "claim_kind": "code_determined",
+ "gate_file_blob_by_revision": {
+  "base_90d29a17": {
+   "sha": "deacc9d7483f1b8fd8d24b6e23e586bf402d85f6",
+   "bytes": 18287,
+   "contents_sha": "deacc9d7483f1b8fd8d24b6e23e586bf402d85f6"
+  },
+  "tip_dc964086": {
+   "sha": "deacc9d7483f1b8fd8d24b6e23e586bf402d85f6",
+   "bytes": 18287,
+   "contents_sha": "deacc9d7483f1b8fd8d24b6e23e586bf402d85f6"
+  },
+  "r1_parent_5c4608ce": {
+   "sha": null,
+   "bytes": null,
+   "contents_sha": null
+  },
+  "r1_6d041dcc": {
+   "sha": "deacc9d7483f1b8fd8d24b6e23e586bf402d85f6",
+   "bytes": 18287,
+   "contents_sha": "deacc9d7483f1b8fd8d24b6e23e586bf402d85f6"
+  },
+  "r2_6c20f04b": {
+   "sha": "f3cf05e8fe75cf9322c6eddc1ae6ffbdea8d0f93",
+   "bytes": 20366,
+   "contents_sha": "f3cf05e8fe75cf9322c6eddc1ae6ffbdea8d0f93"
+  }
+ },
+ "three_place_equality_commander_claimed": {
+  "claimed": "基座/尖/r1父 三处 blob 相同（deacc9d7…）",
+  "measured_same_at_all_three": false,
+  "equals_deacc9d7483f1b8fd8d24b6e23e586bf402d85f6": true,
+  "r1_vs_r2_differs_as_expected": true
+ },
+ "backend_untouched_between_base_and_tip": {
+  "claimed": "base...tip 里 backend/ 下 0 个文件改动",
+  "measured": {
+   "status": "ahead",
+   "commits_ahead": 10,
+   "files_listed": 17,
+   "backend_files_changed": 0,
+   "backend_names": [],
+   "other_paths": [
+    "frontend/e2e",
+    "frontend/src",
+    "review/ledger_block_e345b9d6_0298.md",
+    "review/ledger_block_e345b9d6_0298b.md",
+    "review/ledger_block_e345b9d6_0298c.md",
+    "review/ledger_insert_delivery_e345b9d6.py",
+    "review/make_post_0298.py",
+    "review/ord0269_0273_gate_round.py",
+    "review/ord0278_0253_kill_arms.py",
+    "review/ord0298_gate_batch.py",
+    "review/rewire_0269_cell1_for_0278.py",
+    "review/wire_0278_i18n.py"
+   ]
+  },
+  "claim_holds": true
+ },
+ "q43_r4_available": {
+  "blob": "4262ecfdef077269b935e038554660377f38f955",
+  "fetched": true,
+  "bytes": 10718,
+  "recomputed_sha1_matches": true,
+  "saved_to": "q43_ruler_r4_from_commander.py"
+ },
+ "consequence": "两条都成立 ⇒ 按 Q24 读数携载，不必重跑 11 格与 M11；本文件把号令者的声明与我自己的复现并排放进去，谁的量都能单独回读",
+ "discipline": {
+  "refs_pushed": 0,
+  "authoritative_line_written": 0,
+  "code_changed": 0
+ }
+}
