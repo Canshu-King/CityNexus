@@ -1,0 +1,50 @@
+{
+ "ran_at_local": "2026-09-25T20:48:12+0800",
+ "branch_tip_before": "884ea02545a2a1669064377f4b51a515c94f2596",
+ "branch_tip_after": "884ea02545a2a1669064377f4b51a515c94f2596",
+ "files_under_prefix_before": 67,
+ "files_under_prefix_after": 67,
+ "prefix": "evidence/ord0300-c2-pairing-hjp3",
+ "cases": [
+  "positive: same name, same bytes -> expect SKIP",
+  "mutation: same name, one extra byte -> expect REFUSAL",
+  "negative: unseen name -> expect FRESH"
+ ],
+ "got": {
+  "fresh": [
+   "RECEIPT_O0300C2-1955_r4.json",
+   "selftest_only_brand_new_name.json"
+  ],
+  "skipped": [
+   "RECEIPT_O0300C2-1955.json"
+  ],
+  "refused": [
+   "RECEIPT_O0300C2-1955.json"
+  ],
+  "refusal_reasons": [
+   "CHANGED BYTES UNDER A PUBLISHED NAME"
+  ],
+  "revision_names_offered": [
+   "RECEIPT_O0300C2-1955_r4.json"
+  ],
+  "refusal_names_both_blobs": [
+   {
+    "me": "ee59de6a9ebc962b7157b1c38f2c22d929fa73e4",
+    "branch": "a8305c99cd81bf9c5904b018f1beca8624fe83d8"
+   }
+  ]
+ },
+ "verdict": {
+  "positive_same_name_same_bytes_is_skipped": true,
+  "negative_unseen_name_is_fresh": true,
+  "the_mutated_bytes_are_never_sent_under_the_published_name": true,
+  "mutation_same_name_different_bytes_is_refused": true,
+  "the_refusal_names_only_the_mutated_file": true,
+  "the_refusal_carries_both_blob_ids": true,
+  "nothing_was_pushed_by_this_selftest": true,
+  "ALL_7_HOLD": true
+ },
+ "mutated_file_sha256": "13cdfcc93fc476ef3a23daab43cf2693255ede74621921903238f01eaf204b76",
+ "original_file_sha256": "391bb7d65427eb61aa388724c2634626abd3dbc07c572b8014747d9b84e06796",
+ "what_differs": "one trailing space in a scratch copy; the published file was never opened for writing"
+}
