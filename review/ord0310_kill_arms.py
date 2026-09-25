@@ -121,6 +121,14 @@ def run_gate(label: str, port: int) -> dict:
                           cwd=ROOT, capture_output=True, text=True, encoding="utf-8", errors="replace",
                           env={**os.environ, "CNX_LANE_ROOT": str(ROOT)})
     text = proc.stdout + proc.stderr
+    # `run_spec.py` lets Playwright write to the inherited console, so the report lines are NOT in
+    # this process's captured pipes; the wrapper tells us the log file it wrote. Parsing that file is
+    # the only way to attribute a red to a named node (an empty node map used to read as "SURVIVED").
+    log_path = re.search(r"log=(\S+)", text)
+    if log_path:
+        candidate = Path(log_path.group(1))
+        if candidate.is_file():
+            text = candidate.read_text(encoding="utf-8", errors="replace") + text
     nodes: dict[str, str] = {}
     for m in NODE_RE.finditer(text):
         mark, title = m.group(1), m.group(2).strip()
@@ -237,6 +245,7 @@ def main() -> int:
         "probes": sum(1 for r in results if r["kind"] != "kill"),
         "all_arms_restored_to_tested_tree_bytes": all(r["restored_to_tested_tree_bytes"] for r in results),
         "tree_unchanged_by_this_run": all(sha256(f) == before[f.name] for f in files),
+        "every_arm_parsed_at_least_one_node": all(r["attempt"]["nodes"] for r in results),
         "all_arms_carry_a_green_same_key_precondition": all(r["same_key_precondition_holds"] for r in results),
         "arms": results,
         "discipline": {"refs_pushed": 0, "authority_line_moved": 0, "demo_reset": 0,

@@ -52,10 +52,14 @@ async function openSheet(page: Page, arm: ArmId) {
   return { journeyId };
 }
 
-/** Read the result card the way a traveller sees it: rendered text first, attributes second. */
+/** Read the result card the way a traveller sees it: rendered text first, attributes second.
+ *  The card is read TWICE on purpose: the first pass is what shows before opening anything, and the
+ *  second is after 技术详情 is expanded. A forbidden sentence that only appears inside the detail block
+ *  is still a forbidden sentence -- reading the collapsed card alone is how this gate almost passed
+ *  an arm that wrote 「这一笔没有发生…再试一次」 into the device note. */
 async function readCard(page: Page, arm: ArmId) {
   const result = page.getByTestId("plan-ai-result");
-  const cardText = clean(await result.innerText());
+  const collapsedText = clean(await result.innerText());
   const status = (await result.getAttribute("data-result-status")) ?? "";
   const details = page.getByTestId("plan-ai-detail-toggle");
   const blockAttached = (await details.count()) > 0;
@@ -68,7 +72,9 @@ async function readCard(page: Page, arm: ArmId) {
     origin = (await page.getByTestId("plan-ai-detail-kind").getAttribute("data-reason-origin")) ?? "";
     reason = clean(await page.getByTestId("plan-ai-reason").innerText());
   }
-  return { status, card_text: cardText, detail_block_attached: blockAttached, label, origin, reason };
+  const expandedText = clean(await result.innerText());
+  return { status, collapsed_text: collapsedText, card_text: expandedText,
+    detail_block_attached: blockAttached, label, origin, reason };
 }
 
 async function decide(arm: ArmId, read: Awaited<ReturnType<typeof readCard>>, extra: Record<string, unknown>) {
@@ -82,7 +88,8 @@ async function decide(arm: ArmId, read: Awaited<ReturnType<typeof readCard>>, ex
     add("句子里有「结果未知」", read.card_text.includes("结果未知"), read.card_text.slice(0, 80));
     add("句子里明说这不是「没发生」（未知 ≠ 没发生）",
       read.card_text.includes("不是没发生"), read.card_text.slice(0, 80));
-    add("句子里说明这一笔不能靠同一把键补问", read.card_text.includes("同一把键"), read.card_text.slice(0, 120));
+    add("句子里明说这一笔不能靠同一把键补问（整句，不是提到键就算）",
+      read.card_text.includes("不能靠同一把键补问"), read.card_text.slice(0, 160));
     add("屏幕上那个秒数 == 常数换算（同一个来源）",
       secondsShown === String(KEYLESS_WRITE_DEADLINE_SECONDS), { secondsShown, constant: KEYLESS_WRITE_DEADLINE_SECONDS });
     add("实际等待时长与同一个常数一致（既没提前也没有不触发）",
