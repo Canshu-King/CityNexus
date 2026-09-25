@@ -1,0 +1,184 @@
+{
+ "ran_at_local": "2026-09-25T19:18:11+0800",
+ "live_preview_index": {
+  "path": "D:\\moodle\\_qoder_preview_20260920\\dist\\index.html",
+  "sha256_full_64_hex": "4d634a4a78a3ba53d197aadf7fd56b16aab634fe7b1cc05e74a32aead79146da",
+  "mtime_local": "2026-09-25T17:45:37+0800",
+  "asset_referenced": [
+   "index-BTzTyrqI.js"
+  ],
+  "touched_by_this_batch": "no - this batch served its own vite preview faces from its own outDirs"
+ },
+ "other_batches_private_build_read_not_written": {
+  "path": "D:\\moodle\\_hjp3_0300_0925\\dist_0300\\assets\\index-BN1w-xlK.js",
+  "sha256_now": "57c2a927f9e65ca0b33acdc737cbf941fc395c214aa213d861a4f7e5c664338e",
+  "sha256_recorded_by_that_batch": "57c2a927f9e65ca0b33acdc737cbf941fc395c214aa213d861a4f7e5c664338e",
+  "unchanged_by_this_batch": true,
+  "how_used": "copied INTO my own dist_t90 and verified; the source file was never opened for writing"
+ },
+ "user_chain_listeners_untouched": [
+  {
+   "port": "4781",
+   "pid": "12076",
+   "created": "2026-09-24T16:25:57.2342990+08:00",
+   "in_my_named_port_list": false
+  },
+  {
+   "port": "4782",
+   "pid": "34324",
+   "created": "2026-09-24T16:35:33.5425690+08:00",
+   "in_my_named_port_list": false
+  }
+ ],
+ "my_named_ports": {
+  "8641": "backend",
+  "8642": "pairing proxy",
+  "8643": "face old",
+  "8644": "face new",
+  "8645": "face mut",
+  "8646": "face t90",
+  "8647": "spare, never used"
+ },
+ "negative_scan": {
+  "_live.db": {
+   "lines_that_actually_use_it": 0,
+   "uses": [],
+   "lines_that_only_name_it_in_a_denial_or_comment": 0,
+   "named": [],
+   "lines_excluded_as_the_scanner_reading_itself": 2
+  },
+  "_preview.db": {
+   "lines_that_actually_use_it": 0,
+   "uses": [],
+   "lines_that_only_name_it_in_a_denial_or_comment": 0,
+   "named": [],
+   "lines_excluded_as_the_scanner_reading_itself": 2
+  },
+  "demo/reset": {
+   "lines_that_actually_use_it": 0,
+   "uses": [],
+   "lines_that_only_name_it_in_a_denial_or_comment": 1,
+   "named": [
+    {
+     "file": "c2_rig.py",
+     "line": "phone chain (:4781/:4782) and the shared databases never entered, `demo/reset` never called, `DEEPSEEK_API_KEY`"
+    }
+   ],
+   "lines_excluded_as_the_scanner_reading_itself": 2
+  },
+  "git apply": {
+   "lines_that_actually_use_it": 0,
+   "uses": [],
+   "lines_that_only_name_it_in_a_denial_or_comment": 1,
+   "named": [
+    {
+     "file": "c2_setup.py",
+     "line": "Three trees, all read-only pulls by `git archive` (never `git apply`, never the working tree):"
+    }
+   ],
+   "lines_excluded_as_the_scanner_reading_itself": 2
+  },
+  "citynexus.db": {
+   "lines_that_actually_use_it": 0,
+   "uses": [],
+   "lines_that_only_name_it_in_a_denial_or_comment": 0,
+   "named": [],
+   "lines_excluded_as_the_scanner_reading_itself": 2
+  },
+  ":4781": {
+   "lines_that_actually_use_it": 0,
+   "uses": [],
+   "lines_that_only_name_it_in_a_denial_or_comment": 1,
+   "named": [
+    {
+     "file": "c2_rig.py",
+     "line": "phone chain (:4781/:4782) and the shared databases never entered, `demo/reset` never called, `DEEPSEEK_API_KEY`"
+    }
+   ],
+   "lines_excluded_as_the_scanner_reading_itself": 1
+  },
+  ":4782": {
+   "lines_that_actually_use_it": 0,
+   "uses": [],
+   "lines_that_only_name_it_in_a_denial_or_comment": 1,
+   "named": [
+    {
+     "file": "c2_rig.py",
+     "line": "phone chain (:4781/:4782) and the shared databases never entered, `demo/reset` never called, `DEEPSEEK_API_KEY`"
+    }
+   ],
+   "lines_excluded_as_the_scanner_reading_itself": 1
+  }
+ },
+ "coverage": "NOT EXHAUSTIVE: 11 instrument files of THIS batch scanned by literal string: ['seed_helper.py', 'c2_add_data.py', 'c2_add_t90.py', 'c2_bounds.py', 'c2_receipt.py', 'c2_rig.py', 'c2_runarm.py', 'c2_score.py', 'c2_setup.py', 'c2proxy.py', 'c2proxy.py']",
+ "credential_handling": {
+  "DEEPSEEK_API_KEY_popped": true,
+  "AI_disabled": true,
+  "sk_shaped_strings_in_my_files": []
+ },
+ "junction_used_by_this_batch": {
+  "what": "node_modules junction created INSIDE my own export so vite can resolve its own modules",
+  "target": "D:/moodle/CityNexus/frontend/node_modules (read through the junction only)",
+  "never": "no junction was created inside another batch folder after the first failure, and nothing followed one; the earlier mistake is disclosed in the receipt limits cell"
+ },
+ "databases": {
+  "one_time_files": [
+   "o0300c2_new.s3db",
+   "o0300c2_old.s3db",
+   "o0300c2_t90.s3db"
+  ],
+  "created_by": "each deleted before start and rebuilt by the product's own ensure_schema()",
+  "shared_databases_opened": 0
+ },
+ "teardown_files_written": [
+  "teardown_183047.json",
+  "teardown_183512.json",
+  "teardown_183623.json",
+  "teardown_183650.json",
+  "teardown_183743.json",
+  "teardown_183911.json",
+  "teardown_184111.json",
+  "teardown_184205.json",
+  "teardown_184300.json",
+  "teardown_184317.json",
+  "teardown_184336.json",
+  "teardown_184551.json",
+  "teardown_184607.json",
+  "teardown_184626.json",
+  "teardown_184643.json",
+  "teardown_184736.json",
+  "teardown_184829.json",
+  "teardown_185715.json",
+  "teardown_185812.json",
+  "teardown_190131.json",
+  "teardown_190228.json",
+  "teardown_190359.json",
+  "teardown_190819.json",
+  "teardown_190951.json",
+  "teardown_191231.json",
+  "teardown_191241.json"
+ ],
+ "last_teardown": {
+  "listening_after": {
+   "backend": [],
+   "proxy": [],
+   "face_old": [],
+   "face_new": [],
+   "face_mut": [],
+   "face_t90": [],
+   "spare": []
+  },
+  "all_my_ports_free": true,
+  "any_listener_left_alone_because_it_could_not_be_attributed": []
+ },
+ "ports_free_right_now": {
+  "8641": [],
+  "8642": [],
+  "8643": [],
+  "8644": [],
+  "8645": [],
+  "8646": [],
+  "8647": []
+ },
+ "all_my_ports_free_now": true
+}
