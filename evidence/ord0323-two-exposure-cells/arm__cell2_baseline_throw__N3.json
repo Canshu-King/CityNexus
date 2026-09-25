@@ -1,0 +1,13 @@
+{
+ "run_id": "0323c2b0317",
+ "arm": "N3",
+ "fold_summary": "技术详情",
+ "fold_text": "技术详情confirm_forbidden_token_c258 the commitment was rejected",
+ "fold_code_visible": "confirm_forbidden_token_c258 the commitment was rejected",
+ "status_line": "服务器没有把这条判为通过，它现在说：需审核。",
+ "leaked_needles_still_on_screen": [
+  "confirm_forbidden_token_c258 the commitment was rejected"
+ ],
+ "test_status": "failed",
+ "error_head": "Error: e2e/qoder-ord0323-two-exposure-cells.spec.ts :: N3 — the confirmation fold no longer states what this device measured about the attempt (技术详情confirm_forbidden_token_c258 the commitment was rejected) \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m Expected: \u001b[32mtrue\u001b[39m Received: \u001b[31mfalse\u001b[39m"
+}
