@@ -1,0 +1,130 @@
+{
+ "ran_at": "2026-09-25T08:24:17+08:00",
+ "mode": "DRY-RUN",
+ "authoritative_tip_read": "45b0a5e281cae9c37715173afd3ac5778f309ca7",
+ "tip_moved": false,
+ "generation_note": "尖还没动 ⇒ [2][3] 读的就是我这一代的父那一棵：它只证明工具与判据可用，不能当成对未来的预测；真正那一次要等 0274 落地后重跑（Q24/Q25 不跨代折算）。",
+ "main_py_entry_at_new_tip": {
+  "path": "backend/app/main.py",
+  "blob": "416ea4f210e967130710a900cdecd20e7a1b5eca",
+  "bytes": 482850
+ },
+ "main_py_unchanged_vs_my_generation": true,
+ "guard_expression_hit_lines": [
+  4774
+ ],
+ "guard_unique": true,
+ "carrier_source_bytes": 11252,
+ "carrier_imports_read_from_its_own_file": [
+  "__future__:annotations",
+  "datetime:datetime",
+  "datetime:timedelta",
+  "datetime:timezone",
+  "pathlib:Path",
+  "fastapi.testclient:TestClient",
+  "sqlalchemy:func",
+  "sqlalchemy:select",
+  "app.commerce.idempotency:canonical_request_signature",
+  "app.core.config:settings",
+  "app.db.models:Journey",
+  "app.db.models:Place",
+  "app.db.session:SessionLocal",
+  "app.db.session:ensure_schema",
+  "app.main:_execute_plan_generation_claimed",
+  "app.main:app",
+  "app.schemas:GeneratePlansRequest",
+  "app.services:seed_demo"
+ ],
+ "carrier_imports_resolved_in_their_own_module": {
+  "app.commerce.idempotency:canonical_request_signature": {
+   "file": "backend/app/commerce/idempotency.py",
+   "module_blob": "fccd2bfd6bbf78cf54be9307fd0d26292f6ce88a",
+   "status": "def_at_line_12",
+   "line": 12,
+   "text": "def canonical_request_signature(payload: dict[str, Any]) -> str:"
+  },
+  "app.core.config:settings": {
+   "file": "backend/app/core/config.py",
+   "module_blob": "70737f312caa25b2e5f0b6922509dc468ec95cb3",
+   "status": "binding_at_line_95",
+   "line": 95,
+   "text": "settings = Settings()"
+  },
+  "app.db.models:Journey": {
+   "file": "backend/app/db/models.py",
+   "module_blob": "dc18710d2ece66104406cd8f1b927dbc7a86a019",
+   "status": "class_at_line_174",
+   "line": 174,
+   "text": "class Journey(Base):"
+  },
+  "app.db.models:Place": {
+   "file": "backend/app/db/models.py",
+   "module_blob": "dc18710d2ece66104406cd8f1b927dbc7a86a019",
+   "status": "class_at_line_457",
+   "line": 457,
+   "text": "class Place(Base):"
+  },
+  "app.db.session:SessionLocal": {
+   "file": "backend/app/db/session.py",
+   "module_blob": "ca8330cdf4138b55a1c104aa1926217821a2093a",
+   "status": "binding_at_line_76",
+   "line": 76,
+   "text": "SessionLocal = sessionmaker(bind=engine, class_=Session, expire_on_commit=False)"
+  },
+  "app.db.session:ensure_schema": {
+   "file": "backend/app/db/session.py",
+   "module_blob": "ca8330cdf4138b55a1c104aa1926217821a2093a",
+   "status": "def_at_line_412",
+   "line": 412,
+   "text": "def ensure_schema(target_engine: Engine = engine) -> None:"
+  },
+  "app.main:_execute_plan_generation_claimed": {
+   "file": "backend/app/main.py",
+   "module_blob": "416ea4f210e967130710a900cdecd20e7a1b5eca",
+   "status": "def_at_line_4736",
+   "line": 4736,
+   "text": "def _execute_plan_generation_claimed(journey: Journey, request: GeneratePlansRequest,"
+  },
+  "app.main:app": {
+   "file": "backend/app/main.py",
+   "module_blob": "416ea4f210e967130710a900cdecd20e7a1b5eca",
+   "status": "binding_at_line_432",
+   "line": 432,
+   "text": "app = FastAPI(title=\"CityNexus MVP API\", version=\"0.1.0\")"
+  },
+  "app.schemas:GeneratePlansRequest": {
+   "file": "backend/app/schemas.py",
+   "module_blob": "2e6e26ce17a9e25a40dd8d686f64def5ef1bff0e",
+   "status": "class_at_line_457",
+   "line": 457,
+   "text": "class GeneratePlansRequest(BaseModel):"
+  },
+  "app.services:seed_demo": {
+   "file": "backend/app/services.py",
+   "module_blob": "b2ebcc1052869132884987b63b0201a242204d64",
+   "status": "def_at_line_212",
+   "line": 212,
+   "text": "def seed_demo(session: Session) -> dict[str, str]:"
+  }
+ },
+ "imports_all_present": true,
+ "unresolved": [],
+ "first_probe_self_correction": "两枚我自己造出来的假缺失，都记在这里：① 第一版手写符号表只匹配 `def NAME`/`NAME(`，把 ORM 模型 `class Mission(Base)` 判成缺失；② 第二版把所有 `app.*` 的名字都拿到 main.py 里找，于是 `app.models` 的 `Journey`/`Place` 与 `app.schemas` 的 `GeneratePlansRequest` 又被判缺失。现在按「名字在它自己那个模块的源里解析」，并给出命中行与原句。这类错误正是我今晚在别人收据里点名的东西，我自己犯得更早。",
+ "carrier_blob_at_frozen_tip": "894c6d54e345dabdc4050a38f413fdaaa1a92748",
+ "carrier_blob_matches_r1": true,
+ "planned_new_ref": "review/ord0287-k8-carrier-on-45b0a5e28",
+ "planned_new_ref_already_exists": false,
+ "planned_new_ref_probe_http_status": 404,
+ "planned_commit_shape": {
+  "parent": "45b0a5e281cae9c37715173afd3ac5778f309ca7",
+  "files": [
+   "backend/tests/test_qoder_ord0287_k8_carrier.py"
+  ],
+  "mode": "plumbing-only（read-tree/update-index/write-tree/commit-tree）",
+  "dates_pinned": true,
+  "pinned_via": "GIT_AUTHOR_DATE / GIT_COMMITTER_DATE 固定 ⇒ 重跑铸出同一枚 sha，不再产生兄弟提交",
+  "expected_test_only_diff": true
+ },
+ "ready": true,
+ "if_not_ready": "—"
+}
