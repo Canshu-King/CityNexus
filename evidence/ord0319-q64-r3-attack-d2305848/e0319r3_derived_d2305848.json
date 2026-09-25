@@ -1,0 +1,48 @@
+{
+ "schema": "CNX_LANE_E_ORD0319_R3_DERIVED_V1",
+ "order": "ORD-0319 round 3 (r3 reverse attack)",
+ "verifier": "lane E d2305848",
+ "at": "2026-09-26T03:05:34+0800",
+ "ruler_under_attack": {
+  "path": "evidence/cmdr-ui-exposure-r3-0200/ui_exposure_field_check_r3.py",
+  "git_blob": "44e062e6ce9c7b5d97d78e09e432072da102292c",
+  "file_bytes_sha1_local": "8300737c256446a6c689fa39572d10a18a3dd784",
+  "bytes_unchanged_by_me": true
+ },
+ "cross_surface": [
+  {
+   "surface": "A",
+   "disk_root": "D:\\moodle\\_qoder_redteam_anywhere_20260921\\raw\\ord0319",
+   "python": "C:\\Users\\仓鼠王\\AppData\\Local\\Programs\\Python\\Python313\\python.exe",
+   "rc": 0,
+   "selftest": "SELFTEST_PASS",
+   "ruler_file_sha1": "8300737c256446a6c689fa39572d10a18a3dd784"
+  },
+  {
+   "surface": "B",
+   "disk_root": "D:\\moodle\\_qoder_redteam_anywhere_20260921\\raw\\ord0319\\r3surfaceB_030534",
+   "python": "D:\\moodle\\CityNexus\\.venv\\Scripts\\python.exe",
+   "rc": 0,
+   "selftest": "SELFTEST_PASS",
+   "ruler_file_sha1": "8300737c256446a6c689fa39572d10a18a3dd784"
+  }
+ ],
+ "derived": {
+  "blind_shapes": {
+   "e0319r3_E1_bracket_read.tsx": {
+    "verdict": "MISSED_BY_RULER",
+    "why": "helper reads `body[\"detail\"]` via bracket/string index - no `.detail` and no `?.` in the source, so RETURN_FORBIDDEN ([?.] forbidden) and LOCAL_FROM_FORBIDDEN both miss it; helper unpoisoned; upstream text rendered at <code>{r.failureReason.text}</code>"
+   },
+   "e0319r3_E2_forwarding_helper.tsx": {
+    "verdict": "MISSED_BY_RULER",
+    "why": "wrap() returns serverReasonSentence(b) - a CALL, not a forbidden read, so wrap is unpoisoned; taint tracks only bindings whose expression names the POISONED helper; `const s = wrap(body)` binds wrap's name, then `{s}` renders the poisoned sentence"
+   },
+   "e0319r3_E3_control_attribute_only.tsx": {
+    "verdict": "CLEAN_AS_REQUIRED",
+    "why": "same poisoned chain but only data-reason-origin attribute and a status code reach the screen - must stay clean or the gate cries wolf"
+   }
+  },
+  "cross_surface_selftest_pass_both": true,
+  "scope_note": "both blind shapes render real upstream words on screen; neither is currently present on the live tip 30de4ebe409f49c5e25f4758cb2e5f4e90764a4f (its helper reads via optional chaining, which r3 catches) - grammar boundary report, not a live defect claim"
+ }
+}
