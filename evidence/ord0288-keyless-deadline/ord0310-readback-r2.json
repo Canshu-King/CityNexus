@@ -1,0 +1,263 @@
+{
+ "order": "ORD-0310",
+ "lane": "D e345b9d6",
+ "directory": "evidence/ord0288-keyless-deadline",
+ "ref": "commander/control",
+ "directory_get": {
+  "status": 200,
+  "entries_on_server": 20,
+  "names_on_server": [
+   "ord0310-arms-receipt-r3.json",
+   "ord0310-backend-readings.json",
+   "ord0310-gate-evidence-run335277.json",
+   "ord0310-gate-evidence-run335765.json",
+   "ord0310-ledger-block.md",
+   "ord0310-mergetree-tip-x-candidate.out",
+   "ord0310-path-disjointness.tsv",
+   "ord0310-post-body.md",
+   "ord0310-q38r2-on-receipt.json",
+   "ord0310-q43r3-on-block.json",
+   "ord0310-q43r3-on-post.json",
+   "ord0310-q43r4b-on-block.json",
+   "ord0310-q43r4b-on-post.json",
+   "ord0310-readback-r1.json",
+   "ord0310-tip-read.out",
+   "ord0310-tool-gauge-landed-block.py",
+   "ord0310-tool-kill-arms.py",
+   "ord0310-tool-make-block.py",
+   "ord0310-tool-make-receipt.py",
+   "ord0310_keyless_deadline_receipt_r1.json"
+  ]
+ },
+ "names_local": [
+  "ord0310-arms-receipt-r3.json",
+  "ord0310-backend-readings.json",
+  "ord0310-gate-evidence-run335277.json",
+  "ord0310-gate-evidence-run335765.json",
+  "ord0310-ledger-block.md",
+  "ord0310-mergetree-tip-x-candidate.out",
+  "ord0310-path-disjointness.tsv",
+  "ord0310-post-body.md",
+  "ord0310-q38r2-on-receipt.json",
+  "ord0310-q43r3-on-block.json",
+  "ord0310-q43r3-on-post.json",
+  "ord0310-q43r4b-on-block.json",
+  "ord0310-q43r4b-on-post.json",
+  "ord0310-readback-r1.json",
+  "ord0310-tip-read.out",
+  "ord0310-tool-gauge-landed-block.py",
+  "ord0310-tool-kill-arms.py",
+  "ord0310-tool-make-block.py",
+  "ord0310-tool-make-receipt.py",
+  "ord0310_keyless_deadline_receipt_r1.json"
+ ],
+ "only_on_server": [],
+ "only_local": [],
+ "requestedAndChecked": 20,
+ "byteLevelMatches": 20,
+ "notMatching": [],
+ "rows": {
+  "ord0310-arms-receipt-r3.json": {
+   "remote_bytes": 21496,
+   "remote_blob": "a748c41a93342f767b8b47da642e98a94d798e87",
+   "remote_blob_recomputed_from_decoded_bytes": "a748c41a93342f767b8b47da642e98a94d798e87",
+   "local_bytes": 21496,
+   "local_blob": "a748c41a93342f767b8b47da642e98a94d798e87",
+   "byte_level_equal_to_local": true,
+   "verdict": "BYTE_LEVEL_MATCH",
+   "one_independent_get": "GET https://api.github.com/repos/Canshu-King/CityNexus/contents/evidence/ord0288-keyless-deadline/ord0310-arms-receipt-r3.json?ref=commander/control -> HTTP 200"
+  },
+  "ord0310-backend-readings.json": {
+   "remote_bytes": 1796,
+   "remote_blob": "710f3c8d22379026c6910c74e180fca8c207b04a",
+   "remote_blob_recomputed_from_decoded_bytes": "710f3c8d22379026c6910c74e180fca8c207b04a",
+   "local_bytes": 1796,
+   "local_blob": "710f3c8d22379026c6910c74e180fca8c207b04a",
+   "byte_level_equal_to_local": true,
+   "verdict": "BYTE_LEVEL_MATCH",
+   "one_independent_get": "GET https://api.github.com/repos/Canshu-King/CityNexus/contents/evidence/ord0288-keyless-deadline/ord0310-backend-readings.json?ref=commander/control -> HTTP 200"
+  },
+  "ord0310-gate-evidence-run335277.json": {
+   "remote_bytes": 6242,
+   "remote_blob": "048851d1f25d32523b396fa970338a846aca8903",
+   "remote_blob_recomputed_from_decoded_bytes": "048851d1f25d32523b396fa970338a846aca8903",
+   "local_bytes": 6242,
+   "local_blob": "048851d1f25d32523b396fa970338a846aca8903",
+   "byte_level_equal_to_local": true,
+   "verdict": "BYTE_LEVEL_MATCH",
+   "one_independent_get": "GET https://api.github.com/repos/Canshu-King/CityNexus/contents/evidence/ord0288-keyless-deadline/ord0310-gate-evidence-run335277.json?ref=commander/control -> HTTP 200"
+  },
+  "ord0310-gate-evidence-run335765.json": {
+   "remote_bytes": 6234,
+   "remote_blob": "30aaac9604843c191b2ff47ef23915e306681335",
+   "remote_blob_recomputed_from_decoded_bytes": "30aaac9604843c191b2ff47ef23915e306681335",
+   "local_bytes": 6234,
+   "local_blob": "30aaac9604843c191b2ff47ef23915e306681335",
+   "byte_level_equal_to_local": true,
+   "verdict": "BYTE_LEVEL_MATCH",
+   "one_independent_get": "GET https://api.github.com/repos/Canshu-King/CityNexus/contents/evidence/ord0288-keyless-deadline/ord0310-gate-evidence-run335765.json?ref=commander/control -> HTTP 200"
+  },
+  "ord0310-ledger-block.md": {
+   "remote_bytes": 12209,
+   "remote_blob": "126eb4e97df9bfd0417511ce3672d943b119af78",
+   "remote_blob_recomputed_from_decoded_bytes": "126eb4e97df9bfd0417511ce3672d943b119af78",
+   "local_bytes": 12209,
+   "local_blob": "126eb4e97df9bfd0417511ce3672d943b119af78",
+   "byte_level_equal_to_local": true,
+   "verdict": "BYTE_LEVEL_MATCH",
+   "one_independent_get": "GET https://api.github.com/repos/Canshu-King/CityNexus/contents/evidence/ord0288-keyless-deadline/ord0310-ledger-block.md?ref=commander/control -> HTTP 200"
+  },
+  "ord0310-mergetree-tip-x-candidate.out": {
+   "remote_bytes": 485,
+   "remote_blob": "2b0bd9815d2fcd2b56ee47987fd5deda3469fe33",
+   "remote_blob_recomputed_from_decoded_bytes": "2b0bd9815d2fcd2b56ee47987fd5deda3469fe33",
+   "local_bytes": 485,
+   "local_blob": "2b0bd9815d2fcd2b56ee47987fd5deda3469fe33",
+   "byte_level_equal_to_local": true,
+   "verdict": "BYTE_LEVEL_MATCH",
+   "one_independent_get": "GET https://api.github.com/repos/Canshu-King/CityNexus/contents/evidence/ord0288-keyless-deadline/ord0310-mergetree-tip-x-candidate.out?ref=commander/control -> HTTP 200"
+  },
+  "ord0310-path-disjointness.tsv": {
+   "remote_bytes": 995,
+   "remote_blob": "059a68d41a3fc96cd34dc67ec4472f379d39a859",
+   "remote_blob_recomputed_from_decoded_bytes": "059a68d41a3fc96cd34dc67ec4472f379d39a859",
+   "local_bytes": 995,
+   "local_blob": "059a68d41a3fc96cd34dc67ec4472f379d39a859",
+   "byte_level_equal_to_local": true,
+   "verdict": "BYTE_LEVEL_MATCH",
+   "one_independent_get": "GET https://api.github.com/repos/Canshu-King/CityNexus/contents/evidence/ord0288-keyless-deadline/ord0310-path-disjointness.tsv?ref=commander/control -> HTTP 200"
+  },
+  "ord0310-post-body.md": {
+   "remote_bytes": 11142,
+   "remote_blob": "54f5ed1e04ecd995bd820ebb064e1026f41a9921",
+   "remote_blob_recomputed_from_decoded_bytes": "54f5ed1e04ecd995bd820ebb064e1026f41a9921",
+   "local_bytes": 11142,
+   "local_blob": "54f5ed1e04ecd995bd820ebb064e1026f41a9921",
+   "byte_level_equal_to_local": true,
+   "verdict": "BYTE_LEVEL_MATCH",
+   "one_independent_get": "GET https://api.github.com/repos/Canshu-King/CityNexus/contents/evidence/ord0288-keyless-deadline/ord0310-post-body.md?ref=commander/control -> HTTP 200"
+  },
+  "ord0310-q38r2-on-receipt.json": {
+   "remote_bytes": 7997,
+   "remote_blob": "148d5bc9c589c85e7582e20318e7b1de876d44df",
+   "remote_blob_recomputed_from_decoded_bytes": "148d5bc9c589c85e7582e20318e7b1de876d44df",
+   "local_bytes": 7997,
+   "local_blob": "148d5bc9c589c85e7582e20318e7b1de876d44df",
+   "byte_level_equal_to_local": true,
+   "verdict": "BYTE_LEVEL_MATCH",
+   "one_independent_get": "GET https://api.github.com/repos/Canshu-King/CityNexus/contents/evidence/ord0288-keyless-deadline/ord0310-q38r2-on-receipt.json?ref=commander/control -> HTTP 200"
+  },
+  "ord0310-q43r3-on-block.json": {
+   "remote_bytes": 585,
+   "remote_blob": "0aa255e4fac3e3900c9785d2d034c93ab4c2199e",
+   "remote_blob_recomputed_from_decoded_bytes": "0aa255e4fac3e3900c9785d2d034c93ab4c2199e",
+   "local_bytes": 585,
+   "local_blob": "0aa255e4fac3e3900c9785d2d034c93ab4c2199e",
+   "byte_level_equal_to_local": true,
+   "verdict": "BYTE_LEVEL_MATCH",
+   "one_independent_get": "GET https://api.github.com/repos/Canshu-King/CityNexus/contents/evidence/ord0288-keyless-deadline/ord0310-q43r3-on-block.json?ref=commander/control -> HTTP 200"
+  },
+  "ord0310-q43r3-on-post.json": {
+   "remote_bytes": 582,
+   "remote_blob": "b66c7982eb3c53865f2112900ba9d3cc2b6115a3",
+   "remote_blob_recomputed_from_decoded_bytes": "b66c7982eb3c53865f2112900ba9d3cc2b6115a3",
+   "local_bytes": 582,
+   "local_blob": "b66c7982eb3c53865f2112900ba9d3cc2b6115a3",
+   "byte_level_equal_to_local": true,
+   "verdict": "BYTE_LEVEL_MATCH",
+   "one_independent_get": "GET https://api.github.com/repos/Canshu-King/CityNexus/contents/evidence/ord0288-keyless-deadline/ord0310-q43r3-on-post.json?ref=commander/control -> HTTP 200"
+  },
+  "ord0310-q43r4b-on-block.json": {
+   "remote_bytes": 573,
+   "remote_blob": "cd3c175b0c93b3c472b344e1b180574875e9d4e9",
+   "remote_blob_recomputed_from_decoded_bytes": "cd3c175b0c93b3c472b344e1b180574875e9d4e9",
+   "local_bytes": 573,
+   "local_blob": "cd3c175b0c93b3c472b344e1b180574875e9d4e9",
+   "byte_level_equal_to_local": true,
+   "verdict": "BYTE_LEVEL_MATCH",
+   "one_independent_get": "GET https://api.github.com/repos/Canshu-King/CityNexus/contents/evidence/ord0288-keyless-deadline/ord0310-q43r4b-on-block.json?ref=commander/control -> HTTP 200"
+  },
+  "ord0310-q43r4b-on-post.json": {
+   "remote_bytes": 556,
+   "remote_blob": "77578ed5ccb3527d1e4e1095463a107d6e5232f2",
+   "remote_blob_recomputed_from_decoded_bytes": "77578ed5ccb3527d1e4e1095463a107d6e5232f2",
+   "local_bytes": 556,
+   "local_blob": "77578ed5ccb3527d1e4e1095463a107d6e5232f2",
+   "byte_level_equal_to_local": true,
+   "verdict": "BYTE_LEVEL_MATCH",
+   "one_independent_get": "GET https://api.github.com/repos/Canshu-King/CityNexus/contents/evidence/ord0288-keyless-deadline/ord0310-q43r4b-on-post.json?ref=commander/control -> HTTP 200"
+  },
+  "ord0310-readback-r1.json": {
+   "remote_bytes": 10978,
+   "remote_blob": "f7257d8ae538709ee42f2efa5718bf2e747fa16d",
+   "remote_blob_recomputed_from_decoded_bytes": "f7257d8ae538709ee42f2efa5718bf2e747fa16d",
+   "local_bytes": 10978,
+   "local_blob": "f7257d8ae538709ee42f2efa5718bf2e747fa16d",
+   "byte_level_equal_to_local": true,
+   "verdict": "BYTE_LEVEL_MATCH",
+   "one_independent_get": "GET https://api.github.com/repos/Canshu-King/CityNexus/contents/evidence/ord0288-keyless-deadline/ord0310-readback-r1.json?ref=commander/control -> HTTP 200"
+  },
+  "ord0310-tip-read.out": {
+   "remote_bytes": 1593,
+   "remote_blob": "dd1445df4b5524404dd07b46767d5282b91d9f86",
+   "remote_blob_recomputed_from_decoded_bytes": "dd1445df4b5524404dd07b46767d5282b91d9f86",
+   "local_bytes": 1593,
+   "local_blob": "dd1445df4b5524404dd07b46767d5282b91d9f86",
+   "byte_level_equal_to_local": true,
+   "verdict": "BYTE_LEVEL_MATCH",
+   "one_independent_get": "GET https://api.github.com/repos/Canshu-King/CityNexus/contents/evidence/ord0288-keyless-deadline/ord0310-tip-read.out?ref=commander/control -> HTTP 200"
+  },
+  "ord0310-tool-gauge-landed-block.py": {
+   "remote_bytes": 2062,
+   "remote_blob": "beaa3693b40ca3101d2280ef02a13cd7b4271ed8",
+   "remote_blob_recomputed_from_decoded_bytes": "beaa3693b40ca3101d2280ef02a13cd7b4271ed8",
+   "local_bytes": 2062,
+   "local_blob": "beaa3693b40ca3101d2280ef02a13cd7b4271ed8",
+   "byte_level_equal_to_local": true,
+   "verdict": "BYTE_LEVEL_MATCH",
+   "one_independent_get": "GET https://api.github.com/repos/Canshu-King/CityNexus/contents/evidence/ord0288-keyless-deadline/ord0310-tool-gauge-landed-block.py?ref=commander/control -> HTTP 200"
+  },
+  "ord0310-tool-kill-arms.py": {
+   "remote_bytes": 14063,
+   "remote_blob": "bf0f0cce780cf934d09338186ab699964f08ca0d",
+   "remote_blob_recomputed_from_decoded_bytes": "bf0f0cce780cf934d09338186ab699964f08ca0d",
+   "local_bytes": 14063,
+   "local_blob": "bf0f0cce780cf934d09338186ab699964f08ca0d",
+   "byte_level_equal_to_local": true,
+   "verdict": "BYTE_LEVEL_MATCH",
+   "one_independent_get": "GET https://api.github.com/repos/Canshu-King/CityNexus/contents/evidence/ord0288-keyless-deadline/ord0310-tool-kill-arms.py?ref=commander/control -> HTTP 200"
+  },
+  "ord0310-tool-make-block.py": {
+   "remote_bytes": 16902,
+   "remote_blob": "e50b191f42089f4d04051ad056301f995ff5e47e",
+   "remote_blob_recomputed_from_decoded_bytes": "e50b191f42089f4d04051ad056301f995ff5e47e",
+   "local_bytes": 16902,
+   "local_blob": "e50b191f42089f4d04051ad056301f995ff5e47e",
+   "byte_level_equal_to_local": true,
+   "verdict": "BYTE_LEVEL_MATCH",
+   "one_independent_get": "GET https://api.github.com/repos/Canshu-King/CityNexus/contents/evidence/ord0288-keyless-deadline/ord0310-tool-make-block.py?ref=commander/control -> HTTP 200"
+  },
+  "ord0310-tool-make-receipt.py": {
+   "remote_bytes": 30603,
+   "remote_blob": "6d235d2f0ec92f5f62b68ff9fb10426c455120ff",
+   "remote_blob_recomputed_from_decoded_bytes": "6d235d2f0ec92f5f62b68ff9fb10426c455120ff",
+   "local_bytes": 30603,
+   "local_blob": "6d235d2f0ec92f5f62b68ff9fb10426c455120ff",
+   "byte_level_equal_to_local": true,
+   "verdict": "BYTE_LEVEL_MATCH",
+   "one_independent_get": "GET https://api.github.com/repos/Canshu-King/CityNexus/contents/evidence/ord0288-keyless-deadline/ord0310-tool-make-receipt.py?ref=commander/control -> HTTP 200"
+  },
+  "ord0310_keyless_deadline_receipt_r1.json": {
+   "remote_bytes": 25055,
+   "remote_blob": "b7029fd3a8c806a3dceb6143133480a587c5c5f0",
+   "remote_blob_recomputed_from_decoded_bytes": "b7029fd3a8c806a3dceb6143133480a587c5c5f0",
+   "local_bytes": 25055,
+   "local_blob": "b7029fd3a8c806a3dceb6143133480a587c5c5f0",
+   "byte_level_equal_to_local": true,
+   "verdict": "BYTE_LEVEL_MATCH",
+   "one_independent_get": "GET https://api.github.com/repos/Canshu-King/CityNexus/contents/evidence/ord0288-keyless-deadline/ord0310_keyless_deadline_receipt_r1.json?ref=commander/control -> HTTP 200"
+  }
+ },
+ "method": "one GET per published path; base64 decoded and compared byte for byte; git blob sha1 recomputed on both the decoded remote bytes and the local file",
+ "self_reference": "this JSON cannot certify itself; it is closed by one further single GET printed in the bus post, and that line is written only if the two blobs agree"
+}
