@@ -1,0 +1,78 @@
+{
+  "generatedBy": "e345b9d6",
+  "file": "e2e/qoder-ord0325-upstream-prose-not-on-screen.spec.ts",
+  "head": "c1bea4c20ea8cd5f1cc5c9d87053c005b2a24400",
+  "sentinels": {
+    "leak": "ORD0325-the-servers-own-sentence-请别把我画上屏",
+    "credential_shaped": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.ORD0325.not-a-real-token"
+  },
+  "readings": {
+    "T-A1": {
+      "page_text": "菜单 / 行程 跟随系统 EN TI 行程 住宿 预订 花费 住宿 选一家住的地方 按与行程的关系排序的 4 家住宿。价格未知时我们如实说明。 Haihe Riverside Hotel 已选择 价格 CNY 180 / 晚 步行 34 分钟 到达/离开衔接 1% / 1% 退改 可取消 推荐理由：与行程冲突最少，步行负担 34 分钟，预留缓冲 121 分钟。 已选择这家 Central Station Courtyard 价格 CNY 210 / 晚 步行 34 分钟 到达/离开衔接 1% / 1% 退改 可取消 推荐理由：与行程冲突最少，步行负担 34 分钟，预留缓冲 123 分钟。 选择这家住宿 Five Avenues House 价格 CNY 260 / 晚 步行 34 分钟 到达/离开衔接 1% / 1% 退改 可取消 推荐理由：与行程冲突最少，步行负担 34 分钟，预留缓冲 117 分钟。 选择这家住宿 North Canal Guesthouse 价格 CNY 155 / 晚 步行 28 分钟 到达/离开衔接 1% / 1% 退改 不可取消 推荐理由：与行程冲突最少，步行负担 28 分钟，预留缓冲 123 分钟。 选择这家住宿 暂时无法选择这家住宿。 这台设备自己量到的回读字段 http_status=422 content-type=application/json bytes=386 ✦ CityNexus Copilot 今天 行程 地图 Copilot 我的",
+      "facts_text": "http_status=422 content-type=application/json bytes=386",
+      "attribution_label": "这台设备自己量到的回读字段",
+      "screen_sentence": "暂时无法选择这家住宿。",
+      "expected_lines": [
+        "http_status=422",
+        "content-type=application/json",
+        "bytes=386"
+      ],
+      "sent_bytes": 386,
+      "reached_by": {
+        "hotel_cards_on_screen": 4,
+        "cards_already_chosen": 1,
+        "note": "舞台上这趟自己就有住宿卡片，补位分支没被走到"
+      }
+    },
+    "T-A2": {
+      "page_text": "菜单 / 行程 跟随系统 EN TI 行程 住宿 预订 花费 住宿 选一家住的地方 按与行程的关系排序的 4 家住宿。价格未知时我们如实说明。 Haihe Riverside Hotel 已选择 价格 CNY 180 / 晚 步行 34 分钟 到达/离开衔接 1% / 1% 退改 可取消 推荐理由：与行程冲突最少，步行负担 34 分钟，预留缓冲 121 分钟。 已选择这家 Central Station Courtyard 价格 CNY 210 / 晚 步行 34 分钟 到达/离开衔接 1% / 1% 退改 可取消 推荐理由：与行程冲突最少，步行负担 34 分钟，预留缓冲 123 分钟。 选择这家住宿 Five Avenues House 价格 CNY 260 / 晚 步行 34 分钟 到达/离开衔接 1% / 1% 退改 可取消 推荐理由：与行程冲突最少，步行负担 34 分钟，预留缓冲 117 分钟。 选择这家住宿 North Canal Guesthouse 价格 CNY 155 / 晚 步行 28 分钟 到达/离开衔接 1% / 1% 退改 不可取消 推荐理由：与行程冲突最少，步行负担 28 分钟，预留缓冲 123 分钟。 选择这家住宿 这家住宿的入住/退房时间和你已确认的行程冲突，无法在不改动行程的情况下采用。换一家试试。 这台设备自己量到的回读字段 http_status=422 content-type=application/json bytes=263 ✦ CityNexus Copilot 今天 行程 地图 Copilot 我的",
+      "facts_text": "http_status=422 content-type=application/json bytes=263",
+      "attribution_label": "这台设备自己量到的回读字段",
+      "screen_sentence": "这家住宿的入住/退房时间和你已确认的行程冲突，无法在不改动行程的情况下采用。换一家试试。",
+      "expected_lines": [
+        "http_status=422",
+        "content-type=application/json",
+        "bytes=263"
+      ],
+      "sent_bytes": 263
+    },
+    "T-A3": {
+      "facts_text": "http_status=404 content-type=application/json bytes=386",
+      "sentence": "Could not choose this stay.",
+      "expected_lines": [
+        "http_status=404",
+        "content-type=application/json",
+        "bytes=386"
+      ]
+    },
+    "T-B1": {
+      "page_text": "菜单 / 今天 跟随系统 EN TI 选择你的方案 我们按这座城可核验的地点和你的预算，生成了 1 个可选方案。 方案 A 花费未知 总花费 暂无价格 活动数 0 采用这个方案 这个方案暂时不能采用。 这台设备自己量到的回读字段 http_status=409 content-type=application/json bytes=386 早上好 天津之旅 10月9日 18:00 — 10月11日 15:00 · 1 位旅行者 · 3 天 AI 帮我规划 试用其他城市 打开行程工作台 现在 Arrival 接下来 18:45 Check in · Haihe Riverside Hotel 今天还有 3 项安排 查看实时行程 “现在”取自服务器场景（执行游标）：10月9日 18:00 · 现在/接下来由服务器的执行投影给出 1 2 3 4 5 6 7 8 9 路线上下文 8 段路程 供应商支持的路线 · WGS84 单指拖动地图 · 双指缩放 · 想翻这一页就拖地图以外的地方 住宿 Haihe Riverside Hotel 到达 10月9日 18:00 出发 10月11日 15:00 一切正常 方案概览 每一天，紧密相连。 对比住宿 → 以下只是其中一个候选方案的预览，你还没有采用它。 第 1 天 星期五 Arrival · Check in · Haihe Riverside Hotel · Overnight · Haihe Riverside Hotel 公交地铁 抵达锚点 第 2 天 星期六 Five Great Avenues · Tianjin Museum · Tianjin Eye · Overnight · Haihe Riverside Hotel 公交地铁 住宿锚点 第 3 天 星期日 Check out · Haihe Riverside Hotel · Departure 驾车 离开锚点 今天 行程 地图 Copilot 我的",
+      "facts_text": "http_status=409 content-type=application/json bytes=386",
+      "attribution_label": "这台设备自己量到的回读字段",
+      "screen_sentence": "这个方案暂时不能采用。",
+      "expected_lines": [
+        "http_status=409",
+        "content-type=application/json",
+        "bytes=386"
+      ],
+      "sent_bytes": 386
+    },
+    "T-C1": {
+      "banner_text": "服务器拒绝了这一步（HTTP 422）。你的行程没有因此改变，可以检查后重试。 这台设备自己量到的回读字段 http_status=422 content-type=application/json bytes=386 知道了",
+      "facts_text": "http_status=422 content-type=application/json bytes=386",
+      "expected_lines": [
+        "http_status=422",
+        "content-type=application/json",
+        "bytes=386"
+      ],
+      "page_text": "CN CityNexus 行程智能 工作区 行程运营 TODAY 今天 实时行程 地图 PLAN 行程工作台 住宿选择 城市探索 TRAVEL 旅行票夹 Copilot SYSTEM 恢复与执行 智能守护 旅行者画像 行程事实已同步 0 个方案 · 5 种模式 TI Tianjin 2 位旅行者 ••• 行程 / 今天 行程事实就绪 跟随系统 EN ◌ TI 服务器拒绝了这一步（HTTP 422）。你的行程没有因此改变，可以检查后重试。 这台设备自己量到的回读字段 http_status=422 content-type=application/json bytes=386 知道了 早上好 天津之旅 住宿搜索失败了，行程本身还在。 再查一次 9月27日 10:00 — 9月29日 20:00 · 2 位旅行者 · 3 天 AI 帮我规划 试用其他城市 打开行程工作台 今天 还没有安排 “现在”取自服务器场景（执行游标。服务器没有给出这一分钟的执行游标，这一屏的时间按行程的时间窗来读）：10月9日 18:00 · 现在/接下来由服务器的执行投影给出 尚未获取地图位置 这个行程还没有可信的坐标。添加活动地点或开启定位后，地图会显示正确的城市。 住宿 还没有选定 到达 9月27日 10:00 出发 9月29日 20:00 这个行程还没有可信的坐标 方案概览 每一天，紧密相连。 对比住宿 → 还没有可以预览的行程 选定方案后，这里会显示每天的安排。 ✦ CityNexus Copilot"
+    },
+    "T-C2": {
+      "refusal_block": "这一步没有成功，行程还没有创建。 服务器拒绝了这一步（HTTP 422）。你的行程没有因此改变，可以检查后重试。",
+      "page_text": "用你自己的城市试用 CITYNEXUS 新建行程 三步完成。选择目的地、告诉我们怎么玩，剩下的交给 CityNexus。 EN ✓ 目的地与时间 ✓ 人数与偏好 3 确认创建 目的地 天津 抵达 天津站 · 2026-09-27 10:00 离开 北京南站 · 2026-09-29 20:00 人数 / 房间 2 · 1 · 我们替你填的 总预算 / 住宿 CNY 1500 / 1000 · 我们替你填的 节奏 紧凑 兴趣 美食 特殊要求 — 自动设置 CN · CNY · Asia/Shanghai 这一步没有成功，行程还没有创建。 服务器拒绝了这一步（HTTP 422）。你的行程没有因此改变，可以检查后重试。 返回 确认创建 使用封存的演示行程",
+      "raw_facts_block_on_this_surface": 0,
+      "note": "向导遮罩这一屏只有外壳横幅才渲染读数块；此处主张的是『原话不上屏 + 句子是本机的』，读数块仍在 C1 那枚外壳横幅上主张"
+    }
+  },
+  "rule": "每格两问：上游原话（含哨兵与假凭据）不在 body.innerText；这台设备量到的三行在屏，bytes 由本节点 fulfill 的正文重算"
+}
