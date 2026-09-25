@@ -1,0 +1,442 @@
+{
+ "ran_at_local": "2026-09-25T22:56:00+0800",
+ "roles": {
+  "actor_files": [
+   "p3_rig.py",
+   "p3proxy.py",
+   "p3_arms.py",
+   "p3_cells.cjs",
+   "p3_setup.py",
+   "p3_cells.cjs"
+  ],
+  "artefact_files": 40,
+  "note_files": [
+   "p3_score.py",
+   "p3_receipt.py",
+   "p3_md.py"
+  ],
+  "scanner": [
+   "p3_boundary.py"
+  ]
+ },
+ "method": "case-insensitive substring over every file this batch ran or wrote, then split by role",
+ "needles": {
+  "demo/reset": {
+   "what_it_is": "the reset that wipes 52 tables incl. user journeys",
+   "total_hits": 5,
+   "in_actor_or_artefact": 1,
+   "in_note_prose": 2,
+   "in_this_scanner": 2,
+   "uses_in_actor_or_artefact": [],
+   "use_sites": [],
+   "control": {
+    "must_be_empty": true,
+    "satisfied": true,
+    "anything_found": []
+   }
+  },
+  "_live.db": {
+   "what_it_is": "the shared live database",
+   "total_hits": 4,
+   "in_actor_or_artefact": 1,
+   "in_note_prose": 2,
+   "in_this_scanner": 1,
+   "uses_in_actor_or_artefact": [],
+   "use_sites": [],
+   "control": {
+    "must_be_empty": true,
+    "satisfied": true,
+    "anything_found": []
+   }
+  },
+  "_preview.db": {
+   "what_it_is": "the shared preview database",
+   "total_hits": 4,
+   "in_actor_or_artefact": 1,
+   "in_note_prose": 2,
+   "in_this_scanner": 1,
+   "uses_in_actor_or_artefact": [],
+   "use_sites": [],
+   "control": {
+    "must_be_empty": true,
+    "satisfied": true,
+    "anything_found": []
+   }
+  },
+  "git apply": {
+   "what_it_is": "tree writes are forbidden; exports come from git archive",
+   "total_hits": 4,
+   "in_actor_or_artefact": 1,
+   "in_note_prose": 2,
+   "in_this_scanner": 1,
+   "uses_in_actor_or_artefact": [],
+   "use_sites": [],
+   "control": {
+    "must_be_empty": true,
+    "satisfied": true,
+    "anything_found": []
+   }
+  },
+  "4782": {
+   "what_it_is": "the phone-chain proxy port",
+   "total_hits": 2,
+   "in_actor_or_artefact": 1,
+   "in_note_prose": 0,
+   "in_this_scanner": 1,
+   "uses_in_actor_or_artefact": [],
+   "use_sites": [],
+   "control": {
+    "must_be_empty": true,
+    "satisfied": true,
+    "anything_found": []
+   }
+  },
+  "DEEPSEEK_API_KEY": {
+   "what_it_is": "must appear in actors only at the pop that removes it",
+   "total_hits": 7,
+   "in_actor_or_artefact": 2,
+   "in_note_prose": 2,
+   "in_this_scanner": 3,
+   "uses_in_actor_or_artefact": [
+    "p3_rig.py:11",
+    "p3_rig.py:93"
+   ],
+   "use_sites": [
+    {
+     "file": "p3_rig.py",
+     "line": 11,
+     "role": "actor",
+     "reading": "possible_use",
+     "head": "* `DEEPSEEK_API_KEY` is popped from every child environment, and AI is disabled, so no credential ca"
+    },
+    {
+     "file": "p3_rig.py",
+     "line": 93,
+     "role": "actor",
+     "reading": "possible_use",
+     "head": "e.pop('DEEPSEEK_API_KEY', None)"
+    }
+   ],
+   "control": {
+    "only_allowed_reading": ".pop(",
+    "satisfied": false,
+    "found_at": [
+     "p3_rig.py:11",
+     "p3_rig.py:93"
+    ],
+    "not_allowed": [
+     "p3_rig.py:11"
+    ]
+   }
+  },
+  "4781": {
+   "what_it_is": "the phone-chain face: the binding probe reads it, twice, GET only",
+   "total_hits": 8,
+   "in_actor_or_artefact": 3,
+   "in_note_prose": 2,
+   "in_this_scanner": 3,
+   "uses_in_actor_or_artefact": [
+    "p3_setup.py:56",
+    "p3_setup.py:62"
+   ],
+   "use_sites": [
+    {
+     "file": "p3_setup.py",
+     "line": 56,
+     "role": "actor",
+     "reading": "possible_use",
+     "head": "st, idx = get('http://127.0.0.1:4781/')"
+    },
+    {
+     "file": "p3_setup.py",
+     "line": 62,
+     "role": "actor",
+     "reading": "possible_use",
+     "head": "s2, ab = get('http://127.0.0.1:4781' + ref.group(1))"
+    }
+   ],
+   "control": {
+    "allowed_files": [
+     "p3_setup.py"
+    ],
+    "satisfied": true,
+    "found_in": [
+     "p3_setup.py"
+    ]
+   }
+  },
+  "agent/commands": {
+   "what_it_is": "CONTROL: the leg must be present in the artefacts",
+   "total_hits": 124,
+   "in_actor_or_artefact": 123,
+   "in_note_prose": 0,
+   "in_this_scanner": 1,
+   "uses_in_actor_or_artefact": [
+    "p3proxy.py:41",
+    "p3_arms.py:93",
+    "p3_cells.cjs:164",
+    "p3_cells.cjs:236",
+    "p3_cells.cjs:237",
+    "p3_cells.cjs:164",
+    "p3_cells.cjs:236",
+    "p3_cells.cjs:237",
+    "p3_arm_dep_abort_pass_P3-222950.json:37",
+    "p3_arm_dep_abort_pass_P3-222950.json:64",
+    "p3_arm_dep_hoplock_lock_behind_hop_P3-223608.json:33",
+    "p3_arm_dep_hoplock_lock_behind_hop_P3-223608.json:39",
+    "p3_arm_dep_hoplock_lock_behind_hop_P3-223608.json:75",
+    "p3_arm_dep_hoplock_lock_behind_hop_P3-223608.json:87",
+    "p3_arm_dep_hoplock_lock_behind_hop_P3-223608.json:101",
+    "p3_arm_dep_hoplock_lock_behind_hop_P3-223608.json:117",
+    "p3_arm_dep_hoplock_lock_behind_hop_P3-223608.json:139",
+    "p3_arm_dep_hoplock_lock_behind_hop_P3-223608.json:141",
+    "p3_arm_dep_hoplock_lock_behind_hop_P3-223608.json:170",
+    "p3_arm_dep_hoplock_lock_behind_hop_P3-223608.json:243",
+    "p3_arm_dep_product_mutate_extra_key_P3-222041.json:37",
+    "p3_arm_dep_product_mutate_extra_key_P3-222041.json:75",
+    "p3_arm_dep_product_mutate_extra_key_P3-222041.json:87",
+    "p3_arm_dep_product_mutate_extra_key_P3-222041.json:101",
+    "p3_arm_dep_product_mutate_extra_key_P3-222513.json:37",
+    "p3_arm_dep_product_mutate_extra_key_P3-222513.json:77",
+    "p3_arm_dep_product_mutate_extra_key_P3-222513.json:100",
+    "p3_arm_dep_product_mutate_extra_key_P3-222513.json:114",
+    "p3_arm_dep_product_mutate_extra_key_P3-222513.json:214",
+    "p3_arm_dep_spec_json_envelope_500_P3-222905.json:51",
+    "p3_arm_dep_spec_json_envelope_500_P3-222905.json:77",
+    "p3_arm_dep_spec_json_envelope_500_P3-222905.json:100",
+    "p3_arm_dep_spec_json_envelope_500_P3-222905.json:114",
+    "p3_arm_dep_spec_nonjson_422_P3-222816.json:37",
+    "p3_arm_dep_spec_nonjson_422_P3-222816.json:43",
+    "p3_arm_dep_spec_nonjson_422_P3-222816.json:67",
+    "p3_arm_dep_spec_nonjson_422_P3-222816.json:79",
+    "p3_arm_dep_spec_nonjson_422_P3-222816.json:93",
+    "p3_arm_dep_spec_nonjson_422_P3-222816.json:109",
+    "p3_arm_dep_spec_nonjson_422_P3-222816.json:131",
+    "p3_arm_dep_spec_nonjson_422_P3-222816.json:133",
+    "p3_arm_dep_spec_nonjson_422_P3-222816.json:162",
+    "p3_arm_old_hoplock_lock_behind_hop_P3-223703.json:39",
+    "p3_arm_old_hoplock_lock_behind_hop_P3-223703.json:75",
+    "p3_arm_old_hoplock_lock_behind_hop_P3-223703.json:87",
+    "p3_arm_old_hoplock_lock_behind_hop_P3-223703.json:101",
+    "p3_arm_old_hoplock_lock_behind_hop_P3-223703.json:241",
+    "p3_arm_old_product_mutate_extra_key_P3-222752.json:37",
+    "p3_arm_old_product_mutate_extra_key_P3-222752.json:77",
+    "p3_arm_old_product_mutate_extra_key_P3-222752.json:100",
+    "p3_arm_old_product_mutate_extra_key_P3-222752.json:114",
+    "p3_arm_old_product_mutate_extra_key_P3-222752.json:214",
+    "p3_arm_old_spec_json_envelope_500_P3-222928.json:51",
+    "p3_arm_old_spec_json_envelope_500_P3-222928.json:77",
+    "p3_arm_old_spec_json_envelope_500_P3-222928.json:100",
+    "p3_arm_old_spec_json_envelope_500_P3-222928.json:114",
+    "p3_arm_old_spec_nonjson_422_P3-222841.json:43",
+    "p3_arm_old_spec_nonjson_422_P3-222841.json:67",
+    "p3_arm_old_spec_nonjson_422_P3-222841.json:79",
+    "p3_arm_old_spec_nonjson_422_P3-222841.json:93",
+    "p3_cell_dep_abort_pass_P3-222950.json:271",
+    "p3_cell_dep_abort_pass_P3-222950.json:524",
+    "p3_cell_dep_hoplock_lock_behind_hop_P3-223608.json:15",
+    "p3_cell_dep_hoplock_lock_behind_hop_P3-223608.json:40",
+    "p3_cell_dep_hoplock_lock_behind_hop_P3-223608.json:63",
+    "p3_cell_dep_hoplock_lock_behind_hop_P3-223608.json:65",
+    "p3_cell_dep_hoplock_lock_behind_hop_P3-223608.json:297",
+    "p3_cell_dep_hoplock_lock_behind_hop_P3-223608.json:482",
+    "p3_cell_dep_hoplock_lock_behind_hop_P3-223608.json:622",
+    "p3_cell_dep_product_mutate_extra_key_P3-222041.json:229",
+    "p3_cell_dep_product_mutate_extra_key_P3-222041.json:370",
+    "p3_cell_dep_product_mutate_extra_key_P3-222041.json:494",
+    "p3_cell_dep_product_mutate_extra_key_P3-222513.json:271",
+    "p3_cell_dep_product_mutate_extra_key_P3-222513.json:412",
+    "p3_cell_dep_product_mutate_extra_key_P3-222513.json:547",
+    "p3_cell_dep_spec_json_envelope_500_P3-222905.json:271",
+    "p3_cell_dep_spec_json_envelope_500_P3-222905.json:412",
+    "p3_cell_dep_spec_json_envelope_500_P3-222905.json:547",
+    "p3_cell_dep_spec_nonjson_422_P3-222816.json:15",
+    "p3_cell_dep_spec_nonjson_422_P3-222816.json:40",
+    "p3_cell_dep_spec_nonjson_422_P3-222816.json:63",
+    "p3_cell_dep_spec_nonjson_422_P3-222816.json:65",
+    "p3_cell_dep_spec_nonjson_422_P3-222816.json:271",
+    "p3_cell_dep_spec_nonjson_422_P3-222816.json:412",
+    "p3_cell_dep_spec_nonjson_422_P3-222816.json:536",
+    "p3_cell_old_hoplock_lock_behind_hop_P3-223703.json:271",
+    "p3_cell_old_hoplock_lock_behind_hop_P3-223703.json:456",
+    "p3_cell_old_hoplock_lock_behind_hop_P3-223703.json:596",
+    "p3_cell_old_product_mutate_extra_key_P3-222752.json:271",
+    "p3_cell_old_product_mutate_extra_key_P3-222752.json:412",
+    "p3_cell_old_product_mutate_extra_key_P3-222752.json:547",
+    "p3_cell_old_spec_json_envelope_500_P3-222928.json:271",
+    "p3_cell_old_spec_json_envelope_500_P3-222928.json:412",
+    "p3_cell_old_spec_json_envelope_500_P3-222928.json:547",
+    "p3_cell_old_spec_nonjson_422_P3-222841.json:245",
+    "p3_cell_old_spec_nonjson_422_P3-222841.json:386",
+    "p3_cell_old_spec_nonjson_422_P3-222841.json:510",
+    "p3_pair_log.jsonl:119",
+    "p3_pair_log.jsonl:138",
+    "p3_pair_log.jsonl:157",
+    "p3_pair_log.jsonl:176",
+    "p3_pair_log.jsonl:253",
+    "p3_pair_log.jsonl:274"
+   ],
+   "use_sites": [
+    {
+     "file": "p3proxy.py",
+     "line": 41,
+     "role": "actor",
+     "reading": "possible_use",
+     "head": "WRITE_SUFFIX = '/agent/commands'"
+    },
+    {
+     "file": "p3_arms.py",
+     "line": 93,
+     "role": "actor",
+     "reading": "possible_use",
+     "head": "def access_log_for(path, needle='agent/commands'):"
+    },
+    {
+     "file": "p3_cells.cjs",
+     "line": 164,
+     "role": "actor",
+     "reading": "possible_use",
+     "head": "await page.route('**/api/v1/journeys/*/agent/commands', (route) => {"
+    },
+    {
+     "file": "p3_cells.cjs",
+     "line": 236,
+     "role": "actor",
+     "reading": "possible_use",
+     "head": "const w = collected.legs.find((l) => l.method === 'POST' && l.url.indexOf('agent/commands') >= 0) ||"
+    },
+    {
+     "file": "p3_cells.cjs",
+     "line": 237,
+     "role": "actor",
+     "reading": "possible_use",
+     "head": "const c = collected.consumed.find((x) => (x.url || '').indexOf('agent/commands') >= 0) || {};"
+    },
+    {
+     "file": "p3_cells.cjs",
+     "line": 164,
+     "role": "actor",
+     "reading": "possible_use",
+     "head": "await page.route('**/api/v1/journeys/*/agent/commands', (route) => {"
+    }
+   ],
+   "control": {
+    "must_be_non_empty": true,
+    "satisfied": true
+   }
+  },
+  "x-hjp3-pair": {
+   "what_it_is": "CONTROL: the hop must write it and the page must read it",
+   "total_hits": 13,
+   "in_actor_or_artefact": 9,
+   "in_note_prose": 2,
+   "in_this_scanner": 2,
+   "uses_in_actor_or_artefact": [
+    "p3proxy.py:7",
+    "p3proxy.py:76",
+    "p3_arms.py:6",
+    "p3_cells.cjs:108",
+    "p3_cells.cjs:115",
+    "p3_cells.cjs:154",
+    "p3_cells.cjs:108",
+    "p3_cells.cjs:115",
+    "p3_cells.cjs:154"
+   ],
+   "use_sites": [
+    {
+     "file": "p3proxy.py",
+     "line": 7,
+     "role": "actor",
+     "reading": "possible_use",
+     "head": "same id rides back in `X-HJP3-Pair`, which the page's own Response and the browser's own network sta"
+    },
+    {
+     "file": "p3proxy.py",
+     "line": 76,
+     "role": "actor",
+     "reading": "possible_use",
+     "head": "self.send_header('X-HJP3-Pair', pair_id)"
+    },
+    {
+     "file": "p3_arms.py",
+     "line": 6,
+     "role": "actor",
+     "reading": "possible_use",
+     "head": "carrying the id it minted for it and echoed in `X-HJP3-Pair`; the \"screen side\" is what the page's o"
+    },
+    {
+     "file": "p3_cells.cjs",
+     "line": 108,
+     "role": "actor",
+     "reading": "possible_use",
+     "head": "rec.pair_id = res.headers.get('x-hjp3-pair');"
+    },
+    {
+     "file": "p3_cells.cjs",
+     "line": 115,
+     "role": "actor",
+     "reading": "possible_use",
+     "head": "const ent = { url: this.url, status: this.status, pair_id: this.headers.get('x-hjp3-pair'),"
+    },
+    {
+     "file": "p3_cells.cjs",
+     "line": 154,
+     "role": "actor",
+     "reading": "possible_use",
+     "head": "pair_id: r.headers()['x-hjp3-pair'], content_type: r.headers()['content-type'],"
+    }
+   ],
+   "control": {
+    "must_be_non_empty": true,
+    "satisfied": true
+   }
+  }
+ },
+ "credentials": {
+  "pop_sites_in_actors": [
+   "p3_rig.py:93"
+  ],
+  "assignment_or_read_sites": [],
+  "authorization_header_in_any_arm_file": false
+ },
+ "phone_chain": {
+  "endpoint": "127.0.0.1:4781",
+  "requests_made": 2,
+  "methods": [
+   "GET",
+   "GET"
+  ],
+  "writes": 0,
+  "credentials_sent": false,
+  "arm_artefacts_naming_that_port": 0,
+  "how_counted": "requests_made/methods/writes are fields the binding instrument wrote about its own run; the arm artefacts are counted on the left"
+ },
+ "product_bytes": {
+  "sheet_under_test": "frontend/src/features/planning/PlanWithAiSheet.tsx",
+  "per_generation": {
+   "dep": {
+    "tip": "7856e03f6238da3000976eb6e690a448dfa39b9a",
+    "commit_blob_from_git": "f61d5312e8b33807d3e5304d1fa9fb7f77a518aa",
+    "export_blob_recomputed": "f61d5312e8b33807d3e5304d1fa9fb7f77a518aa",
+    "equal": true
+   },
+   "old": {
+    "tip": "dc964086c9d412573ac19d70b24b30e6c3ee6168",
+    "commit_blob_from_git": "fd5f6e5ba2771a8d12669b9bec1ba91590970701",
+    "export_blob_recomputed": "fd5f6e5ba2771a8d12669b9bec1ba91590970701",
+    "equal": true
+   }
+  },
+  "how_to_recheck": "git -C D:/moodle/CityNexus rev-parse <tip>:<sheet> against a re-hash of that file inside my export - equal means the export is the commit, not an edit of it"
+ },
+ "verdict": {
+  "controls_found_what_they_must": true,
+  "the_use_versus_denial_classifier_has_a_positive_control": true,
+  "no_forbidden_name_appears_as_an_action": true,
+  "credential_appears_in_actors_only_where_it_is_removed": true,
+  "the_phone_chain_saw_only_reads": true,
+  "both_exports_are_their_own_commits": true,
+  "no_arm_sent_any_authorization_header": true,
+  "ALL_HOLD": true
+ }
+}
