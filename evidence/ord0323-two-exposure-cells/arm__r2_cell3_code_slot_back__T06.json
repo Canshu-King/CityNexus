@@ -1,0 +1,16 @@
+{
+ "run_id": "0323c3b3929",
+ "arm": "T06",
+ "cell": "T06",
+ "route": "/inbox/import",
+ "method": "POST",
+ "status_asked": 502,
+ "slot_text": "服务器自己报错了（HTTP 502）。这是它那边的问题，不是你填错了什么。可以重试；如果一直这样，稍后再来。",
+ "status_in_slot": true,
+ "needles_found": [],
+ "needles_found_in_attributes": [],
+ "attribute_pairs_swept": 73,
+ "foreign_status_found": [],
+ "internal_token_on_screen": false,
+ "test_status": "passed"
+}
