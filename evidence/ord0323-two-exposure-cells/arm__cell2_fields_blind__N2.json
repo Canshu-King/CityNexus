@@ -1,0 +1,9 @@
+{
+ "run_id": "0323c2f0317",
+ "arm": "N2",
+ "message_text": "这台设备收到的回复读不成这条请求要的结果，请再看一次。",
+ "pending_text": "待审清单读不出来： 这台设备收到的回复读不成这条请求要的结果，请再看一次。 重读清单",
+ "leaked_needles_still_on_screen": [],
+ "test_status": "failed",
+ "error_head": "Error: e2e/qoder-ord0323-two-exposure-cells.spec.ts :: N2 — the memory slot no longer states the status and content type this device got (这台设备收到的回复读不成这条请求要的结果，请再看一次。) \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m Expected: \u001b[32mtrue\u001b[39m Received: \u001b[31mfalse\u001b[39m"
+}
