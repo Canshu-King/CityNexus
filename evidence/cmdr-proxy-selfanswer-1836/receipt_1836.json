@@ -1,0 +1,84 @@
+{
+ "schema": "CNX_CMDR_PROXY_SELF_ANSWER_V1",
+ "at_local": "2026-09-25T18:37:12+00:00+08",
+ "tool_sha1": "bae6d31e347c78cc3b280f44c5fcfd1dbc8395a8",
+ "interpreter": "C:\\Users\\仓鼠王\\AppData\\Local\\Programs\\Python\\Python310\\python.exe",
+ "what_was_measured": "every /api call through the served shell (port 4781, the generation now on the phone) against the same call made straight to the upstream port (8000)",
+ "listen_rows_4781": 1,
+ "listen_rows_8000": 0,
+ "tcp_connect_to_8000": "ConnectionRefusedError",
+ "rows": [
+  {
+   "path": "/api/v1/health",
+   "through_the_shell_proxy": {
+    "target": "http://127.0.0.1:4781/api/v1/health",
+    "answered": true,
+    "via": "HTTPError",
+    "status": 500,
+    "content_type": "text/plain",
+    "body_bytes": 0,
+    "body_head": ""
+   },
+   "straight_to_upstream": {
+    "target": "http://127.0.0.1:8000/api/v1/health",
+    "answered": false,
+    "error": "URLError",
+    "detail": "<urlopen error [WinError 10061] 由于目标计算机积极拒绝，无法连接。>"
+   },
+   "proxy_answered_and_upstream_did_not": true
+  },
+  {
+   "path": "/api/v1/demo/scene",
+   "through_the_shell_proxy": {
+    "target": "http://127.0.0.1:4781/api/v1/demo/scene",
+    "answered": true,
+    "via": "HTTPError",
+    "status": 500,
+    "content_type": "text/plain",
+    "body_bytes": 0,
+    "body_head": ""
+   },
+   "straight_to_upstream": {
+    "target": "http://127.0.0.1:8000/api/v1/demo/scene",
+    "answered": false,
+    "error": "URLError",
+    "detail": "<urlopen error [WinError 10061] 由于目标计算机积极拒绝，无法连接。>"
+   },
+   "proxy_answered_and_upstream_did_not": true
+  },
+  {
+   "path": "/api/v1/journeys",
+   "through_the_shell_proxy": {
+    "target": "http://127.0.0.1:4781/api/v1/journeys",
+    "answered": true,
+    "via": "HTTPError",
+    "status": 500,
+    "content_type": "text/plain",
+    "body_bytes": 0,
+    "body_head": ""
+   },
+   "straight_to_upstream": {
+    "target": "http://127.0.0.1:8000/api/v1/journeys",
+    "answered": false,
+    "error": "URLError",
+    "detail": "<urlopen error [WinError 10061] 由于目标计算机积极拒绝，无法连接。>"
+   },
+   "proxy_answered_and_upstream_did_not": true
+  }
+ ],
+ "decisions": {
+  "proxy_answers_while_upstream_is_absent": true,
+  "every_proxied_answer_is_a_5xx_with_an_empty_body": true,
+  "upstream_never_replies": true
+ },
+ "consequence_for_ORD_0312": "The null-body shape is reachable on the deployed generation without a backend: the proxy itself produces 'an HTTP answer carrying no JSON body'. The premise I dispatched under - that this cell needs :8000 running - is therefore corrected, not by argument but by the readings above.",
+ "discipline": {
+  "writes_landed": 0,
+  "demo_reset": 0,
+  "protected_db_reads": 0,
+  "credentials_printed": 0,
+  "authority_line_moved": 0,
+  "note": "the one POST carries an empty body ({}) to a demo route while the upstream is down, so nothing can land behind it; no product file, no index, no database was touched, and the screen was never mine to change - the onboarding drawer stayed up"
+ },
+ "scope": "What answers when the data plane is down, measured on the shell the phone is served. It is not the M1 verdict: the painted sentence still has to be read by the measurement lane with the drawer out of the way, and the level still belongs to the verifier."
+}
