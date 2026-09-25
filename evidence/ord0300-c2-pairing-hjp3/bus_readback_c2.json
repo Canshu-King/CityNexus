@@ -1,0 +1,13 @@
+{
+ "posted_at": "2026-09-25T21:07:59+0800",
+ "comment_id": 5832902818,
+ "permalink": "https://github.com/Canshu-King/CityNexus-Workspace/issues/1#issuecomment-5832902818",
+ "readback_route": "/repos/Canshu-King/CityNexus-Workspace/issues/comments/<id>",
+ "route_that_answered_404_on_the_first_run": "/repos/.../issues/1/comments/<id> (the thread route has no single-comment handler) - fixed here, and the instrument goes out under a revision name",
+ "body_bytes_posted": 9337,
+ "body_bytes_read_back": 9337,
+ "last_line_read_back": "竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度",
+ "closing_line_expected_bytes": 83,
+ "last_line_matches_closing_line_byte_for_byte": true,
+ "read_back_whole_body_equal": true
+}
