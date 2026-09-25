@@ -1,0 +1,351 @@
+{
+  "config": {
+    "argv": [
+      "C:\\Program Files\\nodejs\\node.exe",
+      "D:\\moodle\\_qoder_b_lane_20260923\\frontend\\node_modules\\@playwright\\test\\cli.js",
+      "test",
+      "-c",
+      "playwright.config.ts",
+      "e2e/qoder-ord0302-unreadable-server-body.spec.ts",
+      "--reporter=json"
+    ],
+    "configFile": "D:\\moodle\\_qoder_b_lane_20260923\\frontend\\playwright.config.ts",
+    "rootDir": "D:/moodle/_qoder_b_lane_20260923/frontend/e2e",
+    "failOnFlakyTests": false,
+    "forbidOnly": false,
+    "fullyParallel": false,
+    "globalSetup": "D:\\moodle\\_qoder_b_lane_20260923\\frontend\\e2e\\_qoderAuthoritativeSetup.ts",
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "actualWorkers": 1
+    },
+    "preserveOutput": "always",
+    "projects": [
+      {
+        "outputDir": "D:/moodle/_qoder_b_lane_20260923/frontend/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "real-seed",
+        "name": "real-seed",
+        "testDir": "D:/moodle/_qoder_b_lane_20260923/frontend/e2e",
+        "testIgnore": [
+          "/[\\\\/]e2e[\\\\/]legacy[\\\\/]/"
+        ],
+        "testMatch": [
+          "/_qoderRealSeed\\.setup\\.ts/"
+        ],
+        "timeout": 60000
+      },
+      {
+        "outputDir": "D:/moodle/_qoder_b_lane_20260923/frontend/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "chromium",
+        "name": "chromium",
+        "testDir": "D:/moodle/_qoder_b_lane_20260923/frontend/e2e",
+        "testIgnore": [
+          "/[\\\\/]e2e[\\\\/]legacy[\\\\/]/"
+        ],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 60000
+      }
+    ],
+    "quiet": false,
+    "reporter": [
+      [
+        "json"
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "shard": null,
+    "tags": [],
+    "updateSnapshots": "missing",
+    "updateSourceMethod": "patch",
+    "version": "1.63.0",
+    "workers": 1,
+    "webServer": null
+  },
+  "suites": [
+    {
+      "title": "_qoderRealSeed.setup.ts",
+      "file": "_qoderRealSeed.setup.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "seed a real journey through the product API",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "real-seed",
+              "projectName": "real-seed",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 5297,
+                  "errors": [],
+                  "stdout": [
+                    {
+                      "text": "[qoder-real-seed] journey=6d1d51f8-ae3b-40c8-99ad-243753f5bbce options=4 chosen=f183854d-da52-45a2-b3c3-5d53ce1f29b5 (Haihe Riverside Hotel)\n"
+                    },
+                    {
+                      "text": "[qoder-real-seed] trialWizard=false live-journey-current=true\n"
+                    }
+                  ],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-09-25T09:06:03.955Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "e5b963f3c8f6099f74d0-d425156f0efa8e024368",
+          "file": "_qoderRealSeed.setup.ts",
+          "line": 110,
+          "column": 1
+        }
+      ]
+    },
+    {
+      "title": "qoder-ord0302-unreadable-server-body.spec.ts",
+      "file": "qoder-ord0302-unreadable-server-body.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "ord0302-N1 a non-JSON 5xx stays an HTTP answer with a visible device reading",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1329,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-09-25T09:06:09.954Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "c1c7d721c5f677c6c129-56f01151c154441a6af1",
+          "file": "qoder-ord0302-unreadable-server-body.spec.ts",
+          "line": 137,
+          "column": 3
+        },
+        {
+          "title": "ord0302-N2 a 4xx with the server's sentence still quotes it verbatim (positive control)",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1402,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-09-25T09:06:11.427Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "c1c7d721c5f677c6c129-3f34c398ce4d9d115610",
+          "file": "qoder-ord0302-unreadable-server-body.spec.ts",
+          "line": 137,
+          "column": 3
+        },
+        {
+          "title": "ord0302-N3 a genuine network failure keeps NETWORK and still renders the detail block",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1185,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-09-25T09:06:12.852Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "c1c7d721c5f677c6c129-45a5eb871d0174f0311d",
+          "file": "qoder-ord0302-unreadable-server-body.spec.ts",
+          "line": 137,
+          "column": 3
+        },
+        {
+          "title": "ord0302-X1 a run that produced nothing usable still renders the block its own card points at",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "failed",
+                  "duration": 1236,
+                  "error": {
+                    "message": "Error: e2e/qoder-ord0302-unreadable-server-body.spec.ts :: X1 — {\"arm\":\"X1\",\"status\":\"NO_PLANS_PRODUCED\",\"card_text\":\"没有生成可行方案 服务器说这次没排出可行方案，但没有给出具体原因编号，所以我们不替你猜是预算、措辞还是数据的问题。你的行程没有被改动；可以再试一次或换一座城市。 技术详情\",\"sentence\":\"服务器说这次没排出可行方案，但没有给出具体原因编号，所以我们不替你猜是预算、措辞还是数据的问题。你的行程没有被改动；可以再试一次或换一座城市。\",\"details_count\":1,\"promise_in_copy\":false,\"reason\":\"plans compiled; 0 usable result(s) reached this screen\",\"label\":\"这台设备自己的读数（服务器没给句子）\",\"origin\":\"device\"}\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // deep equality\u001b[22m\n\n\u001b[32m- Expected  - 1\u001b[39m\n\u001b[31m+ Received  + 9\u001b[39m\n\n\u001b[32m- Array []\u001b[39m\n\u001b[31m+ Array [\u001b[39m\n\u001b[31m+   Object {\u001b[39m\n\u001b[31m+     \"claim\": \"and the copy still points there (Q53=①: render it, do not delete the pointer)\",\u001b[39m\n\u001b[31m+     \"got\": Object {\u001b[39m\n\u001b[31m+       \"promise_in_copy\": false,\u001b[39m\n\u001b[31m+     },\u001b[39m\n\u001b[31m+     \"ok\": false,\u001b[39m\n\u001b[31m+   },\u001b[39m\n\u001b[31m+ ]\u001b[39m",
+                    "stack": "Error: e2e/qoder-ord0302-unreadable-server-body.spec.ts :: X1 — {\"arm\":\"X1\",\"status\":\"NO_PLANS_PRODUCED\",\"card_text\":\"没有生成可行方案 服务器说这次没排出可行方案，但没有给出具体原因编号，所以我们不替你猜是预算、措辞还是数据的问题。你的行程没有被改动；可以再试一次或换一座城市。 技术详情\",\"sentence\":\"服务器说这次没排出可行方案，但没有给出具体原因编号，所以我们不替你猜是预算、措辞还是数据的问题。你的行程没有被改动；可以再试一次或换一座城市。\",\"details_count\":1,\"promise_in_copy\":false,\"reason\":\"plans compiled; 0 usable result(s) reached this screen\",\"label\":\"这台设备自己的读数（服务器没给句子）\",\"origin\":\"device\"}\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // deep equality\u001b[22m\n\n\u001b[32m- Expected  - 1\u001b[39m\n\u001b[31m+ Received  + 9\u001b[39m\n\n\u001b[32m- Array []\u001b[39m\n\u001b[31m+ Array [\u001b[39m\n\u001b[31m+   Object {\u001b[39m\n\u001b[31m+     \"claim\": \"and the copy still points there (Q53=①: render it, do not delete the pointer)\",\u001b[39m\n\u001b[31m+     \"got\": Object {\u001b[39m\n\u001b[31m+       \"promise_in_copy\": false,\u001b[39m\n\u001b[31m+     },\u001b[39m\n\u001b[31m+     \"ok\": false,\u001b[39m\n\u001b[31m+   },\u001b[39m\n\u001b[31m+ ]\u001b[39m\n    at D:\\moodle\\_qoder_b_lane_20260923\\frontend\\e2e\\qoder-ord0302-unreadable-server-body.spec.ts:243:73",
+                    "location": {
+                      "file": "D:\\moodle\\_qoder_b_lane_20260923\\frontend\\e2e\\qoder-ord0302-unreadable-server-body.spec.ts",
+                      "column": 73,
+                      "line": 243
+                    },
+                    "snippet": "\u001b[0m \u001b[90m 241 |\u001b[39m     readings[\u001b[32m\"X1\"\u001b[39m] \u001b[33m=\u001b[39m { want\u001b[33m:\u001b[39m \u001b[32m\"device\"\u001b[39m\u001b[33m,\u001b[39m force_shape\u001b[33m:\u001b[39m \u001b[32m\"200 mission with no reason, no plans\"\u001b[39m\u001b[33m,\u001b[39m read\u001b[33m,\u001b[39m\n \u001b[90m 242 |\u001b[39m                       verdict\u001b[33m:\u001b[39m rows\u001b[33m.\u001b[39mevery((r) \u001b[33m=>\u001b[39m r\u001b[33m.\u001b[39mok) \u001b[33m?\u001b[39m \u001b[32m\"MET\"\u001b[39m \u001b[33m:\u001b[39m \u001b[32m\"NOT_MET\"\u001b[39m\u001b[33m,\u001b[39m rows }\u001b[33m;\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 243 |\u001b[39m     expect(rows\u001b[33m.\u001b[39mfilter((r) \u001b[33m=>\u001b[39m \u001b[33m!\u001b[39mr\u001b[33m.\u001b[39mok)\u001b[33m,\u001b[39m node(\u001b[32m\"X1\"\u001b[39m\u001b[33m,\u001b[39m \u001b[33mJSON\u001b[39m\u001b[33m.\u001b[39mstringify(read)))\u001b[33m.\u001b[39mtoEqual([])\u001b[33m;\u001b[39m\n \u001b[90m     |\u001b[39m                                                                         \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 244 |\u001b[39m   })\u001b[33m;\u001b[39m\n \u001b[90m 245 |\u001b[39m\n \u001b[90m 246 |\u001b[39m test(\u001b[32m`ord0302-X2 ${\"a status whose copy makes no promise may keep the block absent without lying\"}`\u001b[39m\u001b[33m,\u001b[39m\u001b[0m"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "D:\\moodle\\_qoder_b_lane_20260923\\frontend\\e2e\\qoder-ord0302-unreadable-server-body.spec.ts",
+                        "column": 73,
+                        "line": 243
+                      },
+                      "message": "Error: e2e/qoder-ord0302-unreadable-server-body.spec.ts :: X1 — {\"arm\":\"X1\",\"status\":\"NO_PLANS_PRODUCED\",\"card_text\":\"没有生成可行方案 服务器说这次没排出可行方案，但没有给出具体原因编号，所以我们不替你猜是预算、措辞还是数据的问题。你的行程没有被改动；可以再试一次或换一座城市。 技术详情\",\"sentence\":\"服务器说这次没排出可行方案，但没有给出具体原因编号，所以我们不替你猜是预算、措辞还是数据的问题。你的行程没有被改动；可以再试一次或换一座城市。\",\"details_count\":1,\"promise_in_copy\":false,\"reason\":\"plans compiled; 0 usable result(s) reached this screen\",\"label\":\"这台设备自己的读数（服务器没给句子）\",\"origin\":\"device\"}\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // deep equality\u001b[22m\n\n\u001b[32m- Expected  - 1\u001b[39m\n\u001b[31m+ Received  + 9\u001b[39m\n\n\u001b[32m- Array []\u001b[39m\n\u001b[31m+ Array [\u001b[39m\n\u001b[31m+   Object {\u001b[39m\n\u001b[31m+     \"claim\": \"and the copy still points there (Q53=①: render it, do not delete the pointer)\",\u001b[39m\n\u001b[31m+     \"got\": Object {\u001b[39m\n\u001b[31m+       \"promise_in_copy\": false,\u001b[39m\n\u001b[31m+     },\u001b[39m\n\u001b[31m+     \"ok\": false,\u001b[39m\n\u001b[31m+   },\u001b[39m\n\u001b[31m+ ]\u001b[39m\n\n  241 |     readings[\"X1\"] = { want: \"device\", force_shape: \"200 mission with no reason, no plans\", read,\n  242 |                       verdict: rows.every((r) => r.ok) ? \"MET\" : \"NOT_MET\", rows };\n> 243 |     expect(rows.filter((r) => !r.ok), node(\"X1\", JSON.stringify(read))).toEqual([]);\n      |                                                                         ^\n  244 |   });\n  245 |\n  246 | test(`ord0302-X2 ${\"a status whose copy makes no promise may keep the block absent without lying\"}`,\n    at D:\\moodle\\_qoder_b_lane_20260923\\frontend\\e2e\\qoder-ord0302-unreadable-server-body.spec.ts:243:73"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-09-25T09:06:14.051Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "D:\\moodle\\_qoder_b_lane_20260923\\frontend\\test-results\\qoder-ord0302-unreadable-s-36034-lock-its-own-card-points-at-chromium\\error-context.md"
+                    }
+                  ],
+                  "errorLocation": {
+                    "file": "D:\\moodle\\_qoder_b_lane_20260923\\frontend\\e2e\\qoder-ord0302-unreadable-server-body.spec.ts",
+                    "column": 73,
+                    "line": 243
+                  }
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "c1c7d721c5f677c6c129-16ba4e1532c6c66bfc8d",
+          "file": "qoder-ord0302-unreadable-server-body.spec.ts",
+          "line": 227,
+          "column": 1
+        },
+        {
+          "title": "ord0302-X2 a status whose copy makes no promise may keep the block absent without lying",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 2,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1155,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-09-25T09:06:15.835Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "c1c7d721c5f677c6c129-5678828b0e6ad2f85ba5",
+          "file": "qoder-ord0302-unreadable-server-body.spec.ts",
+          "line": 246,
+          "column": 1
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2026-09-25T09:06:00.287Z",
+    "duration": 18084.983,
+    "expected": 5,
+    "skipped": 0,
+    "unexpected": 1,
+    "flaky": 0
+  }
+}
