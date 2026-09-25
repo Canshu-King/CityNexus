@@ -1,0 +1,405 @@
+{
+ "order": "ORD-0301 (pass 2: the classes named in 四、 that pass 1 did not measure)",
+ "lane": "HJ-P3 aad2d1f2",
+ "run_id": "O0301P2",
+ "asked_in": "Canshu-King/CityNexus-Workspace issue #1 comment 5827977086, section 四 (read back verbatim)",
+ "measured_on": "90d29a172e186aab6e6cb138ab4583ccf93bfa68",
+ "measured_on_how_read": "git ls-remote of refs/heads/mirror/integration-frontend-apple-pass1, re-read at export time by ORD-0300 (same commit, tree reused)",
+ "frozen_tip": "90d29a172e186aab6e6cb138ab4583ccf93bfa68",
+ "frozen_at": "2026-09-25T15:06:31+0800",
+ "continues": {
+  "pass_1_receipt": "RECEIPT_O0301-1500.json",
+  "pass_1_receipt_on_branch": {
+   "blob_sha1": "9035e162b69f171de7a5d57ec30fdeddd58f0e7e",
+   "size": 97514,
+   "recomputed_sha1_equals_tree": true,
+   "local_bytes_equal_the_published_bytes": true,
+   "branch_tip_when_read": "595db21484f918240dca171654d5ba6f56a1ab35"
+  },
+  "pass_1_cells": [
+   "C1_contentless_500_is_still_relabelled_as_no_connection_on_this_tip",
+   "C2_an_answer_that_carries_a_json_object_is_attributed_to_the_server_at_any_5xx",
+   "C3_the_discriminator_is_the_body_not_the_status_code_and_not_the_clock",
+   "C4_the_relabel_happens_because_the_client_reads_a_property_off_a_null_body",
+   "C5_the_two_connection_class_outcomes_are_not_the_same_disease",
+   "C6_a_silent_leg_still_has_no_client_answer_on_the_write_side_and_a_named_one_on_the_read_side",
+   "C7_the_named_server_deadline_answer_is_still_not_reachable_on_this_path",
+   "C8_headers_answered_and_the_body_cut_short_leaves_the_traveller_with_no_card_at_all"
+  ],
+  "pass_1_run_id": "O0301-batch",
+  "note": "pass 1 measured 17 rows; this batch adds the 7 rows for ④/③/⑤-as-written and changes nothing in the published files"
+ },
+ "bundle_under_test": {
+  "built_from": "90d29a172e186aab6e6cb138ab4583ccf93bfa68",
+  "asset": "index-BN1w-xlK.js",
+  "sha256": "57c2a927f9e65ca0b33acdc737cbf941fc395c214aa213d861a4f7e5c664338e",
+  "served_bytes": 1249595,
+  "markers": {
+   "ord0280_device_marker_in_served_bytes": true,
+   "ord0300_http_branch_marker_in_served_bytes": true,
+   "network_card_marker_in_served_bytes": true,
+   "read_deadline_constant_in_served_bytes": true
+  }
+ },
+ "rig_pass2": {
+  "ports": {
+   "backend_real": 8571,
+   "face_real": 8572,
+   "outcome_origin": 8573,
+   "face_controlled": 8574,
+   "face_upstream_absent": 8575,
+   "deliberately_empty": 8576
+  },
+  "db": "D:\\moodle\\_hjp3_0301_0925\\o0301.s3db",
+  "journey_id": "6119ec01-bb15-42f4-a834-245d271c1479",
+  "note": "brand-new ports and a freshly created one-time database; no row from pass 1 was reused"
+ },
+ "judgment_rule_applied": "if an HTTP answer reached the browser for the tapped leg, the screen may not file the reason under the network; rows are HONEST / MISLEADS / NOT_MEASURED by that test only",
+ "cells": [
+  {
+   "id": "C9_200_with_an_unreadable_payload_is_not_blamed_on_the_network_but_it_still_eats_the_detail_block",
+   "verdict": "ANSWERED_200_UNREADABLE_BUT_SCREEN_ASSERTS_ONE_NAMED_CAUSE_WITH_NO_EVIDENCE_REGION",
+   "measured_on": "90d29a172e186aab6e6cb138ab4583ccf93bfa68",
+   "measured": {
+    "rows": [
+     {
+      "run_id": "O0301-153252",
+      "declared_write_leg": {
+       "mode": "answer",
+       "status": 200,
+       "content_type": "application/json",
+       "body": "",
+       "delay_ms": 250
+      },
+      "http_status": 200,
+      "content_type": "application/json",
+      "bytes": 0,
+      "elapsed_ms": 255,
+      "painted_first_line": "没有生成可行方案",
+      "painted_full_card": "没有生成可行方案\n\n服务器说这次没排出可行方案，但没有给出具体原因编号，所以我们不替你猜是预算、措辞还是数据的问题。你的行程没有被改动；原因原文在“技术详情”里，可以再试一次或换一座城市。",
+      "says_cannot_reach_server": false,
+      "details_elements_in_dom": 0,
+      "data_result_status": "NO_PLANS_PRODUCED",
+      "reason_label": null,
+      "reason_value": "",
+      "verdict_by_the_dispatch_rule": "HONEST"
+     },
+     {
+      "run_id": "O0301-153305",
+      "declared_write_leg": {
+       "mode": "answer",
+       "status": 200,
+       "content_type": "application/json",
+       "body": "{}",
+       "delay_ms": 250
+      },
+      "http_status": 200,
+      "content_type": "application/json",
+      "bytes": 2,
+      "elapsed_ms": 259,
+      "painted_first_line": "没有生成可行方案",
+      "painted_full_card": "没有生成可行方案\n\n服务器说这次没排出可行方案，但没有给出具体原因编号，所以我们不替你猜是预算、措辞还是数据的问题。你的行程没有被改动；原因原文在“技术详情”里，可以再试一次或换一座城市。",
+      "says_cannot_reach_server": false,
+      "details_elements_in_dom": 0,
+      "data_result_status": "NO_PLANS_PRODUCED",
+      "reason_label": null,
+      "reason_value": "",
+      "verdict_by_the_dispatch_rule": "HONEST"
+     },
+     {
+      "run_id": "O0301-153320",
+      "declared_write_leg": {
+       "mode": "answer",
+       "status": 200,
+       "content_type": "application/json",
+       "body": "[]",
+       "delay_ms": 250
+      },
+      "http_status": 200,
+      "content_type": "application/json",
+      "bytes": 2,
+      "elapsed_ms": 257,
+      "painted_first_line": "没有生成可行方案",
+      "painted_full_card": "没有生成可行方案\n\n服务器说这次没排出可行方案，但没有给出具体原因编号，所以我们不替你猜是预算、措辞还是数据的问题。你的行程没有被改动；原因原文在“技术详情”里，可以再试一次或换一座城市。",
+      "says_cannot_reach_server": false,
+      "details_elements_in_dom": 0,
+      "data_result_status": "NO_PLANS_PRODUCED",
+      "reason_label": null,
+      "reason_value": "",
+      "verdict_by_the_dispatch_rule": "HONEST"
+     },
+     {
+      "run_id": "O0301-153330",
+      "declared_write_leg": {
+       "mode": "answer",
+       "status": 200,
+       "content_type": "text/plain; charset=utf-8",
+       "body": "Internal Server Error",
+       "delay_ms": 250
+      },
+      "http_status": 200,
+      "content_type": "text/plain; charset=utf-8",
+      "bytes": 21,
+      "elapsed_ms": 254,
+      "painted_first_line": "没有生成可行方案",
+      "painted_full_card": "没有生成可行方案\n\n服务器说这次没排出可行方案，但没有给出具体原因编号，所以我们不替你猜是预算、措辞还是数据的问题。你的行程没有被改动；原因原文在“技术详情”里，可以再试一次或换一座城市。",
+      "says_cannot_reach_server": false,
+      "details_elements_in_dom": 0,
+      "data_result_status": "NO_PLANS_PRODUCED",
+      "reason_label": null,
+      "reason_value": "",
+      "verdict_by_the_dispatch_rule": "HONEST"
+     },
+     {
+      "run_id": "O0301-153341",
+      "declared_write_leg": {
+       "mode": "answer",
+       "status": 200,
+       "content_type": "application/json",
+       "body": {
+        "file": "mission_bad_status.json"
+       },
+       "delay_ms": 250
+      },
+      "http_status": 200,
+      "content_type": "application/json",
+      "bytes": 159,
+      "elapsed_ms": 256,
+      "painted_first_line": "没有生成可行方案",
+      "painted_full_card": "没有生成可行方案\n\n服务器说这次没排出可行方案，但没有给出具体原因编号，所以我们不替你猜是预算、措辞还是数据的问题。你的行程没有被改动；原因原文在“技术详情”里，可以再试一次或换一座城市。",
+      "says_cannot_reach_server": false,
+      "details_elements_in_dom": 0,
+      "data_result_status": "NO_PLANS_PRODUCED",
+      "reason_label": null,
+      "reason_value": "",
+      "verdict_by_the_dispatch_rule": "HONEST"
+     }
+    ],
+    "all_five_paint_the_same_first_line": true,
+    "no_200_row_blamed_the_network": true,
+    "every_200_malformed_row_lost_the_detail_block": true,
+    "single_named_cause_asserted_by_all_five": true
+   },
+   "why": "five answers of HTTP 200 painted '没有生成可行方案' (data-result-status 'NO_PLANS_PRODUCED') with the same first line for all five = True: bodies of 0 B, 2 B, 2 B, 21 B and 159 B whose types were application/json and text/plain; charset=utf-8; none of them said '没有生成可行方案' (so the dispatch rule is satisfied here), but the 技术详情 region is absent from the DOM in every one of them (details 0), and no reason label or value is painted at all, so a traveller is told a specific cause with nothing underneath it"
+  },
+  {
+   "id": "C10_a_real_transport_failure_is_the_case_where_no_connection_is_the_honest_sentence",
+   "verdict": "TRANSPORT_FAILURE_WITHOUT_AN_HTTP_ANSWER_IS_ATTRIBUTED_HONESTLY",
+   "measured_on": "90d29a172e186aab6e6cb138ab4583ccf93bfa68",
+   "measured": {
+    "run_id": "O0301-153240",
+    "declared": {
+     "mode": "answer",
+     "status": 500,
+     "content_type": "text/plain; charset=utf-8",
+     "body": "Internal Server Error",
+     "delay_ms": 250
+    },
+    "how_the_failure_was_made": "page.route(**/agent/commands) -> route.abort(failed) on the tapped leg only; every other route continued normally",
+    "browser_side": {
+     "http_status": null,
+     "client_error": "TypeError: Failed to fetch",
+     "elapsed_ms": 8,
+     "request_failure_reason": "net::ERR_FAILED"
+    },
+    "screen": {
+     "painted_first_line": "连不上服务端",
+     "painted_full_card": "连不上服务端\n\n网络或后端没有响应，这与你的需求内容无关。你的行程没有被改动，检查网络后可以重试。",
+     "details_elements_in_dom": 0,
+     "data_result_status": "NETWORK"
+    },
+    "verdict_by_the_dispatch_rule": "HONEST",
+    "this_is_the_pair_to_C1": "same painted sentence, opposite legitimacy - here nothing answered"
+   },
+   "why": "aborting only the tapped leg left the browser with 'TypeError: Failed to fetch' and no status at all after 8 ms (net layer net::ERR_FAILED), and the screen painted '连不上服务端' / 'NETWORK' - which under the dispatch rule is the honest answer, and it is the same sentence C1 indicts when a real HTTP 500 did arrive"
+  },
+  {
+   "id": "C11_the_client_deadline_fires_first_and_the_server_answer_arrives_after_it_was_abandoned",
+   "verdict": "READ_LEG_NAMES_ITS_OWN_DEADLINE_AND_THE_LATE_ANSWER_COULD_NOT_BE_DELIVERED",
+   "measured_on": "90d29a172e186aab6e6cb138ab4583ccf93bfa68",
+   "measured": {
+    "run_id": "O0301-153352",
+    "declared_read_delay_ms": 20000,
+    "browser_legs": [
+     {
+      "url_tail": "journeys/6119ec01-bb15-42f4-a834-245d271",
+      "client_error": "AbortError: signal is aborted without reason",
+      "elapsed_ms": 12007
+     },
+     {
+      "url_tail": "health",
+      "client_error": "AbortError: signal is aborted without reason",
+      "elapsed_ms": 4003
+     }
+    ],
+    "origin_own_record": [
+     {
+      "at": "15:33:52",
+      "stamp": "A24_READ_ANSWERED_AFTER_DEADLINE",
+      "path": "/api/v1/journeys/6119ec01-bb15-42f4-a834-245d271c1479/experience",
+      "method": "GET",
+      "leg": "read",
+      "mode": "proxy",
+      "status": null,
+      "error": "[WinError 10053] 你的主机中的软件中止了一个已建立的连接。"
+     }
+    ],
+    "painted_on_screen": "没有回音 /  / 等了 12 秒，这台服务器一个字也没回答 /  / 这一发读取到了期限仍然没有任何回答：服务器既没有拒绝，也没有答应。这台设备上也没有可只读查看的本地副本，所以现在没有内容可显示。可以再试一次。 /  / 重试 / 归因详情",
+    "constant_read_in_the_bundle": true,
+    "claim": true
+   },
+   "why": "the read leg was declared to answer only after 20000 ms, and the browser abandoned it at 12007 ms with 'AbortError: signal is aborted without reason', painting '没有回音 /  / 等了 12 秒，这台服务器一个字也没回答 /  / 这一发读取到了期限仍'; the origin then recorded its own attempt at 15:33:52 with '[WinError 10053] 你的主机中的软件中止了一个已建立的连接。' - so the deadline beat the answer by 7993 ms and the late answer had no socket to land on"
+  },
+  {
+   "id": "C12_the_dispatch_s_five_classes_are_each_covered_by_named_rows",
+   "verdict": "CLASS_COVERAGE_COMPLETE_WITH_NO_UNMAPPED_ROW",
+   "measured_on": "90d29a172e186aab6e6cb138ab4583ccf93bfa68",
+   "measured": {
+    "coverage": {
+     "① 应用答了一个不带 envelope 的服务器错误": [
+      "R1",
+      "R2",
+      "R3",
+      "R4"
+     ],
+     "② 代理或网关自己答、应用根本没参与": [
+      "R10",
+      "R11",
+      "R9"
+     ],
+     "③ 真·传输失败（服务器确实没答）": [
+      "R17",
+      "R18"
+     ],
+     "④ 答了 200 但 payload 空或畸形": [
+      "R19",
+      "R20",
+      "R21",
+      "R22",
+      "R23"
+     ],
+     "⑤ 客户端期限先到、服务器事后才答": [
+      "R13",
+      "R24"
+     ],
+     "本单范围之外、同一枚病的延伸读数（我自己加的，不当判据）": [
+      "R12",
+      "R15",
+      "R16"
+     ],
+     "正控与信封阶梯（证明\"引用得了\"这一半）": [
+      "R14",
+      "R5",
+      "R6",
+      "R7",
+      "R8"
+     ]
+    },
+    "every_named_class_has_at_least_one_row": true,
+    "rows_in_the_table_not_in_any_class": [],
+    "rows_total": 24,
+    "verdict_split": {
+     "MISLEADS": 7,
+     "HONEST": 12,
+     "NOT_MEASURED": 5
+    }
+   },
+   "why": "classes ①..⑤ map to ['R1', 'R2', 'R3', 'R4'] / ['R10', 'R11', 'R9'] / ['R17', 'R18'] / ['R19', 'R20', 'R21', 'R22', 'R23'] / ['R13', 'R24'] and the table has 24 rows with 0 unmapped, so no row hides outside the scope the dispatch wrote and no class is answered by a row of a different shape"
+  },
+  {
+   "id": "C13_the_detail_region_disappears_through_two_different_doors",
+   "verdict": "DETAIL_REGION_ABSENT_IN_BOTH_FAILURE_FAMILIES",
+   "measured_on": "90d29a172e186aab6e6cb138ab4583ccf93bfa68",
+   "measured": {
+    "family_1_no_json_object_answered": {
+     "R1": {
+      "details": 0,
+      "card": "连不上服务端"
+     },
+     "R2": {
+      "details": 0,
+      "card": "连不上服务端"
+     },
+     "R3": {
+      "details": 0,
+      "card": "连不上服务端"
+     },
+     "R9": {
+      "details": 0,
+      "card": "连不上服务端"
+     },
+     "R11": {
+      "details": 0,
+      "card": "连不上服务端"
+     },
+     "R15": {
+      "details": 0,
+      "card": "连不上服务端"
+     }
+    },
+    "family_4_200_unreadable": {
+     "R19": {
+      "details": 0,
+      "card": "没有生成可行方案"
+     },
+     "R20": {
+      "details": 0,
+      "card": "没有生成可行方案"
+     },
+     "R21": {
+      "details": 0,
+      "card": "没有生成可行方案"
+     },
+     "R22": {
+      "details": 0,
+      "card": "没有生成可行方案"
+     },
+     "R23": {
+      "details": 0,
+      "card": "没有生成可行方案"
+     }
+    },
+    "family_with_the_region_present": {
+     "R5": {
+      "details": 1,
+      "card": "服务端处理失败"
+     },
+     "R6": {
+      "details": 1,
+      "card": "服务端处理失败"
+     },
+     "R7": {
+      "details": 1,
+      "card": "服务端处理失败"
+     },
+     "R8": {
+      "details": 1,
+      "card": "服务端处理失败"
+     },
+     "R14": {
+      "details": 1,
+      "card": "这次排不出方案：数据不够，不是你说的不对"
+     },
+     "R16": {
+      "details": 1,
+      "card": "服务端处理失败"
+     }
+    },
+    "counts": {
+     "absent_rows": 15,
+     "present_rows": 9
+    }
+   },
+   "why": "the region is gone in 15 of the 24 rows: in the first family the card is '连不上服务端' because the helper threw, in the 200 family the card is '没有生成可行方案' with data-result-status 'NO_PLANS_PRODUCED' - two different code paths, one consequence for a traveller, who in both cases has no 技术详情 to open"
+  }
+ ],
+ "q25": "every millisecond in this batch was measured on this tip in this batch; the pass-1 numbers stay in the pass-1 file and are not carried over",
+ "instrument_limits_disclosed": [
+  "seven earlier executions of these same arms (run ids O0301-153130, O0301-153136, O0301-153142, O0301-153148, O0301-153154, O0301-153159, O0301-153205) fired at the face I had already stopped in pass 1, because the runner still carried hardcoded ports; they wrote probe and origin records but no cell, so no reading of theirs is used here, and they are disclosed rather than deleted. The fix was to read the ports from the live rig state.",
+  "in class ④ the dispatch rule is satisfied - no 200 answer is blamed on the network - and the defect that remains is a different one: one asserted cause, no evidence region; both readings are left in the table so the verdict is not mine alone",
+  "the late server answer in C11 is recorded by my own origin (which plays the server); the product backend behind it did answer the origin, but the browser had already abandoned the socket, so the delivery failure is attributed to the transport, not to the application"
+ ],
+ "r2_reason": "the r1 file (already published, blob unchanged) carried a wrong discarded-run list: a slice was written as a single-character index, so every probe - including pass 1 - was flagged as a discarded execution. The corrected list is the seven O0301-1531xx/1532xx ids below, and r1 is left exactly as published rather than re-pushed.",
+ "derived_result": null,
+ "claimed_result": "MEASURED_NOT_GRADED"
+}
