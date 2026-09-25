@@ -1,0 +1,37 @@
+{
+ "tables": [
+  "journey_missions",
+  "agent_runs",
+  "agent_run_steps"
+ ],
+ "matches": [
+  {
+   "table": "journey_missions",
+   "column": "failure_reason",
+   "id": "f1fc2072-afd7-4fa8-8249-e987e83ffde9",
+   "value_len": 34,
+   "value": "DeepSeek API key is not configured"
+  },
+  {
+   "table": "agent_runs",
+   "column": "provider_key",
+   "id": "a933c9de-d457-4939-8545-a7c2d8ab85c3",
+   "value_len": 8,
+   "value": "deepseek"
+  },
+  {
+   "table": "agent_runs",
+   "column": "model_key",
+   "id": "a933c9de-d457-4939-8545-a7c2d8ab85c3",
+   "value_len": 17,
+   "value": "deepseek-v4-flash"
+  },
+  {
+   "table": "agent_runs",
+   "column": "failure_reason",
+   "id": "a933c9de-d457-4939-8545-a7c2d8ab85c3",
+   "value_len": 34,
+   "value": "DeepSeek API key is not configured"
+  }
+ ]
+}
