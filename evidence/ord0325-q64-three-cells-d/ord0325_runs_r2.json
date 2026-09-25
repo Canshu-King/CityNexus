@@ -1,0 +1,25 @@
+{
+ "schema": "CNX_ORD0325_RUNS_V1",
+ "why_this_is_the_second_name": "r1 那件把 at_local 写进了正文，重跑就是改字节；号令者的门拒绝覆盖已发布路径是对的，所以这里换新名，r1 原件留着不动",
+ "baseline_tip": "0f8b925facabc9df57bab600b86d999dd515bf94",
+ "tested_commit": "bff5c462bdea8b8a384bd02bc85d9232f2211b64",
+ "green_round": {
+  "log": "ord0325-run8-green-after-arms.log",
+  "run_id": "run368837",
+  "port": "5760",
+  "db": "_run368837.db ai=disabled reuseExistingServer=false\n[citynexus e2e] provenance ok: run=run368837 frontend=:5760 -> backend=:9760 ai=disabled db=_run368837.db",
+  "passed_count": 7,
+  "duration": "22.7s",
+  "green_nodes": [
+   "e2e\\qoder-ord0325-upstream-prose-not-on-screen.spec.ts:199:1 :: A1 住宿被拒（未映射的 422）：原话不上屏、三行读数在屏 — 中文半边",
+   "e2e\\qoder-ord0325-upstream-prose-not-on-screen.spec.ts:225:1 :: A2 住宿冲突码仍由 token 决定（正控）：换成行程冲突句，且原话仍不上屏",
+   "e2e\\qoder-ord0325-upstream-prose-not-on-screen.spec.ts:249:1 :: A3 住宿被拒：英文那半边同样两问",
+   "e2e\\qoder-ord0325-upstream-prose-not-on-screen.spec.ts:275:1 :: B1 采用方案被拒（409）：原话不上屏、三行读数在屏",
+   "e2e\\qoder-ord0325-upstream-prose-not-on-screen.spec.ts:355:1 :: C1 建行程后的住宿搜索被拒：banner 不印 error.message，改印本机读数",
+   "e2e\\qoder-ord0325-upstream-prose-not-on-screen.spec.ts:403:1 :: C2 建行程这一步本身被拒：向导里的拒绝句也不印上游原话"
+  ],
+  "node_count_excluding_the_seed_project": 6,
+  "seed_project_nodes": 1,
+  "why_the_denominators_differ": "runner 那一行的分母含 [real-seed] 前置项目，本单自己的门节点数写在 node_count_excluding_the_seed_project"
+ }
+}
