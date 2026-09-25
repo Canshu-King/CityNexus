@@ -1,0 +1,12 @@
+{
+ "run_id": "0323c2b0317",
+ "arm": "N2",
+ "message_text": "memory_forbidden_token_9f3c the traveller's own words were refused",
+ "pending_text": "待审清单读不出来： inbox_forbidden_token_4b71 the review queue is not ready 重读清单",
+ "leaked_needles_still_on_screen": [
+  "memory_forbidden_token_9f3c the traveller's own words were refused",
+  "inbox_forbidden_token_4b71 the review queue is not ready"
+ ],
+ "test_status": "failed",
+ "error_head": "Error: e2e/qoder-ord0323-two-exposure-cells.spec.ts :: N2 — the memory slot no longer states the status and content type this device got (memory_forbidden_token_9f3c the traveller's own words were refused) \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m Expected: \u001b[32mtrue\u001b[39m Received: \u001b[31mfalse\u001b[39m"
+}
