@@ -1,0 +1,12 @@
+{
+ "run_id": "0323c2l0317",
+ "arm": "N2",
+ "message_text": "这台设备收到的回复读不成这条请求要的结果（HTTP 500，内容类型 application/json）。 memory_forbidden_token_9f3c the traveller's own words were refused",
+ "pending_text": "待审清单读不出来： 这台设备收到的回复读不成这条请求要的结果（HTTP 503，内容类型 application/json）。 inbox_forbidden_token_4b71 the review queue is not ready 重读清单",
+ "leaked_needles_still_on_screen": [
+  "memory_forbidden_token_9f3c the traveller's own words were refused",
+  "inbox_forbidden_token_4b71 the review queue is not ready"
+ ],
+ "test_status": "failed",
+ "error_head": "Error: e2e/qoder-ord0323-two-exposure-cells.spec.ts :: N2 — the panel is repeating the reply again ([\"memory_forbidden_token_9f3c the traveller's own words were refused\",\"inbox_forbidden_token_4b71 the review queue is not ready\"]); memory reads \"这台设备收到的回复读不成这条请求要的结果（HTTP 500，内容类型 application/json）。 memory_forbidden_token_9f3c the traveller's own words were refused\" and the queue reads \"待审清单读不出来： 这台设备收到的回复读不成这条请求要的结果（HTTP 503，内容类型 application/json）。 inbox_forbidden_token_4b71 the review queue is not ready 重读清单\" \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m"
+}
