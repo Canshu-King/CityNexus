@@ -1,0 +1,60 @@
+{
+ "path": "frontend/src/features/planning/PlanWithAiSheet.tsx",
+ "old_blob": "c22cf42506a4175db992bde387ed8d9c6f1ffb9d",
+ "new_blob": "fd5f6e5ba2771a8d12669b9bec1ba91590970701",
+ "regions_equal": {
+  "copy_NO_PLANS": {
+   "old_lines": "282-292",
+   "new_lines": "282-292",
+   "slice_sha1_old": "e2c9ac927abea43c5ea49b7cc3052ec9a3843edc",
+   "slice_sha1_new": "e2c9ac927abea43c5ea49b7cc3052ec9a3843edc",
+   "equal": true
+  },
+  "details_render_block": {
+   "old_lines": "913-923",
+   "new_lines": "936-946",
+   "slice_sha1_old": "27eb124a07d3cc41adab0845684246c5bc97d034",
+   "slice_sha1_new": "27eb124a07d3cc41adab0845684246c5bc97d034",
+   "equal": true
+  },
+  "details_condition": {
+   "old_lines": "912-918",
+   "new_lines": "935-941",
+   "slice_sha1_old": "5522eb07efdff338138b7bc2007efc6890cd8ecb",
+   "slice_sha1_new": "5522eb07efdff338138b7bc2007efc6890cd8ecb",
+   "equal": true
+  }
+ },
+ "code_only_diff_old": [
+  "headers: { \"Content-Type\": \"application/json\", Accept: \"application/json\" },",
+  "headers: { \"Content-Type\": \"application/json\" },"
+ ],
+ "code_only_diff_new": [
+  "refuses the second click of a same-tick double tap, and before the first await -- so a refused",
+  "burst never gets one, both legs of the accepted press carry the same one, and the next deliberate",
+  "press mints a new one.  Not held in state, storage or a cooldown: none of those is the intent,",
+  "and a cooldown dressed up as correctness would let two different asks reuse a key.",
+  "The leg that matters is `plans/generate` -- the server reads the transport key there",
+  "(`main.py`, ORD-0272), and its validator wants 8..128 characters, which a v4 UUID satisfies. */",
+  "const idempotencyKey = crypto.randomUUID();",
+  "today, so it is inert HERE -- the leg that reads it is plans/generate below.  The body",
+  "gains nothing: AgentCommandRequest is extra=\"forbid\", so a new key would be a 422. */",
+  "headers: {",
+  "\"Content-Type\": \"application/json\",",
+  "Accept: \"application/json\",",
+  "\"Idempotency-Key\": idempotencyKey,",
+  "Without it the request reaches the route with no identity at all, and the durable",
+  "receipt machinery never sees this submission -- \"the phone's press leaves no trace\"",
+  "is literally this header being absent. */",
+  "headers: {",
+  "\"Content-Type\": \"application/json\",",
+  "Accept: \"application/json\",",
+  "\"Idempotency-Key\": idempotencyKey,"
+ ],
+ "decisions": {
+  "copy_NO_PLANS": true,
+  "details_render_block": true,
+  "details_condition": true
+ },
+ "scope": "Region-level byte equality for the two code sites the X-5 claim depends on (the copy string and the details render). Whole-blob equality does NOT hold between these generations, so this is the narrowest honest transfer."
+}
