@@ -1,0 +1,10 @@
+{
+ "write": {
+  "mode": "silent",
+  "hold_seconds": 200
+ },
+ "read": {
+  "mode": "proxy"
+ },
+ "stamp": "A11_CTL_SILENT_WRITE"
+}
