@@ -144,7 +144,7 @@ function serverReasonCode(body: unknown): string {
     const value = error[key];
     if (typeof value === "string" && value.trim()) return value.trim().toUpperCase();
   }
-  const detail = (body as { detail?: unknown }).detail;
+  const detail = (body as { detail?: unknown } | null)?.detail;
   return typeof detail === "string" ? detail.slice(0, 60).toUpperCase() : "";
 }
 
@@ -152,7 +152,7 @@ function serverReasonCode(body: unknown): string {
 function serverReasonSentence(body: unknown): string | null {
   const error = (body as { error?: Record<string, unknown> } | null)?.error;
   if (error && typeof error.message === "string" && error.message.trim()) return error.message;
-  const detail = (body as { detail?: unknown }).detail;
+  const detail = (body as { detail?: unknown } | null)?.detail;
   if (typeof detail === "string" && detail.trim()) return detail;
   return null;
 }
@@ -745,7 +745,16 @@ export function PlanWithAiSheet({
           summary: null,
         });
       } else {
-        setResult({ status: "NETWORK", failureReason: null, summary: null });
+        /* ORD-0302 ②: this used to write `failureReason: null`, and because 技术详情 is gated on
+           `failureReason || summary`, the whole block left the DOM -- a traveller looking at 「连不上服务端」
+           had nothing to open, and no way to tell "the origin never answered" from "we could not read what
+           it answered".  A note THIS device composed, labelled as such, is the honest minimum: it says we got
+           no wording, without inventing the server's. */
+        setResult({
+          status: "NETWORK",
+          failureReason: failureNote(null, "no readable answer reached this device (network or origin)"),
+          summary: null,
+        });
       }
     } finally {
       abortRef.current = null;
