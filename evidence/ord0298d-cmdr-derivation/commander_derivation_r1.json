@@ -1,0 +1,173 @@
+{
+ "arms_failing_any_check": [],
+ "arms_total": 7,
+ "frozen_tip": "dc964086c9d412573ac19d70b24b30e6c3ee6168",
+ "green_round": {
+  "problems": 0,
+  "triples_named": 14,
+  "verdict": "GREEN"
+ },
+ "inputs": {
+  "arms_blob": "457313365eda53e9634ddf522839fe3714d0e86d",
+  "every_input_recomputed_to_its_own_cited_sha1": true,
+  "gate_round_blob": "211c67f88b4360c63c1e4ed1c6284f36b3f354fd",
+  "verifier_derivation_blob": null
+ },
+ "instrument": "derive_arms_commander_r2.py (rules identical to derive_ord0292_commander_r1.py)",
+ "killed_by_commander": 7,
+ "lane_claims_agree_with_my_derivation": true,
+ "order": "ORD-0298d",
+ "per_arm": [
+  {
+   "arm": "K278_NO_MISSION_ID_IN_BODY",
+   "checks": {
+    "anchor_hits_ge_1": true,
+    "attempt_exitCode_nonzero": true,
+    "baseline_exitCode_zero": true,
+    "both_stacks_started": true,
+    "no_missing_nodes": true,
+    "owner_green_in_baseline": true,
+    "owner_red_in_attempt": true,
+    "redSet_equals_observed": true,
+    "restored_exact": true,
+    "run_ids_distinct": true,
+    "triple_sha_is_frozen": true
+   },
+   "claimed_by_lane": "KILLED",
+   "derived_by_commander": "KILLED",
+   "failing_checks": [],
+   "red_observed_n": 1
+  },
+  {
+   "arm": "K278_TWO_KEYS_MERGED",
+   "checks": {
+    "anchor_hits_ge_1": true,
+    "attempt_exitCode_nonzero": true,
+    "baseline_exitCode_zero": true,
+    "both_stacks_started": true,
+    "no_missing_nodes": true,
+    "owner_green_in_baseline": true,
+    "owner_red_in_attempt": true,
+    "redSet_equals_observed": true,
+    "restored_exact": true,
+    "run_ids_distinct": true,
+    "triple_sha_is_frozen": true
+   },
+   "claimed_by_lane": "KILLED",
+   "derived_by_commander": "KILLED",
+   "failing_checks": [],
+   "red_observed_n": 1
+  },
+  {
+   "arm": "K278_CLEAR_BEFORE_SEND",
+   "checks": {
+    "anchor_hits_ge_1": true,
+    "attempt_exitCode_nonzero": true,
+    "baseline_exitCode_zero": true,
+    "both_stacks_started": true,
+    "no_missing_nodes": true,
+    "owner_green_in_baseline": true,
+    "owner_red_in_attempt": true,
+    "redSet_equals_observed": true,
+    "restored_exact": true,
+    "run_ids_distinct": true,
+    "triple_sha_is_frozen": true
+   },
+   "claimed_by_lane": "KILLED",
+   "derived_by_commander": "KILLED",
+   "failing_checks": [],
+   "red_observed_n": 1
+  },
+  {
+   "arm": "K278_SILENCE_ON_NON_ACCEPT",
+   "checks": {
+    "anchor_hits_ge_1": true,
+    "attempt_exitCode_nonzero": true,
+    "baseline_exitCode_zero": true,
+    "both_stacks_started": true,
+    "no_missing_nodes": true,
+    "owner_green_in_baseline": true,
+    "owner_red_in_attempt": true,
+    "redSet_equals_observed": true,
+    "restored_exact": true,
+    "run_ids_distinct": true,
+    "triple_sha_is_frozen": true
+   },
+   "claimed_by_lane": "KILLED",
+   "derived_by_commander": "KILLED",
+   "failing_checks": [],
+   "red_observed_n": 1
+  },
+  {
+   "arm": "K253_LEG2_KEY_DROPPED",
+   "checks": {
+    "anchor_hits_ge_1": true,
+    "attempt_exitCode_nonzero": true,
+    "baseline_exitCode_zero": true,
+    "both_stacks_started": true,
+    "no_missing_nodes": true,
+    "owner_green_in_baseline": true,
+    "owner_red_in_attempt": true,
+    "redSet_equals_observed": true,
+    "restored_exact": true,
+    "run_ids_distinct": true,
+    "triple_sha_is_frozen": true
+   },
+   "claimed_by_lane": "KILLED",
+   "derived_by_commander": "KILLED",
+   "failing_checks": [],
+   "red_observed_n": 3
+  },
+  {
+   "arm": "K253_LEG1_KEY_DROPPED",
+   "checks": {
+    "anchor_hits_ge_1": true,
+    "attempt_exitCode_nonzero": true,
+    "baseline_exitCode_zero": true,
+    "both_stacks_started": true,
+    "no_missing_nodes": true,
+    "owner_green_in_baseline": true,
+    "owner_red_in_attempt": true,
+    "redSet_equals_observed": true,
+    "restored_exact": true,
+    "run_ids_distinct": true,
+    "triple_sha_is_frozen": true
+   },
+   "claimed_by_lane": "KILLED",
+   "derived_by_commander": "KILLED",
+   "failing_checks": [],
+   "red_observed_n": 3
+  },
+  {
+   "arm": "K253_ONE_KEY_FOR_ALL_INTENTS",
+   "checks": {
+    "anchor_hits_ge_1": true,
+    "attempt_exitCode_nonzero": true,
+    "baseline_exitCode_zero": true,
+    "both_stacks_started": true,
+    "no_missing_nodes": true,
+    "owner_green_in_baseline": true,
+    "owner_red_in_attempt": true,
+    "redSet_equals_observed": true,
+    "restored_exact": true,
+    "run_ids_distinct": true,
+    "triple_sha_is_frozen": true
+   },
+   "claimed_by_lane": "KILLED",
+   "derived_by_commander": "KILLED",
+   "failing_checks": [],
+   "red_observed_n": 3
+  }
+ ],
+ "red_set_sizes": [
+  1,
+  3
+ ],
+ "rederived_by": "commander 494abfd7 (independent of lane prose)",
+ "scope": "Candidate generation named in --frozen only. Per Q24/Q25 these do not transfer to any other tip. This file states what MY derivation says; closure still needs the verifier's derived_result (B-1), which is why `verifier_comparison.present` is reported, not assumed.",
+ "verifier_comparison": {
+  "mine_matching_verifier": null,
+  "present": false,
+  "rows": []
+ }
+}
