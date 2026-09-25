@@ -16588,6 +16588,43 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### CMDR 04:45 — ORD-0302 进 CLOSED、ORD-0328 换代落地、Q68 落章、尺换到 r4，以及我自己那道门的三处修（全部是量出来的）
+
+**lane** commander 494abfd7 · **at_local** 2026-09-26T04:45+08 · **generation** 现尖 `refs/heads/mirror/integration-frontend-apple-pass1` = 0f8b925facabc9df57bab600b86d999dd515bf94
+
+**① ORD-0328 已落地（换代一次，ff-only）**：`65df31df96cfb8a954f5feb36484710a883e1597` → 0f8b925f…（ahead 一枚、behind 零、文件交集为空、两路同号）。回执 `evidence/cmdr-landing-ORD-0328/preflight_r1.json` = aa73a0fc828f06c84f7e63be2c4c0624402ff3ff；同一枚候选的两次 gate 读数一并上架，红 `evidence/cmdr-landing-ORD-0328/pf_ord0328.json` = ef4b34c1f62475534031c69160049c0e5ab56706、绿 `.../pf_ord0328_r2.json` = b49e151f062e68ba30ad59ede491735eec160cf5。**我另做两件亲测，不采信任何人的自报**：`git cat-file -p` 现尖上 `agent-mcp/citynexus_mcp/schemas.py` 里 `class HermesReplanProposalView` 定义在 `:51` 且带真字段；那枚原本不可导入的测试文件在 `afbbf5be3256d76eac0453ab3ad8e6dd1356d7cc` 与现尖上的 blob 逐字节全等 = cfc4e1ef16867a2164cdcea4e139a119cc8db45d —— 也就是说 S2 修的是契约，不是把断言改绿。
+
+**② ORD-0302 = CLOSED-ON-GENERATION(`9a669c8bec863fadf31d5158f4a1be66aec49f23`)**，依据是 verifier 的派生件而非我的读数：`evidence/ord0329-0302-b5-derived-d2305848/ord0329_derived_d2305848.json` = d66dd5b9fc19a823d52655db7685b8ac4f8dc0b6（十枚 derived_cells 全 MET、顶层聚合 ALL_MET；判据取**渲染出来的文字**并用 `==` 而不是 `in`）。范围句照 E 原样转述不加码：手机侧只主张传输层身份一致（我那枚探针 4f67fce417b49d0d87e13d08cd050b5a8d0bd9bc），walkthrough 在门外；按 Q25 绑跑臂那棵树、不跨代。落章口径见本账 `### CMDR 04:05` 那块的 Q67=①。
+
+**③ CMDR_DECISION Q68 = 「原因编号」那个槽只准放编号。** 链路是我在现尖逐行读的：`frontend/src/features/planning/PlanWithAiSheet.tsx:147` 定义 `serverReasonCode`，`:155` 在没有机器码时退回 `detail.slice(0, 60).toUpperCase()`，经 `:662` 与 `:735` 拼成 `status = "BLOCKED:" + code`，再在 `:209` 剖出 `code`、`:218` 渲染成「服务器回的原因编号是 …」。命名承诺了格式就得守格式：截断且大写的人话不是编号。修复归 B 的 ORD-0323 修正件（同文件不开第二车道），双向断言已随单下去。
+
+**④ 换尺**：S4 的 AST 语义尺 r4 = eb262f59e54d5142ad0e8041704e751eac473ace（收据 8564afa9ead7e439a7863639685c3d74e368f7c2）**取代** r3 = 44e062e6ce9c7b5d97d78e09e432072da102292c，并公开承认一处：r3 那 25 格里有 21 行的行**根本不是 DOM 汇**（`} catch (error) {`、`if (!r.ok) {`、递给 `setMessages` 的对象字面量、一行 JSDoc、一枚 sink_count 为零的 `.ts`），另 1 行插的是个数字。所以「不缩」的基线自本块起改以 r4 件内格集为准，谁也不许再拿 25 当分母。S1 的 ORD-0326 已按此改判。
+
+**⑤ 我自己那道写入门今晚修了三处，每处都有反例撑着**：一是落地门加了**全套件收集臂**（双向自测 `evidence/cmdr-landing-gate-suite-arm/selftest_r1.json` = 11e298036a65465e7b38b56a58d9f0f8c3b382f6：干净树静默通过、中毒树报 `Interrupted` 并拒绝落地，两臂同命令同解释器）；二是逐文件臂补上 `PYTHONPATH` —— 缺它时同一枚候选报红（ef4b34c1…）、补上即报绿（b49e151f…），**那次红是我的量具，不是 S2 的形**；三是账本门的坐标螺栓现在**读得懂诚实披露**：值本身那一行写明它是内容 sha1／从未入 git，且同段内有一枚可解析坐标，才放行，三种反例（未披露、披露但无近旁坐标、坐标在另一段）仍拒（自测 `evidence/cmdr-ledger-door-coord-bolt/selftest_r2.json` = 7d6b913e0d398974acd67b0f853efe90ecb56754，被试门体 blob 645f5819750ddfc14b288ee5fc7863079dd8f5a9；上一枚 `.../selftest_r1.json` = 58bde89afc3291e2408516ee976247a4e2276ca0 钉的是更早一版门体（前缀 3dd3b33a，那一版我没有上架、今天已不存在于盘上，故不给全号、也不可 cat-file），逐字短语那版只认得 HJ-P3 的说法，S4 的「文件 sha1」被它拒过一次——拒的是我的口径窄，不是她的字）。这一改的直接效果：HJ-P3 的 `aad2d1f2_0059.md`、S2 的 `S2-hermes-port_0416.md`、E 的 `e-d2305848_0430.md` 三块已入账。
+
+**⑥ 记一条我自己的分类缺陷（不占车道，我修完给新读数）**：落地门把「产品」只定义成 `frontend/src` 与 `backend/app` 两棵树，所以 ① 那枚真正改了 `agent-mcp/` 的候选在它眼里是 `product introduced: none`。工具没坏，但口径窄了：改 MCP 契约的产品码不会被自动带上「要不要重新发布/重新上手机」这一问。
+
+**⑦ 在跑的与待收**：B 的 ORD-0323（含 Q68 修正件）、S1 的 ORD-0326（共享服务器原因通道，先与 B 做文件碰撞检查）、F 的 ORD-0327（有界写入产品码）、S2 的 ORD-0330（把 `_upgrade_cached_request_replan_response` 从 Hermes 线 `0fe51945cdf2d0ae35494b615f3418957174da03` 的 `:107`/`:542`/`:617` 移植到现尖，该符号现尖命中为零）、S4 的 ORD-0331（把 r4 补到跨文件 helper，验收基准就是 S1 要引入的形状）。交付一律落 `D:\moodle\_qoder_ledger_inbox\<lane>_<HHMM>.md`，首行以 `### ` 起；我按 LEDGER_SINGLE_WRITER_V1 代插，不改车道原话。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
+### ORD-0322 S4-ast-taint — Q64 UI 证据污染尺 r4（TypeScript AST 真数据流）已交付，取代 r3
+
+- 车道 S4-ast-taint（本会话新建）。代 generation = 30de4ebe409f49c5e25f4758cb2e5f4e90764a4f；范围 frontend/src 全 74 枚 .ts/.tsx（导出用 git archive，工作树未动）。
+- 尺：evidence/ord0322-ast-taint-S4/ui_exposure_taint_ast_r1.cjs — git blob eb262f59e54d5142ad0e8041704e751eac473ace，56795 bytes，落架 commit 7ee0d0516f9cc738c8cb7d38736db8b2d575f522；架上读出与本地副本的 sha1(over bytes) 同为 6ddd78175550d18d46d521175c3f4fe74e40c2e1。取代 r3 = 44e062e6ce9c7b5d97d78e09e432072da102292c；r1/r2/r3 字节一律未改，只新增路径。
+- 收据：evidence/ord0322-ast-taint-S4/receipt_r1.json — git blob 8564afa9ead7e439a7863639685c3d74e368f7c2，41430 bytes，commit ed1bf595f84334b94e9d3e58eb72b85d3191d1b4。每条 verdict 由本轮实测派生，件内无手写 PASS 字面量。
+- 验收集读数：`--selftest` 20/20 断言达成（13 枚 r3 自带夹具 + E 的 7 枚，逐枚 fixture 字节与架上 blob 全等，见 receipt.selftest_fixtures.*.fixture_blob_sha1）；E 五枚反例 5/5 红（receipt.e_fixtures.e0319r2_A_rename_last_part.tsx 等）；两枚正控 2/2 净（e0319r2_D_control_clean.tsx、e0319r3_E3_control_attribute_only.tsx）；r3 那五枚干净夹具 observed 命中数全为 0。
+- 基线那一格：r3 在 frontend/src/features/planning/PlanWithAiSheet.tsx:1016 的格被 r4 以同规则名 UPSTREAM_TEXT_VIA_HELPER_TO_DOM 原样复现，链路 serverReasonSentence 定义 frontend/src/features/planning/PlanWithAiSheet.tsx:159 → 实参 frontend/src/features/planning/PlanWithAiSheet.tsx:576 → failureNote 返回 frontend/src/features/planning/PlanWithAiSheet.tsx:182 → setResult frontend/src/features/planning/PlanWithAiSheet.tsx:568 → 渲染 frontend/src/features/planning/PlanWithAiSheet.tsx:1016。
+- 但同一枚文件 r4 多出一格 frontend/src/features/planning/PlanWithAiSheet.tsx:989，因此“恰好 1 命中、不多不少”这一格我判 NOT_MET，不改成能过的形状。
+- :989 是真红，证据是跑出来的不是读出来的：把该文件 109-335 行原样导出（git archive 到 scratch）转译执行 serverReasonCode 与 statusCopy，输入 {error:{hint:"x"},detail:"行程过长，无法在三天预算内排出方案"}，得 copy.body = 「服务器回的原因编号是 行程过长，无法在三天预算内排出方案，这条我们还没有本地文案…」，即上游原话落在一个被标注为“原因编号”的位置上（读数见 receipt.behaviour_probe_cell_989）。r3 看不见它的原因：链路跨两次函数边界、一次模板内插与一次 useState 写入，没有单行同时含源与汇。
+- 全树不缩读数：cell=(file,line,rule) 口径 r3 尺（blob 44e062e6ce9c7b5d97d78e09e432072da102292c）报 25 格 → r4 尺（blob eb262f59e54d5142ad0e8041704e751eac473ace）报 26 格；按 (file,line) 口径共有 3 行、r4 独报 23 行、r3 独报 22 行，格集全部逐格列在 receipt（blob 8564afa9ead7e439a7863639685c3d74e368f7c2）。22 行逐格带证据（行原文 + 由 r3 自己的已编译正则重放出的匹配字节区间与起止行，见 receipt.full_tree_diff_vs_r3.lost_cells.*.r3_matched_span）：其中 21 行经 sink_probe 实测不是 DOM 汇（形如 `} catch (error) {`、`if (!r.ok) {`、给 setMessages 的对象字面量、一行 JSDoc 注释，以及 frontend/src/lib/failureAttribution.ts:160 所在文件 sink_count = 0），剩 1 行 frontend/src/main.tsx:1066 确是汇但插的是 agentRun.tool_steps.length（一个数字），r3 实际匹配到的文本就是 "trace · {"（被静态标签 "Persisted tool trace" 里的英文单词 trace 勾发）。
+- 判据口径：tree_lost_cells_all_explained 与 tree_every_lost_cell_carries_evidence 均 MET，而字面口径 tree_no_line_lost 判 NOT_MET，两行同时留在 receipt.derived_verdicts 里，不合并成一句“通过”。
+- 未达与限制（不粉饰）：跨文件数据流不在 r4 范围内（r3 同样不覆盖），frontend/src/lib/failureAttribution.ts:160 那条就属此类；frontend/src/features/agent/AgentRunRail.tsx:18 是 NAME_ONLY 保守多报（step.detail 由外部 props 传入，本文件无法证真也证不伪），已标出不偷偷删；本机只有一个 node 安装（v24.14.0），两面自测之差是 cwd 与调用方式而非引擎，此点在 receipt.cross_surface.limit 里写明；本轮全树 depth-cut 查询 56 次并按文件记入 receipt.per_file[*].depth_cut_lookups，把尺内 depth cap 换成 40、150、400 三档重跑（环境变量 CNX_R4_MAXD，尺 blob eb262f59e54d5142ad0e8041704e751eac473ace），三档格数同为 26，故未见因深度而漏报，但“干净”结论仍带此读数。
+- 边界遵守：0 改产品字节（git -C D:/moodle/CityNexus status --porcelain frontend 输出 0 行，见 receipt.product_untouched）；0 推权威分支 mirror/integration-frontend-apple-pass1；未覆盖任何已发布路径；未触碰 *_live.db 与 *_preview.db；未跑 demo/reset；frontend/node_modules 仅只读用于 require typescript 5.9.3；未用 hardlink/junction 做快照。
+- 待裁决（归号令者，必要时转仲裁）：① Q64 是否允许“上游 detail 经截断与大写后作为原因编号显示”——若不允许，:989 应开修复单；若允许，请把它写成尺的豁免口径，我不自行放行。② 那 21 行按汇定义属假红，是否承认；若承认，r3 的 25 就不该继续当“不缩”的分母，请改以 receipt.full_tree_diff_vs_r3 的格集为准。③ E 的逐枚 40 位在她已发布两件里只有尺的 blob（44e062e6ce9c7b5d97d78e09e432072da102292c 与文件 sha1 8300737c256446a6c689fa39572d10a18a3dd784），总线最近 300 帖内检索不到夹具文件的 40 位，故“与帖对平”这一格记 NOT_VERIFIABLE；能成立的是三方一致：架上 blob = 我 git hash-object 的字节 = 尺内嵌夹具字节。
+
+
 ### 📱 aad2d1f2 (SESSION=aad2d1f2) P3 · **ORD-0312：M3 的代次你 03:32 改指了（B 的 b5 落地 + 手机链已切代），新探针件三行我这回全部自己只读取回并逐字节对上；九臂已在这一代次连同「同代去守卫」突变体一起重跑，十项判据全真，本格不再是 PARTIAL（只差 M2 的 RED 向，仍写 NOT-MEASURED）；M4 已量；ORD-0316 交完并量到闸当场拒绝，按你门口径重投；T-1 在现尖的迁移读数三跑同果** @04:19+08
 
 ```text
