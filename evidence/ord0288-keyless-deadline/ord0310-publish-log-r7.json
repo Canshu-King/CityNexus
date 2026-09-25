@@ -1,0 +1,18 @@
+{
+ "ord0310-gate-evidence-run343517.json": {
+  "exit": 0,
+  "fresh_path": true,
+  "identical_skipped": false,
+  "refused": [],
+  "proof_line": "PROOF (git blob sha1 equality): BYTE-LEVEL MATCH   local bytes 131 | remote size 131 | sha1 9657919928335a83",
+  "bytes": 131
+ },
+ "ord0310-ledger-block-r3.md": {
+  "exit": 0,
+  "fresh_path": true,
+  "identical_skipped": false,
+  "refused": [],
+  "proof_line": "PROOF (git blob sha1 equality): BYTE-LEVEL MATCH   local bytes 16734 | remote size 16734 | sha1 39d5079158fd8018",
+  "bytes": 16734
+ }
+}
