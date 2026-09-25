@@ -1,0 +1,78 @@
+{
+ "ran_at_local": "2026-09-26T02:10:45+0800",
+ "branch": "commander/control",
+ "tip_read": "9873340aa74e3f0eed1770fcc9f39cf3708b7b12",
+ "method": "GET /repos/.../commits?sha=<branch>&path=<file> - a path written once has one commit; a re-PUT would have two; the refused upload must have none",
+ "per_path_writes": {
+  "evidence/ord0288-t1x-transfer-hjp3/cell_t1x_error_path_records_response_status_on_current_tip_T1-001513_whitelisted.json": 1,
+  "evidence/ord0288-t1x-transfer-hjp3/cell_t1x_error_path_records_response_status_on_current_tip_T1-001639_whitelisted.json": 1,
+  "evidence/ord0288-t1x-transfer-hjp3/cell_t1x_error_path_records_response_status_on_current_tip_T1-001727_whitelisted.json": 1,
+  "evidence/ord0288-t1x-transfer-hjp3/cell_t1x_same_key_different_body_on_current_tip_T1-001513_whitelisted.json": 1,
+  "evidence/ord0288-t1x-transfer-hjp3/cell_t1x_same_key_different_body_on_current_tip_T1-001638_whitelisted.json": 1,
+  "evidence/ord0288-t1x-transfer-hjp3/cell_t1x_same_key_different_body_on_current_tip_T1-001727_whitelisted.json": 1,
+  "evidence/ord0288-t1x-transfer-hjp3/cell_t1x_same_key_two_processes_on_current_tip_T1-001513_whitelisted.json": 1,
+  "evidence/ord0288-t1x-transfer-hjp3/cell_t1x_same_key_two_processes_on_current_tip_T1-001638_whitelisted.json": 1,
+  "evidence/ord0288-t1x-transfer-hjp3/cell_t1x_same_key_two_processes_on_current_tip_T1-001727_whitelisted.json": 1,
+  "evidence/ord0288-t1x-transfer-hjp3/instruments/o0288t1x_transfer.py": 1,
+  "evidence/ord0288-t1x-transfer-hjp3/instruments/p3_served_recheck.py": 1,
+  "evidence/ord0288-t1x-transfer-hjp3/t1x_transfer_reading.json": 1,
+  "evidence/ord0300-c2-pairing-hjp3/arm_old_old_lock_C2-214340_gate_refused_original.json": 0,
+  "evidence/ord0300-c2-pairing-hjp3/o0316_gate_refused_original_proof.json": 1,
+  "evidence/ord0300-c2-pairing-hjp3/raw_bundle_o0316.json": 1,
+  "evidence/ord0312-target-generation-reread/instruments/p4_bus2.py": 1,
+  "evidence/ord0312-target-generation-reread/instruments/p4_deliver_r2.py": 1,
+  "evidence/ord0312-target-generation-reread/instruments/p4_deliver_r3.py": 1,
+  "evidence/ord0312-target-generation-reread/instruments/p4_deliver_r4.py": 1,
+  "evidence/ord0312-target-generation-reread/instruments/p4_push.py": 1,
+  "evidence/ord0312-target-generation-reread/instruments/p4_push2.py": 1,
+  "evidence/ord0312-target-generation-reread/instruments/p4_push3.py": 1,
+  "evidence/ord0312-target-generation-reread/instruments/p4_served_now.py": 1,
+  "evidence/ord0312-target-generation-reread/instruments/p4_ship.py": 1,
+  "evidence/ord0312-target-generation-reread/ledger_inbox_proof_p4_r2.json": 1,
+  "evidence/ord0312-target-generation-reread/ledger_inbox_proof_p4_r3.json": 1,
+  "evidence/ord0312-target-generation-reread/ledger_inbox_proof_p4_r4.json": 1,
+  "evidence/ord0312-target-generation-reread/ord0312_m3_m4_reading.json": 1,
+  "evidence/ord0312-target-generation-reread/ord0312_served_recheck_at_block_write.json": 1,
+  "evidence/ord0312-target-generation-reread/retired_ruler_scan_p4.json": 1
+ },
+ "paths_with_more_than_one_write": [],
+ "the_gate_refused_path": {
+  "path": "evidence/ord0300-c2-pairing-hjp3/arm_old_old_lock_C2-214340_gate_refused_original.json",
+  "commits_touching": 0,
+  "meaning": "zero commits = nothing ever landed under that name"
+ },
+ "controls_known_to_hold_two_writes": [
+  {
+   "path": "evidence/ord0300-hjp3-write-cells/RECEIPT_O0300-2610.json",
+   "writes": 2
+  },
+  {
+   "path": "evidence/ord0300-c2-pairing-hjp3/evidence_manifest_full40_c2.json",
+   "writes": 2
+  },
+  {
+   "path": "evidence/ord0288-t1-durable-ownership-hjp3/evidence_manifest_full40_o0288_r2.json",
+   "writes": 2
+  }
+ ],
+ "counting_correction": [
+  "evidence/ord0312-target-generation-reread/ord0312_served_recheck_at_block_write.json",
+  "evidence/ord0312-target-generation-reread/instruments/p4_served_now.py",
+  "evidence/ord0312-target-generation-reread/ledger_inbox_proof_p4_r2.json",
+  "evidence/ord0312-target-generation-reread/instruments/p4_deliver_r2.py",
+  "evidence/ord0312-target-generation-reread/instruments/p4_push2.py",
+  "evidence/ord0312-target-generation-reread/ledger_inbox_proof_p4_r3.json",
+  "evidence/ord0312-target-generation-reread/instruments/p4_deliver_r3.py",
+  "evidence/ord0312-target-generation-reread/ledger_inbox_proof_p4_r4.json",
+  "evidence/ord0312-target-generation-reread/instruments/p4_deliver_r4.py",
+  "evidence/ord0312-target-generation-reread/retired_ruler_scan_p4.json",
+  "evidence/ord0312-target-generation-reread/instruments/p4_bus2.py",
+  "evidence/ord0312-target-generation-reread/instruments/p4_push3.py"
+ ],
+ "verdict": {
+  "no_path_in_this_span_was_written_twice": true,
+  "the_refused_original_never_landed": true,
+  "the_double_publish_controls_are_detected": true,
+  "ALL_HOLD": true
+ }
+}
