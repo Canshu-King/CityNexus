@@ -1,0 +1,92 @@
+{
+ "what": "ORD-0296 r2：G11 修好仪表（缺 import os/subprocess）后重测——控制轮全绿 + M11 只红 G11",
+ "lane": "F 8ccd71d8",
+ "ran_at": "2026-09-25T14:28:17+08:00",
+ "supersedes": "ord0296_G11_and_M11_r1.json（那一版控制轮就红：NameError: name 'os' is not defined ⇒ 仪表无效，不能当击杀）",
+ "instrument_defect_found_and_fixed": {
+  "symptom": "G11 在产品码原样时 3 轮全红 ⇒ 该格当时不具备判别力",
+  "cause": "门文件没有 import os / subprocess / sys / tempfile（我照驱动脚本抄了用法，没抄导入）",
+  "proof_of_cause": "pytest -k G11 的 NameError: name 'os' is not defined（tests 第 376 行）",
+  "fix": "补 4 个 import + 子进程改用一次性 sqlite 路径（不吃套件状态）",
+  "why_it_matters": "红在 pristine 上的格子不能证明任何事；这条正是我自己写在记忆里的仪表纪律"
+ },
+ "tree": "snap_0296_g2（main.py == 权威尖 90d29a17 上同一枚 blob 871aec006a3f6482f7a2700a8baeff8c25f7690f）",
+ "interpreter": "D:/moodle/CityNexus/.venv/Scripts/python.exe",
+ "backend_cwd": "D:\\moodle\\_qoder_f_run\\snap_0296_g2\\backend",
+ "collect_only": {
+  "rc": 0,
+  "collected": 11
+ },
+ "gate_file": {
+  "after_blob_40": "f3cf05e8fe75cf9322c6eddc1ae6ffbdea8d0f93",
+  "bytes": 20366,
+  "cell_added": "test_G11_importing_the_app_is_what_arms_the_door"
+ },
+ "control_rounds_product_untouched": [
+  {
+   "round": 1,
+   "rc": 0,
+   "red": [],
+   "summary_line": "11 passed, 2 warnings in 3.01s"
+  },
+  {
+   "round": 2,
+   "rc": 0,
+   "red": [],
+   "summary_line": "11 passed, 2 warnings in 3.33s"
+  },
+  {
+   "round": 3,
+   "rc": 0,
+   "red": [],
+   "summary_line": "11 passed, 2 warnings in 3.34s"
+  }
+ ],
+ "control_all_green": true,
+ "M11": {
+  "arm": "M11_startup_door_not_wired",
+  "file": "app/main.py",
+  "line_named": 427,
+  "removed": "assert_configuration_reachable()   # ORD-0296: refuse to boot a deadline that cannot mean anything",
+  "replaced_with": "assert_configuration_reachable  # MUTANT M11",
+  "locate_hits": 1,
+  "before_blob_40": "871aec006a3f6482f7a2700a8baeff8c25f7690f",
+  "after_blob_40": "a2920c6adb44bbc1bd8aecbb3d88d9ba710b6c5f",
+  "per_round": [
+   {
+    "round": 1,
+    "rc": 1,
+    "red": [
+     "test_G11_importing_the_app_is_what_arms_the_door"
+    ],
+    "summary_line": "1 failed, 10 passed, 2 warnings in 3.59s"
+   },
+   {
+    "round": 2,
+    "rc": 1,
+    "red": [
+     "test_G11_importing_the_app_is_what_arms_the_door"
+    ],
+    "summary_line": "1 failed, 10 passed, 2 warnings in 3.51s"
+   },
+   {
+    "round": 3,
+    "rc": 1,
+    "red": [
+     "test_G11_importing_the_app_is_what_arms_the_door"
+    ],
+    "summary_line": "1 failed, 10 passed, 2 warnings in 3.50s"
+   }
+  ],
+  "named_cell": "test_G11_importing_the_app_is_what_arms_the_door",
+  "only_that_cell_reddened_all_rounds": true,
+  "survived_under_ten_cells": "ord0296_arm_M11_r1.json：G11 之前 3 轮 10 passed（=我门的空洞）"
+ },
+ "restore": {
+  "main_byte_exact": true,
+  "main_blob_after": "871aec006a3f6482f7a2700a8baeff8c25f7690f"
+ },
+ "shape_of_kill": "拆掉那次调用 ⇒ 子进程 `import app.main` 在坏配置下不再拒绝（rc=0、档名消失）⇒ G11 的 refused 断言当场红；正向那半边同时证明它不是「任何情况都红」的坏格子",
+ "claimed_result": "G11_ADDED_CONTROL_GREEN_AND_M11_RED_ONLY_G11",
+ "derived_result": null
+}
