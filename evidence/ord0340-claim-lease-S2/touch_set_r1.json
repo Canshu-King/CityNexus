@@ -1,0 +1,195 @@
+{
+ "schema": "CNX_ORD0340_TOUCH_SET_V1",
+ "order": "ORD-0340",
+ "state": "PRE-AUTHORISATION-NO-CODE-PUSHED",
+ "lane": "S2-hermes-port",
+ "tip_read_this_run": "9b84a5fea9e7b38f3cace4160508f7a1b46c1418",
+ "tree_read_for_every_coordinate": "9b84a5fea9e7b38f3cace4160508f7a1b46c1418",
+ "measured_on_tip": "9b84a5fea9e7b38f3cace4160508f7a1b46c1418",
+ "cells_as_measured": {
+  "A_dead_worker_http": [
+   500,
+   "Internal Server Error"
+  ],
+  "A_row_left": {
+   "present": true,
+   "queried_key": "plans.generate:ord0340-dead-cffc4a2e",
+   "operation": "plans.generate",
+   "response_status": null,
+   "response_json_is_null": true,
+   "response_json_bytes": 0,
+   "created_at": "2026-09-25T23:30:51.699141+00:00",
+   "expires_at": "2026-10-02T23:30:51.699141+00:00",
+   "journal_mode": "wal",
+   "idempotency_rows_in_db": 1
+  },
+  "B_dead_replay": [
+   409,
+   812,
+   true,
+   "2026-10-02T23:30:51.699141+00:00"
+  ],
+  "C_second_replay_same": [
+   409,
+   true
+  ],
+  "D_null_row_while_alive": {
+   "present": true,
+   "queried_key": "plans.generate:ord0340-live-c5d745ad",
+   "operation": "plans.generate",
+   "response_status": null,
+   "response_json_is_null": true,
+   "response_json_bytes": 0,
+   "created_at": "2026-09-25T23:30:56.953076+00:00",
+   "expires_at": "2026-10-02T23:30:56.953076+00:00",
+   "journal_mode": "wal",
+   "idempotency_rows_in_db": 2
+  },
+  "E_alive_replay": [
+   409,
+   828,
+   true
+  ],
+  "F_alive_worker_final": 201,
+  "G_replay_after_it_finished": [
+   201,
+   16,
+   true
+  ],
+  "H_fresh_key": 201,
+  "pids": [
+   38896,
+   20752,
+   28708,
+   58888,
+   13192
+  ],
+  "cross_process_all_distinct": true
+ },
+ "reading": [
+  "A: a worker claims the key and dies -> the caller gets HTTP 500 whose entire body is `Internal Server Error`, and the durable row stays response_status=NULL",
+  "B/C: replaying that dead key answers 409 `agent idempotency record is incomplete` after about 800 ms of waiting, and the row is still NULL on the third attempt -> the key is burned for the rest of its receipt life",
+  "D/E: a key held by a *healthy* worker shows the identical NULL row, and the replay is answered with the same 409 and the same envelope (C/E third element true) -> in-flight and dead cannot be told apart from the response",
+  "F/G: that healthy worker finished with 201 and a later replay of the same key returns 201 in 16 ms -> the 409 handed out while it ran was simply wrong",
+  "H: a never-used key still returns 201, so the route is not broken in general"
+ ],
+ "body_comparison_basis": "trace_id is regenerated per call, so equality is judged with trace_id normalised; raw byte equality is false by construction",
+ "cross_process_basis": {
+  "pids": [
+   38896,
+   20752,
+   28708,
+   58888,
+   13192
+  ],
+  "all_five_distinct": true,
+  "durable_read_via": "independent sqlite connection, PRAGMA query_only=ON",
+  "journal_mode_observed": "wal"
+ },
+ "instrument_note": "the first pass ran the slow holder without CITYNEXUS_DATABASE_URL, so it opened ./citynexus.db and cells D to G were void; only the corrected pass is quoted",
+ "premise_for_reclaim_safety": {
+  "a_null_receipt_left_no_durable_candidates": true,
+  "plan_versions_before_then_after_the_dead_claim": [
+   1,
+   1
+  ],
+  "replays_add_nothing_either": true,
+  "idempotency_rows_after_the_dead_claim": 2,
+  "not_covered_by_this_premise": "an external AI or Hermes call made inside the dead attempt stays out there - that is ORD-0270 EXTERNAL_EFFECT_NOT_ROLLBACKABLE, and a lease does not undo it"
+ },
+ "touch_set": {
+  "files": [
+   "backend/app/main.py",
+   "backend/db/schema.sql",
+   "backend/app/db/models.py",
+   "backend/app/db/session.py",
+   "backend/tests/test_qoder_ord0340_claim_lease.py"
+  ],
+  "coordinates": {
+   "claim_writer_def": [
+    4773
+   ],
+   "claim_inserts_null_receipt": [
+    4791
+   ],
+   "claim_refuses_to_reclaim_comment": [
+    4777
+   ],
+   "route_call_site": [
+    4722
+   ],
+   "fill_guard": [
+    4847
+   ],
+   "fill_count_check": [
+    4852
+   ],
+   "incomplete_message_sites": [
+    4804,
+    4854
+   ],
+   "waiting_reader_def": [
+    10132
+   ],
+   "reader_attempts": [
+    10142
+   ],
+   "reader_sleep": [
+    10158
+   ],
+   "schema_idempotency_response_json": [
+    402
+   ],
+   "schema_idempotency_expires_at": [
+    404
+   ],
+   "model_idempotency_response_json": [
+    669
+   ],
+   "additive_column_precedent": [
+    535
+   ],
+   "config_write_busy_timeout": [
+    89,
+    95
+   ],
+   "config_write_deadline": [
+    90,
+    96
+   ]
+  },
+  "config_values": {
+   "write_busy_timeout_ms": "write_busy_timeout_ms: int = int(os.getenv(\"CITYNEXUS_WRITE_BUSY_TIMEOUT_MS\", \"30000\"))",
+   "write_deadline_ms": "write_deadline_ms: int = int(os.getenv(\"CITYNEXUS_WRITE_DEADLINE_MS\", \"45000\"))"
+  },
+  "main_py_lines": 11490,
+  "why_main_py_is_unavoidable": "the claim writer, the fill guard, the waiting reader and the route that turns an outcome into an HTTP answer all live in backend/app/main.py, the file the order itself names as lane F's land while ORD-0332 runs there",
+  "why_one_new_durable_column": "idempotency_keys carries only expires_at, which means receipt validity (+7 days here) and is deliberately not trusted as a guard; a lease deadline is a different clock and reusing that column would make 'reclaim' and 'forget' the same value",
+  "additive_column_is_precedented": [
+   535
+  ]
+ },
+ "proposal": {
+  "lease": "each attempt carries a token plus claim_deadline; the deadline is derived from the configured write budget rather than invented, so it cannot expire while a legitimate attempt can still finish",
+  "named_states": {
+   "PLAN_GENERATION_IN_FLIGHT": "an unexpired lease is held by someone else, retry_after_ms says when to come back, nothing is burned",
+   "PLAN_GENERATION_ATTEMPT_STALE": "the lease lapsed with a NULL receipt; the caller may take over. today this case is indistinguishable from the one above"
+  },
+  "fencing": "the fill becomes UPDATE ... WHERE response_json IS NULL AND claim_token = <my token>, so a resurrected original worker cannot overwrite the answer that replaced it",
+  "never_done": "claim rows are never deleted and receipts never forgotten; recovery either reads the winner or takes over a lapsed attempt under a token",
+  "acceptance_cells": [
+   "lease lapsed -> re-claim wins and the new answer lands",
+   "lease unexpired -> re-claim refused, and the refusal is the named in-flight code",
+   "the resurrected original tries to fill -> refused, and the winning answer survives",
+   "the dead-claim shape stops being permanent: the same key yields a real answer afterwards"
+  ]
+ },
+ "sequencing_request": "not a line of this is written until you order it. the edit lands in backend/app/main.py while F is in the same file for ORD-0332, so either F finishes and I rebase, or I land the lease first and F rebases. also say whether backend/app/db/session.py plus schema.sql may move with me in the same commit, because the lease needs one durable column.",
+ "refs_pushed_by_this_measurement": 0,
+ "product_files_written_in_the_repo": 0,
+ "model_calls_made": 0,
+ "credentials_printed": 0,
+ "live_or_preview_db_touched": 0,
+ "demo_reset_invoked": "against a declared throwaway database only, which is the fixture door the suite already uses; the live and preview targets were never opened",
+ "derived_result": null
+}
