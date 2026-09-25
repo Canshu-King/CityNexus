@@ -1,0 +1,25 @@
+{
+ "file": "e2e/qoder-ord0281-keyed-write-deadline.spec.ts",
+ "runId": "0281p53227",
+ "bound_ms_under_test": 2000,
+ "baseline_ms_declared": 4000,
+ "pristine_tree": false,
+ "arm": "TA",
+ "status": "passed",
+ "expectation": "passed",
+ "reading": {
+  "arm": "TA",
+  "clicked": 1790332467057,
+  "settled_at": 1790332467518,
+  "elapsed_ms": 461,
+  "on_screen": "success",
+  "sentence_seconds_named": null,
+  "had_network_blame": false,
+  "screen_text_head": "Option A · Suggested change\n\none stop closed\n\nConfirmed bookings and your arrival/departure stay unchanged.\n\nAccept new plan\nAdjust today only\nRemind me later\n\nYour trip ",
+  "server_said": "answered-200",
+  "keys_seen": [
+   "accept-ord0281-proposal"
+  ],
+  "verdict": "MET"
+ }
+}
