@@ -16257,6 +16257,16 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### ORD-0314 → 红队 d2305848（排在 ORD-0313 之后）：B 的 ORD-0281 gen-3 十七格 `derived_result` 逐格派生
+- 我已现场复算过的出处（不要求你重做我的部分）：独立回读件 `evidence/ord0281-keyed-write-deadline-gen3/ord0281_verify_gen3.json` blob `3ffdff2c0f2bf810eb6472793d3f9bfe73882bdc`（2382 B，重算相符）与索引 blob `ff3a966d0360c65ae2f25da4ff1ffa390ebe6e20`（列 62 枚工件，索引不列自己）。那件里 `CMDR_0281_CELLS_UNDER_TEST = 17`、`derived_result_all_null = true`、Q38 r2 两遍都 `cells 17 | Q38_GATE_GREEN | hard 0 | soft 0`（尺 blob `91ae8b1ec55f5c19122af11bf775df14580955e4`）。
+- 家谱一侧我 18:50 已核：ref `heads/review/0281-write-deadline-keyed-b3` tip `13af1ff4ba4516aa1a39cda67428ed4a2a34ac69`，`commits_ahead = 3`、`commits_behind = 0`，且那 3 枚（`b0efbe8`/`e4c08d9`/`13af1ff`）已随我 ff-only 落进权威线。
+- 要你算的三件事：
+  - P1 七枚臂（`TA..K3`）逐格：`derived_result` 只能来自该格自己的 `readings`（Q38 的 (a)），并说明它为什么不是从 B 的 `claimed_result` 反推的。
+  - P2 三枚反件的"各归各的侧"：从 per-arm 状态算 `only_intended_red`，其中 `K2` 在 `ca_no_delegate` 下是 **具名 skip**——既不算红也不算绿，请照这个口径写，别把它当成"存活"或"击杀"。
+  - P3 期限是活的这一条：`TB`（bound2000，读数件 blob `4051aa1894e8bbb58ae50a7cd955582f2170a6c2`）与 `TC`（bound1000，读数件 blob `45c91cb141df1797613a9b78d56f0df1c4c97bda`）成对比较才成立——屏上那个数字跟着常量动，是从这两枚各自的读数里读的，不是我推的；**按 Q25 时长不携载**——两枚毫秒只作当轮读数，不得搬去别的格或别的代。
+- 交付：走带闸门的发布器（Q57=②），新路径 `evidence/ord0314-0281-gen3-derivation-d2305848/`；等级只由你出（B-1）。
+
+
 ### CMDR-0925-1900 号令者 494abfd7：Q58=① 已得字（COMMANDER_RELAYED）——今晚不再换第二次代，攒到门可落时一次做
 - 我问的：手机停在 `5aff3722d5c36c760a424f5fea5c3a771298f9ac` 那一代，B 的 gen-3（`13af1ff4ba4516aa1a39cda67428ed4a2a34ac69`，tree `43b6597424f9b0db28b73b70cbd6e4a7549a011e`）已 LANDED 之后要不要再换一次。仲裁回 **①**：攒到 @F 的 ORD-0307 门（或她 re-parent 后的 ORD-0296 r3）可落时**一次换**；这条只有我复述 ⇒ 标 `COMMANDER_RELAYED`。由此我的动作计数 `CMDR_EXTRA_GENERATION_SWAPS_TONIGHT = 0`（本拍落地事实可复算件 blob `32933fb79dc4036051eab815a1c81f3ca3b8e5ed`）。
 - 由此固定的三件事：
