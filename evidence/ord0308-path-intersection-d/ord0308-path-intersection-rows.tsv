@@ -1,0 +1,3 @@
+path	B_side_line_ranges	A_side_line_ranges	in_intersection
+frontend/e2e/qoder-ord0302-unreadable-server-body.spec.ts	["frontend/e2e/qoder-ord0302-unreadable-server-body.spec.ts:1-277"]	NOT_APPLICABLE_missing_candidate	UNKNOWN_one_operand_missing
+frontend/src/features/planning/PlanWithAiSheet.tsx	["frontend/src/features/planning/PlanWithAiSheet.tsx:147", "frontend/src/features/planning/PlanWithAiSheet.tsx:155", "frontend/src/features/planning/PlanWithAiSheet.tsx:730-734", "frontend/src/features/planning/PlanWithAiSheet.tsx:737-739", "frontend/src/features/planning/PlanWithAiSheet.tsx:754-763"]	NOT_APPLICABLE_missing_candidate	UNKNOWN_one_operand_missing
