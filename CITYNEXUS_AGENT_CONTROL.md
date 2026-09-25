@@ -16588,6 +16588,16 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### CMDR-0925-2329 号令者 494abfd7：Q64 已经不只是规矩——我把它做成了能跑的门（三向自检 + 两侧捕获），B 的 b5 可以直接用它自查
+- **工具已上架**：`evidence/cmdr-ui-exposure-gate-2327/ui_exposure_field_check_r1.py` = 0ba79e00738984ee06651219530e5a9d7fa897e3。用法两条：扫工作树里的一个文件 `python live_checks/ui_exposure_field_check_r1.py --file <path>`；扫**某个候选自己的字节** `--ref <sha> --path <path-in-tree>`。它报的是"形状"，不是判决（件内 `interpretation_limit` 写明：命中=你要回答的问题，0 命中=这张粗网没抓到，不等于安全）。
+- **三向自检（`…/selftest_r1.json` = 084af05abbee2c2b7008eedf6eb192464c744eee，SELFTEST_PASS）**：① 只渲染白名单字段（`http_status` / `content-type` / `bytes`）的那段必须 0 命中；② `body=${…}` 那种必须命中；③ **另一个入口** `dangerouslySetInnerHTML` 必须命中。第三向是我特意加的：**只盯 `body=` 的门会放过异常堆栈和 innerHTML**，那这种门就是 theatre。
+- **两侧捕获（同一把尺、同一个文件）**：
+  · B 的 `4fc0de91c18a966f99fc40fcd7ce136a5e2b8936` ⇒ `…/capture_b4_r1.json` = c5e689e252cd8e3a972ae8350826fcb80edee145，EXPOSURE_SHAPE_FOUND：`frontend/src/features/planning/PlanWithAiSheet.tsx:187`（`body_head: string;`）、`:582`（`raw.slice(0, 240)`）、`:1068`（渲染 `{`body=${result.rawReading.body_head}`}`）。
+  · 现尖 `2344145ce6342b6ac32ac4d0955c0f524d8c9320` 同一文件 ⇒ `…/capture_tip_r1.json` = 4bf0eafa23f6c814518fabcfc8f38ff34e0b59b3，NO_EXPOSURE_SHAPE_FOUND、0 命中。⇒ 这把尺**不是一律报红**，它抓的正是这次新增的那一面。
+- **@B c01d72a3**：b5 交之前自己先跑 `--ref <你的新 sha> --path frontend/src/features/planning/PlanWithAiSheet.tsx`，我要看到的是**同一个文件从 6 命中变 0 命中**，再把这条命令与两侧输出写进你的收据（scope/generation/artifact/measurement method 四元组，新常设 MEASUREMENT_SCOPE_FIRST_V1）。`expectedRaw` 那两向（假 token 屏上看不见 / 空正文仍显示 `bytes=0`）与门的输出**都要有**：门查的是"码里有没有那个形状"，你的断言查的是"屏上真出现什么"——**两个观测量不是一回事，别拿一个替另一个**。
+- 全员适用：任何把上游文本往 DOM/截图/证据件里放的新形状（新面板、日志视图、"查看详情"、甚至调试浮层），都先过这把门；它覆盖的形状类清单在件内 `PATTERNS` 表里（工具 blob 0ba79e00738984ee06651219530e5a9d7fa897e3 的 `patterns` 字段）：RAW_BODY_TO_DOM / UPSTREAM_EXCEPTION_TO_DOM / RAW_TEXT_INTERPOLATION / DANGEROUS_HTML，覆盖不到的一律按"要具名说明"处理，不许默认放行。
+
+
 ### CMDR-0925-2324 号令者 494abfd7：**Q64=① 已回，并升级为长期规则 UI_EVIDENCE_EXPOSURE_GATE_V1**；B 的 b4 因此**暂时不落**（拦停理由写死在这里，不是我挑刺）
 - **仲裁 23:2x 回字**（我 23:20 提的 Q64）：**选 ①——只许列白名单字段**。允许集合她写得很具体：`http_status / content_type / body_bytes / response_received / elapsed_ms / request_id（若可公开）`；**禁止** `raw body / raw detail / raw exception`。她否掉我倾向的 ②（掩码）的原话理由：**"正则永远追不上所有秘密形态"**——`token=abc` 容易，但 `eyJhbGci...` 看起来就像普通字符串，而且还有内部 ID、用户数据、路径；**"mask 是辅助，不应该成为第一道门"**。③ 更不行：**"'演示环境承担风险'这种说法在证据系统里很危险，因为截图和收据通常会离开演示环境"**。
 - **她顺手把这条升级成常设规则 UI_EVIDENCE_EXPOSURE_GATE_V1**（我即刻执行、全员适用）：任何要进入 **UI / 截图 / 证据工件** 的数据，必须先走 `source classification → allowed fields → render`，**不许** `backend returned something → frontend displays it`。她的定位很准：前面几轮防的是"页面说了不存在的原因"，这一条防的是"页面**诚实地**展示了不该展示的东西"——两件事同属一大类：**用户看到的信息必须既真实、又经过授权**。
