@@ -122,18 +122,24 @@ def main() -> int:
     L.append("")
     if gen.get("authority_tip_is_ancestor_of_this_tree"):
         extra = gen.get("files_this_tree_adds_on_top_of_the_tip", [])
+        rec_blob = rows[RECEIPT]["remote_blob"] if RECEIPT in rows else "NOT_IN_THE_READBACK"
         L.append(
-            f"**本代与权威线的关系（不用嘴说）**：现读的尖 `{tip_read['sha']}` 是我这一代的祖先"
+            f"**本代与权威线的关系（不用嘴说）**：本单收据 `{DIR}/{RECEIPT}` blob `{rec_blob}` 的 "
+            f"`generation_binding` 写着 —— 现读的尖 `{tip_read['sha']}` 是我这一代的祖先"
             f"（`authority_tip_is_ancestor_of_this_tree="
             f"{json.dumps(gen['authority_tip_is_ancestor_of_this_tree'])}`、`git merge-base --is-ancestor` "
-            f"退出 `0`），我这一代比线尖只多 `{len(extra)}` 件："
-            f"{json.dumps(extra, ensure_ascii=False)} —— 全是本车道自己的工具，产品/门字节 0 件。"
-            f"所以这一轮交的就是**落成的那一代**的读数，不再欠一次追基座；落地之前那一轮的"
-            f"分叉/交集论证（自分叉点 `{gen['fork_point_with_the_line']}` 起线动 "
-            f"`{len(gen['files_the_line_changed_since_the_fork'])}` 件、我动 "
-            f"`{len(gen['files_my_candidate_changed_since_the_fork'])}` 件、交集 "
-            f"`{len(gen['intersection_between_their_files_and_mine'])}` 件）记在上一块，"
-            f"原样表 `{DIR}/ord0310-path-disjointness-r2.tsv`，这里不复述成今天的数。")
+            f"退出 `0`）。同一本账里 `files_this_tree_adds_on_top_of_the_tip` = "
+            f"{json.dumps(extra, ensure_ascii=False)} —— 这 "
+            f"{len(extra)} 件全在本车道自己的 `review/` 之下，产品与门字节 "
+            f"{len([p for p in extra if not p.startswith('review/')])} 件。"
+            f"另有 `files_the_line_changed_since_the_fork` / `files_my_candidate_changed_since_the_fork` / "
+            f"交集 = {len(gen['files_the_line_changed_since_the_fork'])} / "
+            f"{len(gen['files_my_candidate_changed_since_the_fork'])} / "
+            f"{len(gen['intersection_between_their_files_and_mine'])}（自分叉点 "
+            f"`{gen['fork_point_with_the_line']}` 起）—— 这个交集是**我前几轮的工具改动已经在线上**"
+            f"的结果，不是「合流会不会撞」：尖是我这一代的祖先时合流是 fast-forward，不做三方合并，"
+            f"所以本代没有冲突面可预测；上一轮那份路径相交表仍在 "
+            f"`{DIR}/ord0310-path-disjointness-r2.tsv`，我不拿它冒充今天的读数。")
     else:
         L.append(
             f"**先说清一枚你不该把它读成什么**：线尖在我这一代之后又动了 "
@@ -275,24 +281,30 @@ def main() -> int:
         L.append("**四·补、判据是「期限到了」，不是「有没有 signal」（你 ② 要的那枚双臂自证）**")
         L.append("")
         L.append(
-            f"先把前提钉住（这是你 21:02 那帖给我的新事实）：现读尖 `{tip_read['sha']}` 上"
-            f"`PlanWithAiSheet.tsx` 的 `signal` 选项行是 "
+            f"先把前提钉住（这是你 21:02 那帖给我的新事实；下面每个数都出自臂收据 "
+            f"`{DIR}/{ARMS_PUB}` blob `{rows[ARMS_PUB]['remote_blob']}` 与其逐臂证据文件）："
+            f"现读尖 `{tip_read['sha']}` 上 `PlanWithAiSheet.tsx` 的 `signal` 选项行是 "
             f"{json.dumps([ln for ln, _ in r6['signal_option_lines_at_the_tip']])}，"
-            f"而我这一代的无键腿 `{r6['keyless_leg_wrapped_in_this_tree'][0][0]}` 行本来就带着它"
-            f"（`{r6['wrapper_preserves_the_callers_signal'][0][1]}`）⇒ **"
-            f"「有 signal」在这棵树上恒真，它不可能当判别量**。所以我把臂对准这一点："
-            f"`{two['arm']}` 只把 `{r6['keyless_leg_wrapped_in_this_tree'][0][1]}` 换回裸 "
-            f"`fetch(`（同一处 `signal,` 一字未动，`anchor_hits={two['anchor_hits']}`、"
-            f"字节 `{two['sizes']['before']}` → `{two['sizes']['during_mutation']}`，差 "
-            f"`{two['sizes']['delta_bytes']}` B 正好是包装函数名的长度），"
+            f"而我这一代的无键腿 "
+            f"{json.dumps([ln for ln, _ in r6['keyless_leg_wrapped_in_this_tree']])} 行本来就带着它"
+            f"（包装件 `{r6['wrapper_preserves_the_callers_signal'][0][0]}` 行 "
+            f"`{r6['wrapper_preserves_the_callers_signal'][0][1]}`）⇒ "
+            f"**「有 signal」在这棵树上恒真，它不可能当判别量**。所以我把臂对准这一点："
+            f"`{two['arm']}` 只把 "
+            f"`{r6['keyless_leg_wrapped_in_this_tree'][0][1]}` 换回裸 `fetch(`"
+            f"（同一处 `signal,` 一字未动；下面四个数都是该臂在 "
+            f"`{DIR}/{ARMS_PUB}` blob `{rows[ARMS_PUB]['remote_blob']}` 里的字段 "
+            f"`anchor_hits` 与 `sizes`：`anchor_hits={two['anchor_hits']}`、"
+            f"`before={two['sizes']['before']}` → `during_mutation={two['sizes']['during_mutation']}` → "
+            f"`after_restore={two['sizes']['after_restore']}`，差 "
+            f"`{two['sizes']['delta_bytes']}` B 正好等于包装函数名多出的长度），"
             f"三枚节点读数是 "
             + "、".join(f"`{k.split('：')[0]}={'红' if v == 'RED' else '绿'}`"
                         for k, v in two["nodes"].items())
             + f" ⇒ 只有 K1 红、K2/K3 仍绿，即**红的是「期限到不到」那一判据，不是 signal 的有无**。"
-              f"反向对照：把期限分支冒充成旅客主动取消的那枚臂 `{r6['arm_that_breaks_the_distinction']['arm']}` "
-              f"红的是 K3（`{len(r6['arm_that_breaks_the_distinction']['red_nodes'])}` 枚）。"
-              f"该臂的 (sha, nodeid, shape) 三元组与还原摘要在臂收据 "
-              f"`{DIR}/{ARMS_PUB}` blob `{rows[ARMS_PUB]['remote_blob']}` 里；"
+              f"反向对照：把期限分支冒充成旅客主动取消的那枚臂 "
+              f"`{r6['arm_that_breaks_the_distinction']['arm']}` 红的节点数是 "
+              f"{len(r6['arm_that_breaks_the_distinction']['red_nodes'])}（K3）。"
               f"逐行前提原样输出 `{DIR}/{proof_name}` blob `{proof_blob}`。")
         if not r6["premise_proof"].get("exists"):
             L.append("")
@@ -315,8 +327,12 @@ def main() -> int:
     if ERRATUM:
         er = json.loads((SC / ERRATUM).read_text(encoding="utf-8"))
         refs_out = SC / "r4" / "ord0310-tools-ref-read-2.out"
-        refs_parsed = json.loads([l for l in refs_out.read_text(encoding="utf-8").splitlines()
-                                  if l.startswith("parsed:")][0][len("parsed:"):].strip())
+        refs_parsed = {l.split("\t")[1].strip(): l.split("\t")[0].strip()
+                       for l in refs_out.read_text(encoding="utf-8").splitlines()
+                       if "\trefs/heads/" in l}
+        if "refs/heads/review/ord0310-tools-r5" not in refs_parsed:
+            print(f"ABORT: {refs_out.name} does not hold the tools-r5 ref line it is cited for")
+            return 8
         TOOLS_R5 = refs_parsed["refs/heads/review/ord0310-tools-r5"]
         d1, d2, d3 = er["defects"][0], er["defects"][1], er["defects"][2]
         L.append("")
@@ -364,23 +380,37 @@ def main() -> int:
              f"{json.dumps(read['notMatching'])}`；剩下 `{len(prior)}` 件是上一代同名/异名件，"
              f"我这一轮没有重贴它们的内容，所以它们具名为 `PRIOR_GENERATION_NOT_RESTAGED` 而不是被算成不吻合。")
     if PUBLISH_LOG:
-        logs = [json.loads((SC / n).read_text(encoding="utf-8")) for n in PUBLISH_LOG.split(",")]
-        fresh = sum(1 for lg in logs for v in lg.values() if v["fresh_path"])
-        skipped = sum(1 for lg in logs for v in lg.values() if v["identical_skipped"])
-        refused = [n for lg in logs for n, v in lg.items() if v["refused"]]
-        transport = sorted(n for lg in logs for n, v in lg.items()
-                           if v["exit"] != 0 and not v["refused"])
+        logs = [(n, json.loads((SC / n).read_text(encoding="utf-8"))) for n in PUBLISH_LOG.split(",")]
+        for n, _ in logs:
+            if n not in rows:
+                print(f"ABORT: the publish log {n} is not in the readback, so it cannot be cited")
+                return 9
+        fresh = sum(1 for _, lg in logs for v in lg.values() if v["fresh_path"])
+        skipped = sum(1 for _, lg in logs for v in lg.values() if v["identical_skipped"])
+        refused = [f"{n} :: {k}" for n, lg in logs for k, v in lg.items() if v["refused"]]
+        transport = [(n, k) for n, lg in logs for k, v in lg.items()
+                     if v["exit"] != 0 and not v["refused"]]
+        cited = "、".join(f"`{DIR}/{n}` blob `{rows[n]['remote_blob']}`" for n, _ in logs)
         L.append("0 覆盖不是我口述：每一件都走 `HJ-P3_evidence/gated_push.py` 那道同字节即跳过、"
-                 f"异字节即拒绝的门，逐件日志已发布 —— 本轮 `FRESH={fresh}`（新路径首次创建）、"
-                 f"`SKIP={skipped}`（同字节不动那件路径）、`REFUSE={json.dumps(refused)}`。"
-                 + (f"另有 {len(transport)} 件在**发出 PUT 之前**就死于链路 "
-                    f"（`SSL: UNEXPECTED_EOF_WHILE_READING`，闸门 fail-closed），我按老规矩只手工重试"
-                    f"那几件、并把它们记成传输异常而不是凭据问题：重试件全部 FRESH+MATCH，"
-                    f"日志逐件写着：" + "、".join(f"`{DIR}/{n}`" for n in PUBLISH_LOG.split(",")) + "。"
-                    if transport else ""))
+                 f"异字节即拒绝的门，逐件日志已发布：{cited}。三个计数是从日志的 "
+                 f"`fresh_path` / `identical_skipped` / `refused` 三个键算出来的："
+                 f"首次创建 `{fresh}` 条路径、同字节被跳过 `{skipped}` 条路径、"
+                 f"被门拒绝 `{len(refused)}` 条"
+                 + (f"（`{refused[0]}`：我把一件已按此名发布过的量具改了字又想同名重发，门咬住了，"
+                    f"于是改名重发成新路径、旧那件字节未动）" if refused else "")
+                 + (f"；另有 `{len(transport)}` 次在**发出 PUT 之前**就死于链路"
+                    f"（`SSL: UNEXPECTED_EOF_WHILE_READING`，闸门 fail-closed、什么都没写）："
+                    f"{json.dumps([k for _, k in transport])} —— 按老规矩记成传输异常而不是凭据问题，"
+                    f"只手工重试那几件，重试后全部 FRESH+MATCH"
+                    if transport else "") + "。")
     else:
         L.append("0 覆盖不是我口述：每一件都走 `HJ-P3_evidence/gated_push.py` 那道同字节即跳过、"
                  "异字节即拒绝的门。")
+    L.append("")
+    L.append(f"生成本条正文那件工具本身也已发布：`{DIR}/ord0310-tool-make-post-r6.py` —— 它的 blob 我不写在这里，"
+             f"由下一本账 `{NEXT_BOOK}` 逐件独立 GET 给出（自己给自己签哈希不算证据）；"
+             f"七枚本车道 ref 同一趟 `git ls-remote` 的原样输出在 `{DIR}/ord0310-tools-ref-read-final.out`，"
+             f"包括 `refs/heads/review/ord0310-keyless-deadline-d-on-2344145c` 与被量那一代的父位。")
     L.append("")
     L.append(f"那本账本自己不能自证，所以它单独由一次 GET 收尾（原话）：`{proof}`。")
     L.append("")
@@ -414,11 +444,19 @@ def main() -> int:
              "ORD-0308 那张表里 `NOT_APPLICABLE_missing_candidate` 那一格现在有条件重跑"
              "（F 的 0307 已落），你要的话我下一单做。")
     L.append("")
+    er_for_discipline = (json.loads((SC / ERRATUM).read_text(encoding="utf-8"))
+                       if ERRATUM else {"readings_unchanged": {}})
     L.append(f"**纪律**：`0 权威线写入`、`0 推他人 ref`（只推了自己命名的 ref：`{ref['ref']}` 与"
              f"量具那枚 tools ref）、`demo/reset 0`、"
              f"`_live`/`_preview` 库 0 读写、凭据 0 打印（第二路读 ref 的 token 只进内存，"
              f"`{DIR}/{TIP_PUB}` 里那一行写的是占位符）、`0 为了绿而改断言`"
-             f"（本轮 0 次开门跑测量，勘误只改标签）。")
+             + (f"（勘误件 `{DIR}/ord0310-erratum-r1.json` blob "
+                f"`{rows['ord0310-erratum-r1.json']['remote_blob']}` 的字段 "
+                f"`readings_unchanged.re_measurements_run_for_this_erratum` = "
+                f"{json.dumps(er_for_discipline['readings_unchanged']['re_measurements_run_for_this_erratum'])}，"
+                f"即一轮门、一枚臂都没重跑）"
+                if 'ord0310-erratum-r1.json' in rows else "（本勘误轮 0 次重测）")
+             + "。")
     L.append("")
     L.append(closing)
     text = "\n".join(L) + "\n"
