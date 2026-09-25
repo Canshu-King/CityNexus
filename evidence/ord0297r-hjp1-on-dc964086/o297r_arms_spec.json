@@ -1,0 +1,66 @@
+{
+  "b3_primary": {
+    "kind": "b3_offline",
+    "cells": [
+      "B3_offline_after_convergence"
+    ],
+    "claim": "On base dc964086: a traveller whose client converged onto the next generation of the SAME base, holding a real trip, stays usable offline on that generation",
+    "base_tip": "dc964086c9d412573ac19d70b24b30e6c3ee6168",
+    "root_installed": "D:\\moodle\\_qoder_hjp1_o207_20260922\\o297r\\landed\\frontend\\dist",
+    "root_next": "D:\\moodle\\_qoder_hjp1_o207_20260922\\o297r\\landed_next\\frontend\\dist",
+    "backend": "D:\\moodle\\_qoder_hjp1_o207_20260922\\o297r\\base_backend\\backend",
+    "installed_sha": "dc964086c9d412573ac19d70b24b30e6c3ee6168",
+    "next_sha": "dc964086c9d412573ac19d70b24b30e6c3ee6168 + inert marker line (ORD-0297r-next)",
+    "marker_value": "ORD-0297r-next",
+    "mode": "answer",
+    "install_mode": "two_navigations"
+  },
+  "b3_control_partial": {
+    "kind": "b3_control_partial",
+    "cells": [
+      "B3_control_partial_deploy"
+    ],
+    "claim": "The discriminating control on base dc964086: identical walk and trigger, one configured byte -- the asset root stays on the previous generation while the shell moves forward, i.e. the deploy that does not retain bundles",
+    "base_tip": "dc964086c9d412573ac19d70b24b30e6c3ee6168",
+    "root_installed": "D:\\moodle\\_qoder_hjp1_o207_20260922\\o297r\\landed\\frontend\\dist",
+    "root_next": "D:\\moodle\\_qoder_hjp1_o207_20260922\\o297r\\landed_next\\frontend\\dist",
+    "backend": "D:\\moodle\\_qoder_hjp1_o207_20260922\\o297r\\base_backend\\backend",
+    "installed_sha": "dc964086c9d412573ac19d70b24b30e6c3ee6168",
+    "next_sha": "dc964086c9d412573ac19d70b24b30e6c3ee6168 + inert marker line (ORD-0297r-next)",
+    "marker_value": "ORD-0297r-next",
+    "mode": "answer",
+    "install_mode": "two_navigations"
+  },
+  "a_never_reconnects": {
+    "kind": "a_never_reconnects",
+    "cells": [
+      "A_never_reconnected"
+    ],
+    "claim": "On base dc964086: a device that never reconnects after the server moved on without retaining its bundles must still be usable offline on the generation it holds",
+    "base_tip": "dc964086c9d412573ac19d70b24b30e6c3ee6168",
+    "root_installed": "D:\\moodle\\_qoder_hjp1_o207_20260922\\o297r\\landed\\frontend\\dist",
+    "root_next": "D:\\moodle\\_qoder_hjp1_o207_20260922\\o297r\\landed_next\\frontend\\dist",
+    "backend": "D:\\moodle\\_qoder_hjp1_o207_20260922\\o297r\\base_backend\\backend",
+    "installed_sha": "dc964086c9d412573ac19d70b24b30e6c3ee6168",
+    "next_sha": "dc964086c9d412573ac19d70b24b30e6c3ee6168 + inert marker line (ORD-0297r-next)",
+    "marker_value": "ORD-0297r-next",
+    "mode": "answer",
+    "install_mode": "two_navigations"
+  },
+  "a_control_update_lands": {
+    "kind": "a_control_update_lands",
+    "cells": [
+      "A_control_update_lands"
+    ],
+    "claim": "The teeth for A on base dc964086: same walk, same no-retention deploy, but the worker is allowed to land its update INSIDE the outage, which is the only way to test whether 'never reconnected' is a protection",
+    "base_tip": "dc964086c9d412573ac19d70b24b30e6c3ee6168",
+    "root_installed": "D:\\moodle\\_qoder_hjp1_o207_20260922\\o297r\\landed\\frontend\\dist",
+    "root_next": "D:\\moodle\\_qoder_hjp1_o207_20260922\\o297r\\landed_next\\frontend\\dist",
+    "backend": "D:\\moodle\\_qoder_hjp1_o207_20260922\\o297r\\base_backend\\backend",
+    "installed_sha": "dc964086c9d412573ac19d70b24b30e6c3ee6168",
+    "next_sha": "dc964086c9d412573ac19d70b24b30e6c3ee6168 + inert marker line (ORD-0297r-next)",
+    "marker_value": "ORD-0297r-next",
+    "mode": "answer",
+    "install_mode": "two_navigations"
+  }
+}
