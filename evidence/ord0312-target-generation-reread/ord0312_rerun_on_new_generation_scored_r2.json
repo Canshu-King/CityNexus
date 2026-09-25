@@ -1,0 +1,496 @@
+{
+ "ran_at_local": "2026-09-26T04:18:19+0800",
+ "order": "ORD-0312 re-measured on the generation that serves now (03:3x cutover, B's ORD-0302 b5 inside)",
+ "lane": "HJ-P3 aad2d1f2-4de9-406b-a5df-afa0e2bcea58",
+ "scope": "who speaks on the screen when a keyed write leg answers, per body class, on the deployed generation and on an unguarded private mutant of the same commit",
+ "generation": "9a669c8bec863fadf31d5158f4a1be66aec49f23",
+ "generations_named_per_cell": true,
+ "bundles": {
+  "deployed_guarded": {
+   "asset": "assets/index-JMSnur7a.js",
+   "sha256_64_hex": "3edfd5df8d45b5d26c451bd4a5f1658a7a3c6c82fb584b4ab121c5339d027111",
+   "bytes": 1257770,
+   "equals_what_the_phone_chain_serves": true,
+   "sheet_blob": "fc4d6111dc013008b610a240aab096deebe2436f"
+  },
+  "private_unguarded_mutant_of_the_same_commit": {
+   "asset": "assets/index-C7GzJT9h.js",
+   "sha256_64_hex": "325bef6fd8d5339c340a7c1c8af46bce2373f51e9a4cfe11bb6a704aabce5a5e",
+   "bytes": 1257768,
+   "guarded_reads_removed": 2,
+   "unguarded_reads_after": 2
+  },
+  "the_two_bundles_differ": true
+ },
+ "method": "same arm table as pass-3, unchanged definitions; one backend + one pairing hop + one private preview face per arm on my own ports, one-time database, real Chromium reading the painted card and the opened 技术详情, and the hop's own audit line as the server side",
+ "cells": {
+  "dep_hoplock": {
+   "run_id": "P3-040015",
+   "arm_file": "p3_arm_dep_hoplock_lock_behind_hop_P3-040015.json",
+   "declared_intent": "A1 the product's own contentless non-JSON 500 on a contended write, on the generation the shared page actually serves: does 技术详情 exist, and who does the card say spoke. The contention is created by the same hop that pairs the leg, because the earlier flag-file recipe lost the click twice (P3-222548, P3-222650 in runs_excluded)",
+   "generation": "9a669c8bec863fadf31d5158f4a1be66aec49f23",
+   "bundle_served_by_my_face": {
+    "asset": "assets/index-JMSnur7a.js",
+    "sha256_64_hex": "3edfd5df8d45b5d26c451bd4a5f1658a7a3c6c82fb584b4ab121c5339d027111"
+   },
+   "sheet_guard_state": "guarded (as deployed)",
+   "hop_mode": "lock_behind_hop",
+   "answered_by": "product",
+   "reached_upstream": true,
+   "server_side": {
+    "http_status": 500,
+    "content_type": "text/plain; charset=utf-8",
+    "body_bytes": 21,
+    "body_parses_as_json": false,
+    "top_level_keys": null,
+    "elapsed_ms": 32560
+   },
+   "body_class": "non-JSON body",
+   "screen_side": {
+    "card_status painted": "HTTP_500",
+    "card_title painted": "服务端处理失败",
+    "reason label painted": "这台设备自己的读数（服务器没给句子）",
+    "server attribution painted": false,
+    "device attribution painted": false
+   },
+   "pairing": {
+    "legs": 1,
+    "one_request_one_id": true,
+    "both_ends_agree_on_status": true,
+    "both_ends_agree_on_json_class": false
+   },
+   "rig_identity": {
+    "face_port": 8663,
+    "journey_id_named_by_the_rig": "adb5d998-3f30-406c-bc20-fb3e2ecc34d7",
+    "two_sided_ownership_probe": true,
+    "db": "p3_dep.s3db"
+   }
+  },
+  "old_hoplock": {
+   "run_id": "P3-040110",
+   "arm_file": "p3_arm_old_hoplock_lock_behind_hop_P3-040110.json",
+   "declared_intent": "A2 the same real answer on the unguarded generation: the crash branch, paired leg for leg",
+   "generation": "9a669c8bec863fadf31d5158f4a1be66aec49f23",
+   "bundle_served_by_my_face": {
+    "asset": "assets/index-C7GzJT9h.js",
+    "sha256_64_hex": "325bef6fd8d5339c340a7c1c8af46bce2373f51e9a4cfe11bb6a704aabce5a5e"
+   },
+   "sheet_guard_state": "unguarded(private mutant of the same commit)",
+   "hop_mode": "lock_behind_hop",
+   "answered_by": "product",
+   "reached_upstream": true,
+   "server_side": {
+    "http_status": 500,
+    "content_type": "text/plain; charset=utf-8",
+    "body_bytes": 21,
+    "body_parses_as_json": false,
+    "top_level_keys": null,
+    "elapsed_ms": 32555
+   },
+   "body_class": "non-JSON body",
+   "screen_side": {
+    "card_status painted": "NETWORK",
+    "card_title painted": "连不上服务端",
+    "reason label painted": "这台设备自己的读数（服务器没给句子）",
+    "server attribution painted": false,
+    "device attribution painted": false
+   },
+   "pairing": {
+    "legs": 1,
+    "one_request_one_id": true,
+    "both_ends_agree_on_status": true,
+    "both_ends_agree_on_json_class": false
+   },
+   "rig_identity": {
+    "face_port": 8664,
+    "journey_id_named_by_the_rig": "83b68c7e-74ac-4f34-b9e2-e41d29d55d11",
+    "two_sided_ownership_probe": true,
+    "db": "p3_old.s3db"
+   }
+  },
+  "dep_product": {
+   "run_id": "P3-040206",
+   "arm_file": "p3_arm_dep_product_mutate_extra_key_P3-040206.json",
+   "declared_intent": "A3 the product's own JSON 4xx envelope on the same leg in the same chain (this hop adds one forbidden key so the server's validator renders its real body): the envelope class on the deployed generation",
+   "generation": "9a669c8bec863fadf31d5158f4a1be66aec49f23",
+   "bundle_served_by_my_face": {
+    "asset": "assets/index-JMSnur7a.js",
+    "sha256_64_hex": "3edfd5df8d45b5d26c451bd4a5f1658a7a3c6c82fb584b4ab121c5339d027111"
+   },
+   "sheet_guard_state": "guarded (as deployed)",
+   "hop_mode": "mutate_extra_key",
+   "answered_by": "product",
+   "reached_upstream": true,
+   "server_side": {
+    "http_status": 422,
+    "content_type": "application/json",
+    "body_bytes": 323,
+    "body_parses_as_json": true,
+    "top_level_keys": [
+     "error"
+    ],
+    "elapsed_ms": 3
+   },
+   "body_class": "JSON envelope",
+   "screen_side": {
+    "card_status painted": "HTTP_422",
+    "card_title painted": "这个要求被明确拒绝",
+    "reason label painted": "服务器给出的原因",
+    "server attribution painted": false,
+    "device attribution painted": false
+   },
+   "pairing": {
+    "legs": 1,
+    "one_request_one_id": true,
+    "both_ends_agree_on_status": true,
+    "both_ends_agree_on_json_class": false
+   },
+   "rig_identity": {
+    "face_port": 8663,
+    "journey_id_named_by_the_rig": "90de3777-8035-4ebf-83a3-b07912486081",
+    "two_sided_ownership_probe": true,
+    "db": "p3_dep.s3db"
+   }
+  },
+  "old_product": {
+   "run_id": "P3-040229",
+   "arm_file": "p3_arm_old_product_mutate_extra_key_P3-040229.json",
+   "declared_intent": "A4 the same real envelope on the unguarded generation: an object body must survive :147/:155",
+   "generation": "9a669c8bec863fadf31d5158f4a1be66aec49f23",
+   "bundle_served_by_my_face": {
+    "asset": "assets/index-C7GzJT9h.js",
+    "sha256_64_hex": "325bef6fd8d5339c340a7c1c8af46bce2373f51e9a4cfe11bb6a704aabce5a5e"
+   },
+   "sheet_guard_state": "unguarded(private mutant of the same commit)",
+   "hop_mode": "mutate_extra_key",
+   "answered_by": "product",
+   "reached_upstream": true,
+   "server_side": {
+    "http_status": 422,
+    "content_type": "application/json",
+    "body_bytes": 323,
+    "body_parses_as_json": true,
+    "top_level_keys": [
+     "error"
+    ],
+    "elapsed_ms": 3
+   },
+   "body_class": "JSON envelope",
+   "screen_side": {
+    "card_status painted": "HTTP_422",
+    "card_title painted": "这个要求被明确拒绝",
+    "reason label painted": "服务器给出的原因",
+    "server attribution painted": false,
+    "device attribution painted": false
+   },
+   "pairing": {
+    "legs": 1,
+    "one_request_one_id": true,
+    "both_ends_agree_on_status": true,
+    "both_ends_agree_on_json_class": false
+   },
+   "rig_identity": {
+    "face_port": 8664,
+    "journey_id_named_by_the_rig": "2f3a40d4-eb92-4970-8129-d65022974b89",
+    "two_sided_ownership_probe": true,
+    "db": "p3_old.s3db"
+   }
+  },
+  "dep_nonjson_422": {
+   "run_id": "P3-040252",
+   "arm_file": "p3_arm_dep_spec_nonjson_422_P3-040252.json",
+   "declared_intent": "A5 non-JSON body at the SAME status as A3: separates \"the body was not JSON\" from \"it was a 4xx\"",
+   "generation": "9a669c8bec863fadf31d5158f4a1be66aec49f23",
+   "bundle_served_by_my_face": {
+    "asset": "assets/index-JMSnur7a.js",
+    "sha256_64_hex": "3edfd5df8d45b5d26c451bd4a5f1658a7a3c6c82fb584b4ab121c5339d027111"
+   },
+   "sheet_guard_state": "guarded (as deployed)",
+   "hop_mode": "answer_spec",
+   "answered_by": "instrument_origin_per_spec",
+   "reached_upstream": false,
+   "server_side": {
+    "http_status": 422,
+    "content_type": "text/plain; charset=utf-8",
+    "body_bytes": 25,
+    "body_parses_as_json": false,
+    "top_level_keys": null,
+    "elapsed_ms": 0
+   },
+   "body_class": "non-JSON body",
+   "screen_side": {
+    "card_status painted": "HTTP_422",
+    "card_title painted": "这个要求被明确拒绝",
+    "reason label painted": "这台设备自己的读数（服务器没给句子）",
+    "server attribution painted": false,
+    "device attribution painted": false
+   },
+   "pairing": {
+    "legs": 1,
+    "one_request_one_id": true,
+    "both_ends_agree_on_status": true,
+    "both_ends_agree_on_json_class": false
+   },
+   "rig_identity": {
+    "face_port": 8663,
+    "journey_id_named_by_the_rig": "606c6023-786c-4c94-8b36-79f07f1efdab",
+    "two_sided_ownership_probe": true,
+    "db": "p3_dep.s3db"
+   }
+  },
+  "old_nonjson_422": {
+   "run_id": "P3-040315",
+   "arm_file": "p3_arm_old_spec_nonjson_422_P3-040315.json",
+   "declared_intent": "A6 the same non-JSON 4xx on the unguarded generation",
+   "generation": "9a669c8bec863fadf31d5158f4a1be66aec49f23",
+   "bundle_served_by_my_face": {
+    "asset": "assets/index-C7GzJT9h.js",
+    "sha256_64_hex": "325bef6fd8d5339c340a7c1c8af46bce2373f51e9a4cfe11bb6a704aabce5a5e"
+   },
+   "sheet_guard_state": "unguarded(private mutant of the same commit)",
+   "hop_mode": "answer_spec",
+   "answered_by": "instrument_origin_per_spec",
+   "reached_upstream": false,
+   "server_side": {
+    "http_status": 422,
+    "content_type": "text/plain; charset=utf-8",
+    "body_bytes": 25,
+    "body_parses_as_json": false,
+    "top_level_keys": null,
+    "elapsed_ms": 0
+   },
+   "body_class": "non-JSON body",
+   "screen_side": {
+    "card_status painted": "NETWORK",
+    "card_title painted": "连不上服务端",
+    "reason label painted": "这台设备自己的读数（服务器没给句子）",
+    "server attribution painted": false,
+    "device attribution painted": false
+   },
+   "pairing": {
+    "legs": 1,
+    "one_request_one_id": true,
+    "both_ends_agree_on_status": true,
+    "both_ends_agree_on_json_class": false
+   },
+   "rig_identity": {
+    "face_port": 8664,
+    "journey_id_named_by_the_rig": "b92d6d29-f654-41dc-a25f-13cacc2cab33",
+    "two_sided_ownership_probe": true,
+    "db": "p3_old.s3db"
+   }
+  },
+  "dep_json_500": {
+   "run_id": "P3-040339",
+   "arm_file": "p3_arm_dep_spec_json_envelope_500_P3-040339.json",
+   "declared_intent": "A7 a JSON envelope at the SAME status as A1: separates \"the body was JSON\" from \"it was a 5xx\"",
+   "generation": "9a669c8bec863fadf31d5158f4a1be66aec49f23",
+   "bundle_served_by_my_face": {
+    "asset": "assets/index-JMSnur7a.js",
+    "sha256_64_hex": "3edfd5df8d45b5d26c451bd4a5f1658a7a3c6c82fb584b4ab121c5339d027111"
+   },
+   "sheet_guard_state": "guarded (as deployed)",
+   "hop_mode": "answer_spec",
+   "answered_by": "instrument_origin_per_spec",
+   "reached_upstream": false,
+   "server_side": {
+    "http_status": 500,
+    "content_type": "application/json",
+    "body_bytes": 208,
+    "body_parses_as_json": true,
+    "top_level_keys": [
+     "error"
+    ],
+    "elapsed_ms": 0
+   },
+   "body_class": "JSON envelope",
+   "screen_side": {
+    "card_status painted": "HTTP_500",
+    "card_title painted": "服务端处理失败",
+    "reason label painted": "服务器给出的原因",
+    "server attribution painted": false,
+    "device attribution painted": false
+   },
+   "pairing": {
+    "legs": 1,
+    "one_request_one_id": true,
+    "both_ends_agree_on_status": true,
+    "both_ends_agree_on_json_class": false
+   },
+   "rig_identity": {
+    "face_port": 8663,
+    "journey_id_named_by_the_rig": "47ec5172-80ca-426b-99ed-511959a9ae3a",
+    "two_sided_ownership_probe": true,
+    "db": "p3_dep.s3db"
+   }
+  },
+  "old_json_500": {
+   "run_id": "P3-040403",
+   "arm_file": "p3_arm_old_spec_json_envelope_500_P3-040403.json",
+   "declared_intent": "A8 the same JSON 5xx on the unguarded generation",
+   "generation": "9a669c8bec863fadf31d5158f4a1be66aec49f23",
+   "bundle_served_by_my_face": {
+    "asset": "assets/index-C7GzJT9h.js",
+    "sha256_64_hex": "325bef6fd8d5339c340a7c1c8af46bce2373f51e9a4cfe11bb6a704aabce5a5e"
+   },
+   "sheet_guard_state": "unguarded(private mutant of the same commit)",
+   "hop_mode": "answer_spec",
+   "answered_by": "instrument_origin_per_spec",
+   "reached_upstream": false,
+   "server_side": {
+    "http_status": 500,
+    "content_type": "application/json",
+    "body_bytes": 208,
+    "body_parses_as_json": true,
+    "top_level_keys": [
+     "error"
+    ],
+    "elapsed_ms": 0
+   },
+   "body_class": "JSON envelope",
+   "screen_side": {
+    "card_status painted": "HTTP_500",
+    "card_title painted": "服务端处理失败",
+    "reason label painted": "服务器给出的原因",
+    "server attribution painted": false,
+    "device attribution painted": false
+   },
+   "pairing": {
+    "legs": 1,
+    "one_request_one_id": true,
+    "both_ends_agree_on_status": true,
+    "both_ends_agree_on_json_class": false
+   },
+   "rig_identity": {
+    "face_port": 8664,
+    "journey_id_named_by_the_rig": "895edd46-3f01-4c52-9c19-30dd25aa6079",
+    "two_sided_ownership_probe": true,
+    "db": "p3_old.s3db"
+   }
+  },
+  "dep_abort": {
+   "run_id": "P3-040427",
+   "arm_file": "p3_arm_dep_abort_pass_P3-040427.json",
+   "declared_intent": "A9 negative control on the deployed generation: a leg that never reaches the hop. If the card equals A1's, that card proves nothing about arrival and only the pairing does",
+   "generation": "9a669c8bec863fadf31d5158f4a1be66aec49f23",
+   "bundle_served_by_my_face": {
+    "asset": "assets/index-JMSnur7a.js",
+    "sha256_64_hex": "3edfd5df8d45b5d26c451bd4a5f1658a7a3c6c82fb584b4ab121c5339d027111"
+   },
+   "sheet_guard_state": "guarded (as deployed)",
+   "hop_mode": "pass",
+   "answered_by": null,
+   "reached_upstream": null,
+   "server_side": {
+    "http_status": null,
+    "content_type": null,
+    "body_bytes": null,
+    "body_parses_as_json": null,
+    "top_level_keys": null,
+    "elapsed_ms": null
+   },
+   "body_class": "no answer at all",
+   "screen_side": {
+    "card_status painted": "NETWORK",
+    "card_title painted": "连不上服务端",
+    "reason label painted": "这台设备自己的读数（服务器没给句子）",
+    "server attribution painted": false,
+    "device attribution painted": false
+   },
+   "pairing": {
+    "legs": 1,
+    "one_request_one_id": false,
+    "both_ends_agree_on_status": false,
+    "both_ends_agree_on_json_class": false
+   },
+   "rig_identity": {
+    "face_port": 8663,
+    "journey_id_named_by_the_rig": "02ce4ca4-2741-4a2c-884d-80adc6f315de",
+    "two_sided_ownership_probe": true,
+    "db": "p3_dep.s3db"
+   }
+  }
+ },
+ "arms_scored": 9,
+ "repeat_of_one_arm": {
+  "run_id": "P3-035932",
+  "agrees_with_the_swept_run_on_status_and_class": true,
+  "file": "p3_arm_dep_product_mutate_extra_key_P3-035932.json"
+ },
+ "runs_excluded": [
+  {
+   "run_id": "P3-035722",
+   "file": "p3_arm_dep_product_mutate_extra_key_P3-035722.json",
+   "paired_legs_recorded": 0,
+   "screen_fields_read": 22,
+   "screen_fields_null": 22,
+   "rig_seed_names_a_missing_file": true,
+   "seed_named_path": "traveler_demo.json",
+   "mechanical_test_catches_it": true
+  }
+ ],
+ "judgments": {
+  "same_status_different_class_422": true,
+  "the_painted_label_tracks_the_body_class_not_the_status": true,
+  "same_status_different_class_500": true,
+  "the_guard_flip_changes_attribution_only_for_non_json_bodies": true,
+  "the_NETWORK_card_is_not_an_arrival_witness": true,
+  "every_cell_names_its_own_bundle_bytes": true,
+  "every_swept_arm_is_paired_by_one_request_one_id": true,
+  "the_repeat_agrees": true,
+  "the_excluded_run_is_caught_by_a_mechanical_test": true,
+  "no_dropped_body_fragment_survives_in_this_file_and_the_detector_works": true
+ },
+ "whitelist_proof": {
+  "fields_dropped_by_name": [
+   "body_head",
+   "body_text",
+   "response_json_head",
+   "detail",
+   "raw_detail",
+   "exception"
+  ],
+  "fields_allowed": [
+   "http_status",
+   "content_type",
+   "body_bytes",
+   "response_received",
+   "elapsed_ms",
+   "request_id"
+  ],
+  "distinct_removed_body_fragments": 6,
+  "surviving_strings_scanned_bytes": 12110,
+  "fragments_still_present": [],
+  "positive_control": {
+   "method": "hide one removed fragment inside a scratch string and run the same substring test - if the test cannot find it there, the zero above means nothing",
+   "scratch_string_contains_the_fragment": true,
+   "test_fired_on_the_scratch_string": true
+  }
+ },
+ "not_measured_here": {
+  "M2_RED_vector": "NOT-MEASURED. The named emitters do exist on this commit (backend/app/main.py:1694 raises V13_DISCOVERY_NO_FEASIBLE_PLAN and :1668 V13_DISCOVERY_NO_FEASIBLE_PLACE_SET, and reason_code appears in the file), so the code-bearing branch the sheet renders at PlanWithAiSheet.tsx:218 is reachable in principle; no arm in this sweep produced an answer that carried a code from the user path, so the promise-with-a-named-cause reading is still owed."
+ },
+ "named_code_emitters_on_this_commit": {
+  "main_py_blob": "5455175abe154c5c4ab5b122e517efd13081a637",
+  "main_py_bytes": 484578,
+  "reason_code_lines": 57,
+  "v13_no_feasible_emitter_lines": [
+   1668,
+   1694
+  ],
+  "sheet_blob": "fc4d6111dc013008b610a240aab096deebe2436f",
+  "sheet_bytes": 55522,
+  "sheet_line_naming_a_server_reason_code": [
+   218
+  ],
+  "sheet_guarded_detail_lines": [
+   154,
+   162
+  ],
+  "how_read": "read-only GET /git/trees/<tip> + /git/blobs/<sha> of this same commit"
+ },
+ "verdict": {
+  "ALL_JUDGMENTS_HOLD": true,
+  "arms_scored_equals_nine": true
+ }
+}
