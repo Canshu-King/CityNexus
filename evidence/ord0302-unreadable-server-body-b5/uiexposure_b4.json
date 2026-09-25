@@ -1,0 +1,71 @@
+{
+ "schema": "CNX_CMDR_UI_EVIDENCE_EXPOSURE_GATE_V1",
+ "lane": "commander 494abfd7",
+ "at_local": "2026-09-26T00:38:37+0800",
+ "standing_rule": "Q64=1 (arbiter): data reaching UI / screenshot / evidence artifacts must pass source classification -> allowed fields -> render. mask is a helper, never the first gate.",
+ "allowed_fields": [
+  "http_status",
+  "content_type",
+  "body_bytes",
+  "response_received",
+  "elapsed_ms",
+  "request_id"
+ ],
+ "forbidden": [
+  "raw body",
+  "raw detail",
+  "raw exception"
+ ],
+ "targets_scanned": [
+  "4fc0de91c18a:frontend/src/features/planning/PlanWithAiSheet.tsx"
+ ],
+ "hits": [
+  {
+   "rule": "RAW_BODY_TO_DOM",
+   "file": "4fc0de91c18a:frontend/src/features/planning/PlanWithAiSheet.tsx",
+   "line": 187,
+   "snippet": "body_head: string;"
+  },
+  {
+   "rule": "RAW_BODY_TO_DOM",
+   "file": "4fc0de91c18a:frontend/src/features/planning/PlanWithAiSheet.tsx",
+   "line": 582,
+   "snippet": "body_head: raw === null ? \"\" : raw.slice(0, 240),"
+  },
+  {
+   "rule": "RAW_BODY_TO_DOM",
+   "file": "4fc0de91c18a:frontend/src/features/planning/PlanWithAiSheet.tsx",
+   "line": 582,
+   "snippet": "body_head: raw === null ? \"\" : raw.slice(0, 240),"
+  },
+  {
+   "rule": "RAW_BODY_TO_DOM",
+   "file": "4fc0de91c18a:frontend/src/features/planning/PlanWithAiSheet.tsx",
+   "line": 1068,
+   "snippet": "{`body=${result.rawReading.body_head}`}"
+  },
+  {
+   "rule": "RAW_BODY_TO_DOM",
+   "file": "4fc0de91c18a:frontend/src/features/planning/PlanWithAiSheet.tsx",
+   "line": 1068,
+   "snippet": "{`body=${result.rawReading.body_head}`}"
+  },
+  {
+   "rule": "RAW_TEXT_INTERPOLATION",
+   "file": "4fc0de91c18a:frontend/src/features/planning/PlanWithAiSheet.tsx",
+   "line": 1068,
+   "snippet": "{`body=${result.rawReading.body_head}`}"
+  }
+ ],
+ "verdict": "EXPOSURE_SHAPE_FOUND",
+ "interpretation_limit": "a hit names a shape to justify, not a defect verdict; the lane answers either by removing it or by showing why that specific text is inside the allowed set. NO_EXPOSURE_SHAPE_FOUND only means this coarse net caught nothing.",
+ "discipline": {
+  "files_written": 0,
+  "product_bytes_changed": 0,
+  "refs_pushed": 0,
+  "credential_values_printed": 0
+ },
+ "claim_kind": "pattern_determined",
+ "claimed_result": "EXPOSURE_SHAPE_FOUND across 1 scanned file(s): 6 hit(s) ['RAW_BODY_TO_DOM@PlanWithAiSheet.tsx:1068', 'RAW_BODY_TO_DOM@PlanWithAiSheet.tsx:187', 'RAW_BODY_TO_DOM@PlanWithAiSheet.tsx:582', 'RAW_TEXT_INTERPOLATION@PlanWithAiSheet.tsx:1068']",
+ "derived_result": null
+}
