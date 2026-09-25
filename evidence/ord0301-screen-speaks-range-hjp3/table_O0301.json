@@ -1,0 +1,3631 @@
+{
+ "generated_from": "arm artefacts on disk (cells, sibling probes, origin logs, declared specs)",
+ "measured_on": "90d29a172e186aab6e6cb138ab4583ccf93bfa68",
+ "rows": [
+  {
+   "row": "R1_①_contentless_500_from_the_product",
+   "arm": "a1_real_lock_500_plain",
+   "outcome_class_as_asked": "① 服务器答 500 且正文无 code/message",
+   "run_id": "O0301-144907",
+   "cap_ms": 80000,
+   "policy_stamp": "FACE-8562",
+   "declared_write_leg": "the real product backend",
+   "server_side": {
+    "deciding_leg": "commands",
+    "all_write_legs": [
+     {
+      "url": "/api/v1/journeys/d845ac26-0add-4305-bd3f-3f7c6f6fe3c1/agent/commands",
+      "status": 500,
+      "content_type": "text/plain; charset=utf-8",
+      "bytes": 21,
+      "elapsed_ms": 32209,
+      "client_error": null
+     }
+    ],
+    "server_side_reading_from": "browser fetch hook",
+    "http_status": 500,
+    "content_type": "text/plain; charset=utf-8",
+    "bytes": 21,
+    "elapsed_ms": 32209,
+    "client_error": null,
+    "body_head": "Internal Server Error",
+    "envelope_code": null,
+    "envelope_message": null,
+    "answer_attributed_to": "product",
+    "sibling_probe_outside_browser": {
+     "status": 200,
+     "content_type": "application/json",
+     "bytes": 2251,
+     "headers": {
+      "date": "Fri, 25 Sep 2026 06:49:47 GMT",
+      "server": "uvicorn",
+      "content-length": "2251",
+      "connection": "close"
+     },
+     "body_head": "{\"journey\":{\"id\":\"d845ac26-0add-4305-bd3f-3f7c6f6fe3c1\",\"traveler_id\":\"ab3d1aa0-c69c-4b0a-99ff-14d65c2410ee\",\"title\":\"HJ",
+     "elapsed_ms": 82
+    },
+    "origin_own_record_for_this_stamp": []
+   },
+   "screen_side": {
+    "painted_first_line": "连不上服务端",
+    "painted_text": "连不上服务端\n\n网络或后端没有响应，这与你的需求内容无关。你的行程没有被改动，检查网络后可以重试。",
+    "says_cannot_reach_server": true,
+    "details_elements_in_dom": 0,
+    "reason_label_painted": null,
+    "reason_value_painted": "",
+    "data_result_status_cross_check": "NETWORK",
+    "client_deadline_sentence_painted": false,
+    "sheet_reached": true
+   },
+   "app_threw_on_the_body": {
+    "json_rejections": [
+     {
+      "status": 500,
+      "url": "http://127.0.0.1:8562/api/v1/journeys/d845ac26-0add-4305-bd3f-3f7c6f6fe3c1/agent/commands",
+      "content_type": "text/plain; charset=utf-8",
+      "error_name": "SyntaxError",
+      "error_message": "Failed to execute 'json' on 'Response': Unexpected token 'I', \"Internal S\"... is not valid JSON",
+      "at_ms": 33026
+     }
+    ],
+    "syntax_error_count": 1,
+    "first_rejection_message": "Failed to execute 'json' on 'Response': Unexpected token 'I', \"Internal S\"... is not valid JSON"
+   },
+   "secondary_surface": null,
+   "verdict": "MISLEADS",
+   "verdict_reason": "浏览器拿到了 HTTP 500，屏上仍把原因归给网络"
+  },
+  {
+   "row": "R2_①_contentless_500_fast",
+   "arm": "a2_ctl_500_plain_fast",
+   "outcome_class_as_asked": "① 同一形状但 250 ms 内答完（把时长从判据里摘出去）",
+   "run_id": "O0301-144507",
+   "cap_ms": 45000,
+   "policy_stamp": "A2_CTL_500_PLAIN_FAST",
+   "declared_write_leg": {
+    "mode": "answer",
+    "status": 500,
+    "content_type": "text/plain; charset=utf-8",
+    "body": "Internal Server Error",
+    "delay_ms": 250
+   },
+   "server_side": {
+    "deciding_leg": "commands",
+    "all_write_legs": [
+     {
+      "url": "/api/v1/journeys/d845ac26-0add-4305-bd3f-3f7c6f6fe3c1/agent/commands",
+      "status": 500,
+      "content_type": "text/plain; charset=utf-8",
+      "bytes": 21,
+      "elapsed_ms": 259,
+      "client_error": null
+     }
+    ],
+    "server_side_reading_from": "browser fetch hook",
+    "http_status": 500,
+    "content_type": "text/plain; charset=utf-8",
+    "bytes": 21,
+    "elapsed_ms": 259,
+    "client_error": null,
+    "body_head": "Internal Server Error",
+    "envelope_code": null,
+    "envelope_message": null,
+    "answer_attributed_to": "my-origin",
+    "sibling_probe_outside_browser": {
+     "status": 500,
+     "content_type": "text/plain; charset=utf-8",
+     "bytes": 21,
+     "headers": {
+      "server": "BaseHTTP/0.6 Python/3.12.14",
+      "date": "Fri, 25 Sep 2026 06:45:18 GMT",
+      "content-length": "21",
+      "connection": "close"
+     },
+     "body_head": "Internal Server Error",
+     "http_error": "HTTP Error 500: Internal Server Error",
+     "elapsed_ms": 297
+    },
+    "origin_own_record_for_this_stamp": [
+     {
+      "at": "14:45:08",
+      "stamp": "A2_CTL_500_PLAIN_FAST",
+      "path": "/api/v1/journeys/d845ac26-0add-4305-bd3f-3f7c6f6fe3c1/experience",
+      "method": "GET",
+      "leg": "read",
+      "mode": "proxy",
+      "status": 200,
+      "bytes": 2251
+     },
+     {
+      "at": "14:45:08",
+      "stamp": "A2_CTL_500_PLAIN_FAST",
+      "path": "/api/v1/journeys/d845ac26-0add-4305-bd3f-3f7c6f6fe3c1/replans",
+      "method": "GET",
+      "leg": "read",
+      "mode": "proxy",
+      "status": 200,
+      "bytes": 2
+     },
+     {
+      "at": "14:45:08",
+      "stamp": "A2_CTL_500_PLAIN_FAST",
+      "path": "/api/v1/demo/scene",
+      "method": "GET",
+      "leg": "read",
+      "mode": "proxy",
+      "status": 200,
+      "bytes": 489
+     },
+     {
+      "at": "14:45:08",
+      "stamp": "A2_CTL_500_PLAIN_FAST",
+      "path": "/api/v1/journeys/d845ac26-0add-4305-bd3f-3f7c6f6fe3c1/twin",
+      "method": "GET",
+      "leg": "read",
+      "mode": "proxy",
+      "status": 200,
+      "bytes": 896
+     },
+     {
+      "at": "14:45:08",
+      "stamp": "A2_CTL_500_PLAIN_FAST",
+      "path": "/api/v1/journeys/d845ac26-0add-4305-bd3f-3f7c6f6fe3c1/offline-snapshot",
+      "method": "GET",
+      "leg": "read",
+      "mode": "proxy",
+      "status": 200,
+      "bytes": 797
+     },
+     {
+      "at": "14:45:08",
+      "stamp": "A2_CTL_500_PLAIN_FAST",
+      "path": "/api/v1/travelers/ab3d1aa0-c69c-4b0a-99ff-14d65c2410ee/agent-policy",
+      "method": "GET",
+      "leg": "read",
+      "mode": "proxy",
+      "status": 200,
+      "bytes": 527
+     },
+     {
+      "at": "14:45:08",
+      "stamp": "A2_CTL_500_PLAIN_FAST",
+      "path": "/api/v1/journeys/d845ac26-0add-4305-bd3f-3f7c6f6fe3c1/wallet",
+      "method": "GET",
+      "leg": "read",
+      "mode": "proxy",
+      "status": 200,
+      "bytes": 109
+     },
+     {
+      "at": "14:45:08",
+      "stamp": "A2_CTL_500_PLAIN_FAST",
+      "path": "/api/v1/journeys/d845ac26-0add-4305-bd3f-3f7c6f6fe3c1/plans",
+      "method": "GET",
+      "leg": "read",
+      "mode": "proxy",
+      "status": 200,
+      "bytes": 2
+     },
+     {
+      "at": "14:45:08",
+      "stamp": "A2_CTL_500_PLAIN_FAST",
+      "path": "/api/v1/journeys/d845ac26-0add-4305-bd3f-3f7c6f6fe3c1/agent-feed?limit=200",
+      "method": "GET",
+      "leg": "read",
+      "mode": "proxy",
+      "status": 200,
+      "bytes": 7551
+     },
+     {
+      "at": "14:45:08",
+      "stamp": "A2_CTL_500_PLAIN_FAST",
+      "path": "/api/v1/journeys/d845ac26-0add-4305-bd3f-3f7c6f6fe3c1/agent-feed?limit=200",
+      "method": "GET",
+      "leg": "read",
+      "mode": "proxy",
+      "status": 200,
+      "bytes": 7551
+     },
+     {
+      "at": "14:45:08",
+      "stamp": "A2_CTL_500_PLAIN_FAST",
+      "path": "/api/v1/agent/runtime-status",
+      "method": "GET",
+      "leg": "read",
+      "mode": "proxy",
+      "status": 200,
+      "bytes": 369
+     },
+     {
+      "at": "14:45:08",
+      "stamp": "A2_CTL_500_PLAIN_FAST",
+      "path": "/api/v1/places?city_code=CNX-DEMO",
+      "method": "GET",
+      "leg": "read",
+      "mode": "proxy",
+      "status": 200,
+      "bytes": 1459
+     },
+     {
+      "at": "14:45:08",
+      "stamp": "A2_CTL_500_PLAIN_FAST",
+      "path": "/api/v1/agent/runtime-status",
+      "method": "GET",
+      "leg": "read",
+      "mode": "proxy",
+      "status": 200,
+      "bytes": 369
+     },
+     {
+      "at": "14:45:08",
+      "stamp": "A2_CTL_500_PLAIN_FAST",
+      "path": "/api/v1/journeys/d845ac26-0add-4305-bd3f-3f7c6f6fe3c1/plans",
+      "method": "GET",
+      "leg": "read",
+      "mode": "proxy",
+      "status": 200,
+      "bytes": 2
+     },
+     {
+      "at": "14:45:08",
+      "stamp": "A2_CTL_500_PLAIN_FAST",
+      "path": "/api/v1/journeys/d845ac26-0add-4305-bd3f-3f7c6f6fe3c1/agent/commands",
+      "method": "POST",
+      "leg": "write",
+      "mode": "answer",
+      "request_bytes": 59,
+      "status": 500,
+      "content_type": "text/plain; charset=utf-8",
+      "response_bytes": null,
+      "delay_ms": 250,
+      "declared_content_length": 21,
+      "bytes_written": 21,
+      "body_sha256_12": "e41656eb2ba6"
+     },
+     {
+      "at": "14:45:17",
+      "stamp": "A2_CTL_500_PLAIN_FAST",
+      "path": "/api/v1/journeys/d845ac26-0add-4305-bd3f-3f7c6f6fe3c1/agent/commands",
+      "method": "POST",
+      "leg": "write",
+      "mode": "answer",
+      "request_bytes": 37,
+      "status": 500,
+      "content_type": "text/plain; charset=utf-8",
+      "response_bytes": null,
+      "delay_ms": 250,
+      "declared_content_length": 21,
+      "bytes_written": 21,
+      "body_sha256_12": "e41656eb2ba6"
+     },
+     {
+      "at": "14:45:18",
+      "stamp": "A2_CTL_500_PLAIN_FAST",
+      "path": "/api/v1/journeys/d845ac26-0add-4305-bd3f-3f7c6f6fe3c1/agent/commands",
+      "method": "POST",
+      "leg": "write",
+      "mode": "answer",
+      "request_bytes": 37,
+      "status": 500,
+      "content_type": "text/plain; charset=utf-8",
+      "response_bytes": null,
+      "delay_ms": 250,
+      "declared_content_length": 21,
+      "bytes_written": 21,
+      "body_sha256_12": "e41656eb2ba6"
+     }
+    ]
+   },
+   "screen_side": {
+    "painted_first_line": "连不上服务端",
+    "painted_text": "连不上服务端\n\n网络或后端没有响应，这与你的需求内容无关。你的行程没有被改动，检查网络后可以重试。",
+    "says_cannot_reach_server": true,
+    "details_elements_in_dom": 0,
+    "reason_label_painted": null,
+    "reason_value_painted": "",
+    "data_result_status_cross_check": "NETWORK",
+    "client_deadline_sentence_painted": false,
+    "sheet_reached": true
+   },
+   "app_threw_on_the_body": {
+    "json_rejections": [
+     {
+      "status": 500,
+      "url": "http://127.0.0.1:8564/api/v1/journeys/d845ac26-0add-4305-bd3f-3f7c6f6fe3c1/agent/commands",
+      "content_type": "text/plain; charset=utf-8",
+      "error_name": "SyntaxError",
+      "error_message": "Failed to execute 'json' on 'Response': Unexpected token 'I', \"Internal S\"... is not valid JSON",
+      "at_ms": 990
+     }
+    ],
+    "syntax_error_count": 1,
+    "first_rejection_message": "Failed to execute 'json' on 'Response': Unexpected token 'I', \"Internal S\"... is not valid JSON"
+   },
+   "secondary_surface": null,
+   "verdict": "MISLEADS",
+   "verdict_reason": "浏览器拿到了 HTTP 500，屏上仍把原因归给网络"
+  },
+  {
+   "row": "R3_①_contentless_500_after_35s",
+   "arm": "a3_ctl_500_plain_slow35",
+   "outcome_class_as_asked": "① 同一形状但 35 s 后才答",
+   "run_id": "O0301-143854",
+   "cap_ms": 75000,
+   "policy_stamp": "A3_CTL_500_PLAIN_SLOW35",
+   "declared_write_leg": {
+    "mode": "answer",
+    "status": 500,
+    "content_type": "text/plain; charset=utf-8",
+    "body": "Internal Server Error",
+    "delay_ms": 35000
+   },
+   "server_side": {
+    "deciding_leg": "commands",
+    "all_write_legs": [
+     {
+      "url": "/api/v1/journeys/d845ac26-0add-4305-bd3f-3f7c6f6fe3c1/agent/commands",
+      "status": 500,
+      "content_type": "text/plain; charset=utf-8",
+      "bytes": 21,
+      "elapsed_ms": 35006,
+      "client_error": null
+     }
+    ],
+    "server_side_reading_from": "browser fetch hook",
+    "http_status": 500,
+    "content_type": "text/plain; charset=utf-8",
+    "bytes": 21,
+    "elapsed_ms": 35006,
+    "client_error": null,
+    "body_head": "Internal Server Error",
+    "envelope_code": null,
+    "envelope_message": null,
+    "answer_attributed_to": "my-origin",
+    "sibling_probe_outside_browser": null,
+    "origin_own_record_for_this_stamp": []
+   },
+   "screen_side": {
+    "painted_first_line": "连不上服务端",
+    "painted_text": "连不上服务端\n\n网络或后端没有响应，这与你的需求内容无关。你的行程没有被改动，检查网络后可以重试。",
+    "says_cannot_reach_server": true,
+    "details_elements_in_dom": 0,
+    "reason_label_painted": null,
+    "reason_value_painted": "",
+    "data_result_status_cross_check": "NETWORK",
+    "client_deadline_sentence_painted": false,
+    "sheet_reached": true
+   },
+   "app_threw_on_the_body": {
+    "json_rejections": [
+     {
+      "status": 500,
+      "url": "http://127.0.0.1:8564/api/v1/journeys/d845ac26-0add-4305-bd3f-3f7c6f6fe3c1/agent/commands",
+      "content_type": "text/plain; charset=utf-8",
+      "error_name": "SyntaxError",
+      "error_message": "Failed to execute 'json' on 'Response': Unexpected token 'I', \"Internal S\"... is not valid JSON",
+      "at_ms": 35661
+     }
+    ],
+    "syntax_error_count": 1,
+    "first_rejection_message": "Failed to execute 'json' on 'Response': Unexpected token 'I', \"Internal S\"... is not valid JSON"
+   },
+   "secondary_surface": null,
+   "verdict": "MISLEADS",
+   "verdict_reason": "浏览器拿到了 HTTP 500，屏上仍把原因归给网络"
+  },
+  {
+   "row": "R4_①_uninstrumented",
+   "arm": "a14_no_instrument_fast500",
+   "outcome_class_as_asked": "① 同一臂、fetch 钩子完全不装",
+   "run_id": "O0301-144717",
+   "cap_ms": 45000,
+   "policy_stamp": "A14_NO_INSTRUMENT_FAST500",
+   "declared_write_leg": {
+    "mode": "answer",
+    "status": 500,
+    "content_type": "text/plain; charset=utf-8",
+    "body": "Internal Server Error",
+    "delay_ms": 250
+   },
+   "server_side": {
+    "deciding_leg": "commands",
+    "all_write_legs": [],
+    "server_side_reading_from": "origin accounting (this arm runs with no hook)",
+    "http_status": 500,
+    "content_type": "text/plain; charset=utf-8",
+    "bytes": null,
+    "elapsed_ms": null,
+    "client_error": null,
+    "body_head": "",
+    "envelope_code": null,
+    "envelope_message": null,
+    "answer_attributed_to": "my-origin",
+    "sibling_probe_outside_browser": {
+     "status": 500,
+     "content_type": "text/plain; charset=utf-8",
+     "bytes": 21,
+     "headers": {
+      "server": "BaseHTTP/0.6 Python/3.12.14",
+      "date": "Fri, 25 Sep 2026 06:47:28 GMT",
+      "content-length": "21",
+      "connection": "close"
+     },
+     "body_head": "Internal Server Error",
+     "http_error": "HTTP Error 500: Internal Server Error",
+     "elapsed_ms": 311
+    },
+    "origin_own_record_for_this_stamp": [
+     {
+      "at": "14:47:17",
+      "stamp": "A14_NO_INSTRUMENT_FAST500",
+      "path": "/api/v1/journeys/d845ac26-0add-4305-bd3f-3f7c6f6fe3c1/experience",
+      "method": "GET",
+      "leg": "read",
+      "mode": "proxy",
+      "status": 200,
+      "bytes": 2251
+     },
+     {
+      "at": "14:47:17",
+      "stamp": "A14_NO_INSTRUMENT_FAST500",
+      "path": "/api/v1/journeys/d845ac26-0add-4305-bd3f-3f7c6f6fe3c1/replans",
+      "method": "GET",
+      "leg": "read",
+      "mode": "proxy",
+      "status": 200,
+      "bytes": 2
+     },
+     {
+      "at": "14:47:17",
+      "stamp": "A14_NO_INSTRUMENT_FAST500",
+      "path": "/api/v1/demo/scene",
+      "method": "GET",
+      "leg": "read",
+      "mode": "proxy",
+      "status": 200,
+      "bytes": 489
+     },
+     {
+      "at": "14:47:18",
+      "stamp": "A14_NO_INSTRUMENT_FAST500",
+      "path": "/api/v1/journeys/d845ac26-0add-4305-bd3f-3f7c6f6fe3c1/plans",
+      "method": "GET",
+      "leg": "read",
+      "mode": "proxy",
+      "status": 200,
+      "bytes": 2
+     },
+     {
+      "at": "14:47:18",
+      "stamp": "A14_NO_INSTRUMENT_FAST500",
+      "path": "/api/v1/journeys/d845ac26-0add-4305-bd3f-3f7c6f6fe3c1/agent-feed?limit=200",
+      "method": "GET",
+      "leg": "read",
+      "mode": "proxy",
+      "status": 200,
+      "bytes": 7551
+     },
+     {
+      "at": "14:47:18",
+      "stamp": "A14_NO_INSTRUMENT_FAST500",
+      "path": "/api/v1/journeys/d845ac26-0add-4305-bd3f-3f7c6f6fe3c1/twin",
+      "method": "GET",
+      "leg": "read",
+      "mode": "proxy",
+      "status": 200,
+      "bytes": 896
+     },
+     {
+      "at": "14:47:18",
+      "stamp": "A14_NO_INSTRUMENT_FAST500",
+      "path": "/api/v1/journeys/d845ac26-0add-4305-bd3f-3f7c6f6fe3c1/wallet",
+      "method": "GET",
+      "leg": "read",
+      "mode": "proxy",
+      "status": 200,
+      "bytes": 109
+     },
+     {
+      "at": "14:47:18",
+      "stamp": "A14_NO_INSTRUMENT_FAST500",
+      "path": "/api/v1/journeys/d845ac26-0add-4305-bd3f-3f7c6f6fe3c1/offline-snapshot",
+      "method": "GET",
+      "leg": "read",
+      "mode": "proxy",
+      "status": 200,
+      "bytes": 797
+     },
+     {
+      "at": "14:47:18",
+      "stamp": "A14_NO_INSTRUMENT_FAST500",
+      "path": "/api/v1/travelers/ab3d1aa0-c69c-4b0a-99ff-14d65c2410ee/agent-policy",
+      "method": "GET",
+      "leg": "read",
+      "mode": "proxy",
+      "status": 200,
+      "bytes": 527
+     },
+     {
+      "at": "14:47:18",
+      "stamp": "A14_NO_INSTRUMENT_FAST500",
+      "path": "/api/v1/journeys/d845ac26-0add-4305-bd3f-3f7c6f6fe3c1/agent-feed?limit=200",
+      "method": "GET",
+      "leg": "read",
+      "mode": "proxy",
+      "status": 200,
+      "bytes": 7551
+     },
+     {
+      "at": "14:47:18",
+      "stamp": "A14_NO_INSTRUMENT_FAST500",
+      "path": "/api/v1/agent/runtime-status",
+      "method": "GET",
+      "leg": "read",
+      "mode": "proxy",
+      "status": 200,
+      "bytes": 369
+     },
+     {
+      "at": "14:47:18",
+      "stamp": "A14_NO_INSTRUMENT_FAST500",
+      "path": "/api/v1/places?city_code=CNX-DEMO",
+      "method": "GET",
+      "leg": "read",
+      "mode": "proxy",
+      "status": 200,
+      "bytes": 1459
+     },
+     {
+      "at": "14:47:18",
+      "stamp": "A14_NO_INSTRUMENT_FAST500",
+      "path": "/api/v1/agent/runtime-status",
+      "method": "GET",
+      "leg": "read",
+      "mode": "proxy",
+      "status": 200,
+      "bytes": 369
+     },
+     {
+      "at": "14:47:18",
+      "stamp": "A14_NO_INSTRUMENT_FAST500",
+      "path": "/api/v1/journeys/d845ac26-0add-4305-bd3f-3f7c6f6fe3c1/plans",
+      "method": "GET",
+      "leg": "read",
+      "mode": "proxy",
+      "status": 200,
+      "bytes": 2
+     },
+     {
+      "at": "14:47:18",
+      "stamp": "A14_NO_INSTRUMENT_FAST500",
+      "path": "/api/v1/journeys/d845ac26-0add-4305-bd3f-3f7c6f6fe3c1/agent/commands",
+      "method": "POST",
+      "leg": "write",
+      "mode": "answer",
+      "request_bytes": 59,
+      "status": 500,
+      "content_type": "text/plain; charset=utf-8",
+      "response_bytes": null,
+      "delay_ms": 250,
+      "declared_content_length": 21,
+      "bytes_written": 21,
+      "body_sha256_12": "e41656eb2ba6"
+     },
+     {
+      "at": "14:47:27",
+      "stamp": "A14_NO_INSTRUMENT_FAST500",
+      "path": "/api/v1/journeys/d845ac26-0add-4305-bd3f-3f7c6f6fe3c1/agent/commands",
+      "method": "POST",
+      "leg": "write",
+      "mode": "answer",
+      "request_bytes": 37,
+      "status": 500,
+      "content_type": "text/plain; charset=utf-8",
+      "response_bytes": null,
+      "delay_ms": 250,
+      "declared_content_length": 21,
+      "bytes_written": 21,
+      "body_sha256_12": "e41656eb2ba6"
+     },
+     {
+      "at": "14:47:27",
+      "stamp": "A14_NO_INSTRUMENT_FAST500",
+      "path": "/api/v1/journeys/d845ac26-0add-4305-bd3f-3f7c6f6fe3c1/agent/commands",
+      "method": "POST",
+      "leg": "write",
+      "mode": "answer",
+      "request_bytes": 37,
+      "status": 500,
+      "content_type": "text/plain; charset=utf-8",
+      "response_bytes": null,
+      "delay_ms": 250,
+      "declared_content_length": 21,
+      "bytes_written": 21,
+      "body_sha256_12": "e41656eb2ba6"
+     }
+    ]
+   },
+   "screen_side": {
+    "painted_first_line": "连不上服务端",
+    "painted_text": "连不上服务端\n\n网络或后端没有响应，这与你的需求内容无关。你的行程没有被改动，检查网络后可以重试。",
+    "says_cannot_reach_server": true,
+    "details_elements_in_dom": 0,
+    "reason_label_painted": null,
+    "reason_value_painted": "",
+    "data_result_status_cross_check": "NETWORK",
+    "client_deadline_sentence_painted": false,
+    "sheet_reached": true
+   },
+   "app_threw_on_the_body": {
+    "json_rejections": [],
+    "syntax_error_count": 0,
+    "first_rejection_message": null
+   },
+   "secondary_surface": null,
+   "verdict": "MISLEADS",
+   "verdict_reason": "浏览器拿到了 HTTP 500，屏上仍把原因归给网络"
+  },
+  {
+   "row": "R5_②_500_with_product_envelope",
+   "arm": "a4_ctl_500_product_env_fast",
+   "outcome_class_as_asked": "② 服务器答 500 且正文带具名 code（产品自己那枚真信封的字节）",
+   "run_id": "O0301-144518",
+   "cap_ms": 45000,
+   "policy_stamp": "A4_CTL_500_PRODUCT_ENV_FAST",
+   "declared_write_leg": {
+    "mode": "answer",
+    "status": 500,
+    "content_type": "application/json",
+    "body": {
+     "file": "envelope_real.json"
+    },
+    "delay_ms": 250
+   },
+   "server_side": {
+    "deciding_leg": "commands",
+    "all_write_legs": [
+     {
+      "url": "/api/v1/journeys/d845ac26-0add-4305-bd3f-3f7c6f6fe3c1/agent/commands",
+      "status": 500,
+      "content_type": "application/json",
+      "bytes": 1443,
+      "elapsed_ms": 260,
+      "client_error": null
+     }
+    ],
+    "server_side_reading_from": "browser fetch hook",
+    "http_status": 500,
+    "content_type": "application/json",
+    "bytes": 1443,
+    "elapsed_ms": 260,
+    "client_error": null,
+    "body_head": "{\"error\":{\"code\":\"VALIDATION_ERROR\",\"message\":\"No feasible plan candidates satisfy the journey constraints\",\"message_key",
+    "envelope_code": "VALIDATION_ERROR",
+    "envelope_message": "No feasible plan candidates satisfy the journey constraints",
+    "answer_attributed_to": "my-origin",
+    "sibling_probe_outside_browser": {
+     "status": 500,
+     "content_type": "application/json",
+     "bytes": 1443,
+     "headers": {
+      "server": "BaseHTTP/0.6 Python/3.12.14",
+      "date": "Fri, 25 Sep 2026 06:45:29 GMT",
+      "content-length": "1443",
+      "connection": "close"
+     },
+     "body_head": "{\"error\":{\"code\":\"VALIDATION_ERROR\",\"message\":\"No feasible plan candidates satisfy the journey constraints\",\"message_key",
+     "http_error": "HTTP Error 500: Internal Server Error",
+     "elapsed_ms": 293
+    },
+    "origin_own_record_for_this_stamp": [
+     {
+      "at": "14:45:19",
+      "stamp": "A4_CTL_500_PRODUCT_ENV_FAST",
+      "path": "/api/v1/journeys/d845ac26-0add-4305-bd3f-3f7c6f6fe3c1/experience",
+      "method": "GET",
+      "leg": "read",
+      "mode": "proxy",
+      "status": 200,
+      "bytes": 2251
+     },
+     {
+      "at": "14:45:19",
+      "stamp": "A4_CTL_500_PRODUCT_ENV_FAST",
+      "path": "/api/v1/journeys/d845ac26-0add-4305-bd3f-3f7c6f6fe3c1/replans",
+      "method": "GET",
+      "leg": "read",
+      "mode": "proxy",
+      "status": 200,
+      "bytes": 2
+     },
+     {
+      "at": "14:45:19",
+      "stamp": "A4_CTL_500_PRODUCT_ENV_FAST",
+      "path": "/api/v1/demo/scene",
+      "method": "GET",
+      "leg": "read",
+      "mode": "proxy",
+      "status": 200,
+      "bytes": 489
+     },
+     {
+      "at": "14:45:19",
+      "stamp": "A4_CTL_500_PRODUCT_ENV_FAST",
+      "path": "/api/v1/journeys/d845ac26-0add-4305-bd3f-3f7c6f6fe3c1/agent-feed?limit=200",
+      "method": "GET",
+      "leg": "read",
+      "mode": "proxy",
+      "status": 200,
+      "bytes": 7551
+     },
+     {
+      "at": "14:45:19",
+      "stamp": "A4_CTL_500_PRODUCT_ENV_FAST",
+      "path": "/api/v1/journeys/d845ac26-0add-4305-bd3f-3f7c6f6fe3c1/plans",
+      "method": "GET",
+      "leg": "read",
+      "mode": "proxy",
+      "status": 200,
+      "bytes": 2
+     },
+     {
+      "at": "14:45:19",
+      "stamp": "A4_CTL_500_PRODUCT_ENV_FAST",
+      "path": "/api/v1/travelers/ab3d1aa0-c69c-4b0a-99ff-14d65c2410ee/agent-policy",
+      "method": "GET",
+      "leg": "read",
+      "mode": "proxy",
+      "status": 200,
+      "bytes": 527
+     },
+     {
+      "at": "14:45:19",
+      "stamp": "A4_CTL_500_PRODUCT_ENV_FAST",
+      "path": "/api/v1/journeys/d845ac26-0add-4305-bd3f-3f7c6f6fe3c1/offline-snapshot",
+      "method": "GET",
+      "leg": "read",
+      "mode": "proxy",
+      "status": 200,
+      "bytes": 797
+     },
+     {
+      "at": "14:45:19",
+      "stamp": "A4_CTL_500_PRODUCT_ENV_FAST",
+      "path": "/api/v1/journeys/d845ac26-0add-4305-bd3f-3f7c6f6fe3c1/wallet",
+      "method": "GET",
+      "leg": "read",
+      "mode": "proxy",
+      "status": 200,
+      "bytes": 109
+     },
+     {
+      "at": "14:45:19",
+      "stamp": "A4_CTL_500_PRODUCT_ENV_FAST",
+      "path": "/api/v1/journeys/d845ac26-0add-4305-bd3f-3f7c6f6fe3c1/agent-feed?limit=200",
+      "method": "GET",
+      "leg": "read",
+      "mode": "proxy",
+      "status": 200,
+      "bytes": 7551
+     },
+     {
+      "at": "14:45:19",
+      "stamp": "A4_CTL_500_PRODUCT_ENV_FAST",
+      "path": "/api/v1/journeys/d845ac26-0add-4305-bd3f-3f7c6f6fe3c1/twin",
+      "method": "GET",
+      "leg": "read",
+      "mode": "proxy",
+      "status": 200,
+      "bytes": 896
+     },
+     {
+      "at": "14:45:19",
+      "stamp": "A4_CTL_500_PRODUCT_ENV_FAST",
+      "path": "/api/v1/agent/runtime-status",
+      "method": "GET",
+      "leg": "read",
+      "mode": "proxy",
+      "status": 200,
+      "bytes": 369
+     },
+     {
+      "at": "14:45:19",
+      "stamp": "A4_CTL_500_PRODUCT_ENV_FAST",
+      "path": "/api/v1/places?city_code=CNX-DEMO",
+      "method": "GET",
+      "leg": "read",
+      "mode": "proxy",
+      "status": 200,
+      "bytes": 1459
+     },
+     {
+      "at": "14:45:19",
+      "stamp": "A4_CTL_500_PRODUCT_ENV_FAST",
+      "path": "/api/v1/agent/runtime-status",
+      "method": "GET",
+      "leg": "read",
+      "mode": "proxy",
+      "status": 200,
+      "bytes": 369
+     },
+     {
+      "at": "14:45:19",
+      "stamp": "A4_CTL_500_PRODUCT_ENV_FAST",
+      "path": "/api/v1/journeys/d845ac26-0add-4305-bd3f-3f7c6f6fe3c1/plans",
+      "method": "GET",
+      "leg": "read",
+      "mode": "proxy",
+      "status": 200,
+      "bytes": 2
+     },
+     {
+      "at": "14:45:19",
+      "stamp": "A4_CTL_500_PRODUCT_ENV_FAST",
+      "path": "/api/v1/journeys/d845ac26-0add-4305-bd3f-3f7c6f6fe3c1/agent/commands",
+      "method": "POST",
+      "leg": "write",
+      "mode": "answer",
+      "request_bytes": 59,
+      "status": 500,
+      "content_type": "application/json",
+      "response_bytes": null,
+      "delay_ms": 250,
+      "declared_content_length": 1443,
+      "bytes_written": 1443,
+      "body_sha256_12": "9acb65ea8f35"
+     },
+     {
+      "at": "14:45:28",
+      "stamp": "A4_CTL_500_PRODUCT_ENV_FAST",
+      "path": "/api/v1/journeys/d845ac26-0add-4305-bd3f-3f7c6f6fe3c1/agent/commands",
+      "method": "POST",
+      "leg": "write",
+      "mode": "answer",
+      "request_bytes": 37,
+      "status": 500,
+      "content_type": "application/json",
+      "response_bytes": null,
+      "delay_ms": 250,
+      "declared_content_length": 1443,
+      "bytes_written": 1443,
+      "body_sha256_12": "9acb65ea8f35"
+     },
+     {
+      "at": "14:45:28",
+      "stamp": "A4_CTL_500_PRODUCT_ENV_FAST",
+      "path": "/api/v1/journeys/d845ac26-0add-4305-bd3f-3f7c6f6fe3c1/agent/commands",
+      "method": "POST",
+      "leg": "write",
+      "mode": "answer",
+      "request_bytes": 37,
+      "status": 500,
+      "content_type": "application/json",
+      "response_bytes": null,
+      "delay_ms": 250,
+      "declared_content_length": 1443,
+      "bytes_written": 1443,
+      "body_sha256_12": "9acb65ea8f35"
+     }
+    ]
+   },
+   "screen_side": {
+    "painted_first_line": "服务端处理失败",
+    "painted_text": "服务端处理失败\n\n这次是服务端出错，不是你的需求有问题。行程未被改动，可稍后重试；反复出现请保留“技术详情”。\n\n技术详情\n服务器给出的原因\nNo feasible plan candidates satisfy the journey constraints",
+    "says_cannot_reach_server": false,
+    "details_elements_in_dom": 1,
+    "reason_label_painted": "服务器给出的原因",
+    "reason_value_painted": "No feasible plan candidates satisfy the journey constraints",
+    "data_result_status_cross_check": "HTTP_500",
+    "client_deadline_sentence_painted": false,
+    "sheet_reached": true
+   },
+   "app_threw_on_the_body": {
+    "json_rejections": [],
+    "syntax_error_count": 0,
+    "first_rejection_message": null
+   },
+   "secondary_surface": null,
+   "verdict": "HONEST",
+   "verdict_reason": "HTTP 500 被原样报成服务端失败"
+  },
+  {
+   "row": "R6_③_503_envelope",
+   "arm": "a5_ctl_503_product_env_fast",
+   "outcome_class_as_asked": "③ 503 + 同一枚信封字节",
+   "run_id": "O0301-144529",
+   "cap_ms": 45000,
+   "policy_stamp": "A5_CTL_503_PRODUCT_ENV_FAST",
+   "declared_write_leg": {
+    "mode": "answer",
+    "status": 503,
+    "content_type": "application/json",
+    "body": {
+     "file": "envelope_real.json"
+    },
+    "delay_ms": 250
+   },
+   "server_side": {
+    "deciding_leg": "commands",
+    "all_write_legs": [
+     {
+      "url": "/api/v1/journeys/d845ac26-0add-4305-bd3f-3f7c6f6fe3c1/agent/commands",
+      "status": 503,
+      "content_type": "application/json",
+      "bytes": 1443,
+      "elapsed_ms": 257,
+      "client_error": null
+     }
+    ],
+    "server_side_reading_from": "browser fetch hook",
+    "http_status": 503,
+    "content_type": "application/json",
+    "bytes": 1443,
+    "elapsed_ms": 257,
+    "client_error": null,
+    "body_head": "{\"error\":{\"code\":\"VALIDATION_ERROR\",\"message\":\"No feasible plan candidates satisfy the journey constraints\",\"message_key",
+    "envelope_code": "VALIDATION_ERROR",
+    "envelope_message": "No feasible plan candidates satisfy the journey constraints",
+    "answer_attributed_to": "my-origin",
+    "sibling_probe_outside_browser": {
+     "status": 503,
+     "content_type": "application/json",
+     "bytes": 1443,
+     "headers": {
+      "server": "BaseHTTP/0.6 Python/3.12.14",
+      "date": "Fri, 25 Sep 2026 06:45:39 GMT",
+      "content-length": "1443",
+      "connection": "close"
+     },
+     "body_head": "{\"error\":{\"code\":\"VALIDATION_ERROR\",\"message\":\"No feasible plan candidates satisfy the journey constraints\",\"message_key",
+     "http_error": "HTTP Error 503: Service Unavailable",
+     "elapsed_ms": 297
+    },
+    "origin_own_record_for_this_stamp": [
+     {
+      "at": "14:45:29",
+      "stamp": "A5_CTL_503_PRODUCT_ENV_FAST",
+      "path": "/api/v1/journeys/d845ac26-0add-4305-bd3f-3f7c6f6fe3c1/experience",
+      "method": "GET",
+      "leg": "read",
+      "mode": "proxy",
+      "status": 200,
+      "bytes": 2251
+     },
+     {
+      "at": "14:45:29",
+      "stamp": "A5_CTL_503_PRODUCT_ENV_FAST",
+      "path": "/api/v1/journeys/d845ac26-0add-4305-bd3f-3f7c6f6fe3c1/replans",
+      "method": "GET",
+      "leg": "read",
+      "mode": "proxy",
+      "status": 200,
+      "bytes": 2
+     },
+     {
+      "at": "14:45:29",
+      "stamp": "A5_CTL_503_PRODUCT_ENV_FAST",
+      "path": "/api/v1/demo/scene",
+      "method": "GET",
+      "leg": "read",
+      "mode": "proxy",
+      "status": 200,
+      "bytes": 489
+     },
+     {
+      "at": "14:45:29",
+      "stamp": "A5_CTL_503_PRODUCT_ENV_FAST",
+      "path": "/api/v1/journeys/d845ac26-0add-4305-bd3f-3f7c6f6fe3c1/agent-feed?limit=200",
+      "method": "GET",
+      "leg": "read",
+      "mode": "proxy",
+      "status": 200,
+      "bytes": 7551
+     },
+     {
+      "at": "14:45:29",
+      "stamp": "A5_CTL_503_PRODUCT_ENV_FAST",
+      "path": "/api/v1/journeys/d845ac26-0add-4305-bd3f-3f7c6f6fe3c1/plans",
+      "method": "GET",
+      "leg": "read",
+      "mode": "proxy",
+      "status": 200,
+      "bytes": 2
+     },
+     {
+      "at": "14:45:29",
+      "stamp": "A5_CTL_503_PRODUCT_ENV_FAST",
+      "path": "/api/v1/journeys/d845ac26-0add-4305-bd3f-3f7c6f6fe3c1/wallet",
+      "method": "GET",
+      "leg": "read",
+      "mode": "proxy",
+      "status": 200,
+      "bytes": 109
+     },
+     {
+      "at": "14:45:29",
+      "stamp": "A5_CTL_503_PRODUCT_ENV_FAST",
+      "path": "/api/v1/journeys/d845ac26-0add-4305-bd3f-3f7c6f6fe3c1/offline-snapshot",
+      "method": "GET",
+      "leg": "read",
+      "mode": "proxy",
+      "status": 200,
+      "bytes": 797
+     },
+     {
+      "at": "14:45:29",
+      "stamp": "A5_CTL_503_PRODUCT_ENV_FAST",
+      "path": "/api/v1/journeys/d845ac26-0add-4305-bd3f-3f7c6f6fe3c1/twin",
+      "method": "GET",
+      "leg": "read",
+      "mode": "proxy",
+      "status": 200,
+      "bytes": 896
+     },
+     {
+      "at": "14:45:29",
+      "stamp": "A5_CTL_503_PRODUCT_ENV_FAST",
+      "path": "/api/v1/travelers/ab3d1aa0-c69c-4b0a-99ff-14d65c2410ee/agent-policy",
+      "method": "GET",
+      "leg": "read",
+      "mode": "proxy",
+      "status": 200,
+      "bytes": 527
+     },
+     {
+      "at": "14:45:29",
+      "stamp": "A5_CTL_503_PRODUCT_ENV_FAST",
+      "path": "/api/v1/journeys/d845ac26-0add-4305-bd3f-3f7c6f6fe3c1/agent-feed?limit=200",
+      "method": "GET",
+      "leg": "read",
+      "mode": "proxy",
+      "status": 200,
+      "bytes": 7551
+     },
+     {
+      "at": "14:45:29",
+      "stamp": "A5_CTL_503_PRODUCT_ENV_FAST",
+      "path": "/api/v1/agent/runtime-status",
+      "method": "GET",
+      "leg": "read",
+      "mode": "proxy",
+      "status": 200,
+      "bytes": 369
+     },
+     {
+      "at": "14:45:30",
+      "stamp": "A5_CTL_503_PRODUCT_ENV_FAST",
+      "path": "/api/v1/places?city_code=CNX-DEMO",
+      "method": "GET",
+      "leg": "read",
+      "mode": "proxy",
+      "status": 200,
+      "bytes": 1459
+     },
+     {
+      "at": "14:45:30",
+      "stamp": "A5_CTL_503_PRODUCT_ENV_FAST",
+      "path": "/api/v1/agent/runtime-status",
+      "method": "GET",
+      "leg": "read",
+      "mode": "proxy",
+      "status": 200,
+      "bytes": 369
+     },
+     {
+      "at": "14:45:30",
+      "stamp": "A5_CTL_503_PRODUCT_ENV_FAST",
+      "path": "/api/v1/journeys/d845ac26-0add-4305-bd3f-3f7c6f6fe3c1/plans",
+      "method": "GET",
+      "leg": "read",
+      "mode": "proxy",
+      "status": 200,
+      "bytes": 2
+     },
+     {
+      "at": "14:45:30",
+      "stamp": "A5_CTL_503_PRODUCT_ENV_FAST",
+      "path": "/api/v1/journeys/d845ac26-0add-4305-bd3f-3f7c6f6fe3c1/agent/commands",
+      "method": "POST",
+      "leg": "write",
+      "mode": "answer",
+      "request_bytes": 59,
+      "status": 503,
+      "content_type": "application/json",
+      "response_bytes": null,
+      "delay_ms": 250,
+      "declared_content_length": 1443,
+      "bytes_written": 1443,
+      "body_sha256_12": "9acb65ea8f35"
+     },
+     {
+      "at": "14:45:39",
+      "stamp": "A5_CTL_503_PRODUCT_ENV_FAST",
+      "path": "/api/v1/journeys/d845ac26-0add-4305-bd3f-3f7c6f6fe3c1/agent/commands",
+      "method": "POST",
+      "leg": "write",
+      "mode": "answer",
+      "request_bytes": 37,
+      "status": 503,
+      "content_type": "application/json",
+      "response_bytes": null,
+      "delay_ms": 250,
+      "declared_content_length": 1443,
+      "bytes_written": 1443,
+      "body_sha256_12": "9acb65ea8f35"
+     },
+     {
+      "at": "14:45:39",
+      "stamp": "A5_CTL_503_PRODUCT_ENV_FAST",
+      "path": "/api/v1/journeys/d845ac26-0add-4305-bd3f-3f7c6f6fe3c1/agent/commands",
+      "method": "POST",
+      "leg": "write",
+      "mode": "answer",
+      "request_bytes": 37,
+      "status": 503,
+      "content_type": "application/json",
+      "response_bytes": null,
+      "delay_ms": 250,
+      "declared_content_length": 1443,
+      "bytes_written": 1443,
+      "body_sha256_12": "9acb65ea8f35"
+     }
+    ]
+   },
+   "screen_side": {
+    "painted_first_line": "服务端处理失败",
+    "painted_text": "服务端处理失败\n\n这次是服务端出错，不是你的需求有问题。行程未被改动，可稍后重试；反复出现请保留“技术详情”。\n\n技术详情\n服务器给出的原因\nNo feasible plan candidates satisfy the journey constraints",
+    "says_cannot_reach_server": false,
+    "details_elements_in_dom": 1,
+    "reason_label_painted": "服务器给出的原因",
+    "reason_value_painted": "No feasible plan candidates satisfy the journey constraints",
+    "data_result_status_cross_check": "HTTP_503",
+    "client_deadline_sentence_painted": false,
+    "sheet_reached": true
+   },
+   "app_threw_on_the_body": {
+    "json_rejections": [],
+    "syntax_error_count": 0,
+    "first_rejection_message": null
+   },
+   "secondary_surface": null,
+   "verdict": "HONEST",
+   "verdict_reason": "HTTP 503 被原样报成服务端失败"
+  },
+  {
+   "row": "R7_③_502_envelope",
+   "arm": "a6_ctl_502_product_env_fast",
+   "outcome_class_as_asked": "③ 502 + 同一枚信封字节",
+   "run_id": "O0301-144539",
+   "cap_ms": 45000,
+   "policy_stamp": "A6_CTL_502_PRODUCT_ENV_FAST",
+   "declared_write_leg": {
+    "mode": "answer",
+    "status": 502,
+    "content_type": "application/json",
+    "body": {
+     "file": "envelope_real.json"
+    },
+    "delay_ms": 250
+   },
+   "server_side": {
+    "deciding_leg": "commands",
+    "all_write_legs": [
+     {
+      "url": "/api/v1/journeys/d845ac26-0add-4305-bd3f-3f7c6f6fe3c1/agent/commands",
+      "status": 502,
+      "content_type": "application/json",
+      "bytes": 1443,
+      "elapsed_ms": 256,
+      "client_error": null
+     }
+    ],
+    "server_side_reading_from": "browser fetch hook",
+    "http_status": 502,
+    "content_type": "application/json",
+    "bytes": 1443,
+    "elapsed_ms": 256,
+    "client_error": null,
+    "body_head": "{\"error\":{\"code\":\"VALIDATION_ERROR\",\"message\":\"No feasible plan candidates satisfy the journey constraints\",\"message_key",
+    "envelope_code": "VALIDATION_ERROR",
+    "envelope_message": "No feasible plan candidates satisfy the journey constraints",
+    "answer_attributed_to": "my-origin",
+    "sibling_probe_outside_browser": {
+     "status": 502,
+     "content_type": "application/json",
+     "bytes": 1443,
+     "headers": {
+      "server": "BaseHTTP/0.6 Python/3.12.14",
+      "date": "Fri, 25 Sep 2026 06:45:50 GMT",
+      "content-length": "1443",
+      "connection": "close"
+     },
+     "body_head": "{\"error\":{\"code\":\"VALIDATION_ERROR\",\"message\":\"No feasible plan candidates satisfy the journey constraints\",\"message_key",
+     "http_error": "HTTP Error 502: Bad Gateway",
+     "elapsed_ms": 295
+    },
+    "origin_own_record_for_this_stamp": [
+     {
+      "at": "14:45:40",
+      "stamp": "A6_CTL_502_PRODUCT_ENV_FAST",
+      "path": "/api/v1/journeys/d845ac26-0add-4305-bd3f-3f7c6f6fe3c1/experience",
+      "method": "GET",
+      "leg": "read",
+      "mode": "proxy",
+      "status": 200,
+      "bytes": 2251
+     },
+     {
+      "at": "14:45:40",
+      "stamp": "A6_CTL_502_PRODUCT_ENV_FAST",
+      "path": "/api/v1/journeys/d845ac26-0add-4305-bd3f-3f7c6f6fe3c1/replans",
+      "method": "GET",
+      "leg": "read",
+      "mode": "proxy",
+      "status": 200,
+      "bytes": 2
+     },
+     {
+      "at": "14:45:40",
+      "stamp": "A6_CTL_502_PRODUCT_ENV_FAST",
+      "path": "/api/v1/demo/scene",
+      "method": "GET",
+      "leg": "read",
+      "mode": "proxy",
+      "status": 200,
+      "bytes": 489
+     },
+     {
+      "at": "14:45:40",
+      "stamp": "A6_CTL_502_PRODUCT_ENV_FAST",
+      "path": "/api/v1/travelers/ab3d1aa0-c69c-4b0a-99ff-14d65c2410ee/agent-policy",
+      "method": "GET",
+      "leg": "read",
+      "mode": "proxy",
+      "status": 200,
+      "bytes": 527
+     },
+     {
+      "at": "14:45:40",
+      "stamp": "A6_CTL_502_PRODUCT_ENV_FAST",
+      "path": "/api/v1/journeys/d845ac26-0add-4305-bd3f-3f7c6f6fe3c1/offline-snapshot",
+      "method": "GET",
+      "leg": "read",
+      "mode": "proxy",
+      "status": 200,
+      "bytes": 797
+     },
+     {
+      "at": "14:45:40",
+      "stamp": "A6_CTL_502_PRODUCT_ENV_FAST",
+      "path": "/api/v1/journeys/d845ac26-0add-4305-bd3f-3f7c6f6fe3c1/wallet",
+      "method": "GET",
+      "leg": "read",
+      "mode": "proxy",
+      "status": 200,
+      "bytes": 109
+     },
+     {
+      "at": "14:45:40",
+      "stamp": "A6_CTL_502_PRODUCT_ENV_FAST",
+      "path": "/api/v1/journeys/d845ac26-0add-4305-bd3f-3f7c6f6fe3c1/agent-feed?limit=200",
+      "method": "GET",
+      "leg": "read",
+      "mode": "proxy",
+      "status": 200,
+      "bytes": 7551
+     },
+     {
+      "at": "14:45:40",
+      "stamp": "A6_CTL_502_PRODUCT_ENV_FAST",
+      "path": "/api/v1/journeys/d845ac26-0add-4305-bd3f-3f7c6f6fe3c1/agent-feed?limit=200",
+      "method": "GET",
+      "leg": "read",
+      "mode": "proxy",
+      "status": 200,
+      "bytes": 7551
+     },
+     {
+      "at": "14:45:40",
+      "stamp": "A6_CTL_502_PRODUCT_ENV_FAST",
+      "path": "/api/v1/journeys/d845ac26-0add-4305-bd3f-3f7c6f6fe3c1/plans",
+      "method": "GET",
+      "leg": "read",
+      "mode": "proxy",
+      "status": 200,
+      "bytes": 2
+     },
+     {
+      "at": "14:45:40",
+      "stamp": "A6_CTL_502_PRODUCT_ENV_FAST",
+      "path": "/api/v1/journeys/d845ac26-0add-4305-bd3f-3f7c6f6fe3c1/twin",
+      "method": "GET",
+      "leg": "read",
+      "mode": "proxy",
+      "status": 200,
+      "bytes": 896
+     },
+     {
+      "at": "14:45:40",
+      "stamp": "A6_CTL_502_PRODUCT_ENV_FAST",
+      "path": "/api/v1/agent/runtime-status",
+      "method": "GET",
+      "leg": "read",
+      "mode": "proxy",
+      "status": 200,
+      "bytes": 369
+     },
+     {
+      "at": "14:45:40",
+      "stamp": "A6_CTL_502_PRODUCT_ENV_FAST",
+      "path": "/api/v1/places?city_code=CNX-DEMO",
+      "method": "GET",
+      "leg": "read",
+      "mode": "proxy",
+      "status": 200,
+      "bytes": 1459
+     },
+     {
+      "at": "14:45:40",
+      "stamp": "A6_CTL_502_PRODUCT_ENV_FAST",
+      "path": "/api/v1/agent/runtime-status",
+      "method": "GET",
+      "leg": "read",
+      "mode": "proxy",
+      "status": 200,
+      "bytes": 369
+     },
+     {
+      "at": "14:45:40",
+      "stamp": "A6_CTL_502_PRODUCT_ENV_FAST",
+      "path": "/api/v1/journeys/d845ac26-0add-4305-bd3f-3f7c6f6fe3c1/plans",
+      "method": "GET",
+      "leg": "read",
+      "mode": "proxy",
+      "status": 200,
+      "bytes": 2
+     },
+     {
+      "at": "14:45:41",
+      "stamp": "A6_CTL_502_PRODUCT_ENV_FAST",
+      "path": "/api/v1/journeys/d845ac26-0add-4305-bd3f-3f7c6f6fe3c1/agent/commands",
+      "method": "POST",
+      "leg": "write",
+      "mode": "answer",
+      "request_bytes": 59,
+      "status": 502,
+      "content_type": "application/json",
+      "response_bytes": null,
+      "delay_ms": 250,
+      "declared_content_length": 1443,
+      "bytes_written": 1443,
+      "body_sha256_12": "9acb65ea8f35"
+     },
+     {
+      "at": "14:45:49",
+      "stamp": "A6_CTL_502_PRODUCT_ENV_FAST",
+      "path": "/api/v1/journeys/d845ac26-0add-4305-bd3f-3f7c6f6fe3c1/agent/commands",
+      "method": "POST",
+      "leg": "write",
+      "mode": "answer",
+      "request_bytes": 37,
+      "status": 502,
+      "content_type": "application/json",
+      "response_bytes": null,
+      "delay_ms": 250,
+      "declared_content_length": 1443,
+      "bytes_written": 1443,
+      "body_sha256_12": "9acb65ea8f35"
+     },
+     {
+      "at": "14:45:50",
+      "stamp": "A6_CTL_502_PRODUCT_ENV_FAST",
+      "path": "/api/v1/journeys/d845ac26-0add-4305-bd3f-3f7c6f6fe3c1/agent/commands",
+      "method": "POST",
+      "leg": "write",
+      "mode": "answer",
+      "request_bytes": 37,
+      "status": 502,
+      "content_type": "application/json",
+      "response_bytes": null,
+      "delay_ms": 250,
+      "declared_content_length": 1443,
+      "bytes_written": 1443,
+      "body_sha256_12": "9acb65ea8f35"
+     }
+    ]
+   },
+   "screen_side": {
+    "painted_first_line": "服务端处理失败",
+    "painted_text": "服务端处理失败\n\n这次是服务端出错，不是你的需求有问题。行程未被改动，可稍后重试；反复出现请保留“技术详情”。\n\n技术详情\n服务器给出的原因\nNo feasible plan candidates satisfy the journey constraints",
+    "says_cannot_reach_server": false,
+    "details_elements_in_dom": 1,
+    "reason_label_painted": "服务器给出的原因",
+    "reason_value_painted": "No feasible plan candidates satisfy the journey constraints",
+    "data_result_status_cross_check": "HTTP_502",
+    "client_deadline_sentence_painted": false,
+    "sheet_reached": true
+   },
+   "app_threw_on_the_body": {
+    "json_rejections": [],
+    "syntax_error_count": 0,
+    "first_rejection_message": null
+   },
+   "secondary_surface": null,
+   "verdict": "HONEST",
+   "verdict_reason": "HTTP 502 被原样报成服务端失败"
+  },
+  {
+   "row": "R8_③_504_envelope",
+   "arm": "a7_ctl_504_product_env_fast",
+   "outcome_class_as_asked": "③ 504 + 同一枚信封字节",
+   "run_id": "O0301-144550",
+   "cap_ms": 45000,
+   "policy_stamp": "A7_CTL_504_PRODUCT_ENV_FAST",
+   "declared_write_leg": {
+    "mode": "answer",
+    "status": 504,
+    "content_type": "application/json",
+    "body": {
+     "file": "envelope_real.json"
+    },
+    "delay_ms": 250
+   },
+   "server_side": {
+    "deciding_leg": "commands",
+    "all_write_legs": [
+     {
+      "url": "/api/v1/journeys/d845ac26-0add-4305-bd3f-3f7c6f6fe3c1/agent/commands",
+      "status": 504,
+      "content_type": "application/json",
+      "bytes": 1443,
+      "elapsed_ms": 255,
+      "client_error": null
+     }
+    ],
+    "server_side_reading_from": "browser fetch hook",
+    "http_status": 504,
+    "content_type": "application/json",
+    "bytes": 1443,
+    "elapsed_ms": 255,
+    "client_error": null,
+    "body_head": "{\"error\":{\"code\":\"VALIDATION_ERROR\",\"message\":\"No feasible plan candidates satisfy the journey constraints\",\"message_key",
+    "envelope_code": "VALIDATION_ERROR",
+    "envelope_message": "No feasible plan candidates satisfy the journey constraints",
+    "answer_attributed_to": "my-origin",
+    "sibling_probe_outside_browser": {
+     "status": 504,
+     "content_type": "application/json",
+     "bytes": 1443,
+     "headers": {
+      "server": "BaseHTTP/0.6 Python/3.12.14",
+      "date": "Fri, 25 Sep 2026 06:46:01 GMT",
+      "content-length": "1443",
+      "connection": "close"
+     },
+     "body_head": "{\"error\":{\"code\":\"VALIDATION_ERROR\",\"message\":\"No feasible plan candidates satisfy the journey constraints\",\"message_key",
+     "http_error": "HTTP Error 504: Gateway Timeout",
+     "elapsed_ms": 297
+    },
+    "origin_own_record_for_this_stamp": [
+     {
+      "at": "14:45:50",
+      "stamp": "A7_CTL_504_PRODUCT_ENV_FAST",
+      "path": "/api/v1/journeys/d845ac26-0add-4305-bd3f-3f7c6f6fe3c1/experience",
+      "method": "GET",
+      "leg": "read",
+      "mode": "proxy",
+      "status": 200,
+      "bytes": 2251
+     },
+     {
+      "at": "14:45:51",
+      "stamp": "A7_CTL_504_PRODUCT_ENV_FAST",
+      "path": "/api/v1/journeys/d845ac26-0add-4305-bd3f-3f7c6f6fe3c1/replans",
+      "method": "GET",
+      "leg": "read",
+      "mode": "proxy",
+      "status": 200,
+      "bytes": 2
+     },
+     {
+      "at": "14:45:51",
+      "stamp": "A7_CTL_504_PRODUCT_ENV_FAST",
+      "path": "/api/v1/demo/scene",
+      "method": "GET",
+      "leg": "read",
+      "mode": "proxy",
+      "status": 200,
+      "bytes": 489
+     },
+     {
+      "at": "14:45:51",
+      "stamp": "A7_CTL_504_PRODUCT_ENV_FAST",
+      "path": "/api/v1/journeys/d845ac26-0add-4305-bd3f-3f7c6f6fe3c1/agent-feed?limit=200",
+      "method": "GET",
+      "leg": "read",
+      "mode": "proxy",
+      "status": 200,
+      "bytes": 7551
+     },
+     {
+      "at": "14:45:51",
+      "stamp": "A7_CTL_504_PRODUCT_ENV_FAST",
+      "path": "/api/v1/travelers/ab3d1aa0-c69c-4b0a-99ff-14d65c2410ee/agent-policy",
+      "method": "GET",
+      "leg": "read",
+      "mode": "proxy",
+      "status": 200,
+      "bytes": 527
+     },
+     {
+      "at": "14:45:51",
+      "stamp": "A7_CTL_504_PRODUCT_ENV_FAST",
+      "path": "/api/v1/journeys/d845ac26-0add-4305-bd3f-3f7c6f6fe3c1/wallet",
+      "method": "GET",
+      "leg": "read",
+      "mode": "proxy",
+      "status": 200,
+      "bytes": 109
+     },
+     {
+      "at": "14:45:51",
+      "stamp": "A7_CTL_504_PRODUCT_ENV_FAST",
+      "path": "/api/v1/journeys/d845ac26-0add-4305-bd3f-3f7c6f6fe3c1/twin",
+      "method": "GET",
+      "leg": "read",
+      "mode": "proxy",
+      "status": 200,
+      "bytes": 896
+     },
+     {
+      "at": "14:45:51",
+      "stamp": "A7_CTL_504_PRODUCT_ENV_FAST",
+      "path": "/api/v1/journeys/d845ac26-0add-4305-bd3f-3f7c6f6fe3c1/plans",
+      "method": "GET",
+      "leg": "read",
+      "mode": "proxy",
+      "status": 200,
+      "bytes": 2
+     },
+     {
+      "at": "14:45:51",
+      "stamp": "A7_CTL_504_PRODUCT_ENV_FAST",
+      "path": "/api/v1/journeys/d845ac26-0add-4305-bd3f-3f7c6f6fe3c1/offline-snapshot",
+      "method": "GET",
+      "leg": "read",
+      "mode": "proxy",
+      "status": 200,
+      "bytes": 797
+     },
+     {
+      "at": "14:45:51",
+      "stamp": "A7_CTL_504_PRODUCT_ENV_FAST",
+      "path": "/api/v1/journeys/d845ac26-0add-4305-bd3f-3f7c6f6fe3c1/agent-feed?limit=200",
+      "method": "GET",
+      "leg": "read",
+      "mode": "proxy",
+      "status": 200,
+      "bytes": 7551
+     },
+     {
+      "at": "14:45:51",
+      "stamp": "A7_CTL_504_PRODUCT_ENV_FAST",
+      "path": "/api/v1/agent/runtime-status",
+      "method": "GET",
+      "leg": "read",
+      "mode": "proxy",
+      "status": 200,
+      "bytes": 369
+     },
+     {
+      "at": "14:45:51",
+      "stamp": "A7_CTL_504_PRODUCT_ENV_FAST",
+      "path": "/api/v1/places?city_code=CNX-DEMO",
+      "method": "GET",
+      "leg": "read",
+      "mode": "proxy",
+      "status": 200,
+      "bytes": 1459
+     },
+     {
+      "at": "14:45:51",
+      "stamp": "A7_CTL_504_PRODUCT_ENV_FAST",
+      "path": "/api/v1/agent/runtime-status",
+      "method": "GET",
+      "leg": "read",
+      "mode": "proxy",
+      "status": 200,
+      "bytes": 369
+     },
+     {
+      "at": "14:45:51",
+      "stamp": "A7_CTL_504_PRODUCT_ENV_FAST",
+      "path": "/api/v1/journeys/d845ac26-0add-4305-bd3f-3f7c6f6fe3c1/plans",
+      "method": "GET",
+      "leg": "read",
+      "mode": "proxy",
+      "status": 200,
+      "bytes": 2
+     },
+     {
+      "at": "14:45:51",
+      "stamp": "A7_CTL_504_PRODUCT_ENV_FAST",
+      "path": "/api/v1/journeys/d845ac26-0add-4305-bd3f-3f7c6f6fe3c1/agent/commands",
+      "method": "POST",
+      "leg": "write",
+      "mode": "answer",
+      "request_bytes": 59,
+      "status": 504,
+      "content_type": "application/json",
+      "response_bytes": null,
+      "delay_ms": 250,
+      "declared_content_length": 1443,
+      "bytes_written": 1443,
+      "body_sha256_12": "9acb65ea8f35"
+     },
+     {
+      "at": "14:46:00",
+      "stamp": "A7_CTL_504_PRODUCT_ENV_FAST",
+      "path": "/api/v1/journeys/d845ac26-0add-4305-bd3f-3f7c6f6fe3c1/agent/commands",
+      "method": "POST",
+      "leg": "write",
+      "mode": "answer",
+      "request_bytes": 37,
+      "status": 504,
+      "content_type": "application/json",
+      "response_bytes": null,
+      "delay_ms": 250,
+      "declared_content_length": 1443,
+      "bytes_written": 1443,
+      "body_sha256_12": "9acb65ea8f35"
+     },
+     {
+      "at": "14:46:00",
+      "stamp": "A7_CTL_504_PRODUCT_ENV_FAST",
+      "path": "/api/v1/journeys/d845ac26-0add-4305-bd3f-3f7c6f6fe3c1/agent/commands",
+      "method": "POST",
+      "leg": "write",
+      "mode": "answer",
+      "request_bytes": 37,
+      "status": 504,
+      "content_type": "application/json",
+      "response_bytes": null,
+      "delay_ms": 250,
+      "declared_content_length": 1443,
+      "bytes_written": 1443,
+      "body_sha256_12": "9acb65ea8f35"
+     }
+    ]
+   },
+   "screen_side": {
+    "painted_first_line": "服务端处理失败",
+    "painted_text": "服务端处理失败\n\n这次是服务端出错，不是你的需求有问题。行程未被改动，可稍后重试；反复出现请保留“技术详情”。\n\n技术详情\n服务器给出的原因\nNo feasible plan candidates satisfy the journey constraints",
+    "says_cannot_reach_server": false,
+    "details_elements_in_dom": 1,
+    "reason_label_painted": "服务器给出的原因",
+    "reason_value_painted": "No feasible plan candidates satisfy the journey constraints",
+    "data_result_status_cross_check": "HTTP_504",
+    "client_deadline_sentence_painted": false,
+    "sheet_reached": true
+   },
+   "app_threw_on_the_body": {
+    "json_rejections": [],
+    "syntax_error_count": 0,
+    "first_rejection_message": null
+   },
+   "secondary_surface": null,
+   "verdict": "HONEST",
+   "verdict_reason": "HTTP 504 被原样报成服务端失败"
+  },
+  {
+   "row": "R9_③_503_plain_gateway",
+   "arm": "a17_ctl_503_plain_gateway",
+   "outcome_class_as_asked": "③ 503 但网关那种纯文本正文",
+   "run_id": "O0301-144659",
+   "cap_ms": 45000,
+   "policy_stamp": "A17_CTL_503_PLAIN_GATEWAY",
+   "declared_write_leg": {
+    "mode": "answer",
+    "status": 503,
+    "content_type": "text/plain; charset=utf-8",
+    "body": "Service Unavailable",
+    "delay_ms": 250
+   },
+   "server_side": {
+    "deciding_leg": "commands",
+    "all_write_legs": [
+     {
+      "url": "/api/v1/journeys/d845ac26-0add-4305-bd3f-3f7c6f6fe3c1/agent/commands",
+      "status": 503,
+      "content_type": "text/plain; charset=utf-8",
+      "bytes": 19,
+      "elapsed_ms": 255,
+      "client_error": null
+     }
+    ],
+    "server_side_reading_from": "browser fetch hook",
+    "http_status": 503,
+    "content_type": "text/plain; charset=utf-8",
+    "bytes": 19,
+    "elapsed_ms": 255,
+    "client_error": null,
+    "body_head": "Service Unavailable",
+    "envelope_code": null,
+    "envelope_message": null,
+    "answer_attributed_to": "my-origin",
+    "sibling_probe_outside_browser": {
+     "status": 503,
+     "content_type": "text/plain; charset=utf-8",
+     "bytes": 19,
+     "headers": {
+      "server": "BaseHTTP/0.6 Python/3.12.14",
+      "date": "Fri, 25 Sep 2026 06:47:10 GMT",
+      "content-length": "19",
+      "connection": "close"
+     },
+     "body_head": "Service Unavailable",
+     "http_error": "HTTP Error 503: Service Unavailable",
+     "elapsed_ms": 306
+    },
+    "origin_own_record_for_this_stamp": [
+     {
+      "at": "14:47:00",
+      "stamp": "A17_CTL_503_PLAIN_GATEWAY",
+      "path": "/api/v1/journeys/d845ac26-0add-4305-bd3f-3f7c6f6fe3c1/experience",
+      "method": "GET",
+      "leg": "read",
+      "mode": "proxy",
+      "status": 200,
+      "bytes": 2251
+     },
+     {
+      "at": "14:47:00",
+      "stamp": "A17_CTL_503_PLAIN_GATEWAY",
+      "path": "/api/v1/journeys/d845ac26-0add-4305-bd3f-3f7c6f6fe3c1/replans",
+      "method": "GET",
+      "leg": "read",
+      "mode": "proxy",
+      "status": 200,
+      "bytes": 2
+     },
+     {
+      "at": "14:47:00",
+      "stamp": "A17_CTL_503_PLAIN_GATEWAY",
+      "path": "/api/v1/demo/scene",
+      "method": "GET",
+      "leg": "read",
+      "mode": "proxy",
+      "status": 200,
+      "bytes": 489
+     },
+     {
+      "at": "14:47:00",
+      "stamp": "A17_CTL_503_PLAIN_GATEWAY",
+      "path": "/api/v1/journeys/d845ac26-0add-4305-bd3f-3f7c6f6fe3c1/agent-feed?limit=200",
+      "method": "GET",
+      "leg": "read",
+      "mode": "proxy",
+      "status": 200,
+      "bytes": 7551
+     },
+     {
+      "at": "14:47:00",
+      "stamp": "A17_CTL_503_PLAIN_GATEWAY",
+      "path": "/api/v1/journeys/d845ac26-0add-4305-bd3f-3f7c6f6fe3c1/twin",
+      "method": "GET",
+      "leg": "read",
+      "mode": "proxy",
+      "status": 200,
+      "bytes": 896
+     },
+     {
+      "at": "14:47:00",
+      "stamp": "A17_CTL_503_PLAIN_GATEWAY",
+      "path": "/api/v1/travelers/ab3d1aa0-c69c-4b0a-99ff-14d65c2410ee/agent-policy",
+      "method": "GET",
+      "leg": "read",
+      "mode": "proxy",
+      "status": 200,
+      "bytes": 527
+     },
+     {
+      "at": "14:47:00",
+      "stamp": "A17_CTL_503_PLAIN_GATEWAY",
+      "path": "/api/v1/journeys/d845ac26-0add-4305-bd3f-3f7c6f6fe3c1/wallet",
+      "method": "GET",
+      "leg": "read",
+      "mode": "proxy",
+      "status": 200,
+      "bytes": 109
+     },
+     {
+      "at": "14:47:00",
+      "stamp": "A17_CTL_503_PLAIN_GATEWAY",
+      "path": "/api/v1/journeys/d845ac26-0add-4305-bd3f-3f7c6f6fe3c1/offline-snapshot",
+      "method": "GET",
+      "leg": "read",
+      "mode": "proxy",
+      "status": 200,
+      "bytes": 797
+     },
+     {
+      "at": "14:47:00",
+      "stamp": "A17_CTL_503_PLAIN_GATEWAY",
+      "path": "/api/v1/journeys/d845ac26-0add-4305-bd3f-3f7c6f6fe3c1/plans",
+      "method": "GET",
+      "leg": "read",
+      "mode": "proxy",
+      "status": 200,
+      "bytes": 2
+     },
+     {
+      "at": "14:47:00",
+      "stamp": "A17_CTL_503_PLAIN_GATEWAY",
+      "path": "/api/v1/journeys/d845ac26-0add-4305-bd3f-3f7c6f6fe3c1/agent-feed?limit=200",
+      "method": "GET",
+      "leg": "read",
+      "mode": "proxy",
+      "status": 200,
+      "bytes": 7551
+     },
+     {
+      "at": "14:47:00",
+      "stamp": "A17_CTL_503_PLAIN_GATEWAY",
+      "path": "/api/v1/agent/runtime-status",
+      "method": "GET",
+      "leg": "read",
+      "mode": "proxy",
+      "status": 200,
+      "bytes": 369
+     },
+     {
+      "at": "14:47:00",
+      "stamp": "A17_CTL_503_PLAIN_GATEWAY",
+      "path": "/api/v1/places?city_code=CNX-DEMO",
+      "method": "GET",
+      "leg": "read",
+      "mode": "proxy",
+      "status": 200,
+      "bytes": 1459
+     },
+     {
+      "at": "14:47:00",
+      "stamp": "A17_CTL_503_PLAIN_GATEWAY",
+      "path": "/api/v1/agent/runtime-status",
+      "method": "GET",
+      "leg": "read",
+      "mode": "proxy",
+      "status": 200,
+      "bytes": 369
+     },
+     {
+      "at": "14:47:00",
+      "stamp": "A17_CTL_503_PLAIN_GATEWAY",
+      "path": "/api/v1/journeys/d845ac26-0add-4305-bd3f-3f7c6f6fe3c1/plans",
+      "method": "GET",
+      "leg": "read",
+      "mode": "proxy",
+      "status": 200,
+      "bytes": 2
+     },
+     {
+      "at": "14:47:00",
+      "stamp": "A17_CTL_503_PLAIN_GATEWAY",
+      "path": "/api/v1/journeys/d845ac26-0add-4305-bd3f-3f7c6f6fe3c1/agent/commands",
+      "method": "POST",
+      "leg": "write",
+      "mode": "answer",
+      "request_bytes": 59,
+      "status": 503,
+      "content_type": "text/plain; charset=utf-8",
+      "response_bytes": null,
+      "delay_ms": 250,
+      "declared_content_length": 19,
+      "bytes_written": 19,
+      "body_sha256_12": "f6fc3c777e46"
+     },
+     {
+      "at": "14:47:09",
+      "stamp": "A17_CTL_503_PLAIN_GATEWAY",
+      "path": "/api/v1/journeys/d845ac26-0add-4305-bd3f-3f7c6f6fe3c1/agent/commands",
+      "method": "POST",
+      "leg": "write",
+      "mode": "answer",
+      "request_bytes": 37,
+      "status": 503,
+      "content_type": "text/plain; charset=utf-8",
+      "response_bytes": null,
+      "delay_ms": 250,
+      "declared_content_length": 19,
+      "bytes_written": 19,
+      "body_sha256_12": "f6fc3c777e46"
+     },
+     {
+      "at": "14:47:10",
+      "stamp": "A17_CTL_503_PLAIN_GATEWAY",
+      "path": "/api/v1/journeys/d845ac26-0add-4305-bd3f-3f7c6f6fe3c1/agent/commands",
+      "method": "POST",
+      "leg": "write",
+      "mode": "answer",
+      "request_bytes": 37,
+      "status": 503,
+      "content_type": "text/plain; charset=utf-8",
+      "response_bytes": null,
+      "delay_ms": 250,
+      "declared_content_length": 19,
+      "bytes_written": 19,
+      "body_sha256_12": "f6fc3c777e46"
+     }
+    ]
+   },
+   "screen_side": {
+    "painted_first_line": "连不上服务端",
+    "painted_text": "连不上服务端\n\n网络或后端没有响应，这与你的需求内容无关。你的行程没有被改动，检查网络后可以重试。",
+    "says_cannot_reach_server": true,
+    "details_elements_in_dom": 0,
+    "reason_label_painted": null,
+    "reason_value_painted": "",
+    "data_result_status_cross_check": "NETWORK",
+    "client_deadline_sentence_painted": false,
+    "sheet_reached": true
+   },
+   "app_threw_on_the_body": {
+    "json_rejections": [
+     {
+      "status": 503,
+      "url": "http://127.0.0.1:8564/api/v1/journeys/d845ac26-0add-4305-bd3f-3f7c6f6fe3c1/agent/commands",
+      "content_type": "text/plain; charset=utf-8",
+      "error_name": "SyntaxError",
+      "error_message": "Failed to execute 'json' on 'Response': Unexpected token 'S', \"Service Unavailable\" is not valid JSON",
+      "at_ms": 879
+     }
+    ],
+    "syntax_error_count": 1,
+    "first_rejection_message": "Failed to execute 'json' on 'Response': Unexpected token 'S', \"Service Unavailable\" is not valid JSON"
+   },
+   "secondary_surface": null,
+   "verdict": "MISLEADS",
+   "verdict_reason": "浏览器拿到了 HTTP 503，屏上仍把原因归给网络"
+  },
+  {
+   "row": "R10_④_upstream_absent",
+   "arm": "a10_upstream_absent",
+   "outcome_class_as_asked": "④ 连接被拒（后端端口上没人听）",
+   "run_id": "O0301-144728",
+   "cap_ms": 45000,
+   "policy_stamp": "FACE-8565",
+   "declared_write_leg": "the real product backend",
+   "server_side": {
+    "deciding_leg": null,
+    "all_write_legs": [],
+    "server_side_reading_from": "origin accounting (this arm runs with no hook)",
+    "http_status": null,
+    "content_type": null,
+    "bytes": null,
+    "elapsed_ms": null,
+    "client_error": null,
+    "body_head": "",
+    "envelope_code": null,
+    "envelope_message": null,
+    "answer_attributed_to": "vite-proxy",
+    "sibling_probe_outside_browser": {
+     "status": 500,
+     "content_type": "text/plain",
+     "bytes": 0,
+     "headers": {
+      "date": "Fri, 25 Sep 2026 06:48:34 GMT",
+      "connection": "close"
+     },
+     "body_head": "",
+     "http_error": "HTTP Error 500: Internal Server Error",
+     "elapsed_ms": 48
+    },
+    "origin_own_record_for_this_stamp": []
+   },
+   "screen_side": {
+    "painted_first_line": "",
+    "painted_text": "",
+    "says_cannot_reach_server": false,
+    "details_elements_in_dom": 1,
+    "reason_label_painted": null,
+    "reason_value_painted": "",
+    "data_result_status_cross_check": null,
+    "client_deadline_sentence_painted": false,
+    "sheet_reached": false
+   },
+   "app_threw_on_the_body": {
+    "json_rejections": [],
+    "syntax_error_count": 0,
+    "first_rejection_message": null
+   },
+   "secondary_surface": {
+    "what_the_traveller_was_left_with": "服务器 /  / 服务器这次没能把行程读出来 /  / 服务器自己报错了（HTTP 500）。这是它那边的问题，不是你填错了什么。可以重试；如果一直这样，稍后再来。 /  / 重试 / 归因详情",
+    "page_level_legs": [
+     {
+      "url": "/api/v1/journeys/d845ac26-0add-4305-bd3f-3f7c6f6fe3c1/experience",
+      "method": "GET",
+      "status": 500,
+      "bytes": 0,
+      "client_error": null
+     }
+    ],
+    "an_http_answer_reached_the_browser": true,
+    "blamed_the_network": false,
+    "same_rule_applied_to_this_surface": "HONEST"
+   },
+   "verdict": "NOT_MEASURED",
+   "verdict_reason": "用户走不到这张结局卡：屏上停的是另一张卡（无卡）"
+  },
+  {
+   "row": "R11_④_reset_no_response",
+   "arm": "a9_ctl_reset_no_response",
+   "outcome_class_as_asked": "④ 源站收了请求就断（一个响应字节都不写）",
+   "run_id": "O0301-144628",
+   "cap_ms": 45000,
+   "policy_stamp": "A9_CTL_RESET_NO_RESPONSE",
+   "declared_write_leg": {
+    "mode": "reset"
+   },
+   "server_side": {
+    "deciding_leg": "commands",
+    "all_write_legs": [
+     {
+      "url": "/api/v1/journeys/d845ac26-0add-4305-bd3f-3f7c6f6fe3c1/agent/commands",
+      "status": 500,
+      "content_type": "text/plain",
+      "bytes": 0,
+      "elapsed_ms": 6,
+      "client_error": null
+     }
+    ],
+    "server_side_reading_from": "browser fetch hook",
+    "http_status": 500,
+    "content_type": "text/plain",
+    "bytes": 0,
+    "elapsed_ms": 6,
+    "client_error": null,
+    "body_head": "",
+    "envelope_code": null,
+    "envelope_message": null,
+    "answer_attributed_to": "vite-proxy",
+    "sibling_probe_outside_browser": {
+     "status": 500,
+     "content_type": "text/plain",
+     "bytes": 0,
+     "headers": {
+      "date": "Fri, 25 Sep 2026 06:46:38 GMT",
+      "connection": "close"
+     },
+     "body_head": "",
+     "http_error": "HTTP Error 500: Internal Server Error",
+     "elapsed_ms": 41
+    },
+    "origin_own_record_for_this_stamp": [
+     {
+      "at": "14:46:28",
+      "stamp": "A9_CTL_RESET_NO_RESPONSE",
+      "path": "/api/v1/journeys/d845ac26-0add-4305-bd3f-3f7c6f6fe3c1/experience",
+      "method": "GET",
+      "leg": "read",
+      "mode": "proxy",
+      "status": 200,
+      "bytes": 2251
+     },
+     {
+      "at": "14:46:28",
+      "stamp": "A9_CTL_RESET_NO_RESPONSE",
+      "path": "/api/v1/journeys/d845ac26-0add-4305-bd3f-3f7c6f6fe3c1/replans",
+      "method": "GET",
+      "leg": "read",
+      "mode": "proxy",
+      "status": 200,
+      "bytes": 2
+     },
+     {
+      "at": "14:46:28",
+      "stamp": "A9_CTL_RESET_NO_RESPONSE",
+      "path": "/api/v1/demo/scene",
+      "method": "GET",
+      "leg": "read",
+      "mode": "proxy",
+      "status": 200,
+      "bytes": 489
+     },
+     {
+      "at": "14:46:28",
+      "stamp": "A9_CTL_RESET_NO_RESPONSE",
+      "path": "/api/v1/journeys/d845ac26-0add-4305-bd3f-3f7c6f6fe3c1/agent-feed?limit=200",
+      "method": "GET",
+      "leg": "read",
+      "mode": "proxy",
+      "status": 200,
+      "bytes": 7551
+     },
+     {
+      "at": "14:46:28",
+      "stamp": "A9_CTL_RESET_NO_RESPONSE",
+      "path": "/api/v1/journeys/d845ac26-0add-4305-bd3f-3f7c6f6fe3c1/plans",
+      "method": "GET",
+      "leg": "read",
+      "mode": "proxy",
+      "status": 200,
+      "bytes": 2
+     },
+     {
+      "at": "14:46:28",
+      "stamp": "A9_CTL_RESET_NO_RESPONSE",
+      "path": "/api/v1/travelers/ab3d1aa0-c69c-4b0a-99ff-14d65c2410ee/agent-policy",
+      "method": "GET",
+      "leg": "read",
+      "mode": "proxy",
+      "status": 200,
+      "bytes": 527
+     },
+     {
+      "at": "14:46:28",
+      "stamp": "A9_CTL_RESET_NO_RESPONSE",
+      "path": "/api/v1/journeys/d845ac26-0add-4305-bd3f-3f7c6f6fe3c1/offline-snapshot",
+      "method": "GET",
+      "leg": "read",
+      "mode": "proxy",
+      "status": 200,
+      "bytes": 797
+     },
+     {
+      "at": "14:46:28",
+      "stamp": "A9_CTL_RESET_NO_RESPONSE",
+      "path": "/api/v1/journeys/d845ac26-0add-4305-bd3f-3f7c6f6fe3c1/wallet",
+      "method": "GET",
+      "leg": "read",
+      "mode": "proxy",
+      "status": 200,
+      "bytes": 109
+     },
+     {
+      "at": "14:46:28",
+      "stamp": "A9_CTL_RESET_NO_RESPONSE",
+      "path": "/api/v1/journeys/d845ac26-0add-4305-bd3f-3f7c6f6fe3c1/twin",
+      "method": "GET",
+      "leg": "read",
+      "mode": "proxy",
+      "status": 200,
+      "bytes": 896
+     },
+     {
+      "at": "14:46:28",
+      "stamp": "A9_CTL_RESET_NO_RESPONSE",
+      "path": "/api/v1/journeys/d845ac26-0add-4305-bd3f-3f7c6f6fe3c1/agent-feed?limit=200",
+      "method": "GET",
+      "leg": "read",
+      "mode": "proxy",
+      "status": 200,
+      "bytes": 7551
+     },
+     {
+      "at": "14:46:28",
+      "stamp": "A9_CTL_RESET_NO_RESPONSE",
+      "path": "/api/v1/agent/runtime-status",
+      "method": "GET",
+      "leg": "read",
+      "mode": "proxy",
+      "status": 200,
+      "bytes": 369
+     },
+     {
+      "at": "14:46:29",
+      "stamp": "A9_CTL_RESET_NO_RESPONSE",
+      "path": "/api/v1/places?city_code=CNX-DEMO",
+      "method": "GET",
+      "leg": "read",
+      "mode": "proxy",
+      "status": 200,
+      "bytes": 1459
+     },
+     {
+      "at": "14:46:29",
+      "stamp": "A9_CTL_RESET_NO_RESPONSE",
+      "path": "/api/v1/agent/runtime-status",
+      "method": "GET",
+      "leg": "read",
+      "mode": "proxy",
+      "status": 200,
+      "bytes": 369
+     },
+     {
+      "at": "14:46:29",
+      "stamp": "A9_CTL_RESET_NO_RESPONSE",
+      "path": "/api/v1/journeys/d845ac26-0add-4305-bd3f-3f7c6f6fe3c1/plans",
+      "method": "GET",
+      "leg": "read",
+      "mode": "proxy",
+      "status": 200,
+      "bytes": 2
+     },
+     {
+      "at": "14:46:29",
+      "stamp": "A9_CTL_RESET_NO_RESPONSE",
+      "path": "/api/v1/journeys/d845ac26-0add-4305-bd3f-3f7c6f6fe3c1/agent/commands",
+      "method": "POST",
+      "leg": "write",
+      "mode": "reset",
+      "request_bytes": 59,
+      "status": null,
+      "content_type": null,
+      "response_bytes": null,
+      "delay_ms": null,
+      "note": "request read, socket closed with no response bytes"
+     },
+     {
+      "at": "14:46:37",
+      "stamp": "A9_CTL_RESET_NO_RESPONSE",
+      "path": "/api/v1/journeys/d845ac26-0add-4305-bd3f-3f7c6f6fe3c1/agent/commands",
+      "method": "POST",
+      "leg": "write",
+      "mode": "reset",
+      "request_bytes": 37,
+      "status": null,
+      "content_type": null,
+      "response_bytes": null,
+      "delay_ms": null,
+      "note": "request read, socket closed with no response bytes"
+     },
+     {
+      "at": "14:46:38",
+      "stamp": "A9_CTL_RESET_NO_RESPONSE",
+      "path": "/api/v1/journeys/d845ac26-0add-4305-bd3f-3f7c6f6fe3c1/agent/commands",
+      "method": "POST",
+      "leg": "write",
+      "mode": "reset",
+      "request_bytes": 37,
+      "status": null,
+      "content_type": null,
+      "response_bytes": null,
+      "delay_ms": null,
+      "note": "request read, socket closed with no response bytes"
+     }
+    ]
+   },
+   "screen_side": {
+    "painted_first_line": "连不上服务端",
+    "painted_text": "连不上服务端\n\n网络或后端没有响应，这与你的需求内容无关。你的行程没有被改动，检查网络后可以重试。",
+    "says_cannot_reach_server": true,
+    "details_elements_in_dom": 0,
+    "reason_label_painted": null,
+    "reason_value_painted": "",
+    "data_result_status_cross_check": "NETWORK",
+    "client_deadline_sentence_painted": false,
+    "sheet_reached": true
+   },
+   "app_threw_on_the_body": {
+    "json_rejections": [
+     {
+      "status": 500,
+      "url": "http://127.0.0.1:8564/api/v1/journeys/d845ac26-0add-4305-bd3f-3f7c6f6fe3c1/agent/commands",
+      "content_type": "text/plain",
+      "error_name": "SyntaxError",
+      "error_message": "Failed to execute 'json' on 'Response': Unexpected end of JSON input",
+      "at_ms": 642
+     }
+    ],
+    "syntax_error_count": 1,
+    "first_rejection_message": "Failed to execute 'json' on 'Response': Unexpected end of JSON input"
+   },
+   "secondary_surface": null,
+   "verdict": "MISLEADS",
+   "verdict_reason": "浏览器拿到了 HTTP 500，屏上仍把原因归给网络"
+  },
+  {
+   "row": "R12_⑤_silent_write_leg",
+   "arm": "a11_ctl_silent_write",
+   "outcome_class_as_asked": "⑤ 写腿无人应答（客户端先放弃？）",
+   "run_id": "O0301-144948",
+   "cap_ms": 62000,
+   "policy_stamp": "A11_CTL_SILENT_WRITE",
+   "declared_write_leg": {
+    "mode": "silent",
+    "hold_seconds": 200
+   },
+   "server_side": {
+    "deciding_leg": "commands",
+    "all_write_legs": [
+     {
+      "url": "/api/v1/journeys/d845ac26-0add-4305-bd3f-3f7c6f6fe3c1/agent/commands",
+      "status": null,
+      "content_type": null,
+      "bytes": null,
+      "elapsed_ms": null,
+      "client_error": null
+     }
+    ],
+    "server_side_reading_from": "browser fetch hook",
+    "http_status": null,
+    "content_type": null,
+    "bytes": null,
+    "elapsed_ms": null,
+    "client_error": null,
+    "body_head": "",
+    "envelope_code": null,
+    "envelope_message": null,
+    "answer_attributed_to": "none",
+    "sibling_probe_outside_browser": {
+     "status": null,
+     "error": "TimeoutError: timed out",
+     "elapsed_ms": 8058
+    },
+    "origin_own_record_for_this_stamp": [
+     {
+      "at": "14:49:49",
+      "stamp": "A11_CTL_SILENT_WRITE",
+      "path": "/api/v1/journeys/d845ac26-0add-4305-bd3f-3f7c6f6fe3c1/experience",
+      "method": "GET",
+      "leg": "read",
+      "mode": "proxy",
+      "status": 200,
+      "bytes": 2251
+     },
+     {
+      "at": "14:49:49",
+      "stamp": "A11_CTL_SILENT_WRITE",
+      "path": "/api/v1/journeys/d845ac26-0add-4305-bd3f-3f7c6f6fe3c1/replans",
+      "method": "GET",
+      "leg": "read",
+      "mode": "proxy",
+      "status": 200,
+      "bytes": 2
+     },
+     {
+      "at": "14:49:49",
+      "stamp": "A11_CTL_SILENT_WRITE",
+      "path": "/api/v1/demo/scene",
+      "method": "GET",
+      "leg": "read",
+      "mode": "proxy",
+      "status": 200,
+      "bytes": 489
+     },
+     {
+      "at": "14:49:49",
+      "stamp": "A11_CTL_SILENT_WRITE",
+      "path": "/api/v1/journeys/d845ac26-0add-4305-bd3f-3f7c6f6fe3c1/agent-feed?limit=200",
+      "method": "GET",
+      "leg": "read",
+      "mode": "proxy",
+      "status": 200,
+      "bytes": 11707
+     },
+     {
+      "at": "14:49:49",
+      "stamp": "A11_CTL_SILENT_WRITE",
+      "path": "/api/v1/journeys/d845ac26-0add-4305-bd3f-3f7c6f6fe3c1/plans",
+      "method": "GET",
+      "leg": "read",
+      "mode": "proxy",
+      "status": 200,
+      "bytes": 2
+     },
+     {
+      "at": "14:49:49",
+      "stamp": "A11_CTL_SILENT_WRITE",
+      "path": "/api/v1/journeys/d845ac26-0add-4305-bd3f-3f7c6f6fe3c1/twin",
+      "method": "GET",
+      "leg": "read",
+      "mode": "proxy",
+      "status": 200,
+      "bytes": 896
+     },
+     {
+      "at": "14:49:49",
+      "stamp": "A11_CTL_SILENT_WRITE",
+      "path": "/api/v1/journeys/d845ac26-0add-4305-bd3f-3f7c6f6fe3c1/offline-snapshot",
+      "method": "GET",
+      "leg": "read",
+      "mode": "proxy",
+      "status": 200,
+      "bytes": 797
+     },
+     {
+      "at": "14:49:49",
+      "stamp": "A11_CTL_SILENT_WRITE",
+      "path": "/api/v1/journeys/d845ac26-0add-4305-bd3f-3f7c6f6fe3c1/wallet",
+      "method": "GET",
+      "leg": "read",
+      "mode": "proxy",
+      "status": 200,
+      "bytes": 109
+     },
+     {
+      "at": "14:49:49",
+      "stamp": "A11_CTL_SILENT_WRITE",
+      "path": "/api/v1/travelers/ab3d1aa0-c69c-4b0a-99ff-14d65c2410ee/agent-policy",
+      "method": "GET",
+      "leg": "read",
+      "mode": "proxy",
+      "status": 200,
+      "bytes": 527
+     },
+     {
+      "at": "14:49:49",
+      "stamp": "A11_CTL_SILENT_WRITE",
+      "path": "/api/v1/journeys/d845ac26-0add-4305-bd3f-3f7c6f6fe3c1/agent-feed?limit=200",
+      "method": "GET",
+      "leg": "read",
+      "mode": "proxy",
+      "status": 200,
+      "bytes": 11707
+     },
+     {
+      "at": "14:49:49",
+      "stamp": "A11_CTL_SILENT_WRITE",
+      "path": "/api/v1/agent/runtime-status",
+      "method": "GET",
+      "leg": "read",
+      "mode": "proxy",
+      "status": 200,
+      "bytes": 369
+     },
+     {
+      "at": "14:49:50",
+      "stamp": "A11_CTL_SILENT_WRITE",
+      "path": "/api/v1/places?city_code=CNX-DEMO",
+      "method": "GET",
+      "leg": "read",
+      "mode": "proxy",
+      "status": 200,
+      "bytes": 1459
+     },
+     {
+      "at": "14:49:50",
+      "stamp": "A11_CTL_SILENT_WRITE",
+      "path": "/api/v1/agent/runtime-status",
+      "method": "GET",
+      "leg": "read",
+      "mode": "proxy",
+      "status": 200,
+      "bytes": 369
+     },
+     {
+      "at": "14:49:50",
+      "stamp": "A11_CTL_SILENT_WRITE",
+      "path": "/api/v1/journeys/d845ac26-0add-4305-bd3f-3f7c6f6fe3c1/plans",
+      "method": "GET",
+      "leg": "read",
+      "mode": "proxy",
+      "status": 200,
+      "bytes": 2
+     },
+     {
+      "at": "14:49:50",
+      "stamp": "A11_CTL_SILENT_WRITE",
+      "path": "/api/v1/journeys/d845ac26-0add-4305-bd3f-3f7c6f6fe3c1/agent/commands",
+      "method": "POST",
+      "leg": "write",
+      "mode": "silent",
+      "request_bytes": 59,
+      "status": null,
+      "content_type": null,
+      "response_bytes": null,
+      "delay_ms": null,
+      "note": "accepted, never answered"
+     },
+     {
+      "at": "14:50:04",
+      "stamp": "A11_CTL_SILENT_WRITE",
+      "path": "/api/v1/journeys/d845ac26-0add-4305-bd3f-3f7c6f6fe3c1/twin",
+      "method": "GET",
+      "leg": "read",
+      "mode": "proxy",
+      "status": 200,
+      "bytes": 896
+     },
+     {
+      "at": "14:50:19",
+      "stamp": "A11_CTL_SILENT_WRITE",
+      "path": "/api/v1/journeys/d845ac26-0add-4305-bd3f-3f7c6f6fe3c1/twin",
+      "method": "GET",
+      "leg": "read",
+      "mode": "proxy",
+      "status": 200,
+      "bytes": 896
+     },
+     {
+      "at": "14:50:34",
+      "stamp": "A11_CTL_SILENT_WRITE",
+      "path": "/api/v1/journeys/d845ac26-0add-4305-bd3f-3f7c6f6fe3c1/twin",
+      "method": "GET",
+      "leg": "read",
+      "mode": "proxy",
+      "status": 200,
+      "bytes": 896
+     },
+     {
+      "at": "14:50:49",
+      "stamp": "A11_CTL_SILENT_WRITE",
+      "path": "/api/v1/journeys/d845ac26-0add-4305-bd3f-3f7c6f6fe3c1/twin",
+      "method": "GET",
+      "leg": "read",
+      "mode": "proxy",
+      "status": 200,
+      "bytes": 896
+     },
+     {
+      "at": "14:50:58",
+      "stamp": "A11_CTL_SILENT_WRITE",
+      "path": "/api/v1/journeys/d845ac26-0add-4305-bd3f-3f7c6f6fe3c1/agent/commands",
+      "method": "POST",
+      "leg": "write",
+      "mode": "silent",
+      "request_bytes": 37,
+      "status": null,
+      "content_type": null,
+      "response_bytes": null,
+      "delay_ms": null,
+      "note": "accepted, never answered"
+     },
+     {
+      "at": "14:51:07",
+      "stamp": "A11_CTL_SILENT_WRITE",
+      "path": "/api/v1/journeys/d845ac26-0add-4305-bd3f-3f7c6f6fe3c1/agent/commands",
+      "method": "POST",
+      "leg": "write",
+      "mode": "silent",
+      "request_bytes": 37,
+      "status": null,
+      "content_type": null,
+      "response_bytes": null,
+      "delay_ms": null,
+      "note": "accepted, never answered"
+     }
+    ]
+   },
+   "screen_side": {
+    "painted_first_line": "",
+    "painted_text": "",
+    "says_cannot_reach_server": false,
+    "details_elements_in_dom": 0,
+    "reason_label_painted": null,
+    "reason_value_painted": "",
+    "data_result_status_cross_check": null,
+    "client_deadline_sentence_painted": false,
+    "sheet_reached": true
+   },
+   "app_threw_on_the_body": {
+    "json_rejections": [],
+    "syntax_error_count": 0,
+    "first_rejection_message": null
+   },
+   "secondary_surface": null,
+   "verdict": "NOT_MEASURED",
+   "verdict_reason": "结局卡到观察帽（62000 ms）为止没出现，屏上仍停在等待态"
+  },
+  {
+   "row": "R13_⑤_silent_read_leg",
+   "arm": "a12_ctl_silent_read",
+   "outcome_class_as_asked": "⑤ 读腿无人应答（客户端 12 s 期限先放弃）",
+   "run_id": "O0301-144834",
+   "cap_ms": 40000,
+   "policy_stamp": "A12_CTL_SILENT_READ",
+   "declared_write_leg": {
+    "mode": "answer",
+    "status": 500,
+    "content_type": "application/json",
+    "body": {
+     "file": "envelope_real.json"
+    }
+   },
+   "server_side": {
+    "deciding_leg": null,
+    "all_write_legs": [],
+    "server_side_reading_from": "origin accounting (this arm runs with no hook)",
+    "http_status": null,
+    "content_type": null,
+    "bytes": null,
+    "elapsed_ms": null,
+    "client_error": null,
+    "body_head": "",
+    "envelope_code": null,
+    "envelope_message": null,
+    "answer_attributed_to": "none",
+    "sibling_probe_outside_browser": {
+     "status": 500,
+     "content_type": "application/json",
+     "bytes": 1443,
+     "headers": {
+      "server": "BaseHTTP/0.6 Python/3.12.14",
+      "date": "Fri, 25 Sep 2026 06:48:56 GMT",
+      "content-length": "1443",
+      "connection": "close"
+     },
+     "body_head": "{\"error\":{\"code\":\"VALIDATION_ERROR\",\"message\":\"No feasible plan candidates satisfy the journey constraints\",\"message_key",
+     "http_error": "HTTP Error 500: Internal Server Error",
+     "elapsed_ms": 75
+    },
+    "origin_own_record_for_this_stamp": [
+     {
+      "at": "14:48:35",
+      "stamp": "A12_CTL_SILENT_READ",
+      "path": "/api/v1/journeys/d845ac26-0add-4305-bd3f-3f7c6f6fe3c1/experience",
+      "method": "GET",
+      "leg": "read",
+      "mode": "silent",
+      "status": null
+     },
+     {
+      "at": "14:48:47",
+      "stamp": "A12_CTL_SILENT_READ",
+      "path": "/api/v1/health",
+      "method": "GET",
+      "leg": "read",
+      "mode": "silent",
+      "status": null
+     },
+     {
+      "at": "14:48:56",
+      "stamp": "A12_CTL_SILENT_READ",
+      "path": "/api/v1/journeys/d845ac26-0add-4305-bd3f-3f7c6f6fe3c1/agent/commands",
+      "method": "POST",
+      "leg": "write",
+      "mode": "answer",
+      "request_bytes": 37,
+      "status": 500,
+      "content_type": "application/json",
+      "response_bytes": null,
+      "delay_ms": null,
+      "declared_content_length": 1443,
+      "bytes_written": 1443,
+      "body_sha256_12": "9acb65ea8f35"
+     },
+     {
+      "at": "14:48:56",
+      "stamp": "A12_CTL_SILENT_READ",
+      "path": "/api/v1/journeys/d845ac26-0add-4305-bd3f-3f7c6f6fe3c1/agent/commands",
+      "method": "POST",
+      "leg": "write",
+      "mode": "answer",
+      "request_bytes": 37,
+      "status": 500,
+      "content_type": "application/json",
+      "response_bytes": null,
+      "delay_ms": null,
+      "declared_content_length": 1443,
+      "bytes_written": 1443,
+      "body_sha256_12": "9acb65ea8f35"
+     }
+    ]
+   },
+   "screen_side": {
+    "painted_first_line": "",
+    "painted_text": "",
+    "says_cannot_reach_server": false,
+    "details_elements_in_dom": 1,
+    "reason_label_painted": null,
+    "reason_value_painted": "",
+    "data_result_status_cross_check": null,
+    "client_deadline_sentence_painted": true,
+    "sheet_reached": false
+   },
+   "app_threw_on_the_body": {
+    "json_rejections": [],
+    "syntax_error_count": 0,
+    "first_rejection_message": null
+   },
+   "secondary_surface": {
+    "what_the_traveller_was_left_with": "没有回音 /  / 等了 12 秒，这台服务器一个字也没回答 /  / 这一发读取到了期限仍然没有任何回答：服务器既没有拒绝，也没有答应。这台设备上也没有可只读查看的本地副本，所以现在没有内容可显示。可以再试一次。 /  / 重试 / 归因详情",
+    "page_level_legs": [
+     {
+      "url": "/api/v1/journeys/d845ac26-0add-4305-bd3f-3f7c6f6fe3c1/experience",
+      "method": "GET",
+      "status": null,
+      "bytes": null,
+      "client_error": "AbortError: signal is aborted without reason"
+     },
+     {
+      "url": "/api/v1/health",
+      "method": "GET",
+      "status": null,
+      "bytes": null,
+      "client_error": "AbortError: signal is aborted without reason"
+     }
+    ],
+    "an_http_answer_reached_the_browser": false,
+    "blamed_the_network": false,
+    "same_rule_applied_to_this_surface": "HONEST"
+   },
+   "verdict": "NOT_MEASURED",
+   "verdict_reason": "用户走不到这张结局卡：屏上停的是另一张卡（无卡）"
+  },
+  {
+   "row": "R14_control_real_422",
+   "arm": "a13_real_422_control",
+   "outcome_class_as_asked": "正控：产品今天真发的那枚具名 422",
+   "run_id": "O0301-144857",
+   "cap_ms": 45000,
+   "policy_stamp": "FACE-8562",
+   "declared_write_leg": "the real product backend",
+   "server_side": {
+    "deciding_leg": "generate",
+    "all_write_legs": [
+     {
+      "url": "/api/v1/journeys/d845ac26-0add-4305-bd3f-3f7c6f6fe3c1/agent/commands",
+      "status": 200,
+      "content_type": "application/json",
+      "bytes": 7087,
+      "elapsed_ms": 95,
+      "client_error": null
+     },
+     {
+      "url": "/api/v1/journeys/d845ac26-0add-4305-bd3f-3f7c6f6fe3c1/plans/generate",
+      "status": 422,
+      "content_type": "application/json",
+      "bytes": 1443,
+      "elapsed_ms": 15,
+      "client_error": null
+     }
+    ],
+    "server_side_reading_from": "browser fetch hook",
+    "http_status": 422,
+    "content_type": "application/json",
+    "bytes": 1443,
+    "elapsed_ms": 15,
+    "client_error": null,
+    "body_head": "{\"error\":{\"code\":\"VALIDATION_ERROR\",\"message\":\"No feasible plan candidates satisfy the journey constraints\",\"message_key",
+    "envelope_code": "VALIDATION_ERROR",
+    "envelope_message": "No feasible plan candidates satisfy the journey constraints",
+    "answer_attributed_to": "product",
+    "sibling_probe_outside_browser": {
+     "status": 200,
+     "content_type": "application/json",
+     "bytes": 2251,
+     "headers": {
+      "date": "Fri, 25 Sep 2026 06:49:06 GMT",
+      "server": "uvicorn",
+      "content-length": "2251",
+      "connection": "close"
+     },
+     "body_head": "{\"journey\":{\"id\":\"d845ac26-0add-4305-bd3f-3f7c6f6fe3c1\",\"traveler_id\":\"ab3d1aa0-c69c-4b0a-99ff-14d65c2410ee\",\"title\":\"HJ",
+     "elapsed_ms": 51
+    },
+    "origin_own_record_for_this_stamp": []
+   },
+   "screen_side": {
+    "painted_first_line": "这次排不出方案：数据不够，不是你说的不对",
+    "painted_text": "这次排不出方案：数据不够，不是你说的不对\n\n这座城我们手上的地点太少，配不平一天的行程。（服务器给的原因编号：CATALOG_INSUFFICIENT）\n\n技术详情\n服务器给出的原因\nDeepSeek API key is not configured\n模型原始输出（未翻译，不代表本界面的结论）\nResolved named activities against the active plan, then intersected the mission envelope with the persisted tra",
+    "says_cannot_reach_server": false,
+    "details_elements_in_dom": 1,
+    "reason_label_painted": "服务器给出的原因",
+    "reason_value_painted": "DeepSeek API key is not configured",
+    "data_result_status_cross_check": "BLOCKED:CATALOG_INSUFFICIENT",
+    "client_deadline_sentence_painted": false,
+    "sheet_reached": true
+   },
+   "app_threw_on_the_body": {
+    "json_rejections": [],
+    "syntax_error_count": 0,
+    "first_rejection_message": null
+   },
+   "secondary_surface": null,
+   "verdict": "HONEST",
+   "verdict_reason": "HTTP 422 被原样报成服务端失败"
+  },
+  {
+   "row": "R15_⓪_json_null_body",
+   "arm": "a15_ctl_500_json_null_body",
+   "outcome_class_as_asked": "机制臂：500 + application/json + 正文就是 null",
+   "run_id": "O0301-144638",
+   "cap_ms": 45000,
+   "policy_stamp": "A15_CTL_500_JSON_NULL_BODY",
+   "declared_write_leg": {
+    "mode": "answer",
+    "status": 500,
+    "content_type": "application/json",
+    "body": "null",
+    "delay_ms": 250
+   },
+   "server_side": {
+    "deciding_leg": "commands",
+    "all_write_legs": [
+     {
+      "url": "/api/v1/journeys/d845ac26-0add-4305-bd3f-3f7c6f6fe3c1/agent/commands",
+      "status": 500,
+      "content_type": "application/json",
+      "bytes": 4,
+      "elapsed_ms": 255,
+      "client_error": null
+     }
+    ],
+    "server_side_reading_from": "browser fetch hook",
+    "http_status": 500,
+    "content_type": "application/json",
+    "bytes": 4,
+    "elapsed_ms": 255,
+    "client_error": null,
+    "body_head": "null",
+    "envelope_code": null,
+    "envelope_message": null,
+    "answer_attributed_to": "my-origin",
+    "sibling_probe_outside_browser": {
+     "status": 500,
+     "content_type": "application/json",
+     "bytes": 4,
+     "headers": {
+      "server": "BaseHTTP/0.6 Python/3.12.14",
+      "date": "Fri, 25 Sep 2026 06:46:48 GMT",
+      "content-length": "4",
+      "connection": "close"
+     },
+     "body_head": "null",
+     "http_error": "HTTP Error 500: Internal Server Error",
+     "elapsed_ms": 318
+    },
+    "origin_own_record_for_this_stamp": [
+     {
+      "at": "14:46:38",
+      "stamp": "A15_CTL_500_JSON_NULL_BODY",
+      "path": "/api/v1/journeys/d845ac26-0add-4305-bd3f-3f7c6f6fe3c1/experience",
+      "method": "GET",
+      "leg": "read",
+      "mode": "proxy",
+      "status": 200,
+      "bytes": 2251
+     },
+     {
+      "at": "14:46:38",
+      "stamp": "A15_CTL_500_JSON_NULL_BODY",
+      "path": "/api/v1/journeys/d845ac26-0add-4305-bd3f-3f7c6f6fe3c1/replans",
+      "method": "GET",
+      "leg": "read",
+      "mode": "proxy",
+      "status": 200,
+      "bytes": 2
+     },
+     {
+      "at": "14:46:38",
+      "stamp": "A15_CTL_500_JSON_NULL_BODY",
+      "path": "/api/v1/journeys/d845ac26-0add-4305-bd3f-3f7c6f6fe3c1/plans",
+      "method": "GET",
+      "leg": "read",
+      "mode": "proxy",
+      "status": 200,
+      "bytes": 2
+     },
+     {
+      "at": "14:46:38",
+      "stamp": "A15_CTL_500_JSON_NULL_BODY",
+      "path": "/api/v1/journeys/d845ac26-0add-4305-bd3f-3f7c6f6fe3c1/wallet",
+      "method": "GET",
+      "leg": "read",
+      "mode": "proxy",
+      "status": 200,
+      "bytes": 109
+     },
+     {
+      "at": "14:46:38",
+      "stamp": "A15_CTL_500_JSON_NULL_BODY",
+      "path": "/api/v1/travelers/ab3d1aa0-c69c-4b0a-99ff-14d65c2410ee/agent-policy",
+      "method": "GET",
+      "leg": "read",
+      "mode": "proxy",
+      "status": 200,
+      "bytes": 527
+     },
+     {
+      "at": "14:46:38",
+      "stamp": "A15_CTL_500_JSON_NULL_BODY",
+      "path": "/api/v1/journeys/d845ac26-0add-4305-bd3f-3f7c6f6fe3c1/twin",
+      "method": "GET",
+      "leg": "read",
+      "mode": "proxy",
+      "status": 200,
+      "bytes": 896
+     },
+     {
+      "at": "14:46:38",
+      "stamp": "A15_CTL_500_JSON_NULL_BODY",
+      "path": "/api/v1/demo/scene",
+      "method": "GET",
+      "leg": "read",
+      "mode": "proxy",
+      "status": 200,
+      "bytes": 489
+     },
+     {
+      "at": "14:46:38",
+      "stamp": "A15_CTL_500_JSON_NULL_BODY",
+      "path": "/api/v1/journeys/d845ac26-0add-4305-bd3f-3f7c6f6fe3c1/agent-feed?limit=200",
+      "method": "GET",
+      "leg": "read",
+      "mode": "proxy",
+      "status": 200,
+      "bytes": 7551
+     },
+     {
+      "at": "14:46:38",
+      "stamp": "A15_CTL_500_JSON_NULL_BODY",
+      "path": "/api/v1/journeys/d845ac26-0add-4305-bd3f-3f7c6f6fe3c1/offline-snapshot",
+      "method": "GET",
+      "leg": "read",
+      "mode": "proxy",
+      "status": 200,
+      "bytes": 797
+     },
+     {
+      "at": "14:46:38",
+      "stamp": "A15_CTL_500_JSON_NULL_BODY",
+      "path": "/api/v1/agent/runtime-status",
+      "method": "GET",
+      "leg": "read",
+      "mode": "proxy",
+      "status": 200,
+      "bytes": 369
+     },
+     {
+      "at": "14:46:38",
+      "stamp": "A15_CTL_500_JSON_NULL_BODY",
+      "path": "/api/v1/journeys/d845ac26-0add-4305-bd3f-3f7c6f6fe3c1/agent-feed?limit=200",
+      "method": "GET",
+      "leg": "read",
+      "mode": "proxy",
+      "status": 200,
+      "bytes": 7551
+     },
+     {
+      "at": "14:46:39",
+      "stamp": "A15_CTL_500_JSON_NULL_BODY",
+      "path": "/api/v1/agent/runtime-status",
+      "method": "GET",
+      "leg": "read",
+      "mode": "proxy",
+      "status": 200,
+      "bytes": 369
+     },
+     {
+      "at": "14:46:39",
+      "stamp": "A15_CTL_500_JSON_NULL_BODY",
+      "path": "/api/v1/places?city_code=CNX-DEMO",
+      "method": "GET",
+      "leg": "read",
+      "mode": "proxy",
+      "status": 200,
+      "bytes": 1459
+     },
+     {
+      "at": "14:46:39",
+      "stamp": "A15_CTL_500_JSON_NULL_BODY",
+      "path": "/api/v1/journeys/d845ac26-0add-4305-bd3f-3f7c6f6fe3c1/plans",
+      "method": "GET",
+      "leg": "read",
+      "mode": "proxy",
+      "status": 200,
+      "bytes": 2
+     },
+     {
+      "at": "14:46:39",
+      "stamp": "A15_CTL_500_JSON_NULL_BODY",
+      "path": "/api/v1/journeys/d845ac26-0add-4305-bd3f-3f7c6f6fe3c1/agent/commands",
+      "method": "POST",
+      "leg": "write",
+      "mode": "answer",
+      "request_bytes": 59,
+      "status": 500,
+      "content_type": "application/json",
+      "response_bytes": null,
+      "delay_ms": 250,
+      "declared_content_length": 4,
+      "bytes_written": 4,
+      "body_sha256_12": "74234e98afe7"
+     },
+     {
+      "at": "14:46:48",
+      "stamp": "A15_CTL_500_JSON_NULL_BODY",
+      "path": "/api/v1/journeys/d845ac26-0add-4305-bd3f-3f7c6f6fe3c1/agent/commands",
+      "method": "POST",
+      "leg": "write",
+      "mode": "answer",
+      "request_bytes": 37,
+      "status": 500,
+      "content_type": "application/json",
+      "response_bytes": null,
+      "delay_ms": 250,
+      "declared_content_length": 4,
+      "bytes_written": 4,
+      "body_sha256_12": "74234e98afe7"
+     },
+     {
+      "at": "14:46:48",
+      "stamp": "A15_CTL_500_JSON_NULL_BODY",
+      "path": "/api/v1/journeys/d845ac26-0add-4305-bd3f-3f7c6f6fe3c1/agent/commands",
+      "method": "POST",
+      "leg": "write",
+      "mode": "answer",
+      "request_bytes": 37,
+      "status": 500,
+      "content_type": "application/json",
+      "response_bytes": null,
+      "delay_ms": 250,
+      "declared_content_length": 4,
+      "bytes_written": 4,
+      "body_sha256_12": "74234e98afe7"
+     }
+    ]
+   },
+   "screen_side": {
+    "painted_first_line": "连不上服务端",
+    "painted_text": "连不上服务端\n\n网络或后端没有响应，这与你的需求内容无关。你的行程没有被改动，检查网络后可以重试。",
+    "says_cannot_reach_server": true,
+    "details_elements_in_dom": 0,
+    "reason_label_painted": null,
+    "reason_value_painted": "",
+    "data_result_status_cross_check": "NETWORK",
+    "client_deadline_sentence_painted": false,
+    "sheet_reached": true
+   },
+   "app_threw_on_the_body": {
+    "json_rejections": [],
+    "syntax_error_count": 0,
+    "first_rejection_message": null
+   },
+   "secondary_surface": null,
+   "verdict": "MISLEADS",
+   "verdict_reason": "浏览器拿到了 HTTP 500，屏上仍把原因归给网络"
+  },
+  {
+   "row": "R16_⓪_json_empty_object",
+   "arm": "a16_ctl_500_empty_json_object",
+   "outcome_class_as_asked": "机制臂：500 + application/json + 正文是 {}",
+   "run_id": "O0301-144649",
+   "cap_ms": 45000,
+   "policy_stamp": "A16_CTL_500_EMPTY_JSON_OBJECT",
+   "declared_write_leg": {
+    "mode": "answer",
+    "status": 500,
+    "content_type": "application/json",
+    "body": "{}",
+    "delay_ms": 250
+   },
+   "server_side": {
+    "deciding_leg": "commands",
+    "all_write_legs": [
+     {
+      "url": "/api/v1/journeys/d845ac26-0add-4305-bd3f-3f7c6f6fe3c1/agent/commands",
+      "status": 500,
+      "content_type": "application/json",
+      "bytes": 2,
+      "elapsed_ms": 255,
+      "client_error": null
+     }
+    ],
+    "server_side_reading_from": "browser fetch hook",
+    "http_status": 500,
+    "content_type": "application/json",
+    "bytes": 2,
+    "elapsed_ms": 255,
+    "client_error": null,
+    "body_head": "{}",
+    "envelope_code": null,
+    "envelope_message": null,
+    "answer_attributed_to": "my-origin",
+    "sibling_probe_outside_browser": {
+     "status": 500,
+     "content_type": "application/json",
+     "bytes": 2,
+     "headers": {
+      "server": "BaseHTTP/0.6 Python/3.12.14",
+      "date": "Fri, 25 Sep 2026 06:46:59 GMT",
+      "content-length": "2",
+      "connection": "close"
+     },
+     "body_head": "{}",
+     "http_error": "HTTP Error 500: Internal Server Error",
+     "elapsed_ms": 294
+    },
+    "origin_own_record_for_this_stamp": [
+     {
+      "at": "14:46:49",
+      "stamp": "A16_CTL_500_EMPTY_JSON_OBJECT",
+      "path": "/api/v1/journeys/d845ac26-0add-4305-bd3f-3f7c6f6fe3c1/experience",
+      "method": "GET",
+      "leg": "read",
+      "mode": "proxy",
+      "status": 200,
+      "bytes": 2251
+     },
+     {
+      "at": "14:46:49",
+      "stamp": "A16_CTL_500_EMPTY_JSON_OBJECT",
+      "path": "/api/v1/journeys/d845ac26-0add-4305-bd3f-3f7c6f6fe3c1/replans",
+      "method": "GET",
+      "leg": "read",
+      "mode": "proxy",
+      "status": 200,
+      "bytes": 2
+     },
+     {
+      "at": "14:46:49",
+      "stamp": "A16_CTL_500_EMPTY_JSON_OBJECT",
+      "path": "/api/v1/demo/scene",
+      "method": "GET",
+      "leg": "read",
+      "mode": "proxy",
+      "status": 200,
+      "bytes": 489
+     },
+     {
+      "at": "14:46:49",
+      "stamp": "A16_CTL_500_EMPTY_JSON_OBJECT",
+      "path": "/api/v1/journeys/d845ac26-0add-4305-bd3f-3f7c6f6fe3c1/agent-feed?limit=200",
+      "method": "GET",
+      "leg": "read",
+      "mode": "proxy",
+      "status": 200,
+      "bytes": 7551
+     },
+     {
+      "at": "14:46:49",
+      "stamp": "A16_CTL_500_EMPTY_JSON_OBJECT",
+      "path": "/api/v1/journeys/d845ac26-0add-4305-bd3f-3f7c6f6fe3c1/plans",
+      "method": "GET",
+      "leg": "read",
+      "mode": "proxy",
+      "status": 200,
+      "bytes": 2
+     },
+     {
+      "at": "14:46:49",
+      "stamp": "A16_CTL_500_EMPTY_JSON_OBJECT",
+      "path": "/api/v1/journeys/d845ac26-0add-4305-bd3f-3f7c6f6fe3c1/twin",
+      "method": "GET",
+      "leg": "read",
+      "mode": "proxy",
+      "status": 200,
+      "bytes": 896
+     },
+     {
+      "at": "14:46:49",
+      "stamp": "A16_CTL_500_EMPTY_JSON_OBJECT",
+      "path": "/api/v1/journeys/d845ac26-0add-4305-bd3f-3f7c6f6fe3c1/wallet",
+      "method": "GET",
+      "leg": "read",
+      "mode": "proxy",
+      "status": 200,
+      "bytes": 109
+     },
+     {
+      "at": "14:46:49",
+      "stamp": "A16_CTL_500_EMPTY_JSON_OBJECT",
+      "path": "/api/v1/journeys/d845ac26-0add-4305-bd3f-3f7c6f6fe3c1/offline-snapshot",
+      "method": "GET",
+      "leg": "read",
+      "mode": "proxy",
+      "status": 200,
+      "bytes": 797
+     },
+     {
+      "at": "14:46:49",
+      "stamp": "A16_CTL_500_EMPTY_JSON_OBJECT",
+      "path": "/api/v1/journeys/d845ac26-0add-4305-bd3f-3f7c6f6fe3c1/agent-feed?limit=200",
+      "method": "GET",
+      "leg": "read",
+      "mode": "proxy",
+      "status": 200,
+      "bytes": 7551
+     },
+     {
+      "at": "14:46:49",
+      "stamp": "A16_CTL_500_EMPTY_JSON_OBJECT",
+      "path": "/api/v1/travelers/ab3d1aa0-c69c-4b0a-99ff-14d65c2410ee/agent-policy",
+      "method": "GET",
+      "leg": "read",
+      "mode": "proxy",
+      "status": 200,
+      "bytes": 527
+     },
+     {
+      "at": "14:46:49",
+      "stamp": "A16_CTL_500_EMPTY_JSON_OBJECT",
+      "path": "/api/v1/agent/runtime-status",
+      "method": "GET",
+      "leg": "read",
+      "mode": "proxy",
+      "status": 200,
+      "bytes": 369
+     },
+     {
+      "at": "14:46:50",
+      "stamp": "A16_CTL_500_EMPTY_JSON_OBJECT",
+      "path": "/api/v1/places?city_code=CNX-DEMO",
+      "method": "GET",
+      "leg": "read",
+      "mode": "proxy",
+      "status": 200,
+      "bytes": 1459
+     },
+     {
+      "at": "14:46:50",
+      "stamp": "A16_CTL_500_EMPTY_JSON_OBJECT",
+      "path": "/api/v1/agent/runtime-status",
+      "method": "GET",
+      "leg": "read",
+      "mode": "proxy",
+      "status": 200,
+      "bytes": 369
+     },
+     {
+      "at": "14:46:50",
+      "stamp": "A16_CTL_500_EMPTY_JSON_OBJECT",
+      "path": "/api/v1/journeys/d845ac26-0add-4305-bd3f-3f7c6f6fe3c1/plans",
+      "method": "GET",
+      "leg": "read",
+      "mode": "proxy",
+      "status": 200,
+      "bytes": 2
+     },
+     {
+      "at": "14:46:50",
+      "stamp": "A16_CTL_500_EMPTY_JSON_OBJECT",
+      "path": "/api/v1/journeys/d845ac26-0add-4305-bd3f-3f7c6f6fe3c1/agent/commands",
+      "method": "POST",
+      "leg": "write",
+      "mode": "answer",
+      "request_bytes": 59,
+      "status": 500,
+      "content_type": "application/json",
+      "response_bytes": null,
+      "delay_ms": 250,
+      "declared_content_length": 2,
+      "bytes_written": 2,
+      "body_sha256_12": "44136fa355b3"
+     },
+     {
+      "at": "14:46:58",
+      "stamp": "A16_CTL_500_EMPTY_JSON_OBJECT",
+      "path": "/api/v1/journeys/d845ac26-0add-4305-bd3f-3f7c6f6fe3c1/agent/commands",
+      "method": "POST",
+      "leg": "write",
+      "mode": "answer",
+      "request_bytes": 37,
+      "status": 500,
+      "content_type": "application/json",
+      "response_bytes": null,
+      "delay_ms": 250,
+      "declared_content_length": 2,
+      "bytes_written": 2,
+      "body_sha256_12": "44136fa355b3"
+     },
+     {
+      "at": "14:46:59",
+      "stamp": "A16_CTL_500_EMPTY_JSON_OBJECT",
+      "path": "/api/v1/journeys/d845ac26-0add-4305-bd3f-3f7c6f6fe3c1/agent/commands",
+      "method": "POST",
+      "leg": "write",
+      "mode": "answer",
+      "request_bytes": 37,
+      "status": 500,
+      "content_type": "application/json",
+      "response_bytes": null,
+      "delay_ms": 250,
+      "declared_content_length": 2,
+      "bytes_written": 2,
+      "body_sha256_12": "44136fa355b3"
+     }
+    ]
+   },
+   "screen_side": {
+    "painted_first_line": "服务端处理失败",
+    "painted_text": "服务端处理失败\n\n这次是服务端出错，不是你的需求有问题。行程未被改动，可稍后重试；反复出现请保留“技术详情”。\n\n技术详情\n这台设备自己的读数（服务器没给句子）\nagent/commands -> HTTP 500",
+    "says_cannot_reach_server": false,
+    "details_elements_in_dom": 1,
+    "reason_label_painted": "这台设备自己的读数（服务器没给句子）",
+    "reason_value_painted": "agent/commands -> HTTP 500",
+    "data_result_status_cross_check": "HTTP_500",
+    "client_deadline_sentence_painted": false,
+    "sheet_reached": true
+   },
+   "app_threw_on_the_body": {
+    "json_rejections": [],
+    "syntax_error_count": 0,
+    "first_rejection_message": null
+   },
+   "secondary_surface": null,
+   "verdict": "HONEST",
+   "verdict_reason": "HTTP 500 被原样报成服务端失败"
+  },
+  {
+   "row": "R17_⓪_headers_then_truncated_body",
+   "arm": "a8_ctl_500_short_body",
+   "outcome_class_as_asked": "机制臂：答了 500 但正文被截短（Content-Length 说 21 只写 5）",
+   "run_id": "O0301-144601",
+   "cap_ms": 45000,
+   "policy_stamp": "A8_CTL_500_SHORT_BODY",
+   "declared_write_leg": {
+    "mode": "answer",
+    "status": 500,
+    "content_type": "text/plain; charset=utf-8",
+    "body": "Internal Server Error",
+    "declared_content_length": 21,
+    "truncate_to": 5,
+    "delay_ms": 250
+   },
+   "server_side": {
+    "deciding_leg": "commands",
+    "all_write_legs": [
+     {
+      "url": "/api/v1/journeys/d845ac26-0add-4305-bd3f-3f7c6f6fe3c1/agent/commands",
+      "status": 500,
+      "content_type": "text/plain; charset=utf-8",
+      "bytes": null,
+      "elapsed_ms": null,
+      "client_error": null
+     }
+    ],
+    "server_side_reading_from": "browser fetch hook",
+    "http_status": 500,
+    "content_type": "text/plain; charset=utf-8",
+    "bytes": null,
+    "elapsed_ms": null,
+    "client_error": null,
+    "body_head": "",
+    "envelope_code": null,
+    "envelope_message": null,
+    "answer_attributed_to": "my-origin",
+    "sibling_probe_outside_browser": null,
+    "origin_own_record_for_this_stamp": [
+     {
+      "at": "14:46:01",
+      "stamp": "A8_CTL_500_SHORT_BODY",
+      "path": "/api/v1/journeys/d845ac26-0add-4305-bd3f-3f7c6f6fe3c1/experience",
+      "method": "GET",
+      "leg": "read",
+      "mode": "proxy",
+      "status": 200,
+      "bytes": 2251
+     },
+     {
+      "at": "14:46:01",
+      "stamp": "A8_CTL_500_SHORT_BODY",
+      "path": "/api/v1/journeys/d845ac26-0add-4305-bd3f-3f7c6f6fe3c1/replans",
+      "method": "GET",
+      "leg": "read",
+      "mode": "proxy",
+      "status": 200,
+      "bytes": 2
+     },
+     {
+      "at": "14:46:01",
+      "stamp": "A8_CTL_500_SHORT_BODY",
+      "path": "/api/v1/demo/scene",
+      "method": "GET",
+      "leg": "read",
+      "mode": "proxy",
+      "status": 200,
+      "bytes": 489
+     },
+     {
+      "at": "14:46:01",
+      "stamp": "A8_CTL_500_SHORT_BODY",
+      "path": "/api/v1/journeys/d845ac26-0add-4305-bd3f-3f7c6f6fe3c1/plans",
+      "method": "GET",
+      "leg": "read",
+      "mode": "proxy",
+      "status": 200,
+      "bytes": 2
+     },
+     {
+      "at": "14:46:01",
+      "stamp": "A8_CTL_500_SHORT_BODY",
+      "path": "/api/v1/journeys/d845ac26-0add-4305-bd3f-3f7c6f6fe3c1/agent-feed?limit=200",
+      "method": "GET",
+      "leg": "read",
+      "mode": "proxy",
+      "status": 200,
+      "bytes": 7551
+     },
+     {
+      "at": "14:46:01",
+      "stamp": "A8_CTL_500_SHORT_BODY",
+      "path": "/api/v1/journeys/d845ac26-0add-4305-bd3f-3f7c6f6fe3c1/twin",
+      "method": "GET",
+      "leg": "read",
+      "mode": "proxy",
+      "status": 200,
+      "bytes": 896
+     },
+     {
+      "at": "14:46:01",
+      "stamp": "A8_CTL_500_SHORT_BODY",
+      "path": "/api/v1/journeys/d845ac26-0add-4305-bd3f-3f7c6f6fe3c1/wallet",
+      "method": "GET",
+      "leg": "read",
+      "mode": "proxy",
+      "status": 200,
+      "bytes": 109
+     },
+     {
+      "at": "14:46:01",
+      "stamp": "A8_CTL_500_SHORT_BODY",
+      "path": "/api/v1/journeys/d845ac26-0add-4305-bd3f-3f7c6f6fe3c1/offline-snapshot",
+      "method": "GET",
+      "leg": "read",
+      "mode": "proxy",
+      "status": 200,
+      "bytes": 797
+     },
+     {
+      "at": "14:46:01",
+      "stamp": "A8_CTL_500_SHORT_BODY",
+      "path": "/api/v1/travelers/ab3d1aa0-c69c-4b0a-99ff-14d65c2410ee/agent-policy",
+      "method": "GET",
+      "leg": "read",
+      "mode": "proxy",
+      "status": 200,
+      "bytes": 527
+     },
+     {
+      "at": "14:46:01",
+      "stamp": "A8_CTL_500_SHORT_BODY",
+      "path": "/api/v1/journeys/d845ac26-0add-4305-bd3f-3f7c6f6fe3c1/agent-feed?limit=200",
+      "method": "GET",
+      "leg": "read",
+      "mode": "proxy",
+      "status": 200,
+      "bytes": 7551
+     },
+     {
+      "at": "14:46:01",
+      "stamp": "A8_CTL_500_SHORT_BODY",
+      "path": "/api/v1/agent/runtime-status",
+      "method": "GET",
+      "leg": "read",
+      "mode": "proxy",
+      "status": 200,
+      "bytes": 369
+     },
+     {
+      "at": "14:46:02",
+      "stamp": "A8_CTL_500_SHORT_BODY",
+      "path": "/api/v1/places?city_code=CNX-DEMO",
+      "method": "GET",
+      "leg": "read",
+      "mode": "proxy",
+      "status": 200,
+      "bytes": 1459
+     },
+     {
+      "at": "14:46:02",
+      "stamp": "A8_CTL_500_SHORT_BODY",
+      "path": "/api/v1/journeys/d845ac26-0add-4305-bd3f-3f7c6f6fe3c1/plans",
+      "method": "GET",
+      "leg": "read",
+      "mode": "proxy",
+      "status": 200,
+      "bytes": 2
+     },
+     {
+      "at": "14:46:02",
+      "stamp": "A8_CTL_500_SHORT_BODY",
+      "path": "/api/v1/agent/runtime-status",
+      "method": "GET",
+      "leg": "read",
+      "mode": "proxy",
+      "status": 200,
+      "bytes": 369
+     },
+     {
+      "at": "14:46:02",
+      "stamp": "A8_CTL_500_SHORT_BODY",
+      "path": "/api/v1/journeys/d845ac26-0add-4305-bd3f-3f7c6f6fe3c1/agent/commands",
+      "method": "POST",
+      "leg": "write",
+      "mode": "answer",
+      "request_bytes": 59,
+      "status": 500,
+      "content_type": "text/plain; charset=utf-8",
+      "response_bytes": null,
+      "delay_ms": 250,
+      "declared_content_length": 21,
+      "bytes_written": 5,
+      "body_sha256_12": "e41656eb2ba6",
+      "short_body": true
+     },
+     {
+      "at": "14:46:11",
+      "stamp": "A8_CTL_500_SHORT_BODY",
+      "path": "/api/v1/journeys/d845ac26-0add-4305-bd3f-3f7c6f6fe3c1/agent/commands",
+      "method": "POST",
+      "leg": "write",
+      "mode": "answer",
+      "request_bytes": 37,
+      "status": 500,
+      "content_type": "text/plain; charset=utf-8",
+      "response_bytes": null,
+      "delay_ms": 250,
+      "declared_content_length": 21,
+      "bytes_written": 5,
+      "body_sha256_12": "e41656eb2ba6",
+      "short_body": true
+     },
+     {
+      "at": "14:46:19",
+      "stamp": "A8_CTL_500_SHORT_BODY",
+      "path": "/api/v1/journeys/d845ac26-0add-4305-bd3f-3f7c6f6fe3c1/agent/commands",
+      "method": "POST",
+      "leg": "write",
+      "mode": "answer",
+      "request_bytes": 37,
+      "status": 500,
+      "content_type": "text/plain; charset=utf-8",
+      "response_bytes": null,
+      "delay_ms": 250,
+      "declared_content_length": 21,
+      "bytes_written": 5,
+      "body_sha256_12": "e41656eb2ba6",
+      "short_body": true
+     }
+    ]
+   },
+   "screen_side": {
+    "painted_first_line": "",
+    "painted_text": "",
+    "says_cannot_reach_server": false,
+    "details_elements_in_dom": 0,
+    "reason_label_painted": null,
+    "reason_value_painted": "",
+    "data_result_status_cross_check": null,
+    "client_deadline_sentence_painted": false,
+    "sheet_reached": true
+   },
+   "app_threw_on_the_body": {
+    "json_rejections": [],
+    "syntax_error_count": 0,
+    "first_rejection_message": null
+   },
+   "secondary_surface": null,
+   "verdict": "NOT_MEASURED",
+   "verdict_reason": "结局卡到观察帽（45000 ms）为止没出现，屏上仍停在等待态"
+  }
+ ],
+ "derived": {
+  "rows": 17,
+  "misleads_rows": [
+   "R1_①_contentless_500_from_the_product",
+   "R2_①_contentless_500_fast",
+   "R3_①_contentless_500_after_35s",
+   "R4_①_uninstrumented",
+   "R9_③_503_plain_gateway",
+   "R11_④_reset_no_response",
+   "R15_⓪_json_null_body"
+  ],
+  "honest_rows": [
+   "R5_②_500_with_product_envelope",
+   "R6_③_503_envelope",
+   "R7_③_502_envelope",
+   "R8_③_504_envelope",
+   "R14_control_real_422",
+   "R16_⓪_json_empty_object"
+  ],
+  "not_measured_rows": [
+   "R10_④_upstream_absent",
+   "R12_⑤_silent_write_leg",
+   "R13_⑤_silent_read_leg",
+   "R17_⓪_headers_then_truncated_body"
+  ],
+  "every_misleads_row_had_no_json_object_for_the_helper": true,
+  "every_honest_answered_row_had_a_json_object": true,
+  "no_honest_answered_row_threw_on_the_body": true,
+  "same_status_different_body_shape_flips_the_verdict": true,
+  "different_status_same_body_shape_keeps_the_verdict": true,
+  "null_versus_empty_object_pair_differs": true,
+  "duration_is_not_the_discriminator": true,
+  "uninstrumented_reproduction_agrees": true,
+  "envelope_sentence_quoted_verbatim_equals": true,
+  "punctuation_drift_still_equals": false,
+  "suffix_drift_still_equals": false,
+  "label_says_server_on_the_envelope_row": true,
+  "label_says_device_when_the_body_holds_no_sentence": true
+ },
+ "captured_envelope": {
+  "code": "VALIDATION_ERROR",
+  "message": "No feasible plan candidates satisfy the journey constraints",
+  "bytes": 1443,
+  "sha256": "9acb65ea8f353e3740f0944e960fc36633bec0600aadea53f31eb97f74b58fe9"
+ }
+}
