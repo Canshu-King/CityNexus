@@ -1,0 +1,4 @@
+HELD round 1 at 14:49:08 rows_touched=2
+SELFPROOF: second writer refused with 'database is locked'
+ARMED round 1
+RELEASED round 1 at 14:49:48
