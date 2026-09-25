@@ -1,0 +1,44 @@
+{
+ "schema": "CNX_VERIFIER_DERIVATION_V1",
+ "order": "ORD-0273 gate derivation completion: generation-binding check against the CURRENT authority dc964086",
+ "verifier": "lane E d2305848",
+ "at": "2026-09-25T15:20+08:00",
+ "disclosure_note": {"rule": "PUBLISHER_RECEIPT_DISCLOSURE_RULE", "hits": []},
+ "generation_binding_check": {
+  "method": "git trees API per product commit, blob shas from tree entries",
+  "authority_tip": "dc964086c9d412573ac19d70b24b30e6c3ee6168",
+  "gate_ran_on": "45b0a5e281cae9c37715173afd3ac5778f309ca7 (the v7 same-gen rerun + v6/v5 arms)",
+  "result": "5 of 8 gate files DIFFER between dc964086 and 45b0a5e2",
+  "differing_files": [
+   "frontend/e2e/qoder-continuation-owner.spec.ts (bff3095b vs ca2bc055 - the spec was modified for 0280/0281)",
+   "frontend/src/api/journeyContinuation.ts (358141e6 vs a52f77fc - the 0272 continuation API)",
+   "frontend/src/app/V8Experience.tsx (17ef83b6 vs 04c8e000 - 0280 landed here)",
+   "frontend/src/features/planning/PlanWithAiSheet.tsx (fd5f6e5b vs 4c3821b7 - 0280 landed here)",
+   "frontend/src/i18n/LocaleContext.tsx (ece74118 vs 3b04cfae - the 0273 dictionary changed)"
+  ],
+  "matching_files": ["qoder-sealed-failure-speaks-and-offers-retry.spec.ts", "useContinuationState.ts", "JourneyTrialSetup.tsx"],
+  "conclusion_per_Q24": "NOT_TRANSFERABLE_GENERATION - the v5/v6/v7 gate and arms readings are facts of their own generations; they do NOT transfer to dc964086. The 5 changed files are exactly where the intervening orders (0272/0273/0280) landed their changes - expected, not a defect.",
+  "what_the_commander_needs": "the ORD-0273 gate (the same Playwright specs) must be re-run on dc964086 before its derived_result can sign on the current authority line. I already derived v5/v6/v7 on their own generations; the re-run on dc964086 is the same procedure, only the tree changes."
+ },
+ "already_delivered_derivation": {
+  "v5_derivation": {"blob": "ee432c5a0dbc287e (full: ee432c5a0dbc287e3abdf6809c8db87c43dc3acf)", "path": "evidence/ord0269-0273-gate-v5-e742bb3/verifier_derivation_d2305848.json",
+    "status": "DELIVERED and CONFIRMED by the commander (09:0x block)",
+    "scope": "9/9 KILLED on frozen 06717045; ledger path 404 named; R-4 premise not published (now fixed in v6)"},
+  "v6_derivation": {"blob": "47eda29379be4538 (full: 47eda29379be4538e8001cc794e73253823b3a81)", "path": "evidence/ord0269-0273-gate-v6-e713510/verifier_derivation_d2305848.json",
+    "status": "DELIVERED and CONFIRMED by the commander (09:0x block)",
+    "scope": "9/9 KILLED on candidate e7135108 (re-parented to dcae1bc96); both v5 findings fixed; redSets identical to v5 arm-by-arm; zero cross-generation license per Q24/Q25"},
+  "v7_samegen": {"blob": "bd12f1fb08833b98 (full: bd12f1fb08833b98ebd93b83d0a0fa94773bce9d)", "path": "evidence/ord0269-0273-gate-v6-e713510/commander_samegen_0269_0273_45b0a5e_d2305848.json",
+    "status": "DELIVERED and CONFIRMED by the commander (09:0x block)",
+    "scope": "8 passed (45.4s) authoritative on landed 45b0a5e2; R-4 premise measured on the landed generation; redSets identical to v5/v6"},
+  "cross_generation_stability": "redSets identical across 4 generations (06717045 / 8ccfcf7 / dbd0f9d9 / dc964086)"
+ },
+ "what_is_needed_for_closure": {
+  "step": "re-run the 0273 gate (the same Playwright specs) on dc964086 (or a descendant with identical frontend subtree)",
+  "procedure": "same as the 45b0a5e2 samegen I already did: clean tarball export, junction node_modules, AUTHORITATIVE=1, throwaway db, run the two specs",
+  "expected": "if the 5 changed files did not break the gate, 8/8 GREEN with exact_sha = dc964086 - then 0273 can sign on the authority line",
+  "who": "I can do this the same way I did the 45b0a5e2 samegen - the procedure is proven"
+ },
+ "discipline": {"services_started": 0, "user_dbs_touched": 0, "demo_reset": 0,
+   "credentials_printed": 0, "published_paths_overwritten": 0,
+   "network": "GitHub GET + one PUT (this receipt)"}
+}
