@@ -1,0 +1,14 @@
+receipt ord0307_gate_receipt_r3.json 31658 B blob_sha1 d81850a53e5fd9416ed86449b06ba816fb6d2ac8
+cells 10 | overall Q38_GATE_GREEN | hard 0 [] | soft 0 []
+  cell 0 | why_source why | why tokens 4 | own hits 4 | unique hits 1 | shares why with []
+  cell 1 | why_source why | why tokens 4 | own hits 4 | unique hits 1 | shares why with []
+  cell 2 | why_source why | why tokens 4 | own hits 4 | unique hits 1 | shares why with []
+  cell 3 | why_source why | why tokens 4 | own hits 4 | unique hits 1 | shares why with []
+  cell 4 | why_source why | why tokens 4 | own hits 4 | unique hits 1 | shares why with []
+  cell 5 | why_source why | why tokens 4 | own hits 4 | unique hits 1 | shares why with []
+  cell 6 | why_source why | why tokens 4 | own hits 4 | unique hits 1 | shares why with []
+  cell 7 | why_source why | why tokens 4 | own hits 4 | unique hits 1 | shares why with []
+  cell 8 | why_source why | why tokens 4 | own hits 4 | unique hits 1 | shares why with []
+  cell 9 | why_source why | why tokens 4 | own hits 4 | unique hits 1 | shares why with []
+meaning: no shared literal and every sentence names its own readings
+wrote D:\moodle\_qoder_f_run\o225_receipts\ord0307_q38_readings_r3.json 6509 B
