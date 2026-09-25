@@ -1,0 +1,541 @@
+{
+  "config": {
+    "argv": [
+      "C:\\Program Files\\nodejs\\node.exe",
+      "D:\\moodle\\_qoder_b_lane_20260923\\frontend\\node_modules\\@playwright\\test\\cli.js",
+      "test",
+      "-c",
+      "playwright.config.ts",
+      "e2e/qoder-ord0281-keyed-write-deadline.spec.ts",
+      "--reporter=json"
+    ],
+    "configFile": "D:\\moodle\\_qoder_b_lane_20260923\\frontend\\playwright.config.ts",
+    "rootDir": "D:/moodle/_qoder_b_lane_20260923/frontend/e2e",
+    "failOnFlakyTests": false,
+    "forbidOnly": false,
+    "fullyParallel": false,
+    "globalSetup": "D:\\moodle\\_qoder_b_lane_20260923\\frontend\\e2e\\_qoderAuthoritativeSetup.ts",
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "actualWorkers": 1
+    },
+    "preserveOutput": "always",
+    "projects": [
+      {
+        "outputDir": "D:/moodle/_qoder_b_lane_20260923/frontend/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "real-seed",
+        "name": "real-seed",
+        "testDir": "D:/moodle/_qoder_b_lane_20260923/frontend/e2e",
+        "testIgnore": [
+          "/[\\\\/]e2e[\\\\/]legacy[\\\\/]/"
+        ],
+        "testMatch": [
+          "/_qoderRealSeed\\.setup\\.ts/"
+        ],
+        "timeout": 60000
+      },
+      {
+        "outputDir": "D:/moodle/_qoder_b_lane_20260923/frontend/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "chromium",
+        "name": "chromium",
+        "testDir": "D:/moodle/_qoder_b_lane_20260923/frontend/e2e",
+        "testIgnore": [
+          "/[\\\\/]e2e[\\\\/]legacy[\\\\/]/"
+        ],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 60000
+      }
+    ],
+    "quiet": false,
+    "reporter": [
+      [
+        "json"
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "shard": null,
+    "tags": [],
+    "updateSnapshots": "missing",
+    "updateSourceMethod": "patch",
+    "version": "1.63.0",
+    "workers": 1,
+    "webServer": null
+  },
+  "suites": [
+    {
+      "title": "_qoderRealSeed.setup.ts",
+      "file": "_qoderRealSeed.setup.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "seed a real journey through the product API",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "real-seed",
+              "projectName": "real-seed",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 5011,
+                  "errors": [],
+                  "stdout": [
+                    {
+                      "text": "[qoder-real-seed] journey=4abb92cd-6046-464b-a031-4c85f7bca399 options=4 chosen=db523022-13a0-4e06-8dcc-1f1f76b0012e (Haihe Riverside Hotel)\n"
+                    },
+                    {
+                      "text": "[qoder-real-seed] trialWizard=false live-journey-current=true\n"
+                    }
+                  ],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-09-25T10:34:20.819Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "e5b963f3c8f6099f74d0-d425156f0efa8e024368",
+          "file": "_qoderRealSeed.setup.ts",
+          "line": 110,
+          "column": 1
+        }
+      ]
+    },
+    {
+      "title": "qoder-ord0281-keyed-write-deadline.spec.ts",
+      "file": "qoder-ord0281-keyed-write-deadline.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "ORD-0281 keyed write deadline",
+          "file": "qoder-ord0281-keyed-write-deadline.spec.ts",
+          "line": 171,
+          "column": 15,
+          "specs": [
+            {
+              "title": "ord0281-TA a keyed write answered inside the bound shows no deadline sentence",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [
+                    {
+                      "type": "serial",
+                      "location": {
+                        "file": "D:\\moodle\\_qoder_b_lane_20260923\\frontend\\e2e\\qoder-ord0281-keyed-write-deadline.spec.ts",
+                        "line": 171,
+                        "column": 15
+                      }
+                    }
+                  ],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 1,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1023,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-09-25T10:34:26.383Z",
+                      "annotations": [
+                        {
+                          "type": "serial",
+                          "location": {
+                            "file": "D:\\moodle\\_qoder_b_lane_20260923\\frontend\\e2e\\qoder-ord0281-keyed-write-deadline.spec.ts",
+                            "line": 171,
+                            "column": 15
+                          }
+                        }
+                      ],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "47de5f3d2c9d1aecc180-2f2b3e7ad2325d7479b0",
+              "file": "qoder-ord0281-keyed-write-deadline.spec.ts",
+              "line": 175,
+              "column": 3
+            },
+            {
+              "title": "ord0281-TB an unanswered keyed write ends at our bound and names itself, not the network",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [
+                    {
+                      "type": "serial",
+                      "location": {
+                        "file": "D:\\moodle\\_qoder_b_lane_20260923\\frontend\\e2e\\qoder-ord0281-keyed-write-deadline.spec.ts",
+                        "line": 171,
+                        "column": 15
+                      }
+                    }
+                  ],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 1,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 2925,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-09-25T10:34:27.532Z",
+                      "annotations": [
+                        {
+                          "type": "serial",
+                          "location": {
+                            "file": "D:\\moodle\\_qoder_b_lane_20260923\\frontend\\e2e\\qoder-ord0281-keyed-write-deadline.spec.ts",
+                            "line": 171,
+                            "column": 15
+                          }
+                        }
+                      ],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "47de5f3d2c9d1aecc180-2d3aa98ac59dac87d016",
+              "file": "qoder-ord0281-keyed-write-deadline.spec.ts",
+              "line": 198,
+              "column": 3
+            },
+            {
+              "title": "ord0281-TC the bound is one named source: halving it moves when the sentence arrives",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [
+                    {
+                      "type": "serial",
+                      "location": {
+                        "file": "D:\\moodle\\_qoder_b_lane_20260923\\frontend\\e2e\\qoder-ord0281-keyed-write-deadline.spec.ts",
+                        "line": 171,
+                        "column": 15
+                      }
+                    }
+                  ],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 1,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 3054,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-09-25T10:34:30.474Z",
+                      "annotations": [
+                        {
+                          "type": "serial",
+                          "location": {
+                            "file": "D:\\moodle\\_qoder_b_lane_20260923\\frontend\\e2e\\qoder-ord0281-keyed-write-deadline.spec.ts",
+                            "line": 171,
+                            "column": 15
+                          }
+                        }
+                      ],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "47de5f3d2c9d1aecc180-7f5ad26b0044d0d841eb",
+              "file": "qoder-ord0281-keyed-write-deadline.spec.ts",
+              "line": 232,
+              "column": 3
+            },
+            {
+              "title": "ord0281-TD a retry after the bound replays the same key and never claims the write failed",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [
+                    {
+                      "type": "serial",
+                      "location": {
+                        "file": "D:\\moodle\\_qoder_b_lane_20260923\\frontend\\e2e\\qoder-ord0281-keyed-write-deadline.spec.ts",
+                        "line": 171,
+                        "column": 15
+                      }
+                    }
+                  ],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 1,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 5065,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-09-25T10:34:33.545Z",
+                      "annotations": [
+                        {
+                          "type": "serial",
+                          "location": {
+                            "file": "D:\\moodle\\_qoder_b_lane_20260923\\frontend\\e2e\\qoder-ord0281-keyed-write-deadline.spec.ts",
+                            "line": 171,
+                            "column": 15
+                          }
+                        }
+                      ],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "47de5f3d2c9d1aecc180-a0bc763c31b9fb0ce950",
+              "file": "qoder-ord0281-keyed-write-deadline.spec.ts",
+              "line": 269,
+              "column": 3
+            },
+            {
+              "title": "ord0281-K1 a keyless write is passed through, not bounded, by this order",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [
+                    {
+                      "type": "serial",
+                      "location": {
+                        "file": "D:\\moodle\\_qoder_b_lane_20260923\\frontend\\e2e\\qoder-ord0281-keyed-write-deadline.spec.ts",
+                        "line": 171,
+                        "column": 15
+                      }
+                    }
+                  ],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 1,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 4393,
+                      "error": {
+                        "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m\"still-pending\"\u001b[39m\nReceived: \u001b[31m\"WriteDeadlineMissed\"\u001b[39m",
+                        "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m\"still-pending\"\u001b[39m\nReceived: \u001b[31m\"WriteDeadlineMissed\"\u001b[39m\n    at D:\\moodle\\_qoder_b_lane_20260923\\frontend\\e2e\\qoder-ord0281-keyed-write-deadline.spec.ts:367:35",
+                        "location": {
+                          "file": "D:\\moodle\\_qoder_b_lane_20260923\\frontend\\e2e\\qoder-ord0281-keyed-write-deadline.spec.ts",
+                          "column": 35,
+                          "line": 367
+                        },
+                        "snippet": "\u001b[0m \u001b[90m 365 |\u001b[39m       note\u001b[33m:\u001b[39m \u001b[32m\"module-level in real browser: the product has no keyless surface that renders this sentence\"\u001b[39m\u001b[33m,\u001b[39m\n \u001b[90m 366 |\u001b[39m     })\u001b[33m;\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 367 |\u001b[39m     expect(probe\u001b[33m.\u001b[39mkeyless\u001b[33m.\u001b[39moutcome)\u001b[33m.\u001b[39mtoBe(\u001b[32m\"still-pending\"\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m     |\u001b[39m                                   \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 368 |\u001b[39m     expect(probe\u001b[33m.\u001b[39mkeyed\u001b[33m.\u001b[39moutcome)\u001b[33m.\u001b[39mtoBe(\u001b[32m\"WriteDeadlineMissed\"\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m 369 |\u001b[39m     expect(probe\u001b[33m.\u001b[39mreads_header)\u001b[33m.\u001b[39mtoBe(\u001b[36mtrue\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m 370 |\u001b[39m     expect(probe\u001b[33m.\u001b[39mrejects_absent)\u001b[33m.\u001b[39mtoBe(\u001b[36mfalse\u001b[39m)\u001b[33m;\u001b[39m\u001b[0m"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "D:\\moodle\\_qoder_b_lane_20260923\\frontend\\e2e\\qoder-ord0281-keyed-write-deadline.spec.ts",
+                            "column": 35,
+                            "line": 367
+                          },
+                          "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m\"still-pending\"\u001b[39m\nReceived: \u001b[31m\"WriteDeadlineMissed\"\u001b[39m\n\n  365 |       note: \"module-level in real browser: the product has no keyless surface that renders this sentence\",\n  366 |     });\n> 367 |     expect(probe.keyless.outcome).toBe(\"still-pending\");\n      |                                   ^\n  368 |     expect(probe.keyed.outcome).toBe(\"WriteDeadlineMissed\");\n  369 |     expect(probe.reads_header).toBe(true);\n  370 |     expect(probe.rejects_absent).toBe(false);\n    at D:\\moodle\\_qoder_b_lane_20260923\\frontend\\e2e\\qoder-ord0281-keyed-write-deadline.spec.ts:367:35"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-09-25T10:34:38.631Z",
+                      "annotations": [
+                        {
+                          "type": "serial",
+                          "location": {
+                            "file": "D:\\moodle\\_qoder_b_lane_20260923\\frontend\\e2e\\qoder-ord0281-keyed-write-deadline.spec.ts",
+                            "line": 171,
+                            "column": 15
+                          }
+                        }
+                      ],
+                      "attachments": [
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "D:\\moodle\\_qoder_b_lane_20260923\\frontend\\test-results\\qoder-ord0281-keyed-write--12aa1-h-not-bounded-by-this-order-chromium\\error-context.md"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "D:\\moodle\\_qoder_b_lane_20260923\\frontend\\test-results\\qoder-ord0281-keyed-write--12aa1-h-not-bounded-by-this-order-chromium\\error-context.md"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "D:\\moodle\\_qoder_b_lane_20260923\\frontend\\e2e\\qoder-ord0281-keyed-write-deadline.spec.ts",
+                        "column": 35,
+                        "line": 367
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "47de5f3d2c9d1aecc180-3a1b50834b01c0ac719c",
+              "file": "qoder-ord0281-keyed-write-deadline.spec.ts",
+              "line": 312,
+              "column": 3
+            },
+            {
+              "title": "ord0281-K2 the shipped numbers are ordered so the client never cuts in front of the server",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [
+                    {
+                      "type": "serial",
+                      "location": {
+                        "file": "D:\\moodle\\_qoder_b_lane_20260923\\frontend\\e2e\\qoder-ord0281-keyed-write-deadline.spec.ts",
+                        "line": 171,
+                        "column": 15
+                      }
+                    }
+                  ],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": -1,
+                      "parallelIndex": -1,
+                      "status": "skipped",
+                      "duration": 0,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-09-25T10:34:43.152Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "skipped"
+                }
+              ],
+              "id": "47de5f3d2c9d1aecc180-8d4fcb9cbcdc026b76f6",
+              "file": "qoder-ord0281-keyed-write-deadline.spec.ts",
+              "line": 373,
+              "column": 3
+            },
+            {
+              "title": "ord0281-K3 the read wrapper delegates a keyed write, and leaves a keyless one alone",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [
+                    {
+                      "type": "serial",
+                      "location": {
+                        "file": "D:\\moodle\\_qoder_b_lane_20260923\\frontend\\e2e\\qoder-ord0281-keyed-write-deadline.spec.ts",
+                        "line": 171,
+                        "column": 15
+                      }
+                    }
+                  ],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": -1,
+                      "parallelIndex": -1,
+                      "status": "skipped",
+                      "duration": 0,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-09-25T10:34:43.152Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "skipped"
+                }
+              ],
+              "id": "47de5f3d2c9d1aecc180-0b254aed5c48c0053b6a",
+              "file": "qoder-ord0281-keyed-write-deadline.spec.ts",
+              "line": 399,
+              "column": 3
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2026-09-25T10:34:17.280Z",
+    "duration": 26914.336,
+    "expected": 5,
+    "skipped": 2,
+    "unexpected": 1,
+    "flaky": 0
+  }
+}
