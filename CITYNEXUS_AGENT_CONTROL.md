@@ -16588,6 +16588,25 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### CMDR-0926-0153 · 号令者 494abfd7：Q43 尺改到 r4c（D 报的 PORT/LINE_REF 混淆，我复现并修，判级不变）+ 三条门全部上膛新尺 + 并行开单
+
+**D 报的是真的，我复现了**：`evidence/cmdr-q43-r4c-0152/` 之前，r4b 把 `` `PlanWithAiSheet.tsx:414`、`:474`、`:538` `` 这类**行号续写**全归进 `PORT` 豁免（她的原话：同一句 7 claims → 2 claims，5 枚被当端口吃掉）。我把她的写法做成夹具跑 r4b：确实进 `PORT`。后果不是放过了违规（行号本身是合法坐标），而是**豁免桶在说谎**——`exempt: {"PORT": 4}` 里其实混着行号，读帖的人没法判断覆盖还剩多少。归我，D 只报不修是对的。
+
+**改法（新路径，r4b 一字节未动）**：`evidence/cmdr-q43-r4c-0152/claim_coordinate_check_r4c.py` = 08f7d3249528b019d1c431770f662aeec91eb2f2。新增 `LINE_REF` 桶（`:NNN` 且前 48 字里出现过 `file.ext:NNN` 才算它），`PORT` 退回到"旁边有 port/端口/listen/监听 词，或孤立 `:NNNN`"；再加一条**只看不拦**的 `advisories()`：当一枚带单位的数量在 200 字窗口内唯一的凭据就是源码行号时，打印 `QUANTITY_VOUCHED_ONLY_BY_A_SOURCE_LINE_NUMBER`，**不改判级**（避免把已入账的块追认成红）。
+- 两向自测 10 判全过（含 `exempt_LINE_REF` 要求 `PORT` 桶为 0、`exempt_PORT` 要求 `LINE_REF` 桶为 0、`advisory_line_ref_only_vouch` 要求有 advisory 且加了真 blob 后为 0）。
+- **无追溯改动，按三枚真实文本逐枚差分**：差分件 `evidence/cmdr-q43-r4c-0152/r4b_vs_r4c_diff.json` = 1ca6ea825e834cd4df1c1ff74435d8c16556b357（三行 row 各带 `bytes_on_disk`/两版 claims/findings/exempt 与 `bucket_delta`，派生格 `no_retroactive_finding_change`、`no_claim_count_change`、`line_ref_bucket_now_visible` 都由 rows 算出）。摘要（逐栏见那件的 rows）：我那帖正文一栏 r4b/r4c 判级同为 GREEN 且 findings 同为 0、桶不变；P3 那块一栏同为 0 findings，只差 `PORT -1 / LINE_REF +1`；B 那块一栏同为 0 findings、桶不变。
+- 三条门已换跑 r4c：门件 `ledger_insert_after_r3.py` = e26a51b47e5a5bcd4db917bd5eeb2e196b8c90a9、收件箱件 `ledger_inbox_apply_r2.py` = cd1076e7f72c8996c9290b174cb7a9e8324a6a67、发帖器 `post_note_r2.py` = 7e1fc7db31d1b7b0fe20b50f787f7aae19314bfa（都在 `evidence/cmdr-q43-r4c-0152/`）。换完 `ledger_inbox_apply_r1.py --selftest` 六判全过。一次性历史脚本（早先那些 post_0297r_accept.py 之类）没动——它们已经用完，不是常设管道。
+
+**并行开单（用户令：不再向仲裁转报，自行推进，可多开会话）**：新开三条工具车道，要件都在各自帖里，我只按坐标验收。
+- `S1-q64sweep`（会话 8e094dec-8ef7-46b6-82bf-bdefc04af8d9）：用 r2 尺扫现尖整个 `frontend/src`，出自带两向基准（必须复现已知的 `PlanWithAiSheet.tsx:1016` 那一枚）与分类表（`upstream_prose` / `local_wording` / `machine_label`，逐格附原文行），件 `evidence/q64-sweep-S1/sweep_r1.json`。它的用处是给 ORD-0302 / Q67 那张"逐格要不要自证"的清单，不是新产品缺陷。
+- `S2-hermes-port`（会话 d9e2c9ae-265d-45c5-acc7-191e6a695bb8）：ORD-0318，按文件从 `refs/heads/hermes/validation-0212` 摘 115 枚 harness-only 件到现尖候选 `agent/S2-hermes-port-candidates`，先 `--collect-only` 报数再跑，产品字节 0 变，两枚缺符号的收集错误具名排除不粉饰。
+- `S3-stateboard`（会话 a17ae861-1fc4-4c43-853c-694797a279e5）：只读账本派生一张 `ORD-#### → 最新状态/归属/时间/代次/证据坐标` 的状态板，逼它先侦察再定枚举，抽不到只能写 `NOT_IN_LEDGER`。
+
+**仍在等的（不催）**：Q65（60 秒定义）、Q66（Hermes 产品增量时点）、Q67（服务器原话经归因标签进「技术详情」算不算越界）三枚符号；B 的 b5 我按 r2 复核过她那三向（现尖命中 [1016]、b4 命中 [187,582,1048,1068]、她候选 b6e1dd3295aafa3330cc9142a4475ac359eb7a3e 命中 [1046]，与我自跑全等），**状态写 ACCEPTED-CODE / NOT-CLOSED，等 Q67 才谈 CLOSED**。
+
+现尖 `30de4ebe409f49c5e25f4758cb2e5f4e90764a4f`（我 01:52 现读 `git ls-remote`）· 账本新 blob 我插入后按 `git rev-parse origin/cmdcontrol:CITYNEXUS_AGENT_CONTROL.md` 回读并写进总线帖 · inbox 待重投 1 枚（P3 的 `aad2d1f2_0059.md`，只差把那枚"本地重算 sha1"的 blob 标签改掉）。
+
+
 ### ORD-0319 round 2 → 红队 E `d2305848` 交（r2 尺反向攻击 · 2026-09-26 02:4x+08）
 
 **证据目录**：`evidence/ord0319-q64-r2-attack-d2305848/` 六件（树回验逐枚 40 位相符，0 覆盖）：attack_readings `f80714550238b9d459ecbc85177ca8082daec967`、derived `fe851927e1e27310551dfcb902dc3ac4aedca887`、四 fixture（A `4c1bdae7…` / B `ace90480…` / C `c6ef79c5…` / D 正控 `aac91374…`）。总线帖 `5837767078`。
