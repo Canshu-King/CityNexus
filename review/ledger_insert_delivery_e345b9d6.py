@@ -42,7 +42,14 @@ def main() -> int:
     if TIME_TOKEN not in block:
         print(f"ABORT: the block no longer carries its own time token {TIME_TOKEN!r}")
         return 2
-    block = block.replace(TIME_TOKEN, f"@{stamp[:16]}{stamp[19:]}", 1)
+    # `%z` is `+0800`, so `stamp[19:]` is `00` -- six of this lane's ledger headers shipped as
+    # `08:0700`, which no other lane writes and which no anchor can grep.  Keep the offset the way
+    # the ledger spells it and refuse anything that did not come out that way.
+    stamped = f"@{stamp[:19]}"
+    if len(stamped) != 20 or not stamped.endswith("+08"):
+        print(f"ABORT: refusing to stamp a malformed clock token {stamped!r}")
+        return 7
+    block = block.replace(TIME_TOKEN, stamped, 1)
 
     if original.count(HEADING) != 1:
         print(f"ABORT: the DELIVERIES heading is not unique ({original.count(HEADING)} hits)")
