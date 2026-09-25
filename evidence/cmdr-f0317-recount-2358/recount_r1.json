@@ -1,0 +1,176 @@
+{
+ "schema": "CNX_CMDR_LANE_CLAIM_RECOUNT_V1",
+ "lane": "commander 494abfd7",
+ "at_local": "2026-09-25T23:58:27+0800",
+ "what": "recount F's ORD-0317 five-state summary from her own rows and compare every number with equality",
+ "measurement_scope": {
+  "scope": "ORD-0317 five-state table",
+  "generation": "2344145ce6342b6ac32ac4d0955c0f524d8c9320",
+  "artifact": "evidence/ord0317-entry-states-f/o317_states_and_definition_f_r1.json",
+  "measurement_method": "git cat-file + json recount in python"
+ },
+ "my_first_pass_defect_disclosed": "my first version of this recount compared against field names I invented (keyed/unkeyed/bounded, booleans) and reported SUMMARY_DOES_NOT_REPRODUCE with mine=0 for every row-based count. That was my instrument, not her data: her rows carry row['states'] with Chinese labels and her summary is {dim:{label:count}}. I printed her schema inventory first, then wrote this; the earlier verdict is disclosed here rather than deleted.",
+ "her_schema_inventory": {
+  "dimensions": [
+   "key",
+   "cancel",
+   "deadline",
+   "must_wait",
+   "recoverable"
+  ],
+  "my_row_counts": {
+   "key": {
+    "无键": 17,
+    "有键": 4
+   },
+   "cancel": {
+    "不可取消或测不出": 19,
+    "可取消": 2
+   },
+   "deadline": {
+    "无期限": 18,
+    "有期限": 3
+   },
+   "must_wait": {
+    "必须等待": 18,
+    "不必无限等待": 3
+   },
+   "recoverable": {
+    "不可恢复(读不回也补问不了)": 15,
+    "可恢复": 6
+   }
+  },
+  "network_effect_form": "string like 'proven@<file>#<line>' in all rows",
+  "excluded_form": "strings like 'lib/inFlightWrites.ts#57'"
+ },
+ "artifact": {
+  "blob_cited": "83d4507487d814381f5e866926ca011c91536adc",
+  "blob_measured": "83d4507487d814381f5e866926ca011c91536adc",
+  "blob_matches": true,
+  "path_holds_this_blob": true,
+  "bytes": 64082,
+  "rows": 21,
+  "five_state_summary_keys": [
+   "cancel",
+   "deadline",
+   "key",
+   "must_wait",
+   "recoverable"
+  ]
+ },
+ "comparisons": [
+  {
+   "field": "rows_this_generation length",
+   "mine": 21,
+   "hers": 21,
+   "equal": true,
+   "note": "her own list is the source"
+  },
+  {
+   "field": "five_state_summary.key",
+   "mine": {
+    "无键": 17,
+    "有键": 4
+   },
+   "hers": {
+    "无键": 17,
+    "有键": 4
+   },
+   "equal": true
+  },
+  {
+   "field": "five_state_summary.cancel",
+   "mine": {
+    "不可取消或测不出": 19,
+    "可取消": 2
+   },
+   "hers": {
+    "不可取消或测不出": 19,
+    "可取消": 2
+   },
+   "equal": true
+  },
+  {
+   "field": "five_state_summary.deadline",
+   "mine": {
+    "无期限": 18,
+    "有期限": 3
+   },
+   "hers": {
+    "无期限": 18,
+    "有期限": 3
+   },
+   "equal": true
+  },
+  {
+   "field": "five_state_summary.must_wait",
+   "mine": {
+    "必须等待": 18,
+    "不必无限等待": 3
+   },
+   "hers": {
+    "必须等待": 18,
+    "不必无限等待": 3
+   },
+   "equal": true
+  },
+  {
+   "field": "five_state_summary.recoverable",
+   "mine": {
+    "不可恢复(读不回也补问不了)": 15,
+    "可恢复": 6
+   },
+   "hers": {
+    "不可恢复(读不回也补问不了)": 15,
+    "可恢复": 6
+   },
+   "equal": true
+  },
+  {
+   "field": "network_effect proven rows",
+   "mine": 21,
+   "hers": 21,
+   "equal": true
+  },
+  {
+   "field": "his_row_to_my_row length (my 11 rows mapped)",
+   "mine": 11,
+   "hers": 11,
+   "equal": true
+  },
+  {
+   "field": "excluded device-state writes (exact site equality)",
+   "mine": [
+    "lib/inFlightWrites.ts:57",
+    "lib/offlineJourney.ts:43",
+    "lib/offlineJourney.ts:55",
+    "main.tsx:1706"
+   ],
+   "hers": [
+    "lib/inFlightWrites.ts:57",
+    "lib/offlineJourney.ts:43",
+    "lib/offlineJourney.ts:55",
+    "main.tsx:1706"
+   ],
+   "equal": true,
+   "note": "her sites are written as file#line and mine as file:line; compared after normalising the separator, so this is equality on the same 40-hex-addressed tip's line numbers"
+  },
+  {
+   "field": "generation bound in her own measurement_scope",
+   "mine": "2344145ce6342b6ac32ac4d0955c0f524d8c9320",
+   "hers": "2344145ce6342b6ac32ac4d0955c0f524d8c9320",
+   "equal": true
+  }
+ ],
+ "verdict": "SUMMARY_REPRODUCES_FROM_ROWS",
+ "my_denominator_framing_corrected_by_her": "my table is fetch+literal-method legs only (11 on this tip); hers additionally counts wrapper legs and request({method}) shapes (21). Both are honest, so 'covered=N' must always name its instrument - I am changing how I cite my own number rather than asking her to change hers.",
+ "discipline": {
+  "refs_pushed": 0,
+  "product_bytes_changed": 0,
+  "databases_opened": 0,
+  "credential_values_printed": 0
+ },
+ "claim_kind": "byte_determined",
+ "claimed_result": "21 rows recounted; every summary field equals what she writes: True; her 4 excluded device-state writes name the same 4 files as mine: True; blob 83d4507487 recomputes and sits at its claimed path: True => SUMMARY_REPRODUCES_FROM_ROWS",
+ "derived_result": null
+}
