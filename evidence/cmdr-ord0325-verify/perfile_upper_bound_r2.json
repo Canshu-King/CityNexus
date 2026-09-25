@@ -1,0 +1,121 @@
+{
+ "schema": "CNX_CMDR_R5_PERFILE_UPPERBOUND_ORD0325_V2",
+ "lane": "commander 494abfd7",
+ "at_local": "2026-09-26T05:18:48+0800",
+ "method": "node ui_exposure_taint_ast_r2.cjs --ref <sha> --path <single file> (per-file mode)",
+ "why_this_is_an_upper_bound": "per-file mode does not carry the cross-file exoneration that --tree mode computes, so a cell reported here may disappear in the whole-tree reading; the direction (tip -> recut) is what this artifact supports",
+ "ruler_blob": "ff98091cf3accb0d836ae25ba49820170b92d932",
+ "tip": "09dffbb70c151e6734221d6d3d69d88775a1fbd0",
+ "recut": "c1bea4c20ea8cd5f1cc5c9d87053c005b2a24400",
+ "runs": [
+  {
+   "file": "HotelsPanel.tsx.09dffbb7.json",
+   "blob": "5d7d95c258fe5e7f91eba57be9185e3a323bdc28",
+   "bytes": 3428,
+   "claimed": "EXPOSURE_SHAPE_FOUND across 1 scanned file(s): 1 hit(s) [\"RAW_BODY_TO_DOM@HotelsPanel.tsx:229\"]",
+   "cells": [
+    [
+     229,
+     "RAW_BODY_TO_DOM"
+    ]
+   ]
+  },
+  {
+   "file": "HotelsPanel.tsx.c1bea4c2.json",
+   "blob": "48fbbaa479e34138cdb179f8c8cd167cf9d7903b",
+   "bytes": 2564,
+   "claimed": "NO_EXPOSURE_SHAPE_FOUND across 1 scanned file(s): 0 hit(s) []",
+   "cells": []
+  },
+  {
+   "file": "PlanComparison.tsx.09dffbb7.json",
+   "blob": "492085e2fbbdd946bf2d4d628a5725d857de872a",
+   "bytes": 3075,
+   "claimed": "EXPOSURE_SHAPE_FOUND across 1 scanned file(s): 1 hit(s) [\"RAW_BODY_TO_DOM@PlanComparison.tsx:260\"]",
+   "cells": [
+    [
+     260,
+     "RAW_BODY_TO_DOM"
+    ]
+   ]
+  },
+  {
+   "file": "PlanComparison.tsx.c1bea4c2.json",
+   "blob": "3a061810bd7c30f172c71b64639625512294eb1c",
+   "bytes": 2482,
+   "claimed": "NO_EXPOSURE_SHAPE_FOUND across 1 scanned file(s): 0 hit(s) []",
+   "cells": []
+  },
+  {
+   "file": "V8Experience.tsx.09dffbb7.json",
+   "blob": "69a3a921e3dded0bd49bdc4b2af7d6f2430f16e6",
+   "bytes": 7051,
+   "claimed": "EXPOSURE_SHAPE_FOUND across 1 scanned file(s): 3 hit(s) [\"RAW_BODY_TO_DOM@V8Experience.tsx:1282\",\"UPSTREAM_EXCEPTION_TO_DOM@V8Experience.tsx:1385\",\"UPSTREAM_EXCEPTION_TO_DOM@V8Experience.tsx:1562\"]",
+   "cells": [
+    [
+     1282,
+     "RAW_BODY_TO_DOM"
+    ],
+    [
+     1385,
+     "UPSTREAM_EXCEPTION_TO_DOM"
+    ],
+    [
+     1562,
+     "UPSTREAM_EXCEPTION_TO_DOM"
+    ]
+   ]
+  },
+  {
+   "file": "V8Experience.tsx.c1bea4c2.json",
+   "blob": "c5e0d867ddbd564f5491798a3c5a66afc463b2b8",
+   "bytes": 5775,
+   "claimed": "EXPOSURE_SHAPE_FOUND across 1 scanned file(s): 1 hit(s) [\"RAW_BODY_TO_DOM@V8Experience.tsx:1348\"]",
+   "cells": [
+    [
+     1348,
+     "RAW_BODY_TO_DOM"
+    ]
+   ]
+  }
+ ],
+ "claim_kind": "recomputation",
+ "derived": {
+  "HotelsPanel.tsx_no_new_rule_kind": true,
+  "HotelsPanel.tsx_total_not_increasing": true,
+  "PlanComparison.tsx_no_new_rule_kind": true,
+  "PlanComparison.tsx_total_not_increasing": true,
+  "V8Experience.tsx_no_new_rule_kind": true,
+  "V8Experience.tsx_total_not_increasing": true,
+  "all_six_runs_present": true
+ },
+ "erratum_from_r1": {
+  "r1_blob": "226dfa9857d0c50319b2187bc6c73ea57d55fe80",
+  "what_was_wrong": "r1 derived the no-new-shapes key by comparing (line, rule) tuples across the two generations, so a surviving cell whose LINE NUMBER shifted (V8Experience.tsx RAW_BODY_TO_DOM 1282 -> 1348) was counted as a new shape. V8Experience.tsx_no_new_shapes came out false for that reason - the key was naive, not the fix.",
+  "what_changed": "r2 compares per-rule COUNT vectors instead of line-number tuples, and publishes both vectors so the reader can check it",
+  "r1_left_untouched": true,
+  "was": {
+   "HotelsPanel.tsx_rule_counts": {
+    "tip": {
+     "RAW_BODY_TO_DOM": 1
+    },
+    "recut": {}
+   },
+   "PlanComparison.tsx_rule_counts": {
+    "tip": {
+     "RAW_BODY_TO_DOM": 1
+    },
+    "recut": {}
+   },
+   "V8Experience.tsx_rule_counts": {
+    "tip": {
+     "RAW_BODY_TO_DOM": 1,
+     "UPSTREAM_EXCEPTION_TO_DOM": 2
+    },
+    "recut": {
+     "RAW_BODY_TO_DOM": 1
+    }
+   }
+  }
+ }
+}
