@@ -1,0 +1,120 @@
+{
+  "schema": "CNX_SIMPANEL_934_V1",
+  "order": "ORD-0326 attachment, CMDR 05:44 item 3 (optional look)",
+  "lane": "S1-q64sweep",
+  "generation": "a8237d7b50a1df419ae7e89ae6c075dabb6513f8",
+  "checked_at_utc": "2026-09-25T22:05:12Z",
+  "question": "Q69 allows the server's own numeric wait hint.  Is the wording at frontend/src/features/simulation/SimulationPanel.tsx:934 still wrong?",
+  "answer": "WORDING_CORRECT_FOR_EVERY_REFUSAL_THIS_PANEL_CAN_RECEIVE",
+  "why": [
+    "the sink renders a sentence this app builds, not a server body (sink cite)",
+    "the sentence is chosen by the server's own named code and carries its status",
+    "where the server stated a wait, the number is passed through as the server's (约 N 毫秒后再试); where it did not, the screen says 服务器没说要等多久 rather than inventing one -- that is the Q68 line held",
+    "the only reachable busy refusal for this panel is GENERATION_STORE_BUSY on POST /journeys/{id}/replans, and that code IS a key in the wording table, so the wait arm is taken"
+  ],
+  "no_ticket_because": "HYDRATION_STORE_BUSY carries the same retry_after_ms and has no key here, but this panel never calls POST /api/v1/catalog-hydrations (method census below), and that door's wait is honoured on the destination-preparation screen.  Naming a missing key that no call site can reach would be an invented ticket.",
+  "panel_methods_named_in_source": [
+    "getJourney",
+    "getPlan",
+    "listReplans",
+    "generateReplans",
+    "acceptReplan",
+    "rejectReplan",
+    "createBooking",
+    "setGuardianProviderFixture"
+  ],
+  "panel_method_count": 8,
+  "hydration_hits_in_adapter": 0,
+  "citation_count": 11,
+  "cites": [
+    {
+      "claim": "sink",
+      "path": "frontend/src/features/simulation/SimulationPanel.tsx",
+      "line": 934,
+      "text": "{zh ? outcome.zh : outcome.en}",
+      "checked_substring": "{zh ? outcome.zh : outcome.en}",
+      "note": "the line r5 flagged: it renders a locally built sentence, not a server body"
+    },
+    {
+      "claim": "wording_built_from_code",
+      "path": "frontend/src/features/simulation/simulationAdapter.ts",
+      "line": 125,
+      "text": "const { code, status } = failureCode(error);",
+      "checked_substring": "const { code, status } = failureCode(error)",
+      "note": "describeFailure(): the sentence is chosen by the server's code, with status interpolated"
+    },
+    {
+      "claim": "wait_hint_only_for_busy",
+      "path": "frontend/src/features/simulation/simulationAdapter.ts",
+      "line": 130,
+      "text": "const extra = busy ? retryHint(error) : fields;",
+      "checked_substring": "const extra = busy ? retryHint(error) : fields",
+      "note": "the server's wait number is attached on the busy arm"
+    },
+    {
+      "claim": "busy_predicate",
+      "path": "frontend/src/features/simulation/simulationAdapter.ts",
+      "line": 127,
+      "text": "const busy = code === \"generation.store_busy\" || code === \"GENERATION_STORE_BUSY\";",
+      "checked_substring": "const busy = code === \"generation.store_busy\" || code === \"GENERATION_STORE_BUSY\"",
+      "note": "names only the two generation spellings -- see the HYDRATION finding"
+    },
+    {
+      "claim": "hint_names_the_speaker",
+      "path": "frontend/src/features/simulation/simulationAdapter.ts",
+      "line": 120,
+      "text": "if (ms === null) return \"（服务器没说要等多久）\";",
+      "checked_substring": "return \"（服务器没说要等多久）\"",
+      "note": "when the server gave no number the screen says so instead of inventing one"
+    },
+    {
+      "claim": "hint_value",
+      "path": "frontend/src/features/simulation/simulationAdapter.ts",
+      "line": 121,
+      "text": "return ms <= 0 ? \"（现在就可以再试）\" : `（约 ${Math.round(ms)} 毫秒后再试）`;",
+      "checked_substring": "`（约 ${Math.round(ms)} 毫秒后再试）`",
+      "note": "the number is the server's retry_after_ms, passed through"
+    },
+    {
+      "claim": "generation_busy_carries_hint",
+      "path": "backend/app/main.py",
+      "line": 3107,
+      "text": "details={\"retry_after_ms\": 500},",
+      "checked_substring": "details={\"retry_after_ms\": 500}",
+      "note": "POST /journeys/{id}/replans, the leg the panel actually presses"
+    },
+    {
+      "claim": "generation_busy_code",
+      "path": "backend/app/main.py",
+      "line": 3104,
+      "text": "\"GENERATION_STORE_BUSY\",",
+      "checked_substring": "\"GENERATION_STORE_BUSY\"",
+      "note": "and that code is a key in the adapter table, so the busy arm is taken"
+    },
+    {
+      "claim": "hydration_busy_carries_hint",
+      "path": "backend/app/main.py",
+      "line": 2948,
+      "text": "details={\"retry_after_ms\": 500},",
+      "checked_substring": "details={\"retry_after_ms\": 500}",
+      "note": "POST /api/v1/catalog-hydrations also states a wait"
+    },
+    {
+      "claim": "hydration_busy_code",
+      "path": "backend/app/main.py",
+      "line": 2945,
+      "text": "\"HYDRATION_STORE_BUSY\",",
+      "checked_substring": "\"HYDRATION_STORE_BUSY\"",
+      "note": "the adapter has no key for it, but the panel never calls that route"
+    },
+    {
+      "claim": "hydration_read_elsewhere",
+      "path": "frontend/src/features/discovery/DestinationPreparationPanel.tsx",
+      "line": 72,
+      "text": "const wait = Math.max(500, Number(row.retry_after_ms || 0) || 1500);",
+      "checked_substring": "Number(row.retry_after_ms || 0)",
+      "note": "the wait from that door is honoured on the destination-preparation screen"
+    }
+  ],
+  "self_declared": "an optional look, not a gate; nothing here claims CLOSED"
+}
