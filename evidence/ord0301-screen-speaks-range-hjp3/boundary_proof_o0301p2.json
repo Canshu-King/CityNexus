@@ -1,0 +1,233 @@
+{
+ "ran_at_local": "2026-09-25T15:43:01+0800",
+ "batch_start_local": "2026-09-25T14:29:08+0800",
+ "how_live_preview_is_touched_here": "read once to hash it; no write, no rename, no restart",
+ "live_preview_index": {
+  "path": "D:\\moodle\\_qoder_preview_20260920\\dist\\index.html",
+  "sha256": "3f9947140cac45197dbb93b952d874d2e669c10c7c11afe7c8a3ea89cebc00c5",
+  "bytes": 1200,
+  "mtime_local": "2026-09-25T15:17:09+0800",
+  "asset_referenced": [
+   "index--q2k569d.js"
+  ]
+ },
+ "what_my_faces_served": {
+  "outdir": "D:\\moodle\\_hjp3_0300_0925\\dist_0300\\index.html",
+  "sha256": "956ca81c8811a0c36c7800465866dc7b6724afd6de196bbb274cb76577e92828",
+  "is_the_same_file_as_the_live_preview": false,
+  "asset": [
+   "index-BN1w-xlK.js"
+  ]
+ },
+ "user_chain_listeners": [
+  {
+   "port": "4782",
+   "pid": "34324",
+   "process_created": "2026-09-24T16:35:33.5425690+08:00",
+   "predates_my_batch": true
+  },
+  {
+   "port": "4781",
+   "pid": "12076",
+   "process_created": "2026-09-24T16:25:57.2342990+08:00",
+   "predates_my_batch": true
+  }
+ ],
+ "negative_scan_over_my_own_instruments": {
+  "_live.db": {
+   "files_with_the_string": [
+    "o0301_bounds.py",
+    "o0301_bus.py",
+    "o0301_ledger.py",
+    "o0301_md.py"
+   ],
+   "count": 4,
+   "the_matching_lines": [
+    {
+     "file": "o0301_bounds.py",
+     "lines": [
+      "for needle in ('_live.db', '_preview.db', 'demo/reset', 'git apply', 'dist/index.html'):"
+     ]
+    },
+    {
+     "file": "o0301_bus.py",
+     "lines": [
+      "w('**边界**：在服 `dist/index.html` 0 改动、预览后端 0 重启（进程创建时间早于本批，见 `boundary_proof.json`）；`_live.db`/`_preview.db` 0 读写；'"
+     ]
+    },
+    {
+     "file": "o0301_ledger.py",
+     "lines": [
+      "'`_live.db`/`_preview.db` 0 读写、`demo/reset` 0 次、`git apply` 0 次、凭据 0 打印（rig 里 pop 掉 DEEPSEEK_API_KEY = %s，我的文件里 sk- 形状串命中 %d 个）；'"
+     ]
+    },
+    {
+     "file": "o0301_md.py",
+     "lines": [
+      "w('库：%s，由产品自己的 ensure_schema() 建、起面先删（R-SCHEMA-01）；`_live.db`/`_preview.db` 0 读写、'"
+     ]
+    }
+   ],
+   "reading": "every hit is a docstring or the needle list of this very file, not an operation"
+  },
+  "_preview.db": {
+   "files_with_the_string": [
+    "o0301_bounds.py",
+    "o0301_bus.py",
+    "o0301_ledger.py",
+    "o0301_md.py"
+   ],
+   "count": 4,
+   "the_matching_lines": [
+    {
+     "file": "o0301_bounds.py",
+     "lines": [
+      "for needle in ('_live.db', '_preview.db', 'demo/reset', 'git apply', 'dist/index.html'):"
+     ]
+    },
+    {
+     "file": "o0301_bus.py",
+     "lines": [
+      "w('**边界**：在服 `dist/index.html` 0 改动、预览后端 0 重启（进程创建时间早于本批，见 `boundary_proof.json`）；`_live.db`/`_preview.db` 0 读写；'"
+     ]
+    },
+    {
+     "file": "o0301_ledger.py",
+     "lines": [
+      "'`_live.db`/`_preview.db` 0 读写、`demo/reset` 0 次、`git apply` 0 次、凭据 0 打印（rig 里 pop 掉 DEEPSEEK_API_KEY = %s，我的文件里 sk- 形状串命中 %d 个）；'"
+     ]
+    },
+    {
+     "file": "o0301_md.py",
+     "lines": [
+      "w('库：%s，由产品自己的 ensure_schema() 建、起面先删（R-SCHEMA-01）；`_live.db`/`_preview.db` 0 读写、'"
+     ]
+    }
+   ],
+   "reading": "every hit is a docstring or the needle list of this very file, not an operation"
+  },
+  "demo/reset": {
+   "files_with_the_string": [
+    "o0301_bounds.py",
+    "o0301_bus.py",
+    "o0301_ledger.py",
+    "o0301_md.py",
+    "o0301_rig.py"
+   ],
+   "count": 5,
+   "the_matching_lines": [
+    {
+     "file": "o0301_bounds.py",
+     "lines": [
+      "3. every instrument I wrote for ORD-0301 never names the two user databases, never calls demo/reset,",
+      "for needle in ('_live.db', '_preview.db', 'demo/reset', 'git apply', 'dist/index.html'):"
+     ]
+    },
+    {
+     "file": "o0301_bus.py",
+     "lines": [
+      "'`demo/reset` 0；`git apply` 0；凭据 0 打印；一次性库 `%s` 由产品 `ensure_schema()` 建、起面先删；端口 %s–%s 全新收尾全空；产品字节 0 改动；已发布路径 0 覆盖 0 删除。'"
+     ]
+    },
+    {
+     "file": "o0301_ledger.py",
+     "lines": [
+      "'`_live.db`/`_preview.db` 0 读写、`demo/reset` 0 次、`git apply` 0 次、凭据 0 打印（rig 里 pop 掉 DEEPSEEK_API_KEY = %s，我的文件里 sk- 形状串命中 %d 个）；'"
+     ]
+    },
+    {
+     "file": "o0301_md.py",
+     "lines": [
+      "'`demo/reset` 0 次、`git apply` 0 次 —— 这三句不是空口，boundary_proof.json 里把我九个仪器文件里出现这些词的行'"
+     ]
+    },
+    {
+     "file": "o0301_rig.py",
+     "lines": [
+      "fresh-or-no-run), brand-new ports, `demo/reset` never called, and every pid I start is registered so"
+     ]
+    }
+   ],
+   "reading": "every hit is a docstring or the needle list of this very file, not an operation"
+  },
+  "git apply": {
+   "files_with_the_string": [
+    "o0301_bounds.py",
+    "o0301_bus.py",
+    "o0301_ledger.py",
+    "o0301_md.py"
+   ],
+   "count": 4,
+   "the_matching_lines": [
+    {
+     "file": "o0301_bounds.py",
+     "lines": [
+      "for needle in ('_live.db', '_preview.db', 'demo/reset', 'git apply', 'dist/index.html'):"
+     ]
+    },
+    {
+     "file": "o0301_bus.py",
+     "lines": [
+      "'`demo/reset` 0；`git apply` 0；凭据 0 打印；一次性库 `%s` 由产品 `ensure_schema()` 建、起面先删；端口 %s–%s 全新收尾全空；产品字节 0 改动；已发布路径 0 覆盖 0 删除。'"
+     ]
+    },
+    {
+     "file": "o0301_ledger.py",
+     "lines": [
+      "'`_live.db`/`_preview.db` 0 读写、`demo/reset` 0 次、`git apply` 0 次、凭据 0 打印（rig 里 pop 掉 DEEPSEEK_API_KEY = %s，我的文件里 sk- 形状串命中 %d 个）；'"
+     ]
+    },
+    {
+     "file": "o0301_md.py",
+     "lines": [
+      "'`demo/reset` 0 次、`git apply` 0 次 —— 这三句不是空口，boundary_proof.json 里把我九个仪器文件里出现这些词的行'"
+     ]
+    }
+   ],
+   "reading": "every hit is a docstring or the needle list of this very file, not an operation"
+  },
+  "dist/index.html": {
+   "files_with_the_string": [
+    "o0301_bounds.py",
+    "o0301_bus.py",
+    "o0301_ledger.py",
+    "o0301_md.py"
+   ],
+   "count": 4,
+   "the_matching_lines": [
+    {
+     "file": "o0301_bounds.py",
+     "lines": [
+      "PREVIEW_DIST = pathlib.Path('D:/moodle/_qoder_preview_20260920/dist/index.html')",
+      "for needle in ('_live.db', '_preview.db', 'demo/reset', 'git apply', 'dist/index.html'):"
+     ]
+    },
+    {
+     "file": "o0301_bus.py",
+     "lines": [
+      "w('**边界**：在服 `dist/index.html` 0 改动、预览后端 0 重启（进程创建时间早于本批，见 `boundary_proof.json`）；`_live.db`/`_preview.db` 0 读写；'"
+     ]
+    },
+    {
+     "file": "o0301_ledger.py",
+     "lines": [
+      "w('**边界**：不动在服 `dist/index.html`（现场 sha256 `%s`，mtime %s，引用 `%s`，与我面的 `%s` 不同一枚）；预览后端 0 重启（4781/4782 的监听进程创建时间 %s、%s，都早于本批 %s）；'"
+     ]
+    },
+    {
+     "file": "o0301_md.py",
+     "lines": [
+      "'在服预览那枚 `dist/index.html` **一个字节没动**（sha256 `%s`，mtime %s，引用的是 `%s`，与我面的 `%s` 不是同一枚）。'",
+      "w('用户链没动：在服 `dist/index.html` sha256 %s / mtime %s（引用 %s，与我面的 %s 不同一枚）；'"
+     ]
+    }
+   ],
+   "reading": "every hit is a docstring or the needle list of this very file, not an operation"
+  },
+  "coverage": "NOT EXHAUSTIVE: this scans the 14 ORD-0301 instrument files by literal string, files=['o0301_answerer.py', 'o0301_bounds.py', 'o0301_bus.py', 'o0301_cleanup.py', 'o0301_ledger.py', 'o0301_md.py', 'o0301_origin.py', 'o0301_publish.py', 'o0301_receipt.py', 'o0301_receipt_p2.py', 'o0301_rig.py', 'o0301_runarm.py', 'o0301_score.py', 'o0301_cells.cjs']"
+ },
+ "credential_handling": {
+  "DEEPSEEK_API_KEY_popped_in_rig": true,
+  "printed_anywhere_in_my_files": []
+ }
+}
