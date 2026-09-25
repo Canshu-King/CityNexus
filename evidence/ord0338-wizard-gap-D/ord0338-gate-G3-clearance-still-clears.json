@@ -1,0 +1,24 @@
+{
+ "generatedBy": "e345b9d6",
+ "file": "e2e/qoder-ord0338-wizard-gap-clearance.spec.ts",
+ "arm": "G3-clearance-still-clears",
+ "order": "ORD-0338",
+ "run": "run378389",
+ "tree_sha": "9b84a5fea9e7b38f3cace4160508f7a1b46c1418",
+ "bound_px": 60,
+ "opener": {
+  "present": true,
+  "centre": [
+   195,
+   650
+  ],
+  "hitTag": "div",
+  "hitText": "下一步",
+  "hitsItself": false,
+  "scrollY": 120
+ },
+ "cardPadding": {
+  "stepsPaddingBottom": "0px",
+  "cardPaddingBottom": "220px"
+ }
+}
