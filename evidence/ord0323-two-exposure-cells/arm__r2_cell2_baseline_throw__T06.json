@@ -1,0 +1,19 @@
+{
+ "run_id": "0323c2b3929",
+ "arm": "T06",
+ "cell": "T06",
+ "route": "/inbox/import",
+ "method": "POST",
+ "status_asked": 502,
+ "slot_text": "import_forbidden_leg_t06",
+ "status_in_slot": false,
+ "needles_found": [
+  "T06"
+ ],
+ "needles_found_in_attributes": [],
+ "attribute_pairs_swept": 73,
+ "foreign_status_found": [],
+ "internal_token_on_screen": false,
+ "test_status": "failed",
+ "error_head": "Error: e2e/qoder-ord0323-two-exposure-cells.spec.ts :: T06 — T06: a reply's own words are on the screen ([\"T06\"]); the slot reads \"import_forbidden_leg_t06\" \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // deep equality\u001b[22m \u001b[32m- Expected - 1\u001b[39m \u001b[31m+ Received + 3\u001b[39m \u001b[32m- Array []\u001b[39m \u001b[31m+ Array [\u001b[39m \u001b[31m+ \"T06\",\u001b[39m \u001b[31m+ ]\u001b[39m"
+}
