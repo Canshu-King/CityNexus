@@ -1,0 +1,60 @@
+{
+ "schema": "CNX_CMDR_PHONE_SIDE_PROBE_V1",
+ "probed_at_local": "2026-09-25 17:52:47 +0800",
+ "serve_root": "D:\\moodle\\_qoder_preview_20260920\\dist",
+ "tunnel_host": "obligation-plain-arcade-bean.trycloudflare.com",
+ "generation_under_test": "5aff3722d5c36c760a424f5fea5c3a771298f9ac",
+ "credential_handling": "auth read from the file by path; value never printed nor stored in this artifact",
+ "index_named_refs": [
+  "/assets/index-BTzTyrqI.js",
+  "/assets/index-I45CQek8.css"
+ ],
+ "assets_probed": 3,
+ "rows": [
+  {
+   "path": "/assets/index-BTzTyrqI.js",
+   "http_status": 200,
+   "content_type": "text/javascript",
+   "served_bytes": 1253398,
+   "disk_bytes": 1253398,
+   "served_sha256": "9d117a64cd1d52f64d5eff3b04e55272805598390574702369d3cbe04a5f6057",
+   "disk_sha256": "9d117a64cd1d52f64d5eff3b04e55272805598390574702369d3cbe04a5f6057",
+   "bytes_equal": true,
+   "is_html_fallback": false,
+   "js_mime_is_script": true
+  },
+  {
+   "path": "/assets/index-I45CQek8.css",
+   "http_status": 200,
+   "content_type": "text/css",
+   "served_bytes": 183897,
+   "disk_bytes": 183897,
+   "served_sha256": "1b3632785212847b19ecbdbbdeb4fbae19ea9ce75060ed19739dc908c8f6a58f",
+   "disk_sha256": "1b3632785212847b19ecbdbbdeb4fbae19ea9ce75060ed19739dc908c8f6a58f",
+   "bytes_equal": true,
+   "is_html_fallback": false,
+   "js_mime_is_script": true
+  },
+  {
+   "path": "/v10-sw.js",
+   "http_status": 200,
+   "content_type": "text/javascript",
+   "served_bytes": 2055,
+   "disk_bytes": 2055,
+   "served_sha256": "743dce3ee5b172faa50c57030114bc7be014d2b1aa6f60ac60d2676e38f4376e",
+   "disk_sha256": "743dce3ee5b172faa50c57030114bc7be014d2b1aa6f60ac60d2676e38f4376e",
+   "bytes_equal": true,
+   "is_html_fallback": false,
+   "js_mime_is_script": true
+  }
+ ],
+ "decisions": {
+  "every_named_asset_present_on_disk": true,
+  "all_200": true,
+  "all_bytes_equal_to_disk": true,
+  "no_asset_served_as_html": true,
+  "js_content_type_correct": true
+ },
+ "overall": "DEPLOYED_AND_BYTE_IDENTICAL_ON_PHONE_SIDE",
+ "scope": "Transport-level identity only (status, content type, bytes). It does not prove the app renders or that a traveller can finish a plan - that is the walkthrough gate."
+}
