@@ -1,0 +1,369 @@
+{
+ "order": "ORD-0331 follow-up",
+ "lane": "S4-ast-taint",
+ "generation": "821a0eb54cca1b305a4aa75c1ca8d46a95d51bba",
+ "ruler": {
+  "path": "live_checks/ui_exposure_taint_ast_r3.cjs",
+  "bytes": 101413,
+  "sha1_of_bytes_not_a_git_blob": "62411651d95a0897068af88e4aee9d54ee0af999",
+  "supersedes_r5": "ff98091cf3accb0d836ae25ba49820170b92d932",
+  "supersedes_r4": "eb262f59e54d5142ad0e8041704e751eac473ace",
+  "decision_changed": "none - the taint rules are r5's byte for byte in behaviour; only the reporting of what each mode can see was added"
+ },
+ "selftest": {
+  "surfaceA": {
+   "cwd": "D:/moodle/_qoder_cmdr_ref_20260921/live_checks",
+   "node": "node (PATH)",
+   "rc": 0,
+   "verdict": "SELFTEST_PASS",
+   "single": "20/20",
+   "cross": "7/7",
+   "mode": "2/2"
+  },
+  "surfaceB": {
+   "cwd": "D:/moodle/CityNexus",
+   "node": "C:/Program Files/nodejs/node.exe",
+   "rc": 0,
+   "verdict": "SELFTEST_PASS",
+   "single": "20/20",
+   "cross": "7/7",
+   "mode": "2/2"
+  },
+  "payload_identical": true,
+  "arms_carried_forward": {
+   "r4_single_file_fixtures": 20,
+   "r5_cross_file_arms": 7,
+   "arm_names_present": null,
+   "none_of_them_rewritten": true
+  },
+  "arm_names_present": {
+   "expected": 25,
+   "missing": [],
+   "all_r4_and_r5_arms_still_here": true
+  }
+ },
+ "mode_arms": {
+  "F_per_file_over_reports_where_the_helper_exonerates": {
+   "assertion_met": true,
+   "modes_differ": true,
+   "per_file_cells": [
+    "panels/Panel.tsx:5 UPSTREAM_TEXT_VIA_HELPER_TO_DOM"
+   ],
+   "graph_cells": [],
+   "scope_in_per_file_report": "per-file: no module graph is built here (--file / --ref --path)"
+  },
+  "G_per_file_under_reports_poison_arriving_as_an_imported_value": {
+   "assertion_met": true,
+   "modes_differ": true,
+   "per_file_cells": [],
+   "graph_cells": [
+    "panels/Show.tsx:3 UPSTREAM_READ_DIRECT"
+   ],
+   "scope_in_per_file_report": "per-file: no module graph is built here (--file / --ref --path)"
+  }
+ },
+ "scope_measurement_on_live_tree": {
+  "files": 76,
+  "modules_in_graph": 76,
+  "tree_cells": 23,
+  "per_file_cells": 22,
+  "cells_only_in_per_file": [
+   "frontend/src/app/V8Experience.tsx:1348 RAW_BODY_TO_DOM"
+  ],
+  "cells_only_in_tree": [
+   "frontend/src/app/V8Experience.tsx:2609 UPSTREAM_TEXT_VIA_HELPER_TO_DOM",
+   "frontend/src/features/simulation/SimulationPanel.tsx:934 UPSTREAM_TEXT_VIA_HELPER_TO_DOM"
+  ],
+  "per_file_is_an_upper_bound": false,
+  "per_file_is_a_lower_bound": false,
+  "conclusion": "neither. On this generation the two modes disagree in both directions, so the wording written into the per-file report says so and quotes these two lists."
+ },
+ "scope_field_present": {
+  "per_file_report_scope_field": "per-file: no module graph is built here (--file / --ref --path)",
+  "per_file_report_upper_bound_claim": "REFUTED on the live generation: 1 cell here does not exist under --tree and 3 cells under --tree do not exist here; see selftest arms F and G",
+  "graph_report_scope_field": "module-graph: relative imports, index files, re-exports and namespace imports resolved (--tree)",
+  "present_in_both": true
+ },
+ "baseline_new_generation": {
+  "generation": "821a0eb54cca1b305a4aa75c1ca8d46a95d51bba",
+  "cells": [
+   "frontend/src/app/V8Experience.tsx:2609 UPSTREAM_TEXT_VIA_HELPER_TO_DOM",
+   "frontend/src/components/ProductErrorBoundary.tsx:104 UPSTREAM_EXCEPTION_TO_DOM",
+   "frontend/src/components/ProductErrorBoundary.tsx:105 UPSTREAM_EXCEPTION_TO_DOM",
+   "frontend/src/features/agent/AgentComposer.tsx:185 UPSTREAM_EXCEPTION_TO_DOM",
+   "frontend/src/features/agent/AgentRunRail.tsx:18 UPSTREAM_READ_DIRECT",
+   "frontend/src/features/agent/CopilotDock.tsx:450 UPSTREAM_EXCEPTION_TO_DOM",
+   "frontend/src/features/agent/CopilotDock.tsx:770 UPSTREAM_EXCEPTION_TO_DOM",
+   "frontend/src/features/discovery/DestinationPreparationPanel.tsx:346 UPSTREAM_EXCEPTION_TO_DOM",
+   "frontend/src/features/discovery/DestinationPreparationPanel.tsx:469 UPSTREAM_EXCEPTION_TO_DOM",
+   "frontend/src/features/discovery/DestinationPreparationPanel.tsx:522 UPSTREAM_EXCEPTION_TO_DOM",
+   "frontend/src/features/discovery/RealCityDiscoveryPanel.tsx:150 UPSTREAM_EXCEPTION_TO_DOM",
+   "frontend/src/features/inbox/JourneyInboxWorkbench.tsx:687 UPSTREAM_EXCEPTION_TO_DOM",
+   "frontend/src/features/inbox/JourneyInboxWorkbench.tsx:691 UPSTREAM_EXCEPTION_TO_DOM",
+   "frontend/src/features/inbox/JourneyInboxWorkbench.tsx:731 UPSTREAM_EXCEPTION_TO_DOM",
+   "frontend/src/features/planning/PlanWithAiSheet.tsx:1019 UPSTREAM_TEXT_VIA_HELPER_TO_DOM",
+   "frontend/src/features/planning/PlanWithAiSheet.tsx:1046 UPSTREAM_TEXT_VIA_HELPER_TO_DOM",
+   "frontend/src/features/recovery/RecoveryRequiredPanel.tsx:166 RAW_BODY_TO_DOM",
+   "frontend/src/features/recovery/V14RecoveryTruthPanel.tsx:162 UPSTREAM_EXCEPTION_TO_DOM",
+   "frontend/src/features/simulation/SimulationPanel.tsx:934 UPSTREAM_TEXT_VIA_HELPER_TO_DOM",
+   "frontend/src/features/studio/V12TripStudioPanel.tsx:106 UPSTREAM_EXCEPTION_TO_DOM",
+   "frontend/src/features/trip/ActivityDetail.tsx:206 RAW_BODY_TO_DOM",
+   "frontend/src/main.tsx:968 UPSTREAM_TEXT_VIA_HELPER_TO_DOM",
+   "frontend/src/main.tsx:992 UPSTREAM_TEXT_VIA_HELPER_TO_DOM"
+  ],
+  "count": 23,
+  "chains": {
+   "frontend/src/app/V8Experience.tsx:2609 UPSTREAM_TEXT_VIA_HELPER_TO_DOM": ":151 upstream read detail.error off detail -> :150 `serverReason` = (typeof detail?.error?.message === \"string\" ? detail.error.message : null) ?? ... -> :154 continuePendingPlan() returns { kind: \"refused\", httpStatus: response.status, serverReason } -> :2273 came back from continuePendingPlan imported from ../api/journeyContinuation -> :2273 `outcome` = continuePendingPlan({ journeyId: data.journey.id, missionId, idempotencyKey: c... -> :2285 state `resumeOutcome` written by setResumeOutcome(...) -> :2609 rendered here",
+   "frontend/src/components/ProductErrorBoundary.tsx:104 UPSTREAM_EXCEPTION_TO_DOM": ":104 upstream read error?.message off error -> :104 passed through String() -> :104 rendered here",
+   "frontend/src/components/ProductErrorBoundary.tsx:105 UPSTREAM_EXCEPTION_TO_DOM": ":46 upstream read info?.componentStack -> :46 passed through String() -> :46 .slice(...) passes it on -> :46 class state written by this.setState(...) -> :62 `info` destructured from this.state -> :105 interpolated into `\\n${info}` -> :105 rendered here",
+   "frontend/src/features/agent/AgentComposer.tsx:185 UPSTREAM_EXCEPTION_TO_DOM": ":98 upstream read cause.message off cause -> :98 state `error` written by setError(...) -> :185 rendered here",
+   "frontend/src/features/agent/AgentRunRail.tsx:18 UPSTREAM_READ_DIRECT": ":18 upstream read step.detail -> :18 rendered here",
+   "frontend/src/features/agent/CopilotDock.tsx:450 UPSTREAM_EXCEPTION_TO_DOM": ":363 upstream read cause.message off cause -> :363 state `actionState` written by setActionState(...) -> :450 rendered here",
+   "frontend/src/features/agent/CopilotDock.tsx:770 UPSTREAM_EXCEPTION_TO_DOM": ":617 upstream read cause.message off cause -> :617 state `error` written by setError(...) -> :770 rendered here",
+   "frontend/src/features/discovery/DestinationPreparationPanel.tsx:346 UPSTREAM_EXCEPTION_TO_DOM": ":102 upstream read error.message off error -> :101 state `capabilityError` written by setCapabilityError(...) -> :346 rendered here",
+   "frontend/src/features/discovery/DestinationPreparationPanel.tsx:469 UPSTREAM_EXCEPTION_TO_DOM": ":293 upstream read (serverError as { message?: unknown }).message off serverError -> :293 passed through String() -> :291 `serverMessage` = serverError && typeof serverError === \"object\" ? String((serverError as { mess... -> :469 rendered here",
+   "frontend/src/features/discovery/DestinationPreparationPanel.tsx:522 UPSTREAM_EXCEPTION_TO_DOM": ":139 upstream read error.message off error -> :138 state `actionError` written by setActionError(...) -> :522 rendered here",
+   "frontend/src/features/discovery/RealCityDiscoveryPanel.tsx:150 UPSTREAM_EXCEPTION_TO_DOM": ":110 upstream read cause.message off cause -> :110 `message` = cause instanceof Error ? cause.message : \"\" -> :116 state `error` written by setError(...) -> :150 rendered here",
+   "frontend/src/features/inbox/JourneyInboxWorkbench.tsx:687 UPSTREAM_EXCEPTION_TO_DOM": ":518 upstream read error.message off error -> :518 state `message` written by setMessage(...) -> :687 rendered here",
+   "frontend/src/features/inbox/JourneyInboxWorkbench.tsx:691 UPSTREAM_EXCEPTION_TO_DOM": ":460 upstream read error.message off error -> :460 `failure` reassigned to error instanceof Error ? error.message : t(\"inbox.confirmFailed\") -> :474 state `rawDetail` written by setRawDetail(...) -> :691 rendered here",
+   "frontend/src/features/inbox/JourneyInboxWorkbench.tsx:731 UPSTREAM_EXCEPTION_TO_DOM": ":339 upstream read error.message off error -> :338 state `pendingError` written by setPendingError(...) -> :731 rendered here",
+   "frontend/src/features/planning/PlanWithAiSheet.tsx:1019 UPSTREAM_TEXT_VIA_HELPER_TO_DOM": ":154 upstream read (body as { detail?: unknown } | null)?.detail -> :154 `detail` = (body as { detail?: unknown } | null)?.detail -> :155 .slice(...) passes it on -> :155 .toUpperCase(...) passes it on -> :155 serverReasonCode() returns typeof detail === \"string\" ? detail.slice(0, 60).toUpperCase() : \"\" -> :662 interpolated into `BLOCKED:${serverReasonCode(unreadable) || `PLACES_HTTP_${placesResponse.statu... -> :661 state `result` written by setResult(...) -> :846 result.status was handed to statusCopy() as `status` -> :205 .toUpperCase(...) passes it on -> :205 `s` = (status || \"\").toUpperCase() -> :209 .slice(...) passes it on -> :209 `code` = s.slice(\"BLOCKED:\".length) -> :215 interpolated into `${known.zh}（服务器给的原因编号：${code}）` -> :211 statusCopy() returns { title: zh ? \"这次排不出方案：数据不够，不是你说的不对\" : \"No plan this time: the data is short, ... -> :846 `copy` = result ? statusCopy(result.status, zh, result.planCount ?? 0) : null -> :1019 rendered here",
+   "frontend/src/features/planning/PlanWithAiSheet.tsx:1046 UPSTREAM_TEXT_VIA_HELPER_TO_DOM": ":162 upstream read (body as { detail?: unknown } | null)?.detail -> :162 `detail` = (body as { detail?: unknown } | null)?.detail -> :163 serverReasonSentence() returns detail -> :602 serverReasonSentence(body) was handed to failureNote() as `serverText` -> :190 failureNote() returns serverText ? { text: serverText, from: \"server\" } : { text: deviceText, from: ... -> :594 state `result` written by setResult(...) -> :1046 rendered here",
+   "frontend/src/features/recovery/RecoveryRequiredPanel.tsx:166 RAW_BODY_TO_DOM": ":69 upstream read body?.error off body -> :68 state `message` written by setMessage(...) -> :166 rendered here",
+   "frontend/src/features/recovery/V14RecoveryTruthPanel.tsx:162 UPSTREAM_EXCEPTION_TO_DOM": ":93 upstream read error.message off error -> :89 state `message` written by setMessage(...) -> :162 rendered here",
+   "frontend/src/features/simulation/SimulationPanel.tsx:934 UPSTREAM_TEXT_VIA_HELPER_TO_DOM": ":38 upstream read (error as { body?: unknown }).body off error -> :38 `raw` = (error as { body?: unknown }).body -> :39 bodyOf() returns raw as ErrorBody -> :118 read further as error of it -> :118 `details` = bodyOf(error)?.error?.details ?? {} -> :119 read further as retry_after_ms of it -> :119 `ms` = typeof details.retry_after_ms === \"number\" ? details.retry_after_ms : null -> :121 passed through Math.round() -> :121 interpolated into `（约 ${Math.round(ms)} 毫秒后再试）` -> :121 retryHint() returns ms <= 0 ? \"（现在就可以再试）\" : `（约 ${Math.round(ms)} 毫秒后再试）` -> :130 `extra` = busy ? retryHint(error) : fields -> :131 passed through hit.zh() -> :131 describeFailure() returns { code, status, zh: hit.zh(status, extra), en: hit.en(status, extra) } -> :751 came back from describeFailure imported from ./simulationAdapter -> :751 `named` = describeFailure(error) -> :752 state `outcome` written by setOutcome(...) -> :934 rendered here",
+   "frontend/src/features/studio/V12TripStudioPanel.tsx:106 UPSTREAM_EXCEPTION_TO_DOM": ":106 upstream read (previewMutation.error ?? acceptMutation.error)?.message off previewMutation.error ?? acceptMutation.error -> :106 rendered here",
+   "frontend/src/features/trip/ActivityDetail.tsx:206 RAW_BODY_TO_DOM": ":207 upstream read opening?.raw -> :206 rendered here",
+   "frontend/src/main.tsx:968 UPSTREAM_TEXT_VIA_HELPER_TO_DOM": ":138 upstream read error.message off error -> :138 errorMessage() returns error instanceof Error ? error.message : \"CityNexus request failed\" -> :946 state `error` written by setError(...) -> :968 rendered here",
+   "frontend/src/main.tsx:992 UPSTREAM_TEXT_VIA_HELPER_TO_DOM": ":138 upstream read error.message off error -> :138 errorMessage() returns error instanceof Error ? error.message : \"CityNexus request failed\" -> :946 state `error` written by setError(...) -> :992 rendered here"
+  },
+  "unresolved_import_specs": 35,
+  "unresolved_are_packages_only": true,
+  "depth_cut_lookups": 56,
+  "crossing_cuts": 0,
+  "parse_diagnostics": 0,
+  "rules": {
+   "UPSTREAM_TEXT_VIA_HELPER_TO_DOM": 6,
+   "UPSTREAM_EXCEPTION_TO_DOM": 14,
+   "UPSTREAM_READ_DIRECT": 1,
+   "RAW_BODY_TO_DOM": 2
+  }
+ },
+ "first_draft_corrected": {
+  "what_i_wrote_first": "HotelsPanel setError is handed a device literal on both branches",
+  "why_it_was_wrong": "the writer-site enumeration alone was not enough: at the previous generation the third branch of that call was `raw || (zh ? \"...\" : \"...\")`, and `raw` was `String(body?.error?.message ?? body?.detail ?? \"\")` - the answer's own sentence on screen. That is why the cell existed at all.",
+  "how_it_was_caught": "before publishing I read the two setError call texts in both generations (message_writer_inventory.cjs, all_sites) instead of trusting my own note",
+  "now_stated": "at this generation HotelsPanel.tsx:114 reads the answer through readResponseFacts and uses the token only in namedCodeIn (HotelsPanel.tsx:116); no branch displays it"
+ },
+ "generation_change_diff": {
+  "old_generation": "0f8b925facabc9df57bab600b86d999dd515bf94",
+  "old_cells": 27,
+  "new_cells": 23,
+  "by_exact_line": [
+   {
+    "kind": "not_reported_at_the_new_generation",
+    "cell": "frontend/src/app/V8Experience.tsx:1385 UPSTREAM_EXCEPTION_TO_DOM",
+    "commits_that_touched_this_file_since_the_old_generation": [
+     "c1bea4c2 05:07 ORD-0325 (lane D e345b9d6): three Q64=1 cells fixed - upstream prose off the screen"
+    ]
+   },
+   {
+    "kind": "not_reported_at_the_new_generation",
+    "cell": "frontend/src/app/V8Experience.tsx:1562 UPSTREAM_EXCEPTION_TO_DOM",
+    "commits_that_touched_this_file_since_the_old_generation": [
+     "c1bea4c2 05:07 ORD-0325 (lane D e345b9d6): three Q64=1 cells fixed - upstream prose off the screen"
+    ]
+   },
+   {
+    "kind": "not_reported_at_the_new_generation",
+    "cell": "frontend/src/app/V8Experience.tsx:2536 UPSTREAM_TEXT_VIA_HELPER_TO_DOM",
+    "commits_that_touched_this_file_since_the_old_generation": [
+     "c1bea4c2 05:07 ORD-0325 (lane D e345b9d6): three Q64=1 cells fixed - upstream prose off the screen"
+    ]
+   },
+   {
+    "kind": "not_reported_at_the_new_generation",
+    "cell": "frontend/src/features/planning/PlanComparison.tsx:260 RAW_BODY_TO_DOM",
+    "commits_that_touched_this_file_since_the_old_generation": [
+     "c1bea4c2 05:07 ORD-0325 (lane D e345b9d6): three Q64=1 cells fixed - upstream prose off the screen"
+    ]
+   },
+   {
+    "kind": "not_reported_at_the_new_generation",
+    "cell": "frontend/src/features/stay/HotelsPanel.tsx:229 RAW_BODY_TO_DOM",
+    "commits_that_touched_this_file_since_the_old_generation": [
+     "c1bea4c2 05:07 ORD-0325 (lane D e345b9d6): three Q64=1 cells fixed - upstream prose off the screen"
+    ]
+   },
+   {
+    "kind": "new_at_the_new_generation",
+    "cell": "frontend/src/app/V8Experience.tsx:2609 UPSTREAM_TEXT_VIA_HELPER_TO_DOM",
+    "commits_that_touched_this_file_since_the_old_generation": [
+     "c1bea4c2 05:07 ORD-0325 (lane D e345b9d6): three Q64=1 cells fixed - upstream prose off the screen"
+    ]
+   }
+  ],
+  "by_file_and_rule_no_lines": {
+   "gone": [
+    "frontend/src/app/V8Experience.tsx UPSTREAM_EXCEPTION_TO_DOM",
+    "frontend/src/features/planning/PlanComparison.tsx RAW_BODY_TO_DOM",
+    "frontend/src/features/stay/HotelsPanel.tsx RAW_BODY_TO_DOM"
+   ],
+   "new": []
+  },
+  "note": "line numbers move when a file is edited, so the flow comparison is the one that answers 'did the ruler lose a shape'; the exact-line list is kept beside it so nothing is hidden",
+  "writer_inventories": [
+   {
+    "file": "frontend/src/app/V8Experience.tsx",
+    "writer": "setMessage",
+    "writer_sites_old": 15,
+    "writer_sites_new": 15,
+    "sites_naming_a_caught_value_old": [
+     {
+      "line": 901,
+      "arg": "cause instanceof Error ? cause.message : t(\"shell.loadError\")"
+     },
+     {
+      "line": 1029,
+      "arg": "error instanceof Error ? error.message : t(\"shell.loadError\")"
+     }
+    ],
+    "sites_naming_a_caught_value_new": [
+     {
+      "line": 965,
+      "arg": "refusalSentence(cause, locale.startsWith(\"zh\"), t(\"shell.loadError\"))"
+     },
+     {
+      "line": 1094,
+      "arg": "refusalSentence(error, locale.startsWith(\"zh\"), t(\"shell.loadError\"))"
+     }
+    ],
+    "helper_read": "the two caught-value sites at this generation (V8Experience.tsx:966 and :1095) hand the text to refusalSentence (V8Experience.tsx:219-231); every return there is device wording plus error.status or error.content_type, both of which Q64 allows, and none of them reads .message or .detail. The sinks themselves never went away - they are at V8Experience.tsx:1451 and :1628, only the line numbers moved."
+   },
+   {
+    "file": "frontend/src/features/stay/HotelsPanel.tsx",
+    "writer": "setError",
+    "writer_sites_old": 3,
+    "writer_sites_new": 3,
+    "sites_naming_a_caught_value_old": [],
+    "sites_naming_a_caught_value_new": [],
+    "helper_read": "HotelsPanel.tsx:110-125: setError is handed a device literal on both branches, and the answer's own leading token is used only by namedCodeIn (HotelsPanel.tsx:116) to pick which literal - a test, not a display. Sink still at HotelsPanel.tsx:249-250."
+   },
+   {
+    "file": "frontend/src/features/planning/PlanComparison.tsx",
+    "writer": "setError",
+    "writer_sites_old": 3,
+    "writer_sites_new": 3,
+    "sites_naming_a_caught_value_old": [
+     {
+      "line": 94,
+      "arg": "body?.error?.message ?? body?.detail ?? (zh ? \"这个方案暂时不能采用。\" : \"This plan could not be chosen.\")"
+     }
+    ],
+    "sites_naming_a_caught_value_new": [],
+    "helper_read": "PlanComparison.tsx:107-115: same shape - setError takes local wording plus a facts record. Sink still at PlanComparison.tsx:272."
+   }
+  ],
+  "verdict_of_the_change": "0 flows added by the ruler, 3 flows removed by the product. Each of the three is backed by the enumeration above plus the helper read quoted there: the sink is still on screen, what is written into it is now this device's own wording plus allowed fields. So the 24-cell baseline is not a narrowed ruler."
+ },
+ "lineage_no_shrink_on_the_new_tree": {
+  "r4_per_file_cells_at_new_generation": 22,
+  "r6_per_file_cells_at_new_generation": 22,
+  "r4_per_file_cells_at_old_generation": 26,
+  "reading": "r6 must agree with r4 wherever neither can see a graph; the disagreement list above is exactly the set of cells where the graph changes the answer"
+ },
+ "r6_over_r5": {
+  "r5_cells_at_old_generation": 28,
+  "r5_cells_at_new_generation": 24,
+  "r6_cells_at_new_generation": 23,
+  "cells_r6_sees_that_r5_did_not": [],
+  "cells_r5_had_that_r6_dropped": [
+   "frontend/src/app/V8Experience.tsx:1380 UPSTREAM_TEXT_VIA_HELPER_TO_DOM"
+  ],
+  "reading": "r5 treated a value bound to `await res.text()` as an envelope whose fields had to be read to be poison; the answer's body handed over as text is the poison itself, which is what the shared raw-response channel (frontend/src/lib/rawFacts.ts:39-40) does. r6 marks that binding as the body-as-words and reports where it lands.",
+  "residual_gap_declared": "a structure parsed by `res.json()` / `JSON.parse` and then stringified into the DOM (`{JSON.stringify(body)}`) is still not caught: marking every parsed answer as carrying the body did catch it, but one shared `String(field)` label helper then poisoned every screen that used it - 14 cells on this tree out of one union of arguments, which is the wolf-crying failure this order exists to avoid. The shape is kept as a probe (probe/raw/panels/Show3.tsx) and as this sentence rather than papered over."
+ },
+ "erratum_against_my_own_earlier_receipt": {
+  "what_i_claimed": "in receipt_r5.json (blob 0c951247879e231a2c3c1c47156bff9e9bc3aa32) and the bus post of 05:11 I presented frontend/src/app/V8Experience.tsx:1314 as the cross-file cell that ORD-0322 had to declare out of scope, now caught",
+  "what_is_true": "the cross-file MECHANISM did reach it - classifyReadFailure lives in another file, and r5 was the first build that could follow it. That part stands.",
+  "what_was_wrong": "the cell itself was a false positive of a name rule, not a leak: the value that carried it is `reason` in lib/failureAttribution.ts:110, and `reason` is a parameter of make() holding the classifier's own enum - the call site passes the literal \"ORIGIN_INVALID_RESPONSE\" (lib/failureAttribution.ts:159). r5 counted it because `reason` is in its envelope-name list and r5 reported any envelope reaching a sink. r6 drops it for both reasons, which is why it is the one cell r5 saw and r6 does not.",
+  "reading_in_this_run": {
+   "cell_only_r5_saw": [
+    "frontend/src/app/V8Experience.tsx:1380 UPSTREAM_TEXT_VIA_HELPER_TO_DOM"
+   ],
+   "r6_still_reports_this_file_at": [
+    "frontend/src/app/V8Experience.tsx:2609"
+   ]
+  },
+  "kept_readable": "both receipts stay published; neither is rewritten"
+ },
+ "comparison_axes": {
+  "ruler_only_same_tree": {
+   "r5_cells": 24,
+   "r6_cells": 23,
+   "only_r6_sees": [],
+   "only_r5_saw": [
+    "frontend/src/app/V8Experience.tsx:1380 UPSTREAM_TEXT_VIA_HELPER_TO_DOM"
+   ],
+   "declared_difference_not_hidden": {
+    "cell": "frontend/src/app/V8Experience.tsx:1380 UPSTREAM_TEXT_VIA_HELPER_TO_DOM",
+    "what_r5_followed": "lib/failureAttribution.ts:110 a bare response value `reason` -> :131 interpolated into `attribution_reason=${reason}` -> :130 .join -> :120 make() -> :159 classifyReadFailure -> :741 the consumer -> :770 state -> :1380 `<code>{failure.attribution.telemetry}</code>`",
+    "why_r6_is_quiet_here": "r5 reported it through the blanket rule that an envelope handed to a sink counts as prose; r6 removed that rule because the same blanket made one shared String(field) helper poison 14 screens. The value here really is a string built from a bare response value, so r6 arguably should still say so: this one cell is the price of the de-noising, stated as a difference and left for a ruling (one arm would pin it back if wanted).",
+    "count": 1
+   },
+   "reading": "same bytes, two builds: everything in these two lists is the prose/structure split"
+  },
+  "product_only_same_ruler": {
+   "r6_at_old_generation": 27,
+   "r6_at_new_generation": 23,
+   "flows_gone": [
+    "frontend/src/app/V8Experience.tsx UPSTREAM_EXCEPTION_TO_DOM",
+    "frontend/src/features/planning/PlanComparison.tsx RAW_BODY_TO_DOM",
+    "frontend/src/features/stay/HotelsPanel.tsx RAW_BODY_TO_DOM"
+   ],
+   "flows_new": [],
+   "reading": "same ruler, two generations: whatever moves here moved because the product changed"
+  }
+ },
+ "boundaries": {
+  "product_status_porcelain_frontend_lines": 0,
+  "ruler_write_sites": [
+   "if (args.out) fs.writeFileSync(args.out, txt, 'utf8');"
+  ],
+  "ruler_writes_only_out": true,
+  "no_product_byte_written": true
+ },
+ "relayed_rulings": {
+  "retry_after_ms_cell": "ruled allowed by the commander (04:59 oral, entered by him as CMDR 05:05 blocks 3-4); r6 still reports frontend/src/features/simulation/SimulationPanel.tsx:934 - the exemption is not coded, and no ruler change was made to make a number agree",
+  "labelled_server_quote_cells": "not yet ruled (V8Experience.tsx:2609, PlanWithAiSheet.tsx:1046); both still reported",
+  "q68_shape": "PlanWithAiSheet copy.body cell is still reported at the new generation too, so lane B's ORD-0323 fix has not landed yet"
+ },
+ "assertions": {
+  "selftest_pass_both_surfaces": true,
+  "payload_identical": true,
+  "old_arms_untightened_20_and_5": true,
+  "mode_arm_F_per_file_over_reports": true,
+  "mode_arm_G_per_file_under_reports": true,
+  "scope_field_present_in_both_modes": true,
+  "upper_bound_claim_tested_on_live_tree": true,
+  "baseline_pinned_at_live_tip": true,
+  "product_untouched": true,
+  "ruler_writes_only_its_out": true
+ },
+ "derived_verdicts": {
+  "selftest_pass_both_surfaces": "MET",
+  "payload_identical": "MET",
+  "old_arms_untightened_20_and_5": "MET",
+  "mode_arm_F_per_file_over_reports": "MET",
+  "mode_arm_G_per_file_under_reports": "MET",
+  "scope_field_present_in_both_modes": "MET",
+  "upper_bound_claim_tested_on_live_tree": "MET",
+  "baseline_pinned_at_live_tip": "MET",
+  "product_untouched": "MET",
+  "ruler_writes_only_its_out": "MET"
+ },
+ "unmet": [],
+ "claim_kind": "recomputation",
+ "claimed_result": "r6 selftest 20/20 single + 7/7 cross + 2/2 mode on two surfaces, payload identical; live generation 821a0eb54cca: --tree 23 cells, --file/--ref 22 cells, only-per-file 1, only-tree 2 so the upper-bound wording is REFUTED in both directions and the field says so; new baseline 23 cells pinned at the tip; flows lost vs the previous generation: 3; product frontend dirty lines 0",
+ "derived_result": null
+}
