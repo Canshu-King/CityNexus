@@ -1,0 +1,2 @@
+version Q43_r4 | input review/evidence/ord0308/ord0308_path_intersection_d_r1.json 12493 B
+claims checked 16 | exempt {"YEAR": 3, "IDENTIFIER_PART": 1} | overall Q43_GATE_GREEN | findings 0 []
