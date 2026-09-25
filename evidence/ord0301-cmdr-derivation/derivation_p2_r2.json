@@ -1,0 +1,1131 @@
+{
+ "schema": "CNX_CMDR_DERIVATION_V2",
+ "order": "ORD-0301",
+ "phase": "pass2",
+ "revision": "r2",
+ "artifacts": {
+  "pass1_receipt": {
+   "path": "evidence/ord0301-screen-speaks-range-hjp3/RECEIPT_O0301-1500.json",
+   "sha": "9035e162b69f171de7a5d57ec30fdeddd58f0e7e",
+   "recomputed": "9035e162b69f171de7a5d57ec30fdeddd58f0e7e",
+   "bytes": 97514
+  },
+  "pass2_receipt": {
+   "path": "evidence/ord0301-screen-speaks-range-hjp3/RECEIPT_O0301P2-1540_r2.json",
+   "sha": "076cadca5cb23f5a243095c52fe06d5b0fa434f6",
+   "recomputed": "076cadca5cb23f5a243095c52fe06d5b0fa434f6",
+   "bytes": 17933
+  },
+  "pass2_table_24rows": {
+   "path": "evidence/ord0301-screen-speaks-range-hjp3/table_O0301_p2_24rows.json",
+   "sha": "a07059852b57828cfb68f80b81bf273341aac11e",
+   "recomputed": "a07059852b57828cfb68f80b81bf273341aac11e",
+   "bytes": 165021
+  }
+ },
+ "schema_probe": {
+  "pass2_row_top_keys": [
+   "app_threw_on_the_body",
+   "arm",
+   "cap_ms",
+   "declared_read_delay_ms",
+   "declared_write_leg",
+   "outcome_class_as_asked",
+   "policy_stamp",
+   "row",
+   "run_id",
+   "screen_side",
+   "secondary_surface",
+   "server_side",
+   "verdict",
+   "verdict_reason"
+  ],
+  "server_side_keys": [
+   "all_write_legs",
+   "answer_attributed_to",
+   "body_head",
+   "bytes",
+   "client_error",
+   "content_type",
+   "deciding_leg",
+   "elapsed_ms",
+   "envelope_code",
+   "envelope_message",
+   "http_status",
+   "origin_own_record_for_this_stamp",
+   "server_side_reading_from",
+   "sibling_probe_outside_browser"
+  ],
+  "screen_side_keys": [
+   "client_deadline_sentence_painted",
+   "data_result_status_cross_check",
+   "details_elements_in_dom",
+   "painted_first_line",
+   "painted_text",
+   "reason_label_painted",
+   "reason_value_painted",
+   "says_cannot_reach_server",
+   "sheet_reached"
+  ]
+ },
+ "C_1": {
+  "pass1_row_count": 17,
+  "pass2_row_count": 24,
+  "shared_ids": [
+   "R1_①_contentless_500_from_the_product",
+   "R2_①_contentless_500_fast",
+   "R3_①_contentless_500_after_35s",
+   "R4_①_uninstrumented",
+   "R5_②_500_with_product_envelope",
+   "R6_③_503_envelope",
+   "R7_③_502_envelope",
+   "R8_③_504_envelope",
+   "R10_④_upstream_absent",
+   "R11_④_reset_no_response",
+   "R12_⑤_silent_write_leg",
+   "R13_⑤_silent_read_leg",
+   "R14_control_real_422",
+   "R17_⓪_headers_then_truncated_body"
+  ],
+  "shared_ids_with_different_fingerprint": [],
+  "pass2_only_ids": [
+   "R9_③_503_plain_gateway",
+   "R15_⓪_json_null_body",
+   "R16_⓪_json_empty_object",
+   "R18_③_route_abort_real_transport_failure",
+   "R19_④_200_empty_body",
+   "R20_④_200_json_empty_object",
+   "R21_④_200_json_array",
+   "R22_④_200_text_plain_payload",
+   "R23_④_200_mission_unusable_status",
+   "R24_⑤_client_deadline_first_server_answers_later"
+  ]
+ },
+ "T_A_rows_missing_a_side": [],
+ "T_B_rows_not_naming_who": [],
+ "T_D_rows_with_empty_painted": [
+  "R10_④_upstream_absent",
+  "R12_⑤_silent_write_leg",
+  "R13_⑤_silent_read_leg",
+  "R17_⓪_headers_then_truncated_body",
+  "R24_⑤_client_deadline_first_server_answers_later"
+ ],
+ "X_4_cause_asserted_with_no_evidence_block": [
+  "R19_④_200_empty_body",
+  "R20_④_200_json_empty_object",
+  "R21_④_200_json_array",
+  "R22_④_200_text_plain_payload",
+  "R23_④_200_mission_unusable_status"
+ ],
+ "X_5_copy_points_at_an_absent_details_block": [
+  "R19_④_200_empty_body",
+  "R20_④_200_json_empty_object",
+  "R21_④_200_json_array",
+  "R22_④_200_text_plain_payload",
+  "R23_④_200_mission_unusable_status"
+ ],
+ "X_5_positive_control_not_flagged_because_details_present": [
+  "R5_②_500_with_product_envelope",
+  "R6_③_503_envelope",
+  "R7_③_502_envelope",
+  "R8_③_504_envelope",
+  "R14_control_real_422",
+  "R16_⓪_json_empty_object"
+ ],
+ "verdict_NOT_MEASURED_rows": [
+  "R10_④_upstream_absent",
+  "R12_⑤_silent_write_leg",
+  "R13_⑤_silent_read_leg",
+  "R17_⓪_headers_then_truncated_body",
+  "R24_⑤_client_deadline_first_server_answers_later"
+ ],
+ "per_row": [
+  {
+   "row": "R1_①_contentless_500_from_the_product",
+   "class_as_asked": "① 服务器答 500 且正文",
+   "verdict": "MISLEADS",
+   "server_keys_present": [
+    "all_write_legs",
+    "answer_attributed_to",
+    "body_head",
+    "bytes",
+    "content_type",
+    "deciding_leg",
+    "elapsed_ms",
+    "http_status",
+    "server_side_reading_from",
+    "sibling_probe_outside_browser"
+   ],
+   "screen_keys_present": [
+    "client_deadline_sentence_painted",
+    "data_result_status_cross_check",
+    "details_elements_in_dom",
+    "painted_first_line",
+    "painted_text",
+    "says_cannot_reach_server",
+    "sheet_reached"
+   ],
+   "T_A": true,
+   "T_B": true,
+   "T_D": true,
+   "painted_first_line": "连不上服务端",
+   "details_elements_in_dom": 0,
+   "mentions_technical_details_in_copy": false,
+   "X_4_cause_without_evidence_block": false,
+   "X_5_copy_points_at_absent_details_block": false,
+   "app_threw_on_the_body": {
+    "json_rejections": [
+     {
+      "status": 500,
+      "url": "http://127.0.0.1:8562/api/v1/journeys/d845ac26-0add-4305-bd3f-3f7c6f6fe3c1/agent/commands",
+      "content_type": "text/plain; charset=utf-8",
+      "error_name": "SyntaxError",
+      "error_message": "Failed to execute 'json' on 'Response': Unexpected token 'I', \"Internal S\"... is not valid JSON",
+      "at_ms": 33026
+     }
+    ],
+    "syntax_error_count": 1,
+    "first_rejection_message": "Failed to execute 'json' on 'Response': Unexpected token 'I', \"Internal S\"... is not valid JSON"
+   }
+  },
+  {
+   "row": "R2_①_contentless_500_fast",
+   "class_as_asked": "① 同一形状但 250 ms",
+   "verdict": "MISLEADS",
+   "server_keys_present": [
+    "all_write_legs",
+    "answer_attributed_to",
+    "body_head",
+    "bytes",
+    "content_type",
+    "deciding_leg",
+    "elapsed_ms",
+    "http_status",
+    "origin_own_record_for_this_stamp",
+    "server_side_reading_from"
+   ],
+   "screen_keys_present": [
+    "client_deadline_sentence_painted",
+    "data_result_status_cross_check",
+    "details_elements_in_dom",
+    "painted_first_line",
+    "painted_text",
+    "says_cannot_reach_server",
+    "sheet_reached"
+   ],
+   "T_A": true,
+   "T_B": true,
+   "T_D": true,
+   "painted_first_line": "连不上服务端",
+   "details_elements_in_dom": 0,
+   "mentions_technical_details_in_copy": false,
+   "X_4_cause_without_evidence_block": false,
+   "X_5_copy_points_at_absent_details_block": false,
+   "app_threw_on_the_body": {
+    "json_rejections": [
+     {
+      "status": 500,
+      "url": "http://127.0.0.1:8564/api/v1/journeys/d845ac26-0add-4305-bd3f-3f7c6f6fe3c1/agent/commands",
+      "content_type": "text/plain; charset=utf-8",
+      "error_name": "SyntaxError",
+      "error_message": "Failed to execute 'json' on 'Response': Unexpected token 'I', \"Internal S\"... is not valid JSON",
+      "at_ms": 990
+     }
+    ],
+    "syntax_error_count": 1,
+    "first_rejection_message": "Failed to execute 'json' on 'Response': Unexpected token 'I', \"Internal S\"... is not valid JSON"
+   }
+  },
+  {
+   "row": "R3_①_contentless_500_after_35s",
+   "class_as_asked": "① 同一形状但 35 s 后",
+   "verdict": "MISLEADS",
+   "server_keys_present": [
+    "all_write_legs",
+    "answer_attributed_to",
+    "body_head",
+    "bytes",
+    "content_type",
+    "deciding_leg",
+    "elapsed_ms",
+    "http_status",
+    "server_side_reading_from"
+   ],
+   "screen_keys_present": [
+    "client_deadline_sentence_painted",
+    "data_result_status_cross_check",
+    "details_elements_in_dom",
+    "painted_first_line",
+    "painted_text",
+    "says_cannot_reach_server",
+    "sheet_reached"
+   ],
+   "T_A": true,
+   "T_B": true,
+   "T_D": true,
+   "painted_first_line": "连不上服务端",
+   "details_elements_in_dom": 0,
+   "mentions_technical_details_in_copy": false,
+   "X_4_cause_without_evidence_block": false,
+   "X_5_copy_points_at_absent_details_block": false,
+   "app_threw_on_the_body": {
+    "json_rejections": [
+     {
+      "status": 500,
+      "url": "http://127.0.0.1:8564/api/v1/journeys/d845ac26-0add-4305-bd3f-3f7c6f6fe3c1/agent/commands",
+      "content_type": "text/plain; charset=utf-8",
+      "error_name": "SyntaxError",
+      "error_message": "Failed to execute 'json' on 'Response': Unexpected token 'I', \"Internal S\"... is not valid JSON",
+      "at_ms": 35661
+     }
+    ],
+    "syntax_error_count": 1,
+    "first_rejection_message": "Failed to execute 'json' on 'Response': Unexpected token 'I', \"Internal S\"... is not valid JSON"
+   }
+  },
+  {
+   "row": "R4_①_uninstrumented",
+   "class_as_asked": "① 同一臂、fetch 钩子",
+   "verdict": "MISLEADS",
+   "server_keys_present": [
+    "answer_attributed_to",
+    "content_type",
+    "deciding_leg",
+    "http_status",
+    "origin_own_record_for_this_stamp",
+    "server_side_reading_from",
+    "sibling_probe_outside_browser"
+   ],
+   "screen_keys_present": [
+    "client_deadline_sentence_painted",
+    "data_result_status_cross_check",
+    "details_elements_in_dom",
+    "painted_first_line",
+    "painted_text",
+    "says_cannot_reach_server",
+    "sheet_reached"
+   ],
+   "T_A": true,
+   "T_B": true,
+   "T_D": true,
+   "painted_first_line": "连不上服务端",
+   "details_elements_in_dom": 0,
+   "mentions_technical_details_in_copy": false,
+   "X_4_cause_without_evidence_block": false,
+   "X_5_copy_points_at_absent_details_block": false,
+   "app_threw_on_the_body": {
+    "json_rejections": [],
+    "syntax_error_count": 0,
+    "first_rejection_message": null
+   }
+  },
+  {
+   "row": "R5_②_500_with_product_envelope",
+   "class_as_asked": "② 服务器答 500 且正文",
+   "verdict": "HONEST",
+   "server_keys_present": [
+    "all_write_legs",
+    "answer_attributed_to",
+    "body_head",
+    "bytes",
+    "content_type",
+    "deciding_leg",
+    "elapsed_ms",
+    "envelope_code",
+    "envelope_message",
+    "http_status"
+   ],
+   "screen_keys_present": [
+    "client_deadline_sentence_painted",
+    "data_result_status_cross_check",
+    "details_elements_in_dom",
+    "painted_first_line",
+    "painted_text",
+    "reason_label_painted",
+    "reason_value_painted",
+    "says_cannot_reach_server",
+    "sheet_reached"
+   ],
+   "T_A": true,
+   "T_B": true,
+   "T_D": true,
+   "painted_first_line": "服务端处理失败",
+   "details_elements_in_dom": 1,
+   "mentions_technical_details_in_copy": true,
+   "X_4_cause_without_evidence_block": false,
+   "X_5_copy_points_at_absent_details_block": false,
+   "app_threw_on_the_body": {
+    "json_rejections": [],
+    "syntax_error_count": 0,
+    "first_rejection_message": null
+   }
+  },
+  {
+   "row": "R6_③_503_envelope",
+   "class_as_asked": "③ 503 + 同一枚信封字",
+   "verdict": "HONEST",
+   "server_keys_present": [
+    "all_write_legs",
+    "answer_attributed_to",
+    "body_head",
+    "bytes",
+    "content_type",
+    "deciding_leg",
+    "elapsed_ms",
+    "envelope_code",
+    "envelope_message",
+    "http_status"
+   ],
+   "screen_keys_present": [
+    "client_deadline_sentence_painted",
+    "data_result_status_cross_check",
+    "details_elements_in_dom",
+    "painted_first_line",
+    "painted_text",
+    "reason_label_painted",
+    "reason_value_painted",
+    "says_cannot_reach_server",
+    "sheet_reached"
+   ],
+   "T_A": true,
+   "T_B": true,
+   "T_D": true,
+   "painted_first_line": "服务端处理失败",
+   "details_elements_in_dom": 1,
+   "mentions_technical_details_in_copy": true,
+   "X_4_cause_without_evidence_block": false,
+   "X_5_copy_points_at_absent_details_block": false,
+   "app_threw_on_the_body": {
+    "json_rejections": [],
+    "syntax_error_count": 0,
+    "first_rejection_message": null
+   }
+  },
+  {
+   "row": "R7_③_502_envelope",
+   "class_as_asked": "③ 502 + 同一枚信封字",
+   "verdict": "HONEST",
+   "server_keys_present": [
+    "all_write_legs",
+    "answer_attributed_to",
+    "body_head",
+    "bytes",
+    "content_type",
+    "deciding_leg",
+    "elapsed_ms",
+    "envelope_code",
+    "envelope_message",
+    "http_status"
+   ],
+   "screen_keys_present": [
+    "client_deadline_sentence_painted",
+    "data_result_status_cross_check",
+    "details_elements_in_dom",
+    "painted_first_line",
+    "painted_text",
+    "reason_label_painted",
+    "reason_value_painted",
+    "says_cannot_reach_server",
+    "sheet_reached"
+   ],
+   "T_A": true,
+   "T_B": true,
+   "T_D": true,
+   "painted_first_line": "服务端处理失败",
+   "details_elements_in_dom": 1,
+   "mentions_technical_details_in_copy": true,
+   "X_4_cause_without_evidence_block": false,
+   "X_5_copy_points_at_absent_details_block": false,
+   "app_threw_on_the_body": {
+    "json_rejections": [],
+    "syntax_error_count": 0,
+    "first_rejection_message": null
+   }
+  },
+  {
+   "row": "R8_③_504_envelope",
+   "class_as_asked": "③ 504 + 同一枚信封字",
+   "verdict": "HONEST",
+   "server_keys_present": [
+    "all_write_legs",
+    "answer_attributed_to",
+    "body_head",
+    "bytes",
+    "content_type",
+    "deciding_leg",
+    "elapsed_ms",
+    "envelope_code",
+    "envelope_message",
+    "http_status"
+   ],
+   "screen_keys_present": [
+    "client_deadline_sentence_painted",
+    "data_result_status_cross_check",
+    "details_elements_in_dom",
+    "painted_first_line",
+    "painted_text",
+    "reason_label_painted",
+    "reason_value_painted",
+    "says_cannot_reach_server",
+    "sheet_reached"
+   ],
+   "T_A": true,
+   "T_B": true,
+   "T_D": true,
+   "painted_first_line": "服务端处理失败",
+   "details_elements_in_dom": 1,
+   "mentions_technical_details_in_copy": true,
+   "X_4_cause_without_evidence_block": false,
+   "X_5_copy_points_at_absent_details_block": false,
+   "app_threw_on_the_body": {
+    "json_rejections": [],
+    "syntax_error_count": 0,
+    "first_rejection_message": null
+   }
+  },
+  {
+   "row": "R9_③_503_plain_gateway",
+   "class_as_asked": "③ 503 但网关那种纯文本",
+   "verdict": "MISLEADS",
+   "server_keys_present": [
+    "all_write_legs",
+    "answer_attributed_to",
+    "body_head",
+    "bytes",
+    "content_type",
+    "deciding_leg",
+    "elapsed_ms",
+    "http_status",
+    "origin_own_record_for_this_stamp",
+    "server_side_reading_from"
+   ],
+   "screen_keys_present": [
+    "client_deadline_sentence_painted",
+    "data_result_status_cross_check",
+    "details_elements_in_dom",
+    "painted_first_line",
+    "painted_text",
+    "says_cannot_reach_server",
+    "sheet_reached"
+   ],
+   "T_A": true,
+   "T_B": true,
+   "T_D": true,
+   "painted_first_line": "连不上服务端",
+   "details_elements_in_dom": 0,
+   "mentions_technical_details_in_copy": false,
+   "X_4_cause_without_evidence_block": false,
+   "X_5_copy_points_at_absent_details_block": false,
+   "app_threw_on_the_body": {
+    "json_rejections": [
+     {
+      "status": 503,
+      "url": "http://127.0.0.1:8564/api/v1/journeys/d845ac26-0add-4305-bd3f-3f7c6f6fe3c1/agent/commands",
+      "content_type": "text/plain; charset=utf-8",
+      "error_name": "SyntaxError",
+      "error_message": "Failed to execute 'json' on 'Response': Unexpected token 'S', \"Service Unavailable\" is not valid JSON",
+      "at_ms": 879
+     }
+    ],
+    "syntax_error_count": 1,
+    "first_rejection_message": "Failed to execute 'json' on 'Response': Unexpected token 'S', \"Service Unavailable\" is not valid JSON"
+   }
+  },
+  {
+   "row": "R10_④_upstream_absent",
+   "class_as_asked": "④ 连接被拒（后端端口上没人",
+   "verdict": "NOT_MEASURED",
+   "server_keys_present": [
+    "answer_attributed_to",
+    "server_side_reading_from",
+    "sibling_probe_outside_browser"
+   ],
+   "screen_keys_present": [
+    "client_deadline_sentence_painted",
+    "details_elements_in_dom",
+    "says_cannot_reach_server",
+    "sheet_reached"
+   ],
+   "T_A": true,
+   "T_B": true,
+   "T_D": false,
+   "painted_first_line": "",
+   "details_elements_in_dom": 1,
+   "mentions_technical_details_in_copy": false,
+   "X_4_cause_without_evidence_block": false,
+   "X_5_copy_points_at_absent_details_block": false,
+   "app_threw_on_the_body": {
+    "json_rejections": [],
+    "syntax_error_count": 0,
+    "first_rejection_message": null
+   }
+  },
+  {
+   "row": "R11_④_reset_no_response",
+   "class_as_asked": "④ 源站收了请求就断（一个响",
+   "verdict": "MISLEADS",
+   "server_keys_present": [
+    "all_write_legs",
+    "answer_attributed_to",
+    "bytes",
+    "content_type",
+    "deciding_leg",
+    "elapsed_ms",
+    "http_status",
+    "origin_own_record_for_this_stamp",
+    "server_side_reading_from",
+    "sibling_probe_outside_browser"
+   ],
+   "screen_keys_present": [
+    "client_deadline_sentence_painted",
+    "data_result_status_cross_check",
+    "details_elements_in_dom",
+    "painted_first_line",
+    "painted_text",
+    "says_cannot_reach_server",
+    "sheet_reached"
+   ],
+   "T_A": true,
+   "T_B": true,
+   "T_D": true,
+   "painted_first_line": "连不上服务端",
+   "details_elements_in_dom": 0,
+   "mentions_technical_details_in_copy": false,
+   "X_4_cause_without_evidence_block": false,
+   "X_5_copy_points_at_absent_details_block": false,
+   "app_threw_on_the_body": {
+    "json_rejections": [
+     {
+      "status": 500,
+      "url": "http://127.0.0.1:8564/api/v1/journeys/d845ac26-0add-4305-bd3f-3f7c6f6fe3c1/agent/commands",
+      "content_type": "text/plain",
+      "error_name": "SyntaxError",
+      "error_message": "Failed to execute 'json' on 'Response': Unexpected end of JSON input",
+      "at_ms": 642
+     }
+    ],
+    "syntax_error_count": 1,
+    "first_rejection_message": "Failed to execute 'json' on 'Response': Unexpected end of JSON input"
+   }
+  },
+  {
+   "row": "R12_⑤_silent_write_leg",
+   "class_as_asked": "⑤ 写腿无人应答（客户端先放",
+   "verdict": "NOT_MEASURED",
+   "server_keys_present": [
+    "all_write_legs",
+    "answer_attributed_to",
+    "deciding_leg",
+    "origin_own_record_for_this_stamp",
+    "server_side_reading_from",
+    "sibling_probe_outside_browser"
+   ],
+   "screen_keys_present": [
+    "client_deadline_sentence_painted",
+    "details_elements_in_dom",
+    "says_cannot_reach_server",
+    "sheet_reached"
+   ],
+   "T_A": true,
+   "T_B": true,
+   "T_D": false,
+   "painted_first_line": "",
+   "details_elements_in_dom": 0,
+   "mentions_technical_details_in_copy": false,
+   "X_4_cause_without_evidence_block": false,
+   "X_5_copy_points_at_absent_details_block": false,
+   "app_threw_on_the_body": {
+    "json_rejections": [],
+    "syntax_error_count": 0,
+    "first_rejection_message": null
+   }
+  },
+  {
+   "row": "R13_⑤_silent_read_leg",
+   "class_as_asked": "⑤ 读腿无人应答（客户端 1",
+   "verdict": "NOT_MEASURED",
+   "server_keys_present": [
+    "answer_attributed_to",
+    "origin_own_record_for_this_stamp",
+    "server_side_reading_from",
+    "sibling_probe_outside_browser"
+   ],
+   "screen_keys_present": [
+    "client_deadline_sentence_painted",
+    "details_elements_in_dom",
+    "says_cannot_reach_server",
+    "sheet_reached"
+   ],
+   "T_A": true,
+   "T_B": true,
+   "T_D": false,
+   "painted_first_line": "",
+   "details_elements_in_dom": 1,
+   "mentions_technical_details_in_copy": false,
+   "X_4_cause_without_evidence_block": false,
+   "X_5_copy_points_at_absent_details_block": false,
+   "app_threw_on_the_body": {
+    "json_rejections": [],
+    "syntax_error_count": 0,
+    "first_rejection_message": null
+   }
+  },
+  {
+   "row": "R14_control_real_422",
+   "class_as_asked": "正控：产品今天真发的那枚具名",
+   "verdict": "HONEST",
+   "server_keys_present": [
+    "all_write_legs",
+    "answer_attributed_to",
+    "body_head",
+    "bytes",
+    "content_type",
+    "deciding_leg",
+    "elapsed_ms",
+    "envelope_code",
+    "envelope_message",
+    "http_status"
+   ],
+   "screen_keys_present": [
+    "client_deadline_sentence_painted",
+    "data_result_status_cross_check",
+    "details_elements_in_dom",
+    "painted_first_line",
+    "painted_text",
+    "reason_label_painted",
+    "reason_value_painted",
+    "says_cannot_reach_server",
+    "sheet_reached"
+   ],
+   "T_A": true,
+   "T_B": true,
+   "T_D": true,
+   "painted_first_line": "这次排不出方案：数据不够，不是你说的不对",
+   "details_elements_in_dom": 1,
+   "mentions_technical_details_in_copy": true,
+   "X_4_cause_without_evidence_block": false,
+   "X_5_copy_points_at_absent_details_block": false,
+   "app_threw_on_the_body": {
+    "json_rejections": [],
+    "syntax_error_count": 0,
+    "first_rejection_message": null
+   }
+  },
+  {
+   "row": "R15_⓪_json_null_body",
+   "class_as_asked": "机制臂：500 + appl",
+   "verdict": "MISLEADS",
+   "server_keys_present": [
+    "all_write_legs",
+    "answer_attributed_to",
+    "body_head",
+    "bytes",
+    "content_type",
+    "deciding_leg",
+    "elapsed_ms",
+    "http_status",
+    "origin_own_record_for_this_stamp",
+    "server_side_reading_from"
+   ],
+   "screen_keys_present": [
+    "client_deadline_sentence_painted",
+    "data_result_status_cross_check",
+    "details_elements_in_dom",
+    "painted_first_line",
+    "painted_text",
+    "says_cannot_reach_server",
+    "sheet_reached"
+   ],
+   "T_A": true,
+   "T_B": true,
+   "T_D": true,
+   "painted_first_line": "连不上服务端",
+   "details_elements_in_dom": 0,
+   "mentions_technical_details_in_copy": false,
+   "X_4_cause_without_evidence_block": false,
+   "X_5_copy_points_at_absent_details_block": false,
+   "app_threw_on_the_body": {
+    "json_rejections": [],
+    "syntax_error_count": 0,
+    "first_rejection_message": null
+   }
+  },
+  {
+   "row": "R16_⓪_json_empty_object",
+   "class_as_asked": "机制臂：500 + appl",
+   "verdict": "HONEST",
+   "server_keys_present": [
+    "all_write_legs",
+    "answer_attributed_to",
+    "body_head",
+    "bytes",
+    "content_type",
+    "deciding_leg",
+    "elapsed_ms",
+    "http_status",
+    "origin_own_record_for_this_stamp",
+    "server_side_reading_from"
+   ],
+   "screen_keys_present": [
+    "client_deadline_sentence_painted",
+    "data_result_status_cross_check",
+    "details_elements_in_dom",
+    "painted_first_line",
+    "painted_text",
+    "reason_label_painted",
+    "reason_value_painted",
+    "says_cannot_reach_server",
+    "sheet_reached"
+   ],
+   "T_A": true,
+   "T_B": true,
+   "T_D": true,
+   "painted_first_line": "服务端处理失败",
+   "details_elements_in_dom": 1,
+   "mentions_technical_details_in_copy": true,
+   "X_4_cause_without_evidence_block": false,
+   "X_5_copy_points_at_absent_details_block": false,
+   "app_threw_on_the_body": {
+    "json_rejections": [],
+    "syntax_error_count": 0,
+    "first_rejection_message": null
+   }
+  },
+  {
+   "row": "R17_⓪_headers_then_truncated_body",
+   "class_as_asked": "机制臂：答了 500 但正文",
+   "verdict": "NOT_MEASURED",
+   "server_keys_present": [
+    "all_write_legs",
+    "answer_attributed_to",
+    "content_type",
+    "deciding_leg",
+    "http_status",
+    "origin_own_record_for_this_stamp",
+    "server_side_reading_from"
+   ],
+   "screen_keys_present": [
+    "client_deadline_sentence_painted",
+    "details_elements_in_dom",
+    "says_cannot_reach_server",
+    "sheet_reached"
+   ],
+   "T_A": true,
+   "T_B": true,
+   "T_D": false,
+   "painted_first_line": "",
+   "details_elements_in_dom": 0,
+   "mentions_technical_details_in_copy": false,
+   "X_4_cause_without_evidence_block": false,
+   "X_5_copy_points_at_absent_details_block": false,
+   "app_threw_on_the_body": {
+    "json_rejections": [],
+    "syntax_error_count": 0,
+    "first_rejection_message": null
+   }
+  },
+  {
+   "row": "R18_③_route_abort_real_transport_failure",
+   "class_as_asked": "③ 浏览器这一发根本没拿到 ",
+   "verdict": "HONEST",
+   "server_keys_present": [
+    "all_write_legs",
+    "answer_attributed_to",
+    "client_error",
+    "deciding_leg",
+    "elapsed_ms",
+    "origin_own_record_for_this_stamp",
+    "server_side_reading_from"
+   ],
+   "screen_keys_present": [
+    "client_deadline_sentence_painted",
+    "data_result_status_cross_check",
+    "details_elements_in_dom",
+    "painted_first_line",
+    "painted_text",
+    "says_cannot_reach_server",
+    "sheet_reached"
+   ],
+   "T_A": true,
+   "T_B": true,
+   "T_D": true,
+   "painted_first_line": "连不上服务端",
+   "details_elements_in_dom": 0,
+   "mentions_technical_details_in_copy": false,
+   "X_4_cause_without_evidence_block": false,
+   "X_5_copy_points_at_absent_details_block": false,
+   "app_threw_on_the_body": {
+    "json_rejections": [],
+    "syntax_error_count": 0,
+    "first_rejection_message": null
+   }
+  },
+  {
+   "row": "R19_④_200_empty_body",
+   "class_as_asked": "④ 答了 200 但正文是空",
+   "verdict": "HONEST",
+   "server_keys_present": [
+    "all_write_legs",
+    "answer_attributed_to",
+    "bytes",
+    "content_type",
+    "deciding_leg",
+    "elapsed_ms",
+    "http_status",
+    "origin_own_record_for_this_stamp",
+    "server_side_reading_from"
+   ],
+   "screen_keys_present": [
+    "client_deadline_sentence_painted",
+    "data_result_status_cross_check",
+    "details_elements_in_dom",
+    "painted_first_line",
+    "painted_text",
+    "says_cannot_reach_server",
+    "sheet_reached"
+   ],
+   "T_A": true,
+   "T_B": true,
+   "T_D": true,
+   "painted_first_line": "没有生成可行方案",
+   "details_elements_in_dom": 0,
+   "mentions_technical_details_in_copy": true,
+   "X_4_cause_without_evidence_block": true,
+   "X_5_copy_points_at_absent_details_block": true,
+   "app_threw_on_the_body": {
+    "json_rejections": [
+     {
+      "status": 200,
+      "url": "http://127.0.0.1:8574/api/v1/journeys/6119ec01-bb15-42f4-a834-245d271c1479/agent/commands",
+      "content_type": "application/json",
+      "error_name": "SyntaxError",
+      "error_message": "Failed to execute 'json' on 'Response': Unexpected end of JSON input",
+      "at_ms": 929
+     },
+     {
+      "status": 200,
+      "url": "http://127.0.0.1:8574/api/v1/journeys/6119ec01-bb15-42f4-a834-245d271c1479/plans/generate",
+      "content_type": "application/json",
+      "error_name": "SyntaxError",
+      "error_message": "Failed to execute 'json' on 'Response': Unexpected end of JSON input",
+      "at_ms": 1246
+     }
+    ],
+    "syntax_error_count": 2,
+    "first_rejection_message": "Failed to execute 'json' on 'Response': Unexpected end of JSON input"
+   }
+  },
+  {
+   "row": "R20_④_200_json_empty_object",
+   "class_as_asked": "④ 答了 200 但正文是 ",
+   "verdict": "HONEST",
+   "server_keys_present": [
+    "all_write_legs",
+    "answer_attributed_to",
+    "body_head",
+    "bytes",
+    "content_type",
+    "deciding_leg",
+    "elapsed_ms",
+    "http_status",
+    "origin_own_record_for_this_stamp",
+    "server_side_reading_from"
+   ],
+   "screen_keys_present": [
+    "client_deadline_sentence_painted",
+    "data_result_status_cross_check",
+    "details_elements_in_dom",
+    "painted_first_line",
+    "painted_text",
+    "says_cannot_reach_server",
+    "sheet_reached"
+   ],
+   "T_A": true,
+   "T_B": true,
+   "T_D": true,
+   "painted_first_line": "没有生成可行方案",
+   "details_elements_in_dom": 0,
+   "mentions_technical_details_in_copy": true,
+   "X_4_cause_without_evidence_block": true,
+   "X_5_copy_points_at_absent_details_block": true,
+   "app_threw_on_the_body": {
+    "json_rejections": [],
+    "syntax_error_count": 0,
+    "first_rejection_message": null
+   }
+  },
+  {
+   "row": "R21_④_200_json_array",
+   "class_as_asked": "④ 答了 200 但正文是 ",
+   "verdict": "HONEST",
+   "server_keys_present": [
+    "all_write_legs",
+    "answer_attributed_to",
+    "body_head",
+    "bytes",
+    "content_type",
+    "deciding_leg",
+    "elapsed_ms",
+    "http_status",
+    "origin_own_record_for_this_stamp",
+    "server_side_reading_from"
+   ],
+   "screen_keys_present": [
+    "client_deadline_sentence_painted",
+    "data_result_status_cross_check",
+    "details_elements_in_dom",
+    "painted_first_line",
+    "painted_text",
+    "says_cannot_reach_server",
+    "sheet_reached"
+   ],
+   "T_A": true,
+   "T_B": true,
+   "T_D": true,
+   "painted_first_line": "没有生成可行方案",
+   "details_elements_in_dom": 0,
+   "mentions_technical_details_in_copy": true,
+   "X_4_cause_without_evidence_block": true,
+   "X_5_copy_points_at_absent_details_block": true,
+   "app_threw_on_the_body": {
+    "json_rejections": [],
+    "syntax_error_count": 0,
+    "first_rejection_message": null
+   }
+  },
+  {
+   "row": "R22_④_200_text_plain_payload",
+   "class_as_asked": "④ 答了 200 但正文是 ",
+   "verdict": "HONEST",
+   "server_keys_present": [
+    "all_write_legs",
+    "answer_attributed_to",
+    "body_head",
+    "bytes",
+    "content_type",
+    "deciding_leg",
+    "elapsed_ms",
+    "http_status",
+    "origin_own_record_for_this_stamp",
+    "server_side_reading_from"
+   ],
+   "screen_keys_present": [
+    "client_deadline_sentence_painted",
+    "data_result_status_cross_check",
+    "details_elements_in_dom",
+    "painted_first_line",
+    "painted_text",
+    "says_cannot_reach_server",
+    "sheet_reached"
+   ],
+   "T_A": true,
+   "T_B": true,
+   "T_D": true,
+   "painted_first_line": "没有生成可行方案",
+   "details_elements_in_dom": 0,
+   "mentions_technical_details_in_copy": true,
+   "X_4_cause_without_evidence_block": true,
+   "X_5_copy_points_at_absent_details_block": true,
+   "app_threw_on_the_body": {
+    "json_rejections": [
+     {
+      "status": 200,
+      "url": "http://127.0.0.1:8574/api/v1/journeys/6119ec01-bb15-42f4-a834-245d271c1479/agent/commands",
+      "content_type": "text/plain; charset=utf-8",
+      "error_name": "SyntaxError",
+      "error_message": "Failed to execute 'json' on 'Response': Unexpected token 'I', \"Internal S\"... is not valid JSON",
+      "at_ms": 948
+     },
+     {
+      "status": 200,
+      "url": "http://127.0.0.1:8574/api/v1/journeys/6119ec01-bb15-42f4-a834-245d271c1479/plans/generate",
+      "content_type": "text/plain; charset=utf-8",
+      "error_name": "SyntaxError",
+      "error_message": "Failed to execute 'json' on 'Response': Unexpected token 'I', \"Internal S\"... is not valid JSON",
+      "at_ms": 1219
+     }
+    ],
+    "syntax_error_count": 2,
+    "first_rejection_message": "Failed to execute 'json' on 'Response': Unexpected token 'I', \"Internal S\"... is not valid JSON"
+   }
+  },
+  {
+   "row": "R23_④_200_mission_unusable_status",
+   "class_as_asked": "④ 答了 200、JSON ",
+   "verdict": "HONEST",
+   "server_keys_present": [
+    "all_write_legs",
+    "answer_attributed_to",
+    "body_head",
+    "bytes",
+    "content_type",
+    "deciding_leg",
+    "elapsed_ms",
+    "http_status",
+    "origin_own_record_for_this_stamp",
+    "server_side_reading_from"
+   ],
+   "screen_keys_present": [
+    "client_deadline_sentence_painted",
+    "data_result_status_cross_check",
+    "details_elements_in_dom",
+    "painted_first_line",
+    "painted_text",
+    "says_cannot_reach_server",
+    "sheet_reached"
+   ],
+   "T_A": true,
+   "T_B": true,
+   "T_D": true,
+   "painted_first_line": "没有生成可行方案",
+   "details_elements_in_dom": 0,
+   "mentions_technical_details_in_copy": true,
+   "X_4_cause_without_evidence_block": true,
+   "X_5_copy_points_at_absent_details_block": true,
+   "app_threw_on_the_body": {
+    "json_rejections": [],
+    "syntax_error_count": 0,
+    "first_rejection_message": null
+   }
+  },
+  {
+   "row": "R24_⑤_client_deadline_first_server_answers_later",
+   "class_as_asked": "⑤ 客户端 12 s 期限先",
+   "verdict": "NOT_MEASURED",
+   "server_keys_present": [
+    "answer_attributed_to",
+    "origin_own_record_for_this_stamp",
+    "server_side_reading_from"
+   ],
+   "screen_keys_present": [
+    "client_deadline_sentence_painted",
+    "details_elements_in_dom",
+    "says_cannot_reach_server",
+    "sheet_reached"
+   ],
+   "T_A": true,
+   "T_B": true,
+   "T_D": false,
+   "painted_first_line": "",
+   "details_elements_in_dom": 1,
+   "mentions_technical_details_in_copy": false,
+   "X_4_cause_without_evidence_block": false,
+   "X_5_copy_points_at_absent_details_block": false,
+   "app_threw_on_the_body": {
+    "json_rejections": [],
+    "syntax_error_count": 0,
+    "first_rejection_message": null
+   }
+  }
+ ],
+ "decisions": {
+  "all_three_artifacts_rehash_to_cited": true,
+  "C_1_row_ids_are_stable_across_batches": true,
+  "T_A_every_row_has_both_sides": true,
+  "T_B_every_row_names_who_answered": true,
+  "T_D_every_row_carries_painted_text": false,
+  "X_4_shape_is_present_in_the_rows": true,
+  "X_5_shape_is_present_in_the_rows": true
+ },
+ "scope": "What the published 24 rows themselves say. Does not sign derived_result, does not grade HONEST/MISLEADS (that is the lane's judgment rule and the red team's to derive), and does not choose wording. X_4 and X_5 are shapes observed in readings, each reproducible row by row."
+}
