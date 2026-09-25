@@ -1,0 +1,3 @@
+version Q43_r4 | input C:\Users\仓鼠王\AppData\Local\Temp\q43r4_ledger.md 2989 B
+claims checked 12 | exempt {"YEAR": 1} | overall Q43_GATE_RED | findings 1 ['NUMBER_WITHOUT_COORDINATE']
+  line 17 F3_bare_numeric_claim NUMBER_WITHOUT_COORDINATE | 0 件 | no class matched
