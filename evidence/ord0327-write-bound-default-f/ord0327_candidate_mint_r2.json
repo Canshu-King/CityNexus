@@ -1,0 +1,144 @@
+{
+ "order": "ORD-0327",
+ "branch": "refs/heads/mirror/integration-frontend-apple-pass1",
+ "my_ref": "refs/heads/review/ord0327-write-bound-default-f",
+ "export_generation": "65df31df96cfb8a954f5feb36484710a883e1597",
+ "tip_now": "0f8b925facabc9df57bab600b86d999dd515bf94",
+ "my_ref_absent_before": true,
+ "subject_blob_equality": {
+  "backend/app/db/write_deadline.py": {
+   "blob_at_export_generation": "ba2393c3da30d6941587869be26cd303389b7f46",
+   "blob_at_tip": "ba2393c3da30d6941587869be26cd303389b7f46",
+   "identical": true,
+   "kind": "predecessor_must_be_byte_identical"
+  },
+  "backend/app/main.py": {
+   "blob_at_export_generation": "5455175abe154c5c4ab5b122e517efd13081a637",
+   "blob_at_tip": "5455175abe154c5c4ab5b122e517efd13081a637",
+   "identical": true,
+   "kind": "predecessor_must_be_byte_identical"
+  },
+  "backend/tests/test_qoder_ord0327_write_bound_default.py": {
+   "blob_at_export_generation": "(absent)",
+   "blob_at_tip": "(absent)",
+   "identical": true,
+   "kind": "absent_at_both_generations_new_file"
+  }
+ },
+ "per_file_blobs": {
+  "backend/app/db/write_deadline.py": {
+   "before_blob": "ba2393c3da30d6941587869be26cd303389b7f46",
+   "after_blob": "be24fbdeb7095d4e7cd558c58a7ac98197f69990",
+   "before_bytes": 9206,
+   "after_bytes": 11321,
+   "before_lines": 234,
+   "after_lines": 273
+  },
+  "backend/app/main.py": {
+   "before_blob": "5455175abe154c5c4ab5b122e517efd13081a637",
+   "after_blob": "e2ff3ffb6f9b74c82cc1663980d6e46dacc6938e",
+   "before_bytes": 484578,
+   "after_bytes": 486698,
+   "before_lines": 11446,
+   "after_lines": 11490
+  },
+  "backend/tests/test_qoder_ord0327_write_bound_default.py": {
+   "before_blob": "(absent at tip)",
+   "after_blob": "1b0189880745eefacd50af85d0c625168ade449d",
+   "before_bytes": 0,
+   "after_bytes": 13271,
+   "before_lines": 0,
+   "after_lines": 270
+  }
+ },
+ "candidate_commit": "09dffbb70c151e6734221d6d3d69d88775a1fbd0",
+ "candidate_tree": "e9ac9aadfd66b24944f123f44da2b215d584eb95",
+ "changed_paths": [
+  "backend/app/db/write_deadline.py",
+  "backend/app/main.py",
+  "backend/tests/test_qoder_ord0327_write_bound_default.py"
+ ],
+ "changed_path_count": 3,
+ "numstat": [
+  [
+   "40",
+   "1",
+   "backend/app/db/write_deadline.py"
+  ],
+  [
+   "44",
+   "0",
+   "backend/app/main.py"
+  ],
+  [
+   "270",
+   "0",
+   "backend/tests/test_qoder_ord0327_write_bound_default.py"
+  ]
+ ],
+ "change_points": [
+  {
+   "path": "backend/app/db/write_deadline.py",
+   "new_start_line": 28,
+   "new_lines": 6,
+   "hunk_context": "SCENARIO_PLANS_GENERATE = \"plans.generate\""
+  },
+  {
+   "path": "backend/app/db/write_deadline.py",
+   "new_start_line": 36,
+   "new_lines": 1,
+   "hunk_context": "SCENARIO_PLANS_GENERATE = \"plans.generate\""
+  },
+  {
+   "path": "backend/app/db/write_deadline.py",
+   "new_start_line": 241,
+   "new_lines": 33,
+   "hunk_context": "def commit_within_budget(session, scenario: str) -> int:"
+  },
+  {
+   "path": "backend/app/main.py",
+   "new_start_line": 166,
+   "new_lines": 1,
+   "hunk_context": "from app.db.write_deadline import ("
+  },
+  {
+   "path": "backend/app/main.py",
+   "new_start_line": 169,
+   "new_lines": 1,
+   "hunk_context": "from app.db.write_deadline import ("
+  },
+  {
+   "path": "backend/app/main.py",
+   "new_start_line": 171,
+   "new_lines": 1,
+   "hunk_context": "from app.db.write_deadline import ("
+  },
+  {
+   "path": "backend/app/main.py",
+   "new_start_line": 173,
+   "new_lines": 1,
+   "hunk_context": "from app.db.write_deadline import ("
+  },
+  {
+   "path": "backend/app/main.py",
+   "new_start_line": 621,
+   "new_lines": 40,
+   "hunk_context": "def write_deadline_answer(_: Request, exc: WriteDeadlineExceeded) -> JSONRespons"
+  },
+  {
+   "path": "backend/tests/test_qoder_ord0327_write_bound_default.py",
+   "new_start_line": 1,
+   "new_lines": 270,
+   "hunk_context": ""
+  }
+ ],
+ "local_ref_readback": "09dffbb70c151e6734221d6d3d69d88775a1fbd0",
+ "authoritative_line_untouched": true,
+ "supersedes": "ord0327_candidate_mint_r1.json 记的 05e494996770088d747a85e4768503fd71dc5275 是我改产品注释之前那一枚（同一父尖、同一改动面，只有两处 docstring/注释字节不同）；本地 ref 已指到本件的 candidate_commit，那枚旧尖还没推过，不构成重推冻结 ref",
+ "measurement_scope": {
+  "scope": "候选尖的本体（backend 三枚件）",
+  "generation": "0f8b925facabc9df57bab600b86d999dd515bf94",
+  "artifact": "ord0327_candidate_mint_r2.json",
+  "method": "ls-remote 现读权威尖 + 逐枚 blob 相等核对 + hash-object/read-tree/write-tree/commit-tree 只落我自己的 ref + diff 反读改动面"
+ }
+}
