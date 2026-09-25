@@ -16588,6 +16588,80 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### ORD-0335 → 红队 E `d2305848` 交（三笔签级 · 2026-09-26 05:4x+08）
+
+**派生件**：`evidence/ord0335-three-signoffs-d2305848/ord0335_derived_d2305848.json` blob `cd0cd36243349311b10326e522d895bcbcbedd50`（9,164 B，树回验相符）。总线帖 `5839984194`。
+**ORD-0325（D）代 `c1bea4c20ea8cd5f1cc5c9d87053c005b2a24400` = ALL_MET**：点名 3 枚 r3 命中在 tested commit 消失、存活 2 枚逐枚指认非本单；6 枚拆臂各咬 owner（siblings green/字节还原/同键前件）；落地 READY_TO_LAND + 手机探针 DEPLOYED_AND_BYTE_IDENTICAL_ON_PHONE_SIDE（只主张传输层身份）。证据件 `ord0325_q64_three_cells_r1.json` = `f508e913c8dd1e328eb3e945ff6017265522b496` pull 后 sha1 全等。
+**ORD-0327（F）代 `09dffbb70c151e6734221d6d3d69d88775a1fbd0` = ALL_MET**：反突变战役控制轮 rc 0、6 臂 6 杀 0 存活 0 锚 miss、字节还原 clean（red_cells 逐臂具名 W1-W7 分母）；套件 A/B 两棵不同代 410=410 红、new_red 0/gone_red 0；mint 三枚前件 blob identical、落地产品文件恰两枚。收据 `ee059206…`/`72546abb…`/`56cae2fe…` pull 后全等。
+**ORD-0330（S2）代 `821a0eb54cca1b305a4aa75c1ca8d46a95d51bba`（候选 `d05cfb2930c8d560e8b877a2d6363e1376dae6c3`）= ALL_MET**：15 枚 req-checks 全 true（每枚本 run 读数比较）；突变控制 M0 双 witness 绿、M1 route witness 红而 r5 兼容面 13/13 绿（r5 单独看不见那道臂）、M2 import 破；全套件红集逐枚相等 12=12、+16 passed、无 new_red/fixed；落地 READY_TO_LAND、门 16 passed rc 0。
+**范围**：三单格判据 = 候选收据自证 + 我对读数结构机械复算（每格 readings.source 具名）；无格需活后端 ⇒ 无 NOT-DEPLOYED 行；手机侧只认传输层身份。
+**边界**：0 改产品字节、0 推 ref、0 demo/reset、0 开别人的库、凭据 0 打印、新路径 0 覆盖。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
+### SESSION=e345b9d6 @2026-09-26 05:35+08 —— **ORD-0325 落地代复量：命令者已把我那枚候选落成权威线上的一枚，六条路径在落地代与现读尖上逐条 blob 相等；r3 该代 5→2、门 6 枚复绿、拆臂 6/6 复红**
+
+这一块不改前一块：`d-e345b9d6_0505.md`（那一块说候选，它此刻还在 inbox 里，所以我这里不引它的 blob —— 没上 branch 的坐标我凭什么叫它可解析？）。这一枚说的是落地代。落地那枚 commit=`c1bea4c20ea8cd5f1cc5c9d87053c005b2a24400`，subject 逐字 = `ORD-0325 (lane D e345b9d6): three Q64=1 cells fixed - upstream prose off the screen`，它的父 commit=`09dffbb70c151e6734221d6d3d69d88775a1fbd0`。现读尖 commit=`821a0eb54cca1b305a4aa75c1ca8d46a95d51bba`（`git ls-remote` 读出，`refs/heads/mirror/integration-frontend-apple-pass1`）。我在 `evidence/ord0325-q64-three-cells-d/ord0325_q64_three_cells_r1.json` 那份主收据里写的『现读尖』是 commit=`0f8b925facabc9df57bab600b86d999dd515bf94`，它现在已经不是尖了 —— 按勘误规矩我不改那份件，was/now 记在这里。
+
+一、落地代携带的字节 = 我交上去的字节（逐路径 blob，不嘴说）：
+
+| 路径 | 我交的候选 blob | 落地代 blob | 现读尖 blob | 三条相等 |
+| --- | --- | --- | --- | --- |
+| `frontend/src/features/stay/HotelsPanel.tsx` | `0fb415405b79a968f1e639137180ad879d8d61ce` | `0fb415405b79a968f1e639137180ad879d8d61ce` | `0fb415405b79a968f1e639137180ad879d8d61ce` | 是 |
+| `frontend/src/features/planning/PlanComparison.tsx` | `30c953c631f9d372a86170302fb0a1be2c664eb4` | `30c953c631f9d372a86170302fb0a1be2c664eb4` | `30c953c631f9d372a86170302fb0a1be2c664eb4` | 是 |
+| `frontend/src/app/V8Experience.tsx` | `aa1e43987a58e0917ff3f0bab0d9fab4716e0ea5` | `aa1e43987a58e0917ff3f0bab0d9fab4716e0ea5` | `aa1e43987a58e0917ff3f0bab0d9fab4716e0ea5` | 是 |
+| `frontend/src/lib/rawFacts.ts` | `aae2369e34fedb5679b2d0c4d0fcd06d73cad152` | `aae2369e34fedb5679b2d0c4d0fcd06d73cad152` | `aae2369e34fedb5679b2d0c4d0fcd06d73cad152` | 是 |
+| `frontend/src/components/RawFactsPanel.tsx` | `7d3ea8530735bfff204a0269f4056f092d262292` | `7d3ea8530735bfff204a0269f4056f092d262292` | `7d3ea8530735bfff204a0269f4056f092d262292` | 是 |
+| `frontend/e2e/qoder-ord0325-upstream-prose-not-on-screen.spec.ts` | `5abb21ac830d5f6fadc600101fa8eca8485fdbd3` | `5abb21ac830d5f6fadc600101fa8eca8485fdbd3` | `5abb21ac830d5f6fadc600101fa8eca8485fdbd3` | 是 |
+
+父那代的 `frontend` 子树与我主收据那枚尖上的同一枚：`e5ac63c1461a51cfa05330d13286ae8e8c83a93e` = `e5ac63c1461a51cfa05330d13286ae8e8c83a93e` —— 落地代多出来的那几笔只动 backend，所以这一代的三格位置与我交件时同一枚字节。
+
+二、尺 r3（blob `44e062e6ce9c7b5d97d78e09e432072da102292c`，与要件③那枚同一枚）在落地代重量的命中行：改前共 5 枚、改后共 2 枚，消失的 3 枚正是本单三枚点名格。逐格：`HotelsPanel` 改前 91 → 改后 无、`PlanComparison` 改前 92 → 改后 无、`V8Experience` 改前 320/833/1028 → 改后 372/897。六份捕获在 `evidence/ord0325-q64-three-cells-d` 下，名字分别是 `ord0325_ruler_r3_landed_before_V8Experience.json`、`ord0325_ruler_r3_landed_after_V8Experience.json`、`ord0325_ruler_r3_landed_before_PlanComparison.json`、`ord0325_ruler_r3_landed_after_PlanComparison.json`、`ord0325_ruler_r3_landed_before_HotelsPanel.json`、`ord0325_ruler_r3_landed_after_HotelsPanel.json`。
+
+三、门在落地代重跑：`ord0325-run12-green-on-landed.log` 里 `7 passed` 那一行，本单门节点 ['e2e\\qoder-ord0325-upstream-prose-not-on-screen.spec.ts:199:1 :: A1 住宿被拒（未映射的 422）：原话不上屏、三行读数在屏 — 中文半边', 'e2e\\qoder-ord0325-upstream-prose-not-on-screen.spec.ts:225:1 :: A2 住宿冲突码仍由 token 决定（正控）：换成行程冲突句，且原话仍不上屏', 'e2e\\qoder-ord0325-upstream-prose-not-on-screen.spec.ts:249:1 :: A3 住宿被拒：英文那半边同样两问', 'e2e\\qoder-ord0325-upstream-prose-not-on-screen.spec.ts:275:1 :: B1 采用方案被拒（409）：原话不上屏、三行读数在屏', 'e2e\\qoder-ord0325-upstream-prose-not-on-screen.spec.ts:355:1 :: C1 建行程后的住宿搜索被拒：banner 不印 error.message，改印本机读数', 'e2e\\qoder-ord0325-upstream-prose-not-on-screen.spec.ts:403:1 :: C2 建行程这一步本身被拒：向导里的拒绝句也不印上游原话'] 枚全绿，另有 `[real-seed]` 前置项目 1 枚在同一个分母里 —— 两个分母我分开写。run=`run371516`，库 `_run371516.db`。落地代那份读数 `evidence/ord0325-q64-three-cells-d/ord0325_gate_readings_landed_r1.json` blob `85e9820fef25739200caa7dfe6517c3bd073d4dc`。
+
+四、拆臂在落地代重跑：6 枚全部弄红（`campaign_valid` = True、逐枚 `restored_to_tested_tree_bytes` = True），件 `evidence/ord0325-q64-three-cells-d/ord0325_arms_landed_r1.json` blob `833c462f1da20469df33290adc1fd17a03386baf`。三元组的 sha 全部署在落地代那枚上，例：`AR1_refusal_freeze_list_ignored` 的 (commit=`c1bea4c20ea8cd5f1cc5c9d87053c005b2a24400`, nodeid=`frontend/e2e/qoder-ord0325-upstream-prose-not-on-screen.spec.ts :: A1 住宿被拒`, shape=`['chromium']`)。
+
+五、我没重跑什么、以及凭什么不重跑：产品与门的字节逐路径 blob 相等（见 path_blob_equality），所以主收据里那两份r3 捕获、门读数与拆臂结论在落地代仍然描述同一枚字节；依据是已经裁过的 GENERATION_TRANSFER_BY_CITED_BLOB_EQUALITY_V1，不是我嘴说没变。typecheck 那两枚配置的说明同件：两枚配置（tsconfig.check.json / tsconfig.typecheck.json）在候选与落地代读到的是同一枚 blob，且本轮跑臂前后工作树都是 clean 0 项改动
+
+六、手机端：手机端没有重跑：本单边界写着 0 次 `vite build`、不碰手机链，所以这仍是源码可达 + 需要那个失败状态真的发生，手机上 = NOT-DEPLOYED（bundle 未重建），Q61（手机不换代）没被我破坏
+
+七、一条要报备的事实：落地代之后我按现读尖又核了一次，commit=`821a0eb54cca1b305a4aa75c1ca8d46a95d51bba` 上我六条路径的 blob 仍与落地代同一枚（见第一节最后一列），所以本单在这条线上的位置不需要再重父；若下一次换代动到 `frontend/src/` 这三枚文件，我按同一把尺重量一遍再报，不拿今天的读数去说明明天。
+
+八、前一块里两问仍然成立，我不在这里重复主张；那两件挂着给仲裁的问题（`body_bytes` 与在屏 `bytes=` 的词表差、`JourneyTrialSetup.tsx:1248` 的 `data-error-message` 属性算不算上屏）原文在 `d-e345b9d6_0505.md` 里，逐字未改。
+
+边界：这一代我只做只读复量与一次门、一次战役，权威线写 0、我推 ref 0（候选分支 commit=`bff5c462bdea8b8a384bd02bc85d9232f2211b64` 是交件时推的那一次，落地由命令者做）、`vite build` 0、`demo/reset` 0、凭据打印 0。产品工作树只在臂窗口内被改，窗口外逐字节等于落地那枚 commit（`git status --porcelain` 在战役前后都空）。`claimed_result` 与 `derived_result` 都在件里，等级归红队。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
+### S1-q64sweep 05:31+08 — ORD-0326 再切已执行：范围收成两枚 agent 文件、撤掉我造的第二套 helper；r5 双向证通（28→25，装回 cause.message 即重新被旗）；附 ORD-0332 用的字段实到清单
+
+**lane** S1-q64sweep · **order** ORD-0326（号令者 04:54 再切） · **at_local** 2026-09-26T05:31+08 · **本块取代** 已入账的 `S1-q64sweep_0524.md`（那块声明的范围含 JourneyInbox/ProductErrorBoundary 与 `frontend/src/lib/serverReason.ts`，均按你 04:54 令作废；旧块我不改一字）
+
+**开枝与清单（你要的两项）**：开枝 sha = **0f8b925facabc9df57bab600b86d999dd515bf94**（`merge-base --is-ancestor` 已验）；候选 `agent/S1-q64sweep-candidates-r3` = commit **08a651e7fc25cf1ccaa0617e97a313b45aad3066**（`ls-remote` 回验同值）。**本枝只碰 2 枚文件**：`frontend/src/features/agent/AgentComposer.tsx`、`frontend/src/features/agent/CopilotDock.tsx`。**没有新建任何 `lib/` 或 `components/` 文件**（件里 `no_new_lib_module=True`）—— 我上一版造的 `lib/serverReason.ts` 与 `components/ServerReasonDetail.tsx` 在这枝上不存在，既有通道 `lib/failureAttribution.ts:150` 的 `classifyReadFailure` + `copyFor` 接管其职责，它的语义我一处未改。
+
+**让出的文件逐枚验过未碰**：`JourneyInboxWorkbench.tsx`、`ProductErrorBoundary.tsx`（→ B）、`HotelsPanel.tsx`、`V8Experience.tsx`（→ D）、`PlanWithAiSheet.tsx`、`PlanComparison.tsx`（→ B）相对开枝 diff 均为 0 行（件里 `yielded_files_confirmed_untouched` 六枚全 True）。
+
+**改法（四处 catch 站点）**：`AgentComposer.tsx:98`、`CopilotDock.tsx:345`、`:363`、`:617` 不再把 `cause.message` 写进被渲染的字符串；改为 `classifyReadFailure(cause)` → 屏上给 `copyFor(attribution, zh).body`（设备侧具名句），并把该 Attribution 自带的 `telemetry` 串挂成同一元素的 `data-attribution` 属性 —— 机器字段落属性、不落正文，正是尺与 Q64 认的 machine_label 位置。
+
+**双向证明（用已发布的 r5，不是我自己写的断言）**：尺 `evidence/ord0331-ast-crossfile-S4/ui_exposure_taint_ast_r2.cjs` = blob ff98091cf3accb0d836ae25ba49820170b92d932，`--selftest` = SELFTEST_PASS（n_fixtures 20）；跑法 `git archive <sha> frontend/src | tar -x` 后 `--tree`（逐文件 `--ref` 会复现 r4 的旧答案，已弃用）。开枝代次全树 28 枚 → 本枝 **25 枚**，移除的正是我被派的三枚汇点 `AgentComposer.tsx:185`、`CopilotDock.tsx:450`、`CopilotDock.tsx:770`，**新增 0 枚**。反方向：在 scratch 拷贝里把 `cause.message` 装回 `:617` 站点，r5 立刻在渲染汇点重新旗出 `CopilotDock.tsx:783|UPSTREAM_EXCEPTION_TO_DOM`（25 → 26）。突变只打在拷贝上，枝从未被改。`tsc -p tsconfig.typecheck.json --noEmit` exit=0；未改任何既有断言、0 处 skip/fixme、0 推权威线。
+
+**ORD-0332 用的字段实到清单**（`POST /api/v1/journeys/{journey_id}/copilot/messages` —— 注意实名是**复数** `messages`，见 backend/app/main.py:11046；你令里写的单数会找不到代码）：六个允许字段里 **2 枚到得了、4 枚到不了**，逐条带 `path:line` 引文（引文由脚本按行号从尖树/后端正文机器抽取，件里 `citations` 无一条为空）：
+
+- `http_status` = **EMITTED**：服务端 main.py:492（JSONResponse 的 status_code）→ 客户端 api/citynexus.ts:681/:689 读 → 通道 lib/failureAttribution.ts:57/:123 → 上屏见 copyFor 句 lib/failureAttribution.ts:358 与 telemetry :133。
+- `content_type` = **EMITTED，但只有一条腿会读**：头由 main.py:492 隐含带出；客户端只在 api/citynexus.ts:686 那个守卫（解析失败或 2xx 空体）里于 :67 读头 —— 所以一个正常的 4xx JSON 回答走不到那行，`Attribution.content_type` 留空、telemetry 直接省略该键而不是显示空值。
+- `body_bytes` = **NOT-EMITTED（两端都没有）**：唯一可能存在字节数的地方是 api/citynexus.ts:663（把整个 body 读成 text 后把长度丢掉）；服务端从不发。**要求它上屏＝要求产品编一个没量过的数。**
+- `response_received` = **NOT-EMITTED，但既有通道已用另一个名字覆盖**：`evidence_kind = HTTP_RESPONSE|TRANSPORT`（lib/failureAttribution.ts:42，telemetry :132）。再加一个布尔是重复信息且属语义改动 —— 按你条件① 我只报不做。
+- `elapsed_ms` = **NOT-EMITTED（这条路上）**：代码里确有同名字段 api/citynexus.ts:730，但它属于执行时钟负载，且 :757 的注释记着后端拒绝为该数编分母；copilot 请求今天没有任何计时。
+- `request_id` = **NOT-EMITTED**：B 的量我复现了 —— `request_id` 在 main.py 全文 **0 命中**（扫描 11446 行），且无任何 X-Request-Id 头或中间件（同类命中 0）。但服务端**每次拒绝都铸了号**：`error.trace_id`，由 main.py:456 的 `trace_id()` 产生、在 main.py:487 进信封 —— 客户端从不读它，通道也没有槽。所以 ORD-0332 的真问题不是"要不要发 request_id"，而是"**已存在的 trace_id 以什么名字暴露**"。（顺带一句：我上一版件的 spec 曾把 trace_id 当 request_id 断言，那是我起的名字，别据此以为服务端有那个键。）
+
+**交付坐标**：件 `commander/control:evidence/ord0326-server-reason-S1/agent_fields_r1.json` = blob **c80f6f61bff8d574dc529a27ba21dd9cbc5cb328**（commit d2af065f2987c6c86968f8f80308cdecb1f096c3，`rev-parse` 与本地 `hash-object` 全等）。已发的旧件一律不动：`channel_r1.json` = baa3f4f902997f3f1a54873628e12fe558969ac1、`channel_r2.json` = 86fc78a7540535ee2898d7129449428fbe6bb7ad、`channel_r3.json` = 94de764e50019d8c76c7cb09fadf68e534cdab64 —— 其中 r3 记录的 `lib/serverReason.ts` 方案已被本块作废，以本块与本件为准。
+
+**边界与遗留** 0 推权威线、共享检出 `git status --porcelain frontend` 读回 0 行、未 demo/reset、未跑 vite build、未碰 `*_live.db`/`*_preview.db`、未读未打印任何凭据；工作树的 `frontend/node_modules` 只读 junction 收尾会摘掉并回验共享树完好。**代次提醒**：我量的是 0f8b925f，现读权威尖已另移（件里 `authoritative_tip_now` 与 `tip_moved_after_my_measurement` 记着），合并方必须对新尖重算、别直接用我的枝。**遗留**：`DestinationPreparationPanel.tsx:346/:469/:522`、`main.tsx:968/:992`、`ActivityDetail.tsx:206`、`RecoveryRequiredPanel.tsx:166`、`SimulationPanel.tsx:934`、`AgentRunRail.tsx:18`、`V12TripStudioPanel.tsx:106`、`V14RecoveryTruthPanel.tsx:162`、`RealCityDiscoveryPanel.tsx:150` 等 r5 旗仍无人认领（`V8Experience.tsx` 4 枚归 D）。
+
+
 ### CMDR 05:26 — ORD-0330 已落（Hermes 线的网关契约升级上主线）、发布量具的 env 串扰已修并双向验过、两条车道块还差作者一句话
 
 **lane** commander 494abfd7 · **at_local** 2026-09-26T05:26+08 · **generation** 现尖 = 821a0eb54cca1b305a4aa75c1ca8d46a95d51bba
