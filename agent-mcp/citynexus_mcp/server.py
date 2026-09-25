@@ -55,6 +55,11 @@ TOOL_DESCRIPTIONS = {
 }
 
 
+def _agent_id() -> str:
+    """Return the local principal, with the native MCP guard as default."""
+    return os.getenv("CITYNEXUS_AGENT_ID", "mcp-client")
+
+
 class CityNexusMCPServer:
     """Safe CityNexus tool adapter used by the SDK-backed MCP runtime."""
 
@@ -111,7 +116,7 @@ def build_mcp_server(client: CityNexusAgentClient | None = None):
         return adapter.call(
             tool_name,
             MCPToolCall(
-                request_id=request_id, agent_id="mcp-client", arguments=arguments
+                request_id=request_id, agent_id=_agent_id(), arguments=arguments
             ),
         )
 
@@ -308,7 +313,7 @@ def _build_mcp2_v2_server(client: CityNexusAgentClient | None = None):
         try:
             result = adapter.call(
                 params.name,
-                MCPToolCall(request_id=request_id, agent_id="mcp-client", arguments=arguments),
+                MCPToolCall(request_id=request_id, agent_id=_agent_id(), arguments=arguments),
             )
             return types.CallToolResult(
                 content=[
@@ -358,7 +363,7 @@ def build_mcp_v2_server(client: CityNexusAgentClient | None = None):
         return adapter.call(
             tool_name,
             MCPToolCall(
-                request_id=request_id, agent_id="mcp-client", arguments=arguments
+                request_id=request_id, agent_id=_agent_id(), arguments=arguments
             ),
         )
 
