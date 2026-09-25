@@ -1,5 +1,5 @@
 {
- "at": "2026-09-25T17:27:04+08:00",
+ "at": "2026-09-25T17:30:47+08:00",
  "order": "ORD-0302 文案修 · 非 JSON 正文不得冒充网络故障",
  "lane": "B c01d72a3",
  "claim_kind": "RUNTIME_MEASURED",
@@ -495,7 +495,7 @@
    "cell": "root cause and the coordinates it was measured at",
    "claimed_result": "MET",
    "derived_result": null,
-   "why": "root cause, re-measured on this tree rather than copied from the order: in the bugged blob fd5f6e5ba2771a8d12669b9bec1ba91590970701 the two envelope helpers read the detail field without a guard on `body` itself, at frontend/src/features/planning/PlanWithAiSheet.tsx:147 and frontend/src/features/planning/PlanWithAiSheet.tsx:155; the leg that reaches them sets `body = null` for an unparseable answer at frontend/src/features/planning/PlanWithAiSheet.tsx:[531], the refusal branch starts at frontend/src/features/planning/PlanWithAiSheet.tsx:[539], and the throw is caught where status is written as NETWORK at frontend/src/features/planning/PlanWithAiSheet.tsx:[748] with the note nulled, which is also the line the detail block depends on at frontend/src/features/planning/PlanWithAiSheet.tsx:[936]. On the candidate the same two reads are guarded, now at frontend/src/features/planning/PlanWithAiSheet.tsx:147 and frontend/src/features/planning/PlanWithAiSheet.tsx:155 (sheet blob f61d5312e8b33807d3e5304d1fa9fb7f77a518aa, spec blob a0c13b1fd9815d8e8daad2b727dbe0adde3b0f36). The generation before ORD-0280 (sheet blob 4c3821b7129320d7940237d33c5f7dd14742f292) did not throw there -- it answered with an invented status string, which is the defect that order removed; both states are wrong in different ways and only the body-has-a-JSON-object reading separates them.",
+   "why": "root cause, re-measured on this tree rather than copied from the order: in the bugged blob fd5f6e5ba2771a8d12669b9bec1ba91590970701 the two envelope helpers read the detail field without a guard on `body` itself, at frontend/src/features/planning/PlanWithAiSheet.tsx:147 and frontend/src/features/planning/PlanWithAiSheet.tsx:155; the leg that reaches them sets `body = null` for an unparseable answer at frontend/src/features/planning/PlanWithAiSheet.tsx:531, the refusal branch starts at frontend/src/features/planning/PlanWithAiSheet.tsx:539, and the throw is caught where status is written as NETWORK at frontend/src/features/planning/PlanWithAiSheet.tsx:748 with the note nulled, which is also the line the detail block depends on at frontend/src/features/planning/PlanWithAiSheet.tsx:936. On the candidate the same two reads are guarded, now at frontend/src/features/planning/PlanWithAiSheet.tsx:147 and frontend/src/features/planning/PlanWithAiSheet.tsx:155 (sheet blob f61d5312e8b33807d3e5304d1fa9fb7f77a518aa, spec blob a0c13b1fd9815d8e8daad2b727dbe0adde3b0f36). The generation before ORD-0280 (sheet blob 4c3821b7129320d7940237d33c5f7dd14742f292) did not throw there -- it answered with an invented status string, which is the defect that order removed; both states are wrong in different ways and only the body-has-a-JSON-object reading separates them.",
    "readings": {
     "base_tip": "dc964086c9d412573ac19d70b24b30e6c3ee6168",
     "bugged_sheet_blob": "fd5f6e5ba2771a8d12669b9bec1ba91590970701",
@@ -510,31 +510,15 @@
      147,
      155
     ],
-    "body_null_line": [
-     531
-    ],
-    "not_ok_line": [
-     539
-    ],
-    "network_write_line": [
-     748
-    ],
-    "details_gate_line": [
-     936
-    ],
+    "body_null_line": 531,
+    "not_ok_line": 539,
+    "network_write_line": 748,
+    "details_gate_line": 936,
     "candidate_lines_of_the_same_anchors": {
-     "body_null_for_unparseable": [
-      531
-     ],
-     "not_ok_branch": [
-      539
-     ],
-     "network_write": [
-      760
-     ],
-     "details_gate": [
-      951
-     ]
+     "body_null_for_unparseable": 531,
+     "not_ok_branch": 539,
+     "network_write": 760,
+     "details_gate": 951
     },
     "status_written": "NETWORK",
     "previous_generation_sheet_blob": "4c3821b7129320d7940237d33c5f7dd14742f292",
@@ -547,10 +531,10 @@
      "frontend/src/features/planning/PlanWithAiSheet.tsx:147",
      "frontend/src/features/planning/PlanWithAiSheet.tsx:155"
     ],
-    "coord_body_null": "frontend/src/features/planning/PlanWithAiSheet.tsx:[531]",
-    "coord_not_ok": "frontend/src/features/planning/PlanWithAiSheet.tsx:[539]",
-    "coord_network": "frontend/src/features/planning/PlanWithAiSheet.tsx:[748]",
-    "coord_details_gate": "frontend/src/features/planning/PlanWithAiSheet.tsx:[936]",
+    "coord_body_null": "frontend/src/features/planning/PlanWithAiSheet.tsx:531",
+    "coord_not_ok": "frontend/src/features/planning/PlanWithAiSheet.tsx:539",
+    "coord_network": "frontend/src/features/planning/PlanWithAiSheet.tsx:748",
+    "coord_details_gate": "frontend/src/features/planning/PlanWithAiSheet.tsx:936",
     "rulers": {
      "q38": "91ae8b1ec55f5c19122af11bf775df14580955e4",
      "q43": [
@@ -580,10 +564,10 @@
      "fd5f6e5ba2771a8d12669b9bec1ba91590970701",
      "frontend/src/features/planning/PlanWithAiSheet.tsx:147",
      "frontend/src/features/planning/PlanWithAiSheet.tsx:155",
-     "frontend/src/features/planning/PlanWithAiSheet.tsx:[531]",
-     "frontend/src/features/planning/PlanWithAiSheet.tsx:[539]",
-     "frontend/src/features/planning/PlanWithAiSheet.tsx:[748]",
-     "frontend/src/features/planning/PlanWithAiSheet.tsx:[936]"
+     "frontend/src/features/planning/PlanWithAiSheet.tsx:531",
+     "frontend/src/features/planning/PlanWithAiSheet.tsx:539",
+     "frontend/src/features/planning/PlanWithAiSheet.tsx:748",
+     "frontend/src/features/planning/PlanWithAiSheet.tsx:936"
     ]
    }
   },
@@ -686,7 +670,7 @@
     "cells 12 | overall Q38_GATE_GREEN | hard 0 [] | soft 0 []"
    ]
   },
-  "pass_1_output": "receipt ord0302_receipt.json 31744 B blob_sha1 e3995a5316d39e3f1ae876954a20ab00dedc9b44\ncells 12 | overall Q38_GATE_GREEN | hard 0 [] | soft 0 []\n  cell 0 | why_source why | why tokens 7 | own hits 6 | unique hits 0 | shares why with []\n  cell 1 | why_source why | why tokens 6 | own hits 5 | unique hits 0 | shares why with []\n  cell 2 | why_source why | why tokens 6 | own hits 5 | unique hits 0 | shares why with []\n  cell 3 | why_source why | why tokens 9 | own hits 7 | unique hits 0 | shares why with []\n  cell 4 | why_source why | why tokens 7 | own hits 6 | unique hits 0 | shares why with []\n  cell 5 | why_source why | why tokens 3 | own hits 3 | unique hits 0 | shares why with []\n  cell 6 | why_source why | why tokens 3 | own hits 3 | unique hits 0 | shares why with []\n  cell 7 | why_source why | why tokens 3 | own hits 3 | unique hits 0 | shares why with []\n  cell 8 | why_source why | why tokens 3 | own hits 3 | unique hits 0 | shares why with []\n  cell 9 | why_source why | why tokens 14 | own hits 14 | unique hits 0 | shares why with []\n  cell 10 | why_source why | why tokens 9 | own hits 5 | unique hits 0 | shares why with []\n  cell 11 | why_source why | why tokens 11 | own hits 10 | unique hits 0 | shares why with []\nmeaning: no shared literal and every sentence names its own readings",
+  "pass_1_output": "receipt ord0302_receipt.json 31608 B blob_sha1 ca623c0cd867c53c6559e31e88d8278316d7dbb9\ncells 12 | overall Q38_GATE_GREEN | hard 0 [] | soft 0 []\n  cell 0 | why_source why | why tokens 7 | own hits 6 | unique hits 0 | shares why with []\n  cell 1 | why_source why | why tokens 6 | own hits 5 | unique hits 0 | shares why with []\n  cell 2 | why_source why | why tokens 6 | own hits 5 | unique hits 0 | shares why with []\n  cell 3 | why_source why | why tokens 9 | own hits 7 | unique hits 0 | shares why with []\n  cell 4 | why_source why | why tokens 7 | own hits 6 | unique hits 0 | shares why with []\n  cell 5 | why_source why | why tokens 3 | own hits 3 | unique hits 0 | shares why with []\n  cell 6 | why_source why | why tokens 3 | own hits 3 | unique hits 0 | shares why with []\n  cell 7 | why_source why | why tokens 3 | own hits 3 | unique hits 0 | shares why with []\n  cell 8 | why_source why | why tokens 3 | own hits 3 | unique hits 0 | shares why with []\n  cell 9 | why_source why | why tokens 14 | own hits 14 | unique hits 0 | shares why with []\n  cell 10 | why_source why | why tokens 9 | own hits 5 | unique hits 0 | shares why with []\n  cell 11 | why_source why | why tokens 11 | own hits 10 | unique hits 0 | shares why with []\nmeaning: no shared literal and every sentence names its own readings",
   "pass_2_on_published_bytes": {
    "ruler": "receipt_cell_derivation_check_r2.py",
    "ruler_blob": "91ae8b1ec55f5c19122af11bf775df14580955e4",
@@ -695,6 +679,6 @@
     "cells 12 | overall Q38_GATE_GREEN | hard 0 [] | soft 0 []"
    ]
   },
-  "pass_2_output": "receipt ord0302_receipt.json 33343 B blob_sha1 125cc7fde6b58a0a774b70b24737cc3b1fb06ba1\ncells 12 | overall Q38_GATE_GREEN | hard 0 [] | soft 0 []\n  cell 0 | why_source why | why tokens 7 | own hits 6 | unique hits 0 | shares why with []\n  cell 1 | why_source why | why tokens 6 | own hits 5 | unique hits 0 | shares why with []\n  cell 2 | why_source why | why tokens 6 | own hits 5 | unique hits 0 | shares why with []\n  cell 3 | why_source why | why tokens 9 | own hits 7 | unique hits 0 | shares why with []\n  cell 4 | why_source why | why tokens 7 | own hits 6 | unique hits 0 | shares why with []\n  cell 5 | why_source why | why tokens 3 | own hits 3 | unique hits 0 | shares why with []\n  cell 6 | why_source why | why tokens 3 | own hits 3 | unique hits 0 | shares why with []\n  cell 7 | why_source why | why tokens 3 | own hits 3 | unique hits 0 | shares why with []\n  cell 8 | why_source why | why tokens 3 | own hits 3 | unique hits 0 | shares why with []\n  cell 9 | why_source why | why tokens 14 | own hits 14 | unique hits 0 | shares why with []\n  cell 10 | why_source why | why tokens 9 | own hits 5 | unique hits 0 | shares why with []\n  cell 11 | why_source why | why tokens 11 | own hits 10 | unique hits 0 | shares why with []\nmeaning: no shared literal and every sentence names its own readings"
+  "pass_2_output": "receipt ord0302_receipt.json 33207 B blob_sha1 6d32ec63edc3ef88f04bf50d42ae303fc9393d9f\ncells 12 | overall Q38_GATE_GREEN | hard 0 [] | soft 0 []\n  cell 0 | why_source why | why tokens 7 | own hits 6 | unique hits 0 | shares why with []\n  cell 1 | why_source why | why tokens 6 | own hits 5 | unique hits 0 | shares why with []\n  cell 2 | why_source why | why tokens 6 | own hits 5 | unique hits 0 | shares why with []\n  cell 3 | why_source why | why tokens 9 | own hits 7 | unique hits 0 | shares why with []\n  cell 4 | why_source why | why tokens 7 | own hits 6 | unique hits 0 | shares why with []\n  cell 5 | why_source why | why tokens 3 | own hits 3 | unique hits 0 | shares why with []\n  cell 6 | why_source why | why tokens 3 | own hits 3 | unique hits 0 | shares why with []\n  cell 7 | why_source why | why tokens 3 | own hits 3 | unique hits 0 | shares why with []\n  cell 8 | why_source why | why tokens 3 | own hits 3 | unique hits 0 | shares why with []\n  cell 9 | why_source why | why tokens 14 | own hits 14 | unique hits 0 | shares why with []\n  cell 10 | why_source why | why tokens 9 | own hits 5 | unique hits 0 | shares why with []\n  cell 11 | why_source why | why tokens 11 | own hits 10 | unique hits 0 | shares why with []\nmeaning: no shared literal and every sentence names its own readings"
  }
 }
