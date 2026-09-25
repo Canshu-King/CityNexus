@@ -1,0 +1,48 @@
+{
+ "original_identity": {
+  "file": "arm_old_old_lock_C2-214340.json",
+  "bytes": 16059,
+  "blob_sha1_40_hex": "206d4831c5fd2aa7fde7518502b1e8a9521d4fee",
+  "sha256_64_hex": "e222a9875cde1b6471b4af420acf33b33e5da6f0431efe453ffa17f16a4b64e4",
+  "guard_refused_because": [
+   "QUOTED_JSON_SECRET"
+  ]
+ },
+ "copy_identity": {
+  "path": "evidence/ord0300-c2-pairing-hjp3/arm_old_old_lock_C2-214340_pub.json",
+  "blob_on_branch": "3f0db1fdebb6690593fa659389c62cc6e9fb37ff",
+  "read_from": "GET /git/trees/<tip>?recursive=1 at 00:51:11"
+ },
+ "container_identity": {
+  "file": "raw_bundle_o0316.json",
+  "blob_sha1_40_hex": "a4b9dc9fea414a2a7521afd64d60f3f5ec73afca",
+  "bytes": 22326,
+  "blob_on_branch": "a4b9dc9fea414a2a7521afd64d60f3f5ec73afca"
+ },
+ "round_trip_decoded_equals_original": {
+  "bytes_equal": true,
+  "decoded_bytes": 16059,
+  "decoded_blob_recomputed": "206d4831c5fd2aa7fde7518502b1e8a9521d4fee",
+  "names_the_original_blob": true
+ },
+ "raw_name_under_a_new_path_was_attempted": {
+  "path_tried": "evidence/ord0300-c2-pairing-hjp3/arm_old_old_lock_C2-214340_gate_refused_original.json",
+  "gated_push_rc": 5,
+  "reading": "refused as expected - the guard matches these bytes under any name",
+  "guard_rules_on_the_raw_bytes": [
+   "QUOTED_JSON_SECRET"
+  ]
+ },
+ "verdict": {
+  "original_bytes_unchanged": true,
+  "original_is_addressable_by_rehash_from_the_container": true,
+  "original_is_addressable_by_git_cat_file_as_a_path": false,
+  "original_is_verifiable_by_rehash_from_a_published_container": true,
+  "ALL_HOLD": false
+ },
+ "three_coordinates": {
+  "original_bytes": "206d4831c5fd2aa7fde7518502b1e8a9521d4fee",
+  "renamed_copy_on_branch": "3f0db1fdebb6690593fa659389c62cc6e9fb37ff",
+  "proof_file": "a4b9dc9fea414a2a7521afd64d60f3f5ec73afca"
+ }
+}
