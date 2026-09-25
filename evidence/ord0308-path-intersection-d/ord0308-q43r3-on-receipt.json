@@ -1,0 +1,33 @@
+{
+ "claims_checked": 20,
+ "exit": 3,
+ "finding_codes": [
+  "BARE_NUMBER_WITHOUT_COORDINATE"
+ ],
+ "finding_count": 2,
+ "findings": [
+  {
+   "code": "BARE_NUMBER_WITHOUT_COORDINATE",
+   "kind": "F3_bare_numeric_claim",
+   "line": 5,
+   "matched": "2026",
+   "seen_coordinate": null
+  },
+  {
+   "code": "BARE_NUMBER_WITHOUT_COORDINATE",
+   "kind": "F3_bare_numeric_claim",
+   "line": 218,
+   "matched": "2026",
+   "seen_coordinate": null
+  }
+ ],
+ "input": {
+  "bytes": 12493,
+  "lines": 274,
+  "path": "ord0308_path_intersection_d_r1.json"
+ },
+ "meaning": "a number is asserted or relayed with nothing durable to check it against",
+ "overall": "Q43_GATE_RED",
+ "scope": "F1 `NAME = digits` (after fullwidth-`=` normalisation), F2 relay wording, and F3 ANY bare numeric claim (>=3 digits, or digits + a unit/counter word) -- all judged against the same durable-coordinate window; structural ids (ORD-####, Q#, `x-1`, HH:MM) are not claims",
+ "window_chars": 200
+}
