@@ -141,7 +141,8 @@ def run_arm(arm: dict, tested: str, committed_hash: dict, clean: dict, port: int
     rel = path.relative_to(ROOT).as_posix()
     name = path.name
     size_before = path.stat().st_size
-    with guard.temporary_guarded_replace(path, arm["anchor"], arm["mutant"],
+    with guard.temporary_guarded_replace(path, arm["anchor"].encode("utf-8"),
+                                         arm["mutant"].encode("utf-8"),
                                          expected_hits=arm["expected_hits"]) as receipt:
         size_during = path.stat().st_size
         attempt = run_gate(arm["name"], port)
