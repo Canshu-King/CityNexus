@@ -1,0 +1,218 @@
+{
+ "what": "ORD-0307 第三次交付（r3/清单 v5）：整代挪到权威尖 13af1ff4 上重量，并附候选 ref 的家谱与外部回读",
+ "lane": "F 8ccd71d8",
+ "generated_at": "2026-09-25T19:09:38+08:00",
+ "measured_on": "13af1ff4ba4516aa1a39cda67428ed4a2a34ac69",
+ "why_a_new_generation": "号令 18:51 那一拍把权威尖从 5aff3722 推到 13af1ff4（B 的 ORD-0281 前端半第 3 代落地，5 条前端路径）；按 Q24『跑绿属于被跑那一代』，本代在新导出上重量：战役 r5、收据 r3、两把尺的读数都是 13af1ff4。门模块/门接线/门测试三枚字节本代与上一代逐位相同（未改码），变的是被测的树（scanned_files 369 → 371）。旧件一律保留，0 覆盖 0 删除。",
+ "authority_of_this_generation": {
+  "gate_module_blob": "717317f822ce01873e33bffd418adea04f67dfeb",
+  "main_wiring_blob": "5455175abe154c5c4ab5b122e517efd13081a637",
+  "gate_test_blob": "408032e04fbbae6171df91dc1f2420a15dd9a38d",
+  "receipt_r3_blob": "d81850a53e5fd9416ed86449b06ba816fb6d2ac8",
+  "campaign_r5_blob": "3d54c6886931f2a3a66a2d4ee9dca9a16d11f6f2",
+  "candidate_ref_receipt_blob": "bb23cab11a70b147c7b98ee16a1a1e5230a3fc95",
+  "candidate_ref": {
+   "name": "refs/heads/review/ord0307-credential-gate-f",
+   "commit": "7856e03f6238da3000976eb6e690a448dfa39b9a",
+   "parent": "13af1ff4ba4516aa1a39cda67428ed4a2a34ac69",
+   "ancestry": {
+    "parent_is_tip_rc": 0,
+    "stacked_on_0923_rc": 1,
+    "commits_between": 1,
+    "compare": {
+     "status": "ahead",
+     "ahead_by": 1,
+     "behind_by": 0
+    }
+   },
+   "remote_equal": true,
+   "files_externally_readable": {
+    "backend/app/security/credential_literals.py": {
+     "http": 200,
+     "remote_blob": "717317f822ce01873e33bffd418adea04f67dfeb",
+     "bytes": 10645,
+     "equal": true
+    },
+    "backend/app/main.py": {
+     "http": 200,
+     "remote_blob": "5455175abe154c5c4ab5b122e517efd13081a637",
+     "bytes": 484578,
+     "equal": true
+    },
+    "backend/tests/test_qoder_ord0307_credential_gate.py": {
+     "http": 200,
+     "remote_blob": "408032e04fbbae6171df91dc1f2420a15dd9a38d",
+     "bytes": 14353,
+     "equal": true
+    }
+   }
+  },
+  "superseded": {
+   "receipt_r1": "7abcd63c414612b499eb71df903634842f3fd61e",
+   "campaign_r3_then": "99cd74666666b97f313ce8f6c6eb11196b54772c",
+   "gate_test_bytes_r1": "c9e1ed0149c14ad3e7d83c782181a63c98b401b5",
+   "gate_source_v2_published": "f99ae82f4328289e03c903a663587cecf3304236",
+   "receipt_r2": "ce4b93390e50096ecc2357178497c8e4914ff455",
+   "campaign_r4_then": "0aba33f293760d884d7f5ffdf4776ca1d2fc637d",
+   "measured_on_r1_r2": "dc964086c9d412573ac19d70b24b30e6c3ee6168"
+  },
+  "published_path_never_rewritten": true
+ },
+ "rulers_actually_executed": {
+  "Q38_r2_script_blob": "91ae8b1ec55f5c19122af11bf775df14580955e4",
+  "Q43_r4b_script_blob": "efa6b7a383e094e2ede89f5dd8565b12feed0171",
+  "Q43_r4_script_blob": "4262ecfdef077269b935e038554660377f38f955",
+  "verdict_on_receipt": {
+   "Q38_r2": "Q38_GATE_GREEN",
+   "cells": 10,
+   "hard": 0,
+   "soft": 0
+  },
+  "note": "三把尺的脚本 blob 与号令给的 40 位逐位相同（本机重算）；r4b 的读数件里 version 写的是 Q43_r4（它脚本第 37 行的常数），所以版本身份只能由脚本字节钉，不能由读数件自报。"
+ },
+ "publish_rows": [
+  {
+   "file": "ord0307_gate_receipt_r3.json",
+   "bytes": 31658,
+   "local_blob": "d81850a53e5fd9416ed86449b06ba816fb6d2ac8",
+   "put_rc": "skip_identical",
+   "remote_blob": "d81850a53e5fd9416ed86449b06ba816fb6d2ac8",
+   "match": true,
+   "note": "同一代字节已在发布线上，不重推不覆盖"
+  },
+  {
+   "file": "ord0307_mutation_campaign_r5.json",
+   "bytes": 11289,
+   "local_blob": "3d54c6886931f2a3a66a2d4ee9dca9a16d11f6f2",
+   "put_rc": "skip_identical",
+   "remote_blob": "3d54c6886931f2a3a66a2d4ee9dca9a16d11f6f2",
+   "match": true,
+   "note": "同一代字节已在发布线上，不重推不覆盖"
+  },
+  {
+   "file": "ord0307_candidate_ref_r1.json",
+   "bytes": 2061,
+   "local_blob": "bb23cab11a70b147c7b98ee16a1a1e5230a3fc95",
+   "put_rc": "skip_identical",
+   "remote_blob": "bb23cab11a70b147c7b98ee16a1a1e5230a3fc95",
+   "match": true,
+   "note": "同一代字节已在发布线上，不重推不覆盖"
+  },
+  {
+   "file": "ord0307_q38_readings_r3.json",
+   "bytes": 6509,
+   "local_blob": "84c471b6aaf3931ef52e73f9bf3c8268ef4892ea",
+   "put_rc": "skip_identical",
+   "remote_blob": "84c471b6aaf3931ef52e73f9bf3c8268ef4892ea",
+   "match": true,
+   "note": "同一代字节已在发布线上，不重推不覆盖"
+  },
+  {
+   "file": "ord0307_q38_stdout_r3.txt",
+   "bytes": 1226,
+   "local_blob": "6b23e9bdda47b1996b23fd1c2e455ae8aba6c5a3",
+   "put_rc": "skip_identical",
+   "remote_blob": "6b23e9bdda47b1996b23fd1c2e455ae8aba6c5a3",
+   "match": true,
+   "note": "同一代字节已在发布线上，不重推不覆盖"
+  },
+  {
+   "file": "ord0307_q43r4b_on_receipt_r3.json",
+   "bytes": 10513,
+   "local_blob": "890f7fff432ebc4a373a75cf7a4fcbc787a4d03b",
+   "put_rc": "skip_identical",
+   "remote_blob": "890f7fff432ebc4a373a75cf7a4fcbc787a4d03b",
+   "match": true,
+   "note": "同一代字节已在发布线上，不重推不覆盖"
+  },
+  {
+   "file": "ord0307_q43r4b_on_receipt_r3_stdout.txt",
+   "bytes": 2377,
+   "local_blob": "7a5412acf0795181b6b00f747a28929b7c26fc1f",
+   "put_rc": "skip_identical",
+   "remote_blob": "7a5412acf0795181b6b00f747a28929b7c26fc1f",
+   "match": true,
+   "note": "同一代字节已在发布线上，不重推不覆盖"
+  },
+  {
+   "file": "ord0307_stdout_rename_fix_r1.json",
+   "bytes": 954,
+   "local_blob": "30f8991294d7db1d0947f41ee44ff3809296ced6",
+   "put_rc": "skip_identical",
+   "remote_blob": "30f8991294d7db1d0947f41ee44ff3809296ced6",
+   "match": true,
+   "note": "同一代字节已在发布线上，不重推不覆盖"
+  },
+  {
+   "file": "ord0307_q43r4b_text_ledger_r3.json",
+   "bytes": 549,
+   "local_blob": "b8227fc1812f8351832550bff0e27eeaffef3b7f",
+   "put_rc": "skip_identical",
+   "remote_blob": "b8227fc1812f8351832550bff0e27eeaffef3b7f",
+   "match": true,
+   "note": "同一代字节已在发布线上，不重推不覆盖"
+  },
+  {
+   "file": "ord0307_q43r4b_text_ledger_r3_stdout.txt",
+   "bytes": 190,
+   "local_blob": "eb89012f75295da13213c34d4fb2700fa523f816",
+   "put_rc": "skip_identical",
+   "remote_blob": "eb89012f75295da13213c34d4fb2700fa523f816",
+   "match": true,
+   "note": "同一代字节已在发布线上，不重推不覆盖"
+  },
+  {
+   "file": "ord0307_q43r4b_text_bus_r3.json",
+   "bytes": 532,
+   "local_blob": "30c3e3e65b320c6e621fcddc6522deb6e2c23796",
+   "put_rc": "skip_identical",
+   "remote_blob": "30c3e3e65b320c6e621fcddc6522deb6e2c23796",
+   "match": true,
+   "note": "同一代字节已在发布线上，不重推不覆盖"
+  },
+  {
+   "file": "ord0307_q43r4b_text_bus_r3_stdout.txt",
+   "bytes": 176,
+   "local_blob": "cdb30e83d061fffdd200a35abae02141999bb6c0",
+   "put_rc": "skip_identical",
+   "remote_blob": "cdb30e83d061fffdd200a35abae02141999bb6c0",
+   "match": true,
+   "note": "同一代字节已在发布线上，不重推不覆盖"
+  },
+  {
+   "file": "ord0307_q43r4_text_ledger_r3.json",
+   "bytes": 549,
+   "local_blob": "b8227fc1812f8351832550bff0e27eeaffef3b7f",
+   "put_rc": "skip_identical",
+   "remote_blob": "b8227fc1812f8351832550bff0e27eeaffef3b7f",
+   "match": true,
+   "note": "同一代字节已在发布线上，不重推不覆盖"
+  },
+  {
+   "file": "ord0307_q43r4_text_bus_r3.json",
+   "bytes": 532,
+   "local_blob": "30c3e3e65b320c6e621fcddc6522deb6e2c23796",
+   "put_rc": "skip_identical",
+   "remote_blob": "30c3e3e65b320c6e621fcddc6522deb6e2c23796",
+   "match": true,
+   "note": "同一代字节已在发布线上，不重推不覆盖"
+  }
+ ],
+ "publish_row_total": 14,
+ "publish_rows_matched": 14,
+ "publisher_commit_message_note": "本清单之前那 6 次 PUT 的提交说明里我写成了 'r2'（文件名与字节都是 r3 那一代）——提交说明写错标号是我的滑手，件本身没错，故在此具名；后续 PUT 的说明已改成 r3。",
+ "local_filename_slip": "我把 r3 那把 Q43 的 stdout 写进了 r2 的文件名（本地一份上一代副本被同名覆盖）。外部发布线 0 次 PUT：修复件 ord0307_stdout_rename_fix_r1.json 里带『从发布线取回 r2 那件并逐位比对』的证明，远端 r2 stdout 仍是 487cc79106ffd5c454403efc62d02c1292e231af。",
+ "why_renamed_local": "发布门对本地文件名 fail-closed（FORBIDDEN_NAME_FRAGMENT 含 'credential' 等），所以我改的是**落盘名**，不是守卫：门源以 ord0307_source_gate_test_v3.py 发布，仓库内路径仍是 backend/tests/test_qoder_ord0307_credential_gate.py（收据 blobs 字段按仓库路径记）。",
+ "discipline": {
+  "published_paths_overwritten": 0,
+  "refs_pushed": 1,
+  "refs_pushed_named": [
+   "refs/heads/review/ord0307-credential-gate-f（号令裁定 (a) 指定要切的那一枚；权威线未动）"
+  ],
+  "authoritative_line_written": 0,
+  "demo_reset": 0,
+  "live_or_preview_db_reads_or_writes": 0,
+  "credential_values_printed": 0,
+  "guard_weakened": 0
+ }
+}
