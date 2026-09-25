@@ -1,0 +1,417 @@
+{
+ "ran_at_local": "2026-09-25T23:34:09+0800",
+ "repo": "Canshu-King/CityNexus",
+ "branch": "commander/control",
+ "tip_read": "2e96f0432da754e136651b839da38afd2f4f9b68",
+ "tree_read": "c31ba59b61fb04a0048516142f941b43b854ad41",
+ "prefix": "evidence/ord0301-p3-same-chain-hjp3",
+ "method": "GET /repos/.../commits?sha=<branch>&path=<file>&per_page=100 - counts the writes that landed at that exact name",
+ "paths_under_prefix": 66,
+ "blobs": [
+  {
+   "path": "ord0301-p3-same-chain-hjp3/RECEIPT_O0301P3-2230.json",
+   "blob_40_hex": "d0bae60f9e249c5b89be58d4ba99d899512728da",
+   "commits_touching_this_path": 1
+  },
+  {
+   "path": "ord0301-p3-same-chain-hjp3/RECEIPT_O0301P3-2230.md",
+   "blob_40_hex": "3f6beaf1564210cc69f93310cb706ded6643c473",
+   "commits_touching_this_path": 1
+  },
+  {
+   "path": "ord0301-p3-same-chain-hjp3/discarded_p3_arm_dep_hoplock_lock_behind_hop_P3-223228.json",
+   "blob_40_hex": "798ad18c91a47add7783f85927f8c55fb9be4720",
+   "commits_touching_this_path": 1
+  },
+  {
+   "path": "ord0301-p3-same-chain-hjp3/discarded_p3_arm_dep_lock_pass_P3-222548.json",
+   "blob_40_hex": "95f72ccffb61eba4344d4b993743bb70de131c2b",
+   "commits_touching_this_path": 1
+  },
+  {
+   "path": "ord0301-p3-same-chain-hjp3/discarded_p3_arm_dep_product_mutate_extra_key_P3-222041.json",
+   "blob_40_hex": "679c7a6385ca46a30f0c911f02d430c88674a4c5",
+   "commits_touching_this_path": 1
+  },
+  {
+   "path": "ord0301-p3-same-chain-hjp3/discarded_p3_arm_old_hoplock_lock_behind_hop_P3-223409.json",
+   "blob_40_hex": "d3329e9e9e56e765807301b06fc9adddd5aad84f",
+   "commits_touching_this_path": 1
+  },
+  {
+   "path": "ord0301-p3-same-chain-hjp3/discarded_p3_arm_old_lock_pass_P3-222649.json",
+   "blob_40_hex": "c257d2696adf877cf0427205b01ba6d580dbaeb6",
+   "commits_touching_this_path": 1
+  },
+  {
+   "path": "ord0301-p3-same-chain-hjp3/evidence_manifest_full40_p3.json",
+   "blob_40_hex": "9c5f083fb25815ab9e52171c14149d5ecbbf3d05",
+   "commits_touching_this_path": 1
+  },
+  {
+   "path": "ord0301-p3-same-chain-hjp3/gate_selftest_publish_p3.json",
+   "blob_40_hex": "2abeebd4326d40ab32de2f5fda0a3f267aa994da",
+   "commits_touching_this_path": 1
+  },
+  {
+   "path": "ord0301-p3-same-chain-hjp3/instruments/p3_arms.py",
+   "blob_40_hex": "8fb2da312d77ff61adf48647fec6d4ea86b9d362",
+   "commits_touching_this_path": 1
+  },
+  {
+   "path": "ord0301-p3-same-chain-hjp3/instruments/p3_boundary.py",
+   "blob_40_hex": "52e316cb4272d241e46173477f918bf286fc2ea2",
+   "commits_touching_this_path": 1
+  },
+  {
+   "path": "ord0301-p3-same-chain-hjp3/instruments/p3_bus.py",
+   "blob_40_hex": "02a25a2438b4b70cfe35847753548bdff4bd3311",
+   "commits_touching_this_path": 1
+  },
+  {
+   "path": "ord0301-p3-same-chain-hjp3/instruments/p3_cells.cjs",
+   "blob_40_hex": "24eb5215ecb024bf5a0cc7c590e99a1057d8a29c",
+   "commits_touching_this_path": 1
+  },
+  {
+   "path": "ord0301-p3-same-chain-hjp3/instruments/p3_gate_selftest.py",
+   "blob_40_hex": "aa3d37fb678e8d7c2be7e704e6167a99ba5820ed",
+   "commits_touching_this_path": 1
+  },
+  {
+   "path": "ord0301-p3-same-chain-hjp3/instruments/p3_ledger.py",
+   "blob_40_hex": "2bf8a98bbdb0a342c2c051226d0325a02a0ffb53",
+   "commits_touching_this_path": 1
+  },
+  {
+   "path": "ord0301-p3-same-chain-hjp3/instruments/p3_md.py",
+   "blob_40_hex": "70a4556e9799d53a1014ee09ad6c09e29a8928f8",
+   "commits_touching_this_path": 1
+  },
+  {
+   "path": "ord0301-p3-same-chain-hjp3/instruments/p3_md_r2.py",
+   "blob_40_hex": "283042f83ad9838ca37e5fd65b0204942420c280",
+   "commits_touching_this_path": 1
+  },
+  {
+   "path": "ord0301-p3-same-chain-hjp3/instruments/p3_no_rewrite.py",
+   "blob_40_hex": "78ed7690d7a8382c8d046f8deb851525f24fed8a",
+   "commits_touching_this_path": 1
+  },
+  {
+   "path": "ord0301-p3-same-chain-hjp3/instruments/p3_publish.py",
+   "blob_40_hex": "9916dea4dc009c4eb71b4e82a407f4654d853120",
+   "commits_touching_this_path": 1
+  },
+  {
+   "path": "ord0301-p3-same-chain-hjp3/instruments/p3_publish_r2.py",
+   "blob_40_hex": "3f9ecedf08f001f38a51c3a86843686cca0b7aa8",
+   "commits_touching_this_path": 1
+  },
+  {
+   "path": "ord0301-p3-same-chain-hjp3/instruments/p3_publish_r3.py",
+   "blob_40_hex": "a47f62122937e0afcbb9c50f2f2ab0968ffaaaf4",
+   "commits_touching_this_path": 1
+  },
+  {
+   "path": "ord0301-p3-same-chain-hjp3/instruments/p3_receipt.py",
+   "blob_40_hex": "1b93571eddb826c04172324319a4926589d241e4",
+   "commits_touching_this_path": 1
+  },
+  {
+   "path": "ord0301-p3-same-chain-hjp3/instruments/p3_rig.py",
+   "blob_40_hex": "880499e9fcd619ad128116795e055c37ca58aff4",
+   "commits_touching_this_path": 1
+  },
+  {
+   "path": "ord0301-p3-same-chain-hjp3/instruments/p3_score.py",
+   "blob_40_hex": "ac8f6eb8eda440bcd7090847a7426ce0989f683d",
+   "commits_touching_this_path": 1
+  },
+  {
+   "path": "ord0301-p3-same-chain-hjp3/instruments/p3_setup.py",
+   "blob_40_hex": "c6597e5826846b89f5dd1b1e70bc0b35f349372a",
+   "commits_touching_this_path": 1
+  },
+  {
+   "path": "ord0301-p3-same-chain-hjp3/instruments/p3proxy.py",
+   "blob_40_hex": "a6274ccb40fa1e511c59e9299b2f9f52f52d7ddc",
+   "commits_touching_this_path": 1
+  },
+  {
+   "path": "ord0301-p3-same-chain-hjp3/p3_arm_dep_abort_pass_P3-222950.json",
+   "blob_40_hex": "afc341c7131f0d008dff87842734fc3eb7004057",
+   "commits_touching_this_path": 1
+  },
+  {
+   "path": "ord0301-p3-same-chain-hjp3/p3_arm_dep_hoplock_lock_behind_hop_P3-223608.json",
+   "blob_40_hex": "354f785b20bc536e045dcf8965b1d7ca4fe42114",
+   "commits_touching_this_path": 1
+  },
+  {
+   "path": "ord0301-p3-same-chain-hjp3/p3_arm_dep_product_mutate_extra_key_P3-222513.json",
+   "blob_40_hex": "aaa6c3de5844af9d1d5a26ac2e5702686ffc4cbb",
+   "commits_touching_this_path": 1
+  },
+  {
+   "path": "ord0301-p3-same-chain-hjp3/p3_arm_dep_spec_json_envelope_500_P3-222905.json",
+   "blob_40_hex": "0dff9290ef1d35f1a86957af8bb5480b508ef1ea",
+   "commits_touching_this_path": 1
+  },
+  {
+   "path": "ord0301-p3-same-chain-hjp3/p3_arm_dep_spec_nonjson_422_P3-222816.json",
+   "blob_40_hex": "66065b72bbb37d04d04f6e15af1b3d042d0f046f",
+   "commits_touching_this_path": 1
+  },
+  {
+   "path": "ord0301-p3-same-chain-hjp3/p3_arm_old_hoplock_lock_behind_hop_P3-223703.json",
+   "blob_40_hex": "6ae7bdd4535d659920cf9f4db97e01b7d41e8f1e",
+   "commits_touching_this_path": 1
+  },
+  {
+   "path": "ord0301-p3-same-chain-hjp3/p3_arm_old_product_mutate_extra_key_P3-222752.json",
+   "blob_40_hex": "f4aaf8bb99626f925a7986087a19d90adb619398",
+   "commits_touching_this_path": 1
+  },
+  {
+   "path": "ord0301-p3-same-chain-hjp3/p3_arm_old_spec_json_envelope_500_P3-222928.json",
+   "blob_40_hex": "e6183450bd6bf2009a477e07480be567165a44b9",
+   "commits_touching_this_path": 1
+  },
+  {
+   "path": "ord0301-p3-same-chain-hjp3/p3_arm_old_spec_nonjson_422_P3-222841.json",
+   "blob_40_hex": "38a1cc73bb8a78466b2af3f332952a94d710c6a2",
+   "commits_touching_this_path": 1
+  },
+  {
+   "path": "ord0301-p3-same-chain-hjp3/p3_boundary.json",
+   "blob_40_hex": "542ef82fa84781e01ccbbfbd38660e07f0bb6dc0",
+   "commits_touching_this_path": 1
+  },
+  {
+   "path": "ord0301-p3-same-chain-hjp3/p3_cell_dep_abort_pass_P3-222950.json",
+   "blob_40_hex": "4b15d8f6f4af67e11491ea9d3ad57a27659411ea",
+   "commits_touching_this_path": 1
+  },
+  {
+   "path": "ord0301-p3-same-chain-hjp3/p3_cell_dep_hoplock_lock_behind_hop_P3-223608.json",
+   "blob_40_hex": "53d1683fae123e6ae4dd7ad402eb057fff5d7408",
+   "commits_touching_this_path": 1
+  },
+  {
+   "path": "ord0301-p3-same-chain-hjp3/p3_cell_dep_hoplock_lock_behind_hop_P3-223608.png",
+   "blob_40_hex": "68f4402281fe05a80326a409f9bc1c5c453046ce",
+   "commits_touching_this_path": 1
+  },
+  {
+   "path": "ord0301-p3-same-chain-hjp3/p3_cell_dep_product_mutate_extra_key_P3-222513.json",
+   "blob_40_hex": "6693e341880ce604f563d8daabed42712ce55f52",
+   "commits_touching_this_path": 1
+  },
+  {
+   "path": "ord0301-p3-same-chain-hjp3/p3_cell_dep_spec_json_envelope_500_P3-222905.json",
+   "blob_40_hex": "b6dd4321675c20755fd42d4c6121a4fa2ad32409",
+   "commits_touching_this_path": 1
+  },
+  {
+   "path": "ord0301-p3-same-chain-hjp3/p3_cell_dep_spec_nonjson_422_P3-222816.json",
+   "blob_40_hex": "5633bec51de869b3a817a6469a04b6ae9e9c333d",
+   "commits_touching_this_path": 1
+  },
+  {
+   "path": "ord0301-p3-same-chain-hjp3/p3_cell_old_hoplock_lock_behind_hop_P3-223703.json",
+   "blob_40_hex": "10650c51e37a16e5d19bfadfe868ac96980987de",
+   "commits_touching_this_path": 1
+  },
+  {
+   "path": "ord0301-p3-same-chain-hjp3/p3_cell_old_hoplock_lock_behind_hop_P3-223703.png",
+   "blob_40_hex": "8abeafbb7106d5ac849f47be90c68b4cb86eb232",
+   "commits_touching_this_path": 1
+  },
+  {
+   "path": "ord0301-p3-same-chain-hjp3/p3_cell_old_product_mutate_extra_key_P3-222752.json",
+   "blob_40_hex": "793cff93acad00b3df7c07139e054143ff462a02",
+   "commits_touching_this_path": 1
+  },
+  {
+   "path": "ord0301-p3-same-chain-hjp3/p3_cell_old_spec_json_envelope_500_P3-222928.json",
+   "blob_40_hex": "01824386b3529a443cf0c89106682f185174a871",
+   "commits_touching_this_path": 1
+  },
+  {
+   "path": "ord0301-p3-same-chain-hjp3/p3_cell_old_spec_nonjson_422_P3-222841.json",
+   "blob_40_hex": "6e7a5dbf18380d395342dcd2559c2a0193280161",
+   "commits_touching_this_path": 1
+  },
+  {
+   "path": "ord0301-p3-same-chain-hjp3/p3_pair_log.jsonl",
+   "blob_40_hex": "1679f26201d282cfe593d3bfcb1cd8ab87a0c5d2",
+   "commits_touching_this_path": 1
+  },
+  {
+   "path": "ord0301-p3-same-chain-hjp3/p3_rig_state_dep_answer_spec_222817.json",
+   "blob_40_hex": "08f76a879486583c3af8e74042e94fa7f0d7ac17",
+   "commits_touching_this_path": 1
+  },
+  {
+   "path": "ord0301-p3-same-chain-hjp3/p3_rig_state_dep_answer_spec_222905.json",
+   "blob_40_hex": "6139a938c3b1f66e7515a058001b8b080c9167a6",
+   "commits_touching_this_path": 1
+  },
+  {
+   "path": "ord0301-p3-same-chain-hjp3/p3_rig_state_dep_lock_behind_hop_223229.json",
+   "blob_40_hex": "e06ac9f6cc25ffceb826ed5127c5a1f9a1bc876f",
+   "commits_touching_this_path": 1
+  },
+  {
+   "path": "ord0301-p3-same-chain-hjp3/p3_rig_state_dep_lock_behind_hop_223609.json",
+   "blob_40_hex": "3dbc60b728c65ca494b50994211cdc4f04ca088b",
+   "commits_touching_this_path": 1
+  },
+  {
+   "path": "ord0301-p3-same-chain-hjp3/p3_rig_state_dep_mutate_extra_key_222041.json",
+   "blob_40_hex": "9473d6e705cfe086fd621c00a5774191d2825fae",
+   "commits_touching_this_path": 1
+  },
+  {
+   "path": "ord0301-p3-same-chain-hjp3/p3_rig_state_dep_mutate_extra_key_222238.json",
+   "blob_40_hex": "8be1df24ba5d1d56909312fbe13c36ddc150f468",
+   "commits_touching_this_path": 1
+  },
+  {
+   "path": "ord0301-p3-same-chain-hjp3/p3_rig_state_dep_mutate_extra_key_222513.json",
+   "blob_40_hex": "4f27cc85bdb731b7b1e6922ae6b024d97968517a",
+   "commits_touching_this_path": 1
+  },
+  {
+   "path": "ord0301-p3-same-chain-hjp3/p3_rig_state_dep_pass_222548.json",
+   "blob_40_hex": "304e7d4bcea7e1acec4e5014df5e8654f173161b",
+   "commits_touching_this_path": 1
+  },
+  {
+   "path": "ord0301-p3-same-chain-hjp3/p3_rig_state_dep_pass_222950.json",
+   "blob_40_hex": "1b105813957fb83da6c37389af42dc1490728cc6",
+   "commits_touching_this_path": 1
+  },
+  {
+   "path": "ord0301-p3-same-chain-hjp3/p3_rig_state_old_answer_spec_222841.json",
+   "blob_40_hex": "f4ce32143ab72eaa1f42d0e8ca13e9066a72c1dd",
+   "commits_touching_this_path": 1
+  },
+  {
+   "path": "ord0301-p3-same-chain-hjp3/p3_rig_state_old_answer_spec_222928.json",
+   "blob_40_hex": "98cfb5c26eb0b22e26f9bb6ed2fb8c825d59f733",
+   "commits_touching_this_path": 1
+  },
+  {
+   "path": "ord0301-p3-same-chain-hjp3/p3_rig_state_old_lock_behind_hop_223409.json",
+   "blob_40_hex": "a5d7847426652cdf1a7ef2a2cbb7f171a6d4f222",
+   "commits_touching_this_path": 1
+  },
+  {
+   "path": "ord0301-p3-same-chain-hjp3/p3_rig_state_old_lock_behind_hop_223703.json",
+   "blob_40_hex": "798f00d4da687fd0336e57d422f64e4518d678c2",
+   "commits_touching_this_path": 1
+  },
+  {
+   "path": "ord0301-p3-same-chain-hjp3/p3_rig_state_old_mutate_extra_key_222752.json",
+   "blob_40_hex": "e12a0d576e04164d2e2837ffcd74e5a7a9a71f6f",
+   "commits_touching_this_path": 1
+  },
+  {
+   "path": "ord0301-p3-same-chain-hjp3/p3_rig_state_old_pass_222650.json",
+   "blob_40_hex": "1dabe524be81186f7825b0d2e840e748d2330a69",
+   "commits_touching_this_path": 1
+  },
+  {
+   "path": "ord0301-p3-same-chain-hjp3/p3_scored.json",
+   "blob_40_hex": "4a0c4c5dc160e125a87b498dc08fe05038ff84d1",
+   "commits_touching_this_path": 1
+  },
+  {
+   "path": "ord0301-p3-same-chain-hjp3/p3_teardown_223758.json",
+   "blob_40_hex": "2b634af186c2f62c1f9028e05553cef6c601aeb4",
+   "commits_touching_this_path": 1
+  },
+  {
+   "path": "ord0301-p3-same-chain-hjp3/q38_ruler_O0301P3-2230.txt",
+   "blob_40_hex": "f8a91f141090ee589b4b503eb2d3802317dd52f4",
+   "commits_touching_this_path": 1
+  }
+ ],
+ "every_published_path_has_exactly_one_write": true,
+ "paths_with_more_than_one_write": [],
+ "negative_controls_the_counter_is_not_blind": [
+  {
+   "path": "ord0300-hjp3-write-cells/RECEIPT_O0300-2610.json",
+   "commits_touching": 2,
+   "history": [
+    {
+     "sha": "cfd07c617f944ab02b37322a1b30a8e5e83b60d6",
+     "at": "2026-09-25T02:56:18Z",
+     "msg": "docs(evidence): ORD-0300 HJ-P3 machine receipt: 5 self-justifyin"
+    },
+    {
+     "sha": "1bc2d8b80df40bb9fbfd179fcde1d051572e21c9",
+     "at": "2026-09-25T02:42:56Z",
+     "msg": "docs(evidence): ORD-0300 HJ-P3 machine receipt: 5 self-justifyin"
+    }
+   ],
+   "so_the_counter_is_not_blind": true
+  },
+  {
+   "path": "ord0300-c2-pairing-hjp3/evidence_manifest_full40_c2.json",
+   "commits_touching": 2,
+   "history": [
+    {
+     "sha": "1751bb51a2f40242f1c5dbe164c63b50d15e1a79",
+     "at": "2026-09-25T13:16:35Z",
+     "msg": "docs(evidence): ORD-0300 C2 pairing HJ-P3 manifest of 40-hex blo"
+    },
+    {
+     "sha": "eb719aa8d30cfb64292d4e7ca3cb399a1b6f76ef",
+     "at": "2026-09-25T12:52:01Z",
+     "msg": "docs(evidence): ORD-0300 C2 pairing HJ-P3 manifest of 40-hex blo"
+    }
+   ],
+   "so_the_counter_is_not_blind": true
+  },
+  {
+   "path": "ord0288-t1-durable-ownership-hjp3/evidence_manifest_full40_o0288_r2.json",
+   "commits_touching": 2,
+   "history": [
+    {
+     "sha": "fd39c8f6c2730939b8f839baf2031cacd742d13d",
+     "at": "2026-09-25T10:01:45Z",
+     "msg": "docs(evidence): ORD-0288 T-1 HJ-P3 blob manifest r2 (40-hex, blo"
+    },
+    {
+     "sha": "2958288b89262e39a7029f09e8b3f6f6de9de39c",
+     "at": "2026-09-25T09:45:05Z",
+     "msg": "docs(evidence): ORD-0288 T-1 manifest r2 - counts blobs, not the"
+    }
+   ],
+   "so_the_counter_is_not_blind": true
+  }
+ ],
+ "control_on_my_own_memory": {
+  "path": "ord0288-t1-durable-ownership-hjp3/evidence_manifest_full40_o0288.json",
+  "commits_touching": 1,
+  "history": [
+   {
+    "sha": "2515880814ca405c22807f65e99b5b5a11c16061",
+    "at": "2026-09-25T09:37:08Z",
+    "msg": "docs(evidence): ORD-0288 T-1 HJ-P3 manifest of every published b"
+   }
+  ],
+  "what_I_had_assumed": "an earlier note of mine named this exact path as a re-PUT one",
+  "what_the_counter_says": "it was written once; the overwrite was on the `_r2` name, which is a control above - so the assumption is corrected here rather than kept as a fact"
+ },
+ "revisions_that_moved_to_new_names": [],
+ "verdict": {
+  "positive_no_path_in_this_batch_was_written_twice": true,
+  "negative_both_known_double_publishes_were_detected": true,
+  "mutation_superseded_and_discarded_copies_each_hold_one_write": true,
+  "ALL_HOLD": true
+ }
+}
