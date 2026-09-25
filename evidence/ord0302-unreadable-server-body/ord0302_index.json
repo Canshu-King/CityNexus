@@ -210,14 +210,11 @@
    "bytes": 40085
   },
   {
-   "name": "ord0302_index.json",
-   "blob40": "b571909ed3d1e34f29a89cfee2995cc731cfbb3e",
-   "bytes": 5401
-  },
-  {
    "name": "ord0302_claim_gate.json",
    "blob40": "90392df7ff6968f4c6b70e25b1008aa721e9d9f7",
    "bytes": 1740
   }
- ]
+ ],
+ "self_reference": "this file is not in its own list; its blob is what the read-back of the branch prints",
+ "repair_note": "the first version of this index carried an entry for itself whose blob had been computed before the file was written, i.e. it named the previous bytes. Entry removed; every other entry is untouched."
 }
