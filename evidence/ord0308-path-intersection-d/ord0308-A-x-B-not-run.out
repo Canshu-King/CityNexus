@@ -1,0 +1,3 @@
+verdict: NOT_RUN_missing_operand
+command that would run: git merge-tree --write-tree <F-0307 candidate sha> 5aff3722d5c36c760a424f5fea5c3a771298f9ac
+why: The third merge-tree is the one the order actually cares about, and it cannot be run: one operand exists (5aff3722d5c36c760a424f5fea5c3a771298f9ac, B's ORD-0302 candidate) and the other does not (cell B printed 0 heads matching 0307 out of 56). Running it against a stand-in would manufacture the answer, so the cell stays NOT_RUN and is re-askable the moment F's ref appears.
