@@ -184,7 +184,6 @@ type RawReading = {
   http_status: number;
   content_type: string;
   bytes: number | null;
-  body_head: string;
 };
 
 function failureNote(serverText: string | null, deviceText: string): FailureNote {
@@ -579,7 +578,6 @@ export function PlanWithAiSheet({
         http_status: response.status,
         content_type: response.headers.get("content-type") ?? "",
         bytes: raw === null ? null : new TextEncoder().encode(raw).length,
-        body_head: raw === null ? "" : raw.slice(0, 240),
       };
       const mission = (body as { mission?: { id?: string; status?: string; failure_reason?: string | null;
                                              reasoning_summary?: string | null } } | null)?.mission ?? null;
@@ -787,9 +785,9 @@ export function PlanWithAiSheet({
            "soften the sentence", so when the mission stored no reason we show what THIS screen measured
            -- a count it derived from the two reads it was allowed to make -- labelled as a device reading. */
         /* Q53=① deleted the device-composed count sentence this line used to fall back to: the card already
-           points at 技术详情, and what belongs under it is the answer's own bytes, not a sentence this screen
-           invented. The block still renders -- it is gated on `rawReading` below -- it just says nothing that
-           was not measured. */
+           points at 技术详情, and what belongs under it is only the fields THIS device measured
+           (status, content-type, byte count): Q64=① forbids forwarding upstream body text into the DOM,
+           so the block renders without any of the answer's bytes in it. */
         failureReason: mission?.failure_reason
           ? { text: mission.failure_reason, from: "server" as const }
           : blockedSentence,
@@ -1050,10 +1048,11 @@ export function PlanWithAiSheet({
                 )}
                 {result?.rawReading && (
                   <>
-                    {/* Field, then the value exactly as it arrived: no translation, no rewriting, no
-                        "probably because". An empty body shows as `bytes=0` with nothing after `body=`. */}
+                    {/* Q64=① whitelist: only what this device measured -- status, content-type, byte
+                        count.  No fragment of the upstream body is forwarded into the DOM, so a
+                        screenshot or an evidence file cannot carry a credential that arrived here. */}
                     <span className="plan-ai-detail-label" data-testid="plan-ai-raw-label">
-                      {zh ? "这台设备读到的原始回读" : "Raw reading this device took"}
+                      {zh ? "这台设备自己量到的回读字段" : "Fields this device measured"}
                     </span>
                     <pre
                       className="plan-ai-raw-reading"
@@ -1065,7 +1064,6 @@ export function PlanWithAiSheet({
                       {`http_status=${result.rawReading.http_status}\n`}
                       {`content-type=${result.rawReading.content_type}\n`}
                       {`bytes=${result.rawReading.bytes ?? ""}\n`}
-                      {`body=${result.rawReading.body_head}`}
                     </pre>
                   </>
                 )}

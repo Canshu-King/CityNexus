@@ -240,14 +240,18 @@ async function bootWithStubs(page: Page, stubs: Stub[], arm: string, cancelMidFl
            origin, raw_text: rawText, raw_fields: rawFields };
 }
 
-/** What the block must show for a shape we forced: the answer's own fields, unedited. */
+/** What the block must show for a shape we forced: only the fields this device measured (Q64=①). */
 function expectedRaw(sh: X5Shape): Record<string, string> {
   return {
     http_status: String(sh.status),
     "content-type": sh.contentType,
     bytes: String(new TextEncoder().encode(sh.body).length),
-    body: sh.body,
   };
+}
+/** The other direction: nothing that was forwarded from the answer's body may be on screen. */
+function panelLeaksBody(read: { raw_text: string }, sh: X5Shape): boolean {
+  const frag = sh.body.slice(0, 24);
+  return frag.length > 0 && read.raw_text.includes(frag);
 }
 
 const MISSION_CLEAN = { mission: { id: "ord0302-mission", status: "COMPLETED", failure_reason: null,
@@ -259,6 +263,10 @@ const TWO_PLACES = [{ id: "ord0302-p1", title: "A" }, { id: "ord0302-p2", title:
    all five answer HTTP 200 on both write legs and differ only in the body. Each one reaches the branch whose
    card sends the traveller to 技术详情, so the pairing is judged once per shape -- inside ONE cell, which is
    what keeps the two killer mutants reddening exactly this cell. */
+/* Q64=① witness: a body that looks like a credential.  Under b4 exactly this string was sliced into the
+   panel; under b5 nothing of it may appear, while `bytes` still has to equal its real length. */
+const FAKE_TOKEN_BODY =
+  "upstream said: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.supersecret-not-for-the-screen";
 type X5Shape = { row: string; status: number; contentType: string; body: string };
 const X5_SHAPES: X5Shape[] = [
   { row: "R19_④_200_empty_body", status: 200, contentType: "application/json", body: "" },
@@ -269,6 +277,8 @@ const X5_SHAPES: X5Shape[] = [
   { row: "R23_④_200_mission_unusable_status", status: 200, contentType: "application/json",
     body: JSON.stringify({ mission: { id: "ord0302-mission", status: "FAILED_UPSTREAM",
                                       failure_reason: null, reasoning_summary: null } }) },
+  { row: "R24_Q64_200_credential_shaped_text", status: 200, contentType: "text/plain; charset=utf-8",
+    body: FAKE_TOKEN_BODY },
 ];
 
 function stubsForShape(sh: X5Shape): Stub[] {
@@ -300,14 +310,21 @@ test(`ord0302-X1 ${"every 200 shape whose card points at 技术详情 renders a 
         ok: read.status === "NO_PLANS_PRODUCED", got: { status: read.status } });
       const want = expectedRaw(sh);
       const got = read.raw_fields;
-      rows.push({ claim: `${sh.row}: its block carries the raw reading, field for field, unedited`,
+      rows.push({ claim: `${sh.row}: its block carries the whitelist fields, value for value`,
         ok: Object.entries(want).every(([k, v]) => (got[k] ?? null) === v),
         got: { expected: want, rendered: got } });
+      rows.push({ claim: `${sh.row}: no fragment of the answer's body reaches the DOM (Q64=①)`,
+        ok: !panelLeaksBody(read, sh),
+        got: { fed_head: sh.body.slice(0, 24), leaked: panelLeaksBody(read, sh),
+               panel: read.raw_text } });
+      rows.push({ claim: `${sh.row}: an empty answer still shows its byte count, so the check above is not vacuous`,
+        ok: sh.body !== "" || (read.raw_text ?? "").includes("bytes=0"),
+        got: { fed_bytes: new TextEncoder().encode(sh.body).length, panel: read.raw_text } });
       rows.push({ claim: `${sh.row}: the copy still points there (Q53=①: render it, keep the pointer)`,
         ok: read.promise_in_copy === true, got: { promise_in_copy: read.promise_in_copy } });
     }
     const head = per[X5_SHAPES[2].row] as Record<string, unknown>;
-    readings["X1"] = { want: "raw", force_shape: "five HTTP 200 bodies on both write legs (R19-R23)",
+    readings["X1"] = { want: "raw", force_shape: "HTTP 200 bodies on both write legs (R19-R23, plus the Q64=① credential-shaped witness R24)",
                        shape_count: X5_SHAPES.length, per_shape: per,
                        read: { ...head, shape_count: X5_SHAPES.length },
                        verdict: rows.every((r) => r.ok) ? "MET" : "NOT_MET", rows };
