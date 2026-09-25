@@ -3,52 +3,42 @@
  "base_tip": "13af1ff4ba4516aa1a39cda67428ed4a2a34ac69",
  "branch": "review/0302-unreadable-server-body-b3",
  "dir": "evidence/ord0302-unreadable-server-body-q53",
- "self_reference": "this file is not in its own list; its blob is what the read-back of the branch prints",
+ "self_reference": "this file is not in its own list; its blob is what the branch answers",
  "files": [
   {
-   "name": "ord0302_receipt.json",
-   "blob40": "63c4421d69bb8f7be334f11ccc5b083c96e4f420",
-   "bytes": 44639
-  },
-  {
-   "name": "ord0302_arms_matrix.json",
-   "blob40": "f2e0b99ca0d17cc550e450f45c7a9cdcf7d32536",
-   "bytes": 81768
-  },
-  {
-   "name": "fixed__arm_N1.json",
-   "blob40": "b1984af11c0058cee3975089138066857ed91a01",
+   "name": "ca_null_on_network__arm_N1.json",
+   "blob40": "d7a0752b2af933e3ca79680eb2d2ba3b95433290",
    "bytes": 1828
   },
   {
-   "name": "fixed__arm_N2.json",
-   "blob40": "066d6e7c1069f5bb83138607d7c735335e784440",
+   "name": "ca_null_on_network__arm_N2.json",
+   "blob40": "50722b8cdea97e2eac44804431632f2b269cdb05",
    "bytes": 1646
   },
   {
-   "name": "fixed__arm_N3.json",
-   "blob40": "cd08928690b48c4a9a74655c8e8dbd4ee5094fe2",
-   "bytes": 1307
+   "name": "ca_null_on_network__arm_N3.json",
+   "blob40": "9d1ba8b511c0fc9c8b381cd5d6b3345f6e624aca",
+   "bytes": 1120
   },
   {
-   "name": "fixed__arm_X1.json",
-   "blob40": "ce36938869ccd5978f2797d97341cb03e554a208",
+   "name": "ca_null_on_network__arm_X1.json",
+   "blob40": "33c9f86117fae1d8e59df46b7041f72b8abbc3eb",
    "bytes": 8438
   },
   {
-   "name": "fixed__arm_X2.json",
-   "blob40": "304d5031455567b96cff5a6034f061a22886368a",
+   "name": "ca_null_on_network__arm_X2.json",
+   "blob40": "8e2fdb10d89a2b7834412215ca58ae08f6432974",
    "bytes": 1635
   },
   {
-   "name": "fixed__authoritative.json",
-   "blob40": "74e3d6da98ba2111770e4ab5a31a8b91eb931d9c",
+   "name": "ca_null_on_network__authoritative.json",
+   "blob40": "bedaed455d3384803ae90e46b6b963443554e3c2",
    "bytes": 772
   },
   {
-   "name": "fixed__playwright_report.json",
-   "blob40": "53755b1986b0c1d813777c766376cdcfd6c8ee09",
-   "bytes": 9795
+   "name": "ca_null_on_network__playwright_report.json",
+   "blob40": "d9b22f2ceeb2d6e8ec48526245d01968c026a4e0",
+   "bytes": 17721
   },
   {
    "name": "ca_unsafe_read__arm_N1.json",
@@ -84,41 +74,6 @@
    "name": "ca_unsafe_read__playwright_report.json",
    "blob40": "0cbf89a96a1e1ac2a3a5bca7c7e129bef4931a13",
    "bytes": 18277
-  },
-  {
-   "name": "ca_null_on_network__arm_N1.json",
-   "blob40": "d7a0752b2af933e3ca79680eb2d2ba3b95433290",
-   "bytes": 1828
-  },
-  {
-   "name": "ca_null_on_network__arm_N2.json",
-   "blob40": "50722b8cdea97e2eac44804431632f2b269cdb05",
-   "bytes": 1646
-  },
-  {
-   "name": "ca_null_on_network__arm_N3.json",
-   "blob40": "9d1ba8b511c0fc9c8b381cd5d6b3345f6e624aca",
-   "bytes": 1120
-  },
-  {
-   "name": "ca_null_on_network__arm_X1.json",
-   "blob40": "33c9f86117fae1d8e59df46b7041f72b8abbc3eb",
-   "bytes": 8438
-  },
-  {
-   "name": "ca_null_on_network__arm_X2.json",
-   "blob40": "8e2fdb10d89a2b7834412215ca58ae08f6432974",
-   "bytes": 1635
-  },
-  {
-   "name": "ca_null_on_network__authoritative.json",
-   "blob40": "bedaed455d3384803ae90e46b6b963443554e3c2",
-   "bytes": 772
-  },
-  {
-   "name": "ca_null_on_network__playwright_report.json",
-   "blob40": "d9b22f2ceeb2d6e8ec48526245d01968c026a4e0",
-   "bytes": 17721
   },
   {
    "name": "ca_x5_no_block__arm_N1.json",
@@ -201,9 +156,49 @@
    "bytes": 21235
   },
   {
-   "name": "ord0302_run_arms.py",
-   "blob40": "2caf692c158c68914d5d9162dec1623204190d42",
-   "bytes": 12161
+   "name": "fixed__arm_N1.json",
+   "blob40": "b1984af11c0058cee3975089138066857ed91a01",
+   "bytes": 1828
+  },
+  {
+   "name": "fixed__arm_N2.json",
+   "blob40": "066d6e7c1069f5bb83138607d7c735335e784440",
+   "bytes": 1646
+  },
+  {
+   "name": "fixed__arm_N3.json",
+   "blob40": "cd08928690b48c4a9a74655c8e8dbd4ee5094fe2",
+   "bytes": 1307
+  },
+  {
+   "name": "fixed__arm_X1.json",
+   "blob40": "ce36938869ccd5978f2797d97341cb03e554a208",
+   "bytes": 8438
+  },
+  {
+   "name": "fixed__arm_X2.json",
+   "blob40": "304d5031455567b96cff5a6034f061a22886368a",
+   "bytes": 1635
+  },
+  {
+   "name": "fixed__authoritative.json",
+   "blob40": "74e3d6da98ba2111770e4ab5a31a8b91eb931d9c",
+   "bytes": 772
+  },
+  {
+   "name": "fixed__playwright_report.json",
+   "blob40": "53755b1986b0c1d813777c766376cdcfd6c8ee09",
+   "bytes": 9795
+  },
+  {
+   "name": "ord0302_arms_matrix.json",
+   "blob40": "f2e0b99ca0d17cc550e450f45c7a9cdcf7d32536",
+   "bytes": 81768
+  },
+  {
+   "name": "ord0302_claim_gate.json",
+   "blob40": "b08c5873806e733ced926f9046b6a0538964dc43",
+   "bytes": 1741
   },
   {
    "name": "ord0302_deliver.py",
@@ -211,19 +206,35 @@
    "bytes": 44374
   },
   {
-   "name": "ord0302_x5_five_shapes_patch.py",
-   "blob40": "e5f73ba25a2802bb81feeb4f5ef9d1759376ad52",
-   "bytes": 6740
-  },
-  {
    "name": "ord0302_deliver_r2_patch.py",
    "blob40": "26342bf3012db74ff70c37a80a3f23eef7ac4ea1",
    "bytes": 7508
   },
   {
-   "name": "ord0302_claim_gate.json",
-   "blob40": "b08c5873806e733ced926f9046b6a0538964dc43",
-   "bytes": 1741
+   "name": "ord0302_receipt.json",
+   "blob40": "63c4421d69bb8f7be334f11ccc5b083c96e4f420",
+   "bytes": 44639
+  },
+  {
+   "name": "ord0302_run_arms.py",
+   "blob40": "2caf692c158c68914d5d9162dec1623204190d42",
+   "bytes": 12161
+  },
+  {
+   "name": "ord0302_verify_r2.json",
+   "blob40": "d2d777ab40de2c3b56ca703f389e4348015f0a48",
+   "bytes": 3583
+  },
+  {
+   "name": "ord0302_verify_r2.py",
+   "blob40": "3baa96f1f9a47e7782ee3f0b227002d114dd880f",
+   "bytes": 10246
+  },
+  {
+   "name": "ord0302_x5_five_shapes_patch.py",
+   "blob40": "e5f73ba25a2802bb81feeb4f5ef9d1759376ad52",
+   "bytes": 6740
   }
- ]
+ ],
+ "audit": "every blob here was recomputed from the branch's own answer by ord0302_verify_r2.py"
 }
