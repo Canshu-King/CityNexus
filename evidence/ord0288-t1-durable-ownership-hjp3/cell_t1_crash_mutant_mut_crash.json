@@ -1,0 +1,161 @@
+{
+ "arm": "t1_crash_mutant_mut_crash",
+ "measured_on": "dc964086c9d412573ac19d70b24b30e6c3ee6168",
+ "private_copy": {
+  "dir": "D:\\moodle\\_hjp3_0288t1_0925\\mut_crash",
+  "hardlink_audit": {
+   "files_checked": 305,
+   "nlink_gt_1": [],
+   "verdict": "PRIVATE_COPY"
+  },
+  "patch": {
+   "anchor_line": "planning_mode = request.planning_mode or journey.planning_mode",
+   "inserted_before_it": "raise RuntimeError(\"ORD-0288 T-1 probe: unhandled after the claim\")",
+   "lines_added": 1,
+   "patched_file_parses": true
+  },
+  "main_py_sha256": "b84171a73964228e",
+  "pristine_main_py_sha256": "46e696c023075988",
+  "only_file_changed": [
+   "app\\main.py"
+  ]
+ },
+ "seed": {
+  "rc": 0,
+  "seed": {
+   "places": 16
+  }
+ },
+ "backend": {
+  "tag": "mut_crash",
+  "pid": 44624,
+  "port": 8613,
+  "tree": "D:\\moodle\\_hjp3_0288t1_0925\\mut_crash",
+  "db": "D:\\moodle\\_hjp3_0288t1_0925\\t1_mut_crash.s3db",
+  "listening": true,
+  "exited": false,
+  "cmdline_at_start": "D:/moodle/CityNexus/.venv/Scripts/python.exe -m uvicorn app.main:app --host 127.0.0.1 --port 8613 --log-level info"
+ },
+ "journey": {
+  "traveler_http": 201,
+  "journey_http": 201,
+  "journey_id": "5708e18f-1e44-458f-90e0-04d336ed6533"
+ },
+ "db": "D:\\moodle\\_hjp3_0288t1_0925\\t1_mut_crash.s3db",
+ "carrier_removed_or_injected": "the unhandled RuntimeError inside _generate_plans_answer",
+ "steps": [
+  {
+   "intent": "the send that claims the key",
+   "response": {
+    "key": "ord0288-crash-163204",
+    "request_body": {
+     "candidate_count": 3
+    },
+    "status": 500,
+    "bytes": 21,
+    "body": "Internal Server Error",
+    "elapsed_ms": 13,
+    "at": "16:32:04"
+   },
+   "durable_after_this": {
+    "connection": "file:D:\\moodle\\_hjp3_0288t1_0925\\t1_mut_crash.s3db?mode=ro (a SECOND, read-only connection)",
+    "rows": [
+     {
+      "key": "plans.generate:ord0288-crash-163204",
+      "operation": "plans.generate",
+      "response_status": null,
+      "response_json_bytes": 0,
+      "request_hash_head": "{\"candidate_coun",
+      "created_at": "2026-09-25T08:32:04.863718+00:00",
+      "expires_at": "2026-10-02T08:32:04.863718+00:00",
+      "response_json_head": ""
+     }
+    ],
+    "plan_versions": 0
+   }
+  },
+  {
+   "intent": "same key again while the placeholder is still NULL",
+   "response": {
+    "key": "ord0288-crash-163204",
+    "request_body": {
+     "candidate_count": 3
+    },
+    "status": 409,
+    "bytes": 178,
+    "body": "{\"error\":{\"code\":\"CONFLICT\",\"message\":\"agent idempotency record is incomplete\",\"message_key\":\"request.conflict\",\"trace_id\":\"6f599ca1-fe10-422e-9388-78ee2f004062\",\"details\":null}}",
+    "elapsed_ms": 818,
+    "at": "16:32:05"
+   },
+   "is_409_incomplete": true
+  },
+  {
+   "intent": "the fresh process I just started for the replay",
+   "backend": {
+    "tag": "mut_crash",
+    "pid": 45616,
+    "port": 8613,
+    "tree": "D:\\moodle\\_hjp3_0288t1_0925\\mut_crash",
+    "db": "D:\\moodle\\_hjp3_0288t1_0925\\t1_mut_crash.s3db",
+    "listening": true,
+    "exited": false,
+    "cmdline_at_start": "D:/moodle/CityNexus/.venv/Scripts/python.exe -m uvicorn app.main:app --host 127.0.0.1 --port 8613 --log-level info"
+   }
+  },
+  {
+   "intent": "same key against a FRESH process on the same file (the owner died here)",
+   "response": {
+    "key": "ord0288-crash-163204",
+    "request_body": {
+     "candidate_count": 3
+    },
+    "status": 409,
+    "bytes": 178,
+    "body": "{\"error\":{\"code\":\"CONFLICT\",\"message\":\"agent idempotency record is incomplete\",\"message_key\":\"request.conflict\",\"trace_id\":\"a760a647-51fc-4151-a29e-1c4133df3e03\",\"details\":null}}",
+    "elapsed_ms": 829,
+    "at": "16:32:10"
+   },
+   "still_409_incomplete": true
+  },
+  {
+   "intent": "a DIFFERENT key on the same journey, to show the journey is still usable",
+   "response": {
+    "key": "ord0288-crash-163204-fresh",
+    "request_body": {
+     "candidate_count": 3
+    },
+    "status": 500,
+    "bytes": 21,
+    "body": "Internal Server Error",
+    "elapsed_ms": 13,
+    "at": "16:32:10"
+   },
+   "durable_after_this": {
+    "connection": "file:D:\\moodle\\_hjp3_0288t1_0925\\t1_mut_crash.s3db?mode=ro (a SECOND, read-only connection)",
+    "rows": [
+     {
+      "key": "plans.generate:ord0288-crash-163204",
+      "operation": "plans.generate",
+      "response_status": null,
+      "response_json_bytes": 0,
+      "request_hash_head": "{\"candidate_coun",
+      "created_at": "2026-09-25T08:32:04.863718+00:00",
+      "expires_at": "2026-10-02T08:32:04.863718+00:00",
+      "response_json_head": ""
+     },
+     {
+      "key": "plans.generate:ord0288-crash-163204-fresh",
+      "operation": "plans.generate",
+      "response_status": null,
+      "response_json_bytes": 0,
+      "request_hash_head": "{\"candidate_coun",
+      "created_at": "2026-09-25T08:32:10.740375+00:00",
+      "expires_at": "2026-10-02T08:32:10.740375+00:00",
+      "response_json_head": ""
+     }
+    ],
+    "plan_versions": 0
+   }
+  }
+ ]
+}
