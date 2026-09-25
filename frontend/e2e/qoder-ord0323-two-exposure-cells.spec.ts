@@ -497,7 +497,11 @@ test("N6_Q68b_a_sentence_only_refusal_is_not_presentation_as_a_code — 编号�
 }) => {
   test.setTimeout(300_000);
   const arm = "Q68b";
-  await askTheSheet(page, jsonBody({detail: Q68_PROSE}));
+  /* `serverReasonCode` returns early when the envelope holds no `error` object at all, so the shape that
+     really reached the slot is the one S4 measured: an envelope with an `error` and no code in it, plus
+     a `detail`. Measured under `cell3_code_slot_back`: with a bare `{detail}` both legs stayed green,
+     which was the arm being vacuous, not the fix being good. */
+  await askTheSheet(page, jsonBody({error: {hint: "no machine code in this envelope"}, detail: Q68_PROSE}));
   const reasonEl = page.getByTestId("plan-ai-reason");
   const reasonText = clean(await reasonEl.textContent().catch(() => ""));
   const cardAll = clean(await page.getByTestId("plan-ai-result").textContent());
