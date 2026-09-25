@@ -1,0 +1,505 @@
+{
+  "schema": "CNX_FIELD_ARRIVAL_V1",
+  "order": "ORD-0326 attachment (input to ORD-0332)",
+  "lane": "S1-q64sweep",
+  "generation": "5d7335721106c20092dd4d90181bb99accd0a32b",
+  "measured_at_utc": "2026-09-25T21:52:24Z",
+  "measured_at_lane_local": "2026-09-26 05:52 +08",
+  "ruling_basis": [
+    "Q64=1 UI_EVIDENCE_EXPOSURE_GATE_V1",
+    "Q68",
+    "Q69",
+    "CMDR 05:44 item 2"
+  ],
+  "scope": {
+    "components_landed": [
+      "frontend/src/features/agent/AgentComposer.tsx",
+      "frontend/src/features/agent/CopilotDock.tsx"
+    ],
+    "legs": [
+      "POST /api/v1/journeys/{id}/copilot/messages",
+      "POST /api/v1/journeys/{id}/agent/hermes/runs/{runId}/stop",
+      "POST /api/v1/journeys/{id}/agent/approvals/{approvalId}/approve"
+    ],
+    "client_methods": [
+      "sendCopilotMessage",
+      "stopNativeHermesRun",
+      "approveAgentAction"
+    ],
+    "note": "the commander's route name /copilot/message is singular; the real route is plural `messages`, cited at backend/app/main.py:11090"
+  },
+  "allowed_fields": {
+    "http_status": {
+      "verdict": "EMITTED_AND_ON_SCREEN",
+      "keys": {
+        "wire": "HTTP status line (no body key)",
+        "client": "CityNexusApiError.status / OriginResponseUnusableError.status",
+        "attribution": "http_status",
+        "dom": "interpolated inside copyFor body + data-attribution=\"http_status=<n>\""
+      },
+      "layer_count": 4,
+      "cite_count": 11,
+      "cites": [
+        {
+          "field": "http_status",
+          "layer": "server",
+          "path": "backend/app/main.py",
+          "line": 496,
+          "text": "return JSONResponse(status_code=status, content={\"error\": body})",
+          "checked_substring": "JSONResponse(status_code=status",
+          "note": "the refusal's status is the transport status of the one envelope; no route in this scope sets status_code, so a success answers 200"
+        },
+        {
+          "field": "http_status",
+          "layer": "client_read",
+          "path": "frontend/src/api/citynexus.ts",
+          "line": 681,
+          "text": "response.status,",
+          "checked_substring": "response.status",
+          "note": "requestJsonInner throws CityNexusApiError carrying it"
+        },
+        {
+          "field": "http_status",
+          "layer": "client_read",
+          "path": "frontend/src/api/citynexus.ts",
+          "line": 689,
+          "text": "response.status,",
+          "checked_substring": "response.status",
+          "note": "OriginResponseUnusableError carries it for a 2xx whose body is unusable"
+        },
+        {
+          "field": "http_status",
+          "layer": "attribution",
+          "path": "frontend/src/lib/failureAttribution.ts",
+          "line": 151,
+          "text": "const status = server?.status ?? (error instanceof Error && \"status\" in error ? Number((error as { status?: number }).status) : null);",
+          "checked_substring": "server?.status ?? (error instanceof Error && \"status\" in error",
+          "note": "the only read site that turns a thrown error back into a status"
+        },
+        {
+          "field": "http_status",
+          "layer": "attribution",
+          "path": "frontend/src/lib/failureAttribution.ts",
+          "line": 57,
+          "text": "http_status: number | null;",
+          "checked_substring": "http_status: number | null",
+          "note": "Attribution key"
+        },
+        {
+          "field": "http_status",
+          "layer": "attribution",
+          "path": "frontend/src/lib/failureAttribution.ts",
+          "line": 133,
+          "text": "`http_status=${http_status ?? \"none\"}`,",
+          "checked_substring": "`http_status=${http_status ?? \"none\"}`",
+          "note": "telemetry token"
+        },
+        {
+          "field": "http_status",
+          "layer": "dom",
+          "path": "frontend/src/lib/failureAttribution.ts",
+          "line": 365,
+          "text": "? `服务器自己报错了（HTTP ${attribution.http_status}）。这是它那边的问题，不是你填错了什么。可以重试；如果一直这样，稍后再来。`",
+          "checked_substring": "HTTP ${attribution.http_status}",
+          "note": "zh SERVER_ERROR body arm -- reachable from all three legs"
+        },
+        {
+          "field": "http_status",
+          "layer": "dom",
+          "path": "frontend/src/lib/failureAttribution.ts",
+          "line": 422,
+          "text": "? `服务器认得你是谁，但明确拒绝了这一步（HTTP ${attribution.http_status}${attribution.server_code ? `：${attribution.server_code}` : \"\"}）。这不是网络问题，也不是登录问题——重新登录不会改变它的回答。你可以换一趟行程，或回到选择页。`",
+          "checked_substring": "HTTP ${attribution.http_status}",
+          "note": "zh FORBIDDEN body arm"
+        },
+        {
+          "field": "http_status",
+          "layer": "dom",
+          "path": "frontend/src/features/agent/AgentComposer.tsx",
+          "line": 193,
+          "text": "<p className=\"v8-message error\" data-testid=\"agent-send-error\" data-attribution={failureFacts ?? \"\"}>",
+          "checked_substring": "data-attribution={failureFacts ?? \"\"}",
+          "note": "render sink, AgentComposer"
+        },
+        {
+          "field": "http_status",
+          "layer": "dom",
+          "path": "frontend/src/features/agent/CopilotDock.tsx",
+          "line": 785,
+          "text": "data-attribution={sendFacts ?? \"\"}>{error}</p>",
+          "checked_substring": "data-attribution={sendFacts ?? \"\"}",
+          "note": "render sink, CopilotDock send"
+        },
+        {
+          "field": "http_status",
+          "layer": "dom",
+          "path": "frontend/src/features/agent/CopilotDock.tsx",
+          "line": 459,
+          "text": "data-attribution={actionFacts ?? \"\"}>{actionState}</p>",
+          "checked_substring": "data-attribution={actionFacts ?? \"\"}",
+          "note": "render sink, CopilotDock stop/approve"
+        }
+      ]
+    },
+    "content_type": {
+      "verdict": "EMITTED_BY_FRAMEWORK_READ_IN_ONE_STATE_ONLY",
+      "keys": {
+        "wire": "response header content-type",
+        "client": "local at api/citynexus.ts:687, then the error's content_type",
+        "attribution": "content_type (optional key)",
+        "dom": "copyFor ORIGIN_INVALID_RESPONSE arms"
+      },
+      "layer_count": 4,
+      "cite_count": 5,
+      "cites": [
+        {
+          "field": "content_type",
+          "layer": "server",
+          "path": "backend/app/main.py",
+          "line": 496,
+          "text": "return JSONResponse(status_code=status, content={\"error\": body})",
+          "checked_substring": "JSONResponse(status_code=status",
+          "note": "the refusal body's media type is whatever this response class sends -- `content_type` as a *name* has 0 hits under backend/app/ (see census)"
+        },
+        {
+          "field": "content_type",
+          "layer": "client_read",
+          "path": "frontend/src/api/citynexus.ts",
+          "line": 687,
+          "text": "const contentType = response.headers.get(\"content-type\");",
+          "checked_substring": "response.headers.get(\"content-type\")",
+          "note": "inside the parseFailed/empty guard only -- a non-2xx throws at :680 first"
+        },
+        {
+          "field": "content_type",
+          "layer": "attribution",
+          "path": "frontend/src/lib/failureAttribution.ts",
+          "line": 91,
+          "text": "readonly content_type: string | null;",
+          "checked_substring": "readonly content_type: string | null",
+          "note": "OriginResponseUnusableError"
+        },
+        {
+          "field": "content_type",
+          "layer": "attribution",
+          "path": "frontend/src/lib/failureAttribution.ts",
+          "line": 160,
+          "text": "\"retry\", \"failure.originInvalidResponse\", null, error.content_type ?? `empty ${error.body_kind} body`);",
+          "checked_substring": "error.content_type ?? `empty ${error.body_kind} body`",
+          "note": "the one classify branch that can fill it"
+        },
+        {
+          "field": "content_type",
+          "layer": "dom",
+          "path": "frontend/src/lib/failureAttribution.ts",
+          "line": 378,
+          "text": "? `它确实回了话（HTTP ${attribution.http_status ?? \"2xx\"}，Content-Type: ${attribution.content_type ?? \"未知\"}），只是那不是一个可解析的行程响应。这属于服务暂时不可用的一种，不是你填错了什么。这台设备上还留着你已保存的行程，用下面的按钮可以只读查看这份本地快照；也可以稍后重试。`",
+          "checked_substring": "Content-Type: ${attribution.content_type",
+          "note": "zh ORIGIN_INVALID_RESPONSE body arm"
+        }
+      ]
+    },
+    "body_bytes": {
+      "verdict": "NOT-EMITTED",
+      "keys": {
+        "wire": "content-length header, framework-level, not named in backend/app",
+        "client": "absent",
+        "attribution": "absent",
+        "dom": "absent"
+      },
+      "layer_count": 1,
+      "cite_count": 1,
+      "cites": [
+        {
+          "field": "body_bytes",
+          "layer": "client_read",
+          "path": "frontend/src/api/citynexus.ts",
+          "line": 663,
+          "text": "const text = await response.text();",
+          "checked_substring": "await response.text()",
+          "note": "the bytes are read as text and the length is never kept"
+        }
+      ]
+    },
+    "response_received": {
+      "verdict": "NOT-EMITTED-BY-THAT-NAME",
+      "keys": {
+        "wire": "n/a",
+        "client": "absent",
+        "attribution": "evidence_kind (HTTP_RESPONSE | TRANSPORT | HEALTH_PROBE)",
+        "dom": "telemetry token evidence_kind="
+      },
+      "layer_count": 1,
+      "cite_count": 2,
+      "cites": [
+        {
+          "field": "response_received",
+          "layer": "attribution",
+          "path": "frontend/src/lib/failureAttribution.ts",
+          "line": 42,
+          "text": "export type EvidenceKind = \"HTTP_RESPONSE\" | \"TRANSPORT\" | \"HEALTH_PROBE\";",
+          "checked_substring": "export type EvidenceKind = \"HTTP_RESPONSE\" | \"TRANSPORT\" | \"HEALTH_PROBE\"",
+          "note": "the fact exists under this name, not as a boolean field"
+        },
+        {
+          "field": "response_received",
+          "layer": "attribution",
+          "path": "frontend/src/lib/failureAttribution.ts",
+          "line": 132,
+          "text": "`evidence_kind=${evidence_kind}`,",
+          "checked_substring": "`evidence_kind=${evidence_kind}`",
+          "note": "telemetry token"
+        }
+      ]
+    },
+    "elapsed_ms": {
+      "verdict": "SERVER_EMITTS_CLIENT_DROPS",
+      "keys": {
+        "wire": "error.details.elapsed_ms (503 SERVER_WRITE_DEADLINE_EXCEEDED only)",
+        "client": "absent -- body never read on these legs",
+        "attribution": "absent",
+        "dom": "absent"
+      },
+      "layer_count": 2,
+      "cite_count": 8,
+      "cites": [
+        {
+          "field": "elapsed_ms",
+          "layer": "server",
+          "path": "backend/app/db/write_deadline.py",
+          "line": 164,
+          "text": "return {\"scenario\": self.scenario, \"elapsed_ms\": self.elapsed_ms,",
+          "checked_substring": "\"elapsed_ms\": self.elapsed_ms",
+          "note": "WriteDeadlineExceeded.details() -- the only allowed field a body carries here"
+        },
+        {
+          "field": "elapsed_ms",
+          "layer": "server",
+          "path": "backend/app/main.py",
+          "line": 618,
+          "text": "return error(exc.code, str(exc), status=503, details=exc.details())",
+          "checked_substring": "status=503, details=exc.details()",
+          "note": "the 503 handler puts those details into the envelope"
+        },
+        {
+          "field": "elapsed_ms",
+          "layer": "server",
+          "path": "backend/app/main.py",
+          "line": 634,
+          "text": "arm_request_budget(SCENARIO_DEFAULT_WRITE)",
+          "checked_substring": "arm_request_budget(SCENARIO_DEFAULT_WRITE)",
+          "note": "the http middleware arms a write clock for every request, so a POST in this scope can reach that 503"
+        },
+        {
+          "field": "elapsed_ms",
+          "layer": "server",
+          "path": "backend/app/main.py",
+          "line": 492,
+          "text": "\"details\": details,",
+          "checked_substring": "\"details\": details",
+          "note": "where it sits in the body: error.details.elapsed_ms"
+        },
+        {
+          "field": "elapsed_ms",
+          "layer": "client_read",
+          "path": "frontend/src/features/agent/AgentComposer.tsx",
+          "line": 103,
+          "text": "const attribution: Attribution = classifyReadFailure(cause);",
+          "checked_substring": "classifyReadFailure(cause)",
+          "note": "one argument, no `server` -- so error.body (and its details) is never read"
+        },
+        {
+          "field": "elapsed_ms",
+          "layer": "client_read",
+          "path": "frontend/src/features/agent/CopilotDock.tsx",
+          "line": 348,
+          "text": "const attribution: Attribution = classifyReadFailure(cause);",
+          "checked_substring": "classifyReadFailure(cause)",
+          "note": "stop leg, same shape"
+        },
+        {
+          "field": "elapsed_ms",
+          "layer": "client_read",
+          "path": "frontend/src/features/agent/CopilotDock.tsx",
+          "line": 368,
+          "text": "const attribution: Attribution = classifyReadFailure(cause);",
+          "checked_substring": "classifyReadFailure(cause)",
+          "note": "approve leg, same shape"
+        },
+        {
+          "field": "elapsed_ms",
+          "layer": "client_read",
+          "path": "frontend/src/features/agent/CopilotDock.tsx",
+          "line": 628,
+          "text": "const attribution: Attribution = classifyReadFailure(cause);",
+          "checked_substring": "classifyReadFailure(cause)",
+          "note": "send leg, same shape"
+        }
+      ]
+    },
+    "request_id": {
+      "verdict": "NOT-EMITTED",
+      "keys": {
+        "wire": "absent; error.trace_id is what a refusal carries",
+        "client": "type-only (AgentToolResponse.request_id?)",
+        "attribution": "absent (server_code is the nearest slot, unfilled here)",
+        "dom": "absent"
+      },
+      "layer_count": 2,
+      "cite_count": 5,
+      "cites": [
+        {
+          "field": "request_id",
+          "layer": "server",
+          "path": "backend/app/main.py",
+          "line": 491,
+          "text": "\"trace_id\": trace_id(),",
+          "checked_substring": "\"trace_id\": trace_id()",
+          "note": "what a refusal actually carries in place of a request id"
+        },
+        {
+          "field": "request_id",
+          "layer": "server",
+          "path": "backend/app/main.py",
+          "line": 460,
+          "text": "def trace_id() -> str:",
+          "checked_substring": "def trace_id() -> str:",
+          "note": "a uuid4 minted per response, not a caller-replayable id"
+        },
+        {
+          "field": "request_id",
+          "layer": "server",
+          "path": "backend/app/schemas.py",
+          "line": 130,
+          "text": "request_id: str = Field(min_length=8, max_length=128)",
+          "checked_substring": "request_id: str = Field(min_length=8, max_length=128)",
+          "note": "inbound only, on AgentToolCall (:128 extra=forbid)"
+        },
+        {
+          "field": "request_id",
+          "layer": "client_read",
+          "path": "frontend/src/api/citynexus.ts",
+          "line": 558,
+          "text": "request_id?: string;",
+          "checked_substring": "request_id?: string",
+          "note": "AgentToolResponse type -- this backend never fills it on these legs"
+        },
+        {
+          "field": "request_id",
+          "layer": "client_read",
+          "path": "frontend/src/api/citynexus.ts",
+          "line": 1089,
+          "text": "request_id: string;",
+          "checked_substring": "request_id: string;",
+          "note": "the caller-supplied id on callAgentTool, i.e. a request field"
+        }
+      ]
+    }
+  },
+  "reachability_cites": [
+    {
+      "field": "__reach__",
+      "layer": "transport",
+      "path": "frontend/src/lib/readDeadline.ts",
+      "line": 51,
+      "text": "return fetchWithWriteDeadline(input, init);",
+      "checked_substring": "return fetchWithWriteDeadline(input, init)",
+      "note": "a non-GET leaves the read wrapper, so ReadDeadlineMissed cannot fire here"
+    },
+    {
+      "field": "__reach__",
+      "layer": "transport",
+      "path": "frontend/src/lib/writeDeadline.ts",
+      "line": 128,
+      "text": "return fetch(input, init);",
+      "checked_substring": "return fetch(input, init)",
+      "note": "keyless writes pass through unbounded -- none of these three legs sends a key"
+    },
+    {
+      "field": "__reach__",
+      "layer": "transport",
+      "path": "frontend/src/api/citynexus.ts",
+      "line": 909,
+      "text": "method: \"POST\",",
+      "checked_substring": "method: \"POST\",",
+      "note": "sendCopilotMessage"
+    },
+    {
+      "field": "__reach__",
+      "layer": "transport",
+      "path": "frontend/src/api/citynexus.ts",
+      "line": 945,
+      "text": "{ method: \"POST\" },",
+      "checked_substring": "{ method: \"POST\" }",
+      "note": "stopNativeHermesRun"
+    },
+    {
+      "field": "__reach__",
+      "layer": "transport",
+      "path": "frontend/src/api/citynexus.ts",
+      "line": 1113,
+      "text": "method: \"POST\",",
+      "checked_substring": "method: \"POST\",",
+      "note": "approveAgentAction"
+    },
+    {
+      "field": "__reach__",
+      "layer": "server",
+      "path": "backend/app/main.py",
+      "line": 11090,
+      "text": "@app.post(\"/api/v1/journeys/{journey_id}/copilot/messages\")",
+      "checked_substring": "@app.post(\"/api/v1/journeys/{journey_id}/copilot/messages\")",
+      "note": "the route is plural `messages`"
+    },
+    {
+      "field": "__reach__",
+      "layer": "server",
+      "path": "backend/app/main.py",
+      "line": 1076,
+      "text": "@app.post(\"/api/v1/journeys/{journey_id}/agent/hermes/runs/{run_id}/stop\")",
+      "checked_substring": "/agent/hermes/runs/{run_id}/stop",
+      "note": "stop handler"
+    },
+    {
+      "field": "__reach__",
+      "layer": "server",
+      "path": "backend/app/main.py",
+      "line": 1861,
+      "text": "@app.post(\"/api/v1/journeys/{journey_id}/agent/approvals/{approval_id}/approve\")",
+      "checked_substring": "/agent/approvals/{approval_id}/approve",
+      "note": "approve handler"
+    },
+    {
+      "field": "__reach__",
+      "layer": "server",
+      "path": "backend/app/main.py",
+      "line": 10664,
+      "text": "return fallback",
+      "checked_substring": "return fallback",
+      "note": "an AI failure on the copilot path is swallowed into the deterministic fallback, so the answer is a 200 with nothing to attribute"
+    }
+  ],
+  "reachability_count": 9,
+  "census": {
+    "main_py_lines": 11490,
+    "request_id_hits_in_main_py": 0,
+    "trace_id_hits_in_main_py": 4,
+    "elapsed_ms_hits_in_failureAttribution": 0,
+    "backend_app_hits_body_bytes": 0,
+    "backend_app_hits_response_received": 0,
+    "backend_app_hits_content_type": 0,
+    "frontend_src_hits_body_bytes": 0,
+    "frontend_src_hits_response_received": 0,
+    "frontend_src_hits_text_length": 0,
+    "frontend_src_hits_content_length_header": 0,
+    "http_status_plain_interpolation_lines_in_failureAttribution": 10,
+    "http_status_mention_lines_in_failureAttribution": 22,
+    "idempotency_key_sites_in_api_layer": 4
+  },
+  "not_emitted": [
+    "body_bytes",
+    "request_id",
+    "response_received"
+  ],
+  "self_declared": "measurement for ORD-0332 input; no gate, no CLOSED claim"
+}
