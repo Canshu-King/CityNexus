@@ -483,7 +483,8 @@ coex = {"tip_read_at_run": TIP_LIVE, "candidate": CAND, "candidate_parents": PAR
                                        "same": blob(BASE, p) == blob(CAND, p)} for p in D0310_PATHS},
         "ord0310_arms_run_on_this_tree": _arm_status,
         "ord0310_arm_durations_ms": _arm_ms,
-        "report_file": _rep[-1].name, "report_blob": blob_of(_rep[-1]),
+        "report_file_local": _rep[-1].name, "report_file": "ord0310_arms_on_recut_tree.json",
+        "report_blob": blob_of(_rep[-1]),
         "mine_still_red_one_cell_each": all(c["readings"]["meets_expectation"] for c in
                                             [x for x in cells if x["cell"].startswith("counter-arm")])}
 coex_why = ("合流与共存（这是 re-cut 唯一的实质要件，两侧都不许把对方改没）：对 " + BASE + " 现跑 "
@@ -583,7 +584,10 @@ print("Q38:", first["headline"], "|", second["headline"])
 if "Q38_GATE_GREEN" not in second["output"] or "soft 0" not in second["output"]:
     raise SystemExit("the receipt is not clean on the bytes being published")
 
-FILES = [(out, "ord0302_receipt.json"), (WORK / "ord0302_arms_run.json", "ord0302_arms_matrix.json")]
+FILES = [(out, "ord0302_receipt.json"), (WORK / "ord0302_arms_run.json", "ord0302_arms_matrix.json"),
+         (_rep[-1], coex["report_file"])]
+# the coexistence cell cites a run report, so that report has to be retrievable where the citation points
+FILES.append((WORK / coex["report_file_local"], coex["report_file"]))
 for shape, meta in MATRIX["runs"].items():
     rid = meta["run_id"]
     arm_files = [(p, f"{shape}__{p.name}")
