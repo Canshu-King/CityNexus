@@ -1,0 +1,273 @@
+{
+ "schema": "CNX_CMDR_WRITE_LEG_RECONCILIATION_V1",
+ "lane": "commander 494abfd7",
+ "generated_at_local": "2026-09-25T20:21:39+0800",
+ "question": "how many frontend write legs exist on the current tip and how many carry a deadline - two instruments answering the same sentence differently",
+ "tip_recheck_from_github": "30a5f90e5deaed6e45a704ddcc7d6e5e9790475b",
+ "tip_agrees_with_both_measurements": true,
+ "tree_export_verification": {
+  "ok": true,
+  "paths_in_tip_frontend_src": 77,
+  "blobs_recomputed": 77,
+  "mismatches": [],
+  "mismatch_count": 0
+ },
+ "instrument_mine": {
+  "tool": "write_leg_scan_r1.js",
+  "selftest": "SELFTEST_PASS (3 fixtures: own-signal leg=covered, bare leg=bare, toString/toLocaleString calls must not be legs)",
+  "definition": "fetch(...) with a literal write method, or .post/.put/.patch/.delete, or .request({method:<write>}); deadline questions asked at the AST node (own options signal / enclosing-function signal parameter / enclosing-function timeout)",
+  "files_scanned": 73,
+  "legs_total": 16,
+  "legs_by_method": {
+   "POST": 12,
+   "DELETE": 2,
+   "PUT": 2
+  },
+  "covered": 2,
+  "covered_sites": [
+   {
+    "file": "features/planning/PlanWithAiSheet.tsx",
+    "line": 518,
+    "own_options_has_signal": true
+   },
+   {
+    "file": "features/planning/PlanWithAiSheet.tsx",
+    "line": 653,
+    "own_options_has_signal": true
+   }
+  ],
+  "known_blind_spot": "a call routed through a named wrapper (fetchWithWriteDeadline) is not a `fetch` identifier, so this instrument cannot see those legs - that is why her two wrapper legs appear as 'only hers' below",
+  "first_run_defect_disclosed": "the first run of this tool counted 23 legs; 7 of them were `x.toString()` / `y.toLocaleString()` calls picked up because AXIOS_VERB was a plain object literal and inherited keys resolved through Object.prototype. Fixed with Object.create(null); the bad numbers are kept here rather than deleted, and the self-test now carries a third fixture that refuses that shape."
+ },
+ "instrument_hers": {
+  "artifact_blob": "6e3ef780c4ad3e0f302f98b15850ecd4e92adf29",
+  "artifact_blob_requested": "6e3ef780c4ad3e0f302f98b15850ecd4e92adf29",
+  "blob_match": true,
+  "bytes": 3360,
+  "legs_total": 14,
+  "legs_covered": 2,
+  "definition": "对每根腿：读它所在文件，看**该调用点前后 12/10 行**内有没有 deadline 或 signal；另数全前端 import writeDeadline 的文件与任何带 signal 的文件",
+  "measured_on": "30a5f90e5deaed6e45a704ddcc7d6e5e9790475b",
+  "tree": "snap_0296r5 == 现场尖的整树导出",
+  "files_importing_writeDeadline": [
+   "features/execution/LiveRecovery.tsx",
+   "features/recovery/V14RecoveryTruthPanel.tsx",
+   "lib/readDeadline.ts"
+  ],
+  "frontend_files_with_any_signal": 7
+ },
+ "set_comparison": {
+  "union_sites": 20,
+  "agreed_sites": 10,
+  "only_mine": 6,
+  "only_hers": 4,
+  "agreed_list": [
+   {
+    "file": "features/notifications/PushCapabilityCard.tsx",
+    "line": 56,
+    "method": "POST",
+    "covered_by_mine": false
+   },
+   {
+    "file": "features/planning/PlanComparison.tsx",
+    "line": 88,
+    "method": "POST",
+    "covered_by_mine": false
+   },
+   {
+    "file": "features/recovery/RecoveryRequiredPanel.tsx",
+    "line": 26,
+    "method": "POST",
+    "covered_by_mine": false
+   },
+   {
+    "file": "features/simulation/simulationAdapter.ts",
+    "line": 229,
+    "method": "POST",
+    "covered_by_mine": false
+   },
+   {
+    "file": "features/simulation/simulationAdapter.ts",
+    "line": 296,
+    "method": "POST",
+    "covered_by_mine": false
+   },
+   {
+    "file": "features/simulation/simulationAdapter.ts",
+    "line": 335,
+    "method": "POST",
+    "covered_by_mine": false
+   },
+   {
+    "file": "features/simulation/simulationAdapter.ts",
+    "line": 376,
+    "method": "POST",
+    "covered_by_mine": false
+   },
+   {
+    "file": "features/stay/HotelsPanel.tsx",
+    "line": 63,
+    "method": "POST",
+    "covered_by_mine": false
+   },
+   {
+    "file": "features/stay/HotelsPanel.tsx",
+    "line": 64,
+    "method": "POST",
+    "covered_by_mine": false
+   },
+   {
+    "file": "features/stay/HotelsPanel.tsx",
+    "line": 87,
+    "method": "POST",
+    "covered_by_mine": false
+   }
+  ],
+  "only_mine_list": [
+   {
+    "file": "features/planning/PlanWithAiSheet.tsx",
+    "line": 518,
+    "method": "POST",
+    "call": "fetch",
+    "covered_by_mine": true
+   },
+   {
+    "file": "features/planning/PlanWithAiSheet.tsx",
+    "line": 653,
+    "method": "POST",
+    "call": "fetch",
+    "covered_by_mine": true
+   },
+   {
+    "file": "lib/inFlightWrites.ts",
+    "line": 57,
+    "method": "DELETE",
+    "call": ".delete",
+    "covered_by_mine": false
+   },
+   {
+    "file": "lib/offlineJourney.ts",
+    "line": 43,
+    "method": "PUT",
+    "call": ".put",
+    "covered_by_mine": false
+   },
+   {
+    "file": "lib/offlineJourney.ts",
+    "line": 55,
+    "method": "PUT",
+    "call": ".put",
+    "covered_by_mine": false
+   },
+   {
+    "file": "main.tsx",
+    "line": 1706,
+    "method": "DELETE",
+    "call": ".delete",
+    "covered_by_mine": false
+   }
+  ],
+  "only_hers_list": [
+   {
+    "file": "features/execution/LiveRecovery.tsx",
+    "line": 225
+   },
+   {
+    "file": "features/planning/PlanWithAiSheet.tsx",
+    "line": 492
+   },
+   {
+    "file": "features/planning/PlanWithAiSheet.tsx",
+    "line": 605
+   },
+   {
+    "file": "features/recovery/V14RecoveryTruthPanel.tsx",
+    "line": 69
+   }
+  ]
+ },
+ "anchor_findings": {
+  "anchors_cited_by_hers": 14,
+  "anchors_that_are_blank_lines": [
+   {
+    "file": "features/execution/LiveRecovery.tsx",
+    "line": 225
+   },
+   {
+    "file": "features/recovery/V14RecoveryTruthPanel.tsx",
+    "line": 69
+   }
+  ],
+  "anchors_that_contain_neither_fetch_nor_a_POST_literal": [
+   {
+    "file": "features/execution/LiveRecovery.tsx",
+    "line": 225,
+    "line_chars": 0
+   },
+   {
+    "file": "features/recovery/V14RecoveryTruthPanel.tsx",
+    "line": 69,
+    "line_chars": 0
+   },
+   {
+    "file": "features/planning/PlanWithAiSheet.tsx",
+    "line": 492,
+    "line_chars": 102
+   },
+   {
+    "file": "features/planning/PlanWithAiSheet.tsx",
+    "line": 605,
+    "line_chars": 102
+   }
+  ],
+  "wrapper_call_lines_found_by_rereading_the_file": {
+   "LiveRecovery_accept": 230,
+   "V14RecoveryTruthPanel_accept": 74
+  },
+  "note": "the count she published and the coordinates she published are not the same object: both sites she marks covered resolve to a blank line in the exported tree, and the two sites she marks uncovered inside PlanWithAiSheet.tsx are, at the real call lines, legs whose own options object carries `signal` (verified by reading those lines)."
+ },
+ "what_this_changes": {
+  "covered_is_not_two": 4,
+  "covered_reasoning": "her 2 wrapper legs (fetchWithWriteDeadline) + my 2 legs carrying `signal` in their own options = 4 sites that demonstrably carry a deadline; none of the four is in the other's denominator, so 2/14 is an artefact of two partial sets.",
+  "bare_by_union": 16,
+  "shapes_the_orders_never_named": [
+   {
+    "file": "lib/inFlightWrites.ts",
+    "line": 57,
+    "method": "DELETE",
+    "call": ".delete"
+   },
+   {
+    "file": "lib/offlineJourney.ts",
+    "line": 43,
+    "method": "PUT",
+    "call": ".put"
+   },
+   {
+    "file": "lib/offlineJourney.ts",
+    "line": 55,
+    "method": "PUT",
+    "call": ".put"
+   },
+   {
+    "file": "main.tsx",
+    "line": 1706,
+    "method": "DELETE",
+    "call": ".delete"
+   }
+  ],
+  "decision_this_moves": "whether 'the write-deadline half is covered by ORD-0281/0288/0312' is a true sentence - it is not, on the union denominator, for the 4 legs whose verb is PUT/DELETE. Whether that is a defect to fix or a decision to keep is a scope question, not a measurement question, so it goes to the arbiter."
+ },
+ "discipline": {
+  "authoritative_branch_moved": 0,
+  "refs_pushed_by_this_run": 0,
+  "demo_reset_calls": 0,
+  "live_or_preview_db_reads_or_writes": 0,
+  "credential_values_printed": 0,
+  "product_bytes_changed": 0,
+  "export_dir_is_read_only_for_this_run": true
+ },
+ "claim_kind": "code_determined",
+ "claimed_result": "two denominators reconciled; anchors of one of them corrected against the bytes",
+ "derived_result": null
+}
