@@ -6,7 +6,7 @@ from pathlib import Path
 
 import anyio
 from citynexus_mcp.schemas import V1_TOOL_NAMES, V2_TOOL_NAMES, MCPToolCall
-from citynexus_mcp.server import CityNexusMCPServer
+from citynexus_mcp.server import CityNexusMCPServer, TOOL_DESCRIPTIONS
 
 
 class FakeClient:
@@ -71,6 +71,17 @@ def test_mcp_v2_exposes_typed_actions_without_changing_v1_discovery():
     assert result["tool"] == "reschedule_activity"
 
 
+def test_context_guidance_describes_server_owned_replan_and_search_facts():
+    assert "newly generated proposal information" in TOOL_DESCRIPTIONS["request_replan"]
+    assert "immediate list_replans reread is normally redundant" in TOOL_DESCRIPTIONS[
+        "request_replan"
+    ]
+    assert "previously persisted Replan proposals" in TOOL_DESCRIPTIONS["list_replans"]
+    assert "do not repeatedly search an unchanged query" in TOOL_DESCRIPTIONS[
+        "search_city_services"
+    ]
+
+
 def test_mcp_rejects_unknown_arguments_and_tools():
     server = CityNexusMCPServer(FakeClient())
     try:
@@ -89,6 +100,73 @@ def test_mcp_rejects_unknown_arguments_and_tools():
         assert "allowlist" in str(exc)
     else:  # pragma: no cover
         raise AssertionError("unknown tools must fail closed")
+
+
+def test_request_replan_emits_a_validated_full_fidelity_proposal_view():
+    candidate = {
+        "id": "proposal-id",
+        "proposed_plan_version_id": "plan-id",
+        "status": "PRESENTED",
+        "hard_constraints_passed": True,
+        "locked_commitments_preserved": True,
+        "utility_score": 0.75,
+        "diff": {
+            "candidate_family": "REPLACE",
+            "kept": ["place:a"],
+            "moved": [],
+            "removed": [],
+            "added": ["place:b"],
+            "cost_delta_minor": 50,
+            "travel_delta_min": -3,
+            "end_time_delta_min": 4,
+            "reason_codes": ["MINIMAL_DISRUPTION"],
+            "preserved_protected": [],
+            "after_feasibility_envelope": {
+                "budget_remaining_minor": 950,
+                "journey_end_slack_min": 25,
+                "preserved_commitment_count": 0,
+                "risk_reason_codes": [],
+            },
+            "verified_evidence": {
+                "commitment_preservation": {"preserved": True, "protected_count": 0}
+            },
+        },
+    }
+
+    class ProposalClient(FakeClient):
+        def call(self, tool_name, payload):
+            return {"tool": tool_name, "proposal": candidate, "proposals": [candidate]}
+
+    server = CityNexusMCPServer(ProposalClient())
+    result = server.call(
+        "request_replan",
+        MCPToolCall(
+            "hermes-r4-request-0001",
+            "hermes",
+            {"journey_id": "journey-id", "trigger_event_id": "event-id"},
+        ),
+    )
+
+    assert result["proposal_contract_version"] == "hermes-replan-proposal-view.v1"
+    assert result["proposal_views"][0]["proposed_plan_version_id"] == "plan-id"
+    assert result["proposal_views"][0]["feasibility_envelope"]["budget_remaining_minor"] == 950
+
+
+def test_request_replan_rejects_incomplete_candidate_projection():
+    class IncompleteClient(FakeClient):
+        def call(self, tool_name, payload):
+            return {"tool": tool_name, "proposals": [{"id": "proposal-id", "diff": {}}]}
+
+    server = CityNexusMCPServer(IncompleteClient())
+    try:
+        server.call(
+            "request_replan",
+            MCPToolCall("hermes-r4-request-0002", "hermes", {"journey_id": "journey-id"}),
+        )
+    except ValueError as exc:
+        assert "required fields" in str(exc)
+    else:  # pragma: no cover
+        raise AssertionError("incomplete candidate projections must not be reported as usable")
 
 
 def test_real_mcp_stdio_protocol_discovers_only_citynexus_tools():
@@ -148,5 +226,9 @@ def test_real_mcp_v2_stdio_protocol_discovers_coherent_inspect_plan_act_surface(
             result = await session.list_tools()
             names = [item.name for item in result.tools]
             assert names == list(V2_TOOL_NAMES)
+            for item in result.tools:
+                request_id = item.inputSchema["properties"]["request_id"]
+                assert request_id["minLength"] == 8
+                assert request_id["maxLength"] == 128
 
     anyio.run(exercise)

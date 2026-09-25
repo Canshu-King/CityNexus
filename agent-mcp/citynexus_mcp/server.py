@@ -3,18 +3,49 @@ from __future__ import annotations
 import json
 import os
 import sys
-from typing import Any
+from typing import Annotated, Any
 from uuid import uuid4
 
+from pydantic import Field
+
 from .client import CityNexusAgentClient
-from .schemas import V1_TOOL_NAMES, V2_TOOL_NAMES, MCPToolCall, MCPToolDescriptor
+from .schemas import (
+    V1_TOOL_NAMES,
+    V2_TOOL_NAMES,
+    HermesReplanProposalView,
+    MCPToolCall,
+    MCPToolDescriptor,
+)
+
+
+RequestId = Annotated[
+    str,
+    Field(
+        min_length=8,
+        max_length=128,
+        description=(
+            "Opaque per-call idempotency identity; use 8-128 characters "
+            "and do not reuse it for different arguments."
+        ),
+    ),
+]
 
 TOOL_DESCRIPTIONS = {
     "inspect_journey": "Read the persisted Journey state.",
     "inspect_twin": "Read the JourneyTwin projection.",
-    "list_replans": "List persisted Replan proposals.",
-    "search_city_services": "Search server-owned city service facts.",
-    "request_replan": "Request a proposal without activating a Plan.",
+    "list_replans": (
+        "List previously persisted Replan proposals. Use this for existing proposals; "
+        "request_replan already returns newly generated proposal information."
+    ),
+    "search_city_services": (
+        "Search server-owned city service facts only when the current server proposal or "
+        "context lacks enough facts; do not repeatedly search an unchanged query."
+    ),
+    "request_replan": (
+        "Request a proposal without activating a Plan. The response contains the newly "
+        "generated proposal information; an immediate list_replans reread is normally "
+        "redundant after a successful call."
+    ),
     "accept_replan": "Ask the server policy and deterministic gate to accept a proposal.",
     "replace_activity": "Replace a mutable Activity through the server policy and feasibility gate.",
     "reschedule_activity": "Reschedule a mutable Activity through the server policy and feasibility gate.",
@@ -45,7 +76,14 @@ class CityNexusMCPServer:
     def call(self, tool_name: str, call: MCPToolCall) -> dict[str, Any]:
         if tool_name not in V2_TOOL_NAMES:
             raise ValueError("tool is outside the CityNexus MCP allowlist")
-        return self.client.call(tool_name, call.payload())
+        result = self.client.call(tool_name, call.payload())
+        if tool_name == "request_replan":
+            result["proposal_contract_version"] = "hermes-replan-proposal-view.v1"
+            result["proposal_views"] = [
+                HermesReplanProposalView.from_payload(item).as_dict()
+                for item in result["proposals"]
+            ]
+        return result
 
 
 def build_mcp_server(client: CityNexusAgentClient | None = None):
@@ -67,7 +105,7 @@ def build_mcp_server(client: CityNexusAgentClient | None = None):
         ),
     )
 
-    def call(tool_name: str, request_id: str, **arguments: Any) -> dict[str, Any]:
+    def call(tool_name: str, request_id: RequestId, **arguments: Any) -> dict[str, Any]:
         # This value is only a compatibility hint. The HTTP layer resolves the
         # trusted principal from its configured credential or local boundary.
         return adapter.call(
@@ -78,15 +116,15 @@ def build_mcp_server(client: CityNexusAgentClient | None = None):
         )
 
     @mcp.tool(name="inspect_journey", description=TOOL_DESCRIPTIONS["inspect_journey"])
-    def inspect_journey(request_id: str, journey_id: str) -> dict[str, Any]:
+    def inspect_journey(request_id: RequestId, journey_id: str) -> dict[str, Any]:
         return call("inspect_journey", request_id, journey_id=journey_id)
 
     @mcp.tool(name="inspect_twin", description=TOOL_DESCRIPTIONS["inspect_twin"])
-    def inspect_twin(request_id: str, journey_id: str) -> dict[str, Any]:
+    def inspect_twin(request_id: RequestId, journey_id: str) -> dict[str, Any]:
         return call("inspect_twin", request_id, journey_id=journey_id)
 
     @mcp.tool(name="list_replans", description=TOOL_DESCRIPTIONS["list_replans"])
-    def list_replans(request_id: str, journey_id: str) -> dict[str, Any]:
+    def list_replans(request_id: RequestId, journey_id: str) -> dict[str, Any]:
         return call("list_replans", request_id, journey_id=journey_id)
 
     @mcp.tool(
@@ -94,7 +132,7 @@ def build_mcp_server(client: CityNexusAgentClient | None = None):
         description=TOOL_DESCRIPTIONS["search_city_services"],
     )
     def search_city_services(
-        request_id: str,
+        request_id: RequestId,
         journey_id: str | None = None,
         city_code: str | None = None,
         q: str | None = None,
@@ -113,7 +151,7 @@ def build_mcp_server(client: CityNexusAgentClient | None = None):
 
     @mcp.tool(name="request_replan", description=TOOL_DESCRIPTIONS["request_replan"])
     def request_replan(
-        request_id: str,
+        request_id: RequestId,
         journey_id: str,
         trigger_event_id: str,
         candidate_count: int = 3,
@@ -128,7 +166,7 @@ def build_mcp_server(client: CityNexusAgentClient | None = None):
 
     @mcp.tool(name="accept_replan", description=TOOL_DESCRIPTIONS["accept_replan"])
     def accept_replan(
-        request_id: str,
+        request_id: RequestId,
         proposal_id: str,
         journey_id: str | None = None,
         approval_id: str | None = None,
@@ -152,7 +190,15 @@ def _build_mcp2_v2_server(client: CityNexusAgentClient | None = None):
 
     adapter = CityNexusMCPServer(client)
     common = {
-        "request_id": {"type": "string"},
+        "request_id": {
+            "type": "string",
+            "minLength": 8,
+            "maxLength": 128,
+            "description": (
+                "Opaque per-call idempotency identity; use 8-128 characters "
+                "and do not reuse it for different arguments."
+            ),
+        },
         "journey_id": {"type": "string"},
     }
 
@@ -188,7 +234,7 @@ def _build_mcp2_v2_server(client: CityNexusAgentClient | None = None):
         ),
         "accept_replan": schema(
             {
-                "request_id": {"type": "string"},
+                "request_id": common["request_id"],
                 "journey_id": {"type": "string"},
                 "proposal_id": {"type": "string"},
                 "approval_id": {"type": "string"},
@@ -280,7 +326,8 @@ def _build_mcp2_v2_server(client: CityNexusAgentClient | None = None):
         instructions=(
             "CityNexus V2 exposes typed Journey inspection and action tools. "
             "The HTTP gateway remains authoritative for identity, policy, provider state, "
-            "and deterministic feasibility."
+            "and deterministic feasibility. Every supplied request_id must be 8-128 "
+            "characters and unique for its argument set."
         ),
         on_list_tools=on_list_tools,
         on_call_tool=on_call_tool,
@@ -307,7 +354,7 @@ def build_mcp_v2_server(client: CityNexusAgentClient | None = None):
         ),
     )
 
-    def call(tool_name: str, request_id: str, **arguments: Any) -> dict[str, Any]:
+    def call(tool_name: str, request_id: RequestId, **arguments: Any) -> dict[str, Any]:
         return adapter.call(
             tool_name,
             MCPToolCall(
@@ -316,15 +363,15 @@ def build_mcp_v2_server(client: CityNexusAgentClient | None = None):
         )
 
     @mcp.tool(name="inspect_journey", description=TOOL_DESCRIPTIONS["inspect_journey"])
-    def inspect_journey(request_id: str, journey_id: str) -> dict[str, Any]:
+    def inspect_journey(request_id: RequestId, journey_id: str) -> dict[str, Any]:
         return call("inspect_journey", request_id, journey_id=journey_id)
 
     @mcp.tool(name="inspect_twin", description=TOOL_DESCRIPTIONS["inspect_twin"])
-    def inspect_twin(request_id: str, journey_id: str) -> dict[str, Any]:
+    def inspect_twin(request_id: RequestId, journey_id: str) -> dict[str, Any]:
         return call("inspect_twin", request_id, journey_id=journey_id)
 
     @mcp.tool(name="list_replans", description=TOOL_DESCRIPTIONS["list_replans"])
-    def list_replans(request_id: str, journey_id: str) -> dict[str, Any]:
+    def list_replans(request_id: RequestId, journey_id: str) -> dict[str, Any]:
         return call("list_replans", request_id, journey_id=journey_id)
 
     @mcp.tool(
@@ -332,7 +379,7 @@ def build_mcp_v2_server(client: CityNexusAgentClient | None = None):
         description=TOOL_DESCRIPTIONS["search_city_services"],
     )
     def search_city_services(
-        request_id: str,
+        request_id: RequestId,
         journey_id: str | None = None,
         city_code: str | None = None,
         q: str | None = None,
@@ -351,7 +398,7 @@ def build_mcp_v2_server(client: CityNexusAgentClient | None = None):
 
     @mcp.tool(name="request_replan", description=TOOL_DESCRIPTIONS["request_replan"])
     def request_replan(
-        request_id: str,
+        request_id: RequestId,
         journey_id: str,
         trigger_event_id: str,
         candidate_count: int = 3,
@@ -366,7 +413,7 @@ def build_mcp_v2_server(client: CityNexusAgentClient | None = None):
 
     @mcp.tool(name="accept_replan", description=TOOL_DESCRIPTIONS["accept_replan"])
     def accept_replan(
-        request_id: str,
+        request_id: RequestId,
         proposal_id: str,
         journey_id: str | None = None,
         approval_id: str | None = None,
@@ -383,7 +430,7 @@ def build_mcp_v2_server(client: CityNexusAgentClient | None = None):
         name="replace_activity", description=TOOL_DESCRIPTIONS["replace_activity"]
     )
     def replace_activity(
-        request_id: str,
+        request_id: RequestId,
         journey_id: str,
         activity_id: str,
         replacement_activity_id: str | None = None,
@@ -404,7 +451,7 @@ def build_mcp_v2_server(client: CityNexusAgentClient | None = None):
         name="reschedule_activity", description=TOOL_DESCRIPTIONS["reschedule_activity"]
     )
     def reschedule_activity(
-        request_id: str,
+        request_id: RequestId,
         journey_id: str,
         activity_id: str,
         start_at: str,
@@ -423,7 +470,7 @@ def build_mcp_v2_server(client: CityNexusAgentClient | None = None):
 
     @mcp.tool(name="create_booking", description=TOOL_DESCRIPTIONS["create_booking"])
     def create_booking(
-        request_id: str,
+        request_id: RequestId,
         journey_id: str,
         activity_id: str,
         provider_key: str = "mock-booking",
@@ -443,7 +490,7 @@ def build_mcp_v2_server(client: CityNexusAgentClient | None = None):
         description=TOOL_DESCRIPTIONS["cancel_refundable_booking"],
     )
     def cancel_refundable_booking(
-        request_id: str,
+        request_id: RequestId,
         journey_id: str,
         booking_id: str,
         approval_id: str | None = None,
@@ -461,7 +508,7 @@ def build_mcp_v2_server(client: CityNexusAgentClient | None = None):
         description=TOOL_DESCRIPTIONS["request_commitment_change"],
     )
     def request_commitment_change(
-        request_id: str,
+        request_id: RequestId,
         journey_id: str,
         commitment_id: str,
         reason: str,
