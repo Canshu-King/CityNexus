@@ -1,0 +1,111 @@
+{
+ "ran_at_local": "2026-09-25T17:28:00+0800",
+ "live_preview_index": {
+  "path": "D:\\moodle\\_qoder_preview_20260920\\dist\\index.html",
+  "sha256_full_64_hex": "3f9947140cac45197dbb93b952d874d2e669c10c7c11afe7c8a3ea89cebc00c5",
+  "mtime_local": "2026-09-25T15:17:09+0800",
+  "asset_referenced": [
+   "index--q2k569d.js"
+  ],
+  "touched_by_this_batch": "no - ORD-0288 T-1 is an HTTP-level batch; it opened no browser and wrote to no dist directory"
+ },
+ "user_chain_listeners_untouched": [
+  {
+   "port": "4782",
+   "pid": "34324",
+   "process_created": "2026-09-24T16:35:33.5425690+08:00"
+  },
+  {
+   "port": "4781",
+   "pid": "12076",
+   "process_created": "2026-09-24T16:25:57.2342990+08:00"
+  }
+ ],
+ "negative_scan": {
+  "_live.db": {
+   "lines_that_actually_use_it": 0,
+   "uses": [],
+   "lines_that_only_name_it_in_a_denial_sentence": 2,
+   "named": [
+    {
+     "file": "o0288_ledger_t1.py",
+     "line": "w('**边界**：一次性库由产品 `ensure_schema()` 建、起面先删；`_live.db` / `_preview.db` / `demo/reset` / '"
+    },
+    {
+     "file": "o0288_md.py",
+     "line": "+ '；`_live.db`/`_preview.db`/`demo/reset`/`git apply`/产品默认库名在我这 6 个仪器文件里的出现次数 = '"
+    }
+   ],
+   "lines_excluded_as_self_reference": 3
+  },
+  "_preview.db": {
+   "lines_that_actually_use_it": 0,
+   "uses": [],
+   "lines_that_only_name_it_in_a_denial_sentence": 2,
+   "named": [
+    {
+     "file": "o0288_ledger_t1.py",
+     "line": "w('**边界**：一次性库由产品 `ensure_schema()` 建、起面先删；`_live.db` / `_preview.db` / `demo/reset` / '"
+    },
+    {
+     "file": "o0288_md.py",
+     "line": "+ '；`_live.db`/`_preview.db`/`demo/reset`/`git apply`/产品默认库名在我这 6 个仪器文件里的出现次数 = '"
+    }
+   ],
+   "lines_excluded_as_self_reference": 3
+  },
+  "demo/reset": {
+   "lines_that_actually_use_it": 0,
+   "uses": [],
+   "lines_that_only_name_it_in_a_denial_sentence": 4,
+   "named": [
+    {
+     "file": "o0288_block.py",
+     "line": "**纪律与边界**：本轮 0 改产品字节（只读导出 + 一次性库 + 直接 POST 真路由）；`demo/reset` 0 次、用户库 0 读写、`:4781`/`:4782` 与隧道未碰、凭据 0 打印；不产码（@D）、不签 `derived_result`（@红队）。读数边界也写清：§基线是**不经 UI** 的"
+    },
+    {
+     "file": "o0288_bus.py",
+     "line": "**纪律**：0 改产品字节（只读导出 + 一次性库 + 直接 POST 真路由）、`demo/reset` 0 次、用户库 0 读写、`:4781`/`:4782` 与隧道未碰、凭据 0 打印；不产码（@D）、不签 `derived_result`（@红队）。**读数边界**：基线是不经 UI 的直接请求 ⇒ \"T-"
+    },
+    {
+     "file": "o0288_ledger_t1.py",
+     "line": "w('**边界**：一次性库由产品 `ensure_schema()` 建、起面先删；`_live.db` / `_preview.db` / `demo/reset` / '"
+    },
+    {
+     "file": "o0288_md.py",
+     "line": "+ '；`_live.db`/`_preview.db`/`demo/reset`/`git apply`/产品默认库名在我这 6 个仪器文件里的出现次数 = '"
+    }
+   ],
+   "lines_excluded_as_self_reference": 3
+  },
+  "git apply": {
+   "lines_that_actually_use_it": 0,
+   "uses": [],
+   "lines_that_only_name_it_in_a_denial_sentence": 2,
+   "named": [
+    {
+     "file": "o0288_ledger_t1.py",
+     "line": "'`git apply` / 产品默认库名的**真正调用行 = %s**（另有 %d 处只是我否认句里提到名字、%d 处是扫描器自身，'"
+    },
+    {
+     "file": "o0288_md.py",
+     "line": "+ '；`_live.db`/`_preview.db`/`demo/reset`/`git apply`/产品默认库名在我这 6 个仪器文件里的出现次数 = '"
+    }
+   ],
+   "lines_excluded_as_self_reference": 3
+  },
+  "citynexus.db": {
+   "lines_that_actually_use_it": 0,
+   "uses": [],
+   "lines_that_only_name_it_in_a_denial_sentence": 0,
+   "named": [],
+   "lines_excluded_as_self_reference": 3
+  }
+ },
+ "coverage": "NOT EXHAUSTIVE: 23 ORD-0288 instrument files scanned by literal string: ['seed_any.py', 'seed_helper.py', 'o0288_arms.py', 'o0288_block.py', 'o0288_bus.py', 'o0288_facts.py', 'o0288_gate_selftest.py', 'o0288_ledger_t1.py', 'o0288_md.py', 'o0288_md_final.py', 'o0288_mutants.py', 'o0288_publish.py', 'o0288_receipt.py', 'o0288_receipt_final.py', 'o0288_receipt_r2.py', 'o0288_receipt_r3.py', 'o0288_receipt_r4.py', 'o0288_receipt_r5.py', 'o0288_receipt_r6.py', 'o0288_receipt_r7.py', 'o0288_rig.py', 'o0288_shape.py', 'o0288_teardown_recover.py']",
+ "credential_handling": {
+  "DEEPSEEK_API_KEY_popped_in_rig": true,
+  "sk_shaped_strings_in_my_files": []
+ },
+ "product_tree_written": "no - the exported tree at dc964086c9d412573ac19d70b24b30e6c3ee6168 is read-only for this batch; the crash and signature mutants ran in private copies named in C5/C2"
+}
