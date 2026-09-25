@@ -1,0 +1,158 @@
+{
+ "cells": [
+  {
+   "derived_from": null,
+   "derived_from_key": null,
+   "id": "K278_NO_MISSION_ID_IN_BODY",
+   "own_hits": [],
+   "own_token_count": 35,
+   "unique_hits": [],
+   "verdict": "KILLED",
+   "why": "the resumed batch no longer says whose it is: the server can replay it but cannot bind it to the interrupted round, which is the half this order was opened for",
+   "why_source": "why",
+   "why_token_count": 0
+  },
+  {
+   "derived_from": null,
+   "derived_from_key": null,
+   "id": "K278_TWO_KEYS_MERGED",
+   "own_hits": [],
+   "own_token_count": 35,
+   "unique_hits": [],
+   "verdict": "KILLED",
+   "why": "the ruling's 'two keys, never merged' violated in the direction that looks harmless: one name standing in for both, so 'same mission, different request' and 'same request, resent' collapse in storage",
+   "why_source": "why",
+   "why_token_count": 0
+  },
+  {
+   "derived_from": null,
+   "derived_from_key": null,
+   "id": "K278_CLEAR_BEFORE_SEND",
+   "own_hits": [
+    "1",
+    "5"
+   ],
+   "own_token_count": 35,
+   "unique_hits": [],
+   "verdict": "KILLED",
+   "why": "clause 5's forbidden shape -- the record is erased AHEAD of the send, so a run interrupted after this press is unfindable again. (v1 measured this arm with a different edit: moving the post-await clear out of its condition still erased after the send, which is a different defect and cell 1 correctly ignored it. That mutant was wrong, not the gate.)",
+   "why_source": "why",
+   "why_token_count": 2
+  },
+  {
+   "derived_from": null,
+   "derived_from_key": null,
+   "id": "K278_SILENCE_ON_NON_ACCEPT",
+   "own_hits": [],
+   "own_token_count": 35,
+   "unique_hits": [],
+   "verdict": "KILLED",
+   "why": "a refusal, timeout or dead transport paints no word and leaves the card standing -- the 'never silence' half of the reveal",
+   "why_source": "why",
+   "why_token_count": 0
+  },
+  {
+   "derived_from": null,
+   "derived_from_key": null,
+   "id": "K253_LEG2_KEY_DROPPED",
+   "own_hits": [],
+   "own_token_count": 35,
+   "unique_hits": [],
+   "verdict": "KILLED",
+   "why": "the pre-fix shape: the leg the server actually reads arrives with no identity, so the receipt machinery never sees the phone's own press",
+   "why_source": "why",
+   "why_token_count": 0
+  },
+  {
+   "derived_from": null,
+   "derived_from_key": null,
+   "id": "K253_LEG1_KEY_DROPPED",
+   "own_hits": [],
+   "own_token_count": 35,
+   "unique_hits": [],
+   "verdict": "KILLED",
+   "why": "only one leg of one press carries the identity, so the two disagree about whose send this is -- 'one intent, one key' broken across the legs rather than dropped from both",
+   "why_source": "why",
+   "why_token_count": 0
+  },
+  {
+   "derived_from": null,
+   "derived_from_key": null,
+   "id": "K253_ONE_KEY_FOR_ALL_INTENTS",
+   "own_hits": [],
+   "own_token_count": 35,
+   "unique_hits": [],
+   "verdict": "KILLED",
+   "why": "the key stops being per intent and becomes a per-session constant: both legs still agree, so only the second-press node can see it -- which is what that node exists for",
+   "why_source": "why",
+   "why_token_count": 0
+  }
+ ],
+ "cells_found": 7,
+ "exit": 0,
+ "findings": [
+  {
+   "cell": "K278_NO_MISSION_ID_IN_BODY",
+   "code": "WHY_CARRIES_NO_EVIDENCE_TOKEN",
+   "detail": "the sentence names nothing machine-checkable (no hash/number/route/filename)",
+   "hard": false
+  },
+  {
+   "cell": "K278_TWO_KEYS_MERGED",
+   "code": "WHY_CARRIES_NO_EVIDENCE_TOKEN",
+   "detail": "the sentence names nothing machine-checkable (no hash/number/route/filename)",
+   "hard": false
+  },
+  {
+   "cell": "K278_SILENCE_ON_NON_ACCEPT",
+   "code": "WHY_CARRIES_NO_EVIDENCE_TOKEN",
+   "detail": "the sentence names nothing machine-checkable (no hash/number/route/filename)",
+   "hard": false
+  },
+  {
+   "cell": "K253_LEG2_KEY_DROPPED",
+   "code": "WHY_CARRIES_NO_EVIDENCE_TOKEN",
+   "detail": "the sentence names nothing machine-checkable (no hash/number/route/filename)",
+   "hard": false
+  },
+  {
+   "cell": "K253_LEG1_KEY_DROPPED",
+   "code": "WHY_CARRIES_NO_EVIDENCE_TOKEN",
+   "detail": "the sentence names nothing machine-checkable (no hash/number/route/filename)",
+   "hard": false
+  },
+  {
+   "cell": "K253_ONE_KEY_FOR_ALL_INTENTS",
+   "code": "WHY_CARRIES_NO_EVIDENCE_TOKEN",
+   "detail": "the sentence names nothing machine-checkable (no hash/number/route/filename)",
+   "hard": false
+  }
+ ],
+ "hard_codes": [],
+ "hard_count": 0,
+ "info_count": 0,
+ "instrument": "live_checks/receipt_cell_derivation_check_r2.py",
+ "meaning": "no hard defect, but some sentences carry nothing machine-checkable",
+ "overall": "Q38_GATE_SOFT_FINDINGS",
+ "receipt": {
+  "blob_sha1": "cb9270671adc323ff2816d406739e04518b9d05f",
+  "bytes": 35661,
+  "local_blob_equals_published_blob": true,
+  "path": "_local_cmdr_copy_ord0292_arms.json",
+  "published_blob_on_commander_control": "cb9270671adc323ff2816d406739e04518b9d05f"
+ },
+ "run_by": "commander 494abfd7",
+ "soft_codes": [
+  "WHY_CARRIES_NO_EVIDENCE_TOKEN"
+ ],
+ "soft_count": 6,
+ "unique_reading_counts": {
+  "K253_LEG1_KEY_DROPPED": 5,
+  "K253_LEG2_KEY_DROPPED": 5,
+  "K253_ONE_KEY_FOR_ALL_INTENTS": 5,
+  "K278_CLEAR_BEFORE_SEND": 8,
+  "K278_NO_MISSION_ID_IN_BODY": 5,
+  "K278_SILENCE_ON_NON_ACCEPT": 6,
+  "K278_TWO_KEYS_MERGED": 6
+ }
+}
