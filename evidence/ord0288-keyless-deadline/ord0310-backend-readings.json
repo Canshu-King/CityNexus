@@ -1,0 +1,59 @@
+{
+ "gate": "backend/tests/test_qoder_ord0310_keyless_leg_receipts.py",
+ "db_file": "C:\\Users\\仓鼠王\\AppData\\Local\\Temp\\cnx_pytest_4hlgea2f\\suite.db",
+ "table": "idempotency_keys",
+ "cells": {
+  "K1": {
+   "shape": "agent/commands with NO Idempotency-Key header",
+   "table": "idempotency_keys",
+   "column": "count(*)",
+   "idempotency_keys_rows_from": 0,
+   "idempotency_keys_rows_to": 0,
+   "table2": "journey_missions",
+   "journey_missions_rows_from": 0,
+   "journey_missions_rows_to": 3,
+   "http_codes": [
+    200,
+    200,
+    200
+   ],
+   "distinct_mission_ids": 3,
+   "receipt_rows_added": 0,
+   "mission_rows_added": 3
+  },
+  "K2": {
+   "shape": "agent/commands WITH a well-formed Idempotency-Key",
+   "idempotency_keys_rows_from": 0,
+   "idempotency_keys_rows_to": 0,
+   "http_code": 200,
+   "mission_id_present": true,
+   "receipt_rows_added": 0
+  },
+  "T1a": {
+   "shape": "plans/generate (the leg the server DOES read the key on)",
+   "idempotency_keys_rows_first_to_second": [
+    1,
+    1
+   ],
+   "first_status": 201,
+   "second_status": 409,
+   "second_body_excerpt": "{'error': {'code': 'CONFLICT', 'message': 'same idempotency key used for a different request', 'message_key': 'request.conflict', 'trace_id': '3b605ef5-d8f4-449b-bd5d-6941c9537fef', 'details': None}}"
+  },
+  "T1b": {
+   "shape_landed_row": "plans/generate claimed then answered (201)",
+   "row_landed": true,
+   "row_key_shape": "plans.generate:6f608826-37d2-4b88-b87e-3ab716023f53",
+   "row_operation": "plans.generate",
+   "row_response_status": 201,
+   "client_status_first": 201,
+   "client_status_replay": 201,
+   "shape_no_row": "plans/generate with a malformed key (422)",
+   "pre_claim_row_landed": false,
+   "columns_read": [
+    "key",
+    "operation",
+    "response_status"
+   ]
+  }
+ }
+}
