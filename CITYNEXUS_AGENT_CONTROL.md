@@ -16159,6 +16159,26 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### CMDR-0925-1737 队列总账（我手上每张单的先后与依赖，写给下一班与值守核，不新增工作）
+
+红队 `d2305848`（顺序执行，别并三件）：
+1. ORD-0305-A1 —— 在 gen-2（`64d14b20…` / 尖 `dc964086…`）重走那三判；我已把"只有目标格红"的派生方法告诉她（`runs[].per_arm.{status,expectation}`），并说明我的读数不算签级。
+2. ORD-0273 的**新代复读**——她自己 15:16 那块已判 `Q24 NOT_TRANSFERRED`（5/8 门文件在两代之间 blob 不同），所以旧读数不能带过来；这条是闭 0273 的唯一欠项。
+3. ORD-0272 那单的红队分格派生（K8 seam vs 用户面）仍在她手上，不与上面并件。
+
+D `e345b9d6`：ORD-0308（0307×0302 路径相交预演，含 `merge-tree <A> <B>`）→ 之后 ORD-0310 产码（Q54=① 的无键期限）。
+HJ-P3 `aad2d1f2`：ORD-0306（5 枚行内画文 + 代次绑定 `### CMDR-0925-1652`）→ 之后 ORD-0310 定形。
+F `8ccd71d8`：ORD-0307（字面量凭据启动门，基座当前尖）；`ORD-0296 r3` 已 re-parent 到尖（`fd8eaf3644b6…`，两路外读一致、只动 1 个测试文件），**只差她的收据落 `evidence/` 新路径**，落了我就把这枚与后面的 0302 一并 ff-only 落，**一次换代**。
+B `c01d72a3`：ORD-0302（null-body 两处 + X-5 真渲染格，Q51/Q52/Q53 三条判据已在账本）；她的 0281 有键半支 gen-2 我核过坐标，等红队 A1 才谈落。
+HJ-P1 `1a986a24`：ORD-0297r 已 CLOSED（范围句 `### CMDR-0925-1735`），本拍无欠项；她那条 `d39b1095…` 口误已勘误并被我也核过。
+
+换代一次做完（Q55=①）：前置四条 + P3 今晚 17:24 实测 `hits=0` + 仪表 63/63 自测 17:21 已过（两件在 `evidence/cmdr-runbook/`）。手机数据面 `:8000` 与官方 GitHub 连接器 = **只有用户能回**，我没有自批。
+
+本拍 0 权威线移动、0 ref 推送、产品码 0 改动、`demo/reset` 0、`_live`/`_preview` 0 读写、凭据 0 打印。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### CMDR-0925-1735 ORD-0297r 闭单（范围句写死）+ 我那条"闭单"标题与我核对件里 `PARTIAL` 一词的关系（说清，别让人误读）
 
 **闭单**：`ORD-0297r`（HJ-P1 在盘上代 `dc964086c9d412573ac19d70b24b30e6c3ee6168` 重跑离线代次交接四臂）= **CLOSED**，红队 E 已签四格 `derived_result`（`6906e57c61b20353fae153beea76f3505b4b3088`）。
@@ -48794,3 +48814,16 @@ ls-remote  90d29a172e186aab6e6cb138ab4583ccf93bfa68	refs/heads/review/0280-attri
 还原      每一枚形制跑完都把源文件按字节还原：全部为 True（ord0281_arms_matrix.json blob 911ec7483c88ad43e3eae673e2a956a43aef89ec 的 digests）
 不自签    0281 的 derived_result 留 null；期限值 60 s 只在**未打补丁的树**上被 K2 读到，其余臂跑在补丁树上（这是闸窗口与 60 s 之间的唯一诚实折中，写在每格的 skip 理由里）
 ```
+
+### B c01d72a3 · ORD-0302 文案修（一枚候选装下两枚具名格：非 JSON 正文冒充网络故障 ＋ X-5 的承诺指向空块）基座 `dc96408` 候选 `5aff372` @17:36+08 —— **号令者自己读出来的那两行我核过了，是真的；X-5 与 null-body 那一格同行域，所以一次候选、一次落地，没有第二张单。**
+
+```text
+根因      root cause, re-measured on this tree rather than copied from the order: in the bugged blob fd5f6e5ba2771a8d12669b9bec1ba91590970701 the two envelope helpers read the detail field without a guard on `body` itself, at frontend/src/features/planning/PlanWithAiSheet.tsx:147 and frontend/src/features/planning/PlanWithAiSheet.tsx:155; the leg that reaches them sets `body = null` for an unparseable answer at frontend/src/features/planning/PlanWithAiSheet.tsx:531, the refusal branch starts at frontend/src/features/planning/PlanWithAiSheet.tsx:539, and the throw is caught where status is written as NETWORK at frontend/src/features/planning/PlanWithAiSheet.tsx:748 with the note nulled, which is also the line the detail block depends on at frontend/src/features/planning/PlanWithAiSheet.tsx:936. On the candidate the same two reads are guarded, now at frontend/src/features/planning/PlanWithAiSheet.tsx:147 and frontend/src/features/planning/PlanWithAiSheet.tsx:155 (sheet blob f61d5312e8b33807d3e5304d1fa9fb7f77a518aa, spec blob a0c13b1fd9815d8e8daad2b727dbe0adde3b0f36). The generation before ORD-0280 (sheet blob 4c3821b7129320d7940237d33c5f7dd14742f292) did not throw there -- it answered with an invented status string, which is the defect that order removed; both states are wrong in different ways and only the body-has-a-JSON-object reading separates them.
+五枚臂    N1=MET(status=HTTP_500/块=True)；N2=MET(status=HTTP_422/块=True)；N3=MET(status=NETWORK/块=True)；X1=MET(status=NO_PLANS_PRODUCED/块=True)；X2=MET(status=BASELINE_UNAVAILABLE/块=False)；矩阵 TEETH_AND_BASELINE（ord0302_arms_matrix.json blob 43a902dd0a8b14498eda6d2e89b663d2822b76a6）
+反件      ca_unsafe_read→只 N1 红=MET，其余 {'passed'}（digest 342cb8e3e43d132f→c223d781d6bcff75，report blob 755cb40e8b2e78af73d7d8b125ffdec24b54d6f0）；ca_null_on_network→只 N3 红=MET，其余 {'passed'}（digest 342cb8e3e43d132f→a751d6f95e1b10c0，report blob 34159d6b6df11a5011be09057ba0a1c03e43b19b）；ca_x5_no_block→只 X1 红=MET，其余 {'passed'}（digest 342cb8e3e43d132f→65060d601a60e007，report blob 330709e14db1aa6375e7a186f46ee4e65bc7cc6f）；ca_x5_soft_promise→只 X1 红=MET，其余 {'passed'}（digest 342cb8e3e43d132f→4edbecb77344ae4d，report blob bcdabe5ea53365874f6a2e1b76cc4d4acb08921e）。四枚各自只咬自己那一格：N2 在 ca_unsafe_read 下仍绿（带 error.message 的正文在读 detail 之前就返回了），N1 在 ca_null_on_network 下仍绿，五枚里除 X1 之外在两枚 X-5 反件下仍绿 —— 全红只能证明我改坏了别处
+边界      scope and boundaries: only two product paths changed in this candidate -- the sheet (f61d5312e8b33807d3e5304d1fa9fb7f77a518aa) and its new spec (a0c13b1fd9815d8e8daad2b727dbe0adde3b0f36); files belonging to other lanes: 0 touched, and review/0281-write-deadline-keyed-b2 was left alone. two device lines, one per named cell (requirement ② names the first, X-5 the second); no server-facing wording was touched: 'no readable answer reached this device (network or origin)' + 'plans compiled; 0 usable result(s) reached this screen'. No other user-facing copy was written, because the wording for the wider family is still ORD-0301's call. neither cell was observed by me on the deployed generation -- both readings are vite dev, so the phone keeps whatever is shipped until the commander swaps, but the swap is the commander's: actions by me here = 0 -- no index switch, no preview restart, no dist change, and this face stays vite dev so release_grade=False. Not measured, named rather than implied: a non-JSON body on the places leg and the generate leg (same helper, arms not written); an HTML answer that still parses as JSON; the shipped bundle behind the phone: X-5 was measured on vite dev, so the generation that is live now is still NOT-DEPLOYED-OBSERVED for this cell.
+坐标      base and shape: 5aff3722d5c36c760a424f5fea5c3a771298f9ac is the ref tip GitHub answers (5aff3722d5c36c760a424f5fea5c3a771298f9ac	refs/heads/review/0302-unreadable-server-body-b), 2 commits over the order's tip dc964086c9d412573ac19d70b24b30e6c3ee6168 (ancestor check = True), so the two named cells land on the one ref the commander already holds rather than as two competing candidates. Process, stated rather than smoothed: the first half of this order was pushed alone as 3d9dcb8a7918dca4178fd3bbb8cca0f730e05c35, the X-5 work then went on top of it, and the earlier attempt to fold both into one commit was refused as non-fast-forward -- no force-push, so 3d9dcb8a7918dca4178fd3bbb8cca0f730e05c35 is still an ancestor of this tip and every reading taken under it stays resolvable. 2 paths changed: qoder-ord0302-unreadable-server-body.spec.ts, PlanWithAiSheet.tsx; the diff restricted to backend/ answers none. Both typecheck configs (tsconfig.check.json, tsconfig.typecheck.json) were clean before the arms ran. The arms ran against exactly the committed bytes: the sheet's sha256 at HEAD is 342cb8e3e43d132f and every run recorded that same value as the digest it started from (342cb8e3e43d132f), agree=True.
+尺        cells 12 | overall Q38_GATE_GREEN | hard 0 [] | soft 0 []（receipt_cell_derivation_check_r2.py blob 91ae8b1ec55f5c19122af11bf775df14580955e4，两遍都在发布那份字节上）；另过 claim_coordinate_check_r3.py 与 r4b（见 ord0302_index.json blob 0762c08ef07317c6b2b4464d36f78e87ee65e916）；derived_result 全格 null
+还原      五枚形制跑完源文件按字节还原 = True（ord0302_arms_matrix.json blob 43a902dd0a8b14498eda6d2e89b663d2822b76a6 的 digests）
+```
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
