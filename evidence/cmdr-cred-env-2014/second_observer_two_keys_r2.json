@@ -1,0 +1,59 @@
+{
+ "schema": "CNX_CMDR_CRED_ENV_SECOND_OBSERVER_V2",
+ "generated_at_local": "2026-09-25T20:14:15+0800",
+ "why": "F's ORD-0307 arm artifact names two live keys; my r1 observer checked one. Widened to the same scan shape so the comparison is between two readings of one set, not two different sets.",
+ "scan_shape": {
+  "candidate_suffix_re": "(?i)(api[_-]?key|token|secret|access[_-]?key)$",
+  "ai_prefix_re": "(?i)^(deepseek|openai|anthropic|claude|gemini|google|groq|mistral|xai|cohere|qwen|dashscope|zhipu|moonshot|kimi|hf|huggingface|stability|perplexity|together)([_-].*)?$"
+ },
+ "named_ai_key_env_vars": {
+  "DEEPSEEK_API_KEY": {
+   "present": true,
+   "char_len": 35,
+   "fp12": "4cabe6bcaff4",
+   "value_printed": false
+  },
+  "OPENAI_API_KEY": {
+   "present": true,
+   "char_len": 67,
+   "fp12": "ed7e75ba651c",
+   "value_printed": false
+  }
+ },
+ "other_key_shaped_env_vars_count": 1,
+ "registry_hkcu_environment": {
+  "DEEPSEEK_API_KEY": true,
+  "OPENAI_API_KEY": true
+ },
+ "against_f_arms_artifact": {
+  "DEEPSEEK_API_KEY": {
+   "f_reported": {
+    "present": true,
+    "char_len": 35,
+    "fp12": "4cabe6bcaff4"
+   },
+   "cmdr_reads": {
+    "present": true,
+    "char_len": 35,
+    "fp12": "4cabe6bcaff4",
+    "value_printed": false
+   },
+   "agree": true
+  },
+  "OPENAI_API_KEY": {
+   "f_reported": {
+    "present": true,
+    "char_len": 67,
+    "fp12": "ed7e75ba651c"
+   },
+   "cmdr_reads": {
+    "present": true,
+    "char_len": 67,
+    "fp12": "ed7e75ba651c",
+    "value_printed": false
+   },
+   "agree": true
+  }
+ },
+ "value_printed": false
+}
