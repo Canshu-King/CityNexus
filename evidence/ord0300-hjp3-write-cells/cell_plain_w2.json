@@ -1,0 +1,19 @@
+{
+ "ran_at": "2026-09-25T02:18:38.379Z",
+ "port": 8552,
+ "measured_on": "90d29a172e186aab6e6cb138ab4583ccf93bfa68",
+ "bundle_sha256": "57c2a927f9e65ca0b33acdc737cbf941fc395c214aa213d861a4f7e5c664338e",
+ "instrumented": false,
+ "first_card": {
+  "ms": 32762,
+  "text": "连不上服务端\n\n网络或后端没有响应，这与你的需求内容无关。你的行程没有被改动，检查网络后可以重试。",
+  "status": "NETWORK",
+  "details": 0,
+  "counter": null
+ },
+ "card_after_3s": {
+  "text": "连不上服务端\n\n网络或后端没有响应，这与你的需求内容无关。你的行程没有被改动，检查网络后可以重试。",
+  "status": "NETWORK",
+  "details": 0
+ }
+}
