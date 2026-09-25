@@ -6,8 +6,8 @@
  "files": [
   {
    "name": "ord0302_receipt.json",
-   "blob40": "44e329677e5f79d1669151b2ef636a65ea1142b2",
-   "bytes": 34940
+   "blob40": "145a8f09800dc40c0dd38e5e8f905517a56016ac",
+   "bytes": 34804
   },
   {
    "name": "ord0302_arms_matrix.json",
@@ -206,8 +206,8 @@
   },
   {
    "name": "ord0302_deliver.py",
-   "blob40": "fc03183395c89ae16e05ebee6304b447f4cc2411",
-   "bytes": 35944
+   "blob40": "2db7bc0c534fd8980399635034d4af8a5147bb0e",
+   "bytes": 36302
   }
  ]
 }
