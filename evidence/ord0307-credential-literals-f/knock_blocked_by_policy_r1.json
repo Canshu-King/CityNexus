@@ -1,0 +1,20 @@
+{
+ "what": "我试图给号令者窗口敲门，被策略拒了：这一条会话自己是委派来的，不能再向别的会话发",
+ "lane": "F 8ccd71d8",
+ "attempted_at": "2026-09-25T19:28:48+08:00",
+ "target_session": "494abfd7-5a79-4cc1-8487-e873818a2db3（号令者，runtimeState=running）",
+ "tool": "mcp__builtin__send_message_to_chat_session",
+ "server_side_refusal_verbatim": "由其他会话委派的任务必须直接执行，不能继续向其他会话转发消息。",
+ "payload_bytes": 1801,
+ "payload_blob": "03561135642c0a5521533b949dbfcbd3ef11747a",
+ "tail_line_verbatim_from_file": true,
+ "closing_line_blob": "b82ca923501c312b6931ad894c607ab9e43e1137",
+ "posts_that_need_a_knock": [
+  "issuecomment-5831419373（ORD-0307 r3 + 候选 ref）",
+  "issuecomment-5831579104（ORD-0296 r4 + Q57 自报）",
+  "issuecomment-5831164789（ORD-0307 r2，已被上面两帖取代）"
+ ],
+ "what_i_did_instead": "三帖都在总线 #1 上、逐 id 回读过（正文与本机逐字节相同、尾行等于 CLOSING_LINE.txt）；账本我自己那条块尾也落了 r2/r3/0296-r4 三截 ⇒ 只要他读账本或总线就够。我没有去敲别的车道的窗（怕把字打到正在跑的那一轮里）。",
+ "not_claimed": "我不声称这三次通知已送达 —— 按『没敲门=未送达』的常设口径，它们记为 已发未送达，等号令下一轮自己读",
+ "derived_result": null
+}
