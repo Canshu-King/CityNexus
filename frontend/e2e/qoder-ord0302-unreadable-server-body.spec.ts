@@ -159,9 +159,10 @@ for (const { id, force } of ARMS) {
  * Both read RENDERED text and DOM counts, never a `data-*`; the promise is read out of the card's `<p>` and
  * not out of the whole card, because the block's own summary says 技术详情 and would hide a deleted promise.
  */
-type Stub = { url: string; method?: string; status?: number; body?: unknown; html?: string; abort?: boolean };
+type Stub = { url: string; method?: string; status?: number; body?: unknown; html?: string;
+                  raw?: string; contentType?: string; abort?: boolean; delay?: number };
 
-async function bootWithStubs(page: Page, stubs: Stub[], arm: string) {
+async function bootWithStubs(page: Page, stubs: Stub[], arm: string, cancelMidFlight = false) {
   const scene = (await (await page.request.get("/api/v1/demo/scene")).json()) as { journey_id?: string };
   const journeyId = String(scene.journey_id ?? "");
   expect(journeyId.length > 0, node(arm, "the stage named no journey")).toBe(true);
@@ -178,6 +179,12 @@ async function bootWithStubs(page: Page, stubs: Stub[], arm: string) {
       if (s.html !== undefined) {
         return r.fulfill({ status: s.status ?? 200, contentType: "text/html", body: s.html });
       }
+      if (s.raw !== undefined) {
+        /* The body is handed over verbatim, including "" -- a JSON parse of an empty answer is exactly what
+           these shapes are about, so the stub must not quietly replace it with `{}`. */
+        return r.fulfill({ status: s.status ?? 200, contentType: s.contentType ?? "application/json",
+                           body: s.raw, delay: s.delay });
+      }
       return r.fulfill({ status: s.status ?? 200, contentType: "application/json",
                          body: JSON.stringify(s.body) });
     });
@@ -189,6 +196,14 @@ async function bootWithStubs(page: Page, stubs: Stub[], arm: string) {
   await page.getByTestId("hub-plan-with-ai").click();
   await page.getByTestId("plan-ai-input").fill(USER_SENTENCE);
   await page.getByTestId("plan-ai-submit").click();
+  if (cancelMidFlight) {
+    /* The other direction of the pairing needs a screen whose block really is absent, and every answered leg
+       now renders a raw reading. A request the traveller cancels is the shape with no answer to show, so the
+       absence is measured here rather than assumed. */
+    const cancel = page.getByTestId("plan-ai-cancel");
+    await expect(cancel, node(arm, "the cancel control never appeared")).toBeVisible({ timeout: 30_000 });
+    await cancel.click();
+  }
   const result = page.getByTestId("plan-ai-result");
   await expect(result, node(arm, "the sheet never answered")).toBeVisible({ timeout: 120_000 });
   const cardText = clean(await result.innerText());
@@ -201,15 +216,38 @@ async function bootWithStubs(page: Page, stubs: Stub[], arm: string) {
   let reason = "";
   let label = "";
   let origin = "";
+  let rawText = "";
   if (count > 0) {
     await details.first().click();
-    label = clean(await page.getByTestId("plan-ai-detail-kind").innerText());
-    origin = (await page.getByTestId("plan-ai-detail-kind").getAttribute("data-reason-origin")) ?? "";
-    reason = clean(await page.getByTestId("plan-ai-reason").innerText());
+    const kind = page.getByTestId("plan-ai-detail-kind");
+    if (await kind.count() > 0) {
+      label = clean(await kind.innerText());
+      origin = (await kind.getAttribute("data-reason-origin")) ?? "";
+      reason = clean(await page.getByTestId("plan-ai-reason").innerText());
+    }
+    /* Q53=①: what has to be under the block is the answer's own bytes. Reading them is a separate probe
+       because a shape can carry a raw reading and no sentence at all. */
+    const raw = page.getByTestId("plan-ai-raw-reading");
+    if (await raw.count() > 0) rawText = String(await raw.textContent());
+  }
+  const rawFields: Record<string, string> = {};
+  for (const line of rawText.split("\n")) {
+    const at = line.indexOf("=");
+    if (at > 0) rawFields[line.slice(0, at)] = line.slice(at + 1);
   }
   return { arm, status: (await result.getAttribute("data-result-status")) ?? "", card_text: cardText,
            sentence, details_count: count, promise_in_copy: sentence.includes("技术详情"), reason, label,
-           origin };
+           origin, raw_text: rawText, raw_fields: rawFields };
+}
+
+/** What the block must show for a shape we forced: the answer's own fields, unedited. */
+function expectedRaw(sh: X5Shape): Record<string, string> {
+  return {
+    http_status: String(sh.status),
+    "content-type": sh.contentType,
+    bytes: String(new TextEncoder().encode(sh.body).length),
+    body: sh.body,
+  };
 }
 
 const MISSION_CLEAN = { mission: { id: "ord0302-mission", status: "COMPLETED", failure_reason: null,
@@ -217,34 +255,74 @@ const MISSION_CLEAN = { mission: { id: "ord0302-mission", status: "COMPLETED", f
 /* Two place rows: below two, the sheet stops at its own `<2 places` guard and never reaches the mission
    branch X-5 is about -- the first attempt at this arm proved that by landing on BLOCKED:CATALOG_EMPTY. */
 const TWO_PLACES = [{ id: "ord0302-p1", title: "A" }, { id: "ord0302-p2", title: "B" }];
-const NO_PLANS_STUBS: Stub[] = [
-  { url: "**/api/v1/journeys/*/agent/commands", method: "POST", body: MISSION_CLEAN },
-  { url: "**/api/v1/journeys/*/plans", method: "GET", body: [] },
-  { url: "**/api/v1/journeys/*/plans/generate", method: "POST", body: { plans: [] } },
-  { url: "**/api/v1/places**", body: TWO_PLACES },
+/* The five shapes the commander named (ledger `CMDR-0925-1625`, readings in bus issuecomment-5829345648):
+   all five answer HTTP 200 on both write legs and differ only in the body. Each one reaches the branch whose
+   card sends the traveller to 技术详情, so the pairing is judged once per shape -- inside ONE cell, which is
+   what keeps the two killer mutants reddening exactly this cell. */
+type X5Shape = { row: string; status: number; contentType: string; body: string };
+const X5_SHAPES: X5Shape[] = [
+  { row: "R19_④_200_empty_body", status: 200, contentType: "application/json", body: "" },
+  { row: "R20_④_200_json_empty_object", status: 200, contentType: "application/json", body: "{}" },
+  { row: "R21_④_200_json_array", status: 200, contentType: "application/json", body: "[]" },
+  { row: "R22_④_200_text_plain_payload", status: 200, contentType: "text/plain; charset=utf-8",
+    body: "plans are not available right now" },
+  { row: "R23_④_200_mission_unusable_status", status: 200, contentType: "application/json",
+    body: JSON.stringify({ mission: { id: "ord0302-mission", status: "FAILED_UPSTREAM",
+                                      failure_reason: null, reasoning_summary: null } }) },
 ];
 
-test(`ord0302-X1 ${"a run that produced nothing usable still renders the block its own card points at"}`,
+function stubsForShape(sh: X5Shape): Stub[] {
+  return [
+    { url: "**/api/v1/journeys/*/agent/commands", method: "POST", status: sh.status,
+      contentType: sh.contentType, raw: sh.body },
+    { url: "**/api/v1/journeys/*/plans/generate", method: "POST", status: sh.status,
+      contentType: sh.contentType, raw: sh.body },
+    { url: "**/api/v1/journeys/*/plans", method: "GET", body: [] },
+    { url: "**/api/v1/places**", body: TWO_PLACES },
+  ];
+}
+
+test(`ord0302-X1 ${"every 200 shape whose card points at 技术详情 renders a block that carries a reading"}`,
   async ({ page }) => {
-    const read = await bootWithStubs(page, NO_PLANS_STUBS, "X1");
-    const invariant = !read.promise_in_copy || read.details_count >= 1;
-    const rows = [
-      { claim: "the card's promise and the DOM agree (promise => block exists)", ok: invariant,
-        got: { promise_in_copy: read.promise_in_copy, details_count: read.details_count } },
-      { claim: "this shape is the one X-5 named", ok: read.status === "NO_PLANS_PRODUCED",
-        got: { status: read.status } },
-      { claim: "and its block carries a reading rather than nothing",
-        ok: read.details_count >= 1 && read.reason.length > 0, got: { reason: read.reason } },
-      { claim: "and the copy still points there (Q53=①: render it, do not delete the pointer)",
-        ok: read.promise_in_copy === true, got: { promise_in_copy: read.promise_in_copy } },
-    ];
-    readings["X1"] = { want: "device", force_shape: "200 mission with no reason, no plans", read,
-                      verdict: rows.every((r) => r.ok) ? "MET" : "NOT_MET", rows };
-    expect(rows.filter((r) => !r.ok), node("X1", JSON.stringify(read))).toEqual([]);
+    test.setTimeout(900_000);
+    const per: Record<string, unknown> = {};
+    const rows: { claim: string; ok: boolean; got: unknown }[] = [];
+    for (const sh of X5_SHAPES) {
+      await page.unrouteAll({ behavior: "ignoreErrors" });
+      const read = await bootWithStubs(page, stubsForShape(sh), "X1");
+      per[sh.row] = { status: read.status, promise_in_copy: read.promise_in_copy,
+                      details_count: read.details_count, reason: read.reason, origin: read.origin,
+                      raw_rendered: read.raw_fields, raw_expected: expectedRaw(sh) };
+      rows.push({ claim: `${sh.row}: the card's promise and the DOM agree (promise => block exists)`,
+        ok: !read.promise_in_copy || read.details_count >= 1,
+        got: { promise_in_copy: read.promise_in_copy, details_count: read.details_count } });
+      rows.push({ claim: `${sh.row}: this is the shape X-5 named`,
+        ok: read.status === "NO_PLANS_PRODUCED", got: { status: read.status } });
+      const want = expectedRaw(sh);
+      const got = read.raw_fields;
+      rows.push({ claim: `${sh.row}: its block carries the raw reading, field for field, unedited`,
+        ok: Object.entries(want).every(([k, v]) => (got[k] ?? null) === v),
+        got: { expected: want, rendered: got } });
+      rows.push({ claim: `${sh.row}: the copy still points there (Q53=①: render it, keep the pointer)`,
+        ok: read.promise_in_copy === true, got: { promise_in_copy: read.promise_in_copy } });
+    }
+    const head = per[X5_SHAPES[2].row] as Record<string, unknown>;
+    readings["X1"] = { want: "raw", force_shape: "five HTTP 200 bodies on both write legs (R19-R23)",
+                       shape_count: X5_SHAPES.length, per_shape: per,
+                       read: { ...head, shape_count: X5_SHAPES.length },
+                       verdict: rows.every((r) => r.ok) ? "MET" : "NOT_MET", rows };
+    expect(rows.filter((r) => !r.ok), node("X1", JSON.stringify(per))).toEqual([]);
   });
 
-test(`ord0302-X2 ${"a status whose copy makes no promise may keep the block absent without lying"}`,
+
+test(`ord0302-X2 ${"a promise-free card stays honest, and the empty-block direction is named as unmeasured"}`,
   async ({ page }) => {
+    /* Requirement 2 wants a reading in each direction. The forward one is X1, over all five shapes. This arm
+       drives a status whose sentence makes no promise and checks the pairing there -- and it states plainly
+       that the reverse direction has no witness on this candidate: the block is now gated on the raw reading,
+       so every shape this screen can be driven into either answered (a reading exists, block present) or was
+       refused before the request (the card names a code and still shows the reading). An unreachable
+       antecedent is reported, not manufactured. */
     const stubs: Stub[] = [
       { url: "**/api/v1/journeys/*/plans", method: "GET", abort: true },
       { url: "**/api/v1/journeys/*/agent/commands", method: "POST", body: MISSION_CLEAN },
@@ -258,11 +336,14 @@ test(`ord0302-X2 ${"a status whose copy makes no promise may keep the block abse
       { claim: "the shape is a real one on screen, not a half-booted page", ok: read.status.length > 0,
         got: { status: read.status } },
     ];
-    readings["X2"] = { want: "either", force_shape: "baseline read aborted", read,
-                      verdict: rows.every((r) => r.ok) ? "MET" : "NOT_MET", rows };
+    readings["X2"] = { want: "either", force_shape: "baseline read aborted, no places, no promise", read,
+                       absent_block_direction: read.details_count === 0 ? "OBSERVED" : "NOT_MEASURED",
+                       why_absent_direction_unreachable:
+                         "the block is gated on the raw reading, so no drivable shape of this screen leaves it "
+                         + "out of the DOM",
+                       verdict: rows.every((r) => r.ok) ? "MET" : "NOT_MET", rows };
     expect(rows.filter((r) => !r.ok), node("X2", JSON.stringify(read))).toEqual([]);
   });
-
 test.afterEach(async ({}, testInfo) => {
   const arm = String(testInfo.title).match(/ord0302-(N[123]|X[12])/)?.[1];
   if (!arm) return;
