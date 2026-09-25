@@ -74,10 +74,26 @@ RUN_SHAPES = {
 }
 
 
+AUTH_REF = "refs/heads/mirror/integration-frontend-apple-pass1"
+AUTH_URL = "https://github.com/Canshu-King/CityNexus.git"
+
+
 def sha_of_head() -> str:
     return subprocess.run(
         "git rev-parse HEAD", cwd=ROOT, capture_output=True, text=True, shell=True
     ).stdout.strip()
+
+
+def read_authoritative_tip() -> str:
+    """The landing line, read from where an auditor can also read it.  A tip typed into this file
+    would keep passing as 'the authoritative one' long after the next landing -- which is exactly how
+    a generation claim goes stale."""
+    out = subprocess.run(
+        f"git ls-remote {AUTH_URL} {AUTH_REF}",
+        cwd=ROOT, capture_output=True, text=True, shell=True, encoding="utf-8", errors="replace",
+    ).stdout
+    line = out.strip().split("\t")[0].strip() if out.strip() else ""
+    return line if len(line) == 40 else f"NOT_READABLE({line or 'empty ls-remote'})"
 
 
 def porcelain_lines() -> int:
@@ -422,8 +438,10 @@ def main() -> int:
         "generatedBy": "e345b9d6",
         "collection": collection,
         "landing_groups": landing,
-        "orders": ["ORD-0269 cells 1/3 + R-4 negative + R-6 pagination", "ORD-0273 TEXT + ACTION"],
-        "authoritative_tip_at_delivery": "c79e2b4f4efe414dba22a071a7136ae10b5c84aa",
+        "orders": ["ORD-0269 cells 1/3 + R-4 negative + R-6 pagination", "ORD-0273 TEXT + ACTION",
+                   "ORD-0278 resume carries both keys", "ORD-0253 client half: both legs carry the key"],
+        # A tip typed into a generator is a tip that goes stale the next landing: read it live.
+        "authoritative_tip_at_delivery": read_authoritative_tip(),
         "candidate_tip": exact_stamp,
         "generation": {
             "sha_the_triples_carry": exact_stamp,
