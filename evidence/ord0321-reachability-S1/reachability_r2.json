@@ -1,0 +1,803 @@
+{
+ "schema": "CNX_ORD0321_REACHABILITY_V1",
+ "order": "ORD-0321",
+ "lane": "S1-q64sweep",
+ "revision": "r2: generation re-pinned to the current tip and re-measured there",
+ "at_local": "2026-09-26T03:47:27+0800",
+ "generation": "65df31df96cfb8a954f5feb36484710a883e1597",
+ "generation_of_r1": "30de4ebe409f49c5e25f4758cb2e5f4e90764a4f",
+ "tip_moved": true,
+ "authoritative_tip_when_r1_was_written": "9a669c8bec863fadf31d5158f4a1be66aec49f23",
+ "ruler": "44e062e6ce9c7b5d97d78e09e432072da102292c",
+ "ruler_previous": "608016f6a538097041554b76cfe3e9a4192f299c",
+ "ruler_delta": 0,
+ "commander_landing_receipt_blob": "959f2738be18b43d23af1f723f0f536ddda30d33",
+ "cells_total": 16,
+ "verdict_distribution": {
+  "REACHABLE_ON_PHONE": 14,
+  "UNKNOWN": 2
+ },
+ "live_observed_any": false,
+ "citation_integrity": [
+  {
+   "file": "frontend/src/app/V8Experience.tsx",
+   "blob_at_30de4ebe": "17ef83b6ec58b4190f483733501ea1b973336d5f",
+   "blob_at_65df31df": "17ef83b6ec58b4190f483733501ea1b973336d5f",
+   "unchanged": true
+  },
+  {
+   "file": "frontend/src/components/ProductErrorBoundary.tsx",
+   "blob_at_30de4ebe": "9ebcd97969102e95bfecc1c78995570409dd0964",
+   "blob_at_65df31df": "9ebcd97969102e95bfecc1c78995570409dd0964",
+   "unchanged": true
+  },
+  {
+   "file": "frontend/src/features/agent/AgentComposer.tsx",
+   "blob_at_30de4ebe": "504ef34fe79d1bc96bb1c8ae6aa99ba68bbc665d",
+   "blob_at_65df31df": "504ef34fe79d1bc96bb1c8ae6aa99ba68bbc665d",
+   "unchanged": true
+  },
+  {
+   "file": "frontend/src/features/agent/CopilotDock.tsx",
+   "blob_at_30de4ebe": "d6019d003aa4cd266374d7dbbfb3b803379a8c55",
+   "blob_at_65df31df": "d6019d003aa4cd266374d7dbbfb3b803379a8c55",
+   "unchanged": true
+  },
+  {
+   "file": "frontend/src/features/inbox/JourneyInboxWorkbench.tsx",
+   "blob_at_30de4ebe": "b4bdf4b809478ccadd7951895a39e966852620a8",
+   "blob_at_65df31df": "b4bdf4b809478ccadd7951895a39e966852620a8",
+   "unchanged": true
+  },
+  {
+   "file": "frontend/src/features/planning/PlanComparison.tsx",
+   "blob_at_30de4ebe": "378bd15134f62bff6479d1700953cd1966cf15ae",
+   "blob_at_65df31df": "378bd15134f62bff6479d1700953cd1966cf15ae",
+   "unchanged": true
+  },
+  {
+   "file": "frontend/src/features/planning/PlanWithAiSheet.tsx",
+   "blob_at_30de4ebe": "3bb6a39067a380c2f75629fd7562f0de8f5d2f2a",
+   "blob_at_65df31df": "fc4d6111dc013008b610a240aab096deebe2436f",
+   "unchanged": false
+  },
+  {
+   "file": "frontend/src/features/stay/HotelsPanel.tsx",
+   "blob_at_30de4ebe": "5154c19580bd344cb49afe07c34dc346dff49f0f",
+   "blob_at_65df31df": "5154c19580bd344cb49afe07c34dc346dff49f0f",
+   "unchanged": true
+  },
+  {
+   "file": "frontend/src/routes/v8Routes.ts",
+   "blob_at_30de4ebe": "999d4c2eeb6b3ef7cc5dd89b5aa042b3b5f2dfe8",
+   "blob_at_65df31df": "999d4c2eeb6b3ef7cc5dd89b5aa042b3b5f2dfe8",
+   "unchanged": true
+  },
+  {
+   "file": "frontend/src/styles.css",
+   "blob_at_30de4ebe": "b942bf640365c013fa02897f19e8a34b5c9d9c46",
+   "blob_at_65df31df": "b942bf640365c013fa02897f19e8a34b5c9d9c46",
+   "unchanged": true
+  }
+ ],
+ "line_shift_applied": [
+  {
+   "file": "frontend/src/features/planning/PlanWithAiSheet.tsx",
+   "r1_line": 1016,
+   "r2_line": 1046
+  }
+ ],
+ "question_answered": "只判一件事：这格渲染在手机上旅客真能撞到吗。",
+ "command_i_ran": "尺 r3 逐文件 --ref 65df31df96cfb8a954f5feb36484710a883e1597 --path ... 扫 74 枚（hits=25 / files_with_hits=12）；可达性静态追证：git archive 65df31df96cfb8a954f5feb36484710a883e1597 frontend/src 导出树按行号读挂载条件与 CSS 断点，git show <tip>:backend/app/main.py 按行号读 require 与信封；未跑 vite build、未进 frontend/node_modules、未碰 *_live.db",
+ "why_no_live_run": ":8000 NOT AVAILABLE、手机不换代（Q61），本会话没有活手机面，故每格 live_observed=false。",
+ "for_ord0323": "ORD-0323 那两格若落在这 16 格里，判据同上：链路闭合已证，缺的是一次活的手机面读数。本表把'代码里到得了'与'屏幕上看见了'分成两栏，正是为了让那一单不必重跑我的追证。",
+ "structural_basis": [
+  {
+   "file": "frontend/src/routes/v8Routes.ts",
+   "line": 21,
+   "text": "{ key: \"map\", label: \"Map\", icon: \"map\" },",
+   "note": "手机底栏只有 5 个键"
+  },
+  {
+   "file": "frontend/src/app/V8Experience.tsx",
+   "line": 424,
+   "text": "...desktopRoutes,",
+   "note": "但抽屉用的是 desktopRoutes ∪ mobileRoutes 的合并表"
+  },
+  {
+   "file": "frontend/src/app/V8Experience.tsx",
+   "line": 1440,
+   "text": "className=\"v8-mobile-menu\"",
+   "note": "窄屏顶栏的汉堡按钮开这个抽屉"
+  },
+  {
+   "file": "frontend/src/app/V8Experience.tsx",
+   "line": 1839,
+   "text": "{drawerRoutes.map((item, index) => (",
+   "note": "抽屉逐条渲染合并表 ⇒ 手机能走到全部路由键"
+  },
+  {
+   "file": "frontend/src/styles.css",
+   "line": 176,
+   "text": ".v8-message { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin: 18px 46px -7px; padding: 11px 14px; border: 1px solid #f0d1b5; border-radius: 8px; color: #8e5f32; background: #fffaf4; font-size: 11px; }.v8-message button { width: auto; margin: 0; padding: 0; border: 0; color: inherit; background: transparent; cursor: pointer; font-size: 10px; font-weight: 800; }.v8-loading { display: grid; place-items: center; align-content: center; gap: 8px; min-height: 100vh; color: var(--v8-ink); background: var(--v8-canvas); }.v8-loading p { margin: 10px 0 0; font-weight: 700; }.v8-loading span { color: var(--v8-muted); font-size: 12px; }.v8-mobile-nav, .v8-mobile-menu { display: none; }",
+   "note": "默认 .v8-mobile-nav 不显示"
+  },
+  {
+   "file": "frontend/src/app/V8Experience.tsx",
+   "line": 1911,
+   "text": "const [tab, setTab] = useState<\"itinerary\" | \"stay\" | \"bookings\" | \"spend\">(",
+   "note": "Trips 的 tab 状态"
+  },
+  {
+   "file": "frontend/src/app/V8Experience.tsx",
+   "line": 1959,
+   "text": "{tab === \"stay\" && (",
+   "note": "住宿 tab 才挂 HotelsPanel"
+  },
+  {
+   "file": "frontend/src/app/V8Experience.tsx",
+   "line": 1962,
+   "text": "{tab === \"bookings\" && (",
+   "note": "预订 tab 才挂 JourneyInboxWorkbench"
+  },
+  {
+   "file": "frontend/src/app/V8Experience.tsx",
+   "line": 1777,
+   "text": "<CopilotDock data={data} onNavigate={navigate} />",
+   "note": "CopilotDock 在路由分支之外，无条件挂载"
+  },
+  {
+   "file": "backend/app/main.py",
+   "line": 492,
+   "text": "return JSONResponse(status_code=status, content={\"error\": body})",
+   "note": "所有拒绝都套在 {\"error\": ...} 里"
+  },
+  {
+   "file": "backend/app/main.py",
+   "line": 570,
+   "text": "detail,",
+   "note": "HTTPException 的 detail 原样进 error.message"
+  },
+  {
+   "file": "backend/app/main.py",
+   "line": 485,
+   "text": "\"message\": message,",
+   "note": "message 就是那句服务器原话"
+  }
+ ],
+ "caveats": [
+  "服务器从不发 `detail` 顶层键（信封是 code/message/message_key/trace_id/details，main.py:483-489）。所以先读 body?.detail 的那些格子（HotelsPanel.tsx:93、LiveRecovery.tsx:238、PlanComparison.tsx:96）实际取到的是第二个选择 error.message —— 正文照样进屏，只是取的是 message 不是 detail。",
+  "500 不走这条通道：未捕获异常由框架答 'Internal Server Error'，无 JSON 体，前端 :82 的 response.json() 自己抛，屏上看到的是浏览器解析话术，不是服务器原话。所以本表所有 REACHABLE 判的触发前置都是 4xx/5xx 具名拒绝（require 的 404 是最普遍的一条），不是 500。",
+  "行程 id 失效是手机上的常见态（本机 localStorage 存的 id 被别处清掉/重置掉），而每个 inbox handler 开头都调 require(...)，所以那 9 格的 404 正文几乎不需要旅客额外动作。",
+  "几何可达我没有量：本会话没有活手机面，`visible_without_scroll` 一律 unmeasured。DOM 里有这句话与拇指够得着这句话是两件事（账本里 Amendment F 那格实测过：填一个字能把入口从 y=929 顶到视口外）。"
+ ],
+ "cells": [
+  {
+   "cell": "frontend/src/app/V8Experience.tsx:1028",
+   "cite": "frontend/src/app/V8Experience.tsx:1028",
+   "cell_text": "} else {",
+   "verdict": "REACHABLE_ON_PHONE",
+   "phone_path": "启动后进设置向导 → 填一张单 → 服务器按字段拒",
+   "endpoint": "POST /api/v1/journeys",
+   "prose_source": [
+    {
+     "file": "backend/app/main.py",
+     "line": 539,
+     "text": "@app.exception_handler(RequestValidationError)"
+    },
+    {
+     "file": "backend/app/main.py",
+     "line": 555,
+     "text": "\"Request validation failed\","
+    },
+    {
+     "file": "backend/app/main.py",
+     "line": 640,
+     "text": "raise HTTPException(404, f\"{label} {identifier} was not found\")"
+    }
+   ],
+   "render_sink": [
+    {
+     "file": "frontend/src/app/V8Experience.tsx",
+     "line": 1030,
+     "text": "error instanceof Error ? error.message : t(\"shell.loadError\"),"
+    },
+    {
+     "file": "frontend/src/app/V8Experience.tsx",
+     "line": 169,
+     "text": "(typeof body?.detail === \"string\" ? body.detail : null) ??"
+    },
+    {
+     "file": "frontend/src/app/V8Experience.tsx",
+     "line": 1562,
+     "text": "{message}"
+    }
+   ],
+   "live_observed": false,
+   "visible_without_scroll": "unmeasured",
+   "missing_step": ""
+  },
+  {
+   "cell": "frontend/src/components/ProductErrorBoundary.tsx:104",
+   "cite": "frontend/src/components/ProductErrorBoundary.tsx:104",
+   "cell_text": "{String(error?.message || error)}",
+   "verdict": "UNKNOWN",
+   "phone_path": "任意一次渲染路径崩溃就会显示这面屏（Boundary 包在 app 外层）",
+   "endpoint": "不经 HTTP —— 崩的是 React 树本身",
+   "prose_source": [],
+   "render_sink": [
+    {
+     "file": "frontend/src/components/ProductErrorBoundary.tsx",
+     "line": 104,
+     "text": "{String(error?.message || error)}"
+    },
+    {
+     "file": "frontend/src/components/ProductErrorBoundary.tsx",
+     "line": 105,
+     "text": "{info ? `\\n${info}` : \"\"}"
+    }
+   ],
+   "live_observed": false,
+   "visible_without_scroll": "unmeasured",
+   "missing_step": "缺一步：一个旅客在手机上能自己撞出来的崩溃。本会话 :8000 NOT AVAILABLE，我没有活面可跑，只能证到'组件确实挂在根上'（main.tsx:1668）与'崩溃即渲染'，证不到'崩得了'。"
+  },
+  {
+   "cell": "frontend/src/features/agent/AgentComposer.tsx:95",
+   "cite": "frontend/src/features/agent/AgentComposer.tsx:95",
+   "cell_text": "{ role: \"assistant\", text: response.message, response },",
+   "verdict": "REACHABLE_ON_PHONE",
+   "phone_path": "底栏第 4 项 Copilot（agent 在 mobileRoutes 里）→ 打字发送",
+   "endpoint": "POST /api/v1/journeys/{id}/copilot/messages",
+   "prose_source": [
+    {
+     "file": "backend/app/main.py",
+     "line": 11221,
+     "text": "\"message\": answer,"
+    }
+   ],
+   "render_sink": [
+    {
+     "file": "frontend/src/features/agent/AgentComposer.tsx",
+     "line": 95,
+     "text": "{ role: \"assistant\", text: response.message, response },"
+    },
+    {
+     "file": "frontend/src/features/agent/AgentComposer.tsx",
+     "line": 196,
+     "text": "<p>{item.text}</p>"
+    }
+   ],
+   "live_observed": false,
+   "visible_without_scroll": "unmeasured",
+   "missing_step": ""
+  },
+  {
+   "cell": "frontend/src/features/agent/CopilotDock.tsx:615",
+   "cite": "frontend/src/features/agent/CopilotDock.tsx:615",
+   "cell_text": "setMessages((current) => [...current, { role: \"assistant\", text: response.message, response }]);",
+   "verdict": "REACHABLE_ON_PHONE",
+   "phone_path": "Dock 无条件挂载，窄屏还有专属布局（贴底、让位规则）",
+   "endpoint": "POST /api/v1/journeys/{id}/copilot/messages",
+   "prose_source": [
+    {
+     "file": "backend/app/main.py",
+     "line": 11221,
+     "text": "\"message\": answer,"
+    }
+   ],
+   "render_sink": [
+    {
+     "file": "frontend/src/features/agent/CopilotDock.tsx",
+     "line": 615,
+     "text": "setMessages((current) => [...current, { role: \"assistant\", text: response.message, response }]);"
+    },
+    {
+     "file": "frontend/src/features/agent/CopilotDock.tsx",
+     "line": 743,
+     "text": "<p>{item.text}</p>"
+    }
+   ],
+   "live_observed": false,
+   "visible_without_scroll": "unmeasured",
+   "missing_step": ""
+  },
+  {
+   "cell": "frontend/src/features/inbox/JourneyInboxWorkbench.tsx:307",
+   "cite": "frontend/src/features/inbox/JourneyInboxWorkbench.tsx:307",
+   "cell_text": "} catch (error) {",
+   "verdict": "REACHABLE_ON_PHONE",
+   "phone_path": "底栏 Trips → 预订 tab → 手工录入并提交",
+   "endpoint": "POST /api/v1/journeys/{id}/inbox/import",
+   "prose_source": [
+    {
+     "file": "backend/app/main.py",
+     "line": 4036,
+     "text": "raise HTTPException(404, \"reservation draft was not found\")"
+    },
+    {
+     "file": "backend/app/main.py",
+     "line": 4046,
+     "text": "raise HTTPException(409, str(exc)) from exc"
+    },
+    {
+     "file": "backend/app/main.py",
+     "line": 4077,
+     "text": "raise HTTPException("
+    },
+    {
+     "file": "backend/app/main.py",
+     "line": 640,
+     "text": "raise HTTPException(404, f\"{label} {identifier} was not found\")"
+    }
+   ],
+   "render_sink": [
+    {
+     "file": "frontend/src/features/inbox/JourneyInboxWorkbench.tsx",
+     "line": 308,
+     "text": "setMessage(error instanceof Error ? error.message : t(\"inbox.memoryLoadError\"));"
+    },
+    {
+     "file": "frontend/src/features/inbox/JourneyInboxWorkbench.tsx",
+     "line": 687,
+     "text": "{message && <p className=\"v10-inbox-message\" role=\"status\">{message}</p>}"
+    }
+   ],
+   "live_observed": false,
+   "visible_without_scroll": "unmeasured",
+   "missing_step": ""
+  },
+  {
+   "cell": "frontend/src/features/inbox/JourneyInboxWorkbench.tsx:317",
+   "cite": "frontend/src/features/inbox/JourneyInboxWorkbench.tsx:317",
+   "cell_text": "} catch (error) {",
+   "verdict": "REACHABLE_ON_PHONE",
+   "phone_path": "底栏 Trips → 预订 tab，挂载即自动读行程记忆",
+   "endpoint": "GET /api/v1/journeys/{id}/memory",
+   "prose_source": [
+    {
+     "file": "backend/app/main.py",
+     "line": 640,
+     "text": "raise HTTPException(404, f\"{label} {identifier} was not found\")"
+    }
+   ],
+   "render_sink": [
+    {
+     "file": "frontend/src/features/inbox/JourneyInboxWorkbench.tsx",
+     "line": 318,
+     "text": "setMessage(error instanceof Error ? error.message : t(\"inbox.memoryLoadError\"));"
+    },
+    {
+     "file": "frontend/src/features/inbox/JourneyInboxWorkbench.tsx",
+     "line": 687,
+     "text": "{message && <p className=\"v10-inbox-message\" role=\"status\">{message}</p>}"
+    },
+    {
+     "file": "frontend/src/features/inbox/JourneyInboxWorkbench.tsx",
+     "line": 346,
+     "text": "void loadMemory();"
+    }
+   ],
+   "live_observed": false,
+   "visible_without_scroll": "unmeasured",
+   "missing_step": ""
+  },
+  {
+   "cell": "frontend/src/features/inbox/JourneyInboxWorkbench.tsx:336",
+   "cite": "frontend/src/features/inbox/JourneyInboxWorkbench.tsx:336",
+   "cell_text": "} catch (error) {",
+   "verdict": "REACHABLE_ON_PHONE",
+   "phone_path": "同上，挂载即自动读待办队列",
+   "endpoint": "GET /api/v1/journeys/{id}/inbox",
+   "prose_source": [
+    {
+     "file": "backend/app/main.py",
+     "line": 640,
+     "text": "raise HTTPException(404, f\"{label} {identifier} was not found\")"
+    }
+   ],
+   "render_sink": [
+    {
+     "file": "frontend/src/features/inbox/JourneyInboxWorkbench.tsx",
+     "line": 339,
+     "text": "error instanceof Error ? error.message : t(\"inbox.pendingUnreadable\"),"
+    },
+    {
+     "file": "frontend/src/features/inbox/JourneyInboxWorkbench.tsx",
+     "line": 731,
+     "text": "<code> {pendingError}</code>{\" \"}"
+    },
+    {
+     "file": "frontend/src/features/inbox/JourneyInboxWorkbench.tsx",
+     "line": 350,
+     "text": "void readInbox();"
+    }
+   ],
+   "live_observed": false,
+   "visible_without_scroll": "unmeasured",
+   "missing_step": ""
+  },
+  {
+   "cell": "frontend/src/features/inbox/JourneyInboxWorkbench.tsx:386",
+   "cite": "frontend/src/features/inbox/JourneyInboxWorkbench.tsx:386",
+   "cell_text": "} catch (error) {",
+   "verdict": "UNKNOWN",
+   "phone_path": "要先有 decodedText（扫凭证得到），而扫描器只挂在抽屉里的 bookings 路由",
+   "endpoint": "POST /api/v1/journeys/{id}/inbox/extract/text",
+   "prose_source": [
+    {
+     "file": "backend/app/main.py",
+     "line": 640,
+     "text": "raise HTTPException(404, f\"{label} {identifier} was not found\")"
+    }
+   ],
+   "render_sink": [
+    {
+     "file": "frontend/src/features/inbox/JourneyInboxWorkbench.tsx",
+     "line": 387,
+     "text": "setMessage(error instanceof Error ? error.message : t(\"inbox.textFailed\"));"
+    },
+    {
+     "file": "frontend/src/features/inbox/JourneyInboxWorkbench.tsx",
+     "line": 687,
+     "text": "{message && <p className=\"v10-inbox-message\" role=\"status\">{message}</p>}"
+    },
+    {
+     "file": "frontend/src/features/inbox/JourneyInboxWorkbench.tsx",
+     "line": 394,
+     "text": "if (decodedText) void extractText(decodedText);"
+    }
+   ],
+   "live_observed": false,
+   "visible_without_scroll": "unmeasured",
+   "missing_step": "缺两步：(1) 菜单→全部路由→预订 才能见到扫描器（V8Experience.tsx:1729），Trips 的预订 tab 里没有它；(2) 手机摄像头的真二维码解码本会话没跑过。"
+  },
+  {
+   "cell": "frontend/src/features/inbox/JourneyInboxWorkbench.tsx:407",
+   "cite": "frontend/src/features/inbox/JourneyInboxWorkbench.tsx:407",
+   "cell_text": "} catch (error) {",
+   "verdict": "REACHABLE_ON_PHONE",
+   "phone_path": "预订 tab → 选一张凭证图片上传",
+   "endpoint": "POST /api/v1/journeys/{id}/inbox/extract/image",
+   "prose_source": [
+    {
+     "file": "backend/app/main.py",
+     "line": 3809,
+     "text": "raise HTTPException(404, \"reservation draft was not found\")"
+    },
+    {
+     "file": "backend/app/main.py",
+     "line": 3811,
+     "text": "raise HTTPException(409, \"confirmed reservation drafts require a new correction artifact\")"
+    },
+    {
+     "file": "backend/app/main.py",
+     "line": 640,
+     "text": "raise HTTPException(404, f\"{label} {identifier} was not found\")"
+    }
+   ],
+   "render_sink": [
+    {
+     "file": "frontend/src/features/inbox/JourneyInboxWorkbench.tsx",
+     "line": 408,
+     "text": "setMessage(error instanceof Error ? error.message : t(\"inbox.imageFailed\"));"
+    },
+    {
+     "file": "frontend/src/features/inbox/JourneyInboxWorkbench.tsx",
+     "line": 687,
+     "text": "{message && <p className=\"v10-inbox-message\" role=\"status\">{message}</p>}"
+    }
+   ],
+   "live_observed": false,
+   "visible_without_scroll": "unmeasured",
+   "missing_step": ""
+  },
+  {
+   "cell": "frontend/src/features/inbox/JourneyInboxWorkbench.tsx:435",
+   "cite": "frontend/src/features/inbox/JourneyInboxWorkbench.tsx:435",
+   "cell_text": "} catch (error) {",
+   "verdict": "REACHABLE_ON_PHONE",
+   "phone_path": "预订 tab → 对一张草稿点智能应用",
+   "endpoint": "POST /api/v1/journeys/{id}/inbox/{draftId}/smart-apply",
+   "prose_source": [
+    {
+     "file": "backend/app/main.py",
+     "line": 3849,
+     "text": "raise HTTPException(404, \"reservation draft was not found\")"
+    },
+    {
+     "file": "backend/app/main.py",
+     "line": 3867,
+     "text": "raise HTTPException(409, str(exc)) from exc"
+    },
+    {
+     "file": "backend/app/main.py",
+     "line": 640,
+     "text": "raise HTTPException(404, f\"{label} {identifier} was not found\")"
+    }
+   ],
+   "render_sink": [
+    {
+     "file": "frontend/src/features/inbox/JourneyInboxWorkbench.tsx",
+     "line": 436,
+     "text": "setMessage(error instanceof Error ? error.message : t(\"inbox.smartApplyFailed\"));"
+    },
+    {
+     "file": "frontend/src/features/inbox/JourneyInboxWorkbench.tsx",
+     "line": 687,
+     "text": "{message && <p className=\"v10-inbox-message\" role=\"status\">{message}</p>}"
+    }
+   ],
+   "live_observed": false,
+   "visible_without_scroll": "unmeasured",
+   "missing_step": ""
+  },
+  {
+   "cell": "frontend/src/features/inbox/JourneyInboxWorkbench.tsx:459",
+   "cite": "frontend/src/features/inbox/JourneyInboxWorkbench.tsx:459",
+   "cell_text": "} catch (error) {",
+   "verdict": "REACHABLE_ON_PHONE",
+   "phone_path": "预订 tab → 审核完点确认",
+   "endpoint": "POST /api/v1/journeys/{id}/inbox/{draftId}/confirm",
+   "prose_source": [
+    {
+     "file": "backend/app/main.py",
+     "line": 4036,
+     "text": "raise HTTPException(404, \"reservation draft was not found\")"
+    },
+    {
+     "file": "backend/app/main.py",
+     "line": 4077,
+     "text": "raise HTTPException("
+    },
+    {
+     "file": "backend/app/main.py",
+     "line": 640,
+     "text": "raise HTTPException(404, f\"{label} {identifier} was not found\")"
+    }
+   ],
+   "render_sink": [
+    {
+     "file": "frontend/src/features/inbox/JourneyInboxWorkbench.tsx",
+     "line": 460,
+     "text": "failure = error instanceof Error ? error.message : t(\"inbox.confirmFailed\");"
+    },
+    {
+     "file": "frontend/src/features/inbox/JourneyInboxWorkbench.tsx",
+     "line": 474,
+     "text": "setRawDetail(passed ? null : failure ?? t(\"inbox.confirmUnreadable\"));"
+    },
+    {
+     "file": "frontend/src/features/inbox/JourneyInboxWorkbench.tsx",
+     "line": 691,
+     "text": "<code>{rawDetail}</code>"
+    }
+   ],
+   "live_observed": false,
+   "visible_without_scroll": "unmeasured",
+   "missing_step": ""
+  },
+  {
+   "cell": "frontend/src/features/inbox/JourneyInboxWorkbench.tsx:517",
+   "cite": "frontend/src/features/inbox/JourneyInboxWorkbench.tsx:517",
+   "cell_text": "} catch (error) {",
+   "verdict": "REACHABLE_ON_PHONE",
+   "phone_path": "预订 tab → 改字段后保存修改",
+   "endpoint": "PATCH /api/v1/journeys/{id}/inbox/{draftId}",
+   "prose_source": [
+    {
+     "file": "backend/app/main.py",
+     "line": 3849,
+     "text": "raise HTTPException(404, \"reservation draft was not found\")"
+    },
+    {
+     "file": "backend/app/main.py",
+     "line": 3867,
+     "text": "raise HTTPException(409, str(exc)) from exc"
+    },
+    {
+     "file": "backend/app/main.py",
+     "line": 640,
+     "text": "raise HTTPException(404, f\"{label} {identifier} was not found\")"
+    }
+   ],
+   "render_sink": [
+    {
+     "file": "frontend/src/features/inbox/JourneyInboxWorkbench.tsx",
+     "line": 518,
+     "text": "setMessage(error instanceof Error ? error.message : t(\"inbox.correctionsFailed\"));"
+    },
+    {
+     "file": "frontend/src/features/inbox/JourneyInboxWorkbench.tsx",
+     "line": 687,
+     "text": "{message && <p className=\"v10-inbox-message\" role=\"status\">{message}</p>}"
+    }
+   ],
+   "live_observed": false,
+   "visible_without_scroll": "unmeasured",
+   "missing_step": ""
+  },
+  {
+   "cell": "frontend/src/features/inbox/JourneyInboxWorkbench.tsx:691",
+   "cite": "frontend/src/features/inbox/JourneyInboxWorkbench.tsx:691",
+   "cell_text": "<code>{rawDetail}</code>",
+   "verdict": "REACHABLE_ON_PHONE",
+   "phone_path": "确认失败后，同一屏的技术详情折叠里就是服务器原话",
+   "endpoint": "承 :459 的失败回答",
+   "prose_source": [
+    {
+     "file": "backend/app/main.py",
+     "line": 640,
+     "text": "raise HTTPException(404, f\"{label} {identifier} was not found\")"
+    },
+    {
+     "file": "backend/app/main.py",
+     "line": 4077,
+     "text": "raise HTTPException("
+    }
+   ],
+   "render_sink": [
+    {
+     "file": "frontend/src/features/inbox/JourneyInboxWorkbench.tsx",
+     "line": 474,
+     "text": "setRawDetail(passed ? null : failure ?? t(\"inbox.confirmUnreadable\"));"
+    },
+    {
+     "file": "frontend/src/features/inbox/JourneyInboxWorkbench.tsx",
+     "line": 691,
+     "text": "<code>{rawDetail}</code>"
+    }
+   ],
+   "live_observed": false,
+   "visible_without_scroll": "unmeasured",
+   "missing_step": ""
+  },
+  {
+   "cell": "frontend/src/features/planning/PlanComparison.tsx:92",
+   "cite": "frontend/src/features/planning/PlanComparison.tsx:92",
+   "cell_text": "if (!response.ok) {",
+   "verdict": "REACHABLE_ON_PHONE",
+   "phone_path": "Today 在未选定方案时就是这面 chooser → 点采用",
+   "endpoint": "POST /api/v1/journeys/{id}/plans/{plan_version_id}/select",
+   "prose_source": [
+    {
+     "file": "backend/app/main.py",
+     "line": 4938,
+     "text": "raise HTTPException(404, f\"Journey {journey_id} was not found\")"
+    },
+    {
+     "file": "backend/app/main.py",
+     "line": 4952,
+     "text": "raise HTTPException(422, \"Only a candidate plan can be selected\")"
+    },
+    {
+     "file": "backend/app/main.py",
+     "line": 5005,
+     "text": "raise HTTPException(422, f\"PlanVersion {plan.id} is infeasible: {failures}\")"
+    },
+    {
+     "file": "backend/app/main.py",
+     "line": 640,
+     "text": "raise HTTPException(404, f\"{label} {identifier} was not found\")"
+    }
+   ],
+   "render_sink": [
+    {
+     "file": "frontend/src/features/planning/PlanComparison.tsx",
+     "line": 95,
+     "text": "body?.error?.message ??"
+    },
+    {
+     "file": "frontend/src/features/planning/PlanComparison.tsx",
+     "line": 96,
+     "text": "body?.detail ??"
+    },
+    {
+     "file": "frontend/src/features/planning/PlanComparison.tsx",
+     "line": 260,
+     "text": "{error}"
+    }
+   ],
+   "live_observed": false,
+   "visible_without_scroll": "unmeasured",
+   "missing_step": ""
+  },
+  {
+   "cell": "frontend/src/features/planning/PlanWithAiSheet.tsx:1046",
+   "cite": "frontend/src/features/planning/PlanWithAiSheet.tsx:1046",
+   "cell_text": "<code data-testid=\"plan-ai-reason\">{result.failureReason.text}</code>",
+   "verdict": "REACHABLE_ON_PHONE",
+   "phone_path": "Today 建完行程自动开这面 sheet（也可从行程条目进）",
+   "endpoint": "POST /api/v1/journeys/{id}/plans/generate",
+   "prose_source": [
+    {
+     "file": "backend/app/main.py",
+     "line": 4661,
+     "text": "raise HTTPException(422, str(exc)) from exc"
+    },
+    {
+     "file": "backend/app/main.py",
+     "line": 4694,
+     "text": "raise HTTPException(404, f\"JourneyMission {mission_id} was not found\")"
+    },
+    {
+     "file": "backend/app/main.py",
+     "line": 4759,
+     "text": "raise HTTPException("
+    },
+    {
+     "file": "backend/app/main.py",
+     "line": 640,
+     "text": "raise HTTPException(404, f\"{label} {identifier} was not found\")"
+    }
+   ],
+   "render_sink": [
+    {
+     "file": "frontend/src/features/planning/PlanWithAiSheet.tsx",
+     "line": 159,
+     "text": "function serverReasonSentence(body: unknown): string | null {"
+    },
+    {
+     "file": "frontend/src/features/planning/PlanWithAiSheet.tsx",
+     "line": 161,
+     "text": "if (error && typeof error.message === \"string\" && error.message.trim()) return error.message;"
+    },
+    {
+     "file": "frontend/src/features/planning/PlanWithAiSheet.tsx",
+     "line": 1046,
+     "text": "<code data-testid=\"plan-ai-reason\">{result.failureReason.text}</code>"
+    }
+   ],
+   "live_observed": false,
+   "visible_without_scroll": "unmeasured",
+   "missing_step": ""
+  },
+  {
+   "cell": "frontend/src/features/stay/HotelsPanel.tsx:91",
+   "cite": "frontend/src/features/stay/HotelsPanel.tsx:91",
+   "cell_text": "if (!r.ok) {",
+   "verdict": "REACHABLE_ON_PHONE",
+   "phone_path": "底栏 Trips → 住宿 tab → 点采用这家",
+   "endpoint": "POST /api/v1/journeys/{id}/stay-options/{option_id}/select",
+   "prose_source": [
+    {
+     "file": "backend/app/main.py",
+     "line": 3156,
+     "text": "raise HTTPException(404, \"StayJourneyOption was not found\")"
+    },
+    {
+     "file": "backend/app/main.py",
+     "line": 3172,
+     "text": "raise HTTPException("
+    },
+    {
+     "file": "backend/app/main.py",
+     "line": 640,
+     "text": "raise HTTPException(404, f\"{label} {identifier} was not found\")"
+    }
+   ],
+   "render_sink": [
+    {
+     "file": "frontend/src/features/stay/HotelsPanel.tsx",
+     "line": 93,
+     "text": "const raw = String(body?.error?.message ?? body?.detail ?? \"\");"
+    },
+    {
+     "file": "frontend/src/features/stay/HotelsPanel.tsx",
+     "line": 104,
+     "text": ": raw || (zh ? \"暂时无法选择这家住宿。\" : \"Could not choose this stay.\"),"
+    },
+    {
+     "file": "frontend/src/features/stay/HotelsPanel.tsx",
+     "line": 229,
+     "text": "<p className=\"role-alert\" data-testid=\"hotel-error\" role=\"alert\">{error}</p>"
+    }
+   ],
+   "live_observed": false,
+   "visible_without_scroll": "unmeasured",
+   "missing_step": ""
+  }
+ ],
+ "claim_kind": "code_path_determined_not_device_observed",
+ "claimed_result": "16 cells at tip 65df31df96cf: {\"REACHABLE_ON_PHONE\": 14, \"UNKNOWN\": 2}; live_observed=False",
+ "derived_result": "reachability re-pinned to the current tip; 14 reachable by a tap or an auto-run read, 2 UNKNOWN with the missing step named"
+}
