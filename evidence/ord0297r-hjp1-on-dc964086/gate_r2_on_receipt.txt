@@ -1,0 +1,7 @@
+receipt o297r_measured_object.json 67487 B blob_sha1 9b8b7cb7bfd9f3d9ba37fe73351386dc2209802e
+cells 4 | overall Q38_GATE_GREEN | hard 0 [] | soft 0 []
+  cell B3_offline_after_convergence | why_source why | why tokens 34 | own hits 11 | unique hits 0 | shares why with []
+  cell A_never_reconnected | why_source why | why tokens 37 | own hits 11 | unique hits 0 | shares why with []
+  cell B3_control_partial_deploy | why_source why | why tokens 30 | own hits 6 | unique hits 0 | shares why with []
+  cell A_control_update_lands | why_source why | why tokens 32 | own hits 8 | unique hits 0 | shares why with []
+meaning: no shared literal and every sentence names its own readings
