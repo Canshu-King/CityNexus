@@ -1,0 +1,56 @@
+{
+ "ran_at_local": "2026-09-25T23:24:21+0800",
+ "branch_tip_read": "2c5ce76840d1d0d4bb60e0b080110c7ab8ba68ae",
+ "prefix": "evidence/ord0301-p3-same-chain-hjp3",
+ "files_already_under_prefix": 58,
+ "expected": {
+  "fresh": [
+   "selftest_only_brand_new_name.json"
+  ],
+  "skipped": [
+   "p3_scored.json"
+  ],
+  "refused": [
+   "p3_scored.json"
+  ]
+ },
+ "got": {
+  "fresh": [
+   "selftest_only_brand_new_name.json"
+  ],
+  "skipped": [
+   "p3_scored.json"
+  ],
+  "refused": [
+   "p3_scored.json"
+  ],
+  "refusal_reasons": [
+   "CHANGED BYTES UNDER A PUBLISHED NAME"
+  ]
+ },
+ "bait_control": {
+  "file": "bait.json",
+  "refused_as": [
+   {
+    "remote": "bait.json",
+    "reason": "guard rule QUOTED_JSON_SECRET matched",
+    "rule": "QUOTED_JSON_SECRET",
+    "bytes_hidden": 35
+   }
+  ],
+  "why": "the key name is the trigger; the value is a made-up literal, not a credential"
+ },
+ "planned_files": 62,
+ "planned_guard_refusals": [],
+ "verdict": {
+  "positive_same_name_same_bytes_is_skipped": true,
+  "negative_unseen_name_is_fresh": true,
+  "mutation_same_name_different_bytes_is_refused": true,
+  "the_refusal_names_only_the_mutated_file": true,
+  "the_guard_scan_refuses_a_credential_shaped_control": true,
+  "the_guard_scan_passes_every_file_this_batch_plans": true,
+  "nothing_was_pushed_by_this_selftest": true,
+  "ALL_SEVEN_HOLD": true
+ },
+ "scratch_kept_for_inspection": "D:\\moodle\\_hjp3_0301p3_0925\\_p3_gate_selftest\\changed_copy.json (one trailing space is the only difference)"
+}
