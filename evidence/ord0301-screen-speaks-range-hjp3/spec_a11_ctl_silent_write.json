@@ -1,0 +1,9 @@
+{
+ "write": {
+  "mode": "silent",
+  "hold_seconds": 200
+ },
+ "read": {
+  "mode": "proxy"
+ }
+}
