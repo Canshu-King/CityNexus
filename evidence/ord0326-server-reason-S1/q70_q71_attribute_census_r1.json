@@ -1,0 +1,791 @@
+{
+  "schema": "CNX_Q70_Q71_ATTRIBUTE_CENSUS_V1",
+  "order": "CMDR 06:05 ③④ applied to the ORD-0326 field table (anchor column) + the new Q71 surface",
+  "lane": "S1-q64sweep",
+  "generation": "a8237d7b50a1df419ae7e89ae6c075dabb6513f8",
+  "measured_at_utc": "2026-09-25T22:19:14Z",
+  "rulings": {
+    "Q70": "human labels are free, the machine-readable field name is the contract; the carrying element must wear a stable anchor named with the Q64 field name",
+    "Q71": "data-* is not 'on screen' but it is 'in the DOM': raw body, exception object or upstream sentence in one is treated as a violation; the six allowed values in one are compliant and are how Q70's anchor is meant to be built"
+  },
+  "denominator": {
+    "files_scanned": 19,
+    "data_attribute_sites_with_a_jsx_expression": 145,
+    "distinct_attribute_names": 78,
+    "anchor_name_sites_anywhere": 0,
+    "anchor_name": "data-cnx-field"
+  },
+  "method_note": "an attribute name never decides anything here: NAME_MAP only generates candidates, and every candidate is then decided by reading where its value comes from (`adjudicated`).  The count of name-matched candidates that did not survive that reading is `look_alike_rejected_count`.",
+  "look_alike_rejected_count": 5,
+  "adjudicated": [
+    {
+      "field": "http_status",
+      "path": "frontend/src/components/RawFactsPanel.tsx",
+      "line": 29,
+      "source_line": "data-raw-http-status={facts.http_status ?? \"\"}",
+      "verdict": "CONFIRMED_CARRIER",
+      "why": "facts is RawFacts; the value is the status this device saw on the answer",
+      "trace_cites": [
+        {
+          "path": "frontend/src/lib/rawFacts.ts",
+          "line": 22,
+          "text": "http_status: response.status,",
+          "checked_substring": "http_status: response.status"
+        }
+      ],
+      "trace_count": 1
+    },
+    {
+      "field": "content_type",
+      "path": "frontend/src/components/RawFactsPanel.tsx",
+      "line": 30,
+      "source_line": "data-raw-content-type={facts.content_type ?? \"\"}",
+      "verdict": "CONFIRMED_CARRIER",
+      "why": "the media type the answer carried, read off the response",
+      "trace_cites": [
+        {
+          "path": "frontend/src/lib/rawFacts.ts",
+          "line": 23,
+          "text": "content_type: response.headers.get(\"content-type\"),",
+          "checked_substring": "content_type: response.headers.get(\"content-type\")"
+        }
+      ],
+      "trace_count": 1
+    },
+    {
+      "field": "body_bytes",
+      "path": "frontend/src/components/RawFactsPanel.tsx",
+      "line": 31,
+      "source_line": "data-raw-bytes={facts.bytes ?? \"\"}",
+      "verdict": "CONFIRMED_CARRIER_NAME_NOT_CONTRACT",
+      "why": "it really is the answer's octet count, but the key is spelled `bytes`, not the Q64 name `body_bytes` -- Q70 says the machine-readable name must be the contract one",
+      "trace_cites": [
+        {
+          "path": "frontend/src/lib/rawFacts.ts",
+          "line": 24,
+          "text": "bytes: new TextEncoder().encode(rawText).length,",
+          "checked_substring": "bytes: new TextEncoder().encode(rawText).length"
+        },
+        {
+          "path": "frontend/src/lib/rawFacts.ts",
+          "line": 61,
+          "text": "`bytes=${facts.bytes ?? \"\"}`,",
+          "checked_substring": "`bytes=${facts.bytes"
+        }
+      ],
+      "trace_count": 2
+    },
+    {
+      "field": "http_status",
+      "path": "frontend/src/features/planning/PlanWithAiSheet.tsx",
+      "line": 1060,
+      "source_line": "data-raw-http-status={result.rawReading.http_status}",
+      "verdict": "CONFIRMED_CARRIER",
+      "why": "rawReading is built off the same response",
+      "trace_cites": [
+        {
+          "path": "frontend/src/features/planning/PlanWithAiSheet.tsx",
+          "line": 578,
+          "text": "http_status: response.status,",
+          "checked_substring": "http_status: response.status"
+        }
+      ],
+      "trace_count": 1
+    },
+    {
+      "field": "content_type",
+      "path": "frontend/src/features/planning/PlanWithAiSheet.tsx",
+      "line": 1061,
+      "source_line": "data-raw-content-type={result.rawReading.content_type}",
+      "verdict": "CONFIRMED_CARRIER",
+      "why": "same answer, same read",
+      "trace_cites": [
+        {
+          "path": "frontend/src/features/planning/PlanWithAiSheet.tsx",
+          "line": 579,
+          "text": "content_type: response.headers.get(\"content-type\") ?? \"\",",
+          "checked_substring": "content_type: response.headers.get(\"content-type\")"
+        }
+      ],
+      "trace_count": 1
+    },
+    {
+      "field": "body_bytes",
+      "path": "frontend/src/features/planning/PlanWithAiSheet.tsx",
+      "line": 1062,
+      "source_line": "data-raw-bytes={result.rawReading.bytes ?? \"\"}",
+      "verdict": "CONFIRMED_CARRIER_NAME_NOT_CONTRACT",
+      "why": "octets of the answer body; key spelled `bytes` again, not `body_bytes`",
+      "trace_cites": [
+        {
+          "path": "frontend/src/features/planning/PlanWithAiSheet.tsx",
+          "line": 580,
+          "text": "bytes: raw === null ? null : new TextEncoder().encode(raw).length,",
+          "checked_substring": "bytes: raw === null ? null : new TextEncoder().encode(raw).length"
+        }
+      ],
+      "trace_count": 1
+    },
+    {
+      "field": "elapsed_ms",
+      "path": "frontend/src/features/planning/PlanWithAiSheet.tsx",
+      "line": 959,
+      "source_line": "data-elapsed-seconds={elapsed}",
+      "verdict": "DIFFERENT_QUANTITY",
+      "why": "elapsed is this component's own wall clock in whole seconds while the button is busy, not the server's elapsed_ms -- the unit and the subject both differ",
+      "trace_cites": [
+        {
+          "path": "frontend/src/features/planning/PlanWithAiSheet.tsx",
+          "line": 384,
+          "text": "const [elapsed, setElapsed] = useState(0);",
+          "checked_substring": "const [elapsed, setElapsed] = useState(0);"
+        },
+        {
+          "path": "frontend/src/features/planning/PlanWithAiSheet.tsx",
+          "line": 965,
+          "text": "{phaseLabel} · {zh ? `已等待 ${elapsed} 秒` : `waiting ${elapsed}s`}",
+          "checked_substring": "已等待 ${elapsed} 秒"
+        }
+      ],
+      "trace_count": 2
+    },
+    {
+      "field": "elapsed_ms",
+      "path": "frontend/src/features/setup/JourneyTrialSetup.tsx",
+      "line": 1142,
+      "source_line": "data-elapsed-seconds={waited}",
+      "verdict": "DIFFERENT_QUANTITY",
+      "why": "waited is a locally counted number of seconds since the press",
+      "trace_cites": [
+        {
+          "path": "frontend/src/features/setup/JourneyTrialSetup.tsx",
+          "line": 589,
+          "text": "const waited = useElapsedSeconds(busy ? startedAt : null);",
+          "checked_substring": "const waited = useElapsedSeconds(busy ? startedAt : null);"
+        }
+      ],
+      "trace_count": 1
+    },
+    {
+      "field": "http_status",
+      "path": "frontend/src/features/discovery/DestinationPreparationPanel.tsx",
+      "line": 456,
+      "source_line": "data-status={job.status}",
+      "verdict": "DIFFERENT_QUANTITY",
+      "why": "job.status is the operation's own state word, printed as progress text, not an HTTP status -- a gauge that matched the attribute name would read a state string as a status code",
+      "trace_cites": [
+        {
+          "path": "frontend/src/features/discovery/DestinationPreparationPanel.tsx",
+          "line": 463,
+          "text": "<span className=\"v8-kicker\">{zh ? \"准备进度\" : \"Preparation\"} · {job.status}</span>",
+          "checked_substring": "{job.status}"
+        }
+      ],
+      "trace_count": 1
+    },
+    {
+      "field": "http_status",
+      "path": "frontend/src/features/planning/PlanWithAiSheet.tsx",
+      "line": 1007,
+      "source_line": "data-result-status={result?.status ?? \"\"}",
+      "verdict": "DIFFERENT_QUANTITY",
+      "why": "result.status is the sheet's own outcome string for the run",
+      "trace_cites": [
+        {
+          "path": "frontend/src/features/planning/PlanWithAiSheet.tsx",
+          "line": 389,
+          "text": "status: string;",
+          "checked_substring": "status: string;"
+        }
+      ],
+      "trace_count": 1
+    },
+    {
+      "field": "body_bytes",
+      "path": "frontend/src/features/planning/PlanWithAiSheet.tsx",
+      "line": 909,
+      "source_line": "data-request-length={text.trim().length}",
+      "verdict": "DIFFERENT_QUANTITY",
+      "why": "a length of the traveller's own words going out (and a character count, not octets) -- the opposite direction from body_bytes",
+      "trace_cites": [],
+      "trace_count": 0
+    },
+    {
+      "field": "__q71__",
+      "path": "frontend/src/features/setup/JourneyTrialSetup.tsx",
+      "line": 1248,
+      "source_line": "data-error-message={sealedDemoDetail?.message ?? \"\"}",
+      "verdict": "Q71_SITE_CARRYING_AN_EXCEPTION_MESSAGE",
+      "why": "the value is `error.message` of a caught failure, parked in a data-* on purpose. Q71 puts this outside the whitelist: an exception object's words in the DOM tree are to be treated as a violation even though nothing is rendered.  Not my file and not my call to fix -- named here for assignment.",
+      "trace_cites": [
+        {
+          "path": "frontend/src/app/V8Experience.tsx",
+          "line": 897,
+          "text": "? { message: error.message, name: error.name }",
+          "checked_substring": "{ message: error.message, name: error.name }"
+        },
+        {
+          "path": "frontend/src/app/V8Experience.tsx",
+          "line": 898,
+          "text": ": { message: String(error), name: \"Unknown\" },",
+          "checked_substring": "{ message: String(error), name: \"Unknown\" }"
+        },
+        {
+          "path": "frontend/src/features/setup/JourneyTrialSetup.tsx",
+          "line": 339,
+          "text": "sealedDemoDetail?: { message: string; name: string } | null;",
+          "checked_substring": "sealedDemoDetail?: { message: string; name: string } | null"
+        }
+      ],
+      "trace_count": 3
+    },
+    {
+      "field": "__q71__",
+      "path": "frontend/src/features/setup/JourneyTrialSetup.tsx",
+      "line": 1247,
+      "source_line": "data-error-name={sealedDemoDetail?.name ?? \"\"}",
+      "verdict": "Q71_SITE_CARRYING_AN_EXCEPTION_NAME",
+      "why": "same chain, the exception's `name` (e.g. TypeError).  A token rather than a sentence, but it is not one of the six either",
+      "trace_cites": [
+        {
+          "path": "frontend/src/app/V8Experience.tsx",
+          "line": 897,
+          "text": "? { message: error.message, name: error.name }",
+          "checked_substring": "{ message: error.message, name: error.name }"
+        }
+      ],
+      "trace_count": 1
+    }
+  ],
+  "ruler_sink_policy": {
+    "quoted_from": "evidence/ord0331-ast-crossfile-S4/ui_exposure_taint_ast_r3.cjs",
+    "blob": "6a251d3a6bea70329e06581384a81d5ef54c96a6",
+    "sink_line_before": " * sinks           a JSX text child, `dangerouslySetInnerHTML`, `textContent=`/`innerText=`/`innerHTML=`.",
+    "sink_line_exclusion": " *                 NOT sinks: an attribute interpolation (`data-reason-origin={x.from}` stays clean) and the",
+    "exclusion_at_line": 65,
+    "consequence": "the published ruler cannot see the class Q71 just made binding -- by its own stated design, not by accident. This census is a measurement, not a replacement judge."
+  },
+  "q70_anchor_column_for_the_field_table": {
+    "http_status": {
+      "confirmed_carriers": [
+        {
+          "field": "http_status",
+          "path": "frontend/src/components/RawFactsPanel.tsx",
+          "line": 29,
+          "source_line": "data-raw-http-status={facts.http_status ?? \"\"}",
+          "verdict": "CONFIRMED_CARRIER",
+          "why": "facts is RawFacts; the value is the status this device saw on the answer",
+          "trace_cites": [
+            {
+              "path": "frontend/src/lib/rawFacts.ts",
+              "line": 22,
+              "text": "http_status: response.status,",
+              "checked_substring": "http_status: response.status"
+            }
+          ],
+          "trace_count": 1
+        },
+        {
+          "field": "http_status",
+          "path": "frontend/src/features/planning/PlanWithAiSheet.tsx",
+          "line": 1060,
+          "source_line": "data-raw-http-status={result.rawReading.http_status}",
+          "verdict": "CONFIRMED_CARRIER",
+          "why": "rawReading is built off the same response",
+          "trace_cites": [
+            {
+              "path": "frontend/src/features/planning/PlanWithAiSheet.tsx",
+              "line": 578,
+              "text": "http_status: response.status,",
+              "checked_substring": "http_status: response.status"
+            }
+          ],
+          "trace_count": 1
+        }
+      ],
+      "confirmed_count": 2,
+      "look_alikes_rejected": [
+        {
+          "field": "http_status",
+          "path": "frontend/src/features/discovery/DestinationPreparationPanel.tsx",
+          "line": 456,
+          "source_line": "data-status={job.status}",
+          "verdict": "DIFFERENT_QUANTITY",
+          "why": "job.status is the operation's own state word, printed as progress text, not an HTTP status -- a gauge that matched the attribute name would read a state string as a status code",
+          "trace_cites": [
+            {
+              "path": "frontend/src/features/discovery/DestinationPreparationPanel.tsx",
+              "line": 463,
+              "text": "<span className=\"v8-kicker\">{zh ? \"准备进度\" : \"Preparation\"} · {job.status}</span>",
+              "checked_substring": "{job.status}"
+            }
+          ],
+          "trace_count": 1
+        },
+        {
+          "field": "http_status",
+          "path": "frontend/src/features/planning/PlanWithAiSheet.tsx",
+          "line": 1007,
+          "source_line": "data-result-status={result?.status ?? \"\"}",
+          "verdict": "DIFFERENT_QUANTITY",
+          "why": "result.status is the sheet's own outcome string for the run",
+          "trace_cites": [
+            {
+              "path": "frontend/src/features/planning/PlanWithAiSheet.tsx",
+              "line": 389,
+              "text": "status: string;",
+              "checked_substring": "status: string;"
+            }
+          ],
+          "trace_count": 1
+        }
+      ],
+      "look_alike_count": 2,
+      "anchor_present_on_a_carrier": false,
+      "contract_anchor_used": [],
+      "name_matched_candidates": [
+        "frontend/src/components/RawFactsPanel.tsx:29",
+        "frontend/src/features/discovery/DestinationPreparationPanel.tsx:456",
+        "frontend/src/features/planning/PlanWithAiSheet.tsx:1007",
+        "frontend/src/features/planning/PlanWithAiSheet.tsx:1060"
+      ],
+      "q70_verdict": "ANCHOR_MISSING"
+    },
+    "content_type": {
+      "confirmed_carriers": [
+        {
+          "field": "content_type",
+          "path": "frontend/src/components/RawFactsPanel.tsx",
+          "line": 30,
+          "source_line": "data-raw-content-type={facts.content_type ?? \"\"}",
+          "verdict": "CONFIRMED_CARRIER",
+          "why": "the media type the answer carried, read off the response",
+          "trace_cites": [
+            {
+              "path": "frontend/src/lib/rawFacts.ts",
+              "line": 23,
+              "text": "content_type: response.headers.get(\"content-type\"),",
+              "checked_substring": "content_type: response.headers.get(\"content-type\")"
+            }
+          ],
+          "trace_count": 1
+        },
+        {
+          "field": "content_type",
+          "path": "frontend/src/features/planning/PlanWithAiSheet.tsx",
+          "line": 1061,
+          "source_line": "data-raw-content-type={result.rawReading.content_type}",
+          "verdict": "CONFIRMED_CARRIER",
+          "why": "same answer, same read",
+          "trace_cites": [
+            {
+              "path": "frontend/src/features/planning/PlanWithAiSheet.tsx",
+              "line": 579,
+              "text": "content_type: response.headers.get(\"content-type\") ?? \"\",",
+              "checked_substring": "content_type: response.headers.get(\"content-type\")"
+            }
+          ],
+          "trace_count": 1
+        }
+      ],
+      "confirmed_count": 2,
+      "look_alikes_rejected": [],
+      "look_alike_count": 0,
+      "anchor_present_on_a_carrier": false,
+      "contract_anchor_used": [],
+      "name_matched_candidates": [
+        "frontend/src/components/RawFactsPanel.tsx:30",
+        "frontend/src/features/planning/PlanWithAiSheet.tsx:1061"
+      ],
+      "q70_verdict": "ANCHOR_MISSING"
+    },
+    "body_bytes": {
+      "confirmed_carriers": [
+        {
+          "field": "body_bytes",
+          "path": "frontend/src/components/RawFactsPanel.tsx",
+          "line": 31,
+          "source_line": "data-raw-bytes={facts.bytes ?? \"\"}",
+          "verdict": "CONFIRMED_CARRIER_NAME_NOT_CONTRACT",
+          "why": "it really is the answer's octet count, but the key is spelled `bytes`, not the Q64 name `body_bytes` -- Q70 says the machine-readable name must be the contract one",
+          "trace_cites": [
+            {
+              "path": "frontend/src/lib/rawFacts.ts",
+              "line": 24,
+              "text": "bytes: new TextEncoder().encode(rawText).length,",
+              "checked_substring": "bytes: new TextEncoder().encode(rawText).length"
+            },
+            {
+              "path": "frontend/src/lib/rawFacts.ts",
+              "line": 61,
+              "text": "`bytes=${facts.bytes ?? \"\"}`,",
+              "checked_substring": "`bytes=${facts.bytes"
+            }
+          ],
+          "trace_count": 2
+        },
+        {
+          "field": "body_bytes",
+          "path": "frontend/src/features/planning/PlanWithAiSheet.tsx",
+          "line": 1062,
+          "source_line": "data-raw-bytes={result.rawReading.bytes ?? \"\"}",
+          "verdict": "CONFIRMED_CARRIER_NAME_NOT_CONTRACT",
+          "why": "octets of the answer body; key spelled `bytes` again, not `body_bytes`",
+          "trace_cites": [
+            {
+              "path": "frontend/src/features/planning/PlanWithAiSheet.tsx",
+              "line": 580,
+              "text": "bytes: raw === null ? null : new TextEncoder().encode(raw).length,",
+              "checked_substring": "bytes: raw === null ? null : new TextEncoder().encode(raw).length"
+            }
+          ],
+          "trace_count": 1
+        }
+      ],
+      "confirmed_count": 2,
+      "look_alikes_rejected": [
+        {
+          "field": "body_bytes",
+          "path": "frontend/src/features/planning/PlanWithAiSheet.tsx",
+          "line": 909,
+          "source_line": "data-request-length={text.trim().length}",
+          "verdict": "DIFFERENT_QUANTITY",
+          "why": "a length of the traveller's own words going out (and a character count, not octets) -- the opposite direction from body_bytes",
+          "trace_cites": [],
+          "trace_count": 0
+        }
+      ],
+      "look_alike_count": 1,
+      "anchor_present_on_a_carrier": false,
+      "contract_anchor_used": [],
+      "name_matched_candidates": [
+        "frontend/src/components/RawFactsPanel.tsx:31",
+        "frontend/src/features/planning/PlanWithAiSheet.tsx:909",
+        "frontend/src/features/planning/PlanWithAiSheet.tsx:1062"
+      ],
+      "q70_verdict": "ANCHOR_MISSING"
+    },
+    "response_received": {
+      "confirmed_carriers": [],
+      "confirmed_count": 0,
+      "look_alikes_rejected": [],
+      "look_alike_count": 0,
+      "anchor_present_on_a_carrier": false,
+      "contract_anchor_used": [],
+      "name_matched_candidates": [],
+      "q70_verdict": "NO_CARRIER_IN_TREE"
+    },
+    "elapsed_ms": {
+      "confirmed_carriers": [],
+      "confirmed_count": 0,
+      "look_alikes_rejected": [
+        {
+          "field": "elapsed_ms",
+          "path": "frontend/src/features/planning/PlanWithAiSheet.tsx",
+          "line": 959,
+          "source_line": "data-elapsed-seconds={elapsed}",
+          "verdict": "DIFFERENT_QUANTITY",
+          "why": "elapsed is this component's own wall clock in whole seconds while the button is busy, not the server's elapsed_ms -- the unit and the subject both differ",
+          "trace_cites": [
+            {
+              "path": "frontend/src/features/planning/PlanWithAiSheet.tsx",
+              "line": 384,
+              "text": "const [elapsed, setElapsed] = useState(0);",
+              "checked_substring": "const [elapsed, setElapsed] = useState(0);"
+            },
+            {
+              "path": "frontend/src/features/planning/PlanWithAiSheet.tsx",
+              "line": 965,
+              "text": "{phaseLabel} · {zh ? `已等待 ${elapsed} 秒` : `waiting ${elapsed}s`}",
+              "checked_substring": "已等待 ${elapsed} 秒"
+            }
+          ],
+          "trace_count": 2
+        },
+        {
+          "field": "elapsed_ms",
+          "path": "frontend/src/features/setup/JourneyTrialSetup.tsx",
+          "line": 1142,
+          "source_line": "data-elapsed-seconds={waited}",
+          "verdict": "DIFFERENT_QUANTITY",
+          "why": "waited is a locally counted number of seconds since the press",
+          "trace_cites": [
+            {
+              "path": "frontend/src/features/setup/JourneyTrialSetup.tsx",
+              "line": 589,
+              "text": "const waited = useElapsedSeconds(busy ? startedAt : null);",
+              "checked_substring": "const waited = useElapsedSeconds(busy ? startedAt : null);"
+            }
+          ],
+          "trace_count": 1
+        }
+      ],
+      "look_alike_count": 2,
+      "anchor_present_on_a_carrier": false,
+      "contract_anchor_used": [],
+      "name_matched_candidates": [
+        "frontend/src/features/planning/PlanWithAiSheet.tsx:959",
+        "frontend/src/features/setup/JourneyTrialSetup.tsx:1142"
+      ],
+      "q70_verdict": "NO_CARRIER_IN_TREE"
+    },
+    "request_id": {
+      "confirmed_carriers": [],
+      "confirmed_count": 0,
+      "look_alikes_rejected": [],
+      "look_alike_count": 0,
+      "anchor_present_on_a_carrier": false,
+      "contract_anchor_used": [],
+      "name_matched_candidates": [],
+      "q70_verdict": "NO_CARRIER_IN_TREE"
+    }
+  },
+  "composite_attribute_note": "data-attribution holds `failureAttribution.ts`'s telemetry line -- `attribution_reason= evidence_kind= http_status= source_layer= retryable= recovery_action= [server_code=] [content_type=]`.  The six-allowed ones among those are compliant under Q71; the rest are derived machine words, not the answer's body and not upstream prose, but they are also not on the list, so this census records them instead of ruling on them.",
+  "composite_attribute_sites": [
+    {
+      "path": "frontend/src/features/agent/AgentComposer.tsx",
+      "line": 193,
+      "attr": "data-attribution",
+      "expression": "{failureFacts ?? \"\"}",
+      "source_line": "<p className=\"v8-message error\" data-testid=\"agent-send-error\" data-attribution={failureFacts ?? \"\"}>"
+    },
+    {
+      "path": "frontend/src/features/agent/CopilotDock.tsx",
+      "line": 459,
+      "attr": "data-attribution",
+      "expression": "{actionFacts ?? \"\"}",
+      "source_line": "data-attribution={actionFacts ?? \"\"}>{actionState}</p>"
+    },
+    {
+      "path": "frontend/src/features/agent/CopilotDock.tsx",
+      "line": 785,
+      "attr": "data-attribution",
+      "expression": "{sendFacts ?? \"\"}",
+      "source_line": "data-attribution={sendFacts ?? \"\"}>{error}</p>"
+    }
+  ],
+  "q71_sites_listed_for_judgement": [
+    {
+      "path": "frontend/src/app/V8Experience.tsx",
+      "line": 1335,
+      "attr": "data-attribution-reason",
+      "expression": "{failure.attribution.reason}",
+      "source_line": "data-attribution-reason={failure.attribution.reason}",
+      "matched_tokens": [
+        "reason"
+      ],
+      "note": "token shortlist only; the decision is in `adjudicated`"
+    },
+    {
+      "path": "frontend/src/components/JourneyMap.tsx",
+      "line": 290,
+      "attr": "data-route-fallback",
+      "expression": "{String(routeEvidence?.fallback ?? true)}",
+      "source_line": "data-route-fallback={String(routeEvidence?.fallback ?? true)}",
+      "matched_tokens": [
+        "String("
+      ],
+      "note": "token shortlist only; the decision is in `adjudicated`"
+    },
+    {
+      "path": "frontend/src/features/discovery/DestinationPreparationPanel.tsx",
+      "line": 306,
+      "attr": "data-reason",
+      "expression": "{reasonCode}",
+      "source_line": "data-reason={reasonCode}",
+      "matched_tokens": [
+        "reason"
+      ],
+      "note": "token shortlist only; the decision is in `adjudicated`"
+    },
+    {
+      "path": "frontend/src/features/discovery/DestinationPreparationPanel.tsx",
+      "line": 308,
+      "attr": "data-retryable",
+      "expression": "{String(retryable)}",
+      "source_line": "data-retryable={String(retryable)}",
+      "matched_tokens": [
+        "String("
+      ],
+      "note": "token shortlist only; the decision is in `adjudicated`"
+    },
+    {
+      "path": "frontend/src/features/discovery/DestinationPreparationPanel.tsx",
+      "line": 459,
+      "attr": "data-outcome",
+      "expression": "{String(job.outcome ?? \"\")}",
+      "source_line": "data-outcome={String(job.outcome ?? \"\")}",
+      "matched_tokens": [
+        "String("
+      ],
+      "note": "token shortlist only; the decision is in `adjudicated`"
+    },
+    {
+      "path": "frontend/src/features/execution/LiveRecovery.tsx",
+      "line": 276,
+      "attr": "data-now-activity-id",
+      "expression": "{String(liveNow?.id ?? \"\")}",
+      "source_line": "data-now-activity-id={String(liveNow?.id ?? \"\")}",
+      "matched_tokens": [
+        "String("
+      ],
+      "note": "token shortlist only; the decision is in `adjudicated`"
+    },
+    {
+      "path": "frontend/src/features/planning/PlanWithAiSheet.tsx",
+      "line": 909,
+      "attr": "data-request-length",
+      "expression": "{text.trim().length}",
+      "source_line": "data-request-length={text.trim().length}",
+      "matched_tokens": [
+        "text"
+      ],
+      "note": "token shortlist only; the decision is in `adjudicated`"
+    },
+    {
+      "path": "frontend/src/features/setup/JourneyTrialSetup.tsx",
+      "line": 1248,
+      "attr": "data-error-message",
+      "expression": "{sealedDemoDetail?.message ?? \"\"}",
+      "source_line": "data-error-message={sealedDemoDetail?.message ?? \"\"}",
+      "matched_tokens": [
+        "message"
+      ],
+      "note": "token shortlist only; the decision is in `adjudicated`"
+    }
+  ],
+  "q71_risk_count": 8,
+  "q71_adjudicated_sites": [
+    {
+      "field": "__q71__",
+      "path": "frontend/src/features/setup/JourneyTrialSetup.tsx",
+      "line": 1248,
+      "source_line": "data-error-message={sealedDemoDetail?.message ?? \"\"}",
+      "verdict": "Q71_SITE_CARRYING_AN_EXCEPTION_MESSAGE",
+      "why": "the value is `error.message` of a caught failure, parked in a data-* on purpose. Q71 puts this outside the whitelist: an exception object's words in the DOM tree are to be treated as a violation even though nothing is rendered.  Not my file and not my call to fix -- named here for assignment.",
+      "trace_cites": [
+        {
+          "path": "frontend/src/app/V8Experience.tsx",
+          "line": 897,
+          "text": "? { message: error.message, name: error.name }",
+          "checked_substring": "{ message: error.message, name: error.name }"
+        },
+        {
+          "path": "frontend/src/app/V8Experience.tsx",
+          "line": 898,
+          "text": ": { message: String(error), name: \"Unknown\" },",
+          "checked_substring": "{ message: String(error), name: \"Unknown\" }"
+        },
+        {
+          "path": "frontend/src/features/setup/JourneyTrialSetup.tsx",
+          "line": 339,
+          "text": "sealedDemoDetail?: { message: string; name: string } | null;",
+          "checked_substring": "sealedDemoDetail?: { message: string; name: string } | null"
+        }
+      ],
+      "trace_count": 3
+    },
+    {
+      "field": "__q71__",
+      "path": "frontend/src/features/setup/JourneyTrialSetup.tsx",
+      "line": 1247,
+      "source_line": "data-error-name={sealedDemoDetail?.name ?? \"\"}",
+      "verdict": "Q71_SITE_CARRYING_AN_EXCEPTION_NAME",
+      "why": "same chain, the exception's `name` (e.g. TypeError).  A token rather than a sentence, but it is not one of the six either",
+      "trace_cites": [
+        {
+          "path": "frontend/src/app/V8Experience.tsx",
+          "line": 897,
+          "text": "? { message: error.message, name: error.name }",
+          "checked_substring": "{ message: error.message, name: error.name }"
+        }
+      ],
+      "trace_count": 1
+    }
+  ],
+  "attribute_name_counts": {
+    "data-testid": 46,
+    "data-cursor-status": 4,
+    "data-phase": 4,
+    "data-attribution": 3,
+    "data-contrast-role": 3,
+    "data-outcome": 3,
+    "data-scene-phase": 3,
+    "data-capability": 2,
+    "data-count": 2,
+    "data-elapsed-seconds": 2,
+    "data-missing": 2,
+    "data-raw-bytes": 2,
+    "data-raw-content-type": 2,
+    "data-raw-http-status": 2,
+    "data-state": 2,
+    "data-action": 1,
+    "data-actor-type": 1,
+    "data-ai-state": 1,
+    "data-attention": 1,
+    "data-attribution-reason": 1,
+    "data-changed": 1,
+    "data-clock-source": 1,
+    "data-cost-status": 1,
+    "data-decision": 1,
+    "data-decision-active": 1,
+    "data-elapsed-ms": 1,
+    "data-error-message": 1,
+    "data-error-name": 1,
+    "data-event-type": 1,
+    "data-evidence-kind": 1,
+    "data-example-count": 1,
+    "data-examples-state": 1,
+    "data-http-status": 1,
+    "data-idle-compact": 1,
+    "data-job-id": 1,
+    "data-journey-id": 1,
+    "data-monetary-status": 1,
+    "data-new-plan-ids": 1,
+    "data-next-source": 1,
+    "data-no-coordinates": 1,
+    "data-now": 1,
+    "data-now-activity-id": 1,
+    "data-open": 1,
+    "data-phase-state": 1,
+    "data-place-id": 1,
+    "data-plan-after-id": 1,
+    "data-plan-before-id": 1,
+    "data-plan-count": 1,
+    "data-pre-failure": 1,
+    "data-property": 1,
+    "data-reason": 1,
+    "data-reason-origin": 1,
+    "data-recovery-action": 1,
+    "data-recovery-state": 1,
+    "data-request-length": 1,
+    "data-rest-overlap": 1,
+    "data-result-status": 1,
+    "data-result-tone": 1,
+    "data-retryable": 1,
+    "data-route-fallback": 1,
+    "data-route-legs": 1,
+    "data-route-modes": 1,
+    "data-route-provider": 1,
+    "data-route-source": 1,
+    "data-rule-code": 1,
+    "data-run-id": 1,
+    "data-simulated": 1,
+    "data-source-layer": 1,
+    "data-status": 1,
+    "data-stay-outcome": 1,
+    "data-target": 1,
+    "data-terminal": 1,
+    "data-theme-choice": 1,
+    "data-tight": 1,
+    "data-tool": 1,
+    "data-transient": 1,
+    "data-verdict": 1,
+    "data-yield-to-surface": 1
+  },
+  "not_claimed": [
+    "this file states no COMPLIANT / VIOLATION for a screen: the Q71 rows are named by the ruling's own words and left for the owner to fix",
+    "no reachability judgement (an attribute may be present yet unreachable)",
+    "the ruler is not mine to change; the sink gap is reported, not patched"
+  ]
+}
