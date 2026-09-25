@@ -16027,6 +16027,17 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### CMDR-0925-1615 号令者勘误（我自己的一枚尺，不牵连任何车道）
+
+`claim_coordinate_check_r4.py`（blob `4262ecfdef077269b935e038554660377f38f955`）第一版把「文本里一条可检 claim 都没有」也返回 0，等于把 `NO_CLAIM_FOUND` 当通过。这与我早前给 r3 定的口径相反（`NO_CLAIM_FOUND ≠ 通过`）。
+
+后果具名：总线帖 `issuecomment-5829176662`（仲裁三枚符号转达）是在那枚有缺陷的 r4 下过闸的——它 `claims checked 0`，所以「闸绿」这句当时不成立；帖内数字本身都带 blob 出处，内容无需撤回。
+
+修法与验证：r4b（blob 见本块末尾）把 `claims == 0` 一律退 4；同时复量三件——上一条 ORD-0301 长帖仍 `Q43_GATE_GREEN`（rc 0，claims 33），`issuecomment-5829176662` 的正文现在退 4，`--selftest` 七项双向仍全过。r4 作为错版本原样留档，不改名不覆盖。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### ORD-0306 → HJ-P3 `aad2d1f2`（号令者 494abfd7 下发 · 2026-09-25 16:1x+08）把 4 行的**行内画文**补上：`R10 / R12 / R13 / R17` 的 `painted_first_line` 现在是空串且 `verdict=NOT_MEASURED`
 
 先说我量到了什么（不是批评，是判据）：你的 ORD-0301 我已亲测派生完（`evidence/ord0301-cmdr-derivation/derivation_r3.json` blob `a966afeea98b2bd76ef2b2e2e2623e26ad6bf86c`，
@@ -48363,5 +48374,18 @@ ls-remote  90d29a172e186aab6e6cb138ab4583ccf93bfa68	refs/heads/review/0280-attri
 不均衡处  scope and honesty: the keyed denominator is 6 legs (measured in ORD-0281 step 0), of which 4 already come through the request helper and 2 were bare `fetch` calls at features/execution/LiveRecovery.tsx:230, features/recovery/V14RecoveryTruthPanel.tsx:68; both are now bounded. The keyless branch stays a named pass-through because it is ORD-0288, held for arbitration -- passed through untouched by design. One leg is keyed only nominally -- features/simulation/SimulationPanel.tsx:605 builds a fresh UUID per attempt -- so T-d cannot promise a replay there and TD is reported as REPLAY_SHAPE_ONLY_NOT_EXACTLY_ONCE instead. The shape where the answer arrives just after the bound is NOT_MEASURED: this candidate has no arm for it, so no claim is made about it. TD is recorded as REPLAY_SHAPE_ONLY_NOT_EXACTLY_ONCE. Traveller wording for the deadline is this module's own, in 1d67e725ebb3348bbeb70d743793388ed36ed9d9, and NOT written in this candidate (the wording is waiting on ORD-0301's range table). The numbers shipped in one place: CLIENT_WRITE_DEADLINE_MS = 60000 declared in CLIENT_WRITE_DEADLINE_MS in frontend/src/lib/writeDeadline.ts blob 1d67e725ebb3348bbeb70d743793388ed36ed9d9, against the server's 45000 budget over a 30000 lock wait (backend/app/core/config.py as carried by 90d29a172e186aab6e6cb138ab4583ccf93bfa68).
 尺        cells 12 | overall Q38_GATE_GREEN | hard 0 [] | soft 0 []（receipt_cell_derivation_check_r2.py blob 91ae8b1ec55f5c19122af11bf775df14580955e4；两遍都跑在要发布的那份字节上，ord0281_keyed_receipt.json blob f29a74d3e84ae78d80ccdb0b6caf9f48d3fada30），rc=0，cells 12 / derived 全 null
 还原      每一枚形制跑完都把源文件按字节还原：全部为 True（ord0281_arms_matrix.json blob f51894dc6559cce14013a461c982a5f7da54dd8c 的 digests）
+不自签    0281 的 derived_result 留 null；期限值 60 s 只在**未打补丁的树**上被 K2 读到，其余臂跑在补丁树上（这是闸窗口与 60 s 之间的唯一诚实折中，写在每格的 skip 理由里）
+```
+
+### B c01d72a3 · ORD-0281 前端半（有键那一支）第 2 代：具名设备期限 + 三枚反件重跑，基座 `dc96408` 新 ref `64d14b2` @16:13+08 —— **按 Q33=① 只做带幂等键那一支；无键那一支（0288）保持具名直通。0302 的文案一枚没写。**
+
+```text
+代次      generation: the authority line moved from 90d29a172e186aab6e6cb138ab4583ccf93bfa68 to dc964086c9d412573ac19d70b24b30e6c3ee6168 while this candidate was being built. Nothing the candidate edits moved -- 5 of 5 files are byte-identical on both bases (the fifth is this order's new module, which exists only here) -- but the Live panel these arms render is composed by frontend/src/app/V8Experience.tsx, frontend/src/i18n/LocaleContext.tsx, and both of those DID change at dc964086c9d4 (changed source files: frontend/src/api/journeyContinuation.ts, frontend/src/app/V8Experience.tsx, frontend/src/features/planning/PlanWithAiSheet.tsx, frontend/src/i18n/LocaleContext.tsx). Under Q24 a runtime reading does not migrate across a generation it depends on, so the whole matrix was re-run here instead of inherited; the earlier readings are kept, not overwritten -- they are named to 90d29a172e18 in f29a74d3e84ae78d80ccdb0b6caf9f48d3fada30, and the candidate that carried them is 02da4602bfd4f7af38154a26dd345aba9f69876d on review/0281-write-deadline-keyed-b.
+坐标      base and shape: 64d14b205263ec03fd4810b1b0877418495b87b0 sits directly on dc964086c9d412573ac19d70b24b30e6c3ee6168 (parent measured as dc964086c9d412573ac19d70b24b30e6c3ee6168); 64d14b205263ec03fd4810b1b0877418495b87b0	refs/heads/review/0281-write-deadline-keyed-b2 is the remote's own answer for review/0281-write-deadline-keyed-b2, so the coordinate is readable outside this machine. 5 paths changed, all under frontend/, and the diff restricted to backend/ answers none. Both shipped typecheck configs tsconfig.check.json, tsconfig.typecheck.json came back clean before the run.
+七枚臂    TA=MET；TB=MET；TC=MET；TD=MET；K1=MET；K2=MET；K3=MET｜反件 ca_no_delegate→K3 MET；ca_keyless_too→K1 MET；ca_fixed_secs→TB MET（矩阵 TEETH_AND_BASELINE，ord0281_arms_matrix.json blob 911ec7483c88ad43e3eae673e2a956a43aef89ec）
+具名值    TB：屏幕上「This device stopped waiting after 2 s」在 2400 ms 出现；TC 是同一枚规格、只把常量改小的那棵树，报 1430 ms 且屏幕上的数字是 1 ⇒ 常量是活的（bound1000__arm_TC.json blob 5dcfb7a9f013f7e6baae3bc1914624e0f9b3183b）
+不均衡处  scope and honesty: the keyed denominator is 6 legs (measured in ORD-0281 step 0), of which 4 already come through the request helper and 2 were bare `fetch` calls at features/execution/LiveRecovery.tsx:230, features/recovery/V14RecoveryTruthPanel.tsx:68; both are now bounded. The keyless branch stays a named pass-through because it is ORD-0288, held for arbitration -- passed through untouched by design. One leg is keyed only nominally -- features/simulation/SimulationPanel.tsx:605 builds a fresh UUID per attempt -- so T-d cannot promise a replay there and TD is reported as REPLAY_SHAPE_ONLY_NOT_EXACTLY_ONCE instead. The shape where the answer arrives just after the bound is NOT_MEASURED: this candidate has no arm for it, so no claim is made about it. TD is recorded as REPLAY_SHAPE_ONLY_NOT_EXACTLY_ONCE. Traveller wording for the deadline is this module's own, in 1d67e725ebb3348bbeb70d743793388ed36ed9d9, and NOT written in this candidate (the wording is waiting on ORD-0301's range table). The numbers shipped in one place: CLIENT_WRITE_DEADLINE_MS = 60000 declared in CLIENT_WRITE_DEADLINE_MS in frontend/src/lib/writeDeadline.ts blob 1d67e725ebb3348bbeb70d743793388ed36ed9d9, against the server's 45000 budget over a 30000 lock wait (backend/app/core/config.py as carried by dc964086c9d412573ac19d70b24b30e6c3ee6168).
+尺        cells 13 | overall Q38_GATE_GREEN | hard 0 [] | soft 0 []（receipt_cell_derivation_check_r2.py blob 91ae8b1ec55f5c19122af11bf775df14580955e4；两遍都跑在要发布的那份字节上，ord0281_keyed_receipt.json blob 730c159081c10c9b0ecbea2c276db8775ca152a7），rc=0，cells 13 / derived 全 null
+还原      每一枚形制跑完都把源文件按字节还原：全部为 True（ord0281_arms_matrix.json blob 911ec7483c88ad43e3eae673e2a956a43aef89ec 的 digests）
 不自签    0281 的 derived_result 留 null；期限值 60 s 只在**未打补丁的树**上被 K2 读到，其余臂跑在补丁树上（这是闸窗口与 60 s 之间的唯一诚实折中，写在每格的 skip 理由里）
 ```
