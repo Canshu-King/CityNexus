@@ -1,0 +1,47 @@
+{
+ "checked_at_utc": "2026-09-25T09:52:13.1432132+08:00",
+ "commands": [
+  "git ls-remote https://github.com/Canshu-King/CityNexus.git refs/heads/mirror/integration-frontend-apple-pass1",
+  "git rev-list --left-right --count 5c4608ce...<live>",
+  "git archive <each tip> | tar -x  (read-only, temp dirs, removed after)"
+ ],
+ "ls_remote_stdout": "90d29a172e186aab6e6cb138ab4583ccf93bfa68\trefs/heads/mirror/integration-frontend-apple-pass1",
+ "github_live_tip": "90d29a172e186aab6e6cb138ab4583ccf93bfa68",
+ "ledger_tip_085x": "5c4608cede6cb7bd5f3ac7e704bfee379ca47abc",
+ "ledger_tip_is_ancestor_of_live": true,
+ "left_right_count_ledger_vs_live": "0\t2",
+ "commits_between": [
+  "90d29a1|07:20|fix(frontend): let the attribution label speak only for the server (ORD-0280)",
+  "6d041dc|09:20|feat(ord0296): give the server's write path a budget that can actually bind, and name the answer when it blows"
+ ],
+ "files_touched_per_commit": {
+  "90d29a1": [
+   "frontend/e2e/qoder-ord0280-attribution-label-speaks-for-itself.spec.ts",
+   "frontend/src/features/planning/PlanWithAiSheet.tsx"
+  ],
+  "6d041dc": [
+   "backend/app/core/config.py",
+   "backend/app/db/session.py",
+   "backend/app/db/write_deadline.py",
+   "backend/app/main.py",
+   "backend/tests/test_qoder_ord0296_write_deadline.py"
+  ]
+ },
+ "write_leg_census_on_each_tip": {
+  "ledger_says": {
+   "sha": "5c4608cede6cb7bd5f3ac7e704bfee379ca47abc",
+   "census": {
+    "write_method_literals": 64,
+    "under_a_plain_fetch": 14
+   }
+  },
+  "github_live": {
+   "sha": "90d29a172e186aab6e6cb138ab4583ccf93bfa68",
+   "census": {
+    "write_method_literals": 64,
+    "under_a_plain_fetch": 14
+   }
+  }
+ },
+ "note": "0 fetch, 0 checkout, 0 push; the object store already held both commits, so the export was done with git archive into temp dirs that this script deleted"
+}
