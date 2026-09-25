@@ -1,0 +1,99 @@
+Exception in thread Thread-11 (_readerthread):
+Traceback (most recent call last):
+  File "C:\Users\仓鼠王\AppData\Local\Programs\Python\Python310\lib\threading.py", line 1016, in _bootstrap_inner
+    self.run()
+  File "C:\Users\仓鼠王\AppData\Local\Programs\Python\Python310\lib\threading.py", line 953, in run
+    self._target(*self._args, **self._kwargs)
+  File "C:\Users\仓鼠王\AppData\Local\Programs\Python\Python310\lib\subprocess.py", line 1515, in _readerthread
+    buffer.append(fh.read())
+  File "C:\Users\仓鼠王\AppData\Local\Programs\Python\Python310\lib\codecs.py", line 322, in decode
+    (result, consumed) = self._buffer_decode(data, self.errors, final)
+UnicodeDecodeError: 'utf-8' codec can't decode byte 0xb3 in position 0: invalid start byte
+Exception in thread Thread-13 (_readerthread):
+Traceback (most recent call last):
+  File "C:\Users\仓鼠王\AppData\Local\Programs\Python\Python310\lib\threading.py", line 1016, in _bootstrap_inner
+    self.run()
+  File "C:\Users\仓鼠王\AppData\Local\Programs\Python\Python310\lib\threading.py", line 953, in run
+    self._target(*self._args, **self._kwargs)
+  File "C:\Users\仓鼠王\AppData\Local\Programs\Python\Python310\lib\subprocess.py", line 1515, in _readerthread
+    buffer.append(fh.read())
+  File "C:\Users\仓鼠王\AppData\Local\Programs\Python\Python310\lib\codecs.py", line 322, in decode
+    (result, consumed) = self._buffer_decode(data, self.errors, final)
+UnicodeDecodeError: 'utf-8' codec can't decode byte 0xb3 in position 0: invalid start byte
+Exception in thread Thread-15 (_readerthread):
+Traceback (most recent call last):
+  File "C:\Users\仓鼠王\AppData\Local\Programs\Python\Python310\lib\threading.py", line 1016, in _bootstrap_inner
+    self.run()
+  File "C:\Users\仓鼠王\AppData\Local\Programs\Python\Python310\lib\threading.py", line 953, in run
+    self._target(*self._args, **self._kwargs)
+  File "C:\Users\仓鼠王\AppData\Local\Programs\Python\Python310\lib\subprocess.py", line 1515, in _readerthread
+    buffer.append(fh.read())
+  File "C:\Users\仓鼠王\AppData\Local\Programs\Python\Python310\lib\codecs.py", line 322, in decode
+    (result, consumed) = self._buffer_decode(data, self.errors, final)
+UnicodeDecodeError: 'utf-8' codec can't decode byte 0xb3 in position 0: invalid start byte
+Exception in thread Thread-17 (_readerthread):
+Traceback (most recent call last):
+  File "C:\Users\仓鼠王\AppData\Local\Programs\Python\Python310\lib\threading.py", line 1016, in _bootstrap_inner
+    self.run()
+  File "C:\Users\仓鼠王\AppData\Local\Programs\Python\Python310\lib\threading.py", line 953, in run
+    self._target(*self._args, **self._kwargs)
+  File "C:\Users\仓鼠王\AppData\Local\Programs\Python\Python310\lib\subprocess.py", line 1515, in _readerthread
+    buffer.append(fh.read())
+  File "C:\Users\仓鼠王\AppData\Local\Programs\Python\Python310\lib\codecs.py", line 322, in decode
+    (result, consumed) = self._buffer_decode(data, self.errors, final)
+UnicodeDecodeError: 'utf-8' codec can't decode byte 0xb3 in position 0: invalid start byte
+Exception in thread Thread-19 (_readerthread):
+Traceback (most recent call last):
+  File "C:\Users\仓鼠王\AppData\Local\Programs\Python\Python310\lib\threading.py", line 1016, in _bootstrap_inner
+    self.run()
+  File "C:\Users\仓鼠王\AppData\Local\Programs\Python\Python310\lib\threading.py", line 953, in run
+    self._target(*self._args, **self._kwargs)
+  File "C:\Users\仓鼠王\AppData\Local\Programs\Python\Python310\lib\subprocess.py", line 1515, in _readerthread
+    buffer.append(fh.read())
+  File "C:\Users\仓鼠王\AppData\Local\Programs\Python\Python310\lib\codecs.py", line 322, in decode
+    (result, consumed) = self._buffer_decode(data, self.errors, final)
+UnicodeDecodeError: 'utf-8' codec can't decode byte 0xb3 in position 0: invalid start byte
+{
+ "killed": {
+  "backend": {
+   "pid": 13016,
+   "port": 8571,
+   "rc": 0,
+   "cmdline_had_port_before_kill": true
+  },
+  "origin": {
+   "pid": 12788,
+   "port": 8573,
+   "rc": 0,
+   "cmdline_had_port_before_kill": false
+  },
+  "face_real": {
+   "pid": 54296,
+   "port": 8572,
+   "rc": 0,
+   "cmdline_had_port_before_kill": true
+  },
+  "face_controlled": {
+   "pid": 5204,
+   "port": 8574,
+   "rc": 0,
+   "cmdline_had_port_before_kill": true
+  },
+  "face_upstream_absent": {
+   "pid": 50732,
+   "port": 8575,
+   "rc": 0,
+   "cmdline_had_port_before_kill": true
+  }
+ },
+ "listening_after": {
+  "8571": [],
+  "8572": [],
+  "8573": [],
+  "8574": [],
+  "8575": [],
+  "8576": [],
+  "8580": []
+ },
+ "all_my_ports_free": true
+}
