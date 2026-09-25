@@ -1,0 +1,61 @@
+{
+ "artifact": "HJP3-P4-ORCH-SERVED-RECHECK",
+ "schema": "CNX_HJP3_SERVED_GENERATION_RECHECK_V1",
+ "ran_at_local": "2026-09-26T01:31:36+0800",
+ "how_read": "two GETs through http://127.0.0.1:4781, asset name taken out of the served index.html; 0 POST, 0 write, 0 credential, 0 database, 0 deploy action",
+ "requests_made": 2,
+ "methods": [
+  "GET",
+  "GET"
+ ],
+ "writes": 0,
+ "credentials_sent": false,
+ "served_now": {
+  "index_http_status": 200,
+  "index_bytes": 1200,
+  "index_sha256_64_hex": "09b22864e96807497a68e988897a14f2f4f0d1eca7ea77d99db1fc2f5efdc298",
+  "asset_named_by_the_served_page": "assets/index-DWgtVWb0.js",
+  "asset_http_status": 200,
+  "asset_bytes": 1255094,
+  "asset_sha256_64_hex": "1c90b81eca9e8947b05821586b6c1d2af2ff69487f266006d3d7ae16bd74c51c"
+ },
+ "probe_js_row_cmdr_0115": {
+  "path": "/assets/index-DWgtVWb0.js",
+  "served_bytes": 1255094,
+  "served_sha256": "1c90b81eca9e8947b05821586b6c1d2af2ff69487f266006d3d7ae16bd74c51c",
+  "http_status": 200
+ },
+ "my_00_1x_read": {
+  "asset": "assets/index-DWgtVWb0.js",
+  "bytes": 1255094,
+  "sha256_64_hex": "1c90b81eca9e8947b05821586b6c1d2af2ff69487f266006d3d7ae16bd74c51c"
+ },
+ "my_22_0x_read": {
+  "asset": "assets/index-DWgtVWb0.js",
+  "bytes": 1255094,
+  "sha256_64_hex": "1c90b81eca9e8947b05821586b6c1d2af2ff69487f266006d3d7ae16bd74c51c"
+ },
+ "my_build_of_the_generation_the_probe_names": {
+  "generation": "7856e03f6238da3000976eb6e690a448dfa39b9a",
+  "built_asset": "assets/index-DWgtVWb0.js",
+  "built_bytes": 1255094,
+  "built_sha256_64_hex": "1c90b81eca9e8947b05821586b6c1d2af2ff69487f266006d3d7ae16bd74c51c"
+ },
+ "comparisons": {
+  "asset_name_equals_the_probe_row": true,
+  "bytes_equal_the_probe_row": true,
+  "bytes_equal_my_00_1x_read": true,
+  "bytes_equal_my_22_0x_read": true,
+  "bytes_equal_my_build_of_that_generation": true,
+  "generation_the_probe_names": "7856e03f6238da3000976eb6e690a448dfa39b9a"
+ },
+ "mirror_tip_read_at_this_minute": "30de4ebe409f49c5e25f4758cb2e5f4e90764a4f",
+ "mirror_tip_named_by_the_commander_at_00_36": "2344145ce6342b6ac32ac4d0955c0f524d8c9320",
+ "mirror_has_moved_since_his_read": true,
+ "verdict": {
+  "the_chain_still_serves_what_the_probe_pins": true,
+  "and_those_bytes_are_my_build_of_that_generation": true,
+  "and_my_three_timestamps_agree": true,
+  "ALL_HOLD": true
+ }
+}
