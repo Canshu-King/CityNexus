@@ -1,0 +1,32 @@
+{
+ "what": "deployed-bundle byte check through the public tunnel (commander first-hand)",
+ "t": "2026-09-25T09:07:33+0800",
+ "url": "https://obligation-plain-arcade-bean.trycloudflare.com/assets/index-xKIGmoBz.js",
+ "http_status": 200,
+ "ms": 2358,
+ "served_bytes": 1249346,
+ "disk_bytes": 1249346,
+ "byte_identical": true,
+ "served_sha256": "ba6654a08dd6f98e946e0acafa82ee2ec6a57226065cc0400a3a20ad531fb545",
+ "disk_sha256": "ba6654a08dd6f98e946e0acafa82ee2ec6a57226065cc0400a3a20ad531fb545",
+ "sha256_equal": true,
+ "markers": {
+  "citynexus.sw.generation-handover-pending": true,
+  "generation-handover": true,
+  "inFlightWrites": false,
+  "safe point": false,
+  "safePoint": false
+ },
+ "landed_tip": "5c4608cede6cb7bd5f3ac7e704bfee379ca47abc",
+ "source_coordinates_cited": [
+  "frontend/src/main.tsx:1683",
+  "frontend/src/lib/inFlightWrites.ts:2"
+ ],
+ "meaning_absent_markers": "minification rewrites module names and strips comments -- absence is NOT evidence of non-deployment",
+ "derived_result": "DEPLOYED_BUNDLE_MATCHES_DISK_AND_CARRIES_THE_LANDED_RUNTIME_EVENT",
+ "discipline": {
+  "credentials_printed": 0,
+  "demo_reset_calls": 0,
+  "user_db_reads_writes": 0
+ }
+}
