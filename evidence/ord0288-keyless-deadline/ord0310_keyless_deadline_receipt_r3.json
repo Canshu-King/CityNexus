@@ -1,0 +1,734 @@
+{
+ "order": "ORD-0310",
+ "lane": "D e345b9d6",
+ "title": "ORD-0288 无键写腿的客户端期限（Q54=① 的形制）：客户端半件 + 屏上句子的射程",
+ "generated_at": "2026-09-25T21:52:45+08:00",
+ "ref_tip_read": {
+  "ref": "refs/heads/mirror/integration-frontend-apple-pass1",
+  "sha": "2344145ce6342b6ac32ac4d0955c0f524d8c9320",
+  "read_by": [
+   "git ls-remote https://github.com/Canshu-King/CityNexus.git <ref> (git protocol over https)",
+   "GET https://api.github.com/repos/Canshu-King/CityNexus/git/ref/heads/<ref> (https REST, token from the git credential helper, never printed)"
+  ],
+  "sha_by_the_second_route": "2344145ce6342b6ac32ac4d0955c0f524d8c9320",
+  "the_two_routes_agree": true,
+  "recheck_after_all_measurement": "2344145ce6342b6ac32ac4d0955c0f524d8c9320",
+  "stable_across_this_run": true
+ },
+ "generation_binding": {
+  "tested_tree": "30de4ebe409f49c5e25f4758cb2e5f4e90764a4f",
+  "parent_of_the_code_commit": "30a5f90e5deaed6e45a704ddcc7d6e5e9790475b",
+  "fork_point_with_the_line": "30a5f90e5deaed6e45a704ddcc7d6e5e9790475b",
+  "is_my_history_a_descendant_line_from_the_fork": true,
+  "tip_is_descendant_of_the_fork": true,
+  "authority_tip_is_ancestor_of_this_tree": true,
+  "files_this_tree_adds_on_top_of_the_tip": [
+   "review/ord0310_kill_arms.py"
+  ],
+  "commits_on_the_line_since_the_fork": [
+   "2344145c ORD-0310: the delivery set, its two readback rounds, and the bus post that cites them",
+   "65656a7b ORD-0310: the receipt binds its own generation, and the block is rendered from it",
+   "9692a977 ORD-0310: the node regex needed MULTILINE",
+   "4ec467d7 ORD-0310: read the card expanded, and name the no-replay clause exactly",
+   "bdbcf210 ORD-0310: hand the mutation guard bytes, not str (its digest path is byte-exact by design)",
+   "f0fd1cec ORD-0310: fix the path spec in the arms driver and add the receipt builder",
+   "39d15b21 ORD-0310: the lane's own reverse-mutation arms for the keyless deadline",
+   "5ff55ec7 ORD-0310: give the keyless write leg a named device deadline, and cap what the screen may claim"
+  ],
+  "files_the_line_changed_since_the_fork": [
+   "backend/tests/test_qoder_ord0310_keyless_leg_receipts.py",
+   "frontend/e2e/qoder-ord0310-keyless-write-deadline.spec.ts",
+   "frontend/src/features/planning/PlanWithAiSheet.tsx",
+   "frontend/src/lib/keylessWriteDeadline.ts",
+   "review/ledger_block_e345b9d6_0310.md",
+   "review/ord0310_gauge_landed_block.py",
+   "review/ord0310_kill_arms.py",
+   "review/ord0310_make_block.py",
+   "review/ord0310_make_post.py",
+   "review/ord0310_make_receipt.py",
+   "review/ord0310_post_bus.py",
+   "review/ord0310_readback.py",
+   "review/ord0310_stage_pub.py"
+  ],
+  "files_my_candidate_changed_since_the_fork": [
+   "backend/tests/test_qoder_ord0310_keyless_leg_receipts.py",
+   "frontend/e2e/qoder-ord0310-keyless-write-deadline.spec.ts",
+   "frontend/src/features/planning/PlanWithAiSheet.tsx",
+   "frontend/src/lib/keylessWriteDeadline.ts",
+   "review/ledger_block_e345b9d6_0310.md",
+   "review/ord0310_gauge_landed_block.py",
+   "review/ord0310_kill_arms.py",
+   "review/ord0310_make_block.py",
+   "review/ord0310_make_post.py",
+   "review/ord0310_make_receipt.py",
+   "review/ord0310_post_bus.py",
+   "review/ord0310_readback.py",
+   "review/ord0310_stage_pub.py"
+  ],
+  "intersection_between_their_files_and_mine": [
+   "backend/tests/test_qoder_ord0310_keyless_leg_receipts.py",
+   "frontend/e2e/qoder-ord0310-keyless-write-deadline.spec.ts",
+   "frontend/src/features/planning/PlanWithAiSheet.tsx",
+   "frontend/src/lib/keylessWriteDeadline.ts",
+   "review/ledger_block_e345b9d6_0310.md",
+   "review/ord0310_gauge_landed_block.py",
+   "review/ord0310_kill_arms.py",
+   "review/ord0310_make_block.py",
+   "review/ord0310_make_post.py",
+   "review/ord0310_make_receipt.py",
+   "review/ord0310_post_bus.py",
+   "review/ord0310_readback.py",
+   "review/ord0310_stage_pub.py"
+  ],
+  "frontend_subtree_oid_my_tree": "3257a0266fbb73cfd452c5a1106ba416a4703ec0",
+  "frontend_subtree_oid_tip": "3257a0266fbb73cfd452c5a1106ba416a4703ec0",
+  "merge_prediction": {
+   "command": "git merge-tree --write-tree 2344145ce6342b6ac32ac4d0955c0f524d8c9320 30de4ebe409f49c5e25f4758cb2e5f4e90764a4f",
+   "exit": 0,
+   "predicted_tree": "a5b5d3f5b253b6bcc635567c9fe1f2fb264e23f8",
+   "raw_after_first_line": "",
+   "stderr": ""
+  },
+  "carry": "READINGS_ARE_FOR_THE_TESTED_TREE_ONLY",
+  "note": "本收据里每一枚读数（绿轮、五枚反突变臂、服务端字段）都是在 `tested_tree` 那一代上量的；线尖比我的分叉点新 `commits_on_the_line_since_the_fork` 那几笔，两边动的文件交集见 `intersection_between_their_files_and_mine`。按 Q24 我不把这一代的读数折算到线尖：要当代数，需要把候选重父到尖上再跑一轮绿 + 一轮拆。合流是否会冲突不靠嘴说，看 `merge_prediction`（只读，0 移动任何 ref）。"
+ },
+ "candidate": {
+  "code_sha": "30de4ebe409f49c5e25f4758cb2e5f4e90764a4f",
+  "parent": "2344145ce6342b6ac32ac4d0955c0f524d8c9320",
+  "base_cut_from": "30a5f90e5deaed6e45a704ddcc7d6e5e9790475b",
+  "product_commit": "5ff55ec7ed349b5f3a20f91995bf0f1e40741c01",
+  "tools_sha": "30de4ebe409f49c5e25f4758cb2e5f4e90764a4f",
+  "is_cut_on_the_tip_read_now": false
+ },
+ "revision": {
+  "generation": "r2_recut_onto_the_frozen_tip",
+  "previous_generation_tested_tree": "2344145ce6342b6ac32ac4d0955c0f524d8c9320",
+  "previous_generation_receipt_blob": "35e40da15ef65b024b10269cb3774faca77f9641",
+  "previous_predicted_tree": {
+   "sha": "aeaaf03c3708529f410162a0aeeb1fbaf66b0ac0",
+   "status": "SUPERSEDED_BY_THIS_GENERATION_NOT_DELETED",
+   "why": "那枚预测树是对上一代被测尖算的；号令者按 ref 当下尖重量出的是 a5b5d3f5b253b6bcc635567c9fe1f2fb264e23f8（见 candidate_ref_readback.merge_prediction_on_the_pushed_ref）"
+  },
+  "tested_tree_vs_product_commit": {
+   "arms_tested_tree": "30de4ebe409f49c5e25f4758cb2e5f4e90764a4f",
+   "candidate_tip": "30de4ebe409f49c5e25f4758cb2e5f4e90764a4f",
+   "product_commit": "5ff55ec7ed349b5f3a20f91995bf0f1e40741c01",
+   "per_subject_blob": {
+    "frontend/src/lib/keylessWriteDeadline.ts": {
+     "at_tested_tree": "1aea861b887273f70ec6cf726369c36a1398786e",
+     "at_candidate_tip": "1aea861b887273f70ec6cf726369c36a1398786e"
+    },
+    "frontend/src/features/planning/PlanWithAiSheet.tsx": {
+     "at_tested_tree": "3bb6a39067a380c2f75629fd7562f0de8f5d2f2a",
+     "at_candidate_tip": "3bb6a39067a380c2f75629fd7562f0de8f5d2f2a"
+    },
+    "frontend/e2e/qoder-ord0310-keyless-write-deadline.spec.ts": {
+     "at_tested_tree": "61fa23882dc0936ea29d08e12d15d1d936157049",
+     "at_candidate_tip": "61fa23882dc0936ea29d08e12d15d1d936157049"
+    },
+    "backend/tests/test_qoder_ord0310_keyless_leg_receipts.py": {
+     "at_tested_tree": "bb2111362c00272d056e0a709bf73a1009366716",
+     "at_candidate_tip": "bb2111362c00272d056e0a709bf73a1009366716"
+    }
+   },
+   "all_equal": true,
+   "note": "臂与绿轮跑的就是本道分支尖这一枚树；这里逐枚证明四件被测工件在它上面与收据所称的候选尖同 blob，所以 `--code-sha` 用分支尖不改变被量字节。"
+  },
+  "what_a_recut_proves": {
+   "subject_blobs_equal_across_generations": true,
+   "patch_id_of_the_product_commit": [
+    "d82931effa099f5420e0d63ad38a873dc6b50a53 5ff55ec7ed349b5f3a20f91995bf0f1e40741c01",
+    "d82931effa099f5420e0d63ad38a873dc6b50a53 5ff55ec7ed349b5f3a20f91995bf0f1e40741c01"
+   ]
+  }
+ },
+ "candidate_ref_readback": {
+  "ref": "refs/heads/review/ord0310-keyless-deadline-d-on-2344145c",
+  "sha_read_back_over_https": "30de4ebe409f49c5e25f4758cb2e5f4e90764a4f",
+  "read_by": "git ls-remote <ref> (same two-route rule as the tip: https git protocol here, and the file contents below are read with git show / git rev-parse by sha)",
+  "tools_commit_at_the_push": "30de4ebe409f49c5e25f4758cb2e5f4e90764a4f",
+  "subject_files_equal_to_the_tested_tree": true,
+  "per_subject_file_blob": {
+   "frontend/src/lib/keylessWriteDeadline.ts": {
+    "blob_at_tested_tree": "1aea861b887273f70ec6cf726369c36a1398786e",
+    "blob_on_the_pushed_ref": "1aea861b887273f70ec6cf726369c36a1398786e"
+   },
+   "frontend/src/features/planning/PlanWithAiSheet.tsx": {
+    "blob_at_tested_tree": "3bb6a39067a380c2f75629fd7562f0de8f5d2f2a",
+    "blob_on_the_pushed_ref": "3bb6a39067a380c2f75629fd7562f0de8f5d2f2a"
+   },
+   "frontend/e2e/qoder-ord0310-keyless-write-deadline.spec.ts": {
+    "blob_at_tested_tree": "61fa23882dc0936ea29d08e12d15d1d936157049",
+    "blob_on_the_pushed_ref": "61fa23882dc0936ea29d08e12d15d1d936157049"
+   },
+   "backend/tests/test_qoder_ord0310_keyless_leg_receipts.py": {
+    "blob_at_tested_tree": "bb2111362c00272d056e0a709bf73a1009366716",
+    "blob_on_the_pushed_ref": "bb2111362c00272d056e0a709bf73a1009366716"
+   }
+  },
+  "what_differs_between_tested_tree_and_the_push": [],
+  "merge_prediction_on_the_pushed_ref": {
+   "command": "git merge-tree --write-tree 2344145ce6342b6ac32ac4d0955c0f524d8c9320 30de4ebe409f49c5e25f4758cb2e5f4e90764a4f",
+   "exit": 0,
+   "predicted_tree": "a5b5d3f5b253b6bcc635567c9fe1f2fb264e23f8",
+   "raw_after_first_line": "",
+   "stderr": ""
+  },
+  "subject_blob_equal_to_previous_generation": {
+   "frontend/src/lib/keylessWriteDeadline.ts": {
+    "previous_generation_blob": "1aea861b887273f70ec6cf726369c36a1398786e",
+    "this_generation_blob": "1aea861b887273f70ec6cf726369c36a1398786e"
+   },
+   "frontend/src/features/planning/PlanWithAiSheet.tsx": {
+    "previous_generation_blob": "3bb6a39067a380c2f75629fd7562f0de8f5d2f2a",
+    "this_generation_blob": "3bb6a39067a380c2f75629fd7562f0de8f5d2f2a"
+   },
+   "frontend/e2e/qoder-ord0310-keyless-write-deadline.spec.ts": {
+    "previous_generation_blob": "61fa23882dc0936ea29d08e12d15d1d936157049",
+    "this_generation_blob": "61fa23882dc0936ea29d08e12d15d1d936157049"
+   },
+   "backend/tests/test_qoder_ord0310_keyless_leg_receipts.py": {
+    "previous_generation_blob": "bb2111362c00272d056e0a709bf73a1009366716",
+    "this_generation_blob": "bb2111362c00272d056e0a709bf73a1009366716"
+   }
+  }
+ },
+ "gates": {
+  "frontend_spec": {
+   "path": "frontend/e2e/qoder-ord0310-keyless-write-deadline.spec.ts",
+   "run_shape": [
+    "chromium"
+   ],
+   "run_id": "run342959",
+   "db": "_run342959.db",
+   "tallies": [
+    "4 passed (1.5m)",
+    "4 passed (1.5m)"
+   ],
+   "command": "python review/run_spec.py qoder-e2e/qoder-ord0310-keyless-write-deadline <port>"
+  },
+  "backend_pytest": {
+   "path": "backend/tests/test_qoder_ord0310_keyless_leg_receipts.py",
+   "run_shape": [
+    "pytest-single-process"
+   ],
+   "command": "python -m pytest backend/tests/test_qoder_ord0310_keyless_leg_receipts.py -q",
+   "db_file": "C:\\Users\\仓鼠王\\AppData\\Local\\Temp\\cnx_pytest_rt3r7nh_\\suite.db",
+   "note": "单进程 TestClient；跨进程耐久那一形是 HJ-P3 在 dc964086c9d412573ac19d70b24b30e6c3ee6168 上量的（她的 C4），不在本收据主张之内"
+  }
+ },
+ "cells": [
+  {
+   "id": "C1_keyed_shape_untouched",
+   "triple": {
+    "exact_sha": "30de4ebe409f49c5e25f4758cb2e5f4e90764a4f",
+    "nodeid": "frontend/e2e/qoder-ord0310-keyless-write-deadline.spec.ts :: K2 正控：服务器两秒内答完时，这枚期限不碰正常结局",
+    "shape": [
+     "chromium"
+    ]
+   },
+   "verdict": "KEYED_LEG_UNTOUCHED",
+   "readings": {
+    "parent_of_the_code_commit": "2344145ce6342b6ac32ac4d0955c0f524d8c9320",
+    "base_cut_from": "30a5f90e5deaed6e45a704ddcc7d6e5e9790475b",
+    "authoritative_tip_read_now": "2344145ce6342b6ac32ac4d0955c0f524d8c9320",
+    "files_changed_by_this_candidate": [
+     "backend/tests/test_qoder_ord0310_keyless_leg_receipts.py",
+     "frontend/e2e/qoder-ord0310-keyless-write-deadline.spec.ts",
+     "frontend/src/features/planning/PlanWithAiSheet.tsx",
+     "frontend/src/lib/keylessWriteDeadline.ts",
+     "review/ledger_block_e345b9d6_0310.md",
+     "review/ord0310_gauge_landed_block.py",
+     "review/ord0310_kill_arms.py",
+     "review/ord0310_make_block.py",
+     "review/ord0310_make_post.py",
+     "review/ord0310_make_receipt.py",
+     "review/ord0310_post_bus.py",
+     "review/ord0310_readback.py",
+     "review/ord0310_stage_pub.py"
+    ],
+    "hunk_headers_in_the_sheet": [
+     "@@ -22,0 +23,7 @@ import { markPendingContinuation } from \"../../api/journeyContinuation\";",
+     "@@ -235,0 +243,13 @@ function statusCopy(",
+     "@@ -518,9 +538,16 @@ export function PlanWithAiSheet({",
+     "@@ -528,3 +555 @@ export function PlanWithAiSheet({",
+     "@@ -744,0 +770,14 @@ export function PlanWithAiSheet({"
+    ],
+    "keyed_call_site_line": 678,
+    "any_hunk_covers_the_keyed_call_site": false,
+    "keyed_shape_on_the_line_0281": {
+     "path": "frontend/src/lib/writeDeadline.ts",
+     "blob_at_tip": "1d67e725ebb3348bbeb70d743793388ed36ed9d9",
+     "absent_from_my_tested_tree": false,
+     "exported_constant": "export const CLIENT_WRITE_DEADLINE_MS = 60_000",
+     "constant_value_ms": 60000,
+     "importers_at_tip": [
+      "frontend/src/features/execution/LiveRecovery.tsx",
+      "frontend/src/features/recovery/V14RecoveryTruthPanel.tsx"
+     ],
+     "sheet_call_sites_at_tip": {
+      "command": "git grep -n fetchWithWriteDeadline 2344145ce6342b6ac32ac4d0955c0f524d8c9320 -- frontend/src/features/planning/PlanWithAiSheet.tsx",
+      "lines_returned": 0,
+      "raw": []
+     }
+    },
+    "keyless_shape_this_order_0310": {
+     "path": "frontend/src/lib/keylessWriteDeadline.ts",
+     "blob_in_this_tree": "1aea861b887273f70ec6cf726369c36a1398786e",
+     "constant": "KEYLESS_WRITE_DEADLINE_MS = 60000",
+     "sheet_wrapped_call": [
+      "30de4ebe409f49c5e25f4758cb2e5f4e90764a4f:frontend/src/features/planning/PlanWithAiSheet.tsx:26:  fetchWithKeylessWriteDeadline,",
+      "30de4ebe409f49c5e25f4758cb2e5f4e90764a4f:frontend/src/features/planning/PlanWithAiSheet.tsx:538:      const response = await fetchWithKeylessWriteDeadline("
+     ]
+    }
+   },
+   "derived_from": "hunk_headers=[\"@@ -22,0 +23,7 @@ import { markPendingContinuation } from \\\"../../api/journeyContinuation\\\";\", \"@@ -235,0 +243,13 @@ function statusCopy(\", \"@@ -518,9 +538,16 @@ export function PlanWithAiSheet({\", \"@@ -528,3 +555 @@ export function PlanWithAiSheet({\", \"@@ -744,0 +770,14 @@ export function PlanWithAiSheet({\"] · keyed_call_site_line=678 · covers=False · 0281_module_blob_at_tip=1d67e725ebb3348bbeb70d743793388ed36ed9d9 · 0281_importers=[\"frontend/src/features/execution/LiveRecovery.tsx\", \"frontend/src/features/recovery/V14RecoveryTruthPanel.tsx\"]",
+   "why": "这一笔提交只碰无键那一支：`plans/generate` 的调用点在第 678 行，本提交在该文件里的 hunk 起点是 @@ -22,0 +23,7 @@ import { markPendingContinuation } from \"../../api/journeyContinuation\";, @@ -235,0 +243,13 @@ function statusCopy(, @@ -518,9 +538,16 @@ export function PlanWithAiSheet({, @@ -528,3 +555 @@ export function PlanWithAiSheet({, @@ -744,0 +770,14 @@ export function PlanWithAiSheet({，没有任何一枚覆盖到 678 ± 的区间。两枚形状分开具名：0281 有键那一支（`plans/generate`：仍走裸 fetch，期限由 0281 自己管） = 线上 `frontend/src/lib/writeDeadline.ts`（blob `1d67e725ebb3348bbeb70d743793388ed36ed9d9`，常数 `export const CLIENT_WRITE_DEADLINE_MS = 60_000`，只被 `frontend/src/features/execution/LiveRecovery.tsx`, `frontend/src/features/recovery/V14RecoveryTruthPanel.tsx` 引用）；0288/0310 无键那一支（`agent/commands`：本单新加的具名设备期限） = 本单新建 `frontend/src/lib/keylessWriteDeadline.ts`（blob `1aea861b887273f70ec6cf726369c36a1398786e`，常数 `KEYLESS_WRITE_DEADLINE_MS = 60000`）。两枚数值同为 60000 ms 但各管各的调用点，本单没有替 0281 交卷，也没有改它一个字节：这一代它就在树里（`frontend/src/lib/writeDeadline.ts` 在本候选里的 blob = `1d67e725ebb3348bbeb70d743793388ed36ed9d9`，与线尖那一枚`1d67e725ebb3348bbeb70d743793388ed36ed9d9` 同值），而本道那一笔提交的改动清单里没有它：[\"backend/tests/test_qoder_ord0310_keyless_leg_receipts.py\", \"frontend/e2e/qoder-ord0310-keyless-write-deadline.spec.ts\", \"frontend/src/features/planning/PlanWithAiSheet.tsx\", \"frontend/src/lib/keylessWriteDeadline.ts\", \"review/ledger_block_e345b9d6_0310.md\", \"review/ord0310_gauge_landed_block.py\", \"review/ord0310_kill_arms.py\", \"review/ord0310_make_block.py\", \"review/ord0310_make_post.py\", \"review/ord0310_make_receipt.py\", \"review/ord0310_post_bus.py\", \"review/ord0310_readback.py\", \"review/ord0310_stage_pub.py\"]。"
+  },
+  {
+   "id": "C2_single_named_constant",
+   "triple": {
+    "exact_sha": "30de4ebe409f49c5e25f4758cb2e5f4e90764a4f",
+    "nodeid": "frontend/e2e/qoder-ord0310-keyless-write-deadline.spec.ts :: K1",
+    "shape": [
+     "chromium"
+    ]
+   },
+   "verdict": "NUMBER_AND_TIMER_SHARE_ONE_SOURCE",
+   "readings": {
+    "constant_ms_in_the_module": 60000,
+    "seconds_shown_on_screen_clean_round": "POST /api/v1/journeys/e8bf898b-babb-47db-9167-a09818ec9d1f/agent/commands -- 这台设备等到 60 秒就停下来了。这一笔的结果未知，不是没发生：请求已经发出去了，服务器可能还在做。也不能靠同一把键补问：这条路线不认幂等键，它没有收下这把键，没有可回读的凭条。",
+    "measured_wait_clean_round_ms": 60544,
+    "post_count_clean_round": 1,
+    "probe_arm": "K0310_DERIVATION_PROBE_CONSTANT_TO_7S",
+    "probe_verdict": "HOLDING_AS_EXPECTED",
+    "probe_run_id": "run343841",
+    "probe_db": "_run343841.db",
+    "probe_port": 5680,
+    "probe_constant_ms": 7000,
+    "probe_seconds_shown": "7",
+    "probe_reason_text": "POST /api/v1/journeys/32592e20-040b-4f0d-87e2-14d04f1072e9/agent/commands -- 这台设备等到 7 秒就停下来了。这一笔的结果未知，不是没发生：请求已经发出去了，服务器可能还在做。也不能靠同一把键补问：这条路线不认幂等键，它没有收下这把键，没有可回读的凭条。",
+    "probe_measured_wait_ms": 7548,
+    "probe_post_count": 1
+   },
+   "derived_from": "clean: elapsed=60544 constant=60000 · probe: K0310_DERIVATION_PROBE_CONSTANT_TO_7S elapsed=7548 verdict=HOLDING_AS_EXPECTED",
+   "why": "常数是 `KEYLESS_WRITE_DEADLINE_MS = 60000`（`frontend/src/lib/keylessWriteDeadline.ts` 里一处定义，屏幕秒数与计时器都从它取）。干净轮 `runId=run342959` 实测等待 60544 ms，屏幕那句里的秒数是 `60`；把常数改小到 7000 的那一枚探针臂（K0310_DERIVATION_PROBE_CONSTANT_TO_7S，轮次 `runId=run343841`）里，屏幕那句跟着变成 `7` 秒、实测等待变成 7548 ms、`post_count=1`，且该臂判 HOLDING_AS_EXPECTED（仍绿）—— 两处一起动才叫同源，这就是 0281 那对 TB/TC 反件先例的形制。"
+  },
+  {
+   "id": "C3_screen_sentence_shape",
+   "triple": {
+    "exact_sha": "30de4ebe409f49c5e25f4758cb2e5f4e90764a4f",
+    "nodeid": "frontend/e2e/qoder-ord0310-keyless-write-deadline.spec.ts :: K1",
+    "shape": [
+     "chromium"
+    ]
+   },
+   "verdict": "TWO_CLAUSES_PRESENT_FORBIDDEN_ABSENT",
+   "readings": {
+    "status_attribute": "UNKNOWN_KEYLESS_WRITE_DEADLINE",
+    "rendered_card_first_240": "这一笔的结果未知（不是没发生） 这台设备停止等待了，而请求已经发出去，服务器那边可能还在做。这条路线不收幂等键，所以这一笔既没有可回读的凭条，也不能靠同一把键补问。先刷新核对结果，不要重复提交。 技术详情 这台设备自己的读数（服务器没给句子） POST /api/v1/journeys/e8bf898b-babb-47db-9167-a09818ec9d1f/agent/commands -- 这台设备等到 60 秒就停下来了。这一笔的结果未知，不是没发生：请求已经发出去了，",
+    "reason_label": "这台设备自己的读数（服务器没给句子）",
+    "reason_origin": "device",
+    "detail_block_attached": true,
+    "rows_in_this_cell": [
+     {
+      "claim": "这一支停在具名的 UNKNOWN_*，不是 NETWORK / CANCELLED",
+      "ok": true,
+      "got": "UNKNOWN_KEYLESS_WRITE_DEADLINE"
+     },
+     {
+      "claim": "句子里有「结果未知」",
+      "ok": true,
+      "got": "这一笔的结果未知（不是没发生） 这台设备停止等待了，而请求已经发出去，服务器那边可能还在做。这条路线不收幂等键，所以这一笔既没有可回读的凭条，也不能靠同一把键补"
+     },
+     {
+      "claim": "句子里明说这不是「没发生」（未知 ≠ 没发生）",
+      "ok": true,
+      "got": "这一笔的结果未知（不是没发生） 这台设备停止等待了，而请求已经发出去，服务器那边可能还在做。这条路线不收幂等键，所以这一笔既没有可回读的凭条，也不能靠同一把键补"
+     },
+     {
+      "claim": "句子里明说这一笔不能靠同一把键补问（整句，不是提到键就算）",
+      "ok": true,
+      "got": "这一笔的结果未知（不是没发生） 这台设备停止等待了，而请求已经发出去，服务器那边可能还在做。这条路线不收幂等键，所以这一笔既没有可回读的凭条，也不能靠同一把键补问。先刷新核对结果，不要重复提交。 技术详情 这台设备自己的读数（服务器没给句子） POST /api/v1/journeys/e8bf898b-babb-47"
+     },
+     {
+      "claim": "屏幕上那个秒数 == 常数换算（同一个来源）",
+      "ok": true,
+      "got": {
+       "secondsShown": "60",
+       "constant": 60
+      }
+     },
+     {
+      "claim": "实际等待时长与同一个常数一致（既没提前也没有不触发）",
+      "ok": true,
+      "got": 60544
+     },
+     {
+      "claim": "归因标签说的是这台设备，不是「服务器给出的原因」",
+      "ok": true,
+      "got": {
+       "label": "这台设备自己的读数（服务器没给句子）",
+       "origin": "device"
+      }
+     },
+     {
+      "claim": "技术详情块仍在（不是靠藏起来避免说谎）",
+      "ok": true,
+      "got": true
+     },
+     {
+      "claim": "四种被禁止的说法一个都没出现",
+      "ok": true,
+      "got": []
+     },
+     {
+      "claim": "客户端没有自动补发第二发",
+      "ok": true,
+      "got": 1
+     }
+    ],
+    "verdict_of_the_node": "MET"
+   },
+   "derived_from": "rows=[\"这一支停在具名的 UNKNOWN_*，不是 NETWORK / CANCELLED\", \"句子里有「结果未知」\", \"句子里明说这不是「没发生」（未知 ≠ 没发生）\", \"句子里明说这一笔不能靠同一把键补问（整句，不是提到键就算）\", \"屏幕上那个秒数 == 常数换算（同一个来源）\", \"实际等待时长与同一个常数一致（既没提前也没有不触发）\", \"归因标签说的是这台设备，不是「服务器给出的原因」\", \"技术详情块仍在（不是靠藏起来避免说谎）\", \"四种被禁止的说法一个都没出现\", \"客户端没有自动补发第二发\"] · origin=device · status=UNKNOWN_KEYLESS_WRITE_DEADLINE",
+   "why": "屏上两件事都在：`status=UNKNOWN_KEYLESS_WRITE_DEADLINE` 的卡片正文（前 60 字）「这一笔的结果未知（不是没发生） 这台设备停止等待了，而请求已经发出去，服务器那边可能还在做。这条路线不收幂等键，所以这一」里同时出现「结果未知」与逐字「不能靠同一把键补问」；归因标签 `origin=device`、`label=这台设备自己的读数（服务器没给句子）`（不是「服务器给出的原因」），`detail_block_attached=true`；四个禁句（已取消 / 没有发生 / 再试一次 / 连不上服务端）在这枚 10 行判据里逐条判缺，实测等待 60544 ms、`post_count=1`（判据所在文件 `frontend/e2e/qoder-ord0310-keyless-write-deadline.spec.ts`，blob `61fa23882dc0936ea29d08e12d15d1d936157049`）。"
+  },
+  {
+   "id": "C4_server_field_readings",
+   "triple": {
+    "exact_sha": "30de4ebe409f49c5e25f4758cb2e5f4e90764a4f",
+    "nodeid": "backend/tests/test_qoder_ord0310_keyless_leg_receipts.py :: K1/K2/T1a/T1b/T1c",
+    "shape": [
+     "pytest-single-process"
+    ]
+   },
+   "verdict": "NO_KEY_ADDS_ZERO_RECEIPT_ROWS_AND_THREE_MISSIONS",
+   "readings": {
+    "K1": {
+     "shape": "agent/commands with NO Idempotency-Key header",
+     "table": "idempotency_keys",
+     "column": "count(*)",
+     "idempotency_keys_rows_from": 0,
+     "idempotency_keys_rows_to": 0,
+     "table2": "journey_missions",
+     "journey_missions_rows_from": 0,
+     "journey_missions_rows_to": 3,
+     "http_codes": [
+      200,
+      200,
+      200
+     ],
+     "distinct_mission_ids": 3,
+     "receipt_rows_added": 0,
+     "mission_rows_added": 3
+    },
+    "K2": {
+     "shape": "agent/commands WITH a well-formed Idempotency-Key",
+     "idempotency_keys_rows_from": 0,
+     "idempotency_keys_rows_to": 0,
+     "http_code": 200,
+     "mission_id_present": true,
+     "receipt_rows_added": 0
+    },
+    "T1a": {
+     "shape": "plans/generate (the leg the server DOES read the key on)",
+     "idempotency_keys_rows_first_to_second": [
+      1,
+      1
+     ],
+     "first_status": 201,
+     "second_status": 409,
+     "second_body_excerpt": "{'error': {'code': 'CONFLICT', 'message': 'same idempotency key used for a different request', 'message_key': 'request.conflict', 'trace_id': '082481ba-4890-4b9e-a1cc-1562de122f1e', 'details': None}}"
+    },
+    "T1b": {
+     "shape_landed_row": "plans/generate claimed then answered (201)",
+     "row_landed": true,
+     "row_key_shape": "plans.generate:8b75f830-471a-4b5e-a814-5afb23e38cf7",
+     "row_operation": "plans.generate",
+     "row_response_status": 201,
+     "client_status_first": 201,
+     "client_status_replay": 201,
+     "shape_no_row": "plans/generate with a malformed key (422)",
+     "pre_claim_row_landed": false,
+     "columns_read": [
+      "key",
+      "operation",
+      "response_status"
+     ]
+    },
+    "T1c": {
+     "shape": "plans/generate refused (422)",
+     "row_landed": false,
+     "row_response_status": null,
+     "client_status": 422,
+     "named_other_shape": "路由内拒绝且落行 = HJ-P3 的 C4，量在 dc964086c9d412573ac19d70b24b30e6c3ee6168"
+    }
+   },
+   "derived_from": "db_file=C:\\Users\\仓鼠王\\AppData\\Local\\Temp\\cnx_pytest_rt3r7nh_\\suite.db table=idempotency_keys K1={from:0,to:0,missions+3}",
+   "why": "不带键连发三发：`idempotency_keys` 从 0 到 0（+0），而 `journey_missions` 同轮 +3 且三个 mission id 互不相同；带一把形制正确的键仍 +0（K2），说明「请求里有个头」不是凭条。库文件具名：`C:\\Users\\仓鼠王\\AppData\\Local\\Temp\\cnx_pytest_rt3r7nh_\\suite.db`。"
+  },
+  {
+   "id": "C5_arms_and_provenance",
+   "triple": {
+    "exact_sha": "30de4ebe409f49c5e25f4758cb2e5f4e90764a4f",
+    "nodeid": "frontend/e2e/qoder-ord0310-keyless-write-deadline.spec.ts :: 全部三枚节点",
+    "shape": [
+     "chromium"
+    ]
+   },
+   "verdict": "ARMS_RESTORED_TREE_UNCHANGED",
+   "readings": {
+    "arms_total": 7,
+    "killed": 6,
+    "survived": 0,
+    "probes": 1,
+    "every_arm_parsed_at_least_one_node": true,
+    "per_arm": [
+     {
+      "arm": "K0310_DEADLINE_RENAMED_AS_CANCEL",
+      "claimed": "KILLED",
+      "red_nodes": [
+       "K1 无键写腿到点：屏幕说结果未知、不能补问，秒数与计时器同源"
+      ],
+      "same_key_precondition_holds": true,
+      "anchor_hits": 1,
+      "bytes_changed": true,
+      "restored": true,
+      "gate_exit": 1
+     },
+     {
+      "arm": "K0310_DEVICE_NOTE_UNDER_SERVER_LABEL",
+      "claimed": "KILLED",
+      "red_nodes": [
+       "K1 无键写腿到点：屏幕说结果未知、不能补问，秒数与计时器同源"
+      ],
+      "same_key_precondition_holds": true,
+      "anchor_hits": 1,
+      "bytes_changed": true,
+      "restored": true,
+      "gate_exit": 1
+     },
+     {
+      "arm": "K0310_SENTENCE_PROMISES_REPLAY",
+      "claimed": "KILLED",
+      "red_nodes": [
+       "K1 无键写腿到点：屏幕说结果未知、不能补问，秒数与计时器同源"
+      ],
+      "same_key_precondition_holds": true,
+      "anchor_hits": 1,
+      "bytes_changed": true,
+      "restored": true,
+      "gate_exit": 1
+     },
+     {
+      "arm": "K0310_DEADLINE_IMPERSONATES_TRAVELLER",
+      "claimed": "KILLED",
+      "red_nodes": [
+       "K3 反控：旅行者按取消时，期限不许冒充用户"
+      ],
+      "same_key_precondition_holds": true,
+      "anchor_hits": 1,
+      "bytes_changed": true,
+      "restored": true,
+      "gate_exit": 1
+     },
+     {
+      "arm": "K0310_TIMER_FIRES_BEFORE_THE_CONSTANT",
+      "claimed": "KILLED",
+      "red_nodes": [
+       "K1 无键写腿到点：屏幕说结果未知、不能补问，秒数与计时器同源",
+       "K2 正控：服务器两秒内答完时，这枚期限不碰正常结局",
+       "K3 反控：旅行者按取消时，期限不许冒充用户"
+      ],
+      "same_key_precondition_holds": true,
+      "anchor_hits": 1,
+      "bytes_changed": true,
+      "restored": true,
+      "gate_exit": 1
+     },
+     {
+      "arm": "K0310_KEYLESS_LEG_HAS_SIGNAL_BUT_NO_DEADLINE",
+      "claimed": "KILLED",
+      "red_nodes": [
+       "K1 无键写腿到点：屏幕说结果未知、不能补问，秒数与计时器同源"
+      ],
+      "same_key_precondition_holds": true,
+      "anchor_hits": 1,
+      "bytes_changed": true,
+      "restored": true,
+      "gate_exit": 1
+     },
+     {
+      "arm": "K0310_DERIVATION_PROBE_CONSTANT_TO_7S",
+      "claimed": "HOLDING_AS_EXPECTED",
+      "red_nodes": [],
+      "same_key_precondition_holds": true,
+      "anchor_hits": 1,
+      "bytes_changed": true,
+      "restored": true,
+      "gate_exit": 0
+     }
+    ],
+    "all_arms_restored_to_tested_tree_bytes": true,
+    "tree_unchanged_by_this_run": true,
+    "every_arm_has_a_green_same_key_precondition": true,
+    "clean_round": {
+     "runId": "run342959",
+     "db": "_run342959.db",
+     "port": 5610,
+     "nodes": {
+      "K1 无键写腿到点：屏幕说结果未知、不能补问，秒数与计时器同源": "GREEN",
+      "K2 正控：服务器两秒内答完时，这枚期限不碰正常结局": "GREEN",
+      "K3 反控：旅行者按取消时，期限不许冒充用户": "GREEN"
+     }
+    },
+    "blob_module": "1aea861b887273f70ec6cf726369c36a1398786e",
+    "blob_sheet": "3bb6a39067a380c2f75629fd7562f0de8f5d2f2a",
+    "blob_spec": "61fa23882dc0936ea29d08e12d15d1d936157049",
+    "blob_backend_test": "bb2111362c00272d056e0a709bf73a1009366716",
+    "blob_keyed_module_at_the_tested_tree": "1d67e725ebb3348bbeb70d743793388ed36ed9d9"
+   },
+   "derived_from": "killed=6 of 6 killers · survived=0 · probe_holding=1 · every_arm_parsed_a_node=True · restored=True · tree_unchanged=True",
+   "why": "7 枚臂里 6 枚击杀、0 枚存活、1 枚探针按预期绿；每臂带自己的 (sha, nodeid, shape) 与还原前后 12 位摘要，`restored=true`、`tree_unchanged=true`、`every_arm_parsed_a_node=true`。绿轮坐标：`runId=run342959`、库 `_run342959.db`、端口 5610。四枚被测工件的 blob：`frontend/src/lib/keylessWriteDeadline.ts`=1aea861b887273f70ec6cf726369c36a1398786e、`frontend/src/features/planning/PlanWithAiSheet.tsx`=3bb6a39067a380c2f75629fd7562f0de8f5d2f2a、`frontend/e2e/qoder-ord0310-keyless-write-deadline.spec.ts`=61fa23882dc0936ea29d08e12d15d1d936157049、`backend/tests/test_qoder_ord0310_keyless_leg_receipts.py`=bb2111362c00272d056e0a709bf73a1009366716。`claimed_result` 是本车道观测，`derived_result` 一律留 null 给红队，等级不由本车道签。"
+  },
+  {
+   "id": "C6_deadline_is_the_criterion_not_signal",
+   "triple": {
+    "exact_sha": "30de4ebe409f49c5e25f4758cb2e5f4e90764a4f",
+    "nodeid": "frontend/e2e/qoder-ord0310-keyless-write-deadline.spec.ts :: K3 反控：旅行者按取消时，期限不许冒充用户",
+    "shape": [
+     "chromium"
+    ]
+   },
+   "verdict": "SIGNAL_PRECEDED_THIS_ORDER_SO_IT_IS_NOT_THE_DISCRIMINATOR",
+   "readings": {
+    "signal_option_lines_at_the_tip": [
+     [
+      414,
+      "signal: controller.signal,"
+     ],
+     [
+      474,
+      "signal,"
+     ],
+     [
+      553,
+      "signal,"
+     ],
+     [
+      600,
+      "signal,"
+     ],
+     [
+      692,
+      "signal,"
+     ]
+    ],
+    "post_call_sites_at_the_tip": [
+     [
+      472,
+      "const response = await fetch(`/api/v1/journeys/${journeyId}/plans`, {"
+     ],
+     [
+      598,
+      "const plansResponse = await fetch(`/api/v1/journeys/${journeyId}/plans"
+     ],
+     [
+      625,
+      "const placesResponse = await fetch("
+     ],
+     [
+      678,
+      "const generate = await fetch("
+     ]
+    ],
+    "keyless_leg_wrapped_in_this_tree": [
+     [
+      538,
+      "const response = await fetchWithKeylessWriteDeadline("
+     ]
+    ],
+    "wrapper_preserves_the_callers_signal": [
+     [
+      93,
+      "const upstream = init.signal ?? null;"
+     ]
+    ],
+    "deadline_branch": [
+     [
+      243,
+      "if (s === \"UNKNOWN_KEYLESS_WRITE_DEADLINE\") {"
+     ],
+     [
+      776,
+      "status: \"UNKNOWN_KEYLESS_WRITE_DEADLINE\","
+     ]
+    ],
+    "cancel_branch": [
+     [
+      234,
+      "if (s === \"CANCELLED_AFTER_SEND\") {"
+     ],
+     [
+      788,
+      "status: reached === \"baseline\" ? \"CANCELLED\" : \"CANCELLED_AFTER_SEND\","
+     ]
+    ],
+    "k3_node_clean_round": "GREEN",
+    "arm_that_breaks_the_distinction": {
+     "arm": "K0310_DEADLINE_IMPERSONATES_TRAVELLER",
+     "red_nodes": [
+      "K3 反控：旅行者按取消时，期限不许冒充用户"
+     ],
+     "claimed": "KILLED"
+    },
+    "signal_but_no_deadline_arm": {
+     "arm": "K0310_KEYLESS_LEG_HAS_SIGNAL_BUT_NO_DEADLINE",
+     "nodes": {
+      "K1 无键写腿到点：屏幕说结果未知、不能补问，秒数与计时器同源": "RED",
+      "K2 正控：服务器两秒内答完时，这枚期限不碰正常结局": "GREEN",
+      "K3 反控：旅行者按取消时，期限不许冒充用户": "GREEN"
+     },
+     "claimed": "KILLED",
+     "restored": true,
+     "anchor_hits": 1,
+     "sizes": {
+      "before": 52799,
+      "during_mutation": 52775,
+      "delta_bytes": -24,
+      "after_restore": 52799
+     }
+    },
+    "premise_proof": {
+     "file": "ord0310-signal-vs-deadline-proof.out",
+     "exists": true,
+     "bytes": 1469,
+     "blob": "eaa24028b6be59cb92ea10516a910567bd37ed62"
+    }
+   },
+   "derived_from": "tip signal lines=[[414, \"signal: controller.signal,\"], [474, \"signal,\"], [553, \"signal,\"], [600, \"signal,\"], [692, \"signal,\"]] · deadline branch=[[243, \"if (s === \\\"UNKNOWN_KEYLESS_WRITE_DEADLINE\\\") {\"], [776, \"status: \\\"UNKNOWN_KEYLESS_WRITE_DEADLINE\\\",\"]] · cancel branch=[[234, \"if (s === \\\"CANCELLED_AFTER_SEND\\\") {\"], [788, \"status: reached === \\\"baseline\\\" ? \\\"CANCELLED\\\" : \\\"CANCELLED_AFTER_SEND\\\",\"]] · K3=GREEN · impersonation arm red_nodes=[\"K3 反控：旅行者按取消时，期限不许冒充用户\"]",
+   "why": "号令者 20:2x 那条新事实我复算成立并可指名：在这枚尖 `2344145ce6342b6ac32ac4d0955c0f524d8c9320` 上两条 POST 的选项对象**本来就带 `signal`**（`frontend/src/features/planning/PlanWithAiSheet.tsx` 的第 414, 474, 553, 600, 692 行就是 `signal,`；两处调用点在第 472, 598, 625, 678 行）。所以本单加的东西不是 signal，是**期限**：wrapper 原样接住调用方的信号（`frontend/src/lib/keylessWriteDeadline.ts` 第 93 行读 `init.signal`），到点才由 `firedHere` 抛 `KeylessWriteDeadlineMissed`，屏上落 `[[243, 'if (s === \"UNKNOWN_KEYLESS_WRITE_DEADLINE\") {']]` 那一支；旅行者自己按取消仍走取消那一支（`CANCELLED_AFTER_SEND`，`frontend/src/features/planning/PlanWithAiSheet.tsx` 第 234, 788 行）。判据按**到点**写而不按**有没有 signal** 写，并且这一条有牙齿：K3 反控本轮判 GREEN，而把 `firedHere` 判定拆掉的臂 `K0310_DEADLINE_IMPERSONATES_TRAVELLER` 实测红的正是 K3 那一枚节点。"
+  }
+ ],
+ "claimed_and_derived": {
+  "claimed_result": "CLIENT_HALF_DELIVERED_ON_A_NAMED_CONSTANT",
+  "derived_result": null
+ },
+ "discipline": {
+  "authority_line_writes": 0,
+  "authority_line_moved_by_this_lane": 0,
+  "other_lanes_refs_touched": 0,
+  "own_candidate_ref_pushed": {
+   "count": 1,
+   "ref": "refs/heads/review/ord0310-keyless-deadline-d-on-2344145c",
+   "sha": "30de4ebe409f49c5e25f4758cb2e5f4e90764a4f",
+   "why_allowed": "边界写的是 0 权威线写入、0 推他人 ref；这枚是本车道自己的新候选 ref，名字与旧 ref 都没被人占过"
+  },
+  "demo_reset": 0,
+  "user_db_reads_writes": 0,
+  "credentials_printed": 0,
+  "assertions_changed_to_buy_green": 0,
+  "instrument_tightened_because_a_survivor_proved_a_hole": "K0310_SENTENCE_PROMISES_REPLAY 第一次是 SURVIVED：门禁只在折叠态读卡片，而禁句活在「技术详情」展开之后；补法是把卡片折叠态与展开态各读一遍，并把「不能靠同一把键补问」钉成逐字判据 —— 收紧量具，不是把断言改松换绿",
+  "note": "逐臂的还原与同一枚树的字节回读见 C5；`derived_result` 全为 null，等级不由本车道签"
+ }
+}
