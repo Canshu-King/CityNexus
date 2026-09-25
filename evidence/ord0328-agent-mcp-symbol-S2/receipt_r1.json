@@ -1,0 +1,180 @@
+{
+ "schema": "CNX_ORD0328_AGENT_MCP_SYMBOL_RECEIPT_V1",
+ "order": "ORD-0328",
+ "lane": "S2-hermes-port",
+ "at_local": "2026-09-26T04:17:38+0800",
+ "generation": "65df31df96cfb8a954f5feb36484710a883e1597",
+ "generation_live_read": "65df31df96cfb8a954f5feb36484710a883e1597",
+ "candidate_branch": "refs/heads/agent/S2-ord0328-agent-mcp-candidates",
+ "candidate_sha": "0f8b925facabc9df57bab600b86d999dd515bf94",
+ "candidate_read_back_from_origin": "0f8b925facabc9df57bab600b86d999dd515bf94",
+ "ahead": 1,
+ "behind": 0,
+ "merge_tree_readonly": {
+  "exit": 0,
+  "tree": "86b574082cddb5071ab34efa04176696370f9a7e",
+  "conflict_entries": 0,
+  "reading": "exit 0 and the tree equals the candidate tree because the candidate is a direct child of the tip (fast-forward)"
+ },
+ "interpreter": "D:/moodle/CityNexus/.venv/Scripts/python.exe (Python 3.12.14)",
+ "hermes_source_commit": "0fe51945cdf2d0ae35494b615f3418957174da03",
+ "symbol": {
+  "name": "HermesReplanProposalView",
+  "file": "agent-mcp/citynexus_mcp/schemas.py",
+  "blob_before_on_tip": "097d12c7fafdcfdc84fe34d7e263181f0d480ba3",
+  "blob_after_on_candidate": "f284a42d7b19e7e6cf10ddd010a2468a506b9cdf",
+  "blob_on_hermes_line": "f284a42d7b19e7e6cf10ddd010a2468a506b9cdf",
+  "definition_site_on_hermes": "agent-mcp/citynexus_mcp/schemas.py:51",
+  "how_applied": "the whole file is taken byte-for-byte from the Hermes line; the tip file and the Hermes file differ by exactly one appended frozen dataclass (numstat +114/-0), and no new imports are needed because dataclass, Mapping and Any are already imported there",
+  "chain_unblocked": "backend/tests/test_v18_hermes_r20_transport_reliability_probe.py -> scripts/hermes_r20_transport_reliability_probe.py:11 -> scripts/hermes_r4_contract_probe.py:29 -> citynexus_mcp.schemas"
+ },
+ "diff_vs_tip": {
+  "paths": [
+   "agent-mcp/citynexus_mcp/schemas.py",
+   "backend/tests/test_v18_hermes_r20_transport_reliability_probe.py"
+  ],
+  "status_tally": {
+   "M": 1,
+   "A": 1
+  },
+  "added_lines": 123,
+  "deleted_lines": 0,
+  "backend_app_or_frontend_paths": []
+ },
+ "gate_readings": {
+  "tip_after_tool_update": {
+   "harness_files": 20,
+   "whole_collected": 1318,
+   "whole_collect_errors": 0,
+   "harness_collected": 58,
+   "harness_passed": 58,
+   "exit": 0,
+   "receipt_blob": "0edc5cd61f4a32fc52718872aa5cf542060fc88f"
+  },
+  "candidate": {
+   "harness_files": 21,
+   "whole_collected": 1319,
+   "whole_collect_errors": 0,
+   "harness_collected": 59,
+   "harness_passed": 59,
+   "harness_failed": 0,
+   "exit": 0,
+   "receipt_blob": "86760ee70d075f4a1b609d559de8412546aea87d"
+  },
+  "tool_export_set": [
+   "backend",
+   "data",
+   "contracts",
+   "tools",
+   "scripts",
+   "agent-mcp"
+  ],
+  "tool_change_made_here": "EXPORT_SET widened to include agent-mcp (see live_checks/run_hermes_suite_r1.py:30 and the REQUIRED_EXPORTS guard at live_checks/run_hermes_suite_r1.py:190); the r4/r20 chain resolves citynexus_mcp through <export root>/agent-mcp, so a set without it would report a false red. tool bytes now 15212",
+  "tool_blob_hash_object": "d9388efab8b3b5d61f5534ac07ec5ab93744de82"
+ },
+ "reverse_mutation": {
+  "single_variable_control": {
+   "injected": "revert only agent-mcp/citynexus_mcp/schemas.py to the tip blob 097d12c7fafdcfdc84fe34d7e263181f0d480ba3",
+   "tree_difference_measured": {
+    "files_in_fixed_tree": 468,
+    "files_in_reverted_tree": 468,
+    "paths_differing": [
+     "agent-mcp/citynexus_mcp/schemas.py"
+    ],
+    "method": "git hash-object --no-filters over every file of both throwaway exports"
+   },
+   "fixed_r20": {
+    "exit": 0,
+    "collected": 1,
+    "passed": 0,
+    "failed": 0,
+    "collect_errors": 0,
+    "error_modules": []
+   },
+   "fixed_r20_run": {
+    "exit": 0,
+    "collected": 0,
+    "passed": 1,
+    "failed": 0,
+    "collect_errors": 0,
+    "error_modules": []
+   },
+   "reverted_r20": {
+    "exit": 2,
+    "collected": 0,
+    "passed": 0,
+    "failed": 0,
+    "collect_errors": 1,
+    "error_modules": [
+     "tests/test_v18_hermes_r20_transport_reliability_probe.py"
+    ]
+   },
+   "reverted_whole": {
+    "exit": 2,
+    "collected": 1318,
+    "passed": 0,
+    "failed": 0,
+    "collect_errors": 1,
+    "error_modules": [
+     "tests/test_v18_hermes_r20_transport_reliability_probe.py"
+    ]
+   },
+   "reading": "with the symbol present the r20 file collects 1 test and passes; with that one file rolled back the same tree reports a collection error naming the r20 file and the whole suite gate breaks - and exactly 1 path differs between the two trees, so the symbol is the sole cause",
+   "receipt_blob": "49a88f42b991cfddb607b538c39e480a36091cde"
+  },
+  "generic_gate_selftest": {
+   "mutant_file": "backend/tests/test_v18_hermes_native_client.py",
+   "whole_collect_errors": 1,
+   "run_exit": 2,
+   "post_restore_green": true
+  },
+  "assertion_edited": 0
+ },
+ "still_excluded_by_name": [
+  {
+   "file": "backend/tests/test_hermes_r5_cached_replan_compatibility.py",
+   "missing_symbol": "_upgrade_cached_request_replan_response",
+   "symbol_home": "backend/app/agent/gateway.py:107 on 0fe51945cdf2d0ae35494b615f3418957174da03 (called at :542 and :617)",
+   "why_not_here": "ORD-0328 authorises agent-mcp only; requirement 1 forbids touching backend/app, so the full 22-file set is not reachable on this order. Measured: the gate discovers 21 files on this candidate vs 20 on the tip",
+   "observed_error_if_added_today": "ImportError: cannot import name '_upgrade_cached_request_replan_response' from 'app.agent.gateway'"
+  }
+ ],
+ "garbage_readings": {
+  "single_variable_control_dirs_removed": true,
+  "gate_candidate_work_dir_removed": true,
+  "gate_tip_work_dir_removed": true
+ },
+ "checks": {
+  "only_agent_mcp_product_file_changed": true,
+  "pure_addition_no_deletions": true,
+  "schema_blob_taken_from_hermes_line": true,
+  "gate_green_on_candidate": true,
+  "gate_still_green_on_tip_after_tool_change": true,
+  "harness_grew_by_the_unblocked_file": true,
+  "whole_suite_collected_grew_by_one_and_stays_clean": true,
+  "reverse_mutation_is_a_real_injection_both_ways": true,
+  "candidate_pushed_and_read_back": true,
+  "authoritative_branch_still_at_measured_tip": true,
+  "candidate_is_fast_forwardable": true,
+  "no_throwaway_dirs_left": true
+ },
+ "verdict": "ORD0328_R20_ROOT_CAUSE_CLOSED_R5_STILL_BLOCKED_BY_SCOPE",
+ "verdict_derivation": "verdict = the all-green string iff every key in checks is true; each check compares readings taken in this run from the two gate receipts, the single-variable control and live git commands - no literal pass token is written",
+ "discipline": {
+  "authoritative_branch_moved": 0,
+  "refs_pushed_by_lane": 1,
+  "pushed_refs": [
+   "refs/heads/agent/S2-ord0328-agent-mcp-candidates"
+  ],
+  "demo_reset": 0,
+  "credentials_printed": 0,
+  "model_calls_made": 0,
+  "live_or_preview_db_touched": 0,
+  "junctions_created": 0,
+  "other_lane_worktrees_touched": 0,
+  "ledger_written_by_lane": 0
+ },
+ "claim_kind": "git_and_pytest_determined",
+ "derived_result": null,
+ "derived_result_policy": "left null by requirement 4 - the sign-off level belongs to the verifier, not to the delivering lane; everything the lane claims is inside checks and the referenced receipts"
+}
