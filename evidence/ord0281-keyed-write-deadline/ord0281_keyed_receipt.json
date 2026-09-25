@@ -1,5 +1,5 @@
 {
- "at": "2026-09-25T15:23:09+08:00",
+ "at": "2026-09-25T15:42:21+08:00",
  "order": "ORD-0281 前端半 · 有键那一支（期限 + 具名中止 + T-d 现状）",
  "lane": "B c01d72a3",
  "claim_kind": "RUNTIME_MEASURED",
@@ -677,7 +677,7 @@
    "cell": "scope: which legs are bounded, which are not, and what was NOT measured",
    "claimed_result": "DECLARED",
    "derived_result": null,
-   "why": "scope and honesty: the keyed denominator is 6 legs (measured in ORD-0281 step 0), of which 4 already come through the request helper and 2 were bare `fetch` calls at features/execution/LiveRecovery.tsx:230, features/recovery/V14RecoveryTruthPanel.tsx:68; both are now bounded. The keyless branch stays a named pass-through because it is ORD-0288, held for arbitration -- passed through untouched by design. One leg is keyed only nominally -- features/simulation/SimulationPanel.tsx:605 builds a fresh UUID per attempt -- so T-d cannot promise a replay there and TD is reported as REPLAY_SHAPE_ONLY_NOT_EXACTLY_ONCE instead. The shape where the answer arrives just after the bound is NOT_MEASURED: this candidate has no arm for it, so no claim is made about it. TD is recorded as REPLAY_SHAPE_ONLY_NOT_EXACTLY_ONCE. Traveller wording for the deadline is this module's own (1d67e725ebb3), and NOT written in this candidate (the wording is waiting on ORD-0301's range table). The numbers shipped in one place: CLIENT_WRITE_DEADLINE_MS = 60000 against the server's 45000 budget over a 30000 lock wait.",
+   "why": "scope and honesty: the keyed denominator is 6 legs (measured in ORD-0281 step 0), of which 4 already come through the request helper and 2 were bare `fetch` calls at features/execution/LiveRecovery.tsx:230, features/recovery/V14RecoveryTruthPanel.tsx:68; both are now bounded. The keyless branch stays a named pass-through because it is ORD-0288, held for arbitration -- passed through untouched by design. One leg is keyed only nominally -- features/simulation/SimulationPanel.tsx:605 builds a fresh UUID per attempt -- so T-d cannot promise a replay there and TD is reported as REPLAY_SHAPE_ONLY_NOT_EXACTLY_ONCE instead. The shape where the answer arrives just after the bound is NOT_MEASURED: this candidate has no arm for it, so no claim is made about it. TD is recorded as REPLAY_SHAPE_ONLY_NOT_EXACTLY_ONCE. Traveller wording for the deadline is this module's own, in 1d67e725ebb3348bbeb70d743793388ed36ed9d9, and NOT written in this candidate (the wording is waiting on ORD-0301's range table). The numbers shipped in one place: CLIENT_WRITE_DEADLINE_MS = 60000 declared in CLIENT_WRITE_DEADLINE_MS in frontend/src/lib/writeDeadline.ts blob 1d67e725ebb3348bbeb70d743793388ed36ed9d9, against the server's 45000 budget over a 30000 lock wait (backend/app/core/config.py as carried by 90d29a172e186aab6e6cb138ab4583ccf93bfa68).",
    "readings": {
     "keyed_legs_total": 6,
     "legs_routed_through_the_wrapper_by_this_change": 2,
@@ -698,19 +698,35 @@
     "ord_0302_copy": "NOT written in this candidate (the wording is waiting on ORD-0301's range table)",
     "client_constant_name": "CLIENT_WRITE_DEADLINE_MS",
     "td_claim_recorded_as": "REPLAY_SHAPE_ONLY_NOT_EXACTLY_ONCE",
+    "candidate_blobs_for_the_bounded_files": {
+     "frontend/src/lib/writeDeadline.ts": "1d67e725ebb3348bbeb70d743793388ed36ed9d9",
+     "frontend/src/lib/readDeadline.ts": "be04016af0b402dbe76cce79167475c77d0e77a4",
+     "frontend/src/features/execution/LiveRecovery.tsx": "48a55ffca4e90d3c45d780f3bb7f9bfb1cdbd698",
+     "frontend/src/features/recovery/V14RecoveryTruthPanel.tsx": "17c27735e561682a1510ee6fc67aae1b710276c2",
+     "frontend/e2e/qoder-ord0281-keyed-write-deadline.spec.ts": "4f64c32890ec6791093faed281d86d709e4b026d"
+    },
     "shipped_numbers": {
      "client_ms": 60000,
      "server_ms": 45000,
      "server_busy_timeout_ms": 30000
     },
+    "where_those_numbers_live": [
+     "CLIENT_WRITE_DEADLINE_MS in frontend/src/lib/writeDeadline.ts blob 1d67e725ebb3348bbeb70d743793388ed36ed9d9",
+     "backend/app/core/config.py as carried by 90d29a172e186aab6e6cb138ab4583ccf93bfa68"
+    ],
     "named_values_the_why_uses": [
+     "17c27735e561682a1510ee6fc67aae1b710276c2",
+     "1d67e725ebb3348bbeb70d743793388ed36ed9d9",
      "2",
      "30000",
      "4",
      "45000",
+     "48a55ffca4e90d3c45d780f3bb7f9bfb1cdbd698",
+     "4f64c32890ec6791093faed281d86d709e4b026d",
      "6",
      "60000",
      "CLIENT_WRITE_DEADLINE_MS",
+     "CLIENT_WRITE_DEADLINE_MS in frontend/src/lib/writeDeadline.ts blob 1d67e725ebb3348bbeb70d743793388ed36ed9d9",
      "NOT written in this candidate (the wording is waiting on ORD-0301's range table)",
      "NOT_MEASURED",
      "ORD-0288, held for arbitration -- passed through untouched by design",
@@ -719,6 +735,8 @@
      "api/citynexus.ts:1179",
      "api/citynexus.ts:1186",
      "api/citynexus.ts:855",
+     "backend/app/core/config.py as carried by 90d29a172e186aab6e6cb138ab4583ccf93bfa68",
+     "be04016af0b402dbe76cce79167475c77d0e77a4",
      "features/execution/LiveRecovery.tsx:230",
      "features/recovery/V14RecoveryTruthPanel.tsx:68",
      "features/simulation/SimulationPanel.tsx:605"
@@ -795,7 +813,7 @@
     "cells 12 | overall Q38_GATE_GREEN | hard 0 [] | soft 0 []"
    ]
   },
-  "pass_1_output": "receipt ord0281_keyed_receipt.json 33433 B blob_sha1 bcefd8461ad9df9b89beaa8bda8ca237488bc602\ncells 12 | overall Q38_GATE_GREEN | hard 0 [] | soft 0 []\n  cell 0 | why_source why | why tokens 8 | own hits 8 | unique hits 0 | shares why with []\n  cell 1 | why_source why | why tokens 9 | own hits 9 | unique hits 0 | shares why with []\n  cell 2 | why_source why | why tokens 11 | own hits 11 | unique hits 0 | shares why with []\n  cell 3 | why_source why | why tokens 10 | own hits 10 | unique hits 0 | shares why with []\n  cell 4 | why_source why | why tokens 8 | own hits 8 | unique hits 0 | shares why with []\n  cell 5 | why_source why | why tokens 8 | own hits 8 | unique hits 0 | shares why with []\n  cell 6 | why_source why | why tokens 7 | own hits 7 | unique hits 0 | shares why with []\n  cell 7 | why_source why | why tokens 7 | own hits 7 | unique hits 0 | shares why with []\n  cell 8 | why_source why | why tokens 4 | own hits 4 | unique hits 0 | shares why with []\n  cell 9 | why_source why | why tokens 4 | own hits 4 | unique hits 0 | shares why with []\n  cell 10 | why_source why | why tokens 23 | own hits 19 | unique hits 0 | shares why with []\n  cell 11 | why_source why | why tokens 6 | own hits 5 | unique hits 0 | shares why with []\nmeaning: no shared literal and every sentence names its own readings",
+  "pass_1_output": "receipt ord0281_keyed_receipt.json 34907 B blob_sha1 575cf68d0a6398ebee6aa24a15d2688f768c4fa7\ncells 12 | overall Q38_GATE_GREEN | hard 0 [] | soft 0 []\n  cell 0 | why_source why | why tokens 8 | own hits 8 | unique hits 0 | shares why with []\n  cell 1 | why_source why | why tokens 9 | own hits 9 | unique hits 0 | shares why with []\n  cell 2 | why_source why | why tokens 11 | own hits 11 | unique hits 0 | shares why with []\n  cell 3 | why_source why | why tokens 10 | own hits 10 | unique hits 0 | shares why with []\n  cell 4 | why_source why | why tokens 8 | own hits 8 | unique hits 0 | shares why with []\n  cell 5 | why_source why | why tokens 8 | own hits 8 | unique hits 0 | shares why with []\n  cell 6 | why_source why | why tokens 7 | own hits 7 | unique hits 0 | shares why with []\n  cell 7 | why_source why | why tokens 7 | own hits 7 | unique hits 0 | shares why with []\n  cell 8 | why_source why | why tokens 4 | own hits 4 | unique hits 0 | shares why with []\n  cell 9 | why_source why | why tokens 4 | own hits 4 | unique hits 0 | shares why with []\n  cell 10 | why_source why | why tokens 26 | own hits 23 | unique hits 0 | shares why with []\n  cell 11 | why_source why | why tokens 6 | own hits 5 | unique hits 0 | shares why with []\nmeaning: no shared literal and every sentence names its own readings",
   "pass_2_on_published_bytes": {
    "ruler": "D:\\moodle\\_qoder_cmdr_ref_20260921\\live_checks\\receipt_cell_derivation_check_r2.py",
    "ruler_blob": "91ae8b1ec55f5c19122af11bf775df14580955e4",
@@ -805,6 +823,6 @@
     "cells 12 | overall Q38_GATE_GREEN | hard 0 [] | soft 0 []"
    ]
   },
-  "pass_2_output": "receipt ord0281_keyed_receipt.json 35140 B blob_sha1 c7344f1408fcebf2c087fc69370827d0559a4d33\ncells 12 | overall Q38_GATE_GREEN | hard 0 [] | soft 0 []\n  cell 0 | why_source why | why tokens 8 | own hits 8 | unique hits 0 | shares why with []\n  cell 1 | why_source why | why tokens 9 | own hits 9 | unique hits 0 | shares why with []\n  cell 2 | why_source why | why tokens 11 | own hits 11 | unique hits 0 | shares why with []\n  cell 3 | why_source why | why tokens 10 | own hits 10 | unique hits 0 | shares why with []\n  cell 4 | why_source why | why tokens 8 | own hits 8 | unique hits 0 | shares why with []\n  cell 5 | why_source why | why tokens 8 | own hits 8 | unique hits 0 | shares why with []\n  cell 6 | why_source why | why tokens 7 | own hits 7 | unique hits 0 | shares why with []\n  cell 7 | why_source why | why tokens 7 | own hits 7 | unique hits 0 | shares why with []\n  cell 8 | why_source why | why tokens 4 | own hits 4 | unique hits 0 | shares why with []\n  cell 9 | why_source why | why tokens 4 | own hits 4 | unique hits 0 | shares why with []\n  cell 10 | why_source why | why tokens 23 | own hits 19 | unique hits 0 | shares why with []\n  cell 11 | why_source why | why tokens 6 | own hits 5 | unique hits 0 | shares why with []\nmeaning: no shared literal and every sentence names its own readings"
+  "pass_2_output": "receipt ord0281_keyed_receipt.json 36614 B blob_sha1 74dc08d6e12f60bca2a981b08e5ec4a232f888c9\ncells 12 | overall Q38_GATE_GREEN | hard 0 [] | soft 0 []\n  cell 0 | why_source why | why tokens 8 | own hits 8 | unique hits 0 | shares why with []\n  cell 1 | why_source why | why tokens 9 | own hits 9 | unique hits 0 | shares why with []\n  cell 2 | why_source why | why tokens 11 | own hits 11 | unique hits 0 | shares why with []\n  cell 3 | why_source why | why tokens 10 | own hits 10 | unique hits 0 | shares why with []\n  cell 4 | why_source why | why tokens 8 | own hits 8 | unique hits 0 | shares why with []\n  cell 5 | why_source why | why tokens 8 | own hits 8 | unique hits 0 | shares why with []\n  cell 6 | why_source why | why tokens 7 | own hits 7 | unique hits 0 | shares why with []\n  cell 7 | why_source why | why tokens 7 | own hits 7 | unique hits 0 | shares why with []\n  cell 8 | why_source why | why tokens 4 | own hits 4 | unique hits 0 | shares why with []\n  cell 9 | why_source why | why tokens 4 | own hits 4 | unique hits 0 | shares why with []\n  cell 10 | why_source why | why tokens 26 | own hits 23 | unique hits 0 | shares why with []\n  cell 11 | why_source why | why tokens 6 | own hits 5 | unique hits 0 | shares why with []\nmeaning: no shared literal and every sentence names its own readings"
  }
 }
