@@ -1,0 +1,198 @@
+{
+ "schema": "CNX_ORD0325_LANDED_GENERATION_V1",
+ "order": "ORD-0325",
+ "lane": "D e345b9d6",
+ "at_local": "2026-09-26T05:28:45+0800",
+ "measurement_scope": {
+  "scope": "候选落地之后那一代上：字节、r3 命中行、门与拆臂的复量",
+  "generation": "c1bea4c20ea8cd5f1cc5c9d87053c005b2a24400",
+  "artifact": "ord0325_landed_generation_r1.json",
+  "method": "git ls-remote 现读尖；blob 逐路径相等比对；尺 r3 在落地代的父与落地代各量一遍；门与六枚臂在落地代重跑"
+ },
+ "what_landed": {
+  "authority_tip_read_now": "821a0eb54cca1b305a4aa75c1ca8d46a95d51bba",
+  "landing_commit": "c1bea4c20ea8cd5f1cc5c9d87053c005b2a24400",
+  "tip_equals_landing": false,
+  "landing_subject": "ORD-0325 (lane D e345b9d6): three Q64=1 cells fixed - upstream prose off the screen",
+  "landing_parent": "09dffbb70c151e6734221d6d3d69d88775a1fbd0",
+  "parent_equals_the_tip_my_receipt_quoted": false,
+  "my_candidate_commit": "bff5c462bdea8b8a384bd02bc85d9232f2211b64",
+  "note": "号令者把我交的 agent/d-e345b9d6-ord0325 落成了权威线上的一枚；我交件时收据引的尖是 0f8b925facabc9df57bab600b86d999dd515bf94，现在那枚已经是父。落之后线上又落了别的车道（含 S2 的 ORD-0330），那几笔只动 backend，所以我这六条路径在现读尖上的 blob 仍与落地代同一枚（逐条见 path_blob_equality 的 still_on_the_authority_tip_now）"
+ },
+ "path_blob_equality": [
+  {
+   "path": "frontend/src/features/stay/HotelsPanel.tsx",
+   "candidate_blob": "0fb415405b79a968f1e639137180ad879d8d61ce",
+   "landed_blob": "0fb415405b79a968f1e639137180ad879d8d61ce",
+   "blob_on_the_tip_read_now": "0fb415405b79a968f1e639137180ad879d8d61ce",
+   "equal": true,
+   "still_on_the_authority_tip_now": true
+  },
+  {
+   "path": "frontend/src/features/planning/PlanComparison.tsx",
+   "candidate_blob": "30c953c631f9d372a86170302fb0a1be2c664eb4",
+   "landed_blob": "30c953c631f9d372a86170302fb0a1be2c664eb4",
+   "blob_on_the_tip_read_now": "30c953c631f9d372a86170302fb0a1be2c664eb4",
+   "equal": true,
+   "still_on_the_authority_tip_now": true
+  },
+  {
+   "path": "frontend/src/app/V8Experience.tsx",
+   "candidate_blob": "aa1e43987a58e0917ff3f0bab0d9fab4716e0ea5",
+   "landed_blob": "aa1e43987a58e0917ff3f0bab0d9fab4716e0ea5",
+   "blob_on_the_tip_read_now": "aa1e43987a58e0917ff3f0bab0d9fab4716e0ea5",
+   "equal": true,
+   "still_on_the_authority_tip_now": true
+  },
+  {
+   "path": "frontend/src/lib/rawFacts.ts",
+   "candidate_blob": "aae2369e34fedb5679b2d0c4d0fcd06d73cad152",
+   "landed_blob": "aae2369e34fedb5679b2d0c4d0fcd06d73cad152",
+   "blob_on_the_tip_read_now": "aae2369e34fedb5679b2d0c4d0fcd06d73cad152",
+   "equal": true,
+   "still_on_the_authority_tip_now": true
+  },
+  {
+   "path": "frontend/src/components/RawFactsPanel.tsx",
+   "candidate_blob": "7d3ea8530735bfff204a0269f4056f092d262292",
+   "landed_blob": "7d3ea8530735bfff204a0269f4056f092d262292",
+   "blob_on_the_tip_read_now": "7d3ea8530735bfff204a0269f4056f092d262292",
+   "equal": true,
+   "still_on_the_authority_tip_now": true
+  },
+  {
+   "path": "frontend/e2e/qoder-ord0325-upstream-prose-not-on-screen.spec.ts",
+   "candidate_blob": "5abb21ac830d5f6fadc600101fa8eca8485fdbd3",
+   "landed_blob": "5abb21ac830d5f6fadc600101fa8eca8485fdbd3",
+   "blob_on_the_tip_read_now": "5abb21ac830d5f6fadc600101fa8eca8485fdbd3",
+   "equal": true,
+   "still_on_the_authority_tip_now": true
+  }
+ ],
+ "frontend_subtree": {
+  "at_landing_parent": "e5ac63c1461a51cfa05330d13286ae8e8c83a93e",
+  "at_my_receipts_baseline_tip": "e5ac63c1461a51cfa05330d13286ae8e8c83a93e",
+  "equal": true
+ },
+ "r3_pair_on_the_landed_generation": {
+  "V8Experience": {
+   "before_hits": [
+    "RAW_BODY_TO_DOM@320",
+    "UPSTREAM_READ_DIRECT@833",
+    "UPSTREAM_READ_DIRECT@1028"
+   ],
+   "after_hits": [
+    "RAW_BODY_TO_DOM@372",
+    "UPSTREAM_READ_DIRECT@897"
+   ]
+  },
+  "PlanComparison": {
+   "before_hits": [
+    "UPSTREAM_READ_DIRECT@92"
+   ],
+   "after_hits": []
+  },
+  "HotelsPanel": {
+   "before_hits": [
+    "UPSTREAM_READ_DIRECT@91"
+   ],
+   "after_hits": []
+  }
+ },
+ "gate_green_round": {
+  "log": "ord0325-run12-green-on-landed.log",
+  "run_id": "run371516",
+  "db": "D:/moodle/_qoder_d_ord0325_20260926/review/evidence/_run371516.db",
+  "tally_passed": 7,
+  "gate_nodes": [
+   "e2e\\qoder-ord0325-upstream-prose-not-on-screen.spec.ts:199:1 :: A1 住宿被拒（未映射的 422）：原话不上屏、三行读数在屏 — 中文半边",
+   "e2e\\qoder-ord0325-upstream-prose-not-on-screen.spec.ts:225:1 :: A2 住宿冲突码仍由 token 决定（正控）：换成行程冲突句，且原话仍不上屏",
+   "e2e\\qoder-ord0325-upstream-prose-not-on-screen.spec.ts:249:1 :: A3 住宿被拒：英文那半边同样两问",
+   "e2e\\qoder-ord0325-upstream-prose-not-on-screen.spec.ts:275:1 :: B1 采用方案被拒（409）：原话不上屏、三行读数在屏",
+   "e2e\\qoder-ord0325-upstream-prose-not-on-screen.spec.ts:355:1 :: C1 建行程后的住宿搜索被拒：banner 不印 error.message，改印本机读数",
+   "e2e\\qoder-ord0325-upstream-prose-not-on-screen.spec.ts:403:1 :: C2 建行程这一步本身被拒：向导里的拒绝句也不印上游原话"
+  ],
+  "gate_node_count": 6,
+  "seed_project_nodes": 1
+ },
+ "arms": {
+  "artifact": "D:/moodle/_qoder_d_lane_20260923\\_scratch_0325\\ord0325_arms_landed_r1.json",
+  "artifact_blob": "833c462f1da20469df33290adc1fd17a03386baf",
+  "arm_count": 6,
+  "killed": 6,
+  "campaign_valid": true,
+  "all_restored_byte_exact": true,
+  "triples": [
+   {
+    "arm": "AR1_refusal_freeze_list_ignored",
+    "exact_sha": "c1bea4c20ea8cd5f1cc5c9d87053c005b2a24400",
+    "nodeid": "frontend/e2e/qoder-ord0325-upstream-prose-not-on-screen.spec.ts :: A1 住宿被拒",
+    "claimed_result": "KILLED",
+    "red_nodes": [
+     "A1 住宿被拒（未映射的 422）：原话不上屏、三行读数在屏 — 中文半边"
+    ]
+   },
+   {
+    "arm": "AR2_hotel_general_branch_leaks_back",
+    "exact_sha": "c1bea4c20ea8cd5f1cc5c9d87053c005b2a24400",
+    "nodeid": "frontend/e2e/qoder-ord0325-upstream-prose-not-on-screen.spec.ts :: A1 住宿被拒",
+    "claimed_result": "KILLED",
+    "red_nodes": [
+     "A1 住宿被拒（未映射的 422）：原话不上屏、三行读数在屏 — 中文半边"
+    ]
+   },
+   {
+    "arm": "AR3_plan_cmp_leaks_back",
+    "exact_sha": "c1bea4c20ea8cd5f1cc5c9d87053c005b2a24400",
+    "nodeid": "frontend/e2e/qoder-ord0325-upstream-prose-not-on-screen.spec.ts :: B1 采用方案被拒",
+    "claimed_result": "KILLED",
+    "red_nodes": [
+     "B1 采用方案被拒（409）：原话不上屏、三行读数在屏"
+    ]
+   },
+   {
+    "arm": "AR4_shell_retry_sink_prints_error_message",
+    "exact_sha": "c1bea4c20ea8cd5f1cc5c9d87053c005b2a24400",
+    "nodeid": "frontend/e2e/qoder-ord0325-upstream-prose-not-on-screen.spec.ts :: C1 建行程后的住宿搜索被拒",
+    "claimed_result": "KILLED",
+    "red_nodes": [
+     "C1 建行程后的住宿搜索被拒：banner 不印 error.message，改印本机读数"
+    ]
+   },
+   {
+    "arm": "AR4b_shell_create_sink_prints_error_message",
+    "exact_sha": "c1bea4c20ea8cd5f1cc5c9d87053c005b2a24400",
+    "nodeid": "frontend/e2e/qoder-ord0325-upstream-prose-not-on-screen.spec.ts :: C2 建行程这一步本身被拒",
+    "claimed_result": "KILLED",
+    "red_nodes": [
+     "C2 建行程这一步本身被拒：向导里的拒绝句也不印上游原话"
+    ]
+   },
+   {
+    "arm": "AR5_bytes_becomes_a_constant",
+    "exact_sha": "c1bea4c20ea8cd5f1cc5c9d87053c005b2a24400",
+    "nodeid": "frontend/e2e/qoder-ord0325-upstream-prose-not-on-screen.spec.ts :: A1 住宿被拒",
+    "claimed_result": "KILLED",
+    "red_nodes": [
+     "A1 住宿被拒（未映射的 422）：原话不上屏、三行读数在屏 — 中文半边"
+    ]
+   }
+  ]
+ },
+ "what_was_not_re_run_and_why": {
+  "main_receipt": "产品与门的字节逐路径 blob 相等（见 path_blob_equality），所以主收据里那两份r3 捕获、门读数与拆臂结论在落地代仍然描述同一枚字节；依据是已经裁过的 GENERATION_TRANSFER_BY_CITED_BLOB_EQUALITY_V1，不是我嘴说没变",
+  "typecheck": "两枚配置（tsconfig.check.json / tsconfig.typecheck.json）在候选与落地代读到的是同一枚 blob，且本轮跑臂前后工作树都是 clean 0 项改动",
+  "phone_side": "手机端没有重跑：本单边界写着 0 次 `vite build`、不碰手机链，所以这仍是源码可达 + 需要那个失败状态真的发生，手机上 = NOT-DEPLOYED（bundle 未重建），Q61（手机不换代）没被我破坏"
+ },
+ "discipline": {
+  "authority_ref_writes": 0,
+  "refs_pushed_by_this_script": 0,
+  "vite_build_run": 0,
+  "demo_reset": 0,
+  "user_db_reads_writes": 0,
+  "credentials_printed": 0,
+  "how": "全部只读：git ls-remote / rev-parse / show + 一次门与一次战役在落地代重跑；产品工作树只在臂窗口内被改，窗口外逐字节等于落地那枚 commit"
+ },
+ "claimed_result": "落地代 commit=`c1bea4c20ea8cd5f1cc5c9d87053c005b2a24400` 携带我这枚候选的全部 6 条路径字节（逐条 blob 相等，且在现读尖 `821a0eb54cca1b305a4aa75c1ca8d46a95d51bba` 上仍同一枚），r3 在该代父上读出 5 命中、在该代读出 2 命中（消失的正是本单三枚）；门 6 枚节点在落地代重跑仍全绿（run=run371516），拆臂 6/6 枚复红且按字节还原",
+ "derived_result": null
+}
