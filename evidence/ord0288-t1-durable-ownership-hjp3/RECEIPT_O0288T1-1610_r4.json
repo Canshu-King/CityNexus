@@ -1,0 +1,553 @@
+{
+ "order": "ORD-0288 T-1(a)/(b)",
+ "lane": "HJ-P3 aad2d1f2",
+ "run_id": "O0288T1",
+ "asked_in": "commander 494abfd7 15:5x relay of the arbiter: (a) same key + cross-process + one-time db, expected: observe durable ownership; (b) does the error path land a row with response_status, can it be replayed, can an unknown result be judged",
+ "measured_on": "dc964086c9d412573ac19d70b24b30e6c3ee6168",
+ "measured_on_how_read": "git ls-remote refs/heads/mirror/integration-frontend-apple-pass1 re-read 2026-09-25T16:16:59+0800; backend exported with git archive",
+ "frozen_tip": "dc964086c9d412573ac19d70b24b30e6c3ee6168",
+ "frozen_at": "2026-09-25T16:16:59+0800; backend exported with git archive",
+ "database": {
+  "file": "D:\\moodle\\_hjp3_0288t1_0925\\t1.s3db",
+  "created_by": "the product's own ensure_schema(); deleted before start (R-SCHEMA-01 fresh-or-no-run)",
+  "both_processes_point_at_the_same_file": true,
+  "journey_id": "633fec87-ee5b-4c05-b8c1-b19cb7e99f2e",
+  "seed": {
+   "places_after": 16,
+   "demo_places": 0,
+   "seeded_by_this_call": true
+  }
+ },
+ "trees": {
+  "pristine_export": "D:\\moodle\\_hjp3_0288t1_0925\\backend",
+  "hardlink_audit": {
+   "files_checked": 305,
+   "nlink_gt_1": [],
+   "verdict": "PRIVATE_COPY"
+  },
+  "mutants": {}
+ },
+ "derived": {
+  "durable_ownership_row_exists_and_is_unique": true,
+  "row_operation_named": true,
+  "row_response_status_recorded": true,
+  "replay_across_processes_same_answer_ignoring_trace_id": true,
+  "same_key_different_body_rejected": true,
+  "concurrency_left_exactly_one_row": true,
+  "error_path_in_route_records_status": true,
+  "failure_before_claim_burns_no_key": true,
+  "placeholder_after_a_crash_stays_null_forever": true,
+  "replay_survives_a_process_restart": true,
+  "mutation_carrier_proven": true,
+  "mutation_control_specific_not_anything_flips": true,
+  "unknown_result_is_distinguishable": false,
+  "replay_is_identical_bytes_across_the_restart": false,
+  "every_keyed_send_answered_422_or_409": true,
+  "not_one_plan_version_row_in_the_database_after_these_arms": true
+ },
+ "cells": [
+  {
+   "id": "C1_same_key_across_two_processes_leaves_one_durable_owner_row",
+   "verdict": "DURABLE_OWNERSHIP_OBSERVED",
+   "measured_on": "dc964086c9d412573ac19d70b24b30e6c3ee6168",
+   "measured": {
+    "key": "ord0288-t1a-162438",
+    "journey_id": "633fec87-ee5b-4c05-b8c1-b19cb7e99f2e",
+    "database_file": "D:\\moodle\\_hjp3_0288t1_0925\\t1.s3db",
+    "processes": [
+     {
+      "tag": "A",
+      "pid": 37392,
+      "port": 8611
+     },
+     {
+      "tag": "B",
+      "pid": 44668,
+      "port": 8612
+     }
+    ],
+    "first_send": {
+     "port": "http://127.0.0.1:8611/api/v1/journeys/633fec87-ee5b-4c05-b8c1-b19cb7e99f2e/plans/generate",
+     "status": 422,
+     "bytes": 1443,
+     "elapsed_ms": 55,
+     "at": "16:24:38"
+    },
+    "second_send_other_process": {
+     "status": 422,
+     "bytes": 1443,
+     "elapsed_ms": 24,
+     "at": "16:24:38"
+    },
+    "idempotency_keys_row": {
+     "key": "plans.generate:ord0288-t1a-162438",
+     "operation": "plans.generate",
+     "request_hash_head": "{\"candidate_coun",
+     "response_status": 422,
+     "response_json_bytes": 1424,
+     "response_json_head": "{\"refusal\": {\"detail\": \"No feasible plan candidates satisfy the journey constraints\", \"error_details\": {\"candidate_rejections\": [{\"candidate_sequence\": 0, \"failures\": [\"JOURNEY_WINDOW_EXCEEDED\"], \"hard_rule_codes\": [], \"",
+     "created_at": "2026-09-25T08:24:38.884241+00:00",
+     "expires_at": "2026-10-02T08:24:38.884241+00:00"
+    },
+    "rows_holding_this_key": 1,
+    "plan_versions_total": 0,
+    "gates_three_way": {
+     "positive": "key ord0288-t1a-162438 holds exactly 1 row in idempotency_keys, operation 'plans.generate', response_status 422 read through a second, read-only connection",
+     "negative": "the malformed-key send on the same journey left 0 rows and burned no key - see C4 pre_claim_rejection.rows_matching_that_key = []",
+     "mutation": "deleting `if row.request_hash != signature:` in _replay_committed_accept turns the same-key-different-body call from 409 into 422, while deleting the similarly named guard on the replan route leaves it at 409 - see C2",
+     "equality_basis_of_the_replay_claim": {
+      "raw_bytes_equal": false,
+      "equal_after_blanking_only_trace_id_values": false,
+      "json_values_equal_after_dropping_trace_id": true,
+      "details_key_insertion_order_differs": true,
+      "a_bytes": 1443,
+      "b_bytes": 1443,
+      "method": "both bodies read from the arm cell on disk; canonical() drops error.trace_id and sorts keys, masked() only blanks trace_id values, raw compares the bytes as sent"
+     }
+    }
+   },
+   "why": "with key ord0288-t1a-162438 on database t1.s3db the store holds exactly 1 row for it, operation 'plans.generate', response_status 422 and a 1424 B response_json expiring 2026-10-02T08:24:38; the second send went to port 8612 (a different process, pid 44668 vs 37392) and answered 422 in 24 ms with the SAME JSON VALUE once error.trace_id is dropped (True) - not the same bytes (raw_bytes_equal False, because error.details re-serialises in a different key order)"
+  },
+  {
+   "id": "C2_same_key_different_body_is_refused_and_the_refusal_has_the_carrier_you_would_name",
+   "verdict": "CROSS_BODY_KEY_REUSE_REFUSED_WITH_A_PROVEN_CARRIER",
+   "measured_on": "dc964086c9d412573ac19d70b24b30e6c3ee6168",
+   "measured": {
+    "status_when_pristine": 409,
+    "body_refused": "{\"error\":{\"code\":\"CONFLICT\",\"message\":\"same idempotency key used for a different request\",\"message_key\":\"request.conflict\",\"trace_id\":\"b6896154-53c3-479c-bea3-86f169c2cea3\",\"details\":null}}",
+    "key": "ord0288-t1a-162438",
+    "first_body": {
+     "candidate_count": 3
+    },
+    "second_body": {
+     "candidate_count": 5
+    },
+    "mutant_that_removes_the_guard": {
+     "tree": "D:\\moodle\\_hjp3_0288t1_0925\\mut_sig",
+     "patch": {
+      "carrier_removed": "if row.request_hash != signature:",
+      "replaced_with": "if False and row.request_hash != signature:",
+      "why_this_one": "plans/generate reaches _replay_committed_accept, not the replan route guard"
+     },
+     "different_body_status_after_removing_it": 422,
+     "cell": "cell_t1_signature_mutant_mut_sig.json"
+    },
+    "control_mutant_that_removes_another_guard": {
+     "tree": "D:\\moodle\\_hjp3_0288t1_0925\\mut_sig_wrong",
+     "different_body_status_still": 409,
+     "note": "my FIRST mutant deleted the guard on the replan route, which this leg never reaches - the 409 survived, so that mutant proved nothing and is published as the negative case",
+     "cell": "cell_t1_wrong_carrier_mutant_mut_sig_wrong.json"
+    },
+    "durable_row_untouched_by_the_refusal": true,
+    "gates_three_way": {
+     "positive": "the pristine tree refused key ord0288-t1a-162438 (first body {'candidate_count': 3}, second body {'candidate_count': 5}) with 409 and the row count stayed 1 - the refusal did not overwrite the owner",
+     "negative": "with that one comparison deleted the same call answers 422 instead of 409, i.e. it silently serves the first sender's stored answer to a different request",
+     "mutation": "the wrong-carrier mutant (guard on the replan route, a line this leg never reaches) leaves it at 409, so the flip is attributed to the named line in D:\\moodle\\_hjp3_0288t1_0925\\mut_sig and not to \"any edit flips it\""
+    }
+   },
+   "why": "the pristine tree refused key ord0288-t1a-162438 with a different candidate_count as 409 whose sentence is '{\"error\":{\"code\":\"CONFLICT\",\"message\":\"same idempotency key used for a', and the row count stayed 1; deleting `if row.request_hash != signature:` inside _replay_committed_accept turned the same call into 422, while deleting the similarly named guard on the replan route left it at 409"
+  },
+  {
+   "id": "C3_one_key_fired_at_both_processes_at_once_still_one_row_and_no_second_batch",
+   "verdict": "CONCURRENT_SAME_KEY_YIELDS_ONE_OWNER_ROW_AND_NO_EXTRA_PLAN_BATCH",
+   "measured_on": "dc964086c9d412573ac19d70b24b30e6c3ee6168",
+   "measured": {
+    "key": "ord0288-t1c-162438",
+    "leg_A": {
+     "status": 422,
+     "elapsed_ms": 14,
+     "at": "16:24:38"
+    },
+    "leg_B": {
+     "status": 422,
+     "elapsed_ms": 28,
+     "at": "16:24:38"
+    },
+    "wall_ms_both": 29,
+    "rows_holding_this_key": 1,
+    "plan_versions_total": 0,
+    "idempotency_rows_all_keys": 2,
+    "gates_three_way": {
+     "positive": "both processes fired key ord0288-t1c-162438 within 29 ms, answered 422 and 422, and the store kept 1 row for it with 0 plan_versions in the whole database",
+     "negative": "the same durable read that holds 1 row for key ord0288-t1c-162438 lists 2 rows for 2 distinct keys (plans.generate:ord0288-t1a-162438, plans.generate:ord0288-t1c-162438), so a second key claimed in the same window does get its own row - this arm only proves one owner per key",
+     "mutation": "the crash arm shows what happens when the claim is won and the answer never lands (C4), which is the failure mode this arm cannot show"
+    },
+    "arm_flag_discrepancy": {
+     "the_arms_own_extra_flag": false,
+     "what_the_store_actually_holds_for_this_key": 1,
+     "this_receipt_uses": "rows filtered out of the durable read by key suffix, recomputed here",
+     "why_they_differ": "the arm ran `SELECT ... FROM idempotency_keys WHERE key LIKE ?` and passed the bare key 'ord0288-t1c-162438', but stored keys are prefixed with the operation ('plans.generate:ord0288-t1c-162438'), so that query matched 0 rows and `sum(...) == 1` came out False. The flag is an artefact of my own query, not a second reading of the store - the row is there.",
+     "verified_by": "the durable read in the same cell lists 1 row(s) whose key ends with ord0288-t1c-162438"
+    }
+   },
+   "why": "both processes fired key ord0288-t1c-162438 within 29 ms of each other and both answered 422 / 422 at 14 ms and 28 ms, and the store kept 1 row for that key with 0 plan versions in the whole database"
+  },
+  {
+   "id": "C4_the_error_path_records_a_status_when_it_goes_through_the_route_and_records_nothing_before_the_claim",
+   "verdict": "REFUSAL_IS_DURABLE_PRE_CLAIM_REJECTION_IS_NOT_A_KEY_BURN",
+   "measured_on": "dc964086c9d412573ac19d70b24b30e6c3ee6168",
+   "measured": {
+    "in_route_refusal": {
+     "key": "ord0288-t1b-162438",
+     "status": 422,
+     "sentence": "{\"error\":{\"code\":\"VALIDATION_ERROR\",\"message\":\"No feasible plan candidates satisfy the journey constraints\",\"message_key\":\"request.invalid\",\"trace_id\":\"1cdc446e-5855-43b0-b072-6c4f37abb0db\",\"details\":"
+    },
+    "row_written": {
+     "key": "plans.generate:ord0288-t1b-162438",
+     "operation": "plans.generate",
+     "request_hash_head": "{\"candidate_coun",
+     "response_status": 422,
+     "response_json_bytes": 1424,
+     "response_json_head": "{\"refusal\": {\"detail\": \"No feasible plan candidates satisfy the journey constraints\", \"error_details\": {\"candidate_rejections\": [{\"candidate_sequence\": 0, \"failures\": [\"JOURNEY_WINDOW_EXCEEDED\"], \"hard_rule_codes\": [], \"",
+     "created_at": "2026-09-25T08:24:38.988192+00:00",
+     "expires_at": "2026-10-02T08:24:38.988192+00:00"
+    },
+    "replay_of_that_failure": {
+     "status": 422,
+     "json_values_equal_after_dropping_trace_id": true,
+     "raw_bytes_equal": false,
+     "equality_reading_used_for_the_claim": "json_values_equal_after_dropping_trace_id",
+     "comparison_detail": {
+      "raw_bytes_equal": false,
+      "equal_after_blanking_only_trace_id_values": false,
+      "json_values_equal_after_dropping_trace_id": true,
+      "details_key_insertion_order_differs": true,
+      "a_bytes": 1443,
+      "b_bytes": 1443,
+      "method": "both bodies read from the arm cell on disk; canonical() drops error.trace_id and sorts keys, masked() only blanks trace_id values, raw compares the bytes as sent"
+     }
+    },
+    "pre_claim_rejection": {
+     "malformed_key_status": 422,
+     "sentence": "{\"error\":{\"code\":\"VALIDATION_ERROR\",\"message\":\"Idempotency-Key must be 8..128 characters\",\"message_key\":\"request.invalid\",\"trace_id\":\"b9f9d5c1-3fb7-430a-9b5f-6f",
+     "rows_matching_that_key": [],
+     "a_later_valid_send_still_works": 422
+    },
+    "gates_three_way": {
+     "positive": true,
+     "negative": true,
+     "mutation": "C5 shows the third case neither of these covers: a claim that is never filled"
+    }
+   },
+   "why": "the keyed send the route itself refused left response_status=422 with 1424 B of response_json, and its replay from the other process answered 422 with the same JSON once error.trace_id is dropped (True) - though the raw bytes are NOT equal (False), because error.details carries the same fields in a different insertion order (True); a malformed key was answered 422 before any claim and matched 0 rows, and a fresh key right after it still answered 422"
+  },
+  {
+   "id": "C5_a_claim_that_was_never_filled_leaves_a_NULL_placeholder_no_process_can_resolve",
+   "verdict": "CRASH_AFTER_CLAIM_BURNS_THE_KEY_AND_DIED_LOOKS_IDENTICAL_TO_RUNNING",
+   "measured_on": "dc964086c9d412573ac19d70b24b30e6c3ee6168",
+   "measured": {
+    "private_copy": {
+     "dir": "D:\\moodle\\_hjp3_0288t1_0925\\mut_crash",
+     "hardlink_audit": {
+      "files_checked": 305,
+      "nlink_gt_1": [],
+      "verdict": "PRIVATE_COPY"
+     },
+     "patch": {
+      "anchor_line": "planning_mode = request.planning_mode or journey.planning_mode",
+      "inserted_before_it": "raise RuntimeError(\"ORD-0288 T-1 probe: unhandled after the claim\")",
+      "lines_added": 1,
+      "patched_file_parses": true
+     },
+     "main_py_sha256": "b84171a73964228ee7d9b6d8b2998829fd37ddfc4b104088a21d6fab85e875b9",
+     "pristine_main_py_sha256": "46e696c0230759888ce5e76fe28688dbb808cd7ca4ad61365cc8410c201ab451",
+     "only_file_changed": [
+      "app\\main.py"
+     ],
+     "main_py_sha256_was_in_r1": "b84171a73964228e",
+     "pristine_main_py_sha256_was_in_r1": "46e696c023075988",
+     "digest_length_hex": 64,
+     "r1_short_values_are_prefixes_of_these": true
+    },
+    "database_file": "D:\\moodle\\_hjp3_0288t1_0925\\t1_mut_crash.s3db",
+    "first_send_status": 500,
+    "row_response_status_after_the_crash": null,
+    "replay_same_process": {
+     "status": 409,
+     "sentence": "{\"error\":{\"code\":\"CONFLICT\",\"message\":\"agent idempotency record is incomplete\",\"message_key\":\"request.conflict\",\"trace_id\":\"6f599ca1-fe10-422e-9388-78ee2f004062"
+    },
+    "replay_after_a_fresh_process": {
+     "status": 409,
+     "sentence": "{\"error\":{\"code\":\"CONFLICT\",\"message\":\"agent idempotency record is incomplete\",\"message_key\":\"request.conflict\",\"trace_id\":\"a760a647-51fc-4151-a29e-1c4133df3e03"
+    },
+    "a_different_key_still_claims_and_crashes": {
+     "status": 500
+    },
+    "unknown_result_is_distinguishable": false,
+    "gates_three_way": {
+     "positive": "the honest answer exists on this same route: C4 records a status when the route refuses",
+     "negative": "a pre-claim rejection leaves no row and burns no key",
+     "mutation": "one injected unhandled raise inside _generate_plans_answer, anchor: 'planning_mode = request.planning_mode or journey.planning_mode'"
+    }
+   },
+   "why": "first send answered 500 and the row kept response_status None; the same key answered 409 from the same process and 409 from a process started after that owner died, saying '{\"error\":{\"code\":\"CONFLICT\",\"message\":\"agent idempotency record is incomplete\",\"message_' - so a working owner and a dead owner are the same message to the caller"
+  },
+  {
+   "id": "C6_the_receipt_survives_the_death_of_the_process_that_wrote_it",
+   "verdict": "REPLAY_IS_DURABLE_ACROSS_A_PROCESS_RESTART_NOT_MERELY_ACROSS_TWO_LIVE_PROCESSES",
+   "measured_on": "dc964086c9d412573ac19d70b24b30e6c3ee6168",
+   "measured": {
+    "killed_pid": 37392,
+    "restarted_on_port": "http://127.0.0.1:8611/api/v1/journeys/633fec87-ee5b-4c05-b8c1-b19cb7e99f2e/plans/generate",
+    "replay_bytes": 1443,
+    "rows_for_the_key": 1,
+    "gates_three_way": {
+     "positive": "key ord0288-t1a-162438 answered 422 with 1443 B from pid 30056, a process started after the owner (pid 37392) was killed, and idempotency_keys still holds 1 row for it",
+     "negative": "C5: a claim that was won but never filled also survives the restart - it survives as response_status NULL and answers 409 to everyone, so durability of the row is not recoverability of the answer",
+     "mutation": "C2: deleting the signature comparison in _replay_committed_accept makes this stored row answer a DIFFERENT request (422 instead of 409) - the row C6 replays is the same object the refusal guard reads",
+     "equality_basis_of_this_cells_own_claim": {
+      "raw_bytes_equal": false,
+      "equal_after_blanking_only_trace_id_values": false,
+      "json_values_equal_after_dropping_trace_id": true,
+      "details_key_insertion_order_differs": true,
+      "a_bytes": 1443,
+      "b_bytes": 1443,
+      "method": "both bodies read from the arm cell on disk; canonical() drops error.trace_id and sorts keys, masked() only blanks trace_id values, raw compares the bytes as sent"
+     }
+    },
+    "replay_from_the_fresh_process": 422,
+    "rows_holding_this_key_after_the_restart": 1,
+    "three_ways_of_saying_the_same_answer": {
+     "raw_bytes_equal": false,
+     "equal_after_blanking_only_trace_id_values": false,
+     "json_values_equal_after_dropping_trace_id": true,
+     "details_key_insertion_order_differs": true,
+     "a_bytes": 1443,
+     "b_bytes": 1443,
+     "method": "both bodies read from the arm cell on disk; canonical() drops error.trace_id and sorts keys, masked() only blanks trace_id values, raw compares the bytes as sent"
+    },
+    "equality_reading_used_for_the_claim": "json_values_equal_after_dropping_trace_id"
+   },
+   "why": "after pid 37392 was killed and a fresh uvicorn (pid 30056) started on the same file D:\\moodle\\_hjp3_0288t1_0925\\t1.s3db, key ord0288-t1a-162438 still answered 422 with 1443 B and 1 row in idempotency_keys; that replay is the same JSON as the original answer once error.trace_id is dropped (True), but its raw bytes are not equal (False) - error.details re-serialises with a different key insertion order (True), so the equality claim is stated at the JSON-value level and not as \"the same bytes\""
+  },
+  {
+   "id": "C7_two_things_this_batch_still_does_not_answer",
+   "verdict": "SCOPE_LIMITS_NAMED_NOT_PASSED_OFF_AS_GREEN",
+   "measured_on": "dc964086c9d412573ac19d70b24b30e6c3ee6168",
+   "measured": {
+    "agent_commands_route_has_no_idempotency_parameter": true,
+    "route_source_read_from": "backend/app/main.py of the exported tree at dc964086c9d412573ac19d70b24b30e6c3ee6168",
+    "mission_bound_leg_not_exercised": "no arm sent mission_id, so the continuation key plans.generate:cont:<mission_id> was never claimed",
+    "first_pass_discarded": "the first T-1 pass printed 0 durable rows for every arm because the runner never read the store; those cells are on disk with earlier run ids and no reading here comes from them",
+    "only_refusal_receipts_were_ever_replayed": {
+     "every_keyed_send_answered_422_or_409": true,
+     "plan_versions_rows": {
+      "same_key_two_processes": 0,
+      "same_key_different_body": 0,
+      "concurrent_two_processes": 0,
+      "error_path_records_response_status": 0,
+      "failure_before_the_claim_leaves_no_row": 0,
+      "replay_after_a_process_restart": 0
+     },
+     "reading": "no arm in this batch reached a 200, so a stored 200 receipt replay is NOT measured here"
+    }
+   },
+   "why": "the def line read out of the exported tree at dc964086c9d4 carries no idempotency parameter (found: True), and no arm sent a mission_id, so this cell says NOT_MEASURED instead of covering two gaps"
+  }
+ ],
+ "q25": "every millisecond here was measured in this batch on this tip",
+ "instrument_limits_disclosed": [
+  "the durable half is always read through a second, READ-ONLY connection and the row is quoted with its key, operation, response_status, byte count and expires_at; a process memory is not ownership",
+  "replay equality is computed after dropping trace_id, because a fresh trace id on a replayed envelope is a fact about the renderer, not about the answer",
+  "the crash arm runs only in a private copy of the exported tree (hardlink-audited, one named line injected, the file parsed before it is written); the exported product tree and the authoritative line were never written",
+  "every \"same answer\" claim in this receipt is stated at the JSON-value level after dropping error.trace_id; the raw bytes are NOT equal across any replay, because error.details re-serialises with a different key insertion order (recomputed per cell in r2_notes)",
+  "one flag inside the concurrent arm's own `extra` is wrong (exactly_one_row_for_the_key = False); C3.arm_flag_discrepancy names the query that produced it and the durable read that refutes it",
+  "no arm in this batch reached a 200, so what is proven durable is ownership of a refusal receipt; replay of a stored 200-with-plans payload is NOT measured here"
+ ],
+ "derived_result": null,
+ "claimed_result": "MEASURED_NOT_GRADED",
+ "r2_notes": {
+  "cross_process_three_ways": {
+   "raw_bytes_equal": false,
+   "equal_after_blanking_only_trace_id_values": false,
+   "json_values_equal_after_dropping_trace_id": true,
+   "details_key_insertion_order_differs": true,
+   "a_bytes": 1443,
+   "b_bytes": 1443,
+   "method": "both bodies read from the arm cell on disk; canonical() drops error.trace_id and sorts keys, masked() only blanks trace_id values, raw compares the bytes as sent"
+  },
+  "error_path_three_ways": {
+   "raw_bytes_equal": false,
+   "equal_after_blanking_only_trace_id_values": false,
+   "json_values_equal_after_dropping_trace_id": true,
+   "details_key_insertion_order_differs": true,
+   "a_bytes": 1443,
+   "b_bytes": 1443,
+   "method": "both bodies read from the arm cell on disk; canonical() drops error.trace_id and sorts keys, masked() only blanks trace_id values, raw compares the bytes as sent"
+  },
+  "restart_three_ways": {
+   "raw_bytes_equal": false,
+   "equal_after_blanking_only_trace_id_values": false,
+   "json_values_equal_after_dropping_trace_id": true,
+   "details_key_insertion_order_differs": true,
+   "a_bytes": 1443,
+   "b_bytes": 1443,
+   "method": "both bodies read from the arm cell on disk; canonical() drops error.trace_id and sorts keys, masked() only blanks trace_id values, raw compares the bytes as sent"
+  },
+  "restart_predicate_inputs": {
+   "restarted_process_pid": 30056,
+   "killed_process_pid": 37392,
+   "rows_holding_the_key_after_the_restart": 1,
+   "status_from_the_fresh_process": 422,
+   "status_from_the_original_process": 422,
+   "derived_replay_survives_a_process_restart": true
+  },
+  "batch_outcome": {
+   "statuses_seen_on_the_shared_database": {
+    "409": [
+     "same_key_different_body"
+    ],
+    "422": [
+     "concurrent_two_processes",
+     "error_path_records_response_status",
+     "failure_before_the_claim_leaves_no_row",
+     "replay_after_a_process_restart",
+     "same_key_two_processes"
+    ]
+   },
+   "send_count_per_status": {
+    "409": 1,
+    "422": 8
+   },
+   "plan_versions_rows_per_arm_durable_read": {
+    "same_key_two_processes": 0,
+    "same_key_different_body": 0,
+    "concurrent_two_processes": 0,
+    "error_path_records_response_status": 0,
+    "failure_before_the_claim_leaves_no_row": 0,
+    "replay_after_a_process_restart": 0
+   },
+   "every_keyed_send_answered_422_or_409": true,
+   "not_one_plan_version_row_in_the_database_after_these_arms": true,
+   "what_that_means": "the durable ownership this receipt proves is ownership of a REFUSAL receipt (422 \"No feasible plan candidates satisfy the journey constraints\"); a replay of a 200-with-plans receipt was never exercised in this batch"
+  },
+  "full_length_digests": {
+   "pristine_export_backend_app_main_py": "46e696c0230759888ce5e76fe28688dbb808cd7ca4ad61365cc8410c201ab451",
+   "mut_crash_app\\main.py": {
+    "path": "D:\\moodle\\_hjp3_0288t1_0925\\mut_crash\\app\\main.py",
+    "sha256_64_hex": "b84171a73964228ee7d9b6d8b2998829fd37ddfc4b104088a21d6fab85e875b9",
+    "r1_value_was": "b84171a73964228e",
+    "r1_value_is_a_prefix_of_this": true
+   },
+   "mut_sig_app\\main.py": {
+    "path": "D:\\moodle\\_hjp3_0288t1_0925\\mut_sig\\app\\main.py",
+    "sha256_64_hex": "a556d06e2ae742323c37a3a1116430867a9a3465abfeaee3f81d59b22008157a",
+    "r1_value_was": "a556d06e2ae74232",
+    "r1_value_is_a_prefix_of_this": true
+   },
+   "mut_sig_wrong_app\\main.py": {
+    "path": "D:\\moodle\\_hjp3_0288t1_0925\\mut_sig_wrong\\app\\main.py",
+    "sha256_64_hex": "fd6a8e6080d9b1946f7d99a8b36e8383bfdb8d008bd49c769d64e1c1a99d5dae",
+    "r1_value_was": "fd6a8e6080d9b194",
+    "r1_value_is_a_prefix_of_this": true
+   },
+   "pristine_export_backend_app_main_py_matches_r1_prefix": true
+  },
+  "cell_ids_r1_still_holds": [
+   "C1",
+   "C2",
+   "C3",
+   "C4",
+   "C5",
+   "C6",
+   "C7"
+  ]
+ },
+ "r1_diff": [
+  {
+   "field": "derived['replay_survives_a_process_restart']",
+   "was": "r1 computed it as `(RES[steps][0].get(\"replay_identical_payload\") is not None)`, i.e. true whenever the field existed - it was True while that very field read False",
+   "now": true,
+   "derived_from": "cell_t1a_replay_after_a_process_restart_*.json + the durable row count and the JSON-value equality recomputed here"
+  },
+  {
+   "field": "C6.measured['same_answer_ignoring_trace_id']",
+   "was": "filled from the raw-text comparison (value False) under a name that promised trace_id was ignored",
+   "now": {
+    "raw_bytes_equal": false,
+    "json_values_equal_after_dropping_trace_id": true,
+    "equal_after_blanking_only_trace_id_values": false
+   },
+   "derived_from": "both response bodies as stored in the arm cells"
+  },
+  {
+   "field": "C4.why['...answered 422 with the same sentence ignoring trace_id']",
+   "was": "quoted replay_identical_payload (False), contradicting the same cell's measured flag (True)",
+   "now": "quotes json_values_equal_after_dropping_trace_id (True) and discloses raw_bytes_equal (False)",
+   "derived_from": "cell_t1b_error_path_records_response_status_*.json bodies"
+  },
+  {
+   "field": "C5.measured['private_copy']['main_py_sha256'] and mutants in trees",
+   "was": "16 hex characters (a display truncation carried into a machine field)",
+   "now": {
+    "pristine_export_backend_app_main_py": "46e696c0230759888ce5e76fe28688dbb808cd7ca4ad61365cc8410c201ab451",
+    "mut_crash_app\\main.py": "b84171a73964228ee7d9b6d8b2998829fd37ddfc4b104088a21d6fab85e875b9",
+    "mut_sig_app\\main.py": "a556d06e2ae742323c37a3a1116430867a9a3465abfeaee3f81d59b22008157a",
+    "mut_sig_wrong_app\\main.py": "fd6a8e6080d9b1946f7d99a8b36e8383bfdb8d008bd49c769d64e1c1a99d5dae",
+    "pristine_export_backend_app_main_py_matches_r1_prefix": true
+   },
+   "derived_from": "sha256 recomputed from the files on disk; every r1 short value is a prefix of the full value here (True)"
+  },
+  {
+   "field": "the batch never said what its sends actually were",
+   "was": "absent from r1",
+   "now": "the durable ownership this receipt proves is ownership of a REFUSAL receipt (422 \"No feasible plan candidates satisfy the journey constraints\"); a replay of a 200-with-plans receipt was never exercised in this batch",
+   "derived_from": "statuses and plan_versions counts recomputed from all six main-database arm cells"
+  }
+ ],
+ "receipt_r2_of": {
+  "file": "RECEIPT_O0288T1-1610.json",
+  "sha256": "f3a72450eb061b8594f90e42e6fc8d01ee48d9eb290ee260c537a6e933e8f29b",
+  "r1_left_untouched_on_disk": true
+ },
+ "r3_notes": {
+  "what_changed": [
+   "C1/C2/C3 gates_three_way rewritten as sentences recomputed from the cells (r1 nested a %s that printed \"(True)\" inside them)",
+   "C1 why now states the equality level it actually proved: JSON value after dropping error.trace_id, raw_bytes_equal = False",
+   "C3 positive gate was the bare boolean True in r1/r2",
+   "nothing in measured changed; every value quoted above was read out of this same receipt object at build time"
+  ],
+  "cells_untouched_by_r3": [
+   "C5"
+  ],
+  "this_field_was_wrong_in_r3": "r3 printed a wrong list, which named C4/C6/C7 as untouched even though r2 had rewritten them - the filter compared against the wrong tuple"
+ },
+ "r4_notes": {
+  "diff": [
+   {
+    "field": "C5.measured.private_copy.main_py_sha256 / pristine_main_py_sha256",
+    "was": {
+     "main_py_sha256": "b84171a73964228e",
+     "pristine_main_py_sha256": "46e696c023075988"
+    },
+    "now_is_full_length": true,
+    "derived_from": "sha256 recomputed from D:\\moodle\\_hjp3_0288t1_0925\\mut_crash\\app\\main.py and D:\\moodle\\_hjp3_0288t1_0925\\backend\\app\\main.py at build time"
+   },
+   {
+    "field": "C6.measured.replay_status vs replay_from_the_fresh_process",
+    "was": {
+     "replay_status": 422,
+     "replay_from_the_fresh_process": 422
+    },
+    "now": "the r1 duplicate key is dropped; the reading survives once, under the r2 name that says which process answered",
+    "both_were_equal": true
+   },
+   {
+    "field": "C3.gates_three_way.negative + new arm_flag_discrepancy",
+    "was": "\"a different key claimed in the same second adds its own row - see the 2 rows for all keys after this arm\" (both numbers came from one count field)",
+    "now": "the same durable read that holds 1 row for key ord0288-t1c-162438 lists 2 rows for 2 distinct keys (plans.generate:ord0288-t1a-162438, plans.generate:ord0288-t1c-162438), so a second key claimed in the same window does get its own row - this arm only proves one owner per key",
+    "derived_from": "durable_read_after.idempotency_keys of the concurrent arm cell"
+   }
+  ],
+  "supersedes": {
+   "file": "RECEIPT_O0288T1-1610_r3.json",
+   "sha256": "71a2d059f6dc5de4dc2c91a933becbb0828863335e38663b921d939e9865f3be"
+  },
+  "receipt_chain": [
+   "RECEIPT_O0288T1-1610.json",
+   "RECEIPT_O0288T1-1610_r2.json",
+   "RECEIPT_O0288T1-1610_r3.json",
+   "RECEIPT_O0288T1-1610_r4.json"
+  ]
+ }
+}
