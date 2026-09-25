@@ -1,0 +1,284 @@
+{
+ "schema": "NETWORK_WRITE_ENTRY_SCOPE_V1",
+ "tool": "write_entry_scope_table_r2.js",
+ "produced_by": "commander 494abfd7",
+ "generated_at_local": "Fri Sep 25 2026 23:00:35 GMT+0800 (中国标准时间)",
+ "measurement_scope": {
+  "scope": "frontend network write entries (fetch / axios verb / request({method}))",
+  "generation": "2344145ce6342b6ac32ac4d0955c0f524d8c9320",
+  "artifact": "_wtes_r2_2344145c.json",
+  "measurement_method": "TypeScript AST walk over ../snap_wtes2/frontend/src (74 files), no proximity window, no grep"
+ },
+ "why_this_shape": "the arbiter's Q60'=1 ruling ordered an inventory and a classification rather than a code change, and her ORD-0315 note said to stop using 'number of write legs' as the metric: these are the five columns she named, one row per call site.",
+ "columns": [
+  "path",
+  "operation",
+  "network_effect",
+  "deadline",
+  "wrapper"
+ ],
+ "deadline_vocabulary": [
+  "OPTION_SIGNAL",
+  "OPTION_TIMEOUT",
+  "CALLER_SUPPLIES_<param>",
+  "ABORTSIGNAL_TIMEOUT_IN_WRAPPER",
+  "DEADLINE_WORD_IN_WRAPPER",
+  "NONE"
+ ],
+ "entries_total": 11,
+ "entries_by_deadline_state": {
+  "NONE": 10,
+  "OPTION_SIGNAL": 1
+ },
+ "entries_bare_DEADLINE_NONE": [
+  {
+   "path": "/api/v1/travelers/${...}",
+   "operation": "POST",
+   "wrapper": "enable",
+   "file": "features/notifications/PushCapabilityCard.tsx",
+   "line": 56
+  },
+  {
+   "path": "/api/v1/journeys/${...}",
+   "operation": "POST",
+   "wrapper": "choose",
+   "file": "features/planning/PlanComparison.tsx",
+   "line": 88
+  },
+  {
+   "path": "EXPR:path",
+   "operation": "POST",
+   "wrapper": "post",
+   "file": "features/recovery/RecoveryRequiredPanel.tsx",
+   "line": 26
+  },
+  {
+   "path": "/api/v1/demo/reset",
+   "operation": "POST",
+   "wrapper": "resetStage",
+   "file": "features/simulation/simulationAdapter.ts",
+   "line": 229
+  },
+  {
+   "path": "/api/v1/journeys/${...}",
+   "operation": "POST",
+   "wrapper": "transitionStage",
+   "file": "features/simulation/simulationAdapter.ts",
+   "line": 296
+  },
+  {
+   "path": "/api/v1/demo/${...}",
+   "operation": "POST",
+   "wrapper": "runStageAction",
+   "file": "features/simulation/simulationAdapter.ts",
+   "line": 335
+  },
+  {
+   "path": "/api/v1/journeys/${...}",
+   "operation": "POST",
+   "wrapper": "postSimulatedEvent",
+   "file": "features/simulation/simulationAdapter.ts",
+   "line": 376
+  },
+  {
+   "path": "/api/v1/journeys/${...}",
+   "operation": "POST",
+   "wrapper": null,
+   "file": "features/stay/HotelsPanel.tsx",
+   "line": 63
+  },
+  {
+   "path": "/api/v1/journeys/${...}",
+   "operation": "POST",
+   "wrapper": null,
+   "file": "features/stay/HotelsPanel.tsx",
+   "line": 64
+  },
+  {
+   "path": "/api/v1/journeys/${...}",
+   "operation": "POST",
+   "wrapper": "select",
+   "file": "features/stay/HotelsPanel.tsx",
+   "line": 87
+  }
+ ],
+ "entries": [
+  {
+   "path": "/api/v1/travelers/${...}",
+   "operation": "POST",
+   "network_effect": true,
+   "deadline": "NONE",
+   "wrapper": "enable",
+   "site": {
+    "file": "features/notifications/PushCapabilityCard.tsx",
+    "line": 56
+   }
+  },
+  {
+   "path": "/api/v1/journeys/${...}",
+   "operation": "POST",
+   "network_effect": true,
+   "deadline": "NONE",
+   "wrapper": "choose",
+   "site": {
+    "file": "features/planning/PlanComparison.tsx",
+    "line": 88
+   }
+  },
+  {
+   "path": "/api/v1/journeys/${...}",
+   "operation": "POST",
+   "network_effect": true,
+   "deadline": "OPTION_SIGNAL",
+   "wrapper": "submit",
+   "site": {
+    "file": "features/planning/PlanWithAiSheet.tsx",
+    "line": 678
+   }
+  },
+  {
+   "path": "EXPR:path",
+   "operation": "POST",
+   "network_effect": true,
+   "deadline": "NONE",
+   "wrapper": "post",
+   "site": {
+    "file": "features/recovery/RecoveryRequiredPanel.tsx",
+    "line": 26
+   }
+  },
+  {
+   "path": "/api/v1/demo/reset",
+   "operation": "POST",
+   "network_effect": true,
+   "deadline": "NONE",
+   "wrapper": "resetStage",
+   "site": {
+    "file": "features/simulation/simulationAdapter.ts",
+    "line": 229
+   }
+  },
+  {
+   "path": "/api/v1/journeys/${...}",
+   "operation": "POST",
+   "network_effect": true,
+   "deadline": "NONE",
+   "wrapper": "transitionStage",
+   "site": {
+    "file": "features/simulation/simulationAdapter.ts",
+    "line": 296
+   }
+  },
+  {
+   "path": "/api/v1/demo/${...}",
+   "operation": "POST",
+   "network_effect": true,
+   "deadline": "NONE",
+   "wrapper": "runStageAction",
+   "site": {
+    "file": "features/simulation/simulationAdapter.ts",
+    "line": 335
+   }
+  },
+  {
+   "path": "/api/v1/journeys/${...}",
+   "operation": "POST",
+   "network_effect": true,
+   "deadline": "NONE",
+   "wrapper": "postSimulatedEvent",
+   "site": {
+    "file": "features/simulation/simulationAdapter.ts",
+    "line": 376
+   }
+  },
+  {
+   "path": "/api/v1/journeys/${...}",
+   "operation": "POST",
+   "network_effect": true,
+   "deadline": "NONE",
+   "wrapper": null,
+   "site": {
+    "file": "features/stay/HotelsPanel.tsx",
+    "line": 63
+   }
+  },
+  {
+   "path": "/api/v1/journeys/${...}",
+   "operation": "POST",
+   "network_effect": true,
+   "deadline": "NONE",
+   "wrapper": null,
+   "site": {
+    "file": "features/stay/HotelsPanel.tsx",
+    "line": 64
+   }
+  },
+  {
+   "path": "/api/v1/journeys/${...}",
+   "operation": "POST",
+   "network_effect": true,
+   "deadline": "NONE",
+   "wrapper": "select",
+   "site": {
+    "file": "features/stay/HotelsPanel.tsx",
+    "line": 87
+   }
+  }
+ ],
+ "local_state_writes_excluded": [
+  {
+   "path": "EXPR:then",
+   "operation": "DELETE",
+   "network_effect": false,
+   "deadline": "NOT_APPLICABLE_LOCAL_STATE",
+   "wrapper": null,
+   "site": {
+    "file": "lib/inFlightWrites.ts",
+    "line": 57
+   },
+   "receiver": "quietListeners"
+  },
+  {
+   "path": "EXPR:snapshot",
+   "operation": "PUT",
+   "network_effect": false,
+   "deadline": "NOT_APPLICABLE_LOCAL_STATE",
+   "wrapper": "saveOfflineJourney",
+   "site": {
+    "file": "lib/offlineJourney.ts",
+    "line": 43
+   },
+   "receiver": "database.journeys"
+  },
+  {
+   "path": "EXPR:snapshot",
+   "operation": "PUT",
+   "network_effect": false,
+   "deadline": "NOT_APPLICABLE_LOCAL_STATE",
+   "wrapper": "saveOfflineJourneyVerified",
+   "site": {
+    "file": "lib/offlineJourney.ts",
+    "line": 55
+   },
+   "receiver": "database.journeys"
+  },
+  {
+   "path": "EXPR:name",
+   "operation": "DELETE",
+   "network_effect": false,
+   "deadline": "NOT_APPLICABLE_LOCAL_STATE",
+   "wrapper": null,
+   "site": {
+    "file": "main.tsx",
+    "line": 1706
+   },
+   "receiver": "caches"
+  }
+ ],
+ "local_state_writes_count": 4,
+ "changes_no_product_bytes": true,
+ "limits": [
+  "a wrapper that passes a deadline down through an object the AST cannot resolve reads NONE here and may be covered in truth; every row carries its file:line so a human can check that specific claim instead of trusting the count",
+  "template-literal paths are truncated at the first interpolation and marked ${...}"
+ ]
+}
