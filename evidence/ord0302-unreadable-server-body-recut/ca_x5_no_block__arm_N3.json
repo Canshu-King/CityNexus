@@ -1,0 +1,52 @@
+{
+ "file": "e2e/qoder-ord0302-unreadable-server-body.spec.ts",
+ "arm": "N3",
+ "runId": "0302xnb05050615",
+ "status": "passed",
+ "expectation": "passed",
+ "reading": {
+  "want": "device",
+  "force_shape": {
+   "abort": true
+  },
+  "read": {
+   "arm": "N3",
+   "status": "NETWORK",
+   "detail_block_attached": true,
+   "label": "这台设备自己的读数（服务器没给句子）",
+   "origin": "device",
+   "reason": "no readable answer reached this device (network or origin)",
+   "card_text": "连不上服务端 网络或后端没有响应，这与你的需求内容无关。你的行程没有被改动，检查网络后可以重试。 技术详情",
+   "legs": [
+    "GET /plans(baseline)",
+    "GET /plans(baseline)",
+    "POST /agent/commands"
+   ]
+  },
+  "verdict": "MET",
+  "rows": [
+   {
+    "claim": "a request that really never got an answer is NETWORK",
+    "ok": true,
+    "got": {
+     "status": "NETWORK"
+    }
+   },
+   {
+    "claim": "ORD-0302 ②: even then the detail block is still there",
+    "ok": true,
+    "got": {
+     "detail_block_attached": true
+    }
+   },
+   {
+    "claim": "and it carries a device line rather than nothing",
+    "ok": true,
+    "got": {
+     "reason": "no readable answer reached this device (network or origin)",
+     "origin": "device"
+    }
+   }
+  ]
+ }
+}
