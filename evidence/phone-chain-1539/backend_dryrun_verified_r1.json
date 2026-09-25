@@ -1,0 +1,35 @@
+{
+ "schema": "CNX_CMDR_BACKEND_DRYRUN_V1",
+ "run_at": "2026-09-25 15:45:38 +0800",
+ "tree": {
+  "generation": "dc964086c9d412573ac19d70b24b30e6c3ee6168",
+  "export": "git archive 那枚尖 -> snap_dc964086/（三枚 blob 与远端逐位对表通过，见总线 issuecomment-5828641177 第一节）",
+  "interpreter": "D:\\moodle\\CityNexus\\.venv\\Scripts\\python.exe"
+ },
+ "attempt_1_REJECTED": {
+  "why": "端口 8693 起前就不空；读到的两个 200 属于一个 2026-09-24 16:24:45 创建、父进程 46968 的既有 uvicorn（别人的车道后端），不是我这台",
+  "action_taken": "没杀它；我那条 taskkill 只针对我自己派生树（attempt 2 的 listener 41192，父进程 == 我的 spawned pid）",
+  "conclusion": "作废，不进任何判据"
+ },
+ "attempt_2_verified": {
+  "port_selection": "socket bind 127.0.0.1:0 由内核挑，得 50425（先证明无人监听再启动）",
+  "spawned_pid": 50772,
+  "listener_pid": 41192,
+  "listener_parent": 50772,
+  "listener_created": "2026-09-25 15:45:07",
+  "ownership_proof": "Get-CimInstance 显示 ProcessId=41192 的 ParentProcessId 正是我 spawn 的 50772",
+  "env": {
+   "CITYNEXUS_DATABASE_URL": "sqlite:///…/_cmdr_dryrun_0925.db（_preview.db 的私有副本，主库未被打开写入）",
+   "CITYNEXUS_AI_ENABLED": "false"
+  },
+  "readings": {
+   "/api/v1/health": "200 (84 B) status ok / database ok / ai disabled",
+   "/api/v1/demo/scene": "200 (611 B) demo_mode=false，journey 前缀 9c6c3d73"
+  },
+  "cleanup": "taskkill /T /F 只作用于我那棵树；随后该端口 LISTENING 行消失（port closed after cleanup = True，无残留）"
+ },
+ "finding": "新一代（权威尖那棵树）后端可启动且 API 能答；手机链缺的不是代码，是 :8000 上没有监听者。",
+ "decision_pending": "是否把这台后端正式挂到 :8000 让手机恢复数据面 = 等用户回字（选项已在 AskUserQuestion 里，含'写受保护演示库'的取舍）；在此之前我不占 :8000、不重启任何进程。",
+ "recipe_for_next_shift": "CITYNEXUS_DATABASE_URL=<想要的库> CITYNEXUS_AI_ENABLED=<按面> python -m uvicorn app.main:app --host 127.0.0.1 --port 8000，cwd=<git archive 出的后端树>/backend；起前必须 netstat 确认 :8000 真空，起后必须验监听进程的父进程是自己（本次第一次尝试就是栽在这里）。",
+ "scope": "一次性私有端口 + 库副本的只读式演练；未写受保护库、未动 dist、未动权威线、未杀别人进程。"
+}
