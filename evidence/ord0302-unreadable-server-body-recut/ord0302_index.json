@@ -7,13 +7,23 @@
  "files": [
   {
    "name": "ord0302_receipt.json",
-   "blob40": "09505f1027334e034bf7acc3d38d7135ce351bfe",
-   "bytes": 53270
+   "blob40": "105c61bd4631939886a278def0246b43b58de0e3",
+   "bytes": 51892
   },
   {
    "name": "ord0302_arms_matrix.json",
    "blob40": "6f48dae28459a44f6d8eeb8909893f9212da97fa",
    "bytes": 81768
+  },
+  {
+   "name": "ord0310_arms_on_recut_tree.json",
+   "blob40": "fc7770d95b0b9717d70feabda11e219e542fe73c",
+   "bytes": 7512
+  },
+  {
+   "name": "ord0310_arms_on_recut_tree.json",
+   "blob40": "fc7770d95b0b9717d70feabda11e219e542fe73c",
+   "bytes": 7512
   },
   {
    "name": "fixed__arm_N1.json",
@@ -207,8 +217,8 @@
   },
   {
    "name": "recut_deliver_instrument.py",
-   "blob40": "64065fae0af8d788b8be3d195fc40f4267b18b6d",
-   "bytes": 60897
+   "blob40": "09fd6a86f819ca84634af4d945d590e774c2fdae",
+   "bytes": 61179
   },
   {
    "name": "ord0302_x5_five_shapes_patch.py",
@@ -219,11 +229,6 @@
    "name": "ord0302_deliver_r2_patch.py",
    "blob40": "26342bf3012db74ff70c37a80a3f23eef7ac4ea1",
    "bytes": 7508
-  },
-  {
-   "name": "ord0302_claim_gate.json",
-   "blob40": "c84c2d703236575381e6feb7c7c2c8fcece8c96d",
-   "bytes": 1741
   }
  ]
 }
