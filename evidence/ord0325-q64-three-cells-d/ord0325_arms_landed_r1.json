@@ -1,0 +1,452 @@
+{
+ "schema": "CNX_ORD0325_KILL_ARMS_V1",
+ "order": "ORD-0325",
+ "lane": "D e345b9d6",
+ "at_local": "2026-09-26T05:22:41+0800",
+ "ruler": {
+  "name": "ui_exposure_field_check_r3.py",
+  "blob": "44e062e6ce9c7b5d97d78e09e432072da102292c"
+ },
+ "measurement_scope": {
+  "scope": "Q64=① 三格（HotelsPanel / PlanComparison / V8Experience banner）的双向断言门",
+  "generation": "c1bea4c20ea8cd5f1cc5c9d87053c005b2a24400",
+  "artifact": "D:/moodle/_qoder_d_lane_20260923/_scratch_0325/ord0325_arms_landed_r1.json",
+  "method": "单变量字面替换 → run_spec.py --grep 只跑被点名的格 → 按字节还原并比 sha256；控制轮先跑"
+ },
+ "spec_path": "frontend/e2e/qoder-ord0325-upstream-prose-not-on-screen.spec.ts",
+ "arms": [
+  {
+   "arm": "AR1_refusal_freeze_list_ignored",
+   "file": "frontend/src/lib/rawFacts.ts",
+   "triple": {
+    "exact_sha": "c1bea4c20ea8cd5f1cc5c9d87053c005b2a24400",
+    "nodeid": "frontend/e2e/qoder-ord0325-upstream-prose-not-on-screen.spec.ts :: A1 住宿被拒",
+    "shape": [
+     "chromium"
+    ]
+   },
+   "anchor_hits": [
+    1
+   ],
+   "edit_lines": 1,
+   "grep": "住宿",
+   "sizes": {
+    "during_mutation_bytes": 2921,
+    "after_restore_bytes": 2948
+   },
+   "hashes_12": {
+    "before": "631b08f4a0e2",
+    "after_restore": "631b08f4a0e2"
+   },
+   "restored_to_tested_tree_bytes": true,
+   "control_round": {
+    "run_id": "run371167",
+    "db": "_run371167.db",
+    "port": 5800,
+    "owner_state": "GREEN",
+    "nodes": {
+     "A1 住宿被拒（未映射的 422）：原话不上屏、三行读数在屏 — 中文半边": "GREEN",
+     "A2 住宿冲突码仍由 token 决定（正控）：换成行程冲突句，且原话仍不上屏": "GREEN",
+     "A3 住宿被拒：英文那半边同样两问": "GREEN",
+     "C1 建行程后的住宿搜索被拒：banner 不印 error.message，改印本机读数": "GREEN"
+    },
+    "tallies": [
+     "5 passed (18.9s)",
+     "5 passed (18.9s)"
+    ]
+   },
+   "attempt": {
+    "gate_exit": 1,
+    "nodes": {
+     "A1 住宿被拒（未映射的 422）：原话不上屏、三行读数在屏 — 中文半边": "RED",
+     "A2 住宿冲突码仍由 token 决定（正控）：换成行程冲突句，且原话仍不上屏": "GREEN",
+     "A3 住宿被拒：英文那半边同样两问": "GREEN",
+     "C1 建行程后的住宿搜索被拒：banner 不印 error.message，改印本机读数": "GREEN"
+    },
+    "n_nodes_attributed": 4,
+    "tallies": [
+     "1 failed",
+     "4 passed (18.6s)",
+     "1 failed",
+     "4 passed (18.6s)"
+    ],
+    "run_id": "run371187",
+    "db": "_run371187.db",
+    "grep": "住宿",
+    "port": 5801
+   },
+   "owner_nodes_red": [
+    "A1 住宿被拒（未映射的 422）：原话不上屏、三行读数在屏 — 中文半边"
+   ],
+   "all_red_nodes_this_attempt": [
+    "A1 住宿被拒（未映射的 422）：原话不上屏、三行读数在屏 — 中文半边"
+   ],
+   "named_sibling_stayed_green": true,
+   "same_key_precondition_holds": true,
+   "why": "让冻结码表形同不存在：任何大写 token（含 VALIDATION_ERROR）都算行程冲突。A1/A3 的通用拒绝句必须红，A2 仍绿 —— 证明这一格的红来自码表，不来自巧合。",
+   "claimed_result": "KILLED",
+   "derived_result": null
+  },
+  {
+   "arm": "AR2_hotel_general_branch_leaks_back",
+   "file": "frontend/src/features/stay/HotelsPanel.tsx",
+   "triple": {
+    "exact_sha": "c1bea4c20ea8cd5f1cc5c9d87053c005b2a24400",
+    "nodeid": "frontend/e2e/qoder-ord0325-upstream-prose-not-on-screen.spec.ts :: A1 住宿被拒",
+    "shape": [
+     "chromium"
+    ]
+   },
+   "anchor_hits": [
+    1
+   ],
+   "edit_lines": 3,
+   "grep": "住宿",
+   "sizes": {
+    "during_mutation_bytes": 10379,
+    "after_restore_bytes": 10435
+   },
+   "hashes_12": {
+    "before": "01ca917e0860",
+    "after_restore": "01ca917e0860"
+   },
+   "restored_to_tested_tree_bytes": true,
+   "control_round": {
+    "run_id": "run371207",
+    "db": "_run371207.db",
+    "port": 5802,
+    "owner_state": "GREEN",
+    "nodes": {
+     "A1 住宿被拒（未映射的 422）：原话不上屏、三行读数在屏 — 中文半边": "GREEN",
+     "A2 住宿冲突码仍由 token 决定（正控）：换成行程冲突句，且原话仍不上屏": "GREEN",
+     "A3 住宿被拒：英文那半边同样两问": "GREEN",
+     "C1 建行程后的住宿搜索被拒：banner 不印 error.message，改印本机读数": "GREEN"
+    },
+    "tallies": [
+     "5 passed (17.1s)",
+     "5 passed (17.1s)"
+    ]
+   },
+   "attempt": {
+    "gate_exit": 1,
+    "nodes": {
+     "A1 住宿被拒（未映射的 422）：原话不上屏、三行读数在屏 — 中文半边": "RED",
+     "A2 住宿冲突码仍由 token 决定（正控）：换成行程冲突句，且原话仍不上屏": "GREEN",
+     "A3 住宿被拒：英文那半边同样两问": "RED",
+     "C1 建行程后的住宿搜索被拒：banner 不印 error.message，改印本机读数": "GREEN"
+    },
+    "n_nodes_attributed": 4,
+    "tallies": [
+     "2 failed",
+     "3 passed (18.0s)",
+     "2 failed",
+     "3 passed (18.0s)"
+    ],
+    "run_id": "run371225",
+    "db": "_run371225.db",
+    "grep": "住宿",
+    "port": 5803
+   },
+   "owner_nodes_red": [
+    "A1 住宿被拒（未映射的 422）：原话不上屏、三行读数在屏 — 中文半边"
+   ],
+   "all_red_nodes_this_attempt": [
+    "A1 住宿被拒（未映射的 422）：原话不上屏、三行读数在屏 — 中文半边",
+    "A3 住宿被拒：英文那半边同样两问"
+   ],
+   "named_sibling_stayed_green": true,
+   "same_key_precondition_holds": true,
+   "why": "把改前那一形放回去（未映射码走 `raw ||`）：服务器原话重新上屏。冲突分支未动，所以 A2 必须仍绿。",
+   "claimed_result": "KILLED",
+   "derived_result": null
+  },
+  {
+   "arm": "AR3_plan_cmp_leaks_back",
+   "file": "frontend/src/features/planning/PlanComparison.tsx",
+   "triple": {
+    "exact_sha": "c1bea4c20ea8cd5f1cc5c9d87053c005b2a24400",
+    "nodeid": "frontend/e2e/qoder-ord0325-upstream-prose-not-on-screen.spec.ts :: B1 采用方案被拒",
+    "shape": [
+     "chromium"
+    ]
+   },
+   "anchor_hits": [
+    1,
+    1
+   ],
+   "edit_lines": 2,
+   "grep": "采用方案被拒",
+   "sizes": {
+    "during_mutation_bytes": 11239,
+    "after_restore_bytes": 11304
+   },
+   "hashes_12": {
+    "before": "bc5a04468415",
+    "after_restore": "bc5a04468415"
+   },
+   "restored_to_tested_tree_bytes": true,
+   "control_round": {
+    "run_id": "run371244",
+    "db": "_run371244.db",
+    "port": 5804,
+    "owner_state": "GREEN",
+    "nodes": {
+     "B1 采用方案被拒（409）：原话不上屏、三行读数在屏": "GREEN"
+    },
+    "tallies": [
+     "2 passed (10.9s)",
+     "2 passed (10.9s)"
+    ]
+   },
+   "attempt": {
+    "gate_exit": 1,
+    "nodes": {
+     "B1 采用方案被拒（409）：原话不上屏、三行读数在屏": "RED"
+    },
+    "n_nodes_attributed": 1,
+    "tallies": [
+     "1 failed",
+     "1 passed (10.9s)",
+     "1 failed",
+     "1 passed (10.9s)"
+    ],
+    "run_id": "run371256",
+    "db": "_run371256.db",
+    "grep": "采用方案被拒",
+    "port": 5805
+   },
+   "owner_nodes_red": [
+    "B1 采用方案被拒（409）：原话不上屏、三行读数在屏"
+   ],
+   "all_red_nodes_this_attempt": [
+    "B1 采用方案被拒（409）：原话不上屏、三行读数在屏"
+   ],
+   "named_sibling_stayed_green": true,
+   "same_key_precondition_holds": true,
+   "why": "复现改前形态：把回读正文直接 setError 上屏。两处替换是同一语义改动（读什么 + 屏上写什么）。",
+   "claimed_result": "KILLED",
+   "derived_result": null
+  },
+  {
+   "arm": "AR4_shell_retry_sink_prints_error_message",
+   "file": "frontend/src/app/V8Experience.tsx",
+   "triple": {
+    "exact_sha": "c1bea4c20ea8cd5f1cc5c9d87053c005b2a24400",
+    "nodeid": "frontend/e2e/qoder-ord0325-upstream-prose-not-on-screen.spec.ts :: C1 建行程后的住宿搜索被拒",
+    "shape": [
+     "chromium"
+    ]
+   },
+   "anchor_hits": [
+    1
+   ],
+   "edit_lines": 1,
+   "grep": "建行程后的住宿搜索被拒",
+   "sizes": {
+    "during_mutation_bytes": 173533,
+    "after_restore_bytes": 173541
+   },
+   "hashes_12": {
+    "before": "fd5f1e914d83",
+    "after_restore": "fd5f1e914d83"
+   },
+   "restored_to_tested_tree_bytes": true,
+   "control_round": {
+    "run_id": "run371268",
+    "db": "_run371268.db",
+    "port": 5806,
+    "owner_state": "GREEN",
+    "nodes": {
+     "C1 建行程后的住宿搜索被拒：banner 不印 error.message，改印本机读数": "GREEN"
+    },
+    "tallies": [
+     "2 passed (13.0s)",
+     "2 passed (13.0s)"
+    ]
+   },
+   "attempt": {
+    "gate_exit": 1,
+    "nodes": {
+     "C1 建行程后的住宿搜索被拒：banner 不印 error.message，改印本机读数": "RED"
+    },
+    "n_nodes_attributed": 1,
+    "tallies": [
+     "1 failed",
+     "1 passed (12.8s)",
+     "1 failed",
+     "1 passed (12.8s)"
+    ],
+    "run_id": "run371282",
+    "db": "_run371282.db",
+    "grep": "建行程后的住宿搜索被拒",
+    "port": 5807
+   },
+   "owner_nodes_red": [
+    "C1 建行程后的住宿搜索被拒：banner 不印 error.message，改印本机读数"
+   ],
+   "all_red_nodes_this_attempt": [
+    "C1 建行程后的住宿搜索被拒：banner 不印 error.message，改印本机读数"
+   ],
+   "named_sibling_stayed_green": true,
+   "same_key_precondition_holds": true,
+   "why": "把「再查一次」那一枚 sink 改回印 error.message。第一版这把臂打的是 createJourney 那一枚（C1 走不到的那条腿），所以它 SURVIVED —— 那一次存活证明的是我的臂没瞄准，不是门没牙齿；改瞄准这条腿后由 C1 认红。",
+   "claimed_result": "KILLED",
+   "derived_result": null
+  },
+  {
+   "arm": "AR4b_shell_create_sink_prints_error_message",
+   "file": "frontend/src/app/V8Experience.tsx",
+   "triple": {
+    "exact_sha": "c1bea4c20ea8cd5f1cc5c9d87053c005b2a24400",
+    "nodeid": "frontend/e2e/qoder-ord0325-upstream-prose-not-on-screen.spec.ts :: C2 建行程这一步本身被拒",
+    "shape": [
+     "chromium"
+    ]
+   },
+   "anchor_hits": [
+    1
+   ],
+   "edit_lines": 1,
+   "grep": "这一步本身被拒",
+   "sizes": {
+    "during_mutation_bytes": 173533,
+    "after_restore_bytes": 173541
+   },
+   "hashes_12": {
+    "before": "fd5f1e914d83",
+    "after_restore": "fd5f1e914d83"
+   },
+   "restored_to_tested_tree_bytes": true,
+   "control_round": {
+    "run_id": "run371296",
+    "db": "_run371296.db",
+    "port": 5808,
+    "owner_state": "GREEN",
+    "nodes": {
+     "C2 建行程这一步本身被拒：向导里的拒绝句也不印上游原话": "GREEN"
+    },
+    "tallies": [
+     "2 passed (12.5s)",
+     "2 passed (12.5s)"
+    ]
+   },
+   "attempt": {
+    "gate_exit": 1,
+    "nodes": {
+     "C2 建行程这一步本身被拒：向导里的拒绝句也不印上游原话": "RED"
+    },
+    "n_nodes_attributed": 1,
+    "tallies": [
+     "1 failed",
+     "1 passed (12.3s)",
+     "1 failed",
+     "1 passed (12.3s)"
+    ],
+    "run_id": "run371310",
+    "db": "_run371310.db",
+    "grep": "这一步本身被拒",
+    "port": 5809
+   },
+   "owner_nodes_red": [
+    "C2 建行程这一步本身被拒：向导里的拒绝句也不印上游原话"
+   ],
+   "all_red_nodes_this_attempt": [
+    "C2 建行程这一步本身被拒：向导里的拒绝句也不印上游原话"
+   ],
+   "named_sibling_stayed_green": true,
+   "same_key_precondition_holds": true,
+   "why": "createJourney 那一枚 sink（rejectionReason 把 detail 与每条 loc: msg 原样拼进 message）。上一轮战役里它无主（AR4 打中它却无人变红），C2 就是为了把这一格变成有主的。",
+   "claimed_result": "KILLED",
+   "derived_result": null
+  },
+  {
+   "arm": "AR5_bytes_becomes_a_constant",
+   "file": "frontend/src/lib/rawFacts.ts",
+   "triple": {
+    "exact_sha": "c1bea4c20ea8cd5f1cc5c9d87053c005b2a24400",
+    "nodeid": "frontend/e2e/qoder-ord0325-upstream-prose-not-on-screen.spec.ts :: A1 住宿被拒",
+    "shape": [
+     "chromium"
+    ]
+   },
+   "anchor_hits": [
+    1
+   ],
+   "edit_lines": 1,
+   "grep": "住宿",
+   "sizes": {
+    "during_mutation_bytes": 2909,
+    "after_restore_bytes": 2948
+   },
+   "hashes_12": {
+    "before": "631b08f4a0e2",
+    "after_restore": "631b08f4a0e2"
+   },
+   "restored_to_tested_tree_bytes": true,
+   "control_round": {
+    "run_id": "run371323",
+    "db": "_run371323.db",
+    "port": 5810,
+    "owner_state": "GREEN",
+    "nodes": {
+     "A1 住宿被拒（未映射的 422）：原话不上屏、三行读数在屏 — 中文半边": "GREEN",
+     "A2 住宿冲突码仍由 token 决定（正控）：换成行程冲突句，且原话仍不上屏": "GREEN",
+     "A3 住宿被拒：英文那半边同样两问": "GREEN",
+     "C1 建行程后的住宿搜索被拒：banner 不印 error.message，改印本机读数": "GREEN"
+    },
+    "tallies": [
+     "5 passed (17.0s)",
+     "5 passed (17.0s)"
+    ]
+   },
+   "attempt": {
+    "gate_exit": 1,
+    "nodes": {
+     "A1 住宿被拒（未映射的 422）：原话不上屏、三行读数在屏 — 中文半边": "RED",
+     "A2 住宿冲突码仍由 token 决定（正控）：换成行程冲突句，且原话仍不上屏": "RED",
+     "A3 住宿被拒：英文那半边同样两问": "RED",
+     "C1 建行程后的住宿搜索被拒：banner 不印 error.message，改印本机读数": "RED"
+    },
+    "n_nodes_attributed": 4,
+    "tallies": [
+     "4 failed",
+     "1 passed (18.6s)",
+     "4 failed",
+     "1 passed (18.6s)"
+    ],
+    "run_id": "run371341",
+    "db": "_run371341.db",
+    "grep": "住宿",
+    "port": 5811
+   },
+   "owner_nodes_red": [
+    "A1 住宿被拒（未映射的 422）：原话不上屏、三行读数在屏 — 中文半边"
+   ],
+   "all_red_nodes_this_attempt": [
+    "A1 住宿被拒（未映射的 422）：原话不上屏、三行读数在屏 — 中文半边",
+    "A2 住宿冲突码仍由 token 决定（正控）：换成行程冲突句，且原话仍不上屏",
+    "A3 住宿被拒：英文那半边同样两问",
+    "C1 建行程后的住宿搜索被拒：banner 不印 error.message，改印本机读数"
+   ],
+   "named_sibling_stayed_green": true,
+   "same_key_precondition_holds": true,
+   "why": "把 bytes 写成常量 0：正向半边（屏上那行必须等于本节点发出的字节数）必须红。这一枚是防永真断言的 —— 没有它，`bytes=` 存在不等于 bytes 是真读数。",
+   "claimed_result": "KILLED",
+   "derived_result": null
+  }
+ ],
+ "campaign_valid": true,
+ "killed": 6,
+ "survived": 0,
+ "discipline": {
+  "authority_branch_writes": 0,
+  "refs_pushed_by_this_script": 0,
+  "authoritative_tip_moved": 0,
+  "user_db_reads_writes": 0,
+  "demo_reset": 0,
+  "credentials_printed": 0,
+  "product_bytes_written_outside_an_arm_window": 0,
+  "how": "每枚臂只在窗口内改一处，窗口外逐字节等于候选提交；还原由 sha256 前后比对证明"
+ },
+ "interpretation_limit": "claimed_result 只是我这侧的观测；等级与 closure 归红队（B-1）"
+}
