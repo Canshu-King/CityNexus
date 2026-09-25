@@ -1,0 +1,1184 @@
+{
+ "schema": "CNX_Q64_SWEEP_V1",
+ "lane": "S1-q64sweep",
+ "revision": "r2 of this lane's sweep (first one was published as sweep_r1.json under ruler r2)",
+ "at_local": "2026-09-26T03:27:04+0800",
+ "generation": "30de4ebe409f49c5e25f4758cb2e5f4e90764a4f",
+ "tip_moved": true,
+ "tip_readback_now": "9a669c8bec863fadf31d5158f4a1be66aec49f23",
+ "ruler": "44e062e6ce9c7b5d97d78e09e432072da102292c",
+ "ruler_route": "commander/control:evidence/cmdr-ui-exposure-r3-0200/ui_exposure_field_check_r3.py",
+ "ruler_local_git_hash_object": "44e062e6ce9c7b5d97d78e09e432072da102292c",
+ "ruler_previous": "608016f6a538097041554b76cfe3e9a4192f299c",
+ "ruler_delta": 0,
+ "ruler_delta_meaning": "named field the commander asked for at 03:07; derived, not typed - it is the size of (only_in_r3 union only_in_r2) computed from the two aggregate artifacts",
+ "ruler_previous_route": "commander/control:evidence/cmdr-ui-exposure-r2-0059/ui_exposure_field_check_r2.py",
+ "ruler_switch_reason": "commander order 03:04 (bus ref issuecomment-5838017559): r2 superseded by r3, which adds the renamed-tail-name, bare-local and paren-alias taint grammars",
+ "companion_artifacts_verified": {
+  "selftest_r3.json": "3b42290b6f66492dfa6355f59db360408ccab882",
+  "r3_differential.json": "a8807c857cfc2d5ca7d43dec90fe4346b347fc44",
+  "capture_tip_r3.json": "5e0b53bd7cdc7455ae931148b54b889684a207d1"
+ },
+ "scope": "frontend/src *.ts/*.tsx at the tip; node_modules / dist / frontend/node_modules excluded",
+ "method": "one ruler subprocess per file: python -X utf8 ui_exposure_field_check_r3.py --ref <tip> --path <tree path> --out <scratch json>; the ruler reads bytes via git show, so the product working tree was never the input and was never written",
+ "files_scanned": 74,
+ "files_failed": 0,
+ "bytes_scanned": 1124647,
+ "files_with_hits": 12,
+ "hits_total": 25,
+ "per_rule": {
+  "RAW_BODY_TO_DOM": 1,
+  "UPSTREAM_READ_DIRECT": 21,
+  "RAW_TEXT_INTERPOLATION": 1,
+  "UPSTREAM_TEXT_VIA_HELPER_TO_DOM": 1,
+  "UPSTREAM_EXCEPTION_TO_DOM": 1
+ },
+ "classification_tally": {
+  "local_wording": 6,
+  "machine_label": 3,
+  "upstream_prose": 16
+ },
+ "selftest": {
+  "verdict": "SELFTEST_PASS",
+  "n_fixtures": 13,
+  "n_clean_expected": 5,
+  "n_bad_expected": 8,
+  "fixtures": {
+   "clean_whitelist_only.tsx": {
+    "expected": 0,
+    "hits": [],
+    "verdict": "CLEAN",
+    "assertion_met": true
+   },
+   "clean_literal_helper.tsx": {
+    "expected": 0,
+    "hits": [],
+    "verdict": "CLEAN",
+    "assertion_met": true
+   },
+   "bad_direct_optional_chain.tsx": {
+    "expected": 1,
+    "hits": [
+     "UPSTREAM_READ_DIRECT"
+    ],
+    "verdict": "HIT",
+    "assertion_met": true
+   },
+   "bad_helper_taint.tsx": {
+    "expected": 1,
+    "hits": [
+     "UPSTREAM_TEXT_VIA_HELPER_TO_DOM"
+    ],
+    "verdict": "HIT",
+    "assertion_met": true
+   },
+   "bad_dangerous_html.tsx": {
+    "expected": 1,
+    "hits": [
+     "DANGEROUS_HTML"
+    ],
+    "verdict": "HIT",
+    "assertion_met": true
+   },
+   "clean_tainted_but_attribute_only.tsx": {
+    "expected": 0,
+    "hits": [],
+    "verdict": "CLEAN",
+    "assertion_met": true
+   },
+   "bad_raw_body.tsx": {
+    "expected": 1,
+    "hits": [
+     "RAW_BODY_TO_DOM",
+     "RAW_BODY_TO_DOM",
+     "RAW_TEXT_INTERPOLATION"
+    ],
+    "verdict": "HIT",
+    "assertion_met": true
+   },
+   "bad_rename_last_part.tsx": {
+    "expected": 1,
+    "hits": [
+     "UPSTREAM_TEXT_VIA_HELPER_TO_DOM"
+    ],
+    "verdict": "HIT",
+    "assertion_met": true
+   },
+   "bad_bare_local_hop.tsx": {
+    "expected": 1,
+    "hits": [
+     "UPSTREAM_TEXT_VIA_HELPER_TO_DOM"
+    ],
+    "verdict": "HIT",
+    "assertion_met": true
+   },
+   "bad_paren_alias.tsx": {
+    "expected": 1,
+    "hits": [
+     "UPSTREAM_TEXT_VIA_HELPER_TO_DOM"
+    ],
+    "verdict": "HIT",
+    "assertion_met": true
+   },
+   "clean_bare_local_from_literal.tsx": {
+    "expected": 0,
+    "hits": [],
+    "verdict": "CLEAN",
+    "assertion_met": true
+   },
+   "clean_untainted_value_name.tsx": {
+    "expected": 0,
+    "hits": [],
+    "verdict": "CLEAN",
+    "assertion_met": true
+   },
+   "bad_helper_taint_multiline.tsx": {
+    "expected": 1,
+    "hits": [
+     "UPSTREAM_TEXT_VIA_HELPER_TO_DOM"
+    ],
+    "verdict": "HIT",
+    "assertion_met": true
+   }
+  },
+  "why": "the two clean fixtures are what give the taint rule teeth: a `.text` render whose field was never assigned from a poisoned helper must stay clean, and a helper that returns a literal must not count as upstream text - otherwise r2 is only a `\\.text` matcher and would fire on every honest label"
+ },
+ "r2_vs_r3": {
+  "r2_hits": 25,
+  "r3_hits": 25,
+  "identical_hit_set": true,
+  "only_in_r3": [],
+  "only_in_r2": []
+ },
+ "carrier_census": {
+  "shape_A_tail_name_in_interp": {
+   "count": 2,
+   "pattern": "\\{[^{}]{0,80}\\??\\.\\s*(value|content|reason|output|head)\\s*\\}"
+  },
+  "shape_B_bare_local_in_text_sink": {
+   "count": 25,
+   "pattern": "<(code|pre|span|div|p|li|strong|em)[^>]*>\\s*\\{[A-Za-z_$][A-Za-z_$0-9]*\\}\\s*</"
+  },
+  "shape_C_paren_alias": {
+   "count": 0,
+   "pattern": "\\(\\s*[A-Za-z_$][A-Za-z_$0-9. ]*\\s*(\\|\\||\\?\\?)\\s*\\{\\s*\\}\\s*\\)\\s*\\??\\.[A-Za-z_$]+"
+  },
+  "generic_signature_function_helper": {
+   "count": 11,
+   "pattern": "(?:async )?function [A-Za-z_][A-Za-z_0-9]*<"
+  },
+  "arrow_helper_returning_forbidden_read": {
+   "count": 0,
+   "pattern": "(?:const|let)\\s+[A-Za-z_$][A-Za-z_$0-9]*\\s*=\\s*\\([^)]*\\)\\s*(?::[^=;]{0,60})?=>[^;]{0,140}[?.]\\s*(detail|message|stack|trace|body)"
+  },
+  "throw_embedding_upstream_prose": {
+   "count": 4,
+   "pattern": "throw new \\w*Error\\(.*(detail|error\\?\\.message)"
+  },
+  "setstate_called_with_error_message": {
+   "count": 10,
+   "pattern": "set[A-Z]\\w*\\((?:\\n|[^)\\n]*\\b(?:error|cause)\\b[^)\\n]*\\.message)"
+  }
+ },
+ "carrier_census_detail": {
+  "shape_A_tail_name_in_interp": [
+   {
+    "file": "app/V8Experience.tsx",
+    "line": 1269,
+    "text": "data-attribution-reason={failure.attribution.reason}"
+   },
+   {
+    "file": "features/discovery/RealCityDiscoveryPanel.tsx",
+    "line": 179,
+    "text": "{rank?.reason && <small>{rank.reason}</small>}"
+   }
+  ],
+  "shape_C_paren_alias": [],
+  "throw_embedding_upstream_prose": [
+   {
+    "file": "api/v12Authoritative.ts",
+    "line": 27,
+    "text": "throw new Error(body?.detail ?? body?.error?.message ?? `Request failed (${response.status})`);"
+   },
+   {
+    "file": "features/discovery/RealCityDiscoveryPanel.tsx",
+    "line": 65,
+    "text": "throw new Error(body?.error?.message ?? body?.detail ?? `Request failed (${response.status})`);"
+   },
+   {
+    "file": "features/inbox/JourneyInboxWorkbench.tsx",
+    "line": 88,
+    "text": "throw new Error(payload.error?.message ?? payload.detail ?? `Request failed (${response.status})`);"
+   },
+   {
+    "file": "features/recovery/V14RecoveryTruthPanel.tsx",
+    "line": 82,
+    "text": "if (!response.ok) throw new Error(body?.detail ?? \"Recovery acceptance failed\");"
+   }
+  ]
+ },
+ "baseline_expectation": {
+  "path": "frontend/src/features/planning/PlanWithAiSheet.tsx",
+  "blob": "3bb6a39067a380c2f75629fd7562f0de8f5d2f2a",
+  "rule": "UPSTREAM_TEXT_VIA_HELPER_TO_DOM",
+  "line": 1016,
+  "chain_src": "serverReasonSentence",
+  "chain_name": "failureReason"
+ },
+ "baseline_observed": {
+  "n_hits": 1,
+  "rule": "UPSTREAM_TEXT_VIA_HELPER_TO_DOM",
+  "line": 1016,
+  "taint_chain": "poisoned helper serverReasonSentence (def :159) -> bound name failureReason (assigned :576) -> result.failureReason.text rendered as text at :1016"
+ },
+ "baseline_reproduced": true,
+ "negative_control": {
+  "file": "frontend/src/lib/money.ts",
+  "verdict": "NO_EXPOSURE_SHAPE_FOUND",
+  "n_hits": 0
+ },
+ "negative_control_clean": true,
+ "verdict": "SWEEP_VALID",
+ "headline_for_commander": "r3 changes nothing on THIS tip: the hit sets are identical, because the three grammars r3 adds have 0 / 0 / 25 carriers here and none of the 25 is fed by a function-declared poisoned helper. But three traced chains where server prose reaches the DOM are reported clean by BOTH r2 and r3 - see uncovered_shapes.",
+ "uncovered_shapes": [
+  {
+   "id": "K1",
+   "fixture": "_sweep_scratch/killers/k1_throw_via_bare_local.tsx",
+   "file": "frontend/src/features/discovery/RealCityDiscoveryPanel.tsx",
+   "chain": [
+    58,
+    65,
+    110,
+    116,
+    150
+   ],
+   "how": "request<T> throws the server sentence into Error.message; the catch binds it to a local (`message`), setError stores it, and a bare `{error}` renders it. Neither hop is a `function` whose body RETURNS an upstream read, so the taint arms never bind, and the render is a bare local so the direct arm has nothing to match.",
+   "sweep_verdict": "NO_EXPOSURE_SHAPE_FOUND",
+   "basis": [
+    {
+     "file": "frontend/src/features/discovery/RealCityDiscoveryPanel.tsx",
+     "line": 58,
+     "text": "async function request<T>(path: string, init?: RequestInit): Promise<T> {"
+    },
+    {
+     "file": "frontend/src/features/discovery/RealCityDiscoveryPanel.tsx",
+     "line": 65,
+     "text": "throw new Error(body?.error?.message ?? body?.detail ?? `Request failed (${response.status})`);"
+    },
+    {
+     "file": "frontend/src/features/discovery/RealCityDiscoveryPanel.tsx",
+     "line": 110,
+     "text": "const message = cause instanceof Error ? cause.message : \"\";"
+    },
+    {
+     "file": "frontend/src/features/discovery/RealCityDiscoveryPanel.tsx",
+     "line": 116,
+     "text": "setError(message || t(\"discovery.composeError\"));"
+    },
+    {
+     "file": "frontend/src/features/discovery/RealCityDiscoveryPanel.tsx",
+     "line": 150,
+     "text": "{error && <div className=\"v8-message\" role=\"alert\">{error}</div>}"
+    }
+   ],
+   "killer_hits": {
+    "r3": 0,
+    "r2": 0
+   },
+   "ruler_silent_on_this_file": true
+  },
+  {
+   "id": "K2",
+   "fixture": "_sweep_scratch/killers/k2_setstate_call_arg.tsx",
+   "file": "frontend/src/features/recovery/V14RecoveryTruthPanel.tsx",
+   "chain": [
+    57,
+    82,
+    86,
+    93,
+    162
+   ],
+   "how": "throw new Error(body?.detail) at :82, read back as error.message at :93 inside a setMessage CALL. The interpolation-shaped windows r2/r3 scan are brace-delimited; a call parenthesis carries no name, so the read is invisible even though the value lands in the same state slot the :691-style render reads out.",
+   "sweep_verdict": "NO_EXPOSURE_SHAPE_FOUND",
+   "basis": [
+    {
+     "file": "frontend/src/features/recovery/V14RecoveryTruthPanel.tsx",
+     "line": 57,
+     "text": "const [message, setMessage] = useState<string | null>(null);"
+    },
+    {
+     "file": "frontend/src/features/recovery/V14RecoveryTruthPanel.tsx",
+     "line": 82,
+     "text": "if (!response.ok) throw new Error(body?.detail ?? \"Recovery acceptance failed\");"
+    },
+    {
+     "file": "frontend/src/features/recovery/V14RecoveryTruthPanel.tsx",
+     "line": 86,
+     "text": "} catch (error) {"
+    },
+    {
+     "file": "frontend/src/features/recovery/V14RecoveryTruthPanel.tsx",
+     "line": 93,
+     "text": "? error.message"
+    },
+    {
+     "file": "frontend/src/features/recovery/V14RecoveryTruthPanel.tsx",
+     "line": 162,
+     "text": "{message && <p role=\"status\">{message}</p>}"
+    }
+   ],
+   "killer_hits": {
+    "r3": 0,
+    "r2": 0
+   },
+   "ruler_silent_on_this_file": true
+  },
+  {
+   "id": "K3",
+   "fixture": "_sweep_scratch/killers/k3_paren_before_message.tsx",
+   "file": "frontend/src/features/studio/V12TripStudioPanel.tsx",
+   "chain": [
+    106
+   ],
+   "how": "This one IS an upstream read sitting inside a JSX interpolation - the case r2's own docstring says UPSTREAM_READ_DIRECT covers. It does not fire because the arm binds only the nine names in its identifier group and requires one to sit directly left of the dot; here the char before `.message` is `)` of `(a.error ?? b.error)`. The thrown text originates at frontend/src/api/v12Authoritative.ts:27.",
+   "sweep_verdict": "NO_EXPOSURE_SHAPE_FOUND",
+   "basis": [
+    {
+     "file": "frontend/src/features/studio/V12TripStudioPanel.tsx",
+     "line": 106,
+     "text": "{(previewMutation.error || acceptMutation.error) && <p className=\"v12-studio-error\"><AlertTriangle size={14} /> {(previewMutation.error ?? acceptMutation.error)?.message}</p>}"
+    }
+   ],
+   "killer_hits": {
+    "r3": 0,
+    "r2": 0
+   },
+   "ruler_silent_on_this_file": true
+  }
+ ],
+ "shape_B_carriers_traced_not_server": [
+  {
+   "file": "frontend/src/features/inbox/BookingArtifactScanner.tsx",
+   "line": 33,
+   "note": "value is QR/barcode text decoded from the device camera (:21 setValue(text)) - externally captured, but not a server sentence"
+  },
+  {
+   "file": "frontend/src/features/stay/StayExplorer.tsx",
+   "line": 37,
+   "note": "cityLabel is derived at :12 from journey.city_code, a code"
+  },
+  {
+   "file": "frontend/src/features/execution/V12StatePrimitives.tsx",
+   "line": 16,
+   "note": "stateLabel maps a state enum through the dictionary, so these three rows render local wording"
+  },
+  {
+   "file": "frontend/src/features/setup/JourneyTrialSetup.tsx",
+   "line": 637,
+   "note": "message arrives as a prop; I did not trace its origin, so this one is listed as unmeasured rather than cleared"
+  }
+ ],
+ "instrument_notes": [
+  "r2 and r3 report the line where their match OPENS, so 16 of the 25 snippets are `} catch (error) {`-style block braces rather than the offending text; every cell carries machine-extracted basis lines.",
+  "1 hit (V8Experience.tsx:320) fires on a JSDoc comment.",
+  "adjacent_findings list DOM renders of server columns that the ruler does not flag and that are NOT counted in hits_total.",
+  "uncovered_shapes were proven by running both ruler revisions over trimmed reproductions alongside a positive control; the positive control fired on both, so the silence is a rule gap, not a broken runner."
+ ],
+ "adjacent_findings": [
+  {
+   "file": "frontend/src/main.tsx",
+   "line": 1063,
+   "text": "{agentRun.outcome && <p className=\"mission-outcome\">{agentRun.outcome}</p>}",
+   "note": "agentRun.outcome is a server column rendered in a p; ruler did not fire"
+  },
+  {
+   "file": "frontend/src/main.tsx",
+   "line": 1064,
+   "text": "{agentRun.failure_reason && <p className=\"mission-failure\">{agentRun.failure_reason}</p>}",
+   "note": "agentRun.failure_reason is a server column rendered in a p; ruler did not fire"
+  },
+  {
+   "file": "frontend/src/main.tsx",
+   "line": 1074,
+   "text": "{typeof step.result.error === \"string\"",
+   "note": "step.result.error tested for string-ness then rendered; server run record"
+  },
+  {
+   "file": "frontend/src/main.tsx",
+   "line": 1421,
+   "text": "evidence {item.evidence_count ?? 0} · observed {item.last_evidence_at?.slice(0, 10) ?? \"unknown\"} · {item.explanation ?? \"outcome evidence\"}",
+   "note": "item.explanation rendered with a local fallback; server field"
+  },
+  {
+   "file": "frontend/src/app/V8Experience.tsx",
+   "line": 1025,
+   "text": "? \"Stopped waiting. The trip is created and the stay search may still be running server-side — come back to Today for the result.\"",
+   "note": "locally written abort sentence (evidence that 1024-1026 is local_wording)"
+  }
+ ],
+ "hits": [
+  {
+   "file": "frontend/src/app/V8Experience.tsx",
+   "blob": "17ef83b6ec58b4190f483733501ea1b973336d5f",
+   "line": 320,
+   "rule": "RAW_BODY_TO_DOM",
+   "taint_chain": null,
+   "snippet": "* Slicing the raw ISO string (``start_at.slice(11, 16)``) shows UTC wall time",
+   "classification": "local_wording",
+   "reaches_dom": "no_comment_never_renders",
+   "basis": [
+    {
+     "file": "frontend/src/app/V8Experience.tsx",
+     "line": 320,
+     "text": "* Slicing the raw ISO string (``start_at.slice(11, 16)``) shows UTC wall time"
+    }
+   ],
+   "why": "The match is inside the JSDoc block at 317-326 that explains why UTC slicing was wrong. The pattern \\braw\\b.*\\bslice\\( fired on prose ABOUT code, not on code; nothing reaches the screen."
+  },
+  {
+   "file": "frontend/src/app/V8Experience.tsx",
+   "blob": "17ef83b6ec58b4190f483733501ea1b973336d5f",
+   "line": 833,
+   "rule": "UPSTREAM_READ_DIRECT",
+   "taint_chain": null,
+   "snippet": "? { message: error.message, name: error.name }",
+   "classification": "machine_label",
+   "reaches_dom": "attribute_only",
+   "basis": [
+    {
+     "file": "frontend/src/app/V8Experience.tsx",
+     "line": 831,
+     "text": "setSealedDemoDetail("
+    },
+    {
+     "file": "frontend/src/app/V8Experience.tsx",
+     "line": 833,
+     "text": "? { message: error.message, name: error.name }"
+    },
+    {
+     "file": "frontend/src/app/V8Experience.tsx",
+     "line": 830,
+     "text": "setSealedDemoUnavailable(t(\"trial.sealedUnreadable\"));"
+    },
+    {
+     "file": "frontend/src/features/setup/JourneyTrialSetup.tsx",
+     "line": 1247,
+     "text": "data-error-name={sealedDemoDetail?.name ?? \"\"}"
+    },
+    {
+     "file": "frontend/src/features/setup/JourneyTrialSetup.tsx",
+     "line": 1248,
+     "text": "data-error-message={sealedDemoDetail?.message ?? \"\"}"
+    },
+    {
+     "file": "frontend/src/features/setup/JourneyTrialSetup.tsx",
+     "line": 1250,
+     "text": "<p>{sealedDemoUnavailable}</p>"
+    }
+   ],
+   "why": "error.message is parked in sealedDemoDetail state and reaches the DOM only as the data-error-message attribute (JourneyTrialSetup 1248). The sentence the traveller reads is the i18n key trial.sealedUnreadable (830, rendered at 1250). Provenance may carry upstream prose via rejectionReason, but the sink is an attribute, not text."
+  },
+  {
+   "file": "frontend/src/app/V8Experience.tsx",
+   "blob": "17ef83b6ec58b4190f483733501ea1b973336d5f",
+   "line": 1028,
+   "rule": "UPSTREAM_READ_DIRECT",
+   "taint_chain": null,
+   "snippet": "} else {",
+   "classification": "upstream_prose",
+   "reaches_dom": "yes",
+   "basis": [
+    {
+     "file": "frontend/src/app/V8Experience.tsx",
+     "line": 1030,
+     "text": "error instanceof Error ? error.message : t(\"shell.loadError\"),"
+    },
+    {
+     "file": "frontend/src/app/V8Experience.tsx",
+     "line": 1562,
+     "text": "{message}"
+    },
+    {
+     "file": "frontend/src/app/V8Experience.tsx",
+     "line": 169,
+     "text": "(typeof body?.detail === \"string\" ? body.detail : null) ??"
+    },
+    {
+     "file": "frontend/src/app/V8Experience.tsx",
+     "line": 170,
+     "text": "(typeof body?.error?.message === \"string\" ? body.error.message : null) ??"
+    },
+    {
+     "file": "frontend/src/app/V8Experience.tsx",
+     "line": 172,
+     "text": "return fields ? `${headline} — ${fields}` : headline;"
+    }
+   ],
+   "why": "setMessage(error.message); the throw site is v8RequestInner -> V8Rejection(rejectionReason(body,status)) and rejectionReason takes body.detail / body.error.message verbatim (169-171) plus the server validation msgs joined at 163. Rendered as text at 1562."
+  },
+  {
+   "file": "frontend/src/components/ProductErrorBoundary.tsx",
+   "blob": "9ebcd97969102e95bfecc1c78995570409dd0964",
+   "line": 104,
+   "rule": "UPSTREAM_READ_DIRECT",
+   "taint_chain": null,
+   "snippet": "{String(error?.message || error)}",
+   "classification": "upstream_prose",
+   "reaches_dom": "yes",
+   "basis": [
+    {
+     "file": "frontend/src/components/ProductErrorBoundary.tsx",
+     "line": 102,
+     "text": "<summary>{t.detail}</summary>"
+    },
+    {
+     "file": "frontend/src/components/ProductErrorBoundary.tsx",
+     "line": 104,
+     "text": "{String(error?.message || error)}"
+    },
+    {
+     "file": "frontend/src/components/ProductErrorBoundary.tsx",
+     "line": 105,
+     "text": "{info ? `\\n${info}` : \"\"}"
+    }
+   ],
+   "why": "A pre with data-testid=error-detail renders String(error?.message || error) and React's info (the component stack) verbatim. The details fold is closed by default, but both strings are in the DOM the moment the boundary trips."
+  },
+  {
+   "file": "frontend/src/features/agent/AgentComposer.tsx",
+   "blob": "504ef34fe79d1bc96bb1c8ae6aa99ba68bbc665d",
+   "line": 95,
+   "rule": "UPSTREAM_READ_DIRECT",
+   "taint_chain": null,
+   "snippet": "{ role: \"assistant\", text: response.message, response },",
+   "classification": "upstream_prose",
+   "reaches_dom": "yes",
+   "basis": [
+    {
+     "file": "frontend/src/features/agent/AgentComposer.tsx",
+     "line": 95,
+     "text": "{ role: \"assistant\", text: response.message, response },"
+    },
+    {
+     "file": "frontend/src/features/agent/AgentComposer.tsx",
+     "line": 196,
+     "text": "<p>{item.text}</p>"
+    },
+    {
+     "file": "frontend/src/api/citynexus.ts",
+     "line": 384,
+     "text": "message: string;"
+    },
+    {
+     "file": "frontend/src/api/citynexus.ts",
+     "line": 908,
+     "text": "return requestJson<CopilotResponse>(\"/journeys/\" + journeyId + \"/copilot/messages\", {"
+    }
+   ],
+   "why": "response.message is CopilotResponse.message from POST /copilot/messages (citynexus.ts 384, 908) stored as the assistant bubble text and rendered in a p at 196. This is the designed content channel (a model answer), not an error string - flagged so the commander can rule it apart."
+  },
+  {
+   "file": "frontend/src/features/agent/CopilotDock.tsx",
+   "blob": "d6019d003aa4cd266374d7dbbfb3b803379a8c55",
+   "line": 615,
+   "rule": "UPSTREAM_READ_DIRECT",
+   "taint_chain": null,
+   "snippet": "setMessages((current) => [...current, { role: \"assistant\", text: response.message, response }]);",
+   "classification": "upstream_prose",
+   "reaches_dom": "yes",
+   "basis": [
+    {
+     "file": "frontend/src/features/agent/CopilotDock.tsx",
+     "line": 615,
+     "text": "setMessages((current) => [...current, { role: \"assistant\", text: response.message, response }]);"
+    },
+    {
+     "file": "frontend/src/features/agent/CopilotDock.tsx",
+     "line": 743,
+     "text": "<p>{item.text}</p>"
+    },
+    {
+     "file": "frontend/src/api/citynexus.ts",
+     "line": 384,
+     "text": "message: string;"
+    }
+   ],
+   "why": "Same channel as AgentComposer: server assistant text stored as message text, rendered in a p at 743. Designed content, not an error string."
+  },
+  {
+   "file": "frontend/src/features/discovery/DestinationPreparationPanel.tsx",
+   "blob": "f28b94c6bd6a1b56b4d5e8fb01a71de599994432",
+   "line": 75,
+   "rule": "UPSTREAM_READ_DIRECT",
+   "taint_chain": null,
+   "snippet": "} catch (error) {",
+   "classification": "local_wording",
+   "reaches_dom": "yes",
+   "basis": [
+    {
+     "file": "frontend/src/features/discovery/DestinationPreparationPanel.tsx",
+     "line": 78,
+     "text": "error instanceof Error ? error.message : zh ? \"读取准备进度失败。\" : \"Reading the job failed.\","
+    },
+    {
+     "file": "frontend/src/api/citynexus.ts",
+     "line": 680,
+     "text": "throw new CityNexusApiError("
+    },
+    {
+     "file": "frontend/src/api/citynexus.ts",
+     "line": 684,
+     "text": ");"
+    },
+    {
+     "file": "frontend/src/features/discovery/DestinationPreparationPanel.tsx",
+     "line": 522,
+     "text": "{actionError}"
+    }
+   ],
+   "why": "error.message here is the CityNexusApiError message composed locally at citynexus.ts 680-684 ('CityNexus API ' + status + ': ' + path). The server body is kept on the error object and never rendered; the else branch of the ternary is this file's own sentence. Rendered at 522. Caveat: status code and request path do surface."
+  },
+  {
+   "file": "frontend/src/features/discovery/DestinationPreparationPanel.tsx",
+   "blob": "f28b94c6bd6a1b56b4d5e8fb01a71de599994432",
+   "line": 99,
+   "rule": "UPSTREAM_READ_DIRECT",
+   "taint_chain": null,
+   "snippet": "} catch (error) {",
+   "classification": "local_wording",
+   "reaches_dom": "yes",
+   "basis": [
+    {
+     "file": "frontend/src/features/discovery/DestinationPreparationPanel.tsx",
+     "line": 102,
+     "text": "error instanceof Error ? error.message : zh ? \"这次没有读到能力判定。\" : \"The capability read failed.\","
+    },
+    {
+     "file": "frontend/src/api/citynexus.ts",
+     "line": 680,
+     "text": "throw new CityNexusApiError("
+    },
+    {
+     "file": "frontend/src/api/citynexus.ts",
+     "line": 684,
+     "text": ");"
+    },
+    {
+     "file": "frontend/src/features/discovery/DestinationPreparationPanel.tsx",
+     "line": 346,
+     "text": "{capabilityError}"
+    }
+   ],
+   "why": "Same provenance as :75 (locally composed CityNexus API message). Lands in capabilityError, rendered at 346. No server prose on this path."
+  },
+  {
+   "file": "frontend/src/features/discovery/DestinationPreparationPanel.tsx",
+   "blob": "f28b94c6bd6a1b56b4d5e8fb01a71de599994432",
+   "line": 120,
+   "rule": "UPSTREAM_READ_DIRECT",
+   "taint_chain": null,
+   "snippet": "} catch (error) {",
+   "classification": "local_wording",
+   "reaches_dom": "yes",
+   "basis": [
+    {
+     "file": "frontend/src/features/discovery/DestinationPreparationPanel.tsx",
+     "line": 122,
+     "text": "error instanceof Error ? error.message : zh ? \"没能开始准备。\" : \"Could not start preparing.\","
+    },
+    {
+     "file": "frontend/src/api/citynexus.ts",
+     "line": 680,
+     "text": "throw new CityNexusApiError("
+    },
+    {
+     "file": "frontend/src/api/citynexus.ts",
+     "line": 684,
+     "text": ");"
+    }
+   ],
+   "why": "Same provenance as :75: locally composed message plus this file's own zh fallback. actionError slot, rendered at 522."
+  },
+  {
+   "file": "frontend/src/features/discovery/DestinationPreparationPanel.tsx",
+   "blob": "f28b94c6bd6a1b56b4d5e8fb01a71de599994432",
+   "line": 137,
+   "rule": "UPSTREAM_READ_DIRECT",
+   "taint_chain": null,
+   "snippet": "} catch (error) {",
+   "classification": "local_wording",
+   "reaches_dom": "yes",
+   "basis": [
+    {
+     "file": "frontend/src/features/discovery/DestinationPreparationPanel.tsx",
+     "line": 139,
+     "text": "error instanceof Error ? error.message : zh ? \"没能停止这次准备。\" : \"Could not stop this preparation.\","
+    },
+    {
+     "file": "frontend/src/api/citynexus.ts",
+     "line": 680,
+     "text": "throw new CityNexusApiError("
+    },
+    {
+     "file": "frontend/src/api/citynexus.ts",
+     "line": 684,
+     "text": ");"
+    }
+   ],
+   "why": "Same provenance as :75: locally composed message plus this file's own zh fallback. actionError slot, rendered at 522."
+  },
+  {
+   "file": "frontend/src/features/execution/LiveRecovery.tsx",
+   "blob": "48a55ffca4e90d3c45d780f3bb7f9bfb1cdbd698",
+   "line": 234,
+   "rule": "UPSTREAM_READ_DIRECT",
+   "taint_chain": null,
+   "snippet": "if (!r.ok) {",
+   "classification": "local_wording",
+   "reaches_dom": "yes",
+   "basis": [
+    {
+     "file": "frontend/src/features/execution/LiveRecovery.tsx",
+     "line": 237,
+     "text": "body?.error?.message ??"
+    },
+    {
+     "file": "frontend/src/features/execution/LiveRecovery.tsx",
+     "line": 238,
+     "text": "body?.detail ??"
+    },
+    {
+     "file": "frontend/src/features/execution/LiveRecovery.tsx",
+     "line": 240,
+     "text": "setMessage(humanReplanReason(raw, zh));"
+    },
+    {
+     "file": "frontend/src/features/execution/LiveRecovery.tsx",
+     "line": 68,
+     "text": "export function humanReplanReason(raw: string, zh: boolean): string {"
+    },
+    {
+     "file": "frontend/src/features/execution/LiveRecovery.tsx",
+     "line": 90,
+     "text": "// Unknown / unmapped reason: never surface the raw internal string."
+    },
+    {
+     "file": "frontend/src/features/execution/LiveRecovery.tsx",
+     "line": 91,
+     "text": "return zh"
+    }
+   ],
+   "why": "raw does read body.error.message / body.detail (237-238), but it is passed through humanReplanReason (68), a four-code whitelist whose unmapped branch (90-93) returns this file's own sentence. The upstream string is used as a match key and never surfaces - the guard the ruling asks for is present here."
+  },
+  {
+   "file": "frontend/src/features/inbox/JourneyInboxWorkbench.tsx",
+   "blob": "b4bdf4b809478ccadd7951895a39e966852620a8",
+   "line": 691,
+   "rule": "RAW_TEXT_INTERPOLATION",
+   "taint_chain": null,
+   "snippet": "<code>{rawDetail}</code>",
+   "classification": "upstream_prose",
+   "reaches_dom": "yes",
+   "basis": [
+    {
+     "file": "frontend/src/features/inbox/JourneyInboxWorkbench.tsx",
+     "line": 688,
+     "text": "{rawDetail && ("
+    },
+    {
+     "file": "frontend/src/features/inbox/JourneyInboxWorkbench.tsx",
+     "line": 691,
+     "text": "<code>{rawDetail}</code>"
+    },
+    {
+     "file": "frontend/src/features/inbox/JourneyInboxWorkbench.tsx",
+     "line": 474,
+     "text": "setRawDetail(passed ? null : failure ?? t(\"inbox.confirmUnreadable\"));"
+    },
+    {
+     "file": "frontend/src/features/inbox/JourneyInboxWorkbench.tsx",
+     "line": 460,
+     "text": "failure = error instanceof Error ? error.message : t(\"inbox.confirmFailed\");"
+    },
+    {
+     "file": "frontend/src/features/inbox/JourneyInboxWorkbench.tsx",
+     "line": 88,
+     "text": "throw new Error(payload.error?.message ?? payload.detail ?? `Request failed (${response.status})`);"
+    }
+   ],
+   "why": "rawDetail is set at 474 from failure, which 460 took off error.message, and this file's own requestJson throws new Error(payload.error?.message ?? payload.detail ?? ...) at 88 - the server sentence verbatim. Rendered inside a code element at 691 when the confirmation did not pass."
+  },
+  {
+   "file": "frontend/src/features/inbox/JourneyInboxWorkbench.tsx",
+   "blob": "b4bdf4b809478ccadd7951895a39e966852620a8",
+   "line": 307,
+   "rule": "UPSTREAM_READ_DIRECT",
+   "taint_chain": null,
+   "snippet": "} catch (error) {",
+   "classification": "upstream_prose",
+   "reaches_dom": "yes",
+   "basis": [
+    {
+     "file": "frontend/src/features/inbox/JourneyInboxWorkbench.tsx",
+     "line": 308,
+     "text": "setMessage(error instanceof Error ? error.message : t(\"inbox.memoryLoadError\"));"
+    },
+    {
+     "file": "frontend/src/features/inbox/JourneyInboxWorkbench.tsx",
+     "line": 88,
+     "text": "throw new Error(payload.error?.message ?? payload.detail ?? `Request failed (${response.status})`);"
+    },
+    {
+     "file": "frontend/src/features/inbox/JourneyInboxWorkbench.tsx",
+     "line": 687,
+     "text": "{message && <p className=\"v10-inbox-message\" role=\"status\">{message}</p>}"
+    }
+   ],
+   "why": "setMessage(error.message) where the only thrower on this path is this file's requestJson at 88, which embeds payload.error.message / payload.detail. Rendered in a role=status p at 687."
+  },
+  {
+   "file": "frontend/src/features/inbox/JourneyInboxWorkbench.tsx",
+   "blob": "b4bdf4b809478ccadd7951895a39e966852620a8",
+   "line": 317,
+   "rule": "UPSTREAM_READ_DIRECT",
+   "taint_chain": null,
+   "snippet": "} catch (error) {",
+   "classification": "upstream_prose",
+   "reaches_dom": "yes",
+   "basis": [
+    {
+     "file": "frontend/src/features/inbox/JourneyInboxWorkbench.tsx",
+     "line": 318,
+     "text": "setMessage(error instanceof Error ? error.message : t(\"inbox.memoryLoadError\"));"
+    },
+    {
+     "file": "frontend/src/features/inbox/JourneyInboxWorkbench.tsx",
+     "line": 88,
+     "text": "throw new Error(payload.error?.message ?? payload.detail ?? `Request failed (${response.status})`);"
+    },
+    {
+     "file": "frontend/src/features/inbox/JourneyInboxWorkbench.tsx",
+     "line": 687,
+     "text": "{message && <p className=\"v10-inbox-message\" role=\"status\">{message}</p>}"
+    }
+   ],
+   "why": "Same thrower (88) and same sink (687) as :307, on the loadMemory retry path."
+  },
+  {
+   "file": "frontend/src/features/inbox/JourneyInboxWorkbench.tsx",
+   "blob": "b4bdf4b809478ccadd7951895a39e966852620a8",
+   "line": 336,
+   "rule": "UPSTREAM_READ_DIRECT",
+   "taint_chain": null,
+   "snippet": "} catch (error) {",
+   "classification": "upstream_prose",
+   "reaches_dom": "yes",
+   "basis": [
+    {
+     "file": "frontend/src/features/inbox/JourneyInboxWorkbench.tsx",
+     "line": 339,
+     "text": "error instanceof Error ? error.message : t(\"inbox.pendingUnreadable\"),"
+    },
+    {
+     "file": "frontend/src/features/inbox/JourneyInboxWorkbench.tsx",
+     "line": 88,
+     "text": "throw new Error(payload.error?.message ?? payload.detail ?? `Request failed (${response.status})`);"
+    },
+    {
+     "file": "frontend/src/features/inbox/JourneyInboxWorkbench.tsx",
+     "line": 731,
+     "text": "<code> {pendingError}</code>{\" \"}"
+    }
+   ],
+   "why": "setPendingError(error.message) from the same 88 thrower; pendingError is rendered in a code element at 731 inside the queue slot."
+  },
+  {
+   "file": "frontend/src/features/inbox/JourneyInboxWorkbench.tsx",
+   "blob": "b4bdf4b809478ccadd7951895a39e966852620a8",
+   "line": 386,
+   "rule": "UPSTREAM_READ_DIRECT",
+   "taint_chain": null,
+   "snippet": "} catch (error) {",
+   "classification": "upstream_prose",
+   "reaches_dom": "yes",
+   "basis": [
+    {
+     "file": "frontend/src/features/inbox/JourneyInboxWorkbench.tsx",
+     "line": 387,
+     "text": "setMessage(error instanceof Error ? error.message : t(\"inbox.textFailed\"));"
+    },
+    {
+     "file": "frontend/src/features/inbox/JourneyInboxWorkbench.tsx",
+     "line": 88,
+     "text": "throw new Error(payload.error?.message ?? payload.detail ?? `Request failed (${response.status})`);"
+    },
+    {
+     "file": "frontend/src/features/inbox/JourneyInboxWorkbench.tsx",
+     "line": 687,
+     "text": "{message && <p className=\"v10-inbox-message\" role=\"status\">{message}</p>}"
+    }
+   ],
+   "why": "Text-intake failure: setMessage(error.message) from 88, rendered at 687."
+  },
+  {
+   "file": "frontend/src/features/inbox/JourneyInboxWorkbench.tsx",
+   "blob": "b4bdf4b809478ccadd7951895a39e966852620a8",
+   "line": 407,
+   "rule": "UPSTREAM_READ_DIRECT",
+   "taint_chain": null,
+   "snippet": "} catch (error) {",
+   "classification": "upstream_prose",
+   "reaches_dom": "yes",
+   "basis": [
+    {
+     "file": "frontend/src/features/inbox/JourneyInboxWorkbench.tsx",
+     "line": 408,
+     "text": "setMessage(error instanceof Error ? error.message : t(\"inbox.imageFailed\"));"
+    },
+    {
+     "file": "frontend/src/features/inbox/JourneyInboxWorkbench.tsx",
+     "line": 88,
+     "text": "throw new Error(payload.error?.message ?? payload.detail ?? `Request failed (${response.status})`);"
+    },
+    {
+     "file": "frontend/src/features/inbox/JourneyInboxWorkbench.tsx",
+     "line": 687,
+     "text": "{message && <p className=\"v10-inbox-message\" role=\"status\">{message}</p>}"
+    }
+   ],
+   "why": "Image-intake failure: setMessage(error.message) from 88, rendered at 687."
+  },
+  {
+   "file": "frontend/src/features/inbox/JourneyInboxWorkbench.tsx",
+   "blob": "b4bdf4b809478ccadd7951895a39e966852620a8",
+   "line": 435,
+   "rule": "UPSTREAM_READ_DIRECT",
+   "taint_chain": null,
+   "snippet": "} catch (error) {",
+   "classification": "upstream_prose",
+   "reaches_dom": "yes",
+   "basis": [
+    {
+     "file": "frontend/src/features/inbox/JourneyInboxWorkbench.tsx",
+     "line": 436,
+     "text": "setMessage(error instanceof Error ? error.message : t(\"inbox.smartApplyFailed\"));"
+    },
+    {
+     "file": "frontend/src/features/inbox/JourneyInboxWorkbench.tsx",
+     "line": 88,
+     "text": "throw new Error(payload.error?.message ?? payload.detail ?? `Request failed (${response.status})`);"
+    },
+    {
+     "file": "frontend/src/features/inbox/JourneyInboxWorkbench.tsx",
+     "line": 687,
+     "text": "{message && <p className=\"v10-inbox-message\" role=\"status\">{message}</p>}"
+    }
+   ],
+   "why": "Smart-apply failure: setMessage(error.message) from 88, rendered at 687."
+  },
+  {
+   "file": "frontend/src/features/inbox/JourneyInboxWorkbench.tsx",
+   "blob": "b4bdf4b809478ccadd7951895a39e966852620a8",
+   "line": 459,
+   "rule": "UPSTREAM_READ_DIRECT",
+   "taint_chain": null,
+   "snippet": "} catch (error) {",
+   "classification": "upstream_prose",
+   "reaches_dom": "yes",
+   "basis": [
+    {
+     "file": "frontend/src/features/inbox/JourneyInboxWorkbench.tsx",
+     "line": 460,
+     "text": "failure = error instanceof Error ? error.message : t(\"inbox.confirmFailed\");"
+    },
+    {
+     "file": "frontend/src/features/inbox/JourneyInboxWorkbench.tsx",
+     "line": 88,
+     "text": "throw new Error(payload.error?.message ?? payload.detail ?? `Request failed (${response.status})`);"
+    },
+    {
+     "file": "frontend/src/features/inbox/JourneyInboxWorkbench.tsx",
+     "line": 474,
+     "text": "setRawDetail(passed ? null : failure ?? t(\"inbox.confirmUnreadable\"));"
+    },
+    {
+     "file": "frontend/src/features/inbox/JourneyInboxWorkbench.tsx",
+     "line": 691,
+     "text": "<code>{rawDetail}</code>"
+    }
+   ],
+   "why": "confirm(): failure = error.message from the 88 thrower, then 474 stores it in rawDetail and 691 renders it in a code element. The in-file comment at 466-467 states the intent explicitly: the raw server string is kept in the technical fold rather than paraphrased."
+  },
+  {
+   "file": "frontend/src/features/inbox/JourneyInboxWorkbench.tsx",
+   "blob": "b4bdf4b809478ccadd7951895a39e966852620a8",
+   "line": 517,
+   "rule": "UPSTREAM_READ_DIRECT",
+   "taint_chain": null,
+   "snippet": "} catch (error) {",
+   "classification": "upstream_prose",
+   "reaches_dom": "yes",
+   "basis": [
+    {
+     "file": "frontend/src/features/inbox/JourneyInboxWorkbench.tsx",
+     "line": 518,
+     "text": "setMessage(error instanceof Error ? error.message : t(\"inbox.correctionsFailed\"));"
+    },
+    {
+     "file": "frontend/src/features/inbox/JourneyInboxWorkbench.tsx",
+     "line": 88,
+     "text": "throw new Error(payload.error?.message ?? payload.detail ?? `Request failed (${response.status})`);"
+    },
+    {
+     "file": "frontend/src/features/inbox/JourneyInboxWorkbench.tsx",
+     "line": 687,
+     "text": "{message && <p className=\"v10-inbox-message\" role=\"status\">{message}</p>}"
+    }
+   ],
+   "why": "Corrections-save failure: setMessage(error.message) from 88, rendered at 687."
+  },
+  {
+   "file": "frontend/src/features/planning/PlanComparison.tsx",
+   "blob": "378bd15134f62bff6479d1700953cd1966cf15ae",
+   "line": 92,
+   "rule": "UPSTREAM_READ_DIRECT",
+   "taint_chain": null,
+   "snippet": "if (!response.ok) {",
+   "classification": "upstream_prose",
+   "reaches_dom": "yes",
+   "basis": [
+    {
+     "file": "frontend/src/features/planning/PlanComparison.tsx",
+     "line": 95,
+     "text": "body?.error?.message ??"
+    },
+    {
+     "file": "frontend/src/features/planning/PlanComparison.tsx",
+     "line": 96,
+     "text": "body?.detail ??"
+    },
+    {
+     "file": "frontend/src/features/planning/PlanComparison.tsx",
+     "line": 260,
+     "text": "{error}"
+    }
+   ],
+   "why": "setError(body?.error?.message ?? body?.detail ?? local sentence) read straight off the parsed select response; error is rendered in a role=alert p at 260. Two-step-free direct upstream read."
+  },
+  {
+   "file": "frontend/src/features/planning/PlanWithAiSheet.tsx",
+   "blob": "3bb6a39067a380c2f75629fd7562f0de8f5d2f2a",
+   "line": 1016,
+   "rule": "UPSTREAM_TEXT_VIA_HELPER_TO_DOM",
+   "taint_chain": "poisoned helper serverReasonSentence (def :159) -> bound name failureReason (assigned :576) -> result.failureReason.text rendered as text at :1016",
+   "snippet": "<code data-testid=\"plan-ai-reason\">{result.failureReason.text}</code>",
+   "classification": "upstream_prose",
+   "reaches_dom": "yes",
+   "basis": [
+    {
+     "file": "frontend/src/features/planning/PlanWithAiSheet.tsx",
+     "line": 1016,
+     "text": "<code data-testid=\"plan-ai-reason\">{result.failureReason.text}</code>"
+    },
+    {
+     "file": "frontend/src/features/planning/PlanWithAiSheet.tsx",
+     "line": 159,
+     "text": "function serverReasonSentence(body: unknown): string | null {"
+    },
+    {
+     "file": "frontend/src/features/planning/PlanWithAiSheet.tsx",
+     "line": 161,
+     "text": "if (error && typeof error.message === \"string\" && error.message.trim()) return error.message;"
+    },
+    {
+     "file": "frontend/src/features/planning/PlanWithAiSheet.tsx",
+     "line": 163,
+     "text": "if (typeof detail === \"string\" && detail.trim()) return detail;"
+    },
+    {
+     "file": "frontend/src/features/planning/PlanWithAiSheet.tsx",
+     "line": 1013,
+     "text": "? \"这台设备自己的读数（服务器没给句子）\""
+    }
+   ],
+   "why": "The named baseline cell. serverReasonSentence (159) returns error.message (161) or detail (163) verbatim - the in-file comment above it says so - and the value is rendered in a code element at 1016. Line 1013 shows the local wording that is used only when the server sent no sentence."
+  },
+  {
+   "file": "frontend/src/features/stay/HotelsPanel.tsx",
+   "blob": "5154c19580bd344cb49afe07c34dc346dff49f0f",
+   "line": 91,
+   "rule": "UPSTREAM_READ_DIRECT",
+   "taint_chain": null,
+   "snippet": "if (!r.ok) {",
+   "classification": "upstream_prose",
+   "reaches_dom": "yes",
+   "basis": [
+    {
+     "file": "frontend/src/features/stay/HotelsPanel.tsx",
+     "line": 93,
+     "text": "const raw = String(body?.error?.message ?? body?.detail ?? \"\");"
+    },
+    {
+     "file": "frontend/src/features/stay/HotelsPanel.tsx",
+     "line": 104,
+     "text": ": raw || (zh ? \"暂时无法选择这家住宿。\" : \"Could not choose this stay.\"),"
+    },
+    {
+     "file": "frontend/src/features/stay/HotelsPanel.tsx",
+     "line": 229,
+     "text": "<p className=\"role-alert\" data-testid=\"hotel-error\" role=\"alert\">{error}</p>"
+    }
+   ],
+   "why": "raw = String(body?.error?.message ?? body?.detail ?? '') at 93. The conflict branch (97-103) is local wording, but the else branch at 104 renders raw itself when the code is not one of the two tested names, and error is shown in a role=alert p at 229. So the whitelist leaks on unmapped codes - the opposite of LiveRecovery's humanReplanReason."
+  },
+  {
+   "file": "frontend/src/lib/failureAttribution.ts",
+   "blob": "5956e880abf625591d371d369fe54b72bd2ffce8",
+   "line": 160,
+   "rule": "UPSTREAM_READ_DIRECT",
+   "taint_chain": null,
+   "snippet": "\"retry\", \"failure.originInvalidResponse\", null, error.content_type ?? `empty ${error.body_kind} body`);",
+   "classification": "machine_label",
+   "reaches_dom": "yes",
+   "basis": [
+    {
+     "file": "frontend/src/lib/failureAttribution.ts",
+     "line": 160,
+     "text": "\"retry\", \"failure.originInvalidResponse\", null, error.content_type ?? `empty ${error.body_kind} body`);"
+    },
+    {
+     "file": "frontend/src/lib/failureAttribution.ts",
+     "line": 92,
+     "text": "readonly body_kind: \"html\" | \"not_json\" | \"empty\";"
+    }
+   ],
+   "why": "The tokens that fired are error.content_type (an allowed field in the ruling's own list) and error.body_kind, which line 92 types as the closed enum html | not_json | empty. What is interpolated is a status/machine classification, not an upstream sentence."
+  },
+  {
+   "file": "frontend/src/main.tsx",
+   "blob": "63a08b2344c72526758d639dd655bd55b5ef3047",
+   "line": 1066,
+   "rule": "UPSTREAM_EXCEPTION_TO_DOM",
+   "taint_chain": null,
+   "snippet": "<strong>Persisted tool trace · {agentRun.tool_steps.length} calls</strong>",
+   "classification": "machine_label",
+   "reaches_dom": "yes",
+   "basis": [
+    {
+     "file": "frontend/src/main.tsx",
+     "line": 1066,
+     "text": "<strong>Persisted tool trace · {agentRun.tool_steps.length} calls</strong>"
+    },
+    {
+     "file": "frontend/src/main.tsx",
+     "line": 1049,
+     "text": "<h3>{agentRun.status} · {agentRun.provider_key}/{agentRun.model_key}</h3>"
+    }
+   ],
+   "why": "The pattern fired on the word 'trace' inside a locally written label; what the interpolation at this line actually renders is agentRun.tool_steps.length, a count. See adjacent_findings: the server prose on this screen is on 1063-1064 and 1074-1075, which the ruler does not flag."
+  }
+ ],
+ "claim_kind": "pattern_determined",
+ "claimed_result": "SWEEP_VALID under ruler 44e062e6ce9c: 74 files scanned, 25 hit(s) in 12 file(s), classification {\"local_wording\": 6, \"machine_label\": 3, \"upstream_prose\": 16}, r2-vs-r3 identical_hit_set=True (delta 0/0)",
+ "derived_result": "Q64 r3 exposure inventory for tip 30de4ebe409f; 3 traced shapes neither revision covers"
+}
