@@ -1,0 +1,197 @@
+{
+ "tip": "e3184ac74db320840815a3eb105335fc38fdd038",
+ "planned": [
+  "RECEIPT_O0300C2-1955.json",
+  "c2_score.json",
+  "q38_ruler_O0300C2-1955_200920.txt",
+  "raw_bundle_c2.json",
+  "pair_log_pub.jsonl",
+  "pair_log_publish_proof_c2.json",
+  "backend_access.log",
+  "boundary_proof_c2.json",
+  "setup_facts.json",
+  "t90_facts.json",
+  "export_repair_facts.json",
+  "instruments/c2_setup.py",
+  "instruments/c2_add_data.py",
+  "instruments/c2_add_t90.py",
+  "instruments/c2proxy.py",
+  "instruments/c2_rig.py",
+  "instruments/c2_runarm.py",
+  "instruments/c2_score.py",
+  "instruments/c2_receipt.py",
+  "instruments/c2_md.py",
+  "instruments/c2_bounds.py",
+  "instruments/c2_bundle.py",
+  "instruments/c2_bundle_check.py",
+  "instruments/c2_gate_selftest.py",
+  "instruments/c2_no_rewrite.py",
+  "instruments/c2_publish.py",
+  "instruments/c2_pair_log_publish_copy.py",
+  "instruments/c2_instrument_publish_copy.py",
+  "instruments/seed_helper.py",
+  "instruments/c2_cells_pub.cjs"
+ ],
+ "skipped": [
+  {
+   "remote": "RECEIPT_O0300C2-1955.json",
+   "blob": "a8305c99cd81bf9c5904b018f1beca8624fe83d8",
+   "decision": "SKIP byte-identical"
+  },
+  {
+   "remote": "c2_score.json",
+   "blob": "fb8ea255eb3f4f219a2bbbe6cb268c5fdb92a754",
+   "decision": "SKIP byte-identical"
+  },
+  {
+   "remote": "q38_ruler_O0300C2-1955_200920.txt",
+   "blob": "5588d365a0b3eae4ea278ab19d145150e13ca0b6",
+   "decision": "SKIP byte-identical"
+  },
+  {
+   "remote": "pair_log_pub.jsonl",
+   "blob": "854195065bf43d4ee020c68b3646e580e8b3fa42",
+   "decision": "SKIP byte-identical"
+  },
+  {
+   "remote": "backend_access.log",
+   "blob": "17ef6f396a8d80d3a1269803fa1ae46948e9bc69",
+   "decision": "SKIP byte-identical"
+  },
+  {
+   "remote": "boundary_proof_c2.json",
+   "blob": "60d9290e9f1a43b97c4b0842d6c784ae97f863f6",
+   "decision": "SKIP byte-identical"
+  },
+  {
+   "remote": "setup_facts.json",
+   "blob": "0abc6190b773bef9b8a9801cec2d3aa24e072d1f",
+   "decision": "SKIP byte-identical"
+  },
+  {
+   "remote": "t90_facts.json",
+   "blob": "23db3dc8d6cf5b3ca3d7c273617c1c99200f6609",
+   "decision": "SKIP byte-identical"
+  },
+  {
+   "remote": "export_repair_facts.json",
+   "blob": "3256a1ec3479edba19760bc28f64baa44dddcdef",
+   "decision": "SKIP byte-identical"
+  },
+  {
+   "remote": "instruments/c2_setup.py",
+   "blob": "82a1e5955139c29bf3051fc599e6aefa6cbe07bd",
+   "decision": "SKIP byte-identical"
+  },
+  {
+   "remote": "instruments/c2_add_data.py",
+   "blob": "22c79309f9e831989cb94d8f21645a508c1f883d",
+   "decision": "SKIP byte-identical"
+  },
+  {
+   "remote": "instruments/c2_add_t90.py",
+   "blob": "9fa6f05d42434d9c6f209b54b211c7c32215dd68",
+   "decision": "SKIP byte-identical"
+  },
+  {
+   "remote": "instruments/c2proxy.py",
+   "blob": "d8e3bd2356e906a8a41fc87b526b77ce31dd8209",
+   "decision": "SKIP byte-identical"
+  },
+  {
+   "remote": "instruments/c2_rig.py",
+   "blob": "e8dbda8320ba45da326450da2ea8fc2445f44638",
+   "decision": "SKIP byte-identical"
+  },
+  {
+   "remote": "instruments/c2_runarm.py",
+   "blob": "c4b61f936275f9273df2d3392a9de0c64fe1be6d",
+   "decision": "SKIP byte-identical"
+  },
+  {
+   "remote": "instruments/c2_score.py",
+   "blob": "8f7499de7e69cd54126d35ecc191cd2dc7b048bd",
+   "decision": "SKIP - these exact bytes are already published as instruments/c2_score_r2.py",
+   "carried_by": "instruments/c2_score_r2.py"
+  },
+  {
+   "remote": "instruments/c2_receipt.py",
+   "blob": "ccd0674c1f691ba6038b3e366168cddf361a769d",
+   "decision": "SKIP - these exact bytes are already published as instruments/c2_receipt_r2.py",
+   "carried_by": "instruments/c2_receipt_r2.py"
+  },
+  {
+   "remote": "instruments/c2_md.py",
+   "blob": "5b6ba8c0748fe449a39c4a76466e48b2f9ae72f6",
+   "decision": "SKIP - these exact bytes are already published as instruments/c2_md_r2.py",
+   "carried_by": "instruments/c2_md_r2.py"
+  },
+  {
+   "remote": "instruments/c2_bounds.py",
+   "blob": "2bb619463dda67388748505fb213a165103b2a17",
+   "decision": "SKIP byte-identical"
+  },
+  {
+   "remote": "instruments/c2_bundle_check.py",
+   "blob": "857a1abac0d609746d953212f98f50f8043ba51a",
+   "decision": "SKIP byte-identical"
+  },
+  {
+   "remote": "instruments/c2_gate_selftest.py",
+   "blob": "e41873d811eae3eef3a3b3154f256f1e5923b3ed",
+   "decision": "SKIP byte-identical"
+  },
+  {
+   "remote": "instruments/c2_no_rewrite.py",
+   "blob": "25a62ae1a53628ba8201ad7ede7c5476500a689a",
+   "decision": "SKIP byte-identical"
+  },
+  {
+   "remote": "instruments/c2_instrument_publish_copy.py",
+   "blob": "43d2ac281b8d8471b82284ede39ebbd742115803",
+   "decision": "SKIP byte-identical"
+  },
+  {
+   "remote": "instruments/seed_helper.py",
+   "blob": "14fd87d274c6bb52eeef8948804eaa08631fedc4",
+   "decision": "SKIP byte-identical"
+  },
+  {
+   "remote": "instruments/c2_cells_pub.cjs",
+   "blob": "39a237e8868546c953cc3e3b4dc9532ed67c563d",
+   "decision": "SKIP byte-identical"
+  }
+ ],
+ "revisions_renamed": [
+  {
+   "was": "raw_bundle_c2.json",
+   "now": "raw_bundle_c2_r3.json",
+   "branch_blob_40_hex": "0946a65c0fa17921faa7efc5b8a34341496a7566",
+   "my_blob_40_hex": "3feafe4573d76e2683a83298c46582e82dfabac2"
+  },
+  {
+   "was": "pair_log_publish_proof_c2.json",
+   "now": "pair_log_publish_proof_c2_r2.json",
+   "branch_blob_40_hex": "5182c27477963d7de52e38790ada6f1170c598bb",
+   "my_blob_40_hex": "d0f9d1f1f01df31c4b6c5f80d703c14b9d52ac0c"
+  },
+  {
+   "was": "instruments/c2_bundle.py",
+   "now": "instruments/c2_bundle_r3.py",
+   "branch_blob_40_hex": "9e5a78dddc7fc3adc94d5bae533b08c81b31a67c",
+   "my_blob_40_hex": "f1df832b70a9c15a9f0e5e4eed7d05ea377e73a6"
+  },
+  {
+   "was": "instruments/c2_publish.py",
+   "now": "instruments/c2_publish_r2.py",
+   "branch_blob_40_hex": "1657e538a2d48d3530fb4f7ced4a866c803c7ae6",
+   "my_blob_40_hex": "6b945bde256dd94c762d26684efb54999fec045e"
+  },
+  {
+   "was": "instruments/c2_pair_log_publish_copy.py",
+   "now": "instruments/c2_pair_log_publish_copy_r2.py",
+   "branch_blob_40_hex": "dc634c040e5f331d083c476d7ff376c1c23d12b2",
+   "my_blob_40_hex": "699cf84b29315a601c02dd897da26e01fe80e902"
+  }
+ ]
+}
