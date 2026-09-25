@@ -1,0 +1,1057 @@
+{
+ "schema": "CNX_CMDR_LANDING_PREFLIGHT_V1",
+ "lane": "commander 494abfd7",
+ "at_local": "2026-09-26T04:10:55+0800",
+ "mode": "DRY_RUN",
+ "authoritative_line": "mirror/integration-frontend-apple-pass1",
+ "tip_re_read_from_github_before": "65df31df96cfb8a954f5feb36484710a883e1597",
+ "candidate_ref": "refs/heads/agent/S2-hermes-port-candidates",
+ "candidate_tip": "afbbf5be3256d76eac0453ab3ad8e6dd1356d7cc",
+ "genealogy": {
+  "ff_possible_rc": 1,
+  "ff_possible": false,
+  "merge_base": "30de4ebe409f49c5e25f4758cb2e5f4e90764a4f",
+  "line_only_commits": 2,
+  "candidate_only_commits": 1
+ },
+ "file_sets": {
+  "line_side_since_base": [
+   "backend/tests/test_v18_hermes_r10_tool_planning_probe.py",
+   "backend/tests/test_v18_hermes_r11_reliability_probe.py",
+   "backend/tests/test_v18_hermes_r12_delay_reliability_probe.py",
+   "backend/tests/test_v18_hermes_r13_weather_reliability_probe.py",
+   "backend/tests/test_v18_hermes_r14_budget_reliability_probe.py",
+   "backend/tests/test_v18_hermes_r15_commitment_reliability_probe.py",
+   "backend/tests/test_v18_hermes_r16_protected_target_reliability_probe.py",
+   "backend/tests/test_v18_hermes_r17_provider_state_reliability_probe.py",
+   "backend/tests/test_v18_hermes_r18_unavailable_proposal_reliability_probe.py",
+   "backend/tests/test_v18_hermes_r19_runtime_fallback_reliability_probe.py",
+   "backend/tests/test_v18_hermes_r21_request_replan_retry_probe.py",
+   "backend/tests/test_v18_hermes_r22_response_loss_recovery_probe.py",
+   "backend/tests/test_v18_hermes_r23_unguided_response_loss_probe.py",
+   "backend/tests/test_v18_hermes_r24_concurrent_request_replan_probe.py",
+   "backend/tests/test_v18_hermes_r25_concurrent_request_replan_conflict_probe.py",
+   "backend/tests/test_v18_hermes_r6_h11_model_probe.py",
+   "backend/tests/test_v18_hermes_r7_human_approval_probe.py",
+   "backend/tests/test_v18_hermes_r8_context_probe.py",
+   "backend/tests/test_v18_hermes_r9_mcp_context_probe.py",
+   "frontend/e2e/qoder-ord0302-unreadable-server-body.spec.ts",
+   "frontend/src/features/planning/PlanWithAiSheet.tsx",
+   "reports/hermes/HERMES_R10_REQUEST_ID_SCHEMA_SCENARIO.md",
+   "reports/hermes/HERMES_R10_SCENARIO.md",
+   "reports/hermes/HERMES_R11_SCENARIO.md",
+   "reports/hermes/HERMES_R12_SCENARIO.md",
+   "reports/hermes/HERMES_R13_SCENARIO.md",
+   "reports/hermes/HERMES_R14_SCENARIO.md",
+   "reports/hermes/HERMES_R15_SCENARIO.md",
+   "reports/hermes/HERMES_R16_SCENARIO.md",
+   "reports/hermes/HERMES_R17_SCENARIO.md",
+   "reports/hermes/HERMES_R18_SCENARIO.md",
+   "reports/hermes/HERMES_R19_SCENARIO.md",
+   "reports/hermes/HERMES_R20_SCENARIO.md",
+   "reports/hermes/HERMES_R21_SCENARIO.md",
+   "reports/hermes/HERMES_R22_SCENARIO.md",
+   "reports/hermes/HERMES_R23_SCENARIO.md",
+   "reports/hermes/HERMES_R24_SCENARIO.md",
+   "reports/hermes/HERMES_R25_SCENARIO.md",
+   "reports/hermes/HERMES_R4_REPORT.md",
+   "reports/hermes/HERMES_R5_REPORT.md",
+   "reports/hermes/HERMES_R5_SCENARIO.md",
+   "reports/hermes/HERMES_R9_SCENARIO.md",
+   "scripts/build_hermes_r10_request_id_review_package.py",
+   "scripts/build_hermes_r10_review_package.py",
+   "scripts/build_hermes_r11_review_package.py",
+   "scripts/build_hermes_r12_review_package.py",
+   "scripts/build_hermes_r13_review_package.py",
+   "scripts/build_hermes_r14_review_package.py",
+   "scripts/build_hermes_r15_review_package.py",
+   "scripts/build_hermes_r16_review_package.py",
+   "scripts/build_hermes_r17_review_package.py",
+   "scripts/build_hermes_r18_review_package.py",
+   "scripts/build_hermes_r19_review_package.py",
+   "scripts/build_hermes_r20_review_package.py",
+   "scripts/build_hermes_r21_review_package.py",
+   "scripts/build_hermes_r22_review_package.py",
+   "scripts/build_hermes_r23_review_package.py",
+   "scripts/build_hermes_r24_review_package.py",
+   "scripts/build_hermes_r25_review_package.py",
+   "scripts/hermes_r10_request_id_schema_probe.py",
+   "scripts/hermes_r10_tool_planning_probe.py",
+   "scripts/hermes_r11_reliability_probe.py",
+   "scripts/hermes_r12_delay_reliability_probe.py",
+   "scripts/hermes_r13_weather_reliability_probe.py",
+   "scripts/hermes_r14_budget_reliability_probe.py",
+   "scripts/hermes_r15_commitment_reliability_probe.py",
+   "scripts/hermes_r16_protected_target_reliability_probe.py",
+   "scripts/hermes_r17_provider_state_reliability_probe.py",
+   "scripts/hermes_r18_unavailable_proposal_reliability_probe.py",
+   "scripts/hermes_r19_runtime_fallback_reliability_probe.py",
+   "scripts/hermes_r20_transport_reliability_probe.py",
+   "scripts/hermes_r21_request_replan_retry_reliability_probe.py",
+   "scripts/hermes_r22_response_loss_recovery_probe.py",
+   "scripts/hermes_r23_unguided_response_loss_probe.py",
+   "scripts/hermes_r24_concurrent_request_replan_probe.py",
+   "scripts/hermes_r25_concurrent_request_replan_conflict_probe.py",
+   "scripts/hermes_r4_contract_probe.py",
+   "scripts/hermes_r4_launch.py",
+   "scripts/hermes_r4_socket_guard.py",
+   "scripts/hermes_r5_idempotency_probe.py",
+   "scripts/hermes_r6_h11_model_probe.py",
+   "scripts/hermes_r7_human_approval_probe.py",
+   "scripts/hermes_r8_context_probe.py",
+   "scripts/hermes_r9_mcp_context_probe.py",
+   "scripts/package_hermes_r5_review.py",
+   "scripts/recompute_hermes_r10_evidence.py",
+   "scripts/reproduce_hermes_r5.ps1",
+   "scripts/run_hermes_r5_captured.py",
+   "scripts/validate_hermes_r10_request_id_review.py",
+   "scripts/validate_hermes_r10_review.py",
+   "scripts/validate_hermes_r11_review.py",
+   "scripts/validate_hermes_r12_review.py",
+   "scripts/validate_hermes_r13_review.py",
+   "scripts/validate_hermes_r14_review.py",
+   "scripts/validate_hermes_r15_review.py",
+   "scripts/validate_hermes_r16_review.py",
+   "scripts/validate_hermes_r17_review.py",
+   "scripts/validate_hermes_r18_review.py",
+   "scripts/validate_hermes_r19_review.py",
+   "scripts/validate_hermes_r20_review.py",
+   "scripts/validate_hermes_r21_review.py",
+   "scripts/validate_hermes_r22_review.py",
+   "scripts/validate_hermes_r23_review.py",
+   "scripts/validate_hermes_r24_review.py",
+   "scripts/validate_hermes_r25_review.py",
+   "scripts/validate_hermes_r5_package.py",
+   "scripts/validate_hermes_r7_review.py",
+   "scripts/validate_hermes_r8_measurement.py",
+   "scripts/validate_hermes_r9_review.py"
+  ],
+  "candidate_side_since_base": [
+   "backend/tests/test_hermes_r5_cached_replan_compatibility.py",
+   "backend/tests/test_v18_hermes_r10_tool_planning_probe.py",
+   "backend/tests/test_v18_hermes_r11_reliability_probe.py",
+   "backend/tests/test_v18_hermes_r12_delay_reliability_probe.py",
+   "backend/tests/test_v18_hermes_r13_weather_reliability_probe.py",
+   "backend/tests/test_v18_hermes_r14_budget_reliability_probe.py",
+   "backend/tests/test_v18_hermes_r15_commitment_reliability_probe.py",
+   "backend/tests/test_v18_hermes_r16_protected_target_reliability_probe.py",
+   "backend/tests/test_v18_hermes_r17_provider_state_reliability_probe.py",
+   "backend/tests/test_v18_hermes_r18_unavailable_proposal_reliability_probe.py",
+   "backend/tests/test_v18_hermes_r19_runtime_fallback_reliability_probe.py",
+   "backend/tests/test_v18_hermes_r20_transport_reliability_probe.py",
+   "backend/tests/test_v18_hermes_r21_request_replan_retry_probe.py",
+   "backend/tests/test_v18_hermes_r22_response_loss_recovery_probe.py",
+   "backend/tests/test_v18_hermes_r23_unguided_response_loss_probe.py",
+   "backend/tests/test_v18_hermes_r24_concurrent_request_replan_probe.py",
+   "backend/tests/test_v18_hermes_r25_concurrent_request_replan_conflict_probe.py",
+   "backend/tests/test_v18_hermes_r6_h11_model_probe.py",
+   "backend/tests/test_v18_hermes_r7_human_approval_probe.py",
+   "backend/tests/test_v18_hermes_r8_context_probe.py",
+   "backend/tests/test_v18_hermes_r9_mcp_context_probe.py",
+   "reports/hermes/HERMES_R10_REQUEST_ID_SCHEMA_SCENARIO.md",
+   "reports/hermes/HERMES_R10_SCENARIO.md",
+   "reports/hermes/HERMES_R11_SCENARIO.md",
+   "reports/hermes/HERMES_R12_SCENARIO.md",
+   "reports/hermes/HERMES_R13_SCENARIO.md",
+   "reports/hermes/HERMES_R14_SCENARIO.md",
+   "reports/hermes/HERMES_R15_SCENARIO.md",
+   "reports/hermes/HERMES_R16_SCENARIO.md",
+   "reports/hermes/HERMES_R17_SCENARIO.md",
+   "reports/hermes/HERMES_R18_SCENARIO.md",
+   "reports/hermes/HERMES_R19_SCENARIO.md",
+   "reports/hermes/HERMES_R20_SCENARIO.md",
+   "reports/hermes/HERMES_R21_SCENARIO.md",
+   "reports/hermes/HERMES_R22_SCENARIO.md",
+   "reports/hermes/HERMES_R23_SCENARIO.md",
+   "reports/hermes/HERMES_R24_SCENARIO.md",
+   "reports/hermes/HERMES_R25_SCENARIO.md",
+   "reports/hermes/HERMES_R4_REPORT.md",
+   "reports/hermes/HERMES_R5_REPORT.md",
+   "reports/hermes/HERMES_R5_SCENARIO.md",
+   "reports/hermes/HERMES_R9_SCENARIO.md",
+   "scripts/build_hermes_r10_request_id_review_package.py",
+   "scripts/build_hermes_r10_review_package.py",
+   "scripts/build_hermes_r11_review_package.py",
+   "scripts/build_hermes_r12_review_package.py",
+   "scripts/build_hermes_r13_review_package.py",
+   "scripts/build_hermes_r14_review_package.py",
+   "scripts/build_hermes_r15_review_package.py",
+   "scripts/build_hermes_r16_review_package.py",
+   "scripts/build_hermes_r17_review_package.py",
+   "scripts/build_hermes_r18_review_package.py",
+   "scripts/build_hermes_r19_review_package.py",
+   "scripts/build_hermes_r20_review_package.py",
+   "scripts/build_hermes_r21_review_package.py",
+   "scripts/build_hermes_r22_review_package.py",
+   "scripts/build_hermes_r23_review_package.py",
+   "scripts/build_hermes_r24_review_package.py",
+   "scripts/build_hermes_r25_review_package.py",
+   "scripts/hermes_r10_request_id_schema_probe.py",
+   "scripts/hermes_r10_tool_planning_probe.py",
+   "scripts/hermes_r11_reliability_probe.py",
+   "scripts/hermes_r12_delay_reliability_probe.py",
+   "scripts/hermes_r13_weather_reliability_probe.py",
+   "scripts/hermes_r14_budget_reliability_probe.py",
+   "scripts/hermes_r15_commitment_reliability_probe.py",
+   "scripts/hermes_r16_protected_target_reliability_probe.py",
+   "scripts/hermes_r17_provider_state_reliability_probe.py",
+   "scripts/hermes_r18_unavailable_proposal_reliability_probe.py",
+   "scripts/hermes_r19_runtime_fallback_reliability_probe.py",
+   "scripts/hermes_r20_transport_reliability_probe.py",
+   "scripts/hermes_r21_request_replan_retry_reliability_probe.py",
+   "scripts/hermes_r22_response_loss_recovery_probe.py",
+   "scripts/hermes_r23_unguided_response_loss_probe.py",
+   "scripts/hermes_r24_concurrent_request_replan_probe.py",
+   "scripts/hermes_r25_concurrent_request_replan_conflict_probe.py",
+   "scripts/hermes_r4_contract_probe.py",
+   "scripts/hermes_r4_launch.py",
+   "scripts/hermes_r4_socket_guard.py",
+   "scripts/hermes_r5_idempotency_probe.py",
+   "scripts/hermes_r6_h11_model_probe.py",
+   "scripts/hermes_r7_human_approval_probe.py",
+   "scripts/hermes_r8_context_probe.py",
+   "scripts/hermes_r9_mcp_context_probe.py",
+   "scripts/package_hermes_r5_review.py",
+   "scripts/recompute_hermes_r10_evidence.py",
+   "scripts/reproduce_hermes_r5.ps1",
+   "scripts/run_hermes_r5_captured.py",
+   "scripts/validate_hermes_r10_request_id_review.py",
+   "scripts/validate_hermes_r10_review.py",
+   "scripts/validate_hermes_r11_review.py",
+   "scripts/validate_hermes_r12_review.py",
+   "scripts/validate_hermes_r13_review.py",
+   "scripts/validate_hermes_r14_review.py",
+   "scripts/validate_hermes_r15_review.py",
+   "scripts/validate_hermes_r16_review.py",
+   "scripts/validate_hermes_r17_review.py",
+   "scripts/validate_hermes_r18_review.py",
+   "scripts/validate_hermes_r19_review.py",
+   "scripts/validate_hermes_r20_review.py",
+   "scripts/validate_hermes_r21_review.py",
+   "scripts/validate_hermes_r22_review.py",
+   "scripts/validate_hermes_r23_review.py",
+   "scripts/validate_hermes_r24_review.py",
+   "scripts/validate_hermes_r25_review.py",
+   "scripts/validate_hermes_r5_package.py",
+   "scripts/validate_hermes_r7_review.py",
+   "scripts/validate_hermes_r8_measurement.py",
+   "scripts/validate_hermes_r9_review.py"
+  ],
+  "intersection": [
+   "backend/tests/test_v18_hermes_r10_tool_planning_probe.py",
+   "backend/tests/test_v18_hermes_r11_reliability_probe.py",
+   "backend/tests/test_v18_hermes_r12_delay_reliability_probe.py",
+   "backend/tests/test_v18_hermes_r13_weather_reliability_probe.py",
+   "backend/tests/test_v18_hermes_r14_budget_reliability_probe.py",
+   "backend/tests/test_v18_hermes_r15_commitment_reliability_probe.py",
+   "backend/tests/test_v18_hermes_r16_protected_target_reliability_probe.py",
+   "backend/tests/test_v18_hermes_r17_provider_state_reliability_probe.py",
+   "backend/tests/test_v18_hermes_r18_unavailable_proposal_reliability_probe.py",
+   "backend/tests/test_v18_hermes_r19_runtime_fallback_reliability_probe.py",
+   "backend/tests/test_v18_hermes_r21_request_replan_retry_probe.py",
+   "backend/tests/test_v18_hermes_r22_response_loss_recovery_probe.py",
+   "backend/tests/test_v18_hermes_r23_unguided_response_loss_probe.py",
+   "backend/tests/test_v18_hermes_r24_concurrent_request_replan_probe.py",
+   "backend/tests/test_v18_hermes_r25_concurrent_request_replan_conflict_probe.py",
+   "backend/tests/test_v18_hermes_r6_h11_model_probe.py",
+   "backend/tests/test_v18_hermes_r7_human_approval_probe.py",
+   "backend/tests/test_v18_hermes_r8_context_probe.py",
+   "backend/tests/test_v18_hermes_r9_mcp_context_probe.py",
+   "reports/hermes/HERMES_R10_REQUEST_ID_SCHEMA_SCENARIO.md",
+   "reports/hermes/HERMES_R10_SCENARIO.md",
+   "reports/hermes/HERMES_R11_SCENARIO.md",
+   "reports/hermes/HERMES_R12_SCENARIO.md",
+   "reports/hermes/HERMES_R13_SCENARIO.md",
+   "reports/hermes/HERMES_R14_SCENARIO.md",
+   "reports/hermes/HERMES_R15_SCENARIO.md",
+   "reports/hermes/HERMES_R16_SCENARIO.md",
+   "reports/hermes/HERMES_R17_SCENARIO.md",
+   "reports/hermes/HERMES_R18_SCENARIO.md",
+   "reports/hermes/HERMES_R19_SCENARIO.md",
+   "reports/hermes/HERMES_R20_SCENARIO.md",
+   "reports/hermes/HERMES_R21_SCENARIO.md",
+   "reports/hermes/HERMES_R22_SCENARIO.md",
+   "reports/hermes/HERMES_R23_SCENARIO.md",
+   "reports/hermes/HERMES_R24_SCENARIO.md",
+   "reports/hermes/HERMES_R25_SCENARIO.md",
+   "reports/hermes/HERMES_R4_REPORT.md",
+   "reports/hermes/HERMES_R5_REPORT.md",
+   "reports/hermes/HERMES_R5_SCENARIO.md",
+   "reports/hermes/HERMES_R9_SCENARIO.md",
+   "scripts/build_hermes_r10_request_id_review_package.py",
+   "scripts/build_hermes_r10_review_package.py",
+   "scripts/build_hermes_r11_review_package.py",
+   "scripts/build_hermes_r12_review_package.py",
+   "scripts/build_hermes_r13_review_package.py",
+   "scripts/build_hermes_r14_review_package.py",
+   "scripts/build_hermes_r15_review_package.py",
+   "scripts/build_hermes_r16_review_package.py",
+   "scripts/build_hermes_r17_review_package.py",
+   "scripts/build_hermes_r18_review_package.py",
+   "scripts/build_hermes_r19_review_package.py",
+   "scripts/build_hermes_r20_review_package.py",
+   "scripts/build_hermes_r21_review_package.py",
+   "scripts/build_hermes_r22_review_package.py",
+   "scripts/build_hermes_r23_review_package.py",
+   "scripts/build_hermes_r24_review_package.py",
+   "scripts/build_hermes_r25_review_package.py",
+   "scripts/hermes_r10_request_id_schema_probe.py",
+   "scripts/hermes_r10_tool_planning_probe.py",
+   "scripts/hermes_r11_reliability_probe.py",
+   "scripts/hermes_r12_delay_reliability_probe.py",
+   "scripts/hermes_r13_weather_reliability_probe.py",
+   "scripts/hermes_r14_budget_reliability_probe.py",
+   "scripts/hermes_r15_commitment_reliability_probe.py",
+   "scripts/hermes_r16_protected_target_reliability_probe.py",
+   "scripts/hermes_r17_provider_state_reliability_probe.py",
+   "scripts/hermes_r18_unavailable_proposal_reliability_probe.py",
+   "scripts/hermes_r19_runtime_fallback_reliability_probe.py",
+   "scripts/hermes_r20_transport_reliability_probe.py",
+   "scripts/hermes_r21_request_replan_retry_reliability_probe.py",
+   "scripts/hermes_r22_response_loss_recovery_probe.py",
+   "scripts/hermes_r23_unguided_response_loss_probe.py",
+   "scripts/hermes_r24_concurrent_request_replan_probe.py",
+   "scripts/hermes_r25_concurrent_request_replan_conflict_probe.py",
+   "scripts/hermes_r4_contract_probe.py",
+   "scripts/hermes_r4_launch.py",
+   "scripts/hermes_r4_socket_guard.py",
+   "scripts/hermes_r5_idempotency_probe.py",
+   "scripts/hermes_r6_h11_model_probe.py",
+   "scripts/hermes_r7_human_approval_probe.py",
+   "scripts/hermes_r8_context_probe.py",
+   "scripts/hermes_r9_mcp_context_probe.py",
+   "scripts/package_hermes_r5_review.py",
+   "scripts/recompute_hermes_r10_evidence.py",
+   "scripts/reproduce_hermes_r5.ps1",
+   "scripts/run_hermes_r5_captured.py",
+   "scripts/validate_hermes_r10_request_id_review.py",
+   "scripts/validate_hermes_r10_review.py",
+   "scripts/validate_hermes_r11_review.py",
+   "scripts/validate_hermes_r12_review.py",
+   "scripts/validate_hermes_r13_review.py",
+   "scripts/validate_hermes_r14_review.py",
+   "scripts/validate_hermes_r15_review.py",
+   "scripts/validate_hermes_r16_review.py",
+   "scripts/validate_hermes_r17_review.py",
+   "scripts/validate_hermes_r18_review.py",
+   "scripts/validate_hermes_r19_review.py",
+   "scripts/validate_hermes_r20_review.py",
+   "scripts/validate_hermes_r21_review.py",
+   "scripts/validate_hermes_r22_review.py",
+   "scripts/validate_hermes_r23_review.py",
+   "scripts/validate_hermes_r24_review.py",
+   "scripts/validate_hermes_r25_review.py",
+   "scripts/validate_hermes_r5_package.py",
+   "scripts/validate_hermes_r7_review.py",
+   "scripts/validate_hermes_r8_measurement.py",
+   "scripts/validate_hermes_r9_review.py"
+  ],
+  "product_introduced_by_candidate": []
+ },
+ "merge_tree": {
+  "exit": 0,
+  "first_line": "59368f7f942df19d1ac842e566a8f1abddd7410f",
+  "conflict_reported": false,
+  "stderr_head": ""
+ },
+ "gate_run": {
+  "requested": [],
+  "collect_exit": null,
+  "collected": null,
+  "test_exit": null,
+  "summary": null,
+  "export": "D:/moodle/_qoder_cmdr_ref_20260921/snap_preflight_041037",
+  "blob_equality": [
+   {
+    "path": "backend/tests/test_hermes_r5_cached_replan_compatibility.py",
+    "candidate_blob": "135a1b22562de77f94de8898d8ff8c8a22cdaeb1",
+    "export_blob": "135a1b22562de77f94de8898d8ff8c8a22cdaeb1",
+    "equal": true
+   },
+   {
+    "path": "backend/tests/test_v18_hermes_r10_tool_planning_probe.py",
+    "candidate_blob": "49431e7bfd36ff33896bc15a60700289170ad0e6",
+    "export_blob": "49431e7bfd36ff33896bc15a60700289170ad0e6",
+    "equal": true
+   },
+   {
+    "path": "backend/tests/test_v18_hermes_r11_reliability_probe.py",
+    "candidate_blob": "d42bf2f3bbf60c9d873f36f432272e29d4d3aa55",
+    "export_blob": "d42bf2f3bbf60c9d873f36f432272e29d4d3aa55",
+    "equal": true
+   },
+   {
+    "path": "backend/tests/test_v18_hermes_r12_delay_reliability_probe.py",
+    "candidate_blob": "afb9da20fd55740a97df10456878adeb1078fb4a",
+    "export_blob": "afb9da20fd55740a97df10456878adeb1078fb4a",
+    "equal": true
+   },
+   {
+    "path": "backend/tests/test_v18_hermes_r13_weather_reliability_probe.py",
+    "candidate_blob": "06ad1718da1d6fa83e1dbaa87efb315ec25b8e44",
+    "export_blob": "06ad1718da1d6fa83e1dbaa87efb315ec25b8e44",
+    "equal": true
+   },
+   {
+    "path": "backend/tests/test_v18_hermes_r14_budget_reliability_probe.py",
+    "candidate_blob": "a6534a8e38d8c539f9099c245fabbaa89998c4b3",
+    "export_blob": "a6534a8e38d8c539f9099c245fabbaa89998c4b3",
+    "equal": true
+   },
+   {
+    "path": "backend/tests/test_v18_hermes_r15_commitment_reliability_probe.py",
+    "candidate_blob": "82e5680fc2351c36d11668739e0528a68142d570",
+    "export_blob": "82e5680fc2351c36d11668739e0528a68142d570",
+    "equal": true
+   },
+   {
+    "path": "backend/tests/test_v18_hermes_r16_protected_target_reliability_probe.py",
+    "candidate_blob": "1abc47f2e590669f1a0e5f0f5cf4a50de9cd1a57",
+    "export_blob": "1abc47f2e590669f1a0e5f0f5cf4a50de9cd1a57",
+    "equal": true
+   },
+   {
+    "path": "backend/tests/test_v18_hermes_r17_provider_state_reliability_probe.py",
+    "candidate_blob": "43bbc499fcf62ca2ffa0917a10f24194bc13a84e",
+    "export_blob": "43bbc499fcf62ca2ffa0917a10f24194bc13a84e",
+    "equal": true
+   },
+   {
+    "path": "backend/tests/test_v18_hermes_r18_unavailable_proposal_reliability_probe.py",
+    "candidate_blob": "ca95573ecda00f616f17afbdb4ffc91a39b1e35f",
+    "export_blob": "ca95573ecda00f616f17afbdb4ffc91a39b1e35f",
+    "equal": true
+   },
+   {
+    "path": "backend/tests/test_v18_hermes_r19_runtime_fallback_reliability_probe.py",
+    "candidate_blob": "22daca435f0065e17c6da151d85dd57c340e78cf",
+    "export_blob": "22daca435f0065e17c6da151d85dd57c340e78cf",
+    "equal": true
+   },
+   {
+    "path": "backend/tests/test_v18_hermes_r20_transport_reliability_probe.py",
+    "candidate_blob": "cfc4e1ef16867a2164cdcea4e139a119cc8db45d",
+    "export_blob": "cfc4e1ef16867a2164cdcea4e139a119cc8db45d",
+    "equal": true
+   },
+   {
+    "path": "backend/tests/test_v18_hermes_r21_request_replan_retry_probe.py",
+    "candidate_blob": "cb33a70ebe2b7001407aada78b54e7843dc44810",
+    "export_blob": "cb33a70ebe2b7001407aada78b54e7843dc44810",
+    "equal": true
+   },
+   {
+    "path": "backend/tests/test_v18_hermes_r22_response_loss_recovery_probe.py",
+    "candidate_blob": "203d59c4d00f3edba94a98e8d2e3ff8ae2017ce7",
+    "export_blob": "203d59c4d00f3edba94a98e8d2e3ff8ae2017ce7",
+    "equal": true
+   },
+   {
+    "path": "backend/tests/test_v18_hermes_r23_unguided_response_loss_probe.py",
+    "candidate_blob": "a5696b34c0f652fa3223955f9b21dae84f53455b",
+    "export_blob": "a5696b34c0f652fa3223955f9b21dae84f53455b",
+    "equal": true
+   },
+   {
+    "path": "backend/tests/test_v18_hermes_r24_concurrent_request_replan_probe.py",
+    "candidate_blob": "ec5c2216720c560fb719fd1278bf4b94982259e0",
+    "export_blob": "ec5c2216720c560fb719fd1278bf4b94982259e0",
+    "equal": true
+   },
+   {
+    "path": "backend/tests/test_v18_hermes_r25_concurrent_request_replan_conflict_probe.py",
+    "candidate_blob": "b523c3b0f01ce12f205e1f5e0e1a9da4d67e0c71",
+    "export_blob": "b523c3b0f01ce12f205e1f5e0e1a9da4d67e0c71",
+    "equal": true
+   },
+   {
+    "path": "backend/tests/test_v18_hermes_r6_h11_model_probe.py",
+    "candidate_blob": "05ba133584d6ac0c537d70fdde8cb20906e19ea8",
+    "export_blob": "05ba133584d6ac0c537d70fdde8cb20906e19ea8",
+    "equal": true
+   },
+   {
+    "path": "backend/tests/test_v18_hermes_r7_human_approval_probe.py",
+    "candidate_blob": "c59ddc0592d7c444861968bdddab154b4be587fb",
+    "export_blob": "c59ddc0592d7c444861968bdddab154b4be587fb",
+    "equal": true
+   },
+   {
+    "path": "backend/tests/test_v18_hermes_r8_context_probe.py",
+    "candidate_blob": "5b372857f381f2d40f9822dd5225d5c7317823d3",
+    "export_blob": "5b372857f381f2d40f9822dd5225d5c7317823d3",
+    "equal": true
+   },
+   {
+    "path": "backend/tests/test_v18_hermes_r9_mcp_context_probe.py",
+    "candidate_blob": "12e2ed159b979566db003b8c73a1cbf0849b2c55",
+    "export_blob": "12e2ed159b979566db003b8c73a1cbf0849b2c55",
+    "equal": true
+   },
+   {
+    "path": "reports/hermes/HERMES_R10_REQUEST_ID_SCHEMA_SCENARIO.md",
+    "candidate_blob": "b48c752da829ee5deac935348135e5a4436537d5",
+    "export_blob": "b48c752da829ee5deac935348135e5a4436537d5",
+    "equal": true
+   },
+   {
+    "path": "reports/hermes/HERMES_R10_SCENARIO.md",
+    "candidate_blob": "10325b5ed7f851fe17bd4432183ae426cdc06b7e",
+    "export_blob": "10325b5ed7f851fe17bd4432183ae426cdc06b7e",
+    "equal": true
+   },
+   {
+    "path": "reports/hermes/HERMES_R11_SCENARIO.md",
+    "candidate_blob": "4003b310498c776548b1ca09f16314887fc1ab7c",
+    "export_blob": "4003b310498c776548b1ca09f16314887fc1ab7c",
+    "equal": true
+   },
+   {
+    "path": "reports/hermes/HERMES_R12_SCENARIO.md",
+    "candidate_blob": "20854d781c1a5e5af40f98feb4e46814eec5a2df",
+    "export_blob": "20854d781c1a5e5af40f98feb4e46814eec5a2df",
+    "equal": true
+   },
+   {
+    "path": "reports/hermes/HERMES_R13_SCENARIO.md",
+    "candidate_blob": "795a0975d237e7fd7c2d757a79598a8242857a43",
+    "export_blob": "795a0975d237e7fd7c2d757a79598a8242857a43",
+    "equal": true
+   },
+   {
+    "path": "reports/hermes/HERMES_R14_SCENARIO.md",
+    "candidate_blob": "be46ac593a07aea9987cf5f33c3b2d89598d9e34",
+    "export_blob": "be46ac593a07aea9987cf5f33c3b2d89598d9e34",
+    "equal": true
+   },
+   {
+    "path": "reports/hermes/HERMES_R15_SCENARIO.md",
+    "candidate_blob": "6e15c3de0779deff4e3808aee66c38fb1d048a21",
+    "export_blob": "6e15c3de0779deff4e3808aee66c38fb1d048a21",
+    "equal": true
+   },
+   {
+    "path": "reports/hermes/HERMES_R16_SCENARIO.md",
+    "candidate_blob": "815e196053cf586e86d4bbdd64118d423db07bf0",
+    "export_blob": "815e196053cf586e86d4bbdd64118d423db07bf0",
+    "equal": true
+   },
+   {
+    "path": "reports/hermes/HERMES_R17_SCENARIO.md",
+    "candidate_blob": "5e0269b41463bcb418ffda9ba2e223dfad45b2df",
+    "export_blob": "5e0269b41463bcb418ffda9ba2e223dfad45b2df",
+    "equal": true
+   },
+   {
+    "path": "reports/hermes/HERMES_R18_SCENARIO.md",
+    "candidate_blob": "f93409e09756bc5ad83adad3613381677f38f59c",
+    "export_blob": "f93409e09756bc5ad83adad3613381677f38f59c",
+    "equal": true
+   },
+   {
+    "path": "reports/hermes/HERMES_R19_SCENARIO.md",
+    "candidate_blob": "83abc3027f160e29023e7070b04ae0b88b022523",
+    "export_blob": "83abc3027f160e29023e7070b04ae0b88b022523",
+    "equal": true
+   },
+   {
+    "path": "reports/hermes/HERMES_R20_SCENARIO.md",
+    "candidate_blob": "358227532eca20bbcb33d29098772b8b6a48a049",
+    "export_blob": "358227532eca20bbcb33d29098772b8b6a48a049",
+    "equal": true
+   },
+   {
+    "path": "reports/hermes/HERMES_R21_SCENARIO.md",
+    "candidate_blob": "8ab0762e67c759e9f570584ebdc143c5b12a1853",
+    "export_blob": "8ab0762e67c759e9f570584ebdc143c5b12a1853",
+    "equal": true
+   },
+   {
+    "path": "reports/hermes/HERMES_R22_SCENARIO.md",
+    "candidate_blob": "579f245a13c40683ea59ab8826027881912bd892",
+    "export_blob": "579f245a13c40683ea59ab8826027881912bd892",
+    "equal": true
+   },
+   {
+    "path": "reports/hermes/HERMES_R23_SCENARIO.md",
+    "candidate_blob": "df083b390d1d3d2bb52891eea0e2c444d01642b8",
+    "export_blob": "df083b390d1d3d2bb52891eea0e2c444d01642b8",
+    "equal": true
+   },
+   {
+    "path": "reports/hermes/HERMES_R24_SCENARIO.md",
+    "candidate_blob": "30f8abfe07e25d7a8035ed2b15772c3e00f7afe5",
+    "export_blob": "30f8abfe07e25d7a8035ed2b15772c3e00f7afe5",
+    "equal": true
+   },
+   {
+    "path": "reports/hermes/HERMES_R25_SCENARIO.md",
+    "candidate_blob": "cb488a2e3414165ae30eb775af67647af53da9a9",
+    "export_blob": "cb488a2e3414165ae30eb775af67647af53da9a9",
+    "equal": true
+   },
+   {
+    "path": "reports/hermes/HERMES_R4_REPORT.md",
+    "candidate_blob": "7f4fdb01357eb6775734b02285c1b01020dbac4d",
+    "export_blob": "7f4fdb01357eb6775734b02285c1b01020dbac4d",
+    "equal": true
+   },
+   {
+    "path": "reports/hermes/HERMES_R5_REPORT.md",
+    "candidate_blob": "42bd443ce66d505387de861d4e44005d9d70c0bc",
+    "export_blob": "42bd443ce66d505387de861d4e44005d9d70c0bc",
+    "equal": true
+   },
+   {
+    "path": "reports/hermes/HERMES_R5_SCENARIO.md",
+    "candidate_blob": "04820cf5a54db56618ea033e3465054fc7b925c2",
+    "export_blob": "04820cf5a54db56618ea033e3465054fc7b925c2",
+    "equal": true
+   },
+   {
+    "path": "reports/hermes/HERMES_R9_SCENARIO.md",
+    "candidate_blob": "56db19ce265e4687a152d81ea3fbeb53197fd0b0",
+    "export_blob": "56db19ce265e4687a152d81ea3fbeb53197fd0b0",
+    "equal": true
+   },
+   {
+    "path": "scripts/build_hermes_r10_request_id_review_package.py",
+    "candidate_blob": "cb65dea01b01a1206beaa7abcd347c257e91bcc9",
+    "export_blob": "cb65dea01b01a1206beaa7abcd347c257e91bcc9",
+    "equal": true
+   },
+   {
+    "path": "scripts/build_hermes_r10_review_package.py",
+    "candidate_blob": "657ea2c47e524845492517d69a2b206a351d9eda",
+    "export_blob": "657ea2c47e524845492517d69a2b206a351d9eda",
+    "equal": true
+   },
+   {
+    "path": "scripts/build_hermes_r11_review_package.py",
+    "candidate_blob": "eea0b874705beecbea728295653b3532c9e7ca10",
+    "export_blob": "eea0b874705beecbea728295653b3532c9e7ca10",
+    "equal": true
+   },
+   {
+    "path": "scripts/build_hermes_r12_review_package.py",
+    "candidate_blob": "7bb40daba2f6013dc49d76f03bfbce25933ec1e9",
+    "export_blob": "7bb40daba2f6013dc49d76f03bfbce25933ec1e9",
+    "equal": true
+   },
+   {
+    "path": "scripts/build_hermes_r13_review_package.py",
+    "candidate_blob": "10d553533fce85f32419b830b3cb175f784fbb63",
+    "export_blob": "10d553533fce85f32419b830b3cb175f784fbb63",
+    "equal": true
+   },
+   {
+    "path": "scripts/build_hermes_r14_review_package.py",
+    "candidate_blob": "48c88f821a2980ccd056cf2f50ba122d99782127",
+    "export_blob": "48c88f821a2980ccd056cf2f50ba122d99782127",
+    "equal": true
+   },
+   {
+    "path": "scripts/build_hermes_r15_review_package.py",
+    "candidate_blob": "687f2503148cd23dc2bba99250728b372bbfb5bc",
+    "export_blob": "687f2503148cd23dc2bba99250728b372bbfb5bc",
+    "equal": true
+   },
+   {
+    "path": "scripts/build_hermes_r16_review_package.py",
+    "candidate_blob": "f5d04cf03c2f9c2eb8602252afe39ffd6f972a6f",
+    "export_blob": "f5d04cf03c2f9c2eb8602252afe39ffd6f972a6f",
+    "equal": true
+   },
+   {
+    "path": "scripts/build_hermes_r17_review_package.py",
+    "candidate_blob": "b1448f14d20ffc19a1c42d603902062926dcaea3",
+    "export_blob": "b1448f14d20ffc19a1c42d603902062926dcaea3",
+    "equal": true
+   },
+   {
+    "path": "scripts/build_hermes_r18_review_package.py",
+    "candidate_blob": "895661ac54c1e8ae580aa8493fc503a6e8306f29",
+    "export_blob": "895661ac54c1e8ae580aa8493fc503a6e8306f29",
+    "equal": true
+   },
+   {
+    "path": "scripts/build_hermes_r19_review_package.py",
+    "candidate_blob": "0c0065e9640d0b717ef674a3762122aeb445d29e",
+    "export_blob": "0c0065e9640d0b717ef674a3762122aeb445d29e",
+    "equal": true
+   },
+   {
+    "path": "scripts/build_hermes_r20_review_package.py",
+    "candidate_blob": "78fcdcde95be3885005b418cb83961c0961da1a4",
+    "export_blob": "78fcdcde95be3885005b418cb83961c0961da1a4",
+    "equal": true
+   },
+   {
+    "path": "scripts/build_hermes_r21_review_package.py",
+    "candidate_blob": "6a88e7645651427b7530b8f9dea0d7d09095e960",
+    "export_blob": "6a88e7645651427b7530b8f9dea0d7d09095e960",
+    "equal": true
+   },
+   {
+    "path": "scripts/build_hermes_r22_review_package.py",
+    "candidate_blob": "c1ec954fd59041b97f0b579b5c93a6ec53d3b20f",
+    "export_blob": "c1ec954fd59041b97f0b579b5c93a6ec53d3b20f",
+    "equal": true
+   },
+   {
+    "path": "scripts/build_hermes_r23_review_package.py",
+    "candidate_blob": "7a751274cf44e864db9653a8d9ab58eb0cfb73c3",
+    "export_blob": "7a751274cf44e864db9653a8d9ab58eb0cfb73c3",
+    "equal": true
+   },
+   {
+    "path": "scripts/build_hermes_r24_review_package.py",
+    "candidate_blob": "12fc20cdd84f59d92f45b4a932dc0c5e52ea8c3b",
+    "export_blob": "12fc20cdd84f59d92f45b4a932dc0c5e52ea8c3b",
+    "equal": true
+   },
+   {
+    "path": "scripts/build_hermes_r25_review_package.py",
+    "candidate_blob": "31eda031d7ce998b0727efaeb90f6b8d6a6d04d3",
+    "export_blob": "31eda031d7ce998b0727efaeb90f6b8d6a6d04d3",
+    "equal": true
+   },
+   {
+    "path": "scripts/hermes_r10_request_id_schema_probe.py",
+    "candidate_blob": "9f43b651a7798815a3d6c9477e876f524175a707",
+    "export_blob": "9f43b651a7798815a3d6c9477e876f524175a707",
+    "equal": true
+   },
+   {
+    "path": "scripts/hermes_r10_tool_planning_probe.py",
+    "candidate_blob": "8c1f58ab582ad680dd363d4e3485a97ace3669da",
+    "export_blob": "8c1f58ab582ad680dd363d4e3485a97ace3669da",
+    "equal": true
+   },
+   {
+    "path": "scripts/hermes_r11_reliability_probe.py",
+    "candidate_blob": "75bd2763fe94ae7b83485873d51e6071aed5089b",
+    "export_blob": "75bd2763fe94ae7b83485873d51e6071aed5089b",
+    "equal": true
+   },
+   {
+    "path": "scripts/hermes_r12_delay_reliability_probe.py",
+    "candidate_blob": "a9bffdbe30a9a7bfb997fb55c6ee22ef663fbdf1",
+    "export_blob": "a9bffdbe30a9a7bfb997fb55c6ee22ef663fbdf1",
+    "equal": true
+   },
+   {
+    "path": "scripts/hermes_r13_weather_reliability_probe.py",
+    "candidate_blob": "c42962e893a4f24b2bcfbecc5b0cab30b8c7406c",
+    "export_blob": "c42962e893a4f24b2bcfbecc5b0cab30b8c7406c",
+    "equal": true
+   },
+   {
+    "path": "scripts/hermes_r14_budget_reliability_probe.py",
+    "candidate_blob": "368916d07fc03da9a930715e36280a9610ee520f",
+    "export_blob": "368916d07fc03da9a930715e36280a9610ee520f",
+    "equal": true
+   },
+   {
+    "path": "scripts/hermes_r15_commitment_reliability_probe.py",
+    "candidate_blob": "e82239ba29b0363507f1eb57e82f376d1075027c",
+    "export_blob": "e82239ba29b0363507f1eb57e82f376d1075027c",
+    "equal": true
+   },
+   {
+    "path": "scripts/hermes_r16_protected_target_reliability_probe.py",
+    "candidate_blob": "097e4548705545cc07584b4a0883c06982d3a2cc",
+    "export_blob": "097e4548705545cc07584b4a0883c06982d3a2cc",
+    "equal": true
+   },
+   {
+    "path": "scripts/hermes_r17_provider_state_reliability_probe.py",
+    "candidate_blob": "9c970fe2bfb86dfa9f12d524caf45b75c0c700e9",
+    "export_blob": "9c970fe2bfb86dfa9f12d524caf45b75c0c700e9",
+    "equal": true
+   },
+   {
+    "path": "scripts/hermes_r18_unavailable_proposal_reliability_probe.py",
+    "candidate_blob": "8e3d3740b51b06dd0004ee92586023741fd3d969",
+    "export_blob": "8e3d3740b51b06dd0004ee92586023741fd3d969",
+    "equal": true
+   },
+   {
+    "path": "scripts/hermes_r19_runtime_fallback_reliability_probe.py",
+    "candidate_blob": "ec81fd5684b7f22f941fa6ad9c21a2edd406a2a7",
+    "export_blob": "ec81fd5684b7f22f941fa6ad9c21a2edd406a2a7",
+    "equal": true
+   },
+   {
+    "path": "scripts/hermes_r20_transport_reliability_probe.py",
+    "candidate_blob": "ecdf0784866b13998e717a8a53740dfaa500d25f",
+    "export_blob": "ecdf0784866b13998e717a8a53740dfaa500d25f",
+    "equal": true
+   },
+   {
+    "path": "scripts/hermes_r21_request_replan_retry_reliability_probe.py",
+    "candidate_blob": "b090c4e08533389143d5b8e0fe934162d2b5ff79",
+    "export_blob": "b090c4e08533389143d5b8e0fe934162d2b5ff79",
+    "equal": true
+   },
+   {
+    "path": "scripts/hermes_r22_response_loss_recovery_probe.py",
+    "candidate_blob": "4ab3b78ea441dc1290159124a27b70d29a7f2e04",
+    "export_blob": "4ab3b78ea441dc1290159124a27b70d29a7f2e04",
+    "equal": true
+   },
+   {
+    "path": "scripts/hermes_r23_unguided_response_loss_probe.py",
+    "candidate_blob": "92992a1d8f412db053654fb8be4e21d2021e5c04",
+    "export_blob": "92992a1d8f412db053654fb8be4e21d2021e5c04",
+    "equal": true
+   },
+   {
+    "path": "scripts/hermes_r24_concurrent_request_replan_probe.py",
+    "candidate_blob": "19bf79a935e21e4737b133760caa5e1b062e25a4",
+    "export_blob": "19bf79a935e21e4737b133760caa5e1b062e25a4",
+    "equal": true
+   },
+   {
+    "path": "scripts/hermes_r25_concurrent_request_replan_conflict_probe.py",
+    "candidate_blob": "1695685d6cc79af6d66eeb0dfb5ff31e5a4e6379",
+    "export_blob": "1695685d6cc79af6d66eeb0dfb5ff31e5a4e6379",
+    "equal": true
+   },
+   {
+    "path": "scripts/hermes_r4_contract_probe.py",
+    "candidate_blob": "45156defeb2b07b1425dd5b561d6e3c2504c49c8",
+    "export_blob": "45156defeb2b07b1425dd5b561d6e3c2504c49c8",
+    "equal": true
+   },
+   {
+    "path": "scripts/hermes_r4_launch.py",
+    "candidate_blob": "6b56d6702d31c483662b1fd895a39db5231d5b5b",
+    "export_blob": "6b56d6702d31c483662b1fd895a39db5231d5b5b",
+    "equal": true
+   },
+   {
+    "path": "scripts/hermes_r4_socket_guard.py",
+    "candidate_blob": "1b819ff10b779ceabde009070ccf38c9e33dccf8",
+    "export_blob": "1b819ff10b779ceabde009070ccf38c9e33dccf8",
+    "equal": true
+   },
+   {
+    "path": "scripts/hermes_r5_idempotency_probe.py",
+    "candidate_blob": "5933c49928f546c8e98ec7c1912fff268b8de3b4",
+    "export_blob": "5933c49928f546c8e98ec7c1912fff268b8de3b4",
+    "equal": true
+   },
+   {
+    "path": "scripts/hermes_r6_h11_model_probe.py",
+    "candidate_blob": "d964eda457992c3caff57afe318ed814d596ed00",
+    "export_blob": "d964eda457992c3caff57afe318ed814d596ed00",
+    "equal": true
+   },
+   {
+    "path": "scripts/hermes_r7_human_approval_probe.py",
+    "candidate_blob": "ecc98136b1ef0a84d9ea1d39f283c7d035917c1d",
+    "export_blob": "ecc98136b1ef0a84d9ea1d39f283c7d035917c1d",
+    "equal": true
+   },
+   {
+    "path": "scripts/hermes_r8_context_probe.py",
+    "candidate_blob": "35a962a3d5e78d4767d49a3904bdeb8fbad2cb29",
+    "export_blob": "35a962a3d5e78d4767d49a3904bdeb8fbad2cb29",
+    "equal": true
+   },
+   {
+    "path": "scripts/hermes_r9_mcp_context_probe.py",
+    "candidate_blob": "bfe3e33b7d0cf832c196773d3edae727b31a00ef",
+    "export_blob": "bfe3e33b7d0cf832c196773d3edae727b31a00ef",
+    "equal": true
+   },
+   {
+    "path": "scripts/package_hermes_r5_review.py",
+    "candidate_blob": "48a8c2727cb27f4c304ba0bf453b8d30dd9359b9",
+    "export_blob": "48a8c2727cb27f4c304ba0bf453b8d30dd9359b9",
+    "equal": true
+   },
+   {
+    "path": "scripts/recompute_hermes_r10_evidence.py",
+    "candidate_blob": "3125108c38f507324a679373358dc7ea967966ee",
+    "export_blob": "3125108c38f507324a679373358dc7ea967966ee",
+    "equal": true
+   },
+   {
+    "path": "scripts/reproduce_hermes_r5.ps1",
+    "candidate_blob": "7fe2d2c57c365369f78440fe74b9b06251216b0f",
+    "export_blob": "7fe2d2c57c365369f78440fe74b9b06251216b0f",
+    "equal": true
+   },
+   {
+    "path": "scripts/run_hermes_r5_captured.py",
+    "candidate_blob": "256fa3d58bbb57bf4932ef47af9d41e926d60e84",
+    "export_blob": "256fa3d58bbb57bf4932ef47af9d41e926d60e84",
+    "equal": true
+   },
+   {
+    "path": "scripts/validate_hermes_r10_request_id_review.py",
+    "candidate_blob": "35e9a60855602266d8940c909101e7acc9323284",
+    "export_blob": "35e9a60855602266d8940c909101e7acc9323284",
+    "equal": true
+   },
+   {
+    "path": "scripts/validate_hermes_r10_review.py",
+    "candidate_blob": "126a85829e9acaa54b9447487cc5ae70b0ac9818",
+    "export_blob": "126a85829e9acaa54b9447487cc5ae70b0ac9818",
+    "equal": true
+   },
+   {
+    "path": "scripts/validate_hermes_r11_review.py",
+    "candidate_blob": "747b6c4389797cd66835fb98e8518c446e4beb66",
+    "export_blob": "747b6c4389797cd66835fb98e8518c446e4beb66",
+    "equal": true
+   },
+   {
+    "path": "scripts/validate_hermes_r12_review.py",
+    "candidate_blob": "5af9bae66a8a6eb59d50ecb453d71ec29c328f39",
+    "export_blob": "5af9bae66a8a6eb59d50ecb453d71ec29c328f39",
+    "equal": true
+   },
+   {
+    "path": "scripts/validate_hermes_r13_review.py",
+    "candidate_blob": "cb4f8fb828a2a39b846e3a29fa7fccf2193a1707",
+    "export_blob": "cb4f8fb828a2a39b846e3a29fa7fccf2193a1707",
+    "equal": true
+   },
+   {
+    "path": "scripts/validate_hermes_r14_review.py",
+    "candidate_blob": "4e2cccdfc933d28206089feca92a852901ec0528",
+    "export_blob": "4e2cccdfc933d28206089feca92a852901ec0528",
+    "equal": true
+   },
+   {
+    "path": "scripts/validate_hermes_r15_review.py",
+    "candidate_blob": "7f07929079d0a402155050d1b803ab658b386017",
+    "export_blob": "7f07929079d0a402155050d1b803ab658b386017",
+    "equal": true
+   },
+   {
+    "path": "scripts/validate_hermes_r16_review.py",
+    "candidate_blob": "12be1522c0e5594873bf54c41260fe79462a7a09",
+    "export_blob": "12be1522c0e5594873bf54c41260fe79462a7a09",
+    "equal": true
+   },
+   {
+    "path": "scripts/validate_hermes_r17_review.py",
+    "candidate_blob": "2ef343ba609a04c65fe881bb2e98694228d2c3bb",
+    "export_blob": "2ef343ba609a04c65fe881bb2e98694228d2c3bb",
+    "equal": true
+   },
+   {
+    "path": "scripts/validate_hermes_r18_review.py",
+    "candidate_blob": "7e867aecaf78c8e144b6482fa509bd9837e6f35d",
+    "export_blob": "7e867aecaf78c8e144b6482fa509bd9837e6f35d",
+    "equal": true
+   },
+   {
+    "path": "scripts/validate_hermes_r19_review.py",
+    "candidate_blob": "3ee24da7e214febb4137e008112c3bda4abf4753",
+    "export_blob": "3ee24da7e214febb4137e008112c3bda4abf4753",
+    "equal": true
+   },
+   {
+    "path": "scripts/validate_hermes_r20_review.py",
+    "candidate_blob": "4af05bcc20bf34d0b05bf71ef4dfaab8cd89c236",
+    "export_blob": "4af05bcc20bf34d0b05bf71ef4dfaab8cd89c236",
+    "equal": true
+   },
+   {
+    "path": "scripts/validate_hermes_r21_review.py",
+    "candidate_blob": "9e3fdf6a48ddbbf7663bd742030a9f50c3328d86",
+    "export_blob": "9e3fdf6a48ddbbf7663bd742030a9f50c3328d86",
+    "equal": true
+   },
+   {
+    "path": "scripts/validate_hermes_r22_review.py",
+    "candidate_blob": "d159f405f2f1d115866a26463fc35185606160af",
+    "export_blob": "d159f405f2f1d115866a26463fc35185606160af",
+    "equal": true
+   },
+   {
+    "path": "scripts/validate_hermes_r23_review.py",
+    "candidate_blob": "0cc479fc21ef04d1d787af54268b7d922ec4b07c",
+    "export_blob": "0cc479fc21ef04d1d787af54268b7d922ec4b07c",
+    "equal": true
+   },
+   {
+    "path": "scripts/validate_hermes_r24_review.py",
+    "candidate_blob": "6ac94582f16357b9952ac63a45754e8408586583",
+    "export_blob": "6ac94582f16357b9952ac63a45754e8408586583",
+    "equal": true
+   },
+   {
+    "path": "scripts/validate_hermes_r25_review.py",
+    "candidate_blob": "71080cd81636a50a2d74890a389d37a549e840a6",
+    "export_blob": "71080cd81636a50a2d74890a389d37a549e840a6",
+    "equal": true
+   },
+   {
+    "path": "scripts/validate_hermes_r5_package.py",
+    "candidate_blob": "1747d8f96d31189b2ee74739b9c60680861ac3b6",
+    "export_blob": "1747d8f96d31189b2ee74739b9c60680861ac3b6",
+    "equal": true
+   },
+   {
+    "path": "scripts/validate_hermes_r7_review.py",
+    "candidate_blob": "28615876d350c18d833ff38171523220a0023aee",
+    "export_blob": "28615876d350c18d833ff38171523220a0023aee",
+    "equal": true
+   },
+   {
+    "path": "scripts/validate_hermes_r8_measurement.py",
+    "candidate_blob": "a9bb7a300bbde95a98d0aa085810150a9ca7cc10",
+    "export_blob": "a9bb7a300bbde95a98d0aa085810150a9ca7cc10",
+    "equal": true
+   },
+   {
+    "path": "scripts/validate_hermes_r9_review.py",
+    "candidate_blob": "1e1be3ad4abb96511b1f6dc8cd557e3f4a5340f6",
+    "export_blob": "1e1be3ad4abb96511b1f6dc8cd557e3f4a5340f6",
+    "equal": true
+   }
+  ],
+  "whole_suite": {
+   "collect_exit": 2,
+   "collected": 1318,
+   "interrupted": true,
+   "error_lines": [
+    "ERROR tests/test_v18_hermes_r20_transport_reliability_probe.py",
+    "!!!!!!!!!!!!!!!!!!! Interrupted: 2 errors during collection !!!!!!!!!!!!!!!!!!!",
+    "1318 tests collected, 2 errors in 6.30s"
+   ],
+   "tail": [
+    "ERROR tests/test_v18_hermes_r20_transport_reliability_probe.py",
+    "!!!!!!!!!!!!!!!!!!! Interrupted: 2 errors during collection !!!!!!!!!!!!!!!!!!!",
+    "1318 tests collected, 2 errors in 6.30s"
+   ],
+   "cmd": "D:/moodle/CityNexus/.venv/Scripts/python.exe -m pytest --collect-only -q tests  (cwd=<export>/backend, PYTHONPATH=<export>)"
+  },
+  "interpreter": "Python 3.12.14 (main, Aug 25 2026, 14:01:42) [MSC v.1944 64 bit (AMD64)]"
+ },
+ "problems": [
+  "candidate is NOT a descendant of the tip (merge-base --is-ancestor rc=1) - landing it would move the authoritative line backwards",
+  "candidate misses 2 commit(s) the line already has - ask the lane to re-cut onto the tip",
+  "file intersection with the line is non-empty: backend/tests/test_v18_hermes_r10_tool_planning_probe.py, backend/tests/test_v18_hermes_r11_reliability_probe.py, backend/tests/test_v18_hermes_r12_delay_reliability_probe.py, backend/tests/test_v18_hermes_r13_weather_reliability_probe.py, backend/tests/test_v18_hermes_r14_budget_reliability_probe.py",
+  "whole-suite collection exit=2 on the candidate tree: ERROR tests/test_v18_hermes_r20_transport_reliability_probe.py | !!!!!!!!!!!!!!!!!!! Interrupted: 2 errors during collection !!!!!!!!!!!!!!!!!!! | 1318 tests collected, 2 errors in 6.30s",
+  "whole-suite collection says Interrupted - the suite would execute ZERO tests if this landed"
+ ],
+ "verdict": "REFUSED",
+ "landing": null,
+ "discipline": {
+  "evidence_paths_overwritten": 0,
+  "databases_opened": 0,
+  "surfaces_started_or_stopped": 0,
+  "credential_values_printed": 0,
+  "candidate_refs_pushed_by_commander": 0
+ },
+ "claim_kind": "git_and_pytest_determined",
+ "claimed_result": "refused: candidate is NOT a descendant of the tip (merge-base --is-ancestor rc=1) - landing it would move the authoritative line backwards | candidate misses 2 commit(s) the line already has - ask the lane to re-cut onto the tip | file intersection with the line is non-empty: backend/tests/test_v18_hermes_r10_tool_planning_probe.py, backend/tests/test_v18_hermes_r11_reliability_probe.py, backend/tests/test_v18_hermes_r12_delay_reliability_probe.py, backend/tests/test_v18_hermes_r13_weather_reliability_probe.py, backend/tests/test_v18_hermes_r14_budget_reliability_probe.py | whole-suite collection exit=2 on the candidate tree: ERROR tests/test_v18_hermes_r20_transport_reliability_probe.py | !!!!!!!!!!!!!!!!!!! Interrupted: 2 errors during collection !!!!!!!!!!!!!!!!!!! | 1318 tests collected, 2 errors in 6.30s | whole-suite collection says Interrupted - the suite would execute ZERO tests if this landed",
+ "derived_result": null
+}
