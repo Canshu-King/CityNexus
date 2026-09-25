@@ -1,0 +1,8 @@
+{
+ "block_file": "D:\\moodle\\_qoder_ledger_inbox\\aad2d1f2_0059.md",
+ "bytes": 16737,
+ "q43_rc": 0,
+ "q43_out": "version Q43_r4 | input D:\\moodle\\_qoder_ledger_inbox\\aad2d1f2_0059.md 16737 B\nclaims checked 53 | exempt {\"YEAR\": 3, \"PORT\": 7, \"HTTP_STATUS\": 8} | overall Q43_GATE_GREEN | findings 0 []\n",
+ "q43_err": "",
+ "ledger_written_by_this_lane": false
+}
