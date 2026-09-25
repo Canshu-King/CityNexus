@@ -1,0 +1,292 @@
+{
+ "schema": "CNX_ORD0336_MCP_SERVER_NONIDENTITY_V1",
+ "order": "ORD-0336",
+ "lane": "S2-hermes-port",
+ "at_local": "2026-09-26T06:17+0800",
+ "live_tip_read_this_run": "a8237d7b50a1df419ae7e89ae6c075dabb6513f8",
+ "base": "a8237d7b50a1df419ae7e89ae6c075dabb6513f8",
+ "candidate": "f45489c6d17f16973faad161618789237ac3814e",
+ "candidate_branch": "refs/heads/agent/S2-ord0336-mcp-server-nonidentity-candidates",
+ "candidate_parent": "a8237d7b50a1df419ae7e89ae6c075dabb6513f8",
+ "ahead_behind_vs_base": {
+  "ahead": 1,
+  "behind": 0
+ },
+ "changed_paths": [
+  "agent-mcp/citynexus_mcp/server.py",
+  "agent-mcp/tests/test_mcp_boundary.py",
+  "agent-mcp/tests/test_replan_proposal_view.py"
+ ],
+ "numstat": [
+  "75\t28\tagent-mcp/citynexus_mcp/server.py",
+  "83\t1\tagent-mcp/tests/test_mcp_boundary.py",
+  "70\t0\tagent-mcp/tests/test_replan_proposal_view.py"
+ ],
+ "blobs": {
+  "agent-mcp/citynexus_mcp/server.py": {
+   "candidate_blob": "759b59e80665c1a80e82948ca88ac87a8ea831f2",
+   "tip_blob": "0da006a587938d37a069784d6c93b0b3ceb46a22",
+   "hermes_blob": "6b4da1b9b939b16dfb2384f808741029dd798a51"
+  },
+  "agent-mcp/tests/test_mcp_boundary.py": {
+   "candidate_blob": "8c24599aae0de3dc2278c7f346548086a39e198c",
+   "tip_blob": "41a20978c1548a33d91a19e7c3359dec12a1f484",
+   "hermes_blob": "8c24599aae0de3dc2278c7f346548086a39e198c"
+  },
+  "agent-mcp/tests/test_replan_proposal_view.py": {
+   "candidate_blob": "bc2dc2710ff6788fd38245661964673d786d2a6b",
+   "tip_blob": "absent-on-tip",
+   "hermes_blob": "bc2dc2710ff6788fd38245661964673d786d2a6b"
+  }
+ },
+ "coordinates_measured": {
+  "server_request_id_type_def": [
+   21
+  ],
+  "server_min_length_kwarg": [
+   24
+  ],
+  "server_low_level_min_length": [
+   195
+  ],
+  "server_proposal_views_attach": [
+   82
+  ],
+  "server_tool_guidance_start": [
+   36
+  ],
+  "gateway_guard_on_the_line": [
+   116
+  ]
+ },
+ "forms_ported": {
+  "A_tool_guidance": "list_replans / search_city_services / request_replan descriptions tell the model that request_replan already carries the new proposals",
+  "B_request_id_boundary": "request_id is an 8-128 character Annotated pydantic value on every typed tool, plus the low-level JSON schema bounds",
+  "C_proposal_views": "request_replan answers carry proposal_contract_version and a validated proposal_views list; an incomplete candidate is refused"
+ },
+ "form_not_ported": {
+  "D_agent_id_identity": "deferred to ORD-0337 by order",
+  "measured_counts": {
+   "hermes_identity_def_sites": 1,
+   "hermes_identity_call_sites": 3,
+   "tip_identity_sites": 0,
+   "tip_literal_principal_sites": 3,
+   "hermes_literal_principal_sites": 0
+  },
+  "changed_lines_hermes_to_candidate": 11,
+  "identity_lines_between_candidate_and_tip": 0
+ },
+ "readings": {
+  "agent_mcp_line_before_this_port": {
+   "exit": 0,
+   "passed": 8,
+   "failed": 0,
+   "errors": 0,
+   "interrupted": 0,
+   "collected": 0,
+   "collect_errors": 0,
+   "failed_tests": [],
+   "tail": "8 passed in 1.56s",
+   "files_exported": 9,
+   "collect": {
+    "exit": 0,
+    "collected": 8,
+    "collect_errors": 0
+   }
+  },
+  "agent_mcp_candidate": {
+   "exit": 0,
+   "passed": 14,
+   "failed": 0,
+   "errors": 0,
+   "interrupted": 0,
+   "collected": 0,
+   "collect_errors": 0,
+   "failed_tests": [],
+   "tail": "14 passed in 1.47s",
+   "files_exported": 10,
+   "collect": {
+    "exit": 0,
+    "collected": 14,
+    "collect_errors": 0
+   },
+   "server_bytes_sha1": "66717abb85b6f779148356cd5be95767cd8c5d3a"
+  },
+  "arms": {
+   "A1_tool_guidance": {
+    "exit": 1,
+    "passed": 13,
+    "failed": 1,
+    "errors": 0,
+    "interrupted": 0,
+    "collected": 0,
+    "collect_errors": 0,
+    "failed_tests": [
+     "test_context_guidance_describes_server_owned_replan_and_search_facts"
+    ],
+    "tail": "1 failed, 13 passed in 1.37s",
+    "cut_digest_sha1": "a56bae080d9d5bd8847768bfa11e375e9f2c40ea",
+    "uncut_control": {
+     "exit": 0,
+     "passed": 14,
+     "failed": 0
+    }
+   },
+   "B1_request_id_boundary": {
+    "exit": 1,
+    "passed": 13,
+    "failed": 1,
+    "errors": 0,
+    "interrupted": 0,
+    "collected": 0,
+    "collect_errors": 0,
+    "failed_tests": [
+     "test_real_mcp_v2_stdio_protocol_discovers_coherent_inspect_plan_act_surface"
+    ],
+    "tail": "1 failed, 13 passed in 1.36s",
+    "cut_digest_sha1": "e13ec999f654f5a5938037fa8b63e876246d5014",
+    "uncut_control": {
+     "exit": 0,
+     "passed": 14,
+     "failed": 0
+    }
+   },
+   "C1_proposal_views": {
+    "exit": 1,
+    "passed": 12,
+    "failed": 2,
+    "errors": 0,
+    "interrupted": 0,
+    "collected": 0,
+    "collect_errors": 0,
+    "failed_tests": [
+     "test_request_replan_emits_a_validated_full_fidelity_proposal_view",
+     "test_request_replan_rejects_incomplete_candidate_projection"
+    ],
+    "tail": "2 failed, 12 passed in 1.39s",
+    "cut_digest_sha1": "2e282eae28079da61543f48ea40b1cf6ecf3c476",
+    "uncut_control": {
+     "exit": 0,
+     "passed": 14,
+     "failed": 0
+    }
+   }
+  },
+  "red_sets": {
+   "A1_tool_guidance": [
+    "test_context_guidance_describes_server_owned_replan_and_search_facts"
+   ],
+   "B1_request_id_boundary": [
+    "test_real_mcp_v2_stdio_protocol_discovers_coherent_inspect_plan_act_surface"
+   ],
+   "C1_proposal_views": [
+    "test_request_replan_emits_a_validated_full_fidelity_proposal_view",
+    "test_request_replan_rejects_incomplete_candidate_projection"
+   ]
+  },
+  "red_union_size_vs_sum": {
+   "union": 4,
+   "sum": 4
+  },
+  "request_id_boundary_re_measured_here": {
+   "per_length": {
+    "len_7": "ValidationError",
+    "len_8": "accepted",
+    "len_128": "accepted",
+    "len_129": "ValidationError"
+   },
+   "json_schema": {
+    "description": "Opaque per-call idempotency identity; use 8-128 characters and do not reuse it for different arguments.",
+    "maxLength": 128,
+    "minLength": 8,
+    "type": "string"
+   }
+  },
+  "backend_gate_on_candidate": {
+   "generation": "f45489c6d17f16973faad161618789237ac3814e",
+   "harness_files": 22,
+   "whole_collected": 1342,
+   "whole_collect_errors": 0,
+   "harness_collected": 72,
+   "harness_passed": 72,
+   "harness_failed": 0,
+   "exit": 0,
+   "verdict": "HERMES_GATE_GREEN whole_collected=1342 harness_collected=72 harness_passed=72"
+  },
+  "backend_gate_on_landed_tip_for_comparison": {
+   "generation": "a8237d7b50a1df419ae7e89ae6c075dabb6513f8",
+   "whole_collected": 1342,
+   "harness_collected": 72,
+   "harness_passed": 72
+  },
+  "excluded_witness_measurement": {
+   "collect_exit": 2,
+   "collected": 14,
+   "collect_errors": 1,
+   "interrupted_line": "",
+   "named_missing_symbol": true,
+   "tail": "14 tests collected, 1 error in 0.23s"
+  },
+  "r9_probe_guided_arm_collapsed": {
+   "mode": "guided",
+   "identical_to_server_default_after_this_port": [
+    "list_replans",
+    "request_replan",
+    "search_city_services"
+   ],
+   "coordinate": "scripts/hermes_r9_mcp_context_probe.py:113",
+   "meaning": "that arm no longer differs from an unmodified server, so any future guided-vs-baseline reading is really default-vs-baseline"
+  }
+ },
+ "boundaries_named": [
+  "The ported C block indexes result['proposals'] without a guard. Measured on the candidate tree: a request_replan response carrying only the singular proposal, or none at all, raises KeyError('proposals') instead of returning the server decision. The same shape is already guarded on the line at backend/app/agent/gateway.py:116. No mainline test covers it (backend gate 72 of 72 green). This is verbatim from the Hermes source and was left as-is because the order scoped this lane to porting; a guard needs its own witness.",
+  "agent-mcp/tests/test_replan_proposal_view.py witnesses schemas, which landed with ORD-0328, so it passes on the tip too. It is carried as regression net for the contract, not as a witness for this port; the witnesses that can redden this port are the forms inside test_mcp_boundary.py, which is where the three arm cuts aim."
+ ],
+ "checks": {
+  "candidate_parent_is_the_live_tip": true,
+  "only_agent_mcp_paths_changed": true,
+  "identity_form_excluded_two_ways": true,
+  "all_three_non_identity_forms_present": true,
+  "witnesses_byte_identical_to_the_hermes_line": true,
+  "collection_clean_before_and_after": true,
+  "harness_grew_by_exactly_six_and_every_test_ran": true,
+  "each_form_has_its_own_red": true,
+  "arms_do_not_cover_for_each_other": true,
+  "every_arm_tree_was_green_before_its_cut": true,
+  "request_id_bounds_enforced_in_process": true,
+  "mainline_backend_gate_green_on_the_candidate": true,
+  "mainline_readings_unchanged_by_this_port": true,
+  "excluded_principal_witness_measured_unusable": true,
+  "shared_repo_porcelain_still_the_two_pre_existing_files": true,
+  "gate_left_no_work_dir_behind": true
+ },
+ "checks_met": "16_of_16",
+ "verdict": "ORD0336_ALL_CHECKS_MET 16_of_16",
+ "verdict_derivation": "verdict_of() counts the checks dict; each check compares two artifacts read in this run (git plumbing output, the gate receipt, the suite receipt, the arm red lists) or re-measures a value in-process. The selftest flips each predicate once and requires the verdict string to change.",
+ "selftest_flip_each_check_changes_verdict": true,
+ "discipline": {
+  "product_bytes_changed_outside_agent_mcp": 0,
+  "authoritative_branch_moved_by_lane": 0,
+  "demo_reset": 0,
+  "credentials_printed": 0,
+  "model_calls_made": 0,
+  "live_or_preview_db_touched": 0,
+  "junctions_created": 0,
+  "other_lane_files_touched": 0,
+  "frontend_files_touched": 0,
+  "backend_app_files_touched": 0,
+  "shared_repo_porcelain_this_run": [
+   " M backend/app/agent/runtime_identity.py",
+   " M backend/app/main.py"
+  ]
+ },
+ "skipped_named_exclusions": [
+  {
+   "path": "agent-mcp/tests/test_hermes_validation_principal.py",
+   "reason": "it imports _agent_id, which this order deliberately does not port. Measured: adding it to the candidate gives collect_exit 2 with 1 collection error and the named missing symbol, so it must travel with ORD-0337",
+   "measured_this_run": true
+  }
+ ],
+ "derived_result": null,
+ "derived_result_policy": "null by standing rule - sign-off belongs to the verifier"
+}
