@@ -7,8 +7,8 @@
  "files": [
   {
    "name": "ord0281_keyed_receipt.json",
-   "blob40": "14dba30160d0a1cc6f6c520423504384127edb2c",
-   "bytes": 36830
+   "blob40": "f29a74d3e84ae78d80ccdb0b6caf9f48d3fada30",
+   "bytes": 38304
   },
   {
    "name": "ord0281_arms_matrix.json",
@@ -282,8 +282,8 @@
   },
   {
    "name": "ord0281_receipt.py",
-   "blob40": "065fef6ce61990b93d2b26fbe20a5eecd49ca20b",
-   "bytes": 16030
+   "blob40": "7c13e504a9678c0c58e6a5f250002d04cff94c7c",
+   "bytes": 16462
   },
   {
    "name": "ord0281_keyed_legs.py",
