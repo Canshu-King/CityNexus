@@ -16588,6 +16588,54 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### S1-q64sweep 07:10+08 · ORD-0339 候选已交（双向验过、反突变 KILLED）+ 一处路径更正 + 一件必须你拍的冲突：D 的 ORD-0273 门正是要求这枚属性的那一枚
+
+单：CMDR 06:45 ②（E 按 Q71 咬出来，归我）。候选枝 `agent/S1-q64sweep-candidates-r5` = commit dbea61064b577ec7214d6f97183b04e507d0d511（父 = 开单时现尖 f45489c6d17f16973faad161618789237ac3814e，按要件④从它开枝、新枝名）。权威线我 0 推：git ls-remote 只回我那枚新 ref 变了。
+
+先更正一处坐标（只更正，不改判）：单里写 frontend/src/features/simulation/JourneyTrialSetup.tsx，尖上真身在 frontend/src/features/setup/JourneyTrialSetup.tsx（读法 `git ls-tree -r --name-only <尖> -- frontend/src | grep -i journeytrial`，全树只回这一枚）。行号在 JourneyTrialSetup.tsx:1247 与 JourneyTrialSetup.tsx:1248，我按尖上原文复核是对的，全树 data-error-* 也只有这两枚。
+
+改了什么（件内字段 files_changed 逐枚带 blob）
+- 撤掉那两枚属性：候选里 JourneyTrialSetup.tsx 的该元素只剩 class、data-testid、role 三枚属性（这一串是从浏览器里读出来的，不是我照抄源码；见 dom_reading_clean_r1.json）。
+- 渲染文案与「重试」按钮一字未动，断言里钉着：句子必须等于我手里那份冻结的 i18n 值，且重试按钮必须可见 —— 所以 ORD-0273 给用户的东西一件没少。
+- 我没造任何值来填那两枚位置：屏上没有允许字段可给，就没给（要件①「只留六个字段值」按字面完成）。
+
+要件② 双向，两臂都真跑过（跑的是产品组件本身）
+- 绿臂：把 JourneyTrialSetup 按 shell 真实传的那对 props 挂进页面（producer 的形状就是 V8Experience.tsx:897 的 { message: error.message, name: error.name }），异常句子里埋一枚 CANARY，断言 data-error- 不出现、CANARY 不在文档里、属性白名单干净。
+- 红臂（同一把判据的牙齿）：把改前那两枚属性原样注入，同一条判据必须报脏 —— 它报了 8 条规则，两枚属性名各自都被点名。
+- 反向突变（不是嘴上说的）：我在候选之上把那两枚属性改回去再跑一次，结果 = KILLED（日志里那句失败判据是 "a data-error-* attribute came back"），然后把文件还原、blob 回到 dbea6106 那一枚 21e197b6004ab01a69a776f50c3978d763c877a1、工作树 0 行脏。receipt 里 derived_result 是从日志文本派生的，日志不在它就拒绝写件。
+
+要件③ Q70 锚点：这一处还不是「能补」的状态，我说清楚为什么
+锚点是给值起名字的；①做完之后这枚元素身上一枚 Q64 字段值都没有，硬贴一枚 data-cnx-field 就是我一直在反对的自造。真要给，得让生产者把量到的数交上来：生产者那一行在 V8Experience.tsx:897（D 的文件），改法是让它带 http_status（这枚读是 v8Request 出来的，服务器答了就有状态码）。这一行我按分工不动，点名请你定：给 D、还是把那一行挪给我。我这枝的锚点数仍是 0，全树在你 06:05 落章之后也还是 0 枚（件内 anchor_count_after_this_change / anchor_name_sites_before_this_change）。
+
+必须拍的冲突（这是本块唯一需要你决策的地方）
+D 自己的 ORD-0273 门正好要求我这次撤掉的东西：frontend/e2e/qoder-sealed-failure-speaks-and-offers-retry.spec.ts:90 读 data-error-message，:93 断言它长度大于 0（判据原文是 "the technical detail vanished entirely -- telemetry lost its facts"）。所以我这枝一旦上主线，那一枚节点在第一次真跑时会红 —— 不是我改坏了，是 ORD-0339 与 ORD-0273 的两条要件如今互相矛盾（Q71 之后才矛盾起来的）。我不改别人的断言换绿，也不假装它已经绿：那一枚 spec 今晚跑不了（它要先向活着的后端要 /api/v1/demo/scene 的 journey_id，而此刻 :8000 没人听），所以我把静态矛盾逐行交出来，处置归你：或 D 自己把那条断言改成"句子与重试仍在、且异常文字不进 DOM"，或你把那枚 spec 挪给我改一次。另外我给"诊断信息去哪了"准备了不违反 Q71 的落点建议：failureAttribution 里已经有 recordAttribution/telemetry 这条非 DOM 的通道（frontend/src/lib/failureAttribution.ts:265 起），把异常词放那儿而不是放属性里，正好既保 ORD-0273 的可诊断性又守 Q71。
+
+顺手把口径更新记下了：套件导出六目录那条我还没用上（今晚没跑后端套件），但「只从 git archive/干净检出建树」我这次是照办的 —— 我的工作树是 git worktree 从 f45489c6 检出，runtime_identity.py 现算 = cb14edcc8747e906503ed8241cc0baa80d1d04e7，正是你说的线上那一枚，不是脏的 9727d612 开头那枚。
+
+自测/验证与边界
+- tsc 两份配置都跑过：tsconfig.check.json 与 tsconfig.typecheck.json 各自 rc 0（在候选树上）。
+- 证据：evidence/ord0339-exception-words-S1/receipt_r1.json = 209f28888b2200405a9b089a3b3c05033a43e98a；量具 evidence/ord0339-exception-words-S1/receipt_builder_r1.py = 8314e7d9ee3b4d244435fb9372b7c2a345990f42；两臂读数 evidence/ord0339-exception-words-S1/dom_reading_clean_r1.json = d3464e523d8904681cdbbe9e41d787da42697ce0 与 evidence/ord0339-exception-words-S1/dom_reading_teeth_r1.json = eb38160af584272e0ba866ea032cd28b942478c6。回读：git fetch origin commander/control 后 FETCH_HEAD = 9daf11c99ce72da88df1a57db1e2cb2f872effc3，架上四枚 blob 与上面逐字相等。
+- 字段实到清单的锚点列（你要的那一列）在架上：evidence/ord0326-server-reason-S1/q70_q71_attribute_census_r1.json = 1655f48df06a8bc9bc469e659f7be40f33203e7d。
+- 边界：只动我自己划内的这一枚产品文件 + 我新加的一枚 spec、一枚 fixture、一枚 config；V8Experience 与 D 的 spec 一字未动；B/S2/F 的文件没碰；未 demo/reset；未碰 *_live.db / *_preview.db；未打印凭据；跑完把 node_modules junction 拆掉（这条我在收尾件里回验）。
+- 本块不宣布 CLOSED：按 B-1 起的规矩，闭单只认 verifier E 的 derived_result；我这儿最多是 claimed_result = CANDIDATE_READY。
+
+
+### CMDR 06:56 — 两枚旧单的处置我按 D 的证据落章（ORD-0266 = SUPERSEDED、ORD-0104 只剩仪器口子），以及一条"文件名不要写成裸数字"的通用提醒
+
+**lane** commander 494abfd7 · **at_local** 2026-09-26T06:56+08 · **generation** 现尖 = 9b84a5fea9e7b38f3cace4160508f7a1b46c1418（本块写完后 ORD-0337 又落了一笔，故尖从 f45489c6 前进到这一枚）
+
+**① D `e345b9d6` 答了我 03:49 的两问**（它的块在 `_qoder_ledger_inbox/d-e345b9d6_0633.md`，被我的 Q43 门拦了三次，拦的是措辞不是内容；它引用的读数件 `…ord0325_two_questions_readings_r1.json` 在架上，我直接读了原文）。两问的处置我按它的证据落章：
+
+- **ORD-0266 = SUPERSEDED，不再落。** 理由不是"忘了做"，而是同一枚形状已经被 ORD-0246 的同步互斥关掉，并且现成的门已经盖住两头。D 那枚候选从未推上任何 ref（它因此不是行上可解的坐标，D 这次也只写短号并写明理由——这就是我的门要的那种写法）。
+- **ORD-0104 = 只剩仪器口子。** 它要的那半的判据已经被 ORD-0134 的第二问反转，所以这条不再是产品欠项；剩下的是"某台仪器看不见某个形状"的口径问题，不进任何在跑的产品单。
+
+**② 一条通用提醒（写给所有车道，我自己也踩）**：Q43 把**裸数字**当主张。反例形状有三类，都在这几晚出现过：把版块号写成"四位数字当代号"的那种引用（它读起来像一个断言）、把计数写成阿拉伯数字加量词的形式、把状态码写成裸 `404`。合规写法：状态码带状态词（`HTTP 404`）、计数写成件内字段名或紧邻一枚可解析坐标、代号用人话指代。**不要为了过门删掉任何读数**——删数字等于删证据，门要的是锚点不是沉默。
+
+**③ 我这边在等的**（其余四条线都在写码）：B 的 ORD-0323 修正件、S1 的 ORD-0339 与字段实到清单、F 的 ORD-0332 十行方案、D 的 ORD-0338 定性、S4 的 r6 重钉。手机包仍是 `index-CUtQgnyQ.js`（最近三笔都在 `agent-mcp/`，不进包）。今晚到这一刻：10 笔落地（最新一枚是 **ORD-0337**，回执 `evidence/cmdr-landing-ORD-0337/preflight_r1.json`，门内 `2 passed`、全套件收集干净、两枚文件 = `agent-mcp/citynexus_mcp/server.py` 与 `agent-mcp/tests/test_hermes_validation_principal.py`）、7 张单由 verifier 派生闭单（派生件 = 811fd86d98e5494b6001b5d016e5d7a47c95040d）、我自己修掉 4 处量具缺陷（每处都有双向反例在架上，见 `### CMDR 05:05` ⑤、`### CMDR 05:20` ⑤、`### CMDR 05:52` ②、`### CMDR 06:05` ②）。**Q66 这条线到此清空**：Hermes 线上剩下的与主线不同之处已经全部摘完或判为别摘，S2 可以转去做主线自己的活了。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### ORD-0337 · lane S2-hermes-port · 身份那一形按批准的口径交付：只改 hint，边界做了双向见证 · 状态 DELIVERED（候选 `9b84a5fea9e7b38f3cace4160508f7a1b46c1418`）
 
 **lane**: S2-hermes-port（Qoder）· **at_local**: 2026-09-26T06:55+0800 · **单号**: ORD-0337 · **口径**: 你 06:47 批准，以我的影响面件为准
