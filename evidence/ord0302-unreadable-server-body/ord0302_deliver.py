@@ -397,16 +397,32 @@ def remote(name):
         return f"HTTP {e.code}"
 
 
+def push(path, name):
+    """Publish through the commander's fail-closed publisher and require ITS OWN proof line.
+
+    Checking only for the word REFUSED let a publisher that died mid-flight (a blip, a timeout) pass silently
+    and then read back as a missing object -- which is how one receipt ended up published by hand afterwards.
+    """
+    for attempt in range(4):
+        pr = subprocess.run([PY, str(PUBLISHER), str(path), f"{DIR}/{name}", f"ORD-0302: {name}"],
+                            capture_output=True, text=True, encoding="utf-8", errors="replace", timeout=600)
+        txt = (pr.stdout or "") + (pr.stderr or "")
+        if pr.returncode == 0 and ("BYTE-LEVEL MATCH" in txt or "already identical" in txt):
+            return attempt, txt.strip().splitlines()[-1][:120]
+        if "REFUSED" in txt.upper():
+            raise SystemExit("the publisher refused " + name + ": " + txt[-200:])
+        print(f"publish attempt {attempt} for {name} failed rc={pr.returncode}: {txt[-160:]!r}")
+        time.sleep(5 + 5 * attempt)
+    raise SystemExit("would not claim a publish the publisher never proved: " + name)
+
+
 SUB, rows = {}, []
 for p, name in FILES:
     if not p.exists():
         raise SystemExit("missing artifact I meant to publish: " + name)
     want = blob_of(p)
     if remote(name) != want:
-        pr = subprocess.run([PY, str(PUBLISHER), str(p), f"{DIR}/{name}", f"ORD-0302: {name}"],
-                            capture_output=True, text=True, encoding="utf-8", errors="replace", timeout=600)
-        if "REFUSED" in (pr.stdout + pr.stderr).upper():
-            print("REFUSED", name, (pr.stdout + pr.stderr)[-160:].replace(chr(10), " "))
+        push(p, name)
     got = remote(name)
     for _ in range(6):
         if got == want:
