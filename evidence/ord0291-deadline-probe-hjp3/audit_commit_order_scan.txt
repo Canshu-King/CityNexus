@@ -1,0 +1,23 @@
+commit_then_audit -> 4
+   HJ-P3_evidence\o0291_audit_order_scan.py:1  """Does any HJ-P3 artefact actually claim an ordering between `session.commit` and `record_audit`?
+   HJ-P3_evidence\o0291_audit_order_scan.py:12  'commit_then_audit': re.compile(r'session\.commit[^\n]{0,90}record_audit|commit[^\n]{0,60}先于[^\n]{0,60}audit',
+   HJ-P3_evidence\o0291_receipt.py:194  w('⇒ 「现草案 DEFAULT_WRITE_DEADLINE_MS = 10000」与「session.commit(:1106) 先于 record_audit(:1111)」')
+   HJ-P3_evidence\o0291_reconcile_note.py:73  w('## b) `session.commit(:1106) 先于 record_audit(:1111)` —— **也不是我给的**')
+audit_then_commit -> 3
+   HJ-P3_evidence\o0291_audit_order_scan.py:14  'audit_then_commit': re.compile(r'record_audit[^\n]{0,90}session\.commit|audit[^\n]{0,60}先于[^\n]{0,60}commit',
+   HJ-P3_evidence\o0291_reconcile_note.py:31  if 'record_audit' in main_py[i - 1] or 'session.commit' in main_py[i - 1]]
+   HJ-P3_evidence\o0291_reconcile_note.py:79  w('3) 该函数体内前 90 行里，`record_audit` / `session.commit` 两类调用只出现在这些行：')
+audit_insert_quote -> 2
+   HJ-P3_evidence\bus_0279.md:8  - 屏上那句「行程未被改动」我对了账：两窗口内 6 张表新增 **0** 行、`journeys.updated_at==created_at` ⇒ `SCREEN_CLAIM_AND_STORE_AGREE`。顺带一笔：这条路径**完全不写幂等收据**（`idempotency_keys` 全库 0 行），失败的写在服务端没留凭条。
+   HJ-P3_evidence\o0291_audit_order_scan.py:16  'audit_insert_quote': re.compile(r'audit INSERT|journeys\.update'),
+record_audit_word -> 2985
+   _hjp3_0279_0924\snap_tip\CityNexus-c79e2b4f4efe414dba22a071a7136ae10b5c84aa\backend\app\agent\approval.py:14  from app.core.audit import record_audit
+   _hjp3_0279_0924\snap_tip\CityNexus-c79e2b4f4efe414dba22a071a7136ae10b5c84aa\backend\app\agent\approval.py:116  record_audit(
+   _hjp3_0279_0924\snap_tip\CityNexus-c79e2b4f4efe414dba22a071a7136ae10b5c84aa\backend\app\agent\approval.py:148  record_audit(
+   _hjp3_0279_0924\snap_tip\CityNexus-c79e2b4f4efe414dba22a071a7136ae10b5c84aa\backend\app\agent\approval.py:180  record_audit(
+   _hjp3_0279_0924\snap_tip\CityNexus-c79e2b4f4efe414dba22a071a7136ae10b5c84aa\backend\app\agent\approval.py:240  record_audit(
+   _hjp3_0279_0924\snap_tip\CityNexus-c79e2b4f4efe414dba22a071a7136ae10b5c84aa\backend\app\agent\autorun.py:22  from app.core.audit import record_audit
+   _hjp3_0279_0924\snap_tip\CityNexus-c79e2b4f4efe414dba22a071a7136ae10b5c84aa\backend\app\agent\autorun.py:275  record_audit(
+   _hjp3_0279_0924\snap_tip\CityNexus-c79e2b4f4efe414dba22a071a7136ae10b5c84aa\backend\app\agent\autorun.py:467  record_audit(
+   _hjp3_0279_0924\snap_tip\CityNexus-c79e2b4f4efe414dba22a071a7136ae10b5c84aa\backend\app\agent\gateway.py:33  from app.core.audit import record_audit
+   _hjp3_0279_0924\snap_tip\CityNexus-c79e2b4f4efe414dba22a071a7136ae10b5c84aa\backend\app\agent\gateway.py:304  record_audit(
