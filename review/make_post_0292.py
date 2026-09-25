@@ -29,11 +29,31 @@ def sh(cmd: str) -> str:
     ).stdout.strip()
 
 
+def short(title: str, keep: int = 34) -> str:
+    """`ord0278-positive-the-resume-request-carries-both-keys` -> `0278-positive-the-resume-request…`
+
+    Truncating from the front is what made the first draft of this table unreadable: three of the
+    seven rows showed a tail fragment that named neither the order nor the node."""
+    order, _, rest = title.partition("-")
+    out = f"{order[2:]}-{rest}"
+    return out if len(out) <= keep else out[: keep - 1] + "…"
+
+
 def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--arms", required=True)
     ap.add_argument("--round", required=True)
     ap.add_argument("--lsremote", required=True, help="file holding the verbatim ls-remote line")
+    ap.add_argument(
+        "--published",
+        default="",
+        help="file of `repo_path<TAB>blob_sha1<TAB>bytes` lines, one per published artifact",
+    )
+    ap.add_argument(
+        "--tooling-line",
+        default="",
+        help="file holding the ls-remote line of refs/heads/review/0292-arm-receipt-tooling",
+    )
     ap.add_argument("--out", required=True)
     a = ap.parse_args()
 
@@ -66,6 +86,18 @@ def main() -> int:
         f"{sum(1 for v in arms['pristine_files_match_tested_tree'].values() if v['equals_blob_at_tested_tree'])}"
         f"/{len(arms['pristine_files_match_tested_tree'])} 等值（这是量的，不是我记得）"
     )
+    if a.tooling_line:
+        tooling_remote = Path(a.tooling_line).read_text(encoding="utf-8").strip()
+        published_tip = tooling_remote.split("\t")[0].strip()
+        reachable = subprocess.run(
+            f"git merge-base --is-ancestor {arms['tooling_commit']} {published_tip}",
+            cwd=LANE, capture_output=True, text=True, shell=True,
+        ).returncode == 0
+        add(f"- 工具 ref 外读行：`{tooling_remote}`")
+        add(
+            f"- 收据里的工具尖 `{arms['tooling_commit']}` 在这枚 ref 上可达："
+            f"`git merge-base --is-ancestor … {published_tip}` ⇒ {reachable}"
+        )
     add("")
     add(
         f"**绿轮（同代）**：`{rd['verdict']}`，三元组 **{len(triples)}** 条，problems {len(rd['problems'])} 条；"
@@ -84,10 +116,10 @@ def main() -> int:
         sk, rp = x["same_key_precondition"], x["restore_proof"]
         red = x["redSet"]
         add(
-            f"| `{x['name']}` | `{x['ownerNode'].split('-', 2)[-1][:26]}` | **{x['claimed_result']}** | "
+            f"| `{x['name']}` | `{short(x['ownerNode'])}` | **{x['claimed_result']}** | "
             f"`{sk['gate_round_verdict_for_this_key']}` | {sk['baseline_owner_verdict_this_batch']} | "
-            f"{str(rp['restored_to_tested_tree_bytes']).lower()}/{rp['digest_after_restore'][:8]} | "
-            + (", ".join(f"`{r.split('-')[1]}`" for r in red) or "—") + f" ({len(red)}) |"
+            f"{str(rp['restored_to_tested_tree_bytes']).lower()} · {rp['digest_after_restore'][:10]} | "
+            + (", ".join(f"`{short(r)}`" for r in red) or "—") + f" ({len(red)}) |"
         )
     add("")
     add("每臂自带 `(exact_sha, nodeid, run_shape)` 三元组与还原三点摘要（before / mutated / after = 冻结树 blob），"
@@ -99,7 +131,7 @@ def main() -> int:
         f"`allArmsCarryAGreenSameKeyPrecondition={str(arms['allArmsCarryAGreenSameKeyPrecondition']).lower()}`"
     )
     add(
-        f"- 上一代（`f86d24e`，v3 那 7/7）的读数**不沿用**：本代五枚 owner 节点各自重新在绿轮里取绿、各自重新咬合。"
+        "- 上一代（`f86d24e` 那批 v3 读数）**不沿用**：本代五枚 owner 节点各自重新在绿轮里取绿、各自重新咬合。"
         "反过来，本收据也不给上一代补信用。"
     )
     add(
@@ -107,6 +139,14 @@ def main() -> int:
         f"{(rd.get('R_SCHEMA_01_class') or {}).get('rule', 'NOT_IN_RECEIPT')}`）：行全经产品 API 造，判据只看渲染文字/HTTP/线格式。"
     )
     add("")
+    if a.published:
+        rows = [l.split("\t") for l in Path(a.published).read_text(encoding="utf-8").splitlines() if l.strip()]
+        add(
+            f"**外读证据（新目录，`commander/control`，逐件 PUT 后独立 GET BYTE-LEVEL MATCH）**：{len(rows)} 件"
+        )
+        for row in rows:
+            add(f"- `{row[0]}` — blob `{row[1]}`，{row[2]} B")
+        add("")
     add(
         "本轮没有产品改动：只有 `review/**` 两枚脚本（臂驱动、绿轮生成器）在工具 ref 上，"
         "`frontend/**` 一个字节都没动 ⇒ 冻结尖仍是冻结尖。等级、direct/collateral 归红队；闭单不等我。"
