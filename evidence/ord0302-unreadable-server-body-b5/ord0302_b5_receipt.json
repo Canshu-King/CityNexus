@@ -1,5 +1,5 @@
 {
- "at": "2026-09-26T00:41:39+08:00",
+ "at": "2026-09-26T00:44:05+08:00",
  "order": "ORD-0302 · b5 · Q64=① 白名单面板（五形臂+五枚反件在新基座重跑）",
  "lane": "B c01d72a3",
  "candidate_tip": "b6e1dd3295aafa3330cc9142a4475ac359eb7a3e",
@@ -102,7 +102,7 @@
    "cell": "the panel shows only fields this device measured, per shape",
    "claimed_result": "MET",
    "derived_result": null,
-   "why": "X1 在六形上各判一遍（R19-R23 是号令者点名的五行，R24 是我为 Q64 加的凭据形 witness：[\"http_status\", \"content-type\", \"bytes\"] 实测为 {\"http_status\": \"200\", \"content-type\": \"text/plain; charset=utf-8\", \"bytes\": \"82\"}）。面板里出现过的字段全集是 [\"bytes\", \"content-type\", \"http_status\"]，其中 body 键出现过=False；6 条「正文不得进 DOM」断言里 6 条通过，另 6 条「空正文仍要显示 bytes=0」防永真断言里 6 条通过（R24 喂的正文含 eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9 这串形似 JWT 的假凭据，屏上看不见它）。",
+   "why": "X1 在六形上各判一遍（R19-R23 是号令者点名的五行，R24 是我为 Q64 加的凭据形 witness：[\"http_status\", \"content-type\", \"bytes\"] 里出现的字段名是 [\"bytes\", \"content-type\", \"http_status\"]（值与逐形判定都在该格 readings 里，我不在正文里复述数字）。面板里出现过的字段全集是 [\"bytes\", \"content-type\", \"http_status\"]，其中 body 键出现过=False；6 条「正文不得进 DOM」断言里 6 条通过，另 6 条「空正文仍要显示 bytes=0」防永真断言里 6 条通过（R24 喂的正文含 eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9 这串形似 JWT 的假凭据，屏上看不见它）。",
    "readings": {
     "shapes": [
      "R19_④_200_empty_body",
@@ -909,21 +909,5 @@
    "ord0302_index.json",
    "ord0302_b5_receipt.json"
   ]
- },
- "ruler_check": {
-  "pass_1": {
-   "rc": 0,
-   "headline": [
-    "cells 14 | overall Q38_GATE_GREEN | hard 0 [] | soft 0 []"
-   ],
-   "green": true
-  },
-  "pass_2_on_published_bytes": {
-   "rc": 0,
-   "headline": [
-    "cells 14 | overall Q38_GATE_GREEN | hard 0 [] | soft 0 []"
-   ],
-   "green": true
-  }
  }
 }
