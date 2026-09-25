@@ -1,0 +1,7 @@
+--- a/backend/app/main.py  (blob on line: 871aec006a3f6482f7a2700a8baeff8c25f7690f)
++++ b/backend/app/main.py  (wired blob: 5455175abe154c5c4ab5b122e517efd13081a637)
+@@ import 段 @@
++ from app.security.credential_literals import (  # ORD-0307: 字面量凭据的常驻启动门
++ CREDENTIAL_GATE = credential_gate_startup()   # ORD-0307: report→只报计数；strict→命中即拒启动
+@@ 启动段（紧跟 assert_configuration_reachable() 之后）@@
++ CREDENTIAL_GATE = credential_gate_startup()   # ORD-0307
