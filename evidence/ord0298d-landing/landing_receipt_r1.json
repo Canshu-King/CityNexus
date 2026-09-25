@@ -1,0 +1,72 @@
+{
+ "schema": "CNX_CMDR_LANDING_RECEIPT_V1",
+ "orders_landed": [
+  "ORD-0278 (continuation press carries the round it started in)",
+  "ORD-0253 (both legs of one intent share one transport key)"
+ ],
+ "branch": "mirror/integration-frontend-apple-pass1",
+ "previous_tip": "90d29a172e186aab6e6cb138ab4583ccf93bfa68",
+ "landed_tip": "dc964086c9d412573ac19d70b24b30e6c3ee6168",
+ "tip_read_back": {
+  "route1_git_ref_heads": "dc964086c9d412573ac19d70b24b30e6c3ee6168",
+  "route2_commits_sha_param": "dc964086c9d412573ac19d70b24b30e6c3ee6168",
+  "route3_git_refs_heads_list": "dc964086c9d412573ac19d70b24b30e6c3ee6168"
+ },
+ "all_three_routes_agree_on_landed_sha": true,
+ "move": {
+  "landed_parents": [
+   "12fc54a3628c3f893699fe95425fdba7ac31dfa0"
+  ],
+  "compare_prev_to_landed_status": "ahead",
+  "ahead_by": 10,
+  "behind_by": 0,
+  "fast_forward_only": true,
+  "commits_in_hop": 10
+ },
+ "tree_identity": {
+  "frontend_subtree_oid": "a53c7303c6d1513010ff91ecf9c022591c3e513c",
+  "equals_what_lane_D_measured": true,
+  "named_product_blobs_at_landed_tip": {
+   "frontend/src/api/journeyContinuation.ts": "358141e6250aeae361aeae4d9df06f80e1417cf0",
+   "frontend/src/app/V8Experience.tsx": "17ef83b6ec58b4190f483733501ea1b973336d5f",
+   "frontend/src/features/planning/PlanWithAiSheet.tsx": "fd5f6e5ba2771a8d12669b9bec1ba91590970701",
+   "frontend/src/i18n/LocaleContext.tsx": "ece74118543434e855b874420dcc075df31f4f05"
+  },
+  "arms_receipt_tested_tree_field": "dc964086c9d412573ac19d70b24b30e6c3ee6168"
+ },
+ "evidence_rehash": {
+  "arms_receipt": {
+   "blob": "457313365eda53e9634ddf522839fe3714d0e86d",
+   "recomputed_equal": true,
+   "bytes": 53650
+  },
+  "green_round_gate": {
+   "blob": "211c67f88b4360c63c1e4ed1c6284f36b3f354fd",
+   "recomputed_equal": true,
+   "bytes": 36722
+  },
+  "verifier_derivation": {
+   "blob": "520a95781efa039df527064ccc6d1940a9288e75",
+   "recomputed_equal": true,
+   "bytes": 4945,
+   "verifier_schema": "CNX_VERIFIER_DERIVATION_V1",
+   "verifier_signed_by": "lane E d2305848"
+  }
+ },
+ "commander_derivation": {
+  "instrument": "_ord0298d_commander_derivation_r2.json",
+  "arms_total": 7,
+  "killed_by_commander": 7,
+  "claims_agree": true,
+  "verifier_present": true,
+  "red_set_sizes": [
+   1,
+   3
+  ]
+ },
+ "files_touched_by_the_whole_hop": 17,
+ "files_outside_frontend_and_review": [],
+ "nothing_outside_expected": true,
+ "what_this_hop_invalidates": "frontend/src/features/planning/PlanWithAiSheet.tsx changed blob (c22cf42506a4175db992bde387ed8d9c6f1ffb9d -> fd5f6e5ba2771a8d12669b9bec1ba91590970701) and three more frontend files changed blob, so per Q24 any in-flight measurement that renders the sheet or the continuation surface is now a previous-generation reading.",
+ "scope": "Proves the ref move, tree identity and that the cited kill evidence re-hashes. Does not claim the phone shows this: no index switch and no preview-backend restart was performed (Q47=option 2 holds the user-visible chain until the copy fix lands)."
+}
