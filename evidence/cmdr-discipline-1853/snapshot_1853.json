@@ -1,0 +1,114 @@
+{
+ "schema": "CNX_CMDR_DISCIPLINE_SNAPSHOT_V1",
+ "at_local": "2026-09-25T18:54:31+00:00+08",
+ "tool_sha1": "b2a4ffe8166ad1759035a4497033cdbf782e2a34",
+ "landing_re_read_from_git": {
+  "tip_now": "13af1ff4ba4516aa1a39cda67428ed4a2a34ac69",
+  "matches_landed_value": true,
+  "parents": [
+   "e4c08d98b06838c2563d053a6aa0f8b280623112"
+  ],
+  "tree": "43b6597424f9b0db28b73b70cbd6e4a7549a011e",
+  "base_is_ancestor": true,
+  "path_count_base_to_tip": 5,
+  "paths": [
+   "frontend/e2e/qoder-ord0281-keyed-write-deadline.spec.ts",
+   "frontend/src/features/execution/LiveRecovery.tsx",
+   "frontend/src/features/recovery/V14RecoveryTruthPanel.tsx",
+   "frontend/src/lib/readDeadline.ts",
+   "frontend/src/lib/writeDeadline.ts"
+  ]
+ },
+ "endpoints_seen_in_this_hours_tools": {
+  "count": 17,
+  "rows": [
+   {
+    "tool": "post_1758_swap.py",
+    "literal": "/repos/"
+   },
+   {
+    "tool": "post_1758_swap.py",
+    "literal": "/repos/"
+   },
+   {
+    "tool": "post_1758_swap.py",
+    "literal": "/repos/Canshu-King/CityNexus/branches/"
+   },
+   {
+    "tool": "post_1758_swap.py",
+    "literal": "/repos/Canshu-King/CityNexus/contents/CITYNEXUS_AGENT_CONTROL.md"
+   },
+   {
+    "tool": "post_1758_swap.py",
+    "literal": "/repos/Canshu-King/CityNexus-Workspace/issues/1/comments"
+   },
+   {
+    "tool": "phone_proxy_selfanswer_r1.py",
+    "literal": "/api/v1/health"
+   },
+   {
+    "tool": "phone_proxy_selfanswer_r1.py",
+    "literal": "/api/v1/demo/scene"
+   },
+   {
+    "tool": "phone_proxy_selfanswer_r1.py",
+    "literal": "/api/v1/journeys"
+   },
+   {
+    "tool": "publish_evidence_gated_r1.py",
+    "literal": "/repos/%s/contents/%s"
+   },
+   {
+    "tool": "publish_evidence_gated_r1.py",
+    "literal": "/repos/%s/git/blobs/%s"
+   },
+   {
+    "tool": "publish_evidence_gated_r1.py",
+    "literal": "/repos/%s/commits"
+   },
+   {
+    "tool": "publish_evidence_gated_r1.py",
+    "literal": "/repos/%s/contents/%s"
+   },
+   {
+    "tool": "merge_ledger_then_mirror_r1.py",
+    "literal": "/repos/Canshu-King/CityNexus/contents/CITYNEXUS_AGENT_CONTROL.md"
+   },
+   {
+    "tool": "merge_ledger_then_mirror_r1.py",
+    "literal": "/repos/Canshu-King/CityNexus/git/blobs/"
+   },
+   {
+    "tool": "post_note_r1.py",
+    "literal": "/repos/Canshu-King/CityNexus/contents/CITYNEXUS_AGENT_CONTROL.md"
+   },
+   {
+    "tool": "post_note_r1.py",
+    "literal": "/repos/Canshu-King/CityNexus/branches/mirror%2Fintegration-fronten"
+   },
+   {
+    "tool": "post_note_r1.py",
+    "literal": "/repos/Canshu-King/CityNexus-Workspace/issues/1/comments"
+   }
+  ],
+  "demo_reset_literal_hits": 0
+ },
+ "secret_shaped_literals_in_sources": {
+  "count": 0,
+  "rows": []
+ },
+ "listen_rows": {
+  "4781": 1,
+  "4782": 1,
+  "8000": 0
+ },
+ "how_to_recompute": [
+  "python cmdr_discipline_snapshot_r1.py",
+  "git -C D:\\moodle\\CityNexus rev-parse 13af1ff4ba4516aa1a39cda67428ed4a2a34ac69^{tree}",
+  "git -C D:\\moodle\\CityNexus merge-base --is-ancestor 5aff3722d5c36c760a424f5fea5c3a771298f9ac 13af1ff4ba4516aa1a39cda67428ed4a2a34ac69",
+  "git -C D:\\moodle\\CityNexus diff --name-only 5aff3722d5c36c760a424f5fea5c3a771298f9ac 13af1ff4ba4516aa1a39cda67428ed4a2a34ac69",
+  "netstat -ano -p tcp"
+ ],
+ "scope": "Restraint claims about my own hour. It does not certify any lane's work and is not a landing: the landing it records was read back from git inside this run.",
+ "self_reported_process_error": "At 18:52 I ran the chain as `gate ; insert ; mirror` instead of gating first, so a block carrying one uncited count reached the ledger while the ruler was RED. The door is now bolted: ledger_insert_after.py runs the Q43 gate itself and refuses to write unless the block passes, with an explicit --allow-ungated escape that I have not used."
+}
