@@ -13,6 +13,12 @@
 
 import { useEffect, useState } from "react";
 import { useLocale } from "../../i18n/LocaleContext";
+import {
+  describeServerReason,
+  reasonFromThrown,
+  type ServerReason,
+} from "../../lib/serverReason";
+import { ServerReasonDetail, serverReasonHeadline } from "../../components/ServerReasonDetail";
 
 type StayOption = {
   id: string;
@@ -43,6 +49,8 @@ export function HotelsPanel({ journeyId, onSelected }: { journeyId: string; onSe
   const [options, setOptions] = useState<StayOption[] | null>(null);
   const [busy, setBusy] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
+  /* ORD-0326: what the server actually said lives beside the message, never inside it. */
+  const [serverReason, setServerReason] = useState<ServerReason | null>(null);
   const [chosen, setChosen] = useState<string | null>(null);
 
   useEffect(() => {
@@ -83,31 +91,62 @@ export function HotelsPanel({ journeyId, onSelected }: { journeyId: string; onSe
   const select = async (optionId: string) => {
     setBusy(optionId);
     setError(null);
+    setServerReason(null);
     try {
       const r = await fetch(
         `/api/v1/journeys/${journeyId}/stay-options/${optionId}/select`,
         { method: "POST" },
       );
       if (!r.ok) {
-        const body = await r.json().catch(() => null);
-        const raw = String(body?.error?.message ?? body?.detail ?? "");
+        /* Read as text first: the byte count is a fact the screen is allowed to show, and a body that
+           will not parse must answer "the server gave no readable reason" instead of throwing away the
+           only discriminating evidence. */
+        const rawText = await r.text().catch(() => "");
+        let parsed: unknown = null;
+        if (rawText.trim() !== "") {
+          try {
+            parsed = JSON.parse(rawText);
+          } catch {
+            parsed = null;
+          }
+        }
+        const reason = describeServerReason({
+          envelope: parsed,
+          http_status: r.status,
+          content_type: r.headers.get("content-type"),
+          body_bytes: rawText.length,
+          response_received: true,
+        });
+        setServerReason(reason);
         // A hotel whose check-in / check-out windows cannot coexist with the
         // confirmed itinerary is a real conflict.  Say so in traveller terms
         // and point at the next action instead of showing a server error.
-        const isConflict =
-          r.status === 422 && /STAY_ITINERARY_CONFLICT|STAY_PINNED_CONFLICT/.test(raw);
+        // The code is matched here, in logic -- what the traveller reads comes from
+        // `serverReasonHeadline`, which never carries the server's own sentence.
+        const forMatching =
+          reason.kind === "server_sentence"
+            ? reason.text
+            : reason.http_status === null
+              ? ""
+              : `HTTP ${reason.http_status}`;
+        const isConflict = r.status === 422 && /STAY_ITINERARY_CONFLICT|STAY_PINNED_CONFLICT/.test(forMatching);
         setError(
           isConflict
             ? zh
               ? "这家住宿的入住/退房时间和你已确认的行程冲突，无法在不改动行程的情况下采用。换一家试试。"
               : "This stay's check-in / check-out windows clash with your confirmed itinerary, so it cannot be used without changing your trip. Try another one."
-            : raw || (zh ? "暂时无法选择这家住宿。" : "Could not choose this stay."),
+            : serverReasonHeadline(reason, zh) ?? (zh ? "暂时无法选择这家住宿。" : "Could not choose this stay."),
         );
         return;
       }
       setChosen(optionId);
+      setServerReason(null);
       onSelected?.();
-    } catch {
+    } catch (cause) {
+      /* The transport case keeps its own established sentence -- an existing screen assertion reads that
+         text, and ORD-0326 is not licensed to rewrite it. What changes is that the machine facts now
+         travel beside it through the channel instead of being absent from the screen entirely. */
+      setServerReason(describeServerReason(reasonFromThrown(cause)));
       setError(zh ? "连不上服务器，请重试。" : "Could not reach the server. Try again.");
     } finally {
       setBusy(null);
@@ -228,6 +267,7 @@ export function HotelsPanel({ journeyId, onSelected }: { journeyId: string; onSe
       {error && (
         <p className="role-alert" data-testid="hotel-error" role="alert">{error}</p>
       )}
+      <ServerReasonDetail reason={serverReason} zh={zh} testId="hotel-error" />
     </section>
   );
 }

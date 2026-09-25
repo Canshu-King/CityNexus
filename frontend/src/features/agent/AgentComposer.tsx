@@ -4,6 +4,8 @@ import { cityNexusApi, type CopilotResponse } from "../../api/citynexus";
 import { useLocale, useT, type TripLocale } from "../../i18n/LocaleContext";
 import { formatMinorMoney } from "../../lib/money";
 import { NativeMissionTimeline } from "./CopilotDock";
+import { describeServerReason, reasonFromThrown, type ServerReason } from "../../lib/serverReason";
+import { ServerReasonDetail, serverReasonHeadline } from "../../components/ServerReasonDetail";
 
 type CopilotMessage = {
   role: "user" | "assistant";
@@ -54,6 +56,8 @@ export function AgentComposer({
   const [messages, setMessages] = useState<CopilotMessage[]>(() => readStoredMessages(data.journey.id));
   const [sending, setSending] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  /* ORD-0326: the server's own words go beside the message, not inside it. */
+  const [sendReason, setSendReason] = useState<ServerReason | null>(null);
   const localeCode = locale === "zh-CN" ? "zh" : "en";
   const latestNativeRun = useMemo(() => {
     for (let index = messages.length - 1; index >= 0; index -= 1) {
@@ -95,7 +99,9 @@ export function AgentComposer({
         { role: "assistant", text: response.message, response },
       ]);
     } catch (cause) {
-      setError(cause instanceof Error ? cause.message : t("agent.sendError"));
+      const reason = describeServerReason(reasonFromThrown(cause));
+      setSendReason(reason);
+      setError(serverReasonHeadline(reason, locale === "zh-CN") ?? t("agent.sendError"));
     } finally {
       setSending(false);
     }
@@ -183,6 +189,7 @@ export function AgentComposer({
       </div>
 
       {error && <p className="v8-message error">{error}</p>}
+      <ServerReasonDetail reason={sendReason} zh={locale === "zh-CN"} testId="agent-send-error" />
 
       <div className="v15-copilot-history" aria-live="polite">
         {messages.map((item, index) => (
