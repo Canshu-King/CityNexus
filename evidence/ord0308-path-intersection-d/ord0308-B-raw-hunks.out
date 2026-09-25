@@ -1,0 +1,12 @@
+$ git diff -U0 --no-color dc964086c9d412573ac19d70b24b30e6c3ee6168 5aff3722d5c36c760a424f5fea5c3a771298f9ac -- <path>
+
+frontend/e2e/qoder-ord0302-unreadable-server-body.spec.ts
+  @@ -0,0 +1,277 @@
+
+frontend/src/features/planning/PlanWithAiSheet.tsx
+  @@ -147 +147 @@ function serverReasonCode(body: unknown): string {
+  @@ -155 +155 @@ function serverReasonSentence(body: unknown): string | null {
+  @@ -730 +730,5 @@ export function PlanWithAiSheet({
+  @@ -733 +737,3 @@ export function PlanWithAiSheet({
+  @@ -748 +754,10 @@ export function PlanWithAiSheet({
+
