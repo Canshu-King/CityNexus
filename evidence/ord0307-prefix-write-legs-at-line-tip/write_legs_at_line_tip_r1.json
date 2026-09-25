@@ -1,0 +1,150 @@
+{
+ "what": "ORD-0307 前置的一件：0289 那 14 根写腿在**当前线尖**上是否仍然成立（分母 + 逐文件行号）",
+ "lane": "F 8ccd71d8",
+ "generated_at": "2026-09-25T16:14:03+08:00",
+ "claim_kind": "code_determined",
+ "claimed_result": "DENOMINATOR-HOLDS-AT-LINE-TIP",
+ "derived_result": null,
+ "line_tip_read": {
+  "ref": "refs/heads/mirror/integration-frontend-apple-pass1",
+  "sha": "dc964086c9d412573ac19d70b24b30e6c3ee6168",
+  "equal_to_the_base_named_in_ORD-0307": true
+ },
+ "export": "git -c core.autocrlf=false archive dc964086c9d412573ac19d70b24b30e6c3ee6168 frontend/src | tar -x → D:/moodle/_qoder_f_run/o303_front_dc964086/frontend/src",
+ "census": {
+  "files_scanned": 72,
+  "fetch_sites": 39,
+  "write_sites": 14,
+  "write_with_signal": 2,
+  "write_with_timer": 0,
+  "read_sites": 0,
+  "parse_error_files": [],
+  "predicate": "method ∈ {POST,PUT,PATCH,DELETE} 且 method 解析得出（o289_ast_census.js:144）",
+  "parser": "ts 5.9.3",
+  "node": "v24.14.0"
+ },
+ "verdict_computed": {
+  "write_sites_at_line_tip": 14,
+  "same_count_as_the_45b0a5e_census": true,
+  "signal_legs": 2,
+  "timer_legs": 0,
+  "files": 8,
+  "files_with_unchanged_line_multiset": 7,
+  "files_whose_lines_moved": 1,
+  "total_legs_previous_generation": 14
+ },
+ "legs": [
+  {
+   "file": "features/execution/LiveRecovery.tsx",
+   "lines": [
+    225
+   ],
+   "methods": [
+    "POST"
+   ],
+   "signal_lines": []
+  },
+  {
+   "file": "features/notifications/PushCapabilityCard.tsx",
+   "lines": [
+    56
+   ],
+   "methods": [
+    "POST"
+   ],
+   "signal_lines": []
+  },
+  {
+   "file": "features/planning/PlanComparison.tsx",
+   "lines": [
+    88
+   ],
+   "methods": [
+    "POST"
+   ],
+   "signal_lines": []
+  },
+  {
+   "file": "features/planning/PlanWithAiSheet.tsx",
+   "lines": [
+    518,
+    653
+   ],
+   "methods": [
+    "POST"
+   ],
+   "signal_lines": [
+    518,
+    653
+   ]
+  },
+  {
+   "file": "features/recovery/RecoveryRequiredPanel.tsx",
+   "lines": [
+    26
+   ],
+   "methods": [
+    "POST"
+   ],
+   "signal_lines": []
+  },
+  {
+   "file": "features/recovery/V14RecoveryTruthPanel.tsx",
+   "lines": [
+    69
+   ],
+   "methods": [
+    "POST"
+   ],
+   "signal_lines": []
+  },
+  {
+   "file": "features/simulation/simulationAdapter.ts",
+   "lines": [
+    229,
+    296,
+    335,
+    376
+   ],
+   "methods": [
+    "POST"
+   ],
+   "signal_lines": []
+  },
+  {
+   "file": "features/stay/HotelsPanel.tsx",
+   "lines": [
+    63,
+    64,
+    87
+   ],
+   "methods": [
+    "POST"
+   ],
+   "signal_lines": []
+  }
+ ],
+ "line_multiset_deltas": [
+  {
+   "file": "features/planning/PlanWithAiSheet.tsx",
+   "lines_at_90d29a17": [
+    510,
+    638
+   ],
+   "lines_at_dc964086": [
+    518,
+    653
+   ]
+  }
+ ],
+ "consistency_with_commanders_own_note": "号令者 CMDR-1531 说 PlanWithAiSheet.tsx 在 90d29a172e… 之后又换过 blob（ORD-0302 待修）；本件量到的正是同一枚文件的行号位移：{'file': 'features/planning/PlanWithAiSheet.tsx', 'lines_at_90d29a17': [510, 638], 'lines_at_dc964086': [518, 653]} ⇒ 两条独立读数同向",
+ "note_for_ORD-0307": "写腿面（14/2/0）在新基座上不变 ⇒ 0281/0296 的射程结论不需要重述；但任何按行号引用 PlanWithAiSheet.tsx 的判据都必须改挂 dc964086 的 518/653",
+ "discipline": {
+  "code_changed": 0,
+  "refs_pushed": 0,
+  "authoritative_line_written": 0,
+  "demo_reset": 0,
+  "live_or_preview_db": 0,
+  "credentials_printed": 0
+ }
+}
