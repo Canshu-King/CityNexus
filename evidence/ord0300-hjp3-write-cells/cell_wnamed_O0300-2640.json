@@ -1,0 +1,519 @@
+{
+ "stage": "wnamed",
+ "run_id": "O0300-2640",
+ "port": 8552,
+ "measured_on": "90d29a172e186aab6e6cb138ab4583ccf93bfa68",
+ "bundle_sha256": "57c2a927f9e65ca0b33acdc737cbf941fc395c214aa213d861a4f7e5c664338e",
+ "bundle_asset": "index-BN1w-xlK.js",
+ "journey_id": "a37be52b-ac37-43fe-8ade-7fa8c8bcf59c",
+ "request_text": "想傍晚在老城慢慢走一圈，别太赶",
+ "hub_reached": true,
+ "tap_ms_wall": "2026-09-25T02:21:45.436Z",
+ "write_legs": [
+  {
+   "url": "/api/v1/journeys/a37be52b-ac37-43fe-8ade-7fa8c8bcf59c/agent/commands",
+   "method": "POST",
+   "api": true,
+   "sent_ms_since_load": 1340,
+   "sent_wall": "2026-09-25T02:21:45.475Z",
+   "has_signal": true,
+   "request_body": "{\"command\":\"想傍晚在老城慢慢走一圈，别太赶\"}",
+   "status": 200,
+   "content_type": "application/json",
+   "bytes": 7087,
+   "body_head": "{\"mission\":{\"id\":\"a8b2adea-4761-4ac6-8838-8939eb423197\",\"journey_id\":\"a37be52b-ac37-43fe-8ade-7fa8c8bcf59c\",\"trigger_event_id\":null,\"user_text\":\"想傍晚在老城慢慢走一圈，别太赶\",\"objective_codes\":[],\"protected_activity_ids\":[],\"mutable_activity_ids\":[],\"intent\":{\"capabilities\":[],\"max_cost_delta_minor\":0,\"max_loss_minor\":0,\"max_schedule_drift_min\":0,\"mutable_activity_ids\":[],\"objective_codes\":[],\"preferences\":{},",
+   "server_envelope": {
+    "has_error_object": false,
+    "error_code": null,
+    "error_message": null,
+    "reason_code": null,
+    "top_level_detail": null
+   },
+   "elapsed_ms": 19717
+  },
+  {
+   "url": "/api/v1/journeys/a37be52b-ac37-43fe-8ade-7fa8c8bcf59c/plans/generate",
+   "method": "POST",
+   "api": true,
+   "sent_ms_since_load": 21073,
+   "sent_wall": "2026-09-25T02:22:05.208Z",
+   "has_signal": true,
+   "request_body": "{\"candidate_count\":3}",
+   "status": 422,
+   "content_type": "application/json",
+   "bytes": 1443,
+   "body_head": "{\"error\":{\"code\":\"VALIDATION_ERROR\",\"message\":\"No feasible plan candidates satisfy the journey constraints\",\"message_key\":\"request.invalid\",\"trace_id\":\"1bc65f18-2f57-46b3-a0fe-276084b5cf78\",\"details\":{\"city_code\":\"CNX-DEMO\",\"places_in_catalog\":8,\"city_services_in_catalog\":5,\"day_sequences_available\":3,\"requested_candidates\":3,\"candidate_rejections\":[{\"reason_codes\":[\"CANDIDATE_REJECTED_BY_FEASIBIL",
+   "server_envelope": {
+    "has_error_object": true,
+    "error_code": "VALIDATION_ERROR",
+    "error_message": "No feasible plan candidates satisfy the journey constraints",
+    "reason_code": "CATALOG_INSUFFICIENT",
+    "top_level_detail": null
+   },
+   "elapsed_ms": 15
+  }
+ ],
+ "all_api_legs": [
+  {
+   "url": "/api/v1/journeys/a37be52b-ac37-43fe-8ade-7fa8c8bcf59c/experience",
+   "method": "GET",
+   "api": true,
+   "sent_ms_since_load": 138,
+   "sent_wall": "2026-09-25T02:21:44.273Z",
+   "has_signal": true,
+   "request_body": null,
+   "status": 200,
+   "content_type": "application/json",
+   "bytes": 2251,
+   "body_head": "{\"journey\":{\"id\":\"a37be52b-ac37-43fe-8ade-7fa8c8bcf59c\",\"traveler_id\":\"57fc16d1-f153-4140-980a-06599499d830\",\"title\":\"HJP3 ORD-0300 one-time\",\"city_code\":\"CNX-DEMO\",\"timezone\":\"Asia/Shanghai\",\"start_at\":\"2026-09-26T10:00:00+08:00\",\"end_at\":\"2026-09-27T20:00:00+08:00\",\"status\":\"DRAFT\",\"active_plan_version_id\":null,\"budget\":{\"amount_minor\":300000,\"currency\":\"CNY\"},\"temporal_shape\":{\"day_count\":2,\"ni",
+   "server_envelope": {
+    "has_error_object": false,
+    "error_code": null,
+    "error_message": null,
+    "reason_code": null,
+    "top_level_detail": null
+   },
+   "elapsed_ms": 21
+  },
+  {
+   "url": "/api/v1/journeys/a37be52b-ac37-43fe-8ade-7fa8c8bcf59c/replans",
+   "method": "GET",
+   "api": true,
+   "sent_ms_since_load": 160,
+   "sent_wall": "2026-09-25T02:21:44.295Z",
+   "has_signal": true,
+   "request_body": null,
+   "status": 200,
+   "content_type": "application/json",
+   "bytes": 2,
+   "body_head": "[]",
+   "server_envelope": {
+    "has_error_object": false,
+    "error_code": null,
+    "error_message": null,
+    "reason_code": null,
+    "top_level_detail": null
+   },
+   "elapsed_ms": 78
+  },
+  {
+   "url": "/api/v1/demo/scene",
+   "method": "GET",
+   "api": true,
+   "sent_ms_since_load": 231,
+   "sent_wall": "2026-09-25T02:21:44.366Z",
+   "has_signal": true,
+   "request_body": null,
+   "status": 200,
+   "content_type": "application/json",
+   "bytes": 489,
+   "body_head": "{\"demo_mode\":false,\"journey_id\":\"22222222-2222-4222-8222-222222222222\",\"journey_status\":\"DRAFT\",\"current_activity_id\":null,\"scene_start_at\":\"2026-10-10T09:00:00+08:00\",\"scene_end_at\":\"2026-10-10T19:00:00+08:00\",\"effective_now\":\"2026-10-10T09:00:00+08:00\",\"basis\":\"JOURNEY_START\",\"evidence_expires_at\":null,\"evidence_state\":\"NO_FROZEN_EVIDENCE\",\"evidence_snapshot_id\":null,\"evidence_reference_consiste",
+   "server_envelope": {
+    "has_error_object": false,
+    "error_code": null,
+    "error_message": null,
+    "reason_code": null,
+    "top_level_detail": null
+   },
+   "elapsed_ms": 17
+  },
+  {
+   "url": "/api/v1/journeys/a37be52b-ac37-43fe-8ade-7fa8c8bcf59c/agent-feed?limit=200",
+   "method": "GET",
+   "api": true,
+   "sent_ms_since_load": 232,
+   "sent_wall": "2026-09-25T02:21:44.367Z",
+   "has_signal": false,
+   "request_body": null,
+   "status": 200,
+   "content_type": "application/json",
+   "bytes": 4730,
+   "body_head": "{\"journey_id\":\"a37be52b-ac37-43fe-8ade-7fa8c8bcf59c\",\"source\":\"audit_log\",\"events\":[{\"id\":\"e7b57a30-94ae-42cb-b096-36003ad74c2c\",\"timestamp\":\"2026-09-25T02:07:19.731411+00:00\",\"event_type\":\"journey.created\",\"type\":\"journey.created\",\"summary\":\"Journey.created\",\"actor_type\":\"system\",\"actor_id\":null,\"tool\":null,\"journey_id\":\"a37be52b-ac37-43fe-8ade-7fa8c8bcf59c\",\"proposal_id\":null,\"entity_type\":\"Jour",
+   "server_envelope": {
+    "has_error_object": false,
+    "error_code": null,
+    "error_message": null,
+    "reason_code": null,
+    "top_level_detail": null
+   },
+   "elapsed_ms": 23
+  },
+  {
+   "url": "/api/v1/journeys/a37be52b-ac37-43fe-8ade-7fa8c8bcf59c/agent-feed?limit=200",
+   "method": "GET",
+   "api": true,
+   "sent_ms_since_load": 232,
+   "sent_wall": "2026-09-25T02:21:44.367Z",
+   "has_signal": true,
+   "request_body": null,
+   "status": 200,
+   "content_type": "application/json",
+   "bytes": 4730,
+   "body_head": "{\"journey_id\":\"a37be52b-ac37-43fe-8ade-7fa8c8bcf59c\",\"source\":\"audit_log\",\"events\":[{\"id\":\"e7b57a30-94ae-42cb-b096-36003ad74c2c\",\"timestamp\":\"2026-09-25T02:07:19.731411+00:00\",\"event_type\":\"journey.created\",\"type\":\"journey.created\",\"summary\":\"Journey.created\",\"actor_type\":\"system\",\"actor_id\":null,\"tool\":null,\"journey_id\":\"a37be52b-ac37-43fe-8ade-7fa8c8bcf59c\",\"proposal_id\":null,\"entity_type\":\"Jour",
+   "server_envelope": {
+    "has_error_object": false,
+    "error_code": null,
+    "error_message": null,
+    "reason_code": null,
+    "top_level_detail": null
+   },
+   "elapsed_ms": 43
+  },
+  {
+   "url": "/api/v1/journeys/a37be52b-ac37-43fe-8ade-7fa8c8bcf59c/plans",
+   "method": "GET",
+   "api": true,
+   "sent_ms_since_load": 233,
+   "sent_wall": "2026-09-25T02:21:44.368Z",
+   "has_signal": false,
+   "request_body": null,
+   "status": 200,
+   "content_type": "application/json",
+   "bytes": 2,
+   "body_head": "[]",
+   "server_envelope": {
+    "has_error_object": false,
+    "error_code": null,
+    "error_message": null,
+    "reason_code": null,
+    "top_level_detail": null
+   },
+   "elapsed_ms": 22
+  },
+  {
+   "url": "/api/v1/journeys/a37be52b-ac37-43fe-8ade-7fa8c8bcf59c/twin",
+   "method": "GET",
+   "api": true,
+   "sent_ms_since_load": 234,
+   "sent_wall": "2026-09-25T02:21:44.369Z",
+   "has_signal": false,
+   "request_body": null,
+   "status": 200,
+   "content_type": "application/json",
+   "bytes": 896,
+   "body_head": "{\"journey_id\":\"a37be52b-ac37-43fe-8ade-7fa8c8bcf59c\",\"active_plan_version_id\":null,\"current_activity_id\":null,\"latest_event_id\":null,\"projection_status\":\"READY\",\"snapshot_at\":\"2026-09-25T02:21:44.383671Z\",\"upcoming_commitments\":[],\"context\":{\"journey_status\":\"DRAFT\",\"provider_level\":1,\"degraded_providers\":[],\"feasibility_envelope\":{\"next_commitment_buffer_min\":null,\"journey_end_slack_min\":2040,\"bu",
+   "server_envelope": {
+    "has_error_object": false,
+    "error_code": null,
+    "error_message": null,
+    "reason_code": null,
+    "top_level_detail": null
+   },
+   "elapsed_ms": 37
+  },
+  {
+   "url": "/api/v1/travelers/57fc16d1-f153-4140-980a-06599499d830/agent-policy",
+   "method": "GET",
+   "api": true,
+   "sent_ms_since_load": 239,
+   "sent_wall": "2026-09-25T02:21:44.374Z",
+   "has_signal": true,
+   "request_body": null,
+   "status": 200,
+   "content_type": "application/json",
+   "bytes": 527,
+   "body_head": "{\"mode\":\"ADVISORY\",\"auto_accept_replan\":false,\"max_auto_replan_cost_delta_minor\":0,\"max_auto_loss_minor\":0,\"max_auto_schedule_drift_min\":0,\"allowed_activity_types\":[],\"allowed_booking_types\":[],\"protected_commitment_levels\":[\"C3_Guaranteed\",\"C4_Anchored\"],\"allow_auto_commitment_management\":false,\"allow_auto_when_provider_degraded\":false,\"allow_auto_on_critical_event\":false,\"traveler_id\":\"57fc16d1-",
+   "server_envelope": {
+    "has_error_object": false,
+    "error_code": null,
+    "error_message": null,
+    "reason_code": null,
+    "top_level_detail": null
+   },
+   "elapsed_ms": 32
+  },
+  {
+   "url": "/api/v1/journeys/a37be52b-ac37-43fe-8ade-7fa8c8bcf59c/wallet",
+   "method": "GET",
+   "api": true,
+   "sent_ms_since_load": 239,
+   "sent_wall": "2026-09-25T02:21:44.374Z",
+   "has_signal": true,
+   "request_body": null,
+   "status": 200,
+   "content_type": "application/json",
+   "bytes": 109,
+   "body_head": "{\"journey_id\":\"a37be52b-ac37-43fe-8ade-7fa8c8bcf59c\",\"reservations\":[],\"commitments\":[],\"offline_ready\":true}",
+   "server_envelope": {
+    "has_error_object": false,
+    "error_code": null,
+    "error_message": null,
+    "reason_code": null,
+    "top_level_detail": null
+   },
+   "elapsed_ms": 32
+  },
+  {
+   "url": "/api/v1/journeys/a37be52b-ac37-43fe-8ade-7fa8c8bcf59c/offline-snapshot",
+   "method": "GET",
+   "api": true,
+   "sent_ms_since_load": 239,
+   "sent_wall": "2026-09-25T02:21:44.374Z",
+   "has_signal": true,
+   "request_body": null,
+   "status": 200,
+   "content_type": "application/json",
+   "bytes": 797,
+   "body_head": "{\"journey_id\":\"a37be52b-ac37-43fe-8ade-7fa8c8bcf59c\",\"sequence\":1,\"valid_until\":\"2026-09-26T10:09:13.294986+08:00\",\"snapshot\":{\"active_plan_version_id\":null,\"current_activity_id\":null,\"execution\":{\"cursor_status\":\"ABSENT_FALLBACK\",\"next\":null,\"next_activity_id\":null,\"next_eta_min\":0,\"next_leg_id\":null,\"next_mode\":\"NONE\",\"next_state\":null,\"now\":null,\"now_activity_id\":null,\"now_state\":\"COMPLETE\",\"pe",
+   "server_envelope": {
+    "has_error_object": false,
+    "error_code": null,
+    "error_message": null,
+    "reason_code": null,
+    "top_level_detail": null
+   },
+   "elapsed_ms": 32
+  },
+  {
+   "url": "/api/v1/agent/runtime-status",
+   "method": "GET",
+   "api": true,
+   "sent_ms_since_load": 239,
+   "sent_wall": "2026-09-25T02:21:44.374Z",
+   "has_signal": true,
+   "request_body": null,
+   "status": 200,
+   "content_type": "application/json",
+   "bytes": 369,
+   "body_head": "{\"runtime_identity\":\"NOT_CONFIGURED\",\"native_binary_detected\":false,\"native_mcp_proven\":false,\"mcp_server\":\"citynexus-v2\",\"deepseek_configured\":false,\"hermes_compat_configured\":false,\"hermes_native_gateway\":{\"configured\":false,\"reachable\":false,\"runs\":false,\"events\":false,\"approval\":false,\"stop\":false,\"ready\":false,\"profile\":\"citynexus\",\"provider\":null,\"model\":null}}",
+   "server_envelope": {
+    "has_error_object": false,
+    "error_code": null,
+    "error_message": null,
+    "reason_code": null,
+    "top_level_detail": null
+   },
+   "elapsed_ms": 61
+  },
+  {
+   "url": "/api/v1/places?city_code=CNX-DEMO",
+   "method": "GET",
+   "api": true,
+   "sent_ms_since_load": 654,
+   "sent_wall": "2026-09-25T02:21:44.789Z",
+   "has_signal": true,
+   "request_body": null,
+   "status": 200,
+   "content_type": "application/json",
+   "bytes": 1459,
+   "body_head": "[{\"id\":\"place-city-park\",\"name\":\"Nexus City Park\",\"category\":\"park\",\"city_code\":\"CNX-DEMO\",\"location\":{\"latitude\":39.113,\"longitude\":117.202},\"tags\":[\"waterfront\",\"relaxed\",\"outdoor\"]},{\"id\":\"place-design-library\",\"name\":\"Design Library\",\"category\":\"library\",\"city_code\":\"CNX-DEMO\",\"location\":{\"latitude\":39.117,\"longitude\":117.207},\"tags\":[\"culture\",\"quiet\",\"indoor\"]},{\"id\":\"place-food-hall\",\"name\"",
+   "server_envelope": {
+    "has_error_object": false,
+    "error_code": null,
+    "error_message": null,
+    "reason_code": null,
+    "top_level_detail": null
+   },
+   "elapsed_ms": 9
+  },
+  {
+   "url": "/api/v1/agent/runtime-status",
+   "method": "GET",
+   "api": true,
+   "sent_ms_since_load": 655,
+   "sent_wall": "2026-09-25T02:21:44.790Z",
+   "has_signal": false,
+   "request_body": null,
+   "status": 200,
+   "content_type": "application/json",
+   "bytes": 369,
+   "body_head": "{\"runtime_identity\":\"NOT_CONFIGURED\",\"native_binary_detected\":false,\"native_mcp_proven\":false,\"mcp_server\":\"citynexus-v2\",\"deepseek_configured\":false,\"hermes_compat_configured\":false,\"hermes_native_gateway\":{\"configured\":false,\"reachable\":false,\"runs\":false,\"events\":false,\"approval\":false,\"stop\":false,\"ready\":false,\"profile\":\"citynexus\",\"provider\":null,\"model\":null}}",
+   "server_envelope": {
+    "has_error_object": false,
+    "error_code": null,
+    "error_message": null,
+    "reason_code": null,
+    "top_level_detail": null
+   },
+   "elapsed_ms": 25
+  },
+  {
+   "url": "/api/v1/journeys/a37be52b-ac37-43fe-8ade-7fa8c8bcf59c/plans",
+   "method": "GET",
+   "api": true,
+   "sent_ms_since_load": 1328,
+   "sent_wall": "2026-09-25T02:21:45.463Z",
+   "has_signal": true,
+   "request_body": null,
+   "status": 200,
+   "content_type": "application/json",
+   "bytes": 2,
+   "body_head": "[]",
+   "server_envelope": {
+    "has_error_object": false,
+    "error_code": null,
+    "error_message": null,
+    "reason_code": null,
+    "top_level_detail": null
+   },
+   "elapsed_ms": 12
+  },
+  {
+   "url": "/api/v1/journeys/a37be52b-ac37-43fe-8ade-7fa8c8bcf59c/agent/commands",
+   "method": "POST",
+   "api": true,
+   "sent_ms_since_load": 1340,
+   "sent_wall": "2026-09-25T02:21:45.475Z",
+   "has_signal": true,
+   "request_body": "{\"command\":\"想傍晚在老城慢慢走一圈，别太赶\"}",
+   "status": 200,
+   "content_type": "application/json",
+   "bytes": 7087,
+   "body_head": "{\"mission\":{\"id\":\"a8b2adea-4761-4ac6-8838-8939eb423197\",\"journey_id\":\"a37be52b-ac37-43fe-8ade-7fa8c8bcf59c\",\"trigger_event_id\":null,\"user_text\":\"想傍晚在老城慢慢走一圈，别太赶\",\"objective_codes\":[],\"protected_activity_ids\":[],\"mutable_activity_ids\":[],\"intent\":{\"capabilities\":[],\"max_cost_delta_minor\":0,\"max_loss_minor\":0,\"max_schedule_drift_min\":0,\"mutable_activity_ids\":[],\"objective_codes\":[],\"preferences\":{},",
+   "server_envelope": {
+    "has_error_object": false,
+    "error_code": null,
+    "error_message": null,
+    "reason_code": null,
+    "top_level_detail": null
+   },
+   "elapsed_ms": 19717
+  },
+  {
+   "url": "/api/v1/journeys/a37be52b-ac37-43fe-8ade-7fa8c8bcf59c/twin",
+   "method": "GET",
+   "api": true,
+   "sent_ms_since_load": 15273,
+   "sent_wall": "2026-09-25T02:21:59.408Z",
+   "has_signal": false,
+   "request_body": null,
+   "status": 200,
+   "content_type": "application/json",
+   "bytes": 896,
+   "body_head": "{\"journey_id\":\"a37be52b-ac37-43fe-8ade-7fa8c8bcf59c\",\"active_plan_version_id\":null,\"current_activity_id\":null,\"latest_event_id\":null,\"projection_status\":\"READY\",\"snapshot_at\":\"2026-09-25T02:21:59.412959Z\",\"upcoming_commitments\":[],\"context\":{\"journey_status\":\"DRAFT\",\"provider_level\":1,\"degraded_providers\":[],\"feasibility_envelope\":{\"next_commitment_buffer_min\":null,\"journey_end_slack_min\":2040,\"bu",
+   "server_envelope": {
+    "has_error_object": false,
+    "error_code": null,
+    "error_message": null,
+    "reason_code": null,
+    "top_level_detail": null
+   },
+   "elapsed_ms": 9
+  },
+  {
+   "url": "/api/v1/journeys/a37be52b-ac37-43fe-8ade-7fa8c8bcf59c/plans",
+   "method": "GET",
+   "api": true,
+   "sent_ms_since_load": 21058,
+   "sent_wall": "2026-09-25T02:22:05.193Z",
+   "has_signal": true,
+   "request_body": null,
+   "status": 200,
+   "content_type": "application/json",
+   "bytes": 2,
+   "body_head": "[]",
+   "server_envelope": {
+    "has_error_object": false,
+    "error_code": null,
+    "error_message": null,
+    "reason_code": null,
+    "top_level_detail": null
+   },
+   "elapsed_ms": 7
+  },
+  {
+   "url": "/api/v1/places?city_code=CNX-DEMO",
+   "method": "GET",
+   "api": true,
+   "sent_ms_since_load": 21065,
+   "sent_wall": "2026-09-25T02:22:05.200Z",
+   "has_signal": true,
+   "request_body": null,
+   "status": 200,
+   "content_type": "application/json",
+   "bytes": 1459,
+   "body_head": "[{\"id\":\"place-city-park\",\"name\":\"Nexus City Park\",\"category\":\"park\",\"city_code\":\"CNX-DEMO\",\"location\":{\"latitude\":39.113,\"longitude\":117.202},\"tags\":[\"waterfront\",\"relaxed\",\"outdoor\"]},{\"id\":\"place-design-library\",\"name\":\"Design Library\",\"category\":\"library\",\"city_code\":\"CNX-DEMO\",\"location\":{\"latitude\":39.117,\"longitude\":117.207},\"tags\":[\"culture\",\"quiet\",\"indoor\"]},{\"id\":\"place-food-hall\",\"name\"",
+   "server_envelope": {
+    "has_error_object": false,
+    "error_code": null,
+    "error_message": null,
+    "reason_code": null,
+    "top_level_detail": null
+   },
+   "elapsed_ms": 8
+  },
+  {
+   "url": "/api/v1/journeys/a37be52b-ac37-43fe-8ade-7fa8c8bcf59c/plans/generate",
+   "method": "POST",
+   "api": true,
+   "sent_ms_since_load": 21073,
+   "sent_wall": "2026-09-25T02:22:05.208Z",
+   "has_signal": true,
+   "request_body": "{\"candidate_count\":3}",
+   "status": 422,
+   "content_type": "application/json",
+   "bytes": 1443,
+   "body_head": "{\"error\":{\"code\":\"VALIDATION_ERROR\",\"message\":\"No feasible plan candidates satisfy the journey constraints\",\"message_key\":\"request.invalid\",\"trace_id\":\"1bc65f18-2f57-46b3-a0fe-276084b5cf78\",\"details\":{\"city_code\":\"CNX-DEMO\",\"places_in_catalog\":8,\"city_services_in_catalog\":5,\"day_sequences_available\":3,\"requested_candidates\":3,\"candidate_rejections\":[{\"reason_codes\":[\"CANDIDATE_REJECTED_BY_FEASIBIL",
+   "server_envelope": {
+    "has_error_object": true,
+    "error_code": "VALIDATION_ERROR",
+    "error_message": "No feasible plan candidates satisfy the journey constraints",
+    "reason_code": "CATALOG_INSUFFICIENT",
+    "top_level_detail": null
+   },
+   "elapsed_ms": 15
+  }
+ ],
+ "first_client_deadline_line": null,
+ "screen_after_open_details": {
+  "result_card": "这次排不出方案：数据不够，不是你说的不对\n\n这座城我们手上的地点太少，配不平一天的行程。（服务器给的原因编号：CATALOG_INSUFFICIENT）\n\n技术详情\n服务器给出的原因\nDeepSeek API key is not configured\n模型原始输出（未翻译，不代表本界面的结论）\nResolved named activities against the active plan, then intersected the mission envelope with the persisted traveler policy.\n换一座有数据的城市",
+  "detail_toggle_present": true,
+  "detail_open": true,
+  "reason_label_painted": "服务器给出的原因",
+  "reason_value_painted": "DeepSeek API key is not configured",
+  "reason_label_testid": "plan-ai-detail-kind",
+  "cross_check_data_reason_origin": "server",
+  "cross_check_data_result_tone": "warn",
+  "elapsed_line": null,
+  "deadline_sentence_on_screen": false,
+  "submit_visible": true,
+  "result_card_html": "<div class=\"plan-ai-result warn\" data-testid=\"plan-ai-result\" data-result-status=\"BLOCKED:CATALOG_INSUFFICIENT\" data-result-tone=\"warn\" data-plan-count=\"0\" data-new-plan-ids=\"\" role=\"status\"><b>这次排不出方案：数据不够，不是你说的不对</b><p>这座城我们手上的地点太少，配不平一天的行程。（服务器给的原因编号：CATALOG_INSUFFICIENT）</p><details class=\"plan-ai-detail\" open=\"\"><summary data-testid=\"plan-ai-detail-toggle\">技术详情</summary><span class=\"plan-ai-detail-label\" data-testid=\"plan-ai-detail-kind\" data-reason-origin=\"server\">服务器给出的原因</span><code data-testid=\"plan-ai-reason\">DeepSeek API key is not configured</code><span class=\"plan-ai-detail-label\" data-testid=\"plan-ai-model-label\">模型原始输出（未翻译，不代表本界面的结论）</span><code data-testid=\"plan-ai-model-output\">Resolved named activities against the active plan, then intersected the mission envelope with the persisted traveler policy.</code></details><button type=\"button\" class=\"v8-primary-button plan-ai-",
+  "sheet_region_text": "AI 帮我规划\n用你自己的话描述这趟旅行，越具体越好。\n×\n旅行需求\n我想去Central Food Ha…\nCentral Food Hall排…\n\n这台服务没有接入 AI 模型：现在提交不会真的由 AI 规划，结果会走其它路径。\n\n这次排不出方案：数据不够，不是你说的不对\n\n这座城我们手上的地点太少，配不平一天的行程。（服务器给的原因编号：CATALOG_INSUFFICIENT）\n\n技术详情\n服务器给出的原因\nDeepSeek API key is not configured\n模型原始输出（未翻译，不代表本界面的结论）\nResolved named activities against the active plan, then intersected the mission envelope with the persisted traveler policy.\n换一座有数据的城市\n稍后\n开始规划",
+  "details_elements_present": 1
+ },
+ "screen_states_observed": [
+  {
+   "ms": 47,
+   "tone": null,
+   "label": null,
+   "value": null,
+   "counter": "发出请求，等待模型返回 · 已等待 0 秒",
+   "card": ""
+  },
+  {
+   "ms": 19930,
+   "tone": "warn",
+   "label": "",
+   "value": "",
+   "counter": null,
+   "card": "这次排不出方案：数据不够，不是你说的不对\n\n这座城我们手上的地点太少，配不平一天的行程。（服务器给的原因编号：CATALOG_I"
+  }
+ ],
+ "timeline_points": 77,
+ "cap_ms": 95000,
+ "page_errors_and_console": [
+  {
+   "at": 1790302925222,
+   "console": "error",
+   "text": "Failed to load resource: the server responded with a status of 422 (Unprocessable Entity)"
+  }
+ ],
+ "screen_after_settle_watch": {
+  "ms": 28069,
+  "card": "这次排不出方案：数据不够，不是你说的不对  这座城我们手上的地点太少，配不平一天的行程。（服务器给的原因编号：CATALOG_INSUFFI",
+  "label": "服务器给出的原因",
+  "value": "DeepSeek API key is not configured",
+  "details": 1,
+  "write_legs": 2
+ },
+ "settle_watch_states": [
+  {
+   "ms": 20458,
+   "card": "这次排不出方案：数据不够，不是你说的不对  这座城我们手上的地点太少，配不平一天的行程。（服务器给的原因编号：CATALOG_INSUFFI",
+   "label": "服务器给出的原因",
+   "value": "DeepSeek API key is not configured",
+   "details": 1,
+   "write_legs": 2
+  }
+ ]
+}
