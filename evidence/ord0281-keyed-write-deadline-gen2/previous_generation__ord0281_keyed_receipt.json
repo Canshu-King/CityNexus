@@ -1,0 +1,828 @@
+{
+ "at": "2026-09-25T15:42:21+08:00",
+ "order": "ORD-0281 前端半 · 有键那一支（期限 + 具名中止 + T-d 现状）",
+ "lane": "B c01d72a3",
+ "claim_kind": "RUNTIME_MEASURED",
+ "candidate_tip": "02da4602bfd4f7af38154a26dd345aba9f69876d",
+ "base_tip": "90d29a172e186aab6e6cb138ab4583ccf93bfa68",
+ "branch": "review/0281-write-deadline-keyed-b",
+ "cells": [
+  {
+   "cell": "TA on the pristine tree",
+   "claimed_result": "MET",
+   "derived_result": null,
+   "why": "TA (frontend/e2e/qoder-ord0281-keyed-write-deadline.spec.ts:169:3, judged on the pristine tree shape, run 0281p11651): Playwright reported passed and the cell's own reading says MET after 400 ms; what the traveller's surface held was 'success'. Keys seen on the wire: ['accept-ord0281-proposal']. Face: authoritative e2e, own db _0281p11651.db, frontend :4470 / backend :42470, ai=disabled, reuseExistingServer=False -- a spec-level reading, not a shipped bundle. Candidate blob for the module this arm exercises: 1d67e725ebb3348bbeb70d743793388ed36ed9d9.",
+   "readings": {
+    "arm": "TA",
+    "nodeid": "frontend/e2e/qoder-ord0281-keyed-write-deadline.spec.ts:169:3",
+    "judged_on_tree": "pristine",
+    "run_id": "0281p11651",
+    "db": "_0281p11651.db",
+    "frontend_port": 4470,
+    "backend_port": 42470,
+    "authoritative": true,
+    "ai": "disabled",
+    "reuse_existing_server": false,
+    "status": "passed",
+    "expectation": "passed",
+    "verdict": "MET",
+    "elapsed_ms": 400,
+    "seconds_named_on_screen": null,
+    "screen_text_kind": "success",
+    "note": null,
+    "bound_ms_under_test": null,
+    "keys_seen": [
+     "accept-ord0281-proposal"
+    ],
+    "had_network_blame": false,
+    "candidate_blobs": {
+     "frontend/src/lib/writeDeadline.ts": "1d67e725ebb3348bbeb70d743793388ed36ed9d9",
+     "frontend/src/lib/readDeadline.ts": "be04016af0b402dbe76cce79167475c77d0e77a4",
+     "frontend/src/features/execution/LiveRecovery.tsx": "48a55ffca4e90d3c45d780f3bb7f9bfb1cdbd698",
+     "frontend/src/features/recovery/V14RecoveryTruthPanel.tsx": "17c27735e561682a1510ee6fc67aae1b710276c2",
+     "frontend/e2e/qoder-ord0281-keyed-write-deadline.spec.ts": "4f64c32890ec6791093faed281d86d709e4b026d"
+    },
+    "base_blobs": {
+     "frontend/src/lib/writeDeadline.ts": "ABSENT",
+     "frontend/src/lib/readDeadline.ts": "709222bd712a2bc22e2296a326063be22b97ee57",
+     "frontend/src/features/execution/LiveRecovery.tsx": "225b8efcc544fb727cdc9d4e759f2a78f85fc36f",
+     "frontend/src/features/recovery/V14RecoveryTruthPanel.tsx": "6a91ea0a2ab1e407dcf62b1e74425084f1c4368d",
+     "frontend/e2e/qoder-ord0281-keyed-write-deadline.spec.ts": "ABSENT"
+    },
+    "named_values_the_why_uses": [
+     "0281p11651",
+     "17c27735e561682a1510ee6fc67aae1b710276c2",
+     "1d67e725ebb3348bbeb70d743793388ed36ed9d9",
+     "225b8efcc544fb727cdc9d4e759f2a78f85fc36f",
+     "400",
+     "42470",
+     "4470",
+     "48a55ffca4e90d3c45d780f3bb7f9bfb1cdbd698",
+     "4f64c32890ec6791093faed281d86d709e4b026d",
+     "6a91ea0a2ab1e407dcf62b1e74425084f1c4368d",
+     "709222bd712a2bc22e2296a326063be22b97ee57",
+     "ABSENT",
+     "False",
+     "MET",
+     "TA",
+     "True",
+     "_0281p11651.db",
+     "accept-ord0281-proposal",
+     "be04016af0b402dbe76cce79167475c77d0e77a4",
+     "disabled",
+     "frontend/e2e/qoder-ord0281-keyed-write-deadline.spec.ts:169:3",
+     "passed",
+     "pristine",
+     "success"
+    ]
+   }
+  },
+  {
+   "cell": "TB on the bound2000 tree",
+   "claimed_result": "MET",
+   "derived_result": null,
+   "why": "TB (frontend/e2e/qoder-ord0281-keyed-write-deadline.spec.ts:191:3, judged on the bound2000 tree shape, run 0281p21651): Playwright reported passed and the cell's own reading says MET after 2420 ms, with the number on screen being 2; what the traveller's surface held was 'bound-sentence'. Keys seen on the wire: ['accept-ord0281-proposal']. Face: authoritative e2e, own db _0281p21651.db, frontend :4471 / backend :42471, ai=disabled, reuseExistingServer=False -- a spec-level reading, not a shipped bundle. Candidate blob for the module this arm exercises: 1d67e725ebb3348bbeb70d743793388ed36ed9d9.",
+   "readings": {
+    "arm": "TB",
+    "nodeid": "frontend/e2e/qoder-ord0281-keyed-write-deadline.spec.ts:191:3",
+    "judged_on_tree": "bound2000",
+    "run_id": "0281p21651",
+    "db": "_0281p21651.db",
+    "frontend_port": 4471,
+    "backend_port": 42471,
+    "authoritative": true,
+    "ai": "disabled",
+    "reuse_existing_server": false,
+    "status": "passed",
+    "expectation": "passed",
+    "verdict": "MET",
+    "elapsed_ms": 2420,
+    "seconds_named_on_screen": 2,
+    "screen_text_kind": "bound-sentence",
+    "note": null,
+    "bound_ms_under_test": null,
+    "keys_seen": [
+     "accept-ord0281-proposal"
+    ],
+    "had_network_blame": false,
+    "candidate_blobs": {
+     "frontend/src/lib/writeDeadline.ts": "1d67e725ebb3348bbeb70d743793388ed36ed9d9",
+     "frontend/src/lib/readDeadline.ts": "be04016af0b402dbe76cce79167475c77d0e77a4",
+     "frontend/src/features/execution/LiveRecovery.tsx": "48a55ffca4e90d3c45d780f3bb7f9bfb1cdbd698",
+     "frontend/src/features/recovery/V14RecoveryTruthPanel.tsx": "17c27735e561682a1510ee6fc67aae1b710276c2",
+     "frontend/e2e/qoder-ord0281-keyed-write-deadline.spec.ts": "4f64c32890ec6791093faed281d86d709e4b026d"
+    },
+    "base_blobs": {
+     "frontend/src/lib/writeDeadline.ts": "ABSENT",
+     "frontend/src/lib/readDeadline.ts": "709222bd712a2bc22e2296a326063be22b97ee57",
+     "frontend/src/features/execution/LiveRecovery.tsx": "225b8efcc544fb727cdc9d4e759f2a78f85fc36f",
+     "frontend/src/features/recovery/V14RecoveryTruthPanel.tsx": "6a91ea0a2ab1e407dcf62b1e74425084f1c4368d",
+     "frontend/e2e/qoder-ord0281-keyed-write-deadline.spec.ts": "ABSENT"
+    },
+    "named_values_the_why_uses": [
+     "0281p21651",
+     "17c27735e561682a1510ee6fc67aae1b710276c2",
+     "1d67e725ebb3348bbeb70d743793388ed36ed9d9",
+     "2",
+     "225b8efcc544fb727cdc9d4e759f2a78f85fc36f",
+     "2420",
+     "42471",
+     "4471",
+     "48a55ffca4e90d3c45d780f3bb7f9bfb1cdbd698",
+     "4f64c32890ec6791093faed281d86d709e4b026d",
+     "6a91ea0a2ab1e407dcf62b1e74425084f1c4368d",
+     "709222bd712a2bc22e2296a326063be22b97ee57",
+     "ABSENT",
+     "False",
+     "MET",
+     "TB",
+     "True",
+     "_0281p21651.db",
+     "accept-ord0281-proposal",
+     "be04016af0b402dbe76cce79167475c77d0e77a4",
+     "bound-sentence",
+     "bound2000",
+     "disabled",
+     "frontend/e2e/qoder-ord0281-keyed-write-deadline.spec.ts:191:3",
+     "passed"
+    ]
+   }
+  },
+  {
+   "cell": "TC on the bound1000 tree",
+   "claimed_result": "MET",
+   "derived_result": null,
+   "why": "TC (frontend/e2e/qoder-ord0281-keyed-write-deadline.spec.ts:224:3, judged on the bound1000 tree shape, run 0281p31651): Playwright reported passed and the cell's own reading says MET after 1417 ms, with the number on screen being 1; what the traveller's surface held was 'bound-sentence'. Keys seen on the wire: ['accept-ord0281-proposal']. Declared boundary in the reading itself: bound_under_test=1000;baseline=2000. Face: authoritative e2e, own db _0281p31651.db, frontend :4472 / backend :42472, ai=disabled, reuseExistingServer=False -- a spec-level reading, not a shipped bundle. Candidate blob for the module this arm exercises: 1d67e725ebb3348bbeb70d743793388ed36ed9d9.",
+   "readings": {
+    "arm": "TC",
+    "nodeid": "frontend/e2e/qoder-ord0281-keyed-write-deadline.spec.ts:224:3",
+    "judged_on_tree": "bound1000",
+    "run_id": "0281p31651",
+    "db": "_0281p31651.db",
+    "frontend_port": 4472,
+    "backend_port": 42472,
+    "authoritative": true,
+    "ai": "disabled",
+    "reuse_existing_server": false,
+    "status": "passed",
+    "expectation": "passed",
+    "verdict": "MET",
+    "elapsed_ms": 1417,
+    "seconds_named_on_screen": 1,
+    "screen_text_kind": "bound-sentence",
+    "note": "bound_under_test=1000;baseline=2000",
+    "bound_ms_under_test": null,
+    "keys_seen": [
+     "accept-ord0281-proposal"
+    ],
+    "had_network_blame": false,
+    "candidate_blobs": {
+     "frontend/src/lib/writeDeadline.ts": "1d67e725ebb3348bbeb70d743793388ed36ed9d9",
+     "frontend/src/lib/readDeadline.ts": "be04016af0b402dbe76cce79167475c77d0e77a4",
+     "frontend/src/features/execution/LiveRecovery.tsx": "48a55ffca4e90d3c45d780f3bb7f9bfb1cdbd698",
+     "frontend/src/features/recovery/V14RecoveryTruthPanel.tsx": "17c27735e561682a1510ee6fc67aae1b710276c2",
+     "frontend/e2e/qoder-ord0281-keyed-write-deadline.spec.ts": "4f64c32890ec6791093faed281d86d709e4b026d"
+    },
+    "base_blobs": {
+     "frontend/src/lib/writeDeadline.ts": "ABSENT",
+     "frontend/src/lib/readDeadline.ts": "709222bd712a2bc22e2296a326063be22b97ee57",
+     "frontend/src/features/execution/LiveRecovery.tsx": "225b8efcc544fb727cdc9d4e759f2a78f85fc36f",
+     "frontend/src/features/recovery/V14RecoveryTruthPanel.tsx": "6a91ea0a2ab1e407dcf62b1e74425084f1c4368d",
+     "frontend/e2e/qoder-ord0281-keyed-write-deadline.spec.ts": "ABSENT"
+    },
+    "named_values_the_why_uses": [
+     "0281p31651",
+     "1",
+     "1417",
+     "17c27735e561682a1510ee6fc67aae1b710276c2",
+     "1d67e725ebb3348bbeb70d743793388ed36ed9d9",
+     "225b8efcc544fb727cdc9d4e759f2a78f85fc36f",
+     "42472",
+     "4472",
+     "48a55ffca4e90d3c45d780f3bb7f9bfb1cdbd698",
+     "4f64c32890ec6791093faed281d86d709e4b026d",
+     "6a91ea0a2ab1e407dcf62b1e74425084f1c4368d",
+     "709222bd712a2bc22e2296a326063be22b97ee57",
+     "ABSENT",
+     "False",
+     "MET",
+     "TC",
+     "True",
+     "_0281p31651.db",
+     "accept-ord0281-proposal",
+     "be04016af0b402dbe76cce79167475c77d0e77a4",
+     "bound-sentence",
+     "bound1000",
+     "bound_under_test=1000;baseline=2000",
+     "disabled",
+     "frontend/e2e/qoder-ord0281-keyed-write-deadline.spec.ts:224:3",
+     "passed"
+    ]
+   }
+  },
+  {
+   "cell": "TD on the bound2000 tree",
+   "claimed_result": "MET",
+   "derived_result": null,
+   "why": "TD (frontend/e2e/qoder-ord0281-keyed-write-deadline.spec.ts:260:3, judged on the bound2000 tree shape, run 0281p21651): Playwright reported passed and the cell's own reading says REPLAY_SHAPE_ONLY_NOT_EXACTLY_ONCE after 4469 ms, with the number on screen being 2; what the traveller's surface held was 'bound-sentence'. Keys seen on the wire: ['accept-ord0281-proposal', 'accept-ord0281-proposal']. Face: authoritative e2e, own db _0281p21651.db, frontend :4471 / backend :42471, ai=disabled, reuseExistingServer=False -- a spec-level reading, not a shipped bundle. Candidate blob for the module this arm exercises: 1d67e725ebb3348bbeb70d743793388ed36ed9d9.",
+   "readings": {
+    "arm": "TD",
+    "nodeid": "frontend/e2e/qoder-ord0281-keyed-write-deadline.spec.ts:260:3",
+    "judged_on_tree": "bound2000",
+    "run_id": "0281p21651",
+    "db": "_0281p21651.db",
+    "frontend_port": 4471,
+    "backend_port": 42471,
+    "authoritative": true,
+    "ai": "disabled",
+    "reuse_existing_server": false,
+    "status": "passed",
+    "expectation": "passed",
+    "verdict": "REPLAY_SHAPE_ONLY_NOT_EXACTLY_ONCE",
+    "elapsed_ms": 4469,
+    "seconds_named_on_screen": 2,
+    "screen_text_kind": "bound-sentence",
+    "note": null,
+    "bound_ms_under_test": null,
+    "keys_seen": [
+     "accept-ord0281-proposal",
+     "accept-ord0281-proposal"
+    ],
+    "had_network_blame": false,
+    "candidate_blobs": {
+     "frontend/src/lib/writeDeadline.ts": "1d67e725ebb3348bbeb70d743793388ed36ed9d9",
+     "frontend/src/lib/readDeadline.ts": "be04016af0b402dbe76cce79167475c77d0e77a4",
+     "frontend/src/features/execution/LiveRecovery.tsx": "48a55ffca4e90d3c45d780f3bb7f9bfb1cdbd698",
+     "frontend/src/features/recovery/V14RecoveryTruthPanel.tsx": "17c27735e561682a1510ee6fc67aae1b710276c2",
+     "frontend/e2e/qoder-ord0281-keyed-write-deadline.spec.ts": "4f64c32890ec6791093faed281d86d709e4b026d"
+    },
+    "base_blobs": {
+     "frontend/src/lib/writeDeadline.ts": "ABSENT",
+     "frontend/src/lib/readDeadline.ts": "709222bd712a2bc22e2296a326063be22b97ee57",
+     "frontend/src/features/execution/LiveRecovery.tsx": "225b8efcc544fb727cdc9d4e759f2a78f85fc36f",
+     "frontend/src/features/recovery/V14RecoveryTruthPanel.tsx": "6a91ea0a2ab1e407dcf62b1e74425084f1c4368d",
+     "frontend/e2e/qoder-ord0281-keyed-write-deadline.spec.ts": "ABSENT"
+    },
+    "named_values_the_why_uses": [
+     "0281p21651",
+     "17c27735e561682a1510ee6fc67aae1b710276c2",
+     "1d67e725ebb3348bbeb70d743793388ed36ed9d9",
+     "2",
+     "225b8efcc544fb727cdc9d4e759f2a78f85fc36f",
+     "42471",
+     "4469",
+     "4471",
+     "48a55ffca4e90d3c45d780f3bb7f9bfb1cdbd698",
+     "4f64c32890ec6791093faed281d86d709e4b026d",
+     "6a91ea0a2ab1e407dcf62b1e74425084f1c4368d",
+     "709222bd712a2bc22e2296a326063be22b97ee57",
+     "ABSENT",
+     "False",
+     "REPLAY_SHAPE_ONLY_NOT_EXACTLY_ONCE",
+     "TD",
+     "True",
+     "_0281p21651.db",
+     "accept-ord0281-proposal",
+     "be04016af0b402dbe76cce79167475c77d0e77a4",
+     "bound-sentence",
+     "bound2000",
+     "disabled",
+     "frontend/e2e/qoder-ord0281-keyed-write-deadline.spec.ts:260:3",
+     "passed"
+    ]
+   }
+  },
+  {
+   "cell": "K1 on the bound2000 tree",
+   "claimed_result": "MET",
+   "derived_result": null,
+   "why": "K1 (frontend/e2e/qoder-ord0281-keyed-write-deadline.spec.ts:303:3, judged on the bound2000 tree shape, run 0281p21651): Playwright reported passed and the cell's own reading says MET after 2002 ms; what the traveller's surface held was 'still-pending/WriteDeadlineMissed'. Declared boundary in the reading itself: module-level in real browser: the product has no keyless surface that renders this sentence. Face: authoritative e2e, own db _0281p21651.db, frontend :4471 / backend :42471, ai=disabled, reuseExistingServer=False -- a spec-level reading, not a shipped bundle. Candidate blob for the module this arm exercises: 1d67e725ebb3348bbeb70d743793388ed36ed9d9.",
+   "readings": {
+    "arm": "K1",
+    "nodeid": "frontend/e2e/qoder-ord0281-keyed-write-deadline.spec.ts:303:3",
+    "judged_on_tree": "bound2000",
+    "run_id": "0281p21651",
+    "db": "_0281p21651.db",
+    "frontend_port": 4471,
+    "backend_port": 42471,
+    "authoritative": true,
+    "ai": "disabled",
+    "reuse_existing_server": false,
+    "status": "passed",
+    "expectation": "passed",
+    "verdict": "MET",
+    "elapsed_ms": 2002,
+    "seconds_named_on_screen": null,
+    "screen_text_kind": "still-pending/WriteDeadlineMissed",
+    "note": "module-level in real browser: the product has no keyless surface that renders this sentence",
+    "bound_ms_under_test": null,
+    "keys_seen": [],
+    "had_network_blame": false,
+    "candidate_blobs": {
+     "frontend/src/lib/writeDeadline.ts": "1d67e725ebb3348bbeb70d743793388ed36ed9d9",
+     "frontend/src/lib/readDeadline.ts": "be04016af0b402dbe76cce79167475c77d0e77a4",
+     "frontend/src/features/execution/LiveRecovery.tsx": "48a55ffca4e90d3c45d780f3bb7f9bfb1cdbd698",
+     "frontend/src/features/recovery/V14RecoveryTruthPanel.tsx": "17c27735e561682a1510ee6fc67aae1b710276c2",
+     "frontend/e2e/qoder-ord0281-keyed-write-deadline.spec.ts": "4f64c32890ec6791093faed281d86d709e4b026d"
+    },
+    "base_blobs": {
+     "frontend/src/lib/writeDeadline.ts": "ABSENT",
+     "frontend/src/lib/readDeadline.ts": "709222bd712a2bc22e2296a326063be22b97ee57",
+     "frontend/src/features/execution/LiveRecovery.tsx": "225b8efcc544fb727cdc9d4e759f2a78f85fc36f",
+     "frontend/src/features/recovery/V14RecoveryTruthPanel.tsx": "6a91ea0a2ab1e407dcf62b1e74425084f1c4368d",
+     "frontend/e2e/qoder-ord0281-keyed-write-deadline.spec.ts": "ABSENT"
+    },
+    "named_values_the_why_uses": [
+     "0281p21651",
+     "17c27735e561682a1510ee6fc67aae1b710276c2",
+     "1d67e725ebb3348bbeb70d743793388ed36ed9d9",
+     "2002",
+     "225b8efcc544fb727cdc9d4e759f2a78f85fc36f",
+     "42471",
+     "4471",
+     "48a55ffca4e90d3c45d780f3bb7f9bfb1cdbd698",
+     "4f64c32890ec6791093faed281d86d709e4b026d",
+     "6a91ea0a2ab1e407dcf62b1e74425084f1c4368d",
+     "709222bd712a2bc22e2296a326063be22b97ee57",
+     "ABSENT",
+     "False",
+     "K1",
+     "MET",
+     "True",
+     "_0281p21651.db",
+     "be04016af0b402dbe76cce79167475c77d0e77a4",
+     "bound2000",
+     "disabled",
+     "frontend/e2e/qoder-ord0281-keyed-write-deadline.spec.ts:303:3",
+     "module-level in real browser: the product has no keyless surface that renders this sentence",
+     "passed",
+     "still-pending/WriteDeadlineMissed"
+    ]
+   }
+  },
+  {
+   "cell": "K2 on the pristine tree",
+   "claimed_result": "MET",
+   "derived_result": null,
+   "why": "K2 (frontend/e2e/qoder-ord0281-keyed-write-deadline.spec.ts:362:3, judged on the pristine tree shape, run 0281p11651): Playwright reported passed and the cell's own reading says MET, with the number on screen being 60; what the traveller's surface held was 'This device stopped waiting after 60 s'. Face: authoritative e2e, own db _0281p11651.db, frontend :4470 / backend :42470, ai=disabled, reuseExistingServer=False -- a spec-level reading, not a shipped bundle. Candidate blob for the module this arm exercises: 1d67e725ebb3348bbeb70d743793388ed36ed9d9.",
+   "readings": {
+    "arm": "K2",
+    "nodeid": "frontend/e2e/qoder-ord0281-keyed-write-deadline.spec.ts:362:3",
+    "judged_on_tree": "pristine",
+    "run_id": "0281p11651",
+    "db": "_0281p11651.db",
+    "frontend_port": 4470,
+    "backend_port": 42470,
+    "authoritative": true,
+    "ai": "disabled",
+    "reuse_existing_server": false,
+    "status": "passed",
+    "expectation": "passed",
+    "verdict": "MET",
+    "elapsed_ms": null,
+    "seconds_named_on_screen": 60,
+    "screen_text_kind": "This device stopped waiting after 60 s",
+    "note": null,
+    "bound_ms_under_test": null,
+    "keys_seen": [],
+    "had_network_blame": false,
+    "candidate_blobs": {
+     "frontend/src/lib/writeDeadline.ts": "1d67e725ebb3348bbeb70d743793388ed36ed9d9",
+     "frontend/src/lib/readDeadline.ts": "be04016af0b402dbe76cce79167475c77d0e77a4",
+     "frontend/src/features/execution/LiveRecovery.tsx": "48a55ffca4e90d3c45d780f3bb7f9bfb1cdbd698",
+     "frontend/src/features/recovery/V14RecoveryTruthPanel.tsx": "17c27735e561682a1510ee6fc67aae1b710276c2",
+     "frontend/e2e/qoder-ord0281-keyed-write-deadline.spec.ts": "4f64c32890ec6791093faed281d86d709e4b026d"
+    },
+    "base_blobs": {
+     "frontend/src/lib/writeDeadline.ts": "ABSENT",
+     "frontend/src/lib/readDeadline.ts": "709222bd712a2bc22e2296a326063be22b97ee57",
+     "frontend/src/features/execution/LiveRecovery.tsx": "225b8efcc544fb727cdc9d4e759f2a78f85fc36f",
+     "frontend/src/features/recovery/V14RecoveryTruthPanel.tsx": "6a91ea0a2ab1e407dcf62b1e74425084f1c4368d",
+     "frontend/e2e/qoder-ord0281-keyed-write-deadline.spec.ts": "ABSENT"
+    },
+    "named_values_the_why_uses": [
+     "0281p11651",
+     "17c27735e561682a1510ee6fc67aae1b710276c2",
+     "1d67e725ebb3348bbeb70d743793388ed36ed9d9",
+     "225b8efcc544fb727cdc9d4e759f2a78f85fc36f",
+     "42470",
+     "4470",
+     "48a55ffca4e90d3c45d780f3bb7f9bfb1cdbd698",
+     "4f64c32890ec6791093faed281d86d709e4b026d",
+     "60",
+     "6a91ea0a2ab1e407dcf62b1e74425084f1c4368d",
+     "709222bd712a2bc22e2296a326063be22b97ee57",
+     "ABSENT",
+     "False",
+     "K2",
+     "MET",
+     "This device stopped waiting after 60 s",
+     "True",
+     "_0281p11651.db",
+     "be04016af0b402dbe76cce79167475c77d0e77a4",
+     "disabled",
+     "frontend/e2e/qoder-ord0281-keyed-write-deadline.spec.ts:362:3",
+     "passed",
+     "pristine"
+    ]
+   }
+  },
+  {
+   "cell": "K3 on the bound2000 tree",
+   "claimed_result": "MET",
+   "derived_result": null,
+   "why": "K3 (frontend/e2e/qoder-ord0281-keyed-write-deadline.spec.ts:386:3, judged on the bound2000 tree shape, run 0281p21651): Playwright reported passed and the cell's own reading says MET; what the traveller's surface held was 'WriteDeadlineMissed/still-pending'. Declared boundary in the reading itself: module-level: the client's own path; the read error name is not reused for writes. Face: authoritative e2e, own db _0281p21651.db, frontend :4471 / backend :42471, ai=disabled, reuseExistingServer=False -- a spec-level reading, not a shipped bundle. Candidate blob for the module this arm exercises: 1d67e725ebb3348bbeb70d743793388ed36ed9d9.",
+   "readings": {
+    "arm": "K3",
+    "nodeid": "frontend/e2e/qoder-ord0281-keyed-write-deadline.spec.ts:386:3",
+    "judged_on_tree": "bound2000",
+    "run_id": "0281p21651",
+    "db": "_0281p21651.db",
+    "frontend_port": 4471,
+    "backend_port": 42471,
+    "authoritative": true,
+    "ai": "disabled",
+    "reuse_existing_server": false,
+    "status": "passed",
+    "expectation": "passed",
+    "verdict": "MET",
+    "elapsed_ms": null,
+    "seconds_named_on_screen": null,
+    "screen_text_kind": "WriteDeadlineMissed/still-pending",
+    "note": "module-level: the client's own path; the read error name is not reused for writes",
+    "bound_ms_under_test": null,
+    "keys_seen": [],
+    "had_network_blame": false,
+    "candidate_blobs": {
+     "frontend/src/lib/writeDeadline.ts": "1d67e725ebb3348bbeb70d743793388ed36ed9d9",
+     "frontend/src/lib/readDeadline.ts": "be04016af0b402dbe76cce79167475c77d0e77a4",
+     "frontend/src/features/execution/LiveRecovery.tsx": "48a55ffca4e90d3c45d780f3bb7f9bfb1cdbd698",
+     "frontend/src/features/recovery/V14RecoveryTruthPanel.tsx": "17c27735e561682a1510ee6fc67aae1b710276c2",
+     "frontend/e2e/qoder-ord0281-keyed-write-deadline.spec.ts": "4f64c32890ec6791093faed281d86d709e4b026d"
+    },
+    "base_blobs": {
+     "frontend/src/lib/writeDeadline.ts": "ABSENT",
+     "frontend/src/lib/readDeadline.ts": "709222bd712a2bc22e2296a326063be22b97ee57",
+     "frontend/src/features/execution/LiveRecovery.tsx": "225b8efcc544fb727cdc9d4e759f2a78f85fc36f",
+     "frontend/src/features/recovery/V14RecoveryTruthPanel.tsx": "6a91ea0a2ab1e407dcf62b1e74425084f1c4368d",
+     "frontend/e2e/qoder-ord0281-keyed-write-deadline.spec.ts": "ABSENT"
+    },
+    "named_values_the_why_uses": [
+     "0281p21651",
+     "17c27735e561682a1510ee6fc67aae1b710276c2",
+     "1d67e725ebb3348bbeb70d743793388ed36ed9d9",
+     "225b8efcc544fb727cdc9d4e759f2a78f85fc36f",
+     "42471",
+     "4471",
+     "48a55ffca4e90d3c45d780f3bb7f9bfb1cdbd698",
+     "4f64c32890ec6791093faed281d86d709e4b026d",
+     "6a91ea0a2ab1e407dcf62b1e74425084f1c4368d",
+     "709222bd712a2bc22e2296a326063be22b97ee57",
+     "ABSENT",
+     "False",
+     "K3",
+     "MET",
+     "True",
+     "WriteDeadlineMissed/still-pending",
+     "_0281p21651.db",
+     "be04016af0b402dbe76cce79167475c77d0e77a4",
+     "bound2000",
+     "disabled",
+     "frontend/e2e/qoder-ord0281-keyed-write-deadline.spec.ts:386:3",
+     "module-level: the client's own path; the read error name is not reused for writes",
+     "passed"
+    ]
+   }
+  },
+  {
+   "cell": "counter-arm ca_no_delegate (must flip K3)",
+   "claimed_result": "MET",
+   "derived_result": null,
+   "why": "counter-arm ca_no_delegate: the arm this mutant targets is K3, which read MET at passed on the clean tree and failed / NOT_MET under the mutant, in run 0281p41651. Files the hunk touched: ['readDeadline.ts', 'writeDeadline.ts'] (digests {'writeDeadline.ts': '0e1210c9702c6578', 'readDeadline.ts': 'eeb6c62698e79529'} -> {'writeDeadline.ts': '2a7b566bde29ba2e', 'readDeadline.ts': '76dcc82354f956f7'}). The red arm also ends the serial chain, so the arms it took with it are named rather than counted as green: []. Source restored byte-exact under this run: True.",
+   "readings": {
+    "counter_arm_run": "ca_no_delegate",
+    "arm_that_flipped": "K3",
+    "status_under_mutant": "failed",
+    "verdict_under_mutant": "NOT_MET",
+    "status_on_clean_tree": "passed",
+    "verdict_on_clean_tree": "MET",
+    "mutated_files": [
+     "readDeadline.ts",
+     "writeDeadline.ts"
+    ],
+    "digests": {
+     "before": {
+      "writeDeadline.ts": "0e1210c9702c6578",
+      "readDeadline.ts": "eeb6c62698e79529"
+     },
+     "mutant": {
+      "writeDeadline.ts": "2a7b566bde29ba2e",
+      "readDeadline.ts": "76dcc82354f956f7"
+     },
+     "restored": true
+    },
+    "run_id": "0281p41651",
+    "arms_judged": [
+     "TA",
+     "TB",
+     "TC",
+     "TD",
+     "K1",
+     "K2",
+     "K3"
+    ],
+    "arms_aborted_by_the_red_arm": [],
+    "restored_byte_exact": true,
+    "named_values_the_why_uses": [
+     "0281p41651",
+     "0e1210c9702c6578",
+     "2a7b566bde29ba2e",
+     "76dcc82354f956f7",
+     "K1",
+     "K2",
+     "K3",
+     "MET",
+     "NOT_MET",
+     "TA",
+     "TB",
+     "TC",
+     "TD",
+     "True",
+     "ca_no_delegate",
+     "eeb6c62698e79529",
+     "failed",
+     "passed",
+     "readDeadline.ts",
+     "writeDeadline.ts"
+    ]
+   }
+  },
+  {
+   "cell": "counter-arm ca_keyless_too (must flip K1)",
+   "claimed_result": "MET",
+   "derived_result": null,
+   "why": "counter-arm ca_keyless_too: the arm this mutant targets is K1, which read MET at passed on the clean tree and failed / NOT_MET under the mutant, in run 0281p51651. Files the hunk touched: ['writeDeadline.ts'] (digests {'writeDeadline.ts': '0e1210c9702c6578'} -> {'writeDeadline.ts': '0297735220872b37'}). The red arm also ends the serial chain, so the arms it took with it are named rather than counted as green: ['K2', 'K3']. Source restored byte-exact under this run: True.",
+   "readings": {
+    "counter_arm_run": "ca_keyless_too",
+    "arm_that_flipped": "K1",
+    "status_under_mutant": "failed",
+    "verdict_under_mutant": "NOT_MET",
+    "status_on_clean_tree": "passed",
+    "verdict_on_clean_tree": "MET",
+    "mutated_files": [
+     "writeDeadline.ts"
+    ],
+    "digests": {
+     "before": {
+      "writeDeadline.ts": "0e1210c9702c6578"
+     },
+     "mutant": {
+      "writeDeadline.ts": "0297735220872b37"
+     },
+     "restored": true
+    },
+    "run_id": "0281p51651",
+    "arms_judged": [
+     "TA",
+     "TB",
+     "TC",
+     "TD",
+     "K1"
+    ],
+    "arms_aborted_by_the_red_arm": [
+     "K2",
+     "K3"
+    ],
+    "restored_byte_exact": true,
+    "named_values_the_why_uses": [
+     "0281p51651",
+     "0297735220872b37",
+     "0e1210c9702c6578",
+     "K1",
+     "K2",
+     "K3",
+     "MET",
+     "NOT_MET",
+     "TA",
+     "TB",
+     "TC",
+     "TD",
+     "True",
+     "ca_keyless_too",
+     "failed",
+     "passed",
+     "writeDeadline.ts"
+    ]
+   }
+  },
+  {
+   "cell": "counter-arm ca_fixed_secs (must flip TB)",
+   "claimed_result": "MET",
+   "derived_result": null,
+   "why": "counter-arm ca_fixed_secs: the arm this mutant targets is TB, which read MET at passed on the clean tree and failed / NOT_MET under the mutant, in run 0281p61651. Files the hunk touched: ['writeDeadline.ts'] (digests {'writeDeadline.ts': '0e1210c9702c6578'} -> {'writeDeadline.ts': '46c8bc1c63b77235'}). The red arm also ends the serial chain, so the arms it took with it are named rather than counted as green: ['TC', 'TD', 'K1', 'K2', 'K3']. Source restored byte-exact under this run: True.",
+   "readings": {
+    "counter_arm_run": "ca_fixed_secs",
+    "arm_that_flipped": "TB",
+    "status_under_mutant": "failed",
+    "verdict_under_mutant": "NOT_MET",
+    "status_on_clean_tree": "passed",
+    "verdict_on_clean_tree": "MET",
+    "mutated_files": [
+     "writeDeadline.ts"
+    ],
+    "digests": {
+     "before": {
+      "writeDeadline.ts": "0e1210c9702c6578"
+     },
+     "mutant": {
+      "writeDeadline.ts": "46c8bc1c63b77235"
+     },
+     "restored": true
+    },
+    "run_id": "0281p61651",
+    "arms_judged": [
+     "TA",
+     "TB"
+    ],
+    "arms_aborted_by_the_red_arm": [
+     "TC",
+     "TD",
+     "K1",
+     "K2",
+     "K3"
+    ],
+    "restored_byte_exact": true,
+    "named_values_the_why_uses": [
+     "0281p61651",
+     "0e1210c9702c6578",
+     "46c8bc1c63b77235",
+     "K1",
+     "K2",
+     "K3",
+     "MET",
+     "NOT_MET",
+     "TA",
+     "TB",
+     "TC",
+     "TD",
+     "True",
+     "ca_fixed_secs",
+     "failed",
+     "passed",
+     "writeDeadline.ts"
+    ]
+   }
+  },
+  {
+   "cell": "scope: which legs are bounded, which are not, and what was NOT measured",
+   "claimed_result": "DECLARED",
+   "derived_result": null,
+   "why": "scope and honesty: the keyed denominator is 6 legs (measured in ORD-0281 step 0), of which 4 already come through the request helper and 2 were bare `fetch` calls at features/execution/LiveRecovery.tsx:230, features/recovery/V14RecoveryTruthPanel.tsx:68; both are now bounded. The keyless branch stays a named pass-through because it is ORD-0288, held for arbitration -- passed through untouched by design. One leg is keyed only nominally -- features/simulation/SimulationPanel.tsx:605 builds a fresh UUID per attempt -- so T-d cannot promise a replay there and TD is reported as REPLAY_SHAPE_ONLY_NOT_EXACTLY_ONCE instead. The shape where the answer arrives just after the bound is NOT_MEASURED: this candidate has no arm for it, so no claim is made about it. TD is recorded as REPLAY_SHAPE_ONLY_NOT_EXACTLY_ONCE. Traveller wording for the deadline is this module's own, in 1d67e725ebb3348bbeb70d743793388ed36ed9d9, and NOT written in this candidate (the wording is waiting on ORD-0301's range table). The numbers shipped in one place: CLIENT_WRITE_DEADLINE_MS = 60000 declared in CLIENT_WRITE_DEADLINE_MS in frontend/src/lib/writeDeadline.ts blob 1d67e725ebb3348bbeb70d743793388ed36ed9d9, against the server's 45000 budget over a 30000 lock wait (backend/app/core/config.py as carried by 90d29a172e186aab6e6cb138ab4583ccf93bfa68).",
+   "readings": {
+    "keyed_legs_total": 6,
+    "legs_routed_through_the_wrapper_by_this_change": 2,
+    "legs_already_reaching_it_via_the_client": 4,
+    "bare_fetch_sites_now_routed": [
+     "features/execution/LiveRecovery.tsx:230",
+     "features/recovery/V14RecoveryTruthPanel.tsx:68"
+    ],
+    "client_legs": [
+     "api/citynexus.ts:855",
+     "api/citynexus.ts:1167",
+     "api/citynexus.ts:1179",
+     "api/citynexus.ts:1186"
+    ],
+    "per_attempt_key_leg": "features/simulation/SimulationPanel.tsx:605",
+    "keyless_branch": "ORD-0288, held for arbitration -- passed through untouched by design",
+    "late_answer_arm": "NOT_MEASURED",
+    "ord_0302_copy": "NOT written in this candidate (the wording is waiting on ORD-0301's range table)",
+    "client_constant_name": "CLIENT_WRITE_DEADLINE_MS",
+    "td_claim_recorded_as": "REPLAY_SHAPE_ONLY_NOT_EXACTLY_ONCE",
+    "candidate_blobs_for_the_bounded_files": {
+     "frontend/src/lib/writeDeadline.ts": "1d67e725ebb3348bbeb70d743793388ed36ed9d9",
+     "frontend/src/lib/readDeadline.ts": "be04016af0b402dbe76cce79167475c77d0e77a4",
+     "frontend/src/features/execution/LiveRecovery.tsx": "48a55ffca4e90d3c45d780f3bb7f9bfb1cdbd698",
+     "frontend/src/features/recovery/V14RecoveryTruthPanel.tsx": "17c27735e561682a1510ee6fc67aae1b710276c2",
+     "frontend/e2e/qoder-ord0281-keyed-write-deadline.spec.ts": "4f64c32890ec6791093faed281d86d709e4b026d"
+    },
+    "shipped_numbers": {
+     "client_ms": 60000,
+     "server_ms": 45000,
+     "server_busy_timeout_ms": 30000
+    },
+    "where_those_numbers_live": [
+     "CLIENT_WRITE_DEADLINE_MS in frontend/src/lib/writeDeadline.ts blob 1d67e725ebb3348bbeb70d743793388ed36ed9d9",
+     "backend/app/core/config.py as carried by 90d29a172e186aab6e6cb138ab4583ccf93bfa68"
+    ],
+    "named_values_the_why_uses": [
+     "17c27735e561682a1510ee6fc67aae1b710276c2",
+     "1d67e725ebb3348bbeb70d743793388ed36ed9d9",
+     "2",
+     "30000",
+     "4",
+     "45000",
+     "48a55ffca4e90d3c45d780f3bb7f9bfb1cdbd698",
+     "4f64c32890ec6791093faed281d86d709e4b026d",
+     "6",
+     "60000",
+     "CLIENT_WRITE_DEADLINE_MS",
+     "CLIENT_WRITE_DEADLINE_MS in frontend/src/lib/writeDeadline.ts blob 1d67e725ebb3348bbeb70d743793388ed36ed9d9",
+     "NOT written in this candidate (the wording is waiting on ORD-0301's range table)",
+     "NOT_MEASURED",
+     "ORD-0288, held for arbitration -- passed through untouched by design",
+     "REPLAY_SHAPE_ONLY_NOT_EXACTLY_ONCE",
+     "api/citynexus.ts:1167",
+     "api/citynexus.ts:1179",
+     "api/citynexus.ts:1186",
+     "api/citynexus.ts:855",
+     "backend/app/core/config.py as carried by 90d29a172e186aab6e6cb138ab4583ccf93bfa68",
+     "be04016af0b402dbe76cce79167475c77d0e77a4",
+     "features/execution/LiveRecovery.tsx:230",
+     "features/recovery/V14RecoveryTruthPanel.tsx:68",
+     "features/simulation/SimulationPanel.tsx:605"
+    ]
+   }
+  },
+  {
+   "cell": "base, ref and what the candidate touches",
+   "claimed_result": "MET",
+   "derived_result": null,
+   "why": "base and shape: 02da4602bfd4f7af38154a26dd345aba9f69876d sits directly on 90d29a172e186aab6e6cb138ab4583ccf93bfa68 (parent measured as 90d29a172e186aab6e6cb138ab4583ccf93bfa68); 02da4602bfd4f7af38154a26dd345aba9f69876d\trefs/heads/review/0281-write-deadline-keyed-b is the remote's own answer for review/0281-write-deadline-keyed-b, so the coordinate is readable outside this machine. 5 paths changed, all under frontend/, and the diff restricted to backend/ answers none. Both shipped typecheck configs tsconfig.check.json, tsconfig.typecheck.json came back clean before the run.",
+   "readings": {
+    "candidate_tip": "02da4602bfd4f7af38154a26dd345aba9f69876d",
+    "base_tip": "90d29a172e186aab6e6cb138ab4583ccf93bfa68",
+    "parent": "90d29a172e186aab6e6cb138ab4583ccf93bfa68",
+    "branch": "review/0281-write-deadline-keyed-b",
+    "ls_remote_line": "02da4602bfd4f7af38154a26dd345aba9f69876d\trefs/heads/review/0281-write-deadline-keyed-b",
+    "base_branch_tip_at_build": "02da4602bfd4f7af38154a26dd345aba9f69876d",
+    "changed_paths": [
+     "frontend/e2e/qoder-ord0281-keyed-write-deadline.spec.ts",
+     "frontend/src/features/execution/LiveRecovery.tsx",
+     "frontend/src/features/recovery/V14RecoveryTruthPanel.tsx",
+     "frontend/src/lib/readDeadline.ts",
+     "frontend/src/lib/writeDeadline.ts"
+    ],
+    "frontend_only": true,
+    "typecheck_configs_clean": [
+     "tsconfig.check.json",
+     "tsconfig.typecheck.json"
+    ],
+    "backend_diff_files": "none",
+    "named_values_the_why_uses": [
+     "02da4602bfd4f7af38154a26dd345aba9f69876d",
+     "02da4602bfd4f7af38154a26dd345aba9f69876d\trefs/heads/review/0281-write-deadline-keyed-b",
+     "90d29a172e186aab6e6cb138ab4583ccf93bfa68",
+     "True",
+     "frontend/e2e/qoder-ord0281-keyed-write-deadline.spec.ts",
+     "frontend/src/features/execution/LiveRecovery.tsx",
+     "frontend/src/features/recovery/V14RecoveryTruthPanel.tsx",
+     "frontend/src/lib/readDeadline.ts",
+     "frontend/src/lib/writeDeadline.ts",
+     "none",
+     "review/0281-write-deadline-keyed-b",
+     "tsconfig.check.json",
+     "tsconfig.typecheck.json"
+    ]
+   }
+  }
+ ],
+ "summary": {
+  "cells_total": 12,
+  "arms_met": 7,
+  "counter_arms_met": 3,
+  "tree_shapes_run": [
+   "pristine",
+   "bound2000",
+   "bound1000",
+   "ca_no_delegate",
+   "ca_keyless_too",
+   "ca_fixed_secs"
+  ],
+  "matrix_verdict": "TEETH_AND_BASELINE",
+  "restored_byte_exact_every_shape": true
+ },
+ "derived_result": null,
+ "not_claimed": "derived_result 全格留 null；late-answer 那一形没测；发布级面（生产构建产物）没跑；0302 的文案不在这枚候选里",
+ "ruler_check": {
+  "pass_1_before_sidecar": {
+   "ruler": "D:\\moodle\\_qoder_cmdr_ref_20260921\\live_checks\\receipt_cell_derivation_check_r2.py",
+   "ruler_blob": "91ae8b1ec55f5c19122af11bf775df14580955e4",
+   "blob_matches_declared": true,
+   "rc": 0,
+   "headline": [
+    "cells 12 | overall Q38_GATE_GREEN | hard 0 [] | soft 0 []"
+   ]
+  },
+  "pass_1_output": "receipt ord0281_keyed_receipt.json 34907 B blob_sha1 575cf68d0a6398ebee6aa24a15d2688f768c4fa7\ncells 12 | overall Q38_GATE_GREEN | hard 0 [] | soft 0 []\n  cell 0 | why_source why | why tokens 8 | own hits 8 | unique hits 0 | shares why with []\n  cell 1 | why_source why | why tokens 9 | own hits 9 | unique hits 0 | shares why with []\n  cell 2 | why_source why | why tokens 11 | own hits 11 | unique hits 0 | shares why with []\n  cell 3 | why_source why | why tokens 10 | own hits 10 | unique hits 0 | shares why with []\n  cell 4 | why_source why | why tokens 8 | own hits 8 | unique hits 0 | shares why with []\n  cell 5 | why_source why | why tokens 8 | own hits 8 | unique hits 0 | shares why with []\n  cell 6 | why_source why | why tokens 7 | own hits 7 | unique hits 0 | shares why with []\n  cell 7 | why_source why | why tokens 7 | own hits 7 | unique hits 0 | shares why with []\n  cell 8 | why_source why | why tokens 4 | own hits 4 | unique hits 0 | shares why with []\n  cell 9 | why_source why | why tokens 4 | own hits 4 | unique hits 0 | shares why with []\n  cell 10 | why_source why | why tokens 26 | own hits 23 | unique hits 0 | shares why with []\n  cell 11 | why_source why | why tokens 6 | own hits 5 | unique hits 0 | shares why with []\nmeaning: no shared literal and every sentence names its own readings",
+  "pass_2_on_published_bytes": {
+   "ruler": "D:\\moodle\\_qoder_cmdr_ref_20260921\\live_checks\\receipt_cell_derivation_check_r2.py",
+   "ruler_blob": "91ae8b1ec55f5c19122af11bf775df14580955e4",
+   "blob_matches_declared": true,
+   "rc": 0,
+   "headline": [
+    "cells 12 | overall Q38_GATE_GREEN | hard 0 [] | soft 0 []"
+   ]
+  },
+  "pass_2_output": "receipt ord0281_keyed_receipt.json 36614 B blob_sha1 74dc08d6e12f60bca2a981b08e5ec4a232f888c9\ncells 12 | overall Q38_GATE_GREEN | hard 0 [] | soft 0 []\n  cell 0 | why_source why | why tokens 8 | own hits 8 | unique hits 0 | shares why with []\n  cell 1 | why_source why | why tokens 9 | own hits 9 | unique hits 0 | shares why with []\n  cell 2 | why_source why | why tokens 11 | own hits 11 | unique hits 0 | shares why with []\n  cell 3 | why_source why | why tokens 10 | own hits 10 | unique hits 0 | shares why with []\n  cell 4 | why_source why | why tokens 8 | own hits 8 | unique hits 0 | shares why with []\n  cell 5 | why_source why | why tokens 8 | own hits 8 | unique hits 0 | shares why with []\n  cell 6 | why_source why | why tokens 7 | own hits 7 | unique hits 0 | shares why with []\n  cell 7 | why_source why | why tokens 7 | own hits 7 | unique hits 0 | shares why with []\n  cell 8 | why_source why | why tokens 4 | own hits 4 | unique hits 0 | shares why with []\n  cell 9 | why_source why | why tokens 4 | own hits 4 | unique hits 0 | shares why with []\n  cell 10 | why_source why | why tokens 26 | own hits 23 | unique hits 0 | shares why with []\n  cell 11 | why_source why | why tokens 6 | own hits 5 | unique hits 0 | shares why with []\nmeaning: no shared literal and every sentence names its own readings"
+ }
+}
