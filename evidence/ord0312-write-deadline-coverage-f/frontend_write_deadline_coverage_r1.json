@@ -1,0 +1,112 @@
+{
+ "what": "前端 14 根写腿在当下尖上的『期限覆盖』普查（只读，用来核一条『已覆盖』的说法）",
+ "lane": "F 8ccd71d8",
+ "generated_at": "2026-09-25T20:06:45+08:00",
+ "measured_on": "30a5f90e5deaed6e45a704ddcc7d6e5e9790475b",
+ "tree": "snap_0296r5 == 现场尖的整树导出",
+ "method": "对每根腿：读它所在文件，看**该调用点前后 12/10 行**内有没有 deadline 或 signal；另数全前端 import writeDeadline 的文件与任何带 signal 的文件",
+ "legs_total": 14,
+ "legs_covered": 2,
+ "covered_sites": [
+  {
+   "file": "features/execution/LiveRecovery.tsx",
+   "line": 225
+  },
+  {
+   "file": "features/recovery/V14RecoveryTruthPanel.tsx",
+   "line": 69
+  }
+ ],
+ "uncovered_sites": [
+  {
+   "file": "features/notifications/PushCapabilityCard.tsx",
+   "line": 56,
+   "method": "POST"
+  },
+  {
+   "file": "features/planning/PlanComparison.tsx",
+   "line": 88,
+   "method": "POST"
+  },
+  {
+   "file": "features/planning/PlanWithAiSheet.tsx",
+   "line": 492,
+   "method": "POST"
+  },
+  {
+   "file": "features/planning/PlanWithAiSheet.tsx",
+   "line": 605,
+   "method": "POST"
+  },
+  {
+   "file": "features/recovery/RecoveryRequiredPanel.tsx",
+   "line": 26,
+   "method": "POST"
+  },
+  {
+   "file": "features/simulation/simulationAdapter.ts",
+   "line": 229,
+   "method": "POST"
+  },
+  {
+   "file": "features/simulation/simulationAdapter.ts",
+   "line": 296,
+   "method": "POST"
+  },
+  {
+   "file": "features/simulation/simulationAdapter.ts",
+   "line": 335,
+   "method": "POST"
+  },
+  {
+   "file": "features/simulation/simulationAdapter.ts",
+   "line": 376,
+   "method": "POST"
+  },
+  {
+   "file": "features/stay/HotelsPanel.tsx",
+   "line": 63,
+   "method": "POST"
+  },
+  {
+   "file": "features/stay/HotelsPanel.tsx",
+   "line": 64,
+   "method": "POST"
+  },
+  {
+   "file": "features/stay/HotelsPanel.tsx",
+   "line": 87,
+   "method": "POST"
+  }
+ ],
+ "by_file": {
+  "features/execution/LiveRecovery.tsx": 1,
+  "features/notifications/PushCapabilityCard.tsx": 1,
+  "features/planning/PlanComparison.tsx": 1,
+  "features/planning/PlanWithAiSheet.tsx": 2,
+  "features/recovery/RecoveryRequiredPanel.tsx": 1,
+  "features/recovery/V14RecoveryTruthPanel.tsx": 1,
+  "features/simulation/simulationAdapter.ts": 4,
+  "features/stay/HotelsPanel.tsx": 3
+ },
+ "files_importing_writeDeadline": [
+  "features/execution/LiveRecovery.tsx",
+  "features/recovery/V14RecoveryTruthPanel.tsx",
+  "lib/readDeadline.ts"
+ ],
+ "writeDeadline_exports": [
+  "CLIENT_WRITE_DEADLINE_MS",
+  "CLIENT_WRITE_DEADLINE_SECONDS",
+  "SERVER_WRITE_DEADLINE_MS_UNDER_TEST",
+  "isWriteDeadlineMissed",
+  "carriesIdempotencyKey",
+  "writeDeadlineCopy",
+  "writeDeadlineNumbersAreOrdered",
+  "fetchWithWriteDeadline"
+ ],
+ "frontend_files_with_any_signal": 7,
+ "reading": "14 根里当下只有 2/14 根的调用点旁边看得见期限或 signal；用 writeDeadline 的文件是 3 个（具名见 files_importing_writeDeadline）。所以『那半已被别的单覆盖』如果指**产品代码里所有写腿都有期限**，这个数不支持那句话；如果指**那两枚单各自要测的形状**，那是它们各自的判据，我不替它们判。",
+ "not_a_defect_report": "本件不主张谁该做这 12 根；它是把『覆盖』这个词换成一个可复算的分母",
+ "claim_kind": "code_determined",
+ "derived_result": null
+}
