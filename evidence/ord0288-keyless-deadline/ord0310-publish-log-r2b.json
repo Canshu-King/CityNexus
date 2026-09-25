@@ -1,0 +1,34 @@
+{
+ "ord0310-tool-gauge-landed-block-r2.py": {
+  "exit": 0,
+  "fresh_path": true,
+  "identical_skipped": false,
+  "refused": [],
+  "proof_line": "PROOF (git blob sha1 equality): BYTE-LEVEL MATCH   local bytes 2356 | remote size 2356 | sha1 76e76aa1418988f3",
+  "bytes": 2356
+ },
+ "ord0310-tool-make-post-r2.py": {
+  "exit": 0,
+  "fresh_path": true,
+  "identical_skipped": false,
+  "refused": [],
+  "proof_line": "PROOF (git blob sha1 equality): BYTE-LEVEL MATCH   local bytes 19825 | remote size 19825 | sha1 6b24bddc307500b1",
+  "bytes": 19825
+ },
+ "ord0310-tool-pub-names-r2.py": {
+  "exit": 0,
+  "fresh_path": true,
+  "identical_skipped": false,
+  "refused": [],
+  "proof_line": "PROOF (git blob sha1 equality): BYTE-LEVEL MATCH   local bytes 4342 | remote size 4342 | sha1 919f8ea96ed57dbc",
+  "bytes": 4342
+ },
+ "ord0310-tool-stage-pub-r3.py": {
+  "exit": 0,
+  "fresh_path": true,
+  "identical_skipped": false,
+  "refused": [],
+  "proof_line": "PROOF (git blob sha1 equality): BYTE-LEVEL MATCH   local bytes 3693 | remote size 3693 | sha1 322e5ac91c19684d",
+  "bytes": 3693
+ }
+}
