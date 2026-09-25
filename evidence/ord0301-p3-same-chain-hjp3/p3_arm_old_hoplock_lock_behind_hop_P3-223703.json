@@ -1,0 +1,244 @@
+{
+ "arm": "old_hoplock_lock_behind_hop",
+ "run_id": "P3-223703",
+ "intent_declared_before": "A2 the same real answer on the unguarded generation: the crash branch, paired leg for leg",
+ "tip": "dc964086c9d412573ac19d70b24b30e6c3ee6168",
+ "scenario": "hoplock",
+ "proxy_mode": "lock_behind_hop",
+ "spec": null,
+ "lock_plan": null,
+ "rig": {
+  "backend_pid": 11424,
+  "proxy_pid": 56684,
+  "face_pid": 44480,
+  "face_port": 8654,
+  "all_up": true,
+  "identity_two_sided": true,
+  "journey_id": "f202ed24-9782-4e1a-b73d-ef48dceb52c1",
+  "seed": {
+   "places_before": 0,
+   "demo_places_before": 0,
+   "seeded_by_this_call": true,
+   "demo_places_after": 8
+  },
+  "db": "D:\\moodle\\_hjp3_0301p3_0925\\p3_old.s3db",
+  "access_log": "p3_backend_access_223703.log",
+  "rig_state_file": "p3_rig_state_old_lock_behind_hop_223703.json"
+ },
+ "request_text": "想傍晚在老城慢慢走一圈，别太赶",
+ "request_text_chars": 15,
+ "node_rc": 0,
+ "node_tail": [
+  [
+   "{\"scenario\":\"hoplock\",\"status\":\"NETWORK\",\"title\":\"连不上服务端\",\"label\":null,\"reason\":null,\"details\":0,\"opened_label_rendered\":null,\"origin\":null,\"fetch_rejected\":false,\"page_saw\":500,\"pair_id\":\"hjp3p3-ec66be6abd94457b\",\"body_parsed\":false,\"parse_err\":\"SyntaxError\"}"
+  ]
+ ],
+ "wall_seconds": 36,
+ "pairing": [
+  {
+   "leg": "f202ed24-9782-4e1a-b73d-ef48dceb52c1/agent/commands",
+   "pair_id": "hjp3p3-ec66be6abd94457b",
+   "one_request_one_id": true,
+   "server_side_from_the_same_hop": {
+    "recorded": true,
+    "reached_upstream": true,
+    "answered_by": "product",
+    "status": 500,
+    "content_type": "text/plain; charset=utf-8",
+    "bytes": 21,
+    "body_parses_as_json": false,
+    "top_level_keys": null,
+    "body_head": "Internal Server Error",
+    "elapsed_ms": 32456,
+    "hop_lock": {
+     "db": "D:\\moodle\\_hjp3_0301p3_0925\\p3_old.s3db",
+     "hold_seconds_planned": 45,
+     "acquired": true,
+     "rows_touched": 2,
+     "second_writer_refused": true,
+     "acquired_after_ms": 2,
+     "release": {
+      "held_ms_around_the_forward": 32454,
+      "rolled_back": true
+     }
+    },
+    "request_mutation": null,
+    "spec_name": null
+   },
+   "screen_side_from_the_page": {
+    "fetch_rejected": false,
+    "status": 500,
+    "ok": false,
+    "content_type": "text/plain; charset=utf-8",
+    "elapsed_ms": 32463,
+    "app_read_the_body": {
+     "url": "http://127.0.0.1:8654/api/v1/journeys/f202ed24-9782-4e1a-b73d-ef48dceb52c1/agent/commands",
+     "status": 500,
+     "pair_id": "hjp3p3-ec66be6abd94457b",
+     "content_type": "text/plain; charset=utf-8",
+     "at_wall": "2026-09-25T14:37:44.236Z",
+     "parsed": false,
+     "error_name": "SyntaxError",
+     "error_message": "Unexpected token 'I', \"Internal S\"... is not valid JSON"
+    },
+    "body_parse_failed": true,
+    "body_parsed": false,
+    "browser_stack": {
+     "url": "/api/v1/journeys/f202ed24-9782-4e1a-b73d-ef48dceb52c1/agent/commands",
+     "status": 500,
+     "pair_id": "hjp3p3-ec66be6abd94457b",
+     "content_type": "text/plain; charset=utf-8",
+     "failure": null,
+     "at_wall": "2026-09-25T14:37:44.236Z"
+    }
+   },
+   "both_ends_agree_on_status": true,
+   "both_ends_agree_on_json_class": true
+  }
+ ],
+ "write_legs_with_a_5xx_or_4xx": [
+  {
+   "leg": "f202ed24-9782-4e1a-b73d-ef48dceb52c1/agent/commands",
+   "status": 500,
+   "answered_by": "product",
+   "json": false,
+   "page_saw": 500,
+   "rejected": false
+  }
+ ],
+ "screen_as_painted_before_tapping": {
+  "result_card_painted": "连不上服务端\n\n网络或后端没有响应，这与你的需求内容无关。你的行程没有被改动，检查网络后可以重试。",
+  "result_card_text_content": "连不上服务端网络或后端没有响应，这与你的需求内容无关。你的行程没有被改动，检查网络后可以重试。",
+  "card_title_painted": "连不上服务端",
+  "card_body_painted": "网络或后端没有响应，这与你的需求内容无关。你的行程没有被改动，检查网络后可以重试。",
+  "reason_label_painted": null,
+  "reason_value_painted": null,
+  "reason_label_text_content": null,
+  "reason_value_text_content": null,
+  "details_elements_present": 0,
+  "details_open_attribute": null,
+  "detail_toggle_present": false,
+  "network_card_painted": true,
+  "http_failed_card_painted": false,
+  "refused_card_painted": false,
+  "server_attribution_painted": false,
+  "device_attribution_painted": false,
+  "unreadable_answer_note_painted": false,
+  "whole_page_contains_server_label": false,
+  "whole_page_contains_device_label": false,
+  "next_step_painted": null,
+  "cross_check_data_result_status": "NETWORK",
+  "cross_check_data_reason_origin": null
+ },
+ "screen_as_painted_after_tapping_detail": {
+  "result_card_painted": "连不上服务端\n\n网络或后端没有响应，这与你的需求内容无关。你的行程没有被改动，检查网络后可以重试。",
+  "result_card_text_content": "连不上服务端网络或后端没有响应，这与你的需求内容无关。你的行程没有被改动，检查网络后可以重试。",
+  "card_title_painted": "连不上服务端",
+  "card_body_painted": "网络或后端没有响应，这与你的需求内容无关。你的行程没有被改动，检查网络后可以重试。",
+  "reason_label_painted": null,
+  "reason_value_painted": null,
+  "reason_label_text_content": null,
+  "reason_value_text_content": null,
+  "details_elements_present": 0,
+  "details_open_attribute": null,
+  "detail_toggle_present": false,
+  "network_card_painted": true,
+  "http_failed_card_painted": false,
+  "refused_card_painted": false,
+  "server_attribution_painted": false,
+  "device_attribution_painted": false,
+  "unreadable_answer_note_painted": false,
+  "whole_page_contains_server_label": false,
+  "whole_page_contains_device_label": false,
+  "next_step_painted": null,
+  "cross_check_data_result_status": "NETWORK",
+  "cross_check_data_reason_origin": null
+ },
+ "detail_block_open_attempt": {
+  "toggle": "no_toggle_present"
+ },
+ "screen": {
+  "result_card_painted": "连不上服务端\n\n网络或后端没有响应，这与你的需求内容无关。你的行程没有被改动，检查网络后可以重试。",
+  "result_card_text_content": "连不上服务端网络或后端没有响应，这与你的需求内容无关。你的行程没有被改动，检查网络后可以重试。",
+  "card_title_painted": "连不上服务端",
+  "card_body_painted": "网络或后端没有响应，这与你的需求内容无关。你的行程没有被改动，检查网络后可以重试。",
+  "reason_label_painted": null,
+  "reason_value_painted": null,
+  "reason_label_text_content": null,
+  "reason_value_text_content": null,
+  "details_elements_present": 0,
+  "details_open_attribute": null,
+  "detail_toggle_present": false,
+  "network_card_painted": true,
+  "http_failed_card_painted": false,
+  "refused_card_painted": false,
+  "server_attribution_painted": false,
+  "device_attribution_painted": false,
+  "unreadable_answer_note_painted": false,
+  "whole_page_contains_server_label": false,
+  "whole_page_contains_device_label": false,
+  "next_step_painted": null,
+  "cross_check_data_result_status": "NETWORK",
+  "cross_check_data_reason_origin": null
+ },
+ "page_errors": [],
+ "waited_ms": 35322,
+ "sample_tail": [
+  {
+   "ms": 29003,
+   "status": null,
+   "details": 0,
+   "busy": false
+  },
+  {
+   "ms": 29512,
+   "status": null,
+   "details": 0,
+   "busy": false
+  },
+  {
+   "ms": 30019,
+   "status": null,
+   "details": 0,
+   "busy": false
+  },
+  {
+   "ms": 30524,
+   "status": null,
+   "details": 0,
+   "busy": false
+  },
+  {
+   "ms": 31032,
+   "status": null,
+   "details": 0,
+   "busy": false
+  },
+  {
+   "ms": 31537,
+   "status": null,
+   "details": 0,
+   "busy": false
+  },
+  {
+   "ms": 32045,
+   "status": null,
+   "details": 0,
+   "busy": false
+  },
+  {
+   "ms": 32549,
+   "status": "NETWORK",
+   "details": 0,
+   "busy": false
+  }
+ ],
+ "access_log_witness": {
+  "present": true,
+  "path": "p3_backend_access_223703.log",
+  "lines_naming_the_leg": 1,
+  "lines": [
+   "1:63089 - \"POST /api/v1/journeys/f202ed24-9782-4e1a-b73d-ef48dceb52c1/agent/commands HTTP/1.1\" 500 Internal Server Error"
+  ]
+ }
+}
