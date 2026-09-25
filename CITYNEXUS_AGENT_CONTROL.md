@@ -196,6 +196,83 @@ GitHub /rate_limit 响应头 Date : Sun, 20 Sep 2026 15:15:18 GMT
 我写错钟点 = 让所有车道在错误的时间轴上做决策；跨日错标还会让人以为有 09-21 的新裁定。
 
 ## DELIVERIES（车道交付登记处 · 追加，不改别人的块）
+### SESSION=8ccd71d8 · ORD-0296 交付 @2026-09-25 09:29+08 —— 0281 后端半落码：服务端写预算 + 13 格门 + 10 臂反突变；候选推成外部可读新 ref；**权威线我没动**
+
+先说没改善的那一半（不等人问）：第一次撞锁、预算还没用完时，仍是今天的 `OperationalError → 框架 500`——这是我故意保留的，G7 就钉这一条：不许把所有锁失败一律刷成好看的码；那半属 0262 的射程。前端那 14 条写腿（signal 2、计时器 0）一条未碰 ⇒ 手机上那句期限话仍拿不到，那一半在 @B 的 0280/0281 名下。
+
+判据五条逐条对表：
+
+```text
+① 默认值严格大于锁等待：deadline=45000 > busy=30000；  且是引擎实测：一次性临时库上 PRAGMA busy_timeout=30000（sqlite 3.53.1、journal=wal、驱动版本与解释器在 facts 里）
+  按场景可配：env CITYNEXUS_WRITE_DEADLINE_SCENARIOS=plans.generate:60000 ⇒ plans=60000、commands 仍 45000；  未知场景记 DEADLINE_SCENARIO_UNKNOWN；畸形值不再在 import 上崩，改由门具名拦下
+② 门双向（同一扇门、只差一枚变量，两边都真跑过）：45000 ⇒ door.raised=False；1 ⇒ door.raised=True（WriteDeadlineConfigurationError → DEADLINE_NOT_ABOVE_BUSY_TIMEOUT）
+③ 清单按 AST 口径引用（不重算、不改前端）：71 文件 / 站点 39 / 写腿 14 / signal 2 / 计时器 0；底稿 blob b30bc3fdac67587636fd1ef2b45b5a3f31edac74（12,597 B）
+④ 候选（新名，旧 ref 与别人的 ref 一件没动）：`review/ord0296-write-deadline-f` 尖 `6d041dcce11d05f28a55abadd40717f321b4db38`；  父 = 我先读的权威尖 `5c4608cede6cb7bd5f3ac7e704bfee379ca47abc`，相等 True；  GitHub ls-remote 与 https git/ref 两路回读 == 候选尖：True
+  diff 5 件全在 backend/**（前端 0 件）：config.py, session.py, write_deadline.py, main.py, test_qoder_ord0296_write_deadline.py
+⑤ 13 格全部 Q38 形状（measured / 由读数派生的 verdict / 自带具名值的 why），跑法在包里；claimed_result 我写、derived_result=null（B-1）；每臂带 (sha, nodeid, shape) 三元组
+```
+
+反突变（10 臂 × 3 轮，单变量、字节级还原）
+
+```text
+控制轮 3 轮全绿；carriers_removed 合计 11；survivors 无；意外红 0；每轮还原 True
+  M1_reachability_is_not_strict                        hunks=1 红轮=[1, 1, 1]  载体=G2_door_is_RED_when_the_deadline_sits_at_
+  M2_no_named_conversion                               hunks=1 红轮=[1, 1, 1]  载体=G6_lost_lock_after_the_budget_answers_und
+  M3_always_renames_the_lock_failure                   hunks=1 红轮=[1, 1, 1]  载体=G7_lost_lock_inside_the_budget_stays_toda
+  M4_startup_door_disabled                             hunks=1 红轮=[2, 2, 2]  载体=G2_door_is_RED_when_the_deadline_sits_at_
+  M5_lock_wait_copied_a_second_time                    hunks=1 红轮=[1, 1, 1]  载体=G4_the_lock_wait_is_written_in_exactly_on
+  M6_scenario_override_ignored                         hunks=1 红轮=[1, 1, 1]  载体=G5_a_scenario_override_moves_one_route_an
+  M7_deadline_answer_status_is_500                     hunks=1 红轮=[1, 1, 1]  载体=G8_the_answer_is_registered_and_carries_t
+  M8_effective_cap_ignores_the_budget                  hunks=1 红轮=[1, 1, 1]  载体=G5_a_scenario_override_moves_one_route_an
+  M9_budget_shared_across_scenarios                    hunks=1 红轮=[1, 1, 1]  载体=G10_the_budget_belongs_to_one_request_not
+  M10_malformed_override_crashes_instead_of_naming     hunks=1 红轮=[1, 1, 1]  载体=G5_a_scenario_override_moves_one_route_an
+  ⇒ 每臂只被它该咬的那一格咬住：`>` 退成 `>=`、门只算不拦、覆盖当空气、常量再抄一份内联、503 退 500、
+    预算挂到连接上、畸形值退回 import 崩——各有一格当场红；反向（不看预算一律改名）由 G7 那一格咬住。
+```
+
+整套件 A/B（候选 vs 同一尖不含我的文件；各自一次性临时库；战役与套件不再同刻）
+
+```text
+分母 候选 {'10': 'failed', '1218': 'passed', '15': 'skipped', '1': 'xfailed'} vs 基线 {'10': 'failed', '1208': 'passed', '15': 'skipped', '1': 'xfailed'}；候选第二轮 {'10': 'failed', '1218': 'passed', '15': 'skipped', '1': 'xfailed'}
+only_in_candidate=空 ⇒ 无新增红（回归按具名基线红集合的子集判）
+两棵恒红 10 条 = 已知基线红；候选两轮 red 逐名相同
+邻居（跑在我改过的两条腿上）：0272 八格 + 0287 载体 + agent_mission_runtime + v16 + v18_2 = 22 passed
+```
+
+坐标：`commander/control` → `evidence/ord0296-write-deadline-backend/`，本拍 12 件全部新路径，逐件 `contents.sha == 本机重算 sha1 == 申报值`
+
+```text
+  ORD0296_RECEIPT_r1.md                          3,202 B  8227b87577683e8cf44d81229e5192bac44c8877
+  ab_baseline_fullsuite_r1.txt                   3,597 B  b38bdcdfa3a7c150cf13ddf02414e19e7f69ac12
+  ab_candidate_fullsuite_r1.txt                  3,597 B  835a88a70486e163ce930cb669d5cd51674fe075
+  ab_candidate_fullsuite_r2.txt                  3,597 B  8f26eb653fe673f2f8c5710f31e6a67352ddf580
+  candidate_commit_facts.json                    2,389 B  e64216c8700b327b0d95f5dddacbe1f1bc19188f
+  mutation_campaign_r1.json                     17,812 B  64934607eb796d5283442f187b9b0d3993c660ab
+  o296_facts.py                                  6,609 B  86aad97cd1a198b1eb05accc7e03a562f9162b6a
+  o296_mutation_campaign.py                     11,408 B  144888857d1aa29d30a028dedee9918489247147
+  ord0296_receipt_erratum_r1.json                1,538 B  7972682df70ec13c18c60e1cbcc97ecfd751fdbb
+  ord0296_receipt_r1.json                       27,290 B  9120cf2dfb7b79ce8f9c973987f4fb03ee0f326d
+  ord0296_receipt_r2.json                       27,288 B  17c718d3a4b83d1c27fba1962840201dcf3c4875
+  write_deadline_facts_r1.json                   3,320 B  015a7ecda4972766e895b106379952bfab198bdd
+  候选四件产品 blob：config.py=5f3062f50255, session.py=3ef99ffe398c, write_deadline.py=ba2393c3da30, main.py=871aec006a3f, test_qoder_ord0296_write_deadline.py=deacc9d7483f
+  外部回读行：6d041dcce11d05f28a55abadd40717f321b4db38  refs/heads/review/ord0296-write-deadline-f
+  复跑：git -c core.autocrlf=false archive 6d041dcc… backend | tar -x -C <空目录>，再 python -m pytest tests/test_qoder_ord0296_write_deadline.py -q（期望 10 passed）
+```
+
+三笔自曝（都是我的，先说比自己干净）
+
+```text
+① 第一版 G1 借了共享 pool 的连接去读 PRAGMA ⇒ 单跑绿、进整套件红（同批邻居模块本来就在量锁等待，改过那条连接）。现在本格自己 make_engine 再 dispose：判据不许落在我不拥有的读数上。
+② 我让反突变战役与整套件 A/B 在同一棵树上并行过一次 ⇒ 那一轮 11 failed 全部不可用，作废重跑；作废的读数没发出去过，作废的原因写在这里而不是抹掉。
+③ 我把一枚**手写的数量**印进了判级串（战役 10 臂，我写成 ALL_NINE_ARMS_HAVE_CARRIERS）——发布之后才发现，正是我今晚点过别人的那一类。处理：r1 不覆盖不删，修正版走新文件名 ord0296_receipt_r2.json，并附 ord0296_receipt_erratum_r1.json 写清 was/now；生成器里所有带数量的串改成由 len()/sum() 派生。读数一枚没变。
+④ 尖在我任务中途从 45b0a5e2 动到 5c4608cede6c（你的 0287 re-cut + 0274 落地）。我先证要改的三件在两尖上 blob 逐位相同，再从新尖重导出、在新代上重跑门/战役/A/B 才铸候选（父=新尖）；旧代读数一格都没沿用来（Q24/Q25）。
+```
+
+**纪律**：`demo/reset` 0 次；`_live`/`_preview` 库 0 读写；凭据 0 打印（探针只输出状态码/字节数/配置值）；权威线未直写（只落 `agent/f-*` 与 `review/ord0296-write-deadline-f`；别人的 ref、旧候选、已发布路径 0 覆盖 0 删除 0 移动）；0274/0287/0292/0294 的树与收据一件未碰。
+
+**下一件**：0296 交完我不自己开单。一个问句留给你（不点我不动）：0272 的闭单前置（0287 载体）现在已在权威线上，要不要我在这一代重跑 0272 那九格 + K8 那臂的新一代读数？
+
+（总线帖 5825173994；本块与它互为坐标——报告本身装不下自己的哈希。）
 ### SESSION=d2305848 @2026-09-25 09:17+08 —— **Q43 尺 r2 红队交：5 枚真咬**——B5 你预测的诱饵 40 位命中（声明只带 md:行号 + 窗口内放另一件收据的 blob ⇒ CLEAN）；B1 全角等号＝让 F1 整条隐身（claims=0）；B3 转述词表 10 短语被 'the lane said'/'据 F' 绕过（0 claims）；B6 两句转述借同一坐标跨节；B4 4 字母常量逃逸。4 枚没咬的记为强度（栅不隐身、10_000 被抓、全角数字被抓、窗口强制）。r3 修法：全角归一化一行 + B5/B6 同根（窗口收紧或同行要求）+ B3 反转 F2 判定方向
 （攻击收据 8a77f5c671284001e4686a19cb10eb5a0d981cf9 @ evidence/ord0295-census-second-observer/q43_ruler_attack_d2305848.json；总线 comment 5825032705。自检 9/9 rc=0。范围限制非洞：格式合格但不存在的 file:line 会过——尺是格式门，存在性归坐标审计，fail-open 于真相/fail-closed 于格式，已文档化。）
 
@@ -15503,6 +15580,32 @@ B2c = VERIFIED_FIXED_WITH_TWO_DISCRIMINATING_CONTROLS 如上
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+## 号令/状态 @2026-09-25 09:3x+08 —— **Q45=① 仲裁定了：10:00 前不动用户可见链**（不换 index、不重启预览后端）；B 的 0280 候选已外读到、正等它 re-parent
+
+### ① 三枚章（总线 `issuecomment-5825190401`，窗口 09:32 回 ①）
+```text
+Q44=① 已执行确认：**本次无需第二次前端换代**（backend-only 变更不触发前端资产切换）
+Q45=① 保持手机健康一代，不在 10:00 前冒险动用户可见链
+⇒ 由此纠正我自己：我 09:31 派 B 时说"09:40 前推上来我就做第二次换代"，那句**作废**（我发在仲裁回话之前 1 分钟）。
+   现在的口径：0280 若 re-parent 上来 ⇒ 我**只落不换**，手机上仍是我 08:37 换的那一代（带 ORD-0274 三格）。
+```
+
+### ② B 的候选坐标我已经外读核过（不再是"本机 sha"）
+```text
+`review/0280-attribution-label-r2` tip `549ac8f1b20bc04e70eadbd238ade737eefbff01`，parent `5c4608cede6cb7bd5f3ac7e704bfee379ca47abc`
+文件 2 枚：`frontend/e2e/qoder-ord0280-attribution-label-speaks-for-itself.spec.ts`(+294，新增) 与
+          `frontend/src/features/planning/PlanWithAiSheet.tsx`(+87)
+它的回读件：`evidence/ord0299-attribution-run/ord0299_remote_readback_r1.json` 2,019 B（本机重算 sha1 与线上一致）
+  内含 `ls_remote_line_verbatim` 与 tip 逐字相等、`force_used=false`、只动那一枚 ref ⇒ 这一步合规
+待它做的只有一件：把 tip 重父到现尖 `6d041dcce11d05f28a55abadd40717f321b4db38`（我那跳只碰 backend，`-- frontend` 差 0 文件），推上来我就外读→核 parent→跑尺→ff-only 落。
+```
+
+### ③ 在飞的（不等我）
+HJ-P1 从 09:30 起连发 5 件 `evidence(ord0274-B3): HJ-P1 offline-after-convergence arm + control`（= 我 08:18 派的 ORD-0297 的 B3 格，跑在落地代上）；F 的 ORD-0296 已落地；D 的 ORD-0298、红队的 ORD-0295 收尾、F 的 14 条写腿清单（`evidence/ord0289-ast-census/write_legs_f.json`）还没回。
+**手机现状（用户能感觉到的）**：地址未变；跑的是 08:37 那一代；我 09:0x 从公网隧道取回那一包与盘上逐字节相等（收据 `62f07fe62934750b57c1ef6a7a227c7c33c91e30`）；**服务端那一跳（写期限）还没在手机上生效**，因为按 Q45=① 不重启预览后端。
+**纪律**：本节 0 次 PUT、0 次移动权威线；用户库 0 读写；`demo/reset` 0；凭据 0 打印。
+
+
 ## 落地 @2026-09-25 09:2x+08 —— **权威线第三跳：`5c4608ce` → `6d041dcc`（ORD-0296 / 0281 的后端半）**；红队那两处 Q43 漏洞也修了（r3 自测 12/12）
 
 ### ① 我凭什么落它（每一条都是现场量，不是"车道说"）
@@ -47449,4 +47552,15 @@ B 未修的树 单跑   3 passed (26.2s)  run=None ports=:None/:None
 反件      counter-arm: 2 hunks at the render lines [929] and [931] replace the two reads of the note's source with the constant server, so the label stops consulting who spoke; component sha256 2e2a6d346d73d680 became 6d898a5250dc66e1 in run 0299cnt4739 (db _0299cnt4739.db), and exactly ['A1', 'B1', 'C1', 'D'] failed while ['A2', 'B2', 'C2'] stayed passed - the source was put back byte-exact (True), tree clean.
 尺        cells 10 | overall Q38_GATE_GREEN | hard 0 [] | soft 0 []（receipt_cell_derivation_check_r2.py blob 91ae8b1ec55f5c19122af11bf775df14580955e4；两遍都在发布的那份字节上跑）
 不自签    全部格子 derived_result = null；0280 的派生签归红队/指挥官
+```
+
+### B c01d72a3 · ORD-0299 第 4 步：候选**已推上线**，外读三件对上了（ls-remote 原样行 + ff-only 父 + contents 逐字节）`549ac8f` @09:32+08 —— **号令者说差的只有坐标这一步：`review/0280-attribution-label-r2` 现在在 GitHub 上，我本机的那个 sha 不再是证据，下面这三行才是。**
+
+```text
+ls-remote  549ac8f1b20bc04e70eadbd238ade737eefbff01	refs/heads/review/0280-attribution-label-r2（ssh over 443 的原样输出，不是我看本地 refs/heads）
+父提交     5c4608cede6cb7bd5f3ac7e704bfee379ca47abc ⇒ 外读 commits API 给 parents=[5c4608cede6cb7bd5f3ac7e704bfee379ca47abc]，ff-only 前置 = True（tree 1b26f48ada6a8ecc13dcc3dc82bbff6ca0c22f11）
+逐字节     frontend/src/features/planning/PlanWithAiSheet.tsx 远端 blob c22cf42506a4175db992bde387ed8d9c6f1ffb9d == 我这棵树 c22cf42506a4175db992bde387ed8d9c6f1ffb9d == 收据里那一枚 ⇒ REMOTE_SIZE = 47470、LOCAL_SIZE = 47470；frontend/e2e/qoder-ord0280-attribution-label-speaks-for-itself.spec.ts 远端 blob 0edae5cf262833e996bbfc3b56f60d0548ca3e3f == 0edae5cf262833e996bbfc3b56f60d0548ca3e3f ⇒ REMOTE_SIZE = 12134、LOCAL_SIZE = 12134（B 与 blob 同一枚 40 位，四对全等 = True）
+旧 ref     48827a9d6402aaabffc5ff47b1540407fafed620	refs/heads/review/0280-attribution-label —— 一个字没动；这一枚分支只 push 了自己（force 0 次、删 0 次）
+回读工件   ord0299_remote_readback_r1.json blob f9ec44258eb0b2368102594acbc30bd9718fec43 @ evidence/ord0299-attribution-run/**（PROVEN：远端读回 sha == 本地 sha）
+我自己这一趟的难堪账  第一次运行是 **push 成功之后** 死在 TLS 抖动上（`UNEXPECTED_EOF_WHILE_READING`），所以上面那次回读报的是 `Everything up-to-date`：推送在前一趟、证明在这一趟（同一枚 sha，两趟都是这条 ref 的唯一写入者）。我给 api() 加重试是因为**链路抖动不能读成对象不存在**——反过来也一样：如果它真的 404，我也不该拿重试把它读成有。
 ```
