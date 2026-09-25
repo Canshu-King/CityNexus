@@ -1,0 +1,127 @@
+{
+ "ran_at_local": "2026-09-25T15:02:05+0800",
+ "batch_start_local": "2026-09-25T14:29:08+0800",
+ "how_live_preview_is_touched_here": "read once to hash it; no write, no rename, no restart",
+ "live_preview_index": {
+  "path": "D:\\moodle\\_qoder_preview_20260920\\dist\\index.html",
+  "sha256": "7aa9afc77bcb1e432edc36e37662d572eade91f272474923f8b93ed9f9a422dc",
+  "bytes": 1200,
+  "mtime_local": "2026-09-25T08:33:06+0800",
+  "asset_referenced": [
+   "index-xKIGmoBz.js"
+  ]
+ },
+ "what_my_faces_served": {
+  "outdir": "D:\\moodle\\_hjp3_0300_0925\\dist_0300\\index.html",
+  "sha256": "956ca81c8811a0c36c7800465866dc7b6724afd6de196bbb274cb76577e92828",
+  "is_the_same_file_as_the_live_preview": false,
+  "asset": [
+   "index-BN1w-xlK.js"
+  ]
+ },
+ "user_chain_listeners": [
+  {
+   "port": "4782",
+   "pid": "34324",
+   "process_created": "2026-09-24T16:35:33.5425690+08:00",
+   "predates_my_batch": true
+  },
+  {
+   "port": "4781",
+   "pid": "12076",
+   "process_created": "2026-09-24T16:25:57.2342990+08:00",
+   "predates_my_batch": true
+  }
+ ],
+ "negative_scan_over_my_own_instruments": {
+  "_live.db": {
+   "files_with_the_string": [
+    "o0301_bounds.py"
+   ],
+   "count": 1,
+   "the_matching_lines": [
+    {
+     "file": "o0301_bounds.py",
+     "lines": [
+      "for needle in ('_live.db', '_preview.db', 'demo/reset', 'git apply', 'dist/index.html'):"
+     ]
+    }
+   ],
+   "reading": "every hit is a docstring or the needle list of this very file, not an operation"
+  },
+  "_preview.db": {
+   "files_with_the_string": [
+    "o0301_bounds.py"
+   ],
+   "count": 1,
+   "the_matching_lines": [
+    {
+     "file": "o0301_bounds.py",
+     "lines": [
+      "for needle in ('_live.db', '_preview.db', 'demo/reset', 'git apply', 'dist/index.html'):"
+     ]
+    }
+   ],
+   "reading": "every hit is a docstring or the needle list of this very file, not an operation"
+  },
+  "demo/reset": {
+   "files_with_the_string": [
+    "o0301_bounds.py",
+    "o0301_rig.py"
+   ],
+   "count": 2,
+   "the_matching_lines": [
+    {
+     "file": "o0301_bounds.py",
+     "lines": [
+      "3. every instrument I wrote for ORD-0301 never names the two user databases, never calls demo/reset,",
+      "for needle in ('_live.db', '_preview.db', 'demo/reset', 'git apply', 'dist/index.html'):"
+     ]
+    },
+    {
+     "file": "o0301_rig.py",
+     "lines": [
+      "fresh-or-no-run), brand-new ports, `demo/reset` never called, and every pid I start is registered so"
+     ]
+    }
+   ],
+   "reading": "every hit is a docstring or the needle list of this very file, not an operation"
+  },
+  "git apply": {
+   "files_with_the_string": [
+    "o0301_bounds.py"
+   ],
+   "count": 1,
+   "the_matching_lines": [
+    {
+     "file": "o0301_bounds.py",
+     "lines": [
+      "for needle in ('_live.db', '_preview.db', 'demo/reset', 'git apply', 'dist/index.html'):"
+     ]
+    }
+   ],
+   "reading": "every hit is a docstring or the needle list of this very file, not an operation"
+  },
+  "dist/index.html": {
+   "files_with_the_string": [
+    "o0301_bounds.py"
+   ],
+   "count": 1,
+   "the_matching_lines": [
+    {
+     "file": "o0301_bounds.py",
+     "lines": [
+      "PREVIEW_DIST = pathlib.Path('D:/moodle/_qoder_preview_20260920/dist/index.html')",
+      "for needle in ('_live.db', '_preview.db', 'demo/reset', 'git apply', 'dist/index.html'):"
+     ]
+    }
+   ],
+   "reading": "every hit is a docstring or the needle list of this very file, not an operation"
+  },
+  "coverage": "NOT EXHAUSTIVE: this scans the 9 ORD-0301 instrument files by literal string, files=['o0301_answerer.py', 'o0301_bounds.py', 'o0301_cleanup.py', 'o0301_origin.py', 'o0301_receipt.py', 'o0301_rig.py', 'o0301_runarm.py', 'o0301_score.py', 'o0301_cells.cjs']"
+ },
+ "credential_handling": {
+  "DEEPSEEK_API_KEY_popped_in_rig": true,
+  "printed_anywhere_in_my_files": []
+ }
+}
