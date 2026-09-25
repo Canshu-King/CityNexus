@@ -1,0 +1,11 @@
+{
+ "run_id": "0323c3b3929",
+ "arm": "Q68a",
+ "card_text": "这次排不出方案：数据不够，不是你说的不对服务器回的原因编号是 ZZ_Q68_SERVER_CODE，这条我们还没有本地文案，所以不替你解释它——原话在\"技术详情\"里。技术详情服务器给出的原因q68_forbidden_prose_行程过长无法在三日预算内排布这台设备自己量到的回读字段http_status=200 content-type=application/json bytes=108 照原话再试一次",
+ "code_in_card": true,
+ "sweep_sees_the_tested_card": true,
+ "attribute_pairs_swept": 126,
+ "prose_outside_the_fold": "这次排不出方案：数据不够，不是你说的不对服务器回的原因编号是 ZZ_Q68_SERVER_CODE，这条我们还没有本地文案，所以不替你解释它——原话在\"技术详情\"里。技术详情服务器给出的原因这台设备自己量到的回读字段http_status=200 content-type=application/json bytes=108 照原话再试一次",
+ "needle_in_dom": true,
+ "test_status": "passed"
+}
