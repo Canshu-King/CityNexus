@@ -1,0 +1,2028 @@
+{
+  "order": "ORD-0274",
+  "cell": "B2 (Q19 iii)",
+  "arm": "b3_primary",
+  "arm_kind": "b3_offline",
+  "session": "1a986a24 HJ-P1",
+  "base": "http://127.0.0.1:8963",
+  "started_at": "2026-09-25T01:03:10.562Z",
+  "viewport": [
+    390,
+    844
+  ],
+  "draft_key": "citynexus.v8.trial_draft",
+  "install_mode": "two_navigations",
+  "write_mode": "answer",
+  "forbidden_moves_taken": {
+    "unregister_called": 0,
+    "cache_clear_called": 0
+  },
+  "phases": {
+    "P0": {
+      "pointer": {
+        "root": "dist",
+        "ok": true
+      },
+      "mode": {
+        "written": "answer",
+        "readBack": "answer"
+      },
+      "install_mode": "two_navigations",
+      "nav1": {
+        "label": "P0-nav1-install",
+        "at": 1790298191014,
+        "status": 200
+      },
+      "nav2": {
+        "label": "P0-nav2-take-control",
+        "at": 1790298206098,
+        "status": 200
+      },
+      "navigations_used": 2,
+      "snapshot": {
+        "href": "http://127.0.0.1:8963/v8/hub",
+        "marker": null,
+        "scripts": [
+          "/assets/index-xKIGmoBz.js"
+        ],
+        "docNonce": "xx0s1afiye",
+        "fields": {
+          "目的地": {
+            "tag": "INPUT",
+            "type": "text",
+            "value": ""
+          },
+          "抵达地点": {
+            "tag": "INPUT",
+            "type": "text",
+            "value": ""
+          },
+          "离开地点": {
+            "tag": "INPUT",
+            "type": "text",
+            "value": ""
+          },
+          "抵达时间": {
+            "tag": "INPUT",
+            "type": "datetime-local",
+            "value": "2026-09-26T10:00"
+          },
+          "离开时间": {
+            "tag": "INPUT",
+            "type": "datetime-local",
+            "value": "2026-09-28T20:00"
+          },
+          "#5": {
+            "tag": "INPUT",
+            "type": "text",
+            "value": "CN"
+          },
+          "#6": {
+            "tag": "INPUT",
+            "type": "text",
+            "value": "Asia/Shanghai"
+          },
+          "#7": {
+            "tag": "INPUT",
+            "type": "text",
+            "value": "CNY"
+          }
+        },
+        "fieldCount": 8,
+        "draft": {
+          "step": 1,
+          "draft": {
+            "cityName": "",
+            "countryCode": "CN",
+            "timezone": "Asia/Shanghai",
+            "startAt": "2026-09-26T10:00",
+            "endAt": "2026-09-28T20:00",
+            "arrivalLocation": "",
+            "departureLocation": "",
+            "budgetMajor": 3000,
+            "stayBudgetMajor": 1000,
+            "currency": "CNY",
+            "partySize": 2,
+            "rooms": 1,
+            "pace": "relaxed",
+            "interests": [],
+            "specialRequirements": ""
+          }
+        },
+        "draftError": null,
+        "headings": [
+          "用你自己的城市试用 CITYNEXUS",
+          "新建行程",
+          "三步完成。选择目的地、告诉我们怎么玩，剩下的交给 CityNexus。",
+          "EN",
+          "1",
+          "目的地与时间",
+          "2",
+          "3"
+        ],
+        "leafCount": 21,
+        "controller": true,
+        "registrations": [
+          {
+            "scope": "/",
+            "installing": null,
+            "waiting": null,
+            "active": "/v10-sw.js"
+          }
+        ],
+        "lifecycle": [
+          {
+            "ev": "document-start",
+            "t": 18,
+            "href": "http://127.0.0.1:8963/v8/hub",
+            "marker": null
+          }
+        ]
+      }
+    },
+    "P1": {
+      "typed": {
+        "city": "北京",
+        "arrival": "北京南站",
+        "departure": "北京西站",
+        "startAt": "2026-10-05T09:30",
+        "endAt": "2026-10-07T18:00",
+        "budget": "480",
+        "stay": "150",
+        "special": "只看免费和便宜的地方"
+      },
+      "fills": [
+        {
+          "why": "city",
+          "idx": 0,
+          "ph": "例如：天津、东京、新加坡",
+          "wrote": 2,
+          "after": {
+            "len": 2,
+            "value": "北京"
+          }
+        },
+        {
+          "why": "arrival",
+          "idx": 1,
+          "ph": "例如：北京站 / 机场",
+          "wrote": 4,
+          "after": {
+            "len": 4,
+            "value": "北京南站"
+          }
+        },
+        {
+          "why": "departure",
+          "idx": 2,
+          "ph": "例如：北京站 / 机场",
+          "wrote": 4,
+          "after": {
+            "len": 4,
+            "value": "北京西站"
+          }
+        },
+        {
+          "why": "startAt",
+          "type": "datetime-local",
+          "idx": 0,
+          "before": "2026-09-26T10:00",
+          "wrote": 16,
+          "after": {
+            "len": 16,
+            "value": "2026-10-05T09:30"
+          }
+        },
+        {
+          "why": "endAt",
+          "type": "datetime-local",
+          "idx": 1,
+          "before": "2026-09-28T20:00",
+          "wrote": 16,
+          "after": {
+            "len": 16,
+            "value": "2026-10-07T18:00"
+          }
+        },
+        {
+          "why": "stayBudget",
+          "skipped": "no empty visible field matched",
+          "needle": "住宿"
+        },
+        {
+          "why": "budget",
+          "skipped": "no empty visible field matched",
+          "needle": "总预算|预算"
+        },
+        {
+          "why": "specialRequirements",
+          "idx": 4,
+          "ph": "例如：我妈妈坐轮椅；每天走路不超过 3000 米",
+          "wrote": 10,
+          "after": {
+            "len": 10,
+            "value": "只看免费和便宜的地方"
+          }
+        }
+      ],
+      "stepChecks": [
+        {
+          "label": "before first 下一步",
+          "draft_step": 1,
+          "missing_hint": [],
+          "fieldCount": 8,
+          "marker": null,
+          "headings": [
+            "用你自己的城市试用 CITYNEXUS",
+            "新建行程",
+            "三步完成。选择目的地、告诉我们怎么玩，剩下的交给 CityNexus。",
+            "EN",
+            "1",
+            "目的地与时间"
+          ]
+        },
+        {
+          "label": "after first 下一步",
+          "draft_step": 2,
+          "missing_hint": [],
+          "fieldCount": 5,
+          "marker": null,
+          "headings": [
+            "用你自己的城市试用 CITYNEXUS",
+            "新建行程",
+            "三步完成。选择目的地、告诉我们怎么玩，剩下的交给 CityNexus。",
+            "EN",
+            "✓",
+            "2"
+          ]
+        },
+        {
+          "label": "after second 下一步",
+          "draft_step": 3,
+          "missing_hint": [],
+          "fieldCount": 0,
+          "marker": null,
+          "headings": [
+            "用你自己的城市试用 CITYNEXUS",
+            "新建行程",
+            "三步完成。选择目的地、告诉我们怎么玩，剩下的交给 CityNexus。",
+            "EN",
+            "✓",
+            "✓"
+          ]
+        }
+      ],
+      "afterStep1": {
+        "label": "before first 下一步",
+        "draft_step": 1,
+        "missing_hint": [],
+        "fieldCount": 8,
+        "marker": null,
+        "headings": [
+          "用你自己的城市试用 CITYNEXUS",
+          "新建行程",
+          "三步完成。选择目的地、告诉我们怎么玩，剩下的交给 CityNexus。",
+          "EN",
+          "1",
+          "目的地与时间"
+        ]
+      },
+      "step2Fields": [
+        {
+          "tag": "INPUT",
+          "type": "number",
+          "ph": null,
+          "value": "2"
+        },
+        {
+          "tag": "INPUT",
+          "type": "number",
+          "ph": null,
+          "value": "1"
+        },
+        {
+          "tag": "INPUT",
+          "type": "number",
+          "ph": null,
+          "value": "3000"
+        },
+        {
+          "tag": "INPUT",
+          "type": "number",
+          "ph": null,
+          "value": "1000"
+        },
+        {
+          "tag": "TEXTAREA",
+          "type": "textarea",
+          "ph": "例如：我妈妈坐轮椅；每天走路不超过 3000 米",
+          "value": ""
+        }
+      ],
+      "step2Buttons": [
+        "EN",
+        "轻松",
+        "适中",
+        "紧凑",
+        "美食",
+        "自然",
+        "人文",
+        "海边",
+        "购物",
+        "亲子",
+        "返回",
+        "下一步",
+        "使用封存的演示行程"
+      ],
+      "partyStepper": {
+        "clicked": false
+      }
+    },
+    "P2": {
+      "snapshot": {
+        "href": "http://127.0.0.1:8963/v8/hub",
+        "marker": null,
+        "scripts": [
+          "/assets/index-xKIGmoBz.js"
+        ],
+        "docNonce": "xx0s1afiye",
+        "fields": {},
+        "fieldCount": 0,
+        "draft": {
+          "step": 3,
+          "draft": {
+            "cityName": "北京",
+            "countryCode": "CN",
+            "timezone": "Asia/Shanghai",
+            "startAt": "2026-10-05T09:30",
+            "endAt": "2026-10-07T18:00",
+            "arrivalLocation": "北京南站",
+            "departureLocation": "北京西站",
+            "budgetMajor": 3000,
+            "stayBudgetMajor": 1000,
+            "currency": "CNY",
+            "partySize": 2,
+            "rooms": 1,
+            "pace": "relaxed",
+            "interests": [],
+            "specialRequirements": "只看免费和便宜的地方"
+          }
+        },
+        "draftError": null,
+        "headings": [
+          "用你自己的城市试用 CITYNEXUS",
+          "新建行程",
+          "三步完成。选择目的地、告诉我们怎么玩，剩下的交给 CityNexus。",
+          "EN",
+          "✓",
+          "✓",
+          "3",
+          "确认创建"
+        ],
+        "leafCount": 29,
+        "controller": true,
+        "registrations": [
+          {
+            "scope": "/",
+            "installing": null,
+            "waiting": null,
+            "active": "/v10-sw.js"
+          }
+        ],
+        "lifecycle": [
+          {
+            "ev": "document-start",
+            "t": 18,
+            "href": "http://127.0.0.1:8963/v8/hub",
+            "marker": null
+          }
+        ]
+      },
+      "confirm_box": [
+        79,
+        652,
+        291,
+        44
+      ]
+    },
+    "P3": {
+      "pointer": {
+        "root": "dist",
+        "ok": true
+      },
+      "back_to_installed_for_the_write": {
+        "root": "dist",
+        "ok": true
+      },
+      "mode": {
+        "written": "answer",
+        "readBack": "answer"
+      },
+      "submit": {
+        "found": true,
+        "label": "确认创建",
+        "disabled": false,
+        "point": [
+          225,
+          674
+        ],
+        "hitIsSelf": true,
+        "tapped": true
+      },
+      "created_wait": [
+        {
+          "atMs": 16046,
+          "journey_id": "3de5ca69-21c1-4284-ad5b-e8a198d0d51b",
+          "nav_labels": [],
+          "leafCount": 31,
+          "headings": [
+            "用你自己的城市试用 CITYNEXUS",
+            "新建行程",
+            "三步完成。选择目的地、告诉我们怎么玩，剩下的交给 CityNexus。",
+            "EN"
+          ]
+        },
+        {
+          "atMs": 32102,
+          "journey_id": "3de5ca69-21c1-4284-ad5b-e8a198d0d51b",
+          "nav_labels": [],
+          "leafCount": 31,
+          "headings": [
+            "用你自己的城市试用 CITYNEXUS",
+            "新建行程",
+            "三步完成。选择目的地、告诉我们怎么玩，剩下的交给 CityNexus。",
+            "EN"
+          ]
+        },
+        {
+          "atMs": 48137,
+          "journey_id": "3de5ca69-21c1-4284-ad5b-e8a198d0d51b",
+          "nav_labels": [],
+          "leafCount": 31,
+          "headings": [
+            "用你自己的城市试用 CITYNEXUS",
+            "新建行程",
+            "三步完成。选择目的地、告诉我们怎么玩，剩下的交给 CityNexus。",
+            "EN"
+          ]
+        },
+        {
+          "atMs": 64175,
+          "journey_id": "3de5ca69-21c1-4284-ad5b-e8a198d0d51b",
+          "nav_labels": [],
+          "leafCount": 31,
+          "headings": [
+            "用你自己的城市试用 CITYNEXUS",
+            "新建行程",
+            "三步完成。选择目的地、告诉我们怎么玩，剩下的交给 CityNexus。",
+            "EN"
+          ]
+        },
+        {
+          "atMs": 80223,
+          "journey_id": "3de5ca69-21c1-4284-ad5b-e8a198d0d51b",
+          "nav_labels": [],
+          "leafCount": 31,
+          "headings": [
+            "用你自己的城市试用 CITYNEXUS",
+            "新建行程",
+            "三步完成。选择目的地、告诉我们怎么玩，剩下的交给 CityNexus。",
+            "EN"
+          ]
+        },
+        {
+          "atMs": 96276,
+          "journey_id": "3de5ca69-21c1-4284-ad5b-e8a198d0d51b",
+          "nav_labels": [],
+          "leafCount": 31,
+          "headings": [
+            "用你自己的城市试用 CITYNEXUS",
+            "新建行程",
+            "三步完成。选择目的地、告诉我们怎么玩，剩下的交给 CityNexus。",
+            "EN"
+          ]
+        },
+        {
+          "atMs": 112306,
+          "journey_id": "3de5ca69-21c1-4284-ad5b-e8a198d0d51b",
+          "nav_labels": [],
+          "leafCount": 31,
+          "headings": [
+            "用你自己的城市试用 CITYNEXUS",
+            "新建行程",
+            "三步完成。选择目的地、告诉我们怎么玩，剩下的交给 CityNexus。",
+            "EN"
+          ]
+        },
+        {
+          "atMs": 128348,
+          "journey_id": "3de5ca69-21c1-4284-ad5b-e8a198d0d51b",
+          "nav_labels": [],
+          "leafCount": 31,
+          "headings": [
+            "用你自己的城市试用 CITYNEXUS",
+            "新建行程",
+            "三步完成。选择目的地、告诉我们怎么玩，剩下的交给 CityNexus。",
+            "EN"
+          ]
+        },
+        {
+          "atMs": 144395,
+          "journey_id": "3de5ca69-21c1-4284-ad5b-e8a198d0d51b",
+          "nav_labels": [],
+          "leafCount": 31,
+          "headings": [
+            "用你自己的城市试用 CITYNEXUS",
+            "新建行程",
+            "三步完成。选择目的地、告诉我们怎么玩，剩下的交给 CityNexus。",
+            "EN"
+          ]
+        },
+        {
+          "atMs": 160435,
+          "journey_id": "3de5ca69-21c1-4284-ad5b-e8a198d0d51b",
+          "nav_labels": [],
+          "leafCount": 31,
+          "headings": [
+            "用你自己的城市试用 CITYNEXUS",
+            "新建行程",
+            "三步完成。选择目的地、告诉我们怎么玩，剩下的交给 CityNexus。",
+            "EN"
+          ]
+        },
+        {
+          "atMs": 176469,
+          "journey_id": "3de5ca69-21c1-4284-ad5b-e8a198d0d51b",
+          "nav_labels": [],
+          "leafCount": 31,
+          "headings": [
+            "用你自己的城市试用 CITYNEXUS",
+            "新建行程",
+            "三步完成。选择目的地、告诉我们怎么玩，剩下的交给 CityNexus。",
+            "EN"
+          ]
+        },
+        {
+          "atMs": 192500,
+          "journey_id": "3de5ca69-21c1-4284-ad5b-e8a198d0d51b",
+          "nav_labels": [],
+          "leafCount": 31,
+          "headings": [
+            "用你自己的城市试用 CITYNEXUS",
+            "新建行程",
+            "三步完成。选择目的地、告诉我们怎么玩，剩下的交给 CityNexus。",
+            "EN"
+          ]
+        },
+        {
+          "atMs": 208529,
+          "journey_id": "3de5ca69-21c1-4284-ad5b-e8a198d0d51b",
+          "nav_labels": [],
+          "leafCount": 31,
+          "headings": [
+            "用你自己的城市试用 CITYNEXUS",
+            "新建行程",
+            "三步完成。选择目的地、告诉我们怎么玩，剩下的交给 CityNexus。",
+            "EN"
+          ]
+        },
+        {
+          "atMs": 224553,
+          "journey_id": "3de5ca69-21c1-4284-ad5b-e8a198d0d51b",
+          "nav_labels": [],
+          "leafCount": 31,
+          "headings": [
+            "用你自己的城市试用 CITYNEXUS",
+            "新建行程",
+            "三步完成。选择目的地、告诉我们怎么玩，剩下的交给 CityNexus。",
+            "EN"
+          ]
+        },
+        {
+          "atMs": 240604,
+          "journey_id": "3de5ca69-21c1-4284-ad5b-e8a198d0d51b",
+          "nav_labels": [],
+          "leafCount": 31,
+          "headings": [
+            "用你自己的城市试用 CITYNEXUS",
+            "新建行程",
+            "三步完成。选择目的地、告诉我们怎么玩，剩下的交给 CityNexus。",
+            "EN"
+          ]
+        },
+        {
+          "atMs": 256651,
+          "journey_id": "3de5ca69-21c1-4284-ad5b-e8a198d0d51b",
+          "nav_labels": [],
+          "leafCount": 31,
+          "headings": [
+            "用你自己的城市试用 CITYNEXUS",
+            "新建行程",
+            "三步完成。选择目的地、告诉我们怎么玩，剩下的交给 CityNexus。",
+            "EN"
+          ]
+        },
+        {
+          "atMs": 272709,
+          "journey_id": "3de5ca69-21c1-4284-ad5b-e8a198d0d51b",
+          "nav_labels": [],
+          "leafCount": 31,
+          "headings": [
+            "用你自己的城市试用 CITYNEXUS",
+            "新建行程",
+            "三步完成。选择目的地、告诉我们怎么玩，剩下的交给 CityNexus。",
+            "EN"
+          ]
+        },
+        {
+          "atMs": 288752,
+          "journey_id": "3de5ca69-21c1-4284-ad5b-e8a198d0d51b",
+          "nav_labels": [],
+          "leafCount": 31,
+          "headings": [
+            "用你自己的城市试用 CITYNEXUS",
+            "新建行程",
+            "三步完成。选择目的地、告诉我们怎么玩，剩下的交给 CityNexus。",
+            "EN"
+          ]
+        },
+        {
+          "atMs": 304813,
+          "journey_id": "3de5ca69-21c1-4284-ad5b-e8a198d0d51b",
+          "nav_labels": [],
+          "leafCount": 31,
+          "headings": [
+            "用你自己的城市试用 CITYNEXUS",
+            "新建行程",
+            "三步完成。选择目的地、告诉我们怎么玩，剩下的交给 CityNexus。",
+            "EN"
+          ]
+        },
+        {
+          "atMs": 320869,
+          "journey_id": "3de5ca69-21c1-4284-ad5b-e8a198d0d51b",
+          "nav_labels": [],
+          "leafCount": 31,
+          "headings": [
+            "用你自己的城市试用 CITYNEXUS",
+            "新建行程",
+            "三步完成。选择目的地、告诉我们怎么玩，剩下的交给 CityNexus。",
+            "EN"
+          ]
+        },
+        {
+          "atMs": 336910,
+          "journey_id": "3de5ca69-21c1-4284-ad5b-e8a198d0d51b",
+          "nav_labels": [],
+          "leafCount": 31,
+          "headings": [
+            "用你自己的城市试用 CITYNEXUS",
+            "新建行程",
+            "三步完成。选择目的地、告诉我们怎么玩，剩下的交给 CityNexus。",
+            "EN"
+          ]
+        },
+        {
+          "atMs": 352957,
+          "journey_id": "3de5ca69-21c1-4284-ad5b-e8a198d0d51b",
+          "nav_labels": [],
+          "leafCount": 31,
+          "headings": [
+            "用你自己的城市试用 CITYNEXUS",
+            "新建行程",
+            "三步完成。选择目的地、告诉我们怎么玩，剩下的交给 CityNexus。",
+            "EN"
+          ]
+        },
+        {
+          "atMs": 369010,
+          "journey_id": "3de5ca69-21c1-4284-ad5b-e8a198d0d51b",
+          "nav_labels": [],
+          "leafCount": 31,
+          "headings": [
+            "用你自己的城市试用 CITYNEXUS",
+            "新建行程",
+            "三步完成。选择目的地、告诉我们怎么玩，剩下的交给 CityNexus。",
+            "EN"
+          ]
+        },
+        {
+          "atMs": 385054,
+          "journey_id": "3de5ca69-21c1-4284-ad5b-e8a198d0d51b",
+          "nav_labels": [],
+          "leafCount": 31,
+          "headings": [
+            "用你自己的城市试用 CITYNEXUS",
+            "新建行程",
+            "三步完成。选择目的地、告诉我们怎么玩，剩下的交给 CityNexus。",
+            "EN"
+          ]
+        },
+        {
+          "atMs": 401111,
+          "journey_id": "3de5ca69-21c1-4284-ad5b-e8a198d0d51b",
+          "nav_labels": [],
+          "leafCount": 31,
+          "headings": [
+            "用你自己的城市试用 CITYNEXUS",
+            "新建行程",
+            "三步完成。选择目的地、告诉我们怎么玩，剩下的交给 CityNexus。",
+            "EN"
+          ]
+        },
+        {
+          "atMs": 417151,
+          "journey_id": "3de5ca69-21c1-4284-ad5b-e8a198d0d51b",
+          "nav_labels": [],
+          "leafCount": 31,
+          "headings": [
+            "用你自己的城市试用 CITYNEXUS",
+            "新建行程",
+            "三步完成。选择目的地、告诉我们怎么玩，剩下的交给 CityNexus。",
+            "EN"
+          ]
+        },
+        {
+          "atMs": 433218,
+          "journey_id": "3de5ca69-21c1-4284-ad5b-e8a198d0d51b",
+          "nav_labels": [],
+          "leafCount": 31,
+          "headings": [
+            "用你自己的城市试用 CITYNEXUS",
+            "新建行程",
+            "三步完成。选择目的地、告诉我们怎么玩，剩下的交给 CityNexus。",
+            "EN"
+          ]
+        },
+        {
+          "atMs": 449267,
+          "journey_id": "3de5ca69-21c1-4284-ad5b-e8a198d0d51b",
+          "nav_labels": [],
+          "leafCount": 31,
+          "headings": [
+            "用你自己的城市试用 CITYNEXUS",
+            "新建行程",
+            "三步完成。选择目的地、告诉我们怎么玩，剩下的交给 CityNexus。",
+            "EN"
+          ]
+        },
+        {
+          "atMs": 465336,
+          "journey_id": "3de5ca69-21c1-4284-ad5b-e8a198d0d51b",
+          "nav_labels": [],
+          "leafCount": 31,
+          "headings": [
+            "用你自己的城市试用 CITYNEXUS",
+            "新建行程",
+            "三步完成。选择目的地、告诉我们怎么玩，剩下的交给 CityNexus。",
+            "EN"
+          ]
+        },
+        {
+          "atMs": 481383,
+          "journey_id": "3de5ca69-21c1-4284-ad5b-e8a198d0d51b",
+          "nav_labels": [],
+          "leafCount": 31,
+          "headings": [
+            "用你自己的城市试用 CITYNEXUS",
+            "新建行程",
+            "三步完成。选择目的地、告诉我们怎么玩，剩下的交给 CityNexus。",
+            "EN"
+          ]
+        },
+        {
+          "atMs": 497425,
+          "journey_id": "3de5ca69-21c1-4284-ad5b-e8a198d0d51b",
+          "nav_labels": [],
+          "leafCount": 31,
+          "headings": [
+            "用你自己的城市试用 CITYNEXUS",
+            "新建行程",
+            "三步完成。选择目的地、告诉我们怎么玩，剩下的交给 CityNexus。",
+            "EN"
+          ]
+        },
+        {
+          "atMs": 513475,
+          "journey_id": "3de5ca69-21c1-4284-ad5b-e8a198d0d51b",
+          "nav_labels": [],
+          "leafCount": 31,
+          "headings": [
+            "用你自己的城市试用 CITYNEXUS",
+            "新建行程",
+            "三步完成。选择目的地、告诉我们怎么玩，剩下的交给 CityNexus。",
+            "EN"
+          ]
+        },
+        {
+          "atMs": 529543,
+          "journey_id": "3de5ca69-21c1-4284-ad5b-e8a198d0d51b",
+          "nav_labels": [],
+          "leafCount": 31,
+          "headings": [
+            "用你自己的城市试用 CITYNEXUS",
+            "新建行程",
+            "三步完成。选择目的地、告诉我们怎么玩，剩下的交给 CityNexus。",
+            "EN"
+          ]
+        },
+        {
+          "atMs": 545595,
+          "journey_id": "3de5ca69-21c1-4284-ad5b-e8a198d0d51b",
+          "nav_labels": [],
+          "leafCount": 31,
+          "headings": [
+            "用你自己的城市试用 CITYNEXUS",
+            "新建行程",
+            "三步完成。选择目的地、告诉我们怎么玩，剩下的交给 CityNexus。",
+            "EN"
+          ]
+        },
+        {
+          "atMs": 561645,
+          "journey_id": "3de5ca69-21c1-4284-ad5b-e8a198d0d51b",
+          "nav_labels": [],
+          "leafCount": 31,
+          "headings": [
+            "用你自己的城市试用 CITYNEXUS",
+            "新建行程",
+            "三步完成。选择目的地、告诉我们怎么玩，剩下的交给 CityNexus。",
+            "EN"
+          ]
+        },
+        {
+          "atMs": 577717,
+          "journey_id": "3de5ca69-21c1-4284-ad5b-e8a198d0d51b",
+          "nav_labels": [],
+          "leafCount": 31,
+          "headings": [
+            "用你自己的城市试用 CITYNEXUS",
+            "新建行程",
+            "三步完成。选择目的地、告诉我们怎么玩，剩下的交给 CityNexus。",
+            "EN"
+          ]
+        },
+        {
+          "atMs": 593768,
+          "journey_id": "3de5ca69-21c1-4284-ad5b-e8a198d0d51b",
+          "nav_labels": [],
+          "leafCount": 31,
+          "headings": [
+            "用你自己的城市试用 CITYNEXUS",
+            "新建行程",
+            "三步完成。选择目的地、告诉我们怎么玩，剩下的交给 CityNexus。",
+            "EN"
+          ]
+        },
+        {
+          "atMs": 609807,
+          "journey_id": "3de5ca69-21c1-4284-ad5b-e8a198d0d51b",
+          "nav_labels": [],
+          "leafCount": 31,
+          "headings": [
+            "用你自己的城市试用 CITYNEXUS",
+            "新建行程",
+            "三步完成。选择目的地、告诉我们怎么玩，剩下的交给 CityNexus。",
+            "EN"
+          ]
+        },
+        {
+          "atMs": 625851,
+          "journey_id": "3de5ca69-21c1-4284-ad5b-e8a198d0d51b",
+          "nav_labels": [],
+          "leafCount": 31,
+          "headings": [
+            "用你自己的城市试用 CITYNEXUS",
+            "新建行程",
+            "三步完成。选择目的地、告诉我们怎么玩，剩下的交给 CityNexus。",
+            "EN"
+          ]
+        },
+        {
+          "atMs": 641931,
+          "journey_id": "3de5ca69-21c1-4284-ad5b-e8a198d0d51b",
+          "nav_labels": [],
+          "leafCount": 31,
+          "headings": [
+            "用你自己的城市试用 CITYNEXUS",
+            "新建行程",
+            "三步完成。选择目的地、告诉我们怎么玩，剩下的交给 CityNexus。",
+            "EN"
+          ]
+        }
+      ],
+      "retry_presses": [
+        {
+          "atMs": 16046,
+          "retries": [
+            {
+              "pressed": false,
+              "label": null,
+              "found": false
+            },
+            {
+              "pressed": false,
+              "label": null,
+              "found": false
+            }
+          ]
+        },
+        {
+          "atMs": 32102,
+          "retries": [
+            {
+              "pressed": false,
+              "label": null,
+              "found": false
+            },
+            {
+              "pressed": false,
+              "label": null,
+              "found": false
+            }
+          ]
+        },
+        {
+          "atMs": 48137,
+          "retries": [
+            {
+              "pressed": false,
+              "label": null,
+              "found": false
+            },
+            {
+              "pressed": false,
+              "label": null,
+              "found": false
+            }
+          ]
+        },
+        {
+          "atMs": 64175,
+          "retries": [
+            {
+              "pressed": false,
+              "label": null,
+              "found": false
+            },
+            {
+              "pressed": false,
+              "label": null,
+              "found": false
+            }
+          ]
+        },
+        {
+          "atMs": 80223,
+          "retries": [
+            {
+              "pressed": false,
+              "label": null,
+              "found": false
+            },
+            {
+              "pressed": false,
+              "label": null,
+              "found": false
+            }
+          ]
+        },
+        {
+          "atMs": 96276,
+          "retries": [
+            {
+              "pressed": false,
+              "label": null,
+              "found": false
+            },
+            {
+              "pressed": false,
+              "label": null,
+              "found": false
+            }
+          ]
+        },
+        {
+          "atMs": 112306,
+          "retries": [
+            {
+              "pressed": false,
+              "label": null,
+              "found": false
+            },
+            {
+              "pressed": false,
+              "label": null,
+              "found": false
+            }
+          ]
+        },
+        {
+          "atMs": 128348,
+          "retries": [
+            {
+              "pressed": false,
+              "label": null,
+              "found": false
+            },
+            {
+              "pressed": false,
+              "label": null,
+              "found": false
+            }
+          ]
+        },
+        {
+          "atMs": 144395,
+          "retries": [
+            {
+              "pressed": false,
+              "label": null,
+              "found": false
+            },
+            {
+              "pressed": false,
+              "label": null,
+              "found": false
+            }
+          ]
+        },
+        {
+          "atMs": 160435,
+          "retries": [
+            {
+              "pressed": false,
+              "label": null,
+              "found": false
+            },
+            {
+              "pressed": false,
+              "label": null,
+              "found": false
+            }
+          ]
+        },
+        {
+          "atMs": 176469,
+          "retries": [
+            {
+              "pressed": false,
+              "label": null,
+              "found": false
+            },
+            {
+              "pressed": false,
+              "label": null,
+              "found": false
+            }
+          ]
+        },
+        {
+          "atMs": 192500,
+          "retries": [
+            {
+              "pressed": false,
+              "label": null,
+              "found": false
+            },
+            {
+              "pressed": false,
+              "label": null,
+              "found": false
+            }
+          ]
+        },
+        {
+          "atMs": 208529,
+          "retries": [
+            {
+              "pressed": false,
+              "label": null,
+              "found": false
+            },
+            {
+              "pressed": false,
+              "label": null,
+              "found": false
+            }
+          ]
+        },
+        {
+          "atMs": 224553,
+          "retries": [
+            {
+              "pressed": false,
+              "label": null,
+              "found": false
+            },
+            {
+              "pressed": false,
+              "label": null,
+              "found": false
+            }
+          ]
+        },
+        {
+          "atMs": 240604,
+          "retries": [
+            {
+              "pressed": false,
+              "label": null,
+              "found": false
+            },
+            {
+              "pressed": false,
+              "label": null,
+              "found": false
+            }
+          ]
+        },
+        {
+          "atMs": 256651,
+          "retries": [
+            {
+              "pressed": false,
+              "label": null,
+              "found": false
+            },
+            {
+              "pressed": false,
+              "label": null,
+              "found": false
+            }
+          ]
+        },
+        {
+          "atMs": 272709,
+          "retries": [
+            {
+              "pressed": false,
+              "label": null,
+              "found": false
+            },
+            {
+              "pressed": false,
+              "label": null,
+              "found": false
+            }
+          ]
+        },
+        {
+          "atMs": 288752,
+          "retries": [
+            {
+              "pressed": false,
+              "label": null,
+              "found": false
+            },
+            {
+              "pressed": false,
+              "label": null,
+              "found": false
+            }
+          ]
+        },
+        {
+          "atMs": 304813,
+          "retries": [
+            {
+              "pressed": false,
+              "label": null,
+              "found": false
+            },
+            {
+              "pressed": false,
+              "label": null,
+              "found": false
+            }
+          ]
+        },
+        {
+          "atMs": 320869,
+          "retries": [
+            {
+              "pressed": false,
+              "label": null,
+              "found": false
+            },
+            {
+              "pressed": false,
+              "label": null,
+              "found": false
+            }
+          ]
+        },
+        {
+          "atMs": 336910,
+          "retries": [
+            {
+              "pressed": false,
+              "label": null,
+              "found": false
+            },
+            {
+              "pressed": false,
+              "label": null,
+              "found": false
+            }
+          ]
+        },
+        {
+          "atMs": 352957,
+          "retries": [
+            {
+              "pressed": false,
+              "label": null,
+              "found": false
+            },
+            {
+              "pressed": false,
+              "label": null,
+              "found": false
+            }
+          ]
+        },
+        {
+          "atMs": 369010,
+          "retries": [
+            {
+              "pressed": false,
+              "label": null,
+              "found": false
+            },
+            {
+              "pressed": false,
+              "label": null,
+              "found": false
+            }
+          ]
+        },
+        {
+          "atMs": 385054,
+          "retries": [
+            {
+              "pressed": false,
+              "label": null,
+              "found": false
+            },
+            {
+              "pressed": false,
+              "label": null,
+              "found": false
+            }
+          ]
+        },
+        {
+          "atMs": 401111,
+          "retries": [
+            {
+              "pressed": false,
+              "label": null,
+              "found": false
+            },
+            {
+              "pressed": false,
+              "label": null,
+              "found": false
+            }
+          ]
+        },
+        {
+          "atMs": 417151,
+          "retries": [
+            {
+              "pressed": false,
+              "label": null,
+              "found": false
+            },
+            {
+              "pressed": false,
+              "label": null,
+              "found": false
+            }
+          ]
+        },
+        {
+          "atMs": 433218,
+          "retries": [
+            {
+              "pressed": false,
+              "label": null,
+              "found": false
+            },
+            {
+              "pressed": false,
+              "label": null,
+              "found": false
+            }
+          ]
+        },
+        {
+          "atMs": 449267,
+          "retries": [
+            {
+              "pressed": false,
+              "label": null,
+              "found": false
+            },
+            {
+              "pressed": false,
+              "label": null,
+              "found": false
+            }
+          ]
+        },
+        {
+          "atMs": 465336,
+          "retries": [
+            {
+              "pressed": false,
+              "label": null,
+              "found": false
+            },
+            {
+              "pressed": false,
+              "label": null,
+              "found": false
+            }
+          ]
+        },
+        {
+          "atMs": 481383,
+          "retries": [
+            {
+              "pressed": false,
+              "label": null,
+              "found": false
+            },
+            {
+              "pressed": false,
+              "label": null,
+              "found": false
+            }
+          ]
+        },
+        {
+          "atMs": 497425,
+          "retries": [
+            {
+              "pressed": false,
+              "label": null,
+              "found": false
+            },
+            {
+              "pressed": false,
+              "label": null,
+              "found": false
+            }
+          ]
+        },
+        {
+          "atMs": 513475,
+          "retries": [
+            {
+              "pressed": false,
+              "label": null,
+              "found": false
+            },
+            {
+              "pressed": false,
+              "label": null,
+              "found": false
+            }
+          ]
+        },
+        {
+          "atMs": 529543,
+          "retries": [
+            {
+              "pressed": false,
+              "label": null,
+              "found": false
+            },
+            {
+              "pressed": false,
+              "label": null,
+              "found": false
+            }
+          ]
+        },
+        {
+          "atMs": 545595,
+          "retries": [
+            {
+              "pressed": false,
+              "label": null,
+              "found": false
+            },
+            {
+              "pressed": false,
+              "label": null,
+              "found": false
+            }
+          ]
+        },
+        {
+          "atMs": 561645,
+          "retries": [
+            {
+              "pressed": false,
+              "label": null,
+              "found": false
+            },
+            {
+              "pressed": false,
+              "label": null,
+              "found": false
+            }
+          ]
+        },
+        {
+          "atMs": 577717,
+          "retries": [
+            {
+              "pressed": false,
+              "label": null,
+              "found": false
+            },
+            {
+              "pressed": false,
+              "label": null,
+              "found": false
+            }
+          ]
+        },
+        {
+          "atMs": 593768,
+          "retries": [
+            {
+              "pressed": false,
+              "label": null,
+              "found": false
+            },
+            {
+              "pressed": false,
+              "label": null,
+              "found": false
+            }
+          ]
+        },
+        {
+          "atMs": 609807,
+          "retries": [
+            {
+              "pressed": false,
+              "label": null,
+              "found": false
+            },
+            {
+              "pressed": false,
+              "label": null,
+              "found": false
+            }
+          ]
+        },
+        {
+          "atMs": 625851,
+          "retries": [
+            {
+              "pressed": false,
+              "label": null,
+              "found": false
+            },
+            {
+              "pressed": false,
+              "label": null,
+              "found": false
+            }
+          ]
+        },
+        {
+          "atMs": 641931,
+          "retries": [
+            {
+              "pressed": false,
+              "label": null,
+              "found": false
+            },
+            {
+              "pressed": false,
+              "label": null,
+              "found": false
+            }
+          ]
+        }
+      ],
+      "next_bundle_expected": "index-DimRtCQm.js",
+      "journey_id": "3de5ca69-21c1-4284-ad5b-e8a198d0d51b",
+      "retry_presses_made": 80,
+      "nav_labels_at_creation": [],
+      "assets": {
+        "asset_root": "dist",
+        "read_back_ok": true
+      },
+      "update_trigger": {
+        "updated": true,
+        "via": "registration.update() after the trip was written"
+      },
+      "before_action": {
+        "marker": null,
+        "scripts": [
+          "/assets/index-xKIGmoBz.js"
+        ],
+        "docNonce": "xx0s1afiye",
+        "fields": {},
+        "draft": {
+          "step": 3,
+          "draft": {
+            "cityName": "北京",
+            "countryCode": "CN",
+            "timezone": "Asia/Shanghai",
+            "startAt": "2026-10-05T09:30",
+            "endAt": "2026-10-07T18:00",
+            "arrivalLocation": "北京南站",
+            "departureLocation": "北京西站",
+            "budgetMajor": 3000,
+            "stayBudgetMajor": 1000,
+            "currency": "CNY",
+            "partySize": 2,
+            "rooms": 1,
+            "pace": "relaxed",
+            "interests": [],
+            "specialRequirements": "只看免费和便宜的地方"
+          }
+        },
+        "leafCount": 31,
+        "registrations": [
+          {
+            "scope": "/",
+            "installing": "installing",
+            "waiting": null,
+            "active": "/v10-sw.js"
+          }
+        ]
+      },
+      "the_one_navigation": {
+        "skipped": "B3 arms get no navigation after the write"
+      },
+      "watch": [
+        {
+          "atMs": 4025,
+          "atEpoch": 1790298876140,
+          "marker": "ORD-0290-next",
+          "scripts": [
+            "/assets/index-DimRtCQm.js"
+          ],
+          "docNonce": "gen3f8oh4a",
+          "registrations": [
+            {
+              "scope": "/",
+              "installing": null,
+              "waiting": null,
+              "active": "/v10-sw.js"
+            }
+          ],
+          "controller": true,
+          "leafCount": 5,
+          "headings": [
+            "服务器",
+            "服务器这次没能把行程读出来",
+            "服务器自己报错了（HTTP 500）。这是它那边的问题，不是你填错了什么。可以重试；如果一直这样，稍后再来。",
+            "重试",
+            "归因详情"
+          ],
+          "fieldCount": 0,
+          "draft_present": true,
+          "lifecycle": [
+            {
+              "ev": "document-start",
+              "t": 1058,
+              "href": "http://127.0.0.1:8963/v8/hub",
+              "marker": null
+            }
+          ]
+        }
+      ],
+      "watch_started_at_epoch": 1790298872115,
+      "converged_atMs": 4026,
+      "after": {
+        "href": "http://127.0.0.1:8963/v8/hub",
+        "marker": "ORD-0290-next",
+        "scripts": [
+          "/assets/index-DimRtCQm.js"
+        ],
+        "docNonce": "gen3f8oh4a",
+        "fields": {},
+        "fieldCount": 0,
+        "draft": {
+          "step": 3,
+          "draft": {
+            "cityName": "北京",
+            "countryCode": "CN",
+            "timezone": "Asia/Shanghai",
+            "startAt": "2026-10-05T09:30",
+            "endAt": "2026-10-07T18:00",
+            "arrivalLocation": "北京南站",
+            "departureLocation": "北京西站",
+            "budgetMajor": 3000,
+            "stayBudgetMajor": 1000,
+            "currency": "CNY",
+            "partySize": 2,
+            "rooms": 1,
+            "pace": "relaxed",
+            "interests": [],
+            "specialRequirements": "只看免费和便宜的地方"
+          }
+        },
+        "draftError": null,
+        "headings": [
+          "服务器",
+          "服务器这次没能把行程读出来",
+          "服务器自己报错了（HTTP 500）。这是它那边的问题，不是你填错了什么。可以重试；如果一直这样，稍后再来。",
+          "重试",
+          "归因详情"
+        ],
+        "leafCount": 5,
+        "controller": true,
+        "registrations": [
+          {
+            "scope": "/",
+            "installing": null,
+            "waiting": null,
+            "active": "/v10-sw.js"
+          }
+        ],
+        "lifecycle": [
+          {
+            "ev": "document-start",
+            "t": 1058,
+            "href": "http://127.0.0.1:8963/v8/hub",
+            "marker": null
+          }
+        ]
+      },
+      "after_written": {
+        "marker": "ORD-0290-next",
+        "scripts": [
+          "/assets/index-DimRtCQm.js"
+        ],
+        "docNonce": "gen3f8oh4a",
+        "fields": {},
+        "draft": {
+          "step": 3,
+          "draft": {
+            "cityName": "北京",
+            "countryCode": "CN",
+            "timezone": "Asia/Shanghai",
+            "startAt": "2026-10-05T09:30",
+            "endAt": "2026-10-07T18:00",
+            "arrivalLocation": "北京南站",
+            "departureLocation": "北京西站",
+            "budgetMajor": 3000,
+            "stayBudgetMajor": 1000,
+            "currency": "CNY",
+            "partySize": 2,
+            "rooms": 1,
+            "pace": "relaxed",
+            "interests": [],
+            "specialRequirements": "只看免费和便宜的地方"
+          }
+        },
+        "headings": [
+          "服务器",
+          "服务器这次没能把行程读出来",
+          "服务器自己报错了（HTTP 500）。这是它那边的问题，不是你填错了什么。可以重试；如果一直这样，稍后再来。",
+          "重试",
+          "归因详情"
+        ],
+        "registrations": [
+          {
+            "scope": "/",
+            "installing": null,
+            "waiting": null,
+            "active": "/v10-sw.js"
+          }
+        ],
+        "leafCount": 5
+      },
+      "nav_events_total": 6,
+      "nav_events_mine": [
+        "P0-nav1-install",
+        "P0-nav2-take-control"
+      ]
+    },
+    "P4": {
+      "offline_at_epoch": 1790298876307,
+      "first_screen_offline": {
+        "href": "http://127.0.0.1:8963/v8/hub",
+        "marker": "ORD-0290-next",
+        "scripts": [
+          "/assets/index-DimRtCQm.js"
+        ],
+        "leafCount": 5,
+        "bodyChars": 83,
+        "headings": [
+          "服务器",
+          "服务器这次没能把行程读出来",
+          "服务器自己报错了（HTTP 500）。这是它那边的问题，不是你填错了什么。可以重试；如果一直这样，稍后再来。",
+          "重试",
+          "归因详情"
+        ],
+        "docNonce": "gen3f8oh4a",
+        "controller": true,
+        "registrations": [
+          {
+            "scope": "/",
+            "installing": null,
+            "waiting": null,
+            "active": "/v10-sw.js"
+          }
+        ],
+        "nav_labels": []
+      },
+      "in_app_nav_offline": [],
+      "reload_offline": {
+        "http_status": 200,
+        "href": "http://127.0.0.1:8963/v8/hub",
+        "marker": "ORD-0290-next",
+        "scripts": [
+          "/assets/index-DimRtCQm.js"
+        ],
+        "leafCount": 5,
+        "bodyChars": 87,
+        "headings": [
+          "连接",
+          "网络不可用",
+          "这一发请求没能出去，也没有收到任何回答，所以这是网络问题。这台设备上还没有可看的离线副本，所以现在没有可显示的内容。请检查网络后重试。",
+          "重试",
+          "归因详情"
+        ],
+        "doc_nonce_before": "gen3f8oh4a",
+        "doc_nonce_after": "tzkcnj91uc8"
+      },
+      "origin_saw_during_offline": {
+        "readable": true,
+        "count": 4,
+        "sample": [
+          {
+            "kind": "static",
+            "path": "/v10-sw.js",
+            "shell_root": "D:\\moodle\\_qoder_hjp1_o207_20260922\\o290\\next_gen\\frontend\\dist",
+            "asset_root": "D:\\moodle\\_qoder_hjp1_o207_20260922\\o290\\next_gen\\frontend\\dist",
+            "served": "v10-sw.js",
+            "html_at_js_url": false,
+            "t": 1790298885.403,
+            "iso": "2026-09-25T09:14:45+0800"
+          },
+          {
+            "kind": "static",
+            "path": "/workbox-6923124b.js",
+            "shell_root": "D:\\moodle\\_qoder_hjp1_o207_20260922\\o290\\next_gen\\frontend\\dist",
+            "asset_root": "D:\\moodle\\_qoder_hjp1_o207_20260922\\o290\\next_gen\\frontend\\dist",
+            "served": "workbox-6923124b.js",
+            "html_at_js_url": false,
+            "t": 1790298885.408,
+            "iso": "2026-09-25T09:14:45+0800"
+          },
+          {
+            "kind": "static",
+            "path": "/v10-sw.js",
+            "shell_root": "D:\\moodle\\_qoder_hjp1_o207_20260922\\o290\\next_gen\\frontend\\dist",
+            "asset_root": "D:\\moodle\\_qoder_hjp1_o207_20260922\\o290\\next_gen\\frontend\\dist",
+            "served": "v10-sw.js",
+            "html_at_js_url": false,
+            "t": 1790298887.089,
+            "iso": "2026-09-25T09:14:47+0800"
+          },
+          {
+            "kind": "static",
+            "path": "/workbox-6923124b.js",
+            "shell_root": "D:\\moodle\\_qoder_hjp1_o207_20260922\\o290\\next_gen\\frontend\\dist",
+            "asset_root": "D:\\moodle\\_qoder_hjp1_o207_20260922\\o290\\next_gen\\frontend\\dist",
+            "served": "workbox-6923124b.js",
+            "html_at_js_url": false,
+            "t": 1790298887.092,
+            "iso": "2026-09-25T09:14:47+0800"
+          }
+        ]
+      },
+      "summary": {
+        "first_bodyChars": 83,
+        "nav_steps": 0,
+        "nav_changed": 0,
+        "reload_bodyChars": 87,
+        "origin_hits_offline": 4
+      }
+    }
+  },
+  "instrument": {
+    "pageErrors": [],
+    "navEvents": [
+      {
+        "at": 1790298190894,
+        "mine": true,
+        "label": "P0-nav1-install"
+      },
+      {
+        "at": 1790298190922,
+        "href": "http://127.0.0.1:8963/v8/hub",
+        "mine": false
+      },
+      {
+        "at": 1790298206018,
+        "mine": true,
+        "label": "P0-nav2-take-control"
+      },
+      {
+        "at": 1790298206038,
+        "href": "http://127.0.0.1:8963/v8/hub",
+        "mine": false
+      },
+      {
+        "at": 1790298873325,
+        "href": "http://127.0.0.1:8963/v8/hub",
+        "mine": false
+      },
+      {
+        "at": 1790298885342,
+        "href": "http://127.0.0.1:8963/v8/hub",
+        "mine": false
+      }
+    ],
+    "probe_smoke": {
+      "ok": true,
+      "href": "about:blank",
+      "marker": null,
+      "leafCount": 0
+    },
+    "apiEvents": [
+      {
+        "atEpoch": 1790298191142,
+        "ev": "request",
+        "m": "GET",
+        "p": "/api/v1/demo/scene"
+      },
+      {
+        "atEpoch": 1790298191341,
+        "ev": "response",
+        "m": "GET",
+        "p": "/api/v1/demo/scene",
+        "s": 200
+      },
+      {
+        "atEpoch": 1790298206133,
+        "ev": "request",
+        "m": "GET",
+        "p": "/api/v1/demo/scene"
+      },
+      {
+        "atEpoch": 1790298206163,
+        "ev": "response",
+        "m": "GET",
+        "p": "/api/v1/demo/scene",
+        "s": 200
+      },
+      {
+        "atEpoch": 1790298230049,
+        "ev": "request",
+        "m": "POST",
+        "p": "/api/v1/travelers"
+      },
+      {
+        "atEpoch": 1790298230066,
+        "ev": "response",
+        "m": "POST",
+        "p": "/api/v1/travelers",
+        "s": 201
+      },
+      {
+        "atEpoch": 1790298230069,
+        "ev": "request",
+        "m": "POST",
+        "p": "/api/v1/journeys"
+      },
+      {
+        "atEpoch": 1790298230093,
+        "ev": "response",
+        "m": "POST",
+        "p": "/api/v1/journeys",
+        "s": 201
+      },
+      {
+        "atEpoch": 1790298230095,
+        "ev": "request",
+        "m": "GET",
+        "p": "/api/v1/travelers/e225fbde-9da4-4261-84cf-b1f03b16e05c/preferences"
+      },
+      {
+        "atEpoch": 1790298230109,
+        "ev": "response",
+        "m": "GET",
+        "p": "/api/v1/travelers/e225fbde-9da4-4261-84cf-b1f03b16e05c/preferences",
+        "s": 200
+      },
+      {
+        "atEpoch": 1790298230110,
+        "ev": "request",
+        "m": "PUT",
+        "p": "/api/v1/travelers/e225fbde-9da4-4261-84cf-b1f03b16e05c/preferences"
+      },
+      {
+        "atEpoch": 1790298230126,
+        "ev": "response",
+        "m": "PUT",
+        "p": "/api/v1/travelers/e225fbde-9da4-4261-84cf-b1f03b16e05c/preferences",
+        "s": 200
+      },
+      {
+        "atEpoch": 1790298230127,
+        "ev": "request",
+        "m": "GET",
+        "p": "/api/v1/travelers/e225fbde-9da4-4261-84cf-b1f03b16e05c/preferences"
+      },
+      {
+        "atEpoch": 1790298230137,
+        "ev": "response",
+        "m": "GET",
+        "p": "/api/v1/travelers/e225fbde-9da4-4261-84cf-b1f03b16e05c/preferences",
+        "s": 200
+      },
+      {
+        "atEpoch": 1790298230138,
+        "ev": "request",
+        "m": "POST",
+        "p": "/api/v1/journeys/3de5ca69-21c1-4284-ad5b-e8a198d0d51b/stay-options/generate"
+      },
+      {
+        "atEpoch": 1790298230221,
+        "ev": "response",
+        "m": "POST",
+        "p": "/api/v1/journeys/3de5ca69-21c1-4284-ad5b-e8a198d0d51b/stay-options/generate",
+        "s": 500
+      },
+      {
+        "atEpoch": 1790298873489,
+        "ev": "request",
+        "m": "GET",
+        "p": "/api/v1/journeys/3de5ca69-21c1-4284-ad5b-e8a198d0d51b/experience"
+      },
+      {
+        "atEpoch": 1790298873773,
+        "ev": "response",
+        "m": "GET",
+        "p": "/api/v1/journeys/3de5ca69-21c1-4284-ad5b-e8a198d0d51b/experience",
+        "s": 500
+      },
+      {
+        "atEpoch": 1790298885402,
+        "ev": "request",
+        "m": "GET",
+        "p": "/api/v1/journeys/3de5ca69-21c1-4284-ad5b-e8a198d0d51b/experience"
+      },
+      {
+        "atEpoch": 1790298885405,
+        "ev": "requestfailed",
+        "m": "GET",
+        "p": "/api/v1/journeys/3de5ca69-21c1-4284-ad5b-e8a198d0d51b/experience",
+        "why": "net::ERR_INTERNET_DISCONNECTED"
+      },
+      {
+        "atEpoch": 1790298885406,
+        "ev": "request",
+        "m": "GET",
+        "p": "/api/v1/health"
+      },
+      {
+        "atEpoch": 1790298885407,
+        "ev": "requestfailed",
+        "m": "GET",
+        "p": "/api/v1/health",
+        "why": "net::ERR_INTERNET_DISCONNECTED"
+      }
+    ]
+  },
+  "next1": {
+    "found": true,
+    "label": "下一步",
+    "disabled": false,
+    "point": [
+      195,
+      674
+    ],
+    "hitIsSelf": true,
+    "tapped": true
+  },
+  "next2": {
+    "found": true,
+    "label": "下一步",
+    "disabled": false,
+    "point": [
+      225,
+      674
+    ],
+    "hitIsSelf": true,
+    "tapped": true
+  },
+  "arm_invalid_reason": "no in-app navigation rendered - in-app offline movement not observable",
+  "ended_at": "2026-09-25T01:14:52.570Z"
+}
