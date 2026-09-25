@@ -17,12 +17,17 @@ import {
   OriginResponseUnusableError,
   clearJourneyReferences,
   copyFor,
+  isOriginResponseUnusable,
   recordAttribution,
   withCachedCopyFact,
   type Attribution,
   type OriginProbeFact,
 } from "../lib/failureAttribution";
-import { fetchWithReadDeadline, READ_DEADLINE_MS } from "../lib/readDeadline";
+import {
+  fetchWithReadDeadline,
+  isReadDeadlineMissed,
+  READ_DEADLINE_MS,
+} from "../lib/readDeadline";
 import { beginNonIdempotentRequest } from "../lib/inFlightWrites";
 import {
   clearPendingContinuation,
@@ -80,6 +85,8 @@ import {
 } from "../lib/money";
 import { withViewTransition } from "../lib/viewTransition";
 import { isDisruptionOpen } from "../lib/disruptionState";
+import { measureRawFacts, type RawFacts } from "../lib/rawFacts";
+import { RawFactsPanel } from "../components/RawFactsPanel";
 import {
   budgetEvidenceCoverage,
   budgetVerdictAllowed as budgetVerdictAllowedFor,
@@ -147,7 +154,12 @@ type Wallet = {
  * A4-1 froze the envelope as `error.code = VALIDATION_ERROR` with
  * `error.details.errors[].loc / msg`.  Reading only `error.message` yields the constant
  * "Request validation failed", which names nothing the traveller can go and fix, so the
- * per-field `loc: msg` pairs are appended verbatim -- backend words, no invented translation.
+ * per-field `loc: msg` pairs are appended -- backend words, no invented translation.
+ *
+ * Those backend words are this error's own `message`, and since Q64=1 they stop there: the value is
+ * for telemetry and for a `data-*` attribute, never for the rendered copy.  A traveller sentence and
+ * this device's measured fields (RawFactsPanel) are what a screen shows, because an upstream
+ * sentence in the DOM also carries whatever the answer happened to contain (ORD-0325).
  */
 function rejectionReason(body: any, status: number): string {
   const errors: unknown[] = Array.isArray(body?.error?.details?.errors)
@@ -181,12 +193,51 @@ function rejectionReason(body: any, status: number): string {
 class V8Rejection extends Error {
   readonly status: number;
   readonly code: string | null;
-  constructor(message: string, status: number, code: string | null) {
+  /** What this device measured on the refusing answer, carried with the refusal so the screen that
+   *  shows the rejection can show *that* instead of the server's sentence (Q64=1). */
+  readonly facts: RawFacts;
+  constructor(
+    message: string,
+    status: number,
+    code: string | null,
+    facts: RawFacts,
+  ) {
     super(message);
     this.name = "V8Rejection";
     this.status = status;
     this.code = code;
+    this.facts = facts;
   }
+}
+
+/**
+ * The traveller sentence for a step that failed, composed from the machine facts this device holds:
+ * whether an answer came at all, and with what status.  An upstream sentence is never the wording,
+ * and `error.message` is not a safe stand-in for "our own words" -- whichever helper threw decides
+ * what that string carries, and since Q64=1 that includes whatever the server's body happened to say.
+ */
+function refusalSentence(error: unknown, zh: boolean, fallback: string): string {
+  if (error instanceof V8Rejection) {
+    return zh
+      ? `服务器拒绝了这一步（HTTP ${error.status}）。你的行程没有因此改变，可以检查后重试。`
+      : `The server refused this step (HTTP ${error.status}). Your trip is unchanged; check the details and try again.`;
+  }
+  if (isOriginResponseUnusable(error)) {
+    return zh
+      ? `服务器答了 HTTP ${error.status}，可带回来的不是这一屏能用的数据（Content-Type: ${error.content_type ?? "未知"}）。`
+      : `The server answered HTTP ${error.status}, but not with data this screen can use (Content-Type: ${error.content_type ?? "unknown"}).`;
+  }
+  if (isReadDeadlineMissed(error) || error instanceof TypeError) {
+    return zh
+      ? "连不上服务器，请重试。"
+      : "Could not reach the server. Try again.";
+  }
+  return fallback;
+}
+
+/** The reading a failure carries, if any: only an answered HTTP refusal has one. */
+function refusalFacts(error: unknown): RawFacts | null {
+  return error instanceof V8Rejection ? error.facts : null;
 }
 
 async function v8Request<T>(path: string, init?: RequestInit): Promise<T> {
@@ -223,6 +274,7 @@ async function v8RequestInner<T>(path: string, init?: RequestInit): Promise<T> {
       rejectionReason(body, response.status),
       response.status,
       typeof body?.error?.code === "string" ? body.error.code : null,
+      measureRawFacts(response, raw),
     );
   }
   /* ORD-0263 fifth state: a 2xx that reached us and still gives this screen nothing is an answered
@@ -478,7 +530,19 @@ export function V8Experience() {
     null,
   );
   const [busy, setBusy] = useState(true);
-  const [message, setMessage] = useState<string | null>(null);
+  const [banner, setBanner] = useState<{ text: string | null; facts: RawFacts | null }>({
+    text: null,
+    facts: null,
+  });
+  /**
+   * The banner's text and its measured fields are one decision, so they are set by one function: a
+   * sentence from a later step must never stay on screen next to the fields this step read.  The
+   * name is kept as `setMessage`, so the 13 sites that announce something without a reading beside it
+   * continue to mean exactly what they meant and clear the fields on their own.
+   */
+  const message = banner.text;
+  const setMessage = (text: string | null, facts: RawFacts | null = null) =>
+    setBanner({ text, facts });
   /* ORD-0146: the structured-JSON aside and the review queue are siblings, and the sentence the
      aside prints asks for a review the queue has to show.  Bumping this token is how the shell tells
      the queue "the server has a new row" without either component pretending to know the other's
@@ -899,7 +963,8 @@ export function V8Experience() {
     } catch (cause) {
       if (!isAbort(cause)) {
         setMessage(
-          cause instanceof Error ? cause.message : t("shell.loadError"),
+          refusalSentence(cause, locale.startsWith("zh"), t("shell.loadError")),
+          refusalFacts(cause),
         );
       }
     } finally {
@@ -1027,7 +1092,8 @@ export function V8Experience() {
         );
       } else {
         setMessage(
-          error instanceof Error ? error.message : t("shell.loadError"),
+          refusalSentence(error, locale.startsWith("zh"), t("shell.loadError")),
+          refusalFacts(error),
         );
       }
     } finally {
@@ -1560,6 +1626,13 @@ export function V8Experience() {
         {message && (
           <div className="v8-message" role="status">
             {message}
+            {banner.facts && (
+              <RawFactsPanel
+                facts={banner.facts}
+                zh={locale.startsWith("zh")}
+                testId="shell-message-raw-facts"
+              />
+            )}
             <button onClick={() => setMessage(null)}>
               {t("shell.dismiss")}
             </button>

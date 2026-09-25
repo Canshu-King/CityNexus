@@ -12,6 +12,8 @@
 import { useState } from "react";
 import { useLocale } from "../../i18n/LocaleContext";
 import type { PlanVersion } from "../../api/v12Authoritative";
+import { readResponseFacts, type RawFacts } from "../../lib/rawFacts";
+import { RawFactsPanel } from "../../components/RawFactsPanel";
 
 // The generated OpenAPI PlanVersion schema lags the backend, which also emits
 // plan.stale, plan.selectable and per-activity cost_status / metadata. View
@@ -74,7 +76,15 @@ export function PlanComparison({
   const { locale } = useLocale();
   const zh = locale.startsWith("zh");
   const [busyId, setBusyId] = useState<string | null>(null);
-  const [error, setError] = useState<string | null>(null);
+  const [banner, setBanner] = useState<{ text: string | null; facts: RawFacts | null }>({
+    text: null,
+    facts: null,
+  });
+  /** Text and reading are one announcement: a sentence from a later attempt must not stay up beside
+   *  the fields an earlier one measured, so every setError clears the reading unless it passes one. */
+  const error = banner.text;
+  const setError = (text: string | null, facts: RawFacts | null = null) =>
+    setBanner({ text, facts });
 
   const candidates = (plans as PlanVersionView[]).filter(
     (plan) => plan.status === "CANDIDATE" && !plan.stale && plan.selectable !== false,
@@ -90,11 +100,13 @@ export function PlanComparison({
         { method: "POST", headers: { Accept: "application/json" } },
       );
       if (!response.ok) {
-        const body = await response.json().catch(() => null);
+        /* Q64=1: the refusal's own sentence stays out of the DOM.  What this device measured --
+           status, media type, byte count -- goes on screen beside our own wording, so the traveller
+           can still tell "the server said no" from "the server never answered". */
+        const { facts } = await readResponseFacts(response);
         setError(
-          body?.error?.message ??
-            body?.detail ??
-            (zh ? "这个方案暂时不能采用。" : "This plan could not be chosen."),
+          zh ? "这个方案暂时不能采用。" : "This plan could not be chosen.",
+          facts,
         );
         return;
       }
@@ -259,6 +271,13 @@ export function PlanComparison({
         <p className="plan-cmp-error" role="alert" data-testid="plan-cmp-error">
           {error}
         </p>
+      )}
+      {banner.facts && (
+        <RawFactsPanel
+          facts={banner.facts}
+          zh={zh}
+          testId="plan-cmp-raw-facts"
+        />
       )}
     </section>
   );
