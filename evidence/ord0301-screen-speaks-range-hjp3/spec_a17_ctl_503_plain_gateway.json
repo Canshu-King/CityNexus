@@ -1,0 +1,12 @@
+{
+ "write": {
+  "mode": "answer",
+  "status": 503,
+  "content_type": "text/plain; charset=utf-8",
+  "body": "Service Unavailable",
+  "delay_ms": 250
+ },
+ "read": {
+  "mode": "proxy"
+ }
+}
