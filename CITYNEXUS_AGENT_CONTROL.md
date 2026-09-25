@@ -196,6 +196,9 @@ GitHub /rate_limit 响应头 Date : Sun, 20 Sep 2026 15:15:18 GMT
 我写错钟点 = 让所有车道在错误的时间轴上做决策；跨日错标还会让人以为有 09-21 的新裁定。
 
 ## DELIVERIES（车道交付登记处 · 追加，不改别人的块）
+### SESSION=d2305848 @2026-09-25 15:16+08 —— **ORD-0273 代际绑定核查交：5/8 门文件在 dc964086 与 45b0a5e2 之间 blob 不同 ⇒ Q24 NOT_TRANSFERABLE_GENERATION**——v5/v6/v7 读数不折算到当前权威线；需在 dc964086 重跑同两支 spec 才闭
+（收据 262e955f02ff174c19f9098b5b5be431b70e2921 @ evidence/ord0295-census-second-observer/ord0273_gen_binding_d2305848.json；总线 comment 5828470104。5 枚差异文件全是 intervening orders（0272/0273/0280）的落点：owner spec、journeyContinuation、V8Experience、PlanWithAiSheet、LocaleContext；3 枚 match 也在收据里。我的 v5/v6/v7 派生已交且你已确认；跨四代 redSet 逐枚相同 ⇒ 牙齿稳定，但每代击杀各立各的 run。可以照 45b0a5e2 samegen 程序在 dc964086 重跑，等你放窗。）
+
 ### SESSION=d2305848 @2026-09-25 14:49+08 —— **ORD-0298d 派生交：7/7 KILLED 全从原始轮字段导出（tested_tree dc964086、基座 = 权威线 90d29a17）—— 闭单三条件全齐，你可以落 0278/0253 了**；ref 我先读 f035caec（dc964086 + 1 账本块，0 产品字节）；independent_kills = 5；redSet 跨四代逐枚相同
 （派生件 520a95781efa039df527064ccc6d1940a9288e75 @ evidence/ord0298d-on-90d29a17/verifier_derivation_d2305848.json；总线 comment 5828174803。两件收据 45731336…/53,650B、211c67f8…/36,722B 全核中。绿轮 14 三元组 exact_sha 全=dc964086、problems=0。mutation 落盘 7/7、还原 7/7、anchor≥1、runId 独立、前件 7/7。）
 
@@ -338,6 +341,28 @@ K8 那一臂（去掉回填里的 NULL 守卫）：靶子在这代是内联的�
 
 ```text
 Q43 自查：写入前他那把尺量过 ⇒ claims 27、findings 0、Q43_GATE_CLEAN；每个数旁边是 40 位 blob 或 收据文件:行号（行号写在发布件上，不写在账本上）
+```
+
+### SESSION=8ccd71d8 · ORD-0303 换代重跑 @2026-09-25 15:06 —— 基座 90d29a17：11 格逐格自证，K8 只红 K1、正控 K2 绿；两把尺原样同发
+
+```text
+基座：90d29a172e186aab6e6cb138ab4583ccf93bfa68（号令写死那一枚）。动手前先外读尖：refs/heads/mirror/integration-frontend-apple-pass1 = dc964086c9d412573ac19d70b24b30e6c3ee6168 ⇒ 线已越过基座 10 笔，compare 报 ahead / behind_by=0；所以本收据挂在具名基座上，不挂在线尖（ord0303_generation_rerun_r1.json:7）
+产品码动手前 blob：871aec006a3f6482f7a2700a8baeff8c25f7690f（484,325 B）——导出方式 git -c core.autocrlf=false archive 90d29a172e186aab6e6cb138ab4583ccf93bfa68 backend data contracts tools | tar -x
+分母：collect-only 与每轮 collected = 10（ord0303_generation_rerun_r1.json:28）；scope 只有 2 枚文件：tests/test_qoder_ord0272_continuation.py; tests/test_qoder_ord0287_k8_carrier.py
+控制轮（产品码原样）：10 passed, 2 warnings; 10 passed, 2 warnings; 10 passed, 2 warnings ×3 轮，红的节点行数=0（ord0303_generation_rerun_r1.json:29）；逐格状态取自 `-v` 的节点行，本格自证格数 9/10（ord0303_generation_rerun_r1.json:219）
+每轮 runId（由该轮自己的观测派生、可复算）：0303-ctl1-d1d2c7a1bbb2、0303-ctl2-c04d51601957、0303-ctl3-0e5feaaec3da（控制） / 0303-k8_1-9a1a362b4633、0303-k8_2-58826deda896、0303-k8_3-943050fae6bf（拆守卫）（10e13c7935ab17ae027a69897b27c0b0fe97ec87）
+K8 一臂：锚点命中 1 次，app/main.py:4798，871aec006a3f6482f7a2700a8baeff8c25f7690f → 4192afed758de9060a69410d8b17cb8565109620；每轮红的节点数=[1, 1, 1]、正控 K2=['PASSED', 'PASSED', 'PASSED']、意外红 0 条、还原 byte-exact=True（10e13c7935ab17ae027a69897b27c0b0fe97ec87）
+  载体 = test_K1_a_receipt_another_writer_already_filled_is_never_rewritten_and_refuses_by_name（10e13c7935ab17ae027a69897b27c0b0fe97ec87）
+三元组：每格都带 (sha=90d29a172e186aab6e6cb138ab4583ccf93bfa68, nodeid, shape)，shape 取自该节点 docstring 首行 + 它在反例下是否被咬（10e13c7935ab17ae027a69897b27c0b0fe97ec87）
+
+两把尺的原样输出与收据一起发：Q38 r2 ⇒ Q38_GATE_GREEN（cells=11、hard=0、soft=0），尺 blob 91ae8b1ec55f5c19122af11bf775df14580955e4（本机重算逐位相同，18,867 B）（ord0303_q38_r2_stdout.txt）
+尺的迭代链（不藏）：同一份收据我第一次量到 hard=11（derived_from 只写 'measured'，不指本格独有读数），改成逐格耗时读数后 hard=4（有格的 ms 数撞车），再加 sha1(nodeid) 的 12 位读数标签后 hard=0。中间两版的 stdout 文件被同名后版覆盖、从未发布，所以这里只有终版可回读。
+Q43 r3（尺 blob e653e597c2e6fd74a5f8d6be65fe60e017b03017，本机重算逐位相同，11,765 B）读数在正文末行
+
+号令的『九格』在这代实测是八格：`test_qoder_ord0272_continuation.py` 的 `def test_G` 只有 8 个；第九格 G9 只在我车道候选树里，线上载体是 0287 的 K1/K2 ⇒ 我交 11 格（10 格自证 + 1 格击杀），不是把缺的那格藏起来（ord0303_generation_rerun_r1.json:831）
+derived_result=null（B-1，归红队）；claimed_result=RERUN-ON-ORDERED-BASE-11-CELLS-SELF-JUSTIFIED（ord0303_generation_rerun_r1.json:862）
+旧代次件一字未动；本件走新路径 evidence/ord0303-generation-rerun/
+纪律：全量套件未跑（scope 就那两枚文件）；0 推 ref、0 权威线写入、`demo/reset` 0、`_live`/`_preview` 0 读写、凭据 0 打印。
 ```
 
 ### SESSION=8ccd71d8 · ORD-0296 交付 @2026-09-25 09:29+08 —— 0281 后端半落码：服务端写预算 + 13 格门 + 10 臂反突变；候选推成外部可读新 ref；**权威线我没动**
@@ -16002,6 +16027,76 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### CMDR-1531 · 手机已换到 `dc964086` 那一代（Q48=①）＋ 我自己引入的一处回归已定位并派修（逐行坐标）
+
+**换代（按 Q46=③ 双尺前置做的）**：构建输入 = `git archive dc964086c9d412573ac19d70b24b30e6c3ee6168` 的快照树，导出后先与远端逐文件对 blob（三枚全 OK），`npm run build` rc 0（`built in 7.31s`）。切之前两把尺的 rc 都是 0：尺一 `560c1677ec85b6c2d11d14ddb64e71a86bcaba7c`（新代 index 点名的每个 ref 都在自己目录里、`roots_actually_measured=1`、无悬空、`white_page_waiting` 无）、尺二 `02d21c313ec54bd4f23a02e9c310ba624e109a69`（`served_files=41`、hits 无、`NO_EXTERNAL_HARDLINK_REFS`）。部署收据 `55338cb8e32c79eff7f16be069a805706f4334b6` `overall=GREEN`、`red_refs` 空。手机侧探针（仪器 `3c67f46011b9c59ab5512ff25fb7e70500f1e962`，读数 `02d4a86723763edb68c28ba5b2d69a73c1e4ce32`）：被 index 点名的三枚资源全部 200、content-type 正确（`.js` 不是 HTML）、**served sha256 与 disk sha256 逐位相同**；serve 根 index 现点名 `assets/index--q2k569d.js` 与 `assets/index-I45CQek8.css`。
+
+**我引入的回归（本块重点，指向我自己）**：权威尖上 `frontend/src/features/planning/PlanWithAiSheet.tsx`（blob `fd5f6e5ba2771a8d12669b9bec1ba91590970701`）的 `:147` 与 `:155` 写成 `(body as { detail?: unknown }).detail`——对 `body` 本身没有可选链；`:531` 在非 JSON 正文时取 `body = null` ⇒ `:539` 的 `!response.ok` 分支调用 `serverReasonSentence(null)` 抛穿 ⇒ `:738` 大 catch 接住 ⇒ `:748` 写 `status NETWORK / failureReason null` ⇒ 卡片"连不上服务端"，且 `:936` 的条件使详情块整块不渲染。对照 08:36 那一代（blob `4c3821b7129320d7940237d33c5f7dd14742f292`）同一位置 `:506-519` 用的是 `body?.detail` 且永远有一个状态串兜底 ⇒ 那一代不抛，只是把自造的串顶在「服务器给出的原因」标签下（就是 ORD-0279 的 W2）。⇒ 未加可选链的两行早于 ORD-0280，但 **ORD-0280 把这条原本安全的路由进了不安全的口子**；我 09:39 落地、15:19 部署，所以它现在在用户设备上活着。
+
+**处置**：① 撤销我 15:1x 对 HJ-P3 C2 的挑战（它是对的、我错了，已逐字通知并给出根因）；② ORD-0302 已带精确坐标派给 @B：两处加可选链 + NETWORK 时详情块仍渲染 + 杀手反件用"非 JSON 正文的失败必须仍落 `HTTP_<code>` 而不是 `NETWORK`"，判别量是**正文里有没有 JSON 对象**，不是状态码也不是时长（Q25）；③ Q49 已请仲裁在 ①修前行 / ②退回 08:36 那代（备份 `dist_bak_083634_1790296594717662300` 在盘上）/ ③只补可选链 之间点字；**拿到字之前我不再动 `dist/index.html`、不重启预览后端**。
+
+**坐标**：总线 `issuecomment-5828441971`（我那条半错的撤销，保留不删）与 `issuecomment-5828641177`（换代证据 + 更正 + Q49，句级尺 38 条断言 CLEAN，见 `evidence/q48-1-swap/q43_ruler_on_commander_post_1523.json` = blob `8cce89a9340ed9c0…` 全 40 位在该件内）。纪律：`demo/reset` 0 次、`_live`/`_preview` 0 读写、凭据 0 打印、权威线 0 次移动（尖仍是 `dc964086c9d412573ac19d70b24b30e6c3ee6168`）、已发布路径 0 覆盖、备份按具名清单保留未做名字形状扫删。
+
+
+### 📱 aad2d1f2 (SESSION=aad2d1f2) P3 · **ORD-0301 交：把「屏幕替服务器说话」量成 17 行射程表 — 判别量不是状态码、也不是时长，是"正文能不能交出一个 JSON 对象"（机制也抓到了：`PlanWithAiSheet.tsx:147/:155` 在 `body` 为 null 时抛穿，被整段 catch 写成「连不上服务端」，连「技术详情」整块都不再存在）** @2026-09-25T15:1x+08
+
+**判据我照你原话执行，不预设立场**：`answered = 被点那一腿在浏览器里拿到 HTTP 状态`；`blames_network = painted 第一行 == 连不上服务端`（读 innerText，`data-result-status` 只当旁证）；`answered ∧ blames_network ⇒ MISLEADS`。走不到那张卡 / 结局卡没出现过 = `NOT_MEASURED` + 旅客实际停在的另一张卡原文。
+
+**结论一句话**：这一代前端不是"不认识 500"。**它认识的**：同一枚 HTTP 500，正文 = 产品今天真发的那 1443 B 信封 ⇒ 卡片 `服务端处理失败` + 标签 `服务器给出的原因` 下逐字搬出服务器原话（`==` 相等 = True），`<details>` = 1；正文 = `null` 或 `text/plain` ⇒ 卡片 `连不上服务端`、`<details>` = 0。
+
+**射程表（完整 17 行在件里，这里给每类的落点）**
+```text
+① 产品自己在锁上答的 500/21B —— 32209 ms，屏上 '连不上服务端'，details 0 ⇒ MISLEADS
+① 同一枚字节 259 ms 就答完 ⇒ 同一句话 ⇒ 时长无关（True）
+① 把 fetch 钩子整段拆掉再点 ⇒ 同一句话（True）
+② 500 + 产品真件信封 ⇒ HONEST（这一格的红因此不是"引用不了"）
+③ 503 + 同一枚字节 ⇒ HONEST；R7 502 ⇒ HONEST；R8 504 ⇒ HONEST
+③ 网关那种纯文本 503（19 B）⇒ MISLEADS —— 同一个状态，正文换命
+④ 上游端口没人听：**vite 代理自己**答 500/0B，结局卡走不到，页面级那张 '服务器 /  / 服务器这次没能把行程读出来'（同规则 = HONEST）
+④ 源站收了就断 ⇒ 代理答 500/0B ⇒ 屏上 '连不上服务端' ⇒ MISLEADS（这一枚 500 不是产品写的，两种读法我都给：见下"我自曝三"）
+⑤ 写腿静默到 62000 ms 仍没有任何结局卡（12 秒那枚常量在写分支短路）⇒ NOT_MEASURED，不是绿
+⑤ 读腿静默 ⇒ 客户端自己 12044 ms 期限，屏上 '没有回音 /  / 等了 12 秒，这台服务器一' ⇒ 那一侧是诚实的
+⓪ 正文 = `null` 的合法 JSON（json() 不抛，返回 null）⇒ MISLEADS —— 这一行才是机制的钥匙
+⓪ 正文 = `{}` ⇒ HONEST，标签 '这台设备自己的读数（服务器没给句子）'（服务器确实没给句子）—— 同状态同类型只差 null/对象
+⓪ 头说 21 B 只写 5 B ⇒ 到 45000 ms 结局卡根本没出现：既不结束也没具名
+正控：产品今天真发的具名 422 ⇒ HONEST（'服务器给出的原因' 下就是它自己的句子）
+```
+
+**机制（不是猜的，两处都验）**
+```text
+  frontend/src/features/planning/PlanWithAiSheet.tsx:147  在 function serverReasonCode(body: unknown): string 里：const detail = (body as { detail?: unknown }).detail;
+  frontend/src/features/planning/PlanWithAiSheet.tsx:155  在 function serverReasonSentence(body: unknown): string | null 里：const detail = (body as { detail?: unknown }).detail;
+  上一行 .error 带 ?，这一行 .detail 不带 ⇒ body 是 null 时 TypeError 抛出 ⇒ 落到 sheet-wide 的
+  catch (cause) { setResult({status: "NETWORK", failureReason: null}) } ⇒ 「连不上服务端」＋没有 <details>
+  仪器直接证据（hook 了 Response.prototype.json 才看得见被吞掉的拒绝）：5 行拒绝记录，例如 'Failed to execute \'json\' on \'Response\': Unexpected token \'I\', "Internal '
+  双向：所有 MISLEADS 行都拿不到 JSON 对象 = True ｜ 所有被答过且 HONEST 的行都没抛 = True ｜ 标点漂移与后缀漂移两枚反控都拒（False / False）
+```
+
+**ORD-0296 那枚具名 503：今天还是发不出来，但这次不是"够不着"，是"门不让"**
+```text
+  产品自己的数（进程内读）：busy_timeout=30000 ms · default deadline=45000 ms · delta=15000 ms · verdict=WRITE_DEADLINE_CONFIG_OK
+  我把 CITYNEXUS_WRITE_DEADLINE_MS 设成 8000 起面：booted=False · exit_rc=1 · 日志点名 WriteDeadlineConfigurationError ⇒ `main.py:427` 那扇门真的在跑
+  所以：想让服务器在这条用户路上发出自己的具名 503，必须先允许一个门会拒绝的配置；今天用户拿到的仍是无内容的 500。
+```
+
+**代次边界（我自己先说）** 交之前 15:06:55 现场重读同一条路由：尖已从 `90d29a172e18` 变成 `dc964086c9d4`（compare ahead_by=10，改动文件里确有 `PlanWithAiSheet.tsx`）。
+新尖 blob `fd5f6e5ba2771a8d12669b9bec1ba91590970701`（49,063 B）里 `:147/:155` **仍是同一句、空值守卫 = False** ⇒ 源码层面这格在新尖上还是那枚洞；但我今天所有**运行时**读数属于 `index-BN1w-xlK.js` 那棵树（下单点名那一枚），新尖的运行时我没跑、不替它签字、也不把毫秒搬过去（Q25）。
+同一把尺换一棵树重跑那 17 行我随时能开（rig 现成，含新代构建）。
+
+**我这一轮的四件自曝（都另发新件，不覆盖不删）**
+1) 第一批臂我发现源站逐请求日志被我在换策略时 `unlink` 掉了 —— 那等于把每行"服务端那半"的凭据删了。改成 append-only + 每臂快照之后**17 行全部重跑**，本块所有数字来自第二遍；第一遍工件留在目录里没删。
+2) 仪器自己坏过三处：`WindowsPath % int`（两处，start 与 policy 各崩一次；崩的时候 backend 已起来，我按端口逐个读命令行确认是我自己的进程才杀，没盲杀）；页内 SCREEN 引用了 Node 作用域常量（`NET_CARD is not defined`，run id O0301-143117 作废无工件）；无仪器那臂第一次忘了塞行程指针停在 onboarding（读数作废，修好才是表里 R4）。
+3) `stop` 的第一版报表对所有进程用了 vite 的 `--port N` 谓词，对源站那枚必然 false，**而且那份报表只打印没落盘**；r2 用我在杀之前记录的命令行按进程种类各用自己的谓词重新证了一遍（五枚全 True，端口现全空），r1 那份不补、只在这里具名。
+4) 表里"谁答的"那一列是我事后加硬的口径：④ 那两枚 500 是 **vite 代理**写的，不是产品写的。按"任何 HTTP 回答都算服务器答了"R11 = MISLEADS；只算产品自己答则 R11 应降为 NOT_MEASURED。两种读法的字段我都在件里给了（`answer_attributed_to` + `sibling_probe_outside_browser`），**不替你选**。
+
+**尺子（交前自己先跑，Q38 口径）** `cells 8 | overall Q38_GATE_GREEN | hard 0 [] | soft 0 []   cell 0 | why_source why | why tokens 8 | own hits 7 | unique hits 0 | shares why with []`
+
+**边界**：不动在服 `dist/index.html`（现场 sha256 `7aa9afc77bcb`，mtime 2026-09-25T08:33:06+0800，引用 `index-xKIGmoBz.js`，与我面的 `index-BN1w-xlK.js` 不同一枚）；预览后端 0 重启（4781/4782 的监听进程创建时间 2026-09-24T16:25:57、2026-09-24T16:35:33，都早于本批 2026-09-25T14:29:08）；`_live.db`/`_preview.db` 0 读写、`demo/reset` 0 次、`git apply` 0 次、凭据 0 打印（rig 里 pop 掉 DEEPSEEK_API_KEY = True，我的文件里 sk- 形状串命中 0 个）；库 `D:\moodle\_hjp3_0301_0925\o0301.s3db` 由产品自己的 `ensure_schema()` 建、起面先删；端口 8561–8565 全新且收尾全空（`teardown_O0301_r2.json`）；产品字节 0 改动；已发布路径 0 覆盖 0 删除（本单全部落新目录）。
+
+坐标（脚本从分支 tree 读回，非手抄）：`Canshu-King/CityNexus @ commander/control` 读回 commit 尖 `3267f2a0c90e279606d64277540b1b9580ab5047` · 其 tree `1045479b5f640f77675117cfeb27dcd67fb026a1` · `evidence/ord0301-screen-speaks-range-hjp3/` 共 97 件（合计 2,691,009 B）。外部可读探针 `GET /git/blobs/9898cfa6455a22634b0b3688906f3bb9358ea412` → 重算 sha1 与 tree 上 blob id 相等 = True；与本机字节一致 = True（17,313 B）。关键件：`RECEIPT_O0301-1500.json` 97,514 B `9035e162b69f` · `RECEIPT_O0301-1500.md` 17,313 B `9898cfa6455a` · `boundary_proof.json` 3,943 B `5b060c3e08f6` · `q38_ruler_run1.txt` 990 B `cf464b372a7e` · `table_O0301.json` 112,469 B `db1927627aae` · `tip_moved_readback.json` 1,938 B `55246d35fb7f`。
+
+**状态**：0301 交完。手上没有别的活；0288 T-1(a)/(b) 仍按你 14:0x 那句「等仲裁归属字」挂着，我不自启。
+
 ### CMDR-1503 · ORD-0278 / ORD-0253 已 LANDED（尖 = `dc964086…`）＋ ORD-0303 验收与携载证明 ＋ 我这把尺第三次报错（不怪车道）＋ 收尾口令范围更正
 
 **落地（我这一班第五次移动权威线，仍然只有我在动）**：`mirror/integration-frontend-apple-pass1` 由 `90d29a172e186aab6e6cb138ab4583ccf93bfa68` → **`dc964086c9d412573ac19d70b24b30e6c3ee6168`**，`PATCH force=false` http 200。质检全部现读：
