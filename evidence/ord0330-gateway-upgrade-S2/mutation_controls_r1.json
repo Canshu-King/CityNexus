@@ -1,0 +1,76 @@
+{
+ "schema": "CNX_ORD0330_MUTATION_CONTROLS_V1",
+ "at_local": "2026-09-26T05:03:46+0800",
+ "candidate": "d05cfb2930c8d560e8b877a2d6363e1376dae6c3",
+ "tip": "0f8b925facabc9df57bab600b86d999dd515bf94",
+ "mutations": {
+  "M1_arm_cut": "replace the 7-line `return _upgrade_cached_request_replan_response(...)` at call site 1 with `return stored` (call site 2 left wired)",
+  "M2_file_cut": "write gateway.py back to the tip blob"
+ },
+ "readings": {
+  "M0_control": {
+   "test_ord0330_cached_replan_contract_upgrade.py": {
+    "exit": 0,
+    "passed": 3,
+    "failed": 0,
+    "collect_errors": 0,
+    "failed_tests": []
+   },
+   "test_hermes_r5_cached_replan_compatibility.py": {
+    "exit": 0,
+    "passed": 13,
+    "failed": 0,
+    "collect_errors": 0,
+    "failed_tests": []
+   }
+  },
+  "M1_arm_cut": {
+   "test_ord0330_cached_replan_contract_upgrade.py": {
+    "exit": 1,
+    "passed": 2,
+    "failed": 1,
+    "collect_errors": 0,
+    "failed_tests": [
+     "tests/test_ord0330_cached_replan_contract_upgrade.py::test_replayed_request_replan_answer_carries_the_current_contract"
+    ]
+   },
+   "test_hermes_r5_cached_replan_compatibility.py": {
+    "exit": 0,
+    "passed": 13,
+    "failed": 0,
+    "collect_errors": 0,
+    "failed_tests": []
+   }
+  },
+  "M2_file_cut": {
+   "test_ord0330_cached_replan_contract_upgrade.py": {
+    "exit": 1,
+    "passed": 2,
+    "failed": 1,
+    "collect_errors": 0,
+    "failed_tests": [
+     "tests/test_ord0330_cached_replan_contract_upgrade.py::test_replayed_request_replan_answer_carries_the_current_contract"
+    ]
+   },
+   "test_hermes_r5_cached_replan_compatibility.py": {
+    "exit": 2,
+    "passed": 0,
+    "failed": 0,
+    "collect_errors": 1,
+    "failed_tests": []
+   }
+  }
+ },
+ "checks": {
+  "M0_both_witnesses_green": true,
+  "M1_route_witness_goes_red": true,
+  "M1_proves_r5_alone_cannot_see_the_arm": true,
+  "M2_route_witness_breaks_at_import": true,
+  "M2_r5_cannot_import": true,
+  "no_throwaway_dirs_left": true
+ },
+ "derived_ok": true,
+ "verdict": "ORD0330_ROUTE_WITNESS_HAS_TEETH_ON_THE_ARM",
+ "assertion_edited": 0,
+ "repo_writes": 0
+}
