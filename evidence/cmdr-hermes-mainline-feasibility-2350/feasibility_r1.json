@@ -1,0 +1,126 @@
+{
+ "schema": "CNX_CMDR_HERMES_MAINLINE_FEASIBILITY_V1",
+ "lane": "commander 494abfd7",
+ "at_local": "2026-09-25T23:50:36+0800",
+ "measurement_scope": {
+  "scope": "can the Hermes (R4-R25) line join the authoritative mainline, and at what cost",
+  "generation": "2344145ce634 (authoritative tip) vs 0fe51945cdf2 (hermes/validation-0212 head)",
+  "artifact": "this receipt; the pytest run it reports is from _cmdr_hermes_probe_2345 (git archive of the tip + copied harness files)",
+  "measurement_method": "git rev-list / merge-base / merge-tree / ls-tree / diff-tree + one real pytest run with the project venv"
+ },
+ "genealogy": {
+  "merge_base": "7d22cd0eb7840121ba42a5ba363e1a4c7ca1a7e7",
+  "hermes_commits_since_base": 94,
+  "tip_commits_since_base": 373,
+  "ff_possible": false,
+  "merge_tree_exit": 1,
+  "merge_tree_conflict_entries": 102,
+  "reading": "the branch is not behind, it is a parallel history: 94 of its own commits against 373 on the line, and a three-way merge predicts 102 conflict entries. 'Merge the branch' is therefore not an option anyone should try."
+ },
+ "already_on_both_sides": {
+  "backend/app/agent files on tip": 17,
+  "backend/app/agent files on hermes": 17,
+  "same file set": true,
+  "reading": "the agent runtime modules the Hermes line depends on are already mainline code, which is why most of the harness runs unchanged."
+ },
+ "hermes_named_files_on_branch": {
+  "total": 135,
+  "harness_only_paths": 115,
+  "groups": {
+   "scripts": 67,
+   "backend/tests": 22,
+   "reports": 25,
+   "other": 21
+  }
+ },
+ "product_symbol_gaps": [
+  {
+   "symbol": "_upgrade_cached_request_replan_response",
+   "where_needed": "backend/tests/test_hermes_r5_cached_replan_compatibility.py",
+   "on_tip": false,
+   "on_hermes": false,
+   "tip_definitions": [
+    "",
+    "AgentToolGateway"
+   ],
+   "hermes_definitions": [
+    "",
+    "AgentToolGateway"
+   ]
+  },
+  {
+   "symbol": "HermesReplanProposalView",
+   "where_needed": "backend/tests/test_v18_hermes_r20_transport_reliability_probe.py",
+   "on_tip": false,
+   "on_hermes": true,
+   "tip_definitions": [
+    "MCPToolCall",
+    "MCPToolDescriptor"
+   ],
+   "hermes_definitions": [
+    "HermesReplanProposalView",
+    "MCPToolCall",
+    "MCPToolDescriptor"
+   ]
+  }
+ ],
+ "imported_fix_commit": {
+  "sha": "bf57924d8e5e2142d8f94b2d1b3bde51751191f7",
+  "subject": "fix Hermes concurrent request replan idempotency",
+  "files": [
+   "backend/app/agent/gateway.py",
+   "backend/app/main.py",
+   "backend/tests/test_v18_hermes_r24_concurrent_request_replan_probe.py",
+   "reports/hermes/HERMES_R24_SCENARIO.md",
+   "scripts/build_hermes_r24_review_package.py",
+   "scripts/hermes_r24_concurrent_request_replan_probe.py",
+   "scripts/validate_hermes_r24_review.py"
+  ],
+  "product_files": [
+   "backend/app/agent/gateway.py",
+   "backend/app/main.py"
+  ],
+  "reading": "this is the only real product delta I found that Hermes needs: 2 product files, one of them backend/app/main.py. main.py has moved a lot tonight (ORD-0281/0310 landed), so this must be re-derived on the tip, not cherry-picked."
+ },
+ "harness_run_against_current_tip": {
+  "command": "pytest -q <20 model-independent tests/test_*hermes*.py> with PYTHONPATH=<export root>",
+  "venv": "D:/moodle/CityNexus/.venv/Scripts/python.exe",
+  "passed": 53,
+  "collection_errors": 2,
+  "error_modules": [
+   "tests/test_hermes_r5_cached_replan_compatibility.py",
+   "tests/test_v18_hermes_r20_transport_reliability_probe.py"
+  ],
+  "collect_only_with_all_22_files": "58 collected / 2 collection errors (the same two symbols)",
+  "reading": "53 of the harness tests already pass on tonight's tip; the only blockers are the two symbols above, and both are import-time, not behavioural."
+ },
+ "model_dependent_rounds": {
+  "files": 36,
+  "why_blocked": "they call a real DeepSeek/Hermes model, and every AI reading is provisional until the leaked key is rotated (arbiter's standing era-rule). Cost + validity both say: not tonight.",
+  "counted_by": "grep of the hermes scripts/tests for deepseek|real_model|api_key|OPENAI"
+ },
+ "checkpoint_package_verified": {
+  "path": "C:/Users/仓鼠王/Downloads/CityNexus-Hermes-R23-Unguided-Response-Loss-External-Review-20250925.zip",
+  "bytes": 211104,
+  "sha256_measured": "DA9E1AB239989EBA13E72BF0A71BA81ABCEE6702B9323475C7333CDCEDB12099",
+  "matches_transcript_claim": true
+ },
+ "recommendation": {
+  "group_A_harness_port": "port scripts/ + backend/tests/test_*hermes* + reports/hermes onto the tip as a candidate branch with 0 product bytes; that alone puts 53 passing harness tests on the mainline and makes R21-R25 repeatable.",
+  "group_B_product_symbols": "two symbols only (_upgrade_cached_request_replan_response, HermesReplanProposalView) + the 2-file delta of bf57924d8e. Needs its own order, must be re-derived on the current main.py, and closure belongs to the red team (B-1).",
+  "group_C_model_rounds": "R6/R9/R10/R23/R25-class runs wait for the key rotation (P0, user action).",
+  "not_recommended": "merging or rebasing hermes/validation-0212: 102 conflict entries, and the useful product surface is already on the line."
+ },
+ "discipline": {
+  "product_bytes_changed_by_me": 0,
+  "refs_pushed": 0,
+  "authoritative_branch_moved": 0,
+  "user_dbs_touched": 0,
+  "demo_reset": 0,
+  "credentials_printed": 0,
+  "model_calls_made": 0
+ },
+ "claim_kind": "git_and_pytest_determined",
+ "claimed_result": "parallel history: 94 commits on the Hermes side, 373 on the line, merge-base 7d22cd0eb7, merge-tree exit 1 with 102 conflict entries; backend/app/agent is already identical as a file set (17 files each side); 115 of the Hermes-named files are harness-only; running the 20 model-independent Hermes test files against an export of the tip gives 53 passed / 2 collection errors, both errors naming exactly 2 missing product symbols (_upgrade_cached_request_replan_response, HermesReplanProposalView); the only product delta needed is bf57924d8e (2 product files incl. backend/app/main.py); R23 zip sha256 verified against the transcript claim: match",
+ "derived_result": null
+}
