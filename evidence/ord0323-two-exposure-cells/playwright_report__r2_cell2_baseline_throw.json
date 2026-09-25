@@ -1,0 +1,893 @@
+{
+  "config": {
+    "argv": [
+      "C:\\Program Files\\nodejs\\node.exe",
+      "D:\\moodle\\_qoder_b_lane_20260923\\frontend\\node_modules\\@playwright\\test\\cli.js",
+      "test",
+      "-c",
+      "playwright.config.ts",
+      "e2e/qoder-ord0323-two-exposure-cells.spec.ts",
+      "--reporter=json"
+    ],
+    "configFile": "D:\\moodle\\_qoder_b_lane_20260923\\frontend\\playwright.config.ts",
+    "rootDir": "D:/moodle/_qoder_b_lane_20260923/frontend/e2e",
+    "failOnFlakyTests": false,
+    "forbidOnly": false,
+    "fullyParallel": false,
+    "globalSetup": "D:\\moodle\\_qoder_b_lane_20260923\\frontend\\e2e\\_qoderAuthoritativeSetup.ts",
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "actualWorkers": 1
+    },
+    "preserveOutput": "always",
+    "projects": [
+      {
+        "outputDir": "D:/moodle/_qoder_b_lane_20260923/frontend/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "real-seed",
+        "name": "real-seed",
+        "testDir": "D:/moodle/_qoder_b_lane_20260923/frontend/e2e",
+        "testIgnore": [
+          "/[\\\\/]e2e[\\\\/]legacy[\\\\/]/"
+        ],
+        "testMatch": [
+          "/_qoderRealSeed\\.setup\\.ts/"
+        ],
+        "timeout": 60000
+      },
+      {
+        "outputDir": "D:/moodle/_qoder_b_lane_20260923/frontend/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "chromium",
+        "name": "chromium",
+        "testDir": "D:/moodle/_qoder_b_lane_20260923/frontend/e2e",
+        "testIgnore": [
+          "/[\\\\/]e2e[\\\\/]legacy[\\\\/]/"
+        ],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 60000
+      }
+    ],
+    "quiet": false,
+    "reporter": [
+      [
+        "json"
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "shard": null,
+    "tags": [],
+    "updateSnapshots": "missing",
+    "updateSourceMethod": "patch",
+    "version": "1.63.0",
+    "workers": 1,
+    "webServer": null
+  },
+  "suites": [
+    {
+      "title": "_qoderRealSeed.setup.ts",
+      "file": "_qoderRealSeed.setup.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "seed a real journey through the product API",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "real-seed",
+              "projectName": "real-seed",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 4842,
+                  "errors": [],
+                  "stdout": [
+                    {
+                      "text": "[qoder-real-seed] journey=7c36b4b6-265f-4e3b-a7b9-6eda167a3029 options=4 chosen=b9225c50-fdb1-47f6-a776-8cbe3662c0da (Haihe Riverside Hotel)\n"
+                    },
+                    {
+                      "text": "[qoder-real-seed] trialWizard=false live-journey-current=true\n"
+                    }
+                  ],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-09-25T22:41:03.481Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "e5b963f3c8f6099f74d0-d425156f0efa8e024368",
+          "file": "_qoderRealSeed.setup.ts",
+          "line": 110,
+          "column": 1
+        }
+      ]
+    },
+    {
+      "title": "qoder-ord0323-two-exposure-cells.spec.ts",
+      "file": "qoder-ord0323-two-exposure-cells.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "N1_boundary_panel_keeps_its_own_readings_and_drops_the_failure_prose — 边界自己量的字段还在，失败原文与组件帧不在屏上",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 300000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1430,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-09-25T22:41:08.823Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "10b2d8883c0bec666957-23d909069f0d27801731",
+          "file": "qoder-ord0323-two-exposure-cells.spec.ts",
+          "line": 119,
+          "column": 1
+        },
+        {
+          "title": "N2_rejected_readings_render_their_own_status_and_content_type_not_the_reply_s_sentence — 顶回来的两条读数各自还在，回复原话不在屏上",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 300000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "failed",
+                  "duration": 637,
+                  "error": {
+                    "message": "Error: e2e/qoder-ord0323-two-exposure-cells.spec.ts :: N2 — the memory slot no longer states the status this device measured (memory_forbidden_token_9f3c the traveller's own words were refused)\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32mtrue\u001b[39m\nReceived: \u001b[31mfalse\u001b[39m",
+                    "stack": "Error: e2e/qoder-ord0323-two-exposure-cells.spec.ts :: N2 — the memory slot no longer states the status this device measured (memory_forbidden_token_9f3c the traveller's own words were refused)\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32mtrue\u001b[39m\nReceived: \u001b[31mfalse\u001b[39m\n    at D:\\moodle\\_qoder_b_lane_20260923\\frontend\\e2e\\qoder-ord0323-two-exposure-cells.spec.ts:270:5",
+                    "location": {
+                      "file": "D:\\moodle\\_qoder_b_lane_20260923\\frontend\\e2e\\qoder-ord0323-two-exposure-cells.spec.ts",
+                      "column": 5,
+                      "line": 270
+                    },
+                    "snippet": "\u001b[0m \u001b[90m 268 |\u001b[39m     messageText\u001b[33m.\u001b[39mincludes(\u001b[32m\"500\"\u001b[39m)\u001b[33m,\u001b[39m\n \u001b[90m 269 |\u001b[39m     node(arm\u001b[33m,\u001b[39m \u001b[32m`the memory slot no longer states the status this device measured (${messageText})`\u001b[39m)\u001b[33m,\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 270 |\u001b[39m   )\u001b[33m.\u001b[39mtoBe(\u001b[36mtrue\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m     |\u001b[39m     \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 271 |\u001b[39m   expect(\n \u001b[90m 272 |\u001b[39m     \u001b[35m/Cannot read|Unexpected token|JSON|is not valid JSON/\u001b[39m\u001b[33m.\u001b[39mtest(messageText)\u001b[33m,\u001b[39m\n \u001b[90m 273 |\u001b[39m     node(arm\u001b[33m,\u001b[39m \u001b[32m`the status line is showing parser or engine prose instead of the channel's own sentence (${messageText})`\u001b[39m)\u001b[33m,\u001b[39m\u001b[0m"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "D:\\moodle\\_qoder_b_lane_20260923\\frontend\\e2e\\qoder-ord0323-two-exposure-cells.spec.ts",
+                        "column": 5,
+                        "line": 270
+                      },
+                      "message": "Error: e2e/qoder-ord0323-two-exposure-cells.spec.ts :: N2 — the memory slot no longer states the status this device measured (memory_forbidden_token_9f3c the traveller's own words were refused)\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32mtrue\u001b[39m\nReceived: \u001b[31mfalse\u001b[39m\n\n  268 |     messageText.includes(\"500\"),\n  269 |     node(arm, `the memory slot no longer states the status this device measured (${messageText})`),\n> 270 |   ).toBe(true);\n      |     ^\n  271 |   expect(\n  272 |     /Cannot read|Unexpected token|JSON|is not valid JSON/.test(messageText),\n  273 |     node(arm, `the status line is showing parser or engine prose instead of the channel's own sentence (${messageText})`),\n    at D:\\moodle\\_qoder_b_lane_20260923\\frontend\\e2e\\qoder-ord0323-two-exposure-cells.spec.ts:270:5"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-09-25T22:41:10.371Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "D:\\moodle\\_qoder_b_lane_20260923\\frontend\\test-results\\qoder-ord0323-two-exposure-f0e4c-nce-—-顶回来的两条读数各自还在，回复原话不在屏上-chromium\\error-context.md"
+                    }
+                  ],
+                  "errorLocation": {
+                    "file": "D:\\moodle\\_qoder_b_lane_20260923\\frontend\\e2e\\qoder-ord0323-two-exposure-cells.spec.ts",
+                    "column": 5,
+                    "line": 270
+                  }
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "10b2d8883c0bec666957-e9b970889ed65a93377e",
+          "file": "qoder-ord0323-two-exposure-cells.spec.ts",
+          "line": 220,
+          "column": 1
+        },
+        {
+          "title": "N3_confirm_fold_carries_the_attempt_reading_not_the_attempt_s_words — 确认那一折带着这台设备的读数，不带回复的原话",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 300000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 2,
+                  "parallelIndex": 0,
+                  "status": "failed",
+                  "duration": 1169,
+                  "error": {
+                    "message": "Error: e2e/qoder-ord0323-two-exposure-cells.spec.ts :: N3 — the confirmation fold no longer states what this device measured about the attempt (技术详情confirm_forbidden_token_c258 the commitment was rejected)\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32mtrue\u001b[39m\nReceived: \u001b[31mfalse\u001b[39m",
+                    "stack": "Error: e2e/qoder-ord0323-two-exposure-cells.spec.ts :: N3 — the confirmation fold no longer states what this device measured about the attempt (技术详情confirm_forbidden_token_c258 the commitment was rejected)\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32mtrue\u001b[39m\nReceived: \u001b[31mfalse\u001b[39m\n    at D:\\moodle\\_qoder_b_lane_20260923\\frontend\\e2e\\qoder-ord0323-two-exposure-cells.spec.ts:373:5",
+                    "location": {
+                      "file": "D:\\moodle\\_qoder_b_lane_20260923\\frontend\\e2e\\qoder-ord0323-two-exposure-cells.spec.ts",
+                      "column": 5,
+                      "line": 373
+                    },
+                    "snippet": "\u001b[0m \u001b[90m 371 |\u001b[39m     detailText\u001b[33m.\u001b[39mincludes(\u001b[32m\"500\"\u001b[39m) \u001b[33m&&\u001b[39m detailText\u001b[33m.\u001b[39mincludes(\u001b[32m\"application/json\"\u001b[39m)\u001b[33m,\u001b[39m\n \u001b[90m 372 |\u001b[39m     node(arm\u001b[33m,\u001b[39m \u001b[32m`the confirmation fold no longer states what this device measured about the attempt (${detailText})`\u001b[39m)\u001b[33m,\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 373 |\u001b[39m   )\u001b[33m.\u001b[39mtoBe(\u001b[36mtrue\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m     |\u001b[39m     \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 374 |\u001b[39m   expect(\n \u001b[90m 375 |\u001b[39m     codeText\u001b[33m.\u001b[39mincludes(\u001b[32m\"500\"\u001b[39m)\u001b[33m,\u001b[39m\n \u001b[90m 376 |\u001b[39m     node(arm\u001b[33m,\u001b[39m \u001b[32m`the reading is in the fold but not on the screen once it is opened (${codeText})`\u001b[39m)\u001b[33m,\u001b[39m\u001b[0m"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "D:\\moodle\\_qoder_b_lane_20260923\\frontend\\e2e\\qoder-ord0323-two-exposure-cells.spec.ts",
+                        "column": 5,
+                        "line": 373
+                      },
+                      "message": "Error: e2e/qoder-ord0323-two-exposure-cells.spec.ts :: N3 — the confirmation fold no longer states what this device measured about the attempt (技术详情confirm_forbidden_token_c258 the commitment was rejected)\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32mtrue\u001b[39m\nReceived: \u001b[31mfalse\u001b[39m\n\n  371 |     detailText.includes(\"500\") && detailText.includes(\"application/json\"),\n  372 |     node(arm, `the confirmation fold no longer states what this device measured about the attempt (${detailText})`),\n> 373 |   ).toBe(true);\n      |     ^\n  374 |   expect(\n  375 |     codeText.includes(\"500\"),\n  376 |     node(arm, `the reading is in the fold but not on the screen once it is opened (${codeText})`),\n    at D:\\moodle\\_qoder_b_lane_20260923\\frontend\\e2e\\qoder-ord0323-two-exposure-cells.spec.ts:373:5"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-09-25T22:41:11.398Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "D:\\moodle\\_qoder_b_lane_20260923\\frontend\\test-results\\qoder-ord0323-two-exposure-3c743-ds-—-确认那一折带着这台设备的读数，不带回复的原话-chromium\\error-context.md"
+                    }
+                  ],
+                  "errorLocation": {
+                    "file": "D:\\moodle\\_qoder_b_lane_20260923\\frontend\\e2e\\qoder-ord0323-two-exposure-cells.spec.ts",
+                    "column": 5,
+                    "line": 373
+                  }
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "10b2d8883c0bec666957-7b32271c01e9f8430b42",
+          "file": "qoder-ord0323-two-exposure-cells.spec.ts",
+          "line": 305,
+          "column": 1
+        },
+        {
+          "title": "N6_Q68a_a_server_code_still_reaches_the_code_slot — 编号那格：服务器真给了编号时，编号还在屏上",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 300000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 3,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1012,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-09-25T22:41:13.047Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "10b2d8883c0bec666957-f7e992ac16cf1f04accb",
+          "file": "qoder-ord0323-two-exposure-cells.spec.ts",
+          "line": 532,
+          "column": 1
+        },
+        {
+          "title": "N6_Q68b_a_sentence_only_refusal_is_not_presentation_as_a_code — 编号那格：只有句子时，编号位上不许出现句子，句子归技术详情",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 300000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 3,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1016,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-09-25T22:41:14.164Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "10b2d8883c0bec666957-b10b825c92a72b78c984",
+          "file": "qoder-ord0323-two-exposure-cells.spec.ts",
+          "line": 554,
+          "column": 1
+        },
+        {
+          "title": "N4_T06_a_refused_POST_leaves_no_reply_words_and_keeps_its_own_reading — T06：自己那句原话不在屏上，自己那次读数还在屏上",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 120000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 3,
+                  "parallelIndex": 0,
+                  "status": "failed",
+                  "duration": 1129,
+                  "error": {
+                    "message": "Error: e2e/qoder-ord0323-two-exposure-cells.spec.ts :: T06 — T06: a reply's own words are on the screen ([\"T06\"]); the slot reads \"import_forbidden_leg_t06\"\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // deep equality\u001b[22m\n\n\u001b[32m- Expected  - 1\u001b[39m\n\u001b[31m+ Received  + 3\u001b[39m\n\n\u001b[32m- Array []\u001b[39m\n\u001b[31m+ Array [\u001b[39m\n\u001b[31m+   \"T06\",\u001b[39m\n\u001b[31m+ ]\u001b[39m",
+                    "stack": "Error: e2e/qoder-ord0323-two-exposure-cells.spec.ts :: T06 — T06: a reply's own words are on the screen ([\"T06\"]); the slot reads \"import_forbidden_leg_t06\"\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // deep equality\u001b[22m\n\n\u001b[32m- Expected  - 1\u001b[39m\n\u001b[31m+ Received  + 3\u001b[39m\n\n\u001b[32m- Array []\u001b[39m\n\u001b[31m+ Array [\u001b[39m\n\u001b[31m+   \"T06\",\u001b[39m\n\u001b[31m+ ]\u001b[39m\n    at D:\\moodle\\_qoder_b_lane_20260923\\frontend\\e2e\\qoder-ord0323-two-exposure-cells.spec.ts:674:137",
+                    "location": {
+                      "file": "D:\\moodle\\_qoder_b_lane_20260923\\frontend\\e2e\\qoder-ord0323-two-exposure-cells.spec.ts",
+                      "column": 137,
+                      "line": 674
+                    },
+                    "snippet": "\u001b[0m \u001b[90m 672 |\u001b[39m       internal_token_on_screen\u001b[33m:\u001b[39m \u001b[35m/inbox request rejected/i\u001b[39m\u001b[33m.\u001b[39mtest(text)\u001b[33m,\u001b[39m\n \u001b[90m 673 |\u001b[39m     }\u001b[33m;\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 674 |\u001b[39m     expect(found\u001b[33m,\u001b[39m node(arm\u001b[33m,\u001b[39m \u001b[32m`${leg.cell}: a reply's own words are on the screen (${JSON.stringify(found)}); the slot reads \"${text}\"`\u001b[39m))\u001b[33m.\u001b[39mtoEqual([])\u001b[33m;\u001b[39m\n \u001b[90m     |\u001b[39m                                                                                                                                         \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 675 |\u001b[39m     expect(foundInAttrs\u001b[33m,\u001b[39m node(arm\u001b[33m,\u001b[39m \u001b[32m`${leg.cell}: Q71 counts an attribute as the screen -- a reply's words sit in a data / aria value (${JSON.stringify(foundInAttrs)} of ${String(dom.attr_pairs)} pairs swept)`\u001b[39m))\u001b[33m.\u001b[39mtoEqual([])\u001b[33m;\u001b[39m\n \u001b[90m 676 |\u001b[39m     expect(text\u001b[33m.\u001b[39mincludes(\u001b[33mString\u001b[39m(leg\u001b[33m.\u001b[39mstatus))\u001b[33m,\u001b[39m\n \u001b[90m 677 |\u001b[39m       node(arm\u001b[33m,\u001b[39m \u001b[32m`${leg.cell}: the slot no longer states the status this device measured for THIS request (${text})`\u001b[39m))\u001b[33m.\u001b[39mtoBe(\u001b[36mtrue\u001b[39m)\u001b[33m;\u001b[39m\u001b[0m"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "D:\\moodle\\_qoder_b_lane_20260923\\frontend\\e2e\\qoder-ord0323-two-exposure-cells.spec.ts",
+                        "column": 137,
+                        "line": 674
+                      },
+                      "message": "Error: e2e/qoder-ord0323-two-exposure-cells.spec.ts :: T06 — T06: a reply's own words are on the screen ([\"T06\"]); the slot reads \"import_forbidden_leg_t06\"\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // deep equality\u001b[22m\n\n\u001b[32m- Expected  - 1\u001b[39m\n\u001b[31m+ Received  + 3\u001b[39m\n\n\u001b[32m- Array []\u001b[39m\n\u001b[31m+ Array [\u001b[39m\n\u001b[31m+   \"T06\",\u001b[39m\n\u001b[31m+ ]\u001b[39m\n\n  672 |       internal_token_on_screen: /inbox request rejected/i.test(text),\n  673 |     };\n> 674 |     expect(found, node(arm, `${leg.cell}: a reply's own words are on the screen (${JSON.stringify(found)}); the slot reads \"${text}\"`)).toEqual([]);\n      |                                                                                                                                         ^\n  675 |     expect(foundInAttrs, node(arm, `${leg.cell}: Q71 counts an attribute as the screen -- a reply's words sit in a data / aria value (${JSON.stringify(foundInAttrs)} of ${String(dom.attr_pairs)} pairs swept)`)).toEqual([]);\n  676 |     expect(text.includes(String(leg.status)),\n  677 |       node(arm, `${leg.cell}: the slot no longer states the status this device measured for THIS request (${text})`)).toBe(true);\n    at D:\\moodle\\_qoder_b_lane_20260923\\frontend\\e2e\\qoder-ord0323-two-exposure-cells.spec.ts:674:137"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-09-25T22:41:15.188Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "D:\\moodle\\_qoder_b_lane_20260923\\frontend\\test-results\\qoder-ord0323-two-exposure-3d69b-—-T06：自己那句原话不在屏上，自己那次读数还在屏上-chromium\\error-context.md"
+                    }
+                  ],
+                  "errorLocation": {
+                    "file": "D:\\moodle\\_qoder_b_lane_20260923\\frontend\\e2e\\qoder-ord0323-two-exposure-cells.spec.ts",
+                    "column": 137,
+                    "line": 674
+                  }
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "10b2d8883c0bec666957-8bf96ef88f6ef91740fe",
+          "file": "qoder-ord0323-two-exposure-cells.spec.ts",
+          "line": 599,
+          "column": 3
+        },
+        {
+          "title": "N4_T07_a_refused_GET_leaves_no_reply_words_and_keeps_its_own_reading — T07：自己那句原话不在屏上，自己那次读数还在屏上",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 120000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 4,
+                  "parallelIndex": 0,
+                  "status": "failed",
+                  "duration": 463,
+                  "error": {
+                    "message": "Error: e2e/qoder-ord0323-two-exposure-cells.spec.ts :: T07 — T07: a reply's own words are on the screen ([\"T07\"]); the slot reads \"memory_forbidden_token_9f3c the traveller's own words were refused\"\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // deep equality\u001b[22m\n\n\u001b[32m- Expected  - 1\u001b[39m\n\u001b[31m+ Received  + 3\u001b[39m\n\n\u001b[32m- Array []\u001b[39m\n\u001b[31m+ Array [\u001b[39m\n\u001b[31m+   \"T07\",\u001b[39m\n\u001b[31m+ ]\u001b[39m",
+                    "stack": "Error: e2e/qoder-ord0323-two-exposure-cells.spec.ts :: T07 — T07: a reply's own words are on the screen ([\"T07\"]); the slot reads \"memory_forbidden_token_9f3c the traveller's own words were refused\"\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // deep equality\u001b[22m\n\n\u001b[32m- Expected  - 1\u001b[39m\n\u001b[31m+ Received  + 3\u001b[39m\n\n\u001b[32m- Array []\u001b[39m\n\u001b[31m+ Array [\u001b[39m\n\u001b[31m+   \"T07\",\u001b[39m\n\u001b[31m+ ]\u001b[39m\n    at D:\\moodle\\_qoder_b_lane_20260923\\frontend\\e2e\\qoder-ord0323-two-exposure-cells.spec.ts:674:137",
+                    "location": {
+                      "file": "D:\\moodle\\_qoder_b_lane_20260923\\frontend\\e2e\\qoder-ord0323-two-exposure-cells.spec.ts",
+                      "column": 137,
+                      "line": 674
+                    },
+                    "snippet": "\u001b[0m \u001b[90m 672 |\u001b[39m       internal_token_on_screen\u001b[33m:\u001b[39m \u001b[35m/inbox request rejected/i\u001b[39m\u001b[33m.\u001b[39mtest(text)\u001b[33m,\u001b[39m\n \u001b[90m 673 |\u001b[39m     }\u001b[33m;\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 674 |\u001b[39m     expect(found\u001b[33m,\u001b[39m node(arm\u001b[33m,\u001b[39m \u001b[32m`${leg.cell}: a reply's own words are on the screen (${JSON.stringify(found)}); the slot reads \"${text}\"`\u001b[39m))\u001b[33m.\u001b[39mtoEqual([])\u001b[33m;\u001b[39m\n \u001b[90m     |\u001b[39m                                                                                                                                         \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 675 |\u001b[39m     expect(foundInAttrs\u001b[33m,\u001b[39m node(arm\u001b[33m,\u001b[39m \u001b[32m`${leg.cell}: Q71 counts an attribute as the screen -- a reply's words sit in a data / aria value (${JSON.stringify(foundInAttrs)} of ${String(dom.attr_pairs)} pairs swept)`\u001b[39m))\u001b[33m.\u001b[39mtoEqual([])\u001b[33m;\u001b[39m\n \u001b[90m 676 |\u001b[39m     expect(text\u001b[33m.\u001b[39mincludes(\u001b[33mString\u001b[39m(leg\u001b[33m.\u001b[39mstatus))\u001b[33m,\u001b[39m\n \u001b[90m 677 |\u001b[39m       node(arm\u001b[33m,\u001b[39m \u001b[32m`${leg.cell}: the slot no longer states the status this device measured for THIS request (${text})`\u001b[39m))\u001b[33m.\u001b[39mtoBe(\u001b[36mtrue\u001b[39m)\u001b[33m;\u001b[39m\u001b[0m"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "D:\\moodle\\_qoder_b_lane_20260923\\frontend\\e2e\\qoder-ord0323-two-exposure-cells.spec.ts",
+                        "column": 137,
+                        "line": 674
+                      },
+                      "message": "Error: e2e/qoder-ord0323-two-exposure-cells.spec.ts :: T07 — T07: a reply's own words are on the screen ([\"T07\"]); the slot reads \"memory_forbidden_token_9f3c the traveller's own words were refused\"\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // deep equality\u001b[22m\n\n\u001b[32m- Expected  - 1\u001b[39m\n\u001b[31m+ Received  + 3\u001b[39m\n\n\u001b[32m- Array []\u001b[39m\n\u001b[31m+ Array [\u001b[39m\n\u001b[31m+   \"T07\",\u001b[39m\n\u001b[31m+ ]\u001b[39m\n\n  672 |       internal_token_on_screen: /inbox request rejected/i.test(text),\n  673 |     };\n> 674 |     expect(found, node(arm, `${leg.cell}: a reply's own words are on the screen (${JSON.stringify(found)}); the slot reads \"${text}\"`)).toEqual([]);\n      |                                                                                                                                         ^\n  675 |     expect(foundInAttrs, node(arm, `${leg.cell}: Q71 counts an attribute as the screen -- a reply's words sit in a data / aria value (${JSON.stringify(foundInAttrs)} of ${String(dom.attr_pairs)} pairs swept)`)).toEqual([]);\n  676 |     expect(text.includes(String(leg.status)),\n  677 |       node(arm, `${leg.cell}: the slot no longer states the status this device measured for THIS request (${text})`)).toBe(true);\n    at D:\\moodle\\_qoder_b_lane_20260923\\frontend\\e2e\\qoder-ord0323-two-exposure-cells.spec.ts:674:137"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-09-25T22:41:16.764Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "D:\\moodle\\_qoder_b_lane_20260923\\frontend\\test-results\\qoder-ord0323-two-exposure-45a0d-—-T07：自己那句原话不在屏上，自己那次读数还在屏上-chromium\\error-context.md"
+                    }
+                  ],
+                  "errorLocation": {
+                    "file": "D:\\moodle\\_qoder_b_lane_20260923\\frontend\\e2e\\qoder-ord0323-two-exposure-cells.spec.ts",
+                    "column": 137,
+                    "line": 674
+                  }
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "10b2d8883c0bec666957-7bf18318fcd33cef1b28",
+          "file": "qoder-ord0323-two-exposure-cells.spec.ts",
+          "line": 599,
+          "column": 3
+        },
+        {
+          "title": "N4_T08_a_refused_GET_leaves_no_reply_words_and_keeps_its_own_reading — T08：自己那句原话不在屏上，自己那次读数还在屏上",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 120000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 5,
+                  "parallelIndex": 0,
+                  "status": "failed",
+                  "duration": 480,
+                  "error": {
+                    "message": "Error: e2e/qoder-ord0323-two-exposure-cells.spec.ts :: T08 — T08: a reply's own words are on the screen ([\"T08\"]); the slot reads \"待审清单读不出来： inbox_forbidden_token_4b71 the review queue is not ready 重读清单\"\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // deep equality\u001b[22m\n\n\u001b[32m- Expected  - 1\u001b[39m\n\u001b[31m+ Received  + 3\u001b[39m\n\n\u001b[32m- Array []\u001b[39m\n\u001b[31m+ Array [\u001b[39m\n\u001b[31m+   \"T08\",\u001b[39m\n\u001b[31m+ ]\u001b[39m",
+                    "stack": "Error: e2e/qoder-ord0323-two-exposure-cells.spec.ts :: T08 — T08: a reply's own words are on the screen ([\"T08\"]); the slot reads \"待审清单读不出来： inbox_forbidden_token_4b71 the review queue is not ready 重读清单\"\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // deep equality\u001b[22m\n\n\u001b[32m- Expected  - 1\u001b[39m\n\u001b[31m+ Received  + 3\u001b[39m\n\n\u001b[32m- Array []\u001b[39m\n\u001b[31m+ Array [\u001b[39m\n\u001b[31m+   \"T08\",\u001b[39m\n\u001b[31m+ ]\u001b[39m\n    at D:\\moodle\\_qoder_b_lane_20260923\\frontend\\e2e\\qoder-ord0323-two-exposure-cells.spec.ts:674:137",
+                    "location": {
+                      "file": "D:\\moodle\\_qoder_b_lane_20260923\\frontend\\e2e\\qoder-ord0323-two-exposure-cells.spec.ts",
+                      "column": 137,
+                      "line": 674
+                    },
+                    "snippet": "\u001b[0m \u001b[90m 672 |\u001b[39m       internal_token_on_screen\u001b[33m:\u001b[39m \u001b[35m/inbox request rejected/i\u001b[39m\u001b[33m.\u001b[39mtest(text)\u001b[33m,\u001b[39m\n \u001b[90m 673 |\u001b[39m     }\u001b[33m;\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 674 |\u001b[39m     expect(found\u001b[33m,\u001b[39m node(arm\u001b[33m,\u001b[39m \u001b[32m`${leg.cell}: a reply's own words are on the screen (${JSON.stringify(found)}); the slot reads \"${text}\"`\u001b[39m))\u001b[33m.\u001b[39mtoEqual([])\u001b[33m;\u001b[39m\n \u001b[90m     |\u001b[39m                                                                                                                                         \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 675 |\u001b[39m     expect(foundInAttrs\u001b[33m,\u001b[39m node(arm\u001b[33m,\u001b[39m \u001b[32m`${leg.cell}: Q71 counts an attribute as the screen -- a reply's words sit in a data / aria value (${JSON.stringify(foundInAttrs)} of ${String(dom.attr_pairs)} pairs swept)`\u001b[39m))\u001b[33m.\u001b[39mtoEqual([])\u001b[33m;\u001b[39m\n \u001b[90m 676 |\u001b[39m     expect(text\u001b[33m.\u001b[39mincludes(\u001b[33mString\u001b[39m(leg\u001b[33m.\u001b[39mstatus))\u001b[33m,\u001b[39m\n \u001b[90m 677 |\u001b[39m       node(arm\u001b[33m,\u001b[39m \u001b[32m`${leg.cell}: the slot no longer states the status this device measured for THIS request (${text})`\u001b[39m))\u001b[33m.\u001b[39mtoBe(\u001b[36mtrue\u001b[39m)\u001b[33m;\u001b[39m\u001b[0m"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "D:\\moodle\\_qoder_b_lane_20260923\\frontend\\e2e\\qoder-ord0323-two-exposure-cells.spec.ts",
+                        "column": 137,
+                        "line": 674
+                      },
+                      "message": "Error: e2e/qoder-ord0323-two-exposure-cells.spec.ts :: T08 — T08: a reply's own words are on the screen ([\"T08\"]); the slot reads \"待审清单读不出来： inbox_forbidden_token_4b71 the review queue is not ready 重读清单\"\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // deep equality\u001b[22m\n\n\u001b[32m- Expected  - 1\u001b[39m\n\u001b[31m+ Received  + 3\u001b[39m\n\n\u001b[32m- Array []\u001b[39m\n\u001b[31m+ Array [\u001b[39m\n\u001b[31m+   \"T08\",\u001b[39m\n\u001b[31m+ ]\u001b[39m\n\n  672 |       internal_token_on_screen: /inbox request rejected/i.test(text),\n  673 |     };\n> 674 |     expect(found, node(arm, `${leg.cell}: a reply's own words are on the screen (${JSON.stringify(found)}); the slot reads \"${text}\"`)).toEqual([]);\n      |                                                                                                                                         ^\n  675 |     expect(foundInAttrs, node(arm, `${leg.cell}: Q71 counts an attribute as the screen -- a reply's words sit in a data / aria value (${JSON.stringify(foundInAttrs)} of ${String(dom.attr_pairs)} pairs swept)`)).toEqual([]);\n  676 |     expect(text.includes(String(leg.status)),\n  677 |       node(arm, `${leg.cell}: the slot no longer states the status this device measured for THIS request (${text})`)).toBe(true);\n    at D:\\moodle\\_qoder_b_lane_20260923\\frontend\\e2e\\qoder-ord0323-two-exposure-cells.spec.ts:674:137"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-09-25T22:41:17.713Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "D:\\moodle\\_qoder_b_lane_20260923\\frontend\\test-results\\qoder-ord0323-two-exposure-83132-—-T08：自己那句原话不在屏上，自己那次读数还在屏上-chromium\\error-context.md"
+                    }
+                  ],
+                  "errorLocation": {
+                    "file": "D:\\moodle\\_qoder_b_lane_20260923\\frontend\\e2e\\qoder-ord0323-two-exposure-cells.spec.ts",
+                    "column": 137,
+                    "line": 674
+                  }
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "10b2d8883c0bec666957-3e014726171d435110ae",
+          "file": "qoder-ord0323-two-exposure-cells.spec.ts",
+          "line": 599,
+          "column": 3
+        },
+        {
+          "title": "N4_T09_a_refused_POST_leaves_no_reply_words_and_keeps_its_own_reading — T09：自己那句原话不在屏上，自己那次读数还在屏上",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 120000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 6,
+                  "parallelIndex": 0,
+                  "status": "failed",
+                  "duration": 907,
+                  "error": {
+                    "message": "Error: e2e/qoder-ord0323-two-exposure-cells.spec.ts :: T09 — T09: a reply's own words are on the screen ([\"T09\"]); the slot reads \"text_extract_forbidden_leg_t09\"\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // deep equality\u001b[22m\n\n\u001b[32m- Expected  - 1\u001b[39m\n\u001b[31m+ Received  + 3\u001b[39m\n\n\u001b[32m- Array []\u001b[39m\n\u001b[31m+ Array [\u001b[39m\n\u001b[31m+   \"T09\",\u001b[39m\n\u001b[31m+ ]\u001b[39m",
+                    "stack": "Error: e2e/qoder-ord0323-two-exposure-cells.spec.ts :: T09 — T09: a reply's own words are on the screen ([\"T09\"]); the slot reads \"text_extract_forbidden_leg_t09\"\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // deep equality\u001b[22m\n\n\u001b[32m- Expected  - 1\u001b[39m\n\u001b[31m+ Received  + 3\u001b[39m\n\n\u001b[32m- Array []\u001b[39m\n\u001b[31m+ Array [\u001b[39m\n\u001b[31m+   \"T09\",\u001b[39m\n\u001b[31m+ ]\u001b[39m\n    at D:\\moodle\\_qoder_b_lane_20260923\\frontend\\e2e\\qoder-ord0323-two-exposure-cells.spec.ts:674:137",
+                    "location": {
+                      "file": "D:\\moodle\\_qoder_b_lane_20260923\\frontend\\e2e\\qoder-ord0323-two-exposure-cells.spec.ts",
+                      "column": 137,
+                      "line": 674
+                    },
+                    "snippet": "\u001b[0m \u001b[90m 672 |\u001b[39m       internal_token_on_screen\u001b[33m:\u001b[39m \u001b[35m/inbox request rejected/i\u001b[39m\u001b[33m.\u001b[39mtest(text)\u001b[33m,\u001b[39m\n \u001b[90m 673 |\u001b[39m     }\u001b[33m;\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 674 |\u001b[39m     expect(found\u001b[33m,\u001b[39m node(arm\u001b[33m,\u001b[39m \u001b[32m`${leg.cell}: a reply's own words are on the screen (${JSON.stringify(found)}); the slot reads \"${text}\"`\u001b[39m))\u001b[33m.\u001b[39mtoEqual([])\u001b[33m;\u001b[39m\n \u001b[90m     |\u001b[39m                                                                                                                                         \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 675 |\u001b[39m     expect(foundInAttrs\u001b[33m,\u001b[39m node(arm\u001b[33m,\u001b[39m \u001b[32m`${leg.cell}: Q71 counts an attribute as the screen -- a reply's words sit in a data / aria value (${JSON.stringify(foundInAttrs)} of ${String(dom.attr_pairs)} pairs swept)`\u001b[39m))\u001b[33m.\u001b[39mtoEqual([])\u001b[33m;\u001b[39m\n \u001b[90m 676 |\u001b[39m     expect(text\u001b[33m.\u001b[39mincludes(\u001b[33mString\u001b[39m(leg\u001b[33m.\u001b[39mstatus))\u001b[33m,\u001b[39m\n \u001b[90m 677 |\u001b[39m       node(arm\u001b[33m,\u001b[39m \u001b[32m`${leg.cell}: the slot no longer states the status this device measured for THIS request (${text})`\u001b[39m))\u001b[33m.\u001b[39mtoBe(\u001b[36mtrue\u001b[39m)\u001b[33m;\u001b[39m\u001b[0m"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "D:\\moodle\\_qoder_b_lane_20260923\\frontend\\e2e\\qoder-ord0323-two-exposure-cells.spec.ts",
+                        "column": 137,
+                        "line": 674
+                      },
+                      "message": "Error: e2e/qoder-ord0323-two-exposure-cells.spec.ts :: T09 — T09: a reply's own words are on the screen ([\"T09\"]); the slot reads \"text_extract_forbidden_leg_t09\"\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // deep equality\u001b[22m\n\n\u001b[32m- Expected  - 1\u001b[39m\n\u001b[31m+ Received  + 3\u001b[39m\n\n\u001b[32m- Array []\u001b[39m\n\u001b[31m+ Array [\u001b[39m\n\u001b[31m+   \"T09\",\u001b[39m\n\u001b[31m+ ]\u001b[39m\n\n  672 |       internal_token_on_screen: /inbox request rejected/i.test(text),\n  673 |     };\n> 674 |     expect(found, node(arm, `${leg.cell}: a reply's own words are on the screen (${JSON.stringify(found)}); the slot reads \"${text}\"`)).toEqual([]);\n      |                                                                                                                                         ^\n  675 |     expect(foundInAttrs, node(arm, `${leg.cell}: Q71 counts an attribute as the screen -- a reply's words sit in a data / aria value (${JSON.stringify(foundInAttrs)} of ${String(dom.attr_pairs)} pairs swept)`)).toEqual([]);\n  676 |     expect(text.includes(String(leg.status)),\n  677 |       node(arm, `${leg.cell}: the slot no longer states the status this device measured for THIS request (${text})`)).toBe(true);\n    at D:\\moodle\\_qoder_b_lane_20260923\\frontend\\e2e\\qoder-ord0323-two-exposure-cells.spec.ts:674:137"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-09-25T22:41:18.653Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "D:\\moodle\\_qoder_b_lane_20260923\\frontend\\test-results\\qoder-ord0323-two-exposure-1d1f8-—-T09：自己那句原话不在屏上，自己那次读数还在屏上-chromium\\error-context.md"
+                    }
+                  ],
+                  "errorLocation": {
+                    "file": "D:\\moodle\\_qoder_b_lane_20260923\\frontend\\e2e\\qoder-ord0323-two-exposure-cells.spec.ts",
+                    "column": 137,
+                    "line": 674
+                  }
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "10b2d8883c0bec666957-7959f50fbf02bfe36e11",
+          "file": "qoder-ord0323-two-exposure-cells.spec.ts",
+          "line": 599,
+          "column": 3
+        },
+        {
+          "title": "N4_T10_a_refused_POST_leaves_no_reply_words_and_keeps_its_own_reading — T10：自己那句原话不在屏上，自己那次读数还在屏上",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 120000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 7,
+                  "parallelIndex": 0,
+                  "status": "failed",
+                  "duration": 988,
+                  "error": {
+                    "message": "Error: e2e/qoder-ord0323-two-exposure-cells.spec.ts :: T10 — T10: a reply's own words are on the screen ([\"T10\"]); the slot reads \"vision_forbidden_leg_t10\"\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // deep equality\u001b[22m\n\n\u001b[32m- Expected  - 1\u001b[39m\n\u001b[31m+ Received  + 3\u001b[39m\n\n\u001b[32m- Array []\u001b[39m\n\u001b[31m+ Array [\u001b[39m\n\u001b[31m+   \"T10\",\u001b[39m\n\u001b[31m+ ]\u001b[39m",
+                    "stack": "Error: e2e/qoder-ord0323-two-exposure-cells.spec.ts :: T10 — T10: a reply's own words are on the screen ([\"T10\"]); the slot reads \"vision_forbidden_leg_t10\"\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // deep equality\u001b[22m\n\n\u001b[32m- Expected  - 1\u001b[39m\n\u001b[31m+ Received  + 3\u001b[39m\n\n\u001b[32m- Array []\u001b[39m\n\u001b[31m+ Array [\u001b[39m\n\u001b[31m+   \"T10\",\u001b[39m\n\u001b[31m+ ]\u001b[39m\n    at D:\\moodle\\_qoder_b_lane_20260923\\frontend\\e2e\\qoder-ord0323-two-exposure-cells.spec.ts:674:137",
+                    "location": {
+                      "file": "D:\\moodle\\_qoder_b_lane_20260923\\frontend\\e2e\\qoder-ord0323-two-exposure-cells.spec.ts",
+                      "column": 137,
+                      "line": 674
+                    },
+                    "snippet": "\u001b[0m \u001b[90m 672 |\u001b[39m       internal_token_on_screen\u001b[33m:\u001b[39m \u001b[35m/inbox request rejected/i\u001b[39m\u001b[33m.\u001b[39mtest(text)\u001b[33m,\u001b[39m\n \u001b[90m 673 |\u001b[39m     }\u001b[33m;\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 674 |\u001b[39m     expect(found\u001b[33m,\u001b[39m node(arm\u001b[33m,\u001b[39m \u001b[32m`${leg.cell}: a reply's own words are on the screen (${JSON.stringify(found)}); the slot reads \"${text}\"`\u001b[39m))\u001b[33m.\u001b[39mtoEqual([])\u001b[33m;\u001b[39m\n \u001b[90m     |\u001b[39m                                                                                                                                         \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 675 |\u001b[39m     expect(foundInAttrs\u001b[33m,\u001b[39m node(arm\u001b[33m,\u001b[39m \u001b[32m`${leg.cell}: Q71 counts an attribute as the screen -- a reply's words sit in a data / aria value (${JSON.stringify(foundInAttrs)} of ${String(dom.attr_pairs)} pairs swept)`\u001b[39m))\u001b[33m.\u001b[39mtoEqual([])\u001b[33m;\u001b[39m\n \u001b[90m 676 |\u001b[39m     expect(text\u001b[33m.\u001b[39mincludes(\u001b[33mString\u001b[39m(leg\u001b[33m.\u001b[39mstatus))\u001b[33m,\u001b[39m\n \u001b[90m 677 |\u001b[39m       node(arm\u001b[33m,\u001b[39m \u001b[32m`${leg.cell}: the slot no longer states the status this device measured for THIS request (${text})`\u001b[39m))\u001b[33m.\u001b[39mtoBe(\u001b[36mtrue\u001b[39m)\u001b[33m;\u001b[39m\u001b[0m"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "D:\\moodle\\_qoder_b_lane_20260923\\frontend\\e2e\\qoder-ord0323-two-exposure-cells.spec.ts",
+                        "column": 137,
+                        "line": 674
+                      },
+                      "message": "Error: e2e/qoder-ord0323-two-exposure-cells.spec.ts :: T10 — T10: a reply's own words are on the screen ([\"T10\"]); the slot reads \"vision_forbidden_leg_t10\"\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // deep equality\u001b[22m\n\n\u001b[32m- Expected  - 1\u001b[39m\n\u001b[31m+ Received  + 3\u001b[39m\n\n\u001b[32m- Array []\u001b[39m\n\u001b[31m+ Array [\u001b[39m\n\u001b[31m+   \"T10\",\u001b[39m\n\u001b[31m+ ]\u001b[39m\n\n  672 |       internal_token_on_screen: /inbox request rejected/i.test(text),\n  673 |     };\n> 674 |     expect(found, node(arm, `${leg.cell}: a reply's own words are on the screen (${JSON.stringify(found)}); the slot reads \"${text}\"`)).toEqual([]);\n      |                                                                                                                                         ^\n  675 |     expect(foundInAttrs, node(arm, `${leg.cell}: Q71 counts an attribute as the screen -- a reply's words sit in a data / aria value (${JSON.stringify(foundInAttrs)} of ${String(dom.attr_pairs)} pairs swept)`)).toEqual([]);\n  676 |     expect(text.includes(String(leg.status)),\n  677 |       node(arm, `${leg.cell}: the slot no longer states the status this device measured for THIS request (${text})`)).toBe(true);\n    at D:\\moodle\\_qoder_b_lane_20260923\\frontend\\e2e\\qoder-ord0323-two-exposure-cells.spec.ts:674:137"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-09-25T22:41:20.047Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "D:\\moodle\\_qoder_b_lane_20260923\\frontend\\test-results\\qoder-ord0323-two-exposure-9c80d-—-T10：自己那句原话不在屏上，自己那次读数还在屏上-chromium\\error-context.md"
+                    }
+                  ],
+                  "errorLocation": {
+                    "file": "D:\\moodle\\_qoder_b_lane_20260923\\frontend\\e2e\\qoder-ord0323-two-exposure-cells.spec.ts",
+                    "column": 137,
+                    "line": 674
+                  }
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "10b2d8883c0bec666957-91095dc63cd520fe8a51",
+          "file": "qoder-ord0323-two-exposure-cells.spec.ts",
+          "line": 599,
+          "column": 3
+        },
+        {
+          "title": "N4_T11_a_refused_POST_leaves_no_reply_words_and_keeps_its_own_reading — T11：自己那句原话不在屏上，自己那次读数还在屏上",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 120000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 8,
+                  "parallelIndex": 0,
+                  "status": "failed",
+                  "duration": 934,
+                  "error": {
+                    "message": "Error: e2e/qoder-ord0323-two-exposure-cells.spec.ts :: T11 — T11: a reply's own words are on the screen ([\"T11\"]); the slot reads \"smart_apply_forbidden_leg_t11\"\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // deep equality\u001b[22m\n\n\u001b[32m- Expected  - 1\u001b[39m\n\u001b[31m+ Received  + 3\u001b[39m\n\n\u001b[32m- Array []\u001b[39m\n\u001b[31m+ Array [\u001b[39m\n\u001b[31m+   \"T11\",\u001b[39m\n\u001b[31m+ ]\u001b[39m",
+                    "stack": "Error: e2e/qoder-ord0323-two-exposure-cells.spec.ts :: T11 — T11: a reply's own words are on the screen ([\"T11\"]); the slot reads \"smart_apply_forbidden_leg_t11\"\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // deep equality\u001b[22m\n\n\u001b[32m- Expected  - 1\u001b[39m\n\u001b[31m+ Received  + 3\u001b[39m\n\n\u001b[32m- Array []\u001b[39m\n\u001b[31m+ Array [\u001b[39m\n\u001b[31m+   \"T11\",\u001b[39m\n\u001b[31m+ ]\u001b[39m\n    at D:\\moodle\\_qoder_b_lane_20260923\\frontend\\e2e\\qoder-ord0323-two-exposure-cells.spec.ts:674:137",
+                    "location": {
+                      "file": "D:\\moodle\\_qoder_b_lane_20260923\\frontend\\e2e\\qoder-ord0323-two-exposure-cells.spec.ts",
+                      "column": 137,
+                      "line": 674
+                    },
+                    "snippet": "\u001b[0m \u001b[90m 672 |\u001b[39m       internal_token_on_screen\u001b[33m:\u001b[39m \u001b[35m/inbox request rejected/i\u001b[39m\u001b[33m.\u001b[39mtest(text)\u001b[33m,\u001b[39m\n \u001b[90m 673 |\u001b[39m     }\u001b[33m;\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 674 |\u001b[39m     expect(found\u001b[33m,\u001b[39m node(arm\u001b[33m,\u001b[39m \u001b[32m`${leg.cell}: a reply's own words are on the screen (${JSON.stringify(found)}); the slot reads \"${text}\"`\u001b[39m))\u001b[33m.\u001b[39mtoEqual([])\u001b[33m;\u001b[39m\n \u001b[90m     |\u001b[39m                                                                                                                                         \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 675 |\u001b[39m     expect(foundInAttrs\u001b[33m,\u001b[39m node(arm\u001b[33m,\u001b[39m \u001b[32m`${leg.cell}: Q71 counts an attribute as the screen -- a reply's words sit in a data / aria value (${JSON.stringify(foundInAttrs)} of ${String(dom.attr_pairs)} pairs swept)`\u001b[39m))\u001b[33m.\u001b[39mtoEqual([])\u001b[33m;\u001b[39m\n \u001b[90m 676 |\u001b[39m     expect(text\u001b[33m.\u001b[39mincludes(\u001b[33mString\u001b[39m(leg\u001b[33m.\u001b[39mstatus))\u001b[33m,\u001b[39m\n \u001b[90m 677 |\u001b[39m       node(arm\u001b[33m,\u001b[39m \u001b[32m`${leg.cell}: the slot no longer states the status this device measured for THIS request (${text})`\u001b[39m))\u001b[33m.\u001b[39mtoBe(\u001b[36mtrue\u001b[39m)\u001b[33m;\u001b[39m\u001b[0m"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "D:\\moodle\\_qoder_b_lane_20260923\\frontend\\e2e\\qoder-ord0323-two-exposure-cells.spec.ts",
+                        "column": 137,
+                        "line": 674
+                      },
+                      "message": "Error: e2e/qoder-ord0323-two-exposure-cells.spec.ts :: T11 — T11: a reply's own words are on the screen ([\"T11\"]); the slot reads \"smart_apply_forbidden_leg_t11\"\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // deep equality\u001b[22m\n\n\u001b[32m- Expected  - 1\u001b[39m\n\u001b[31m+ Received  + 3\u001b[39m\n\n\u001b[32m- Array []\u001b[39m\n\u001b[31m+ Array [\u001b[39m\n\u001b[31m+   \"T11\",\u001b[39m\n\u001b[31m+ ]\u001b[39m\n\n  672 |       internal_token_on_screen: /inbox request rejected/i.test(text),\n  673 |     };\n> 674 |     expect(found, node(arm, `${leg.cell}: a reply's own words are on the screen (${JSON.stringify(found)}); the slot reads \"${text}\"`)).toEqual([]);\n      |                                                                                                                                         ^\n  675 |     expect(foundInAttrs, node(arm, `${leg.cell}: Q71 counts an attribute as the screen -- a reply's words sit in a data / aria value (${JSON.stringify(foundInAttrs)} of ${String(dom.attr_pairs)} pairs swept)`)).toEqual([]);\n  676 |     expect(text.includes(String(leg.status)),\n  677 |       node(arm, `${leg.cell}: the slot no longer states the status this device measured for THIS request (${text})`)).toBe(true);\n    at D:\\moodle\\_qoder_b_lane_20260923\\frontend\\e2e\\qoder-ord0323-two-exposure-cells.spec.ts:674:137"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-09-25T22:41:21.471Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "D:\\moodle\\_qoder_b_lane_20260923\\frontend\\test-results\\qoder-ord0323-two-exposure-92ac1-—-T11：自己那句原话不在屏上，自己那次读数还在屏上-chromium\\error-context.md"
+                    }
+                  ],
+                  "errorLocation": {
+                    "file": "D:\\moodle\\_qoder_b_lane_20260923\\frontend\\e2e\\qoder-ord0323-two-exposure-cells.spec.ts",
+                    "column": 137,
+                    "line": 674
+                  }
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "10b2d8883c0bec666957-ec265ef2ff2b9f1eb944",
+          "file": "qoder-ord0323-two-exposure-cells.spec.ts",
+          "line": 599,
+          "column": 3
+        },
+        {
+          "title": "N4_T12_a_refused_POST_leaves_no_reply_words_and_keeps_its_own_reading — T12：自己那句原话不在屏上，自己那次读数还在屏上",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 120000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 9,
+                  "parallelIndex": 0,
+                  "status": "failed",
+                  "duration": 1138,
+                  "error": {
+                    "message": "Error: e2e/qoder-ord0323-two-exposure-cells.spec.ts :: T12 — T12: a reply's own words are on the screen ([\"T12\"]); the slot reads \"技术详情confirm_forbidden_token_c258 the commitment was rejected\"\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // deep equality\u001b[22m\n\n\u001b[32m- Expected  - 1\u001b[39m\n\u001b[31m+ Received  + 3\u001b[39m\n\n\u001b[32m- Array []\u001b[39m\n\u001b[31m+ Array [\u001b[39m\n\u001b[31m+   \"T12\",\u001b[39m\n\u001b[31m+ ]\u001b[39m",
+                    "stack": "Error: e2e/qoder-ord0323-two-exposure-cells.spec.ts :: T12 — T12: a reply's own words are on the screen ([\"T12\"]); the slot reads \"技术详情confirm_forbidden_token_c258 the commitment was rejected\"\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // deep equality\u001b[22m\n\n\u001b[32m- Expected  - 1\u001b[39m\n\u001b[31m+ Received  + 3\u001b[39m\n\n\u001b[32m- Array []\u001b[39m\n\u001b[31m+ Array [\u001b[39m\n\u001b[31m+   \"T12\",\u001b[39m\n\u001b[31m+ ]\u001b[39m\n    at D:\\moodle\\_qoder_b_lane_20260923\\frontend\\e2e\\qoder-ord0323-two-exposure-cells.spec.ts:674:137",
+                    "location": {
+                      "file": "D:\\moodle\\_qoder_b_lane_20260923\\frontend\\e2e\\qoder-ord0323-two-exposure-cells.spec.ts",
+                      "column": 137,
+                      "line": 674
+                    },
+                    "snippet": "\u001b[0m \u001b[90m 672 |\u001b[39m       internal_token_on_screen\u001b[33m:\u001b[39m \u001b[35m/inbox request rejected/i\u001b[39m\u001b[33m.\u001b[39mtest(text)\u001b[33m,\u001b[39m\n \u001b[90m 673 |\u001b[39m     }\u001b[33m;\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 674 |\u001b[39m     expect(found\u001b[33m,\u001b[39m node(arm\u001b[33m,\u001b[39m \u001b[32m`${leg.cell}: a reply's own words are on the screen (${JSON.stringify(found)}); the slot reads \"${text}\"`\u001b[39m))\u001b[33m.\u001b[39mtoEqual([])\u001b[33m;\u001b[39m\n \u001b[90m     |\u001b[39m                                                                                                                                         \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 675 |\u001b[39m     expect(foundInAttrs\u001b[33m,\u001b[39m node(arm\u001b[33m,\u001b[39m \u001b[32m`${leg.cell}: Q71 counts an attribute as the screen -- a reply's words sit in a data / aria value (${JSON.stringify(foundInAttrs)} of ${String(dom.attr_pairs)} pairs swept)`\u001b[39m))\u001b[33m.\u001b[39mtoEqual([])\u001b[33m;\u001b[39m\n \u001b[90m 676 |\u001b[39m     expect(text\u001b[33m.\u001b[39mincludes(\u001b[33mString\u001b[39m(leg\u001b[33m.\u001b[39mstatus))\u001b[33m,\u001b[39m\n \u001b[90m 677 |\u001b[39m       node(arm\u001b[33m,\u001b[39m \u001b[32m`${leg.cell}: the slot no longer states the status this device measured for THIS request (${text})`\u001b[39m))\u001b[33m.\u001b[39mtoBe(\u001b[36mtrue\u001b[39m)\u001b[33m;\u001b[39m\u001b[0m"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "D:\\moodle\\_qoder_b_lane_20260923\\frontend\\e2e\\qoder-ord0323-two-exposure-cells.spec.ts",
+                        "column": 137,
+                        "line": 674
+                      },
+                      "message": "Error: e2e/qoder-ord0323-two-exposure-cells.spec.ts :: T12 — T12: a reply's own words are on the screen ([\"T12\"]); the slot reads \"技术详情confirm_forbidden_token_c258 the commitment was rejected\"\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // deep equality\u001b[22m\n\n\u001b[32m- Expected  - 1\u001b[39m\n\u001b[31m+ Received  + 3\u001b[39m\n\n\u001b[32m- Array []\u001b[39m\n\u001b[31m+ Array [\u001b[39m\n\u001b[31m+   \"T12\",\u001b[39m\n\u001b[31m+ ]\u001b[39m\n\n  672 |       internal_token_on_screen: /inbox request rejected/i.test(text),\n  673 |     };\n> 674 |     expect(found, node(arm, `${leg.cell}: a reply's own words are on the screen (${JSON.stringify(found)}); the slot reads \"${text}\"`)).toEqual([]);\n      |                                                                                                                                         ^\n  675 |     expect(foundInAttrs, node(arm, `${leg.cell}: Q71 counts an attribute as the screen -- a reply's words sit in a data / aria value (${JSON.stringify(foundInAttrs)} of ${String(dom.attr_pairs)} pairs swept)`)).toEqual([]);\n  676 |     expect(text.includes(String(leg.status)),\n  677 |       node(arm, `${leg.cell}: the slot no longer states the status this device measured for THIS request (${text})`)).toBe(true);\n    at D:\\moodle\\_qoder_b_lane_20260923\\frontend\\e2e\\qoder-ord0323-two-exposure-cells.spec.ts:674:137"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-09-25T22:41:22.905Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "D:\\moodle\\_qoder_b_lane_20260923\\frontend\\test-results\\qoder-ord0323-two-exposure-07a48-—-T12：自己那句原话不在屏上，自己那次读数还在屏上-chromium\\error-context.md"
+                    }
+                  ],
+                  "errorLocation": {
+                    "file": "D:\\moodle\\_qoder_b_lane_20260923\\frontend\\e2e\\qoder-ord0323-two-exposure-cells.spec.ts",
+                    "column": 137,
+                    "line": 674
+                  }
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "10b2d8883c0bec666957-503a4fa317013aab8948",
+          "file": "qoder-ord0323-two-exposure-cells.spec.ts",
+          "line": 599,
+          "column": 3
+        },
+        {
+          "title": "N4_T13_a_refused_PATCH_leaves_no_reply_words_and_keeps_its_own_reading — T13：自己那句原话不在屏上，自己那次读数还在屏上",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 120000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 10,
+                  "parallelIndex": 0,
+                  "status": "failed",
+                  "duration": 1072,
+                  "error": {
+                    "message": "Error: e2e/qoder-ord0323-two-exposure-cells.spec.ts :: T13 — T13: a reply's own words are on the screen ([\"T13\"]); the slot reads \"patch_forbidden_leg_t13\"\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // deep equality\u001b[22m\n\n\u001b[32m- Expected  - 1\u001b[39m\n\u001b[31m+ Received  + 3\u001b[39m\n\n\u001b[32m- Array []\u001b[39m\n\u001b[31m+ Array [\u001b[39m\n\u001b[31m+   \"T13\",\u001b[39m\n\u001b[31m+ ]\u001b[39m",
+                    "stack": "Error: e2e/qoder-ord0323-two-exposure-cells.spec.ts :: T13 — T13: a reply's own words are on the screen ([\"T13\"]); the slot reads \"patch_forbidden_leg_t13\"\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // deep equality\u001b[22m\n\n\u001b[32m- Expected  - 1\u001b[39m\n\u001b[31m+ Received  + 3\u001b[39m\n\n\u001b[32m- Array []\u001b[39m\n\u001b[31m+ Array [\u001b[39m\n\u001b[31m+   \"T13\",\u001b[39m\n\u001b[31m+ ]\u001b[39m\n    at D:\\moodle\\_qoder_b_lane_20260923\\frontend\\e2e\\qoder-ord0323-two-exposure-cells.spec.ts:674:137",
+                    "location": {
+                      "file": "D:\\moodle\\_qoder_b_lane_20260923\\frontend\\e2e\\qoder-ord0323-two-exposure-cells.spec.ts",
+                      "column": 137,
+                      "line": 674
+                    },
+                    "snippet": "\u001b[0m \u001b[90m 672 |\u001b[39m       internal_token_on_screen\u001b[33m:\u001b[39m \u001b[35m/inbox request rejected/i\u001b[39m\u001b[33m.\u001b[39mtest(text)\u001b[33m,\u001b[39m\n \u001b[90m 673 |\u001b[39m     }\u001b[33m;\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 674 |\u001b[39m     expect(found\u001b[33m,\u001b[39m node(arm\u001b[33m,\u001b[39m \u001b[32m`${leg.cell}: a reply's own words are on the screen (${JSON.stringify(found)}); the slot reads \"${text}\"`\u001b[39m))\u001b[33m.\u001b[39mtoEqual([])\u001b[33m;\u001b[39m\n \u001b[90m     |\u001b[39m                                                                                                                                         \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 675 |\u001b[39m     expect(foundInAttrs\u001b[33m,\u001b[39m node(arm\u001b[33m,\u001b[39m \u001b[32m`${leg.cell}: Q71 counts an attribute as the screen -- a reply's words sit in a data / aria value (${JSON.stringify(foundInAttrs)} of ${String(dom.attr_pairs)} pairs swept)`\u001b[39m))\u001b[33m.\u001b[39mtoEqual([])\u001b[33m;\u001b[39m\n \u001b[90m 676 |\u001b[39m     expect(text\u001b[33m.\u001b[39mincludes(\u001b[33mString\u001b[39m(leg\u001b[33m.\u001b[39mstatus))\u001b[33m,\u001b[39m\n \u001b[90m 677 |\u001b[39m       node(arm\u001b[33m,\u001b[39m \u001b[32m`${leg.cell}: the slot no longer states the status this device measured for THIS request (${text})`\u001b[39m))\u001b[33m.\u001b[39mtoBe(\u001b[36mtrue\u001b[39m)\u001b[33m;\u001b[39m\u001b[0m"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "D:\\moodle\\_qoder_b_lane_20260923\\frontend\\e2e\\qoder-ord0323-two-exposure-cells.spec.ts",
+                        "column": 137,
+                        "line": 674
+                      },
+                      "message": "Error: e2e/qoder-ord0323-two-exposure-cells.spec.ts :: T13 — T13: a reply's own words are on the screen ([\"T13\"]); the slot reads \"patch_forbidden_leg_t13\"\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // deep equality\u001b[22m\n\n\u001b[32m- Expected  - 1\u001b[39m\n\u001b[31m+ Received  + 3\u001b[39m\n\n\u001b[32m- Array []\u001b[39m\n\u001b[31m+ Array [\u001b[39m\n\u001b[31m+   \"T13\",\u001b[39m\n\u001b[31m+ ]\u001b[39m\n\n  672 |       internal_token_on_screen: /inbox request rejected/i.test(text),\n  673 |     };\n> 674 |     expect(found, node(arm, `${leg.cell}: a reply's own words are on the screen (${JSON.stringify(found)}); the slot reads \"${text}\"`)).toEqual([]);\n      |                                                                                                                                         ^\n  675 |     expect(foundInAttrs, node(arm, `${leg.cell}: Q71 counts an attribute as the screen -- a reply's words sit in a data / aria value (${JSON.stringify(foundInAttrs)} of ${String(dom.attr_pairs)} pairs swept)`)).toEqual([]);\n  676 |     expect(text.includes(String(leg.status)),\n  677 |       node(arm, `${leg.cell}: the slot no longer states the status this device measured for THIS request (${text})`)).toBe(true);\n    at D:\\moodle\\_qoder_b_lane_20260923\\frontend\\e2e\\qoder-ord0323-two-exposure-cells.spec.ts:674:137"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-09-25T22:41:24.506Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "D:\\moodle\\_qoder_b_lane_20260923\\frontend\\test-results\\qoder-ord0323-two-exposure-dbfa7-—-T13：自己那句原话不在屏上，自己那次读数还在屏上-chromium\\error-context.md"
+                    }
+                  ],
+                  "errorLocation": {
+                    "file": "D:\\moodle\\_qoder_b_lane_20260923\\frontend\\e2e\\qoder-ord0323-two-exposure-cells.spec.ts",
+                    "column": 137,
+                    "line": 674
+                  }
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "10b2d8883c0bec666957-46bbb40efe72c539a0bc",
+          "file": "qoder-ord0323-two-exposure-cells.spec.ts",
+          "line": 599,
+          "column": 3
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2026-09-25T22:41:00.080Z",
+    "duration": 26387.847999999998,
+    "expected": 4,
+    "skipped": 0,
+    "unexpected": 10,
+    "flaky": 0
+  }
+}
