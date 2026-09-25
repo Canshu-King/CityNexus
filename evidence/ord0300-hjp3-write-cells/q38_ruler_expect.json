@@ -93,9 +93,30 @@
    "why": "the two-window schedules (20s+20s and 20s+45s) both let the request finish its writes once it had the lock: the 45 s run waited 19927 ms and SUCCEEDED with 200, then plans/generate settled in 15 ms, so no second wait ever lost the lock; with deadline_ms 45000 above busy_timeout 30000, one failed wait surfaces at <= 30000 ms, i.e. before the budget is spent, which is why the plain HTTP 500 is what a traveller sees instead of the named answer",
    "why_source": "why",
    "why_token_count": 8
+  },
+  {
+   "derived_from": null,
+   "derived_from_key": null,
+   "id": "5",
+   "own_hits": [
+    "0",
+    "200",
+    "21",
+    "32343",
+    "404",
+    "500",
+    "NETWORK",
+    "index-CiK8NvBw.js"
+   ],
+   "own_token_count": 12,
+   "unique_hits": [],
+   "verdict": "SAME_FINDING_ON_A_FOREIGN_BUILD",
+   "why": "the other build (asset index-CiK8NvBw.js, sha256 3af4b146feaa, byte-identical to my private build = False, ORD-0280 markers present = True) served through a face whose proxy is mine (my journey 200, a foreign one 404) gave HTTP 500 / 21 B at 32343 ms, painting the card '连不上服务端' with data-result-status='NETWORK' and 0 detail regions - so the mismatch belongs to the generation, not to the bundle I compiled",
+   "why_source": "why",
+   "why_token_count": 11
   }
  ],
- "cells_found": 5,
+ "cells_found": 6,
  "exit": 0,
  "findings": [],
  "hard_codes": [],
@@ -104,17 +125,18 @@
  "meaning": "no shared literal and every sentence names its own readings",
  "overall": "Q38_GATE_GREEN",
  "receipt": {
-  "blob_sha1": "40a508e7fb4f3f482b6cb51c269584e983056254",
-  "bytes": 11921,
+  "blob_sha1": "6e93836db5b6a5322b4b7d8c77e0e240c0aaf894",
+  "bytes": 13423,
   "path": "_hjp3_0300_0925/RECEIPT_O0300-2610.json"
  },
  "soft_codes": [],
  "soft_count": 0,
  "unique_reading_counts": {
-  "0": 4,
-  "1": 4,
+  "0": 3,
+  "1": 2,
   "2": 5,
   "3": 10,
-  "4": 27
+  "4": 26,
+  "5": 4
  }
 }
