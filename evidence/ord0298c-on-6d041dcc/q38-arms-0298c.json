@@ -1,0 +1,243 @@
+{
+ "cells": [
+  {
+   "derived_from": "this arm's own readings; the one no other arm can quote is the mutant hash: arm_shape_digest_12=e8cae1f91429 · attempt.db=_run301343.db · baseline.db=_run301322.db · attempt.port=4941 · baseline.port=4940",
+   "derived_from_key": "derived_from",
+   "id": "K278_NO_MISSION_ID_IN_BODY",
+   "own_hits": [
+    "081c8491a206",
+    "1",
+    "4",
+    "4940",
+    "4941",
+    "7364",
+    "7392",
+    "_run301322.db",
+    "_run301343.db",
+    "e8cae1f91429",
+    "journeyContinuation.ts"
+   ],
+   "own_token_count": 50,
+   "unique_hits": [
+    "4940",
+    "4941",
+    "_run301322.db",
+    "_run301343.db",
+    "e8cae1f91429"
+   ],
+   "verdict": "KILLED",
+   "why": "the resumed batch no longer says whose it is: the server can replay it but cannot bind it to the interrupted round, which is the half this order was opened for  Measured on this tip: anchor 1 hit in frontend/src/api/journeyContinuation.ts, -28 bytes changed (7392 -> 7364), mutant e8cae1f91429. Baseline run run301322 (_run301322.db, port 4940) read GREEN; the same spec with the mutant in place ran as run301343 (_run301343.db, port 4941) and put 1 node(s) in RED [ord0278-positive-the-resume-request-carries-both-keys] out of 4. After the arm the file hashed 081c8491a206, which equals the tested tree's blob 081c8491a206.",
+   "why_source": "why",
+   "why_token_count": 12
+  },
+  {
+   "derived_from": "this arm's own readings; the one no other arm can quote is the mutant hash: arm_shape_digest_12=13c42505c5af · attempt.db=_run301386.db · baseline.db=_run301366.db · attempt.port=4943 · baseline.port=4942",
+   "derived_from_key": "derived_from",
+   "id": "K278_TWO_KEYS_MERGED",
+   "own_hits": [
+    "081c8491a206",
+    "1",
+    "13c42505c5af",
+    "4",
+    "4942",
+    "4943",
+    "5",
+    "7387",
+    "7392",
+    "_run301366.db",
+    "_run301386.db",
+    "journeyContinuation.ts"
+   ],
+   "own_token_count": 50,
+   "unique_hits": [
+    "13c42505c5af",
+    "4942",
+    "4943",
+    "_run301366.db",
+    "_run301386.db"
+   ],
+   "verdict": "KILLED",
+   "why": "the ruling's 'two keys, never merged' violated in the direction that looks harmless: one name standing in for both, so 'same mission, different request' and 'same request, resent' collapse in storage  Measured on this tip: anchor 1 hit in frontend/src/api/journeyContinuation.ts, -5 bytes changed (7392 -> 7387), mutant 13c42505c5af. Baseline run run301366 (_run301366.db, port 4942) read GREEN; the same spec with the mutant in place ran as run301386 (_run301386.db, port 4943) and put 1 node(s) in RED [ord0278-positive-the-resume-request-carries-both-keys] out of 4. After the arm the file hashed 081c8491a206, which equals the tested tree's blob 081c8491a206.",
+   "why_source": "why",
+   "why_token_count": 12
+  },
+  {
+   "derived_from": "this arm's own readings; the one no other arm can quote is the mutant hash: arm_shape_digest_12=66a6193027f8 · attempt.db=_run301425.db · baseline.db=_run301405.db · attempt.port=4945 · baseline.port=4944",
+   "derived_from_key": "derived_from",
+   "id": "K278_CLEAR_BEFORE_SEND",
+   "own_hits": [
+    "1",
+    "170208",
+    "170255",
+    "4",
+    "47",
+    "4944",
+    "4945",
+    "5",
+    "66a6193027f8",
+    "V8Experience.tsx",
+    "_run301405.db",
+    "_run301425.db",
+    "e31d5d750c6a"
+   ],
+   "own_token_count": 52,
+   "unique_hits": [
+    "4944",
+    "4945",
+    "66a6193027f8",
+    "_run301405.db",
+    "_run301425.db"
+   ],
+   "verdict": "KILLED",
+   "why": "clause 5's forbidden shape -- the record is erased AHEAD of the send, so a run interrupted after this press is unfindable again. (v1 measured this arm with a different edit: moving the post-await clear out of its condition still erased after the send, which is a different defect and cell 1 correctly ignored it. That mutant was wrong, not the gate.)  Measured on this tip: anchor 1 hit in frontend/src/app/V8Experience.tsx, 47 bytes changed (170208 -> 170255), mutant 66a6193027f8. Baseline run run301405 (_run301405.db, port 4944) read GREEN; the same spec with the mutant in place ran as run301425 (_run301425.db, port 4945) and put 1 node(s) in RED [ord0269-cell1-reveals-and-names-its-boundary] out of 4. After the arm the file hashed e31d5d750c6a, which equals the tested tree's blob e31d5d750c6a.",
+   "why_source": "why",
+   "why_token_count": 13
+  },
+  {
+   "derived_from": "this arm's own readings; the one no other arm can quote is the mutant hash: arm_shape_digest_12=5ac2179b8813 · attempt.db=_run301463.db · baseline.db=_run301443.db · attempt.port=4947 · baseline.port=4946",
+   "derived_from_key": "derived_from",
+   "id": "K278_SILENCE_ON_NON_ACCEPT",
+   "own_hits": [
+    "1",
+    "170208",
+    "170241",
+    "33",
+    "4",
+    "4946",
+    "4947",
+    "5ac2179b8813",
+    "V8Experience.tsx",
+    "_run301443.db",
+    "_run301463.db",
+    "e31d5d750c6a"
+   ],
+   "own_token_count": 50,
+   "unique_hits": [
+    "4946",
+    "4947",
+    "5ac2179b8813",
+    "_run301443.db",
+    "_run301463.db"
+   ],
+   "verdict": "KILLED",
+   "why": "a refusal, timeout or dead transport paints no word and leaves the card standing -- the 'never silence' half of the reveal  Measured on this tip: anchor 1 hit in frontend/src/app/V8Experience.tsx, 33 bytes changed (170208 -> 170241), mutant 5ac2179b8813. Baseline run run301443 (_run301443.db, port 4946) read GREEN; the same spec with the mutant in place ran as run301463 (_run301463.db, port 4947) and put 1 node(s) in RED [ord0278-negative-refused-keeps-the-marker-and-says-whose-words-these-are] out of 4. After the arm the file hashed e31d5d750c6a, which equals the tested tree's blob e31d5d750c6a.",
+   "why_source": "why",
+   "why_token_count": 12
+  },
+  {
+   "derived_from": "this arm's own readings; the one no other arm can quote is the mutant hash: arm_shape_digest_12=0c60a2f0ca6d · attempt.db=_run301517.db · baseline.db=_run301502.db · attempt.port=4949 · baseline.port=4948",
+   "derived_from_key": "derived_from",
+   "id": "K253_LEG2_KEY_DROPPED",
+   "own_hits": [
+    "0c60a2f0ca6d",
+    "1",
+    "3",
+    "45548",
+    "45674",
+    "4948",
+    "4949",
+    "6a2e742627b3",
+    "PlanWithAiSheet.tsx",
+    "_run301502.db",
+    "_run301517.db"
+   ],
+   "own_token_count": 50,
+   "unique_hits": [
+    "0c60a2f0ca6d",
+    "4948",
+    "4949",
+    "_run301502.db",
+    "_run301517.db"
+   ],
+   "verdict": "KILLED",
+   "why": "the pre-fix shape: the leg the server actually reads arrives with no identity, so the receipt machinery never sees the phone's own press  Measured on this tip: anchor 1 hit in frontend/src/features/planning/PlanWithAiSheet.tsx, -126 bytes changed (45674 -> 45548), mutant 0c60a2f0ca6d. Baseline run run301502 (_run301502.db, port 4948) read GREEN; the same spec with the mutant in place ran as run301517 (_run301517.db, port 4949) and put 3 node(s) in RED [ord0253-a-burst-consumes-no-key, ord0253-both-legs-of-one-intent-share-one-key, ord0253-each-intent-mints-a-fresh-key] out of 3. After the arm the file hashed 6a2e742627b3, which equals the tested tree's blob 6a2e742627b3.",
+   "why_source": "why",
+   "why_token_count": 12
+  },
+  {
+   "derived_from": "this arm's own readings; the one no other arm can quote is the mutant hash: arm_shape_digest_12=fe5ab9f5c935 · attempt.db=_run301549.db · baseline.db=_run301534.db · attempt.port=4951 · baseline.port=4950",
+   "derived_from_key": "derived_from",
+   "id": "K253_LEG1_KEY_DROPPED",
+   "own_hits": [
+    "1",
+    "3",
+    "45600",
+    "45674",
+    "4950",
+    "4951",
+    "6a2e742627b3",
+    "PlanWithAiSheet.tsx",
+    "_run301534.db",
+    "_run301549.db",
+    "fe5ab9f5c935"
+   ],
+   "own_token_count": 50,
+   "unique_hits": [
+    "4950",
+    "4951",
+    "_run301534.db",
+    "_run301549.db",
+    "fe5ab9f5c935"
+   ],
+   "verdict": "KILLED",
+   "why": "only one leg of one press carries the identity, so the two disagree about whose send this is -- 'one intent, one key' broken across the legs rather than dropped from both  Measured on this tip: anchor 1 hit in frontend/src/features/planning/PlanWithAiSheet.tsx, -74 bytes changed (45674 -> 45600), mutant fe5ab9f5c935. Baseline run run301534 (_run301534.db, port 4950) read GREEN; the same spec with the mutant in place ran as run301549 (_run301549.db, port 4951) and put 3 node(s) in RED [ord0253-a-burst-consumes-no-key, ord0253-both-legs-of-one-intent-share-one-key, ord0253-each-intent-mints-a-fresh-key] out of 3. After the arm the file hashed 6a2e742627b3, which equals the tested tree's blob 6a2e742627b3.",
+   "why_source": "why",
+   "why_token_count": 12
+  },
+  {
+   "derived_from": "this arm's own readings; the one no other arm can quote is the mutant hash: arm_shape_digest_12=2aba1f33cc8a · attempt.db=_run301580.db · baseline.db=_run301566.db · attempt.port=4953 · baseline.port=4952",
+   "derived_from_key": "derived_from",
+   "id": "K253_ONE_KEY_FOR_ALL_INTENTS",
+   "own_hits": [
+    "1",
+    "11",
+    "2aba1f33cc8a",
+    "3",
+    "45674",
+    "45685",
+    "4952",
+    "4953",
+    "6a2e742627b3",
+    "PlanWithAiSheet.tsx",
+    "_run301566.db",
+    "_run301580.db"
+   ],
+   "own_token_count": 50,
+   "unique_hits": [
+    "2aba1f33cc8a",
+    "4952",
+    "4953",
+    "_run301566.db",
+    "_run301580.db"
+   ],
+   "verdict": "KILLED",
+   "why": "the key stops being per intent and becomes a per-session constant: both legs still agree, so only the second-press node can see it -- which is what that node exists for  Measured on this tip: anchor 1 hit in frontend/src/features/planning/PlanWithAiSheet.tsx, 11 bytes changed (45674 -> 45685), mutant 2aba1f33cc8a. Baseline run run301566 (_run301566.db, port 4952) read GREEN; the same spec with the mutant in place ran as run301580 (_run301580.db, port 4953) and put 3 node(s) in RED [ord0253-a-burst-consumes-no-key, ord0253-both-legs-of-one-intent-share-one-key, ord0253-each-intent-mints-a-fresh-key] out of 3. After the arm the file hashed 6a2e742627b3, which equals the tested tree's blob 6a2e742627b3.",
+   "why_source": "why",
+   "why_token_count": 12
+  }
+ ],
+ "cells_found": 7,
+ "exit": 0,
+ "findings": [],
+ "hard_codes": [],
+ "hard_count": 0,
+ "info_count": 0,
+ "meaning": "no shared literal and every sentence names its own readings",
+ "overall": "Q38_GATE_GREEN",
+ "receipt": {
+  "blob_sha1": "859292701b8c0e4fd06ca7d36a58f5b506803bd3",
+  "bytes": 52884,
+  "path": "review/evidence/ui-overnight/ord0278-0253-arms-0298c-on-dbd0f9d.json"
+ },
+ "soft_codes": [],
+ "soft_count": 0,
+ "unique_reading_counts": {
+  "K253_LEG1_KEY_DROPPED": 8,
+  "K253_LEG2_KEY_DROPPED": 8,
+  "K253_ONE_KEY_FOR_ALL_INTENTS": 8,
+  "K278_CLEAR_BEFORE_SEND": 9,
+  "K278_NO_MISSION_ID_IN_BODY": 10,
+  "K278_SILENCE_ON_NON_ACCEPT": 9,
+  "K278_TWO_KEYS_MERGED": 8
+ }
+}
