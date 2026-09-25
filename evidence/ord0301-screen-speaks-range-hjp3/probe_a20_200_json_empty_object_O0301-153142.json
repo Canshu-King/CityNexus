@@ -1,0 +1,17 @@
+{
+ "asked": "http://127.0.0.1:8564/api/v1/journeys/d845ac26-0add-4305-bd3f-3f7c6f6fe3c1/agent/commands",
+ "face_port": 8564,
+ "face_tag": "outcome_origin",
+ "policy_stamp": "A20_200_JSON_EMPTY_OBJECT",
+ "method": "POST",
+ "why_this_method": "the controlled face manufactures the POST outcome, so the probe asks the same leg the traveller hits",
+ "upstream_port": 8563,
+ "upstream_listening": false,
+ "origin_listening": false,
+ "real_backend_listening": false,
+ "probe": {
+  "status": null,
+  "error": "URLError: <urlopen error [WinError 10061] 由于目标计算机积极拒绝，无法连接。>",
+  "elapsed_ms": 2082
+ }
+}
