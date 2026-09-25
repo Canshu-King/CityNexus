@@ -1,0 +1,59 @@
+{
+ "ran_at_local": "2026-09-25T18:03:47+0800",
+ "branch_tip_at_read": "5c717e60264d7ee33e0ae52c198efba1582b84e0",
+ "path_overwritten": "ord0288-t1-durable-ownership-hjp3/evidence_manifest_full40_o0288_r2.json",
+ "writes_on_this_path": 2,
+ "history": [
+  {
+   "commit": "fd39c8f6c2730939b8f839baf2031cacd742d13d",
+   "commit_short": "fd39c8f6c273",
+   "committed_at": "2026-09-25T10:01:45Z",
+   "message": "docs(evidence): ORD-0288 T-1 HJ-P3 blob manifest r2 (40-hex, blobs only)",
+   "blob_40_hex": "6747b51fc7d41582920a7c350e9c29f51c978252",
+   "size_bytes": 14165
+  },
+  {
+   "commit": "2958288b89262e39a7029f09e8b3f6f6de9de39c",
+   "commit_short": "2958288b8926",
+   "committed_at": "2026-09-25T09:45:05Z",
+   "message": "docs(evidence): ORD-0288 T-1 manifest r2 - counts blobs, not the instruments/ tree entry",
+   "blob_40_hex": "5ac1c5900840f4eff682b610ba2eb6f8fe231434",
+   "size_bytes": 13519
+  }
+ ],
+ "first_write": {
+  "commit": "2958288b89262e39a7029f09e8b3f6f6de9de39c",
+  "commit_short": "2958288b8926",
+  "committed_at": "2026-09-25T09:45:05Z",
+  "message": "docs(evidence): ORD-0288 T-1 manifest r2 - counts blobs, not the instruments/ tree entry",
+  "blob_40_hex": "5ac1c5900840f4eff682b610ba2eb6f8fe231434",
+  "size_bytes": 13519
+ },
+ "my_re_put": {
+  "commit": "fd39c8f6c2730939b8f839baf2031cacd742d13d",
+  "commit_short": "fd39c8f6c273",
+  "committed_at": "2026-09-25T10:01:45Z",
+  "message": "docs(evidence): ORD-0288 T-1 HJ-P3 blob manifest r2 (40-hex, blobs only)",
+  "blob_40_hex": "6747b51fc7d41582920a7c350e9c29f51c978252",
+  "size_bytes": 14165
+ },
+ "claim_it_contradicts": "delivery `issuecomment-5830510652` and the ledger block say 已发布路径 0 覆盖; that was true of the 58 paths the write-history file read, and became false for this one path when I pushed the refreshed manifest past my own gate",
+ "root_cause": "I called the low-level publisher (`publish_evidence_r5.py`) directly for a one-file refresh instead of going through `o0288_publish.py`, which is the only place the identical-or-refuse gate lives. The gate never sees a direct call.",
+ "recovery_of_the_overwritten_bytes": "the first blob is still addressable: GET /repos/Canshu-King/CityNexus/git/blobs/5ac1c5900840f4eff682b610ba2eb6f8fe231434, or check out commit 2958288b8926 of this path",
+ "what_i_did_about_it": [
+  "the current bytes of the path are left as they are - re-pushing the old blob would be a third write on the same name",
+  "the newest full listing goes out under a NEW name (evidence_manifest_full40_o0288_r3.json)",
+  "the write-history proof is re-run and published as no_rewrite_proof_o0288_r2.json, and it now reports this path with 2 writes, so the record shows the hole instead of hiding it",
+  "a single-file publisher with the gate built in (gated_push.py) is what I use from now on",
+  "a correction post on the bus naming this file, the delivery post id, both blob ids"
+ ],
+ "sizes": {
+  "first_write_bytes": 13519,
+  "re_put_bytes": 14165,
+  "delta_bytes": 646
+ },
+ "self_check": {
+  "blobs_are_different": true,
+  "history_is_read_not_written": true
+ }
+}
