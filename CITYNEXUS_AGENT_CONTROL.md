@@ -16588,6 +16588,69 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### CMDR-0926-0305 · 号令者 494abfd7：Q64 尺改到 r3（E 第二轮拓出三处文法盲区，逐枚复现后修）+ ORD-0319 第 2 轮 = ACCEPTED + Q43 换 r4c 上膛
+
+**E 的反例我逐枚自己跑过**：`evidence/ord0319-q64-r2-attack-d2305848/` 四枚 fixture 拉下来先对字节——我的本地副本与她发布的 blob 全等：A `4c1bdae7f371ae96f580a7e590331c95ba04715e`（属性尾名 `value` 在旧名单外）、B `ace904808257b02b002c63e424e8bdc6855623f6`（裸局部 `{sentence}` 一跳）、C `c6ef79c50cea55e3024b8dfe79ff8273bf24c16e`（括号别名 `(out.failureReason || {}).text`）、D 正控 `aac913740eb191e453144ea0d2e253a8611e5883`。r2 跑这四枚 = 0 命中；r3 跑 = 3 命中且正控仍干净。⇒ **ORD-0319 第 2 轮 = ACCEPTED**（要件①—④齐，跨面自测两面 PASS，她按我上一轮的要件把"三形不在 live 树上"讲在前面，没有借机翻产品判定）。
+
+**r3 与其牙齿**：尺 `evidence/cmdr-ui-exposure-r3-0200/ui_exposure_field_check_r3.py` = 44e062e6ce9c7b5d97d78e09e432072da102292c；自测 `selftest_r3.json` = 3b42290b6f66492dfa6355f59db360408ccab882 —— 13 枚夹具（必须红 8 / 必须干净 5），两对 (工作目录, 解释器) 各跑一次均 `SELFTEST_PASS`；差分 `r3_differential.json` = a8807c857cfc2d5ca7d43dec90fe4346b347fc44，四格 `derived` 全 True（三形抓到 / 现尖读数不变 / 老一代不变窄 / 干净侧五枚仍为 0）。
+- 现尖复扫不变：`capture_tip_r3.json` = 5e0b53bd7cdc7455ae931148b54b889684a207d1，尖 `30de4ebe409f49c5e25f4758cb2e5f4e90764a4f` 上 `PlanWithAiSheet.tsx:1016` 仍 1 命中（链 helper `:159` → 绑定名 `failureReason` `:576`）。
+- 老一代回归：`4fc0de91c18a966f99fc40fcd7ce136a5e2b8936` 在 r2 与 r3 下同为 7 命中 ⇒ 加规则没有把旧读数改窄。B 的 b5 候选 `b6e1dd3295aafa3330cc9142a4475ac359eb7a3e` 在 r3 下仍是 `:1046` 同一枚，她 02:49 那块数值不变、不必重跑。
+- **一处故意没做（写死防后人）**：我一度把 `INTERP_BLOCK` 放宽到吃一层嵌套花括号，它立刻把 `{result?.failureReason && (` 这类守卫行当渲染点报，自测 4 枚夹具当场转红；退回窄版、只加一条专认 `(x.y || {}).text` 的别名规则。放宽括号 = 把守卫当渲染，是另一种假红。
+
+**Q43 门换版**：D 报的"行号列表被归进 `PORT` 豁免"经我复现成立（她的写法 `…tsx:414`、`:474`、`:538` 在 r4b 下全进 PORT），已改到 `evidence/cmdr-q43-r4c-0152/claim_coordinate_check_r4c.py` = 08f7d3249528b019d1c431770f662aeec91eb2f2，新增 `LINE_REF` 桶与只看不拦的 `advisories()`；三枚真实文本逐枚差分见 `evidence/cmdr-q43-r4c-0152/r4b_vs_r4c_diff.json` = 1ca6ea825e834cd4df1c1ff74435d8c16556b357（判级与 claims 数全不变，只有桶变）。三条写盘门已换跑 r4c：`ledger_insert_after_r3.py` = e26a51b47e5a5bcd4db917bd5eeb2e196b8c90a9、`ledger_inbox_apply_r2.py` = cd1076e7f72c8996c9290b174cb7a9e8324a6a67、`post_note_r2.py` = 7e1fc7db31d1b7b0fe20b50f787f7aae19314bfa；换完收件箱工具六判自测全过。
+
+**并行车道状态**：S1（Q64 全树扫描）已改指 r3 并保留同一枚基准格；S2（ORD-0318 Hermes harness 移植）与 S3（账本状态板）在跑。inbox 仍挂 P3 一枚待改标签（`aad2d1f2_0059.md`，只差把"本地重算 sha1"的 blob 字样改掉，我不碰她的字）。`:8000` 仍 NOT AVAILABLE、手机不换代（Q61）、P0 两枚 key × 两层在用户手上。Q67 未裁 ⇒ B 的 b5 = ACCEPTED-CODE / NOT-CLOSED。
+
+
+### S1-q64sweep 02:54+08 — Q64 尺 r2 全前端树清扫完成（量具读数，0 改产品）
+
+**lane** S1-q64sweep · **standing rule** Q64=① UI_EVIDENCE_EXPOSURE_GATE_V1 · **at_local** 2026-09-26T02:54+08
+
+**generation（权威尖）** 30de4ebe409f49c5e25f4758cb2e5f4e90764a4f · 我开单时与收尾各自 `git ls-remote origin refs/heads/mirror/integration-frontend-apple-pass1` 读回同一枚，`tip_moved=False`。
+
+**尺** blob 608016f6a538097041554b76cfe3e9a4192f299c（本地 `ui_exposure_field_check_r2.py` 经 `git hash-object` = 同值，`git rev-parse origin/commander/control:evidence/cmdr-ui-exposure-r2-0059/ui_exposure_field_check_r2.py` = 同值，三处全等）。尺自检 `--selftest` = SELFTEST_PASS，夹具 8 枚中 5 红 3 净，逐条 `assertion_met=True`。
+
+**方法** 尺本体逐文件调用：`python -X utf8 ui_exposure_field_check_r2.py --ref <generation> --path frontend/src/... --out <scratch>.json`。尺自己用 `git show` 取字节，所以输入始终是尖的提交对象而非工作树；我未 import 尺、未重写任何正则、未改产品字节（`git status --porcelain frontend` 交付前读回 = 0 行）。枚举取 `git ls-tree -r --name-only <tip> frontend/src` 的 `.ts`/`.tsx`，计 files_scanned=74；`node_modules`、`dist`、`frontend/node_modules`（junction）未扫未碰。旁证：`git archive <tip> frontend/src | tar -x` 落盘后 `find -name '*.ts*'` 亦为 74，与枚举同数。
+
+**读数（全部由尺的 per-file 工件重算，非手填）**
+
+- files_scanned 74 · files_failed 0 · files_with_hits 12 · hits_total 25
+- per_rule：UPSTREAM_READ_DIRECT 21 · UPSTREAM_TEXT_VIA_HELPER_TO_DOM 1 · RAW_BODY_TO_DOM 1 · RAW_TEXT_INTERPOLATION 1 · UPSTREAM_EXCEPTION_TO_DOM 1
+- classification：**upstream_prose 16** · local_wording 6 · machine_label 3（合计 25，与 hits 表长度派生一致）
+
+**两向自检（硬条件，均成立）**
+
+- `baseline_reproduced=True`：PlanWithAiSheet.tsx 仍 1 命中，规则 UPSTREAM_TEXT_VIA_HELPER_TO_DOM、行 :1016、链 `serverReasonSentence` → `failureReason`，blob 3bb6a39067a380c2f75629fd7562f0de8f5d2f2a 回读全等。
+- `negative_control_clean=True`：具名负控 frontend/src/lib/money.ts（币制算术，全文 grep `fetch|XMLHttpRequest|axios|detail|body|message|resp` = 0 行）由尺本体单扫 = NO_EXPOSURE_SHAPE_FOUND，命中 0。
+
+**16 枚 upstream_prose 的集中点（我逐格读了落点行，不是照规则名猜）**
+
+- 9 枚同源：JourneyInboxWorkbench.tsx:88 的 `throw new Error(payload.error?.message ?? payload.detail ?? ...)` 把服务器正文塞进 `error.message`，再经 :687 的 role=status 段、:731 与 :691 的 code 元素出屏（含 :307 :317 :336 :386 :407 :435 :459 :517 与 RAW_TEXT_INTERPOLATION :691）。
+- 另有 V8Experience.tsx:1028 —— 抛点是 app/V8Experience.tsx:169-171 的 `rejectionReason`，它逐字取 `body.detail` / `body.error.message`，渲染在 :1562。
+- PlanComparison.tsx:92（:95-96 直读，:260 出屏）、HotelsPanel.tsx:91（:97-103 的白名单只挡两个冲突码，:104 的 else 分支 `raw ||` 在未映射码时把原话放出去，:229 出屏）、ProductErrorBoundary.tsx:104（连 React 的 `info` 组件栈一起进 pre）、AgentComposer.tsx:95 与 CopilotDock.tsx:615（CopilotResponse.message，citynexus.ts:384/:908，属设计内的模型答复通道，我单列以便另行裁决）、PlanWithAiSheet.tsx:1016（基准格）。
+- **对照组**：LiveRecovery.tsx:234 虽直读 `body.error.message`，但过 features/execution/LiveRecovery.tsx:68 的 `humanReplanReason` 四码白名单，:90-93 未映射时回本机句子 ⇒ 判 local_wording，这条路径上裁决要的闸门是在的。
+- machine_label 3 枚：failureAttribution.ts:160（`content_type` 在允许字段内、`body_kind` 是 :92 的 `html|not_json|empty` 闭枚举）、main.tsx:1066（本机标签 + 计数）、V8Experience.tsx:833（`error.message` 只以 JourneyTrialSetup.tsx:1248 的 `data-error-message` 属性落地，用户句走 i18n 键）。
+
+**仪表读数（对量具本身有用，我不改尺）**
+
+- r2 报的行是匹配**起始**花括号所在行，不是 offending 文本行：25 枚里有 16 枚的 snippet 是 `} catch (error) {`、`} else {`、`if (!r.ok) {` 这一类（我按尺的 snippet 字段实数得出 16，覆盖 6 个文件）。故每格我另附机器抽取的 basis 行（按行号从 `git archive` 导出的尖树里读，非手打）。
+- 1 枚打在注释上：V8Experience.tsx:320 命中的是 317-326 的 JSDoc 正文，`\braw\b.*\bslice\(` 吃到了解释代码的散文。
+- 反向漏报 4 处（服务器正文确实出屏、r2 不响）：main.tsx:1063、main.tsx:1064、main.tsx:1074、main.tsx:1421 —— `agentRun.outcome` / `agentRun.failure_reason` / `step.result.error` / `item.explanation` 都是服务器列直进 DOM。我没把它们计进 hits_total（该数只由尺派生），单列在件的 `adjacent_findings`。
+
+**上架（只走 gated 门，两条路径均为新建，0 覆盖）**
+
+- commander/control:evidence/q64-sweep-S1/sweep_r1.json = blob f783b12eea629d52dbe8ff00f45716d50b99e30c，publish commit 09c56540df86a4bb205d8a3795de200c3a23f08e，decision CREATED，proof BYTE-LEVEL MATCH。
+- 独立回读走第二扇门（不信任发布工具自己的读回）：`git fetch origin refs/heads/commander/control:refs/remotes/origin/cmdcontrol` 后 `git rev-parse origin/cmdcontrol:evidence/q64-sweep-S1/sweep_r1.json` = f783b12eea629d52dbe8ff00f45716d50b99e30c，本地 sha1-over-bytes 与 `git hash-object` 亦同值，字节 35059/35059。
+- 回读收据另立一件（件不能自存自身 blob，故号记在旁边的第二件里）：commander/control:evidence/q64-sweep-S1/readback_proof_r1.json = blob d15fd4430b74d410c32cc486601c97486bec669a，publish commit 38c0778c3e5e07cc3910a4031c80c1dd04397c79，`rev-parse` 回读同值，verdict READBACK_CONCORDANT。
+- 件的 schema CNX_Q64_SWEEP_V1，含 lane / at_local / generation / ruler / files_scanned / files_with_hits / hits_total / per_rule / baseline_reproduced / negative_control_clean / verdict=SWEEP_VALID / classification / hits（每格带 blob、taint_chain、basis 原文）/ adjacent_findings / instrument_notes。
+
+**边界与归属声明**
+
+- 我只读产品树，0 改字节、0 推权威分支、未跑 `demo/reset`、未碰 `*_live.db`/`*_preview.db`、未跑 `vite build`、未读也未打印任何凭据（`run/preview_auth.txt` 这个路径我一个字都没读，也没用过 `--print-auth`）。
+- 交付时我在同一个 CityNexus 检出里看到 `backend/app/main.py` 与 `backend/app/agent/runtime_identity.py` 处于 modified、根目录有 `_ctrl_log.txt` 等未跟踪文件 —— 那是别的车道/权威线的既有状态，不是我这一趟产生的，按 R14 归因先说明。
+- 下一步归属：16 枚 upstream_prose 是否要各配闸门属裁决与实现车道；本车道只做量具读数，未开任何修复。若要 r3，请把上面读到的量具事实（16 枚错行锚点、1 枚注释命中、以及 main.tsx:1063 / main.tsx:1064 / main.tsx:1074 / main.tsx:1421 这一族未响应的行）作为夹具输入。
+
+
 ### CMDR-0926-0153 · 号令者 494abfd7：Q43 尺改到 r4c（D 报的 PORT/LINE_REF 混淆，我复现并修，判级不变）+ 三条门全部上膛新尺 + 并行开单
 
 **D 报的是真的，我复现了**：`evidence/cmdr-q43-r4c-0152/` 之前，r4b 把 `` `PlanWithAiSheet.tsx:414`、`:474`、`:538` `` 这类**行号续写**全归进 `PORT` 豁免（她的原话：同一句 7 claims → 2 claims，5 枚被当端口吃掉）。我把她的写法做成夹具跑 r4b：确实进 `PORT`。后果不是放过了违规（行号本身是合法坐标），而是**豁免桶在说谎**——`exempt: {"PORT": 4}` 里其实混着行号，读帖的人没法判断覆盖还剩多少。归我，D 只报不修是对的。
