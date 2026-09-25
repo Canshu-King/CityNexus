@@ -1,0 +1,65 @@
+{
+ "schema": "CNX_LANE_E_ORD0319_Q64_ATTACK_V1",
+ "order": "ORD-0319 (commander 00:37 knock): two-sided attack on the Q64 UI exposure ruler",
+ "ruler_under_attack": {
+  "path": "evidence/cmdr-ui-exposure-gate-2327/ui_exposure_field_check_r1.py",
+  "blob": "0ba79e00738984ee06651219530e5a9d7fa897e3",
+  "blob_expected": "0ba79e00738984ee06651219530e5a9d7fa897e3",
+  "bytes_unchanged_by_me": true
+ },
+ "at": "2026-09-26T00:41:53+0800",
+ "counter_examples": {
+  "e0319_counter_raw_body_head.tsx": {
+   "rc": 0,
+   "rules_hit": [
+    "RAW_BODY_TO_DOM",
+    "RAW_TEXT_INTERPOLATION"
+   ],
+   "stdout_head": "EXPOSURE_SHAPE_FOUND across 1 scanned file(s): 4 hit(s) ['RAW_BODY_TO_DOM@D:\\\\moodle\\\\_qoder_redteam_anywhere_20260921\\\\raw\\\\ord0319\\\\e0319_counter_raw_body_head.tsx:1', 'RAW_BODY_TO_DOM@D:\\\\moodle\\\\_qoder_redteam_anywhere_20260921\\\\raw\\\\ord0319\\\\e0319_counter_raw_body_head.tsx:2', 'RAW_TEXT_INTERPOLATION@D:\\\\moodle\\\\_qoder_redteam_anywhere_20260921\\\\raw\\\\ord0319\\\\e0319_counter_raw_body_head.tsx:2']"
+  },
+  "e0319_counter_backend_detail.tsx": {
+   "rc": 0,
+   "rules_hit": [],
+   "stdout_head": "NO_EXPOSURE_SHAPE_FOUND across 1 scanned file(s): 0 hit(s) []"
+  },
+  "e0319_counter_exception_stack.tsx": {
+   "rc": 0,
+   "rules_hit": [
+    "UPSTREAM_EXCEPTION_TO_DOM"
+   ],
+   "stdout_head": "EXPOSURE_SHAPE_FOUND across 1 scanned file(s): 2 hit(s) ['UPSTREAM_EXCEPTION_TO_DOM@D:\\\\moodle\\\\_qoder_redteam_anywhere_20260921\\\\raw\\\\ord0319\\\\e0319_counter_exception_stack.tsx:2', 'UPSTREAM_EXCEPTION_TO_DOM@D:\\\\moodle\\\\_qoder_redteam_anywhere_20260921\\\\raw\\\\ord0319\\\\e0319_counter_exception_stack.tsx:3']"
+  }
+ },
+ "positive_control": {
+  "e0319_control_whitelist_only.tsx": {
+   "rc": 0,
+   "rules_hit": [],
+   "stdout_head": "NO_EXPOSURE_SHAPE_FOUND across 1 scanned file(s): 0 hit(s) []"
+  }
+ },
+ "blind_spot_probe": {
+  "target": "2344145ce6342b6ac32ac4d0955c0f524d8c9320:frontend/src/features/planning/PlanWithAiSheet.tsx (blob 3bb6a39067a380c2f75629fd7562f0de8f5d2f2a)",
+  "cmdr_capture_says": "0 hits (evidence/cmdr-ui-exposure-gate-2327/capture_tip_r1.json 4bf0eafa23f6c814518fabcfc8f38ff34e0b59b3)",
+  "my_rerun_rc": 0,
+  "shapes_the_net_misses": [
+   {
+    "path": "frontend/src/features/planning/PlanWithAiSheet.tsx",
+    "line": 577,
+    "text": "serverReasonSentence(body),"
+   },
+   {
+    "path": "frontend/src/features/planning/PlanWithAiSheet.tsx",
+    "line": 1016,
+    "text": "<code data-testid=\"plan-ai-reason\">{result.failureReason.text}</code>"
+   }
+  ]
+ },
+ "two_way_rule": {},
+ "discipline": {
+  "product_bytes_changed": 0,
+  "ruler_bytes_changed": 0,
+  "refs_pushed": 0,
+  "published_paths_overwritten": 0,
+  "credential_values_printed": 0
+ }
+}
