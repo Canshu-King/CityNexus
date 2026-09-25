@@ -1,0 +1,1241 @@
+{
+  "order": "ORD-0297",
+  "revision": "o297_derived_r1",
+  "verifier": "1a986a24 HJ-P1",
+  "what_is_claimed_and_what_is_not": "claimed_result is mine and computed from the fields printed beside it; derived_result is null on every cell because closure belongs to a verifier reading other than the deliverer's (B-1)",
+  "ref_tip_read": {
+    "read_at_local": "2026-09-25T09:46:31+0800",
+    "how": "GET /repos/Canshu-King/CityNexus/git/ref/heads/<branch> over https (external read; the local repo remote is NOT the authoritative line)",
+    "note_master": "refs/heads/master is 346 commits BEHIND 5c4608ce (compare API) => it is not the landed line; recorded so nobody reuses my first, wrong read",
+    "refs": {
+      "review/ord0287-recut-commander": {
+        "http": 200,
+        "tip": "5c4608cede6cb7bd5f3ac7e704bfee379ca47abc",
+        "ls_remote_form": "5c4608cede6cb7bd5f3ac7e704bfee379ca47abc\trefs/heads/review/ord0287-recut-commander",
+        "object_id_len": 40
+      },
+      "review/ord0296-write-deadline-f": {
+        "http": 200,
+        "tip": "6d041dcce11d05f28a55abadd40717f321b4db38",
+        "ls_remote_form": "6d041dcce11d05f28a55abadd40717f321b4db38\trefs/heads/review/ord0296-write-deadline-f",
+        "object_id_len": 40
+      },
+      "master": {
+        "http": 200,
+        "tip": "7d22cd0eb7840121ba42a5ba363e1a4c7ca1a7e7",
+        "ls_remote_form": "7d22cd0eb7840121ba42a5ba363e1a4c7ca1a7e7\trefs/heads/master",
+        "object_id_len": 40
+      },
+      "commander/control": {
+        "http": 200,
+        "tip": "812ac630cf46b95b6c6d021cb56cae43e7b8d184",
+        "ls_remote_form": "812ac630cf46b95b6c6d021cb56cae43e7b8d184\trefs/heads/commander/control",
+        "object_id_len": 40
+      }
+    },
+    "ordered_to_landed_jump": {
+      "http": 200,
+      "files": [
+        "backend/app/core/config.py",
+        "backend/app/db/session.py",
+        "backend/app/db/write_deadline.py",
+        "backend/app/main.py",
+        "backend/tests/test_qoder_ord0296_write_deadline.py"
+      ],
+      "ahead": 1,
+      "behind": 0,
+      "frontend_files": []
+    }
+  },
+  "trees": {
+    "ordered_tip": "5c4608cede6cb7bd5f3ac7e704bfee379ca47abc",
+    "generations": {
+      "landed": {
+        "commit": "5c4608cede6cb7bd5f3ac7e704bfee379ca47abc",
+        "bundle": "index-xKIGmoBz.js",
+        "shell_md5": "3f2914575322ce0b952eeab2809716c5",
+        "worker_sha256_16": "6a2eee7091c7cdc0",
+        "marker_line_added": null
+      },
+      "landed_next": {
+        "commit": "5c4608cede6cb7bd5f3ac7e704bfee379ca47abc",
+        "bundle": "index-IbbdpA3f.js",
+        "shell_md5": "75aba1f1a5162ece67d1ce0b4afa1391",
+        "worker_sha256_16": "e1556d912c286209",
+        "marker_line_added": "window.__cnxNextGenerationMarker = \"ORD-0297-next\";"
+      }
+    },
+    "pairwise_distinct": true,
+    "shell_md5_distinct": true,
+    "backend_trees": {
+      "ordered_backend": "5c4608cede6cb7bd5f3ac7e704bfee379ca47abc",
+      "landed_backend": "6d041dcce11d05f28a55abadd40717f321b4db38"
+    }
+  },
+  "cells": {
+    "B3_offline_after_convergence": {
+      "claim_under_test": [
+        "B3_offline_after_convergence"
+      ],
+      "claimed_result": "CLAIMED_MET_ON_LANDED_GEN",
+      "derived_result": null,
+      "why": "arm=b3_landed_primary; kind=b3_offline; installed_sha=5c4608ce; frontend_under_test=landed 5c4608ce; backend_tree=D:\\moodle\\_qoder_hjp1_o207_20260922\\o297\\ordered_backend\\backend; instrument_ok=true; probe_smoke={\"ok\": true, \"href\": \"about:blank\", \"marker\": null, \"leafCount\": 0}; instrument_self_errors=[]; generation_pairs=index-xKIGmoBz.js (installed) vs index-IbbdpA3f.js (next); executed_after_transition=[\"index-IbbdpA3f.js\"]; marker_after_transition=ORD-0297-next; update_trigger={\"updated\": true, \"via\": \"registration.update() after the trip was written\"}; asset_root_written=dist; pointer_read_back_ok=true; instrument_navigations=[\"P0-nav1-install\", \"P0-nav2-take-control\"]; journeys_rows=0 before / 1 after; tables_measured=55; server_logged_201_for_journeys=false; journey_id=07f4892e-e1fa-4967-964a-c073210a4778; retry_presses=0; nav_labels_at_creation=[\"今天\", \"行程\", \"地图\", \"Copilot\", \"我的\"]; offline_first_bodyChars=651; offline_first_leafCount=47; offline_first_marker=ORD-0297-next; offline_first_executed=[\"index-IbbdpA3f.js\"]; in_app_taps_of_steps=3/3; nav_path_changed=3; nav_bodyChars=[114, 271, 334]; reload_bodyChars=91; reload_http_status=200; reload_executed=[\"index-IbbdpA3f.js\"]; origin_hits_during_offline_total=5; page_level_hits_offline=0; worker_update_hits_offline=[\"/v10-sw.js\", \"/workbox-6923124b.js\"]; origin_html_at_js_urls=[]; nav_executed_per_screen=[[\"index-IbbdpA3f.js\"], [\"index-IbbdpA3f.js\"], [\"index-IbbdpA3f.js\"]]; offline_document_boots=true; usable_offline=true; usable_offline_strict_200_chars=false; offline_reload_is_app_notice=true; offline_app_names_saved_copy=true; outage_update_attempt=NOT_MEASURED; converged_onto_next=true; stays_on_new_generation_offline=true; stayed_on_installed_generation_offline=false; pageErrors=[]; arm_invalid_reason=None; control_arm=b3_landed_control; control_differs_on=[\"offline_document_boots\", \"usable_offline\"] | rendered offline sentences: {\"first_screen\": [\"菜单\", \"/\", \"今天\", \"跟随系统\", \"EN\", \"BE\", \"早上好\", \"北京之旅\"], \"after_reload\": [\"连接\", \"网络不可用\", \"这一发请求没能出去，也没有收到任何回答，所以这是网络问题。你的行程数据没有丢失，已保存的只读副本还能看。请检查网络后重试。\", \"看已保存的只读副本\", \"重试\", \"归因详情\"]}",
+      "controls": [
+        {
+          "arm": "b3_landed_control",
+          "discriminating_field": "offline_document_boots",
+          "primary_measured": true,
+          "control_measured": false
+        },
+        {
+          "arm": "b3_landed_control",
+          "discriminating_field": "usable_offline",
+          "primary_measured": true,
+          "control_measured": false
+        }
+      ],
+      "control_verdict": "CONTROL_DISCRIMINATES",
+      "instrument_state": {
+        "primary_probe_smoke": {
+          "ok": true,
+          "href": "about:blank",
+          "marker": null,
+          "leafCount": 0
+        },
+        "primary_self_errors": [],
+        "control_probe_smoke": {
+          "ok": true,
+          "href": "about:blank",
+          "marker": null,
+          "leafCount": 0
+        },
+        "control_self_errors": []
+      },
+      "triples": [
+        {
+          "sha": "5c4608cede6cb7bd5f3ac7e704bfee379ca47abc",
+          "nodeid": "b3_landed_primary",
+          "shape": "390x844 touch / zh-CN persistent profile / one-shot sqlite / ports {\"backend\": 8980, \"origin\": 8981}",
+          "executed_offline": [
+            "index-IbbdpA3f.js"
+          ],
+          "bodyChars": 651
+        },
+        {
+          "sha": "5c4608cede6cb7bd5f3ac7e704bfee379ca47abc",
+          "nodeid": "b3_landed_control",
+          "shape": "390x844 touch / zh-CN persistent profile / one-shot sqlite / ports {\"backend\": 8980, \"origin\": 8981}",
+          "executed_offline": [
+            "index-IbbdpA3f.js"
+          ],
+          "bodyChars": 0
+        }
+      ],
+      "same_key_precondition": "same walk, same typed draft, same trees and same offline window; the arms differ only in the field their cell is about (B3: which root serves /assets/ after the swap -- dist vs dist; A: whether the worker is allowed to land its update while offline)",
+      "isolation": {
+        "b3_landed_primary": {
+          "rundir_deleted": true,
+          "db_leftovers": [],
+          "profile_leftovers": false,
+          "ports_final": {
+            "backend": [],
+            "origin": []
+          }
+        },
+        "b3_landed_control": {
+          "rundir_deleted": true,
+          "db_leftovers": [],
+          "profile_leftovers": false,
+          "ports_final": {
+            "backend": [],
+            "origin": []
+          }
+        }
+      },
+      "durable_read_back": {
+        "journeys_rows": [
+          1,
+          1
+        ],
+        "tables_measured": [
+          55,
+          55
+        ]
+      }
+    },
+    "A_never_reconnected": {
+      "claim_under_test": [
+        "A_never_reconnected"
+      ],
+      "claimed_result": "CLAIMED_RED_NEVER_RECONNECTED_BROKEN",
+      "derived_result": null,
+      "why": "arm=a_never_reconnects; kind=a_never_reconnects; installed_sha=5c4608ce; frontend_under_test=landed 5c4608ce; backend_tree=D:\\moodle\\_qoder_hjp1_o207_20260922\\o297\\ordered_backend\\backend; instrument_ok=true; probe_smoke={\"ok\": true, \"href\": \"about:blank\", \"marker\": null, \"leafCount\": 0}; instrument_self_errors=[]; generation_pairs=index-xKIGmoBz.js (installed) vs index-IbbdpA3f.js (next); executed_after_transition=[\"index-xKIGmoBz.js\"]; marker_after_transition=None; update_trigger={\"deferred\": \"no update attempted while online; the control attempts one inside the outage\"}; asset_root_written=dist; pointer_read_back_ok=true; instrument_navigations=[\"P0-nav1-install\", \"P0-nav2-take-control\"]; journeys_rows=0 before / 1 after; tables_measured=55; server_logged_201_for_journeys=false; journey_id=8ce75b6f-88c2-45f1-baa8-5fdb9d419084; retry_presses=0; nav_labels_at_creation=[\"今天\", \"行程\", \"地图\", \"Copilot\", \"我的\"]; offline_first_bodyChars=789; offline_first_leafCount=56; offline_first_marker=None; offline_first_executed=[\"index-xKIGmoBz.js\"]; in_app_taps_of_steps=0/3; nav_path_changed=0; nav_bodyChars=[789, 789, 789]; reload_bodyChars=91; reload_http_status=200; reload_executed=[\"index-IbbdpA3f.js\"]; origin_hits_during_offline_total=10; page_level_hits_offline=4; worker_update_hits_offline=[\"/v10-sw.js\", \"/workbox-6923124b.js\"]; origin_html_at_js_urls=[]; nav_executed_per_screen=[[\"index-xKIGmoBz.js\"], [\"index-xKIGmoBz.js\"], [\"index-xKIGmoBz.js\"]]; offline_document_boots=true; usable_offline=false; usable_offline_strict_200_chars=false; offline_reload_is_app_notice=true; offline_app_names_saved_copy=true; outage_update_attempt=NOT_MEASURED; converged_onto_next=false; stays_on_new_generation_offline=false; stayed_on_installed_generation_offline=false; pageErrors=[]; arm_invalid_reason=None; control_arm=a_control_update_lands; control_differs_on=[\"stayed_on_installed_generation_offline\"] | rendered offline sentences: {\"first_screen\": [\"菜单\", \"/\", \"今天\", \"跟随系统\", \"EN\", \"BE\", \"知道了\", \"早上好\"], \"after_reload\": [\"连接\", \"网络不可用\", \"这一发请求没能出去，也没有收到任何回答，所以这是网络问题。你的行程数据没有丢失，已保存的只读副本还能看。请检查网络后重试。\", \"看已保存的只读副本\", \"重试\", \"归因详情\"]}",
+      "controls": [
+        {
+          "arm": "a_control_update_lands",
+          "discriminating_field": "stayed_on_installed_generation_offline",
+          "primary_measured": false,
+          "control_measured": true
+        }
+      ],
+      "control_verdict": "CONTROL_DISCRIMINATES",
+      "instrument_state": {
+        "primary_probe_smoke": {
+          "ok": true,
+          "href": "about:blank",
+          "marker": null,
+          "leafCount": 0
+        },
+        "primary_self_errors": [],
+        "control_probe_smoke": {
+          "ok": true,
+          "href": "about:blank",
+          "marker": null,
+          "leafCount": 0
+        },
+        "control_self_errors": []
+      },
+      "triples": [
+        {
+          "sha": "5c4608cede6cb7bd5f3ac7e704bfee379ca47abc",
+          "nodeid": "a_never_reconnects",
+          "shape": "390x844 touch / zh-CN persistent profile / one-shot sqlite / ports {\"backend\": 8980, \"origin\": 8981}",
+          "executed_offline": [
+            "index-xKIGmoBz.js"
+          ],
+          "bodyChars": 789
+        },
+        {
+          "sha": "5c4608cede6cb7bd5f3ac7e704bfee379ca47abc",
+          "nodeid": "a_control_update_lands",
+          "shape": "390x844 touch / zh-CN persistent profile / one-shot sqlite / ports {\"backend\": 8980, \"origin\": 8981}",
+          "executed_offline": [
+            "index-xKIGmoBz.js"
+          ],
+          "bodyChars": 789
+        }
+      ],
+      "same_key_precondition": "same walk, same typed draft, same trees and same offline window; the arms differ only in the field their cell is about (B3: which root serves /assets/ after the swap -- dist vs dist; A: whether the worker is allowed to land its update while offline)",
+      "isolation": {
+        "a_never_reconnects": {
+          "rundir_deleted": true,
+          "db_leftovers": [],
+          "profile_leftovers": false,
+          "ports_final": {
+            "backend": [],
+            "origin": []
+          }
+        },
+        "a_control_update_lands": {
+          "rundir_deleted": true,
+          "db_leftovers": [],
+          "profile_leftovers": false,
+          "ports_final": {
+            "backend": [],
+            "origin": []
+          }
+        }
+      },
+      "durable_read_back": {
+        "journeys_rows": [
+          1,
+          1
+        ],
+        "tables_measured": [
+          55,
+          55
+        ]
+      }
+    },
+    "B3_with_backend_6d041dcc": {
+      "claim_under_test": "does the trip screen still answer HTTP 500 when the backend half is the next landed jump 6d041dcc (write deadline) instead of 5c4608ce, with the frontend bytes identical",
+      "claimed_result": "CLAIMED_HUB_500_CLEARED",
+      "derived_result": null,
+      "why": "arm=b3_landed_primary_writebackend; kind=b3_offline; installed_sha=5c4608ce; frontend_under_test=landed 5c4608ce; backend_tree=D:\\moodle\\_qoder_hjp1_o207_20260922\\o297\\landed_backend\\backend; instrument_ok=true; probe_smoke={\"ok\": true, \"href\": \"about:blank\", \"marker\": null, \"leafCount\": 0}; instrument_self_errors=[]; generation_pairs=index-xKIGmoBz.js (installed) vs index-IbbdpA3f.js (next); executed_after_transition=[\"index-IbbdpA3f.js\"]; marker_after_transition=ORD-0297-next; update_trigger={\"updated\": true, \"via\": \"registration.update() after the trip was written\"}; asset_root_written=dist; pointer_read_back_ok=true; instrument_navigations=[\"P0-nav1-install\", \"P0-nav2-take-control\"]; journeys_rows=0 before / 1 after; tables_measured=55; server_logged_201_for_journeys=false; journey_id=afa84d3e-9c4a-4a4d-a943-24288f433996; retry_presses=0; nav_labels_at_creation=[\"今天\", \"行程\", \"地图\", \"Copilot\", \"我的\"]; offline_first_bodyChars=651; offline_first_leafCount=47; offline_first_marker=ORD-0297-next; offline_first_executed=[\"index-IbbdpA3f.js\"]; in_app_taps_of_steps=3/3; nav_path_changed=3; nav_bodyChars=[114, 271, 334]; reload_bodyChars=91; reload_http_status=200; reload_executed=[\"index-IbbdpA3f.js\"]; origin_hits_during_offline_total=6; page_level_hits_offline=0; worker_update_hits_offline=[\"/v10-sw.js\", \"/workbox-6923124b.js\"]; origin_html_at_js_urls=[]; nav_executed_per_screen=[[\"index-IbbdpA3f.js\"], [\"index-IbbdpA3f.js\"], [\"index-IbbdpA3f.js\"]]; offline_document_boots=true; usable_offline=true; usable_offline_strict_200_chars=false; offline_reload_is_app_notice=true; offline_app_names_saved_copy=true; outage_update_attempt=NOT_MEASURED; converged_onto_next=true; stays_on_new_generation_offline=true; stayed_on_installed_generation_offline=false; pageErrors=[]; arm_invalid_reason=None; compared_against_arm=b3_landed_primary; primary_offline_first_bodyChars=651 | rendered offline sentences: {\"first_screen\": [\"菜单\", \"/\", \"今天\", \"跟随系统\", \"EN\", \"BE\", \"早上好\", \"北京之旅\"], \"after_reload\": [\"连接\", \"网络不可用\", \"这一发请求没能出去，也没有收到任何回答，所以这是网络问题。你的行程数据没有丢失，已保存的只读副本还能看。请检查网络后重试。\", \"看已保存的只读副本\", \"重试\", \"归因详情\"]}",
+      "controls": [],
+      "instrument_state": {
+        "probe_smoke": {
+          "ok": true,
+          "href": "about:blank",
+          "marker": null,
+          "leafCount": 0
+        },
+        "self_errors": []
+      },
+      "triples": [
+        {
+          "sha": "5c4608cede6cb7bd5f3ac7e704bfee379ca47abc",
+          "nodeid": "b3_landed_primary_writebackend",
+          "shape": "390x844 touch / zh-CN persistent profile / one-shot sqlite / ports {\"backend\": 8980, \"origin\": 8981}",
+          "executed_offline": [
+            "index-IbbdpA3f.js"
+          ],
+          "bodyChars": 651
+        }
+      ],
+      "isolation": {
+        "b3_landed_primary_writebackend": {
+          "rundir_deleted": true,
+          "db_leftovers": [],
+          "profile_leftovers": false,
+          "ports_final": {
+            "backend": [],
+            "origin": []
+          }
+        }
+      }
+    }
+  },
+  "arms": {
+    "b3_landed_primary": {
+      "arm": "b3_landed_primary",
+      "kind": "b3_offline",
+      "cells_this_arm_judges": [
+        "B3_offline_after_convergence"
+      ],
+      "installed_sha": "5c4608cede6cb7bd5f3ac7e704bfee379ca47abc",
+      "next_sha_label": "5c4608cede6cb7bd5f3ac7e704bfee379ca47abc + inert marker line (ORD-0297-next)",
+      "backend_tree": "D:\\moodle\\_qoder_hjp1_o207_20260922\\o297\\ordered_backend\\backend",
+      "old_bundle": "index-xKIGmoBz.js",
+      "new_bundle": "index-IbbdpA3f.js",
+      "shape": "390x844 touch / zh-CN persistent profile / one-shot sqlite / ports {\"backend\": 8980, \"origin\": 8981}",
+      "fatal": null,
+      "arm_invalid_reason": null,
+      "arm_exit": 0,
+      "arm_wall_s": 78.0,
+      "probe_smoke": {
+        "ok": true,
+        "href": "about:blank",
+        "marker": null,
+        "leafCount": 0
+      },
+      "instrument_self_errors": [],
+      "pageErrors": [],
+      "journey_id": "07f4892e-e1fa-4967-964a-c073210a4778",
+      "retry_presses_made": 0,
+      "nav_labels_at_creation": [
+        "今天",
+        "行程",
+        "地图",
+        "Copilot",
+        "我的"
+      ],
+      "update_trigger": {
+        "updated": true,
+        "via": "registration.update() after the trip was written"
+      },
+      "asset_root_written": "dist",
+      "pointer_read_back_ok": true,
+      "executed_after_transition": [
+        "index-IbbdpA3f.js"
+      ],
+      "marker_after_transition": "ORD-0297-next",
+      "instrument_navigations": [
+        "P0-nav1-install",
+        "P0-nav2-take-control"
+      ],
+      "offline_first_bodyChars": 651,
+      "offline_first_leafCount": 47,
+      "offline_first_marker": "ORD-0297-next",
+      "offline_first_scripts": [
+        "index-IbbdpA3f.js"
+      ],
+      "offline_first_rendered": [
+        "菜单",
+        "/",
+        "今天",
+        "跟随系统",
+        "EN",
+        "BE",
+        "早上好",
+        "北京之旅"
+      ],
+      "nav_steps": 3,
+      "nav_tapped": 3,
+      "nav_path_changed": 3,
+      "nav_bodyChars": [
+        114,
+        271,
+        334
+      ],
+      "nav_executed": [
+        [
+          "index-IbbdpA3f.js"
+        ],
+        [
+          "index-IbbdpA3f.js"
+        ],
+        [
+          "index-IbbdpA3f.js"
+        ]
+      ],
+      "reload_bodyChars": 91,
+      "reload_bundles": [
+        "index-IbbdpA3f.js"
+      ],
+      "reload_marker": "ORD-0297-next",
+      "reload_http_status": 200,
+      "reload_rendered": [
+        "连接",
+        "网络不可用",
+        "这一发请求没能出去，也没有收到任何回答，所以这是网络问题。你的行程数据没有丢失，已保存的只读副本还能看。请检查网络后重试。",
+        "看已保存的只读副本",
+        "重试",
+        "归因详情"
+      ],
+      "origin_hits_during_offline": 5,
+      "page_level_hits_offline": [],
+      "worker_update_hits_offline": [
+        "/v10-sw.js",
+        "/workbox-6923124b.js"
+      ],
+      "origin_html_at_js_urls": [],
+      "journeys_rows_before": 0,
+      "journeys_rows_after": 1,
+      "server_logged_201_for_journeys": false,
+      "tables_measured": 55,
+      "isolation": {
+        "rundir_deleted": true,
+        "db_leftovers": [],
+        "profile_leftovers": false,
+        "ports_final": {
+          "backend": [],
+          "origin": []
+        }
+      },
+      "converged_onto_next": true,
+      "stays_on_new_generation_offline": true,
+      "stayed_on_installed_generation_offline": false,
+      "offline_document_boots": true,
+      "usable_offline_strict": false,
+      "offline_reload_is_app_notice": true,
+      "offline_app_names_saved_copy": true,
+      "offline_first_is_app_copy": true,
+      "usable_offline": true,
+      "no_page_origin_contact_offline": true,
+      "outage_update_attempt": "NOT_MEASURED",
+      "worker_update_landed": true,
+      "instrument_ok": true
+    },
+    "a_never_reconnects": {
+      "arm": "a_never_reconnects",
+      "kind": "a_never_reconnects",
+      "cells_this_arm_judges": [
+        "A_never_reconnected"
+      ],
+      "installed_sha": "5c4608cede6cb7bd5f3ac7e704bfee379ca47abc",
+      "next_sha_label": "5c4608cede6cb7bd5f3ac7e704bfee379ca47abc + inert marker line (ORD-0297-next)",
+      "backend_tree": "D:\\moodle\\_qoder_hjp1_o207_20260922\\o297\\ordered_backend\\backend",
+      "old_bundle": "index-xKIGmoBz.js",
+      "new_bundle": "index-IbbdpA3f.js",
+      "shape": "390x844 touch / zh-CN persistent profile / one-shot sqlite / ports {\"backend\": 8980, \"origin\": 8981}",
+      "fatal": null,
+      "arm_invalid_reason": null,
+      "arm_exit": 0,
+      "arm_wall_s": 121.1,
+      "probe_smoke": {
+        "ok": true,
+        "href": "about:blank",
+        "marker": null,
+        "leafCount": 0
+      },
+      "instrument_self_errors": [],
+      "pageErrors": [],
+      "journey_id": "8ce75b6f-88c2-45f1-baa8-5fdb9d419084",
+      "retry_presses_made": 0,
+      "nav_labels_at_creation": [
+        "今天",
+        "行程",
+        "地图",
+        "Copilot",
+        "我的"
+      ],
+      "update_trigger": {
+        "deferred": "no update attempted while online; the control attempts one inside the outage"
+      },
+      "asset_root_written": "dist",
+      "pointer_read_back_ok": true,
+      "executed_after_transition": [
+        "index-xKIGmoBz.js"
+      ],
+      "marker_after_transition": null,
+      "instrument_navigations": [
+        "P0-nav1-install",
+        "P0-nav2-take-control"
+      ],
+      "offline_first_bodyChars": 789,
+      "offline_first_leafCount": 56,
+      "offline_first_marker": null,
+      "offline_first_scripts": [
+        "index-xKIGmoBz.js"
+      ],
+      "offline_first_rendered": [
+        "菜单",
+        "/",
+        "今天",
+        "跟随系统",
+        "EN",
+        "BE",
+        "知道了",
+        "早上好"
+      ],
+      "nav_steps": 3,
+      "nav_tapped": 0,
+      "nav_path_changed": 0,
+      "nav_bodyChars": [
+        789,
+        789,
+        789
+      ],
+      "nav_executed": [
+        [
+          "index-xKIGmoBz.js"
+        ],
+        [
+          "index-xKIGmoBz.js"
+        ],
+        [
+          "index-xKIGmoBz.js"
+        ]
+      ],
+      "reload_bodyChars": 91,
+      "reload_bundles": [
+        "index-IbbdpA3f.js"
+      ],
+      "reload_marker": "ORD-0297-next",
+      "reload_http_status": 200,
+      "reload_rendered": [
+        "连接",
+        "网络不可用",
+        "这一发请求没能出去，也没有收到任何回答，所以这是网络问题。你的行程数据没有丢失，已保存的只读副本还能看。请检查网络后重试。",
+        "看已保存的只读副本",
+        "重试",
+        "归因详情"
+      ],
+      "origin_hits_during_offline": 10,
+      "page_level_hits_offline": [
+        {
+          "kind": "static",
+          "path": "/index.html",
+          "status": null
+        },
+        {
+          "kind": "static",
+          "path": "/assets/maplibre-gl-BGokhCjD.js",
+          "status": null
+        },
+        {
+          "kind": "static",
+          "path": "/assets/JourneyMap-BPOS1vwf.js",
+          "status": null
+        },
+        {
+          "kind": "static",
+          "path": "/assets/index-IbbdpA3f.js",
+          "status": null
+        }
+      ],
+      "worker_update_hits_offline": [
+        "/v10-sw.js",
+        "/workbox-6923124b.js"
+      ],
+      "origin_html_at_js_urls": [],
+      "journeys_rows_before": 0,
+      "journeys_rows_after": 1,
+      "server_logged_201_for_journeys": false,
+      "tables_measured": 55,
+      "isolation": {
+        "rundir_deleted": true,
+        "db_leftovers": [],
+        "profile_leftovers": false,
+        "ports_final": {
+          "backend": [],
+          "origin": []
+        }
+      },
+      "converged_onto_next": false,
+      "stays_on_new_generation_offline": false,
+      "stayed_on_installed_generation_offline": false,
+      "offline_document_boots": true,
+      "usable_offline_strict": false,
+      "offline_reload_is_app_notice": true,
+      "offline_app_names_saved_copy": true,
+      "offline_first_is_app_copy": true,
+      "usable_offline": false,
+      "no_page_origin_contact_offline": false,
+      "outage_update_attempt": "NOT_MEASURED",
+      "worker_update_landed": true,
+      "instrument_ok": true
+    },
+    "b3_landed_control": {
+      "arm": "b3_landed_control",
+      "kind": "b3_control_partial",
+      "cells_this_arm_judges": [
+        "B3_control_partial_deploy"
+      ],
+      "installed_sha": "5c4608cede6cb7bd5f3ac7e704bfee379ca47abc",
+      "next_sha_label": "5c4608cede6cb7bd5f3ac7e704bfee379ca47abc + inert marker line (ORD-0297-next)",
+      "backend_tree": "D:\\moodle\\_qoder_hjp1_o207_20260922\\o297\\ordered_backend\\backend",
+      "old_bundle": "index-xKIGmoBz.js",
+      "new_bundle": "index-IbbdpA3f.js",
+      "shape": "390x844 touch / zh-CN persistent profile / one-shot sqlite / ports {\"backend\": 8980, \"origin\": 8981}",
+      "fatal": null,
+      "arm_invalid_reason": null,
+      "arm_exit": 0,
+      "arm_wall_s": 63.4,
+      "probe_smoke": {
+        "ok": true,
+        "href": "about:blank",
+        "marker": null,
+        "leafCount": 0
+      },
+      "instrument_self_errors": [],
+      "pageErrors": [],
+      "journey_id": "e4c7b928-4e58-46b2-8ddc-341b5949bca8",
+      "retry_presses_made": 0,
+      "nav_labels_at_creation": [
+        "今天",
+        "行程",
+        "地图",
+        "Copilot",
+        "我的"
+      ],
+      "update_trigger": {
+        "updated": true,
+        "via": "registration.update() after the trip was written"
+      },
+      "asset_root_written": "dist",
+      "pointer_read_back_ok": true,
+      "executed_after_transition": [
+        "index-IbbdpA3f.js"
+      ],
+      "marker_after_transition": null,
+      "instrument_navigations": [
+        "P0-nav1-install",
+        "P0-nav2-take-control"
+      ],
+      "offline_first_bodyChars": 0,
+      "offline_first_leafCount": 0,
+      "offline_first_marker": null,
+      "offline_first_scripts": [
+        "index-IbbdpA3f.js"
+      ],
+      "offline_first_rendered": [],
+      "nav_steps": 0,
+      "nav_tapped": 0,
+      "nav_path_changed": 0,
+      "nav_bodyChars": [],
+      "nav_executed": [],
+      "reload_bodyChars": 0,
+      "reload_bundles": [
+        "index-IbbdpA3f.js"
+      ],
+      "reload_marker": null,
+      "reload_http_status": 200,
+      "reload_rendered": [],
+      "origin_hits_during_offline": 2,
+      "page_level_hits_offline": [],
+      "worker_update_hits_offline": [
+        "/v10-sw.js",
+        "/workbox-6923124b.js"
+      ],
+      "origin_html_at_js_urls": [
+        "/assets/JourneyMap-BPOS1vwf.js",
+        "/assets/index-IbbdpA3f.js",
+        "/assets/maplibre-gl-BGokhCjD.js"
+      ],
+      "journeys_rows_before": 0,
+      "journeys_rows_after": 1,
+      "server_logged_201_for_journeys": false,
+      "tables_measured": 55,
+      "isolation": {
+        "rundir_deleted": true,
+        "db_leftovers": [],
+        "profile_leftovers": false,
+        "ports_final": {
+          "backend": [],
+          "origin": []
+        }
+      },
+      "converged_onto_next": true,
+      "stays_on_new_generation_offline": true,
+      "stayed_on_installed_generation_offline": false,
+      "offline_document_boots": false,
+      "usable_offline_strict": false,
+      "offline_reload_is_app_notice": false,
+      "offline_app_names_saved_copy": false,
+      "offline_first_is_app_copy": false,
+      "usable_offline": false,
+      "no_page_origin_contact_offline": true,
+      "outage_update_attempt": "NOT_MEASURED",
+      "worker_update_landed": true,
+      "instrument_ok": true
+    },
+    "a_control_update_lands": {
+      "arm": "a_control_update_lands",
+      "kind": "a_control_update_lands",
+      "cells_this_arm_judges": [
+        "A_control_update_lands"
+      ],
+      "installed_sha": "5c4608cede6cb7bd5f3ac7e704bfee379ca47abc",
+      "next_sha_label": "5c4608cede6cb7bd5f3ac7e704bfee379ca47abc + inert marker line (ORD-0297-next)",
+      "backend_tree": "D:\\moodle\\_qoder_hjp1_o207_20260922\\o297\\ordered_backend\\backend",
+      "old_bundle": "index-xKIGmoBz.js",
+      "new_bundle": "index-IbbdpA3f.js",
+      "shape": "390x844 touch / zh-CN persistent profile / one-shot sqlite / ports {\"backend\": 8980, \"origin\": 8981}",
+      "fatal": null,
+      "arm_invalid_reason": null,
+      "arm_exit": 0,
+      "arm_wall_s": 121.2,
+      "probe_smoke": {
+        "ok": true,
+        "href": "about:blank",
+        "marker": null,
+        "leafCount": 0
+      },
+      "instrument_self_errors": [],
+      "pageErrors": [],
+      "journey_id": "6ea1d12c-0961-49a3-bbd6-23d367790de3",
+      "retry_presses_made": 0,
+      "nav_labels_at_creation": [
+        "今天",
+        "行程",
+        "地图",
+        "Copilot",
+        "我的"
+      ],
+      "update_trigger": {
+        "deferred": "no update attempted while online; the control attempts one inside the outage"
+      },
+      "asset_root_written": "dist",
+      "pointer_read_back_ok": true,
+      "executed_after_transition": [
+        "index-xKIGmoBz.js"
+      ],
+      "marker_after_transition": null,
+      "instrument_navigations": [
+        "P0-nav1-install",
+        "P0-nav2-take-control"
+      ],
+      "offline_first_bodyChars": 789,
+      "offline_first_leafCount": 56,
+      "offline_first_marker": null,
+      "offline_first_scripts": [
+        "index-xKIGmoBz.js"
+      ],
+      "offline_first_rendered": [
+        "菜单",
+        "/",
+        "今天",
+        "跟随系统",
+        "EN",
+        "BE",
+        "知道了",
+        "早上好"
+      ],
+      "nav_steps": 3,
+      "nav_tapped": 0,
+      "nav_path_changed": 0,
+      "nav_bodyChars": [
+        789,
+        789,
+        789
+      ],
+      "nav_executed": [
+        [
+          "index-xKIGmoBz.js"
+        ],
+        [
+          "index-xKIGmoBz.js"
+        ],
+        [
+          "index-xKIGmoBz.js"
+        ]
+      ],
+      "reload_bodyChars": 91,
+      "reload_bundles": [
+        "index-xKIGmoBz.js"
+      ],
+      "reload_marker": null,
+      "reload_http_status": 200,
+      "reload_rendered": [
+        "连接",
+        "网络不可用",
+        "这一发请求没能出去，也没有收到任何回答，所以这是网络问题。你的行程数据没有丢失，已保存的只读副本还能看。请检查网络后重试。",
+        "看已保存的只读副本",
+        "重试",
+        "归因详情"
+      ],
+      "origin_hits_during_offline": 3,
+      "page_level_hits_offline": [],
+      "worker_update_hits_offline": [
+        "/v10-sw.js"
+      ],
+      "origin_html_at_js_urls": [],
+      "journeys_rows_before": 0,
+      "journeys_rows_after": 1,
+      "server_logged_201_for_journeys": false,
+      "tables_measured": 55,
+      "isolation": {
+        "rundir_deleted": true,
+        "db_leftovers": [],
+        "profile_leftovers": false,
+        "ports_final": {
+          "backend": [],
+          "origin": []
+        }
+      },
+      "converged_onto_next": false,
+      "stays_on_new_generation_offline": false,
+      "stayed_on_installed_generation_offline": true,
+      "offline_document_boots": true,
+      "usable_offline_strict": false,
+      "offline_reload_is_app_notice": true,
+      "offline_app_names_saved_copy": true,
+      "offline_first_is_app_copy": true,
+      "usable_offline": false,
+      "no_page_origin_contact_offline": true,
+      "outage_update_attempt": {
+        "updated": true,
+        "ms": 18,
+        "at_epoch": 1790304233968
+      },
+      "worker_update_landed": true,
+      "instrument_ok": true
+    },
+    "b3_landed_primary_writebackend": {
+      "arm": "b3_landed_primary_writebackend",
+      "kind": "b3_offline",
+      "cells_this_arm_judges": [
+        "B3_offline_after_convergence_backend_6d041dcc"
+      ],
+      "installed_sha": "5c4608cede6cb7bd5f3ac7e704bfee379ca47abc",
+      "next_sha_label": "5c4608cede6cb7bd5f3ac7e704bfee379ca47abc + inert marker line (ORD-0297-next)",
+      "backend_tree": "D:\\moodle\\_qoder_hjp1_o207_20260922\\o297\\landed_backend\\backend",
+      "old_bundle": "index-xKIGmoBz.js",
+      "new_bundle": "index-IbbdpA3f.js",
+      "shape": "390x844 touch / zh-CN persistent profile / one-shot sqlite / ports {\"backend\": 8980, \"origin\": 8981}",
+      "fatal": null,
+      "arm_invalid_reason": null,
+      "arm_exit": 0,
+      "arm_wall_s": 77.0,
+      "probe_smoke": {
+        "ok": true,
+        "href": "about:blank",
+        "marker": null,
+        "leafCount": 0
+      },
+      "instrument_self_errors": [],
+      "pageErrors": [],
+      "journey_id": "afa84d3e-9c4a-4a4d-a943-24288f433996",
+      "retry_presses_made": 0,
+      "nav_labels_at_creation": [
+        "今天",
+        "行程",
+        "地图",
+        "Copilot",
+        "我的"
+      ],
+      "update_trigger": {
+        "updated": true,
+        "via": "registration.update() after the trip was written"
+      },
+      "asset_root_written": "dist",
+      "pointer_read_back_ok": true,
+      "executed_after_transition": [
+        "index-IbbdpA3f.js"
+      ],
+      "marker_after_transition": "ORD-0297-next",
+      "instrument_navigations": [
+        "P0-nav1-install",
+        "P0-nav2-take-control"
+      ],
+      "offline_first_bodyChars": 651,
+      "offline_first_leafCount": 47,
+      "offline_first_marker": "ORD-0297-next",
+      "offline_first_scripts": [
+        "index-IbbdpA3f.js"
+      ],
+      "offline_first_rendered": [
+        "菜单",
+        "/",
+        "今天",
+        "跟随系统",
+        "EN",
+        "BE",
+        "早上好",
+        "北京之旅"
+      ],
+      "nav_steps": 3,
+      "nav_tapped": 3,
+      "nav_path_changed": 3,
+      "nav_bodyChars": [
+        114,
+        271,
+        334
+      ],
+      "nav_executed": [
+        [
+          "index-IbbdpA3f.js"
+        ],
+        [
+          "index-IbbdpA3f.js"
+        ],
+        [
+          "index-IbbdpA3f.js"
+        ]
+      ],
+      "reload_bodyChars": 91,
+      "reload_bundles": [
+        "index-IbbdpA3f.js"
+      ],
+      "reload_marker": "ORD-0297-next",
+      "reload_http_status": 200,
+      "reload_rendered": [
+        "连接",
+        "网络不可用",
+        "这一发请求没能出去，也没有收到任何回答，所以这是网络问题。你的行程数据没有丢失，已保存的只读副本还能看。请检查网络后重试。",
+        "看已保存的只读副本",
+        "重试",
+        "归因详情"
+      ],
+      "origin_hits_during_offline": 6,
+      "page_level_hits_offline": [],
+      "worker_update_hits_offline": [
+        "/v10-sw.js",
+        "/workbox-6923124b.js"
+      ],
+      "origin_html_at_js_urls": [],
+      "journeys_rows_before": 0,
+      "journeys_rows_after": 1,
+      "server_logged_201_for_journeys": false,
+      "tables_measured": 55,
+      "isolation": {
+        "rundir_deleted": true,
+        "db_leftovers": [],
+        "profile_leftovers": false,
+        "ports_final": {
+          "backend": [],
+          "origin": []
+        }
+      },
+      "converged_onto_next": true,
+      "stays_on_new_generation_offline": true,
+      "stayed_on_installed_generation_offline": false,
+      "offline_document_boots": true,
+      "usable_offline_strict": false,
+      "offline_reload_is_app_notice": true,
+      "offline_app_names_saved_copy": true,
+      "offline_first_is_app_copy": true,
+      "usable_offline": true,
+      "no_page_origin_contact_offline": true,
+      "outage_update_attempt": "NOT_MEASURED",
+      "worker_update_landed": true,
+      "instrument_ok": true
+    }
+  },
+  "not_run": {},
+  "criterion_boundaries": "the app's own data reads are not cached by the worker on this surface, so an offline data fetch failing is reported verbatim in the rendered sentences and scored neither as a pass nor as a defect; this receipt scores documents (does anything mount, on which generation, can the traveller move).  SW update fetches survive Playwright's offline emulation, so worker traffic is counted apart from page traffic.",
+  "selftest_duplicate_why": {
+    "cells": 3,
+    "distinct_why_strings": 3,
+    "duplicates": [],
+    "result": "PASS"
+  },
+  "derived_result_is_null_everywhere": true,
+  "gate_rulers": {
+    "r1": {
+      "blob40": "35caa42c0697faf0a8eeb0929a3e11cb53c9709a",
+      "local_sha1_matches_blob_id": true,
+      "selftest_rc": 0,
+      "selftest_tail": "map_entry cells 2 got Q38_GATE_GREEN [] | want Q38_GATE_GREEN [] -> ok",
+      "receipt_measured_rc": 0,
+      "parsed": {
+        "overall": "Q38_GATE_GREEN",
+        "cells_found": 3,
+        "hard": "0",
+        "soft": "0",
+        "cells": [
+          {
+            "cell": "B3_offline_after_convergence",
+            "why_source": "why",
+            "why_tokens": 24,
+            "own_hits": 5,
+            "unique_hits": 0,
+            "shares_why_with": "[]"
+          },
+          {
+            "cell": "A_never_reconnected",
+            "why_source": "why",
+            "why_tokens": 19,
+            "own_hits": 5,
+            "unique_hits": 0,
+            "shares_why_with": "[]"
+          },
+          {
+            "cell": "B3_with_backend_6d041dcc",
+            "why_source": "why",
+            "why_tokens": 23,
+            "own_hits": 4,
+            "unique_hits": 0,
+            "shares_why_with": "[]"
+          }
+        ],
+        "meaning": "no shared literal and every sentence names its own readings"
+      }
+    },
+    "r2": {
+      "blob40": "91ae8b1ec55f5c19122af11bf775df14580955e4",
+      "local_sha1_matches_blob_id": true,
+      "selftest_rc": 0,
+      "selftest_tail": "r_any_key cells 2 got Q38_GATE_GREEN [] | want Q38_GATE_GREEN [] -> ok",
+      "receipt_measured_rc": 0,
+      "parsed": {
+        "overall": "Q38_GATE_GREEN",
+        "cells_found": 3,
+        "hard": "0",
+        "soft": "0",
+        "cells": [
+          {
+            "cell": "B3_offline_after_convergence",
+            "why_source": "why",
+            "why_tokens": 24,
+            "own_hits": 5,
+            "unique_hits": 0,
+            "shares_why_with": "[]"
+          },
+          {
+            "cell": "A_never_reconnected",
+            "why_source": "why",
+            "why_tokens": 19,
+            "own_hits": 5,
+            "unique_hits": 0,
+            "shares_why_with": "[]"
+          },
+          {
+            "cell": "B3_with_backend_6d041dcc",
+            "why_source": "why",
+            "why_tokens": 23,
+            "own_hits": 4,
+            "unique_hits": 0,
+            "shares_why_with": "[]"
+          }
+        ],
+        "meaning": "no shared literal and every sentence names its own readings"
+      }
+    }
+  },
+  "gate_rulers_verbatim": {
+    "r1": "receipt o297_derived_r1.json 38003 B blob_sha1 cf0335ce19e38341e8119f86649d02928b86f638\ncells 3 | overall Q38_GATE_GREEN | hard 0 [] | soft 0 []\n  cell B3_offline_after_convergence | why_source why | why tokens 24 | own hits 5 | unique hits 0 | shares why with []\n  cell A_never_reconnected | why_source why | why tokens 19 | own hits 5 | unique hits 0 | shares why with []\n  cell B3_with_backend_6d041dcc | why_source why | why tokens 23 | own hits 4 | unique hits 0 | shares why with []\nmeaning: no shared literal and every sentence names its own readings\n",
+    "r2": "receipt o297_derived_r1.json 38003 B blob_sha1 cf0335ce19e38341e8119f86649d02928b86f638\ncells 3 | overall Q38_GATE_GREEN | hard 0 [] | soft 0 []\n  cell B3_offline_after_convergence | why_source why | why tokens 24 | own hits 5 | unique hits 0 | shares why with []\n  cell A_never_reconnected | why_source why | why tokens 19 | own hits 5 | unique hits 0 | shares why with []\n  cell B3_with_backend_6d041dcc | why_source why | why tokens 23 | own hits 4 | unique hits 0 | shares why with []\nmeaning: no shared literal and every sentence names its own readings\n"
+  },
+  "gate_both_rulers_green": true,
+  "rounds": {
+    "delivered": {
+      "folder": "(lane root)",
+      "arms": {
+        "b3_landed_primary": {
+          "present": true,
+          "arm_exit": 0,
+          "arm_wall_s": 78.0,
+          "started_at": "2026-09-25T10:33:07+0800",
+          "ended_at": "2026-09-25T10:34:36+0800",
+          "probe_smoke_ok": true,
+          "fatal": null,
+          "reached_A_branch": true,
+          "reached_offline_phase": true,
+          "update_attempted_inside_outage": null,
+          "offline_first_bodyChars": 651,
+          "offline_nav_steps": 3,
+          "offline_reload_bodyChars": 91,
+          "journeys_rows_after": 1,
+          "rundir_deleted": true
+        },
+        "b3_landed_control": {
+          "present": true,
+          "arm_exit": 0,
+          "arm_wall_s": 63.4,
+          "started_at": "2026-09-25T10:34:36+0800",
+          "ended_at": "2026-09-25T10:35:50+0800",
+          "probe_smoke_ok": true,
+          "fatal": null,
+          "reached_A_branch": true,
+          "reached_offline_phase": true,
+          "update_attempted_inside_outage": null,
+          "offline_first_bodyChars": 0,
+          "offline_nav_steps": 0,
+          "offline_reload_bodyChars": 0,
+          "journeys_rows_after": 1,
+          "rundir_deleted": true
+        },
+        "a_never_reconnects": {
+          "present": true,
+          "arm_exit": 0,
+          "arm_wall_s": 121.1,
+          "started_at": "2026-09-25T10:35:50+0800",
+          "ended_at": "2026-09-25T10:38:02+0800",
+          "probe_smoke_ok": true,
+          "fatal": null,
+          "reached_A_branch": true,
+          "reached_offline_phase": true,
+          "update_attempted_inside_outage": null,
+          "offline_first_bodyChars": 789,
+          "offline_nav_steps": 3,
+          "offline_reload_bodyChars": 91,
+          "journeys_rows_after": 1,
+          "rundir_deleted": true
+        },
+        "a_control_update_lands": {
+          "present": true,
+          "arm_exit": 0,
+          "arm_wall_s": 121.2,
+          "started_at": "2026-09-25T10:42:18+0800",
+          "ended_at": "2026-09-25T10:44:30+0800",
+          "probe_smoke_ok": true,
+          "fatal": null,
+          "reached_A_branch": true,
+          "reached_offline_phase": true,
+          "update_attempted_inside_outage": {
+            "updated": true,
+            "ms": 18,
+            "at_epoch": 1790304233968
+          },
+          "offline_first_bodyChars": 789,
+          "offline_nav_steps": 3,
+          "offline_reload_bodyChars": 91,
+          "journeys_rows_after": 1,
+          "rundir_deleted": true
+        },
+        "b3_landed_primary_writebackend": {
+          "present": true,
+          "arm_exit": 0,
+          "arm_wall_s": 77.0,
+          "started_at": "2026-09-25T10:39:50+0800",
+          "ended_at": "2026-09-25T10:41:17+0800",
+          "probe_smoke_ok": true,
+          "fatal": null,
+          "reached_A_branch": true,
+          "reached_offline_phase": true,
+          "update_attempted_inside_outage": null,
+          "offline_first_bodyChars": 651,
+          "offline_nav_steps": 3,
+          "offline_reload_bodyChars": 91,
+          "journeys_rows_after": 1,
+          "rundir_deleted": true
+        }
+      },
+      "spec_kind_strings": {
+        "b3_landed_primary": "b3_offline",
+        "b3_landed_control": "b3_control_partial",
+        "a_never_reconnects": "a_never_reconnects",
+        "a_control_update_lands": "a_control_update_lands",
+        "b3_landed_primary_writebackend": "b3_offline"
+      },
+      "usable_for_the_delivered_verdicts": true,
+      "why_not": null,
+      "defects_named_from_content": []
+    },
+    "A_kind_name_mismatch": {
+      "folder": "o297_round_A_kind_name_mismatch",
+      "arms": {
+        "b3_landed_primary": {
+          "present": true,
+          "arm_exit": 0,
+          "arm_wall_s": 78.1,
+          "started_at": "2026-09-25T10:05:00+0800",
+          "ended_at": "2026-09-25T10:06:29+0800",
+          "probe_smoke_ok": true,
+          "fatal": null,
+          "reached_A_branch": true,
+          "reached_offline_phase": true,
+          "update_attempted_inside_outage": null,
+          "offline_first_bodyChars": 651,
+          "offline_nav_steps": 3,
+          "offline_reload_bodyChars": 91,
+          "journeys_rows_after": 1,
+          "rundir_deleted": true
+        },
+        "b3_landed_control": {
+          "present": true,
+          "arm_exit": 0,
+          "arm_wall_s": 63.5,
+          "started_at": "2026-09-25T10:06:29+0800",
+          "ended_at": "2026-09-25T10:07:44+0800",
+          "probe_smoke_ok": true,
+          "fatal": null,
+          "reached_A_branch": true,
+          "reached_offline_phase": true,
+          "update_attempted_inside_outage": null,
+          "offline_first_bodyChars": 0,
+          "offline_nav_steps": 0,
+          "offline_reload_bodyChars": 0,
+          "journeys_rows_after": 1,
+          "rundir_deleted": true
+        },
+        "a_never_reconnects": {
+          "present": true,
+          "arm_exit": 0,
+          "arm_wall_s": 121.5,
+          "started_at": "2026-09-25T10:07:44+0800",
+          "ended_at": "2026-09-25T10:09:56+0800",
+          "probe_smoke_ok": true,
+          "fatal": null,
+          "reached_A_branch": true,
+          "reached_offline_phase": true,
+          "update_attempted_inside_outage": null,
+          "offline_first_bodyChars": 789,
+          "offline_nav_steps": 3,
+          "offline_reload_bodyChars": 91,
+          "journeys_rows_after": 1,
+          "rundir_deleted": true
+        },
+        "a_control_update_lands": {
+          "present": true,
+          "arm_exit": 0,
+          "arm_wall_s": 121.4,
+          "started_at": "2026-09-25T10:10:19+0800",
+          "ended_at": "2026-09-25T10:12:31+0800",
+          "probe_smoke_ok": true,
+          "fatal": null,
+          "reached_A_branch": true,
+          "reached_offline_phase": true,
+          "update_attempted_inside_outage": null,
+          "offline_first_bodyChars": 651,
+          "offline_nav_steps": 3,
+          "offline_reload_bodyChars": 91,
+          "journeys_rows_after": 1,
+          "rundir_deleted": true
+        },
+        "b3_landed_primary_writebackend": {
+          "present": true,
+          "arm_exit": 0,
+          "arm_wall_s": 77.2,
+          "started_at": "2026-09-25T10:12:31+0800",
+          "ended_at": "2026-09-25T10:13:59+0800",
+          "probe_smoke_ok": true,
+          "fatal": null,
+          "reached_A_branch": true,
+          "reached_offline_phase": true,
+          "update_attempted_inside_outage": null,
+          "offline_first_bodyChars": 651,
+          "offline_nav_steps": 3,
+          "offline_reload_bodyChars": 91,
+          "journeys_rows_after": 1,
+          "rundir_deleted": true
+        }
+      },
+      "spec_kind_strings": {
+        "b3_landed_primary": "b3_offline",
+        "b3_landed_control": "b3_control_partial",
+        "a_never_reconnects": "a_never_reconnects",
+        "a_control_update_lands": "a_control_update_lands",
+        "b3_landed_primary_writebackend": "b3_offline"
+      },
+      "usable_for_the_delivered_verdicts": false,
+      "why_not": "see per-arm content: an arm that never reached the offline phase, or whose branch header did not match the spec's kind string, cannot carry a verdict",
+      "defects_named_from_content": [
+        "a_control_update_lands: no update attempted inside the outage, so it did not test its own claim"
+      ]
+    }
+  }
+}
