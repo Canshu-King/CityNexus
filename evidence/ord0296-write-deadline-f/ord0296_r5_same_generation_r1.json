@@ -1,0 +1,82 @@
+{
+ "what": "ORD-0296 r5 候选的当代自证（门已落地的这一代）",
+ "lane": "F 8ccd71d8",
+ "generated_at": "2026-09-25T19:42:23+08:00",
+ "measured_on": "7856e03f6238da3000976eb6e690a448dfa39b9a",
+ "candidate_commit": "30a5f90e5deaed6e45a704ddcc7d6e5e9790475b",
+ "gate_test_blob": "f3cf05e8fe75cf9322c6eddc1ae6ffbdea8d0f93",
+ "why_a_third_move": "号令 19:20 把我的 ORD-0307 门落了地：尖从 13af1ff4 → 7856e03f（改了 3 条路径，其中 backend 一条 `app/main.py` 是我那两行接线）⇒ r4 的父被超掉，本枚 r5 从当场读到的尖重切",
+ "carry_basis": {
+  "gate_test_blob_at_tip": "deacc9d7483f1b8fd8d24b6e23e586bf402d85f6",
+  "same_blob_the_change_was_made_on": "deacc9d7483f1b8fd8d24b6e23e586bf402d85f6",
+  "overlap_with_landed_paths": 0
+ },
+ "A_default_report_rounds": [
+  {
+   "label": "r5a1",
+   "policy": "report（默认，未设变量）",
+   "rc": 0,
+   "summary_line": "11 passed, 2 warnings in 5.65s",
+   "outcomes": {},
+   "red": [],
+   "runId": "0296-r5a1-2a9ef4019bc1"
+  },
+  {
+   "label": "r5a2",
+   "policy": "report（默认，未设变量）",
+   "rc": 0,
+   "summary_line": "11 passed, 2 warnings in 5.04s",
+   "outcomes": {},
+   "red": [],
+   "runId": "0296-r5a2-bbc8e5636ee2"
+  },
+  {
+   "label": "r5a3",
+   "policy": "report（默认，未设变量）",
+   "rc": 0,
+   "summary_line": "11 passed, 2 warnings in 5.21s",
+   "outcomes": {},
+   "red": [],
+   "runId": "0296-r5a3-17f1217bf0a4"
+  }
+ ],
+ "A_red_across_rounds": [],
+ "B_strict_inside_pytest": {
+  "label": "B_pytest_strict",
+  "rc": 0,
+  "summary_line": "11 passed, 2 warnings in 5.00s",
+  "red": [],
+  "credential_gate_named_in_output": false,
+  "runId": "0296-B-967a652cf626"
+ },
+ "C_strict_outside_pytest": {
+  "label": "C_direct_import_strict",
+  "rc": 1,
+  "named_line_present": true,
+  "named_line": "raise CredentialLiteralError(report[\"live\"], \"strict\", report[\"verdict\"])",
+  "control_default_import_rc": 0,
+  "secret_value_leaked_into_output": false
+ },
+ "conftest_lines_that_explain_B": [
+  "tests/conftest.py:110: \"DEEPSEEK_API_KEY\",",
+  "tests/conftest.py:111: \"OPENAI_API_KEY\",",
+  "tests/conftest.py:112: \"CITYNEXUS_AI_API_KEY\",",
+  "tests/conftest.py:117: \"CITYNEXUS_HERMES_API_KEY\",",
+  "tests/conftest.py:125: os.environ.pop(_name, None)"
+ ],
+ "reading": "同一枚 strict 在 B 里没牙、在 C 里有牙，差别是被 tests/conftest.py 先把 4 个 AI key 从环境 pop 掉（见 conftest_lines）⇒ 结论：**prod 显式 strict 会真的拒启动，但不要拿测试套件的绿去否认它**；反过来也不能说『strict 已验过所以套件安全』——套件走的是环境被洗干净的那条路。",
+ "not_claimed": "十臂反突变战役的当代读数我没有重跑 ⇒ 不声称；前端 14 根写腿的 e2e 半件不在这枚候选里，仍具名未做（号令 relay 里那句『e2e 收据』如果指的是那一半，需要单开一单，因为它跨的是前端与部署面，不是我这条测量车道能自己落的）",
+ "discipline": {
+  "authoritative_line_written": 0,
+  "demo_reset": 0,
+  "live_or_preview_db": 0,
+  "credential_values_printed": 0,
+  "published_paths_overwritten": 0,
+  "refs_pushed_named": [
+   "refs/heads/review/ord0296-write-deadline-f-r5"
+  ]
+ },
+ "claim_kind": "runtime_measured",
+ "claimed_result": "R5-MINTED-PUSHED-AND-11-CELLS-GREEN-ON-LANDED-GEN",
+ "derived_result": null
+}
