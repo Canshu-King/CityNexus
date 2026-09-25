@@ -1,0 +1,96 @@
+{
+  "schema": "CNX_FIELD_ARRIVAL_REPIN_V1",
+  "instrument": {
+    "local": "_ord0326_fields_r2.py",
+    "published_path": "evidence/ord0326-server-reason-S1/field_arrival_builder_r2.py",
+    "published_blob": "64ec7d8af049f8d2311147d56ba67789ca8d874e",
+    "instrument_bytes_rewritten": 0,
+    "generation_field_override": "the driver sets the module's TIP constant to --new; no citation, verdict or expectation was edited"
+  },
+  "old_generation": "5d7335721106c20092dd4d90181bb99accd0a32b",
+  "new_generation": "a8237d7b50a1df419ae7e89ae6c075dabb6513f8",
+  "read_how": "git ls-remote origin refs/heads/mirror/integration-frontend-apple-pass1",
+  "repinned_at_utc": "2026-09-25T21:58:25Z",
+  "cited_file_count": 9,
+  "cited_files_unchanged": [
+    {
+      "path": "backend/app/db/write_deadline.py",
+      "old": "be24fbdeb7095d4e7cd558c58a7ac98197f69990",
+      "new": "be24fbdeb7095d4e7cd558c58a7ac98197f69990"
+    },
+    {
+      "path": "backend/app/main.py",
+      "old": "e2ff3ffb6f9b74c82cc1663980d6e46dacc6938e",
+      "new": "e2ff3ffb6f9b74c82cc1663980d6e46dacc6938e"
+    },
+    {
+      "path": "backend/app/schemas.py",
+      "old": "2e6e26ce17a9e25a40dd8d686f64def5ef1bff0e",
+      "new": "2e6e26ce17a9e25a40dd8d686f64def5ef1bff0e"
+    },
+    {
+      "path": "frontend/src/api/citynexus.ts",
+      "old": "96be3c5aa5db4c0f72de6f3bed1bd34d0fbbb165",
+      "new": "96be3c5aa5db4c0f72de6f3bed1bd34d0fbbb165"
+    },
+    {
+      "path": "frontend/src/features/agent/AgentComposer.tsx",
+      "old": "3a0d06533a416b4a6c4390cf0e411092038131b4",
+      "new": "3a0d06533a416b4a6c4390cf0e411092038131b4"
+    },
+    {
+      "path": "frontend/src/features/agent/CopilotDock.tsx",
+      "old": "3a73aa9e4c2e9fa220d6ff09d1a9ba1c05bbc355",
+      "new": "3a73aa9e4c2e9fa220d6ff09d1a9ba1c05bbc355"
+    },
+    {
+      "path": "frontend/src/lib/failureAttribution.ts",
+      "old": "5956e880abf625591d371d369fe54b72bd2ffce8",
+      "new": "5956e880abf625591d371d369fe54b72bd2ffce8"
+    },
+    {
+      "path": "frontend/src/lib/readDeadline.ts",
+      "old": "be04016af0b402dbe76cce79167475c77d0e77a4",
+      "new": "be04016af0b402dbe76cce79167475c77d0e77a4"
+    },
+    {
+      "path": "frontend/src/lib/writeDeadline.ts",
+      "old": "1d67e725ebb3348bbeb70d743793388ed36ed9d9",
+      "new": "1d67e725ebb3348bbeb70d743793388ed36ed9d9"
+    }
+  ],
+  "cited_files_changed": [],
+  "unchanged_count": 9,
+  "changed_count": 0,
+  "all_citations_pass_at_new_tip": true,
+  "re_cited_line_count": 41,
+  "verdicts_at_new_tip": {
+    "http_status": "EMITTED_AND_ON_SCREEN",
+    "content_type": "EMITTED_BY_FRAMEWORK_READ_IN_ONE_STATE_ONLY",
+    "body_bytes": "NOT-EMITTED",
+    "response_received": "NOT-EMITTED-BY-THAT-NAME",
+    "elapsed_ms": "SERVER_EMITTS_CLIENT_DROPS",
+    "request_id": "NOT-EMITTED"
+  },
+  "not_emitted_at_new_tip": [
+    "body_bytes",
+    "request_id",
+    "response_received"
+  ],
+  "census_at_new_tip": {
+    "main_py_lines": 11490,
+    "request_id_hits_in_main_py": 0,
+    "trace_id_hits_in_main_py": 4,
+    "elapsed_ms_hits_in_failureAttribution": 0,
+    "backend_app_hits_body_bytes": 0,
+    "backend_app_hits_response_received": 0,
+    "backend_app_hits_content_type": 0,
+    "frontend_src_hits_body_bytes": 0,
+    "frontend_src_hits_response_received": 0,
+    "frontend_src_hits_text_length": 0,
+    "frontend_src_hits_content_length_header": 0,
+    "http_status_plain_interpolation_lines_in_failureAttribution": 10,
+    "http_status_mention_lines_in_failureAttribution": 22,
+    "idempotency_key_sites_in_api_layer": 4
+  }
+}
