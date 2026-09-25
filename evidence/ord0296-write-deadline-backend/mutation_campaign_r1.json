@@ -1,0 +1,581 @@
+{
+ "what": "ORD-0296 门体反突变战役（9 臂 × 3 轮，单变量、字节级还原）",
+ "lane": "F 8ccd71d8",
+ "generated_at": "2026-09-25T09:12:55+08:00",
+ "module": "tests/test_qoder_ord0296_write_deadline.py",
+ "rounds": 3,
+ "arms": [
+  {
+   "arm": "M1_reachability_is_not_strict",
+   "file": "app\\db\\write_deadline.py",
+   "line_named": "return deadline > 0 and busy_timeout > 0 and deadline > busy_timeout",
+   "why": "把「严格大于」松成「大于等于」 ⇒ 相等那一档必须被判成不可达，门要当场红",
+   "hunks": 1,
+   "py_compile_ok": true,
+   "before_blob_40": "ba2393c3da30d6941587869be26cd303389b7f46",
+   "after_blob_40": "da4e10f3989d833303af4ed7bcc0883adfe38119",
+   "per_round": [
+    {
+     "rc": 1,
+     "seconds": 3.63,
+     "red": [
+      "test_G2_door_is_RED_when_the_deadline_sits_at_or_below_busy_timeout"
+     ],
+     "summary_line": "1 failed, 9 passed, 2 warnings in 2.00s",
+     "round": 1
+    },
+    {
+     "rc": 1,
+     "seconds": 3.26,
+     "red": [
+      "test_G2_door_is_RED_when_the_deadline_sits_at_or_below_busy_timeout"
+     ],
+     "summary_line": "1 failed, 9 passed, 2 warnings in 1.85s",
+     "round": 2
+    },
+    {
+     "rc": 1,
+     "seconds": 3.28,
+     "red": [
+      "test_G2_door_is_RED_when_the_deadline_sits_at_or_below_busy_timeout"
+     ],
+     "summary_line": "1 failed, 9 passed, 2 warnings in 1.89s",
+     "round": 3
+    }
+   ],
+   "always_red_all_rounds": [
+    "test_G2_door_is_RED_when_the_deadline_sits_at_or_below_busy_timeout"
+   ],
+   "expected_red": [
+    "test_G2_door_is_RED_when_the_deadline_sits_at_or_below_busy_timeout"
+   ],
+   "carriers_removed": [
+    "test_G2_door_is_RED_when_the_deadline_sits_at_or_below_busy_timeout"
+   ],
+   "unexpected_red": [],
+   "expected_green_stayed_green": [],
+   "restored_byte_exact": true,
+   "claimed_result": "KILLED_CANDIDATE_ALL_ROUNDS_RED",
+   "derived_result": null
+  },
+  {
+   "arm": "M2_no_named_conversion",
+   "file": "app\\db\\write_deadline.py",
+   "line_named": "raise WriteDeadlineExceeded(scenario, budget.elapsed_ms, budget.deadline_ms,\n           ",
+   "why": "删掉超期那一支的改名 ⇒ 用户仍只能拿到没有内容的 500，G6 必红",
+   "hunks": 1,
+   "py_compile_ok": true,
+   "before_blob_40": "ba2393c3da30d6941587869be26cd303389b7f46",
+   "after_blob_40": "3c604dd7d3e9f518a59b7f03fe2ea3858ba81984",
+   "per_round": [
+    {
+     "rc": 1,
+     "seconds": 3.16,
+     "red": [
+      "test_G6_lost_lock_after_the_budget_answers_under_its_own_name"
+     ],
+     "summary_line": "1 failed, 9 passed, 2 warnings in 1.82s",
+     "round": 1
+    },
+    {
+     "rc": 1,
+     "seconds": 2.98,
+     "red": [
+      "test_G6_lost_lock_after_the_budget_answers_under_its_own_name"
+     ],
+     "summary_line": "1 failed, 9 passed, 2 warnings in 1.63s",
+     "round": 2
+    },
+    {
+     "rc": 1,
+     "seconds": 3.31,
+     "red": [
+      "test_G6_lost_lock_after_the_budget_answers_under_its_own_name"
+     ],
+     "summary_line": "1 failed, 9 passed, 2 warnings in 1.78s",
+     "round": 3
+    }
+   ],
+   "always_red_all_rounds": [
+    "test_G6_lost_lock_after_the_budget_answers_under_its_own_name"
+   ],
+   "expected_red": [
+    "test_G6_lost_lock_after_the_budget_answers_under_its_own_name"
+   ],
+   "carriers_removed": [
+    "test_G6_lost_lock_after_the_budget_answers_under_its_own_name"
+   ],
+   "unexpected_red": [],
+   "expected_green_stayed_green": [
+    "test_G7_lost_lock_inside_the_budget_stays_todays_error"
+   ],
+   "restored_byte_exact": true,
+   "claimed_result": "KILLED_CANDIDATE_ALL_ROUNDS_RED",
+   "derived_result": null
+  },
+  {
+   "arm": "M3_always_renames_the_lock_failure",
+   "file": "app\\db\\write_deadline.py",
+   "line_named": "budget.waits_lost += 1\n        if not budget.expired():\n            raise",
+   "why": "不看预算一律改名 ⇒ 今天的错误被冒充成「期限」，G7 必红（这一臂是 G6 的反向对照）",
+   "hunks": 1,
+   "py_compile_ok": true,
+   "before_blob_40": "ba2393c3da30d6941587869be26cd303389b7f46",
+   "after_blob_40": "231c30ecd7a194959c33957bfc4ef4148e896bb0",
+   "per_round": [
+    {
+     "rc": 1,
+     "seconds": 3.27,
+     "red": [
+      "test_G7_lost_lock_inside_the_budget_stays_todays_error"
+     ],
+     "summary_line": "1 failed, 9 passed, 2 warnings in 1.99s",
+     "round": 1
+    },
+    {
+     "rc": 1,
+     "seconds": 2.48,
+     "red": [
+      "test_G7_lost_lock_inside_the_budget_stays_todays_error"
+     ],
+     "summary_line": "1 failed, 9 passed, 2 warnings in 1.52s",
+     "round": 2
+    },
+    {
+     "rc": 1,
+     "seconds": 2.46,
+     "red": [
+      "test_G7_lost_lock_inside_the_budget_stays_todays_error"
+     ],
+     "summary_line": "1 failed, 9 passed, 2 warnings in 1.45s",
+     "round": 3
+    }
+   ],
+   "always_red_all_rounds": [
+    "test_G7_lost_lock_inside_the_budget_stays_todays_error"
+   ],
+   "expected_red": [
+    "test_G7_lost_lock_inside_the_budget_stays_todays_error"
+   ],
+   "carriers_removed": [
+    "test_G7_lost_lock_inside_the_budget_stays_todays_error"
+   ],
+   "unexpected_red": [],
+   "expected_green_stayed_green": [
+    "test_G6_lost_lock_after_the_budget_answers_under_its_own_name"
+   ],
+   "restored_byte_exact": true,
+   "claimed_result": "KILLED_CANDIDATE_ALL_ROUNDS_RED",
+   "derived_result": null
+  },
+  {
+   "arm": "M4_startup_door_disabled",
+   "file": "app\\db\\write_deadline.py",
+   "line_named": "report = configuration_verdict()\n    if report[\"verdict\"] != CONFIG_OK:\n        raise Wr",
+   "why": "门只算不拦 ⇒ 不合规的配置能启动，G2 的红就没人接住",
+   "hunks": 1,
+   "py_compile_ok": true,
+   "before_blob_40": "ba2393c3da30d6941587869be26cd303389b7f46",
+   "after_blob_40": "38b86a7c7efd1c7c309e6745cb8777a594e4d531",
+   "per_round": [
+    {
+     "rc": 1,
+     "seconds": 2.43,
+     "red": [
+      "test_G2_door_is_RED_when_the_deadline_sits_at_or_below_busy_timeout",
+      "test_G5_a_scenario_override_moves_one_route_and_names_every_other_case"
+     ],
+     "summary_line": "2 failed, 8 passed, 2 warnings in 1.53s",
+     "round": 1
+    },
+    {
+     "rc": 1,
+     "seconds": 2.52,
+     "red": [
+      "test_G2_door_is_RED_when_the_deadline_sits_at_or_below_busy_timeout",
+      "test_G5_a_scenario_override_moves_one_route_and_names_every_other_case"
+     ],
+     "summary_line": "2 failed, 8 passed, 2 warnings in 1.43s",
+     "round": 2
+    },
+    {
+     "rc": 1,
+     "seconds": 2.53,
+     "red": [
+      "test_G2_door_is_RED_when_the_deadline_sits_at_or_below_busy_timeout",
+      "test_G5_a_scenario_override_moves_one_route_and_names_every_other_case"
+     ],
+     "summary_line": "2 failed, 8 passed, 2 warnings in 1.50s",
+     "round": 3
+    }
+   ],
+   "always_red_all_rounds": [
+    "test_G2_door_is_RED_when_the_deadline_sits_at_or_below_busy_timeout",
+    "test_G5_a_scenario_override_moves_one_route_and_names_every_other_case"
+   ],
+   "expected_red": [
+    "test_G2_door_is_RED_when_the_deadline_sits_at_or_below_busy_timeout",
+    "test_G5_a_scenario_override_moves_one_route_and_names_every_other_case"
+   ],
+   "carriers_removed": [
+    "test_G2_door_is_RED_when_the_deadline_sits_at_or_below_busy_timeout",
+    "test_G5_a_scenario_override_moves_one_route_and_names_every_other_case"
+   ],
+   "unexpected_red": [],
+   "expected_green_stayed_green": [
+    "test_G3_door_is_GREEN_one_millisecond_above_it"
+   ],
+   "restored_byte_exact": true,
+   "claimed_result": "KILLED_CANDIDATE_ALL_ROUNDS_RED",
+   "derived_result": null
+  },
+  {
+   "arm": "M5_lock_wait_copied_a_second_time",
+   "file": "app\\db\\session.py",
+   "line_named": "cursor.execute(f\"PRAGMA busy_timeout={write_busy_timeout_ms()}\")",
+   "why": "把 30000 再抄一份内联（0281 T-c 点名的形状）⇒ 单一来源那格必红",
+   "hunks": 1,
+   "py_compile_ok": true,
+   "before_blob_40": "3ef99ffe398c048ff729ffd0016e61b8ce0ae678",
+   "after_blob_40": "09a280ee4f1a5c3483d17b4edb8734a763791307",
+   "per_round": [
+    {
+     "rc": 1,
+     "seconds": 2.47,
+     "red": [
+      "test_G4_the_lock_wait_is_written_in_exactly_one_place"
+     ],
+     "summary_line": "1 failed, 9 passed, 2 warnings in 1.39s",
+     "round": 1
+    },
+    {
+     "rc": 1,
+     "seconds": 2.54,
+     "red": [
+      "test_G4_the_lock_wait_is_written_in_exactly_one_place"
+     ],
+     "summary_line": "1 failed, 9 passed, 2 warnings in 1.53s",
+     "round": 2
+    },
+    {
+     "rc": 1,
+     "seconds": 2.89,
+     "red": [
+      "test_G4_the_lock_wait_is_written_in_exactly_one_place"
+     ],
+     "summary_line": "1 failed, 9 passed, 2 warnings in 1.78s",
+     "round": 3
+    }
+   ],
+   "always_red_all_rounds": [
+    "test_G4_the_lock_wait_is_written_in_exactly_one_place"
+   ],
+   "expected_red": [
+    "test_G4_the_lock_wait_is_written_in_exactly_one_place"
+   ],
+   "carriers_removed": [
+    "test_G4_the_lock_wait_is_written_in_exactly_one_place"
+   ],
+   "unexpected_red": [],
+   "expected_green_stayed_green": [],
+   "restored_byte_exact": true,
+   "claimed_result": "KILLED_CANDIDATE_ALL_ROUNDS_RED",
+   "derived_result": null
+  },
+  {
+   "arm": "M6_scenario_override_ignored",
+   "file": "app\\db\\write_deadline.py",
+   "line_named": "overrides = scenario_overrides()\n    if scenario in overrides:",
+   "why": "「按场景可配」变成口号 ⇒ 覆盖那格必红",
+   "hunks": 1,
+   "py_compile_ok": true,
+   "before_blob_40": "ba2393c3da30d6941587869be26cd303389b7f46",
+   "after_blob_40": "9db8a453ddb4d906132797e105ca725f2e8c1c8d",
+   "per_round": [
+    {
+     "rc": 1,
+     "seconds": 2.76,
+     "red": [
+      "test_G5_a_scenario_override_moves_one_route_and_names_every_other_case"
+     ],
+     "summary_line": "1 failed, 9 passed, 2 warnings in 1.69s",
+     "round": 1
+    },
+    {
+     "rc": 1,
+     "seconds": 3.23,
+     "red": [
+      "test_G5_a_scenario_override_moves_one_route_and_names_every_other_case"
+     ],
+     "summary_line": "1 failed, 9 passed, 2 warnings in 1.85s",
+     "round": 2
+    },
+    {
+     "rc": 1,
+     "seconds": 2.82,
+     "red": [
+      "test_G5_a_scenario_override_moves_one_route_and_names_every_other_case"
+     ],
+     "summary_line": "1 failed, 9 passed, 2 warnings in 1.65s",
+     "round": 3
+    }
+   ],
+   "always_red_all_rounds": [
+    "test_G5_a_scenario_override_moves_one_route_and_names_every_other_case"
+   ],
+   "expected_red": [
+    "test_G5_a_scenario_override_moves_one_route_and_names_every_other_case"
+   ],
+   "carriers_removed": [
+    "test_G5_a_scenario_override_moves_one_route_and_names_every_other_case"
+   ],
+   "unexpected_red": [],
+   "expected_green_stayed_green": [],
+   "restored_byte_exact": true,
+   "claimed_result": "KILLED_CANDIDATE_ALL_ROUNDS_RED",
+   "derived_result": null
+  },
+  {
+   "arm": "M7_deadline_answer_status_is_500",
+   "file": "app\\main.py",
+   "line_named": "return error(exc.code, str(exc), status=503, details=exc.details())",
+   "why": "把服务端那句「我没写完」降级成 500 ⇒ 与框架裸 500 无法区分，G8 必红",
+   "hunks": 1,
+   "py_compile_ok": true,
+   "before_blob_40": "871aec006a3f6482f7a2700a8baeff8c25f7690f",
+   "after_blob_40": "17bfdefcd0e7a829c6d61f27eb63e26f50388c82",
+   "per_round": [
+    {
+     "rc": 1,
+     "seconds": 2.78,
+     "red": [
+      "test_G8_the_answer_is_registered_and_carries_the_servers_own_words"
+     ],
+     "summary_line": "1 failed, 9 passed, 2 warnings in 1.65s",
+     "round": 1
+    },
+    {
+     "rc": 1,
+     "seconds": 2.75,
+     "red": [
+      "test_G8_the_answer_is_registered_and_carries_the_servers_own_words"
+     ],
+     "summary_line": "1 failed, 9 passed, 2 warnings in 1.55s",
+     "round": 2
+    },
+    {
+     "rc": 1,
+     "seconds": 2.85,
+     "red": [
+      "test_G8_the_answer_is_registered_and_carries_the_servers_own_words"
+     ],
+     "summary_line": "1 failed, 9 passed, 2 warnings in 1.53s",
+     "round": 3
+    }
+   ],
+   "always_red_all_rounds": [
+    "test_G8_the_answer_is_registered_and_carries_the_servers_own_words"
+   ],
+   "expected_red": [
+    "test_G8_the_answer_is_registered_and_carries_the_servers_own_words"
+   ],
+   "carriers_removed": [
+    "test_G8_the_answer_is_registered_and_carries_the_servers_own_words"
+   ],
+   "unexpected_red": [],
+   "expected_green_stayed_green": [],
+   "restored_byte_exact": true,
+   "claimed_result": "KILLED_CANDIDATE_ALL_ROUNDS_RED",
+   "derived_result": null
+  },
+  {
+   "arm": "M8_effective_cap_ignores_the_budget",
+   "file": "app\\db\\write_deadline.py",
+   "line_named": "return max(1, min(busy_timeout_ms(), deadline_ms(scenario)))",
+   "why": "期限不再约束实际等待 ⇒ 那格里 min(...) 的断言必红",
+   "hunks": 1,
+   "py_compile_ok": true,
+   "before_blob_40": "ba2393c3da30d6941587869be26cd303389b7f46",
+   "after_blob_40": "22d5983875caa0e56f7623c57429d789c92aa699",
+   "per_round": [
+    {
+     "rc": 1,
+     "seconds": 2.92,
+     "red": [
+      "test_G5_a_scenario_override_moves_one_route_and_names_every_other_case"
+     ],
+     "summary_line": "1 failed, 9 passed, 2 warnings in 1.74s",
+     "round": 1
+    },
+    {
+     "rc": 1,
+     "seconds": 3.01,
+     "red": [
+      "test_G5_a_scenario_override_moves_one_route_and_names_every_other_case"
+     ],
+     "summary_line": "1 failed, 9 passed, 2 warnings in 1.70s",
+     "round": 2
+    },
+    {
+     "rc": 1,
+     "seconds": 2.61,
+     "red": [
+      "test_G5_a_scenario_override_moves_one_route_and_names_every_other_case"
+     ],
+     "summary_line": "1 failed, 9 passed, 2 warnings in 1.58s",
+     "round": 3
+    }
+   ],
+   "always_red_all_rounds": [
+    "test_G5_a_scenario_override_moves_one_route_and_names_every_other_case"
+   ],
+   "expected_red": [
+    "test_G5_a_scenario_override_moves_one_route_and_names_every_other_case"
+   ],
+   "carriers_removed": [
+    "test_G5_a_scenario_override_moves_one_route_and_names_every_other_case"
+   ],
+   "unexpected_red": [],
+   "expected_green_stayed_green": [],
+   "restored_byte_exact": true,
+   "claimed_result": "KILLED_CANDIDATE_ALL_ROUNDS_RED",
+   "derived_result": null
+  },
+  {
+   "arm": "M9_budget_shared_across_scenarios",
+   "file": "app\\db\\write_deadline.py",
+   "line_named": "if budget is None or budget.scenario != scenario:",
+   "why": "预算按连接共享 ⇒ 上一条请求替这一条超时，G10 必红",
+   "hunks": 1,
+   "py_compile_ok": true,
+   "before_blob_40": "ba2393c3da30d6941587869be26cd303389b7f46",
+   "after_blob_40": "391c778bc3a9a21322802e13fee52d75879e4e51",
+   "per_round": [
+    {
+     "rc": 1,
+     "seconds": 2.79,
+     "red": [
+      "test_G10_the_budget_belongs_to_one_request_not_one_connection"
+     ],
+     "summary_line": "1 failed, 9 passed, 2 warnings in 1.60s",
+     "round": 1
+    },
+    {
+     "rc": 1,
+     "seconds": 3.05,
+     "red": [
+      "test_G10_the_budget_belongs_to_one_request_not_one_connection"
+     ],
+     "summary_line": "1 failed, 9 passed, 2 warnings in 1.61s",
+     "round": 2
+    },
+    {
+     "rc": 1,
+     "seconds": 2.8,
+     "red": [
+      "test_G10_the_budget_belongs_to_one_request_not_one_connection"
+     ],
+     "summary_line": "1 failed, 9 passed, 2 warnings in 1.61s",
+     "round": 3
+    }
+   ],
+   "always_red_all_rounds": [
+    "test_G10_the_budget_belongs_to_one_request_not_one_connection"
+   ],
+   "expected_red": [
+    "test_G10_the_budget_belongs_to_one_request_not_one_connection"
+   ],
+   "carriers_removed": [
+    "test_G10_the_budget_belongs_to_one_request_not_one_connection"
+   ],
+   "unexpected_red": [],
+   "expected_green_stayed_green": [],
+   "restored_byte_exact": true,
+   "claimed_result": "KILLED_CANDIDATE_ALL_ROUNDS_RED",
+   "derived_result": null
+  },
+  {
+   "arm": "M10_malformed_override_crashes_instead_of_naming",
+   "file": "app\\db\\write_deadline.py",
+   "line_named": "try:\n        deadline = deadline_ms(scenario)\n    except ValueError:",
+   "why": "畸形覆盖从「具名配置判级」退回成 import 期崩溃 ⇒ 门那一档断言必红（0296 自查加的一臂）",
+   "hunks": 1,
+   "py_compile_ok": true,
+   "before_blob_40": "ba2393c3da30d6941587869be26cd303389b7f46",
+   "after_blob_40": "ca336ee9d685d578a0920b66445b4810c50dfee4",
+   "per_round": [
+    {
+     "rc": 1,
+     "seconds": 2.9,
+     "red": [
+      "test_G5_a_scenario_override_moves_one_route_and_names_every_other_case"
+     ],
+     "summary_line": "1 failed, 9 passed, 2 warnings in 1.74s",
+     "round": 1
+    },
+    {
+     "rc": 1,
+     "seconds": 2.84,
+     "red": [
+      "test_G5_a_scenario_override_moves_one_route_and_names_every_other_case"
+     ],
+     "summary_line": "1 failed, 9 passed, 2 warnings in 1.67s",
+     "round": 2
+    },
+    {
+     "rc": 1,
+     "seconds": 2.8,
+     "red": [
+      "test_G5_a_scenario_override_moves_one_route_and_names_every_other_case"
+     ],
+     "summary_line": "1 failed, 9 passed, 2 warnings in 1.57s",
+     "round": 3
+    }
+   ],
+   "always_red_all_rounds": [
+    "test_G5_a_scenario_override_moves_one_route_and_names_every_other_case"
+   ],
+   "expected_red": [
+    "test_G5_a_scenario_override_moves_one_route_and_names_every_other_case"
+   ],
+   "carriers_removed": [
+    "test_G5_a_scenario_override_moves_one_route_and_names_every_other_case"
+   ],
+   "unexpected_red": [],
+   "expected_green_stayed_green": [],
+   "restored_byte_exact": true,
+   "claimed_result": "KILLED_CANDIDATE_ALL_ROUNDS_RED",
+   "derived_result": null
+  }
+ ],
+ "control_rounds": [
+  {
+   "rc": 0,
+   "seconds": 3.7,
+   "red": [],
+   "summary_line": "10 passed, 2 warnings in 2.09s",
+   "round": 1
+  },
+  {
+   "rc": 0,
+   "seconds": 3.06,
+   "red": [],
+   "summary_line": "10 passed, 2 warnings in 1.75s",
+   "round": 2
+  },
+  {
+   "rc": 0,
+   "seconds": 3.64,
+   "red": [],
+   "summary_line": "10 passed, 2 warnings in 1.93s",
+   "round": 3
+  }
+ ],
+ "summary": {
+  "arms": 10,
+  "control_rounds_green": true,
+  "survivors": [],
+  "unexpected_red_total": 0,
+  "restore_byte_exact_every_round": true
+ }
+}
