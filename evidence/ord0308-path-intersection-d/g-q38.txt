@@ -1,0 +1,8 @@
+receipt ord0308_path_intersection_d_r1.json 12493 B blob_sha1 7a1a5eb7ebf7d8cde93792820b08c7157a48c3af
+cells 4 | overall Q38_GATE_GREEN | hard 0 [] | soft 0 []
+  cell 0 | why_source why | why tokens 12 | own hits 12 | unique hits 0 | shares why with []
+  cell 1 | why_source why | why tokens 5 | own hits 5 | unique hits 0 | shares why with []
+  cell 2 | why_source why | why tokens 7 | own hits 2 | unique hits 0 | shares why with []
+  cell 3 | why_source why | why tokens 2 | own hits 1 | unique hits 0 | shares why with []
+meaning: no shared literal and every sentence names its own readings
+wrote _scratch_0308/q38-on-receipt.json 5038 B
