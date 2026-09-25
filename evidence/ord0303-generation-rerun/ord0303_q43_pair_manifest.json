@@ -1,0 +1,27 @@
+{
+ "what": "ORD-0303：两份正文各自的 Q43 读数（之前那对同名覆盖了，只对应最后一次量过的正文）",
+ "lane": "F 8ccd71d8",
+ "ruler_blob": "e653e597c2e6fd74a5f8d3be65fe60e017b03017",
+ "pairs": {
+  "ledger": {
+   "source": "ledger_sub_o303_r1.md",
+   "source_bytes": 3575,
+   "rc": 0,
+   "overall": "Q43_GATE_CLEAN",
+   "claims": 28,
+   "findings": 0,
+   "codes": []
+  },
+  "bus": {
+   "source": "bus_o303_r1.md",
+   "source_bytes": 3684,
+   "rc": 0,
+   "overall": "Q43_GATE_CLEAN",
+   "claims": 27,
+   "findings": 0,
+   "codes": []
+  }
+ },
+ "claim_kind": "code_determined",
+ "derived_result": null
+}
