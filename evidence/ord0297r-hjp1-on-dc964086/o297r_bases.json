@@ -1,0 +1,87 @@
+{
+  "repo_used_for_archive": "D:\\moodle\\_qoder_integration_20260919",
+  "old_base": "5c4608cede6cb7bd5f3ac7e704bfee379ca47abc",
+  "new_base": "dc964086c9d412573ac19d70b24b30e6c3ee6168",
+  "both_commits_present_locally": true,
+  "named_files": {
+    "PlanWithAiSheet.tsx": [
+      "frontend/src/features/planning/PlanWithAiSheet.tsx"
+    ],
+    "journeyContinuation.ts": [
+      "frontend/src/api/journeyContinuation.ts"
+    ],
+    "V8Experience.tsx": [
+      "frontend/src/app/V8Experience.tsx"
+    ],
+    "LocaleContext.tsx": [
+      "frontend/src/i18n/LocaleContext.tsx"
+    ]
+  },
+  "files_found": [
+    "frontend/src/api/journeyContinuation.ts",
+    "frontend/src/app/V8Experience.tsx",
+    "frontend/src/features/planning/PlanWithAiSheet.tsx",
+    "frontend/src/i18n/LocaleContext.tsx"
+  ],
+  "blob_pairs": {
+    "frontend/src/api/journeyContinuation.ts": {
+      "old": "a52f77fc39fd1202b484b42aeab54b2357c65de8",
+      "new": "358141e6250aeae361aeae4d9df06f80e1417cf0",
+      "changed": true
+    },
+    "frontend/src/app/V8Experience.tsx": {
+      "old": "a1eccc6b32e5cab6334811cd243a52e75641b890",
+      "new": "17ef83b6ec58b4190f483733501ea1b973336d5f",
+      "changed": true
+    },
+    "frontend/src/features/planning/PlanWithAiSheet.tsx": {
+      "old": "4c3821b7129320d7940237d33c5f7dd14742f292",
+      "new": "fd5f6e5ba2771a8d12669b9bec1ba91590970701",
+      "changed": true,
+      "commander_quoted_pre_image": "c22cf42506a4175db992bde387ed8d9c6f1ffb9d",
+      "commander_pre_image_matches_this_tree": false
+    },
+    "frontend/src/i18n/LocaleContext.tsx": {
+      "old": "3b04cfaeaeb75088d5818bf28697e8d0dd61bb0b",
+      "new": "ece74118543434e855b874420dcc075df31f4f05",
+      "changed": true
+    }
+  },
+  "frontend_files_changed": 8,
+  "frontend_src_changed": [
+    "frontend/src/api/journeyContinuation.ts",
+    "frontend/src/app/V8Experience.tsx",
+    "frontend/src/features/planning/PlanWithAiSheet.tsx",
+    "frontend/src/i18n/LocaleContext.tsx"
+  ],
+  "all_files_changed": 23,
+  "old_is_ancestor_of_new_returncode": 0,
+  "old_is_ancestor_of_new": true,
+  "commits_between": [
+    "dc96408|2026-09-25 10:13:12 +0800|review(ORD-0298 second hop): derive the conclusion from the measurement, and let r3 grade my prose",
+    "12fc54a|2026-09-25 09:45:19 +0800|review(ledger): the ORD-0298 delivery block plus a landing-time addendum",
+    "ca5fbd4|2026-09-25 09:39:51 +0800|review(ORD-0298): the delivery block, and the gauge runs that made its numbers checkable",
+    "cb4aaa0|2026-09-25 09:17:07 +0800|review(ORD-0298): the arms sentence has to carry a number, not a boolean",
+    "3000af7|2026-09-25 09:07:12 +0800|review(ORD-0298): name both refs in the receipt, and a post builder that renders the three-way table",
+    "a41018d|2026-09-25 09:04:56 +0800|review(ORD-0298): a batch that will not grade a gate on someone else's socket",
+    "e6435ed|2026-09-25 08:56:06 +0800|review(ORD-0298): a re-parent needs a per-file tree table, and each arm has to cite its own numbers",
+    "8bf3893|2026-09-25 08:50:38 +0800|review(ORD-0298): bring the generation-0292 measurement drivers onto this ref",
+    "e59c5bf|2026-09-25 05:32:55 +0800|feat(frontend): a continuation press carries the round it resumes (ORD-0278)",
+    "60e5587|2026-09-25 05:09:51 +0800|feat(frontend): the sheet's submission carries one transport identity on both legs (ORD-0253 client half)",
+    "90d29a1|2026-09-25 07:20:05 +0800|fix(frontend): let the attribution label speak only for the server (ORD-0280)",
+    "6d041dc|2026-09-25 09:20:00 +0800|feat(ord0296): give the server's write path a budget that can actually bind, and name the answer when it blows"
+  ],
+  "commits_between_count": 12,
+  "github_ref_read": {
+    "ref": "refs/heads/mirror/integration-frontend-apple-pass1",
+    "object_sha": "dc964086c9d412573ac19d70b24b30e6c3ee6168",
+    "equals_second_base": true
+  },
+  "planwithai_crosscheck": {
+    "github_contents_sha": "fd5f6e5ba2771a8d12669b9bec1ba91590970701",
+    "git_show_recomputed_sha1": "fd5f6e5ba2771a8d12669b9bec1ba91590970701",
+    "local_equals_github": true,
+    "bytes": 49063,
+    "local_bytes": 49063
+  }
+}
