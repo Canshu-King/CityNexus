@@ -1,0 +1,95 @@
+{
+ "schema": "CNX_CMDR_PREFLIGHT_TOOL_SELFTEST_V1",
+ "tool": "preflight_and_land_r1.py",
+ "lane": "commander 494abfd7",
+ "at_local": "2026-09-25T21:52:24+0800",
+ "why": "consolidating tonight's four handmade landing moves into one door; smoke-tested in three directions before it is trusted",
+ "interpreter": "see per-case gate_run in the receipts",
+ "cases": [
+  {
+   "case": "_pf_smoke1.json",
+   "candidate_ref": "review/0281-write-deadline-keyed-b3",
+   "candidate_tip": "13af1ff4ba4516aa1a39cda67428ed4a2a34ac69",
+   "verdict": "REFUSED",
+   "ff_possible": false,
+   "ahead": 0,
+   "behind": 10,
+   "intersection": 0,
+   "product_introduced_by_candidate": [],
+   "collect_exit": null,
+   "test_exit": null,
+   "summary": null,
+   "blob_equality_all_true": null,
+   "problems": [
+    "candidate is NOT a descendant of the tip (merge-base --is-ancestor rc=1) - landing it would move the authoritative line backwards",
+    "candidate misses 10 commit(s) the line already has - ask the lane to re-cut onto the tip",
+    "candidate adds nothing over the tip (ahead=0) - there is nothing to land"
+   ]
+  },
+  {
+   "case": "_pf_smoke2.json",
+   "candidate_ref": "refs/heads/review/ord0310-keyless-deadline-d-on-30a5f90e",
+   "candidate_tip": "2344145ce6342b6ac32ac4d0955c0f524d8c9320",
+   "verdict": "REFUSED",
+   "ff_possible": true,
+   "ahead": 0,
+   "behind": 0,
+   "intersection": 0,
+   "product_introduced_by_candidate": [],
+   "collect_exit": 0,
+   "test_exit": 0,
+   "summary": [
+    "27 passed, 2 warnings in 9.84s"
+   ],
+   "blob_equality_all_true": null,
+   "problems": [
+    "candidate adds nothing over the tip (ahead=0) - there is nothing to land"
+   ]
+  },
+  {
+   "case": "_pf_smoke3.json",
+   "candidate_ref": "review/ord0310-keyless-deadline-d",
+   "candidate_tip": "b025432ded0381d83ebf36b85202a345bede2fcb",
+   "verdict": "REFUSED",
+   "ff_possible": false,
+   "ahead": 6,
+   "behind": 13,
+   "intersection": 6,
+   "product_introduced_by_candidate": [
+    "frontend/src/features/planning/PlanWithAiSheet.tsx",
+    "frontend/src/lib/keylessWriteDeadline.ts"
+   ],
+   "collect_exit": 0,
+   "test_exit": 0,
+   "summary": [
+    "6 passed, 2 warnings in 1.52s"
+   ],
+   "blob_equality_all_true": true,
+   "problems": [
+    "candidate is NOT a descendant of the tip (merge-base --is-ancestor rc=1) - landing it would move the authoritative line backwards",
+    "candidate misses 13 commit(s) the line already has - ask the lane to re-cut onto the tip",
+    "file intersection with the line is non-empty: backend/tests/test_qoder_ord0310_keyless_leg_receipts.py, frontend/e2e/qoder-ord0310-keyless-write-deadline.spec.ts, frontend/src/features/planning/PlanWithAiSheet.tsx, frontend/src/lib/keylessWriteDeadline.ts, review/ord0310_kill_arms.py",
+    "merge-tree reports CONFLICT"
+   ]
+  }
+ ],
+ "reading": {
+  "refuses_a_candidate_behind_the_line": true,
+  "refuses_a_candidate_that_adds_nothing": true,
+  "export_bytes_equal_candidate_blobs": true,
+  "gate_green_on_a_real_export": true,
+  "direction_bug_found_and_fixed": "`git diff tip cand` on a behind-candidate listed the LINE's files as if the candidate introduced them; now measured from the merge base to the candidate (case smoke3 shows only the two real product files)"
+ },
+ "discipline": {
+  "authoritative_branch_moved": 0,
+  "refs_pushed": 0,
+  "product_bytes_changed": 0,
+  "databases_opened": 0,
+  "surfaces_started_or_stopped": 0,
+  "credential_values_printed": 0,
+  "evidence_paths_overwritten": 0
+ },
+ "claim_kind": "git_and_pytest_determined",
+ "claimed_result": "three directions: behind->REFUSED, equal->REFUSED(nothing to land), old-ref-with-files->REFUSED on ancestry but its export matched its blobs and its gate ran green",
+ "derived_result": null
+}
