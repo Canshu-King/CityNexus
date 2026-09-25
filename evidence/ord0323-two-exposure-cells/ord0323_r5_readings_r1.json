@@ -1,0 +1,117 @@
+{
+ "schema": "CNX_ORD0323_R5_READINGS_R1",
+ "order": "ORD-0323",
+ "lane": "B c01d72a3",
+ "at_local": "2026-09-26T06:45:23+0800",
+ "ruler": {
+  "path": "evidence/ord0331-ast-crossfile-S4/ui_exposure_taint_ast_r2.cjs",
+  "published_blob": "ff98091cf3accb0d836ae25ba49820170b92d932",
+  "local_git_hash_object": "ff98091cf3accb0d836ae25ba49820170b92d932",
+  "sha1_over_bytes": "3bafd65d239db51fd21f5b315115e3110ef89081",
+  "bytes": 85052,
+  "selftest": "SELFTEST_PASS",
+  "selftest_fixtures": 20,
+  "lineage": "r1 正则 -> r2 -> r3 (44e062e6) -> r4 AST 逐文件 (eb262f59) -> r5 AST + 模块图",
+  "usage_note": "r5 只在 --tree 模式下建模块图；逐文件跑会精确复现 r4 的答案（号令者实测）。所以本件的口径是 --tree，且不从共享工作树读依赖：两代都用 git archive 导出。"
+ },
+ "generations": {
+  "before": "9a669c8bec863fadf31d5158f4a1be66aec49f23",
+  "after": "499522db0903790c3eaba5837bf8e8e3764b7463",
+  "exported_with": "git archive <ref> frontend | tar -x -C <dir>",
+  "scanned": "frontend/src"
+ },
+ "tree_wide": {
+  "before_hits": 28,
+  "after_hits": 23,
+  "delta": -5,
+  "changed_files_outside_my_three": [],
+  "reading": "28 -> 23 (delta -5), 和 9 个变动的格子里 0 个文件不属于本单"
+ },
+ "in_my_three_files": {
+  "before": [
+   "JourneyInboxWorkbench.tsx:687[UPSTREAM_EXCEPTION_TO_DOM]",
+   "JourneyInboxWorkbench.tsx:691[UPSTREAM_EXCEPTION_TO_DOM]",
+   "JourneyInboxWorkbench.tsx:731[UPSTREAM_EXCEPTION_TO_DOM]",
+   "PlanWithAiSheet.tsx:1019[UPSTREAM_TEXT_VIA_HELPER_TO_DOM]",
+   "PlanWithAiSheet.tsx:1046[UPSTREAM_TEXT_VIA_HELPER_TO_DOM]",
+   "ProductErrorBoundary.tsx:104[UPSTREAM_EXCEPTION_TO_DOM]",
+   "ProductErrorBoundary.tsx:105[UPSTREAM_EXCEPTION_TO_DOM]"
+  ],
+  "after": [
+   "PlanWithAiSheet.tsx:1021[UPSTREAM_TEXT_VIA_HELPER_TO_DOM]",
+   "PlanWithAiSheet.tsx:1048[UPSTREAM_TEXT_VIA_HELPER_TO_DOM]"
+  ],
+  "cell_ids_gone": [
+   "JourneyInboxWorkbench.tsx:687[UPSTREAM_EXCEPTION_TO_DOM]",
+   "JourneyInboxWorkbench.tsx:691[UPSTREAM_EXCEPTION_TO_DOM]",
+   "JourneyInboxWorkbench.tsx:731[UPSTREAM_EXCEPTION_TO_DOM]",
+   "PlanWithAiSheet.tsx:1019[UPSTREAM_TEXT_VIA_HELPER_TO_DOM]",
+   "PlanWithAiSheet.tsx:1046[UPSTREAM_TEXT_VIA_HELPER_TO_DOM]",
+   "ProductErrorBoundary.tsx:104[UPSTREAM_EXCEPTION_TO_DOM]",
+   "ProductErrorBoundary.tsx:105[UPSTREAM_EXCEPTION_TO_DOM]"
+  ],
+  "cell_ids_untouched": [],
+  "cell_ids_only_at_candidate": [
+   "PlanWithAiSheet.tsx:1021[UPSTREAM_TEXT_VIA_HELPER_TO_DOM]",
+   "PlanWithAiSheet.tsx:1048[UPSTREAM_TEXT_VIA_HELPER_TO_DOM]"
+  ],
+  "counts": {
+   "before": 7,
+   "after": 2,
+   "gone": 7,
+   "untouched": 0,
+   "only_at_candidate": 2
+  },
+  "by_shape_identity": {
+   "before": [
+    "ActivityDetail.tsx[RAW_BODY_TO_DOM]",
+    "AgentComposer.tsx[UPSTREAM_EXCEPTION_TO_DOM]",
+    "AgentRunRail.tsx[UPSTREAM_READ_DIRECT]",
+    "CopilotDock.tsx[UPSTREAM_EXCEPTION_TO_DOM]",
+    "DestinationPreparationPanel.tsx[UPSTREAM_EXCEPTION_TO_DOM]",
+    "HotelsPanel.tsx[RAW_BODY_TO_DOM]",
+    "JourneyInboxWorkbench.tsx[UPSTREAM_EXCEPTION_TO_DOM]",
+    "PlanComparison.tsx[RAW_BODY_TO_DOM]",
+    "PlanWithAiSheet.tsx[UPSTREAM_TEXT_VIA_HELPER_TO_DOM]",
+    "ProductErrorBoundary.tsx[UPSTREAM_EXCEPTION_TO_DOM]",
+    "RealCityDiscoveryPanel.tsx[UPSTREAM_EXCEPTION_TO_DOM]",
+    "RecoveryRequiredPanel.tsx[RAW_BODY_TO_DOM]",
+    "SimulationPanel.tsx[UPSTREAM_TEXT_VIA_HELPER_TO_DOM]",
+    "V12TripStudioPanel.tsx[UPSTREAM_EXCEPTION_TO_DOM]",
+    "V14RecoveryTruthPanel.tsx[UPSTREAM_EXCEPTION_TO_DOM]",
+    "V8Experience.tsx[UPSTREAM_EXCEPTION_TO_DOM]",
+    "V8Experience.tsx[UPSTREAM_TEXT_VIA_HELPER_TO_DOM]",
+    "main.tsx[UPSTREAM_TEXT_VIA_HELPER_TO_DOM]"
+   ],
+   "after": [
+    "ActivityDetail.tsx[RAW_BODY_TO_DOM]",
+    "AgentComposer.tsx[UPSTREAM_EXCEPTION_TO_DOM]",
+    "AgentRunRail.tsx[UPSTREAM_READ_DIRECT]",
+    "CopilotDock.tsx[UPSTREAM_EXCEPTION_TO_DOM]",
+    "DestinationPreparationPanel.tsx[UPSTREAM_EXCEPTION_TO_DOM]",
+    "HotelsPanel.tsx[RAW_BODY_TO_DOM]",
+    "PlanComparison.tsx[RAW_BODY_TO_DOM]",
+    "PlanWithAiSheet.tsx[UPSTREAM_TEXT_VIA_HELPER_TO_DOM]",
+    "RealCityDiscoveryPanel.tsx[UPSTREAM_EXCEPTION_TO_DOM]",
+    "RecoveryRequiredPanel.tsx[RAW_BODY_TO_DOM]",
+    "SimulationPanel.tsx[UPSTREAM_TEXT_VIA_HELPER_TO_DOM]",
+    "V12TripStudioPanel.tsx[UPSTREAM_EXCEPTION_TO_DOM]",
+    "V14RecoveryTruthPanel.tsx[UPSTREAM_EXCEPTION_TO_DOM]",
+    "V8Experience.tsx[UPSTREAM_EXCEPTION_TO_DOM]",
+    "V8Experience.tsx[UPSTREAM_TEXT_VIA_HELPER_TO_DOM]",
+    "main.tsx[UPSTREAM_TEXT_VIA_HELPER_TO_DOM]"
+   ],
+   "cleared": [
+    "JourneyInboxWorkbench.tsx[UPSTREAM_EXCEPTION_TO_DOM]",
+    "ProductErrorBoundary.tsx[UPSTREAM_EXCEPTION_TO_DOM]"
+   ],
+   "new": []
+  }
+ },
+ "why_gone_and_only_at_candidate_do_not_cancel": "按格子 id 算，我的三件里 7 形消失、2 形只在新代出现；按 shape 身份（文件+规则，不含行号）算则是 2 形消失、0 形新增，差额完全由行号位移解释：PlanWithAiSheet.tsx 的 UPSTREAM_TEXT_VIA_HELPER_TO_DOM 改前 [1019, 1046]、改后 [1021, 1048]，同一形各 2 处。",
+ "remaining_meaning": "PlanWithAiSheet.tsx 那两形（改后 1021/1048，改前 1019/1046）就是 Q67=① 裁过的合规归属链：serverReasonSentence 的服务器原话经 failureReason 渲染在带「服务器给出的原因」标签的技术详情里。本单不改它，行号差 2 只是我在同文件上方新增/删除行的位移。",
+ "reading": "tree-wide 28 -> 23 (delta -5); my three files 7 -> 2 格; 按 shape 身份 2 形清除 / 0 形新增 / 0 形未动; 树内其它文件变动 0",
+ "claim_kind": "ast_module_graph_determined",
+ "claimed_result": null,
+ "derived_result": null
+}
