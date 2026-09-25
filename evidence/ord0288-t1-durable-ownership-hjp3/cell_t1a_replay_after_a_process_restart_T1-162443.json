@@ -1,0 +1,158 @@
+{
+ "arm": "t1a_replay_after_a_process_restart",
+ "run_id": "T1-162443",
+ "measured_on": "dc964086c9d412573ac19d70b24b30e6c3ee6168",
+ "journey_id": "633fec87-ee5b-4c05-b8c1-b19cb7e99f2e",
+ "processes": [
+  {
+   "tag": "A",
+   "pid": 37392,
+   "port": 8611,
+   "tree": "D:\\moodle\\_hjp3_0288t1_0925\\backend",
+   "db": "D:\\moodle\\_hjp3_0288t1_0925\\t1.s3db",
+   "listening": true,
+   "exited": false,
+   "cmdline_at_start": "D:/moodle/CityNexus/.venv/Scripts/python.exe -m uvicorn app.main:app --host 127.0.0.1 --port 8611 --log-level info"
+  },
+  {
+   "tag": "B",
+   "pid": 44668,
+   "port": 8612,
+   "tree": "D:\\moodle\\_hjp3_0288t1_0925\\backend",
+   "db": "D:\\moodle\\_hjp3_0288t1_0925\\t1.s3db",
+   "listening": true,
+   "exited": false,
+   "cmdline_at_start": "D:/moodle/CityNexus/.venv/Scripts/python.exe -m uvicorn app.main:app --host 127.0.0.1 --port 8612 --log-level info"
+  }
+ ],
+ "steps": [
+  {
+   "intent": "replay after the original process was killed and a fresh one started on the same file",
+   "response": {
+    "url": "http://127.0.0.1:8611/api/v1/journeys/633fec87-ee5b-4c05-b8c1-b19cb7e99f2e/plans/generate",
+    "method": "POST",
+    "request_body": {
+     "candidate_count": 3
+    },
+    "sent_headers": {
+     "Idempotency-Key": "ord0288-t1a-162438"
+    },
+    "status": 422,
+    "content_type": "application/json",
+    "bytes": 1443,
+    "body_text": "{\"error\":{\"code\":\"VALIDATION_ERROR\",\"message\":\"No feasible plan candidates satisfy the journey constraints\",\"message_key\":\"request.invalid\",\"trace_id\":\"099e98c9-1466-48f7-bad3-69daa7b4eed0\",\"details\":{\"candidate_rejections\":[{\"candidate_sequence\":0,\"failures\":[\"JOURNEY_WINDOW_EXCEEDED\"],\"hard_rule_codes\":[],\"reason_codes\":[\"CANDIDATE_REJECTED_BY_FEASIBILITY_GATE\"],\"stops\":[\"place-old-town\",\"place-riverside-museum\",\"place-food-hall\",\"place-tech-art\",\"place-river-cruise\",\"place-skyline-dinner\"],\"summary\":\"candidate dropped before persistence: JOURNEY_WINDOW_EXCEEDED\"},{\"candidate_sequence\":1,\"failures\":[\"JOURNEY_WINDOW_EXCEEDED\"],\"hard_rule_codes\":[],\"reason_codes\":[\"CANDIDATE_REJECTED_BY_FEASIBILITY_GATE\"],\"stops\":[\"place-old-town\",\"place-riverside-museum\",\"place-food-hall\",\"place-city-park\",\"place-river-cruise\",\"place-skyline-dinner\"],\"summary\":\"candidate dropped before persistence: JOURNEY_WINDOW_EXCEEDED\"},{\"candidate_sequence\":2,\"failures\":[\"JOURNEY_WINDOW_EXCEEDED\"],\"hard_rule_codes\":[],\"reason_codes\":[\"CANDIDATE_REJECTED_BY_FEASIBILITY_GATE\"],\"stops\":[\"place-old-town\",\"place-riverside-museum\",\"place-food-hall\",\"place-design-library\",\"place-river-cruise\",\"place-skyline-dinner\"],\"summary\":\"candidate dropped before persistence: JOURNEY_WINDOW_EXCEEDED\"}],\"city_code\":\"CNX-DEMO\",\"city_services_in_catalog\":5,\"day_sequences_available\":3,\"places_in_catalog\":8,\"requested_candidates\":3},\"reason_code\":\"CATALOG_INSUFFICIENT\"}}",
+    "elapsed_ms": 41,
+    "at": "16:24:43",
+    "http_error": "HTTP Error 422: Unprocessable Entity"
+   },
+   "replay_identical_payload": false
+  }
+ ],
+ "extra": {
+  "taskkill_rc": 0,
+  "new_process": {
+   "tag": "A",
+   "pid": 30056,
+   "port": 8611,
+   "tree": "D:\\moodle\\_hjp3_0288t1_0925\\backend",
+   "db": "D:\\moodle\\_hjp3_0288t1_0925\\t1.s3db",
+   "listening": true,
+   "exited": false,
+   "cmdline_at_start": "D:/moodle/CityNexus/.venv/Scripts/python.exe -m uvicorn app.main:app --host 127.0.0.1 --port 8611 --log-level info"
+  }
+ },
+ "durable_read_after": {
+  "connection_uri": "file:D:/moodle/_hjp3_0288t1_0925/t1.s3db?mode=ro",
+  "db_exists": true,
+  "idempotency_keys": [
+   {
+    "key": "plans.generate:ord0288-t1a-162438",
+    "operation": "plans.generate",
+    "request_hash_head": "{\"candidate_coun",
+    "response_status": 422,
+    "response_json_bytes": 1424,
+    "response_json_head": "{\"refusal\": {\"detail\": \"No feasible plan candidates satisfy the journey constraints\", \"error_details\": {\"candidate_rejections\": [{\"candidate_sequence\": 0, \"failures\": [\"JOURNEY_WINDOW_EXCEEDED\"], \"hard_rule_codes\": [], \"",
+    "created_at": "2026-09-25T08:24:38.884241+00:00",
+    "expires_at": "2026-10-02T08:24:38.884241+00:00"
+   },
+   {
+    "key": "plans.generate:ord0288-t1c-162438",
+    "operation": "plans.generate",
+    "request_hash_head": "{\"candidate_coun",
+    "response_status": 422,
+    "response_json_bytes": 1424,
+    "response_json_head": "{\"refusal\": {\"detail\": \"No feasible plan candidates satisfy the journey constraints\", \"error_details\": {\"candidate_rejections\": [{\"candidate_sequence\": 0, \"failures\": [\"JOURNEY_WINDOW_EXCEEDED\"], \"hard_rule_codes\": [], \"",
+    "created_at": "2026-09-25T08:24:38.954411+00:00",
+    "expires_at": "2026-10-02T08:24:38.954411+00:00"
+   },
+   {
+    "key": "plans.generate:ord0288-t1b-162438",
+    "operation": "plans.generate",
+    "request_hash_head": "{\"candidate_coun",
+    "response_status": 422,
+    "response_json_bytes": 1424,
+    "response_json_head": "{\"refusal\": {\"detail\": \"No feasible plan candidates satisfy the journey constraints\", \"error_details\": {\"candidate_rejections\": [{\"candidate_sequence\": 0, \"failures\": [\"JOURNEY_WINDOW_EXCEEDED\"], \"hard_rule_codes\": [], \"",
+    "created_at": "2026-09-25T08:24:38.988192+00:00",
+    "expires_at": "2026-10-02T08:24:38.988192+00:00"
+   },
+   {
+    "key": "plans.generate:ord0288-after-badkey-162439",
+    "operation": "plans.generate",
+    "request_hash_head": "{\"candidate_coun",
+    "response_status": 422,
+    "response_json_bytes": 1424,
+    "response_json_head": "{\"refusal\": {\"detail\": \"No feasible plan candidates satisfy the journey constraints\", \"error_details\": {\"candidate_rejections\": [{\"candidate_sequence\": 0, \"failures\": [\"JOURNEY_WINDOW_EXCEEDED\"], \"hard_rule_codes\": [], \"",
+    "created_at": "2026-09-25T08:24:39.063174+00:00",
+    "expires_at": "2026-10-02T08:24:39.063174+00:00"
+   }
+  ],
+  "counts": {
+   "plan_versions": 0,
+   "journeys": 2,
+   "journey_missions": 0,
+   "audit_logs": 14,
+   "replan_proposals": 0
+  },
+  "total_idempotency_rows_all_keys": 4,
+  "names_the_store": "D:\\moodle\\_hjp3_0288t1_0925\\t1.s3db",
+  "this_arms_keys": [
+   "ord0288-t1a-162438",
+   "ord0288-t1c-162438",
+   "ord0288-t1b-162438",
+   "x",
+   "ord0288-after-badkey"
+  ],
+  "rows_for_this_arms_keys": [
+   {
+    "key": "plans.generate:ord0288-t1a-162438",
+    "operation": "plans.generate",
+    "request_hash_head": "{\"candidate_coun",
+    "response_status": 422,
+    "response_json_bytes": 1424,
+    "response_json_head": "{\"refusal\": {\"detail\": \"No feasible plan candidates satisfy the journey constraints\", \"error_details\": {\"candidate_rejections\": [{\"candidate_sequence\": 0, \"failures\": [\"JOURNEY_WINDOW_EXCEEDED\"], \"hard_rule_codes\": [], \"",
+    "created_at": "2026-09-25T08:24:38.884241+00:00",
+    "expires_at": "2026-10-02T08:24:38.884241+00:00"
+   },
+   {
+    "key": "plans.generate:ord0288-t1c-162438",
+    "operation": "plans.generate",
+    "request_hash_head": "{\"candidate_coun",
+    "response_status": 422,
+    "response_json_bytes": 1424,
+    "response_json_head": "{\"refusal\": {\"detail\": \"No feasible plan candidates satisfy the journey constraints\", \"error_details\": {\"candidate_rejections\": [{\"candidate_sequence\": 0, \"failures\": [\"JOURNEY_WINDOW_EXCEEDED\"], \"hard_rule_codes\": [], \"",
+    "created_at": "2026-09-25T08:24:38.954411+00:00",
+    "expires_at": "2026-10-02T08:24:38.954411+00:00"
+   },
+   {
+    "key": "plans.generate:ord0288-t1b-162438",
+    "operation": "plans.generate",
+    "request_hash_head": "{\"candidate_coun",
+    "response_status": 422,
+    "response_json_bytes": 1424,
+    "response_json_head": "{\"refusal\": {\"detail\": \"No feasible plan candidates satisfy the journey constraints\", \"error_details\": {\"candidate_rejections\": [{\"candidate_sequence\": 0, \"failures\": [\"JOURNEY_WINDOW_EXCEEDED\"], \"hard_rule_codes\": [], \"",
+    "created_at": "2026-09-25T08:24:38.988192+00:00",
+    "expires_at": "2026-10-02T08:24:38.988192+00:00"
+   }
+  ]
+ }
+}
