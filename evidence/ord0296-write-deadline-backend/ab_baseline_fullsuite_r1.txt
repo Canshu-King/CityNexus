@@ -1,0 +1,41 @@
+........................................................................ [  5%]
+...................F.................................................... [ 11%]
+.......s................................................................ [ 17%]
+...........F...FF.....F.F....F...F....................................F. [ 23%]
+........................................................................ [ 29%]
+..................................................................x..... [ 35%]
+........................................................................ [ 40%]
+........................................................................ [ 46%]
+........................................................................ [ 52%]
+........................................................................ [ 58%]
+........................................................................ [ 64%]
+......F................................................................. [ 70%]
+...................................................sssssssssssss........ [ 75%]
+........................................................................ [ 81%]
+........................................................................ [ 87%]
+................................s....................................... [ 93%]
+........................................................................ [ 99%]
+..........                                                               [100%]
+============================== warnings summary ===============================
+..\..\..\CityNexus\.venv\Lib\site-packages\fastapi\testclient.py:1
+  D:\moodle\CityNexus\.venv\Lib\site-packages\fastapi\testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.
+    from starlette.testclient import TestClient as TestClient  # noqa
+
+..\..\..\CityNexus\.venv\Lib\site-packages\starlette\testclient.py:53
+  D:\moodle\CityNexus\.venv\Lib\site-packages\starlette\testclient.py:53: DeprecationWarning: The anyio.abc.BlockingPortal alias is deprecated, use anyio.from_thread.BlockingPortal instead.
+    _PortalFactoryType = Callable[[], AbstractContextManager[anyio.abc.BlockingPortal]]
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ===========================
+FAILED tests/test_gpt_agent_authority_v3.py::test_aiv3_02_v2_mcp_builder_includes_read_plan_and_action_tools
+FAILED tests/test_qoder_anywhere_gates.py::test_g5_an_ai_run_that_changed_must_say_which_it_was
+FAILED tests/test_qoder_anywhere_lock_duration.py::test_g9a_the_instrument_actually_sees_write_transactions_and_provider_calls
+FAILED tests/test_qoder_anywhere_lock_duration.py::test_g9b_provider_http_never_runs_inside_an_open_write_transaction
+FAILED tests/test_qoder_anywhere_matrix_truth.py::test_g14a_an_oversized_matrix_fails_closed_and_invents_no_facts
+FAILED tests/test_qoder_anywhere_matrix_truth.py::test_g14c_the_verdict_must_not_depend_on_the_providers_wording
+FAILED tests/test_qoder_anywhere_provider_independence.py::test_g8a_default_suite_contains_no_live_provider_calls
+FAILED tests/test_qoder_anywhere_provider_truth.py::test_g10_every_normalised_place_carries_a_usable_coordinate_including_nodes
+FAILED tests/test_qoder_city_failure_reasons.py::test_a_live_failure_arrives_named_and_carries_the_stage_it_broke_at
+FAILED tests/test_v18_3_convergence.py::test_release_metadata_and_map_entrypoint_are_converged
+10 failed, 1208 passed, 15 skipped, 1 xfailed, 2 warnings in 182.53s (0:03:02)
+rc=1
