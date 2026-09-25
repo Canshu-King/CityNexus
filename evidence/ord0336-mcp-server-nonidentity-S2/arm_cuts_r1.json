@@ -1,0 +1,95 @@
+{
+ "schema": "CNX_ORD0336_ARM_CUTS_V1",
+ "order": "ORD-0336",
+ "lane": "S2-hermes-port",
+ "candidate": "f45489c6d17f16973faad161618789237ac3814e",
+ "arms": {
+  "A1_tool_guidance": {
+   "exit": 1,
+   "passed": 13,
+   "failed": 1,
+   "errors": 0,
+   "interrupted": 0,
+   "collected": 0,
+   "collect_errors": 0,
+   "failed_tests": [
+    "test_context_guidance_describes_server_owned_replan_and_search_facts"
+   ],
+   "tail": "1 failed, 13 passed in 1.37s",
+   "cut_digest_sha1": "a56bae080d9d5bd8847768bfa11e375e9f2c40ea",
+   "uncut_control": {
+    "exit": 0,
+    "passed": 14,
+    "failed": 0
+   }
+  },
+  "B1_request_id_boundary": {
+   "exit": 1,
+   "passed": 13,
+   "failed": 1,
+   "errors": 0,
+   "interrupted": 0,
+   "collected": 0,
+   "collect_errors": 0,
+   "failed_tests": [
+    "test_real_mcp_v2_stdio_protocol_discovers_coherent_inspect_plan_act_surface"
+   ],
+   "tail": "1 failed, 13 passed in 1.36s",
+   "cut_digest_sha1": "e13ec999f654f5a5938037fa8b63e876246d5014",
+   "uncut_control": {
+    "exit": 0,
+    "passed": 14,
+    "failed": 0
+   }
+  },
+  "C1_proposal_views": {
+   "exit": 1,
+   "passed": 12,
+   "failed": 2,
+   "errors": 0,
+   "interrupted": 0,
+   "collected": 0,
+   "collect_errors": 0,
+   "failed_tests": [
+    "test_request_replan_emits_a_validated_full_fidelity_proposal_view",
+    "test_request_replan_rejects_incomplete_candidate_projection"
+   ],
+   "tail": "2 failed, 12 passed in 1.39s",
+   "cut_digest_sha1": "2e282eae28079da61543f48ea40b1cf6ecf3c476",
+   "uncut_control": {
+    "exit": 0,
+    "passed": 14,
+    "failed": 0
+   }
+  }
+ },
+ "red_sets": {
+  "A1_tool_guidance": [
+   "test_context_guidance_describes_server_owned_replan_and_search_facts"
+  ],
+  "B1_request_id_boundary": [
+   "test_real_mcp_v2_stdio_protocol_discovers_coherent_inspect_plan_act_surface"
+  ],
+  "C1_proposal_views": [
+   "test_request_replan_emits_a_validated_full_fidelity_proposal_view",
+   "test_request_replan_rejects_incomplete_candidate_projection"
+  ]
+ },
+ "red_union_size_vs_sum": {
+  "union": 4,
+  "sum": 4
+ },
+ "disjointness_checks": {
+  "each_form_has_its_own_red": true,
+  "arms_do_not_cover_for_each_other": true,
+  "every_arm_tree_was_green_before_its_cut": true
+ },
+ "excluded_witness_measurement": {
+  "collect_exit": 2,
+  "collected": 14,
+  "collect_errors": 1,
+  "interrupted_line": "",
+  "named_missing_symbol": true,
+  "tail": "14 tests collected, 1 error in 0.23s"
+ }
+}
