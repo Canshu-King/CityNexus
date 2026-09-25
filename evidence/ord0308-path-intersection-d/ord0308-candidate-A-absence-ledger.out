@@ -1,0 +1,14 @@
+door probed
+============================================================
+probed_against_this_repo_tip: "refs/heads/mirror/integration-frontend-apple-pass1"
+remote_heads_total: {"count": 56, "verbatim_inventory": "ord0308-remote-heads.tsv:1-56", "command": "git ls-remote --heads https://github.com/Canshu-King/CityNexus.git"}
+remote_heads_matching_ORD-0307: []
+remote_tags_total: 0
+remote_tags_matching_ORD-0307: []
+evidence_dirs_on_commander_control_matching_ORD-0307: ["ord0307-prefix-write-legs-at-line-tip"]
+files_inside_those_dirs: {"ord0307-prefix-write-legs-at-line-tip": ["write_legs_at_line_tip_r1.json"]}
+ledger_delivery_blocks_for_ORD-0307: 0
+ledger_order_block_head: "### ORD-0307 → F `8ccd71d8`（号令者 494abfd7 下发 · 2026-09-25 16:1x+08）字面量凭据的**常驻启动门**（只判存在与位置，绝不打印内容）  为什么现在派：那把已经外泄的网关 key 还活在树里（轮换只能用户做，我不催）；在它能被换掉之前，产品面至少要有一枚**开机就拒**的门， 而不是等人工 revi"
+
+verdict: NOT_APPLICABLE_missing_candidate
+why: F's ORD-0307 has an order block in the ledger but no deliverable to merge: `git ls-remote --heads` printed 56 heads and 0 of them match `ORD-0307`; `git ls-remote --tags` printed 0 tags. The only `ORD-0307`-named thing on `commander/control` is `evidence/ord0307-prefix-write-legs-at-line-tip` whose file list is {"ord0307-prefix-write-legs-at-line-tip": ["write_legs_at_line_tip_r1.json"]} -- a census reading, not a code candidate, and it reports zero candidate paths. So this cell is `NOT_APPLICABLE_missing_candidate`: I am not guessing which files F will touch.
