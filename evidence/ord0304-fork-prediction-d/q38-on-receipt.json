@@ -1,0 +1,94 @@
+{
+ "cells": [
+  {
+   "derived_from": "merge_tree.raw_output_sha256=d62340cc5fa80519 · predicted_tree=77e0ee47e7786527cda7c992aa1718a4a0057ac1 · intersection=0 · candidate_paths_sha1=984c253404f8",
+   "derived_from_key": "derived_from",
+   "id": "0",
+   "own_hits": [
+    "0",
+    "02da4602bfd4f7af38154a26dd345aba9f69876d",
+    "1",
+    "10",
+    "17",
+    "5",
+    "77e0ee47e7786527cda7c992aa1718a4a0057ac1"
+   ],
+   "own_token_count": 44,
+   "unique_hits": [
+    "77e0ee47e7786527cda7c992aa1718a4a0057ac1",
+    "984c253404f8",
+    "d62340cc5fa80519"
+   ],
+   "verdict": "CLEAN_REPARENT",
+   "why": "B c01d72a3 的 02da4602bfd4f7af38154a26dd345aba9f69876d 只带自有 1 笔、领先当前尖 1 笔、落后 10 笔；它动 5 条路径、当前尖自 90d29a172… 以来动 17 条，交集 0 条；`git merge-tree --write-tree dc964086c… 02da4602b…` rc=0、预测树 77e0ee47e7786527cda7c992aa1718a4a0057ac1、conflict 段 NONE ⇒ 判据来自 B（交集为空），A 的 rc=0 一致背书",
+   "why_source": "why",
+   "why_token_count": 11
+  },
+  {
+   "derived_from": "merge_tree.raw_output_sha256=abc1fab1bcf12468 · predicted_tree=2899ca1a909598bded1617be226b021ea3ab0491 · intersection=0 · candidate_paths_sha1=d1926915821a",
+   "derived_from_key": "derived_from",
+   "id": "1",
+   "own_hits": [
+    "0",
+    "1",
+    "11",
+    "18",
+    "2899ca1a909598bded1617be226b021ea3ab0491",
+    "6c20f04b195faf2339f1fb55d8ea9a0b0d825fe1"
+   ],
+   "own_token_count": 41,
+   "unique_hits": [
+    "2899ca1a909598bded1617be226b021ea3ab0491",
+    "abc1fab1bcf12468",
+    "d1926915821a"
+   ],
+   "verdict": "CLEAN_REPARENT",
+   "why": "F 8ccd71d8 的 6c20f04b195faf2339f1fb55d8ea9a0b0d825fe1 只带自有 1 笔、领先当前尖 1 笔、落后 11 笔；它动 1 条路径、当前尖自 6d041dcce… 以来动 18 条，交集 0 条；`git merge-tree --write-tree dc964086c… 6c20f04b1…` rc=0、预测树 2899ca1a909598bded1617be226b021ea3ab0491、conflict 段 NONE ⇒ 判据来自 B（交集为空），A 的 rc=0 一致背书",
+   "why_source": "why",
+   "why_token_count": 10
+  },
+  {
+   "derived_from": "receipt_blob=10e13c7935ab17ae027a69897b27c0b0fe97ec87 · drifted=0 · identical=2 · backend_deps_all_same=True",
+   "derived_from_key": "derived_from",
+   "id": "2",
+   "own_hits": [
+    "0",
+    "10e13c7935ab17ae027a69897b27c0b0fe97ec87",
+    "11",
+    "2",
+    "39296",
+    "90d29a172e186aab6e6cb138ab4583ccf93bfa68",
+    "CARRIES_TO_CURRENT_TIP"
+   ],
+   "own_token_count": 32,
+   "unique_hits": [
+    "10e13c7935ab17ae027a69897b27c0b0fe97ec87",
+    "2"
+   ],
+   "verdict": "CARRIES_TO_CURRENT_TIP",
+   "why": "从 F 自己的收据 blob 10e13c7935ab17ae027a69897b27c0b0fe97ec87（39296 B）读出 measured_on=90d29a172e186aab6e6cb138ab4583ccf93bfa68 与 scope_actually_run 2 支；这 2 支测试文件在基座与当前尖之间字节相同的 2 支、漂移 0 支；它依赖的三枚后端件（main.py、db/write_deadline.py、db/session.py）两侧 blob 全等 = True；收据里 cells 计数 = 11 格（同一枚 blob `10e13c7935ab17ae027a69897b27c0b0fe97ec87` 内可复算）⇒ 这一格判 `CARRIES_TO_CURRENT_TIP`，不需重跑；判据来自 B 的文件级 blob 等式",
+   "why_source": "why",
+   "why_token_count": 10
+  }
+ ],
+ "cells_found": 3,
+ "exit": 0,
+ "findings": [],
+ "hard_codes": [],
+ "hard_count": 0,
+ "info_count": 0,
+ "meaning": "no shared literal and every sentence names its own readings",
+ "overall": "Q38_GATE_GREEN",
+ "receipt": {
+  "blob_sha1": "fcfa6510c3a6632ef032631ef728b604138d75fd",
+  "bytes": 12412,
+  "path": "review/evidence/ord0304/ord0304_fork_prediction_d_r1.json"
+ },
+ "soft_codes": [],
+ "soft_count": 0,
+ "unique_reading_counts": {
+  "0": 13,
+  "1": 9,
+  "2": 15
+ }
+}
