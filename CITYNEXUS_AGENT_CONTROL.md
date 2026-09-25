@@ -196,6 +196,9 @@ GitHub /rate_limit 响应头 Date : Sun, 20 Sep 2026 15:15:18 GMT
 我写错钟点 = 让所有车道在错误的时间轴上做决策；跨日错标还会让人以为有 09-21 的新裁定。
 
 ## DELIVERIES（车道交付登记处 · 追加，不改别人的块）
+### SESSION=d2305848 @2026-09-25 17:31+08 —— **ORD-0309 派生交：四格全由原始 arm 字段支撑**——B3 主格 MET（converged_onto_next=true、offline_document_boots=true、usable_offline=true、marker 对、无 HTML 冒充 JS）；B3 控制格 CONTROL_DISCRIMINATES（offline_document_boots=false、usable_offline=false）；A 主格 CONFIRMED_AS_CLAIMED（复合两半：held screen usable offline=true + offline re-entry lands next gen=true）；A 控制格 CONTROL_DISCRIMINATES（outage_update_landed=true、usable_offline=false、marker/bundle/rendered 全变）⇒ 代次 dc964086 = 权威线（无重跑需求）
+（派生件 6906e57c61b20353fae153beea76f3505b4b3088 @ evidence/ord0297r-hjp1/verifier_derivation_d2305848.json；总线 comment 5830114952。收据 aa13e204…/74,446B 核中。每格 why 串里的具名字段都从原始 arm 数据对上了。HJ-P1 的 claimed_result 不是采信的——每个字段我都从 arms{} 的原始值重新读了。）
+
 ### SESSION=d2305848 @2026-09-25 17:03+08 —— **ORD-0305-A1 交：gen-2 重走——常量活了（2000→'2'、1000→'1'）；全翻转集合从 per-arm reading 文件独立派生（deriving limit 解除）；independent_kills = 3、每枚独占；late-answer NOT_MEASURED 保留**
 （派生件 62f85dd1cb9a1ba35dfdd4bea24aa8b8cd164748 @ evidence/ord0305-write-deadline-keyed/verifier_derivation_a1_d2305848.json；总线 comment 5829761955。被验尖 = 我自己先读的 64d14b20（与 commander 坐标一致）。per-arm reading 文件从 gen-2 evidence/ord0281-keyed-write-deadline-gen2/ 拉：ca_no_delegate 翻 [K3] 独占（still-pending/still-pending NOT_MET）；ca_keyless_too 翻 [K1] 独占（WriteDeadlineMissed elapsed 2009ms）；ca_fixed_secs 翻 [TB] 独占（sentence_seconds_named=99 硬编码）。12 格 MET/DECLARED/NOT_MEASURED 全从实测行派生。RUNTIME_MEASURED per Q25。）
 
@@ -16156,6 +16159,20 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### CMDR-0925-1735 ORD-0297r 闭单（范围句写死）+ 我那条"闭单"标题与我核对件里 `PARTIAL` 一词的关系（说清，别让人误读）
+
+**闭单**：`ORD-0297r`（HJ-P1 在盘上代 `dc964086c9d412573ac19d70b24b30e6c3ee6168` 重跑离线代次交接四臂）= **CLOSED**，红队 E 已签四格 `derived_result`（`6906e57c61b20353fae153beea76f3505b4b3088`）。
+
+**范围只到这四格撑得住的**：握着的那一代离线仍可用；换代能收敛到下一代；「换代没成功」与「换代成功」在两枚控制格里**可区分**；A 那格的复合主张两半各有原始字段撑。
+**不覆盖**：手机数据面 `:8000`（仍无人监听，等用户的字）；A 臂 modal 挡路的**成因归属**（投递方自己撤回、红队未代归因）；任何"乘客能走完一次规划"的结论；下一代部署后的同代复读（那是 ORD-0306/X-5 那条线）。
+
+**两个词别混**：我核对件 `_ord0309_cmdr_acceptance_r1.json` 里那个 `PARTIAL` 说的**不是**产品结论，是**我自己的引用覆盖率**——红队四格共点名 50 枚原始字段，49 枚在投递收据字节里命中，唯一缺席的是 `note_from_value`，那是红队内部的"由值生成的注记"键名，不是投递方的字段。⇒ 引用面 0 枚虚构投递字段；我把这一条写死，免得下一班看到 `PARTIAL` 就去重跑一单已经闭掉的单。
+
+本拍我 0 权威线移动、0 ref 推送、产品码 0 改动、`demo/reset` 0、`_live`/`_preview` 0 读写、凭据 0 打印。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### CMDR-0925-1729 今晚的落地与换代顺序（我自己执行，写给下一班核）· Q55=① 已得字
 
 1. **一次把可落的都落进同一条线，只做一次换代**。当前可落状态：
