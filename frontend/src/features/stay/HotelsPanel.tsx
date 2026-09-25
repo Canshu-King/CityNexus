@@ -13,6 +13,8 @@
 
 import { useEffect, useState } from "react";
 import { useLocale } from "../../i18n/LocaleContext";
+import { namedCodeIn, readResponseFacts, type RawFacts } from "../../lib/rawFacts";
+import { RawFactsPanel } from "../../components/RawFactsPanel";
 
 type StayOption = {
   id: string;
@@ -37,12 +39,26 @@ type StayOption = {
   };
 };
 
+/** The refusals this screen can actually explain to a traveller, named by the token the endpoint
+ *  answers with.  A code outside this list gets the general refusal: this screen has no wording for
+ *  a condition it was never told about, and quoting the server's sentence for one is what put an
+ *  upstream body into the DOM (Q64=1). */
+const EXPLAINABLE_REFUSALS = ["STAY_ITINERARY_CONFLICT", "STAY_PINNED_CONFLICT"];
+
 export function HotelsPanel({ journeyId, onSelected }: { journeyId: string; onSelected?: () => void }) {
   const { locale } = useLocale();
   const zh = locale.startsWith("zh");
   const [options, setOptions] = useState<StayOption[] | null>(null);
   const [busy, setBusy] = useState<string | null>(null);
-  const [error, setError] = useState<string | null>(null);
+  const [banner, setBanner] = useState<{ text: string | null; facts: RawFacts | null }>({
+    text: null,
+    facts: null,
+  });
+  /** The sentence and the reading are announced together, so a later attempt can never leave the
+   *  previous attempt's fields on screen beside it. */
+  const error = banner.text;
+  const setError = (text: string | null, facts: RawFacts | null = null) =>
+    setBanner({ text, facts });
   const [chosen, setChosen] = useState<string | null>(null);
 
   useEffect(() => {
@@ -89,19 +105,24 @@ export function HotelsPanel({ journeyId, onSelected }: { journeyId: string; onSe
         { method: "POST" },
       );
       if (!r.ok) {
-        const body = await r.json().catch(() => null);
-        const raw = String(body?.error?.message ?? body?.detail ?? "");
-        // A hotel whose check-in / check-out windows cannot coexist with the
-        // confirmed itinerary is a real conflict.  Say so in traveller terms
-        // and point at the next action instead of showing a server error.
+        /* A hotel whose check-in / check-out windows cannot coexist with the confirmed itinerary is a
+           real conflict, and the endpoint names it in the answer's leading token
+           (`detail: "STAY_ITINERARY_CONFLICT: STAY_PINNED_CONFLICT:..."`).  The token is what this
+           screen decides on; the sentence around it is dropped, because since Q64=1 no upstream body
+           may reach the DOM and a traveller-facing refusal is ours to word.  What stays visible is
+           this device's own reading of the answer, below. */
+        const { text, facts } = await readResponseFacts(r);
         const isConflict =
-          r.status === 422 && /STAY_ITINERARY_CONFLICT|STAY_PINNED_CONFLICT/.test(raw);
+          r.status === 422 && namedCodeIn(text, EXPLAINABLE_REFUSALS) !== null;
         setError(
           isConflict
             ? zh
               ? "这家住宿的入住/退房时间和你已确认的行程冲突，无法在不改动行程的情况下采用。换一家试试。"
               : "This stay's check-in / check-out windows clash with your confirmed itinerary, so it cannot be used without changing your trip. Try another one."
-            : raw || (zh ? "暂时无法选择这家住宿。" : "Could not choose this stay."),
+            : zh
+              ? "暂时无法选择这家住宿。"
+              : "Could not choose this stay.",
+          facts,
         );
         return;
       }
@@ -227,6 +248,9 @@ export function HotelsPanel({ journeyId, onSelected }: { journeyId: string; onSe
       </div>
       {error && (
         <p className="role-alert" data-testid="hotel-error" role="alert">{error}</p>
+      )}
+      {banner.facts && (
+        <RawFactsPanel facts={banner.facts} zh={zh} testId="hotel-raw-facts" />
       )}
     </section>
   );
