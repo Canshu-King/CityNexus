@@ -1,0 +1,2099 @@
+{
+ "schema": "CNX_ORD0317_STATES_AND_DEFINITION_F_V1",
+ "lane": "F 8ccd71d8",
+ "order": "ORD-0317 ②（逐行五态）+ ③（一句产品定义 + 触发判据写成期限到了）",
+ "at_local": "2026-09-25T23:24:52+0800",
+ "measurement_scope": {
+  "scope": "frontend network write entries reached through fetch / a fetch-family wrapper / request({method}) or a module-local verb helper — i.e. every entry a traveller can trigger that puts bytes on the wire",
+  "generation": "2344145ce6342b6ac32ac4d0955c0f524d8c9320",
+  "artifact": "evidence/ord0317-entry-states-f/o317_states_and_definition_f_r1.json",
+  "measurement_method": "TypeScript compiler AST walk (o317b_entry_scope_states.cjs, blob cf22ea6075c53cd13bdedeed93ea76101296de9e) over `git archive` export of frontend/src, 74 files, two-way self-test gated; no grep, no ±line window"
+ },
+ "why_this_shape": "仲裁 Q60'=① 要的是清点+分类+定义而不是立即改码；号令者已交①（那张五列表）。本件把②的五个状态逐行补上，并按③给出一句产品定义与触发判据，另附一条实测：'看有没有 signal' 的判据没有牙。",
+ "his_table_readback": {
+  "path": "evidence/cmdr-write-entry-scope-2257/write_entry_scope_r2.json",
+  "blob_verified": "fba4e01a4e7ad9833a5b4fc35920b8a089ae9525",
+  "bytes": 6867,
+  "entries_total": 11,
+  "local_state_writes_count": 4
+ },
+ "instrument_selftest": "SELFTEST_PASS",
+ "per_generation": {
+  "dc96408": {
+   "generation": "dc964086c9d412573ac19d70b24b30e6c3ee6168",
+   "label": "ORD-0281 尚未落地那一代",
+   "files_scanned": 72,
+   "rows_total": 21,
+   "deadline_enforced_strict": 0,
+   "no_deadline": 21,
+   "signal_at_call_site": 2,
+   "signal_keyed_says_covered": 2,
+   "signal_but_no_deadline": [
+    "features/planning/PlanWithAiSheet.tsx#518",
+    "features/planning/PlanWithAiSheet.tsx#653"
+   ],
+   "keyed": 4,
+   "cancellable": 2,
+   "must_wait": 21,
+   "recoverable": 6,
+   "network_effect_proven": 21,
+   "site_set": [
+    "api/travelerPreferences.ts|PUT|/api/v1/travelers/${…}",
+    "api/v12Authoritative.ts|POST|/journeys/${…}",
+    "features/discovery/RealCityDiscoveryPanel.tsx|POST|/api/v1/journeys/${…}",
+    "features/execution/LiveRecovery.tsx|POST|/api/v1/replans/${…}",
+    "features/notifications/PushCapabilityCard.tsx|POST|/api/v1/travelers/${…}",
+    "features/planning/PlanComparison.tsx|POST|/api/v1/journeys/${…}",
+    "features/planning/PlanWithAiSheet.tsx|POST|/api/v1/journeys/${…}",
+    "features/recovery/RecoveryRequiredPanel.tsx|POST|/api/v1/journeys/${…}",
+    "features/recovery/V14RecoveryTruthPanel.tsx|POST|/api/v1/replans/${…}",
+    "features/simulation/simulationAdapter.ts|POST|/api/v1/demo/${…}",
+    "features/simulation/simulationAdapter.ts|POST|/api/v1/demo/reset",
+    "features/simulation/simulationAdapter.ts|POST|/api/v1/journeys/${…}",
+    "features/stay/HotelsPanel.tsx|POST|/api/v1/journeys/${…}"
+   ]
+  },
+  "13af1ff": {
+   "generation": "13af1ff4ba4516aa1a39cda67428ed4a2a34ac69",
+   "label": "0281 有键半支落地那一代",
+   "files_scanned": 73,
+   "rows_total": 21,
+   "deadline_enforced_strict": 2,
+   "no_deadline": 19,
+   "signal_at_call_site": 2,
+   "signal_keyed_says_covered": 2,
+   "signal_but_no_deadline": [
+    "features/planning/PlanWithAiSheet.tsx#518",
+    "features/planning/PlanWithAiSheet.tsx#653"
+   ],
+   "keyed": 4,
+   "cancellable": 2,
+   "must_wait": 19,
+   "recoverable": 6,
+   "network_effect_proven": 21,
+   "site_set": [
+    "api/travelerPreferences.ts|PUT|/api/v1/travelers/${…}",
+    "api/v12Authoritative.ts|POST|/journeys/${…}",
+    "features/discovery/RealCityDiscoveryPanel.tsx|POST|/api/v1/journeys/${…}",
+    "features/execution/LiveRecovery.tsx|POST|/api/v1/replans/${…}",
+    "features/notifications/PushCapabilityCard.tsx|POST|/api/v1/travelers/${…}",
+    "features/planning/PlanComparison.tsx|POST|/api/v1/journeys/${…}",
+    "features/planning/PlanWithAiSheet.tsx|POST|/api/v1/journeys/${…}",
+    "features/recovery/RecoveryRequiredPanel.tsx|POST|/api/v1/journeys/${…}",
+    "features/recovery/V14RecoveryTruthPanel.tsx|POST|/api/v1/replans/${…}",
+    "features/simulation/simulationAdapter.ts|POST|/api/v1/demo/${…}",
+    "features/simulation/simulationAdapter.ts|POST|/api/v1/demo/reset",
+    "features/simulation/simulationAdapter.ts|POST|/api/v1/journeys/${…}",
+    "features/stay/HotelsPanel.tsx|POST|/api/v1/journeys/${…}"
+   ]
+  },
+  "30a5f90": {
+   "generation": "30a5f90e5deaed6e45a704ddcc7d6e5e9790475b",
+   "label": "0296 r5（我 r1 清单量的那一代）",
+   "files_scanned": 73,
+   "rows_total": 21,
+   "deadline_enforced_strict": 2,
+   "no_deadline": 19,
+   "signal_at_call_site": 2,
+   "signal_keyed_says_covered": 2,
+   "signal_but_no_deadline": [
+    "features/planning/PlanWithAiSheet.tsx#518",
+    "features/planning/PlanWithAiSheet.tsx#653"
+   ],
+   "keyed": 4,
+   "cancellable": 2,
+   "must_wait": 19,
+   "recoverable": 6,
+   "network_effect_proven": 21,
+   "site_set": [
+    "api/travelerPreferences.ts|PUT|/api/v1/travelers/${…}",
+    "api/v12Authoritative.ts|POST|/journeys/${…}",
+    "features/discovery/RealCityDiscoveryPanel.tsx|POST|/api/v1/journeys/${…}",
+    "features/execution/LiveRecovery.tsx|POST|/api/v1/replans/${…}",
+    "features/notifications/PushCapabilityCard.tsx|POST|/api/v1/travelers/${…}",
+    "features/planning/PlanComparison.tsx|POST|/api/v1/journeys/${…}",
+    "features/planning/PlanWithAiSheet.tsx|POST|/api/v1/journeys/${…}",
+    "features/recovery/RecoveryRequiredPanel.tsx|POST|/api/v1/journeys/${…}",
+    "features/recovery/V14RecoveryTruthPanel.tsx|POST|/api/v1/replans/${…}",
+    "features/simulation/simulationAdapter.ts|POST|/api/v1/demo/${…}",
+    "features/simulation/simulationAdapter.ts|POST|/api/v1/demo/reset",
+    "features/simulation/simulationAdapter.ts|POST|/api/v1/journeys/${…}",
+    "features/stay/HotelsPanel.tsx|POST|/api/v1/journeys/${…}"
+   ]
+  },
+  "2344145": {
+   "generation": "2344145ce6342b6ac32ac4d0955c0f524d8c9320",
+   "label": "现尖（号令者钉的 generation）",
+   "files_scanned": 74,
+   "rows_total": 21,
+   "deadline_enforced_strict": 3,
+   "no_deadline": 18,
+   "signal_at_call_site": 2,
+   "signal_keyed_says_covered": 2,
+   "signal_but_no_deadline": [
+    "features/planning/PlanWithAiSheet.tsx#678"
+   ],
+   "keyed": 4,
+   "cancellable": 2,
+   "must_wait": 18,
+   "recoverable": 6,
+   "network_effect_proven": 21,
+   "site_set": [
+    "api/travelerPreferences.ts|PUT|/api/v1/travelers/${…}",
+    "api/v12Authoritative.ts|POST|/journeys/${…}",
+    "features/discovery/RealCityDiscoveryPanel.tsx|POST|/api/v1/journeys/${…}",
+    "features/execution/LiveRecovery.tsx|POST|/api/v1/replans/${…}",
+    "features/notifications/PushCapabilityCard.tsx|POST|/api/v1/travelers/${…}",
+    "features/planning/PlanComparison.tsx|POST|/api/v1/journeys/${…}",
+    "features/planning/PlanWithAiSheet.tsx|POST|/api/v1/journeys/${…}",
+    "features/recovery/RecoveryRequiredPanel.tsx|POST|/api/v1/journeys/${…}",
+    "features/recovery/V14RecoveryTruthPanel.tsx|POST|/api/v1/replans/${…}",
+    "features/simulation/simulationAdapter.ts|POST|/api/v1/demo/${…}",
+    "features/simulation/simulationAdapter.ts|POST|/api/v1/demo/reset",
+    "features/simulation/simulationAdapter.ts|POST|/api/v1/journeys/${…}",
+    "features/stay/HotelsPanel.tsx|POST|/api/v1/journeys/${…}"
+   ]
+  }
+ },
+ "cross_generation_conclusion": {
+  "generations_where_a_real_deadline_exists": [
+   "13af1ff",
+   "30a5f90",
+   "2344145"
+  ],
+  "generations_with_zero_real_deadlines": [
+   "dc96408"
+  ],
+  "signal_keyed_count_per_generation": {
+   "dc96408": 2,
+   "13af1ff": 2,
+   "30a5f90": 2,
+   "2344145": 2
+  },
+  "real_deadline_count_per_generation": {
+   "dc96408": 0,
+   "13af1ff": 2,
+   "30a5f90": 2,
+   "2344145": 3
+  },
+  "signal_invariant_while_deadline_moves": true,
+  "row_set_identical_first_vs_last": true
+ },
+ "his_row_to_my_row": [
+  {
+   "his_row": {
+    "file": "features/notifications/PushCapabilityCard.tsx",
+    "line": 56,
+    "operation": "POST",
+    "path": "/api/v1/travelers/${...}",
+    "his_deadline_label": "NONE"
+   },
+   "my_rows": [
+    {
+     "site": "features/notifications/PushCapabilityCard.tsx#56",
+     "path": "/api/v1/travelers/${…}",
+     "operation": "POST enable",
+     "five_states": {
+      "key": "无键",
+      "cancel": "不可取消或测不出",
+      "deadline": "无期限",
+      "must_wait": "必须等待",
+      "recoverable": "不可恢复(读不回也补问不了)"
+     },
+     "evidence": {
+      "site": "features/notifications/PushCapabilityCard.tsx#56",
+      "key": [],
+      "key_via": "call_site",
+      "cancel": [],
+      "readback": [],
+      "wrapper": [],
+      "fetch_line": [
+       "features/notifications/PushCapabilityCard.tsx#56"
+      ],
+      "line_text": "const response = await fetch(`/api/v1/travelers/${travelerId}/push-subscriptions`, {"
+     }
+    }
+   ],
+   "agrees_on_site": true,
+   "note": ""
+  },
+  {
+   "his_row": {
+    "file": "features/planning/PlanComparison.tsx",
+    "line": 88,
+    "operation": "POST",
+    "path": "/api/v1/journeys/${...}",
+    "his_deadline_label": "NONE"
+   },
+   "my_rows": [
+    {
+     "site": "features/planning/PlanComparison.tsx#88",
+     "path": "/api/v1/journeys/${…}",
+     "operation": "POST choose",
+     "five_states": {
+      "key": "无键",
+      "cancel": "不可取消或测不出",
+      "deadline": "无期限",
+      "must_wait": "必须等待",
+      "recoverable": "不可恢复(读不回也补问不了)"
+     },
+     "evidence": {
+      "site": "features/planning/PlanComparison.tsx#88",
+      "key": [],
+      "key_via": "call_site",
+      "cancel": [],
+      "readback": [],
+      "wrapper": [],
+      "fetch_line": [
+       "features/planning/PlanComparison.tsx#88"
+      ],
+      "line_text": "const response = await fetch("
+     }
+    }
+   ],
+   "agrees_on_site": true,
+   "note": ""
+  },
+  {
+   "his_row": {
+    "file": "features/planning/PlanWithAiSheet.tsx",
+    "line": 678,
+    "operation": "POST",
+    "path": "/api/v1/journeys/${...}",
+    "his_deadline_label": "OPTION_SIGNAL"
+   },
+   "my_rows": [
+    {
+     "site": "features/planning/PlanWithAiSheet.tsx#678",
+     "path": "/api/v1/journeys/${…}",
+     "operation": "POST submit",
+     "five_states": {
+      "key": "有键",
+      "cancel": "可取消",
+      "deadline": "无期限",
+      "must_wait": "必须等待",
+      "recoverable": "可恢复"
+     },
+     "evidence": {
+      "site": "features/planning/PlanWithAiSheet.tsx#678",
+      "key": [
+       "features/planning/PlanWithAiSheet.tsx#689"
+      ],
+      "key_via": "call_site",
+      "cancel": [
+       "features/planning/PlanWithAiSheet.tsx#514",
+       "features/planning/PlanWithAiSheet.tsx#404",
+       "features/planning/PlanWithAiSheet.tsx#434",
+       "features/planning/PlanWithAiSheet.tsx#813",
+       "features/planning/PlanWithAiSheet.tsx#1072"
+      ],
+      "readback": [
+       536,
+       598,
+       612,
+       625,
+       702
+      ],
+      "wrapper": [],
+      "fetch_line": [
+       "features/planning/PlanWithAiSheet.tsx#678"
+      ],
+      "line_text": "const generate = await fetch("
+     }
+    }
+   ],
+   "agrees_on_site": true,
+   "note": "他标 OPTION_SIGNAL 的那一行，这把尺判的是无期限（signal 只是取消通道）"
+  },
+  {
+   "his_row": {
+    "file": "features/recovery/RecoveryRequiredPanel.tsx",
+    "line": 26,
+    "operation": "POST",
+    "path": "EXPR:path",
+    "his_deadline_label": "NONE"
+   },
+   "my_rows": [
+    {
+     "site": "features/recovery/RecoveryRequiredPanel.tsx#64",
+     "path": "/api/v1/journeys/${…}",
+     "operation": "POST replan",
+     "five_states": {
+      "key": "无键",
+      "cancel": "不可取消或测不出",
+      "deadline": "无期限",
+      "must_wait": "必须等待",
+      "recoverable": "不可恢复(读不回也补问不了)"
+     },
+     "evidence": {
+      "site": "features/recovery/RecoveryRequiredPanel.tsx#64",
+      "key": [
+       "features/recovery/RecoveryRequiredPanel.tsx#28"
+      ],
+      "key_via": "wrapper_headers",
+      "cancel": [],
+      "readback": [],
+      "wrapper": [
+       "features/recovery/RecoveryRequiredPanel.tsx#25"
+      ],
+      "fetch_line": [
+       "features/recovery/RecoveryRequiredPanel.tsx#26"
+      ],
+      "line_text": "const response = await post(`/api/v1/journeys/${journeyId}/plans/generate`, {});"
+     }
+    },
+    {
+     "site": "features/recovery/RecoveryRequiredPanel.tsx#95",
+     "path": "/api/v1/journeys/${…}",
+     "operation": "POST acknowledge",
+     "five_states": {
+      "key": "无键",
+      "cancel": "不可取消或测不出",
+      "deadline": "无期限",
+      "must_wait": "必须等待",
+      "recoverable": "不可恢复(读不回也补问不了)"
+     },
+     "evidence": {
+      "site": "features/recovery/RecoveryRequiredPanel.tsx#95",
+      "key": [
+       "features/recovery/RecoveryRequiredPanel.tsx#28"
+      ],
+      "key_via": "wrapper_headers",
+      "cancel": [],
+      "readback": [],
+      "wrapper": [
+       "features/recovery/RecoveryRequiredPanel.tsx#25"
+      ],
+      "fetch_line": [
+       "features/recovery/RecoveryRequiredPanel.tsx#26"
+      ],
+      "line_text": "const response = await post("
+     }
+    }
+   ],
+   "agrees_on_site": false,
+   "note": "他表里 path 是 EXPR:path（URL 由形参带进来），按号令者要求人读：这一枚 helper 的两个入口分别是 POST /api/v1/journeys/${…}/plans/generate 与 POST /api/v1/journeys/${…}/recovery/acknowledge ⇒ 表里 1 行在这把尺上是 2 行"
+  },
+  {
+   "his_row": {
+    "file": "features/simulation/simulationAdapter.ts",
+    "line": 229,
+    "operation": "POST",
+    "path": "/api/v1/demo/reset",
+    "his_deadline_label": "NONE"
+   },
+   "my_rows": [
+    {
+     "site": "features/simulation/simulationAdapter.ts#229",
+     "path": "/api/v1/demo/reset",
+     "operation": "POST resetStage",
+     "five_states": {
+      "key": "无键",
+      "cancel": "不可取消或测不出",
+      "deadline": "无期限",
+      "must_wait": "必须等待",
+      "recoverable": "不可恢复(读不回也补问不了)"
+     },
+     "evidence": {
+      "site": "features/simulation/simulationAdapter.ts#229",
+      "key": [],
+      "key_via": "call_site",
+      "cancel": [],
+      "readback": [],
+      "wrapper": [],
+      "fetch_line": [
+       "features/simulation/simulationAdapter.ts#229"
+      ],
+      "line_text": "const response = await fetch(\"/api/v1/demo/reset\", {"
+     }
+    }
+   ],
+   "agrees_on_site": true,
+   "note": ""
+  },
+  {
+   "his_row": {
+    "file": "features/simulation/simulationAdapter.ts",
+    "line": 296,
+    "operation": "POST",
+    "path": "/api/v1/journeys/${...}",
+    "his_deadline_label": "NONE"
+   },
+   "my_rows": [
+    {
+     "site": "features/simulation/simulationAdapter.ts#296",
+     "path": "/api/v1/journeys/${…}",
+     "operation": "POST transitionStage",
+     "five_states": {
+      "key": "无键",
+      "cancel": "不可取消或测不出",
+      "deadline": "无期限",
+      "must_wait": "必须等待",
+      "recoverable": "不可恢复(读不回也补问不了)"
+     },
+     "evidence": {
+      "site": "features/simulation/simulationAdapter.ts#296",
+      "key": [],
+      "key_via": "call_site",
+      "cancel": [],
+      "readback": [],
+      "wrapper": [],
+      "fetch_line": [
+       "features/simulation/simulationAdapter.ts#296"
+      ],
+      "line_text": "const response = await fetch(`/api/v1/journeys/${journeyId}/activities/${activityId}/${step}`, {"
+     }
+    }
+   ],
+   "agrees_on_site": true,
+   "note": ""
+  },
+  {
+   "his_row": {
+    "file": "features/simulation/simulationAdapter.ts",
+    "line": 335,
+    "operation": "POST",
+    "path": "/api/v1/demo/${...}",
+    "his_deadline_label": "NONE"
+   },
+   "my_rows": [
+    {
+     "site": "features/simulation/simulationAdapter.ts#335",
+     "path": "/api/v1/demo/${…}",
+     "operation": "POST runStageAction",
+     "five_states": {
+      "key": "无键",
+      "cancel": "不可取消或测不出",
+      "deadline": "无期限",
+      "must_wait": "必须等待",
+      "recoverable": "不可恢复(读不回也补问不了)"
+     },
+     "evidence": {
+      "site": "features/simulation/simulationAdapter.ts#335",
+      "key": [],
+      "key_via": "call_site",
+      "cancel": [],
+      "readback": [],
+      "wrapper": [],
+      "fetch_line": [
+       "features/simulation/simulationAdapter.ts#335"
+      ],
+      "line_text": "const response = await fetch(`/api/v1/demo/${action}`, {"
+     }
+    }
+   ],
+   "agrees_on_site": true,
+   "note": ""
+  },
+  {
+   "his_row": {
+    "file": "features/simulation/simulationAdapter.ts",
+    "line": 376,
+    "operation": "POST",
+    "path": "/api/v1/journeys/${...}",
+    "his_deadline_label": "NONE"
+   },
+   "my_rows": [
+    {
+     "site": "features/simulation/simulationAdapter.ts#376",
+     "path": "/api/v1/journeys/${…}",
+     "operation": "POST postSimulatedEvent",
+     "five_states": {
+      "key": "无键",
+      "cancel": "不可取消或测不出",
+      "deadline": "无期限",
+      "must_wait": "必须等待",
+      "recoverable": "不可恢复(读不回也补问不了)"
+     },
+     "evidence": {
+      "site": "features/simulation/simulationAdapter.ts#376",
+      "key": [],
+      "key_via": "call_site",
+      "cancel": [],
+      "readback": [],
+      "wrapper": [],
+      "fetch_line": [
+       "features/simulation/simulationAdapter.ts#376"
+      ],
+      "line_text": "const response = await fetch(`/api/v1/journeys/${journeyId}/events`, {"
+     }
+    }
+   ],
+   "agrees_on_site": true,
+   "note": ""
+  },
+  {
+   "his_row": {
+    "file": "features/stay/HotelsPanel.tsx",
+    "line": 63,
+    "operation": "POST",
+    "path": "/api/v1/journeys/${...}",
+    "his_deadline_label": "NONE"
+   },
+   "my_rows": [
+    {
+     "site": "features/stay/HotelsPanel.tsx#63",
+     "path": "/api/v1/journeys/${…}",
+     "operation": "POST <anonymous>",
+     "five_states": {
+      "key": "无键",
+      "cancel": "不可取消或测不出",
+      "deadline": "无期限",
+      "must_wait": "必须等待",
+      "recoverable": "可恢复"
+     },
+     "evidence": {
+      "site": "features/stay/HotelsPanel.tsx#63",
+      "key": [],
+      "key_via": "call_site",
+      "cancel": [],
+      "readback": [
+       54,
+       58,
+       65
+      ],
+      "wrapper": [],
+      "fetch_line": [
+       "features/stay/HotelsPanel.tsx#63"
+      ],
+      "line_text": "await fetch(`/api/v1/journeys/${journeyId}/stays/offers/capture`, { method: \"POST\" });"
+     }
+    }
+   ],
+   "agrees_on_site": true,
+   "note": ""
+  },
+  {
+   "his_row": {
+    "file": "features/stay/HotelsPanel.tsx",
+    "line": 64,
+    "operation": "POST",
+    "path": "/api/v1/journeys/${...}",
+    "his_deadline_label": "NONE"
+   },
+   "my_rows": [
+    {
+     "site": "features/stay/HotelsPanel.tsx#64",
+     "path": "/api/v1/journeys/${…}",
+     "operation": "POST <anonymous>",
+     "five_states": {
+      "key": "无键",
+      "cancel": "不可取消或测不出",
+      "deadline": "无期限",
+      "must_wait": "必须等待",
+      "recoverable": "可恢复"
+     },
+     "evidence": {
+      "site": "features/stay/HotelsPanel.tsx#64",
+      "key": [],
+      "key_via": "call_site",
+      "cancel": [],
+      "readback": [
+       54,
+       58,
+       65
+      ],
+      "wrapper": [],
+      "fetch_line": [
+       "features/stay/HotelsPanel.tsx#64"
+      ],
+      "line_text": "await fetch(`/api/v1/journeys/${journeyId}/stay-options/generate`, { method: \"POST\" });"
+     }
+    }
+   ],
+   "agrees_on_site": true,
+   "note": ""
+  },
+  {
+   "his_row": {
+    "file": "features/stay/HotelsPanel.tsx",
+    "line": 87,
+    "operation": "POST",
+    "path": "/api/v1/journeys/${...}",
+    "his_deadline_label": "NONE"
+   },
+   "my_rows": [
+    {
+     "site": "features/stay/HotelsPanel.tsx#87",
+     "path": "/api/v1/journeys/${…}",
+     "operation": "POST select",
+     "five_states": {
+      "key": "无键",
+      "cancel": "不可取消或测不出",
+      "deadline": "无期限",
+      "must_wait": "必须等待",
+      "recoverable": "不可恢复(读不回也补问不了)"
+     },
+     "evidence": {
+      "site": "features/stay/HotelsPanel.tsx#87",
+      "key": [],
+      "key_via": "call_site",
+      "cancel": [],
+      "readback": [],
+      "wrapper": [],
+      "fetch_line": [
+       "features/stay/HotelsPanel.tsx#87"
+      ],
+      "line_text": "const r = await fetch("
+     }
+    }
+   ],
+   "agrees_on_site": true,
+   "note": ""
+  }
+ ],
+ "rows_this_generation": [
+  {
+   "path": "/api/v1/travelers/${…}",
+   "operation": "PUT syncStatedInterests",
+   "entry_fn": "syncStatedInterests",
+   "verb": "PUT",
+   "network_effect": "proven@api/travelerPreferences.ts#23",
+   "wrapper": "request",
+   "wrapper_at": "api/travelerPreferences.ts#22",
+   "deadline": "NONE",
+   "deadline_detail": {
+    "enforced": false,
+    "rule": "没有任何计时器（signal 只是取消通道）",
+    "why": "no_timer"
+   },
+   "idempotency_key": "absent",
+   "key_why": "options 里没有 headers ／ 包装函数自己的 headers 里没有幂等键",
+   "key_evidence": [
+    "api/travelerPreferences.ts#24"
+   ],
+   "key_resolved_via": "wrapper_headers",
+   "signal_at_call_site": false,
+   "cancel_channel": {
+    "on": false,
+    "how": "none",
+    "why": "options 没有 signal ⇒ 用户取消到不了这一腿",
+    "controller_lines": [],
+    "abort_lines": []
+   },
+   "readback": {
+    "lines": [],
+    "why": "处理函数内没有回读"
+   },
+   "states": {
+    "key": "无键",
+    "cancel": "不可取消或测不出",
+    "deadline": "无期限",
+    "must_wait": "必须等待",
+    "recoverable": "不可恢复(读不回也补问不了)"
+   },
+   "evidence": {
+    "site": "api/travelerPreferences.ts#69",
+    "line_text": "await request(`/api/v1/travelers/${travelerId}/preferences`, {",
+    "key": [
+     "api/travelerPreferences.ts#24"
+    ],
+    "cancel": [],
+    "readback": [],
+    "wrapper": [
+     "api/travelerPreferences.ts#22"
+    ],
+    "fetch_line": [
+     "api/travelerPreferences.ts#23"
+    ]
+   },
+   "path_candidates": [
+    {
+     "value": "/api/v1/travelers/${…}",
+     "site": "api/travelerPreferences.ts#69",
+     "same_file": true
+    }
+   ]
+  },
+  {
+   "path": "/journeys/${…}",
+   "operation": "POST mutationFn",
+   "entry_fn": "mutationFn",
+   "verb": "POST",
+   "network_effect": "proven@api/v12Authoritative.ts#21",
+   "wrapper": "request",
+   "wrapper_at": "api/v12Authoritative.ts#20",
+   "deadline": "NONE",
+   "deadline_detail": {
+    "enforced": false,
+    "rule": "没有任何计时器（signal 只是取消通道）",
+    "why": "no_timer"
+   },
+   "idempotency_key": "absent",
+   "key_why": "options 里没有 headers ／ 包装函数自己的 headers 里没有幂等键",
+   "key_evidence": [
+    "api/v12Authoritative.ts#22"
+   ],
+   "key_resolved_via": "wrapper_headers",
+   "signal_at_call_site": false,
+   "cancel_channel": {
+    "on": false,
+    "how": "none",
+    "why": "options 没有 signal ⇒ 用户取消到不了这一腿",
+    "controller_lines": [],
+    "abort_lines": []
+   },
+   "readback": {
+    "lines": [],
+    "why": "处理函数内没有回读"
+   },
+   "states": {
+    "key": "无键",
+    "cancel": "不可取消或测不出",
+    "deadline": "无期限",
+    "must_wait": "必须等待",
+    "recoverable": "不可恢复(读不回也补问不了)"
+   },
+   "evidence": {
+    "site": "api/v12Authoritative.ts#52",
+    "line_text": "request<PreviewResponse>(`/journeys/${journeyId}/trip-studio/preview`, {",
+    "key": [
+     "api/v12Authoritative.ts#22"
+    ],
+    "cancel": [],
+    "readback": [],
+    "wrapper": [
+     "api/v12Authoritative.ts#20"
+    ],
+    "fetch_line": [
+     "api/v12Authoritative.ts#21"
+    ]
+   },
+   "path_candidates": [
+    {
+     "value": "/journeys/${…}",
+     "site": "api/v12Authoritative.ts#52",
+     "same_file": true
+    }
+   ]
+  },
+  {
+   "path": "/journeys/${…}",
+   "operation": "POST mutationFn",
+   "entry_fn": "mutationFn",
+   "verb": "POST",
+   "network_effect": "proven@api/v12Authoritative.ts#21",
+   "wrapper": "request",
+   "wrapper_at": "api/v12Authoritative.ts#20",
+   "deadline": "NONE",
+   "deadline_detail": {
+    "enforced": false,
+    "rule": "没有任何计时器（signal 只是取消通道）",
+    "why": "no_timer"
+   },
+   "idempotency_key": "absent",
+   "key_why": "options 里没有 headers ／ 包装函数自己的 headers 里没有幂等键",
+   "key_evidence": [
+    "api/v12Authoritative.ts#22"
+   ],
+   "key_resolved_via": "wrapper_headers",
+   "signal_at_call_site": false,
+   "cancel_channel": {
+    "on": false,
+    "how": "none",
+    "why": "options 没有 signal ⇒ 用户取消到不了这一腿",
+    "controller_lines": [],
+    "abort_lines": []
+   },
+   "readback": {
+    "lines": [],
+    "why": "处理函数内没有回读"
+   },
+   "states": {
+    "key": "无键",
+    "cancel": "不可取消或测不出",
+    "deadline": "无期限",
+    "must_wait": "必须等待",
+    "recoverable": "不可恢复(读不回也补问不了)"
+   },
+   "evidence": {
+    "site": "api/v12Authoritative.ts#63",
+    "line_text": "request<TripStudioAcceptResponse>(`/journeys/${journeyId}/trip-studio/accept`, {",
+    "key": [
+     "api/v12Authoritative.ts#22"
+    ],
+    "cancel": [],
+    "readback": [],
+    "wrapper": [
+     "api/v12Authoritative.ts#20"
+    ],
+    "fetch_line": [
+     "api/v12Authoritative.ts#21"
+    ]
+   },
+   "path_candidates": [
+    {
+     "value": "/journeys/${…}",
+     "site": "api/v12Authoritative.ts#63",
+     "same_file": true
+    }
+   ]
+  },
+  {
+   "path": "/journeys/${…}",
+   "operation": "POST composeAuthoritativeJourney",
+   "entry_fn": "composeAuthoritativeJourney",
+   "verb": "POST",
+   "network_effect": "proven@api/v12Authoritative.ts#21",
+   "wrapper": "request",
+   "wrapper_at": "api/v12Authoritative.ts#20",
+   "deadline": "NONE",
+   "deadline_detail": {
+    "enforced": false,
+    "rule": "没有任何计时器（signal 只是取消通道）",
+    "why": "no_timer"
+   },
+   "idempotency_key": "absent",
+   "key_why": "options 里没有 headers ／ 包装函数自己的 headers 里没有幂等键",
+   "key_evidence": [
+    "api/v12Authoritative.ts#22"
+   ],
+   "key_resolved_via": "wrapper_headers",
+   "signal_at_call_site": false,
+   "cancel_channel": {
+    "on": false,
+    "how": "none",
+    "why": "options 没有 signal ⇒ 用户取消到不了这一腿",
+    "controller_lines": [],
+    "abort_lines": []
+   },
+   "readback": {
+    "lines": [],
+    "why": "处理函数内没有回读"
+   },
+   "states": {
+    "key": "无键",
+    "cancel": "不可取消或测不出",
+    "deadline": "无期限",
+    "must_wait": "必须等待",
+    "recoverable": "不可恢复(读不回也补问不了)"
+   },
+   "evidence": {
+    "site": "api/v12Authoritative.ts#77",
+    "line_text": "return request<AuthoritativeComposeResponse>(",
+    "key": [
+     "api/v12Authoritative.ts#22"
+    ],
+    "cancel": [],
+    "readback": [],
+    "wrapper": [
+     "api/v12Authoritative.ts#20"
+    ],
+    "fetch_line": [
+     "api/v12Authoritative.ts#21"
+    ]
+   },
+   "path_candidates": [
+    {
+     "value": "/journeys/${…}",
+     "site": "api/v12Authoritative.ts#77",
+     "same_file": true
+    }
+   ]
+  },
+  {
+   "path": "/journeys/${…}",
+   "operation": "POST transitionActivity",
+   "entry_fn": "transitionActivity",
+   "verb": "POST",
+   "network_effect": "proven@api/v12Authoritative.ts#21",
+   "wrapper": "request",
+   "wrapper_at": "api/v12Authoritative.ts#20",
+   "deadline": "NONE",
+   "deadline_detail": {
+    "enforced": false,
+    "rule": "没有任何计时器（signal 只是取消通道）",
+    "why": "no_timer"
+   },
+   "idempotency_key": "absent",
+   "key_why": "options 里没有 headers ／ 包装函数自己的 headers 里没有幂等键",
+   "key_evidence": [
+    "api/v12Authoritative.ts#22"
+   ],
+   "key_resolved_via": "wrapper_headers",
+   "signal_at_call_site": false,
+   "cancel_channel": {
+    "on": false,
+    "how": "none",
+    "why": "options 没有 signal ⇒ 用户取消到不了这一腿",
+    "controller_lines": [],
+    "abort_lines": []
+   },
+   "readback": {
+    "lines": [],
+    "why": "处理函数内没有回读"
+   },
+   "states": {
+    "key": "无键",
+    "cancel": "不可取消或测不出",
+    "deadline": "无期限",
+    "must_wait": "必须等待",
+    "recoverable": "不可恢复(读不回也补问不了)"
+   },
+   "evidence": {
+    "site": "api/v12Authoritative.ts#88",
+    "line_text": "return request<JourneyTwin>(",
+    "key": [
+     "api/v12Authoritative.ts#22"
+    ],
+    "cancel": [],
+    "readback": [],
+    "wrapper": [
+     "api/v12Authoritative.ts#20"
+    ],
+    "fetch_line": [
+     "api/v12Authoritative.ts#21"
+    ]
+   },
+   "path_candidates": [
+    {
+     "value": "/journeys/${…}",
+     "site": "api/v12Authoritative.ts#88",
+     "same_file": true
+    }
+   ]
+  },
+  {
+   "path": "/api/v1/journeys/${…}",
+   "operation": "POST runDiscovery",
+   "entry_fn": "runDiscovery",
+   "verb": "POST",
+   "network_effect": "proven@features/discovery/RealCityDiscoveryPanel.tsx#59",
+   "wrapper": "request",
+   "wrapper_at": "features/discovery/RealCityDiscoveryPanel.tsx#58",
+   "deadline": "NONE",
+   "deadline_detail": {
+    "enforced": false,
+    "rule": "没有任何计时器（signal 只是取消通道）",
+    "why": "no_timer"
+   },
+   "idempotency_key": "absent",
+   "key_why": "options 里没有 headers ／ 包装函数自己的 headers 里没有幂等键",
+   "key_evidence": [
+    "features/discovery/RealCityDiscoveryPanel.tsx#60"
+   ],
+   "key_resolved_via": "wrapper_headers",
+   "signal_at_call_site": false,
+   "cancel_channel": {
+    "on": false,
+    "how": "none",
+    "why": "options 没有 signal ⇒ 用户取消到不了这一腿",
+    "controller_lines": [],
+    "abort_lines": []
+   },
+   "readback": {
+    "lines": [],
+    "why": "处理函数内没有回读"
+   },
+   "states": {
+    "key": "无键",
+    "cancel": "不可取消或测不出",
+    "deadline": "无期限",
+    "must_wait": "必须等待",
+    "recoverable": "不可恢复(读不回也补问不了)"
+   },
+   "evidence": {
+    "site": "features/discovery/RealCityDiscoveryPanel.tsx#103",
+    "line_text": "const next = await request<DiscoveryResponse>(`/api/v1/journeys/${journeyId}/real-city/intelligence`, {",
+    "key": [
+     "features/discovery/RealCityDiscoveryPanel.tsx#60"
+    ],
+    "cancel": [],
+    "readback": [],
+    "wrapper": [
+     "features/discovery/RealCityDiscoveryPanel.tsx#58"
+    ],
+    "fetch_line": [
+     "features/discovery/RealCityDiscoveryPanel.tsx#59"
+    ]
+   },
+   "path_candidates": [
+    {
+     "value": "/api/v1/journeys/${…}",
+     "site": "features/discovery/RealCityDiscoveryPanel.tsx#103",
+     "same_file": true
+    }
+   ]
+  },
+  {
+   "path": "/api/v1/replans/${…}",
+   "operation": "POST accept",
+   "entry_fn": "accept",
+   "verb": "POST",
+   "network_effect": "proven@lib/writeDeadline.ts#128 + lib/writeDeadline.ts#143",
+   "wrapper": "fetchWithWriteDeadline",
+   "wrapper_at": "lib/writeDeadline.ts#120",
+   "deadline": "包装函数有计时器，且本调用点带了幂等键（过了透传门）",
+   "deadline_detail": {
+    "enforced": true,
+    "rule": "包装函数有计时器，且本调用点带了幂等键（过了透传门）",
+    "why": "conditional_on_key_key_present"
+   },
+   "idempotency_key": "present",
+   "key_why": "options.headers 含 Idempotency-Key",
+   "key_evidence": [
+    "features/execution/LiveRecovery.tsx#232"
+   ],
+   "key_resolved_via": "call_site",
+   "signal_at_call_site": false,
+   "cancel_channel": {
+    "on": false,
+    "how": "none",
+    "why": "options 没有 signal ⇒ 用户取消到不了这一腿",
+    "controller_lines": [],
+    "abort_lines": []
+   },
+   "readback": {
+    "lines": [
+     244,
+     245,
+     246
+    ],
+    "why": "同一处理函数里有对该资源的回读/refetch"
+   },
+   "states": {
+    "key": "有键",
+    "cancel": "不可取消或测不出",
+    "deadline": "有期限",
+    "must_wait": "不必无限等待",
+    "recoverable": "可恢复"
+   },
+   "evidence": {
+    "site": "features/execution/LiveRecovery.tsx#230",
+    "line_text": "const r = await fetchWithWriteDeadline(`/api/v1/replans/${proposalId}/accept`, {",
+    "key": [
+     "features/execution/LiveRecovery.tsx#232"
+    ],
+    "cancel": [],
+    "readback": [
+     "features/execution/LiveRecovery.tsx#244",
+     "features/execution/LiveRecovery.tsx#245",
+     "features/execution/LiveRecovery.tsx#246"
+    ],
+    "wrapper": [
+     "lib/writeDeadline.ts#120"
+    ],
+    "fetch_line": [
+     "lib/writeDeadline.ts#128 + lib/writeDeadline.ts#143"
+    ]
+   },
+   "path_candidates": [
+    {
+     "value": "/api/v1/replans/${…}",
+     "site": "features/execution/LiveRecovery.tsx#230",
+     "same_file": true
+    }
+   ]
+  },
+  {
+   "path": "/api/v1/travelers/${…}",
+   "operation": "POST enable",
+   "entry_fn": "enable",
+   "verb": "POST",
+   "network_effect": "proven@features/notifications/PushCapabilityCard.tsx#56",
+   "wrapper": "none",
+   "wrapper_at": null,
+   "deadline": "NONE",
+   "deadline_detail": {
+    "enforced": false,
+    "rule": "没有任何计时器（signal 只是取消通道）",
+    "why": "no_timer"
+   },
+   "idempotency_key": "absent",
+   "key_why": "options.headers 不含幂等键",
+   "key_evidence": [],
+   "key_resolved_via": "call_site",
+   "signal_at_call_site": false,
+   "cancel_channel": {
+    "on": false,
+    "how": "none",
+    "why": "options 没有 signal ⇒ 用户取消到不了这一腿",
+    "controller_lines": [],
+    "abort_lines": []
+   },
+   "readback": {
+    "lines": [],
+    "why": "处理函数内没有回读"
+   },
+   "states": {
+    "key": "无键",
+    "cancel": "不可取消或测不出",
+    "deadline": "无期限",
+    "must_wait": "必须等待",
+    "recoverable": "不可恢复(读不回也补问不了)"
+   },
+   "evidence": {
+    "site": "features/notifications/PushCapabilityCard.tsx#56",
+    "line_text": "const response = await fetch(`/api/v1/travelers/${travelerId}/push-subscriptions`, {",
+    "key": [],
+    "cancel": [],
+    "readback": [],
+    "wrapper": [],
+    "fetch_line": [
+     "features/notifications/PushCapabilityCard.tsx#56"
+    ]
+   },
+   "path_candidates": [
+    {
+     "value": "/api/v1/travelers/${…}",
+     "site": "features/notifications/PushCapabilityCard.tsx#56",
+     "same_file": true
+    }
+   ]
+  },
+  {
+   "path": "/api/v1/journeys/${…}",
+   "operation": "POST choose",
+   "entry_fn": "choose",
+   "verb": "POST",
+   "network_effect": "proven@features/planning/PlanComparison.tsx#88",
+   "wrapper": "none",
+   "wrapper_at": null,
+   "deadline": "NONE",
+   "deadline_detail": {
+    "enforced": false,
+    "rule": "没有任何计时器（signal 只是取消通道）",
+    "why": "no_timer"
+   },
+   "idempotency_key": "absent",
+   "key_why": "options.headers 不含幂等键",
+   "key_evidence": [],
+   "key_resolved_via": "call_site",
+   "signal_at_call_site": false,
+   "cancel_channel": {
+    "on": false,
+    "how": "none",
+    "why": "options 没有 signal ⇒ 用户取消到不了这一腿",
+    "controller_lines": [],
+    "abort_lines": []
+   },
+   "readback": {
+    "lines": [],
+    "why": "处理函数内没有回读"
+   },
+   "states": {
+    "key": "无键",
+    "cancel": "不可取消或测不出",
+    "deadline": "无期限",
+    "must_wait": "必须等待",
+    "recoverable": "不可恢复(读不回也补问不了)"
+   },
+   "evidence": {
+    "site": "features/planning/PlanComparison.tsx#88",
+    "line_text": "const response = await fetch(",
+    "key": [],
+    "cancel": [],
+    "readback": [],
+    "wrapper": [],
+    "fetch_line": [
+     "features/planning/PlanComparison.tsx#88"
+    ]
+   },
+   "path_candidates": [
+    {
+     "value": "/api/v1/journeys/${…}",
+     "site": "features/planning/PlanComparison.tsx#88",
+     "same_file": true
+    }
+   ]
+  },
+  {
+   "path": "/api/v1/journeys/${…}",
+   "operation": "POST submit",
+   "entry_fn": "submit",
+   "verb": "POST",
+   "network_effect": "proven@lib/keylessWriteDeadline.ts#85 + lib/keylessWriteDeadline.ts#100",
+   "wrapper": "fetchWithKeylessWriteDeadline",
+   "wrapper_at": "lib/keylessWriteDeadline.ts#76",
+   "deadline": "包装函数自己计时（它只对写动词计时，这一腿是写 ⇒ 计时生效）",
+   "deadline_detail": {
+    "enforced": true,
+    "rule": "包装函数自己计时（它只对写动词计时，这一腿是写 ⇒ 计时生效）",
+    "why": "wrapper_times_writes"
+   },
+   "idempotency_key": "present",
+   "key_why": "options.headers 含 Idempotency-Key",
+   "key_evidence": [
+    "features/planning/PlanWithAiSheet.tsx#550"
+   ],
+   "key_resolved_via": "call_site",
+   "signal_at_call_site": true,
+   "cancel_channel": {
+    "on": true,
+    "how": "controller_in_handler",
+    "controller_lines": [
+     "features/planning/PlanWithAiSheet.tsx#514"
+    ],
+    "abort_lines": [],
+    "file_abort_lines": [
+     "features/planning/PlanWithAiSheet.tsx#404",
+     "features/planning/PlanWithAiSheet.tsx#434",
+     "features/planning/PlanWithAiSheet.tsx#813",
+     "features/planning/PlanWithAiSheet.tsx#1072"
+    ],
+    "why": "options 带 signal（signal）；本处理函数内 AbortController 1 枚、本函数内 abort() 0 处、同文件他处 abort() 4 处"
+   },
+   "readback": {
+    "lines": [
+     536,
+     598,
+     612,
+     625,
+     702
+    ],
+    "why": "同一处理函数里有对该资源的回读/refetch"
+   },
+   "states": {
+    "key": "有键",
+    "cancel": "可取消",
+    "deadline": "有期限",
+    "must_wait": "不必无限等待",
+    "recoverable": "可恢复"
+   },
+   "evidence": {
+    "site": "features/planning/PlanWithAiSheet.tsx#538",
+    "line_text": "const response = await fetchWithKeylessWriteDeadline(",
+    "key": [
+     "features/planning/PlanWithAiSheet.tsx#550"
+    ],
+    "cancel": [
+     "features/planning/PlanWithAiSheet.tsx#features/planning/PlanWithAiSheet.tsx#514"
+    ],
+    "readback": [
+     "features/planning/PlanWithAiSheet.tsx#536",
+     "features/planning/PlanWithAiSheet.tsx#598",
+     "features/planning/PlanWithAiSheet.tsx#612",
+     "features/planning/PlanWithAiSheet.tsx#625",
+     "features/planning/PlanWithAiSheet.tsx#702"
+    ],
+    "wrapper": [
+     "lib/keylessWriteDeadline.ts#76"
+    ],
+    "fetch_line": [
+     "lib/keylessWriteDeadline.ts#85 + lib/keylessWriteDeadline.ts#100"
+    ]
+   },
+   "path_candidates": [
+    {
+     "value": "/api/v1/journeys/${…}",
+     "site": "features/planning/PlanWithAiSheet.tsx#538",
+     "same_file": true
+    }
+   ]
+  },
+  {
+   "path": "/api/v1/journeys/${…}",
+   "operation": "POST submit",
+   "entry_fn": "submit",
+   "verb": "POST",
+   "network_effect": "proven@features/planning/PlanWithAiSheet.tsx#678",
+   "wrapper": "none",
+   "wrapper_at": null,
+   "deadline": "NONE",
+   "deadline_detail": {
+    "enforced": false,
+    "rule": "没有任何计时器（signal 只是取消通道）",
+    "why": "no_timer"
+   },
+   "idempotency_key": "present",
+   "key_why": "options.headers 含 Idempotency-Key",
+   "key_evidence": [
+    "features/planning/PlanWithAiSheet.tsx#689"
+   ],
+   "key_resolved_via": "call_site",
+   "signal_at_call_site": true,
+   "cancel_channel": {
+    "on": true,
+    "how": "controller_in_handler",
+    "controller_lines": [
+     "features/planning/PlanWithAiSheet.tsx#514"
+    ],
+    "abort_lines": [],
+    "file_abort_lines": [
+     "features/planning/PlanWithAiSheet.tsx#404",
+     "features/planning/PlanWithAiSheet.tsx#434",
+     "features/planning/PlanWithAiSheet.tsx#813",
+     "features/planning/PlanWithAiSheet.tsx#1072"
+    ],
+    "why": "options 带 signal（signal）；本处理函数内 AbortController 1 枚、本函数内 abort() 0 处、同文件他处 abort() 4 处"
+   },
+   "readback": {
+    "lines": [
+     536,
+     598,
+     612,
+     625,
+     702
+    ],
+    "why": "同一处理函数里有对该资源的回读/refetch"
+   },
+   "states": {
+    "key": "有键",
+    "cancel": "可取消",
+    "deadline": "无期限",
+    "must_wait": "必须等待",
+    "recoverable": "可恢复"
+   },
+   "evidence": {
+    "site": "features/planning/PlanWithAiSheet.tsx#678",
+    "line_text": "const generate = await fetch(",
+    "key": [
+     "features/planning/PlanWithAiSheet.tsx#689"
+    ],
+    "cancel": [
+     "features/planning/PlanWithAiSheet.tsx#features/planning/PlanWithAiSheet.tsx#514"
+    ],
+    "readback": [
+     "features/planning/PlanWithAiSheet.tsx#536",
+     "features/planning/PlanWithAiSheet.tsx#598",
+     "features/planning/PlanWithAiSheet.tsx#612",
+     "features/planning/PlanWithAiSheet.tsx#625",
+     "features/planning/PlanWithAiSheet.tsx#702"
+    ],
+    "wrapper": [],
+    "fetch_line": [
+     "features/planning/PlanWithAiSheet.tsx#678"
+    ]
+   },
+   "path_candidates": [
+    {
+     "value": "/api/v1/journeys/${…}",
+     "site": "features/planning/PlanWithAiSheet.tsx#678",
+     "same_file": true
+    }
+   ]
+  },
+  {
+   "path": "/api/v1/journeys/${…}",
+   "operation": "POST replan",
+   "entry_fn": "replan",
+   "verb": "POST",
+   "network_effect": "proven@features/recovery/RecoveryRequiredPanel.tsx#26",
+   "wrapper": "post",
+   "wrapper_at": "features/recovery/RecoveryRequiredPanel.tsx#25",
+   "deadline": "NONE",
+   "deadline_detail": {
+    "enforced": false,
+    "rule": "没有任何计时器（signal 只是取消通道）",
+    "why": "no_timer"
+   },
+   "idempotency_key": "absent",
+   "key_why": "options 里没有 headers ／ 包装函数自己的 headers 里没有幂等键",
+   "key_evidence": [
+    "features/recovery/RecoveryRequiredPanel.tsx#28"
+   ],
+   "key_resolved_via": "wrapper_headers",
+   "signal_at_call_site": false,
+   "cancel_channel": {
+    "on": false,
+    "how": "none",
+    "why": "options 没有 signal ⇒ 用户取消到不了这一腿",
+    "controller_lines": [],
+    "abort_lines": []
+   },
+   "readback": {
+    "lines": [],
+    "why": "处理函数内没有回读"
+   },
+   "states": {
+    "key": "无键",
+    "cancel": "不可取消或测不出",
+    "deadline": "无期限",
+    "must_wait": "必须等待",
+    "recoverable": "不可恢复(读不回也补问不了)"
+   },
+   "evidence": {
+    "site": "features/recovery/RecoveryRequiredPanel.tsx#64",
+    "line_text": "const response = await post(`/api/v1/journeys/${journeyId}/plans/generate`, {});",
+    "key": [
+     "features/recovery/RecoveryRequiredPanel.tsx#28"
+    ],
+    "cancel": [],
+    "readback": [],
+    "wrapper": [
+     "features/recovery/RecoveryRequiredPanel.tsx#25"
+    ],
+    "fetch_line": [
+     "features/recovery/RecoveryRequiredPanel.tsx#26"
+    ]
+   },
+   "path_candidates": [
+    {
+     "value": "/api/v1/journeys/${…}",
+     "site": "features/recovery/RecoveryRequiredPanel.tsx#64",
+     "same_file": true
+    }
+   ]
+  },
+  {
+   "path": "/api/v1/journeys/${…}",
+   "operation": "POST acknowledge",
+   "entry_fn": "acknowledge",
+   "verb": "POST",
+   "network_effect": "proven@features/recovery/RecoveryRequiredPanel.tsx#26",
+   "wrapper": "post",
+   "wrapper_at": "features/recovery/RecoveryRequiredPanel.tsx#25",
+   "deadline": "NONE",
+   "deadline_detail": {
+    "enforced": false,
+    "rule": "没有任何计时器（signal 只是取消通道）",
+    "why": "no_timer"
+   },
+   "idempotency_key": "absent",
+   "key_why": "这一枚调用没有字面 options 对象 ／ 包装函数自己的 headers 里没有幂等键",
+   "key_evidence": [
+    "features/recovery/RecoveryRequiredPanel.tsx#28"
+   ],
+   "key_resolved_via": "wrapper_headers",
+   "signal_at_call_site": false,
+   "cancel_channel": {
+    "on": false,
+    "how": "none",
+    "why": "options 没有 signal ⇒ 用户取消到不了这一腿",
+    "controller_lines": [],
+    "abort_lines": []
+   },
+   "readback": {
+    "lines": [],
+    "why": "处理函数内没有回读"
+   },
+   "states": {
+    "key": "无键",
+    "cancel": "不可取消或测不出",
+    "deadline": "无期限",
+    "must_wait": "必须等待",
+    "recoverable": "不可恢复(读不回也补问不了)"
+   },
+   "evidence": {
+    "site": "features/recovery/RecoveryRequiredPanel.tsx#95",
+    "line_text": "const response = await post(",
+    "key": [
+     "features/recovery/RecoveryRequiredPanel.tsx#28"
+    ],
+    "cancel": [],
+    "readback": [],
+    "wrapper": [
+     "features/recovery/RecoveryRequiredPanel.tsx#25"
+    ],
+    "fetch_line": [
+     "features/recovery/RecoveryRequiredPanel.tsx#26"
+    ]
+   },
+   "path_candidates": [
+    {
+     "value": "/api/v1/journeys/${…}",
+     "site": "features/recovery/RecoveryRequiredPanel.tsx#95",
+     "same_file": true
+    }
+   ]
+  },
+  {
+   "path": "/api/v1/replans/${…}",
+   "operation": "POST accept",
+   "entry_fn": "accept",
+   "verb": "POST",
+   "network_effect": "proven@lib/writeDeadline.ts#128 + lib/writeDeadline.ts#143",
+   "wrapper": "fetchWithWriteDeadline",
+   "wrapper_at": "lib/writeDeadline.ts#120",
+   "deadline": "包装函数有计时器，且本调用点带了幂等键（过了透传门）",
+   "deadline_detail": {
+    "enforced": true,
+    "rule": "包装函数有计时器，且本调用点带了幂等键（过了透传门）",
+    "why": "conditional_on_key_key_present"
+   },
+   "idempotency_key": "present",
+   "key_why": "options.headers 含 Idempotency-Key",
+   "key_evidence": [
+    "features/recovery/V14RecoveryTruthPanel.tsx#78"
+   ],
+   "key_resolved_via": "call_site",
+   "signal_at_call_site": false,
+   "cancel_channel": {
+    "on": false,
+    "how": "none",
+    "why": "options 没有 signal ⇒ 用户取消到不了这一腿",
+    "controller_lines": [],
+    "abort_lines": []
+   },
+   "readback": {
+    "lines": [
+     84
+    ],
+    "why": "同一处理函数里有对该资源的回读/refetch"
+   },
+   "states": {
+    "key": "有键",
+    "cancel": "不可取消或测不出",
+    "deadline": "有期限",
+    "must_wait": "不必无限等待",
+    "recoverable": "可恢复"
+   },
+   "evidence": {
+    "site": "features/recovery/V14RecoveryTruthPanel.tsx#74",
+    "line_text": "const response = await fetchWithWriteDeadline(`/api/v1/replans/${proposal.id}/accept`, {",
+    "key": [
+     "features/recovery/V14RecoveryTruthPanel.tsx#78"
+    ],
+    "cancel": [],
+    "readback": [
+     "features/recovery/V14RecoveryTruthPanel.tsx#84"
+    ],
+    "wrapper": [
+     "lib/writeDeadline.ts#120"
+    ],
+    "fetch_line": [
+     "lib/writeDeadline.ts#128 + lib/writeDeadline.ts#143"
+    ]
+   },
+   "path_candidates": [
+    {
+     "value": "/api/v1/replans/${…}",
+     "site": "features/recovery/V14RecoveryTruthPanel.tsx#74",
+     "same_file": true
+    }
+   ]
+  },
+  {
+   "path": "/api/v1/demo/reset",
+   "operation": "POST resetStage",
+   "entry_fn": "resetStage",
+   "verb": "POST",
+   "network_effect": "proven@features/simulation/simulationAdapter.ts#229",
+   "wrapper": "none",
+   "wrapper_at": null,
+   "deadline": "NONE",
+   "deadline_detail": {
+    "enforced": false,
+    "rule": "没有任何计时器（signal 只是取消通道）",
+    "why": "no_timer"
+   },
+   "idempotency_key": "absent",
+   "key_why": "options.headers 不含幂等键",
+   "key_evidence": [],
+   "key_resolved_via": "call_site",
+   "signal_at_call_site": false,
+   "cancel_channel": {
+    "on": false,
+    "how": "none",
+    "why": "options 没有 signal ⇒ 用户取消到不了这一腿",
+    "controller_lines": [],
+    "abort_lines": []
+   },
+   "readback": {
+    "lines": [],
+    "why": "处理函数内没有回读"
+   },
+   "states": {
+    "key": "无键",
+    "cancel": "不可取消或测不出",
+    "deadline": "无期限",
+    "must_wait": "必须等待",
+    "recoverable": "不可恢复(读不回也补问不了)"
+   },
+   "evidence": {
+    "site": "features/simulation/simulationAdapter.ts#229",
+    "line_text": "const response = await fetch(\"/api/v1/demo/reset\", {",
+    "key": [],
+    "cancel": [],
+    "readback": [],
+    "wrapper": [],
+    "fetch_line": [
+     "features/simulation/simulationAdapter.ts#229"
+    ]
+   },
+   "path_candidates": [
+    {
+     "value": "/api/v1/demo/reset",
+     "site": "features/simulation/simulationAdapter.ts#229",
+     "same_file": true
+    }
+   ]
+  },
+  {
+   "path": "/api/v1/journeys/${…}",
+   "operation": "POST transitionStage",
+   "entry_fn": "transitionStage",
+   "verb": "POST",
+   "network_effect": "proven@features/simulation/simulationAdapter.ts#296",
+   "wrapper": "none",
+   "wrapper_at": null,
+   "deadline": "NONE",
+   "deadline_detail": {
+    "enforced": false,
+    "rule": "没有任何计时器（signal 只是取消通道）",
+    "why": "no_timer"
+   },
+   "idempotency_key": "absent",
+   "key_why": "options.headers 不含幂等键",
+   "key_evidence": [],
+   "key_resolved_via": "call_site",
+   "signal_at_call_site": false,
+   "cancel_channel": {
+    "on": false,
+    "how": "none",
+    "why": "options 没有 signal ⇒ 用户取消到不了这一腿",
+    "controller_lines": [],
+    "abort_lines": []
+   },
+   "readback": {
+    "lines": [],
+    "why": "处理函数内没有回读"
+   },
+   "states": {
+    "key": "无键",
+    "cancel": "不可取消或测不出",
+    "deadline": "无期限",
+    "must_wait": "必须等待",
+    "recoverable": "不可恢复(读不回也补问不了)"
+   },
+   "evidence": {
+    "site": "features/simulation/simulationAdapter.ts#296",
+    "line_text": "const response = await fetch(`/api/v1/journeys/${journeyId}/activities/${activityId}/${step}`, {",
+    "key": [],
+    "cancel": [],
+    "readback": [],
+    "wrapper": [],
+    "fetch_line": [
+     "features/simulation/simulationAdapter.ts#296"
+    ]
+   },
+   "path_candidates": [
+    {
+     "value": "/api/v1/journeys/${…}",
+     "site": "features/simulation/simulationAdapter.ts#296",
+     "same_file": true
+    }
+   ]
+  },
+  {
+   "path": "/api/v1/demo/${…}",
+   "operation": "POST runStageAction",
+   "entry_fn": "runStageAction",
+   "verb": "POST",
+   "network_effect": "proven@features/simulation/simulationAdapter.ts#335",
+   "wrapper": "none",
+   "wrapper_at": null,
+   "deadline": "NONE",
+   "deadline_detail": {
+    "enforced": false,
+    "rule": "没有任何计时器（signal 只是取消通道）",
+    "why": "no_timer"
+   },
+   "idempotency_key": "absent",
+   "key_why": "options.headers 不含幂等键",
+   "key_evidence": [],
+   "key_resolved_via": "call_site",
+   "signal_at_call_site": false,
+   "cancel_channel": {
+    "on": false,
+    "how": "none",
+    "why": "options 没有 signal ⇒ 用户取消到不了这一腿",
+    "controller_lines": [],
+    "abort_lines": []
+   },
+   "readback": {
+    "lines": [],
+    "why": "处理函数内没有回读"
+   },
+   "states": {
+    "key": "无键",
+    "cancel": "不可取消或测不出",
+    "deadline": "无期限",
+    "must_wait": "必须等待",
+    "recoverable": "不可恢复(读不回也补问不了)"
+   },
+   "evidence": {
+    "site": "features/simulation/simulationAdapter.ts#335",
+    "line_text": "const response = await fetch(`/api/v1/demo/${action}`, {",
+    "key": [],
+    "cancel": [],
+    "readback": [],
+    "wrapper": [],
+    "fetch_line": [
+     "features/simulation/simulationAdapter.ts#335"
+    ]
+   },
+   "path_candidates": [
+    {
+     "value": "/api/v1/demo/${…}",
+     "site": "features/simulation/simulationAdapter.ts#335",
+     "same_file": true
+    }
+   ]
+  },
+  {
+   "path": "/api/v1/journeys/${…}",
+   "operation": "POST postSimulatedEvent",
+   "entry_fn": "postSimulatedEvent",
+   "verb": "POST",
+   "network_effect": "proven@features/simulation/simulationAdapter.ts#376",
+   "wrapper": "none",
+   "wrapper_at": null,
+   "deadline": "NONE",
+   "deadline_detail": {
+    "enforced": false,
+    "rule": "没有任何计时器（signal 只是取消通道）",
+    "why": "no_timer"
+   },
+   "idempotency_key": "absent",
+   "key_why": "options.headers 不含幂等键",
+   "key_evidence": [],
+   "key_resolved_via": "call_site",
+   "signal_at_call_site": false,
+   "cancel_channel": {
+    "on": false,
+    "how": "none",
+    "why": "options 没有 signal ⇒ 用户取消到不了这一腿",
+    "controller_lines": [],
+    "abort_lines": []
+   },
+   "readback": {
+    "lines": [],
+    "why": "处理函数内没有回读"
+   },
+   "states": {
+    "key": "无键",
+    "cancel": "不可取消或测不出",
+    "deadline": "无期限",
+    "must_wait": "必须等待",
+    "recoverable": "不可恢复(读不回也补问不了)"
+   },
+   "evidence": {
+    "site": "features/simulation/simulationAdapter.ts#376",
+    "line_text": "const response = await fetch(`/api/v1/journeys/${journeyId}/events`, {",
+    "key": [],
+    "cancel": [],
+    "readback": [],
+    "wrapper": [],
+    "fetch_line": [
+     "features/simulation/simulationAdapter.ts#376"
+    ]
+   },
+   "path_candidates": [
+    {
+     "value": "/api/v1/journeys/${…}",
+     "site": "features/simulation/simulationAdapter.ts#376",
+     "same_file": true
+    }
+   ]
+  },
+  {
+   "path": "/api/v1/journeys/${…}",
+   "operation": "POST <anonymous>",
+   "entry_fn": "<anonymous>",
+   "verb": "POST",
+   "network_effect": "proven@features/stay/HotelsPanel.tsx#63",
+   "wrapper": "none",
+   "wrapper_at": null,
+   "deadline": "NONE",
+   "deadline_detail": {
+    "enforced": false,
+    "rule": "没有任何计时器（signal 只是取消通道）",
+    "why": "no_timer"
+   },
+   "idempotency_key": "absent",
+   "key_why": "options 里没有 headers",
+   "key_evidence": [],
+   "key_resolved_via": "call_site",
+   "signal_at_call_site": false,
+   "cancel_channel": {
+    "on": false,
+    "how": "none",
+    "why": "options 没有 signal ⇒ 用户取消到不了这一腿",
+    "controller_lines": [],
+    "abort_lines": []
+   },
+   "readback": {
+    "lines": [
+     54,
+     58,
+     65
+    ],
+    "why": "同一处理函数里有对该资源的回读/refetch"
+   },
+   "states": {
+    "key": "无键",
+    "cancel": "不可取消或测不出",
+    "deadline": "无期限",
+    "must_wait": "必须等待",
+    "recoverable": "可恢复"
+   },
+   "evidence": {
+    "site": "features/stay/HotelsPanel.tsx#63",
+    "line_text": "await fetch(`/api/v1/journeys/${journeyId}/stays/offers/capture`, { method: \"POST\" });",
+    "key": [],
+    "cancel": [],
+    "readback": [
+     "features/stay/HotelsPanel.tsx#54",
+     "features/stay/HotelsPanel.tsx#58",
+     "features/stay/HotelsPanel.tsx#65"
+    ],
+    "wrapper": [],
+    "fetch_line": [
+     "features/stay/HotelsPanel.tsx#63"
+    ]
+   },
+   "path_candidates": [
+    {
+     "value": "/api/v1/journeys/${…}",
+     "site": "features/stay/HotelsPanel.tsx#63",
+     "same_file": true
+    }
+   ]
+  },
+  {
+   "path": "/api/v1/journeys/${…}",
+   "operation": "POST <anonymous>",
+   "entry_fn": "<anonymous>",
+   "verb": "POST",
+   "network_effect": "proven@features/stay/HotelsPanel.tsx#64",
+   "wrapper": "none",
+   "wrapper_at": null,
+   "deadline": "NONE",
+   "deadline_detail": {
+    "enforced": false,
+    "rule": "没有任何计时器（signal 只是取消通道）",
+    "why": "no_timer"
+   },
+   "idempotency_key": "absent",
+   "key_why": "options 里没有 headers",
+   "key_evidence": [],
+   "key_resolved_via": "call_site",
+   "signal_at_call_site": false,
+   "cancel_channel": {
+    "on": false,
+    "how": "none",
+    "why": "options 没有 signal ⇒ 用户取消到不了这一腿",
+    "controller_lines": [],
+    "abort_lines": []
+   },
+   "readback": {
+    "lines": [
+     54,
+     58,
+     65
+    ],
+    "why": "同一处理函数里有对该资源的回读/refetch"
+   },
+   "states": {
+    "key": "无键",
+    "cancel": "不可取消或测不出",
+    "deadline": "无期限",
+    "must_wait": "必须等待",
+    "recoverable": "可恢复"
+   },
+   "evidence": {
+    "site": "features/stay/HotelsPanel.tsx#64",
+    "line_text": "await fetch(`/api/v1/journeys/${journeyId}/stay-options/generate`, { method: \"POST\" });",
+    "key": [],
+    "cancel": [],
+    "readback": [
+     "features/stay/HotelsPanel.tsx#54",
+     "features/stay/HotelsPanel.tsx#58",
+     "features/stay/HotelsPanel.tsx#65"
+    ],
+    "wrapper": [],
+    "fetch_line": [
+     "features/stay/HotelsPanel.tsx#64"
+    ]
+   },
+   "path_candidates": [
+    {
+     "value": "/api/v1/journeys/${…}",
+     "site": "features/stay/HotelsPanel.tsx#64",
+     "same_file": true
+    }
+   ]
+  },
+  {
+   "path": "/api/v1/journeys/${…}",
+   "operation": "POST select",
+   "entry_fn": "select",
+   "verb": "POST",
+   "network_effect": "proven@features/stay/HotelsPanel.tsx#87",
+   "wrapper": "none",
+   "wrapper_at": null,
+   "deadline": "NONE",
+   "deadline_detail": {
+    "enforced": false,
+    "rule": "没有任何计时器（signal 只是取消通道）",
+    "why": "no_timer"
+   },
+   "idempotency_key": "absent",
+   "key_why": "options 里没有 headers",
+   "key_evidence": [],
+   "key_resolved_via": "call_site",
+   "signal_at_call_site": false,
+   "cancel_channel": {
+    "on": false,
+    "how": "none",
+    "why": "options 没有 signal ⇒ 用户取消到不了这一腿",
+    "controller_lines": [],
+    "abort_lines": []
+   },
+   "readback": {
+    "lines": [],
+    "why": "处理函数内没有回读"
+   },
+   "states": {
+    "key": "无键",
+    "cancel": "不可取消或测不出",
+    "deadline": "无期限",
+    "must_wait": "必须等待",
+    "recoverable": "不可恢复(读不回也补问不了)"
+   },
+   "evidence": {
+    "site": "features/stay/HotelsPanel.tsx#87",
+    "line_text": "const r = await fetch(",
+    "key": [],
+    "cancel": [],
+    "readback": [],
+    "wrapper": [],
+    "fetch_line": [
+     "features/stay/HotelsPanel.tsx#87"
+    ]
+   },
+   "path_candidates": [
+    {
+     "value": "/api/v1/journeys/${…}",
+     "site": "features/stay/HotelsPanel.tsx#87",
+     "same_file": true
+    }
+   ]
+  }
+ ],
+ "five_state_summary": {
+  "key": {
+   "无键": 17,
+   "有键": 4
+  },
+  "cancel": {
+   "不可取消或测不出": 19,
+   "可取消": 2
+  },
+  "deadline": {
+   "无期限": 18,
+   "有期限": 3
+  },
+  "must_wait": {
+   "必须等待": 18,
+   "不必无限等待": 3
+  },
+  "recoverable": {
+   "不可恢复(读不回也补问不了)": 15,
+   "可恢复": 6
+  }
+ },
+ "not_measured_rows": [],
+ "excluded_local_state_writes_not_counted": [
+  {
+   "site": "lib/inFlightWrites.ts#57",
+   "receiver": "quietListeners",
+   "in_my_rows": false
+  },
+  {
+   "site": "lib/offlineJourney.ts#43",
+   "receiver": "database.journeys",
+   "in_my_rows": false
+  },
+  {
+   "site": "lib/offlineJourney.ts#55",
+   "receiver": "database.journeys",
+   "in_my_rows": false
+  },
+  {
+   "site": "main.tsx#1706",
+   "receiver": "caches",
+   "in_my_rows": false
+  }
+ ],
+ "definition": {
+  "product_definition": "用户在屏上点一次网络写，最迟 60 秒必须看到一个明确状态：要么服务器自己答了，要么这台设备说出“等到 60 秒就停了，这一笔结果未知、不是没发生”（无键那一类不得承诺可补问）。超过这个时刻还只有转圈，就是产品缺陷，不是慢。",
+  "definition_source_constants": {
+   "keyed_deadline_ms": {
+    "file": "lib/writeDeadline.ts",
+    "line": 27,
+    "text": "export const CLIENT_WRITE_DEADLINE_MS = 60_000;"
+   },
+   "keyless_deadline_ms": {
+    "file": "lib/keylessWriteDeadline.ts",
+    "line": 25,
+    "text": "export const KEYLESS_WRITE_DEADLINE_MS = 60_000;"
+   },
+   "keyed_pass_through_gate": {
+    "file": "lib/writeDeadline.ts",
+    "line": 127,
+    "text": "if (!isWrite || !carriesIdempotencyKey(init)) {"
+   },
+   "keyed_copy": {
+    "file": "lib/writeDeadline.ts",
+    "line": 84,
+    "text": "title: `这台设备等到 ${seconds} 秒就停了`,"
+   },
+   "keyed_is_missed_seam": {
+    "file": "lib/writeDeadline.ts",
+    "line": 48,
+    "text": "export function isWriteDeadlineMissed(error: unknown): boolean {"
+   },
+   "keyless_copy": {
+    "file": "lib/keylessWriteDeadline.ts",
+    "line": 63,
+    "text": "`这一笔的结果未知，不是没发生：请求已经发出去了，服务器可能还在做。` +"
+   },
+   "keyless_is_missed_seam": {
+    "file": "lib/keylessWriteDeadline.ts",
+    "line": 44,
+    "text": "export function isKeylessWriteDeadlineMissed("
+   }
+  },
+  "trigger_criterion": {
+   "state_of_truth": "屏幕换状态的条件 = 这一腿自己那个计时器到期（或服务器回答），不是“这一腿有没有 signal”",
+   "mechanical_predicates": [
+    "发请求之前同一作用域里存在 setTimeout(...) 且到期路径调用 abort()：lib/writeDeadline.ts#27 与包装体内 abort()",
+    "归因必须分家：我们计时器造成的 abort 与旅客自己按“取消”造成的 abort 不能写进同一格 —— 现产品已有这道 seam：lib/writeDeadline.ts#48、lib/keylessWriteDeadline.ts#44",
+    "文案触发条件写成 isWriteDeadlineMissed(error) / isKeylessWriteDeadlineMissed(error) 为真；写 error.name === 'AbortError' 或“options 里有 signal”都不合格（下条给了为什么）",
+    "期限数值必须与文案里那个数同源（同一枚常量），否则读数会与计时器不一致"
+   ],
+   "wrapper_does_not_imply_deadline": "包装函数自己有一道透传门：lib/writeDeadline.ts#127 —— 没带幂等键就原样 fetch，所以“经过 fetchWithWriteDeadline”不等于“有期限”；这把尺对每一枚调用点单独解"
+  },
+  "why_signal_predicate_has_no_teeth": {
+   "claim_tested": "“看有没有 signal”这条判据在有没有期限的树上给出同一个答案 ⇒ 没有牙",
+   "measurements": {
+    "generation_without_any_deadline": {
+     "generation": "dc964086c9d412573ac19d70b24b30e6c3ee6168",
+     "label": "ORD-0281 尚未落地那一代",
+     "signal_keyed_says_covered": 2,
+     "real_deadlines_measured": 0
+    },
+    "current_generation": {
+     "generation": "2344145ce6342b6ac32ac4d0955c0f524d8c9320",
+     "label": "现尖（号令者钉的 generation）",
+     "signal_keyed_says_covered": 2,
+     "real_deadlines_measured": 3
+    }
+   },
+   "sites_the_signal_predicate_would_call_covered_but_have_no_timer": [
+    "features/planning/PlanWithAiSheet.tsx#678"
+   ],
+   "verdict_derived": "同一把尺、同一份行集合（21 行 vs 21 行，行数相同 = True）：在 dc96408 那代“有 signal”的腿有 2 枚、真期限 0 枚；在现尖 2344145 “有 signal”的腿2 枚、真期限 3 枚 ⇒ “有没有 signal”这个读数在期限从 0 变成 3 的两次测量里没有跟着动，而现尖唯一被他表标成 OPTION_SIGNAL 的那一行（features/planning/PlanWithAiSheet.tsx#678）恰恰是“有 signal、无期限”的那一枚"
+  }
+ },
+ "discipline": {
+  "product_bytes_changed": 0,
+  "refs_pushed": 0,
+  "authoritative_branch_moved": 0,
+  "user_databases_opened": 0,
+  "demo_reset_calls": 0,
+  "credential_values_printed": 0,
+  "ledger_written_by_lane": 0,
+  "evidence_paths_overwritten": 0
+ },
+ "limits": [
+  "可取消这一列判的是“这一腿有没有到达 fetch 的取消通道”，用的是本处理函数里的 AbortController + 同文件 abort() 两个证据；只找到 controller 没找到 abort() 的行会落到“不可取消或测不出”，这是保守方向，不会高估",
+  "可恢复这一列 = 同一处理函数里有回读/refetch/invalidate 或带幂等键；没有就写不可恢复，不拿“用户能刷新页面”充当恢复",
+  "路径里的模板插值统一截成 ${…}（与号令者那张表同一约定），所以同一文件里多条同前缀腿要靠行号区分"
+ ],
+ "claim_kind": "measured_on_the_generation_named_above",
+ "claimed_result": "范围 scope=前端网络写入口（含经包装函数到达 fetch 的腿）、代 generation=2344145ce6342b6ac32ac4d0955c0f524d8c9320、工具 measurement method=TypeScript AST（自检 SELFTEST_PASS、21 枚行、74 个文件）、对照件=fba4e01a4e7ad9833a5b4fc35920b8a089ae9525。逐行五态：有键 4 / 无键 17；可取消 2；有期限 3、无期限 18；必须等待 18；可恢复 6；network_effect 追到真 fetch 行 21 枚。“看 signal”那条判据被实测证成没牙：dc96408 那代有 signal 的腿 2 枚而真期限 0 枚，现尖有 signal 2 枚、真期限 3 枚；定义句取 60 秒（60000 与 60000 两枚常量同为 60 秒）",
+ "derived_result": null
+}
