@@ -1,0 +1,72 @@
+{
+  "b3_landed_primary": {
+    "kind": "b3_offline",
+    "cells": [
+      "B3_offline_after_convergence"
+    ],
+    "claim": "B3 on the LANDED generation 5c4608ce: a traveller whose client converged onto the new generation, and who really has a trip, stays usable offline on that same generation",
+    "root_installed": "D:\\moodle\\_qoder_hjp1_o207_20260922\\o297\\landed\\frontend\\dist",
+    "root_next": "D:\\moodle\\_qoder_hjp1_o207_20260922\\o297\\landed_next\\frontend\\dist",
+    "backend": "D:\\moodle\\_qoder_hjp1_o207_20260922\\o297\\ordered_backend\\backend",
+    "installed_sha": "5c4608cede6cb7bd5f3ac7e704bfee379ca47abc",
+    "next_sha": "5c4608cede6cb7bd5f3ac7e704bfee379ca47abc + inert marker line (ORD-0297-next)",
+    "mode": "answer",
+    "install_mode": "two_navigations"
+  },
+  "b3_landed_control": {
+    "kind": "b3_control_partial",
+    "cells": [
+      "B3_control_partial_deploy"
+    ],
+    "claim": "The discriminating control for B3 on the landed trees: identical walk, one configured byte -- the asset root stays on the previous generation while the shell moves, i.e. the deploy that does not retain bundles",
+    "root_installed": "D:\\moodle\\_qoder_hjp1_o207_20260922\\o297\\landed\\frontend\\dist",
+    "root_next": "D:\\moodle\\_qoder_hjp1_o207_20260922\\o297\\landed_next\\frontend\\dist",
+    "backend": "D:\\moodle\\_qoder_hjp1_o207_20260922\\o297\\ordered_backend\\backend",
+    "installed_sha": "5c4608cede6cb7bd5f3ac7e704bfee379ca47abc",
+    "next_sha": "5c4608cede6cb7bd5f3ac7e704bfee379ca47abc + inert marker line (ORD-0297-next)",
+    "mode": "answer",
+    "install_mode": "two_navigations"
+  },
+  "a_never_reconnects": {
+    "kind": "a_never_reconnects",
+    "cells": [
+      "A_never_reconnected"
+    ],
+    "claim": "A on the landed generation: a device that never reconnects after the server moved on WITHOUT keeping its bundles must still show what it cached -- offline first screen, in-app movement, re-entry",
+    "root_installed": "D:\\moodle\\_qoder_hjp1_o207_20260922\\o297\\landed\\frontend\\dist",
+    "root_next": "D:\\moodle\\_qoder_hjp1_o207_20260922\\o297\\landed_next\\frontend\\dist",
+    "backend": "D:\\moodle\\_qoder_hjp1_o207_20260922\\o297\\ordered_backend\\backend",
+    "installed_sha": "5c4608cede6cb7bd5f3ac7e704bfee379ca47abc",
+    "next_sha": "5c4608cede6cb7bd5f3ac7e704bfee379ca47abc + inert marker line (ORD-0297-next)",
+    "mode": "answer",
+    "install_mode": "two_navigations"
+  },
+  "a_control_update_lands": {
+    "kind": "a_control_update_lands",
+    "cells": [
+      "A_control_update_lands"
+    ],
+    "claim": "The teeth for A: identical walk and identical no-retention deploy, but the worker is allowed to land its update while the page is meant to be offline (measured in ORD-0274: SW update fetches survive Playwright's offline emulation). If A reads the same with and without it, the A judgement has no teeth [kind string aligned to the instrument on 2026-09-25: the instrument only accepts a_control_update_lands, and an earlier mismatch sent this arm down the fallback branch]",
+    "root_installed": "D:\\moodle\\_qoder_hjp1_o207_20260922\\o297\\landed\\frontend\\dist",
+    "root_next": "D:\\moodle\\_qoder_hjp1_o207_20260922\\o297\\landed_next\\frontend\\dist",
+    "backend": "D:\\moodle\\_qoder_hjp1_o207_20260922\\o297\\ordered_backend\\backend",
+    "installed_sha": "5c4608cede6cb7bd5f3ac7e704bfee379ca47abc",
+    "next_sha": "5c4608cede6cb7bd5f3ac7e704bfee379ca47abc + inert marker line (ORD-0297-next)",
+    "mode": "answer",
+    "install_mode": "two_navigations"
+  },
+  "b3_landed_primary_writebackend": {
+    "kind": "b3_offline",
+    "cells": [
+      "B3_offline_after_convergence_backend_6d041dcc"
+    ],
+    "claim": "Same B3 walk, same frontend bytes, but the backend half is the NEXT landed jump 6d041dcc (write-deadline / ORD-0296, five backend files, zero frontend files). This is not a substitute reading -- it asks one named question: does the trip screen still 500 on the backend that is now on the line, and if so the offline cell cannot be closed for reasons that have nothing to do with the worker",
+    "root_installed": "D:\\moodle\\_qoder_hjp1_o207_20260922\\o297\\landed\\frontend\\dist",
+    "root_next": "D:\\moodle\\_qoder_hjp1_o207_20260922\\o297\\landed_next\\frontend\\dist",
+    "backend": "D:\\moodle\\_qoder_hjp1_o207_20260922\\o297\\landed_backend\\backend",
+    "installed_sha": "5c4608cede6cb7bd5f3ac7e704bfee379ca47abc",
+    "next_sha": "5c4608cede6cb7bd5f3ac7e704bfee379ca47abc + inert marker line (ORD-0297-next)",
+    "mode": "answer",
+    "install_mode": "two_navigations"
+  }
+}
