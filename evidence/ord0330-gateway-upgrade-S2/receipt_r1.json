@@ -1,0 +1,247 @@
+{
+ "schema": "CNX_ORD0330_GATEWAY_UPGRADE_RECEIPT_V1",
+ "order": "ORD-0330",
+ "lane": "S2-hermes-port",
+ "at_local": "2026-09-26T05:14:00+0800",
+ "generation": "0f8b925facabc9df57bab600b86d999dd515bf94",
+ "generation_note": "the branch opened from 0f8b925facabc9df57bab600b86d999dd515bf94; origin's authoritative line has since moved to c1bea4c20ea8cd5f1cc5c9d87053c005b2a24400 (another landing, not this lane) - so a landing today is a merge, not a fast-forward, unless the candidate is re-cut",
+ "live_branch_read_at_receipt_time": "c1bea4c20ea8cd5f1cc5c9d87053c005b2a24400",
+ "candidate_branch": "refs/heads/agent/S2-ord0330-gateway-candidates",
+ "candidate_sha": "d05cfb2930c8d560e8b877a2d6363e1376dae6c3",
+ "candidate_read_back_from_origin": "d05cfb2930c8d560e8b877a2d6363e1376dae6c3",
+ "commits": [
+  {
+   "sha": "94c171cd899b75fe43bbe2ca00f95b0782803856",
+   "subject": "ORD-0330 upgrade cached request-replan responses in the agent gateway"
+  },
+  {
+   "sha": "d05cfb2930c8d560e8b877a2d6363e1376dae6c3",
+   "subject": "ORD-0330 add the route-level witness for the cached replan contract upgrade"
+  }
+ ],
+ "ahead_behind_vs_measured_tip": {
+  "behind": 0,
+  "ahead": 2
+ },
+ "merge_tree_readonly_vs_tip": {
+  "exit": 0,
+  "tree": "ecef1a50d52a95ae9678b9df1ef7e65270a34141",
+  "conflict_entries": 0
+ },
+ "hermes_source_commit": "0fe51945cdf2d0ae35494b615f3418957174da03",
+ "symbol": {
+  "name": "_upgrade_cached_request_replan_response",
+  "file": "backend/app/agent/gateway.py",
+  "transplant": "three module constants plus the function, taken verbatim from the Hermes line; call site 1 (the cached-response branch of AgentToolGateway.request_replan) and call site 2 (the IntegrityError race after _write_idempotent) both route through it; the sqlalchemy.exc.IntegrityError import is added because call site 2 needs it",
+  "block_line_count": 72,
+  "block_sha256_hermes": "7157d0e76cdcd08bff8077d2519e186227987745498701c7cecf02846970401d",
+  "block_sha256_candidate": "7157d0e76cdcd08bff8077d2519e186227987745498701c7cecf02846970401d",
+  "whole_file_blobs_differ_by_design": "the gateway file as a whole differs from the Hermes version because the mainline moved 370+ commits since the branches split; only the transplanted block is claimed byte-identical, and that claim is the two sha256 values above",
+  "tip_blob": "8a0ffffe2acc4e39c65068faaaea2140b0936220",
+  "candidate_blob": "a87e0726bbcfd267102ab068a978666db582056d",
+  "hermes_blob": "ff043bbf88e3c3199d8c0bca3803f7286b937f75",
+  "main_py_dependency": "the function imports _replan_payload from app.main at call time; the measured tip already defines it at backend/app/main.py:7542, so backend/app/main.py was not touched"
+ },
+ "diff_vs_tip": {
+  "paths": {
+   "backend/app/agent/gateway.py": {
+    "added": 92,
+    "deleted": 2
+   },
+   "backend/tests/test_hermes_r5_cached_replan_compatibility.py": {
+    "added": 130,
+    "deleted": 0
+   },
+   "backend/tests/test_ord0330_cached_replan_contract_upgrade.py": {
+    "added": 104,
+    "deleted": 0
+   }
+  },
+  "status_tally": {
+   "M": 1,
+   "A": 2
+  },
+  "added_lines": 326,
+  "deleted_lines": 2,
+  "product_files_changed": [
+   "backend/app/agent/gateway.py"
+  ],
+  "backend_app_main_or_frontend_in_diff": []
+ },
+ "gate": {
+  "tool": "live_checks/run_hermes_suite_r1.py",
+  "receipt_blob": "88d0cb181adff5303f6de2f637c1e2ded1c5d028",
+  "generation_measured": "d05cfb2930c8d560e8b877a2d6363e1376dae6c3",
+  "resolved_via": "d05cfb2930c8d560e8b877a2d6363e1376dae6c3",
+  "fetch_performed": false,
+  "harness_files": 22,
+  "whole_collected": 1335,
+  "whole_collect_errors": 0,
+  "harness_collected": 72,
+  "harness_passed": 72,
+  "harness_failed": 0,
+  "interpreter": "D:/moodle/CityNexus/.venv/Scripts/python.exe (Python 3.12.14)",
+  "tool_defect_found_and_fixed_here": "an explicit --ref was being silently replaced by the branch's refreshed value, so the first run reported the tip's tree instead of the candidate. resolve_generation now only refreshes when no --ref was given; the reading above shows generation equals the candidate and fetch_performed=false",
+  "tool_bytes_now": 16608
+ },
+ "full_suite": {
+  "tip": {
+   "line": "12 failed, 1291 passed, 15 skipped, 1 xfailed, 6 warnings in 126.04s (0:02:06)",
+   "failed": 12,
+   "passed": 1291,
+   "skipped": 15
+  },
+  "candidate_head": {
+   "line": "12 failed, 1307 passed, 15 skipped, 1 xfailed, 6 warnings in 127.17s (0:02:07)",
+   "failed": 12,
+   "passed": 1307,
+   "skipped": 15
+  },
+  "red_set_tip": [
+   "tests/test_qoder_anywhere_gates.py::test_g5_an_ai_run_that_changed_must_say_which_it_was",
+   "tests/test_qoder_anywhere_lock_duration.py::test_g9a_the_instrument_actually_sees_write_transactions_and_provider_calls",
+   "tests/test_qoder_anywhere_lock_duration.py::test_g9b_provider_http_never_runs_inside_an_open_write_transaction",
+   "tests/test_qoder_anywhere_matrix_truth.py::test_g14a_an_oversized_matrix_fails_closed_and_invents_no_facts",
+   "tests/test_qoder_anywhere_matrix_truth.py::test_g14c_the_verdict_must_not_depend_on_the_providers_wording",
+   "tests/test_qoder_anywhere_provider_independence.py::test_g8a_default_suite_contains_no_live_provider_calls",
+   "tests/test_qoder_anywhere_provider_truth.py::test_g10_every_normalised_place_carries_a_usable_coordinate_including_nodes",
+   "tests/test_qoder_city_failure_reasons.py::test_a_live_failure_arrives_named_and_carries_the_stage_it_broke_at",
+   "tests/test_qoder_ord0307_credential_gate.py::test_C01_the_scanned_set_is_named_and_actually_present",
+   "tests/test_qoder_ord0307_credential_gate.py::test_C06_declaration_is_by_digest_not_by_path",
+   "tests/test_qoder_ord0307_credential_gate.py::test_C07_what_the_working_tree_actually_holds_today",
+   "tests/test_v18_3_convergence.py::test_release_metadata_and_map_entrypoint_are_converged"
+  ],
+  "red_set_candidate": [
+   "tests/test_qoder_anywhere_gates.py::test_g5_an_ai_run_that_changed_must_say_which_it_was",
+   "tests/test_qoder_anywhere_lock_duration.py::test_g9a_the_instrument_actually_sees_write_transactions_and_provider_calls",
+   "tests/test_qoder_anywhere_lock_duration.py::test_g9b_provider_http_never_runs_inside_an_open_write_transaction",
+   "tests/test_qoder_anywhere_matrix_truth.py::test_g14a_an_oversized_matrix_fails_closed_and_invents_no_facts",
+   "tests/test_qoder_anywhere_matrix_truth.py::test_g14c_the_verdict_must_not_depend_on_the_providers_wording",
+   "tests/test_qoder_anywhere_provider_independence.py::test_g8a_default_suite_contains_no_live_provider_calls",
+   "tests/test_qoder_anywhere_provider_truth.py::test_g10_every_normalised_place_carries_a_usable_coordinate_including_nodes",
+   "tests/test_qoder_city_failure_reasons.py::test_a_live_failure_arrives_named_and_carries_the_stage_it_broke_at",
+   "tests/test_qoder_ord0307_credential_gate.py::test_C01_the_scanned_set_is_named_and_actually_present",
+   "tests/test_qoder_ord0307_credential_gate.py::test_C06_declaration_is_by_digest_not_by_path",
+   "tests/test_qoder_ord0307_credential_gate.py::test_C07_what_the_working_tree_actually_holds_today",
+   "tests/test_v18_3_convergence.py::test_release_metadata_and_map_entrypoint_are_converged"
+  ],
+  "new_red": [],
+  "fixed": [],
+  "passed_delta": 16,
+  "note": "both runs are on git-archive exports of the same six paths; the tip run was repeated once and reproduced 12 failed / 1291 passed exactly, so the red set is a stable baseline and not one observation. An earlier comparison against a full working tree briefly showed 4 fewer failures - those 4 tests scan the working tree and were a tree-shape artefact, not a fix by this change"
+ },
+ "mutation_controls": {
+  "schema": "CNX_ORD0330_MUTATION_CONTROLS_V1",
+  "at_local": "2026-09-26T05:03:46+0800",
+  "candidate": "d05cfb2930c8d560e8b877a2d6363e1376dae6c3",
+  "tip": "0f8b925facabc9df57bab600b86d999dd515bf94",
+  "mutations": {
+   "M1_arm_cut": "replace the 7-line `return _upgrade_cached_request_replan_response(...)` at call site 1 with `return stored` (call site 2 left wired)",
+   "M2_file_cut": "write gateway.py back to the tip blob"
+  },
+  "readings": {
+   "M0_control": {
+    "test_ord0330_cached_replan_contract_upgrade.py": {
+     "exit": 0,
+     "passed": 3,
+     "failed": 0,
+     "collect_errors": 0,
+     "failed_tests": []
+    },
+    "test_hermes_r5_cached_replan_compatibility.py": {
+     "exit": 0,
+     "passed": 13,
+     "failed": 0,
+     "collect_errors": 0,
+     "failed_tests": []
+    }
+   },
+   "M1_arm_cut": {
+    "test_ord0330_cached_replan_contract_upgrade.py": {
+     "exit": 1,
+     "passed": 2,
+     "failed": 1,
+     "collect_errors": 0,
+     "failed_tests": [
+      "tests/test_ord0330_cached_replan_contract_upgrade.py::test_replayed_request_replan_answer_carries_the_current_contract"
+     ]
+    },
+    "test_hermes_r5_cached_replan_compatibility.py": {
+     "exit": 0,
+     "passed": 13,
+     "failed": 0,
+     "collect_errors": 0,
+     "failed_tests": []
+    }
+   },
+   "M2_file_cut": {
+    "test_ord0330_cached_replan_contract_upgrade.py": {
+     "exit": 1,
+     "passed": 2,
+     "failed": 1,
+     "collect_errors": 0,
+     "failed_tests": [
+      "tests/test_ord0330_cached_replan_contract_upgrade.py::test_replayed_request_replan_answer_carries_the_current_contract"
+     ]
+    },
+    "test_hermes_r5_cached_replan_compatibility.py": {
+     "exit": 2,
+     "passed": 0,
+     "failed": 0,
+     "collect_errors": 1,
+     "failed_tests": []
+    }
+   }
+  },
+  "checks": {
+   "M0_both_witnesses_green": true,
+   "M1_route_witness_goes_red": true,
+   "M1_proves_r5_alone_cannot_see_the_arm": true,
+   "M2_route_witness_breaks_at_import": true,
+   "M2_r5_cannot_import": true,
+   "no_throwaway_dirs_left": true
+  },
+  "derived_ok": true,
+  "verdict": "ORD0330_ROUTE_WITNESS_HAS_TEETH_ON_THE_ARM",
+  "assertion_edited": 0,
+  "repo_writes": 0
+ },
+ "checks": {
+  "req1_only_gateway_product_file": true,
+  "req1_main_py_and_frontend_untouched": true,
+  "no_deletions_outside_the_two_edited_lines": true,
+  "transplanted_block_is_byte_identical_to_hermes": true,
+  "both_call_sites_wired": true,
+  "cache_read_survives": true,
+  "req2_gate_green_with_complete_harness_set": true,
+  "req2_full_suite_red_set_unchanged": true,
+  "req2_full_suite_gained_exactly_the_new_tests": true,
+  "req3_route_witness_goes_red_when_the_arm_is_cut": true,
+  "req3_r5_alone_cannot_see_the_arm": true,
+  "req3_control_dirs_removed": true,
+  "req5_candidate_pushed_and_read_back": true,
+  "req5_only_candidate_branch_pushed": true,
+  "candidate_fast_forwardable_from_measured_tip": true
+ },
+ "verdict": "ORD0330_GATEWAY_ARM_WIRED_AND_WITNESSED_NO_REGRESSION",
+ "verdict_derivation": "every key in checks compares readings taken in this run (git diffs, the gate receipt, the full-suite logs, the mutation-control receipt); the verdict string is computed from them and no literal pass token is written",
+ "discipline": {
+  "authoritative_branch_moved": 0,
+  "refs_pushed_by_lane": 1,
+  "pushed_refs": [
+   "refs/heads/agent/S2-ord0330-gateway-candidates"
+  ],
+  "demo_reset": 0,
+  "credentials_printed": 0,
+  "model_calls_made": 0,
+  "live_or_preview_db_touched": 0,
+  "junctions_created": 0,
+  "other_lane_worktrees_touched": 0,
+  "ledger_written_by_lane": 0,
+  "assertions_edited_to_get_green": 0,
+  "previously_pushed_candidates_rewritten": 0
+ },
+ "claim_kind": "git_and_pytest_determined",
+ "derived_result": null,
+ "derived_result_policy": "left null by requirement 4 - sign-off belongs to the verifier"
+}
