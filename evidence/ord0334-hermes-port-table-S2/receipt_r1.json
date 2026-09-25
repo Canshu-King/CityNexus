@@ -1,0 +1,689 @@
+{
+ "schema": "CNX_ORD0334_HERMES_PORT_TABLE_AND_CLIENT_RECEIPT_V1",
+ "order": "ORD-0334",
+ "lane": "S2-hermes-port",
+ "at_local": "2026-09-26T05:39:21+0800",
+ "generation": "821a0eb54cca1b305a4aa75c1ca8d46a95d51bba",
+ "live_branch_read_at_receipt_time": "5d7335721106c20092dd4d90181bb99accd0a32b",
+ "hermes_source_commit": "0fe51945cdf2d0ae35494b615f3418957174da03",
+ "scope_of_table": "git diff --numstat <tip> <hermes> -- backend/app agent-mcp, i.e. the paths this lane may touch; frontend/ and the other lanes' files are outside it",
+ "table_row_count": 37,
+ "table_verdict_tally": {
+  "PORT（本单已摘）": 1,
+  "PORT（另开单，别混摘）": 1,
+  "见证（非产品）": 4,
+  "别摘": 31
+ },
+ "table": [
+  {
+   "path": "agent-mcp/citynexus_mcp/client.py",
+   "on_mainline": true,
+   "on_hermes": true,
+   "diff_tip_to_hermes": {
+    "added": 22,
+    "deleted": 2
+   },
+   "hermes_line_anchor": "agent-mcp/citynexus_mcp/client.py:1",
+   "verdict": "PORT（本单已摘）",
+   "why": "净增 22 行且 -2 全是被替换的两行，无主线行为损失",
+   "user_facing": "间接但真实：MCP 侧每一次工具调用都被 15 秒掐断，而服务器给每个请求的写预算是 45 秒、等锁本身允许 30 秒；一次合法但慢的 request_replan 会在服务器仍在预算内时被客户端放弃，旅客侧表现为等了却没有新提案。第二臂决定放弃时旅客/模型看到的是裸 409 还是服务器编号"
+  },
+  {
+   "path": "agent-mcp/citynexus_mcp/server.py",
+   "on_mainline": true,
+   "on_hermes": true,
+   "diff_tip_to_hermes": {
+    "added": 83,
+    "deleted": 31
+   },
+   "hermes_line_anchor": "agent-mcp/citynexus_mcp/server.py:1",
+   "verdict": "PORT（另开单，别混摘）",
+   "why": "净增 52 但混着 31 行替换，其中 _agent_id() 改主体身份，与另一车道在改的 backend/app/agent/runtime_identity.py 同一条边界；应单独一单并带边界证据",
+   "user_facing": "模型可见的工具说明（少重复 list_replans / 少重复搜索）+ request_id 边界校验前移 + request_replan 响应里的 proposal_views 契约；另含 _agent_id() 改变主体身份，属跨道面"
+  },
+  {
+   "path": "agent-mcp/tests/test_client_error_detail.py",
+   "on_mainline": false,
+   "on_hermes": true,
+   "diff_tip_to_hermes": {
+    "added": 42,
+    "deleted": 0
+   },
+   "hermes_line_anchor": "agent-mcp/tests/test_client_error_detail.py:1",
+   "verdict": "见证（非产品）",
+   "why": "Hermes 独有的测试文件，只在对应产品增量落地时才有意义",
+   "user_facing": "见证本体：钉住两条超时数值不同、失败时抛的是服务器原话"
+  },
+  {
+   "path": "agent-mcp/tests/test_hermes_validation_principal.py",
+   "on_mainline": false,
+   "on_hermes": true,
+   "diff_tip_to_hermes": {
+    "added": 11,
+    "deleted": 0
+   },
+   "hermes_line_anchor": "agent-mcp/tests/test_hermes_validation_principal.py:1",
+   "verdict": "见证（非产品）",
+   "why": "Hermes 独有的测试文件，只在对应产品增量落地时才有意义",
+   "user_facing": "隔离校验主体测试本体（与 server.py 的 _agent_id 绑定）"
+  },
+  {
+   "path": "agent-mcp/tests/test_mcp_boundary.py",
+   "on_mainline": true,
+   "on_hermes": true,
+   "diff_tip_to_hermes": {
+    "added": 83,
+    "deleted": 1
+   },
+   "hermes_line_anchor": "agent-mcp/tests/test_mcp_boundary.py:1",
+   "verdict": "见证（非产品）",
+   "why": "Hermes 独有的测试文件，只在对应产品增量落地时才有意义",
+   "user_facing": "边界测试本体"
+  },
+  {
+   "path": "agent-mcp/tests/test_replan_proposal_view.py",
+   "on_mainline": false,
+   "on_hermes": true,
+   "diff_tip_to_hermes": {
+    "added": 70,
+    "deleted": 0
+   },
+   "hermes_line_anchor": "agent-mcp/tests/test_replan_proposal_view.py:1",
+   "verdict": "见证（非产品）",
+   "why": "Hermes 独有的测试文件，只在对应产品增量落地时才有意义",
+   "user_facing": "proposal 视图契约测试本体"
+  },
+  {
+   "path": "backend/app/agent/gateway.py",
+   "on_mainline": true,
+   "on_hermes": true,
+   "diff_tip_to_hermes": {
+    "added": 5,
+    "deleted": 10
+   },
+   "hermes_line_anchor": "backend/app/agent/gateway.py:1",
+   "verdict": "别摘",
+   "why": "主线在这枚文件上已前进（净删除），Hermes 版本是旧版",
+   "user_facing": "无（主线领先或纯测试本体，旅客面不变）"
+  },
+  {
+   "path": "backend/app/anywhere_capability.py",
+   "on_mainline": true,
+   "on_hermes": false,
+   "diff_tip_to_hermes": {
+    "added": 0,
+    "deleted": 1592
+   },
+   "hermes_line_anchor": "",
+   "verdict": "别摘",
+   "why": "主线独有的模块，Hermes 线没有；摘过去等于删掉现成产品行为",
+   "user_facing": "无（主线领先或纯测试本体，旅客面不变）"
+  },
+  {
+   "path": "backend/app/capabilities.py",
+   "on_mainline": true,
+   "on_hermes": true,
+   "diff_tip_to_hermes": {
+    "added": 2,
+    "deleted": 53
+   },
+   "hermes_line_anchor": "backend/app/capabilities.py:1",
+   "verdict": "别摘",
+   "why": "主线在这枚文件上已前进（净删除），Hermes 版本是旧版",
+   "user_facing": "无（主线领先或纯测试本体，旅客面不变）"
+  },
+  {
+   "path": "backend/app/catalog_hydration_operations.py",
+   "on_mainline": true,
+   "on_hermes": false,
+   "diff_tip_to_hermes": {
+    "added": 0,
+    "deleted": 973
+   },
+   "hermes_line_anchor": "",
+   "verdict": "别摘",
+   "why": "主线独有的模块，Hermes 线没有；摘过去等于删掉现成产品行为",
+   "user_facing": "无（主线领先或纯测试本体，旅客面不变）"
+  },
+  {
+   "path": "backend/app/commerce/service_impl.py",
+   "on_mainline": true,
+   "on_hermes": true,
+   "diff_tip_to_hermes": {
+    "added": 0,
+    "deleted": 40
+   },
+   "hermes_line_anchor": "backend/app/commerce/service_impl.py:1",
+   "verdict": "别摘",
+   "why": "主线在这枚文件上已前进（净删除），Hermes 版本是旧版",
+   "user_facing": "无（主线领先或纯测试本体，旅客面不变）"
+  },
+  {
+   "path": "backend/app/concurrency_guards.py",
+   "on_mainline": true,
+   "on_hermes": false,
+   "diff_tip_to_hermes": {
+    "added": 0,
+    "deleted": 85
+   },
+   "hermes_line_anchor": "",
+   "verdict": "别摘",
+   "why": "主线独有的模块，Hermes 线没有；摘过去等于删掉现成产品行为",
+   "user_facing": "无（主线领先或纯测试本体，旅客面不变）"
+  },
+  {
+   "path": "backend/app/core/config.py",
+   "on_mainline": true,
+   "on_hermes": true,
+   "diff_tip_to_hermes": {
+    "added": 0,
+    "deleted": 20
+   },
+   "hermes_line_anchor": "backend/app/core/config.py:1",
+   "verdict": "别摘",
+   "why": "主线在这枚文件上已前进（净删除），Hermes 版本是旧版",
+   "user_facing": "无（主线领先或纯测试本体，旅客面不变）"
+  },
+  {
+   "path": "backend/app/core/phase_timing.py",
+   "on_mainline": true,
+   "on_hermes": false,
+   "diff_tip_to_hermes": {
+    "added": 0,
+    "deleted": 155
+   },
+   "hermes_line_anchor": "",
+   "verdict": "别摘",
+   "why": "主线独有的模块，Hermes 线没有；摘过去等于删掉现成产品行为",
+   "user_facing": "无（主线领先或纯测试本体，旅客面不变）"
+  },
+  {
+   "path": "backend/app/core/temporal.py",
+   "on_mainline": true,
+   "on_hermes": true,
+   "diff_tip_to_hermes": {
+    "added": 8,
+    "deleted": 137
+   },
+   "hermes_line_anchor": "backend/app/core/temporal.py:1",
+   "verdict": "别摘",
+   "why": "主线在这枚文件上已前进（净删除），Hermes 版本是旧版",
+   "user_facing": "无（主线领先或纯测试本体，旅客面不变）"
+  },
+  {
+   "path": "backend/app/db/models.py",
+   "on_mainline": true,
+   "on_hermes": true,
+   "diff_tip_to_hermes": {
+    "added": 1022,
+    "deleted": 1122
+   },
+   "hermes_line_anchor": "backend/app/db/models.py:1",
+   "verdict": "别摘",
+   "why": "主线在这枚文件上已前进（净删除），Hermes 版本是旧版",
+   "user_facing": "无（主线领先或纯测试本体，旅客面不变）"
+  },
+  {
+   "path": "backend/app/db/session.py",
+   "on_mainline": true,
+   "on_hermes": true,
+   "diff_tip_to_hermes": {
+    "added": 2,
+    "deleted": 247
+   },
+   "hermes_line_anchor": "backend/app/db/session.py:1",
+   "verdict": "别摘",
+   "why": "主线在这枚文件上已前进（净删除），Hermes 版本是旧版",
+   "user_facing": "无（主线领先或纯测试本体，旅客面不变）"
+  },
+  {
+   "path": "backend/app/db/write_deadline.py",
+   "on_mainline": true,
+   "on_hermes": false,
+   "diff_tip_to_hermes": {
+    "added": 0,
+    "deleted": 273
+   },
+   "hermes_line_anchor": "",
+   "verdict": "别摘",
+   "why": "主线独有的模块，Hermes 线没有；摘过去等于删掉现成产品行为",
+   "user_facing": "无（主线领先或纯测试本体，旅客面不变）"
+  },
+  {
+   "path": "backend/app/integrations/discovery/provider_identity.py",
+   "on_mainline": true,
+   "on_hermes": false,
+   "diff_tip_to_hermes": {
+    "added": 0,
+    "deleted": 544
+   },
+   "hermes_line_anchor": "",
+   "verdict": "别摘",
+   "why": "主线独有的模块，Hermes 线没有；摘过去等于删掉现成产品行为",
+   "user_facing": "无（主线领先或纯测试本体，旅客面不变）"
+  },
+  {
+   "path": "backend/app/integrations/discovery/real_city.py",
+   "on_mainline": true,
+   "on_hermes": true,
+   "diff_tip_to_hermes": {
+    "added": 20,
+    "deleted": 344
+   },
+   "hermes_line_anchor": "backend/app/integrations/discovery/real_city.py:1",
+   "verdict": "别摘",
+   "why": "主线在这枚文件上已前进（净删除），Hermes 版本是旧版",
+   "user_facing": "无（主线领先或纯测试本体，旅客面不变）"
+  },
+  {
+   "path": "backend/app/integrations/mobility/runtime.py",
+   "on_mainline": true,
+   "on_hermes": true,
+   "diff_tip_to_hermes": {
+    "added": 7,
+    "deleted": 82
+   },
+   "hermes_line_anchor": "backend/app/integrations/mobility/runtime.py:1",
+   "verdict": "别摘",
+   "why": "主线在这枚文件上已前进（净删除），Hermes 版本是旧版",
+   "user_facing": "无（主线领先或纯测试本体，旅客面不变）"
+  },
+  {
+   "path": "backend/app/integrations/mobility/snapshot_capture.py",
+   "on_mainline": true,
+   "on_hermes": true,
+   "diff_tip_to_hermes": {
+    "added": 1,
+    "deleted": 35
+   },
+   "hermes_line_anchor": "backend/app/integrations/mobility/snapshot_capture.py:1",
+   "verdict": "别摘",
+   "why": "主线在这枚文件上已前进（净删除），Hermes 版本是旧版",
+   "user_facing": "无（主线领先或纯测试本体，旅客面不变）"
+  },
+  {
+   "path": "backend/app/integrations/mobility/valhalla_http.py",
+   "on_mainline": true,
+   "on_hermes": true,
+   "diff_tip_to_hermes": {
+    "added": 1,
+    "deleted": 17
+   },
+   "hermes_line_anchor": "backend/app/integrations/mobility/valhalla_http.py:1",
+   "verdict": "别摘",
+   "why": "主线在这枚文件上已前进（净删除），Hermes 版本是旧版",
+   "user_facing": "无（主线领先或纯测试本体，旅客面不变）"
+  },
+  {
+   "path": "backend/app/integrations/mock/providers.py",
+   "on_mainline": true,
+   "on_hermes": true,
+   "diff_tip_to_hermes": {
+    "added": 2,
+    "deleted": 41
+   },
+   "hermes_line_anchor": "backend/app/integrations/mock/providers.py:1",
+   "verdict": "别摘",
+   "why": "主线在这枚文件上已前进（净删除），Hermes 版本是旧版",
+   "user_facing": "无（主线领先或纯测试本体，旅客面不变）"
+  },
+  {
+   "path": "backend/app/integrations/stay_osm.py",
+   "on_mainline": true,
+   "on_hermes": true,
+   "diff_tip_to_hermes": {
+    "added": 67,
+    "deleted": 120
+   },
+   "hermes_line_anchor": "backend/app/integrations/stay_osm.py:1",
+   "verdict": "别摘",
+   "why": "主线在这枚文件上已前进（净删除），Hermes 版本是旧版",
+   "user_facing": "无（主线领先或纯测试本体，旅客面不变）"
+  },
+  {
+   "path": "backend/app/main.py",
+   "on_mainline": true,
+   "on_hermes": true,
+   "diff_tip_to_hermes": {
+    "added": 336,
+    "deleted": 2044
+   },
+   "hermes_line_anchor": "backend/app/main.py:1",
+   "verdict": "别摘",
+   "why": "主线在这枚文件上已前进（净删除），Hermes 版本是旧版",
+   "user_facing": "无（主线领先或纯测试本体，旅客面不变）"
+  },
+  {
+   "path": "backend/app/operations/v9.py",
+   "on_mainline": true,
+   "on_hermes": true,
+   "diff_tip_to_hermes": {
+    "added": 39,
+    "deleted": 106
+   },
+   "hermes_line_anchor": "backend/app/operations/v9.py:1",
+   "verdict": "别摘",
+   "why": "主线在这枚文件上已前进（净删除），Hermes 版本是旧版",
+   "user_facing": "无（主线领先或纯测试本体，旅客面不变）"
+  },
+  {
+   "path": "backend/app/planning/authoritative_v12.py",
+   "on_mainline": true,
+   "on_hermes": true,
+   "diff_tip_to_hermes": {
+    "added": 0,
+    "deleted": 2
+   },
+   "hermes_line_anchor": "backend/app/planning/authoritative_v12.py:1",
+   "verdict": "别摘",
+   "why": "主线在这枚文件上已前进（净删除），Hermes 版本是旧版",
+   "user_facing": "无（主线领先或纯测试本体，旅客面不变）"
+  },
+  {
+   "path": "backend/app/replanning/commitment_remap.py",
+   "on_mainline": true,
+   "on_hermes": false,
+   "diff_tip_to_hermes": {
+    "added": 0,
+    "deleted": 188
+   },
+   "hermes_line_anchor": "",
+   "verdict": "别摘",
+   "why": "主线独有的模块，Hermes 线没有；摘过去等于删掉现成产品行为",
+   "user_facing": "无（主线领先或纯测试本体，旅客面不变）"
+  },
+  {
+   "path": "backend/app/replanning/feasibility.py",
+   "on_mainline": true,
+   "on_hermes": true,
+   "diff_tip_to_hermes": {
+    "added": 1,
+    "deleted": 57
+   },
+   "hermes_line_anchor": "backend/app/replanning/feasibility.py:1",
+   "verdict": "别摘",
+   "why": "主线在这枚文件上已前进（净删除），Hermes 版本是旧版",
+   "user_facing": "无（主线领先或纯测试本体，旅客面不变）"
+  },
+  {
+   "path": "backend/app/replanning/mock_replan_engine.py",
+   "on_mainline": true,
+   "on_hermes": true,
+   "diff_tip_to_hermes": {
+    "added": 39,
+    "deleted": 255
+   },
+   "hermes_line_anchor": "backend/app/replanning/mock_replan_engine.py:1",
+   "verdict": "别摘",
+   "why": "主线在这枚文件上已前进（净删除），Hermes 版本是旧版",
+   "user_facing": "无（主线领先或纯测试本体，旅客面不变）"
+  },
+  {
+   "path": "backend/app/replanning/provider_snapshots.py",
+   "on_mainline": true,
+   "on_hermes": true,
+   "diff_tip_to_hermes": {
+    "added": 0,
+    "deleted": 86
+   },
+   "hermes_line_anchor": "backend/app/replanning/provider_snapshots.py:1",
+   "verdict": "别摘",
+   "why": "主线在这枚文件上已前进（净删除），Hermes 版本是旧版",
+   "user_facing": "无（主线领先或纯测试本体，旅客面不变）"
+  },
+  {
+   "path": "backend/app/schemas.py",
+   "on_mainline": true,
+   "on_hermes": true,
+   "diff_tip_to_hermes": {
+    "added": 0,
+    "deleted": 62
+   },
+   "hermes_line_anchor": "backend/app/schemas.py:1",
+   "verdict": "别摘",
+   "why": "主线在这枚文件上已前进（净删除），Hermes 版本是旧版",
+   "user_facing": "无（主线领先或纯测试本体，旅客面不变）"
+  },
+  {
+   "path": "backend/app/security/credential_literals.py",
+   "on_mainline": true,
+   "on_hermes": false,
+   "diff_tip_to_hermes": {
+    "added": 0,
+    "deleted": 213
+   },
+   "hermes_line_anchor": "",
+   "verdict": "别摘",
+   "why": "主线独有的模块，Hermes 线没有；摘过去等于删掉现成产品行为",
+   "user_facing": "无（主线领先或纯测试本体，旅客面不变）"
+  },
+  {
+   "path": "backend/app/services.py",
+   "on_mainline": true,
+   "on_hermes": true,
+   "diff_tip_to_hermes": {
+    "added": 14,
+    "deleted": 345
+   },
+   "hermes_line_anchor": "backend/app/services.py:1",
+   "verdict": "别摘",
+   "why": "主线在这枚文件上已前进（净删除），Hermes 版本是旧版",
+   "user_facing": "无（主线领先或纯测试本体，旅客面不变）"
+  },
+  {
+   "path": "backend/app/stay_generation_operations.py",
+   "on_mainline": true,
+   "on_hermes": false,
+   "diff_tip_to_hermes": {
+    "added": 0,
+    "deleted": 844
+   },
+   "hermes_line_anchor": "",
+   "verdict": "别摘",
+   "why": "主线独有的模块，Hermes 线没有；摘过去等于删掉现成产品行为",
+   "user_facing": "无（主线领先或纯测试本体，旅客面不变）"
+  },
+  {
+   "path": "backend/app/stay_mobility.py",
+   "on_mainline": true,
+   "on_hermes": true,
+   "diff_tip_to_hermes": {
+    "added": 26,
+    "deleted": 234
+   },
+   "hermes_line_anchor": "backend/app/stay_mobility.py:1",
+   "verdict": "别摘",
+   "why": "主线在这枚文件上已前进（净删除），Hermes 版本是旧版",
+   "user_facing": "无（主线领先或纯测试本体，旅客面不变）"
+  }
+ ],
+ "headline_finding": "backend/app holds nothing portable: every one of its 31 paths is either mainline-only (status D, 9 of them) or mainline-ahead (net deletions), so the Hermes line's remaining product content is exactly two files, both in agent-mcp/",
+ "ported_increment": {
+  "file": "agent-mcp/citynexus_mcp/client.py",
+  "hermes_blob": "16b21067bf6d011698642799d3dadfa2c1ee41b7",
+  "tip_blob": "07deded0029fa01c0e6e25317d95174b00d8acd2",
+  "candidate_blob": "16b21067bf6d011698642799d3dadfa2c1ee41b7",
+  "arms": [
+   "per-call timeout budget: request_replan gets 120 s, every other tool keeps 15 s",
+   "a non-2xx response raises the server's own detail / error.message instead of an opaque raise_for_status()"
+  ],
+  "measured_mismatch": {
+   "client_cap_seconds_on_tip": 15.0,
+   "client_cap_location": "agent-mcp/citynexus_mcp/client.py:21",
+   "server_write_deadline_ms_default": 45000,
+   "server_busy_wait_ms_default": 30000,
+   "server_locations": [
+    "backend/app/core/config.py:96",
+    "backend/app/core/config.py:95"
+   ],
+   "applies_to_the_tools_route_because": "backend/app/main.py arms SCENARIO_DEFAULT_WRITE for every request in the HTTP middleware, so the /api/v1/agent/tools/{tool_name} route (backend/app/main.py:1106) is on the 45 s budget while its caller in agent-mcp gave up at 15 s",
+   "not_measured": "no live request_replan latency was observed tonight (no model call, no server run); the claim is the two configured numbers, not an observed timeout"
+  },
+  "witness": {
+   "file": "agent-mcp/tests/test_client_error_detail.py",
+   "hermes_blob": "36950f9eb470b8e25cf4ed932036bd8b341494f0",
+   "suite_before": 6,
+   "suite_after": 8,
+   "runner_note": "agent-mcp/tests is not collected by the backend gate; the hermes review-package scripts reference it, and this lane ran it directly"
+  }
+ },
+ "candidate": {
+  "branch": "refs/heads/agent/S2-ord0334-mcp-client-budget-candidates",
+  "sha": "7188a2064edc8432a011291fc240b18c7f998a2c",
+  "read_back_from_origin": "7188a2064edc8432a011291fc240b18c7f998a2c",
+  "ahead": 1,
+  "behind": 0,
+  "merge_tree_vs_tip": {
+   "exit": 0,
+   "tree": "0ccff4f3ddb3dc03bd47aa24f508976e75fce1de",
+   "conflict_entries": 0
+  },
+  "diff_vs_tip": {
+   "agent-mcp/citynexus_mcp/client.py": {
+    "added": 22,
+    "deleted": 2
+   },
+   "agent-mcp/tests/test_client_error_detail.py": {
+    "added": 42,
+    "deleted": 0
+   }
+  },
+  "status_tally": {
+   "M": 1,
+   "A": 1
+  },
+  "tip_moved_during_this_order": {
+   "tip_i_cut_from": "821a0eb54cca1b305a4aa75c1ca8d46a95d51bba",
+   "live_tip_at_receipt": "5d7335721106c20092dd4d90181bb99accd0a32b",
+   "ahead_behind_vs_live": {
+    "behind": 1,
+    "ahead": 1
+   },
+   "merge_tree_vs_live": {
+    "exit": 0,
+    "tree": "233440937775ff84b0a838cfa626062f62501094",
+    "conflict_entries": 0
+   },
+   "agent_mcp_paths_touched_by_the_new_landing": 0,
+   "reading": "the authoritative line moved twice more while this order ran; the candidate stays mergeable with 0 conflicts and the new landing does not touch agent-mcp"
+  }
+ },
+ "gate": {
+  "tip": {
+   "generation": "821a0eb54cca1b305a4aa75c1ca8d46a95d51bba",
+   "whole_collected": 1342,
+   "whole_collect_errors": 0,
+   "harness_collected": 72,
+   "harness_passed": 72,
+   "receipt_blob": "04dc6cd022c721196710a55a22a3cfffe5dd6f17\n"
+  },
+  "candidate": {
+   "generation": "7188a2064edc8432a011291fc240b18c7f998a2c",
+   "whole_collected": 1342,
+   "whole_collect_errors": 0,
+   "harness_files": 22,
+   "harness_collected": 72,
+   "harness_passed": 72,
+   "harness_failed": 0,
+   "exit": 0,
+   "receipt_blob": "b33998966eaf8278ea656217f01beda6b4c47683\n"
+  },
+  "reading": "the backend gate reports the same numbers on tip and candidate, which is expected: the backend suite does not import the MCP client, so the proof of this change lives in agent-mcp/tests and the arm cuts"
+ },
+ "arm_cuts": {
+  "schema": "CNX_ORD0334_ARM_CUT_CONTROLS_V1",
+  "at_local": "2026-09-26T05:35:06+0800",
+  "candidate": "7188a2064edc8432a011291fc240b18c7f998a2c",
+  "subject_file": "agent-mcp/citynexus_mcp/client.py",
+  "witness_file": "agent-mcp/tests/test_client_error_detail.py",
+  "cuts": {
+   "M1_timeout_arm_cut": "the per-call budget becomes a constant default (kwarg still passed), so a red must come from the assertion on the two different timeouts",
+   "M2_detail_arm_cut": "the non-2xx branch reverts to a bare response.raise_for_status()"
+  },
+  "readings": {
+   "M0_control": {
+    "exit": 0,
+    "passed": 8,
+    "failed": 0,
+    "collect_errors": 0,
+    "failed_tests": [],
+    "assertion_errors": 0,
+    "type_errors": 0
+   },
+   "M1_timeout_arm_cut": {
+    "exit": 1,
+    "passed": 7,
+    "failed": 1,
+    "collect_errors": 0,
+    "failed_tests": [
+     "test_request_replan_gets_backend_generation_timeout_budget"
+    ],
+    "assertion_errors": 1,
+    "type_errors": 0
+   },
+   "M2_detail_arm_cut": {
+    "exit": 1,
+    "passed": 7,
+    "failed": 1,
+    "collect_errors": 0,
+    "failed_tests": [
+     "test_agent_client_preserves_server_owned_error_detail"
+    ],
+    "assertion_errors": 0,
+    "type_errors": 0
+   }
+  },
+  "checks": {
+   "M0_suite_all_green": true,
+   "M1_timeout_test_red_by_assertion": true,
+   "M1_detail_test_still_green": true,
+   "M2_detail_test_red_by_assertion": true,
+   "M2_timeout_test_still_green": true,
+   "arms_are_independently_witnessed": true,
+   "no_throwaway_dirs_left": true
+  },
+  "derived_ok": true,
+  "verdict": "ORD0334_BOTH_ARMS_SEPARATELY_RED",
+  "assertions_edited": 0,
+  "repo_writes": 0
+ },
+ "deferred_next": {
+  "file": "agent-mcp/citynexus_mcp/server.py",
+  "why_deferred": "it carries the tool-description steering, the RequestId boundary validation, the proposal_views contract and _agent_id(); the last one changes which principal the HTTP layer sees, and backend/app/agent/runtime_identity.py is dirty in another lane right now, so it needs its own order with boundary evidence rather than a mixed second arm in this one",
+  "order_rule_respected": "the order said not to take three at once; this lane took exactly one"
+ },
+ "checks": {
+  "table_covers_every_scoped_path": true,
+  "exactly_one_product_increment_ported": true,
+  "no_other_lanes_files_touched": true,
+  "client_blob_equals_hermes": true,
+  "server_deadline_numbers_measured": true,
+  "mcp_suite_went_6_to_8": true,
+  "both_arms_independently_red": true,
+  "backend_gate_unchanged_vs_tip": true,
+  "candidate_pushed_and_read_back": true,
+  "candidate_parent_is_the_tip_read_at_cut_time": true,
+  "candidate_merges_onto_live_tip_without_conflict": true,
+  "no_throwaway_left": true
+ },
+ "verdict": "ORD0334_TABLE_BUILT_ONE_INCREMENT_PORTED_BOTH_ARMS_WITNESSED",
+ "verdict_derivation": "checks compares the table rows to the git diff itself, the two configured deadline numbers read out of the tip, the gate receipts and the arm-cut readings; nothing here is a written token",
+ "discipline": {
+  "authoritative_branch_moved": 0,
+  "refs_pushed_by_lane": 1,
+  "pushed_refs": [
+   "refs/heads/agent/S2-ord0334-mcp-client-budget-candidates"
+  ],
+  "other_lane_files_touched": 0,
+  "demo_reset": 0,
+  "credentials_printed": 0,
+  "model_calls_made": 0,
+  "live_or_preview_db_touched": 0,
+  "junctions_created": 0,
+  "assertions_edited_to_get_green": 0,
+  "ledger_written_by_lane": 0
+ },
+ "claim_kind": "git_and_pytest_and_config_determined",
+ "derived_result": null,
+ "derived_result_policy": "left null by the order - sign-off belongs to the verifier"
+}
