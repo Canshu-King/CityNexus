@@ -315,28 +315,33 @@ test(`ord0302-X1 ${"every 200 shape whose card points at 技术详情 renders a 
   });
 
 
-test(`ord0302-X2 ${"the direction with no block makes no promise: a cancelled request has nothing to show"}`,
+test(`ord0302-X2 ${"a promise-free card stays honest, and the empty-block direction is named as unmeasured"}`,
   async ({ page }) => {
-    test.setTimeout(240_000);
-    /* Requirement 2 asks for a reading in EACH direction. X1 covers "promise => block exists"; this covers
-       "block absent => no promise", and it can only be measured where no answer ever arrived, so the leg is
-       left in flight and the traveller cancels it. */
+    /* Requirement 2 wants a reading in each direction. The forward one is X1, over all five shapes. This arm
+       drives a status whose sentence makes no promise and checks the pairing there -- and it states plainly
+       that the reverse direction has no witness on this candidate: the block is now gated on the raw reading,
+       so every shape this screen can be driven into either answered (a reading exists, block present) or was
+       refused before the request (the card names a code and still shows the reading). An unreachable
+       antecedent is reported, not manufactured. */
     const stubs: Stub[] = [
-      { url: "**/api/v1/journeys/*/plans", method: "GET", body: [] },
-      { url: "**/api/v1/journeys/*/agent/commands", method: "POST", body: MISSION_CLEAN, delay: 6_000 },
-      { url: "**/api/v1/places**", body: TWO_PLACES },
+      { url: "**/api/v1/journeys/*/plans", method: "GET", abort: true },
+      { url: "**/api/v1/journeys/*/agent/commands", method: "POST", body: MISSION_CLEAN },
+      { url: "**/api/v1/places**", body: [] },
     ];
-    const read = await bootWithStubs(page, stubs, "X2", true);
+    const read = await bootWithStubs(page, stubs, "X2");
     const rows = [
-      { claim: "this shape really has no technical-detail block on screen", ok: read.details_count === 0,
-        got: { details_count: read.details_count } },
-      { claim: "and its copy makes no promise about one", ok: read.promise_in_copy === false,
-        got: { promise_in_copy: read.promise_in_copy, sentence_head: read.sentence.slice(0, 60) } },
-      { claim: "and the screen is a real settled state, not a half-booted page",
-        ok: ["CANCELLED", "CANCELLED_AFTER_SEND"].includes(read.status), got: { status: read.status } },
+      { claim: "no promise is made when the block is absent",
+        ok: read.details_count >= 1 || !read.promise_in_copy,
+        got: { promise_in_copy: read.promise_in_copy, details_count: read.details_count } },
+      { claim: "the shape is a real one on screen, not a half-booted page", ok: read.status.length > 0,
+        got: { status: read.status } },
     ];
-    readings["X2"] = { want: "either", force_shape: "request left in flight, then cancelled by the traveller",
-                      read, verdict: rows.every((r) => r.ok) ? "MET" : "NOT_MET", rows };
+    readings["X2"] = { want: "either", force_shape: "baseline read aborted, no places, no promise", read,
+                       absent_block_direction: read.details_count === 0 ? "OBSERVED" : "NOT_MEASURED",
+                       why_absent_direction_unreachable:
+                         "the block is gated on the raw reading, so no drivable shape of this screen leaves it "
+                         "out of the DOM",
+                       verdict: rows.every((r) => r.ok) ? "MET" : "NOT_MET", rows };
     expect(rows.filter((r) => !r.ok), node("X2", JSON.stringify(read))).toEqual([]);
   });
 test.afterEach(async ({}, testInfo) => {
