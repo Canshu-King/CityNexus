@@ -1,0 +1,16 @@
+kind	path
+line_moved_since_fork	backend/app/main.py
+line_moved_since_fork	backend/app/security/credential_literals.py
+line_moved_since_fork	backend/tests/test_qoder_ord0307_credential_gate.py
+line_moved_since_fork	frontend/e2e/qoder-ord0281-keyed-write-deadline.spec.ts
+line_moved_since_fork	frontend/src/features/execution/LiveRecovery.tsx
+line_moved_since_fork	frontend/src/features/recovery/V14RecoveryTruthPanel.tsx
+line_moved_since_fork	frontend/src/lib/readDeadline.ts
+line_moved_since_fork	frontend/src/lib/writeDeadline.ts
+my_candidate_moves_since_fork	backend/tests/test_qoder_ord0310_keyless_leg_receipts.py
+my_candidate_moves_since_fork	frontend/e2e/qoder-ord0310-keyless-write-deadline.spec.ts
+my_candidate_moves_since_fork	frontend/src/features/planning/PlanWithAiSheet.tsx
+my_candidate_moves_since_fork	frontend/src/lib/keylessWriteDeadline.ts
+my_candidate_moves_since_fork	review/ord0310_kill_arms.py
+my_candidate_moves_since_fork	review/ord0310_make_receipt.py
+intersection	NONE
