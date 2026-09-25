@@ -1,0 +1,136 @@
+{
+ "file": "e2e/qoder-ord0310-keyless-write-deadline.spec.ts",
+ "runId": "run340266",
+ "deadline_constant_ms": 7000,
+ "arms": {
+  "K1": {
+   "elapsed_ms": 7580,
+   "post_count": 1,
+   "deadline_constant_ms": 7000,
+   "read": {
+    "status": "UNKNOWN_KEYLESS_WRITE_DEADLINE",
+    "collapsed_text": "这一笔的结果未知（不是没发生） 这台设备停止等待了，而请求已经发出去，服务器那边可能还在做。这条路线不收幂等键，所以这一笔既没有可回读的凭条，也不能靠同一把键补问。先刷新核对结果，不要重复提交。 技术详情",
+    "card_text": "这一笔的结果未知（不是没发生） 这台设备停止等待了，而请求已经发出去，服务器那边可能还在做。这条路线不收幂等键，所以这一笔既没有可回读的凭条，也不能靠同一把键补问。先刷新核对结果，不要重复提交。 技术详情 这台设备自己的读数（服务器没给句子） POST /api/v1/journeys/e342a3bc-e38e-4cee-bbfb-796e61a35bcb/agent/commands -- 这台设备等到 7 秒就停下来了。这一笔的结果未知，不是没发生：请求已经发出去了，服务器可能还在做。也不能靠同一把键补问：这条路线不认幂等键，它没有收下这把键，没有可回读的凭条。",
+    "detail_block_attached": true,
+    "label": "这台设备自己的读数（服务器没给句子）",
+    "origin": "device",
+    "reason": "POST /api/v1/journeys/e342a3bc-e38e-4cee-bbfb-796e61a35bcb/agent/commands -- 这台设备等到 7 秒就停下来了。这一笔的结果未知，不是没发生：请求已经发出去了，服务器可能还在做。也不能靠同一把键补问：这条路线不认幂等键，它没有收下这把键，没有可回读的凭条。"
+   },
+   "verdict": "MET",
+   "rows": [
+    {
+     "claim": "这一支停在具名的 UNKNOWN_*，不是 NETWORK / CANCELLED",
+     "ok": true,
+     "got": "UNKNOWN_KEYLESS_WRITE_DEADLINE"
+    },
+    {
+     "claim": "句子里有「结果未知」",
+     "ok": true,
+     "got": "这一笔的结果未知（不是没发生） 这台设备停止等待了，而请求已经发出去，服务器那边可能还在做。这条路线不收幂等键，所以这一笔既没有可回读的凭条，也不能靠同一把键补"
+    },
+    {
+     "claim": "句子里明说这不是「没发生」（未知 ≠ 没发生）",
+     "ok": true,
+     "got": "这一笔的结果未知（不是没发生） 这台设备停止等待了，而请求已经发出去，服务器那边可能还在做。这条路线不收幂等键，所以这一笔既没有可回读的凭条，也不能靠同一把键补"
+    },
+    {
+     "claim": "句子里明说这一笔不能靠同一把键补问（整句，不是提到键就算）",
+     "ok": true,
+     "got": "这一笔的结果未知（不是没发生） 这台设备停止等待了，而请求已经发出去，服务器那边可能还在做。这条路线不收幂等键，所以这一笔既没有可回读的凭条，也不能靠同一把键补问。先刷新核对结果，不要重复提交。 技术详情 这台设备自己的读数（服务器没给句子） POST /api/v1/journeys/e342a3bc-e38e-4c"
+    },
+    {
+     "claim": "屏幕上那个秒数 == 常数换算（同一个来源）",
+     "ok": true,
+     "got": {
+      "secondsShown": "7",
+      "constant": 7
+     }
+    },
+    {
+     "claim": "实际等待时长与同一个常数一致（既没提前也没有不触发）",
+     "ok": true,
+     "got": 7580
+    },
+    {
+     "claim": "归因标签说的是这台设备，不是「服务器给出的原因」",
+     "ok": true,
+     "got": {
+      "label": "这台设备自己的读数（服务器没给句子）",
+      "origin": "device"
+     }
+    },
+    {
+     "claim": "技术详情块仍在（不是靠藏起来避免说谎）",
+     "ok": true,
+     "got": true
+    },
+    {
+     "claim": "四种被禁止的说法一个都没出现",
+     "ok": true,
+     "got": []
+    },
+    {
+     "claim": "客户端没有自动补发第二发",
+     "ok": true,
+     "got": 1
+    }
+   ]
+  },
+  "K2": {
+   "elapsed_ms": 130,
+   "post_count": 1,
+   "read": {
+    "status": "HTTP_500",
+    "collapsed_text": "服务端处理失败 这次是服务端出错，不是你的需求有问题。行程未被改动，可稍后重试；反复出现请保留“技术详情”。 技术详情",
+    "card_text": "服务端处理失败 这次是服务端出错，不是你的需求有问题。行程未被改动，可稍后重试；反复出现请保留“技术详情”。 技术详情 服务器给出的原因 这一趟的模型通道没开，没排出方案。",
+    "detail_block_attached": true,
+    "label": "服务器给出的原因",
+    "origin": "server",
+    "reason": "这一趟的模型通道没开，没排出方案。"
+   },
+   "verdict": "MET",
+   "rows": [
+    {
+     "claim": "服务器按时答完时，这一支不被读成未知",
+     "ok": true,
+     "got": "HTTP_500"
+    },
+    {
+     "claim": "也没被读成网络问题",
+     "ok": true,
+     "got": "HTTP_500"
+    },
+    {
+     "claim": "没有「结果未知」那句话",
+     "ok": true,
+     "got": "服务端处理失败 这次是服务端出错，不是你的需求有问题。行程未被改动，可稍后重试；反复出现请保留“技术详情”。 技术详情 服务器给出的原因 这一趟的模型通道没开，"
+    }
+   ]
+  },
+  "K3": {
+   "post_count": 1,
+   "read": {
+    "status": "CANCELLED_AFTER_SEND",
+    "collapsed_text": "已中止后续核对 请求本身已经发出去了，可能已经生成方案。请先刷新确认，不要重复提交。",
+    "card_text": "已中止后续核对 请求本身已经发出去了，可能已经生成方案。请先刷新确认，不要重复提交。",
+    "detail_block_attached": false,
+    "label": "",
+    "origin": "",
+    "reason": ""
+   },
+   "verdict": "MET",
+   "rows": [
+    {
+     "claim": "旅行者自己按的取消仍是取消，不是期限",
+     "ok": true,
+     "got": "CANCELLED_AFTER_SEND"
+    },
+    {
+     "claim": "取消那一格没有被 UNKNOWN_* 顶替",
+     "ok": true,
+     "got": "CANCELLED_AFTER_SEND"
+    }
+   ]
+  }
+ }
+}
