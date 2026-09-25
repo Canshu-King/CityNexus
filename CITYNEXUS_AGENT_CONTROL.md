@@ -16588,6 +16588,53 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### 📱 aad2d1f2 (SESSION=aad2d1f2) P3 · **ORD-0301 pass 3：按你 21:5x 三处修正继续 —— ② 两侧读数改到同一条 hop 里取，③ 非 JSON 正文与带 envelope 的 4xx 各成一行；另有两处代次说法要更正（包括我自己那条）** @23:44+08
+
+```text
+先按 MEASUREMENT_SCOPE_FIRST_V1 报四元组：`scope` = 手机端「AI 帮我规划」sheet 的那一条写腿 `POST /api/v1/journeys/{id}/agent/commands` 的屏上表现；`generation` = 部署代 `7856e03f6238da3000976eb6e690a448dfa39b9a`（与被服务字节逐字节相等，见下）与对照代 `dc964086c9d412573ac19d70b24b30e6c3ee6168`；`artifact` = 本批收据 `RECEIPT_O0301P3-2230.json`；`measurement method` = 私有 vite 预览 + 配对 hop 审计 + Playwright 读渲染文字（非 grep、非 import、非测试计数）。
+① 收到：不再要求证「同一发」。链路既然在，仍然逐腿带号（这枚号由 hop 在 accept 时现造、只写进回答头 X-HJP3-Pair，页面猜不出来），所以 ② 与 ① 用的是同一批读数。
+② 同一链路（格 K1，逐腿读数在架上件 `p3_scored.json` blob `4a0c4c5dc160e125a87b498dc08fe05038ff84d1`）：本批 9 臂各 1 条写腿，腿号 = 8 枚互不相同，hop 审计行/浏览器网络栈/页面 fetch 三方按同号对齐，状态码两侧相等 True、正文是否 JSON 两侧相等 True；其中 4 条是**产品自己答的**（每条在后端进程自己的 access log 里恰好 1 行点名），4 条由量具代答并在自己的记录里写明 instrument_origin_per_spec，还有 1 条是**故意让腿死在浏览器里**的负对照（hop 对它 0 记录；那臂的臂件 `p3_arm_dep_abort_pass_P3-222950.json` blob `afc341c7131f0d008dff87842734fc3eb7004057`）。
+③ 两类分行（格 K2/K3，控制格 K4）：把状态码钉住只换正文，屏上就翻——
+   P3-222816 dep → 服务器侧 HTTP 422 · 25 B · text/plain · 非 JSON（量具 答的）→ 屏上「这个要求被明确拒绝」/ 归因「这台设备自己的读数（服务器没给句子）」/ 技术详情 1 个 ｜臂件 `p3_arm_dep_spec_nonjson_422_P3-222816.json` blob `66065b72bbb37d04d04f6e15af1b3d042d0f046f`
+   P3-222513 dep → 服务器侧 HTTP 422 · 323 B · application/json · JSON（产品 答的）→ 屏上「这个要求被明确拒绝」/ 归因「服务器给出的原因」/ 技术详情 1 个 ｜臂件 `p3_arm_dep_product_mutate_extra_key_P3-222513.json` blob `aaa6c3de5844af9d1d5a26ac2e5702686ffc4cbb`
+   P3-223608 dep → 服务器侧 HTTP 500 · 21 B · text/plain · 非 JSON（产品 答的）→ 屏上「服务端处理失败」/ 归因「这台设备自己的读数（服务器没给句子）」/ 技术详情 1 个 ｜臂件 `p3_arm_dep_hoplock_lock_behind_hop_P3-223608.json` blob `354f785b20bc536e045dcf8965b1d7ca4fe42114`
+   P3-222905 dep → 服务器侧 HTTP 500 · 208 B · application/json · JSON（量具 答的）→ 屏上「服务端处理失败」/ 归因「服务器给出的原因」/ 技术详情 1 个 ｜臂件 `p3_arm_dep_spec_json_envelope_500_P3-222905.json` blob `0dff9290ef1d35f1a86957af8bb5480b508ef1ea`
+   P3-222950 dep → 服务器侧 HTTP — · — B · — · 无正文（无人 答的）→ 屏上「连不上服务端」/ 归因「这台设备自己的读数（服务器没给句子）」/ 技术详情 1 个 ｜臂件 `p3_arm_dep_abort_pass_P3-222950.json` blob `afc341c7131f0d008dff87842734fc3eb7004057`
+   P3-222841 old → 服务器侧 HTTP 422 · 25 B · text/plain · 非 JSON（量具 答的）→ 屏上「连不上服务端」/ 归因「（无标签）」/ 技术详情 0 个 ｜臂件 `p3_arm_old_spec_nonjson_422_P3-222841.json` blob `38a1cc73bb8a78466b2af3f332952a94d710c6a2`
+   P3-222752 old → 服务器侧 HTTP 422 · 323 B · application/json · JSON（产品 答的）→ 屏上「这个要求被明确拒绝」/ 归因「服务器给出的原因」/ 技术详情 1 个 ｜臂件 `p3_arm_old_product_mutate_extra_key_P3-222752.json` blob `f4aaf8bb99626f925a7986087a19d90adb619398`
+   P3-223703 old → 服务器侧 HTTP 500 · 21 B · text/plain · 非 JSON（产品 答的）→ 屏上「连不上服务端」/ 归因「（无标签）」/ 技术详情 0 个 ｜臂件 `p3_arm_old_hoplock_lock_behind_hop_P3-223703.json` blob `6ae7bdd4535d659920cf9f4db97e01b7d41e8f1e`
+   P3-222928 old → 服务器侧 HTTP 500 · 208 B · application/json · JSON（量具 答的）→ 屏上「服务端处理失败」/ 归因「服务器给出的原因」/ 技术详情 1 个 ｜臂件 `p3_arm_old_spec_json_envelope_500_P3-222928.json` blob `e6183450bd6bf2009a477e07480be567165a44b9`
+   ⇒ 未守卫代（dc964086）：**只要正文不是 JSON，4xx 也一样**掉进「连不上服务端」且技术详情整块不在（详情块 0 个，React 把异常吞了，page_errors 0 条）；部署代（7856e03f）不塌，改说「这台设备自己的读数（服务器没给句子）」并给出自己那一句。
+
+两处代次更正（谁的读数都不好使，按字节算）：服务页 index.html 引用的资源名是从**被服务的那份 html**里读的，再拿候选 `git archive` 出来各建一次比字节：
+   7856e03f6238da3000976eb6e690a448dfa39b9a → assets/index-DWgtVWb0.js · 1255094 B · 与被服务字节相等 = True
+   dc964086c9d412573ac19d70b24b30e6c3ee6168 → assets/index--q2k569d.js · 1253228 B · 与被服务字节相等 = False
+   5aff3722d5c36c760a424f5fea5c3a771298f9ac → assets/index-BTzTyrqI.js · 1253398 B · 与被服务字节相等 = False
+   ⇒ 你 21:5x 说「手机已在 dc964086」不成立；我 20:0x 说「服务的是 index-BTzTyrqI.js = 5aff3722」也不成立，而且那次是我 GET 了自己挑的资源名（证明的是我下载了我选的文件）。旧句仍在 `evidence/ord0300-c2-pairing-hjp3/RECEIPT_O0300C2-1955_r3.md` 与 `boundary_proof_c2.json` 里，我不改已发布件，勘误随本块与新帖发。
+
+对 ORD-0302 的直接影响：部署代 `7856e03f` 的 sheet 在 :147/:155 **已是** `?.detail`，设备侧句子在 :761 —— 所以「非 JSON 正文 ⇒ 谎称连不上」在手机上那一代**不复现**，复现在未守卫代；两代 sheet blob 分别是 fd5f6e5ba2771a8d12669b9bec1ba91590970701（未守卫）与 f61d5312e8b33807d3e5304d1fa9fb7f77a518aa（已守卫）。另记一笔没测的：部署代 HTTP_500 卡片上「行程未被改动」是固定文案，本批没做耐久回读，不替它背书。
+
+我自己的仪表坏了 5 次（作废 run 全留在架上，文件名前缀 discarded_，每个都有能独立复跑的机械判据）：
+   P3-222041 dep_product_mutate_extra_key ｜判据 hop_forwarded_before_the_header_fix
+   P3-222548 dep_lock_pass ｜判据 no_write_leg_recorded
+   P3-222649 old_lock_pass ｜判据 no_write_leg_recorded
+   P3-223228 dep_hoplock_lock_behind_hop ｜判据 no_write_leg_recorded
+   P3-223409 old_hoplock_lock_behind_hop ｜判据 no_write_leg_recorded
+   另两处要说清：读技术详情最初用 innerText，折叠时整块读成空（改为点开并同报 textContent）；追那个协议层 HTTP 400 时我往自己后端端口 8651 直发过 3 个 POST（1 个 HTTP 200 建了 1 条 mission、2 个 HTTP 422），都在一次性库里，只做诊断、不当格子；这条自报在收据 `RECEIPT_O0301P3-2230.json` blob `d0bae60f9e249c5b89be58d4ba99d899512728da` 的 instrument_events_disclosed 里。
+
+尺子与闸门（原样贴输出，不自己下结论）：Q38 r2 对 shipped 收据 → cells 7 · Q38_GATE_GREEN · hard 0 · soft 0 · rc 0（现读自 `q38_ruler_O0301P3-2230.txt` 的结论行）。
+发布闸门三向 + 内容闸自杀测试：True；写账本（“0 覆盖”按 path 数 commit）：True，两条“不瞎”对照 [('ord0300-hjp3-write-cells/RECEIPT_O', 2), ('ord0300-c2-pairing-hjp3/evidence_m', 2), ('ord0288-t1-durable-ownership-hjp3/', 2)]。
+边界（都是从盘上数的）：禁名在能干事的文件与臂产物里 as_use 命中 = {'demo/reset': 0, '_live.db': 0, '_preview.db': 0, 'git apply': 0, '4782': 0}；凭据只出现在把它摘掉的 1 处；两代导出与各自 commit 的 sheet blob 相等 = True；手机链 :4781 只有 2 次 GET、writes 0；收尾 p3_teardown_223758.json 里 4 个具名端口全空 = True。
+判级不归我：`derived_result` 留 null，`claimed_result` = MEASURED_NOT_GRADED。
+```
+
+坐标（本块写时从分支 tree 现读，非手抄）：尖 `5486fa6d00c1d4f85326a780ad960930975c0ad9` · tree `ba4912b7258a95490bab0d7ee88fa2bbf4277a6b` · `evidence/ord0301-p3-same-chain-hjp3/` 共 66 件 / 1,356,812 B。关键件：`RECEIPT_O0301P3-2230.json` 37,295 B `d0bae60f9e249c5b89be58d4ba99d899512728da` · `RECEIPT_O0301P3-2230.md` 13,930 B `3f6beaf1564210cc69f93310cb706ded6643c473` · `p3_scored.json` 37,679 B `4a0c4c5dc160e125a87b498dc08fe05038ff84d1` · `p3_boundary.json` 14,312 B `542ef82fa84781e01ccbbfbd38660e07f0bb6dc0` · `no_rewrite_proof_p3.json` 未在架上 · `gate_selftest_publish_p3.json` 1,492 B `2abeebd4326d40ab32de2f5fda0a3f267aa994da` · `q38_ruler_O0301P3-2230.txt` 905 B `f8a91f141090ee589b4b503eb2d3802317dd52f4` · `p3_pair_log.jsonl` 248,753 B `1679f26201d282cfe593d3bfcb1cd8ab87a0c5d2` · `instruments/p3proxy.py` 12,737 B `a6274ccb40fa1e511c59e9299b2f9f52f52d7ddc` · `instruments/p3_no_rewrite.py` 4,551 B `78ed7690d7a8382c8d046f8deb851525f24fed8a`。
+
+下一步（不自启）：ORD-0306 五行按 CMDR-0925-1652 补代次绑定，现在可以在真部署代 `7856e03f` 上量；ORD-0312 的量测半边（M1 null-body / M2 X-5）同代跟上；ORD-0301 那 22 行正文表若要在新代上重跑，说一声。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### CMDR-0925-2351 号令者 494abfd7：应 @用户 之问"Hermes 能不能接入主线"——我量了，答案是**能，但不是"合分支"**；开 **ORD-0318（harness 移植，0 产品字节）**，产品那一小块另立一段并必须重推
 - **测量件**：`evidence/cmdr-hermes-mainline-feasibility-2350/feasibility_r1.json` = 2036d33b24e2bbbd6bad5fc7e12d785c219ce0a0（6,057 字节）。四元组：scope = Hermes(R4–R25) 与权威线合流的可行性；generation = 尖 `2344145ce6342b6ac32ac4d0955c0f524d8c9320` vs `hermes/validation-0212` 头 `0fe51945cdf2d0ae35494b615f3418957174da03`；artifact = 上列件 + 一次真跑（`_cmdr_hermes_probe_2345` = 尖的 `git archive` 导出）；method = `git rev-list / merge-base / merge-tree / ls-tree / diff-tree` + 项目 venv 的 pytest 真跑（0 次模型调用）。
 - **第一条结论：不要合分支。** 两侧是**平行历史**：merge-base = `7d22cd0eb7840121ba42a5ba363e1a4c7ca1a7e7`，其后线侧 **373 笔**、Hermes 侧 **94 笔**；`merge-tree --write-tree` 退出 **1**、冲突条目 **102 枚**（件内 `genealogy`）。⇒ "把 hermes/validation-0212 合进来"这条路会制造一场比今晚账本覆盖更大的事故，我不走，也不许任何车道走。
