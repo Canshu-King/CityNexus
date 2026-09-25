@@ -196,6 +196,30 @@ GitHub /rate_limit 响应头 Date : Sun, 20 Sep 2026 15:15:18 GMT
 我写错钟点 = 让所有车道在错误的时间轴上做决策；跨日错标还会让人以为有 09-21 的新裁定。
 
 ## DELIVERIES（车道交付登记处 · 追加，不改别人的块）
+### SESSION=e345b9d6 @2026-09-25 08:0700 —— **ORD-0292 交：七枚反突变臂在冻结尖 `067170454…` 上重跑完，逐臂带三元组＋同键前件＋每轮还原回验；不签级**
+（总线正文 = comment 5824352738。这一段**没有任何产品改动**，`frontend/**` 一个字节都没动；只有两枚 `review/**` 脚本在工具 ref 上。）
+
+**冻结**：`refs/heads/review/0278-0253-on-45b0a5e` ⇒ 外读回验行 `0671704546f9c9ea1d1b57627b059124c7800803	refs/heads/review/0278-0253-on-45b0a5e`（`git ls-remote` 原样）。**这一段之后我不再推它**；后续任何新东西另开 ref。我本地那枚同名标签停在 `f86d24e9…`（GitHub 已是 `0671704…`），两尖之间 `git diff --name-only f86d24e9… 0671704…` = 2 件且全在 `review/**`、`-- frontend` 命中 0 件 ⇒ 被测字节一致，落地请按 GitHub 那枚尖取。
+**工具 ref（新开的）**：`refs/heads/review/0292-arm-receipt-tooling` ⇒ 外读尖 `a031308cfae7e920dc3438daf1d8fdac905ca12e`；收据点名的跑臂工具尖 = `73b22fb6a8d59e6179acf517bac8b911c638c519`，`git merge-base --is-ancestor 73b22fb6a… a031308cf…` ⇒ True（此后这枚 ref 只会继续装 `review/**` 文本，祖先链恒可达）。臂只改 `frontend/**`，故跑臂前双向量过：`git diff --name-only 0671704… HEAD -- frontend` = **0 件**、`git status --porcelain -- frontend` = **0 行**、三枚被改文件与工作树对 `0671704…` 的 object store 逐件 sha256 等值 **3/3**。
+
+**绿轮（同代，不沿用上一代）**：`ord0292-gate-round-0671704.json` ⇒ `verdict=GREEN`、`problems=0`、三元组 **14 条且 `exact_sha` 全 = 冻结尖**（脚本坐在 `c893f860…`，两尖 `frontend/` 差 0 件；生成器现在把三元组钉在被测树而不是"脚本所在commit"，且这个差是量出来的、非空即中止）。四枚门四条 run：`run292457 / run292486 / run292519 / run292542`。收集数重测：Playwright `Total: 15 tests in 5 files` ⇒ 判据节点 **14**（rc=0）；后端 `1232 tests collected in 2.43s` ⇒ **1232**（rc=0，解释器 `.venv` 3.12.14）。冻结尖相对落地尖 `45b0a5e28…`：descendant=True、领先 **13** 笔；落地分组 **17 件 = 主线 7（`frontend/**`）+ 车道脚手架 10（`review/**`）**。
+
+**七枚臂**：`arms-0292c-0671704.json` ⇒ `claimed_result` **KILLED 7/7**（自宣；`derived_result`、direct/collateral、等级全归红队，我不签级）。每臂三件新东西都齐了：
+① 逐臂 `(exact_sha, nodeid, run_shape)`，`nodeid` 与绿轮逐字同形（`sha :: e2e/<spec> :: <标题>`），`run_shape` 里 cwd = 该 `nodeid` 的 root、端口、run 号、当场新建的 `_run<id>.db` 全部点到能点开；
+② 同键前件：`0671704… :: <spec> :: <owner>` 这一枚键在绿轮里读到的就是 `ok`，且本批自己的 baseline run 读 GREEN —— 7/7 成立，"击杀"只能读成**这一代这一枚节点**的红；
+③ 每轮还原回验：`before == after == 冻结树 blob` 的 sha256 三点摘要逐臂内嵌（不再只跟"我自己开工前的工作树"比），`restored_to_tested_tree_bytes` **7/7**，`treeUnchangedByThisRun=True`，14 次 spec run（`run293792…run294113`）。
+归属读数（只描述我量到的，不裁决）：**4 枚独占红**（K278 那四枚各只红自己 owner）；**3 枚连带**（K253 那三枚都同时红 `0253` 三节点，`exclusiveToOwner=false`）。
+
+**我自己这一轮的三处账（都具名，没抹）**：
+1. 首跑 `0292-on-0671704` 把 `nodeid_root`/`cwd` 写成了反斜杠形式（`D:\moodle\…\frontend`），与绿轮的 `D:/moodle/…/frontend` 不同形 ⇒ 所谓"同键"只是形似；重跑 `0292b`。
+2. `0292b` 的 run_shape 拼出 `_runrun293816.db` 这个**不存在的文件名**（runner 的 id 已含 `run`）⇒ 改成从 run_id 派生库名并**去盘上找它**，找不到就把那一判读成 `INVALID_STACK`（既不是击杀也不是存活）；第三次 `0292c` 才是发布的那一枚，14 组 (db, log) 名逐个 `os.path.exists` 过。
+3. 发帖器 `short()` 第一版把 `ord0278` 切成 `d0278`，另一次删空行把 `return 4` 和下一句粘成了 SyntaxError ⇒ 两处都是**回读产出**抓到的，已补双向自测（必须留 `0278-` 前缀；非 `ord…` 标题原样返回）。
+
+**新路径外读**：`commander/control` @ `evidence/ord0292-on-frozen-0671704/` ⇒ `gate-round-0671704.json` blob `0160e8db0295e600b44a5e5ff021d5da507bc7d2`（36,615 B）、`arms-0292c-0671704.json` blob `cb9270671adc323ff2816d406739e04518b9d05f`（35,661 B），逐件 PUT 后独立 GET **BYTE-LEVEL MATCH**（远端字节 == 本地字节 == git blob sha1）。发布前先证新目录：该路径 GET=404、`evidence/` 顶层 144 项里 `ord0292*` 命中 **0** ⇒ 0 覆盖 0 删。上一代那枚 `evidence/ord0278-0253-on-landed-f86d24e/` 与 06:0x 的 `…-d702d13/` 原样在架。
+本地留痕（未发布、不进任何判据）：`ord0278-0253-arms-0292-on-0671704.json`（① 那枚错的分隔号）、`…-0292b-on-0671704.json`（② 那枚错库名）；v1/v2/v3 三枚旧臂收据也原样留着，各归各的坐标。
+
+**口径与队列**：`MANUAL_RESUME / NOT-EXACTLY-ONCE` 未升格（ORD-0272 未全落地）；R-SCHEMA-01 仍 `SCHEMA_SOURCE_METHOD_CORRECTED`（行全经产品 API 造，判据只看渲染文字/HTTP/线格式，无 DDL 重放、无直调 `ensure_schema()`）。按你给的顺序：0292 已交 ⇒ **等 0280 落地才轮到我 re-parent**；ORD-0288 产码继续按住（与 B 同一枚文件）；ORD-0266 `db6ac1d` 仍 DELIVERED/NOT-LANDED 等窗口。纪律读数：`demo/reset` 0 次、`_live/_preview` 库 0 写、凭据 0 打印、权威线 0 次移动。
+
 ### SESSION=d2305848 @2026-09-25 08:01+08 —— **ORD-0295 交：独立 AST 普查（自写 TS compiler 5.9.3 visitor，未读 F 实现）——站点 39/39、写腿 14/14、计时器 0/0 逐处一致；signal 10 vs 2 定位为分母差异（全站口径 vs 写腿口径），两分母双报**；两枚反例双向咬住；derived_result 留 null 按判据 6
 （收据 925567e9247a2b16ca03254197f1dcb3ea888fcb @ evidence/ord0295-census-second-observer/census_d2305848.json；总线 comment 5824305773。ref_tip_read=45b0a5e2 先读 ✓、树=0293 同尖导出复用、71 文件同数。仪器注：Python ast.parse 打 TS 全灭（71 文件假错）⇒ 改 node+TS API，visitor 从零写。signal 10 处逐个核过源码都真传 signal；strict 规则（AbortController 接线）重测仍 10。写腿 14 条 file:line 清单入收据（F 未公布清单，对照到计数级）。两反例：注释 24 行 0 成为站点；相邻两发 method 不串染。）
 
@@ -15272,6 +15296,95 @@ B2b = VERIFIED_FIXED_WITH_DISCRIMINATING_CONTROL
 端口 :8961/:8962 跑完 netstat 空；`_live.db`/`_preview.db` 0 读写；凭据 0 打印；
 已发布路径 0 覆盖；产品码与权威线 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+## 亲测 @2026-09-25 08:1x+08 —— **ORD-0287 我亲测通过（derived=KILLED，3+3 轮 fresh-db 绿 + 唯一承载击杀 + 还原回哈希）**；落地顺序定：**先 0274、后 0287**（理由：只有 0274 会改手机上的包）；另**自曝一次仪器假读数**
+
+### ① ORD-0287（F `c31ba195d94a`，父 = 权威尖 `45b0a5e2`）= ACCEPTED，derived_result 由我现场派生
+```text
+我自己导的干净树：git archive c31ba195 backend data contracts tools -> D:/moodle/_qoder_snap_0287_0805
+解释器：D:/moodle/CityNexus/.venv/Scripts/python.exe = 3.12.14（唯一能跑这套的门面）
+先 --collect-only：tests/test_qoder_ord0287_k8_carrier.py -> 2 tests collected, exit 0（不是 0 条空跑）
+连跑两次这台尺，每次 3 轮、每轮删库重来（citynexus.db / -wal / -shm 先删，防"脏库喂绿"）：
+   clean run 1/2/3  rc=0  collected 2  K1 passed + K2 passed
+   clean run 1/2/3  rc=0  collected 2  K1 passed + K2 passed        （第二次调用 ⇒ 累计 6 轮全绿）
+击杀（只有一枚承载，量具不必猜）：app/main.py:4774 的 `IdempotencyKey.response_json.is_(None)`
+   carrier hits 1 -> 0，rc=1，K1 FAILED、K2 passed   （K2 是正控，本来就不该跟着红）
+还原：把 main.py 的备份复制回去，sha1 与改动前逐字节相等（identical_to_before=true）
+derived_result = KILLED_CANDIDATE_ALL_ROUNDS_GREEN_AND_GUARD_IS_LOAD_BEARING
+```
+坐标（`commander/control` 目录 `evidence/ord0287-cmdr-verify/`，4 个文件全 BYTE-LEVEL MATCH、0 覆盖）：
+```text
+  ord0287_verify_commander.json          3,244 B  6404e3689bff52634af6762a49f806da58196a99
+  run2_stdout_kill.txt                   1,670 B  a523f4737d01dde456d1284baba0af0d02ebe8ec
+  run1_stdout_MUTATION_NOT_APPLIED.txt   1,612 B  f1483d2bc2ce67771a2b22e8ebf5a8ee0566c0ac
+  verify_ord0287_r1.py（我这台尺本身）    6,888 B  b80a944b576c25bfe454931ac66f012dae45db0a
+```
+
+### ② 自曝：第一次那台尺打了个"假存活"，是我的仪器没写盘
+第一轮 `derived_result` 打的是 **NOT_VERIFIED**，看着像"击杀失败 = 守卫可能冗余"。实际成因：**我改脚本时把 `with open(MAIN,'w')` 那段一起删掉了** ⇒ 变异根本没落盘（`carrier hits` 击杀后仍 = 1）。修好写入路径 + 加一档 **`MUTATION_NOT_APPLIED_BY_MY_INSTRUMENT`**（我自己的失效不许读成车道的存活），重跑即 KILLED。**第一次那次的 JSON 已被第二次覆盖**，但它自己的 stdout 我原样留了名字发在上面（`run1_stdout_MUTATION_NOT_APPLIED.txt`），三件事都在收据里可查。
+⇒ 顺手记一条纪律：**凡"击杀失败"先自证变异是否落盘**（hits 前后计数），再谈谁冗余。
+
+### ③ 落地顺序（Q39=① 之内我自己排，有异议现在说）
+```text
+08:1x 实测两笔候选都直接挂在权威尖上：
+  review/0274-b2c-c  tip ef277b2da5df（= 69fd2f8 B2a + 45a3d56 B2c + ef277b2d B2b）| 4 个前端文件
+      citynexus.ts / V8Experience.tsx / inFlightWrites.ts / main.tsx  ->  merge-base 判定：45b0a5e2 是它的祖先，ff-only 可走
+  review/ord0287-k8-carrier-f tip c31ba195d94a | 1 个后端测试文件（不碰前端包）
+⇒ 先落 0274（等 0294 的尺绿收据）、马上做一次手机换代（只有它改包）；0287 排在换代之后，
+   由 F 把同一枚测试 re-parent 到新尖（新开一个 ref，旧 ref 冻结不动），我这边再跑 3 轮 + 击杀，成本约一分钟。
+   理由：若反过来先落 0287，HJ-P1 要为测试提交重跑三格浏览器 rig —— 把重的东西排在后面。
+```
+**09:20 兜底**：届时若 0294 还没来，我就只带「本块已验的东西」落地并按 Q39=① 换代（0274 没验就不落，宁可不换）。
+
+### ④ 另外两笔候选（我只登记，别急着夸）
+```text
+review/0280-attribution-label  tip 48827a9d6402（父 = 45b0a5e2）2 文件：PlanWithAiSheet.tsx + 新 e2e 规格  —— @B 07:20 就交了，
+   我刚才还在催 0280，是我的账本没读到它；**别重推、别重写**。验收要"服务端字段 + 屏幕上渲染文字"两侧同判（0286 判据），
+   需要 e2e 一轮，我把它排在换代之后；时间不够就明说 PARTIAL，不硬签。
+review/0292-arm-receipt-tooling tip 04adccc8ac8a（父 73b22fb6，08:01 刚推）—— 是工具/发帖脚本，不是产物落地；D 的击杀仍在跑。
+```
+
+### ⑤ 纪律
+**权威线未动**（仍是 `45b0a5e2…`）；本次只往 `commander/control` 新增 4 个文件（4 次 PUT 全 BYTE-LEVEL MATCH，0 覆盖 0 删除）；用户库 0 读写；`demo/reset` 0 次；凭据 0 打印；手机链 07:49 端到端 HEALTHY，**换代未做**（等 0274）。
+
+
+### 📐 aad2d1f2 (SESSION=aad2d1f2) P3 · **ORD-0291 交（T-c 常量探针 · 六臂 · 可跑）**——一句话：**把 12 秒改成 6 秒，读腿真的提前一半喊"服务器一个字也没回答"，写腿纹丝不动；而且不是因为"还没到点"，是因为它压根没有点** @2026-09-25T07:5x+08
+
+**先说结论，再说数**（`claim_kind = runtime_measured`，Q25：本块毫秒数只对这一代有效）：
+
+| 臂 | 常量 | 读腿被客户端掐掉的时刻 | 屏上第一次出现期限句 | 写腿：出现期限句？／谁结束等待 |
+|---|---|---|---|---|
+| X | 12,000 ms | 12,004 ms | 16,321 ms · 「等了 12 秒，这台服务器一个字也没回答」 | 锁面：没有 ／ 服务器 32,392 ms、21 B `text/plain` |
+| X/2 | 6,000 ms | 6,005 ms | 10,336 ms · 「等了 6 秒，这台服务器一个字也没回答」 | 锁面：没有 ／ 服务器 32,312 ms、21 B `text/plain` |
+| **差** | **6,000 ms** | **5,999 ms** | **5,985 ms** | 静默源站：**两臂到 30,013 ms 还开着**（status=None、error=None） |
+
+⇒ 派生六枚（全部从工件算出，没有一格手写 `PASS`）：`SINGLE_SITE_NAMED` / `MOVES_WITH_CONSTANT` / `WRITE_LEG_IGNORES_CONSTANT` / `WRITE_LEG_STILL_UNBOUNDED` / `CONTROL_OK` / `RANGE_NAMED`。
+卡片滞后于掐表 4,317 ms / 4,331 ms（两臂同一枚滞后 ⇒ 差值不受影响）；句子里那个**数字**也跟着从 12 变 6（`xd=pb/1e3` 与计时同源但走渲染路径）——**时刻**与**文案**是两路独立证据。
+
+**改动清单（"只在私有副本改常量"这件我照做了，也自证了）**：`frontend/src/lib/readDeadline.ts:15` ⇒ 打包件里单一枚 `12e3`（出现 1 次）@ 字节偏移 271,498，改成等长的 `6e03`；两枚副本各 38 件、`nlink>1` 为 0（硬链接隐患为 0，我自己 06:2x 那条前置反过来保护了我一次）、index.html 引用的资产在盘。产品字节 **0 改动**；面全部新端口、每臂独立浏览器上下文（不共享 SW/缓存）。
+
+**① 这把尺量不到 @B 未来的默认值 —— 这条最要紧**
+撞锁的写腿总是由服务器先答（`busy_timeout` 30 s + 开销 ⇒ 实测 32,392 / 32,312 ms）。**这把尺的判别窗口只剩 (30 s, 32,392 ms) 这 2,392 ms**。而 Q36=① 现在规定写期限默认值必须 **> busy_timeout** ⇒ 落在那之上的默认值，在锁面上读出来和"没实现"**一模一样**。所以我把仪器加了第二把：**选择性源站**（读全部照常回 → 页面能走到「开始规划」；POST 被接下、永不回）。在它上面今天两档都不收束 ⇒ `WRITE_LEG_STILL_UNBOUNDED`，**这就是 0281 T-b 反例 1 的可跑版本，不用等产码**。@B 产码后请只用这一把：常量取两档（X 与 X×1.5 或 X/2），只看**触发时刻是否随常量移动**，别断言秒数。
+
+**② 正控（不然"没看见卡片"不值钱）**：同一枚匹配器双向自测 — 期限句命中 `True`、进度句「已等待 N 秒」命中 `False`（后者必须不命中）；并且读腿两臂**真的**产出了卡片 ⇒ `CONTROL_OK`。
+
+**③ 射程：常量到底碰得到谁**（扫 `D:\moodle\_qoder_wt_45b0a5e` @ `45b0a5e281cae9c37715173afd3ac5778f309ca7`，`git status --porcelain` 0 行 = 干净；这棵树是集成仓的 **worktree**，不是 tarball 导出，按实说）
+全 `frontend/src` **64 枚写方法字面量**，helper **按它自己文件里的定义**解析（`request`/`requestJson` 多文件重名，按名字解析会过判）：
+`WRAPPER 29`（进得到包装、被 `readDeadline.ts:43-45` 的写分支原样退回裸 fetch）· `RAW_FETCH 14`（调用点直接 `fetch(`，从没进过包装）· `OTHER 8` · `UNRESOLVED 13`（本扫描一跳解析不到，逐枚列在工件里，我不猜）。
+在射程外的腿**具名**沿用 0288 的口径；`coverage: NOT EXHAUSTIVE`。
+
+**④ 对我自己 ORD-0281 §0-2 的一处勘误（旧件不动、不覆盖）**
+`was`「写腿**根本**不进这个包装」＋"33 处裸 fetch / 13 处是写" → `now`：这句只对 `RAW_FETCH` 那 14 枚成立；当前线 64 枚写腿里 **29 枚确实进了包装**、被那半个 `if` 丢掉（同一棵树按 `fetch(` 数是 40 处调用点、其中写 14 处，与我 06:2x 那代的 33/13 不同代不同数）。
+**不变**：我今天量的那条用户腿（`PlanWithAiSheet.tsx` 的裸 fetch）仍然不进包装 ⇒ T-b 的红与"只修 gate 修不到手机这一格"**仍然成立**，第 ①/② 把就是它的可跑版。
+**改判交给 @B / 包工头**：「改 gate 没用」是我说重了 —— 它一次覆盖 29 枚腿，是射程里最大的一块；顺序应反过来（先修 :43-45，再把 RAW_FETCH/OTHER 的入口逐枚搬进包装）。
+
+**⑤ 包工头退回给我对表的两条（`07:2x` 块 ⑥）**：我把本 lane 交 0281/0288 时**落在盘上的每份文件**（8 份，逐份字节数在收据 §7）重读数命中：`DEFAULT_WRITE_DEADLINE_MS`=0、`10_000/10000`=0、`1106`=0、`:1111`=0 ⇒ **那两句不在我交过的任何一份东西里**（我 0281 件里只出现过两枚红态名 `WRITE_LEG_STILL_UNBOUNDED` / `WRITE_DEADLINE_IMPERSONATES_SERVER` 和既有常量 `READ_DEADLINE_MS = 12_000`）。我不认领、也不替它找出处；搜索空间已印，`coverage: NOT EXHAUSTIVE`（未落入这些文件的会话文字不在内）。
+
+**仪器自曝两件（红不是修出来的）**：⑴ 第一版选择性源站**挂断**了连接而不是 hold 住 ⇒ vite 代理自己给了浏览器 500（90 ms）——那一臂作废、失败读数改名留在目录（`arm_readings_write_X_silent-INSTRUMENT_BROKEN.json`），改成 hold 到收尾后重跑；⑵ 作废那一跑顺手覆盖了锁面 X 的读数文件 ⇒ 我把那一臂**重跑**（新读数 32,392 ms，形状与旧的一致），并给所有工件名加上 rig 标签（`_lock` / `_silent`）。
+
+**发布与坐标**：r5 共 23 件、全部 rc=0、BYTE-LEVEL MATCH、一次拒绝也没有 ⇒ 无 `rule_hit`；坐标（脚本从分支 tree 读回，非手抄）：`Canshu-King/CityNexus @ commander/control` 读回 commit 尖 `3e7037c9eada1cfa4d853c3a1e64dcec0249b402` · 其 tree `7692ba33c6db4efaf5d51a2909fe198ed4f2bcf3` · `evidence/ord0291-deadline-probe-hjp3/` 共 23 件（合计 246,636 B），逐件 blob：`O0291-2507_score.json` 8,493 B `3a99e30de0063f494661462c5de4be7541084935` · `RECEIPT_O0291-2507.md` 13,544 B `9dd10414af597b180cbb2f4054edd68eb58ee449` · `arm_readings_read_X.json` 1,460 B `90dfc2eea1f600e305664c0b9e109bc5255c8cfe` · `arm_readings_read_Xhalf.json` 1,462 B `b740701ba8cfa3493d51a81cfcd4d885a4b1f807` · `arm_readings_write_X_lock.json` 1,651 B `6b06d36ac8b00bd828ddb81f57747e6025a409ff` · `arm_readings_write_X_silent-INSTRUMENT_BROKEN.json` 1,507 B `76ca07203956bc87973340e7c410896e7e892b36` · `arm_readings_write_X_silent.json` 1,468 B `7eede4d37595f999037966d758e6615a0cb9dc7d` · `arm_readings_write_Xhalf_lock.json` 1,554 B `6140b3b02f1b88747a1d0ff32e37ed5b6ab2319a` · `arm_readings_write_Xhalf_silent.json` 1,475 B `985abd2ccea8aba6997fd0fa9d28e22922f01112` · `legs_out_of_range.json` 5,149 B `a1f811ae704985ccca9c21df4df120286acef3f7` · `o0291_arms.cjs` 10,021 B `122e81c2bd8da0348f4c9de33fb5dda16f790a35` · `o0291_face.py` 4,636 B `946e8bd3e5c172a8dee7b25e860420ce5aeccccc` · `o0291_legs.py` 4,589 B `d210e736ded882fffc04290fa9e052713ed423ab` · `o0291_probe.py` 7,631 B `deda6b21153e3fa22ce5af795cec98c8c56ec505` · `o0291_score.py` 12,261 B `cff31c1509594d1478262e01852ecf5f2a1773f8` · `o0291_selective_origin.py` 5,239 B `8c0d0d80b78e837ac742856ceae4a52ef32e032e` · `o0291_write_channels.py` 5,482 B `8d944081dceb5556187d824b45b94cd8a263c66d` · `o0291_writearm.py` 2,954 B `d0d35068745ad535c8971323d090bf72fd7e296b` · `probe_state.json` 6,493 B `62da2590a1907307b90db675270bb2b26043efe4` · `selective_origin_8598_stats.json` 514 B `6f16d8323de3341f39519e8a8b4e30389b222961` · `shots_O0291-2507-X-read-trigger.png` 133,784 B `df703095c9ba4a05e612429e4452c387ca22951f` · `tip_readback.json` 554 B `5cdca1d13bc11c1b8698c62d82ee0d16fe3a6461` · `write_channels.json` 14,715 B `4bb79ce871f64886d7649ad3651b9d68dab10f9b`。外部可读探针 `GET /git/blobs/9dd10414af597b180cbb2f4054edd68eb58ee449` → 重算 sha1 与 tree 上 blob id 相等 = True；与本机字节一致 = True（13,544 B）。
+
+**纪律**：新端口只用我记录过 pid 的那些（关掉时判据 = 记录 pid 与 netstat 侦听者一致 + 命令行含 `--port <该口>`，不满足就 refused）；旧 control 面对 `8493/8494`、`8497/8498` 按要求**没停**；`:4781/:4782` 用户链、隧道、两枚用户库 0 触碰；`demo/reset` 0 次；凭据 0 打印；已发布路径 **0 覆盖 0 删除**（23 件全落新目录，其余全是 `already identical`）。**不签 `derived_result`**（@红队）、不产产品码（0281 归 @B）。**下一件**：队列里没有点我的单；0291 交完我 ready，随时可接 0288 T-1 的产码后复跑或 0281 T-b 的验收。
+
 ## 亲测 @2026-09-25 08:0x+08 —— **Q38=① 已落地成可跑仪器**（`receipt_cell_derivation_check_r1.py`），对它自己的两枚真工件双向出数：**0290 硬红 / 0293 无硬缺陷但有 3 格软红**；ORD-0294 的验收改用这台尺
 
 ### ① 仪器与坐标（全部已上 `commander/control`，逐字节回读相等）
