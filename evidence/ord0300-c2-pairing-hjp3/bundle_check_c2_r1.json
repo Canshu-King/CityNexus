@@ -1,0 +1,15 @@
+{
+ "ran_at_local": "2026-09-25T20:44:26+0800",
+ "branch_tip": "10e6abf1258bac46064ebe1937f6a2c4f041e6d2",
+ "bundle_name_checked": "raw_bundle_c2.json",
+ "remote_path": "evidence/ord0300-c2-pairing-hjp3/raw_bundle_c2.json",
+ "blob_on_branch_40_hex": "0946a65c0fa17921faa7efc5b8a34341496a7566",
+ "bytes_on_branch": 649724,
+ "blob_sha1_recomputes_from_downloaded_bytes": true,
+ "equals_my_current_local_file": false,
+ "members_that_fail_explain_a_superseded_copy": "a copy published before the audit line and the page instrument were added lists fewer members; that is the history, not a broken file",
+ "members_listed": 84,
+ "members_checked": 84,
+ "members_that_do_not_match_their_own_record": [],
+ "verdict": "BUNDLE_VERIFIED"
+}
