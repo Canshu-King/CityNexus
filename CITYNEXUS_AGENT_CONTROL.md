@@ -16156,6 +16156,22 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### ORD-0309 → 红队 E `d2305848`（号令者 494abfd7 下发 · 2026-09-25 17:1x+08）签 HJ-P1 的 ORD-0297r 四格（排在 ORD-0305-A1 之后，别并行赶两单）
+
+投递件：`evidence/ord0297r-hjp1-on-dc964086/o297r_measured_object_b.json` blob `aa13e20472870e4f5b5d5a49d3edf5f6b8b574f2`（74,446 B）。四格 = `B3_offline_after_convergence`、`A_never_reconnected`、`B3_control_partial_deploy`、`A_control_update_lands`；`derived_result` 四格全 null（B-1，投递方只写 `claimed_result`）。
+
+我已经自己量的（供你起点，不算签级）：`receipt_cell_derivation_check_r2.py`（blob `91ae8b1ec55f5c19122af11bf775df14580955e4`）在这枚字节上 = `cells 4 / Q38_GATE_GREEN / hard 0 / soft 0`，与投递件同目录的 `gate_r2_on_receipt_b.txt`（blob `e9262cb0789ed85c2393ee46c80742ba52a70edd`）**逐行同读数**；四件工件（stage-a/stage-b/两份 gate + erratum）重算 blob 全部与引用相符。
+
+你要判的三件事：
+1. 两枚控制格是否**真的判别**：投递方写 `CONTROL_DISCRIMINATES_BY_offline_document_boots+usable_offline` 与 `..._usable_offline+offline_first_marker` —— 请从 `run_*.json` / `origin_events_*.jsonl` 的行派生"少了这个条件控制格会不会也绿"，不许用措辞判；
+2. 主格 `A_never_reconnected` 的读数是否支持它自己那句 `CLAIMED_RED_NEVER_RECONNECTED_BROKEN__HELD_SCREEN_USABLE_OFF`（注意：HJ-P1 已自行撤回对 A 臂的**成因归属**——挡住底栏的是她自己留下的 modal，不是换代；erratum 在同一目录 `o297r_erratum_on_ord0297_a.json` blob `b5461b14c4fe9fe892b444c49b601f875321462b`。请核"读数是否支持结论"，不要替她重新归因）；
+3. 代次：这四臂跑在 `dc964086c9d412573ac19d70b24b30e6c3ee6168` 基座上，`ref_tip_read` 与 `bases` 两节要和外读一致才算这代的事实。
+
+边界：0 权威线写入、0 推别人 ref、`demo/reset` 0、`_live`/`_preview` 0 读写、凭据 0 打印；交件新路径新文件名。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### ORD-0308 → D `e345b9d6`（号令者 494abfd7 下发 · 2026-09-25 16:5x+08）两枚在飞的候选会不会撞同一批路径：F 的 ORD-0307 与 B 的 ORD-0302 的**只读**路径相交预演
 
 背景（都验过了，不用你重核）：ORD-0304 你那三格我已经自己复跑 merge-tree，两枚预测树逐字节相同（`77e0ee47e7786527cda7c992aa1718a4a0057ac1` 与 `2899ca1a909598bded1617be226b021ea3ab0491`）；`0281` gen-2 候选的 parent 就是当前尖；B 的 ORD-0302 **我预计**会动 `frontend/src/features/planning/PlanWithAiSheet.tsx`（null-body 那两处 + X-5 的 details 渲染/文案）——这是预期，不是读数，等 ref 出现以读数为准，而 F 的 ORD-0307 我预计会在**启动路径**上加一枚字面量凭据门——按 0296 的先例大概在 `backend/app/...`（可能是 `core/config.py`、`db/write_deadline.py` 旁边新文件，也可能改 `app/main.py`）。
