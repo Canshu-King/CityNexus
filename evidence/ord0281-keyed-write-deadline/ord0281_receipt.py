@@ -165,8 +165,13 @@ scope = {"keyed_legs_total": 6, "legs_routed_through_the_wrapper_by_this_change"
          "ord_0302_copy": "NOT written in this candidate (the wording is waiting on ORD-0301's range table)",
          "client_constant_name": "CLIENT_WRITE_DEADLINE_MS",
          "td_claim_recorded_as": "REPLAY_SHAPE_ONLY_NOT_EXACTLY_ONCE",
+         "candidate_blobs_for_the_bounded_files": BLOBS,
          "shipped_numbers": {"client_ms": 60_000, "server_ms": 45_000,
-                             "server_busy_timeout_ms": 30_000}}
+                             "server_busy_timeout_ms": 30_000},
+         "where_those_numbers_live": [
+             "CLIENT_WRITE_DEADLINE_MS in frontend/src/lib/writeDeadline.ts blob "
+             + BLOBS["frontend/src/lib/writeDeadline.ts"],
+             "backend/app/core/config.py as carried by " + BASE]}
 scope_why = ("scope and honesty: the keyed denominator is 6 legs (measured in ORD-0281 step 0), of which "
              + str(scope["legs_already_reaching_it_via_the_client"]) + " already come through the request "
              "helper and " + str(scope["legs_routed_through_the_wrapper_by_this_change"]) + " were bare "
@@ -177,11 +182,13 @@ scope_why = ("scope and honesty: the keyed denominator is 6 legs (measured in OR
              "REPLAY_SHAPE_ONLY_NOT_EXACTLY_ONCE instead. The shape where the answer arrives just after the "
              "bound is " + scope["late_answer_arm"] + ": this candidate has no arm for it, so no claim is "
              "made about it. TD is recorded as " + scope["td_claim_recorded_as"] + ". "
-             "Traveller wording for the deadline is this module's own ("
-             + BLOBS["frontend/src/lib/writeDeadline.ts"][:12] + "), and " + scope["ord_0302_copy"] + ". "
+             "Traveller wording for the deadline is this module's own, in "
+             + BLOBS["frontend/src/lib/writeDeadline.ts"] + ", and " + scope["ord_0302_copy"] + ". "
              "The numbers shipped in one place: " + scope["client_constant_name"] + " = " + str(scope["shipped_numbers"]["client_ms"])
-             + " against the server's " + str(scope["shipped_numbers"]["server_ms"]) + " budget over a "
-             + str(scope["shipped_numbers"]["server_busy_timeout_ms"]) + " lock wait.")
+             + " declared in " + scope["where_those_numbers_live"][0]
+             + ", against the server's " + str(scope["shipped_numbers"]["server_ms"]) + " budget over a "
+             + str(scope["shipped_numbers"]["server_busy_timeout_ms"]) + " lock wait ("
+             + scope["where_those_numbers_live"][1] + ").")
 cells.append({"cell": "scope: which legs are bounded, which are not, and what was NOT measured",
               "claimed_result": "DECLARED", "derived_result": None,
               "why": C.cite(scope_why, scope, PATS) and scope_why, "readings": scope})
