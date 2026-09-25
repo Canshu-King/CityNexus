@@ -1,0 +1,521 @@
+{
+ "at": "2026-09-25T21:45:36+08:00",
+ "order": "ORD-0302 · q53 轮账目更正 + 落地面复算（read-only，不动 ref）",
+ "lane": "B c01d72a3",
+ "authority_tip": "2344145ce6342b6ac32ac4d0955c0f524d8c9320",
+ "candidate": "2f191eb5fd1682a53cf95f883c7200f00cbb6ebe",
+ "order_base": "13af1ff4ba4516aa1a39cda67428ed4a2a34ac69",
+ "evidence_dir": "evidence/ord0302-unreadable-server-body-q53",
+ "cells": [
+  {
+   "cell": "ledger label collision on my own delivery block",
+   "claimed_result": "DECLARED",
+   "derived_result": null,
+   "why": "账目（不是代码，是我自己的记录）：本轮候选 2f191eb5fd1682a53cf95f883c7200f00cbb6ebe 交付时那块标题沿用了上一轮的轮名，所以现在账本里带着 2 枚「文案修 r2」标题，而上一轮那枚候选是 176d04f554b3ff62c9321f24f132355e8887216d。其中属于本轮的那 1 枚标题里还留着「产品字节 0 改动」——那句对 176d04f 成立（上一轮只改 spec），对本轮不成立，而且我已经在 https://github.com/Canshu-King/CityNexus-Workspace/issues/1#issuecomment-5832979407 撤回过它，收据 a650fe1fdd04ff6f6bd7d2fffdcebf0a3c36cd09 的 `correction` 键里也写着。已发布的一字不改，只在这里具名。",
+   "readings": {
+    "r2_labelled_delivery_headings_now_in_the_ledger": 2,
+    "this_round_is": "q53",
+    "candidate": "2f191eb5fd1682a53cf95f883c7200f00cbb6ebe",
+    "previous_round_candidate": "176d04f554b3ff62c9321f24f132355e8887216d",
+    "blobs_named_by_the_mislabelled_block": [
+     "7673ce60a56c3e9b787344d63a134e05f81a4292"
+    ],
+    "headings_carrying_the_retracted_phrase_total": 2,
+    "headings_carrying_it_for_this_round": 1,
+    "where_it_was_true": "176d04f 那一轮只改 spec，那句对它成立",
+    "named_values_the_why_uses": [
+     "1",
+     "176d04f 那一轮只改 spec，那句对它成立",
+     "176d04f554b3ff62c9321f24f132355e8887216d",
+     "2",
+     "2f191eb5fd1682a53cf95f883c7200f00cbb6ebe",
+     "7673ce60a56c3e9b787344d63a134e05f81a4292",
+     "q53"
+    ]
+   }
+  },
+  {
+   "cell": "the retraction was written into the ledger twice",
+   "claimed_result": "DECLARED",
+   "derived_result": null,
+   "why": "同一句更正被写进账本 2 遍（21:12、21:13）。三个数摆在一起才对得上：这台仪器按「发布→写账本→发帖」的顺序跑，收据 a650fe1 这个路径在标着 q53 的提交下被写过 3 次（d98633e1c78c0935e4f43363d8ffd32b01333711@2026-09-25T13:13:12Z、6edc6b9d3e68d1923063fa5320ce28065c6a15e5@2026-09-25T13:12:27Z、afaadf5827cc6cb04fba0b60f10a4a565bed8dd8@2026-09-25T13:10:42Z），账本留了 2 块，总线只留 1 帖 —— 所以头一趟死在写账本之前（那趟没留块），后两趟各写了一块，重跑时没有防重门。两遍各自点的 blob 都是真发布过的，不是幽灵：收据在这串提交下分别答出 d98633e1c78c0935e4f43363d8ffd32b01333711->a650fe1fdd04ff6f6bd7d2fffdcebf0a3c36cd09、6edc6b9d3e68d1923063fa5320ce28065c6a15e5->f920f2e79dbe47d6bb81433b07826697c394911d、afaadf5827cc6cb04fba0b60f10a4a565bed8dd8->39a9cd141cc0d5d28d237f4dc9505b4686d5a71b、24ac4bced852c7ec8f23c77b844833c71471bb3b->63c4421d69bb8f7be334f11ccc5b083c96e4f420、26e1d38b3b6cfc598f578df7e6172347e5853612->3d77dc8f8a325d1a58b3168bf541f7ddbdc46642。现在线位答的那对是 a650fe1fdd04ff6f6bd7d2fffdcebf0a3c36cd09 / 7e5e223bd938608423fd8e101d61a49629a0b6d1，与后一遍那块一致，也和总线帖 https://github.com/Canshu-King/CityNexus-Workspace/issues/1#issuecomment-5832979407 所引的一致；前一遍 f920f2e79dbe47d6bb81433b07826697c394911d/592f38b90fe10cf527044ca0e0da4169a7bd2130 已被后面的提交覆盖，仍可从上面具名的提交逐位取出。旧块不改，只在此说明哪一遍作数。",
+   "readings": {
+    "count": 2,
+    "pairs_cited": [
+     {
+      "stamp": "21:12",
+      "receipt": "f920f2e79dbe47d6bb81433b07826697c394911d",
+      "index": "592f38b90fe10cf527044ca0e0da4169a7bd2130"
+     },
+     {
+      "stamp": "21:13",
+      "receipt": "a650fe1fdd04ff6f6bd7d2fffdcebf0a3c36cd09",
+      "index": "7e5e223bd938608423fd8e101d61a49629a0b6d1"
+     }
+    ],
+    "stamps": [
+     "21:12",
+     "21:13"
+    ],
+    "branch_answers_now": {
+     "receipt": "a650fe1fdd04ff6f6bd7d2fffdcebf0a3c36cd09",
+     "index": "7e5e223bd938608423fd8e101d61a49629a0b6d1"
+    },
+    "older_pair_still_named_in_the_ledger": [
+     {
+      "stamp": "21:12",
+      "receipt": "f920f2e79dbe47d6bb81433b07826697c394911d",
+      "index": "592f38b90fe10cf527044ca0e0da4169a7bd2130"
+     }
+    ],
+    "q53_receipt_writes": [
+     {
+      "commit": "d98633e1c78c0935e4f43363d8ffd32b01333711",
+      "date": "2026-09-25T13:13:12Z",
+      "blob": "a650fe1fdd04ff6f6bd7d2fffdcebf0a3c36cd09",
+      "message": "ORD-0302 q53: ord0302_receipt.json"
+     },
+     {
+      "commit": "6edc6b9d3e68d1923063fa5320ce28065c6a15e5",
+      "date": "2026-09-25T13:12:27Z",
+      "blob": "f920f2e79dbe47d6bb81433b07826697c394911d",
+      "message": "ORD-0302 q53: ord0302_receipt.json"
+     },
+     {
+      "commit": "afaadf5827cc6cb04fba0b60f10a4a565bed8dd8",
+      "date": "2026-09-25T13:10:42Z",
+      "blob": "39a9cd141cc0d5d28d237f4dc9505b4686d5a71b",
+      "message": "ORD-0302 q53: ord0302_receipt.json"
+     }
+    ],
+    "q53_receipt_write_count": 3,
+    "erratum_posts_on_the_bus": 1,
+    "erratum_post_ids": [
+     5832979407
+    ],
+    "receipt_writes": [
+     {
+      "commit": "d98633e1c78c0935e4f43363d8ffd32b01333711",
+      "date": "2026-09-25T13:13:12Z",
+      "blob": "a650fe1fdd04ff6f6bd7d2fffdcebf0a3c36cd09",
+      "message": "ORD-0302 q53: ord0302_receipt.json"
+     },
+     {
+      "commit": "6edc6b9d3e68d1923063fa5320ce28065c6a15e5",
+      "date": "2026-09-25T13:12:27Z",
+      "blob": "f920f2e79dbe47d6bb81433b07826697c394911d",
+      "message": "ORD-0302 q53: ord0302_receipt.json"
+     },
+     {
+      "commit": "afaadf5827cc6cb04fba0b60f10a4a565bed8dd8",
+      "date": "2026-09-25T13:10:42Z",
+      "blob": "39a9cd141cc0d5d28d237f4dc9505b4686d5a71b",
+      "message": "ORD-0302 q53: ord0302_receipt.json"
+     },
+     {
+      "commit": "24ac4bced852c7ec8f23c77b844833c71471bb3b",
+      "date": "2026-09-25T12:58:43Z",
+      "blob": "63c4421d69bb8f7be334f11ccc5b083c96e4f420",
+      "message": "ORD-0302: ord0302_receipt.json"
+     },
+     {
+      "commit": "26e1d38b3b6cfc598f578df7e6172347e5853612",
+      "date": "2026-09-25T12:50:58Z",
+      "blob": "3d77dc8f8a325d1a58b3168bf541f7ddbdc46642",
+      "message": "ORD-0302: ord0302_receipt.json"
+     }
+    ],
+    "index_writes": [
+     {
+      "commit": "9e3a0d4b94a7bffb318782f5cf4d4742c1825023",
+      "date": "2026-09-25T13:13:21Z",
+      "blob": "7e5e223bd938608423fd8e101d61a49629a0b6d1",
+      "message": "ORD-0302 q53: ord0302_index.json"
+     },
+     {
+      "commit": "477c80946dad4fc3af64b73b7340418096a8c7a2",
+      "date": "2026-09-25T13:12:37Z",
+      "blob": "592f38b90fe10cf527044ca0e0da4169a7bd2130",
+      "message": "ORD-0302 q53: ord0302_index.json"
+     },
+     {
+      "commit": "5db3da4e91d4e37be293c5654ac8cbd94fea1729",
+      "date": "2026-09-25T13:10:51Z",
+      "blob": "8c1447ab4e0e1d1cacb0ca67845bc72343bcfcde",
+      "message": "ORD-0302 q53: ord0302_index.json"
+     },
+     {
+      "commit": "12704dcc0fb64f912ed1cb44dcef6d304b4f78d0",
+      "date": "2026-09-25T13:01:45Z",
+      "blob": "141a95c60973fdd653963b8c4311b6c7228c7a93",
+      "message": "ORD-0302 r2: ord0302_index.json"
+     },
+     {
+      "commit": "12d2802efa12410e138b7af0ce4cdaaf7ff1572a",
+      "date": "2026-09-25T12:58:52Z",
+      "blob": "8199f941662dae1fa3314a082adff94d2db6a227",
+      "message": "ORD-0302: ord0302_index.json"
+     },
+     {
+      "commit": "5bb814cd9b028f57ddedbf599c1a3cb13e9faebd",
+      "date": "2026-09-25T12:58:22Z",
+      "blob": "7673ce60a56c3e9b787344d63a134e05f81a4292",
+      "message": "ORD-0302: ord0302_index.json"
+     }
+    ],
+    "erratum_post_cites": [
+     "2f191eb5fd1682a53cf95f883c7200f00cbb6ebe",
+     "13af1ff4ba4516aa1a39cda67428ed4a2a34ac69",
+     "47ff8985a9963d77a4094eb970ad3fd5b639140b",
+     "13af1ff4ba4516aa1a39cda67428ed4a2a34ac69",
+     "2f191eb5fd1682a53cf95f883c7200f00cbb6ebe",
+     "a650fe1fdd04ff6f6bd7d2fffdcebf0a3c36cd09",
+     "7e5e223bd938608423fd8e101d61a49629a0b6d1"
+    ],
+    "named_values_the_why_uses": [
+     "1",
+     "12704dcc0fb64f912ed1cb44dcef6d304b4f78d0",
+     "12d2802efa12410e138b7af0ce4cdaaf7ff1572a",
+     "13af1ff4ba4516aa1a39cda67428ed4a2a34ac69",
+     "141a95c60973fdd653963b8c4311b6c7228c7a93",
+     "2",
+     "2026-09-25T12:50:58Z",
+     "2026-09-25T12:58:22Z",
+     "2026-09-25T12:58:43Z",
+     "2026-09-25T12:58:52Z",
+     "2026-09-25T13:01:45Z",
+     "2026-09-25T13:10:42Z",
+     "2026-09-25T13:10:51Z",
+     "2026-09-25T13:12:27Z",
+     "2026-09-25T13:12:37Z",
+     "2026-09-25T13:13:12Z",
+     "2026-09-25T13:13:21Z",
+     "21:12",
+     "21:13",
+     "24ac4bced852c7ec8f23c77b844833c71471bb3b",
+     "26e1d38b3b6cfc598f578df7e6172347e5853612",
+     "2f191eb5fd1682a53cf95f883c7200f00cbb6ebe",
+     "3",
+     "39a9cd141cc0d5d28d237f4dc9505b4686d5a71b",
+     "3d77dc8f8a325d1a58b3168bf541f7ddbdc46642",
+     "477c80946dad4fc3af64b73b7340418096a8c7a2",
+     "47ff8985a9963d77a4094eb970ad3fd5b639140b",
+     "5832979407",
+     "592f38b90fe10cf527044ca0e0da4169a7bd2130",
+     "5bb814cd9b028f57ddedbf599c1a3cb13e9faebd",
+     "5db3da4e91d4e37be293c5654ac8cbd94fea1729",
+     "63c4421d69bb8f7be334f11ccc5b083c96e4f420",
+     "6edc6b9d3e68d1923063fa5320ce28065c6a15e5",
+     "7673ce60a56c3e9b787344d63a134e05f81a4292",
+     "7e5e223bd938608423fd8e101d61a49629a0b6d1",
+     "8199f941662dae1fa3314a082adff94d2db6a227",
+     "8c1447ab4e0e1d1cacb0ca67845bc72343bcfcde",
+     "9e3a0d4b94a7bffb318782f5cf4d4742c1825023",
+     "ORD-0302 q53: ord0302_index.json",
+     "ORD-0302 q53: ord0302_receipt.json",
+     "ORD-0302 r2: ord0302_index.json",
+     "ORD-0302: ord0302_index.json",
+     "ORD-0302: ord0302_receipt.json",
+     "a650fe1fdd04ff6f6bd7d2fffdcebf0a3c36cd09",
+     "afaadf5827cc6cb04fba0b60f10a4a565bed8dd8",
+     "d98633e1c78c0935e4f43363d8ffd32b01333711",
+     "f920f2e79dbe47d6bb81433b07826697c394911d"
+    ]
+   }
+  },
+  {
+   "cell": "instruments changed so this cannot recur",
+   "claimed_result": "DECLARED",
+   "derived_result": null,
+   "why": "轮名不再写死：交付仪器改成按发布目录查表（r1、r2、q53），表里没有的目录直接中止，而不是沿用上一版的标题与叙述。写账本的防重门改成认「候选短名出现在我自己那行标题里」，不再认整行标题——上一遍就是因为标题被改过而没认出来。更正仪器在动手前先数账本里已有的更正块，有则中止，除非显式写 CNX_0302_ERRATUM_RERUN=force。另把号令者指过的那句措辞也修了：ord0281_receipt_commits_between.py 里 「sits directly on」不再由我口头断言，改成现算 rev-list --count 的枚数并进那一格的读数。改后的仪器按新文件名发布，旧文件名不动。",
+   "readings": {
+    "deliver_round_map_keys": [
+     "r1",
+     "r2",
+     "q53"
+    ],
+    "unknown_directory_is_refused": true,
+    "append_guard_key": "candidate short sha inside a heading of mine",
+    "erratum_guard_env": "CNX_0302_ERRATUM_RERUN=force",
+    "0281_wording_fixed": "ord0281_receipt_commits_between.py",
+    "0281_what_changed": "「sits directly on」换成现算的 rev-list --count 与枚数字段 commits_between",
+    "named_values_the_why_uses": [
+     "CNX_0302_ERRATUM_RERUN=force",
+     "True",
+     "candidate short sha inside a heading of mine",
+     "ord0281_receipt_commits_between.py",
+     "q53",
+     "r1",
+     "r2",
+     "「sits directly on」换成现算的 rev-list --count 与枚数字段 commits_between"
+    ]
+   }
+  },
+  {
+   "cell": "landing surface: this candidate vs the already-landed ORD-0310",
+   "claimed_result": "MET",
+   "derived_result": null,
+   "why": "只读复算（git ls-remote + git fetch + git merge-tree --write-tree，我 0 次移动 ref）：权威线现在在 2344145ce6342b6ac32ac4d0955c0f524d8c9320，自本候选切的基座 13af1ff4ba4516aa1a39cda67428ed4a2a34ac69 以来动过 10 枚提交、17 条路径，其中含号令者已落地的 ORD-0310（D 产码、同文件同函数）。本候选动 2 条路径，两边都动的只有 frontend/src/features/planning/PlanWithAiSheet.tsx。`git merge-tree --write-tree 2344145ce6342b6ac32ac4d0955c0f524d8c9320 2f191eb5fd1682a53cf95f883c7200f00cbb6ebe` 退出 1、预测树 929a67e1a300ed6ecedb64e74f022be3731f69aa，冲突面就那 1 条路径 —— 所以这一枚**不能直接落**，要在当代尖重切；重切后按 Q24 那些臂读数得在新一代重取一遍，我不把 13af1ff4ba4516aa1a39cda67428ed4a2a34ac69 那一代的读数折算过去。有意思的是两枚改动在基座那份文件里并不压在同一行上：已落地那侧行段 frontend/src/features/planning/PlanWithAiSheet.tsx:22、frontend/src/features/planning/PlanWithAiSheet.tsx:235、frontend/src/features/planning/PlanWithAiSheet.tsx:518-527、frontend/src/features/planning/PlanWithAiSheet.tsx:528-531、frontend/src/features/planning/PlanWithAiSheet.tsx:744 与本候选行段 frontend/src/features/planning/PlanWithAiSheet.tsx:173、frontend/src/features/planning/PlanWithAiSheet.tsx:363、frontend/src/features/planning/PlanWithAiSheet.tsx:531-533、frontend/src/features/planning/PlanWithAiSheet.tsx:555、frontend/src/features/planning/PlanWithAiSheet.tsx:734、frontend/src/features/planning/PlanWithAiSheet.tsx:737-740、frontend/src/features/planning/PlanWithAiSheet.tsx:740、frontend/src/features/planning/PlanWithAiSheet.tsx:951-952、frontend/src/features/planning/PlanWithAiSheet.tsx:979 交集 0 段，最近的一对只差 0 行（相贴），git 因上下文重叠仍拒绝自动合流。",
+   "readings": {
+    "authority_tip": "2344145ce6342b6ac32ac4d0955c0f524d8c9320",
+    "predicted_merge_tree": "929a67e1a300ed6ecedb64e74f022be3731f69aa",
+    "merge_tree_rc": 1,
+    "conflicted_paths": [
+     "frontend/src/features/planning/PlanWithAiSheet.tsx"
+    ],
+    "paths_tip_moved_since_base": 17,
+    "paths_candidate_changes": 2,
+    "paths_both_edit": [
+     "frontend/src/features/planning/PlanWithAiSheet.tsx"
+    ],
+    "commits_base_to_tip": 10,
+    "commits_base_to_candidate": 6,
+    "sheet_blobs": {
+     "at_order_base": "f61d5312e8b33807d3e5304d1fa9fb7f77a518aa",
+     "at_authority_tip": "3bb6a39067a380c2f75629fd7562f0de8f5d2f2a",
+     "at_my_candidate": "47ff8985a9963d77a4094eb970ad3fd5b639140b",
+     "tip_equals_base": false,
+     "candidate_equals_base": false
+    },
+    "0310_span_refs": [
+     "frontend/src/features/planning/PlanWithAiSheet.tsx:22",
+     "frontend/src/features/planning/PlanWithAiSheet.tsx:235",
+     "frontend/src/features/planning/PlanWithAiSheet.tsx:518-527",
+     "frontend/src/features/planning/PlanWithAiSheet.tsx:528-531",
+     "frontend/src/features/planning/PlanWithAiSheet.tsx:744"
+    ],
+    "q53_span_refs": [
+     "frontend/src/features/planning/PlanWithAiSheet.tsx:173",
+     "frontend/src/features/planning/PlanWithAiSheet.tsx:363",
+     "frontend/src/features/planning/PlanWithAiSheet.tsx:531-533",
+     "frontend/src/features/planning/PlanWithAiSheet.tsx:555",
+     "frontend/src/features/planning/PlanWithAiSheet.tsx:734",
+     "frontend/src/features/planning/PlanWithAiSheet.tsx:737-740",
+     "frontend/src/features/planning/PlanWithAiSheet.tsx:740",
+     "frontend/src/features/planning/PlanWithAiSheet.tsx:951-952",
+     "frontend/src/features/planning/PlanWithAiSheet.tsx:979"
+    ],
+    "intersecting_spans": [],
+    "nearest_gap": 0,
+    "measurement": "ord0302_recut_overlap.json",
+    "named_values_the_why_uses": [
+     "0",
+     "1",
+     "10",
+     "17",
+     "2",
+     "2344145ce6342b6ac32ac4d0955c0f524d8c9320",
+     "3bb6a39067a380c2f75629fd7562f0de8f5d2f2a",
+     "47ff8985a9963d77a4094eb970ad3fd5b639140b",
+     "6",
+     "929a67e1a300ed6ecedb64e74f022be3731f69aa",
+     "False",
+     "f61d5312e8b33807d3e5304d1fa9fb7f77a518aa",
+     "frontend/src/features/planning/PlanWithAiSheet.tsx",
+     "frontend/src/features/planning/PlanWithAiSheet.tsx:173",
+     "frontend/src/features/planning/PlanWithAiSheet.tsx:22",
+     "frontend/src/features/planning/PlanWithAiSheet.tsx:235",
+     "frontend/src/features/planning/PlanWithAiSheet.tsx:363",
+     "frontend/src/features/planning/PlanWithAiSheet.tsx:518-527",
+     "frontend/src/features/planning/PlanWithAiSheet.tsx:528-531",
+     "frontend/src/features/planning/PlanWithAiSheet.tsx:531-533",
+     "frontend/src/features/planning/PlanWithAiSheet.tsx:555",
+     "frontend/src/features/planning/PlanWithAiSheet.tsx:734",
+     "frontend/src/features/planning/PlanWithAiSheet.tsx:737-740",
+     "frontend/src/features/planning/PlanWithAiSheet.tsx:740",
+     "frontend/src/features/planning/PlanWithAiSheet.tsx:744",
+     "frontend/src/features/planning/PlanWithAiSheet.tsx:951-952",
+     "frontend/src/features/planning/PlanWithAiSheet.tsx:979",
+     "ord0302_recut_overlap.json"
+    ]
+   }
+  },
+  {
+   "cell": "what the landed tip already carries, and what Q53=① still lacks there",
+   "claimed_result": "MET",
+   "derived_result": null,
+   "why": "把两件事分开说，别一起报成「已修」或「未修」。权威线 2344145ce6342b6ac32ac4d0955c0f524d8c9320 上那枚 frontend/src/features/planning/PlanWithAiSheet.tsx（blob 3bb6a39067a380c2f75629fd7562f0de8f5d2f2a）里：两枚非 JSON 正文的安全读**已经在**，行号 frontend/src/features/planning/PlanWithAiSheet.tsx:154、frontend/src/features/planning/PlanWithAiSheet.tsx:162，也就是 ORD-0302 第一格已闭。但 Q53=① 要的「块内只陈列已实测的原始回读」还没有：那份字节里 rawReading 命中 0 处，而 frontend/src/features/planning/PlanWithAiSheet.tsx:556 仍是 `await response.json().catch(() => null)`，字节先被丢掉，所以块里此刻是本屏自造的计数句（frontend/src/features/planning/PlanWithAiSheet.tsx:763）。本候选 2f191eb5fd1682a53cf95f883c7200f00cbb6ebe 那枚（blob 47ff8985a9963d77a4094eb970ad3fd5b639140b）里 rawReading 命中 14 处、自造计数句 0 处、安全读在 frontend/src/features/planning/PlanWithAiSheet.tsx:147、frontend/src/features/planning/PlanWithAiSheet.tsx:155。搜过什么都写清：两枚字节里「技术详情」块的渲染门分别落在 frontend/src/features/planning/PlanWithAiSheet.tsx:990（只认 failureReason/summary 两枚字段）与 frontend/src/features/planning/PlanWithAiSheet.tsx:983（多带 rawReading 那一枚字段）。至于「①是否已落在手机上」是另一件事，仍归 ORD-0312 那条线，我不动代次。",
+   "readings": {
+    "tip_sheet_blob": "3bb6a39067a380c2f75629fd7562f0de8f5d2f2a",
+    "candidate_sheet_blob": "47ff8985a9963d77a4094eb970ad3fd5b639140b",
+    "guarded_detail_reads_on_tip": {
+     "count": 2,
+     "lines": [
+      154,
+      162
+     ],
+     "first_ref": "frontend/src/features/planning/PlanWithAiSheet.tsx:154"
+    },
+    "guarded_detail_reads_on_candidate": {
+     "count": 2,
+     "lines": [
+      147,
+      155
+     ],
+     "first_ref": "frontend/src/features/planning/PlanWithAiSheet.tsx:147"
+    },
+    "raw_reading_lines_on_tip": {
+     "count": 0,
+     "lines": [],
+     "first_ref": "ABSENT"
+    },
+    "raw_reading_lines_on_candidate": {
+     "count": 14,
+     "lines": [
+      373,
+      553,
+      584,
+      766,
+      772,
+      983,
+      1012,
+      1022,
+      1023,
+      1024,
+      1026,
+      1027,
+      1028,
+      1029
+     ],
+     "first_ref": "frontend/src/features/planning/PlanWithAiSheet.tsx:373"
+    },
+    "invented_count_sentence_on_tip": {
+     "count": 1,
+     "lines": [
+      763
+     ],
+     "first_ref": "frontend/src/features/planning/PlanWithAiSheet.tsx:763"
+    },
+    "invented_count_sentence_on_candidate": {
+     "count": 0,
+     "lines": [],
+     "first_ref": "ABSENT"
+    },
+    "json_only_leg_reads_on_tip": {
+     "count": 1,
+     "lines": [
+      556
+     ],
+     "first_ref": "frontend/src/features/planning/PlanWithAiSheet.tsx:556"
+    },
+    "json_only_leg_reads_on_candidate": {
+     "count": 0,
+     "lines": [],
+     "first_ref": "ABSENT"
+    },
+    "details_block_gate_on_tip": {
+     "count": 1,
+     "lines": [
+      990
+     ],
+     "first_ref": "frontend/src/features/planning/PlanWithAiSheet.tsx:990"
+    },
+    "details_block_gate_on_candidate": {
+     "count": 1,
+     "lines": [
+      983
+     ],
+     "first_ref": "frontend/src/features/planning/PlanWithAiSheet.tsx:983"
+    },
+    "json_leg_needle": "await response.json().catch(() => null)",
+    "guarded_detail_needle": "(body as { detail?: unknown } | null)?.detail",
+    "named_values_the_why_uses": [
+     "(body as { detail?: unknown } | null)?.detail",
+     "0",
+     "1",
+     "1012",
+     "1022",
+     "1023",
+     "1024",
+     "1026",
+     "1027",
+     "1028",
+     "1029",
+     "14",
+     "147",
+     "154",
+     "155",
+     "162",
+     "2",
+     "373",
+     "3bb6a39067a380c2f75629fd7562f0de8f5d2f2a",
+     "47ff8985a9963d77a4094eb970ad3fd5b639140b",
+     "553",
+     "556",
+     "584",
+     "763",
+     "766",
+     "772",
+     "983",
+     "990",
+     "ABSENT",
+     "await response.json().catch(() => null)",
+     "frontend/src/features/planning/PlanWithAiSheet.tsx:147",
+     "frontend/src/features/planning/PlanWithAiSheet.tsx:154",
+     "frontend/src/features/planning/PlanWithAiSheet.tsx:373",
+     "frontend/src/features/planning/PlanWithAiSheet.tsx:556",
+     "frontend/src/features/planning/PlanWithAiSheet.tsx:763",
+     "frontend/src/features/planning/PlanWithAiSheet.tsx:983",
+     "frontend/src/features/planning/PlanWithAiSheet.tsx:990"
+    ]
+   }
+  }
+ ],
+ "actions_by_me": {
+  "authority_ref_moves": 0,
+  "force_pushes": 0,
+  "published_files_edited": 0,
+  "ledger_blocks_edited": 0,
+  "demo_reset": 0,
+  "databases_touched": 0,
+  "mobile_generation_changes": 0,
+  "candidate_re_cut_opened": 0
+ },
+ "rulers": {
+  "q38": "91ae8b1ec55f5c19122af11bf775df14580955e4",
+  "q43": [
+   "e653e597c2e6fd74a5f8d3be65fe60e017b03017",
+   "efa6b7a383e094e2ede89f5dd8565b12feed0171"
+  ]
+ },
+ "published": {
+  "index_after": "00b9bbbcbf845ad316f9bbcc4a8b0b3eef54f7a7",
+  "index_lists": 52,
+  "files": {
+   "ord0302_recut_overlap.py": {
+    "blob40": "c265e73813efe740fc7165e4dd893a1de09745ef",
+    "bytes": 5589,
+    "local_matches_remote": true
+   },
+   "ord0302_recut_overlap.json": {
+    "blob40": "2b7accdfb94bd38d4f61d141fba6605a8d898e1a",
+    "bytes": 3585,
+    "local_matches_remote": true
+   },
+   "ord0302_deliver_markfix.py": {
+    "blob40": "ca05b5b2dbf520f82b364e40a1de761c8d7adbdd",
+    "bytes": 46785,
+    "local_matches_remote": true
+   },
+   "ord0302_erratum_appendguard.py": {
+    "blob40": "b4febf49e099133b4d57e5ad9ecfb845da7bf299",
+    "bytes": 11234,
+    "local_matches_remote": true
+   },
+   "ord0302_ledger_disclosure.py": {
+    "blob40": "524c41257da07359a3029c9b13d09517a7dfafb2",
+    "bytes": 28558,
+    "local_matches_remote": true
+   },
+   "ord0281_receipt_commits_between.py": {
+    "blob40": "ce7cb4eeb0f41fa76b1dc4ca7d06db1afd4e356a",
+    "bytes": 31946,
+    "local_matches_remote": true
+   }
+  },
+  "index_omits": [
+   "ord0302_index.json",
+   "ord0302_ledger_disclosure.json"
+  ]
+ }
+}
