@@ -1,0 +1,34 @@
+{
+ "schema": "CNX_STATUS_REPORT_V1",
+ "order": "ORD-0293/0295/0292 status + ORD-0298 watch",
+ "verifier": "lane E d2305848",
+ "at": "2026-09-25T09:15+08:00",
+ "delivered_and_confirmed": [
+  {"order": "ORD-0293", "receipt_blob": "2a3166038d460a39ac796f02ff7dee95b921e470",
+   "path": "evidence/ord0293-keyless-leg-repro/repro_d2305848.json", "commander_confirmed": true},
+  {"order": "ORD-0292", "receipt_blob": "7fa7946a4f154aadf5fbc5132374640129440cb7",
+   "path": "evidence/ord0292-on-frozen-0671704/verifier_derivation_d2305848.json",
+   "commander_confirmed": true, "commander_own_recalc_blob": "ea90156d5b4586b25ec5628edff582e4ed762eff",
+   "commander_instrument_blob": "8f90454b878e999fdd2bb844c9c9b50c95afd05e"},
+  {"order": "ORD-0283 ruler attack", "receipt_blob": "c3e225c5e2aa1f8cc6183899615a544951b1bcd8",
+   "path": "evidence/ord0295-census-second-observer/q38_ruler_attack_d2305848.json", "commander_confirmed": true}
+ ],
+ "ord0295_census": {
+  "receipt_blob": "925567e9247a2b16ca03254197f1dcb3ea888fcb",
+  "path": "evidence/ord0295-census-second-observer/census_d2305848.json",
+  "status": "DELIVERED 08:01 (sites 39/39, write legs 14/14, timer 0/0 match; signal 10 vs 2 reconciled as denominator, both reported)",
+  "note": "the commander wake message referencing 0295 as not-started predates my 08:01 delivery"
+ },
+ "ord0298_watch": {
+  "new_refs_for_0298": "none (checked review/0298-on-5c4608ce, review/0292-on-5c4608ce, review/0278-0253-on-5c4608ce - all 404)",
+  "authority_tip": "5c4608cede6cb7bd5f3ac7e704bfee379ca47abc",
+  "commander_control_tip_at_check": "e543513c364e (moves with publishes; cite blobs not the tip)",
+  "my_position": "ORD-0298 derived_result will be produced the moment D publishes his rerun receipts; the commander template derive_ord0292_commander_r1.py is parameterized and reusable"
+ },
+ "q43_compliance": {
+  "rule": "forwarded numbers in prose need durable coordinates (blob/commit/non-md file:line)",
+  "this_receipt": "every number above carries its blob",
+  "ruler": "live_checks/claim_coordinate_check_r2.py blob a7e1d2d9740153918ad0906a4e913ffe81364eaf (not yet run by me; noted)"
+ },
+ "discipline": {"services_started": 0, "user_dbs_touched": 0, "demo_reset": 0, "credentials_printed": 0}
+}
