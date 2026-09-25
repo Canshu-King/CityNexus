@@ -228,6 +228,35 @@
     "attempt_2_lock_log": "HELD round 1 at 10:25:53 rows_touched=2\nSELFPROOF: second writer refused with 'database is locked'\nARMED round 1 - browser legs may fire now\nRELEASED round 1 at 10:26:13\nHELD round 2 at 10:26:16 rows_touched=2\nSELFPROOF: second writer refused with 'database is locked'\nARMED round 2 - browser legs may fire now\nRELEASED round 2 at 10:27:01\n"
    },
    "why": "the two-window schedules (20s+20s and 20s+45s) both let the request finish its writes once it had the lock: the 45 s run waited 19927 ms and SUCCEEDED with 200, then plans/generate settled in 15 ms, so no second wait ever lost the lock; with deadline_ms 45000 above busy_timeout 30000, one failed wait surfaces at <= 30000 ms, i.e. before the budget is spent, which is why the plain HTTP 500 is what a traveller sees instead of the named answer"
+  },
+  {
+   "id": "C6_the_same_finding_on_a_bundle_i_did_not_build",
+   "verdict": "SAME_FINDING_ON_A_FOREIGN_BUILD",
+   "measured_on": "90d29a172e186aab6e6cb138ab4583ccf93bfa68",
+   "measured": {
+    "foreign_asset": "index-CiK8NvBw.js",
+    "foreign_sha256": "3af4b146feaa39c615a93df5ddaf5891b9752c5299a1b0c49306a5fd2a44447d",
+    "my_build_sha256": "57c2a927f9e65ca0b33acdc737cbf941fc395c214aa213d861a4f7e5c664338e",
+    "byte_identical_to_mine": false,
+    "markers_present": true,
+    "ownership": {
+     "mine_via_face": 200,
+     "foreign_via_face": 404
+    },
+    "foreign_tree_unchanged": true,
+    "reading": {
+     "http_status": 500,
+     "content_type": "text/plain; charset=utf-8",
+     "bytes": 21,
+     "elapsed_ms": 32343,
+     "painted_card": "连不上服务端\n\n网络或后端没有响应，这与你的需求内容无关。你的行程没有被改动，检查网络后可以重试。",
+     "painted_label": null,
+     "painted_value": null,
+     "details_in_dom": 0,
+     "data_result_status": "NETWORK"
+    }
+   },
+   "why": "the other build (asset index-CiK8NvBw.js, sha256 3af4b146feaa, byte-identical to my private build = False, ORD-0280 markers present = True) served through a face whose proxy is mine (my journey 200, a foreign one 404) gave HTTP 500 / 21 B at 32343 ms, painting the card '连不上服务端' with data-result-status='NETWORK' and 0 detail regions - so the mismatch belongs to the generation, not to the bundle I compiled"
   }
  ],
  "instrument_limits_disclosed": [
