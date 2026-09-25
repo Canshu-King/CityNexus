@@ -1,0 +1,11 @@
+{
+ "file": "e2e/qoder-ord0281-keyed-write-deadline.spec.ts",
+ "runId": "0281p11651",
+ "bound_ms_under_test": 60000,
+ "baseline_ms_declared": 60000,
+ "pristine_tree": true,
+ "arm": "K1",
+ "status": "skipped",
+ "expectation": "skipped",
+ "reading": null
+}
