@@ -1,0 +1,10 @@
+{
+ "run_id": "0323c1l0317",
+ "arm": "N3",
+ "fold_summary": "技术详情",
+ "fold_text": "技术详情这台设备收到的回复读不成这条请求要的结果（HTTP 500，内容类型 application/json）。",
+ "fold_code_visible": "这台设备收到的回复读不成这条请求要的结果（HTTP 500，内容类型 application/json）。",
+ "status_line": "服务器没有把这条判为通过，它现在说：需审核。",
+ "leaked_needles_still_on_screen": [],
+ "test_status": "passed"
+}
