@@ -40,7 +40,7 @@ import mutation_anchor_guard as guard  # noqa: E402
 PYTHON = "D:/moodle/CityNexus/.venv/Scripts/python.exe"
 SPEC_BASE = "qoder-ord0310-keyless-write-deadline"
 SPEC_PATH = f"e2e/{SPEC_BASE}.spec.ts"
-NODE_RE = re.compile(r"^\s*(ok|x|✘|failed|-)\s+\d+\s+\[[^\]]+\]\s+›\s+\S+\s+›\s+(.+?)(?:\s+\([\d.]+[ms]+\))?\s*$")
+NODE_RE = re.compile(r"^\s*(ok|x|✘|failed|-)\s+\d+\s+\[[^\]]+\]\s+›\s+\S+\s+›\s+(.+?)(?:\s+\([\d.]+[ms]+\))?\s*$", re.M)
 TALLY_RE = re.compile(r"^\s*\d+ (passed|failed|flaky)")
 
 SHEET = ROOT / "frontend/src/features/planning/PlanWithAiSheet.tsx"
