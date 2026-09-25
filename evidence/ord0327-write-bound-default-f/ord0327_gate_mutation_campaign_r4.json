@@ -1,0 +1,133 @@
+{
+ "order": "ORD-0327",
+ "gate": "tests/test_qoder_ord0327_write_bound_default.py",
+ "tree": "D:\\moodle\\_qoder_f_run\\work_0327",
+ "python": "D:/moodle/CityNexus/.venv/Scripts/python.exe",
+ "cells": [
+  "test_W1_the_default_scenario_is_declared_once_and_covered_by_the_door",
+  "test_W2_the_door_refuses_a_default_deadline_at_or_below_the_lock_wait",
+  "test_W3_without_an_armed_clock_the_old_error_propagates_untouched",
+  "test_W4_the_boundary_judge_needs_a_clock_a_lost_lock_and_an_expired_budget",
+  "test_W5_http_past_the_budget_answers_named_and_persists_nothing",
+  "test_W6_http_inside_the_budget_keeps_todays_face_with_no_new_name",
+  "test_W7_a_spent_budget_names_only_the_request_that_lost_the_lock"
+ ],
+ "arms": [
+  {
+   "arm": "M1_no_clock_armed",
+   "file": "backend/app/main.py",
+   "claim": "middleware 不再给请求挂默认时钟",
+   "anchor_hits": 1,
+   "shape": "m1:2781fa08f1",
+   "derived_result": null,
+   "returncode": 1,
+   "red_cells": [
+    "test_W5_http_past_the_budget_answers_named_and_persists_nothing",
+    "test_W7_a_spent_budget_names_only_the_request_that_lost_the_lock"
+   ],
+   "collateral_note": "本格红集合就是这臂的全部后果（同一门内，无跨文件连带）",
+   "claimed_result": "KILLS（2/7 格为它变红）"
+  },
+  {
+   "arm": "M2_boundary_silent",
+   "file": "backend/app/db/write_deadline.py",
+   "claim": "边界判据永远不回话（只改名这一半被摘掉）",
+   "anchor_hits": 1,
+   "shape": "m1:102c213082",
+   "derived_result": null,
+   "returncode": 1,
+   "red_cells": [
+    "test_W4_the_boundary_judge_needs_a_clock_a_lost_lock_and_an_expired_budget",
+    "test_W5_http_past_the_budget_answers_named_and_persists_nothing",
+    "test_W7_a_spent_budget_names_only_the_request_that_lost_the_lock"
+   ],
+   "collateral_note": "本格红集合就是这臂的全部后果（同一门内，无跨文件连带）",
+   "claimed_result": "KILLS（3/7 格为它变红）"
+  },
+  {
+   "arm": "M3_ignores_lock_test",
+   "file": "backend/app/db/write_deadline.py",
+   "claim": "边界判据不再区分\"丢锁\"与\"别的 OperationalError\"（会把 bug 洗成 503）",
+   "anchor_hits": 1,
+   "shape": "m1:1ad6480a49",
+   "derived_result": null,
+   "returncode": 1,
+   "red_cells": [
+    "test_W4_the_boundary_judge_needs_a_clock_a_lost_lock_and_an_expired_budget"
+   ],
+   "collateral_note": "本格红集合就是这臂的全部后果（同一门内，无跨文件连带）",
+   "claimed_result": "KILLS（1/7 格为它变红）"
+  },
+  {
+   "arm": "M4_ignores_expiry",
+   "file": "backend/app/db/write_deadline.py",
+   "claim": "边界判据不看预算是否用完（预算内也改名）",
+   "anchor_hits": 1,
+   "shape": "m1:60179405d8",
+   "derived_result": null,
+   "returncode": 1,
+   "red_cells": [
+    "test_W4_the_boundary_judge_needs_a_clock_a_lost_lock_and_an_expired_budget",
+    "test_W6_http_inside_the_budget_keeps_todays_face_with_no_new_name"
+   ],
+   "collateral_note": "本格红集合就是这臂的全部后果（同一门内，无跨文件连带）",
+   "claimed_result": "KILLS（2/7 格为它变红）"
+  },
+  {
+   "arm": "M5_default_scenario_undeclared",
+   "file": "backend/app/db/write_deadline.py",
+   "claim": "默认档从 SCENARIOS 里撤掉（启动门不再覆盖它）",
+   "anchor_hits": 1,
+   "shape": "m1:9cbc73181f",
+   "derived_result": null,
+   "returncode": 1,
+   "red_cells": [
+    "test_W1_the_default_scenario_is_declared_once_and_covered_by_the_door",
+    "test_W2_the_door_refuses_a_default_deadline_at_or_below_the_lock_wait"
+   ],
+   "collateral_note": "本格红集合就是这臂的全部后果（同一门内，无跨文件连带）",
+   "claimed_result": "KILLS（2/7 格为它变红）"
+  },
+  {
+   "arm": "M6_handler_unregistered",
+   "file": "backend/app/main.py",
+   "claim": "边界那道 exception_handler 摘掉（名字还在，但没人替它答话）",
+   "anchor_hits": 1,
+   "shape": "m1:d8a64d441a",
+   "derived_result": null,
+   "returncode": 1,
+   "red_cells": [
+    "test_W5_http_past_the_budget_answers_named_and_persists_nothing",
+    "test_W7_a_spent_budget_names_only_the_request_that_lost_the_lock"
+   ],
+   "collateral_note": "本格红集合就是这臂的全部后果（同一门内，无跨文件连带）",
+   "claimed_result": "KILLS（2/7 格为它变红）"
+  }
+ ],
+ "subject_blobs_sha1_disk": {
+  "backend/app/main.py": "b544280bfca998fc89335bf6fb6728a2d03fe497",
+  "backend/app/db/write_deadline.py": "daf25cd02cdb025779b842a32bb524015eaa757d"
+ },
+ "control_round": {
+  "returncode": 0,
+  "cell_verdicts": {
+   "test_W1_the_default_scenario_is_declared_once_and_covered_by_the_door": "PASSED",
+   "test_W2_the_door_refuses_a_default_deadline_at_or_below_the_lock_wait": "PASSED",
+   "test_W3_without_an_armed_clock_the_old_error_propagates_untouched": "PASSED",
+   "test_W4_the_boundary_judge_needs_a_clock_a_lost_lock_and_an_expired_budget": "PASSED",
+   "test_W5_http_past_the_budget_answers_named_and_persists_nothing": "PASSED",
+   "test_W6_http_inside_the_budget_keeps_todays_face_with_no_new_name": "PASSED",
+   "test_W7_a_spent_budget_names_only_the_request_that_lost_the_lock": "PASSED"
+  },
+  "summary": [
+   "======================== 7 passed, 2 warnings in 3.78s ========================"
+  ]
+ },
+ "campaign_valid": true,
+ "restored_clean": true,
+ "kills": 6,
+ "survivors": [],
+ "anchor_misses": [],
+ "claimed_result": "控制轮 绿；6 臂里 6 臂让门变红，0 臂存活，0 臂锚点没命中",
+ "supersedes": "ord0327_gate_mutation_campaign_r1.json（r1 的控制轮红是我这把尺读不到逐格，不是门红；r2 起加了\"逐格数不等于格数就抛\"的前件）；ord0327_gate_mutation_campaign_r2.json（r2 里 M3_ignores_lock_test 存活 ⇒ 门缺一格\"预算用完后的非丢锁错误\"，W4 已补那一格）；流程偏差如实记：r3 那枚文件在我改完产品注释（`main.py` 行号 697→718 的自更正）之后被同名覆盖重跑过一次，改注释前那一读的 `subject_blobs_sha1_disk` 已不在盘上、无法回读；臂结果两读相同（6/6 KILL），交付面以本件 r4 为准"
+}
