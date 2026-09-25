@@ -1,0 +1,54 @@
+{
+ "file": "e2e/qoder-ord0302-unreadable-server-body.spec.ts",
+ "arm": "X1",
+ "runId": "0302xsp04140559",
+ "status": "failed",
+ "expectation": "passed",
+ "reading": {
+  "want": "device",
+  "force_shape": "200 mission with no reason, no plans",
+  "read": {
+   "arm": "X1",
+   "status": "NO_PLANS_PRODUCED",
+   "card_text": "没有生成可行方案 服务器说这次没排出可行方案，但没有给出具体原因编号，所以我们不替你猜是预算、措辞还是数据的问题。你的行程没有被改动；可以再试一次或换一座城市。 技术详情",
+   "sentence": "服务器说这次没排出可行方案，但没有给出具体原因编号，所以我们不替你猜是预算、措辞还是数据的问题。你的行程没有被改动；可以再试一次或换一座城市。",
+   "details_count": 1,
+   "promise_in_copy": false,
+   "reason": "plans compiled; 0 usable result(s) reached this screen",
+   "label": "这台设备自己的读数（服务器没给句子）",
+   "origin": "device"
+  },
+  "verdict": "NOT_MET",
+  "rows": [
+   {
+    "claim": "the card's promise and the DOM agree (promise => block exists)",
+    "ok": true,
+    "got": {
+     "promise_in_copy": false,
+     "details_count": 1
+    }
+   },
+   {
+    "claim": "this shape is the one X-5 named",
+    "ok": true,
+    "got": {
+     "status": "NO_PLANS_PRODUCED"
+    }
+   },
+   {
+    "claim": "and its block carries a reading rather than nothing",
+    "ok": true,
+    "got": {
+     "reason": "plans compiled; 0 usable result(s) reached this screen"
+    }
+   },
+   {
+    "claim": "and the copy still points there (Q53=①: render it, do not delete the pointer)",
+    "ok": false,
+    "got": {
+     "promise_in_copy": false
+    }
+   }
+  ]
+ }
+}
