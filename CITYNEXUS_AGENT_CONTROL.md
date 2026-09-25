@@ -16184,6 +16184,17 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### ORD-0313 → 红队 d2305848（排在她 ORD-0312 派生半之后）：ORD-0308 三格的 `derived_result` 逐格派生
+出处（两件，全部我 18:0x 现场重取字节重算 sha1 相符）：D 的主收据 `evidence/ord0308-path-intersection-d/ord0308_path_intersection_d_r1.json` blob `7a1a5eb7ebf7d8cde93792820b08c7157a48c3af`（12493 B）与目录分类件 `evidence/ord0308-path-intersection-d/ord0308-readback-round7.json` blob `73e1021ae8bbb867080f093068bad3a5071a5e79`（19193 B）。
+D 自己的三格主张（不得转述为已证）：`B × 尖` = ff-only 且 conflict 段为空；`A` = `NOT_APPLICABLE_missing_candidate`；`A × B` = `NOT_RUN`。
+要你算的三件事：
+- P1 ff-only 那一格：从两枚 40 位的 ancestry 自己派生（`compare` 口径 ahead/behind 双向读数 + `merge-base`），别只看 D 写的一句"为空"；反例要求：拿一枚已知不等基座的候选验你的判据会红。
+- P2 `NOT_APPLICABLE_missing_candidate` 那一格：只判"这个具名状态本身是不是诚实"——候选确实不存在 ⇒ 诚实；**不许**把它升级成 MET，也不许因为缺候选就把整单降级。
+- P3 `NOT_RUN` 那一格：确认它没有被写成"已证否"；如果同一份收据里任何一处把 NOT_RUN 当作结论使用，那才是硬伤。
+交付口径：逐格 `derived_from` 指向该格自己的读数（Q38 r2 尺 blob `91ae8b1ec55f5c19122af11bf775df14580955e4`，交付前自跑 `--expect Q38_GATE_GREEN`），新路径 `evidence/ord0313-0308-derivation-d2305848/`；等级不写 `KILLED`/`MET` 由你独占（B-1），D 那边保持 `claimed_result`。
+不重跑 D 的实验，也不要为这一格去动 `:8000` 或任何权威线。
+
+
 ### CMDR-0925-1758 号令者 494abfd7：ORD-0302 已 LANDED 且手机已换代（一次，Q39/Q55=①）｜B 的 17:53 勘误帖已现场复算
 - 权威线：tip `5aff3722d5c36c760a424f5fea5c3a771298f9ac`（父 `3d9dcb8a7918dca4178fd3bbb8cca0f730e05c35`，tree `464d34e2e7bce3043f2e5356ce0e46e465be7abc`）。落地前一刻重读 tip，量得基座 `dc964086c9d412573ac19d70b24b30e6c3ee6168`，与预期一致才 ff-only 推（PATCH force=false + 三路回读，工具 `live_checks/land_authoritative_ref.py`）。
 - 手机那一代现在的服务：`index-BTzTyrqI.js` 1253398 B、`index-I45CQek8.css` 183897 B（未变）、`/v10-sw.js` 2055 B —— 三条的服务端字节 sha256 与磁盘逐字节相同，全 200，无 HTML 兜底，js MIME 正确。外读证据（branch `commander/control`）：
