@@ -853,5 +853,51 @@
    ]
   },
   "pass_2_output": "receipt ord0302_receipt.json 41559 B blob_sha1 e99ae07282b1650077d26eb6ea27921641a2f146\ncells 12 | overall Q38_GATE_GREEN | hard 0 [] | soft 0 []\n  cell 0 | why_source why | why tokens 7 | own hits 6 | unique hits 0 | shares why with []\n  cell 1 | why_source why | why tokens 6 | own hits 5 | unique hits 0 | shares why with []\n  cell 2 | why_source why | why tokens 6 | own hits 5 | unique hits 0 | shares why with []\n  cell 3 | why_source why | why tokens 17 | own hits 14 | unique hits 0 | shares why with []\n  cell 4 | why_source why | why tokens 7 | own hits 6 | unique hits 0 | shares why with []\n  cell 5 | why_source why | why tokens 3 | own hits 3 | unique hits 0 | shares why with []\n  cell 6 | why_source why | why tokens 3 | own hits 3 | unique hits 0 | shares why with []\n  cell 7 | why_source why | why tokens 3 | own hits 3 | unique hits 0 | shares why with []\n  cell 8 | why_source why | why tokens 3 | own hits 3 | unique hits 0 | shares why with []\n  cell 9 | why_source why | why tokens 17 | own hits 17 | unique hits 0 | shares why with []\n  cell 10 | why_source why | why tokens 12 | own hits 8 | unique hits 0 | shares why with []\n  cell 11 | why_source why | why tokens 12 | own hits 10 | unique hits 0 | shares why with []\nmeaning: no shared literal and every sentence names its own readings"
+ },
+ "claim_gate_check": {
+  "rulers": {
+   "claim_coordinate_check_r3.py": {
+    "path": "D:\\moodle\\_qoder_cmdr_ref_20260921\\live_checks\\claim_coordinate_check_r3.py",
+    "blob40": "e653e597c2e6fd74a5f8d3be65fe60e017b03017"
+   },
+   "claim_coordinate_check_r4b.py": {
+    "path": "D:\\moodle\\_qoder_cmdr_ref_20260921\\live_checks\\claim_coordinate_check_r4b.py",
+    "blob40": "efa6b7a383e094e2ede89f5dd8565b12feed0171"
+   },
+   "receipt_cell_derivation_check_r2.py": {
+    "path": "D:\\moodle\\_qoder_cmdr_ref_20260921\\live_checks\\receipt_cell_derivation_check_r2.py",
+    "blob40": "91ae8b1ec55f5c19122af11bf775df14580955e4"
+   }
+  },
+  "ledger": {
+   "claim_coordinate_check_r3.py": {
+    "rc": 0,
+    "headline": [
+     "claims checked 14 | overall Q43_GATE_CLEAN | findings 0 []"
+    ]
+   },
+   "claim_coordinate_check_r4b.py": {
+    "rc": 0,
+    "headline": [
+     "claims checked 12 | exempt {\"HTTP_STATUS\": 1, \"IDENTIFIER_PART\": 1} | overall Q43_GATE_GREEN | findings 0 []"
+    ]
+   }
+  },
+  "bus": {
+   "claim_coordinate_check_r3.py": {
+    "rc": 0,
+    "headline": [
+     "claims checked 19 | overall Q43_GATE_CLEAN | findings 0 []"
+    ]
+   },
+   "claim_coordinate_check_r4b.py": {
+    "rc": 0,
+    "headline": [
+     "claims checked 14 | exempt {\"HTTP_STATUS\": 2, \"IDENTIFIER_PART\": 3} | overall Q43_GATE_GREEN | findings 0 []"
+    ]
+   }
+  },
+  "receipt_of_it": "ord0302_claim_gate.json",
+  "receipt_blob": "b08c5873806e733ced926f9046b6a0538964dc43"
  }
 }
