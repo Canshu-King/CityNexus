@@ -1,0 +1,54 @@
+{
+ "ran_at_local": "2026-09-25T15:04:36+0800",
+ "why_this_file_exists": "the r1 stop report tested every process with the vite-style \"--port N\" predicate, so for the origin it printed false while the pid really was mine; the honest predicate per kind is applied here against the command line I recorded BEFORE killing",
+ "processes": [
+  {
+   "name": "backend",
+   "pid_registered_by_me": 46944,
+   "port": 8561,
+   "kind": "backend",
+   "cmdline_recorded_at_start": "D:/moodle/CityNexus/.venv/Scripts/python.exe -m uvicorn app.main:app --host 127.0.0.1 --port 8561 --log-level info",
+   "predicate_for_this_kind": true,
+   "listener_on_that_port_now": []
+  },
+  {
+   "name": "origin",
+   "pid_registered_by_me": 31756,
+   "port": 8563,
+   "kind": "origin",
+   "cmdline_recorded_at_start": "D:/moodle/CityNexus/.venv/Scripts/python.exe D:\\moodle\\HJ-P3_evidence\\o0301_origin.py serve 8563 8561",
+   "predicate_for_this_kind": true,
+   "listener_on_that_port_now": []
+  },
+  {
+   "name": "real_backend",
+   "pid_registered_by_me": 14988,
+   "port": 8562,
+   "kind": "face",
+   "cmdline_recorded_at_start": "node node_modules/vite/bin/vite.js preview --outDir D:\\moodle\\_hjp3_0300_0925\\dist_0300 --port 8562 --host 127.0.0.1 --strictPort",
+   "predicate_for_this_kind": true,
+   "listener_on_that_port_now": []
+  },
+  {
+   "name": "outcome_origin",
+   "pid_registered_by_me": 37196,
+   "port": 8564,
+   "kind": "face",
+   "cmdline_recorded_at_start": "node node_modules/vite/bin/vite.js preview --outDir D:\\moodle\\_hjp3_0300_0925\\dist_0300 --port 8564 --host 127.0.0.1 --strictPort",
+   "predicate_for_this_kind": true,
+   "listener_on_that_port_now": []
+  },
+  {
+   "name": "upstream_absent",
+   "pid_registered_by_me": 51276,
+   "port": 8565,
+   "kind": "face",
+   "cmdline_recorded_at_start": "node node_modules/vite/bin/vite.js preview --outDir D:\\moodle\\_hjp3_0300_0925\\dist_0300 --port 8565 --host 127.0.0.1 --strictPort",
+   "predicate_for_this_kind": true,
+   "listener_on_that_port_now": []
+  }
+ ],
+ "ports_now": {},
+ "all_my_ports_free": true,
+ "deliberately_empty_port_8566_still_empty": true
+}
