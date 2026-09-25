@@ -1,0 +1,7 @@
+{
+ "ran_at_local": "2026-09-25T10:40:40+0800",
+ "command": "git ls-remote https://github.com/Canshu-King/CityNexus.git refs/heads/mirror/integration-frontend-apple-pass1",
+ "rc": 0,
+ "stdout": "90d29a172e186aab6e6cb138ab4583ccf93bfa68\trefs/heads/mirror/integration-frontend-apple-pass1",
+ "stderr": ""
+}
