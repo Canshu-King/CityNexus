@@ -1,0 +1,16 @@
+{
+ "my_named_ports": [
+  8611,
+  8612,
+  8613,
+  8614
+ ],
+ "listeners": {},
+ "listening_after": {
+  "8611": [],
+  "8612": [],
+  "8613": [],
+  "8614": []
+ },
+ "all_my_ports_free": true
+}
