@@ -7,8 +7,8 @@
  "files": [
   {
    "name": "ord0302_receipt.json",
-   "blob40": "c624c30d3be36ec3dd680b797c02ea4dccbf6026",
-   "bytes": 51790
+   "blob40": "09505f1027334e034bf7acc3d38d7135ce351bfe",
+   "bytes": 53270
   },
   {
    "name": "ord0302_arms_matrix.json",
@@ -219,6 +219,11 @@
    "name": "ord0302_deliver_r2_patch.py",
    "blob40": "26342bf3012db74ff70c37a80a3f23eef7ac4ea1",
    "bytes": 7508
+  },
+  {
+   "name": "ord0302_claim_gate.json",
+   "blob40": "c84c2d703236575381e6feb7c7c2c8fcece8c96d",
+   "bytes": 1741
   }
  ]
 }
