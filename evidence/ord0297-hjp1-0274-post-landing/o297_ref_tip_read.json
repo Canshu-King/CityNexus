@@ -1,0 +1,44 @@
+{
+  "read_at_local": "2026-09-25T09:46:31+0800",
+  "how": "GET /repos/Canshu-King/CityNexus/git/ref/heads/<branch> over https (external read; the local repo remote is NOT the authoritative line)",
+  "note_master": "refs/heads/master is 346 commits BEHIND 5c4608ce (compare API) => it is not the landed line; recorded so nobody reuses my first, wrong read",
+  "refs": {
+    "review/ord0287-recut-commander": {
+      "http": 200,
+      "tip": "5c4608cede6cb7bd5f3ac7e704bfee379ca47abc",
+      "ls_remote_form": "5c4608cede6cb7bd5f3ac7e704bfee379ca47abc\trefs/heads/review/ord0287-recut-commander",
+      "object_id_len": 40
+    },
+    "review/ord0296-write-deadline-f": {
+      "http": 200,
+      "tip": "6d041dcce11d05f28a55abadd40717f321b4db38",
+      "ls_remote_form": "6d041dcce11d05f28a55abadd40717f321b4db38\trefs/heads/review/ord0296-write-deadline-f",
+      "object_id_len": 40
+    },
+    "master": {
+      "http": 200,
+      "tip": "7d22cd0eb7840121ba42a5ba363e1a4c7ca1a7e7",
+      "ls_remote_form": "7d22cd0eb7840121ba42a5ba363e1a4c7ca1a7e7\trefs/heads/master",
+      "object_id_len": 40
+    },
+    "commander/control": {
+      "http": 200,
+      "tip": "812ac630cf46b95b6c6d021cb56cae43e7b8d184",
+      "ls_remote_form": "812ac630cf46b95b6c6d021cb56cae43e7b8d184\trefs/heads/commander/control",
+      "object_id_len": 40
+    }
+  },
+  "ordered_to_landed_jump": {
+    "http": 200,
+    "files": [
+      "backend/app/core/config.py",
+      "backend/app/db/session.py",
+      "backend/app/db/write_deadline.py",
+      "backend/app/main.py",
+      "backend/tests/test_qoder_ord0296_write_deadline.py"
+    ],
+    "ahead": 1,
+    "behind": 0,
+    "frontend_files": []
+  }
+}
