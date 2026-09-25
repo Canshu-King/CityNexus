@@ -159,7 +159,8 @@ for (const { id, force } of ARMS) {
  * Both read RENDERED text and DOM counts, never a `data-*`; the promise is read out of the card's `<p>` and
  * not out of the whole card, because the block's own summary says 技术详情 and would hide a deleted promise.
  */
-type Stub = { url: string; method?: string; status?: number; body?: unknown; html?: string; abort?: boolean };
+type Stub = { url: string; method?: string; status?: number; body?: unknown; html?: string;
+                  raw?: string; contentType?: string; abort?: boolean };
 
 async function bootWithStubs(page: Page, stubs: Stub[], arm: string) {
   const scene = (await (await page.request.get("/api/v1/demo/scene")).json()) as { journey_id?: string };
@@ -177,6 +178,12 @@ async function bootWithStubs(page: Page, stubs: Stub[], arm: string) {
       if (s.abort) return r.abort();
       if (s.html !== undefined) {
         return r.fulfill({ status: s.status ?? 200, contentType: "text/html", body: s.html });
+      }
+      if (s.raw !== undefined) {
+        /* The body is handed over verbatim, including "" -- a JSON parse of an empty answer is exactly what
+           these shapes are about, so the stub must not quietly replace it with `{}`. */
+        return r.fulfill({ status: s.status ?? 200, contentType: s.contentType ?? "application/json",
+                           body: s.raw });
       }
       return r.fulfill({ status: s.status ?? 200, contentType: "application/json",
                          body: JSON.stringify(s.body) });
@@ -217,31 +224,61 @@ const MISSION_CLEAN = { mission: { id: "ord0302-mission", status: "COMPLETED", f
 /* Two place rows: below two, the sheet stops at its own `<2 places` guard and never reaches the mission
    branch X-5 is about -- the first attempt at this arm proved that by landing on BLOCKED:CATALOG_EMPTY. */
 const TWO_PLACES = [{ id: "ord0302-p1", title: "A" }, { id: "ord0302-p2", title: "B" }];
-const NO_PLANS_STUBS: Stub[] = [
-  { url: "**/api/v1/journeys/*/agent/commands", method: "POST", body: MISSION_CLEAN },
-  { url: "**/api/v1/journeys/*/plans", method: "GET", body: [] },
-  { url: "**/api/v1/journeys/*/plans/generate", method: "POST", body: { plans: [] } },
-  { url: "**/api/v1/places**", body: TWO_PLACES },
+/* The five shapes the commander named (ledger `CMDR-0925-1625`, readings in bus issuecomment-5829345648):
+   all five answer HTTP 200 on both write legs and differ only in the body. Each one reaches the branch whose
+   card sends the traveller to 技术详情, so the pairing is judged once per shape -- inside ONE cell, which is
+   what keeps the two killer mutants reddening exactly this cell. */
+type X5Shape = { row: string; status: number; contentType: string; body: string };
+const X5_SHAPES: X5Shape[] = [
+  { row: "R19_④_200_empty_body", status: 200, contentType: "application/json", body: "" },
+  { row: "R20_④_200_json_empty_object", status: 200, contentType: "application/json", body: "{}" },
+  { row: "R21_④_200_json_array", status: 200, contentType: "application/json", body: "[]" },
+  { row: "R22_④_200_text_plain_payload", status: 200, contentType: "text/plain; charset=utf-8",
+    body: "plans are not available right now" },
+  { row: "R23_④_200_mission_unusable_status", status: 200, contentType: "application/json",
+    body: JSON.stringify({ mission: { id: "ord0302-mission", status: "FAILED_UPSTREAM",
+                                      failure_reason: null, reasoning_summary: null } }) },
 ];
 
-test(`ord0302-X1 ${"a run that produced nothing usable still renders the block its own card points at"}`,
+function stubsForShape(sh: X5Shape): Stub[] {
+  return [
+    { url: "**/api/v1/journeys/*/agent/commands", method: "POST", status: sh.status,
+      contentType: sh.contentType, raw: sh.body },
+    { url: "**/api/v1/journeys/*/plans/generate", method: "POST", status: sh.status,
+      contentType: sh.contentType, raw: sh.body },
+    { url: "**/api/v1/journeys/*/plans", method: "GET", body: [] },
+    { url: "**/api/v1/places**", body: TWO_PLACES },
+  ];
+}
+
+test(`ord0302-X1 ${"every 200 shape whose card points at 技术详情 renders a block that carries a reading"}`,
   async ({ page }) => {
-    const read = await bootWithStubs(page, NO_PLANS_STUBS, "X1");
-    const invariant = !read.promise_in_copy || read.details_count >= 1;
-    const rows = [
-      { claim: "the card's promise and the DOM agree (promise => block exists)", ok: invariant,
-        got: { promise_in_copy: read.promise_in_copy, details_count: read.details_count } },
-      { claim: "this shape is the one X-5 named", ok: read.status === "NO_PLANS_PRODUCED",
-        got: { status: read.status } },
-      { claim: "and its block carries a reading rather than nothing",
-        ok: read.details_count >= 1 && read.reason.length > 0, got: { reason: read.reason } },
-      { claim: "and the copy still points there (Q53=①: render it, do not delete the pointer)",
-        ok: read.promise_in_copy === true, got: { promise_in_copy: read.promise_in_copy } },
-    ];
-    readings["X1"] = { want: "device", force_shape: "200 mission with no reason, no plans", read,
-                      verdict: rows.every((r) => r.ok) ? "MET" : "NOT_MET", rows };
-    expect(rows.filter((r) => !r.ok), node("X1", JSON.stringify(read))).toEqual([]);
+    test.setTimeout(900_000);
+    const per: Record<string, unknown> = {};
+    const rows: { claim: string; ok: boolean; got: unknown }[] = [];
+    for (const sh of X5_SHAPES) {
+      await page.unrouteAll({ behavior: "ignoreErrors" });
+      const read = await bootWithStubs(page, stubsForShape(sh), "X1");
+      per[sh.row] = { status: read.status, promise_in_copy: read.promise_in_copy,
+                      details_count: read.details_count, reason: read.reason, origin: read.origin };
+      rows.push({ claim: `${sh.row}: the card's promise and the DOM agree (promise => block exists)`,
+        ok: !read.promise_in_copy || read.details_count >= 1,
+        got: { promise_in_copy: read.promise_in_copy, details_count: read.details_count } });
+      rows.push({ claim: `${sh.row}: this is the shape X-5 named`,
+        ok: read.status === "NO_PLANS_PRODUCED", got: { status: read.status } });
+      rows.push({ claim: `${sh.row}: its block carries a reading rather than nothing`,
+        ok: read.details_count >= 1 && read.reason.length > 0, got: { reason: read.reason } });
+      rows.push({ claim: `${sh.row}: the copy still points there (Q53=①: render it, keep the pointer)`,
+        ok: read.promise_in_copy === true, got: { promise_in_copy: read.promise_in_copy } });
+    }
+    const head = per[X5_SHAPES[2].row] as Record<string, unknown>;
+    readings["X1"] = { want: "device", force_shape: "five HTTP 200 bodies on both write legs (R19-R23)",
+                       shape_count: X5_SHAPES.length, per_shape: per,
+                       read: { ...head, shape_count: X5_SHAPES.length },
+                       verdict: rows.every((r) => r.ok) ? "MET" : "NOT_MET", rows };
+    expect(rows.filter((r) => !r.ok), node("X1", JSON.stringify(per))).toEqual([]);
   });
+
 
 test(`ord0302-X2 ${"a status whose copy makes no promise may keep the block absent without lying"}`,
   async ({ page }) => {
