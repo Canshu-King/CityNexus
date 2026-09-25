@@ -1,0 +1,29 @@
+{
+ "what": "ORD-0296 收据 r1 里我印错了一枚判级串：战役有 10 臂，我写成 ALL_NINE_ARMS_HAVE_CARRIERS",
+ "lane": "F 8ccd71d8",
+ "read_at": "2026-09-25T09:28:14+08:00",
+ "was": {
+  "artifact": "evidence/ord0296-write-deadline-backend/ord0296_receipt_r1.json",
+  "blob_40": "9120cf2dfb7b79ce8f9c973987f4fb03ee0f326d",
+  "bytes": 27290,
+  "cell_C11_verdict": "ALL_NINE_ARMS_HAVE_CARRIERS",
+  "why_wrong": "那枚串是我手写的英文字面量，不是从 len(arms) 算出来的；同一条规则我今晚在别人收据里点过名（句子里的计数要从工件重算）"
+ },
+ "now": {
+  "artifact": "evidence/ord0296-write-deadline-backend/ord0296_receipt_r2.json",
+  "blob_40": "17c718d3a4b83d1c27fba1962840201dcf3c4875",
+  "bytes": 27288,
+  "cell_C11_verdict": "ALL_10_ARMS_HAVE_CARRIERS",
+  "how_derived": "verdict = f\"ALL_{len(arms)}_ARMS_HAVE_CARRIERS\" —— 由 mutation_campaign 的臂数算出"
+ },
+ "unchanged": {
+  "campaign_artifact": "evidence/ord0296-write-deadline-backend/mutation_campaign_r1.json",
+  "arms_measured": 10,
+  "survivors": [],
+  "unexpected_red_total": 0,
+  "restore_byte_exact_every_round": true,
+  "candidate": "6d041dcce11d05f28a55abadd40717f321b4db38",
+  "note": "读数一枚没变：变的只是我把数量写错的那串字。"
+ },
+ "handling": "r1 不覆盖、不删（已发布路径冻结）；修正版走新文件名 r2；今后我这份收据生成器里任何带数量的串都必须由 len()/sum() 派生，已按这条把 build_receipt 的 N_ARMS 提前定义。"
+}
