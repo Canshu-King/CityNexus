@@ -1,0 +1,138 @@
+{
+ "ran_at_local": "2026-09-26T03:36:18+0800",
+ "order": "ORD-0312 M3 re-bound at 03:32 (generation moved: B's ORD-0302 b5 landed and the chain was cut over)",
+ "lane": "HJ-P3 aad2d1f2-4de9-406b-a5df-afa0e2bcea58",
+ "scope": "which front-end bytes the shared phone chain serves NOW, and whether they equal the rows in the commander's post-cutover probe",
+ "how_read": "GET /git/blobs/<40hex> over the API + re-hash for his artefacts; 1 read of the served page and one GET per served row through http://127.0.0.1:4781 (the hop the phone uses). 0 POST, 0 write, 0 credential, 0 database, 0 deploy action.",
+ "requests_to_the_chain": 6,
+ "cmdr_artefacts_read_back": {
+  "phone_probe_after_r1": {
+   "path": "evidence/cmdr-deploy-ORD-0302-b5/phone_probe_after_r1.json",
+   "cited_blob": "4f67fce417b49d0d87e13d08cd050b5a8d0bd9bc",
+   "recomputed_from_bytes_i_read": "4f67fce417b49d0d87e13d08cd050b5a8d0bd9bc",
+   "cited_equals_recomputed": true,
+   "bytes": 2238,
+   "also_on_branch_at_that_path": "4f67fce417b49d0d87e13d08cd050b5a8d0bd9bc",
+   "schema": "CNX_CMDR_PHONE_SIDE_PROBE_V1",
+   "probed_at_local": "2026-09-26 03:31:18 +0800",
+   "generation_under_test": "9a669c8bec863fadf31d5158f4a1be66aec49f23",
+   "overall": "DEPLOYED_AND_BYTE_IDENTICAL_ON_PHONE_SIDE",
+   "rows_named": [
+    "/assets/index-I45CQek8.css",
+    "/assets/index-JMSnur7a.js",
+    "/v10-sw.js"
+   ]
+  },
+  "deploy_receipt_r1": {
+   "path": "evidence/cmdr-deploy-ORD-0302-b5/deploy_receipt_r1.json",
+   "cited_blob": "55178a00cfc7125179ec7b50111ec92e2500aa05",
+   "recomputed": "55178a00cfc7125179ec7b50111ec92e2500aa05",
+   "cited_equals_recomputed": true,
+   "bytes": 66529,
+   "also_on_branch_at_that_path": "55178a00cfc7125179ec7b50111ec92e2500aa05",
+   "fields_seen": {
+    "overall": "GREEN"
+   }
+  },
+  "landing_preflight_r1": {
+   "path": "evidence/cmdr-landing-ORD-0302-b5/preflight_r1.json",
+   "cited_blob": "e2420d98ef2bf26e6b3bfc83049ab17d2b463a96",
+   "recomputed": "e2420d98ef2bf26e6b3bfc83049ab17d2b463a96",
+   "cited_equals_recomputed": true,
+   "bytes": 1971,
+   "also_on_branch_at_that_path": "e2420d98ef2bf26e6b3bfc83049ab17d2b463a96",
+   "fields_seen": {
+    "verdict": "READY_TO_LAND"
+   }
+  }
+ },
+ "generation_under_test": "9a669c8bec863fadf31d5158f4a1be66aec49f23",
+ "generation_named_by_the_commander_03_32": "9a669c8bec863fadf31d5158f4a1be66aec49f23",
+ "generation_field_equals_his_number": true,
+ "mirror_tip_read_at_this_minute": "9a669c8bec863fadf31d5158f4a1be66aec49f23",
+ "mirror_tip_equals_the_ordered_generation": true,
+ "served_page": {
+  "names_this_asset": "assets/index-JMSnur7a.js",
+  "index_bytes": null,
+  "http_status": 200
+ },
+ "per_row_mine_vs_probe": {
+  "assets/index-I45CQek8.css": {
+   "probe_row": {
+    "bytes": 183897,
+    "sha256_head": "1b3632785212847b",
+    "sha256_full": "1b3632785212847b19ecbdbbdeb4fbae19ea9ce75060ed19739dc908c8f6a58f",
+    "http_status": 200,
+    "content_type": "text/css"
+   },
+   "my_read": {
+    "bytes": 183897,
+    "sha256_full": "1b3632785212847b19ecbdbbdeb4fbae19ea9ce75060ed19739dc908c8f6a58f",
+    "http_status": 200,
+    "content_type": "text/css"
+   },
+   "bytes_equal": true,
+   "sha256_equal": true,
+   "status_equal": true
+  },
+  "assets/index-JMSnur7a.js": {
+   "probe_row": {
+    "bytes": 1257770,
+    "sha256_head": "3edfd5df8d45b5d2",
+    "sha256_full": "3edfd5df8d45b5d26c451bd4a5f1658a7a3c6c82fb584b4ab121c5339d027111",
+    "http_status": 200,
+    "content_type": "text/javascript"
+   },
+   "my_read": {
+    "bytes": 1257770,
+    "sha256_full": "3edfd5df8d45b5d26c451bd4a5f1658a7a3c6c82fb584b4ab121c5339d027111",
+    "http_status": 200,
+    "content_type": "text/javascript"
+   },
+   "bytes_equal": true,
+   "sha256_equal": true,
+   "status_equal": true
+  },
+  "v10-sw.js": {
+   "probe_row": {
+    "bytes": 2055,
+    "sha256_head": "35821041233ec822",
+    "sha256_full": "35821041233ec8228cb7143fdabe333f4ef8e791a42372f51c81dfa01b0675f4",
+    "http_status": 200,
+    "content_type": "text/javascript"
+   },
+   "my_read": {
+    "bytes": 2055,
+    "sha256_full": "35821041233ec8228cb7143fdabe333f4ef8e791a42372f51c81dfa01b0675f4",
+    "http_status": 200,
+    "content_type": "text/javascript"
+   },
+   "bytes_equal": true,
+   "sha256_equal": true,
+   "status_equal": true
+  }
+ },
+ "retention_check_of_the_superseded_bundle": {
+  "path": "assets/index-DWgtVWb0.js",
+  "http_status": 200,
+  "bytes": 1255094,
+  "sha256_full": "1c90b81eca9e8947b05821586b6c1d2af2ff69487f266006d3d7ae16bd74c51c",
+  "equals_the_generation_i_measured_pass3": true
+ },
+ "generation_of_my_pass3_arms": {
+  "tip": "7856e03f6238da3000976eb6e690a448dfa39b9a",
+  "served_asset_at_the_time": "assets/index-DWgtVWb0.js",
+  "still_in_service_now": false,
+  "what_this_means": "My pass-3 readings belong to the generation that was serving before this cutover. They are not re-pointed by citing a newer probe; if ORD-0312 wants same-generation readings the arms have to be re-run on 9a669c8bec863fadf31d5158f4a1be66aec49f23."
+ },
+ "verdict": {
+  "every_cited_cmdr_blob_resolves_to_the_bytes_i_read": true,
+  "the_new_probe_pins_the_generation_the_commander_named": true,
+  "the_chain_now_serves_the_asset_the_probe_names": true,
+  "all_three_rows_match_my_own_read_byte_for_byte": true,
+  "and_every_row_returns_the_status_the_probe_recorded": true,
+  "the_superseded_bundle_is_still_fetchable": true,
+  "my_pass3_arms_are_on_the_previous_generation": true,
+  "ALL_HOLD": true
+ }
+}
