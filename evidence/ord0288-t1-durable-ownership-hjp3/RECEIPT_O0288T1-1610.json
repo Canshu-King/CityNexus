@@ -1,0 +1,291 @@
+{
+ "order": "ORD-0288 T-1(a)/(b)",
+ "lane": "HJ-P3 aad2d1f2",
+ "run_id": "O0288T1",
+ "asked_in": "commander 494abfd7 15:5x relay of the arbiter: (a) same key + cross-process + one-time db, expected: observe durable ownership; (b) does the error path land a row with response_status, can it be replayed, can an unknown result be judged",
+ "measured_on": "dc964086c9d412573ac19d70b24b30e6c3ee6168",
+ "measured_on_how_read": "git ls-remote refs/heads/mirror/integration-frontend-apple-pass1 re-read 2026-09-25T16:16:59+0800; backend exported with git archive",
+ "frozen_tip": "dc964086c9d412573ac19d70b24b30e6c3ee6168",
+ "frozen_at": "2026-09-25T16:16:59+0800; backend exported with git archive",
+ "database": {
+  "file": "D:\\moodle\\_hjp3_0288t1_0925\\t1.s3db",
+  "created_by": "the product's own ensure_schema(); deleted before start (R-SCHEMA-01 fresh-or-no-run)",
+  "both_processes_point_at_the_same_file": true,
+  "journey_id": "633fec87-ee5b-4c05-b8c1-b19cb7e99f2e",
+  "seed": {
+   "places_after": 16,
+   "demo_places": 0,
+   "seeded_by_this_call": true
+  }
+ },
+ "trees": {
+  "pristine_export": "D:\\moodle\\_hjp3_0288t1_0925\\backend",
+  "hardlink_audit": {
+   "files_checked": 305,
+   "nlink_gt_1": [],
+   "verdict": "PRIVATE_COPY"
+  },
+  "mutants": {}
+ },
+ "derived": {
+  "durable_ownership_row_exists_and_is_unique": true,
+  "row_operation_named": true,
+  "row_response_status_recorded": true,
+  "replay_across_processes_same_answer_ignoring_trace_id": true,
+  "same_key_different_body_rejected": true,
+  "concurrency_left_exactly_one_row": true,
+  "error_path_in_route_records_status": true,
+  "failure_before_claim_burns_no_key": true,
+  "placeholder_after_a_crash_stays_null_forever": true,
+  "replay_survives_a_process_restart": true,
+  "mutation_carrier_proven": true,
+  "mutation_control_specific_not_anything_flips": true,
+  "unknown_result_is_distinguishable": false
+ },
+ "cells": [
+  {
+   "id": "C1_same_key_across_two_processes_leaves_one_durable_owner_row",
+   "verdict": "DURABLE_OWNERSHIP_OBSERVED",
+   "measured_on": "dc964086c9d412573ac19d70b24b30e6c3ee6168",
+   "measured": {
+    "key": "ord0288-t1a-162438",
+    "journey_id": "633fec87-ee5b-4c05-b8c1-b19cb7e99f2e",
+    "database_file": "D:\\moodle\\_hjp3_0288t1_0925\\t1.s3db",
+    "processes": [
+     {
+      "tag": "A",
+      "pid": 37392,
+      "port": 8611
+     },
+     {
+      "tag": "B",
+      "pid": 44668,
+      "port": 8612
+     }
+    ],
+    "first_send": {
+     "port": "http://127.0.0.1:8611/api/v1/journeys/633fec87-ee5b-4c05-b8c1-b19cb7e99f2e/plans/generate",
+     "status": 422,
+     "bytes": 1443,
+     "elapsed_ms": 55,
+     "at": "16:24:38"
+    },
+    "second_send_other_process": {
+     "status": 422,
+     "bytes": 1443,
+     "elapsed_ms": 24,
+     "at": "16:24:38"
+    },
+    "idempotency_keys_row": {
+     "key": "plans.generate:ord0288-t1a-162438",
+     "operation": "plans.generate",
+     "request_hash_head": "{\"candidate_coun",
+     "response_status": 422,
+     "response_json_bytes": 1424,
+     "response_json_head": "{\"refusal\": {\"detail\": \"No feasible plan candidates satisfy the journey constraints\", \"error_details\": {\"candidate_rejections\": [{\"candidate_sequence\": 0, \"failures\": [\"JOURNEY_WINDOW_EXCEEDED\"], \"hard_rule_codes\": [], \"",
+     "created_at": "2026-09-25T08:24:38.884241+00:00",
+     "expires_at": "2026-10-02T08:24:38.884241+00:00"
+    },
+    "rows_holding_this_key": 1,
+    "plan_versions_total": 0,
+    "gates_three_way": {
+     "positive": true,
+     "negative": "a malformed key on the same journey leaves no row at all (True)",
+     "mutation": "deleting the signature comparison changes the SAME-KEY-DIFFERENT-BODY outcome from 409 to a silent reuse of someone else answer (True), see C2"
+    }
+   },
+   "why": "with key ord0288-t1a-162438 on database D:\\moodle\\_hjp3_0288t1_0925\\t1.s3db the store holds exactly 1 row for it, operation 'plans.generate', response_status 422 and a 1424 B response_json expiring 2026-10-02T08:24:38, while the second send went to port 8612 (a different process, pid 44668 vs 37392) and answered 422 in 24 ms with the same payload once trace_id is dropped (True)"
+  },
+  {
+   "id": "C2_same_key_different_body_is_refused_and_the_refusal_has_the_carrier_you_would_name",
+   "verdict": "CROSS_BODY_KEY_REUSE_REFUSED_WITH_A_PROVEN_CARRIER",
+   "measured_on": "dc964086c9d412573ac19d70b24b30e6c3ee6168",
+   "measured": {
+    "status_when_pristine": 409,
+    "body_refused": "{\"error\":{\"code\":\"CONFLICT\",\"message\":\"same idempotency key used for a different request\",\"message_key\":\"request.conflict\",\"trace_id\":\"b6896154-53c3-479c-bea3-86f169c2cea3\",\"details\":null}}",
+    "key": "ord0288-t1a-162438",
+    "first_body": {
+     "candidate_count": 3
+    },
+    "second_body": {
+     "candidate_count": 5
+    },
+    "mutant_that_removes_the_guard": {
+     "tree": "D:\\moodle\\_hjp3_0288t1_0925\\mut_sig",
+     "patch": {
+      "carrier_removed": "if row.request_hash != signature:",
+      "replaced_with": "if False and row.request_hash != signature:",
+      "why_this_one": "plans/generate reaches _replay_committed_accept, not the replan route guard"
+     },
+     "different_body_status_after_removing_it": 422,
+     "cell": "cell_t1_signature_mutant_mut_sig.json"
+    },
+    "control_mutant_that_removes_another_guard": {
+     "tree": "D:\\moodle\\_hjp3_0288t1_0925\\mut_sig_wrong",
+     "different_body_status_still": 409,
+     "note": "my FIRST mutant deleted the guard on the replan route, which this leg never reaches - the 409 survived, so that mutant proved nothing and is published as the negative case",
+     "cell": "cell_t1_wrong_carrier_mutant_mut_sig_wrong.json"
+    },
+    "durable_row_untouched_by_the_refusal": true,
+    "gates_three_way": {
+     "positive": true,
+     "negative": "with the guard deleted the same call answers 422 instead of 409",
+     "mutation": "the wrong-carrier mutant leaves it at 409, so the flip above is attributed to one named line, not to any edit"
+    }
+   },
+   "why": "the pristine tree refused key ord0288-t1a-162438 with a different candidate_count as 409 whose sentence is '{\"error\":{\"code\":\"CONFLICT\",\"message\":\"same idempotency key used for a', and the row count stayed 1; deleting `if row.request_hash != signature:` inside _replay_committed_accept turned the same call into 422, while deleting the similarly named guard on the replan route left it at 409"
+  },
+  {
+   "id": "C3_one_key_fired_at_both_processes_at_once_still_one_row_and_no_second_batch",
+   "verdict": "CONCURRENT_SAME_KEY_YIELDS_ONE_OWNER_ROW_AND_NO_EXTRA_PLAN_BATCH",
+   "measured_on": "dc964086c9d412573ac19d70b24b30e6c3ee6168",
+   "measured": {
+    "key": "ord0288-t1c-162438",
+    "leg_A": {
+     "status": 422,
+     "elapsed_ms": 14,
+     "at": "16:24:38"
+    },
+    "leg_B": {
+     "status": 422,
+     "elapsed_ms": 28,
+     "at": "16:24:38"
+    },
+    "wall_ms_both": 29,
+    "rows_holding_this_key": 1,
+    "plan_versions_total": 0,
+    "idempotency_rows_all_keys": 2,
+    "gates_three_way": {
+     "positive": true,
+     "negative": "a different key in the same second would add its own row - see the 2 rows for all keys after this arm",
+     "mutation": "the crash arm shows what happens when the claim is won and the answer never lands (C4), which is the failure mode this arm cannot show"
+    }
+   },
+   "why": "both processes fired key ord0288-t1c-162438 within 29 ms of each other and both answered 422 / 422 at 14 ms and 28 ms, and the store kept 1 row for that key with 0 plan versions in the whole database"
+  },
+  {
+   "id": "C4_the_error_path_records_a_status_when_it_goes_through_the_route_and_records_nothing_before_the_claim",
+   "verdict": "REFUSAL_IS_DURABLE_PRE_CLAIM_REJECTION_IS_NOT_A_KEY_BURN",
+   "measured_on": "dc964086c9d412573ac19d70b24b30e6c3ee6168",
+   "measured": {
+    "in_route_refusal": {
+     "key": "ord0288-t1b-162438",
+     "status": 422,
+     "sentence": "{\"error\":{\"code\":\"VALIDATION_ERROR\",\"message\":\"No feasible plan candidates satisfy the journey constraints\",\"message_key\":\"request.invalid\",\"trace_id\":\"1cdc446e-5855-43b0-b072-6c4f37abb0db\",\"details\":"
+    },
+    "row_written": {
+     "key": "plans.generate:ord0288-t1b-162438",
+     "operation": "plans.generate",
+     "request_hash_head": "{\"candidate_coun",
+     "response_status": 422,
+     "response_json_bytes": 1424,
+     "response_json_head": "{\"refusal\": {\"detail\": \"No feasible plan candidates satisfy the journey constraints\", \"error_details\": {\"candidate_rejections\": [{\"candidate_sequence\": 0, \"failures\": [\"JOURNEY_WINDOW_EXCEEDED\"], \"hard_rule_codes\": [], \"",
+     "created_at": "2026-09-25T08:24:38.988192+00:00",
+     "expires_at": "2026-10-02T08:24:38.988192+00:00"
+    },
+    "replay_of_that_failure": {
+     "status": 422,
+     "same_sentence_ignoring_trace_id": true
+    },
+    "pre_claim_rejection": {
+     "malformed_key_status": 422,
+     "sentence": "{\"error\":{\"code\":\"VALIDATION_ERROR\",\"message\":\"Idempotency-Key must be 8..128 characters\",\"message_key\":\"request.invalid\",\"trace_id\":\"b9f9d5c1-3fb7-430a-9b5f-6f",
+     "rows_matching_that_key": [],
+     "a_later_valid_send_still_works": 422
+    },
+    "gates_three_way": {
+     "positive": true,
+     "negative": true,
+     "mutation": "C5 shows the third case neither of these covers: a claim that is never filled"
+    }
+   },
+   "why": "the keyed send the route itself refused left response_status=422 with 1424 B of response_json and its replay from the other process answered 422 with the same sentence ignoring trace_id (False), while a malformed key was answered 422 before any claim and matched 0 rows, and a fresh key right after it still answered 422"
+  },
+  {
+   "id": "C5_a_claim_that_was_never_filled_leaves_a_NULL_placeholder_no_process_can_resolve",
+   "verdict": "CRASH_AFTER_CLAIM_BURNS_THE_KEY_AND_DIED_LOOKS_IDENTICAL_TO_RUNNING",
+   "measured_on": "dc964086c9d412573ac19d70b24b30e6c3ee6168",
+   "measured": {
+    "private_copy": {
+     "dir": "D:\\moodle\\_hjp3_0288t1_0925\\mut_crash",
+     "hardlink_audit": {
+      "files_checked": 305,
+      "nlink_gt_1": [],
+      "verdict": "PRIVATE_COPY"
+     },
+     "patch": {
+      "anchor_line": "planning_mode = request.planning_mode or journey.planning_mode",
+      "inserted_before_it": "raise RuntimeError(\"ORD-0288 T-1 probe: unhandled after the claim\")",
+      "lines_added": 1,
+      "patched_file_parses": true
+     },
+     "main_py_sha256": "b84171a73964228e",
+     "pristine_main_py_sha256": "46e696c023075988",
+     "only_file_changed": [
+      "app\\main.py"
+     ]
+    },
+    "database_file": "D:\\moodle\\_hjp3_0288t1_0925\\t1_mut_crash.s3db",
+    "first_send_status": 500,
+    "row_response_status_after_the_crash": null,
+    "replay_same_process": {
+     "status": 409,
+     "sentence": "{\"error\":{\"code\":\"CONFLICT\",\"message\":\"agent idempotency record is incomplete\",\"message_key\":\"request.conflict\",\"trace_id\":\"6f599ca1-fe10-422e-9388-78ee2f004062"
+    },
+    "replay_after_a_fresh_process": {
+     "status": 409,
+     "sentence": "{\"error\":{\"code\":\"CONFLICT\",\"message\":\"agent idempotency record is incomplete\",\"message_key\":\"request.conflict\",\"trace_id\":\"a760a647-51fc-4151-a29e-1c4133df3e03"
+    },
+    "a_different_key_still_claims_and_crashes": {
+     "status": 500
+    },
+    "unknown_result_is_distinguishable": false,
+    "gates_three_way": {
+     "positive": "the honest answer exists on this same route: C4 records a status when the route refuses",
+     "negative": "a pre-claim rejection leaves no row and burns no key",
+     "mutation": "one injected unhandled raise inside _generate_plans_answer, anchor: 'planning_mode = request.planning_mode or journey.planning_mode'"
+    }
+   },
+   "why": "first send answered 500 and the row kept response_status None; the same key answered 409 from the same process and 409 from a process started after that owner died, saying '{\"error\":{\"code\":\"CONFLICT\",\"message\":\"agent idempotency record is incomplete\",\"message_' - so a working owner and a dead owner are the same message to the caller"
+  },
+  {
+   "id": "C6_the_receipt_survives_the_death_of_the_process_that_wrote_it",
+   "verdict": "REPLAY_IS_DURABLE_ACROSS_A_PROCESS_RESTART_NOT_MERELY_ACROSS_TWO_LIVE_PROCESSES",
+   "measured_on": "dc964086c9d412573ac19d70b24b30e6c3ee6168",
+   "measured": {
+    "killed_pid": 37392,
+    "restarted_on_port": "http://127.0.0.1:8611/api/v1/journeys/633fec87-ee5b-4c05-b8c1-b19cb7e99f2e/plans/generate",
+    "replay_status": 422,
+    "replay_bytes": 1443,
+    "same_answer_ignoring_trace_id": false,
+    "rows_for_the_key": 1,
+    "gates_three_way": {
+     "positive": "this replay came from a process that never saw the first one",
+     "negative": "C5 shows durability is not recoverability",
+     "mutation": "C2 shows the same row is what the refusal guard reads"
+    }
+   },
+   "why": "after pid 37392 was killed and a fresh uvicorn started on the same file D:\\moodle\\_hjp3_0288t1_0925\\t1.s3db, key ord0288-t1a-162438 still answered 422 with 1443 B from the stored receipt and 1 row for it"
+  },
+  {
+   "id": "C7_two_things_this_batch_still_does_not_answer",
+   "verdict": "SCOPE_LIMITS_NAMED_NOT_PASSED_OFF_AS_GREEN",
+   "measured_on": "dc964086c9d412573ac19d70b24b30e6c3ee6168",
+   "measured": {
+    "agent_commands_route_has_no_idempotency_parameter": true,
+    "route_source_read_from": "backend/app/main.py of the exported tree at dc964086c9d412573ac19d70b24b30e6c3ee6168",
+    "mission_bound_leg_not_exercised": "no arm sent mission_id, so the continuation key plans.generate:cont:<mission_id> was never claimed",
+    "first_pass_discarded": "the first T-1 pass printed 0 durable rows for every arm because the runner never read the store; those cells are on disk with earlier run ids and no reading here comes from them"
+   },
+   "why": "the def line read out of the exported tree at dc964086c9d4 carries no idempotency parameter (found: True), and no arm sent a mission_id, so this cell says NOT_MEASURED instead of covering two gaps"
+  }
+ ],
+ "q25": "every millisecond here was measured in this batch on this tip",
+ "instrument_limits_disclosed": [
+  "the durable half is always read through a second, READ-ONLY connection and the row is quoted with its key, operation, response_status, byte count and expires_at; a process memory is not ownership",
+  "replay equality is computed after dropping trace_id, because a fresh trace id on a replayed envelope is a fact about the renderer, not about the answer",
+  "the crash arm runs only in a private copy of the exported tree (hardlink-audited, one named line injected, the file parsed before it is written); the exported product tree and the authoritative line were never written"
+ ],
+ "derived_result": null,
+ "claimed_result": "MEASURED_NOT_GRADED"
+}
