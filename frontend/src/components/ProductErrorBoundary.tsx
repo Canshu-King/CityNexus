@@ -9,7 +9,32 @@
 import { Component, type ErrorInfo, type ReactNode } from "react";
 
 type Props = { children: ReactNode };
-type State = { error: Error | null; info: string | null };
+
+/* ORD-0323 cell 1 (Q64).  The technical fold used to print two things it was handed: the failure's own
+   prose and React's component stack.  Either one can be somebody else's words -- a panel that renders a
+   reply it could not read is exactly where a server sentence turns into an exception message -- and the
+   stack names component and file paths the traveller has no use for.  What this boundary may state on its
+   own is what this device knows at the moment it catches: when, on which route, how many times, and
+   whether the device is online. */
+type Fields = {
+  caught_at: string;
+  route: string;
+  failures_caught_here: number;
+  online_at_this_device: boolean;
+};
+type State = { error: Error | null; fields: Fields | null };
+
+/* The fold is where a machine reading belongs, so the reading is written out even when a value never
+   arrived -- a missing measurement shows as a named field with no value, never as a silent blank. */
+function fieldsText(fields: Fields | null): string {
+  return [
+    `caught_at=${fields?.caught_at ?? ""}`,
+    `route=${fields?.route ?? ""}`,
+    `failures_caught_here=${fields ? fields.failures_caught_here : ""}`,
+    `online_at_this_device=${fields ? (fields.online_at_this_device ? "yes" : "no") : ""}`,
+    "failure_text_rendered=no",
+  ].join("\n");
+}
 
 const COPY = {
   en: {
@@ -36,17 +61,28 @@ function pick() {
 }
 
 export class ProductErrorBoundary extends Component<Props, State> {
-  state: State = { error: null, info: null };
+  state: State = { error: null, fields: null };
+  private caught = 0;
 
   static getDerivedStateFromError(error: Error): Partial<State> {
     return { error };
   }
 
-  componentDidCatch(error: Error, info: ErrorInfo) {
-    this.setState({ info: String(info?.componentStack || "").slice(0, 400) });
+  componentDidCatch(_error: Error, _info: ErrorInfo) {
+    /* Both arguments are deliberately not read.  React writes the failure and its frames to this
+       device's console on its own; copying them into state is what put them on the screen. */
+    this.caught += 1;
+    this.setState({
+      fields: {
+        caught_at: new Date().toISOString(),
+        route: window.location.pathname,
+        failures_caught_here: this.caught,
+        online_at_this_device: Boolean(navigator.onLine),
+      },
+    });
   }
 
-  private reset = () => this.setState({ error: null, info: null });
+  private reset = () => this.setState({ error: null, fields: null });
 
   private goHome = () => {
     try {
@@ -59,7 +95,7 @@ export class ProductErrorBoundary extends Component<Props, State> {
   };
 
   render() {
-    const { error, info } = this.state;
+    const { error, fields } = this.state;
     if (!error) return this.props.children;
     const t = pick();
     return (
@@ -98,11 +134,10 @@ export class ProductErrorBoundary extends Component<Props, State> {
             {t.reload}
           </button>
         </div>
-        <details style={{ marginTop: 18, opacity: 0.7, fontSize: 12 }}>
+        <details style={{ marginTop: 18, opacity: 0.7, fontSize: 12 }} data-testid="error-detail-fold">
           <summary>{t.detail}</summary>
           <pre style={{ whiteSpace: "pre-wrap" }} data-testid="error-detail">
-            {String(error?.message || error)}
-            {info ? `\n${info}` : ""}
+            {fieldsText(fields)}
           </pre>
         </details>
       </section>

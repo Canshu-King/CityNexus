@@ -78,14 +78,29 @@ type ApplyResponse = {
   draft?: Draft;
 };
 
+/* ORD-0323 cell 2 (Q64).  A rejected reply used to be re-labelled with its own prose and handed upward,
+   and this panel printed that prose at three places on the screen.  What this device may say about a
+   rejection is what it measured itself: the status that answered and the content type it came with.
+   `requestJson` is outside React, so it cannot reach `useT`; the locale follows the same stored-value-
+   then-browser rule LocaleContext.tsx:1444-1451 uses, so the sentence is in the language the rest of the
+   screen is already in. */
+function deviceSentenceForRejected(status: number, contentType: string): string {
+  const stored = typeof localStorage === "undefined" ? null : localStorage.getItem("citynexus.locale");
+  const zh =
+    stored === "zh-CN" || stored === "en"
+      ? stored === "zh-CN"
+      : (typeof navigator !== "undefined" ? navigator.language || "" : "").toLowerCase().startsWith("zh");
+  const type = contentType || (zh ? "没有标注内容类型" : "not labelled");
+  return zh
+    ? `这台设备收到的回复读不成这条请求要的结果（HTTP ${status}，内容类型 ${type}）。`
+    : `This device could not read the reply into the result this request asked for (HTTP ${status}, content type ${type}).`;
+}
+
 async function requestJson<T>(path: string, init?: RequestInit): Promise<T> {
   const response = await fetch(path, init);
-  const payload = (await response.json()) as T & {
-    detail?: string;
-    error?: { message?: string };
-  };
+  const payload = (await response.json()) as T;
   if (!response.ok) {
-    throw new Error(payload.error?.message ?? payload.detail ?? `Request failed (${response.status})`);
+    throw new Error(deviceSentenceForRejected(response.status, response.headers.get("content-type") ?? ""));
   }
   return payload;
 }
@@ -242,7 +257,7 @@ export function JourneyInboxWorkbench({ journeyId, decodedText, onConfirmed, imp
      nowhere to do it. */
   const [pending, setPending] = useState<Draft[] | null>(null);
   const [pendingError, setPendingError] = useState<string | null>(null);
-  const [rawDetail, setRawDetail] = useState<string | null>(null);
+  const [confirmDetail, setConfirmDetail] = useState<string | null>(null);
   const [memory, setMemory] = useState<Memory | null>(null);
   const [message, setMessage] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
@@ -463,15 +478,16 @@ export function JourneyInboxWorkbench({ journeyId, decodedText, onConfirmed, imp
        decides, and its answer can still be "not passed" (a duplicate confirmation_ref, a field that
        only resolves against the journey window); a locally stamped `status:"CONFIRMED"` with
        `confirmed_at: new Date()` was the front end grading its own homework, which is exactly what
-       ORD-0146 ① forbids.  The raw server string stays in the technical fold -- paraphrasing it here
-       would mean matching on English words the contract never promised. */
+       ORD-0146 ① forbids.  ORD-0323: what sits in the technical fold is this device's own reading of the
+       attempt (status, content type), not the reply's sentence -- `requestJson` stopped carrying that up,
+       so paraphrasing it here is not what this line avoids, it never arrives in the first place. */
     const fresh = (await readInbox()).find((item) => item.id === draftId) ?? null;
     setDraft(fresh ?? draft);
     await loadMemory();
     await onConfirmed?.();
     setBusy(false);
     const passed = fresh?.status === "CONFIRMED";
-    setRawDetail(passed ? null : failure ?? t("inbox.confirmUnreadable"));
+    setConfirmDetail(passed ? null : failure ?? t("inbox.confirmUnreadable"));
     setMessage(
       passed
         ? t("inbox.confirmedProtected")
@@ -685,10 +701,10 @@ export function JourneyInboxWorkbench({ journeyId, decodedText, onConfirmed, imp
       </div>
       )}
       {message && <p className="v10-inbox-message" role="status">{message}</p>}
-      {rawDetail && (
+      {confirmDetail && (
         <details className="v8-advanced" data-testid="inbox-confirm-detail">
           <summary>{t("inbox.technicalDetail")}</summary>
-          <code>{rawDetail}</code>
+          <code>{confirmDetail}</code>
         </details>
       )}
 
@@ -761,7 +777,7 @@ export function JourneyInboxWorkbench({ journeyId, decodedText, onConfirmed, imp
               onClick={() => {
                 setDraft(item);
                 setMessage(null);
-                setRawDetail(null);
+                setConfirmDetail(null);
               }}
             >
               {t("inbox.openReview")}
