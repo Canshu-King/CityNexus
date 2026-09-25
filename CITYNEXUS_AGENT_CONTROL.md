@@ -196,6 +196,9 @@ GitHub /rate_limit 响应头 Date : Sun, 20 Sep 2026 15:15:18 GMT
 我写错钟点 = 让所有车道在错误的时间轴上做决策；跨日错标还会让人以为有 09-21 的新裁定。
 
 ## DELIVERIES（车道交付登记处 · 追加，不改别人的块）
+### SESSION=d2305848 @2026-09-25 14:49+08 —— **ORD-0298d 派生交：7/7 KILLED 全从原始轮字段导出（tested_tree dc964086、基座 = 权威线 90d29a17）—— 闭单三条件全齐，你可以落 0278/0253 了**；ref 我先读 f035caec（dc964086 + 1 账本块，0 产品字节）；independent_kills = 5；redSet 跨四代逐枚相同
+（派生件 520a95781efa039df527064ccc6d1940a9288e75 @ evidence/ord0298d-on-90d29a17/verifier_derivation_d2305848.json；总线 comment 5828174803。两件收据 45731336…/53,650B、211c67f8…/36,722B 全核中。绿轮 14 三元组 exact_sha 全=dc964086、problems=0。mutation 落盘 7/7、还原 7/7、anchor≥1、runId 独立、前件 7/7。）
+
 ### SESSION=e345b9d6 @2026-09-25 14:36+08 —— **ORD-0298 第三跳照令完成：候选重切到基座 `90d29a17…`，新 ref `refs/heads/review/0278-0253-on-90d29a17`，一轮绿 + 一轮拆全部在新代重测（不是携带）**
 （坐标：`refs/heads/review/0278-0253-on-90d29a17` ⇒ `dc964086c9d412573ac19d70b24b30e6c3ee6168`；总线正文 comment 5828015823，其逐字节 = blob `0340d9f018c6fc5c512d92577480053eca584555`。）
 
@@ -303,6 +306,39 @@ GitHub /rate_limit 响应头 Date : Sun, 20 Sep 2026 15:15:18 GMT
 - `VENDOR_PORT_REATTRIBUTIONS = 3`（那三枚红改判为仪器红，起因 `ArmourySocketServer.exe` PID 21036 占 9012/9013、`ArmouryHtmlDebugServer.exe` PID 22264 占 9014；逐端口探测与 PID 名单 blob `b8a6ec930af8d8009c33a6774cebe1d7444fe9a6`）
 
 **口径与纪律**：`MANUAL_RESUME / NOT-EXACTLY-ONCE` 未升格；R-SCHEMA-01 仍 `SCHEMA_SOURCE_METHOD_CORRECTED`；新目录 `evidence/ord0298-on-5c4608ce/` 共 **6 件**，PUT 前先证该目录 GET=404、`evidence/` 顶层 153 项里 `ord0298*` 命中 0 ⇒ 0 覆盖 0 删，逐件独立 GET 字节级 + git blob sha1 等值；`demo/reset` 0 次、`_live/_preview` 库 0 读写、凭据 0 打印、权威线 0 次移动。队列：ORD-0288 产码继续按住（与 B 同文件），ORD-0266 `db6ac1d` 仍 DELIVERED/NOT-LANDED 等窗口。
+
+### SESSION=8ccd71d8 · ORD-0272 换代重跑 @2026-09-25 14:49+08 —— 基座写死 90d29a17：10 个节点轮轮绿、K8 三轮只红 K1（正控 K2 绿）
+
+**⑤ 0272 门 + K8 臂在写死基座上的新一代读数（号令者 494abfd7 点名）**
+
+```text
+基座按你写死的那一枚：90d29a172e186aab6e6cb138ab4583ccf93bfa68（先对过产品码：app/main.py 的 blob 871aec006a3f6482f7a2700a8baeff8c25f7690f 才动手，见 ord0272_generation_rerun_90d29a17_r1.json:7）
+跑法：git -c core.autocrlf=false archive <那枚尖> backend data contracts tools | tar -x，再在导出树里跑；解释器 D:/moodle/CityNexus/.venv（3.12.14）
+分母先报：collect-only rc=0、collected=10（ord0272_generation_rerun_90d29a17_r1.json:15）= 0272 那枚门的 8 格 + 0287 载体 2 格，共 10 个节点
+控制轮（产品码原样，每轮一次性库）：10 passed, 2 warnings ×3 轮；逐格状态从 `-v` 的节点行派生，不假设绿 ⇒ 10/10 格轮轮 PASSED（ord0272_generation_rerun_90d29a17_r1.json:97）
+  红的节点行数=0、绿的节点行数=30（= 3 轮 × 10 格，由本次真跑的 scope 派生：tests/test_qoder_ord0272_continuation.py; tests/test_qoder_ord0287_k8_carrier.py）（ord0272_generation_rerun_90d29a17_r1.json:505）
+
+K8 那一臂（去掉回填里的 NULL 守卫）：靶子在这代是内联的——`app/main.py:4798`，我车道抽的那条缝 `_fill_plan_generation_receipts` **没上线**（grep 计数 0，见 ord0272_generation_rerun_90d29a17_r1.json:313）
+  锚点命中 1 次才动手；871aec006a3f6482f7a2700a8baeff8c25f7690f → 4192afed758de9060a69410d8b17cb8565109620（125 字节那段原文与替换都在收据里）
+  三轮：1 failed, 9 passed, 2 warnings ×3 轮 ⇒ 红的、且仅红的是 test_K1_a_receipt_another_writer_already_filled_is_never_rewritten_and_refuses_by_name
+  同轮正控 K2 仍 PASSED ⇒ 这不是一格永远失败的载体（ord0272_generation_rerun_90d29a17_r1.json:309）
+  还原 byte-exact=True（871aec006a3f6482f7a2700a8baeff8c25f7690f）（ord0272_generation_rerun_90d29a17_r1.json:501）
+
+一条按名字猜会猜错的实情（顺手量了，不是你们要我答的）：`test_qoder_ord0272_continuation.py` 在 90d29a172e 上只有 8 格（G1–G8），第九格 G9 只活在我车道候选树里（那棵树 9 个 def test_）；线上守这条不变量的是 0287 的 K1/K2。所以「0272 九格」这句在本代应当读作「八格 + 两格载体 = 10 个节点」（ord0272_generation_rerun_90d29a17_r1.json:19）
+
+旧代怎么处理：不搬时长、不覆盖旧件，只在本收据的 supersession 一节把它标成 SUPERSEDED_BY_GENERATION（ord0272_generation_rerun_90d29a17_r1.json:523）。已发布的路径我一律不改，所以「原地改标」这句我做不到的那半在这里说清：改标只能落在新件里，旧 blob 不动。
+
+我这次交付自己的两处仪表故障（写下来不藏）：
+  ① 第一版用 `-v -q` 一起跑 ⇒ pytest 不输出逐节点行 ⇒ 10 格状态全空、K8 的红无法归因；作废重跑（去掉 -q 之后才有上面那串）。第一版文件没发布过，但被同名的第二版就地覆盖了，本地留痕=无。
+  ② 归因写错过一次：把已 split 过的节点名再 split('::') ⇒ IndexError，跑挂在收尾。修完才是这份收据。
+
+落盘：evidence/ord0272-k8-generation-rerun/ord0272_generation_rerun_90d29a17_r1.json（blob cc242337d10ec9f749d319015470af37c217270f、17,805 B）。claimed_result 我写、derived_result=null（B-1）。
+纪律：全量套件这次没跑（scope 只那两枚文件）；0 产品码留下改动（还原 byte-exact）；0 推 ref；0 权威线写入；`demo/reset` 0；`_live`/`_preview` 0 读写；凭据 0 打印。
+```
+
+```text
+Q43 自查：写入前他那把尺量过 ⇒ claims 27、findings 0、Q43_GATE_CLEAN；每个数旁边是 40 位 blob 或 收据文件:行号（行号写在发布件上，不写在账本上）
+```
 
 ### SESSION=8ccd71d8 · ORD-0296 交付 @2026-09-25 09:29+08 —— 0281 后端半落码：服务端写预算 + 13 格门 + 10 臂反突变；候选推成外部可读新 ref；**权威线我没动**
 
@@ -15966,6 +16002,30 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### CMDR-1503 · ORD-0278 / ORD-0253 已 LANDED（尖 = `dc964086…`）＋ ORD-0303 验收与携载证明 ＋ 我这把尺第三次报错（不怪车道）＋ 收尾口令范围更正
+
+**落地（我这一班第五次移动权威线，仍然只有我在动）**：`mirror/integration-frontend-apple-pass1` 由 `90d29a172e186aab6e6cb138ab4583ccf93bfa68` → **`dc964086c9d412573ac19d70b24b30e6c3ee6168`**，`PATCH force=false` http 200。质检全部现读：
+```text
+三条路由 git/ref/heads | commits?sha= | git/refs/heads 列表  全部 = dc964086…   一致 = True
+compare 90d29a17...dc964086                    status=ahead  ahead_by=10  behind_by=0   ⇒ 纯 fast-forward
+整条 hop 触碰的文件里落在 frontend/** 与 review/** 之外的  空集                    ⇒ 没顺手带上别人的东西
+新尖 frontend 子树 oid  a53c7303c6d1513010ff91ecf9c022591c3e513c  == D 自己逐文件表里那枚被测 oid  True
+证据重算全等  臂 457313365eda53e9634ddf522839fe3714d0e86d · 绿轮 211c67f88b4360c63c1e4ed1c6284f36b3f354fd · 红队派生 520a95781efa039df527064ccc6d1940a9288e75
+我的独立派生（十一枚布尔与早上正本逐字相同，跑前先用 ORD-0292 的 blob 做控制轮复现 7/7）  7/7 KILLED · failing_checks 全空 · red sizes [1,3]
+```
+坐标：落地质检 `evidence/ord0298d-landing/landing_receipt_r1.json` = `0ccdd6b3a3568b545b96952695195f1962b3b005`（3,037 B）、仪器 `…/ord0298d_landing_receipt_r1.py` = `e9fb18677e7d64d7ddb4937af50ce3a9fe82cb1a`（8,172 B）、派生 `evidence/ord0298d-cmdr-derivation/commander_derivation_r2_with_verifier.json` = `8abc737260d3d72f4893e30491f00faf9ac2158d`（5,863 B）、句级质检 `evidence/ord0298d-landing/q43_ruler_on_commander_post_1502.json` = `9d077735cc3683c5…`（见文件，本块引的是同一枚）。总线帖 = `Canshu-King/CityNexus-Workspace` Issue #1 的 `issuecomment-5828312530`。
+
+**ORD-0303（F）验收 = 通过，并且我替你补了携载证明，你不用重跑**：收据 `cc242337d10ec9f749d319015470af37c217270f`（17,805 B，先取回重算 == 引用）；`collect_only {rc:0, collected:10}`、`cells_on_this_base.count = 10`、`restore.main_byte_exact = true` 且 `main_blob_after = 871aec006a3f6482f7a2700a8baeff8c25f7690f`。**关键**：我把你依赖的后端文件在 `90d29a17` 与 `dc964086` 上各取一次 blob —— `backend/app/main.py`、`backend/app/db/write_deadline.py`、`backend/app/db/session.py` **全部 SAME** ⇒ 我那跳只动前端与 `review/**`，你的十格在新线上继续算数。（我原本还想比 `backend/app/config.py`，那枚两尖都取回空——**路径是我猜的**，按 `EVIDENCE_INTEGRITY_GATE_V1` 第①查它不进结论。）
+
+**我这把尺今天第三次报错，记录在案，不记在车道头上**：`receipt_cell_derivation_check_r2.py`（blob `91ae8b1ec55f5c19122af11bf775df14580955e4`）对红队派生件判 `MISSING_WHY`（把 `derivation_notes` 两条纯字符串当成"格子"），对 F 的重跑收据判 `cells 0 / NOT_ASSESSABLE`（逐格记录在我 collector 不认识的键下）。⇒ 新规矩：**引用这把尺的结论必须同时打印 `cells 计数` 与被判件顶层键名；`cells 0` 或形状不符一律记 `RULER_OUT_OF_SCOPE`，既不算红也不算绿。**
+
+**代次变化点名**：`frontend/src/features/planning/PlanWithAiSheet.tsx` blob `c22cf42506a4175db992bde387ed8d9c6f1ffb9d` → `fd5f6e5ba2771a8d12669b9bec1ba91590970701`，另 `journeyContinuation.ts` = `358141e6250aeae361aeae4d9df06f80e1417cf0`、`V8Experience.tsx` = `17ef83b6ec58b4190f483733501ea1b973336d5f`、`LocaleContext.tsx` = `ece74118543434e855b874420dcc075df31f4f05`。凡渲染这几处的臂，`90d29a17` 上的读数自此算上一代（B / HJ-P1 / HJ-P3 已各自点名；不要求赶在谁前面重跑，只要求具名）。D 的 `review/0278-0253-on-90d29a17` 尚领先一枚纯账本 commit `f035caeca53765a5c652fab200f66fa04a57bb0d`（parent 就是 `dc964086…`），按"落被测那一枚"的原则我没落它。
+
+**手机链不变**：没切 index、没重启预览后端、没动 tunnel；serve 根仍点名 `assets/index-xKIGmoBz.js`（可复算命令同 `### CMDR-1452`）。等 ORD-0301 射程表 ⇒ ORD-0302 文案修 ⇒ 落地 ⇒ 一次换代（Q46=③ 双尺前置）。
+
+**用户 15:0x 更正我一条规矩**：收尾口令「竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度」适用于**每一条外发**——总线、仲裁窗口、以及给车道的会话消息；我之前只给 GPT 类通信带，属于漏。已记进长期记忆并在后续每条外发逐字带上。
+
+
 ### CMDR-1452 · Q47=②① 盖章（不切 index，等射程表→改文案→只换一次）＋ ORD-0298d 我独立派生 7/7 ＋ ORD-0303 派给 F ＋ 我第二笔误更正
 
 **Q47 的回字与对位**（总线盖章 `issuecomment-5828091963`；提问在 `issuecomment-5827977086`）：仲裁 14:3x 在窗口回 **②①**。第①问（换代窗口）→ **②** = 先等 HJ-P3 的 ORD-0301 射程表 ⇒ B 依表改文案 ⇒ 落地 ⇒ **只换一次**代 ⇒ 所以现在**不切** `dist/index.html`。第②问（ORD-0272 闭单前置）→ **①**，那一问我只给了"我倾向要（按 Q24）"一种读法 ⇒ 我记作**要重跑**，据此派 ORD-0303；若仲裁本意不同，回一个 ✗ 我立刻撤这单。
