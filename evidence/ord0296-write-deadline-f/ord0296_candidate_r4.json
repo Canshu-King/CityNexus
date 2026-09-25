@@ -1,0 +1,71 @@
+{
+ "what": "ORD-0296 第 4 代候选：G11 那一格 re-parent 到当前尖",
+ "lane": "F 8ccd71d8",
+ "commanded_by": "账本 CMDR-0925-1851『需再 re-parent 一次；重叠她自己量』",
+ "ref": "refs/heads/review/ord0296-write-deadline-f-r4",
+ "candidate_commit": "9f06fb5f0e85a679d65e284411b7b82370913b12",
+ "candidate_tree": "9fe1bfe4d8624ebea9e12434c11543c5a84b47b5",
+ "parent": "13af1ff4ba4516aa1a39cda67428ed4a2a34ac69",
+ "parent_read_from": "GitHub git/ref API 当场读（等于号令 18:51 那块写的尖）",
+ "carry_proof": {
+  "path": "backend/tests/test_qoder_ord0296_write_deadline.py",
+  "blob_at_tip": "deacc9d7483f1b8fd8d24b6e23e586bf402d85f6",
+  "blob_at_r3_parent": "deacc9d7483f1b8fd8d24b6e23e586bf402d85f6",
+  "pinned_before": "deacc9d7483f1b8fd8d24b6e23e586bf402d85f6",
+  "byte_identical": true,
+  "why_that_matters": "反突变读数是『在同一枚父字节上』量出来的 ⇒ 尖上字节相同才谈得上搬运（Q24）"
+ },
+ "overlap_measurement": {
+  "my_candidate_paths": [
+   "backend/tests/test_qoder_ord0296_write_deadline.py"
+  ],
+  "landed_generation_paths": [
+   "frontend/e2e/qoder-ord0281-keyed-write-deadline.spec.ts",
+   "frontend/src/features/execution/LiveRecovery.tsx",
+   "frontend/src/features/recovery/V14RecoveryTruthPanel.tsx",
+   "frontend/src/lib/readDeadline.ts",
+   "frontend/src/lib/writeDeadline.ts"
+  ],
+  "intersection": [],
+  "note": "号令要我落之前自己量的那件重叠：逐条按路径集合现算，交集是空集"
+ },
+ "ancestry": {
+  "parent_is_tip_rc": 0,
+  "diff_vs_tip": [
+   "M\tbackend/tests/test_qoder_ord0296_write_deadline.py"
+  ],
+  "compare": {
+   "status": "ahead",
+   "ahead_by": 1,
+   "behind_by": 0
+  }
+ },
+ "file_readback": {
+  "http": 200,
+  "remote_blob": "f3cf05e8fe75cf9322c6eddc1ae6ffbdea8d0f93",
+  "equal": true,
+  "bytes": 20366
+ },
+ "remote_sha_via_api": "9f06fb5f0e85a679d65e284411b7b82370913b12",
+ "remote_equal": true,
+ "ls_remote_line": "9f06fb5f0e85a679d65e284411b7b82370913b12\trefs/heads/review/ord0296-write-deadline-f-r4",
+ "re_mint_equal": true,
+ "pinned_dates": "2026-09-25T19:35:00 +0800",
+ "supersedes": {
+  "r3_commit": "fd8eaf3644b66b44c44ce3178a7babac2bf561c0",
+  "r3_parent": "dc964086c9d412573ac19d70b24b30e6c3ee6168",
+  "r3_ref": "review/ord0296-write-deadline-f-r3（保留不覆盖、不重推）"
+ },
+ "cells_carried": "11 格与 10 臂战役量在 90d29a17/dc964086 那一代；本枚只搬字节，不重跑 ⇒ 不声称新代读数",
+ "discipline": {
+  "authoritative_line_written": 0,
+  "other_refs_touched": 0,
+  "published_paths_overwritten": 0,
+  "demo_reset": 0,
+  "live_or_preview_db": 0,
+  "credential_values_printed": 0
+ },
+ "claim_kind": "code_determined",
+ "derived_result": null,
+ "claimed_result": "R4-MINTED-PUSHED-READ-BACK (carry proven byte-identical, overlap empty)"
+}
