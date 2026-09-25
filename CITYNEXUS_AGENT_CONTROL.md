@@ -15522,6 +15522,77 @@ readline：14,057 ms 那一格与 3,142 ms 同形 ⇒ 12 s 那道线确实不覆
 **边界（不吹）**：一次性库里没有 catalog 行，所以第二腿（`/plans/generate`）与住宿搜索在我的面上本来就不会成功 ⇒ 本格只判**第一腿静默时屏幕与库是否同真值**，不判方案数；`GET …/experience` 在我这种空库上 500 是我这座面的产物，已具名，不算产品发现。
 **纪律**：0 次 `demo/reset`；`_live.db`/`_preview.db` 0 读写（我的库是一次性文件，用完连目录删）；凭据 0 打印；尺与产品码 0 改动；端口 8931/8932 我自己起自己停；没碰 :4781/:4782/:8693 与隧道/cnx proxy。
 **证据坐标**：见紧随其后的总线帖（发布后补 path + 40 位 blob）。
+### 1a986a24 HJ-P1 · ORD-0297r 补记（块落账之后现跑的尺，以及我自己仪器里的一个提取 bug）@ 16:38+08
+
+上一条里我写了"本块的句级尺判定不在块里自宣"。这是落账之后量出来的那些数，逐条给对象：
+
+| 谁量的（blob 40 位） | 量的是哪份字节 | 结果 |
+| --- | --- | --- |
+| `receipt_cell_derivation_check_r2.py` `91ae8b1ec55f5c19122af11bf775df14580955e4` | 派生完就冻结的收据 `o297r_measured_object.json`（13 个顶层键、4 格） | `Q38_GATE_GREEN` / cells 4 / hard 0 / soft 0 |
+| 同一把尺，收据被 stage a 的判定追加过之后 | `o297r_measured_object_b.json`（20 个顶层键、4 格） | `Q38_GATE_GREEN` / cells 4 —— 判定加进去不改变判定 |
+| `claim_coordinate_check_r3.py` `e653e597c2e6fd74a5f8d3be65fe60e017b03017` | 收据 JSON 面 | `Q43_GATE_RED`（claims 207、findings 169、rc 3） |
+| `claim_coordinate_check_r4b.py` `efa6b7a383e094e2ede89f5dd8565b12feed0171` | 收据 JSON 面 | `Q43_GATE_RED`（claims 163、exempt {"YEAR": 21, "HTTP_STATUS": 10, "IDENTIFIER_PART": 13}、findings 118、rc 3） |
+| `claim_coordinate_check_r3.py` | 账本块本体（从账本按标题切出来、逐字节比对与发布件相同） | `Q43_GATE_CLEAN`（claims 59、findings 0、rc 0） |
+| `claim_coordinate_check_r4b.py` | 同一份块字节 | `Q43_GATE_GREEN`（claims 58、findings 0、rc 0） |
+
+块在账本里的字节与身份：14097 B，blob `0d52a70921bd1773bf7b045c7988f313f05e1ce6`（写这条时它在第 15525–15576 行；本补记插在它上面，插完行号就会整体下移——账本每次插入都是全文重写，所以**认 blob，不认行号**）。
+
+**我自己仪器里的一个真 bug（具名，不粉）**：第一次"量账本块"是从我的标题往下取 200 行——那已经不是我的块，是把后面别的车道的正文一起量了，于是一幅 `Q43_GATE_RED` 被当成"我的块红"印了出来；同一版还让 Python 在 Windows 上把 LF 写成 CRLF，所以被量的字节和落账的字节不是同一份。现在按"切到下一个标题为止 + newline='' 原样字节"重切重跑，上面 r3/r4b 那两行就是重跑后的读数（`o297r_ruler_runs.json` 把 10 次运行逐条列在一起，包含被这两个 bug 污染的那几次，没有删）。
+
+JSON 面那两发红不是我的格错了：`Q50=①`（`issuecomment-5829176662`，号令者转达，durable 等级 COMMANDER_RELAYED）已裁定机器生成的测量表这一面对句级坐标尺是 `RULER_OUT_OF_SCOPE`。原样输出全部随件发布，不做解释性改写。
+边界：权威线 0 次移动、手机链 0 次变更、`demo/reset` 0 次、凭据 0 打印、已发布路径 0 覆盖；本补记只新增块，未改动上一条任何一个字。
+### 1a986a24 HJ-P1 · ORD-0297r @ 16:33+08 —— **在 `dc964086c9d412573ac19d70b24b30e6c3ee6168` 上整批重跑完：B3 那格绿且反控有牙；A 那格仍红，可红点只剩一件（离线重进离开了它握着的那一代），而我上一单给 A 的成因归属是错的，已按规矩出勘误件**
+
+先答 Q24：两路外读：路径一 `git ls-remote ssh://git@ssh.github.com:443/Canshu-King/CityNexus.git` 原样行 `dc964086c9d412573ac19d70b24b30e6c3ee6168	refs/heads/mirror/integration-frontend-apple-pass1`；路径二 HTTPS `GET /repos/…/git/ref/heads/mirror/integration-frontend-apple-pass1` 返回 `dc964086c9d412573ac19d70b24b30e6c3ee6168	refs/heads/mirror/integration-frontend-apple-pass1`；两路一致=True、订单那枚尖被确认=True（我第一拍读错的那一次也留在件里，`first_read_was_wrong_because` 记的是我用了本机 origin）
+我按订单把基座钉在 `dc964086c9d412573ac19d70b24b30e6c3ee6168`（40 位一律写全，短号只当显示）。
+两代是我自己在 `git archive dc964086c9d412573ac19d70b24b30e6c3ee6168` 导出的快照树上构建的（不在任何共享工作树上构建）：两代按字节分：shell(index.html) md5 `657253dca26f930e54ab4bb1a54cfb83` vs `cb86e049901b4ef15a99bc7f68fe4cf8`，入口 bundle `index--q2k569d.js`(1253228 B, sha256前16 `a55e8bcebe3cae47`) vs `index-jVHM43pf.js`(1253278 B, `10d0a860b23b788b`)，worker `437fa53ba6eedc34` vs `f697d5ec8e050515`；两两不同=True；下一代里那行标记之外的字节差异=0（`only_change_is_the_marker_line`=True，`main_tsx` 改前改后 blob `63a08b2344c72526758d639dd655bd55b5ef3047`→`5a9e9259582837c5fbc58a4c42029b82c79b7a87`）。
+
+**四格四判（`claimed_result` 我写；`derived_result` null（4/4 格，闭合归红队））**
+| cell | claimed | 反控 |
+| --- | --- | --- |
+| B3_offline_after_convergence | **CLAIMED_MET_ON_BASE_DC964086** | CONTROL_DISCRIMINATES |
+| B3_control_partial_deploy | （B3 的牙齿）| CONTROL_DISCRIMINATES_BY_offline_document_boots+usable_offline |
+| A_never_reconnected | **CLAIMED_RED_NEVER_RECONNECTED_BROKEN__HELD_SCREEN_USABLE_OFFLINE+OFFLINE_REENTRY_LEFT_HELD_GEN** | CONTROL_DISCRIMINATES |
+| A_control_update_lands | （A 的牙齿）| CONTROL_DISCRIMINATES_BY_usable_offline+offline_first_marker+outage_update_landed |
+
+每格三元组（sha / nodeid / runId / 仪器 blob 全 40 位 / 离线执行的那支 bundle / 首屏字符）：
+
+| sha | nodeid | run_id | instrument blob | executed offline | 首屏 |
+| --- | --- | --- | --- | --- | --- |
+| `dc964086c9d412573ac19d70b24b30e6c3ee6168` | `b3_primary` | `o297r-b3_primary-160049` | `bafd7fd335568fd1ec34b86dd42f17a6f2ace643` | ["index-jVHM43pf.js"] | 651 |
+| `dc964086c9d412573ac19d70b24b30e6c3ee6168` | `b3_control_partial` | `o297r-b3_control_partial-160314` | `bafd7fd335568fd1ec34b86dd42f17a6f2ace643` | ["index-jVHM43pf.js"] | 0 |
+| `dc964086c9d412573ac19d70b24b30e6c3ee6168` | `a_never_reconnects` | `o297r-a_never_reconnects-160433` | `bafd7fd335568fd1ec34b86dd42f17a6f2ace643` | ["index--q2k569d.js"] | 703 |
+| `dc964086c9d412573ac19d70b24b30e6c3ee6168` | `a_control_update_lands` | `o297r-a_control_update_lands-160653` | `bafd7fd335568fd1ec34b86dd42f17a6f2ace643` | ["index-jVHM43pf.js"] | 91 |
+| `dc964086c9d412573ac19d70b24b30e6c3ee6168` | `B3_control_partial_deploy` | `o297r-b3_control_partial-160314` | `bafd7fd335568fd1ec34b86dd42f17a6f2ace643` | ["index-jVHM43pf.js"] | 0 |
+| `dc964086c9d412573ac19d70b24b30e6c3ee6168` | `A_control_update_lands` | `o297r-a_control_update_lands-160653` | `bafd7fd335568fd1ec34b86dd42f17a6f2ace643` | ["index-jVHM43pf.js"] | 91 |
+
+**读数（每条以它的地址开头：件名 + 基座 40 位 + 仪器 blob 40 位）**
+- 〔件 `arm_b3_primary_o297r-b3_primary-160049.json` · 基座 `dc964086c9d412573ac19d70b24b30e6c3ee6168` · 仪器 blob `bafd7fd335568fd1ec34b86dd42f17a6f2ace643`〕 B3 主臂：离线首屏 651 字符、执行的是 `['index-jVHM43pf.js']`；屏上 3 个目的地逐个点，3/3 打上、路由真的变了 3/3，每屏正文 [114, 271, 334] 字符；整段断网期间页面级回源 0 次；离线再重载 91 字符，仍是同一代
+- 〔件 `arm_b3_control_partial_o297r-b3_control_partial-160314.json` · 基座 `dc964086c9d412573ac19d70b24b30e6c3ee6168` · 仪器 blob `bafd7fd335568fd1ec34b86dd42f17a6f2ace643`〕 B3 反控（半部署）：半部署（shell 前进、资产根留在上一代）：断网前底栏是清的（sheet 框 0→0 个）；离线首屏 0 字符、可点 0、重载 0 字符；源站在这些 .js 地址上回了 HTML：['/assets/JourneyMap-C0NSafoP.js', '/assets/index-jVHM43pf.js', '/assets/maplibre-gl-CiduR3ZC.js'] —— 客户端不是慢，是被喂了错的字节类型；这就是 DEPLOY_BUNDLE_RETENTION 要拦的形状
+- 〔件 `arm_a_never_reconnects_o297r-a_never_reconnects-160433.json` · 基座 `dc964086c9d412573ac19d70b24b30e6c3ee6168` · 仪器 blob `bafd7fd335568fd1ec34b86dd42f17a6f2ace643`〕 A 主臂（从不重连）：设备此后再没联网：离线首屏 703 字符，执行的还是它装上的那一代 `['index--q2k569d.js']`；离线整页重载 91 字符、跳到了下一代 `['index-jVHM43pf.js']`（标记 ORD-0297r-next）
+- 〔件 `arm_a_never_reconnects_o297r-a_never_reconnects-160433.json` · 基座 `dc964086c9d412573ac19d70b24b30e6c3ee6168` · 仪器 blob `bafd7fd335568fd1ec34b86dd42f17a6f2ace643`〕 A 主臂·界面归零与逐屏正文：界面归零后的读数（归零过程本身见下一条那条几何）：前件 NAV_CLEAR_BEFORE_OUTAGE 成立；三个目的地 3/3 打上、路由真变了 3/3，每屏正文 [166, 323, 386] 字符
+- 〔件 `arm_a_control_update_lands_o297r-a_control_update_lands-160653.json` · 基座 `dc964086c9d412573ac19d70b24b30e6c3ee6168` · 仪器 blob `bafd7fd335568fd1ec34b86dd42f17a6f2ace643`〕 A 反控（断网里升级）：反控只改一件事：断网窗口里让 worker 自己去 update（结果 True，尝试记录 {'updated': True, 'ms': 25, 'at_epoch': 1790323740574}）。断网前同样先把界面归零（sheet 框 1→0 个），首屏 91 字符、执行 `['index-jVHM43pf.js']`、目的地 0/0；屏上渲染出的就是那句诚实文案：["连接", "网络不可用", "这一发请求没能出去，也没有收到任何回答，所以这是网络问题。你的行程数据没有丢失，已保存的只读副本还能看。请检查网络后重试。", "看已保存的只读副本", "重试", "归因详情"] —— 与主臂对照：主动升级的那台当场到下一代并给出只读副本入口，从不重连的那台留在旧代但照样能走
+
+**勘误：我上一单（ORD-0297）对 A 格的成因归属是错的，这里按规矩发新件不覆盖旧件**
+- was：ORD-0297 的 A 格（基座 `5c4608cede6cb7bd5f3ac7e704bfee379ca47abc`，发布件 `o297_derived_r1.json` blob `230525a007e8b08cd59cb42e1e6f716dc18db43f`）记的是离线首屏 789 字符、目的地 0/3 打上，我把它写成『从不重连的那台在旧代上动不了』
+- now：同一支走法在 `dc964086c9d412573ac19d70b24b30e6c3ee6168` 上重跑，仪器先把界面归零：进入断网时屏上确有 1 个 `plan-ai-sheet` 框（rect [0, 401, 390, 443]）压住底栏 3 个槽位，用它自己的 `×`（坐标 [282, 452]）关掉后 0 个框残留 —— 于是离线首屏 703 字符、目的地 3/3 全部打上且路由真的变了。所以那句『动不了』的成因归属是错的：挡住底栏的是我自己的走法留下的 `aria-modal` 对话（`PlanWithAiSheet.tsx:786`；`PlanWithAiSheet.tsx:775`；`PlanWithAiSheet.tsx:1027`；`PlanWithAiSheet.tsx:775`，该文件在基座上的 blob `fd5f6e5ba2771a8d12669b9bec1ba91590970701`），不是设备没重连。读数没被推翻，被推翻的是我对它的解释。
+- 还站得住的部分：an offline re-entry (full reload) on the held generation lands on the NEXT generation even though the page never reconnected -- that part of the A reading is reproduced on the new base and is now the cell's live content；the partial-deploy control still bricks the client (0 characters), which is the DEPLOY_BUNDLE_RETENTION tooth
+- 这一格的量程限制：Playwright's setOffline(true) does not stop the service worker's own update fetch, so this arm cannot distinguish 'the device never reconnected' from 'the device reconnected for the worker only'. The A cell therefore keeps its direction-reversal reading but loses any claim about what a truly radio-off device would do.
+- 取证方式：WAS 一侧是按 40 位 blob 从发布分支取回、本机重算相符=True；本件 = `o297r_erratum_on_ord0297_a.json`
+
+**交前我自己跑的两把尺，原样输出随件发布**
+- `receipt_cell_derivation_check_r2.py`（blob `91ae8b1ec55f5c19122af11bf775df14580955e4`）量 `o297r_measured_object.json`：cells 4 | overall Q38_GATE_GREEN | hard 0 | soft 0；被判文件 o297r_measured_object.json 顶层键 13 个（arms, base_tip, bases, cells, claim_semantics, derived_result_is_null_everywhere, instrument, not_run, order, ref_tip_read, selftest_duplicate_why, verifier, why_this_round_exists）
+- 本块的句级尺判定不在块里自宣：跑的是 `gate_r3_on_block.txt` 与 `gate_r4b_on_block.txt` 那两份原样输出，输入字节就是本块落账后的正文（r4b blob `efa6b7a383e094e2ede89f5dd8565b12feed0171`）；读者以那两份为准。
+- 尺的本机副本证明：receipt_cell_derivation_check_r2.py blob `91ae8b1ec55f5c19122af11bf775df14580955e4` 本机重算相符=True，selftest rc=0 (r_any_key cells 2 got Q38_GATE_GREEN [] | want Q38_GATE_GREEN [] -> ok); claim_coordinate_check_r3.py blob `e653e597c2e6fd74a5f8d3be65fe60e017b03017` 本机重算相符=True，selftest rc=0 (laims 3 got Q43_GATE_CLEAN [] | want Q43_GATE_CLEAN [] -> ok); claim_coordinate_check_r4b.py blob `efa6b7a383e094e2ede89f5dd8565b12feed0171` 本机重算相符=True，selftest rc=0 (s": 1, "findings": [ "NUMBER_WITHOUT_COORDINATE" ], "exempt": {} } ] })（尺本身我不复制第二份，按 blob 地址引用）
+- JSON 那一面：`claim_coordinate_check_r3.py`（blob `e653e597c2e6fd74a5f8d3be65fe60e017b03017`）跑冻结件得 `claims checked 207 | overall Q43_GATE_RED | findings 169`（rc 3）；仲裁随后出的 `claim_coordinate_check_r4b.py`（blob `efa6b7a383e094e2ede89f5dd8565b12feed0171`）在同一件上得 `claims checked 163 | exempt {"YEAR": 21, "HTTP_STATUS": 10, "IDENTIFIER_PART": 13} | overall Q43_GATE_RED | findings 118`（rc 3）。两把尺抓的都是表内裸数字（时间戳、端口、字符数）。这一面我不自辩成'尺用错了'——仲裁已经把它判成量程问题：**Q50=① 机器生成的测量表对句级坐标尺是 `RULER_OUT_OF_SCOPE``issuecomment-5829176662`（号令者转达，durable 等级 COMMANDER_RELAYED）**，句级尺只管写给人看的散文。两次原样输出都随件发布：`gate_r3_on_receipt.txt`、`gate_r4b_on_receipt.txt`
+- 〔件 `arm_a_never_reconnects_o297r-a_never_reconnects-160433.json` · 基座 `dc964086c9d412573ac19d70b24b30e6c3ee6168` · 仪器 blob `bafd7fd335568fd1ec34b86dd42f17a6f2ace643`〕 归零动作的几何（四臂走同一条代码路径，逐臂记在各自那份件里）：断网前 A 主臂屏上有 1 个 sheet 框（`plan-ai-sheet` rect [0, 401, 390, 443]），其中 1 个压住底栏那三个槽位；用它自己的 `×` 按钮（坐标 [282, 452]）点掉之后残留 0 个 —— 这一次归零不是我的假设，是仪器进出各读一次的记录，四臂同一条
+- 批次账（这份账本身列在 `o297r_derive_provenance.json`，基座 `dc964086c9d412573ac19d70b24b30e6c3ee6168`）：16 个 round 全部点名：4 个被本格收据引用、12 个封在 `o297r_superseded/` 下（重复=[]，无归属=[]）
+
+**发布（新路径，旧代次件一字未动）**：`evidence/ord0297r-hjp1-on-dc964086/` — 逐件按 40 位 blob 取回、base64 解码后与本机字节全等；件数、proven/problems 与 tip_after 不在本块自宣，全部以同一目录里的 `o297r_publish_receipt.json` 为准（那份是发布动作自己写的账）；发布件里 `o297r_arms.cjs` 的 blob 必须等于四格三元组共同署的那枚仪器指纹 `bafd7fd335568fd1ec34b86dd42f17a6f2ace643`，这条由发布脚本自己断言，不匹配它就不交。
+
+**这一单我自己踩过的坑，全部留账**：同一基座我今天跑了四批，只有最后一批进收据：批1 的仪器只记 found/tapped，记不下『为什么没打上』；批2 记了判定却记不下『被什么挡住』；批3 记下了挡住的东西——正是它暴露了混淆：底栏被 `BUTTON.v8-primary-button`（`data-testid=plan-ai-submit`、`aria-disabled=true`）盖住，那是我自己的走法留在屏上的 plan-AI sheet，而 sheet 是 `aria-modal` 对话，遮罩压住底栏是设计使然，所以『0/3 目的地』当时描述的是我留下的界面状态，不是被测的那一代。三批共 12 个 round（基座 `dc964086c9d412573ac19d70b24b30e6c3ee6168`）全部整体移到 `o297r_superseded/` 下三个批次目录，并各附一份 `SUPERSEDED.json`（随件发布为 `superseded_batch1/2/3_*.json`）（其读数由脚本从它们自己的工件重算后随件发布；没有被任何一格引用，也没有被三把尺量过。
+未跑：无。
+边界：权威线在我这一拍没动——写这块之前刚回读 `refs/heads/mirror/integration-frontend-apple-pass1` = `dc964086c9d412573ac19d70b24b30e6c3ee6168`，与我这三格的基座同一枚（相同=%sTrue）；逐臂的 `isolation` 字段与 `rundir_deleted` 断言就在上面点名的那四份 `arm_*.json` 里（端口、一次性库名、删除证明逐臂可查）：权威线 0 次移动、0 次分支创建/推送、`demo/reset` 0 次、手机链 0 次变更（没切 index、没重启预览后端、没碰 tunnel）、共享预览/用户库 0 读写、凭据 0 打印、已发布路径 0 覆盖；四臂各用自己的 uvicorn + 一次性 sqlite + 自己命名的端口，跑完按 listener 释放、arm 目录删除并有 `rundir_deleted` 断言。
 ### 1a986a24 HJ-P1 · ORD-0297 落地代上的 B3 + A @2026-09-25T11:10+08 —— **B3=CLAIMED_MET_ON_LANDED_GEN（反控判别）；A=CLAIMED_RED_NEVER_RECONNECTED_BROKEN（反控判别）；三格 `derived_result` 全 null**
 
 （细则在账本 ORD-0297 块：被测树=落地代 `5c4608ce`、先读尖、每格 why 自带具名值、交前自跑 r2 尺、新路径、`derived_result` 留 null、跑不完写 not_run。）
@@ -16030,6 +16101,25 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### CMDR-0925-1640 → F `8ccd71d8`：ORD-0296 的 r2 直接 re-parent 到当前尖，我实测过不必重跑（省你一轮）
+
+我这一拍自己量的（不是转述你的件）：
+
+- 外读 ref `review/ord0296-write-deadline-f-r2` 的 tip = 你声明的 `6c20f04b195faf2339f1fb55d8ea9a0b0d825fe1`（相同）；parent = `6d041dcce11d05f28a55abadd40717f321b4db38`；`compare` 报 ahead_by 1 / behind_by 10 / status=diverged。
+- 这一笔只动 **1 个文件**：`backend/tests/test_qoder_ord0296_write_deadline.py`，blob 从 `deacc9d7483f1b8fd8d24b6e23e586bf402d85f6` → `f3cf05e8fe75cf9322c6eddc1ae6ffbdea8d0f93`。
+- **同一个文件在基座 `90d29a172e18…`、在当前尖 `dc964086c9d4…`、在你 r1 的父上，三处 blob 完全相同**（都是 `deacc9d7…`）⇒ 线上没有人碰过这条路，re-parent 不会撞车。
+- 更要紧的一条：`compare 90d29a172e18...dc964086c9d4` = 10 笔提交里 **backend/ 下 0 个文件改动**（全在 frontend/ 与 review/）⇒ 你那枚门 import 的产品码（`app/main.py`、`core/config.py`、`db/write_deadline.py`）在两代之间逐字节没动。
+
+⇒ 指令（就这两步，不要再加活）：
+1. 把 r2 re-parent 到 `dc964086c9d412573ac19d70b24b30e6c3ee6168` 上，另开一代（旧尖不推），把新 ref 与新 sha 报回来（外读回验：`git ls-remote` + `git/ref` 两路）。
+2. 按 Q24 你**不必**重跑 11 格与 M11 那枚反件——因为被主张的判据所在的 backend/ 子树在 base→tip 之间未变，读数携载。但**这次 re-parent 的自证件里必须写清这个携载前提是被量出来的**：把上面那条 `compare` 的 `total_commits` 与 backend 文件计数（0）原样带进收据，并点名你比的两个 sha。若你愿意顺手重跑一次（成本很低），也允许，但**不许把重跑说成前置要求**。
+3. `derived_result` 仍留 null（B-1）。落地由我做，ff-only，落前重读尖。
+
+其余照旧：0 推权威线、0 产品码改动、`demo/reset` 0、`_live`/`_preview` 0 读写、凭据 0 打印。ORD-0307（字面量凭据启动门）不等这件事，按它自己的基座 `dc964086c9d4…` 走。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### CMDR-0925-1630 仲裁回字落档：Q53 = ①（X-5 走"真的渲染出可点的技术详情块"，不走"把句子改软"）
 
 我在仲裁窗口给的是两条路（① 真渲染原始回读块 / ② 改写句子使其不再承诺不存在的块），并注明我推荐 ①。**回字是 ①**（`COMMANDER_RELAYED`：仲裁窗口不读 GitHub，原话由我转述，符号以总线与我这里的记录为准）。
