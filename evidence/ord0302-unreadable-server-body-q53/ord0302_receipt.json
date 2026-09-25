@@ -1,0 +1,857 @@
+{
+ "at": "2026-09-25T20:50:53+08:00",
+ "order": "ORD-0302 文案修 · 非 JSON 正文不得冒充网络故障 · r2 补 X-5 五形",
+ "lane": "B c01d72a3",
+ "amendment_of": "evidence/ord0302-unreadable-server-body",
+ "product_bytes_changed": 0,
+ "claim_kind": "RUNTIME_MEASURED",
+ "candidate_tip": "2f191eb5fd1682a53cf95f883c7200f00cbb6ebe",
+ "base_tip": "13af1ff4ba4516aa1a39cda67428ed4a2a34ac69",
+ "branch": "review/0302-unreadable-server-body-b3",
+ "cells": [
+  {
+   "cell": "N1 on the fixed candidate",
+   "claimed_result": "MET",
+   "derived_result": null,
+   "why": "N1 (frontend/e2e/qoder-ord0302-unreadable-server-body.spec.ts :: ord0302-N1, shape=fixed, run 0302fix46204620 over base 13af1ff4ba45): Playwright reported passed and the cell's own verdict is MET. The screen said status=HTTP_500, , the rendered label was '这台设备自己的读数（服务器没给句子）' with origin='device' over the reading 'agent/commands -> HTTP 500'; legs seen: ['GET /plans(baseline)', 'GET /plans(baseline)', 'POST /agent/commands']. This is the regression itself: a server answer with no parseable body stays an HTTP answer and is still readable. Face: authoritative e2e on vite dev (frontend :4490, backend :42490, ai=disabled, db _0302fix46204620.db) -- spec-grade, not a shipped bundle.",
+   "readings": {
+    "arm": "N1",
+    "nodeid": "frontend/e2e/qoder-ord0302-unreadable-server-body.spec.ts :: ord0302-N1",
+    "run_shape": "fixed",
+    "run_id": "0302fix46204620",
+    "candidate_tip": "2f191eb5fd1682a53cf95f883c7200f00cbb6ebe",
+    "base_tip": "13af1ff4ba4516aa1a39cda67428ed4a2a34ac69",
+    "matrix_blob_of_this_run_report": "f2e0b99ca0d17cc550e450f45c7a9cdcf7d32536",
+    "sheet_blob_candidate": "47ff8985a9963d77a4094eb970ad3fd5b639140b",
+    "spec_blob": "868059d0206418395513a05221071302720416a1",
+    "status": "HTTP_500",
+    "detail_block_attached": true,
+    "details_count": null,
+    "per_shape": null,
+    "shape_count": null,
+    "absent_block_direction": null,
+    "why_absent_direction_unreachable": null,
+    "shape_rows": [],
+    "promise_in_copy": null,
+    "label_rendered": "这台设备自己的读数（服务器没给句子）",
+    "origin_attribute": "device",
+    "reason_rendered": "agent/commands -> HTTP 500",
+    "legs": [
+     "GET /plans(baseline)",
+     "GET /plans(baseline)",
+     "POST /agent/commands"
+    ],
+    "want": "device",
+    "verdict": "MET",
+    "outcome": "passed",
+    "db": "_0302fix46204620.db",
+    "frontend_port": 4490,
+    "backend_port": 42490,
+    "authoritative": true,
+    "ai": "disabled",
+    "reuseExistingServer": false,
+    "named_values_the_why_uses": [
+     "0302fix46204620",
+     "13af1ff4ba4516aa1a39cda67428ed4a2a34ac69",
+     "2f191eb5fd1682a53cf95f883c7200f00cbb6ebe",
+     "42490",
+     "4490",
+     "47ff8985a9963d77a4094eb970ad3fd5b639140b",
+     "868059d0206418395513a05221071302720416a1",
+     "False",
+     "GET /plans(baseline)",
+     "HTTP_500",
+     "MET",
+     "N1",
+     "POST /agent/commands",
+     "True",
+     "_0302fix46204620.db",
+     "agent/commands -> HTTP 500",
+     "device",
+     "disabled",
+     "f2e0b99ca0d17cc550e450f45c7a9cdcf7d32536",
+     "fixed",
+     "frontend/e2e/qoder-ord0302-unreadable-server-body.spec.ts :: ord0302-N1",
+     "passed",
+     "这台设备自己的读数（服务器没给句子）"
+    ]
+   }
+  },
+  {
+   "cell": "N2 on the fixed candidate",
+   "claimed_result": "MET",
+   "derived_result": null,
+   "why": "N2 (frontend/e2e/qoder-ord0302-unreadable-server-body.spec.ts :: ord0302-N2, shape=fixed, run 0302fix46204620 over base 13af1ff4ba45): Playwright reported passed and the cell's own verdict is MET. The screen said status=HTTP_422, , the rendered label was '服务器给出的原因' with origin='server' over the reading '该目的地的候选目录尚未就绪，请稍后重试。'; legs seen: ['GET /plans(baseline)', 'GET /plans(baseline)', 'POST /agent/commands']. Positive control: the verbatim server sentence still wins, so the fix did not start preferring our own prose. Face: authoritative e2e on vite dev (frontend :4490, backend :42490, ai=disabled, db _0302fix46204620.db) -- spec-grade, not a shipped bundle.",
+   "readings": {
+    "arm": "N2",
+    "nodeid": "frontend/e2e/qoder-ord0302-unreadable-server-body.spec.ts :: ord0302-N2",
+    "run_shape": "fixed",
+    "run_id": "0302fix46204620",
+    "candidate_tip": "2f191eb5fd1682a53cf95f883c7200f00cbb6ebe",
+    "base_tip": "13af1ff4ba4516aa1a39cda67428ed4a2a34ac69",
+    "matrix_blob_of_this_run_report": "f2e0b99ca0d17cc550e450f45c7a9cdcf7d32536",
+    "sheet_blob_candidate": "47ff8985a9963d77a4094eb970ad3fd5b639140b",
+    "spec_blob": "868059d0206418395513a05221071302720416a1",
+    "status": "HTTP_422",
+    "detail_block_attached": true,
+    "details_count": null,
+    "per_shape": null,
+    "shape_count": null,
+    "absent_block_direction": null,
+    "why_absent_direction_unreachable": null,
+    "shape_rows": [],
+    "promise_in_copy": null,
+    "label_rendered": "服务器给出的原因",
+    "origin_attribute": "server",
+    "reason_rendered": "该目的地的候选目录尚未就绪，请稍后重试。",
+    "legs": [
+     "GET /plans(baseline)",
+     "GET /plans(baseline)",
+     "POST /agent/commands"
+    ],
+    "want": "server",
+    "verdict": "MET",
+    "outcome": "passed",
+    "db": "_0302fix46204620.db",
+    "frontend_port": 4490,
+    "backend_port": 42490,
+    "authoritative": true,
+    "ai": "disabled",
+    "reuseExistingServer": false,
+    "named_values_the_why_uses": [
+     "0302fix46204620",
+     "13af1ff4ba4516aa1a39cda67428ed4a2a34ac69",
+     "2f191eb5fd1682a53cf95f883c7200f00cbb6ebe",
+     "42490",
+     "4490",
+     "47ff8985a9963d77a4094eb970ad3fd5b639140b",
+     "868059d0206418395513a05221071302720416a1",
+     "False",
+     "GET /plans(baseline)",
+     "HTTP_422",
+     "MET",
+     "N2",
+     "POST /agent/commands",
+     "True",
+     "_0302fix46204620.db",
+     "disabled",
+     "f2e0b99ca0d17cc550e450f45c7a9cdcf7d32536",
+     "fixed",
+     "frontend/e2e/qoder-ord0302-unreadable-server-body.spec.ts :: ord0302-N2",
+     "passed",
+     "server",
+     "服务器给出的原因",
+     "该目的地的候选目录尚未就绪，请稍后重试。"
+    ]
+   }
+  },
+  {
+   "cell": "N3 on the fixed candidate",
+   "claimed_result": "MET",
+   "derived_result": null,
+   "why": "N3 (frontend/e2e/qoder-ord0302-unreadable-server-body.spec.ts :: ord0302-N3, shape=fixed, run 0302fix46204620 over base 13af1ff4ba45): Playwright reported passed and the cell's own verdict is MET. The screen said status=NETWORK, , the rendered label was '这台设备自己的读数（服务器没给句子）' with origin='device' over the reading 'no readable answer reached this device (network or origin)'; legs seen: ['GET /plans(baseline)', 'GET /plans(baseline)', 'POST /agent/commands']. Requirement ②: even a real network failure keeps a visible device line instead of an empty panel. Face: authoritative e2e on vite dev (frontend :4490, backend :42490, ai=disabled, db _0302fix46204620.db) -- spec-grade, not a shipped bundle.",
+   "readings": {
+    "arm": "N3",
+    "nodeid": "frontend/e2e/qoder-ord0302-unreadable-server-body.spec.ts :: ord0302-N3",
+    "run_shape": "fixed",
+    "run_id": "0302fix46204620",
+    "candidate_tip": "2f191eb5fd1682a53cf95f883c7200f00cbb6ebe",
+    "base_tip": "13af1ff4ba4516aa1a39cda67428ed4a2a34ac69",
+    "matrix_blob_of_this_run_report": "f2e0b99ca0d17cc550e450f45c7a9cdcf7d32536",
+    "sheet_blob_candidate": "47ff8985a9963d77a4094eb970ad3fd5b639140b",
+    "spec_blob": "868059d0206418395513a05221071302720416a1",
+    "status": "NETWORK",
+    "detail_block_attached": true,
+    "details_count": null,
+    "per_shape": null,
+    "shape_count": null,
+    "absent_block_direction": null,
+    "why_absent_direction_unreachable": null,
+    "shape_rows": [],
+    "promise_in_copy": null,
+    "label_rendered": "这台设备自己的读数（服务器没给句子）",
+    "origin_attribute": "device",
+    "reason_rendered": "no readable answer reached this device (network or origin)",
+    "legs": [
+     "GET /plans(baseline)",
+     "GET /plans(baseline)",
+     "POST /agent/commands"
+    ],
+    "want": "device",
+    "verdict": "MET",
+    "outcome": "passed",
+    "db": "_0302fix46204620.db",
+    "frontend_port": 4490,
+    "backend_port": 42490,
+    "authoritative": true,
+    "ai": "disabled",
+    "reuseExistingServer": false,
+    "named_values_the_why_uses": [
+     "0302fix46204620",
+     "13af1ff4ba4516aa1a39cda67428ed4a2a34ac69",
+     "2f191eb5fd1682a53cf95f883c7200f00cbb6ebe",
+     "42490",
+     "4490",
+     "47ff8985a9963d77a4094eb970ad3fd5b639140b",
+     "868059d0206418395513a05221071302720416a1",
+     "False",
+     "GET /plans(baseline)",
+     "MET",
+     "N3",
+     "NETWORK",
+     "POST /agent/commands",
+     "True",
+     "_0302fix46204620.db",
+     "device",
+     "disabled",
+     "f2e0b99ca0d17cc550e450f45c7a9cdcf7d32536",
+     "fixed",
+     "frontend/e2e/qoder-ord0302-unreadable-server-body.spec.ts :: ord0302-N3",
+     "no readable answer reached this device (network or origin)",
+     "passed",
+     "这台设备自己的读数（服务器没给句子）"
+    ]
+   }
+  },
+  {
+   "cell": "X1 on the fixed candidate",
+   "claimed_result": "MET",
+   "derived_result": null,
+   "why": "X1 (frontend/e2e/qoder-ord0302-unreadable-server-body.spec.ts :: ord0302-X1, shape=fixed, run 0302fix46204620 over base 13af1ff4ba45): Playwright reported passed and the cell's own verdict is MET. The screen said status=NO_PLANS_PRODUCED, its rendered card text points at 技术详情=True and the DOM held 1 such block(s), so attached=True judged once per shape over the 5 rows X-5 named: R19_④_200_empty_body -> status=NO_PLANS_PRODUCED, promise=True, details_count=1, and the block's own fields rendered={\"http_status\": \"200\", \"content-type\": \"application/json\", \"bytes\": \"0\", \"body\": \"\"} against what the stub forced={\"http_status\": \"200\", \"content-type\": \"application/json\", \"bytes\": \"0\", \"body\": \"\"}; R20_④_200_json_empty_object -> status=NO_PLANS_PRODUCED, promise=True, details_count=1, and the block's own fields rendered={\"http_status\": \"200\", \"content-type\": \"application/json\", \"bytes\": \"2\", \"body\": \"{}\"} against what the stub forced={\"http_status\": \"200\", \"content-type\": \"application/json\", \"bytes\": \"2\", \"body\": \"{}\"}; R21_④_200_json_array -> status=NO_PLANS_PRODUCED, promise=True, details_count=1, and the block's own fields rendered={\"http_status\": \"200\", \"content-type\": \"application/json\", \"bytes\": \"2\", \"body\": \"[]\"} against what the stub forced={\"http_status\": \"200\", \"content-type\": \"application/json\", \"bytes\": \"2\", \"body\": \"[]\"}; R22_④_200_text_plain_payload -> status=NO_PLANS_PRODUCED, promise=True, details_count=1, and the block's own fields rendered={\"http_status\": \"200\", \"content-type\": \"text/plain; charset=utf-8\", \"bytes\": \"33\", \"body\": \"plans are not available right now\"} against what the stub forced={\"http_status\": \"200\", \"content-type\": \"text/plain; charset=utf-8\", \"bytes\": \"33\", \"body\": \"plans are not available right now\"}; R23_④_200_mission_unusable_status -> status=NO_PLANS_PRODUCED, promise=True, details_count=1, and the block's own fields rendered={\"http_status\": \"200\", \"content-type\": \"application/json\", \"bytes\": \"110\", \"body\": \"{\\\"mission\\\":{\\\"id\\\":\\\"ord0302-mission\\\",\\\"status\\\":\\\"FAILED_UPSTREAM\\\",\\\"failure_reason\\\":null,\\\"reasoning_summary\\\":null}}\"} against what the stub forced={\"http_status\": \"200\", \"content-type\": \"application/json\", \"bytes\": \"110\", \"body\": \"{\\\"mission\\\":{\\\"id\\\":\\\"ord0302-mission\\\",\\\"status\\\":\\\"FAILED_UPSTREAM\\\",\\\"failure_reason\\\":null,\\\"reasoning_summary\\\":null}}\"}, the rendered label was None with origin='' over the reading ''; legs seen: None. X-5: for every one of the five rows X-5 named (R19-R23, all of them answers the sheet never stored, whose card still points at 技术详情) the block must exist and pointer may not be deleted to make the test pass (Q53=① rendered it). Face: authoritative e2e on vite dev (frontend :4490, backend :42490, ai=disabled, db _0302fix46204620.db) -- spec-grade, not a shipped bundle.",
+   "readings": {
+    "arm": "X1",
+    "nodeid": "frontend/e2e/qoder-ord0302-unreadable-server-body.spec.ts :: ord0302-X1",
+    "run_shape": "fixed",
+    "run_id": "0302fix46204620",
+    "candidate_tip": "2f191eb5fd1682a53cf95f883c7200f00cbb6ebe",
+    "base_tip": "13af1ff4ba4516aa1a39cda67428ed4a2a34ac69",
+    "matrix_blob_of_this_run_report": "f2e0b99ca0d17cc550e450f45c7a9cdcf7d32536",
+    "sheet_blob_candidate": "47ff8985a9963d77a4094eb970ad3fd5b639140b",
+    "spec_blob": "868059d0206418395513a05221071302720416a1",
+    "status": "NO_PLANS_PRODUCED",
+    "detail_block_attached": true,
+    "details_count": 1,
+    "per_shape": {
+     "R19_④_200_empty_body": {
+      "status": "NO_PLANS_PRODUCED",
+      "promise_in_copy": true,
+      "details_count": 1,
+      "reason": "",
+      "origin": "",
+      "raw_rendered": {
+       "http_status": "200",
+       "content-type": "application/json",
+       "bytes": "0",
+       "body": ""
+      },
+      "raw_expected": {
+       "http_status": "200",
+       "content-type": "application/json",
+       "bytes": "0",
+       "body": ""
+      }
+     },
+     "R20_④_200_json_empty_object": {
+      "status": "NO_PLANS_PRODUCED",
+      "promise_in_copy": true,
+      "details_count": 1,
+      "reason": "",
+      "origin": "",
+      "raw_rendered": {
+       "http_status": "200",
+       "content-type": "application/json",
+       "bytes": "2",
+       "body": "{}"
+      },
+      "raw_expected": {
+       "http_status": "200",
+       "content-type": "application/json",
+       "bytes": "2",
+       "body": "{}"
+      }
+     },
+     "R21_④_200_json_array": {
+      "status": "NO_PLANS_PRODUCED",
+      "promise_in_copy": true,
+      "details_count": 1,
+      "reason": "",
+      "origin": "",
+      "raw_rendered": {
+       "http_status": "200",
+       "content-type": "application/json",
+       "bytes": "2",
+       "body": "[]"
+      },
+      "raw_expected": {
+       "http_status": "200",
+       "content-type": "application/json",
+       "bytes": "2",
+       "body": "[]"
+      }
+     },
+     "R22_④_200_text_plain_payload": {
+      "status": "NO_PLANS_PRODUCED",
+      "promise_in_copy": true,
+      "details_count": 1,
+      "reason": "",
+      "origin": "",
+      "raw_rendered": {
+       "http_status": "200",
+       "content-type": "text/plain; charset=utf-8",
+       "bytes": "33",
+       "body": "plans are not available right now"
+      },
+      "raw_expected": {
+       "http_status": "200",
+       "content-type": "text/plain; charset=utf-8",
+       "bytes": "33",
+       "body": "plans are not available right now"
+      }
+     },
+     "R23_④_200_mission_unusable_status": {
+      "status": "NO_PLANS_PRODUCED",
+      "promise_in_copy": true,
+      "details_count": 1,
+      "reason": "",
+      "origin": "",
+      "raw_rendered": {
+       "http_status": "200",
+       "content-type": "application/json",
+       "bytes": "110",
+       "body": "{\"mission\":{\"id\":\"ord0302-mission\",\"status\":\"FAILED_UPSTREAM\",\"failure_reason\":null,\"reasoning_summary\":null}}"
+      },
+      "raw_expected": {
+       "http_status": "200",
+       "content-type": "application/json",
+       "bytes": "110",
+       "body": "{\"mission\":{\"id\":\"ord0302-mission\",\"status\":\"FAILED_UPSTREAM\",\"failure_reason\":null,\"reasoning_summary\":null}}"
+      }
+     }
+    },
+    "shape_count": 5,
+    "absent_block_direction": null,
+    "why_absent_direction_unreachable": null,
+    "shape_rows": [
+     "R19_④_200_empty_body",
+     "R20_④_200_json_empty_object",
+     "R21_④_200_json_array",
+     "R22_④_200_text_plain_payload",
+     "R23_④_200_mission_unusable_status"
+    ],
+    "promise_in_copy": true,
+    "label_rendered": null,
+    "origin_attribute": "",
+    "reason_rendered": "",
+    "legs": null,
+    "want": "device",
+    "verdict": "MET",
+    "outcome": "passed",
+    "db": "_0302fix46204620.db",
+    "frontend_port": 4490,
+    "backend_port": 42490,
+    "authoritative": true,
+    "ai": "disabled",
+    "reuseExistingServer": false,
+    "named_values_the_why_uses": [
+     "",
+     "0",
+     "0302fix46204620",
+     "1",
+     "110",
+     "13af1ff4ba4516aa1a39cda67428ed4a2a34ac69",
+     "2",
+     "200",
+     "2f191eb5fd1682a53cf95f883c7200f00cbb6ebe",
+     "33",
+     "42490",
+     "4490",
+     "47ff8985a9963d77a4094eb970ad3fd5b639140b",
+     "5",
+     "868059d0206418395513a05221071302720416a1",
+     "False",
+     "MET",
+     "NO_PLANS_PRODUCED",
+     "R19_④_200_empty_body",
+     "R20_④_200_json_empty_object",
+     "R21_④_200_json_array",
+     "R22_④_200_text_plain_payload",
+     "R23_④_200_mission_unusable_status",
+     "True",
+     "X1",
+     "[]",
+     "_0302fix46204620.db",
+     "application/json",
+     "device",
+     "disabled",
+     "f2e0b99ca0d17cc550e450f45c7a9cdcf7d32536",
+     "fixed",
+     "frontend/e2e/qoder-ord0302-unreadable-server-body.spec.ts :: ord0302-X1",
+     "passed",
+     "plans are not available right now",
+     "text/plain; charset=utf-8",
+     "{\"mission\":{\"id\":\"ord0302-mission\",\"status\":\"FAILED_UPSTREAM\",\"failure_reason\":null,\"reasoning_summary\":null}}",
+     "{}"
+    ]
+   }
+  },
+  {
+   "cell": "X2 on the fixed candidate",
+   "claimed_result": "MET",
+   "derived_result": null,
+   "why": "X2 (frontend/e2e/qoder-ord0302-unreadable-server-body.spec.ts :: ord0302-X2, shape=fixed, run 0302fix46204620 over base 13af1ff4ba45): Playwright reported passed and the cell's own verdict is MET. The screen said status=BASELINE_UNAVAILABLE, its rendered card text points at 技术详情=False and the DOM held 1 such block(s), so attached=True, the rendered label was '' with origin='' over the reading ''; legs seen: None. The other side of the pairing, measured rather than implied: a request the traveller cancels has no answer to show, so its block really is absent and its sentence makes no promise -- which is what stops the rule degenerating into 'always render something'. Face: authoritative e2e on vite dev (frontend :4490, backend :42490, ai=disabled, db _0302fix46204620.db) -- spec-grade, not a shipped bundle.",
+   "readings": {
+    "arm": "X2",
+    "nodeid": "frontend/e2e/qoder-ord0302-unreadable-server-body.spec.ts :: ord0302-X2",
+    "run_shape": "fixed",
+    "run_id": "0302fix46204620",
+    "candidate_tip": "2f191eb5fd1682a53cf95f883c7200f00cbb6ebe",
+    "base_tip": "13af1ff4ba4516aa1a39cda67428ed4a2a34ac69",
+    "matrix_blob_of_this_run_report": "f2e0b99ca0d17cc550e450f45c7a9cdcf7d32536",
+    "sheet_blob_candidate": "47ff8985a9963d77a4094eb970ad3fd5b639140b",
+    "spec_blob": "868059d0206418395513a05221071302720416a1",
+    "status": "BASELINE_UNAVAILABLE",
+    "detail_block_attached": true,
+    "details_count": 1,
+    "per_shape": null,
+    "shape_count": null,
+    "absent_block_direction": "NOT_MEASURED",
+    "why_absent_direction_unreachable": "the block is gated on the raw reading, so no drivable shape of this screen leaves it out of the DOM",
+    "shape_rows": [],
+    "promise_in_copy": false,
+    "label_rendered": "",
+    "origin_attribute": "",
+    "reason_rendered": "",
+    "legs": null,
+    "want": "either",
+    "verdict": "MET",
+    "outcome": "passed",
+    "db": "_0302fix46204620.db",
+    "frontend_port": 4490,
+    "backend_port": 42490,
+    "authoritative": true,
+    "ai": "disabled",
+    "reuseExistingServer": false,
+    "named_values_the_why_uses": [
+     "",
+     "0302fix46204620",
+     "1",
+     "13af1ff4ba4516aa1a39cda67428ed4a2a34ac69",
+     "2f191eb5fd1682a53cf95f883c7200f00cbb6ebe",
+     "42490",
+     "4490",
+     "47ff8985a9963d77a4094eb970ad3fd5b639140b",
+     "868059d0206418395513a05221071302720416a1",
+     "BASELINE_UNAVAILABLE",
+     "False",
+     "MET",
+     "NOT_MEASURED",
+     "True",
+     "X2",
+     "_0302fix46204620.db",
+     "disabled",
+     "either",
+     "f2e0b99ca0d17cc550e450f45c7a9cdcf7d32536",
+     "fixed",
+     "frontend/e2e/qoder-ord0302-unreadable-server-body.spec.ts :: ord0302-X2",
+     "passed",
+     "the block is gated on the raw reading, so no drivable shape of this screen leaves it out of the DOM"
+    ]
+   }
+  },
+  {
+   "cell": "counter-arm ca_unsafe_read (must flip N1 only)",
+   "claimed_result": "MET",
+   "derived_result": null,
+   "why": "counter-arm ca_unsafe_read: the sha256 of the sheet went 4b5fb60bb377b479 -> 55f224663f8087a5 (mutant landed, bytes changed) and the intended arm N1 read failed while the arms that should not care stayed ['passed', 'passed', 'passed', 'passed'] -- an all-red run would prove nothing about which line carries the defect. Expectation {'N1': 'failed', 'N2': 'passed', 'N3': 'passed', 'X1': 'passed', 'X2': 'passed'} met=True, run 0302unr46204640, source restored byte-exact=True, report blob 0cbf89a96a1e1ac2a3a5bca7c7e129bef4931a13.",
+   "readings": {
+    "shape": "ca_unsafe_read",
+    "run_id": "0302unr46204640",
+    "arm_that_flipped": "N1",
+    "outcomes": {
+     "N1": "failed",
+     "N2": "passed",
+     "N3": "passed",
+     "X1": "passed",
+     "X2": "passed"
+    },
+    "digest_before": "4b5fb60bb377b479",
+    "digest_running": "55f224663f8087a5",
+    "restored_byte_exact": true,
+    "expected": {
+     "N1": "failed",
+     "N2": "passed",
+     "N3": "passed",
+     "X1": "passed",
+     "X2": "passed"
+    },
+    "meets_expectation": true,
+    "report_blob": "0cbf89a96a1e1ac2a3a5bca7c7e129bef4931a13",
+    "candidate_tip": "2f191eb5fd1682a53cf95f883c7200f00cbb6ebe",
+    "base_tip": "13af1ff4ba4516aa1a39cda67428ed4a2a34ac69",
+    "named_values_the_why_uses": [
+     "0302unr46204640",
+     "0cbf89a96a1e1ac2a3a5bca7c7e129bef4931a13",
+     "13af1ff4ba4516aa1a39cda67428ed4a2a34ac69",
+     "2f191eb5fd1682a53cf95f883c7200f00cbb6ebe",
+     "4b5fb60bb377b479",
+     "55f224663f8087a5",
+     "N1",
+     "True",
+     "ca_unsafe_read",
+     "failed",
+     "passed"
+    ]
+   }
+  },
+  {
+   "cell": "counter-arm ca_null_on_network (must flip N3 only)",
+   "claimed_result": "MET",
+   "derived_result": null,
+   "why": "counter-arm ca_null_on_network: the sha256 of the sheet went 4b5fb60bb377b479 -> 8f193d1834336734 (mutant landed, bytes changed) and the intended arm N3 read failed while the arms that should not care stayed ['passed', 'passed', 'passed', 'passed'] -- an all-red run would prove nothing about which line carries the defect. Expectation {'N1': 'passed', 'N2': 'passed', 'N3': 'failed', 'X1': 'passed', 'X2': 'passed'} met=True, run 0302nul46204701, source restored byte-exact=True, report blob d9b22f2ceeb2d6e8ec48526245d01968c026a4e0.",
+   "readings": {
+    "shape": "ca_null_on_network",
+    "run_id": "0302nul46204701",
+    "arm_that_flipped": "N3",
+    "outcomes": {
+     "N1": "passed",
+     "N2": "passed",
+     "N3": "failed",
+     "X1": "passed",
+     "X2": "passed"
+    },
+    "digest_before": "4b5fb60bb377b479",
+    "digest_running": "8f193d1834336734",
+    "restored_byte_exact": true,
+    "expected": {
+     "N1": "passed",
+     "N2": "passed",
+     "N3": "failed",
+     "X1": "passed",
+     "X2": "passed"
+    },
+    "meets_expectation": true,
+    "report_blob": "d9b22f2ceeb2d6e8ec48526245d01968c026a4e0",
+    "candidate_tip": "2f191eb5fd1682a53cf95f883c7200f00cbb6ebe",
+    "base_tip": "13af1ff4ba4516aa1a39cda67428ed4a2a34ac69",
+    "named_values_the_why_uses": [
+     "0302nul46204701",
+     "13af1ff4ba4516aa1a39cda67428ed4a2a34ac69",
+     "2f191eb5fd1682a53cf95f883c7200f00cbb6ebe",
+     "4b5fb60bb377b479",
+     "8f193d1834336734",
+     "N3",
+     "True",
+     "ca_null_on_network",
+     "d9b22f2ceeb2d6e8ec48526245d01968c026a4e0",
+     "failed",
+     "passed"
+    ]
+   }
+  },
+  {
+   "cell": "counter-arm ca_x5_no_block (must flip X1 only)",
+   "claimed_result": "MET",
+   "derived_result": null,
+   "why": "counter-arm ca_x5_no_block: the sha256 of the sheet went 4b5fb60bb377b479 -> 73a2b2de1e1d1f18 (mutant landed, bytes changed) and the intended arm X1 read failed while the arms that should not care stayed ['passed', 'passed', 'passed', 'passed'] -- an all-red run would prove nothing about which line carries the defect. Expectation {'N1': 'passed', 'N2': 'passed', 'N3': 'passed', 'X1': 'failed', 'X2': 'passed'} met=True, run 0302xnb46204721, source restored byte-exact=True, report blob 4a82b71206d47f876a184449fd503326dfca21f1.",
+   "readings": {
+    "shape": "ca_x5_no_block",
+    "run_id": "0302xnb46204721",
+    "arm_that_flipped": "X1",
+    "outcomes": {
+     "N1": "passed",
+     "N2": "passed",
+     "N3": "passed",
+     "X1": "failed",
+     "X2": "passed"
+    },
+    "digest_before": "4b5fb60bb377b479",
+    "digest_running": "73a2b2de1e1d1f18",
+    "restored_byte_exact": true,
+    "expected": {
+     "N1": "passed",
+     "N2": "passed",
+     "N3": "passed",
+     "X1": "failed",
+     "X2": "passed"
+    },
+    "meets_expectation": true,
+    "report_blob": "4a82b71206d47f876a184449fd503326dfca21f1",
+    "candidate_tip": "2f191eb5fd1682a53cf95f883c7200f00cbb6ebe",
+    "base_tip": "13af1ff4ba4516aa1a39cda67428ed4a2a34ac69",
+    "named_values_the_why_uses": [
+     "0302xnb46204721",
+     "13af1ff4ba4516aa1a39cda67428ed4a2a34ac69",
+     "2f191eb5fd1682a53cf95f883c7200f00cbb6ebe",
+     "4a82b71206d47f876a184449fd503326dfca21f1",
+     "4b5fb60bb377b479",
+     "73a2b2de1e1d1f18",
+     "True",
+     "X1",
+     "ca_x5_no_block",
+     "failed",
+     "passed"
+    ]
+   }
+  },
+  {
+   "cell": "counter-arm ca_x5_soft_promise (must flip X1 only)",
+   "claimed_result": "MET",
+   "derived_result": null,
+   "why": "counter-arm ca_x5_soft_promise: the sha256 of the sheet went 4b5fb60bb377b479 -> 8cbdea67a0b03200 (mutant landed, bytes changed) and the intended arm X1 read failed while the arms that should not care stayed ['passed', 'passed', 'passed', 'passed'] -- an all-red run would prove nothing about which line carries the defect. Expectation {'N1': 'passed', 'N2': 'passed', 'N3': 'passed', 'X1': 'failed', 'X2': 'passed'} met=True, run 0302xsp46204741, source restored byte-exact=True, report blob 99717874e1da262ca11e360cba5fe58d16c0f392.",
+   "readings": {
+    "shape": "ca_x5_soft_promise",
+    "run_id": "0302xsp46204741",
+    "arm_that_flipped": "X1",
+    "outcomes": {
+     "N1": "passed",
+     "N2": "passed",
+     "N3": "passed",
+     "X1": "failed",
+     "X2": "passed"
+    },
+    "digest_before": "4b5fb60bb377b479",
+    "digest_running": "8cbdea67a0b03200",
+    "restored_byte_exact": true,
+    "expected": {
+     "N1": "passed",
+     "N2": "passed",
+     "N3": "passed",
+     "X1": "failed",
+     "X2": "passed"
+    },
+    "meets_expectation": true,
+    "report_blob": "99717874e1da262ca11e360cba5fe58d16c0f392",
+    "candidate_tip": "2f191eb5fd1682a53cf95f883c7200f00cbb6ebe",
+    "base_tip": "13af1ff4ba4516aa1a39cda67428ed4a2a34ac69",
+    "named_values_the_why_uses": [
+     "0302xsp46204741",
+     "13af1ff4ba4516aa1a39cda67428ed4a2a34ac69",
+     "2f191eb5fd1682a53cf95f883c7200f00cbb6ebe",
+     "4b5fb60bb377b479",
+     "8cbdea67a0b03200",
+     "99717874e1da262ca11e360cba5fe58d16c0f392",
+     "True",
+     "X1",
+     "ca_x5_soft_promise",
+     "failed",
+     "passed"
+    ]
+   }
+  },
+  {
+   "cell": "root cause and the coordinates it was measured at",
+   "claimed_result": "MET",
+   "derived_result": null,
+   "why": "root cause, re-measured on the generation that still carries it (dc964086c9d412573ac19d70b24b30e6c3ee6168) rather than copied from the order: in the bugged blob fd5f6e5ba2771a8d12669b9bec1ba91590970701 the two envelope helpers read the detail field without a guard on `body` itself, at frontend/src/features/planning/PlanWithAiSheet.tsx:147 and frontend/src/features/planning/PlanWithAiSheet.tsx:155; the leg that reaches them sets `body = null` for an unparseable answer at frontend/src/features/planning/PlanWithAiSheet.tsx:531 (on this candidate the same leg keeps the bytes first, at frontend/src/features/planning/PlanWithAiSheet.tsx:544), the refusal branch starts at frontend/src/features/planning/PlanWithAiSheet.tsx:539, and the throw is caught where status is written as NETWORK at frontend/src/features/planning/PlanWithAiSheet.tsx:748 with the note nulled, which is also the line the detail block depends on at frontend/src/features/planning/PlanWithAiSheet.tsx:936; on this candidate that gate also takes the raw reading, at frontend/src/features/planning/PlanWithAiSheet.tsx:983, and the same two reads are guarded, now at frontend/src/features/planning/PlanWithAiSheet.tsx:147 and frontend/src/features/planning/PlanWithAiSheet.tsx:155 (sheet blob 47ff8985a9963d77a4094eb970ad3fd5b639140b, spec blob 868059d0206418395513a05221071302720416a1). The generation before ORD-0280 (sheet blob 4c3821b7129320d7940237d33c5f7dd14742f292) did not throw there -- it answered with an invented status string, which is the defect that order removed; both states are wrong in different ways and only the body-has-a-JSON-object reading separates them.",
+   "readings": {
+    "base_tip": "13af1ff4ba4516aa1a39cda67428ed4a2a34ac69",
+    "defect_generation_base": "dc964086c9d412573ac19d70b24b30e6c3ee6168",
+    "bugged_sheet_blob": "fd5f6e5ba2771a8d12669b9bec1ba91590970701",
+    "candidate_sheet_blob": "47ff8985a9963d77a4094eb970ad3fd5b639140b",
+    "predecessor_order": "ORD-0280",
+    "this_order": "ORD-0302",
+    "unsafe_reads_at": [
+     147,
+     155
+    ],
+    "safe_reads_at": [
+     147,
+     155
+    ],
+    "body_null_line": 531,
+    "not_ok_line": 539,
+    "network_write_line": 748,
+    "details_gate_line": 936,
+    "candidate_lines_of_the_same_anchors": {
+     "body_read": 544,
+     "not_ok_branch": 567,
+     "network_write": 792,
+     "details_gate": 983
+    },
+    "candidate_answer_read": 544,
+    "candidate_details_gate": 983,
+    "status_written": "NETWORK",
+    "previous_generation_sheet_blob": "4c3821b7129320d7940237d33c5f7dd14742f292",
+    "spec_blob": "868059d0206418395513a05221071302720416a1",
+    "unsafe_read_coords": [
+     "frontend/src/features/planning/PlanWithAiSheet.tsx:147",
+     "frontend/src/features/planning/PlanWithAiSheet.tsx:155"
+    ],
+    "safe_read_coords": [
+     "frontend/src/features/planning/PlanWithAiSheet.tsx:147",
+     "frontend/src/features/planning/PlanWithAiSheet.tsx:155"
+    ],
+    "coord_body_null": "frontend/src/features/planning/PlanWithAiSheet.tsx:531",
+    "coord_candidate_answer_read": "frontend/src/features/planning/PlanWithAiSheet.tsx:544",
+    "coord_candidate_gate": "frontend/src/features/planning/PlanWithAiSheet.tsx:983",
+    "coord_not_ok": "frontend/src/features/planning/PlanWithAiSheet.tsx:539",
+    "coord_network": "frontend/src/features/planning/PlanWithAiSheet.tsx:748",
+    "coord_details_gate": "frontend/src/features/planning/PlanWithAiSheet.tsx:936",
+    "rulers": {
+     "q38": "91ae8b1ec55f5c19122af11bf775df14580955e4",
+     "q43": [
+      "e653e597c2e6fd74a5f8d3be65fe60e017b03017",
+      "efa6b7a383e094e2ede89f5dd8565b12feed0171"
+     ]
+    },
+    "named_values_the_why_uses": [
+     "13af1ff4ba4516aa1a39cda67428ed4a2a34ac69",
+     "147",
+     "155",
+     "47ff8985a9963d77a4094eb970ad3fd5b639140b",
+     "4c3821b7129320d7940237d33c5f7dd14742f292",
+     "531",
+     "539",
+     "544",
+     "567",
+     "748",
+     "792",
+     "868059d0206418395513a05221071302720416a1",
+     "91ae8b1ec55f5c19122af11bf775df14580955e4",
+     "936",
+     "983",
+     "NETWORK",
+     "ORD-0280",
+     "ORD-0302",
+     "dc964086c9d412573ac19d70b24b30e6c3ee6168",
+     "e653e597c2e6fd74a5f8d3be65fe60e017b03017",
+     "efa6b7a383e094e2ede89f5dd8565b12feed0171",
+     "fd5f6e5ba2771a8d12669b9bec1ba91590970701",
+     "frontend/src/features/planning/PlanWithAiSheet.tsx:147",
+     "frontend/src/features/planning/PlanWithAiSheet.tsx:155",
+     "frontend/src/features/planning/PlanWithAiSheet.tsx:531",
+     "frontend/src/features/planning/PlanWithAiSheet.tsx:539",
+     "frontend/src/features/planning/PlanWithAiSheet.tsx:544",
+     "frontend/src/features/planning/PlanWithAiSheet.tsx:748",
+     "frontend/src/features/planning/PlanWithAiSheet.tsx:936",
+     "frontend/src/features/planning/PlanWithAiSheet.tsx:983"
+    ]
+   }
+  },
+  {
+   "cell": "scope, phone boundary and what was NOT measured",
+   "claimed_result": "DECLARED",
+   "derived_result": null,
+   "why": "scope and boundaries: this delivery lives at evidence/ord0302-unreadable-server-body-q53; the two earlier ones keep their own paths and were not rewritten (evidence/ord0302-unreadable-server-body (first delivery, landed as 5aff3722d5c36c760a424f5fea5c3a771298f9ac); evidence/ord0302-unreadable-server-body-r2 (X-5 widened to the five rows, candidate 176d04f554b3ff62c9321f24f132355e8887216d)). Only two product paths changed in this candidate -- the sheet (47ff8985a9963d77a4094eb970ad3fd5b639140b) and its new spec (868059d0206418395513a05221071302720416a1); files belonging to other lanes: 0 touched, and review/0281-write-deadline-keyed-b2 was left alone. one device line, for the NETWORK cell (requirement ②); Q53=① deleted the count sentence X-5 used to show, so that block now carries measured fields only: 'no readable answer reached this device (network or origin)'. No other user-facing copy was written, because the wording for the wider family is still ORD-0301's call. neither cell was observed by me on the deployed generation -- both readings are vite dev, so the phone keeps whatever is shipped until the commander swaps, but the swap is the commander's: actions by me here = 0 -- no index switch, no preview restart, no dist change, and this face stays vite dev so release_grade=False. Not measured, named rather than implied: a non-JSON body on the places leg and the generate leg (same helper, arms not written); an HTML answer that still parses as JSON; the shipped bundle behind the phone: X-5 was measured on vite dev, so the generation that is live now is still NOT-DEPLOYED-OBSERVED for this cell.",
+   "readings": {
+    "predecessor_evidence_paths": [
+     "evidence/ord0302-unreadable-server-body (first delivery, landed as 5aff3722d5c36c760a424f5fea5c3a771298f9ac)",
+     "evidence/ord0302-unreadable-server-body-r2 (X-5 widened to the five rows, candidate 176d04f554b3ff62c9321f24f132355e8887216d)"
+    ],
+    "this_delivery_path": "evidence/ord0302-unreadable-server-body-q53",
+    "ord_0281_branch_untouched": "review/0281-write-deadline-keyed-b2",
+    "other_lanes_files_touched": 0,
+    "phone_state": "neither cell was observed by me on the deployed generation -- both readings are vite dev, so the phone keeps whatever is shipped until the commander swaps",
+    "swap_actions_by_me": 0,
+    "release_grade": false,
+    "new_prose_written": "one device line, for the NETWORK cell (requirement ②); Q53=① deleted the count sentence X-5 used to show, so that block now carries measured fields only",
+    "device_lines_written": [
+     "no readable answer reached this device (network or origin)"
+    ],
+    "raw_fields_rendered": [
+     "http_status",
+     "content-type",
+     "bytes",
+     "body"
+    ],
+    "not_measured": [
+     "a non-JSON body on the places leg and the generate leg (same helper, arms not written)",
+     "an HTML answer that still parses as JSON",
+     "the shipped bundle behind the phone: X-5 was measured on vite dev, so the generation that is live now is still NOT-DEPLOYED-OBSERVED for this cell"
+    ],
+    "named_values_the_why_uses": [
+     "0",
+     "False",
+     "a non-JSON body on the places leg and the generate leg (same helper, arms not written)",
+     "an HTML answer that still parses as JSON",
+     "body",
+     "bytes",
+     "content-type",
+     "evidence/ord0302-unreadable-server-body (first delivery, landed as 5aff3722d5c36c760a424f5fea5c3a771298f9ac)",
+     "evidence/ord0302-unreadable-server-body-q53",
+     "evidence/ord0302-unreadable-server-body-r2 (X-5 widened to the five rows, candidate 176d04f554b3ff62c9321f24f132355e8887216d)",
+     "http_status",
+     "neither cell was observed by me on the deployed generation -- both readings are vite dev, so the phone keeps whatever is shipped until the commander swaps",
+     "no readable answer reached this device (network or origin)",
+     "one device line, for the NETWORK cell (requirement ②); Q53=① deleted the count sentence X-5 used to show, so that block now carries measured fields only",
+     "review/0281-write-deadline-keyed-b2",
+     "the shipped bundle behind the phone: X-5 was measured on vite dev, so the generation that is live now is still NOT-DEPLOYED-OBSERVED for this cell"
+    ]
+   }
+  },
+  {
+   "cell": "base, ref and what this candidate touches",
+   "claimed_result": "NOT_MET",
+   "derived_result": null,
+   "why": "base and shape: 2f191eb5fd1682a53cf95f883c7200f00cbb6ebe is the ref tip GitHub answers (2f191eb5fd1682a53cf95f883c7200f00cbb6ebe\trefs/heads/review/0302-unreadable-server-body-b3), 6 commits over the order's tip 13af1ff4ba4516aa1a39cda67428ed4a2a34ac69 (ancestor check = True), so the two named cells land on the one ref the commander already holds rather than as two competing candidates. Process, stated rather than smoothed: the first half of this order was pushed alone as 841e0f5cea9afa6ada2247ec6224d85db575fd34, the X-5 work then went on top of it, and the earlier attempt to fold both into one commit was refused as non-fast-forward -- no force-push, so 841e0f5cea9afa6ada2247ec6224d85db575fd34 is still an ancestor of this tip and every reading taken under it stays resolvable. 2 paths changed: qoder-ord0302-unreadable-server-body.spec.ts, PlanWithAiSheet.tsx; the diff restricted to backend/ answers none. Both typecheck configs (tsconfig.check.json, tsconfig.typecheck.json) were clean before the arms ran. The arms ran against exactly the committed bytes: the sheet's sha256 at HEAD is 4b5fb60bb377b479 and every run recorded that same value as the digest it started from (4b5fb60bb377b479), agree=True.",
+   "readings": {
+    "candidate_tip": "2f191eb5fd1682a53cf95f883c7200f00cbb6ebe",
+    "base_tip": "13af1ff4ba4516aa1a39cda67428ed4a2a34ac69",
+    "parent_measured": "841e0f5cea9afa6ada2247ec6224d85db575fd34",
+    "branch": "review/0302-unreadable-server-body-b3",
+    "committed_sheet_sha256": "4b5fb60bb377b4797d070bfde32467e0c592f001bc27c5a12f6288ce1c5b42a8",
+    "digests_the_runs_started_from": [
+     "4b5fb60bb377b479"
+    ],
+    "arms_measured_exactly_the_committed_bytes": true,
+    "base_is_ancestor": true,
+    "commits_over_base": 6,
+    "ref_readback": "2f191eb5fd1682a53cf95f883c7200f00cbb6ebe\trefs/heads/review/0302-unreadable-server-body-b3",
+    "superseded_tip": "841e0f5cea9afa6ada2247ec6224d85db575fd34",
+    "changed_paths": [
+     "frontend/e2e/qoder-ord0302-unreadable-server-body.spec.ts",
+     "frontend/src/features/planning/PlanWithAiSheet.tsx"
+    ],
+    "backend_diff": "none",
+    "typecheck_configs": [
+     "tsconfig.check.json",
+     "tsconfig.typecheck.json"
+    ],
+    "named_values_the_why_uses": [
+     "13af1ff4ba4516aa1a39cda67428ed4a2a34ac69",
+     "2f191eb5fd1682a53cf95f883c7200f00cbb6ebe",
+     "2f191eb5fd1682a53cf95f883c7200f00cbb6ebe\trefs/heads/review/0302-unreadable-server-body-b3",
+     "4b5fb60bb377b479",
+     "4b5fb60bb377b4797d070bfde32467e0c592f001bc27c5a12f6288ce1c5b42a8",
+     "6",
+     "841e0f5cea9afa6ada2247ec6224d85db575fd34",
+     "True",
+     "frontend/e2e/qoder-ord0302-unreadable-server-body.spec.ts",
+     "frontend/src/features/planning/PlanWithAiSheet.tsx",
+     "none",
+     "review/0302-unreadable-server-body-b3",
+     "tsconfig.check.json",
+     "tsconfig.typecheck.json"
+    ]
+   }
+  }
+ ],
+ "summary": {
+  "arms_met": 5,
+  "counter_arms_met": 4,
+  "matrix_verdict": "TEETH_AND_BASELINE",
+  "restored_byte_exact_every_shape": true
+ },
+ "derived_result": null,
+ "not_claimed": "derived_result 全格 null；发布级面没跑；places/generate 两条腿的同一形没写臂；手机换代不归我（未动 dist/index/预览后端）",
+ "ruler_check": {
+  "pass_1": {
+   "ruler": "receipt_cell_derivation_check_r2.py",
+   "ruler_blob": "91ae8b1ec55f5c19122af11bf775df14580955e4",
+   "rc": 0,
+   "headline": [
+    "cells 12 | overall Q38_GATE_GREEN | hard 0 [] | soft 0 []"
+   ]
+  },
+  "pass_1_output": "receipt ord0302_receipt.json 39957 B blob_sha1 3230d10d1e5d4437425a6d1f2ba866d688abf7c7\ncells 12 | overall Q38_GATE_GREEN | hard 0 [] | soft 0 []\n  cell 0 | why_source why | why tokens 7 | own hits 6 | unique hits 0 | shares why with []\n  cell 1 | why_source why | why tokens 6 | own hits 5 | unique hits 0 | shares why with []\n  cell 2 | why_source why | why tokens 6 | own hits 5 | unique hits 0 | shares why with []\n  cell 3 | why_source why | why tokens 17 | own hits 14 | unique hits 0 | shares why with []\n  cell 4 | why_source why | why tokens 7 | own hits 6 | unique hits 0 | shares why with []\n  cell 5 | why_source why | why tokens 3 | own hits 3 | unique hits 0 | shares why with []\n  cell 6 | why_source why | why tokens 3 | own hits 3 | unique hits 0 | shares why with []\n  cell 7 | why_source why | why tokens 3 | own hits 3 | unique hits 0 | shares why with []\n  cell 8 | why_source why | why tokens 3 | own hits 3 | unique hits 0 | shares why with []\n  cell 9 | why_source why | why tokens 17 | own hits 17 | unique hits 0 | shares why with []\n  cell 10 | why_source why | why tokens 12 | own hits 8 | unique hits 0 | shares why with []\n  cell 11 | why_source why | why tokens 12 | own hits 10 | unique hits 0 | shares why with []\nmeaning: no shared literal and every sentence names its own readings",
+  "pass_2_on_published_bytes": {
+   "ruler": "receipt_cell_derivation_check_r2.py",
+   "ruler_blob": "91ae8b1ec55f5c19122af11bf775df14580955e4",
+   "rc": 0,
+   "headline": [
+    "cells 12 | overall Q38_GATE_GREEN | hard 0 [] | soft 0 []"
+   ]
+  },
+  "pass_2_output": "receipt ord0302_receipt.json 41559 B blob_sha1 e99ae07282b1650077d26eb6ea27921641a2f146\ncells 12 | overall Q38_GATE_GREEN | hard 0 [] | soft 0 []\n  cell 0 | why_source why | why tokens 7 | own hits 6 | unique hits 0 | shares why with []\n  cell 1 | why_source why | why tokens 6 | own hits 5 | unique hits 0 | shares why with []\n  cell 2 | why_source why | why tokens 6 | own hits 5 | unique hits 0 | shares why with []\n  cell 3 | why_source why | why tokens 17 | own hits 14 | unique hits 0 | shares why with []\n  cell 4 | why_source why | why tokens 7 | own hits 6 | unique hits 0 | shares why with []\n  cell 5 | why_source why | why tokens 3 | own hits 3 | unique hits 0 | shares why with []\n  cell 6 | why_source why | why tokens 3 | own hits 3 | unique hits 0 | shares why with []\n  cell 7 | why_source why | why tokens 3 | own hits 3 | unique hits 0 | shares why with []\n  cell 8 | why_source why | why tokens 3 | own hits 3 | unique hits 0 | shares why with []\n  cell 9 | why_source why | why tokens 17 | own hits 17 | unique hits 0 | shares why with []\n  cell 10 | why_source why | why tokens 12 | own hits 8 | unique hits 0 | shares why with []\n  cell 11 | why_source why | why tokens 12 | own hits 10 | unique hits 0 | shares why with []\nmeaning: no shared literal and every sentence names its own readings"
+ }
+}
