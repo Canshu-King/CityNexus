@@ -1,0 +1,1447 @@
+{
+ "order": "ORD-0300 C2 challenge - same-request pairing instead of same-outcome",
+ "lane": "HJ-P3 aad2d1f2",
+ "run_id": "O0300C2",
+ "asked_in": "commander 494abfd7, this session 18:1x+08: 同果 ≠ 同一发请求；要么 ① 服务端把那一发的编号回显、要么 ② 让页面自己的 fetch 过一个会记状态码的本地代理；两项都做不到就改名 UI_FETCH_DIED_AT_TRANSPORT_AFTER_~32s 并把旧名标 SUPERSEDED_BY_EVIDENCE，另保留 NETWORK 分支不渲染技术详情这条产品事实",
+ "measured_on_how_read": "each tip read by git ls-remote / from the batch own export; three vite builds into private outDirs, all verified by sha256; the challenged cell was re-measured on its own generation through that batch read-only export",
+ "arms": {
+  "P1_controlled500_old_bundle": "arm_old_old_origin500_C2-184534.json",
+  "P2_controlled500_current_bundle": "arm_new_new_origin500_C2-184551.json",
+  "P3_controlled500_two_guards_reverted": "arm_new_mut_origin500_C2-184607.json",
+  "N1_transport_death_old_bundle": "arm_old_old_abort_C2-184626.json",
+  "N2_transport_death_current_bundle": "arm_new_new_abort_C2-184300.json",
+  "N3_transport_death_guards_reverted": "arm_new_mut_abort_C2-184317.json",
+  "R1a_real500_landed_on_agent_commands": "arm_old_old_lock_C2-184018.json",
+  "R1b_real500_landed_on_plans_generate": "arm_old_old_lock_C2-184643.json",
+  "R2_real500_current_tip": "arm_new_new_lock_C2-184736.json",
+  "R3_real500_generation_the_cell_was_born_on": "arm_t90_t90_lock_C2-191014.json",
+  "R4_lock_released_before_any_500": "arm_new_new_lock_C2-184112.json",
+  "R5_lock_released_before_any_500_guards_reverted": "arm_new_mut_lock_C2-184205.json"
+ },
+ "scores": "c2_score.json",
+ "challenge_answered": {
+  "①_server_side_id_echoed": "yes - the token is minted where the answer is made and echoed on the response header, then read identically by the proxy audit line, the browser network view and the app own fetch",
+  "②_page_own_fetch_through_a_recording_proxy": "yes - every face served behind 127.0.0.1:8642, so the status the page saw is the status recorded server-side for that token",
+  "rename_needed": false,
+  "disposition": {
+   "old_cell_id": "C2_screen_side_attribution_of_that_same_answer",
+   "old_verdict": "SERVER_ANSWERED_BUT_SCREEN_SAYS_UNREACHABLE",
+   "old_measured_on": "90d29a172e186aab6e6cb138ab4583ccf93bfa68",
+   "why_it_was_open": "the pair 32330 ms (server) / 32762 ms (screen) rested on the scene, not on one request",
+   "pairing_routes_achieved": [
+    "① one token minted by my proxy on the server side, echoed back in the answer header and read there by the browser stack and by the app own fetch",
+    "② the page own fetch crossed a proxy that records the status code per leg"
+   ],
+   "lifted_from_unproven_on_the_named_tip": true,
+   "new_cell_name": "C2b_SERVER_ANSWERED_500_ON_THE_SAME_LEG_THE_PAGE_PAINTS_UNREACHABLE_paired_by_one_token",
+   "old_name_marked": "SUPERSEDED_BY_EVIDENCE - the 90d29a17 pair itself is still unpaired (my one paired run on that generation put the 500 on plans/generate and painted a different card), and the claim is re-made on dc964086 with a per-request id",
+   "rename_to_UI_FETCH_DIED_AT_TRANSPORT_AFTER_~32s_needed": false,
+   "product_fact_kept_without_any_same_request_proof": "the NETWORK branch renders no technical detail at all on 90d29a17 and on dc964086 (0 <details> elements in the DOM); the current tip renders a device note there"
+  }
+ },
+ "derived_summary": {
+  "pairing_holds_in_every_5xx_arm": true,
+  "the_app_held_the_answer_and_parse_threw": true,
+  "mechanism_is_one_variable": true,
+  "id_covers_every_answered_leg": true,
+  "card_alone_is_not_evidence": true,
+  "challenged_cell_lifted": true,
+  "the_leg_that_ate_the_500": {
+   "R1a_real500_landed_on_agent_commands": "agent/commands",
+   "R1b_real500_landed_on_plans_generate": "plans/generate",
+   "R2_real500_current_tip": "plans/generate",
+   "R3_real500_generation_the_cell_was_born_on": "plans/generate"
+  },
+  "the_kept_product_fact": true,
+  "all_required_booleans_held": true,
+  "booleans_true_of_required": "29 of 29"
+ },
+ "cells": [
+  {
+   "id": "K1_pairing_one_leg_seen_by_three_independent_readers",
+   "verdict": "ARRIVAL_IS_PAIRABLE_BY_AN_ID_THE_PAGE_CANNOT_GUESS",
+   "measured_on": "dc964086c9d412573ac19d70b24b30e6c3ee6168",
+   "measured": {
+    "arms": {
+     "P1_controlled500_old_bundle": {
+      "arm_file": "arm_old_old_origin500_C2-184534.json",
+      "run_id": "C2-184534",
+      "backend_tip": "dc964086c9d412573ac19d70b24b30e6c3ee6168",
+      "bundle_asset": "index--q2k569d.js",
+      "scenario": "origin500",
+      "who_answered": "my pairing proxy answered it byte-for-byte in the shape the product uses (21 B text/plain \"Internal Server Error\"), no upstream call",
+      "leg": "agent/commands",
+      "pair_id": "hjp3c2-c29b410cd440422a",
+      "proxy_lines_with_that_id": 1,
+      "pair_id_echoed_in_the_answer": "hjp3c2-c29b410cd440422a",
+      "pair_id_read_by_the_app": "hjp3c2-c29b410cd440422a",
+      "server_side": {
+       "status": 500,
+       "bytes": 21,
+       "content_type": "text/plain; charset=utf-8",
+       "body_head": "Internal Server Error",
+       "elapsed_ms": null
+      },
+      "page_side": {
+       "status": 500,
+       "rejected": false,
+       "reject": null,
+       "elapsed_ms": 7,
+       "browser_stack_status": 500,
+       "browser_stack_failure": null,
+       "app_json_parse_threw": true,
+       "parse_error_name": "SyntaxError"
+      },
+      "card": {
+       "result_status": "NETWORK",
+       "card_text": "连不上服务端\n\n网络或后端没有响应，这与你的需求内容无关。你的行程没有被改动，检查网络后可以重试。",
+       "network_words_painted": true,
+       "server_failure_words_painted": false,
+       "detail_regions_in_dom": 0,
+       "reason_label_painted": null,
+       "reason_value_painted": null
+      },
+      "all_write_legs": [
+       {
+        "leg": "agent/commands",
+        "server_status": 500,
+        "page_status": 500,
+        "rejected": false,
+        "proxy_lines": 1,
+        "pair_id": "hjp3c2-c29b410cd440422a",
+        "elapsed_page_ms": 7,
+        "elapsed_server_ms": null
+       }
+      ]
+     },
+     "R1a_real500_landed_on_agent_commands": {
+      "arm_file": "arm_old_old_lock_C2-184018.json",
+      "run_id": "C2-184018",
+      "backend_tip": "dc964086c9d412573ac19d70b24b30e6c3ee6168",
+      "bundle_asset": "index--q2k569d.js",
+      "scenario": "lock",
+      "who_answered": "the product backend itself (the proxy only witnessed it)",
+      "leg": "agent/commands",
+      "pair_id": "hjp3c2-4ebce84aeb7b4557",
+      "proxy_lines_with_that_id": 1,
+      "pair_id_echoed_in_the_answer": "hjp3c2-4ebce84aeb7b4557",
+      "pair_id_read_by_the_app": "hjp3c2-4ebce84aeb7b4557",
+      "server_side": {
+       "status": 500,
+       "bytes": 21,
+       "content_type": "text/plain; charset=utf-8",
+       "body_head": "Internal Server Error",
+       "elapsed_ms": 32346
+      },
+      "page_side": {
+       "status": 500,
+       "rejected": false,
+       "reject": null,
+       "elapsed_ms": 32342,
+       "browser_stack_status": 500,
+       "browser_stack_failure": null,
+       "app_json_parse_threw": true,
+       "parse_error_name": "SyntaxError"
+      },
+      "card": {
+       "result_status": "NETWORK",
+       "card_text": "连不上服务端\n\n网络或后端没有响应，这与你的需求内容无关。你的行程没有被改动，检查网络后可以重试。",
+       "network_words_painted": true,
+       "server_failure_words_painted": false,
+       "detail_regions_in_dom": 0,
+       "reason_label_painted": null,
+       "reason_value_painted": null
+      },
+      "all_write_legs": [
+       {
+        "leg": "agent/commands",
+        "server_status": 500,
+        "page_status": 500,
+        "rejected": false,
+        "proxy_lines": 1,
+        "pair_id": "hjp3c2-4ebce84aeb7b4557",
+        "elapsed_page_ms": 32342,
+        "elapsed_server_ms": 32346
+       }
+      ]
+     }
+    },
+    "route_1_the_id_comes_from_the_server_side": "my pairing proxy mints the token when it accepts the leg and echoes it back on the response header X-HJP3-Pair, so the same string sits in the proxy audit line, in the browser network view and in the app own fetch resolution",
+    "route_2_the_page_own_fetch_crossed_a_recording_proxy": "the face pointed at 127.0.0.1:8642, so the status code the page saw was recorded server-side for that same token",
+    "pairing_holds_in_both_arms": {
+     "P1_controlled500_old_bundle": true,
+     "R1a_real500_landed_on_agent_commands": true
+    },
+    "how_far_the_id_reaches_in_this_batch": {
+     "answered_api_legs_carrying_their_own_id": 200,
+     "write_legs_meeting_the_strict_three_reader_test": "14 of 17",
+     "the_write_legs_that_do_not_are_exactly_the_ones_I_killed": true,
+     "why": "a leg that never got an answer cannot carry an id back - which is the point of the negative control in K4"
+    },
+    "id_provenance": {
+     "minted_at": "c2proxy.py:47 token = \"hjp3c2-\" + uuid4().hex[:16], one per handled request",
+     "never_read_from_the_client": "the proxy never looks for an inbound X-HJP3-Pair; the header appears at exactly two places in it and both are response writes (c2proxy.py:78 for the instrument-answered 500, c2proxy.py:109 for the pass-through)",
+     "where_a_reader_can_see_it": "the page reads it off the Response it resolved (c2_cells.cjs INSTRUMENT) and my audit line carries the same string, so equality is a cross-check between two sides that never share memory"
+    },
+    "batch_wide_id_uniqueness": {
+     "pair_log_lines": 334,
+     "distinct_ids": 334,
+     "each_id_names_exactly_one_leg": true
+    },
+    "why_①is_not_a_header_I_could_fake": "the id is minted where the answer is made (my proxy sits on the server side of the browser), it is not in the request the page sent, and it surfaces in three readers that do not talk to each other: my audit line, the browser network view, the app own resolved Response",
+    "backend_ownership_two_sided": {
+     "P1_controlled500_old_bundle": true,
+     "R1a_real500_landed_on_agent_commands": true
+    }
+   },
+   "why": "in arm_old_old_origin500_C2-184534.json the leg agent/commands carries token hjp3c2-c29b410cd440422a; that token appears in 1 proxy line and on the answer the browser stack saw (status 500) and in the app own fetch (status 500, rejected=False, 7 ms); the app then called .json() on that very response and got SyntaxError reading 'Internal Server Error' - so the answer was physically inside the page at the moment the card was written. In arm_old_old_lock_C2-184018.json the same is true with the PRODUCT answering (token hjp3c2-4ebce84aeb7b4557, 1 proxy line, server 21 B Internal Server Error at 32346 ms, page 500 at 32342 ms)"
+  },
+  {
+   "id": "K2_the_challenged_cell_lifted_from_unproven",
+   "verdict": "SERVER_ANSWERED_500_ON_THE_SAME_LEG_THE_PAGE_PAINTS_UNREACHABLE_PROVEN_AT_REQUEST_LEVEL",
+   "measured_on": "dc964086c9d412573ac19d70b24b30e6c3ee6168",
+   "measured": {
+    "arm": {
+     "arm_file": "arm_old_old_lock_C2-184018.json",
+     "run_id": "C2-184018",
+     "backend_tip": "dc964086c9d412573ac19d70b24b30e6c3ee6168",
+     "bundle_asset": "index--q2k569d.js",
+     "scenario": "lock",
+     "who_answered": "the product backend itself (the proxy only witnessed it)",
+     "leg": "agent/commands",
+     "pair_id": "hjp3c2-4ebce84aeb7b4557",
+     "proxy_lines_with_that_id": 1,
+     "pair_id_echoed_in_the_answer": "hjp3c2-4ebce84aeb7b4557",
+     "pair_id_read_by_the_app": "hjp3c2-4ebce84aeb7b4557",
+     "server_side": {
+      "status": 500,
+      "bytes": 21,
+      "content_type": "text/plain; charset=utf-8",
+      "body_head": "Internal Server Error",
+      "elapsed_ms": 32346
+     },
+     "page_side": {
+      "status": 500,
+      "rejected": false,
+      "reject": null,
+      "elapsed_ms": 32342,
+      "browser_stack_status": 500,
+      "browser_stack_failure": null,
+      "app_json_parse_threw": true,
+      "parse_error_name": "SyntaxError"
+     },
+     "card": {
+      "result_status": "NETWORK",
+      "card_text": "连不上服务端\n\n网络或后端没有响应，这与你的需求内容无关。你的行程没有被改动，检查网络后可以重试。",
+      "network_words_painted": true,
+      "server_failure_words_painted": false,
+      "detail_regions_in_dom": 0,
+      "reason_label_painted": null,
+      "reason_value_painted": null
+     },
+     "all_write_legs": [
+      {
+       "leg": "agent/commands",
+       "server_status": 500,
+       "page_status": 500,
+       "rejected": false,
+       "proxy_lines": 1,
+       "pair_id": "hjp3c2-4ebce84aeb7b4557",
+       "elapsed_page_ms": 32342,
+       "elapsed_server_ms": 32346
+      }
+     ]
+    },
+    "the_card_that_arm_painted": "连不上服务端\n\n网络或后端没有响应，这与你的需求内容无关。你的行程没有被改动，检查网络后可以重试。",
+    "detail_regions_in_dom": 0,
+    "data_result_status": "NETWORK",
+    "what_ORD_0300_C2_recorded": {
+     "measured_on": "90d29a172e186aab6e6cb138ab4583ccf93bfa68",
+     "cross_check_data_result_status": "NETWORK",
+     "detail_regions_in_dom": 0,
+     "painted_card": "连不上服务端\n\n网络或后端没有响应，这与你的需求内容无关。你的行程没有被改动，检查网络后可以重试。",
+     "server_side_claimed_by_C1": {
+      "url_tail": "agent/commands",
+      "status": 500,
+      "bytes": 21,
+      "elapsed_ms": 32330,
+      "any_request_id_in_C1": false
+     },
+     "screen_side_elapsed_ms": 32762,
+     "no_request_id_of_any_kind_in_that_cell": true
+    },
+    "derived": {
+     "the_real_product_answered_500_on_the_agent_commands_leg": true,
+     "that_same_leg_is_the_one_the_page_saw": true,
+     "the_card_that_arm_painted_is_the_one_the_challenge_called_into_question": true,
+     "the_reproduction_is_on_the_tip_the_commander_named": true,
+     "and_the_server_side_body_is_the_contentless_21_byte_one": true,
+     "lifted_from_unproven_on_the_named_tip": true
+    }
+   },
+   "why": "on tip dc964086c9d412573ac19d70b24b30e6c3ee6168, exported by git archive and served by its own backend, the product answered the leg agent/commands with HTTP 500 of 21 B text/plain; charset=utf-8 ('Internal Server Error') at 32346 ms; that same token is what the PAGE resolved (500, 32342 ms, not rejected) and what its network stack logged (500); the card that came up is '连不上服务端\\n\\n网络或后端没有响应，这与你的需求内容无关。你的行程没有被改动，检查网络后可以重试。' with data-result-status=NETWORK and 0 <details> elements. The challenged pair (32330 ms server / 32762 ms screen on 90d29a17) carried no request id at all, so it stays superseded - but the shape it described is now measured on one request"
+  },
+  {
+   "id": "K3_the_mechanism_one_variable_three_bundles",
+   "verdict": "AN_ARRIVED_500_IS_PAINTED_AS_UNREACHABLE_ONLY_WHERE_THOSE_TWO_NULL_GUARDS_ARE_ABSENT",
+   "measured_on": "dc964086c9d412573ac19d70b24b30e6c3ee6168",
+   "measured": {
+    "the_answer_is_one_answer": {
+     "status": 500,
+     "bytes": 21,
+     "content_type": "text/plain; charset=utf-8",
+     "body_head": "Internal Server Error",
+     "identical_across_the_three_arms": true
+    },
+    "bundles": {
+     "P1_controlled500_old_bundle": {
+      "tip_of_the_source_tree": "dc964086c9d412573ac19d70b24b30e6c3ee6168",
+      "asset": "index--q2k569d.js",
+      "sha256": "a55e8bcebe3cae47eacc485fb19c4381211ac6b437de2a495ce5f59493d4bf93",
+      "card_status": "NETWORK",
+      "detail_regions": 0,
+      "arm": "arm_old_old_origin500_C2-184534.json"
+     },
+     "P2_controlled500_current_bundle": {
+      "tip_of_the_source_tree": "5aff3722d5c36c760a424f5fea5c3a771298f9ac",
+      "asset": "index-BTzTyrqI.js",
+      "sha256": "9d117a64cd1d52f64d5eff3b04e55272805598390574702369d3cbe04a5f6057",
+      "card_status": "HTTP_500",
+      "detail_regions": 1,
+      "arm": "arm_new_new_origin500_C2-184551.json"
+     },
+     "P3_controlled500_two_guards_reverted": {
+      "tip_of_the_source_tree": "5aff3722d5c36c760a424f5fea5c3a771298f9ac",
+      "asset": "index-BOGNlWDY.js",
+      "sha256": "84bdb9750b71187a733673a646870b53d9a8140ffff4842e8db60ffb20e7f689",
+      "card_status": "NETWORK",
+      "detail_regions": 1,
+      "arm": "arm_new_mut_origin500_C2-184607.json"
+     }
+    },
+    "source_diff_new_vs_mut": {
+     "compared": "new vs mut of frontend/src/features/planning/PlanWithAiSheet.tsx",
+     "lines_that_differ": [
+      147,
+      155
+     ],
+     "lines_total_new": 1057,
+     "lines_total_mut": 1057,
+     "text": [
+      {
+       "line": 147,
+       "new": "  const detail = (body as { detail?: unknown } | null)?.detail;",
+       "mut": "  const detail = (body as { detail?: unknown }).detail;"
+      },
+      {
+       "line": 155,
+       "new": "  const detail = (body as { detail?: unknown } | null)?.detail;",
+       "mut": "  const detail = (body as { detail?: unknown }).detail;"
+      }
+     ]
+    },
+    "guard_shape_counted_out_of_the_exports": {
+     "old": {
+      "path": "frontend/src/features/planning/PlanWithAiSheet.tsx",
+      "sha1_blob_like_hash": "fd5f6e5ba2771a8d12669b9bec1ba91590970701",
+      "lines_total": 1042,
+      "unguarded_detail_reads": 2,
+      "unguarded_at_lines": [
+       147,
+       155
+      ],
+      "guarded_detail_reads": 0,
+      "guarded_at_lines": [],
+      "device_note_present": false,
+      "device_note_at_lines": []
+     },
+     "new": {
+      "path": "frontend/src/features/planning/PlanWithAiSheet.tsx",
+      "sha1_blob_like_hash": "f61d5312e8b33807d3e5304d1fa9fb7f77a518aa",
+      "lines_total": 1057,
+      "unguarded_detail_reads": 0,
+      "unguarded_at_lines": [],
+      "guarded_detail_reads": 2,
+      "guarded_at_lines": [
+       147,
+       155
+      ],
+      "device_note_present": true,
+      "device_note_at_lines": [
+       761
+      ]
+     },
+     "mut": {
+      "path": "frontend/src/features/planning/PlanWithAiSheet.tsx",
+      "sha1_blob_like_hash": "2838fbb69d55671f4cb14d2fd1424dd1a2be064d",
+      "lines_total": 1057,
+      "unguarded_detail_reads": 2,
+      "unguarded_at_lines": [
+       147,
+       155
+      ],
+      "guarded_detail_reads": 0,
+      "guarded_at_lines": [],
+      "device_note_present": true,
+      "device_note_at_lines": [
+       761
+      ]
+     },
+     "t90": {
+      "path": "frontend/src/features/planning/PlanWithAiSheet.tsx",
+      "sha1_blob_like_hash": "c22cf42506a4175db992bde387ed8d9c6f1ffb9d",
+      "lines_total": 1019,
+      "unguarded_detail_reads": 2,
+      "unguarded_at_lines": [
+       147,
+       155
+      ],
+      "guarded_detail_reads": 0,
+      "guarded_at_lines": [],
+      "device_note_present": false,
+      "device_note_at_lines": []
+     }
+    },
+    "derived": {
+     "old_bundle_paints_the_unreachable_card_on_an_arrived_500": true,
+     "current_bundle_paints_the_server_failure_card_for_the_same_answer": true,
+     "reverting_only_those_two_lines_puts_the_unreachable_card_back": true,
+     "the_two_bundles_differ_only_by_those_two_lines": true,
+     "same_answer_three_bundles_three_card_shapes": true,
+     "the_current_authority_tip_backend_is_the_same_bytes_for_the_mutant_arm": true
+    }
+   },
+   "why": "one and the same 5xx answer (500 / 21 B / text/plain; charset=utf-8) against the same backend produced three different screens: the index--q2k569d.js bundle painted NETWORK with 0 detail regions, the index-BTzTyrqI.js bundle painted HTTP_500 with 1, and a bundle whose ONLY difference from the current one is lines [147, 155] painted NETWORK with 1. The guard counts were re-read from the four exports in this batch, and the blob hash my reader recomputed for the old tree is fd5f6e5ba2771a8d12669b9bec1ba91590970701 - the same 40 hex the challenge quotes"
+  },
+  {
+   "id": "K4_negative_control_the_card_is_not_evidence",
+   "verdict": "A_TRUE_TRANSPORT_DEATH_PAINTS_THE_SAME_CARD_SO_ONLY_THE_PAIRING_DECIDES",
+   "measured_on": "dc964086c9d412573ac19d70b24b30e6c3ee6168",
+   "measured": {
+    "arms": {
+     "N1_transport_death_old_bundle": {
+      "arm_file": "arm_old_old_abort_C2-184626.json",
+      "run_id": "C2-184626",
+      "backend_tip": "dc964086c9d412573ac19d70b24b30e6c3ee6168",
+      "bundle_asset": "index--q2k569d.js",
+      "scenario": "abort",
+      "who_answered": null,
+      "leg": null,
+      "pair_id": null,
+      "proxy_lines_with_that_id": null,
+      "pair_id_echoed_in_the_answer": null,
+      "pair_id_read_by_the_app": null,
+      "server_side": {
+       "status": null,
+       "bytes": null,
+       "content_type": null,
+       "body_head": null,
+       "elapsed_ms": null
+      },
+      "page_side": {
+       "status": null,
+       "rejected": null,
+       "reject": null,
+       "elapsed_ms": null,
+       "browser_stack_status": null,
+       "browser_stack_failure": null,
+       "app_json_parse_threw": null,
+       "parse_error_name": null
+      },
+      "card": {
+       "result_status": "NETWORK",
+       "card_text": "连不上服务端\n\n网络或后端没有响应，这与你的需求内容无关。你的行程没有被改动，检查网络后可以重试。",
+       "network_words_painted": true,
+       "server_failure_words_painted": false,
+       "detail_regions_in_dom": 0,
+       "reason_label_painted": null,
+       "reason_value_painted": null
+      },
+      "all_write_legs": [
+       {
+        "leg": "agent/commands",
+        "server_status": null,
+        "page_status": null,
+        "rejected": true,
+        "proxy_lines": 0,
+        "pair_id": null,
+        "elapsed_page_ms": 4,
+        "elapsed_server_ms": null
+       }
+      ]
+     },
+     "N2_transport_death_current_bundle": {
+      "arm_file": "arm_new_new_abort_C2-184300.json",
+      "run_id": "C2-184300",
+      "backend_tip": "5aff3722d5c36c760a424f5fea5c3a771298f9ac",
+      "bundle_asset": "index-BTzTyrqI.js",
+      "scenario": "abort",
+      "who_answered": null,
+      "leg": null,
+      "pair_id": null,
+      "proxy_lines_with_that_id": null,
+      "pair_id_echoed_in_the_answer": null,
+      "pair_id_read_by_the_app": null,
+      "server_side": {
+       "status": null,
+       "bytes": null,
+       "content_type": null,
+       "body_head": null,
+       "elapsed_ms": null
+      },
+      "page_side": {
+       "status": null,
+       "rejected": null,
+       "reject": null,
+       "elapsed_ms": null,
+       "browser_stack_status": null,
+       "browser_stack_failure": null,
+       "app_json_parse_threw": null,
+       "parse_error_name": null
+      },
+      "card": {
+       "result_status": "NETWORK",
+       "card_text": "连不上服务端\n\n网络或后端没有响应，这与你的需求内容无关。你的行程没有被改动，检查网络后可以重试。\n\n技术详情",
+       "network_words_painted": true,
+       "server_failure_words_painted": false,
+       "detail_regions_in_dom": 1,
+       "reason_label_painted": "",
+       "reason_value_painted": ""
+      },
+      "all_write_legs": [
+       {
+        "leg": "agent/commands",
+        "server_status": null,
+        "page_status": null,
+        "rejected": true,
+        "proxy_lines": 0,
+        "pair_id": null,
+        "elapsed_page_ms": 27,
+        "elapsed_server_ms": null
+       }
+      ]
+     },
+     "N3_transport_death_guards_reverted": {
+      "arm_file": "arm_new_mut_abort_C2-184317.json",
+      "run_id": "C2-184317",
+      "backend_tip": "5aff3722d5c36c760a424f5fea5c3a771298f9ac",
+      "bundle_asset": "index-BOGNlWDY.js",
+      "scenario": "abort",
+      "who_answered": null,
+      "leg": null,
+      "pair_id": null,
+      "proxy_lines_with_that_id": null,
+      "pair_id_echoed_in_the_answer": null,
+      "pair_id_read_by_the_app": null,
+      "server_side": {
+       "status": null,
+       "bytes": null,
+       "content_type": null,
+       "body_head": null,
+       "elapsed_ms": null
+      },
+      "page_side": {
+       "status": null,
+       "rejected": null,
+       "reject": null,
+       "elapsed_ms": null,
+       "browser_stack_status": null,
+       "browser_stack_failure": null,
+       "app_json_parse_threw": null,
+       "parse_error_name": null
+      },
+      "card": {
+       "result_status": "NETWORK",
+       "card_text": "连不上服务端\n\n网络或后端没有响应，这与你的需求内容无关。你的行程没有被改动，检查网络后可以重试。\n\n技术详情",
+       "network_words_painted": true,
+       "server_failure_words_painted": false,
+       "detail_regions_in_dom": 1,
+       "reason_label_painted": "",
+       "reason_value_painted": ""
+      },
+      "all_write_legs": [
+       {
+        "leg": "agent/commands",
+        "server_status": null,
+        "page_status": null,
+        "rejected": true,
+        "proxy_lines": 0,
+        "pair_id": null,
+        "elapsed_page_ms": 2,
+        "elapsed_server_ms": null
+       }
+      ]
+     }
+    },
+    "compared_with": {
+     "P1_controlled500_old_bundle": {
+      "arm_file": "arm_old_old_origin500_C2-184534.json",
+      "run_id": "C2-184534",
+      "backend_tip": "dc964086c9d412573ac19d70b24b30e6c3ee6168",
+      "bundle_asset": "index--q2k569d.js",
+      "scenario": "origin500",
+      "who_answered": "my pairing proxy answered it byte-for-byte in the shape the product uses (21 B text/plain \"Internal Server Error\"), no upstream call",
+      "leg": "agent/commands",
+      "pair_id": "hjp3c2-c29b410cd440422a",
+      "proxy_lines_with_that_id": 1,
+      "pair_id_echoed_in_the_answer": "hjp3c2-c29b410cd440422a",
+      "pair_id_read_by_the_app": "hjp3c2-c29b410cd440422a",
+      "server_side": {
+       "status": 500,
+       "bytes": 21,
+       "content_type": "text/plain; charset=utf-8",
+       "body_head": "Internal Server Error",
+       "elapsed_ms": null
+      },
+      "page_side": {
+       "status": 500,
+       "rejected": false,
+       "reject": null,
+       "elapsed_ms": 7,
+       "browser_stack_status": 500,
+       "browser_stack_failure": null,
+       "app_json_parse_threw": true,
+       "parse_error_name": "SyntaxError"
+      },
+      "card": {
+       "result_status": "NETWORK",
+       "card_text": "连不上服务端\n\n网络或后端没有响应，这与你的需求内容无关。你的行程没有被改动，检查网络后可以重试。",
+       "network_words_painted": true,
+       "server_failure_words_painted": false,
+       "detail_regions_in_dom": 0,
+       "reason_label_painted": null,
+       "reason_value_painted": null
+      },
+      "all_write_legs": [
+       {
+        "leg": "agent/commands",
+        "server_status": 500,
+        "page_status": 500,
+        "rejected": false,
+        "proxy_lines": 1,
+        "pair_id": "hjp3c2-c29b410cd440422a",
+        "elapsed_page_ms": 7,
+        "elapsed_server_ms": null
+       }
+      ]
+     }
+    },
+    "identical_card_on_the_old_bundle": true,
+    "the_killed_leg_has_no_server_side_line": true,
+    "derived": {
+     "a_true_transport_death_paints_the_identical_card_on_the_old_bundle": true,
+     "the_transport_death_leg_has_no_server_side_line_at_all": true,
+     "what_separates_the_two_is_the_pairing_not_the_card": true,
+     "the_negative_control_is_mine_not_the_products": true
+    }
+   },
+   "why": "in arm_old_old_abort_C2-184626.json the leg never reached the product (0 proxy lines, page rejected with 'TypeError: Failed to fetch', browser logged net::ERR_FAILED) and the card is byte-identical to the one from the arrived case (arm_old_old_origin500_C2-184534.json); what separates the two is the token pairing, not the wording. On the current tip the same death renders 1 detail region because the NETWORK branch now carries its own device sentence"
+  },
+  {
+   "id": "K5_the_schedule_varies_and_the_generation_it_was_born_on",
+   "verdict": "WHICH_LEG_EATS_THE_PRODUCT_500_VARIES_PER_RUN_THE_PUBLISHED_PAIR_STAYS_SUPERSEDED",
+   "measured_on": "dc964086c9d412573ac19d70b24b30e6c3ee6168",
+   "measured": {
+    "paired_lock_arms": {
+     "R1a_real500_landed_on_agent_commands": {
+      "tip": "dc964086c9d412573ac19d70b24b30e6c3ee6168",
+      "arm": "arm_old_old_lock_C2-184018.json",
+      "legs": [
+       {
+        "leg": "agent/commands",
+        "server": 500,
+        "page": 500,
+        "proxy_lines": 1,
+        "server_ms": 32346,
+        "page_ms": 32342
+       }
+      ],
+      "card_status": "NETWORK",
+      "detail_regions": 0,
+      "card_words": "连不上服务端\n\n网络或后端没有响应，这与你的需求内容无关。你的行程没有被改动，检查网络后可以重试。"
+     },
+     "R1b_real500_landed_on_plans_generate": {
+      "tip": "dc964086c9d412573ac19d70b24b30e6c3ee6168",
+      "arm": "arm_old_old_lock_C2-184643.json",
+      "legs": [
+       {
+        "leg": "agent/commands",
+        "server": 200,
+        "page": 200,
+        "proxy_lines": 1,
+        "server_ms": 24,
+        "page_ms": 31
+       },
+       {
+        "leg": "plans/generate",
+        "server": 500,
+        "page": 500,
+        "proxy_lines": 1,
+        "server_ms": 32406,
+        "page_ms": 32404
+       }
+      ],
+      "card_status": "SKIPPED_EXTERNAL_DEPENDENCY",
+      "detail_regions": 1,
+      "card_words": "AI 暂时不可用\n\n规划助手这次没能连上。你的行程没有被改动，可以稍后重试。\n\n技术详情"
+     },
+     "R2_real500_current_tip": {
+      "tip": "5aff3722d5c36c760a424f5fea5c3a771298f9ac",
+      "arm": "arm_new_new_lock_C2-184736.json",
+      "legs": [
+       {
+        "leg": "agent/commands",
+        "server": 200,
+        "page": 200,
+        "proxy_lines": 1,
+        "server_ms": 20,
+        "page_ms": 25
+       },
+       {
+        "leg": "plans/generate",
+        "server": 500,
+        "page": 500,
+        "proxy_lines": 1,
+        "server_ms": 32411,
+        "page_ms": 32409
+       }
+      ],
+      "card_status": "SKIPPED_EXTERNAL_DEPENDENCY",
+      "detail_regions": 1,
+      "card_words": "AI 暂时不可用\n\n规划助手这次没能连上。你的行程没有被改动，可以稍后重试。\n\n技术详情"
+     },
+     "R3_real500_generation_the_cell_was_born_on": {
+      "tip": "90d29a172e186aab6e6cb138ab4583ccf93bfa68",
+      "arm": "arm_t90_t90_lock_C2-191014.json",
+      "legs": [
+       {
+        "leg": "agent/commands",
+        "server": 200,
+        "page": 200,
+        "proxy_lines": 1,
+        "server_ms": 22,
+        "page_ms": 28
+       },
+       {
+        "leg": "plans/generate",
+        "server": 500,
+        "page": 500,
+        "proxy_lines": 1,
+        "server_ms": 32332,
+        "page_ms": 32333
+       }
+      ],
+      "card_status": "SKIPPED_EXTERNAL_DEPENDENCY",
+      "detail_regions": 1,
+      "card_words": "AI 暂时不可用\n\n规划助手这次没能连上。你的行程没有被改动，可以稍后重试。\n\n技术详情"
+     },
+     "R4_lock_released_before_any_500": {
+      "tip": "5aff3722d5c36c760a424f5fea5c3a771298f9ac",
+      "arm": "arm_new_new_lock_C2-184112.json",
+      "legs": [
+       {
+        "leg": "agent/commands",
+        "server": 200,
+        "page": 200,
+        "proxy_lines": 1,
+        "server_ms": 63,
+        "page_ms": 67
+       },
+       {
+        "leg": "plans/generate",
+        "server": 422,
+        "page": 422,
+        "proxy_lines": 1,
+        "server_ms": 28,
+        "page_ms": 35
+       }
+      ],
+      "card_status": "BLOCKED:CATALOG_INSUFFICIENT",
+      "detail_regions": 1,
+      "card_words": "这次排不出方案：数据不够，不是你说的不对\n\n这座城我们手上的地点太少，配不平一天的行程。（服务器给的原因编号：CATAL"
+     },
+     "R5_lock_released_before_any_500_guards_reverted": {
+      "tip": "5aff3722d5c36c760a424f5fea5c3a771298f9ac",
+      "arm": "arm_new_mut_lock_C2-184205.json",
+      "legs": [
+       {
+        "leg": "agent/commands",
+        "server": 200,
+        "page": 200,
+        "proxy_lines": 1,
+        "server_ms": 19,
+        "page_ms": 23
+       },
+       {
+        "leg": "plans/generate",
+        "server": 422,
+        "page": 422,
+        "proxy_lines": 1,
+        "server_ms": 16,
+        "page_ms": 20
+       }
+      ],
+      "card_status": "BLOCKED:CATALOG_INSUFFICIENT",
+      "detail_regions": 1,
+      "card_words": "这次排不出方案：数据不够，不是你说的不对\n\n这座城我们手上的地点太少，配不平一天的行程。（服务器给的原因编号：CATAL"
+     }
+    },
+    "which_leg_answered_500": {
+     "R1a_real500_landed_on_agent_commands": "agent/commands",
+     "R1b_real500_landed_on_plans_generate": "plans/generate",
+     "R2_real500_current_tip": "plans/generate",
+     "R3_real500_generation_the_cell_was_born_on": "plans/generate"
+    },
+    "the_leg_varies_on_one_tip": true,
+    "on_the_generation_C2_was_born_on": {
+     "tip": "90d29a172e186aab6e6cb138ab4583ccf93bfa68",
+     "sheet_blob": "c22cf42506a4175db992bde387ed8d9c6f1ffb9d",
+     "bundle_sha256_verified_against_that_batch": true,
+     "leg_that_ate_the_500": "plans/generate",
+     "card": "SKIPPED_EXTERNAL_DEPENDENCY",
+     "detail_regions": 1,
+     "server_ms": 32332,
+     "page_ms": 32333
+    },
+    "no_card_names_the_status_or_the_leg": true,
+    "runs_excluded_and_why": [
+     {
+      "file": "arm_old_old_lock_C2-183632.json",
+      "arm": "old_old_lock",
+      "reason": "its `pairing` block has no `write_legs`, so it records one leg only - superseded inside this batch by the per-leg token capture",
+      "pairing_keys": [
+       "app_body_parse_failed",
+       "app_read_the_body",
+       "browser_stack_saw",
+       "page_elapsed_ms",
+       "page_fetch_rejected",
+       "page_reject",
+       "page_saw_ok",
+       "page_saw_status",
+       "paired",
+       "proxy_lines_with_this_token",
+       "proxy_says_abort",
+       "server_saw_this_leg",
+       "token",
+       "upstream_body_head",
+       "upstream_bytes_for_this_leg",
+       "upstream_content_type",
+       "upstream_status_for_this_leg"
+      ],
+      "card": {
+       "result_status": "BLOCKED:CATALOG_EMPTY",
+       "card_text": "这次排不出方案：数据不够，不是你说的不对\n\n这座城我们还没有任何地点数据，所以不是你描述得不对——是没有东西可排。（服务器给的原因编号：CATALOG_EMPTY）\n\n技术详情\n换一座有数据的城市",
+       "network_words_painted": false,
+       "server_failure_words_painted": false,
+       "detail_regions_in_dom": 1,
+       "reason_label_painted": "",
+       "reason_value_painted": ""
+      }
+     },
+     {
+      "file": "arm_old_old_lock_C2-183723.json",
+      "arm": "old_old_lock",
+      "reason": "its `pairing` block has no `write_legs`, so it records one leg only - superseded inside this batch by the per-leg token capture",
+      "pairing_keys": [
+       "app_body_parse_failed",
+       "app_read_the_body",
+       "browser_stack_saw",
+       "page_elapsed_ms",
+       "page_fetch_rejected",
+       "page_reject",
+       "page_saw_ok",
+       "page_saw_status",
+       "paired",
+       "proxy_lines_with_this_token",
+       "proxy_says_abort",
+       "server_saw_this_leg",
+       "token",
+       "upstream_body_head",
+       "upstream_bytes_for_this_leg",
+       "upstream_content_type",
+       "upstream_status_for_this_leg"
+      ],
+      "card": {
+       "result_status": "BLOCKED:CATALOG_INSUFFICIENT",
+       "card_text": "这次排不出方案：数据不够，不是你说的不对\n\n这座城我们手上的地点太少，配不平一天的行程。（服务器给的原因编号：CATALOG_INSUFFICIENT）\n\n技术详情\n换一座有数据的城市",
+       "network_words_painted": false,
+       "server_failure_words_painted": false,
+       "detail_regions_in_dom": 1,
+       "reason_label_painted": "",
+       "reason_value_painted": ""
+      }
+     },
+     {
+      "file": "arm_old_old_lock_C2-183817.json",
+      "arm": "old_old_lock",
+      "reason": "its `pairing` block has no `write_legs`, so it records one leg only - superseded inside this batch by the per-leg token capture",
+      "pairing_keys": [
+       "app_body_parse_failed",
+       "app_read_the_body",
+       "browser_stack_saw",
+       "page_elapsed_ms",
+       "page_fetch_rejected",
+       "page_reject",
+       "page_saw_ok",
+       "page_saw_status",
+       "paired",
+       "proxy_lines_with_this_token",
+       "proxy_says_abort",
+       "server_saw_this_leg",
+       "token",
+       "upstream_body_head",
+       "upstream_bytes_for_this_leg",
+       "upstream_content_type",
+       "upstream_status_for_this_leg"
+      ],
+      "card": {
+       "result_status": "SKIPPED_EXTERNAL_DEPENDENCY",
+       "card_text": "AI 暂时不可用\n\n规划助手这次没能连上。你的行程没有被改动，可以稍后重试。\n\n技术详情",
+       "network_words_painted": false,
+       "server_failure_words_painted": false,
+       "detail_regions_in_dom": 1,
+       "reason_label_painted": "",
+       "reason_value_painted": ""
+      }
+     }
+    ]
+   },
+   "why": "six paired runs of the same forced write, 4 of which drew a 5xx: {\"R1a_real500_landed_on_agent_commands\": \"agent/commands\", \"R1b_real500_landed_on_plans_generate\": \"plans/generate\", \"R2_real500_current_tip\": \"plans/generate\", \"R3_real500_generation_the_cell_was_born_on\": \"plans/generate\"}. On 90d29a172e186aab6e6cb138ab4583ccf93bfa68 the 500 landed on plans/generate at 32332 ms while the page took 32333 ms and the card said SKIPPED_EXTERNAL_DEPENDENCY with 1 detail regions - which is a different outcome from the one ORD-0300 C2 recorded on that same generation, and I am not going to paper over it: the published pair has no request id and cannot be retro-paired, so it is marked SUPERSEDED_BY_EVIDENCE here. What is stable across all of them is that no painted card names the status code or the leg of the 5xx it came from"
+  },
+  {
+   "id": "K6_the_product_fact_that_needs_no_same_request_proof",
+   "verdict": "NETWORK_BRANCH_RENDERS_NO_TECHNICAL_DETAIL_ON_90d29a17_AND_dc964086_AND_ONE_ON_5aff3722",
+   "measured_on": "dc964086c9d412573ac19d70b24b30e6c3ee6168",
+   "measured": {
+    "detail_regions_per_arm": {
+     "P1_controlled500_old_bundle": {
+      "tip": "dc964086c9d412573ac19d70b24b30e6c3ee6168",
+      "scenario": "origin500",
+      "card_status": "NETWORK",
+      "detail_regions": 0,
+      "arm": "arm_old_old_origin500_C2-184534.json"
+     },
+     "N1_transport_death_old_bundle": {
+      "tip": "dc964086c9d412573ac19d70b24b30e6c3ee6168",
+      "scenario": "abort",
+      "card_status": "NETWORK",
+      "detail_regions": 0,
+      "arm": "arm_old_old_abort_C2-184626.json"
+     },
+     "R1a_real500_landed_on_agent_commands": {
+      "tip": "dc964086c9d412573ac19d70b24b30e6c3ee6168",
+      "scenario": "lock",
+      "card_status": "NETWORK",
+      "detail_regions": 0,
+      "arm": "arm_old_old_lock_C2-184018.json"
+     },
+     "P2_controlled500_current_bundle": {
+      "tip": "5aff3722d5c36c760a424f5fea5c3a771298f9ac",
+      "scenario": "origin500",
+      "card_status": "HTTP_500",
+      "detail_regions": 1,
+      "arm": "arm_new_new_origin500_C2-184551.json"
+     },
+     "N2_transport_death_current_bundle": {
+      "tip": "5aff3722d5c36c760a424f5fea5c3a771298f9ac",
+      "scenario": "abort",
+      "card_status": "NETWORK",
+      "detail_regions": 1,
+      "arm": "arm_new_new_abort_C2-184300.json"
+     },
+     "P3_controlled500_two_guards_reverted": {
+      "tip": "5aff3722d5c36c760a424f5fea5c3a771298f9ac",
+      "scenario": "origin500",
+      "card_status": "NETWORK",
+      "detail_regions": 1,
+      "arm": "arm_new_mut_origin500_C2-184607.json"
+     },
+     "N3_transport_death_guards_reverted": {
+      "tip": "5aff3722d5c36c760a424f5fea5c3a771298f9ac",
+      "scenario": "abort",
+      "card_status": "NETWORK",
+      "detail_regions": 1,
+      "arm": "arm_new_mut_abort_C2-184317.json"
+     },
+     "R3_real500_generation_the_cell_was_born_on": {
+      "tip": "90d29a172e186aab6e6cb138ab4583ccf93bfa68",
+      "scenario": "lock",
+      "card_status": "SKIPPED_EXTERNAL_DEPENDENCY",
+      "detail_regions": 1,
+      "arm": "arm_t90_t90_lock_C2-191014.json"
+     }
+    },
+    "the_words_painted_on_the_current_tip": "连不上服务端\n\n网络或后端没有响应，这与你的需求内容无关。你的行程没有被改动，检查网络后可以重试。\n\n技术详情",
+    "guard_shape_counted_out_of_the_exports": {
+     "old": {
+      "path": "frontend/src/features/planning/PlanWithAiSheet.tsx",
+      "sha1_blob_like_hash": "fd5f6e5ba2771a8d12669b9bec1ba91590970701",
+      "lines_total": 1042,
+      "unguarded_detail_reads": 2,
+      "unguarded_at_lines": [
+       147,
+       155
+      ],
+      "guarded_detail_reads": 0,
+      "guarded_at_lines": [],
+      "device_note_present": false,
+      "device_note_at_lines": []
+     },
+     "new": {
+      "path": "frontend/src/features/planning/PlanWithAiSheet.tsx",
+      "sha1_blob_like_hash": "f61d5312e8b33807d3e5304d1fa9fb7f77a518aa",
+      "lines_total": 1057,
+      "unguarded_detail_reads": 0,
+      "unguarded_at_lines": [],
+      "guarded_detail_reads": 2,
+      "guarded_at_lines": [
+       147,
+       155
+      ],
+      "device_note_present": true,
+      "device_note_at_lines": [
+       761
+      ]
+     },
+     "mut": {
+      "path": "frontend/src/features/planning/PlanWithAiSheet.tsx",
+      "sha1_blob_like_hash": "2838fbb69d55671f4cb14d2fd1424dd1a2be064d",
+      "lines_total": 1057,
+      "unguarded_detail_reads": 2,
+      "unguarded_at_lines": [
+       147,
+       155
+      ],
+      "guarded_detail_reads": 0,
+      "guarded_at_lines": [],
+      "device_note_present": true,
+      "device_note_at_lines": [
+       761
+      ]
+     },
+     "t90": {
+      "path": "frontend/src/features/planning/PlanWithAiSheet.tsx",
+      "sha1_blob_like_hash": "c22cf42506a4175db992bde387ed8d9c6f1ffb9d",
+      "lines_total": 1019,
+      "unguarded_detail_reads": 2,
+      "unguarded_at_lines": [
+       147,
+       155
+      ],
+      "guarded_detail_reads": 0,
+      "guarded_at_lines": [],
+      "device_note_present": false,
+      "device_note_at_lines": []
+     }
+    },
+    "derived": {
+     "old_network_branch_renders_no_technical_detail": true,
+     "current_branch_network_card_does_render_a_device_note": true,
+     "the_no_detail_fact_holds_with_and_without_a_paired_arrival": true
+    }
+   },
+   "why": "the unreachable branch shows 0 <details> elements on tip dc964086c9d412573ac19d70b24b30e6c3ee6168 in all three of its shapes (arrived 500, killed leg, real product 500) and 1 on the current tip and on the mutant - so on the older trees the sentence about \"technical detail\" sits above nothing at all. This fact needs no pairing: the same DOM count appears whether or not an answer arrived (True true)"
+  },
+  {
+   "id": "K7_limits_i_am_not_passing_off_as_green",
+   "verdict": "SCOPE_LIMITS_NAMED_WITH_THEIR_NUMBERS",
+   "measured": {
+    "who_answered_what": {
+     "P1_controlled500_old_bundle": "my pairing proxy answered it byte-for-byte in the shape the product uses (21 B text/plain \"Internal Server Error\"), no upstream call",
+     "P2_controlled500_current_bundle": "my pairing proxy answered it byte-for-byte in the shape the product uses (21 B text/plain \"Internal Server Error\"), no upstream call",
+     "P3_controlled500_two_guards_reverted": "my pairing proxy answered it byte-for-byte in the shape the product uses (21 B text/plain \"Internal Server Error\"), no upstream call",
+     "N1_transport_death_old_bundle": "no 5xx leg in this arm",
+     "N2_transport_death_current_bundle": "no 5xx leg in this arm",
+     "N3_transport_death_guards_reverted": "no 5xx leg in this arm",
+     "R1a_real500_landed_on_agent_commands": "the product backend itself (the proxy only witnessed it)",
+     "R1b_real500_landed_on_plans_generate": "the product backend itself (the proxy only witnessed it)",
+     "R2_real500_current_tip": "the product backend itself (the proxy only witnessed it)",
+     "R3_real500_generation_the_cell_was_born_on": "the product backend itself (the proxy only witnessed it)",
+     "R4_lock_released_before_any_500": "no 5xx leg in this arm",
+     "R5_lock_released_before_any_500_guards_reverted": "no 5xx leg in this arm"
+    },
+    "why_the_controlled_answer_is_allowed_here": "the claim under challenge is \"the page held an answer\". The controlled arms prove a 500 in the product own byte shape does that; the arms where the PRODUCT answered (R1a/R1b/R2/R3) carry the same pairing and are reported independently, including the run where it did not land on the leg the original cell named",
+    "ai_supplier_called_in_any_arm": 0,
+    "ai_disabled_how": "CITYNEXUS_AI_ENABLED=false and DEEPSEEK_API_KEY popped from the rig env before the backend starts, so no supplier call is made and no key is ever printed",
+    "tips_touched": {
+     "old": "dc964086c9d412573ac19d70b24b30e6c3ee6168",
+     "new": "5aff3722d5c36c760a424f5fea5c3a771298f9ac",
+     "t90": "90d29a172e186aab6e6cb138ab4583ccf93bfa68",
+     "mut": "a private copy of the new tip with 2 lines reverted, 2838fbb69d55671f4cb14d2fd1424dd1a2be064d"
+    },
+    "named_port_list": [
+     8641,
+     8642,
+     8643,
+     8644,
+     8645,
+     8646,
+     8647
+    ],
+    "field_names_i_renamed_between_the_raw_arms_and_the_derived_copies": {
+     "in_this_batches_own_files": [
+      "arm/cell field `token` -> `pair_id` in c2_score/c2_receipt",
+      "`token_echoed_by_the_answer` -> `pair_id_echoed_in_answer_header`",
+      "`token_read_by_the_app_itself` -> `pair_id_read_by_app`"
+     ],
+     "what_still_uses_the_old_names": "the raw arm and cell files on disk and inside raw_bundle_c2*.json, and the proxy audit line, keep the field name `token` - those bytes are the record as produced, and the guard is applied to published copies only",
+     "how_to_cross_check": "the value is the same string in both spellings; pair_log_publish_proof_c2.json and instrument_publish_copy_proof_c2.json list every line that differs and prove nothing else changed"
+    },
+    "revisions_the_publication_gate_moved_to_new_names": {
+     "mapping_read_at_build_time": [
+      {
+       "was": "raw_bundle_c2.json",
+       "now": "raw_bundle_c2_r2.json",
+       "branch_blob_40_hex": "0946a65c0fa17921faa7efc5b8a34341496a7566",
+       "my_blob_40_hex": "6c434fa4c93d46356fa6b6dd39aedac95a8bc6c0"
+      },
+      {
+       "was": "instruments/c2_score.py",
+       "now": "instruments/c2_score_r2.py",
+       "branch_blob_40_hex": "d57ef21a713478e382f71949af6d70a5e66b5f62",
+       "my_blob_40_hex": "8f7499de7e69cd54126d35ecc191cd2dc7b048bd"
+      },
+      {
+       "was": "instruments/c2_receipt.py",
+       "now": "instruments/c2_receipt_r2.py",
+       "branch_blob_40_hex": "69b93f375d4d78a94984e033cc1dc780d343475d",
+       "my_blob_40_hex": "ccd0674c1f691ba6038b3e366168cddf361a769d"
+      },
+      {
+       "was": "instruments/c2_md.py",
+       "now": "instruments/c2_md_r2.py",
+       "branch_blob_40_hex": "cb41d8fdae11988cf8f37d4dd9cb737c5710e176",
+       "my_blob_40_hex": "5b6ba8c0748fe449a39c4a76466e48b2f9ae72f6"
+      },
+      {
+       "was": "instruments/c2_bundle.py",
+       "now": "instruments/c2_bundle_r2.py",
+       "branch_blob_40_hex": "9e5a78dddc7fc3adc94d5bae533b08c81b31a67c",
+       "my_blob_40_hex": "49a179dcc27b3cbb93a53f6b2a953ec90fdc79f2"
+      }
+     ],
+     "note": "the push re-reads this mapping at the moment it sends; what is recorded here is the state when the receipt was built. Either way a published path keeps its first bytes and the revision lands under `_r2`",
+     "branch_tip_of_that_reading": "dbfad910bb8affea59e3a819cb29678b5f76efb9"
+    },
+    "guard_driven_renames_of_my_own_files": {
+     "proxy_audit": {
+      "only_change": "the JSON field name token -> pair_id; values, order and every other field untouched",
+      "as_ran_bytes": 162231,
+      "as_ran_blob_40_hex": "33961871027a4d3fe2bb456318d5795703e554a2",
+      "published_copy_bytes": 162565,
+      "published_copy_blob_40_hex": "854195065bf43d4ee020c68b3646e580e8b3fa42",
+      "ids_unchanged_and_in_order": true,
+      "proof_file": "pair_log_publish_proof_c2.json",
+      "ALL_HOLD": true
+     },
+     "page_side_instrument": {
+      "only_change": "the recorded key name pair_token -> pair_id (and the same name in two quoted property reads); no logic, no selector, no assertion touched",
+      "as_ran_blob_40_hex": "93896daf3b8878f407baf2cbcd624bea2125c522",
+      "published_copy_blob_40_hex": "39a237e8868546c953cc3e3b4dc9532ed67c563d",
+      "lines_that_differ": [
+       87,
+       122,
+       127
+      ],
+      "line_counts_equal": true,
+      "everything_else_identical": true,
+      "proof_file": "instrument_publish_copy_proof_c2.json",
+      "ALL_HOLD": true
+     },
+     "values_are_not_secrets": "a pairing marker minted per request by my own proxy (hjp3c2- + 16 hex); it authorises nothing, and the guard matched the KEY NAME, not any real credential",
+     "the_running_bytes_are_published_too": {
+      "bundle_members": 86,
+      "groups": {
+       "arm": 15,
+       "cell": 16,
+       "teardown": 26,
+       "rig_state": 7,
+       "lock_log": 10,
+       "face_log": 4,
+       "build_log": 3,
+       "proxy_log": 1,
+       "pair_log": 1,
+       "instrument_as_ran": 1,
+       "arms_log": 2
+      },
+      "contains": [
+       "pair_log.jsonl",
+       "c2_cells.cjs"
+      ]
+     }
+    },
+    "publications_the_gate_moved_to_new_names": [
+     {
+      "was": "raw_bundle_c2.json",
+      "now": "raw_bundle_c2_r2.json",
+      "branch_blob_40_hex": "0946a65c0fa17921faa7efc5b8a34341496a7566",
+      "my_blob_40_hex": "6c434fa4c93d46356fa6b6dd39aedac95a8bc6c0"
+     },
+     {
+      "was": "instruments/c2_score.py",
+      "now": "instruments/c2_score_r2.py",
+      "branch_blob_40_hex": "d57ef21a713478e382f71949af6d70a5e66b5f62",
+      "my_blob_40_hex": "8f7499de7e69cd54126d35ecc191cd2dc7b048bd"
+     },
+     {
+      "was": "instruments/c2_receipt.py",
+      "now": "instruments/c2_receipt_r2.py",
+      "branch_blob_40_hex": "69b93f375d4d78a94984e033cc1dc780d343475d",
+      "my_blob_40_hex": "ccd0674c1f691ba6038b3e366168cddf361a769d"
+     },
+     {
+      "was": "instruments/c2_md.py",
+      "now": "instruments/c2_md_r2.py",
+      "branch_blob_40_hex": "cb41d8fdae11988cf8f37d4dd9cb737c5710e176",
+      "my_blob_40_hex": "5b6ba8c0748fe449a39c4a76466e48b2f9ae72f6"
+     },
+     {
+      "was": "instruments/c2_bundle.py",
+      "now": "instruments/c2_bundle_r2.py",
+      "branch_blob_40_hex": "9e5a78dddc7fc3adc94d5bae533b08c81b31a67c",
+      "my_blob_40_hex": "49a179dcc27b3cbb93a53f6b2a953ec90fdc79f2"
+     }
+    ],
+    "last_teardown_file": "teardown_191241.json",
+    "instrument_fault_count": 6,
+    "ports_and_teardown": {
+     "my_named_ports": {
+      "8641": "backend",
+      "8642": "pairing proxy",
+      "8643": "face old",
+      "8644": "face new",
+      "8645": "face mut",
+      "8646": "face t90",
+      "8647": "spare, never used"
+     },
+     "listening_after_last_teardown": {
+      "backend": [],
+      "proxy": [],
+      "face_old": [],
+      "face_new": [],
+      "face_mut": [],
+      "face_t90": [],
+      "spare": []
+     },
+     "all_my_ports_free": true,
+     "last_teardown_found_the_pids_already_gone": true
+    },
+    "one_read_only_get_on_the_shared_chain": {
+     "requests_made": 1,
+     "method": "GET",
+     "url": "http://127.0.0.1:4781/assets/index-BTzTyrqI.js",
+     "http_status": 200,
+     "bytes": 1253398,
+     "cookie_or_credential_sent": false,
+     "my_private_build_of_5aff3722_sha256": "9d117a64cd1d52f64d5eff3b04e55272805598390574702369d3cbe04a5f6057",
+     "served_sha256": "9d117a64cd1d52f64d5eff3b04e55272805598390574702369d3cbe04a5f6057",
+     "byte_identical": true,
+     "note": "a read of what the shared chain serves, not a write and not a measurement of the product behaviour; the 4781/4782 listeners were not restarted or touched"
+    },
+    "not_measured": [
+     "a 200-with-a-plan answer on these legs (every arm here ends in an error or a skip)",
+     "the phone chain, _live.db, _preview.db, demo/reset (0 calls, see boundary file)",
+     "whether ORD-0302 re-fixes the crash path: on 5aff3722 the guard is already there",
+     "repeat counts of the R arms: R1a happened once in two old-tip paired runs, so the leg that eats the 500 is a schedule outcome, not a certainty"
+    ],
+    "instrument_events_disclosed": [
+     "first arms of this batch died inside /experience with a FileNotFoundError: my git archive omitted the repo-root data/ the product reads - that 500 was my packaging, fixed in c2_add_data.py with before/after hashes proving the subject bytes never moved",
+     "one sqlite line used the wrong attribute on this interpreter (isolation vs isolation_level) so the lock never locked in that round; those arms are on disk and score nothing",
+     "the seed helper first wrote the demo catalog into the wrong arm database (CATALOG_EMPTY on screen behind an upstream 200); fixed to seed per arm",
+     "the face for the generation the challenged cell was born on would not start in the first round: I pointed it at the other batch folder, and that copy of the built bundle has no node_modules beside it (the same trap as in ORD-0300) - fixed by re-exporting that tip into my own directory and verifying the bundle bytes against what ORD-0300 recorded (57c2a927f9e65ca0b33acdc737cbf941fc395c214aa213d861a4f7e5c664338e == 57c2a927f9e65ca0b33acdc737cbf941fc395c214aa213d861a4f7e5c664338e); in the round that scored, that face answered 200 for my private journey id and 404 for a fake one",
+     "an early patch of my own scorer typed two booleans as literals instead of deriving them; the table is now computed from the arm files and the guard counts are re-read from the four exports",
+     "the first per-leg version paired only the last write leg; three old-tip arms recorded that way are listed in runs_excluded rather than quietly deleted"
+    ]
+   },
+   "why": "the limits are readings too: 7 named ports (8641 through 8647) all free after teardown_191241.json (True), the supplier endpoint was crossed in 0 of the legs this batch logged, 9 instrument faults are named with what each cost, and the one read-only GET of index-BTzTyrqI.js on the shared chain returned 1253398 bytes whose sha256 equals my private build (True) - that GET is the only contact this batch had with 127.0.0.1:4781"
+  }
+ ],
+ "boundary": {
+  "ran_at_local": "2026-09-25T19:18:11+0800",
+  "live_preview_index": {
+   "path": "D:\\moodle\\_qoder_preview_20260920\\dist\\index.html",
+   "sha256_full_64_hex": "4d634a4a78a3ba53d197aadf7fd56b16aab634fe7b1cc05e74a32aead79146da",
+   "mtime_local": "2026-09-25T17:45:37+0800",
+   "asset_referenced": [
+    "index-BTzTyrqI.js"
+   ],
+   "touched_by_this_batch": "no - this batch served its own vite preview faces from its own outDirs"
+  },
+  "other_batches_private_build_read_not_written": {
+   "path": "D:\\moodle\\_hjp3_0300_0925\\dist_0300\\assets\\index-BN1w-xlK.js",
+   "sha256_now": "57c2a927f9e65ca0b33acdc737cbf941fc395c214aa213d861a4f7e5c664338e",
+   "sha256_recorded_by_that_batch": "57c2a927f9e65ca0b33acdc737cbf941fc395c214aa213d861a4f7e5c664338e",
+   "unchanged_by_this_batch": true,
+   "how_used": "copied INTO my own dist_t90 and verified; the source file was never opened for writing"
+  },
+  "user_chain_listeners_untouched": [
+   {
+    "port": "4781",
+    "pid": "12076",
+    "created": "2026-09-24T16:25:57.2342990+08:00",
+    "in_my_named_port_list": false
+   },
+   {
+    "port": "4782",
+    "pid": "34324",
+    "created": "2026-09-24T16:35:33.5425690+08:00",
+    "in_my_named_port_list": false
+   }
+  ],
+  "my_named_ports": {
+   "8641": "backend",
+   "8642": "pairing proxy",
+   "8643": "face old",
+   "8644": "face new",
+   "8645": "face mut",
+   "8646": "face t90",
+   "8647": "spare, never used"
+  },
+  "negative_scan": {
+   "_live.db": {
+    "lines_that_actually_use_it": 0,
+    "uses": [],
+    "lines_that_only_name_it_in_a_denial_or_comment": 0,
+    "named": [],
+    "lines_excluded_as_the_scanner_reading_itself": 2
+   },
+   "_preview.db": {
+    "lines_that_actually_use_it": 0,
+    "uses": [],
+    "lines_that_only_name_it_in_a_denial_or_comment": 0,
+    "named": [],
+    "lines_excluded_as_the_scanner_reading_itself": 2
+   },
+   "demo/reset": {
+    "lines_that_actually_use_it": 0,
+    "uses": [],
+    "lines_that_only_name_it_in_a_denial_or_comment": 1,
+    "named": [
+     {
+      "file": "c2_rig.py",
+      "line": "phone chain (:4781/:4782) and the shared databases never entered, `demo/reset` never called, `DEEPSEEK_API_KEY`"
+     }
+    ],
+    "lines_excluded_as_the_scanner_reading_itself": 2
+   },
+   "git apply": {
+    "lines_that_actually_use_it": 0,
+    "uses": [],
+    "lines_that_only_name_it_in_a_denial_or_comment": 1,
+    "named": [
+     {
+      "file": "c2_setup.py",
+      "line": "Three trees, all read-only pulls by `git archive` (never `git apply`, never the working tree):"
+     }
+    ],
+    "lines_excluded_as_the_scanner_reading_itself": 2
+   },
+   "citynexus.db": {
+    "lines_that_actually_use_it": 0,
+    "uses": [],
+    "lines_that_only_name_it_in_a_denial_or_comment": 0,
+    "named": [],
+    "lines_excluded_as_the_scanner_reading_itself": 2
+   },
+   ":4781": {
+    "lines_that_actually_use_it": 0,
+    "uses": [],
+    "lines_that_only_name_it_in_a_denial_or_comment": 1,
+    "named": [
+     {
+      "file": "c2_rig.py",
+      "line": "phone chain (:4781/:4782) and the shared databases never entered, `demo/reset` never called, `DEEPSEEK_API_KEY`"
+     }
+    ],
+    "lines_excluded_as_the_scanner_reading_itself": 1
+   },
+   ":4782": {
+    "lines_that_actually_use_it": 0,
+    "uses": [],
+    "lines_that_only_name_it_in_a_denial_or_comment": 1,
+    "named": [
+     {
+      "file": "c2_rig.py",
+      "line": "phone chain (:4781/:4782) and the shared databases never entered, `demo/reset` never called, `DEEPSEEK_API_KEY`"
+     }
+    ],
+    "lines_excluded_as_the_scanner_reading_itself": 1
+   }
+  },
+  "coverage": "NOT EXHAUSTIVE: 11 instrument files of THIS batch scanned by literal string: ['seed_helper.py', 'c2_add_data.py', 'c2_add_t90.py', 'c2_bounds.py', 'c2_receipt.py', 'c2_rig.py', 'c2_runarm.py', 'c2_score.py', 'c2_setup.py', 'c2proxy.py', 'c2proxy.py']",
+  "credential_handling": {
+   "DEEPSEEK_API_KEY_popped": true,
+   "AI_disabled": true,
+   "sk_shaped_strings_in_my_files": []
+  },
+  "junction_used_by_this_batch": {
+   "what": "node_modules junction created INSIDE my own export so vite can resolve its own modules",
+   "target": "D:/moodle/CityNexus/frontend/node_modules (read through the junction only)",
+   "never": "no junction was created inside another batch folder after the first failure, and nothing followed one; the earlier mistake is disclosed in the receipt limits cell"
+  },
+  "databases": {
+   "one_time_files": [
+    "o0300c2_new.s3db",
+    "o0300c2_old.s3db",
+    "o0300c2_t90.s3db"
+   ],
+   "created_by": "each deleted before start and rebuilt by the product's own ensure_schema()",
+   "shared_databases_opened": 0
+  },
+  "teardown_files_written": [
+   "teardown_183047.json",
+   "teardown_183512.json",
+   "teardown_183623.json",
+   "teardown_183650.json",
+   "teardown_183743.json",
+   "teardown_183911.json",
+   "teardown_184111.json",
+   "teardown_184205.json",
+   "teardown_184300.json",
+   "teardown_184317.json",
+   "teardown_184336.json",
+   "teardown_184551.json",
+   "teardown_184607.json",
+   "teardown_184626.json",
+   "teardown_184643.json",
+   "teardown_184736.json",
+   "teardown_184829.json",
+   "teardown_185715.json",
+   "teardown_185812.json",
+   "teardown_190131.json",
+   "teardown_190228.json",
+   "teardown_190359.json",
+   "teardown_190819.json",
+   "teardown_190951.json",
+   "teardown_191231.json",
+   "teardown_191241.json"
+  ],
+  "last_teardown": {
+   "listening_after": {
+    "backend": [],
+    "proxy": [],
+    "face_old": [],
+    "face_new": [],
+    "face_mut": [],
+    "face_t90": [],
+    "spare": []
+   },
+   "all_my_ports_free": true,
+   "any_listener_left_alone_because_it_could_not_be_attributed": []
+  },
+  "ports_free_right_now": {
+   "8641": [],
+   "8642": [],
+   "8643": [],
+   "8644": [],
+   "8645": [],
+   "8646": [],
+   "8647": []
+  },
+  "all_my_ports_free_now": true
+ },
+ "q25": "every millisecond and every byte count here was read in this batch from the named arm file; no number is carried over from ORD-0300",
+ "derived_result": null,
+ "claimed_result": "MEASURED_NOT_GRADED",
+ "built_at_local": "2026-09-25T20:09:20+0800"
+}
