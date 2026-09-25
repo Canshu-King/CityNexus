@@ -1,0 +1,20 @@
+{
+ "schema": "CNX_CMDR_CRED_ENV_SECOND_OBSERVER_V1",
+ "name": "DEEPSEEK_API_KEY",
+ "process_env_present": true,
+ "process_env_char_len": 35,
+ "process_env_fp12": "4cabe6bcaff4",
+ "registry_hkcu_environment_present": true,
+ "value_printed": false,
+ "note": "presence, length and a 12-hex fingerprint only; no byte of the value was written to this file, to stdout, or to any evidence path",
+ "against_fs_reading": {
+  "she_reported": {
+   "present": 1,
+   "len": 35,
+   "fp": "4cabe6bcaff4"
+  },
+  "agree_on_presence": true,
+  "agree_on_length": true,
+  "agree_on_fingerprint": true
+ }
+}
