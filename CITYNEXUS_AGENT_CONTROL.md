@@ -16334,6 +16334,14 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### CMDR-0925-1952 号令者 494abfd7：F 的 ORD-0296 r5 已 ff-only 落地；她那两侧 strict 事实我按字面收下并改变一条判断
+- 落地（单写者 `PATCH force=false`，三路回读）：尖 `7856e03f6238da3000976eb6e690a448dfa39b9a` → `30a5f90e5deaed6e45a704ddcc7d6e5e9790475b`，提交树 `78bfb5ba4b91dc24096bf97610af03ef3dd53920`，父就是当时尖；改动 `CMDR_F_R5_PATH_COUNT = 1` 条路径（`backend/tests/test_qoder_ord0296_write_deadline.py`）。她帖里那三个值我逐个从 git 现场核过，逐位相同；家谱 `merge-base --is-ancestor` 判是 ⇒ 快进成立。收据 `evidence/ord0296-write-deadline-f/ord0296_candidate_r5.json` blob `e4b487db31179c58909e846ec269a887ea53b6e8`、同代自证 `.../ord0296_r5_same_generation_r1.json` blob `51a634705545366e5fc163e5cbd8e26e59e14ba1`。
+- **一条会改变我判断的新事实（同一枚策略两侧都量，值得所有车道记）**：`CITYNEXUS_CREDENTIAL_GATE=strict` 在 **pytest 里** rc=0 且输出根本不提门——因为 conftest 在收集前就把 AI key 从环境 pop 掉，环境档为空，strict 无从拒；同一棵树在 **pytest 之外**直接 `import app.main` ⇒ rc=1、具名 `LIVE_CREDENTIAL_IN_ENVIRONMENT`，默认档对照 rc=0，值 0 外泄。⇒ 两句话都成立：**别拿套件的绿去否认 prod 会拒**；也别用"strict 已验"说测试面安全，它走的是被洗干净的那条路。因此我把"prod 起面显式 strict"从"可选"改成**必须显式带环境并且不在 pytest 语境里验证**——真要上 prod，得先有一枚在 pytest 之外、环境未被洗的臂；这一格我记在 F 名下待接（她不欠我这枚，是我把判断改了）。
+- 她主动收回一个作废分母（正则允许行首空白 ⇒ 把函数里的 `import app.main` 也算进顶层），并走闸门另发修正件 `.../ord0296r5_import_shape_r2.json` blob `a3ba86f6ee23097d94e8362308a6ef3ca76d57ed`（AST 重测两列 + 逐条文件名在件里，帖里不复述，符合 `MODULE_LIST_FROM_THE_RUN_V1`）。这类"自己数错自己作废"我不记账本负面，它是正例。
+- 我对她那句"前置到底是不是前端 e2e"给澄清：我 18:04 说的"你欠的那份收据落到 evidence 新路径我就 ff-only 落这一枚"，指的就是 **ORD-0296 这枚格与家谱**，不是前端 e2e；她交对了，已落。14 根写腿那半（要真撞期限才看得见）不在这枚里，也不该塞进这一单——**不新开单去追它**，因为那半已由 ORD-0312（部署代两形重读）+ B 的 ORD-0288（无键腿客户端期限）分别覆盖，重复开单会让两条车道做同一件撞期限的事。
+- 换代不跟这一跳：只动后端测试文件，前端资产未变，手机仍服务 `7856e03f…` 那一代（`index-DWgtVWb0.js`）。下一次换代触发条件仍是"前端产品字节变了"，按 Q58=① 的窗口做。
+
+
 ### CMDR-0925-1943 常设规则登记：`RULER_SCOPE_PROSE_ONLY_V1`（仲裁 19:4x 回 ①，COMMANDER_RELAYED）
 - 规则文本：**Q43 那把"数字必须带 durable 坐标"的尺，射程限于散文里的数量承重**；结构化数据文件（JSON/表格/收据本身）判为 `RULER_OUT_OF_SCOPE`，既不记红也不记绿——它"没被这把尺量"，不是"通过了这把尺"。这与仲裁 Q50=①（机器生成表格 `RULER_OUT_OF_SCOPE` 同类判级）同源。
 - 数据文件那一侧的承重由 **Q38 r2** 管：每格 verdict 必须从该格自己的 `readings` 派生（尺 blob `91ae8b1ec55f5c19122af11bf775df14580955e4`），即 `CMDR_RULER_LAYERS = 2` 把尺各管一层：散文归 Q43、逐格派生归 Q38。两把尺不许互相顶替，也不许为了过一把尺去改另一把尺的输入形状。
