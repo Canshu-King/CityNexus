@@ -1,0 +1,149 @@
+{
+ "schema": "CNX_ORD0323_R3_READINGS_R1",
+ "order": "ORD-0323",
+ "lane": "B c01d72a3",
+ "ruler": {
+  "path": "live_checks/ui_exposure_field_check_r3.py",
+  "published_blob": "44e062e6ce9c7b5d97d78e09e432072da102292c",
+  "local_git_blob_hash": "44e062e6ce9c7b5d97d78e09e432072da102292c",
+  "selftest": "SELFTEST_PASS",
+  "local_sha256": "f922d51c1bfa67ff7fde09a0ffa66ce884729c5fc9b2d48df510ba2e04b52351"
+ },
+ "generations": {
+  "before": "9a669c8bec863fadf31d5158f4a1be66aec49f23",
+  "after": "499522db0903790c3eaba5837bf8e8e3764b7463",
+  "commits_between": 13,
+  "after_contains_before_as_ancestor": true
+ },
+ "before": {
+  "verdict": "EXPOSURE_SHAPE_FOUND",
+  "hit_count": 11,
+  "hits": [
+   "RAW_TEXT_INTERPOLATION@JourneyInboxWorkbench.tsx:691",
+   "UPSTREAM_READ_DIRECT@JourneyInboxWorkbench.tsx:307",
+   "UPSTREAM_READ_DIRECT@JourneyInboxWorkbench.tsx:317",
+   "UPSTREAM_READ_DIRECT@JourneyInboxWorkbench.tsx:336",
+   "UPSTREAM_READ_DIRECT@JourneyInboxWorkbench.tsx:386",
+   "UPSTREAM_READ_DIRECT@JourneyInboxWorkbench.tsx:407",
+   "UPSTREAM_READ_DIRECT@JourneyInboxWorkbench.tsx:435",
+   "UPSTREAM_READ_DIRECT@JourneyInboxWorkbench.tsx:459",
+   "UPSTREAM_READ_DIRECT@JourneyInboxWorkbench.tsx:517",
+   "UPSTREAM_READ_DIRECT@ProductErrorBoundary.tsx:104",
+   "UPSTREAM_TEXT_VIA_HELPER_TO_DOM@PlanWithAiSheet.tsx:1046"
+  ]
+ },
+ "after": {
+  "verdict": "EXPOSURE_SHAPE_FOUND",
+  "hit_count": 1,
+  "hits": [
+   "UPSTREAM_TEXT_VIA_HELPER_TO_DOM@PlanWithAiSheet.tsx:1048"
+  ]
+ },
+ "coordinate_diff": {
+  "why": "raw hit coordinates on each side; NOT a claim that the difference is a fix -- the identity block below is what says which shapes actually went away",
+  "before_lines": [
+   "RAW_TEXT_INTERPOLATION@JourneyInboxWorkbench.tsx:691",
+   "UPSTREAM_READ_DIRECT@JourneyInboxWorkbench.tsx:307",
+   "UPSTREAM_READ_DIRECT@JourneyInboxWorkbench.tsx:317",
+   "UPSTREAM_READ_DIRECT@JourneyInboxWorkbench.tsx:336",
+   "UPSTREAM_READ_DIRECT@JourneyInboxWorkbench.tsx:386",
+   "UPSTREAM_READ_DIRECT@JourneyInboxWorkbench.tsx:407",
+   "UPSTREAM_READ_DIRECT@JourneyInboxWorkbench.tsx:435",
+   "UPSTREAM_READ_DIRECT@JourneyInboxWorkbench.tsx:459",
+   "UPSTREAM_READ_DIRECT@JourneyInboxWorkbench.tsx:517",
+   "UPSTREAM_READ_DIRECT@ProductErrorBoundary.tsx:104",
+   "UPSTREAM_TEXT_VIA_HELPER_TO_DOM@PlanWithAiSheet.tsx:1046"
+  ],
+  "after_lines": [
+   "UPSTREAM_TEXT_VIA_HELPER_TO_DOM@PlanWithAiSheet.tsx:1048"
+  ]
+ },
+ "shape_identity": {
+  "why": "line numbers move when I add lines above them; matching a shape by (rule, file, snippet) is what separates 'this shape is gone' from 'this shape got renumbered'",
+  "same_shape_renumbered": [
+   {
+    "rule": "UPSTREAM_TEXT_VIA_HELPER_TO_DOM",
+    "file": "PlanWithAiSheet.tsx",
+    "snippet": "<code data-testid=\"plan-ai-reason\">{result.failureReason.text}</code>",
+    "lines_before": [
+     1046
+    ],
+    "lines_after": [
+     1048
+    ],
+    "line_delta": [
+     2
+    ]
+   }
+  ],
+  "shapes_gone": [
+   {
+    "rule": "UPSTREAM_READ_DIRECT",
+    "file": "ProductErrorBoundary.tsx",
+    "snippet": "{String(error?.message || error)}",
+    "lines_before": [
+     104
+    ]
+   },
+   {
+    "rule": "RAW_TEXT_INTERPOLATION",
+    "file": "JourneyInboxWorkbench.tsx",
+    "snippet": "<code>{rawDetail}</code>",
+    "lines_before": [
+     691
+    ]
+   },
+   {
+    "rule": "UPSTREAM_READ_DIRECT",
+    "file": "JourneyInboxWorkbench.tsx",
+    "snippet": "} catch (error) {",
+    "lines_before": [
+     307,
+     317,
+     336,
+     386,
+     407,
+     435,
+     459,
+     517
+    ]
+   }
+  ],
+  "shapes_new": []
+ },
+ "named_cells": {
+  "cell1_ProductErrorBoundary:104-105": {
+   "before": [
+    "UPSTREAM_READ_DIRECT@ProductErrorBoundary.tsx:104 {String(error?.message || error)}"
+   ],
+   "after": []
+  },
+  "cell3_PlanWithAiSheet:155_reason_code_slot": {
+   "before": [
+    "UPSTREAM_TEXT_VIA_HELPER_TO_DOM@PlanWithAiSheet.tsx:1046 <code data-testid=\"plan-ai-reason\">{result.failureReason.text}</code>"
+   ],
+   "after": [
+    "UPSTREAM_TEXT_VIA_HELPER_TO_DOM@PlanWithAiSheet.tsx:1048 <code data-testid=\"plan-ai-reason\">{result.failureReason.text}</code>"
+   ]
+  },
+  "cell2_JourneyInboxWorkbench:88_surfacing_at_687_691_731": {
+   "before": [
+    "RAW_TEXT_INTERPOLATION@JourneyInboxWorkbench.tsx:691 <code>{rawDetail}</code>",
+    "UPSTREAM_READ_DIRECT@JourneyInboxWorkbench.tsx:307 } catch (error) {",
+    "UPSTREAM_READ_DIRECT@JourneyInboxWorkbench.tsx:317 } catch (error) {",
+    "UPSTREAM_READ_DIRECT@JourneyInboxWorkbench.tsx:336 } catch (error) {",
+    "UPSTREAM_READ_DIRECT@JourneyInboxWorkbench.tsx:386 } catch (error) {",
+    "UPSTREAM_READ_DIRECT@JourneyInboxWorkbench.tsx:407 } catch (error) {",
+    "UPSTREAM_READ_DIRECT@JourneyInboxWorkbench.tsx:435 } catch (error) {",
+    "UPSTREAM_READ_DIRECT@JourneyInboxWorkbench.tsx:459 } catch (error) {",
+    "UPSTREAM_READ_DIRECT@JourneyInboxWorkbench.tsx:517 } catch (error) {"
+   ],
+   "after": []
+  }
+ },
+ "reading": "before 11 hit(s) -> after 1 hit(s); 3 shape(s) gone, 0 new, 1 unchanged shape occurrence(s) renumbered by [2] line(s)",
+ "interpretation_limit": "r3 is a pattern ruler over source text: it names shapes, not defects, and it cannot see what a string holds at runtime. The lines that still fire are catch blocks reading the message of the error this file now composes itself; whether that message carries upstream words is judged by the e2e arms, not by r3.",
+ "claim_kind": "pattern_determined",
+ "claimed_result": null,
+ "derived_result": null
+}
