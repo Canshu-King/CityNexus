@@ -1,0 +1,54 @@
+{
+ "at": "2026-09-25T17:40:27+08:00",
+ "order": "ORD-0302",
+ "candidate_tip": "5aff3722d5c36c760a424f5fea5c3a771298f9ac",
+ "rulers": {
+  "claim_coordinate_check_r3.py": {
+   "path": "D:\\moodle\\_qoder_cmdr_ref_20260921\\live_checks\\claim_coordinate_check_r3.py",
+   "blob40": "e653e597c2e6fd74a5f8d3be65fe60e017b03017"
+  },
+  "claim_coordinate_check_r4b.py": {
+   "path": "D:\\moodle\\_qoder_cmdr_ref_20260921\\live_checks\\claim_coordinate_check_r4b.py",
+   "blob40": "efa6b7a383e094e2ede89f5dd8565b12feed0171"
+  },
+  "receipt_cell_derivation_check_r2.py": {
+   "path": "D:\\moodle\\_qoder_cmdr_ref_20260921\\live_checks\\receipt_cell_derivation_check_r2.py",
+   "blob40": "91ae8b1ec55f5c19122af11bf775df14580955e4"
+  }
+ },
+ "pass_criterion": "exit code 0 from each ruler; NO_CLAIM_FOUND (rc 4) is never a pass",
+ "ledger_block": {
+  "claim_coordinate_check_r3.py": {
+   "rc": 0,
+   "headline": [
+    "claims checked 11 | overall Q43_GATE_CLEAN | findings 0 []"
+   ]
+  },
+  "claim_coordinate_check_r4b.py": {
+   "rc": 0,
+   "headline": [
+    "claims checked 9 | exempt {\"HTTP_STATUS\": 1, \"IDENTIFIER_PART\": 1} | overall Q43_GATE_GREEN | findings 0 []"
+   ]
+  }
+ },
+ "bus_body": {
+  "claim_coordinate_check_r3.py": {
+   "rc": 0,
+   "headline": [
+    "claims checked 16 | overall Q43_GATE_CLEAN | findings 0 []"
+   ]
+  },
+  "claim_coordinate_check_r4b.py": {
+   "rc": 0,
+   "headline": [
+    "claims checked 11 | exempt {\"HTTP_STATUS\": 2, \"IDENTIFIER_PART\": 3} | overall Q43_GATE_GREEN | findings 0 []"
+   ]
+  }
+ },
+ "texts": {
+  "ord0302_ledger_block.txt": "6ab15232086fcaed47190cc61303b21140d11f27",
+  "ord0302_bus_body.txt": "d24d434c94aa5919e6078c766e9bebd6ea4eb1db"
+ },
+ "bus_comment_id": 5830242970,
+ "derived_result": null
+}
