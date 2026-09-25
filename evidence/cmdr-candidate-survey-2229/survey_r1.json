@@ -1,0 +1,126 @@
+{
+ "schema": "CNX_CMDR_CANDIDATE_SURVEY_V1",
+ "lane": "commander 494abfd7",
+ "at_local": "2026-09-25T22:25:21+0800",
+ "what": "structural landing survey of candidate refs against the live tip - no suite run, no ref move",
+ "tip": "2344145ce6342b6ac32ac4d0955c0f524d8c9320",
+ "candidates": [
+  {
+   "ref": "refs/remotes/origin/b4",
+   "sha": "4fc0de91c18a966f99fc40fcd7ce136a5e2b8936",
+   "object_type": "commit",
+   "commit_subject": "fix(frontend): re-cut the ORD-0302 q53 candidate onto the generation that carries ORD-0310 (ORD-0302)",
+   "commit_date": "2026-09-25T22:03:44+08:00",
+   "behind_the_tip": 0,
+   "ahead_of_tip": 7,
+   "ff_possible_from_tip": true,
+   "merge_tree_exit": 0,
+   "merge_tree_prediction": "CLEAN_UNION",
+   "conflict_surface": [],
+   "files_changed_vs_tip": [
+    "frontend/e2e/qoder-ord0302-unreadable-server-body.spec.ts",
+    "frontend/src/features/planning/PlanWithAiSheet.tsx"
+   ],
+   "n_files": 2
+  },
+  {
+   "ref": "refs/remotes/origin/d0310_2344",
+   "sha": "30de4ebe409f49c5e25f4758cb2e5f4e90764a4f",
+   "object_type": "commit",
+   "commit_subject": "ORD-0310 gen-3: unwrap the leg, keep its signal, and see which witness falls",
+   "commit_date": "2026-09-25T21:23:19+08:00",
+   "behind_the_tip": 0,
+   "ahead_of_tip": 1,
+   "ff_possible_from_tip": true,
+   "merge_tree_exit": 0,
+   "merge_tree_prediction": "CLEAN_UNION",
+   "conflict_surface": [],
+   "files_changed_vs_tip": [
+    "review/ord0310_kill_arms.py"
+   ],
+   "n_files": 1
+  },
+  {
+   "ref": "refs/remotes/origin/b3",
+   "sha": "2f191eb5fd1682a53cf95f883c7200f00cbb6ebe",
+   "object_type": "commit",
+   "commit_subject": "fix(frontend): the X-5 arm's reason string never parsed; add the collection gate that catches it (ORD-0302)",
+   "commit_date": "2026-09-25T20:43:11+08:00",
+   "behind_the_tip": 10,
+   "ahead_of_tip": 6,
+   "ff_possible_from_tip": false,
+   "merge_tree_exit": 1,
+   "merge_tree_prediction": "CONFLICT_PREDICTED",
+   "conflict_surface": [
+    "100644 f61d5312e8b33807d3e5304d1fa9fb7f77a518aa 1\tfrontend/src/features/planning/PlanWithAiSheet.tsx",
+    "100644 3bb6a39067a380c2f75629fd7562f0de8f5d2f2a 2\tfrontend/src/features/planning/PlanWithAiSheet.tsx",
+    "100644 47ff8985a9963d77a4094eb970ad3fd5b639140b 3\tfrontend/src/features/planning/PlanWithAiSheet.tsx",
+    "Auto-merging frontend/src/features/planning/PlanWithAiSheet.tsx",
+    "CONFLICT (content): Merge conflict in frontend/src/features/planning/PlanWithAiSheet.tsx"
+   ],
+   "files_changed_vs_tip": [
+    "backend/app/main.py",
+    "backend/app/security/credential_literals.py",
+    "backend/tests/test_qoder_ord0296_write_deadline.py",
+    "backend/tests/test_qoder_ord0307_credential_gate.py",
+    "backend/tests/test_qoder_ord0310_keyless_leg_receipts.py",
+    "frontend/e2e/qoder-ord0302-unreadable-server-body.spec.ts",
+    "frontend/e2e/qoder-ord0310-keyless-write-deadline.spec.ts",
+    "frontend/src/features/planning/PlanWithAiSheet.tsx",
+    "frontend/src/lib/keylessWriteDeadline.ts",
+    "review/ledger_block_e345b9d6_0310.md",
+    "review/ord0310_gauge_landed_block.py",
+    "review/ord0310_kill_arms.py",
+    "review/ord0310_make_block.py",
+    "review/ord0310_make_post.py",
+    "review/ord0310_make_receipt.py",
+    "review/ord0310_post_bus.py",
+    "review/ord0310_readback.py",
+    "review/ord0310_stage_pub.py"
+   ],
+   "n_files": 18
+  }
+ ],
+ "pairwise_intersections": [
+  {
+   "pair": [
+    "refs/remotes/origin/b4",
+    "refs/remotes/origin/d0310_2344"
+   ],
+   "shared_files": [],
+   "collision": false
+  },
+  {
+   "pair": [
+    "refs/remotes/origin/b4",
+    "refs/remotes/origin/b3"
+   ],
+   "shared_files": [
+    "frontend/e2e/qoder-ord0302-unreadable-server-body.spec.ts",
+    "frontend/src/features/planning/PlanWithAiSheet.tsx"
+   ],
+   "collision": true
+  },
+  {
+   "pair": [
+    "refs/remotes/origin/d0310_2344",
+    "refs/remotes/origin/b3"
+   ],
+   "shared_files": [
+    "review/ord0310_kill_arms.py"
+   ],
+   "collision": true
+  }
+ ],
+ "standing_rule": "ff_possible is computed against the tip read at this instant; a candidate that is not a descendant must be re-cut by its owner before the suite is worth running. Two candidates sharing a file will collide whoever lands second, so the order between them is a decision, not an accident.",
+ "discipline": {
+  "refs_pushed": 0,
+  "authoritative_branch_moved": 0,
+  "suites_run": 0,
+  "databases_opened": 0,
+  "credential_values_printed": 0
+ },
+ "claim_kind": "git_determined",
+ "claimed_result": "2344145ce6: refs/remotes/origin/b4 ahead=7 behind=0 ff=True CLEAN_UNION files=2; refs/remotes/origin/d0310_2344 ahead=1 behind=0 ff=True CLEAN_UNION files=1; refs/remotes/origin/b3 ahead=6 behind=10 ff=False CONFLICT_PREDICTED files=18",
+ "derived_result": null
+}
