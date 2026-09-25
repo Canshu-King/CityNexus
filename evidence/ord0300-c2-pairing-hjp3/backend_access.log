@@ -1,0 +1,142 @@
+INFO:     Started server process [2408]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://127.0.0.1:8641 (Press CTRL+C to quit)
+INFO:     127.0.0.1:54462 - "POST /api/v1/travelers HTTP/1.1" 201 Created
+INFO:     127.0.0.1:54465 - "POST /api/v1/journeys HTTP/1.1" 201 Created
+INFO:     127.0.0.1:54467 - "GET /api/v1/journeys/e0840633-aeb1-4f6c-8d56-709365307ac5 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54469 - "GET /api/v1/journeys/00000000-0000-0000-0000-000000000000 HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:56750 - "GET /api/v1/journeys/e0840633-aeb1-4f6c-8d56-709365307ac5/experience HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56752 - "GET /api/v1/journeys/e0840633-aeb1-4f6c-8d56-709365307ac5/replans HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56756 - "GET /api/v1/demo/scene HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56757 - "GET /api/v1/journeys/e0840633-aeb1-4f6c-8d56-709365307ac5/agent-feed?limit=200 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60432 - "GET /api/v1/journeys/e0840633-aeb1-4f6c-8d56-709365307ac5/plans HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60433 - "GET /api/v1/journeys/e0840633-aeb1-4f6c-8d56-709365307ac5/twin HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60435 - "GET /api/v1/journeys/e0840633-aeb1-4f6c-8d56-709365307ac5/agent-feed?limit=200 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54546 - "GET /api/v1/travelers/4a75bcbd-d053-4858-96ce-11b87f1ea793/agent-policy HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54548 - "GET /api/v1/journeys/e0840633-aeb1-4f6c-8d56-709365307ac5/wallet HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54549 - "GET /api/v1/journeys/e0840633-aeb1-4f6c-8d56-709365307ac5/offline-snapshot HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54551 - "GET /api/v1/agent/runtime-status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50177 - "GET /api/v1/places?city_code=CNX-DEMO HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50176 - "GET /api/v1/agent/runtime-status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64879 - "GET /api/v1/journeys/e0840633-aeb1-4f6c-8d56-709365307ac5/plans HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64881 - "POST /api/v1/journeys/e0840633-aeb1-4f6c-8d56-709365307ac5/agent/commands HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64883 - "GET /api/v1/journeys/e0840633-aeb1-4f6c-8d56-709365307ac5/plans HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64885 - "GET /api/v1/places?city_code=CNX-DEMO HTTP/1.1" 200 OK
+JourneyTwin cache write skipped during transient SQLite contention: (sqlite3.OperationalError) database is locked
+[SQL: UPDATE journey_twins SET snapshot_at=?, updated_at=? WHERE journey_twins.journey_id = ?]
+[parameters: ('2026-09-25T11:11:50.131377+00:00', '2026-09-25T11:11:50.131377+00:00', 'e0840633-aeb1-4f6c-8d56-709365307ac5')]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+INFO:     127.0.0.1:59425 - "GET /api/v1/journeys/e0840633-aeb1-4f6c-8d56-709365307ac5/twin HTTP/1.1" 200 OK
+JourneyTwin cache write skipped during transient SQLite contention: (sqlite3.OperationalError) database is locked
+[SQL: UPDATE journey_twins SET snapshot_at=?, updated_at=? WHERE journey_twins.journey_id = ?]
+[parameters: ('2026-09-25T11:12:05.170436+00:00', '2026-09-25T11:12:05.170436+00:00', 'e0840633-aeb1-4f6c-8d56-709365307ac5')]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+INFO:     127.0.0.1:62842 - "GET /api/v1/journeys/e0840633-aeb1-4f6c-8d56-709365307ac5/twin HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64887 - "POST /api/v1/journeys/e0840633-aeb1-4f6c-8d56-709365307ac5/plans/generate HTTP/1.1" 500 Internal Server Error
+ERROR:    Exception in ASGI application
+Traceback (most recent call last):
+  File "D:\moodle\CityNexus\.venv\Lib\site-packages\uvicorn\protocols\http\httptools_impl.py", line 422, in run_asgi
+    result = await app(  # type: ignore[func-returns-value]
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\moodle\CityNexus\.venv\Lib\site-packages\uvicorn\middleware\proxy_headers.py", line 63, in __call__
+    return await self.app(scope, receive, send)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\moodle\CityNexus\.venv\Lib\site-packages\fastapi\applications.py", line 1163, in __call__
+    await super().__call__(scope, receive, send)
+  File "D:\moodle\CityNexus\.venv\Lib\site-packages\starlette\applications.py", line 96, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "D:\moodle\CityNexus\.venv\Lib\site-packages\starlette\middleware\errors.py", line 186, in __call__
+    raise exc
+  File "D:\moodle\CityNexus\.venv\Lib\site-packages\starlette\middleware\errors.py", line 164, in __call__
+    await self.app(scope, receive, _send)
+  File "D:\moodle\CityNexus\.venv\Lib\site-packages\starlette\middleware\exceptions.py", line 63, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "D:\moodle\CityNexus\.venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "D:\moodle\CityNexus\.venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "D:\moodle\CityNexus\.venv\Lib\site-packages\fastapi\middleware\asyncexitstack.py", line 18, in __call__
+    await self.app(scope, receive, send)
+  File "D:\moodle\CityNexus\.venv\Lib\site-packages\starlette\routing.py", line 670, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "D:\moodle\CityNexus\.venv\Lib\site-packages\fastapi\routing.py", line 2734, in app
+    await route.handle(scope, receive, send)
+  File "D:\moodle\CityNexus\.venv\Lib\site-packages\fastapi\routing.py", line 1281, in handle
+    await super().handle(scope, receive, send)
+  File "D:\moodle\CityNexus\.venv\Lib\site-packages\starlette\routing.py", line 280, in handle
+    await self.app(scope, receive, send)
+  File "D:\moodle\CityNexus\.venv\Lib\site-packages\fastapi\routing.py", line 158, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "D:\moodle\CityNexus\.venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "D:\moodle\CityNexus\.venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "D:\moodle\CityNexus\.venv\Lib\site-packages\fastapi\routing.py", line 144, in app
+    response = await f(request)
+               ^^^^^^^^^^^^^^^^
+  File "D:\moodle\CityNexus\.venv\Lib\site-packages\fastapi\routing.py", line 706, in app
+    raw_response = await run_endpoint_function(
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\moodle\CityNexus\.venv\Lib\site-packages\fastapi\routing.py", line 354, in run_endpoint_function
+    return await run_in_threadpool(dependant.call, **values)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\moodle\CityNexus\.venv\Lib\site-packages\starlette\concurrency.py", line 34, in run_in_threadpool
+    return await anyio.to_thread.run_sync(func)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\moodle\CityNexus\.venv\Lib\site-packages\anyio\to_thread.py", line 65, in run_sync
+    return await get_async_backend().run_sync_in_worker_thread(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\moodle\CityNexus\.venv\Lib\site-packages\anyio\_backends\_asyncio.py", line 2706, in run_sync_in_worker_thread
+    return await future
+           ^^^^^^^^^^^^
+  File "D:\moodle\CityNexus\.venv\Lib\site-packages\anyio\_backends\_asyncio.py", line 1100, in run
+    result = context.run(func, *args)
+             ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\moodle\_hjp3_0300c2_0925\snap_t90\backend\app\main.py", line 4660, in generate_journey_plans
+    plans = _generate_plans_answer(session, journey, request)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\moodle\_hjp3_0300c2_0925\snap_t90\backend\app\main.py", line 4848, in _generate_plans_answer
+    plans = generate_plans(
+            ^^^^^^^^^^^^^^^
+  File "D:\moodle\_hjp3_0300c2_0925\snap_t90\backend\app\services.py", line 1751, in generate_plans
+    "city_code": journey.city_code,
+                 ^^^^^^^^^^^^^^^^^
+  File "D:\moodle\CityNexus\.venv\Lib\site-packages\sqlalchemy\orm\attributes.py", line 569, in __get__
+    return self.impl.get(state, dict_)  # type: ignore[no-any-return]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\moodle\CityNexus\.venv\Lib\site-packages\sqlalchemy\orm\attributes.py", line 1096, in get
+    value = self._fire_loader_callables(state, key, passive)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\moodle\CityNexus\.venv\Lib\site-packages\sqlalchemy\orm\attributes.py", line 1126, in _fire_loader_callables
+    return state._load_expired(state, passive)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\moodle\CityNexus\.venv\Lib\site-packages\sqlalchemy\orm\state.py", line 828, in _load_expired
+    self.manager.expired_attribute_loader(self, toload, passive)
+  File "D:\moodle\CityNexus\.venv\Lib\site-packages\sqlalchemy\orm\loading.py", line 1674, in load_scalar_attributes
+    result = load_on_ident(
+             ^^^^^^^^^^^^^^
+  File "D:\moodle\CityNexus\.venv\Lib\site-packages\sqlalchemy\orm\loading.py", line 510, in load_on_ident
+    return load_on_pk_identity(
+           ^^^^^^^^^^^^^^^^^^^^
+  File "D:\moodle\CityNexus\.venv\Lib\site-packages\sqlalchemy\orm\loading.py", line 695, in load_on_pk_identity
+    session.execute(
+  File "D:\moodle\CityNexus\.venv\Lib\site-packages\sqlalchemy\orm\session.py", line 2373, in execute
+    return self._execute_internal(
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\moodle\CityNexus\.venv\Lib\site-packages\sqlalchemy\orm\session.py", line 2261, in _execute_internal
+    conn = self._connection_for_bind(bind)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\moodle\CityNexus\.venv\Lib\site-packages\sqlalchemy\orm\session.py", line 2113, in _connection_for_bind
+    return trans._connection_for_bind(engine, execution_options)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<string>", line 2, in _connection_for_bind
+  File "D:\moodle\CityNexus\.venv\Lib\site-packages\sqlalchemy\orm\state_changes.py", line 101, in _go
+    self._raise_for_prerequisite_state(fn.__name__, current_state)
+  File "D:\moodle\CityNexus\.venv\Lib\site-packages\sqlalchemy\orm\session.py", line 975, in _raise_for_prerequisite_state
+    raise sa_exc.PendingRollbackError(
+sqlalchemy.exc.PendingRollbackError: This Session's transaction has been rolled back due to a previous exception during flush. To begin a new transaction with this Session, first issue Session.rollback(). Original exception was: (raised as a result of Query-invoked autoflush; consider using a session.no_autoflush block if this flush is occurring prematurely)
+(sqlite3.OperationalError) database is locked
+[SQL: INSERT INTO audit_logs (id, actor_type, actor_id, journey_id, action, entity_type, entity_id, before_json, after_json, trace_id, created_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)]
+[parameters: [('9ea272c2-4d9b-4272-a00b-fef933490c98', 'system', None, 'e0840633-aeb1-4f6c-8d56-709365307ac5', 'plans.candidate_rejected', 'Journey', 'e0840633-aeb1-4f6c-8d56-709365307ac5', None, '{"reason_codes": ["CANDIDATE_REJECTED_BY_FEASIBILITY_GATE"], "summary": "candidate dropped before persistence: JOURNEY_WINDOW_EXCEEDED", "failures":  ... (65 characters truncated) ... quence": 0, "stops": ["place-old-town", "place-riverside-museum", "place-food-hall", "place-tech-art", "place-river-cruise", "place-skyline-dinner"]}', 'a361b37b-336d-4a66-a676-b90f62a5a736', '2026-09-25T11:11:36.106591+00:00'), ('94170177-4623-4ea8-9fdf-d86b0bc16423', 'system', None, 'e0840633-aeb1-4f6c-8d56-709365307ac5', 'plans.candidate_rejected', 'Journey', 'e0840633-aeb1-4f6c-8d56-709365307ac5', None, '{"reason_codes": ["CANDIDATE_REJECTED_BY_FEASIBILITY_GATE"], "summary": "candidate dropped before persistence: JOURNEY_WINDOW_EXCEEDED", "failures":  ... (66 characters truncated) ... uence": 1, "stops": ["place-old-town", "place-riverside-museum", "place-food-hall", "place-city-park", "place-river-cruise", "place-skyline-dinner"]}', '75b504fb-2c47-457e-9bc0-35d413a96c35', '2026-09-25T11:11:36.106591+00:00'), ('8b41d2d1-1e1e-4cd2-8819-02d2920e579d', 'system', None, 'e0840633-aeb1-4f6c-8d56-709365307ac5', 'plans.candidate_rejected', 'Journey', 'e0840633-aeb1-4f6c-8d56-709365307ac5', None, '{"reason_codes": ["CANDIDATE_REJECTED_BY_FEASIBILITY_GATE"], "summary": "candidate dropped before persistence: JOURNEY_WINDOW_EXCEEDED", "failures":  ... (71 characters truncated) ... ": 2, "stops": ["place-old-town", "place-riverside-museum", "place-food-hall", "place-design-library", "place-river-cruise", "place-skyline-dinner"]}', '9f0a8929-2f57-4cab-a9ac-143203bb191e', '2026-09-25T11:11:36.106591+00:00')]]
+(Background on this error at: https://sqlalche.me/e/20/e3q8) (Background on this error at: https://sqlalche.me/e/20/7s2a)
