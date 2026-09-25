@@ -1,0 +1,97 @@
+{
+ "cells": [
+  {
+   "derived_from": null,
+   "derived_from_key": null,
+   "id": "0",
+   "own_hits": [
+    "0",
+    "0302",
+    "2",
+    "3d9dcb8",
+    "464d34e2e7bce3043f2e5356ce0e46e465be7abc",
+    "5",
+    "5aff372",
+    "5aff3722d5c36c760a424f5fea5c3a771298f9ac",
+    "ORD-0302",
+    "PlanWithAiSheet.tsx",
+    "dc964086c9d412573ac19d70b24b30e6c3ee6168",
+    "qoder-ord0302-unreadable-server-body.spec.ts"
+   ],
+   "own_token_count": 82,
+   "unique_hits": [],
+   "verdict": "CLEAN_REPARENT_ff_only",
+   "why": "merge-tree returned exit 0 with the single line `464d34e2e7bce3043f2e5356ce0e46e465be7abc` and an empty remainder, and that tree equals the candidate's own tree `464d34e2e7bce3043f2e5356ce0e46e465be7abc`. `git merge-base --is-ancestor dc964086c9d412573ac19d70b24b30e6c3ee6168 5aff3722d5c36c760a424f5fea5c3a771298f9ac` exits 0 (0 = true) and `git rev-list --count dc964086c9d412573ac19d70b24b30e6c3ee6168..5aff3722d5c36c760a424f5fea5c3a771298f9ac` = 2 while `5aff3722d5c36c760a424f5fea5c3a771298f9ac..dc964086c9d412573ac19d70b24b30e6c3ee6168` = 0, so the candidate sits 2 commit(s) on top of the tip and nothing behind it: the landing is a fast-forward, not a merge, and there is no conflict section to quote. The 2 commit(s) are: `5aff372` fix(frontend): a card that points at 技术详情 must render one (ORD-0302 X-5); `3d9dcb8` fix(frontend): an unreadable server answer stays an HTTP answer, not a network claim (ORD-0302). B moves 2 path(s): `frontend/e2e/qoder-ord0302-unreadable-server-body.spec.ts`, `frontend/src/features/planning/PlanWithAiSheet.tsx`. Node titles are read out of the candidate's own spec rather than assumed: `e2e/qoder-ord0302-unreadable-server-body.spec.ts :: ord0302-N1` (the ternary branch keyed on that arm) => `a non-JSON 5xx stays an HTTP answer with a visible device reading`; `e2e/qoder-ord0302-unreadable-server-body.spec.ts :: ord0302-N2` (the ternary branch keyed on that arm) => `a 4xx with the server's sentence still quotes it verbatim (positive control)`; `e2e/qoder-ord0302-unreadable-server-body.spec.ts :: ord0302-N3` (the ternary's final else branch) => ``. No gate was run here, so this cell says nothing about whether B's assertions pass.",
+   "why_source": "why",
+   "why_token_count": 12
+  },
+  {
+   "derived_from": null,
+   "derived_from_key": null,
+   "id": "1",
+   "own_hits": [
+    "0",
+    "0307",
+    "56",
+    "ORD-0307",
+    "write_legs_at_line_tip_r1.json"
+   ],
+   "own_token_count": 16,
+   "unique_hits": [],
+   "verdict": "NOT_APPLICABLE_missing_candidate",
+   "why": "F's ORD-0307 has an order block in the ledger but no deliverable to merge: `git ls-remote --heads` printed 56 heads and 0 of them match `ORD-0307`; `git ls-remote --tags` printed 0 tags. The only `ORD-0307`-named thing on `commander/control` is `evidence/ord0307-prefix-write-legs-at-line-tip` whose file list is {\"ord0307-prefix-write-legs-at-line-tip\": [\"write_legs_at_line_tip_r1.json\"]} -- a census reading, not a code candidate, and it reports zero candidate paths. So this cell is `NOT_APPLICABLE_missing_candidate`: I am not guessing which files F will touch.",
+   "why_source": "why",
+   "why_token_count": 5
+  },
+  {
+   "derived_from": null,
+   "derived_from_key": null,
+   "id": "2",
+   "own_hits": [
+    "0307",
+    "5aff3722d5c36c760a424f5fea5c3a771298f9ac"
+   ],
+   "own_token_count": 3,
+   "unique_hits": [],
+   "verdict": "NOT_RUN_missing_operand",
+   "why": "The third merge-tree is the one the order actually cares about, and it cannot be run: one operand exists (5aff3722d5c36c760a424f5fea5c3a771298f9ac, B's ORD-0302 candidate) and the other does not (cell B printed 0 heads matching 0307 out of 56). Running it against a stand-in would manufacture the answer, so the cell stays NOT_RUN and is re-askable the moment F's ref appears.",
+   "why_source": "why",
+   "why_token_count": 7
+  },
+  {
+   "derived_from": null,
+   "derived_from_key": null,
+   "id": "3",
+   "own_hits": [
+    "464d34e2e7bce3043f2e5356ce0e46e465be7abc"
+   ],
+   "own_token_count": 5,
+   "unique_hits": [],
+   "verdict": "B_LANDS_NOW_A_AFTER_READING",
+   "why": "Every clause in that sentence is derived from cell A's recorded readings in this same file (exit 0, predicted tree 464d34e2e7bce3043f2e5356ce0e46e465be7abc, B tree 464d34e2e7bce3043f2e5356ce0e46e465be7abc, ancestor test exit 0, conflict section \"(none)\"). Nothing here says the landing is approved or that B's gate passes -- B's spec was never executed by me, so no `passed` claim is made.",
+   "why_source": "why",
+   "why_token_count": 2
+  }
+ ],
+ "cells_found": 4,
+ "exit": 0,
+ "findings": [],
+ "hard_codes": [],
+ "hard_count": 0,
+ "info_count": 0,
+ "meaning": "no shared literal and every sentence names its own readings",
+ "overall": "Q38_GATE_GREEN",
+ "receipt": {
+  "blob_sha1": "7a1a5eb7ebf7d8cde93792820b08c7157a48c3af",
+  "bytes": 12493,
+  "path": "review/evidence/ord0308/ord0308_path_intersection_d_r1.json"
+ },
+ "soft_codes": [],
+ "soft_count": 0,
+ "unique_reading_counts": {
+  "0": 21,
+  "1": 8,
+  "2": 0,
+  "3": 1
+ }
+}
