@@ -1,0 +1,30 @@
+{
+ "generatedBy": "e345b9d6",
+ "file": "e2e/qoder-ord0338-wizard-gap-clearance.spec.ts",
+ "arm": "G2-no-invisible-reserved",
+ "order": "ORD-0338",
+ "run": "run378389",
+ "tree_sha": "9b84a5fea9e7b38f3cace4160508f7a1b46c1418",
+ "bound_px": 60,
+ "viewport": {
+  "width": 390,
+  "height": 844
+ },
+ "band": {
+  "top": 279,
+  "bottom": 296,
+  "height": 17
+ },
+ "label": "目的地",
+ "stepLabels": [
+  "1目的地与时间",
+  "2人数与偏好",
+  "3确认创建"
+ ],
+ "members": [],
+ "tallestMember": 0,
+ "computed": {
+  "stepsPaddingBottom": "0px",
+  "cardPaddingBottom": "220px"
+ }
+}
