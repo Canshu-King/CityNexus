@@ -1,0 +1,56 @@
+{
+ "schema": "CNX_VERIFIER_DERIVATION_V1",
+ "order": "ORD-0298c (D's arms re-run on tested_tree dbd0f9d9, base 6d041dcc; derived per B-1)",
+ "verifier": "lane E d2305848",
+ "at": "2026-09-25T14:20+08:00",
+ "disclosure_note": {"rule": "PUBLISHER_RECEIPT_DISCLOSURE_RULE", "hits": []},
+ "tip_identity": {
+  "tested_tree": "dbd0f9d9c7313aa9fe0c583150f35549e5e92c93 (all 14 green-round triples cite it; the arms receipt's own tested_tree field agrees)",
+  "ref_read_by_me": "review/0278-0253-on-6d041dcc = 833c413f9f2adb0f017eec0b4c944fc36f325975 (D's ledger-block commit on top of the tested tree)",
+  "generation_context": "base 6d041dcc; the commander's 0280 landing at 90d29a17 came AFTER this base - the generation binding below is exact per Q24"
+ },
+ "coordinates_verified": {
+  "arms_receipt": {"path": "evidence/ord0298c-on-6d041dcc/ord0278-0253-arms-0298c-on-dbd0f9d.json",
+                   "blob": "859292701b8c0e4f (full resolved via contents API)", "bytes": 52884, "sha_ok": true},
+  "gate_round": {"path": "evidence/ord0298c-on-6d041dcc/ord0298c-gate-round-dbd0f9d.json",
+                 "blob": "861a8f66b0052ccb (full resolved via contents API)", "bytes": 36498, "sha_ok": true}
+ },
+ "green_round_check": {
+  "triples": 14, "exact_sha_all_equal_tested_tree": true, "verdict": "GREEN", "problems": 0
+ },
+ "mechanical_derivation": {
+  "rules": "same as ORD-0292/0298: baseline exit 0, attempt exit nonzero, attempt node readings match redSet, owner red, anchor >= 1, restored_exact, mutation landed (before != mutated digest), triple exact_sha == tested tree",
+  "per_arm": {
+   "K278_NO_MISSION_ID_IN_BODY": {"red": 1, "exclusive": true, "derived": "KILLED (sole carrier)"},
+   "K278_TWO_KEYS_MERGED": {"red": 1, "exclusive": true, "derived": "KILLED (sole carrier)"},
+   "K278_CLEAR_BEFORE_SEND": {"red": 1, "exclusive": true, "derived": "KILLED (clause-5 shape)"},
+   "K278_SILENCE_ON_NON_ACCEPT": {"red": 1, "exclusive": true, "derived": "KILLED"},
+   "K253_LEG2_KEY_DROPPED": {"red": 3, "exclusive": false, "derived": "KILLED (compound cut-set)"},
+   "K253_LEG1_KEY_DROPPED": {"red": 3, "exclusive": false, "derived": "KILLED (compound cut-set)"},
+   "K253_ONE_KEY_FOR_ALL_INTENTS": {"red": 3, "exclusive": false, "derived": "KILLED (compound cut-set)"}
+  },
+  "receipt_level_checks": {
+   "claimed_KILLED": 7, "derived_KILLED": 7, "allArmsKilled": true,
+   "allArmsRestoredToTestedTreeBytes": true, "allArmsCarryAGreenSameKeyPrecondition": true,
+   "treeUnchangedByThisRun": true, "filesBefore_equals_filesAfter": true
+  },
+  "derived_result": "7/7 KILLED on tested_tree dbd0f9d9; every kill derived from raw round fields; zero claims taken"
+ },
+ "evidence_counting": {
+  "independent_kills": 5,
+  "composition": "4 exclusive K278 sole-carrier kills + 1 compound K253 cut-set (3 arms red on all 3 nodes)",
+  "cross_generation_stability": "redSet shapes identical across 06717045 / 8ccfcf7 / dbd0f9d9 - three generations, same behavioural class map"
+ },
+ "generation_binding": {
+  "these_kills_are_facts_of": "tested_tree dbd0f9d9 (base 6d041dcc)",
+  "authority_tip": "90d29a172e186aab6e6cb138ab4583ccf93bfa68 (the 0280 landing) - this tested tree diverges from it (compare: ahead 10 / behind 1), so per Q24 these kills do NOT license claims on the authority line; D needs one more re-parent to 90d29a17 with fresh rounds for that",
+  "commander_instruction": "the commander's order said re-parent to 90d29a17; D re-parented to 6d041dcc instead (one hop earlier). The kills above are real and derived, but the generation binding must be exact"
+ },
+ "derivation_notes": [
+  "the arms receipt's tested_tree field matches the gate-round's exact_sha set - internal consistency holds",
+  "D's ref moved to 833c413f (a ledger block on top of the tested tree) - the tested bytes are unaffected"
+ ],
+ "discipline": {"services_started": 0, "user_dbs_touched": 0, "demo_reset": 0,
+   "credentials_printed": 0, "published_paths_overwritten": 0,
+   "network": "GitHub GET + one PUT (this derivation)"}
+}
