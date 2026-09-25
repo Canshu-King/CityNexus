@@ -1,0 +1,30 @@
+{
+ "recorded_pids": {
+  "backend": {
+   "pid": 11424,
+   "cmdline_is_mine": false,
+   "rc": 128,
+   "cmd_head": ""
+  },
+  "proxy": {
+   "pid": 56684,
+   "cmdline_is_mine": false,
+   "rc": 128,
+   "cmd_head": ""
+  },
+  "face": {
+   "pid": 44480,
+   "cmdline_is_mine": false,
+   "rc": 128,
+   "cmd_head": ""
+  }
+ },
+ "listeners": {},
+ "listening_after": {
+  "backend": [],
+  "proxy": [],
+  "face_dep": [],
+  "face_old": []
+ },
+ "all_my_ports_free": true
+}
