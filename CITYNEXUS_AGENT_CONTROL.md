@@ -16027,6 +16027,50 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### ORD-0304 → D `e345b9d6`（号令者 494abfd7 下发 · 2026-09-25 16:0x+08）三枚候选到当前尖的**只读**分叉预测与文件级冲突表
+
+为什么是这一单：现在同时有三枚候选停在**旧基座** `90d29a172e186aab6e6cb138ab4583ccf93bfa68` 上，而权威线尖已经走到
+`dc964086c9d412573ac19d70b24b30e6c3ee6168`（越过基座 10 笔）。我不允许自己在没看清分叉面的情况下落任何一枚。
+这正是 D 已经证明过的能力（`git merge-tree --write-tree` 只读预测、"-N 行删除"先查 ancestor），所以给你，不给 B 或 F 顺手做。
+
+要做的三枚（全部只读，0 写 ref）：
+1. B `c01d72a3`：`02da4602bfd4f7af38154a26dd345aba9f69876d` = `refs/heads/review/0281-write-deadline-keyed-b`，父 `90d29a172e18…`；
+2. F `8ccd71d8`：`6c20f04b195faf2339f1fb55d8ea9a0b0d825fe1` = `refs/heads/review/ord0296-write-deadline-f-r2`，父 `6d041dcce11d…`（祖父 `90d29a172e18…`）；
+3. F 在 ORD-0303 里以 `90d29a172e18…` 为**跑码基座**重跑的那套门（收据 `evidence/ord0303-generation-rerun/ord0303_generation_rerun_r1.json`
+   blob `10e13c7935ab17ae027a69897b27c0b0fe97ec87`）：只判「这两枚测试文件在 `dc964086` 上是否仍然与基座同字节」，不同字节就点名哪几行漂了。
+
+每枚都要交（缺一样就按 NOT-STARTED 处理，别补文字说明）：
+- A. `git merge-tree --write-tree <尖> <候选>` 的**原样输出**（含 conflict 段），并给出预测树 oid；
+- B. 文件级差异表：候选动了哪些路径、尖自基座以来动了哪些路径、交集是什么（交集为空 = 可干净摘取）；
+- C. 若交集非空：逐文件给"能不能摘"的判据 + 摘取后需要重跑哪几格；不许改任何断言来制造干净；
+- D. 一行结论：`CLEAN_REPARENT` / `NEEDS_REPARENT_COMMIT` / `GENUINELY_DIVERGED`，并点名判据来自 A/B/C 哪一条。
+
+边界与纪律（照旧）：0 推 ref、0 移动权威线、0 产品码改动、0 次 `demo/reset`、`_live`/`_preview` 0 读写、凭据 0 打印。
+交件走**新路径**（已发布路径不改名不覆盖），并在正文里带 (sha, nodeid, shape) 三元组与尺原样输出。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+### ORD-0305 → 红队 E `d2305848`（号令者 494abfd7 下发 · 2026-09-25 16:0x+08）给 ORD-0281 有键那一支签 `derived_result`（B-1：交付方不自签）
+
+为什么是这一单：E 自报名下无未交件、在接单。B 已交 `0281` 有键半支候选 `02da4602bfd4f7af38154a26dd345aba9f69876d`
+（基座 `90d29a172e186aab6e6cb138ab4583ccf93bfa68`，ref `review/0281-write-deadline-keyed-b`），自报 7 枚臂 MET、3 枚反件各咬一枚、
+12 格 Q38 r2 hard 0 / soft 0。按 B-1，`KILLED`/`MET` 只能由 verifier 派生，B 最多写 `claimed_result`——所以这一枚归你。
+
+要独立复算的三件事（用你自己的进程、你自己的库副本，不复用 B 的中间产物）：
+1. **常量是活的**：`CLIENT_WRITE_DEADLINE_MS = 60000` 在 `frontend/src/lib/writeDeadline.ts` blob `1d67e725ebb3348bbeb70d743793388ed36ed9d9`。
+   同一枚规格只改小常量（B 的两枚读数：blob `8edd744ef4e30774d6b6a52fb0f92b6e974ef95f` / `09c6aceb35f99359259c55a12777ee076a1667fd`），
+   你要读出**屏幕上那个数字跟着变**，不是 setTimeout 存在与否。读数两侧都要：服务端字段 + 渲染文字。
+2. **反件各归各侧（独立性）**：B 声明回退 `readDeadline.ts` blob `be04016af0b402dbe76cce79167475c77d0e77a4` 里那一跳只让 K3 红、
+   面板 TB 仍绿；把键判定改成恒真只让 K1 红。请给出每臂的完整红集合（不是"红了 N 格"），并明确 primary/collateral。
+3. **B 自报没测的那一格**：答案刚好落在期限之后那一形（B 写 `NOT_MEASURED`，收据 blob `f29a74d3e84ae78d80ccdb0b6caf9f48d3fada30`）。
+   你不许替它补判；要么造出真臂并给双向证据，要么在派生里原样保留 `NOT_MEASURED`。
+
+派生表要求（与我给你的一致，逐格）：每格 `derived_result` ∈ {`MET`,`NOT_MET`,`NOT_MEASURED`}，由你**实测行**派生，
+不许写 `"PASS"` 字面量；顶层聚合要机械可复算（per-run 有不算合规）。范围：不判无键那一支（ORD-0288 等仲裁），不判发布级产物面。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### CMDR-1531 · 手机已换到 `dc964086` 那一代（Q48=①）＋ 我自己引入的一处回归已定位并派修（逐行坐标）
 
 **换代（按 Q46=③ 双尺前置做的）**：构建输入 = `git archive dc964086c9d412573ac19d70b24b30e6c3ee6168` 的快照树，导出后先与远端逐文件对 blob（三枚全 OK），`npm run build` rc 0（`built in 7.31s`）。切之前两把尺的 rc 都是 0：尺一 `560c1677ec85b6c2d11d14ddb64e71a86bcaba7c`（新代 index 点名的每个 ref 都在自己目录里、`roots_actually_measured=1`、无悬空、`white_page_waiting` 无）、尺二 `02d21c313ec54bd4f23a02e9c310ba624e109a69`（`served_files=41`、hits 无、`NO_EXTERNAL_HARDLINK_REFS`）。部署收据 `55338cb8e32c79eff7f16be069a805706f4334b6` `overall=GREEN`、`red_refs` 空。手机侧探针（仪器 `3c67f46011b9c59ab5512ff25fb7e70500f1e962`，读数 `02d4a86723763edb68c28ba5b2d69a73c1e4ce32`）：被 index 点名的三枚资源全部 200、content-type 正确（`.js` 不是 HTML）、**served sha256 与 disk sha256 逐位相同**；serve 根 index 现点名 `assets/index--q2k569d.js` 与 `assets/index-I45CQek8.css`。
@@ -48270,4 +48314,16 @@ ls-remote  90d29a172e186aab6e6cb138ab4583ccf93bfa68	refs/heads/review/0280-attri
 逐字节     PlanWithAiSheet.tsx 远端 blob c22cf42506a4175db992bde387ed8d9c6f1ffb9d == 我树 == 收据那枚（REMOTE_SIZE = 47470、LOCAL_SIZE = 47470）; qoder-ord0280-attribution-label-speaks-for-itself.spec.ts 远端 blob 0edae5cf262833e996bbfc3b56f60d0548ca3e3f == 我树 == 收据那枚（REMOTE_SIZE = 12134、LOCAL_SIZE = 12134）
 尺        cells 10 | overall Q38_GATE_GREEN | hard 0 [] | soft 0 []（receipt_cell_derivation_check_r2.py blob 91ae8b1ec55f5c19122af11bf775df14580955e4，被量的是已发布的那份收据字节 02dfbb817e5add8577c4c47a7e898983743b7202）
 回读工件   ord0299_reparent_r3_readback_r1.json blob 29ad358ecf0d16107de0797163e61c9fa6658897
+```
+
+### B c01d72a3 · ORD-0281 前端半（有键那一支）：具名设备期限 + 三枚反件，基座 `90d29a1` 新 ref `02da460` @15:45+08 —— **按 Q33=① 只做带幂等键那一支；无键那一支（0288）保持具名直通。0302 的文案一枚没写。**
+
+```text
+坐标      base and shape: 02da4602bfd4f7af38154a26dd345aba9f69876d sits directly on 90d29a172e186aab6e6cb138ab4583ccf93bfa68 (parent measured as 90d29a172e186aab6e6cb138ab4583ccf93bfa68); 02da4602bfd4f7af38154a26dd345aba9f69876d	refs/heads/review/0281-write-deadline-keyed-b is the remote's own answer for review/0281-write-deadline-keyed-b, so the coordinate is readable outside this machine. 5 paths changed, all under frontend/, and the diff restricted to backend/ answers none. Both shipped typecheck configs tsconfig.check.json, tsconfig.typecheck.json came back clean before the run.
+七枚臂    TA=MET；TB=MET；TC=MET；TD=MET；K1=MET；K2=MET；K3=MET｜反件 ca_no_delegate→K3 MET；ca_keyless_too→K1 MET；ca_fixed_secs→TB MET（矩阵 TEETH_AND_BASELINE，ord0281_arms_matrix.json blob f51894dc6559cce14013a461c982a5f7da54dd8c）
+具名值    TB：屏幕上「This device stopped waiting after 2 s」在 2420 ms 出现；TC 是同一枚规格、只把常量改小的那棵树，报 1417 ms 且屏幕上的数字是 1 ⇒ 常量是活的（bound1000__arm_TC.json blob 09c6aceb35f99359259c55a12777ee076a1667fd）
+不均衡处  scope and honesty: the keyed denominator is 6 legs (measured in ORD-0281 step 0), of which 4 already come through the request helper and 2 were bare `fetch` calls at features/execution/LiveRecovery.tsx:230, features/recovery/V14RecoveryTruthPanel.tsx:68; both are now bounded. The keyless branch stays a named pass-through because it is ORD-0288, held for arbitration -- passed through untouched by design. One leg is keyed only nominally -- features/simulation/SimulationPanel.tsx:605 builds a fresh UUID per attempt -- so T-d cannot promise a replay there and TD is reported as REPLAY_SHAPE_ONLY_NOT_EXACTLY_ONCE instead. The shape where the answer arrives just after the bound is NOT_MEASURED: this candidate has no arm for it, so no claim is made about it. TD is recorded as REPLAY_SHAPE_ONLY_NOT_EXACTLY_ONCE. Traveller wording for the deadline is this module's own, in 1d67e725ebb3348bbeb70d743793388ed36ed9d9, and NOT written in this candidate (the wording is waiting on ORD-0301's range table). The numbers shipped in one place: CLIENT_WRITE_DEADLINE_MS = 60000 declared in CLIENT_WRITE_DEADLINE_MS in frontend/src/lib/writeDeadline.ts blob 1d67e725ebb3348bbeb70d743793388ed36ed9d9, against the server's 45000 budget over a 30000 lock wait (backend/app/core/config.py as carried by 90d29a172e186aab6e6cb138ab4583ccf93bfa68).
+尺        cells 12 | overall Q38_GATE_GREEN | hard 0 [] | soft 0 []（receipt_cell_derivation_check_r2.py blob 91ae8b1ec55f5c19122af11bf775df14580955e4；两遍都跑在要发布的那份字节上，ord0281_keyed_receipt.json blob f29a74d3e84ae78d80ccdb0b6caf9f48d3fada30），rc=0，cells 12 / derived 全 null
+还原      每一枚形制跑完都把源文件按字节还原：全部为 True（ord0281_arms_matrix.json blob f51894dc6559cce14013a461c982a5f7da54dd8c 的 digests）
+不自签    0281 的 derived_result 留 null；期限值 60 s 只在**未打补丁的树**上被 K2 读到，其余臂跑在补丁树上（这是闸窗口与 60 s 之间的唯一诚实折中，写在每格的 skip 理由里）
 ```
