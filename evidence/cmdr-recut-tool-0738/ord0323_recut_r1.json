@@ -1,0 +1,57 @@
+{
+ "order": "ORD-0323",
+ "line": "origin/mirror/integration-frontend-apple-pass1",
+ "tip": "9b84a5fea9e7b38f3cace4160508f7a1b46c1418",
+ "cand": "499522db0903790c3eaba5837bf8e8e3764b7463",
+ "merge_base": "09dffbb70c151e6734221d6d3d69d88775a1fbd0",
+ "commits_tip_ahead_of_base": 6,
+ "commits_cand_ahead_of_base": 10,
+ "merge_tree_rc": 0,
+ "changed_files": [
+  "frontend/e2e/qoder-ord0323-two-exposure-cells.spec.ts",
+  "frontend/src/components/ProductErrorBoundary.tsx",
+  "frontend/src/features/inbox/JourneyInboxWorkbench.tsx",
+  "frontend/src/features/planning/PlanWithAiSheet.tsx"
+ ],
+ "files": [
+  {
+   "path": "frontend/e2e/qoder-ord0323-two-exposure-cells.spec.ts",
+   "cand_blob": "c7bdadac30ce3182a6acd195a21f03a7430f9b83",
+   "merged_blob": "c7bdadac30ce3182a6acd195a21f03a7430f9b83",
+   "identical": true,
+   "cand_changed_the_file": true
+  },
+  {
+   "path": "frontend/src/components/ProductErrorBoundary.tsx",
+   "cand_blob": "e8073263167f1eac165441d633e808156914ca84",
+   "merged_blob": "e8073263167f1eac165441d633e808156914ca84",
+   "identical": true,
+   "cand_changed_the_file": true
+  },
+  {
+   "path": "frontend/src/features/inbox/JourneyInboxWorkbench.tsx",
+   "cand_blob": "3ac7e6a7b575128721355b744c6487f5106524d8",
+   "merged_blob": "3ac7e6a7b575128721355b744c6487f5106524d8",
+   "identical": true,
+   "cand_changed_the_file": true
+  },
+  {
+   "path": "frontend/src/features/planning/PlanWithAiSheet.tsx",
+   "cand_blob": "268bdf9c5f06d9d22e8b1b5dbe6d614be65cb354",
+   "merged_blob": "268bdf9c5f06d9d22e8b1b5dbe6d614be65cb354",
+   "identical": true,
+   "cand_changed_the_file": true
+  }
+ ],
+ "merged_tree": "8b731cbaaa5ae27bbda1a9ed817dee3d1b2c3fdb",
+ "auto_merged_files": [],
+ "recut_commit": "03ad438dc66b17ab313f9c216b044a38d33b101d",
+ "readback_tree": "8b731cbaaa5ae27bbda1a9ed817dee3d1b2c3fdb",
+ "readback_tree_matches": true,
+ "readback_parents": [
+  "9b84a5fea9e7b38f3cace4160508f7a1b46c1418",
+  "499522db0903790c3eaba5837bf8e8e3764b7463"
+ ],
+ "readback_parent_tip": true,
+ "verdict": "RECUT_OK"
+}
