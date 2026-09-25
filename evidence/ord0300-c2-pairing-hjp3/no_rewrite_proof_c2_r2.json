@@ -1,0 +1,571 @@
+{
+ "ran_at_local": "2026-09-25T21:14:03+0800",
+ "repo": "Canshu-King/CityNexus",
+ "branch": "commander/control",
+ "tip_read": "f6b7f9ad456cd4979d9b67849f51c37a3d5a367a",
+ "tree_read": "112f69d3308016a54880f6ae345fbe86724bed38",
+ "prefix": "evidence/ord0300-c2-pairing-hjp3",
+ "method": "GET /repos/.../commits?sha=<branch>&path=<file>&per_page=100 = how many times anything landed at that exact name",
+ "paths_under_prefix_now": 86,
+ "blobs": [
+  {
+   "path": "ord0300-c2-pairing-hjp3/RECEIPT_O0300C2-1955.json",
+   "blob_40_hex": "a8305c99cd81bf9c5904b018f1beca8624fe83d8",
+   "size": 60413,
+   "commits_touching_this_path": 1
+  },
+  {
+   "path": "ord0300-c2-pairing-hjp3/RECEIPT_O0300C2-1955_r2.json",
+   "blob_40_hex": "af4a81bc36ce9dfc60295d12fbb1b4b0772dafa5",
+   "size": 62927,
+   "commits_touching_this_path": 1
+  },
+  {
+   "path": "ord0300-c2-pairing-hjp3/RECEIPT_O0300C2-1955_r3.json",
+   "blob_40_hex": "13ef834703eebe5c5b614adbcebd1a92354d0edf",
+   "size": 63954,
+   "commits_touching_this_path": 1
+  },
+  {
+   "path": "ord0300-c2-pairing-hjp3/RECEIPT_O0300C2-1955_r3.md",
+   "blob_40_hex": "9600a27759790c4d335b4f27ad26692c5c71e29b",
+   "size": 17170,
+   "commits_touching_this_path": 1
+  },
+  {
+   "path": "ord0300-c2-pairing-hjp3/backend_access.log",
+   "blob_40_hex": "17ef6f396a8d80d3a1269803fa1ae46948e9bc69",
+   "size": 13059,
+   "commits_touching_this_path": 1
+  },
+  {
+   "path": "ord0300-c2-pairing-hjp3/block_c2_delivery.md",
+   "blob_40_hex": "b7817d81d35be822e5ef6b8ae7824b95fda96592",
+   "size": 14310,
+   "commits_touching_this_path": 1
+  },
+  {
+   "path": "ord0300-c2-pairing-hjp3/boundary_proof_c2.json",
+   "blob_40_hex": "60d9290e9f1a43b97c4b0842d6c784ae97f863f6",
+   "size": 5631,
+   "commits_touching_this_path": 1
+  },
+  {
+   "path": "ord0300-c2-pairing-hjp3/bundle_check_c2_r1.json",
+   "blob_40_hex": "e7eb838fcc41f884dbaaad19c6cf31d5d67b371d",
+   "size": 728,
+   "commits_touching_this_path": 1
+  },
+  {
+   "path": "ord0300-c2-pairing-hjp3/bundle_check_c2_r2.json",
+   "blob_40_hex": "329215886120b28836bd150640ba55f9fc028522",
+   "size": 733,
+   "commits_touching_this_path": 1
+  },
+  {
+   "path": "ord0300-c2-pairing-hjp3/bundle_check_c2_r3.json",
+   "blob_40_hex": "69a1e57cc5be61c8ac27542081768873e513e2dd",
+   "size": 733,
+   "commits_touching_this_path": 1
+  },
+  {
+   "path": "ord0300-c2-pairing-hjp3/bus_challenge_scan_c2.json",
+   "blob_40_hex": "21364c5041fcfe8bbf9c6e7f939f28a18a04255f",
+   "size": 172,
+   "commits_touching_this_path": 1
+  },
+  {
+   "path": "ord0300-c2-pairing-hjp3/bus_correction_c2.md",
+   "blob_40_hex": "0de806cb0e4f4f9a4783f26852afd94017a41b3a",
+   "size": 1631,
+   "commits_touching_this_path": 1
+  },
+  {
+   "path": "ord0300-c2-pairing-hjp3/bus_correction_readback_c2.json",
+   "blob_40_hex": "cc82ca15368ea5452a164144d4ffdcbf1a306c6b",
+   "size": 561,
+   "commits_touching_this_path": 1
+  },
+  {
+   "path": "ord0300-c2-pairing-hjp3/bus_duplicate_note_c2.json",
+   "blob_40_hex": "611c66026c089449a9019e2e332117fc6e475e71",
+   "size": 1357,
+   "commits_touching_this_path": 1
+  },
+  {
+   "path": "ord0300-c2-pairing-hjp3/bus_post_c2.md",
+   "blob_40_hex": "45c9416c19bb3b54aa46e7737d8099a4d2e299dc",
+   "size": 9337,
+   "commits_touching_this_path": 1
+  },
+  {
+   "path": "ord0300-c2-pairing-hjp3/bus_posted_id_c2.txt",
+   "blob_40_hex": "c5f2a5277e31cb341ec9d7070b86705673fce616",
+   "size": 11,
+   "commits_touching_this_path": 1
+  },
+  {
+   "path": "ord0300-c2-pairing-hjp3/bus_readback_c2.json",
+   "blob_40_hex": "d880fb510a04b94bd72343e342e268de56cacdf7",
+   "size": 747,
+   "commits_touching_this_path": 1
+  },
+  {
+   "path": "ord0300-c2-pairing-hjp3/c2_score.json",
+   "blob_40_hex": "fb8ea255eb3f4f219a2bbbe6cb268c5fdb92a754",
+   "size": 50175,
+   "commits_touching_this_path": 1
+  },
+  {
+   "path": "ord0300-c2-pairing-hjp3/evidence_manifest_full40_c2.json",
+   "blob_40_hex": "983e39b6072a00569b61bbe23bdec38377a670ce",
+   "size": 14826,
+   "commits_touching_this_path": 1
+  },
+  {
+   "path": "ord0300-c2-pairing-hjp3/export_repair_facts.json",
+   "blob_40_hex": "3256a1ec3479edba19760bc28f64baa44dddcdef",
+   "size": 3110,
+   "commits_touching_this_path": 1
+  },
+  {
+   "path": "ord0300-c2-pairing-hjp3/gate_selftest_publish_c2.json",
+   "blob_40_hex": "eaca78e6e2ad832e5cc2e41dedfc7186ad3224c4",
+   "size": 1657,
+   "commits_touching_this_path": 1
+  },
+  {
+   "path": "ord0300-c2-pairing-hjp3/gate_selftest_publish_c2_r2.json",
+   "blob_40_hex": "fff9cfe98e899905b8f0744a6baec04727b293cf",
+   "size": 1657,
+   "commits_touching_this_path": 1
+  },
+  {
+   "path": "ord0300-c2-pairing-hjp3/instrument_publish_copy_proof_c2.json",
+   "blob_40_hex": "269d916c10ecc201cca3302712f2e0be05439dde",
+   "size": 3237,
+   "commits_touching_this_path": 1
+  },
+  {
+   "path": "ord0300-c2-pairing-hjp3/instruments/c2_add_data.py",
+   "blob_40_hex": "22c79309f9e831989cb94d8f21645a508c1f883d",
+   "size": 4543,
+   "commits_touching_this_path": 1
+  },
+  {
+   "path": "ord0300-c2-pairing-hjp3/instruments/c2_add_t90.py",
+   "blob_40_hex": "9fa6f05d42434d9c6f209b54b211c7c32215dd68",
+   "size": 4724,
+   "commits_touching_this_path": 1
+  },
+  {
+   "path": "ord0300-c2-pairing-hjp3/instruments/c2_bounds.py",
+   "blob_40_hex": "2bb619463dda67388748505fb213a165103b2a17",
+   "size": 7751,
+   "commits_touching_this_path": 1
+  },
+  {
+   "path": "ord0300-c2-pairing-hjp3/instruments/c2_bundle.py",
+   "blob_40_hex": "9e5a78dddc7fc3adc94d5bae533b08c81b31a67c",
+   "size": 2920,
+   "commits_touching_this_path": 1
+  },
+  {
+   "path": "ord0300-c2-pairing-hjp3/instruments/c2_bundle_check.py",
+   "blob_40_hex": "857a1abac0d609746d953212f98f50f8043ba51a",
+   "size": 2982,
+   "commits_touching_this_path": 1
+  },
+  {
+   "path": "ord0300-c2-pairing-hjp3/instruments/c2_bundle_check_r2.py",
+   "blob_40_hex": "d867dd2f2c1a0885e202ff86ad866152be358665",
+   "size": 3978,
+   "commits_touching_this_path": 1
+  },
+  {
+   "path": "ord0300-c2-pairing-hjp3/instruments/c2_bundle_r2.py",
+   "blob_40_hex": "49a179dcc27b3cbb93a53f6b2a953ec90fdc79f2",
+   "size": 2999,
+   "commits_touching_this_path": 1
+  },
+  {
+   "path": "ord0300-c2-pairing-hjp3/instruments/c2_bundle_r3.py",
+   "blob_40_hex": "f1df832b70a9c15a9f0e5e4eed7d05ea377e73a6",
+   "size": 3133,
+   "commits_touching_this_path": 1
+  },
+  {
+   "path": "ord0300-c2-pairing-hjp3/instruments/c2_bus.py",
+   "blob_40_hex": "930ad5d8884db3ac7f78be9f29537bbd7bb09294",
+   "size": 15872,
+   "commits_touching_this_path": 1
+  },
+  {
+   "path": "ord0300-c2-pairing-hjp3/instruments/c2_bus_correction.py",
+   "blob_40_hex": "af080a446754e3487aa157088c7324674d456c25",
+   "size": 6440,
+   "commits_touching_this_path": 1
+  },
+  {
+   "path": "ord0300-c2-pairing-hjp3/instruments/c2_bus_duplicate_note.py",
+   "blob_40_hex": "e0ebd530c6176633fdc12387597206a3ee1977bb",
+   "size": 3705,
+   "commits_touching_this_path": 1
+  },
+  {
+   "path": "ord0300-c2-pairing-hjp3/instruments/c2_bus_scan.py",
+   "blob_40_hex": "7867f95828b23577a06fb2b6a3e8764091a30068",
+   "size": 2454,
+   "commits_touching_this_path": 1
+  },
+  {
+   "path": "ord0300-c2-pairing-hjp3/instruments/c2_bus_tail.py",
+   "blob_40_hex": "ce6f2a78f9257da5097c939b3034837a0e81aa75",
+   "size": 2648,
+   "commits_touching_this_path": 1
+  },
+  {
+   "path": "ord0300-c2-pairing-hjp3/instruments/c2_cells_pub.cjs",
+   "blob_40_hex": "39a237e8868546c953cc3e3b4dc9532ed67c563d",
+   "size": 10002,
+   "commits_touching_this_path": 1
+  },
+  {
+   "path": "ord0300-c2-pairing-hjp3/instruments/c2_gate_selftest.py",
+   "blob_40_hex": "e41873d811eae3eef3a3b3154f256f1e5923b3ed",
+   "size": 4250,
+   "commits_touching_this_path": 1
+  },
+  {
+   "path": "ord0300-c2-pairing-hjp3/instruments/c2_gate_selftest_r2.py",
+   "blob_40_hex": "93f0e0c12bc6811c08a6af87d16f58a144e9a734",
+   "size": 4719,
+   "commits_touching_this_path": 1
+  },
+  {
+   "path": "ord0300-c2-pairing-hjp3/instruments/c2_instrument_publish_copy.py",
+   "blob_40_hex": "43d2ac281b8d8471b82284ede39ebbd742115803",
+   "size": 3811,
+   "commits_touching_this_path": 1
+  },
+  {
+   "path": "ord0300-c2-pairing-hjp3/instruments/c2_instrument_publish_copy_r2.py",
+   "blob_40_hex": "716fb075c268d55fd4b97a1ed9be7e1545a48404",
+   "size": 5404,
+   "commits_touching_this_path": 1
+  },
+  {
+   "path": "ord0300-c2-pairing-hjp3/instruments/c2_instrument_publish_copy_r3.py",
+   "blob_40_hex": "aa486db105145ac2cb381388b9359b039faf275d",
+   "size": 6407,
+   "commits_touching_this_path": 1
+  },
+  {
+   "path": "ord0300-c2-pairing-hjp3/instruments/c2_ledger.py",
+   "blob_40_hex": "000510f0f8b231ed70a572d7fc5f00733a4f601b",
+   "size": 18389,
+   "commits_touching_this_path": 1
+  },
+  {
+   "path": "ord0300-c2-pairing-hjp3/instruments/c2_md.py",
+   "blob_40_hex": "cb41d8fdae11988cf8f37d4dd9cb737c5710e176",
+   "size": 16384,
+   "commits_touching_this_path": 1
+  },
+  {
+   "path": "ord0300-c2-pairing-hjp3/instruments/c2_md_r2.py",
+   "blob_40_hex": "5b6ba8c0748fe449a39c4a76466e48b2f9ae72f6",
+   "size": 16913,
+   "commits_touching_this_path": 1
+  },
+  {
+   "path": "ord0300-c2-pairing-hjp3/instruments/c2_md_r3.py",
+   "blob_40_hex": "332f910733cc598beeebfce1623374f023535d05",
+   "size": 18285,
+   "commits_touching_this_path": 1
+  },
+  {
+   "path": "ord0300-c2-pairing-hjp3/instruments/c2_md_r4.py",
+   "blob_40_hex": "d6ccbd5d877c3b2b7e8207d43ed123a53d933726",
+   "size": 17701,
+   "commits_touching_this_path": 1
+  },
+  {
+   "path": "ord0300-c2-pairing-hjp3/instruments/c2_no_rewrite.py",
+   "blob_40_hex": "25a62ae1a53628ba8201ad7ede7c5476500a689a",
+   "size": 4357,
+   "commits_touching_this_path": 1
+  },
+  {
+   "path": "ord0300-c2-pairing-hjp3/instruments/c2_pair_log_publish_copy.py",
+   "blob_40_hex": "dc634c040e5f331d083c476d7ff376c1c23d12b2",
+   "size": 4365,
+   "commits_touching_this_path": 1
+  },
+  {
+   "path": "ord0300-c2-pairing-hjp3/instruments/c2_pair_log_publish_copy_r2.py",
+   "blob_40_hex": "699cf84b29315a601c02dd897da26e01fe80e902",
+   "size": 5839,
+   "commits_touching_this_path": 1
+  },
+  {
+   "path": "ord0300-c2-pairing-hjp3/instruments/c2_publish.py",
+   "blob_40_hex": "1657e538a2d48d3530fb4f7ced4a866c803c7ae6",
+   "size": 15563,
+   "commits_touching_this_path": 1
+  },
+  {
+   "path": "ord0300-c2-pairing-hjp3/instruments/c2_publish_r2.py",
+   "blob_40_hex": "6b945bde256dd94c762d26684efb54999fec045e",
+   "size": 16094,
+   "commits_touching_this_path": 1
+  },
+  {
+   "path": "ord0300-c2-pairing-hjp3/instruments/c2_publish_r3.py",
+   "blob_40_hex": "826a65e0009e8b99371acc21ef0cf9d9316a9b72",
+   "size": 16800,
+   "commits_touching_this_path": 1
+  },
+  {
+   "path": "ord0300-c2-pairing-hjp3/instruments/c2_publish_r4.py",
+   "blob_40_hex": "f2f1b7e0c9dabfba89ffbfdf7b3a4acb1dd5ab0f",
+   "size": 16800,
+   "commits_touching_this_path": 1
+  },
+  {
+   "path": "ord0300-c2-pairing-hjp3/instruments/c2_publish_r5.py",
+   "blob_40_hex": "2888a00cb5c89edf22765bcf4af52fc5c4562770",
+   "size": 17304,
+   "commits_touching_this_path": 1
+  },
+  {
+   "path": "ord0300-c2-pairing-hjp3/instruments/c2_publish_r6.py",
+   "blob_40_hex": "853f9ed543846787ad1e009de67c4590b6838be0",
+   "size": 17623,
+   "commits_touching_this_path": 1
+  },
+  {
+   "path": "ord0300-c2-pairing-hjp3/instruments/c2_receipt.py",
+   "blob_40_hex": "69b93f375d4d78a94984e033cc1dc780d343475d",
+   "size": 28468,
+   "commits_touching_this_path": 1
+  },
+  {
+   "path": "ord0300-c2-pairing-hjp3/instruments/c2_receipt_r2.py",
+   "blob_40_hex": "ccd0674c1f691ba6038b3e366168cddf361a769d",
+   "size": 34521,
+   "commits_touching_this_path": 1
+  },
+  {
+   "path": "ord0300-c2-pairing-hjp3/instruments/c2_receipt_r3.py",
+   "blob_40_hex": "aac0e2a7672064460aafc046e226a0b612fec153",
+   "size": 36753,
+   "commits_touching_this_path": 1
+  },
+  {
+   "path": "ord0300-c2-pairing-hjp3/instruments/c2_receipt_r4.py",
+   "blob_40_hex": "e2c1bc9c8708d0964c186bb30a851db3a87a3c11",
+   "size": 37239,
+   "commits_touching_this_path": 1
+  },
+  {
+   "path": "ord0300-c2-pairing-hjp3/instruments/c2_rig.py",
+   "blob_40_hex": "e8dbda8320ba45da326450da2ea8fc2445f44638",
+   "size": 15646,
+   "commits_touching_this_path": 1
+  },
+  {
+   "path": "ord0300-c2-pairing-hjp3/instruments/c2_runarm.py",
+   "blob_40_hex": "c4b61f936275f9273df2d3392a9de0c64fe1be6d",
+   "size": 14047,
+   "commits_touching_this_path": 1
+  },
+  {
+   "path": "ord0300-c2-pairing-hjp3/instruments/c2_score.py",
+   "blob_40_hex": "d57ef21a713478e382f71949af6d70a5e66b5f62",
+   "size": 23660,
+   "commits_touching_this_path": 1
+  },
+  {
+   "path": "ord0300-c2-pairing-hjp3/instruments/c2_score_r2.py",
+   "blob_40_hex": "8f7499de7e69cd54126d35ecc191cd2dc7b048bd",
+   "size": 26495,
+   "commits_touching_this_path": 1
+  },
+  {
+   "path": "ord0300-c2-pairing-hjp3/instruments/c2_setup.py",
+   "blob_40_hex": "82a1e5955139c29bf3051fc599e6aefa6cbe07bd",
+   "size": 8989,
+   "commits_touching_this_path": 1
+  },
+  {
+   "path": "ord0300-c2-pairing-hjp3/instruments/c2proxy.py",
+   "blob_40_hex": "d8e3bd2356e906a8a41fc87b526b77ce31dd8209",
+   "size": 6517,
+   "commits_touching_this_path": 1
+  },
+  {
+   "path": "ord0300-c2-pairing-hjp3/instruments/seed_helper.py",
+   "blob_40_hex": "14fd87d274c6bb52eeef8948804eaa08631fedc4",
+   "size": 710,
+   "commits_touching_this_path": 1
+  },
+  {
+   "path": "ord0300-c2-pairing-hjp3/no_rewrite_proof_c2.json",
+   "blob_40_hex": "1dd7ff17c65a5bb3aa454c9b63e5a8e5fa7a3f58",
+   "size": 15086,
+   "commits_touching_this_path": 1
+  },
+  {
+   "path": "ord0300-c2-pairing-hjp3/pair_log_pub.jsonl",
+   "blob_40_hex": "854195065bf43d4ee020c68b3646e580e8b3fa42",
+   "size": 162565,
+   "commits_touching_this_path": 1
+  },
+  {
+   "path": "ord0300-c2-pairing-hjp3/pair_log_publish_proof_c2.json",
+   "blob_40_hex": "5182c27477963d7de52e38790ada6f1170c598bb",
+   "size": 1194,
+   "commits_touching_this_path": 1
+  },
+  {
+   "path": "ord0300-c2-pairing-hjp3/pair_log_publish_proof_c2_r2.json",
+   "blob_40_hex": "d0f9d1f1f01df31c4b6c5f80d703c14b9d52ac0c",
+   "size": 1734,
+   "commits_touching_this_path": 1
+  },
+  {
+   "path": "ord0300-c2-pairing-hjp3/pair_log_publish_proof_c2_r3.json",
+   "blob_40_hex": "c7b1b13394b21f5c1cb875dc9d8ca95ef746ce58",
+   "size": 1734,
+   "commits_touching_this_path": 1
+  },
+  {
+   "path": "ord0300-c2-pairing-hjp3/publish_plan_c2.json",
+   "blob_40_hex": "96bffbac9dfc2ea0cbc4b78dad6c069e24daf444",
+   "size": 6028,
+   "commits_touching_this_path": 1
+  },
+  {
+   "path": "ord0300-c2-pairing-hjp3/publish_plan_c2_r2.json",
+   "blob_40_hex": "05e5350a14b17cb53e215ce34cfdb1804a9b04a0",
+   "size": 6561,
+   "commits_touching_this_path": 1
+  },
+  {
+   "path": "ord0300-c2-pairing-hjp3/publish_plan_c2_r3.json",
+   "blob_40_hex": "d21636c948b192229396aaf524adca5c23e57876",
+   "size": 7177,
+   "commits_touching_this_path": 1
+  },
+  {
+   "path": "ord0300-c2-pairing-hjp3/published_names_c2.json",
+   "blob_40_hex": "a5e1d8ed96339fd09a0fa173f9f79b9eb9a63fe1",
+   "size": 1286,
+   "commits_touching_this_path": 1
+  },
+  {
+   "path": "ord0300-c2-pairing-hjp3/published_names_c2_r2.json",
+   "blob_40_hex": "66c1ec9fb58a75e8e7f7407ec517a5790c1704cd",
+   "size": 2118,
+   "commits_touching_this_path": 1
+  },
+  {
+   "path": "ord0300-c2-pairing-hjp3/q38_ruler_O0300C2-1955_194917.txt",
+   "blob_40_hex": "b13260617e73cdea2fbabf3480d7bbc1c9d3345a",
+   "size": 909,
+   "commits_touching_this_path": 1
+  },
+  {
+   "path": "ord0300-c2-pairing-hjp3/q38_ruler_O0300C2-1955_200920.txt",
+   "blob_40_hex": "5588d365a0b3eae4ea278ab19d145150e13ca0b6",
+   "size": 909,
+   "commits_touching_this_path": 1
+  },
+  {
+   "path": "ord0300-c2-pairing-hjp3/q38_ruler_O0300C2-1955_r2_203213.txt",
+   "blob_40_hex": "80284f50cddff3bd9edab906db51d007f54fe951",
+   "size": 912,
+   "commits_touching_this_path": 1
+  },
+  {
+   "path": "ord0300-c2-pairing-hjp3/q38_ruler_O0300C2-1955_r3_203706.txt",
+   "blob_40_hex": "da9e905137067459739ee7033c065934a780b609",
+   "size": 912,
+   "commits_touching_this_path": 1
+  },
+  {
+   "path": "ord0300-c2-pairing-hjp3/raw_bundle_c2.json",
+   "blob_40_hex": "0946a65c0fa17921faa7efc5b8a34341496a7566",
+   "size": 649724,
+   "commits_touching_this_path": 1
+  },
+  {
+   "path": "ord0300-c2-pairing-hjp3/raw_bundle_c2_r2.json",
+   "blob_40_hex": "6c434fa4c93d46356fa6b6dd39aedac95a8bc6c0",
+   "size": 879911,
+   "commits_touching_this_path": 1
+  },
+  {
+   "path": "ord0300-c2-pairing-hjp3/raw_bundle_c2_r3.json",
+   "blob_40_hex": "3feafe4573d76e2683a83298c46582e82dfabac2",
+   "size": 880041,
+   "commits_touching_this_path": 1
+  },
+  {
+   "path": "ord0300-c2-pairing-hjp3/setup_facts.json",
+   "blob_40_hex": "0abc6190b773bef9b8a9801cec2d3aa24e072d1f",
+   "size": 3133,
+   "commits_touching_this_path": 1
+  },
+  {
+   "path": "ord0300-c2-pairing-hjp3/t90_facts.json",
+   "blob_40_hex": "23db3dc8d6cf5b3ca3d7c273617c1c99200f6609",
+   "size": 1113,
+   "commits_touching_this_path": 1
+  }
+ ],
+ "paths_counted": 86,
+ "every_published_path_in_this_prefix_has_exactly_one_write": true,
+ "paths_with_more_than_one_write": [],
+ "control_the_double_publish_the_commander_himself_named_ORD_0300": {
+  "path": "evidence/ord0300-hjp3-write-cells/RECEIPT_O0300-2610.json",
+  "commits_touching": 2,
+  "history": [
+   {
+    "sha": "cfd07c617f944ab02b37322a1b30a8e5e83b60d6",
+    "at": "2026-09-25T02:56:18Z",
+    "msg": "docs(evidence): ORD-0300 HJ-P3 machine receipt: 5 self-justifying cell"
+   },
+   {
+    "sha": "1bc2d8b80df40bb9fbfd179fcde1d051572e21c9",
+    "at": "2026-09-25T02:42:56Z",
+    "msg": "docs(evidence): ORD-0300 HJ-P3 machine receipt: 5 self-justifying cell"
+   }
+  ],
+  "so_the_counter_is_not_blind": true
+ },
+ "control_the_overwrite_I_recorded_against_myself_in_ORD_0288": {
+  "path": "evidence/ord0288-t1-durable-ownership-hjp3/evidence_manifest_full40_o0288_r2.json",
+  "commits_touching": 2,
+  "history": [
+   {
+    "sha": "fd39c8f6c2730939b8f839baf2031cacd742d13d",
+    "at": "2026-09-25T10:01:45Z",
+    "msg": "docs(evidence): ORD-0288 T-1 HJ-P3 blob manifest r2 (40-hex, blobs onl"
+   },
+   {
+    "sha": "2958288b89262e39a7029f09e8b3f6f6de9de39c",
+    "at": "2026-09-25T09:45:05Z",
+    "msg": "docs(evidence): ORD-0288 T-1 manifest r2 - counts blobs, not the instr"
+   }
+  ],
+  "so_the_counter_is_not_blind": true
+ },
+ "verdict": {
+  "positive_no_path_in_this_prefix_was_written_twice": true,
+  "negative_both_counters_detected_a_real_double_publish": true,
+  "mutation_this_batch_itself_offered_a_re_put_and_the_gate_refused_it": true,
+  "ALL_HOLD": true
+ }
+}
