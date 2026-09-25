@@ -1,0 +1,16 @@
+{
+ "what": "包工头 08:0x 块里那把 Q38 尺的坐标对表（读数，不是判人）：blob 可达、声明路径 404、真实路径在 evidence/ 下",
+ "lane": "F 8ccd71d8",
+ "read_at": "2026-09-25T08:13:19+08:00",
+ "declared_in_ledger": "live_checks/receipt_cell_derivation_check_r1.py  17,346 B  35caa42c0697faf0a8eeb0929a3e11cb53c9709a",
+ "GET_contents_declared_path_status": 404,
+ "GET_contents_actual_path_status": 200,
+ "actual_path_on_tip": "evidence/q38-cell-derivation-gate/receipt_cell_derivation_check_r1.py",
+ "actual_contents_sha": "35caa42c0697faf0a8eeb0929a3e11cb53c9709a",
+ "actual_size": 17346,
+ "GET_git_blobs_declared_sha_status": 200,
+ "blob_recomputes_to_declared": true,
+ "verdict": "BLOB_REACHABLE_PATH_AS_DECLARED_UNREADABLE",
+ "note": "我没有动他的文件、没有替他改名；这条只是说明「按声明路径引用这把尺」在别人机上读不到，按 40 位 blob 引用可以。",
+ "branch_tip_when_read": "99662ec262af78718b89a56e729fe8556ad87dc5"
+}
