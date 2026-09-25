@@ -1,0 +1,374 @@
+{
+ "ran_at_local": "2026-09-25T17:40:58+0800",
+ "repo": "Canshu-King/CityNexus",
+ "branch": "commander/control",
+ "tip_read": "af75b06fa39724bf136ab11db414e7102d437ac1",
+ "tree_read": "9b66b38889bc0f4c64e24d8c667d1f28d47ad021",
+ "method": "GET /repos/.../commits?sha=<branch>&path=<file>&per_page=100 - counts the writes that landed at that exact name",
+ "files_under_prefix_now": 58,
+ "blobs": [
+  {
+   "path": "ord0288-t1-durable-ownership-hjp3/RECEIPT_O0288T1-1610.json",
+   "blob_40_hex": "4d5a23ff6d6edc3b504fe9ecb3c63b80ec8afa63",
+   "commits_touching_this_path": 1
+  },
+  {
+   "path": "ord0288-t1-durable-ownership-hjp3/RECEIPT_O0288T1-1610_r2.json",
+   "blob_40_hex": "95f6c34a4c8c08af14ea400c48647f239ebfba76",
+   "commits_touching_this_path": 1
+  },
+  {
+   "path": "ord0288-t1-durable-ownership-hjp3/RECEIPT_O0288T1-1610_r3.json",
+   "blob_40_hex": "0552d020fdada8e3b2ef35c4eb69cdefbcd24d15",
+   "commits_touching_this_path": 1
+  },
+  {
+   "path": "ord0288-t1-durable-ownership-hjp3/RECEIPT_O0288T1-1610_r4.json",
+   "blob_40_hex": "4659e47ca097f696f1a1465aa1da4eae42ecb4ce",
+   "commits_touching_this_path": 1
+  },
+  {
+   "path": "ord0288-t1-durable-ownership-hjp3/RECEIPT_O0288T1-1610_r5.json",
+   "blob_40_hex": "8f372728fe158b507059a4e3c8ebb6fc6f525a0d",
+   "commits_touching_this_path": 1
+  },
+  {
+   "path": "ord0288-t1-durable-ownership-hjp3/RECEIPT_O0288T1-1610_r6.json",
+   "blob_40_hex": "287c20ffb8eecb3cfc18aa4c7100be8b967b461f",
+   "commits_touching_this_path": 1
+  },
+  {
+   "path": "ord0288-t1-durable-ownership-hjp3/RECEIPT_O0288T1-1610_r7.json",
+   "blob_40_hex": "c111f887db01c0c667fb419850fa658094f7b355",
+   "commits_touching_this_path": 1
+  },
+  {
+   "path": "ord0288-t1-durable-ownership-hjp3/RECEIPT_O0288T1-1730.json",
+   "blob_40_hex": "429a5de3872d87f98a2532b23a8ed3e35426747e",
+   "commits_touching_this_path": 1
+  },
+  {
+   "path": "ord0288-t1-durable-ownership-hjp3/RECEIPT_O0288T1-1730.md",
+   "blob_40_hex": "459b8f60f19a4c9aab59c485cc7a781fd58b4006",
+   "commits_touching_this_path": 1
+  },
+  {
+   "path": "ord0288-t1-durable-ownership-hjp3/boundary_proof_O0288T1.json",
+   "blob_40_hex": "91a1a7ed9b8d78e270d4ad534f27cd83a4826520",
+   "commits_touching_this_path": 1
+  },
+  {
+   "path": "ord0288-t1-durable-ownership-hjp3/boundary_proof_O0288T1_r2.json",
+   "blob_40_hex": "00fba8b33a837dc7596516d40ad03617a7bf67fe",
+   "commits_touching_this_path": 1
+  },
+  {
+   "path": "ord0288-t1-durable-ownership-hjp3/cell_t1_crash_mutant_mut_crash.json",
+   "blob_40_hex": "0a561b28df78def77593f4dfae0cf9543181eab3",
+   "commits_touching_this_path": 1
+  },
+  {
+   "path": "ord0288-t1-durable-ownership-hjp3/cell_t1_signature_mutant_mut_sig.json",
+   "blob_40_hex": "bf3d4bcb272afe3c50e0cb38343d68201a49190f",
+   "commits_touching_this_path": 1
+  },
+  {
+   "path": "ord0288-t1-durable-ownership-hjp3/cell_t1_wrong_carrier_mutant_mut_sig_wrong.json",
+   "blob_40_hex": "a4315a7296589a9dd500ac64d2eaea028b2eb09e",
+   "commits_touching_this_path": 1
+  },
+  {
+   "path": "ord0288-t1-durable-ownership-hjp3/cell_t1a_replay_after_a_process_restart_T1-162443.json",
+   "blob_40_hex": "7bc4c4ff0e946791fe6833e70d38ecca34bbe85c",
+   "commits_touching_this_path": 1
+  },
+  {
+   "path": "ord0288-t1-durable-ownership-hjp3/cell_t1a_same_key_concurrent_two_processes_T1-162438.json",
+   "blob_40_hex": "04317804ba880f6376d9b026342e963ba5cb63fd",
+   "commits_touching_this_path": 1
+  },
+  {
+   "path": "ord0288-t1-durable-ownership-hjp3/cell_t1a_same_key_different_body_T1-162438.json",
+   "blob_40_hex": "2adf7c797c848417219495e9151009726a5f647a",
+   "commits_touching_this_path": 1
+  },
+  {
+   "path": "ord0288-t1-durable-ownership-hjp3/cell_t1a_same_key_two_processes_T1-162438.json",
+   "blob_40_hex": "d459d3291d7c5a4910c76f1cc3b826167470e24d",
+   "commits_touching_this_path": 1
+  },
+  {
+   "path": "ord0288-t1-durable-ownership-hjp3/cell_t1b_error_path_records_response_status_T1-162439.json",
+   "blob_40_hex": "5c45cdc1350fc5cb668bf77c059a90d178bed8d3",
+   "commits_touching_this_path": 1
+  },
+  {
+   "path": "ord0288-t1-durable-ownership-hjp3/cell_t1b_failure_before_the_claim_leaves_no_row_T1-162439.json",
+   "blob_40_hex": "3f1e3d1ee184295d1d5407f6c750bbb2702a8d45",
+   "commits_touching_this_path": 1
+  },
+  {
+   "path": "ord0288-t1-durable-ownership-hjp3/discarded_t1a_replay_after_a_process_restart_T1-162319.json",
+   "blob_40_hex": "b4b94face31f35d777059c197a74b05756088295",
+   "commits_touching_this_path": 1
+  },
+  {
+   "path": "ord0288-t1-durable-ownership-hjp3/discarded_t1a_same_key_concurrent_two_processes_T1-162314.json",
+   "blob_40_hex": "e605cab87d25d45ad9c58627a2bcb1f08bf85969",
+   "commits_touching_this_path": 1
+  },
+  {
+   "path": "ord0288-t1-durable-ownership-hjp3/discarded_t1a_same_key_different_body_T1-162314.json",
+   "blob_40_hex": "28e14292a5211f905ba77c528c2c2297f9a312c3",
+   "commits_touching_this_path": 1
+  },
+  {
+   "path": "ord0288-t1-durable-ownership-hjp3/discarded_t1a_same_key_two_processes_T1-162314.json",
+   "blob_40_hex": "d0e2fbf0f10229315928261c4f6e93e4e6081e8e",
+   "commits_touching_this_path": 1
+  },
+  {
+   "path": "ord0288-t1-durable-ownership-hjp3/discarded_t1b_error_path_records_response_status_T1-162314.json",
+   "blob_40_hex": "82ee50e6d89b13f9a30f6fc6d27b73edac2fc6fb",
+   "commits_touching_this_path": 1
+  },
+  {
+   "path": "ord0288-t1-durable-ownership-hjp3/discarded_t1b_failure_before_the_claim_leaves_no_row_T1-162314.json",
+   "blob_40_hex": "10f75569547343a2e9869a2123c719f1e8518b9f",
+   "commits_touching_this_path": 1
+  },
+  {
+   "path": "ord0288-t1-durable-ownership-hjp3/evidence_manifest_full40_o0288.json",
+   "blob_40_hex": "9bc321ed5ae5ab1c5e3d38b8a586ab4dbf7f0c4f",
+   "commits_touching_this_path": 1
+  },
+  {
+   "path": "ord0288-t1-durable-ownership-hjp3/gate_refusal_recorded_o0288.json",
+   "blob_40_hex": "922d79a8249bcd931cfa52c3497ef868714f3c11",
+   "commits_touching_this_path": 1
+  },
+  {
+   "path": "ord0288-t1-durable-ownership-hjp3/gate_selftest_publish_o0288.json",
+   "blob_40_hex": "df48044593553f6b970b183c96fc7117646206fc",
+   "commits_touching_this_path": 1
+  },
+  {
+   "path": "ord0288-t1-durable-ownership-hjp3/instruments/o0288_arms.py",
+   "blob_40_hex": "e6e6c52bec323e55614da7f7ce7e0b0df7ef7007",
+   "commits_touching_this_path": 1
+  },
+  {
+   "path": "ord0288-t1-durable-ownership-hjp3/instruments/o0288_md.py",
+   "blob_40_hex": "75fddc641c521bd8a87ce9a542b13dac5c7e0b92",
+   "commits_touching_this_path": 1
+  },
+  {
+   "path": "ord0288-t1-durable-ownership-hjp3/instruments/o0288_md_final.py",
+   "blob_40_hex": "513aefc85407e451861e2743f5628f0c7e8b4fab",
+   "commits_touching_this_path": 1
+  },
+  {
+   "path": "ord0288-t1-durable-ownership-hjp3/instruments/o0288_md_final_r2.py",
+   "blob_40_hex": "ee0098303d9653f86394e7f9f59b780bf05fb1e9",
+   "commits_touching_this_path": 1
+  },
+  {
+   "path": "ord0288-t1-durable-ownership-hjp3/instruments/o0288_mutants.py",
+   "blob_40_hex": "651ddbe814c28c2b655df09469498ded20dad019",
+   "commits_touching_this_path": 1
+  },
+  {
+   "path": "ord0288-t1-durable-ownership-hjp3/instruments/o0288_receipt.py",
+   "blob_40_hex": "9bfb203e400ae2cb39b2cde3b4ef183e689b55c5",
+   "commits_touching_this_path": 1
+  },
+  {
+   "path": "ord0288-t1-durable-ownership-hjp3/instruments/o0288_receipt_final.py",
+   "blob_40_hex": "1b2c73767327ff74ee7404f3f2c44afb451f7df5",
+   "commits_touching_this_path": 1
+  },
+  {
+   "path": "ord0288-t1-durable-ownership-hjp3/instruments/o0288_receipt_r2.py",
+   "blob_40_hex": "24635c453cd7363d5780f472c5e852221d5f6fbf",
+   "commits_touching_this_path": 1
+  },
+  {
+   "path": "ord0288-t1-durable-ownership-hjp3/instruments/o0288_receipt_r3.py",
+   "blob_40_hex": "24dbb6eae94ab9ee0494d79710018e038e5ed6a9",
+   "commits_touching_this_path": 1
+  },
+  {
+   "path": "ord0288-t1-durable-ownership-hjp3/instruments/o0288_receipt_r4.py",
+   "blob_40_hex": "aee209142f5c0de67161720dbcaa537cabb2a366",
+   "commits_touching_this_path": 1
+  },
+  {
+   "path": "ord0288-t1-durable-ownership-hjp3/instruments/o0288_receipt_r5.py",
+   "blob_40_hex": "5d038dabbf10163a538d0ebaacd2d2e6c31f0eb2",
+   "commits_touching_this_path": 1
+  },
+  {
+   "path": "ord0288-t1-durable-ownership-hjp3/instruments/o0288_receipt_r6.py",
+   "blob_40_hex": "77ecc956af512c554bf0decacb254a83cd7c9444",
+   "commits_touching_this_path": 1
+  },
+  {
+   "path": "ord0288-t1-durable-ownership-hjp3/instruments/o0288_receipt_r7.py",
+   "blob_40_hex": "145ae01a1303807a9a11ebdd19156cb34bdb63d4",
+   "commits_touching_this_path": 1
+  },
+  {
+   "path": "ord0288-t1-durable-ownership-hjp3/instruments/o0288_rig.py",
+   "blob_40_hex": "209be2d93663ad154e1f7affcd2b82154ae5bfb3",
+   "commits_touching_this_path": 1
+  },
+  {
+   "path": "ord0288-t1-durable-ownership-hjp3/instruments/o0288_teardown_recover.py",
+   "blob_40_hex": "ca48fb742a0e33d3b72b48332e4dc607c102c9a1",
+   "commits_touching_this_path": 1
+  },
+  {
+   "path": "ord0288-t1-durable-ownership-hjp3/mutant_arms.json",
+   "blob_40_hex": "3d4358ed17984d840e148bf9522dc487ce3e4ac3",
+   "commits_touching_this_path": 1
+  },
+  {
+   "path": "ord0288-t1-durable-ownership-hjp3/o0288_pids.json",
+   "blob_40_hex": "8201e96646aa68c0abde1665a22245a6bf204c7e",
+   "commits_touching_this_path": 1
+  },
+  {
+   "path": "ord0288-t1-durable-ownership-hjp3/o0288_state.json",
+   "blob_40_hex": "8c05a77f0f606ae08c453c9619edd30a012cefda",
+   "commits_touching_this_path": 1
+  },
+  {
+   "path": "ord0288-t1-durable-ownership-hjp3/q38_ruler_O0288T1-1730.txt",
+   "blob_40_hex": "343a95cdde6d4fc0a5bd307508d3ae9878d7e2f3",
+   "commits_touching_this_path": 1
+  },
+  {
+   "path": "ord0288-t1-durable-ownership-hjp3/restart_A.json",
+   "blob_40_hex": "28ddf1c06b7cc22a1bd6a216a79d7661c1266886",
+   "commits_touching_this_path": 1
+  },
+  {
+   "path": "ord0288-t1-durable-ownership-hjp3/seed_any.py",
+   "blob_40_hex": "b499d69331efac695e7a84ad50a0028a5a7d2302",
+   "commits_touching_this_path": 1
+  },
+  {
+   "path": "ord0288-t1-durable-ownership-hjp3/seed_helper.py",
+   "blob_40_hex": "3805df39eccd76b4e2443e2b7b823df8ed5acadb",
+   "commits_touching_this_path": 1
+  },
+  {
+   "path": "ord0288-t1-durable-ownership-hjp3/seed_journey.json",
+   "blob_40_hex": "cdb439b5f9407a756da35d8b3d5c3470b0d78137",
+   "commits_touching_this_path": 1
+  },
+  {
+   "path": "ord0288-t1-durable-ownership-hjp3/teardown_O0288T1_171101.json",
+   "blob_40_hex": "91bc11dd463c541dccfb96dcb88f701d69232a0d",
+   "commits_touching_this_path": 1
+  },
+  {
+   "path": "ord0288-t1-durable-ownership-hjp3/teardown_O0288T1_171350.json",
+   "blob_40_hex": "91bc11dd463c541dccfb96dcb88f701d69232a0d",
+   "commits_touching_this_path": 1
+  },
+  {
+   "path": "ord0288-t1-durable-ownership-hjp3/teardown_O0288T1_171902.json",
+   "blob_40_hex": "91bc11dd463c541dccfb96dcb88f701d69232a0d",
+   "commits_touching_this_path": 1
+  },
+  {
+   "path": "ord0288-t1-durable-ownership-hjp3/teardown_O0288T1_172754.json",
+   "blob_40_hex": "91bc11dd463c541dccfb96dcb88f701d69232a0d",
+   "commits_touching_this_path": 1
+  },
+  {
+   "path": "ord0288-t1-durable-ownership-hjp3/teardown_O0288T1_round1_restored_from_console.txt",
+   "blob_40_hex": "1c5fe82a39d2792870c7a541d6387b9e2d75f7a8",
+   "commits_touching_this_path": 1
+  },
+  {
+   "path": "ord0288-t1-durable-ownership-hjp3/teardown_O0288T1_round2_overwrote_round1.json",
+   "blob_40_hex": "91bc11dd463c541dccfb96dcb88f701d69232a0d",
+   "commits_touching_this_path": 1
+  }
+ ],
+ "every_published_path_has_exactly_one_write": true,
+ "paths_with_more_than_one_write": [],
+ "negative_control_method_sees_a_real_double_publish": {
+  "path": "ord0300-hjp3-write-cells/RECEIPT_O0300-2610.json",
+  "commits_touching": 2,
+  "history": [
+   {
+    "sha": "cfd07c617f944ab02b37322a1b30a8e5e83b60d6",
+    "at": "2026-09-25T02:56:18Z",
+    "msg": "docs(evidence): ORD-0300 HJ-P3 machine receipt: 5 self-justifying cell"
+   },
+   {
+    "sha": "1bc2d8b80df40bb9fbfd179fcde1d051572e21c9",
+    "at": "2026-09-25T02:42:56Z",
+    "msg": "docs(evidence): ORD-0300 HJ-P3 machine receipt: 5 self-justifying cell"
+   }
+  ],
+  "so_the_counter_is_not_blind": true
+ },
+ "pairs": [
+  {
+   "superseded_path": "instruments/o0288_md_final.py",
+   "revision_path": "instruments/o0288_md_final_r2.py",
+   "superseded_blob_40_hex": "513aefc85407e451861e2743f5628f0c7e8b4fab",
+   "revision_blob_40_hex": "ee0098303d9653f86394e7f9f59b780bf05fb1e9",
+   "blobs_differ": true,
+   "superseded_writes": 1,
+   "revision_writes": 1,
+   "superseded_history": [
+    {
+     "sha": "cf8073dd5b9e43421929d124bf06665dc42ecdaf",
+     "at": "2026-09-25T09:27:24Z",
+     "msg": "docs(evidence): ORD-0288 T-1 HJ-P3 instrument: the shipping pass that "
+    }
+   ],
+   "revision_history": [
+    {
+     "sha": "c59a2dd3f908ef17201208af19c1954d7c438292",
+     "at": "2026-09-25T09:35:50Z",
+     "msg": "docs(evidence): ORD-0288 T-1 HJ-P3 instrument revision: teardown round"
+    }
+   ]
+  },
+  {
+   "superseded_path": "boundary_proof_O0288T1.json",
+   "revision_path": "boundary_proof_O0288T1_r2.json",
+   "superseded_blob_40_hex": "91a1a7ed9b8d78e270d4ad534f27cd83a4826520",
+   "revision_blob_40_hex": "00fba8b33a837dc7596516d40ad03617a7bf67fe",
+   "blobs_differ": true,
+   "superseded_writes": 1,
+   "revision_writes": 1,
+   "superseded_history": [
+    {
+     "sha": "59f3c710e3a97a33d326c5fd1a64952aa09aceb3",
+     "at": "2026-09-25T09:25:15Z",
+     "msg": "docs(evidence): ORD-0288 T-1 HJ-P3 boundary proof: served generation, "
+    }
+   ],
+   "revision_history": [
+    {
+     "sha": "5172145ff5f376505f2a070c09b56983e8b48e5c",
+     "at": "2026-09-25T09:35:43Z",
+     "msg": "docs(evidence): ORD-0288 T-1 HJ-P3 boundary proof revision: the scan r"
+    }
+   ]
+  }
+ ],
+ "verdict": {
+  "positive_no_path_in_this_batch_was_written_twice": true,
+  "negative_the_counter_detected_the_known_double_publish_in_ORD_0300": true,
+  "mutation_each_superseded_pair_is_two_names_two_blobs_one_write_each": true,
+  "ALL_HOLD": true
+ }
+}
