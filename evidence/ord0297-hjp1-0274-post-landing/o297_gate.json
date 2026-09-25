@@ -1,0 +1,97 @@
+{
+  "receipt": "o297_derived_r1.json",
+  "how_rulers_fetched": "GET /git/blobs/<40> then re-hash the local file over the git blob frame; the rulers are the arbiter's, not copies I republish",
+  "output_format_note": "the ruler emits text, not JSON -- readings are parsed out of that text",
+  "rulers": {
+    "r1": {
+      "blob40": "35caa42c0697faf0a8eeb0929a3e11cb53c9709a",
+      "http": 200,
+      "blob_meta_size": 17346,
+      "local_bytes": 17346,
+      "local_sha1_matches_blob_id": true,
+      "selftest_rc": 0,
+      "selftest_tail": "map_entry cells 2 got Q38_GATE_GREEN [] | want Q38_GATE_GREEN [] -> ok",
+      "receipt_measured_rc": 0,
+      "parsed": {
+        "overall": "Q38_GATE_GREEN",
+        "cells_found": 3,
+        "hard": "0",
+        "soft": "0",
+        "cells": [
+          {
+            "cell": "B3_offline_after_convergence",
+            "why_source": "why",
+            "why_tokens": 24,
+            "own_hits": 5,
+            "unique_hits": 0,
+            "shares_why_with": "[]"
+          },
+          {
+            "cell": "A_never_reconnected",
+            "why_source": "why",
+            "why_tokens": 19,
+            "own_hits": 5,
+            "unique_hits": 0,
+            "shares_why_with": "[]"
+          },
+          {
+            "cell": "B3_with_backend_6d041dcc",
+            "why_source": "why",
+            "why_tokens": 23,
+            "own_hits": 4,
+            "unique_hits": 0,
+            "shares_why_with": "[]"
+          }
+        ],
+        "meaning": "no shared literal and every sentence names its own readings"
+      },
+      "raw_stdout": "receipt o297_derived_r1.json 38003 B blob_sha1 cf0335ce19e38341e8119f86649d02928b86f638\ncells 3 | overall Q38_GATE_GREEN | hard 0 [] | soft 0 []\n  cell B3_offline_after_convergence | why_source why | why tokens 24 | own hits 5 | unique hits 0 | shares why with []\n  cell A_never_reconnected | why_source why | why tokens 19 | own hits 5 | unique hits 0 | shares why with []\n  cell B3_with_backend_6d041dcc | why_source why | why tokens 23 | own hits 4 | unique hits 0 | shares why with []\nmeaning: no shared literal and every sentence names its own readings\n",
+      "stderr_head": ""
+    },
+    "r2": {
+      "blob40": "91ae8b1ec55f5c19122af11bf775df14580955e4",
+      "http": 200,
+      "blob_meta_size": 18867,
+      "local_bytes": 18867,
+      "local_sha1_matches_blob_id": true,
+      "selftest_rc": 0,
+      "selftest_tail": "r_any_key cells 2 got Q38_GATE_GREEN [] | want Q38_GATE_GREEN [] -> ok",
+      "receipt_measured_rc": 0,
+      "parsed": {
+        "overall": "Q38_GATE_GREEN",
+        "cells_found": 3,
+        "hard": "0",
+        "soft": "0",
+        "cells": [
+          {
+            "cell": "B3_offline_after_convergence",
+            "why_source": "why",
+            "why_tokens": 24,
+            "own_hits": 5,
+            "unique_hits": 0,
+            "shares_why_with": "[]"
+          },
+          {
+            "cell": "A_never_reconnected",
+            "why_source": "why",
+            "why_tokens": 19,
+            "own_hits": 5,
+            "unique_hits": 0,
+            "shares_why_with": "[]"
+          },
+          {
+            "cell": "B3_with_backend_6d041dcc",
+            "why_source": "why",
+            "why_tokens": 23,
+            "own_hits": 4,
+            "unique_hits": 0,
+            "shares_why_with": "[]"
+          }
+        ],
+        "meaning": "no shared literal and every sentence names its own readings"
+      },
+      "raw_stdout": "receipt o297_derived_r1.json 38003 B blob_sha1 cf0335ce19e38341e8119f86649d02928b86f638\ncells 3 | overall Q38_GATE_GREEN | hard 0 [] | soft 0 []\n  cell B3_offline_after_convergence | why_source why | why tokens 24 | own hits 5 | unique hits 0 | shares why with []\n  cell A_never_reconnected | why_source why | why tokens 19 | own hits 5 | unique hits 0 | shares why with []\n  cell B3_with_backend_6d041dcc | why_source why | why tokens 23 | own hits 4 | unique hits 0 | shares why with []\nmeaning: no shared literal and every sentence names its own readings\n",
+      "stderr_head": ""
+    }
+  }
+}
