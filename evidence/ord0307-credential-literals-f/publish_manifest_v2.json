@@ -1,0 +1,96 @@
+{
+ "what": "ORD-0307 发布清单 v2（v1 有 4 件被发布闸按文件名拒了，rc=5 如实保留在 v1 里）",
+ "lane": "F 8ccd71d8",
+ "dir": "evidence/ord0307-credential-literals-f/",
+ "files": [
+  {
+   "path": "evidence/ord0307-credential-literals-f/ord0307_gate_receipt_r1.json",
+   "blob": "7abcd63c414612b499eb71df903634842f3fd61e",
+   "bytes": 24777,
+   "put_rc": 0
+  },
+  {
+   "path": "evidence/ord0307-credential-literals-f/ord0307_source_literals.py",
+   "blob": "717317f822ce01873e33bffd418adea04f67dfeb",
+   "bytes": 10645,
+   "put_rc": 0
+  },
+  {
+   "path": "evidence/ord0307-credential-literals-f/ord0307_source_main_wired.py",
+   "blob": "5455175abe154c5c4ab5b122e517efd13081a637",
+   "bytes": 484578,
+   "put_rc": 5
+  },
+  {
+   "path": "evidence/ord0307-credential-literals-f/ord0307_source_gate_test.py",
+   "blob": "c9e1ed0149c14ad3e7d83c782181a63c98b401b5",
+   "bytes": 14239,
+   "put_rc": 5
+  },
+  {
+   "path": "evidence/ord0307-credential-literals-f/ord0307_mutation_campaign_r3.json",
+   "blob": "99cd74666666b97f313ce8f6c6eb11196b54772c",
+   "bytes": 11286,
+   "put_rc": 0
+  },
+  {
+   "path": "evidence/ord0307-credential-literals-f/ord0307_q38_readings.json",
+   "blob": "cfde3110830add0430564e096d4c1e9fc2a87040",
+   "bytes": 6520,
+   "put_rc": 0
+  },
+  {
+   "path": "evidence/ord0307-credential-literals-f/ord0307_q38_stdout.txt",
+   "blob": "d21d574b09669686dddbb4e72b50bfc7ff229338",
+   "bytes": 1234,
+   "put_rc": 0
+  },
+  {
+   "path": "evidence/ord0307-credential-literals-f/ord0307_q43r4b_on_receipt.json",
+   "blob": "478da403ffb6ae83f67049b92014be3c494c984a",
+   "bytes": 9662,
+   "put_rc": 0
+  },
+  {
+   "path": "evidence/ord0307-credential-literals-f/ord0307_q43r4b_on_receipt_stdout.txt",
+   "blob": "126d9ddb8e1f8f20f761551995f946a2e9d6e12a",
+   "bytes": 2373,
+   "put_rc": 0
+  },
+  {
+   "path": "evidence/ord0307-credential-literals-f/ord0307_q43r4b_ledger.json",
+   "blob": "0780dec53e482e0522fd4b921e788ae55de9b7d0",
+   "bytes": 521,
+   "put_rc": 0
+  },
+  {
+   "path": "evidence/ord0307-credential-literals-f/ord0307_q43r4b_stdout_ledger.txt",
+   "blob": "aef2828c667092a7cbfa04981bd2425774f1abb3",
+   "bytes": 165,
+   "put_rc": 0
+  },
+  {
+   "path": "evidence/ord0307-credential-literals-f/ord0307_q43r4b_bus.json",
+   "blob": "8e0387dce8f607242fe4804b2232110c58be8125",
+   "bytes": 502,
+   "put_rc": 0
+  },
+  {
+   "path": "evidence/ord0307-credential-literals-f/ord0307_q43r4b_stdout_bus.txt",
+   "blob": "aeecba3a51c5c5de39070a4c99fdc1b71554cf84",
+   "bytes": 153,
+   "put_rc": 0
+  },
+  {
+   "path": "evidence/ord0307-credential-literals-f/ord0307_prototype_scan_r1.json",
+   "blob": "e6d71b67b5e5fb20ba161c01ec60e7c500a3223a",
+   "bytes": 157,
+   "put_rc": 0
+  }
+ ],
+ "n_files": 14,
+ "n_refused_in_v1": 4,
+ "guard_held": "闸未削弱：FORBIDDEN_NAME_FRAGMENT 仍拒本地文件名含 credential 的件",
+ "claim_kind": "code_determined",
+ "derived_result": null
+}
