@@ -1,0 +1,49 @@
+{
+ "which": "old",
+ "tip": "dc964086c9d412573ac19d70b24b30e6c3ee6168",
+ "proxy_mode": "mutate_extra_key",
+ "spec": null,
+ "started_at": "22:27:52",
+ "stamp": "222752",
+ "backend": {
+  "tag": "backend_old",
+  "pid": 47048,
+  "cmdline": "D:/moodle/CityNexus/.venv/Scripts/python.exe -m uvicorn app.main:app --host 127.0.0.1 --port 8651 --log-level info --access-log",
+  "up": true,
+  "access_log_path": "D:\\moodle\\_hjp3_0301p3_0925\\p3_backend_access_222752.log"
+ },
+ "proxy": {
+  "tag": "proxy",
+  "pid": 21524,
+  "cmdline": "python D:\\moodle\\HJ-P3_evidence\\p3proxy.py 8652",
+  "up": true,
+  "mode": "mutate_extra_key",
+  "spec": null
+ },
+ "face": {
+  "tag": "face_old",
+  "pid": 15308,
+  "cmdline": "node D:/moodle/CityNexus/frontend/node_modules/vite/bin/vite.js preview --outDir D:\\moodle\\_hjp3_0301p3_0925\\dist_dc964086 --port 8654 --host 127.0.0.1 --strictPort",
+  "up": true,
+  "port": 8654,
+  "served_from": "D:\\moodle\\_hjp3_0301p3_0925\\dist_dc964086"
+ },
+ "seed": {
+  "seed_rc": 0,
+  "seed": {
+   "places_before": 0,
+   "demo_places_before": 0,
+   "seeded_by_this_call": true,
+   "demo_places_after": 8
+  },
+  "traveler_http": 201,
+  "journey_http": 201,
+  "journey_id": "d4155d69-0057-4a1f-9414-e4bf0a6b5dcf"
+ },
+ "identity": {
+  "mine_status": 200,
+  "mine_echoes": true,
+  "bogus_status": 404,
+  "two_sided": true
+ }
+}
