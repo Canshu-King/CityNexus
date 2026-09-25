@@ -1,0 +1,50 @@
+{
+ "schema": "CNX_CMDR_PHONE_CHAIN_HEALTH_V1",
+ "at_local": "2026-09-25T21:48:24+00:00+08",
+ "tool_sha1": "5a85c5c921e5ce869491ef8cb8633ccd3ebc5682",
+ "credential_handling": "the auth file is read by path; only the separator that was found ('\\t') is reported, never a value",
+ "probes": [
+  {
+   "url": "http://127.0.0.1:4781/index.html",
+   "status": 200,
+   "bytes": 1200,
+   "ms": 54,
+   "content_type": "text/html;charset=utf-8",
+   "sha256_12": "09b22864e968"
+  },
+  {
+   "url": "http://127.0.0.1:4782/index.html",
+   "status": 200,
+   "bytes": 1200,
+   "ms": 30,
+   "content_type": "text/html;charset=utf-8",
+   "sha256_12": "09b22864e968"
+  },
+  {
+   "url": "https://obligation-plain-arcade-bean.trycloudflare.com/index.html",
+   "error": "HTTPError",
+   "detail": "HTTP Error 401: Unauthorized"
+  },
+  {
+   "url": "https://obligation-plain-arcade-bean.trycloudflare.com/index.html",
+   "status": 200,
+   "bytes": 1200,
+   "ms": 2135,
+   "content_type": "text/html;charset=utf-8",
+   "sha256_12": "09b22864e968"
+  }
+ ],
+ "listen_rows": {
+  "4781": 1,
+  "4782": 1,
+  "8000": 0
+ },
+ "tunnel_reachable_with_credentials": true,
+ "decisions": {
+  "shell_up": true,
+  "proxy_auth_gate_up": true,
+  "proxy_gate_refuses_without_credentials": true,
+  "all_three_layers_answer_the_same_index": true
+ },
+ "scope": "Transport health only. It says nothing about the data plane (that is the :8000 row) and is not a product claim - the served bytes here are the same index the phone gets."
+}
