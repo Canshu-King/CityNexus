@@ -1,0 +1,49 @@
+{
+  "order": "ORD-0297",
+  "built_at": "2026-09-25T09:50:01+0800",
+  "ref_tip_read_file": "o297_ref_tip_read.json",
+  "ordered_tip": "5c4608cede6cb7bd5f3ac7e704bfee379ca47abc",
+  "trees": {
+    "landed": {
+      "commit": "5c4608cede6cb7bd5f3ac7e704bfee379ca47abc",
+      "build_exit": 0,
+      "dist": "D:\\moodle\\_qoder_hjp1_o207_20260922\\o297\\landed\\frontend\\dist",
+      "bundle": "index-xKIGmoBz.js",
+      "bundle_bytes": 1249346,
+      "bundle_sha256_16": "ba6654a08dd6f98e",
+      "shell_md5": "3f2914575322ce0b952eeab2809716c5",
+      "worker_sha256_16": "6a2eee7091c7cdc0",
+      "marker_in_served_bundle": false
+    },
+    "landed_next": {
+      "commit": "5c4608cede6cb7bd5f3ac7e704bfee379ca47abc",
+      "build_exit": 0,
+      "dist": "D:\\moodle\\_qoder_hjp1_o207_20260922\\o297\\landed_next\\frontend\\dist",
+      "bundle": "index-IbbdpA3f.js",
+      "bundle_bytes": 1249395,
+      "bundle_sha256_16": "85644eb14354f717",
+      "shell_md5": "75aba1f1a5162ece67d1ce0b4afa1391",
+      "worker_sha256_16": "e1556d912c286209",
+      "marker_in_served_bundle": true,
+      "marker_line_added": "window.__cnxNextGenerationMarker = \"ORD-0297-next\";",
+      "main_tsx_committed_blob": "63a08b2344c72526758d639dd655bd55b5ef3047",
+      "main_tsx_blob_before_edit": "63a08b2344c72526758d639dd655bd55b5ef3047",
+      "main_tsx_blob_after_edit": "4c09c3bede0991b1e495f696f6494cec2bf591ec",
+      "only_change_is_the_marker_line": true
+    }
+  },
+  "pairwise_distinct": true,
+  "shell_md5_distinct": true,
+  "backend_trees": {
+    "ordered_backend": {
+      "commit": "5c4608cede6cb7bd5f3ac7e704bfee379ca47abc",
+      "backend_dir": "D:\\moodle\\_qoder_hjp1_o207_20260922\\o297\\ordered_backend\\backend",
+      "has_main": true
+    },
+    "landed_backend": {
+      "commit": "6d041dcce11d05f28a55abadd40717f321b4db38",
+      "backend_dir": "D:\\moodle\\_qoder_hjp1_o207_20260922\\o297\\landed_backend\\backend",
+      "has_main": true
+    }
+  }
+}
