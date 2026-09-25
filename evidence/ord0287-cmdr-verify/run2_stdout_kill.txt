@@ -1,0 +1,16 @@
+clean run 1 rc 0 collected 2 all_passed True ['2 passed, 2 warnings in 1.90s'] 3.0s
+    passed tests.test_qoder_ord0287_k8_carrier::test_K1_a_receipt_another_writer_already_filled_is_never_rewritten_and_refuses_by_name
+    passed tests.test_qoder_ord0287_k8_carrier::test_K2_my_own_unfilled_claims_do_get_filled_and_hold_my_answer
+clean run 2 rc 0 collected 2 all_passed True ['2 passed, 2 warnings in 1.54s'] 2.7s
+    passed tests.test_qoder_ord0287_k8_carrier::test_K1_a_receipt_another_writer_already_filled_is_never_rewritten_and_refuses_by_name
+    passed tests.test_qoder_ord0287_k8_carrier::test_K2_my_own_unfilled_claims_do_get_filled_and_hold_my_answer
+clean run 3 rc 0 collected 2 all_passed True ['2 passed, 2 warnings in 1.68s'] 2.9s
+    passed tests.test_qoder_ord0287_k8_carrier::test_K1_a_receipt_another_writer_already_filled_is_never_rewritten_and_refuses_by_name
+    passed tests.test_qoder_ord0287_k8_carrier::test_K2_my_own_unfilled_claims_do_get_filled_and_hold_my_answer
+--- mutation: drop the only carrier of the guard ---
+kill run rc 1 collected 2 carrier hits 0 ['1 failed, 1 passed, 2 warnings in 1.69s']
+    failure tests.test_qoder_ord0287_k8_carrier::test_K1_a_receipt_another_writer_already_filled_is_never_rewritten_and_refuses_by_name
+    passed tests.test_qoder_ord0287_k8_carrier::test_K2_my_own_unfilled_claims_do_get_filled_and_hold_my_answer
+restore: carrier hits 1 sha identical to pre-mutation True
+derived_result: KILLED_CANDIDATE_ALL_ROUNDS_GREEN_AND_GUARD_IS_LOAD_BEARING
+wrote D:\moodle\_qoder_cmdr_ref_20260921\live_checks\receipts\ord0287_verify_commander.json 3244 B 6404e3689bff52634af6762a49f806da58196a99
