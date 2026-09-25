@@ -1,0 +1,14 @@
+{
+ "compared_tips": {
+  "after_pass_1": "3267f2a0c90e279606d64277540b1b9580ab5047",
+  "now": "4730253b1c6c2e3846c183da2a63587596fba63c"
+ },
+ "files_at_pass1_tip": 97,
+ "files_now": 167,
+ "overwritten_paths": [],
+ "deleted_paths": [],
+ "verdict": "IMMUTABLE_0_OVERWRITE_0_DELETE",
+ "positive_control": "the 97 names at the pass-1 tip are looked up by name in the tree at the current tip; a name whose blob differs is an overwrite and this exits non-zero",
+ "negative_control": "the gate refused two of my own pushes in this batch (a changed instrument and a changed plan summary) - see publish_plan_p2.json and the _r2 names",
+ "mutation_control": "byte-identical re-plans are counted as SKIP, not as a refusal, so the check is not merely 'any repeated name fails'"
+}
