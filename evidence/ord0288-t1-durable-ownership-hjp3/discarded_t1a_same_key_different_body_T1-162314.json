@@ -1,0 +1,54 @@
+{
+ "arm": "t1a_same_key_different_body",
+ "run_id": "T1-162314",
+ "measured_on": "dc964086c9d412573ac19d70b24b30e6c3ee6168",
+ "journey_id": "17a376b7-28ab-49c7-afb7-e2e48e2c3ea9",
+ "processes": [
+  {
+   "tag": "A",
+   "pid": 33180,
+   "port": 8611,
+   "tree": "D:\\moodle\\_hjp3_0288t1_0925\\backend",
+   "db": "D:\\moodle\\_hjp3_0288t1_0925\\t1.s3db",
+   "listening": true,
+   "exited": false,
+   "cmdline_at_start": "D:/moodle/CityNexus/.venv/Scripts/python.exe -m uvicorn app.main:app --host 127.0.0.1 --port 8611 --log-level info"
+  },
+  {
+   "tag": "B",
+   "pid": 40128,
+   "port": 8612,
+   "tree": "D:\\moodle\\_hjp3_0288t1_0925\\backend",
+   "db": "D:\\moodle\\_hjp3_0288t1_0925\\t1.s3db",
+   "listening": true,
+   "exited": false,
+   "cmdline_at_start": "D:/moodle/CityNexus/.venv/Scripts/python.exe -m uvicorn app.main:app --host 127.0.0.1 --port 8612 --log-level info"
+  }
+ ],
+ "steps": [
+  {
+   "intent": "same key, different candidate_count on the other process",
+   "response": {
+    "url": "http://127.0.0.1:8612/api/v1/journeys/17a376b7-28ab-49c7-afb7-e2e48e2c3ea9/plans/generate",
+    "method": "POST",
+    "request_body": {
+     "candidate_count": 5
+    },
+    "sent_headers": {
+     "Idempotency-Key": "ord0288-t1a-162314"
+    },
+    "status": 409,
+    "content_type": "application/json",
+    "bytes": 189,
+    "body_text": "{\"error\":{\"code\":\"CONFLICT\",\"message\":\"same idempotency key used for a different request\",\"message_key\":\"request.conflict\",\"trace_id\":\"14ca6f3d-788f-499b-9eac-9abbe188287b\",\"details\":null}}",
+    "elapsed_ms": 4,
+    "at": "16:23:14",
+    "http_error": "HTTP Error 409: Conflict"
+   },
+   "is_409": true
+  }
+ ],
+ "extra": {
+  "key": "ord0288-t1a-162314"
+ }
+}
