@@ -1,0 +1,148 @@
+{
+ "schema": "CNX_CMDR_DERIVATION_V1",
+ "order": "ORD-0300",
+ "lane": "HJ-P3 aad2d1f2",
+ "run_id": "O0300-2610",
+ "asked_in": "Canshu-King/CityNexus-Workspace issue #1 comment 5825415532",
+ "subject_blob_cited": "6e93836db5b6a5322b4b7d8c77e0e240c0aaf894",
+ "subject_bytes": 13423,
+ "recomputed_git_blob_sha1": "6e93836db5b6a5322b4b7d8c77e0e240c0aaf894",
+ "recomputed_equals_cited": true,
+ "authoritative_tip_at_run": "90d29a172e186aab6e6cb138ab4583ccf93bfa68",
+ "cells_total_declared_by_lane": 6,
+ "cells": [
+  {
+   "id": "C1_server_side_answer_on_the_contended_write",
+   "verdict": "NOT_200_BUT_UNNAMED_STILL",
+   "cell_measured_on": "90d29a172e186aab6e6cb138ab4583ccf93bfa68",
+   "generation_binding_ok": true,
+   "server_side_fields_present": 10,
+   "server_field_paths": [
+    "arms[0].bytes",
+    "arms[0].client_error",
+    "arms[0].content_type",
+    "arms[0].elapsed_ms",
+    "arms[0].http_status",
+    "last.bytes"
+   ],
+   "screen_side_fields_present": 0,
+   "screen_field_paths": [],
+   "both_sides_judged": false,
+   "why_chars": 447,
+   "derived_result_present": false
+  },
+  {
+   "id": "C2_screen_side_attribution_of_that_same_answer",
+   "verdict": "SERVER_ANSWERED_BUT_SCREEN_SAYS_UNREACHABLE",
+   "cell_measured_on": "90d29a172e186aab6e6cb138ab4583ccf93bfa68",
+   "generation_binding_ok": true,
+   "server_side_fields_present": 2,
+   "server_field_paths": [
+    "server_side_of_the_same_response.bytes",
+    "server_side_of_the_same_response.elapsed_ms"
+   ],
+   "screen_side_fields_present": 3,
+   "screen_field_paths": [
+    "detail_regions_in_dom",
+    "painted_reason_label",
+    "reproduced_without_any_instrument.detail_region_in_dom"
+   ],
+   "both_sides_judged": true,
+   "why_chars": 415,
+   "derived_result_present": false
+  },
+  {
+   "id": "C3_positive_control_the_server_channel_still_carries_words_verbatim",
+   "verdict": "SERVER_SENTENCE_QUOTED_VERBATIM_WHEN_ONE_EXISTS",
+   "cell_measured_on": "90d29a172e186aab6e6cb138ab4583ccf93bfa68",
+   "generation_binding_ok": true,
+   "server_side_fields_present": 0,
+   "server_field_paths": [],
+   "screen_side_fields_present": 3,
+   "screen_field_paths": [
+    "painted_label",
+    "sentence_length_chars",
+    "server_sentence_read_by_second_ro_connection"
+   ],
+   "both_sides_judged": false,
+   "why_chars": 701,
+   "derived_result_present": false
+  },
+  {
+   "id": "C4_write_leg_deadline_on_the_silent_origin",
+   "verdict": "WRITE_LEG_STILL_UNBOUNDED",
+   "cell_measured_on": "90d29a172e186aab6e6cb138ab4583ccf93bfa68",
+   "generation_binding_ok": true,
+   "server_side_fields_present": 1,
+   "server_field_paths": [
+    "post_client_error"
+   ],
+   "screen_side_fields_present": 0,
+   "screen_field_paths": [],
+   "both_sides_judged": false,
+   "why_chars": 377,
+   "derived_result_present": false
+  },
+  {
+   "id": "C5_is_the_named_503_reachable_on_the_user_path",
+   "verdict": "NAMED_503_NOT_REACHED_IN_TWO_SCHEDULES",
+   "cell_measured_on": "90d29a172e186aab6e6cb138ab4583ccf93bfa68",
+   "generation_binding_ok": true,
+   "server_side_fields_present": 20,
+   "server_field_paths": [
+    "schedule_two_windows_20s_20s.agent_commands.bytes",
+    "schedule_two_windows_20s_20s.agent_commands.client_error",
+    "schedule_two_windows_20s_20s.agent_commands.content_type",
+    "schedule_two_windows_20s_20s.agent_commands.elapsed_ms",
+    "schedule_two_windows_20s_20s.agent_commands.http_status",
+    "schedule_two_windows_20s_20s.plans_generate.bytes"
+   ],
+   "screen_side_fields_present": 0,
+   "screen_field_paths": [],
+   "both_sides_judged": false,
+   "why_chars": 444,
+   "derived_result_present": false
+  },
+  {
+   "id": "C6_the_same_finding_on_a_bundle_i_did_not_build",
+   "verdict": "SAME_FINDING_ON_A_FOREIGN_BUILD",
+   "cell_measured_on": "90d29a172e186aab6e6cb138ab4583ccf93bfa68",
+   "generation_binding_ok": true,
+   "server_side_fields_present": 4,
+   "server_field_paths": [
+    "reading.bytes",
+    "reading.content_type",
+    "reading.elapsed_ms",
+    "reading.http_status"
+   ],
+   "screen_side_fields_present": 2,
+   "screen_field_paths": [
+    "reading.details_in_dom",
+    "reading.painted_label"
+   ],
+   "both_sides_judged": true,
+   "why_chars": 407,
+   "derived_result_present": false
+  }
+ ],
+ "supersedes_rows": 2,
+ "supersedes_relabelled_not_deleted": false,
+ "q38_ruler": {
+  "instrument": "receipt_cell_derivation_check_r2.py",
+  "exit_code": 0,
+  "line_printed": "cells 6 | overall Q38_GATE_GREEN | hard 0 [] | soft 0 []"
+ },
+ "keep_5cell_copy": {
+  "cited_blob": "40a508e7fb4f3f482b6cb51c269584e983056254",
+  "note": "the lane preserved the earlier 5-cell bytes under RECEIPT_O0300-2610_r1_5cells.json after having published twice at the same path - recorded as a discipline breach WITH remediation, this field only states the copy exists at that sha in the tree."
+ },
+ "decisions": {
+  "blob_recompute_matches_citation": true,
+  "at_least_one_cell_measured": true,
+  "every_cell_bound_to_authoritative_tip": true,
+  "every_cell_judges_server_AND_rendered_text": false,
+  "lane_did_not_sign_its_own_derived_result": true
+ },
+ "overall": "NOT_VERIFIED_SEE_DECISIONS",
+ "scope": "Answers only: are the receipt's readings internally in order and generation-bound. Does NOT prove the product copy is fixed, does NOT sign derived_result (red team's), and does NOT judge whether the swap should carry this state to the phone."
+}
