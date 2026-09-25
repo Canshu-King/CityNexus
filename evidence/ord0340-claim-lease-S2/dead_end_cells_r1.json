@@ -1,0 +1,207 @@
+{
+ "journey_id": "22222222-2222-4222-8222-222222222222",
+ "keys": {
+  "dead": "ord0340-dead-cffc4a2e",
+  "live": "ord0340-live-c5d745ad",
+  "fresh": "ord0340-fresh-a67adad6"
+ },
+ "database": "sqlite:///D:/moodle/_qoder_s2_ord0340/db/probe.db",
+ "A_crash_after_claim": {
+  "status": 500,
+  "body": "Internal Server Error",
+  "elapsed_ms": 15,
+  "row_after": {
+   "present": true,
+   "queried_key": "plans.generate:ord0340-dead-cffc4a2e",
+   "operation": "plans.generate",
+   "response_status": null,
+   "response_json_is_null": true,
+   "response_json_bytes": 0,
+   "created_at": "2026-09-25T23:30:51.699141+00:00",
+   "expires_at": "2026-10-02T23:30:51.699141+00:00",
+   "journal_mode": "wal",
+   "idempotency_rows_in_db": 1
+  }
+ },
+ "B_replay_dead_key": {
+  "status": 409,
+  "body": "{\"error\":{\"code\":\"CONFLICT\",\"message\":\"agent idempotency record is incomplete\",\"message_key\":\"request.conflict\",\"trace_id\":\"441bf4f2-ecd1-4186-9f5b-0be4b738aca2\",\"details\":null}}",
+  "elapsed_ms": 812,
+  "row": {
+   "present": true,
+   "queried_key": "plans.generate:ord0340-dead-cffc4a2e",
+   "operation": "plans.generate",
+   "response_status": null,
+   "response_json_is_null": true,
+   "response_json_bytes": 0,
+   "created_at": "2026-09-25T23:30:51.699141+00:00",
+   "expires_at": "2026-10-02T23:30:51.699141+00:00",
+   "journal_mode": "wal",
+   "idempotency_rows_in_db": 1
+  },
+  "pid": 28708
+ },
+ "C_replay_dead_key_again": {
+  "status": 409,
+  "body": "{\"error\":{\"code\":\"CONFLICT\",\"message\":\"agent idempotency record is incomplete\",\"message_key\":\"request.conflict\",\"trace_id\":\"6f3e768e-06a9-487b-a2f1-001b5fd61d9f\",\"details\":null}}",
+  "elapsed_ms": 828,
+  "row": {
+   "present": true,
+   "queried_key": "plans.generate:ord0340-dead-cffc4a2e",
+   "operation": "plans.generate",
+   "response_status": null,
+   "response_json_is_null": true,
+   "response_json_bytes": 0,
+   "created_at": "2026-09-25T23:30:51.699141+00:00",
+   "expires_at": "2026-10-02T23:30:51.699141+00:00",
+   "journal_mode": "wal",
+   "idempotency_rows_in_db": 1
+  },
+  "pid": 31180
+ },
+ "holder_pid": 20752,
+ "D_row_null_while_worker_alive": {
+  "present": true,
+  "queried_key": "plans.generate:ord0340-live-c5d745ad",
+  "operation": "plans.generate",
+  "response_status": null,
+  "response_json_is_null": true,
+  "response_json_bytes": 0,
+  "created_at": "2026-09-25T23:30:56.953076+00:00",
+  "expires_at": "2026-10-02T23:30:56.953076+00:00",
+  "journal_mode": "wal",
+  "idempotency_rows_in_db": 2
+ },
+ "E_replay_while_alive": {
+  "status": 409,
+  "body": "{\"error\":{\"code\":\"CONFLICT\",\"message\":\"agent idempotency record is incomplete\",\"message_key\":\"request.conflict\",\"trace_id\":\"497f1d77-0a74-4707-b3d0-bf9c27436dcb\",\"details\":null}}",
+  "elapsed_ms": 828,
+  "row": {
+   "present": true,
+   "queried_key": "plans.generate:ord0340-live-c5d745ad",
+   "operation": "plans.generate",
+   "response_status": null,
+   "response_json_is_null": true,
+   "response_json_bytes": 0,
+   "created_at": "2026-09-25T23:30:56.953076+00:00",
+   "expires_at": "2026-10-02T23:30:56.953076+00:00",
+   "journal_mode": "wal",
+   "idempotency_rows_in_db": 2
+  },
+  "pid": 58888
+ },
+ "F_holder_result": {
+  "status": 201,
+  "body": "[{\"id\":\"55523d40-cafe-5bd2-b30a-de057ec7a839\",\"journey_id\":\"22222222-2222-4222-8222-222222222222\",\"version_no\":1,\"planning_mode\":\"balanced\",\"status\":\"CANDIDATE\",\"source\":\"INITIAL\",\"parent_plan_version_id\":null,\"total_cost\":{\"amount_minor\":37000,\"currency\":\"CNY\"},\"utility_score\":0.9298,\"score_breakdown\":{\"commitment_preservation\":0.98,\"stability\":0.95,\"time_reliability\":0.94,\"preference_fit\":0.92,\"",
+  "elapsed_ms": 10046,
+  "row_after": {
+   "present": true,
+   "queried_key": "plans.generate:ord0340-live-c5d745ad",
+   "operation": "plans.generate",
+   "response_status": 201,
+   "response_json_is_null": false,
+   "response_json_bytes": 37193,
+   "created_at": "2026-09-25T23:30:56.953076+00:00",
+   "expires_at": "2026-10-02T23:30:56.953076+00:00",
+   "journal_mode": "wal",
+   "idempotency_rows_in_db": 2
+  },
+  "pid": 40484
+ },
+ "G_replay_after_finished": {
+  "status": 201,
+  "body": "[{\"activities\":[{\"activity_type\":\"visit\",\"city_service_id\":null,\"cost_status\":\"UNKNOWN\",\"end_at\":\"2026-10-10T10:15:00+08:00\",\"estimated_cost\":{\"amount_minor\":0,\"currency\":\"CNY\"},\"id\":\"3a58c470-524c-5854-aa39-6c37a350eb80\",\"locked\":false,\"metadata\":{\"category\":\"heritage\",\"crs\":\"WGS84\",\"latitude\":39.1,\"longitude\":117.18,\"opening_hours\":{\"close\":\"18:00\",\"open\":\"08:30\"}},\"place_id\":\"place-old-town\",\"s",
+  "elapsed_ms": 16,
+  "row": {
+   "present": true,
+   "queried_key": "plans.generate:ord0340-live-c5d745ad",
+   "operation": "plans.generate",
+   "response_status": 201,
+   "response_json_is_null": false,
+   "response_json_bytes": 37193,
+   "created_at": "2026-09-25T23:30:56.953076+00:00",
+   "expires_at": "2026-10-02T23:30:56.953076+00:00",
+   "journal_mode": "wal",
+   "idempotency_rows_in_db": 2
+  },
+  "pid": 13192
+ },
+ "H_control_fresh_key": {
+  "status": 201,
+  "body": "[{\"id\":\"0a1dcd9c-85cc-54bc-943c-5b46d6f3426c\",\"journey_id\":\"22222222-2222-4222-8222-222222222222\",\"version_no\":2,\"planning_mode\":\"balanced\",\"status\":\"CANDIDATE\",\"source\":\"INITIAL\",\"parent_plan_version_id\":null,\"total_cost\":{\"amount_minor\":37000,\"currency\":\"CNY\"},\"utility_score\":0.9298,\"score_breakdown\":{\"commitment_preservation\":0.98,\"stability\":0.95,\"time_reliability\":0.94,\"preference_fit\":0.92,\"",
+  "elapsed_ms": 31,
+  "row": {
+   "present": true,
+   "queried_key": "plans.generate:ord0340-fresh-a67adad6",
+   "operation": "plans.generate",
+   "response_status": 201,
+   "response_json_is_null": false,
+   "response_json_bytes": 37193,
+   "created_at": "2026-09-25T23:31:09.398566+00:00",
+   "expires_at": "2026-10-02T23:31:09.398566+00:00",
+   "journal_mode": "wal",
+   "idempotency_rows_in_db": 3
+  },
+  "pid": 53572
+ },
+ "cells": {
+  "A_dead_worker_http": [
+   500,
+   "Internal Server Error"
+  ],
+  "A_row_left": {
+   "present": true,
+   "queried_key": "plans.generate:ord0340-dead-cffc4a2e",
+   "operation": "plans.generate",
+   "response_status": null,
+   "response_json_is_null": true,
+   "response_json_bytes": 0,
+   "created_at": "2026-09-25T23:30:51.699141+00:00",
+   "expires_at": "2026-10-02T23:30:51.699141+00:00",
+   "journal_mode": "wal",
+   "idempotency_rows_in_db": 1
+  },
+  "B_dead_replay": [
+   409,
+   812,
+   true,
+   "2026-10-02T23:30:51.699141+00:00"
+  ],
+  "C_second_replay_same": [
+   409,
+   true
+  ],
+  "D_null_row_while_alive": {
+   "present": true,
+   "queried_key": "plans.generate:ord0340-live-c5d745ad",
+   "operation": "plans.generate",
+   "response_status": null,
+   "response_json_is_null": true,
+   "response_json_bytes": 0,
+   "created_at": "2026-09-25T23:30:56.953076+00:00",
+   "expires_at": "2026-10-02T23:30:56.953076+00:00",
+   "journal_mode": "wal",
+   "idempotency_rows_in_db": 2
+  },
+  "E_alive_replay": [
+   409,
+   828,
+   true
+  ],
+  "F_alive_worker_final": 201,
+  "G_replay_after_it_finished": [
+   201,
+   16,
+   true
+  ],
+  "H_fresh_key": 201,
+  "pids": [
+   38896,
+   20752,
+   28708,
+   58888,
+   13192
+  ],
+  "cross_process_all_distinct": true
+ }
+}
