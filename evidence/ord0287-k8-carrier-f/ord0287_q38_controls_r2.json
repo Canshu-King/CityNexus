@@ -1,0 +1,317 @@
+{
+ "selftest": {
+  "rc": 0,
+  "overall": null,
+  "cells_found": null,
+  "hard_codes": null,
+  "soft_codes": null,
+  "stdout_tail": [
+   "  arm S7_short_verdict_no_why cells 2 got Q38_GATE_RED_HARD ['MISSING_WHY'] | want Q38_GATE_RED_HARD ['MISSING_WHY'] -> ok",
+   "  arm S8_sibling_cells_no_container cells 2 got Q38_GATE_GREEN [] | want Q38_GATE_GREEN [] -> ok",
+   "  arm S9_paired_map_entry cells 2 got Q38_GATE_GREEN [] | want Q38_GATE_GREEN [] -> ok"
+  ]
+ },
+ "r2": {
+  "rc": 0,
+  "overall": "Q38_GATE_GREEN",
+  "cells_found": 9,
+  "hard_codes": [],
+  "soft_codes": [],
+  "stdout_tail": [
+   "  cell S9_two_state_repeats_on_the_github_export | why_source why | why tokens 4 | own hits 4 | unique hits 0 | shares why with []",
+   "meaning: no shared literal and every sentence names its own readings",
+   "wrote D:\\moodle\\_qoder_f_run\\o225_receipts\\q38_out_r2.json 6886 B"
+  ]
+ },
+ "r2_cells_detail": [
+  {
+   "id": "S1_K1_green_on_authoritative_line",
+   "own_token_count": 16,
+   "why_token_count": 6,
+   "own_hits": 5,
+   "shares_why_with": []
+  },
+  {
+   "id": "S2_K1_red_when_guard_removed",
+   "own_token_count": 24,
+   "why_token_count": 5,
+   "own_hits": 5,
+   "shares_why_with": []
+  },
+  {
+   "id": "S3_K2_positive_control_green_both_states",
+   "own_token_count": 27,
+   "why_token_count": 4,
+   "own_hits": 4,
+   "shares_why_with": []
+  },
+  {
+   "id": "S4_mutation_is_one_line_and_compiles",
+   "own_token_count": 10,
+   "why_token_count": 7,
+   "own_hits": 7,
+   "shares_why_with": []
+  },
+  {
+   "id": "S5_tree_restored_byte_exact",
+   "own_token_count": 3,
+   "why_token_count": 3,
+   "own_hits": 1,
+   "shares_why_with": []
+  },
+  {
+   "id": "S6_candidate_is_test_only_on_authoritative_parent",
+   "own_token_count": 12,
+   "why_token_count": 5,
+   "own_hits": 5,
+   "shares_why_with": []
+  },
+  {
+   "id": "S7_frozen_tip_is_externally_readable",
+   "own_token_count": 13,
+   "why_token_count": 7,
+   "own_hits": 7,
+   "shares_why_with": []
+  },
+  {
+   "id": "S8_verbatim_port_is_refused_at_import",
+   "own_token_count": 13,
+   "why_token_count": 7,
+   "own_hits": 7,
+   "shares_why_with": []
+  },
+  {
+   "id": "S9_two_state_repeats_on_the_github_export",
+   "own_token_count": 33,
+   "why_token_count": 4,
+   "own_hits": 4,
+   "shares_why_with": []
+  }
+ ],
+ "controls_behave_as_named": {
+  "r2_green": true,
+  "r2_cells_equal_declared": true,
+  "r2_no_soft_no_hard": true,
+  "selftest_rc0": true,
+  "killer_shared_hard": true,
+  "killer_dup_sentence_hard": true,
+  "killer_fake_derived_from_hard": true,
+  "killer_soft_no_token_only": true,
+  "killer_soft_not_own_readings": true,
+  "killer_missing_why_hard": true,
+  "boundary_long_verdict_falls_back_to_prose": true
+ },
+ "killer_shared_sentence": {
+  "rc": 3,
+  "overall": "Q38_GATE_RED_HARD",
+  "cells_found": 9,
+  "hard_codes": [
+   "DUPLICATE_WHY_LITERALS"
+  ],
+  "soft_codes": [
+   "WHY_CARRIES_NO_EVIDENCE_TOKEN"
+  ],
+  "stdout_tail": [
+   "  finding DUPLICATE_WHY_LITERALS HARD ['S1_K1_green_on_authoritative_line', 'S5_tree_restored_byte_exact'] | 2 cells share one folded-identical sentence; 2 of them have no effective derived_from",
+   "meaning: at least one cell cannot be read as its own evidence",
+   "wrote D:\\moodle\\_qoder_f_run\\o225_receipts\\q38_out_killer_shared.json 7229 B"
+  ]
+ },
+ "killer_unique_but_no_evidence_token": {
+  "rc": 0,
+  "overall": "Q38_GATE_SOFT_FINDINGS",
+  "cells_found": 9,
+  "hard_codes": [],
+  "soft_codes": [
+   "WHY_CARRIES_NO_EVIDENCE_TOKEN"
+  ],
+  "stdout_tail": [
+   "  finding WHY_CARRIES_NO_EVIDENCE_TOKEN soft S9_two_state_repeats_on_the_github_export | the sentence names nothing machine-checkable (no hash/number/route/filename)",
+   "meaning: no hard defect, but some sentences carry nothing machine-checkable",
+   "wrote D:\\moodle\\_qoder_f_run\\o225_receipts\\q38_out_killer_unique_but_no_evidence_token.json 6369 B"
+  ],
+  "words_containing_GREEN_printed": []
+ },
+ "killer_unique_but_tokens_not_own_readings": {
+  "rc": 0,
+  "overall": "Q38_GATE_SOFT_FINDINGS",
+  "cells_found": 9,
+  "hard_codes": [],
+  "soft_codes": [
+   "WHY_NOT_FROM_OWN_READINGS"
+  ],
+  "stdout_tail": [
+   "  finding WHY_NOT_FROM_OWN_READINGS soft S9_two_state_repeats_on_the_github_export | 0 of 1 tokens in this cell's sentence appear in that cell's own readings",
+   "meaning: no hard defect, but some sentences carry nothing machine-checkable",
+   "wrote D:\\moodle\\_qoder_f_run\\o225_receipts\\q38_out_killer_unique_but_tokens_not_own_readings.json 5544 B"
+  ],
+  "words_containing_GREEN_printed": []
+ },
+ "killer_missing_why_short_verdict": {
+  "rc": 3,
+  "overall": "Q38_GATE_RED_HARD",
+  "cells_found": 9,
+  "hard_codes": [
+   "MISSING_WHY"
+  ],
+  "soft_codes": [],
+  "stdout_tail": [
+   "  finding MISSING_WHY HARD S2_K1_red_when_guard_removed | no why field, verdict too short to be prose, no paired map entry",
+   "meaning: at least one cell cannot be read as its own evidence",
+   "wrote D:\\moodle\\_qoder_f_run\\o225_receipts\\q38_out_killer_missing_why_short_verdict.json 6310 B"
+  ],
+  "words_containing_GREEN_printed": []
+ },
+ "boundary_missing_why_long_verdict": {
+  "rc": 0,
+  "overall": "Q38_GATE_SOFT_FINDINGS",
+  "cells_found": 9,
+  "hard_codes": [],
+  "soft_codes": [
+   "WHY_NOT_FROM_OWN_READINGS"
+  ],
+  "stdout_tail": [
+   "  finding WHY_NOT_FROM_OWN_READINGS soft S2_K1_red_when_guard_removed | 0 of 1 tokens in this cell's sentence appear in that cell's own readings",
+   "meaning: no hard defect, but some sentences carry nothing machine-checkable",
+   "wrote D:\\moodle\\_qoder_f_run\\o225_receipts\\q38_out_boundary_missing_why_long_verdict.json 6528 B"
+  ],
+  "words_containing_GREEN_printed": []
+ },
+ "killer_all_cells_one_sentence": {
+  "rc": 3,
+  "overall": "Q38_GATE_RED_HARD",
+  "cells_found": 9,
+  "hard_codes": [
+   "DUPLICATE_WHY_LITERALS"
+  ],
+  "soft_codes": [
+   "WHY_CARRIES_NO_EVIDENCE_TOKEN"
+  ],
+  "stdout_tail": [
+   "  finding DUPLICATE_WHY_LITERALS HARD ['S1_K1_green_on_authoritative_line', 'S2_K1_red_when_guard_removed', 'S3_K2_positive_control_green_both_states', 'S4_mutation_is_one_line_and_compiles', 'S5_tree_restored_byte_exact', 'S6_candidate_is_test_only_on_authoritative_parent', 'S7_frozen_tip_is_externally_readable', 'S8_verbatim_port_is_refused_at_import', 'S9_two_state_repeats_on_the_github_export'] | 9 cells share one folded-identical sentence; 9 of them have no effective derived_from",
+   "meaning: at least one cell cannot be read as its own evidence",
+   "wrote D:\\moodle\\_qoder_f_run\\o225_receipts\\q38_out_killer_notoken.json 9771 B"
+  ]
+ },
+ "killer_fake_derived_from": {
+  "rc": 3,
+  "overall": "Q38_GATE_RED_HARD",
+  "cells_found": 9,
+  "hard_codes": [
+   "DUPLICATE_WHY_LITERALS",
+   "FAKE_OR_INEFFECTIVE_DERIVED_FROM"
+  ],
+  "soft_codes": [
+   "WHY_CARRIES_NO_EVIDENCE_TOKEN"
+  ],
+  "stdout_tail": [
+   "  finding DUPLICATE_WHY_LITERALS HARD ['S1_K1_green_on_authoritative_line', 'S5_tree_restored_byte_exact'] | 2 cells share one folded-identical sentence; 2 of them have no effective derived_from",
+   "meaning: at least one cell cannot be read as its own evidence",
+   "wrote D:\\moodle\\_qoder_f_run\\o225_receipts\\q38_out_killer_fakedf.json 7729 B"
+  ]
+ },
+ "gate_on_r1_artifacts": [
+  {
+   "artifact": "candidate_commit_facts.json",
+   "artifact_blob": "e86c2b8a2a1d8085f99d5ed47f71d96643bafe1e",
+   "artifact_bytes": 2803,
+   "rc": 4,
+   "stdout_tail": [
+    "receipt pub_candidate_commit_facts.json 2803 B blob_sha1 e86c2b8a2a1d8085f99d5ed47f71d96643bafe1e",
+    "cells 0 | overall NOT_ASSESSABLE | hard None None | soft None None",
+    "meaning: fewer than 2 assessable cells -- this is NOT a pass and NOT a gate run",
+    "wrote q38_on_f\\gate_candidate_commit_facts.json 327 B"
+   ],
+   "overall": "NOT_ASSESSABLE",
+   "cells_found": 0,
+   "hard": [],
+   "soft": [],
+   "cells": []
+  },
+  {
+   "artifact": "frozen_tip_addendum_r1.json",
+   "artifact_blob": "5d140a6b961d7adf0eff5ca2ca54e31d421184c4",
+   "artifact_bytes": 1746,
+   "rc": 4,
+   "stdout_tail": [
+    "receipt pub_frozen_tip_addendum_r1.json 1746 B blob_sha1 5d140a6b961d7adf0eff5ca2ca54e31d421184c4",
+    "cells 1 | overall NOT_ASSESSABLE | hard None None | soft None None",
+    "meaning: fewer than 2 assessable cells -- this is NOT a pass and NOT a gate run",
+    "wrote q38_on_f\\gate_frozen_tip_addendum_r1.json 327 B"
+   ],
+   "overall": "NOT_ASSESSABLE",
+   "cells_found": 1,
+   "hard": [],
+   "soft": [],
+   "cells": []
+  },
+  {
+   "artifact": "ord0287_step0_portability.json",
+   "artifact_blob": "3197c26db9702a40eb773db21c42565c7f912579",
+   "artifact_bytes": 3940,
+   "rc": 4,
+   "stdout_tail": [
+    "receipt pub_ord0287_step0_portability.json 3940 B blob_sha1 3197c26db9702a40eb773db21c42565c7f912579",
+    "cells 0 | overall NOT_ASSESSABLE | hard None None | soft None None",
+    "meaning: fewer than 2 assessable cells -- this is NOT a pass and NOT a gate run",
+    "wrote q38_on_f\\gate_ord0287_step0_portability.json 330 B"
+   ],
+   "overall": "NOT_ASSESSABLE",
+   "cells_found": 0,
+   "hard": [],
+   "soft": [],
+   "cells": []
+  },
+  {
+   "artifact": "ref_readback.json",
+   "artifact_blob": "d57e6dc730a12442cdbb856ed61dd63f06f1e5fd",
+   "artifact_bytes": 299,
+   "rc": 4,
+   "stdout_tail": [
+    "receipt pub_ref_readback.json 299 B blob_sha1 d57e6dc730a12442cdbb856ed61dd63f06f1e5fd",
+    "cells 0 | overall NOT_ASSESSABLE | hard None None | soft None None",
+    "meaning: fewer than 2 assessable cells -- this is NOT a pass and NOT a gate run",
+    "wrote q38_on_f\\gate_ref_readback.json 316 B"
+   ],
+   "overall": "NOT_ASSESSABLE",
+   "cells_found": 0,
+   "hard": [],
+   "soft": [],
+   "cells": []
+  },
+  {
+   "artifact": "two_state_on_candidate.json",
+   "artifact_blob": "94a106942d5a7d7a5c1ba704b38472469d66460a",
+   "artifact_bytes": 5074,
+   "rc": 4,
+   "stdout_tail": [
+    "receipt pub_two_state_on_candidate.json 5074 B blob_sha1 94a106942d5a7d7a5c1ba704b38472469d66460a",
+    "cells 0 | overall NOT_ASSESSABLE | hard None None | soft None None",
+    "meaning: fewer than 2 assessable cells -- this is NOT a pass and NOT a gate run",
+    "wrote q38_on_f\\gate_two_state_on_candidate.json 327 B"
+   ],
+   "overall": "NOT_ASSESSABLE",
+   "cells_found": 0,
+   "hard": [],
+   "soft": [],
+   "cells": []
+  },
+  {
+   "artifact": "two_state_on_landed_export.json",
+   "artifact_blob": "49d2bba73d09a9fa15373198b73c4f6046577265",
+   "artifact_bytes": 5068,
+   "rc": 4,
+   "stdout_tail": [
+    "receipt pub_two_state_on_landed_export.json 5068 B blob_sha1 49d2bba73d09a9fa15373198b73c4f6046577265",
+    "cells 0 | overall NOT_ASSESSABLE | hard None None | soft None None",
+    "meaning: fewer than 2 assessable cells -- this is NOT a pass and NOT a gate run",
+    "wrote q38_on_f\\gate_two_state_on_landed_export.json 331 B"
+   ],
+   "overall": "NOT_ASSESSABLE",
+   "cells_found": 0,
+   "hard": [],
+   "soft": [],
+   "cells": []
+  }
+ ]
+}
