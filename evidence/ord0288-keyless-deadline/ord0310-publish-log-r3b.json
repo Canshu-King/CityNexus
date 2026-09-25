@@ -1,0 +1,18 @@
+{
+ "ord0310-publish-log-r2.json": {
+  "exit": 0,
+  "fresh_path": true,
+  "identical_skipped": false,
+  "refused": [],
+  "proof_line": "PROOF (git blob sha1 equality): BYTE-LEVEL MATCH   local bytes 7528 | remote size 7528 | sha1 e6589f871103f1d8",
+  "bytes": 7528
+ },
+ "ord0310-publish-log-r2b.json": {
+  "exit": 0,
+  "fresh_path": true,
+  "identical_skipped": false,
+  "refused": [],
+  "proof_line": "PROOF (git blob sha1 equality): BYTE-LEVEL MATCH   local bytes 1083 | remote size 1083 | sha1 4129809a1490241b",
+  "bytes": 1083
+ }
+}
