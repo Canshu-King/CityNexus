@@ -1,0 +1,8 @@
+HELD round 1 at 10:25:53 rows_touched=2
+SELFPROOF: second writer refused with 'database is locked'
+ARMED round 1 - browser legs may fire now
+RELEASED round 1 at 10:26:13
+HELD round 2 at 10:26:16 rows_touched=2
+SELFPROOF: second writer refused with 'database is locked'
+ARMED round 2 - browser legs may fire now
+RELEASED round 2 at 10:27:01
