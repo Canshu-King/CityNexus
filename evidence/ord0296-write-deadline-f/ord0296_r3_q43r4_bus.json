@@ -1,0 +1,25 @@
+{
+ "version": "Q43_r4",
+ "input": "C:\\Users\\仓鼠王\\AppData\\Local\\Temp\\q43r4_bus.md",
+ "bytes": 3111,
+ "lines": 21,
+ "claims_checked": 12,
+ "exempt_classes": {},
+ "verdict": "Q43_GATE_RED",
+ "exit_code": 3,
+ "findings": [
+  {
+   "kind": "F3_bare_numeric_claim",
+   "matched": "0 件",
+   "code": "NUMBER_WITHOUT_COORDINATE",
+   "line": 19,
+   "why_classified_as_quantity": "no class matched",
+   "seen_coordinate": null
+  }
+ ],
+ "finding_kinds": [
+  "NUMBER_WITHOUT_COORDINATE"
+ ],
+ "finding_total": 1,
+ "scope": "Numeric/constant/relay claims in the text. A green verdict here means every quantity carries a durable coordinate - it does not mean the measurements are correct, and it does not sign derived_result."
+}
