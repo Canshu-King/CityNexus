@@ -1,0 +1,98 @@
+{
+ "arm": "t1a_same_key_different_body",
+ "run_id": "T1-162438",
+ "measured_on": "dc964086c9d412573ac19d70b24b30e6c3ee6168",
+ "journey_id": "633fec87-ee5b-4c05-b8c1-b19cb7e99f2e",
+ "processes": [
+  {
+   "tag": "A",
+   "pid": 37392,
+   "port": 8611,
+   "tree": "D:\\moodle\\_hjp3_0288t1_0925\\backend",
+   "db": "D:\\moodle\\_hjp3_0288t1_0925\\t1.s3db",
+   "listening": true,
+   "exited": false,
+   "cmdline_at_start": "D:/moodle/CityNexus/.venv/Scripts/python.exe -m uvicorn app.main:app --host 127.0.0.1 --port 8611 --log-level info"
+  },
+  {
+   "tag": "B",
+   "pid": 44668,
+   "port": 8612,
+   "tree": "D:\\moodle\\_hjp3_0288t1_0925\\backend",
+   "db": "D:\\moodle\\_hjp3_0288t1_0925\\t1.s3db",
+   "listening": true,
+   "exited": false,
+   "cmdline_at_start": "D:/moodle/CityNexus/.venv/Scripts/python.exe -m uvicorn app.main:app --host 127.0.0.1 --port 8612 --log-level info"
+  }
+ ],
+ "steps": [
+  {
+   "intent": "same key, different candidate_count on the other process",
+   "response": {
+    "url": "http://127.0.0.1:8612/api/v1/journeys/633fec87-ee5b-4c05-b8c1-b19cb7e99f2e/plans/generate",
+    "method": "POST",
+    "request_body": {
+     "candidate_count": 5
+    },
+    "sent_headers": {
+     "Idempotency-Key": "ord0288-t1a-162438"
+    },
+    "status": 409,
+    "content_type": "application/json",
+    "bytes": 189,
+    "body_text": "{\"error\":{\"code\":\"CONFLICT\",\"message\":\"same idempotency key used for a different request\",\"message_key\":\"request.conflict\",\"trace_id\":\"b6896154-53c3-479c-bea3-86f169c2cea3\",\"details\":null}}",
+    "elapsed_ms": 4,
+    "at": "16:24:38",
+    "http_error": "HTTP Error 409: Conflict"
+   },
+   "is_409": true
+  }
+ ],
+ "extra": {
+  "key": "ord0288-t1a-162438"
+ },
+ "durable_read_after": {
+  "connection_uri": "file:D:/moodle/_hjp3_0288t1_0925/t1.s3db?mode=ro",
+  "db_exists": true,
+  "idempotency_keys": [
+   {
+    "key": "plans.generate:ord0288-t1a-162438",
+    "operation": "plans.generate",
+    "request_hash_head": "{\"candidate_coun",
+    "response_status": 422,
+    "response_json_bytes": 1424,
+    "response_json_head": "{\"refusal\": {\"detail\": \"No feasible plan candidates satisfy the journey constraints\", \"error_details\": {\"candidate_rejections\": [{\"candidate_sequence\": 0, \"failures\": [\"JOURNEY_WINDOW_EXCEEDED\"], \"hard_rule_codes\": [], \"",
+    "created_at": "2026-09-25T08:24:38.884241+00:00",
+    "expires_at": "2026-10-02T08:24:38.884241+00:00"
+   }
+  ],
+  "counts": {
+   "plan_versions": 0,
+   "journeys": 2,
+   "journey_missions": 0,
+   "audit_logs": 5,
+   "replan_proposals": 0
+  },
+  "total_idempotency_rows_all_keys": 1,
+  "names_the_store": "D:\\moodle\\_hjp3_0288t1_0925\\t1.s3db",
+  "this_arms_keys": [
+   "ord0288-t1a-162438",
+   "ord0288-t1c-162438",
+   "ord0288-t1b-162438",
+   "x",
+   "ord0288-after-badkey"
+  ],
+  "rows_for_this_arms_keys": [
+   {
+    "key": "plans.generate:ord0288-t1a-162438",
+    "operation": "plans.generate",
+    "request_hash_head": "{\"candidate_coun",
+    "response_status": 422,
+    "response_json_bytes": 1424,
+    "response_json_head": "{\"refusal\": {\"detail\": \"No feasible plan candidates satisfy the journey constraints\", \"error_details\": {\"candidate_rejections\": [{\"candidate_sequence\": 0, \"failures\": [\"JOURNEY_WINDOW_EXCEEDED\"], \"hard_rule_codes\": [], \"",
+    "created_at": "2026-09-25T08:24:38.884241+00:00",
+    "expires_at": "2026-10-02T08:24:38.884241+00:00"
+   }
+  ]
+ }
+}
