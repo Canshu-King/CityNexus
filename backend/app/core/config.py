@@ -85,6 +85,16 @@ class Settings:
     )
     solver_random_seed: int = int(os.getenv("CITYNEXUS_SOLVER_RANDOM_SEED", "1"))
     solver_max_time_seconds: float = float(os.getenv("CITYNEXUS_SOLVER_MAX_TIME_SECONDS", "1.0"))
+    # ORD-0296 (ORD-0281's backend half): the server's own bound on a write attempt, and the only
+    # place SQLite's lock wait is configured.  `write_busy_timeout_ms` is what the engine actually
+    # hands to SQLite; `write_deadline_ms` is the budget a caller declares for the whole write, and
+    # `effective_busy_timeout_ms()` caps the wait by it.  A deadline at or below the lock wait is
+    # rejected at the doors: it would make *my configuration* the reason a write gave up, which is
+    # how a deadline ends up impersonating the server (ORD-0281 T-b).  Per-scenario values come from
+    # `write_deadline_scenarios` so one route can be tightened without moving everyone's default.
+    write_busy_timeout_ms: int = int(os.getenv("CITYNEXUS_WRITE_BUSY_TIMEOUT_MS", "30000"))
+    write_deadline_ms: int = int(os.getenv("CITYNEXUS_WRITE_DEADLINE_MS", "45000"))
+    write_deadline_scenarios: str = os.getenv("CITYNEXUS_WRITE_DEADLINE_SCENARIOS", "")
     # Process-ownership token for the authoritative frontend E2E gate.  The suite
     # starts its own backend with a per-run value and refuses to trust a /health
     # that does not echo it, so a server belonging to another checkout or another

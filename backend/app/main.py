@@ -161,6 +161,15 @@ from app.db.models import (
     ReplanProposal as ReplanProposalModel,
 )
 from app.db.session import SessionLocal, engine, ensure_schema, get_session
+from app.db.write_deadline import (
+    SCENARIO_AGENT_COMMANDS,
+    SCENARIO_PLANS_GENERATE,
+    WriteDeadlineExceeded,
+    assert_configuration_reachable,
+    commit_within_budget,
+    start_request_budget,
+    write_attempt,
+)
 from app.execution.clock import execution_clock
 from app.execution.traveler_twin import (
     clear_learned,
@@ -415,6 +424,7 @@ from app.anywhere_capability import (
     evaluate_capability,
 )
 
+assert_configuration_reachable()   # ORD-0296: refuse to boot a deadline that cannot mean anything
 ensure_schema()
 # Rows still open at this point were left by a process that no longer exists, so no thread
 # here can ever finish them; they are closed as WORKER_LOST rather than left to be polled
@@ -587,6 +597,17 @@ TEMPORAL_MESSAGE_KEYS = {
     "V13_JOURNEY_DAYS_OUT_OF_BOUNDS": "journey.days_out_of_bounds",
     "V13_INVALID_ANCHOR_WINDOW": "journey.anchor_order",
 }
+
+
+@app.exception_handler(WriteDeadlineExceeded)
+def write_deadline_answer(_: Request, exc: WriteDeadlineExceeded) -> JSONResponse:
+    """The server's own words for "I ran out of write budget".
+
+    ORD-0280 lets a screen show what the server said and nothing else, so this has to be a sentence
+    the server actually produced, carrying the two numbers a reader can check it against.
+    """
+
+    return error(exc.code, str(exc), status=503, details=exc.details())
 
 
 @app.exception_handler(ValueError)
@@ -1061,6 +1082,7 @@ def run_agent_command(
     session: Session = Depends(get_session),
 ):
     journey = require(session, Journey, str(journey_id), "Journey")
+    start_request_budget(SCENARIO_AGENT_COMMANDS)
     now_dt = datetime.now(timezone.utc)
     now = now_dt.isoformat()
     interpretation = _copilot_fallback_or_ai(payload.command, _copilot_context(session, journey))
@@ -1071,85 +1093,86 @@ def run_agent_command(
         else None
     )
     event = None
-    if event_type is not None:
-        semantic = interpretation.semantic_envelope or {
-            "assertion_status": interpretation.entities.get("assertion_status", "ASSERTED"),
-            "effective_time": interpretation.entities.get("effective_time", "NOW"),
-            "entities": dict(interpretation.entities),
-        }
-        target = resolve_event_target(
+    with write_attempt(SCENARIO_AGENT_COMMANDS):
+        if event_type is not None:
+            semantic = interpretation.semantic_envelope or {
+                "assertion_status": interpretation.entities.get("assertion_status", "ASSERTED"),
+                "effective_time": interpretation.entities.get("effective_time", "NOW"),
+                "entities": dict(interpretation.entities),
+            }
+            target = resolve_event_target(
+                session,
+                journey,
+                event_type=event_type,
+                semantic=semantic,
+                now=now_dt,
+            )
+            if target.resolution == "UNRESOLVED_REVIEW_REQUIRED":
+                return {
+                    "mission": None,
+                    "event_id": None,
+                    "review_required": True,
+                    "event": {
+                        "id": None,
+                        "event_type": event_type,
+                        "status": "REVIEW_REQUIRED",
+                        "affected_activity_id": None,
+                        "occurred_at": None,
+                        "target_resolution": target.resolution,
+                        "effective_time": str(semantic.get("effective_time") or "FUTURE").upper(),
+                    },
+                }
+            resolved = target.resolution != "UNRESOLVED_REVIEW_REQUIRED"
+            event = EventModel(
+                id=str(uuid4()),
+                journey_id=journey.id,
+                provider_key="user-command",
+                provenance="USER_REPORTED",
+                event_type=event_type,
+                severity=disruption_severity(payload.command, event_type),
+                status="DETECTED",
+                # A free-text disruption is scoped to the server's current
+                # execution position. The model may describe the event, but it
+                # must not invent an Activity target.
+                affected_activity_id=target.activity_id,
+                occurred_at=target.occurred_at or now,
+                detected_at=now,
+                payload_json=json.dumps(
+                    {
+                        "description": payload.command,
+                        "source": "agent_command",
+                        "extra_minutes": 15 if event_type == "TRAFFIC_DELAY" else None,
+                        "semantic": {**semantic, "target_resolution": target.resolution},
+                    },
+                    ensure_ascii=False,
+                    sort_keys=True,
+                ),
+                created_at=now,
+            )
+            session.add(event)
+            session.flush()
+        mission = create_mission(
             session,
             journey,
-            event_type=event_type,
-            semantic=semantic,
-            now=now_dt,
+            command=payload.command,
+            requested_autonomy=payload.requested_autonomy,
+            trigger_event_id=event.id if event else None,
         )
-        if target.resolution == "UNRESOLVED_REVIEW_REQUIRED":
-            return {
-                "mission": None,
-                "event_id": None,
-                "review_required": True,
-                "event": {
-                    "id": None,
-                    "event_type": event_type,
-                    "status": "REVIEW_REQUIRED",
-                    "affected_activity_id": None,
-                    "occurred_at": None,
-                    "target_resolution": target.resolution,
-                    "effective_time": str(semantic.get("effective_time") or "FUTURE").upper(),
-                },
-            }
-        resolved = target.resolution != "UNRESOLVED_REVIEW_REQUIRED"
-        event = EventModel(
-            id=str(uuid4()),
+        record_audit(
+            session,
+            action="agent.mission.created",
+            entity_type="JourneyMission",
+            entity_id=mission.id,
             journey_id=journey.id,
-            provider_key="user-command",
-            provenance="USER_REPORTED",
-            event_type=event_type,
-            severity=disruption_severity(payload.command, event_type),
-            status="DETECTED",
-            # A free-text disruption is scoped to the server's current
-            # execution position. The model may describe the event, but it
-            # must not invent an Activity target.
-            affected_activity_id=target.activity_id,
-            occurred_at=target.occurred_at or now,
-            detected_at=now,
-            payload_json=json.dumps(
-                {
-                    "description": payload.command,
-                    "source": "agent_command",
-                    "extra_minutes": 15 if event_type == "TRAFFIC_DELAY" else None,
-                    "semantic": {**semantic, "target_resolution": target.resolution},
-                },
-                ensure_ascii=False,
-                sort_keys=True,
-            ),
-            created_at=now,
+            actor_type="USER",
+            actor_id=journey.traveler_id,
+            after={
+                "mission_id": mission.id,
+                "event_id": event.id if event else None,
+                "requested_autonomy": mission.requested_autonomy,
+            },
         )
-        session.add(event)
-        session.flush()
-    mission = create_mission(
-        session,
-        journey,
-        command=payload.command,
-        requested_autonomy=payload.requested_autonomy,
-        trigger_event_id=event.id if event else None,
-    )
-    record_audit(
-        session,
-        action="agent.mission.created",
-        entity_type="JourneyMission",
-        entity_id=mission.id,
-        journey_id=journey.id,
-        actor_type="USER",
-        actor_id=journey.traveler_id,
-        after={
-            "mission_id": mission.id,
-            "event_id": event.id if event else None,
-            "requested_autonomy": mission.requested_autonomy,
-        },
-    )
-    session.commit()
+        commit_within_budget(session, SCENARIO_AGENT_COMMANDS)
     native_status = native_hermes_status()
     if native_status.get("ready"):
         native = HermesNativeClient()
@@ -1186,7 +1209,7 @@ def run_agent_command(
             )
             mission.status = "RUNNING"
             mission.started_at = datetime.now(timezone.utc).isoformat()
-            session.commit()
+            commit_within_budget(session, SCENARIO_AGENT_COMMANDS)
             initial_events = _native_citynexus_events(
                 run_id=native_run.run_id,
                 journey_id=journey.id,
@@ -1222,7 +1245,7 @@ def run_agent_command(
                 actor_type="SYSTEM",
                 after={"reason": str(exc)},
             )
-            session.commit()
+            commit_within_budget(session, SCENARIO_AGENT_COMMANDS)
         finally:
             native.close()
     if not settings.ai_api_key and not (settings.hermes_api_url and settings.hermes_api_key):
@@ -4624,6 +4647,7 @@ def generate_journey_plans(
     """
 
     journey = require(session, Journey, str(journey_id), "Journey")
+    start_request_budget(SCENARIO_PLANS_GENERATE)
     request = payload or GeneratePlansRequest()
     transport_key: str | None = None
     if idempotency_key is not None:
@@ -4721,7 +4745,8 @@ def _claim_plan_generation(keys: list[str], signature: str, session: Session,
                         expires_at=(now + timedelta(days=7)).isoformat(),
                     )
                 )
-            claim_tx.commit()
+            with write_attempt(SCENARIO_PLANS_GENERATE):
+                claim_tx.commit()
         except IntegrityError as exc:
             claim_tx.rollback()
             raced = _replay_plan_generation(session, keys, signature, wait=True)
@@ -4742,7 +4767,7 @@ def _execute_plan_generation_claimed(journey: Journey, request: GeneratePlansReq
     重发时仍由同一个 handler 渲染，所以"复用现成信封"不是我的口号而是唯一的一条路。
     """
 
-    with engine.begin() as work_conn:
+    with write_attempt(SCENARIO_PLANS_GENERATE), engine.begin() as work_conn:
         work_session = Session(bind=work_conn, expire_on_commit=False)
         try:
             try:

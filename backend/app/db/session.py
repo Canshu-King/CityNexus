@@ -11,6 +11,8 @@ from sqlalchemy.orm import Session, sessionmaker
 from sqlalchemy.pool import StaticPool
 
 from app.core.config import settings
+from app.db.write_deadline import busy_timeout_ms as write_busy_timeout_ms
+from app.db.write_deadline import busy_timeout_seconds as write_busy_timeout_seconds
 
 ROOT = Path(__file__).resolve().parents[2]
 SCHEMA_PATH = ROOT / "db" / "schema.sql"
@@ -52,7 +54,8 @@ def make_engine(database_url: str | None = None) -> Engine:
         # the Guardian worker against one SQLite file.  Let the writer wait
         # for the short transaction already in progress instead of surfacing
         # a spurious `database is locked` failure to the Agent run.
-        kwargs["connect_args"] = {"check_same_thread": False, "timeout": 30}
+        kwargs["connect_args"] = {"check_same_thread": False,
+                                  "timeout": write_busy_timeout_seconds()}
         if url in {"sqlite://", "sqlite:///:memory:"}:
             kwargs["poolclass"] = StaticPool
     created = create_engine(url, **kwargs)
@@ -62,7 +65,7 @@ def make_engine(database_url: str | None = None) -> Engine:
             cursor = dbapi_connection.cursor()
             try:
                 cursor.execute("PRAGMA foreign_keys=ON")
-                cursor.execute("PRAGMA busy_timeout=30000")
+                cursor.execute(f"PRAGMA busy_timeout={write_busy_timeout_ms()}")
                 if created.url.database not in {None, ":memory:"}:
                     cursor.execute("PRAGMA journal_mode=WAL")
             finally:
