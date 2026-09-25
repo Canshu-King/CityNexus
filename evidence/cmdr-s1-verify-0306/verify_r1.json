@@ -1,0 +1,69 @@
+{
+ "schema": "CNX_CMDR_S1_SWEEP_VERIFICATION_V1",
+ "lane": "commander 494abfd7",
+ "at_local": "2026-09-26T03:07:03+0800",
+ "generation": "30de4ebe409f49c5e25f4758cb2e5f4e90764a4f",
+ "rulers": {
+  "r2": "608016f6a538097041554b76cfe3e9a4192f299c",
+  "r3": "44e062e6ce9c7b5d97d78e09e432072da102292c"
+ },
+ "method": "git archive <generation> frontend/src | tar -x into a commander-private scratch dir, then the ruler binary itself per 20-file chunk via --file --out; no imports, no rewritten regex, product tree never touched",
+ "independent_scan": {
+  "files_scanned": 74,
+  "hits_r2": 25,
+  "hits_r3": 25,
+  "files_with_hits": 12,
+  "per_rule_r3": {
+   "UPSTREAM_READ_DIRECT": 21,
+   "UPSTREAM_TEXT_VIA_HELPER_TO_DOM": 1,
+   "RAW_BODY_TO_DOM": 1,
+   "RAW_TEXT_INTERPOLATION": 1,
+   "UPSTREAM_EXCEPTION_TO_DOM": 1
+  },
+  "new_in_r3_vs_r2": 0,
+  "lost_in_r3_vs_r2": 0
+ },
+ "s1_reported": {
+  "files_scanned": 74,
+  "files_with_hits": 12,
+  "hits_total": 25,
+  "upstream_prose": 16,
+  "local_wording": 6,
+  "machine_label": 3,
+  "source": "S1-q64sweep_0254.md (ledger block) + evidence/q64-sweep-S1/sweep_r1.json"
+ },
+ "spot_checks": [
+  {
+   "claim": "JourneyInboxWorkbench.tsx:88 puts server body text into Error.message",
+   "cite": "frontend/src/features/inbox/JourneyInboxWorkbench.tsx:87-89",
+   "lines_read": [
+    "if (!response.ok) {",
+    "throw new Error(payload.error?.message ?? payload.detail ?? `Request failed (${response.status})`);",
+    "}"
+   ],
+   "holds": true
+  },
+  {
+   "claim": "ProductErrorBoundary.tsx:104 renders the error message and React's component stack into a <pre>",
+   "cite": "frontend/src/components/ProductErrorBoundary.tsx:103-106",
+   "lines_read": [
+    "<pre style={{ whiteSpace: \"pre-wrap\" }} data-testid=\"error-detail\">",
+    "{String(error?.message || error)}",
+    "{info ? `\\n${info}` : \"\"}",
+    "</pre>"
+   ],
+   "holds": true
+  }
+ ],
+ "derived": {
+  "counts_match_s1": true,
+  "classification_sums_to_hits": true,
+  "per_rule_sums_to_hits": true,
+  "r3_adds_nothing_on_live_tree": true,
+  "both_spot_claims_hold": true
+ },
+ "verdict": "S1_SWEEP_VERIFIED",
+ "claim_kind": "recomputation",
+ "claimed_result": "commander re-scan: 74 files / 25 hits (r2) / 25 hits (r3) / 12 files with hits; S1 totals equal mine=True; spot claims hold=True; verdict=S1_SWEEP_VERIFIED",
+ "derived_result": null
+}
