@@ -1,0 +1,55 @@
+{
+ "file": "e2e/qoder-ord0302-unreadable-server-body.spec.ts",
+ "arm": "N2",
+ "runId": "0302xnb04140539",
+ "status": "passed",
+ "expectation": "passed",
+ "reading": {
+  "want": "server",
+  "force_shape": {
+   "status": 422,
+   "contentType": "application/json",
+   "body": "{\"error\":{\"code\":\"request.invalid\",\"message\":\"该目的地的候选目录尚未就绪，请稍后重试。\",\"message_key\":\"request.invalid\",\"details\":null}}"
+  },
+  "read": {
+   "arm": "N2",
+   "status": "HTTP_422",
+   "detail_block_attached": true,
+   "label": "服务器给出的原因",
+   "origin": "server",
+   "reason": "该目的地的候选目录尚未就绪，请稍后重试。",
+   "card_text": "这个要求被明确拒绝 服务端说明了原因（见“技术详情”）。你的行程没有被改动，按原因调整条件或换个说法再试。 技术详情",
+   "legs": [
+    "GET /plans(baseline)",
+    "GET /plans(baseline)",
+    "POST /agent/commands"
+   ]
+  },
+  "verdict": "MET",
+  "rows": [
+   {
+    "claim": "a refusal that carries the server's sentence still renders under the attribution label",
+    "ok": true,
+    "got": {
+     "label": "服务器给出的原因",
+     "origin": "server"
+    }
+   },
+   {
+    "claim": "the server's words are passed through verbatim (equality, not containment)",
+    "ok": true,
+    "got": {
+     "reason": "该目的地的候选目录尚未就绪，请稍后重试。",
+     "expected": "该目的地的候选目录尚未就绪，请稍后重试。"
+    }
+   },
+   {
+    "claim": "status is the HTTP answer it is",
+    "ok": true,
+    "got": {
+     "status": "HTTP_422"
+    }
+   }
+  ]
+ }
+}
