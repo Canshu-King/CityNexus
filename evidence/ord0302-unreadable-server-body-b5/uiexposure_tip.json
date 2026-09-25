@@ -1,0 +1,34 @@
+{
+ "schema": "CNX_CMDR_UI_EVIDENCE_EXPOSURE_GATE_V1",
+ "lane": "commander 494abfd7",
+ "at_local": "2026-09-26T00:38:37+0800",
+ "standing_rule": "Q64=1 (arbiter): data reaching UI / screenshot / evidence artifacts must pass source classification -> allowed fields -> render. mask is a helper, never the first gate.",
+ "allowed_fields": [
+  "http_status",
+  "content_type",
+  "body_bytes",
+  "response_received",
+  "elapsed_ms",
+  "request_id"
+ ],
+ "forbidden": [
+  "raw body",
+  "raw detail",
+  "raw exception"
+ ],
+ "targets_scanned": [
+  "2344145ce634:frontend/src/features/planning/PlanWithAiSheet.tsx"
+ ],
+ "hits": [],
+ "verdict": "NO_EXPOSURE_SHAPE_FOUND",
+ "interpretation_limit": "a hit names a shape to justify, not a defect verdict; the lane answers either by removing it or by showing why that specific text is inside the allowed set. NO_EXPOSURE_SHAPE_FOUND only means this coarse net caught nothing.",
+ "discipline": {
+  "files_written": 0,
+  "product_bytes_changed": 0,
+  "refs_pushed": 0,
+  "credential_values_printed": 0
+ },
+ "claim_kind": "pattern_determined",
+ "claimed_result": "NO_EXPOSURE_SHAPE_FOUND across 1 scanned file(s): 0 hit(s) []",
+ "derived_result": null
+}
