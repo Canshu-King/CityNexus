@@ -1,0 +1,36 @@
+{
+ "arm": "teeth",
+ "attributes": [
+  [
+   "class",
+   "trial-city-warning"
+  ],
+  [
+   "data-testid",
+   "trial-sealed-unavailable"
+  ],
+  [
+   "role",
+   "alert"
+  ],
+  [
+   "data-error-name",
+   "TypeError"
+  ],
+  [
+   "data-error-message",
+   "CANARY Unexpected token < in JSON at position 0 while parsing text/html"
+  ]
+ ],
+ "dirty": [
+  "data-error-name: a data-error-* surface is the shape ORD-0339 withdrew",
+  "data-error-message: a data-error-* surface is the shape ORD-0339 withdrew",
+  "data-error-name=\"TypeError\": carries the exception shape \"error\"",
+  "data-error-name=\"TypeError\": carries the exception shape \"TypeError\"",
+  "data-error-message=\"CANARY Unexpected token < in JSON at position 0 while parsing text/html\": carries the exception shape \"text/html\"",
+  "data-error-message=\"CANARY Unexpected token < in JSON at position 0 while parsing text/html\": carries the exception shape \"unexpected\"",
+  "data-error-message=\"CANARY Unexpected token < in JSON at position 0 while parsing text/html\": carries the exception shape \"CANARY\"",
+  "data-error-message=\"CANARY Unexpected token < in JSON at position 0 while parsing text/html\": a sentence, not a measured value"
+ ],
+ "rulesFired": 8
+}
