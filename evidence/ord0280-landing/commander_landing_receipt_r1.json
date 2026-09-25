@@ -1,0 +1,74 @@
+{
+ "schema": "CNX_CMDR_LANDING_RECEIPT_V1",
+ "order": "ORD-0280",
+ "claim": "the attribution-label fix landed on the authoritative line fast-forward-only, and the two files at the new tip are byte-identical to the verified candidate",
+ "branch": "mirror/integration-frontend-apple-pass1",
+ "tip_read_back": {
+  "route_git_ref_heads_http": 200,
+  "route_git_ref_heads": "90d29a172e186aab6e6cb138ab4583ccf93bfa68",
+  "route_commits_http": 200,
+  "route_commits": "90d29a172e186aab6e6cb138ab4583ccf93bfa68",
+  "routes_agree_on_landed_sha": true
+ },
+ "landed_commit": {
+  "sha": "90d29a172e186aab6e6cb138ab4583ccf93bfa68",
+  "http": 200,
+  "parents": [
+   "6d041dcce11d05f28a55abadd40717f321b4db38"
+  ],
+  "parent_is_previous_tip": true,
+  "fast_forward_only": true,
+  "subject": "fix(frontend): let the attribution label speak only for the server (ORD-0280)"
+ },
+ "verified_candidate": {
+  "sha": "549ac8f1b20bc04e70eadbd238ade737eefbff01"
+ },
+ "files": [
+  {
+   "path": "frontend/e2e/qoder-ord0280-attribution-label-speaks-for-itself.spec.ts",
+   "blob_at_landed_tip": "0edae5cf262833e996bbfc3b56f60d0548ca3e3f",
+   "tree_note": "full",
+   "blob_at_verified_candidate": "0edae5cf262833e996bbfc3b56f60d0548ca3e3f",
+   "cand_tree_note": "full",
+   "recomputed_git_hash_at_landed": "0edae5cf262833e996bbfc3b56f60d0548ca3e3f",
+   "bytes_landed": 12134,
+   "recomputed_git_hash_at_candidate": "0edae5cf262833e996bbfc3b56f60d0548ca3e3f",
+   "bytes_candidate": 12134,
+   "byte_identical": true
+  },
+  {
+   "path": "frontend/src/features/planning/PlanWithAiSheet.tsx",
+   "blob_at_landed_tip": "c22cf42506a4175db992bde387ed8d9c6f1ffb9d",
+   "tree_note": "full",
+   "blob_at_verified_candidate": "c22cf42506a4175db992bde387ed8d9c6f1ffb9d",
+   "cand_tree_note": "full",
+   "recomputed_git_hash_at_landed": "c22cf42506a4175db992bde387ed8d9c6f1ffb9d",
+   "bytes_landed": 47470,
+   "recomputed_git_hash_at_candidate": "c22cf42506a4175db992bde387ed8d9c6f1ffb9d",
+   "bytes_candidate": 47470,
+   "byte_identical": true
+  }
+ ],
+ "files_expected": 2,
+ "files_byte_identical": 2,
+ "ruler": {
+  "instrument": "receipt_cell_derivation_check_r2.py",
+  "subject_published_blob": "02dfbb817e5add8577c4c47a7e898983743b7202",
+  "blob_http": 200,
+  "recomputed_git_hash": "02dfbb817e5add8577c4c47a7e898983743b7202",
+  "recomputed_equals_cited": true,
+  "bytes": 31760,
+  "exit_code": 0,
+  "cells_read": 10,
+  "verdict_line_printed_by_ruler": "cells 10 | overall Q38_GATE_GREEN | hard 0 [] | soft 0 []",
+  "stderr_tail": ""
+ },
+ "decisions": {
+  "tip_both_routes_equal_landed": true,
+  "parent_equals_previous_tip": true,
+  "all_named_files_byte_identical": true,
+  "ruler_green_with_nonzero_cells": true
+ },
+ "overall": "LANDED_AND_VERIFIED",
+ "scope": "Ref move + blob equality + Q38 ruler re-run, all read at 2026-09-25 ~09:40 +08. Does NOT claim the phone shows this generation: no dist/index switch and no preview backend restart was performed (Q45=option 1), so this is LANDED / NOT-YET-DEPLOYED-to-phone."
+}
