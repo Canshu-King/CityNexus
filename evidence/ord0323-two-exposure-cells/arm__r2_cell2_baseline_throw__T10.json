@@ -1,0 +1,19 @@
+{
+ "run_id": "0323c2b3929",
+ "arm": "T10",
+ "cell": "T10",
+ "route": "/inbox/vision",
+ "method": "POST",
+ "status_asked": 507,
+ "slot_text": "vision_forbidden_leg_t10",
+ "status_in_slot": false,
+ "needles_found": [
+  "T10"
+ ],
+ "needles_found_in_attributes": [],
+ "attribute_pairs_swept": 63,
+ "foreign_status_found": [],
+ "internal_token_on_screen": false,
+ "test_status": "failed",
+ "error_head": "Error: e2e/qoder-ord0323-two-exposure-cells.spec.ts :: T10 — T10: a reply's own words are on the screen ([\"T10\"]); the slot reads \"vision_forbidden_leg_t10\" \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // deep equality\u001b[22m \u001b[32m- Expected - 1\u001b[39m \u001b[31m+ Received + 3\u001b[39m \u001b[32m- Array []\u001b[39m \u001b[31m+ Array [\u001b[39m \u001b[31m+ \"T10\",\u001b[39m \u001b[31m+ ]\u001b[39m"
+}
