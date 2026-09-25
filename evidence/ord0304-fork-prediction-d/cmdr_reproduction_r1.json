@@ -1,0 +1,46 @@
+{
+ "schema": "CNX_CMDR_REPRODUCTION_V1",
+ "order": "ORD-0304",
+ "lane": "e345b9d6",
+ "receipt_blob": "fcfa6510c3a6632ef032631ef728b604138d75fd",
+ "receipt_bytes": 12412,
+ "receipt_recomputes": true,
+ "reproduced_at_local": "2026-09-25 16:58:14 +0000",
+ "merge_tree_predictions": [
+  {
+   "candidate": "02da4602bfd4f7af38154a26dd345aba9f69876d",
+   "lane_predicted": "77e0ee47e7786527cda7c992aa1718a4a0057ac1",
+   "commander_predicted": "77e0ee47e7786527cda7c992aa1718a4a0057ac1",
+   "rc": 0,
+   "stderr": "",
+   "match": true,
+   "conflict_lines_in_output": 0
+  },
+  {
+   "candidate": "6c20f04b195faf2339f1fb55d8ea9a0b0d825fe1",
+   "lane_predicted": "2899ca1a909598bded1617be226b021ea3ab0491",
+   "commander_predicted": "2899ca1a909598bded1617be226b021ea3ab0491",
+   "rc": 0,
+   "stderr": "",
+   "match": true,
+   "conflict_lines_in_output": 0
+  }
+ ],
+ "genealogy_check": {
+  "parent_of_90d29a17_measured": "6d041dcce11d",
+  "lane_claim": "6d041dcc is 90d29a17's parent",
+  "confirmed": true,
+  "consequence": "my own order block CMDR-0925-1640 repeated F's inverted wording (祖父); the ancestry is corrected here"
+ },
+ "carry_denominator_strengthened": {
+  "backend_files_changed_from_F_candidate_parent_to_tip": 0,
+  "backend_files_changed_from_90d29a17_to_tip": 0,
+  "ord0280_commit_files": [
+   "frontend/e2e/qoder-ord0280-attribution-label-speaks-for-itself.spec.ts",
+   "frontend/src/features/planning/PlanWithAiSheet.tsx"
+  ],
+  "meaning": "backend/ is byte-unchanged all the way from the candidate's own parent to the tip, so the carry verdict holds on a stronger denominator than the one I first cited"
+ },
+ "verdict": "ACCEPTED-COMMANDER-REPRODUCED (three cells; the two merge-tree predictions match my own bytes; level/derived_result stays with the red team)",
+ "scope": "My reproduction of D's read-only predictions. Not a landing, not a signature of derived_result."
+}
