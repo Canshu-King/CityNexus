@@ -222,7 +222,7 @@ test("A1 住宿被拒（未映射的 422）：原话不上屏、三行读数在�
   };
 });
 
-test("A2 冲突码仍由 token 决定（正控）：换成行程冲突句，且原话仍不上屏", async ({ page }) => {
+test("A2 住宿冲突码仍由 token 决定（正控）：换成行程冲突句，且原话仍不上屏", async ({ page }) => {
   test.setTimeout(180_000);
   const arm = "T-A2";
   const { choose } = await openHotels(page, arm);
