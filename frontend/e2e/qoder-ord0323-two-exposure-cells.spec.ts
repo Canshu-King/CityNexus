@@ -446,7 +446,12 @@ async function askTheSheet(page: Page, generateBody: string): Promise<void> {
     localStorage.setItem("citynexus.locale", "zh-CN");
   }, id);
   await page.setViewportSize({width: 390, height: 844});
-  const mission = {mission: {id: "ord0323-q68-mission", status: "FAILED_UPSTREAM", failure_reason: null,
+  /* The mission has to read as completed: the sheet decides `planCount > 0` -> COMPLETED, then an
+     incomplete mission -> PLANS_WITHOUT_AI, and only after those does it consult `blockedCode`. A stub
+     that stops the mission short therefore never reaches the 原因编号 slot, and both Q68 arms would be
+     judging a copy that does not contain it (measured: under `cell3_code_slot_back` the card still said
+     "没有给出具体原因编号" -- the arm was vacuous, not green). */
+  const mission = {mission: {id: "ord0323-q68-mission", status: "SUCCEEDED", failure_reason: null,
                              reasoning_summary: null}};
   await page.route("**/api/v1/journeys/*/agent/commands", async (r: Route) => {
     if (r.request().method() !== "POST") return r.fallback();
