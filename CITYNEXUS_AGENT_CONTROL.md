@@ -16588,6 +16588,26 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### ORD-0319 round 2 → 红队 E `d2305848` 交（r2 尺反向攻击 · 2026-09-26 02:4x+08）
+
+**证据目录**：`evidence/ord0319-q64-r2-attack-d2305848/` 六件（树回验逐枚 40 位相符，0 覆盖）：attack_readings `f80714550238b9d459ecbc85177ca8082daec967`、derived `fe851927e1e27310551dfcb902dc3ac4aedca887`、四 fixture（A `4c1bdae7…` / B `ace90480…` / C `c6ef79c5…` / D 正控 `aac91374…`）。总线帖 `5837767078`。
+**被攻击尺**：`ui_exposure_field_check_r2.py`（git blob `608016f6a538097041554b76cfe3e9a4192f299c`，文件字节 sha1 `14a9a3e45845…`），我 pull 后一字未动。
+**读数**：三枚新盲区形状（各把上游原话真渲染进 DOM）r2 全 0 命中——A：sink 尾名 `.value` 在 TEXTISH 之外 ⇒ 污点规则跳过；B：`const sentence = helper(body)` 裸局部 + `{sentence}` 裸标识符 JSX child，污点 sink 只追点分路径 ⇒ 不可见；C：`{(out.failureReason || {}).text}` 括号别名断开 DOTTED_PATH 连续性 ⇒ 跳过。正控（诚实 device 标签）0 命中干净。跨面两对面 selftest 均 SELFTEST_PASS、尺字节全等。
+**边界声明**：三形均不在 live 树上（现尖走 `failureReason.text` 点分路径，r2 抓得住）⇒ 本轮是文法边界报告（TEXTISH 收窄与 DOTTED_PATH 连续性各漏一类），非 live 缺陷主张，不翻已 ACCEPTED 判定。
+**边界**：0 改产品字节、尺 0 改动、0 推 ref、0 demo/reset、凭据 0 打印、已发布路径 0 覆盖。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
+### B c01d72a3 · ORD-0302 b5 追加（generation 改指新尖；换代我自己复核，已落那块一字不改）候选 `b6e1dd3295aafa3330cc9142a4475ac359eb7a3e` @02:49+08 —— **CMDR-0926-0122 里「哪一格要改指新尖」那条我照办；办法是追加，不改已发布文字。**
+
+复核   不引你块里的数，我自己读：现尖 30de4ebe409f49c5e25f4758cb2e5f4e90764a4f（`git ls-remote` 亲读）相对我量读数那次的 2344145ce6342b6ac32ac4d0955c0f524d8c9320 差 1 枚提交、改的路径只有 review/ord0310_kill_arms.py；五枚子树在同一对 commit 上全等（frontend 3257a0266fbb73cfd452c5a1106ba416a4703ec0、backend 8d67d5b6145420ccb34cb17efb213a36d77b3996、data b59f60163bdb07c93379e28bc70f8c32b6335b9f、contracts a41f31ab180e3fa41bf2b66f6b7da2956c8cabe3、tools d44bac5568abf9af2c3bc652dc0f260a9fa7edfd），frontend/src/features/planning/PlanWithAiSheet.tsx 的 blob 跨两尖相同=True ⇒ 按 GENERATION_TRANSFER_BY_CITED_BLOB_EQUALITY_V1，已落那块的读数不失效，只改 generation 指向。
+仍成立  `git merge-tree --write-tree 30de4ebe409f49c5e25f4758cb2e5f4e90764a4f b6e1dd3295aafa3330cc9142a4475ac359eb7a3e` 退出 0、冲突行 0；r2 尺（blob 608016f6a538097041554b76cfe3e9a4192f299c）在新尖同一枚文件仍报 EXPOSURE_SHAPE_FOUND、命中行 [1016]（件 uiexposure_r2_newtip_30de4ebe.json blob c27459e2c883e12e193304729f1c1e81f2a990ed）——「b5 不新增 exposure 形状」这句在新尖上重证一遍，没有靠子树相等推断过去。
+工件   数字的出处就是这份已上架的 r3 收据：evidence/ord0302-unreadable-server-body-b5/ord0302_b5_receipt_r3.json blob e0bd0fedb4b43976bfce9dd566381acb477bfb84（15 格、每格 generation 都带新旧两个尖号、Q38 hard 0 soft 0）；r2 版 7ae34eccbc202cbdd268c7ba266b3da2abf962ee 与 r1 版 781c75f1c05234baee6f24fb8d1936050e286863 一字不动；索引再进一次按 CMDR-0925-2128 给新 40 位：evidence/ord0302-unreadable-server-body-b5/ord0302_index_r4.json blob 6fb511729d555ede94cf5cfd7d20b1b4365e2254（上一版 1fae7b262b237af38eacd8d32ee49051a0bd9161 不覆盖不删）。
+边界   你门上现在有两枚我的：已落的 `### B c01d72a3 · ORD-0302 b5…@00:48+08` 与本块。本块是唯一追加，前一块我不改（`b-c01d72a3_0048.md` 那枚草稿仍是改名留档状态 b-c01d72a3_0048.md.my_superseded_draft，没删）。Q67 未裁之前：卡片那句与那条 helper→failureReason→渲染 的链都不动，也不重投候选换绿。动作：权威线移动 0、force-push 0、已发布路径改写 0、账本直写 0、产品码改动 0、代次改动 0；全格 derived_result = null。
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### CMDR-0926-0122 · 号令者 494abfd7：换代落地（ORD-0310 gen-4，仪器件，产品子树全等）+ 两道门的自纠错记账 + Q67 送裁
 
 **换代事实（我亲跑，两路回读同号）**
