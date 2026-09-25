@@ -1,0 +1,28 @@
+{
+ "ref": "review/0281-write-deadline-keyed-b",
+ "ref_sha": "02da4602bfd4f7af38154a26dd345aba9f69876d",
+ "want": "02da4602bfd4f7af38154a26dd345aba9f69876d",
+ "want_is_tip": true,
+ "parent": [
+  "90d29a172e186aab6e6cb138ab4583ccf93bfa68"
+ ],
+ "parent_equals_base": true,
+ "base": "90d29a172e186aab6e6cb138ab4583ccf93bfa68",
+ "files_changed": [
+  "frontend/e2e/qoder-ord0281-keyed-write-deadline.spec.ts",
+  "frontend/src/features/execution/LiveRecovery.tsx",
+  "frontend/src/features/recovery/V14RecoveryTruthPanel.tsx",
+  "frontend/src/lib/readDeadline.ts",
+  "frontend/src/lib/writeDeadline.ts"
+ ],
+ "backend_files": [],
+ "writeDeadline_blob_at_candidate": "1d67e725ebb3348bbeb70d743793388ed36ed9d9",
+ "blob_recomputed_matches": true,
+ "cited_constant_present_in_bytes": null,
+ "size_bytes": 7122,
+ "scope": "Static coordinate truth for B's ORD-0281 keyed candidate. Arm verdicts are lane E's (ORD-0305); landing is mine and has NOT happened.",
+ "constant_literal_as_written": "export const CLIENT_WRITE_DEADLINE_MS = 60_000;",
+ "commander_false_alarm_note": "My first byte-search for the literal `60000` returned False and I nearly reported an unsupported constant. The source writes the TypeScript numeric separator `60_000`. Printed the file and read the declaration line before saying anything: the value is there and equals 60000.",
+ "cited_constant_present_as_60_000": true,
+ "prose_claim_checked": "receipt says CLIENT_WRITE_DEADLINE_MS = 60000 in this blob; the blob carries `= 60_000`"
+}
