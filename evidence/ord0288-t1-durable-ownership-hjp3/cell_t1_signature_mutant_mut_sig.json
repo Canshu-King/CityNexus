@@ -1,0 +1,108 @@
+{
+ "arm": "t1_signature_mutant_mut_sig",
+ "measured_on": "dc964086c9d412573ac19d70b24b30e6c3ee6168",
+ "private_copy": {
+  "dir": "D:\\moodle\\_hjp3_0288t1_0925\\mut_sig",
+  "hardlink_audit": {
+   "files_checked": 305,
+   "nlink_gt_1": [],
+   "verdict": "PRIVATE_COPY"
+  },
+  "patch": {
+   "carrier_removed": "if row.request_hash != signature:",
+   "replaced_with": "if False and row.request_hash != signature:",
+   "why_this_one": "plans/generate reaches _replay_committed_accept, not the replan route guard"
+  },
+  "main_py_sha256": "a556d06e2ae74232",
+  "pristine_main_py_sha256": "46e696c023075988",
+  "only_file_changed": [
+   "app\\main.py"
+  ]
+ },
+ "seed": {
+  "rc": 0,
+  "seed": {
+   "places": 16
+  }
+ },
+ "backend": {
+  "tag": "mut_sig",
+  "pid": 45408,
+  "port": 8614,
+  "tree": "D:\\moodle\\_hjp3_0288t1_0925\\mut_sig",
+  "db": "D:\\moodle\\_hjp3_0288t1_0925\\t1_mut_sig.s3db",
+  "listening": true,
+  "exited": false,
+  "cmdline_at_start": "D:/moodle/CityNexus/.venv/Scripts/python.exe -m uvicorn app.main:app --host 127.0.0.1 --port 8614 --log-level info"
+ },
+ "journey": {
+  "traveler_http": 201,
+  "journey_http": 201,
+  "journey_id": "320d7b3c-f4ce-4edc-afd8-27a26b0a291e"
+ },
+ "db": "D:\\moodle\\_hjp3_0288t1_0925\\t1_mut_sig.s3db",
+ "carrier_removed_or_injected": "the guard `if row.request_hash != signature:` inside _replay_committed_accept, which is the comparison plans/generate actually reaches",
+ "steps": [
+  {
+   "intent": "the send that claims the key",
+   "response": {
+    "key": "ord0288-sig-163216",
+    "request_body": {
+     "candidate_count": 3
+    },
+    "status": 422,
+    "bytes": 1443,
+    "body": "{\"error\":{\"code\":\"VALIDATION_ERROR\",\"message\":\"No feasible plan candidates satisfy the journey constraints\",\"message_key\":\"request.invalid\",\"trace_id\":\"30f342a9-9353-4444-bff0-4b527378d436\",\"details\":{\"city_code\":\"CNX-DEMO\",\"places_in_catalog\":8,\"city_services_in_catalog\":5,\"day_sequences_available\":3,\"requested_candidates\":3,\"candidate_rejections\":[{\"reason_codes\":[\"CANDIDATE_REJECTED_BY_FEASIBILITY_GATE\"],\"summary\":\"candidate dropped before persistence: JOURNEY_WINDOW_EXCEEDED\",\"failures\":[\"JOURNEY_WINDOW_EXCEEDED\"],\"hard_rule_codes\":[],\"candidate_sequence\":0,\"stops\":[\"place-old-town\",\"place",
+    "elapsed_ms": 54,
+    "at": "16:32:16"
+   },
+   "durable_after_this": {
+    "connection": "file:D:\\moodle\\_hjp3_0288t1_0925\\t1_mut_sig.s3db?mode=ro (a SECOND, read-only connection)",
+    "rows": [
+     {
+      "key": "plans.generate:ord0288-sig-163216",
+      "operation": "plans.generate",
+      "response_status": 422,
+      "response_json_bytes": 1424,
+      "request_hash_head": "{\"candidate_coun",
+      "created_at": "2026-09-25T08:32:16.546661+00:00",
+      "expires_at": "2026-10-02T08:32:16.546661+00:00",
+      "response_json_head": "{\"refusal\": {\"detail\": \"No feasible plan candidates satisfy the journey constraints\", \"error_details\": {\"candidate_rejections\": [{\"candidate_sequence\": 0, \"fail"
+     }
+    ],
+    "plan_versions": 0
+   }
+  },
+  {
+   "intent": "same key, DIFFERENT body with the signature comparison deleted",
+   "response": {
+    "key": "ord0288-sig-163216",
+    "request_body": {
+     "candidate_count": 5
+    },
+    "status": 422,
+    "bytes": 1443,
+    "body": "{\"error\":{\"code\":\"VALIDATION_ERROR\",\"message\":\"No feasible plan candidates satisfy the journey constraints\",\"message_key\":\"request.invalid\",\"trace_id\":\"87d0cc5e-02ae-43b2-a9d5-4285d41783c4\",\"details\":{\"candidate_rejections\":[{\"candidate_sequence\":0,\"failures\":[\"JOURNEY_WINDOW_EXCEEDED\"],\"hard_rule_codes\":[],\"reason_codes\":[\"CANDIDATE_REJECTED_BY_FEASIBILITY_GATE\"],\"stops\":[\"place-old-town\",\"place-riverside-museum\",\"place-food-hall\",\"place-tech-art\",\"place-river-cruise\",\"place-skyline-dinner\"],\"summary\":\"candidate dropped before persistence: JOURNEY_WINDOW_EXCEEDED\"},{\"candidate_sequence\":1,\"fa",
+    "elapsed_ms": 4,
+    "at": "16:32:16"
+   },
+   "still_409": false,
+   "durable_after_this": {
+    "connection": "file:D:\\moodle\\_hjp3_0288t1_0925\\t1_mut_sig.s3db?mode=ro (a SECOND, read-only connection)",
+    "rows": [
+     {
+      "key": "plans.generate:ord0288-sig-163216",
+      "operation": "plans.generate",
+      "response_status": 422,
+      "response_json_bytes": 1424,
+      "request_hash_head": "{\"candidate_coun",
+      "created_at": "2026-09-25T08:32:16.546661+00:00",
+      "expires_at": "2026-10-02T08:32:16.546661+00:00",
+      "response_json_head": "{\"refusal\": {\"detail\": \"No feasible plan candidates satisfy the journey constraints\", \"error_details\": {\"candidate_rejections\": [{\"candidate_sequence\": 0, \"fail"
+     }
+    ],
+    "plan_versions": 0
+   }
+  }
+ ]
+}
