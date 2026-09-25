@@ -1,0 +1,723 @@
+{
+ "at": "2026-09-25T09:06:45+08:00",
+ "order": "ORD-0299 · 0280 的 e2e 真跑 + 反件（landed tip 上）",
+ "lane": "B c01d72a3",
+ "claim_kind": "RUNTIME_MEASURED",
+ "candidate_tip": "549ac8f1b20bc04e70eadbd238ade737eefbff01",
+ "landed_base": "5c4608cede6cb7bd5f3ac7e704bfee379ca47abc",
+ "branch": "review/0280-attribution-label-r2",
+ "cells": [
+  {
+   "cell": "A1 attribution arm (device)",
+   "claimed_result": "MET",
+   "derived_result": null,
+   "why": "A1 (frontend/e2e/qoder-ord0280-attribution-label-speaks-for-itself.spec.ts:185:1, device leg, code at line 538): on the candidate the screen renders '这台设备自己的读数（服务器没给句子）' with origin='device' over the reading 'agent/commands -> HTTP 500' (HTTP_500); with the label forced blind at lines [929] the same arm turns failed and its label becomes '服务器给出的原因' while the reading is still 'agent/commands -> HTTP 500'. component sha256 2e2a6d346d73d680 -> 6d898a5250dc66e1, run 0299fix4739 vs 0299cnt4739.",
+   "readings": {
+    "arm": "A1",
+    "want": "device",
+    "site_line": 538,
+    "nodeid": "frontend/e2e/qoder-ord0280-attribution-label-speaks-for-itself.spec.ts:185:1",
+    "test_title": "ord0280-A1 agent/commands refused with NO server sentence does not wear the attribution label",
+    "baseline": {
+     "run_id": "0299fix4739",
+     "db": "_0299fix4739.db",
+     "frontend_port": "4391",
+     "backend_port": "8191",
+     "label_rendered": "这台设备自己的读数（服务器没给句子）",
+     "origin_attribute": "device",
+     "reason_rendered": "agent/commands -> HTTP 500",
+     "result_status": "HTTP_500",
+     "outcome": "passed"
+    },
+    "counter": {
+     "run_id": "0299cnt4739",
+     "db": "_0299cnt4739.db",
+     "frontend_port": "4392",
+     "backend_port": "8192",
+     "label_rendered": "服务器给出的原因",
+     "origin_attribute": "server",
+     "reason_rendered": "agent/commands -> HTTP 500",
+     "outcome": "failed"
+    },
+    "component_sha256_fixed": "2e2a6d346d73d680",
+    "component_sha256_mutant": "6d898a5250dc66e1",
+    "render_lines": [
+     929
+    ],
+    "blind_lines": [
+     931
+    ],
+    "named_values_the_why_uses": [
+     "0299cnt4739",
+     "0299fix4739",
+     "2e2a6d346d73d680",
+     "4391",
+     "4392",
+     "538",
+     "6d898a5250dc66e1",
+     "8191",
+     "8192",
+     "929",
+     "931",
+     "A1",
+     "HTTP_500",
+     "_0299cnt4739.db",
+     "_0299fix4739.db",
+     "agent/commands -> HTTP 500",
+     "device",
+     "failed",
+     "frontend/e2e/qoder-ord0280-attribution-label-speaks-for-itself.spec.ts:185:1",
+     "ord0280-A1 agent/commands refused with NO server sentence does not wear the attribution label",
+     "passed",
+     "server",
+     "服务器给出的原因",
+     "这台设备自己的读数（服务器没给句子）"
+    ]
+   }
+  },
+  {
+   "cell": "A2 attribution arm (server)",
+   "claimed_result": "MET",
+   "derived_result": null,
+   "why": "A2 (frontend/e2e/qoder-ord0280-attribution-label-speaks-for-itself.spec.ts:193:1, server leg, code at line 538): the sentence '该目的地的候选目录尚未就绪，请稍后重试。' is shown under '服务器给出的原因' with origin='server' and status HTTP_503, and it stays passed when the label goes blind at lines [929] (label still '服务器给出的原因') - the control that stops the device arms from being satisfied by hiding the panel. component sha256 2e2a6d346d73d680 / mutant 6d898a5250dc66e1, runs 0299fix4739 and 0299cnt4739.",
+   "readings": {
+    "arm": "A2",
+    "want": "server",
+    "site_line": 538,
+    "nodeid": "frontend/e2e/qoder-ord0280-attribution-label-speaks-for-itself.spec.ts:193:1",
+    "test_title": "ord0280-A2 agent/commands refused WITH a server sentence shows it verbatim under the label",
+    "baseline": {
+     "run_id": "0299fix4739",
+     "db": "_0299fix4739.db",
+     "frontend_port": "4391",
+     "backend_port": "8191",
+     "label_rendered": "服务器给出的原因",
+     "origin_attribute": "server",
+     "reason_rendered": "该目的地的候选目录尚未就绪，请稍后重试。",
+     "result_status": "HTTP_503",
+     "outcome": "passed"
+    },
+    "counter": {
+     "run_id": "0299cnt4739",
+     "db": "_0299cnt4739.db",
+     "frontend_port": "4392",
+     "backend_port": "8192",
+     "label_rendered": "服务器给出的原因",
+     "origin_attribute": "server",
+     "reason_rendered": "该目的地的候选目录尚未就绪，请稍后重试。",
+     "outcome": "passed"
+    },
+    "component_sha256_fixed": "2e2a6d346d73d680",
+    "component_sha256_mutant": "6d898a5250dc66e1",
+    "render_lines": [
+     929
+    ],
+    "blind_lines": [
+     931
+    ],
+    "named_values_the_why_uses": [
+     "0299cnt4739",
+     "0299fix4739",
+     "2e2a6d346d73d680",
+     "4391",
+     "4392",
+     "538",
+     "6d898a5250dc66e1",
+     "8191",
+     "8192",
+     "929",
+     "931",
+     "A2",
+     "HTTP_503",
+     "_0299cnt4739.db",
+     "_0299fix4739.db",
+     "frontend/e2e/qoder-ord0280-attribution-label-speaks-for-itself.spec.ts:193:1",
+     "ord0280-A2 agent/commands refused WITH a server sentence shows it verbatim under the label",
+     "passed",
+     "server",
+     "服务器给出的原因",
+     "该目的地的候选目录尚未就绪，请稍后重试。"
+    ]
+   }
+  },
+  {
+   "cell": "B1 attribution arm (device)",
+   "claimed_result": "MET",
+   "derived_result": null,
+   "why": "B1 (frontend/e2e/qoder-ord0280-attribution-label-speaks-for-itself.spec.ts:205:1, device leg, code at line 599): on the candidate the screen renders '这台设备自己的读数（服务器没给句子）' with origin='device' over the reading 'GET /places -> HTTP 502' (BLOCKED:UPSTREAM_UNREADABLE); with the label forced blind at lines [929] the same arm turns failed and its label becomes '服务器给出的原因' while the reading is still 'GET /places -> HTTP 502'. component sha256 2e2a6d346d73d680 -> 6d898a5250dc66e1, run 0299fix4739 vs 0299cnt4739.",
+   "readings": {
+    "arm": "B1",
+    "want": "device",
+    "site_line": 599,
+    "nodeid": "frontend/e2e/qoder-ord0280-attribution-label-speaks-for-itself.spec.ts:205:1",
+    "test_title": "ord0280-B1 GET /places unreadable with NO sentence is named as this device's reading",
+    "baseline": {
+     "run_id": "0299fix4739",
+     "db": "_0299fix4739.db",
+     "frontend_port": "4391",
+     "backend_port": "8191",
+     "label_rendered": "这台设备自己的读数（服务器没给句子）",
+     "origin_attribute": "device",
+     "reason_rendered": "GET /places -> HTTP 502",
+     "result_status": "BLOCKED:UPSTREAM_UNREADABLE",
+     "outcome": "passed"
+    },
+    "counter": {
+     "run_id": "0299cnt4739",
+     "db": "_0299cnt4739.db",
+     "frontend_port": "4392",
+     "backend_port": "8192",
+     "label_rendered": "服务器给出的原因",
+     "origin_attribute": "server",
+     "reason_rendered": "GET /places -> HTTP 502",
+     "outcome": "failed"
+    },
+    "component_sha256_fixed": "2e2a6d346d73d680",
+    "component_sha256_mutant": "6d898a5250dc66e1",
+    "render_lines": [
+     929
+    ],
+    "blind_lines": [
+     931
+    ],
+    "named_values_the_why_uses": [
+     "0299cnt4739",
+     "0299fix4739",
+     "2e2a6d346d73d680",
+     "4391",
+     "4392",
+     "599",
+     "6d898a5250dc66e1",
+     "8191",
+     "8192",
+     "929",
+     "931",
+     "B1",
+     "BLOCKED:UPSTREAM_UNREADABLE",
+     "GET /places -> HTTP 502",
+     "_0299cnt4739.db",
+     "_0299fix4739.db",
+     "device",
+     "failed",
+     "frontend/e2e/qoder-ord0280-attribution-label-speaks-for-itself.spec.ts:205:1",
+     "ord0280-B1 GET /places unreadable with NO sentence is named as this device's reading",
+     "passed",
+     "server",
+     "服务器给出的原因",
+     "这台设备自己的读数（服务器没给句子）"
+    ]
+   }
+  },
+  {
+   "cell": "B2 attribution arm (server)",
+   "claimed_result": "MET",
+   "derived_result": null,
+   "why": "B2 (frontend/e2e/qoder-ord0280-attribution-label-speaks-for-itself.spec.ts:220:1, server leg, code at line 599): the sentence 'places 目录在该城市没有物化任何地点，无法组成候选。' is shown under '服务器给出的原因' with origin='server' and status BLOCKED:PLACES_HTTP_409, and it stays passed when the label goes blind at lines [929] (label still '服务器给出的原因') - the control that stops the device arms from being satisfied by hiding the panel. component sha256 2e2a6d346d73d680 / mutant 6d898a5250dc66e1, runs 0299fix4739 and 0299cnt4739.",
+   "readings": {
+    "arm": "B2",
+    "want": "server",
+    "site_line": 599,
+    "nodeid": "frontend/e2e/qoder-ord0280-attribution-label-speaks-for-itself.spec.ts:220:1",
+    "test_title": "ord0280-B2 GET /places refused with a detail sentence quotes the server",
+    "baseline": {
+     "run_id": "0299fix4739",
+     "db": "_0299fix4739.db",
+     "frontend_port": "4391",
+     "backend_port": "8191",
+     "label_rendered": "服务器给出的原因",
+     "origin_attribute": "server",
+     "reason_rendered": "places 目录在该城市没有物化任何地点，无法组成候选。",
+     "result_status": "BLOCKED:PLACES_HTTP_409",
+     "outcome": "passed"
+    },
+    "counter": {
+     "run_id": "0299cnt4739",
+     "db": "_0299cnt4739.db",
+     "frontend_port": "4392",
+     "backend_port": "8192",
+     "label_rendered": "服务器给出的原因",
+     "origin_attribute": "server",
+     "reason_rendered": "places 目录在该城市没有物化任何地点，无法组成候选。",
+     "outcome": "passed"
+    },
+    "component_sha256_fixed": "2e2a6d346d73d680",
+    "component_sha256_mutant": "6d898a5250dc66e1",
+    "render_lines": [
+     929
+    ],
+    "blind_lines": [
+     931
+    ],
+    "named_values_the_why_uses": [
+     "0299cnt4739",
+     "0299fix4739",
+     "2e2a6d346d73d680",
+     "4391",
+     "4392",
+     "599",
+     "6d898a5250dc66e1",
+     "8191",
+     "8192",
+     "929",
+     "931",
+     "B2",
+     "BLOCKED:PLACES_HTTP_409",
+     "_0299cnt4739.db",
+     "_0299fix4739.db",
+     "frontend/e2e/qoder-ord0280-attribution-label-speaks-for-itself.spec.ts:220:1",
+     "ord0280-B2 GET /places refused with a detail sentence quotes the server",
+     "passed",
+     "places 目录在该城市没有物化任何地点，无法组成候选。",
+     "server",
+     "服务器给出的原因"
+    ]
+   }
+  },
+  {
+   "cell": "C1 attribution arm (device)",
+   "claimed_result": "MET",
+   "derived_result": null,
+   "why": "C1 (frontend/e2e/qoder-ord0280-attribution-label-speaks-for-itself.spec.ts:233:1, device leg, code at line 664): on the candidate the screen renders '这台设备自己的读数（服务器没给句子）' with origin='device' over the reading 'POST /plans/generate -> HTTP 422' (BLOCKED:VALIDATION_ERROR); with the label forced blind at lines [929] the same arm turns failed and its label becomes '服务器给出的原因' while the reading is still 'POST /plans/generate -> HTTP 422'. component sha256 2e2a6d346d73d680 -> 6d898a5250dc66e1, run 0299fix4739 vs 0299cnt4739.",
+   "readings": {
+    "arm": "C1",
+    "want": "device",
+    "site_line": 664,
+    "nodeid": "frontend/e2e/qoder-ord0280-attribution-label-speaks-for-itself.spec.ts:233:1",
+    "test_title": "ord0280-C1 plans/generate refused with NO sentence is not the server's reason",
+    "baseline": {
+     "run_id": "0299fix4739",
+     "db": "_0299fix4739.db",
+     "frontend_port": "4391",
+     "backend_port": "8191",
+     "label_rendered": "这台设备自己的读数（服务器没给句子）",
+     "origin_attribute": "device",
+     "reason_rendered": "POST /plans/generate -> HTTP 422",
+     "result_status": "BLOCKED:VALIDATION_ERROR",
+     "outcome": "passed"
+    },
+    "counter": {
+     "run_id": "0299cnt4739",
+     "db": "_0299cnt4739.db",
+     "frontend_port": "4392",
+     "backend_port": "8192",
+     "label_rendered": "服务器给出的原因",
+     "origin_attribute": "server",
+     "reason_rendered": "POST /plans/generate -> HTTP 422",
+     "outcome": "failed"
+    },
+    "component_sha256_fixed": "2e2a6d346d73d680",
+    "component_sha256_mutant": "6d898a5250dc66e1",
+    "render_lines": [
+     929
+    ],
+    "blind_lines": [
+     931
+    ],
+    "named_values_the_why_uses": [
+     "0299cnt4739",
+     "0299fix4739",
+     "2e2a6d346d73d680",
+     "4391",
+     "4392",
+     "664",
+     "6d898a5250dc66e1",
+     "8191",
+     "8192",
+     "929",
+     "931",
+     "BLOCKED:VALIDATION_ERROR",
+     "C1",
+     "POST /plans/generate -> HTTP 422",
+     "_0299cnt4739.db",
+     "_0299fix4739.db",
+     "device",
+     "failed",
+     "frontend/e2e/qoder-ord0280-attribution-label-speaks-for-itself.spec.ts:233:1",
+     "ord0280-C1 plans/generate refused with NO sentence is not the server's reason",
+     "passed",
+     "server",
+     "服务器给出的原因",
+     "这台设备自己的读数（服务器没给句子）"
+    ]
+   }
+  },
+  {
+   "cell": "C2 attribution arm (server)",
+   "claimed_result": "MET",
+   "derived_result": null,
+   "why": "C2 (frontend/e2e/qoder-ord0280-attribution-label-speaks-for-itself.spec.ts:252:1, server leg, code at line 664): the sentence '预算与停留上限无法同时满足，未生成方案。' is shown under '服务器给出的原因' with origin='server' and status BLOCKED:BUDGET_INFEASIBLE, and it stays passed when the label goes blind at lines [929] (label still '服务器给出的原因') - the control that stops the device arms from being satisfied by hiding the panel. component sha256 2e2a6d346d73d680 / mutant 6d898a5250dc66e1, runs 0299fix4739 and 0299cnt4739.",
+   "readings": {
+    "arm": "C2",
+    "want": "server",
+    "site_line": 664,
+    "nodeid": "frontend/e2e/qoder-ord0280-attribution-label-speaks-for-itself.spec.ts:252:1",
+    "test_title": "ord0280-C2 plans/generate refused with a message quotes it exactly",
+    "baseline": {
+     "run_id": "0299fix4739",
+     "db": "_0299fix4739.db",
+     "frontend_port": "4391",
+     "backend_port": "8191",
+     "label_rendered": "服务器给出的原因",
+     "origin_attribute": "server",
+     "reason_rendered": "预算与停留上限无法同时满足，未生成方案。",
+     "result_status": "BLOCKED:BUDGET_INFEASIBLE",
+     "outcome": "passed"
+    },
+    "counter": {
+     "run_id": "0299cnt4739",
+     "db": "_0299cnt4739.db",
+     "frontend_port": "4392",
+     "backend_port": "8192",
+     "label_rendered": "服务器给出的原因",
+     "origin_attribute": "server",
+     "reason_rendered": "预算与停留上限无法同时满足，未生成方案。",
+     "outcome": "passed"
+    },
+    "component_sha256_fixed": "2e2a6d346d73d680",
+    "component_sha256_mutant": "6d898a5250dc66e1",
+    "render_lines": [
+     929
+    ],
+    "blind_lines": [
+     931
+    ],
+    "named_values_the_why_uses": [
+     "0299cnt4739",
+     "0299fix4739",
+     "2e2a6d346d73d680",
+     "4391",
+     "4392",
+     "664",
+     "6d898a5250dc66e1",
+     "8191",
+     "8192",
+     "929",
+     "931",
+     "BLOCKED:BUDGET_INFEASIBLE",
+     "C2",
+     "_0299cnt4739.db",
+     "_0299fix4739.db",
+     "frontend/e2e/qoder-ord0280-attribution-label-speaks-for-itself.spec.ts:252:1",
+     "ord0280-C2 plans/generate refused with a message quotes it exactly",
+     "passed",
+     "server",
+     "服务器给出的原因",
+     "预算与停留上限无法同时满足，未生成方案。"
+    ]
+   }
+  },
+  {
+   "cell": "D attribution arm (device)",
+   "claimed_result": "MET",
+   "derived_result": null,
+   "why": "D (frontend/e2e/qoder-ord0280-attribution-label-speaks-for-itself.spec.ts:272:1, device leg, code at line 623): on the candidate the screen renders '这台设备自己的读数（服务器没给句子）' with origin='device' over the reading 'GET /places?city_code=CN-TIANJIN -> 0 places' (BLOCKED:CATALOG_EMPTY); with the label forced blind at lines [929] the same arm turns failed and its label becomes '服务器给出的原因' while the reading is still 'GET /places?city_code=CN-TIANJIN -> 0 places'. component sha256 2e2a6d346d73d680 -> 6d898a5250dc66e1, run 0299fix4739 vs 0299cnt4739.",
+   "readings": {
+    "arm": "D",
+    "want": "device",
+    "site_line": 623,
+    "nodeid": "frontend/e2e/qoder-ord0280-attribution-label-speaks-for-itself.spec.ts:272:1",
+    "test_title": "ord0280-D the <2-places count this screen measured is a device statement too",
+    "baseline": {
+     "run_id": "0299fix4739",
+     "db": "_0299fix4739.db",
+     "frontend_port": "4391",
+     "backend_port": "8191",
+     "label_rendered": "这台设备自己的读数（服务器没给句子）",
+     "origin_attribute": "device",
+     "reason_rendered": "GET /places?city_code=CN-TIANJIN -> 0 places",
+     "result_status": "BLOCKED:CATALOG_EMPTY",
+     "outcome": "passed"
+    },
+    "counter": {
+     "run_id": "0299cnt4739",
+     "db": "_0299cnt4739.db",
+     "frontend_port": "4392",
+     "backend_port": "8192",
+     "label_rendered": "服务器给出的原因",
+     "origin_attribute": "server",
+     "reason_rendered": "GET /places?city_code=CN-TIANJIN -> 0 places",
+     "outcome": "failed"
+    },
+    "component_sha256_fixed": "2e2a6d346d73d680",
+    "component_sha256_mutant": "6d898a5250dc66e1",
+    "render_lines": [
+     929
+    ],
+    "blind_lines": [
+     931
+    ],
+    "named_values_the_why_uses": [
+     "0299cnt4739",
+     "0299fix4739",
+     "2e2a6d346d73d680",
+     "4391",
+     "4392",
+     "623",
+     "6d898a5250dc66e1",
+     "8191",
+     "8192",
+     "929",
+     "931",
+     "BLOCKED:CATALOG_EMPTY",
+     "D",
+     "GET /places?city_code=CN-TIANJIN -> 0 places",
+     "_0299cnt4739.db",
+     "_0299fix4739.db",
+     "device",
+     "failed",
+     "frontend/e2e/qoder-ord0280-attribution-label-speaks-for-itself.spec.ts:272:1",
+     "ord0280-D the <2-places count this screen measured is a device statement too",
+     "passed",
+     "server",
+     "服务器给出的原因",
+     "这台设备自己的读数（服务器没给句子）"
+    ]
+   }
+  },
+  {
+   "cell": "counter-arm shape (label no longer consults the source)",
+   "claimed_result": "MET",
+   "derived_result": null,
+   "why": "counter-arm: 2 hunks at the render lines [929] and [931] replace the two reads of the note's source with the constant server, so the label stops consulting who spoke; component sha256 2e2a6d346d73d680 became 6d898a5250dc66e1 in run 0299cnt4739 (db _0299cnt4739.db), and exactly ['A1', 'B1', 'C1', 'D'] failed while ['A2', 'B2', 'C2'] stayed passed - the source was put back byte-exact (True), tree clean.",
+   "readings": {
+    "device_arms_failed": [
+     "A1",
+     "B1",
+     "C1",
+     "D"
+    ],
+    "server_arms_passed": [
+     "A2",
+     "B2",
+     "C2"
+    ],
+    "hunk_count": 2,
+    "render_lines": [
+     929
+    ],
+    "blind_lines": [
+     931
+    ],
+    "component_sha256_fixed": "2e2a6d346d73d680",
+    "component_sha256_mutant": "6d898a5250dc66e1",
+    "restored_byte_exact": true,
+    "src_dirty_after": "clean",
+    "counter_run_id": "0299cnt4739",
+    "counter_db": "_0299cnt4739.db",
+    "named_values_the_why_uses": [
+     "0299cnt4739",
+     "2",
+     "2e2a6d346d73d680",
+     "6d898a5250dc66e1",
+     "929",
+     "931",
+     "A1",
+     "A2",
+     "B1",
+     "B2",
+     "C1",
+     "C2",
+     "D",
+     "True",
+     "_0299cnt4739.db",
+     "clean"
+    ]
+   }
+  },
+  {
+   "cell": "face of the run (what grade this evidence is)",
+   "claimed_result": "DECLARED",
+   "derived_result": null,
+   "why": "face: the product's own e2e hook recorded both runs in authoritative.json - 0299fix4739 on frontend :4391 / backend :8191 with db _0299fix4739.db, and 0299cnt4739 on :4392 / :8192 with db _0299cnt4739.db - each with authoritative=true, ai=disabled, reuseExistingServer=false; the ports and run ids the driver pins (ord0299_counter_arm.py, sha256 119213774274, last written 2026-09-25T08:47:29) match those records on every point, so the two sources agree rather than one restating the other. What answered the browser was vite dev (the playwright webServer this invocation owns), not the built bundle, i.e. the source tree, not a shipped bundle, so by the commander's grading this is spec-level red/green and NOT release-grade (release_grade=False); the grade label written at run time was dev face => 规格会红/会绿一级；不是发布级证据（发布级要跑在生产构建的产物上）.",
+   "readings": {
+    "release_grade": false,
+    "served_by": "vite dev (the playwright webServer this invocation owns), not the built bundle",
+    "provenance_files": [
+     "authoritative.json",
+     "authoritative.json"
+    ],
+    "provenance_baseline_run": {
+     "authoritative": true,
+     "suite": "current-product",
+     "runId": "0299fix4739",
+     "python": "D:\\moodle\\CityNexus\\.venv\\Scripts\\python.exe",
+     "pythonResolved": "D:\\moodle\\CityNexus\\.venv\\Scripts\\python.exe",
+     "frontendPort": 4391,
+     "backendPort": 8191,
+     "databaseUrl": "sqlite:///D:/moodle/_qoder_b_lane_20260923/backend/_0299fix4739.db",
+     "ai": "disabled",
+     "reuseExistingServer": false,
+     "workers": 1,
+     "retries": 0,
+     "recordedAt": "2026-09-25T00:47:52.426Z",
+     "provenanceLine": "[citynexus e2e] suite=current-product authoritative=true python=D:\\moodle\\CityNexus\\.venv\\Scripts\\python.exe frontend=:4391 backend=:8191 db=sqlite:///D:/moodle/_qoder_b_lane_20260923/backend/_0299fix4739.db ai=disabled reuseExistingServer=false"
+    },
+    "provenance_counter_run": {
+     "authoritative": true,
+     "suite": "current-product",
+     "runId": "0299cnt4739",
+     "python": "D:\\moodle\\CityNexus\\.venv\\Scripts\\python.exe",
+     "pythonResolved": "D:\\moodle\\CityNexus\\.venv\\Scripts\\python.exe",
+     "frontendPort": 4392,
+     "backendPort": 8192,
+     "databaseUrl": "sqlite:///D:/moodle/_qoder_b_lane_20260923/backend/_0299cnt4739.db",
+     "ai": "disabled",
+     "reuseExistingServer": false,
+     "workers": 1,
+     "retries": 0,
+     "recordedAt": "2026-09-25T00:48:23.289Z",
+     "provenanceLine": "[citynexus e2e] suite=current-product authoritative=true python=D:\\moodle\\CityNexus\\.venv\\Scripts\\python.exe frontend=:4392 backend=:8192 db=sqlite:///D:/moodle/_qoder_b_lane_20260923/backend/_0299cnt4739.db ai=disabled reuseExistingServer=false"
+    },
+    "pins_agree": {
+     "frontend_ports": true,
+     "backend_ports": true,
+     "run_ids": true,
+     "dbs": true,
+     "ai_off": true,
+     "server_not_reused": true,
+     "authoritative": true
+    },
+    "command_as_recorded_in_the_run_artifact": "node node_modules/@playwright/test/cli.js test -c playwright.config.ts e2e/qoder-ord0280-attribution-label-speaks-for-itself.spec.ts --reporter=json",
+    "grade_honest_label_as_recorded": "dev face => 规格会红/会绿一级；不是发布级证据（发布级要跑在生产构建的产物上）",
+    "env_pinned_by_the_executed_driver": [
+     "CITYNEXUS_AI_ENABLED=false",
+     "CITYNEXUS_BACKEND_PORT=<computed:be_port>",
+     "CITYNEXUS_DATABASE_URL=<computed:f\"sqlite:///{(LANE / 'backend' / ('_' + run_id + '.db')).as_posix()}\">",
+     "CITYNEXUS_E2E_AUTHORITATIVE=1",
+     "CITYNEXUS_E2E_PORT=<computed:fe_port>",
+     "CITYNEXUS_E2E_RUN_ID=<computed:run_id>",
+     "CITYNEXUS_EVIDENCE_DIR=<computed:str(evidence_dir)>",
+     "CITYNEXUS_PYTHON=D:\\moodle\\CityNexus\\.venv\\Scripts\\python.exe",
+     "PLAYWRIGHT_JSON_OUTPUT_NAME=<computed:str(json_out)>"
+    ],
+    "ai_keys_removed_by_the_executed_driver": [
+     "CITYNEXUS_AI_API_KEY",
+     "DEEPSEEK_API_KEY"
+    ],
+    "driver_script": "ord0299_counter_arm.py",
+    "driver_sha256": "119213774274fbda6dd76fba5c23bfb1a2d74d7d44deda55814697621a25e339",
+    "driver_mtime": "2026-09-25T08:47:29",
+    "run_artifact_recorded_at": "2026-09-25T08:48:27+08:00",
+    "named_values_the_why_uses": [
+     "0",
+     "0299cnt4739",
+     "0299fix4739",
+     "1",
+     "119213774274fbda6dd76fba5c23bfb1a2d74d7d44deda55814697621a25e339",
+     "2026-09-25T00:47:52.426Z",
+     "2026-09-25T00:48:23.289Z",
+     "2026-09-25T08:47:29",
+     "2026-09-25T08:48:27+08:00",
+     "4391",
+     "4392",
+     "8191",
+     "8192",
+     "CITYNEXUS_AI_API_KEY",
+     "CITYNEXUS_AI_ENABLED=false",
+     "CITYNEXUS_BACKEND_PORT=<computed:be_port>",
+     "CITYNEXUS_DATABASE_URL=<computed:f\"sqlite:///{(LANE / 'backend' / ('_' + run_id + '.db')).as_posix()}\">",
+     "CITYNEXUS_E2E_AUTHORITATIVE=1",
+     "CITYNEXUS_E2E_PORT=<computed:fe_port>",
+     "CITYNEXUS_E2E_RUN_ID=<computed:run_id>",
+     "CITYNEXUS_EVIDENCE_DIR=<computed:str(evidence_dir)>",
+     "CITYNEXUS_PYTHON=D:\\moodle\\CityNexus\\.venv\\Scripts\\python.exe",
+     "D:\\moodle\\CityNexus\\.venv\\Scripts\\python.exe",
+     "DEEPSEEK_API_KEY",
+     "False",
+     "PLAYWRIGHT_JSON_OUTPUT_NAME=<computed:str(json_out)>",
+     "True",
+     "[citynexus e2e] suite=current-product authoritative=true python=D:\\moodle\\CityNexus\\.venv\\Scripts\\python.exe frontend=:4391 backend=:8191 db=sqlite:///D:/moodle/_qoder_b_lane_20260923/backend/_0299fix4739.db ai=disabled reuseExistingServer=false",
+     "[citynexus e2e] suite=current-product authoritative=true python=D:\\moodle\\CityNexus\\.venv\\Scripts\\python.exe frontend=:4392 backend=:8192 db=sqlite:///D:/moodle/_qoder_b_lane_20260923/backend/_0299cnt4739.db ai=disabled reuseExistingServer=false",
+     "authoritative.json",
+     "current-product",
+     "dev face => 规格会红/会绿一级；不是发布级证据（发布级要跑在生产构建的产物上）",
+     "disabled",
+     "node node_modules/@playwright/test/cli.js test -c playwright.config.ts e2e/qoder-ord0280-attribution-label-speaks-for-itself.spec.ts --reporter=json",
+     "ord0299_counter_arm.py",
+     "sqlite:///D:/moodle/_qoder_b_lane_20260923/backend/_0299cnt4739.db",
+     "sqlite:///D:/moodle/_qoder_b_lane_20260923/backend/_0299fix4739.db",
+     "vite dev (the playwright webServer this invocation owns), not the built bundle"
+    ]
+   }
+  },
+  {
+   "cell": "re-parent identity onto the landed tip",
+   "claimed_result": "MET",
+   "derived_result": null,
+   "why": "re-parent: 549ac8f1b20bc04e70eadbd238ade737eefbff01 sits directly on the landed tip 5c4608cede6cb7bd5f3ac7e704bfee379ca47abc (merge-base --is-ancestor rc=0). The two bases carry the same input - PlanWithAiSheet.tsx is 4c3821b7129320d7940237d33c5f7dd14742f292 at 5c4608ce and 4c3821b7129320d7940237d33c5f7dd14742f292 at 45b0a5e2 - and the two candidates carry the same fixed file, c22cf42506a4175db992bde387ed8d9c6f1ffb9d at both 549ac8f1 and 48827a9d (different from the base blob, so the change is still there). The spec is new on this line: ABSENT at the landed base, 0edae5cf262833e996bbfc3b56f60d0548ca3e3f here. Old ref review/0280-attribution-label was left at 48827a9d6402aaabffc5ff47b1540407fafed620, nothing was force-pushed.",
+   "readings": {
+    "candidate_tip": "549ac8f1b20bc04e70eadbd238ade737eefbff01",
+    "landed_base": "5c4608cede6cb7bd5f3ac7e704bfee379ca47abc",
+    "previous_candidate_tip": "48827a9d6402aaabffc5ff47b1540407fafed620",
+    "old_base": "45b0a5e281cae9c37715173afd3ac5778f309ca7",
+    "is_ancestor_rc": 0,
+    "component_path": "frontend/src/features/planning/PlanWithAiSheet.tsx",
+    "spec_path": "frontend/e2e/qoder-ord0280-attribution-label-speaks-for-itself.spec.ts",
+    "sheet_blob_landed_base": "4c3821b7129320d7940237d33c5f7dd14742f292",
+    "sheet_blob_old_base": "4c3821b7129320d7940237d33c5f7dd14742f292",
+    "sheet_blob_candidate": "c22cf42506a4175db992bde387ed8d9c6f1ffb9d",
+    "sheet_blob_previous_candidate": "c22cf42506a4175db992bde387ed8d9c6f1ffb9d",
+    "spec_blob_landed_base": "ABSENT",
+    "spec_blob_candidate": "0edae5cf262833e996bbfc3b56f60d0548ca3e3f",
+    "new_ref": "review/0280-attribution-label-r2",
+    "old_ref_left_at": "48827a9d6402aaabffc5ff47b1540407fafed620",
+    "named_values_the_why_uses": [
+     "0",
+     "0edae5cf262833e996bbfc3b56f60d0548ca3e3f",
+     "45b0a5e281cae9c37715173afd3ac5778f309ca7",
+     "48827a9d6402aaabffc5ff47b1540407fafed620",
+     "4c3821b7129320d7940237d33c5f7dd14742f292",
+     "549ac8f1b20bc04e70eadbd238ade737eefbff01",
+     "5c4608cede6cb7bd5f3ac7e704bfee379ca47abc",
+     "ABSENT",
+     "c22cf42506a4175db992bde387ed8d9c6f1ffb9d",
+     "frontend/e2e/qoder-ord0280-attribution-label-speaks-for-itself.spec.ts",
+     "frontend/src/features/planning/PlanWithAiSheet.tsx",
+     "review/0280-attribution-label-r2"
+    ]
+   }
+  }
+ ],
+ "summary": {
+  "arms_total": 7,
+  "arms_met": 7,
+  "device_arms": 4,
+  "server_arms": 3,
+  "counter_device_failed": [
+   "A1",
+   "B1",
+   "C1",
+   "D"
+  ],
+  "counter_server_passed": [
+   "A2",
+   "B2",
+   "C2"
+  ],
+  "non_arm_cells": 3
+ },
+ "derived_result": null,
+ "not_claimed": "derived_result 全格留 null；发布级证据缺（见 face 格），要补的是同一批臂跑在生产构建产物上",
+ "ruler_check": {
+  "pass_1_before_sidecar": {
+   "ruler_path": "D:\\moodle\\_qoder_cmdr_ref_20260921\\live_checks\\receipt_cell_derivation_check_r2.py",
+   "ruler_blob": "91ae8b1ec55f5c19122af11bf775df14580955e4",
+   "ruler_blob_matches_declared": true,
+   "rc": 0,
+   "headline": [
+    "cells 10 | overall Q38_GATE_GREEN | hard 0 [] | soft 0 []"
+   ]
+  },
+  "pass_1_output": "receipt ord0299_attribution_run_receipt.json 28685 B blob_sha1 ff99cdeaf225b7cd9c517e53dc94c44c211e943e\ncells 10 | overall Q38_GATE_GREEN | hard 0 [] | soft 0 []\n  cell 0 | why_source why | why tokens 9 | own hits 9 | unique hits 0 | shares why with []\n  cell 1 | why_source why | why tokens 8 | own hits 8 | unique hits 0 | shares why with []\n  cell 2 | why_source why | why tokens 10 | own hits 10 | unique hits 0 | shares why with []\n  cell 3 | why_source why | why tokens 9 | own hits 9 | unique hits 0 | shares why with []\n  cell 4 | why_source why | why tokens 10 | own hits 10 | unique hits 0 | shares why with []\n  cell 5 | why_source why | why tokens 9 | own hits 9 | unique hits 0 | shares why with []\n  cell 6 | why_source why | why tokens 11 | own hits 11 | unique hits 0 | shares why with []\n  cell 7 | why_source why | why tokens 6 | own hits 6 | unique hits 0 | shares why with []\n  cell 8 | why_source why | why tokens 13 | own hits 12 | unique hits 0 | shares why with []\n  cell 9 | why_source why | why tokens 14 | own hits 10 | unique hits 0 | shares why with []\nmeaning: no shared literal and every sentence names its own readings",
+  "pass_2_on_published_bytes": {
+   "ruler_path": "D:\\moodle\\_qoder_cmdr_ref_20260921\\live_checks\\receipt_cell_derivation_check_r2.py",
+   "ruler_blob": "91ae8b1ec55f5c19122af11bf775df14580955e4",
+   "ruler_blob_matches_declared": true,
+   "rc": 0,
+   "headline": [
+    "cells 10 | overall Q38_GATE_GREEN | hard 0 [] | soft 0 []"
+   ]
+  },
+  "pass_2_output": "receipt ord0299_attribution_run_receipt.json 30231 B blob_sha1 bf3c70a2605917c99c7356aad913a83b1ef5ba73\ncells 10 | overall Q38_GATE_GREEN | hard 0 [] | soft 0 []\n  cell 0 | why_source why | why tokens 9 | own hits 9 | unique hits 0 | shares why with []\n  cell 1 | why_source why | why tokens 8 | own hits 8 | unique hits 0 | shares why with []\n  cell 2 | why_source why | why tokens 10 | own hits 10 | unique hits 0 | shares why with []\n  cell 3 | why_source why | why tokens 9 | own hits 9 | unique hits 0 | shares why with []\n  cell 4 | why_source why | why tokens 10 | own hits 10 | unique hits 0 | shares why with []\n  cell 5 | why_source why | why tokens 9 | own hits 9 | unique hits 0 | shares why with []\n  cell 6 | why_source why | why tokens 11 | own hits 11 | unique hits 0 | shares why with []\n  cell 7 | why_source why | why tokens 6 | own hits 6 | unique hits 0 | shares why with []\n  cell 8 | why_source why | why tokens 13 | own hits 12 | unique hits 0 | shares why with []\n  cell 9 | why_source why | why tokens 14 | own hits 10 | unique hits 0 | shares why with []\nmeaning: no shared literal and every sentence names its own readings"
+ }
+}
