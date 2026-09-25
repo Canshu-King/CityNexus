@@ -1,0 +1,27 @@
+version Q43_r4 | input o297r_measured_object_b.json 74446 B
+claims checked 188 | exempt {"YEAR": 21, "HTTP_STATUS": 10, "IDENTIFIER_PART": 13} | overall Q43_GATE_RED | findings 135 ['NUMBER_WITHOUT_COORDINATE']
+  line 44 F3_bare_numeric_claim NUMBER_WITHOUT_COORDINATE | 12, | no class matched
+  line 139 F3_bare_numeric_claim NUMBER_WITHOUT_COORDINATE | 23, | no class matched
+  line 143 F3_bare_numeric_claim NUMBER_WITHOUT_COORDINATE | 0800 | no class matched
+  line 144 F3_bare_numeric_claim NUMBER_WITHOUT_COORDINATE | 0800 | no class matched
+  line 145 F3_bare_numeric_claim NUMBER_WITHOUT_COORDINATE | 0800 | no class matched
+  line 146 F3_bare_numeric_claim NUMBER_WITHOUT_COORDINATE | 0800 | no class matched
+  line 147 F3_bare_numeric_claim NUMBER_WITHOUT_COORDINATE | 0800 | no class matched
+  line 148 F3_bare_numeric_claim NUMBER_WITHOUT_COORDINATE | 0800 | no class matched
+  line 149 F3_bare_numeric_claim NUMBER_WITHOUT_COORDINATE | 0800 | no class matched
+  line 150 F3_bare_numeric_claim NUMBER_WITHOUT_COORDINATE | 0800 | no class matched
+  line 151 F3_bare_numeric_claim NUMBER_WITHOUT_COORDINATE | 0800 | no class matched
+  line 152 F3_bare_numeric_claim NUMBER_WITHOUT_COORDINATE | 0800 | no class matched
+  line 153 F3_bare_numeric_claim NUMBER_WITHOUT_COORDINATE | 0800 | no class matched
+  line 154 F3_bare_numeric_claim NUMBER_WITHOUT_COORDINATE | 0800 | no class matched
+  line 186 F3_bare_numeric_claim NUMBER_WITHOUT_COORDINATE | 651 | no class matched
+  line 186 F3_bare_numeric_claim NUMBER_WITHOUT_COORDINATE | 114, | no class matched
+  line 186 F3_bare_numeric_claim NUMBER_WITHOUT_COORDINATE | 271, | no class matched
+  line 186 F3_bare_numeric_claim NUMBER_WITHOUT_COORDINATE | 334 | no class matched
+  line 275 F3_bare_numeric_claim NUMBER_WITHOUT_COORDINATE | 127 | no class matched
+  line 275 F3_bare_numeric_claim NUMBER_WITHOUT_COORDINATE | 703 | no class matched
+  line 275 F3_bare_numeric_claim NUMBER_WITHOUT_COORDINATE | 166, | no class matched
+  line 275 F3_bare_numeric_claim NUMBER_WITHOUT_COORDINATE | 323, | no class matched
+  line 275 F3_bare_numeric_claim NUMBER_WITHOUT_COORDINATE | 386 | no class matched
+  line 326 F3_bare_numeric_claim NUMBER_WITHOUT_COORDINATE | 25, | no class matched
+  line 326 F3_bare_numeric_claim NUMBER_WITHOUT_COORDINATE | 1790323740574 | no class matched
