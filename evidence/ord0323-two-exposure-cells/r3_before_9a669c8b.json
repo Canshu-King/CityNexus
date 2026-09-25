@@ -1,0 +1,99 @@
+{
+ "schema": "CNX_CMDR_UI_EVIDENCE_EXPOSURE_GATE_V1_R2",
+ "revision_of": "ui_exposure_field_check_r1.py = 0ba79e00738984ee06651219530e5a9d7fa897e3 (bytes untouched)",
+ "revision_reason": "lane E d2305848 ORD-0319 caught a blind spot; commander reproduced it first-hand: r1 reports 0 hits on the tip while PlanWithAiSheet.tsx:1016 renders result.failureReason.text, fed by serverReasonSentence (:159-165) reading body.detail / error.message at :576/:637/:711",
+ "attribution": "COMMANDER_RULER_BLIND_SPOT",
+ "lane": "commander 494abfd7",
+ "at_local": "2026-09-26T04:22:12+0800",
+ "standing_rule": "Q64=1 (arbiter): data reaching UI / screenshot / evidence artifacts must pass source classification -> allowed fields -> render. mask is a helper, never the first gate.",
+ "allowed_fields": [
+  "http_status",
+  "content_type",
+  "body_bytes",
+  "response_received",
+  "elapsed_ms",
+  "request_id"
+ ],
+ "forbidden": [
+  "raw body",
+  "raw detail",
+  "raw exception",
+  "upstream sentence reaching DOM via a helper"
+ ],
+ "rules_fired": [
+  "RAW_TEXT_INTERPOLATION",
+  "UPSTREAM_READ_DIRECT"
+ ],
+ "targets_scanned": [
+  "D:\\moodle\\_qoder_b_ord0323_20260926\\r3\\baseline_9a669c8bec86__ProductErrorBoundary.tsx",
+  "D:\\moodle\\_qoder_b_ord0323_20260926\\r3\\baseline_9a669c8bec86__JourneyInboxWorkbench.tsx"
+ ],
+ "hits": [
+  {
+   "rule": "UPSTREAM_READ_DIRECT",
+   "line": 104,
+   "snippet": "{String(error?.message || error)}",
+   "file": "D:\\moodle\\_qoder_b_ord0323_20260926\\r3\\baseline_9a669c8bec86__ProductErrorBoundary.tsx"
+  },
+  {
+   "rule": "RAW_TEXT_INTERPOLATION",
+   "file": "D:\\moodle\\_qoder_b_ord0323_20260926\\r3\\baseline_9a669c8bec86__JourneyInboxWorkbench.tsx",
+   "line": 691,
+   "snippet": "<code>{rawDetail}</code>"
+  },
+  {
+   "rule": "UPSTREAM_READ_DIRECT",
+   "line": 307,
+   "snippet": "} catch (error) {",
+   "file": "D:\\moodle\\_qoder_b_ord0323_20260926\\r3\\baseline_9a669c8bec86__JourneyInboxWorkbench.tsx"
+  },
+  {
+   "rule": "UPSTREAM_READ_DIRECT",
+   "line": 317,
+   "snippet": "} catch (error) {",
+   "file": "D:\\moodle\\_qoder_b_ord0323_20260926\\r3\\baseline_9a669c8bec86__JourneyInboxWorkbench.tsx"
+  },
+  {
+   "rule": "UPSTREAM_READ_DIRECT",
+   "line": 336,
+   "snippet": "} catch (error) {",
+   "file": "D:\\moodle\\_qoder_b_ord0323_20260926\\r3\\baseline_9a669c8bec86__JourneyInboxWorkbench.tsx"
+  },
+  {
+   "rule": "UPSTREAM_READ_DIRECT",
+   "line": 386,
+   "snippet": "} catch (error) {",
+   "file": "D:\\moodle\\_qoder_b_ord0323_20260926\\r3\\baseline_9a669c8bec86__JourneyInboxWorkbench.tsx"
+  },
+  {
+   "rule": "UPSTREAM_READ_DIRECT",
+   "line": 407,
+   "snippet": "} catch (error) {",
+   "file": "D:\\moodle\\_qoder_b_ord0323_20260926\\r3\\baseline_9a669c8bec86__JourneyInboxWorkbench.tsx"
+  },
+  {
+   "rule": "UPSTREAM_READ_DIRECT",
+   "line": 435,
+   "snippet": "} catch (error) {",
+   "file": "D:\\moodle\\_qoder_b_ord0323_20260926\\r3\\baseline_9a669c8bec86__JourneyInboxWorkbench.tsx"
+  },
+  {
+   "rule": "UPSTREAM_READ_DIRECT",
+   "line": 459,
+   "snippet": "} catch (error) {",
+   "file": "D:\\moodle\\_qoder_b_ord0323_20260926\\r3\\baseline_9a669c8bec86__JourneyInboxWorkbench.tsx"
+  },
+  {
+   "rule": "UPSTREAM_READ_DIRECT",
+   "line": 517,
+   "snippet": "} catch (error) {",
+   "file": "D:\\moodle\\_qoder_b_ord0323_20260926\\r3\\baseline_9a669c8bec86__JourneyInboxWorkbench.tsx"
+  }
+ ],
+ "verdict": "EXPOSURE_SHAPE_FOUND",
+ "interpretation_limit": "a hit names a shape to justify, not a defect verdict; NO_EXPOSURE_SHAPE_FOUND from r1 is additionally worthless on its own, because r1 was proven blind at this exact file - only r2's clean verdict is a clean verdict.",
+ "selftest_command": "python ui_exposure_field_check_r2.py --selftest",
+ "claim_kind": "pattern_determined",
+ "claimed_result": "EXPOSURE_SHAPE_FOUND across 2 scanned file(s): 10 hit(s) ['RAW_TEXT_INTERPOLATION@D:\\\\moodle\\\\_qoder_b_ord0323_20260926\\\\r3\\\\baseline_9a669c8bec86__JourneyInboxWorkbench.tsx:691', 'UPSTREAM_READ_DIRECT@D:\\\\moodle\\\\_qoder_b_ord0323_20260926\\\\r3\\\\baseline_9a669c8bec86__JourneyInboxWorkbench.tsx:307', 'UPSTREAM_READ_DIRECT@D:\\\\moodle\\\\_qoder_b_ord0323_20260926\\\\r3\\\\baseline_9a669c8bec86__JourneyInboxWorkbench.tsx:317', 'UPSTREAM_READ_DIRECT@D:\\\\moodle\\\\_qoder_b_ord0323_20260926\\\\r3\\\\baseline_9a669c8bec86__JourneyInboxWorkbench.tsx:336', 'UPSTREAM_READ_DIRECT@D:\\\\moodle\\\\_qoder_b_ord0323_20260926\\\\r3\\\\baseline_9a669c8bec86__JourneyInboxWorkbench.tsx:386', 'UPSTREAM_READ_DIRECT@D:\\\\moodle\\\\_qoder_b_ord0323_20260926\\\\r3\\\\baseline_9a669c8bec86__JourneyInboxWorkbench.tsx:407', 'UPSTREAM_READ_DIRECT@D:\\\\moodle\\\\_qoder_b_ord0323_20260926\\\\r3\\\\baseline_9a669c8bec86__JourneyInboxWorkbench.tsx:435', 'UPSTREAM_READ_DIRECT@D:\\\\moodle\\\\_qoder_b_ord0323_20260926\\\\r3\\\\baseline_9a669c8bec86__JourneyInboxWorkbench.tsx:459']",
+ "derived_result": null
+}
