@@ -1,0 +1,32 @@
+{
+ "patterns": [
+  "capture_tip_r1.json",
+  "4bf0eafa"
+ ],
+ "exclusion_rule": [
+  "p4_bus2*.py",
+  "retired_ruler_scan*.json",
+  "bus_note_p4_bus2*.md"
+ ],
+ "this_batch_artefacts": {
+  "files": 24,
+  "bytes": 118033,
+  "files_with_a_hit": [],
+  "hit_lines": []
+ },
+ "earlier_batch_artefacts": {
+  "files": 175,
+  "bytes": 2670848,
+  "files_with_a_hit": [],
+  "hit_lines": []
+ },
+ "lane_instruments": {
+  "files": 52,
+  "bytes": 544332,
+  "files_with_a_hit": [],
+  "hit_lines": []
+ },
+ "hit_line_count": 0,
+ "citations_anywhere": [],
+ "positive_control_fires": true
+}
