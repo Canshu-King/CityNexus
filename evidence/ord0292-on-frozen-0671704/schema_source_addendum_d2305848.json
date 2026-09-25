@@ -1,0 +1,54 @@
+{
+ "schema": "CNX_SCHEMA_SOURCE_ADDENDUM_V1",
+ "order": "task #33: schema_source fields for the receipts named in my Q-b self-report (0253 Phase A/B, 0225 Y123/Y23, 0200/0201/0204 family)",
+ "verifier": "lane E d2305848",
+ "at": "2026-09-25T10:3x+08:00",
+ "rule_source": "arbiter Q24 = 1 + Q-b self-report (bus 5806428858) + R-SCHEMA-01/02 (Q24 new standard: ensure_schema() for new rigs)",
+ "disclosure_note": {"rule": "PUBLISHER_RECEIPT_DISCLOSURE_RULE", "hits": []},
+ "addendum": {
+  "ORD-0253_phaseAB": {
+   "receipts": [
+    {"repo_path": "evidence/ord0253-phaseab/v1/v1_index.json", "blob_prefix": "bb4ee158bd7ca740"},
+    {"repo_path": "evidence/ord0253-phaseab/v1/v1_index_r2.json", "blob_prefix": "bc8da16ad3e70226"}
+   ],
+   "my_derivation": {"repo_path": "evidence/ord0253-phaseab/verifier_index_d2305848.json",
+                      "blob": "8952ae615a6a254bbbc2432006b642aa1244933d"},
+   "schema_source": "replayed_DDL",
+   "fields_affected": ["mutated_unfilled_rows [13,14,15]", "mutated_claim_rows [51,63,75]", "baseline_claim_rows 39"],
+   "derivation_impact": "NONE on KILL verdicts (they derive from pytest outcomes + round fields, not from row counts); the row-count readings inherit the DDL-replay provenance for any durability claim quoting them",
+   "note": "F's own ORD-0253 delivery already carries R-SCHEMA-01 class = SCHEMA_SOURCE_METHOD_CORRECTED (all rows via product API); only MY consumption of the durable-row counts needs this flag"
+  },
+  "ORD-0225_Y123_Y23": {
+   "receipts": [
+    {"repo_path": "evidence/ord0225/v1_gate_receipt_Y123_a_21f1e8d.json"},
+    {"repo_path": "evidence/ord0225/v1_gate_receipt_Y123_b_21f1e8d.json"},
+    {"repo_path": "evidence/ord0225/v1_gate_receipt_Y23_a_21f1e8d.json"},
+    {"repo_path": "evidence/ord0225/v1_gate_receipt_Y23_b_21f1e8d.json"},
+    {"repo_path": "evidence/ord0225/v1_gate_receipt_Y23_c_21f1e8d.json"}
+   ],
+   "schema_source": "replayed_DDL",
+   "fields_affected": ["per-round fresh app-resolved temp DB", "row counts (5 rows per round)"],
+   "derivation_impact": "NONE on KILL verdicts (pytest outcomes + counters); durability statements quoting those row counts inherit this caveat"
+  },
+  "ORD-0200_0201_0204_family": {
+   "receipts": "my own attack-driver receipts in local raw/ dirs (never published as blobs; the readings were 0->N row counts from DDL-replayed fixtures)",
+   "schema_source": "replayed_DDL",
+   "derivation_impact": "KILL/attack conclusions unaffected; 0->N readings carry the caveat"
+  },
+  "not_affected": [
+   "ORD-0279 (rows via product API per HJ-P3's own declaration)",
+   "ORD-0269/0273 v5/v6/0292/0298 (rows via product e2e/API per D's R-SCHEMA-01 declaration)",
+   "ORD-0272 samegen (one-shot temp db via ensure_schema)",
+   "ORD-0293 (rows via product API; my own rig used product endpoints only)"
+  ]
+ },
+ "provenance": {
+  "original_promise": "bus 5806428858 (Q-b self-report): add schema_source at the next natural revision rather than re-running now",
+  "this_is_that_revision": true,
+  "no_rerun": true,
+  "rule": "R-SCHEMA-01/02 (Q24/Q-b, arbiter): new rigs use ensure_schema(); existing DDL-replay receipts get the field at their next revision"
+ },
+ "discipline": {"services_started": 0, "user_dbs_touched": 0, "demo_reset": 0,
+   "credentials_printed": 0, "published_paths_overwritten": 0,
+   "network": "GitHub GET + one PUT (this addendum)"}
+}
