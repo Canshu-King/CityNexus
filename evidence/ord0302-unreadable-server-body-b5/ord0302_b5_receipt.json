@@ -909,5 +909,21 @@
    "ord0302_index.json",
    "ord0302_b5_receipt.json"
   ]
+ },
+ "ruler_check": {
+  "pass_1": {
+   "rc": 0,
+   "headline": [
+    "cells 14 | overall Q38_GATE_GREEN | hard 0 [] | soft 0 []"
+   ],
+   "green": true
+  },
+  "pass_2_on_published_bytes": {
+   "rc": 0,
+   "headline": [
+    "cells 14 | overall Q38_GATE_GREEN | hard 0 [] | soft 0 []"
+   ],
+   "green": true
+  }
  }
 }
