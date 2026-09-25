@@ -1,0 +1,87 @@
+{
+ "cells": [
+  {
+   "derived_from": null,
+   "derived_from_key": null,
+   "id": "B2a_idle_automatic_convergence",
+   "own_hits": [
+    "1",
+    "45b0a5e2",
+    "69fd2f85",
+    "index-BLpFjUjp.js",
+    "index-CtuiCkKf.js",
+    "index-DimRtCQm.js"
+   ],
+   "own_token_count": 27,
+   "unique_hits": [],
+   "verdict": "VERIFIED_FIXED_WITH_DISCRIMINATING_CONTROL",
+   "why": "idle page installed on 69fd2f85 executed index-BLpFjUjp.js -> index-DimRtCQm.js, converged=True, at 4013 ms, on exactly 1 navigation(s) issued by the instrument; the same instrument on 45b0a5e2 executed index-CtuiCkKf.js -> index-CtuiCkKf.js, converged=False",
+   "why_source": "why",
+   "why_token_count": 7
+  },
+  {
+   "derived_from": null,
+   "derived_from_key": null,
+   "id": "B2b_dirty_form_preservation",
+   "own_hits": [
+    "0",
+    "3",
+    "45a3d568",
+    "C2DKD_R7",
+    "ef277b2d",
+    "index-C2DKD_R7.js",
+    "index-DimRtCQm.js",
+    "index-xKIGmoBz.js"
+   ],
+   "own_token_count": 29,
+   "unique_hits": [],
+   "verdict": "VERIFIED_FIXED_WITH_DISCRIMINATING_CONTROL",
+   "why": "document claimed during its own lifetime on ef277b2d executed index-xKIGmoBz.js -> index-DimRtCQm.js with 0 further navigations; wizard step 3 -> 3; named fields differing after the reload = []; 6 of them carry values the instrument typed (['cityName', 'arrivalLocation', 'departureLocation', 'startAt', 'endAt', 'specialRequirements']); mutant self-test flagged=True; the same shape on 45a3d568 executed index-C2DKD_R7.js -> index-C2DKD_R7.js, converged=False",
+   "why_source": "why",
+   "why_token_count": 9
+  },
+  {
+   "derived_from": null,
+   "derived_from_key": null,
+   "id": "B2c_inflight_write_safe_point",
+   "own_hits": [
+    "0",
+    "1",
+    "22",
+    "2790",
+    "45a3d568",
+    "45b0a5e2",
+    "69fd2f85",
+    "C2DKD_R7",
+    "index-C2DKD_R7.js",
+    "index-DimRtCQm.js"
+   ],
+   "own_token_count": 37,
+   "unique_hits": [],
+   "verdict": "VERIFIED_FIXED_WITH_TWO_DISCRIMINATING_CONTROLS",
+   "why": "handover on 45a3d568 reloaded 22.0 ms relative to its own write settling (cut=False), converged=True (index-C2DKD_R7.js -> index-DimRtCQm.js) with 0 instrument-issued navigations and its client received the 201=True; the control arm on 45b0a5e2 - same in-flight write, same 0 navigations, a tree with NO B2a idle convergence - had reload epoch=None, converged=False, its client received the write=True, and the row count is the same 1 as the fix arm, so the server committed in both and only one client still knew about it; named secondary control on 69fd2f85 (B2a present, safe point absent) reloaded -2790.0 ms relative to settlement (cut=True), converged=True, client received=False - that arm is the hazard itself, and it is why convergence is NOT this cell's discriminator: both it and the fix arm converge, only one of them does it by cutting the write | journeys rows: fix=1 control=1 secondary=1",
+   "why_source": "why",
+   "why_token_count": 11
+  }
+ ],
+ "cells_found": 3,
+ "exit": 0,
+ "findings": [],
+ "hard_codes": [],
+ "hard_count": 0,
+ "info_count": 0,
+ "meaning": "no shared literal and every sentence names its own readings",
+ "overall": "Q38_GATE_GREEN",
+ "receipt": {
+  "blob_sha1": "37133521666190c7df3894d7fa0fcfd504cc6641",
+  "bytes": 24542,
+  "path": "_incoming_o290r3.json"
+ },
+ "soft_codes": [],
+ "soft_count": 0,
+ "unique_reading_counts": {
+  "B2a_idle_automatic_convergence": 1,
+  "B2b_dirty_form_preservation": 3,
+  "B2c_inflight_write_safe_point": 4
+ }
+}
