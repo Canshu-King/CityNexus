@@ -1,0 +1,10 @@
+{
+ "serve_root": "D:\\moodle\\_qoder_preview_20260920\\dist",
+ "look_roots": [
+  "D:\\moodle\\_qoder_cmdr_ref_20260921\\snap_dc964086\\frontend\\dist"
+ ],
+ "served_files": 41,
+ "hits": [],
+ "unlinked_twins_unnamed": [],
+ "verdict": "NO_EXTERNAL_HARDLINK_REFS"
+}
