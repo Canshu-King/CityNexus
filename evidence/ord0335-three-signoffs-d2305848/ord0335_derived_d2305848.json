@@ -1,0 +1,245 @@
+{
+ "schema": "CNX_LANE_E_ORD0335_DERIVED_V1",
+ "verifier": "lane E d2305848",
+ "at": "2026-09-26T05:35:17+0800",
+ "orders": {
+  "ORD-0325": {
+   "lane": "D e345b9d6",
+   "generation": "c1bea4c20ea8cd5f1cc5c9d87053c005b2a24400",
+   "cells": [
+    {
+     "cell": "three named r3 hits removed at tested commit (T-A/T-B/T-C); survivors named and out of scope",
+     "derived_result": "MET",
+     "readings": {
+      "tested_hits_V8Experience": [
+       "RAW_BODY_TO_DOM@372",
+       "UPSTREAM_READ_DIRECT@897"
+      ],
+      "expected_survivors": [
+       "RAW_BODY_TO_DOM@372",
+       "UPSTREAM_READ_DIRECT@897"
+      ],
+      "TA_tested": 0,
+      "TB_tested": 0,
+      "removed_flags": {
+       "T-A": [
+        {
+         "rule": "UPSTREAM_READ_DIRECT",
+         "line_in_baseline": 91,
+         "snippet": "if (!r.ok) {",
+         "still_a_hit_on_the_tested_file": false,
+         "same_hit_now_reports_at_line": null,
+         "how_persisted_sinks_were_matched": "同一 rule 下锚句字节相等（尺输出的 snippet），不是行号 -- 行号会因为我在上文加行而整体下移"
+        }
+       ],
+       "T-B": [
+        {
+         "rule": "UPSTREAM_READ_DIRECT",
+         "line_in_baseline": 92,
+         "snippet": "if (!response.ok) {",
+         "still_a_hit_on_the_tested_file": false,
+         "same_hit_now_reports_at_line": null,
+         "how_persisted_sinks_were_matched": "同一 rule 下锚句字节相等（尺输出的 snippet），不是行号 -- 行号会因为我在上文加行而整体下移"
+        }
+       ],
+       "T-C": [
+        {
+         "rule": "UPSTREAM_READ_DIRECT",
+         "line_in_baseline": 1028,
+         "snippet": "} else {",
+         "still_a_hit_on_the_tested_file": false,
+         "same_hit_now_reports_at_line": null,
+         "how_persisted_sinks_were_matched": "同一 rule 下锚句字节相等（尺输出的 snippet），不是行号 -- 行号会因为我在上文加行而整体下移"
+        }
+       ]
+      },
+      "source": "ord0325_evidence.json cells[*].ruler_r3_at_tested (captures after_*.json)"
+     }
+    },
+    {
+     "cell": "6 mutation arms each flip exactly their named owner (siblings green, byte-exact restore)",
+     "derived_result": "MET",
+     "readings": {
+      "killed": 6,
+      "survived": 0,
+      "campaign_valid": true,
+      "tested_tree_equals_candidate": true,
+      "arms_ok": true,
+      "source": "ord0325_evidence.json arms.per_arm"
+     }
+    },
+    {
+     "cell": "landing receipt binds candidate c1bea4c2 (READY_TO_LAND, no problems) + phone transport identity",
+     "derived_result": "MET",
+     "readings": {
+      "candidate_tip": "c1bea4c20ea8cd5f1cc5c9d87053c005b2a24400",
+      "verdict": "READY_TO_LAND",
+      "problems": [],
+      "phone_overall": "DEPLOYED_AND_BYTE_IDENTICAL_ON_PHONE_SIDE",
+      "phone_scope": "transport-level identity only (commander probe); no walkthrough claim",
+      "source": "ord0325_landing.json + ord0325_phone_probe.json"
+     }
+    }
+   ],
+   "top_level_derived_result": "ALL_MET"
+  },
+  "ORD-0327": {
+   "lane": "F 8ccd71d8",
+   "generation": "09dffbb70c151e6734221d6d3d69d88775a1fbd0",
+   "cells": [
+    {
+     "cell": "mutation campaign: control green, 6/6 mutants kill, 0 survivors, anchors hit, restored clean",
+     "derived_result": "MET",
+     "readings": {
+      "control_returncode": 0,
+      "kills": 6,
+      "survivors": [],
+      "anchor_misses": [],
+      "restored_clean": true,
+      "campaign_valid": true,
+      "per_arm_red_cells": {
+       "M1_no_clock_armed": [
+        "test_W5_http_past_the_budget_answers_named_and_persists_nothing",
+        "test_W7_a_spent_budget_names_only_the_request_that_lost_the_lock"
+       ],
+       "M2_boundary_silent": [
+        "test_W4_the_boundary_judge_needs_a_clock_a_lost_lock_and_an_expired_budget",
+        "test_W5_http_past_the_budget_answers_named_and_persists_nothing",
+        "test_W7_a_spent_budget_names_only_the_request_that_lost_the_lock"
+       ],
+       "M3_ignores_lock_test": [
+        "test_W4_the_boundary_judge_needs_a_clock_a_lost_lock_and_an_expired_budget"
+       ],
+       "M4_ignores_expiry": [
+        "test_W4_the_boundary_judge_needs_a_clock_a_lost_lock_and_an_expired_budget",
+        "test_W6_http_inside_the_budget_keeps_todays_face_with_no_new_name"
+       ],
+       "M5_default_scenario_undeclared": [
+        "test_W1_the_default_scenario_is_declared_once_and_covered_by_the_door",
+        "test_W2_the_door_refuses_a_default_deadline_at_or_below_the_lock_wait"
+       ],
+       "M6_handler_unregistered": [
+        "test_W5_http_past_the_budget_answers_named_and_persists_nothing",
+        "test_W7_a_spent_budget_names_only_the_request_that_lost_the_lock"
+       ]
+      },
+      "source": "ord0327_gate_mutation_campaign_r4.json"
+     }
+    },
+    {
+     "cell": "suite A/B on two distinct generations: 0 new red / 0 gone red, own gate green in-suite",
+     "derived_result": "MET",
+     "readings": {
+      "tip_red": 410,
+      "candidate_red": 410,
+      "new_red": [],
+      "gone_red": [],
+      "trees": {
+       "tip_0f8b925f": "0f8b925facabc9df57bab600b86d999dd515bf94",
+       "candidate_09dffbb7": "09dffbb70c151e6734221d6d3d69d88775a1fbd0"
+      },
+      "source": "ord0327_suite_ab_r2.json (r2 fixed the same-tree problem r1 had)"
+     }
+    },
+    {
+     "cell": "candidate minted on byte-identical predecessors; landing READY_TO_LAND, product files = the named two",
+     "derived_result": "MET",
+     "readings": {
+      "subject_blob_equality": {
+       "backend/app/db/write_deadline.py": true,
+       "backend/app/main.py": true,
+       "backend/tests/test_qoder_ord0327_write_bound_default.py": true
+      },
+      "candidate_tip": "09dffbb70c151e6734221d6d3d69d88775a1fbd0",
+      "verdict": "READY_TO_LAND",
+      "product_files": [
+       "backend/app/db/write_deadline.py",
+       "backend/app/main.py"
+      ],
+      "source": "ord0327_candidate_mint_r2.json + ord0327_landing.json"
+     }
+    }
+   ],
+   "top_level_derived_result": "ALL_MET"
+  },
+  "ORD-0330": {
+   "lane": "S2-hermes-port",
+   "generation": "821a0eb54cca1b305a4aa75c1ca8d46a95d51bba (candidate d05cfb2930c8d560e8b877a2d6363e1376dae6c3 landed as)",
+   "cells": [
+    {
+     "cell": "all requirement checks true (each compares readings taken in the run)",
+     "derived_result": "MET",
+     "readings": {
+      "checks": {
+       "req1_only_gateway_product_file": true,
+       "req1_main_py_and_frontend_untouched": true,
+       "no_deletions_outside_the_two_edited_lines": true,
+       "transplanted_block_is_byte_identical_to_hermes": true,
+       "both_call_sites_wired": true,
+       "cache_read_survives": true,
+       "req2_gate_green_with_complete_harness_set": true,
+       "req2_full_suite_red_set_unchanged": true,
+       "req2_full_suite_gained_exactly_the_new_tests": true,
+       "req3_route_witness_goes_red_when_the_arm_is_cut": true,
+       "req3_r5_alone_cannot_see_the_arm": true,
+       "req3_control_dirs_removed": true,
+       "req5_candidate_pushed_and_read_back": true,
+       "req5_only_candidate_branch_pushed": true,
+       "candidate_fast_forwardable_from_measured_tip": true
+      },
+      "verdict_derivation": "every key in checks compares readings taken in this run (git diffs, the gate receipt, the full-suite logs, the mutation-control receipt); the verdict string is computed from them and no literal pass t",
+      "source": "receipt_r1.json checks (git diffs + gate receipt + mutation controls)"
+     }
+    },
+    {
+     "cell": "mutation controls: M0 green; M1 route witness red + r5 still green (r5 alone cannot see the arm); M2 import break",
+     "derived_result": "MET",
+     "readings": {
+      "M0": true,
+      "M1_route_red": true,
+      "M1_r5_green": true,
+      "M1_failed_test": [
+       "tests/test_ord0330_cached_replan_contract_upgrade.py::test_replayed_request_replan_answer_carries_the_current_contract"
+      ],
+      "M2_checks": {
+       "M2_route_witness_breaks_at_import": true,
+       "M2_r5_cannot_import": true
+      },
+      "source": "receipt_r1.json mutation_controls"
+     }
+    },
+    {
+     "cell": "full suite red set unchanged (+16 passed); landing binds 821a0eb5, gate 16 passed / rc 0",
+     "derived_result": "MET",
+     "readings": {
+      "red_set_same": true,
+      "red_len": 12,
+      "passed_delta": 16,
+      "new_red": [],
+      "fixed": [],
+      "landing_candidate": "821a0eb54cca1b305a4aa75c1ca8d46a95d51bba",
+      "landing_verdict": "READY_TO_LAND",
+      "gate_summary": [
+       "16 passed, 2 warnings in 1.79s"
+      ],
+      "source": "receipt_r1.json full_suite + ord0330_landing.json"
+     }
+    }
+   ],
+   "top_level_derived_result": "ALL_MET"
+  }
+ },
+ "derivation_rule": "every cell verdict is computed from the readings named in its own readings.source (the candidates' published receipts); no PASS literal; per Q25 each verdict is bound to the generation its readings were taken on",
+ "top_level": {
+  "ORD-0325": "ALL_MET",
+  "ORD-0327": "ALL_MET",
+  "ORD-0330": "ALL_MET"
+ },
+ "discipline": {
+  "product_bytes_changed": 0,
+  "refs_pushed": 0,
+  "demo_reset": 0,
+  "databases_opened_by_me": 0,
+  "credential_values_printed": 0
+ }
+}
