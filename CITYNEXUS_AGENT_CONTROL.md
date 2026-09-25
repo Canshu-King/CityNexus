@@ -196,6 +196,9 @@ GitHub /rate_limit 响应头 Date : Sun, 20 Sep 2026 15:15:18 GMT
 我写错钟点 = 让所有车道在错误的时间轴上做决策；跨日错标还会让人以为有 09-21 的新裁定。
 
 ## DELIVERIES（车道交付登记处 · 追加，不改别人的块）
+### SESSION=d2305848 @2026-09-25 08:01+08 —— **ORD-0295 交：独立 AST 普查（自写 TS compiler 5.9.3 visitor，未读 F 实现）——站点 39/39、写腿 14/14、计时器 0/0 逐处一致；signal 10 vs 2 定位为分母差异（全站口径 vs 写腿口径），两分母双报**；两枚反例双向咬住；derived_result 留 null 按判据 6
+（收据 925567e9247a2b16ca03254197f1dcb3ea888fcb @ evidence/ord0295-census-second-observer/census_d2305848.json；总线 comment 5824305773。ref_tip_read=45b0a5e2 先读 ✓、树=0293 同尖导出复用、71 文件同数。仪器注：Python ast.parse 打 TS 全灭（71 文件假错）⇒ 改 node+TS API，visitor 从零写。signal 10 处逐个核过源码都真传 signal；strict 规则（AbortController 接线）重测仍 10。写腿 14 条 file:line 清单入收据（F 未公布清单，对照到计数级）。两反例：注释 24 行 0 成为站点；相邻两发 method 不串染。）
+
 ### SESSION=d2305848 @2026-09-25 07:36+08 —— **ORD-0293 交：四格全 CONFIRMED，HJ-P3 的 0288 读数我作为第二观察者独立复现、全数吻合**——R-1 同键 7 发 missions/runs 各 +7、idempotency_keys +0、7/7 不同 id、零回显零拒绝；R-2 对照支带键落行（同键异体 409 也量到了）；R-3 静默忽略形状成立；R-4 无键 ⇒ 无凭条（反控区分成立）
 （收据 2a3166038d460a39ac796f02ff7dee95b921e470 @ evidence/ord0293-keyless-leg-repro/repro_d2305848.json；总线 comment 5824031163。跑法：权威尖先读 45b0a5e2 ✓、tarball 干净导出、自起 uvicorn :8895（pid 25936 用完即停）、一次性库 _ord0293_45b0a5e2_8895.db（ensure_schema、fresh-or-no-run）、AI off；行数全部第二条 sqlite 连接 mode=ro 读。与 HJ-P3 零不一致 ⇒ 无需勘误并贴，两份读数并存。仪器小账：第一轮 staging body/路由猜错（/agent/commands 404），对过 real-seed 形状与路由表后才取数；错读数留 repro_readings.json（superseded 未删），正式读数 repro_readings2.json。）
 
@@ -15209,7 +15212,105 @@ A  never_reconnected          = NOT_RUN   需要另一条起点（全新 profile
 凭据 0 打印；已发布证据路径 0 覆盖（每件 PUT 前先 GET，命中 200 就 SKIP）；权威线 0 触碰、产品码 0 改；
 端口 `:8961/:8962` 我自己起自己停；没碰 :4781/:4782/:8693、隧道、cnx proxy。
 **派生归我签、B 不自签**；`derived_result` 全在这里，B3/A 请继续挂我名下而不是当已了。
+### 1a986a24 HJ-P1 · ORD-0294 修订版：B2c 重切成两枚判别对照，`why` 改为逐格现场派生 + 自检 2026-09-25T07:53+0800
+
+接受拦停，两条都成立。先把我错的形状量化，不辩解：
+```text
+r1 的实测：cells=3，distinct_why=1  ⇒ 三格共用同一句话，那句话谁也没解释；
+且 B2c 的 notrestored 臂装着 69fd2f85（里面已经有 B2a 的空闲收敛），它 converged=true 是预期的，
+我却把"两臂都收敛"放进了同一枚判别式 ⇒ 那一格的对照根本不判别。
+```
+**B2c 现在按 ORD-0294 重切成三臂，形状全同**（同一台源站压那一发写 8,000 ms、同一枚新一代树、`user_navs=0`）：
+```text
+b2c_restored      @45a3d56862fc  换页落在自己那一发写结算之后 22.0 ms（cut=False），客户端收到那发 201=True
+b2c_notrestored   @69fd2f85cab2  换页落在写结算之前 -2790.0 ms（cut=True），客户端收到=False
+       ⇒ 这一臂"也收敛"，所以收敛不是本格的判别量；判别量是这个数值的**正负号**
+b2c_noconvergence @45b0a5e281ca  观察窗内没有任何一次非我发起的导航（reload epoch=None）、converged=False
+       写照常结算、客户端收到=True ⇒ 前两臂的收敛不是任何树白拿来的
+三臂的 journeys 行数都是 1（服务器每次都真写了）："写了什么"这一侧三臂无差别，
+差别全在"客户端还记不记得自己写过、以及换页是不是把它抹掉的"。
+derived_result = VERIFIED_FIXED_WITH_TWO_DISCRIMINATING_CONTROLS
+```
+**B2a / B2b 维持**（拦停方已照认，我不加戏；两格的 notrestored 都是 converged=False，判别式与结论同一件事）：
+```text
+B2a = VERIFIED_FIXED_WITH_DISCRIMINATING_CONTROL
+B2b = VERIFIED_FIXED_WITH_DISCRIMINATING_CONTROL
+```
+**自检按令加上，并且我先验了它不是摆设**
+```text
+规则：任意两格的 why 字符串相同 ⇒ 那两格一律改判 SELFTEST_DUPLICATE_WHY
+本次：cells=3 distinct=3 result=PASS
+反控：把 A 格那句抄给 B 格 ⇒ result=FAIL，抓到 duplicates=1 组  ⇒ 检测器确实咬得住
+（自检件单独发布：o290_selftest_duplicate_why.json，里面同时记着 r1 那版"3 格 1 句"的实测数）
+```
+**每格现在自带 controls（哪一臂、哪个字段、实测、期望）**，B2c 那两枚：
+```text
+  b2c_notrestored       @ 69fd2f85  判别字段=reload_ms_relative_to_settlement  实测=-2790.0  期望=negative (reloaded before the write settled)
+  b2c_noconvergence     @ 45b0a5e2  判别字段=converged_onto_next  实测=False  期望=False on a tree with no B2a convergence
+```
+**边界不扩**：这是本机双代面上对 B 前端机理的派生，不是手机链；"新一代"那枚树带着我加的一行惰性标记
+（main.tsx blob 与 ef277b2 不同，记在 o290_builds.json）；**B3 / A 仍 NOT_RUN**，理由没变
+（B3 缺"故意半部署"的反控、A 需要一次带 journey 的库才谈得上"可导航"），我不拿这三格绿去替它们说话。
+
+**r1 原样留着**：账本里那块标题为「1a986a24 HJ-P1 · ORD-0290 …」@07:29 签的一字未改（行号会随别人插入漂移，我不钉数字），架上那 18 件本次逐件 GET 命中即 SKIP（0 覆盖）；
+修订只新增下面这几件。0274 在你复核完这版之前不落地，我不碰权威线。
+
+**证据坐标**（`Canshu-King/CityNexus @ commander/control : evidence/ord0290-0274-derivation/`，8 件新路径，逐件满 40 位 blob 回读相符）
+```text
+  o290_derived_r2.json                           24302 B  9da11c04306950db02f091c7c7d05b766b1485e3
+  o290_derive_r2.py                              18444 B  5e7e31fbabae3639599b85e1b601b05eae7df2e6
+  o290_make_r2.py                                 4320 B  300c9bf96d066e0e88f51b964cfb6de819fce5ec
+  o290_arms_r2.json                               4353 B  399cfbb29021c3ba70a8ca88aea72c004b5135fc
+  o290_selftest_duplicate_why.json                 778 B  44370889a1b2e42b410feece1de58c3b23e22783
+  b2_b2c_noconvergence.json                      48279 B  9576590fe776ea8c172075bbd8e92683576ef35a
+  o290_run_b2c_noconvergence.json                21590 B  d2d90fb3d750f6b1676225fb05c8bc4097397396
+  o290_requests_b2c_noconvergence.jsonl           5051 B  dab4f5918b0ab75a49200145973123f6b44f4747
+同目录里 r1 那 18 件：本次逐件 GET 到 200，一律 SKIP，0 覆盖；发布后分支尖 de0c4e0043df0cae4e8b621866c7d7ac0e10fb83
+```
+
+纪律：0 次 `demo/reset`；新臂 b2c_noconvergence 的一次性库同样"用完连整个目录删除并断言不存在"、
+端口 :8961/:8962 跑完 netstat 空；`_live.db`/`_preview.db` 0 读写；凭据 0 打印；
+已发布路径 0 覆盖；产品码与权威线 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+## 亲测 @2026-09-25 08:0x+08 —— **Q38=① 已落地成可跑仪器**（`receipt_cell_derivation_check_r1.py`），对它自己的两枚真工件双向出数：**0290 硬红 / 0293 无硬缺陷但有 3 格软红**；ORD-0294 的验收改用这台尺
+
+### ① 仪器与坐标（全部已上 `commander/control`，逐字节回读相等）
+```text
+live_checks/receipt_cell_derivation_check_r1.py   17,346 B  35caa42c0697faf0a8eeb0929a3e11cb53c9709a
+  evidence/q38-cell-derivation-gate/selftest_20260925_0759.txt        1,253 B  bcb539459638cb035d3a5aa01d398d612efc22c0
+  evidence/q38-cell-derivation-gate/gate_on_ord0290_published.json    3,192 B  9e199e7003120f86f7a59390f09565df5340b3c1
+  evidence/q38-cell-derivation-gate/gate_on_ord0293_second_observer.json 3,529 B  307cab6419b8037a4923e2079a917258542e4f4e
+自检：**9 臂全过**（跑 9、过 9、失败列表为空，rc=0）。硬红/软红/豁免三态都有反例臂：
+  S2 三格同一句 ⇒ DUPLICATE_WHY_LITERALS；S3 两句互指对方的哈希 ⇒ 软红 WHY_NOT_FROM_OWN_READINGS；
+  S4 同一句 + 假的 derived_from ⇒ 硬红 FAKE_OR_INEFFECTIVE_DERIVED_FROM；**S5 同一句 + 每格引自己独有的读数 ⇒ 绿**（豁免通道真的能用，不是只会把东西判红）；
+  S6 只有一格 ⇒ NOT_ASSESSABLE（rc=4，永不当成通过）。
+```
+口径落地为三档（比仲裁那句话更细，因为实测把 E 的好收据也蹭红了）：**HARD**=重复句 / 缺 why / 假 derived_from；**SOFT**=句子里没有任何可机器核对的 token、或 token 不在本格读数里；**INFO**=重复句但每格都引了自己独有的读数（豁免）。**软红不会打印带 GREEN 的字样**，谁都别想拿它当通过。
+
+### ② 对两枚真工件的实测（不是演示，是判据）
+```text
+ORD-0290（HJ-P1，我拦停的那份，published bytes blob c893bde2… 18,750 B，本机副本 sha1 与之相等）
+   3 格 | overall Q38_GATE_RED_HARD | 硬 1 [DUPLICATE_WHY_LITERALS] | 软 3 [WHY_CARRIES_NO_EVIDENCE_TOKEN]
+   三格的 why 逐字节相同、且每格句子里可机器核对的 token 数 = 0 ⇒ **机器复现了我今晚靠肉眼发现的同一件事**
+ORD-0293（红队第二观察者，published blob 2a316603… 6,031 B，本机副本 sha1 相等）
+   4 格 | overall Q38_GATE_SOFT_FINDINGS | 硬 0 | 软 3（R1/R3/R4 的 `derived` 句里没有一个 token 出现在本格自己的读数里；R2 命中 2 个）
+```
+⇒ **两条结论我照实说**：(1) 拦停 0274 的判断现在有可跑仪器背书，不再是"我觉得"；(2) **我把 0293 当"正例"是偏高的**——它没有共享句（这是硬缺陷那一档），但它的每格句子确实只写了结论词，数字在 `measured` 里而没进句子。所以口径 (a) 若按字面做成硬门，会连今晚最好的收据一起判红。**我按"硬=重复句那一档 / 软=句子不引自己读数"来分档**，并且从下一单起要求句子自带数字（下面 ③）。仲裁若要 (a) 也判硬，回一个字即可，我把 `--strict` 上膛。
+**自我更正一枚（如实）**：这台尺的第一版 `blob_sha()` 只对 `"blob %d\0"` 头做哈希、漏了内容 ⇒ 打印的 sha1 是错的（`b6fe549b…`）。修好后与 `git hash-object` 逐字符相等。**发布出去的三份 JSON 都是修好之后重算再发的**，旧的那次输出没有进任何收据。
+**另记一枚副本账**：我手上曾有两份 0290 副本——`_incoming_o290.json` 16,744 B（sha `1e3d350b…`，早先下载的缩进版）与从 `commander/control` 取的 **18,750 B 正本** `_published_cmdr_copy_ord0290.json`（sha `c893bde2…`）。两份 JSON 解析后深度相等（差的是排版空白），**判据用的是正本那一份**，收据里 `local_blob_equals_published_blob: true` 就是把这件事钉住。
+
+### ③ ORD-0294 的验收判据（现在就绪，来了就能机械跑）
+```text
+(a) 每格 `why` 必须自带该格自己读数里的具名值（哈希 / 行差 / 状态码 / 资源名 / 路由至少一个）；
+(b) 任意两格 `why` 折叠空白后相同 ⇒ 必须每格另带 `derived_from` 且指向**只有本格有**的读数，否则我这边直接判硬红；
+(c) 交付后我用 `--receipt <你的修订收据> --out ...` 出数，**尺红即不落地**；跑法与坐标见 ①。
+```
+红队 ORD-0295 交回来时同样走这台尺（普查类收据没有多格判决就不该被它管，尺会报 NOT_ASSESSABLE，我按 ORD-0295 自己的判据验收，不混用）。
+
+### ④ 队列与纪律
+**权威线未动**（`45b0a5e2…`）；本次只往 `commander/control` 新增 4 个文件（4 次 PUT 全 BYTE-LEVEL MATCH，0 覆盖 0 删除）；用户库 0 读写；`demo/reset` 0 次；凭据 0 打印（本次发布的文件里没有凭据，探针脚本不发）；手机链最后实测 **07:49 HEALTHY**；Q39（10:00 前只带 0274 一笔落地+换代，还是等 0292/0287 齐）已提，等仲裁回符号。
+
+
 ## 亲测 @2026-09-25 07:4x+08 —— 手机链端到端重测 **HEALTHY**（并交叉印证"现在手机上是落地代那一棵"）；**ORD-0288 T-1 判据加两条**；**新单 ORD-0295 派红队**（我采用了 F 的普查数当底稿 ⇒ 按我自己的规矩得有第二观察者）
 
 ### ① 手机预览链 07:49 端到端实测（我亲自走的，不是看进程表）
@@ -46398,4 +46499,45 @@ now（按 %p 父指针量出）  ef277b2 ← 45a3d56 ← 69fd2f8 ← 45b0a5e
 blob     19ce9e5d710ce679a275d64ad5ff2cfe39e2779a｜远端回读 19ce9e5d710ce679a275d64ad5ff2cfe39e2779a｜一致 True
 候选尖   ef277b2da5df（分支 review/0274-b2c-c）；旧枝 853c549… 原样未动
 影响面   0 格读数撤回、0 臂需重跑、0 产品字节改动；`was` 不是我回忆的，是从账本那一行里取出来的（取不到就会写 `None`，不认错）
+```
+
+### B c01d72a3 · ORD-0280 缺陷1 候选（三处 + 我自己多找的一处一起改；标签由「谁说的」决定）`48827a9` @07:53+08 —— **按 05:2x 定形块产码：:515/:573/:629 三处一次改完，外加本文件扫出的第 4 处（`<2 places` 计数）；统一模型用现成的 `said ? 引原话 : 明说没文案`，没新造词汇。七枚臂在修好的组件上全过，在未修组件上 7 失败，其中三枚直接把缺陷念出来。0280 的 `derived_result` 我不签。**
+
+```text
+尖/基线   48827a9d6402（分支 review/0280-attribution-label）← 权威尖 45b0a5e281ca（is-ancestor rc=0）；上一候选 review/0274-b2c-c@ef277b2da5df 未动
+改动      2 files changed, 365 insertions(+), 16 deletions(-)；文件 frontend/e2e/qoder-ord0280-attribution-label-speaks-for-itself.spec.ts, frontend/src/features/planning/PlanWithAiSheet.tsx
+射程      三处已改={"site_515": false, "site_573": true, "site_629": true, "extra_site_catalog_count": true}；机器字段（:511/:571 那两枚 `status:`）按定形块的界线**保留不动**：{"machine_field_status_http": [529], "machine_field_blocked": [595]}
+坐标      在本代重量（不是从命令文本抄的）：{"label_服务器给出的原因": [], "site1_agent_commands_leg": [], "site2_get_places_leg": [599], "site3_plans_generate_leg": [664], "site4_catalog_count": [623], "failureNote_helper": [174], "origin_attribute": [929]}
+七枚臂    A1=device/一致 A2=server/一致 B1=device/一致 B2=server/一致 C1=device/一致 C2=server/一致 D=device/一致｜一致 7/7
+  渲染出来的（不是 data 属性）：[{"arm": "A1", "label": "这台设备自己的读数（服务器没给句子）", "reason": "agent/commands -> HTTP 500"}, {"arm": "A2", "label": "服务器给出的原因", "reason": "该目的地的候选目录尚未就绪，请稍后重试。"}, {"arm": "B1", "label": "这台设备自己的读数（服务器没给句子）", "reason": "GET /places -> HTTP 502"}, {"arm": "B2", "label": "服务器给出的原因", "reason": "places 目录在该城市没有物化任何地点，无法组成候选。"}]
+  服务器给了句子的三枚，屏幕上就是那句原话（逐字等值判，不是包含判）：["A2", "B2", "C2"]
+牙齿      未修组件上 ["  7 failed", "  1 passed (1.4m)"]；把缺陷念出来的失败行：["FAILED: label and origin agree :: {\"want\":\"device\",\"label\":\"服务器给出的原因\",\"origin\":\"\",\"reason\":\"GET /places -> HTTP 502\"}", "FAILED: label and origin agree :: {\"want\":\"device\",\"label\":\"服务器给出的原因\",\"origin\":\"\",\"reason\":\"POST /plans/generate -> HTTP 422\"}", "FAILED: label and origin agree :: {\"want\":\"device\",\"label\":\"服务器给出的原因\",\"origin\":\"\",\"reason\":\"GET /places?city_code=CN-TIANJIN -> 0 places\"}"]
+  A1 的未修版失败是**另一个症状**：`error.message` 为空串时旧的链式 `??` 直接答 `""` ⇒ 整块技术详情不渲染（同一族里的"沉默"，不是标签比较；已用 node 复算两代取值）。
+回归      读这枚标签的三把既有门：["  15 passed (1.3m)"]；全量套这一枚：没跑完，最后一行进度 ["[128/250] [chromium] \u203a e2e\\qoder-plan-ai-contrast.spec.ts:111:5 \u203a ORD-0035 plan-ai sheet ink is legible in both themes \u203a"] —— 我不拿半截当结果；另有一次被我自己切枝切坏的中途跑，已作废并写明（**是观测不是基线**）
+权威运行  {"suite_run_ids": ["ord0280e", "ord0280j", "ord0280g", "ord0280full"], "ai": "disabled", "reuseExistingServer": false}
+我自己声明的两处副作用/边界：ordering change, stated: when a refusal carries BOTH `error.message` and `detail`, the sheet now quotes `error.message`, where the old inline chain at :515 answered `detail` first. The other two legs already treated error.message as the server's sentence, so this makes one envelope mean one thing across the sheet; it is a behaviour change and is not hidden.；no invented number was removed: a device-composed reading still shows `GET /places -> HTTP 502`. The defect was who the screen claimed spoke, not whether the status is worth reading.
+不自签    0280 与 0281 的派生分开签（红队）；0274 的 B2/B2b/B2c 仍归 HJ-P1
+```
+
+### B c01d72a3 · ORD-0280 坐标格勘误（我自己写错的针头，让收据自相矛盾）`48827a9` @07:56+08 —— **上一条 0280 交付里 `site_515=false`、标签坐标为空 —— 那是我的查找串没匹配上我刚写的代码（标签进了嵌套三元、三处 fallback 是反引号模板串），不是改动没做。同一份收据里七枚臂的表格其实已经把 A1 渲染成 `agent/commands -> HTTP 500` 记下了，所以这份件自相矛盾。按规矩发新名 v2 + 勘误，不覆盖。**
+
+```text
+was      {"cited_sites_changed": {"site_515": false, "site_573": true, "site_629": true, "extra_site_catalog_count": true}, "all_three_plus_one": false, "coordinates_re_measured_on_this_tree": {"label_服务器给出的原因": [], "site1_agent_commands_leg": [], "site2_get_places_leg": [599], "site3_plans_generate_leg": [6
+now      {"cited_sites_changed": {"site_515_agent_commands": true, "site_573_get_places": true, "site_629_plans_generate": true, "extra_site_catalog_count": true}, "all_three_plus_one": true, "coordinates": {"attribution_label_string": [933], "site1_agent_commands": [538], "site2_get_places": [599], "site3_plans_generate": [664], "site4_catalog_count": [623], "failureNote_helper": [174], "origin_attribute": [929], "device_lab
+逐条对上  {"attribution_label_string": [[933], 1], "site1_agent_commands": [[538], 1], "site2_get_places": [[599], 1], "site3_plans_generate": [[664], 1], "site4_catalog_count": [[623], 1], "failureNote_helper": [[174], 1], "origin_attribute": [[929], 1], "device_label_string": [[936], 1], "machine_field_kept_status": [[529], 1], "machine_field_kept_blocked": [[595], 1]}
+  （每枚针头要求**只命中一行**；命中多于一行就单独列 ambiguous，不算通过）
+撤回范围  只撤那一格的算术。七枚臂 / 未修版牙齿 / 三把既有门 / 候选代码 **一律不动**：["3_arms_on_the_fix", "4_teeth_against_the_unfixed", "5_regressions"]
+端点     Canshu-King/CityNexus@commander/control:evidence/ord0280-laneB/ord0280_selfproof_v2.json（blob 060cb11fe1ef…）；被勘误原件 blob 05bdec154242… 仍在原处不覆盖
+```
+
+### B c01d72a3 · ORD-0280 补一格归因（全量套里那两枚落在我改的文件上的红，不是我的改动在孤立下造成的） @07:59+08 —— **两枚红出现在整套的顺序里；同一对测试在**修好的树**和**未修的树**上单独跑都是 3 passed。所以它们需要的是套内先前的状态，不是我这笔改动。但我不把这叫"既有红"——我没在未修树上重跑整套。**
+
+```text
+两枚红   ["e2e/qoder-ai-sheet-blocked.spec.ts :: ord0104-ai-sheet-examples-follow-the-destination", "e2e/qoder-ai-sheet-blocked.spec.ts :: ord0134-ai-sheet-actions-stay-inside-the-visible-viewport"]
+A 修好的树 单跑   3 passed (29.4s)  run=None ports=:None/:None
+B 未修的树 单跑   3 passed (26.2s)  run=None ports=:None/:None
+怎么换的树 git checkout HEAD~1 -- frontend/src/features/planning/PlanWithAiSheet.tsx, then git checkout HEAD -- <same path>; frontend/src verified clean afterwards
+仍未证    它们是否**既有**（要在未修树上重跑整套才算）；整套这一枚仍在跑（146/250 量级），它的计数不参与我对 0280 的任何说法
+0280 的支持  七枚臂 7/7 + 未修组件上 7 失败 + 三把既有门 15 passed；坐标勘误见 v2 件
+件         Canshu-King/CityNexus@commander/control:evidence/ord0280-laneB/ord0280_fullsuite_red_attribution.json（blob edc853711eac…）
 ```
