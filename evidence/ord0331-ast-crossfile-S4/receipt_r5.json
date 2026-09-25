@@ -1,0 +1,367 @@
+{
+ "order": "ORD-0331",
+ "lane": "S4-ast-taint",
+ "generation": "0f8b925facabc9df57bab600b86d999dd515bf94",
+ "ruler": {
+  "path": "live_checks/ui_exposure_taint_ast_r2.cjs",
+  "bytes": 85052,
+  "sha1_of_bytes": "3bafd65d239db51fd21f5b315115e3110ef89081",
+  "supersedes_r4_blob": "eb262f59e54d5142ad0e8041704e751eac473ace",
+  "supersedes_r3_blob": "44e062e6ce9c7b5d97d78e09e432072da102292c",
+  "typescript": "5.9.3",
+  "shelf_path": "evidence/ord0331-ast-crossfile-S4/ui_exposure_taint_ast_r2.cjs",
+  "shelf_blob": "ff98091cf3accb0d836ae25ba49820170b92d932",
+  "shelf_commit": "64a572adeb594c682ac5b68f36cf73324214e7d1",
+  "shelf_readback_sha1_of_bytes": "3bafd65d239db51fd21f5b315115e3110ef89081",
+  "shelf_bytes_equal_measured_bytes": true
+ },
+ "selftest": {
+  "surfaceA": {
+   "cwd": "D:/moodle/_qoder_cmdr_ref_20260921/live_checks",
+   "node": "node (PATH)",
+   "rc": 0,
+   "ruler": "D:/moodle/_qoder_cmdr_ref_20260921/live_checks/ui_exposure_taint_ast_r2.cjs",
+   "verdict": "SELFTEST_PASS",
+   "single": "20/20",
+   "cross": "5/5"
+  },
+  "surfaceB": {
+   "cwd": "D:/moodle/CityNexus",
+   "node": "C:/Program Files/nodejs/node.exe",
+   "rc": 0,
+   "ruler": "D:/moodle/_qoder_cmdr_ref_20260921/live_checks/ui_exposure_taint_ast_r2.cjs",
+   "verdict": "SELFTEST_PASS",
+   "single": "20/20",
+   "cross": "5/5"
+  },
+  "payload_identical": true,
+  "ruler_bytes_unchanged_by_running": true,
+  "limit": "one node install on this box (v24.14.0): the two surfaces differ by cwd and invocation, not engine"
+ },
+ "old_set_not_tightened": {
+  "single_file_arms": 20,
+  "expected_from_r4": 20,
+  "e_fixtures_blob_equal_shelf": {
+   "e0319r2_A_rename_last_part.tsx": true,
+   "e0319r2_B_destructure_hop.tsx": true,
+   "e0319r2_C_paren_alias.tsx": true,
+   "e0319r2_D_control_clean.tsx": true,
+   "e0319r3_E1_bracket_read.tsx": true,
+   "e0319r3_E2_forwarding_helper.tsx": true,
+   "e0319r3_E3_control_attribute_only.tsx": true
+  },
+  "r3_clean_fixture_names_from_selftest_blob": [
+   "clean_bare_local_from_literal.tsx",
+   "clean_literal_helper.tsx",
+   "clean_tainted_but_attribute_only.tsx",
+   "clean_untainted_value_name.tsx",
+   "clean_whitelist_only.tsx"
+  ],
+  "r3_clean_fixtures_observed_hits_in_r5": {
+   "clean_bare_local_from_literal.tsx": 0,
+   "clean_literal_helper.tsx": 0,
+   "clean_tainted_but_attribute_only.tsx": 0,
+   "clean_untainted_value_name.tsx": 0,
+   "clean_whitelist_only.tsx": 0
+  }
+ },
+ "requirements": {
+  "one_import_resolved_return_reaches_consumer_sink": {
+   "arm": "B_helper_returns_detail_cell_lands_in_consumer",
+   "consumer_cells": 1,
+   "other_cells": 0,
+   "cells": [
+    "panels/Panel.tsx:6 UPSTREAM_TEXT_VIA_HELPER_TO_DOM"
+   ],
+   "chain": [
+    ":2 upstream read (body as { detail?: unknown } | null)?.detail -> :2 `d` = (body as { detail?: unknown } | null)?.detail -> :3 reasonLabel() returns typeof d === \"string\" ? d : \"\" -> :5 came back from reasonLabel imported from ../lib/wording -> :5 `note` = reasonLabel(body) -> :6 rendered here"
+   ],
+   "met": true
+  },
+  "two_sided_control_zero": {
+   "arm": "A_control_clean_lib_and_clean_consumer",
+   "cells": [],
+   "met": true
+  },
+  "three_mutation_arm_cell_disappears": {
+   "before": [
+    "panels/Panel.tsx:6 UPSTREAM_TEXT_VIA_HELPER_TO_DOM"
+   ],
+   "after": [],
+   "met": true
+  },
+  "extra_shapes_barrel_and_namespace": {
+   "D_barrel_reexport_through_index_and_star": [
+    "panels/Panel.tsx:6 UPSTREAM_TEXT_VIA_HELPER_TO_DOM"
+   ],
+   "E_namespace_import_member_call": [
+    "panels/Name.tsx:5 UPSTREAM_TEXT_VIA_HELPER_TO_DOM"
+   ],
+   "met": true
+  }
+ },
+ "real_tree": {
+  "files": 74,
+  "modules_in_graph": 74,
+  "r4_cells": 26,
+  "r5_cells": 28,
+  "common_lines": 25,
+  "gained_lines": [
+   "frontend/src/app/V8Experience.tsx:1314",
+   "frontend/src/app/V8Experience.tsx:2536",
+   "frontend/src/features/simulation/SimulationPanel.tsx:934"
+  ],
+  "gained_chains": {
+   "frontend/src/app/V8Experience.tsx:1314": ":110 the response value `reason` itself reached the DOM -> :131 interpolated into `attribution_reason=${reason}` -> :130 .join(...) passes it on -> :120 make() returns { reason, evidence_kind, http_status, source_layer, retryable, recovery_action... -> :159 classifyReadFailure() returns make(\"ORIGIN_INVALID_RESPONSE\", \"HTTP_RESPONSE\", error.status, \"RUNTIME\", true... -> :677 came back from classifyReadFailure imported from ../lib/failureAttribution -> :677 `attribution` = classifyReadFailure(error) -> :706 state `failure` written by setFailure(...) -> :1314 the object itself was handed to the DOM, where it is read as text -> :1314 rendered here",
+   "frontend/src/app/V8Experience.tsx:2536": ":151 upstream read detail.error off detail -> :150 `serverReason` = (typeof detail?.error?.message === \"string\" ? detail.error.message : null) ?? ... -> :154 continuePendingPlan() returns { kind: \"refused\", httpStatus: response.status, serverReason } -> :2200 came back from continuePendingPlan imported from ../api/journeyContinuation -> :2200 `outcome` = continuePendingPlan({ journeyId: data.journey.id, missionId, idempotencyKey: c... -> :2212 state `resumeOutcome` written by setResumeOutcome(...) -> :2536 rendered here",
+   "frontend/src/features/simulation/SimulationPanel.tsx:934": ":38 upstream read (error as { body?: unknown }).body off error -> :38 `raw` = (error as { body?: unknown }).body -> :39 bodyOf() returns raw as ErrorBody -> :118 read further as error of it -> :118 `details` = bodyOf(error)?.error?.details ?? {} -> :119 read further as retry_after_ms of it -> :119 `ms` = typeof details.retry_after_ms === \"number\" ? details.retry_after_ms : null -> :121 passed through Math.round() -> :121 interpolated into `（约 ${Math.round(ms)} 毫秒后再试）` -> :121 retryHint() returns ms <= 0 ? \"（现在就可以再试）\" : `（约 ${Math.round(ms)} 毫秒后再试）` -> :130 `extra` = busy ? retryHint(error) : fields -> :131 passed through hit.zh() -> :131 describeFailure() returns { code, status, zh: hit.zh(status, extra), en: hit.en(status, extra) } -> :751 came back from describeFailure imported from ./simulationAdapter -> :751 `named` = describeFailure(error) -> :752 state `outcome` written by setOutcome(...) -> :934 rendered here"
+  },
+  "dropped_lines": [
+   "frontend/src/app/V8Experience.tsx:1282"
+  ],
+  "gained_classification": {
+   "frontend/src/app/V8Experience.tsx:1314": "TRUE_FLOW_TO_JUSTIFY: failureAttribution.ts:110/131 puts a response value into `attribution_reason=${reason}`, classifyReadFailure returns it (failureAttribution.ts:159), V8Experience.tsx:677 stores it and :1314 renders it. Invisible to r4 because the helper is in another file - this is the exact cell ORD-0322 had to declare out of scope.",
+   "frontend/src/app/V8Experience.tsx:2536": "TRUE_FLOW, SAME CLASS AS THE ACCEPTED :1046 CELL: journeyContinuation.ts:150 reads `detail?.error?.message` and V8Experience.tsx:2536 renders it under 「服务器给出的原因：」. It is the ORD-0280 design (quote rather than invent) seen from the consumer side, so it is a shape to justify, not an assertion that the product is wrong.",
+   "frontend/src/features/simulation/SimulationPanel.tsx:934": "MARGIN - value arrives as a formatted number: simulationAdapter.ts:38 reads `(error as {body?}).body`, :119 takes `details.retry_after_ms`, :121 renders 「约 N 毫秒后再试」. Nothing on screen is prose; `retry_after_ms` is not in Q64's allowed list, so the cell is reported and flagged for a ruling rather than dropped."
+  },
+  "dropped_cell_evidence": {
+   "cell": "frontend/src/app/V8Experience.tsx:1282",
+   "what_r4_said": "RAW_BODY_TO_DOM on `{copy.body}`",
+   "why_r5_is_clean_here": "r4 could not see inside the imported `copyFor`, so it applied `any argument handed to an unknown function can come back out`. r5 resolves copyFor (lib/failureAttribution.ts:321-434) and every arm of it returns device literals plus the allowed http_status/content_type and a device-held trip reference.",
+   "negative_control_v1_flawed": {
+    "copyfor_taken_from": "D:/moodle/_qoder_lane_S4_0926/work/gen2/frontend/src/lib/failureAttribution.ts:321-434 (verbatim, git archive of the generation)",
+    "arms_exercised": 12,
+    "arms_returning_a_sentence": 12,
+    "arms_whose_body_carries_the_sentinel": 6,
+    "arms_whose_body_carries_the_trip_reference": 2,
+    "arms_whose_body_carries_the_allowed_http_status": 0,
+    "arms_whose_body_carries_only_the_allowed_number": 6,
+    "sample_body": "这台设备还记得行程 7c1a9f4d…，但服务器明确回答它不存在（HTTP SENTINEL-上游原话-9f3c2a）。这不是网络问题：服务器刚才答得出来。你的其它行程没有受影响。",
+    "verdict": "UPSTREAM_TEXT_CAN_REACH_COPY_BODY",
+    "reading": "every non-allowed field of the attribution was filled with a string that cannot appear by accident; if any of them could reach the sentence on screen, the sentinel would be in it"
+   },
+   "negative_control_v2": {
+    "copyfor_taken_from": "D:/moodle/_qoder_lane_S4_0926/work/gen2/frontend/src/lib/failureAttribution.ts:321-434 (verbatim, git archive of the generation)",
+    "arms_exercised": 12,
+    "arms_returning_a_sentence": 12,
+    "arms_whose_body_carries_the_sentinel": 0,
+    "arms_whose_body_carries_the_trip_reference": 2,
+    "arms_whose_body_carries_the_allowed_http_status": 6,
+    "arms_whose_body_carries_only_the_allowed_number": 12,
+    "sample_body": "这台设备还记得行程 7c1a9f4d…，但服务器明确回答它不存在（HTTP 503）。这不是网络问题：服务器刚才答得出来。你的其它行程没有受影响。",
+    "verdict": "COPY_BODY_CARRIES_NO_UPSTREAM_VALUE",
+    "reading": "every non-allowed field of the attribution was filled with a string that cannot appear by accident; if any of them could reach the sentence on screen, the sentinel would be in it"
+   },
+   "reading": "v1 filled the two ALLOWED fields with the sentinel as well and therefore 'detected' a leak that is the contract itself; that reading is kept, not deleted. v2 leaves the allowed fields realistic and sentinel-fills every other field of the attribution: 0 of 12 arms carry it. On that evidence :1282 was a false red in r4, and this is the only line r5 drops."
+  }
+ },
+ "coverage": {
+  "unresolved_import_count": 35,
+  "unresolved_relative_specifiers": [],
+  "unresolved_relative_count": 0,
+  "unresolved_are_packages_only": true,
+  "unresolved_import_specs": [
+   {
+    "from": "frontend/src/app/V8Experience.tsx",
+    "spec": "react"
+   },
+   {
+    "from": "frontend/src/lib/sceneClock.ts",
+    "spec": "@tanstack/react-query"
+   },
+   {
+    "from": "frontend/src/lib/waitClock.ts",
+    "spec": "react"
+   },
+   {
+    "from": "frontend/src/api/candidateRejections.ts",
+    "spec": "@tanstack/react-query"
+   },
+   {
+    "from": "frontend/src/i18n/LocaleContext.tsx",
+    "spec": "react"
+   },
+   {
+    "from": "frontend/src/components/v8/MapPanel.tsx",
+    "spec": "react"
+   },
+   {
+    "from": "frontend/src/features/agent/AgentComposer.tsx",
+    "spec": "react"
+   },
+   {
+    "from": "frontend/src/features/agent/CopilotDock.tsx",
+    "spec": "react"
+   },
+   {
+    "from": "frontend/src/features/discovery/DestinationPreparationPanel.tsx",
+    "spec": "react"
+   },
+   {
+    "from": "frontend/src/features/discovery/RealCityDiscoveryPanel.tsx",
+    "spec": "react"
+   },
+   {
+    "from": "frontend/src/api/v12Authoritative.ts",
+    "spec": "@tanstack/react-query"
+   },
+   {
+    "from": "frontend/src/features/execution/LiveRecovery.tsx",
+    "spec": "react"
+   },
+   {
+    "from": "frontend/src/api/v10Execution.ts",
+    "spec": "@tanstack/react-query"
+   },
+   {
+    "from": "frontend/src/features/execution/V12AuthoritativeJourneyPanel.tsx",
+    "spec": "react"
+   },
+   {
+    "from": "frontend/src/features/inbox/BookingArtifactScanner.tsx",
+    "spec": "react"
+   },
+   {
+    "from": "frontend/src/features/inbox/JourneyInboxWorkbench.tsx",
+    "spec": "react"
+   },
+   {
+    "from": "frontend/src/features/trip/TripItinerary.tsx",
+    "spec": "react"
+   },
+   {
+    "from": "frontend/src/features/notifications/PushCapabilityCard.tsx",
+    "spec": "react"
+   },
+   {
+    "from": "frontend/src/features/planning/PlanComparison.tsx",
+    "spec": "react"
+   },
+   {
+    "from": "frontend/src/features/planning/PlanWithAiSheet.tsx",
+    "spec": "react"
+   },
+   {
+    "from": "frontend/src/features/recovery/RecoveryRequiredPanel.tsx",
+    "spec": "react"
+   },
+   {
+    "from": "frontend/src/features/recovery/V14PreventivePanel.tsx",
+    "spec": "react"
+   },
+   {
+    "from": "frontend/src/features/recovery/V14RecoveryTruthPanel.tsx",
+    "spec": "react"
+   },
+   {
+    "from": "frontend/src/features/setup/JourneyTrialSetup.tsx",
+    "spec": "react"
+   },
+   {
+    "from": "frontend/src/features/simulation/SimulationPanel.tsx",
+    "spec": "@tanstack/react-query"
+   },
+   {
+    "from": "frontend/src/features/simulation/SimulationPanel.tsx",
+    "spec": "react"
+   },
+   {
+    "from": "frontend/src/features/simulation/SimulationPanel.tsx",
+    "spec": "react-dom"
+   },
+   {
+    "from": "frontend/src/features/stay/HotelsPanel.tsx",
+    "spec": "react"
+   },
+   {
+    "from": "frontend/src/features/studio/SortableActivityList.tsx",
+    "spec": "@dnd-kit/sortable"
+   },
+   {
+    "from": "frontend/src/features/studio/SortableActivityList.tsx",
+    "spec": "react"
+   },
+   {
+    "from": "frontend/src/features/studio/SortableActivityList.tsx",
+    "spec": "@dnd-kit/core"
+   },
+   {
+    "from": "frontend/src/features/studio/V12TripStudioPanel.tsx",
+    "spec": "react"
+   },
+   {
+    "from": "frontend/src/main.tsx",
+    "spec": "react"
+   },
+   {
+    "from": "frontend/src/main.tsx",
+    "spec": "xstate"
+   },
+   {
+    "from": "frontend/src/main.tsx",
+    "spec": "react-dom/client"
+   }
+  ],
+  "reading": "these specifiers are packages or paths outside the tree; r5 records them instead of guessing, and a clean verdict on a file with unresolved imports is weaker than one without",
+  "parse_diagnostics_total": 0,
+  "depth_cut_lookups": 56,
+  "crossing_cuts": 0,
+  "crossing_budget": 24
+ },
+ "boundaries": {
+  "product_status_porcelain_frontend_lines": 0,
+  "ruler_write_sites": [
+   "    if (args.out) fs.writeFileSync(args.out, txt, 'utf8');"
+  ],
+  "ruler_writes_only_out": true,
+  "authoritative_branch_untouched": "0f8b925facabc9df57bab600b86d999dd515bf94"
+ },
+ "erratum_on_r4": {
+  "blob": "eb262f59e54d5142ad0e8041704e751eac473ace",
+  "lines": {
+   "used_cap": 295,
+   "reported_cap": 977
+  },
+  "statement": "published r4 analyses at depth 150 but its own JSON field prints the literal 40. r4's bytes cannot be rewritten, so r5 prints the cap it ran with (resolution_depth_cap / crossing_budget), and any r4 output field named cap should be read as 150.",
+  "does_any_verdict_depend_on_it": "the cell set is identical at cap 40, 150 and 400 on this generation, measured below",
+  "r5_cells_by_cap": {
+   "40": 28,
+   "150": 28,
+   "400": 28
+  }
+ },
+ "assertions": {
+  "selftest_pass_both_surfaces": true,
+  "payload_identical_both_surfaces": true,
+  "single_file_set_unchanged_20": true,
+  "e_fixture_bytes_still_match_shelf": true,
+  "r3_clean_fixtures_still_zero": true,
+  "req1_return_reaches_consumer_sink": true,
+  "req2_control_zero": true,
+  "req3_mutation_kills_the_cell": true,
+  "barrel_and_namespace_arms": true,
+  "tree_no_line_lost_except_the_proven_one": true,
+  "tree_cell_count_does_not_shrink": true,
+  "product_untouched": true,
+  "ruler_writes_only_its_out_file": true
+ },
+ "derived_verdicts": {
+  "selftest_pass_both_surfaces": "MET",
+  "payload_identical_both_surfaces": "MET",
+  "single_file_set_unchanged_20": "MET",
+  "e_fixture_bytes_still_match_shelf": "MET",
+  "r3_clean_fixtures_still_zero": "MET",
+  "req1_return_reaches_consumer_sink": "MET",
+  "req2_control_zero": "MET",
+  "req3_mutation_kills_the_cell": "MET",
+  "barrel_and_namespace_arms": "MET",
+  "tree_no_line_lost_except_the_proven_one": "MET",
+  "tree_cell_count_does_not_shrink": "MET",
+  "product_untouched": "MET",
+  "ruler_writes_only_its_out_file": "MET"
+ },
+ "unmet": [],
+ "claim_kind": "recomputation",
+ "claimed_result": "r5 (module graph) selftest 20/20 single + 5/5 cross on two surfaces, payload identical; generation 0f8b925facab real tree r4 26 lines -> r5 28 lines, gained 3, dropped 1 (dropped cell proven false red by the corrected negative control: 0 of 12 arms carry the sentinel); requirements 1/2/3 = True/True/True; product frontend dirty lines=0",
+ "derived_result": null
+}
