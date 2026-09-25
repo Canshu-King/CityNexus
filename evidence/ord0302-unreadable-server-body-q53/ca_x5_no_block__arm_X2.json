@@ -1,0 +1,44 @@
+{
+ "file": "e2e/qoder-ord0302-unreadable-server-body.spec.ts",
+ "arm": "X2",
+ "runId": "0302xnb46204721",
+ "status": "passed",
+ "expectation": "passed",
+ "reading": {
+  "want": "either",
+  "force_shape": "baseline read aborted, no places, no promise",
+  "read": {
+   "arm": "X2",
+   "status": "BASELINE_UNAVAILABLE",
+   "card_text": "无法确认这次的结果 无法确认本次是否生成了新方案，请重试或刷新页面。",
+   "sentence": "无法确认本次是否生成了新方案，请重试或刷新页面。",
+   "details_count": 0,
+   "promise_in_copy": false,
+   "reason": "",
+   "label": "",
+   "origin": "",
+   "raw_text": "",
+   "raw_fields": {}
+  },
+  "absent_block_direction": "OBSERVED",
+  "why_absent_direction_unreachable": "the block is gated on the raw reading, so no drivable shape of this screen leaves it out of the DOM",
+  "verdict": "MET",
+  "rows": [
+   {
+    "claim": "no promise is made when the block is absent",
+    "ok": true,
+    "got": {
+     "promise_in_copy": false,
+     "details_count": 0
+    }
+   },
+   {
+    "claim": "the shape is a real one on screen, not a half-booted page",
+    "ok": true,
+    "got": {
+     "status": "BASELINE_UNAVAILABLE"
+    }
+   }
+  ]
+ }
+}
