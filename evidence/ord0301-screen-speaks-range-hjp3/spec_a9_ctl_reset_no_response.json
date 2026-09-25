@@ -1,0 +1,8 @@
+{
+ "write": {
+  "mode": "reset"
+ },
+ "read": {
+  "mode": "proxy"
+ }
+}
