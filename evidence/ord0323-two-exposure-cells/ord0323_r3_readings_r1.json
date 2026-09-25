@@ -1,0 +1,168 @@
+{
+ "schema": "CNX_ORD0323_R3_READINGS_R1",
+ "order": "ORD-0323",
+ "lane": "B c01d72a3",
+ "ruler": {
+  "path": "live_checks/ui_exposure_field_check_r3.py",
+  "published_blob": "44e062e6ce9c7b5d97d78e09e432072da102292c",
+  "local_git_blob_hash": "44e062e6ce9c7b5d97d78e09e432072da102292c",
+  "selftest": "SELFTEST_PASS",
+  "local_sha256": "f922d51c1bfa67ff7fde09a0ffa66ce884729c5fc9b2d48df510ba2e04b52351"
+ },
+ "generations": {
+  "before": "9a669c8bec863fadf31d5158f4a1be66aec49f23",
+  "after": "e302e4c433712284a23c1c0ab11147fe105e1e22",
+  "commits_between": 2,
+  "after_contains_before_as_ancestor": true
+ },
+ "before": {
+  "verdict": "EXPOSURE_SHAPE_FOUND",
+  "hit_count": 10,
+  "hits": [
+   "RAW_TEXT_INTERPOLATION@JourneyInboxWorkbench.tsx:691",
+   "UPSTREAM_READ_DIRECT@JourneyInboxWorkbench.tsx:307",
+   "UPSTREAM_READ_DIRECT@JourneyInboxWorkbench.tsx:317",
+   "UPSTREAM_READ_DIRECT@JourneyInboxWorkbench.tsx:336",
+   "UPSTREAM_READ_DIRECT@JourneyInboxWorkbench.tsx:386",
+   "UPSTREAM_READ_DIRECT@JourneyInboxWorkbench.tsx:407",
+   "UPSTREAM_READ_DIRECT@JourneyInboxWorkbench.tsx:435",
+   "UPSTREAM_READ_DIRECT@JourneyInboxWorkbench.tsx:459",
+   "UPSTREAM_READ_DIRECT@JourneyInboxWorkbench.tsx:517",
+   "UPSTREAM_READ_DIRECT@ProductErrorBoundary.tsx:104"
+  ]
+ },
+ "after": {
+  "verdict": "EXPOSURE_SHAPE_FOUND",
+  "hit_count": 8,
+  "hits": [
+   "UPSTREAM_READ_DIRECT@JourneyInboxWorkbench.tsx:322",
+   "UPSTREAM_READ_DIRECT@JourneyInboxWorkbench.tsx:332",
+   "UPSTREAM_READ_DIRECT@JourneyInboxWorkbench.tsx:351",
+   "UPSTREAM_READ_DIRECT@JourneyInboxWorkbench.tsx:401",
+   "UPSTREAM_READ_DIRECT@JourneyInboxWorkbench.tsx:422",
+   "UPSTREAM_READ_DIRECT@JourneyInboxWorkbench.tsx:450",
+   "UPSTREAM_READ_DIRECT@JourneyInboxWorkbench.tsx:474",
+   "UPSTREAM_READ_DIRECT@JourneyInboxWorkbench.tsx:533"
+  ]
+ },
+ "coordinate_diff": {
+  "why": "raw hit coordinates on each side; NOT a claim that the difference is a fix -- the identity block below is what says which shapes actually went away",
+  "before_lines": [
+   "RAW_TEXT_INTERPOLATION@JourneyInboxWorkbench.tsx:691",
+   "UPSTREAM_READ_DIRECT@JourneyInboxWorkbench.tsx:307",
+   "UPSTREAM_READ_DIRECT@JourneyInboxWorkbench.tsx:317",
+   "UPSTREAM_READ_DIRECT@JourneyInboxWorkbench.tsx:336",
+   "UPSTREAM_READ_DIRECT@JourneyInboxWorkbench.tsx:386",
+   "UPSTREAM_READ_DIRECT@JourneyInboxWorkbench.tsx:407",
+   "UPSTREAM_READ_DIRECT@JourneyInboxWorkbench.tsx:435",
+   "UPSTREAM_READ_DIRECT@JourneyInboxWorkbench.tsx:459",
+   "UPSTREAM_READ_DIRECT@JourneyInboxWorkbench.tsx:517",
+   "UPSTREAM_READ_DIRECT@ProductErrorBoundary.tsx:104"
+  ],
+  "after_lines": [
+   "UPSTREAM_READ_DIRECT@JourneyInboxWorkbench.tsx:322",
+   "UPSTREAM_READ_DIRECT@JourneyInboxWorkbench.tsx:332",
+   "UPSTREAM_READ_DIRECT@JourneyInboxWorkbench.tsx:351",
+   "UPSTREAM_READ_DIRECT@JourneyInboxWorkbench.tsx:401",
+   "UPSTREAM_READ_DIRECT@JourneyInboxWorkbench.tsx:422",
+   "UPSTREAM_READ_DIRECT@JourneyInboxWorkbench.tsx:450",
+   "UPSTREAM_READ_DIRECT@JourneyInboxWorkbench.tsx:474",
+   "UPSTREAM_READ_DIRECT@JourneyInboxWorkbench.tsx:533"
+  ]
+ },
+ "shape_identity": {
+  "why": "line numbers move when I add lines above them; matching a shape by (rule, file, snippet) is what separates 'this shape is gone' from 'this shape got renumbered'",
+  "same_shape_renumbered": [
+   {
+    "rule": "UPSTREAM_READ_DIRECT",
+    "file": "JourneyInboxWorkbench.tsx",
+    "snippet": "} catch (error) {",
+    "lines_before": [
+     307,
+     317,
+     336,
+     386,
+     407,
+     435,
+     459,
+     517
+    ],
+    "lines_after": [
+     322,
+     332,
+     351,
+     401,
+     422,
+     450,
+     474,
+     533
+    ],
+    "line_delta": [
+     15,
+     15,
+     15,
+     15,
+     15,
+     15,
+     15,
+     16
+    ]
+   }
+  ],
+  "shapes_gone": [
+   {
+    "rule": "UPSTREAM_READ_DIRECT",
+    "file": "ProductErrorBoundary.tsx",
+    "snippet": "{String(error?.message || error)}",
+    "lines_before": [
+     104
+    ]
+   },
+   {
+    "rule": "RAW_TEXT_INTERPOLATION",
+    "file": "JourneyInboxWorkbench.tsx",
+    "snippet": "<code>{rawDetail}</code>",
+    "lines_before": [
+     691
+    ]
+   }
+  ],
+  "shapes_new": []
+ },
+ "named_cells": {
+  "cell1_ProductErrorBoundary:104-105": {
+   "before": [
+    "UPSTREAM_READ_DIRECT@ProductErrorBoundary.tsx:104 {String(error?.message || error)}"
+   ],
+   "after": []
+  },
+  "cell2_JourneyInboxWorkbench:88_surfacing_at_687_691_731": {
+   "before": [
+    "RAW_TEXT_INTERPOLATION@JourneyInboxWorkbench.tsx:691 <code>{rawDetail}</code>",
+    "UPSTREAM_READ_DIRECT@JourneyInboxWorkbench.tsx:307 } catch (error) {",
+    "UPSTREAM_READ_DIRECT@JourneyInboxWorkbench.tsx:317 } catch (error) {",
+    "UPSTREAM_READ_DIRECT@JourneyInboxWorkbench.tsx:336 } catch (error) {",
+    "UPSTREAM_READ_DIRECT@JourneyInboxWorkbench.tsx:386 } catch (error) {",
+    "UPSTREAM_READ_DIRECT@JourneyInboxWorkbench.tsx:407 } catch (error) {",
+    "UPSTREAM_READ_DIRECT@JourneyInboxWorkbench.tsx:435 } catch (error) {",
+    "UPSTREAM_READ_DIRECT@JourneyInboxWorkbench.tsx:459 } catch (error) {",
+    "UPSTREAM_READ_DIRECT@JourneyInboxWorkbench.tsx:517 } catch (error) {"
+   ],
+   "after": [
+    "UPSTREAM_READ_DIRECT@JourneyInboxWorkbench.tsx:322 } catch (error) {",
+    "UPSTREAM_READ_DIRECT@JourneyInboxWorkbench.tsx:332 } catch (error) {",
+    "UPSTREAM_READ_DIRECT@JourneyInboxWorkbench.tsx:351 } catch (error) {",
+    "UPSTREAM_READ_DIRECT@JourneyInboxWorkbench.tsx:401 } catch (error) {",
+    "UPSTREAM_READ_DIRECT@JourneyInboxWorkbench.tsx:422 } catch (error) {",
+    "UPSTREAM_READ_DIRECT@JourneyInboxWorkbench.tsx:450 } catch (error) {",
+    "UPSTREAM_READ_DIRECT@JourneyInboxWorkbench.tsx:474 } catch (error) {",
+    "UPSTREAM_READ_DIRECT@JourneyInboxWorkbench.tsx:533 } catch (error) {"
+   ]
+  }
+ },
+ "reading": "before 10 hit(s) -> after 8 hit(s); 2 shape(s) gone, 0 new, 8 unchanged shape occurrence(s) renumbered by [15, 16] line(s)",
+ "interpretation_limit": "r3 is a pattern ruler over source text: it names shapes, not defects, and it cannot see what a string holds at runtime. The lines that still fire are catch blocks reading the message of the error this file now composes itself; whether that message carries upstream words is judged by the e2e arms, not by r3.",
+ "claim_kind": "pattern_determined",
+ "claimed_result": null,
+ "derived_result": null
+}
