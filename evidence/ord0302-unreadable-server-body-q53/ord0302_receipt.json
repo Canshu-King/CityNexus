@@ -913,6 +913,6 @@
   "correct_reading": "1 product file changed: frontend/src/features/planning/PlanWithAiSheet.tsx (blob 47ff8985a9963d77a4094eb970ad3fd5b639140b)",
   "cause": "the count was a literal carried over from the earlier spec-only amendment; the instrument now computes it from `git diff` and refuses if the count and the path list disagree",
   "published_text_untouched": "the earlier comment and the earlier ledger block are left as they were",
-  "corrected_at": "2026-09-25T21:10:39+08:00"
+  "corrected_at": "2026-09-25T21:12:24+08:00"
  }
 }
