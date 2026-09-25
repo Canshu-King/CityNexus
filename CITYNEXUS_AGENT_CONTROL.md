@@ -16588,6 +16588,26 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### CMDR-0926-0122 · 号令者 494abfd7：换代落地（ORD-0310 gen-4，仪器件，产品子树全等）+ 两道门的自纠错记账 + Q67 送裁
+
+**换代事实（我亲跑，两路回读同号）**
+- 权威分支 `mirror/integration-frontend-apple-pass1`：`2344145ce6342b6ac32ac4d0955c0f524d8c9320` → **`30de4ebe409f49c5e25f4758cb2e5f4e90764a4f`**（今晚第一次移动；上一代是 21:02 落的 ORD-0310）。
+- 落地前现读：`ff=True`、ahead 1、behind 0、`git merge-tree --write-tree` 单行无冲突、改动文件只有 `review/ord0310_kill_arms.py`、numstat `+10 / -0`、`product introduced: (none)`。门件 `live_checks/preflight_and_land_r1.py` = bf833626ba27316297af59ee0fe77a6e14d0c686，`--land` 一次，GitHub `PATCH force=false` 回 HTTP 200，`tip_after` 与 `branches_route` 两路同号 = true。回执 `evidence/cmdr-landing-ORD-0310-gen4/preflight_r1.json` = b2f8b25cdf5b597568f9ae58e1615755af6ea742（1,850 B）。
+- **"产品没动"是按子树号证的，不是嘴说**：同一对 commit 上 `frontend` 同为 3257a0266f、`backend` 同为 8d67d5b614、`data` 同为 b59f60163b、`contracts` 同为 a41f31ab18、`tools` 同为 d44bac5568（五枚全 equal）；整树 aeaaf03c3708529f410162a0aeeb1fbaf66b0ac0 → a5b5d3f5b253b6bcc635567c9fe1f2fb264e23f8，差异只在 `review/`。⇒ 按 `GENERATION_TRANSFER_BY_CITED_BLOB_EQUALITY_V1`，F 的 ORD-0296 第 2 代臂证据、B 的候选读数与 P3 的手机侧读数**不失效**；只有把"现尖 commit 号"写进 `measurement_scope.generation` 的格子要改指 30de4ebe409f49c5e25f4758cb2e5f4e90764a4f。手机侧那一份 bundle 未重建：`evidence/cmdr-phone-side-probe-0115/probe_r2.json` = c6c6ce251520e9656b985129d00cd049ad35774a 的 `overall` = `DEPLOYED_AND_BYTE_IDENTICAL_ON_PHONE_SIDE`，服务中仍 `/assets/index-DWgtVWb0.js`，Q61（手机不换代）未被破坏。
+
+**两道我自己门上的误判，记账在我名下（不改任何车道一字）**
+- 写账本那道门 `ledger_insert_after.py` 原先只 fetch `refs/heads/commander/control`，于是把"只存在于车道自己 `refs/heads/review/*` 上的 commit"读成坐标不可解析，误拒了 D 的 `d-e345b9d6_0041.md` 首枚与 P3 块里的两枚说明性引用。fetch 范围已改为 `+refs/heads/*:refs/remotes/origin/*`，新门件 `evidence/cmdr-ledger-door-0120/ledger_insert_after_r2.py` = 6def6b7ee683e3afa2322b00318198b79d593ead（4,830 B，与本机正在跑的那份逐字节相等，我按 `git cat-file -p` 与本地文件双向比过）。改后 `ledger_inbox_apply_r1.py --selftest` 六判全过（`well_formed_accepted` / `dry_run_touched_nothing` / `q43_rc_on_bad_block` / `unresolved_coordinates` / `fabricated_coordinate_refused` / `bad_filename_rejected`）。
+- 复核后的真拒因：D 那两枚是 review ref 上的 commit，现已可解析（`git cat-file -t` 回 `commit`）——她的解释成立。仍不可解析的只有两类：P3 块里 `206d4831c5…`（40 位全值我故意不写——它不可解析，写出来就是伪造坐标；她自己的正文说明是"从容器解出后重算的原件 sha1，原件从未入 git"，标签写成 blob 才会被挡；我已请她把三处标签改掉）；B 块里 5 枚报告件（逐枚行号 L11 / L12 / L13 / L14 / L15，前缀分别是 5ca94aaf87、101747915c、f9edd44343、a2a52adbaa、23c6a42b64；40 位全值同样故意不写，理由同上）——我已 fetch 全分支后逐枚验过，其余 8 枚 resolve。两块原样留在 inbox。
+
+**我尺子的两处自我更正（同夜第二、第三起）**
+1. Q64 尺 r1 在现尖瞎（`COMMANDER_RULER_BLIND_SPOT`），E 的 ORD-0319 拓出、我亲测复核；r2 = 608016f6a538097041554b76cfe3e9a4192f299c 在现尖得 1 命中（`failureReason.text` → `:1016`），旧件 4bf0eafa23f6c814518fabcfc8f38ff34e0b59b3 的"0 命中"作废。B 用 r1 量的"从 6 命中到 0 命中"因此要按 r2 重报（我已敲门，`frontend` 子树未变 ⇒ 两尖上结果同一枚）。
+2. 额度尺读数被事实移动推翻两次（B 于 00:26:02 复活），已发勘误帖 `issuecomment-5835906242`。⇒ 新增常设要求：**我今后所有捕获件必须自带 `at_local` 与尺版本名**，车道引用时引这两项而不是我的口语时间。
+
+**Q67 送裁（与 Q65/Q66 并列，未回符号前不动产品）**：B 如实交出、不自己拍板也不改文案换绿那一格 = 卡片说"原因原文在技术详情里"，而 Q64 不许上游原文进 DOM；同一处 `:1006` 还配了 `data-reason-origin` 归因标签。裁"合规归因"则 b5 即交完，裁"越界正文"则要改渲染。我不替仲裁裁这一格。三问都在总线帖 issuecomment-5836294042 与 issuecomment-5836530511。
+
+**现尖** `30de4ebe409f49c5e25f4758cb2e5f4e90764a4f` · 账本 `{{LEDGER}}` · inbox 待重投 2 枚（`aad2d1f2_0059.md`、`b-c01d72a3_0048.md`）。`:8000` 仍 NOT AVAILABLE、P0 两枚 key × 两层在用户手上。
+
+
 ### B c01d72a3 · ORD-0302 b5（Q64=① 白名单面板：同一个文件：b4 的形状在 b5 全部消失，尖自己那条链我没新增；五形臂+五枚反件在尖 `2344145ce6342b6ac32ac4d0955c0f524d8c9320` 上重跑）候选 `b6e1dd3295aafa3330cc9142a4475ac359eb7a3e` @00:48+08 —— **两枚裁决的交集只剩一处：卡片仍说「原因原文在技术详情里」，而 Q64 不许把原文放进 DOM。那一格我如实交出去，不自己拍板也不改文案换绿。**
 
 ```text
