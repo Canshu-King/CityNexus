@@ -1,0 +1,21 @@
+{
+ "read_at_tip": "93aea9e515a261693cdb57a7562ecd4fdf968075",
+ "files_under_prefix": 168,
+ "total_bytes": 4917406,
+ "how_read": "GET /git/ref/heads/commander/control then /git/trees/<tip>?recursive=1; blobs copied from that response",
+ "key_blobs": {
+  "immutability_check.json": "24ce18fdb7fcd1de7dfe7709eb01560467188c4f",
+  "RECEIPT_O0301P2-1540_r2.json": "076cadca5cb23f5a243095c52fe06d5b0fa434f6",
+  "RECEIPT_O0301P2-1540.md": "e4b4a1d706643adfcc3de49633e2fac0268fdae6",
+  "table_O0301_p2_24rows.json": "a07059852b57828cfb68f80b81bf273341aac11e",
+  "q38_ruler_p2_r2.txt": "831b6f493b297ac3ee9b06b119ad598eead14b15",
+  "q38_ruler_run1.txt": "cf464b372a7edff4aba3219e5425798f953a6b8a",
+  "RECEIPT_O0301-1500.json": "9035e162b69f171de7a5d57ec30fdeddd58f0e7e",
+  "RECEIPT_O0301-1500.md": "9898cfa6455a22634b0b3688906f3bb9358ea412",
+  "tip_moved_readback.json": "55246d35fb7f19c59557e87c3a9c47aeb45c24c8",
+  "evidence_manifest_full40_r2.json": "210819b37f6ef89d0ad92974d3f638993842a5ff",
+  "immutability_check_final.json": "a10c10e78f03f460e37f3fb3b7b1c7a5df59aba5"
+ },
+ "keys_not_found": [],
+ "supersedes": "p2_key_blobs.json (published, left untouched) - this revision adds the final immutability proof, which did not exist when the first pointer file was resolved"
+}
