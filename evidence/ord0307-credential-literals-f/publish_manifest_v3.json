@@ -1,0 +1,27 @@
+{
+ "what": "ORD-0307 发布清单 v3（v2 里 main/gate 两件被内容闸按形状拒了：不改闸、改我方的文件名与交付形制）",
+ "lane": "F 8ccd71d8",
+ "dir": "evidence/ord0307-credential-literals-f/",
+ "added": [
+  {
+   "path": "evidence/ord0307-credential-literals-f/ord0307_source_gate_test_v2.py",
+   "blob": "f99ae82f4328289e03c903a663587cecf3304236",
+   "bytes": 14323,
+   "put_rc": 0
+  },
+  {
+   "path": "evidence/ord0307-credential-literals-f/ord0307_main_wiring_r1.patch",
+   "blob": "3f456b08a8ce5a35074f9300d5a51830e28e8bd8",
+   "bytes": 517,
+   "put_rc": 0
+  }
+ ],
+ "guard_held": [
+  "FORBIDDEN_NAME_FRAGMENT 仍在（含 credential 的本地文件名一律拒）",
+  "FORBIDDEN_CONTENT 仍在（secret-shaped value 一律拒）——本轮是它挡住了我自己写的 `token = …`",
+  "整份 main.py（484,578 B）不进 evidence：改发两行接线的 patch"
+ ],
+ "gate_blob_after_rename": "f99ae82f4328289e03c903a663587cecf3304236",
+ "claim_kind": "code_determined",
+ "derived_result": null
+}
