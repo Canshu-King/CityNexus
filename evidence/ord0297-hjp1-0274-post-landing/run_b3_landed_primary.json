@@ -1,0 +1,1151 @@
+{
+  "order": "ORD-0297",
+  "arm": "b3_landed_primary",
+  "verifier": "1a986a24 HJ-P1",
+  "claim_under_test": "B3 on the LANDED generation 5c4608ce: a traveller whose client converged onto the new generation, and who really has a trip, stays usable offline on that same generation",
+  "installed_commit": "5c4608cede6cb7bd5f3ac7e704bfee379ca47abc",
+  "next_commit": "5c4608cede6cb7bd5f3ac7e704bfee379ca47abc + inert marker line (ORD-0297-next)",
+  "root_installed": "D:\\moodle\\_qoder_hjp1_o207_20260922\\o297\\landed\\frontend\\dist",
+  "root_next": "D:\\moodle\\_qoder_hjp1_o207_20260922\\o297\\landed_next\\frontend\\dist",
+  "arm_kind": "b3_offline",
+  "write_mode": "answer",
+  "cells_this_arm_judges": [
+    "B3_offline_after_convergence"
+  ],
+  "started_at": "2026-09-25T10:33:07+0800",
+  "ports": {
+    "backend": 8980,
+    "origin": 8981
+  },
+  "ref_tip_read": {
+    "read_at_local": "2026-09-25T09:46:31+0800",
+    "how": "GET /repos/Canshu-King/CityNexus/git/ref/heads/<branch> over https (external read; the local repo remote is NOT the authoritative line)",
+    "note_master": "refs/heads/master is 346 commits BEHIND 5c4608ce (compare API) => it is not the landed line; recorded so nobody reuses my first, wrong read",
+    "refs": {
+      "review/ord0287-recut-commander": {
+        "http": 200,
+        "tip": "5c4608cede6cb7bd5f3ac7e704bfee379ca47abc",
+        "ls_remote_form": "5c4608cede6cb7bd5f3ac7e704bfee379ca47abc\trefs/heads/review/ord0287-recut-commander",
+        "object_id_len": 40
+      },
+      "review/ord0296-write-deadline-f": {
+        "http": 200,
+        "tip": "6d041dcce11d05f28a55abadd40717f321b4db38",
+        "ls_remote_form": "6d041dcce11d05f28a55abadd40717f321b4db38\trefs/heads/review/ord0296-write-deadline-f",
+        "object_id_len": 40
+      },
+      "master": {
+        "http": 200,
+        "tip": "7d22cd0eb7840121ba42a5ba363e1a4c7ca1a7e7",
+        "ls_remote_form": "7d22cd0eb7840121ba42a5ba363e1a4c7ca1a7e7\trefs/heads/master",
+        "object_id_len": 40
+      },
+      "commander/control": {
+        "http": 200,
+        "tip": "812ac630cf46b95b6c6d021cb56cae43e7b8d184",
+        "ls_remote_form": "812ac630cf46b95b6c6d021cb56cae43e7b8d184\trefs/heads/commander/control",
+        "object_id_len": 40
+      }
+    },
+    "ordered_to_landed_jump": {
+      "http": 200,
+      "files": [
+        "backend/app/core/config.py",
+        "backend/app/db/session.py",
+        "backend/app/db/write_deadline.py",
+        "backend/app/main.py",
+        "backend/tests/test_qoder_ord0296_write_deadline.py"
+      ],
+      "ahead": 1,
+      "behind": 0,
+      "frontend_files": []
+    }
+  },
+  "build_receipt": "o297_builds.json",
+  "generation_identities_from_build": {
+    "landed": {
+      "commit": "5c4608cede6cb7bd5f3ac7e704bfee379ca47abc",
+      "bundle": "index-xKIGmoBz.js",
+      "shell_md5": "3f2914575322ce0b952eeab2809716c5",
+      "worker_sha256_16": "6a2eee7091c7cdc0",
+      "bundle_sha256_16": "ba6654a08dd6f98e",
+      "marker_line_added": null
+    },
+    "landed_next": {
+      "commit": "5c4608cede6cb7bd5f3ac7e704bfee379ca47abc",
+      "bundle": "index-IbbdpA3f.js",
+      "shell_md5": "75aba1f1a5162ece67d1ce0b4afa1391",
+      "worker_sha256_16": "e1556d912c286209",
+      "bundle_sha256_16": "85644eb14354f717",
+      "marker_line_added": "window.__cnxNextGenerationMarker = \"ORD-0297-next\";"
+    }
+  },
+  "identity_installed": {
+    "root": "D:\\moodle\\_qoder_hjp1_o207_20260922\\o297\\landed\\frontend\\dist",
+    "bundle": "index-xKIGmoBz.js",
+    "shell_md5": "3f2914575322ce0b952eeab2809716c5",
+    "worker_sha256_16": "6a2eee7091c7cdc0"
+  },
+  "identity_next": {
+    "root": "D:\\moodle\\_qoder_hjp1_o207_20260922\\o297\\landed_next\\frontend\\dist",
+    "bundle": "index-IbbdpA3f.js",
+    "shell_md5": "75aba1f1a5162ece67d1ce0b4afa1391",
+    "worker_sha256_16": "e1556d912c286209"
+  },
+  "backend_tree": {
+    "dir": "D:\\moodle\\_qoder_hjp1_o207_20260922\\o297\\ordered_backend\\backend",
+    "main_py_present": true
+  },
+  "surface": {
+    "backend_pid": 49380,
+    "origin_pid": 9640,
+    "openapi_paths": 139,
+    "root_status": 200,
+    "served_entry": "index-xKIGmoBz.js"
+  },
+  "db_before": {
+    "measured_at": "after boot, before any click",
+    "tables_measured": 55,
+    "nonempty": [],
+    "counts": {
+      "accommodation_offer_snapshots": 0,
+      "action_approvals": 0,
+      "activities": 0,
+      "agent_run_steps": 0,
+      "agent_runs": 0,
+      "audit_logs": 0,
+      "autopilot_enrollments": 0,
+      "bookings": 0,
+      "catalog_hydration_operations": 0,
+      "city_services": 0,
+      "city_signal_fixtures": 0,
+      "commitments": 0,
+      "constraints": 0,
+      "counterfactual_simulations": 0,
+      "edge_actions": 0,
+      "edge_devices": 0,
+      "edge_observations": 0,
+      "events": 0,
+      "external_reservation_drafts": 0,
+      "guardian_pulses": 0,
+      "guardian_runs": 0,
+      "idempotency_keys": 0,
+      "impact_assessments": 0,
+      "journey_legs": 0,
+      "journey_missions": 0,
+      "journey_operations_contexts": 0,
+      "journey_outcome_events": 0,
+      "journey_resilience_snapshots": 0,
+      "journey_trip_contexts": 0,
+      "journey_twins": 0,
+      "journeys": 0,
+      "location_observations": 0,
+      "mobility_facts": 0,
+      "notification_events": 0,
+      "offline_journey_snapshots": 0,
+      "orders": 0,
+      "places": 0,
+      "plan_versions": 0,
+      "preferences": 0,
+      "provider_calls": 0,
+      "provider_observations": 0,
+      "push_subscriptions": 0,
+      "real_place_candidates": 0,
+      "recommendations": 0,
+      "replan_proposals": 0,
+      "stay_generation_operations": 0,
+      "stay_journey_options": 0,
+      "transactions": 0,
+      "transport_reservations": 0,
+      "traveler_agent_policies": 0,
+      "traveler_capabilities": 0,
+      "traveler_preference_evidence": 0,
+      "traveler_twin_snapshots": 0,
+      "travelers": 0,
+      "web_observations": 0
+    },
+    "detail": {
+      "accommodation_offer_snapshots": {
+        "pk_columns": [
+          "id"
+        ],
+        "rows": 0,
+        "keys": []
+      },
+      "action_approvals": {
+        "pk_columns": [
+          "id"
+        ],
+        "rows": 0,
+        "keys": []
+      },
+      "activities": {
+        "pk_columns": [
+          "id"
+        ],
+        "rows": 0,
+        "keys": []
+      },
+      "agent_run_steps": {
+        "pk_columns": [
+          "id"
+        ],
+        "rows": 0,
+        "keys": []
+      },
+      "agent_runs": {
+        "pk_columns": [
+          "id"
+        ],
+        "rows": 0,
+        "keys": []
+      },
+      "audit_logs": {
+        "pk_columns": [
+          "id"
+        ],
+        "rows": 0,
+        "keys": []
+      },
+      "autopilot_enrollments": {
+        "pk_columns": [
+          "journey_id"
+        ],
+        "rows": 0,
+        "keys": []
+      },
+      "bookings": {
+        "pk_columns": [
+          "id"
+        ],
+        "rows": 0,
+        "keys": []
+      },
+      "catalog_hydration_operations": {
+        "pk_columns": [
+          "id"
+        ],
+        "rows": 0,
+        "keys": []
+      },
+      "city_services": {
+        "pk_columns": [
+          "id"
+        ],
+        "rows": 0,
+        "keys": []
+      },
+      "city_signal_fixtures": {
+        "pk_columns": [
+          "journey_id"
+        ],
+        "rows": 0,
+        "keys": []
+      },
+      "commitments": {
+        "pk_columns": [
+          "id"
+        ],
+        "rows": 0,
+        "keys": []
+      },
+      "constraints": {
+        "pk_columns": [
+          "id"
+        ],
+        "rows": 0,
+        "keys": []
+      },
+      "counterfactual_simulations": {
+        "pk_columns": [
+          "id"
+        ],
+        "rows": 0,
+        "keys": []
+      },
+      "edge_actions": {
+        "pk_columns": [
+          "id"
+        ],
+        "rows": 0,
+        "keys": []
+      },
+      "edge_devices": {
+        "pk_columns": [
+          "id"
+        ],
+        "rows": 0,
+        "keys": []
+      },
+      "edge_observations": {
+        "pk_columns": [
+          "id"
+        ],
+        "rows": 0,
+        "keys": []
+      },
+      "events": {
+        "pk_columns": [
+          "id"
+        ],
+        "rows": 0,
+        "keys": []
+      },
+      "external_reservation_drafts": {
+        "pk_columns": [
+          "id"
+        ],
+        "rows": 0,
+        "keys": []
+      },
+      "guardian_pulses": {
+        "pk_columns": [
+          "id"
+        ],
+        "rows": 0,
+        "keys": []
+      },
+      "guardian_runs": {
+        "pk_columns": [
+          "id"
+        ],
+        "rows": 0,
+        "keys": []
+      },
+      "idempotency_keys": {
+        "pk_columns": [
+          "key"
+        ],
+        "rows": 0,
+        "keys": []
+      },
+      "impact_assessments": {
+        "pk_columns": [
+          "id"
+        ],
+        "rows": 0,
+        "keys": []
+      },
+      "journey_legs": {
+        "pk_columns": [
+          "id"
+        ],
+        "rows": 0,
+        "keys": []
+      },
+      "journey_missions": {
+        "pk_columns": [
+          "id"
+        ],
+        "rows": 0,
+        "keys": []
+      },
+      "journey_operations_contexts": {
+        "pk_columns": [
+          "journey_id"
+        ],
+        "rows": 0,
+        "keys": []
+      },
+      "journey_outcome_events": {
+        "pk_columns": [
+          "id"
+        ],
+        "rows": 0,
+        "keys": []
+      },
+      "journey_resilience_snapshots": {
+        "pk_columns": [
+          "id"
+        ],
+        "rows": 0,
+        "keys": []
+      },
+      "journey_trip_contexts": {
+        "pk_columns": [
+          "journey_id"
+        ],
+        "rows": 0,
+        "keys": []
+      },
+      "journey_twins": {
+        "pk_columns": [
+          "journey_id"
+        ],
+        "rows": 0,
+        "keys": []
+      },
+      "journeys": {
+        "pk_columns": [
+          "id"
+        ],
+        "rows": 0,
+        "keys": []
+      },
+      "location_observations": {
+        "pk_columns": [
+          "id"
+        ],
+        "rows": 0,
+        "keys": []
+      },
+      "mobility_facts": {
+        "pk_columns": [
+          "id"
+        ],
+        "rows": 0,
+        "keys": []
+      },
+      "notification_events": {
+        "pk_columns": [
+          "id"
+        ],
+        "rows": 0,
+        "keys": []
+      },
+      "offline_journey_snapshots": {
+        "pk_columns": [
+          "journey_id"
+        ],
+        "rows": 0,
+        "keys": []
+      },
+      "orders": {
+        "pk_columns": [
+          "id"
+        ],
+        "rows": 0,
+        "keys": []
+      },
+      "places": {
+        "pk_columns": [
+          "id"
+        ],
+        "rows": 0,
+        "keys": []
+      },
+      "plan_versions": {
+        "pk_columns": [
+          "id"
+        ],
+        "rows": 0,
+        "keys": []
+      },
+      "preferences": {
+        "pk_columns": [
+          "id"
+        ],
+        "rows": 0,
+        "keys": []
+      },
+      "provider_calls": {
+        "pk_columns": [
+          "id"
+        ],
+        "rows": 0,
+        "keys": []
+      },
+      "provider_observations": {
+        "pk_columns": [
+          "id"
+        ],
+        "rows": 0,
+        "keys": []
+      },
+      "push_subscriptions": {
+        "pk_columns": [
+          "id"
+        ],
+        "rows": 0,
+        "keys": []
+      },
+      "real_place_candidates": {
+        "pk_columns": [
+          "id"
+        ],
+        "rows": 0,
+        "keys": []
+      },
+      "recommendations": {
+        "pk_columns": [
+          "id"
+        ],
+        "rows": 0,
+        "keys": []
+      },
+      "replan_proposals": {
+        "pk_columns": [
+          "id"
+        ],
+        "rows": 0,
+        "keys": []
+      },
+      "stay_generation_operations": {
+        "pk_columns": [
+          "id"
+        ],
+        "rows": 0,
+        "keys": []
+      },
+      "stay_journey_options": {
+        "pk_columns": [
+          "id"
+        ],
+        "rows": 0,
+        "keys": []
+      },
+      "transactions": {
+        "pk_columns": [
+          "id"
+        ],
+        "rows": 0,
+        "keys": []
+      },
+      "transport_reservations": {
+        "pk_columns": [
+          "id"
+        ],
+        "rows": 0,
+        "keys": []
+      },
+      "traveler_agent_policies": {
+        "pk_columns": [
+          "traveler_id"
+        ],
+        "rows": 0,
+        "keys": []
+      },
+      "traveler_capabilities": {
+        "pk_columns": [
+          "id"
+        ],
+        "rows": 0,
+        "keys": []
+      },
+      "traveler_preference_evidence": {
+        "pk_columns": [
+          "id"
+        ],
+        "rows": 0,
+        "keys": []
+      },
+      "traveler_twin_snapshots": {
+        "pk_columns": [
+          "traveler_id"
+        ],
+        "rows": 0,
+        "keys": []
+      },
+      "travelers": {
+        "pk_columns": [
+          "id"
+        ],
+        "rows": 0,
+        "keys": []
+      },
+      "web_observations": {
+        "pk_columns": [
+          "id"
+        ],
+        "rows": 0,
+        "keys": []
+      }
+    }
+  },
+  "arm_exit": 0,
+  "arm_wall_s": 78.0,
+  "db_after": {
+    "measured_at": "after the walk, backend stopped",
+    "tables_measured": 55,
+    "nonempty": [
+      "accommodation_offer_snapshots",
+      "audit_logs",
+      "journey_operations_contexts",
+      "journey_trip_contexts",
+      "journey_twins",
+      "journeys",
+      "mobility_facts",
+      "offline_journey_snapshots",
+      "stay_generation_operations",
+      "stay_journey_options",
+      "traveler_agent_policies",
+      "traveler_twin_snapshots",
+      "travelers"
+    ],
+    "counts": {
+      "accommodation_offer_snapshots": 1,
+      "action_approvals": 0,
+      "activities": 0,
+      "agent_run_steps": 0,
+      "agent_runs": 0,
+      "audit_logs": 3,
+      "autopilot_enrollments": 0,
+      "bookings": 0,
+      "catalog_hydration_operations": 0,
+      "city_services": 0,
+      "city_signal_fixtures": 0,
+      "commitments": 0,
+      "constraints": 0,
+      "counterfactual_simulations": 0,
+      "edge_actions": 0,
+      "edge_devices": 0,
+      "edge_observations": 0,
+      "events": 0,
+      "external_reservation_drafts": 0,
+      "guardian_pulses": 0,
+      "guardian_runs": 0,
+      "idempotency_keys": 0,
+      "impact_assessments": 0,
+      "journey_legs": 0,
+      "journey_missions": 0,
+      "journey_operations_contexts": 1,
+      "journey_outcome_events": 0,
+      "journey_resilience_snapshots": 0,
+      "journey_trip_contexts": 1,
+      "journey_twins": 1,
+      "journeys": 1,
+      "location_observations": 0,
+      "mobility_facts": 35,
+      "notification_events": 0,
+      "offline_journey_snapshots": 1,
+      "orders": 0,
+      "places": 0,
+      "plan_versions": 0,
+      "preferences": 0,
+      "provider_calls": 0,
+      "provider_observations": 0,
+      "push_subscriptions": 0,
+      "real_place_candidates": 0,
+      "recommendations": 0,
+      "replan_proposals": 0,
+      "stay_generation_operations": 1,
+      "stay_journey_options": 1,
+      "transactions": 0,
+      "transport_reservations": 0,
+      "traveler_agent_policies": 1,
+      "traveler_capabilities": 0,
+      "traveler_preference_evidence": 0,
+      "traveler_twin_snapshots": 1,
+      "travelers": 1,
+      "web_observations": 0
+    },
+    "detail": {
+      "accommodation_offer_snapshots": {
+        "pk_columns": [
+          "id"
+        ],
+        "rows": 1,
+        "keys": [
+          {
+            "id": "17514a48-73e2-4101-bcbb-a0b8003ce2b0"
+          }
+        ]
+      },
+      "action_approvals": {
+        "pk_columns": [
+          "id"
+        ],
+        "rows": 0,
+        "keys": []
+      },
+      "activities": {
+        "pk_columns": [
+          "id"
+        ],
+        "rows": 0,
+        "keys": []
+      },
+      "agent_run_steps": {
+        "pk_columns": [
+          "id"
+        ],
+        "rows": 0,
+        "keys": []
+      },
+      "agent_runs": {
+        "pk_columns": [
+          "id"
+        ],
+        "rows": 0,
+        "keys": []
+      },
+      "audit_logs": {
+        "pk_columns": [
+          "id"
+        ],
+        "rows": 3,
+        "keys": [
+          {
+            "id": "14ca2d41-7db6-4943-a1be-1ae4f279b1fa"
+          },
+          {
+            "id": "5d9c65df-0619-4d5f-bf51-5efa857ca18f"
+          },
+          {
+            "id": "f0ad61ab-5060-4311-b684-ef3d981864b0"
+          }
+        ]
+      },
+      "autopilot_enrollments": {
+        "pk_columns": [
+          "journey_id"
+        ],
+        "rows": 0,
+        "keys": []
+      },
+      "bookings": {
+        "pk_columns": [
+          "id"
+        ],
+        "rows": 0,
+        "keys": []
+      },
+      "catalog_hydration_operations": {
+        "pk_columns": [
+          "id"
+        ],
+        "rows": 0,
+        "keys": []
+      },
+      "city_services": {
+        "pk_columns": [
+          "id"
+        ],
+        "rows": 0,
+        "keys": []
+      },
+      "city_signal_fixtures": {
+        "pk_columns": [
+          "journey_id"
+        ],
+        "rows": 0,
+        "keys": []
+      },
+      "commitments": {
+        "pk_columns": [
+          "id"
+        ],
+        "rows": 0,
+        "keys": []
+      },
+      "constraints": {
+        "pk_columns": [
+          "id"
+        ],
+        "rows": 0,
+        "keys": []
+      },
+      "counterfactual_simulations": {
+        "pk_columns": [
+          "id"
+        ],
+        "rows": 0,
+        "keys": []
+      },
+      "edge_actions": {
+        "pk_columns": [
+          "id"
+        ],
+        "rows": 0,
+        "keys": []
+      },
+      "edge_devices": {
+        "pk_columns": [
+          "id"
+        ],
+        "rows": 0,
+        "keys": []
+      },
+      "edge_observations": {
+        "pk_columns": [
+          "id"
+        ],
+        "rows": 0,
+        "keys": []
+      },
+      "events": {
+        "pk_columns": [
+          "id"
+        ],
+        "rows": 0,
+        "keys": []
+      },
+      "external_reservation_drafts": {
+        "pk_columns": [
+          "id"
+        ],
+        "rows": 0,
+        "keys": []
+      },
+      "guardian_pulses": {
+        "pk_columns": [
+          "id"
+        ],
+        "rows": 0,
+        "keys": []
+      },
+      "guardian_runs": {
+        "pk_columns": [
+          "id"
+        ],
+        "rows": 0,
+        "keys": []
+      },
+      "idempotency_keys": {
+        "pk_columns": [
+          "key"
+        ],
+        "rows": 0,
+        "keys": []
+      },
+      "impact_assessments": {
+        "pk_columns": [
+          "id"
+        ],
+        "rows": 0,
+        "keys": []
+      },
+      "journey_legs": {
+        "pk_columns": [
+          "id"
+        ],
+        "rows": 0,
+        "keys": []
+      },
+      "journey_missions": {
+        "pk_columns": [
+          "id"
+        ],
+        "rows": 0,
+        "keys": []
+      },
+      "journey_operations_contexts": {
+        "pk_columns": [
+          "journey_id"
+        ],
+        "rows": 1,
+        "keys": [
+          {
+            "journey_id": "07f4892e-e1fa-4967-964a-c073210a4778"
+          }
+        ]
+      },
+      "journey_outcome_events": {
+        "pk_columns": [
+          "id"
+        ],
+        "rows": 0,
+        "keys": []
+      },
+      "journey_resilience_snapshots": {
+        "pk_columns": [
+          "id"
+        ],
+        "rows": 0,
+        "keys": []
+      },
+      "journey_trip_contexts": {
+        "pk_columns": [
+          "journey_id"
+        ],
+        "rows": 1,
+        "keys": [
+          {
+            "journey_id": "07f4892e-e1fa-4967-964a-c073210a4778"
+          }
+        ]
+      },
+      "journey_twins": {
+        "pk_columns": [
+          "journey_id"
+        ],
+        "rows": 1,
+        "keys": [
+          {
+            "journey_id": "07f4892e-e1fa-4967-964a-c073210a4778"
+          }
+        ]
+      },
+      "journeys": {
+        "pk_columns": [
+          "id"
+        ],
+        "rows": 1,
+        "keys": [
+          {
+            "id": "07f4892e-e1fa-4967-964a-c073210a4778"
+          }
+        ]
+      },
+      "location_observations": {
+        "pk_columns": [
+          "id"
+        ],
+        "rows": 0,
+        "keys": []
+      },
+      "mobility_facts": {
+        "pk_columns": [
+          "id"
+        ],
+        "rows": 35,
+        "keys": [
+          {
+            "id": "009ebd9a-0d8e-4c0a-bd04-9ae0eb9676c4"
+          },
+          {
+            "id": "1686cc2c-3c1d-4cb1-af90-819e7fdf82f1"
+          },
+          {
+            "id": "18659fb4-850a-4f92-9a40-bb989e5b5630"
+          },
+          {
+            "id": "1987883c-f2f6-4fa3-b4bf-073a01e67281"
+          },
+          {
+            "id": "2d816f63-4823-4bdc-ac2c-d75e6cbae746"
+          },
+          {
+            "id": "31797a09-fabb-477e-8cb6-e796faa39a5d"
+          },
+          {
+            "id": "50d5fc32-b02c-45b8-88ea-7804db319d64"
+          },
+          {
+            "id": "51511333-c93a-4561-a656-b71b19d5cbf3"
+          },
+          {
+            "id": "5efe2179-7454-4003-ab92-ef23af66f175"
+          },
+          {
+            "id": "5fbc9342-29d3-49c2-8c99-6f64257e962e"
+          },
+          {
+            "id": "603295cc-6a4d-4cc1-b499-e2a6f035003d"
+          },
+          {
+            "id": "653d5285-63f3-482f-a2da-75e488c95344"
+          },
+          {
+            "id": "68c16409-37d4-425c-9150-2013cfeb40bb"
+          },
+          {
+            "id": "6a2639d1-2f3e-4ef4-824e-d0f0f93ae5f7"
+          },
+          {
+            "id": "6f13c8ed-f488-4145-bbd6-21cc675ed377"
+          },
+          {
+            "id": "74307be1-6f47-4df6-90c1-3948e9f18700"
+          },
+          {
+            "id": "75296c43-924e-4990-bd82-7c0423cb7225"
+          },
+          {
+            "id": "7a875360-c692-469b-bca6-dff540a0967e"
+          },
+          {
+            "id": "875823c4-8483-4ee9-9135-7dbea8c0fa1d"
+          },
+          {
+            "id": "8b806672-49ae-4f59-a476-f7412db96e50"
+          }
+        ]
+      },
+      "notification_events": {
+        "pk_columns": [
+          "id"
+        ],
+        "rows": 0,
+        "keys": []
+      },
+      "offline_journey_snapshots": {
+        "pk_columns": [
+          "journey_id"
+        ],
+        "rows": 1,
+        "keys": [
+          {
+            "journey_id": "07f4892e-e1fa-4967-964a-c073210a4778"
+          }
+        ]
+      },
+      "orders": {
+        "pk_columns": [
+          "id"
+        ],
+        "rows": 0,
+        "keys": []
+      },
+      "places": {
+        "pk_columns": [
+          "id"
+        ],
+        "rows": 0,
+        "keys": []
+      },
+      "plan_versions": {
+        "pk_columns": [
+          "id"
+        ],
+        "rows": 0,
+        "keys": []
+      },
+      "preferences": {
+        "pk_columns": [
+          "id"
+        ],
+        "rows": 0,
+        "keys": []
+      },
+      "provider_calls": {
+        "pk_columns": [
+          "id"
+        ],
+        "rows": 0,
+        "keys": []
+      },
+      "provider_observations": {
+        "pk_columns": [
+          "id"
+        ],
+        "rows": 0,
+        "keys": []
+      },
+      "push_subscriptions": {
+        "pk_columns": [
+          "id"
+        ],
+        "rows": 0,
+        "keys": []
+      },
+      "real_place_candidates": {
+        "pk_columns": [
+          "id"
+        ],
+        "rows": 0,
+        "keys": []
+      },
+      "recommendations": {
+        "pk_columns": [
+          "id"
+        ],
+        "rows": 0,
+        "keys": []
+      },
+      "replan_proposals": {
+        "pk_columns": [
+          "id"
+        ],
+        "rows": 0,
+        "keys": []
+      },
+      "stay_generation_operations": {
+        "pk_columns": [
+          "id"
+        ],
+        "rows": 1,
+        "keys": [
+          {
+            "id": "d5f84741-376f-4b98-8e50-fe3d5070ceaf"
+          }
+        ]
+      },
+      "stay_journey_options": {
+        "pk_columns": [
+          "id"
+        ],
+        "rows": 1,
+        "keys": [
+          {
+            "id": "8c00d019-995d-4df3-b67b-528c1576bee1"
+          }
+        ]
+      },
+      "transactions": {
+        "pk_columns": [
+          "id"
+        ],
+        "rows": 0,
+        "keys": []
+      },
+      "transport_reservations": {
+        "pk_columns": [
+          "id"
+        ],
+        "rows": 0,
+        "keys": []
+      },
+      "traveler_agent_policies": {
+        "pk_columns": [
+          "traveler_id"
+        ],
+        "rows": 1,
+        "keys": [
+          {
+            "traveler_id": "092b2073-abf3-4914-8232-e98129fa8b47"
+          }
+        ]
+      },
+      "traveler_capabilities": {
+        "pk_columns": [
+          "id"
+        ],
+        "rows": 0,
+        "keys": []
+      },
+      "traveler_preference_evidence": {
+        "pk_columns": [
+          "id"
+        ],
+        "rows": 0,
+        "keys": []
+      },
+      "traveler_twin_snapshots": {
+        "pk_columns": [
+          "traveler_id"
+        ],
+        "rows": 1,
+        "keys": [
+          {
+            "traveler_id": "092b2073-abf3-4914-8232-e98129fa8b47"
+          }
+        ]
+      },
+      "travelers": {
+        "pk_columns": [
+          "id"
+        ],
+        "rows": 1,
+        "keys": [
+          {
+            "id": "092b2073-abf3-4914-8232-e98129fa8b47"
+          }
+        ]
+      },
+      "web_observations": {
+        "pk_columns": [
+          "id"
+        ],
+        "rows": 0,
+        "keys": []
+      }
+    }
+  },
+  "backend_write_log": [
+    "INFO:     127.0.0.1:49692 - \"POST /api/v1/travelers HTTP/1.1\" 201 Created",
+    "INFO:     127.0.0.1:49693 - \"POST /api/v1/journeys HTTP/1.1\" 201 Created",
+    "INFO:     127.0.0.1:49695 - \"PUT /api/v1/travelers/092b2073-abf3-4914-8232-e98129fa8b47/preferences HTTP/1.1\" 200 OK",
+    "INFO:     127.0.0.1:49697 - \"POST /api/v1/journeys/07f4892e-e1fa-4967-964a-c073210a4778/stay-options/generate HTTP/1.1\" 200 OK"
+  ],
+  "isolation": {
+    "rundir_deleted": true,
+    "db_leftovers": [],
+    "profile_leftovers": false,
+    "ports_final": {
+      "backend": [],
+      "origin": []
+    }
+  },
+  "ended_at": "2026-09-25T10:34:36+0800"
+}
