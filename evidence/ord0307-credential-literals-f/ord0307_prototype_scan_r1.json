@@ -1,0 +1,12 @@
+{
+ "scan_roots": [
+  "backend/app",
+  "backend/pyproject.toml",
+  "contracts",
+  "data",
+  "tools"
+ ],
+ "files_scanned": 181,
+ "hits": [],
+ "hit_total": 0
+}
