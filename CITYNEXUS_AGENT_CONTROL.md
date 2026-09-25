@@ -16588,6 +16588,100 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### ORD-0331 后续 S4-ast-taint — 尺 r6：两种模式的可见范围写成读数，另修一处我自己上一块的误判
+
+- 车道 S4-ast-taint。代 generation = 821a0eb54cca1b305a4aa75c1ca8d46a95d51bba（现尖，用 git ls-remote 网络实读；上一代 0f8b925facabc9df57bab600b86d999dd515bf94，frontend/src 在 c1bea4c2 换过代）。
+- 尺：evidence/ord0331-ast-crossfile-S4/ui_exposure_taint_ast_r3.cjs — git blob 6a251d3a6bea70329e06581384a81d5ef54c96a6，101413 bytes，落架 commit f3614b5c33c1589c3c9395456d5e4a19a3bacfad；架上读出与本地副本同为**字节的 sha1（非 blob，不可 cat-file）** 62411651d95a0897068af88e4aee9d54ee0af999。取代 r5（blob ff98091cf3accb0d836ae25ba49820170b92d932）与 r4（blob eb262f59e54d5142ad0e8041704e751eac473ace）；r1/r2/r3（blob 44e062e6ce9c7b5d97d78e09e432072da102292c）字节仍未动，只新增路径。
+- 收据：evidence/ord0331-ast-crossfile-S4/receipt_r6.json — git blob aaf01f5cee346ce0db03a00f81309c1953646a02，25719 bytes，commit 09bc0e1743636ca6b4195dd94f6f6e94b65c8b7d。derived_result 留 null。
+- 卫生：`_qoder_ledger_inbox/S4-ast-taint_0454.md` 已改名 `..._0454.md.superseded_by_0502`，不再被坐标螺栓重复拒。
+
+**一、你要的口径写进尺了，但写成两个方向的读数，不写成“上界”**
+- 尺的 `--file` / `--ref --path` 输出现在自带 `scope` / `scope_note` / `upper_bound_claim` 三个字段，`--tree` 输出自带 `scope`；字段文案就是下面这组实测，不是形容词。
+- 现尖全树 76 枚：`--tree` 23 格，`--file/--ref` 22 格；**只在 per-file 出现的 1 格** = frontend/src/app/V8Experience.tsx:1348（清单在收据 blob aaf01f5cee346ce0db03a00f81309c1953646a02 的 scope_measurement_on_live_tree.cells_only_in_per_file）；**只在 --tree 出现的 2 格**（含 frontend/src/features/simulation/SimulationPanel.tsx:934 与 frontend/src/app/V8Experience.tsx:2609）。所以 per-file 既不是上界也不是下界：看不见被导入 helper 的函数体就多说一格，看不见 poison 沿 import 走进来就少说两格。你 05:08 用 `--ref` 量 D 的候选拿到的是那一侧的差，S1 用 `--tree` 量到的是另一侧，两个读数都真，但不能当一个。
+- 自测里加了两条对照臂把这个方向差钉住：两臂逐格读数在收据 blob aaf01f5cee346ce0db03a00f81309c1953646a02 的 mode_arms 一节（F_per_file_over_reports_where_the_helper_exonerates：per-file 侧 1 格、graph 侧 0 格；G_per_file_under_reports_poison_arriving_as_an_imported_value：per-file 侧 0 格、graph 侧 1 格），并断言两模式读数不等时 scope 字段必须存在。
+
+**二、顺手修掉一处尺的真实盲区（也是你说的“产品下一步要用的通道”）**
+- frontend/src/lib/rawFacts.ts:39 把 `await response.text()` 当字符串返回，四个文件 import 它。r5 只把“参数名叫 body”一类当携带原话，所以这个通道把答案正文递到别的文件再打印时不报。r6 把“绑定到正文来源的变量”也记为正文（`res.text()` / `body_head` / `raw`），同时把 `res.json()`、`JSON.parse` 判为**结构**：字段按名字各自裁，结构本身不再是原话（此前一版我把结构也整体标记，结果一枚共享的 `String(field)` 标签函数把 14 个屏幕全染红（那一版实测格数与名单在收据 blob aaf01f5cee346ce0db03a00f81309c1953646a02 的 r6_over_r5 与 comparison_axes 两节，已回退不采用），那就是你反复警告的“喊狼”的尺，已回退并在尺的注释里写明原因）。
+- 新臂 H（照抄现尖那条例：lib 返回正文文本 → 消费者 `<p>{text}</p>`）必报；反臂 H2（同一通道只传测得的 `http_status`/`bytes`）必净。
+- 仍留一处**声明的缺口**：`{JSON.stringify(parsedAnswer)}` 这种把解析后的结构又转回文本打印的形状，r6 不报（要报就得整体标记结构，代价是上面那 14 格噪声）。探针留在 probe/raw/panels/Show3.tsx，收据里以 residual_gap_declared 写明，不当已修。
+
+**三、对我自己上一块的一处误判做勘误（旧件不重写）**
+- 我在 receipt_r5（blob 0c951247879e231a2c3c1c47156bff9e9bc3aa32）与 05:11 总线帖里，把 frontend/src/app/V8Experience.tsx:1314 说成“ORD-0322 只能声明超范围、现在被跨文件机制抓到”的那一格。**跨文件机制部分成立**（classifyReadFailure 真在另一个文件，r5 是第一把能跟过去的尺）；**但那一格本身是名字造成的假红**：承载它的 `reason` 是 lib/failureAttribution.ts:110 的形参，装的是分类器自己的枚举，调用点 lib/failureAttribution.ts:159 传的是字面量 "ORIGIN_INVALID_RESPONSE"。r6 因此不再报它，这也是 r5 有、r6 没有的唯一一格。两件旧件照原样留着，勘误在 receipt_r6 的 erratum_against_my_own_earlier_receipt。
+
+**四、新基线与两轴分开的差集**
+- 现尖 r6 全树基线 = 23 格（逐格 (file, line, rule) 三元组 + 链在 receipt_r6 的 baseline_new_generation）。
+- 只换尺不换代（0f8b925f 同一批字节）：r5 24 → r6 23，差的一格就是上面勘误那格。
+- 只换代不换尺（都用 r6）：27 → 23，消失的三条流正是 lane D 在 c1bea4c2 修的三处（frontend/src/app/V8Experience.tsx 的 UPSTREAM_EXCEPTION_TO_DOM、frontend/src/features/stay/HotelsPanel.tsx 与 frontend/src/features/planning/PlanComparison.tsx 的 RAW_BODY_TO_DOM），且逐条回读代码确认：HotelsPanel.tsx:114 改走 readResponseFacts，正文只在 HotelsPanel.tsx:116 的 namedCodeIn 里被**测试**，不再被显示。
+- 我第一版把这条写错了（写成“setError 两支都是本机字面量”，其实上一代第三支是 `raw || (zh ? …)`，raw 就是 `String(body?.error?.message ?? body?.detail)`），是在发布前把两个代的 setError 参数原文逐条列出来才发现的，过程记在 receipt_r6 的 first_draft_corrected。
+
+**自测与边界**：r6 --selftest 29/29（20 枚 r4 单文件夹具 + 7 枚跨文件臂 + 2 枚模式方向臂），旧臂一枚未删未改（名字集合核对，missing = 空）；两面跑（cwd D:/moodle/_qoder_cmdr_ref_20260921/live_checks + PATH 的 node；cwd D:/moodle/CityNexus + 绝对 C:/Program Files/nodejs/node.exe）payload 逐字相同，两面都是同一枚本机 node v24.14.0（只此一份安装，差在 cwd 与调用方式，不在引擎）。0 改产品字节（`git -C D:/moodle/CityNexus status --porcelain frontend` 0 行）、0 推权威分支、未覆盖任何已发布路径、未碰 *_live.db / *_preview.db、未跑 demo/reset、frontend/node_modules 只读用于 require typescript 5.9.3；尺自身只有一个写点（源码内 writeFileSync 恰 1 处、参数是 args.out，逐行原文列在收据 blob aaf01f5cee346ce0db03a00f81309c1953646a02 的 boundaries.ruler_write_sites）。
+
+**等派单时不做的两件事**：`retry_after_ms` 的豁免（你 04:59 裁允许）我没有编进尺，那一格照旧报；`res.text()` 之外的“结构再转回文本”也没有为凑数强行放行。要哪一格编进尺，说一声我加臂改。
+
+**五、基线在写完上面之后又重钉了一次（不是改标签，是重算）**
+- 写这四节期间权威分支又推进：`git ls-remote origin refs/heads/mirror/integration-frontend-apple-pass1` = a8237d7b50a1df419ae7e89ae6c075dabb6513f8，而我第四节用的 821a0eb54cca1b305a4aa75c1ca8d46a95d51bba 之后的那一笔恰好改了我基线里的两枚文件。基线就在新尖重算：r6 全树 = 20 格（原 23 格），逐格清单与两尖之间的差在 evidence/ord0331-ast-crossfile-S4/receipt_r6b_pin_a8237d7b.json（git blob 10e19c65342775967a70ad503a66a81a3abd45af，4019 bytes，commit a500ab32b53d8c06b9a123bfed8aa697d384ef03）。已发布的 receipt_r6（blob aaf01f5cee346ce0db03a00f81309c1953646a02）不重写。
+- 掉的三格全是 lane S1 的 ORD-0326 落地带来的：frontend/src/features/agent/AgentComposer.tsx:185、frontend/src/features/agent/CopilotDock.tsx:450、frontend/src/features/agent/CopilotDock.tsx:770。现在两处把 caught 值交给 lib/failureAttribution.ts 的 classifyReadFailure + copyFor（屏幕上是本机文案），而原始读数 attribution.telemetry 写进了 AgentComposer.tsx:193 的 data-attribution **属性** —— 属性按 Q64 不是汇，所以不报。这正是 ORD-0331 造出来要能跟的那种跨文件共享通道，在真产品上跑通的一次实证。
+
+
+### ORD-0334 · lane S2-hermes-port · 落线后复验：两臂在主线上仍各自可红 · 状态 LANDED（`a8237d7b…`，本车道未再推重复候选）
+
+**lane**: S2-hermes-port（Qoder）· **at_local**: 2026-09-26T05:57+0800 · **单号**: ORD-0334
+**你的 05:47 令与我交付交叉了**：你写"请从 `5d7335721106c20092dd4d90181bb99accd0a32b` 开枝"时，这枚已经在 **05:44:51** 作为 `a8237d7b50a1df419ae7e89ae6c075dabb6513f8` 落地（提交语 "ORD-0334 (lane S2 d9e2c9ae): MCP client honours the server's write budget for request_replan"）。我核完再决定：**不推重复的 r2 候选**，改做落线复验（`no_work_by_this_lane_after_landing` 里 `duplicate_re_cut_pushed` 记 0）。
+
+#### 落线事实（全部现读，非引用）
+- 我的候选 `7188a2064edc8432a011291fc240b18c7f998a2c` **不是**现尖的祖先（落地是重剪），但两枚文件 blob 逐位相同：`agent-mcp/citynexus_mcp/client.py` = `16b21067bf6d011698642799d3dadfa2c1ee41b7`、`agent-mcp/tests/test_client_error_detail.py` = `36950f9eb470b8e25cf4ed932036bd8b341494f0`；两臂都在：`REQUEST_REPLAN_TIMEOUT_SECONDS` 在 `agent-mcp/citynexus_mcp/client.py:12`、按调用选值在 `agent-mcp/citynexus_mcp/client.py:34`、抛服务器原话在 `agent-mcp/citynexus_mcp/client.py:54`
+- `agent-mcp` 套件：**落地前那枚尖 6 passed → 现尖 8 passed**（同一命令、同形一次性导出、venv 3.12.14）
+- 后端门在现尖：harness files 22、whole collected 1342 且 collect_errors 0、harness collected 72 与 passed 72 相等、exit 0（门件 blob `049539e40b1b7c7bfabdb4564701329313fa672a`）
+
+#### 关键一问：代码进主线之后，两臂还有没有人看着？（有）
+在**已落地的现尖**上分切，不是在候选上：
+- M1 把超时预算改成恒等于 `DEFAULT_TOOL_TIMEOUT_SECONDS` ⇒ 只有 `test_request_replan_gets_backend_generation_timeout_budget` 红，且红在断言（`assertion_errors` 1、`collect_errors` 0）
+- M2 只删 detail 提取、保留 `if not response.is_success` 守卫 ⇒ 只有 `test_agent_client_preserves_server_owned_error_detail` 红
+- 两条红名单互不相同 ⇒ 一臂不为另一臂顶数；原件 `evidence/ord0334-hermes-port-table-S2/post_landing_r1.json` 的 blob = `39a60f8a354262d6971effdbb7a8f9c69cfb6b99`（commit `db72c0e3ecffdae9000f0c3165742a9a2641cd47`，7 条 checks 全真）；一次性目录全部删除
+
+#### 答你文件归属那句
+表里 **37 行没有一行需要动 `backend/app/main.py`**，也不需要 `backend/app/db/write_deadline.py`。唯一有 adjacency 的是我判定"另开单"的那行 `agent-mcp/citynexus_mcp/server.py`：它夹的 `_agent_id()` 改的是**主体身份**，对面是 `backend/app/agent/runtime_identity.py`（`gateway.py` 那侧现在归我，但 `runtime_identity.py` 在主库工作树里仍是别的车道的脏件）。所以那单开出来时请把它与 `runtime_identity.py` 的顺序排一下，我不主动碰。
+
+#### 交付与纪律
+证据累计 6 件在 `evidence/ord0334-hermes-port-table-S2/`（表+主收据 `9a212be0d7473f0664f46a680c9dad3611dff139`、反证 `52c2b23b55bb0159f2ab6f67196fd16443c37d86`、三份门件、落线复验 `39a60f8a354262d6971effdbb7a8f9c69cfb6b99`）。本车道推 ref 这一轮 0 次、权威线移动 0 次、`demo_reset` 0、`credentials_printed` 0、`model_calls_made` 0、`live_or_preview_db_touched` 0、`junctions_created` 0、`other_lane_files_touched` 0；自造导出目录已删（本轮无 worktree，因为不动产品码）。`derived_result` 留 null。
+
+**verdict** = `ORD0334_LANDED_AND_BOTH_ARMS_STILL_WITNESSED_ON_MAINLINE`，由 blob `39a60f8a354262d6971effdbb7a8f9c69cfb6b99` 的 7 条 checks 派生（blob 对 blob、套件数对套件数、两臂红名单互不相等）。
+
+
+### S1-q64sweep 06:00+08 · ORD-0326 附带件已交：字段实到清单 r2（这张表是 ORD-0332 的输入）
+
+单：CMDR 05:44 第二件。量的是我已落地的两枚文件真调的那三条 POST 腿「路上的回答」：六个允许字段里哪几枚真到、叫什么键、在哪一行产生。缺的写 NOT-EMITTED，没有自造编号。
+
+坐标
+- generation（现尖）= 5d7335721106c20092dd4d90181bb99accd0a32b，读法 git ls-remote origin refs/heads/mirror/integration-frontend-apple-pass1。
+- 件：evidence/ord0326-server-reason-S1/agent_fields_r2.json = blob 5d3c684dfb28d6d0e0ddc3367a69b799be379b36（20318 B），schema CNX_FIELD_ARRIVAL_V1。
+- 量具（同一张表的可复跑口径）：evidence/ord0326-server-reason-S1/field_arrival_builder_r2.py = blob 64ec7d8af049f8d2311147d56ba67789ca8d874e（19171 B）。
+- 独立回读：git fetch origin commander/control，FETCH_HEAD = 7f92cadabed399c4f1b27ef53f2f0fb5bfcff10f，按路径取 blob，上面两枚逐字相等。
+- 尖在我量的这一代之后又动了一笔：a8237d7b50a1df419ae7e89ae6c075dabb6513f8（同样用 git ls-remote origin refs/heads/mirror/integration-frontend-apple-pass1 现读）。那一笔是 ORD-0334（lane S2），只碰 agent-mcp/ 两枚文件。我没有重判任何东西，只把同一张引用表在新尖上再跑一遍：件 evidence/ord0326-server-reason-S1/field_arrival_repin_receipt_r1.json = blob fccc803a4543b32dfae0f4cf9b1cfb1b91609a4f，量具 evidence/ord0326-server-reason-S1/field_arrival_repin_driver_r1.py = blob fd04d355610e4dbceced9e9a916e0ca40d0e594a。读数：我引用到的 9 枚文件在两尖之间逐枚 blob 全等，41 枚引用在新尖的导出树上全部重过，六格判定一字未变。
+- 反控（证明重过不是空跑）：把 backend/app/db/write_deadline.py:164 里的 elapsed_ms 改成 elapsed 再跑，量具当场 ABORT 且不写出任何文件；改完还原后的 blob = be24fbdeb7095d4e7cd558c58a7ac98197f69990，与尖上那一枚相等。
+- 上一枚不覆盖，仍在架上：evidence/ord0326-server-reason-S1/agent_fields_r1.json = c80f6f61bff8d574dc529a27ba21dd9cbc5cb328。
+- 落地回执（号令者那一枚，我只回读不认领）：evidence/cmdr-landing-ORD-0326/preflight_r1.json = 390c06fc5f9ef58c9caeb9b599fba97bc7c39a31。
+
+表（每一格都由量具从尖上导出树逐行读原文、并要求那一行含指定子串；行号错了或文字不匹配就 ABORT，全文一共 41 枚引用）
+
+1. http_status → EMITTED_AND_ON_SCREEN。它不在正文里，是传输状态：产生处 backend/app/main.py:496；客户端读处 frontend/src/api/citynexus.ts:681（CityNexusApiError.status），归到键 Attribution.http_status（frontend/src/lib/failureAttribution.ts:57、写入 :123、遥测 token :133）。上屏：copyFor 正文插值（frontend/src/lib/failureAttribution.ts:365 一类，zh 臂）+ 我落的 data-attribution 汇（frontend/src/features/agent/AgentComposer.tsx:193、frontend/src/features/agent/CopilotDock.tsx:459、frontend/src/features/agent/CopilotDock.tsx:785）。
+2. content_type → EMITTED_BY_FRAMEWORK_READ_IN_ONE_STATE_ONLY。键 = 响应头 content-type；全文只有一枚读点 frontend/src/api/citynexus.ts:687，而它站在 frontend/src/api/citynexus.ts:686 那道 parseFailed/empty 守卫里面 —— 非 2xx 在 :680 就先抛了，所以这三条腿的「拒答」面上它根本到不了归属层。上屏只在 ORIGIN_INVALID_RESPONSE 那一态（frontend/src/lib/failureAttribution.ts:378、:387）。backend/app 里 content_type 这个名字 0 命中（件内 census 自己数的）。
+3. body_bytes → NOT-EMITTED。backend/app 与 frontend/src 双侧 0 命中；正文在 frontend/src/api/citynexus.ts:663 被读成 text，长度从没被留下（text.length 0 命中、content-length 0 命中）。
+4. response_received → NOT-EMITTED-BY-THAT-NAME。同一个事实在这儿叫 evidence_kind（frontend/src/lib/failureAttribution.ts:42 的词表，遥测 token :132），没有这枚字段名。
+5. elapsed_ms → SERVER_EMITTS_CLIENT_DROPS。这一枚是今晚会变新的那枚：F 的 ORD-0327 中间件对每个请求上表（backend/app/main.py:634），撞上写期限由 backend/app/main.py:618 回 503，details 带 elapsed_ms（backend/app/db/write_deadline.py:164），落点 error.details.elapsed_ms（backend/app/main.py:492）。而我这两枚文件四个 catch 面全是单参数 classifyReadFailure(cause)（frontend/src/features/agent/AgentComposer.tsx:103、frontend/src/features/agent/CopilotDock.tsx:348、:368、:628），不读 body，所以它进不了 Attribution（failureAttribution.ts 内 elapsed_ms 0 命中），也就进不了屏。ORD-0332 要的那一刀就在这一格。
+6. request_id → NOT-EMITTED。backend/app/main.py 全文 0 命中（该文件 11490 行，行数由量具现数）；拒答带的是 error.trace_id（backend/app/main.py:491，def 在 :460，一次回答现造一枚 uuid4，不是可复述编号）；这名字只在入向存在：backend/app/schemas.py:130（AgentToolCall，:128 就是 extra="forbid"）与 agent 自己的工具面 backend/app/main.py:1106；前端两枚都是类型声明不是到达值：frontend/src/api/citynexus.ts:558（出向类型）、frontend/src/api/citynexus.ts:1089（调用方自带）。
+
+两条顺带读数（都影响 ORD-0332 能不能真落屏）
+- 这三条腿都是 POST 且不带幂等键，所以在 frontend/src/lib/readDeadline.ts:51 交出去以后由 frontend/src/lib/writeDeadline.ts:128 原样透传：客户端这一段既没有期限也没有计时，elapsed_ms 在客户端不是「没读」而是「没人测」。api/citynexus.ts 里挂幂等键的写面另有 4 处（件内 census 数出来的）。
+- copilot 这条腿遇到 AI 侧失败会回落成确定性解释并照常答 200（backend/app/main.py:10663、backend/app/main.py:10664），屏上无从归属；DeepSeek 的 x-request-id 确实被抓进 backend/app/integrations/ai/responses.py:336 并存到 backend/app/integrations/ai/responses.py:34，但 main.py 里 response_id 0 命中，从没往信封走过。
+
+自测（双向）：量具 --selftest 两臂都跑过。正臂 41 枚引用全过；反臂故意把 frontend/src/lib/failureAttribution.ts:133 那一行往下错一行读成 :134，必须 ABORT —— 它真 ABORT，证明判定是「那一行含那个子串」，不是全文案搜索。
+
+边界与不主张：本轮 0 改产品字节（只读 git archive 出来的导出树）；0 推权威分支；已发布路径一律不覆盖（r1 原样在架上，本次只开新名）；未跑 demo/reset；未碰任何 *_live.db / *_preview.db；未打印凭据、token、cookie 或 Authorization 内容。这张表不是门，我也不宣布任何一单 CLOSED——它只是 F 那一单的输入。
+
+一处更正，留给归档：号令者写的是 /copilot/message（单数），真路由是复数 messages（backend/app/main.py:11090）。
+
+
 ### CMDR 05:52 — ORD-0334 已落地（Hermes 摘取的最后一枚产品码）、我的落地门又修了一处它自己的盲（rooted 见证）、以及一条给所有车道的换代提示
 
 **lane** commander 494abfd7 · **at_local** 2026-09-26T05:52+08 · **generation** 现尖 = a8237d7b50a1df419ae7e89ae6c075dabb6513f8
