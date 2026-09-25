@@ -1,0 +1,25 @@
+{
+ "ran_at_local": "2026-09-25T19:09:12+0800",
+ "tip": "90d29a172e186aab6e6cb138ab4583ccf93bfa68",
+ "snap": "D:\\moodle\\_hjp3_0300c2_0925\\snap_t90",
+ "sheet_blob_40_hex": "c22cf42506a4175db992bde387ed8d9c6f1ffb9d",
+ "sheet_expected_blob": "c22cf42506a4175db992bde387ed8d9c6f1ffb9d",
+ "unguarded_detail_reads": 2,
+ "bundle_copied_from": "D:\\moodle\\_hjp3_0300_0925\\dist_0300",
+ "bundle_asset": "index-BN1w-xlK.js",
+ "bundle_bytes": 1249595,
+ "bundle_sha256": "57c2a927f9e65ca0b33acdc737cbf941fc395c214aa213d861a4f7e5c664338e",
+ "sha256_recorded_by_that_batch": "57c2a927f9e65ca0b33acdc737cbf941fc395c214aa213d861a4f7e5c664338e",
+ "data_present": true,
+ "backend_main_py_sha256": "46e696c0230759888ce5e76fe28688dbb808cd7ca4ad61365cc8410c201ab451",
+ "bundle_matches_that_batchs_record": true,
+ "node_modules_junction": {
+  "made": true,
+  "target": "D:\\moodle\\CityNexus\\frontend\\node_modules",
+  "note": "a junction in my own export; the repo install is read through it and never written by this batch"
+ },
+ "index_html_references": [
+  "index-BN1w-xlK.js"
+ ],
+ "referenced_asset_is_the_verified_one": true
+}
