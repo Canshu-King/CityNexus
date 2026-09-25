@@ -109,6 +109,12 @@ PUB = {
     "ord0310-tool-make-erratum.py": "ord0310-tool-make-erratum.py",
     "ord0310-tool-pub-names-r5.py": "ord0310-tool-pub-names-r5.py",
     "ord0310-tool-stage-pub-r5.py": "ord0310-tool-stage-pub-r5.py",
+    # the map and the staging tool change whenever a generation adds a name, so their bytes are
+    # published from the commit they were frozen in, never from a working tree that has moved since
+    "ord0310-tool-pub-names-r6.py": "ord0310-tool-pub-names-r6.py",
+    "ord0310-tool-stage-pub-r6.py": "ord0310-tool-stage-pub-r6.py",
+    "ord0310-tools-ref-read-2.out": "ord0310-tools-ref-read-2.out",
+    "ord0310-publish-log-r11.json": "ord0310-publish-log-r11.json",
     "ord0310-publish-log-r9.json": "ord0310-publish-log-r9.json",
     "ord0310-readback-r6.json": "ord0310-readback-r6.json",
     "ord0310-post-body-r3.md": "ord0310-post-body-r3.md",

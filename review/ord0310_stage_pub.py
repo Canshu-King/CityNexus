@@ -70,8 +70,8 @@ SET += [
     # the arms driver gained the seventh (two-sided signal-vs-deadline) arm, so its current bytes go
     # out under a new name; the gen-2 name keeps the bytes that generation's receipt was built with
     ("ord0310-tool-kill-arms-r2.py", ROOT / "review" / "ord0310_kill_arms.py"),
-    ("ord0310-tool-pub-names-r5.py", ROOT / "review" / "ord0310_pub_names.py"),
-    ("ord0310-tool-stage-pub-r5.py", ROOT / "review" / "ord0310_stage_pub.py"),
+    ("ord0310-tool-pub-names-r6.py", ROOT / "review" / "ord0310_pub_names.py"),
+    ("ord0310-tool-stage-pub-r6.py", ROOT / "review" / "ord0310_stage_pub.py"),
     ("ord0310-tool-signal-proof.py", ROOT / "review" / "ord0310_signal_proof.py"),
 ]
 
@@ -85,20 +85,28 @@ SET += [
     ("ord0310-q43r3-on-block-erratum-r1.json", SC / "ord0310-q43r3-on-block-erratum-r1.json"),
     ("ord0310_keyless_deadline_receipt_r3b.json", SC / "ord0310_keyless_deadline_receipt_r3b.json"),
     ("ord0310-q38r2-on-receipt-r3b.json", SC / "ord0310-q38r2-on-receipt-r3b.json"),
-    ("r3b/ord0310-ref-read-r3b.out", R3B / "ord0310-ref-read-r3b.out"),
-    ("r3b/ord0310-mergetree-tip-x-candidate.out", R3B / "ord0310-mergetree-tip-x-candidate.out"),
-    ("r4/ord0310-tools-ref-read.out", R4 / "ord0310-tools-ref-read.out"),
+    ("ord0310-ref-read-r3b.out", R3B / "ord0310-ref-read-r3b.out"),
+    ("ord0310-mergetree-tip-x-candidate-r3b.out", R3B / "ord0310-mergetree-tip-x-candidate.out"),
+    ("ord0310-tools-ref-read.out", R4 / "ord0310-tools-ref-read.out"),
     ("ord0310-tool-make-receipt-r4.py", ROOT / "review" / "ord0310_make_receipt.py"),
     ("ord0310-tool-make-block-r4.py", ROOT / "review" / "ord0310_make_block.py"),
     ("ord0310-tool-make-post-r4.py", ROOT / "review" / "ord0310_make_post.py"),
     ("ord0310-tool-make-erratum.py", ROOT / "review" / "ord0310_make_erratum.py"),
-    ("ord0310-tool-pub-names-r5.py", ROOT / "review" / "ord0310_pub_names.py"),
-    ("ord0310-tool-stage-pub-r5.py", ROOT / "review" / "ord0310_stage_pub.py"),
+    ("ord0310-tool-pub-names-r6.py", ROOT / "review" / "ord0310_pub_names.py"),
+    ("ord0310-tool-stage-pub-r6.py", ROOT / "review" / "ord0310_stage_pub.py"),
     ("ord0310-readback-r6.json", SC / "ord0310-readback-r6.json"),
     ("ord0310-post-body-r3.md", SC / "ord0310-post-body-r3.md"),
     ("ord0310-q43r4b-on-post-r3.json", SC / "ord0310-q43r4b-on-post-r3.json"),
     ("ord0310-q43r3-on-post-r3.json", SC / "ord0310-q43r3-on-post-r3.json"),
 ]
+# Instruments are staged out of a frozen snapshot taken from a named commit, not out of the working
+# tree: the staging tool and the name map each change whenever a generation adds a name, so
+# publishing them "as live" means the bytes on the branch are never the bytes that produced that
+# publish. Anything without a snapshot is skipped loudly rather than filled in from a moving tree.
+SNAP = SC / "tools-at-r5"
+SET = [(name, SNAP / src.name if src.parent == ROOT / "review" else src) for name, src in SET]
+
+# the gate's own per-run evidence files are named from the arms receipt, never typed here
 _arms = json.loads((SC / "arms_receipt_r5.json").read_text(encoding="utf-8"))
 for _rid in [_arms["clean_round"]["runId"]] + [a["attempt"]["runId"] for a in _arms["arms"]]:
     _src = EV / f"keyless_deadline_arms-{_rid}.json"
