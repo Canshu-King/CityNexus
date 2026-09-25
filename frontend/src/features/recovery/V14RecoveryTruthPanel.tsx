@@ -1,5 +1,10 @@
 import { useEffect, useState } from "react";
 import { formatMinorMoney } from "../../lib/money";
+import {
+  fetchWithWriteDeadline,
+  isWriteDeadlineMissed,
+  writeDeadlineCopy,
+} from "../../lib/writeDeadline";
 
 type Proposal = {
   id: string;
@@ -66,7 +71,7 @@ export function V14RecoveryTruthPanel({ journeyId, policy, currency = "CNY", onA
     if (!proposal) return;
     setBusy(true);
     try {
-      const response = await fetch(`/api/v1/replans/${proposal.id}/accept`, {
+      const response = await fetchWithWriteDeadline(`/api/v1/replans/${proposal.id}/accept`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -79,7 +84,15 @@ export function V14RecoveryTruthPanel({ journeyId, policy, currency = "CNY", onA
       await refresh();
       onAccepted?.();
     } catch (error) {
-      setMessage(error instanceof Error ? error.message : "Recovery acceptance failed");
+      /* ORD-0281: a bound this device ran out with is not a server statement and not a failed
+         parse.  Raw English debug text used to be handed to the traveller here. */
+      setMessage(
+        isWriteDeadlineMissed(error)
+          ? `${writeDeadlineCopy(false).title} ${writeDeadlineCopy(false).body}`
+          : error instanceof Error
+            ? error.message
+            : "Recovery acceptance failed",
+      );
     } finally {
       setBusy(false);
     }
