@@ -36,7 +36,7 @@ SET = [
     # restaged: a changed tool under a published name is either a gate REFUSE or, worse, a rewritten
     # audit instrument. Which name holds the current bytes is decided by comparing the live git blob
     # against the directory listing, not by guessing.
-    ("ord0310-tool-make-post-r3.py", ROOT / "review" / "ord0310_make_post.py"),
+    ("ord0310-tool-make-post-r4.py", ROOT / "review" / "ord0310_make_post.py"),
     ("ord0310-tool-readback-r3.py", ROOT / "review" / "ord0310_readback.py"),
     ("ord0310-q38r2-on-receipt-r2.json", SC / "ord0310-q38r2-on-receipt-r2.json"),
     ("ord0310-q43r4b-on-block-r2.json", SC / "ord0310-q43r4b-on-block-r2.json"),
@@ -65,17 +65,40 @@ SET += [
     ("ord0310-q43r4b-on-post-r3.json", SC / "ord0310-q43r4b-on-post-r3.json"),
     ("ord0310-q43r3-on-post-r3.json", SC / "ord0310-q43r3-on-post-r3.json"),
     ("ord0310-readback-r5.json", SC / "ord0310-readback-r5.json"),
-    ("ord0310-tool-make-receipt-r3.py", ROOT / "review" / "ord0310_make_receipt.py"),
-    ("ord0310-tool-make-block-r3.py", ROOT / "review" / "ord0310_make_block.py"),
+    ("ord0310-tool-make-receipt-r4.py", ROOT / "review" / "ord0310_make_receipt.py"),
+    ("ord0310-tool-make-block-r4.py", ROOT / "review" / "ord0310_make_block.py"),
     # the arms driver gained the seventh (two-sided signal-vs-deadline) arm, so its current bytes go
     # out under a new name; the gen-2 name keeps the bytes that generation's receipt was built with
     ("ord0310-tool-kill-arms-r2.py", ROOT / "review" / "ord0310_kill_arms.py"),
-    ("ord0310-tool-pub-names-r4.py", ROOT / "review" / "ord0310_pub_names.py"),
-    ("ord0310-tool-stage-pub-r4.py", ROOT / "review" / "ord0310_stage_pub.py"),
+    ("ord0310-tool-pub-names-r5.py", ROOT / "review" / "ord0310_pub_names.py"),
+    ("ord0310-tool-stage-pub-r5.py", ROOT / "review" / "ord0310_stage_pub.py"),
     ("ord0310-tool-signal-proof.py", ROOT / "review" / "ord0310_signal_proof.py"),
 ]
 
-# the gate's own per-run evidence files are named from the arms receipt, never typed here
+# the erratum round: labels and derivations only, no reading was re-taken
+R3B = SC / "r3b"
+R4 = SC / "r4"
+SET += [
+    ("ord0310-erratum-r1.json", SC / "ord0310-erratum-r1.json"),
+    ("ord0310-ledger-block-erratum-r1.md", SC / "ord0310-ledger-block-erratum-r1.md"),
+    ("ord0310-q43r4b-on-block-erratum-r1.json", SC / "ord0310-q43r4b-on-block-erratum-r1.json"),
+    ("ord0310-q43r3-on-block-erratum-r1.json", SC / "ord0310-q43r3-on-block-erratum-r1.json"),
+    ("ord0310_keyless_deadline_receipt_r3b.json", SC / "ord0310_keyless_deadline_receipt_r3b.json"),
+    ("ord0310-q38r2-on-receipt-r3b.json", SC / "ord0310-q38r2-on-receipt-r3b.json"),
+    ("r3b/ord0310-ref-read-r3b.out", R3B / "ord0310-ref-read-r3b.out"),
+    ("r3b/ord0310-mergetree-tip-x-candidate.out", R3B / "ord0310-mergetree-tip-x-candidate.out"),
+    ("r4/ord0310-tools-ref-read.out", R4 / "ord0310-tools-ref-read.out"),
+    ("ord0310-tool-make-receipt-r4.py", ROOT / "review" / "ord0310_make_receipt.py"),
+    ("ord0310-tool-make-block-r4.py", ROOT / "review" / "ord0310_make_block.py"),
+    ("ord0310-tool-make-post-r4.py", ROOT / "review" / "ord0310_make_post.py"),
+    ("ord0310-tool-make-erratum.py", ROOT / "review" / "ord0310_make_erratum.py"),
+    ("ord0310-tool-pub-names-r5.py", ROOT / "review" / "ord0310_pub_names.py"),
+    ("ord0310-tool-stage-pub-r5.py", ROOT / "review" / "ord0310_stage_pub.py"),
+    ("ord0310-readback-r6.json", SC / "ord0310-readback-r6.json"),
+    ("ord0310-post-body-r3.md", SC / "ord0310-post-body-r3.md"),
+    ("ord0310-q43r4b-on-post-r3.json", SC / "ord0310-q43r4b-on-post-r3.json"),
+    ("ord0310-q43r3-on-post-r3.json", SC / "ord0310-q43r3-on-post-r3.json"),
+]
 _arms = json.loads((SC / "arms_receipt_r5.json").read_text(encoding="utf-8"))
 for _rid in [_arms["clean_round"]["runId"]] + [a["attempt"]["runId"] for a in _arms["arms"]]:
     _src = EV / f"keyless_deadline_arms-{_rid}.json"

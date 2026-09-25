@@ -88,9 +88,22 @@ k1b = back["cells"]["K1"]
 genb = recb["generation_binding"]
 refb = recb["candidate_ref_readback"]
 
+def ancestor(older: str, newer: str) -> bool:
+    return subprocess.run(["git", "merge-base", "--is-ancestor", older, newer],
+                          cwd=ROOT, capture_output=True, text=True).returncode == 0
+
+
+def blob_of_at(rev: str, path: str) -> str:
+    """The git object's own sha1, or a named absence - never the echoed argument."""
+    proc = subprocess.run(["git", "rev-parse", "--verify", "-q", f"{rev}:{path}"],
+                          cwd=ROOT, capture_output=True, text=True)
+    sha = proc.stdout.strip()
+    return sha if re.fullmatch(r"[0-9a-f]{40}", sha) else "NOT_IN_THAT_TREE"
+
+
 parent = git("rev-parse", f"{MEASURED_SHA}^")
-tools_blobs_before = {p: git("rev-parse", f"{MEASURED_SHA}:{p}") for p in TOOL_PATHS}
-tools_blobs_after = {p: git("rev-parse", f"{TOOLS_SHA}:{p}") for p in TOOL_PATHS}
+tools_blobs_before = {p: blob_of_at(MEASURED_SHA, p) for p in TOOL_PATHS}
+tools_blobs_after = {p: blob_of_at(TOOLS_SHA, p) for p in TOOL_PATHS}
 subject_blobs = {f: v["blob_on_the_pushed_ref"]
                  for f, v in refb["per_subject_file_blob"].items()}
 
@@ -178,8 +191,16 @@ ERRATUM = {
                    "path": f"{EVDIR}/ord0310-q38r2-on-receipt-r3b.json",
                    "blob": of(SC / "ord0310-q38r2-on-receipt-r3b.json")},
         "instrument_commit": {"ref": TOOLS_REF, "sha": TOOLS_SHA,
-                              "parent_is_the_measured_tree": git("rev-parse", f"{TOOLS_SHA}^")
-                              == MEASURED_SHA,
+                              "parent_of_the_tools_tip": git("rev-parse", f"{TOOLS_SHA}^"),
+                              "measured_tree_is_an_ancestor_of_it": ancestor(MEASURED_SHA, TOOLS_SHA),
+                              "commits_between": git("rev-list", "--count",
+                                                     f"{MEASURED_SHA}..{TOOLS_SHA}"),
+                              "paths_it_touches": git("diff", "--name-only",
+                                                     f"{MEASURED_SHA}..{TOOLS_SHA}").splitlines(),
+                              "anything_outside_review_slash":
+                                  [p for p in git("diff", "--name-only",
+                                                  f"{MEASURED_SHA}..{TOOLS_SHA}").splitlines()
+                                   if not p.startswith("review/")],
                               "raw_readback": {"path": f"{EVDIR}/ord0310-ref-read-r3b.out",
                                                "blob": REF_BLOB},
                               "tool_blobs_before_and_after": {
@@ -257,16 +278,23 @@ L.append(
     f"`{EVDIR}/ord0310-mergetree-tip-x-candidate-r3b.out` blob "
     f"`{of(R3B / 'ord0310-mergetree-tip-x-candidate.out')}`。")
 L.append("")
+ic = ERRATUM["corrected_artifacts"]["instrument_commit"]
 L.append(
     f"**改动落在哪一枚可解析坐标**：只改量具，产品与门字节 0 改动 ⇒ 单独一枚新 ref "
-    f"`{TOOLS_REF}` = `{TOOLS_SHA}`，其父位就是被量那一代 "
-    f"`{MEASURED_SHA}`（`{json.dumps(ERRATUM['corrected_artifacts']['instrument_commit']['parent_is_the_measured_tree'])}`）；"
+    f"`{TOOLS_REF}` = `{TOOLS_SHA}`。它与被量那一代的关系是量出来的，不是说的："
+    f"`measured_tree_is_an_ancestor_of_it="
+    f"{json.dumps(ic['measured_tree_is_an_ancestor_of_it'])}`、中间隔 "
+    f"{ic['commits_between']} 笔、`git diff --name-only {MEASURED_SHA[:8]}..{TOOLS_SHA[:8]}` "
+    f"里 `review/` 之外的件数 = {len(ic['anything_outside_review_slash'])}"
+    f"（即产品/门字节 0 改动）；该 ref 自己的父位是 `{ic['parent_of_the_tools_tip']}`，"
+    f"**不是**被量那一代 —— 上一枚 erratum 犯的正是把这类相等写成话，这里只写测到的那枚。"
     f"被量的那枚 ref `{MEASURED_REF}` 仍是 `{MEASURED_SHA}`，一个字节没被这次改动挪动。"
-    f"逐件前后 blob：`review/ord0310_make_receipt.py` `{tools_blobs_before['review/ord0310_make_receipt.py'][:12]}…` → "
+    f"逐件前后 blob：`review/ord0310_make_receipt.py` "
+    f"`{tools_blobs_before['review/ord0310_make_receipt.py']}` → "
     f"`{tools_blobs_after['review/ord0310_make_receipt.py']}`；"
-    f"`review/ord0310_make_block.py` `{tools_blobs_before['review/ord0310_make_block.py'][:12]}…` → "
-    f"`{tools_blobs_after['review/ord0310_make_block.py']}`。已发布路径 0 覆盖：被勘误那两件留在原位不删不改，"
-    f"修正件一律用新名（`…r3b` / `…r4`）。")
+    f"`review/ord0310_make_block.py` `{tools_blobs_before['review/ord0310_make_block.py']}` → "
+    f"`{tools_blobs_after['review/ord0310_make_block.py']}`。已发布路径 0 覆盖：被勘误那两件留在原位"
+    f"不删不改，修正件一律用新名（`…r3b` / `…r4`）。")
 L.append("")
 L.append(
     f"**没被这次勘误碰过的读数（一枚都没重测）**：绿轮 `{UNCHANGED['clean_round_runId']}`"

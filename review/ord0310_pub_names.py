@@ -93,6 +93,25 @@ PUB = {
     "ord0310-tool-pub-names-r4.py": "ord0310-tool-pub-names-r4.py",
     "ord0310-tool-stage-pub-r4.py": "ord0310-tool-stage-pub-r4.py",
     "ord0310-tool-signal-proof.py": "ord0310-tool-signal-proof.py",
+    # the gen-3 erratum round: labels/derivations corrected, no reading re-taken
+    "ord0310-erratum-r1.json": "ord0310-erratum-r1.json",
+    "ord0310-ledger-block-erratum-r1.md": "ord0310-ledger-block-erratum-r1.md",
+    "ord0310-q43r4b-on-block-erratum-r1.json": "ord0310-q43r4b-on-block-erratum-r1.json",
+    "ord0310-q43r3-on-block-erratum-r1.json": "ord0310-q43r3-on-block-erratum-r1.json",
+    "ord0310_keyless_deadline_receipt_r3b.json": "ord0310_keyless_deadline_receipt_r3b.json",
+    "ord0310-q38r2-on-receipt-r3b.json": "ord0310-q38r2-on-receipt-r3b.json",
+    "r3b/ord0310-ref-read-r3b.out": "ord0310-ref-read-r3b.out",
+    "r3b/ord0310-mergetree-tip-x-candidate.out": "ord0310-mergetree-tip-x-candidate-r3b.out",
+    "r4/ord0310-tools-ref-read.out": "ord0310-tools-ref-read.out",
+    "ord0310-tool-make-receipt-r4.py": "ord0310-tool-make-receipt-r4.py",
+    "ord0310-tool-make-block-r4.py": "ord0310-tool-make-block-r4.py",
+    "ord0310-tool-make-post-r4.py": "ord0310-tool-make-post-r4.py",
+    "ord0310-tool-make-erratum.py": "ord0310-tool-make-erratum.py",
+    "ord0310-tool-pub-names-r5.py": "ord0310-tool-pub-names-r5.py",
+    "ord0310-tool-stage-pub-r5.py": "ord0310-tool-stage-pub-r5.py",
+    "ord0310-publish-log-r9.json": "ord0310-publish-log-r9.json",
+    "ord0310-readback-r6.json": "ord0310-readback-r6.json",
+    "ord0310-post-body-r3.md": "ord0310-post-body-r3.md",
 }
 
 # per-run gate evidence, one file per arm. The run ids are read out of the arms receipts on disk
