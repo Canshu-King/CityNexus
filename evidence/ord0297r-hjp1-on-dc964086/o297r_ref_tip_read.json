@@ -1,0 +1,78 @@
+{
+  "read_at_local": "2026-09-25T15:30:29+0800",
+  "order": "ORD-0297r",
+  "expected_claimed_tip": "dc964086c9d412573ac19d70b24b30e6c3ee6168",
+  "previous_round_base": "5c4608cede6cb7bd5f3ac7e704bfee379ca47abc",
+  "path1_ssh443": {
+    "rc": 0,
+    "verbatim_lines": [
+      "7d22cd0eb7840121ba42a5ba363e1a4c7ca1a7e7\trefs/heads/master",
+      "dc964086c9d412573ac19d70b24b30e6c3ee6168\trefs/heads/mirror/integration-frontend-apple-pass1"
+    ],
+    "stderr_head": ""
+  },
+  "path2_https_api": {
+    "mirror/integration-frontend-apple-pass1": {
+      "http": 200,
+      "ref": "refs/heads/mirror/integration-frontend-apple-pass1",
+      "sha": "dc964086c9d412573ac19d70b24b30e6c3ee6168",
+      "ls_remote_form": "dc964086c9d412573ac19d70b24b30e6c3ee6168\trefs/heads/mirror/integration-frontend-apple-pass1"
+    },
+    "master": {
+      "http": 200,
+      "ref": "refs/heads/master",
+      "sha": "7d22cd0eb7840121ba42a5ba363e1a4c7ca1a7e7",
+      "ls_remote_form": "7d22cd0eb7840121ba42a5ba363e1a4c7ca1a7e7\trefs/heads/master"
+    }
+  },
+  "both_paths_agree": true,
+  "claimed_tip_confirmed_by_both_paths": true,
+  "first_read_was_wrong_because": {
+    "command": "git ls-remote origin refs/heads/master (in _qoder_integration_20260919)",
+    "what_origin_is_here": "D:/moodle/CityNexus",
+    "returned": [
+      "7d22cd0eb7840121ba42a5ba363e1a4c7ca1a7e7\trefs/heads/master"
+    ],
+    "consequence": "that master is a different line (346 commits behind the landed one, read via the compare API), so it cannot serve as ref_tip_read for this order"
+  },
+  "ancestry": {
+    "prev_is_ancestor_of_claimed": true,
+    "commits_between": 12,
+    "meaning": "returncode 0 means ancestor; the command prints nothing either way, so stdout is not consulted (an earlier check of mine read empty stdout as 'True' and was wrong in the other direction)"
+  },
+  "file_blobs": {
+    "frontend/src/features/planning/PlanWithAiSheet.tsx": {
+      "prev": "4c3821b7129320d7940237d33c5f7dd14742f292",
+      "claimed": "fd5f6e5ba2771a8d12669b9bec1ba91590970701",
+      "changed": true,
+      "commander_quoted_prev": "4c3821b7129320d7940237d33c5f7dd14742f292"
+    },
+    "frontend/src/api/journeyContinuation.ts": {
+      "prev": "a52f77fc39fd1202b484b42aeab54b2357c65de8",
+      "claimed": "358141e6250aeae361aeae4d9df06f80e1417cf0",
+      "changed": true,
+      "commander_quoted_prev": null
+    },
+    "frontend/src/app/V8Experience.tsx": {
+      "prev": "a1eccc6b32e5cab6334811cd243a52e75641b890",
+      "claimed": "17ef83b6ec58b4190f483733501ea1b973336d5f",
+      "changed": true,
+      "commander_quoted_prev": null
+    },
+    "frontend/src/i18n/LocaleContext.tsx": {
+      "prev": "3b04cfaeaeb75088d5818bf28697e8d0dd61bb0b",
+      "claimed": "ece74118543434e855b874420dcc075df31f4f05",
+      "changed": true,
+      "commander_quoted_prev": null
+    }
+  },
+  "planwithai_commander_pre_image": {
+    "quoted": "c22cf42506a4175db992bde387ed8d9c6f1ffb9d",
+    "found_at_previous_base": "4c3821b7129320d7940237d33c5f7dd14742f292",
+    "where_the_quoted_value_lives": [
+      "60e5587302d86cedd12a5bd493ad015bd77913c1 feat(frontend): the sheet's submission carries one transport identity on both legs (ORD-0253 client half)",
+      "90d29a172e186aab6e6cb138ab4583ccf93bfa68 fix(frontend): let the attribution label speak only for the server (ORD-0280)",
+      "549ac8f1b20bc04e70eadbd238ade737eefbff01 fix(frontend): let the attribution label speak only for the server (ORD-0280)"
+    ]
+  }
+}
