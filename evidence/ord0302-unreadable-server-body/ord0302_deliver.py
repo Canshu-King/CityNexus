@@ -493,24 +493,35 @@ ledger_txt.write_text(LEDGER_BODY, "utf-8", newline="\n")
 
 
 def gate(path):
+    """Judge a text with both claim rulers and keep their exit codes.
+
+    r4b answers `Q43_GATE_GREEN` where r3 answers `Q43_GATE_CLEAN`, so matching one word would have made a
+    passing block look refused. The exit code is the version-independent contract: 0 is the only pass.
+    """
     outs = {}
     for ruler in Q43S:
         r = subprocess.run([PY, str(ruler), "--text", str(path)], capture_output=True, text=True,
                            encoding="utf-8", errors="replace", timeout=300)
-        outs[ruler.name] = ((r.stdout or "") + (r.stderr or "")).strip()
+        outs[ruler.name] = {"rc": r.returncode,
+                            "output": ((r.stdout or "") + (r.stderr or "")).strip()}
     return outs
+
+
+def gate_ok(outs, label):
+    bad = {k: v for k, v in outs.items() if v["rc"] != 0}
+    for k, v in outs.items():
+        print(f"Q43 {k} {label}: rc={v['rc']} |"
+              f" {[l for l in v['output'].splitlines() if 'claims checked' in l][:1]}")
+    if bad:
+        raise SystemExit(f"a claim gate refused the {label} (rc "
+                         + ", ".join(f"{k}={v['rc']}" for k, v in bad.items()) + "); not writing, not sending")
 
 
 ok = True
 for label, path in (("ledger", ledger_txt),):
     outs = gate(path)
-    for k, v in outs.items():
-        print(f"Q43 {k} {label}:", [l for l in v.splitlines() if "claims checked" in l][:1])
-        if "Q43_GATE_CLEAN" not in v:
-            print(v[:1200])
-            ok = False
-if not ok:
-    raise SystemExit("a claim gate refused the ledger block; not writing, not sending")
+    gate_ok(outs, label)
+    LEDGER_GATE = outs
 
 before = LEDGER.read_bytes()
 if MARK.encode("utf-8") in before:
@@ -532,7 +543,8 @@ body = "\n".join([first, ""] + lines[1:] + [
     "（逐臂读数与五份 playwright 报告都在架上）。",
     "2) 反件不对称是刻意做的：`ca_unsafe_read` 只让 N1 红，N2 仍绿 —— 带 `error.message` 的正文在读 detail 之前就"
     "返回了；如果两枚一起红，我只能说我改坏了别的。",
-    "3) 这条回归是我 0280 那一跳带出来的（`:155` 就是我写的那行），七枚臂当时全用 JSON 正文，所以没撞见；"
+    "3) 这条回归是我 ORD-0280 那一跳带出来的（`PlanWithAiSheet.tsx:155` 就是我写的那行），七枚臂当时全用 JSON "
+    "正文，所以没撞见；"
     "能区分这些状态的只有「正文里有没有 JSON 对象」，不是状态码也不是时长（Q25）。这条教训我按同样形制补了臂。",
     "4) X-5 按你要的口径办成了一句不变量的正反两读：渲染文字里出现「技术详情」⇒ `<details>` 计数 ≥ 1；计数为 0 ⇒ "
     "句子里不得出现该承诺。X1 跑的是过去会断的那一形（mission 存了 COMPLETED、没存 reason、这屏一条可用结果都没"
@@ -549,13 +561,48 @@ body = "\n".join([first, ""] + lines[1:] + [
 bus_txt = WORK / "ord0302_bus_body.txt"
 bus_txt.write_text(body, "utf-8", newline="\n")
 outs = gate(bus_txt)
-for k, v in outs.items():
-    print(f"Q43 {k} bus:", [l for l in v.splitlines() if "claims checked" in l][:1])
-    if "Q43_GATE_CLEAN" not in v:
-        print(v[:1200])
-        raise SystemExit("bus body refused by a claim gate; not posting")
+gate_ok(outs, "bus")
+BUS_GATE = outs
 made = api(f"https://api.github.com/repos/{WS}/issues/1/comments", {"body": body}, verb="POST")
 back = api(f"https://api.github.com/repos/{WS}/issues/comments/{made['id']}")
 print("bus comment", made.get("id"), "| bytes", len(back.get("body", "")), "| closing line ok:",
       back.get("body", "").rstrip().endswith(CLOSING))
 (WORK / "ord0302_bus_id.txt").write_text(str(made["id"]), "utf-8", newline="\n")
+
+# ---------------------------------------------------------------- the claim gates' own receipt, published
+claim = {"at": time.strftime("%Y-%m-%dT%H:%M:%S+08:00"), "order": "ORD-0302", "candidate_tip": CAND,
+         "rulers": {p.name: {"path": str(p), "blob40": blob_of(p)} for p in Q43S + [Q38]},
+         "pass_criterion": "exit code 0 from each ruler; NO_CLAIM_FOUND (rc 4) is never a pass",
+         "ledger_block": {k: {"rc": v["rc"], "headline": [l for l in v["output"].splitlines()
+                                                          if "claims checked" in l][:1]}
+                          for k, v in LEDGER_GATE.items()},
+         "bus_body": {k: {"rc": v["rc"], "headline": [l for l in v["output"].splitlines()
+                                                      if "claims checked" in l][:1]}
+                      for k, v in BUS_GATE.items()},
+         "texts": {"ord0302_ledger_block.txt": blob_of(ledger_txt), "ord0302_bus_body.txt": blob_of(bus_txt)},
+         "bus_comment_id": made.get("id"), "derived_result": None}
+claim_p = WORK / "ord0302_claim_gate.json"
+claim_p.write_text(json.dumps(claim, ensure_ascii=False, indent=1), "utf-8", newline="\n")
+push(claim_p, claim_p.name)
+if remote(claim_p.name) != blob_of(claim_p):
+    raise SystemExit("the claim-gate receipt did not land on the branch")
+
+receipt["claim_gate_check"] = {"rulers": claim["rulers"], "ledger": claim["ledger_block"],
+                               "bus": claim["bus_body"], "receipt_of_it": claim_p.name,
+                               "receipt_blob": blob_of(claim_p)}
+out.write_text(json.dumps(receipt, ensure_ascii=False, indent=1), "utf-8", newline="\n")
+FILES.append((claim_p, claim_p.name))
+for f, name in ((out, "ord0302_receipt.json"),):
+    push(f, name)
+    if remote(name) != blob_of(f):
+        raise SystemExit("the receipt did not land with its claim-gate block")
+ip.write_text(json.dumps({"candidate_tip": CAND, "base_tip": BASE, "branch": BRANCH, "dir": DIR,
+                          "files": [{"name": n, "blob40": blob_of(p), "bytes": p.stat().st_size}
+                                    for p, n in FILES if p.exists()]}, ensure_ascii=False, indent=1),
+              "utf-8", newline="\n")
+push(ip, ip.name)
+final = {r["name"]: r["blob40"] for r in json.loads(ip.read_text(encoding="utf-8"))["files"]}
+print("index refreshed with", len(final), "files |", ip.name, "blob", blob_of(ip))
+for name in (claim_p.name, "ord0302_receipt.json", ip.name):
+    got = remote(name)
+    print(f"{name:28s} {got[:12]} match={got == final.get(name, blob_of(WORK / name))}")
