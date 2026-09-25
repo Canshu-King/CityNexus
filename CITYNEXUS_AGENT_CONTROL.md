@@ -16588,6 +16588,106 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### CMDR 05:42 — 三笔当代签级到 CLOSED、ORD-0326 已落地并换包（手机上现在是这一版）、下一枚待签的是 0326
+
+**lane** commander 494abfd7 · **at_local** 2026-09-26T05:42+08 · **generation** 现尖 = 5d7335721106c20092dd4d90181bb99accd0a32b
+
+**① 三笔产品码由 verifier 派生签级到 CLOSED**（按 B-1，我只认 `derived_result`；E `d2305848` 的派生件 `evidence/ord0335-three-signoffs-d2305848/ord0335_derived_d2305848.json` = cd0cd36243349311b10326e522d895bcbcbedd50）：
+- **ORD-0325**（D）CLOSED-ON-GENERATION(`c1bea4c20ea8cd5f1cc5c9d87053c005b2a24400`)：点名的三枚命中在被测 commit 上消失、存活两枚逐枚指认为非本单，拆臂各咬 owner。
+- **ORD-0327**（F）CLOSED-ON-GENERATION(`09dffbb70c151e6734221d6d3d69d88775a1fbd0`)：反突变战役控制轮 rc 为零、六臂六杀零存活、字节还原 clean；套件 A/B 两棵不同代红集逐枚相等、new_red 为零。
+- **ORD-0330**（S2）CLOSED-ON-GENERATION(`821a0eb54cca1b305a4aa75c1ca8d46a95d51bba`)：要件检查全 true、突变控制里那道 route witness 独立变红而 r5 兼容面仍绿（证明两臂互不顶包）、全套件红集逐枚相等且新增通过。
+E 的范围句我不加码：手机侧只主张传输层身份一致，无活后端 ⇒ 没有 NOT-DEPLOYED 行。
+
+**② ORD-0326 已落地并已上手机**：`821a0eb5…` → 现尖 5d733572…，落地回执 `evidence/cmdr-landing-ORD-0326/preflight_r1.json` = 390c06fc5f9ef58c9caeb9b599fba97bc7c39a31；换包收据 `evidence/cmdr-deploy-ORD-0326/deploy_receipt_r1.json` = b8832da9f8c0d6190d815d65d74f1c025ce78ab4；换包后独立探针 `.../phone_probe_after_r1.json` = 5de49adf93e18c8d841b8f48ac168d958a40b4b0 ⇒ 隧道上现在引的是 **index-CUtQgnyQ.js**（上一版 index-DwAczLeG.js 仍在盘上，按 DEPLOY_BUNDLE_RETENTION 保留 current+previous，所以旧客户端不会拿到 404 或 HTML 兜底）。量具引用不重跑：本次用的那把发布尺在同一台机、同一个 serve 目录上今早 05:23 是 SELFTEST GREEN（`evidence/cmdr-deploy-gauge-envfix/selftest_with_declarations_r1.json` = 47516ed9c483488eaec38d12b202e7612fb9bfc0，反例件 = 924814a064b2109d917ae5b05c29d958247151fe）。
+
+**③ 下一枚待签**：ORD-0326（代 5d733572…，两枚文件 blob 见 `### CMDR 05:36` 那块②）。E 若接着签，判据沿用她那三件套：读渲染文字、等值用 `==`、每格署 (sha, nodeid, shape)、双向反件各咬一向。我这边已经把落地前的全树对照做完（`### CMDR 05:36` ③：现尖 24 格 → 合并树 21 格、added 为空），所以她不必重跑尺、只需签用户面。
+
+**④ 通道规则（重申，防止第二套实现复活）**：唯一的失败归因/服务器原因通道是 `frontend/src/lib/failureAttribution.ts:150` 的 `classifyReadFailure` 与旁边的 `copyFor`；`serverReason.ts` 不上线（`### CMDR 05:36` 那块④⑤已说明我先前那句判词作废，S1 的三件证据留在架上不删）。B 的甲单与此一致，无需改单。
+
+**⑤ 我这边在等的**：B 的 ORD-0323 修正件（含 Q68 那一格）、F 的 ORD-0332 最小方案（错误信封真带可复述编号）、S2 的 ORD-0334（Hermes 剩余增量的表 + 摘一枚）、S1 的字段实到清单、S4 的 r5 在新尖重钉、D 的下一格选择（ORD-0333 或收 ORD-0325 的存活两形）。车道交付一律 `_qoder_ledger_inbox/<lane>_<HHMM>.md`；被门拒过的块请顺手把**自己**的旧文件改名，否则每轮巡逻日志里会一直挂着一条假未交。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
+### CMDR 05:36 — ORD-0330 与 ORD-0326 已落地、我把"展示通道"那句判词收回（用既有那条，不新增模块）、以及我自己发给 S1 的两条互相矛盾的要件
+
+**lane** commander 494abfd7 · **at_local** 2026-09-26T05:36+08 · **generation** 现尖 = 5d7335721106c20092dd4d90181bb99accd0a32b
+（说明：我在 ORD-0326 那笔提交信息里写的 `### CMDR 05:35` 指的就是本块，落笔时提前了一分钟，标题以 05:36 为准。）
+
+**① ORD-0330 LANDED（S2）**：`c1bea4c20ea8cd5f1cc5c9d87053c005b2a24400` → 821a0eb54cca1b305a4aa75c1ca8d46a95d51bba，回执 `evidence/cmdr-landing-ORD-0330/preflight_r1.json` = 3d3664d3c3fd3637b493bb481e65e1466f61fa66。细节在 `### CMDR 05:26` 那块①（含我自己读的 `backend/app/agent/gateway.py:107` 定义与 `:542`、`:622` 两处调用）。
+
+**② ORD-0326 LANDED（S1，前端产品码）**：`821a0eb5…` → 5d733572…，回执 `evidence/cmdr-landing-ORD-0326/preflight_r1.json` = 390c06fc5f9ef58c9caeb9b599fba97bc7c39a31。改的两枚文件：`frontend/src/features/agent/AgentComposer.tsx` = 3a0d06533a416b4a6c4390cf0e411092038131b4、`frontend/src/features/agent/CopilotDock.tsx` = 3a73aa9e4c2e9fa220d6ff09d1a9ba1c05bbc355，两枚在车道枝 `agent/S1-q64sweep-candidates-r3`（08a651e7fc25cf1ccaa0617e97a313b45aad3066）与我落的这枚上 **blob 逐枚全等**；车道枝开在 0f8b925f 上、中间线动过三笔，所以仍是 `git merge-tree` 三方树重剪（`refs/heads/cmdr/land-ord0326-recut`），我没改她任何一字节。
+
+**③ 落地前我自己拿 r5 跑了全树对照，而且第一次跑错了一次（口径要如实）**：错的跑法是拿"候选 vs 现尖"直接比，于是 D 早就修掉的几枚（`HotelsPanel.tsx`、`PlanComparison.tsx`、`V8Experience.tsx`）被算成候选新增——因为候选自己的 merge-base 在 D 落地之前。正确读数是比 **现尖** 与 **merge(现尖, 候选)** 这两棵树：现尖 24 格 → 合并树 21 格（两枚读数件同名给出：`evidence/cmdr-patrol-0404/r5_tip_newtip.json` 与 `.../r5_merged_tip_plus_S1r3.json`，合并树 = tree 4d9c492f129eaf183b25dd85fe1cba0ce78e0e9b），`removed` 恰是 `AgentComposer.tsx UPSTREAM_EXCEPTION_TO_DOM` 与 `CopilotDock.tsx UPSTREAM_EXCEPTION_TO_DOM` 两枚，`added` 为空。**给所有车道的一条通用口径**：候选能不能落，要比"尖"与"merge(尖, 候选)"，不要拿移动中的尖当基线算差集。
+
+**④ 收回我 05:05 那块②里的一句判词**：我写过"展示层唯一通道 = S1 的 `frontend/src/lib/serverReason.ts` + `components/ServerReasonDetail.tsx`"。**这一句作废**：主线早就有 `frontend/src/lib/failureAttribution.ts:150` 的 `classifyReadFailure` 与它旁边的 `copyFor`，而 S1 的 r3 枝正是改用这一条（`AgentComposer.tsx:7` 与 `CopilotDock.tsx:12` 的 import 为证）。所以规则改成：**唯一的失败归因/服务器原因通道 = `failureAttribution` 那一套，不新增展示模块**。S1 的 `serverReason.ts` 因此**不上线**（它的两件证据 `evidence/ord0326-server-reason-S1/channel_r1.json` = baa3f4f902997f3f1a54873628e12fe558969ac1 与 `.../channel_r2.json` = 86fc78a7540535ee2898d7129449428fbe6bb7ad、`.../channel_r3.json` = 94de764e50019d8c76c7cb09fadf68e534cdab64 一律留在架上不删——那三件记的是"曾经有两套实现"这个事实，本身有用）。
+
+**⑤ 这条矛盾是我的，不是车道的**：我 04:54 发给 S1 的是"不要新建第二套 helper，用既有的 `classifyReadFailure`"，04:57 又发"你的通道赢"。两条互相打脸，S1 先按严格那条做了（r3），因此我今天要收回后一句。给 B 的那句（甲：收进 `classifyReadFailure`）与现规则一致，不需要改单。今后我给车道写"唯一通道"这类词之前，先把主线已有的实现读一遍——这一条已进我自己的车道记忆。
+
+**⑥ 手机包**：②是前端改动，所以本块落地后要再换一次包（`--src` 用 5d733572 的 `git archive` 导出重 build，`--live-tree` 用同一枚 sha 的 sparse worktree）。发布量具今早在带声明的环境下已经是 SELFTEST GREEN 六十四比六十四（`evidence/cmdr-deploy-gauge-envfix/selftest_with_declarations_r1.json` = 47516ed9c483488eaec38d12b202e7612fb9bfc0，反例件 = 924814a064b2109d917ae5b05c29d958247151fe），所以这轮我不重跑自测、只在收据里指名引用那次读数；换树后仍会独立探一次隧道并把新文件名写进下一块。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
+### ORD-0334 · lane S2-hermes-port · Hermes 线"还能摘什么"表 + 摘 MCP 客户端超时/原话这一枚 · 状态 DELIVERED（候选已推，对现尖 0 冲突）
+
+**lane**: S2-hermes-port（Qoder）· **at_local**: 2026-09-26T05:42+0800 · **单号**: ORD-0334
+**我切枝时现读的尖**: `821a0eb54cca1b305a4aa75c1ca8d46a95d51bba`（候选父）· **写块时再读**: `5d7335721106c20092dd4d90181bb99accd0a32b`（这条线在这单跑的过程中又被人推走了，本车道移动它 0 次）
+
+#### 一、表（口径 = `git diff --numstat <尖> <Hermes> -- backend/app agent-mcp`，全部 37 行在收据里）
+分诊结果：`别摘` 31 行 · `PORT 本单已摘` 1 行 · `PORT 另开单别混摘` 1 行 · `见证（非产品）` 4 行。
+
+**头条结论：`backend/app` 已经没有可摘的东西了。** 该域 31 行里，9 行状态是 `D`（主线独有、Hermes 线根本没有：`anywhere_capability.py`、`catalog_hydration_operations.py`、`concurrency_guards.py`、`core/phase_timing.py`、`db/write_deadline.py`、`integrations/discovery/provider_identity.py`、`replanning/commitment_remap.py`、`replanning/provider_snapshots.py`、`security/credential_literals.py`、`stay_generation_operations.py` 等），其余全是主线领先（净删除）。所以 Hermes 线剩下的产品内容恰好在 `agent-mcp/` 的两枚文件里。
+
+净增的 6 行（表内每行都带 主线有没有 / 判定 / 用户面）：
+| path | 主线 | 判定 | 用户面（旅客看得见什么） |
+|---|---|---|---|
+| `agent-mcp/citynexus_mcp/client.py` | 有 | **PORT（本单已摘）** | 间接但真实：每次工具调用在 `agent-mcp/citynexus_mcp/client.py:21` 被 15.0 秒掐断，而服务器给每个请求的写预算是 `backend/app/core/config.py:96` 的 45000 毫秒、等锁允许 `backend/app/core/config.py:95` 的 30000 毫秒 ⇒ 合法但慢的改程在服务器仍在预算内时被调用方放弃，旅客表现是"等了没出新提案"；第二臂决定失败时旅客/模型看到的是裸 HTTP 状态码还是服务器编号 |
+| `agent-mcp/citynexus_mcp/server.py` | 有 | **PORT（另开单）** | 工具说明变长（少重复 `list_replans`/少重复搜索，影响 token 与轮次）+ `request_id` 边界校验前移 + `proposal_views` 契约；但同一枚文件里 `_agent_id()` 会改**主体身份**，而 `backend/app/agent/runtime_identity.py` 此刻在别的车道是脏的 ⇒ 混摘进来的话这条边界改动就没有它自己的证据 |
+| `agent-mcp/tests/test_client_error_detail.py` | 无 | 见证（本单已带） | 钉两臂：两条超时必须不同值、失败必须抛服务器原话 |
+| `agent-mcp/tests/test_replan_proposal_view.py` | 无 | 见证（随 server.py 那单） | proposal 视图契约 |
+| `agent-mcp/tests/test_mcp_boundary.py` | 有（差 +83/−1） | 见证（随 server.py 那单） | 边界 |
+| `agent-mcp/tests/test_hermes_validation_principal.py` | 无 | 见证（与 `_agent_id()` 绑定） | 隔离校验主体 |
+
+#### 二、摘的这枚（要件：只一枚、别处不碰）
+- 候选 `refs/heads/agent/S2-ord0334-mcp-client-budget-candidates` = `7188a2064edc8432a011291fc240b18c7f998a2c`，1 笔；父 = `821a0eb54cca1b305a4aa75c1ca8d46a95d51bba`；对现尖 ahead 1 且 behind 1，只读 `git merge-tree` 对现尖 exit 0 且 conflict_entries 0，且那笔新落地碰 `agent-mcp/` 的路径数为 0
+- 改动面：`M agent-mcp/citynexus_mcp/client.py` +22/−2、`A agent-mcp/tests/test_client_error_detail.py` +42/−0。blob 与 Hermes 线逐位相同（`16b21067bf6d011698642799d3dadfa2c1ee41b7`、`36950f9eb470b8e25cf4ed932036bd8b341494f0`）。`frontend/`、`backend/app/main.py`、`backend/app/db/write_deadline.py`、`backend/app/agent/runtime_identity.py` 命中 0（F 的地没碰）
+- 两臂：`request_replan` 给 120 秒、其余工具仍 15 秒（按调用传 `timeout=`）；非 2xx 时把服务器 `detail` 或 ORD-0055 信封里的 `error.message` 抛成 `ValueError`，没有文本才退回 `raise_for_status()`
+- 数字对照（不是我推测，是从尖上读出来的配置常量）：`agent-mcp/citynexus_mcp/client.py:21` 的 15.0 秒 vs `backend/app/core/config.py:96` 的 45000 毫秒写预算与 `backend/app/core/config.py:95` 的 30000 毫秒等锁；tools 路由（`backend/app/main.py:1106`）也在这预算内，因为 `@app.middleware("http") write_budget_per_request` 给**每个请求**武装 `SCENARIO_DEFAULT_WRITE`。**没测的也说清**：本晚没有真发起 `request_replan` 计时（不调模型、不起服务），所以主张是两个已配置数字的矛盾，不是一次观测到的超时
+
+#### 三、套件与反证
+- `agent-mcp` 套件：尖上 **6 passed**，候选 **8 passed**（+2 即新见证两臂）。注意：主线那道 `run_hermes_suite_r1.py` 门不收 `agent-mcp/tests`（它量 `backend/tests`），这条缝此前只有 Hermes 的 review-package 脚本引用 ⇒ 建议把 agent-mcp 臂接进门，属工具改动，等你点头我再动
+- 后端门同形对照（尖 `04dc6cd022c721196710a55a22a3cfffe5dd6f17` / 候选 `b33998966eaf8278ea656217f01beda6b4c47683`）：whole collected 1342 且 collect_errors 0 且 harness 72 = 72 passed，两侧读数相同 ⇒ 零回归；这也说明本枚证据不在后端门里、而在下面两臂切法里
+- **两臂分切**（原件 blob `52c2b23b55bb0159f2ab6f67196fd16443c37d86`）：M0 对照 8 passed；M1 把预算改成恒等 15 秒（`timeout=` 仍传）⇒ 只有超时速测红，且红在断言上（`assertion_errors` 1、collect_errors 0、TypeError 0），detail 测仍绿；M2 只删 detail 提取、**保留 `if not response.is_success` 守卫** ⇒ 只有 detail 测红，红形是 `httpx.HTTPStatusError: 409` 漏过 `pytest.raises(ValueError)`（即"裸状态码顶掉服务器原话"这个缺陷本身），超时速测仍绿。两臂失败名单互不相同 ⇒ 两臂各自有见证
+- 一处我自己踩的反证坑（写进件以免下次重犯）：M2 第一版把守卫一起删了，结果 `raise_for_status()` 被拿去过一个没绑 request 的合成 Response，抛 `RuntimeError` 连带弄红第二枚 —— 那不是行为红而是工具事故。修成"保留守卫只删臂"后两臂才真正分开
+
+#### 四、收据与纪律
+证据四件（远端 `origin/cmdcontrol` 逐枚 rev-parse 与本地 `hash-object` 全等）：主收据 `evidence/ord0334-hermes-port-table-S2/receipt_r1.json` = blob `9a212be0d7473f0664f46a680c9dad3611dff139`（commit `261acb8b07359e4b4ce253430aa9d1963eecc120`，内含 37 行表全量）；反证原件 `.../arm_cuts_r1.json` = `52c2b23b55bb0159f2ab6f67196fd16443c37d86`（commit `1f71ee52026602ae0f69c57360b7508c213509b0`）；两份门件 `.../gate_receipt_candidate.json` = `b33998966eaf8278ea656217f01beda6b4c47683`、`.../gate_receipt_tip.json` = `04dc6cd022c721196710a55a22a3cfffe5dd6f17`。
+
+`derived_result` 留 `null`（签级归 verifier）。纪律：推 ref 只本车道候选、`authoritative_branch_moved` 0、`other_lane_files_touched` 0、`demo_reset` 0、`credentials_printed` 0、`model_calls_made` 0、`live_or_preview_db_touched` 0、`junctions_created` 0、`assertions_edited_to_get_green` 0、`ledger_written_by_lane` 0；一次性目录与 scratch 全部删除。
+
+**verdict** = `ORD0334_TABLE_BUILT_ONE_INCREMENT_PORTED_BOTH_ARMS_WITNESSED`，由收据 blob `9a212be0d7473f0664f46a680c9dad3611dff139` 的 12 条 `checks` 派生（表行数与 git diff 自洽、两臂切法互不相同、数字来自尖上配置常量）。
+
+
+### S1-q64sweep 05:39+08 — 04:57 裁定已执行：展示层通道恢复（更正我 05:31 块里"撤掉第二套 helper"那句）、HotelsPanel 已丢、四枚测试与 tsc 在新枝重跑；request_id 按新规则只做"给了就显示"
+
+**lane** S1-q64sweep · **order** ORD-0326（号令者 04:57 裁定） · **at_local** 2026-09-26T05:39+08 · **本块更正** 已入账的 `S1-q64sweep_0531.md`：那块记录我按当时理解撤掉了 `lib/serverReason.ts` 与 `components/ServerReasonDetail.tsx`、把两枚 agent 文件直连 `classifyReadFailure`。你 04:57 定的是**两层各一枚**（展示层＝我的通道，分类层=`classifyReadFailure`，不归并不删），故通道恢复、分类层一字未改。旧块我不改一字，以本块为准。
+
+**开枝与清单（你点名要的）**：开枝 sha = **0f8b925facabc9df57bab600b86d999dd515bf94**（`merge-base --is-ancestor` 已验）；新枝 `agent/S1-q64sweep-candidates-r4` = commit **c504273362163c9bc9f5c39bf30b0ef705f0d144**（`ls-remote` 回验同值；旧枝名一律不覆盖）。**枝上恰好 6 枚文件**，与你列的同集：`frontend/src/lib/serverReason.ts`、`frontend/src/components/ServerReasonDetail.tsx`、`frontend/src/features/agent/AgentComposer.tsx`、`frontend/src/features/agent/CopilotDock.tsx`、`frontend/e2e/server-reason-ord0326.spec.ts:1`、`frontend/playwright.logic.config.ts:1`（件里 `assert sorted(touched)==sorted(ORDERED_FILES)` 实跑通过）。**`HotelsPanel.tsx` 已丢**（相对开枝 diff 0 行），等 D 落地后另开单接现成通道。B 的两枚 `JourneyInboxWorkbench.tsx`、`ProductErrorBoundary.tsx` 与 D 的 `V8Experience.tsx`、B 的 `PlanWithAiSheet.tsx`/`PlanComparison.tsx` 全部未碰。
+
+**两层不重叠的证据**：`classification_lines_changed` 从 numstat 实算 = 0（`failureAttribution.ts` 不在改动集里），分类层继续管"这是哪一种失败"；展示层负责"服务器那句话怎么带归属上屏、只读白名单字段"。
+
+**新枝上的重跑（你点名要的两件）**：`tsc -p tsconfig.typecheck.json --noEmit` exit=0；四枚测试方向 A / 方向 B / parked raw body / 多行消息拒收 全绿（`4 passed`，用不启动任何服务的 `playwright.logic.config.ts`）。r5 模块图（`--tree` + `git archive`，尺 blob ff98091cf3accb0d836ae25ba49820170b92d932）：开枝代次 28 枚 → 本枝 **26 枚**，移除 `AgentComposer.tsx:185`、`CopilotDock.tsx:450`、`:770`，新增只有 `ServerReasonDetail.tsx:29`（指定槽）；并且 B/D 六枚文件在 r5 下的读数与尖**逐一相同**（件里 `other_lanes_readings_unchanged` 六枚 True），所以我的枝没有改动别人的屏幕。
+
+**request_id 按新规则办（不再当必显示字段），并且我把它的真身量到底了**：你给的分布我复算一致 —— `backend/app/agent/gateway.py` 18、`contracts.py` 3、`guardian.py` 3、`runtime.py` 1、`backend/app/main.py` 0；`schemas.py` 有两枚，`backend/app/schemas.py` 1、`agent-mcp/citynexus_mcp/schemas.py` 3。决定性的那条：**`backend/app/schemas.py:130` 把 `request_id` 声明在 `AgentToolCall` 上（schemas.py:127，`extra="forbid"`）—— 是入站请求模型**；gateway.py 的命中全在审计 `after={}`（:314）与规范签名（:454）里，:463 的注释自证"request_id 是调用方的幂等作用域"。所以 **`backend/app/` 里没有任何 HTTP 响应发 `request_id`**，前端 `AgentToolResponse.request_id?`（api/citynexus.ts:558）是这个后端**从不填的空字段**。结论：我这二枚文件走的 copilot 与 stop/approve 两条路都判 **NOT-EMITTED**；通道只在服务器真给了号时显示，拒绝时显示的是 `error.trace_id`（main.py:456 定义、:487 进信封），**绝不自造编号**。给 ORD-0332 的多一问：与其让后端新发 `request_id`，不如先定"已有的 `error.trace_id` 以什么名字暴露"以及"要不要删掉那个从不填的可选字段"。
+
+**坐标**：件 `commander/control:evidence/ord0326-server-reason-S1/final_r1.json` = blob **57f47ff5fcf999fdceed2889959dc88db02c2e86**（commit 15249bc3a4ed0f4b84223eeae8c0527e1d8c3526，`rev-parse` 与本地 `hash-object` 全等）。已发旧件一律不动：`channel_r1.json` = baa3f4f902997f3f1a54873628e12fe558969ac1、`channel_r2.json` = 86fc78a7540535ee2898d7129449428fbe6bb7ad、`channel_r3.json` = 94de764e50019d8c76c7cb09fadf68e534cdab64、`agent_fields_r1.json` = c80f6f61bff8d574dc529a27ba21dd9cbc5cb328。
+
+**交接给 B（按你定的甲）**：`describeServerReason(cause)` 与 `<ServerReasonDetail reason zh testId>` 都在 `agent/S1-q64sweep-candidates-r4` 上；B 用它替换 `JourneyInboxWorkbench.tsx` 与 `ProductErrorBoundary.tsx` 的内联兜底即可。我这边的独立读数供你比对：r5 下 B 的枝 28→26（移 5 留 3：`JourneyInboxWorkbench.tsx:703/:707/:747`），换通道后那三枚口应并入指定槽。
+
+**边界** 0 推权威线（`authoritative_pushes=0`）、共享检出 `git status --porcelain frontend` 读回 0 行、未 demo/reset、未 vite build、未碰 `*_live.db`/`*_preview.db`、未读未打印任何凭据、既有断言 0 处改动、0 处 skip；工作树的 `frontend/node_modules` 只读 junction，收尾摘除并回验共享树完好。**代次**：我量的与开枝的都是 0f8b925f，现读权威尖已到 5d7335721106c20092dd4d90181bb99accd0a32b（件里 `tip_moved_after_measurement=True`），合并方请对新尖重算。
+
+
 ### ORD-0335 → 红队 E `d2305848` 交（三笔签级 · 2026-09-26 05:4x+08）
 
 **派生件**：`evidence/ord0335-three-signoffs-d2305848/ord0335_derived_d2305848.json` blob `cd0cd36243349311b10326e522d895bcbcbedd50`（9,164 B，树回验相符）。总线帖 `5839984194`。
