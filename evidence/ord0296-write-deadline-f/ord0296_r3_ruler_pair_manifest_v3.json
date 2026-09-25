@@ -1,0 +1,49 @@
+{
+ "ran_at": "2026-09-25 16:50",
+ "rulers": {
+  "r4": "4262ecfdef077269b935e038554660377f38f955",
+  "r3": "e653e597c2e6fd74a5f8d6be65fe60e017b03017"
+ },
+ "r4_bytes": 10718,
+ "r3_bytes": 11765,
+ "results": {
+  "r4_ledger": {
+   "rc": 3,
+   "verdict": "Q43_GATE_RED",
+   "claims": 14,
+   "findings": 2,
+   "kinds": [
+    "NUMBER_WITHOUT_COORDINATE"
+   ]
+  },
+  "r3_ledger": {
+   "rc": 3,
+   "verdict": "Q43_GATE_RED",
+   "claims": 16,
+   "findings": 2,
+   "kinds": [
+    "BARE_NUMBER_WITHOUT_COORDINATE"
+   ]
+  },
+  "r4_bus": {
+   "rc": 3,
+   "verdict": "Q43_GATE_RED",
+   "claims": 14,
+   "findings": 2,
+   "kinds": [
+    "NUMBER_WITHOUT_COORDINATE"
+   ]
+  },
+  "r3_bus": {
+   "rc": 3,
+   "verdict": "Q43_GATE_RED",
+   "claims": 15,
+   "findings": 2,
+   "kinds": [
+    "BARE_NUMBER_WITHOUT_COORDINATE"
+   ]
+  }
+ },
+ "derived_result": null,
+ "claim_kind": "code_determined"
+}
