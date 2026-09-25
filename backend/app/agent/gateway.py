@@ -8,6 +8,7 @@ from uuid import UUID
 
 from fastapi import HTTPException
 from sqlalchemy import select
+from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 
 from app.agent.approval import (
@@ -89,6 +90,78 @@ def _write_idempotent(
             expires_at=(now + timedelta(days=7)).isoformat(),
         )
     )
+
+
+_CURRENT_REPLAN_PROPOSAL_FIELDS = frozenset({
+    "id", "journey_id", "trigger_event_id", "base_plan_version_id",
+    "proposed_plan_version_id", "status", "hard_constraints_passed",
+    "locked_commitments_preserved", "utility_score", "score_breakdown",
+    "diff", "explanation",
+})
+_LEGACY_REPLAN_PROPOSAL_FIELDS = frozenset({
+    "id", "status", "hard_constraints_passed", "locked_commitments_preserved",
+})
+_REPLAN_CACHE_UNAVAILABLE = "AGENT_IDEMPOTENCY_RESPONSE_SCHEMA_UNAVAILABLE"
+
+
+def _upgrade_cached_request_replan_response(
+    session: Session,
+    stored: dict[str, Any],
+    *,
+    journey_id: str,
+    trigger_event_id: str,
+) -> dict[str, Any]:
+    """Project only persisted legacy proposals while keeping frozen response facts."""
+    proposals = stored.get("proposals")
+    if not isinstance(proposals, list) or not proposals:
+        raise HTTPException(409, _REPLAN_CACHE_UNAVAILABLE)
+
+    upgraded: list[dict[str, Any]] = []
+    seen_ids: set[str] = set()
+    changed = False
+    for cached in proposals:
+        if not isinstance(cached, dict):
+            raise HTTPException(409, _REPLAN_CACHE_UNAVAILABLE)
+        proposal_id = cached.get("id")
+        if not isinstance(proposal_id, str) or not proposal_id.strip() or proposal_id in seen_ids:
+            raise HTTPException(409, _REPLAN_CACHE_UNAVAILABLE)
+        seen_ids.add(proposal_id)
+        if _CURRENT_REPLAN_PROPOSAL_FIELDS.issubset(cached):
+            if (
+                cached["journey_id"] != journey_id
+                or cached["trigger_event_id"] != trigger_event_id
+                or not isinstance(cached["status"], str)
+                or not isinstance(cached["hard_constraints_passed"], bool)
+                or not isinstance(cached["locked_commitments_preserved"], bool)
+                or isinstance(cached["utility_score"], bool)
+                or not isinstance(cached["utility_score"], (int, float))
+                or not isinstance(cached["score_breakdown"], dict)
+                or not isinstance(cached["diff"], dict)
+                or not isinstance(cached["explanation"], dict)
+            ):
+                raise HTTPException(409, _REPLAN_CACHE_UNAVAILABLE)
+            upgraded.append(cached)
+            continue
+        if set(cached) != _LEGACY_REPLAN_PROPOSAL_FIELDS:
+            raise HTTPException(409, _REPLAN_CACHE_UNAVAILABLE)
+        if (
+            not isinstance(cached["status"], str)
+            or not isinstance(cached["hard_constraints_passed"], bool)
+            or not isinstance(cached["locked_commitments_preserved"], bool)
+        ):
+            raise HTTPException(409, _REPLAN_CACHE_UNAVAILABLE)
+        row = session.get(ReplanProposal, proposal_id)
+        if (row is None or row.journey_id != journey_id
+                or row.trigger_event_id != trigger_event_id):
+            raise HTTPException(409, _REPLAN_CACHE_UNAVAILABLE)
+        from app.main import _replan_payload
+
+        current = _replan_payload(row)
+        for field in ("status", "hard_constraints_passed", "locked_commitments_preserved"):
+            current[field] = cached[field]
+        upgraded.append(current)
+        changed = True
+    return {**stored, "proposals": upgraded} if changed else stored
 
 
 def _json(value: object) -> Any:
@@ -466,7 +539,12 @@ class AgentToolGateway:
         key = _agent_key("request_replan", request.agent_id, request.request_id)
         stored = _read_idempotent(self.session, key, signature)
         if stored is not None:
-            return stored
+            return _upgrade_cached_request_replan_response(
+                self.session,
+                stored,
+                journey_id=journey.id,
+                trigger_event_id=str(request.trigger_event_id),
+            )
 
         from app.main import generate_replan
 
@@ -535,7 +613,19 @@ class AgentToolGateway:
             signature=signature,
             response=response,
         )
-        self.session.commit()
+        try:
+            self.session.commit()
+        except IntegrityError:
+            self.session.rollback()
+            stored = _read_idempotent(self.session, key, signature)
+            if stored is not None:
+                return _upgrade_cached_request_replan_response(
+                    self.session,
+                    stored,
+                    journey_id=journey.id,
+                    trigger_event_id=str(request.trigger_event_id),
+                )
+            raise
         return response
 
     def accept_replan(self, request: AgentToolCall) -> dict[str, Any]:
