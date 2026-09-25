@@ -16588,6 +16588,61 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### ORD-0329 → 红队 E `d2305848` 交（ORD-0302 b5 derived_result = ALL_MET · 2026-09-26 04:3x+08）
+
+**派生件**：`evidence/ord0329-0302-b5-derived-d2305848/ord0329_derived_d2305848.json` blob `d66dd5b9fc19a823d52655db7685b8ac4f8dc0b6`（7,690 B，树回验相符）。总线帖 `5839017462`。
+**被验代**：落地 `9a669c8bec863fadf31d5158f4a1be66aec49f23`（sheet `fc4d6111dc013008b610a240aab096deebe2436f`、spec `70b1df97308f48b606add160b63ceaee3d17ed9b`，从落地 commit 树逐字节拉取核对）。号令者三枚回执 pull 后 sha1 全等。
+**判据执行（渲染文字双向）**：给句子方向 N2 屏上 label=「服务器给出的原因」/ origin=server / reason 渲染字 `==` "该目的地的候选目录尚未就绪，请稍后重试。"（等值非包含）；不给句子 N1（非 JSON 5xx）屏上 device 归属+设备行、卡片不含「连不上服务端」；完全没回答 N3 status=NETWORK 且 detail block 仍在 DOM 带设备行；面板白名单 X1 六形渲染字段并集={http_status,content-type,bytes}、body 键 0 次出现（arm_X1.json run 0302fix33353335 的 36 行断言全 OK，件 `D:/moodle/_qoder_b_ord0274sw_20260924/e2e_ord0302_0302fix33353335/ord0302/arm_X1.json`）、R24 凭据 witness 无正文片段；X2 promise-free 卡如实；五枚反件各咬各的检测器（N1 两行红/N3 两行红/X1 泄漏检测/X1 promise 行/X1 有红）独立成立。⇒ 派生件内 derived_cells 十格全部 MET，顶层 ALL_MET。
+**测量范围**：臂跑在 B 自己的 vite 面（b5 补丁字节在树内，per-run DB 具名）；stub 造形不需活后端 ⇒ 无 NOT-DEPLOYED 行；手机侧只主张传输层身份一致（号令者探针 4f67fce417b49d0d87e13d08cd050b5a8d0bd9bc），walkthrough 门外。claim_kind=RUNTIME_MEASURED，绑跑臂那棵树，per Q25 不跨代。
+**边界**：0 改产品字节、0 推 ref、0 demo/reset、0 开别人的库（读盘上臂 JSON）、凭据 0 打印、新路径 0 覆盖。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
+### ORD-0328 · lane S2-hermes-port · 补 `agent-mcp` 的 `HermesReplanProposalView`（r20 根因）· 状态 LANDED（号令者已快进上权威线，本车道落线后复验通过）
+
+**lane**: S2-hermes-port（Qoder）· **at_local**: 2026-09-26T04:29+0800 · **单号**: ORD-0328
+**generation（我开工时现读）**: `65df31df96cfb8a954f5feb36484710a883e1597` ｜**落线后现读**: `0f8b925facabc9df57bab600b86d999dd515bf94`（= 我的候选同一枚 sha，父即上一枚尖 ⇒ 快进；本车道移动权威线 0 次）
+- 落线复验：`git diff --name-status 65df31df96cfb8a954f5feb36484710a883e1597..0f8b925facabc9df57bab600b86d999dd515bf94` 在权威线上仍是 `M agent-mcp/citynexus_mcp/schemas.py` 与 `A backend/tests/test_v18_hermes_r20_transport_reliability_probe.py` 两条；`git grep -c 'class HermesReplanProposalView' 0f8b925facabc9df57bab600b86d999dd515bf94` 命中该文件 1 处
+- 落线后用我自己的门再量（不显式给 `--ref`，走默认路径；读数出处 = 收据 blob `08a770524f7ef4d9716ebba6b401b5d73c83d95e`）：harness files 21 且 whole collected 1319 且 collect_errors 0 且 harness collected 59 且 passed 59 且 exit 0
+
+#### 交付
+- 候选 `refs/heads/agent/S2-ord0328-agent-mcp-candidates` = `0f8b925facabc9df57bab600b86d999dd515bf94`（origin 回读全等；behind 0 且 ahead 1 ⇒ 可快进；只读 `git merge-tree` exit 0 且 conflict_entries 0）
+- 改动面 `git diff --numstat 65df31df96cfb8a954f5feb36484710a883e1597..0f8b925facabc9df57bab600b86d999dd515bf94`：两条路径 —— `agent-mcp/citynexus_mcp/schemas.py` 状态 `M` 且 +114/−0、`backend/tests/test_v18_hermes_r20_transport_reliability_probe.py` 状态 `A` 且 +9/−0；合计 +123/−0
+- 要件①达成方式：产品侧只碰 `agent-mcp/`；`backend/app/` 与 `frontend/` 在差里命中 0（`diff_vs_tip.backend_app_or_frontend_paths` 为空数组）。第二枚是测试文件（harness），不是 `backend/app/`，写在这块是为了让"根因已闭"在主线上有回归见证
+- 符号来源与落点：`HermesReplanProposalView` 整文件按字节取自 Hermes 线 `0fe51945cdf2d0ae35494b615f3418957174da03`，其定义为 `agent-mcp/citynexus_mcp/schemas.py:51`。三枚 blob 可解析：尖上旧版 `097d12c7fafdcfdc84fe34d7e263181f0d480ba3`、候选新版 = Hermes 版 `f284a42d7b19e7e6cf10ddd010a2468a506b9cdf`、见证测试 `cfc4e1ef16867a2164cdcea4e139a119cc8db45d`。两侧文件只差这一枚 frozen dataclass（纯追加），不需要新 import
+- 收据 `evidence/ord0328-agent-mcp-symbol-S2/receipt_r1.json`，blob `4fdf1c3468bb9dbca060d51965cabf318885d057`，commit `e93152e1b447e7cf76051f3629a59dbe29220c1e`
+- 反证原件 `evidence/ord0328-agent-mcp-symbol-S2/single_variable_control_r1.json`，blob `49a88f42b991cfddb607b538c39e480a36091cde`，commit `ac285f6c9140ae93990c24b2b40b1e19164f2fde`
+
+#### 要件②：用我自己的门量（`live_checks/run_hermes_suite_r1.py`）
+门本轮把导出集加宽到含 `agent-mcp`（定义在 `live_checks/run_hermes_suite_r1.py:30`，`REQUIRED_EXPORTS` 守卫在 `live_checks/run_hermes_suite_r1.py:210`）——因为 r4/r20 链条经 `<导出根>/agent-mcp` 解析 `citynexus_mcp`，缺它会把好树报成假红。
+- 尖（工具改宽后回归）：harness files 20 且 whole collected 1318 且 whole collect_errors 0 且 harness collected 58 且 passed 58 且 exit 0
+- 候选（读数出处 = 收据 blob `4fdf1c3468bb9dbca060d51965cabf318885d057` 的 gate_readings.candidate）：harness files 21（+1）且 whole collected 1319（+1）且 whole collect_errors 0 且 harness collected 59 且 **passed 59 且 `passed == collected`** 且 failed 0 且 exit 0
+- 六条 checks 在两趟里全真（门内 `checks`），判据含"全量收集不得中断"与"执行数等于收集数"两条
+
+#### 要件③：反向突变是真注入，不是改断言
+- 单变量反证（原件 blob `49a88f42b991cfddb607b538c39e480a36091cde`）：在两棵一次性导出树之间**只**回退 `agent-mcp/citynexus_mcp/schemas.py` 到尖上那枚 `097d12c7fafdcfdc84fe34d7e263181f0d480ba3`。实测两棵树各 468 个文件、逐文件 `hash-object` 差出的 `paths_differing` 恰为该一条；有符号时 r20 collected 1 且 passed 1 且 exit 0，回退后 r20 `collect_errors` 1 且 exit 2 且具名报错，同时全量门也断 ⇒ 符号就是唯一开关
+- 通用门自测（同一趟）：向 discovered 首枚注入假 import ⇒ whole collect_errors 1、运行 exit 非零；按 blob 还原后复绿
+- 收据里 `assertion_edited` 记 0：我没有为凑绿改过任何断言
+
+#### 要件④与⑤
+`derived_result` 按要求留 `null`，`derived_result_policy` 写明签级归 verifier。本车道推 ref 一次，且只推自己的候选分支 `refs/heads/agent/S2-ord0328-agent-mcp-candidates`；权威线移动 0 次。
+
+#### 仍然具名排除的那一枚（不在本单范围）
+`backend/tests/test_hermes_r5_cached_replan_compatibility.py` 缺 `_upgrade_cached_request_replan_response`，其定义在 Hermes 线的 `backend/app/agent/gateway.py:107`（调用于 `:542` 与 `:617`）⇒ 那是 `backend/app` 的改动，要件①禁止，所以"完整 22 枚集"在本单不可达；实测本候选 discovered 为 21 枚。要不要另开一单放行 `backend/app`，归你裁。
+
+#### 落线复验顺带逮到并修掉的一处门的缺陷（对你后续用门有用）
+门默认 `--ref` 解析的是**本地 remote-tracking ref**，不是 origin 现值。我上一轮 fetch 之后你把线推到了 `0f8b925facabc9df57bab600b86d999dd515bf94`，于是门在那次默认路径跑的是**过期树**（它确实报了 `equals_live_branch=False`，却仍然照量照绿并给出 `harness files 20`）—— 作为落地门这会放行过期内容。修法：默认路径下若本地值与 `ls-remote` 不符，先 `git fetch origin <branch>` 再重解析（`fetch_performed` 与 `resolved_via … (after fetch)` 写进收据），且 fetch 后仍不符就拒跑（exit 8）。修好后同一命令给出现尖与 21/1319/59（修前那趟显式 `--ref` 的对照件 = blob `951d0d153c57954224f24583f2b55b70f6cbafe0`）。**诚实边界**：fetch 后仍不一致才拒的那条分支我没构造出真实场景，属未测分支；已测的是"过期→fetch→量到现尖"。
+
+#### 纪律
+
+`demo_reset` 0、`credentials_printed` 0、`model_calls_made` 0、`live_or_preview_db_touched` 0、`junctions_created` 0、`other_lane_worktrees_touched` 0、`ledger_written_by_lane` 0；门与反证的一次性目录全部删除（收据 `garbage_readings` 三条皆真）；主库含 `agent-mcp` 的 porcelain 运行前后逐行全等。
+
+门两趟的原始收据也已上架，避免收据里的 blob 引用成为悬空值：`evidence/ord0328-agent-mcp-symbol-S2/gate_receipt_tip.json` 的 blob = `0edc5cd61f4a32fc52718872aa5cf542060fc88f`（commit `18194b500f4206b82d380db89eba34dda9e409a4`）、`evidence/ord0328-agent-mcp-symbol-S2/gate_receipt_candidate.json` 的 blob = `86760ee70d075f4a1b609d559de8412546aea87d`（commit `91de354a85f1294b0eaab4214807e9cd6548500d`）。工具本体 `live_checks/run_hermes_suite_r1.py` 是工作区文件、未入 git 库，所以它的 `hash-object` 值不写进本块（写了就是一枚不可解析的假坐标），核对同版请现算 `git hash-object --no-filters live_checks/run_hermes_suite_r1.py` 并与收据 `gate_readings.tool_blob_hash_object` 比。
+
+**verdict** = `ORD0328_R20_ROOT_CAUSE_CLOSED_R5_STILL_BLOCKED_BY_SCOPE`，由收据 blob `4fdf1c3468bb9dbca060d51965cabf318885d057` 的 `checks`（12 条）派生；正反双向已自测：12 条各自改一处读数都能把 verdict 翻成 `ORD0328_PARTIAL`，且结论串不是裸 PASS 形。
+
+
 ### CMDR 04:05 — 号令者自章三枚符号（Q65/Q66/Q67）＋三张开给产品码的单（ORD-0326 / ORD-0327 / ORD-0328）
 
 **lane** commander 494abfd7 · **at_local** 2026-09-26T04:05+08 · **generation** 现尖 `refs/heads/mirror/integration-frontend-apple-pass1` = 65df31df96cfb8a954f5feb36484710a883e1597
