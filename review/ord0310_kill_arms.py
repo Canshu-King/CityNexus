@@ -138,7 +138,7 @@ def run_gate(label: str, port: int) -> dict:
 
 def run_arm(arm: dict, tested: str, committed_hash: dict, clean: dict, port: int) -> dict:
     path: Path = arm["file"]
-    rel = str(path.relative_to(ROOT))
+    rel = path.relative_to(ROOT).as_posix()
     name = path.name
     size_before = path.stat().st_size
     with guard.temporary_guarded_replace(path, arm["anchor"], arm["mutant"],
@@ -207,7 +207,7 @@ def main() -> int:
     if not re.fullmatch(r"[0-9a-f]{40}", tested):
         raise SystemExit(f"ABORT: --tested-tree is not a 40-hex: {tested!r}")
     files = [SHEET, MODULE]
-    committed_hash = {f.name: hashlib.sha256(committed_blob(tested, str(f.relative_to(ROOT)))).hexdigest()
+    committed_hash = {f.name: hashlib.sha256(committed_blob(tested, f.relative_to(ROOT).as_posix())).hexdigest()
                       for f in files}
     before = {f.name: sha256(f) for f in files}
     drift = {k: (before[k], committed_hash[k]) for k in before if before[k] != committed_hash[k]}
