@@ -1,0 +1,88 @@
+{
+ "schema": "CNX_ORD0336_SIDE_READINGS_V1",
+ "order": "ORD-0336",
+ "lane": "S2-hermes-port",
+ "candidate": "f45489c6d17f16973faad161618789237ac3814e",
+ "request_id_boundary_re_measured_here": {
+  "per_length": {
+   "len_7": "ValidationError",
+   "len_8": "accepted",
+   "len_128": "accepted",
+   "len_129": "ValidationError"
+  },
+  "json_schema": {
+   "description": "Opaque per-call idempotency identity; use 8-128 characters and do not reuse it for different arguments.",
+   "maxLength": 128,
+   "minLength": 8,
+   "type": "string"
+  }
+ },
+ "r9_probe_guided_arm_collapsed": {
+  "mode": "guided",
+  "identical_to_server_default_after_this_port": [
+   "list_replans",
+   "request_replan",
+   "search_city_services"
+  ],
+  "coordinate": "scripts/hermes_r9_mcp_context_probe.py:113",
+  "meaning": "that arm no longer differs from an unmodified server, so any future guided-vs-baseline reading is really default-vs-baseline"
+ },
+ "boundaries_named": [
+  "The ported C block indexes result['proposals'] without a guard. Measured on the candidate tree: a request_replan response carrying only the singular proposal, or none at all, raises KeyError('proposals') instead of returning the server decision. The same shape is already guarded on the line at backend/app/agent/gateway.py:116. No mainline test covers it (backend gate 72 of 72 green). This is verbatim from the Hermes source and was left as-is because the order scoped this lane to porting; a guard needs its own witness.",
+  "agent-mcp/tests/test_replan_proposal_view.py witnesses schemas, which landed with ORD-0328, so it passes on the tip too. It is carried as regression net for the contract, not as a witness for this port; the witnesses that can redden this port are the forms inside test_mcp_boundary.py, which is where the three arm cuts aim."
+ ],
+ "adapter_shape_raw": {
+  "r9_description_modes_vs_server_default": {
+   "baseline": {
+    "keys_in_mode_table": 3,
+    "identical_to_server_default_after_this_port": [],
+    "differs_after_this_port": [
+     "list_replans",
+     "request_replan",
+     "search_city_services"
+    ]
+   },
+   "guided": {
+    "keys_in_mode_table": 3,
+    "identical_to_server_default_after_this_port": [
+     "list_replans",
+     "request_replan",
+     "search_city_services"
+    ],
+    "differs_after_this_port": []
+   },
+   "r10-guided": {
+    "keys_in_mode_table": 3,
+    "identical_to_server_default_after_this_port": [],
+    "differs_after_this_port": [
+     "list_replans",
+     "request_replan",
+     "search_city_services"
+    ]
+   }
+  },
+  "server_default_chars": {
+   "request_replan": 189,
+   "list_replans": 145,
+   "search_city_services": 152
+  },
+  "adapter_shapes": {
+   "response_with_only_singular_proposal": {
+    "raised": "KeyError",
+    "message": "'proposals'",
+    "keys": null
+   },
+   "response_with_no_proposal_at_all": {
+    "raised": "KeyError",
+    "message": "'proposals'",
+    "keys": null
+   },
+   "a_non_replan_tool_is_untouched": {
+    "tool": "list_replans",
+    "grew_views_keys": [
+     "proposal"
+    ]
+   }
+  }
+ }
+}
