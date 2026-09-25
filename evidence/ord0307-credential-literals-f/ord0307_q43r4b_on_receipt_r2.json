@@ -1,0 +1,380 @@
+{
+ "version": "Q43_r4",
+ "input": "D:\\moodle\\_qoder_f_run\\o225_receipts\\ord0307_gate_receipt_r2.json",
+ "bytes": 26915,
+ "lines": 704,
+ "claims_checked": 85,
+ "exempt_classes": {
+  "YEAR": 1,
+  "IDENTIFIER_PART": 7
+ },
+ "verdict": "Q43_GATE_RED",
+ "exit_code": 3,
+ "findings": [
+  {
+   "kind": "F3_bare_numeric_claim",
+   "matched": "369,",
+   "code": "NUMBER_WITHOUT_COORDINATE",
+   "line": 61,
+   "why_classified_as_quantity": "no class matched",
+   "seen_coordinate": null
+  },
+  {
+   "kind": "F3_bare_numeric_claim",
+   "matched": "35,",
+   "code": "NUMBER_WITHOUT_COORDINATE",
+   "line": 80,
+   "why_classified_as_quantity": "no class matched",
+   "seen_coordinate": null
+  },
+  {
+   "kind": "F3_bare_numeric_claim",
+   "matched": "6348",
+   "code": "NUMBER_WITHOUT_COORDINATE",
+   "line": 86,
+   "why_classified_as_quantity": "no class matched",
+   "seen_coordinate": null
+  },
+  {
+   "kind": "F3_bare_numeric_claim",
+   "matched": "81,",
+   "code": "NUMBER_WITHOUT_COORDINATE",
+   "line": 94,
+   "why_classified_as_quantity": "no class matched",
+   "seen_coordinate": null
+  },
+  {
+   "kind": "F3_bare_numeric_claim",
+   "matched": "10,",
+   "code": "NUMBER_WITHOUT_COORDINATE",
+   "line": 95,
+   "why_classified_as_quantity": "no class matched",
+   "seen_coordinate": null
+  },
+  {
+   "kind": "F3_bare_numeric_claim",
+   "matched": "0307",
+   "code": "NUMBER_WITHOUT_COORDINATE",
+   "line": 98,
+   "why_classified_as_quantity": "no class matched",
+   "seen_coordinate": null
+  },
+  {
+   "kind": "F3_bare_numeric_claim",
+   "matched": "10,",
+   "code": "NUMBER_WITHOUT_COORDINATE",
+   "line": 104,
+   "why_classified_as_quantity": "no class matched",
+   "seen_coordinate": null
+  },
+  {
+   "kind": "F3_bare_numeric_claim",
+   "matched": "0307",
+   "code": "NUMBER_WITHOUT_COORDINATE",
+   "line": 107,
+   "why_classified_as_quantity": "no class matched",
+   "seen_coordinate": null
+  },
+  {
+   "kind": "F3_bare_numeric_claim",
+   "matched": "53,",
+   "code": "NUMBER_WITHOUT_COORDINATE",
+   "line": 112,
+   "why_classified_as_quantity": "no class matched",
+   "seen_coordinate": null
+  },
+  {
+   "kind": "F3_bare_numeric_claim",
+   "matched": "10,",
+   "code": "NUMBER_WITHOUT_COORDINATE",
+   "line": 113,
+   "why_classified_as_quantity": "no class matched",
+   "seen_coordinate": null
+  },
+  {
+   "kind": "F3_bare_numeric_claim",
+   "matched": "0307",
+   "code": "NUMBER_WITHOUT_COORDINATE",
+   "line": 116,
+   "why_classified_as_quantity": "no class matched",
+   "seen_coordinate": null
+  },
+  {
+   "kind": "F3_bare_numeric_claim",
+   "matched": "0307",
+   "code": "NUMBER_WITHOUT_COORDINATE",
+   "line": 332,
+   "why_classified_as_quantity": "no class matched",
+   "seen_coordinate": null
+  },
+  {
+   "kind": "F3_bare_numeric_claim",
+   "matched": "10,",
+   "code": "NUMBER_WITHOUT_COORDINATE",
+   "line": 343,
+   "why_classified_as_quantity": "no class matched",
+   "seen_coordinate": null
+  },
+  {
+   "kind": "F3_bare_numeric_claim",
+   "matched": "0307",
+   "code": "NUMBER_WITHOUT_COORDINATE",
+   "line": 363,
+   "why_classified_as_quantity": "no class matched",
+   "seen_coordinate": null
+  },
+  {
+   "kind": "F3_bare_numeric_claim",
+   "matched": "0307",
+   "code": "NUMBER_WITHOUT_COORDINATE",
+   "line": 364,
+   "why_classified_as_quantity": "no class matched",
+   "seen_coordinate": null
+  },
+  {
+   "kind": "F3_bare_numeric_claim",
+   "matched": "10,",
+   "code": "NUMBER_WITHOUT_COORDINATE",
+   "line": 375,
+   "why_classified_as_quantity": "no class matched",
+   "seen_coordinate": null
+  },
+  {
+   "kind": "F3_bare_numeric_claim",
+   "matched": "0307",
+   "code": "NUMBER_WITHOUT_COORDINATE",
+   "line": 396,
+   "why_classified_as_quantity": "no class matched",
+   "seen_coordinate": null
+  },
+  {
+   "kind": "F3_bare_numeric_claim",
+   "matched": "10,",
+   "code": "NUMBER_WITHOUT_COORDINATE",
+   "line": 407,
+   "why_classified_as_quantity": "no class matched",
+   "seen_coordinate": null
+  },
+  {
+   "kind": "F3_bare_numeric_claim",
+   "matched": "0307",
+   "code": "NUMBER_WITHOUT_COORDINATE",
+   "line": 428,
+   "why_classified_as_quantity": "no class matched",
+   "seen_coordinate": null
+  },
+  {
+   "kind": "F3_bare_numeric_claim",
+   "matched": "10,",
+   "code": "NUMBER_WITHOUT_COORDINATE",
+   "line": 439,
+   "why_classified_as_quantity": "no class matched",
+   "seen_coordinate": null
+  },
+  {
+   "kind": "F3_bare_numeric_claim",
+   "matched": "0307",
+   "code": "NUMBER_WITHOUT_COORDINATE",
+   "line": 465,
+   "why_classified_as_quantity": "no class matched",
+   "seen_coordinate": null
+  },
+  {
+   "kind": "F3_bare_numeric_claim",
+   "matched": "0307",
+   "code": "NUMBER_WITHOUT_COORDINATE",
+   "line": 466,
+   "why_classified_as_quantity": "no class matched",
+   "seen_coordinate": null
+  },
+  {
+   "kind": "F3_bare_numeric_claim",
+   "matched": "10,",
+   "code": "NUMBER_WITHOUT_COORDINATE",
+   "line": 477,
+   "why_classified_as_quantity": "no class matched",
+   "seen_coordinate": null
+  },
+  {
+   "kind": "F3_bare_numeric_claim",
+   "matched": "0307",
+   "code": "NUMBER_WITHOUT_COORDINATE",
+   "line": 498,
+   "why_classified_as_quantity": "no class matched",
+   "seen_coordinate": null
+  },
+  {
+   "kind": "F3_bare_numeric_claim",
+   "matched": "10,",
+   "code": "NUMBER_WITHOUT_COORDINATE",
+   "line": 509,
+   "why_classified_as_quantity": "no class matched",
+   "seen_coordinate": null
+  },
+  {
+   "kind": "F3_bare_numeric_claim",
+   "matched": "0307",
+   "code": "NUMBER_WITHOUT_COORDINATE",
+   "line": 532,
+   "why_classified_as_quantity": "no class matched",
+   "seen_coordinate": null
+  },
+  {
+   "kind": "F3_bare_numeric_claim",
+   "matched": "0307",
+   "code": "NUMBER_WITHOUT_COORDINATE",
+   "line": 533,
+   "why_classified_as_quantity": "no class matched",
+   "seen_coordinate": null
+  },
+  {
+   "kind": "F3_bare_numeric_claim",
+   "matched": "0307",
+   "code": "NUMBER_WITHOUT_COORDINATE",
+   "line": 534,
+   "why_classified_as_quantity": "no class matched",
+   "seen_coordinate": null
+  },
+  {
+   "kind": "F3_bare_numeric_claim",
+   "matched": "10,",
+   "code": "NUMBER_WITHOUT_COORDINATE",
+   "line": 545,
+   "why_classified_as_quantity": "no class matched",
+   "seen_coordinate": null
+  },
+  {
+   "kind": "F3_bare_numeric_claim",
+   "matched": "0307",
+   "code": "NUMBER_WITHOUT_COORDINATE",
+   "line": 570,
+   "why_classified_as_quantity": "no class matched",
+   "seen_coordinate": null
+  },
+  {
+   "kind": "F3_bare_numeric_claim",
+   "matched": "0307",
+   "code": "NUMBER_WITHOUT_COORDINATE",
+   "line": 571,
+   "why_classified_as_quantity": "no class matched",
+   "seen_coordinate": null
+  },
+  {
+   "kind": "F3_bare_numeric_claim",
+   "matched": "10,",
+   "code": "NUMBER_WITHOUT_COORDINATE",
+   "line": 582,
+   "why_classified_as_quantity": "no class matched",
+   "seen_coordinate": null
+  },
+  {
+   "kind": "F3_bare_numeric_claim",
+   "matched": "0307",
+   "code": "NUMBER_WITHOUT_COORDINATE",
+   "line": 603,
+   "why_classified_as_quantity": "no class matched",
+   "seen_coordinate": null
+  },
+  {
+   "kind": "F3_bare_numeric_claim",
+   "matched": "10,",
+   "code": "NUMBER_WITHOUT_COORDINATE",
+   "line": 614,
+   "why_classified_as_quantity": "no class matched",
+   "seen_coordinate": null
+  },
+  {
+   "kind": "F3_bare_numeric_claim",
+   "matched": "0307",
+   "code": "NUMBER_WITHOUT_COORDINATE",
+   "line": 639,
+   "why_classified_as_quantity": "no class matched",
+   "seen_coordinate": null
+  },
+  {
+   "kind": "F3_bare_numeric_claim",
+   "matched": "10,",
+   "code": "NUMBER_WITHOUT_COORDINATE",
+   "line": 650,
+   "why_classified_as_quantity": "no class matched",
+   "seen_coordinate": null
+  },
+  {
+   "kind": "F3_bare_numeric_claim",
+   "matched": "4_s",
+   "code": "NUMBER_WITHOUT_COORDINATE",
+   "line": 303,
+   "why_classified_as_quantity": "no class matched",
+   "seen_coordinate": null
+  },
+  {
+   "kind": "F3_bare_numeric_claim",
+   "matched": "1 格",
+   "code": "NUMBER_WITHOUT_COORDINATE",
+   "line": 305,
+   "why_classified_as_quantity": "no class matched",
+   "seen_coordinate": null
+  },
+  {
+   "kind": "F3_bare_numeric_claim",
+   "matched": "3 轮",
+   "code": "NUMBER_WITHOUT_COORDINATE",
+   "line": 454,
+   "why_classified_as_quantity": "no class matched",
+   "seen_coordinate": null
+  },
+  {
+   "kind": "F3_bare_numeric_claim",
+   "matched": "3 轮",
+   "code": "NUMBER_WITHOUT_COORDINATE",
+   "line": 522,
+   "why_classified_as_quantity": "no class matched",
+   "seen_coordinate": null
+  },
+  {
+   "kind": "F3_bare_numeric_claim",
+   "matched": "3 轮",
+   "code": "NUMBER_WITHOUT_COORDINATE",
+   "line": 559,
+   "why_classified_as_quantity": "no class matched",
+   "seen_coordinate": null
+  },
+  {
+   "kind": "F3_bare_numeric_claim",
+   "matched": "4_s",
+   "code": "NUMBER_WITHOUT_COORDINATE",
+   "line": 616,
+   "why_classified_as_quantity": "no class matched",
+   "seen_coordinate": null
+  },
+  {
+   "kind": "F3_bare_numeric_claim",
+   "matched": "4_s",
+   "code": "NUMBER_WITHOUT_COORDINATE",
+   "line": 619,
+   "why_classified_as_quantity": "no class matched",
+   "seen_coordinate": null
+  },
+  {
+   "kind": "F3_bare_numeric_claim",
+   "matched": "3 轮",
+   "code": "NUMBER_WITHOUT_COORDINATE",
+   "line": 627,
+   "why_classified_as_quantity": "no class matched",
+   "seen_coordinate": null
+  },
+  {
+   "kind": "F3_bare_numeric_claim",
+   "matched": "3 轮",
+   "code": "NUMBER_WITHOUT_COORDINATE",
+   "line": 663,
+   "why_classified_as_quantity": "no class matched",
+   "seen_coordinate": null
+  }
+ ],
+ "finding_kinds": [
+  "NUMBER_WITHOUT_COORDINATE"
+ ],
+ "finding_total": 45,
+ "scope": "Numeric/constant/relay claims in the text. A green verdict here means every quantity carries a durable coordinate - it does not mean the measurements are correct, and it does not sign derived_result."
+}
