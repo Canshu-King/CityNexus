@@ -14,8 +14,11 @@
 from __future__ import annotations
 
 import json
+import os
 import sqlite3
-import time
+import subprocess
+import sys
+import tempfile
 import uuid
 from contextlib import contextmanager
 from pathlib import Path
@@ -359,3 +362,35 @@ def test_G10_the_budget_belongs_to_one_request_not_one_connection() -> None:
     assert other.deadline_ms == WD.deadline_ms(WD.SCENARIO_PLANS_GENERATE)
     WD.reset_request_budget()
     assert WD.current_budget(WD.SCENARIO_AGENT_COMMANDS) is not again
+
+
+def test_G11_importing_the_app_is_what_arms_the_door() -> None:
+    """G11（包工头字面点名的那一枚补上的）：门必须挂在真正的启动路径上，而不是只挂在函数上。
+
+    前十格量不到这件事：G2/G3 直接叫 `assert_configuration_reachable()`，所以把 `app/main.py:427`
+    那句调用删掉时它们照绿——M11 把我门的空洞照了出来。这一格走**子进程真 import**：
+    期限压到锁等待之下 ⇒ 导入必须失败且说得出档名；抬高一毫秒 ⇒ 必须导入成功（双向）。
+    子进程带自己的临时库，不吃套件里别人留下的状态。
+    """
+
+    busy = WD.busy_timeout_ms()
+    outcomes = []
+    for probe, must_refuse in ((busy - 1, True), (busy + 1, False)):
+        own = Path(tempfile.mkdtemp(prefix="cnx_g11_")) / "gate.db"
+        env = {**os.environ,
+               "CITYNEXUS_WRITE_BUSY_TIMEOUT_MS": str(busy),
+               "CITYNEXUS_WRITE_DEADLINE_MS": str(probe),
+               "CITYNEXUS_DATABASE_URL": f"sqlite:///{own.as_posix()}"}
+        done = subprocess.run([sys.executable, "-c", "import app.main"], cwd=str(BACKEND_ROOT),
+                              capture_output=True, text=True, encoding="utf-8",
+                              errors="replace", env=env, timeout=300)
+        tail = (done.stderr or "") + (done.stdout or "")
+        outcomes.append({"deadline_ms": probe, "busy_timeout_ms": busy, "rc": done.returncode,
+                         "refused": done.returncode != 0,
+                         "named_code": WD.CONFIG_NOT_ABOVE_BUSY in tail,
+                         "named_error": "WriteDeadlineConfigurationError" in tail,
+                         "tail_tail": tail.strip().splitlines()[-1][-140:] if tail.strip() else ""})
+    refused, accepted = outcomes
+    assert refused["deadline_ms"] == busy - 1 and accepted["deadline_ms"] == busy + 1, outcomes
+    assert refused["refused"] and refused["named_code"] and refused["named_error"], refused
+    assert not accepted["refused"], accepted
