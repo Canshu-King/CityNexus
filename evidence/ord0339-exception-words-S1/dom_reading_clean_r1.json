@@ -1,0 +1,20 @@
+{
+ "arm": "clean",
+ "sentence": "没读到封存演示的信息：服务器刚才答了，但答的内容我们用不了。这不是你填错了什么。",
+ "attributes": [
+  [
+   "class",
+   "trial-city-warning"
+  ],
+  [
+   "data-testid",
+   "trial-sealed-unavailable"
+  ],
+  [
+   "role",
+   "alert"
+  ]
+ ],
+ "dirty": [],
+ "canaryInHtml": false
+}
