@@ -1,0 +1,45 @@
+{
+ "what": "ORD-0296 r2 候选：只把门文件换成含 G11 的那枚（产品码 0 件改动）",
+ "lane": "F 8ccd71d8",
+ "minted_at": "2026-09-25T14:32:04+08:00",
+ "ref": "review/ord0296-write-deadline-f-r2",
+ "lane_branch": "agent/f-ord0296-write-deadline-r2",
+ "commit": "6c20f04b195faf2339f1fb55d8ea9a0b0d825fe1",
+ "tree": "10a811ae28d031b18ac99f31e03c3c83e8816c6b",
+ "parent": "6d041dcce11d05f28a55abadd40717f321b4db38",
+ "parent_is": "我冻结在 ord0296_write_deadline_receipt 里的那枚候选尖（Q37：旧 ref 不再推，新东西另开一代）",
+ "ref_tip_read": {
+  "refs/heads/mirror/integration-frontend-apple-pass1": "90d29a172e186aab6e6cb138ab4583ccf93bfa68",
+  "note": "铸造前先读；本候选的父不是它，而是我自己的候选尖"
+ },
+ "file_changed": "backend/tests/test_qoder_ord0296_write_deadline.py",
+ "blob_before": "deacc9d7483f1b8fd8d24b6e23e586bf402d85f6",
+ "blob_after": "f3cf05e8fe75cf9322c6eddc1ae6ffbdea8d0f93",
+ "bytes_after": 20366,
+ "diff_files": [
+  "backend/tests/test_qoder_ord0296_write_deadline.py"
+ ],
+ "readback": {
+  "ls_remote_sha_equals_commit": true,
+  "api_sha_equals_commit": true,
+  "authoritative_line_tip_untouched": true
+ },
+ "idempotent_recast_same_sha": true,
+ "cells": {
+  "before": 10,
+  "after": 11,
+  "collected_rc": 0
+ },
+ "evidence_for_the_new_cell": "ord0296_G11_and_M11_r2.json（控制轮 3×11 passed；M11 3 轮只红 G11；还原 byte-exact）",
+ "why_this_generation_exists": "包工头字面点名的第一枚（拆掉 main.py:427 那次调用）在我前十格下存活：ord0296_arm_M11_r1.json 3 轮 10 passed。门有洞，补格之后才谈得上击杀。",
+ "claimed_result": "R2-MINTED-PUSHED-AND-READ-BACK",
+ "derived_result": null,
+ "discipline": {
+  "authoritative_line_written": false,
+  "old_refs_touched": [],
+  "product_files_changed": 0,
+  "demo_reset": 0,
+  "live_or_preview_db": 0,
+  "credentials_printed": 0
+ }
+}
