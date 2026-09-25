@@ -16588,6 +16588,60 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### ORD-0330 · lane S2-hermes-port · `gateway.py` 缓存契约升级臂接上并配可红的路由见证 · 状态 DELIVERED（候选已推，与新尖 0 冲突）
+
+**lane**: S2-hermes-port（Qoder）· **at_local**: 2026-09-26T05:17+0800 · **单号**: ORD-0330
+**我开工现读的尖**: `0f8b925facabc9df57bab600b86d999dd515bf94`（候选父提交）· **收据时点再读**: `c1bea4c20ea8cd5f1cc5c9d87053c005b2a24400`（这两小时内线又被别人推了两笔，非本车道）
+
+#### 交付
+- 候选 `refs/heads/agent/S2-ord0330-gateway-candidates` = `d05cfb2930c8d560e8b877a2d6363e1376dae6c3`，2 笔（中间那笔 `94c171cd899b75fe43bbe2ca00f95b0782803856` 是产品改动，末笔加路由见证）
+- 与新尖的关系：behind 2 且 ahead 2（我父是现尖的祖先）；只读 `git merge-tree --write-tree c1bea4c20ea8cd5f1cc5c9d87053c005b2a24400 d05cfb2930c8d560e8b877a2d6363e1376dae6c3` → exit 0 且 conflict_entries 0，合并树 `6f363e5e0f3b2fadc15be6e3dbb6548ab00c70c7`。那两笔新落地与我这三条路径重叠 0 条 ⇒ 要快进我可以随时重切一枚
+- 改动面 `git diff --numstat 0f8b925facabc9df57bab600b86d999dd515bf94..d05cfb2930c8d560e8b877a2d6363e1376dae6c3`：`M backend/app/agent/gateway.py` +92/−2、`A backend/tests/test_hermes_r5_cached_replan_compatibility.py` +130/−0、`A backend/tests/test_ord0330_cached_replan_contract_upgrade.py` +104/−0
+- 要件①：唯一产品文件就是 `backend/app/agent/gateway.py`（blob `8a0ffffe2acc4e39c65068faaaea2140b0936220` → `a87e0726bbcfd267102ab068a978666db582056d`）；`backend/app/main.py` 与 `frontend/` 在差里 0 命中（F 在跑的 `main.py` 我没碰：它 `:7542` 的 `_replan_payload` 本就存在，函数内是运行时 import）
+- 搬运保真：三枚模块常量加那枚函数按字节取自 `0fe51945cdf2d0ae35494b615f3418957174da03`，块长 72 行，块级 sha256 两侧相等（件内 `symbol.block_sha256_hermes` 与 `block_sha256_candidate`）。独立印证：候选上 def 落在 `backend/app/agent/gateway.py:107`、第一处调用 `:542`，与 Hermes 线自报坐标逐字相同；第二处 `backend/app/agent/gateway.py:622`（源侧 `:617`）差 5 行，是主线在两者之间另有过内容
+- 证据三件（远端 `origin/cmdcontrol` 已 rev-parse 回读，与本地 `hash-object` 全等）：主收据 `evidence/ord0330-gateway-upgrade-S2/receipt_r1.json` = blob `41c07b5c684f63849c65fc1301178ca18a866e8f`（commit `cadffd2b9a45def509c994ca7d30e12528f494ad`）；反证原件 `.../mutation_controls_r1.json` = `d8809eb3cd525c95e10df492e37b244596b791fa`（commit `63ad46150aaeb28a02841628cf5e3d73e46491da`）；门件 `.../gate_receipt_candidate.json` = `88d0cb181adff5303f6de2f637c1e2ded1c5d028`（commit `3ac5184756408554115ad5629d78c31205b065f3`）
+
+#### 要件②：门与新尖完整集（解释器 `D:/moodle/CityNexus/.venv/Scripts/python.exe` = Python 3.12.14）
+门 `run_hermes_suite_r1.py --ref d05cfb2930c8d560e8b877a2d6363e1376dae6c3`：harness files 22（20 涨到含那两枚的完整集）且 whole collected 1335 且 collect_errors 0 且 harness collected 72 且 **passed 72 = collected** 且 exit 0（出处 = 上面 gate 件的 `arms`）。
+完整套件同形导出对照（读数出处 = 收据 blob `41c07b5c684f63849c65fc1301178ca18a866e8f` 的 `full_suite`）：尖 = failed 12 且 passed 1291；候选头 = failed 12 且 passed 1307；`new_red` 与 `fixed` 都是空数组，两棵树的 FAILED 名单（各 12 条，名单本身就在同一件里）逐行相同 ⇒ **没有引入任何回归**。那 12 条是主线既有红（其中含 `test_qoder_anywhere_*` 一族）。
+复现性：尖的同形导出我跑了两遍，两遍都是 failed 12 且 passed 1291（同一件 `full_suite` 与门件 blob `88d0cb181adff5303f6de2f637c1e2ded1c5d028`）⇒ 基线是稳定量不是单次观察。
+
+#### 要件③：反向突变必须真红，且证明"为什么非新增测试不可"
+- M0 对照：新见证 3 passed 且 r5 13 passed（都绿）
+- M1 **只切调用臂**（把第一处的 7 行 `return _upgrade_...` 换回 `return stored`，第二处仍接好）：新见证 `failed=1` 且点名 `test_replayed_request_replan_answer_carries_the_current_contract`（**断言级红，不是收集错**）；同一趟 r5 仍 13 passed ⇒ r5 只看函数本体、看不见调用点，这正是必须新增路由级见证的实测理由
+- M2 整文件回退到尖 blob：新见证仍红 1，r5 `collect_errors` 1（import 期失败）
+- 三棵一次性树跑完即删（反证件 `checks.no_throwaway_dirs_left` 为真）；全程 0 改断言换绿（`assertions_edited_to_get_green` 记 0）
+
+#### 顺带修掉门的第二个自身缺陷（我这次自己踩的）
+`--ref <候选>` 被上一轮"过期就 fetch 重解析"的逻辑**换成了分支尖**：我第一次跑门时报的其实是当时的尖（`09dffbb7…`，harness files 21）而不是候选。已改成只在调用方没给 `--ref` 时才刷新；上面 gate 件的 `generation_measured` 就是候选本身且 `fetch_performed=false`。这条与 ORD-0328 那次"本地 remote-tracking 过期"是同族问题：**量具不能替调用方换树**。
+
+#### 要件④⑤与纪律
+`derived_result` 留 `null`（`derived_result_policy` 写明签级归 verifier）。本车道推 ref 只一枚候选分支 `refs/heads/agent/S2-ord0330-gateway-candidates`，权威线移动次数为 0（现读仍是 `c1bea4c20ea8cd5f1cc5c9d87053c005b2a24400`）；`demo_reset` 0、`credentials_printed` 0、`model_calls_made` 0、`live_or_preview_db_touched` 0、`junctions_created` 0、`other_lane_worktrees_touched` 0、`previously_pushed_candidates_rewritten` 0。主库 `backend data contracts tools scripts agent-mcp` 的 porcelain 仍是 `backend/app/agent/runtime_identity.py` 与 `backend/app/main.py` 那两枚他车道脏件，未由我改动。
+
+**verdict** = `ORD0330_GATEWAY_ARM_WIRED_AND_WITNESSED_NO_REGRESSION`，由收据 blob `41c07b5c684f63849c65fc1301178ca18a866e8f` 的 `checks`（15 条）派生；正反双向已自测（15 条一致、逐条改一处读数都能翻成 `ORD0330_PARTIAL`，结论串非裸 PASS 形）。自造 worktree、导出树与 scratch 收工即删。
+
+
+### S1-q64sweep 05:11+08 — ORD-0326 用 r5 重测的更正：我那 4 枚汇点是真消失（全树 28→25，只剩指定位 1 枚），我先前那条 r4 读数属尺的 scope 假象；r5 同时揭出我自己表格里 7 处引错行
+
+**lane** S1-q64sweep · **order** ORD-0326 · **at_local** 2026-09-26T05:11+08 · **件** `commander/control:evidence/ord0326-server-reason-S1/channel_r2.json` = blob 86fc78a7540535ee2898d7129449428fbe6bb7ad（commit ecf69df4b6ad19a1b4c8721a733d7c5465befc89，`rev-parse` 与本地 `hash-object` 全等；旧件 `channel_r1.json` = baa3f4f902997f3f1a54873628e12fe558969ac1 一字未动，按规矩不覆盖）
+
+**尺**：r5 = `evidence/ord0331-ast-crossfile-S4/ui_exposure_taint_ast_r2.cjs` = blob ff98091cf3accb0d836ae25ba49820170b92d932，我按 blob 取字节后 `git hash-object` 同值，`--selftest` = SELFTEST_PASS（n_fixtures 20）。取代 r4 = eb262f59e54d5142ad0e8041704e751eac473ace 与 r3 = 44e062e6ce9c7b5d97d78e09e432072da102292c。
+
+**先更正我自己**：`channel_r1.json` 与本车道 04:50 块说"触碰文件 4→3、三枚汇点只是换了规则（`UPSTREAM_TEXT_VIA_HELPER_TO_DOM`）"。**那是一条被尺的 scope 骗出来的读数。** 用 r5 的模块图重量一遍：`agent/S1-q64sweep-candidates`（commit b32c0d6516fe60539d6485e95b8fa4534e1ad56d，`ls-remote` 回验同值）上 `AgentComposer.tsx:185`、`CopilotDock.tsx:450`、`CopilotDock.tsx:770`、`HotelsPanel.tsx:229` **四枚全部不再被旗**，全树从 28 降到 25，唯一新增旗是 `ServerReasonDetail.tsx:29` —— 即 Q67=① 允许带归属渲染那句的那个指定槽。也就是说通道被 r5 顺着 import 追到了底，修的是真生效，不是换形状。
+
+**一条给 S4 的量具用法发现**：r5 只在 `--tree <dir>` 模式下建模块图；用 `--ref/--path` 逐文件跑会**精确复现 r4 的答案**（我两种跑法各得 26，直到在 `evidence/ord0331-ast-crossfile-S4/ui_exposure_taint_ast_r2.cjs` = blob ff98091cf3accb0d836ae25ba49820170b92d932 里看到 `--tree` 那条分支）。任何从逐文件跑法引用的 r5 数字都应当成 r4 数字看。另：代次要用 `git archive <tip>` 导出后再 `--tree`，否则 `:1230` 那行会从磁盘读依赖 —— 我的目标是尖上的、依赖却是共享工作树那一代（HEAD 在另一枚线上），是跨代混读。
+
+**r5 分母（这是 ORD-0323/0326 该拿来替代 25 的那个数）**：tip 0f8b925facabc9df57bab600b86d999dd515bf94 上 **hits=28、files=17**，`per_rule` = UPSTREAM_EXCEPTION_TO_DOM 16 / UPSTREAM_TEXT_VIA_HELPER_TO_DOM 7 / RAW_BODY_TO_DOM 4 / UPSTREAM_READ_DIRECT 1，`resolution_depth_cap=150`、`resolution_truncated_total=56`。`V8Experience.tsx:1282` 在 r5 下不再是旗（与我独立核到的"那是本机 `copy.body` 文案"同向，S4 用执行 `copyFor` 证了它）。
+
+**r5 也揭出我自己表格的一处缺陷，我如实分开算**：我那 16 格里 14 格能落到一枚 r5 汇点上；r5 的 28 枚里没有 19 枚被我引用——但这不是"r5 又找出 19 个问题"，件里按原因分成两堆 —— **7 处是我自己引错了行**（`AgentComposer.tsx:185`、`CopilotDock.tsx:450`、`CopilotDock.tsx:770`、`PlanWithAiSheet.tsx:1019`、`V8Experience.tsx:1314`、`V8Experience.tsx:1385`、`V8Experience.tsx:2536`：我当时把渲染点记在成功内容那一行 `:196`/`:743`，而不是错误槽），**12 处是我表里根本没有的文件**（含 `AgentRunRail.tsx:18`、`DestinationPreparationPanel.tsx:346/469/522`、`RealCityDiscoveryPanel.tsx:150`、`V14RecoveryTruthPanel.tsx:162`、`V12TripStudioPanel.tsx:106`、`SimulationPanel.tsx:934`、`ActivityDetail.tsx:206`、`RecoveryRequiredPanel.tsx:166`、`main.tsx:968/992`）。其中后三枚正是本车道当反例报过的 K1/K2/K3 —— r5 现在在我当时引的那一行认到了它们。
+
+**给"两条通道要合流"那条决定的新依据**（同一把尺、同一模式量的）：B 的候选 `review/0323-two-exposure-cells-b`（e302e4c433712284a23c1c0ab11147fe105e1e22）全树 28→26，移除 `ProductErrorBoundary.tsx:104`、`ProductErrorBoundary.tsx:105`、`JourneyInboxWorkbench.tsx:687/691/731` 五枚，但**新增 3 枚仍被旗**：`JourneyInboxWorkbench.tsx:703`（`setMessage(error.message)` 的落点）、`:707`（`confirmDetail`）、`:747`（`pendingError`）—— 即 :88 那个 thrower 闭了，三个出屏口仍吃 `error.message`。两车道的移除集合交集 = 空、文件交集 = 空，所以是**严格互补**：合流的具体一步就是让 B 那三枚口改走 `describeServerReason` + `<ServerReasonDetail>`，可把 3 枚旗收成指定槽那 1 枚。谁做仍等你派，我不擅自动 B 的文件。
+
+**代次提醒**：我量的那一枚是 0f8b925f（件里 `generation`），发布时 `ls-remote` 已到 c1bea4c20ea8cd5f1cc5c9d87053c005b2a24400（今天第三次移动），所以件里 `authoritative_tip_now` 与 `tip_moved=True` 也只代表建件那一刻 —— 后续车道请以 `ls-remote` 现读为准，别抄我件里的"now"。
+
+**边界** 0 改产品字节（共享检出 `git status --porcelain frontend` 读回 0 行）、0 推权威线、未碰 B 与 F 的文件、未 demo/reset、未跑 vite build、未进 `frontend/node_modules`（工作树那个 junction 我已在收尾摘掉并回验共享 `node_modules` 完好）、未读未打印任何凭据。**仍待你一句话的三件**：① 两条通道保哪条（本报告倾向：保 `lib/serverReason.ts`，因为它已被 r5 证明能把 4 枚旗清零且只留指定槽）；② `V8Experience.tsx` 那 4 枚无人认领的旗（含我引错行的 :1314/:1385/:2536）归谁；③ 我 04:50 块里 inbox/:88 归属那条与你 04:05 令的对账。
+
+
 ### ORD-0327 → F `8ccd71d8` 默认写期限落地：候选尖 09dffbb7 已自推，门 7 格 + 反突变 6 臂全杀 + 整套件 A/B 无新增红（2026-09-26 05:01+08）
 
 四元组：`scope` = ORD-0327 四条判据里产品码那一件（backend 三枚路径）；`generation` = 父尖 `0f8b925facabc9df57bab600b86d999dd515bf94`、候选尖 `09dffbb70c151e6734221d6d3d69d88775a1fbd0`；`artifact` = `ee059206062da74d0f5803d3e8cabf3af25f4061`（本体与改动点）、`72546abb207775e241d539ed2f4dd9266af3b8c0`（门体反突变）、`56cae2feda576289e7e5b9d5b0d65701779c4f4d`（整套件 A/B）、`bc27d47f01aad7b92a53edc32efd9ed0b3e16d72`（WAL 争用四形）；`method` = ls-remote 现读 + 逐枚 blob 相等核对 + hash-object/read-tree/write-tree/commit-tree 只落我自己的 ref + `git archive` 同配方导出后跑同一把门。
