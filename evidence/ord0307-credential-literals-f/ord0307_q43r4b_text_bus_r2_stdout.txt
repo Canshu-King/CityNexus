@@ -1,0 +1,2 @@
+version Q43_r4 | input C:\Users\仓鼠王\AppData\Local\Temp\q43b_bus_r2.md 8368 B
+claims checked 16 | exempt {"IDENTIFIER_PART": 1} | overall Q43_GATE_GREEN | findings 0 []
