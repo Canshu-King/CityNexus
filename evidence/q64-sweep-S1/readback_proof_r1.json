@@ -1,0 +1,19 @@
+{
+ "schema": "CNX_Q64_SWEEP_READBACK_V1",
+ "lane": "S1-q64sweep",
+ "at_local": "2026-09-26T02:53:43+0800",
+ "generation": "30de4ebe409f49c5e25f4758cb2e5f4e90764a4f",
+ "tip_moved": false,
+ "ruler": "608016f6a538097041554b76cfe3e9a4192f299c",
+ "subject_route": "commander/control:evidence/q64-sweep-S1/sweep_r1.json",
+ "subject_blob_expected_from_local_bytes": "f783b12eea629d52dbe8ff00f45716d50b99e30c",
+ "subject_blob_git_hash_object": "f783b12eea629d52dbe8ff00f45716d50b99e30c",
+ "subject_blob_rev_parse": "f783b12eea629d52dbe8ff00f45716d50b99e30c",
+ "subject_bytes_local": 35059,
+ "subject_bytes_rev_parse": 35059,
+ "publish_commit": "09c56540df86a4bb205d8a3795de200c3a23f08e",
+ "readback_command": "git -C D:/moodle/CityNexus fetch origin refs/heads/commander/control:refs/remotes/origin/cmdcontrol && git -C D:/moodle/CityNexus rev-parse origin/cmdcontrol:evidence/q64-sweep-S1/sweep_r1.json",
+ "all_four_numbers_equal": true,
+ "verdict": "READBACK_CONCORDANT",
+ "note": "publish_evidence_gated_r1.py reported BYTE-LEVEL MATCH on its own read-back; this receipt is the independent second read through a different door (local sha1 over bytes, git hash-object, and rev-parse of the fetched ref), which is what the acceptance asks for."
+}
