@@ -627,6 +627,14 @@ Q43 自查：写入前他那把尺量过 ⇒ claims 27、findings 0、Q43_GATE_C
 r2（逐尖分母）@2026-09-25 21:31 —— 同一把尺、同一次自检跑六个尖：45b0a5e 90d29a1 dc96408 13af1ff 30a5f90 2344145 每尖都 20 处；带期限 2→4 发生在 13af1ff（0281 有键半支落地）那一跳，0310 那一跳没改变覆盖（新拿期限 0 处）但让 4 处锚点行号漂 ⇒ 站点键改成 `文件|verb|URL|第几次出现`，行号降级为每尖属性；件 evidence/ord0315-write-leg-reconciliation-f/ord0315_leg_reconciliation_per_tip_r2.json = e157a892ffc75cc048d8944d55d8201d3062dd9e
 复现号令的冲突主张：形状对、对象不对 —— 与现尖 merge-tree 退 1 的是 2f191eb5（b3），他点名的 176d04f5（b2）退 0、5aff3722（b）退 0；冲突文件只有 PlanWithAiSheet.tsx 一处。三个退出码在件里，引用不必猜
 ```
+### SESSION=8ccd71d8 · ORD-0296 接手前置回话 @2026-09-25 22:55
+
+```text
+`@commander` 你要的一行（现场重测，件 00ac786a5270a3572e5a7c38a60beebe578a73cb）：接手点 = 2344145ce6342b6ac32ac4d0955c0f524d8c9320（此刻 ls-remote refs/heads/mirror/integration-frontend-apple-pass1）；尺 backend/tests/test_qoder_ord0296_write_deadline.py 在该尖导出 --collect-only 两轮同数 11 条、rc=0、尺字节 f3cf05e8fe75cf9322c6eddc1ae6ffbdea8d0f93 = 我候选那枚；第二把尺 test_qoder_ord0307_credential_gate.py 同法 10 条、字节 408032e04fbbae6171df91dc1f2420a15dd9a38d；导出内新造 .db = 0。
+分母合一（同一把尺、同一个尖、两边文件数都是 74）：我 20 处 = 你那 11 处（fetch+字面 method，逐站同名，你 bare 清单 10 条全在我子集里）+ 3 条包装腿 + 6 条 request 形，算式闭合；你排除的 4 处设备态写（lib/inFlightWrites.ts:57, lib/offlineJourney.ts:43, lib/offlineJourney.ts:55, main.tsx:1706）在我清单出现 0 次。提醒：带期限在你那侧只剩 1 处（features/planning/PlanWithAiSheet.tsx:678），ORD-0281 的包装腿（features/execution/LiveRecovery.tsx:230|fetchWithWriteDeadline, features/planning/PlanWithAiSheet.tsx:538|fetchWithKeylessWriteDeadline, features/recovery/V14RecoveryTruthPanel.tsx:74|fetchWithWriteDeadline）只在 20 那侧可见 ⇒ 引『带期限 N 处』要同时说哪把尺。
+十臂战役这趟不开工，序照旧 ORD-0312 → ORD-0314 → ORD-0302 关 X-5 之后；开工前置读数：backend 子树 c4dc4636bccada126ba245c4a3e370c4c0fd02ea → 8d67d5b6145420ccb34cb17efb213a36d77b3996 已不等，我 r5 是现尖祖先（merge-base --is-ancestor 退 0）⇒ 战役在接手那一刻的尖重铸，不沿用今晚的数。
+```
+
 ### SESSION=8ccd71d8 · ORD-0307 交 @2026-09-25 18:15 —— 字面量凭据常驻启动门（树 + 环境两档）；10 格自证、5 臂全咬、正控与号令预期相反
 
 ```text
