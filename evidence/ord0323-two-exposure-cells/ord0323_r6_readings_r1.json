@@ -1,0 +1,186 @@
+{
+ "schema": "CNX_ORD0323_R6_READINGS_R1",
+ "order": "ORD-0323",
+ "lane": "B c01d72a3",
+ "at_local": "2026-09-26T06:45:27+0800",
+ "ruler": {
+  "published_path": "evidence/ord0331-ast-crossfile-S4/ui_exposure_taint_ast_r3.cjs",
+  "published_blob": "6a251d3a6bea70329e06581384a81d5ef54c96a6",
+  "local_git_hash_object": "6a251d3a6bea70329e06581384a81d5ef54c96a6",
+  "bytes": 101413,
+  "added_by_commit": "f3614b5c",
+  "blob_at_published_path": "6a251d3a6bea70329e06581384a81d5ef54c96a6",
+  "selftest": "SELFTEST_PASS",
+  "n_fixtures": 20,
+  "n_mode_arms": 2,
+  "n_mode_arms_met": 2,
+  "n_cross_file_arms_met": 7,
+  "supersedes": "ui_exposure_taint_ast_r2.cjs (r5, same decision, scope reporting added)",
+  "supersedes_blob": "ff98091cf3accb0d836ae25ba49820170b92d932",
+  "also_supersedes_r4": {
+   "file": "ui_exposure_taint_ast_r1.cjs",
+   "blob": "eb262f59e54d5142ad0e8041704e751eac473ace"
+  },
+  "mode_arms": {
+   "F_per_file_over_reports_where_the_helper_exonerates": {
+    "assertion_met": true,
+    "modes_differ": true,
+    "scope_in_per_file_report": "per-file: no module graph is built here (--file / --ref --path)",
+    "scope_in_graph_report": "module-graph: relative imports, index files, re-exports and namespace imports resolved (--tree)",
+    "per_file_cells": [
+     "panels/Panel.tsx:5 UPSTREAM_TEXT_VIA_HELPER_TO_DOM"
+    ],
+    "graph_cells": []
+   },
+   "G_per_file_under_reports_poison_arriving_as_an_imported_value": {
+    "assertion_met": true,
+    "modes_differ": true,
+    "scope_in_per_file_report": "per-file: no module graph is built here (--file / --ref --path)",
+    "scope_in_graph_report": "module-graph: relative imports, index files, re-exports and namespace imports resolved (--tree)",
+    "per_file_cells": [],
+    "graph_cells": [
+     "panels/Show.tsx:3 UPSTREAM_READ_DIRECT"
+    ]
+   }
+  }
+ },
+ "mode": {
+  "used": "--tree",
+  "why": "r6 自己的 mode_arms 判 --file/--ref 既不是 --tree 的上界也不是下界；逐文件跑答的是另一个问题",
+  "scope_as_the_ruler_reports_it": {
+   "before": "module-graph: relative imports, index files, re-exports and namespace imports resolved (--tree)",
+   "after": "module-graph: relative imports, index files, re-exports and namespace imports resolved (--tree)",
+   "before_note": "this mode is the one the pre-landing gate must run: it can both clear a value a helper rebuilds from device wording and condemn a value that arrives through an import",
+   "upper_bound_claim": null
+  }
+ },
+ "generations": {
+  "before": "9a669c8bec863fadf31d5158f4a1be66aec49f23",
+  "after": "499522db0903790c3eaba5837bf8e8e3764b7463",
+  "exported_with": "git archive <ref> frontend | tar -x -C <dir>",
+  "scanned": "frontend/src"
+ },
+ "tree_wide": {
+  "before_hits": 27,
+  "after_hits": 22,
+  "delta": -5,
+  "changed_files_outside_my_three": []
+ },
+ "in_my_three_files": {
+  "before": [
+   "JourneyInboxWorkbench.tsx:687[UPSTREAM_EXCEPTION_TO_DOM]",
+   "JourneyInboxWorkbench.tsx:691[UPSTREAM_EXCEPTION_TO_DOM]",
+   "JourneyInboxWorkbench.tsx:731[UPSTREAM_EXCEPTION_TO_DOM]",
+   "PlanWithAiSheet.tsx:1019[UPSTREAM_TEXT_VIA_HELPER_TO_DOM]",
+   "PlanWithAiSheet.tsx:1046[UPSTREAM_TEXT_VIA_HELPER_TO_DOM]",
+   "ProductErrorBoundary.tsx:104[UPSTREAM_EXCEPTION_TO_DOM]",
+   "ProductErrorBoundary.tsx:105[UPSTREAM_EXCEPTION_TO_DOM]"
+  ],
+  "after": [
+   "PlanWithAiSheet.tsx:1021[UPSTREAM_TEXT_VIA_HELPER_TO_DOM]",
+   "PlanWithAiSheet.tsx:1048[UPSTREAM_TEXT_VIA_HELPER_TO_DOM]"
+  ],
+  "cell_ids_gone": [
+   "JourneyInboxWorkbench.tsx:687[UPSTREAM_EXCEPTION_TO_DOM]",
+   "JourneyInboxWorkbench.tsx:691[UPSTREAM_EXCEPTION_TO_DOM]",
+   "JourneyInboxWorkbench.tsx:731[UPSTREAM_EXCEPTION_TO_DOM]",
+   "PlanWithAiSheet.tsx:1019[UPSTREAM_TEXT_VIA_HELPER_TO_DOM]",
+   "PlanWithAiSheet.tsx:1046[UPSTREAM_TEXT_VIA_HELPER_TO_DOM]",
+   "ProductErrorBoundary.tsx:104[UPSTREAM_EXCEPTION_TO_DOM]",
+   "ProductErrorBoundary.tsx:105[UPSTREAM_EXCEPTION_TO_DOM]"
+  ],
+  "cell_ids_untouched": [],
+  "cell_ids_only_at_candidate": [
+   "PlanWithAiSheet.tsx:1021[UPSTREAM_TEXT_VIA_HELPER_TO_DOM]",
+   "PlanWithAiSheet.tsx:1048[UPSTREAM_TEXT_VIA_HELPER_TO_DOM]"
+  ],
+  "counts": {
+   "before": 7,
+   "after": 2,
+   "gone": 7,
+   "untouched": 0,
+   "only_at_candidate": 2
+  },
+  "by_shape_identity": {
+   "before": [
+    "ActivityDetail.tsx[RAW_BODY_TO_DOM]",
+    "AgentComposer.tsx[UPSTREAM_EXCEPTION_TO_DOM]",
+    "AgentRunRail.tsx[UPSTREAM_READ_DIRECT]",
+    "CopilotDock.tsx[UPSTREAM_EXCEPTION_TO_DOM]",
+    "DestinationPreparationPanel.tsx[UPSTREAM_EXCEPTION_TO_DOM]",
+    "HotelsPanel.tsx[RAW_BODY_TO_DOM]",
+    "JourneyInboxWorkbench.tsx[UPSTREAM_EXCEPTION_TO_DOM]",
+    "PlanComparison.tsx[RAW_BODY_TO_DOM]",
+    "PlanWithAiSheet.tsx[UPSTREAM_TEXT_VIA_HELPER_TO_DOM]",
+    "ProductErrorBoundary.tsx[UPSTREAM_EXCEPTION_TO_DOM]",
+    "RealCityDiscoveryPanel.tsx[UPSTREAM_EXCEPTION_TO_DOM]",
+    "RecoveryRequiredPanel.tsx[RAW_BODY_TO_DOM]",
+    "SimulationPanel.tsx[UPSTREAM_TEXT_VIA_HELPER_TO_DOM]",
+    "V12TripStudioPanel.tsx[UPSTREAM_EXCEPTION_TO_DOM]",
+    "V14RecoveryTruthPanel.tsx[UPSTREAM_EXCEPTION_TO_DOM]",
+    "V8Experience.tsx[UPSTREAM_EXCEPTION_TO_DOM]",
+    "V8Experience.tsx[UPSTREAM_TEXT_VIA_HELPER_TO_DOM]",
+    "main.tsx[UPSTREAM_TEXT_VIA_HELPER_TO_DOM]"
+   ],
+   "after": [
+    "ActivityDetail.tsx[RAW_BODY_TO_DOM]",
+    "AgentComposer.tsx[UPSTREAM_EXCEPTION_TO_DOM]",
+    "AgentRunRail.tsx[UPSTREAM_READ_DIRECT]",
+    "CopilotDock.tsx[UPSTREAM_EXCEPTION_TO_DOM]",
+    "DestinationPreparationPanel.tsx[UPSTREAM_EXCEPTION_TO_DOM]",
+    "HotelsPanel.tsx[RAW_BODY_TO_DOM]",
+    "PlanComparison.tsx[RAW_BODY_TO_DOM]",
+    "PlanWithAiSheet.tsx[UPSTREAM_TEXT_VIA_HELPER_TO_DOM]",
+    "RealCityDiscoveryPanel.tsx[UPSTREAM_EXCEPTION_TO_DOM]",
+    "RecoveryRequiredPanel.tsx[RAW_BODY_TO_DOM]",
+    "SimulationPanel.tsx[UPSTREAM_TEXT_VIA_HELPER_TO_DOM]",
+    "V12TripStudioPanel.tsx[UPSTREAM_EXCEPTION_TO_DOM]",
+    "V14RecoveryTruthPanel.tsx[UPSTREAM_EXCEPTION_TO_DOM]",
+    "V8Experience.tsx[UPSTREAM_EXCEPTION_TO_DOM]",
+    "V8Experience.tsx[UPSTREAM_TEXT_VIA_HELPER_TO_DOM]",
+    "main.tsx[UPSTREAM_TEXT_VIA_HELPER_TO_DOM]"
+   ],
+   "cleared": [
+    "JourneyInboxWorkbench.tsx[UPSTREAM_EXCEPTION_TO_DOM]",
+    "ProductErrorBoundary.tsx[UPSTREAM_EXCEPTION_TO_DOM]"
+   ],
+   "new": []
+  }
+ },
+ "cross_check_against_r5": {
+  "r5_artifact": "ord0323_r5_readings.json",
+  "r5_tree_wide": [
+   28,
+   23
+  ],
+  "r6_tree_wide": [
+   27,
+   22
+  ],
+  "r5_reading": "tree-wide 28 -> 23 (delta -5); my three files 7 -> 2 格; 按 shape 身份 2 形清除 / 0 形新增 / 0 形未动; 树内其它文件变动 0",
+  "agreement": {
+   "before_same": false,
+   "after_same": false,
+   "my_cells_before_same": true,
+   "my_cells_after_same": true
+  },
+  "all_agree": false,
+  "cells_only_r5_reports": {
+   "before": [
+    "V8Experience.tsx:1314[UPSTREAM_TEXT_VIA_HELPER_TO_DOM]"
+   ],
+   "after": [
+    "V8Experience.tsx:1314[UPSTREAM_TEXT_VIA_HELPER_TO_DOM]"
+   ]
+  },
+  "cells_only_r6_reports": {
+   "before": [],
+   "after": []
+  },
+  "the_same_difference_on_both_generations": true
+ },
+ "reading": "r6 --tree 全树 27 -> 22 (delta -5); 我这三枚 7 -> 2 格; 按 shape 身份 2 形清除 / 0 形新增; 树内不属于我的文件变动 0; 与 r5 逐项一致 = False",
+ "claim_kind": "ast_module_graph_determined",
+ "claimed_result": null,
+ "derived_result": null
+}
