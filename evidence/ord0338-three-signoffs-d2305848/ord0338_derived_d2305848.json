@@ -1,0 +1,215 @@
+{
+ "schema": "CNX_LANE_E_ORD0338_DERIVED_V1",
+ "verifier": "lane E d2305848",
+ "at": "2026-09-26T06:39:17+0800",
+ "orders": {
+  "ORD-0326": {
+   "lane": "S1-q64sweep",
+   "generation": "5d7335721106c20092dd4d90181bb99accd0a32b",
+   "cells": [
+    {
+     "cell": "user face: the two agent sinks removed, hits 28 -> 26 on the branch, the one added sink is the designated slot only, classification layer byte-untouched",
+     "derived_result": "MET",
+     "readings": {
+      "sinks_removed": [
+       "AgentComposer.tsx:185|UPSTREAM_EXCEPTION_TO_DOM",
+       "CopilotDock.tsx:450|UPSTREAM_EXCEPTION_TO_DOM",
+       "CopilotDock.tsx:770|UPSTREAM_EXCEPTION_TO_DOM"
+      ],
+      "r5_at_branch_off": 28,
+      "r5_on_branch": 26,
+      "sink_added": [
+       "ServerReasonDetail.tsx:29|UPSTREAM_TEXT_VIA_HELPER_TO_DOM"
+      ],
+      "added_is_designated_slot": true,
+      "classification_lines_changed": 0,
+      "presentation_layer": "frontend/src/lib/serverReason.ts (describeServerReason / reasonFromThrown / serverReasonScreenTexts) + frontend/src/comp",
+      "spec_4_passed": "4 passed on this branch: direction A / direction B / parked raw body / multi-line refusal, via playwright.logic.config.ts which starts no server",
+      "source": "ord0326_final_r1.json r5 + two_layers_not_two_implementations + verification"
+     }
+    },
+    {
+     "cell": "landing binds 5d733572 (READY_TO_LAND, product = the two agent files) + phone transport identity",
+     "derived_result": "MET",
+     "readings": {
+      "candidate_tip": "5d7335721106c20092dd4d90181bb99accd0a32b",
+      "verdict": "READY_TO_LAND",
+      "product_files": [
+       "frontend/src/features/agent/AgentComposer.tsx",
+       "frontend/src/features/agent/CopilotDock.tsx"
+      ],
+      "phone_overall": "DEPLOYED_AND_BYTE_IDENTICAL_ON_PHONE_SIDE",
+      "phone_index_ref": "/assets/index-CUtQgnyQ.js",
+      "phone_scope": "transport-level identity only (commander probe); no walkthrough claim",
+      "source": "ord0326_landing.json + ord0326_phone_probe.json"
+     }
+    },
+    {
+     "cell": "Q68 field table named honestly (EMITTED / NOT-EMITTED per field); Q70 anchors 0 -> row-to-fill; Q71 census flags 2 sites (JourneyTrialSetup.tsx:1247/:1248, error message/name in data-*) - adjudicated in the census for their owner, neither is in the two agent files this landing touched",
+     "derived_result": "MET",
+     "readings": {
+      "fields": {
+       "http_status": "EMITTED",
+       "content_type": "EMITTED but read on one leg only (api/citynexus.ts:686 guard)",
+       "body_bytes": "NOT-EMITTED (length discarded at api/citynexus.ts:663)",
+       "response_received": "not a field; encoded as evidence_kind (lib/failureAttribution.ts:42)",
+       "elapsed_ms": "NOT-EMITTED on this path",
+       "request_id": "NOT-EMITTED (0 hits in main.py; see request_id_ruling_applied)"
+      },
+      "q70_anchor_sites_anywhere": 0,
+      "q70_disposition": "row-to-fill per order wording (missing != violation)",
+      "q71_sites_all": [
+       {
+        "path": "frontend/src/features/setup/JourneyTrialSetup.tsx",
+        "line": 1248,
+        "verdict": "Q71_SITE_CARRYING_AN_EXCEPTION_MESSAGE"
+       },
+       {
+        "path": "frontend/src/features/setup/JourneyTrialSetup.tsx",
+        "line": 1247,
+        "verdict": "Q71_SITE_CARRYING_AN_EXCEPTION_NAME"
+       }
+      ],
+      "q71_in_this_landing_scope": [],
+      "q71_note": "flagged sites belong to setup/JourneyTrialSetup.tsx (not touched by 0326's two agent files)",
+      "source": "ord0326_final_r1.json field_arrival_copilot_path + q70_q71_attribute_census_r1.json"
+     }
+    }
+   ],
+   "top_level_derived_result": "ALL_MET"
+  },
+  "ORD-0334": {
+   "lane": "S2-hermes-port",
+   "generation": "a8237d7b50a1df419ae7e89ae6c075dabb6513f8",
+   "cells": [
+    {
+     "cell": "the two configured numbers are now measured and named (client 15s cap on tip vs server 45s budget); candidate gives request_replan 120s; NO observed-timeout claim (S2 declared no live timing)",
+     "derived_result": "MET",
+     "readings": {
+      "client_cap_on_tip": 15.0,
+      "server_budget": 45000,
+      "budget_locations": [
+       "backend/app/core/config.py:96",
+       "backend/app/core/config.py:95"
+      ],
+      "not_measured": "no live request_replan latency was observed tonight (no model call, no server run); the claim is the two configured numbers, not an observed timeout",
+      "arms_claimed": [
+       "per-call timeout budget: request_replan gets 120 s, every other tool keeps 15 s",
+       "a non-2xx response raises the server's own detail / error.message instead of an opaque raise_for_status()"
+      ],
+      "scope_limit": "per the order: sign only the two configured numbers + failure-text shape, NOT an observed timeout fix",
+      "source": "ord0334_receipt.json ported_increment.measured_mismatch"
+     }
+    },
+    {
+     "cell": "both arms independently red (M1 -> timeout-budget test, M2 -> error-detail test), control 8/8 green",
+     "derived_result": "MET",
+     "readings": {
+      "M0": {
+       "passed": 8,
+       "failed": 0
+      },
+      "M1_failed": [
+       "test_request_replan_gets_backend_generation_timeout_budget"
+      ],
+      "M2_failed": [
+       "test_agent_client_preserves_server_owned_error_detail"
+      ],
+      "suite_6_to_8": true,
+      "witness_file": "agent-mcp/tests/test_client_error_detail.py",
+      "source": "ord0334_receipt.json arm_cuts.readings"
+     }
+    },
+    {
+     "cell": "client.py candidate blob == hermes blob (16b21067...); landing binds a8237d7b (READY_TO_LAND)",
+     "derived_result": "MET",
+     "readings": {
+      "hermes_blob": "16b21067bf6d011698642799d3dadfa2c1ee41b7",
+      "candidate_blob": "16b21067bf6d011698642799d3dadfa2c1ee41b7",
+      "landing_candidate": "a8237d7b50a1df419ae7e89ae6c075dabb6513f8",
+      "landing_verdict": "READY_TO_LAND",
+      "landing_subject": "ORD-0334 (lane S2 d9e2c9ae): MCP client honours the server's write budget for request_replan",
+      "source": "ord0334_receipt.json + ord0334_landing.json + post_landing_r1.json"
+     }
+    }
+   ],
+   "top_level_derived_result": "ALL_MET"
+  },
+  "ORD-0336": {
+   "lane": "S2-hermes-port",
+   "generation": "f45489c6d17f16973faad161618789237ac3814e (current tip per order)",
+   "cells": [
+    {
+     "cell": "16/16 checks met, self-test proven (flipping any check flips the verdict); identity form excluded two ways",
+     "derived_result": "MET",
+     "readings": {
+      "checks_met": "16_of_16",
+      "selftest": true,
+      "identity_counts": {
+       "hermes_identity_def_sites": 1,
+       "hermes_identity_call_sites": 3,
+       "tip_identity_sites": 0,
+       "tip_literal_principal_sites": 3,
+       "hermes_literal_principal_sites": 0
+      },
+      "deferred_to": "ORD-0337",
+      "source": "ord0336_receipt_r1.json checks + form_not_ported"
+     }
+    },
+    {
+     "cell": "forms A/B/C each have their own red (A1, B1, C1+C2); red union 4 == sum 4 -> arms do not cover each other",
+     "derived_result": "MET",
+     "readings": {
+      "red_sets": {
+       "A1_tool_guidance": [
+        "test_context_guidance_describes_server_owned_replan_and_search_facts"
+       ],
+       "B1_request_id_boundary": [
+        "test_real_mcp_v2_stdio_protocol_discovers_coherent_inspect_plan_act_surface"
+       ],
+       "C1_proposal_views": [
+        "test_request_replan_emits_a_validated_full_fidelity_proposal_view",
+        "test_request_replan_rejects_incomplete_candidate_projection"
+       ]
+      },
+      "union": 4,
+      "sum": 4,
+      "source": "ord0336_receipt_r1.json readings.red_sets + red_union_size_vs_sum"
+     }
+    },
+    {
+     "cell": "collection clean before/after, harness +6 all ran; landing binds f45489c6 (READY_TO_LAND, 12 passed gate)",
+     "derived_result": "MET",
+     "readings": {
+      "line_before": "8 passed in 1.56s",
+      "landing_candidate": "f45489c6d17f16973faad161618789237ac3814e",
+      "landing_verdict": "READY_TO_LAND",
+      "gate_summary": [
+       "no backend-relative targets in this request"
+      ],
+      "source": "ord0336_receipt_r1.json checks + suite_readings_r1.json + ord0336_landing.json"
+     }
+    }
+   ],
+   "top_level_derived_result": "ALL_MET"
+  }
+ },
+ "rulings_applied": {
+  "Q70": "anchors (data-cnx-field) currently 0 across the tree -> recorded as a row-to-fill, not a violation",
+  "Q71": "census flagged JourneyTrialSetup.tsx:1248 carrying error.message in data-* (adjudicated to its owner; not among the files these three landings touched)",
+  "Q68": "field table columns named honestly (EMITTED / NOT-EMITTED / not-a-field)"
+ },
+ "derivation_rule": "every cell verdict is computed from the readings named in its own readings.source (the candidates' published receipts); no PASS literal; per Q25 each verdict is bound to the generation its readings were taken on",
+ "top_level": {
+  "ORD-0326": "ALL_MET",
+  "ORD-0334": "ALL_MET",
+  "ORD-0336": "ALL_MET"
+ },
+ "discipline": {
+  "product_bytes_changed": 0,
+  "refs_pushed": 0,
+  "demo_reset": 0,
+  "databases_opened_by_me": 0,
+  "credential_values_printed": 0
+ }
+}
