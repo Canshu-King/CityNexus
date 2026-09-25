@@ -1,0 +1,857 @@
+{
+ "order": "ORD-0301 pass 3 - same chain, two answer classes",
+ "lane": "HJ-P3 aad2d1f2-4de9-406b-a5df-afa0e2bcea58",
+ "asked_in": "号令者 494abfd7 21:5x: 撤我对你 C2 的挑战 + 你 ORD-0301 的射程表继续，三处修正",
+ "corrections_answered": {
+  "1_no_more_same_request_proof_required": "accepted; the batch still pairs by an id the hop mints, because it costs nothing once the chain is in place",
+  "2_both_sides_from_one_chain": "cell K1",
+  "3_non_json_vs_envelope_4xx_separated": "cells K2 and K3, with the control K4"
+ },
+ "measured_on_how_read": "generations read by git ls-remote / git archive exports and rebuilt into my own outDirs; the served generation pinned by the asset name taken out of the served index.html; every arm answer read from the hop audit line written for that request",
+ "scored_run": "p3_scored.json",
+ "scorer": "instruments/p3_score.py",
+ "arms_scored": 9,
+ "arms_excluded": 5,
+ "derived_summary": {
+  "booleans_true": 25,
+  "booleans_total": 25,
+  "all_hold": true
+ },
+ "cells": [
+  {
+   "id": "K1_one_chain_both_ends_of_the_same_leg",
+   "verdict": "CORRECTION_2_MET_EVERY_LEG_PAIRED_AT_BOTH_ENDS_OF_ONE_HOP",
+   "claim": "the server-side reading and the screen-side reading of a leg are taken inside ONE proxy chain, keyed by an id the hop minted for that request, so a later shift can use the pair as publication-grade evidence without supplementing it",
+   "measured_on": "both generations: 7856e03f6238da3000976eb6e690a448dfa39b9a (deployed, guarded) and dc964086c9d412573ac19d70b24b30e6c3ee6168 (unguarded)",
+   "derived_from": "the 8 ids this hop minted for the scored legs - hjp3p3-e56f4b07d6694004, hjp3p3-ec66be6abd94457b, hjp3p3-2f47a57d90ed4499, hjp3p3-8b63e56ade2d4250, hjp3p3-709a655b58234db6, hjp3p3-95a834c454894a7b, hjp3p3-8bf6a202320a4d52, hjp3p3-bad7557080574936 - each named once in pair_ids_of_the_scored_arms below",
+   "readings": {
+    "pairing": [
+     {
+      "gen": "dep",
+      "scenario": "hoplock",
+      "spec_name": null,
+      "pair_id": "hjp3p3-e56f4b07d6694004",
+      "one_request_one_id": true,
+      "answer_producer": "product",
+      "server_status": 500,
+      "page_status": 500,
+      "page_fetch_rejected": false,
+      "browser_stack_status": 500,
+      "app_body_parse_failed": true,
+      "both_ends_agree_on_status": true,
+      "both_ends_agree_on_json_class": true,
+      "access_log_lines_naming_the_leg": 1
+     },
+     {
+      "gen": "old",
+      "scenario": "hoplock",
+      "spec_name": null,
+      "pair_id": "hjp3p3-ec66be6abd94457b",
+      "one_request_one_id": true,
+      "answer_producer": "product",
+      "server_status": 500,
+      "page_status": 500,
+      "page_fetch_rejected": false,
+      "browser_stack_status": 500,
+      "app_body_parse_failed": true,
+      "both_ends_agree_on_status": true,
+      "both_ends_agree_on_json_class": true,
+      "access_log_lines_naming_the_leg": 1
+     },
+     {
+      "gen": "dep",
+      "scenario": "product",
+      "spec_name": null,
+      "pair_id": "hjp3p3-2f47a57d90ed4499",
+      "one_request_one_id": true,
+      "answer_producer": "product",
+      "server_status": 422,
+      "page_status": 422,
+      "page_fetch_rejected": false,
+      "browser_stack_status": 422,
+      "app_body_parse_failed": false,
+      "both_ends_agree_on_status": true,
+      "both_ends_agree_on_json_class": true,
+      "access_log_lines_naming_the_leg": 1
+     },
+     {
+      "gen": "old",
+      "scenario": "product",
+      "spec_name": null,
+      "pair_id": "hjp3p3-8b63e56ade2d4250",
+      "one_request_one_id": true,
+      "answer_producer": "product",
+      "server_status": 422,
+      "page_status": 422,
+      "page_fetch_rejected": false,
+      "browser_stack_status": 422,
+      "app_body_parse_failed": false,
+      "both_ends_agree_on_status": true,
+      "both_ends_agree_on_json_class": true,
+      "access_log_lines_naming_the_leg": 1
+     },
+     {
+      "gen": "dep",
+      "scenario": "spec",
+      "spec_name": "nonjson_422",
+      "pair_id": "hjp3p3-709a655b58234db6",
+      "one_request_one_id": true,
+      "answer_producer": "instrument_origin_per_spec",
+      "server_status": 422,
+      "page_status": 422,
+      "page_fetch_rejected": false,
+      "browser_stack_status": 422,
+      "app_body_parse_failed": true,
+      "both_ends_agree_on_status": true,
+      "both_ends_agree_on_json_class": true,
+      "access_log_lines_naming_the_leg": 0
+     },
+     {
+      "gen": "old",
+      "scenario": "spec",
+      "spec_name": "nonjson_422",
+      "pair_id": "hjp3p3-95a834c454894a7b",
+      "one_request_one_id": true,
+      "answer_producer": "instrument_origin_per_spec",
+      "server_status": 422,
+      "page_status": 422,
+      "page_fetch_rejected": false,
+      "browser_stack_status": 422,
+      "app_body_parse_failed": true,
+      "both_ends_agree_on_status": true,
+      "both_ends_agree_on_json_class": true,
+      "access_log_lines_naming_the_leg": 0
+     },
+     {
+      "gen": "dep",
+      "scenario": "spec",
+      "spec_name": "json_envelope_500",
+      "pair_id": "hjp3p3-8bf6a202320a4d52",
+      "one_request_one_id": true,
+      "answer_producer": "instrument_origin_per_spec",
+      "server_status": 500,
+      "page_status": 500,
+      "page_fetch_rejected": false,
+      "browser_stack_status": 500,
+      "app_body_parse_failed": false,
+      "both_ends_agree_on_status": true,
+      "both_ends_agree_on_json_class": true,
+      "access_log_lines_naming_the_leg": 0
+     },
+     {
+      "gen": "old",
+      "scenario": "spec",
+      "spec_name": "json_envelope_500",
+      "pair_id": "hjp3p3-bad7557080574936",
+      "one_request_one_id": true,
+      "answer_producer": "instrument_origin_per_spec",
+      "server_status": 500,
+      "page_status": 500,
+      "page_fetch_rejected": false,
+      "browser_stack_status": 500,
+      "app_body_parse_failed": false,
+      "both_ends_agree_on_status": true,
+      "both_ends_agree_on_json_class": true,
+      "access_log_lines_naming_the_leg": 0
+     },
+     {
+      "gen": "dep",
+      "scenario": "abort",
+      "spec_name": null,
+      "pair_id": null,
+      "one_request_one_id": false,
+      "answer_producer": "nobody_answered_this_leg",
+      "server_status": null,
+      "page_status": null,
+      "page_fetch_rejected": true,
+      "browser_stack_status": null,
+      "app_body_parse_failed": false,
+      "both_ends_agree_on_status": false,
+      "both_ends_agree_on_json_class": false,
+      "access_log_lines_naming_the_leg": 0
+     }
+    ],
+    "pair_ids_of_the_scored_arms": [
+     "hjp3p3-e56f4b07d6694004",
+     "hjp3p3-ec66be6abd94457b",
+     "hjp3p3-2f47a57d90ed4499",
+     "hjp3p3-8b63e56ade2d4250",
+     "hjp3p3-709a655b58234db6",
+     "hjp3p3-95a834c454894a7b",
+     "hjp3p3-8bf6a202320a4d52",
+     "hjp3p3-bad7557080574936",
+     null
+    ],
+    "chain": {
+     "hop_port": 8652,
+     "backend_port": 8651,
+     "how_the_id_travels": "minted at accept time in p3proxy.py and written into the answer header X-HJP3-Pair; the hop never reads it from a request",
+     "readers_of_the_same_id": [
+      "the hop audit line",
+      "the page fetch (Response object)",
+      "the browser network stack via page.on(response)",
+      "the app own Response.prototype.json call"
+     ]
+    },
+    "counts": {
+     "arms": 9,
+     "write_legs_per_arm": [
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1
+     ],
+     "producer_counts": {
+      "product": 4,
+      "instrument": 4,
+      "never_answered": 1
+     },
+     "audit_lines_from_scored_arms": 8,
+     "distinct_ids_the_hop_wrote": 274,
+     "hop_log_lines_on_disk": 274
+    },
+    "no_second_probe_of_the_backend": true
+   },
+   "why": "9 scored arms sent 9 write legs between them, each carrying one of these ids (hjp3p3-e56f4b07d6694004 hjp3p3-ec66be6abd94457b hjp3p3-2f47a57d90ed4499 hjp3p3-8b63e56ade2d4250 hjp3p3-709a655b58234db6 hjp3p3-95a834c454894a7b hjp3p3-8bf6a202320a4d52 hjp3p3-bad7557080574936); every id matched exactly 1 audit line and 1 browser-stack record, the 8 ids are distinct against a hop log of 274 lines, the two ends agreed on status in all 8 legs that were answered at all and on the JSON class in the same set, and 4 of the legs were answered by the product itself (each named by exactly 1 backend access-log line) while 4 were answered by my hop and say so"
+  },
+  {
+   "id": "K2_row_non_json_body",
+   "verdict": "CLASS_SEPARATED_CONTENTLESS_ANSWER_RENDERS_AS_OWN_READING_OR_AS_UNREACHABLE",
+   "claim": "row 1 of the separation: an answer whose body is not JSON paints differently depending on which bundle is loaded, and never as \"the server said this\"",
+   "measured_on": "7856e03f and dc964086",
+   "derived_from": "the 4 non-JSON arms P3-223608, P3-223703, P3-222816, P3-222841, whose contentless answer is 21 B of text/plain; charset=utf-8 produced under a write lock this hop held (rows_touched 2, second writer refused True)",
+   "readings": {
+    "deployed_bundle": [
+     {
+      "run_id": "P3-223608",
+      "gen": "dep",
+      "scenario": "hoplock",
+      "spec_name": null,
+      "answer_producer": "product",
+      "server_status": 500,
+      "server_bytes": 21,
+      "server_content_type": "text/plain; charset=utf-8",
+      "server_body_is_json": false,
+      "page_status": 500,
+      "app_body_parse_failed": true,
+      "card_status": "HTTP_500",
+      "card_title": "服务端处理失败",
+      "attribution_label": "这台设备自己的读数（服务器没给句子）",
+      "reason_text": "agent/commands -> HTTP 500",
+      "details_blocks": 1,
+      "detail_toggle_present": true,
+      "origin_attribute": "device"
+     },
+     {
+      "run_id": "P3-222816",
+      "gen": "dep",
+      "scenario": "spec",
+      "spec_name": "nonjson_422",
+      "answer_producer": "instrument_origin_per_spec",
+      "server_status": 422,
+      "server_bytes": 25,
+      "server_content_type": "text/plain; charset=utf-8",
+      "server_body_is_json": false,
+      "page_status": 422,
+      "app_body_parse_failed": true,
+      "card_status": "HTTP_422",
+      "card_title": "这个要求被明确拒绝",
+      "attribution_label": "这台设备自己的读数（服务器没给句子）",
+      "reason_text": "agent/commands -> HTTP 422",
+      "details_blocks": 1,
+      "detail_toggle_present": true,
+      "origin_attribute": "device"
+     }
+    ],
+    "unguarded_bundle": [
+     {
+      "run_id": "P3-223703",
+      "gen": "old",
+      "scenario": "hoplock",
+      "spec_name": null,
+      "answer_producer": "product",
+      "server_status": 500,
+      "server_bytes": 21,
+      "server_content_type": "text/plain; charset=utf-8",
+      "server_body_is_json": false,
+      "page_status": 500,
+      "app_body_parse_failed": true,
+      "card_status": "NETWORK",
+      "card_title": "连不上服务端",
+      "attribution_label": null,
+      "reason_text": null,
+      "details_blocks": 0,
+      "detail_toggle_present": false,
+      "origin_attribute": null
+     },
+     {
+      "run_id": "P3-222841",
+      "gen": "old",
+      "scenario": "spec",
+      "spec_name": "nonjson_422",
+      "answer_producer": "instrument_origin_per_spec",
+      "server_status": 422,
+      "server_bytes": 25,
+      "server_content_type": "text/plain; charset=utf-8",
+      "server_body_is_json": false,
+      "page_status": 422,
+      "app_body_parse_failed": true,
+      "card_status": "NETWORK",
+      "card_title": "连不上服务端",
+      "attribution_label": null,
+      "reason_text": null,
+      "details_blocks": 0,
+      "detail_toggle_present": false,
+      "origin_attribute": null
+     }
+    ],
+    "contentless_answer_as_the_product_sent_it": {
+     "bytes": 21,
+     "content_type": "text/plain; charset=utf-8",
+     "body": "Internal Server Error",
+     "elapsed_ms": 32508,
+     "contention": {
+      "db": "D:\\moodle\\_hjp3_0301p3_0925\\p3_dep.s3db",
+      "hold_seconds_planned": 45,
+      "acquired": true,
+      "rows_touched": 2,
+      "second_writer_refused": true,
+      "acquired_after_ms": 8,
+      "release": {
+       "held_ms_around_the_forward": 32508,
+       "rolled_back": true
+      }
+     }
+    },
+    "painted": {
+     "dep_500": "服务端处理失败这次是服务端出错，不是你的需求有问题。行程未被改动，可稍后重试；反复出现请保留“技术详情”。技术详情这台设备自己的读数（服务器没给句子）agent/commands -> HTTP 500",
+     "dep_422": "这个要求被明确拒绝服务端说明了原因（见“技术详情”）。你的行程没有被改动，按原因调整条件或换个说法再试。技术详情这台设备自己的读数（服务器没给句子）agent/commands -> HTTP 422",
+     "old_500": "连不上服务端网络或后端没有响应，这与你的需求内容无关。你的行程没有被改动，检查网络后可以重试。",
+     "old_422": "连不上服务端网络或后端没有响应，这与你的需求内容无关。你的行程没有被改动，检查网络后可以重试。"
+    },
+    "server_sentence_in_any_of_the_four": false
+   },
+   "why": "the product's own contended answer is 21 B of text/plain; charset=utf-8 reading \"Internal Server Error\" after 32508 ms (write lock held by the pairing hop itself, rows_touched 2, second writer refused True); on 7856e03f that renders as 「服务端处理失败」 labelled 「这台设备自己的读数（服务器没给句子）」 with the note \"agent/commands -> HTTP 500\", and the same class at 422 (25 B, run P3-222816) renders 「这个要求被明确拒绝」 with that same device label; on dc964086 both non-JSON answers instead render 「连不上服务端」 with 0 detail blocks and no attribution label at all"
+  },
+  {
+   "id": "K3_row_json_envelope_4xx",
+   "verdict": "CLASS_SEPARATED_AN_OBJECT_BODY_CARRIES_THE_SERVER_SENTENCE_ON_BOTH_BUNDLES",
+   "claim": "row 2: an answer carrying the product's error envelope is read as the server speaking, on both bundles, so this class is not a quieter version of row 1 - it is a different outcome",
+   "measured_on": "7856e03f and dc964086",
+   "derived_from": "the 2 envelope arms P3-222513, P3-222752, whose 323 B application/json body has top-level key ['error'] after the one-key request edit p3_forbidden_probe",
+   "readings": {
+    "arms": [
+     {
+      "run_id": "P3-222513",
+      "gen": "dep",
+      "scenario": "product",
+      "spec_name": null,
+      "answer_producer": "product",
+      "server_status": 422,
+      "server_bytes": 323,
+      "server_content_type": "application/json",
+      "server_body_is_json": true,
+      "page_status": 422,
+      "app_body_parse_failed": false,
+      "card_status": "HTTP_422",
+      "card_title": "这个要求被明确拒绝",
+      "attribution_label": "服务器给出的原因",
+      "reason_text": "Request validation failed",
+      "details_blocks": 1,
+      "detail_toggle_present": true,
+      "origin_attribute": "server",
+      "server_top_level_keys": [
+       "error"
+      ],
+      "server_body_head": "{\"error\":{\"code\":\"VALIDATION_ERROR\",\"message\":\"Request validation failed\",\"message_key\":\"request.invalid\",\"trace_id\":\"c275f579-8ad0-4285-95a4-eb895d6fca6b\",\"det",
+      "server_elapsed_ms": 22
+     },
+     {
+      "run_id": "P3-222752",
+      "gen": "old",
+      "scenario": "product",
+      "spec_name": null,
+      "answer_producer": "product",
+      "server_status": 422,
+      "server_bytes": 323,
+      "server_content_type": "application/json",
+      "server_body_is_json": true,
+      "page_status": 422,
+      "app_body_parse_failed": false,
+      "card_status": "HTTP_422",
+      "card_title": "这个要求被明确拒绝",
+      "attribution_label": "服务器给出的原因",
+      "reason_text": "Request validation failed",
+      "details_blocks": 1,
+      "detail_toggle_present": true,
+      "origin_attribute": "server",
+      "server_top_level_keys": [
+       "error"
+      ],
+      "server_body_head": "{\"error\":{\"code\":\"VALIDATION_ERROR\",\"message\":\"Request validation failed\",\"message_key\":\"request.invalid\",\"trace_id\":\"b542bd77-af8a-4e01-b803-1cbd64fefbb8\",\"det",
+      "server_elapsed_ms": 23
+     }
+    ],
+    "how_a_real_4xx_was_obtained_without_fabricating_it": {
+     "added_key": "p3_forbidden_probe",
+     "keys_before": [
+      "command"
+     ],
+     "keys_after": [
+      "command",
+      "p3_forbidden_probe"
+     ],
+     "request_bytes_before": 59,
+     "request_bytes_after": 85,
+     "sha256_before": "06132450c24518927deb5866f1b0bb8120aadfdad0286a5a2ef3e01857695351",
+     "sha256_after": "b3b04eb87db1921ac600e78afbd53a2236695834e279dec8329f3f08ec8b9e6b",
+     "who_sent_what": "the page sent the untouched body; this hop added the key, and the product answered with its own envelope"
+    },
+    "app_read_the_same_object": {
+     "url": "http://127.0.0.1:8653/api/v1/journeys/6506c6ac-6dc2-412e-8961-95cc18ff79e5/agent/commands",
+     "status": 422,
+     "pair_id": "hjp3p3-2f47a57d90ed4499",
+     "content_type": "application/json",
+     "at_wall": "2026-09-25T14:25:22.609Z",
+     "parsed": true,
+     "top_type": "object",
+     "top_keys": [
+      "error"
+     ],
+     "error_keys": [
+      "code",
+      "message",
+      "message_key",
+      "trace_id",
+      "details"
+     ],
+     "error_message_type": "string",
+     "detail_type": "undefined"
+    },
+    "painted_on_deployed": "这个要求被明确拒绝服务端说明了原因（见“技术详情”）。你的行程没有被改动，按原因调整条件或换个说法再试。技术详情服务器给出的原因Request validation failed",
+    "painted_on_unguarded": "这个要求被明确拒绝服务端说明了原因（见“技术详情”）。你的行程没有被改动，按原因调整条件或换个说法再试。技术详情服务器给出的原因Request validation failed"
+   },
+   "why": "the hop added one forbidden key (p3_forbidden_probe: 59 B -> 85 B, sha256 06132450c2451892 -> b3b04eb87db1921a) to the page's own body and the product answered 422 with 323 B of application/json whose only top-level key is ['error']; the app parsed that object (parsed=True) and both bundles (P3-222513 and P3-222752) printed the label 「服务器给出的原因」 over the server's own sentence \"Request validation failed\" inside 1 detail block, where the non-JSON arms printed no server sentence at all"
+  },
+  {
+   "id": "K4_the_class_is_the_body_not_the_status",
+   "verdict": "DISCRIMINATOR_IS_BODY_SHAPE_FOUR_FLIPS_ZERO_COUNTEREXAMPLES",
+   "claim": "the root cause says the screen branches on whether the body parsed, not on the status code; this cell tests that by holding the status fixed and changing only the body",
+   "measured_on": "4 fixed-status pairs, on both bundles",
+   "derived_from": "the two sheet blobs the flips are explained by: unguarded fd5f6e5ba2771a8d12669b9bec1ba91590970701 and guarded f61d5312e8b33807d3e5304d1fa9fb7f77a518aa",
+   "readings": {
+    "pairs": [
+     {
+      "gen": "dep",
+      "status": 422,
+      "non_json_label": "这台设备自己的读数（服务器没给句子）",
+      "non_json_card": "HTTP_422",
+      "envelope_label": "服务器给出的原因",
+      "envelope_card": "HTTP_422",
+      "card_or_label_differs": true
+     },
+     {
+      "gen": "dep",
+      "status": 500,
+      "non_json_label": "这台设备自己的读数（服务器没给句子）",
+      "non_json_card": "HTTP_500",
+      "envelope_label": "服务器给出的原因",
+      "envelope_card": "HTTP_500",
+      "card_or_label_differs": true
+     },
+     {
+      "gen": "old",
+      "status": 422,
+      "non_json_label": null,
+      "non_json_card": "NETWORK",
+      "envelope_label": "服务器给出的原因",
+      "envelope_card": "HTTP_422",
+      "card_or_label_differs": true
+     },
+     {
+      "gen": "old",
+      "status": 500,
+      "non_json_label": null,
+      "non_json_card": "NETWORK",
+      "envelope_label": "服务器给出的原因",
+      "envelope_card": "HTTP_500",
+      "card_or_label_differs": true
+     }
+    ],
+    "class_cells_total": 8,
+    "arms_per_class_cell": {
+     "dep | 422 | False": 1,
+     "dep | 422 | True": 1,
+     "dep | 500 | False": 1,
+     "dep | 500 | True": 1,
+     "old | 422 | False": 1,
+     "old | 422 | True": 1,
+     "old | 500 | False": 1,
+     "old | 500 | True": 1
+    },
+    "class_cells_run_more_than_once": {},
+    "source_side_of_the_mechanism": {
+     "unguarded_sheet": {
+      "tip": "dc964086c9d412573ac19d70b24b30e6c3ee6168",
+      "sheet_blob_sha1_40_hex": "fd5f6e5ba2771a8d12669b9bec1ba91590970701",
+      "sheet_bytes": 49063,
+      "unguarded_detail_read_lines": [
+       147,
+       155
+      ],
+      "guarded_detail_read_lines": [],
+      "device_note_lines": []
+     },
+     "deployed_sheet": {
+      "tip": "7856e03f6238da3000976eb6e690a448dfa39b9a",
+      "sheet_blob_sha1_40_hex": "f61d5312e8b33807d3e5304d1fa9fb7f77a518aa",
+      "sheet_bytes": 50281,
+      "unguarded_detail_read_lines": [],
+      "guarded_detail_read_lines": [
+       147,
+       155
+      ],
+      "device_note_lines": [
+       761
+      ]
+     }
+    },
+    "crash_leaves_no_console_trace": [
+     {
+      "gen": "dep",
+      "scenario": "hoplock",
+      "spec_name": null,
+      "server_status": 500,
+      "server_body_is_json": false,
+      "page_errors": []
+     },
+     {
+      "gen": "old",
+      "scenario": "hoplock",
+      "spec_name": null,
+      "server_status": 500,
+      "server_body_is_json": false,
+      "page_errors": []
+     },
+     {
+      "gen": "dep",
+      "scenario": "product",
+      "spec_name": null,
+      "server_status": 422,
+      "server_body_is_json": true,
+      "page_errors": []
+     },
+     {
+      "gen": "old",
+      "scenario": "product",
+      "spec_name": null,
+      "server_status": 422,
+      "server_body_is_json": true,
+      "page_errors": []
+     },
+     {
+      "gen": "dep",
+      "scenario": "spec",
+      "spec_name": "nonjson_422",
+      "server_status": 422,
+      "server_body_is_json": false,
+      "page_errors": []
+     },
+     {
+      "gen": "old",
+      "scenario": "spec",
+      "spec_name": "nonjson_422",
+      "server_status": 422,
+      "server_body_is_json": false,
+      "page_errors": []
+     },
+     {
+      "gen": "dep",
+      "scenario": "spec",
+      "spec_name": "json_envelope_500",
+      "server_status": 500,
+      "server_body_is_json": true,
+      "page_errors": []
+     },
+     {
+      "gen": "old",
+      "scenario": "spec",
+      "spec_name": "json_envelope_500",
+      "server_status": 500,
+      "server_body_is_json": true,
+      "page_errors": []
+     },
+     {
+      "gen": "dep",
+      "scenario": "abort",
+      "spec_name": null,
+      "server_status": null,
+      "server_body_is_json": null,
+      "page_errors": []
+     }
+    ]
+   },
+   "why": "at a fixed 422 the deployed bundle moves from 「HTTP_422」 labelled 「这台设备自己的读数（服务器没给句子）」 to 「HTTP_422」 labelled 「服务器给出的原因」 when only the body changes, and at a fixed 500 the same flip happens; on dc964086 a non-JSON body gives 「NETWORK」 with 0 detail blocks while an object body at that same status gives 「HTTP_422」 with the server sentence - 4 flips, no counterexample, and the lines that decide it are the unguarded reads at [147, 155] of sheet fd5f6e5ba2771a8d12669b9bec1ba91590970701 versus the guarded reads at [147, 155] of sheet f61d5312e8b33807d3e5304d1fa9fb7f77a518aa"
+  },
+  {
+   "id": "K5_the_deployed_bundle_is_the_guarded_one",
+   "verdict": "MEASURED_ON_THE_GENERATION_THE_SHARED_PAGE_SERVES",
+   "claim": "which bundle the traveller is looking at is a byte question, and this batch answered it before scoring anything: the asset name was taken out of the served index.html, then each candidate was rebuilt and hashed",
+   "measured_on": "the shared chain, read with 2 GETs and 0 writes",
+   "derived_from": "the served asset assets/index-DWgtVWb0.js against my two builds /assets/index-DWgtVWb0.js and /assets/index--q2k569d.js, recorded by served_generation_bind_c2.json",
+   "readings": {
+    "served": {
+     "served_index_http_status": 200,
+     "asset_referenced_by_the_served_page": "assets/index-DWgtVWb0.js",
+     "served_asset_bytes": 1255094,
+     "served_asset_sha256_64_hex": "1c90b81eca9e8947b05821586b6c1d2af2ff69487f266006d3d7ae16bd74c51c",
+     "my_dep_build_asset": "assets/index-DWgtVWb0.js",
+     "my_dep_build_sha256_64_hex": "1c90b81eca9e8947b05821586b6c1d2af2ff69487f266006d3d7ae16bd74c51c",
+     "candidate_verdict": {
+      "served_asset_name_taken_from_the_served_page": true,
+      "exactly_one_candidate_build_equals_the_served_asset": true,
+      "which_candidate_it_is": "7856e03f",
+      "served_tip_full_40_hex": "7856e03f6238da3000976eb6e690a448dfa39b9a",
+      "commander_claim_that_the_phone_is_on_dc964086": false,
+      "my_own_20_0x_claim_that_it_was_5aff3722": false
+     },
+     "binding_instrument": "instruments/p3_setup.py",
+     "binding_file": "served_generation_bind_c2.json"
+    },
+    "my_builds": {
+     "dep": {
+      "tip": "7856e03f6238da3000976eb6e690a448dfa39b9a",
+      "outdir": "dist_7856e03f",
+      "asset_referenced_by_my_built_index": "/assets/index-DWgtVWb0.js",
+      "bytes": 1255094,
+      "sha256_64_hex": "1c90b81eca9e8947b05821586b6c1d2af2ff69487f266006d3d7ae16bd74c51c",
+      "device_note_lines": [
+       761
+      ]
+     },
+     "old": {
+      "tip": "dc964086c9d412573ac19d70b24b30e6c3ee6168",
+      "outdir": "dist_dc964086",
+      "asset_referenced_by_my_built_index": "/assets/index--q2k569d.js",
+      "bytes": 1253228,
+      "sha256_64_hex": "a55e8bcebe3cae47eacc485fb19c4381211ac6b437de2a495ce5f59493d4bf93",
+      "device_note_lines": []
+     }
+    },
+    "candidate_verdict": {
+     "served_asset_name_taken_from_the_served_page": true,
+     "exactly_one_candidate_build_equals_the_served_asset": true,
+     "which_candidate_it_is": "7856e03f",
+     "served_tip_full_40_hex": "7856e03f6238da3000976eb6e690a448dfa39b9a",
+     "commander_claim_that_the_phone_is_on_dc964086": false,
+     "my_own_20_0x_claim_that_it_was_5aff3722": false
+    },
+    "requests_to_the_phone_chain": {
+     "GET": 2,
+     "writes": 0,
+     "endpoint": "127.0.0.1:4781",
+     "probe_file": "served_generation_bind_c2.json",
+     "instrument": "instruments/p3_setup.py"
+    }
+   },
+   "why": "the served index.html answered HTTP 200 and references assets/index-DWgtVWb0.js, 1255094 B, sha256 1c90b81eca9e8947; of the three candidates I rebuilt exactly one matches it - mine from 7856e03f into dist_7856e03f (asset assets/index-DWgtVWb0.js, 1255094 B, sha256 1c90b81eca9e8947, equal=True) - and that sheet is the guarded one (device note at line [761]), whereas dc964086 builds to /assets/index--q2k569d.js and carries 0 such line"
+  },
+  {
+   "id": "K6_two_published_generation_claims_are_withdrawn",
+   "verdict": "CORRECTIONS_ISSUE_FROM_BYTES_NOT_FROM_MEMORY",
+   "claim": "what this batch contradicts about itself and about the relayed note, plus the one card that still legitimately means \"unreachable\" on the deployed bundle",
+   "measured_on": "the same served page, and one arm whose leg never reached the hop",
+   "derived_from": "the published copy of my own wrong sentence in evidence/ord0300-c2-pairing-hjp3/RECEIPT_O0300C2-1955_r3.md and in evidence/ord0300-c2-pairing-hjp3/boundary_proof_c2.json, and the note the aborted leg painted in P3-222950",
+   "readings": {
+    "commander_claim_phone_on_dc964086_scored": false,
+    "my_own_20_0x_claim_5aff3722_scored": false,
+    "where_my_wrong_sentence_lives": {
+     "path": "evidence/ord0300-c2-pairing-hjp3/RECEIPT_O0300C2-1955_r3.md",
+     "also_in": [
+      "evidence/ord0300-c2-pairing-hjp3/RECEIPT_O0300C2-1955_r3.json",
+      "evidence/ord0300-c2-pairing-hjp3/boundary_proof_c2.json"
+     ],
+     "the_method_that_was_wrong": "I fetched an asset name taken from my own build list instead of the name the served page references, so the GET proved a file I chose, not the file in use"
+    },
+    "negative_control": {
+     "run_id": "P3-222950",
+     "gen": "dep",
+     "server_status": null,
+     "server_bytes": null,
+     "server_content_type": null,
+     "server_body_is_json": null,
+     "card_status": "NETWORK",
+     "card_title": "连不上服务端",
+     "attribution_label": "这台设备自己的读数（服务器没给句子）",
+     "reason_text": "no readable answer reached this device (network or origin)",
+     "details_blocks": 1,
+     "detail_toggle_present": true,
+     "card_text_content": "连不上服务端网络或后端没有响应，这与你的需求内容无关。你的行程没有被改动，检查网络后可以重试。技术详情这台设备自己的读数（服务器没给句子）no readable answer reached this device (network or origin)",
+     "origin_attribute": "device",
+     "audit_lines_for_its_id": 0,
+     "fetch_rejected": true
+    }
+   },
+   "why": "both earlier readings score false against the rebuilt candidates (False for dc964086, False for 5aff3722) because the served page references assets/index-DWgtVWb0.js, which is my 7856e03f build; and the card that genuinely means unreachable is still reachable: with the leg aborted in the browser (0 audit lines for its id) the deployed bundle prints 「连不上服务端」 plus \"no readable answer reached this device (network or origin)\" in 1 detail block - the one place the deployed screen may say unreachable"
+  },
+  {
+   "id": "K7_limits_exclusions_and_my_own_faults",
+   "verdict": "LIMITS_NAMED_AND_EVERY_EXCLUDED_RUN_HAS_A_MECHANICAL_TEST",
+   "claim": "the reading of what this pass cannot be used for, including the five runs I threw away because my own instrument was wrong",
+   "measured_on": "this batch's own artefacts: 14 arm files of which 5 are excluded",
+   "derived_from": "the 5 excluded runs P3-222041, P3-222548, P3-222649, P3-223228, P3-223409, and the closing teardown p3_teardown_223758.json",
+   "readings": {
+    "runs_excluded": [
+     {
+      "run_id": "P3-222041",
+      "arm": "dep_product_mutate_extra_key",
+      "file": "p3_arm_dep_product_mutate_extra_key_P3-222041.json",
+      "declared_fault": "my hop forwarded the browser's lower-case content-length AND added its own, so the two values disagreed and h11 answered 400 \"Invalid HTTP request received.\" in 1 ms - the record has no hop_headers key because that key was added by the fix",
+      "mechanical_test": "hop_forwarded_before_the_header_fix",
+      "mechanical_detail": "the hop answered in 1 ms with 30 B of text/plain; charset=utf-8: Invalid HTTP request received.",
+      "agrees_with_declared": true
+     },
+     {
+      "run_id": "P3-222548",
+      "arm": "dep_lock_pass",
+      "file": "p3_arm_dep_lock_pass_P3-222548.json",
+      "declared_fault": "the flag-file lock recipe: a separate process took the write lock on sight of a flag, the hub re-read under that lock, and the submit control was aria-disabled when Playwright asked, so no leg left the page",
+      "mechanical_test": "no_write_leg_recorded",
+      "mechanical_detail": "the page never sent the leg (node_rc=4), so there is nothing on either end to pair",
+      "agrees_with_declared": true
+     },
+     {
+      "run_id": "P3-222649",
+      "arm": "old_lock_pass",
+      "file": "p3_arm_old_lock_pass_P3-222649.json",
+      "declared_fault": "same flag-file recipe on the other generation, same outcome (0 write legs)",
+      "mechanical_test": "no_write_leg_recorded",
+      "mechanical_detail": "the page never sent the leg (node_rc=4), so there is nothing on either end to pair",
+      "agrees_with_declared": true
+     },
+     {
+      "run_id": "P3-223228",
+      "arm": "dep_hoplock_lock_behind_hop",
+      "file": "p3_arm_dep_hoplock_lock_behind_hop_P3-223228.json",
+      "declared_fault": "the runner put the --shot flag in the request-text slot, so the traveller's sentence became \"--shot\" (6 chars), the sheet's own 8-character gate refused to send, and the arm timed out",
+      "mechanical_test": "no_write_leg_recorded",
+      "mechanical_detail": "the page never sent the leg (node_rc=4), so there is nothing on either end to pair",
+      "agrees_with_declared": true
+     },
+     {
+      "run_id": "P3-223409",
+      "arm": "old_hoplock_lock_behind_hop",
+      "file": "p3_arm_old_hoplock_lock_behind_hop_P3-223409.json",
+      "declared_fault": "same --shot-slot fault on the other generation",
+      "mechanical_test": "no_write_leg_recorded",
+      "mechanical_detail": "the page never sent the leg (node_rc=4), so there is nothing on either end to pair",
+      "agrees_with_declared": true
+     }
+    ],
+    "retry_siblings_not_scored": {},
+    "ports_named_by_this_batch": {
+     "backend": 8651,
+     "proxy": 8652,
+     "face_dep": 8653,
+     "face_old": 8654
+    },
+    "last_teardown": {
+     "file": "p3_teardown_223758.json",
+     "all_my_ports_free": true,
+     "listening_after": {
+      "backend": [],
+      "proxy": [],
+      "face_dep": [],
+      "face_old": []
+     }
+    },
+    "boundaries": {
+     "forbidden_names_found_as_an_action": {
+      "demo/reset": [],
+      "_live.db": [],
+      "_preview.db": [],
+      "git apply": [],
+      "4782": []
+     },
+     "phone_chain": {
+      "endpoint": "127.0.0.1:4781",
+      "requests_made": 2,
+      "methods": [
+       "GET",
+       "GET"
+      ],
+      "writes": 0,
+      "credentials_sent": false,
+      "arm_artefacts_naming_that_port": 0,
+      "how_counted": "requests_made/methods/writes are fields the binding instrument wrote about its own run; the arm artefacts are counted on the left"
+     },
+     "credential_sites_in_actors": [
+      "p3_rig.py:93"
+     ],
+     "credential_assignment_sites": [],
+     "authorization_header_in_any_arm_file": false,
+     "exports_equal_their_own_commits": {
+      "dep": true,
+      "old": true
+     },
+     "boundary_verdict": {
+      "controls_found_what_they_must": true,
+      "the_use_versus_denial_classifier_has_a_positive_control": true,
+      "no_forbidden_name_appears_as_an_action": true,
+      "credential_appears_in_actors_only_where_it_is_removed": true,
+      "the_phone_chain_saw_only_reads": true,
+      "both_exports_are_their_own_commits": true,
+      "no_arm_sent_any_authorization_header": true,
+      "ALL_HOLD": true
+     },
+     "instrument": "instruments/p3_boundary.py",
+     "proof_file": "p3_boundary.json"
+    },
+    "databases": [
+     "p3_dep.s3db",
+     "p3_old.s3db"
+    ],
+    "private_outdirs": [
+     "dist_7856e03f",
+     "dist_dc964086"
+    ],
+    "unscored_observation_for_ORD_0302": "the deployed card tells the traveller 「行程未被改动」 from a fixed string on the HTTP_500 branch; this batch took no durable read of journeys or missions after that 500, so the promise is not scored here",
+    "not_measured": [
+     "what the phone itself shows right now - the serving generation was pinned by bytes, the device was not touched",
+     "whether the 21 B contentless answer survives a future deploy: it is uvicorn's own 500 body, not a product string",
+     "a 200-with-a-malformed-payload leg on this pass (pass 2 covered that class and this batch re-ran none of it)",
+     "repeat counts: 8 class cells with [1] arms each, so a schedule outcome cannot be separated from a deterministic one by this file alone",
+     "the mission-row side effects of the contended write (no durable read was taken)"
+    ]
+   },
+   "why": "4 named ports (8651, 8652, 8653, 8654) are free after p3_teardown_223758.json; 5 runs are excluded and each is caught by the same test I declared (True), of which 4 name 0 write legs (the two flag-file arms plus the two --shot-slot arms), and the pilot P3-222041 is the one whose hop record carries no hop_headers key"
+  }
+ ],
+ "boundary": {
+  "ports": {
+   "backend": 8651,
+   "proxy": 8652,
+   "face_dep": 8653,
+   "face_old": 8654
+  },
+  "teardown": "p3_teardown_223758.json",
+  "all_my_ports_free": true,
+  "phone_chain": "2 read-only GETs at the binding stage, 0 writes, 0 in arms",
+  "three_direct_POSTs_to_my_own_backend_port": "diagnostics only, named in instrument_events_disclosed, they score nothing"
+ },
+ "instrument_events_disclosed": [
+  "the first 422-envelope pilot (P3-222041) measured a protocol-level 400 because my hop forwarded the browser's lower-case content-length and added its own: fixed by dropping headers case-insensitively, and the fixed hop now records which headers it changed",
+  "the flag-file lock recipe lost the submit click twice (P3-222548, P3-222649): the hub re-reads under the write lock and the control is legitimately aria-disabled, so contention was moved inside the hop that pairs the leg",
+  "two hoplock arms (P3-223228, P3-223409) died because my runner passed --shot into the request-text slot, so the sheet refused a 6-character request; the text is now positional and recorded in the arm file",
+  "the reader first took 技术详情 contents from innerText, which reads empty while the block is folded; it now opens the block and reports both textContent and rendered innerText",
+  "three POSTs went straight to my own backend port (8651) while hunting the 400 above - one 200 mission and two 422 envelopes, all in my one-time database, all diagnostics, none a row"
+ ],
+ "derived_result": null,
+ "claimed_result": "MEASURED_NOT_GRADED",
+ "built_at_local": "2026-09-25T22:56:25+0800"
+}
