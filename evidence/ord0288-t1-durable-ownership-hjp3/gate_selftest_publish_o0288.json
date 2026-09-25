@@ -1,0 +1,47 @@
+{
+ "ran_at_local": "2026-09-25T17:34:30+0800",
+ "branch_tip_read": "09524eec74a5b44dbbbf4f3441e442f4654c4f54",
+ "prefix": "evidence/ord0288-t1-durable-ownership-hjp3",
+ "files_already_under_prefix": 50,
+ "cases": [
+  "positive: same name, same bytes -> expect SKIP",
+  "mutation: same name, one extra byte -> expect REFUSAL",
+  "negative: unseen name -> expect FRESH"
+ ],
+ "expected": {
+  "fresh": [
+   "selftest_only_brand_new_name.json"
+  ],
+  "skipped": [
+   "seed_journey.json"
+  ],
+  "refused": [
+   "seed_journey.json"
+  ]
+ },
+ "got": {
+  "fresh": [
+   "selftest_only_brand_new_name.json"
+  ],
+  "skipped": [
+   "seed_journey.json"
+  ],
+  "refused": [
+   "seed_journey.json"
+  ],
+  "refusal_reasons": [
+   "CHANGED BYTES UNDER A PUBLISHED NAME"
+  ]
+ },
+ "verdict": {
+  "positive_same_name_same_bytes_is_skipped": true,
+  "negative_unseen_name_is_fresh": true,
+  "mutation_same_name_different_bytes_is_refused": true,
+  "the_refusal_names_only_the_mutated_file": true,
+  "nothing_was_pushed_by_this_selftest": true,
+  "ALL_THREE_HOLD": true
+ },
+ "scratch_kept_for_inspection": "D:\\moodle\\_hjp3_0288t1_0925\\_gate_selftest\\changed_copy.json (one trailing space is the only difference)",
+ "changed_by_bytes": "57b64f879e6584a6b6a1d9c750fd10bf4b9ff9d6d751b6a1d45fa5c27b67bb91",
+ "original_by_bytes": "997d4a76d7f265fccb6c5033036b6a32fcc96716e1f833d444937f1cd9fa03d5"
+}
