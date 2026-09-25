@@ -144,9 +144,134 @@ for (const { id, force } of ARMS) {
   });
 }
 
-test.afterAll(() => {
+/* -------------------------------------------------------------------------------------------- X-5 arms */
+/*
+ * ORD-0302's second named cell (commander 16:0x): the `NO_PLANS_PRODUCED` card text sends the traveller to
+ * 技术详情, and on the deployed generation that block was not in the DOM at all -- a promise pointing at
+ * nothing.  Q53=① chose the fix "render the raw reading", not "soften the sentence", so the gate here is the
+ * pairing itself, read both ways:
+ *
+ *   promise in the card's own sentence  <=>  <details> count >= 1
+ *
+ * X1 drives the shape that used to break (a run that compiled, stored no reason, and left this screen with
+ * nothing usable) and requires the block to exist AND to carry a reading.  X2 is the other side: a status
+ * whose copy makes no promise (the baseline could not be read) may keep the block absent without lying.
+ * Both read RENDERED text and DOM counts, never a `data-*`; the promise is read out of the card's `<p>` and
+ * not out of the whole card, because the block's own summary says 技术详情 and would hide a deleted promise.
+ */
+type Stub = { url: string; method?: string; status?: number; body?: unknown; html?: string; abort?: boolean };
+
+async function bootWithStubs(page: Page, stubs: Stub[], arm: string) {
+  const scene = (await (await page.request.get("/api/v1/demo/scene")).json()) as { journey_id?: string };
+  const journeyId = String(scene.journey_id ?? "");
+  expect(journeyId.length > 0, node(arm, "the stage named no journey")).toBe(true);
+  await page.addInitScript((id) => {
+    localStorage.clear();
+    localStorage.setItem("citynexus.v8.journey_id", id as string);
+    localStorage.setItem("citynexus.locale", "zh-CN");
+  }, journeyId);
+  await page.setViewportSize({ width: 390, height: 844 });
+  for (const s of stubs) {
+    await page.route(s.url, async (r: Route) => {
+      if (s.method && r.request().method() !== s.method) return r.fallback();
+      if (s.abort) return r.abort();
+      if (s.html !== undefined) {
+        return r.fulfill({ status: s.status ?? 200, contentType: "text/html", body: s.html });
+      }
+      return r.fulfill({ status: s.status ?? 200, contentType: "application/json",
+                         body: JSON.stringify(s.body) });
+    });
+  }
+  await page.goto("/v8/hub", { waitUntil: "load" });
+  await expect(page.getByTestId("today-hero"), node(arm, "the hub never rendered")).toBeVisible({
+    timeout: 30_000,
+  });
+  await page.getByTestId("hub-plan-with-ai").click();
+  await page.getByTestId("plan-ai-input").fill(USER_SENTENCE);
+  await page.getByTestId("plan-ai-submit").click();
+  const result = page.getByTestId("plan-ai-result");
+  await expect(result, node(arm, "the sheet never answered")).toBeVisible({ timeout: 120_000 });
+  const cardText = clean(await result.innerText());
+  /* The promise lives in the sentence, not in the card: `innerText()` of the whole card also returns the
+     block's own 「技术详情」 summary label, so a run that deleted the promise from the wording would still
+     read as if it made one.  Reading the card's `<p>` is what makes the soft-promise mutant actually bite. */
+  const sentence = clean(await result.locator("p").first().innerText());
+  const details = page.getByTestId("plan-ai-detail-toggle");
+  const count = await details.count();
+  let reason = "";
+  let label = "";
+  let origin = "";
+  if (count > 0) {
+    await details.first().click();
+    label = clean(await page.getByTestId("plan-ai-detail-kind").innerText());
+    origin = (await page.getByTestId("plan-ai-detail-kind").getAttribute("data-reason-origin")) ?? "";
+    reason = clean(await page.getByTestId("plan-ai-reason").innerText());
+  }
+  return { arm, status: (await result.getAttribute("data-result-status")) ?? "", card_text: cardText,
+           sentence, details_count: count, promise_in_copy: sentence.includes("技术详情"), reason, label,
+           origin };
+}
+
+const MISSION_CLEAN = { mission: { id: "ord0302-mission", status: "COMPLETED", failure_reason: null,
+                                   reasoning_summary: null } };
+/* Two place rows: below two, the sheet stops at its own `<2 places` guard and never reaches the mission
+   branch X-5 is about -- the first attempt at this arm proved that by landing on BLOCKED:CATALOG_EMPTY. */
+const TWO_PLACES = [{ id: "ord0302-p1", title: "A" }, { id: "ord0302-p2", title: "B" }];
+const NO_PLANS_STUBS: Stub[] = [
+  { url: "**/api/v1/journeys/*/agent/commands", method: "POST", body: MISSION_CLEAN },
+  { url: "**/api/v1/journeys/*/plans", method: "GET", body: [] },
+  { url: "**/api/v1/journeys/*/plans/generate", method: "POST", body: { plans: [] } },
+  { url: "**/api/v1/places**", body: TWO_PLACES },
+];
+
+test(`ord0302-X1 ${"a run that produced nothing usable still renders the block its own card points at"}`,
+  async ({ page }) => {
+    const read = await bootWithStubs(page, NO_PLANS_STUBS, "X1");
+    const invariant = !read.promise_in_copy || read.details_count >= 1;
+    const rows = [
+      { claim: "the card's promise and the DOM agree (promise => block exists)", ok: invariant,
+        got: { promise_in_copy: read.promise_in_copy, details_count: read.details_count } },
+      { claim: "this shape is the one X-5 named", ok: read.status === "NO_PLANS_PRODUCED",
+        got: { status: read.status } },
+      { claim: "and its block carries a reading rather than nothing",
+        ok: read.details_count >= 1 && read.reason.length > 0, got: { reason: read.reason } },
+      { claim: "and the copy still points there (Q53=①: render it, do not delete the pointer)",
+        ok: read.promise_in_copy === true, got: { promise_in_copy: read.promise_in_copy } },
+    ];
+    readings["X1"] = { want: "device", force_shape: "200 mission with no reason, no plans", read,
+                      verdict: rows.every((r) => r.ok) ? "MET" : "NOT_MET", rows };
+    expect(rows.filter((r) => !r.ok), node("X1", JSON.stringify(read))).toEqual([]);
+  });
+
+test(`ord0302-X2 ${"a status whose copy makes no promise may keep the block absent without lying"}`,
+  async ({ page }) => {
+    const stubs: Stub[] = [
+      { url: "**/api/v1/journeys/*/plans", method: "GET", abort: true },
+      { url: "**/api/v1/journeys/*/agent/commands", method: "POST", body: MISSION_CLEAN },
+      { url: "**/api/v1/places**", body: [] },
+    ];
+    const read = await bootWithStubs(page, stubs, "X2");
+    const rows = [
+      { claim: "no promise is made when the block is absent",
+        ok: read.details_count >= 1 || !read.promise_in_copy,
+        got: { promise_in_copy: read.promise_in_copy, details_count: read.details_count } },
+      { claim: "the shape is a real one on screen, not a half-booted page", ok: read.status.length > 0,
+        got: { status: read.status } },
+    ];
+    readings["X2"] = { want: "either", force_shape: "baseline read aborted", read,
+                      verdict: rows.every((r) => r.ok) ? "MET" : "NOT_MET", rows };
+    expect(rows.filter((r) => !r.ok), node("X2", JSON.stringify(read))).toEqual([]);
+  });
+
+test.afterEach(async ({}, testInfo) => {
+  const arm = String(testInfo.title).match(/ord0302-(N[123]|X[12])/)?.[1];
+  if (!arm) return;
   writeFileSync(
-    evidencePath("ord0302", "unreadable_body_arms.json"),
-    JSON.stringify({ file: FILE, runId: process.env.CITYNEXUS_E2E_RUN_ID ?? "", arms: readings }, null, 1),
+    evidencePath("ord0302", `arm_${arm}.json`),
+    JSON.stringify({
+      file: FILE, arm, runId: process.env.CITYNEXUS_E2E_RUN_ID ?? "",
+      status: testInfo.status, expectation: testInfo.expectedStatus,
+      reading: readings[arm] ?? null,
+    }, null, 1),
   );
 });

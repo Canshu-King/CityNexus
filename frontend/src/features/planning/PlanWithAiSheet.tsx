@@ -727,10 +727,16 @@ export function PlanWithAiSheet({
         status,
         newPlanIds,
         /* `failure_reason` is the mission's own stored field, i.e. words that came off this server, so
-           it is labelled as such; the refused-request note carries its own origin from where it was set. */
+           it is labelled as such; the refused-request note carries its own origin from where it was set.
+           ORD-0302 X-5: this branch's own card text tells the traveller the reason sits under 技术详情,
+           so it may not render a screen where that block does not exist.  Q53=① chose "render it" over
+           "soften the sentence", so when the mission stored no reason we show what THIS screen measured
+           -- a count it derived from the two reads it was allowed to make -- labelled as a device reading. */
         failureReason: mission?.failure_reason
           ? { text: mission.failure_reason, from: "server" as const }
-          : blockedSentence,
+          : blockedSentence ?? (status === "NO_PLANS_PRODUCED"
+              ? failureNote(null, `plans compiled; ${planCount} usable result(s) reached this screen`)
+              : null),
         summary: mission?.reasoning_summary ?? null,
         planCount,
       });
