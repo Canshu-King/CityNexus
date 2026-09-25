@@ -1,0 +1,822 @@
+{
+ "ran_at_local": "2026-09-26T00:17:27+0800",
+ "order": "ORD-0288 T-1 transfer check - current tip",
+ "lane": "HJ-P3 aad2d1f2-4de9-406b-a5df-afa0e2bcea58",
+ "scope": "the keyed plans/generate write leg of a one-time local backend, two OS processes, one file",
+ "generation_under_test": "2344145ce6342b6ac32ac4d0955c0f524d8c9320",
+ "generation_measured_before_on_branch": "dc964086c9d412573ac19d70b24b30e6c3ee6168",
+ "how_read": "git archive of the tip into my own directory (read-only), two uvicorn processes, the durable half read through a second READ-ONLY sqlite connection naming file/table/key",
+ "artifact": "o0288t1x_transfer.py (this instrument) + the three cell files it wrote",
+ "reuse_of_published_instruments": {
+  "rig": "o0288_rig.py imported with its paths pointed here",
+  "arms": {
+   "file": "D:\\moodle\\HJ-P3_evidence\\o0288_arms.py",
+   "statement_removed": "main()",
+   "line_where_it_stood": 228,
+   "lines_kept": 227,
+   "bytes_kept": 12220,
+   "full_bytes": 12228
+  }
+ },
+ "backends": [
+  {
+   "tag": "A",
+   "pid": 59704,
+   "port": 8621,
+   "tree": "D:\\moodle\\_hjp3_0288t1x_0926\\backend",
+   "db": "D:\\moodle\\_hjp3_0288t1x_0926\\t1x.s3db",
+   "listening": true,
+   "exited": false,
+   "cmdline_at_start": "D:/moodle/CityNexus/.venv/Scripts/python.exe -m uvicorn app.main:app --host 127.0.0.1 --port 8621 --log-level info"
+  },
+  {
+   "tag": "B",
+   "pid": 42128,
+   "port": 8622,
+   "tree": "D:\\moodle\\_hjp3_0288t1x_0926\\backend",
+   "db": "D:\\moodle\\_hjp3_0288t1x_0926\\t1x.s3db",
+   "listening": true,
+   "exited": false,
+   "cmdline_at_start": "D:/moodle/CityNexus/.venv/Scripts/python.exe -m uvicorn app.main:app --host 127.0.0.1 --port 8622 --log-level info"
+  }
+ ],
+ "db": "D:\\moodle\\_hjp3_0288t1x_0926\\t1x.s3db",
+ "credential_gate_lines_from_the_startup_log": "INFO:     Application startup complete.",
+ "replay_equality_measured_two_ways": {
+  "cross_process_pair": {
+   "raw_json_equal": false,
+   "equal_once_trace_id_dropped": true,
+   "trace_ids": [
+    "1b347072-e264-4f8e-a604-0a3f7eacccee",
+    "d4c2a288-f028-4bab-a1a9-e1cd94b0c8cc"
+   ]
+  },
+  "error_path_pair": {
+   "raw_json_equal": false,
+   "equal_once_trace_id_dropped": true
+  }
+ },
+ "cells": {
+  "t1x_a_same_key_two_processes": {
+   "statuses": [
+    422,
+    422
+   ],
+   "rows_for_this_key": 1,
+   "operations": [
+    "plans.generate"
+   ],
+   "response_statuses": [
+    422
+   ],
+   "response_json_bytes": [
+    1424
+   ]
+  },
+  "t1x_a_same_key_different_body": {
+   "statuses": [
+    409
+   ],
+   "rows_for_this_key": 1,
+   "operations": [
+    "plans.generate"
+   ],
+   "response_statuses": [
+    422
+   ],
+   "response_json_bytes": [
+    1424
+   ]
+  },
+  "t1x_b_error_path_records_status": {
+   "statuses": [
+    422,
+    422
+   ],
+   "rows_for_this_key": 2,
+   "operations": [
+    "plans.generate"
+   ],
+   "response_statuses": [
+    422,
+    422
+   ],
+   "response_json_bytes": [
+    1424,
+    1424
+   ]
+  }
+ },
+ "store_totals_after": {
+  "idempotency_rows_all_keys": 2,
+  "counts": {
+   "plan_versions": 0,
+   "journeys": 2,
+   "journey_missions": 0,
+   "audit_logs": 8,
+   "replan_proposals": 0
+  }
+ },
+ "comparison_with_the_shipped_reading": {
+  "shipped_cell": "C1_same_key_across_two_processes_leaves_one_durable_owner_row",
+  "shipped_on_tip": "dc964086c9d412573ac19d70b24b30e6c3ee6168",
+  "shipped_key": "ord0288-t1a-162438",
+  "shipped_status": 422,
+  "shipped_row_count_for_the_key": 1,
+  "shipped_operation": "plans.generate",
+  "shipped_response_status": 422,
+  "shipped_response_json_bytes": 1424,
+  "now": {
+   "statuses": [
+    422,
+    422
+   ],
+   "rows": 1,
+   "operations": [
+    "plans.generate"
+   ],
+   "response_statuses": [
+    422
+   ],
+   "response_json_bytes": [
+    1424
+   ]
+  }
+ },
+ "boundary": {
+  "product_bytes_written": 0,
+  "refs_pushed": 0,
+  "demo_reset": 0,
+  "live_or_preview_db": 0,
+  "credentials_printed": 0,
+  "ports": [
+   8621,
+   8622
+  ]
+ },
+ "verdict": {
+  "durable_ownership_observed_on_the_current_tip": true,
+  "the_answer_is_a_refusal_not_a_silence": true,
+  "cross_process_replay_equal_at_the_json_value_level": true,
+  "cross_process_replay_byte_identical": false,
+  "same_key_different_body_still_refused": true,
+  "error_path_row_still_carries_a_response_status": true,
+  "reading_matches_the_shipped_one_row_for_row": true,
+  "ALL_HOLD": true
+ },
+ "verdict_basis": {
+  "claims_aggregated_into_ALL_HOLD": [
+   "durable_ownership_observed_on_the_current_tip",
+   "the_answer_is_a_refusal_not_a_silence",
+   "cross_process_replay_equal_at_the_json_value_level",
+   "same_key_different_body_still_refused",
+   "error_path_row_still_carries_a_response_status",
+   "reading_matches_the_shipped_one_row_for_row"
+  ],
+  "readings_reported_but_not_aggregated": [
+   "cross_process_replay_byte_identical"
+  ]
+ },
+ "repeat_runs_of_the_same_transfer_arm": {
+  "per_arm": {
+   "t1x_error_path_records_response_status_on_current_tip": [
+    {
+     "run": "T1-001513",
+     "statuses": [
+      422,
+      422
+     ],
+     "rows": 2,
+     "ops": [
+      "plans.generate"
+     ],
+     "response_statuses": [
+      422,
+      422
+     ],
+     "bytes": [
+      1424,
+      1424
+     ]
+    },
+    {
+     "run": "T1-001639",
+     "statuses": [
+      422,
+      422
+     ],
+     "rows": 2,
+     "ops": [
+      "plans.generate"
+     ],
+     "response_statuses": [
+      422,
+      422
+     ],
+     "bytes": [
+      1424,
+      1424
+     ]
+    },
+    {
+     "run": "T1-001727",
+     "statuses": [
+      422,
+      422
+     ],
+     "rows": 2,
+     "ops": [
+      "plans.generate"
+     ],
+     "response_statuses": [
+      422,
+      422
+     ],
+     "bytes": [
+      1424,
+      1424
+     ]
+    }
+   ],
+   "t1x_same_key_different_body_on_current_tip": [
+    {
+     "run": "T1-001513",
+     "statuses": [
+      409
+     ],
+     "rows": 1,
+     "ops": [
+      "plans.generate"
+     ],
+     "response_statuses": [
+      422
+     ],
+     "bytes": [
+      1424
+     ]
+    },
+    {
+     "run": "T1-001638",
+     "statuses": [
+      409
+     ],
+     "rows": 1,
+     "ops": [
+      "plans.generate"
+     ],
+     "response_statuses": [
+      422
+     ],
+     "bytes": [
+      1424
+     ]
+    },
+    {
+     "run": "T1-001727",
+     "statuses": [
+      409
+     ],
+     "rows": 1,
+     "ops": [
+      "plans.generate"
+     ],
+     "response_statuses": [
+      422
+     ],
+     "bytes": [
+      1424
+     ]
+    }
+   ],
+   "t1x_same_key_two_processes_on_current_tip": [
+    {
+     "run": "T1-001513",
+     "statuses": [
+      422,
+      422
+     ],
+     "rows": 1,
+     "ops": [
+      "plans.generate"
+     ],
+     "response_statuses": [
+      422
+     ],
+     "bytes": [
+      1424
+     ]
+    },
+    {
+     "run": "T1-001638",
+     "statuses": [
+      422,
+      422
+     ],
+     "rows": 1,
+     "ops": [
+      "plans.generate"
+     ],
+     "response_statuses": [
+      422
+     ],
+     "bytes": [
+      1424
+     ]
+    },
+    {
+     "run": "T1-001727",
+     "statuses": [
+      422,
+      422
+     ],
+     "rows": 1,
+     "ops": [
+      "plans.generate"
+     ],
+     "response_statuses": [
+      422
+     ],
+     "bytes": [
+      1424
+     ]
+    }
+   ]
+  },
+  "all_runs_agree_on_status_rows_and_operation": true,
+  "runs_per_arm": {
+   "t1x_error_path_records_response_status_on_current_tip": 3,
+   "t1x_same_key_different_body_on_current_tip": 3,
+   "t1x_same_key_two_processes_on_current_tip": 3
+  },
+  "statuses_seen": [
+   [
+    409
+   ],
+   [
+    422,
+    422
+   ]
+  ]
+ },
+ "whitelisting_under_UI_EVIDENCE_EXPOSURE_GATE_V1": {
+  "rule": "arbiter Q64=① / CMDR-0925-2324: only source classification -> allowed fields -> render; no raw body / raw detail / raw exception inside an evidence artefact",
+  "allowed_set_used": [
+   "status",
+   "http_status",
+   "content_type",
+   "bytes",
+   "response_bytes",
+   "response_received",
+   "elapsed_ms",
+   "key",
+   "operation",
+   "request_hash_head",
+   "created_at",
+   "expires_at",
+   "at",
+   "url",
+   "method",
+   "intent",
+   "error",
+   "error_name",
+   "error_message",
+   "http_error",
+   "sent_headers"
+  ],
+  "forbidden_keys_removed": [
+   "body_text",
+   "response_json_head",
+   "response_json",
+   "body_head",
+   "sentence",
+   "detail_text"
+  ],
+  "per_cell_file": {
+   "cell_t1x_error_path_records_response_status_on_current_tip_T1-001513.json": {
+    "original_bytes": 8699,
+    "original_blob": "f397608a10c3ada3a0fa7be27ba493da0b9fdbc6",
+    "copy_bytes": 4476,
+    "copy_file": "cell_t1x_error_path_records_response_status_on_current_tip_T1-001513_whitelisted.json",
+    "copy_blob": "9a30ee428e6275ba35274d4b1430acb4c31f4993",
+    "fields_removed": [
+     {
+      "path": "/steps[]/response/body_text",
+      "kind": "upstream_text_removed",
+      "chars": 1573
+     },
+     {
+      "path": "/steps[]/response/body_text",
+      "kind": "upstream_text_removed",
+      "chars": 1573
+     },
+     {
+      "path": "/extra/row_for_this_key[]/response_json_head",
+      "kind": "upstream_text_removed",
+      "chars": 241
+     },
+     {
+      "path": "/durable_read_after/idempotency_keys[]/response_json_head",
+      "kind": "upstream_text_removed",
+      "chars": 241
+     },
+     {
+      "path": "/durable_read_after/idempotency_keys[]/response_json_head",
+      "kind": "upstream_text_removed",
+      "chars": 241
+     },
+     {
+      "path": "/durable_read_after/rows_for_this_arms_keys[]/response_json_head",
+      "kind": "upstream_text_removed",
+      "chars": 241
+     },
+     {
+      "path": "/durable_read_after/rows_for_this_arms_keys[]/response_json_head",
+      "kind": "upstream_text_removed",
+      "chars": 241
+     }
+    ],
+    "forbidden_keys_surviving_in_copy": [],
+    "statuses_still_present": [
+     422,
+     422
+    ],
+    "equality_of_everything_but_the_removed_fields": null,
+    "equality_of_everything_but_the_removed_and_added_fields": true,
+    "fields_added_in_place_of_a_removed_body": [
+     "body_sha256_64_hex",
+     "response_bytes",
+     "response_received"
+    ],
+    "upstream_fragments_still_present": [],
+    "removed_body_fragments": 7,
+    "detector_control_a_known_fragment_is_caught": true
+   },
+   "cell_t1x_error_path_records_response_status_on_current_tip_T1-001639.json": {
+    "original_bytes": 8698,
+    "original_blob": "fb730c97a549f2a20736936fda31b97e9b18dd7d",
+    "copy_bytes": 4475,
+    "copy_file": "cell_t1x_error_path_records_response_status_on_current_tip_T1-001639_whitelisted.json",
+    "copy_blob": "99b9c4b889805ea5330037caafdd8c7bbf4958f8",
+    "fields_removed": [
+     {
+      "path": "/steps[]/response/body_text",
+      "kind": "upstream_text_removed",
+      "chars": 1573
+     },
+     {
+      "path": "/steps[]/response/body_text",
+      "kind": "upstream_text_removed",
+      "chars": 1573
+     },
+     {
+      "path": "/extra/row_for_this_key[]/response_json_head",
+      "kind": "upstream_text_removed",
+      "chars": 241
+     },
+     {
+      "path": "/durable_read_after/idempotency_keys[]/response_json_head",
+      "kind": "upstream_text_removed",
+      "chars": 241
+     },
+     {
+      "path": "/durable_read_after/idempotency_keys[]/response_json_head",
+      "kind": "upstream_text_removed",
+      "chars": 241
+     },
+     {
+      "path": "/durable_read_after/rows_for_this_arms_keys[]/response_json_head",
+      "kind": "upstream_text_removed",
+      "chars": 241
+     },
+     {
+      "path": "/durable_read_after/rows_for_this_arms_keys[]/response_json_head",
+      "kind": "upstream_text_removed",
+      "chars": 241
+     }
+    ],
+    "forbidden_keys_surviving_in_copy": [],
+    "statuses_still_present": [
+     422,
+     422
+    ],
+    "equality_of_everything_but_the_removed_fields": null,
+    "equality_of_everything_but_the_removed_and_added_fields": true,
+    "fields_added_in_place_of_a_removed_body": [
+     "body_sha256_64_hex",
+     "response_bytes",
+     "response_received"
+    ],
+    "upstream_fragments_still_present": [],
+    "removed_body_fragments": 7,
+    "detector_control_a_known_fragment_is_caught": true
+   },
+   "cell_t1x_error_path_records_response_status_on_current_tip_T1-001727.json": {
+    "original_bytes": 8698,
+    "original_blob": "d16cd00151ab014f491f3decf2570bff73dfb496",
+    "copy_bytes": 4475,
+    "copy_file": "cell_t1x_error_path_records_response_status_on_current_tip_T1-001727_whitelisted.json",
+    "copy_blob": "cd2aa005e3dd81a21379d9812a160d56adb0355d",
+    "fields_removed": [
+     {
+      "path": "/steps[]/response/body_text",
+      "kind": "upstream_text_removed",
+      "chars": 1573
+     },
+     {
+      "path": "/steps[]/response/body_text",
+      "kind": "upstream_text_removed",
+      "chars": 1573
+     },
+     {
+      "path": "/extra/row_for_this_key[]/response_json_head",
+      "kind": "upstream_text_removed",
+      "chars": 241
+     },
+     {
+      "path": "/durable_read_after/idempotency_keys[]/response_json_head",
+      "kind": "upstream_text_removed",
+      "chars": 241
+     },
+     {
+      "path": "/durable_read_after/idempotency_keys[]/response_json_head",
+      "kind": "upstream_text_removed",
+      "chars": 241
+     },
+     {
+      "path": "/durable_read_after/rows_for_this_arms_keys[]/response_json_head",
+      "kind": "upstream_text_removed",
+      "chars": 241
+     },
+     {
+      "path": "/durable_read_after/rows_for_this_arms_keys[]/response_json_head",
+      "kind": "upstream_text_removed",
+      "chars": 241
+     }
+    ],
+    "forbidden_keys_surviving_in_copy": [],
+    "statuses_still_present": [
+     422,
+     422
+    ],
+    "equality_of_everything_but_the_removed_fields": null,
+    "equality_of_everything_but_the_removed_and_added_fields": true,
+    "fields_added_in_place_of_a_removed_body": [
+     "body_sha256_64_hex",
+     "response_bytes",
+     "response_received"
+    ],
+    "upstream_fragments_still_present": [],
+    "removed_body_fragments": 7,
+    "detector_control_a_known_fragment_is_caught": true
+   },
+   "cell_t1x_same_key_different_body_on_current_tip_T1-001513.json": {
+    "original_bytes": 3390,
+    "original_blob": "bb75bd5d4f3a58d59be741642ca70d43e8cc7dbc",
+    "copy_bytes": 2774,
+    "copy_file": "cell_t1x_same_key_different_body_on_current_tip_T1-001513_whitelisted.json",
+    "copy_blob": "548c1d4aaf31ecc03ff0f58ca9445d644f061de7",
+    "fields_removed": [
+     {
+      "path": "/steps[]/response/body_text",
+      "kind": "upstream_text_removed",
+      "chars": 211
+     },
+     {
+      "path": "/durable_read_after/idempotency_keys[]/response_json_head",
+      "kind": "upstream_text_removed",
+      "chars": 241
+     },
+     {
+      "path": "/durable_read_after/rows_for_this_arms_keys[]/response_json_head",
+      "kind": "upstream_text_removed",
+      "chars": 241
+     }
+    ],
+    "forbidden_keys_surviving_in_copy": [],
+    "statuses_still_present": [
+     409
+    ],
+    "equality_of_everything_but_the_removed_fields": null,
+    "equality_of_everything_but_the_removed_and_added_fields": true,
+    "fields_added_in_place_of_a_removed_body": [
+     "body_sha256_64_hex",
+     "response_bytes",
+     "response_received"
+    ],
+    "upstream_fragments_still_present": [],
+    "removed_body_fragments": 3,
+    "detector_control_a_known_fragment_is_caught": true
+   },
+   "cell_t1x_same_key_different_body_on_current_tip_T1-001638.json": {
+    "original_bytes": 3389,
+    "original_blob": "824c88299218d178694cba24736ef56d5d10aac7",
+    "copy_bytes": 2773,
+    "copy_file": "cell_t1x_same_key_different_body_on_current_tip_T1-001638_whitelisted.json",
+    "copy_blob": "352b4e323ee1b858c8e795d3fc9d3700b2507f8f",
+    "fields_removed": [
+     {
+      "path": "/steps[]/response/body_text",
+      "kind": "upstream_text_removed",
+      "chars": 211
+     },
+     {
+      "path": "/durable_read_after/idempotency_keys[]/response_json_head",
+      "kind": "upstream_text_removed",
+      "chars": 241
+     },
+     {
+      "path": "/durable_read_after/rows_for_this_arms_keys[]/response_json_head",
+      "kind": "upstream_text_removed",
+      "chars": 241
+     }
+    ],
+    "forbidden_keys_surviving_in_copy": [],
+    "statuses_still_present": [
+     409
+    ],
+    "equality_of_everything_but_the_removed_fields": null,
+    "equality_of_everything_but_the_removed_and_added_fields": true,
+    "fields_added_in_place_of_a_removed_body": [
+     "body_sha256_64_hex",
+     "response_bytes",
+     "response_received"
+    ],
+    "upstream_fragments_still_present": [],
+    "removed_body_fragments": 3,
+    "detector_control_a_known_fragment_is_caught": true
+   },
+   "cell_t1x_same_key_different_body_on_current_tip_T1-001727.json": {
+    "original_bytes": 3390,
+    "original_blob": "183dd978f0f548e9c634daefb63632c4a70323f2",
+    "copy_bytes": 2774,
+    "copy_file": "cell_t1x_same_key_different_body_on_current_tip_T1-001727_whitelisted.json",
+    "copy_blob": "c0206c35c2dfc6d969bf80c63e0c6424df117845",
+    "fields_removed": [
+     {
+      "path": "/steps[]/response/body_text",
+      "kind": "upstream_text_removed",
+      "chars": 211
+     },
+     {
+      "path": "/durable_read_after/idempotency_keys[]/response_json_head",
+      "kind": "upstream_text_removed",
+      "chars": 241
+     },
+     {
+      "path": "/durable_read_after/rows_for_this_arms_keys[]/response_json_head",
+      "kind": "upstream_text_removed",
+      "chars": 241
+     }
+    ],
+    "forbidden_keys_surviving_in_copy": [],
+    "statuses_still_present": [
+     409
+    ],
+    "equality_of_everything_but_the_removed_fields": null,
+    "equality_of_everything_but_the_removed_and_added_fields": true,
+    "fields_added_in_place_of_a_removed_body": [
+     "body_sha256_64_hex",
+     "response_bytes",
+     "response_received"
+    ],
+    "upstream_fragments_still_present": [],
+    "removed_body_fragments": 3,
+    "detector_control_a_known_fragment_is_caught": true
+   },
+   "cell_t1x_same_key_two_processes_on_current_tip_T1-001513.json": {
+    "original_bytes": 7007,
+    "original_blob": "07e96682912c987d90d0e5b56b982c56e5ca0486",
+    "copy_bytes": 3591,
+    "copy_file": "cell_t1x_same_key_two_processes_on_current_tip_T1-001513_whitelisted.json",
+    "copy_blob": "4035ac49b9da66a36d88118b8d2d6fa7e6d03d91",
+    "fields_removed": [
+     {
+      "path": "/steps[]/response/body_text",
+      "kind": "upstream_text_removed",
+      "chars": 1573
+     },
+     {
+      "path": "/steps[]/response/body_text",
+      "kind": "upstream_text_removed",
+      "chars": 1573
+     },
+     {
+      "path": "/durable_read_after/idempotency_keys[]/response_json_head",
+      "kind": "upstream_text_removed",
+      "chars": 241
+     },
+     {
+      "path": "/durable_read_after/rows_for_this_arms_keys[]/response_json_head",
+      "kind": "upstream_text_removed",
+      "chars": 241
+     }
+    ],
+    "forbidden_keys_surviving_in_copy": [],
+    "statuses_still_present": [
+     422,
+     422
+    ],
+    "equality_of_everything_but_the_removed_fields": null,
+    "equality_of_everything_but_the_removed_and_added_fields": true,
+    "fields_added_in_place_of_a_removed_body": [
+     "body_sha256_64_hex",
+     "response_bytes",
+     "response_received"
+    ],
+    "upstream_fragments_still_present": [],
+    "removed_body_fragments": 4,
+    "detector_control_a_known_fragment_is_caught": true
+   },
+   "cell_t1x_same_key_two_processes_on_current_tip_T1-001638.json": {
+    "original_bytes": 7006,
+    "original_blob": "7df5489629b76df7b4a14fa7cd55a5edea423836",
+    "copy_bytes": 3590,
+    "copy_file": "cell_t1x_same_key_two_processes_on_current_tip_T1-001638_whitelisted.json",
+    "copy_blob": "7b46622fe40f909e33c5ce7b097e0862e06346e7",
+    "fields_removed": [
+     {
+      "path": "/steps[]/response/body_text",
+      "kind": "upstream_text_removed",
+      "chars": 1573
+     },
+     {
+      "path": "/steps[]/response/body_text",
+      "kind": "upstream_text_removed",
+      "chars": 1573
+     },
+     {
+      "path": "/durable_read_after/idempotency_keys[]/response_json_head",
+      "kind": "upstream_text_removed",
+      "chars": 241
+     },
+     {
+      "path": "/durable_read_after/rows_for_this_arms_keys[]/response_json_head",
+      "kind": "upstream_text_removed",
+      "chars": 241
+     }
+    ],
+    "forbidden_keys_surviving_in_copy": [],
+    "statuses_still_present": [
+     422,
+     422
+    ],
+    "equality_of_everything_but_the_removed_fields": null,
+    "equality_of_everything_but_the_removed_and_added_fields": true,
+    "fields_added_in_place_of_a_removed_body": [
+     "body_sha256_64_hex",
+     "response_bytes",
+     "response_received"
+    ],
+    "upstream_fragments_still_present": [],
+    "removed_body_fragments": 4,
+    "detector_control_a_known_fragment_is_caught": true
+   },
+   "cell_t1x_same_key_two_processes_on_current_tip_T1-001727.json": {
+    "original_bytes": 7007,
+    "original_blob": "e8d28928d9dceb1da9b37a665343720ee363f72b",
+    "copy_bytes": 3591,
+    "copy_file": "cell_t1x_same_key_two_processes_on_current_tip_T1-001727_whitelisted.json",
+    "copy_blob": "b0e221abdbefd63330b573e2723bcde6719d4d03",
+    "fields_removed": [
+     {
+      "path": "/steps[]/response/body_text",
+      "kind": "upstream_text_removed",
+      "chars": 1573
+     },
+     {
+      "path": "/steps[]/response/body_text",
+      "kind": "upstream_text_removed",
+      "chars": 1573
+     },
+     {
+      "path": "/durable_read_after/idempotency_keys[]/response_json_head",
+      "kind": "upstream_text_removed",
+      "chars": 241
+     },
+     {
+      "path": "/durable_read_after/rows_for_this_arms_keys[]/response_json_head",
+      "kind": "upstream_text_removed",
+      "chars": 241
+     }
+    ],
+    "forbidden_keys_surviving_in_copy": [],
+    "statuses_still_present": [
+     422,
+     422
+    ],
+    "equality_of_everything_but_the_removed_fields": null,
+    "equality_of_everything_but_the_removed_and_added_fields": true,
+    "fields_added_in_place_of_a_removed_body": [
+     "body_sha256_64_hex",
+     "response_bytes",
+     "response_received"
+    ],
+    "upstream_fragments_still_present": [],
+    "removed_body_fragments": 4,
+    "detector_control_a_known_fragment_is_caught": true
+   }
+  },
+  "verdict": true,
+  "note": "long_strings_remaining is the real test: a removed body that left a 200-character sentence somewhere else would still be an exposure"
+ }
+}
