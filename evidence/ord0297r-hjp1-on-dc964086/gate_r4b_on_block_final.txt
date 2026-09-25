@@ -1,0 +1,2 @@
+version Q43_r4 | input D:\moodle\_qoder_hjp1_o207_20260922\o297r_ledger_block_as_inserted.txt 14097 B
+claims checked 58 | exempt {"HTTP_STATUS": 1} | overall Q43_GATE_GREEN | findings 0 []
