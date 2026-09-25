@@ -1,0 +1,634 @@
+{
+ "schema": "CNX_CMDR_DERIVATION_V2",
+ "order": "ORD-0301",
+ "revision": "r3",
+ "revision_note": "r1 T_B = false absence (field is answer_attributed_to, on rows). r2 row counts inflated by judging origin_own_record access-log entries and browser rejections as observations. r3 partitions PRIMARY/SECONDARY by the lane's own schema keys measured.row / measured.rows.",
+ "partition_rule": "PRIMARY = dicts at measured.row or measured.rows (R# outcome rows). SECONDARY = every other list in a cell; reported, never judged.",
+ "artifact": {
+  "path": "evidence/ord0301-screen-speaks-range-hjp3/RECEIPT_O0301-1500.json",
+  "contents_sha": "9035e162b69f171de7a5d57ec30fdeddd58f0e7e",
+  "recomputed_equals_cited": true,
+  "bytes": 97514,
+  "md_path": "evidence/ord0301-screen-speaks-range-hjp3/RECEIPT_O0301-1500.md",
+  "md_contents_sha": "9898cfa6455a22634b0b3688906f3bb9358ea412",
+  "md_bytes": 17313
+ },
+ "cells_total": 8,
+ "primary_rows_total": 14,
+ "primary_rows_per_cell": {
+  "C5": 2,
+  "C8": 1,
+  "C1": 4,
+  "C6": 2,
+  "C2": 5
+ },
+ "cells_with_no_primary_row": [
+  "C3_the_discriminator_is_the_body_not_the_status_code_and_not_the_clock",
+  "C4_the_relabel_happens_because_the_client_reads_a_property_off_a_null_body",
+  "C7_the_named_server_deadline_answer_is_still_not_reachable_on_this_path"
+ ],
+ "secondary_lists": [
+  {
+   "cell_index": 2,
+   "cell_id": "C3_the_discriminator_is_the_body_not_the_status_code_and_not_the_clock",
+   "list": "statuses_with_the_envelope_body",
+   "length": 4,
+   "element_kind": "scalar",
+   "element_keys": []
+  },
+  {
+   "cell_index": 3,
+   "cell_id": "C4_the_relabel_happens_because_the_client_reads_a_property_off_a_null_body",
+   "list": "rejections_seen_in_the_browser",
+   "length": 5,
+   "element_kind": "dict",
+   "element_keys": [
+    "content_type",
+    "error_message",
+    "row"
+   ]
+  },
+  {
+   "cell_index": 3,
+   "cell_id": "C4_the_relabel_happens_because_the_client_reads_a_property_off_a_null_body",
+   "list": "mislead_rows",
+   "length": 7,
+   "element_kind": "scalar",
+   "element_keys": []
+  },
+  {
+   "cell_index": 4,
+   "cell_id": "C5_the_two_connection_class_outcomes_are_not_the_same_disease",
+   "list": "who_answered_per_the_probes",
+   "length": 2,
+   "element_kind": "scalar",
+   "element_keys": []
+  },
+  {
+   "cell_index": 5,
+   "cell_id": "C6_a_silent_leg_still_has_no_client_answer_on_the_write_side_and_a_named_one_on_the_read_side",
+   "list": "read_abort_client_error",
+   "length": 2,
+   "element_kind": "scalar",
+   "element_keys": []
+  },
+  {
+   "cell_index": 7,
+   "cell_id": "C8_headers_answered_and_the_body_cut_short_leaves_the_traveller_with_no_card_at_all",
+   "list": "origin_own_record",
+   "length": 17,
+   "element_kind": "dict",
+   "element_keys": [
+    "at",
+    "body_sha256_12",
+    "bytes",
+    "bytes_written",
+    "content_type",
+    "declared_content_length",
+    "delay_ms",
+    "leg",
+    "method",
+    "mode"
+   ]
+  }
+ ],
+ "T_A_rows_missing_a_side": [],
+ "T_B_rows_not_naming_who": [],
+ "T_D_rows_not_naming_the_painted_string": [
+  {
+   "cell": "C5",
+   "row": "R10_④_upstream_absent"
+  },
+  {
+   "cell": "C6",
+   "row": "R12_⑤_silent_write_leg"
+  },
+  {
+   "cell": "C6",
+   "row": "R13_⑤_silent_read_leg"
+  },
+  {
+   "cell": "C8",
+   "row": "R17_⓪_headers_then_truncated_body"
+  }
+ ],
+ "T_C_clock_pairs": {
+  "pairs_found": 1,
+  "detail": {
+   "('{\"body\": \"Internal Server Error\", \"content_type\": \"text/plain; charset=utf-8\", \"mode\": \"answer\", \"status\": 500}', 500, 'text/plain; charset=utf-8')": [
+    {
+     "row": "R2_①_contentless_500_fast",
+     "cell": "C1",
+     "elapsed_ms": 259
+    },
+    {
+     "row": "R3_①_contentless_500_after_35s",
+     "cell": "C1",
+     "elapsed_ms": 35006
+    },
+    {
+     "row": "R4_①_uninstrumented",
+     "cell": "C1",
+     "elapsed_ms": null
+    },
+    {
+     "row": "R17_⓪_headers_then_truncated_body",
+     "cell": "C8",
+     "elapsed_ms": null
+    }
+   ]
+  }
+ },
+ "per_primary_row": [
+  {
+   "cell_index": 0,
+   "cell_id": "C1_contentless_500_is_still_relabelled_as_no_connection_on_this_tip",
+   "source": "measured.rows",
+   "row_name": "R1_①_contentless_500_from_the_product",
+   "wire": [
+    "http_status",
+    "content_type",
+    "bytes",
+    "declared",
+    "sibling_probe"
+   ],
+   "painted": [
+    "painted_first_line",
+    "says_cannot_reach_server",
+    "details_elements_in_dom",
+    "data_result_status"
+   ],
+   "who": [
+    "answer_attributed_to",
+    "declared"
+   ],
+   "time": [
+    "elapsed_ms",
+    "cap_ms"
+   ],
+   "T_A": true,
+   "T_B": true,
+   "T_D_names_the_painted_string": true
+  },
+  {
+   "cell_index": 0,
+   "cell_id": "C1_contentless_500_is_still_relabelled_as_no_connection_on_this_tip",
+   "source": "measured.rows",
+   "row_name": "R2_①_contentless_500_fast",
+   "wire": [
+    "http_status",
+    "content_type",
+    "bytes",
+    "declared",
+    "sibling_probe"
+   ],
+   "painted": [
+    "painted_first_line",
+    "says_cannot_reach_server",
+    "details_elements_in_dom",
+    "data_result_status"
+   ],
+   "who": [
+    "answer_attributed_to",
+    "declared"
+   ],
+   "time": [
+    "elapsed_ms",
+    "cap_ms"
+   ],
+   "T_A": true,
+   "T_B": true,
+   "T_D_names_the_painted_string": true
+  },
+  {
+   "cell_index": 0,
+   "cell_id": "C1_contentless_500_is_still_relabelled_as_no_connection_on_this_tip",
+   "source": "measured.rows",
+   "row_name": "R3_①_contentless_500_after_35s",
+   "wire": [
+    "http_status",
+    "content_type",
+    "bytes",
+    "declared"
+   ],
+   "painted": [
+    "painted_first_line",
+    "says_cannot_reach_server",
+    "details_elements_in_dom",
+    "data_result_status"
+   ],
+   "who": [
+    "answer_attributed_to",
+    "declared"
+   ],
+   "time": [
+    "elapsed_ms",
+    "cap_ms"
+   ],
+   "T_A": true,
+   "T_B": true,
+   "T_D_names_the_painted_string": true
+  },
+  {
+   "cell_index": 0,
+   "cell_id": "C1_contentless_500_is_still_relabelled_as_no_connection_on_this_tip",
+   "source": "measured.rows",
+   "row_name": "R4_①_uninstrumented",
+   "wire": [
+    "http_status",
+    "content_type",
+    "declared",
+    "sibling_probe"
+   ],
+   "painted": [
+    "painted_first_line",
+    "says_cannot_reach_server",
+    "details_elements_in_dom",
+    "data_result_status"
+   ],
+   "who": [
+    "answer_attributed_to",
+    "declared"
+   ],
+   "time": [
+    "cap_ms"
+   ],
+   "T_A": true,
+   "T_B": true,
+   "T_D_names_the_painted_string": true
+  },
+  {
+   "cell_index": 1,
+   "cell_id": "C2_an_answer_that_carries_a_json_object_is_attributed_to_the_server_at_any_5xx",
+   "source": "measured.rows",
+   "row_name": "R5_②_500_with_product_envelope",
+   "wire": [
+    "http_status",
+    "content_type",
+    "bytes",
+    "envelope_code",
+    "declared",
+    "sibling_probe"
+   ],
+   "painted": [
+    "painted_first_line",
+    "says_cannot_reach_server",
+    "details_elements_in_dom",
+    "reason_label",
+    "reason_value",
+    "data_result_status"
+   ],
+   "who": [
+    "answer_attributed_to",
+    "declared"
+   ],
+   "time": [
+    "elapsed_ms",
+    "cap_ms"
+   ],
+   "T_A": true,
+   "T_B": true,
+   "T_D_names_the_painted_string": true
+  },
+  {
+   "cell_index": 1,
+   "cell_id": "C2_an_answer_that_carries_a_json_object_is_attributed_to_the_server_at_any_5xx",
+   "source": "measured.rows",
+   "row_name": "R6_③_503_envelope",
+   "wire": [
+    "http_status",
+    "content_type",
+    "bytes",
+    "envelope_code",
+    "declared",
+    "sibling_probe"
+   ],
+   "painted": [
+    "painted_first_line",
+    "says_cannot_reach_server",
+    "details_elements_in_dom",
+    "reason_label",
+    "reason_value",
+    "data_result_status"
+   ],
+   "who": [
+    "answer_attributed_to",
+    "declared"
+   ],
+   "time": [
+    "elapsed_ms",
+    "cap_ms"
+   ],
+   "T_A": true,
+   "T_B": true,
+   "T_D_names_the_painted_string": true
+  },
+  {
+   "cell_index": 1,
+   "cell_id": "C2_an_answer_that_carries_a_json_object_is_attributed_to_the_server_at_any_5xx",
+   "source": "measured.rows",
+   "row_name": "R7_③_502_envelope",
+   "wire": [
+    "http_status",
+    "content_type",
+    "bytes",
+    "envelope_code",
+    "declared",
+    "sibling_probe"
+   ],
+   "painted": [
+    "painted_first_line",
+    "says_cannot_reach_server",
+    "details_elements_in_dom",
+    "reason_label",
+    "reason_value",
+    "data_result_status"
+   ],
+   "who": [
+    "answer_attributed_to",
+    "declared"
+   ],
+   "time": [
+    "elapsed_ms",
+    "cap_ms"
+   ],
+   "T_A": true,
+   "T_B": true,
+   "T_D_names_the_painted_string": true
+  },
+  {
+   "cell_index": 1,
+   "cell_id": "C2_an_answer_that_carries_a_json_object_is_attributed_to_the_server_at_any_5xx",
+   "source": "measured.rows",
+   "row_name": "R8_③_504_envelope",
+   "wire": [
+    "http_status",
+    "content_type",
+    "bytes",
+    "envelope_code",
+    "declared",
+    "sibling_probe"
+   ],
+   "painted": [
+    "painted_first_line",
+    "says_cannot_reach_server",
+    "details_elements_in_dom",
+    "reason_label",
+    "reason_value",
+    "data_result_status"
+   ],
+   "who": [
+    "answer_attributed_to",
+    "declared"
+   ],
+   "time": [
+    "elapsed_ms",
+    "cap_ms"
+   ],
+   "T_A": true,
+   "T_B": true,
+   "T_D_names_the_painted_string": true
+  },
+  {
+   "cell_index": 1,
+   "cell_id": "C2_an_answer_that_carries_a_json_object_is_attributed_to_the_server_at_any_5xx",
+   "source": "measured.rows",
+   "row_name": "R14_control_real_422",
+   "wire": [
+    "http_status",
+    "content_type",
+    "bytes",
+    "envelope_code",
+    "declared",
+    "sibling_probe"
+   ],
+   "painted": [
+    "painted_first_line",
+    "says_cannot_reach_server",
+    "details_elements_in_dom",
+    "reason_label",
+    "reason_value",
+    "data_result_status"
+   ],
+   "who": [
+    "answer_attributed_to",
+    "declared"
+   ],
+   "time": [
+    "elapsed_ms",
+    "cap_ms"
+   ],
+   "T_A": true,
+   "T_B": true,
+   "T_D_names_the_painted_string": true
+  },
+  {
+   "cell_index": 4,
+   "cell_id": "C5_the_two_connection_class_outcomes_are_not_the_same_disease",
+   "source": "measured.rows",
+   "row_name": "R10_④_upstream_absent",
+   "wire": [
+    "declared",
+    "sibling_probe"
+   ],
+   "painted": [
+    "says_cannot_reach_server",
+    "details_elements_in_dom",
+    "secondary_surface"
+   ],
+   "who": [
+    "answer_attributed_to",
+    "declared"
+   ],
+   "time": [
+    "cap_ms"
+   ],
+   "T_A": true,
+   "T_B": true,
+   "T_D_names_the_painted_string": false
+  },
+  {
+   "cell_index": 4,
+   "cell_id": "C5_the_two_connection_class_outcomes_are_not_the_same_disease",
+   "source": "measured.rows",
+   "row_name": "R11_④_reset_no_response",
+   "wire": [
+    "http_status",
+    "content_type",
+    "bytes",
+    "declared",
+    "sibling_probe"
+   ],
+   "painted": [
+    "painted_first_line",
+    "says_cannot_reach_server",
+    "details_elements_in_dom",
+    "data_result_status"
+   ],
+   "who": [
+    "answer_attributed_to",
+    "declared"
+   ],
+   "time": [
+    "elapsed_ms",
+    "cap_ms"
+   ],
+   "T_A": true,
+   "T_B": true,
+   "T_D_names_the_painted_string": true
+  },
+  {
+   "cell_index": 5,
+   "cell_id": "C6_a_silent_leg_still_has_no_client_answer_on_the_write_side_and_a_named_one_on_the_read_side",
+   "source": "measured.rows",
+   "row_name": "R12_⑤_silent_write_leg",
+   "wire": [
+    "declared",
+    "sibling_probe"
+   ],
+   "painted": [
+    "says_cannot_reach_server",
+    "details_elements_in_dom"
+   ],
+   "who": [
+    "answer_attributed_to",
+    "declared"
+   ],
+   "time": [
+    "cap_ms"
+   ],
+   "T_A": true,
+   "T_B": true,
+   "T_D_names_the_painted_string": false
+  },
+  {
+   "cell_index": 5,
+   "cell_id": "C6_a_silent_leg_still_has_no_client_answer_on_the_write_side_and_a_named_one_on_the_read_side",
+   "source": "measured.rows",
+   "row_name": "R13_⑤_silent_read_leg",
+   "wire": [
+    "declared",
+    "sibling_probe"
+   ],
+   "painted": [
+    "says_cannot_reach_server",
+    "details_elements_in_dom",
+    "secondary_surface"
+   ],
+   "who": [
+    "answer_attributed_to",
+    "declared"
+   ],
+   "time": [
+    "cap_ms"
+   ],
+   "T_A": true,
+   "T_B": true,
+   "T_D_names_the_painted_string": false
+  },
+  {
+   "cell_index": 7,
+   "cell_id": "C8_headers_answered_and_the_body_cut_short_leaves_the_traveller_with_no_card_at_all",
+   "source": "measured.row",
+   "row_name": "R17_⓪_headers_then_truncated_body",
+   "wire": [
+    "http_status",
+    "content_type",
+    "declared"
+   ],
+   "painted": [
+    "says_cannot_reach_server",
+    "details_elements_in_dom"
+   ],
+   "who": [
+    "answer_attributed_to",
+    "declared"
+   ],
+   "time": [
+    "cap_ms"
+   ],
+   "T_A": true,
+   "T_B": true,
+   "T_D_names_the_painted_string": false
+  }
+ ],
+ "controls": {
+  "primary_row_found_painted_keys": [
+   "painted_first_line",
+   "says_cannot_reach_server",
+   "details_elements_in_dom",
+   "reason_label",
+   "reason_value",
+   "data_result_status",
+   "secondary_surface"
+  ],
+  "strip_painted_turns_T_A_red": true,
+  "restore_turns_T_A_green": true,
+  "who_field_present_on_first_primary_row": [
+   "answer_attributed_to",
+   "declared"
+  ],
+  "secondary_lists_excluded_from_T_A": [
+   "statuses_with_the_envelope_body",
+   "rejections_seen_in_the_browser",
+   "mislead_rows",
+   "who_answered_per_the_probes",
+   "read_abort_client_error",
+   "origin_own_record"
+  ]
+ },
+ "rulers": {
+  "q38_json": {
+   "exit_code": 0,
+   "verdict_line": "cells 8 | overall Q38_GATE_GREEN | hard 0 [] | soft 0 []",
+   "denominator_line": "cells 8 | overall Q38_GATE_GREEN | hard 0 [] | soft 0 []"
+  },
+  "q43_json": {
+   "exit_code": 3,
+   "verdict_line": "claims checked 636 | overall Q43_GATE_RED | findings 622 ['BARE_NUMBER_WITHOUT_COORDINATE', 'CONSTANT_VALUE_CLAIM_WITHOUT_COORDINATE']",
+   "denominator_line": "claims checked 636 | overall Q43_GATE_RED | findings 622 ['BARE_NUMBER_WITHOUT_COORDINATE', 'CONSTANT_VALUE_CLAIM_WITHOUT_COORDINATE']"
+  },
+  "q43_md": {
+   "exit_code": 3,
+   "verdict_line": "claims checked 179 | overall Q43_GATE_RED | findings 133 ['BARE_NUMBER_WITHOUT_COORDINATE']",
+   "denominator_line": "claims checked 179 | overall Q43_GATE_RED | findings 133 ['BARE_NUMBER_WITHOUT_COORDINATE']"
+  }
+ },
+ "decisions": {
+  "artifact_rehashes_to_cited_blob": true,
+  "primary_rows_found": true,
+  "T_A_every_primary_row_has_both_sides": true,
+  "T_B_every_primary_row_names_who_answered": true,
+  "T_D_every_primary_row_names_the_painted_string": false,
+  "T_C_clock_claim_is_a_measured_pair": true,
+  "controls_pass": true
+ },
+ "field_union_across_primary_rows": [
+  "answer_attributed_to",
+  "bytes",
+  "cap_ms",
+  "client_error",
+  "content_type",
+  "data_result_status",
+  "declared",
+  "details_elements_in_dom",
+  "elapsed_ms",
+  "envelope_code",
+  "first_rejection_message",
+  "http_status",
+  "origin_own_record",
+  "painted_first_line",
+  "policy_stamp",
+  "reason_label",
+  "reason_value",
+  "row",
+  "run_id",
+  "says_cannot_reach_server",
+  "secondary_surface",
+  "sibling_probe",
+  "syntax_error_count",
+  "verdict",
+  "verdict_reason"
+ ],
+ "scope": "What the table's own outcome rows prove. Does NOT sign derived_result (red team) and does NOT choose ORD-0302's wording; it states which rows a wording rule may quote. Cells with no PRIMARY row are code-attribution or in-process door tests and cannot carry a traveller-facing sentence."
+}
