@@ -1,6 +1,10 @@
 import { useEffect, useState } from "react";
 import { useLocale, useT } from "../../i18n/LocaleContext";
 import {
+  classifyReadFailure,
+  copyFor,
+} from "../../lib/failureAttribution";
+import {
   artifactTypeLabel as artifactTypeLabelShared,
   bookingStatusLabel,
   extractionModeLabel as extractionModeLabelShared,
@@ -78,14 +82,30 @@ type ApplyResponse = {
   draft?: Draft;
 };
 
+/* ORD-0323 cells T05-T13 (Q64/Q67=①).  A rejected reply used to be re-labelled with its own prose and
+   handed upward as `new Error(<the reply's sentence>)`, and eight catch sites then printed that message.
+   What travels now is the *measurement*: which status answered, with which content type. The wording is
+   looked up, not written at the catch site -- `classifyReadFailure` / `copyFor` in lib/failureAttribution.ts
+   is the channel this product already uses (`status` is read off the error, never a sentence), so this
+   panel does not grow a second vocabulary for the same fact. */
+class InboxRequestRejected extends Error {
+  readonly status: number;
+  readonly content_type: string;
+  constructor(status: number, contentType: string) {
+    /* Internal vocabulary lives in this message and in the code slots only; every rendered sentence on
+       this surface comes from copyFor. */
+    super(`inbox request rejected (${status})`);
+    this.name = "InboxRequestRejected";
+    this.status = status;
+    this.content_type = contentType;
+  }
+}
+
 async function requestJson<T>(path: string, init?: RequestInit): Promise<T> {
   const response = await fetch(path, init);
-  const payload = (await response.json()) as T & {
-    detail?: string;
-    error?: { message?: string };
-  };
+  const payload = (await response.json()) as T;
   if (!response.ok) {
-    throw new Error(payload.error?.message ?? payload.detail ?? `Request failed (${response.status})`);
+    throw new InboxRequestRejected(response.status, response.headers.get("content-type") ?? "");
   }
   return payload;
 }
@@ -242,7 +262,7 @@ export function JourneyInboxWorkbench({ journeyId, decodedText, onConfirmed, imp
      nowhere to do it. */
   const [pending, setPending] = useState<Draft[] | null>(null);
   const [pendingError, setPendingError] = useState<string | null>(null);
-  const [rawDetail, setRawDetail] = useState<string | null>(null);
+  const [confirmDetail, setConfirmDetail] = useState<string | null>(null);
   const [memory, setMemory] = useState<Memory | null>(null);
   const [message, setMessage] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
@@ -260,6 +280,17 @@ export function JourneyInboxWorkbench({ journeyId, decodedText, onConfirmed, imp
   const [manualDepart, setManualDepart] = useState("");
   const [manualArrive, setManualArrive] = useState("");
   const [manualAmount, setManualAmount] = useState("");
+
+  /* One lookup per failure, two products of it: the sentence the traveller reads (copyFor's own table)
+     and the machine line the code slots show. Neither of them is read off `error.message`. */
+  const deviceCopy = (error: unknown): string => copyFor(classifyReadFailure(error), zh).body;
+  const deviceFields = (error: unknown): string => {
+    const a = classifyReadFailure(error);
+    /* The classification carries the status; the media type is this device's own header read, and the
+       channel does not put it on SERVER_ERROR, so it is taken from the measurement rather than invented. */
+    const ct = error instanceof InboxRequestRejected ? error.content_type : "";
+    return `http_status=${a.http_status ?? "none"} content_type=${ct || "none"} evidence=${a.evidence_kind}`;
+  };
 
   const confidence = (value: number | null | undefined): string =>
     typeof value === "number" ? t("inbox.confidence", { n: Math.round(value * 100) }) : t("inbox.confidencePending");
@@ -305,7 +336,7 @@ export function JourneyInboxWorkbench({ journeyId, decodedText, onConfirmed, imp
         setMessage(t("inbox.memoryLoadError"));
       }
     } catch (error) {
-      setMessage(error instanceof Error ? error.message : t("inbox.memoryLoadError"));
+      setMessage(deviceCopy(error));
     } finally {
       setBusy(false);
     }
@@ -315,7 +346,7 @@ export function JourneyInboxWorkbench({ journeyId, decodedText, onConfirmed, imp
     try {
       setMemory(await requestJson<Memory>(`/api/v1/journeys/${journeyId}/memory`));
     } catch (error) {
-      setMessage(error instanceof Error ? error.message : t("inbox.memoryLoadError"));
+      setMessage(deviceCopy(error));
     }
   };
 
@@ -335,9 +366,7 @@ export function JourneyInboxWorkbench({ journeyId, decodedText, onConfirmed, imp
       return drafts;
     } catch (error) {
       setPending(null);
-      setPendingError(
-        error instanceof Error ? error.message : t("inbox.pendingUnreadable"),
-      );
+      setPendingError(deviceFields(error));
       return [];
     }
   };
@@ -384,7 +413,7 @@ export function JourneyInboxWorkbench({ journeyId, decodedText, onConfirmed, imp
         ),
       );
     } catch (error) {
-      setMessage(error instanceof Error ? error.message : t("inbox.textFailed"));
+      setMessage(deviceCopy(error));
     } finally {
       setBusy(false);
     }
@@ -405,7 +434,7 @@ export function JourneyInboxWorkbench({ journeyId, decodedText, onConfirmed, imp
         ),
       );
     } catch (error) {
-      setMessage(error instanceof Error ? error.message : t("inbox.imageFailed"));
+      setMessage(deviceCopy(error));
     } finally {
       setBusy(false);
     }
@@ -433,7 +462,7 @@ export function JourneyInboxWorkbench({ journeyId, decodedText, onConfirmed, imp
         ),
       );
     } catch (error) {
-      setMessage(error instanceof Error ? error.message : t("inbox.smartApplyFailed"));
+      setMessage(deviceCopy(error));
     } finally {
       setBusy(false);
     }
@@ -457,21 +486,22 @@ export function JourneyInboxWorkbench({ journeyId, decodedText, onConfirmed, imp
     try {
       await postJson(`/api/v1/journeys/${journeyId}/inbox/${draftId}/confirm`, {});
     } catch (error) {
-      failure = error instanceof Error ? error.message : t("inbox.confirmFailed");
+      failure = `${deviceCopy(error)} · ${deviceFields(error)}`;
     }
     /* The verdict is read back, never written here.  `confirm_reservation_draft` is the one that
        decides, and its answer can still be "not passed" (a duplicate confirmation_ref, a field that
        only resolves against the journey window); a locally stamped `status:"CONFIRMED"` with
        `confirmed_at: new Date()` was the front end grading its own homework, which is exactly what
-       ORD-0146 ① forbids.  The raw server string stays in the technical fold -- paraphrasing it here
-       would mean matching on English words the contract never promised. */
+       ORD-0146 ① forbids.  ORD-0323: what sits in the technical fold is this device's own reading of the
+       attempt (status, content type), not the reply's sentence -- `requestJson` stopped carrying that up,
+       so paraphrasing it here is not what this line avoids, it never arrives in the first place. */
     const fresh = (await readInbox()).find((item) => item.id === draftId) ?? null;
     setDraft(fresh ?? draft);
     await loadMemory();
     await onConfirmed?.();
     setBusy(false);
     const passed = fresh?.status === "CONFIRMED";
-    setRawDetail(passed ? null : failure ?? t("inbox.confirmUnreadable"));
+    setConfirmDetail(passed ? null : failure ?? t("inbox.confirmUnreadable"));
     setMessage(
       passed
         ? t("inbox.confirmedProtected")
@@ -515,7 +545,7 @@ export function JourneyInboxWorkbench({ journeyId, decodedText, onConfirmed, imp
           : t("inbox.correctionsSaved"),
       );
     } catch (error) {
-      setMessage(error instanceof Error ? error.message : t("inbox.correctionsFailed"));
+      setMessage(deviceCopy(error));
     } finally {
       setBusy(false);
     }
@@ -685,10 +715,10 @@ export function JourneyInboxWorkbench({ journeyId, decodedText, onConfirmed, imp
       </div>
       )}
       {message && <p className="v10-inbox-message" role="status">{message}</p>}
-      {rawDetail && (
+      {confirmDetail && (
         <details className="v8-advanced" data-testid="inbox-confirm-detail">
           <summary>{t("inbox.technicalDetail")}</summary>
-          <code>{rawDetail}</code>
+          <code>{confirmDetail}</code>
         </details>
       )}
 
@@ -761,7 +791,7 @@ export function JourneyInboxWorkbench({ journeyId, decodedText, onConfirmed, imp
               onClick={() => {
                 setDraft(item);
                 setMessage(null);
-                setRawDetail(null);
+                setConfirmDetail(null);
               }}
             >
               {t("inbox.openReview")}
