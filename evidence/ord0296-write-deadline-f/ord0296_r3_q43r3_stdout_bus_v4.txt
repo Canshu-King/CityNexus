@@ -1,0 +1,7 @@
+D:\moodle\_qoder_f_run\q43_ruler_r3_from_commander.py:26: SyntaxWarning: invalid escape sequence '\d'
+  (U+FF1D -> "=", U+FF0C stays, fullwidth digits already matched \d) before any scan;
+input q43v2_bus.md 3967 B 25 lines
+claims checked 18 | overall Q43_GATE_CLEAN | findings 0 []
+scope: F1 `NAME = digits` (after fullwidth-`=` normalisation), F2 relay wording, and F3 ANY bare numeric claim (>=3 digits, or digits + a unit/counter word) -- all judged against the same durable-coordinate window; structural ids (ORD-####, Q#, `x-1`, HH:MM) are not claims
+meaning: every claim names a durable coordinate within 200 chars
+wrote D:\moodle\_qoder_f_run\o225_receipts\ord0296_r3_q43r3_bus_v4.json 573 B
