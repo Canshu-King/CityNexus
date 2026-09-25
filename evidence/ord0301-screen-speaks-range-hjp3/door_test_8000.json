@@ -1,0 +1,36 @@
+{
+ "env_CITYNEXUS_WRITE_DEADLINE_MS": "8000",
+ "booted": false,
+ "exited": true,
+ "exit_rc": 1,
+ "error_named_in_log": true,
+ "log_tail": "DLINE_NOT_ABOVE_BUSY_TIMEOUT: write_deadline_ms must be strictly above write_busy_timeout_ms=30000 for every scenario in ['agent.commands', 'plans.generate']; got {'agent.commands': {'deadline_ms': 8000, 'busy_timeout_ms': 30000, 'delta_ms': -22000, 'deadline_source': 'default', 'effective_busy_timeout_ms': 8000, 'reachable': False, 'verdict': 'DEADLINE_NOT_ABOVE_BUSY_TIMEOUT'}, 'plans.generate': {'deadline_ms': 8000, 'busy_timeout_ms': 30000, 'delta_ms': -22000, 'deadline_source': 'default', 'effective_busy_timeout_ms': 8000, 'reachable': False, 'verdict': 'DEADLINE_NOT_ABOVE_BUSY_TIMEOUT'}}\n",
+ "in_process_verdict": {
+  "scenario": null,
+  "busy_timeout_ms": 30000,
+  "default_deadline_ms": 8000,
+  "scenario_overrides": {},
+  "per_scenario": {
+   "agent.commands": {
+    "deadline_ms": 8000,
+    "busy_timeout_ms": 30000,
+    "delta_ms": -22000,
+    "deadline_source": "default",
+    "effective_busy_timeout_ms": 8000,
+    "reachable": false,
+    "verdict": "DEADLINE_NOT_ABOVE_BUSY_TIMEOUT"
+   },
+   "plans.generate": {
+    "deadline_ms": 8000,
+    "busy_timeout_ms": 30000,
+    "delta_ms": -22000,
+    "deadline_source": "default",
+    "effective_busy_timeout_ms": 8000,
+    "reachable": false,
+    "verdict": "DEADLINE_NOT_ABOVE_BUSY_TIMEOUT"
+   }
+  },
+  "verdict": "DEADLINE_NOT_ABOVE_BUSY_TIMEOUT"
+ },
+ "verdict_rc": 0
+}
