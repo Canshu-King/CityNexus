@@ -1,0 +1,305 @@
+{
+ "order": "ORD-0281 keyed half",
+ "candidate_tip": "64d14b205263ec03fd4810b1b0877418495b87b0",
+ "base_tip": "dc964086c9d412573ac19d70b24b30e6c3ee6168",
+ "branch": "review/0281-write-deadline-keyed-b2",
+ "dir": "evidence/ord0281-keyed-write-deadline-gen2",
+ "files": [
+  {
+   "name": "ord0281_keyed_receipt.json",
+   "blob40": "730c159081c10c9b0ecbea2c276db8775ca152a7",
+   "bytes": 41381
+  },
+  {
+   "name": "ord0281_arms_matrix.json",
+   "blob40": "911ec7483c88ad43e3eae673e2a956a43aef89ec",
+   "bytes": 18094
+  },
+  {
+   "name": "previous_generation__ord0281_keyed_receipt.json",
+   "blob40": "f29a74d3e84ae78d80ccdb0b6caf9f48d3fada30",
+   "bytes": 38304
+  },
+  {
+   "name": "previous_generation__ord0281_arms_matrix.json",
+   "blob40": "f51894dc6559cce14013a461c982a5f7da54dd8c",
+   "bytes": 18094
+  },
+  {
+   "name": "pristine__arm_K1.json",
+   "blob40": "09344d1b5c42327e816e4ebf07a28619aeac0434",
+   "bytes": 253
+  },
+  {
+   "name": "pristine__arm_K2.json",
+   "blob40": "0e2e7bd6ad7eab3988a25c8119f003e9474c5dc5",
+   "bytes": 480
+  },
+  {
+   "name": "pristine__arm_K3.json",
+   "blob40": "88a0253e6ae5092556c3017b4f56cb5389e3609d",
+   "bytes": 253
+  },
+  {
+   "name": "pristine__arm_TA.json",
+   "blob40": "90434f9ec9b1d82c497cef2b45d94611c29516de",
+   "bytes": 539
+  },
+  {
+   "name": "pristine__arm_TB.json",
+   "blob40": "8ac10be58d7cd9f02aa09f642c4278ef357477f6",
+   "bytes": 253
+  },
+  {
+   "name": "pristine__arm_TC.json",
+   "blob40": "757b315c77caf041b2531d966260d068e3ed10a5",
+   "bytes": 253
+  },
+  {
+   "name": "pristine__arm_TD.json",
+   "blob40": "9cf0695deef14ac7d072744c3837d294cce36a4d",
+   "bytes": 253
+  },
+  {
+   "name": "pristine__authoritative.json",
+   "blob40": "83a26ea643c24a8c0c936825b10ff8d76d9c6178",
+   "bytes": 757
+  },
+  {
+   "name": "pristine__playwright_report.json",
+   "blob40": "252bbcb34855731d599fc4e4a8a8faf540d01a35",
+   "bytes": 23435
+  },
+  {
+   "name": "bound2000__arm_K1.json",
+   "blob40": "d775d44bfa1e185d5b28932193bc7445907d5458",
+   "bytes": 547
+  },
+  {
+   "name": "bound2000__arm_K2.json",
+   "blob40": "92aaf74224a68edfb1af0e8db785a1dc71631b09",
+   "bytes": 252
+  },
+  {
+   "name": "bound2000__arm_K3.json",
+   "blob40": "55c5abe50e9ca75b84eb5a6ca266cbe49af48de8",
+   "bytes": 571
+  },
+  {
+   "name": "bound2000__arm_TA.json",
+   "blob40": "c6ee92a699a1ac5b3e6bb4c81a9c85aab3012170",
+   "bytes": 538
+  },
+  {
+   "name": "bound2000__arm_TB.json",
+   "blob40": "7156fd5412023d748c0e76dce710229e81ef35e9",
+   "bytes": 545
+  },
+  {
+   "name": "bound2000__arm_TC.json",
+   "blob40": "b254b633b2a1f5c5cdefe4f664350ebfd9467d22",
+   "bytes": 594
+  },
+  {
+   "name": "bound2000__arm_TD.json",
+   "blob40": "170439286ca779ae9778271937bf4ab462b2711f",
+   "bytes": 606
+  },
+  {
+   "name": "bound2000__authoritative.json",
+   "blob40": "73c426aa12077a72e555fd2063064c208f6275a2",
+   "bytes": 757
+  },
+  {
+   "name": "bound2000__playwright_report.json",
+   "blob40": "96d4e0759e7ed84e51bda4484485a3e45bf81ee5",
+   "bytes": 19528
+  },
+  {
+   "name": "bound1000__arm_K1.json",
+   "blob40": "4801c8d52f5985dc4e548e95d78ae0d08435f4bd",
+   "bytes": 547
+  },
+  {
+   "name": "bound1000__arm_K2.json",
+   "blob40": "768991ea9084a52d18b84154ccc529af2fdcc401",
+   "bytes": 252
+  },
+  {
+   "name": "bound1000__arm_K3.json",
+   "blob40": "f33a0fbb20cd1396d0aa6a513da974cad7a2471d",
+   "bytes": 571
+  },
+  {
+   "name": "bound1000__arm_TA.json",
+   "blob40": "d62122614def19c2afb30c206d05c363e89bc6d7",
+   "bytes": 538
+  },
+  {
+   "name": "bound1000__arm_TB.json",
+   "blob40": "0c0c84a9ff6185bf826ac59bcd4372d05f9a4c8b",
+   "bytes": 545
+  },
+  {
+   "name": "bound1000__arm_TC.json",
+   "blob40": "5dcfb7a9f013f7e6baae3bc1914624e0f9b3183b",
+   "bytes": 594
+  },
+  {
+   "name": "bound1000__arm_TD.json",
+   "blob40": "71439e902c07299d7577ea28b917dc905dc8609a",
+   "bytes": 606
+  },
+  {
+   "name": "bound1000__authoritative.json",
+   "blob40": "261e8d0f1856219195f8ea6da7a075507daa0c0a",
+   "bytes": 757
+  },
+  {
+   "name": "bound1000__playwright_report.json",
+   "blob40": "093e37a716cf94d71b04059ce1aec089426950c5",
+   "bytes": 19519
+  },
+  {
+   "name": "ca_no_delegate__arm_K1.json",
+   "blob40": "acaab83bbd0001ffb9824bcd0afc3592a1bcb598",
+   "bytes": 547
+  },
+  {
+   "name": "ca_no_delegate__arm_K2.json",
+   "blob40": "bef32fd852ae7048b441225e192e6145853f7a1e",
+   "bytes": 252
+  },
+  {
+   "name": "ca_no_delegate__arm_K3.json",
+   "blob40": "0c3b695860fb1fa6ac60dbc276942c5d7881f6f3",
+   "bytes": 569
+  },
+  {
+   "name": "ca_no_delegate__arm_TA.json",
+   "blob40": "3078c8c37e7f6c11336614570a2a9efb87b2bb61",
+   "bytes": 538
+  },
+  {
+   "name": "ca_no_delegate__arm_TB.json",
+   "blob40": "a3d655bec4762e9b890db8249951c97e78842869",
+   "bytes": 545
+  },
+  {
+   "name": "ca_no_delegate__arm_TC.json",
+   "blob40": "71fa824c22485c86cd26169a1773cc7172de9815",
+   "bytes": 594
+  },
+  {
+   "name": "ca_no_delegate__arm_TD.json",
+   "blob40": "92bd4102990c10302a7a91334223310f2338cb99",
+   "bytes": 606
+  },
+  {
+   "name": "ca_no_delegate__authoritative.json",
+   "blob40": "a06cc9f919be68258f424edce49b84a8c6f77e45",
+   "bytes": 757
+  },
+  {
+   "name": "ca_no_delegate__playwright_report.json",
+   "blob40": "67db0b3bf5b38562755fba03129086ff2dbd6a09",
+   "bytes": 23696
+  },
+  {
+   "name": "ca_keyless_too__arm_K1.json",
+   "blob40": "12521a7efdd931627146fd1b2708136f3aed8573",
+   "bytes": 557
+  },
+  {
+   "name": "ca_keyless_too__arm_TA.json",
+   "blob40": "26c0d1110800fda8f09d06b247931a5aed365398",
+   "bytes": 538
+  },
+  {
+   "name": "ca_keyless_too__arm_TB.json",
+   "blob40": "8eba729fe67556bc1bce97c20625f1eb4ee7ce9d",
+   "bytes": 545
+  },
+  {
+   "name": "ca_keyless_too__arm_TC.json",
+   "blob40": "4bf6718664c5fc50d0478ae6ffc2a22b4942046c",
+   "bytes": 594
+  },
+  {
+   "name": "ca_keyless_too__arm_TD.json",
+   "blob40": "6c55ba11ea6802b3b76e77012028686865309172",
+   "bytes": 606
+  },
+  {
+   "name": "ca_keyless_too__authoritative.json",
+   "blob40": "ef724752e06944355113493ea7a72e66c9d531f4",
+   "bytes": 757
+  },
+  {
+   "name": "ca_keyless_too__playwright_report.json",
+   "blob40": "0a2a36634f0849d6fca7f83df574cd2780636a79",
+   "bytes": 22158
+  },
+  {
+   "name": "ca_fixed_secs__arm_TA.json",
+   "blob40": "58b0e932680cd8d17b036e1e1ee9ccedb7fc25bb",
+   "bytes": 538
+  },
+  {
+   "name": "ca_fixed_secs__arm_TB.json",
+   "blob40": "4cc1c758496848e0b59d62a0b146cfb7de2495ba",
+   "bytes": 550
+  },
+  {
+   "name": "ca_fixed_secs__authoritative.json",
+   "blob40": "1168f3f38348b7914e3d2a87bd1d5d3b78de2977",
+   "bytes": 757
+  },
+  {
+   "name": "ca_fixed_secs__playwright_report.json",
+   "blob40": "255f18072c42e08f091821e3acd656e894d9547f",
+   "bytes": 20724
+  },
+  {
+   "name": "writeDeadline.ts",
+   "blob40": "1d67e725ebb3348bbeb70d743793388ed36ed9d9",
+   "bytes": 7122
+  },
+  {
+   "name": "readDeadline.ts",
+   "blob40": "be04016af0b402dbe76cce79167475c77d0e77a4",
+   "bytes": 3393
+  },
+  {
+   "name": "execution_recovery_panel.tsx",
+   "blob40": "48a55ffca4e90d3c45d780f3bb7f9bfb1cdbd698",
+   "bytes": 18313
+  },
+  {
+   "name": "V14RecoveryTruthPanel.tsx",
+   "blob40": "17c27735e561682a1510ee6fc67aae1b710276c2",
+   "bytes": 6967
+  },
+  {
+   "name": "qoder-ord0281-keyed-write-deadline.spec.ts",
+   "blob40": "4f64c32890ec6791093faed281d86d709e4b026d",
+   "bytes": 23586
+  },
+  {
+   "name": "ord0281_run_arms.py",
+   "blob40": "e9dfe4a7c8040fb27b7f3bd7452d586b04ee748e",
+   "bytes": 15326
+  },
+  {
+   "name": "ord0281_receipt.py",
+   "blob40": "b0443582ceb593e1fb92709ed3b786ab30b8f1da",
+   "bytes": 19209
+  },
+  {
+   "name": "ord0281_keyed_legs.py",
+   "blob40": "b4059710bdf9b776595dced622187f1134b16dab",
+   "bytes": 7970
+  }
+ ],
+ "listed": 59
+}
