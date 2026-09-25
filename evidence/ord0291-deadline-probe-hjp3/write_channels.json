@@ -1,0 +1,512 @@
+{
+ "tree": "D:\\moodle\\_qoder_wt_45b0a5e",
+ "search_space": "every *.ts / *.tsx under frontend/src; rows matched by method:\"POST|PUT|PATCH|DELETE\"",
+ "write_method_literals": 64,
+ "channel_tally": {
+  "WRAPPER": 29,
+  "UNRESOLVED": 13,
+  "OTHER": 8,
+  "RAW_FETCH": 14
+ },
+ "per_site": [
+  {
+   "file": "frontend/src/api/citynexus.ts",
+   "line": 740,
+   "method": "POST",
+   "enclosing_call": "requestJson",
+   "helper": "requestJson @ frontend/src/api/citynexus.ts (same file)",
+   "channel": "WRAPPER"
+  },
+  {
+   "file": "frontend/src/api/citynexus.ts",
+   "line": 759,
+   "method": "POST",
+   "enclosing_call": "requestJson",
+   "helper": "requestJson @ frontend/src/api/citynexus.ts (same file)",
+   "channel": "WRAPPER"
+  },
+  {
+   "file": "frontend/src/api/citynexus.ts",
+   "line": 777,
+   "method": "POST",
+   "enclosing_call": "encodeURIComponent",
+   "channel": "UNRESOLVED",
+   "helper": "encodeURIComponent (definition not found in one hop)"
+  },
+  {
+   "file": "frontend/src/api/citynexus.ts",
+   "line": 815,
+   "method": "PUT",
+   "enclosing_call": "requestJson",
+   "helper": "requestJson @ frontend/src/api/citynexus.ts (same file)",
+   "channel": "WRAPPER"
+  },
+  {
+   "file": "frontend/src/api/citynexus.ts",
+   "line": 822,
+   "method": "POST",
+   "enclosing_call": "requestJson",
+   "helper": "requestJson @ frontend/src/api/citynexus.ts (same file)",
+   "channel": "WRAPPER"
+  },
+  {
+   "file": "frontend/src/api/citynexus.ts",
+   "line": 829,
+   "method": "POST",
+   "enclosing_call": "requestJson",
+   "helper": "requestJson @ frontend/src/api/citynexus.ts (same file)",
+   "channel": "WRAPPER"
+  },
+  {
+   "file": "frontend/src/api/citynexus.ts",
+   "line": 839,
+   "method": "POST",
+   "enclosing_call": "requestJson",
+   "helper": "requestJson @ frontend/src/api/citynexus.ts (same file)",
+   "channel": "WRAPPER"
+  },
+  {
+   "file": "frontend/src/api/citynexus.ts",
+   "line": 846,
+   "method": "POST",
+   "enclosing_call": "requestJson",
+   "helper": "requestJson @ frontend/src/api/citynexus.ts (same file)",
+   "channel": "WRAPPER"
+  },
+  {
+   "file": "frontend/src/api/citynexus.ts",
+   "line": 857,
+   "method": "POST",
+   "enclosing_call": "requestJson",
+   "helper": "requestJson @ frontend/src/api/citynexus.ts (same file)",
+   "channel": "WRAPPER"
+  },
+  {
+   "file": "frontend/src/api/citynexus.ts",
+   "line": 863,
+   "method": "POST",
+   "enclosing_call": "requestJson",
+   "helper": "requestJson @ frontend/src/api/citynexus.ts (same file)",
+   "channel": "WRAPPER"
+  },
+  {
+   "file": "frontend/src/api/citynexus.ts",
+   "line": 888,
+   "method": "POST",
+   "enclosing_call": "requestJson",
+   "helper": "requestJson @ frontend/src/api/citynexus.ts (same file)",
+   "channel": "WRAPPER"
+  },
+  {
+   "file": "frontend/src/api/citynexus.ts",
+   "line": 899,
+   "method": "POST",
+   "enclosing_call": "requestJson",
+   "helper": "requestJson @ frontend/src/api/citynexus.ts (same file)",
+   "channel": "WRAPPER"
+  },
+  {
+   "file": "frontend/src/api/citynexus.ts",
+   "line": 935,
+   "method": "POST",
+   "enclosing_call": "encodeURIComponent",
+   "channel": "UNRESOLVED",
+   "helper": "encodeURIComponent (definition not found in one hop)"
+  },
+  {
+   "file": "frontend/src/api/citynexus.ts",
+   "line": 951,
+   "method": "PUT",
+   "enclosing_call": "requestJson",
+   "helper": "requestJson @ frontend/src/api/citynexus.ts (same file)",
+   "channel": "WRAPPER"
+  },
+  {
+   "file": "frontend/src/api/citynexus.ts",
+   "line": 958,
+   "method": "POST",
+   "enclosing_call": "requestJson",
+   "helper": "requestJson @ frontend/src/api/citynexus.ts (same file)",
+   "channel": "WRAPPER"
+  },
+  {
+   "file": "frontend/src/api/citynexus.ts",
+   "line": 979,
+   "method": "POST",
+   "enclosing_call": "requestJson",
+   "helper": "requestJson @ frontend/src/api/citynexus.ts (same file)",
+   "channel": "WRAPPER"
+  },
+  {
+   "file": "frontend/src/api/citynexus.ts",
+   "line": 994,
+   "method": "POST",
+   "enclosing_call": "discoverRealCity",
+   "channel": "UNRESOLVED",
+   "helper": "discoverRealCity (definition not found in one hop)"
+  },
+  {
+   "file": "frontend/src/api/citynexus.ts",
+   "line": 1003,
+   "method": "POST",
+   "enclosing_call": "startGuardianAutopilot",
+   "channel": "UNRESOLVED",
+   "helper": "startGuardianAutopilot (definition not found in one hop)"
+  },
+  {
+   "file": "frontend/src/api/citynexus.ts",
+   "line": 1012,
+   "method": "POST",
+   "enclosing_call": "stopGuardianAutopilot",
+   "channel": "UNRESOLVED",
+   "helper": "stopGuardianAutopilot (definition not found in one hop)"
+  },
+  {
+   "file": "frontend/src/api/citynexus.ts",
+   "line": 1024,
+   "method": "POST",
+   "enclosing_call": "requestJson",
+   "helper": "requestJson @ frontend/src/api/citynexus.ts (same file)",
+   "channel": "WRAPPER"
+  },
+  {
+   "file": "frontend/src/api/citynexus.ts",
+   "line": 1050,
+   "method": "POST",
+   "enclosing_call": "stringify",
+   "channel": "UNRESOLVED",
+   "helper": "stringify (definition not found in one hop)"
+  },
+  {
+   "file": "frontend/src/api/citynexus.ts",
+   "line": 1066,
+   "method": "POST",
+   "enclosing_call": "stringify",
+   "channel": "UNRESOLVED",
+   "helper": "stringify (definition not found in one hop)"
+  },
+  {
+   "file": "frontend/src/api/citynexus.ts",
+   "line": 1072,
+   "method": "DELETE",
+   "enclosing_call": "requestJson",
+   "helper": "requestJson @ frontend/src/api/citynexus.ts (same file)",
+   "channel": "WRAPPER"
+  },
+  {
+   "file": "frontend/src/api/citynexus.ts",
+   "line": 1090,
+   "method": "POST",
+   "enclosing_call": "requestJson",
+   "helper": "requestJson @ frontend/src/api/citynexus.ts (same file)",
+   "channel": "WRAPPER"
+  },
+  {
+   "file": "frontend/src/api/citynexus.ts",
+   "line": 1103,
+   "method": "POST",
+   "enclosing_call": "requestJson",
+   "helper": "requestJson @ frontend/src/api/citynexus.ts (same file)",
+   "channel": "WRAPPER"
+  },
+  {
+   "file": "frontend/src/api/citynexus.ts",
+   "line": 1120,
+   "method": "POST",
+   "enclosing_call": "requestJson",
+   "helper": "requestJson @ frontend/src/api/citynexus.ts (same file)",
+   "channel": "WRAPPER"
+  },
+  {
+   "file": "frontend/src/api/citynexus.ts",
+   "line": 1140,
+   "method": "POST",
+   "enclosing_call": "requestJson",
+   "helper": "requestJson @ frontend/src/api/citynexus.ts (same file)",
+   "channel": "WRAPPER"
+  },
+  {
+   "file": "frontend/src/api/citynexus.ts",
+   "line": 1158,
+   "method": "POST",
+   "enclosing_call": "requestJson",
+   "helper": "requestJson @ frontend/src/api/citynexus.ts (same file)",
+   "channel": "WRAPPER"
+  },
+  {
+   "file": "frontend/src/api/citynexus.ts",
+   "line": 1170,
+   "method": "POST",
+   "enclosing_call": "requestJson",
+   "helper": "requestJson @ frontend/src/api/citynexus.ts (same file)",
+   "channel": "WRAPPER"
+  },
+  {
+   "file": "frontend/src/api/citynexus.ts",
+   "line": 1177,
+   "method": "POST",
+   "enclosing_call": "requestJson",
+   "helper": "requestJson @ frontend/src/api/citynexus.ts (same file)",
+   "channel": "WRAPPER"
+  },
+  {
+   "file": "frontend/src/api/travelerPreferences.ts",
+   "line": 70,
+   "method": "PUT",
+   "enclosing_call": "request",
+   "helper": "request @ frontend/src/api/travelerPreferences.ts (same file)",
+   "channel": "OTHER"
+  },
+  {
+   "file": "frontend/src/api/v12Authoritative.ts",
+   "line": 53,
+   "method": "POST",
+   "enclosing_call": "request",
+   "helper": "request @ frontend/src/api/v12Authoritative.ts (same file)",
+   "channel": "OTHER"
+  },
+  {
+   "file": "frontend/src/api/v12Authoritative.ts",
+   "line": 64,
+   "method": "POST",
+   "enclosing_call": "request",
+   "helper": "request @ frontend/src/api/v12Authoritative.ts (same file)",
+   "channel": "OTHER"
+  },
+  {
+   "file": "frontend/src/api/v12Authoritative.ts",
+   "line": 79,
+   "method": "POST",
+   "enclosing_call": "stringify",
+   "channel": "UNRESOLVED",
+   "helper": "stringify (definition not found in one hop)"
+  },
+  {
+   "file": "frontend/src/api/v12Authoritative.ts",
+   "line": 90,
+   "method": "POST",
+   "enclosing_call": "request",
+   "helper": "request @ frontend/src/api/v12Authoritative.ts (same file)",
+   "channel": "OTHER"
+  },
+  {
+   "file": "frontend/src/app/V8Experience.tsx",
+   "line": 843,
+   "method": "POST",
+   "enclosing_call": "setStayAttempts",
+   "channel": "UNRESOLVED",
+   "helper": "setStayAttempts (definition not found in one hop)"
+  },
+  {
+   "file": "frontend/src/app/V8Experience.tsx",
+   "line": 927,
+   "method": "POST",
+   "enclosing_call": "v8Request",
+   "helper": "v8Request @ frontend/src/app/V8Experience.tsx (same file)",
+   "channel": "WRAPPER"
+  },
+  {
+   "file": "frontend/src/app/V8Experience.tsx",
+   "line": 937,
+   "method": "POST",
+   "enclosing_call": "v8Request",
+   "helper": "v8Request @ frontend/src/app/V8Experience.tsx (same file)",
+   "channel": "WRAPPER"
+  },
+  {
+   "file": "frontend/src/app/V8Experience.tsx",
+   "line": 1030,
+   "method": "POST",
+   "enclosing_call": "v8Request",
+   "helper": "v8Request @ frontend/src/app/V8Experience.tsx (same file)",
+   "channel": "WRAPPER"
+  },
+  {
+   "file": "frontend/src/app/V8Experience.tsx",
+   "line": 1045,
+   "method": "POST",
+   "enclosing_call": "stringify",
+   "channel": "UNRESOLVED",
+   "helper": "stringify (definition not found in one hop)"
+  },
+  {
+   "file": "frontend/src/app/V8Experience.tsx",
+   "line": 1049,
+   "method": "POST",
+   "enclosing_call": "stringify",
+   "channel": "UNRESOLVED",
+   "helper": "stringify (definition not found in one hop)"
+  },
+  {
+   "file": "frontend/src/app/V8Experience.tsx",
+   "line": 1077,
+   "method": "POST",
+   "enclosing_call": "stringify",
+   "channel": "UNRESOLVED",
+   "helper": "stringify (definition not found in one hop)"
+  },
+  {
+   "file": "frontend/src/app/V8Experience.tsx",
+   "line": 1100,
+   "method": "PUT",
+   "enclosing_call": "v8Request",
+   "helper": "v8Request @ frontend/src/app/V8Experience.tsx (same file)",
+   "channel": "WRAPPER"
+  },
+  {
+   "file": "frontend/src/app/V8Experience.tsx",
+   "line": 1131,
+   "method": "POST",
+   "enclosing_call": "setBusy",
+   "channel": "UNRESOLVED",
+   "helper": "setBusy (definition not found in one hop)"
+  },
+  {
+   "file": "frontend/src/app/V8Experience.tsx",
+   "line": 1140,
+   "method": "POST",
+   "enclosing_call": "v8Request",
+   "helper": "v8Request @ frontend/src/app/V8Experience.tsx (same file)",
+   "channel": "WRAPPER"
+  },
+  {
+   "file": "frontend/src/app/V8Experience.tsx",
+   "line": 1164,
+   "method": "POST",
+   "enclosing_call": "v8Request",
+   "helper": "v8Request @ frontend/src/app/V8Experience.tsx (same file)",
+   "channel": "WRAPPER"
+  },
+  {
+   "file": "frontend/src/features/discovery/RealCityDiscoveryPanel.tsx",
+   "line": 104,
+   "method": "POST",
+   "enclosing_call": "request",
+   "helper": "request @ frontend/src/features/discovery/RealCityDiscoveryPanel.tsx (same file)",
+   "channel": "OTHER"
+  },
+  {
+   "file": "frontend/src/features/execution/LiveRecovery.tsx",
+   "line": 226,
+   "method": "POST",
+   "enclosing_call": "fetch",
+   "channel": "RAW_FETCH"
+  },
+  {
+   "file": "frontend/src/features/inbox/JourneyInboxWorkbench.tsx",
+   "line": 95,
+   "method": "POST",
+   "enclosing_call": "requestJson",
+   "helper": "requestJson @ frontend/src/features/inbox/JourneyInboxWorkbench.tsx (same file)",
+   "channel": "OTHER"
+  },
+  {
+   "file": "frontend/src/features/inbox/JourneyInboxWorkbench.tsx",
+   "line": 278,
+   "method": "POST",
+   "enclosing_call": "requestJson",
+   "helper": "requestJson @ frontend/src/features/inbox/JourneyInboxWorkbench.tsx (same file)",
+   "channel": "OTHER"
+  },
+  {
+   "file": "frontend/src/features/inbox/JourneyInboxWorkbench.tsx",
+   "line": 497,
+   "method": "PATCH",
+   "enclosing_call": "requestJson",
+   "helper": "requestJson @ frontend/src/features/inbox/JourneyInboxWorkbench.tsx (same file)",
+   "channel": "OTHER"
+  },
+  {
+   "file": "frontend/src/features/notifications/PushCapabilityCard.tsx",
+   "line": 57,
+   "method": "POST",
+   "enclosing_call": "fetch",
+   "channel": "RAW_FETCH"
+  },
+  {
+   "file": "frontend/src/features/planning/PlanComparison.tsx",
+   "line": 90,
+   "method": "POST",
+   "enclosing_call": "fetch",
+   "channel": "RAW_FETCH"
+  },
+  {
+   "file": "frontend/src/features/planning/PlanWithAiSheet.tsx",
+   "line": 493,
+   "method": "POST",
+   "enclosing_call": "fetch",
+   "channel": "RAW_FETCH"
+  },
+  {
+   "file": "frontend/src/features/planning/PlanWithAiSheet.tsx",
+   "line": 608,
+   "method": "POST",
+   "enclosing_call": "fetch",
+   "channel": "RAW_FETCH"
+  },
+  {
+   "file": "frontend/src/features/recovery/RecoveryRequiredPanel.tsx",
+   "line": 27,
+   "method": "POST",
+   "enclosing_call": "fetch",
+   "channel": "RAW_FETCH"
+  },
+  {
+   "file": "frontend/src/features/recovery/V14RecoveryTruthPanel.tsx",
+   "line": 70,
+   "method": "POST",
+   "enclosing_call": "fetch",
+   "channel": "RAW_FETCH"
+  },
+  {
+   "file": "frontend/src/features/simulation/simulationAdapter.ts",
+   "line": 230,
+   "method": "POST",
+   "enclosing_call": "fetch",
+   "channel": "RAW_FETCH"
+  },
+  {
+   "file": "frontend/src/features/simulation/simulationAdapter.ts",
+   "line": 297,
+   "method": "POST",
+   "enclosing_call": "fetch",
+   "channel": "RAW_FETCH"
+  },
+  {
+   "file": "frontend/src/features/simulation/simulationAdapter.ts",
+   "line": 336,
+   "method": "POST",
+   "enclosing_call": "fetch",
+   "channel": "RAW_FETCH"
+  },
+  {
+   "file": "frontend/src/features/simulation/simulationAdapter.ts",
+   "line": 377,
+   "method": "POST",
+   "enclosing_call": "fetch",
+   "channel": "RAW_FETCH"
+  },
+  {
+   "file": "frontend/src/features/stay/HotelsPanel.tsx",
+   "line": 63,
+   "method": "POST",
+   "enclosing_call": "fetch",
+   "channel": "RAW_FETCH"
+  },
+  {
+   "file": "frontend/src/features/stay/HotelsPanel.tsx",
+   "line": 64,
+   "method": "POST",
+   "enclosing_call": "fetch",
+   "channel": "RAW_FETCH"
+  },
+  {
+   "file": "frontend/src/features/stay/HotelsPanel.tsx",
+   "line": 89,
+   "method": "POST",
+   "enclosing_call": "fetch",
+   "channel": "RAW_FETCH"
+  }
+ ],
+ "coverage": "NOT EXHAUSTIVE - the enclosing call is the first call-shaped token on the literal line else on the 12 lines above; a helper is followed exactly one import hop; UNRESOLVED rows are listed rather than assigned to a channel"
+}
