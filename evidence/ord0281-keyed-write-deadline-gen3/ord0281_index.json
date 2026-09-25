@@ -6,114 +6,9 @@
  "dir": "evidence/ord0281-keyed-write-deadline-gen3",
  "files": [
   {
-   "name": "ord0281_keyed_receipt.json",
-   "blob40": "5534af61d26cab48821ad7437e71c5cc8199ae89",
-   "bytes": 55049
-  },
-  {
-   "name": "ord0281_arms_matrix.json",
-   "blob40": "8b9815ebe3bd924b8b54a469007fda227326f19b",
-   "bytes": 23011
-  },
-  {
-   "name": "previous_generation__ord0281_keyed_receipt.json",
-   "blob40": "730c159081c10c9b0ecbea2c276db8775ca152a7",
-   "bytes": 41381
-  },
-  {
-   "name": "previous_generation__ord0281_arms_matrix.json",
-   "blob40": "911ec7483c88ad43e3eae673e2a956a43aef89ec",
-   "bytes": 18094
-  },
-  {
-   "name": "pristine__arm_K1.json",
-   "blob40": "5636fdb7f1cb55582cd0bbef530f05488cb44ec3",
-   "bytes": 253
-  },
-  {
-   "name": "pristine__arm_K2.json",
-   "blob40": "40b742dd451fd6456cc1f6673e78096574ee9659",
-   "bytes": 610
-  },
-  {
-   "name": "pristine__arm_K3.json",
-   "blob40": "b79072e883bd9bb743b3362e9fb84cf9f1202ec0",
-   "bytes": 253
-  },
-  {
-   "name": "pristine__arm_TA.json",
-   "blob40": "789c10a15403858eb5a255d68e33e91500c3de09",
-   "bytes": 748
-  },
-  {
-   "name": "pristine__arm_TB.json",
-   "blob40": "bdc98d6e1f461c6985e33b6f27fa9c18f79c2477",
-   "bytes": 253
-  },
-  {
-   "name": "pristine__arm_TC.json",
-   "blob40": "949cc67fd010b2bf33628d7331f70bcd32c26aaf",
-   "bytes": 253
-  },
-  {
-   "name": "pristine__arm_TD.json",
-   "blob40": "c9cad01e16bce08fac9dcc5ccb64bd60dc79ef3c",
-   "bytes": 253
-  },
-  {
-   "name": "pristine__authoritative.json",
-   "blob40": "1f3ed1facc5cb9a469bc5d5f484fa1739eccc645",
-   "bytes": 757
-  },
-  {
-   "name": "pristine__playwright_report.json",
-   "blob40": "005922b4120a5bbd351a79ad1af1ebe8e33770b9",
-   "bytes": 23431
-  },
-  {
-   "name": "bound2000__arm_K1.json",
-   "blob40": "08487ded77b96947ea732a77c0788cf2112edd4a",
-   "bytes": 653
-  },
-  {
-   "name": "bound2000__arm_K2.json",
-   "blob40": "bd72912631f2fe405b90888d52fd2ab5dfe27249",
-   "bytes": 252
-  },
-  {
-   "name": "bound2000__arm_K3.json",
-   "blob40": "be049e2b23d137491b1709612fb1b59fd1a1562c",
-   "bytes": 678
-  },
-  {
-   "name": "bound2000__arm_TA.json",
-   "blob40": "1de1d02fdb7e73acffde5740c145f44be8b3f64e",
-   "bytes": 745
-  },
-  {
-   "name": "bound2000__arm_TB.json",
-   "blob40": "4051aa1894e8bbb58ae50a7cd955582f2170a6c2",
-   "bytes": 752
-  },
-  {
-   "name": "bound2000__arm_TC.json",
-   "blob40": "b0a5763ee51ac9cf27602405ea9fcef91e9f65f4",
-   "bytes": 801
-  },
-  {
-   "name": "bound2000__arm_TD.json",
-   "blob40": "dba6aabf7e0cf96607ec86867e74cfaf7a1d2132",
-   "bytes": 813
-  },
-  {
-   "name": "bound2000__authoritative.json",
-   "blob40": "17881df366a5806d42325520688219d2a92b47a6",
-   "bytes": 757
-  },
-  {
-   "name": "bound2000__playwright_report.json",
-   "blob40": "597d7f3fc27e2d2a99596e215245c4ca73422a53",
-   "bytes": 19528
+   "name": "V14RecoveryTruthPanel.tsx",
+   "blob40": "17c27735e561682a1510ee6fc67aae1b710276c2",
+   "bytes": 6967
   },
   {
    "name": "bound1000__arm_K1.json",
@@ -161,6 +56,106 @@
    "bytes": 19519
   },
   {
+   "name": "bound2000__arm_K1.json",
+   "blob40": "08487ded77b96947ea732a77c0788cf2112edd4a",
+   "bytes": 653
+  },
+  {
+   "name": "bound2000__arm_K2.json",
+   "blob40": "bd72912631f2fe405b90888d52fd2ab5dfe27249",
+   "bytes": 252
+  },
+  {
+   "name": "bound2000__arm_K3.json",
+   "blob40": "be049e2b23d137491b1709612fb1b59fd1a1562c",
+   "bytes": 678
+  },
+  {
+   "name": "bound2000__arm_TA.json",
+   "blob40": "1de1d02fdb7e73acffde5740c145f44be8b3f64e",
+   "bytes": 745
+  },
+  {
+   "name": "bound2000__arm_TB.json",
+   "blob40": "4051aa1894e8bbb58ae50a7cd955582f2170a6c2",
+   "bytes": 752
+  },
+  {
+   "name": "bound2000__arm_TC.json",
+   "blob40": "b0a5763ee51ac9cf27602405ea9fcef91e9f65f4",
+   "bytes": 801
+  },
+  {
+   "name": "bound2000__arm_TD.json",
+   "blob40": "dba6aabf7e0cf96607ec86867e74cfaf7a1d2132",
+   "bytes": 813
+  },
+  {
+   "name": "bound2000__authoritative.json",
+   "blob40": "17881df366a5806d42325520688219d2a92b47a6",
+   "bytes": 757
+  },
+  {
+   "name": "bound2000__playwright_report.json",
+   "blob40": "597d7f3fc27e2d2a99596e215245c4ca73422a53",
+   "bytes": 19528
+  },
+  {
+   "name": "ca_fixed_secs__arm_TA.json",
+   "blob40": "d900520677d2a2f3320c99efff59ef4a86f6b082",
+   "bytes": 747
+  },
+  {
+   "name": "ca_fixed_secs__arm_TB.json",
+   "blob40": "76dca26ed2ee51422ff0bb08a29e79bba23d329d",
+   "bytes": 757
+  },
+  {
+   "name": "ca_fixed_secs__authoritative.json",
+   "blob40": "d0748eb287665eaf54b8a2aa5eb7a7b5f12853a1",
+   "bytes": 757
+  },
+  {
+   "name": "ca_fixed_secs__playwright_report.json",
+   "blob40": "97ccfe5e9cfd5053e90c81cb4fdbb6bc58a57dec",
+   "bytes": 20724
+  },
+  {
+   "name": "ca_keyless_too__arm_K1.json",
+   "blob40": "87d180e689303d0aa23afa7ea87b63332eb13ad0",
+   "bytes": 663
+  },
+  {
+   "name": "ca_keyless_too__arm_TA.json",
+   "blob40": "5c1800cdff619933dce9ada73e21b26da27854ad",
+   "bytes": 745
+  },
+  {
+   "name": "ca_keyless_too__arm_TB.json",
+   "blob40": "79e4b43dc20f22a0130c1720134afac1bb640c63",
+   "bytes": 752
+  },
+  {
+   "name": "ca_keyless_too__arm_TC.json",
+   "blob40": "dd17fe3f79f78151e3a40d5e98b051cea83011f2",
+   "bytes": 801
+  },
+  {
+   "name": "ca_keyless_too__arm_TD.json",
+   "blob40": "100e28c16458ebfd2a156387c461081cd193bf03",
+   "bytes": 813
+  },
+  {
+   "name": "ca_keyless_too__authoritative.json",
+   "blob40": "2f31a9de953c92870d5c409eb72bf747eac3f17a",
+   "bytes": 757
+  },
+  {
+   "name": "ca_keyless_too__playwright_report.json",
+   "blob40": "e7f4127b46c4ea3ad4aee33cc357d4725005021f",
+   "bytes": 22158
+  },
+  {
    "name": "ca_no_delegate__arm_K1.json",
    "blob40": "8faa636dd0d2f0a0cb75f998eb2d1340504b902d",
    "bytes": 653
@@ -206,89 +201,29 @@
    "bytes": 23705
   },
   {
-   "name": "ca_keyless_too__arm_K1.json",
-   "blob40": "87d180e689303d0aa23afa7ea87b63332eb13ad0",
-   "bytes": 663
-  },
-  {
-   "name": "ca_keyless_too__arm_TA.json",
-   "blob40": "5c1800cdff619933dce9ada73e21b26da27854ad",
-   "bytes": 745
-  },
-  {
-   "name": "ca_keyless_too__arm_TB.json",
-   "blob40": "79e4b43dc20f22a0130c1720134afac1bb640c63",
-   "bytes": 752
-  },
-  {
-   "name": "ca_keyless_too__arm_TC.json",
-   "blob40": "dd17fe3f79f78151e3a40d5e98b051cea83011f2",
-   "bytes": 801
-  },
-  {
-   "name": "ca_keyless_too__arm_TD.json",
-   "blob40": "100e28c16458ebfd2a156387c461081cd193bf03",
-   "bytes": 813
-  },
-  {
-   "name": "ca_keyless_too__authoritative.json",
-   "blob40": "2f31a9de953c92870d5c409eb72bf747eac3f17a",
-   "bytes": 757
-  },
-  {
-   "name": "ca_keyless_too__playwright_report.json",
-   "blob40": "e7f4127b46c4ea3ad4aee33cc357d4725005021f",
-   "bytes": 22158
-  },
-  {
-   "name": "ca_fixed_secs__arm_TA.json",
-   "blob40": "d900520677d2a2f3320c99efff59ef4a86f6b082",
-   "bytes": 747
-  },
-  {
-   "name": "ca_fixed_secs__arm_TB.json",
-   "blob40": "76dca26ed2ee51422ff0bb08a29e79bba23d329d",
-   "bytes": 757
-  },
-  {
-   "name": "ca_fixed_secs__authoritative.json",
-   "blob40": "d0748eb287665eaf54b8a2aa5eb7a7b5f12853a1",
-   "bytes": 757
-  },
-  {
-   "name": "ca_fixed_secs__playwright_report.json",
-   "blob40": "97ccfe5e9cfd5053e90c81cb4fdbb6bc58a57dec",
-   "bytes": 20724
-  },
-  {
-   "name": "writeDeadline.ts",
-   "blob40": "1d67e725ebb3348bbeb70d743793388ed36ed9d9",
-   "bytes": 7122
-  },
-  {
-   "name": "readDeadline.ts",
-   "blob40": "be04016af0b402dbe76cce79167475c77d0e77a4",
-   "bytes": 3393
-  },
-  {
    "name": "execution_recovery_panel.tsx",
    "blob40": "48a55ffca4e90d3c45d780f3bb7f9bfb1cdbd698",
    "bytes": 18313
   },
   {
-   "name": "V14RecoveryTruthPanel.tsx",
-   "blob40": "17c27735e561682a1510ee6fc67aae1b710276c2",
-   "bytes": 6967
+   "name": "ord0281_arms_matrix.json",
+   "blob40": "8b9815ebe3bd924b8b54a469007fda227326f19b",
+   "bytes": 23011
   },
   {
-   "name": "qoder-ord0281-keyed-write-deadline.spec.ts",
-   "blob40": "ece928c80599cbdddde5f83883533b9c9bd4648d",
-   "bytes": 24059
+   "name": "ord0281_deliver_gen3.py",
+   "blob40": "f064fd871b1fda5fea19e9cb5b335dfa323743bc",
+   "bytes": 17529
   },
   {
-   "name": "ord0281_run_arms.py",
-   "blob40": "1cb2fd111f2c3ea49f349203e59d72b0c42b9f1b",
-   "bytes": 15377
+   "name": "ord0281_keyed_legs.py",
+   "blob40": "b4059710bdf9b776595dced622187f1134b16dab",
+   "bytes": 7970
+  },
+  {
+   "name": "ord0281_keyed_receipt.json",
+   "blob40": "5534af61d26cab48821ad7437e71c5cc8199ae89",
+   "bytes": 55049
   },
   {
    "name": "ord0281_receipt.py",
@@ -296,10 +231,92 @@
    "bytes": 31580
   },
   {
-   "name": "ord0281_keyed_legs.py",
-   "blob40": "b4059710bdf9b776595dced622187f1134b16dab",
-   "bytes": 7970
+   "name": "ord0281_run_arms.py",
+   "blob40": "1cb2fd111f2c3ea49f349203e59d72b0c42b9f1b",
+   "bytes": 15377
+  },
+  {
+   "name": "ord0281_verify_gen3.json",
+   "blob40": "3ffdff2c0f2bf810eb6472793d3f9bfe73882bdc",
+   "bytes": 2382
+  },
+  {
+   "name": "ord0281_verify_gen3.py",
+   "blob40": "633162e5dd1807fbc25b4a1e789a924c071ce321",
+   "bytes": 6146
+  },
+  {
+   "name": "previous_generation__ord0281_arms_matrix.json",
+   "blob40": "911ec7483c88ad43e3eae673e2a956a43aef89ec",
+   "bytes": 18094
+  },
+  {
+   "name": "previous_generation__ord0281_keyed_receipt.json",
+   "blob40": "730c159081c10c9b0ecbea2c276db8775ca152a7",
+   "bytes": 41381
+  },
+  {
+   "name": "pristine__arm_K1.json",
+   "blob40": "5636fdb7f1cb55582cd0bbef530f05488cb44ec3",
+   "bytes": 253
+  },
+  {
+   "name": "pristine__arm_K2.json",
+   "blob40": "40b742dd451fd6456cc1f6673e78096574ee9659",
+   "bytes": 610
+  },
+  {
+   "name": "pristine__arm_K3.json",
+   "blob40": "b79072e883bd9bb743b3362e9fb84cf9f1202ec0",
+   "bytes": 253
+  },
+  {
+   "name": "pristine__arm_TA.json",
+   "blob40": "789c10a15403858eb5a255d68e33e91500c3de09",
+   "bytes": 748
+  },
+  {
+   "name": "pristine__arm_TB.json",
+   "blob40": "bdc98d6e1f461c6985e33b6f27fa9c18f79c2477",
+   "bytes": 253
+  },
+  {
+   "name": "pristine__arm_TC.json",
+   "blob40": "949cc67fd010b2bf33628d7331f70bcd32c26aaf",
+   "bytes": 253
+  },
+  {
+   "name": "pristine__arm_TD.json",
+   "blob40": "c9cad01e16bce08fac9dcc5ccb64bd60dc79ef3c",
+   "bytes": 253
+  },
+  {
+   "name": "pristine__authoritative.json",
+   "blob40": "1f3ed1facc5cb9a469bc5d5f484fa1739eccc645",
+   "bytes": 757
+  },
+  {
+   "name": "pristine__playwright_report.json",
+   "blob40": "005922b4120a5bbd351a79ad1af1ebe8e33770b9",
+   "bytes": 23431
+  },
+  {
+   "name": "qoder-ord0281-keyed-write-deadline.spec.ts",
+   "blob40": "ece928c80599cbdddde5f83883533b9c9bd4648d",
+   "bytes": 24059
+  },
+  {
+   "name": "readDeadline.ts",
+   "blob40": "be04016af0b402dbe76cce79167475c77d0e77a4",
+   "bytes": 3393
+  },
+  {
+   "name": "writeDeadline.ts",
+   "blob40": "1d67e725ebb3348bbeb70d743793388ed36ed9d9",
+   "bytes": 7122
   }
  ],
- "listed": 59
+ "listed": 59,
+ "self_reference": "this file is not in its own list; its blob is what the read-back of the branch prints",
+ "audit": "every blob here was recomputed from the branch's own answer by ord0281_audit_gen3.py"
 }
