@@ -1,0 +1,559 @@
+{
+ "arm": "old_old_lock",
+ "run_id": "C2-214340",
+ "intent_declared_before": "the real product 500 off a real write-lock contention, paired leg by leg",
+ "tip_backend": "dc964086c9d412573ac19d70b24b30e6c3ee6168",
+ "tip_bundle_source": "dc964086c9d412573ac19d70b24b30e6c3ee6168",
+ "mode": "lock",
+ "rig": {
+  "backend_pid": 52444,
+  "proxy_pid": 21724,
+  "backend_up": true,
+  "proxy_up": true,
+  "proxy_mode_declared": "pass",
+  "proxy_mode_matches_plan": true,
+  "identity_two_sided": true,
+  "journey_id": "957cfaec-d57b-4e07-b0e3-01b84955b2ef",
+  "db": "D:\\moodle\\_hjp3_0300c2_0925\\o0300c2_old.s3db"
+ },
+ "bundle": {
+  "which": "old",
+  "outdir": "D:\\moodle\\_hjp3_0300c2_0925\\dist_old",
+  "asset": "index--q2k569d.js",
+  "bytes": 1253228,
+  "sha256_64_hex": "a55e8bcebe3cae47eacc485fb19c4381211ac6b437de2a495ce5f59493d4bf93",
+  "markers": {
+   "network_card_wording": true,
+   "device_note_for_network_branch": false,
+   "http_branch_wording": true,
+   "technical_detail_wording": true
+  },
+  "build_rc": 0
+ },
+ "backend_bytes_equal_to_new_export": "n/a for this arm",
+ "node_tail": [
+  "{\"mode\":\"lock\",\"result_status\":\"SKIPPED_EXTERNAL_DEPENDENCY\",\"network_card\":false,\"http500_card\":false,\"details\":1,\"fetch_rejected\":false,\"status\":200,\"token\":\"hjp3c2-6dcedbeb74324cc8\",\"body_parsed\":true}"
+ ],
+ "node_rc": 0,
+ "pairing": {
+  "write_legs": [
+   {
+    "leg": "957cfaec-d57b-4e07-b0e3-01b84955b2ef/agent/commands",
+    "paired": true,
+    "pair_id": "hjp3c2-6dcedbeb74324cc8",
+    "proxy_lines_with_this_token": 1,
+    "reached_upstream": true,
+    "upstream_status": 200,
+    "upstream_bytes": 7147,
+    "upstream_content_type": "application/json",
+    "upstream_body_head": "{\"mission\":{\"id\":\"58fced3d-2d4a-4b22-9923-ce33d7c41920\",\"journey_id\":\"957cfaec-d57b-4e07-b0e3-01b84955b2ef\",\"trigger_eve",
+    "upstream_elapsed_ms": 56,
+    "answered_by_per_proxy_record": null,
+    "proxy_mode_per_proxy_record": "pass",
+    "proxy_says_it_aborted": false,
+    "page_fetch_rejected": false,
+    "page_reject": null,
+    "page_saw_status": 200,
+    "page_saw_ok": true,
+    "page_elapsed_ms": 63,
+    "browser_stack_saw": {
+     "url": "/api/v1/journeys/957cfaec-d57b-4e07-b0e3-01b84955b2ef/agent/commands",
+     "status": 200,
+     "pair_token": "hjp3c2-6dcedbeb74324cc8",
+     "content_type": "application/json",
+     "failure": null,
+     "at_wall": "2026-09-25T13:44:56.220Z"
+    },
+    "app_read_the_body": {
+     "url": "http://127.0.0.1:8643/api/v1/journeys/957cfaec-d57b-4e07-b0e3-01b84955b2ef/agent/commands",
+     "status": 200,
+     "pair_token": "hjp3c2-6dcedbeb74324cc8",
+     "at_wall": "2026-09-25T13:44:56.220Z",
+     "parsed": true,
+     "top_type": "object",
+     "top_keys": [
+      "mission",
+      "event_id",
+      "run"
+     ]
+    },
+    "app_body_parse_failed": false
+   },
+   {
+    "leg": "957cfaec-d57b-4e07-b0e3-01b84955b2ef/plans/generate",
+    "paired": true,
+    "pair_id": "hjp3c2-44d380ef105d430f",
+    "proxy_lines_with_this_token": 1,
+    "reached_upstream": true,
+    "upstream_status": 500,
+    "upstream_bytes": 21,
+    "upstream_content_type": "text/plain; charset=utf-8",
+    "upstream_body_head": "Internal Server Error",
+    "upstream_elapsed_ms": 32362,
+    "answered_by_per_proxy_record": null,
+    "proxy_mode_per_proxy_record": "pass",
+    "proxy_says_it_aborted": false,
+    "page_fetch_rejected": false,
+    "page_reject": null,
+    "page_saw_status": 500,
+    "page_saw_ok": false,
+    "page_elapsed_ms": 32367,
+    "browser_stack_saw": {
+     "url": "/api/v1/journeys/957cfaec-d57b-4e07-b0e3-01b84955b2ef/plans/generate",
+     "status": 500,
+     "pair_token": "hjp3c2-44d380ef105d430f",
+     "content_type": "text/plain; charset=utf-8",
+     "failure": null,
+     "at_wall": "2026-09-25T13:45:58.809Z"
+    },
+    "app_read_the_body": {
+     "url": "http://127.0.0.1:8643/api/v1/journeys/957cfaec-d57b-4e07-b0e3-01b84955b2ef/plans/generate",
+     "status": 500,
+     "pair_token": "hjp3c2-44d380ef105d430f",
+     "at_wall": "2026-09-25T13:45:28.622Z",
+     "parsed": false,
+     "error_name": "SyntaxError",
+     "error_message": "Unexpected token 'I', \"Internal S\"... is not valid JSON"
+    },
+    "app_body_parse_failed": true
+   }
+  ],
+  "count": 2,
+  "any_leg_paired": true,
+  "leg_that_got_a_500": "957cfaec-d57b-4e07-b0e3-01b84955b2ef/plans/generate",
+  "that_500_leg_is_paired": true,
+  "that_500_arrived_at_the_page": true,
+  "that_500_body_was_read_and_failed_to_parse": true
+ },
+ "screen": {
+  "cross_check_data_result_status": "SKIPPED_EXTERNAL_DEPENDENCY",
+  "network_card_painted": false,
+  "http500_card_painted": false,
+  "details_elements_present": 1,
+  "result_card_painted": "AI 暂时不可用\n\n规划助手这次没能连上。你的行程没有被改动，可以稍后重试。\n\n技术详情",
+  "reason_label_painted": "",
+  "reason_value_painted": "",
+  "body_has_no_readble_answer_note": false,
+  "cross_check_data_reason_origin": "server"
+ },
+ "page_errors": [],
+ "legs_all": [
+  {
+   "url": "/api/v1/journeys/957cfaec-d57b-4e07-b0e3-01b84955b2ef/experience",
+   "method": "GET",
+   "api": true,
+   "sent_at_wall": "2026-09-25T13:44:55.027Z",
+   "sent_at": 1790343895030,
+   "fetch_rejected": false,
+   "status": 200,
+   "ok": true,
+   "content_type": "application/json",
+   "pair_token": "hjp3c2-be007d3193cf4073",
+   "elapsed_ms": 44
+  },
+  {
+   "url": "/api/v1/journeys/957cfaec-d57b-4e07-b0e3-01b84955b2ef/replans",
+   "method": "GET",
+   "api": true,
+   "sent_at_wall": "2026-09-25T13:44:55.075Z",
+   "sent_at": 1790343895075,
+   "fetch_rejected": false,
+   "status": 200,
+   "ok": true,
+   "content_type": "application/json",
+   "pair_token": "hjp3c2-e3275f6f7e63493c",
+   "elapsed_ms": 106
+  },
+  {
+   "url": "/api/v1/demo/scene",
+   "method": "GET",
+   "api": true,
+   "sent_at_wall": "2026-09-25T13:44:55.182Z",
+   "sent_at": 1790343895182,
+   "fetch_rejected": false,
+   "status": 200,
+   "ok": true,
+   "content_type": "application/json",
+   "pair_token": "hjp3c2-aea342592dfe4913",
+   "elapsed_ms": 14
+  },
+  {
+   "url": "/api/v1/journeys/957cfaec-d57b-4e07-b0e3-01b84955b2ef/agent-feed?limit=200",
+   "method": "GET",
+   "api": true,
+   "sent_at_wall": "2026-09-25T13:44:55.183Z",
+   "sent_at": 1790343895183,
+   "fetch_rejected": false,
+   "status": 200,
+   "ok": true,
+   "content_type": "application/json",
+   "pair_token": "hjp3c2-25a1461c49544d40",
+   "elapsed_ms": 34
+  },
+  {
+   "url": "/api/v1/journeys/957cfaec-d57b-4e07-b0e3-01b84955b2ef/plans",
+   "method": "GET",
+   "api": true,
+   "sent_at_wall": "2026-09-25T13:44:55.183Z",
+   "sent_at": 1790343895183,
+   "fetch_rejected": false,
+   "status": 200,
+   "ok": true,
+   "content_type": "application/json",
+   "pair_token": "hjp3c2-40aed2f0298d44a0",
+   "elapsed_ms": 34
+  },
+  {
+   "url": "/api/v1/journeys/957cfaec-d57b-4e07-b0e3-01b84955b2ef/wallet",
+   "method": "GET",
+   "api": true,
+   "sent_at_wall": "2026-09-25T13:44:55.189Z",
+   "sent_at": 1790343895189,
+   "fetch_rejected": false,
+   "status": 200,
+   "ok": true,
+   "content_type": "application/json",
+   "pair_token": "hjp3c2-9fc04308d4a841ae",
+   "elapsed_ms": 54
+  },
+  {
+   "url": "/api/v1/journeys/957cfaec-d57b-4e07-b0e3-01b84955b2ef/twin",
+   "method": "GET",
+   "api": true,
+   "sent_at_wall": "2026-09-25T13:44:55.184Z",
+   "sent_at": 1790343895184,
+   "fetch_rejected": false,
+   "status": 200,
+   "ok": true,
+   "content_type": "application/json",
+   "pair_token": "hjp3c2-e4c22d3195db4454",
+   "elapsed_ms": 59
+  },
+  {
+   "url": "/api/v1/travelers/f0745dc6-7f64-4815-a965-e9267f1c465f/agent-policy",
+   "method": "GET",
+   "api": true,
+   "sent_at_wall": "2026-09-25T13:44:55.189Z",
+   "sent_at": 1790343895189,
+   "fetch_rejected": false,
+   "status": 200,
+   "ok": true,
+   "content_type": "application/json",
+   "pair_token": "hjp3c2-bfadd98ebc27402f",
+   "elapsed_ms": 54
+  },
+  {
+   "url": "/api/v1/journeys/957cfaec-d57b-4e07-b0e3-01b84955b2ef/agent-feed?limit=200",
+   "method": "GET",
+   "api": true,
+   "sent_at_wall": "2026-09-25T13:44:55.183Z",
+   "sent_at": 1790343895183,
+   "fetch_rejected": false,
+   "status": 200,
+   "ok": true,
+   "content_type": "application/json",
+   "pair_token": "hjp3c2-91b051f07f1d4936",
+   "elapsed_ms": 68
+  },
+  {
+   "url": "/api/v1/journeys/957cfaec-d57b-4e07-b0e3-01b84955b2ef/offline-snapshot",
+   "method": "GET",
+   "api": true,
+   "sent_at_wall": "2026-09-25T13:44:55.189Z",
+   "sent_at": 1790343895189,
+   "fetch_rejected": false,
+   "status": 200,
+   "ok": true,
+   "content_type": "application/json",
+   "pair_token": "hjp3c2-d85d9b379b644368",
+   "elapsed_ms": 62
+  },
+  {
+   "url": "/api/v1/agent/runtime-status",
+   "method": "GET",
+   "api": true,
+   "sent_at_wall": "2026-09-25T13:44:55.189Z",
+   "sent_at": 1790343895189,
+   "fetch_rejected": false,
+   "status": 200,
+   "ok": true,
+   "content_type": "application/json",
+   "pair_token": "hjp3c2-725a99e08f8647d8",
+   "elapsed_ms": 63
+  },
+  {
+   "url": "/api/v1/places?city_code=CNX-DEMO",
+   "method": "GET",
+   "api": true,
+   "sent_at_wall": "2026-09-25T13:44:55.636Z",
+   "sent_at": 1790343895636,
+   "fetch_rejected": false,
+   "status": 200,
+   "ok": true,
+   "content_type": "application/json",
+   "pair_token": "hjp3c2-7693ba7821934c6e",
+   "elapsed_ms": 14
+  },
+  {
+   "url": "/api/v1/agent/runtime-status",
+   "method": "GET",
+   "api": true,
+   "sent_at_wall": "2026-09-25T13:44:55.636Z",
+   "sent_at": 1790343895636,
+   "fetch_rejected": false,
+   "status": 200,
+   "ok": true,
+   "content_type": "application/json",
+   "pair_token": "hjp3c2-e4689e4731c448dc",
+   "elapsed_ms": 23
+  },
+  {
+   "url": "/api/v1/journeys/957cfaec-d57b-4e07-b0e3-01b84955b2ef/plans",
+   "method": "GET",
+   "api": true,
+   "sent_at_wall": "2026-09-25T13:44:56.131Z",
+   "sent_at": 1790343896131,
+   "fetch_rejected": false,
+   "status": 200,
+   "ok": true,
+   "content_type": "application/json",
+   "pair_token": "hjp3c2-09eb1939842f425a",
+   "elapsed_ms": 26
+  },
+  {
+   "url": "/api/v1/journeys/957cfaec-d57b-4e07-b0e3-01b84955b2ef/agent/commands",
+   "method": "POST",
+   "api": true,
+   "sent_at_wall": "2026-09-25T13:44:56.157Z",
+   "sent_at": 1790343896157,
+   "request_body": "{\"command\":\"想傍晚在老城慢慢走一圈，别太赶\"}",
+   "fetch_rejected": false,
+   "status": 200,
+   "ok": true,
+   "content_type": "application/json",
+   "pair_token": "hjp3c2-6dcedbeb74324cc8",
+   "elapsed_ms": 63
+  },
+  {
+   "url": "/api/v1/journeys/957cfaec-d57b-4e07-b0e3-01b84955b2ef/plans",
+   "method": "GET",
+   "api": true,
+   "sent_at_wall": "2026-09-25T13:44:56.222Z",
+   "sent_at": 1790343896222,
+   "fetch_rejected": false,
+   "status": 200,
+   "ok": true,
+   "content_type": "application/json",
+   "pair_token": "hjp3c2-14a70188e90249e2",
+   "elapsed_ms": 27
+  },
+  {
+   "url": "/api/v1/places?city_code=CNX-DEMO",
+   "method": "GET",
+   "api": true,
+   "sent_at_wall": "2026-09-25T13:44:56.249Z",
+   "sent_at": 1790343896249,
+   "fetch_rejected": false,
+   "status": 200,
+   "ok": true,
+   "content_type": "application/json",
+   "pair_token": "hjp3c2-971899d294fe4dfe",
+   "elapsed_ms": 5
+  },
+  {
+   "url": "/api/v1/journeys/957cfaec-d57b-4e07-b0e3-01b84955b2ef/plans/generate",
+   "method": "POST",
+   "api": true,
+   "sent_at_wall": "2026-09-25T13:44:56.255Z",
+   "sent_at": 1790343896255,
+   "request_body": "{\"candidate_count\":3}",
+   "fetch_rejected": false,
+   "status": 500,
+   "ok": false,
+   "content_type": "text/plain; charset=utf-8",
+   "pair_token": "hjp3c2-44d380ef105d430f",
+   "elapsed_ms": 32367
+  },
+  {
+   "url": "/api/v1/journeys/957cfaec-d57b-4e07-b0e3-01b84955b2ef/twin",
+   "method": "GET",
+   "api": true,
+   "sent_at_wall": "2026-09-25T13:45:10.256Z",
+   "sent_at": 1790343910256,
+   "fetch_rejected": false,
+   "status": 200,
+   "ok": true,
+   "content_type": "application/json",
+   "pair_token": "hjp3c2-074239f4b68346f7",
+   "elapsed_ms": 48574
+  }
+ ],
+ "consumed_all": [
+  {
+   "url": "http://127.0.0.1:8643/api/v1/journeys/957cfaec-d57b-4e07-b0e3-01b84955b2ef/agent-feed?limit=200",
+   "status": 200,
+   "pair_token": "hjp3c2-25a1461c49544d40",
+   "at_wall": "2026-09-25T13:44:55.217Z",
+   "parsed": true,
+   "top_type": "object",
+   "top_keys": [
+    "journey_id",
+    "source",
+    "events"
+   ]
+  },
+  {
+   "url": "http://127.0.0.1:8643/api/v1/journeys/957cfaec-d57b-4e07-b0e3-01b84955b2ef/plans",
+   "status": 200,
+   "pair_token": "hjp3c2-40aed2f0298d44a0",
+   "at_wall": "2026-09-25T13:44:55.217Z",
+   "parsed": true,
+   "top_type": "object",
+   "top_keys": []
+  },
+  {
+   "url": "http://127.0.0.1:8643/api/v1/journeys/957cfaec-d57b-4e07-b0e3-01b84955b2ef/twin",
+   "status": 200,
+   "pair_token": "hjp3c2-e4c22d3195db4454",
+   "at_wall": "2026-09-25T13:44:55.243Z",
+   "parsed": true,
+   "top_type": "object",
+   "top_keys": [
+    "journey_id",
+    "active_plan_version_id",
+    "current_activity_id",
+    "latest_event_id",
+    "projection_status",
+    "snapshot_at",
+    "upcoming_commitments",
+    "context"
+   ]
+  },
+  {
+   "url": "http://127.0.0.1:8643/api/v1/journeys/957cfaec-d57b-4e07-b0e3-01b84955b2ef/agent-feed?limit=200",
+   "status": 200,
+   "pair_token": "hjp3c2-91b051f07f1d4936",
+   "at_wall": "2026-09-25T13:44:55.251Z",
+   "parsed": true,
+   "top_type": "object",
+   "top_keys": [
+    "journey_id",
+    "source",
+    "events"
+   ]
+  },
+  {
+   "url": "http://127.0.0.1:8643/api/v1/places?city_code=CNX-DEMO",
+   "status": 200,
+   "pair_token": "hjp3c2-7693ba7821934c6e",
+   "at_wall": "2026-09-25T13:44:55.650Z",
+   "parsed": true,
+   "top_type": "object",
+   "top_keys": [
+    "0",
+    "1",
+    "2",
+    "3",
+    "4",
+    "5",
+    "6",
+    "7"
+   ]
+  },
+  {
+   "url": "http://127.0.0.1:8643/api/v1/agent/runtime-status",
+   "status": 200,
+   "pair_token": "hjp3c2-e4689e4731c448dc",
+   "at_wall": "2026-09-25T13:44:55.659Z",
+   "parsed": true,
+   "top_type": "object",
+   "top_keys": [
+    "runtime_identity",
+    "native_binary_detected",
+    "native_mcp_proven",
+    "mcp_server",
+    "deepseek_configured",
+    "hermes_compat_configured",
+    "hermes_native_gateway"
+   ]
+  },
+  {
+   "url": "http://127.0.0.1:8643/api/v1/journeys/957cfaec-d57b-4e07-b0e3-01b84955b2ef/plans",
+   "status": 200,
+   "pair_token": "hjp3c2-09eb1939842f425a",
+   "at_wall": "2026-09-25T13:44:56.157Z",
+   "parsed": true,
+   "top_type": "object",
+   "top_keys": []
+  },
+  {
+   "url": "http://127.0.0.1:8643/api/v1/journeys/957cfaec-d57b-4e07-b0e3-01b84955b2ef/agent/commands",
+   "status": 200,
+   "pair_token": "hjp3c2-6dcedbeb74324cc8",
+   "at_wall": "2026-09-25T13:44:56.220Z",
+   "parsed": true,
+   "top_type": "object",
+   "top_keys": [
+    "mission",
+    "event_id",
+    "run"
+   ]
+  },
+  {
+   "url": "http://127.0.0.1:8643/api/v1/journeys/957cfaec-d57b-4e07-b0e3-01b84955b2ef/plans",
+   "status": 200,
+   "pair_token": "hjp3c2-14a70188e90249e2",
+   "at_wall": "2026-09-25T13:44:56.249Z",
+   "parsed": true,
+   "top_type": "object",
+   "top_keys": []
+  },
+  {
+   "url": "http://127.0.0.1:8643/api/v1/places?city_code=CNX-DEMO",
+   "status": 200,
+   "pair_token": "hjp3c2-971899d294fe4dfe",
+   "at_wall": "2026-09-25T13:44:56.254Z",
+   "parsed": true,
+   "top_type": "object",
+   "top_keys": [
+    "0",
+    "1",
+    "2",
+    "3",
+    "4",
+    "5",
+    "6",
+    "7"
+   ]
+  },
+  {
+   "url": "http://127.0.0.1:8643/api/v1/journeys/957cfaec-d57b-4e07-b0e3-01b84955b2ef/plans/generate",
+   "status": 500,
+   "pair_token": "hjp3c2-44d380ef105d430f",
+   "at_wall": "2026-09-25T13:45:28.622Z",
+   "parsed": false,
+   "error_name": "SyntaxError",
+   "error_message": "Unexpected token 'I', \"Internal S\"... is not valid JSON"
+  },
+  {
+   "url": "http://127.0.0.1:8643/api/v1/journeys/957cfaec-d57b-4e07-b0e3-01b84955b2ef/twin",
+   "status": 200,
+   "pair_token": "hjp3c2-074239f4b68346f7",
+   "at_wall": "2026-09-25T13:45:58.830Z",
+   "parsed": true,
+   "top_type": "object",
+   "top_keys": [
+    "journey_id",
+    "active_plan_version_id",
+    "current_activity_id",
+    "latest_event_id",
+    "projection_status",
+    "snapshot_at",
+    "upcoming_commitments",
+    "context"
+   ]
+  }
+ ],
+ "proxy_lines_in_this_arm": 19,
+ "waited_ms": 65735
+}
