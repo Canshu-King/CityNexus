@@ -1,0 +1,205 @@
+{
+ "file": "e2e/qoder-ord0302-unreadable-server-body.spec.ts",
+ "arm": "X1",
+ "runId": "0302nul11421226",
+ "status": "passed",
+ "expectation": "passed",
+ "reading": {
+  "want": "device",
+  "force_shape": "five HTTP 200 bodies on both write legs (R19-R23)",
+  "shape_count": 5,
+  "per_shape": {
+   "R19_④_200_empty_body": {
+    "status": "NO_PLANS_PRODUCED",
+    "promise_in_copy": true,
+    "details_count": 1,
+    "reason": "plans compiled; 0 usable result(s) reached this screen",
+    "origin": "device"
+   },
+   "R20_④_200_json_empty_object": {
+    "status": "NO_PLANS_PRODUCED",
+    "promise_in_copy": true,
+    "details_count": 1,
+    "reason": "plans compiled; 0 usable result(s) reached this screen",
+    "origin": "device"
+   },
+   "R21_④_200_json_array": {
+    "status": "NO_PLANS_PRODUCED",
+    "promise_in_copy": true,
+    "details_count": 1,
+    "reason": "plans compiled; 0 usable result(s) reached this screen",
+    "origin": "device"
+   },
+   "R22_④_200_text_plain_payload": {
+    "status": "NO_PLANS_PRODUCED",
+    "promise_in_copy": true,
+    "details_count": 1,
+    "reason": "plans compiled; 0 usable result(s) reached this screen",
+    "origin": "device"
+   },
+   "R23_④_200_mission_unusable_status": {
+    "status": "NO_PLANS_PRODUCED",
+    "promise_in_copy": true,
+    "details_count": 1,
+    "reason": "plans compiled; 0 usable result(s) reached this screen",
+    "origin": "device"
+   }
+  },
+  "read": {
+   "status": "NO_PLANS_PRODUCED",
+   "promise_in_copy": true,
+   "details_count": 1,
+   "reason": "plans compiled; 0 usable result(s) reached this screen",
+   "origin": "device",
+   "shape_count": 5
+  },
+  "verdict": "MET",
+  "rows": [
+   {
+    "claim": "R19_④_200_empty_body: the card's promise and the DOM agree (promise => block exists)",
+    "ok": true,
+    "got": {
+     "promise_in_copy": true,
+     "details_count": 1
+    }
+   },
+   {
+    "claim": "R19_④_200_empty_body: this is the shape X-5 named",
+    "ok": true,
+    "got": {
+     "status": "NO_PLANS_PRODUCED"
+    }
+   },
+   {
+    "claim": "R19_④_200_empty_body: its block carries a reading rather than nothing",
+    "ok": true,
+    "got": {
+     "reason": "plans compiled; 0 usable result(s) reached this screen"
+    }
+   },
+   {
+    "claim": "R19_④_200_empty_body: the copy still points there (Q53=①: render it, keep the pointer)",
+    "ok": true,
+    "got": {
+     "promise_in_copy": true
+    }
+   },
+   {
+    "claim": "R20_④_200_json_empty_object: the card's promise and the DOM agree (promise => block exists)",
+    "ok": true,
+    "got": {
+     "promise_in_copy": true,
+     "details_count": 1
+    }
+   },
+   {
+    "claim": "R20_④_200_json_empty_object: this is the shape X-5 named",
+    "ok": true,
+    "got": {
+     "status": "NO_PLANS_PRODUCED"
+    }
+   },
+   {
+    "claim": "R20_④_200_json_empty_object: its block carries a reading rather than nothing",
+    "ok": true,
+    "got": {
+     "reason": "plans compiled; 0 usable result(s) reached this screen"
+    }
+   },
+   {
+    "claim": "R20_④_200_json_empty_object: the copy still points there (Q53=①: render it, keep the pointer)",
+    "ok": true,
+    "got": {
+     "promise_in_copy": true
+    }
+   },
+   {
+    "claim": "R21_④_200_json_array: the card's promise and the DOM agree (promise => block exists)",
+    "ok": true,
+    "got": {
+     "promise_in_copy": true,
+     "details_count": 1
+    }
+   },
+   {
+    "claim": "R21_④_200_json_array: this is the shape X-5 named",
+    "ok": true,
+    "got": {
+     "status": "NO_PLANS_PRODUCED"
+    }
+   },
+   {
+    "claim": "R21_④_200_json_array: its block carries a reading rather than nothing",
+    "ok": true,
+    "got": {
+     "reason": "plans compiled; 0 usable result(s) reached this screen"
+    }
+   },
+   {
+    "claim": "R21_④_200_json_array: the copy still points there (Q53=①: render it, keep the pointer)",
+    "ok": true,
+    "got": {
+     "promise_in_copy": true
+    }
+   },
+   {
+    "claim": "R22_④_200_text_plain_payload: the card's promise and the DOM agree (promise => block exists)",
+    "ok": true,
+    "got": {
+     "promise_in_copy": true,
+     "details_count": 1
+    }
+   },
+   {
+    "claim": "R22_④_200_text_plain_payload: this is the shape X-5 named",
+    "ok": true,
+    "got": {
+     "status": "NO_PLANS_PRODUCED"
+    }
+   },
+   {
+    "claim": "R22_④_200_text_plain_payload: its block carries a reading rather than nothing",
+    "ok": true,
+    "got": {
+     "reason": "plans compiled; 0 usable result(s) reached this screen"
+    }
+   },
+   {
+    "claim": "R22_④_200_text_plain_payload: the copy still points there (Q53=①: render it, keep the pointer)",
+    "ok": true,
+    "got": {
+     "promise_in_copy": true
+    }
+   },
+   {
+    "claim": "R23_④_200_mission_unusable_status: the card's promise and the DOM agree (promise => block exists)",
+    "ok": true,
+    "got": {
+     "promise_in_copy": true,
+     "details_count": 1
+    }
+   },
+   {
+    "claim": "R23_④_200_mission_unusable_status: this is the shape X-5 named",
+    "ok": true,
+    "got": {
+     "status": "NO_PLANS_PRODUCED"
+    }
+   },
+   {
+    "claim": "R23_④_200_mission_unusable_status: its block carries a reading rather than nothing",
+    "ok": true,
+    "got": {
+     "reason": "plans compiled; 0 usable result(s) reached this screen"
+    }
+   },
+   {
+    "claim": "R23_④_200_mission_unusable_status: the copy still points there (Q53=①: render it, keep the pointer)",
+    "ok": true,
+    "got": {
+     "promise_in_copy": true
+    }
+   }
+  ]
+ }
+}
