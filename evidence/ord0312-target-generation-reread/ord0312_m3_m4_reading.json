@@ -1,0 +1,90 @@
+{
+ "order": "ORD-0312 (measurement half) - M3 generation binding and M4 data-plane state",
+ "asked_in": "### ORD-0312 → HJ-P3（测量）, re-pointed to 7856e03f by CMDR-0925-1920",
+ "scope": "which bundle the shared phone chain serves, and whether a real backend is listening on :8000",
+ "generation_as_ordered": "7856e03f6238da3000976eb6e690a448dfa39b9a (per CMDR-0925-1920)",
+ "generation_named_by_the_commander_00_36": "dc964086c9d412573ac19d70b24b30e6c3ee6168",
+ "binding_blob_the_order_cites": {
+  "blob": "370fbb2e541b77050018013e4947b68199d6ce44",
+  "schema": "CNX_CMDR_PHONE_SIDE_PROBE_V1",
+  "probed_at_local": "2026-09-25 17:52:47 +0800",
+  "generation_under_test": "5aff3722d5c36c760a424f5fea5c3a771298f9ac",
+  "index_named_refs": [
+   "/assets/index-BTzTyrqI.js",
+   "/assets/index-I45CQek8.css"
+  ],
+  "rows": [
+   {
+    "path": "/assets/index-BTzTyrqI.js",
+    "http_status": 200,
+    "served_bytes": 1253398,
+    "served_sha256": "9d117a64cd1d52f64d5eff3b04e55272805598390574702369d3cbe04a5f6057"
+   },
+   {
+    "path": "/assets/index-I45CQek8.css",
+    "http_status": 200,
+    "served_bytes": 183897,
+    "served_sha256": "1b3632785212847b19ecbdbbdeb4fbae19ea9ce75060ed19739dc908c8f6a58f"
+   },
+   {
+    "path": "/v10-sw.js",
+    "http_status": 200,
+    "served_bytes": 2055,
+    "served_sha256": "743dce3ee5b172faa50c57030114bc7be014d2b1aa6f60ac60d2676e38f4376e"
+   }
+  ]
+ },
+ "my_build_of_the_cited_generation": {
+  "asset": "assets/index-BTzTyrqI.js",
+  "bytes": 1253398,
+  "sha256_64_hex": "9d117a64cd1d52f64d5eff3b04e55272805598390574702369d3cbe04a5f6057",
+  "equals_the_cited_probe_rows": false
+ },
+ "what_the_chain_serves": {
+  "at_22_0x": {
+   "asset": "assets/index-DWgtVWb0.js",
+   "bytes": 1255094,
+   "sha256_64_hex": "1c90b81eca9e8947b05821586b6c1d2af2ff69487f266006d3d7ae16bd74c51c",
+   "matches_a_candidate_build": "7856e03f6238da3000976eb6e690a448dfa39b9a"
+  },
+  "at_00_1x": {
+   "asset": "assets/index-DWgtVWb0.js",
+   "bytes": 1255094,
+   "sha256_64_hex": "1c90b81eca9e8947b05821586b6c1d2af2ff69487f266006d3d7ae16bd74c51c",
+   "same_bytes_as_22_0x": true,
+   "matches_a_candidate_build": [
+    "7856e03f"
+   ]
+  }
+ },
+ "M3_verdict": {
+  "the_cited_binding_blob_matches_the_generation_it_named": true,
+  "the_cited_binding_blob_matches_the_ordered_generation_7856e03f": false,
+  "the_ordered_generation_is_what_the_chain_serves": true,
+  "therefore_M3_is_STOP_AND_REPORT": true
+ },
+ "M4": {
+  "port": ":8000",
+  "listening_pids_now": [],
+  "listener_count": 0,
+  "verdict": "NOT_AVAILABLE as ruled (Q61/:8000 不补)",
+  "how": "netstat -ano counted for 127.0.0.1:8000 + LISTENING in this run",
+  "my_own_ports_are": [
+   8651,
+   8652,
+   8653,
+   8654,
+   8621,
+   8622
+  ]
+ },
+ "authority_tip_read_at": "00:44:54",
+ "mirror_tip_read": "refs/heads/mirror/integration-frontend-apple-pass1",
+ "M1_M2_status": {
+  "M1_both_directions_already_measured_in": "evidence/ord0301-p3-same-chain-hjp3/ (cells K2/K3/K4, runs P3-223608 P3-223703 P3-222816 P3-222841 P3-222513 P3-222752)",
+  "M1_basis": "innerText read AFTER opening 技术详情 (the fold makes innerText empty - the first reader of that batch scored a present label as absent before it was fixed), with the server-side field values listed beside it",
+  "M2_green_direction": "measured: 技术详情 exists and was raw-read on the deployed generation (details=1, arms P3-223608 / P3-222513)",
+  "M2_red_direction": "NOT MEASURED YET: it needs a mutant of the deployed bundle that drives the details count to 0 on the branch that carries the sentence 原因原文在「技术详情」里 (PlanWithAiSheet.tsx:287, and :203 for a BLOCKED code with no local wording), and that must redden exactly this cell",
+  "M2_blocker_named": "on the deployed generation the answers this product can actually send on that leg are 4xx/5xx; reaching :287 needs a mission whose compose step named a data cause, which is a different trigger than anything pass 3 sent"
+ }
+}
