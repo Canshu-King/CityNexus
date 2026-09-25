@@ -1,0 +1,112 @@
+{
+ "ref": {
+  "name": "heads/review/0302-unreadable-server-body-b",
+  "tip": "5aff3722d5c36c760a424f5fea5c3a771298f9ac",
+  "parents": [
+   "3d9dcb8a7918dca4178fd3bbb8cca0f730e05c35"
+  ],
+  "ancestry_via_compare": "ahead",
+  "commits_ahead": 2,
+  "commits_behind": 0,
+  "on_top_of_base_only": true
+ },
+ "at_ref": {
+  "frontend/src/features/planning/PlanWithAiSheet.tsx": {
+   "blob40": "f61d5312e8b33807d3e5304d1fa9fb7f77a518aa",
+   "bytes": 50281,
+   "api_sha_agrees": true,
+   "evidence_copy_identical": true
+  },
+  "frontend/e2e/qoder-ord0302-unreadable-server-body.spec.ts": {
+   "blob40": "a0c13b1fd9815d8e8daad2b727dbe0adde3b0f36",
+   "bytes": 16149,
+   "api_sha_agrees": true,
+   "evidence_copy_identical": true
+  }
+ },
+ "receipt": {
+  "blob40": "910b78a9587fc96c714b4ab0bc01c70ed777b06c",
+  "cells": 12,
+  "candidate_tip_in_receipt": "5aff3722d5c36c760a424f5fea5c3a771298f9ac",
+  "derived_result_all_null": true,
+  "every_cell_has_readings": true
+ },
+ "arms_recomputed": {
+  "N1": {
+   "matrix_status": "passed",
+   "receipt_claims": "MET",
+   "agree": true
+  },
+  "N2": {
+   "matrix_status": "passed",
+   "receipt_claims": "MET",
+   "agree": true
+  },
+  "N3": {
+   "matrix_status": "passed",
+   "receipt_claims": "MET",
+   "agree": true
+  },
+  "X1": {
+   "matrix_status": "passed",
+   "receipt_claims": "MET",
+   "agree": true
+  },
+  "X2": {
+   "matrix_status": "passed",
+   "receipt_claims": "MET",
+   "agree": true
+  }
+ },
+ "mismatches": [],
+ "counter_arms": {
+  "ca_unsafe_read": {
+   "intended": "N1",
+   "red": [
+    "N1"
+   ],
+   "independent": true,
+   "meets_expectation": true
+  },
+  "ca_null_on_network": {
+   "intended": "N3",
+   "red": [
+    "N3"
+   ],
+   "independent": true,
+   "meets_expectation": true
+  },
+  "ca_x5_no_block": {
+   "intended": "X1",
+   "red": [
+    "X1"
+   ],
+   "independent": true,
+   "meets_expectation": true
+  },
+  "ca_x5_soft_promise": {
+   "intended": "X1",
+   "red": [
+    "X1"
+   ],
+   "independent": true,
+   "meets_expectation": true
+  }
+ },
+ "claim_gate": {
+  "bus": {
+   "claim_coordinate_check_r3.py": 0,
+   "claim_coordinate_check_r4b.py": 0
+  },
+  "ledger": {
+   "claim_coordinate_check_r3.py": 0,
+   "claim_coordinate_check_r4b.py": 0
+  },
+  "bus_comment_id": 5830242970
+ },
+ "index": {
+  "listed": 42,
+  "names_itself": false,
+  "blob40": "425c7e3a2698b95fa7ce1b139aa30f689d0deeb1"
+ }
+}
