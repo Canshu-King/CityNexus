@@ -1,0 +1,104 @@
+{
+ "measured_on": "90d29a172e186aab6e6cb138ab4583ccf93bfa68",
+ "measured_on_how_read": "git ls-remote of refs/heads/mirror/integration-frontend-apple-pass1, re-read at export time by ORD-0300 (same commit, tree reused)",
+ "export_facts": {
+  "backend_dir": "D:\\moodle\\_hjp3_0300_0925\\snap\\backend",
+  "exists": true,
+  "outdir": "D:\\moodle\\_hjp3_0300_0925\\dist_0300",
+  "git_on_ancestor_path": [],
+  "git_inside_export": []
+ },
+ "bundle_facts": {
+  "served_asset": "index-BN1w-xlK.js",
+  "served_bytes": 1249595,
+  "served_sha256": "57c2a927f9e65ca0b33acdc737cbf941fc395c214aa213d861a4f7e5c664338e",
+  "matches_copy_on_disk": true,
+  "ord0280_device_marker_in_served_bytes": true,
+  "ord0300_http_branch_marker_in_served_bytes": true,
+  "network_card_marker_in_served_bytes": true,
+  "source_has_http_branch": true,
+  "source_has_network_fallback": true,
+  "read_deadline_constant_in_served_bytes": true
+ },
+ "backend": {
+  "port": 8561,
+  "pid": 46944,
+  "tag": "real_default_config",
+  "env_overrides": {},
+  "listening": true,
+  "exited": false,
+  "exit_rc": null,
+  "log_tail": "INFO:     Started server process [42436]\nINFO:     Waiting for application startup.\nINFO:     Application startup complete.\nINFO:     Uvicorn running on http://127.0.0.1:8561 (Press CTRL+C to quit)\n",
+  "cmdline_at_start": "D:/moodle/CityNexus/.venv/Scripts/python.exe -m uvicorn app.main:app --host 127.0.0.1 --port 8561 --log-level info"
+ },
+ "backend_port": 8561,
+ "db": "D:\\moodle\\_hjp3_0301_0925\\o0301.s3db",
+ "db_created_by": "the product's own ensure_schema() at import; file deleted before start (R-SCHEMA-01 fresh-or-no-run)",
+ "origin": {
+  "pid": 31756,
+  "port": 8563,
+  "cmdline_at_start": "D:/moodle/CityNexus/.venv/Scripts/python.exe D:\\moodle\\HJ-P3_evidence\\o0301_origin.py serve 8563 8561"
+ },
+ "faces": [
+  {
+   "port": 8562,
+   "pid": 14988,
+   "upstream_backend_port": 8561,
+   "tag": "real_backend",
+   "cmdline_at_start": "node node_modules/vite/bin/vite.js preview --outDir D:\\moodle\\_hjp3_0300_0925\\dist_0300 --port 8562 --host 127.0.0.1 --strictPort"
+  },
+  {
+   "port": 8564,
+   "pid": 37196,
+   "upstream_backend_port": 8563,
+   "tag": "outcome_origin",
+   "cmdline_at_start": "node node_modules/vite/bin/vite.js preview --outDir D:\\moodle\\_hjp3_0300_0925\\dist_0300 --port 8564 --host 127.0.0.1 --strictPort"
+  },
+  {
+   "port": 8565,
+   "pid": 51276,
+   "upstream_backend_port": 8566,
+   "tag": "upstream_absent",
+   "cmdline_at_start": "node node_modules/vite/bin/vite.js preview --outDir D:\\moodle\\_hjp3_0300_0925\\dist_0300 --port 8565 --host 127.0.0.1 --strictPort"
+  }
+ ],
+ "ports": {
+  "backend_real": 8561,
+  "face_real": 8562,
+  "outcome_origin": 8563,
+  "face_controlled": 8564,
+  "face_upstream_absent": 8565,
+  "deliberately_empty": 8566
+ },
+ "seed": {
+  "seed_rc": 0,
+  "seed": {
+   "places_before": 0,
+   "seeded_by_this_call": true,
+   "places_after": 8
+  },
+  "traveler_http": 201,
+  "traveler_id": "ab3d1aa0-c69c-4b0a-99ff-14d65c2410ee",
+  "journey_http": 201,
+  "journey_id": "d845ac26-0add-4305-bd3f-3f7c6f6fe3c1",
+  "journey_city": "CNX-DEMO"
+ },
+ "captured_envelope": {
+  "asked": "http://127.0.0.1:8561/api/v1/journeys/d845ac26-0add-4305-bd3f-3f7c6f6fe3c1/plans/generate",
+  "status": 422,
+  "bytes": 1443,
+  "sha256": "9acb65ea8f353e3740f0944e960fc36633bec0600aadea53f31eb97f74b58fe9",
+  "saved": "envelope_real.json",
+  "envelope_keys": [
+   "code",
+   "details",
+   "message",
+   "message_key",
+   "reason_code",
+   "trace_id"
+  ],
+  "code": "VALIDATION_ERROR",
+  "message": "No feasible plan candidates satisfy the journey constraints",
+  "message_key": "request.invalid"
+ }
+}
