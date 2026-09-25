@@ -1,0 +1,20 @@
+{
+ "order": "ORD-0310",
+ "lane": "D e345b9d6",
+ "kind": "BUS_DELIVERY_PROOF",
+ "written_at": "2026-09-25T23:29:58+08:00",
+ "comment_id": 5834964517,
+ "permalink": "https://github.com/Canshu-King/CityNexus-Workspace/issues/1#issuecomment-5834964517",
+ "created_at": "2026-09-25T15:28:06Z",
+ "read_by": "GET /repos/Canshu-King/CityNexus-Workspace/issues/comments/5834964517",
+ "body_file": "ord0310-post-body-r3.md",
+ "body_bytes_sent": 24004,
+ "body_bytes_read_back": 24004,
+ "body_blob_sent": "b85c11fe63e21b26a27ef4bf7dce5c331f4bd04f",
+ "body_blob_read_back": "b85c11fe63e21b26a27ef4bf7dce5c331f4bd04f",
+ "read_back_equals_sent_byte_for_byte": true,
+ "tail_is_the_closing_line_from_its_own_file": true,
+ "closing_line_bytes": 83,
+ "closing_line_blob": "b82ca923501c312b6931ad894c607ab9e43e1137",
+ "transport_note": "the POST raised SSL UNEXPECTED_EOF_WHILE_READING on the response; a presence check (review/ord0310_bus_presence.py) read the exact body blob back off the bus before any retry was considered, so no second comment was created"
+}
