@@ -1,0 +1,142 @@
+{
+ "ran_at_local": "2026-09-26T01:18:51+0800",
+ "order": "ORD-0312 M3 - generation binding against the new probe",
+ "lane": "HJ-P3 aad2d1f2-4de9-406b-a5df-afa0e2bcea58",
+ "scope": "the front-end asset the phone chain serves, and the per-arm binding of pass-3 readings to it",
+ "generation_under_test": "7856e03f6238da3000976eb6e690a448dfa39b9a",
+ "artifact_read": {
+  "path": "evidence/cmdr-phone-side-probe-0115/probe_r2.json",
+  "cited_blob": "c6c6ce251520e9656b985129d00cd049ad35774a",
+  "blob_recomputed_from_bytes_i_read": "c6c6ce251520e9656b985129d00cd049ad35774a",
+  "cited_equals_recomputed": true,
+  "bytes": 2238,
+  "also_on_branch_at_that_path": "c6c6ce251520e9656b985129d00cd049ad35774a",
+  "probe_probed_at_local": "2026-09-26 01:15:01 +0800",
+  "probe_overall": "DEPLOYED_AND_BYTE_IDENTICAL_ON_PHONE_SIDE",
+  "probe_serve_root": "D:\\moodle\\_qoder_preview_20260920\\dist",
+  "probe_tunnel_host": "obligation-plain-arcade-bean.trycloudflare.com"
+ },
+ "how_read": "GET /git/blobs/<40hex> over the API and re-hash with the git blob header; the phone chain was NOT contacted by this run (my own two reads of it were at 22:0x and 00:1x, GET only)",
+ "probe_generation_matches_the_ordered_generation": true,
+ "row_checks": {
+  "js_asset_i_read_myself": {
+   "probe_row": {
+    "path": "/assets/index-DWgtVWb0.js",
+    "served_bytes": 1255094,
+    "served_sha256": "1c90b81eca9e8947b05821586b6c1d2af2ff69487f266006d3d7ae16bd74c51c",
+    "http_status": 200
+   },
+   "my_22_0x_read": {
+    "asset": "assets/index-DWgtVWb0.js",
+    "bytes": 1255094,
+    "sha256_64_hex": "1c90b81eca9e8947b05821586b6c1d2af2ff69487f266006d3d7ae16bd74c51c"
+   },
+   "my_00_1x_read": {
+    "asset": "assets/index-DWgtVWb0.js",
+    "bytes": 1255094,
+    "sha256_64_hex": "1c90b81eca9e8947b05821586b6c1d2af2ff69487f266006d3d7ae16bd74c51c"
+   },
+   "probe_equals_my_22_0x_read": true,
+   "probe_equals_my_00_1x_read": true,
+   "my_two_reads_agree": true
+  },
+  "rows_i_did_not_fetch": {
+   "assets/index-I45CQek8.css": {
+    "in_the_probe": "1b3632785212847b19ecbdbbdeb4fbae19ea9ce75060ed19739dc908c8f6a58f",
+    "in_the_probe_bytes": 183897,
+    "my_own_read": "NOT MEASURED BY ME - I never fetched this row; carrying it means trusting his artefact, so it is named, not folded in"
+   },
+   "v10-sw.js": {
+    "in_the_probe": "beac71ab72b71624c10325d5e688a4127bcc36be245e08cdd04b690d2313ad60",
+    "in_the_probe_bytes": 2055,
+    "my_own_read": "NOT MEASURED BY ME - I never fetched this row; carrying it means trusting his artefact, so it is named, not folded in"
+   }
+  }
+ },
+ "per_arm_binding": {
+  "P3-222950": {
+   "generation": "7856e03f6238da3000976eb6e690a448dfa39b9a",
+   "asset_named_by_my_build": "/assets/index-DWgtVWb0.js",
+   "asset_bytes": 1255094,
+   "asset_sha256_64_hex": "1c90b81eca9e8947b05821586b6c1d2af2ff69487f266006d3d7ae16bd74c51c",
+   "equals_the_probe_row_for_that_asset": true,
+   "served_asset_equals_this_cells_asset": true
+  },
+  "P3-223608": {
+   "generation": "7856e03f6238da3000976eb6e690a448dfa39b9a",
+   "asset_named_by_my_build": "/assets/index-DWgtVWb0.js",
+   "asset_bytes": 1255094,
+   "asset_sha256_64_hex": "1c90b81eca9e8947b05821586b6c1d2af2ff69487f266006d3d7ae16bd74c51c",
+   "equals_the_probe_row_for_that_asset": true,
+   "served_asset_equals_this_cells_asset": true
+  },
+  "P3-222513": {
+   "generation": "7856e03f6238da3000976eb6e690a448dfa39b9a",
+   "asset_named_by_my_build": "/assets/index-DWgtVWb0.js",
+   "asset_bytes": 1255094,
+   "asset_sha256_64_hex": "1c90b81eca9e8947b05821586b6c1d2af2ff69487f266006d3d7ae16bd74c51c",
+   "equals_the_probe_row_for_that_asset": true,
+   "served_asset_equals_this_cells_asset": true
+  },
+  "P3-222905": {
+   "generation": "7856e03f6238da3000976eb6e690a448dfa39b9a",
+   "asset_named_by_my_build": "/assets/index-DWgtVWb0.js",
+   "asset_bytes": 1255094,
+   "asset_sha256_64_hex": "1c90b81eca9e8947b05821586b6c1d2af2ff69487f266006d3d7ae16bd74c51c",
+   "equals_the_probe_row_for_that_asset": true,
+   "served_asset_equals_this_cells_asset": true
+  },
+  "P3-222816": {
+   "generation": "7856e03f6238da3000976eb6e690a448dfa39b9a",
+   "asset_named_by_my_build": "/assets/index-DWgtVWb0.js",
+   "asset_bytes": 1255094,
+   "asset_sha256_64_hex": "1c90b81eca9e8947b05821586b6c1d2af2ff69487f266006d3d7ae16bd74c51c",
+   "equals_the_probe_row_for_that_asset": true,
+   "served_asset_equals_this_cells_asset": true
+  },
+  "P3-223703": {
+   "generation": "dc964086c9d412573ac19d70b24b30e6c3ee6168",
+   "asset_named_by_my_build": "/assets/index--q2k569d.js",
+   "asset_bytes": 1253228,
+   "asset_sha256_64_hex": "a55e8bcebe3cae47eacc485fb19c4381211ac6b437de2a495ce5f59493d4bf93",
+   "equals_the_probe_row_for_that_asset": false,
+   "served_asset_equals_this_cells_asset": false
+  },
+  "P3-222752": {
+   "generation": "dc964086c9d412573ac19d70b24b30e6c3ee6168",
+   "asset_named_by_my_build": "/assets/index--q2k569d.js",
+   "asset_bytes": 1253228,
+   "asset_sha256_64_hex": "a55e8bcebe3cae47eacc485fb19c4381211ac6b437de2a495ce5f59493d4bf93",
+   "equals_the_probe_row_for_that_asset": false,
+   "served_asset_equals_this_cells_asset": false
+  },
+  "P3-222928": {
+   "generation": "dc964086c9d412573ac19d70b24b30e6c3ee6168",
+   "asset_named_by_my_build": "/assets/index--q2k569d.js",
+   "asset_bytes": 1253228,
+   "asset_sha256_64_hex": "a55e8bcebe3cae47eacc485fb19c4381211ac6b437de2a495ce5f59493d4bf93",
+   "equals_the_probe_row_for_that_asset": false,
+   "served_asset_equals_this_cells_asset": false
+  },
+  "P3-222841": {
+   "generation": "dc964086c9d412573ac19d70b24b30e6c3ee6168",
+   "asset_named_by_my_build": "/assets/index--q2k569d.js",
+   "asset_bytes": 1253228,
+   "asset_sha256_64_hex": "a55e8bcebe3cae47eacc485fb19c4381211ac6b437de2a495ce5f59493d4bf93",
+   "equals_the_probe_row_for_that_asset": false,
+   "served_asset_equals_this_cells_asset": false
+  }
+ },
+ "arms_bound": 9,
+ "arms_on_the_served_generation": 5,
+ "limit_named": "M3 is closed for the JS asset row, which I fetched twice myself and which matches his probe byte for byte. The CSS and the service-worker rows are HIS readings, not mine: my cells do not depend on them, so I do not claim them as verified here.",
+ "verdict": {
+  "the_cited_probe_blob_resolves_and_matches_its_bytes": true,
+  "the_probe_pins_the_generation_my_arms_ran_on": true,
+  "my_two_own_reads_of_the_served_asset_agree": true,
+  "the_probe_row_equals_my_own_read_byte_for_byte": true,
+  "every_pass3_arm_names_its_asset_and_sha256": true,
+  "arms_measured_on_the_served_generation_match_it": true,
+  "ALL_HOLD": true
+ }
+}
