@@ -1,0 +1,8 @@
+$ git rev-list --left-right --count b025432ded0381d83ebf36b85202a345bede2fcb 30a5f90e5deaed6e45a704ddcc7d6e5e9790475b   # 少了三点号
+0	376
+$ git rev-list --left-right --count b025432ded0381d83ebf36b85202a345bede2fcb...30a5f90e5deaed6e45a704ddcc7d6e5e9790475b   # 正确形制
+6	5
+$ git rev-list --count 30a5f90e5deaed6e45a704ddcc7d6e5e9790475b..b025432ded0381d83ebf36b85202a345bede2fcb  # 领先
+6
+$ git rev-list --count b025432ded0381d83ebf36b85202a345bede2fcb..30a5f90e5deaed6e45a704ddcc7d6e5e9790475b  # 落后
+5
