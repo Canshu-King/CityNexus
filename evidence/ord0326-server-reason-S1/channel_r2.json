@@ -1,0 +1,300 @@
+{
+ "schema": "CNX_ORD0326_CHANNEL_V2",
+ "order": "ORD-0326",
+ "lane": "S1-q64sweep",
+ "revision": "r2 - re-measured on the r5 module-graph ruler; supersedes the r4 readings in channel_r1.json",
+ "at_local": "2026-09-26T05:10:19+0800",
+ "generation": "0f8b925facabc9df57bab600b86d999dd515bf94",
+ "generation_measured_from": "the exported tree the ruler was run with --tree on; see authoritative_tip_now for the ref at publish time",
+ "authoritative_tip_now": "c1bea4c20ea8cd5f1cc5c9d87053c005b2a24400",
+ "tip_moved": true,
+ "generation_read_by": "git ls-remote origin refs/heads/mirror/integration-frontend-apple-pass1",
+ "ruler": "ff98091cf3accb0d836ae25ba49820170b92d932",
+ "ruler_route": "commander/control:evidence/ord0331-ast-crossfile-S4/ui_exposure_taint_ast_r2.cjs",
+ "ruler_verified_local_hash_object": "ff98091cf3accb0d836ae25ba49820170b92d932",
+ "ruler_supersedes": {
+  "r4": "eb262f59e54d5142ad0e8041704e751eac473ace",
+  "r3": "44e062e6ce9c7b5d97d78e09e432072da102292c"
+ },
+ "r5_selftest": "SELFTEST_PASS",
+ "ruler_usage_finding": "r5 only builds a module graph in `--tree <dir>` mode. Run per file with `--ref/--path` it reproduces r4's answer exactly - this lane measured 26 both ways before noticing. Any r5 number quoted from a per-file sweep should be treated as an r4 number.",
+ "denominator_r5_tip": {
+  "hits": 28,
+  "files": 17,
+  "per_rule": {
+   "UPSTREAM_TEXT_VIA_HELPER_TO_DOM": 7,
+   "UPSTREAM_EXCEPTION_TO_DOM": 16,
+   "UPSTREAM_READ_DIRECT": 1,
+   "RAW_BODY_TO_DOM": 4
+  },
+  "resolution_depth_cap": 150,
+  "resolution_truncated_total": 56
+ },
+ "denominator_r3_this_lane_previously_reported": {
+  "cells": 16,
+  "files": 12,
+  "hits_total": 25
+ },
+ "ord0321_cells_rejudged": {
+  "of_16_cells_matching_an_r5_sink": 14,
+  "of_16_cells_with_no_r5_sink_at_the_cited_line": 2,
+  "note": "the 16 cells were keyed on r3's reported line; this lane's own render_sink lines are what survive the re-judgement, which is why the two are listed separately per cell",
+  "cells": [
+   {
+    "cell_r3_key": "frontend/src/app/V8Experience.tsx:1028",
+    "classification": "upstream_prose",
+    "verdict_reachability": "REACHABLE_ON_PHONE",
+    "r5_sink_matches": [
+     "V8Experience.tsx:1562|UPSTREAM_EXCEPTION_TO_DOM"
+    ],
+    "counts_as_r5_sink": true
+   },
+   {
+    "cell_r3_key": "frontend/src/components/ProductErrorBoundary.tsx:104",
+    "classification": "upstream_prose",
+    "verdict_reachability": "UNKNOWN",
+    "r5_sink_matches": [
+     "ProductErrorBoundary.tsx:104|UPSTREAM_EXCEPTION_TO_DOM",
+     "ProductErrorBoundary.tsx:105|UPSTREAM_EXCEPTION_TO_DOM"
+    ],
+    "counts_as_r5_sink": true
+   },
+   {
+    "cell_r3_key": "frontend/src/features/agent/AgentComposer.tsx:95",
+    "classification": "upstream_prose",
+    "verdict_reachability": "REACHABLE_ON_PHONE",
+    "r5_sink_matches": [],
+    "counts_as_r5_sink": false
+   },
+   {
+    "cell_r3_key": "frontend/src/features/agent/CopilotDock.tsx:615",
+    "classification": "upstream_prose",
+    "verdict_reachability": "REACHABLE_ON_PHONE",
+    "r5_sink_matches": [],
+    "counts_as_r5_sink": false
+   },
+   {
+    "cell_r3_key": "frontend/src/features/inbox/JourneyInboxWorkbench.tsx:307",
+    "classification": "upstream_prose",
+    "verdict_reachability": "REACHABLE_ON_PHONE",
+    "r5_sink_matches": [
+     "JourneyInboxWorkbench.tsx:687|UPSTREAM_EXCEPTION_TO_DOM"
+    ],
+    "counts_as_r5_sink": true
+   },
+   {
+    "cell_r3_key": "frontend/src/features/inbox/JourneyInboxWorkbench.tsx:317",
+    "classification": "upstream_prose",
+    "verdict_reachability": "REACHABLE_ON_PHONE",
+    "r5_sink_matches": [
+     "JourneyInboxWorkbench.tsx:687|UPSTREAM_EXCEPTION_TO_DOM"
+    ],
+    "counts_as_r5_sink": true
+   },
+   {
+    "cell_r3_key": "frontend/src/features/inbox/JourneyInboxWorkbench.tsx:336",
+    "classification": "upstream_prose",
+    "verdict_reachability": "REACHABLE_ON_PHONE",
+    "r5_sink_matches": [
+     "JourneyInboxWorkbench.tsx:731|UPSTREAM_EXCEPTION_TO_DOM"
+    ],
+    "counts_as_r5_sink": true
+   },
+   {
+    "cell_r3_key": "frontend/src/features/inbox/JourneyInboxWorkbench.tsx:386",
+    "classification": "upstream_prose",
+    "verdict_reachability": "UNKNOWN",
+    "r5_sink_matches": [
+     "JourneyInboxWorkbench.tsx:687|UPSTREAM_EXCEPTION_TO_DOM"
+    ],
+    "counts_as_r5_sink": true
+   },
+   {
+    "cell_r3_key": "frontend/src/features/inbox/JourneyInboxWorkbench.tsx:407",
+    "classification": "upstream_prose",
+    "verdict_reachability": "REACHABLE_ON_PHONE",
+    "r5_sink_matches": [
+     "JourneyInboxWorkbench.tsx:687|UPSTREAM_EXCEPTION_TO_DOM"
+    ],
+    "counts_as_r5_sink": true
+   },
+   {
+    "cell_r3_key": "frontend/src/features/inbox/JourneyInboxWorkbench.tsx:435",
+    "classification": "upstream_prose",
+    "verdict_reachability": "REACHABLE_ON_PHONE",
+    "r5_sink_matches": [
+     "JourneyInboxWorkbench.tsx:687|UPSTREAM_EXCEPTION_TO_DOM"
+    ],
+    "counts_as_r5_sink": true
+   },
+   {
+    "cell_r3_key": "frontend/src/features/inbox/JourneyInboxWorkbench.tsx:459",
+    "classification": "upstream_prose",
+    "verdict_reachability": "REACHABLE_ON_PHONE",
+    "r5_sink_matches": [
+     "JourneyInboxWorkbench.tsx:691|UPSTREAM_EXCEPTION_TO_DOM"
+    ],
+    "counts_as_r5_sink": true
+   },
+   {
+    "cell_r3_key": "frontend/src/features/inbox/JourneyInboxWorkbench.tsx:517",
+    "classification": "upstream_prose",
+    "verdict_reachability": "REACHABLE_ON_PHONE",
+    "r5_sink_matches": [
+     "JourneyInboxWorkbench.tsx:687|UPSTREAM_EXCEPTION_TO_DOM"
+    ],
+    "counts_as_r5_sink": true
+   },
+   {
+    "cell_r3_key": "frontend/src/features/inbox/JourneyInboxWorkbench.tsx:691",
+    "classification": "upstream_prose",
+    "verdict_reachability": "REACHABLE_ON_PHONE",
+    "r5_sink_matches": [
+     "JourneyInboxWorkbench.tsx:691|UPSTREAM_EXCEPTION_TO_DOM"
+    ],
+    "counts_as_r5_sink": true
+   },
+   {
+    "cell_r3_key": "frontend/src/features/planning/PlanComparison.tsx:92",
+    "classification": "upstream_prose",
+    "verdict_reachability": "REACHABLE_ON_PHONE",
+    "r5_sink_matches": [
+     "PlanComparison.tsx:260|RAW_BODY_TO_DOM"
+    ],
+    "counts_as_r5_sink": true
+   },
+   {
+    "cell_r3_key": "frontend/src/features/planning/PlanWithAiSheet.tsx:1046",
+    "classification": "upstream_prose",
+    "verdict_reachability": "REACHABLE_ON_PHONE",
+    "r5_sink_matches": [
+     "PlanWithAiSheet.tsx:1046|UPSTREAM_TEXT_VIA_HELPER_TO_DOM"
+    ],
+    "counts_as_r5_sink": true
+   },
+   {
+    "cell_r3_key": "frontend/src/features/stay/HotelsPanel.tsx:91",
+    "classification": "upstream_prose",
+    "verdict_reachability": "REACHABLE_ON_PHONE",
+    "r5_sink_matches": [
+     "HotelsPanel.tsx:229|RAW_BODY_TO_DOM"
+    ],
+    "counts_as_r5_sink": true
+   }
+  ]
+ },
+ "r5_sinks_this_lane_did_not_cite": {
+  "split_by_reason": {
+   "wrong_line_in_a_cited_file": [
+    "AgentComposer.tsx:185",
+    "CopilotDock.tsx:450",
+    "CopilotDock.tsx:770",
+    "PlanWithAiSheet.tsx:1019",
+    "V8Experience.tsx:1314",
+    "V8Experience.tsx:1385",
+    "V8Experience.tsx:2536"
+   ],
+   "file_not_in_the_table_at_all": [
+    "ActivityDetail.tsx:206",
+    "AgentRunRail.tsx:18",
+    "DestinationPreparationPanel.tsx:346",
+    "DestinationPreparationPanel.tsx:469",
+    "DestinationPreparationPanel.tsx:522",
+    "RealCityDiscoveryPanel.tsx:150",
+    "RecoveryRequiredPanel.tsx:166",
+    "SimulationPanel.tsx:934",
+    "V12TripStudioPanel.tsx:106",
+    "V14RecoveryTruthPanel.tsx:162",
+    "main.tsx:968",
+    "main.tsx:992"
+   ]
+  },
+  "self_correction": "three of these are in files this lane DID analyse, but the cell cited the success-content render instead of the error slot the ruler flags (AgentComposer.tsx:196 vs :185, CopilotDock.tsx:743 vs :450 and :770) - a defect in this lane's own table, exposed by r5 and corrected here rather than left in reachability_r2.json"
+ },
+ "my_branch_measurement": {
+  "branch": "agent/S1-q64sweep-candidates",
+  "tip": "b32c0d6516fe60539d6485e95b8fa4534e1ad56d",
+  "verified_by_ls_remote": "b32c0d6516fe60539d6485e95b8fa4534e1ad56d",
+  "hits": 25,
+  "per_rule": {
+   "UPSTREAM_TEXT_VIA_HELPER_TO_DOM": 8,
+   "UPSTREAM_EXCEPTION_TO_DOM": 13,
+   "UPSTREAM_READ_DIRECT": 1,
+   "RAW_BODY_TO_DOM": 3
+  },
+  "sinks_removed_vs_tip": [
+   "AgentComposer.tsx:185|UPSTREAM_EXCEPTION_TO_DOM",
+   "CopilotDock.tsx:450|UPSTREAM_EXCEPTION_TO_DOM",
+   "CopilotDock.tsx:770|UPSTREAM_EXCEPTION_TO_DOM",
+   "HotelsPanel.tsx:229|RAW_BODY_TO_DOM"
+  ],
+  "sinks_added_vs_tip": [
+   "ServerReasonDetail.tsx:29|UPSTREAM_TEXT_VIA_HELPER_TO_DOM"
+  ],
+  "added_sink_chain": [
+   {
+    "cell": "ServerReasonDetail.tsx:29",
+    "rule": "UPSTREAM_TEXT_VIA_HELPER_TO_DOM",
+    "chain": ":184 upstream read c.body off c -> :184 `body` = c.body -> :186 reasonFromThrown() returns { envelope: body, http_status: typeof c.status === \"number\" ? c.status : null,... -> :102 came back from reasonFromThrown imported from ../../lib/serverReason -> :102 what features/agent/AgentComposer.tsx:102 "
+   }
+  ],
+  "reading": "the four previously flagged sinks are gone, and the only remaining flag is the single sanctioned slot (ServerReasonDetail.tsx:29) where Q67=1 allows the attributed sentence"
+ },
+ "lane_B_measurement": {
+  "branch": "review/0323-two-exposure-cells-b",
+  "tip": "e302e4c433712284a23c1c0ab11147fe105e1e22",
+  "hits": 26,
+  "per_rule": {
+   "UPSTREAM_TEXT_VIA_HELPER_TO_DOM": 7,
+   "UPSTREAM_EXCEPTION_TO_DOM": 14,
+   "UPSTREAM_READ_DIRECT": 1,
+   "RAW_BODY_TO_DOM": 4
+  },
+  "sinks_removed_vs_tip": [
+   "JourneyInboxWorkbench.tsx:687|UPSTREAM_EXCEPTION_TO_DOM",
+   "JourneyInboxWorkbench.tsx:691|UPSTREAM_EXCEPTION_TO_DOM",
+   "JourneyInboxWorkbench.tsx:731|UPSTREAM_EXCEPTION_TO_DOM",
+   "ProductErrorBoundary.tsx:104|UPSTREAM_EXCEPTION_TO_DOM",
+   "ProductErrorBoundary.tsx:105|UPSTREAM_EXCEPTION_TO_DOM"
+  ],
+  "sinks_added_vs_tip": [
+   "JourneyInboxWorkbench.tsx:703|UPSTREAM_EXCEPTION_TO_DOM",
+   "JourneyInboxWorkbench.tsx:707|UPSTREAM_EXCEPTION_TO_DOM",
+   "JourneyInboxWorkbench.tsx:747|UPSTREAM_EXCEPTION_TO_DOM"
+  ],
+  "added_sink_chains": [
+   {
+    "cell": "JourneyInboxWorkbench.tsx:703",
+    "chain": ":534 upstream read error.message off error -> :534 state `message` written by setMessage(...) -> :703 rendered here"
+   },
+   {
+    "cell": "JourneyInboxWorkbench.tsx:707",
+    "chain": ":475 upstream read error.message off error -> :475 `failure` reassigned to error instanceof Error ? error.message : t(\"inbox.confirmFailed\") -> :490 state `confirmDetail` written by setConfirmDetail(...) -> :707 rendered"
+   },
+   {
+    "cell": "JourneyInboxWorkbench.tsx:747",
+    "chain": ":354 upstream read error.message off error -> :353 state `pendingError` written by setPendingError(...) -> :747 rendered here"
+   }
+  ],
+  "reading": "closes the :88 thrower and the two boundary lines, but the same three inbox slots are still flagged, now at :703/:707/:747 and still fed by error.message"
+ },
+ "overlap_between_the_two_lanes": {
+  "files_in_common": [],
+  "removed_sinks_in_common": [],
+  "reading": "strictly complementary - neither lane touches a sink the other removes"
+ },
+ "correction_of_this_lanes_earlier_claim": {
+  "was": "channel_r1.json (blob baa3f4f902997f3f1a54873628e12fe558969ac1) reported the touched files going 4 -> 3 under r4 with the rule changing at three sinks, and left 3 flagged",
+  "now": "under r5 those three sinks are not flagged at all; the branch is 28 -> 25 tree-wide with one flag left at the designated slot",
+  "why_it_was_wrong": "r4 is per-file, so it could not see the channel and reported the call sites as still tainted; the earlier reading was an artefact of the ruler's scope, not of the code",
+  "published_artifacts_untouched": true
+ },
+ "what_still_needs_a_decision": [
+  "which channel survives: this lane's measure says adopting lib/serverReason.ts in B's two files would clear the three inbox slots that are still flagged on B's branch",
+  "the 28-sink denominator now replaces 25 as the number ORD-0323/0326 work against",
+  "V8Experience.tsx still carries 4 flagged sinks on the tip (:1314, :1385, :1562, :2536) and is not claimed by any lane dispatch this lane can see"
+ ],
+ "claim_kind": "measured_with_published_ruler",
+ "command_i_ran": "git archive <tip> frontend/src | tar -x, then node ui_exposure_taint_ast_r2.cjs --tree <exported frontend/src> --out <json>, once for the tip, once for agent/S1-q64sweep-candidates and once for review/0323-two-exposure-cells-b; ruler bytes taken from the published blob and re-hashed",
+ "claimed_result": "r5 at tip c1bea4c20ea8: 28 sinks / 17 files; my branch 25 (4 removed, 1 added at the sanctioned slot); B branch 26 (5 removed, 3 added); 14 of 16 ORD-0321 cells land on an r5 sink"
+}
