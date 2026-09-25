@@ -1,0 +1,230 @@
+{
+ "what": "包工头那把 Q38 尺出了 r2（为 @D 的 `arms` 列表形状）⇒ 我按 Q24 把自己那包整体重跑，不用 r1 的读数背书",
+ "lane": "F 8ccd71d8",
+ "ran_at": "2026-09-25T08:19:22+08:00",
+ "gate": {
+  "blob_40": "91ae8b1ec55f5c19122af11bf775df14580955e4",
+  "bytes": 18867,
+  "recomputes_equal": true,
+  "r1_blob_40_for_reference": "35caa42c0697faf0a8eeb0929a3e11cb53c9709a",
+  "r1_still_published": true,
+  "delta_declared_by_commander": "r1 只认 cells/同兄弟格/逐格判决映射；r2 另收任何键名下的 per-cell 记录列表（他的 selftest S10）",
+  "contents_get_declared_path_status": 404,
+  "contents_get_evidence_path_status": 200
+ },
+ "selftest": {
+  "rc": 0,
+  "overall": null,
+  "cells_found": null,
+  "hard_codes": null,
+  "soft_codes": null,
+  "green_words": [
+   "Q38_GATE_GREEN",
+   "SELFTEST_GREEN"
+  ],
+  "out_blob": null,
+  "file": "r2_selftest.json",
+  "stdout_file": "r2_selftest_stdout.txt"
+ },
+ "receipt_under_test": {
+  "path": "evidence/ord0287-k8-carrier-f/ord0287_receipt_cells_r2.json",
+  "blob_40": "5f4a0af6248a7e646bf383c9e53a7c1ec5422905",
+  "bytes": 13053
+ },
+ "gate_r2_on_my_receipt": {
+  "rc": 0,
+  "overall": "Q38_GATE_GREEN",
+  "cells_found": 9,
+  "hard_codes": [],
+  "soft_codes": [],
+  "green_words": [
+   "Q38_GATE_GREEN"
+  ],
+  "out_blob": "8ceeeb147a81bc3a21b8b4b2bad880f5fb825155",
+  "file": "r2_on_receipt.json"
+ },
+ "per_cell_r2": [
+  {
+   "id": "S1_K1_green_on_authoritative_line",
+   "why_token_count": 6,
+   "own_hits": 5,
+   "own_token_count": 16
+  },
+  {
+   "id": "S2_K1_red_when_guard_removed",
+   "why_token_count": 5,
+   "own_hits": 5,
+   "own_token_count": 24
+  },
+  {
+   "id": "S3_K2_positive_control_green_both_states",
+   "why_token_count": 4,
+   "own_hits": 4,
+   "own_token_count": 27
+  },
+  {
+   "id": "S4_mutation_is_one_line_and_compiles",
+   "why_token_count": 7,
+   "own_hits": 7,
+   "own_token_count": 10
+  },
+  {
+   "id": "S5_tree_restored_byte_exact",
+   "why_token_count": 3,
+   "own_hits": 1,
+   "own_token_count": 3
+  },
+  {
+   "id": "S6_candidate_is_test_only_on_authoritative_parent",
+   "why_token_count": 5,
+   "own_hits": 5,
+   "own_token_count": 12
+  },
+  {
+   "id": "S7_frozen_tip_is_externally_readable",
+   "why_token_count": 7,
+   "own_hits": 7,
+   "own_token_count": 13
+  },
+  {
+   "id": "S8_verbatim_port_is_refused_at_import",
+   "why_token_count": 7,
+   "own_hits": 7,
+   "own_token_count": 13
+  },
+  {
+   "id": "S9_two_state_repeats_on_the_github_export",
+   "why_token_count": 4,
+   "own_hits": 4,
+   "own_token_count": 33
+  }
+ ],
+ "r1_vs_r2_agreement_on_this_artifact": true,
+ "controls": {
+  "control_shared_sentence_two_cells": {
+   "rc": 3,
+   "overall": "Q38_GATE_RED_HARD",
+   "cells_found": 9,
+   "hard_codes": [
+    "DUPLICATE_WHY_LITERALS"
+   ],
+   "soft_codes": [
+    "WHY_CARRIES_NO_EVIDENCE_TOKEN"
+   ],
+   "green_words": [],
+   "out_blob": "dd2a4edbbe88870d8895d8ace2095b98fb5905a2",
+   "file": "r2_control_shared_sentence_two_cells.json",
+   "desc": "两格共用同一句",
+   "r1_overall": "Q38_GATE_RED_HARD"
+  },
+  "control_shared_sentence_all_cells": {
+   "rc": 3,
+   "overall": "Q38_GATE_RED_HARD",
+   "cells_found": 9,
+   "hard_codes": [
+    "DUPLICATE_WHY_LITERALS"
+   ],
+   "soft_codes": [
+    "WHY_CARRIES_NO_EVIDENCE_TOKEN"
+   ],
+   "green_words": [],
+   "out_blob": "0ae924fd5c654993ac9ddc104685d83549903dae",
+   "file": "r2_control_shared_sentence_all_cells.json",
+   "desc": "九格共用同一句",
+   "r1_overall": "Q38_GATE_RED_HARD"
+  },
+  "control_shared_plus_fake_derived_from": {
+   "rc": 3,
+   "overall": "Q38_GATE_RED_HARD",
+   "cells_found": 9,
+   "hard_codes": [
+    "DUPLICATE_WHY_LITERALS",
+    "FAKE_OR_INEFFECTIVE_DERIVED_FROM"
+   ],
+   "soft_codes": [
+    "WHY_CARRIES_NO_EVIDENCE_TOKEN"
+   ],
+   "green_words": [],
+   "out_blob": "808c93b836dde0a2b11216376f22ea6e98e8ead0",
+   "file": "r2_control_shared_plus_fake_derived_from.json",
+   "desc": "共用句 + 假 derived_from",
+   "r1_overall": "Q38_GATE_RED_HARD"
+  },
+  "control_unique_but_no_named_value": {
+   "rc": 0,
+   "overall": "Q38_GATE_SOFT_FINDINGS",
+   "cells_found": 9,
+   "hard_codes": [],
+   "soft_codes": [
+    "WHY_CARRIES_NO_EVIDENCE_TOKEN"
+   ],
+   "green_words": [],
+   "out_blob": "6878e10a798363079b6446613594f3e79ad4f224",
+   "file": "r2_control_unique_but_no_named_value.json",
+   "desc": "各格句子不同但无可核对值",
+   "r1_overall": "Q38_GATE_SOFT_FINDINGS"
+  },
+  "control_unique_but_values_not_own": {
+   "rc": 0,
+   "overall": "Q38_GATE_SOFT_FINDINGS",
+   "cells_found": 9,
+   "hard_codes": [],
+   "soft_codes": [
+    "WHY_NOT_FROM_OWN_READINGS"
+   ],
+   "green_words": [],
+   "out_blob": "c787d83b0896e9d351193c98197374407b40cd45",
+   "file": "r2_control_unique_but_values_not_own.json",
+   "desc": "值不在本格读数里",
+   "r1_overall": "Q38_GATE_SOFT_FINDINGS"
+  },
+  "control_missing_why_short_verdict": {
+   "rc": 3,
+   "overall": "Q38_GATE_RED_HARD",
+   "cells_found": 9,
+   "hard_codes": [
+    "MISSING_WHY"
+   ],
+   "soft_codes": [],
+   "green_words": [],
+   "out_blob": "b29f77e675d99a972950a749118f75ac78ba42d2",
+   "file": "r2_control_missing_why_short_verdict.json",
+   "desc": "删 why + 短 verdict",
+   "r1_overall": "Q38_GATE_RED_HARD"
+  },
+  "boundary_missing_why_long_verdict": {
+   "rc": 0,
+   "overall": "Q38_GATE_SOFT_FINDINGS",
+   "cells_found": 9,
+   "hard_codes": [],
+   "soft_codes": [
+    "WHY_NOT_FROM_OWN_READINGS"
+   ],
+   "green_words": [],
+   "out_blob": "b61e07957d03303a4edb24094d156dbe6b7966d3",
+   "file": "r2_boundary_missing_why_long_verdict.json",
+   "desc": "删 why 但 verdict 是长串（散文回退）",
+   "r1_overall": "Q38_GATE_SOFT_FINDINGS"
+  }
+ },
+ "checks": {
+  "gate_r2_blob_recomputes": true,
+  "selftest_rc0": true,
+  "receipt_still_green_on_r2": true,
+  "per_cell_own_hits_unchanged_r1_vs_r2": true,
+  "shared_sentence_still_hard": true,
+  "fake_derived_from_still_hard": true,
+  "missing_why_short_still_hard": true,
+  "soft_arms_print_no_green": true
+ },
+ "self_report": "上一包两件被我们自己的发布门拒绝（FORBIDDEN_NAME_FRAGMENT：本地文件名含 `token`）。我没有放宽门、没有改别人的门，只把本地落盘名换成安全名重发——这两件的字节与 r1 那版输入完全相同，改名前后逐位相等：见 renamed_inputs_equal。",
+ "discipline": {
+  "demo_reset_calls": 0,
+  "live_or_preview_db_touched": false,
+  "credentials_printed": 0,
+  "authoritative_branch_written": false,
+  "published_paths_overwritten": 0,
+  "candidate_ref_pushes_after_freeze": 0,
+  "gate_files_modified": 0
+ }
+}
