@@ -1,0 +1,67 @@
+{
+ "arm": "a10_upstream_absent",
+ "run_id": "O0301-144728",
+ "face_port": 8565,
+ "policy_stamp": "FACE-8565",
+ "instrumented": true,
+ "measured_on": "90d29a172e186aab6e6cb138ab4583ccf93bfa68",
+ "bundle_sha256": "57c2a927f9e65ca0b33acdc737cbf941fc395c214aa213d861a4f7e5c664338e",
+ "bundle_asset": "index-BN1w-xlK.js",
+ "journey_id": "d845ac26-0add-4305-bd3f-3f7c6f6fe3c1",
+ "request_text": "想傍晚在老城慢慢走一圈，别太赶",
+ "opened": {
+  "hub_reached": false
+ },
+ "cap_ms": 45000,
+ "no_sheet": {
+  "screen": {
+   "result_card": null,
+   "network_card_painted": false,
+   "detail_toggle_present": false,
+   "details_elements_present": 1,
+   "detail_open": null,
+   "reason_label_painted": null,
+   "reason_value_painted": null,
+   "cross_check_data_result_status": null,
+   "cross_check_data_reason_origin": null,
+   "deadline_sentence_on_screen": false,
+   "body_head": "服务器\n\n服务器这次没能把行程读出来\n\n服务器自己报错了（HTTP 500）。这是它那边的问题，不是你填错了什么。可以重试；如果一直这样，稍后再来。\n\n重试\n归因详情",
+   "submit_visible": false
+  },
+  "watch": [
+   {
+    "ms": 1017,
+    "network_card": false,
+    "deadline": false,
+    "body_head": "服务器\n\n服务器这次没能把行程读出来\n\n服务器自己报错了（HTTP 500）。这是它那边的问题，不是你填错了什么。可以重试；如果一直这样，稍后再来。\n\n重试\n归因详情"
+   }
+  ],
+  "legs": [
+   {
+    "url": "/api/v1/journeys/d845ac26-0add-4305-bd3f-3f7c6f6fe3c1/experience",
+    "method": "GET",
+    "api": true,
+    "sent_ms_since_load": 80,
+    "sent_wall": "2026-09-25T06:47:28.566Z",
+    "has_signal": true,
+    "request_body": null,
+    "status": 500,
+    "content_type": "text/plain",
+    "bytes": 0,
+    "body_head": "",
+    "server_envelope": {
+     "unparsable_body": true
+    },
+    "elapsed_ms": 22
+   }
+  ],
+  "json_errors": []
+ },
+ "request_failures": [],
+ "page_events": [
+  {
+   "kind": "console",
+   "text": "Failed to load resource: the server responded with a status of 500 (Internal Server Error)"
+  }
+ ]
+}
