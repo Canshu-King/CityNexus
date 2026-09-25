@@ -1,0 +1,93 @@
+{
+  "b2a_restored": {
+    "claim": "B2a idle convergence must happen inside ONE navigation (commit 69fd2f85)",
+    "installed_sha": "69fd2f85cab22ad93724195ba132ba4f8618d9a0",
+    "next_sha": "ef277b2da5dfff22ae3f1deaf63b295f5cda678f",
+    "root_installed": "D:\\moodle\\_qoder_hjp1_o207_20260922\\o290\\s1_b2a\\frontend\\dist",
+    "root_next": "D:\\moodle\\_qoder_hjp1_o207_20260922\\o290\\next_gen\\frontend\\dist",
+    "kind": "fixed_idle",
+    "mode": "answer",
+    "install_mode": "two_navigations",
+    "cells": [
+      "B2a"
+    ]
+  },
+  "b2a_notrestored": {
+    "claim": "B2a's red direction: same instrument on the pre-fix tree 45b0a5e2 must NOT converge",
+    "installed_sha": "45b0a5e281cae9c37715173afd3ac5778f309ca7",
+    "next_sha": "ef277b2da5dfff22ae3f1deaf63b295f5cda678f",
+    "root_installed": "D:\\moodle\\_qoder_hjp1_o207_20260922\\o290\\baseline\\frontend\\dist",
+    "root_next": "D:\\moodle\\_qoder_hjp1_o207_20260922\\o290\\next_gen\\frontend\\dist",
+    "kind": "fixed_idle",
+    "mode": "answer",
+    "install_mode": "two_navigations",
+    "cells": [
+      "B2a-control"
+    ]
+  },
+  "b2c_restored": {
+    "claim": "B2c safe point (commit 45a3d568): a non-idempotent write in flight must not be cut; converge right after it settles, still no second navigation",
+    "installed_sha": "45a3d56862fcebd7aa50c16b4a80842320a97856",
+    "next_sha": "ef277b2da5dfff22ae3f1deaf63b295f5cda678f",
+    "root_installed": "D:\\moodle\\_qoder_hjp1_o207_20260922\\o290\\s2_b2c\\frontend\\dist",
+    "root_next": "D:\\moodle\\_qoder_hjp1_o207_20260922\\o290\\next_gen\\frontend\\dist",
+    "kind": "fixed_inflight",
+    "mode": "release_journeys_after_8000",
+    "install_mode": "two_navigations",
+    "cells": [
+      "B2c"
+    ]
+  },
+  "b2c_notrestored": {
+    "claim": "B2c's red direction: with only 69fd2f85 present the handover reload cuts the same write",
+    "installed_sha": "69fd2f85cab22ad93724195ba132ba4f8618d9a0",
+    "next_sha": "ef277b2da5dfff22ae3f1deaf63b295f5cda678f",
+    "root_installed": "D:\\moodle\\_qoder_hjp1_o207_20260922\\o290\\s1_b2a\\frontend\\dist",
+    "root_next": "D:\\moodle\\_qoder_hjp1_o207_20260922\\o290\\next_gen\\frontend\\dist",
+    "kind": "fixed_inflight",
+    "mode": "release_journeys_after_8000",
+    "install_mode": "two_navigations",
+    "cells": [
+      "B2c-control"
+    ]
+  },
+  "b2b_restored": {
+    "claim": "B2b (commit ef277b2d): a document claimed during its own lifetime must still converge, with the typed draft preserved value by value",
+    "installed_sha": "ef277b2da5dfff22ae3f1deaf63b295f5cda678f",
+    "next_sha": "ef277b2da5dfff22ae3f1deaf63b295f5cda678f",
+    "root_installed": "D:\\moodle\\_qoder_hjp1_o207_20260922\\o290\\s3_b2b\\frontend\\dist",
+    "root_next": "D:\\moodle\\_qoder_hjp1_o207_20260922\\o290\\next_gen\\frontend\\dist",
+    "kind": "b2b_claimed",
+    "mode": "answer",
+    "install_mode": "single_navigation",
+    "cells": [
+      "B2b"
+    ]
+  },
+  "b2b_notrestored": {
+    "claim": "B2b's red direction: the same claim-during-lifetime shape on 45a3d568 must not converge",
+    "installed_sha": "45a3d56862fcebd7aa50c16b4a80842320a97856",
+    "next_sha": "ef277b2da5dfff22ae3f1deaf63b295f5cda678f",
+    "root_installed": "D:\\moodle\\_qoder_hjp1_o207_20260922\\o290\\s2_b2c\\frontend\\dist",
+    "root_next": "D:\\moodle\\_qoder_hjp1_o207_20260922\\o290\\next_gen\\frontend\\dist",
+    "kind": "b2b_claimed",
+    "mode": "answer",
+    "install_mode": "single_navigation",
+    "cells": [
+      "B2b-control"
+    ]
+  },
+  "b2c_noconvergence": {
+    "claim": "B2c 的第二枚对照：装在没有任何收敛修复的基线 45b0a5e2 上，同样 0 次用户导航、同一枚在飞写 —— 这一臂必须既不收敛也不'安全地等'，用来证明 b2c_restored 的收敛不是白拿的",
+    "installed_sha": "45b0a5e281cae9c37715173afd3ac5778f309ca7",
+    "next_sha": "ef277b2da5dfff22ae3f1deaf63b295f5cda678f",
+    "root_installed": "D:\\moodle\\_qoder_hjp1_o207_20260922\\o290\\baseline\\frontend\\dist",
+    "root_next": "D:\\moodle\\_qoder_hjp1_o207_20260922\\o290\\next_gen\\frontend\\dist",
+    "kind": "fixed_inflight",
+    "mode": "release_journeys_after_8000",
+    "install_mode": "two_navigations",
+    "cells": [
+      "B2c-control2"
+    ]
+  }
+}
