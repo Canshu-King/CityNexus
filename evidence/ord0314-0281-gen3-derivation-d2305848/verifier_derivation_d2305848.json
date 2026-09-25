@@ -1,0 +1,74 @@
+{
+ "schema": "CNX_VERIFIER_DERIVATION_V1",
+ "order": "ORD-0314 (gen-3 re-run on candidate 13af1ff4; per-cell derived + full flip sets per configuration)",
+ "verifier": "lane E d2305848",
+ "at": "2026-09-25T20:50+08:00",
+ "disclosure_note": {"rule": "PUBLISHER_RECEIPT_DISCLOSURE_RULE", "hits": []},
+ "tip_identity": {
+  "my_own_first_read_of_the_ref": "13af1ff4ba4516aa1a39cda67428ed4a2a34ac69",
+  "method": "GET /git/ref/heads/review%2F0281-write-deadline-keyed-b3",
+  "matches_commander_coordinate": true,
+  "commander_note_on_tip_drift": "the commander warned the authority tip may have moved past 30a5f90e; I wrote what I read at run time per his instruction ②"
+ },
+ "coordinates_verified": {
+  "gen3_verify": {"path": "evidence/ord0281-keyed-write-deadline-gen3/ord0281_verify_gen3.json",
+                   "blob": "3ffdff2c0f2bf810eb6472793d3f9bfe73882bdc", "bytes": 2382, "sha_ok": true},
+  "writeDeadline_gen3_ts": {"path": "frontend/src/lib/writeDeadline.ts (blob in the gen-3 tree)",
+                             "blob": "1d67e725ebb3348bbeb70d743793388ed36ed9d9", "in_gen3_tree": true}
+ },
+ "generation_binding": {
+  "gen3_tree": "the tree at ref review/0281-write-deadline-keyed-b3 tip 13af1ff4",
+  "authority_tip_at_my_run": "I wrote the tip I read at run time (13af1ff4) into the receipt; I did not use the commander's message literal per instruction ②"
+ },
+ "criterion_1_constant_alive_gen3": {
+  "arm_TB": {"bound_ms_under_test": 2000, "elapsed_ms": 2404, "sentence_seconds_named": 2,
+             "on_screen": "bound-sentence", "verdict": "MET"},
+  "arm_TC": {"bound_ms_under_test": 1000, "elapsed_ms": 1416, "sentence_seconds_named": 1,
+             "on_screen": "bound-sentence", "verdict": "MET"},
+  "derived": "CONFIRMED - the screen number follows the constant on gen-3 (2000->'2', 1000->'1'), elapsed tracks the bound value not the baseline"
+ },
+ "criterion_2_full_flip_sets_per_configuration": {
+  "note": "each configuration has its own per-arm reading files published on commander/control under evidence/ord0281-keyed-write-deadline-gen3/, so the full flip set is externally derivable from the published artifacts (the deriving limit from 0295 is resolved on gen-3 as well)",
+  "ca_no_delegate_flip_set": {
+   "arm_K3": {"status": "failed", "reading_verdict": "NOT_MET", "on_screen": null, "elapsed_ms": null,
+     "note": "the K3 cell (server's own words) reads NOT_MET - the deadline path lost the server's sentence"},
+   "flip_set": ["K3"],
+   "cells_that_stayed_green": "TA, TB, TC, TD, K1, K2",
+   "derived": "EXCLUSIVE_TO_K3"
+  },
+  "ca_keyless_too_flip_set": {
+   "arm_K1": {"status": "failed", "reading_verdict": "NOT_MET", "elapsed_ms": 2015},
+   "flip_set": ["K1"],
+   "derived": "EXCLUSIVE_TO_K1"
+  },
+  "ca_fixed_secs_flip_set": {
+   "arm_TB": {"status": "failed", "reading_verdict": "NOT_MET", "sentence_seconds_named": 99, "elapsed_ms": 2400},
+   "flip_set": ["TB"],
+   "note": "the mutant hard-coded 99 seconds - the screen showed 99, proving the constant was not the source",
+   "derived": "EXCLUSIVE_TO_TB"
+  },
+  "independent_kills": 3,
+  "composition": "3 counter-arms, each flips exactly its target cell, full flip sets derived from per-arm reading files"
+ },
+ "criterion_3_late_answer": {
+  "status": "NOT_MEASURED preserved on gen-3 (no late-answer arm in the gen-3 evidence set)"
+ },
+ "cell_by_cell_derived_result_gen3": {
+  "TA_pristine": "MET", "TB_bound2000": "MET (2000 -> screen 2s, elapsed 2404ms)",
+  "TC_bound1000": "MET (1000 -> screen 1s, elapsed 1416ms)", "TD_bound2000": "MET",
+  "K1_bound2000": "MET", "K2_pristine": "MET", "K3_bound2000": "MET",
+  "counter_ca_no_delegate": "MET (flips K3 exclusively)",
+  "counter_ca_keyless_too": "MET (flips K1 exclusively)",
+  "counter_ca_fixed_secs": "MET (flips TB exclusively)",
+  "scope": "DECLARED", "base_ref": "MET (13af1ff4 sits on the authority line)",
+  "late_answer_after_deadline": "NOT_MEASURED"
+ },
+ "claim_kind": "RUNTIME_MEASURED (all cells; per Q25)",
+ "generation_binding_note": {
+  "these_are_facts_of": "tested_tree 13af1ff4 (gen-3, on the authority line after dc964086 → 90d29a17 → …)",
+  "commander_warned_tip_may_have_moved": "I wrote my own read (13af1ff4); if the authority moved past this before 0314 lands, the Q24 procedure applies"
+ },
+ "discipline": {"services_started": 0, "user_dbs_touched": 0, "demo_reset": 0,
+   "credentials_printed": 0, "published_paths_overwritten": 0,
+   "network": "GitHub GET + one PUT (this receipt)"}
+}
