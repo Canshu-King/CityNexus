@@ -1,0 +1,21 @@
+$ git ls-remote https://github.com/Canshu-King/CityNexus.git refs/heads/mirror/integration-frontend-apple-pass1
+exit=0
+stdout:
+7856e03f6238da3000976eb6e690a448dfa39b9a	refs/heads/mirror/integration-frontend-apple-pass1
+
+$ GET https://api.github.com/repos/Canshu-King/CityNexus/git/ref/heads/mirror/integration-frontend-apple-pass1
+HTTP 200
+(the Authorization header is written as a placeholder above; the secret is held in memory only and appears in no artifact)
+body:
+{"ref":"refs/heads/mirror/integration-frontend-apple-pass1","node_id":"REF_kwDOUhlJJ9oAMnJlZnMvaGVhZHMvbWlycm9yL2ludGVncmF0aW9uLWZyb250ZW5kLWFwcGxlLXBhc3Mx","url":"https://api.github.com/repos/Canshu-King/CityNexus/git/refs/heads/mirror/integration-frontend-apple-pass1","object":{"sha":"7856e03f6238da3000976eb6e690a448dfa39b9a","type":"commit","url":"https://api.github.com/repos/Canshu-King/CityNexus/git/commits/7856e03f6238da3000976eb6e690a448dfa39b9a"}}
+$ git ls-remote https://github.com/Canshu-King/CityNexus.git refs/heads/review/ord0310-keyless-deadline-d
+exit=0
+stdout:
+b025432ded0381d83ebf36b85202a345bede2fcb	refs/heads/review/ord0310-keyless-deadline-d
+
+$ git ls-remote https://github.com/Canshu-King/CityNexus.git refs/heads/mirror/integration-frontend-apple-pass1
+exit=0
+stdout:
+7856e03f6238da3000976eb6e690a448dfa39b9a	refs/heads/mirror/integration-frontend-apple-pass1
+
+parsed: tip=7856e03f6238da3000976eb6e690a448dfa39b9a tip_via_api=7856e03f6238da3000976eb6e690a448dfa39b9a agree=True recheck=7856e03f6238da3000976eb6e690a448dfa39b9a stable=True pushed_candidate=b025432ded0381d83ebf36b85202a345bede2fcb
