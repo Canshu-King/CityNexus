@@ -30,6 +30,8 @@ def main() -> int:
     ap.add_argument("--candidate-line", required=True, help="file with the candidate ref's ls-remote line")
     ap.add_argument("--auth-line", required=True, help="file with the authoritative ref's ls-remote line")
     ap.add_argument("--published", required=True, help="file of repo_path<TAB>blob<TAB>bytes lines")
+    ap.add_argument("--preflight", default="none", help="port pre-flight manifest path")
+    ap.add_argument("--candidate-ref", default="NOT_GIVEN", help="refs/heads/... this generation lives on")
     ap.add_argument("--out", required=True)
     a = ap.parse_args()
 
@@ -85,10 +87,14 @@ def main() -> int:
     def delta(cell: str) -> str:
         return "0/0" if cell.startswith("0\t0\t(no diff)") else "/".join(cell.split("\t")[:2])
 
+    arms_blob_for_rows = next((r[1] for r in published if r[0].endswith(Path(a.arms).name)), "NOT_PUBLISHED")
     for r in rows:
         add(
             f"| `{r['path']}` | {str(r['equals_frozen_tree']).lower()} | {str(r['equals_landed_tip']).lower()} | "
-            f"`{delta(r['lines_vs_landed_tip'])}` | `{delta(r['lines_vs_frozen_tree'])}` |"
+            f"`{delta(r['lines_vs_landed_tip'])}` | `{delta(r['lines_vs_frozen_tree'])}` | "
+            # Every row carries its own coordinate: the numbers in a table cell are 200+ chars away
+            # from the paragraph that names the receipt, so Q43-F3 rightly refuses to trust them.
+            f"表出自 blob `{arms_blob_for_rows[:16]}` |"
         )
     add("")
     add(
@@ -96,7 +102,7 @@ def main() -> int:
         f"（`{', '.join(r['path'].rsplit('/', 1)[-1] for r in moved_from_frozen if r['equals_landed_tip']) or '—'}`），"
         f"只有 `{', '.join(r['path'].rsplit('/', 1)[-1] for r in moved_from_frozen if not r['equals_landed_tip']) or '—'}` "
         "是两边都改过的那一枚 ⇒ 我就是在那一处手工并的（import 段并 `READ_DEADLINE_MS` + `beginNonIdempotentRequest`，"
-        "并把 0269 交付时那个「点开 sheet 不自动发」的 MANUAL_RESUME 占位换成真续发调用）"
+        "并把 ORD-0269 交付时那个「点开 sheet 不自动发」的 MANUAL_RESUME 占位换成真续发调用）"
     )
     add(
         f"- 我这一边的 7 件功能文件逐字节等于冻结树：{sum(1 for r in rows if r['equals_frozen_tree'])} 件 `frontend/**` 命中"
@@ -161,43 +167,73 @@ def main() -> int:
             f"git merge-tree --write-tree {live_tip} {gc['tested_tree']}",
             cwd=LANE, capture_output=True, text=True, shell=True, encoding="utf-8", errors="replace",
         )
-        add("**被测期间权威线又动了一跳（读数照实，不等谁来问）**")
+        front_moved = [m for m in moved if m.strip()]
+        overlap = sorted(set(front_moved) & {r["path"] for r in rows})
+        tree_now = subprocess.run(
+            f"git rev-parse {live_tip}:frontend", cwd=LANE, capture_output=True, text=True, shell=True
+        ).stdout.strip()
+        tree_mine = subprocess.run(
+            f"git rev-parse {gc['tested_tree']}:frontend", cwd=LANE, capture_output=True, text=True, shell=True
+        ).stdout.strip()
+        add("**被测期间权威线又动了（读数照实，结论从量出来的数推，不写死）**")
         add(
             f"- 我开工时读到 `{gc['landed_tip']}`，现在 `git ls-remote` 读到 `{live_tip}`；"
             f"`merge-base --is-ancestor` ⇒ {desc}（我的基座是它的祖先）"
         )
         add(
-            f"- 那一跳改了 **{len(all_moved)} 件**，其中 `frontend/**` = **{len([m for m in moved if m.strip()])} 件** ⇒ "
-            f"本段所有前端字节级判据（臂、还原、绿轮三元组）不受它影响；合流预测 "
-            f"`git merge-tree --write-tree` ⇒ rc={mt.returncode}，tree `{mt.stdout.strip().splitlines()[0] if mt.stdout.strip() else '?'}`"
-            "（只读预测，我没动任何 ref）"
+            f"- 那一跳改了 **{len(all_moved)} 件**，其中 `frontend/**` = **{len(front_moved)} 件**"
+            + (f"（`{', '.join(p.rsplit('/', 1)[-1] for p in front_moved)}`）" if front_moved else "")
+            + f"；与我这一代的 `frontend` 文件交集 = **{len(overlap)} 件**"
+            + (f"（`{', '.join(p.rsplit('/', 1)[-1] for p in overlap)}`）" if overlap else "")
+        )
+        if not front_moved:
+            add(
+                "- ⇒ 那一跳没碰前端字节，本段的臂/还原/三元组对它同样成立（无需重跑）"
+            )
+        else:
+            add(
+                f"- ⇒ **那一跳动了前端**：按 Q24/Q25「运行时事实不靠 blob 等式迁移」，本段读数只关于被测尖 "
+                f"`{gc['tested_tree']}`，**不能读成新尖的当代数**；要新尖当代数必须重跑一轮绿 + 一轮拆"
+            )
+        add(
+            f"- 携带判据（不靠文件数，靠子树 oid）：`git rev-parse {live_tip[:9]}…:frontend` = `{tree_now}`，"
+            f"而我的被测尖同一子树 = `{tree_mine}` ⇒ **{'同一枚 oid，前端逐字节相同' if tree_now == tree_mine else '两枚不同 oid，前端不相同'}**"
+        )
+        add(
+            f"- 合流只读预测 `git merge-tree --write-tree` ⇒ rc={mt.returncode}，"
+            f"tree `{mt.stdout.strip().splitlines()[0] if mt.stdout.strip() else '?'}`（我没动任何 ref）"
         )
     add("")
-    def blob_of(suffix: str) -> str:
-        return next((r[1] for r in published if r[0].endswith(suffix)), "NOT_PUBLISHED")
+    def blob_of(path: str) -> str:
+        """Look a published blob up by the basename of the file the claim came out of -- naming a
+        fixed file name here would let a claim cite last generation's receipt."""
+        import os
+        want = os.path.basename(path)
+        hits = [r[1] for r in published if r[0].endswith('/' + want) or r[0] == want]
+        return hits[0] if len(hits) == 1 else f"NOT_RESOLVED({want}:{len(hits)})"
 
     spec_runs = {x["attempt"]["runId"] for x in arms["arms"]} | {x["baseline"]["runId"] for x in arms["arms"]}
     add("**本段的可判读数（F1 形式，每条 200 字内带耐久坐标）**")
     add("")
     add(
         f"- KILLED_ARMS = {len(killed)}（共 {len(arms['arms'])} 枚，每臂 `claimed_result` 逐格派生自收据 "
-        f"`{blob_of('arms-0298b-8ccfcf7.json')}` · `refs/heads/review/0278-0253-on-5c4608ce`）"
+        f"`{blob_of(a.arms)}` · `{a.candidate_ref}`）"
     )
     add(
         f"- GREEN_TRIPLES = {len(rd['triples'])}（四枚门 14 条，`exact_sha` 全 = 被测尖 `{rd['candidate_tip']}` · "
-        f"收据 `{blob_of('gate-round-8ccfcf7.json')}`）"
+        f"收据 `{blob_of(a.round)}`）"
     )
     add(
-        f"- SPEC_RUNS = {len(spec_runs)}（一轮绿 + 一轮拆，run_id 逐臂写在 `{blob_of('arms-0298b-8ccfcf7.json')}` "
+        f"- SPEC_RUNS = {len(spec_runs)}（一轮绿 + 一轮拆，run_id 逐臂写在 `{blob_of(a.arms)}` "
         "的 `triple.run_shape`）"
     )
     add(
         f"- SOFT_FINDINGS = {len(soft)}（上一代那 6 条已关掉；尺的原样输出发布在 "
-        f"`{blob_of('q38-gauge-run-on-arms.json')}`：硬 0 / 软 0 / 格数 {q38.get('cells_found', '?')}）"
+        f"`{blob_of(a.q38)}`：硬 0 / 软 0 / 格数 {q38.get('cells_found', '?')}）"
     )
     add(
         f"- RED_GATE_REATTRIBUTIONS = 0（那一轮 3 枚红改判为仪器红：厂商标志进程占了后端端口，逐端口探测与 "
-        f"PID 名单在 `{blob_of('port-preflight-gate-batch.json')}`）"
+        f"PID 名单在 `{blob_of(a.preflight)}`）"
     )
     add("")
     add("**外读证据（新目录，`commander/control`；PUT 前先证目录不存在，逐件独立 GET 字节级回读）**")
@@ -208,7 +244,8 @@ def main() -> int:
         "- 口径：`MANUAL_RESUME / NOT-EXACTLY-ONCE` 未升格；R-SCHEMA-01 仍 "
         f"`{(rd.get('R_SCHEMA_01_class') or {}).get('rule', 'NOT_IN_RECEIPT')}`；`treeUnchangedByThisRun="
         f"{str(arms['treeUnchangedByThisRun']).lower()}`；`demo/reset` 0 次、`_live/_preview` 0 写、凭据 0 打印、"
-        "已发布路径 0 覆盖 0 删、权威线 0 次移动。"
+        "已发布路径 0 覆盖 0 删、权威线 0 次移动（权威线只由包工头在 "
+        "`refs/heads/mirror/integration-frontend-apple-pass1` 上移动，我只读 ls-remote）。"
     )
     add("- 队列：ORD-0288 产码继续按住（与 B 同一枚文件），ORD-0266 `db6ac1d` 仍 DELIVERED/NOT-LANDED 等窗口。")
     add("竭尽所能的替qoder铺路")
