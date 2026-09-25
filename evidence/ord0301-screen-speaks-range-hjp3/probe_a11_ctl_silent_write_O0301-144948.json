@@ -1,0 +1,17 @@
+{
+ "asked": "http://127.0.0.1:8564/api/v1/journeys/d845ac26-0add-4305-bd3f-3f7c6f6fe3c1/agent/commands",
+ "face_port": 8564,
+ "face_tag": "outcome_origin",
+ "policy_stamp": "A11_CTL_SILENT_WRITE",
+ "method": "POST",
+ "why_this_method": "the controlled face manufactures the POST outcome, so the probe asks the same leg the traveller hits",
+ "upstream_port": 8563,
+ "upstream_listening": true,
+ "origin_listening": true,
+ "real_backend_listening": true,
+ "probe": {
+  "status": null,
+  "error": "TimeoutError: timed out",
+  "elapsed_ms": 8058
+ }
+}
