@@ -408,6 +408,13 @@ for p, name in FILES:
         if "REFUSED" in (pr.stdout + pr.stderr).upper():
             print("REFUSED", name, (pr.stdout + pr.stderr)[-160:].replace(chr(10), " "))
     got = remote(name)
+    for _ in range(6):
+        if got == want:
+            break
+        # the contents API can answer the previous commit for a moment after a write lands; a stale read is
+        # not a missing object, and treating it as one once made me re-publish a file that was already there
+        time.sleep(4)
+        got = remote(name)
     rows.append({"file": name, "blob40": want, "readback": got,
                  "verdict": "PROVEN" if got == want else "NOT"})
     SUB[name] = want
