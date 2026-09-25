@@ -1,0 +1,282 @@
+{
+ "schema": "CNX_CMDR_UI_EVIDENCE_EXPOSURE_GATE_V1_R4",
+ "ruler": {
+  "name": "ui_exposure_taint_ast_r1.cjs",
+  "supersedes": "ui_exposure_field_check_r3.py",
+  "supersedes_blob": "44e062e6ce9c7b5d97d78e09e432072da102292c",
+  "generation": "r4 / AST taint"
+ },
+ "typescript": "5.9.3",
+ "method": "per-file AST taint through the TypeScript compiler API: poison source, spread along assignment / object-property value / destructure / template hole / call argument by position / return / useState setter, property-path sensitive, fixpoint over the call graph. No regular expression decides anything.",
+ "standing_rule": "Q64=1 (arbiter): data reaching UI / screenshot / evidence artifacts must pass source classification -> allowed fields -> render. mask is a helper, never the first gate.",
+ "allowed_fields": [
+  "http_status",
+  "content_type",
+  "body_bytes",
+  "response_received",
+  "elapsed_ms",
+  "request_id"
+ ],
+ "forbidden": [
+  "raw body",
+  "raw detail",
+  "raw exception",
+  "the answer's own words reaching the DOM by any route, including a forwarding helper"
+ ],
+ "rules_fired": [
+  "UPSTREAM_EXCEPTION_TO_DOM",
+  "UPSTREAM_TEXT_VIA_HELPER_TO_DOM"
+ ],
+ "per_rule": {
+  "UPSTREAM_EXCEPTION_TO_DOM": 5,
+  "UPSTREAM_TEXT_VIA_HELPER_TO_DOM": 2
+ },
+ "files_scanned": 3,
+ "files_failed": 0,
+ "parse_diagnostics_total": 0,
+ "per_file": [
+  {
+   "file": "ProductErrorBoundary.tsx__base.tsx",
+   "hits": 2,
+   "parse_diagnostics": 0,
+   "depth_cut_lookups": 0,
+   "graph": {
+    "bindings": 11,
+    "functions": 7,
+    "call_sites": 13,
+    "state_pairs": [],
+    "sinks": 8
+   }
+  },
+  {
+   "file": "JourneyInboxWorkbench.tsx__base.tsx",
+   "hits": 3,
+   "parse_diagnostics": 0,
+   "depth_cut_lookups": 0,
+   "graph": {
+    "bindings": 166,
+    "functions": 72,
+    "call_sites": 321,
+    "state_pairs": [
+     "text/setText",
+     "text/setText",
+     "image/setImage",
+     "image/setImage",
+     "draft/setDraft",
+     "draft/setDraft",
+     "pending/setPending",
+     "pending/setPending",
+     "pendingError/setPendingError",
+     "pendingError/setPendingError",
+     "rawDetail/setRawDetail",
+     "rawDetail/setRawDetail",
+     "memory/setMemory",
+     "memory/setMemory",
+     "message/setMessage",
+     "message/setMessage",
+     "busy/setBusy",
+     "busy/setBusy",
+     "role/setRole",
+     "role/setRole",
+     "scheduledDeparture/setScheduledDeparture",
+     "scheduledDeparture/setScheduledDeparture",
+     "scheduledArrival/setScheduledArrival",
+     "scheduledArrival/setScheduledArrival",
+     "manualOpen/setManualOpen",
+     "manualOpen/setManualOpen",
+     "manualType/setManualType",
+     "manualType/setManualType",
+     "manualTitle/setManualTitle",
+     "manualTitle/setManualTitle",
+     "manualRef/setManualRef",
+     "manualRef/setManualRef",
+     "manualFrom/setManualFrom",
+     "manualFrom/setManualFrom",
+     "manualTo/setManualTo",
+     "manualTo/setManualTo",
+     "manualDepart/setManualDepart",
+     "manualDepart/setManualDepart",
+     "manualArrive/setManualArrive",
+     "manualArrive/setManualArrive",
+     "manualAmount/setManualAmount",
+     "manualAmount/setManualAmount"
+    ],
+    "sinks": 105
+   }
+  },
+  {
+   "file": "PlanWithAiSheet.tsx__base.tsx",
+   "hits": 2,
+   "parse_diagnostics": 0,
+   "depth_cut_lookups": 0,
+   "graph": {
+    "bindings": 129,
+    "functions": 49,
+    "call_sites": 166,
+    "state_pairs": [
+     "text/setText",
+     "text/setText",
+     "placeNames/setPlaceNames",
+     "placeNames/setPlaceNames",
+     "namesRead/setNamesRead",
+     "namesRead/setNamesRead",
+     "busy/setBusy",
+     "busy/setBusy",
+     "requestTooShort/setRequestTooShort",
+     "requestTooShort/setRequestTooShort",
+     "phase/setPhase",
+     "phase/setPhase",
+     "elapsed/setElapsed",
+     "elapsed/setElapsed",
+     "aiState/setAiState",
+     "aiState/setAiState",
+     "result/setResult",
+     "result/setResult"
+    ],
+    "sinks": 41
+   }
+  }
+ ],
+ "resolution_depth_cap": 40,
+ "resolution_truncated_total": 0,
+ "truncated_meaning": "how many times a lookup ran out of depth and had to answer \"unknown\" - a clean verdict with a nonzero value here is NOT a proven clean verdict",
+ "targets_scanned": [
+  "ProductErrorBoundary.tsx__base.tsx",
+  "JourneyInboxWorkbench.tsx__base.tsx",
+  "PlanWithAiSheet.tsx__base.tsx"
+ ],
+ "hits": [
+  {
+   "rule": "UPSTREAM_EXCEPTION_TO_DOM",
+   "line": 104,
+   "sink": "jsx-text",
+   "origin_kind": "exception",
+   "function_boundaries": 0,
+   "snippet": "{String(error?.message || error)}",
+   "taint_trace": [
+    ":104 upstream read error?.message off error",
+    ":104 passed through String()",
+    ":104 rendered here"
+   ],
+   "taint_chain": ":104 upstream read error?.message off error -> :104 passed through String() -> :104 rendered here",
+   "file": "ProductErrorBoundary.tsx__base.tsx"
+  },
+  {
+   "rule": "UPSTREAM_EXCEPTION_TO_DOM",
+   "line": 105,
+   "sink": "jsx-text",
+   "origin_kind": "exception",
+   "function_boundaries": 0,
+   "snippet": "{info ? `\\n${info}` : \"\"}",
+   "taint_trace": [
+    ":46 upstream read info?.componentStack",
+    ":46 passed through String()",
+    ":46 .slice(...) passes it on",
+    ":46 class state written by this.setState(...)",
+    ":62 `info` destructured from this.state",
+    ":105 interpolated into `\\n${info}`",
+    ":105 rendered here"
+   ],
+   "taint_chain": ":46 upstream read info?.componentStack -> :46 passed through String() -> :46 .slice(...) passes it on -> :46 class state written by this.setState(...) -> :62 `info` destructured from this.state -> :105 interpolated into `\\n${info}` -> :105 rendered here",
+   "file": "ProductErrorBoundary.tsx__base.tsx"
+  },
+  {
+   "rule": "UPSTREAM_EXCEPTION_TO_DOM",
+   "line": 687,
+   "sink": "jsx-text",
+   "origin_kind": "exception",
+   "function_boundaries": 0,
+   "snippet": "{message && <p className=\"v10-inbox-message\" role=\"status\">{message}</p>}",
+   "taint_trace": [
+    ":518 upstream read error.message off error",
+    ":518 state `message` written by setMessage(...)",
+    ":687 rendered here"
+   ],
+   "taint_chain": ":518 upstream read error.message off error -> :518 state `message` written by setMessage(...) -> :687 rendered here",
+   "file": "JourneyInboxWorkbench.tsx__base.tsx"
+  },
+  {
+   "rule": "UPSTREAM_EXCEPTION_TO_DOM",
+   "line": 691,
+   "sink": "jsx-text",
+   "origin_kind": "exception",
+   "function_boundaries": 0,
+   "snippet": "<code>{rawDetail}</code>",
+   "taint_trace": [
+    ":460 upstream read error.message off error",
+    ":460 `failure` reassigned to error instanceof Error ? error.message : t(\"inbox.confirmFailed\")",
+    ":474 state `rawDetail` written by setRawDetail(...)",
+    ":691 rendered here"
+   ],
+   "taint_chain": ":460 upstream read error.message off error -> :460 `failure` reassigned to error instanceof Error ? error.message : t(\"inbox.confirmFailed\") -> :474 state `rawDetail` written by setRawDetail(...) -> :691 rendered here",
+   "file": "JourneyInboxWorkbench.tsx__base.tsx"
+  },
+  {
+   "rule": "UPSTREAM_EXCEPTION_TO_DOM",
+   "line": 731,
+   "sink": "jsx-text",
+   "origin_kind": "exception",
+   "function_boundaries": 0,
+   "snippet": "<code> {pendingError}</code>{\" \"}",
+   "taint_trace": [
+    ":339 upstream read error.message off error",
+    ":338 state `pendingError` written by setPendingError(...)",
+    ":731 rendered here"
+   ],
+   "taint_chain": ":339 upstream read error.message off error -> :338 state `pendingError` written by setPendingError(...) -> :731 rendered here",
+   "file": "JourneyInboxWorkbench.tsx__base.tsx"
+  },
+  {
+   "rule": "UPSTREAM_TEXT_VIA_HELPER_TO_DOM",
+   "line": 1019,
+   "sink": "jsx-text",
+   "origin_kind": "prose",
+   "function_boundaries": 3,
+   "snippet": "<p>{copy.body}</p>",
+   "taint_trace": [
+    ":154 upstream read (body as { detail?: unknown } | null)?.detail",
+    ":154 `detail` = (body as { detail?: unknown } | null)?.detail",
+    ":155 .slice(...) passes it on",
+    ":155 .toUpperCase(...) passes it on",
+    ":155 serverReasonCode() returns typeof detail === \"string\" ? detail.slice(0, 60).toUpperCase() : \"\"",
+    ":662 interpolated into `BLOCKED:${serverReasonCode(unreadable) || `PLACES_HTTP_${placesResponse.statu...",
+    ":661 state `result` written by setResult(...)",
+    ":846 result.status was handed to statusCopy() as `status`",
+    ":205 .toUpperCase(...) passes it on",
+    ":205 `s` = (status || \"\").toUpperCase()",
+    ":209 .slice(...) passes it on",
+    ":209 `code` = s.slice(\"BLOCKED:\".length)",
+    ":215 interpolated into `${known.zh}（服务器给的原因编号：${code}）`",
+    ":211 statusCopy() returns { title: zh ? \"这次排不出方案：数据不够，不是你说的不对\" : \"No plan this time: the data is short, ...",
+    ":846 `copy` = result ? statusCopy(result.status, zh, result.planCount ?? 0) : null",
+    ":1019 rendered here"
+   ],
+   "taint_chain": ":154 upstream read (body as { detail?: unknown } | null)?.detail -> :154 `detail` = (body as { detail?: unknown } | null)?.detail -> :155 .slice(...) passes it on -> :155 .toUpperCase(...) passes it on -> :155 serverReasonCode() returns typeof detail === \"string\" ? detail.slice(0, 60).toUpperCase() : \"\" -> :662 interpolated into `BLOCKED:${serverReasonCode(unreadable) || `PLACES_HTTP_${placesResponse.statu... -> :661 state `result` written by setResult(...) -> :846 result.status was handed to statusCopy() as `status` -> :205 .toUpperCase(...) passes it on -> :205 `s` = (status || \"\").toUpperCase() -> :209 .slice(...) passes it on -> :209 `code` = s.slice(\"BLOCKED:\".length) -> :215 interpolated into `${known.zh}（服务器给的原因编号：${code}）` -> :211 statusCopy() returns { title: zh ? \"这次排不出方案：数据不够，不是你说的不对\" : \"No plan this time: the data is short, ... -> :846 `copy` = result ? statusCopy(result.status, zh, result.planCount ?? 0) : null -> :1019 rendered here",
+   "file": "PlanWithAiSheet.tsx__base.tsx"
+  },
+  {
+   "rule": "UPSTREAM_TEXT_VIA_HELPER_TO_DOM",
+   "line": 1046,
+   "sink": "jsx-text",
+   "origin_kind": "prose",
+   "function_boundaries": 3,
+   "snippet": "<code data-testid=\"plan-ai-reason\">{result.failureReason.text}</code>",
+   "taint_trace": [
+    ":162 upstream read (body as { detail?: unknown } | null)?.detail",
+    ":162 `detail` = (body as { detail?: unknown } | null)?.detail",
+    ":163 serverReasonSentence() returns detail",
+    ":602 serverReasonSentence(body) was handed to failureNote() as `serverText`",
+    ":190 failureNote() returns serverText ? { text: serverText, from: \"server\" } : { text: deviceText, from: ...",
+    ":594 state `result` written by setResult(...)",
+    ":1046 rendered here"
+   ],
+   "taint_chain": ":162 upstream read (body as { detail?: unknown } | null)?.detail -> :162 `detail` = (body as { detail?: unknown } | null)?.detail -> :163 serverReasonSentence() returns detail -> :602 serverReasonSentence(body) was handed to failureNote() as `serverText` -> :190 failureNote() returns serverText ? { text: serverText, from: \"server\" } : { text: deviceText, from: ... -> :594 state `result` written by setResult(...) -> :1046 rendered here",
+   "file": "PlanWithAiSheet.tsx__base.tsx"
+  }
+ ],
+ "verdict": "EXPOSURE_SHAPE_FOUND",
+ "interpretation_limit": "a hit names a shape to justify, not a defect verdict",
+ "claim_kind": "pattern_determined",
+ "claimed_result": "EXPOSURE_SHAPE_FOUND across 3 scanned file(s): 7 hit(s) [\"UPSTREAM_EXCEPTION_TO_DOM@ProductErrorBoundary.tsx__base.tsx:104\",\"UPSTREAM_EXCEPTION_TO_DOM@ProductErrorBoundary.tsx__base.tsx:105\",\"UPSTREAM_EXCEPTION_TO_DOM@JourneyInboxWorkbench.tsx__base.tsx:687\",\"UPSTREAM_EXCEPTION_TO_DOM@JourneyInboxWorkbench.tsx__base.tsx:691\",\"UPSTREAM_EXCEPTION_TO_DOM@JourneyInboxWorkbench.tsx__base.tsx:731\",\"UPSTREAM_TEXT_VIA_HELPER_TO_DOM@PlanWithAiSheet.tsx__base.ts",
+ "derived_result": null
+}
