@@ -1,0 +1,657 @@
+{
+ "scenario": "hoplock",
+ "port": 8654,
+ "journey": "f202ed24-9782-4e1a-b73d-ef48dceb52c1",
+ "hub_reached": true,
+ "sheet_opened": true,
+ "card": {
+  "result_card_painted": "连不上服务端\n\n网络或后端没有响应，这与你的需求内容无关。你的行程没有被改动，检查网络后可以重试。",
+  "result_card_text_content": "连不上服务端网络或后端没有响应，这与你的需求内容无关。你的行程没有被改动，检查网络后可以重试。",
+  "card_title_painted": "连不上服务端",
+  "card_body_painted": "网络或后端没有响应，这与你的需求内容无关。你的行程没有被改动，检查网络后可以重试。",
+  "reason_label_painted": null,
+  "reason_value_painted": null,
+  "reason_label_text_content": null,
+  "reason_value_text_content": null,
+  "details_elements_present": 0,
+  "details_open_attribute": null,
+  "detail_toggle_present": false,
+  "network_card_painted": true,
+  "http_failed_card_painted": false,
+  "refused_card_painted": false,
+  "server_attribution_painted": false,
+  "device_attribution_painted": false,
+  "unreadable_answer_note_painted": false,
+  "whole_page_contains_server_label": false,
+  "whole_page_contains_device_label": false,
+  "next_step_painted": null,
+  "cross_check_data_result_status": "NETWORK",
+  "cross_check_data_reason_origin": null,
+  "busy_present": false
+ },
+ "after_open": {
+  "result_card_painted": "连不上服务端\n\n网络或后端没有响应，这与你的需求内容无关。你的行程没有被改动，检查网络后可以重试。",
+  "result_card_text_content": "连不上服务端网络或后端没有响应，这与你的需求内容无关。你的行程没有被改动，检查网络后可以重试。",
+  "card_title_painted": "连不上服务端",
+  "card_body_painted": "网络或后端没有响应，这与你的需求内容无关。你的行程没有被改动，检查网络后可以重试。",
+  "reason_label_painted": null,
+  "reason_value_painted": null,
+  "reason_label_text_content": null,
+  "reason_value_text_content": null,
+  "details_elements_present": 0,
+  "details_open_attribute": null,
+  "detail_toggle_present": false,
+  "network_card_painted": true,
+  "http_failed_card_painted": false,
+  "refused_card_painted": false,
+  "server_attribution_painted": false,
+  "device_attribution_painted": false,
+  "unreadable_answer_note_painted": false,
+  "whole_page_contains_server_label": false,
+  "whole_page_contains_device_label": false,
+  "next_step_painted": null,
+  "cross_check_data_result_status": "NETWORK",
+  "cross_check_data_reason_origin": null,
+  "busy_present": false
+ },
+ "after_details_opened": null,
+ "open_attempt": {
+  "toggle": "no_toggle_present"
+ },
+ "legs": [
+  {
+   "url": "/api/v1/journeys/f202ed24-9782-4e1a-b73d-ef48dceb52c1/experience",
+   "method": "GET",
+   "api": true,
+   "sent_at_wall": "2026-09-25T14:37:10.839Z",
+   "sent_at": 1790347030840,
+   "fetch_rejected": false,
+   "status": 200,
+   "ok": true,
+   "content_type": "application/json",
+   "pair_id": "hjp3p3-27f08e7293cb40bb",
+   "elapsed_ms": 35
+  },
+  {
+   "url": "/api/v1/journeys/f202ed24-9782-4e1a-b73d-ef48dceb52c1/replans",
+   "method": "GET",
+   "api": true,
+   "sent_at_wall": "2026-09-25T14:37:10.875Z",
+   "sent_at": 1790347030875,
+   "fetch_rejected": false,
+   "status": 200,
+   "ok": true,
+   "content_type": "application/json",
+   "pair_id": "hjp3p3-a6d47215dd9f449a",
+   "elapsed_ms": 60
+  },
+  {
+   "url": "/api/v1/demo/scene",
+   "method": "GET",
+   "api": true,
+   "sent_at_wall": "2026-09-25T14:37:10.936Z",
+   "sent_at": 1790347030936,
+   "fetch_rejected": false,
+   "status": 200,
+   "ok": true,
+   "content_type": "application/json",
+   "pair_id": "hjp3p3-3f367ae6506d4ad9",
+   "elapsed_ms": 12
+  },
+  {
+   "url": "/api/v1/journeys/f202ed24-9782-4e1a-b73d-ef48dceb52c1/plans",
+   "method": "GET",
+   "api": true,
+   "sent_at_wall": "2026-09-25T14:37:10.938Z",
+   "sent_at": 1790347030938,
+   "fetch_rejected": false,
+   "status": 200,
+   "ok": true,
+   "content_type": "application/json",
+   "pair_id": "hjp3p3-6f7d1d5528204f3d",
+   "elapsed_ms": 28
+  },
+  {
+   "url": "/api/v1/journeys/f202ed24-9782-4e1a-b73d-ef48dceb52c1/twin",
+   "method": "GET",
+   "api": true,
+   "sent_at_wall": "2026-09-25T14:37:10.938Z",
+   "sent_at": 1790347030938,
+   "fetch_rejected": false,
+   "status": 200,
+   "ok": true,
+   "content_type": "application/json",
+   "pair_id": "hjp3p3-48b38903763a49ab",
+   "elapsed_ms": 41
+  },
+  {
+   "url": "/api/v1/journeys/f202ed24-9782-4e1a-b73d-ef48dceb52c1/agent-feed?limit=200",
+   "method": "GET",
+   "api": true,
+   "sent_at_wall": "2026-09-25T14:37:10.937Z",
+   "sent_at": 1790347030937,
+   "fetch_rejected": false,
+   "status": 200,
+   "ok": true,
+   "content_type": "application/json",
+   "pair_id": "hjp3p3-0ed8f21c9d714052",
+   "elapsed_ms": 45
+  },
+  {
+   "url": "/api/v1/journeys/f202ed24-9782-4e1a-b73d-ef48dceb52c1/wallet",
+   "method": "GET",
+   "api": true,
+   "sent_at_wall": "2026-09-25T14:37:10.943Z",
+   "sent_at": 1790347030943,
+   "fetch_rejected": false,
+   "status": 200,
+   "ok": true,
+   "content_type": "application/json",
+   "pair_id": "hjp3p3-add271d3f679446c",
+   "elapsed_ms": 39
+  },
+  {
+   "url": "/api/v1/travelers/039bae19-ea47-4097-ba22-e84e88574be0/agent-policy",
+   "method": "GET",
+   "api": true,
+   "sent_at_wall": "2026-09-25T14:37:10.943Z",
+   "sent_at": 1790347030943,
+   "fetch_rejected": false,
+   "status": 200,
+   "ok": true,
+   "content_type": "application/json",
+   "pair_id": "hjp3p3-d3be66346cd348bb",
+   "elapsed_ms": 40
+  },
+  {
+   "url": "/api/v1/journeys/f202ed24-9782-4e1a-b73d-ef48dceb52c1/offline-snapshot",
+   "method": "GET",
+   "api": true,
+   "sent_at_wall": "2026-09-25T14:37:10.943Z",
+   "sent_at": 1790347030943,
+   "fetch_rejected": false,
+   "status": 200,
+   "ok": true,
+   "content_type": "application/json",
+   "pair_id": "hjp3p3-b86c03e4c0744b4e",
+   "elapsed_ms": 46
+  },
+  {
+   "url": "/api/v1/journeys/f202ed24-9782-4e1a-b73d-ef48dceb52c1/agent-feed?limit=200",
+   "method": "GET",
+   "api": true,
+   "sent_at_wall": "2026-09-25T14:37:10.937Z",
+   "sent_at": 1790347030937,
+   "fetch_rejected": false,
+   "status": 200,
+   "ok": true,
+   "content_type": "application/json",
+   "pair_id": "hjp3p3-ffabe2c845334c47",
+   "elapsed_ms": 56
+  },
+  {
+   "url": "/api/v1/agent/runtime-status",
+   "method": "GET",
+   "api": true,
+   "sent_at_wall": "2026-09-25T14:37:10.943Z",
+   "sent_at": 1790347030943,
+   "fetch_rejected": false,
+   "status": 200,
+   "ok": true,
+   "content_type": "application/json",
+   "pair_id": "hjp3p3-0868951ec14f4315",
+   "elapsed_ms": 60
+  },
+  {
+   "url": "/api/v1/places?city_code=CNX-DEMO",
+   "method": "GET",
+   "api": true,
+   "sent_at_wall": "2026-09-25T14:37:11.329Z",
+   "sent_at": 1790347031329,
+   "fetch_rejected": false,
+   "status": 200,
+   "ok": true,
+   "content_type": "application/json",
+   "pair_id": "hjp3p3-39567459a9644c38",
+   "elapsed_ms": 13
+  },
+  {
+   "url": "/api/v1/agent/runtime-status",
+   "method": "GET",
+   "api": true,
+   "sent_at_wall": "2026-09-25T14:37:11.330Z",
+   "sent_at": 1790347031330,
+   "fetch_rejected": false,
+   "status": 200,
+   "ok": true,
+   "content_type": "application/json",
+   "pair_id": "hjp3p3-eddbfd6eb90c4a3f",
+   "elapsed_ms": 27
+  },
+  {
+   "url": "/api/v1/journeys/f202ed24-9782-4e1a-b73d-ef48dceb52c1/plans",
+   "method": "GET",
+   "api": true,
+   "sent_at_wall": "2026-09-25T14:37:11.760Z",
+   "sent_at": 1790347031760,
+   "fetch_rejected": false,
+   "status": 200,
+   "ok": true,
+   "content_type": "application/json",
+   "pair_id": "hjp3p3-63e8e105951f41de",
+   "elapsed_ms": 13
+  },
+  {
+   "url": "/api/v1/journeys/f202ed24-9782-4e1a-b73d-ef48dceb52c1/twin",
+   "method": "GET",
+   "api": true,
+   "sent_at_wall": "2026-09-25T14:37:25.989Z",
+   "sent_at": 1790347045989,
+   "fetch_rejected": false,
+   "status": 200,
+   "ok": true,
+   "content_type": "application/json",
+   "pair_id": "hjp3p3-ef5daf9699cd4c4f",
+   "elapsed_ms": 9
+  },
+  {
+   "url": "/api/v1/journeys/f202ed24-9782-4e1a-b73d-ef48dceb52c1/twin",
+   "method": "GET",
+   "api": true,
+   "sent_at_wall": "2026-09-25T14:37:41.005Z",
+   "sent_at": 1790347061005,
+   "fetch_rejected": false,
+   "status": 200,
+   "ok": true,
+   "content_type": "application/json",
+   "pair_id": "hjp3p3-0b734424a028481a",
+   "elapsed_ms": 25
+  },
+  {
+   "url": "/api/v1/journeys/f202ed24-9782-4e1a-b73d-ef48dceb52c1/agent/commands",
+   "method": "POST",
+   "api": true,
+   "sent_at_wall": "2026-09-25T14:37:11.773Z",
+   "sent_at": 1790347031773,
+   "request_body": "{\"command\":\"想傍晚在老城慢慢走一圈，别太赶\"}",
+   "fetch_rejected": false,
+   "status": 500,
+   "ok": false,
+   "content_type": "text/plain; charset=utf-8",
+   "pair_id": "hjp3p3-ec66be6abd94457b",
+   "elapsed_ms": 32463
+  }
+ ],
+ "consumed": [
+  {
+   "url": "http://127.0.0.1:8654/api/v1/journeys/f202ed24-9782-4e1a-b73d-ef48dceb52c1/plans",
+   "status": 200,
+   "pair_id": "hjp3p3-6f7d1d5528204f3d",
+   "content_type": "application/json",
+   "at_wall": "2026-09-25T14:37:10.966Z",
+   "parsed": true,
+   "top_type": "object",
+   "top_keys": [],
+   "error_keys": null,
+   "error_message_type": null,
+   "detail_type": "undefined"
+  },
+  {
+   "url": "http://127.0.0.1:8654/api/v1/journeys/f202ed24-9782-4e1a-b73d-ef48dceb52c1/twin",
+   "status": 200,
+   "pair_id": "hjp3p3-48b38903763a49ab",
+   "content_type": "application/json",
+   "at_wall": "2026-09-25T14:37:10.979Z",
+   "parsed": true,
+   "top_type": "object",
+   "top_keys": [
+    "journey_id",
+    "active_plan_version_id",
+    "current_activity_id",
+    "latest_event_id",
+    "projection_status",
+    "snapshot_at",
+    "upcoming_commitments",
+    "context"
+   ],
+   "error_keys": null,
+   "error_message_type": null,
+   "detail_type": "undefined"
+  },
+  {
+   "url": "http://127.0.0.1:8654/api/v1/journeys/f202ed24-9782-4e1a-b73d-ef48dceb52c1/agent-feed?limit=200",
+   "status": 200,
+   "pair_id": "hjp3p3-0ed8f21c9d714052",
+   "content_type": "application/json",
+   "at_wall": "2026-09-25T14:37:10.982Z",
+   "parsed": true,
+   "top_type": "object",
+   "top_keys": [
+    "journey_id",
+    "source",
+    "events"
+   ],
+   "error_keys": null,
+   "error_message_type": null,
+   "detail_type": "undefined"
+  },
+  {
+   "url": "http://127.0.0.1:8654/api/v1/journeys/f202ed24-9782-4e1a-b73d-ef48dceb52c1/agent-feed?limit=200",
+   "status": 200,
+   "pair_id": "hjp3p3-ffabe2c845334c47",
+   "content_type": "application/json",
+   "at_wall": "2026-09-25T14:37:10.993Z",
+   "parsed": true,
+   "top_type": "object",
+   "top_keys": [
+    "journey_id",
+    "source",
+    "events"
+   ],
+   "error_keys": null,
+   "error_message_type": null,
+   "detail_type": "undefined"
+  },
+  {
+   "url": "http://127.0.0.1:8654/api/v1/places?city_code=CNX-DEMO",
+   "status": 200,
+   "pair_id": "hjp3p3-39567459a9644c38",
+   "content_type": "application/json",
+   "at_wall": "2026-09-25T14:37:11.342Z",
+   "parsed": true,
+   "top_type": "object",
+   "top_keys": [
+    "0",
+    "1",
+    "2",
+    "3",
+    "4",
+    "5",
+    "6",
+    "7"
+   ],
+   "error_keys": null,
+   "error_message_type": null,
+   "detail_type": "undefined"
+  },
+  {
+   "url": "http://127.0.0.1:8654/api/v1/agent/runtime-status",
+   "status": 200,
+   "pair_id": "hjp3p3-eddbfd6eb90c4a3f",
+   "content_type": "application/json",
+   "at_wall": "2026-09-25T14:37:11.357Z",
+   "parsed": true,
+   "top_type": "object",
+   "top_keys": [
+    "runtime_identity",
+    "native_binary_detected",
+    "native_mcp_proven",
+    "mcp_server",
+    "deepseek_configured",
+    "hermes_compat_configured",
+    "hermes_native_gateway"
+   ],
+   "error_keys": null,
+   "error_message_type": null,
+   "detail_type": "undefined"
+  },
+  {
+   "url": "http://127.0.0.1:8654/api/v1/journeys/f202ed24-9782-4e1a-b73d-ef48dceb52c1/plans",
+   "status": 200,
+   "pair_id": "hjp3p3-63e8e105951f41de",
+   "content_type": "application/json",
+   "at_wall": "2026-09-25T14:37:11.773Z",
+   "parsed": true,
+   "top_type": "object",
+   "top_keys": [],
+   "error_keys": null,
+   "error_message_type": null,
+   "detail_type": "undefined"
+  },
+  {
+   "url": "http://127.0.0.1:8654/api/v1/journeys/f202ed24-9782-4e1a-b73d-ef48dceb52c1/twin",
+   "status": 200,
+   "pair_id": "hjp3p3-ef5daf9699cd4c4f",
+   "content_type": "application/json",
+   "at_wall": "2026-09-25T14:37:25.998Z",
+   "parsed": true,
+   "top_type": "object",
+   "top_keys": [
+    "journey_id",
+    "active_plan_version_id",
+    "current_activity_id",
+    "latest_event_id",
+    "projection_status",
+    "snapshot_at",
+    "upcoming_commitments",
+    "context"
+   ],
+   "error_keys": null,
+   "error_message_type": null,
+   "detail_type": "undefined"
+  },
+  {
+   "url": "http://127.0.0.1:8654/api/v1/journeys/f202ed24-9782-4e1a-b73d-ef48dceb52c1/twin",
+   "status": 200,
+   "pair_id": "hjp3p3-0b734424a028481a",
+   "content_type": "application/json",
+   "at_wall": "2026-09-25T14:37:41.030Z",
+   "parsed": true,
+   "top_type": "object",
+   "top_keys": [
+    "journey_id",
+    "active_plan_version_id",
+    "current_activity_id",
+    "latest_event_id",
+    "projection_status",
+    "snapshot_at",
+    "upcoming_commitments",
+    "context"
+   ],
+   "error_keys": null,
+   "error_message_type": null,
+   "detail_type": "undefined"
+  },
+  {
+   "url": "http://127.0.0.1:8654/api/v1/journeys/f202ed24-9782-4e1a-b73d-ef48dceb52c1/agent/commands",
+   "status": 500,
+   "pair_id": "hjp3p3-ec66be6abd94457b",
+   "content_type": "text/plain; charset=utf-8",
+   "at_wall": "2026-09-25T14:37:44.236Z",
+   "parsed": false,
+   "error_name": "SyntaxError",
+   "error_message": "Unexpected token 'I', \"Internal S\"... is not valid JSON"
+  }
+ ],
+ "cdp": [
+  {
+   "url": "/api/v1/journeys/f202ed24-9782-4e1a-b73d-ef48dceb52c1/experience",
+   "status": 200,
+   "pair_id": "hjp3p3-27f08e7293cb40bb",
+   "content_type": "application/json",
+   "failure": null,
+   "at_wall": "2026-09-25T14:37:10.875Z"
+  },
+  {
+   "url": "/api/v1/journeys/f202ed24-9782-4e1a-b73d-ef48dceb52c1/replans",
+   "status": 200,
+   "pair_id": "hjp3p3-a6d47215dd9f449a",
+   "content_type": "application/json",
+   "failure": null,
+   "at_wall": "2026-09-25T14:37:10.935Z"
+  },
+  {
+   "url": "/api/v1/demo/scene",
+   "status": 200,
+   "pair_id": "hjp3p3-3f367ae6506d4ad9",
+   "content_type": "application/json",
+   "failure": null,
+   "at_wall": "2026-09-25T14:37:10.948Z"
+  },
+  {
+   "url": "/api/v1/journeys/f202ed24-9782-4e1a-b73d-ef48dceb52c1/plans",
+   "status": 200,
+   "pair_id": "hjp3p3-6f7d1d5528204f3d",
+   "content_type": "application/json",
+   "failure": null,
+   "at_wall": "2026-09-25T14:37:10.966Z"
+  },
+  {
+   "url": "/api/v1/journeys/f202ed24-9782-4e1a-b73d-ef48dceb52c1/twin",
+   "status": 200,
+   "pair_id": "hjp3p3-48b38903763a49ab",
+   "content_type": "application/json",
+   "failure": null,
+   "at_wall": "2026-09-25T14:37:10.979Z"
+  },
+  {
+   "url": "/api/v1/journeys/f202ed24-9782-4e1a-b73d-ef48dceb52c1/agent-feed?limit=200",
+   "status": 200,
+   "pair_id": "hjp3p3-0ed8f21c9d714052",
+   "content_type": "application/json",
+   "failure": null,
+   "at_wall": "2026-09-25T14:37:10.982Z"
+  },
+  {
+   "url": "/api/v1/journeys/f202ed24-9782-4e1a-b73d-ef48dceb52c1/wallet",
+   "status": 200,
+   "pair_id": "hjp3p3-add271d3f679446c",
+   "content_type": "application/json",
+   "failure": null,
+   "at_wall": "2026-09-25T14:37:10.982Z"
+  },
+  {
+   "url": "/api/v1/travelers/039bae19-ea47-4097-ba22-e84e88574be0/agent-policy",
+   "status": 200,
+   "pair_id": "hjp3p3-d3be66346cd348bb",
+   "content_type": "application/json",
+   "failure": null,
+   "at_wall": "2026-09-25T14:37:10.982Z"
+  },
+  {
+   "url": "/api/v1/journeys/f202ed24-9782-4e1a-b73d-ef48dceb52c1/offline-snapshot",
+   "status": 200,
+   "pair_id": "hjp3p3-b86c03e4c0744b4e",
+   "content_type": "application/json",
+   "failure": null,
+   "at_wall": "2026-09-25T14:37:10.989Z"
+  },
+  {
+   "url": "/api/v1/journeys/f202ed24-9782-4e1a-b73d-ef48dceb52c1/agent-feed?limit=200",
+   "status": 200,
+   "pair_id": "hjp3p3-ffabe2c845334c47",
+   "content_type": "application/json",
+   "failure": null,
+   "at_wall": "2026-09-25T14:37:10.992Z"
+  },
+  {
+   "url": "/api/v1/agent/runtime-status",
+   "status": 200,
+   "pair_id": "hjp3p3-0868951ec14f4315",
+   "content_type": "application/json",
+   "failure": null,
+   "at_wall": "2026-09-25T14:37:11.002Z"
+  },
+  {
+   "url": "/api/v1/places?city_code=CNX-DEMO",
+   "status": 200,
+   "pair_id": "hjp3p3-39567459a9644c38",
+   "content_type": "application/json",
+   "failure": null,
+   "at_wall": "2026-09-25T14:37:11.342Z"
+  },
+  {
+   "url": "/api/v1/agent/runtime-status",
+   "status": 200,
+   "pair_id": "hjp3p3-eddbfd6eb90c4a3f",
+   "content_type": "application/json",
+   "failure": null,
+   "at_wall": "2026-09-25T14:37:11.357Z"
+  },
+  {
+   "url": "/api/v1/journeys/f202ed24-9782-4e1a-b73d-ef48dceb52c1/plans",
+   "status": 200,
+   "pair_id": "hjp3p3-63e8e105951f41de",
+   "content_type": "application/json",
+   "failure": null,
+   "at_wall": "2026-09-25T14:37:11.773Z"
+  },
+  {
+   "url": "/api/v1/journeys/f202ed24-9782-4e1a-b73d-ef48dceb52c1/twin",
+   "status": 200,
+   "pair_id": "hjp3p3-ef5daf9699cd4c4f",
+   "content_type": "application/json",
+   "failure": null,
+   "at_wall": "2026-09-25T14:37:25.998Z"
+  },
+  {
+   "url": "/api/v1/journeys/f202ed24-9782-4e1a-b73d-ef48dceb52c1/twin",
+   "status": 200,
+   "pair_id": "hjp3p3-0b734424a028481a",
+   "content_type": "application/json",
+   "failure": null,
+   "at_wall": "2026-09-25T14:37:41.030Z"
+  },
+  {
+   "url": "/api/v1/journeys/f202ed24-9782-4e1a-b73d-ef48dceb52c1/agent/commands",
+   "status": 500,
+   "pair_id": "hjp3p3-ec66be6abd94457b",
+   "content_type": "text/plain; charset=utf-8",
+   "failure": null,
+   "at_wall": "2026-09-25T14:37:44.236Z"
+  }
+ ],
+ "page_errors": [],
+ "samples": [
+  {
+   "ms": 29003,
+   "status": null,
+   "details": 0,
+   "busy": false
+  },
+  {
+   "ms": 29512,
+   "status": null,
+   "details": 0,
+   "busy": false
+  },
+  {
+   "ms": 30019,
+   "status": null,
+   "details": 0,
+   "busy": false
+  },
+  {
+   "ms": 30524,
+   "status": null,
+   "details": 0,
+   "busy": false
+  },
+  {
+   "ms": 31032,
+   "status": null,
+   "details": 0,
+   "busy": false
+  },
+  {
+   "ms": 31537,
+   "status": null,
+   "details": 0,
+   "busy": false
+  },
+  {
+   "ms": 32045,
+   "status": null,
+   "details": 0,
+   "busy": false
+  },
+  {
+   "ms": 32549,
+   "status": "NETWORK",
+   "details": 0,
+   "busy": false
+  }
+ ],
+ "sample_count": 64,
+ "waited_ms": 35322
+}
