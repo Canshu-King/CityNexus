@@ -20,6 +20,13 @@
 import { useEffect, useRef, useState } from "react";
 import { useLocale } from "../../i18n/LocaleContext";
 import { markPendingContinuation } from "../../api/journeyContinuation";
+/* ORD-0310: the keyless write leg's own deadline, and the only sentence shape it is allowed to say.
+   The number a traveller reads and the timer that ended the request come from one exported constant. */
+import {
+  fetchWithKeylessWriteDeadline,
+  isKeylessWriteDeadlineMissed,
+  keylessWriteUnknownReading,
+} from "../../lib/keylessWriteDeadline";
 
 /** The phases this component itself drives, in the order it can enter them. */
 type PhaseKey = "baseline" | "request" | "verify" | "fallback";
@@ -230,6 +237,19 @@ function statusCopy(
       body: zh
         ? "请求本身已经发出去了，可能已经生成方案。请先刷新确认，不要重复提交。"
         : "The request had already been sent, so it may have produced plans. Refresh and check before submitting again.",
+      tone: "warn",
+    };
+  }
+  if (s === "UNKNOWN_KEYLESS_WRITE_DEADLINE") {
+    /* ORD-0310 (Q54=①).  Two clauses are mandatory and one word is forbidden: the result of this write
+       is UNKNOWN (which is not the statement "it did not happen"), and this one cannot be re-asked with
+       the same key because the server never took a key here.  「已取消」/「没有发生」/「再点一次」 are the
+       counter-examples this branch exists to refuse. */
+    return {
+      title: zh ? "这一笔的结果未知（不是没发生）" : "This one's result is unknown (not: it did not happen)",
+      body: zh
+        ? "这台设备停止等待了，而请求已经发出去，服务器那边可能还在做。这条路线不收幂等键，所以这一笔既没有可回读的凭条，也不能靠同一把键补问。先刷新核对结果，不要重复提交。"
+        : "This device stopped waiting, after the request had been sent -- the server may still be working. This route never took an idempotency key, so there is no receipt to read back and no way to re-ask with the same key. Refresh and check the result before submitting again.",
       tone: "warn",
     };
   }
@@ -515,19 +535,24 @@ export function PlanWithAiSheet({
       // fail CLOSED instead of assuming an empty baseline.
       baseline = await existingPlanIds(signal);
       enter("request");
-      const response = await fetch(`/api/v1/journeys/${journeyId}/agent/commands`, {
-        method: "POST",
-        /* The transport key travels with the whole intent.  This route declares no such parameter
-           today, so it is inert HERE -- the leg that reads it is plans/generate below.  The body
-           gains nothing: AgentCommandRequest is extra="forbid", so a new key would be a 422. */
-        headers: {
-          "Content-Type": "application/json",
-          Accept: "application/json",
-          "Idempotency-Key": idempotencyKey,
+      const response = await fetchWithKeylessWriteDeadline(
+        `/api/v1/journeys/${journeyId}/agent/commands`,
+        {
+          method: "POST",
+          /* The transport key travels with the whole intent.  This route declares no such parameter
+             today, so it is inert HERE -- the leg that reads it is plans/generate below.  The body
+             gains nothing: AgentCommandRequest is extra="forbid", so a new key would be a 422.
+             ORD-0310: because that key buys nothing on this leg, this is the one leg whose deadline
+             may not promise a replay, and the wrapper below is what enforces that. */
+          headers: {
+            "Content-Type": "application/json",
+            Accept: "application/json",
+            "Idempotency-Key": idempotencyKey,
+          },
+          body: JSON.stringify({ command }),
+          signal,
         },
-        body: JSON.stringify({ command }),
-        signal,
-      });
+      );
       const body = await response.json().catch(() => null);
       const mission = body?.mission ?? null;
       /* ORD-0269 clause 1: the pending marker is written the moment leg 1 returns a mission id --
@@ -742,6 +767,20 @@ export function PlanWithAiSheet({
       });
       if (status === "COMPLETED") onPlanned?.();
     } catch (cause) {
+      if (isKeylessWriteDeadlineMissed(cause)) {
+        /* ORD-0310 (Q54=①): this device stopped waiting on a write the server cannot recognise.  There
+           is no receipt row to read back and no key the server took, so the only honest state here is
+           UNKNOWN -- not "cancelled", not "did not happen", and deliberately not a re-press invitation:
+           a second press on this leg is measured to produce a second mission (ORD-0288 baseline). */
+        setResult({
+          status: "UNKNOWN_KEYLESS_WRITE_DEADLINE",
+          failureReason: keylessWriteUnknownReading(cause.method, cause.path, cause.deadlineMs),
+          summary: null,
+          planCount: -1,
+          newPlanIds: [],
+        });
+        return;
+      }
       if (isAbort(cause)) {
         /* `reached` is "request" or later once the POST has been issued, which is
            the point after which cancelling no longer guarantees nothing happened. */
