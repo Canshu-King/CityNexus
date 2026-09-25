@@ -1,0 +1,97 @@
+{
+ "schema": "CNX_ORD0324_HERMES_SUITE_GATE_EVIDENCE_V1",
+ "order": "ORD-0324",
+ "lane": "S2-hermes-port",
+ "at_local": "2026-09-26T03:51:20+0800",
+ "tool": {
+  "path": "live_checks/run_hermes_suite_r1.py",
+  "blob": "aceacebd836039d9c4660a5df5b281bfdf240370",
+  "bytes": 14632,
+  "sha256_16": "0b14b885778215d3"
+ },
+ "generation": "65df31df96cfb8a954f5feb36484710a883e1597",
+ "generation_context_live_reading": {
+  "ref_requested": "refs/heads/mirror/integration-frontend-apple-pass1",
+  "resolved_via": "refs/remotes/origin/mirror/integration-frontend-apple-pass1",
+  "resolved_40": "65df31df96cfb8a954f5feb36484710a883e1597",
+  "tried": [
+   "refs/heads/mirror/integration-frontend-apple-pass1",
+   "refs/remotes/origin/mirror/integration-frontend-apple-pass1"
+  ],
+  "live_branch": "refs/heads/mirror/integration-frontend-apple-pass1",
+  "live_branch_sha": "65df31df96cfb8a954f5feb36484710a883e1597",
+  "equals_live_branch": true
+ },
+ "interpreter": "D:/moodle/CityNexus/.venv/Scripts/python.exe (Python 3.12.14)",
+ "export_set": [
+  "backend",
+  "data",
+  "contracts",
+  "tools",
+  "scripts"
+ ],
+ "how_to_use_as_a_landing_gate": "python -X utf8 live_checks/run_hermes_suite_r1.py --selftest   (defaults to the live authoritative tip; pass --ref <candidate-sha> to gate a candidate). Exit 0 = harness collects and runs, 3 = gate red, 4 = self-test red, 7/8 = refused for an unsafe work dir or a bad export. It never writes into the repo and never pushes a ref.",
+ "runs": {
+  "live_tip_self": {
+   "exit_code": 0,
+   "verdict": "HERMES_GATE_GREEN whole_collected=1318 harness_collected=58 harness_passed=58",
+   "harness_files": 20,
+   "whole_collected": 1318,
+   "whole_collect_errors": 0,
+   "harness_collected": 58,
+   "harness_collect_errors": 0,
+   "harness_passed": 58,
+   "harness_failed": 0,
+   "harness_executed": 58,
+   "receipt_blob_on_disk": "fb97dd981b38775cda6aa5818891ab0b66dbd506"
+  },
+  "r1_candidate_retrospective": {
+   "ref": "afbbf5be3256d76eac0453ab3ad8e6dd1356d7cc",
+   "exit_code": 3,
+   "verdict": "HERMES_GATE_RED harness_collected_positive_with_zero_errors,harness_passed_with_zero_failures,harness_run_executed_every_collected_test,whole_suite_collection_not_interrupted",
+   "harness_files": 22,
+   "whole_collected": 1318,
+   "whole_collect_errors": 2,
+   "harness_collected": 58,
+   "harness_collect_errors": 2,
+   "harness_passed": 0,
+   "harness_failed": 0,
+   "harness_executed": 0,
+   "reading": "this is the candidate the commander declined to land: 22 discovered files, 2 collection errors, and harness_executed=0 with passed=0 and failed=0 - a run that looks like a summary line but executes nothing. The gate names 4 failing checks and exits 3, so the defect is caught before landing rather than after.",
+   "receipt_blob_on_disk": "81ea94c7fd5c9be72f88bd3ad517b91e2622440b"
+  },
+  "negative_control": {
+   "mutant_file": "backend/tests/test_v18_hermes_native_client.py",
+   "injected": "import ord0324_no_such_module_zz  # injected by run_hermes_suite_r1 --selftest",
+   "whole_collect_errors": 1,
+   "harness_collect_errors": 1,
+   "harness_run_exit": 2,
+   "harness_passed_after_mutation": 0,
+   "post_restore_whole_collected": 1318,
+   "post_restore_green": true
+  }
+ },
+ "arithmetic_reconciliation": {
+  "live_whole_collected": 1318,
+  "r1_whole_collected": 1318,
+  "harness_collected_equal": true,
+  "note": "both trees collect the same 58 harness tests and the same whole-suite total; what differs is that 2 of the 22 files in the r1 tree cannot import, so its run aborts at collection and executes 0 - collected equality is exactly why a collected-count alone is not a gate"
+ },
+ "checks": {
+  "gate_green_on_live_tip": true,
+  "gate_red_on_the_unlandable_candidate": true,
+  "negative_control_collected_errors_at_least_one": true,
+  "negative_control_is_distinguishable_from_green": true,
+  "post_restore_returns_to_green": true,
+  "live_and_r1_differ_in_discovered_file_count": true,
+  "throwaway_dirs_all_removed": true,
+  "repo_porcelain_unchanged_by_the_gate": true
+ },
+ "derived_ok": true,
+ "verdict": "ORD0324_GATE_INSTRUMENTED_BOTH_DIRECTIONS",
+ "verdict_derivation": "derived_ok = and(checks); every value in checks compares readings taken from the two run receipts (their arms blocks), so the verdict cannot be reached by writing a token",
+ "refs_pushed": 0,
+ "repo_writes": 0,
+ "garbage_left": 0,
+ "discipline_note": "the gate exports into D:/moodle/_ord0324_gate_<stamp> outside the repo, refuses any work dir inside the repo, refuses an export set lacking scripts, and removes the dir in the same run; repo_porcelain_before == after in both runs"
+}
