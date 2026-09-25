@@ -16,6 +16,11 @@ import {
   isDisruptionOpen,
 } from "../../lib/disruptionState";
 import {
+  fetchWithWriteDeadline,
+  isWriteDeadlineMissed,
+  writeDeadlineCopy,
+} from "../../lib/writeDeadline";
+import {
   useAuthoritativePlans,
   useAuthoritativeTwin,
 } from "../../api/v12Authoritative";
@@ -222,7 +227,7 @@ export function LiveRecovery({
     setBusy(proposalId);
     setMessage(null);
     try {
-      const r = await fetch(`/api/v1/replans/${proposalId}/accept`, {
+      const r = await fetchWithWriteDeadline(`/api/v1/replans/${proposalId}/accept`, {
         method: "POST",
         headers: { "Idempotency-Key": `accept-${proposalId}` },
       });
@@ -240,8 +245,16 @@ export function LiveRecovery({
       await plans.refetch();
       await twin.refetch();
       onAccepted?.();
-    } catch {
-      setMessage(zh ? "连不上服务器，请重试。" : "Could not reach the server. Try again.");
+    } catch (error) {
+      /* ORD-0281 T-b: this device's bound expiring is its own fact.  It used to be reported as
+         「连不上服务器」, which blamed the network for a request the server may still be finishing --
+         the same attribution mistake ORD-0280 closed for the label, in another panel. */
+      if (isWriteDeadlineMissed(error)) {
+        const copy = writeDeadlineCopy(zh);
+        setMessage(`${copy.title}｜${copy.body}`);
+      } else {
+        setMessage(zh ? "连不上服务器，请重试。" : "Could not reach the server. Try again.");
+      }
     } finally {
       setBusy(null);
     }
