@@ -1,0 +1,16 @@
+{
+  "authoritative": true,
+  "suite": "current-product",
+  "runId": "0302unr46204640",
+  "python": "D:\\moodle\\CityNexus\\.venv\\Scripts\\python.exe",
+  "pythonResolved": "D:\\moodle\\CityNexus\\.venv\\Scripts\\python.exe",
+  "frontendPort": 4491,
+  "backendPort": 42491,
+  "databaseUrl": "sqlite:///D:/moodle/_qoder_b_lane_20260923/backend/_0302unr46204640.db",
+  "ai": "disabled",
+  "reuseExistingServer": false,
+  "workers": 1,
+  "retries": 0,
+  "recordedAt": "2026-09-25T12:46:51.967Z",
+  "provenanceLine": "[citynexus e2e] suite=current-product authoritative=true python=D:\\moodle\\CityNexus\\.venv\\Scripts\\python.exe frontend=:4491 backend=:42491 db=sqlite:///D:/moodle/_qoder_b_lane_20260923/backend/_0302unr46204640.db ai=disabled reuseExistingServer=false"
+}
