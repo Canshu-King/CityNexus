@@ -1,0 +1,251 @@
+{
+ "cells": [
+  {
+   "derived_from": [
+    "measured.cell_evidence_tag=be8ce573e819",
+    "measured.passed_rounds=3"
+   ],
+   "derived_from_key": "derived_from",
+   "id": "0",
+   "own_hits": [
+    "10",
+    "3",
+    "PASSED",
+    "be8ce573e819"
+   ],
+   "own_token_count": 20,
+   "unique_hits": [
+    "be8ce573e819"
+   ],
+   "verdict": "GREEN_3_of_3",
+   "why": "本格自己的读数：3 轮控制里 PASSED 3/3（collected=10），本格标签 be8ce573e819；被这些臂咬到=[]；作为 primary 的臂=[]",
+   "why_source": "why",
+   "why_token_count": 4
+  },
+  {
+   "derived_from": [
+    "measured.cell_evidence_tag=0183c5e39546",
+    "measured.passed_rounds=3"
+   ],
+   "derived_from_key": "derived_from",
+   "id": "1",
+   "own_hits": [
+    "0183c5e39546",
+    "10",
+    "3",
+    "PASSED"
+   ],
+   "own_token_count": 20,
+   "unique_hits": [
+    "0183c5e39546"
+   ],
+   "verdict": "GREEN_3_of_3",
+   "why": "本格自己的读数：3 轮控制里 PASSED 3/3（collected=10），本格标签 0183c5e39546；被这些臂咬到=[]；作为 primary 的臂=[]",
+   "why_source": "why",
+   "why_token_count": 4
+  },
+  {
+   "derived_from": [
+    "measured.cell_evidence_tag=00776efc5ff3",
+    "measured.passed_rounds=3"
+   ],
+   "derived_from_key": "derived_from",
+   "id": "2",
+   "own_hits": [
+    "00776efc5ff3",
+    "10",
+    "3",
+    "PASSED"
+   ],
+   "own_token_count": 19,
+   "unique_hits": [
+    "00776efc5ff3"
+   ],
+   "verdict": "GREEN_3_of_3",
+   "why": "本格自己的读数：3 轮控制里 PASSED 3/3（collected=10），本格标签 00776efc5ff3；被这些臂咬到=[]；作为 primary 的臂=[]",
+   "why_source": "why",
+   "why_token_count": 4
+  },
+  {
+   "derived_from": [
+    "measured.cell_evidence_tag=a15bac6ab7e4",
+    "measured.passed_rounds=3"
+   ],
+   "derived_from_key": "derived_from",
+   "id": "3",
+   "own_hits": [
+    "10",
+    "3",
+    "PASSED",
+    "a15bac6ab7e4"
+   ],
+   "own_token_count": 18,
+   "unique_hits": [
+    "a15bac6ab7e4"
+   ],
+   "verdict": "GREEN_3_of_3",
+   "why": "本格自己的读数：3 轮控制里 PASSED 3/3（collected=10），本格标签 a15bac6ab7e4；被这些臂咬到=['K1_placeholder_filter_off', 'K2_all_shapes_pass_filters']；作为 primary 的臂=['K1_placeholder_filter_off', 'K2_all_shapes_pass_filters']",
+   "why_source": "why",
+   "why_token_count": 4
+  },
+  {
+   "derived_from": [
+    "measured.cell_evidence_tag=76e9d244c43f",
+    "measured.passed_rounds=3"
+   ],
+   "derived_from_key": "derived_from",
+   "id": "4",
+   "own_hits": [
+    "10",
+    "3",
+    "76e9d244c43f",
+    "PASSED"
+   ],
+   "own_token_count": 18,
+   "unique_hits": [
+    "76e9d244c43f"
+   ],
+   "verdict": "GREEN_3_of_3",
+   "why": "本格自己的读数：3 轮控制里 PASSED 3/3（collected=10），本格标签 76e9d244c43f；被这些臂咬到=[]；作为 primary 的臂=[]",
+   "why_source": "why",
+   "why_token_count": 4
+  },
+  {
+   "derived_from": [
+    "measured.cell_evidence_tag=4bc415213781",
+    "measured.passed_rounds=3"
+   ],
+   "derived_from_key": "derived_from",
+   "id": "5",
+   "own_hits": [
+    "10",
+    "3",
+    "4bc415213781",
+    "PASSED"
+   ],
+   "own_token_count": 19,
+   "unique_hits": [
+    "4bc415213781"
+   ],
+   "verdict": "GREEN_3_of_3",
+   "why": "本格自己的读数：3 轮控制里 PASSED 3/3（collected=10），本格标签 4bc415213781；被这些臂咬到=['K3_declaration_fingerprint_mutated']；作为 primary 的臂=['K3_declaration_fingerprint_mutated']",
+   "why_source": "why",
+   "why_token_count": 4
+  },
+  {
+   "derived_from": [
+    "measured.cell_evidence_tag=465f39ddde4c",
+    "measured.passed_rounds=3"
+   ],
+   "derived_from_key": "derived_from",
+   "id": "6",
+   "own_hits": [
+    "10",
+    "3",
+    "465f39ddde4c",
+    "PASSED"
+   ],
+   "own_token_count": 19,
+   "unique_hits": [
+    "465f39ddde4c"
+   ],
+   "verdict": "GREEN_3_of_3",
+   "why": "本格自己的读数：3 轮控制里 PASSED 3/3（collected=10），本格标签 465f39ddde4c；被这些臂咬到=['K1_placeholder_filter_off', 'K2_all_shapes_pass_filters', 'K3_declaration_fingerprint_mutated', 'K5_default_policy_becomes_off']；作为 primary 的臂=[]",
+   "why_source": "why",
+   "why_token_count": 4
+  },
+  {
+   "derived_from": [
+    "measured.cell_evidence_tag=7106c018bec1",
+    "measured.passed_rounds=3"
+   ],
+   "derived_from_key": "derived_from",
+   "id": "7",
+   "own_hits": [
+    "10",
+    "3",
+    "7106c018bec1",
+    "PASSED"
+   ],
+   "own_token_count": 19,
+   "unique_hits": [
+    "7106c018bec1"
+   ],
+   "verdict": "GREEN_3_of_3",
+   "why": "本格自己的读数：3 轮控制里 PASSED 3/3（collected=10），本格标签 7106c018bec1；被这些臂咬到=[]；作为 primary 的臂=[]",
+   "why_source": "why",
+   "why_token_count": 4
+  },
+  {
+   "derived_from": [
+    "measured.cell_evidence_tag=34105e07181f",
+    "measured.passed_rounds=3"
+   ],
+   "derived_from_key": "derived_from",
+   "id": "8",
+   "own_hits": [
+    "10",
+    "3",
+    "34105e07181f",
+    "PASSED"
+   ],
+   "own_token_count": 18,
+   "unique_hits": [
+    "34105e07181f"
+   ],
+   "verdict": "GREEN_3_of_3",
+   "why": "本格自己的读数：3 轮控制里 PASSED 3/3（collected=10），本格标签 34105e07181f；被这些臂咬到=['K4_startup_refusal_removed']；作为 primary 的臂=['K4_startup_refusal_removed']",
+   "why_source": "why",
+   "why_token_count": 4
+  },
+  {
+   "derived_from": [
+    "measured.cell_evidence_tag=50bf675f705c",
+    "measured.passed_rounds=3"
+   ],
+   "derived_from_key": "derived_from",
+   "id": "9",
+   "own_hits": [
+    "10",
+    "3",
+    "50bf675f705c",
+    "PASSED"
+   ],
+   "own_token_count": 18,
+   "unique_hits": [
+    "50bf675f705c"
+   ],
+   "verdict": "GREEN_3_of_3",
+   "why": "本格自己的读数：3 轮控制里 PASSED 3/3（collected=10），本格标签 50bf675f705c；被这些臂咬到=['K5_default_policy_becomes_off']；作为 primary 的臂=['K5_default_policy_becomes_off']",
+   "why_source": "why",
+   "why_token_count": 4
+  }
+ ],
+ "cells_found": 10,
+ "exit": 0,
+ "findings": [],
+ "hard_codes": [],
+ "hard_count": 0,
+ "info_count": 0,
+ "meaning": "no shared literal and every sentence names its own readings",
+ "overall": "Q38_GATE_GREEN",
+ "receipt": {
+  "blob_sha1": "d81850a53e5fd9416ed86449b06ba816fb6d2ac8",
+  "bytes": 31658,
+  "path": "D:/moodle/_qoder_f_run/o225_receipts/ord0307_gate_receipt_r3.json"
+ },
+ "soft_codes": [],
+ "soft_count": 0,
+ "unique_reading_counts": {
+  "0": 2,
+  "1": 2,
+  "2": 1,
+  "3": 1,
+  "4": 1,
+  "5": 2,
+  "6": 2,
+  "7": 2,
+  "8": 1,
+  "9": 1
+ }
+}
