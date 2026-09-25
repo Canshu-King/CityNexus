@@ -1,0 +1,17 @@
+{
+ "run_id": "0323c2f3929",
+ "arm": "T13",
+ "cell": "T13",
+ "route": "PATCH_INBOX",
+ "method": "PATCH",
+ "status_asked": 511,
+ "slot_text": "文本提取失败。",
+ "status_in_slot": false,
+ "needles_found": [],
+ "needles_found_in_attributes": [],
+ "attribute_pairs_swept": 72,
+ "foreign_status_found": [],
+ "internal_token_on_screen": false,
+ "test_status": "failed",
+ "error_head": "Error: e2e/qoder-ord0323-two-exposure-cells.spec.ts :: T13 — T13: the slot no longer states the status this device measured for THIS request (文本提取失败。) \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m Expected: \u001b[32mtrue\u001b[39m Received: \u001b[31mfalse\u001b[39m"
+}
