@@ -1,0 +1,102 @@
+{
+ "measured_on": "90d29a172e186aab6e6cb138ab4583ccf93bfa68",
+ "export_facts": {
+  "backend_dir": "D:\\moodle\\_hjp3_0300_0925\\snap\\backend",
+  "exists": true,
+  "git_on_ancestor_path": [],
+  "git_inside_export": [],
+  "ord0296_module_present": true,
+  "ord0280_marker_in_source": true
+ },
+ "server_write_config": {
+  "rc": 0,
+  "verdict": {
+   "settings_write_busy_timeout_ms": 30000,
+   "settings_write_deadline_ms": 45000,
+   "settings_write_deadline_scenarios": "",
+   "scenarios": [
+    "agent.commands",
+    "plans.generate"
+   ],
+   "busy_timeout_ms": 30000,
+   "deadline_per_scenario": {
+    "agent.commands": 45000,
+    "plans.generate": 45000
+   },
+   "verdict": {
+    "scenario": null,
+    "busy_timeout_ms": 30000,
+    "default_deadline_ms": 45000,
+    "scenario_overrides": {},
+    "per_scenario": {
+     "agent.commands": {
+      "deadline_ms": 45000,
+      "busy_timeout_ms": 30000,
+      "delta_ms": 15000,
+      "deadline_source": "default",
+      "effective_busy_timeout_ms": 30000,
+      "reachable": true,
+      "verdict": "WRITE_DEADLINE_CONFIG_OK"
+     },
+     "plans.generate": {
+      "deadline_ms": 45000,
+      "busy_timeout_ms": 30000,
+      "delta_ms": 15000,
+      "deadline_source": "default",
+      "effective_busy_timeout_ms": 30000,
+      "reachable": true,
+      "verdict": "WRITE_DEADLINE_CONFIG_OK"
+     }
+    },
+    "verdict": "WRITE_DEADLINE_CONFIG_OK"
+   }
+  },
+  "stderr_tail": ""
+ },
+ "backend_pid": 16912,
+ "backend_port": 8551,
+ "db": "D:\\moodle\\_hjp3_0300_0925\\o0300.s3db",
+ "db_created_by": "app.db.session.ensure_schema() at import; file deleted before start (fresh-or-no-run)",
+ "face": {
+  "port": 8552,
+  "pid": 11356,
+  "backend_port": 8551,
+  "served_asset": "index-BN1w-xlK.js",
+  "served_bytes": 1249595,
+  "served_sha256": "57c2a927f9e65ca0b33acdc737cbf941fc395c214aa213d861a4f7e5c664338e",
+  "matches_copy_on_disk": true,
+  "is_the_ord0300_build": true,
+  "cmdline": "node node_modules/vite/bin/vite.js preview --outDir D:\\moodle\\_hjp3_0300_0925\\dist_0300 --port 8552 --host 127.0.0.1 --strictPort",
+  "ord0280_markers_in_served_bytes": true
+ },
+ "seed": {
+  "seed_rc": 0,
+  "seed": {
+   "places_before": 0,
+   "seeded_by_this_call": true,
+   "places_after": 8
+  },
+  "traveler_http": 201,
+  "traveler_id": "57fc16d1-f153-4140-980a-06599499d830",
+  "journey_http": 201,
+  "journey_id": "a37be52b-ac37-43fe-8ade-7fa8c8bcf59c",
+  "journey_city": "CNX-DEMO"
+ },
+ "silent": {
+  "origin_pid": 51572,
+  "origin_port": 8553,
+  "face": {
+   "port": 8554,
+   "pid": 51904,
+   "backend_port": 8553,
+   "served_asset": "index-BN1w-xlK.js",
+   "served_bytes": 1249595,
+   "served_sha256": "57c2a927f9e65ca0b33acdc737cbf941fc395c214aa213d861a4f7e5c664338e",
+   "matches_copy_on_disk": true,
+   "is_the_ord0300_build": true,
+   "cmdline": "node node_modules/vite/bin/vite.js preview --outDir D:\\moodle\\_hjp3_0300_0925\\dist_0300 --port 8554 --host 127.0.0.1 --strictPort",
+   "ord0280_markers_in_served_bytes": true
+  },
+  "origin_probe_get": 200
+ }
+}
