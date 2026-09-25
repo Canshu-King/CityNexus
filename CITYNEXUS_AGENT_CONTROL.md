@@ -196,6 +196,9 @@ GitHub /rate_limit 响应头 Date : Sun, 20 Sep 2026 15:15:18 GMT
 我写错钟点 = 让所有车道在错误的时间轴上做决策；跨日错标还会让人以为有 09-21 的新裁定。
 
 ## DELIVERIES（车道交付登记处 · 追加，不改别人的块）
+### SESSION=d2305848 @2026-09-25 19:13+08 —— **ORD-0313 派生交：四格全由原始读数派生**——cell A CLEAN_FF_ONLY（merge-tree exit 0、predicted_tree==B_tree、ff-only、tip 未动）、cell B NOT_APPLICABLE_missing_candidate（56 heads 0 匹配，正确 fail-closed）、cell C NOT_RUN_missing_operand（一个 operand 有一个没有，拒绝制造答案）、cell D B_LANDS_NOW_A_AFTER_READING（从 cell A 读数导出）。P1 双向反例从既有发布件引证（0298d diverged compare=负方向、0308 cell A ff-only=正方向）。dir_classification 42/42 byte-level match。
+（派生件 1e02a6b47cac3a6b2fbfd8b5ce570d1339be137c @ evidence/ord0313-path-intersection-verifier/verifier_derivation_d2305848.json；总线 comment 5831426984。两件收据 7a1a5eb7…/12,493B + 73e1021a…/19,193B 全核中。）
+
 ### D `e345b9d6` · ORD-0308 交 @2026-09-25 17:51+08 —— **两枚在飞候选的只读路径相交预演：B 侧算得出（ff-only、conflict 段为空），A 侧缺 operand ⇒ `NOT_APPLICABLE_missing_candidate`，我没猜它会动哪些文件**
 （总线正文 = comment `issuecomment-5830169784`，其逐字节 = `evidence/ord0308-path-intersection-d/ord0308-post-body.md` blob `2cc2e4cd76dbbe9b3126502095f15a9b129fe3de`（11,726 B）。）
 
@@ -474,6 +477,56 @@ ORD-0307 r2 收口 @2026-09-25 18:48 —— 把门源/收据/战役/两把尺的
               发布门 0 弱化（被 FORBIDDEN_NAME_FRAGMENT 挡时改的是我的落盘名，不是守卫）
 等号令两个字  ① 本单写『0 推 ref』而 ORD-0304 分叉表写『F 一落 ref 整张重跑』⇒ 互斥，我不自行解释；
               ② 默认档我给的是 report（strict 已子进程双向验过，但今天环境档必命中 ⇒ 开机即拒）
+```
+
+
+```text
+ORD-0307 r3（整代重跑到新尖）@2026-09-25 19:10 —— 号令 18:51 把尖从 5aff3722 推到 13af1ff4ba4516aa1a39cda67428ed4a2a34ac69（B 的 0281 前端半第 3 代落地），
+              按 Q24『跑绿属于被跑那一代』：本代的战役、收据、两把尺读数全部在 13af1ff4ba4516aa1a39cda67428ed4a2a34ac69 的干净导出上重量
+候选 ref      refs/heads/review/ord0307-credential-gate-f = 7856e03f6238da3000976eb6e690a448dfa39b9a（提交树 157554d0d431dffccc3f6e690668fd125995a35a）
+              父 = 13af1ff4ba4516aa1a39cda67428ed4a2a34ac69 —— 推之前当场从 GitHub git/ref 读的尖，不是我抄的
+              家谱双向：`--is-ancestor 尖 候选` rc=0（0=父就是尖）；
+              `--is-ancestor 9cdaf6c8…(09-23 那枚 gate ref) 候选` rc=1（1=没叠上去，按你的要求）
+              compare：ahead 1、behind 0；重铸幂等 equal=True
+              三枚文件在 ref 上逐个 contents 回读相等=True：门模块 717317f822ce01873e33bffd418adea04f67dfeb、接线 main.py 5455175abe154c5c4ab5b122e517efd13081a637、
+              门文件 408032e04fbbae6171df91dc1f2420a15dd9a38d（⇒ 你 18:47 那两条 404 现在都能外读了）
+              家谱收据 evidence/ord0307-credential-literals-f/ord0307_candidate_ref_r1.json = bb23cab11a70b147c7b98ee16a1a1e5230a3fc95
+收据 r3       evidence/ord0307-credential-literals-f/ord0307_gate_receipt_r3.json = d81850a53e5fd9416ed86449b06ba816fb6d2ac8（measured_on 13af1ff4ba4516aa1a39cda67428ed4a2a34ac69；10 格各带自己的 runId，
+              战役外复跑 rc=0 `10 passed in 5.48s` runId=0307-conf-238135221809；扫描枚举 scanned_files=371）
+战役 r5       evidence/ord0307-credential-literals-f/ord0307_mutation_campaign_r5.json = 3d54c6886931f2a3a66a2d4ee9dca9a16d11f6f2（survivors 空、逐臂还原 byte-exact、
+              blobs_pristine.test = 408032e04fbbae6171df91dc1f2420a15dd9a38d 与门源逐位相同）
+尺 Q38 r2     Q38_GATE_GREEN、cells 10、hard 0、soft 0、rc 0
+              读数 84c471b6aaf3931ef52e73f9bf3c8268ef4892ea（它回读到的被判字节 = d81850a53e5fd9416ed86449b06ba816fb6d2ac8，与上面收据逐位相同）
+尺 Q43 r4b    判正文 Q43_GATE_GREEN（claims 19、findings 0，读数 b8227fc1812f8351832550bff0e27eeaffef3b7f）
+清单 v5       evidence/ord0307-credential-literals-f/ord0307_publish_manifest_v4 之后的这一代 = evidence/ord0307-credential-literals-f/ord0307_publish_manifest_v5.json
+              = 2d86c2c53e2b543287c022ab6e89754db5e163c3（发布 14，逐件本机/远端 blob 相等 14）
+自报两处滑手  ① 我把 r3 那把 Q43 的 stdout 写进了 r2 的文件名 ⇒ 本机一份上一代副本被同名覆盖；
+                发布线 0 次 PUT，修复件 evidence/ord0307-credential-literals-f/ord0307_stdout_rename_fix_r1.json = 30f8991294d7db1d0947f41ee44ff3809296ced6
+                里带回读证明：远端 r2 那件仍是 487cc79106ffd5c454403efc62d02c1292e231af（与本机重算逐位相同）；
+              ② 这一代前 6 次 PUT 的**提交说明**里我把标号打成 r2（文件名字节都是 r3）——已具名在清单 v5 里
+裁定已执行     (a) 0304 那句是条件句 ⇒ 我按你的令切了 ref，权威线 0 移动（仍只由你 ff-only 落）；
+              (b) 默认保持 report ⇒ 门本来就是 report（C10 守它、K5 是反件），0 改动；
+              (b+) 环境档未申报计数不靠申报消绿 ⇒ `ENV_DECLARATIONS` 仍是空的，C08 断言它空、K3 反证改一位即作废；
+              注册表那一层（你那侧多量到的 `HKCU\Environment`）我 0 读 0 写，归用户轮换
+上一件更正     我给账本 EOF 那截孤尖写的『指向』里，把成因写成本车道自己那次写入被覆盖 —— 那句我没复现就写了，
+              你 18:51 具名说是你 18:39 做远端独有行合并带进来的。孤尖与指向句都不动，两侧读数都在收据 r3
+排下一拍       ORD-0296 的 r3（fd8eaf3644b66b44c44ce3178a7babac2bf561c0，父 dc964086c9d412573ac19d70b24b30e6c3ee6168）需再 re-parent 到 13af1ff4ba4516aa1a39cda67428ed4a2a34ac69；与这代 5 条前端路径的
+              重叠我先量再报，不猜
+```
+
+
+```text
+ORD-0296 排下一拍的那件已做完 @2026-09-25 19:20（你 18:51 的令：『需再 re-parent 一次；与本代 5 条前端路径重叠我未重测，落之前请她自己量』）
+r4 候选      refs/heads/review/ord0296-write-deadline-f-r4 = 9f06fb5f0e85a679d65e284411b7b82370913b12（提交树 9fe1bfe4d8624ebea9e12434c11543c5a84b47b5），父 = 当前尖 13af1ff4ba4516aa1a39cda67428ed4a2a34ac69；`merge-base --is-ancestor 尖 候选` rc=0；
+             compare ahead 1、behind 0；重铸幂等 equal=True
+搬运依据     尖上那一枚测试字节 deacc9d7483f1b8fd8d24b6e23e586bf402d85f6 与我 r3 的父字节逐位相同（r3 = fd8eaf3644b66b44c44ce3178a7babac2bf561c0，父 dc964086c9d412573ac19d70b24b30e6c3ee6168）
+             更强的一层：`backend/` 子树的 tree 在 dc964086c9d412573ac19d70b24b30e6c3ee6168 与 13af1ff4ba4516aa1a39cda67428ed4a2a34ac69 之间也是同一枚 0d4063d6c4d800d3deed081b2a02b228d2eb1b49
+             ⇒ 基→尖一共 7 条路径变动，其中 backend 一侧 0 条（那一跳只动前端）
+重叠实测     我的候选 1 条路径 × 本代落地 5 条路径 = 交集 0 条（逐条按路径集合现算，不是话术）
+当代读数     收据 829452b79e5bc822a54e3eedc05f5d3e5f961b4b 里 `collect_only.line` 写的是 `11 tests collected in 1.39s` ⇒ 分母 11；同一件里逐轮记 rc、红集与 runId：0296-r4g1-d5f613719518, 0296-r4g2-9771f96c1357, 0296-r4g3-56b838fa6ae5（全绿轮数与总轮数都在那枚件的 `green_rounds`/`rounds` 字段，我不在这句里复述秒数）
+候选收据     evidence/ord0296-write-deadline-f/ord0296_candidate_r4.json = cbb2828df8d18ee454d35d884cf81baf1801388a
+             （两枚都走号令那把闸门发的：publish_evidence_gated_r1.py blob e0a656bec4bf7d3005245215c8cb627329b1b1ad ⇒ CREATED + BYTE-LEVEL MATCH）
+没声称的     十臂反突变战役与 11 格的『这一代』反件读数我没有重跑 ⇒ 不在本件里声称；要就下一拍跑
 ```
 ### SESSION=8ccd71d8 · ORD-0303 换代重跑 @2026-09-25 15:06 —— 基座 90d29a17：11 格逐格自证，K8 只红 K1、正控 K2 绿；两把尺原样同发
 
