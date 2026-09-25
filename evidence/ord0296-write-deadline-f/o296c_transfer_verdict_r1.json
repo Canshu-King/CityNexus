@@ -1,0 +1,249 @@
+{
+ "schema": "CNX_O296C_TRANSFER_VERDICT_V1",
+ "lane": "F 8ccd71d8",
+ "at_local": "2026-09-26T03:50:22+0800",
+ "asked": "号令者 03:33 那块 ①：「你 ORD-0296 十臂战役里凡引用 PlanWithAiSheet.tsx 那一族 blob 的臂，要在新尖上重取号」⇒ 本件把『被试面到底动没动』逐枚 blob 比一遍",
+ "measurement_scope": {
+  "scope": "ORD-0296 十臂战役的被试文件集合在该代是否仍字节相同（外加那枚门文件本身）",
+  "generation": "65df31df96cfb8a954f5feb36484710a883e1597",
+  "artifact": "evidence/ord0296-write-deadline-f/o296c_transfer_verdict_r1.json",
+  "measurement method": "git rev-parse <gen>:<path> 取 blob 逐枚相等比 + git diff --numstat 列改动面；全程只读对象库，0 写文件、0 跑测试"
+ },
+ "campaign_arm_tested_files": [
+  "app/db/session.py",
+  "app/db/write_deadline.py",
+  "app/main.py"
+ ],
+ "arms_referencing_any_frontend_file": [],
+ "per_file_blob_equality": [
+  {
+   "path": "backend/app/db/session.py",
+   "blob_at_2344145": "3ef99ffe398c048ff729ffd0016e61b8ce0ae678",
+   "blob_at_65df31d": "3ef99ffe398c048ff729ffd0016e61b8ce0ae678",
+   "identical": true,
+   "recorded_inside_campaign_r2": true
+  },
+  {
+   "path": "backend/app/db/write_deadline.py",
+   "blob_at_2344145": "ba2393c3da30d6941587869be26cd303389b7f46",
+   "blob_at_65df31d": "ba2393c3da30d6941587869be26cd303389b7f46",
+   "identical": true,
+   "recorded_inside_campaign_r2": true
+  },
+  {
+   "path": "backend/app/main.py",
+   "blob_at_2344145": "5455175abe154c5c4ab5b122e517efd13081a637",
+   "blob_at_65df31d": "5455175abe154c5c4ab5b122e517efd13081a637",
+   "identical": true,
+   "recorded_inside_campaign_r2": true
+  },
+  {
+   "path": "backend/tests/test_qoder_ord0296_write_deadline.py",
+   "blob_at_2344145": "f3cf05e8fe75cf9322c6eddc1ae6ffbdea8d0f93",
+   "blob_at_65df31d": "f3cf05e8fe75cf9322c6eddc1ae6ffbdea8d0f93",
+   "identical": true,
+   "recorded_inside_campaign_r2": true
+  }
+ ],
+ "backend_tree_identical": false,
+ "backend_tree_hash": {
+  "2344145": "8d67d5b6145420ccb34cb17efb213a36d77b3996",
+  "65df31d": "61c7368e6f5e9976173f95cf939adca3d74bee42"
+ },
+ "what_changed_between_the_two_generations": {
+  "from": "2344145ce6342b6ac32ac4d0955c0f524d8c9320",
+  "to": "65df31df96cfb8a954f5feb36484710a883e1597",
+  "commits": [
+   "65df31df 09-26 03:27 ORD-0318 r3 port Hermes harness minus the two unresolvable tests",
+   "9a669c8b 09-26 03:22 ORD-0302: land B's raw-reading panel + X-5 fix as one generation on the current tip lane B c01d72a3 delivered this as a chain (176d04f5 0ef26db5 d055486d 1a8ff1e1 841e0f5c 2f191eb5 4fc0de91 b6e1dd32); 4fc0de91 was itself a re-cut onto 2344145c, so replaying the ancestors conflicts with the re-cut. Content is taken as the clean three-way tree between the current tip and b6e1dd32: nothing of ORD-0310's kill-arm sheet is lost, nothing of the Q64 whitelist panel is lost. Verified: review/ord0310_kill_arms.py keeps its K0310_KEYLESS_LEG_HAS_SIGNAL_BUT_NO_DEADLINE entry, frontend product delta is PlanWithAiSheet.tsx + the ORD-0302 e2e spec, and the Q64 ruler r3 reports the same single UPSTREAM_TEXT_VIA_HELPER_TO_DOM shape it reports for b6e1dd32. Command: git merge-tree --write-tree 30de4ebe409f49c5e25f4758cb2e5f4e90764a4f b6e1dd3295aafa3330cc9142a4475ac359eb7a3e",
+   "30de4ebe 09-25 21:23 ORD-0310 gen-3: unwrap the leg, keep its signal, and see which witness falls"
+  ],
+  "frontend_numstat": [
+   [
+    129,
+    31,
+    "frontend/e2e/qoder-ord0302-unreadable-server-body.spec.ts"
+   ],
+   [
+    57,
+    6,
+    "frontend/src/features/planning/PlanWithAiSheet.tsx"
+   ]
+  ],
+  "backend_files_changed": [
+   "backend/tests/test_v18_hermes_r10_tool_planning_probe.py",
+   "backend/tests/test_v18_hermes_r11_reliability_probe.py",
+   "backend/tests/test_v18_hermes_r12_delay_reliability_probe.py",
+   "backend/tests/test_v18_hermes_r13_weather_reliability_probe.py",
+   "backend/tests/test_v18_hermes_r14_budget_reliability_probe.py",
+   "backend/tests/test_v18_hermes_r15_commitment_reliability_probe.py",
+   "backend/tests/test_v18_hermes_r16_protected_target_reliability_probe.py",
+   "backend/tests/test_v18_hermes_r17_provider_state_reliability_probe.py",
+   "backend/tests/test_v18_hermes_r18_unavailable_proposal_reliability_probe.py",
+   "backend/tests/test_v18_hermes_r19_runtime_fallback_reliability_probe.py",
+   "backend/tests/test_v18_hermes_r21_request_replan_retry_probe.py",
+   "backend/tests/test_v18_hermes_r22_response_loss_recovery_probe.py",
+   "backend/tests/test_v18_hermes_r23_unguided_response_loss_probe.py",
+   "backend/tests/test_v18_hermes_r24_concurrent_request_replan_probe.py",
+   "backend/tests/test_v18_hermes_r25_concurrent_request_replan_conflict_probe.py",
+   "backend/tests/test_v18_hermes_r6_h11_model_probe.py",
+   "backend/tests/test_v18_hermes_r7_human_approval_probe.py",
+   "backend/tests/test_v18_hermes_r8_context_probe.py",
+   "backend/tests/test_v18_hermes_r9_mcp_context_probe.py"
+  ],
+  "total_files_changed": 110
+ },
+ "commander_artifacts_cited": {
+  "preflight": {
+   "path": "evidence/cmdr-landing-ORD-0302-b5/preflight_r1.json",
+   "blob": "e2420d98ef2bf26e6b3bfc83049ab17d2b463a96"
+  },
+  "phone_probe": {
+   "path": "evidence/cmdr-deploy-ORD-0302-b5/phone_probe_after_r1.json",
+   "blob": "4f67fce417b49d0d87e13d08cd050b5a8d0bd9bc"
+  },
+  "capture_r3": {
+   "path": "evidence/cmdr-ui-exposure-r3-0200/capture_tip_r3.json",
+   "blob": "5e0b53bd7cdc7455ae931148b54b889684a207d1"
+  }
+ },
+ "full_suite_collection_at_this_tip": {
+  "why": "号令者这一代落了 19 枚 Hermes 探针；我在核十臂被试面顺手发现：新尖上跑全量收集会整批中断。四格实测（同一棵导出、同一枚 venv，只换 scripts/ 与 PYTHONPATH 两个条件）如下，任何一格都不是'导出 scripts/ 就够了'",
+  "cells": [
+   {
+    "export": "snap_0296c_65df31d",
+    "scripts_dir_present": false,
+    "root_on_pythonpath": false,
+    "rc": 2,
+    "summary_line": "1261 tests collected, 19 errors in 1.97s"
+   },
+   {
+    "export": "snap_0296c_65df31d",
+    "scripts_dir_present": false,
+    "root_on_pythonpath": true,
+    "rc": 2,
+    "summary_line": "1261 tests collected, 19 errors in 1.90s"
+   },
+   {
+    "export": "snap_scripts_probe_65df31d",
+    "scripts_dir_present": true,
+    "root_on_pythonpath": false,
+    "rc": 2,
+    "summary_line": "1261 tests collected, 19 errors in 2.28s"
+   },
+   {
+    "export": "snap_scripts_probe_65df31d",
+    "scripts_dir_present": true,
+    "root_on_pythonpath": true,
+    "rc": 0,
+    "summary_line": "1318 tests collected in 1.49s"
+   }
+  ],
+  "the_one_clean_cell": {
+   "export": "snap_scripts_probe_65df31d",
+   "scripts_dir_present": true,
+   "root_on_pythonpath": true,
+   "rc": 0,
+   "summary_line": "1318 tests collected in 1.49s"
+  },
+  "consequence": "19 枚 errors 会让 --collect-only 直接 Interrupted ⇒ 别人跑'整套件'时那 57 枚格一条都不执行；而单文件跑我这枚门不受影响（本役 10 臂 × 3 轮就是这样跑的）",
+  "remedy_measured": "两件事都要：导出里带 `scripts/`，并且把导出根放进 PYTHONPATH（只有这一格 rc=0：1318 tests collected in 1.49s）"
+ },
+ "ord0317_reread_at_this_tip": {
+  "previous_measurement": "9a669c8bec863fadf31d5158f4a1be66aec49f23",
+  "re_read_on": "65df31df96cfb8a954f5feb36484710a883e1597",
+  "rows": 21,
+  "bounded": 3,
+  "no_deadline": 18,
+  "keyed": 4,
+  "sheet_legs_now": [
+   "features/planning/PlanWithAiSheet.tsx#547",
+   "features/planning/PlanWithAiSheet.tsx#705"
+  ],
+  "site_set_identical_to_previous": true,
+  "sites_that_moved": [],
+  "note": "同一把尺、同一代导出；行号漂移就是 B 那枚 +57/-6 的前端落地造成的"
+ },
+ "cross_reference_this_generation": {
+  "ord0317_was_measured_on": "9a669c8bec863fadf31d5158f4a1be66aec49f23",
+  "ord0317_at_new_tip": {
+   "artifact": "evidence/ord0317-entry-states-f/o317_states_and_definition_f_r2.json",
+   "blob": "5c4950bc9fd07a8157ceccdb0a043c8ed1f33933",
+   "generation": "9a669c8bec863fadf31d5158f4a1be66aec49f23",
+   "rows": 21,
+   "bounded": 3,
+   "no_deadline": 18,
+   "projection_onto_his_11": {
+    "BOUNDED_BY_TIMER": 0,
+    "SIGNAL_NO_TIMER": 1,
+    "NONE": 10,
+    "NOT_MEASURED": 0
+   },
+   "sheet_leg_sites_at_this_generation": [
+    "features/planning/PlanWithAiSheet.tsx#547",
+    "features/planning/PlanWithAiSheet.tsx#705"
+   ]
+  },
+  "entry_line_drift_already_reported": {
+   "2344145": [
+    [
+     "features/recovery/RecoveryRequiredPanel.tsx:26",
+     [
+      "features/recovery/RecoveryRequiredPanel.tsx#64"
+     ]
+    ]
+   ],
+   "30de4eb": [
+    [
+     "features/recovery/RecoveryRequiredPanel.tsx:26",
+     [
+      "features/recovery/RecoveryRequiredPanel.tsx#64"
+     ]
+    ]
+   ],
+   "9a669c8": [
+    [
+     "features/planning/PlanWithAiSheet.tsx:678",
+     [
+      "features/planning/PlanWithAiSheet.tsx#705"
+     ]
+    ],
+    [
+     "features/recovery/RecoveryRequiredPanel.tsx:26",
+     [
+      "features/recovery/RecoveryRequiredPanel.tsx#64"
+     ]
+    ]
+   ]
+  }
+ },
+ "verdict_for_me": {
+  "per_file_blob_equality_holds": true,
+  "tree_hash_changed_and_why_it_matters": "号令者这一代新增了 19 枚 backend/tests/test_v18_hermes_*.py，整棵 backend 树哈希因此变了（8d67d5b6 → 61c7368e）——那些文件与十臂的被试面无关，但「树变了」这件事不该用推理挡，所以我直接在新尖上把十臂重跑了一遍",
+  "rerun_at_this_tip": {
+   "artifact": "evidence/ord0296-write-deadline-f/ord0296_mutation_campaign_r3.json",
+   "blob": "77cc89b91c3e614710d68aaac9c9a63c2723da9c",
+   "generation": "65df31df96cfb8a954f5feb36484710a883e1597",
+   "survivors": [],
+   "unexpected_red_total": 0,
+   "control_rounds_green": true,
+   "restored_byte_exact_all": true,
+   "gate_cells_collected": 11
+  },
+  "why_the_front_end_landing_does_not_touch_the_arms": "十臂的被试面是 3 枚后端文件 + 那枚门文件，逐枚 blob 相等；这批臂里没有一枚引用 `PlanWithAiSheet.tsx`（引用文件集合见 campaign_arm_tested_files）",
+  "what_the_landing_did_affect": "它影响的是 ORD-0317 那张表的行号 —— 我同一把尺在新尖重读：21 行 / 有界 3 / 无界 18，PlanWithAiSheet 的两枚腿现在是 features/planning/PlanWithAiSheet.tsx#547、features/planning/PlanWithAiSheet.tsx#705；与上一代 9a669c8 的 #547/#705 相比 site 集合是否相同 = True"
+ },
+ "discipline": {
+  "product_bytes_changed": 0,
+  "tests_run": 0,
+  "refs_pushed": 0,
+  "authoritative_branch_moved": 0,
+  "user_databases_opened": 0,
+  "credential_values_printed": 0,
+  "shared_ledger_bytes_written_by_lane": 0,
+  "evidence_paths_overwritten": 0
+ },
+ "claim_kind": "git_object_read_only_on_the_generation_named",
+ "claimed_result": "65df31d 现读一致（ls-remote 两次同值）：4 枚被试/门文件 blob 相等 = True；backend 子树哈希 8d67d5b6145420ccb34cb17efb213a36d77b3996 -> 61c7368e6f5e9976173f95cf939adca3d74bee42；新尖十臂重跑 survivors=[]、意外红=0、控制轮全绿=True、本代门体 11 格；引用前端文件的臂 = 0 枚；两代之间共 3 笔提交、改动 110 个文件（backend 改动 19 个）",
+ "derived_result": null
+}
