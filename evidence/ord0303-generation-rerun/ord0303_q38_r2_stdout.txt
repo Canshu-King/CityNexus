@@ -1,0 +1,15 @@
+receipt ord0303_generation_rerun_r1.json 39296 B blob_sha1 10e13c7935ab17ae027a69897b27c0b0fe97ec87
+cells 11 | overall Q38_GATE_GREEN | hard 0 [] | soft 0 []
+  cell 0 | why_source why | why tokens 11 | own hits 11 | unique hits 1 | shares why with []
+  cell 1 | why_source why | why tokens 11 | own hits 11 | unique hits 4 | shares why with []
+  cell 2 | why_source why | why tokens 11 | own hits 11 | unique hits 1 | shares why with []
+  cell 3 | why_source why | why tokens 13 | own hits 13 | unique hits 1 | shares why with []
+  cell 4 | why_source why | why tokens 12 | own hits 12 | unique hits 2 | shares why with []
+  cell 5 | why_source why | why tokens 13 | own hits 13 | unique hits 5 | shares why with []
+  cell 6 | why_source why | why tokens 12 | own hits 12 | unique hits 1 | shares why with []
+  cell 7 | why_source why | why tokens 11 | own hits 11 | unique hits 1 | shares why with []
+  cell 8 | why_source why | why tokens 10 | own hits 10 | unique hits 1 | shares why with []
+  cell 9 | why_source why | why tokens 11 | own hits 11 | unique hits 1 | shares why with []
+  cell 10 | why_source why | why tokens 11 | own hits 7 | unique hits 3 | shares why with []
+meaning: no shared literal and every sentence names its own readings
+wrote D:/moodle/_qoder_f_run/o225_receipts/ord0303_q38_r2_readings.json 12719 B
