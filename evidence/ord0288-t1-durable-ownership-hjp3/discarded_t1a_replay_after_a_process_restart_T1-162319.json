@@ -1,0 +1,64 @@
+{
+ "arm": "t1a_replay_after_a_process_restart",
+ "run_id": "T1-162319",
+ "measured_on": "dc964086c9d412573ac19d70b24b30e6c3ee6168",
+ "journey_id": "17a376b7-28ab-49c7-afb7-e2e48e2c3ea9",
+ "processes": [
+  {
+   "tag": "A",
+   "pid": 33180,
+   "port": 8611,
+   "tree": "D:\\moodle\\_hjp3_0288t1_0925\\backend",
+   "db": "D:\\moodle\\_hjp3_0288t1_0925\\t1.s3db",
+   "listening": true,
+   "exited": false,
+   "cmdline_at_start": "D:/moodle/CityNexus/.venv/Scripts/python.exe -m uvicorn app.main:app --host 127.0.0.1 --port 8611 --log-level info"
+  },
+  {
+   "tag": "B",
+   "pid": 40128,
+   "port": 8612,
+   "tree": "D:\\moodle\\_hjp3_0288t1_0925\\backend",
+   "db": "D:\\moodle\\_hjp3_0288t1_0925\\t1.s3db",
+   "listening": true,
+   "exited": false,
+   "cmdline_at_start": "D:/moodle/CityNexus/.venv/Scripts/python.exe -m uvicorn app.main:app --host 127.0.0.1 --port 8612 --log-level info"
+  }
+ ],
+ "steps": [
+  {
+   "intent": "replay after the original process was killed and a fresh one started on the same file",
+   "response": {
+    "url": "http://127.0.0.1:8611/api/v1/journeys/17a376b7-28ab-49c7-afb7-e2e48e2c3ea9/plans/generate",
+    "method": "POST",
+    "request_body": {
+     "candidate_count": 3
+    },
+    "sent_headers": {
+     "Idempotency-Key": "ord0288-t1a-162314"
+    },
+    "status": 422,
+    "content_type": "application/json",
+    "bytes": 1443,
+    "body_text": "{\"error\":{\"code\":\"VALIDATION_ERROR\",\"message\":\"No feasible plan candidates satisfy the journey constraints\",\"message_key\":\"request.invalid\",\"trace_id\":\"4238a9b9-c7af-435d-b4af-ce95d9f5a473\",\"details\":{\"candidate_rejections\":[{\"candidate_sequence\":0,\"failures\":[\"JOURNEY_WINDOW_EXCEEDED\"],\"hard_rule_codes\":[],\"reason_codes\":[\"CANDIDATE_REJECTED_BY_FEASIBILITY_GATE\"],\"stops\":[\"place-old-town\",\"place-riverside-museum\",\"place-food-hall\",\"place-tech-art\",\"place-river-cruise\",\"place-skyline-dinner\"],\"summary\":\"candidate dropped before persistence: JOURNEY_WINDOW_EXCEEDED\"},{\"candidate_sequence\":1,\"failures\":[\"JOURNEY_WINDOW_EXCEEDED\"],\"hard_rule_codes\":[],\"reason_codes\":[\"CANDIDATE_REJECTED_BY_FEASIBILITY_GATE\"],\"stops\":[\"place-old-town\",\"place-riverside-museum\",\"place-food-hall\",\"place-city-park\",\"place-river-cruise\",\"place-skyline-dinner\"],\"summary\":\"candidate dropped before persistence: JOURNEY_WINDOW_EXCEEDED\"},{\"candidate_sequence\":2,\"failures\":[\"JOURNEY_WINDOW_EXCEEDED\"],\"hard_rule_codes\":[],\"reason_codes\":[\"CANDIDATE_REJECTED_BY_FEASIBILITY_GATE\"],\"stops\":[\"place-old-town\",\"place-riverside-museum\",\"place-food-hall\",\"place-design-library\",\"place-river-cruise\",\"place-skyline-dinner\"],\"summary\":\"candidate dropped before persistence: JOURNEY_WINDOW_EXCEEDED\"}],\"city_code\":\"CNX-DEMO\",\"city_services_in_catalog\":5,\"day_sequences_available\":3,\"places_in_catalog\":8,\"requested_candidates\":3},\"reason_code\":\"CATALOG_INSUFFICIENT\"}}",
+    "elapsed_ms": 16,
+    "at": "16:23:19",
+    "http_error": "HTTP Error 422: Unprocessable Entity"
+   },
+   "replay_identical_payload": false
+  }
+ ],
+ "extra": {
+  "taskkill_rc": 0,
+  "new_process": {
+   "tag": "A",
+   "pid": 15796,
+   "port": 8611,
+   "tree": "D:\\moodle\\_hjp3_0288t1_0925\\backend",
+   "db": "D:\\moodle\\_hjp3_0288t1_0925\\t1.s3db",
+   "listening": true,
+   "exited": false,
+   "cmdline_at_start": "D:/moodle/CityNexus/.venv/Scripts/python.exe -m uvicorn app.main:app --host 127.0.0.1 --port 8611 --log-level info"
+  }
+ }
+}
