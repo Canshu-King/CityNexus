@@ -1,0 +1,14 @@
+{
+ "dist_root": "D:\\moodle\\_hjp3_0300_0925\\dist_0300",
+ "asset": "index-BN1w-xlK.js",
+ "bytes": 1249595,
+ "sha256": "57c2a927f9e65ca0b33acdc737cbf941fc395c214aa213d861a4f7e5c664338e",
+ "marker_label_device": true,
+ "marker_device_text": true,
+ "read_deadline_constant": {
+  "found": true,
+  "value": "xb"
+ },
+ "files_in_dist": 10,
+ "nlink_gt1": 0
+}
