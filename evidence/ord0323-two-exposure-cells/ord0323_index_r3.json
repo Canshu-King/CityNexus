@@ -1,0 +1,950 @@
+{
+ "schema": "CNX_ORD0323_INDEX_R1",
+ "dir": "evidence/ord0323-two-exposure-cells",
+ "listed_at_local": "2026-09-26T07:16:50+0800",
+ "files": [
+  {
+   "path": "evidence/ord0323-two-exposure-cells/arm__cell1_baseline_sink__N1.json",
+   "blob": "f9bab8611c88f4b655768a35268997681511f684",
+   "bytes": 2173
+  },
+  {
+   "path": "evidence/ord0323-two-exposure-cells/arm__cell1_baseline_sink__N2.json",
+   "blob": "c711dd70e73364f2e69d9b14db2144582b85bb1c",
+   "bytes": 408
+  },
+  {
+   "path": "evidence/ord0323-two-exposure-cells/arm__cell1_baseline_sink__N3.json",
+   "blob": "f8d3e5e37889685a0b6ee8193f9fead30e73b6b0",
+   "bytes": 500
+  },
+  {
+   "path": "evidence/ord0323-two-exposure-cells/arm__cell1_fields_gone__N1.json",
+   "blob": "2204174c538577e426f48d092b43ce83a801f600",
+   "bytes": 1127
+  },
+  {
+   "path": "evidence/ord0323-two-exposure-cells/arm__cell1_fields_gone__N2.json",
+   "blob": "742f035ba7c97fdd1cbf62c96b273631c0934616",
+   "bytes": 408
+  },
+  {
+   "path": "evidence/ord0323-two-exposure-cells/arm__cell1_fields_gone__N3.json",
+   "blob": "f763d6311b7f1b81b42b8246c65e2cd59159e636",
+   "bytes": 500
+  },
+  {
+   "path": "evidence/ord0323-two-exposure-cells/arm__cell1_leak_beside_fields__N1.json",
+   "blob": "f0773a5ef3f1f44a4d212a1119077c2b7afbd93f",
+   "bytes": 1788
+  },
+  {
+   "path": "evidence/ord0323-two-exposure-cells/arm__cell1_leak_beside_fields__N2.json",
+   "blob": "503698abdd7b2b53bf81c40589aecb33f4eb49ee",
+   "bytes": 408
+  },
+  {
+   "path": "evidence/ord0323-two-exposure-cells/arm__cell1_leak_beside_fields__N3.json",
+   "blob": "23825be26cd008a12e9fe12efab68d64d2266633",
+   "bytes": 500
+  },
+  {
+   "path": "evidence/ord0323-two-exposure-cells/arm__cell2_baseline_throw__N1.json",
+   "blob": "c334f81335a96d3b15c58f064bbf7129075deb09",
+   "bytes": 931
+  },
+  {
+   "path": "evidence/ord0323-two-exposure-cells/arm__cell2_baseline_throw__N2.json",
+   "blob": "1149cd94db75bf9b7491bad071def63e1a38987e",
+   "bytes": 914
+  },
+  {
+   "path": "evidence/ord0323-two-exposure-cells/arm__cell2_baseline_throw__N3.json",
+   "blob": "6fa2698a26ba8bb563ab80b37f263aedda2d63e6",
+   "bytes": 932
+  },
+  {
+   "path": "evidence/ord0323-two-exposure-cells/arm__cell2_fields_blind__N1.json",
+   "blob": "4f83374058bd5a01331e63e8ad855932a4f215d0",
+   "bytes": 931
+  },
+  {
+   "path": "evidence/ord0323-two-exposure-cells/arm__cell2_fields_blind__N2.json",
+   "blob": "11d2ce9ff9a7a9bc4e642660c75ec55510a7ba03",
+   "bytes": 834
+  },
+  {
+   "path": "evidence/ord0323-two-exposure-cells/arm__cell2_fields_blind__N3.json",
+   "blob": "15f7dafb8358b2ff641e5f144417d068304350f0",
+   "bytes": 944
+  },
+  {
+   "path": "evidence/ord0323-two-exposure-cells/arm__cell2_leak_beside_fields__N1.json",
+   "blob": "13d2940197f9cdf2b2fb1a9e51bd4aa23ae7bef7",
+   "bytes": 931
+  },
+  {
+   "path": "evidence/ord0323-two-exposure-cells/arm__cell2_leak_beside_fields__N2.json",
+   "blob": "aac0f565e47eb9e04b71599d2338f2a625f5705b",
+   "bytes": 1489
+  },
+  {
+   "path": "evidence/ord0323-two-exposure-cells/arm__cell2_leak_beside_fields__N3.json",
+   "blob": "5344dbaff27b8f2bd03fe97d3add9301949787d8",
+   "bytes": 1473
+  },
+  {
+   "path": "evidence/ord0323-two-exposure-cells/arm__fixed__N1.json",
+   "blob": "de79680efa4654e487e9f3970d97ff402d37702a",
+   "bytes": 931
+  },
+  {
+   "path": "evidence/ord0323-two-exposure-cells/arm__fixed__N2.json",
+   "blob": "4260d2896590519b9928a7722d03f0346ea57765",
+   "bytes": 408
+  },
+  {
+   "path": "evidence/ord0323-two-exposure-cells/arm__fixed__N3.json",
+   "blob": "68f3afb4885eab4487a94f4e46875091a93d5a34",
+   "bytes": 500
+  },
+  {
+   "path": "evidence/ord0323-two-exposure-cells/arm__r2_cell1_baseline_sink__N1.json",
+   "blob": "13990e91e87af04facb25c78417e901c42eb2613",
+   "bytes": 2240
+  },
+  {
+   "path": "evidence/ord0323-two-exposure-cells/arm__r2_cell1_baseline_sink__N2.json",
+   "blob": "bf7f4b37b883ca8dce1cd8dcebaae92bff7e89ac",
+   "bytes": 471
+  },
+  {
+   "path": "evidence/ord0323-two-exposure-cells/arm__r2_cell1_baseline_sink__N3.json",
+   "blob": "624fb3d4233bc32c11358a9378c35fa73ade7dd3",
+   "bytes": 785
+  },
+  {
+   "path": "evidence/ord0323-two-exposure-cells/arm__r2_cell1_baseline_sink__Q68a.json",
+   "blob": "aa3b8ce49759be6d237288861c6ec47ba223ad51",
+   "bytes": 1018
+  },
+  {
+   "path": "evidence/ord0323-two-exposure-cells/arm__r2_cell1_baseline_sink__Q68b.json",
+   "blob": "878da03371916315ec9764da6e84f61bea307cc3",
+   "bytes": 850
+  },
+  {
+   "path": "evidence/ord0323-two-exposure-cells/arm__r2_cell1_baseline_sink__T06.json",
+   "blob": "04f1d0b1ab0911bbe8e1d9ebebd8a4c7119eeead",
+   "bytes": 495
+  },
+  {
+   "path": "evidence/ord0323-two-exposure-cells/arm__r2_cell1_baseline_sink__T07.json",
+   "blob": "041beb37a5510c23297de16dbe7157de19f9b6df",
+   "bytes": 488
+  },
+  {
+   "path": "evidence/ord0323-two-exposure-cells/arm__r2_cell1_baseline_sink__T08.json",
+   "blob": "7b7aac64b39da153a822c742e6a537ee3a11ca54",
+   "bytes": 450
+  },
+  {
+   "path": "evidence/ord0323-two-exposure-cells/arm__r2_cell1_baseline_sink__T09.json",
+   "blob": "db940bff07cc925d47fb91d27544d1f5f402b020",
+   "bytes": 501
+  },
+  {
+   "path": "evidence/ord0323-two-exposure-cells/arm__r2_cell1_baseline_sink__T10.json",
+   "blob": "5805a874006ef21091283e9c417a59f181c8da94",
+   "bytes": 495
+  },
+  {
+   "path": "evidence/ord0323-two-exposure-cells/arm__r2_cell1_baseline_sink__T11.json",
+   "blob": "78dc8c36c99393b7b0823a2e6e54b39c337bee16",
+   "bytes": 494
+  },
+  {
+   "path": "evidence/ord0323-two-exposure-cells/arm__r2_cell1_baseline_sink__T12.json",
+   "blob": "efbb2657036dc05ce94ff6e3994e3f62881ff285",
+   "bytes": 574
+  },
+  {
+   "path": "evidence/ord0323-two-exposure-cells/arm__r2_cell1_baseline_sink__T13.json",
+   "blob": "f8b065ce78c59f65b28e745d5bb9282b6fde95ff",
+   "bytes": 494
+  },
+  {
+   "path": "evidence/ord0323-two-exposure-cells/arm__r2_cell1_fields_gone__N1.json",
+   "blob": "9f8b87da7b31772292a0a8fa7048c164a77bdd9d",
+   "bytes": 1194
+  },
+  {
+   "path": "evidence/ord0323-two-exposure-cells/arm__r2_cell1_fields_gone__N2.json",
+   "blob": "5f23cdd67b727ba5140071b7a04d98ad7f5b9e9b",
+   "bytes": 471
+  },
+  {
+   "path": "evidence/ord0323-two-exposure-cells/arm__r2_cell1_fields_gone__N3.json",
+   "blob": "f6391c3b09527f735082a5d6d5ae98afc80ab8b1",
+   "bytes": 785
+  },
+  {
+   "path": "evidence/ord0323-two-exposure-cells/arm__r2_cell1_fields_gone__Q68a.json",
+   "blob": "5549fa740fab965a75d64790a53ace2dc984d112",
+   "bytes": 1018
+  },
+  {
+   "path": "evidence/ord0323-two-exposure-cells/arm__r2_cell1_fields_gone__Q68b.json",
+   "blob": "e1bb68edf0febce045ccf4350b980f8cc77a5b81",
+   "bytes": 850
+  },
+  {
+   "path": "evidence/ord0323-two-exposure-cells/arm__r2_cell1_fields_gone__T06.json",
+   "blob": "cfd4bdc34054f80d16936a5f27b75c145ac282ea",
+   "bytes": 495
+  },
+  {
+   "path": "evidence/ord0323-two-exposure-cells/arm__r2_cell1_fields_gone__T07.json",
+   "blob": "12f7dbe1581cb11f68f864f3efc349c577ac68a7",
+   "bytes": 488
+  },
+  {
+   "path": "evidence/ord0323-two-exposure-cells/arm__r2_cell1_fields_gone__T08.json",
+   "blob": "d791e22421420b5fe0afbf21bc5b554a3ee6a70a",
+   "bytes": 450
+  },
+  {
+   "path": "evidence/ord0323-two-exposure-cells/arm__r2_cell1_fields_gone__T09.json",
+   "blob": "00794892d4e4dfb81849dc7d01882b79d8a55334",
+   "bytes": 501
+  },
+  {
+   "path": "evidence/ord0323-two-exposure-cells/arm__r2_cell1_fields_gone__T10.json",
+   "blob": "3342c8aa524bca0b2b6e0184bc7e065756883ea4",
+   "bytes": 495
+  },
+  {
+   "path": "evidence/ord0323-two-exposure-cells/arm__r2_cell1_fields_gone__T11.json",
+   "blob": "092ce463aa1bd3a96135f158bff12c5c346d9639",
+   "bytes": 494
+  },
+  {
+   "path": "evidence/ord0323-two-exposure-cells/arm__r2_cell1_fields_gone__T12.json",
+   "blob": "7783606a78e06b7ac3e357f0942bb50e814a0de7",
+   "bytes": 574
+  },
+  {
+   "path": "evidence/ord0323-two-exposure-cells/arm__r2_cell1_fields_gone__T13.json",
+   "blob": "762398af82e0b14d2ad437fb4f6087ade5b8f034",
+   "bytes": 494
+  },
+  {
+   "path": "evidence/ord0323-two-exposure-cells/arm__r2_cell1_leak_beside_fields__N1.json",
+   "blob": "1b1c7bc9bdf9f8dc6c9a46669b8af419bbe9e4df",
+   "bytes": 1855
+  },
+  {
+   "path": "evidence/ord0323-two-exposure-cells/arm__r2_cell1_leak_beside_fields__N2.json",
+   "blob": "be6d322cdfc305cf2db0420c827e6fce0f7b7a8b",
+   "bytes": 471
+  },
+  {
+   "path": "evidence/ord0323-two-exposure-cells/arm__r2_cell1_leak_beside_fields__N3.json",
+   "blob": "e2fcf3f6cab2d42ff28ebe21499d89b078278704",
+   "bytes": 785
+  },
+  {
+   "path": "evidence/ord0323-two-exposure-cells/arm__r2_cell1_leak_beside_fields__Q68a.json",
+   "blob": "12483a59129987c0f9952934daad3b690be5e41c",
+   "bytes": 1018
+  },
+  {
+   "path": "evidence/ord0323-two-exposure-cells/arm__r2_cell1_leak_beside_fields__Q68b.json",
+   "blob": "96b84dc92828f1a18b4c39941575db1df6e9099d",
+   "bytes": 850
+  },
+  {
+   "path": "evidence/ord0323-two-exposure-cells/arm__r2_cell1_leak_beside_fields__T06.json",
+   "blob": "64dae33542ad2cc14d1c23fd161447ebc293b3bd",
+   "bytes": 495
+  },
+  {
+   "path": "evidence/ord0323-two-exposure-cells/arm__r2_cell1_leak_beside_fields__T07.json",
+   "blob": "6d768e6a10b5a45c106a1a91b9a02a2a333155aa",
+   "bytes": 488
+  },
+  {
+   "path": "evidence/ord0323-two-exposure-cells/arm__r2_cell1_leak_beside_fields__T08.json",
+   "blob": "140a944409438d3564e5176bcd34a1bb681e0e71",
+   "bytes": 450
+  },
+  {
+   "path": "evidence/ord0323-two-exposure-cells/arm__r2_cell1_leak_beside_fields__T09.json",
+   "blob": "0912f56e88b38c0aeb34ede260851eb602fd46c4",
+   "bytes": 501
+  },
+  {
+   "path": "evidence/ord0323-two-exposure-cells/arm__r2_cell1_leak_beside_fields__T10.json",
+   "blob": "4adf137e8a23592c6c684179e33db9dfa4748660",
+   "bytes": 495
+  },
+  {
+   "path": "evidence/ord0323-two-exposure-cells/arm__r2_cell1_leak_beside_fields__T11.json",
+   "blob": "de473b1cbafd81adeb3cd9f911632b28c9f5df13",
+   "bytes": 494
+  },
+  {
+   "path": "evidence/ord0323-two-exposure-cells/arm__r2_cell1_leak_beside_fields__T12.json",
+   "blob": "6fd4089309f9c2402441b7f459732a03074afb07",
+   "bytes": 574
+  },
+  {
+   "path": "evidence/ord0323-two-exposure-cells/arm__r2_cell1_leak_beside_fields__T13.json",
+   "blob": "6414f0a0ae41b72badd81d1892b0bc57d1732747",
+   "bytes": 494
+  },
+  {
+   "path": "evidence/ord0323-two-exposure-cells/arm__r2_cell2_baseline_throw__N1.json",
+   "blob": "f637b322b645759ebd87b8593eec605e3b4d1767",
+   "bytes": 998
+  },
+  {
+   "path": "evidence/ord0323-two-exposure-cells/arm__r2_cell2_baseline_throw__N2.json",
+   "blob": "7228a1fe4d301d7dc9cfa6e0bf45423a666652c9",
+   "bytes": 969
+  },
+  {
+   "path": "evidence/ord0323-two-exposure-cells/arm__r2_cell2_baseline_throw__N3.json",
+   "blob": "9ce8b91f5d3f035276162f07b1b1bb7521363712",
+   "bytes": 999
+  },
+  {
+   "path": "evidence/ord0323-two-exposure-cells/arm__r2_cell2_baseline_throw__Q68a.json",
+   "blob": "d18cabaea3dab09b8f10dbf109e946e37fea194f",
+   "bytes": 1018
+  },
+  {
+   "path": "evidence/ord0323-two-exposure-cells/arm__r2_cell2_baseline_throw__Q68b.json",
+   "blob": "4c5f418a2a2ffb8804766243478a140dfd1156ba",
+   "bytes": 850
+  },
+  {
+   "path": "evidence/ord0323-two-exposure-cells/arm__r2_cell2_baseline_throw__T06.json",
+   "blob": "15b0a8c7ec14357e40339c089d41af7e00ec05ae",
+   "bytes": 919
+  },
+  {
+   "path": "evidence/ord0323-two-exposure-cells/arm__r2_cell2_baseline_throw__T07.json",
+   "blob": "b0ecf28d9d9f2589541f39efb30fe9d8b11ffba4",
+   "bytes": 996
+  },
+  {
+   "path": "evidence/ord0323-two-exposure-cells/arm__r2_cell2_baseline_throw__T08.json",
+   "blob": "0811a2587737629058bfb48640f961455c7601da",
+   "bytes": 1057
+  },
+  {
+   "path": "evidence/ord0323-two-exposure-cells/arm__r2_cell2_baseline_throw__T09.json",
+   "blob": "49ec1b7adceb87138c8b259cf118875c6fc6b1f2",
+   "bytes": 937
+  },
+  {
+   "path": "evidence/ord0323-two-exposure-cells/arm__r2_cell2_baseline_throw__T10.json",
+   "blob": "16e81dd3784dca29a8ef504441932b78afef4550",
+   "bytes": 919
+  },
+  {
+   "path": "evidence/ord0323-two-exposure-cells/arm__r2_cell2_baseline_throw__T11.json",
+   "blob": "8639662d2edf4c2eb7d4129f7e492577e13867fe",
+   "bytes": 928
+  },
+  {
+   "path": "evidence/ord0323-two-exposure-cells/arm__r2_cell2_baseline_throw__T12.json",
+   "blob": "70da6848e8f887f3b1772e1bfcae2451b21d38dd",
+   "bytes": 1002
+  },
+  {
+   "path": "evidence/ord0323-two-exposure-cells/arm__r2_cell2_baseline_throw__T13.json",
+   "blob": "138456bf63a31280e8b150a52fad63a4b1476bba",
+   "bytes": 916
+  },
+  {
+   "path": "evidence/ord0323-two-exposure-cells/arm__r2_cell2_fields_blind__N1.json",
+   "blob": "49eab0efb130ff495f3c7a7a313511dea144f708",
+   "bytes": 998
+  },
+  {
+   "path": "evidence/ord0323-two-exposure-cells/arm__r2_cell2_fields_blind__N2.json",
+   "blob": "ecc0853b4d409beed276f2ed841b30485996ab0d",
+   "bytes": 736
+  },
+  {
+   "path": "evidence/ord0323-two-exposure-cells/arm__r2_cell2_fields_blind__N3.json",
+   "blob": "1517ed48e107f8ccdce3936ce403ff1d04b6189b",
+   "bytes": 987
+  },
+  {
+   "path": "evidence/ord0323-two-exposure-cells/arm__r2_cell2_fields_blind__Q68a.json",
+   "blob": "a56913adea639c9244a85e6e6833b56bc903989e",
+   "bytes": 1018
+  },
+  {
+   "path": "evidence/ord0323-two-exposure-cells/arm__r2_cell2_fields_blind__Q68b.json",
+   "blob": "e5166f0c6df8bd481084c690464b2b3064535034",
+   "bytes": 850
+  },
+  {
+   "path": "evidence/ord0323-two-exposure-cells/arm__r2_cell2_fields_blind__T06.json",
+   "blob": "d1ec680925d5db4e44fe1a9c946515ff61918036",
+   "bytes": 797
+  },
+  {
+   "path": "evidence/ord0323-two-exposure-cells/arm__r2_cell2_fields_blind__T07.json",
+   "blob": "3fc17cfdd848cfc375b3a6e36f7b6d56d24fa100",
+   "bytes": 790
+  },
+  {
+   "path": "evidence/ord0323-two-exposure-cells/arm__r2_cell2_fields_blind__T08.json",
+   "blob": "8b4a0200d96993958be1200db1ba25c95b4919cc",
+   "bytes": 925
+  },
+  {
+   "path": "evidence/ord0323-two-exposure-cells/arm__r2_cell2_fields_blind__T09.json",
+   "blob": "1745dc4fd9080fca1741fce07c0487785f01a55a",
+   "bytes": 803
+  },
+  {
+   "path": "evidence/ord0323-two-exposure-cells/arm__r2_cell2_fields_blind__T10.json",
+   "blob": "3ea4eb8dcaace34b20b29f554401ff2d5d80455d",
+   "bytes": 797
+  },
+  {
+   "path": "evidence/ord0323-two-exposure-cells/arm__r2_cell2_fields_blind__T11.json",
+   "blob": "aff7f7d8ddcd363d68e57a531f572eedc008124f",
+   "bytes": 796
+  },
+  {
+   "path": "evidence/ord0323-two-exposure-cells/arm__r2_cell2_fields_blind__T12.json",
+   "blob": "8ff0ffb5c11cd008320782dc7110c34869edf445",
+   "bytes": 920
+  },
+  {
+   "path": "evidence/ord0323-two-exposure-cells/arm__r2_cell2_fields_blind__T13.json",
+   "blob": "28c8b102c7e7091fc536f98010856dece5c7bc90",
+   "bytes": 796
+  },
+  {
+   "path": "evidence/ord0323-two-exposure-cells/arm__r2_cell2_status_frozen__N1.json",
+   "blob": "477e13301cc39aa9c33e48d28dcb62d6326aa22c",
+   "bytes": 998
+  },
+  {
+   "path": "evidence/ord0323-two-exposure-cells/arm__r2_cell2_status_frozen__N2.json",
+   "blob": "4ef6520ea84b5352381e89aeb2aae31244c4b576",
+   "bytes": 471
+  },
+  {
+   "path": "evidence/ord0323-two-exposure-cells/arm__r2_cell2_status_frozen__N3.json",
+   "blob": "c2b264353e4cc674c3c12abef4c041fa0338e97c",
+   "bytes": 785
+  },
+  {
+   "path": "evidence/ord0323-two-exposure-cells/arm__r2_cell2_status_frozen__Q68a.json",
+   "blob": "cef6ad3694edd7fc923230c24ebfce4bb99f3820",
+   "bytes": 1018
+  },
+  {
+   "path": "evidence/ord0323-two-exposure-cells/arm__r2_cell2_status_frozen__Q68b.json",
+   "blob": "3f0e3d352fa98358bc71820428d9dc15cf789f12",
+   "bytes": 850
+  },
+  {
+   "path": "evidence/ord0323-two-exposure-cells/arm__r2_cell2_status_frozen__T06.json",
+   "blob": "e695cd9835eea7345c0b2c1b868b01748d259258",
+   "bytes": 495
+  },
+  {
+   "path": "evidence/ord0323-two-exposure-cells/arm__r2_cell2_status_frozen__T07.json",
+   "blob": "fc13d15f057810d0b0452d7e45a102906ab3f6a7",
+   "bytes": 488
+  },
+  {
+   "path": "evidence/ord0323-two-exposure-cells/arm__r2_cell2_status_frozen__T08.json",
+   "blob": "d8968212a2232595414e95ed41d8bdb3dbb4da1e",
+   "bytes": 450
+  },
+  {
+   "path": "evidence/ord0323-two-exposure-cells/arm__r2_cell2_status_frozen__T09.json",
+   "blob": "b68265ee0dfbeb4388063aa7cde39db1c57eea17",
+   "bytes": 501
+  },
+  {
+   "path": "evidence/ord0323-two-exposure-cells/arm__r2_cell2_status_frozen__T10.json",
+   "blob": "021320570c18f1766b04fcb483fe8b0809bbfb8c",
+   "bytes": 495
+  },
+  {
+   "path": "evidence/ord0323-two-exposure-cells/arm__r2_cell2_status_frozen__T11.json",
+   "blob": "3619e401384479544b1c1153682205638df98ce4",
+   "bytes": 494
+  },
+  {
+   "path": "evidence/ord0323-two-exposure-cells/arm__r2_cell2_status_frozen__T12.json",
+   "blob": "d41834926aa8dfe3b6f4e13031d566225d622052",
+   "bytes": 1322
+  },
+  {
+   "path": "evidence/ord0323-two-exposure-cells/arm__r2_cell2_status_frozen__T13.json",
+   "blob": "d6ac4203fa632d93ea3dfc9f472e3204475d89c4",
+   "bytes": 494
+  },
+  {
+   "path": "evidence/ord0323-two-exposure-cells/arm__r2_cell3_code_slot_back__N1.json",
+   "blob": "1a808fbb8c01d46ce3fd5e859bcb545a760c9d12",
+   "bytes": 998
+  },
+  {
+   "path": "evidence/ord0323-two-exposure-cells/arm__r2_cell3_code_slot_back__N2.json",
+   "blob": "41fadcfc498bf9281028b6745b4ddee8dd8fb38e",
+   "bytes": 471
+  },
+  {
+   "path": "evidence/ord0323-two-exposure-cells/arm__r2_cell3_code_slot_back__N3.json",
+   "blob": "43b7266b4ea411fdad70bb13947f660478fbc6c1",
+   "bytes": 785
+  },
+  {
+   "path": "evidence/ord0323-two-exposure-cells/arm__r2_cell3_code_slot_back__Q68a.json",
+   "blob": "f6014ad6577d9d1744641a8b8b7928102ac2e2b3",
+   "bytes": 1018
+  },
+  {
+   "path": "evidence/ord0323-two-exposure-cells/arm__r2_cell3_code_slot_back__Q68b.json",
+   "blob": "0e135e7491bf467ec623d401689a315e65753563",
+   "bytes": 1638
+  },
+  {
+   "path": "evidence/ord0323-two-exposure-cells/arm__r2_cell3_code_slot_back__T06.json",
+   "blob": "29109480bc89cdb6db222bf4ca5b220814155b8b",
+   "bytes": 495
+  },
+  {
+   "path": "evidence/ord0323-two-exposure-cells/arm__r2_cell3_code_slot_back__T07.json",
+   "blob": "e49ae1c48cafffd9be7109ce95cd4cf197d4a552",
+   "bytes": 488
+  },
+  {
+   "path": "evidence/ord0323-two-exposure-cells/arm__r2_cell3_code_slot_back__T08.json",
+   "blob": "528c0a74b9da2a067e43734f6f8e8335cebd9437",
+   "bytes": 450
+  },
+  {
+   "path": "evidence/ord0323-two-exposure-cells/arm__r2_cell3_code_slot_back__T09.json",
+   "blob": "584b418a84ec1678f49e3bc7a2f70c44307b829c",
+   "bytes": 501
+  },
+  {
+   "path": "evidence/ord0323-two-exposure-cells/arm__r2_cell3_code_slot_back__T10.json",
+   "blob": "c7e7a06db45bb38f10bb01a977e059d8f9864a88",
+   "bytes": 495
+  },
+  {
+   "path": "evidence/ord0323-two-exposure-cells/arm__r2_cell3_code_slot_back__T11.json",
+   "blob": "81bc806ea0a4618283a0ef7b93c416e61b7a3e87",
+   "bytes": 494
+  },
+  {
+   "path": "evidence/ord0323-two-exposure-cells/arm__r2_cell3_code_slot_back__T12.json",
+   "blob": "d81f710d250ae823ca36349dda35e7446c2aada7",
+   "bytes": 574
+  },
+  {
+   "path": "evidence/ord0323-two-exposure-cells/arm__r2_cell3_code_slot_back__T13.json",
+   "blob": "3594e696e0a249be5d519668f0d752c879bc6ea5",
+   "bytes": 494
+  },
+  {
+   "path": "evidence/ord0323-two-exposure-cells/arm__r2_fixed__N1.json",
+   "blob": "0f5cccec3b48a1b5d2cef4b07025f3b63a67d089",
+   "bytes": 998
+  },
+  {
+   "path": "evidence/ord0323-two-exposure-cells/arm__r2_fixed__N2.json",
+   "blob": "d5fc37abde08e8c04a958b3ceaaad5bd80eef945",
+   "bytes": 471
+  },
+  {
+   "path": "evidence/ord0323-two-exposure-cells/arm__r2_fixed__N3.json",
+   "blob": "4d4085ac7192c15f630305b5f0973b580a78f500",
+   "bytes": 785
+  },
+  {
+   "path": "evidence/ord0323-two-exposure-cells/arm__r2_fixed__Q68a.json",
+   "blob": "5432b1ea2b439a79111904db499730027c223f40",
+   "bytes": 1018
+  },
+  {
+   "path": "evidence/ord0323-two-exposure-cells/arm__r2_fixed__Q68b.json",
+   "blob": "2470ee9a9c0bbe406022fd9fd449d5e082c3c133",
+   "bytes": 850
+  },
+  {
+   "path": "evidence/ord0323-two-exposure-cells/arm__r2_fixed__T06.json",
+   "blob": "877d05648d0ccac86a0c7ba4ec42308a5807a09c",
+   "bytes": 495
+  },
+  {
+   "path": "evidence/ord0323-two-exposure-cells/arm__r2_fixed__T07.json",
+   "blob": "84c61f361009741df2707301106910dafdc4d0dd",
+   "bytes": 488
+  },
+  {
+   "path": "evidence/ord0323-two-exposure-cells/arm__r2_fixed__T08.json",
+   "blob": "7ed622ac1730d9c1d558905780a7fc94a5d6901d",
+   "bytes": 450
+  },
+  {
+   "path": "evidence/ord0323-two-exposure-cells/arm__r2_fixed__T09.json",
+   "blob": "bd27addd0563a4a4b72169209f6ea3e105851431",
+   "bytes": 501
+  },
+  {
+   "path": "evidence/ord0323-two-exposure-cells/arm__r2_fixed__T10.json",
+   "blob": "8f3a29a4ba24448a8ef71b4d525e20261d4a7f9c",
+   "bytes": 495
+  },
+  {
+   "path": "evidence/ord0323-two-exposure-cells/arm__r2_fixed__T11.json",
+   "blob": "adab5c20fb86c8d5f1fcefbe9d91f5ee86bd86d1",
+   "bytes": 494
+  },
+  {
+   "path": "evidence/ord0323-two-exposure-cells/arm__r2_fixed__T12.json",
+   "blob": "914eeddd8ac132504ef8c340376ce770310bfe6d",
+   "bytes": 574
+  },
+  {
+   "path": "evidence/ord0323-two-exposure-cells/arm__r2_fixed__T13.json",
+   "blob": "84ee1195eb713f51dc699446bb407ab7a1f36923",
+   "bytes": 494
+  },
+  {
+   "path": "evidence/ord0323-two-exposure-cells/ord0323_add_q68.py",
+   "blob": "f8582e247c6ea05447de85cd11d2a1b27d07753f",
+   "bytes": 4024
+  },
+  {
+   "path": "evidence/ord0323-two-exposure-cells/ord0323_arms_matrix_r1.json",
+   "blob": "9b16e263a3d5540804e1bad152e8d1310e1aeb2c",
+   "bytes": 26124
+  },
+  {
+   "path": "evidence/ord0323-two-exposure-cells/ord0323_arms_matrix_r3.json",
+   "blob": "aeeea11598de3383111a5051577e3c5216568b4b",
+   "bytes": 96747
+  },
+  {
+   "path": "evidence/ord0323-two-exposure-cells/ord0323_block_r2.py",
+   "blob": "a53fb7704fec6fbcfd5dd44008391526d8c4c1a9",
+   "bytes": 22671
+  },
+  {
+   "path": "evidence/ord0323-two-exposure-cells/ord0323_clean_rebuild.py",
+   "blob": "5697d1187611f7de9ec0e87dba70bd5ee095583b",
+   "bytes": 3751
+  },
+  {
+   "path": "evidence/ord0323-two-exposure-cells/ord0323_deliver_r2.py",
+   "blob": "ac237cfa4307fb7f77a53dffed93d2659ffd7d10",
+   "bytes": 21987
+  },
+  {
+   "path": "evidence/ord0323-two-exposure-cells/ord0323_index_r1.json",
+   "blob": "ffa98d6d48e95cc3d771dd15ca17017e1122735b",
+   "bytes": 6754
+  },
+  {
+   "path": "evidence/ord0323-two-exposure-cells/ord0323_index_r2.json",
+   "blob": "2f6390f3b8f9497459fe323483748eaf882f6d36",
+   "bytes": 7063
+  },
+  {
+   "path": "evidence/ord0323-two-exposure-cells/ord0323_matrix_from_disk.py",
+   "blob": "279911092af335bf33913cfff5cd8690309995d0",
+   "bytes": 8143
+  },
+  {
+   "path": "evidence/ord0323-two-exposure-cells/ord0323_perleg.py",
+   "blob": "b15fcf1986062abf59c192160c2e52d6890f7d92",
+   "bytes": 8411
+  },
+  {
+   "path": "evidence/ord0323-two-exposure-cells/ord0323_r3_readings.py",
+   "blob": "240b67578b3907ccf3c989bcf5214b355beeab40",
+   "bytes": 8421
+  },
+  {
+   "path": "evidence/ord0323-two-exposure-cells/ord0323_r3_readings_r1.json",
+   "blob": "d65e470923d621288423bc65a81f32ca5da4439f",
+   "bytes": 6287
+  },
+  {
+   "path": "evidence/ord0323-two-exposure-cells/ord0323_r3_readings_r2.json",
+   "blob": "ba38900ecb4c79fe9af0870e4bfab80b9dcd5aa5",
+   "bytes": 5465
+  },
+  {
+   "path": "evidence/ord0323-two-exposure-cells/ord0323_r3_readings_r2.py",
+   "blob": "1f00a6be63dd65165f1b7f3545f8ed29cec64f0d",
+   "bytes": 8984
+  },
+  {
+   "path": "evidence/ord0323-two-exposure-cells/ord0323_r4_readings.py",
+   "blob": "c41eb27f921bb28c9cb36c5aa122816a7a7288ab",
+   "bytes": 6707
+  },
+  {
+   "path": "evidence/ord0323-two-exposure-cells/ord0323_r4_readings_r1.json",
+   "blob": "42af3158153eb7155bbed2ee884700f60c3b0ee7",
+   "bytes": 4305
+  },
+  {
+   "path": "evidence/ord0323-two-exposure-cells/ord0323_r4_readings_r2.json",
+   "blob": "a1f37a32d88aff91b41287f36b4e42c835eedf99",
+   "bytes": 5856
+  },
+  {
+   "path": "evidence/ord0323-two-exposure-cells/ord0323_r4_readings_r2.py",
+   "blob": "ad04615e1452705fe6a3106c05d5966a16472207",
+   "bytes": 6793
+  },
+  {
+   "path": "evidence/ord0323-two-exposure-cells/ord0323_r5_readings.py",
+   "blob": "a1720a787f69bc68c338b2505e92255e5696d739",
+   "bytes": 8359
+  },
+  {
+   "path": "evidence/ord0323-two-exposure-cells/ord0323_r5_readings_r1.json",
+   "blob": "d3d96bc91e1335877e331137e2a219791560b054",
+   "bytes": 5669
+  },
+  {
+   "path": "evidence/ord0323-two-exposure-cells/ord0323_r6_readings.py",
+   "blob": "8d94f70892e2883fac527a5d7f6eb4fa04c454a4",
+   "bytes": 9580
+  },
+  {
+   "path": "evidence/ord0323-two-exposure-cells/ord0323_r6_readings_r1.json",
+   "blob": "f1f7cf5ab08c18df3ce1c5e4aa1649e4e3546bfb",
+   "bytes": 7322
+  },
+  {
+   "path": "evidence/ord0323-two-exposure-cells/ord0323_receipt_r1.json",
+   "blob": "74b928715a37d564434ea4f8b742fd54adbd028b",
+   "bytes": 39048
+  },
+  {
+   "path": "evidence/ord0323-two-exposure-cells/ord0323_receipt_r2.json",
+   "blob": "f3ba6917372c57a1e05ea977d71612500b71bb05",
+   "bytes": 40345
+  },
+  {
+   "path": "evidence/ord0323-two-exposure-cells/ord0323_receipt_r3.json",
+   "blob": "6df398bcdc0d4d036497064d880acd71d76c41ab",
+   "bytes": 82940
+  },
+  {
+   "path": "evidence/ord0323-two-exposure-cells/ord0323_retarget.py",
+   "blob": "f5785e91b04f6be0966bd4fd7f663b40f8a133d6",
+   "bytes": 10651
+  },
+  {
+   "path": "evidence/ord0323-two-exposure-cells/ord0323_run_arms.py",
+   "blob": "4b96bc3c8408de512e1e55087b2130a61f7dd95a",
+   "bytes": 16220
+  },
+  {
+   "path": "evidence/ord0323-two-exposure-cells/ord0323_run_arms_r2.py",
+   "blob": "de0a5de834f2d59052bd1b192d4aba28c5e30479",
+   "bytes": 20127
+  },
+  {
+   "path": "evidence/ord0323-two-exposure-cells/ord0323_split_legs.py",
+   "blob": "3f4628b2173d32f6bfc0321311821fbd3571e1ac",
+   "bytes": 6039
+  },
+  {
+   "path": "evidence/ord0323-two-exposure-cells/ord0323_split_runner.py",
+   "blob": "2d32a568fc79461579a4ca9bbb48749dd545646f",
+   "bytes": 5439
+  },
+  {
+   "path": "evidence/ord0323-two-exposure-cells/ord0323_stages_r2.py",
+   "blob": "0ffc53eb96d3d181ef6ff1ce81623cb0b32fb859",
+   "bytes": 42560
+  },
+  {
+   "path": "evidence/ord0323-two-exposure-cells/ord0323_widen_q71.py",
+   "blob": "43089d39950cc3b0182ff4e52ca0d7f86fffebd5",
+   "bytes": 7595
+  },
+  {
+   "path": "evidence/ord0323-two-exposure-cells/ord0323_widen_q71_r2.py",
+   "blob": "5359a517daf73a0f30520433f039a3072116288c",
+   "bytes": 2297
+  },
+  {
+   "path": "evidence/ord0323-two-exposure-cells/playwright_report__0323c1b0317.json",
+   "blob": "87c8be255f344e3786e49976822c44face372674",
+   "bytes": 11146
+  },
+  {
+   "path": "evidence/ord0323-two-exposure-cells/playwright_report__0323c1f0317.json",
+   "blob": "d1259f5e19a0734e03e08786cf49fc7fda361839",
+   "bytes": 11903
+  },
+  {
+   "path": "evidence/ord0323-two-exposure-cells/playwright_report__0323c1l0317.json",
+   "blob": "ddcd7a0f1cc74ae1162ad848edf52b897c9cb3a8",
+   "bytes": 12728
+  },
+  {
+   "path": "evidence/ord0323-two-exposure-cells/playwright_report__0323c2b0317.json",
+   "blob": "92d22f21b4c98b48c81692f41bef2f4b63dbe60c",
+   "bytes": 16748
+  },
+  {
+   "path": "evidence/ord0323-two-exposure-cells/playwright_report__0323c2f0317.json",
+   "blob": "c7bd442557dddb4631fdca7e5bd884691fe14415",
+   "bytes": 16867
+  },
+  {
+   "path": "evidence/ord0323-two-exposure-cells/playwright_report__0323c2l0317.json",
+   "blob": "a2f9f4a4ed999a126b8537c073872e0c753722b7",
+   "bytes": 19215
+  },
+  {
+   "path": "evidence/ord0323-two-exposure-cells/playwright_report__0323fix0317.json",
+   "blob": "4aa04e3c9b7519700a61bcfcd7fc89b8a8065e68",
+   "bytes": 7702
+  },
+  {
+   "path": "evidence/ord0323-two-exposure-cells/playwright_report__r2_cell1_baseline_sink.json",
+   "blob": "880bb859fba0582d7b27ec9fef091cd692e18dec",
+   "bytes": 22833
+  },
+  {
+   "path": "evidence/ord0323-two-exposure-cells/playwright_report__r2_cell1_fields_gone.json",
+   "blob": "368c99967bffa6a17db93a346dbd211f57bbaace",
+   "bytes": 23581
+  },
+  {
+   "path": "evidence/ord0323-two-exposure-cells/playwright_report__r2_cell1_leak_beside_fields.json",
+   "blob": "c59d571e83a69cc08f86c33a5c6d1834a1eb80a8",
+   "bytes": 24225
+  },
+  {
+   "path": "evidence/ord0323-two-exposure-cells/playwright_report__r2_cell2_baseline_throw.json",
+   "blob": "1b9fce8e05ec343c2afbc04751b8d7f073e2003d",
+   "bytes": 73456
+  },
+  {
+   "path": "evidence/ord0323-two-exposure-cells/playwright_report__r2_cell2_fields_blind.json",
+   "blob": "5a0f9008af40860392c876dda32b78b09263cbce",
+   "bytes": 69402
+  },
+  {
+   "path": "evidence/ord0323-two-exposure-cells/playwright_report__r2_cell2_status_frozen.json",
+   "blob": "87f651badf7c4490082e7bc25db9357ed8208aff",
+   "bytes": 25250
+  },
+  {
+   "path": "evidence/ord0323-two-exposure-cells/playwright_report__r2_cell3_code_slot_back.json",
+   "blob": "757e93fd5206d64d66774bd34362c0b6bdbd2627",
+   "bytes": 25245
+  },
+  {
+   "path": "evidence/ord0323-two-exposure-cells/playwright_report__r2_fixed.json",
+   "blob": "3f5b7259e0aed2dc50ca88dde5acc31955cb6729",
+   "bytes": 19389
+  },
+  {
+   "path": "evidence/ord0323-two-exposure-cells/r3_after_candidate.json",
+   "blob": "fe9e10cc3ef77714b7ccb2f714b82e8fafabb7c2",
+   "bytes": 4430
+  },
+  {
+   "path": "evidence/ord0323-two-exposure-cells/r3_after_candidate_r2.json",
+   "blob": "851c07f72f4997c5d4bb4784a0cae8c7810b9fe7",
+   "bytes": 2457
+  },
+  {
+   "path": "evidence/ord0323-two-exposure-cells/r3_before_9a669c8b.json",
+   "blob": "59c4fb79712e60097d972bf8005e629eea35f137",
+   "bytes": 4867
+  },
+  {
+   "path": "evidence/ord0323-two-exposure-cells/r3_before_9a669c8b_r2.json",
+   "blob": "ef3ec7c8413c17e60d5709a8ad454875b64e780f",
+   "bytes": 5423
+  },
+  {
+   "path": "evidence/ord0323-two-exposure-cells/r4_after_candidate.json",
+   "blob": "7c426cb405a4fb2fbb3dd038b1a57e380e8f74f4",
+   "bytes": 5831
+  },
+  {
+   "path": "evidence/ord0323-two-exposure-cells/r4_after_candidate_r2.json",
+   "blob": "aee1087b696a0bc62a774e30603d0ce13294f8d8",
+   "bytes": 8446
+  },
+  {
+   "path": "evidence/ord0323-two-exposure-cells/r4_before_9a669c8b.json",
+   "blob": "bbd78846317ad0fd23afcb0757e3ebb1e5570589",
+   "bytes": 7266
+  },
+  {
+   "path": "evidence/ord0323-two-exposure-cells/r4_before_9a669c8b_r2.json",
+   "blob": "6e120be1a8ea19b873ff87ac32bbcc135efe53dc",
+   "bytes": 11847
+  },
+  {
+   "path": "evidence/ord0323-two-exposure-cells/r4_selftest.json",
+   "blob": "487bc11bd5ca4719619e6afec0355c96249e1c9d",
+   "bytes": 14521
+  },
+  {
+   "path": "evidence/ord0323-two-exposure-cells/r5_after_tree.json",
+   "blob": "a4fd6d96ea0bdfc441ef1cc642f10b6912f1fc6a",
+   "bytes": 56978
+  },
+  {
+   "path": "evidence/ord0323-two-exposure-cells/r5_before_tree.json",
+   "blob": "b657612a41c0eca9ba060e0bfe148e8dac2bc78b",
+   "bytes": 60064
+  },
+  {
+   "path": "evidence/ord0323-two-exposure-cells/r6_after_tree.json",
+   "blob": "fb7cfe1f5ab1bf29b08072c01188d0efac330402",
+   "bytes": 55721
+  },
+  {
+   "path": "evidence/ord0323-two-exposure-cells/r6_before_tree.json",
+   "blob": "7090be3a7dfc3e2996fa6c9daede8f79841d2297",
+   "bytes": 58807
+  },
+  {
+   "path": "evidence/ord0323-two-exposure-cells/ui_exposure_taint_ast_r5.cjs",
+   "blob": "ff98091cf3accb0d836ae25ba49820170b92d932",
+   "bytes": 85052
+  },
+  {
+   "path": "evidence/ord0323-two-exposure-cells/ui_exposure_taint_ast_r6.cjs",
+   "blob": "6a251d3a6bea70329e06581384a81d5ef54c96a6",
+   "bytes": 101413
+  }
+ ],
+ "file_count": 188,
+ "total_bytes": 1520757,
+ "note": "自增长清单；下一次重写用新文件名，并在下一帖给新的 40 位"
+}
