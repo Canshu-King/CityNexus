@@ -1,0 +1,1318 @@
+{
+ "schema": "CNX_ORD0338_GAP_ANATOMY_V1",
+ "order": "ORD-0338",
+ "lane": "D e345b9d6",
+ "dispatched_by": "CMDR 06:05 ⑤（block `### CMDR 06:05`，正文要求「先用渲染结果定性再动手」）",
+ "generation": {
+  "tip": "f45489c6d17f16973faad161618789237ac3814e",
+  "how_read": "git ls-remote + fetch, re-read until stable",
+  "export": "D:/moodle/_qoder_d_ord0338_0926",
+  "export_recipe": "git archive f45489c6d17f16973faad161618789237ac3814e | tar -x",
+  "blob_verified_files": {
+   "frontend/src/styles.css": {
+    "export_blob": "b942bf640365c013fa02897f19e8a34b5c9d9c46",
+    "tip_blob": "b942bf640365c013fa02897f19e8a34b5c9d9c46",
+    "identical": true
+   },
+   "frontend/src/design-tokens.css": {
+    "export_blob": "ecd562466f8545cf55dbc3daa7c3074a98a20e13",
+    "tip_blob": "ecd562466f8545cf55dbc3daa7c3074a98a20e13",
+    "identical": true
+   },
+   "frontend/src/features/setup/JourneyTrialSetup.tsx": {
+    "export_blob": "f41c0a1ffd660c9c406229e2ab11d8959e9e7a25",
+    "tip_blob": "f41c0a1ffd660c9c406229e2ab11d8959e9e7a25",
+    "identical": true
+   },
+   "frontend/src/app/V8Experience.tsx": {
+    "export_blob": "aa1e43987a58e0917ff3f0bab0d9fab4716e0ea5",
+    "tip_blob": "aa1e43987a58e0917ff3f0bab0d9fab4716e0ea5",
+    "identical": true
+   },
+   "frontend/e2e/qoder-wizard-advanced-is-tappable.spec.ts": {
+    "export_blob": "82f79682a7837b27eb3d281b9725d76bbfdf8f48",
+    "tip_blob": "82f79682a7837b27eb3d281b9725d76bbfdf8f48",
+    "identical": true
+   },
+   "frontend/e2e/qoder-ord0261-overlap-readonly-reproduction.spec.ts": {
+    "export_blob": "94c1ea0e6772edef7c82dbb0edd1f405a6eb8f78",
+    "tip_blob": "94c1ea0e6772edef7c82dbb0edd1f405a6eb8f78",
+    "identical": true
+   }
+  }
+ },
+ "instrument": {
+  "spec": "frontend/e2e/qoder-ord0338-wizard-gap-anatomy.spec.ts",
+  "spec_blob_local": "c7635b6b07e7a3d5ba9e7a3a678bddd7512c7c0a",
+  "spec_state": "本次新增，未推任何 ref；只在本地导出树里跑",
+  "runner": "review/run_spec.py with CNX_LANE_ROOT=<export>",
+  "viewport": {
+   "width": 390,
+   "height": 844,
+   "locale": "zh-CN"
+  },
+  "how_measured": "getBoundingClientRect / getComputedStyle / document.styleSheets，全部读渲染后的文档，不读源码字符串",
+  "runs": [
+   {
+    "stdout_file": "ord0338_run1.out",
+    "wrapper_log": "run-run376478.log",
+    "run_id": "run376478",
+    "db": "_run376478.db",
+    "frontend_port": "5790",
+    "tallies": [
+     "4 failed",
+     "1 passed (15.8s)",
+     "4 failed",
+     "1 passed (15.8s)"
+    ],
+    "red_nodes": [],
+    "spec": "e2e/qoder-ord0338-wizard-gap-anatomy.spec.ts"
+   },
+   {
+    "stdout_file": "ord0338_run2.out",
+    "wrapper_log": "run-run376627.log",
+    "run_id": "run376627",
+    "db": "_run376627.db",
+    "frontend_port": "5790",
+    "tallies": [
+     "2 failed",
+     "3 passed (15.4s)",
+     "2 failed",
+     "3 passed (15.4s)"
+    ],
+    "red_nodes": [
+     "N1",
+     "N3"
+    ],
+    "spec": "e2e/qoder-ord0338-wizard-gap-anatomy.spec.ts"
+   },
+   {
+    "stdout_file": "ord0338_run3.out",
+    "wrapper_log": "run-run376746.log",
+    "run_id": "run376746",
+    "db": "_run376746.db",
+    "frontend_port": "5790",
+    "tallies": [
+     "5 passed (15.1s)",
+     "5 passed (15.1s)"
+    ],
+    "red_nodes": [],
+    "spec": "e2e/qoder-ord0338-wizard-gap-anatomy.spec.ts"
+   },
+   {
+    "stdout_file": "ord0338_run4_restored.out",
+    "wrapper_log": "run-run376920.log",
+    "run_id": "run376920",
+    "db": "_run376920.db",
+    "frontend_port": "5796",
+    "tallies": [
+     "5 passed (14.9s)",
+     "5 passed (14.9s)"
+    ],
+    "red_nodes": [],
+    "spec": "e2e/qoder-ord0338-wizard-gap-anatomy.spec.ts"
+   },
+   {
+    "stdout_file": "ord0338_run5_arm.out",
+    "wrapper_log": "run-run376977.log",
+    "run_id": "run376977",
+    "db": "_run376977.db",
+    "frontend_port": "5798",
+    "tallies": [
+     "1 failed",
+     "4 passed (15.0s)",
+     "1 failed",
+     "4 passed (15.0s)"
+    ],
+    "red_nodes": [
+     "N1"
+    ],
+    "spec": "e2e/qoder-ord0338-wizard-gap-anatomy.spec.ts"
+   },
+   {
+    "stdout_file": "ord0338_run6_0261arm.out",
+    "wrapper_log": "run-run376993.log",
+    "run_id": "run376993",
+    "db": "_run376993.db",
+    "frontend_port": "5800",
+    "tallies": [
+     "1 failed",
+     "2 passed (12.8s)",
+     "1 failed",
+     "2 passed (12.8s)"
+    ],
+    "red_nodes": [
+     "ord0264"
+    ],
+    "spec": "e2e/qoder-wizard-advanced-is-tappable.spec.ts"
+   },
+   {
+    "stdout_file": "ord0338_run7_0261base.out",
+    "wrapper_log": "run-run377109.log",
+    "run_id": "run377109",
+    "db": "_run377109.db",
+    "frontend_port": "5802",
+    "tallies": [
+     "3 passed (13.0s)",
+     "3 passed (13.0s)"
+    ],
+    "red_nodes": [],
+    "spec": "e2e/qoder-wizard-advanced-is-tappable.spec.ts"
+   }
+  ]
+ },
+ "measurements": {
+  "at_rest": {
+   "generatedBy": "e345b9d6",
+   "file": "e2e/qoder-ord0338-wizard-gap-anatomy.spec.ts",
+   "arm": "N1-at-rest",
+   "head": "unknown",
+   "run": "run376920",
+   "tree_sha": "f45489c6d17f16973faad161618789237ac3814e",
+   "head_as_reported_by_runner": "unknown",
+   "tree": "git archive of the tip; key blobs re-hashed against it before the run",
+   "question": "步骤条与目的地之间那一整块空白是插槽还是留白",
+   "viewport": {
+    "width": 390,
+    "height": 844
+   },
+   "stepsRect": {
+    "top": 257,
+    "bottom": 491,
+    "height": 234
+   },
+   "stepItemsRect": [
+    {
+     "text": "1目的地与时间",
+     "top": 257,
+     "bottom": 279,
+     "height": 22
+    },
+    {
+     "text": "2人数与偏好",
+     "top": 257,
+     "bottom": 279,
+     "height": 22
+    },
+    {
+     "text": "3确认创建",
+     "top": 257,
+     "bottom": 279,
+     "height": 22
+    }
+   ],
+   "cardRect": {
+    "top": 507,
+    "bottom": 1077,
+    "height": 570
+   },
+   "cityLabel": "目的地",
+   "cityLabelRect": {
+    "top": 508,
+    "bottom": 524,
+    "height": 16
+   },
+   "band": {
+    "top": 279,
+    "bottom": 508,
+    "height": 229
+   },
+   "bandElements": [],
+   "bandWaitingAffordances": [],
+   "computed": {
+    "stepsPaddingBottom": "212px",
+    "stepsMarginBottom": "16px",
+    "stepsHeight": "22px",
+    "simClearance": "calc(124px + 0px + 12px)"
+   },
+   "cssRulesTouchingTrialSteps": [
+    {
+     "selector": ".trial-steps",
+     "media": null,
+     "paddingBottom": "0px",
+     "margin": "12px 0px 16px"
+    },
+    {
+     "selector": ".trial-steps li",
+     "media": null,
+     "paddingBottom": null,
+     "margin": null
+    },
+    {
+     "selector": ".trial-steps li span:last-child",
+     "media": null,
+     "paddingBottom": null,
+     "margin": null
+    },
+    {
+     "selector": ".trial-steps li.active, .trial-steps li.done",
+     "media": null,
+     "paddingBottom": null,
+     "margin": null
+    },
+    {
+     "selector": ".trial-steps li.active .trial-step-dot",
+     "media": null,
+     "paddingBottom": null,
+     "margin": null
+    },
+    {
+     "selector": ".trial-steps li.done .trial-step-dot",
+     "media": null,
+     "paddingBottom": null,
+     "margin": null
+    },
+    {
+     "selector": ".cn-onboarding .trial-steps",
+     "media": null,
+     "paddingBottom": "calc(76px + env(safe-area-inset-bottom, 0px))",
+     "margin": null
+    },
+    {
+     "selector": ".cn-onboarding .trial-steps",
+     "media": "(max-width: 680px)",
+     "paddingBottom": "calc(76px + var(--cn-sim-float-clearance, 132px) + env(safe-area-inset-bottom, 0px))",
+     "margin": null
+    },
+    {
+     "selector": ".trial-steps",
+     "media": "(max-width: 680px)",
+     "paddingBottom": null,
+     "margin": null
+    },
+    {
+     "selector": ".trial-steps li",
+     "media": "(max-width: 680px)",
+     "paddingBottom": null,
+     "margin": null
+    },
+    {
+     "selector": ".trial-steps li:not(.active) span:last-child",
+     "media": "(max-width: 680px)",
+     "paddingBottom": "0px",
+     "margin": "-1px"
+    }
+   ]
+  },
+  "single_variable": {
+   "generatedBy": "e345b9d6",
+   "file": "e2e/qoder-ord0338-wizard-gap-anatomy.spec.ts",
+   "arm": "N2-single-variable",
+   "head": "unknown",
+   "run": "run376920",
+   "tree_sha": "f45489c6d17f16973faad161618789237ac3814e",
+   "head_as_reported_by_runner": "unknown",
+   "tree": "git archive of the tip; key blobs re-hashed against it before the run",
+   "question": "步骤条与目的地之间那一整块空白是插槽还是留白",
+   "base": {
+    "viewport": {
+     "width": 390,
+     "height": 844
+    },
+    "stepsRect": {
+     "top": 257,
+     "bottom": 491,
+     "height": 234
+    },
+    "stepItemsRect": [
+     {
+      "text": "1目的地与时间",
+      "top": 257,
+      "bottom": 279,
+      "height": 22
+     },
+     {
+      "text": "2人数与偏好",
+      "top": 257,
+      "bottom": 279,
+      "height": 22
+     },
+     {
+      "text": "3确认创建",
+      "top": 257,
+      "bottom": 279,
+      "height": 22
+     }
+    ],
+    "cardRect": {
+     "top": 507,
+     "bottom": 1077,
+     "height": 570
+    },
+    "cityLabel": "目的地",
+    "cityLabelRect": {
+     "top": 508,
+     "bottom": 524,
+     "height": 16
+    },
+    "band": {
+     "top": 279,
+     "bottom": 508,
+     "height": 229
+    },
+    "bandElements": [],
+    "bandWaitingAffordances": [],
+    "computed": {
+     "stepsPaddingBottom": "212px",
+     "stepsMarginBottom": "16px",
+     "stepsHeight": "22px",
+     "simClearance": "calc(124px + 0px + 12px)"
+    },
+    "cssRulesTouchingTrialSteps": [
+     {
+      "selector": ".trial-steps",
+      "media": null,
+      "paddingBottom": "0px",
+      "margin": "12px 0px 16px"
+     },
+     {
+      "selector": ".trial-steps li",
+      "media": null,
+      "paddingBottom": null,
+      "margin": null
+     },
+     {
+      "selector": ".trial-steps li span:last-child",
+      "media": null,
+      "paddingBottom": null,
+      "margin": null
+     },
+     {
+      "selector": ".trial-steps li.active, .trial-steps li.done",
+      "media": null,
+      "paddingBottom": null,
+      "margin": null
+     },
+     {
+      "selector": ".trial-steps li.active .trial-step-dot",
+      "media": null,
+      "paddingBottom": null,
+      "margin": null
+     },
+     {
+      "selector": ".trial-steps li.done .trial-step-dot",
+      "media": null,
+      "paddingBottom": null,
+      "margin": null
+     },
+     {
+      "selector": ".cn-onboarding .trial-steps",
+      "media": null,
+      "paddingBottom": "calc(76px + env(safe-area-inset-bottom, 0px))",
+      "margin": null
+     },
+     {
+      "selector": ".cn-onboarding .trial-steps",
+      "media": "(max-width: 680px)",
+      "paddingBottom": "calc(76px + var(--cn-sim-float-clearance, 132px) + env(safe-area-inset-bottom, 0px))",
+      "margin": null
+     },
+     {
+      "selector": ".trial-steps",
+      "media": "(max-width: 680px)",
+      "paddingBottom": null,
+      "margin": null
+     },
+     {
+      "selector": ".trial-steps li",
+      "media": "(max-width: 680px)",
+      "paddingBottom": null,
+      "margin": null
+     },
+     {
+      "selector": ".trial-steps li:not(.active) span:last-child",
+      "media": "(max-width: 680px)",
+      "paddingBottom": "0px",
+      "margin": "-1px"
+     }
+    ]
+   },
+   "padding_neutered": {
+    "viewport": {
+     "width": 390,
+     "height": 844
+    },
+    "stepsRect": {
+     "top": 240,
+     "bottom": 262,
+     "height": 22
+    },
+    "stepItemsRect": [
+     {
+      "text": "1目的地与时间",
+      "top": 240,
+      "bottom": 262,
+      "height": 22
+     },
+     {
+      "text": "2人数与偏好",
+      "top": 240,
+      "bottom": 262,
+      "height": 22
+     },
+     {
+      "text": "3确认创建",
+      "top": 240,
+      "bottom": 262,
+      "height": 22
+     }
+    ],
+    "cardRect": {
+     "top": 278,
+     "bottom": 848,
+     "height": 570
+    },
+    "cityLabel": "目的地",
+    "cityLabelRect": {
+     "top": 279,
+     "bottom": 295,
+     "height": 16
+    },
+    "band": {
+     "top": 262,
+     "bottom": 279,
+     "height": 17
+    },
+    "bandElements": [],
+    "bandWaitingAffordances": [],
+    "computed": {
+     "stepsPaddingBottom": "0px",
+     "stepsMarginBottom": "16px",
+     "stepsHeight": "22px",
+     "simClearance": "calc(124px + 0px + 12px)"
+    },
+    "cssRulesTouchingTrialSteps": [
+     {
+      "selector": ".trial-steps",
+      "media": null,
+      "paddingBottom": "0px",
+      "margin": "12px 0px 16px"
+     },
+     {
+      "selector": ".trial-steps li",
+      "media": null,
+      "paddingBottom": null,
+      "margin": null
+     },
+     {
+      "selector": ".trial-steps li span:last-child",
+      "media": null,
+      "paddingBottom": null,
+      "margin": null
+     },
+     {
+      "selector": ".trial-steps li.active, .trial-steps li.done",
+      "media": null,
+      "paddingBottom": null,
+      "margin": null
+     },
+     {
+      "selector": ".trial-steps li.active .trial-step-dot",
+      "media": null,
+      "paddingBottom": null,
+      "margin": null
+     },
+     {
+      "selector": ".trial-steps li.done .trial-step-dot",
+      "media": null,
+      "paddingBottom": null,
+      "margin": null
+     },
+     {
+      "selector": ".cn-onboarding .trial-steps",
+      "media": null,
+      "paddingBottom": "calc(76px + env(safe-area-inset-bottom, 0px))",
+      "margin": null
+     },
+     {
+      "selector": ".cn-onboarding .trial-steps",
+      "media": "(max-width: 680px)",
+      "paddingBottom": "calc(76px + var(--cn-sim-float-clearance, 132px) + env(safe-area-inset-bottom, 0px))",
+      "margin": null
+     },
+     {
+      "selector": ".trial-steps",
+      "media": "(max-width: 680px)",
+      "paddingBottom": null,
+      "margin": null
+     },
+     {
+      "selector": ".trial-steps li",
+      "media": "(max-width: 680px)",
+      "paddingBottom": null,
+      "margin": null
+     },
+     {
+      "selector": ".trial-steps li:not(.active) span:last-child",
+      "media": "(max-width: 680px)",
+      "paddingBottom": "0px",
+      "margin": "-1px"
+     },
+     {
+      "selector": ".cn-onboarding .trial-steps",
+      "media": null,
+      "paddingBottom": "0px",
+      "margin": null
+     }
+    ]
+   },
+   "declared_padding_px": 212,
+   "band_shrank_by": 212,
+   "product_bytes_written": 0,
+   "note": "页面内 addStyleTag，落盘文件一字未动；这一枚只回答『那段空白是不是这条声明撑的』"
+  },
+  "network_idle": {
+   "generatedBy": "e345b9d6",
+   "file": "e2e/qoder-ord0338-wizard-gap-anatomy.spec.ts",
+   "arm": "N3-not-data-gated",
+   "head": "unknown",
+   "run": "run376920",
+   "tree_sha": "f45489c6d17f16973faad161618789237ac3814e",
+   "head_as_reported_by_runner": "unknown",
+   "tree": "git archive of the tip; key blobs re-hashed against it before the run",
+   "question": "步骤条与目的地之间那一整块空白是插槽还是留白",
+   "before_network_idle": {
+    "viewport": {
+     "width": 390,
+     "height": 844
+    },
+    "stepsRect": {
+     "top": 254,
+     "bottom": 488,
+     "height": 234
+    },
+    "stepItemsRect": [
+     {
+      "text": "1目的地与时间",
+      "top": 254,
+      "bottom": 276,
+      "height": 22
+     },
+     {
+      "text": "2人数与偏好",
+      "top": 254,
+      "bottom": 276,
+      "height": 22
+     },
+     {
+      "text": "3确认创建",
+      "top": 254,
+      "bottom": 276,
+      "height": 22
+     }
+    ],
+    "cardRect": {
+     "top": 505,
+     "bottom": 1075,
+     "height": 570
+    },
+    "cityLabel": "目的地",
+    "cityLabelRect": {
+     "top": 506,
+     "bottom": 522,
+     "height": 16
+    },
+    "band": {
+     "top": 276,
+     "bottom": 506,
+     "height": 230
+    },
+    "bandElements": [],
+    "bandWaitingAffordances": [],
+    "computed": {
+     "stepsPaddingBottom": "212px",
+     "stepsMarginBottom": "16px",
+     "stepsHeight": "22px",
+     "simClearance": "calc(124px + 0px + 12px)"
+    },
+    "cssRulesTouchingTrialSteps": [
+     {
+      "selector": ".trial-steps",
+      "media": null,
+      "paddingBottom": "0px",
+      "margin": "12px 0px 16px"
+     },
+     {
+      "selector": ".trial-steps li",
+      "media": null,
+      "paddingBottom": null,
+      "margin": null
+     },
+     {
+      "selector": ".trial-steps li span:last-child",
+      "media": null,
+      "paddingBottom": null,
+      "margin": null
+     },
+     {
+      "selector": ".trial-steps li.active, .trial-steps li.done",
+      "media": null,
+      "paddingBottom": null,
+      "margin": null
+     },
+     {
+      "selector": ".trial-steps li.active .trial-step-dot",
+      "media": null,
+      "paddingBottom": null,
+      "margin": null
+     },
+     {
+      "selector": ".trial-steps li.done .trial-step-dot",
+      "media": null,
+      "paddingBottom": null,
+      "margin": null
+     },
+     {
+      "selector": ".cn-onboarding .trial-steps",
+      "media": null,
+      "paddingBottom": "calc(76px + env(safe-area-inset-bottom, 0px))",
+      "margin": null
+     },
+     {
+      "selector": ".cn-onboarding .trial-steps",
+      "media": "(max-width: 680px)",
+      "paddingBottom": "calc(76px + var(--cn-sim-float-clearance, 132px) + env(safe-area-inset-bottom, 0px))",
+      "margin": null
+     },
+     {
+      "selector": ".trial-steps",
+      "media": "(max-width: 680px)",
+      "paddingBottom": null,
+      "margin": null
+     },
+     {
+      "selector": ".trial-steps li",
+      "media": "(max-width: 680px)",
+      "paddingBottom": null,
+      "margin": null
+     },
+     {
+      "selector": ".trial-steps li:not(.active) span:last-child",
+      "media": "(max-width: 680px)",
+      "paddingBottom": "0px",
+      "margin": "-1px"
+     }
+    ]
+   },
+   "after_network_idle": {
+    "viewport": {
+     "width": 390,
+     "height": 844
+    },
+    "stepsRect": {
+     "top": 240,
+     "bottom": 474,
+     "height": 234
+    },
+    "stepItemsRect": [
+     {
+      "text": "1目的地与时间",
+      "top": 240,
+      "bottom": 262,
+      "height": 22
+     },
+     {
+      "text": "2人数与偏好",
+      "top": 240,
+      "bottom": 262,
+      "height": 22
+     },
+     {
+      "text": "3确认创建",
+      "top": 240,
+      "bottom": 262,
+      "height": 22
+     }
+    ],
+    "cardRect": {
+     "top": 490,
+     "bottom": 1060,
+     "height": 570
+    },
+    "cityLabel": "目的地",
+    "cityLabelRect": {
+     "top": 491,
+     "bottom": 507,
+     "height": 16
+    },
+    "band": {
+     "top": 262,
+     "bottom": 491,
+     "height": 229
+    },
+    "bandElements": [],
+    "bandWaitingAffordances": [],
+    "computed": {
+     "stepsPaddingBottom": "212px",
+     "stepsMarginBottom": "16px",
+     "stepsHeight": "22px",
+     "simClearance": "calc(124px + 0px + 12px)"
+    },
+    "cssRulesTouchingTrialSteps": [
+     {
+      "selector": ".trial-steps",
+      "media": null,
+      "paddingBottom": "0px",
+      "margin": "12px 0px 16px"
+     },
+     {
+      "selector": ".trial-steps li",
+      "media": null,
+      "paddingBottom": null,
+      "margin": null
+     },
+     {
+      "selector": ".trial-steps li span:last-child",
+      "media": null,
+      "paddingBottom": null,
+      "margin": null
+     },
+     {
+      "selector": ".trial-steps li.active, .trial-steps li.done",
+      "media": null,
+      "paddingBottom": null,
+      "margin": null
+     },
+     {
+      "selector": ".trial-steps li.active .trial-step-dot",
+      "media": null,
+      "paddingBottom": null,
+      "margin": null
+     },
+     {
+      "selector": ".trial-steps li.done .trial-step-dot",
+      "media": null,
+      "paddingBottom": null,
+      "margin": null
+     },
+     {
+      "selector": ".cn-onboarding .trial-steps",
+      "media": null,
+      "paddingBottom": "calc(76px + env(safe-area-inset-bottom, 0px))",
+      "margin": null
+     },
+     {
+      "selector": ".cn-onboarding .trial-steps",
+      "media": "(max-width: 680px)",
+      "paddingBottom": "calc(76px + var(--cn-sim-float-clearance, 132px) + env(safe-area-inset-bottom, 0px))",
+      "margin": null
+     },
+     {
+      "selector": ".trial-steps",
+      "media": "(max-width: 680px)",
+      "paddingBottom": null,
+      "margin": null
+     },
+     {
+      "selector": ".trial-steps li",
+      "media": "(max-width: 680px)",
+      "paddingBottom": null,
+      "margin": null
+     },
+     {
+      "selector": ".trial-steps li:not(.active) span:last-child",
+      "media": "(max-width: 680px)",
+      "paddingBottom": "0px",
+      "margin": "-1px"
+     }
+    ]
+   },
+   "band_height_equal": false,
+   "band_height_delta": -1,
+   "waiting_affordances_in_band": []
+  },
+  "eye_order": {
+   "generatedBy": "e345b9d6",
+   "file": "e2e/qoder-ord0338-wizard-gap-anatomy.spec.ts",
+   "arm": "N4-what-the-eye-sees",
+   "head": "unknown",
+   "run": "run376920",
+   "tree_sha": "f45489c6d17f16973faad161618789237ac3814e",
+   "head_as_reported_by_runner": "unknown",
+   "tree": "git archive of the tip; key blobs re-hashed against it before the run",
+   "question": "步骤条与目的地之间那一整块空白是插槽还是留白",
+   "rendered_above": [
+    {
+     "text": "1目的地与时间",
+     "top": 257,
+     "bottom": 279,
+     "height": 22
+    },
+    {
+     "text": "2人数与偏好",
+     "top": 257,
+     "bottom": 279,
+     "height": 22
+    },
+    {
+     "text": "3确认创建",
+     "top": 257,
+     "bottom": 279,
+     "height": 22
+    }
+   ],
+   "band": {
+    "top": 279,
+    "bottom": 508,
+    "height": 229
+   },
+   "rendered_below": "目的地",
+   "rendered_below_rect": {
+    "top": 508,
+    "bottom": 524,
+    "height": 16
+   },
+   "rule_provenance": [
+    {
+     "selector": ".trial-steps",
+     "media": null,
+     "paddingBottom": "0px",
+     "margin": "12px 0px 16px"
+    },
+    {
+     "selector": ".trial-steps li",
+     "media": null,
+     "paddingBottom": null,
+     "margin": null
+    },
+    {
+     "selector": ".trial-steps li span:last-child",
+     "media": null,
+     "paddingBottom": null,
+     "margin": null
+    },
+    {
+     "selector": ".trial-steps li.active, .trial-steps li.done",
+     "media": null,
+     "paddingBottom": null,
+     "margin": null
+    },
+    {
+     "selector": ".trial-steps li.active .trial-step-dot",
+     "media": null,
+     "paddingBottom": null,
+     "margin": null
+    },
+    {
+     "selector": ".trial-steps li.done .trial-step-dot",
+     "media": null,
+     "paddingBottom": null,
+     "margin": null
+    },
+    {
+     "selector": ".cn-onboarding .trial-steps",
+     "media": null,
+     "paddingBottom": "calc(76px + env(safe-area-inset-bottom, 0px))",
+     "margin": null
+    },
+    {
+     "selector": ".cn-onboarding .trial-steps",
+     "media": "(max-width: 680px)",
+     "paddingBottom": "calc(76px + var(--cn-sim-float-clearance, 132px) + env(safe-area-inset-bottom, 0px))",
+     "margin": null
+    },
+    {
+     "selector": ".trial-steps",
+     "media": "(max-width: 680px)",
+     "paddingBottom": null,
+     "margin": null
+    },
+    {
+     "selector": ".trial-steps li",
+     "media": "(max-width: 680px)",
+     "paddingBottom": null,
+     "margin": null
+    },
+    {
+     "selector": ".trial-steps li:not(.active) span:last-child",
+     "media": "(max-width: 680px)",
+     "paddingBottom": "0px",
+     "margin": "-1px"
+    }
+   ],
+   "computed": {
+    "stepsPaddingBottom": "212px",
+    "stepsMarginBottom": "16px",
+    "stepsHeight": "22px",
+    "simClearance": "calc(124px + 0px + 12px)"
+   },
+   "band_element_count": 0,
+   "screenshot": "ord0338-wizard-gap-run376920.png"
+  },
+  "arm_neutered_at_rest": {
+   "generatedBy": "e345b9d6",
+   "file": "e2e/qoder-ord0338-wizard-gap-anatomy.spec.ts",
+   "arm": "N1-at-rest",
+   "head": "unknown",
+   "run": "run376977",
+   "tree_sha": "f45489c6d17f16973faad161618789237ac3814e",
+   "head_as_reported_by_runner": "unknown",
+   "tree": "git archive of the tip; key blobs re-hashed against it before the run",
+   "question": "步骤条与目的地之间那一整块空白是插槽还是留白",
+   "viewport": {
+    "width": 390,
+    "height": 844
+   },
+   "stepsRect": {
+    "top": 257,
+    "bottom": 279,
+    "height": 22
+   },
+   "stepItemsRect": [
+    {
+     "text": "1目的地与时间",
+     "top": 257,
+     "bottom": 279,
+     "height": 22
+    },
+    {
+     "text": "2人数与偏好",
+     "top": 257,
+     "bottom": 279,
+     "height": 22
+    },
+    {
+     "text": "3确认创建",
+     "top": 257,
+     "bottom": 279,
+     "height": 22
+    }
+   ],
+   "cardRect": {
+    "top": 295,
+    "bottom": 865,
+    "height": 570
+   },
+   "cityLabel": "目的地",
+   "cityLabelRect": {
+    "top": 296,
+    "bottom": 312,
+    "height": 16
+   },
+   "band": {
+    "top": 279,
+    "bottom": 296,
+    "height": 17
+   },
+   "bandElements": [],
+   "bandWaitingAffordances": [],
+   "computed": {
+    "stepsPaddingBottom": "0px",
+    "stepsMarginBottom": "16px",
+    "stepsHeight": "22px",
+    "simClearance": "calc(124px + 0px + 12px)"
+   },
+   "cssRulesTouchingTrialSteps": [
+    {
+     "selector": ".trial-steps",
+     "media": null,
+     "paddingBottom": "0px",
+     "margin": "12px 0px 16px"
+    },
+    {
+     "selector": ".trial-steps li",
+     "media": null,
+     "paddingBottom": null,
+     "margin": null
+    },
+    {
+     "selector": ".trial-steps li span:last-child",
+     "media": null,
+     "paddingBottom": null,
+     "margin": null
+    },
+    {
+     "selector": ".trial-steps li.active, .trial-steps li.done",
+     "media": null,
+     "paddingBottom": null,
+     "margin": null
+    },
+    {
+     "selector": ".trial-steps li.active .trial-step-dot",
+     "media": null,
+     "paddingBottom": null,
+     "margin": null
+    },
+    {
+     "selector": ".trial-steps li.done .trial-step-dot",
+     "media": null,
+     "paddingBottom": null,
+     "margin": null
+    },
+    {
+     "selector": ".cn-onboarding .trial-steps",
+     "media": null,
+     "paddingBottom": "0px",
+     "margin": null
+    },
+    {
+     "selector": ".cn-onboarding .trial-steps",
+     "media": "(max-width: 680px)",
+     "paddingBottom": "0px",
+     "margin": null
+    },
+    {
+     "selector": ".trial-steps",
+     "media": "(max-width: 680px)",
+     "paddingBottom": null,
+     "margin": null
+    },
+    {
+     "selector": ".trial-steps li",
+     "media": "(max-width: 680px)",
+     "paddingBottom": null,
+     "margin": null
+    },
+    {
+     "selector": ".trial-steps li:not(.active) span:last-child",
+     "media": "(max-width: 680px)",
+     "paddingBottom": "0px",
+     "margin": "-1px"
+    }
+   ]
+  },
+  "arm_neutered_eye_order": {
+   "generatedBy": "e345b9d6",
+   "file": "e2e/qoder-ord0338-wizard-gap-anatomy.spec.ts",
+   "arm": "N4-what-the-eye-sees",
+   "head": "unknown",
+   "run": "run376977",
+   "tree_sha": "f45489c6d17f16973faad161618789237ac3814e",
+   "head_as_reported_by_runner": "unknown",
+   "tree": "git archive of the tip; key blobs re-hashed against it before the run",
+   "question": "步骤条与目的地之间那一整块空白是插槽还是留白",
+   "rendered_above": [
+    {
+     "text": "1目的地与时间",
+     "top": 257,
+     "bottom": 279,
+     "height": 22
+    },
+    {
+     "text": "2人数与偏好",
+     "top": 257,
+     "bottom": 279,
+     "height": 22
+    },
+    {
+     "text": "3确认创建",
+     "top": 257,
+     "bottom": 279,
+     "height": 22
+    }
+   ],
+   "band": {
+    "top": 279,
+    "bottom": 296,
+    "height": 17
+   },
+   "rendered_below": "目的地",
+   "rendered_below_rect": {
+    "top": 296,
+    "bottom": 312,
+    "height": 16
+   },
+   "rule_provenance": [
+    {
+     "selector": ".trial-steps",
+     "media": null,
+     "paddingBottom": "0px",
+     "margin": "12px 0px 16px"
+    },
+    {
+     "selector": ".trial-steps li",
+     "media": null,
+     "paddingBottom": null,
+     "margin": null
+    },
+    {
+     "selector": ".trial-steps li span:last-child",
+     "media": null,
+     "paddingBottom": null,
+     "margin": null
+    },
+    {
+     "selector": ".trial-steps li.active, .trial-steps li.done",
+     "media": null,
+     "paddingBottom": null,
+     "margin": null
+    },
+    {
+     "selector": ".trial-steps li.active .trial-step-dot",
+     "media": null,
+     "paddingBottom": null,
+     "margin": null
+    },
+    {
+     "selector": ".trial-steps li.done .trial-step-dot",
+     "media": null,
+     "paddingBottom": null,
+     "margin": null
+    },
+    {
+     "selector": ".cn-onboarding .trial-steps",
+     "media": null,
+     "paddingBottom": "0px",
+     "margin": null
+    },
+    {
+     "selector": ".cn-onboarding .trial-steps",
+     "media": "(max-width: 680px)",
+     "paddingBottom": "0px",
+     "margin": null
+    },
+    {
+     "selector": ".trial-steps",
+     "media": "(max-width: 680px)",
+     "paddingBottom": null,
+     "margin": null
+    },
+    {
+     "selector": ".trial-steps li",
+     "media": "(max-width: 680px)",
+     "paddingBottom": null,
+     "margin": null
+    },
+    {
+     "selector": ".trial-steps li:not(.active) span:last-child",
+     "media": "(max-width: 680px)",
+     "paddingBottom": "0px",
+     "margin": "-1px"
+    }
+   ],
+   "computed": {
+    "stepsPaddingBottom": "0px",
+    "stepsMarginBottom": "16px",
+    "stepsHeight": "22px",
+    "simClearance": "calc(124px + 0px + 12px)"
+   },
+   "band_element_count": 0,
+   "screenshot": "ord0338-wizard-gap-run376977.png"
+  }
+ },
+ "owning_rule": {
+  "selector": ".cn-onboarding .trial-steps",
+  "media": "(max-width: 680px)",
+  "paddingBottom": "calc(76px + var(--cn-sim-float-clearance, 132px) + env(safe-area-inset-bottom, 0px))",
+  "margin": null
+ },
+ "arithmetic": {
+  "padding_bottom_effective_px": 212.0,
+  "declared_base_plus_clearance_px": 212.0,
+  "matches_effective": true,
+  "margin_bottom_px": 16.0,
+  "band_height_px": 229,
+  "band_minus_padding_minus_margin": 1.0,
+  "note": "CSS 里 fallback 写的是 132px，`:root` 实际定义是 calc(124px + 0px + 12px) = 136.0px，所以实算是 76 + 136.0 = 212.0px"
+ },
+ "verdict": {
+  "question": "390×844 下步骤条与「目的地」之间那一整块空白：等数据的插槽，还是布局塌了？",
+  "answer": "两者都不是：是一段真实的留白，由 `.cn-onboarding .trial-steps` 在 ≤680px 下的 padding-bottom 撑出来；那段里没有任何内容节点，也没有任何「我在等」的节点。",
+  "band_members_at_rest": 0,
+  "band_waiting_affordances": 0,
+  "band_height_before_vs_after_network_idle": [
+   230,
+   229
+  ],
+  "single_variable": {
+   "at_rest_band_px": 229,
+   "with_that_padding_zeroed_band_px": 17,
+   "declared_padding_px": 212.0,
+   "delta_px": 212,
+   "delta_equals_padding": true
+  },
+  "load_bearing": {
+   "question": "那这段留白能不能直接删？",
+   "answer": "不能只删。把同一条 padding 置 0 之后，尖上现成的门 `frontend/e2e/qoder-wizard-advanced-is-tappable.spec.ts` 的 `ord0264-opener-is-scroll-reachable-and-tappable` 立刻变红：「the opener's centre hit <BUTTON> 下一步 instead of the button -- chrome covering it at rest」。也就是这 212px 正在替 `.trial-card` 的 84px 底部留白挡住 sticky CTA。",
+   "gate_on_tip_row": {
+    "stdout_file": "ord0338_run7_0261base.out",
+    "wrapper_log": "run-run377109.log",
+    "run_id": "run377109",
+    "db": "_run377109.db",
+    "frontend_port": "5802",
+    "tallies": [
+     "3 passed (13.0s)",
+     "3 passed (13.0s)"
+    ],
+    "red_nodes": [],
+    "spec": "e2e/qoder-wizard-advanced-is-tappable.spec.ts"
+   },
+   "gate_with_padding_zeroed_row": {
+    "stdout_file": "ord0338_run6_0261arm.out",
+    "wrapper_log": "run-run376993.log",
+    "run_id": "run376993",
+    "db": "_run376993.db",
+    "frontend_port": "5800",
+    "tallies": [
+     "1 failed",
+     "2 passed (12.8s)",
+     "1 failed",
+     "2 passed (12.8s)"
+    ],
+    "red_nodes": [
+     "ord0264"
+    ],
+    "spec": "e2e/qoder-wizard-advanced-is-tappable.spec.ts"
+   },
+   "red_node_names_under_arm": [
+    "ord0264"
+   ],
+   "same_run_id_pair": {
+    "green": "run377109",
+    "red": "run376993"
+   },
+   "red_is_attributable_to_the_padding_only": true,
+   "note_attribution": "两行来自同一棵导出树的两次只差那一条声明的运行；红集合按 run_id 署到节点"
+  },
+  "restored_run_row": {
+   "stdout_file": "ord0338_run4_restored.out",
+   "wrapper_log": "run-run376920.log",
+   "run_id": "run376920",
+   "db": "_run376920.db",
+   "frontend_port": "5796",
+   "tallies": [
+    "5 passed (14.9s)",
+    "5 passed (14.9s)"
+   ],
+   "red_nodes": [],
+   "spec": "e2e/qoder-ord0338-wizard-gap-anatomy.spec.ts"
+  },
+  "where_the_reserve_should_live": "`.trial-card { padding-bottom: 84px }` 才是该拿这份留白的元素（它就贴在 sticky CTA 上面）；现在这份钱付在了页面顶部的步骤条上，于是旅客在步骤条与第一个字段之间看到 212px 空段。"
+ },
+ "restore_proof": {
+  "file": "frontend/src/styles.css",
+  "blob_after_restore": "b942bf640365c013fa02897f19e8a34b5c9d9c46",
+  "tip_blob": "b942bf640365c013fa02897f19e8a34b5c9d9c46",
+  "byte_identical": true,
+  "arm_markers_left_in_file": 0,
+  "behavior_after_restore_row": {
+   "stdout_file": "ord0338_run4_restored.out",
+   "wrapper_log": "run-run376920.log",
+   "run_id": "run376920",
+   "db": "_run376920.db",
+   "frontend_port": "5796",
+   "tallies": [
+    "5 passed (14.9s)",
+    "5 passed (14.9s)"
+   ],
+   "red_nodes": [],
+   "spec": "e2e/qoder-ord0338-wizard-gap-anatomy.spec.ts"
+  }
+ },
+ "discipline": {
+  "product_bytes_written": 0,
+  "authoritative_line_written": 0,
+  "refs_pushed": 0,
+  "vite_build_runs": 0,
+  "demo_reset": 0,
+  "phone_chain_touched": 0,
+  "node_modules_junction": "导出的 frontend/node_modules 是指向 _qoder_d_ord0325_20260926 的 junction，0 安装、0 改",
+  "credentials_printed": 0,
+  "arm_edit_scope": "两枚既有门的实验只在本地导出树里改 styles.css，跑完按字节还原并回验 blob",
+  "assertions_changed_for_green": 0,
+  "skips": 0
+ },
+ "claimed_result": "定性完成：留白，归属到一条具名 CSS 声明，且证成它当前是 load-bearing；修复方向已给但未写码",
+ "derived_result": null,
+ "grade_owner": "red team (B-1: the delivering lane does not self-declare KILLED/CLOSED)"
+}
