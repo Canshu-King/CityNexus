@@ -1,0 +1,34 @@
+{
+ "order": "ORD-0331",
+ "lane": "S4-ast-taint",
+ "subject": "addendum to receipt_r5.json (blob 0c951247879e231a2c3c1c47156bff9e9bc3aa32)",
+ "why": "the published receipt records boundaries.authoritative_branch_untouched as a commit read from a LOCAL remote-tracking ref, which lagged the network in that run. Nothing was pushed to that branch either way, but a number that reads as a tip has to be the tip, so it is corrected in a new file: a published coordinate is never rewritten.",
+ "authoritative_branch_tip_read_from_the_network": "0f8b925facabc9df57bab600b86d999dd515bf94",
+ "generation_scanned": "0f8b925facabc9df57bab600b86d999dd515bf94",
+ "generation_equals_tip": true,
+ "value_in_the_published_receipt": "300fd61e52ee10dcddc86d0e0bff43fb76d64a15 (a stale local tracking ref)",
+ "commander_control_tip_now": "399ce66dfd9375869bfe6b209ada7f09f351d15c",
+ "my_two_commits_are_ancestors_of_commander_control": {
+  "ruler_commit_64a572adeb594c682ac5b68f36cf73324214e7d1": true,
+  "receipt_commit_0bf24bb611c80e80e19e2649f5cb6e250cd8ed6b": true
+ },
+ "shelf_re_read": {
+  "ruler": {
+   "path": "evidence/ord0331-ast-crossfile-S4/ui_exposure_taint_ast_r2.cjs",
+   "blob": "ff98091cf3accb0d836ae25ba49820170b92d932",
+   "bytes": 85052,
+   "sha1_of_bytes": "3bafd65d239db51fd21f5b315115e3110ef89081"
+  },
+  "receipt": {
+   "path": "evidence/ord0331-ast-crossfile-S4/receipt_r5.json",
+   "blob": "0c951247879e231a2c3c1c47156bff9e9bc3aa32",
+   "bytes": 16470,
+   "sha1_of_bytes": "d0c8a2a4634f0f5a726362fe6bee54b4f69608e0"
+  }
+ },
+ "shelf_ruler_bytes_equal_local_measured_bytes": true,
+ "product_status_porcelain_frontend_lines": 0,
+ "claim_kind": "recomputation",
+ "derived_result": null,
+ "claimed_result": "network tip 0f8b925facab equals the scanned generation 0f8b925facab = True; shelf ruler blob ff98091cf3ac sha1(over bytes) 3bafd65d239d equal to what this lane measured = True; both my commits are ancestors of commander/control now at 399ce66dfd93; product frontend dirty lines = 0"
+}
