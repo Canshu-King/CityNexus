@@ -1,0 +1,52 @@
+{
+ "version": "Q43_r4",
+ "input": "review/ledger_block_e345b9d6_0308.md",
+ "bytes": 6001,
+ "lines": 22,
+ "claims_checked": 19,
+ "exempt_classes": {
+  "YEAR": 1,
+  "PORT": 4
+ },
+ "verdict": "Q43_GATE_RED",
+ "exit_code": 3,
+ "findings": [
+  {
+   "kind": "F3_bare_numeric_claim",
+   "matched": "15 件",
+   "code": "NUMBER_WITHOUT_COORDINATE",
+   "line": 19,
+   "why_classified_as_quantity": "no class matched",
+   "seen_coordinate": null
+  },
+  {
+   "kind": "F3_bare_numeric_claim",
+   "matched": "4 件",
+   "code": "NUMBER_WITHOUT_COORDINATE",
+   "line": 19,
+   "why_classified_as_quantity": "no class matched",
+   "seen_coordinate": null
+  },
+  {
+   "kind": "F3_bare_numeric_claim",
+   "matched": "18 件",
+   "code": "NUMBER_WITHOUT_COORDINATE",
+   "line": 19,
+   "why_classified_as_quantity": "no class matched",
+   "seen_coordinate": null
+  },
+  {
+   "kind": "F3_bare_numeric_claim",
+   "matched": "4 件",
+   "code": "NUMBER_WITHOUT_COORDINATE",
+   "line": 19,
+   "why_classified_as_quantity": "no class matched",
+   "seen_coordinate": null
+  }
+ ],
+ "finding_kinds": [
+  "NUMBER_WITHOUT_COORDINATE"
+ ],
+ "finding_total": 4,
+ "scope": "Numeric/constant/relay claims in the text. A green verdict here means every quantity carries a durable coordinate - it does not mean the measurements are correct, and it does not sign derived_result."
+}
