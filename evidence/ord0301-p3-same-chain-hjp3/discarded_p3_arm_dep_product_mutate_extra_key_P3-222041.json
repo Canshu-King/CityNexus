@@ -1,0 +1,143 @@
+{
+ "arm": "dep_product_mutate_extra_key",
+ "run_id": "P3-222041",
+ "intent_declared_before": "A3 the product's own JSON 4xx envelope on the same leg in the same chain (this hop adds one forbidden key so the server's validator renders its real body): the envelope class on the deployed generation",
+ "tip": "7856e03f6238da3000976eb6e690a448dfa39b9a",
+ "scenario": "product",
+ "proxy_mode": "mutate_extra_key",
+ "spec": null,
+ "lock_plan": null,
+ "rig": {
+  "backend_pid": 61748,
+  "proxy_pid": 26296,
+  "face_pid": 36144,
+  "face_port": 8653,
+  "all_up": true,
+  "identity_two_sided": true,
+  "journey_id": "baec3043-eb17-42cd-a4e3-4fc746c516e5",
+  "seed": {
+   "places_before": 0,
+   "demo_places_before": 0,
+   "seeded_by_this_call": true,
+   "demo_places_after": 8
+  },
+  "db": "D:\\moodle\\_hjp3_0301p3_0925\\p3_dep.s3db",
+  "access_log": "p3_backend_access_222041.log",
+  "rig_state_file": "p3_rig_state_dep_mutate_extra_key_222041.json"
+ },
+ "node_rc": 0,
+ "node_tail": [
+  [
+   "{\"scenario\":\"product\",\"status\":\"HTTP_400\",\"title\":\"暂时无法完成规划\",\"label\":\"\",\"reason\":\"\",\"details\":1,\"fetch_rejected\":false,\"page_saw\":400,\"pair_id\":\"hjp3p3-7dd5e357c81e41ff\",\"body_parsed\":false,\"parse_err\":\"SyntaxError\"}"
+  ]
+ ],
+ "wall_seconds": 5,
+ "pairing": [
+  {
+   "leg": "baec3043-eb17-42cd-a4e3-4fc746c516e5/agent/commands",
+   "pair_id": "hjp3p3-7dd5e357c81e41ff",
+   "one_request_one_id": true,
+   "server_side_from_the_same_hop": {
+    "recorded": true,
+    "reached_upstream": true,
+    "answered_by": "product",
+    "status": 400,
+    "content_type": "text/plain; charset=utf-8",
+    "bytes": 30,
+    "body_parses_as_json": false,
+    "top_level_keys": null,
+    "body_head": "Invalid HTTP request received.",
+    "elapsed_ms": 1,
+    "request_mutation": {
+     "added_key": "p3_forbidden_probe",
+     "keys_before": [
+      "command"
+     ],
+     "keys_after": [
+      "command",
+      "p3_forbidden_probe"
+     ],
+     "request_bytes_before": 59,
+     "request_bytes_after": 85,
+     "sha256_before": "06132450c24518927deb5866f1b0bb8120aadfdad0286a5a2ef3e01857695351",
+     "sha256_after": "b3b04eb87db1921ac600e78afbd53a2236695834e279dec8329f3f08ec8b9e6b",
+     "who_sent_what": "the page sent the untouched body; this hop added the key, and the product answered with its own envelope"
+    },
+    "spec_name": null
+   },
+   "screen_side_from_the_page": {
+    "fetch_rejected": false,
+    "status": 400,
+    "ok": false,
+    "content_type": "text/plain; charset=utf-8",
+    "elapsed_ms": 16,
+    "app_read_the_body": {
+     "url": "http://127.0.0.1:8653/api/v1/journeys/baec3043-eb17-42cd-a4e3-4fc746c516e5/agent/commands",
+     "status": 400,
+     "pair_id": "hjp3p3-7dd5e357c81e41ff",
+     "content_type": "text/plain; charset=utf-8",
+     "at_wall": "2026-09-25T14:20:54.937Z",
+     "parsed": false,
+     "error_name": "SyntaxError",
+     "error_message": "Unexpected token 'I', \"Invalid HT\"... is not valid JSON"
+    },
+    "body_parse_failed": true,
+    "body_parsed": false,
+    "browser_stack": {
+     "url": "/api/v1/journeys/baec3043-eb17-42cd-a4e3-4fc746c516e5/agent/commands",
+     "status": 400,
+     "pair_id": "hjp3p3-7dd5e357c81e41ff",
+     "content_type": "text/plain; charset=utf-8",
+     "failure": null,
+     "at_wall": "2026-09-25T14:20:54.938Z"
+    }
+   },
+   "both_ends_agree_on_status": true,
+   "both_ends_agree_on_json_class": true
+  }
+ ],
+ "write_legs_with_a_5xx_or_4xx": [
+  {
+   "leg": "baec3043-eb17-42cd-a4e3-4fc746c516e5/agent/commands",
+   "status": 400,
+   "answered_by": "product",
+   "json": false,
+   "page_saw": 400,
+   "rejected": false
+  }
+ ],
+ "screen": {
+  "result_card_painted": "暂时无法完成规划\n\n这次没能生成方案。你的行程没有被改动，可以重试或换个说法。\n\n技术详情",
+  "card_title_painted": "暂时无法完成规划",
+  "card_body_painted": "这次没能生成方案。你的行程没有被改动，可以重试或换个说法。",
+  "reason_label_painted": "",
+  "reason_value_painted": "",
+  "details_elements_present": 1,
+  "detail_toggle_present": true,
+  "network_card_painted": false,
+  "http_failed_card_painted": false,
+  "refused_card_painted": false,
+  "server_attribution_painted": false,
+  "device_attribution_painted": false,
+  "unreadable_answer_note_painted": false,
+  "next_step_painted": null,
+  "cross_check_data_result_status": "HTTP_400",
+  "cross_check_data_reason_origin": "device"
+ },
+ "page_errors": [],
+ "waited_ms": 3080,
+ "sample_tail": [
+  {
+   "ms": 563,
+   "status": "HTTP_400",
+   "details": 1,
+   "busy": false
+  }
+ ],
+ "access_log_witness": {
+  "present": true,
+  "path": "p3_backend_access_222041.log",
+  "lines_naming_the_leg": 0,
+  "lines": []
+ }
+}
