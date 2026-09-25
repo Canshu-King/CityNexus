@@ -1,0 +1,351 @@
+{
+  "config": {
+    "argv": [
+      "C:\\Program Files\\nodejs\\node.exe",
+      "D:\\moodle\\_qoder_b_lane_20260923\\frontend\\node_modules\\@playwright\\test\\cli.js",
+      "test",
+      "-c",
+      "playwright.config.ts",
+      "e2e/qoder-ord0302-unreadable-server-body.spec.ts",
+      "--reporter=json"
+    ],
+    "configFile": "D:\\moodle\\_qoder_b_lane_20260923\\frontend\\playwright.config.ts",
+    "rootDir": "D:/moodle/_qoder_b_lane_20260923/frontend/e2e",
+    "failOnFlakyTests": false,
+    "forbidOnly": false,
+    "fullyParallel": false,
+    "globalSetup": "D:\\moodle\\_qoder_b_lane_20260923\\frontend\\e2e\\_qoderAuthoritativeSetup.ts",
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "actualWorkers": 1
+    },
+    "preserveOutput": "always",
+    "projects": [
+      {
+        "outputDir": "D:/moodle/_qoder_b_lane_20260923/frontend/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "real-seed",
+        "name": "real-seed",
+        "testDir": "D:/moodle/_qoder_b_lane_20260923/frontend/e2e",
+        "testIgnore": [
+          "/[\\\\/]e2e[\\\\/]legacy[\\\\/]/"
+        ],
+        "testMatch": [
+          "/_qoderRealSeed\\.setup\\.ts/"
+        ],
+        "timeout": 60000
+      },
+      {
+        "outputDir": "D:/moodle/_qoder_b_lane_20260923/frontend/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "chromium",
+        "name": "chromium",
+        "testDir": "D:/moodle/_qoder_b_lane_20260923/frontend/e2e",
+        "testIgnore": [
+          "/[\\\\/]e2e[\\\\/]legacy[\\\\/]/"
+        ],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 60000
+      }
+    ],
+    "quiet": false,
+    "reporter": [
+      [
+        "json"
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "shard": null,
+    "tags": [],
+    "updateSnapshots": "missing",
+    "updateSourceMethod": "patch",
+    "version": "1.63.0",
+    "workers": 1,
+    "webServer": null
+  },
+  "suites": [
+    {
+      "title": "_qoderRealSeed.setup.ts",
+      "file": "_qoderRealSeed.setup.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "seed a real journey through the product API",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "real-seed",
+              "projectName": "real-seed",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 5124,
+                  "errors": [],
+                  "stdout": [
+                    {
+                      "text": "[qoder-real-seed] journey=4f989308-6567-4cd9-ab50-b9adb6baf0ba options=4 chosen=85d42930-53a5-4f0f-8e62-b276323161f8 (Haihe Riverside Hotel)\n"
+                    },
+                    {
+                      "text": "[qoder-real-seed] trialWizard=false live-journey-current=true\n"
+                    }
+                  ],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-09-25T12:47:05.348Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "e5b963f3c8f6099f74d0-d425156f0efa8e024368",
+          "file": "_qoderRealSeed.setup.ts",
+          "line": 110,
+          "column": 1
+        }
+      ]
+    },
+    {
+      "title": "qoder-ord0302-unreadable-server-body.spec.ts",
+      "file": "qoder-ord0302-unreadable-server-body.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "ord0302-N1 a non-JSON 5xx stays an HTTP answer with a visible device reading",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1041,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-09-25T12:47:11.056Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "c1c7d721c5f677c6c129-56f01151c154441a6af1",
+          "file": "qoder-ord0302-unreadable-server-body.spec.ts",
+          "line": 137,
+          "column": 3
+        },
+        {
+          "title": "ord0302-N2 a 4xx with the server's sentence still quotes it verbatim (positive control)",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 998,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-09-25T12:47:12.208Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "c1c7d721c5f677c6c129-3f34c398ce4d9d115610",
+          "file": "qoder-ord0302-unreadable-server-body.spec.ts",
+          "line": 137,
+          "column": 3
+        },
+        {
+          "title": "ord0302-N3 a genuine network failure keeps NETWORK and still renders the detail block",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "failed",
+                  "duration": 934,
+                  "error": {
+                    "message": "Error: e2e/qoder-ord0302-unreadable-server-body.spec.ts :: N3 — {\"verdict\":\"NOT_MET\",\"read\":{\"arm\":\"N3\",\"status\":\"NETWORK\",\"detail_block_attached\":false,\"label\":\"\",\"origin\":\"\",\"reason\":\"\",\"card_text\":\"连不上服务端 网络或后端没有响应，这与你的需求内容无关。你的行程没有被改动，检查网络后可以重试。\",\"legs\":[\"GET /plans(baseline)\",\"GET /plans(baseline)\",\"POST /agent/commands\"]}}\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // deep equality\u001b[22m\n\n\u001b[32m- Expected  -  1\u001b[39m\n\u001b[31m+ Received  + 17\u001b[39m\n\n\u001b[32m- Array []\u001b[39m\n\u001b[31m+ Array [\u001b[39m\n\u001b[31m+   Object {\u001b[39m\n\u001b[31m+     \"claim\": \"ORD-0302 ②: even then the detail block is still there\",\u001b[39m\n\u001b[31m+     \"got\": Object {\u001b[39m\n\u001b[31m+       \"detail_block_attached\": false,\u001b[39m\n\u001b[31m+     },\u001b[39m\n\u001b[31m+     \"ok\": false,\u001b[39m\n\u001b[31m+   },\u001b[39m\n\u001b[31m+   Object {\u001b[39m\n\u001b[31m+     \"claim\": \"and it carries a device line rather than nothing\",\u001b[39m\n\u001b[31m+     \"got\": Object {\u001b[39m\n\u001b[31m+       \"origin\": \"\",\u001b[39m\n\u001b[31m+       \"reason\": \"\",\u001b[39m\n\u001b[31m+     },\u001b[39m\n\u001b[31m+     \"ok\": false,\u001b[39m\n\u001b[31m+   },\u001b[39m\n\u001b[31m+ ]\u001b[39m",
+                    "stack": "Error: e2e/qoder-ord0302-unreadable-server-body.spec.ts :: N3 — {\"verdict\":\"NOT_MET\",\"read\":{\"arm\":\"N3\",\"status\":\"NETWORK\",\"detail_block_attached\":false,\"label\":\"\",\"origin\":\"\",\"reason\":\"\",\"card_text\":\"连不上服务端 网络或后端没有响应，这与你的需求内容无关。你的行程没有被改动，检查网络后可以重试。\",\"legs\":[\"GET /plans(baseline)\",\"GET /plans(baseline)\",\"POST /agent/commands\"]}}\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // deep equality\u001b[22m\n\n\u001b[32m- Expected  -  1\u001b[39m\n\u001b[31m+ Received  + 17\u001b[39m\n\n\u001b[32m- Array []\u001b[39m\n\u001b[31m+ Array [\u001b[39m\n\u001b[31m+   Object {\u001b[39m\n\u001b[31m+     \"claim\": \"ORD-0302 ②: even then the detail block is still there\",\u001b[39m\n\u001b[31m+     \"got\": Object {\u001b[39m\n\u001b[31m+       \"detail_block_attached\": false,\u001b[39m\n\u001b[31m+     },\u001b[39m\n\u001b[31m+     \"ok\": false,\u001b[39m\n\u001b[31m+   },\u001b[39m\n\u001b[31m+   Object {\u001b[39m\n\u001b[31m+     \"claim\": \"and it carries a device line rather than nothing\",\u001b[39m\n\u001b[31m+     \"got\": Object {\u001b[39m\n\u001b[31m+       \"origin\": \"\",\u001b[39m\n\u001b[31m+       \"reason\": \"\",\u001b[39m\n\u001b[31m+     },\u001b[39m\n\u001b[31m+     \"ok\": false,\u001b[39m\n\u001b[31m+   },\u001b[39m\n\u001b[31m+ ]\u001b[39m\n    at D:\\moodle\\_qoder_b_lane_20260923\\frontend\\e2e\\qoder-ord0302-unreadable-server-body.spec.ts:143:101",
+                    "location": {
+                      "file": "D:\\moodle\\_qoder_b_lane_20260923\\frontend\\e2e\\qoder-ord0302-unreadable-server-body.spec.ts",
+                      "column": 101,
+                      "line": 143
+                    },
+                    "snippet": "\u001b[0m \u001b[90m 141 |\u001b[39m     \u001b[36mconst\u001b[39m { verdict\u001b[33m,\u001b[39m rows } \u001b[33m=\u001b[39m decide(id\u001b[33m,\u001b[39m read)\u001b[33m;\u001b[39m\n \u001b[90m 142 |\u001b[39m     readings[id] \u001b[33m=\u001b[39m { want\u001b[33m:\u001b[39m id \u001b[33m===\u001b[39m \u001b[32m\"N2\"\u001b[39m \u001b[33m?\u001b[39m \u001b[32m\"server\"\u001b[39m \u001b[33m:\u001b[39m \u001b[32m\"device\"\u001b[39m\u001b[33m,\u001b[39m force_shape\u001b[33m:\u001b[39m force\u001b[33m,\u001b[39m read\u001b[33m,\u001b[39m verdict\u001b[33m,\u001b[39m rows }\u001b[33m;\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 143 |\u001b[39m     expect(rows\u001b[33m.\u001b[39mfilter((r\u001b[33m:\u001b[39m { ok\u001b[33m:\u001b[39m boolean }) \u001b[33m=>\u001b[39m \u001b[33m!\u001b[39mr\u001b[33m.\u001b[39mok)\u001b[33m,\u001b[39m node(id\u001b[33m,\u001b[39m \u001b[33mJSON\u001b[39m\u001b[33m.\u001b[39mstringify({ verdict\u001b[33m,\u001b[39m read })))\u001b[33m.\u001b[39mtoEqual([])\u001b[33m;\u001b[39m\n \u001b[90m     |\u001b[39m                                                                                                     \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 144 |\u001b[39m   })\u001b[33m;\u001b[39m\n \u001b[90m 145 |\u001b[39m }\n \u001b[90m 146 |\u001b[39m\u001b[0m"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "D:\\moodle\\_qoder_b_lane_20260923\\frontend\\e2e\\qoder-ord0302-unreadable-server-body.spec.ts",
+                        "column": 101,
+                        "line": 143
+                      },
+                      "message": "Error: e2e/qoder-ord0302-unreadable-server-body.spec.ts :: N3 — {\"verdict\":\"NOT_MET\",\"read\":{\"arm\":\"N3\",\"status\":\"NETWORK\",\"detail_block_attached\":false,\"label\":\"\",\"origin\":\"\",\"reason\":\"\",\"card_text\":\"连不上服务端 网络或后端没有响应，这与你的需求内容无关。你的行程没有被改动，检查网络后可以重试。\",\"legs\":[\"GET /plans(baseline)\",\"GET /plans(baseline)\",\"POST /agent/commands\"]}}\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // deep equality\u001b[22m\n\n\u001b[32m- Expected  -  1\u001b[39m\n\u001b[31m+ Received  + 17\u001b[39m\n\n\u001b[32m- Array []\u001b[39m\n\u001b[31m+ Array [\u001b[39m\n\u001b[31m+   Object {\u001b[39m\n\u001b[31m+     \"claim\": \"ORD-0302 ②: even then the detail block is still there\",\u001b[39m\n\u001b[31m+     \"got\": Object {\u001b[39m\n\u001b[31m+       \"detail_block_attached\": false,\u001b[39m\n\u001b[31m+     },\u001b[39m\n\u001b[31m+     \"ok\": false,\u001b[39m\n\u001b[31m+   },\u001b[39m\n\u001b[31m+   Object {\u001b[39m\n\u001b[31m+     \"claim\": \"and it carries a device line rather than nothing\",\u001b[39m\n\u001b[31m+     \"got\": Object {\u001b[39m\n\u001b[31m+       \"origin\": \"\",\u001b[39m\n\u001b[31m+       \"reason\": \"\",\u001b[39m\n\u001b[31m+     },\u001b[39m\n\u001b[31m+     \"ok\": false,\u001b[39m\n\u001b[31m+   },\u001b[39m\n\u001b[31m+ ]\u001b[39m\n\n  141 |     const { verdict, rows } = decide(id, read);\n  142 |     readings[id] = { want: id === \"N2\" ? \"server\" : \"device\", force_shape: force, read, verdict, rows };\n> 143 |     expect(rows.filter((r: { ok: boolean }) => !r.ok), node(id, JSON.stringify({ verdict, read }))).toEqual([]);\n      |                                                                                                     ^\n  144 |   });\n  145 | }\n  146 |\n    at D:\\moodle\\_qoder_b_lane_20260923\\frontend\\e2e\\qoder-ord0302-unreadable-server-body.spec.ts:143:101"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-09-25T12:47:13.214Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "D:\\moodle\\_qoder_b_lane_20260923\\frontend\\test-results\\qoder-ord0302-unreadable-s-106e6-ll-renders-the-detail-block-chromium\\error-context.md"
+                    }
+                  ],
+                  "errorLocation": {
+                    "file": "D:\\moodle\\_qoder_b_lane_20260923\\frontend\\e2e\\qoder-ord0302-unreadable-server-body.spec.ts",
+                    "column": 101,
+                    "line": 143
+                  }
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "c1c7d721c5f677c6c129-45a5eb871d0174f0311d",
+          "file": "qoder-ord0302-unreadable-server-body.spec.ts",
+          "line": 137,
+          "column": 3
+        },
+        {
+          "title": "ord0302-X1 every 200 shape whose card points at 技术详情 renders a block that carries a reading",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 900000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 2,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 4598,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-09-25T12:47:14.576Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "c1c7d721c5f677c6c129-8907b1decc65dd8ecf02",
+          "file": "qoder-ord0302-unreadable-server-body.spec.ts",
+          "line": 285,
+          "column": 1
+        },
+        {
+          "title": "ord0302-X2 a promise-free card stays honest, and the empty-block direction is named as unmeasured",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 2,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1032,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-09-25T12:47:19.286Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "c1c7d721c5f677c6c129-b88b0b1efdbd95ab78fd",
+          "file": "qoder-ord0302-unreadable-server-body.spec.ts",
+          "line": 318,
+          "column": 1
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2026-09-25T12:47:01.736Z",
+    "duration": 19701.721999999998,
+    "expected": 5,
+    "skipped": 0,
+    "unexpected": 1,
+    "flaky": 0
+  }
+}
