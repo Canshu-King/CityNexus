@@ -1,0 +1,9 @@
+D:\moodle\_qoder_f_run\q43_ruler_r3_from_commander.py:26: SyntaxWarning: invalid escape sequence '\d'
+  (U+FF1D -> "=", U+FF0C stays, fullwidth digits already matched \d) before any scan;
+input q43v2_bus.md 3726 B 25 lines
+claims checked 15 | overall Q43_GATE_RED | findings 2 ['BARE_NUMBER_WITHOUT_COORDINATE']
+  line 22 F3_bare_numeric_claim BARE_NUMBER_WITHOUT_COORDINATE | 10 格 | nearest coordinate seen: None
+  line 23 F3_bare_numeric_claim BARE_NUMBER_WITHOUT_COORDINATE | 0 件 | nearest coordinate seen: None
+scope: F1 `NAME = digits` (after fullwidth-`=` normalisation), F2 relay wording, and F3 ANY bare numeric claim (>=3 digits, or digits + a unit/counter word) -- all judged against the same durable-coordinate window; structural ids (ORD-####, Q#, `x-1`, HH:MM) are not claims
+meaning: a number is asserted or relayed with nothing durable to check it against
+wrote D:\moodle\_qoder_f_run\o225_receipts\ord0296_r3_q43r3_bus_v3.json 937 B
