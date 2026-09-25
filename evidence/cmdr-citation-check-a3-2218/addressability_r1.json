@@ -1,0 +1,100 @@
+{
+ "schema": "CNX_CMDR_CITATION_ADDRESSABILITY_CHECK_V2",
+ "lane": "commander 494abfd7",
+ "at_local": "2026-09-25T22:18:01+0800",
+ "what": "do the per-arm blob citations in an arbitrary receipt resolve to the objects they name, and are they canonical 40-hex",
+ "instrument_diff_from_r1": "r1 hardcoded E's a2; r2 takes the receipt as arguments and additionally asserts the artifact itself is reachable at its claimed path under the same blob, and refuses to run on an empty field (a vacuous pass is a pass I did not earn)",
+ "artifact_under_test": {
+  "path": "evidence/ord0314-0281-gen3-derivation-d2305848/verifier_derivation_a3_d2305848.json",
+  "blob": "526e0f4ee67b5093676f7a2306b31a4fa58b8ce6",
+  "field": "per_arm_reading_blobs_40hex",
+  "artifact_bytes": 9354
+ },
+ "rows": [
+  {
+   "file": "bound1000__arm_TC.json",
+   "cited_value": "45c91cb141df1797613a9b78d56f0df1c4c97bda",
+   "cited_length": 40,
+   "canonical_40_hex": true,
+   "resolves_via_git": true,
+   "resolved_to": "45c91cb141df1797613a9b78d56f0df1c4c97bda",
+   "true_blob_sha1_of_that_path": "45c91cb141df1797613a9b78d56f0df1c4c97bda",
+   "true_sha1_recomputes_from_bytes": true,
+   "true_bytes": 801,
+   "citation_is_the_true_blob": true,
+   "leading_40_chars_equal_the_true_blob": true
+  },
+  {
+   "file": "bound2000__arm_TB.json",
+   "cited_value": "4051aa1894e8bbb58ae50a7cd955582f2170a6c2",
+   "cited_length": 40,
+   "canonical_40_hex": true,
+   "resolves_via_git": true,
+   "resolved_to": "4051aa1894e8bbb58ae50a7cd955582f2170a6c2",
+   "true_blob_sha1_of_that_path": "4051aa1894e8bbb58ae50a7cd955582f2170a6c2",
+   "true_sha1_recomputes_from_bytes": true,
+   "true_bytes": 752,
+   "citation_is_the_true_blob": true,
+   "leading_40_chars_equal_the_true_blob": true
+  },
+  {
+   "file": "ca_fixed_secs__arm_TB.json",
+   "cited_value": "76dca26ed2ee51422ff0bb08a29e79bba23d329d",
+   "cited_length": 40,
+   "canonical_40_hex": true,
+   "resolves_via_git": true,
+   "resolved_to": "76dca26ed2ee51422ff0bb08a29e79bba23d329d",
+   "true_blob_sha1_of_that_path": "76dca26ed2ee51422ff0bb08a29e79bba23d329d",
+   "true_sha1_recomputes_from_bytes": true,
+   "true_bytes": 757,
+   "citation_is_the_true_blob": true,
+   "leading_40_chars_equal_the_true_blob": true
+  },
+  {
+   "file": "ca_keyless_too__arm_K1.json",
+   "cited_value": "87d180e689303d0aa23afa7ea87b63332eb13ad0",
+   "cited_length": 40,
+   "canonical_40_hex": true,
+   "resolves_via_git": true,
+   "resolved_to": "87d180e689303d0aa23afa7ea87b63332eb13ad0",
+   "true_blob_sha1_of_that_path": "87d180e689303d0aa23afa7ea87b63332eb13ad0",
+   "true_sha1_recomputes_from_bytes": true,
+   "true_bytes": 663,
+   "citation_is_the_true_blob": true,
+   "leading_40_chars_equal_the_true_blob": true
+  },
+  {
+   "file": "ca_no_delegate__arm_K3.json",
+   "cited_value": "b2a201ee029fac9471b653c3a8db5d60b92f011a",
+   "cited_length": 40,
+   "canonical_40_hex": true,
+   "resolves_via_git": true,
+   "resolved_to": "b2a201ee029fac9471b653c3a8db5d60b92f011a",
+   "true_blob_sha1_of_that_path": "b2a201ee029fac9471b653c3a8db5d60b92f011a",
+   "true_sha1_recomputes_from_bytes": true,
+   "true_bytes": 676,
+   "citation_is_the_true_blob": true,
+   "leading_40_chars_equal_the_true_blob": true
+  }
+ ],
+ "summary": {
+  "citations": 5,
+  "canonical_40_hex": 5,
+  "resolve_via_git": 5,
+  "equal_the_true_blob": 5,
+  "all_citations_addressable": true
+ },
+ "verdict": "CITATIONS_ADDRESSABLE",
+ "standing_rule": "a field whose name promises a blob must be exactly 40 hex and must resolve to the object it names. The frozen Q38 ruler tests derivability, not addressability, so this sits on top of it, not instead of it.",
+ "discipline": {
+  "refs_pushed": 0,
+  "authoritative_branch_moved": 0,
+  "evidence_paths_overwritten_by_me": 0,
+  "databases_opened": 0,
+  "credential_values_printed": 0,
+  "git_write_operations_run": 0
+ },
+ "claim_kind": "git_determined",
+ "claimed_result": "of 5 per-arm blob citations: 5 canonical 40-hex, 5 resolve via git, 5 equal the true blob of the file they name",
+ "derived_result": null
+}
