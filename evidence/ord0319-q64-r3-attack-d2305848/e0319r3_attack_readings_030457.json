@@ -1,0 +1,19 @@
+{
+ "schema": "CNX_LANE_E_ORD0319_R3_ATTACK_V1",
+ "ruler_file_sha1": "8300737c256446a6c689fa39572d10a18a3dd784",
+ "at": "2026-09-26T03:04:57+0800",
+ "results": {
+  "e0319r3_E1_bracket_read.tsx": {
+   "verdict": "NO_EXPOSURE_SHAPE_FOUND",
+   "hits": 0
+  },
+  "e0319r3_E2_forwarding_helper.tsx": {
+   "verdict": "NO_EXPOSURE_SHAPE_FOUND",
+   "hits": 0
+  },
+  "e0319r3_E3_control_attribute_only.tsx": {
+   "verdict": "NO_EXPOSURE_SHAPE_FOUND",
+   "hits": 0
+  }
+ }
+}
