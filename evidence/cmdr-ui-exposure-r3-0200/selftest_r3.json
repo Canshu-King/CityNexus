@@ -1,0 +1,105 @@
+{
+ "verdict": "SELFTEST_PASS",
+ "n_fixtures": 13,
+ "n_clean_expected": 5,
+ "n_bad_expected": 8,
+ "fixtures": {
+  "clean_whitelist_only.tsx": {
+   "expected": 0,
+   "hits": [],
+   "verdict": "CLEAN",
+   "assertion_met": true
+  },
+  "clean_literal_helper.tsx": {
+   "expected": 0,
+   "hits": [],
+   "verdict": "CLEAN",
+   "assertion_met": true
+  },
+  "bad_direct_optional_chain.tsx": {
+   "expected": 1,
+   "hits": [
+    "UPSTREAM_READ_DIRECT"
+   ],
+   "verdict": "HIT",
+   "assertion_met": true
+  },
+  "bad_helper_taint.tsx": {
+   "expected": 1,
+   "hits": [
+    "UPSTREAM_TEXT_VIA_HELPER_TO_DOM"
+   ],
+   "verdict": "HIT",
+   "assertion_met": true
+  },
+  "bad_dangerous_html.tsx": {
+   "expected": 1,
+   "hits": [
+    "DANGEROUS_HTML"
+   ],
+   "verdict": "HIT",
+   "assertion_met": true
+  },
+  "clean_tainted_but_attribute_only.tsx": {
+   "expected": 0,
+   "hits": [],
+   "verdict": "CLEAN",
+   "assertion_met": true
+  },
+  "bad_raw_body.tsx": {
+   "expected": 1,
+   "hits": [
+    "RAW_BODY_TO_DOM",
+    "RAW_BODY_TO_DOM",
+    "RAW_TEXT_INTERPOLATION"
+   ],
+   "verdict": "HIT",
+   "assertion_met": true
+  },
+  "bad_rename_last_part.tsx": {
+   "expected": 1,
+   "hits": [
+    "UPSTREAM_TEXT_VIA_HELPER_TO_DOM"
+   ],
+   "verdict": "HIT",
+   "assertion_met": true
+  },
+  "bad_bare_local_hop.tsx": {
+   "expected": 1,
+   "hits": [
+    "UPSTREAM_TEXT_VIA_HELPER_TO_DOM"
+   ],
+   "verdict": "HIT",
+   "assertion_met": true
+  },
+  "bad_paren_alias.tsx": {
+   "expected": 1,
+   "hits": [
+    "UPSTREAM_TEXT_VIA_HELPER_TO_DOM"
+   ],
+   "verdict": "HIT",
+   "assertion_met": true
+  },
+  "clean_bare_local_from_literal.tsx": {
+   "expected": 0,
+   "hits": [],
+   "verdict": "CLEAN",
+   "assertion_met": true
+  },
+  "clean_untainted_value_name.tsx": {
+   "expected": 0,
+   "hits": [],
+   "verdict": "CLEAN",
+   "assertion_met": true
+  },
+  "bad_helper_taint_multiline.tsx": {
+   "expected": 1,
+   "hits": [
+    "UPSTREAM_TEXT_VIA_HELPER_TO_DOM"
+   ],
+   "verdict": "HIT",
+   "assertion_met": true
+  }
+ },
+ "why": "the two clean fixtures are what give the taint rule teeth: a `.text` render whose field was never assigned from a poisoned helper must stay clean, and a helper that returns a literal must not count as upstream text - otherwise r2 is only a `\\.text` matcher and would fire on every honest label"
+}
