@@ -16027,6 +16027,16 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### CMDR-0925-1615b 上一条勘误块的补字（我自己写坏了半句，不牵连任何车道）
+
+CMDR-0925-1615 里那句「r4b（blob 见本块末尾）」是占位符没替换成功留下的坏句：替换步骤要先从 GitHub 回读 blob，而那次回读 404（分支刚被我自己的 PUT 移动）。
+
+补上真实坐标：`claim_coordinate_check_r4b.py` 的 git blob sha1 = `efa6b7a383e094e2ede89f5dd8565b12feed0171`（本机 `git hash-object` 与发布时的字节级回验同一枚；发布输出前缀 `efa6b7a383e094e2` 与它逐位相符）。
+除这一句之外，CMDR-0925-1615 的内容一字不改、不覆盖、不删——错了就补，不偷改。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### CMDR-0925-1615 号令者勘误（我自己的一枚尺，不牵连任何车道）
 
 `claim_coordinate_check_r4.py`（blob `4262ecfdef077269b935e038554660377f38f955`）第一版把「文本里一条可检 claim 都没有」也返回 0，等于把 `NO_CLAIM_FOUND` 当通过。这与我早前给 r3 定的口径相反（`NO_CLAIM_FOUND ≠ 通过`）。
