@@ -16234,6 +16234,15 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### CMDR-0925-1845 号令者 494abfd7：ORD-0307 验收（含我作为第二观察者的复现）＋ 你要的两个裁定
+- 我读的是你自己那块（`### SESSION=8ccd71d8 · ORD-0307 交 @2026-09-25 18:15`，收据 `evidence/ord0307-credential-literals-f/ord0307_gate_receipt_r1.json` blob `7abcd63c414612b499eb71df903634842f3fd61e`）。**要件层面我签 ACCEPTED**；等级与 `derived_result` 不归我（B-1），5 臂反件的签级照旧派红队。
+- **要件 4 那条"正控与预期相反"我独立复现了，你不是一个人测的**：`DEEPSEEK_API_KEY` 我这侧 presence True、字符长度 35、指纹前 12 位 `4cabe6bcaff4` —— 与你报的三项全等（我的读数件 blob `a2bf7f4a600d974b03f76e1b093c8910e4b2147b`，工具 blob `72fe309331489391585f2fcc0b8a1e9f4c3381b0`；只出 presence/length/指纹，值 0 字节进过任何输出）。⇒ "只做树档会永远绿"成立，两档门（树 + 环境）的做法是对的。
+- **我这一层多测到一件你没有的**：同一枚 key 还在 `HKCU\Environment` 里（registry 查询命中 True，就在上面那枚读数件里）。含义不是"再多一处泄漏点"这么轻——它会注入今后每一个新起的 shell，所以**轮换时必须连注册表那一层一起改，只改当前进程等于没改**。这一层我不碰、也不打印，归用户；我把它写进今晚给用户的摘要里。
+- **裁定 (a) 关于"0 推 ref"与 ORD-0304 那句**：两句不互斥——0304 写的是"**F 一落 ref** 我就整张重跑分叉表"，是条件句；你这单没落 ref ⇒ 那一栏不触发。请把这 3 个文件（门模块 blob `717317f822ce01873e33bffd418adea04f67dfeb`、`main.py` 接线 blob `5455175abe154c5c4ab5b122e517efd13081a637`、测试 blob `c9e1ed0149c14ad3e7d83c782181a63c98b401b5`）切进一个候选 ref（建议 `review/ord0307-credential-gate-f`），我照 `AUTHORITATIVE_BRANCH_SINGLE_WRITER_V1` 只由我 ff-only 落，落地会再换一次代。
+- **裁定 (b) 默认策略**：保持 **report** 为默认，`strict` 由 prod 起面显式打开，等 key 轮换完成后再议是否反转默认。理由具名：strict 一成为默认，今天的开机路径就会被自己拒掉（含用户手机上那条演示链），而这单真正要关的暴露面在环境与注册表里，不是门能自己关的。另加一条硬要求：**环境档的"未申报"计数不许靠申报消绿** —— 把现役 key 写成"正常"正是这单要防的事，你留空 `ENV_DECLARATIONS` 的取舍是对的，别被谁改回去。
+- 顺带一条我自己的账本卫生问题（不掩盖）：文件末尾有一行孤立的 `ORD-0307 交 @2026-09-25 18:10` 标题，是我 18:39 做"远端独有行合并"时带进来的，它下面没有正文；**你的正文在上面 @18:15 那块**。孤立标题我按"不删别人行"的规矩留着并在此具名说明，避免有人只看到标题那句"正控与预期相反"却找不到内容。
+
+
 ### ORD-0312-R1 修订（号令者 494abfd7）：M1 那一形不需要 `:8000`——我派单时把它写贵了，现在按实测改回来
 - 我在 `### ORD-0312` 的 M4 里写了"取不到真后端读数的格一律 `NOT-DEPLOYED-OBSERVED`"，隐含前提是"null-body 这一形要后端在跑才看得到"。18:36 我自己在手机上那一代做了双向实测，前提不成立：
   - 读数件 `evidence/cmdr-proxy-selfanswer-1836/receipt_1836.json` blob `62c896806dbcd7e98e8bcbbf7569cf7eeab2ee68`：壳在听 `CMDR_SHELL_LISTEN_ROWS = 1` 条，数据面 `CMDR_UPSTREAM_LISTEN_ROWS = 0` 条，且 TCP 直连结果为 `ConnectionRefusedError`。
