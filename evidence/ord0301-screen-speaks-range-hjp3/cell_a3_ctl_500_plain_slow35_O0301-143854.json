@@ -1,0 +1,101 @@
+{
+ "arm": "a3_ctl_500_plain_slow35",
+ "run_id": "O0301-143854",
+ "face_port": 8564,
+ "policy_stamp": "A3_CTL_500_PLAIN_SLOW35",
+ "instrumented": true,
+ "measured_on": "90d29a172e186aab6e6cb138ab4583ccf93bfa68",
+ "bundle_sha256": "57c2a927f9e65ca0b33acdc737cbf941fc395c214aa213d861a4f7e5c664338e",
+ "bundle_asset": "index-BN1w-xlK.js",
+ "journey_id": "d845ac26-0add-4305-bd3f-3f7c6f6fe3c1",
+ "request_text": "想傍晚在老城慢慢走一圈，别太赶",
+ "opened": {
+  "hub_reached": true,
+  "sheet_opened": true
+ },
+ "cap_ms": 75000,
+ "tap_ms_wall": "2026-09-25T06:38:55.330Z",
+ "write_legs": [
+  {
+   "url": "/api/v1/journeys/d845ac26-0add-4305-bd3f-3f7c6f6fe3c1/agent/commands",
+   "method": "POST",
+   "api": true,
+   "sent_ms_since_load": 654,
+   "sent_wall": "2026-09-25T06:38:55.390Z",
+   "has_signal": true,
+   "request_body": "{\"command\":\"想傍晚在老城慢慢走一圈，别太赶\"}",
+   "status": 500,
+   "content_type": "text/plain; charset=utf-8",
+   "bytes": 21,
+   "body_head": "Internal Server Error",
+   "server_envelope": {
+    "unparsable_body": true
+   },
+   "elapsed_ms": 35006
+  }
+ ],
+ "all_api_legs_count": 17,
+ "json_rejections": [
+  {
+   "status": 500,
+   "url": "http://127.0.0.1:8564/api/v1/journeys/d845ac26-0add-4305-bd3f-3f7c6f6fe3c1/agent/commands",
+   "content_type": "text/plain; charset=utf-8",
+   "error_name": "SyntaxError",
+   "error_message": "Failed to execute 'json' on 'Response': Unexpected token 'I', \"Internal S\"... is not valid JSON",
+   "at_ms": 35661
+  }
+ ],
+ "first_client_deadline_line": null,
+ "screen_final": {
+  "result_card": "连不上服务端\n\n网络或后端没有响应，这与你的需求内容无关。你的行程没有被改动，检查网络后可以重试。",
+  "network_card_painted": true,
+  "detail_toggle_present": false,
+  "details_elements_present": 0,
+  "detail_open": null,
+  "reason_label_painted": null,
+  "reason_value_painted": null,
+  "cross_check_data_result_status": "NETWORK",
+  "cross_check_data_reason_origin": null,
+  "deadline_sentence_on_screen": false,
+  "body_head": "菜单\n/\n今天\n跟随系统\nEN\nDE\n\n下午好\n\nDemo之旅\n规划前被去掉的候选地点（6 个）\n去掉「一个没认出名字的地点」：这一站不满足一条未识别的硬性条件的硬性条件\n去掉「一个没认出名字的地点」：这一站不满足一条未识别的硬性条件的硬性条件\n去掉「一个没认出名字的地点」：这一站不满足一条未识别的硬性条件的硬性条件\n去掉「一个没认出名字的地点」：这一站不满足一条未识别的硬性条件的硬性条件\n去掉「一个没认出名字的地点」：这一站不满足一条未识别的硬性条件的硬性条件\n去掉「一个没认出名字的地点」：这一站不满足一条未识别的硬性条件的硬性条件\n\n9月26日 10:00 — 9月27日 20:00 · 2 位旅行者 · 2 天\n\nAI 帮我规划\n试用其他城市\n打开行程工作台\n今天\n还没有安排\n“现在”取自服务器场景（行程起点。服务器没有给出这一分钟的执行游标，这一屏的时间按行程的时间窗来读）：10月",
+  "submit_visible": true
+ },
+ "timeline_states": [
+  {
+   "ms": 50,
+   "network_card": false,
+   "status": null,
+   "card_first_line": "",
+   "label": null,
+   "value": "",
+   "details": 0
+  },
+  {
+   "ms": 35101,
+   "network_card": true,
+   "status": "NETWORK",
+   "card_first_line": "连不上服务端",
+   "label": null,
+   "value": "",
+   "details": 0
+  }
+ ],
+ "settle_states": [
+  {
+   "ms": 35603,
+   "network_card": true,
+   "status": "NETWORK",
+   "card_first_line": "连不上服务端",
+   "label": null,
+   "value": "",
+   "details": 0
+  }
+ ],
+ "request_failures": [],
+ "page_events": [
+  {
+   "kind": "console",
+   "text": "Failed to load resource: the server responded with a status of 500 (Internal Server Error)"
+  }
+ ]
+}
