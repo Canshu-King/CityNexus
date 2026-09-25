@@ -16588,6 +16588,30 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### B c01d72a3 · ORD-0302 b5（Q64=① 白名单面板：同一个文件：b4 的形状在 b5 全部消失，尖自己那条链我没新增；五形臂+五枚反件在尖 `2344145ce6342b6ac32ac4d0955c0f524d8c9320` 上重跑）候选 `b6e1dd3295aafa3330cc9142a4475ac359eb7a3e` @00:48+08 —— **两枚裁决的交集只剩一处：卡片仍说「原因原文在技术详情里」，而 Q64 不许把原文放进 DOM。那一格我如实交出去，不自己拍板也不改文案换绿。**
+
+```text
+尺三向   UI_EVIDENCE_EXPOSURE_GATE 用 r2 尺重测（尺 blob 608016f6a538097041554b76cfe3e9a4192f299c，与号令者贴的同一枚；上一版引的 r1 尺 0ba79e00738984ee06651219530e5a9d7fa897e3 已被 ORD-0319 证实在这一形上是瞎的）。同一个文件三个 ref：现尖 2344145ce6342b6ac32ac4d0955c0f524d8c9320 ⇒ EXPOSURE_SHAPE_FOUND 命中行 [1016]；上一枚 4fc0de91c18a966f99fc40fcd7ce136a5e2b8936 ⇒ EXPOSURE_SHAPE_FOUND 命中行 [187, 582, 1048, 1068]；本候选 b6e1dd3295aafa3330cc9142a4475ac359eb7a3e ⇒ EXPOSURE_SHAPE_FOUND 命中行 [1046]。b5 剩下的那条链与现尖同一条（helper→failureReason→渲染），正是 Q67 要裁的那格；b4 上多出的两类（RAW_BODY_TO_DOM / RAW_TEXT_INTERPOLATION）在 b5 的规则集里已经没有了。三向捕获件：uiexposure_r2_tip.json / uiexposure_r2_b4.json / uiexposure_r2_b5.json。
+面板逐形    X1 在六形上各判一遍（R19-R23 是号令者点名的五行，R24 是我为 Q64 加的凭据形 witness：["http_status", "content-type", "bytes"] 里出现的字段名是 ["bytes", "content-type", "http_status"]（值与逐形判定都在该格 readings 里，我不在正文里复述数字）。面板里出现过的字段全集是 ["bytes", "content-type", "http_status"]，其中 body 键出现过=False；6 条「正文不得进 DOM」断言里 6 条通过，另 6 条「空正文仍要显示 bytes=0」防永真断言里 6 条通过（R24 喂的正文含 eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9 这串形似 JWT 的假凭据，屏上看不见它）。
+N1      N1 在新基座 2344145ce6342b6ac32ac4d0955c0f524d8c9320 的这枚候选 b6e1dd3295aafa3330cc9142a4475ac359eb7a3e 上读 MET：屏上状态 "HTTP_500"、details 计数 null、承诺在文案里=null，轮次 0302fix33353335。
+N2      N2 在新基座 2344145ce6342b6ac32ac4d0955c0f524d8c9320 的这枚候选 b6e1dd3295aafa3330cc9142a4475ac359eb7a3e 上读 MET：屏上状态 "HTTP_422"、details 计数 null、承诺在文案里=null，轮次 0302fix33353335。
+N3      N3 在新基座 2344145ce6342b6ac32ac4d0955c0f524d8c9320 的这枚候选 b6e1dd3295aafa3330cc9142a4475ac359eb7a3e 上读 MET：屏上状态 "NETWORK"、details 计数 null、承诺在文案里=null，轮次 0302fix33353335。
+X1      X1 在新基座 2344145ce6342b6ac32ac4d0955c0f524d8c9320 的这枚候选 b6e1dd3295aafa3330cc9142a4475ac359eb7a3e 上读 MET：屏上状态 "NO_PLANS_PRODUCED"、details 计数 1、承诺在文案里=true，轮次 0302fix33353335。
+X2      X2 在新基座 2344145ce6342b6ac32ac4d0955c0f524d8c9320 的这枚候选 b6e1dd3295aafa3330cc9142a4475ac359eb7a3e 上读 MET：屏上状态 "BASELINE_UNAVAILABLE"、details 计数 1、承诺在文案里=false，轮次 0302fix33353335。
+反一      反件 ca_unsafe_read 把 N1 那一格弄成 failed，其余四枚仍是 ["passed"]（digest e815cb7fa45f00b1 跑到 a72f9035bd1a25e6，报告 blob 5ca94aaf87b4b681b58efcec8f5bee56bfc2dbf4，源文件按字节还原=True）。
+反二      反件 ca_null_on_network 把 N3 那一格弄成 failed，其余四枚仍是 ["passed"]（digest e815cb7fa45f00b1 跑到 bd85d3d23d36cf3e，报告 blob 101747915c779802c01a20a0fd11b3006b4a0810，源文件按字节还原=True）。
+反三      反件 ca_x5_no_block 把 X1 那一格弄成 failed，其余四枚仍是 ["passed"]（digest e815cb7fa45f00b1 跑到 a0080111e2863d7c，报告 blob f9edd443433eb10fc995cad8812f50d4faf94bf3，源文件按字节还原=True）。
+反四      反件 ca_x5_soft_promise 把 X1 那一格弄成 failed，其余四枚仍是 ["passed"]（digest e815cb7fa45f00b1 跑到 d766f4e08042abcb，报告 blob a2a52adbaa8171ec521161bd9df0e8a6d26ae355，源文件按字节还原=True）。
+反五      反件 ca_q64_body_back 把 X1 那一格弄成 failed，其余四枚仍是 ["passed"]（digest e815cb7fa45f00b1 跑到 8e178b87c08d3209，报告 blob 23c6a42b646ce3a0d4b0ec54b94bd015b5152066，源文件按字节还原=True）。
+残差      两枚裁决在这里没有交集，我不自己拍板：Q53=① 说「渲染出来，别把句子改软」，Q64=① 说「上游正文不许进 DOM」。于是那 6 形（R19_④_200_empty_body、R20_④_200_json_empty_object、R21_④_200_json_array、R22_④_200_text_plain_payload、R23_④_200_mission_unusable_status、R24_Q64_200_credential_shaped_text）屏上仍然写着「原因原文在“技术详情”里」，块也在（details 计数 [1]），但块里此刻只有这台设备量到的 ["bytes", "content-type", "http_status"]，没有任何「原文」。承诺仍然指向一个存在但不含原文的块。要不要改那句卡片文案是仲裁的判断，我这一版没动它，也没拿它换绿。
+形状      候选 b6e1dd3295aafa3330cc9142a4475ac359eb7a3e 的父是 4fc0de91c18a966f99fc40fcd7ce136a5e2b8936（= 上一枚 4fc0de91c18a966f99fc40fcd7ce136a5e2b8936，它的第一个父才是号令者的尖 2344145ce6342b6ac32ac4d0955c0f524d8c9320），比尖多 8 枚提交、动 2 条路径，其中产品文件 1 枚：frontend/e2e/qoder-ord0302-unreadable-server-body.spec.ts, frontend/src/features/planning/PlanWithAiSheet.tsx。frontend/src/features/planning/PlanWithAiSheet.tsx 的 blob 从尖的 3bb6a39067a380c2f75629fd7562f0de8f5d2f2a 变成 fc4d6111dc013008b610a240aab096deebe2436f。`git merge-tree --write-tree 2344145ce6342b6ac32ac4d0955c0f524d8c9320 b6e1dd3295aafa3330cc9142a4475ac359eb7a3e` 退出 0、冲突段 []，所以这枚可以 ff-only。两枚 typecheck 配置在跑臂之前都是干净的，五枚臂起始摘要都等于提交后的那枚 ["e815cb7fa45f00b1"]。
+```
+14 格逐条可复算，全文在 evidence/ord0302-unreadable-server-body-b5/ord0302_b5_receipt.json blob 781c75f1c05234baee6f24fb8d1936050e286863（矩阵 TEETH_AND_BASELINE；Q38 两遍 hard 0 soft 0）；索引 5b69cee459e2e30fb186fa08ce9b2e98fabd12ee。账本按 CMDR-0925-2307 走 inbox，本块写在 _qoder_ledger_inbox/b-c01d72a3_0048.md，我没写权威账本。
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+两件修：r1 尺的读数字已在 evidence/ord0302-unreadable-server-body-b5/ord0302_b5_receipt_r2.json blob 7ae34eccbc202cbdd268c7ba266b3da2abf962ee 里出 r2 版（r1 那版 781c75f1c05234baee6f24fb8d1936050e286863 一字不改）；本块原先引不出的 5 枚报告 blob 已按新名上架 playwright_report__fixed.json fa1e9f4168732920534403dd011e7c57ef5b1084、playwright_report__ca_unsafe_read.json 5ca94aaf87b4b681b58efcec8f5bee56bfc2dbf4、playwright_report__ca_null_on_network.json 101747915c779802c01a20a0fd11b3006b4a0810、playwright_report__ca_x5_no_block.json f9edd443433eb10fc995cad8812f50d4faf94bf3、playwright_report__ca_x5_soft_promise.json a2a52adbaa8171ec521161bd9df0e8a6d26ae355、playwright_report__ca_q64_body_back.json 23c6a42b646ce3a0d4b0ec54b94bd015b5152066；被拒的旧草稿改名 b-c01d72a3_0048.md.my_superseded_draft，没有删。Q67 未裁之前我不改文案、不重投候选。
+
+
 ### ORD-0296 → F `8ccd71d8` 十臂战役第 2 代（在接手那一刻现读的尖上重跑 · 2026-09-26 01:01+08）
 
 **先纠正一条前提（防误排程）**：你 00:36 那块写「你已经开工的 ORD-0296 十臂不要停」。实情：收到它之前我没开工——23:0x 只交了接手前置读数（件 `evidence/ord0296-handover-precheck-f/o296_handover_precheck_f_r1.json` = 00ac786a5270a3572e5a7c38a60beebe578a73cb）；开工在 2026-09-26 01:01，要件一字未动。
