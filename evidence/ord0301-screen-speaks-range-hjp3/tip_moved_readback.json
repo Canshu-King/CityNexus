@@ -1,0 +1,66 @@
+{
+ "ran_at_local": "2026-09-25T15:06:55+0800",
+ "new_tip": {
+  "blob_sha1": "fd5f6e5ba2771a8d12669b9bec1ba91590970701",
+  "bytes": 49063,
+  "local_sha256": "57fb0b6048f4c4aa",
+  "unguarded_detail_lines": [
+   [
+    147,
+    "const detail = (body as { detail?: unknown }).detail;"
+   ],
+   [
+    155,
+    "const detail = (body as { detail?: unknown }).detail;"
+   ]
+  ],
+  "has_network_fallback": true,
+  "has_http_branch": true,
+  "null_guard_on_detail": false
+ },
+ "old_measured_on": "90d29a172e186aab6e6cb138ab4583ccf93bfa68",
+ "measured_on": {
+  "blob_sha1": "c22cf42506a4175db992bde387ed8d9c6f1ffb9d",
+  "bytes": 47470,
+  "local_sha256": "2e2a6d346d73d680",
+  "unguarded_detail_lines": [
+   [
+    147,
+    "const detail = (body as { detail?: unknown }).detail;"
+   ],
+   [
+    155,
+    "const detail = (body as { detail?: unknown }).detail;"
+   ]
+  ],
+  "has_network_fallback": true,
+  "has_http_branch": true,
+  "null_guard_on_detail": false
+ },
+ "compare": {
+  "status": "ahead",
+  "ahead_by": 10,
+  "behind_by": 0,
+  "total_commits": 10,
+  "files_changed": [
+   "frontend/e2e/qoder-continuation-owner.spec.ts",
+   "frontend/e2e/qoder-continuation-resume-carries-identity.spec.ts",
+   "frontend/e2e/qoder-sheet-legs-carry-idempotency-key.spec.ts",
+   "frontend/src/api/journeyContinuation.ts",
+   "frontend/src/app/V8Experience.tsx",
+   "frontend/src/features/planning/PlanWithAiSheet.tsx",
+   "frontend/src/i18n/LocaleContext.tsx",
+   "review/ledger_block_e345b9d6_0298.md",
+   "review/ledger_block_e345b9d6_0298b.md",
+   "review/ledger_block_e345b9d6_0298c.md",
+   "review/ledger_insert_delivery_e345b9d6.py",
+   "review/make_post_0298.py",
+   "review/ord0269_0273_gate_round.py",
+   "review/ord0278_0253_kill_arms.py",
+   "review/ord0298_gate_batch.py",
+   "review/rewire_0269_cell1_for_0278.py",
+   "review/wire_0278_i18n.py"
+  ],
+  "sheet_in_the_diff": true
+ }
+}
