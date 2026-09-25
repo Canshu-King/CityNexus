@@ -1,0 +1,240 @@
+{
+ "order": "ORD-0300",
+ "lane": "HJ-P3 aad2d1f2",
+ "run_id": "O0300-2610",
+ "asked_in": "Canshu-King/CityNexus-Workspace issue #1 comment 5825415532",
+ "measured_on": "90d29a172e186aab6e6cb138ab4583ccf93bfa68",
+ "measured_on_how_read": "git ls-remote https://github.com/Canshu-King/CityNexus.git refs/heads/mirror/integration-frontend-apple-pass1, re-read at export time",
+ "bundle_under_test": {
+  "built_from": "90d29a172e186aab6e6cb138ab4583ccf93bfa68",
+  "asset": "index-BN1w-xlK.js",
+  "sha256": "57c2a927f9e65ca0b33acdc737cbf941fc395c214aa213d861a4f7e5c664338e",
+  "ord0280_markers_present_in_served_bytes": true,
+  "how": "private `vite build --outDir D:/moodle/_hjp3_0300_0925/dist_0300`; the served preview dist and its index.html were not touched"
+ },
+ "supersedes": [
+  {
+   "cell": "ORD-0279 W2 (CLIENT_SUBSTITUTES_A_STATUS_STRING_FOR_THE_SERVER_REASON)",
+   "previous_run": "O0279X-2504 measured on dcae1bc9…",
+   "new_status": "SUPERSEDED_BY_GENERATION",
+   "note": "that red shape is not what this generation paints; see C2 for what it paints instead"
+  },
+  {
+   "cell": "ORD-0281 T-b counter-example 1 (silent origin)",
+   "previous_run": "O0291-2507 on 45b0a5e2…",
+   "new_status": "REPRODUCED_ON_NEW_GENERATION",
+   "note": "C4"
+  }
+ ],
+ "q25": "no duration in this file is inherited across generations; every ms here was measured on 90d29a172e186aab6e6cb138ab4583ccf93bfa68",
+ "cells": [
+  {
+   "id": "C1_server_side_answer_on_the_contended_write",
+   "verdict": "NOT_200_BUT_UNNAMED_STILL",
+   "measured_on": "90d29a172e186aab6e6cb138ab4583ccf93bfa68",
+   "measured": {
+    "arms": [
+     {
+      "url_tail": "agent/commands",
+      "http_status": 500,
+      "content_type": "text/plain; charset=utf-8",
+      "bytes": 21,
+      "elapsed_ms": 32330,
+      "client_error": null,
+      "body_head": "Internal Server Error",
+      "error_code": null,
+      "error_message": null,
+      "reason_code": null
+     }
+    ],
+    "last": {
+     "url_tail": "agent/commands",
+     "http_status": 500,
+     "content_type": "text/plain; charset=utf-8",
+     "bytes": 21,
+     "elapsed_ms": 32330,
+     "client_error": null,
+     "body_head": "Internal Server Error",
+     "error_code": null,
+     "error_message": null,
+     "reason_code": null
+    },
+    "server_write_config_read_from_the_product": {
+     "deadline_ms": 45000,
+     "busy_timeout_ms": 30000,
+     "delta_ms": 15000,
+     "deadline_source": "default",
+     "effective_busy_timeout_ms": 30000,
+     "reachable": true,
+     "verdict": "WRITE_DEADLINE_CONFIG_OK"
+    },
+    "settings_as_read": {
+     "settings_write_busy_timeout_ms": 30000,
+     "settings_write_deadline_ms": 45000,
+     "settings_write_deadline_scenarios": ""
+    },
+    "run_ids": [
+     "O0300-2610"
+    ],
+    "bundle_sha256": "57c2a927f9e65ca0b33acdc737cbf941fc395c214aa213d861a4f7e5c664338e"
+   },
+   "why": "POST agent/commands on 90d29a17 answered HTTP 500 with content-type \"text/plain; charset=utf-8\" and 21 bytes, and the body carries no envelope at all (error_code=None, error_message=None, body starts 'Internal Server Error'), so the answer still has no name a client could read; ORD-0296's own numbers explain why - budget 45000 ms against a wait capped at busy_timeout 30000 ms, so one lost lock surfaces at <=30000 ms, before the budget is spent"
+  },
+  {
+   "id": "C2_screen_side_attribution_of_that_same_answer",
+   "verdict": "SERVER_ANSWERED_BUT_SCREEN_SAYS_UNREACHABLE",
+   "measured_on": "90d29a172e186aab6e6cb138ab4583ccf93bfa68",
+   "measured": {
+    "painted_card": "连不上服务端\n\n网络或后端没有响应，这与你的需求内容无关。你的行程没有被改动，检查网络后可以重试。",
+    "painted_reason_label": null,
+    "painted_reason_value": null,
+    "detail_regions_in_dom": 0,
+    "cross_check_data_result_status": "NETWORK",
+    "reproduced_without_any_instrument": {
+     "card_painted": "连不上服务端\n\n网络或后端没有响应，这与你的需求内容无关。你的行程没有被改动，检查网络后可以重试。",
+     "cross_check_data_result_status": "NETWORK",
+     "detail_region_in_dom": 0,
+     "instrumented": false,
+     "appeared_after_ms": 32762
+    },
+    "server_side_of_the_same_response": {
+     "status": 500,
+     "bytes": 21,
+     "elapsed_ms": 32330
+    }
+   },
+   "why": "the card painted \"连不上服务端\" (cross-check attribute data-result-status='NETWORK') while the response object for the same leg was HTTP 500 of 21 B at 32330 ms, and 0 <details> regions exist, so there is no technical detail to open at all; the identical card appears with no fetch wrapper installed (first seen at 32762 ms, data-result-status='NETWORK'), so this is the product's sentence about a server that did answer."
+  },
+  {
+   "id": "C3_positive_control_the_server_channel_still_carries_words_verbatim",
+   "verdict": "SERVER_SENTENCE_QUOTED_VERBATIM_WHEN_ONE_EXISTS",
+   "measured_on": "90d29a172e186aab6e6cb138ab4583ccf93bfa68",
+   "measured": {
+    "db_table_column_row": "journey_missions.failure_reason/f1fc2072-afd7-4fa8-8249-e987e83ffde9",
+    "server_sentence_read_by_second_ro_connection": "DeepSeek API key is not configured",
+    "sentence_length_chars": 34,
+    "painted_label": "服务器给出的原因",
+    "painted_value": "DeepSeek API key is not configured",
+    "equal_with_double_equals": true,
+    "controls": {
+     "punctuation_drift_must_be_refused": true,
+     "suffix_drift_must_be_refused": true,
+     "substring_test_would_have_been_softer": true
+    },
+    "other_legs_in_the_same_run": {
+     "plans_generate_status": 422,
+     "plans_generate_error_message": "No feasible plan candidates satisfy the journey constraints"
+    }
+   },
+   "why": "read through a second read-only connection, journey_missions.failure_reason for row f1fc2072 is 'DeepSeek API key is not configured' (34 chars) and the text painted under the label \"服务器给出的原因\" is 'DeepSeek API key is not configured' (34 chars), equal under == (True); a punctuation drift (\"DeepSeek  API  key  \") and a suffix drift (\"d。\") are both refused, while a substring test would have accepted the suffix - that is why this cell carries the two controls. The same run's other leg answered 422 with error_code 'VALIDATION_ERROR' and error_message 'No feasible plan candidates ', which is NOT what the screen quoted, so the quoted sentence is traceable to the 34-char DB column and not to that body"
+  },
+  {
+   "id": "C4_write_leg_deadline_on_the_silent_origin",
+   "verdict": "WRITE_LEG_STILL_UNBOUNDED",
+   "measured_on": "90d29a172e186aab6e6cb138ab4583ccf93bfa68",
+   "measured": {
+    "face_port": 8554,
+    "origin_port": 8553,
+    "bundle_sha256": "57c2a927f9e65ca0b33acdc737cbf941fc395c214aa213d861a4f7e5c664338e",
+    "post_sent_at_ms": 703,
+    "post_status": null,
+    "post_client_error": null,
+    "observation_cap_ms": 60000,
+    "samples_taken": 231,
+    "client_deadline_line_seen": null,
+    "origin_accounting": {
+     "reads_answered": 22,
+     "writes_swallowed": 1,
+     "swallowed_at": [
+      "10:20:28"
+     ]
+    },
+    "readDeadline_source_line_on_this_tip": [
+     "export const READ_DEADLINE_MS = 12_000;"
+    ],
+    "shipped_bundle_constant_occurrences": {
+     "12e3": 1,
+     "1e3_divisions": 1
+    }
+   },
+   "why": "against the selective origin on port 8553 (which answered 22 reads and swallowed 1 writes at 10:20:28) the POST left at 703 ms and had no status and no client error after 60000 ms across 231 samples, and no client-deadline sentence was ever painted - so on 90d29a17 the write leg still has no bound of its own, and this reading is a duration observation, not an assertion (Q25)"
+  },
+  {
+   "id": "C5_is_the_named_503_reachable_on_the_user_path",
+   "verdict": "NAMED_503_NOT_REACHED_IN_TWO_SCHEDULES",
+   "measured_on": "90d29a172e186aab6e6cb138ab4583ccf93bfa68",
+   "measured": {
+    "schedule_single_window_result": {
+     "verdict_from_C1": "HTTP 500 at 32330 ms"
+    },
+    "schedule_two_windows_20s_20s": {
+     "agent_commands": {
+      "url_tail": "agent/commands",
+      "http_status": 200,
+      "content_type": "application/json",
+      "bytes": 7087,
+      "elapsed_ms": 19717,
+      "client_error": null,
+      "body_head": "{\"mission\":{\"id\":\"a8b2adea-4761-4ac6-8838-8939eb423197\",\"journey_id\":\"a37be52b-a",
+      "error_code": null,
+      "error_message": null,
+      "reason_code": null
+     },
+     "plans_generate": {
+      "url_tail": "plans/generate",
+      "http_status": 422,
+      "content_type": "application/json",
+      "bytes": 1443,
+      "elapsed_ms": 15,
+      "client_error": null,
+      "body_head": "{\"error\":{\"code\":\"VALIDATION_ERROR\",\"message\":\"No feasible plan candidates satis",
+      "error_code": "VALIDATION_ERROR",
+      "error_message": "No feasible plan candidates satisfy the journey constraints",
+      "reason_code": "CATALOG_INSUFFICIENT"
+     }
+    },
+    "schedule_two_windows_20s_45s": {
+     "agent_commands": {
+      "url_tail": "agent/commands",
+      "http_status": 200,
+      "content_type": "application/json",
+      "bytes": 7087,
+      "elapsed_ms": 19927,
+      "client_error": null,
+      "body_head": "{\"mission\":{\"id\":\"883edabc-3307-4e83-b1d9-5054746f3db0\",\"journey_id\":\"a37be52b-a",
+      "error_code": null,
+      "error_message": null,
+      "reason_code": null
+     },
+     "plans_generate": {
+      "url_tail": "plans/generate",
+      "http_status": 422,
+      "content_type": "application/json",
+      "bytes": 1443,
+      "elapsed_ms": 15,
+      "client_error": null,
+      "body_head": "{\"error\":{\"code\":\"VALIDATION_ERROR\",\"message\":\"No feasible plan candidates satis",
+      "error_code": "VALIDATION_ERROR",
+      "error_message": "No feasible plan candidates satisfy the journey constraints",
+      "reason_code": "CATALOG_INSUFFICIENT"
+     }
+    },
+    "budget_numbers": {
+     "deadline_ms": 45000,
+     "busy_timeout_ms": 30000,
+     "delta_ms": 15000,
+     "effective_busy_timeout_ms": 30000
+    },
+    "attempt_2_lock_log": "HELD round 1 at 10:25:53 rows_touched=2\nSELFPROOF: second writer refused with 'database is locked'\nARMED round 1 - browser legs may fire now\nRELEASED round 1 at 10:26:13\nHELD round 2 at 10:26:16 rows_touched=2\nSELFPROOF: second writer refused with 'database is locked'\nARMED round 2 - browser legs may fire now\nRELEASED round 2 at 10:27:01\n"
+   },
+   "why": "the two-window schedules (20s+20s and 20s+45s) both let the request finish its writes once it had the lock: the 45 s run waited 19927 ms and SUCCEEDED with 200, then plans/generate settled in 15 ms, so no second wait ever lost the lock; with deadline_ms 45000 above busy_timeout 30000, one failed wait surfaces at <= 30000 ms, i.e. before the budget is spent, which is why the plain HTTP 500 is what a traveller sees instead of the named answer"
+  }
+ ],
+ "instrument_limits_disclosed": [
+  "this stage was executed twice (10:09 and 10:15) with the same run id, so the second execution overwrote the first file; both printed the same shape (HTTP 500, text/plain, 21 B, no envelope), but only the later one survives as an artefact - from here on every execution gets its own run id",
+  "the value caught by PlanWithAiSheet.tsx:715-726 is not observable from outside the page: the painted data-result-status proves the catch ran, but which exception it caught is not visible without a diagnostic build or a unit-level test, so no cause is claimed here",
+  "this lane runs one browser per arm in a private profile, so a Service Worker from another arm cannot be involved; the arms were also not run in parallel"
+ ],
+ "derived_result": null,
+ "claimed_result": "MEASURED_NOT_GRADED"
+}
