@@ -1,0 +1,51 @@
+{
+ "ran_at_local": "2026-09-25T21:24:05+0800",
+ "lane": "HJ-P3 aad2d1f2",
+ "what_i_did": "wrote a path that had already been published, with different bytes, under the same name",
+ "path": "evidence/ord0300-c2-pairing-hjp3/evidence_manifest_full40_c2.json",
+ "writes_this_path_now_has": 2,
+ "commit_list_from_the_branch": [
+  {
+   "sha": "1751bb51a2f40242f1c5dbe164c63b50d15e1a79",
+   "at": "2026-09-25T13:16:35Z",
+   "msg": "docs(evidence): ORD-0300 C2 pairing HJ-P3 manifest of 40-hex blobs for"
+  },
+  {
+   "sha": "eb719aa8d30cfb64292d4e7ca3cb399a1b6f76ef",
+   "at": "2026-09-25T12:52:01Z",
+   "msg": "docs(evidence): ORD-0300 C2 pairing HJ-P3 manifest of 40-hex blobs for"
+  }
+ ],
+ "the_two_copies": {
+  "first": {
+   "blob_40_hex": "983e39b6072a00569b61bbe23bdec38377a670ce",
+   "bytes": 14826,
+   "sha1_recomputes_from_fetched_bytes": true,
+   "commit_40_hex": "eb719aa8d30cfb64292d4e7ca3cb399a1b6f76b9",
+   "files_listed_inside": 70,
+   "tip_it_listed": "70dbf66edb604d7d356e4ae8986bb6120a12dd7c",
+   "generated_at_local": "2026-09-25T20:51:57+0800",
+   "how_to_retrieve": "GET /repos/Canshu-King/CityNexus/git/blobs/983e39b6072a00569b61bbe23bdec38377a670ce (still addressable), or the file at commit eb719aa8d30cfb64292d4e7ca3cb399a1b6f76b9"
+  },
+  "second": {
+   "blob_40_hex": "3f7b2cd25a0a5ac5215c789942094ef09eda92d4",
+   "bytes": 18265,
+   "sha1_recomputes_from_fetched_bytes": true,
+   "commit_40_hex": "1751bb51a2f40242f1c5dbe164c63b50d15e1a79",
+   "files_listed_inside": 87,
+   "tip_it_listed": "28799abf7a768d690e40489e4646f07c5dfe4260",
+   "generated_at_local": "2026-09-25T21:16:32+0800",
+   "how_to_retrieve": "GET /repos/Canshu-King/CityNexus/git/blobs/3f7b2cd25a0a5ac5215c789942094ef09eda92d4 (still addressable), or the file at commit 1751bb51a2f40242f1c5dbe164c63b50d15e1a79"
+  }
+ },
+ "bytes_actually_lost": "none - git keeps both blobs and both commits; the first copy is still retrievable by blob id or by checking the file out at its commit",
+ "root_cause": "the `manifest` stage of c2_publish.py calls the low-level publisher directly instead of going through the batch gate, exactly the hole the commander named in ORD-0288 (`Q57` proposal). The gate is the only thing that refuses a same-name/different-bytes write, and a direct call cannot see it.",
+ "fix_applied_in_the_tool": "c2_publish.py now routes the manifest and md stages through the same identical-or-refuse gate, so a revision can only ever land under a new name; the version that ran stays published as an instrument revision",
+ "what_i_did_not_do": "no revert, no third write over the same path to \"put the old bytes back\", no deletion - a third write would be the same mistake",
+ "this_batch_other_self_report": "the bus delivery post also went out twice (issuecomment-5832877676 and issuecomment-5832902818) because the script died on a 404 read-back route and I re-ran it; recorded in bus_duplicate_note_c2.json and corrected by issuecomment-5832932960",
+ "effect_on_readings": "none. Every measurement in RECEIPT_O0300C2-1955_r3.json and the pairing that lifts the challenged cell is untouched by this; what is damaged is my own \"已发布路径 0 覆盖\" claim for this prefix, and the write ledger now has to say 2 for this path instead of 1",
+ "no_longer_true": {
+  "every_path_in_this_prefix_has_exactly_one_write": false,
+  "where_the_honest_reading_lives": "no_rewrite_proof_c2_r3.json (published after this write) is the copy that reads 2 for this path and reports ALL_HOLD false; the earlier ledger block for this batch asserted 1-for-every-path and is corrected by a new addendum block, not by editing that one"
+ }
+}
