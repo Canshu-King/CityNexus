@@ -1,0 +1,220 @@
+{
+ "ord0310-arms-receipt-r4.json": {
+  "exit": 0,
+  "fresh_path": true,
+  "identical_skipped": false,
+  "refused": [],
+  "proof_line": "PROOF (git blob sha1 equality): BYTE-LEVEL MATCH   local bytes 21496 | remote size 21496 | sha1 d86e0e7ba757fbf1",
+  "bytes": 21496
+ },
+ "ord0310-backend-readings-r2.json": {
+  "exit": 0,
+  "fresh_path": true,
+  "identical_skipped": false,
+  "refused": [],
+  "proof_line": "PROOF (git blob sha1 equality): BYTE-LEVEL MATCH   local bytes 2053 | remote size 2053 | sha1 74d4c0ea276c1126",
+  "bytes": 2053
+ },
+ "ord0310-gate-evidence-run339785.json": {
+  "exit": 0,
+  "fresh_path": true,
+  "identical_skipped": false,
+  "refused": [],
+  "proof_line": "PROOF (git blob sha1 equality): BYTE-LEVEL MATCH   local bytes 6242 | remote size 6242 | sha1 8a0fc019897f3a89",
+  "bytes": 6242
+ },
+ "ord0310-gate-evidence-run339864.json": {
+  "exit": 0,
+  "fresh_path": true,
+  "identical_skipped": false,
+  "refused": [],
+  "proof_line": "PROOF (git blob sha1 equality): BYTE-LEVEL MATCH   local bytes 2235 | remote size 2235 | sha1 69ab58a560ed3f31",
+  "bytes": 2235
+ },
+ "ord0310-gate-evidence-run339947.json": {
+  "exit": 0,
+  "fresh_path": true,
+  "identical_skipped": false,
+  "refused": [],
+  "proof_line": "PROOF (git blob sha1 equality): BYTE-LEVEL MATCH   local bytes 2235 | remote size 2235 | sha1 6708b2906fef4bd9",
+  "bytes": 2235
+ },
+ "ord0310-gate-evidence-run340026.json": {
+  "exit": 0,
+  "fresh_path": true,
+  "identical_skipped": false,
+  "refused": [],
+  "proof_line": "PROOF (git blob sha1 equality): BYTE-LEVEL MATCH   local bytes 2235 | remote size 2235 | sha1 6453ea942538d641",
+  "bytes": 2235
+ },
+ "ord0310-gate-evidence-run340105.json": {
+  "exit": 0,
+  "fresh_path": true,
+  "identical_skipped": false,
+  "refused": [],
+  "proof_line": "PROOF (git blob sha1 equality): BYTE-LEVEL MATCH   local bytes 7552 | remote size 7552 | sha1 956c286e59e33153",
+  "bytes": 7552
+ },
+ "ord0310-gate-evidence-run340186.json": {
+  "exit": 0,
+  "fresh_path": true,
+  "identical_skipped": false,
+  "refused": [],
+  "proof_line": "PROOF (git blob sha1 equality): BYTE-LEVEL MATCH   local bytes 131 | remote size 131 | sha1 0d0e93a8846c62d9",
+  "bytes": 131
+ },
+ "ord0310-gate-evidence-run340266.json": {
+  "exit": 0,
+  "fresh_path": true,
+  "identical_skipped": false,
+  "refused": [],
+  "proof_line": "PROOF (git blob sha1 equality): BYTE-LEVEL MATCH   local bytes 6234 | remote size 6234 | sha1 8ad7d0bb9190ed62",
+  "bytes": 6234
+ },
+ "ord0310-ledger-block-r2.md": {
+  "exit": 0,
+  "fresh_path": true,
+  "identical_skipped": false,
+  "refused": [],
+  "proof_line": "PROOF (git blob sha1 equality): BYTE-LEVEL MATCH   local bytes 15511 | remote size 15511 | sha1 320084ace903d1c1",
+  "bytes": 15511
+ },
+ "ord0310-left-right-count-trap.out": {
+  "exit": 0,
+  "fresh_path": true,
+  "identical_skipped": false,
+  "refused": [],
+  "proof_line": "PROOF (git blob sha1 equality): BYTE-LEVEL MATCH   local bytes 521 | remote size 521 | sha1 ee03cf3206ff6f8e",
+  "bytes": 521
+ },
+ "ord0310-mergetree-tip-x-candidate-r2.out": {
+  "exit": 0,
+  "fresh_path": true,
+  "identical_skipped": false,
+  "refused": [],
+  "proof_line": "PROOF (git blob sha1 equality): BYTE-LEVEL MATCH   local bytes 485 | remote size 485 | sha1 8db66d7493f634f8",
+  "bytes": 485
+ },
+ "ord0310-mergetree-tip-x-previous-ref.out": {
+  "exit": 0,
+  "fresh_path": true,
+  "identical_skipped": false,
+  "refused": [],
+  "proof_line": "PROOF (git blob sha1 equality): BYTE-LEVEL MATCH   local bytes 41 | remote size 41 | sha1 73cafd8de3e1a36e",
+  "bytes": 41
+ },
+ "ord0310-path-disjointness-r2.tsv": {
+  "exit": 0,
+  "fresh_path": true,
+  "identical_skipped": false,
+  "refused": [],
+  "proof_line": "PROOF (git blob sha1 equality): BYTE-LEVEL MATCH   local bytes 897 | remote size 897 | sha1 d74dbd49ff8975b0",
+  "bytes": 897
+ },
+ "ord0310-q38r2-on-receipt-r2.json": {
+  "exit": 0,
+  "fresh_path": true,
+  "identical_skipped": false,
+  "refused": [],
+  "proof_line": "PROOF (git blob sha1 equality): BYTE-LEVEL MATCH   local bytes 12127 | remote size 12127 | sha1 64c7fd6398fb025b",
+  "bytes": 12127
+ },
+ "ord0310-q43r3-on-block-r2.json": {
+  "exit": 0,
+  "fresh_path": true,
+  "identical_skipped": false,
+  "refused": [],
+  "proof_line": "PROOF (git blob sha1 equality): BYTE-LEVEL MATCH   local bytes 588 | remote size 588 | sha1 9d04379b6cb3795e",
+  "bytes": 588
+ },
+ "ord0310-q43r4b-on-block-r2.json": {
+  "exit": 0,
+  "fresh_path": true,
+  "identical_skipped": false,
+  "refused": [],
+  "proof_line": "PROOF (git blob sha1 equality): BYTE-LEVEL MATCH   local bytes 576 | remote size 576 | sha1 bfbc4a1fe4e77b82",
+  "bytes": 576
+ },
+ "ord0310-tip-read-r2.out": {
+  "exit": 0,
+  "fresh_path": true,
+  "identical_skipped": false,
+  "refused": [],
+  "proof_line": "PROOF (git blob sha1 equality): BYTE-LEVEL MATCH   local bytes 1617 | remote size 1617 | sha1 0e19d401a3174edf",
+  "bytes": 1617
+ },
+ "ord0310-tool-gauge-landed-block.py": {
+  "exit": 4,
+  "fresh_path": false,
+  "identical_skipped": false,
+  "refused": [
+   "REFUSE evidence/ord0288-keyless-deadline/ord0310-tool-gauge-landed-block.py"
+  ],
+  "proof_line": "ent bytes : 76e76aa1418988f3c14dda9d764276f3c3a4b6e8\n   a published path is never re-PUT - publish a new name instead\n   this path has 1 write(s) on it already:\n      3a43ac9b64d0 2026-09-25T12:02:00Z",
+  "bytes": 2356
+ },
+ "ord0310-tool-kill-arms.py": {
+  "exit": 0,
+  "fresh_path": false,
+  "identical_skipped": true,
+  "refused": [],
+  "proof_line": "SKIP   evidence/ord0288-keyless-deadline/ord0310-tool-kill-arms.py - byte-identical already on the branch (bf0f0cce780cf934d09338186ab699964f08ca0d)",
+  "bytes": 14063
+ },
+ "ord0310-tool-make-block-r2.py": {
+  "exit": 0,
+  "fresh_path": true,
+  "identical_skipped": false,
+  "refused": [],
+  "proof_line": "PROOF (git blob sha1 equality): BYTE-LEVEL MATCH   local bytes 22228 | remote size 22228 | sha1 bf36f33243568c86",
+  "bytes": 22228
+ },
+ "ord0310-tool-make-receipt-r2.py": {
+  "exit": 0,
+  "fresh_path": true,
+  "identical_skipped": false,
+  "refused": [],
+  "proof_line": "PROOF (git blob sha1 equality): BYTE-LEVEL MATCH   local bytes 39769 | remote size 39769 | sha1 1d0b21e97bb7df10",
+  "bytes": 39769
+ },
+ "ord0310-tool-pub-names.py": {
+  "exit": 0,
+  "fresh_path": true,
+  "identical_skipped": false,
+  "refused": [],
+  "proof_line": "PROOF (git blob sha1 equality): BYTE-LEVEL MATCH   local bytes 3831 | remote size 3831 | sha1 ffe479a8bddb8a24",
+  "bytes": 3831
+ },
+ "ord0310-tool-publish.py": {
+  "exit": 0,
+  "fresh_path": true,
+  "identical_skipped": false,
+  "refused": [],
+  "proof_line": "PROOF (git blob sha1 equality): BYTE-LEVEL MATCH   local bytes 2715 | remote size 2715 | sha1 08bf5229f6a52077",
+  "bytes": 2715
+ },
+ "ord0310-tool-readback-r2.py": {
+  "exit": 0,
+  "fresh_path": true,
+  "identical_skipped": false,
+  "refused": [],
+  "proof_line": "PROOF (git blob sha1 equality): BYTE-LEVEL MATCH   local bytes 5678 | remote size 5678 | sha1 16111ad7a99b5581",
+  "bytes": 5678
+ },
+ "ord0310-tool-stage-pub-r2.py": {
+  "exit": 0,
+  "fresh_path": true,
+  "identical_skipped": false,
+  "refused": [],
+  "proof_line": "PROOF (git blob sha1 equality): BYTE-LEVEL MATCH   local bytes 3607 | remote size 3607 | sha1 dcbd88e60c783dee",
+  "bytes": 3607
+ },
+ "ord0310_keyless_deadline_receipt_r2.json": {
+  "exit": 0,
+  "fresh_path": true,
+  "identical_skipped": false,
+  "refused": [],
+  "proof_line": "PROOF (git blob sha1 equality): BYTE-LEVEL MATCH   local bytes 34150 | remote size 34150 | sha1 35e40da15ef65b02",
+  "bytes": 34150
+ }
+}
