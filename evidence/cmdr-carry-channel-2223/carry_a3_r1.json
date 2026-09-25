@@ -1,0 +1,214 @@
+{
+ "schema": "CNX_CMDR_READING_CARRY_CHANNEL_V1",
+ "lane": "commander 494abfd7",
+ "at_local": "2026-09-25T22:23:01+0800",
+ "what": "attribute the frozen Q38 ruler's SOFT findings: my token grammar's blind spot vs a real sentence-not-built-from-readings gap",
+ "receipt": {
+  "path": "_e0314_a3.json",
+  "bytes": 9354
+ },
+ "frozen_ruler_verdict_unchanged": "Q38_GATE_SOFT_FINDINGS",
+ "cells": [
+  {
+   "cell": "TA_pristine",
+   "readings_values": 11,
+   "carried_verbatim": 2,
+   "examples": [
+    "0281p13227",
+    "passed"
+   ],
+   "channel_ok": true
+  },
+  {
+   "cell": "TB_bound2000",
+   "readings_values": 5,
+   "carried_verbatim": 2,
+   "examples": [
+    "2",
+    "2404"
+   ],
+   "channel_ok": true
+  },
+  {
+   "cell": "TC_bound1000",
+   "readings_values": 5,
+   "carried_verbatim": 2,
+   "examples": [
+    "1",
+    "1416"
+   ],
+   "channel_ok": true
+  },
+  {
+   "cell": "TD_bound2000",
+   "readings_values": 8,
+   "carried_verbatim": 2,
+   "examples": [
+    "0281p23227",
+    "passed"
+   ],
+   "channel_ok": true
+  },
+  {
+   "cell": "K1_bound2000",
+   "readings_values": 8,
+   "carried_verbatim": 2,
+   "examples": [
+    "0281p23227",
+    "passed"
+   ],
+   "channel_ok": true
+  },
+  {
+   "cell": "K2_pristine",
+   "readings_values": 8,
+   "carried_verbatim": 2,
+   "examples": [
+    "0281p13227",
+    "passed"
+   ],
+   "channel_ok": true
+  },
+  {
+   "cell": "K3_bound2000",
+   "readings_values": 8,
+   "carried_verbatim": 2,
+   "examples": [
+    "0281p23227",
+    "passed"
+   ],
+   "channel_ok": true
+  },
+  {
+   "cell": "counter_ca_no_delegate",
+   "readings_values": 2,
+   "carried_verbatim": 1,
+   "examples": [
+    "NOT_MET"
+   ],
+   "channel_ok": true
+  },
+  {
+   "cell": "counter_ca_keyless_too",
+   "readings_values": 3,
+   "carried_verbatim": 1,
+   "examples": [
+    "NOT_MET"
+   ],
+   "channel_ok": true
+  },
+  {
+   "cell": "counter_ca_fixed_secs",
+   "readings_values": 4,
+   "carried_verbatim": 2,
+   "examples": [
+    "99",
+    "NOT_MET"
+   ],
+   "channel_ok": true
+  },
+  {
+   "cell": "scope",
+   "readings_values": 3,
+   "carried_verbatim": 3,
+   "examples": [
+    "2",
+    "4",
+    "6"
+   ],
+   "channel_ok": true
+  },
+  {
+   "cell": "base_ref",
+   "readings_values": 7,
+   "carried_verbatim": 5,
+   "examples": [
+    "0",
+    "13af1ff4ba4516aa1a39cda67428ed4a2a34ac69",
+    "3",
+    "5aff3722d5c36c760a424f5fea5c3a771298f9ac",
+    "heads/review/0281-write-deadline-keyed-b3"
+   ],
+   "channel_ok": true
+  },
+  {
+   "cell": "late_answer_after_deadline",
+   "readings_values": 0,
+   "carried_verbatim": 0,
+   "examples": [],
+   "channel_ok": false
+  }
+ ],
+ "soft_attribution": [
+  {
+   "cell_index": "0",
+   "ruler_code": "WHY_NOT_FROM_OWN_READINGS",
+   "ruler_detail": "0 of 1 tokens in this cell's sentence appear in that cell's own readings",
+   "value_channel_carries": true,
+   "carried_examples": [
+    "0281p13227",
+    "passed"
+   ],
+   "attribution": "COMMANDER_RULER_BLIND_SPOT"
+  },
+  {
+   "cell_index": "3",
+   "ruler_code": "WHY_NOT_FROM_OWN_READINGS",
+   "ruler_detail": "0 of 1 tokens in this cell's sentence appear in that cell's own readings",
+   "value_channel_carries": true,
+   "carried_examples": [
+    "0281p23227",
+    "passed"
+   ],
+   "attribution": "COMMANDER_RULER_BLIND_SPOT"
+  },
+  {
+   "cell_index": "4",
+   "ruler_code": "WHY_NOT_FROM_OWN_READINGS",
+   "ruler_detail": "0 of 1 tokens in this cell's sentence appear in that cell's own readings",
+   "value_channel_carries": true,
+   "carried_examples": [
+    "0281p23227",
+    "passed"
+   ],
+   "attribution": "COMMANDER_RULER_BLIND_SPOT"
+  },
+  {
+   "cell_index": "5",
+   "ruler_code": "WHY_NOT_FROM_OWN_READINGS",
+   "ruler_detail": "0 of 1 tokens in this cell's sentence appear in that cell's own readings",
+   "value_channel_carries": true,
+   "carried_examples": [
+    "0281p13227",
+    "passed"
+   ],
+   "attribution": "COMMANDER_RULER_BLIND_SPOT"
+  },
+  {
+   "cell_index": "6",
+   "ruler_code": "WHY_NOT_FROM_OWN_READINGS",
+   "ruler_detail": "0 of 1 tokens in this cell's sentence appear in that cell's own readings",
+   "value_channel_carries": true,
+   "carried_examples": [
+    "0281p23227",
+    "passed"
+   ],
+   "attribution": "COMMANDER_RULER_BLIND_SPOT"
+  }
+ ],
+ "summary": {
+  "soft_from_ruler": 5,
+  "attributed_to_my_blind_spot": 5,
+  "attributed_to_real_gap": 0
+ },
+ "standing_rule": "before a soft finding is billed to a lane, run the same sentence through a second channel; where the two instruments disagree the defect is in the instrument until the lane's own readings are shown not to contain the words.",
+ "discipline": {
+  "product_bytes_changed": 0,
+  "refs_pushed": 0,
+  "databases_opened": 0,
+  "credential_values_printed": 0
+ },
+ "claim_kind": "artifact_determined",
+ "claimed_result": "of 5 SOFT findings the frozen ruler reports for this receipt, 5 are cleared by the value-carry channel (my token grammar cannot see runIds like 0281p13227) and 0 stay as real gaps",
+ "derived_result": null
+}
