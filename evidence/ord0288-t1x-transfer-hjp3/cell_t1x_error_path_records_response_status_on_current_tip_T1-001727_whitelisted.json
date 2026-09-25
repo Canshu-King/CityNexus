@@ -1,0 +1,147 @@
+{
+ "arm": "t1x_error_path_records_response_status_on_current_tip",
+ "run_id": "T1-001727",
+ "measured_on": "2344145ce6342b6ac32ac4d0955c0f524d8c9320",
+ "journey_id": "cdb40d52-d8d4-45d8-83c8-cb0b55e07376",
+ "processes": [
+  {
+   "tag": "A",
+   "pid": 59704,
+   "port": 8621,
+   "tree": "D:\\moodle\\_hjp3_0288t1x_0926\\backend",
+   "db": "D:\\moodle\\_hjp3_0288t1x_0926\\t1x.s3db",
+   "listening": true,
+   "exited": false,
+   "cmdline_at_start": "D:/moodle/CityNexus/.venv/Scripts/python.exe -m uvicorn app.main:app --host 127.0.0.1 --port 8621 --log-level info"
+  },
+  {
+   "tag": "B",
+   "pid": 42128,
+   "port": 8622,
+   "tree": "D:\\moodle\\_hjp3_0288t1x_0926\\backend",
+   "db": "D:\\moodle\\_hjp3_0288t1x_0926\\t1x.s3db",
+   "listening": true,
+   "exited": false,
+   "cmdline_at_start": "D:/moodle/CityNexus/.venv/Scripts/python.exe -m uvicorn app.main:app --host 127.0.0.1 --port 8622 --log-level info"
+  }
+ ],
+ "steps": [
+  {
+   "intent": "keyed send the route refuses",
+   "response": {
+    "url": "http://127.0.0.1:8621/api/v1/journeys/cdb40d52-d8d4-45d8-83c8-cb0b55e07376/plans/generate",
+    "method": "POST",
+    "request_body": {
+     "candidate_count": 3
+    },
+    "sent_headers": {
+     "Idempotency-Key": "ord0288-t1x-b-001727"
+    },
+    "status": 422,
+    "content_type": "application/json",
+    "bytes": 1443,
+    "body_sha256_64_hex": "df614cf945498bcc4c6506d1cd8aa82fb20e9c5971ec0783effa0d4d461979a1",
+    "response_bytes": 1443,
+    "response_received": true,
+    "elapsed_ms": 46,
+    "at": "00:17:27",
+    "http_error": "HTTP Error 422: Unprocessable Entity"
+   }
+  },
+  {
+   "intent": "replay of that key from the other process",
+   "response": {
+    "url": "http://127.0.0.1:8622/api/v1/journeys/cdb40d52-d8d4-45d8-83c8-cb0b55e07376/plans/generate",
+    "method": "POST",
+    "request_body": {
+     "candidate_count": 3
+    },
+    "sent_headers": {
+     "Idempotency-Key": "ord0288-t1x-b-001727"
+    },
+    "status": 422,
+    "content_type": "application/json",
+    "bytes": 1443,
+    "body_sha256_64_hex": "990e433813c878a276be651ae1655b46613791836c9ba06481c1991818f99c7a",
+    "response_bytes": 1443,
+    "response_received": true,
+    "elapsed_ms": 4,
+    "at": "00:17:27",
+    "http_error": "HTTP Error 422: Unprocessable Entity"
+   },
+   "replay_identical_payload": false
+  }
+ ],
+ "extra": {
+  "key": "ord0288-t1x-b-001727",
+  "row_for_this_key": [
+   {
+    "key": "plans.generate:ord0288-t1x-b-001727",
+    "operation": "plans.generate",
+    "request_hash_head": "{\"candidate_coun",
+    "response_status": 422,
+    "response_json_bytes": 1424,
+    "created_at": "2026-09-25T16:17:27.716048+00:00",
+    "expires_at": "2026-10-02T16:17:27.716048+00:00"
+   }
+  ],
+  "response_status_is_not_null": true
+ },
+ "durable_read_after": {
+  "connection_uri": "file:D:/moodle/_hjp3_0288t1x_0926/t1x.s3db?mode=ro",
+  "db_exists": true,
+  "idempotency_keys": [
+   {
+    "key": "plans.generate:ord0288-t1x-001727",
+    "operation": "plans.generate",
+    "request_hash_head": "{\"candidate_coun",
+    "response_status": 422,
+    "response_json_bytes": 1424,
+    "created_at": "2026-09-25T16:17:27.612940+00:00",
+    "expires_at": "2026-10-02T16:17:27.612940+00:00"
+   },
+   {
+    "key": "plans.generate:ord0288-t1x-b-001727",
+    "operation": "plans.generate",
+    "request_hash_head": "{\"candidate_coun",
+    "response_status": 422,
+    "response_json_bytes": 1424,
+    "created_at": "2026-09-25T16:17:27.716048+00:00",
+    "expires_at": "2026-10-02T16:17:27.716048+00:00"
+   }
+  ],
+  "counts": {
+   "plan_versions": 0,
+   "journeys": 2,
+   "journey_missions": 0,
+   "audit_logs": 8,
+   "replan_proposals": 0
+  },
+  "total_idempotency_rows_all_keys": 2,
+  "names_the_store": "D:\\moodle\\_hjp3_0288t1x_0926\\t1x.s3db",
+  "this_arms_keys": [
+   "ord0288-t1x-001727",
+   "ord0288-t1x-b-001727"
+  ],
+  "rows_for_this_arms_keys": [
+   {
+    "key": "plans.generate:ord0288-t1x-001727",
+    "operation": "plans.generate",
+    "request_hash_head": "{\"candidate_coun",
+    "response_status": 422,
+    "response_json_bytes": 1424,
+    "created_at": "2026-09-25T16:17:27.612940+00:00",
+    "expires_at": "2026-10-02T16:17:27.612940+00:00"
+   },
+   {
+    "key": "plans.generate:ord0288-t1x-b-001727",
+    "operation": "plans.generate",
+    "request_hash_head": "{\"candidate_coun",
+    "response_status": 422,
+    "response_json_bytes": 1424,
+    "created_at": "2026-09-25T16:17:27.716048+00:00",
+    "expires_at": "2026-10-02T16:17:27.716048+00:00"
+   }
+  ]
+ }
+}
