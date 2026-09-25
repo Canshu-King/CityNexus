@@ -16588,6 +16588,42 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### ORD-0318 · lane S2-hermes-port · r2/r3 重切：两枚不可解析的测试不移植 · 状态 DELIVERED（r3 可直接快进）
+
+**依令**: 号令者 494abfd7 于 03:15 判"内容成立、形状不成立"，要求去掉两枚 import 不了的测试重切一枚，不改已推的 r1。
+**lane**: S2-hermes-port（Qoder）· **at_local**: 2026-09-26T03:41+0800
+
+#### 交付（三枚候选并存，各自父提交都写明）
+- `refs/heads/agent/S2-hermes-port-candidates-r3` = `65df31df96cfb8a954f5feb36484710a883e1597` ｜父 = 现尖 `9a669c8bec863fadf31d5158f4a1be66aec49f23` ⇒ **可快进**（`git merge-base --is-ancestor` 真；behind 0 且 ahead 1）
+- `refs/heads/agent/S2-hermes-port-candidates-r2` = `0ff20610f19e412ef01f821e252c5b490002d2de` ｜父 = 上一枚尖 `30de4ebe409f49c5e25f4758cb2e5f4e90764a4f` ⇒ 与现尖 1 比 1 分叉
+- r1 `afbbf5be3256d76eac0453ab3ad8e6dd1356d7cc` 原样保留未改写（`previously_pushed_candidates_rewritten` 计数 0）
+- **建议落 r3**：你下 03:15 令时权威尖还是 `30de4ebe409f49c5e25f4758cb2e5f4e90764a4f`，但 ORD-0302 在 03:22 把线推到 `9a669c8bec863fadf31d5158f4a1be66aec49f23`（其 diff 只碰 `frontend/src` 与 `frontend/e2e`，与我这 107 条重叠 0 条，`backend/tests` 未触及）⇒ 我按你"从上述尖开"的本意又在**现行尖**上重切一枚，两枚移植内容**逐字节相同**。
+
+#### 改动面（`git diff --name-status <父>..<候选>`，两枚同形）
+- paths 107 且状态只有 `A`（`M` 与 `D` 各 0）｜added_lines 19549 且 deleted_lines 0｜分桶 scripts 67 加 backend/tests 19 加 reports/hermes 21
+- `backend/app/`、`frontend/`、`data/`、`contracts/` 命中 0；删除行为 0 ⇒ 父尖上每个既有字节逐位不变（证明方法记在收据 blob `5f8a97258d9eccfeaaa6e08fb83379b0fbca9317`）
+- 只读 `git merge-tree --write-tree`：exit 0 且 conflict_entries 0，返回树 `e4dfe540e9c1f01f8cb39503386d31c9f42267a8`（r2 与 r3 各自对父的预测都落到这同一枚树 ⇒ 移植内容与基线无关，交叉核对成立）
+
+#### 套件读数（`backend/tests` 全量与净臂都在**现尖导出树**上量；解释器 `D:/moodle/CityNexus/.venv/Scripts/python.exe` 即 Python 3.12.14）
+- 净臂 clean arm：files 20 且 collected 58 且 passed 58 且 failed 0 且 error 行 0 且 exit 0 ｜出处 blob `5f8a97258d9eccfeaaa6e08fb83379b0fbca9317` 的 `arms.clean20`
+- 全局门（你要的那格）：`full_suite_collect_clean` = true ｜同件的 `arms.fullsuite_ported`：collected 1318 且 error 行 0 且 exit 0
+- 同树无移植基线：collected 1261 且 error 行 0 ｜同件 `arms.fullsuite_baseline` ⇒ 移植净增 57 条
+- 对账：净臂 58 条 但全量只增 57 条，差的那 1 条来自 `backend/tests/test_v18_hermes_native_client.py` —— 它在尖上本就同源（blob `e584e6e83ca41199132ab40d99b31e27da29c9e2`），基线已计它 1 条测试
+- 逐枚 blob 对平：三棵树（导出树 与 r2 worktree 与 r3 worktree）各 108 条全部 `MATCH`（107 新 加 1 本就同源），`MISMATCH` 与 `WRITE_FAIL` 各 0 ｜出处同件 `per_tree_blob_tally`
+
+#### 两枚**具名不移植**（按你的要件写明，不是 skip、没动任何断言）
+- `backend/tests/test_hermes_r5_cached_replan_compatibility.py` → 报 `ImportError: cannot import name '_upgrade_cached_request_replan_response' from 'app.agent.gateway'`；该符号在 Hermes 线上有定义（`backend/app/agent/gateway.py:107`，调用于 `:542` 与 `:617`），只有主线缺 ⇒ 属你 Group B
+- `backend/tests/test_v18_hermes_r20_transport_reliability_probe.py` → 报 `ModuleNotFoundError: No module named 'citynexus_mcp'`；真链条是它 → `scripts/hermes_r20_transport_reliability_probe.py:11` → `scripts/hermes_r4_contract_probe.py:29` → 类在 `agent-mcp/citynexus_mcp/schemas.py:51`；反证：把现尖的 `agent-mcp` 放进 `PYTHONPATH` 后 import 同一链条，改报 `ImportError: cannot import name 'HermesReplanProposalView'` ⇒ 缺口结构性 且 **家在 `agent-mcp/` 而不是 `backend/app/`**
+- 措辞按你要求写成"本轮不移植"，两处对你 feasibility 件（blob `2036d33b24e2bbbd6bad5fc7e12d785c219ce0a0`）的更正保持上一块 `S2-hermes-port_0310.md` 的原文与实测，未再加新断言
+
+#### 你那两件我照办、一件我提醒
+- 你第 4 点（另开一单记账：两枚符号归属已改 且 一枚其实已在 hermes 线上 ⇒ 那份 feasibility 件不能当 Group B 的地图）我不动账本 只把这条原样转给你：它归你今晚自己发件。
+- 提醒一处量具坑（我自己的）：见收据 blob `5f8a97258d9eccfeaaa6e08fb83379b0fbca9317` 的 `per_tree_blob_tally`（三棵树各 108 条）。本轮第一次写 worktree 时 108 条全报 `MISMATCH` 且实为 0 字节，真因是 inline 命令里的 `!` 被转义成 `\!` ⇒ `if ! git cat-file …` 变成"命令未找到"，git 没跑而重定向先造了空文件；改成脚本文件后重跑才全 `MATCH`（逐行在 `perfile_worktree_r2.tsv` 与 `perfile_worktree_r3.tsv`）。同类风险对任何在 Bash 里循环取 blob 的车道都成立。
+- 纪律计数：`product_bytes_changed` 0 且 `authoritative_branch_moved` 0 且 `demo_reset` 0 且 `credentials_printed` 0 且 `model_calls_made` 0 且 `junctions_created` 0；主库 4 子树 porcelain 仍是你 03:15 之前那 2 条脏件 未由我改动。
+
+**verdict** = `R2_R3_PORT_CLEAN_58_PASSED_FULL_SUITE_COLLECT_CLEAN`，由收据 blob `5f8a97258d9eccfeaaa6e08fb83379b0fbca9317` 的 `checks` 派生；正反双向各改一条读数都能翻成 `PARTIAL`（自检脚本 `verdict_killer_r2.py` 随件说明可复跑）。
+
+
 ### ORD-0317 → F `8ccd71d8` ② 的换锚件 + 逐代重算（欠件清偿 · 2026-09-26 03:34+08）
 
 欠的那一枚，按你上一条 CMDR 块里那句「下一枚欠件按新尖现读」办了。本件不改任何产品字节，也不重投已入账的块（ORD-0296 那块你 01:11:17 已代插，我不再动）。
