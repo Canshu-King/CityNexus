@@ -1,0 +1,215 @@
+{
+ "arm": "dep_spec_json_envelope_500",
+ "run_id": "P3-222905",
+ "intent_declared_before": "A7 a JSON envelope at the SAME status as A1: separates \"the body was JSON\" from \"it was a 5xx\"",
+ "tip": "7856e03f6238da3000976eb6e690a448dfa39b9a",
+ "scenario": "spec",
+ "proxy_mode": "answer_spec",
+ "spec": {
+  "name": "json_envelope_500",
+  "status": 500,
+  "reason": "Internal Server Error",
+  "content_type": "application/json",
+  "body": {
+   "error": {
+    "code": "INTERNAL_ERROR",
+    "message": "The server could not complete this request",
+    "message_key": "error.internal_error",
+    "trace_id": "p3-instrument-composed-not-a-product-trace",
+    "details": null
+   }
+  }
+ },
+ "lock_plan": null,
+ "rig": {
+  "backend_pid": 30428,
+  "proxy_pid": 56960,
+  "face_pid": 50904,
+  "face_port": 8653,
+  "all_up": true,
+  "identity_two_sided": true,
+  "journey_id": "e37943d3-fa3a-4d35-9feb-a6e7684504fb",
+  "seed": {
+   "places_before": 0,
+   "demo_places_before": 0,
+   "seeded_by_this_call": true,
+   "demo_places_after": 8
+  },
+  "db": "D:\\moodle\\_hjp3_0301p3_0925\\p3_dep.s3db",
+  "access_log": "p3_backend_access_222905.log",
+  "rig_state_file": "p3_rig_state_dep_answer_spec_222905.json"
+ },
+ "node_rc": 0,
+ "node_tail": [
+  [
+   "{\"scenario\":\"spec\",\"status\":\"HTTP_500\",\"title\":\"服务端处理失败\",\"label\":\"服务器给出的原因\",\"reason\":\"The server could not complete this request\",\"details\":1,\"opened_label_rendered\":\"服务器给出的原因\",\"origin\":\"server\",\"fetch_rejected\":false,\"page_saw\":500,\"pair_id\":\"hjp3p3-8bf6a202320a4d52\",\"body_parsed\":true,\"top_keys\":[\"error\"]}"
+  ]
+ ],
+ "wall_seconds": 5,
+ "pairing": [
+  {
+   "leg": "e37943d3-fa3a-4d35-9feb-a6e7684504fb/agent/commands",
+   "pair_id": "hjp3p3-8bf6a202320a4d52",
+   "one_request_one_id": true,
+   "server_side_from_the_same_hop": {
+    "recorded": true,
+    "reached_upstream": false,
+    "answered_by": "instrument_origin_per_spec",
+    "status": 500,
+    "content_type": "application/json",
+    "bytes": 208,
+    "body_parses_as_json": true,
+    "top_level_keys": [
+     "error"
+    ],
+    "body_head": "{\"error\": {\"code\": \"INTERNAL_ERROR\", \"message\": \"The server could not complete this request\", \"message_key\": \"error.inte",
+    "elapsed_ms": 0,
+    "request_mutation": null,
+    "spec_name": "json_envelope_500"
+   },
+   "screen_side_from_the_page": {
+    "fetch_rejected": false,
+    "status": 500,
+    "ok": false,
+    "content_type": "application/json",
+    "elapsed_ms": 5,
+    "app_read_the_body": {
+     "url": "http://127.0.0.1:8653/api/v1/journeys/e37943d3-fa3a-4d35-9feb-a6e7684504fb/agent/commands",
+     "status": 500,
+     "pair_id": "hjp3p3-8bf6a202320a4d52",
+     "content_type": "application/json",
+     "at_wall": "2026-09-25T14:29:13.941Z",
+     "parsed": true,
+     "top_type": "object",
+     "top_keys": [
+      "error"
+     ],
+     "error_keys": [
+      "code",
+      "message",
+      "message_key",
+      "trace_id",
+      "details"
+     ],
+     "error_message_type": "string",
+     "detail_type": "undefined"
+    },
+    "body_parse_failed": false,
+    "body_parsed": true,
+    "browser_stack": {
+     "url": "/api/v1/journeys/e37943d3-fa3a-4d35-9feb-a6e7684504fb/agent/commands",
+     "status": 500,
+     "pair_id": "hjp3p3-8bf6a202320a4d52",
+     "content_type": "application/json",
+     "failure": null,
+     "at_wall": "2026-09-25T14:29:13.942Z"
+    }
+   },
+   "both_ends_agree_on_status": true,
+   "both_ends_agree_on_json_class": true
+  }
+ ],
+ "write_legs_with_a_5xx_or_4xx": [
+  {
+   "leg": "e37943d3-fa3a-4d35-9feb-a6e7684504fb/agent/commands",
+   "status": 500,
+   "answered_by": "instrument_origin_per_spec",
+   "json": true,
+   "page_saw": 500,
+   "rejected": false
+  }
+ ],
+ "screen_as_painted_before_tapping": {
+  "result_card_painted": "服务端处理失败\n\n这次是服务端出错，不是你的需求有问题。行程未被改动，可稍后重试；反复出现请保留“技术详情”。\n\n技术详情",
+  "result_card_text_content": "服务端处理失败这次是服务端出错，不是你的需求有问题。行程未被改动，可稍后重试；反复出现请保留“技术详情”。技术详情服务器给出的原因The server could not complete this request",
+  "card_title_painted": "服务端处理失败",
+  "card_body_painted": "这次是服务端出错，不是你的需求有问题。行程未被改动，可稍后重试；反复出现请保留“技术详情”。",
+  "reason_label_painted": "",
+  "reason_value_painted": "",
+  "reason_label_text_content": "服务器给出的原因",
+  "reason_value_text_content": "The server could not complete this request",
+  "details_elements_present": 1,
+  "details_open_attribute": false,
+  "detail_toggle_present": true,
+  "network_card_painted": false,
+  "http_failed_card_painted": true,
+  "refused_card_painted": false,
+  "server_attribution_painted": false,
+  "device_attribution_painted": false,
+  "unreadable_answer_note_painted": false,
+  "whole_page_contains_server_label": true,
+  "whole_page_contains_device_label": false,
+  "next_step_painted": null,
+  "cross_check_data_result_status": "HTTP_500",
+  "cross_check_data_reason_origin": "server"
+ },
+ "screen_as_painted_after_tapping_detail": {
+  "result_card_painted": "服务端处理失败\n\n这次是服务端出错，不是你的需求有问题。行程未被改动，可稍后重试；反复出现请保留“技术详情”。\n\n技术详情\n服务器给出的原因\nThe server could not complete this request",
+  "result_card_text_content": "服务端处理失败这次是服务端出错，不是你的需求有问题。行程未被改动，可稍后重试；反复出现请保留“技术详情”。技术详情服务器给出的原因The server could not complete this request",
+  "card_title_painted": "服务端处理失败",
+  "card_body_painted": "这次是服务端出错，不是你的需求有问题。行程未被改动，可稍后重试；反复出现请保留“技术详情”。",
+  "reason_label_painted": "服务器给出的原因",
+  "reason_value_painted": "The server could not complete this request",
+  "reason_label_text_content": "服务器给出的原因",
+  "reason_value_text_content": "The server could not complete this request",
+  "details_elements_present": 1,
+  "details_open_attribute": true,
+  "detail_toggle_present": true,
+  "network_card_painted": false,
+  "http_failed_card_painted": true,
+  "refused_card_painted": false,
+  "server_attribution_painted": true,
+  "device_attribution_painted": false,
+  "unreadable_answer_note_painted": false,
+  "whole_page_contains_server_label": true,
+  "whole_page_contains_device_label": false,
+  "next_step_painted": null,
+  "cross_check_data_result_status": "HTTP_500",
+  "cross_check_data_reason_origin": "server"
+ },
+ "detail_block_open_attempt": {
+  "clicked": true,
+  "was_already_open": false,
+  "details_open_after": true
+ },
+ "screen": {
+  "result_card_painted": "服务端处理失败\n\n这次是服务端出错，不是你的需求有问题。行程未被改动，可稍后重试；反复出现请保留“技术详情”。\n\n技术详情",
+  "result_card_text_content": "服务端处理失败这次是服务端出错，不是你的需求有问题。行程未被改动，可稍后重试；反复出现请保留“技术详情”。技术详情服务器给出的原因The server could not complete this request",
+  "card_title_painted": "服务端处理失败",
+  "card_body_painted": "这次是服务端出错，不是你的需求有问题。行程未被改动，可稍后重试；反复出现请保留“技术详情”。",
+  "reason_label_painted": "",
+  "reason_value_painted": "",
+  "reason_label_text_content": "服务器给出的原因",
+  "reason_value_text_content": "The server could not complete this request",
+  "details_elements_present": 1,
+  "details_open_attribute": false,
+  "detail_toggle_present": true,
+  "network_card_painted": false,
+  "http_failed_card_painted": true,
+  "refused_card_painted": false,
+  "server_attribution_painted": false,
+  "device_attribution_painted": false,
+  "unreadable_answer_note_painted": false,
+  "whole_page_contains_server_label": true,
+  "whole_page_contains_device_label": false,
+  "next_step_painted": null,
+  "cross_check_data_result_status": "HTTP_500",
+  "cross_check_data_reason_origin": "server"
+ },
+ "page_errors": [],
+ "waited_ms": 3714,
+ "sample_tail": [
+  {
+   "ms": 550,
+   "status": "HTTP_500",
+   "details": 1,
+   "busy": false
+  }
+ ],
+ "access_log_witness": {
+  "present": true,
+  "path": "p3_backend_access_222905.log",
+  "lines_naming_the_leg": 0,
+  "lines": []
+ }
+}
