@@ -1,0 +1,8 @@
+$ git merge-tree --write-tree 2344145ce6342b6ac32ac4d0955c0f524d8c9320 30de4ebe409f49c5e25f4758cb2e5f4e90764a4f
+exit=0
+stdout line 1 (predicted tree): a5b5d3f5b253b6bcc635567c9fe1f2fb264e23f8
+stdout after line 1 (the conflict section, empty means no conflict):
+
+stderr:
+
+note: read-only prediction; it writes blobs/trees into the object store and moves 0 refs. Rendered in the same process run that produced ord0310_keyless_deadline_receipt_r3.json, so the numbers cannot drift apart.
