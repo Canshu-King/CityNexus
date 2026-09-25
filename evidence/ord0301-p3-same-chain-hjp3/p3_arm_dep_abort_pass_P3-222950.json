@@ -1,0 +1,170 @@
+{
+ "arm": "dep_abort_pass",
+ "run_id": "P3-222950",
+ "intent_declared_before": "A9 negative control on the deployed generation: a leg that never reaches the hop. If the card equals A1's, that card proves nothing about arrival and only the pairing does",
+ "tip": "7856e03f6238da3000976eb6e690a448dfa39b9a",
+ "scenario": "abort",
+ "proxy_mode": "pass",
+ "spec": null,
+ "lock_plan": null,
+ "rig": {
+  "backend_pid": 62720,
+  "proxy_pid": 24632,
+  "face_pid": 24972,
+  "face_port": 8653,
+  "all_up": true,
+  "identity_two_sided": true,
+  "journey_id": "234dbcd5-ad4b-4eac-8a32-04422b2f41ca",
+  "seed": {
+   "places_before": 0,
+   "demo_places_before": 0,
+   "seeded_by_this_call": true,
+   "demo_places_after": 8
+  },
+  "db": "D:\\moodle\\_hjp3_0301p3_0925\\p3_dep.s3db",
+  "access_log": "p3_backend_access_222950.log",
+  "rig_state_file": "p3_rig_state_dep_pass_222950.json"
+ },
+ "node_rc": 0,
+ "node_tail": [
+  [
+   "{\"scenario\":\"abort\",\"status\":\"NETWORK\",\"title\":\"连不上服务端\",\"label\":\"这台设备自己的读数（服务器没给句子）\",\"reason\":\"no readable answer reached this device (network or origin)\",\"details\":1,\"opened_label_rendered\":\"这台设备自己的读数（服务器没给句子）\",\"origin\":\"device\",\"fetch_rejected\":true}"
+  ]
+ ],
+ "wall_seconds": 9,
+ "pairing": [
+  {
+   "leg": "234dbcd5-ad4b-4eac-8a32-04422b2f41ca/agent/commands",
+   "pair_id": null,
+   "one_request_one_id": false,
+   "server_side_from_the_same_hop": {
+    "recorded": false,
+    "reached_upstream": null,
+    "answered_by": null,
+    "status": null,
+    "content_type": null,
+    "bytes": null,
+    "body_parses_as_json": null,
+    "top_level_keys": null,
+    "body_head": null,
+    "elapsed_ms": null,
+    "request_mutation": null,
+    "spec_name": null
+   },
+   "screen_side_from_the_page": {
+    "fetch_rejected": true,
+    "status": null,
+    "ok": null,
+    "content_type": null,
+    "elapsed_ms": 7,
+    "app_read_the_body": null,
+    "body_parse_failed": false,
+    "body_parsed": false,
+    "browser_stack": {
+     "url": "/api/v1/journeys/234dbcd5-ad4b-4eac-8a32-04422b2f41ca/agent/commands",
+     "status": null,
+     "pair_id": null,
+     "content_type": null,
+     "failure": "net::ERR_FAILED",
+     "at_wall": "2026-09-25T14:29:59.477Z"
+    }
+   },
+   "both_ends_agree_on_status": false,
+   "both_ends_agree_on_json_class": false
+  }
+ ],
+ "write_legs_with_a_5xx_or_4xx": [],
+ "screen_as_painted_before_tapping": {
+  "result_card_painted": "连不上服务端\n\n网络或后端没有响应，这与你的需求内容无关。你的行程没有被改动，检查网络后可以重试。\n\n技术详情",
+  "result_card_text_content": "连不上服务端网络或后端没有响应，这与你的需求内容无关。你的行程没有被改动，检查网络后可以重试。技术详情这台设备自己的读数（服务器没给句子）no readable answer reached this device (network or origin)",
+  "card_title_painted": "连不上服务端",
+  "card_body_painted": "网络或后端没有响应，这与你的需求内容无关。你的行程没有被改动，检查网络后可以重试。",
+  "reason_label_painted": "",
+  "reason_value_painted": "",
+  "reason_label_text_content": "这台设备自己的读数（服务器没给句子）",
+  "reason_value_text_content": "no readable answer reached this device (network or origin)",
+  "details_elements_present": 1,
+  "details_open_attribute": false,
+  "detail_toggle_present": true,
+  "network_card_painted": true,
+  "http_failed_card_painted": false,
+  "refused_card_painted": false,
+  "server_attribution_painted": false,
+  "device_attribution_painted": false,
+  "unreadable_answer_note_painted": false,
+  "whole_page_contains_server_label": false,
+  "whole_page_contains_device_label": true,
+  "next_step_painted": null,
+  "cross_check_data_result_status": "NETWORK",
+  "cross_check_data_reason_origin": "device"
+ },
+ "screen_as_painted_after_tapping_detail": {
+  "result_card_painted": "连不上服务端\n\n网络或后端没有响应，这与你的需求内容无关。你的行程没有被改动，检查网络后可以重试。\n\n技术详情\n这台设备自己的读数（服务器没给句子）\nno readable answer reached this device (network or origin)",
+  "result_card_text_content": "连不上服务端网络或后端没有响应，这与你的需求内容无关。你的行程没有被改动，检查网络后可以重试。技术详情这台设备自己的读数（服务器没给句子）no readable answer reached this device (network or origin)",
+  "card_title_painted": "连不上服务端",
+  "card_body_painted": "网络或后端没有响应，这与你的需求内容无关。你的行程没有被改动，检查网络后可以重试。",
+  "reason_label_painted": "这台设备自己的读数（服务器没给句子）",
+  "reason_value_painted": "no readable answer reached this device (network or origin)",
+  "reason_label_text_content": "这台设备自己的读数（服务器没给句子）",
+  "reason_value_text_content": "no readable answer reached this device (network or origin)",
+  "details_elements_present": 1,
+  "details_open_attribute": true,
+  "detail_toggle_present": true,
+  "network_card_painted": true,
+  "http_failed_card_painted": false,
+  "refused_card_painted": false,
+  "server_attribution_painted": false,
+  "device_attribution_painted": true,
+  "unreadable_answer_note_painted": true,
+  "whole_page_contains_server_label": false,
+  "whole_page_contains_device_label": true,
+  "next_step_painted": null,
+  "cross_check_data_result_status": "NETWORK",
+  "cross_check_data_reason_origin": "device"
+ },
+ "detail_block_open_attempt": {
+  "clicked": true,
+  "was_already_open": false,
+  "details_open_after": true
+ },
+ "screen": {
+  "result_card_painted": "连不上服务端\n\n网络或后端没有响应，这与你的需求内容无关。你的行程没有被改动，检查网络后可以重试。\n\n技术详情",
+  "result_card_text_content": "连不上服务端网络或后端没有响应，这与你的需求内容无关。你的行程没有被改动，检查网络后可以重试。技术详情这台设备自己的读数（服务器没给句子）no readable answer reached this device (network or origin)",
+  "card_title_painted": "连不上服务端",
+  "card_body_painted": "网络或后端没有响应，这与你的需求内容无关。你的行程没有被改动，检查网络后可以重试。",
+  "reason_label_painted": "",
+  "reason_value_painted": "",
+  "reason_label_text_content": "这台设备自己的读数（服务器没给句子）",
+  "reason_value_text_content": "no readable answer reached this device (network or origin)",
+  "details_elements_present": 1,
+  "details_open_attribute": false,
+  "detail_toggle_present": true,
+  "network_card_painted": true,
+  "http_failed_card_painted": false,
+  "refused_card_painted": false,
+  "server_attribution_painted": false,
+  "device_attribution_painted": false,
+  "unreadable_answer_note_painted": false,
+  "whole_page_contains_server_label": false,
+  "whole_page_contains_device_label": true,
+  "next_step_painted": null,
+  "cross_check_data_result_status": "NETWORK",
+  "cross_check_data_reason_origin": "device"
+ },
+ "page_errors": [],
+ "waited_ms": 8025,
+ "sample_tail": [
+  {
+   "ms": 533,
+   "status": "NETWORK",
+   "details": 1,
+   "busy": false
+  }
+ ],
+ "access_log_witness": {
+  "present": true,
+  "path": "p3_backend_access_222950.log",
+  "lines_naming_the_leg": 0,
+  "lines": []
+ }
+}
