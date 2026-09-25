@@ -1,0 +1,1848 @@
+{
+ "what": "lane F 自己的 0296 文本在 Q43 r3 下的自查 + 每个数字的出处索引",
+ "ruler": "e653e597c2e6fd74a5f8d3be65fe60e017b03017",
+ "index_size": 136,
+ "texts": [
+  {
+   "label": "my_bus_post",
+   "file": "D:\\moodle\\_qoder_f_run\\bus_f_0296.txt",
+   "gate_overall": "Q43_GATE_RED",
+   "claims_checked": 51,
+   "findings": 36,
+   "distinct_numbers_named": 31,
+   "with_artifact_coordinate": 24,
+   "without_coordinate": [
+    "0055",
+    "0262",
+    "0287",
+    "0292",
+    "0294",
+    "22",
+    "6_s"
+   ],
+   "rows": [
+    {
+     "code": "BARE_NUMBER_WITHOUT_COORDINATE",
+     "number": "0281",
+     "found_where": "第 3 行",
+     "matched_as": "0281",
+     "artifact_paths": [
+      "campaign:arms[4].why",
+      "receipt:cells.C13_what_this_change_does_NOT_improve.why",
+      "receipt:cells.C4_lock_wait_has_exactly_one_source.claim"
+     ]
+    },
+    {
+     "code": "BARE_NUMBER_WITHOUT_COORDINATE",
+     "number": "0296",
+     "found_where": "第 3 行",
+     "matched_as": "0296",
+     "artifact_paths": [
+      "campaign:arms[9].why",
+      "campaign:what",
+      "candidate:what"
+     ]
+    },
+    {
+     "code": "BARE_NUMBER_WITHOUT_COORDINATE",
+     "number": "13",
+     "found_where": "第 3 行",
+     "matched_as": "13",
+     "artifact_paths": [
+      "receipt:what"
+     ]
+    },
+    {
+     "code": "BARE_NUMBER_WITHOUT_COORDINATE",
+     "number": "10",
+     "found_where": "第 3 行",
+     "matched_as": "10",
+     "artifact_paths": [
+      "campaign:control_rounds[0].summary_line",
+      "campaign:control_rounds[1].summary_line",
+      "campaign:control_rounds[2].summary_line"
+     ]
+    },
+    {
+     "code": "BARE_NUMBER_WITHOUT_COORDINATE",
+     "number": "500",
+     "found_where": "第 7 行",
+     "matched_as": "500",
+     "artifact_paths": [
+      "campaign:arms[1].why",
+      "campaign:arms[6].why",
+      "receipt:cells.C13_what_this_change_does_NOT_improve.measured.first_lost_lock_still"
+     ]
+    },
+    {
+     "code": "BARE_NUMBER_WITHOUT_COORDINATE",
+     "number": "0055",
+     "found_where": "第 7 行",
+     "artifact_paths": [],
+     "note": "NO_ARTIFACT_MATCH —— 查不到出处就不给它编来源",
+     "classified_as": "STILL_UNRESOLVED"
+    },
+    {
+     "code": "BARE_NUMBER_WITHOUT_COORDINATE",
+     "number": "500",
+     "found_where": "第 10 行",
+     "matched_as": "500",
+     "artifact_paths": [
+      "campaign:arms[1].why",
+      "campaign:arms[6].why",
+      "receipt:cells.C13_what_this_change_does_NOT_improve.measured.first_lost_lock_still"
+     ]
+    },
+    {
+     "code": "BARE_NUMBER_WITHOUT_COORDINATE",
+     "number": "0262",
+     "found_where": "第 11 行",
+     "artifact_paths": [],
+     "note": "NO_ARTIFACT_MATCH —— 查不到出处就不给它编来源",
+     "classified_as": "ORDER_ID_NOT_A_MEASUREMENT"
+    },
+    {
+     "code": "BARE_NUMBER_WITHOUT_COORDINATE",
+     "number": "0280",
+     "found_where": "第 15 行",
+     "matched_as": "0280",
+     "artifact_paths": [
+      "receipt:cells.C13_what_this_change_does_NOT_improve.why",
+      "receipt:cells.C8_answer_is_registered_and_server_said_it.claim",
+      "receipt:not_claimed[1]"
+     ]
+    },
+    {
+     "code": "BARE_NUMBER_WITHOUT_COORDINATE",
+     "number": "0281",
+     "found_where": "第 15 行",
+     "matched_as": "0281",
+     "artifact_paths": [
+      "campaign:arms[4].why",
+      "receipt:cells.C13_what_this_change_does_NOT_improve.why",
+      "receipt:cells.C4_lock_wait_has_exactly_one_source.claim"
+     ]
+    },
+    {
+     "code": "BARE_NUMBER_WITHOUT_COORDINATE",
+     "number": "0281",
+     "found_where": "第 15 行",
+     "matched_as": "0281",
+     "artifact_paths": [
+      "campaign:arms[4].why",
+      "receipt:cells.C13_what_this_change_does_NOT_improve.why",
+      "receipt:cells.C4_lock_wait_has_exactly_one_source.claim"
+     ]
+    },
+    {
+     "code": "BARE_NUMBER_WITHOUT_COORDINATE",
+     "number": "0280",
+     "found_where": "第 15 行",
+     "matched_as": "0280",
+     "artifact_paths": [
+      "receipt:cells.C13_what_this_change_does_NOT_improve.why",
+      "receipt:cells.C8_answer_is_registered_and_server_said_it.claim",
+      "receipt:not_claimed[1]"
+     ]
+    },
+    {
+     "code": "BARE_NUMBER_WITHOUT_COORDINATE",
+     "number": "45000",
+     "found_where": "第 21 行",
+     "matched_as": "45000",
+     "artifact_paths": [
+      "facts:env_variants.CITYNEXUS_WRITE_DEADLINE_MS.deadline_ms_plans",
+      "facts:live_read.configuration_verdict.default_deadline_ms",
+      "facts:live_read.configuration_verdict.per_scenario.agent.commands.deadline_ms"
+     ]
+    },
+    {
+     "code": "BARE_NUMBER_WITHOUT_COORDINATE",
+     "number": "30000",
+     "found_where": "第 21 行",
+     "matched_as": "30000",
+     "artifact_paths": [
+      "campaign:arms[4].why",
+      "facts:env_variants.CITYNEXUS_WRITE_DEADLINE_MS.effective_busy_timeout_ms.agent.commands",
+      "facts:env_variants.CITYNEXUS_WRITE_DEADLINE_MS.effective_busy_timeout_ms.plans.generate"
+     ]
+    },
+    {
+     "code": "BARE_NUMBER_WITHOUT_COORDINATE",
+     "number": "30000",
+     "found_where": "第 21 行",
+     "matched_as": "30000",
+     "artifact_paths": [
+      "campaign:arms[4].why",
+      "facts:env_variants.CITYNEXUS_WRITE_DEADLINE_MS.effective_busy_timeout_ms.agent.commands",
+      "facts:env_variants.CITYNEXUS_WRITE_DEADLINE_MS.effective_busy_timeout_ms.plans.generate"
+     ]
+    },
+    {
+     "code": "BARE_NUMBER_WITHOUT_COORDINATE",
+     "number": "45000",
+     "found_where": "第 21 行",
+     "matched_as": "45000",
+     "artifact_paths": [
+      "facts:env_variants.CITYNEXUS_WRITE_DEADLINE_MS.deadline_ms_plans",
+      "facts:live_read.configuration_verdict.default_deadline_ms",
+      "facts:live_read.configuration_verdict.per_scenario.agent.commands.deadline_ms"
+     ]
+    },
+    {
+     "code": "BARE_NUMBER_WITHOUT_COORDINATE",
+     "number": "30000",
+     "found_where": "第 22 行",
+     "matched_as": "30000",
+     "artifact_paths": [
+      "campaign:arms[4].why",
+      "facts:env_variants.CITYNEXUS_WRITE_DEADLINE_MS.effective_busy_timeout_ms.agent.commands",
+      "facts:env_variants.CITYNEXUS_WRITE_DEADLINE_MS.effective_busy_timeout_ms.plans.generate"
+     ]
+    },
+    {
+     "code": "BARE_NUMBER_WITHOUT_COORDINATE",
+     "number": "3.53.1",
+     "found_where": "第 22 行",
+     "matched_as": "3.53.1",
+     "artifact_paths": [
+      "facts:live_read.sqlite_driver_version",
+      "receipt:cells.C1_default_strictly_above_measured_busy_timeout.measured.sqlite_driver_version"
+     ]
+    },
+    {
+     "code": "BARE_NUMBER_WITHOUT_COORDINATE",
+     "number": "60000",
+     "found_where": "第 23 行",
+     "matched_as": "60000",
+     "artifact_paths": [
+      "facts:env_variants.CITYNEXUS_WRITE_DEADLINE_SCENARIOS.deadline_ms_plans",
+      "receipt:cells.C2_two_way_door_RED_when_deadline_not_above.measured.env_variants.CITYNEXUS_WRITE_DEADLINE_SCENARIOS.deadline_ms_plans",
+      "receipt:cells.C5_per_scenario_configuration_is_real.measured.variant_60000.deadline_ms_plans"
+     ]
+    },
+    {
+     "code": "BARE_NUMBER_WITHOUT_COORDINATE",
+     "number": "60000",
+     "found_where": "第 23 行",
+     "matched_as": "60000",
+     "artifact_paths": [
+      "facts:env_variants.CITYNEXUS_WRITE_DEADLINE_SCENARIOS.deadline_ms_plans",
+      "receipt:cells.C2_two_way_door_RED_when_deadline_not_above.measured.env_variants.CITYNEXUS_WRITE_DEADLINE_SCENARIOS.deadline_ms_plans",
+      "receipt:cells.C5_per_scenario_configuration_is_real.measured.variant_60000.deadline_ms_plans"
+     ]
+    },
+    {
+     "code": "BARE_NUMBER_WITHOUT_COORDINATE",
+     "number": "45000",
+     "found_where": "第 24 行",
+     "matched_as": "45000",
+     "artifact_paths": [
+      "facts:env_variants.CITYNEXUS_WRITE_DEADLINE_MS.deadline_ms_plans",
+      "facts:live_read.configuration_verdict.default_deadline_ms",
+      "facts:live_read.configuration_verdict.per_scenario.agent.commands.deadline_ms"
+     ]
+    },
+    {
+     "code": "BARE_NUMBER_WITHOUT_COORDINATE",
+     "number": "503",
+     "found_where": "第 53 行",
+     "matched_as": "503",
+     "artifact_paths": [
+      "campaign:arms[6].line_named",
+      "receipt:cells.C8_answer_is_registered_and_server_said_it.why"
+     ]
+    },
+    {
+     "code": "BARE_NUMBER_WITHOUT_COORDINATE",
+     "number": "500",
+     "found_where": "第 53 行",
+     "matched_as": "500",
+     "artifact_paths": [
+      "campaign:arms[1].why",
+      "campaign:arms[6].why",
+      "receipt:cells.C13_what_this_change_does_NOT_improve.measured.first_lost_lock_still"
+     ]
+    },
+    {
+     "code": "BARE_NUMBER_WITHOUT_COORDINATE",
+     "number": "500",
+     "found_where": "第 53 行",
+     "matched_as": "500",
+     "artifact_paths": [
+      "campaign:arms[1].why",
+      "campaign:arms[6].why",
+      "receipt:cells.C13_what_this_change_does_NOT_improve.measured.first_lost_lock_still"
+     ]
+    },
+    {
+     "code": "BARE_NUMBER_WITHOUT_COORDINATE",
+     "number": "503",
+     "found_where": "第 53 行",
+     "matched_as": "503",
+     "artifact_paths": [
+      "campaign:arms[6].line_named",
+      "receipt:cells.C8_answer_is_registered_and_server_said_it.why"
+     ]
+    },
+    {
+     "code": "BARE_NUMBER_WITHOUT_COORDINATE",
+     "number": "1218",
+     "found_where": "第 60 行",
+     "matched_as": "1218",
+     "artifact_paths": [
+      "receipt:cells.C12_full_suite_ab.measured.candidate_r1.summary_line",
+      "receipt:cells.C12_full_suite_ab.measured.candidate_r2.summary_line",
+      "receipt:cells.C12_full_suite_ab.why"
+     ]
+    },
+    {
+     "code": "BARE_NUMBER_WITHOUT_COORDINATE",
+     "number": "10",
+     "found_where": "第 60 行",
+     "matched_as": "10",
+     "artifact_paths": [
+      "campaign:control_rounds[0].summary_line",
+      "campaign:control_rounds[1].summary_line",
+      "campaign:control_rounds[2].summary_line"
+     ]
+    },
+    {
+     "code": "BARE_NUMBER_WITHOUT_COORDINATE",
+     "number": "15",
+     "found_where": "第 60 行",
+     "matched_as": "15",
+     "artifact_paths": [
+      "receipt:cells.C12_full_suite_ab.measured.baseline.summary_line",
+      "receipt:cells.C12_full_suite_ab.measured.candidate_r1.summary_line",
+      "receipt:cells.C12_full_suite_ab.measured.candidate_r2.summary_line"
+     ]
+    },
+    {
+     "code": "BARE_NUMBER_WITHOUT_COORDINATE",
+     "number": "1208",
+     "found_where": "第 60 行",
+     "matched_as": "1208",
+     "artifact_paths": [
+      "receipt:cells.C12_full_suite_ab.measured.baseline.summary_line",
+      "receipt:cells.C12_full_suite_ab.why"
+     ]
+    },
+    {
+     "code": "BARE_NUMBER_WITHOUT_COORDINATE",
+     "number": "1208",
+     "found_where": "第 60 行",
+     "matched_as": "1208",
+     "artifact_paths": [
+      "receipt:cells.C12_full_suite_ab.measured.baseline.summary_line",
+      "receipt:cells.C12_full_suite_ab.why"
+     ]
+    },
+    {
+     "code": "BARE_NUMBER_WITHOUT_COORDINATE",
+     "number": "10",
+     "found_where": "第 60 行",
+     "matched_as": "10",
+     "artifact_paths": [
+      "campaign:control_rounds[0].summary_line",
+      "campaign:control_rounds[1].summary_line",
+      "campaign:control_rounds[2].summary_line"
+     ]
+    },
+    {
+     "code": "BARE_NUMBER_WITHOUT_COORDINATE",
+     "number": "1218",
+     "found_where": "第 60 行",
+     "matched_as": "1218",
+     "artifact_paths": [
+      "receipt:cells.C12_full_suite_ab.measured.candidate_r1.summary_line",
+      "receipt:cells.C12_full_suite_ab.measured.candidate_r2.summary_line",
+      "receipt:cells.C12_full_suite_ab.why"
+     ]
+    },
+    {
+     "code": "BARE_NUMBER_WITHOUT_COORDINATE",
+     "number": "15",
+     "found_where": "第 60 行",
+     "matched_as": "15",
+     "artifact_paths": [
+      "receipt:cells.C12_full_suite_ab.measured.baseline.summary_line",
+      "receipt:cells.C12_full_suite_ab.measured.candidate_r1.summary_line",
+      "receipt:cells.C12_full_suite_ab.measured.candidate_r2.summary_line"
+     ]
+    },
+    {
+     "code": "BARE_NUMBER_WITHOUT_COORDINATE",
+     "number": "0272",
+     "found_where": "第 63 行",
+     "matched_as": "0272",
+     "artifact_paths": [
+      "receipt:cells.C9_normal_write_path_unchanged.why"
+     ]
+    },
+    {
+     "code": "BARE_NUMBER_WITHOUT_COORDINATE",
+     "number": "0287",
+     "found_where": "第 63 行",
+     "artifact_paths": [],
+     "note": "NO_ARTIFACT_MATCH —— 查不到出处就不给它编来源",
+     "classified_as": "ORDER_ID_NOT_A_MEASUREMENT"
+    },
+    {
+     "code": "BARE_NUMBER_WITHOUT_COORDINATE",
+     "number": "22",
+     "found_where": "第 63 行",
+     "artifact_paths": [],
+     "note": "NO_ARTIFACT_MATCH —— 查不到出处就不给它编来源",
+     "classified_as": "STILL_UNRESOLVED"
+    },
+    {
+     "code": "BARE_NUMBER_WITHOUT_COORDINATE",
+     "number": "0287",
+     "found_where": "第 63 行",
+     "artifact_paths": [],
+     "note": "NO_ARTIFACT_MATCH —— 查不到出处就不给它编来源",
+     "classified_as": "ORDER_ID_NOT_A_MEASUREMENT"
+    },
+    {
+     "code": "BARE_NUMBER_WITHOUT_COORDINATE",
+     "number": "0272",
+     "found_where": "第 63 行",
+     "matched_as": "0272",
+     "artifact_paths": [
+      "receipt:cells.C9_normal_write_path_unchanged.why"
+     ]
+    },
+    {
+     "code": "BARE_NUMBER_WITHOUT_COORDINATE",
+     "number": "22",
+     "found_where": "第 63 行",
+     "artifact_paths": [],
+     "note": "NO_ARTIFACT_MATCH —— 查不到出处就不给它编来源",
+     "classified_as": "STILL_UNRESOLVED"
+    },
+    {
+     "code": "BARE_NUMBER_WITHOUT_COORDINATE",
+     "number": "0287",
+     "found_where": "第 92 行",
+     "artifact_paths": [],
+     "note": "NO_ARTIFACT_MATCH —— 查不到出处就不给它编来源",
+     "classified_as": "ORDER_ID_NOT_A_MEASUREMENT"
+    },
+    {
+     "code": "BARE_NUMBER_WITHOUT_COORDINATE",
+     "number": "0274",
+     "found_where": "第 92 行",
+     "matched_as": "0274",
+     "artifact_paths": [
+      "receipt:cells.C13_what_this_change_does_NOT_improve.why"
+     ]
+    },
+    {
+     "code": "BARE_NUMBER_WITHOUT_COORDINATE",
+     "number": "0274",
+     "found_where": "第 92 行",
+     "matched_as": "0274",
+     "artifact_paths": [
+      "receipt:cells.C13_what_this_change_does_NOT_improve.why"
+     ]
+    },
+    {
+     "code": "BARE_NUMBER_WITHOUT_COORDINATE",
+     "number": "0287",
+     "found_where": "第 92 行",
+     "artifact_paths": [],
+     "note": "NO_ARTIFACT_MATCH —— 查不到出处就不给它编来源",
+     "classified_as": "ORDER_ID_NOT_A_MEASUREMENT"
+    },
+    {
+     "code": "BARE_NUMBER_WITHOUT_COORDINATE",
+     "number": "0274",
+     "found_where": "第 95 行",
+     "matched_as": "0274",
+     "artifact_paths": [
+      "receipt:cells.C13_what_this_change_does_NOT_improve.why"
+     ]
+    },
+    {
+     "code": "BARE_NUMBER_WITHOUT_COORDINATE",
+     "number": "0287",
+     "found_where": "第 95 行",
+     "artifact_paths": [],
+     "note": "NO_ARTIFACT_MATCH —— 查不到出处就不给它编来源",
+     "classified_as": "ORDER_ID_NOT_A_MEASUREMENT"
+    },
+    {
+     "code": "BARE_NUMBER_WITHOUT_COORDINATE",
+     "number": "0292",
+     "found_where": "第 95 行",
+     "artifact_paths": [],
+     "note": "NO_ARTIFACT_MATCH —— 查不到出处就不给它编来源",
+     "classified_as": "ORDER_ID_NOT_A_MEASUREMENT"
+    },
+    {
+     "code": "BARE_NUMBER_WITHOUT_COORDINATE",
+     "number": "0294",
+     "found_where": "第 95 行",
+     "artifact_paths": [],
+     "note": "NO_ARTIFACT_MATCH —— 查不到出处就不给它编来源",
+     "classified_as": "ORDER_ID_NOT_A_MEASUREMENT"
+    },
+    {
+     "code": "BARE_NUMBER_WITHOUT_COORDINATE",
+     "number": "0287",
+     "found_where": "第 95 行",
+     "artifact_paths": [],
+     "note": "NO_ARTIFACT_MATCH —— 查不到出处就不给它编来源",
+     "classified_as": "ORDER_ID_NOT_A_MEASUREMENT"
+    },
+    {
+     "code": "BARE_NUMBER_WITHOUT_COORDINATE",
+     "number": "0274",
+     "found_where": "第 95 行",
+     "matched_as": "0274",
+     "artifact_paths": [
+      "receipt:cells.C13_what_this_change_does_NOT_improve.why"
+     ]
+    },
+    {
+     "code": "BARE_NUMBER_WITHOUT_COORDINATE",
+     "number": "0292",
+     "found_where": "第 95 行",
+     "artifact_paths": [],
+     "note": "NO_ARTIFACT_MATCH —— 查不到出处就不给它编来源",
+     "classified_as": "ORDER_ID_NOT_A_MEASUREMENT"
+    },
+    {
+     "code": "BARE_NUMBER_WITHOUT_COORDINATE",
+     "number": "0294",
+     "found_where": "第 95 行",
+     "artifact_paths": [],
+     "note": "NO_ARTIFACT_MATCH —— 查不到出处就不给它编来源",
+     "classified_as": "ORDER_ID_NOT_A_MEASUREMENT"
+    },
+    {
+     "code": "BARE_NUMBER_WITHOUT_COORDINATE",
+     "number": "0292",
+     "found_where": "第 95 行",
+     "artifact_paths": [],
+     "note": "NO_ARTIFACT_MATCH —— 查不到出处就不给它编来源",
+     "classified_as": "ORDER_ID_NOT_A_MEASUREMENT"
+    },
+    {
+     "code": "BARE_NUMBER_WITHOUT_COORDINATE",
+     "number": "0274",
+     "found_where": "第 95 行",
+     "matched_as": "0274",
+     "artifact_paths": [
+      "receipt:cells.C13_what_this_change_does_NOT_improve.why"
+     ]
+    },
+    {
+     "code": "BARE_NUMBER_WITHOUT_COORDINATE",
+     "number": "0287",
+     "found_where": "第 95 行",
+     "artifact_paths": [],
+     "note": "NO_ARTIFACT_MATCH —— 查不到出处就不给它编来源",
+     "classified_as": "ORDER_ID_NOT_A_MEASUREMENT"
+    },
+    {
+     "code": "BARE_NUMBER_WITHOUT_COORDINATE",
+     "number": "0294",
+     "found_where": "第 95 行",
+     "artifact_paths": [],
+     "note": "NO_ARTIFACT_MATCH —— 查不到出处就不给它编来源",
+     "classified_as": "ORDER_ID_NOT_A_MEASUREMENT"
+    },
+    {
+     "code": "BARE_NUMBER_WITHOUT_COORDINATE",
+     "number": "0294",
+     "found_where": "第 95 行",
+     "artifact_paths": [],
+     "note": "NO_ARTIFACT_MATCH —— 查不到出处就不给它编来源",
+     "classified_as": "ORDER_ID_NOT_A_MEASUREMENT"
+    },
+    {
+     "code": "BARE_NUMBER_WITHOUT_COORDINATE",
+     "number": "0274",
+     "found_where": "第 95 行",
+     "matched_as": "0274",
+     "artifact_paths": [
+      "receipt:cells.C13_what_this_change_does_NOT_improve.why"
+     ]
+    },
+    {
+     "code": "BARE_NUMBER_WITHOUT_COORDINATE",
+     "number": "0287",
+     "found_where": "第 95 行",
+     "artifact_paths": [],
+     "note": "NO_ARTIFACT_MATCH —— 查不到出处就不给它编来源",
+     "classified_as": "ORDER_ID_NOT_A_MEASUREMENT"
+    },
+    {
+     "code": "BARE_NUMBER_WITHOUT_COORDINATE",
+     "number": "0292",
+     "found_where": "第 95 行",
+     "artifact_paths": [],
+     "note": "NO_ARTIFACT_MATCH —— 查不到出处就不给它编来源",
+     "classified_as": "ORDER_ID_NOT_A_MEASUREMENT"
+    },
+    {
+     "code": "BARE_NUMBER_WITHOUT_COORDINATE",
+     "number": "0272",
+     "found_where": "第 97 行",
+     "matched_as": "0272",
+     "artifact_paths": [
+      "receipt:cells.C9_normal_write_path_unchanged.why"
+     ]
+    },
+    {
+     "code": "BARE_NUMBER_WITHOUT_COORDINATE",
+     "number": "0287",
+     "found_where": "第 97 行",
+     "artifact_paths": [],
+     "note": "NO_ARTIFACT_MATCH —— 查不到出处就不给它编来源",
+     "classified_as": "ORDER_ID_NOT_A_MEASUREMENT"
+    },
+    {
+     "code": "BARE_NUMBER_WITHOUT_COORDINATE",
+     "number": "0287",
+     "found_where": "第 97 行",
+     "artifact_paths": [],
+     "note": "NO_ARTIFACT_MATCH —— 查不到出处就不给它编来源",
+     "classified_as": "ORDER_ID_NOT_A_MEASUREMENT"
+    },
+    {
+     "code": "BARE_NUMBER_WITHOUT_COORDINATE",
+     "number": "0272",
+     "found_where": "第 97 行",
+     "matched_as": "0272",
+     "artifact_paths": [
+      "receipt:cells.C9_normal_write_path_unchanged.why"
+     ]
+    },
+    {
+     "code": "BARE_NUMBER_WITHOUT_COORDINATE",
+     "number": "0272",
+     "found_where": "第 97 行",
+     "matched_as": "0272",
+     "artifact_paths": [
+      "receipt:cells.C9_normal_write_path_unchanged.why"
+     ]
+    },
+    {
+     "code": "BARE_NUMBER_WITHOUT_COORDINATE",
+     "number": "0287",
+     "found_where": "第 97 行",
+     "artifact_paths": [],
+     "note": "NO_ARTIFACT_MATCH —— 查不到出处就不给它编来源",
+     "classified_as": "ORDER_ID_NOT_A_MEASUREMENT"
+    },
+    {
+     "code": "BARE_NUMBER_WITHOUT_COORDINATE",
+     "number": "13 格",
+     "found_where": "第 3 行",
+     "matched_as": "13",
+     "artifact_paths": [
+      "receipt:what"
+     ]
+    },
+    {
+     "code": "BARE_NUMBER_WITHOUT_COORDINATE",
+     "number": "0296",
+     "found_where": "第 3 行",
+     "matched_as": "0296",
+     "artifact_paths": [
+      "campaign:arms[9].why",
+      "campaign:what",
+      "candidate:what"
+     ]
+    },
+    {
+     "code": "BARE_NUMBER_WITHOUT_COORDINATE",
+     "number": "0281",
+     "found_where": "第 3 行",
+     "matched_as": "0281",
+     "artifact_paths": [
+      "campaign:arms[4].why",
+      "receipt:cells.C13_what_this_change_does_NOT_improve.why",
+      "receipt:cells.C4_lock_wait_has_exactly_one_source.claim"
+     ]
+    },
+    {
+     "code": "BARE_NUMBER_WITHOUT_COORDINATE",
+     "number": "13",
+     "found_where": "第 3 行",
+     "matched_as": "13",
+     "artifact_paths": [
+      "receipt:what"
+     ]
+    },
+    {
+     "code": "BARE_NUMBER_WITHOUT_COORDINATE",
+     "number": "10",
+     "found_where": "第 3 行",
+     "matched_as": "10",
+     "artifact_paths": [
+      "campaign:control_rounds[0].summary_line",
+      "campaign:control_rounds[1].summary_line",
+      "campaign:control_rounds[2].summary_line"
+     ]
+    },
+    {
+     "code": "BARE_NUMBER_WITHOUT_COORDINATE",
+     "number": "14 条",
+     "found_where": "第 12 行",
+     "matched_as": "14",
+     "artifact_paths": [
+      "erratum:read_at",
+      "receipt:cells.C13_what_this_change_does_NOT_improve.measured.census_provenance.summary.write_sites",
+      "receipt:cells.C13_what_this_change_does_NOT_improve.measured.frontend_write_legs_out_of_scope"
+     ]
+    },
+    {
+     "code": "BARE_NUMBER_WITHOUT_COORDINATE",
+     "number": "14",
+     "found_where": "第 12 行",
+     "matched_as": "14",
+     "artifact_paths": [
+      "erratum:read_at",
+      "receipt:cells.C13_what_this_change_does_NOT_improve.measured.census_provenance.summary.write_sites",
+      "receipt:cells.C13_what_this_change_does_NOT_improve.measured.frontend_write_legs_out_of_scope"
+     ]
+    },
+    {
+     "code": "BARE_NUMBER_WITHOUT_COORDINATE",
+     "number": "13 格",
+     "found_where": "第 34 行",
+     "matched_as": "13",
+     "artifact_paths": [
+      "receipt:what"
+     ]
+    },
+    {
+     "code": "BARE_NUMBER_WITHOUT_COORDINATE",
+     "number": "13",
+     "found_where": "第 34 行",
+     "matched_as": "13",
+     "artifact_paths": [
+      "receipt:what"
+     ]
+    },
+    {
+     "code": "BARE_NUMBER_WITHOUT_COORDINATE",
+     "number": "3 轮",
+     "found_where": "第 38 行",
+     "matched_as": "3",
+     "artifact_paths": [
+      "campaign:arms[0].per_round[2].round",
+      "campaign:arms[1].per_round[2].round",
+      "campaign:arms[2].per_round[2].round"
+     ]
+    },
+    {
+     "code": "BARE_NUMBER_WITHOUT_COORDINATE",
+     "number": "10",
+     "found_where": "第 38 行",
+     "matched_as": "10",
+     "artifact_paths": [
+      "campaign:control_rounds[0].summary_line",
+      "campaign:control_rounds[1].summary_line",
+      "campaign:control_rounds[2].summary_line"
+     ]
+    },
+    {
+     "code": "BARE_NUMBER_WITHOUT_COORDINATE",
+     "number": "3 轮",
+     "found_where": "第 41 行",
+     "matched_as": "3",
+     "artifact_paths": [
+      "campaign:arms[0].per_round[2].round",
+      "campaign:arms[1].per_round[2].round",
+      "campaign:arms[2].per_round[2].round"
+     ]
+    },
+    {
+     "code": "BARE_NUMBER_WITHOUT_COORDINATE",
+     "number": "11",
+     "found_where": "第 41 行",
+     "matched_as": "11",
+     "artifact_paths": [
+      "receipt:cells.C11_mutation_campaign_summary.why"
+     ]
+    },
+    {
+     "code": "BARE_NUMBER_WITHOUT_COORDINATE",
+     "number": "4_s",
+     "found_where": "第 46 行",
+     "matched_as": "4",
+     "artifact_paths": [
+      "receipt:cells.C13_what_this_change_does_NOT_improve.measured.census_provenance.summary.sites_with_spread_options"
+     ]
+    },
+    {
+     "code": "BARE_NUMBER_WITHOUT_COORDINATE",
+     "number": "6_s",
+     "found_where": "第 48 行",
+     "artifact_paths": [],
+     "note": "NO_ARTIFACT_MATCH —— 查不到出处就不给它编来源",
+     "classified_as": "STILL_UNRESOLVED"
+    }
+   ],
+   "numbers_without_artifact_match": [
+    "0055",
+    "0262",
+    "0287",
+    "0292",
+    "0294",
+    "22",
+    "6_s"
+   ],
+   "still_unresolved": [
+    "0055",
+    "22",
+    "6_s"
+   ]
+  },
+  {
+   "label": "my_ledger_block",
+   "file": "D:\\moodle\\_qoder_f_run\\blk_f_0296.txt",
+   "gate_overall": "Q43_GATE_RED",
+   "claims_checked": 69,
+   "findings": 38,
+   "distinct_numbers_named": 32,
+   "with_artifact_coordinate": 26,
+   "without_coordinate": [
+    "0262",
+    "0287",
+    "0292",
+    "0294",
+    "22",
+    "6_s"
+   ],
+   "rows": [
+    {
+     "code": "BARE_NUMBER_WITHOUT_COORDINATE",
+     "number": "0281",
+     "found_where": "第 1 行",
+     "matched_as": "0281",
+     "artifact_paths": [
+      "campaign:arms[4].why",
+      "receipt:cells.C13_what_this_change_does_NOT_improve.why",
+      "receipt:cells.C4_lock_wait_has_exactly_one_source.claim"
+     ]
+    },
+    {
+     "code": "BARE_NUMBER_WITHOUT_COORDINATE",
+     "number": "0296",
+     "found_where": "第 1 行",
+     "matched_as": "0296",
+     "artifact_paths": [
+      "campaign:arms[9].why",
+      "campaign:what",
+      "candidate:what"
+     ]
+    },
+    {
+     "code": "BARE_NUMBER_WITHOUT_COORDINATE",
+     "number": "08",
+     "found_where": "第 1 行",
+     "matched_as": "08",
+     "artifact_paths": [
+      "campaign:generated_at",
+      "erratum:read_at",
+      "facts:read_at"
+     ]
+    },
+    {
+     "code": "BARE_NUMBER_WITHOUT_COORDINATE",
+     "number": "13",
+     "found_where": "第 1 行",
+     "matched_as": "13",
+     "artifact_paths": [
+      "receipt:what"
+     ]
+    },
+    {
+     "code": "BARE_NUMBER_WITHOUT_COORDINATE",
+     "number": "10",
+     "found_where": "第 1 行",
+     "matched_as": "10",
+     "artifact_paths": [
+      "campaign:control_rounds[0].summary_line",
+      "campaign:control_rounds[1].summary_line",
+      "campaign:control_rounds[2].summary_line"
+     ]
+    },
+    {
+     "code": "BARE_NUMBER_WITHOUT_COORDINATE",
+     "number": "500",
+     "found_where": "第 3 行",
+     "matched_as": "500",
+     "artifact_paths": [
+      "campaign:arms[1].why",
+      "campaign:arms[6].why",
+      "receipt:cells.C13_what_this_change_does_NOT_improve.measured.first_lost_lock_still"
+     ]
+    },
+    {
+     "code": "BARE_NUMBER_WITHOUT_COORDINATE",
+     "number": "0262",
+     "found_where": "第 3 行",
+     "artifact_paths": [],
+     "note": "NO_ARTIFACT_MATCH —— 查不到出处就不给它编来源",
+     "classified_as": "ORDER_ID_NOT_A_MEASUREMENT"
+    },
+    {
+     "code": "BARE_NUMBER_WITHOUT_COORDINATE",
+     "number": "14",
+     "found_where": "第 3 行",
+     "matched_as": "14",
+     "artifact_paths": [
+      "erratum:read_at",
+      "receipt:cells.C13_what_this_change_does_NOT_improve.measured.census_provenance.summary.write_sites",
+      "receipt:cells.C13_what_this_change_does_NOT_improve.measured.frontend_write_legs_out_of_scope"
+     ]
+    },
+    {
+     "code": "BARE_NUMBER_WITHOUT_COORDINATE",
+     "number": "0280",
+     "found_where": "第 3 行",
+     "matched_as": "0280",
+     "artifact_paths": [
+      "receipt:cells.C13_what_this_change_does_NOT_improve.why",
+      "receipt:cells.C8_answer_is_registered_and_server_said_it.claim",
+      "receipt:not_claimed[1]"
+     ]
+    },
+    {
+     "code": "BARE_NUMBER_WITHOUT_COORDINATE",
+     "number": "0281",
+     "found_where": "第 3 行",
+     "matched_as": "0281",
+     "artifact_paths": [
+      "campaign:arms[4].why",
+      "receipt:cells.C13_what_this_change_does_NOT_improve.why",
+      "receipt:cells.C4_lock_wait_has_exactly_one_source.claim"
+     ]
+    },
+    {
+     "code": "BARE_NUMBER_WITHOUT_COORDINATE",
+     "number": "0262",
+     "found_where": "第 3 行",
+     "artifact_paths": [],
+     "note": "NO_ARTIFACT_MATCH —— 查不到出处就不给它编来源",
+     "classified_as": "ORDER_ID_NOT_A_MEASUREMENT"
+    },
+    {
+     "code": "BARE_NUMBER_WITHOUT_COORDINATE",
+     "number": "500",
+     "found_where": "第 3 行",
+     "matched_as": "500",
+     "artifact_paths": [
+      "campaign:arms[1].why",
+      "campaign:arms[6].why",
+      "receipt:cells.C13_what_this_change_does_NOT_improve.measured.first_lost_lock_still"
+     ]
+    },
+    {
+     "code": "BARE_NUMBER_WITHOUT_COORDINATE",
+     "number": "14",
+     "found_where": "第 3 行",
+     "matched_as": "14",
+     "artifact_paths": [
+      "erratum:read_at",
+      "receipt:cells.C13_what_this_change_does_NOT_improve.measured.census_provenance.summary.write_sites",
+      "receipt:cells.C13_what_this_change_does_NOT_improve.measured.frontend_write_legs_out_of_scope"
+     ]
+    },
+    {
+     "code": "BARE_NUMBER_WITHOUT_COORDINATE",
+     "number": "0280",
+     "found_where": "第 3 行",
+     "matched_as": "0280",
+     "artifact_paths": [
+      "receipt:cells.C13_what_this_change_does_NOT_improve.why",
+      "receipt:cells.C8_answer_is_registered_and_server_said_it.claim",
+      "receipt:not_claimed[1]"
+     ]
+    },
+    {
+     "code": "BARE_NUMBER_WITHOUT_COORDINATE",
+     "number": "0281",
+     "found_where": "第 3 行",
+     "matched_as": "0281",
+     "artifact_paths": [
+      "campaign:arms[4].why",
+      "receipt:cells.C13_what_this_change_does_NOT_improve.why",
+      "receipt:cells.C4_lock_wait_has_exactly_one_source.claim"
+     ]
+    },
+    {
+     "code": "BARE_NUMBER_WITHOUT_COORDINATE",
+     "number": "0280",
+     "found_where": "第 3 行",
+     "matched_as": "0280",
+     "artifact_paths": [
+      "receipt:cells.C13_what_this_change_does_NOT_improve.why",
+      "receipt:cells.C8_answer_is_registered_and_server_said_it.claim",
+      "receipt:not_claimed[1]"
+     ]
+    },
+    {
+     "code": "BARE_NUMBER_WITHOUT_COORDINATE",
+     "number": "500",
+     "found_where": "第 3 行",
+     "matched_as": "500",
+     "artifact_paths": [
+      "campaign:arms[1].why",
+      "campaign:arms[6].why",
+      "receipt:cells.C13_what_this_change_does_NOT_improve.measured.first_lost_lock_still"
+     ]
+    },
+    {
+     "code": "BARE_NUMBER_WITHOUT_COORDINATE",
+     "number": "0262",
+     "found_where": "第 3 行",
+     "artifact_paths": [],
+     "note": "NO_ARTIFACT_MATCH —— 查不到出处就不给它编来源",
+     "classified_as": "ORDER_ID_NOT_A_MEASUREMENT"
+    },
+    {
+     "code": "BARE_NUMBER_WITHOUT_COORDINATE",
+     "number": "14",
+     "found_where": "第 3 行",
+     "matched_as": "14",
+     "artifact_paths": [
+      "erratum:read_at",
+      "receipt:cells.C13_what_this_change_does_NOT_improve.measured.census_provenance.summary.write_sites",
+      "receipt:cells.C13_what_this_change_does_NOT_improve.measured.frontend_write_legs_out_of_scope"
+     ]
+    },
+    {
+     "code": "BARE_NUMBER_WITHOUT_COORDINATE",
+     "number": "0281",
+     "found_where": "第 3 行",
+     "matched_as": "0281",
+     "artifact_paths": [
+      "campaign:arms[4].why",
+      "receipt:cells.C13_what_this_change_does_NOT_improve.why",
+      "receipt:cells.C4_lock_wait_has_exactly_one_source.claim"
+     ]
+    },
+    {
+     "code": "BARE_NUMBER_WITHOUT_COORDINATE",
+     "number": "0281",
+     "found_where": "第 3 行",
+     "matched_as": "0281",
+     "artifact_paths": [
+      "campaign:arms[4].why",
+      "receipt:cells.C13_what_this_change_does_NOT_improve.why",
+      "receipt:cells.C4_lock_wait_has_exactly_one_source.claim"
+     ]
+    },
+    {
+     "code": "BARE_NUMBER_WITHOUT_COORDINATE",
+     "number": "500",
+     "found_where": "第 3 行",
+     "matched_as": "500",
+     "artifact_paths": [
+      "campaign:arms[1].why",
+      "campaign:arms[6].why",
+      "receipt:cells.C13_what_this_change_does_NOT_improve.measured.first_lost_lock_still"
+     ]
+    },
+    {
+     "code": "BARE_NUMBER_WITHOUT_COORDINATE",
+     "number": "0262",
+     "found_where": "第 3 行",
+     "artifact_paths": [],
+     "note": "NO_ARTIFACT_MATCH —— 查不到出处就不给它编来源",
+     "classified_as": "ORDER_ID_NOT_A_MEASUREMENT"
+    },
+    {
+     "code": "BARE_NUMBER_WITHOUT_COORDINATE",
+     "number": "14",
+     "found_where": "第 3 行",
+     "matched_as": "14",
+     "artifact_paths": [
+      "erratum:read_at",
+      "receipt:cells.C13_what_this_change_does_NOT_improve.measured.census_provenance.summary.write_sites",
+      "receipt:cells.C13_what_this_change_does_NOT_improve.measured.frontend_write_legs_out_of_scope"
+     ]
+    },
+    {
+     "code": "BARE_NUMBER_WITHOUT_COORDINATE",
+     "number": "0280",
+     "found_where": "第 3 行",
+     "matched_as": "0280",
+     "artifact_paths": [
+      "receipt:cells.C13_what_this_change_does_NOT_improve.why",
+      "receipt:cells.C8_answer_is_registered_and_server_said_it.claim",
+      "receipt:not_claimed[1]"
+     ]
+    },
+    {
+     "code": "BARE_NUMBER_WITHOUT_COORDINATE",
+     "number": "45000",
+     "found_where": "第 8 行",
+     "matched_as": "45000",
+     "artifact_paths": [
+      "facts:env_variants.CITYNEXUS_WRITE_DEADLINE_MS.deadline_ms_plans",
+      "facts:live_read.configuration_verdict.default_deadline_ms",
+      "facts:live_read.configuration_verdict.per_scenario.agent.commands.deadline_ms"
+     ]
+    },
+    {
+     "code": "BARE_NUMBER_WITHOUT_COORDINATE",
+     "number": "30000",
+     "found_where": "第 8 行",
+     "matched_as": "30000",
+     "artifact_paths": [
+      "campaign:arms[4].why",
+      "facts:env_variants.CITYNEXUS_WRITE_DEADLINE_MS.effective_busy_timeout_ms.agent.commands",
+      "facts:env_variants.CITYNEXUS_WRITE_DEADLINE_MS.effective_busy_timeout_ms.plans.generate"
+     ]
+    },
+    {
+     "code": "BARE_NUMBER_WITHOUT_COORDINATE",
+     "number": "3.53.1",
+     "found_where": "第 8 行",
+     "matched_as": "3.53.1",
+     "artifact_paths": [
+      "facts:live_read.sqlite_driver_version",
+      "receipt:cells.C1_default_strictly_above_measured_busy_timeout.measured.sqlite_driver_version"
+     ]
+    },
+    {
+     "code": "BARE_NUMBER_WITHOUT_COORDINATE",
+     "number": "30000",
+     "found_where": "第 8 行",
+     "matched_as": "30000",
+     "artifact_paths": [
+      "campaign:arms[4].why",
+      "facts:env_variants.CITYNEXUS_WRITE_DEADLINE_MS.effective_busy_timeout_ms.agent.commands",
+      "facts:env_variants.CITYNEXUS_WRITE_DEADLINE_MS.effective_busy_timeout_ms.plans.generate"
+     ]
+    },
+    {
+     "code": "BARE_NUMBER_WITHOUT_COORDINATE",
+     "number": "45000",
+     "found_where": "第 8 行",
+     "matched_as": "45000",
+     "artifact_paths": [
+      "facts:env_variants.CITYNEXUS_WRITE_DEADLINE_MS.deadline_ms_plans",
+      "facts:live_read.configuration_verdict.default_deadline_ms",
+      "facts:live_read.configuration_verdict.per_scenario.agent.commands.deadline_ms"
+     ]
+    },
+    {
+     "code": "BARE_NUMBER_WITHOUT_COORDINATE",
+     "number": "3.53.1",
+     "found_where": "第 8 行",
+     "matched_as": "3.53.1",
+     "artifact_paths": [
+      "facts:live_read.sqlite_driver_version",
+      "receipt:cells.C1_default_strictly_above_measured_busy_timeout.measured.sqlite_driver_version"
+     ]
+    },
+    {
+     "code": "BARE_NUMBER_WITHOUT_COORDINATE",
+     "number": "30000",
+     "found_where": "第 8 行",
+     "matched_as": "30000",
+     "artifact_paths": [
+      "campaign:arms[4].why",
+      "facts:env_variants.CITYNEXUS_WRITE_DEADLINE_MS.effective_busy_timeout_ms.agent.commands",
+      "facts:env_variants.CITYNEXUS_WRITE_DEADLINE_MS.effective_busy_timeout_ms.plans.generate"
+     ]
+    },
+    {
+     "code": "BARE_NUMBER_WITHOUT_COORDINATE",
+     "number": "45000",
+     "found_where": "第 8 行",
+     "matched_as": "45000",
+     "artifact_paths": [
+      "facts:env_variants.CITYNEXUS_WRITE_DEADLINE_MS.deadline_ms_plans",
+      "facts:live_read.configuration_verdict.default_deadline_ms",
+      "facts:live_read.configuration_verdict.per_scenario.agent.commands.deadline_ms"
+     ]
+    },
+    {
+     "code": "BARE_NUMBER_WITHOUT_COORDINATE",
+     "number": "3.53.1",
+     "found_where": "第 8 行",
+     "matched_as": "3.53.1",
+     "artifact_paths": [
+      "facts:live_read.sqlite_driver_version",
+      "receipt:cells.C1_default_strictly_above_measured_busy_timeout.measured.sqlite_driver_version"
+     ]
+    },
+    {
+     "code": "BARE_NUMBER_WITHOUT_COORDINATE",
+     "number": "60000",
+     "found_where": "第 9 行",
+     "matched_as": "60000",
+     "artifact_paths": [
+      "facts:env_variants.CITYNEXUS_WRITE_DEADLINE_SCENARIOS.deadline_ms_plans",
+      "receipt:cells.C2_two_way_door_RED_when_deadline_not_above.measured.env_variants.CITYNEXUS_WRITE_DEADLINE_SCENARIOS.deadline_ms_plans",
+      "receipt:cells.C5_per_scenario_configuration_is_real.measured.variant_60000.deadline_ms_plans"
+     ]
+    },
+    {
+     "code": "BARE_NUMBER_WITHOUT_COORDINATE",
+     "number": "45000",
+     "found_where": "第 9 行",
+     "matched_as": "45000",
+     "artifact_paths": [
+      "facts:env_variants.CITYNEXUS_WRITE_DEADLINE_MS.deadline_ms_plans",
+      "facts:live_read.configuration_verdict.default_deadline_ms",
+      "facts:live_read.configuration_verdict.per_scenario.agent.commands.deadline_ms"
+     ]
+    },
+    {
+     "code": "BARE_NUMBER_WITHOUT_COORDINATE",
+     "number": "60000",
+     "found_where": "第 9 行",
+     "matched_as": "60000",
+     "artifact_paths": [
+      "facts:env_variants.CITYNEXUS_WRITE_DEADLINE_SCENARIOS.deadline_ms_plans",
+      "receipt:cells.C2_two_way_door_RED_when_deadline_not_above.measured.env_variants.CITYNEXUS_WRITE_DEADLINE_SCENARIOS.deadline_ms_plans",
+      "receipt:cells.C5_per_scenario_configuration_is_real.measured.variant_60000.deadline_ms_plans"
+     ]
+    },
+    {
+     "code": "BARE_NUMBER_WITHOUT_COORDINATE",
+     "number": "45000",
+     "found_where": "第 9 行",
+     "matched_as": "45000",
+     "artifact_paths": [
+      "facts:env_variants.CITYNEXUS_WRITE_DEADLINE_MS.deadline_ms_plans",
+      "facts:live_read.configuration_verdict.default_deadline_ms",
+      "facts:live_read.configuration_verdict.per_scenario.agent.commands.deadline_ms"
+     ]
+    },
+    {
+     "code": "BARE_NUMBER_WITHOUT_COORDINATE",
+     "number": "45000",
+     "found_where": "第 9 行",
+     "matched_as": "45000",
+     "artifact_paths": [
+      "facts:env_variants.CITYNEXUS_WRITE_DEADLINE_MS.deadline_ms_plans",
+      "facts:live_read.configuration_verdict.default_deadline_ms",
+      "facts:live_read.configuration_verdict.per_scenario.agent.commands.deadline_ms"
+     ]
+    },
+    {
+     "code": "BARE_NUMBER_WITHOUT_COORDINATE",
+     "number": "60000",
+     "found_where": "第 9 行",
+     "matched_as": "60000",
+     "artifact_paths": [
+      "facts:env_variants.CITYNEXUS_WRITE_DEADLINE_SCENARIOS.deadline_ms_plans",
+      "receipt:cells.C2_two_way_door_RED_when_deadline_not_above.measured.env_variants.CITYNEXUS_WRITE_DEADLINE_SCENARIOS.deadline_ms_plans",
+      "receipt:cells.C5_per_scenario_configuration_is_real.measured.variant_60000.deadline_ms_plans"
+     ]
+    },
+    {
+     "code": "BARE_NUMBER_WITHOUT_COORDINATE",
+     "number": "503",
+     "found_where": "第 31 行",
+     "matched_as": "503",
+     "artifact_paths": [
+      "campaign:arms[6].line_named",
+      "receipt:cells.C8_answer_is_registered_and_server_said_it.why"
+     ]
+    },
+    {
+     "code": "BARE_NUMBER_WITHOUT_COORDINATE",
+     "number": "500",
+     "found_where": "第 31 行",
+     "matched_as": "500",
+     "artifact_paths": [
+      "campaign:arms[1].why",
+      "campaign:arms[6].why",
+      "receipt:cells.C13_what_this_change_does_NOT_improve.measured.first_lost_lock_still"
+     ]
+    },
+    {
+     "code": "BARE_NUMBER_WITHOUT_COORDINATE",
+     "number": "500",
+     "found_where": "第 31 行",
+     "matched_as": "500",
+     "artifact_paths": [
+      "campaign:arms[1].why",
+      "campaign:arms[6].why",
+      "receipt:cells.C13_what_this_change_does_NOT_improve.measured.first_lost_lock_still"
+     ]
+    },
+    {
+     "code": "BARE_NUMBER_WITHOUT_COORDINATE",
+     "number": "503",
+     "found_where": "第 31 行",
+     "matched_as": "503",
+     "artifact_paths": [
+      "campaign:arms[6].line_named",
+      "receipt:cells.C8_answer_is_registered_and_server_said_it.why"
+     ]
+    },
+    {
+     "code": "BARE_NUMBER_WITHOUT_COORDINATE",
+     "number": "1218",
+     "found_where": "第 38 行",
+     "matched_as": "1218",
+     "artifact_paths": [
+      "receipt:cells.C12_full_suite_ab.measured.candidate_r1.summary_line",
+      "receipt:cells.C12_full_suite_ab.measured.candidate_r2.summary_line",
+      "receipt:cells.C12_full_suite_ab.why"
+     ]
+    },
+    {
+     "code": "BARE_NUMBER_WITHOUT_COORDINATE",
+     "number": "10",
+     "found_where": "第 38 行",
+     "matched_as": "10",
+     "artifact_paths": [
+      "campaign:control_rounds[0].summary_line",
+      "campaign:control_rounds[1].summary_line",
+      "campaign:control_rounds[2].summary_line"
+     ]
+    },
+    {
+     "code": "BARE_NUMBER_WITHOUT_COORDINATE",
+     "number": "15",
+     "found_where": "第 38 行",
+     "matched_as": "15",
+     "artifact_paths": [
+      "receipt:cells.C12_full_suite_ab.measured.baseline.summary_line",
+      "receipt:cells.C12_full_suite_ab.measured.candidate_r1.summary_line",
+      "receipt:cells.C12_full_suite_ab.measured.candidate_r2.summary_line"
+     ]
+    },
+    {
+     "code": "BARE_NUMBER_WITHOUT_COORDINATE",
+     "number": "1208",
+     "found_where": "第 38 行",
+     "matched_as": "1208",
+     "artifact_paths": [
+      "receipt:cells.C12_full_suite_ab.measured.baseline.summary_line",
+      "receipt:cells.C12_full_suite_ab.why"
+     ]
+    },
+    {
+     "code": "BARE_NUMBER_WITHOUT_COORDINATE",
+     "number": "1208",
+     "found_where": "第 38 行",
+     "matched_as": "1208",
+     "artifact_paths": [
+      "receipt:cells.C12_full_suite_ab.measured.baseline.summary_line",
+      "receipt:cells.C12_full_suite_ab.why"
+     ]
+    },
+    {
+     "code": "BARE_NUMBER_WITHOUT_COORDINATE",
+     "number": "10",
+     "found_where": "第 38 行",
+     "matched_as": "10",
+     "artifact_paths": [
+      "campaign:control_rounds[0].summary_line",
+      "campaign:control_rounds[1].summary_line",
+      "campaign:control_rounds[2].summary_line"
+     ]
+    },
+    {
+     "code": "BARE_NUMBER_WITHOUT_COORDINATE",
+     "number": "1218",
+     "found_where": "第 38 行",
+     "matched_as": "1218",
+     "artifact_paths": [
+      "receipt:cells.C12_full_suite_ab.measured.candidate_r1.summary_line",
+      "receipt:cells.C12_full_suite_ab.measured.candidate_r2.summary_line",
+      "receipt:cells.C12_full_suite_ab.why"
+     ]
+    },
+    {
+     "code": "BARE_NUMBER_WITHOUT_COORDINATE",
+     "number": "15",
+     "found_where": "第 38 行",
+     "matched_as": "15",
+     "artifact_paths": [
+      "receipt:cells.C12_full_suite_ab.measured.baseline.summary_line",
+      "receipt:cells.C12_full_suite_ab.measured.candidate_r1.summary_line",
+      "receipt:cells.C12_full_suite_ab.measured.candidate_r2.summary_line"
+     ]
+    },
+    {
+     "code": "BARE_NUMBER_WITHOUT_COORDINATE",
+     "number": "1218",
+     "found_where": "第 38 行",
+     "matched_as": "1218",
+     "artifact_paths": [
+      "receipt:cells.C12_full_suite_ab.measured.candidate_r1.summary_line",
+      "receipt:cells.C12_full_suite_ab.measured.candidate_r2.summary_line",
+      "receipt:cells.C12_full_suite_ab.why"
+     ]
+    },
+    {
+     "code": "BARE_NUMBER_WITHOUT_COORDINATE",
+     "number": "10",
+     "found_where": "第 38 行",
+     "matched_as": "10",
+     "artifact_paths": [
+      "campaign:control_rounds[0].summary_line",
+      "campaign:control_rounds[1].summary_line",
+      "campaign:control_rounds[2].summary_line"
+     ]
+    },
+    {
+     "code": "BARE_NUMBER_WITHOUT_COORDINATE",
+     "number": "15",
+     "found_where": "第 38 行",
+     "matched_as": "15",
+     "artifact_paths": [
+      "receipt:cells.C12_full_suite_ab.measured.baseline.summary_line",
+      "receipt:cells.C12_full_suite_ab.measured.candidate_r1.summary_line",
+      "receipt:cells.C12_full_suite_ab.measured.candidate_r2.summary_line"
+     ]
+    },
+    {
+     "code": "BARE_NUMBER_WITHOUT_COORDINATE",
+     "number": "1208",
+     "found_where": "第 38 行",
+     "matched_as": "1208",
+     "artifact_paths": [
+      "receipt:cells.C12_full_suite_ab.measured.baseline.summary_line",
+      "receipt:cells.C12_full_suite_ab.why"
+     ]
+    },
+    {
+     "code": "BARE_NUMBER_WITHOUT_COORDINATE",
+     "number": "0272",
+     "found_where": "第 41 行",
+     "matched_as": "0272",
+     "artifact_paths": [
+      "receipt:cells.C9_normal_write_path_unchanged.why"
+     ]
+    },
+    {
+     "code": "BARE_NUMBER_WITHOUT_COORDINATE",
+     "number": "0287",
+     "found_where": "第 41 行",
+     "artifact_paths": [],
+     "note": "NO_ARTIFACT_MATCH —— 查不到出处就不给它编来源",
+     "classified_as": "ORDER_ID_NOT_A_MEASUREMENT"
+    },
+    {
+     "code": "BARE_NUMBER_WITHOUT_COORDINATE",
+     "number": "22",
+     "found_where": "第 41 行",
+     "artifact_paths": [],
+     "note": "NO_ARTIFACT_MATCH —— 查不到出处就不给它编来源",
+     "classified_as": "STILL_UNRESOLVED"
+    },
+    {
+     "code": "BARE_NUMBER_WITHOUT_COORDINATE",
+     "number": "0287",
+     "found_where": "第 41 行",
+     "artifact_paths": [],
+     "note": "NO_ARTIFACT_MATCH —— 查不到出处就不给它编来源",
+     "classified_as": "ORDER_ID_NOT_A_MEASUREMENT"
+    },
+    {
+     "code": "BARE_NUMBER_WITHOUT_COORDINATE",
+     "number": "0272",
+     "found_where": "第 41 行",
+     "matched_as": "0272",
+     "artifact_paths": [
+      "receipt:cells.C9_normal_write_path_unchanged.why"
+     ]
+    },
+    {
+     "code": "BARE_NUMBER_WITHOUT_COORDINATE",
+     "number": "22",
+     "found_where": "第 41 行",
+     "artifact_paths": [],
+     "note": "NO_ARTIFACT_MATCH —— 查不到出处就不给它编来源",
+     "classified_as": "STILL_UNRESOLVED"
+    },
+    {
+     "code": "BARE_NUMBER_WITHOUT_COORDINATE",
+     "number": "0287",
+     "found_where": "第 70 行",
+     "artifact_paths": [],
+     "note": "NO_ARTIFACT_MATCH —— 查不到出处就不给它编来源",
+     "classified_as": "ORDER_ID_NOT_A_MEASUREMENT"
+    },
+    {
+     "code": "BARE_NUMBER_WITHOUT_COORDINATE",
+     "number": "0274",
+     "found_where": "第 70 行",
+     "matched_as": "0274",
+     "artifact_paths": [
+      "receipt:cells.C13_what_this_change_does_NOT_improve.why"
+     ]
+    },
+    {
+     "code": "BARE_NUMBER_WITHOUT_COORDINATE",
+     "number": "0274",
+     "found_where": "第 70 行",
+     "matched_as": "0274",
+     "artifact_paths": [
+      "receipt:cells.C13_what_this_change_does_NOT_improve.why"
+     ]
+    },
+    {
+     "code": "BARE_NUMBER_WITHOUT_COORDINATE",
+     "number": "0287",
+     "found_where": "第 70 行",
+     "artifact_paths": [],
+     "note": "NO_ARTIFACT_MATCH —— 查不到出处就不给它编来源",
+     "classified_as": "ORDER_ID_NOT_A_MEASUREMENT"
+    },
+    {
+     "code": "BARE_NUMBER_WITHOUT_COORDINATE",
+     "number": "0274",
+     "found_where": "第 73 行",
+     "matched_as": "0274",
+     "artifact_paths": [
+      "receipt:cells.C13_what_this_change_does_NOT_improve.why"
+     ]
+    },
+    {
+     "code": "BARE_NUMBER_WITHOUT_COORDINATE",
+     "number": "0287",
+     "found_where": "第 73 行",
+     "artifact_paths": [],
+     "note": "NO_ARTIFACT_MATCH —— 查不到出处就不给它编来源",
+     "classified_as": "ORDER_ID_NOT_A_MEASUREMENT"
+    },
+    {
+     "code": "BARE_NUMBER_WITHOUT_COORDINATE",
+     "number": "0292",
+     "found_where": "第 73 行",
+     "artifact_paths": [],
+     "note": "NO_ARTIFACT_MATCH —— 查不到出处就不给它编来源",
+     "classified_as": "ORDER_ID_NOT_A_MEASUREMENT"
+    },
+    {
+     "code": "BARE_NUMBER_WITHOUT_COORDINATE",
+     "number": "0294",
+     "found_where": "第 73 行",
+     "artifact_paths": [],
+     "note": "NO_ARTIFACT_MATCH —— 查不到出处就不给它编来源",
+     "classified_as": "ORDER_ID_NOT_A_MEASUREMENT"
+    },
+    {
+     "code": "BARE_NUMBER_WITHOUT_COORDINATE",
+     "number": "0287",
+     "found_where": "第 73 行",
+     "artifact_paths": [],
+     "note": "NO_ARTIFACT_MATCH —— 查不到出处就不给它编来源",
+     "classified_as": "ORDER_ID_NOT_A_MEASUREMENT"
+    },
+    {
+     "code": "BARE_NUMBER_WITHOUT_COORDINATE",
+     "number": "0274",
+     "found_where": "第 73 行",
+     "matched_as": "0274",
+     "artifact_paths": [
+      "receipt:cells.C13_what_this_change_does_NOT_improve.why"
+     ]
+    },
+    {
+     "code": "BARE_NUMBER_WITHOUT_COORDINATE",
+     "number": "0292",
+     "found_where": "第 73 行",
+     "artifact_paths": [],
+     "note": "NO_ARTIFACT_MATCH —— 查不到出处就不给它编来源",
+     "classified_as": "ORDER_ID_NOT_A_MEASUREMENT"
+    },
+    {
+     "code": "BARE_NUMBER_WITHOUT_COORDINATE",
+     "number": "0294",
+     "found_where": "第 73 行",
+     "artifact_paths": [],
+     "note": "NO_ARTIFACT_MATCH —— 查不到出处就不给它编来源",
+     "classified_as": "ORDER_ID_NOT_A_MEASUREMENT"
+    },
+    {
+     "code": "BARE_NUMBER_WITHOUT_COORDINATE",
+     "number": "0292",
+     "found_where": "第 73 行",
+     "artifact_paths": [],
+     "note": "NO_ARTIFACT_MATCH —— 查不到出处就不给它编来源",
+     "classified_as": "ORDER_ID_NOT_A_MEASUREMENT"
+    },
+    {
+     "code": "BARE_NUMBER_WITHOUT_COORDINATE",
+     "number": "0274",
+     "found_where": "第 73 行",
+     "matched_as": "0274",
+     "artifact_paths": [
+      "receipt:cells.C13_what_this_change_does_NOT_improve.why"
+     ]
+    },
+    {
+     "code": "BARE_NUMBER_WITHOUT_COORDINATE",
+     "number": "0287",
+     "found_where": "第 73 行",
+     "artifact_paths": [],
+     "note": "NO_ARTIFACT_MATCH —— 查不到出处就不给它编来源",
+     "classified_as": "ORDER_ID_NOT_A_MEASUREMENT"
+    },
+    {
+     "code": "BARE_NUMBER_WITHOUT_COORDINATE",
+     "number": "0294",
+     "found_where": "第 73 行",
+     "artifact_paths": [],
+     "note": "NO_ARTIFACT_MATCH —— 查不到出处就不给它编来源",
+     "classified_as": "ORDER_ID_NOT_A_MEASUREMENT"
+    },
+    {
+     "code": "BARE_NUMBER_WITHOUT_COORDINATE",
+     "number": "0294",
+     "found_where": "第 73 行",
+     "artifact_paths": [],
+     "note": "NO_ARTIFACT_MATCH —— 查不到出处就不给它编来源",
+     "classified_as": "ORDER_ID_NOT_A_MEASUREMENT"
+    },
+    {
+     "code": "BARE_NUMBER_WITHOUT_COORDINATE",
+     "number": "0274",
+     "found_where": "第 73 行",
+     "matched_as": "0274",
+     "artifact_paths": [
+      "receipt:cells.C13_what_this_change_does_NOT_improve.why"
+     ]
+    }
+   ],
+   "numbers_without_artifact_match": [
+    "0262",
+    "0287",
+    "0292",
+    "0294",
+    "22"
+   ],
+   "still_unresolved": [
+    "22"
+   ]
+  },
+  {
+   "label": "published_receipt_md",
+   "file": "D:\\moodle\\_qoder_f_run\\o225_receipts\\ord0296_receipt_r1.md",
+   "gate_overall": "Q43_GATE_RED",
+   "claims_checked": 17,
+   "findings": 9,
+   "distinct_numbers_named": 14,
+   "with_artifact_coordinate": 14,
+   "without_coordinate": [],
+   "rows": [
+    {
+     "code": "BARE_NUMBER_WITHOUT_COORDINATE",
+     "number": "15000,",
+     "found_where": "第 12 行",
+     "matched_as": "15000",
+     "artifact_paths": [
+      "facts:live_read.configuration_verdict.per_scenario.agent.commands.delta_ms",
+      "facts:live_read.configuration_verdict.per_scenario.plans.generate.delta_ms",
+      "receipt:cells.C1_default_strictly_above_measured_busy_timeout.measured.configuration_verdict.per_scenario.agent.commands.delta_ms"
+     ]
+    },
+    {
+     "code": "BARE_NUMBER_WITHOUT_COORDINATE",
+     "number": "15000",
+     "found_where": "第 12 行",
+     "matched_as": "15000",
+     "artifact_paths": [
+      "facts:live_read.configuration_verdict.per_scenario.agent.commands.delta_ms",
+      "facts:live_read.configuration_verdict.per_scenario.plans.generate.delta_ms",
+      "receipt:cells.C1_default_strictly_above_measured_busy_timeout.measured.configuration_verdict.per_scenario.agent.commands.delta_ms"
+     ]
+    },
+    {
+     "code": "BARE_NUMBER_WITHOUT_COORDINATE",
+     "number": "15000",
+     "found_where": "第 12 行",
+     "matched_as": "15000",
+     "artifact_paths": [
+      "facts:live_read.configuration_verdict.per_scenario.agent.commands.delta_ms",
+      "facts:live_read.configuration_verdict.per_scenario.plans.generate.delta_ms",
+      "receipt:cells.C1_default_strictly_above_measured_busy_timeout.measured.configuration_verdict.per_scenario.agent.commands.delta_ms"
+     ]
+    },
+    {
+     "code": "BARE_NUMBER_WITHOUT_COORDINATE",
+     "number": "45000",
+     "found_where": "第 13 行",
+     "matched_as": "45000",
+     "artifact_paths": [
+      "facts:env_variants.CITYNEXUS_WRITE_DEADLINE_MS.deadline_ms_plans",
+      "facts:live_read.configuration_verdict.default_deadline_ms",
+      "facts:live_read.configuration_verdict.per_scenario.agent.commands.deadline_ms"
+     ]
+    },
+    {
+     "code": "BARE_NUMBER_WITHOUT_COORDINATE",
+     "number": "60000",
+     "found_where": "第 13 行",
+     "matched_as": "60000",
+     "artifact_paths": [
+      "facts:env_variants.CITYNEXUS_WRITE_DEADLINE_SCENARIOS.deadline_ms_plans",
+      "receipt:cells.C2_two_way_door_RED_when_deadline_not_above.measured.env_variants.CITYNEXUS_WRITE_DEADLINE_SCENARIOS.deadline_ms_plans",
+      "receipt:cells.C5_per_scenario_configuration_is_real.measured.variant_60000.deadline_ms_plans"
+     ]
+    },
+    {
+     "code": "BARE_NUMBER_WITHOUT_COORDINATE",
+     "number": "60000",
+     "found_where": "第 13 行",
+     "matched_as": "60000",
+     "artifact_paths": [
+      "facts:env_variants.CITYNEXUS_WRITE_DEADLINE_SCENARIOS.deadline_ms_plans",
+      "receipt:cells.C2_two_way_door_RED_when_deadline_not_above.measured.env_variants.CITYNEXUS_WRITE_DEADLINE_SCENARIOS.deadline_ms_plans",
+      "receipt:cells.C5_per_scenario_configuration_is_real.measured.variant_60000.deadline_ms_plans"
+     ]
+    },
+    {
+     "code": "BARE_NUMBER_WITHOUT_COORDINATE",
+     "number": "45000",
+     "found_where": "第 13 行",
+     "matched_as": "45000",
+     "artifact_paths": [
+      "facts:env_variants.CITYNEXUS_WRITE_DEADLINE_MS.deadline_ms_plans",
+      "facts:live_read.configuration_verdict.default_deadline_ms",
+      "facts:live_read.configuration_verdict.per_scenario.agent.commands.deadline_ms"
+     ]
+    },
+    {
+     "code": "BARE_NUMBER_WITHOUT_COORDINATE",
+     "number": "503",
+     "found_where": "第 14 行",
+     "matched_as": "503",
+     "artifact_paths": [
+      "campaign:arms[6].line_named",
+      "receipt:cells.C8_answer_is_registered_and_server_said_it.why"
+     ]
+    },
+    {
+     "code": "BARE_NUMBER_WITHOUT_COORDINATE",
+     "number": "500",
+     "found_where": "第 15 行",
+     "matched_as": "500",
+     "artifact_paths": [
+      "campaign:arms[1].why",
+      "campaign:arms[6].why",
+      "receipt:cells.C13_what_this_change_does_NOT_improve.measured.first_lost_lock_still"
+     ]
+    },
+    {
+     "code": "BARE_NUMBER_WITHOUT_COORDINATE",
+     "number": "14",
+     "found_where": "第 15 行",
+     "matched_as": "14",
+     "artifact_paths": [
+      "erratum:read_at",
+      "receipt:cells.C13_what_this_change_does_NOT_improve.measured.census_provenance.summary.write_sites",
+      "receipt:cells.C13_what_this_change_does_NOT_improve.measured.frontend_write_legs_out_of_scope"
+     ]
+    },
+    {
+     "code": "BARE_NUMBER_WITHOUT_COORDINATE",
+     "number": "1218",
+     "found_where": "第 40 行",
+     "matched_as": "1218",
+     "artifact_paths": [
+      "receipt:cells.C12_full_suite_ab.measured.candidate_r1.summary_line",
+      "receipt:cells.C12_full_suite_ab.measured.candidate_r2.summary_line",
+      "receipt:cells.C12_full_suite_ab.why"
+     ]
+    },
+    {
+     "code": "BARE_NUMBER_WITHOUT_COORDINATE",
+     "number": "10",
+     "found_where": "第 40 行",
+     "matched_as": "10",
+     "artifact_paths": [
+      "campaign:control_rounds[0].summary_line",
+      "campaign:control_rounds[1].summary_line",
+      "campaign:control_rounds[2].summary_line"
+     ]
+    },
+    {
+     "code": "BARE_NUMBER_WITHOUT_COORDINATE",
+     "number": "15",
+     "found_where": "第 40 行",
+     "matched_as": "15",
+     "artifact_paths": [
+      "receipt:cells.C12_full_suite_ab.measured.baseline.summary_line",
+      "receipt:cells.C12_full_suite_ab.measured.candidate_r1.summary_line",
+      "receipt:cells.C12_full_suite_ab.measured.candidate_r2.summary_line"
+     ]
+    },
+    {
+     "code": "BARE_NUMBER_WITHOUT_COORDINATE",
+     "number": "1208",
+     "found_where": "第 40 行",
+     "matched_as": "1208",
+     "artifact_paths": [
+      "receipt:cells.C12_full_suite_ab.measured.baseline.summary_line",
+      "receipt:cells.C12_full_suite_ab.why"
+     ]
+    },
+    {
+     "code": "BARE_NUMBER_WITHOUT_COORDINATE",
+     "number": "14 条",
+     "found_where": "第 15 行",
+     "matched_as": "14",
+     "artifact_paths": [
+      "erratum:read_at",
+      "receipt:cells.C13_what_this_change_does_NOT_improve.measured.census_provenance.summary.write_sites",
+      "receipt:cells.C13_what_this_change_does_NOT_improve.measured.frontend_write_legs_out_of_scope"
+     ]
+    },
+    {
+     "code": "BARE_NUMBER_WITHOUT_COORDINATE",
+     "number": "500",
+     "found_where": "第 15 行",
+     "matched_as": "500",
+     "artifact_paths": [
+      "campaign:arms[1].why",
+      "campaign:arms[6].why",
+      "receipt:cells.C13_what_this_change_does_NOT_improve.measured.first_lost_lock_still"
+     ]
+    },
+    {
+     "code": "BARE_NUMBER_WITHOUT_COORDINATE",
+     "number": "14",
+     "found_where": "第 15 行",
+     "matched_as": "14",
+     "artifact_paths": [
+      "erratum:read_at",
+      "receipt:cells.C13_what_this_change_does_NOT_improve.measured.census_provenance.summary.write_sites",
+      "receipt:cells.C13_what_this_change_does_NOT_improve.measured.frontend_write_legs_out_of_scope"
+     ]
+    },
+    {
+     "code": "BARE_NUMBER_WITHOUT_COORDINATE",
+     "number": "13 格",
+     "found_where": "第 18 行",
+     "matched_as": "13",
+     "artifact_paths": [
+      "receipt:what"
+     ]
+    },
+    {
+     "code": "BARE_NUMBER_WITHOUT_COORDINATE",
+     "number": "13",
+     "found_where": "第 18 行",
+     "matched_as": "13",
+     "artifact_paths": [
+      "receipt:what"
+     ]
+    }
+   ],
+   "numbers_without_artifact_match": [],
+   "still_unresolved": []
+  }
+ ]
+}
