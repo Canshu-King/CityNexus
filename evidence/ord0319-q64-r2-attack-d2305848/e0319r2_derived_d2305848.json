@@ -1,0 +1,51 @@
+{
+ "schema": "CNX_LANE_E_ORD0319_R2_DERIVED_V1",
+ "order": "ORD-0319 round 2 (r2 reverse attack)",
+ "verifier": "lane E d2305848",
+ "at": "2026-09-26T02:45:27+0800",
+ "ruler_under_attack": {
+  "file_bytes_sha1": "14a9a3e4584570836c096ae072d07faffa5f4d52",
+  "git_blob": "608016f6a538097041554b76cfe3e9a4192f299c",
+  "bytes_unchanged_by_me": true
+ },
+ "cross_surface": [
+  {
+   "surface": "A",
+   "disk_root": "D:\\moodle\\_qoder_redteam_anywhere_20260921\\raw\\ord0319",
+   "python": "C:\\Users\\仓鼠王\\AppData\\Local\\Programs\\Python\\Python313\\python.exe",
+   "rc": 0,
+   "selftest": "SELFTEST_PASS",
+   "ruler_bytes_sha1": "14a9a3e4584570836c096ae072d07faffa5f4d52"
+  },
+  {
+   "surface": "B",
+   "disk_root": "D:\\moodle\\_qoder_redteam_anywhere_20260921\\raw\\ord0319\\r2surfaceB_024527",
+   "python": "D:\\moodle\\CityNexus\\.venv\\Scripts\\python.exe",
+   "rc": 0,
+   "selftest": "SELFTEST_PASS",
+   "ruler_bytes_sha1": "14a9a3e4584570836c096ae072d07faffa5f4d52"
+  }
+ ],
+ "derived": {
+  "r2_blind_shapes_confirmed": [
+   "e0319r2_A_rename_last_part.tsx",
+   "e0319r2_B_destructure_hop.tsx",
+   "e0319r2_C_paren_alias.tsx"
+  ],
+  "shape_why": {
+   "e0319r2_A_rename_last_part.tsx": "sink path last part `.value` not in TEXTISH {text,message,detail,...} => taint rule skips; upstream sentence still rendered in <code>",
+   "e0319r2_B_destructure_hop.tsx": "tainted helper result parked in bare local `const sentence = helper(body)`; the taint sink follows only DOTTED_PATH, a bare tainted identifier as JSX child is invisible",
+   "e0319r2_C_paren_alias.tsx": "`{(out.failureReason || {}).text}`: parens/alias break the contiguous DOTTED_PATH match => skipped"
+  },
+  "control_clean": true,
+  "cross_surface_selftest_pass_both": true,
+  "verdicts": {
+   "A": "MISSED_BY_RULER",
+   "B": "MISSED_BY_RULER",
+   "C": "MISSED_BY_RULER",
+   "control": "CLEAN_AS_REQUIRED",
+   "cross_surface": "REPRODUCED_2_PAIRINGS"
+  },
+  "scope_note": "these are shapes the r2 grammar cannot see, each verified to render real upstream words on screen; none of them is currently present on the live tip 2344145c/30de4ebe (live file uses the dotted `failureReason.text` path, which r2 does catch) - so this is a grammar boundary report, not a live-tree defect claim"
+ }
+}
