@@ -1,0 +1,2 @@
+version Q43_r4 | input C:\Users\仓鼠王\AppData\Local\Temp\q43b_ledger_r3.md 9564 B
+claims checked 19 | exempt {"YEAR": 1, "IDENTIFIER_PART": 1} | overall Q43_GATE_GREEN | findings 0 []
