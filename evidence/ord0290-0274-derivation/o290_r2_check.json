@@ -1,0 +1,83 @@
+{
+ "cells": [
+  {
+   "derived_from": null,
+   "derived_from_key": null,
+   "id": "B2a_idle_automatic_convergence",
+   "own_hits": [
+    "1",
+    "45b0a5e2",
+    "69fd2f85",
+    "index-BLpFjUjp.js",
+    "index-CtuiCkKf.js",
+    "index-DimRtCQm.js"
+   ],
+   "own_token_count": 27,
+   "unique_hits": [],
+   "verdict": "VERIFIED_FIXED_WITH_DISCRIMINATING_CONTROL",
+   "why": "idle page installed on 69fd2f85 executed index-BLpFjUjp.js -> index-DimRtCQm.js, converged=True, at 4013 ms, on exactly 1 navigation(s) issued by the instrument; the same instrument on 45b0a5e2 executed index-CtuiCkKf.js -> index-CtuiCkKf.js, converged=False",
+   "why_source": "why",
+   "why_token_count": 7
+  },
+  {
+   "derived_from": null,
+   "derived_from_key": null,
+   "id": "B2b_dirty_form_preservation",
+   "own_hits": [
+    "0",
+    "3",
+    "45a3d568",
+    "C2DKD_R7",
+    "ef277b2d",
+    "index-C2DKD_R7.js",
+    "index-DimRtCQm.js",
+    "index-xKIGmoBz.js"
+   ],
+   "own_token_count": 29,
+   "unique_hits": [],
+   "verdict": "VERIFIED_FIXED_WITH_DISCRIMINATING_CONTROL",
+   "why": "document claimed during its own lifetime on ef277b2d executed index-xKIGmoBz.js -> index-DimRtCQm.js with 0 further navigations; wizard step 3 -> 3; named fields differing after the reload = []; 6 of them carry values the instrument typed (['cityName', 'arrivalLocation', 'departureLocation', 'startAt', 'endAt', 'specialRequirements']); mutant self-test flagged=True; the same shape on 45a3d568 executed index-C2DKD_R7.js -> index-C2DKD_R7.js, converged=False",
+   "why_source": "why",
+   "why_token_count": 9
+  },
+  {
+   "derived_from": null,
+   "derived_from_key": null,
+   "id": "B2c_inflight_write_safe_point",
+   "own_hits": [
+    "0",
+    "22",
+    "2790",
+    "45a3d568",
+    "45b0a5e2",
+    "69fd2f85"
+   ],
+   "own_token_count": 37,
+   "unique_hits": [],
+   "verdict": "VERIFIED_FIXED_WITH_TWO_DISCRIMINATING_CONTROLS",
+   "why": "handover on 45a3d568 reloaded 22.0 ms RELATIVE to its own write settling (cut=False) and the client received that write=True; on 69fd2f85 (B2a present, safe point absent) the same in-flight write was reloaded -2790.0 ms relative to settlement (cut=True) and the client received it=False - both arms converged, so the discriminator here is the sign of that number, not the convergence; and on 45b0a5e2 (no B2a at all) there was NO product-initiated navigation in the watch window at all (reload epoch=None), converged=False after 0 navigations, while its write still settled normally (client received it=True) - so the convergence the other two arms show is not something every tree gets for free",
+   "why_source": "why",
+   "why_token_count": 7
+  }
+ ],
+ "cells_found": 3,
+ "exit": 0,
+ "findings": [],
+ "hard_codes": [],
+ "hard_count": 0,
+ "info_count": 0,
+ "meaning": "no shared literal and every sentence names its own readings",
+ "overall": "Q38_GATE_GREEN",
+ "receipt": {
+  "blob_sha1": "9da11c04306950db02f091c7c7d05b766b1485e3",
+  "bytes": 24302,
+  "path": "_incoming_o290r2.json"
+ },
+ "soft_codes": [],
+ "soft_count": 0,
+ "unique_reading_counts": {
+  "B2a_idle_automatic_convergence": 1,
+  "B2b_dirty_form_preservation": 3,
+  "B2c_inflight_write_safe_point": 4
+ }
+}
