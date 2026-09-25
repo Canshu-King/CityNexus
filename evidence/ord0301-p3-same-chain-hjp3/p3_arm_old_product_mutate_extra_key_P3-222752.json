@@ -1,0 +1,217 @@
+{
+ "arm": "old_product_mutate_extra_key",
+ "run_id": "P3-222752",
+ "intent_declared_before": "A4 the same real envelope on the unguarded generation: an object body must survive :147/:155",
+ "tip": "dc964086c9d412573ac19d70b24b30e6c3ee6168",
+ "scenario": "product",
+ "proxy_mode": "mutate_extra_key",
+ "spec": null,
+ "lock_plan": null,
+ "rig": {
+  "backend_pid": 47048,
+  "proxy_pid": 21524,
+  "face_pid": 15308,
+  "face_port": 8654,
+  "all_up": true,
+  "identity_two_sided": true,
+  "journey_id": "d4155d69-0057-4a1f-9414-e4bf0a6b5dcf",
+  "seed": {
+   "places_before": 0,
+   "demo_places_before": 0,
+   "seeded_by_this_call": true,
+   "demo_places_after": 8
+  },
+  "db": "D:\\moodle\\_hjp3_0301p3_0925\\p3_old.s3db",
+  "access_log": "p3_backend_access_222752.log",
+  "rig_state_file": "p3_rig_state_old_mutate_extra_key_222752.json"
+ },
+ "node_rc": 0,
+ "node_tail": [
+  [
+   "{\"scenario\":\"product\",\"status\":\"HTTP_422\",\"title\":\"这个要求被明确拒绝\",\"label\":\"服务器给出的原因\",\"reason\":\"Request validation failed\",\"details\":1,\"opened_label_rendered\":\"服务器给出的原因\",\"origin\":\"server\",\"fetch_rejected\":false,\"page_saw\":422,\"pair_id\":\"hjp3p3-8b63e56ade2d4250\",\"body_parsed\":true,\"top_keys\":[\"error\"]}"
+  ]
+ ],
+ "wall_seconds": 5,
+ "pairing": [
+  {
+   "leg": "d4155d69-0057-4a1f-9414-e4bf0a6b5dcf/agent/commands",
+   "pair_id": "hjp3p3-8b63e56ade2d4250",
+   "one_request_one_id": true,
+   "server_side_from_the_same_hop": {
+    "recorded": true,
+    "reached_upstream": true,
+    "answered_by": "product",
+    "status": 422,
+    "content_type": "application/json",
+    "bytes": 323,
+    "body_parses_as_json": true,
+    "top_level_keys": [
+     "error"
+    ],
+    "body_head": "{\"error\":{\"code\":\"VALIDATION_ERROR\",\"message\":\"Request validation failed\",\"message_key\":\"request.invalid\",\"trace_id\":\"b542bd77-af8a-4e01-b803-1cbd64fefbb8\",\"det",
+    "elapsed_ms": 23,
+    "request_mutation": {
+     "added_key": "p3_forbidden_probe",
+     "keys_before": [
+      "command"
+     ],
+     "keys_after": [
+      "command",
+      "p3_forbidden_probe"
+     ],
+     "request_bytes_before": 59,
+     "request_bytes_after": 85,
+     "sha256_before": "06132450c24518927deb5866f1b0bb8120aadfdad0286a5a2ef3e01857695351",
+     "sha256_after": "b3b04eb87db1921ac600e78afbd53a2236695834e279dec8329f3f08ec8b9e6b",
+     "who_sent_what": "the page sent the untouched body; this hop added the key, and the product answered with its own envelope"
+    },
+    "spec_name": null
+   },
+   "screen_side_from_the_page": {
+    "fetch_rejected": false,
+    "status": 422,
+    "ok": false,
+    "content_type": "application/json",
+    "elapsed_ms": 34,
+    "app_read_the_body": {
+     "url": "http://127.0.0.1:8654/api/v1/journeys/d4155d69-0057-4a1f-9414-e4bf0a6b5dcf/agent/commands",
+     "status": 422,
+     "pair_id": "hjp3p3-8b63e56ade2d4250",
+     "content_type": "application/json",
+     "at_wall": "2026-09-25T14:28:01.475Z",
+     "parsed": true,
+     "top_type": "object",
+     "top_keys": [
+      "error"
+     ],
+     "error_keys": [
+      "code",
+      "message",
+      "message_key",
+      "trace_id",
+      "details"
+     ],
+     "error_message_type": "string",
+     "detail_type": "undefined"
+    },
+    "body_parse_failed": false,
+    "body_parsed": true,
+    "browser_stack": {
+     "url": "/api/v1/journeys/d4155d69-0057-4a1f-9414-e4bf0a6b5dcf/agent/commands",
+     "status": 422,
+     "pair_id": "hjp3p3-8b63e56ade2d4250",
+     "content_type": "application/json",
+     "failure": null,
+     "at_wall": "2026-09-25T14:28:01.476Z"
+    }
+   },
+   "both_ends_agree_on_status": true,
+   "both_ends_agree_on_json_class": true
+  }
+ ],
+ "write_legs_with_a_5xx_or_4xx": [
+  {
+   "leg": "d4155d69-0057-4a1f-9414-e4bf0a6b5dcf/agent/commands",
+   "status": 422,
+   "answered_by": "product",
+   "json": true,
+   "page_saw": 422,
+   "rejected": false
+  }
+ ],
+ "screen_as_painted_before_tapping": {
+  "result_card_painted": "这个要求被明确拒绝\n\n服务端说明了原因（见“技术详情”）。你的行程没有被改动，按原因调整条件或换个说法再试。\n\n技术详情",
+  "result_card_text_content": "这个要求被明确拒绝服务端说明了原因（见“技术详情”）。你的行程没有被改动，按原因调整条件或换个说法再试。技术详情服务器给出的原因Request validation failed",
+  "card_title_painted": "这个要求被明确拒绝",
+  "card_body_painted": "服务端说明了原因（见“技术详情”）。你的行程没有被改动，按原因调整条件或换个说法再试。",
+  "reason_label_painted": "",
+  "reason_value_painted": "",
+  "reason_label_text_content": "服务器给出的原因",
+  "reason_value_text_content": "Request validation failed",
+  "details_elements_present": 1,
+  "details_open_attribute": false,
+  "detail_toggle_present": true,
+  "network_card_painted": false,
+  "http_failed_card_painted": false,
+  "refused_card_painted": true,
+  "server_attribution_painted": false,
+  "device_attribution_painted": false,
+  "unreadable_answer_note_painted": false,
+  "whole_page_contains_server_label": true,
+  "whole_page_contains_device_label": false,
+  "next_step_painted": null,
+  "cross_check_data_result_status": "HTTP_422",
+  "cross_check_data_reason_origin": "server"
+ },
+ "screen_as_painted_after_tapping_detail": {
+  "result_card_painted": "这个要求被明确拒绝\n\n服务端说明了原因（见“技术详情”）。你的行程没有被改动，按原因调整条件或换个说法再试。\n\n技术详情\n服务器给出的原因\nRequest validation failed",
+  "result_card_text_content": "这个要求被明确拒绝服务端说明了原因（见“技术详情”）。你的行程没有被改动，按原因调整条件或换个说法再试。技术详情服务器给出的原因Request validation failed",
+  "card_title_painted": "这个要求被明确拒绝",
+  "card_body_painted": "服务端说明了原因（见“技术详情”）。你的行程没有被改动，按原因调整条件或换个说法再试。",
+  "reason_label_painted": "服务器给出的原因",
+  "reason_value_painted": "Request validation failed",
+  "reason_label_text_content": "服务器给出的原因",
+  "reason_value_text_content": "Request validation failed",
+  "details_elements_present": 1,
+  "details_open_attribute": true,
+  "detail_toggle_present": true,
+  "network_card_painted": false,
+  "http_failed_card_painted": false,
+  "refused_card_painted": true,
+  "server_attribution_painted": true,
+  "device_attribution_painted": false,
+  "unreadable_answer_note_painted": false,
+  "whole_page_contains_server_label": true,
+  "whole_page_contains_device_label": false,
+  "next_step_painted": null,
+  "cross_check_data_result_status": "HTTP_422",
+  "cross_check_data_reason_origin": "server"
+ },
+ "detail_block_open_attempt": {
+  "clicked": true,
+  "was_already_open": false,
+  "details_open_after": true
+ },
+ "screen": {
+  "result_card_painted": "这个要求被明确拒绝\n\n服务端说明了原因（见“技术详情”）。你的行程没有被改动，按原因调整条件或换个说法再试。\n\n技术详情",
+  "result_card_text_content": "这个要求被明确拒绝服务端说明了原因（见“技术详情”）。你的行程没有被改动，按原因调整条件或换个说法再试。技术详情服务器给出的原因Request validation failed",
+  "card_title_painted": "这个要求被明确拒绝",
+  "card_body_painted": "服务端说明了原因（见“技术详情”）。你的行程没有被改动，按原因调整条件或换个说法再试。",
+  "reason_label_painted": "",
+  "reason_value_painted": "",
+  "reason_label_text_content": "服务器给出的原因",
+  "reason_value_text_content": "Request validation failed",
+  "details_elements_present": 1,
+  "details_open_attribute": false,
+  "detail_toggle_present": true,
+  "network_card_painted": false,
+  "http_failed_card_painted": false,
+  "refused_card_painted": true,
+  "server_attribution_painted": false,
+  "device_attribution_painted": false,
+  "unreadable_answer_note_painted": false,
+  "whole_page_contains_server_label": true,
+  "whole_page_contains_device_label": false,
+  "next_step_painted": null,
+  "cross_check_data_result_status": "HTTP_422",
+  "cross_check_data_reason_origin": "server"
+ },
+ "page_errors": [],
+ "waited_ms": 3717,
+ "sample_tail": [
+  {
+   "ms": 549,
+   "status": "HTTP_422",
+   "details": 1,
+   "busy": false
+  }
+ ],
+ "access_log_witness": {
+  "present": true,
+  "path": "p3_backend_access_222752.log",
+  "lines_naming_the_leg": 1,
+  "lines": [
+   ".1:60546 - \"POST /api/v1/journeys/d4155d69-0057-4a1f-9414-e4bf0a6b5dcf/agent/commands HTTP/1.1\" 422 Unprocessable Entity"
+  ]
+ }
+}
