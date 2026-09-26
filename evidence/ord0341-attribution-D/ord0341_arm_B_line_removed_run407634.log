@@ -1,0 +1,67 @@
+[WebServer] INFO:     127.0.0.1:61670 - "GET /api/v1/health HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:61679 - "GET /api/v1/health HTTP/1.1" 200 OK
+
+Running 5 tests using 1 worker
+
+[WebServer] INFO:     127.0.0.1:49315 - "POST /api/v1/travelers HTTP/1.1" 201 Created
+[WebServer] INFO:     127.0.0.1:49316 - "POST /api/v1/journeys HTTP/1.1" 201 Created
+[WebServer] INFO:     127.0.0.1:49315 - "POST /api/v1/journeys/4b5544a8-42e8-400a-af2b-7d18572a5d9c/stay-options/generate HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:49316 - "GET /api/v1/journeys/4b5544a8-42e8-400a-af2b-7d18572a5d9c/stay-options HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:49315 - "POST /api/v1/journeys/4b5544a8-42e8-400a-af2b-7d18572a5d9c/stay-options/98bffc7e-6a97-4f74-bee9-858ee9433344/select HTTP/1.1" 200 OK
+[qoder-real-seed] journey=4b5544a8-42e8-400a-af2b-7d18572a5d9c options=4 chosen=98bffc7e-6a97-4f74-bee9-858ee9433344 (Haihe Riverside Hotel)
+[WebServer] INFO:     127.0.0.1:49829 - "GET /api/v1/journeys/4b5544a8-42e8-400a-af2b-7d18572a5d9c/experience HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:49830 - "GET /api/v1/journeys/4b5544a8-42e8-400a-af2b-7d18572a5d9c/replans HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:62381 - "GET /api/v1/journeys/4b5544a8-42e8-400a-af2b-7d18572a5d9c/replans HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:49832 - "GET /api/v1/journeys/4b5544a8-42e8-400a-af2b-7d18572a5d9c/plans HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:53857 - "GET /api/v1/journeys/4b5544a8-42e8-400a-af2b-7d18572a5d9c/web-observations HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:53859 - "GET /api/v1/journeys/4b5544a8-42e8-400a-af2b-7d18572a5d9c/wallet HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:60385 - "GET /api/v1/journeys/4b5544a8-42e8-400a-af2b-7d18572a5d9c/offline-snapshot HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:58594 - "GET /api/v1/journeys/4b5544a8-42e8-400a-af2b-7d18572a5d9c/execution-clock HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:59330 - "GET /api/v1/agent/runtime-status HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:49831 - "GET /api/v1/journeys/4b5544a8-42e8-400a-af2b-7d18572a5d9c/twin HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:58593 - "GET /api/v1/journeys/4b5544a8-42e8-400a-af2b-7d18572a5d9c/experience HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:53858 - "GET /api/v1/travelers/6c25f042-42f0-4d16-a860-b69c818577bb/agent-policy HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:52193 - "GET /api/v1/journeys/4b5544a8-42e8-400a-af2b-7d18572a5d9c/experience HTTP/1.1" 200 OK
+[qoder-real-seed] trialWizard=false live-journey-current=true
+  ok 1 [real-seed] › e2e\_qoderRealSeed.setup.ts:110:1 › seed a real journey through the product API (5.3s)
+[WebServer] INFO:     127.0.0.1:55473 - "GET /api/v1/demo/scene HTTP/1.1" 200 OK
+  ok 2 [chromium] › e2e\qoder-sealed-failure-speaks-and-offers-retry.spec.ts:140:1 › ord0273-text-the-sentence-is-the-key-and-no-shape-leaks — 主文案是键值，不漏技术形状 (1.6s)
+[WebServer] INFO:     127.0.0.1:61708 - "GET /api/v1/demo/scene HTTP/1.1" 200 OK
+  ok 3 [chromium] › e2e\qoder-sealed-failure-speaks-and-offers-retry.spec.ts:262:1 › ord0273-text-en-arm-speaks-english-and-neither-side-leaks — 英文臂不得说中文 (1.5s)
+[WebServer] INFO:     127.0.0.1:58255 - "GET /api/v1/demo/scene HTTP/1.1" 200 OK
+  x  4 [chromium] › e2e\qoder-sealed-failure-speaks-and-offers-retry.spec.ts:346:1 › ord0341-telemetry-the-facts-have-a-sink-off-the-dom — 离开 DOM 之后技术事实仍有落点 (1.7s)
+[WebServer] INFO:     127.0.0.1:52939 - "GET /api/v1/demo/scene HTTP/1.1" 200 OK
+  ok 5 [chromium] › e2e\qoder-sealed-failure-speaks-and-offers-retry.spec.ts:446:1 › ord0273-action-retry-is-a-real-executable-step — 失败屏带着能走的那一步 (15.5s)
+
+
+  1) [chromium] › e2e\qoder-sealed-failure-speaks-and-offers-retry.spec.ts:346:1 › ord0341-telemetry-the-facts-have-a-sink-off-the-dom — 离开 DOM 之后技术事实仍有落点 
+
+    Error: e2e/qoder-sealed-failure-speaks-and-offers-retry.spec.ts :: ord0341-telemetry — the sealed-demo failure left 0 record(s) on the attribution channel (contexts seen: none) -- Q71 took the words out of the DOM and nothing replaced them, so this failure is undiagnosable off the screen. Fix site: V8Experience.tsx:894 catch -- recordAttribution(classifyReadFailure(error), "wizard.sealedDemo.enter")
+
+    expect(received).toBeTruthy()
+
+    Received: undefined
+
+      441 |         '"wizard.sealedDemo.enter")',
+      442 |     ),
+    > 443 |   ).toBeTruthy();
+          |     ^
+      444 | });
+      445 |
+      446 | test("ord0273-action-retry-is-a-real-executable-step — 失败屏带着能走的那一步", async ({ page }) => {
+        at D:\moodle\_qoder_d_ord0341_20260926\frontend\e2e\qoder-sealed-failure-speaks-and-offers-retry.spec.ts:443:5
+
+    Error Context: test-results\qoder-sealed-failure-speak-b6c68-the-dom-—-离开-DOM-之后技术事实仍有落点-chromium\error-context.md
+
+  1 failed
+    [chromium] › e2e\qoder-sealed-failure-speaks-and-offers-retry.spec.ts:346:1 › ord0341-telemetry-the-facts-have-a-sink-off-the-dom — 离开 DOM 之后技术事实仍有落点 
+  4 passed (33.3s)
+[citynexus e2e] suite=current-product authoritative=true python=D:/moodle/CityNexus/.venv/Scripts/python.exe frontend=:5310 backend=:9310 db=sqlite:///D:/moodle/_qoder_d_ord0341_20260926/review/evidence/_run407634.db ai=disabled reuseExistingServer=false
+[WebServer] INFO:     Started server process [52300]
+[WebServer] INFO:     Waiting for application startup.
+[WebServer] INFO:     Application startup complete.
+[WebServer] INFO:     Uvicorn running on http://127.0.0.1:9310 (Press CTRL+C to quit)
+[citynexus e2e] provenance ok: run=run407634 frontend=:5310 -> backend=:9310 ai=disabled db=_run407634.db
+[citynexus e2e] suite=current-product authoritative=true python=D:/moodle/CityNexus/.venv/Scripts/python.exe frontend=:5310 backend=:9310 db=sqlite:///D:/moodle/_qoder_d_ord0341_20260926/review/evidence/_run407634.db ai=disabled reuseExistingServer=false
+[citynexus e2e] suite=current-product authoritative=true python=D:/moodle/CityNexus/.venv/Scripts/python.exe frontend=:5310 backend=:9310 db=sqlite:///D:/moodle/_qoder_d_ord0341_20260926/review/evidence/_run407634.db ai=disabled reuseExistingServer=false
+[citynexus e2e] suite=current-product authoritative=true python=D:/moodle/CityNexus/.venv/Scripts/python.exe frontend=:5310 backend=:9310 db=sqlite:///D:/moodle/_qoder_d_ord0341_20260926/review/evidence/_run407634.db ai=disabled reuseExistingServer=false
