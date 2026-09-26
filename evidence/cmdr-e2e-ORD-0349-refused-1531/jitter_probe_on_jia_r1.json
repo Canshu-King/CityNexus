@@ -1,0 +1,39 @@
+{
+ "wt": "D:/moodle/_qoder_cmdr_bisect_0349jia",
+ "port": 4461,
+ "started": "Sat Sep 26 2026 15:15:50 GMT+0800 (中国标准时间)",
+ "pre_click_used": true,
+ "probe": {
+  "present": true,
+  "samples": 121,
+  "distinct_x": 1,
+  "distinct_y": 1,
+  "distinct_w": 1,
+  "distinct_h": 1,
+  "moved": false,
+  "reattached": 0,
+  "mutations": 0,
+  "first": [
+   0,
+   20,
+   586.55,
+   353,
+   175.92
+  ],
+  "last": [
+   5994,
+   20,
+   586.55,
+   353,
+   175.92
+  ],
+  "parent_tag": "DIV",
+  "scroll_containers": [
+   {
+    "scrollTop": 407,
+    "scrollHeight": 1205,
+    "clientHeight": 615
+   }
+  ]
+ }
+}
