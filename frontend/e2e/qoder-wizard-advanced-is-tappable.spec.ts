@@ -73,8 +73,8 @@ async function probe(page: Page, selector: string, shape: string) {
          button, which an unfiltered viewport test reads as "chrome covers the control". */
       const inScrollport =
         box.height > 0 &&
-        cy >= Math.max(0, sr.top) &&
-        cy <= Math.min(window.innerHeight, sr.bottom);
+        cy >= Math.max(1, sr.top + 1) &&
+        cy <= Math.min(window.innerHeight - 1, sr.bottom - 1);
       return {
         shape: shapeName,
         present: true,

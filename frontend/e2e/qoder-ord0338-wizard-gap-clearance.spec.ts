@@ -163,7 +163,9 @@ async function overlaps(page: Page): Promise<any> {
           if (r.height <= 0 || r.width <= 0) continue;
           const cx = r.left + r.width / 2;
           const cy = r.top + r.height / 2;
-          if (cy < sr.top || cy > sr.bottom || cy < 0 || cy > window.innerHeight) continue;
+          /* one pixel of margin: when the band starts exactly where the row ends, a centre on
+             that boundary row belongs to neither, and elementFromPoint answers with the bar. */
+          if (cy < sr.top + 1 || cy > sr.bottom - 1 || cy < 1 || cy > window.innerHeight - 1) continue;
           if (cta.contains(el)) continue;
           nodesProbed += 1;
           const landed = document.elementFromPoint(cx, cy);
