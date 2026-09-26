@@ -1,0 +1,76 @@
+{
+  "purpose": "existing gates owned by other lanes: same instrument, tip vs fixed, per-node status equality",
+  "main_tsx_tip_blob": "4769a6e3712955cc9e5f20b43ee80e893676a9c0",
+  "main_tsx_fixed_blob": "341017e14314c67c6891c337967fb9379ee0223b",
+  "restored_equals_fixed": true,
+  "gates": {
+    "product-v8": {
+      "spec": "e2e/product-v8.spec.ts",
+      "tip": {
+        "arm": "tip",
+        "main_tsx_blob_measured": "4769a6e3712955cc9e5f20b43ee80e893676a9c0",
+        "command": "node node_modules/@playwright/test/cli.js test e2e/product-v8.spec.ts --project=chromium --no-deps --reporter=json",
+        "exit": 0,
+        "run_id": "o351nproduct-v8tip092946",
+        "report_file": "neighbor_report_product-v8_tip_092946.json",
+        "statuses": {
+          "completes the multi-day stay and autonomous recovery journey": "passed",
+          "keeps the mobile Journey, Map, AI, Bookings, Me composition usable": "passed"
+        },
+        "stderr_tail": "[citynexus e2e] suite=current-product authoritative=true python=D:/moodle/CityNexus/.venv/Scripts/python.exe frontend=:4792 backend=:8140 db=sqlite:///D:/moodle/_qoder_ord0351_S2/db/_o351nproduct-v8tip092946.db ai=disabled reuseExistingServer=false\n[citynexus e2e] provenance ok: run=o351nproduct-v8tip092946 frontend=:4792 -> backend=:8140 ai=disabled db=_o351nproduct-v8tip092946.db\n"
+      },
+      "fixed": {
+        "arm": "fixed",
+        "main_tsx_blob_measured": "341017e14314c67c6891c337967fb9379ee0223b",
+        "command": "node node_modules/@playwright/test/cli.js test e2e/product-v8.spec.ts --project=chromium --no-deps --reporter=json",
+        "exit": 0,
+        "run_id": "o351nproduct-v8fixed092946",
+        "report_file": "neighbor_report_product-v8_fixed_092946.json",
+        "statuses": {
+          "completes the multi-day stay and autonomous recovery journey": "passed",
+          "keeps the mobile Journey, Map, AI, Bookings, Me composition usable": "passed"
+        },
+        "stderr_tail": "[citynexus e2e] suite=current-product authoritative=true python=D:/moodle/CityNexus/.venv/Scripts/python.exe frontend=:4792 backend=:8140 db=sqlite:///D:/moodle/_qoder_ord0351_S2/db/_o351nproduct-v8fixed092946.db ai=disabled reuseExistingServer=false\n[citynexus e2e] provenance ok: run=o351nproduct-v8fixed092946 frontend=:4792 -> backend=:8140 ai=disabled db=_o351nproduct-v8fixed092946.db\n"
+      },
+      "nodes_compared": 2,
+      "drift": [],
+      "nodes_present_in_only_one_arm": [],
+      "red_both_arms": [],
+      "clean": true
+    },
+    "exit-gate-a": {
+      "spec": "e2e/qoder-failure-has-an-exit.spec.ts",
+      "tip": {
+        "arm": "tip",
+        "main_tsx_blob_measured": "4769a6e3712955cc9e5f20b43ee80e893676a9c0",
+        "command": "node node_modules/@playwright/test/cli.js test e2e/qoder-failure-has-an-exit.spec.ts --project=chromium --no-deps --reporter=json -g ord0169-a-stale-journey-404-is-never-called-a-network-failure",
+        "exit": 0,
+        "run_id": "o351nexit-gate-atip092946",
+        "report_file": "neighbor_report_exit-gate-a_tip_092946.json",
+        "statuses": {
+          "ord0169-a-stale-journey-404-is-never-called-a-network-failure": "passed"
+        },
+        "stderr_tail": "[citynexus e2e] suite=current-product authoritative=true python=D:/moodle/CityNexus/.venv/Scripts/python.exe frontend=:4792 backend=:8140 db=sqlite:///D:/moodle/_qoder_ord0351_S2/db/_o351nexit-gate-atip092946.db ai=disabled reuseExistingServer=false\n[citynexus e2e] provenance ok: run=o351nexit-gate-atip092946 frontend=:4792 -> backend=:8140 ai=disabled db=_o351nexit-gate-atip092946.db\n"
+      },
+      "fixed": {
+        "arm": "fixed",
+        "main_tsx_blob_measured": "341017e14314c67c6891c337967fb9379ee0223b",
+        "command": "node node_modules/@playwright/test/cli.js test e2e/qoder-failure-has-an-exit.spec.ts --project=chromium --no-deps --reporter=json -g ord0169-a-stale-journey-404-is-never-called-a-network-failure",
+        "exit": 0,
+        "run_id": "o351nexit-gate-afixed092946",
+        "report_file": "neighbor_report_exit-gate-a_fixed_092946.json",
+        "statuses": {
+          "ord0169-a-stale-journey-404-is-never-called-a-network-failure": "passed"
+        },
+        "stderr_tail": "[citynexus e2e] suite=current-product authoritative=true python=D:/moodle/CityNexus/.venv/Scripts/python.exe frontend=:4792 backend=:8140 db=sqlite:///D:/moodle/_qoder_ord0351_S2/db/_o351nexit-gate-afixed092946.db ai=disabled reuseExistingServer=false\n[citynexus e2e] provenance ok: run=o351nexit-gate-afixed092946 frontend=:4792 -> backend=:8140 ai=disabled db=_o351nexit-gate-afixed092946.db\n"
+      },
+      "nodes_compared": 1,
+      "drift": [],
+      "nodes_present_in_only_one_arm": [],
+      "red_both_arms": [],
+      "clean": true
+    }
+  },
+  "zero_drift": true,
+  "written_at": "2026-09-26T09:30:28+0800"
+}
