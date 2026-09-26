@@ -1,0 +1,636 @@
+{
+ "started_at": "2026-09-26T09:36:44.287Z",
+ "base": "https://administrator-personality-supervisor-peers.trycloudflare.com",
+ "viewport": {
+  "width": 390,
+  "height": 844
+ },
+ "clicks": 1,
+ "keystrokes": 0,
+ "legs": [
+  {
+   "at_ms": 1790415414494,
+   "url": "/api/v1/demo/scene",
+   "m": "GET",
+   "status": 200,
+   "ct": "application/json",
+   "req_bytes": 0,
+   "resp_bytes": 610
+  },
+  {
+   "at_ms": 1790415417298,
+   "url": "/api/v1/destinations/capability?query=%E6%96%B0%E5%8A%A0%E5%9D%A1",
+   "m": "GET",
+   "status": 200,
+   "ct": "application/json",
+   "req_bytes": 0,
+   "resp_bytes": 1760
+  },
+  {
+   "at_ms": 1790415417333,
+   "url": "/api/v1/destinations/capability?query=%E6%B7%B1%E5%9C%B3",
+   "m": "GET",
+   "status": 200,
+   "ct": "application/json",
+   "req_bytes": 0,
+   "resp_bytes": 1728
+  },
+  {
+   "at_ms": 1790415417333,
+   "url": "/api/v1/destinations/capability?query=%E6%9D%AD%E5%B7%9E",
+   "m": "GET",
+   "status": 200,
+   "ct": "application/json",
+   "req_bytes": 0,
+   "resp_bytes": 1728
+  },
+  {
+   "at_ms": 1790415417543,
+   "url": "/api/v1/destinations/capability?query=%E6%88%90%E9%83%BD",
+   "m": "GET",
+   "status": 200,
+   "ct": "application/json",
+   "req_bytes": 0,
+   "resp_bytes": 1727
+  },
+  {
+   "at_ms": 1790415417543,
+   "url": "/api/v1/destinations/capability?query=%E4%B8%9C%E4%BA%AC",
+   "m": "GET",
+   "status": 200,
+   "ct": "application/json",
+   "req_bytes": 0,
+   "resp_bytes": 1751
+  },
+  {
+   "at_ms": 1790415417554,
+   "url": "/api/v1/destinations/capability?query=%E7%A6%8F%E5%B7%9E",
+   "m": "GET",
+   "status": 200,
+   "ct": "application/json",
+   "req_bytes": 0,
+   "resp_bytes": 1751
+  },
+  {
+   "at_ms": 1790415417568,
+   "url": "/api/v1/destinations/capability?query=%E5%A4%A9%E6%B4%A5",
+   "m": "GET",
+   "status": 200,
+   "ct": "application/json",
+   "req_bytes": 0,
+   "resp_bytes": 1727
+  },
+  {
+   "at_ms": 1790415417579,
+   "url": "/api/v1/destinations/capability?query=%E4%B8%8A%E6%B5%B7",
+   "m": "GET",
+   "status": 200,
+   "ct": "application/json",
+   "req_bytes": 0,
+   "resp_bytes": 1728
+  },
+  {
+   "at_ms": 1790415417716,
+   "url": "/api/v1/destinations/capability?query=%E5%8C%97%E4%BA%AC",
+   "m": "GET",
+   "status": 200,
+   "ct": "application/json",
+   "req_bytes": 0,
+   "resp_bytes": 1727
+  },
+  {
+   "at_ms": 1790415417820,
+   "url": "/api/v1/destinations/capability?query=%E5%8E%A6%E9%97%A8",
+   "m": "GET",
+   "status": 200,
+   "ct": "application/json",
+   "req_bytes": 0,
+   "resp_bytes": 1726
+  },
+  {
+   "at_ms": 1790415417828,
+   "url": "/api/v1/destinations/capability?query=%E5%B9%BF%E5%B7%9E",
+   "m": "GET",
+   "status": 200,
+   "ct": "application/json",
+   "req_bytes": 0,
+   "resp_bytes": 5715
+  }
+ ],
+ "advertised": [
+  "厦门",
+  "北京",
+  "上海",
+  "天津",
+  "福州",
+  "广州",
+  "深圳",
+  "成都",
+  "杭州",
+  "东京",
+  "新加坡"
+ ],
+ "headings": [
+  "已支持：服务器认得它，而且目录里有东西",
+  "需联网才能解析：服务器现在认不出这个名字",
+  "未知或无数据：这一轮拿不出可规划的判定"
+ ],
+ "chromium_version": "153.0.8010.12",
+ "served_asset": "https://administrator-personality-supervisor-peers.trycloudflare.com/assets/index-BOIAHTWw.js",
+ "state_1_closed": {
+  "host_found": true,
+  "host_inner_text_len": 168,
+  "host_inner_text": "用你自己的城市试用 CITYNEXUS\n\n新建行程\n\n三步完成。选择目的地、告诉我们怎么玩，剩下的交给 CityNexus。\n\nEN\n1\n目的地与时间\n2\n人数与偏好\n3\n确认创建\n目的地\n看支持的目的地\n抵达地点\n离开地点\n抵达时间\n离开时间\n高级设置\n高级设置\n\n还需要填写：目的地、抵达地点、离开地点\n\n使用封存的演示行程\n下一步",
+  "group_heading_counts": {
+   "已支持：服务器认得它，而且目录里有东西": 0,
+   "需联网才能解析：服务器现在认不出这个名字": 0,
+   "未知或无数据：这一轮拿不出可规划的判定": 0
+  },
+  "names_on_screen": [],
+  "per_name": {
+   "厦门": {
+    "on_screen": false
+   },
+   "北京": {
+    "on_screen": false
+   },
+   "上海": {
+    "on_screen": false
+   },
+   "天津": {
+    "on_screen": false
+   },
+   "福州": {
+    "on_screen": false
+   },
+   "广州": {
+    "on_screen": false
+   },
+   "深圳": {
+    "on_screen": false
+   },
+   "成都": {
+    "on_screen": false
+   },
+   "杭州": {
+    "on_screen": false
+   },
+   "东京": {
+    "on_screen": false
+   },
+   "新加坡": {
+    "on_screen": false
+   }
+  },
+  "details_count": 2,
+  "toggle_aria": null,
+  "body_inner_len": 168
+ },
+ "shot_1_closed": {
+  "file": "A3_1_closed.png",
+  "abs": "D:\\moodle\\_hjp3_b6a8_0926\\A3_1_closed.png",
+  "exists": true,
+  "bytes": 163237,
+  "sha256": "70f0980ee431ad9c87d3b81579f3f0e93169bb66dbd44c1e8d2158f27b687ccf"
+ },
+ "state_2_just_opened": {
+  "host_found": true,
+  "host_inner_text_len": 666,
+  "host_inner_text": "用你自己的城市试用 CITYNEXUS\n\n新建行程\n\n三步完成。选择目的地、告诉我们怎么玩，剩下的交给 CityNexus。\n\nEN\n1\n目的地与时间\n2\n人数与偏好\n3\n确认创建\n目的地\n看支持的目的地\n已支持：服务器认得它，而且目录里有东西\n\nREADY / 有 canonical 身份且有目录行\n\n这一轮没有名字落在这一组。\n\n需联网才能解析：服务器现在认不出这个名字\n\nNO_CANONICAL_IDENTITY\n\n这一轮没有名字落在这一组。\n\n未知或无数据：这一轮拿不出可规划的判定\n\nHYDRATABLE 无目录行 / UNKNOWN_RETRYABLE / 没读到\n\n厦门\n身份还没读到\n还没问过服务器\nnot-asked\n北京\n身份还没读到\n还没问过服务器\nnot-asked\n上海\n身份还没读到\n还没问过服务器\nnot-asked\n天津\n身份还没读到\n还没问过服务器\nnot-asked\n福州\n身份还没读到\n还没问过服务器\nnot-asked\n广州\n身份还没读到\n还没问过服务器\nnot-asked\n深圳\n身份还没读到\n还没问过服务器\nnot-asked\n成都\n身份还没读到\n还没问过服务器\nnot-asked\n杭州\n身份还没读到\n还没问过服务器\nnot-asked\n东京\n身份还没读到\n还没问过服务器\nnot-asked\n新加坡\n身份还没读到\n还没问过服务器\nnot-asked\n抵达地点\n离开地点\n抵达时间\n离开时间\n高级设置\n高级设置\n\n还需要填写：目的地、抵达地点、离开地点\n\n使用封存的演示行程\n下一步",
+  "group_heading_counts": {
+   "已支持：服务器认得它，而且目录里有东西": 0,
+   "需联网才能解析：服务器现在认不出这个名字": 0,
+   "未知或无数据：这一轮拿不出可规划的判定": 11
+  },
+  "names_on_screen": [
+   "厦门",
+   "北京",
+   "上海",
+   "天津",
+   "福州",
+   "广州",
+   "深圳",
+   "成都",
+   "杭州",
+   "东京",
+   "新加坡"
+  ],
+  "per_name": {
+   "厦门": {
+    "on_screen": true,
+    "attributed_heading": "未知或无数据：这一轮拿不出可规划的判定",
+    "lines_under_name": [
+     "身份还没读到",
+     "还没问过服务器",
+     "not-asked"
+    ],
+    "role": null,
+    "tag": "li",
+    "aria_expanded": null
+   },
+   "北京": {
+    "on_screen": true,
+    "attributed_heading": "未知或无数据：这一轮拿不出可规划的判定",
+    "lines_under_name": [
+     "身份还没读到",
+     "还没问过服务器",
+     "not-asked"
+    ],
+    "role": null,
+    "tag": "li",
+    "aria_expanded": null
+   },
+   "上海": {
+    "on_screen": true,
+    "attributed_heading": "未知或无数据：这一轮拿不出可规划的判定",
+    "lines_under_name": [
+     "身份还没读到",
+     "还没问过服务器",
+     "not-asked"
+    ],
+    "role": null,
+    "tag": "li",
+    "aria_expanded": null
+   },
+   "天津": {
+    "on_screen": true,
+    "attributed_heading": "未知或无数据：这一轮拿不出可规划的判定",
+    "lines_under_name": [
+     "身份还没读到",
+     "还没问过服务器",
+     "not-asked"
+    ],
+    "role": null,
+    "tag": "li",
+    "aria_expanded": null
+   },
+   "福州": {
+    "on_screen": true,
+    "attributed_heading": "未知或无数据：这一轮拿不出可规划的判定",
+    "lines_under_name": [
+     "身份还没读到",
+     "还没问过服务器",
+     "not-asked"
+    ],
+    "role": null,
+    "tag": "li",
+    "aria_expanded": null
+   },
+   "广州": {
+    "on_screen": true,
+    "attributed_heading": "未知或无数据：这一轮拿不出可规划的判定",
+    "lines_under_name": [
+     "身份还没读到",
+     "还没问过服务器",
+     "not-asked"
+    ],
+    "role": null,
+    "tag": "li",
+    "aria_expanded": null
+   },
+   "深圳": {
+    "on_screen": true,
+    "attributed_heading": "未知或无数据：这一轮拿不出可规划的判定",
+    "lines_under_name": [
+     "身份还没读到",
+     "还没问过服务器",
+     "not-asked"
+    ],
+    "role": null,
+    "tag": "li",
+    "aria_expanded": null
+   },
+   "成都": {
+    "on_screen": true,
+    "attributed_heading": "未知或无数据：这一轮拿不出可规划的判定",
+    "lines_under_name": [
+     "身份还没读到",
+     "还没问过服务器",
+     "not-asked"
+    ],
+    "role": null,
+    "tag": "li",
+    "aria_expanded": null
+   },
+   "杭州": {
+    "on_screen": true,
+    "attributed_heading": "未知或无数据：这一轮拿不出可规划的判定",
+    "lines_under_name": [
+     "身份还没读到",
+     "还没问过服务器",
+     "not-asked"
+    ],
+    "role": null,
+    "tag": "li",
+    "aria_expanded": null
+   },
+   "东京": {
+    "on_screen": true,
+    "attributed_heading": "未知或无数据：这一轮拿不出可规划的判定",
+    "lines_under_name": [
+     "身份还没读到",
+     "还没问过服务器",
+     "not-asked"
+    ],
+    "role": null,
+    "tag": "li",
+    "aria_expanded": null
+   },
+   "新加坡": {
+    "on_screen": true,
+    "attributed_heading": "未知或无数据：这一轮拿不出可规划的判定",
+    "lines_under_name": [
+     "身份还没读到",
+     "还没问过服务器",
+     "not-asked"
+    ],
+    "role": null,
+    "tag": "li",
+    "aria_expanded": null
+   }
+  },
+  "details_count": 2,
+  "toggle_aria": null,
+  "body_inner_len": 666
+ },
+ "shot_2_just_opened": {
+  "file": "A3_2_just_opened.png",
+  "abs": "D:\\moodle\\_hjp3_b6a8_0926\\A3_2_just_opened.png",
+  "exists": true,
+  "bytes": 307341,
+  "sha256": "a0d8cbb500471c9f27e8c869c29b9813e3c624d2a37e8ddc66439c07e650bde5"
+ },
+ "capability_legs_seen": 11,
+ "capability_leg_rows": [
+  {
+   "at_ms": 1790415417298,
+   "url": "/api/v1/destinations/capability?query=%E6%96%B0%E5%8A%A0%E5%9D%A1",
+   "m": "GET",
+   "status": 200,
+   "ct": "application/json",
+   "req_bytes": 0,
+   "resp_bytes": 1760
+  },
+  {
+   "at_ms": 1790415417333,
+   "url": "/api/v1/destinations/capability?query=%E6%B7%B1%E5%9C%B3",
+   "m": "GET",
+   "status": 200,
+   "ct": "application/json",
+   "req_bytes": 0,
+   "resp_bytes": 1728
+  },
+  {
+   "at_ms": 1790415417333,
+   "url": "/api/v1/destinations/capability?query=%E6%9D%AD%E5%B7%9E",
+   "m": "GET",
+   "status": 200,
+   "ct": "application/json",
+   "req_bytes": 0,
+   "resp_bytes": 1728
+  },
+  {
+   "at_ms": 1790415417543,
+   "url": "/api/v1/destinations/capability?query=%E6%88%90%E9%83%BD",
+   "m": "GET",
+   "status": 200,
+   "ct": "application/json",
+   "req_bytes": 0,
+   "resp_bytes": 1727
+  },
+  {
+   "at_ms": 1790415417543,
+   "url": "/api/v1/destinations/capability?query=%E4%B8%9C%E4%BA%AC",
+   "m": "GET",
+   "status": 200,
+   "ct": "application/json",
+   "req_bytes": 0,
+   "resp_bytes": 1751
+  },
+  {
+   "at_ms": 1790415417554,
+   "url": "/api/v1/destinations/capability?query=%E7%A6%8F%E5%B7%9E",
+   "m": "GET",
+   "status": 200,
+   "ct": "application/json",
+   "req_bytes": 0,
+   "resp_bytes": 1751
+  },
+  {
+   "at_ms": 1790415417568,
+   "url": "/api/v1/destinations/capability?query=%E5%A4%A9%E6%B4%A5",
+   "m": "GET",
+   "status": 200,
+   "ct": "application/json",
+   "req_bytes": 0,
+   "resp_bytes": 1727
+  },
+  {
+   "at_ms": 1790415417579,
+   "url": "/api/v1/destinations/capability?query=%E4%B8%8A%E6%B5%B7",
+   "m": "GET",
+   "status": 200,
+   "ct": "application/json",
+   "req_bytes": 0,
+   "resp_bytes": 1728
+  },
+  {
+   "at_ms": 1790415417716,
+   "url": "/api/v1/destinations/capability?query=%E5%8C%97%E4%BA%AC",
+   "m": "GET",
+   "status": 200,
+   "ct": "application/json",
+   "req_bytes": 0,
+   "resp_bytes": 1727
+  },
+  {
+   "at_ms": 1790415417820,
+   "url": "/api/v1/destinations/capability?query=%E5%8E%A6%E9%97%A8",
+   "m": "GET",
+   "status": 200,
+   "ct": "application/json",
+   "req_bytes": 0,
+   "resp_bytes": 1726
+  },
+  {
+   "at_ms": 1790415417828,
+   "url": "/api/v1/destinations/capability?query=%E5%B9%BF%E5%B7%9E",
+   "m": "GET",
+   "status": 200,
+   "ct": "application/json",
+   "req_bytes": 0,
+   "resp_bytes": 5715
+  }
+ ],
+ "settled_wait_ms": 4556,
+ "state_3_settled": {
+  "host_found": true,
+  "host_inner_text_len": 1334,
+  "host_inner_text": "用你自己的城市试用 CITYNEXUS\n\n新建行程\n\n三步完成。选择目的地、告诉我们怎么玩，剩下的交给 CityNexus。\n\nEN\n1\n目的地与时间\n2\n人数与偏好\n3\n确认创建\n目的地\n看支持的目的地\n已支持：服务器认得它，而且目录里有东西\n\nREADY / 有 canonical 身份且有目录行\n\n广州\n服务器给了身份\n服务器认得它，目录里有 14 条，还缺 6 类事实\nHYDRATABLE · COVERAGE_INCOMPLETE · START_HYDRATION\n需联网才能解析：服务器现在认不出这个名字\n\nNO_CANONICAL_IDENTITY\n\n福州\n还没有身份\n服务器的词表和目录里都没有这个名字，要它联网解析才有答案\nUNAVAILABLE · NO_CANONICAL_IDENTITY · CHOOSE_ANOTHER_DESTINATION\n东京\n还没有身份\n服务器的词表和目录里都没有这个名字，要它联网解析才有答案\nUNAVAILABLE · NO_CANONICAL_IDENTITY · CHOOSE_ANOTHER_DESTINATION\n新加坡\n还没有身份\n服务器的词表和目录里都没有这个名字，要它联网解析才有答案\nUNAVAILABLE · NO_CANONICAL_IDENTITY · CHOOSE_ANOTHER_DESTINATION\n未知或无数据：这一轮拿不出可规划的判定\n\nHYDRATABLE 无目录行 / UNKNOWN_RETRYABLE / 没读到\n\n厦门\n服务器给了身份\n服务器认得它，目录里有 0 条，还缺 6 类事实\nHYDRATABLE · COVERAGE_INCOMPLETE · START_HYDRATION\n北京\n服务器给了身份\n服务器认得它，目录里有 0 条，还缺 6 类事实\nHYDRATABLE · COVERAGE_INCOMPLETE · START_HYDRATION\n上海\n服务器给了身份\n服务器认得它，目录里有 0 条，还缺 6 类事实\nHYDRATABLE · COVERAGE_INCOMPLETE · START_HYDRATION\n天津\n服务器给了身份\n服务器认得它，目录里有 0 条，还缺 6 类事实\nHYDRATABLE · COVERAGE_INCOMPLETE · START_HYDRATION\n深圳\n服务器给了身份\n服务器认得它，目录里有 0 条，还缺 6 类事实\nHYDRATABLE · COVERAGE_INCOMPLETE · START_HYDRATION\n成都\n服务器给了身份\n服务器认得它，目录里有 0 条，还缺 6 类事实\nHYDRATABLE · COVERAGE_INCOMPLETE · START_HYDRATION\n杭州\n服务器给了身份\n服务器认得它，目录里有 0 条，还缺 6 类事实\nHYDRATABLE · COVERAGE_INCOMPLETE · START_HYDRATION\n抵达地点\n离开地点\n抵达时间\n离开时间\n高级设置\n高级设置\n\n还需要填写：目的地、抵达地点、离开地点\n\n使用封存的演示行程\n下一步",
+  "group_heading_counts": {
+   "已支持：服务器认得它，而且目录里有东西": 1,
+   "需联网才能解析：服务器现在认不出这个名字": 3,
+   "未知或无数据：这一轮拿不出可规划的判定": 7
+  },
+  "names_on_screen": [
+   "厦门",
+   "北京",
+   "上海",
+   "天津",
+   "福州",
+   "广州",
+   "深圳",
+   "成都",
+   "杭州",
+   "东京",
+   "新加坡"
+  ],
+  "per_name": {
+   "厦门": {
+    "on_screen": true,
+    "attributed_heading": "未知或无数据：这一轮拿不出可规划的判定",
+    "lines_under_name": [
+     "服务器给了身份",
+     "服务器认得它，目录里有 0 条，还缺 6 类事实",
+     "HYDRATABLE · COVERAGE_INCOMPLETE · START_HYDRATION"
+    ],
+    "role": null,
+    "tag": "li",
+    "aria_expanded": null
+   },
+   "北京": {
+    "on_screen": true,
+    "attributed_heading": "未知或无数据：这一轮拿不出可规划的判定",
+    "lines_under_name": [
+     "服务器给了身份",
+     "服务器认得它，目录里有 0 条，还缺 6 类事实",
+     "HYDRATABLE · COVERAGE_INCOMPLETE · START_HYDRATION"
+    ],
+    "role": null,
+    "tag": "li",
+    "aria_expanded": null
+   },
+   "上海": {
+    "on_screen": true,
+    "attributed_heading": "未知或无数据：这一轮拿不出可规划的判定",
+    "lines_under_name": [
+     "服务器给了身份",
+     "服务器认得它，目录里有 0 条，还缺 6 类事实",
+     "HYDRATABLE · COVERAGE_INCOMPLETE · START_HYDRATION"
+    ],
+    "role": null,
+    "tag": "li",
+    "aria_expanded": null
+   },
+   "天津": {
+    "on_screen": true,
+    "attributed_heading": "未知或无数据：这一轮拿不出可规划的判定",
+    "lines_under_name": [
+     "服务器给了身份",
+     "服务器认得它，目录里有 0 条，还缺 6 类事实",
+     "HYDRATABLE · COVERAGE_INCOMPLETE · START_HYDRATION"
+    ],
+    "role": null,
+    "tag": "li",
+    "aria_expanded": null
+   },
+   "福州": {
+    "on_screen": true,
+    "attributed_heading": "需联网才能解析：服务器现在认不出这个名字",
+    "lines_under_name": [
+     "还没有身份",
+     "服务器的词表和目录里都没有这个名字，要它联网解析才有答案",
+     "UNAVAILABLE · NO_CANONICAL_IDENTITY · CHOOSE_ANOTHER_DESTINATION"
+    ],
+    "role": null,
+    "tag": "li",
+    "aria_expanded": null
+   },
+   "广州": {
+    "on_screen": true,
+    "attributed_heading": "已支持：服务器认得它，而且目录里有东西",
+    "lines_under_name": [
+     "服务器给了身份",
+     "服务器认得它，目录里有 14 条，还缺 6 类事实",
+     "HYDRATABLE · COVERAGE_INCOMPLETE · START_HYDRATION"
+    ],
+    "role": null,
+    "tag": "li",
+    "aria_expanded": null
+   },
+   "深圳": {
+    "on_screen": true,
+    "attributed_heading": "未知或无数据：这一轮拿不出可规划的判定",
+    "lines_under_name": [
+     "服务器给了身份",
+     "服务器认得它，目录里有 0 条，还缺 6 类事实",
+     "HYDRATABLE · COVERAGE_INCOMPLETE · START_HYDRATION"
+    ],
+    "role": null,
+    "tag": "li",
+    "aria_expanded": null
+   },
+   "成都": {
+    "on_screen": true,
+    "attributed_heading": "未知或无数据：这一轮拿不出可规划的判定",
+    "lines_under_name": [
+     "服务器给了身份",
+     "服务器认得它，目录里有 0 条，还缺 6 类事实",
+     "HYDRATABLE · COVERAGE_INCOMPLETE · START_HYDRATION"
+    ],
+    "role": null,
+    "tag": "li",
+    "aria_expanded": null
+   },
+   "杭州": {
+    "on_screen": true,
+    "attributed_heading": "未知或无数据：这一轮拿不出可规划的判定",
+    "lines_under_name": [
+     "服务器给了身份",
+     "服务器认得它，目录里有 0 条，还缺 6 类事实",
+     "HYDRATABLE · COVERAGE_INCOMPLETE · START_HYDRATION"
+    ],
+    "role": null,
+    "tag": "li",
+    "aria_expanded": null
+   },
+   "东京": {
+    "on_screen": true,
+    "attributed_heading": "需联网才能解析：服务器现在认不出这个名字",
+    "lines_under_name": [
+     "还没有身份",
+     "服务器的词表和目录里都没有这个名字，要它联网解析才有答案",
+     "UNAVAILABLE · NO_CANONICAL_IDENTITY · CHOOSE_ANOTHER_DESTINATION"
+    ],
+    "role": null,
+    "tag": "li",
+    "aria_expanded": null
+   },
+   "新加坡": {
+    "on_screen": true,
+    "attributed_heading": "需联网才能解析：服务器现在认不出这个名字",
+    "lines_under_name": [
+     "还没有身份",
+     "服务器的词表和目录里都没有这个名字，要它联网解析才有答案",
+     "UNAVAILABLE · NO_CANONICAL_IDENTITY · CHOOSE_ANOTHER_DESTINATION"
+    ],
+    "role": null,
+    "tag": "li",
+    "aria_expanded": null
+   }
+  },
+  "details_count": 2,
+  "toggle_aria": null,
+  "body_inner_len": 1334
+ },
+ "shot_3_settled": {
+  "file": "A3_3_settled.png",
+  "abs": "D:\\moodle\\_hjp3_b6a8_0926\\A3_3_settled.png",
+  "exists": true,
+  "bytes": 277692,
+  "sha256": "50ccc026ad1f3052819c21b2def204cdebf9a6ecc699491a74cee9067ee49f4f"
+ },
+ "changed_between_just_opened_and_settled": true,
+ "leg_count": 12,
+ "finished_at": "2026-09-26T09:37:01.231Z"
+}
