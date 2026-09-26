@@ -1,0 +1,34 @@
+{
+ "run_id": "cmdr140415o338bas",
+ "tree": "38277c4e9787b1ddf0bf69487060ba0e40c14146",
+ "worktree": "D:/moodle/_qoder_cmdr_ord0338_base",
+ "target": "e2e/qoder-wizard-advanced-is-tappable.spec.ts e2e/qoder-onboarding-failure.spec.ts e2e/qoder-plan-ai-contrast.spec.ts e2e/qoder-plan-ai-thinking.spec.ts e2e/qoder-raw-enums-never-reach-the-traveller.spec.ts e2e/qoder-theme-contract.spec.ts e2e/qoder-today-hero.spec.ts e2e/qoder-not-answered-cell.spec.ts e2e/qoder-sealed-failure-speaks-and-offers-retry.spec.ts e2e/qoder-offline-persistence.spec.ts",
+ "full": false,
+ "grep": null,
+ "ports": {
+  "frontend": 4400,
+  "backend": 5400
+ },
+ "python": "D:/moodle/CityNexus/.venv/Scripts/python.exe",
+ "db": "_cmdr140415o338bas.db",
+ "env_keys_dropped_names_only": [
+  "DEEPSEEK_API_KEY",
+  "OPENAI_API_KEY",
+  "WB2API_KEY"
+ ],
+ "node_modules": {
+  "mode": "present",
+  "path": "D:/moodle/_qoder_cmdr_ord0338_base/frontend/node_modules"
+ },
+ "exit_code": 1,
+ "verdict": "RED",
+ "counts": {
+  "passed": 32,
+  "failed": 8
+ },
+ "listed_case_count": 0,
+ "started_local": "2026-09-26T14:04:15",
+ "duration_s": 1151.335287,
+ "log": "D:/moodle/_qoder_cmdr_ref_20260921/live_checks/e2e_logs/o338bas_38277c4e_140415.log",
+ "log_bytes": 121443
+}
