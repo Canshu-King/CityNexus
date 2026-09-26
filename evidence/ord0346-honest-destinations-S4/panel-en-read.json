@@ -1,0 +1,162 @@
+{
+ "generatedBy": "S4-ast-taint",
+ "order": "ORD-0346",
+ "arm": "en real reads",
+ "panel": {
+  "summary": "See supported destinations",
+  "groups": [
+   {
+    "key": "supported",
+    "title": "Supported: the server names it and holds material",
+    "rule": "READY / 有 canonical 身份且有目录行",
+    "empty": null
+   },
+   {
+    "key": "needs_lookup",
+    "title": "Needs a network lookup: nothing the server consults names it",
+    "rule": "NO_CANONICAL_IDENTITY",
+    "empty": null
+   },
+   {
+    "key": "unknown",
+    "title": "Unknown or empty: no plannable verdict came back this round",
+    "rule": "HYDRATABLE 无目录行 / UNKNOWN_RETRYABLE / 没读到",
+    "empty": null
+   }
+  ],
+  "rows": [
+   {
+    "spelling": "Beijing",
+    "group": "supported",
+    "answered": "yes",
+    "capability": "HYDRATABLE",
+    "reasonCode": "COVERAGE_INCOMPLETE",
+    "action": "START_HYDRATION",
+    "identityAttr": "CN-BEIJING",
+    "identityText": "the server named it",
+    "verdictText": "the server names it, holds 8 rows and is short 2 categories",
+    "fieldsText": "HYDRATABLE · COVERAGE_INCOMPLETE · START_HYDRATION"
+   },
+   {
+    "spelling": "Fuzhou",
+    "group": "needs_lookup",
+    "answered": "yes",
+    "capability": "UNAVAILABLE",
+    "reasonCode": "NO_CANONICAL_IDENTITY",
+    "action": "CHOOSE_ANOTHER_DESTINATION",
+    "identityAttr": null,
+    "identityText": "no identity yet",
+    "verdictText": "nothing the server consults names this spelling; it would have to resolve it over the network",
+    "fieldsText": "UNAVAILABLE · NO_CANONICAL_IDENTITY · CHOOSE_ANOTHER_DESTINATION"
+   },
+   {
+    "spelling": "Tokyo",
+    "group": "needs_lookup",
+    "answered": "yes",
+    "capability": "UNAVAILABLE",
+    "reasonCode": "NO_CANONICAL_IDENTITY",
+    "action": "CHOOSE_ANOTHER_DESTINATION",
+    "identityAttr": null,
+    "identityText": "no identity yet",
+    "verdictText": "nothing the server consults names this spelling; it would have to resolve it over the network",
+    "fieldsText": "UNAVAILABLE · NO_CANONICAL_IDENTITY · CHOOSE_ANOTHER_DESTINATION"
+   },
+   {
+    "spelling": "Singapore",
+    "group": "needs_lookup",
+    "answered": "yes",
+    "capability": "UNAVAILABLE",
+    "reasonCode": "NO_CANONICAL_IDENTITY",
+    "action": "CHOOSE_ANOTHER_DESTINATION",
+    "identityAttr": null,
+    "identityText": "no identity yet",
+    "verdictText": "nothing the server consults names this spelling; it would have to resolve it over the network",
+    "fieldsText": "UNAVAILABLE · NO_CANONICAL_IDENTITY · CHOOSE_ANOTHER_DESTINATION"
+   },
+   {
+    "spelling": "Xiamen",
+    "group": "unknown",
+    "answered": "yes",
+    "capability": "HYDRATABLE",
+    "reasonCode": "COVERAGE_INCOMPLETE",
+    "action": "START_HYDRATION",
+    "identityAttr": "CN-XIAMEN",
+    "identityText": "the server named it",
+    "verdictText": "the server names it, holds 0 rows and is short 6 categories",
+    "fieldsText": "HYDRATABLE · COVERAGE_INCOMPLETE · START_HYDRATION"
+   },
+   {
+    "spelling": "Shanghai",
+    "group": "unknown",
+    "answered": "yes",
+    "capability": "HYDRATABLE",
+    "reasonCode": "COVERAGE_INCOMPLETE",
+    "action": "START_HYDRATION",
+    "identityAttr": "CN-SHANGHAI",
+    "identityText": "the server named it",
+    "verdictText": "the server names it, holds 0 rows and is short 6 categories",
+    "fieldsText": "HYDRATABLE · COVERAGE_INCOMPLETE · START_HYDRATION"
+   },
+   {
+    "spelling": "Tianjin",
+    "group": "unknown",
+    "answered": "yes",
+    "capability": "HYDRATABLE",
+    "reasonCode": "COVERAGE_INCOMPLETE",
+    "action": "START_HYDRATION",
+    "identityAttr": "CN-TIANJIN",
+    "identityText": "the server named it",
+    "verdictText": "the server names it, holds 0 rows and is short 6 categories",
+    "fieldsText": "HYDRATABLE · COVERAGE_INCOMPLETE · START_HYDRATION"
+   },
+   {
+    "spelling": "Guangzhou",
+    "group": "unknown",
+    "answered": "yes",
+    "capability": "HYDRATABLE",
+    "reasonCode": "COVERAGE_INCOMPLETE",
+    "action": "START_HYDRATION",
+    "identityAttr": "CN-GUANGZHOU",
+    "identityText": "the server named it",
+    "verdictText": "the server names it, holds 0 rows and is short 6 categories",
+    "fieldsText": "HYDRATABLE · COVERAGE_INCOMPLETE · START_HYDRATION"
+   },
+   {
+    "spelling": "Shenzhen",
+    "group": "unknown",
+    "answered": "yes",
+    "capability": "HYDRATABLE",
+    "reasonCode": "COVERAGE_INCOMPLETE",
+    "action": "START_HYDRATION",
+    "identityAttr": "CN-SHENZHEN",
+    "identityText": "the server named it",
+    "verdictText": "the server names it, holds 0 rows and is short 6 categories",
+    "fieldsText": "HYDRATABLE · COVERAGE_INCOMPLETE · START_HYDRATION"
+   },
+   {
+    "spelling": "Chengdu",
+    "group": "unknown",
+    "answered": "yes",
+    "capability": "HYDRATABLE",
+    "reasonCode": "COVERAGE_INCOMPLETE",
+    "action": "START_HYDRATION",
+    "identityAttr": "CN-CHENGDU",
+    "identityText": "the server named it",
+    "verdictText": "the server names it, holds 0 rows and is short 6 categories",
+    "fieldsText": "HYDRATABLE · COVERAGE_INCOMPLETE · START_HYDRATION"
+   },
+   {
+    "spelling": "Hangzhou",
+    "group": "unknown",
+    "answered": "yes",
+    "capability": "HYDRATABLE",
+    "reasonCode": "COVERAGE_INCOMPLETE",
+    "action": "START_HYDRATION",
+    "identityAttr": "CN-HANGZHOU",
+    "identityText": "the server named it",
+    "verdictText": "the server names it, holds 0 rows and is short 6 categories",
+    "fieldsText": "HYDRATABLE · COVERAGE_INCOMPLETE · START_HYDRATION"
+   }
+  ]
+ }
+}
