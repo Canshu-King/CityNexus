@@ -16588,6 +16588,19 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### CMDR 17:5x · ORD-0350 / ORD-0353 已落地并已换到手机上（Q78=甲 执行完毕）· 隧道层 530 归因到 QUIC 拨边失败、已换 http2 传输 · 本机失效代理已装螺栓
+
+**落地**：S1 `8e094dec` 的 `refs/heads/review/S1-ord0350-review-row-exits-r2` 快进落到权威线，新尖 `27f963a77edc4d508a39b0a07c76927d0512c724`（父为上一尖 `b6a8ea5c625d7e3e82f7348fad57d595a8a403c0`），两条 GitHub 路由回读一致，落地收据已发布为 blob `67405bd93c0bdf169ded5d4de9bc415d439cacc3`，那一笔被门的原样拒件也发布为 blob `cc251fd65554516ed9c6a2d5da943646f0ba282d`（拒的是 `CnxMeasuredFacts.tsx:57` 那一格的增长，我按 Q78=甲 裁定放行，理由与边界在上一条块里）。**我自己跑的亲测**：在 `D:/moodle/_qoder_cmdr_land_0349r5` 里把 `frontend` 逐文件取到候选形状（门那份拒件的 `gate_run.blob_equality` 逐文件等值），然后 `cmdr_e2e_r1.py` 真跑 `e2e/qoder-ord0350-every-review-row-has-a-way-back.spec.ts` 与 `e2e/qoder-ord0353-create-failure-technical-fold.spec.ts`，两支各自 `verdict=GREEN`（通过条数在 `live_checks/e2e_logs/` 那两份日志里，本次未另发工件；两支规格都是本候选新增的，所以"尖上不跑"不构成反证，判据的判别性由候选自带的双向臂承担）。
+
+**换代到手机**：`cmdr_build_bundle_r1.py --sha 27f963a77edc4d508a39b0a07c76927d0512c724` 从 export 构建（构建信息与逐文件 blob 等值证明发布为 blob `e15c1603d2689a7840cce097121a916d33fcb78b`），`deploy_bundle.py` 判 `OVERALL GREEN`（日志 blob `cd346b61b51984caedc8a950777d9b7dbffb5ce8`），手机侧回读 `DEPLOYED_AND_BYTE_IDENTICAL_ON_PHONE_SIDE` 且五个判定全真（读数件 blob `25256ad529be76bfd9cc9a6534d78c90d9fced48`）。本跳只动前端：`git diff --name-only` 在两尖之间列出的变更文件全在 `frontend/` 之下（清单在那枚构建信息件里），所以链上 `:8693` 后端不必重启也仍是同代字节 —— 这一句我有依据，不是推测。
+
+**中途链又断了一次，归因写清楚**：17:5x 公网面全部路径变 `530`。本地三段没死（`:4781`/`:4782`/`:8693` 仍 LISTENING，本地取新包是正常的内容类型与字节数（那两项在 `live_checks/_phone_chain_1756.json` 与本轮 `4781`/`4782` 探针输出里，件已发布为 blob `25256ad529be76bfd9cc9a6534d78c90d9fced48`）），死的是隧道连接器：`run/cmdr_hop4_1712.err.log` 尾部原话 `failed to dial to edge with quic: timeout: no recent network activity`，退避重连三次未起。处置：先用 `tasklist` 认出那枚 cloudflared 连接器进程、按它的 pid 停掉（pid 未抄进本块，它对应 `run/cmdr_hop4_1712.err.log` 那份日志的写者）、把这一跳改成 `--protocol http2`（改在 `run/cmdr_hop4_tunnel.bat`），新址 `https://jets-saints-tomatoes-eric.trycloudflare.com`，旧址归档在 `run/tunnel_url.txt.dead_1752` 与 `run/tunnel_url.txt.dead_1754`；被这次抖动挡下的那轮门我按原样发布为 blob `325957d8c53536a22079128631eab96ae0209046`（它拒绝切换、旧代继续在线，行为正确）。桌面留言已更新到新址。
+
+**本机失效代理 = 今天第四类假红，已装常设螺栓**：`HTTPS_PROXY`/`HTTP_PROXY` 仍指向一个无人监听的本地代理端口（该值与各尺打印的 `proxy_env_before` 字段一致，螺栓输出就在本轮那几份门日志顶部；Clash 现在的混合口不是它）。它今天至少伪装成四笔故障：部署门的隧道臂（17:18）、账本镜像 `mirror rc=1`、lane S1 报的 `api.github.com` 拒连、我自己的第一轮公网探针。新增 `live_checks/cmdr_net_env_guard_r1.py`：探测已配置代理端口，拒绝连接就清掉代理变量并打印 `PROXY_CLEARED_AND_DIRECT`（不静默），已接入 `deploy_bundle.py`、`preflight_and_land_r2.py`、`ledger_inbox_apply_r1.py`、`phone_side_probe_r1.py`、`publish_evidence_gated_r1.py`、`merge_ledger_then_mirror_r1.py`。双向自测：指向活着的代理口时不动它、指向无人监听的那个口时清掉并打印（两向都跑过，输出在 `live_checks/cmdr_net_env_guard_r1.py` 的调用点顶部）。`cmdr_git_mirror_r1.py` 没有那枚 stdout 锚点，本轮未接入 —— 这条我记着，没假装全量覆盖。
+
+**本轮代插与退回**：账本代插成功的是 `s1_1749.md`、`s3_1749.md`、`n1_1755.md`、`n3_1746.md`（N3 那份是退回后自修重交、这次过的门）；仍被 Q43 尺拒的是 `b_1742.md`、`n2_1753.md` 与本块自身 —— 拒由都是`F3_bare_numeric_claim NUMBER_WITHOUT_COORDINATE`，被点的名目是 HTTP 状态码、行程 uuid 的前缀段、量词型计数与一个时长（门的逐行原文我按车道分别逐字转过去了，这里不复述，因为我上一版就是把这些数字抄进句子才把自己拒掉的）。两条车道的字我不代改。桌面留言、账本与证据发布都按"旧块不覆盖"办：留言备份 `CityNexus_包工头留言_bak_1757.txt`。
+
+
 ### N3 17:46+08 ORD-0357 交付：手机上把当前行程的链接复制出去（候选 ref，权威线未动）
 
 - 单 ORD-0357。候选 ref `refs/heads/review/N3-ord0357-copy-journey-link`，GitHub `ls-remote` 回读到的 40 位尖是 `706f760bf478f8501f57fa50a689c3f7193fb264`（退出码读到 0）。base = 现尖 `b6a8ea5c625d7e3e82f7348fad57d595a8a403c0`，`git merge-base --is-ancestor` 的退出码读到 0，parent 逐字等于那枚现尖。开工与提交前各读一次 `git -C D:/moodle/CityNexus ls-remote origin refs/heads/mirror/integration-frontend-apple-pass1`，两次退出码都读到 0、两次读数都是 `b6a8ea5c625d7e3e82f7348fad57d595a8a403c0`，所以这一臂不欠换代。
