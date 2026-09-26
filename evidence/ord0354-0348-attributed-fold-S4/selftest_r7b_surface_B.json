@@ -1,0 +1,929 @@
+{
+ "schema": "CNX_CMDR_UI_EVIDENCE_EXPOSURE_GATE_V1_R7_SELFTEST",
+ "ruler": {
+  "name": "ui_exposure_taint_ast_r7b.cjs",
+  "supersedes": "ui_exposure_taint_ast_r7.cjs (blob 3272a4336f60ddd183875000c11e5b5ead6be2be), which superseded r6 = ui_exposure_taint_ast_r3.cjs (blob 6a251d3a6bea70329e06581384a81d5ef54c96a6)",
+  "supersedes_blob": "3272a4336f60ddd183875000c11e5b5ead6be2be",
+  "also_supersedes_r4": {
+   "file": "ui_exposure_taint_ast_r1.cjs",
+   "blob": "eb262f59e54d5142ad0e8041704e751eac473ace"
+  },
+  "rule_lineage": "r1 regex -> r2 regex -> r3 regex -> r4 AST per-file -> r5 module graph -> r6 scope+prose/structure -> r7 attribute slot (Q71) + attributed-fold exoneration (Q67=1 / Q75) -> r7b a cell identity that does not move when the file's lines move",
+  "order": "ORD-0354 (attribute slot + line-independent cell identity) + ORD-0348 (fold exoneration)",
+  "also_supersedes": {
+   "r3": "ui_exposure_field_check_r3.py",
+   "r3_blob": "44e062e6ce9c7b5d97d78e09e432072da102292c"
+  },
+  "generation": "r7b / AST taint, module graph, both DOM surfaces, one auditable exception, stable cell ids",
+  "naming": "local file name == published generation name from r7 onward"
+ },
+ "typescript": "5.9.3",
+ "verdict": "SELFTEST_PASS",
+ "n_fixtures": 20,
+ "n_clean_expected": 7,
+ "n_bad_expected": 13,
+ "n_single_file_assertions_met": 20,
+ "n_cross_file_arms": 7,
+ "n_mode_arms": 2,
+ "n_mode_arms_met": 2,
+ "mode_arms": {
+  "F_per_file_over_reports_where_the_helper_exonerates": {
+   "assertion_met": true,
+   "modes_differ": true,
+   "scope_in_per_file_report": "per-file: no module graph is built here (--file / --ref --path)",
+   "scope_in_graph_report": "module-graph: relative imports, index files, re-exports and namespace imports resolved (--tree)",
+   "per_file_cells": [
+    "panels/Panel.tsx:5 UPSTREAM_TEXT_VIA_HELPER_TO_DOM"
+   ],
+   "graph_cells": []
+  },
+  "G_per_file_under_reports_poison_arriving_as_an_imported_value": {
+   "assertion_met": true,
+   "modes_differ": true,
+   "scope_in_per_file_report": "per-file: no module graph is built here (--file / --ref --path)",
+   "scope_in_graph_report": "module-graph: relative imports, index files, re-exports and namespace imports resolved (--tree)",
+   "per_file_cells": [],
+   "graph_cells": [
+    "panels/Show.tsx:3 UPSTREAM_READ_DIRECT"
+   ]
+  }
+ },
+ "n_cross_file_arms_met": 7,
+ "n_slot_arms": 12,
+ "n_expectations_moved": 2,
+ "expectations_moved": [
+  {
+   "fixture": "clean_tainted_but_attribute_only.tsx",
+   "was": 0,
+   "now": 1,
+   "why": "ORD-0354: the same member in a text position already fired (probe: `out.failureReason.from` as a child gives UPSTREAM_TEXT_VIA_HELPER_TO_DOM); the attribute slot is now read the same way, so the control is no longer clean by invisibility",
+   "fixture_blob_sha1": "1ec593591e20e3b8c2e49ea84c30733fa83e9137"
+  },
+  {
+   "fixture": "e0319r3_E3_control_attribute_only.tsx",
+   "was": 0,
+   "now": 1,
+   "why": "same shape, lane E blob b5fda05334fd0b5088571cb7cd6394ea088be8c5",
+   "fixture_blob_sha1": "b5fda05334fd0b5088571cb7cd6394ea088be8c5"
+  }
+ ],
+ "n_slot_arms_met": 12,
+ "slot_arms": {
+  "R7_1_server_sentence_on_the_face_still_fires": {
+   "expected_hits": 1,
+   "observed_hits": 1,
+   "expected_attributed_in_fold": 0,
+   "observed_attributed_in_fold": 0,
+   "observed_rules": [
+    "UPSTREAM_TEXT_VIA_HELPER_TO_DOM"
+   ],
+   "observed_slots": [
+    "jsx-text"
+   ],
+   "exonerated_by": [],
+   "assertion_met": true,
+   "error": null,
+   "fixture_bytes": 311,
+   "fixture_blob_sha1": "84d378bc8d270b4d1ebb268b5302f53ba45f5396"
+  },
+  "R7_2_same_sentence_in_a_fold_with_an_anchor": {
+   "expected_hits": 0,
+   "observed_hits": 0,
+   "expected_attributed_in_fold": 1,
+   "observed_attributed_in_fold": 1,
+   "observed_rules": [],
+   "observed_slots": [],
+   "exonerated_by": [
+    "details:7 via http_status:7"
+   ],
+   "assertion_met": true,
+   "error": null,
+   "fixture_bytes": 392,
+   "fixture_blob_sha1": "3d4d617c9920135cdb6437a8ae50394dbd282d44"
+  },
+  "R7_3_anchor_deleted_so_the_cell_returns": {
+   "expected_hits": 1,
+   "observed_hits": 1,
+   "expected_attributed_in_fold": 0,
+   "observed_attributed_in_fold": 0,
+   "observed_rules": [
+    "UPSTREAM_TEXT_VIA_HELPER_TO_DOM"
+   ],
+   "observed_slots": [
+    "jsx-text"
+   ],
+   "exonerated_by": [],
+   "assertion_met": true,
+   "error": null,
+   "fixture_bytes": 334,
+   "fixture_blob_sha1": "c5f8b2892978c8fa99a3a9166722f5d1a7dc4b97"
+  },
+  "R7_4_exception_words_in_a_data_attribute_fires": {
+   "expected_hits": 1,
+   "observed_hits": 1,
+   "expected_attributed_in_fold": 0,
+   "observed_attributed_in_fold": 0,
+   "observed_rules": [
+    "UPSTREAM_PROSE_TO_ATTRIBUTE_SLOT"
+   ],
+   "observed_slots": [
+    "dom-attribute"
+   ],
+   "exonerated_by": [],
+   "assertion_met": true,
+   "error": null,
+   "fixture_bytes": 242,
+   "fixture_blob_sha1": "40ce5efc1a2c4cfd52bad43e1427112f36d63ce7"
+  },
+  "R7_5_attribute_removed_so_the_denominator_returns": {
+   "expected_hits": 0,
+   "observed_hits": 0,
+   "expected_attributed_in_fold": 0,
+   "observed_attributed_in_fold": 0,
+   "observed_rules": [],
+   "observed_slots": [],
+   "exonerated_by": [],
+   "assertion_met": true,
+   "error": null,
+   "fixture_bytes": 199,
+   "fixture_blob_sha1": "e16ba1bf7e288a67942f4b488222cb140f84bacf"
+  },
+  "R7_6_structural_attributes_stay_legal": {
+   "expected_hits": 0,
+   "observed_hits": 0,
+   "expected_attributed_in_fold": 0,
+   "observed_attributed_in_fold": 0,
+   "observed_rules": [],
+   "observed_slots": [],
+   "exonerated_by": [],
+   "assertion_met": true,
+   "error": null,
+   "fixture_bytes": 305,
+   "fixture_blob_sha1": "7036c85d77a517a830c7da1663cece5732cbdc2c"
+  },
+  "R7_7_the_fold_never_exonerates_an_attribute": {
+   "expected_hits": 1,
+   "observed_hits": 1,
+   "expected_attributed_in_fold": 0,
+   "observed_attributed_in_fold": 0,
+   "observed_rules": [
+    "UPSTREAM_PROSE_TO_ATTRIBUTE_SLOT"
+   ],
+   "observed_slots": [
+    "dom-attribute"
+   ],
+   "exonerated_by": [],
+   "assertion_met": true,
+   "error": null,
+   "fixture_bytes": 339,
+   "fixture_blob_sha1": "1ceec48887821f9c36cca88c34595fb1ddc21822"
+  },
+  "R7_8_data_cnx_fold_counts_as_a_fold_surface": {
+   "expected_hits": 0,
+   "observed_hits": 0,
+   "expected_attributed_in_fold": 1,
+   "observed_attributed_in_fold": 1,
+   "observed_rules": [],
+   "observed_slots": [],
+   "exonerated_by": [
+    "div:7 via request_id:7"
+   ],
+   "assertion_met": true,
+   "error": null,
+   "fixture_bytes": 380,
+   "fixture_blob_sha1": "116bee9cb1fd6fd6814e5d4432da9d77dc1a03a1"
+  },
+  "R7_9_a_class_name_opens_nothing": {
+   "expected_hits": 1,
+   "observed_hits": 1,
+   "expected_attributed_in_fold": 0,
+   "observed_attributed_in_fold": 0,
+   "observed_rules": [
+    "UPSTREAM_TEXT_VIA_HELPER_TO_DOM"
+   ],
+   "observed_slots": [
+    "jsx-text"
+   ],
+   "exonerated_by": [],
+   "assertion_met": true,
+   "error": null,
+   "fixture_bytes": 369,
+   "fixture_blob_sha1": "52697c445da4a8eb23846b0a76ad26a2502dc59c"
+  },
+  "R7_10_an_anchor_outside_the_six_fields_opens_nothing": {
+   "expected_hits": 1,
+   "observed_hits": 1,
+   "expected_attributed_in_fold": 0,
+   "observed_attributed_in_fold": 0,
+   "observed_rules": [
+    "UPSTREAM_TEXT_VIA_HELPER_TO_DOM"
+   ],
+   "observed_slots": [
+    "jsx-text"
+   ],
+   "exonerated_by": [],
+   "assertion_met": true,
+   "error": null,
+   "fixture_bytes": 366,
+   "fixture_blob_sha1": "98471ad45b24afbe5c6acaa2dc76948c6916b254"
+  },
+  "R7_11_prop_carried_message_in_an_attribute_fires": {
+   "expected_hits": 1,
+   "observed_hits": 1,
+   "expected_attributed_in_fold": 0,
+   "observed_attributed_in_fold": 0,
+   "observed_rules": [
+    "UPSTREAM_PROSE_TO_ATTRIBUTE_SLOT"
+   ],
+   "observed_slots": [
+    "dom-attribute"
+   ],
+   "exonerated_by": [],
+   "assertion_met": true,
+   "error": null,
+   "fixture_bytes": 163,
+   "fixture_blob_sha1": "a25f8cf0721cec0a6cdc06e9e2087765801eaae0"
+  },
+  "R7_12_the_same_member_in_text_is_left_to_the_old_rule": {
+   "expected_hits": 0,
+   "observed_hits": 0,
+   "expected_attributed_in_fold": 0,
+   "observed_attributed_in_fold": 0,
+   "observed_rules": [],
+   "observed_slots": [],
+   "exonerated_by": [],
+   "assertion_met": true,
+   "error": null,
+   "fixture_bytes": 125,
+   "fixture_blob_sha1": "2b5c2c5bf3ec81e7fe281291ad5572e27adeaad2"
+  }
+ },
+ "cell_identity_arms": {
+  "base_cell_id": "c318179c8bfc1dbf",
+  "base_line": 7,
+  "shifted_line": 10,
+  "twice_ids": [
+   "b669568c13e93a98",
+   "54b5ff4f53334215"
+  ],
+  "identity_text": "UPSTREAM_TEXT_VIA_HELPER_TO_DOM :: frontend/src/identity/Base.tsx :: text-in:p testid=p:o :: prose :: - :: serverReasonSentence :: upstream read (body as { detail?: unknown } | null)?.detail | `detail` = (body as { detail?: unknown } | null)?.detail | serverReasonSentence() returns detail | `sentence` = serverReasonSentence(body)",
+  "identity_survives_a_line_shift": true,
+  "line_number_is_not_in_the_identity": true,
+  "identity_names_the_helper_and_every_link": true,
+  "attribute_slot_is_a_different_cell": true,
+  "a_different_chain_is_a_different_cell": true,
+  "a_different_file_is_a_different_cell": true,
+  "the_same_file_under_a_different_root_is_the_same_cell": true,
+  "two_renders_are_two_cells": true,
+  "assertion_met": true
+ },
+ "cross_file_arms": {
+  "A_control_clean_lib_and_clean_consumer": {
+   "assertion_met": true,
+   "consumer": "panels/Panel.tsx",
+   "expected_consumer_cells": 0,
+   "observed_consumer_cells": 0,
+   "observed_other_cells": 0,
+   "cells": [],
+   "chains": [],
+   "modules": 2,
+   "unresolved_import_specs": [],
+   "parse_diagnostics": 0,
+   "depth_cut_lookups": 0
+  },
+  "B_helper_returns_detail_cell_lands_in_consumer": {
+   "assertion_met": true,
+   "consumer": "panels/Panel.tsx",
+   "expected_consumer_cells": 1,
+   "observed_consumer_cells": 1,
+   "observed_other_cells": 0,
+   "cells": [
+    "panels/Panel.tsx:6 UPSTREAM_TEXT_VIA_HELPER_TO_DOM"
+   ],
+   "chains": [
+    ":2 upstream read (body as { detail?: unknown } | null)?.detail -> :2 `d` = (body as { detail?: unknown } | null)?.detail -> :3 reasonLabel() returns typeof d === \"string\" ? d : \"\" -> :5 came back from reasonLabel imported from ../lib/wording -> :5 `note` = reasonLabel(body) -> :6 rendered here"
+   ],
+   "modules": 2,
+   "unresolved_import_specs": [],
+   "parse_diagnostics": 0,
+   "depth_cut_lookups": 0
+  },
+  "C_mutated_helper_returns_allowed_fields_only": {
+   "assertion_met": true,
+   "consumer": "panels/Panel.tsx",
+   "expected_consumer_cells": 0,
+   "observed_consumer_cells": 0,
+   "observed_other_cells": 0,
+   "cells": [],
+   "chains": [],
+   "modules": 2,
+   "unresolved_import_specs": [],
+   "parse_diagnostics": 0,
+   "depth_cut_lookups": 0
+  },
+  "D_barrel_reexport_through_index_and_star": {
+   "assertion_met": true,
+   "consumer": "panels/Panel.tsx",
+   "expected_consumer_cells": 1,
+   "observed_consumer_cells": 1,
+   "observed_other_cells": 0,
+   "cells": [
+    "panels/Panel.tsx:6 UPSTREAM_TEXT_VIA_HELPER_TO_DOM"
+   ],
+   "chains": [
+    ":2 upstream read (body as { error?: { message?: string } } | null)?.error off body -> :2 `error` = (body as { error?: { message?: string } } | null)?.error -> :3 read further as message of it -> :3 serverSentence() returns error.message -> :5 came back from serverSentence imported from ../lib -> :5 `line` = serverSentence(payload) -> :6 rendered here"
+   ],
+   "modules": 3,
+   "unresolved_import_specs": [],
+   "parse_diagnostics": 0,
+   "depth_cut_lookups": 0
+  },
+  "E_namespace_import_member_call": {
+   "assertion_met": true,
+   "consumer": "panels/Name.tsx",
+   "expected_consumer_cells": 1,
+   "observed_consumer_cells": 1,
+   "observed_other_cells": 0,
+   "cells": [
+    "panels/Name.tsx:5 UPSTREAM_TEXT_VIA_HELPER_TO_DOM"
+   ],
+   "chains": [
+    ":2 upstream read (body as { detail?: string } | null)?.detail -> :2 passed through String() -> :2 quoted() returns String((body as { detail?: string } | null)?.detail ?? \"\") -> :5 came back from say.quoted imported from ../lib/say -> :5 rendered here"
+   ],
+   "modules": 2,
+   "unresolved_import_specs": [],
+   "parse_diagnostics": 0,
+   "depth_cut_lookups": 0
+  },
+  "H_raw_response_text_through_a_shared_channel": {
+   "assertion_met": true,
+   "consumer": "panels/Show.tsx",
+   "expected_consumer_cells": 1,
+   "observed_consumer_cells": 1,
+   "observed_other_cells": 0,
+   "cells": [
+    "panels/Show.tsx:5 UPSTREAM_TEXT_VIA_HELPER_TO_DOM"
+   ],
+   "chains": [
+    ":5 the answer's own body held in `text` reached the DOM as text -> :6 readResponseFacts() returns { text, facts: { http_status: response.status, bytes: text.length } } -> :4 came back from readResponseFacts imported from ../lib/rawFacts -> :4 `text` destructured from readResponseFacts(r) -> :5 rendered here"
+   ],
+   "modules": 2,
+   "unresolved_import_specs": [],
+   "parse_diagnostics": 0,
+   "depth_cut_lookups": 0
+  },
+  "H2_same_channel_allowing_only_measured_facts": {
+   "assertion_met": true,
+   "consumer": "panels/Show2.tsx",
+   "expected_consumer_cells": 0,
+   "observed_consumer_cells": 0,
+   "observed_other_cells": 0,
+   "cells": [],
+   "chains": [],
+   "modules": 2,
+   "unresolved_import_specs": [],
+   "parse_diagnostics": 0,
+   "depth_cut_lookups": 0
+  }
+ },
+ "fixtures": {
+  "clean_whitelist_only.tsx": {
+   "expected": 0,
+   "expected_under_r6": 0,
+   "expectation_moved_by_this_revision": null,
+   "observed": 0,
+   "hits": [],
+   "verdict": "CLEAN",
+   "assertion_met": true,
+   "note": "r3 selftest fixture, source taken from blob 44e062e6ce9c7b5d97d78e09e432072da102292c",
+   "fixture_bytes": 101,
+   "fixture_blob_sha1": "96257b74705577d84de5ee76ee34851aefa3314b",
+   "lines": [],
+   "chains": [],
+   "parse_diagnostics": 0,
+   "graph": {
+    "bindings": 0,
+    "functions": 0,
+    "call_sites": 0,
+    "state_pairs": [],
+    "sinks": 3
+   }
+  },
+  "clean_literal_helper.tsx": {
+   "expected": 0,
+   "expected_under_r6": 0,
+   "expectation_moved_by_this_revision": null,
+   "observed": 0,
+   "hits": [],
+   "verdict": "CLEAN",
+   "assertion_met": true,
+   "note": "r3 selftest fixture, source taken from blob 44e062e6ce9c7b5d97d78e09e432072da102292c",
+   "fixture_bytes": 219,
+   "fixture_blob_sha1": "b9a2e2a60f31e2da9dd340cf5679ca0f4470e75a",
+   "lines": [],
+   "chains": [],
+   "parse_diagnostics": 0,
+   "graph": {
+    "bindings": 4,
+    "functions": 2,
+    "call_sites": 1,
+    "state_pairs": [],
+    "sinks": 1
+   }
+  },
+  "bad_direct_optional_chain.tsx": {
+   "expected": 1,
+   "expected_under_r6": 1,
+   "expectation_moved_by_this_revision": null,
+   "observed": 1,
+   "hits": [
+    "UPSTREAM_READ_DIRECT"
+   ],
+   "verdict": "HIT",
+   "assertion_met": true,
+   "note": "r3 selftest fixture, source taken from blob 44e062e6ce9c7b5d97d78e09e432072da102292c",
+   "fixture_bytes": 65,
+   "fixture_blob_sha1": "50f655826b84125f6eee55d20f8e5b6b089fe37f",
+   "lines": [
+    1
+   ],
+   "chains": [
+    ":1 upstream read body?.detail -> :1 rendered here"
+   ],
+   "parse_diagnostics": 0,
+   "graph": {
+    "bindings": 2,
+    "functions": 1,
+    "call_sites": 0,
+    "state_pairs": [],
+    "sinks": 1
+   }
+  },
+  "bad_helper_taint.tsx": {
+   "expected": 1,
+   "expected_under_r6": 1,
+   "expectation_moved_by_this_revision": null,
+   "observed": 1,
+   "hits": [
+    "UPSTREAM_TEXT_VIA_HELPER_TO_DOM"
+   ],
+   "verdict": "HIT",
+   "assertion_met": true,
+   "note": "r3 selftest fixture, source taken from blob 44e062e6ce9c7b5d97d78e09e432072da102292c",
+   "fixture_bytes": 351,
+   "fixture_blob_sha1": "23bfee63bef79afdc7395f7dad57fca1275592f7",
+   "lines": [
+    7
+   ],
+   "chains": [
+    ":2 upstream read (body as { detail?: unknown } | null)?.detail -> :2 `detail` = (body as { detail?: unknown } | null)?.detail -> :3 serverReasonSentence() returns detail -> :6 passed through note() -> :6 `r` = {failureReason: note(serverReasonSentence(body))} -> :7 read further as text of it -> :7 rendered here"
+   ],
+   "parse_diagnostics": 0,
+   "graph": {
+    "bindings": 5,
+    "functions": 2,
+    "call_sites": 2,
+    "state_pairs": [],
+    "sinks": 1
+   }
+  },
+  "bad_dangerous_html.tsx": {
+   "expected": 1,
+   "expected_under_r6": 1,
+   "expectation_moved_by_this_revision": null,
+   "observed": 1,
+   "hits": [
+    "DANGEROUS_HTML"
+   ],
+   "verdict": "HIT",
+   "assertion_met": true,
+   "note": "r3 selftest fixture, source taken from blob 44e062e6ce9c7b5d97d78e09e432072da102292c",
+   "fixture_bytes": 54,
+   "fixture_blob_sha1": "0682fabc2c74b14d5b1348829458336918f48c26",
+   "lines": [
+    1
+   ],
+   "chains": [
+    ":1 a value this file cannot prove is its own wording was handed to innerHTML / dangerouslySetInnerHTML -> :1 rendered here"
+   ],
+   "parse_diagnostics": 0,
+   "graph": {
+    "bindings": 0,
+    "functions": 0,
+    "call_sites": 0,
+    "state_pairs": [],
+    "sinks": 1
+   }
+  },
+  "clean_tainted_but_attribute_only.tsx": {
+   "expected": 1,
+   "expected_under_r6": 0,
+   "expectation_moved_by_this_revision": {
+    "was": 0,
+    "now": 1,
+    "why": "ORD-0354: the same member in a text position already fired (probe: `out.failureReason.from` as a child gives UPSTREAM_TEXT_VIA_HELPER_TO_DOM); the attribute slot is now read the same way, so the control is no longer clean by invisibility"
+   },
+   "observed": 1,
+   "hits": [
+    "UPSTREAM_PROSE_TO_ATTRIBUTE_SLOT"
+   ],
+   "verdict": "HIT",
+   "assertion_met": true,
+   "note": "r3 selftest fixture, source taken from blob 44e062e6ce9c7b5d97d78e09e432072da102292c",
+   "fixture_bytes": 373,
+   "fixture_blob_sha1": "1ec593591e20e3b8c2e49ea84c30733fa83e9137",
+   "lines": [
+    8
+   ],
+   "chains": [
+    ":2 upstream read (body as { detail?: unknown } | null)?.detail -> :2 `detail` = (body as { detail?: unknown } | null)?.detail -> :3 serverReasonSentence() returns detail -> :6 passed through failureNote() -> :6 `out` = {failureReason: failureNote( serverReasonSentence(body), \"x\")} -> :8 read further as from of it -> :8 rendered here"
+   ],
+   "parse_diagnostics": 0,
+   "graph": {
+    "bindings": 5,
+    "functions": 2,
+    "call_sites": 2,
+    "state_pairs": [],
+    "sinks": 2
+   }
+  },
+  "bad_raw_body.tsx": {
+   "expected": 1,
+   "expected_under_r6": 1,
+   "expectation_moved_by_this_revision": null,
+   "observed": 1,
+   "hits": [
+    "RAW_BODY_TO_DOM"
+   ],
+   "verdict": "HIT",
+   "assertion_met": true,
+   "note": "r3 selftest fixture, source taken from blob 44e062e6ce9c7b5d97d78e09e432072da102292c",
+   "fixture_bytes": 34,
+   "fixture_blob_sha1": "670b7f820c433d944e649bdba6ad277d17104a86",
+   "lines": [
+    1
+   ],
+   "chains": [
+    ":1 upstream read r.body_head -> :1 interpolated into `body=${r.body_head}` -> :1 rendered here"
+   ],
+   "parse_diagnostics": 0,
+   "graph": {
+    "bindings": 0,
+    "functions": 0,
+    "call_sites": 0,
+    "state_pairs": [],
+    "sinks": 1
+   }
+  },
+  "bad_rename_last_part.tsx": {
+   "expected": 1,
+   "expected_under_r6": 1,
+   "expectation_moved_by_this_revision": null,
+   "observed": 1,
+   "hits": [
+    "UPSTREAM_TEXT_VIA_HELPER_TO_DOM"
+   ],
+   "verdict": "HIT",
+   "assertion_met": true,
+   "note": "r3 selftest fixture, source taken from blob 44e062e6ce9c7b5d97d78e09e432072da102292c",
+   "fixture_bytes": 330,
+   "fixture_blob_sha1": "99165e44be3c5cebdf0c10c3b3f230aeabc6940f",
+   "lines": [
+    9
+   ],
+   "chains": [
+    ":2 upstream read (body as { detail?: unknown } | null)?.detail -> :2 `d` = (body as { detail?: unknown } | null)?.detail -> :3 serverReasonSentence() returns d -> :7 passed through failureNote() -> :7 `out` = {failureReason: failureNote( serverReasonSentence(body), \"fb\")} -> :9 read further as value of it -> :9 rendered here"
+   ],
+   "parse_diagnostics": 0,
+   "graph": {
+    "bindings": 5,
+    "functions": 2,
+    "call_sites": 2,
+    "state_pairs": [],
+    "sinks": 1
+   }
+  },
+  "bad_bare_local_hop.tsx": {
+   "expected": 1,
+   "expected_under_r6": 1,
+   "expectation_moved_by_this_revision": null,
+   "observed": 1,
+   "hits": [
+    "UPSTREAM_TEXT_VIA_HELPER_TO_DOM"
+   ],
+   "verdict": "HIT",
+   "assertion_met": true,
+   "note": "r3 selftest fixture, source taken from blob 44e062e6ce9c7b5d97d78e09e432072da102292c",
+   "fixture_bytes": 281,
+   "fixture_blob_sha1": "34c6793315bbd5ebd2d12130591a0bd37bbd5e57",
+   "lines": [
+    8
+   ],
+   "chains": [
+    ":2 upstream read (body as { detail?: unknown } | null)?.detail -> :2 `d` = (body as { detail?: unknown } | null)?.detail -> :3 serverReasonSentence() returns d -> :7 `sentence` = serverReasonSentence(body) -> :8 rendered here"
+   ],
+   "parse_diagnostics": 0,
+   "graph": {
+    "bindings": 5,
+    "functions": 2,
+    "call_sites": 1,
+    "state_pairs": [],
+    "sinks": 1
+   }
+  },
+  "bad_paren_alias.tsx": {
+   "expected": 1,
+   "expected_under_r6": 1,
+   "expectation_moved_by_this_revision": null,
+   "observed": 1,
+   "hits": [
+    "UPSTREAM_TEXT_VIA_HELPER_TO_DOM"
+   ],
+   "verdict": "HIT",
+   "assertion_met": true,
+   "note": "r3 selftest fixture, source taken from blob 44e062e6ce9c7b5d97d78e09e432072da102292c",
+   "fixture_bytes": 337,
+   "fixture_blob_sha1": "19bd286df8612b9689aa4e3f26f07c65868d0eb3",
+   "lines": [
+    9
+   ],
+   "chains": [
+    ":2 upstream read (body as { detail?: unknown } | null)?.detail -> :2 `d` = (body as { detail?: unknown } | null)?.detail -> :3 serverReasonSentence() returns d -> :7 passed through failureNote() -> :7 `out` = {failureReason: failureNote( serverReasonSentence(body), \"fb\")} -> :9 read further as text of it -> :9 rendered here"
+   ],
+   "parse_diagnostics": 0,
+   "graph": {
+    "bindings": 5,
+    "functions": 2,
+    "call_sites": 2,
+    "state_pairs": [],
+    "sinks": 1
+   }
+  },
+  "clean_bare_local_from_literal.tsx": {
+   "expected": 0,
+   "expected_under_r6": 0,
+   "expectation_moved_by_this_revision": null,
+   "observed": 0,
+   "hits": [],
+   "verdict": "CLEAN",
+   "assertion_met": true,
+   "note": "r3 selftest fixture, source taken from blob 44e062e6ce9c7b5d97d78e09e432072da102292c",
+   "fixture_bytes": 185,
+   "fixture_blob_sha1": "76300e363781cc7ab15b515599a80b5ae0566343",
+   "lines": [],
+   "chains": [],
+   "parse_diagnostics": 0,
+   "graph": {
+    "bindings": 4,
+    "functions": 2,
+    "call_sites": 1,
+    "state_pairs": [],
+    "sinks": 1
+   }
+  },
+  "clean_untainted_value_name.tsx": {
+   "expected": 0,
+   "expected_under_r6": 0,
+   "expectation_moved_by_this_revision": null,
+   "observed": 0,
+   "hits": [],
+   "verdict": "CLEAN",
+   "assertion_met": true,
+   "note": "r3 selftest fixture, source taken from blob 44e062e6ce9c7b5d97d78e09e432072da102292c",
+   "fixture_bytes": 119,
+   "fixture_blob_sha1": "ca235ea39acf7bf8987488beac67ac037331ae43",
+   "lines": [],
+   "chains": [],
+   "parse_diagnostics": 0,
+   "graph": {
+    "bindings": 2,
+    "functions": 1,
+    "call_sites": 0,
+    "state_pairs": [],
+    "sinks": 1
+   }
+  },
+  "bad_helper_taint_multiline.tsx": {
+   "expected": 1,
+   "expected_under_r6": 1,
+   "expectation_moved_by_this_revision": null,
+   "observed": 1,
+   "hits": [
+    "UPSTREAM_TEXT_VIA_HELPER_TO_DOM"
+   ],
+   "verdict": "HIT",
+   "assertion_met": true,
+   "note": "r3 selftest fixture, source taken from blob 44e062e6ce9c7b5d97d78e09e432072da102292c",
+   "fixture_bytes": 380,
+   "fixture_blob_sha1": "0fa3b220cdffa0af4e96b111137d3b85c5d430e7",
+   "lines": [
+    10
+   ],
+   "chains": [
+    ":2 upstream read (body as { detail?: unknown } | null)?.detail -> :2 `detail` = (body as { detail?: unknown } | null)?.detail -> :3 serverReasonSentence() returns detail -> :6 passed through failureNote() -> :6 `out` = {failureReason: failureNote( serverReasonSentence(body), \"fallback\" )} -> :10 read further as text of it -> :10 rendered here"
+   ],
+   "parse_diagnostics": 0,
+   "graph": {
+    "bindings": 5,
+    "functions": 2,
+    "call_sites": 2,
+    "state_pairs": [],
+    "sinks": 1
+   }
+  },
+  "e0319r2_A_rename_last_part.tsx": {
+   "expected": 1,
+   "expected_under_r6": 1,
+   "expectation_moved_by_this_revision": null,
+   "observed": 1,
+   "hits": [
+    "UPSTREAM_TEXT_VIA_HELPER_TO_DOM"
+   ],
+   "verdict": "HIT",
+   "assertion_met": true,
+   "note": "lane E d2305848 counterexample, blob 4c1bdae7f371ae96f580a7e590331c95ba04715e",
+   "fixture_bytes": 344,
+   "fixture_blob_sha1": "4c1bdae7f371ae96f580a7e590331c95ba04715e",
+   "lines": [
+    8
+   ],
+   "chains": [
+    ":2 upstream read (body as { detail?: unknown } | null)?.detail -> :2 `detail` = (body as { detail?: unknown } | null)?.detail -> :3 serverReasonSentence() returns detail -> :6 passed through failureNote() -> :6 `out` = {failureReason: failureNote( serverReasonSentence(body), \"fb\")} -> :8 read further as value of it -> :8 rendered here"
+   ],
+   "parse_diagnostics": 0,
+   "graph": {
+    "bindings": 5,
+    "functions": 2,
+    "call_sites": 2,
+    "state_pairs": [],
+    "sinks": 1
+   }
+  },
+  "e0319r2_B_destructure_hop.tsx": {
+   "expected": 1,
+   "expected_under_r6": 1,
+   "expectation_moved_by_this_revision": null,
+   "observed": 1,
+   "hits": [
+    "UPSTREAM_TEXT_VIA_HELPER_TO_DOM"
+   ],
+   "verdict": "HIT",
+   "assertion_met": true,
+   "note": "lane E d2305848 counterexample, blob ace904808257b02b002c63e424e8bdc6855623f6",
+   "fixture_bytes": 295,
+   "fixture_blob_sha1": "ace904808257b02b002c63e424e8bdc6855623f6",
+   "lines": [
+    7
+   ],
+   "chains": [
+    ":2 upstream read (body as { detail?: unknown } | null)?.detail -> :2 `detail` = (body as { detail?: unknown } | null)?.detail -> :3 serverReasonSentence() returns detail -> :6 `sentence` = serverReasonSentence(body) -> :7 rendered here"
+   ],
+   "parse_diagnostics": 0,
+   "graph": {
+    "bindings": 5,
+    "functions": 2,
+    "call_sites": 1,
+    "state_pairs": [],
+    "sinks": 1
+   }
+  },
+  "e0319r2_C_paren_alias.tsx": {
+   "expected": 1,
+   "expected_under_r6": 1,
+   "expectation_moved_by_this_revision": null,
+   "observed": 1,
+   "hits": [
+    "UPSTREAM_TEXT_VIA_HELPER_TO_DOM"
+   ],
+   "verdict": "HIT",
+   "assertion_met": true,
+   "note": "lane E d2305848 counterexample, blob c6ef79c50cea55e3024b8dfe79ff8273bf24c16e",
+   "fixture_bytes": 351,
+   "fixture_blob_sha1": "c6ef79c50cea55e3024b8dfe79ff8273bf24c16e",
+   "lines": [
+    8
+   ],
+   "chains": [
+    ":2 upstream read (body as { detail?: unknown } | null)?.detail -> :2 `detail` = (body as { detail?: unknown } | null)?.detail -> :3 serverReasonSentence() returns detail -> :6 passed through failureNote() -> :6 `out` = {failureReason: failureNote( serverReasonSentence(body), \"fb\")} -> :8 read further as text of it -> :8 rendered here"
+   ],
+   "parse_diagnostics": 0,
+   "graph": {
+    "bindings": 5,
+    "functions": 2,
+    "call_sites": 2,
+    "state_pairs": [],
+    "sinks": 1
+   }
+  },
+  "e0319r2_D_control_clean.tsx": {
+   "expected": 0,
+   "expected_under_r6": 0,
+   "expectation_moved_by_this_revision": null,
+   "observed": 0,
+   "hits": [],
+   "verdict": "CLEAN",
+   "assertion_met": true,
+   "note": "lane E d2305848 counterexample, blob aac913740eb191e453144ea0d2e253a8611e5883",
+   "fixture_bytes": 187,
+   "fixture_blob_sha1": "aac913740eb191e453144ea0d2e253a8611e5883",
+   "lines": [],
+   "chains": [],
+   "parse_diagnostics": 0,
+   "graph": {
+    "bindings": 2,
+    "functions": 1,
+    "call_sites": 0,
+    "state_pairs": [],
+    "sinks": 1
+   }
+  },
+  "e0319r3_E1_bracket_read.tsx": {
+   "expected": 1,
+   "expected_under_r6": 1,
+   "expectation_moved_by_this_revision": null,
+   "observed": 1,
+   "hits": [
+    "UPSTREAM_TEXT_VIA_HELPER_TO_DOM"
+   ],
+   "verdict": "HIT",
+   "assertion_met": true,
+   "note": "lane E d2305848 counterexample, blob 95547a73642cd9959c62548b0195bc6a54967398",
+   "fixture_bytes": 282,
+   "fixture_blob_sha1": "95547a73642cd9959c62548b0195bc6a54967398",
+   "lines": [
+    7
+   ],
+   "chains": [
+    ":2 upstream read body[\"detail\"] -> :2 `d` = body[\"detail\"] -> :3 serverReasonSentence() returns d -> :6 passed through note() -> :6 `r` = {failureReason: note(serverReasonSentence(body))} -> :7 read further as text of it -> :7 rendered here"
+   ],
+   "parse_diagnostics": 0,
+   "graph": {
+    "bindings": 5,
+    "functions": 2,
+    "call_sites": 2,
+    "state_pairs": [],
+    "sinks": 1
+   }
+  },
+  "e0319r3_E2_forwarding_helper.tsx": {
+   "expected": 1,
+   "expected_under_r6": 1,
+   "expectation_moved_by_this_revision": null,
+   "observed": 1,
+   "hits": [
+    "UPSTREAM_TEXT_VIA_HELPER_TO_DOM"
+   ],
+   "verdict": "HIT",
+   "assertion_met": true,
+   "note": "lane E d2305848 counterexample, blob b2f507455e610dd639e882f72651be8e120953c8",
+   "fixture_bytes": 342,
+   "fixture_blob_sha1": "b2f507455e610dd639e882f72651be8e120953c8",
+   "lines": [
+    8
+   ],
+   "chains": [
+    ":2 upstream read (body as { detail?: unknown } | null)?.detail -> :2 `detail` = (body as { detail?: unknown } | null)?.detail -> :3 serverReasonSentence() returns detail -> :6 wrap() returns serverReasonSentence(b) -> :7 `s` = wrap(body) -> :8 rendered here"
+   ],
+   "parse_diagnostics": 0,
+   "graph": {
+    "bindings": 7,
+    "functions": 3,
+    "call_sites": 2,
+    "state_pairs": [],
+    "sinks": 1
+   }
+  },
+  "e0319r3_E3_control_attribute_only.tsx": {
+   "expected": 1,
+   "expected_under_r6": 0,
+   "expectation_moved_by_this_revision": {
+    "was": 0,
+    "now": 1,
+    "why": "same shape, lane E blob b5fda05334fd0b5088571cb7cd6394ea088be8c5"
+   },
+   "observed": 1,
+   "hits": [
+    "UPSTREAM_PROSE_TO_ATTRIBUTE_SLOT"
+   ],
+   "verdict": "HIT",
+   "assertion_met": true,
+   "note": "lane E d2305848 counterexample, blob b5fda05334fd0b5088571cb7cd6394ea088be8c5",
+   "fixture_bytes": 375,
+   "fixture_blob_sha1": "b5fda05334fd0b5088571cb7cd6394ea088be8c5",
+   "lines": [
+    8
+   ],
+   "chains": [
+    ":2 upstream read (body as { detail?: unknown } | null)?.detail -> :2 `detail` = (body as { detail?: unknown } | null)?.detail -> :3 serverReasonSentence() returns detail -> :6 passed through failureNote() -> :6 `out` = {failureReason: failureNote( serverReasonSentence(body), \"fb\")} -> :8 read further as from of it -> :8 rendered here"
+   ],
+   "parse_diagnostics": 0,
+   "graph": {
+    "bindings": 5,
+    "functions": 2,
+    "call_sites": 2,
+    "state_pairs": [],
+    "sinks": 2
+   }
+  }
+ }
+}
