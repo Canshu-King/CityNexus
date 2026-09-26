@@ -1,0 +1,54 @@
+{
+ "order": "ORD-0344",
+ "line": "origin/mirror/integration-frontend-apple-pass1",
+ "tip": "e9a392db4f596362ffe3365174e1fef1366f3247",
+ "cand": "110c4323d99509c9a957ed42f4d01022b8fef0c3",
+ "merge_base": "c740f45d68f337c460a1a43b995162689d0110af",
+ "commits_tip_ahead_of_base": 3,
+ "commits_cand_ahead_of_base": 1,
+ "merge_tree_rc": 0,
+ "changed_files": [
+  "frontend/src/features/agent/AgentRunRail.tsx",
+  "frontend/src/features/agent/CopilotDock.tsx",
+  "frontend/src/main.tsx"
+ ],
+ "files": [
+  {
+   "path": "frontend/src/features/agent/AgentRunRail.tsx",
+   "cand_blob": "c09e07a114deb8e6c377c2a7c757dbc5ca853d40",
+   "merged_blob": "c09e07a114deb8e6c377c2a7c757dbc5ca853d40",
+   "identical": true,
+   "cand_changed_the_file": true
+  },
+  {
+   "path": "frontend/src/features/agent/CopilotDock.tsx",
+   "cand_blob": "4fb493bddea7d302e2fdeaa57ef332cf70fefc50",
+   "merged_blob": "4fb493bddea7d302e2fdeaa57ef332cf70fefc50",
+   "identical": true,
+   "cand_changed_the_file": true
+  },
+  {
+   "path": "frontend/src/main.tsx",
+   "cand_blob": "4769a6e3712955cc9e5f20b43ee80e893676a9c0",
+   "merged_blob": "4769a6e3712955cc9e5f20b43ee80e893676a9c0",
+   "identical": true,
+   "cand_changed_the_file": true
+  }
+ ],
+ "merged_tree": "05abf0305f1eb65c6804ec904e7a23c7e77e25fd",
+ "auto_merged_files": [],
+ "recut_commit": "ab12c17a65450c2c3062c9232e27a26c4ae1b485",
+ "readback_tree": "05abf0305f1eb65c6804ec904e7a23c7e77e25fd",
+ "readback_tree_matches": true,
+ "readback_parents": [
+  "e9a392db4f596362ffe3365174e1fef1366f3247",
+  "110c4323d99509c9a957ed42f4d01022b8fef0c3"
+ ],
+ "readback_parent_tip": true,
+ "verdict": "RECUT_OK",
+ "pushed_ref": "refs/heads/cmdr/land-ord0344-recut",
+ "push_rc": 0,
+ "push_stderr": "remote: \nremote: Create a pull request for 'cmdr/land-ord0344-recut' on GitHub by visiting:        \nremote:      https://github.com/Canshu-King/CityNexus/pull/new/cmdr/land-ord0344-recut        \nremote: \nTo github.com:Canshu-King/CityNexus.git\n * [new branch]        ab12c17a65450c2c3062c9232e27a26c4ae1b485 -> cmdr/land-ord0344-recut",
+ "ls_remote": "ab12c17a65450c2c3062c9232e27a26c4ae1b485\trefs/heads/cmdr/land-ord0344-recut",
+ "ls_remote_matches": true
+}
