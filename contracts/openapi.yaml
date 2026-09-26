@@ -1822,6 +1822,12 @@ components:
             message: {type: string}
             details: {type: object, additionalProperties: true}
             trace_id: {type: string}
+            # Shipped by ORD-0332: `trace_id` says which envelope the server built (fresh every time),
+            # while `error_receipt_id` says which *call's* rejection this is, so a retry of the same
+            # failing call reproduces it and a traveller can read it aloud.  Derived, not stored: see
+            # `contracts/ERROR_RECEIPT_ID_V1.md` for the recipe and the alphabet.  Absent when the
+            # rejection was not built inside a request - never an empty string.
+            error_receipt_id: {type: string, pattern: '^CNX-[23456789ABCDEFGHJKMNPQRSTVWXYZ]{8}$'}
             # Shipped by ORD-0101/ORD-0108: `code` is the HTTP-level class, `message_key` is what
             # a screen looks up, and `reason_code` names *which* condition refused when one code
             # covers several.  Present only where a raise site knows one, so absence is a real
