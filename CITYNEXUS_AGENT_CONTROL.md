@@ -16588,6 +16588,123 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### ORD-0358 → F `8ccd71d8` 链自恢复入口·第二切已推；四臂**全绿（含「起—杀—回」）** · 2026-09-26 19:04+08
+
+四元组：`scope` = 链路工具（`tools/` 那两枚文件，你已把第一切落地；产品路由与前后端文件一字未改，也没有新增任何写端点 ⇒ 改动面只看字段 `changed_paths`）；`generation` = 派单指定的 base `b6a8ea5c625d7e3e82f7348fad57d595a8a403c0` → 第一切落地后的现读尖 `6ee21eddba60303e8f0f46907df9501ee0149e6e`（第二切就挂在这一枚上，父与现读尖同值 ⇒ 不必再 re-cut）→ 交付时现读尖 `282dc65a487b6be35c7268e41f358463d575aed3`（`merge-base --is-ancestor` 读退出码判祖先关系，判据不是「等于现尖」，现尖一直在你手里前推）；候选 `6c671f56b84ede206e75efeb810958a750d01c52`；`artifact` = `8d0e4d0f9f23936885fc7c57d725220ea7dac1be`、`f17e3b3d82be8601d5d483bbe2de58900c6a6e80`、`b815bab7c81bf82a4c8c4c6dce70e49b889579cc`、`8df7b0c49147cd3c7746c764b12979bbf212e08a`、`411c802460f9c0f80b381cdbd091872565ff84ca`、`4489bfae6c754d886a074725cdbd9c02ffea32b0`、`e5d01ef7c629869ed0b9ac7991b918abdef379d4`；`method` = 真起真停的进程 + 真 HTTP 探测 + `netstat`/CIM 回读 pid 与父进程 + 逐字节回读留言副本。
+
+**这一切比第一切多的东西：判据在现网里自己露了怯，每一处都改成了字节。**下面行号取自我这台`work_0358/tools/chain_self_heal.mjs`，其 blob 与候选里那枚同值（在 `8d0e4d0f9f23936885fc7c57d725220ea7dac1be` 的 `per_file_blobs` 里）
+  * 候选 `6c671f56b84ede206e75efeb810958a750d01c52` · tools/chain_self_heal.mjs:176 `apiJson()`：API 腿（backend / auth_proxy / tunnel）必须真是 `application/json` **且**正文里有 `"status":`；tools/chain_self_heal.mjs:180 `isHtml()` 反过来要求静态腿真是 `<!doctype html>`。理由很实在：SPA 的兜底会把 `/api/v1/health` 答成 `200 + index.html`，「200」正是把「没后端」读成「活着」的那一步。每跳的形状都进收据（字段 `hops[*].shape`：`api-json` / `html` / `other` / `no-answer`）。
+  * 候选 `6c671f56b84ede206e75efeb810958a750d01c52` · tools/chain_self_heal.mjs:266：隧道的现值只认 `run/tunnel_url.txt`，日志降级为兜底、且两枚并列（字段 `tunnel.from_newest_log`）。第一版按 mtime 取最新日志，实测取到的是 `run/tunnel_0925_0417.err.log` 里一条早已死掉的 quick tunnel ⇒ 三跳全 UP 却被判成隧道断。
+  * 候选 `6c671f56b84ede206e75efeb810958a750d01c52` · tools/chain_self_heal.mjs:114：探针一律直连、并把这一事实写进读数（字段 `http.proxy`）。这台机器环境里 `HTTPS_PROXY` 指着无监听了的端口 `127.0.0.1:7892`，跟着它走会把 `WinError 10061`（拒连）读成「整条链断了」——这正是我第一版`ord0358_detect_live_r3.json` 那一趟的假红（`4489bfae6c754d886a074725cdbd9c02ffea32b0`，`verdict` = CHAIN_UNHEALTHY 而同批 `verdict_reason.hops_ok` = True、`tunnel_shape` = no-answer，改直连之后同一台链判 CHAIN_HEALTHY）。
+  * 候选 `6c671f56b84ede206e75efeb810958a750d01c52` · tools/chain_self_heal.mjs:275 与隧道那一处 `start` 都带 `stdio: "ignore"` + `timeout: 30000`。**根因更正**：`cmd /c start 某.bat` 起的是 `cmd /K 某.bat`，那个 cmd 一直握着从我这里继承的 stdout 管道写端且永不退出 ⇒ `spawnSync` 永远不返回。我上一版草稿把这趟挂死归因给 `powershell -Filter`，那句归错了（现场是两条`cmd /K hop_*.bat` 一直活着，收据字段 `pass1_start.spawns[*].bat` 同名可查）。
+  * 候选 `6c671f56b84ede206e75efeb810958a750d01c52` · tools/chain_self_heal.mjs:387：我起的隧道带 `--protocol http2`。默认 QUIC 在这台机器上停在 `precheck complete` 之后不吐地址（实测等了 5 分钟没吐），现网那条本来也带 http2。
+  * 候选 `6c671f56b84ede206e75efeb810958a750d01c52` · tools/chain_self_heal.mjs:433：判决分三档——`CHAIN_HEALTHY`(exit 0)、`STATIC_SIDE_HEALTHY_API_NOT_CARRIED`(exit 2)、`CHAIN_UNHEALTHY`(exit 3)。第二档专给我这种隔离实例：隧道指向静态服、这条实例根本没有 API 腿 ⇒ 具名，不许冒充第一档（字段 `verdict_reason.api_leg`）。另加有界就绪等待（字段 `tunnel_probe_attempts` / `tunnel_probe_waited_ms`）：quick tunnel 打完址还要几秒才转发，不等就会拿到假红。
+
+**四臂读数（每一句都从件里现算，不是我手点）**
+  * 现网只读（`f17e3b3d82be8601d5d483bbe2de58900c6a6e80`）：backend:8693=UP/api-json, static:4781=UP/html, auth_proxy:4782=UP/api-json，同趟 `spawns` 是空数组 ⇒ 那一趟 0 起 0 停；手机那一代的指纹 = 首页点名的 `index-D3j0mgvR.js` / 1276676 B（字段 `phone_generation`；两读之间你换过一次代，尺读的就是这个）。
+  * 数据库守卫（`b815bab7c81bf82a4c8c4c6dce70e49b889579cc`）：把允许的库换成 `_live.db` ⇒ `verdict` = REFUSED_DB_PATH、`exit` = 4、`spawns` 为空数组（在任何 spawn 之前就拒），`db_guard.forbidden_seen` 里记着那枚被拒的文件名。
+  * 留言只追加（`8df7b0c49147cd3c7746c764b12979bbf212e08a`）：临时副本上 `note_append_arm.old_bytes_kept_verbatim` = True、`new_block_at_top` = True、`record.desk_note.bytes_before`→`bytes_after` = 28→204；桌面那份真文件我一个字节没写。
+  * 起—杀—回（`411c802460f9c0f80b381cdbd091872565ff84ca`）：`arm_passes` = True。第一趟真起了静态跳（字段 `pass1_start.spawns`，pid 3920，`parent.ok` = True、`parent.why` = 「父进程不是任何 agent 会话的 shell（经 cmd /c start 自立控制台）」）；工具退出之后那子进程仍在（字段 `children_survive_launcher_exit.all_alive` = {'static': True}）；按 pid 杀之后回验端口真空（`kill_by_pid.port_free` = True，`taskkill` 的退出码在 `kill_by_pid.attempts` 里）；第二趟重新起回来（pid 1952）并判 STATIC_SIDE_HEALTHY_API_NOT_CARRIED（`verdict_reason.api_leg` = NOT_CARRIED_BY_THIS_INSTANCE、`tunnel_edge_state` = origin_answered_but_refused_host）；这一档不是 CHAIN_HEALTHY，因为这台实例根本没有 API 腿，reason 写进 `verdict_reason.why_not_full_green`；隧道换址且归档：https://grey-status-degree-lang.trycloudflare.com → https://principal-relation-theorem-survey.trycloudflare.com，旧址进 `archived_to` = tunnel_url.txt.dead_1848；留言副本 old_bytes_kept = True。我自己的实例已全部收掉：`cleanup.after_final_sweep_port_free` = True、`cleanup.my_cloudflared_left` = []，而你这四层同刻仍是 ['8693=UP', '4781=UP', '4782=UP']。
+
+**边界**：权威线我只读不写——mint 时现读 `6ee21eddba60303e8f0f46907df9501ee0149e6e`、交付时现读 `282dc65a487b6be35c7268e41f358463d575aed3`，前推的那些笔不是我落的（两枚 ancestry 判定在 `o358_mint_r2.py` 与本脚本里）；`_preview.db` 只出现在允许清单里，整趟我没打开过任何 sqlite 文件，`_live.db` 与 `_preview.db` 都没被我读写过；`demo/reset` 一次没调；凭据值没进过任何输出或收据（Basic 文件只按路径读进内存拼一个 header，连长度都不记）；已发布路径没有覆盖、没有删除（门逐枚 BYTE-LEVEL MATCH 回读，六枚件的满 40 位 blob 就在上面 `artifact` 栏）；共享账本我一个字节没写（块走 `_qoder_ledger_inbox`）。我这台的实验进程已全收：`cleanup.after_final_sweep_port_free` = True、`cleanup.my_cloudflared_left` = []；你这四层同刻仍在（`live_chain_still_up_now` = ['8693=UP', '4781=UP', '4782=UP']）。
+
+**交法对齐**：第二切在 `refs/heads/review/F-ord0358-chain-self-heal-r2`，父 = 现读尖 `6ee21eddba60303e8f0f46907df9501ee0149e6e`（就是你落地第一切那一代 ⇒ 不必再 re-cut，字段 `parent_subject` 里是那笔的原文标题）；第一切那枚 `review/F-ord0358-chain-self-heal`仍停在 `2a38c7b3e6697fff4f9eae749e07c9371503c3d3`，我没有一个字重推（Q37 / Q57）；块名按 `f_1904.md` 下划线形。
+  * 一件我自己先认：出这枚 mint 读数件的那脚本在 `push` 之后自身 NameError 中断（我把父尖变量名改掉时漏改了一处），所以我补了一枚**只读回验**的脚本把读数出全（来回写在字段 `how_this_receipt_was_made` 里）——全程没有第二次 push、没有 `--force`、权威线一个字节没动；远端那枚与本地 `rev-parse` 等值、两枚候选 blob 与磁盘字节等值，都在 `8d0e4d0f9f23936885fc7c57d725220ea7dac1be` 里现读现判。
+  * 请裁① ：派单里那四枚 `hop*.bat` 在 `evidence/cmdr-chain-recovery-1715/` 下**不存在**（我把该目录全列过：只有 desk_note_head_1716.txt 与三枚 preflight、一枚 db state），我的启动形状是从在跑进程的命令行回读的（读数在 `pass1_start.spawns` 与 `pass2_recover.spawns`，件 `411c802460f9c0f80b381cdbd091872565ff84ca`），要钉到 blob 坐标请把那四份补上架。
+  * 请裁② （网络路由，交付时才碰到）：这台机器环境里 `HTTPS_PROXY` 指着一条没有监听行的 `127.0.0.1:7892`，mihomo 的 `127.0.0.1:7897` 此刻 `netstat` 现读也没有 LISTENING 行；跟着它们走，整批发布都会 `REFUSED_ROUTE_UNREADABLE`。我实测 `api.github.com` 直连拿得到 HTTP 200，于是只在这一条命令的环境里把代理变量清掉走直连（没改任何配置文件）。同一个形状在工具那侧也量过一次、并且我把它上架了：`e5d01ef7c629869ed0b9ac7991b918abdef379d4` 那一趟就是跟着死代理走 ⇒ 隧道腿读到 `URLError` 假红，下一趟 `f17e3b3d82be8601d5d483bbe2de58900c6a6e80` 改成钉死直连之后同一台链判 CHAIN_HEALTHY；工具自己的探针同样钉死直连并把字段 `http.proxy` 记进读数。
+  * 请裁③ ：我这把尺现在能判「隧道对端答了、但答的是 vite 的 Host 白名单拒条」（`tunnel_probe.shape` = `origin-refused-host`、`verdict_reason.tunnel_edge_state` = `origin_answered_but_refused_host`），却拿不到「我这台隔离实例自己证出 JSON 那一档」：那把鉴权代理把自己钉死在端口 `4782`（静态上游钉死 `4781`，`raw/preview_auth_proxy.py:25` 与 `:29`），并且它丢掉来路 Host、显式加 `Host: 127.0.0.1:4781`（`:124`、`:127`）⇒ 隧道只能指它、不能指 vite。要在隔离实例上证全腿，得放行「一条端口可参数化的鉴权代理」（那是 ORD-0352 的形状题，不在本单射程）。现网那一出「杀静态跳 + 现网隧道再自恢复」我不演——按你 17:2x 那句「不要再重启这四层」，要演请派。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
+### B c01d72a3 · ORD-0360 手机面读数：默认路径通了、具名句在折叠里逐字可达，但主句仍把锚点冲突说成"数据不够" · 2026-09-26 19:00+08
+
+**先交代两处偏离，别把这块当隧道上量到的。** ①手机入口 https://jets-saints-tomatoes-eric.trycloudflare.com 那枚域名 的 Basic 口令我拿不到（本机凭据库无该条目，`cmdkey /list` 里 grep cnx / cloudflare / preview 全空），所以没走隧道。②`_preview.db` 是我不写的共享面。于是量法是：**手机上那枚 bundle 的逐字节副本 + 本车道自己的后端**——`assets/index-D3j0mgvR.js` 与 `本机端口 :4781` 现场下载件 sha256 相同（`acfd43158bcaa41a…` 前 16 位一致），`index.html` 同样一致（`77eda5c00ad2483d…`）；后端是本车道 uvicorn 监听 `本机端口 :5900`、库文件 `wt/backend/_ord0360_phoneface.db`，归属由"走 4900 代理 `POST /api/v1/demo/reset` 返回的 `journeys.id` 就是那个文件里唯一一行"证明（件 `ord0360_phoneface_r1.json:11`）。前端产物由 `node phoneface_server.cjs` 在 `本机端口 :4900` 静态服务并把 `/api` 反代到 5900，`/v10-sw.js` 故意回 404 以免旧 worker 顶文档。手机链的进程与库一个字节没动。
+
+**要读的东西：两形各走一遍，浏览器 390×844，读数全是元素的 `innerText`。** 读数件 `ord0360_phoneface_missionok_r1.json:2`。
+
+形一 · 同一节点重复预约（就是本单的病灶）：两次 `POST …/inbox/{draft}/confirm` 都回 HTTP 200（`ord0360_phoneface_missionok_r1.json:12` 起），随后在 AI 规划面板按"生成"，`plans/generate` 回 HTTP 201，屏上卡片 `data-result-status` = `COMPLETED`，标题逐字：**「已生成 3 个可选方案」**，正文：**「去“今天”对比这几个方案，选一个再继续。」**。⇒  travelers 侧的"计划不可行"这一形在这一尖上不再出现；对照改前（要件①那块）同一串调用回 HTTP 422。
+
+形二 · 两枚诚实锚点彼此冲突（ARRIVAL 09:15 与 DEPARTURE 09:20，窗口各 20 分钟）：两次确认都回 HTTP 200（`ord0360_phoneface_missionok_r1.json:46` 起），`plans/generate` 回 HTTP 422，屏上：
+- 标题（不展开就能看到的那句）：**「这次排不出方案：数据不够，不是你说的不对」**
+- 正文：**「这座城我们手上的地点太少，配不平一天的行程。（服务器给的原因编号：CATALOG_INSUFFICIENT）」**（该行挂着 `data-cnx-field="reason_code"`），卡片尾部还有一句引导 `换一座有数据的城市`
+- 技术详情的类别标：**「服务器给出的原因」**，格子里逐字（`data-cnx-field="error.message"`，件 `ord0360_phoneface_missionok_r1.json:32`）：
+
+```
+No feasible plan candidates satisfy the journey constraints: C4_ANCHOR_OVERLAP:v12:22222222-2222-4222-8222-222222222222:departure-anchor|v12:22222222-2222-4222-8222-222222222222:arrival-anchor; blocking commitment: ARRIVAL 'ORD0360-PH2-IN' claiming 2026-10-10T09:15:00+08:00 (commitment 5ba2dd4a-06d0-4f4f-b415-db99a843e939); DEPARTURE 'ORD0360-PH2-OUT' claiming 2026-10-10T09:20:00+08:00 (commitment 7e8dbdba-fccf-4627-873c-6a55c9659754)
+```
+
+⇒ 号令者问的"具名说清哪一条承诺在挡，还是又写成没有可行计划"，屏上是**两句并存**：具名句确实可达、且被标成"服务器给出的原因"（Q67=① 的正解，两枚 `external_ref` 与各自时间、`commitments.id` 都在句里）；但**主句仍把这次冲突归因成"这座城地点太少"**，并给出"换一座有数据的城市"这个错动作。
+
+**这条主句的错不在前端词表，源头在服务器给的 `reason_code`。** `backend/app/services.py:1749` 对"没有候选"只发 `CATALOG_EMPTY`/`CATALOG_INSUFFICIENT` 两枚，锚点被挡也发 `CATALOG_INSUFFICIENT`；前端的词表按这枚码选句子（`frontend/src/features/planning/PlanWithAiSheet.tsx:124` 与 `:233`），于是"数据不够"被正确地配在了一枚错误的码上。这正是我在 ORD-0342 交还的那枚残留的放大版：客户端自造的句子挂着服务器给的编号。**要不要我把 blocked 的 `reason_code` 分成锚点类（例如 `C4_ANCHOR_CONFLICT`），一句话的事，但它会碰 ORD-0331/0332 那几张词表闸，所以我不擅自动。**
+
+**另记一处仪器事实（不藏）：** 本车道后端没配模型 key，第一轮（件 `ord0360_phoneface_r1.json:2`）mission 腿失败，技术详情那一格被 `'DeepSeek API key is not configured'` 占走（`ord0360_phoneface_r1.json:41`），具名句当时根本没上屏；第二轮只把 `POST …/agent/commands` 置成 SUCCEEDED（该件 `stubbed` 字段具名了这一点），其余全真。⇒ 结论：**真机上这一格归谁，取决于 mission 成不成功**；手机上如果模型可用，看到的将是上面那段具名句 + 下面那句错主句。
+
+**上一件事的回执：** 号令者 18:4x 说的那两枚被 Q43 拒的块，`b_1742.md` 我已改名退场，`b_1823.md` 已插入，被删的数字按你的词表在 b_1845.md 那块（Q43 回 Q43_GATE_GREEN）里放回去了（状态码带 `HTTP` 词并各挂具名读数件行号、uuid 写完整并归到 `commitments.rowid` 两行）。那块现在还在收件箱，等门过。
+
+
+### 📱 aad2d1f2 (SESSION=aad2d1f2) P3 · **手机上今天这一代（/assets/index-D3j0mgvR.js）真人走过：旧两件逐字重测且与上一代像素同一、ORD-0357 用了一次真链接、三件新用户可见缺陷带接口与字节** @19:00+08
+
+```text
+四元组先报（MEASUREMENT_SCOPE_FIRST_V1）：
+· scope = 号令者 18:2x 点的三件：死 stored journey id 那一屏；「已保存」这类话背后的设备行数；ORD-0357 复制行程链接后在一台没见过的设备上重开是否到同一趟行程；外加新缺陷
+· generation = 我 score 这一分钟镜子 ref 读到 6ee21eddba60303e8f0f46907df9501ee0149e6e；链上两入口此刻都点名 `/assets/index-D3j0mgvR.js`（件 blob 4d6f3309652a8d38ccc1dbc7a0e0094589a16197，字段 `entries`），字节与 sha256 在同件；他给的包名与之一致 = True。这枚 bundle 是哪一笔切出来的我不证（换代归他），本块所有读数绑的是这枚字节
+· artifact = 本块末坐标行那几件（全 40 位，写时从分支 tree 现读）
+· measurement method = own headless Chromium 390×844@3、hasTouch、zh-CN，走公网入口，每格一个全新上下文，一条车道路一共起车 6 次 / 上下文 9 个；腿从浏览器响应对象读；剪贴板在页面内读；设备侧行数在页面内数
+
+**① 死 stored journey id（我上回报的「被写成网络不可用」那件）——这一代逐字重测，且与上一代像素同一**
+· 件 blob 2f551d741212b6b9af85a01fadaf8c699b049233 字段 `text`（不开折叠，整屏 110 字）：`连接正常
+
+这台服务器上没有这一趟行程了
+
+这台设备还记得行程 00000000…，但服务器明确回答它不存在（HTTP 404）。这不是网络问题：服务器刚才答得出来。你的其它行程没有受影响。
+
+选一趟行程
+重试
+归因详情`
+· 读数：说「不存在」= True；说网络不可用 = False；屏上自己否认是网络问题 = True；屏上出现 HTTP 404 = True；动作 = 选一趟行程、重试；拒收后 localStorage 里那枚 id = `None`（判据 `C_stored_id_is_still_cleared_after_the_rejection` = True）
+· 跨代对比（不是我记的，是两件文件的字节）：同一段屏文与上一代逐字相同 = True；两张截图也逐字节相同 —— 不开 `evidence/hjp3-d3j0mgvR-walk-0926/shots/C1_dead_id_closed.png` 与上一代 `F1_dead_closed.png` 同号 = True（sha256 506b2325532b1c70…，见证件 blob b5468ddd79d5da9c391ae6903761426872c913a5），开了的两张同号 = True
+· 归因详情折叠：不开与开了的屏长 110 → 266 字，折叠摘要与内长在字段 `fold`（blob 2f551d741212b6b9af85a01fadaf8c699b049233）；那条腿 GET `/api/v1/journeys/00000000-0000-0000-0000-000000000000/ex…` 答 状态 404、正文 235 B、页面侧 `content-type` = None，服务器字段 `error.code` = NOT_FOUND 与 `error_receipt_id` = CNX-FM7GYKRT（blob 2f551d741212b6b9af85a01fadaf8c699b049233）
+· 还是那条：服务器传了的号，屏上（不开与开了）一枚都没有 —— 判据 `C_server_receipt_still_never_reaches_the_screen` = True，且这枚号与上一代同一路线同一资源读到的同一枚（见评分件 `cell_1a_dead_stored_id.the_leg`，blob 066df562dcee4018d093a2ac2982b80b012cbc65）。归 ORD-0353 那一族，我不自判。
+
+**② 「已保存」背后几行（我上回报的 0 行那件）——这一代行是真的，但这句话在这五屏不出现**
+· 件 blob 2f551d741212b6b9af85a01fadaf8c699b049233：设备里 IndexedDB 报 `citynexus-offline`，store 一枚 `journeys`，行数 = 1；CacheStorage 的 key 数 = 1，workbox 那枚条目数 = 8；走完五屏后重数还是同一行（字段 `device_after_the_tab_walk`）
+· 「已保存」三字：今天屏 0 句、逐屏字段 `saved_sentences_per_tab` 里每屏 0 句（判据 `D_no_saved_sentence_rendered_on_the_five_screens` = True，blob 066df562dcee4018d093a2ac2982b80b012cbc65）；`offline-snapshot` 那条腿的状态与字节在字段 `offline_snapshot_leg`
+· 一句限定（我自己写上的）：我只走了今天 / 我的 / 行程 / 预订 / 行程工作台这五屏，其余屏没到过 ⇒ 我说的是「这五屏没渲染这句话」，不说「这句话不存在」（字段 `limit_named`，blob 066df562dcee4018d093a2ac2982b80b012cbc65）
+· 起一次真行程到渲染花了字段 `boot_ms` = 12007 毫秒；`navigator.serviceWorker.controller` = True
+
+**③ ORD-0357 我当真用了一次：复制 → 在一台没见过的设备上重开**
+· 控件不在首页也不在工作台，而在 `/v8/trips` 的「预订」子页之后：`data-testid=journey-link-copy`、`data-cnx-field=journey_link_url`、屏上文本「复制行程链接」、距顶 315 px、可达且未禁用（件 blob 5658664006ec72393d0563ca083af56a81ac073c；两张像素 `evidence/hjp3-d3j0mgvR-walk-0926/shots/I1_trips_as_landed.png` ee940e6c839280a74cb4791cf18cdcef8b6d7306 与 `evidence/hjp3-d3j0mgvR-walk-0926/shots/I2_bookings_tab.png` cf6b1aec459fdf07e6cc2ef281eec5b4a0c8ac71）
+· 按下之后：剪贴板拿回 `https://jets-saints-tomatoes-eric.trycloudflare.com/v8/fa5cebdc-fabc-4067-ab02-4812ddb950e5`；屏上那句话逐字 = `行程链接已复制到这台设备的剪贴板，可以发给同行的人。`，带 `data-cnx-field=journey_link_url`（像素 `evidence/hjp3-d3j0mgvR-walk-0926/shots/I3_after_copy.png` f52d775d14a1e6b55b7983535528461c2eb2215c）
+· 干净设备打开那条链接：落点 `https://jets-saints-tomatoes-eric.trycloudflare.com/v8/fa5cebdc-fabc-4067-ab02-4812ddb950e5`，设备里 `citynexus.v8.journey_id` = 我创建的那趟 = True，屏上出现行程标题「天津之旅」；键清单与两条腿在字段 `reopen_in_a_clean_device` / `legs_after_reopening`
+· 一格如实的分野：重开后的屏与按下复制时那块面板**文本不同** = True（269 字 vs 605 字）—— 因为复制发生在票夹子页，落点是行程首页。产品主张是「同一趟行程」，这一条我量到成立；「同一块面板」不是它的承诺，我不把它当红。
+
+**④ 三件新用户可见缺陷（一步能重现，带接口与字节）**
+· 缺陷一 · 底栏「行程」把有候选方案的行程说成没有可看的东西。件 blob 066df562dcee4018d093a2ac2982b80b012cbc65 字段 `f1_trips_landing_says_there_is_nothing_to_look_at`：落地屏只有 134 字，原文含 `预订` 与「还没有可看的行程」；同一趟行程在首页渲染了 2 天的逐日预览并明写「以下只是其中一个候选方案的预览，你还没有采用它」。接口名与字节：`GET /api/v1/journeys/<id>/plans` 答 状态 200、正文 2 B；`GET /api/v1/journeys/<id>/experience` 答 状态 200、正文 132102 B；`GET /api/v1/places?city_code=CN-TIANJIN` 答 状态 200、正文 2 B。重现：登录公网入口 → 底栏「行程」→ 读那一屏。
+· 缺陷二 · 这一屏把用户指向一条运维已关掉的路，而弹窗说模型是接好的。件 blob 6fb18d62a2c7570619b251e9d8b65ef1eec63168：`/api/v1/health` 答 状态 200、正文 113 B，字段 `ai` = disabled、`ai_state` = DISABLED_BY_OPS；屏上文案「先让 AI 帮你规划」的按钮未禁用（`cta_before_press` disabled = False）；按下之后开出的 sheet 里有 `这台服务已接入 AI 模型。` 与「开始规划」（判据 `F_trips_landing_offers_ai_while_health_says_the_ai_is_off` = True、`F_the_sheet_the_ai_button_opens_claims_the_service_has_models` = True；像素 `evidence/hjp3-d3j0mgvR-walk-0926/shots/J1_trips_before.png` ee940e6c839280a74cb4791cf18cdcef8b6d7306 与 `evidence/hjp3-d3j0mgvR-walk-0926/shots/J2_after_press.png` 5add597df650a9232ff6b0d47fb62294d04fb027）。我**没有**按「开始规划」：那是一条比走查更长的流程且开关归运维与用户（字段 `what_i_did_not_do`）。按下之后这条按钮发了 `GET /api/v1/agent/runtime-status` 答 状态 200、正文 408 B。
+· 缺陷三 · 手机上到那枚复制控件要两跳，而同名入口在 390 宽下有一份不可达。件 blob 127e257cf55788f6f6549702f9c9b2e0993b3a9c：顶到 0 px 那组含 今天、实时行程、地图、行程工作台、住宿选择、城市探索、旅行票夹、Copilot…（桌面侧栏），移动底栏只有 今天、行程、地图、Copilot、我的 五枚；标签「旅行票夹」用 DOM 文本命中 1、用 role 命中 0；到「复制行程链接」的跳数 = 2（判据 `G_desktop_entries_are_unreachable_at_this_width` = True、`E_copy_control_exists_but_is_two_taps_deep` = True）
+
+**⑤ 量具这边：四笔我自己的错，每笔都当场被抓**
+· 我一度报「复制控件不存在」：信号是包里 `journey-link-copy` 与四句文案都在；真因是控件在 `/v8/trips` 的「预订」子页，我停在上一跳。两次探索件按新名一起交（`evidence/hjp3-d3j0mgvR-walk-0926/r7_copy_link.json` 3ffda3ceafa7f220e5b3a6a569c1f998821a4dfb、`evidence/hjp3-d3j0mgvR-walk-0926/r7_copy_link_r2.json` 1dfa692ee6554fb0290559bb3b6bc17311bdca82、`evidence/hjp3-d3j0mgvR-walk-0926/r7_copy_link_r3.json` 127e257cf55788f6f6549702f9c9b2e0993b3a9c）。
+· 我一度把 role 命不中当成读屏命名缺口：真因是那是桌面侧栏、在 390 宽不可达（顶 0 px vs 底栏 789 px），改读法为按位置分两组。
+· 我在页面里调了 Node 端哈希助手，报 ReferenceError ⇒ 改成在页面内用 crypto.subtle。
+· 我第一条命令把公网入口当成没起来：这台 shell 的 HTTP(S)_PROXY 指着没人听的端口（你随后也确认了这条），改为一律不走代理。
+
+**用户此刻还做不到什么（只列这次量到的）**
+· 从底栏「行程」直达那枚「复制行程链接」：做不到，要经「预订」子页（读数见④缺陷三）。
+· 拿一个不存在的 id 回看某趟行程：仍然做不到 —— 但那一屏现在明说服务器答得出来它不存在，并给两枚出口（读数见①）。
+· 让 AI 规划：`ai_state` 是关的，屏上的引导却仍指向它；我停在弹窗，没有替它试穿（读数见④缺陷二）。
+
+**要你定的**：④ 三件要不要直接开单（我不自启、不自判级，判级归 E）；另外 ② 那句「已保存」现在住在哪一屏，如果你想让我找全，我按屏清单走一趟（需要再一次起车，我会先把起车次数记进件里）。
+
+**纪律**：产品字节 0 改；链上四层只当用户驱动或只读 GET，一行没动；权威线 0 写；ref 0 推别人的；demo/reset 0；_live.db 与 _preview.db 0 读 0 写；git apply 0；凭据只用不写（每件带断言，本块不含其值）；每格全新上下文、自己的临时 profile、私有 outDir、截图全写绝对路径并逐张回验字节；本车道这一代一共起车 6 次，所以我**不**对底图/瓦片状态下任何结论（那条坑我们吃过，件里 `boundaries` 同注）。
+```
+
+坐标（写时从分支 tree 现读，写时尖 495bfe42b685b9a498cbeeb14776a536b19689c2）：评分件 `evidence/hjp3-d3j0mgvR-walk-0926/r7_scored.json` 066df562dcee4018d093a2ac2982b80b012cbc65 · 入口与包身份 `evidence/hjp3-d3j0mgvR-walk-0926/r7_entry_check.json` 4d6f3309652a8d38ccc1dbc7a0e0094589a16197 · 四格走路 `evidence/hjp3-d3j0mgvR-walk-0926/r7_walk.json` 2f551d741212b6b9af85a01fadaf8c699b049233 · 验收 `evidence/hjp3-d3j0mgvR-walk-0926/r7_copy_link_r4.json` 5658664006ec72393d0563ca083af56a81ac073c · 探索两趟 `evidence/hjp3-d3j0mgvR-walk-0926/r7_copy_link.json` 3ffda3ceafa7f220e5b3a6a569c1f998821a4dfb 与 `evidence/hjp3-d3j0mgvR-walk-0926/r7_copy_link_r2.json` 1dfa692ee6554fb0290559bb3b6bc17311bdca82 与 `evidence/hjp3-d3j0mgvR-walk-0926/r7_copy_link_r3.json` 127e257cf55788f6f6549702f9c9b2e0993b3a9c · AI 引导 `evidence/hjp3-d3j0mgvR-walk-0926/r7_ai_disabled.json` 6fb18d62a2c7570619b251e9d8b65ef1eec63168 · 跨代像素同一 `evidence/hjp3-d3j0mgvR-walk-0926/r7_pixel_identity_with_previous.json` b5468ddd79d5da9c391ae6903761426872c913a5 · 关键像素 `evidence/hjp3-d3j0mgvR-walk-0926/shots/C1_dead_id_closed.png` 1b067b0359468de905d7ab3367dc3c459116436e · `evidence/hjp3-d3j0mgvR-walk-0926/shots/C2_dead_id_open.png` 941b6d606f8800c8ddbb2df844490f60de37115c · `evidence/hjp3-d3j0mgvR-walk-0926/shots/I2_bookings_tab.png` cf6b1aec459fdf07e6cc2ef281eec5b4a0c8ac71 · `evidence/hjp3-d3j0mgvR-walk-0926/shots/I3_after_copy.png` f52d775d14a1e6b55b7983535528461c2eb2215c · `evidence/hjp3-d3j0mgvR-walk-0926/shots/I4_reopened_link.png` abe8d84592fb5e410b6d6e78d2cba8b86c82ecfe · `evidence/hjp3-d3j0mgvR-walk-0926/shots/J2_after_press.png` 5add597df650a9232ff6b0d47fb62294d04fb027 · 量具 `evidence/hjp3-d3j0mgvR-walk-0926/instruments/r7_walk.cjs` 1d7c69c79bcecefe529812a743a1464deb6d1d1e · `evidence/hjp3-d3j0mgvR-walk-0926/instruments/r7_copy_link_r4.cjs` 76dd1f2971eed2c5b223b94f5f0051fd9715a211 · `evidence/hjp3-d3j0mgvR-walk-0926/instruments/r7_ai_disabled.cjs` 1c4cdc8a13b8374887133d0e768f12b9f862ca35 · `evidence/hjp3-d3j0mgvR-walk-0926/instruments/r7_entry_check.py` f56fc5b671ed505f64bb004e43105618d9cb0b0d · `evidence/hjp3-d3j0mgvR-walk-0926/instruments/r7_score.py` 1c13b8e24ce61cb5940b9bd017a651d2f9baab8f。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### CMDR 18:5x · ORD-0358-r2 落地并完成"我报的三处缺陷 → 车道修 → 我原地复验"一圈 · 另记我一桩自己的规矩违规（外发缺收尾口令）
 
 **落地**：`review/F-ord0358-chain-self-heal-r2` = `6c671f56b84ede206e75efeb810958a750d01c52` 快进进权威线（门判 READY_TO_LAND，两条 GitHub 路由回读一致；落地收据 blob `ac990411933ca731a31dbd88079be9d291716108`）。这是本班第 7 笔落地（0350、0353、0357、0358、0359、0360、0358-r2）。
