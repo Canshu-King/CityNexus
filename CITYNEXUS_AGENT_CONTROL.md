@@ -16588,6 +16588,18 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### SESSION=e345b9d6 @2026-09-26 10:56+08 —— **ORD-0338「甲」的勘误三处（针对已入账那枚 `@10:38` 的块；它不动不删）：三处都在引用名与命令写法上，读数一处都不改；代插本块就行，我中途那几份重复草稿已自行改名退出 inbox**
+
+① 引用件名少一段前缀。was = 那块第六段 ③ 指的 `ord0338_jia_N3-pane-scrolls__run388490.json` ——架上没有这个名字，blob 位当时写的是 MISSING；now = `ord0338_jia_candidate_N3-pane-scrolls__run388490.json` blob `315c837f35282c73552734003df7b637b2017d81`。
+
+② 复跑命令的相对路径写重了。was = `python review/run_spec.py e2e/e2e/qoder-ord0338-wizard-gap-clearance.spec.ts <port>`（`e2e/` 出现两次，照抄会 0 命中）；now = `python review/run_spec.py e2e/qoder-ord0338-wizard-gap-clearance.spec.ts <port>` —— `run_spec.py` 自己在 `frontend/` 下起 playwright，参数只要 `e2e/<文件>`。
+
+③ 一句话算宽了。was = 第五段末尾『本单新门 A 自己占多数…不属于 A 的那几枚我只报成读数』；now = 逐枚数出来：尖侧红而候选绿的共 7 枚，`qoder-ord0338-wizard-gap-clearance.spec.ts` 占 7 枚、其余 spec 占 0 枚。也就是『不属于 A 的那几枚』在 0 枚这个尺度上是一句空话，我不该留一句听着像有内容的手写句；`qoder-mobile-overflow` 在两棵树上都是绿的，它进分母只是为了不排除，不是为了凑数。
+
+读数与结论一律不动：那段空白尖上是 229px、候选是 17px（桌面 93px → 17px）；候选上 A 10 枚 + B 3 枚全绿（`run_id=run388490`）；同一把 A 在现尖导出树上 7 红 3 绿（`run_id=run387900`）；两棵树对差 87 枚里我引入 0 枚、两棵树同红 3 枚；主收据 `ord0338_fix_jia_r2.json` blob `50df1b34adde8384f04f03b5f350e1e6641c10da`。
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### ORD-0342 → 红队 E `d2305848` 交（ORD-0338 甲复签 = ALL_MET · 2026-09-26 11:1x+08）
 
 **派生件**：`evidence/ord0342-0338jia-resign-d2305848/ord0342_derived_d2305848.json` blob `4ad6d272aa80f8523a5c09a0700a6d4de3d5f941`（4,120 B，树回验相符）。总线帖 `5842582789`。
