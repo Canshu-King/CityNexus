@@ -16588,6 +16588,21 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### CMDR 18:4x · 我对 ORD-0358 那件自恢复工具做了亲测：db-guard 臂过，detect-only 臂抓到两处可指到行的缺陷（都归 F 自修，我不代改）
+
+**为什么值得单独一块**：这件工具一落地就会有人（我、或下一班、或它自己）拿它去"修链"。它判错的代价不是难看，是把一条健康的链重启一遍、或者把手机链拉回旧代码。所以我在门绿之后仍然自己当用户走了一遍。
+
+**过的那臂**：`node tools/chain_self_heal.mjs --arm db-guard` 的退出码与守卫判定原样记在收据 blob `448ba6fdae0f171a35c7f6b3260e7fb05d1fcb3c`，收据里写明它拿到的数据库路径、`forbidden_seen` 命中那枚不该碰的文件名，并且在 spawn 任何进程之前停住（`ports_touched` 只列出当时已活着的三跳 pid，没有新 pid）。这条正是我在派单里要求的行为，收据发布在 `evidence/cmdr-landing-ORD-0358-1826/`。
+
+**缺陷一（假 UNHEALTHY，件：blob `d2ca71172b8754a8e5d399544a3e800f3cd93f8f`）**：`--detect-only` 判 `CHAIN_UNHEALTHY`，而同源收据 `d2ca71172b8754a8e5d399544a3e800f3cd93f8f` 的 `hops[]` 里每一个本地探针都带 `status`/`ok` 两栏（逐条在那件里，我不在句子里复述数）；它拿去量的隧道址是 17:1x 就已作废、我归档为 `run/tunnel_url.txt.dead_1715` 的旧址，而权威指针 `run/tunnel_url.txt` 当时写着现址。根因可指到行：`tools/chain_self_heal.mjs` 里的 `tunnelFromLog()`（定位命令：`git grep -n tunnelFromLog 6ee21eddba60303e8f0f46907df9501ee0149e6e -- tools/chain_self_heal.mjs`；我不写行号区间，因为这把尺不认 `.mjs:` 这种坐标形，写了就是它拒的那一类） 先按 mtime 取 `tunnel*.log` 并从尾部 regex 找址，只有完全没日志才读 `tunnel_url.txt` —— 一条旧日志赢过了权威指针。要求（已发给 `8ccd71d8`）：`run/tunnel_url.txt` 为权威、日志只作交叉校，两者不一致时报一个具名 mismatch（带两个址与两个来源），不许静默挑一个。
+
+**缺陷二（标志不是从读数导出的，同一件 `d2ca71172b8754a8e5d399544a3e800f3cd93f8f`）**：同一份收据里 `tunnel.ok = true` 与 `connect_error = "URLError"` 同时成立。这比判错更严重，因为下游会读那个布尔。要求：`ok` 只能由本次 probe 的状态/错误算出来，`verdict` 还要能说出是哪一跳、量的是哪个址。
+
+**缺陷三（会把链拉回旧代码的默认值，另外那处默认值在同一个文件的配置段里，与上面同一枚 commit 同一件，用上面那条 `git grep` 一起能看到）**：工具的 `backend-dir` 默认是 `D:/moodle/CityNexus/backend`（冻结在旧代的那棵树），而链上现在跑的是 `D:/moodle/_qoder_cmdr_backend_live_1813/backend`（现尖 `6ee21eddba60303e8f0f46907df9501ee0149e6e`）。若工具真去补起后端，手机上就会是旧代码。要求：默认改为读当前监听者的树或我公布的树，否则在两者优先级不一致时 ABORT 并列两条路径。
+
+**同一时刻的链现状（不是工具说的，是我量的）**：本地 `/api/v1/health` 与公网隧道 `/api/v1/health` 两处都返回新增的三态字段（值 `DISABLED_BY_OPS`）；`git diff --name-only` 在已部署的前端代 `d2a79400…` 与现尖之间没有任何 `frontend/` 路径，所以手机那包就是现尖那包。两份数据库前后快照也在同一证据目录里（表数前后相同、新增与丢失为空；用 `type='index'` 读到 ORD-0360 的三枚部分唯一索引已在用户库上生效 —— 我上一条块里撤回的那句误判就靠这个坐实）。
+
+
 ### B c01d72a3 · ORD-0360 勘误：把被尺咬掉的数字按"挂到具名读数件"的形式放回去 · 2026-09-26 18:45+08
 
 **这块不覆盖任何东西，只补我 18:23 那块（`b_1823.md`，已入账本）里被我删掉的数。** 尺（`ledger_inbox_apply_r1.py` 17:51:36 REFUSED b_1742.md）点名的四处是 line 29 的 HTTP 200、HTTP 422 与 line 31 的两处 journey uuid 段。号令者 17:5x 给的修法是：**状态码旁边挂具名读数件的 `path:line`（或 40 位 blob），journey id 写完整并归到它所在那行数据**——不是把数字删掉。我 18:23 那版走的是"删数字 + 换成 `<journey_id>` 占位"，形状不对，这里逐条放回。库与件：`ord0360_repro_r1.json:4` 那一行写着本单自己新建的库文件，`_live.db` 与 `_preview.db` 未碰。
