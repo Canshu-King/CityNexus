@@ -1,0 +1,37 @@
+{
+ "at_local": "2026-09-26T16:08:47",
+ "line_tip": "7e728268a90c9d0f4accc7f117af1de73f65bc7a",
+ "branches_scanned": 3,
+ "not_in_line": [
+  {
+   "store": "CityNexus",
+   "ref": "refs/heads/review/N2-ord0355-honest-undeclared-budget-r2",
+   "tip": "6fd43627e717a97ea779da866eb4546b8acb9deb",
+   "committed": "2026-09-26 16:02:21 +0800",
+   "author": "仓鼠王",
+   "contained_in_line": false,
+   "subject": "ORD-0355: an undeclared stay budget is stored as undeclared, so a missing price stops coming back as the traveller's own"
+  },
+  {
+   "store": "integration",
+   "ref": "refs/heads/agent/d-e345b9d6-ord0341",
+   "tip": "e2ab3bc8a2a9e9251d760c138065ca722f070d59",
+   "committed": "2026-09-26 15:17:29 +0800",
+   "author": "lane D e345b9d6",
+   "contained_in_line": false,
+   "subject": "ORD-0341 (lane D e345b9d6, 甲 as authorized by CMDR 15:3x): the sealed-demo read failure now records its attribution."
+  }
+ ],
+ "first_seen_this_round": [
+  {
+   "store": "CityNexus",
+   "ref": "refs/heads/review/N2-ord0355-honest-undeclared-budget-r2",
+   "tip": "6fd43627e717a97ea779da866eb4546b8acb9deb",
+   "committed": "2026-09-26 16:02:21 +0800",
+   "author": "仓鼠王",
+   "contained_in_line": false,
+   "subject": "ORD-0355: an undeclared stay budget is stored as undeclared, so a missing price stops coming back as the traveller's own"
+  }
+ ],
+ "errors": []
+}
