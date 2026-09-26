@@ -16588,6 +16588,32 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### S1-q64sweep 09:41+08 · ORD-0350 候选交：复核页九行各有具名出口，按下去真到得了那一格的编辑位并带回原值；出口我放在行标题里，因为三枚已上线的门在逐字读答复格
+
+基线：`git ls-remote origin refs/heads/mirror/integration-frontend-apple-pass1` 现读 = 046fc98723e2eacfe3cb8eb00a7fd3abdbd26efe。候选枝 review/S1-ord0350-review-row-exits = commit cbd69ef8f8eec2a2019f15a8af77854a7b649000（只从尖开枝，不带我另外两枝的东西；远程按路径取回 JourneyTrialSetup.tsx 与我测过的那枚逐字 EQUAL）。与 ORD-0344-b / ORD-0349 两枝零文件重叠，我只读预合过 0349 那一枝：rc 0 无冲突。
+
+做了什么（射程一枚产品文件 + 一份样式选择器）
+- 复核页 9 行各有自己的出口：review-edit-city、-arrival、-departure、-party、-budget、-pace、-interests、-special、-auto-set。可见文字是「改这一项」，具名在无障碍名里（改这一项：人数 / 房间），因为一行里连着念两遍条目名比只念一遍差。
+- 按下去走的是 ORD-0135 ③ 已有的那条路（从第 3 步去前面那步的字段必须先挂载再聚焦），我把它抽成共用的 jumpToField 复用，没有第二份实现：JourneyTrialSetup.tsx:438 那一处，缺字段列表与复核出口共用。
+- 节奏与兴趣两格本来没有可聚焦的落点（只有一堆 chip），我给两个 fieldset 加了 data-testid 与 tabIndex=-1（trial-pace-fieldset / trial-interests-fieldset），落在组上而不是随便指第一枚 chip —— 落在第一枚 chip 会让读屏以为要选它。
+- 「自动设置」那一行一次改三个值、而且那三控件在第 1 步的「显示高级」后面，所以它的出口就是那枚披露按钮本身，具名说明，不假装能直接聚焦藏起来的输入框。
+- 样式复用 .trial-missing-jump 那条内联规则（styles.css 里加一个共用选择器）：那条评论记着实测 —— 给跳转做成独立小盒会把提示撑高 58px、移动端 44px 覆盖门随即红。
+
+判据双向（都在真产品页面上走，不是夹具里的复制品）
+- 存在：9 行全部有出口、每个都点名自己那一格（witness_exists.json）。
+- 到得了且带回原值：第 2 步那格 —— 出口按下前该控件根本不在 DOM 里（计数为 0，这条是"红"的一半），按下后挂出第 2 步、焦点落在 trial-party、原值还在，并且能改（填 3 读回 3）；第 1 步同理，焦点落在 trial-city、值仍是 seed 进去的「天津」。
+- 不破坏别人的门：出口放在行标题里而不是答复格里，答复格 innerText 一字未增（review-pace / review-interests / review-party / review-budget / review-city 五格都测了不含「改这一项」且非空）。这一步不是洁癖：qoder-stated-versus-stored-versus-planned.spec.ts:64 拿 review-interests 与 review-pace 的整格文字与冻结串逐字判等 —— 出口若塞进格里，那两臂当场红。
+- 共用路由的回归：ORD-0135 ③ 那枚缺字段跳转我换了实现，所以重新量了一遍 —— 点「抵达」那条跳转，焦点仍落在 trial-arrival。
+
+没跑 / 没做的：D 名下那三枚走完整向导的门（qoder-wizard-*、qoder-speaks-*、qoder-wizard-hint-surface-*）不在我这枝上跑过 —— 它们要 playwright.config.ts 的活后端与种子，此刻 :8000 无人监听；我能在本地复现的是它们读的那几格文字没变（上一条）。手机侧复走归 HJ-P3。r6 --tree 在这枝上的完整输出已上架（evidence/ord0350-review-row-exits-S1/r6_tree_candidate_r1.json = 09901799d7cfd09f8ddc1ef921db6fe13c29187c，字段 hits 与 per_file）；我拿它与 ORD-0349 那份（evidence/ord0349-two-legs-S1/ 同批上架件）比过集合差：格数一致、无新增暴露，JourneyTrialSetup.tsx 在这份 hits 里不出现 —— 差集本身是我在本会话算的，没另存件，要复跑请用同一枚尺对两棵导出树各跑一次。
+另记一处我自己差点交错的形状：第一版我用 fixture 把组件"再挂一份"到页面上（沿用 ORD-0339 那招），结果产品自己的向导也同时挂载，页面上有两份 trial-step3-body、门位全部歧义 —— 这次直接走产品自己的入口（清掉 journey_id + 把草稿写进它自己会恢复的那枚 key），删了 fixture。
+
+不宣布 CLOSED 之外的一条仪器提示（给所有车道和我自己）：我这台的哈希预检是在 `git fetch` 之前跑的，把刚由 Contents API 上架的那枚 blob 报成 OFFENDER —— 预检只认本地对象库，发布之后必须先 fetch 再自测，否则会把真件当成手打假号（这次我按你上次的提醒 fetch 后复检，八枚全可解析、offenders 归零）。
+
+边界：改的产品文件是 JourneyTrialSetup.tsx 与 styles.css 两枚（后者只是把一类既有规则的选择器加一个）；spec 与 config 是我新增的；V8Experience.tsx、D 的 spec、B/S2/S4 的文件一字未动；权威线零移动零 push；未 demo/reset；未碰 *_live.db / *_preview.db；凭据零打印；已发布路径零覆盖零删除（本单四枚新证据全在 evidence/ord0350-review-row-exits-S1/，按路径取 blob 逐字回读，回读当代 84dac8792ac32feb1f9baabe89138b1901c02fdb）：reading_r1.json = 6f0a4961a0ab18e0977cb09a0060428b88b2f646、witness_exists.json = 80878ff611bd0f97da4b355ce793803e72fc5b77、witness_step2-press.json = 8a17ac45ce9e5e0bc7dfcf20794d4634d9eae100、witness_answer-cells.json = 9d1a483fc268917a5650432873971a1bed5c79f1；tsc 两份配置各自 rc 0；node_modules junction 收尾已拆（拆前拆后共享树条目数同读数）。
+ORD-0349 与 ORD-0350 现在都在架：两枝可独立重切。claimed_result = CANDIDATE_READY；闭单只认 verifier E 的 derived_result。
+
+
 ### CMDR 09:40 — 四笔由 E 派生为 ALL_MET（今晚第一批真正 CLOSED 的路）、ORD-0349 被我的门第二次拦下（同一原因）、HJ 量到"失败屏上根本没有技术详情块"
 
 **一、四笔签级到位，按 B-1 它们现在才有资格谈 CLOSED。** E `d2305848` 交来派生件 `evidence/ord0341-four-signoffs-d2305848/ord0341_derived_d2305848.json` blob `c19633a28974ec4e940d955791ea3fc7a6ab660c`，四笔全部 `derived_result = ALL_MET`：
