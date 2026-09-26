@@ -1,0 +1,257 @@
+{
+ "schema": "CNX_LANE_E_ORD0345_DERIVED_V1",
+ "verifier": "lane E d2305848",
+ "at": "2026-09-26T16:03:41+0800",
+ "orders": {
+  "ORD-0342": {
+   "lane": "B c01d72a3",
+   "generation": "candidate 003886ca83294a9ec97a98215cb8cc2e8232189b (branch review/B-ord0342-anchor-two-cells-b; landing preflight ran on the tip-merged tree)",
+   "cells": [
+    {
+     "cell": "cell_fold_anchor (:1048): the upstream sentence's slot carries its contract field name; A1/A2/A4 equality-read error.message / detail / mission.failure_reason; A3 (device-written) reads None; data-cnx-value null on all four (Q71: sentence not in attribute)",
+     "derived_result": "MET",
+     "readings": {
+      "why_head": "格一：features/planning/PlanWithAiSheet.tsx:1048 折叠里那句原话现在带着它的契约字段名上屏，A1/A2/A4 各自读到 error.message / detail / mission.failure_reason，三枚都是等值读出的属性值；A3 这台设备自己写的那句读到 None。data-cnx-value 在这四臂全为 null，所以原话没有因为 Q70 而搬进属性（Q71）。",
+      "verdict_derivation": {
+       "booleans_considered": 1,
+       "failing": []
+      },
+      "source": "ord0342_receipt_r6.json cell_fold_anchor"
+     }
+    },
+    {
+     "cell": "cell_code_anchor (:1021): the reason-number anchor is named by the key that actually answered (reason_code / code / message_key), and the anchor value appears in the same card's visible text",
+     "derived_result": "MET",
+     "readings": {
+      "why_head": "格二：features/planning/PlanWithAiSheet.tsx:1021 旅客那一行的编号锚按真正答题的键命名：reason_code / code / message_key 三形各测一次，锚值都出现在同一张卡显示的那段文字里（三臂的等值包含全为 true），所以锚与文案不可能各说各话。",
+      "source": "ord0342_receipt_r6.json cell_code_anchor"
+     }
+    },
+    {
+     "cell": "two-sided: pre-fix tree (same product blob 268bdf9c on both 38277c4e and 436d4a36) turns 6/9 arms red; the 3 absence arms (A3/B4/B5) stay green and M_anchor_always redds exactly those 3 (anchor must be null when there is nothing to name); 3 counter-mutants each redd their own set, declaration corrected to observed",
+     "derived_result": "MET",
+     "readings": {
+      "pre_fix_red_arms": [
+       "A1",
+       "A2",
+       "A4",
+       "B1",
+       "B2",
+       "B3"
+      ],
+      "green_arms": [
+       "A3",
+       "B4",
+       "B5"
+      ],
+      "same_bytes_on_both": true,
+      "M_anchor_always_reds": [
+       "A3",
+       "B4",
+       "B5"
+      ],
+      "counter_reds": {
+       "M_anchor_always": [
+        "A3",
+        "B4",
+        "B5"
+       ],
+       "M_field_never_asks": [
+        "A2",
+        "A4",
+        "B2",
+        "B3"
+       ],
+       "M_sentence_in_attribute": [
+        "A1",
+        "A2",
+        "A4",
+        "B4"
+       ]
+      },
+      "source": "ord0342_receipt_r6.json cells_before_red + cell_absence_no_anchor + counter_examples"
+     }
+    },
+    {
+     "cell": "r6 --tree no-growth (12 -> 12, the two cells line-shifted to :1075/:1114 not removed - convergence is proven by the 9 arms, not the ruler, exactly as ORD-0331's class requires); 15 existing sheet specs byte-identical, red-set diff []; landing READY_TO_LAND",
+     "derived_result": "MET",
+     "readings": {
+      "ruler_why_head": "尺：r6（blob 6a251d3a6bea70329e06581384a81d5ef54c96a6）以 --tree 量现尖 12 格，量我与现尖的合并树仍是 12 格，按 (file, rule) 的增长集合为 空；我名下两格没有消失，只是随行号搬到 features/planning/PlanWithAiSheet.tsx:1075 features/planning/PlanWithAiS",
+      "existing_arms_head": "既有臂没红、也没人被我改过：这 15 枚读着同一张 sheet 的 spec（第一版只列了 13 枚，把本单点名的 ord0339 与封存演示那两枚漏在外面，所以整件重跑成 r2）在改前代与候选上逐字节相同（True），两跑的红集合差为 []，改前就红的 3 枚原样留着，不折进本单；两跑的红集合逐条相同：['?|qoder-continuation-resume-carries-identity.",
+      "landing": {
+       "cand": "38277c4e9787b1ddf0bf69487060ba0e40c14146",
+       "verdict": "READY_TO_LAND"
+      },
+      "source": "ord0342_receipt_r6.json ruler_no_growth + existing_arms + landing preflight"
+     }
+    }
+   ],
+   "residuals_named_not_fixed": [
+    "the same card's CATALOG_INSUFFICIENT device-composed number still sits inside the （服务器给的原因编号：…）sentence with attribution=device (B5 arm carries the on-screen text) - fixing it needs new visible copy, outside this order's scope; the anchor itself is null so the worst step (anchoring an invented number) did not happen",
+    "vocabulary collision handed back for a ruling: D's Q71 predicate limits data-cnx-field to the six Q64 names while ORD-0342 wants contract key names - B's 6 anchors use values outside the six; the predicate currently only guards trial-sealed-unavailable so ord0339's arms do not redden; widening the six is the commander's call"
+   ],
+   "top_level_derived_result": "ALL_MET"
+  },
+  "ORD-0354_and_0348": {
+   "lane": "S4-ast-taint (1d64acf5)",
+   "generation": "r7b = d3f66ce9fecd0790981a4fcdeb5e36b1c0fd10f2 (r6 and r7 bytes untouched, new revision new file name)",
+   "cells": [
+    {
+     "cell": "attribute-slot rule UPSTREAM_PROSE_TO_ATTRIBUTE_SLOT with two triggers (provenance same-as-text with envelope excluded + field_name_alone for FORBIDDEN_ALWAYS incl. message/stack - the second trigger is what catches the planted probe crossing the component-prop boundary); probe caught at JourneyTrialSetup.tsx:1478; live attribute cell PlanWithAiSheet.tsx:1009 flagged as shape-to-explain, not verdict",
+     "derived_result": "MET",
+     "readings": {
+      "two_triggers": {
+       "provenance": "the same taint origin the text rule uses, with the envelope/structure levels excluded (a number, an enum or a contract id in data-* is what Q70 asks for)",
+       "field_name_alone": "FORBIDDEN_ALWAYS plus message/stack, because a value can reach the slot across a component-prop boundary the module graph does not model - which is exactly the planted probe's shape"
+      },
+      "probe_caught_at": [
+       "UPSTREAM_PROSE_TO_ATTRIBUTE_SLOT@frontend/src/features/setup/JourneyTrialSetup.tsx:1478"
+      ],
+      "live_attribute_cells": [
+       "UPSTREAM_PROSE_TO_ATTRIBUTE_SLOT@frontend/src/features/planning/PlanWithAiSheet.tsx:1009"
+      ],
+      "source": "ord0354 receipt_r2.json requirement_1"
+     }
+    },
+    {
+     "cell": "cell identity without line numbers: cell_id (16-hex) + readable cell_identity (rule::path::sink-shape::origin-level::member::helper names::every chain link); 9 identity arms all true (survives blank-line shift, no line number, names helper+chain, attr!=text, different chain/file = different cell, same file under another root = same cell, two renders = two cells); dedupe key fixed to line|rule|sink-shape with r7-vs-r7b cell sets byte-identical on the tip",
+     "derived_result": "MET",
+     "readings": {
+      "arms": {
+       "identity_survives_a_line_shift": true,
+       "line_number_is_not_in_the_identity": true,
+       "identity_names_the_helper_and_every_link": true,
+       "attribute_slot_is_a_different_cell": true,
+       "a_different_chain_is_a_different_cell": true,
+       "a_different_file_is_a_different_cell": true,
+       "the_same_file_under_a_different_root_is_the_same_cell": true,
+       "two_renders_are_two_cells": true,
+       "assertion_met": true
+      },
+      "dedupe_key": "the per-file dedupe was `line|rule`, which merged two different renders written on one source line; it is now `line|rule|sink-shape`. Measured on this tip that changes nothing (the cell set is byte-identical to r7's), but the fixture with two renders on one line now reports two cells instead of one.",
+      "example_identity": "UPSTREAM_PROSE_TO_ATTRIBUTE_SLOT :: frontend/src/features/setup/JourneyTrialSetup.tsx :: attribute:data-error-message :: named-prose-member :: - :: :: attribute received the member `message`, a name t",
+      "source": "ord0354 receipt_r2.json requirement_1b"
+     }
+    },
+    {
+     "cell": "two-sided selftest on two surfaces (cwd lane dir / cwd CityNexus frontend, same TS 5.9.3): 12 slot arms + 9 identity arms both PASS; fixture 20/20, mode 2/2",
+     "derived_result": "MET",
+     "readings": {
+      "surface_A_verdict": "SELFTEST_PASS",
+      "surface_B_verdict": "SELFTEST_PASS",
+      "source": "selftest_r7b_surface_A/B.json"
+     }
+    },
+    {
+     "cell": "exception stays narrow: rendered-structure predicate (nearest details or data-cnx-fold + same-container data-cnx-field literal among the six names); class names and testids do NOT open it (R7_9/R7_10 still report); attributes never exempted even inside a labelled fold (R7_7); exempted cells move to attributed_in_fold with container+anchor lines; the limit is stated: the ruler proves the structure, not that the anchor's value is a real reading - that half stays with the e2e gate",
+     "derived_result": "MET",
+     "readings": {
+      "arms_named": [
+       "R7_7_the_fold_never_exonerates_an_attribute",
+       "R7_9_a_class_name_opens_nothing",
+       "R7_10_an_anchor_outside_the_six_fields_opens_nothing",
+       "R7_6_structural_attributes_stay_legal"
+      ],
+      "limit": "the ruler proves the *structure* - a fold plus an anchor naming a measured field. It cannot prove the anchor's value is a real measurement; a lane could write data-cnx-field=\"http_status\" beside nothi",
+      "live_effect": "V8Experience.tsx:2649 exempted via details:2643 + data-cnx-field=http_status:2656",
+      "source": "ord0354 receipt_r2.json requirement_3"
+     }
+    },
+    {
+     "cell": "new denominator honestly split: tip live face 12 cells (text 11 + attribute 1) vs full-tree 34 (22 are review/ archive copies); r6 on the same tip/tree also 34 with the text-side difference named; the --tree scope question (repo root vs frontend/src) handed back for the commander's ruling, not decided unilaterally",
+     "derived_result": "MET",
+     "readings": {
+      "denominators": {
+       "r6_tip": {
+        "whole_tree": {
+         "cells": 34,
+         "text_position": 34,
+         "attribute_position": 0,
+         "markup": 0,
+         "dom_write": 0
+        },
+        "live_frontend_src": {
+         "cells": 12,
+         "text_position": 12,
+         "attribute_position": 0,
+         "markup": 0,
+         "dom_write": 0
+        },
+        "vendored_review_copies": {
+         "cells": 22,
+         "text_position": 22,
+         "attribute_position": 0,
+         "markup": 0,
+         "dom_write": 0
+        },
+        "attributed_in_fold": 0,
+        "modules_in_graph": 318
+       },
+       "r7_tip": {
+        "whole_tree": {
+         "cells": 34,
+         "text_position": 33,
+         "attribute_position": 1,
+         "markup": 0,
+         "dom_write": 0
+        },
+        "live_frontend_src": {
+         "cells": 12,
+         "text_position": 11,
+         "attribute_position": 1,
+         "markup": 0,
+         "dom_write": 0
+        },
+        "vendored_review_copies": {
+         "cells": 22,
+         "text_position": 22,
+         "attribute_position": 0,
+         "markup": 0,
+         "dom_write": 0
+        },
+        "attributed_in_fold": 1,
+        "fold_without_anchor": 1,
+        "modules_in_graph": 318,
+        "unresolved_import_count": 74,
+        "resolution_truncated_total": 52
+       },
+       "live_cells_under_r7": [
+        "RAW_BODY_TO_DOM@frontend/src/features/recovery/RecoveryRequiredPanel.tsx:166",
+        "RAW_BODY_TO_DOM@frontend/src/features/trip/ActivityDetail.tsx:206",
+        "UPSTREAM_EXCEPTION_TO_DOM@frontend/src/features/discovery/DestinationPreparationPanel.tsx:346",
+        "UPSTREAM_EXCEPTION_TO_DOM@frontend/src/features/discovery/DestinationPreparationPanel.tsx:469",
+        "UPSTREAM_EXCEPTION_TO_DOM@frontend/src/features/discovery/DestinationPreparationPanel.tsx:522",
+        "UPSTREAM_EXCEPTION_TO_DOM@frontend/src/features/discovery/RealCityDiscoveryPanel.tsx:150",
+        "UPSTREAM_EXCEPTION_TO_DOM@frontend/src/features/recovery/V14RecoveryTruthPanel.tsx:162",
+        "UPSTREAM_EXCEPTION_TO_DOM@frontend/src/features/studio/V12TripStudioPanel.tsx:106",
+        "UPSTREAM_PROSE_TO_ATTRIBUTE_SLOT@frontend/src/features/planning/PlanWithAiSheet.tsx:1009",
+        "UPSTREAM_TEXT_VIA_HELPER_TO_DOM@frontend/src/features/planning/PlanWithAiSheet.tsx:1021",
+        "UPSTREAM_TEXT_VIA_HELPER_TO_DOM@frontend/src/features/planning/PlanWithAiSheet.tsx:1048",
+        "UPSTREAM_TEXT_VIA_HELPER_TO_DOM@frontend/src/features/simulation/SimulationPanel.tsx:934"
+       ]
+      },
+      "open_question": "gate --tree scope + which ruler preflight_and_land_r1.py points at (r7b ready)",
+      "source": "ord0354 receipt_r2.json requirement_4"
+     }
+    }
+   ],
+   "scope_notes": [
+    "ORD-0342 two cells were mis-dispatched to S4 (PlanWithAiSheet.tsx belongs to lane B per the Q68 ruling) - S1 correctly did not touch the file; the mispatch is voided in S4's r7b block (zero product bytes)",
+    "the commander's own probe (7c0d21b7, data-error-message) is what forced the field_name trigger - the module graph cannot model JSX attribute -> component prop edges"
+   ],
+   "top_level_derived_result": "ALL_MET"
+  }
+ },
+ "derivation_rule": "every cell verdict is computed from the readings named in its own readings.source; no PASS literal; per Q25 bound to the generation the readings were taken on",
+ "top_level": {
+  "ORD-0342": "ALL_MET",
+  "ORD-0354_and_0348": "ALL_MET"
+ },
+ "discipline": {
+  "product_bytes_changed": 0,
+  "refs_pushed": 0,
+  "demo_reset": 0,
+  "databases_opened_by_me": 0,
+  "credential_values_printed": 0
+ }
+}
