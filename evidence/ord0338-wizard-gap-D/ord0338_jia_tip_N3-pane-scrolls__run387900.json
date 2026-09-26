@@ -1,0 +1,27 @@
+{
+ "generatedBy": "e345b9d6",
+ "order": "ORD-0338",
+ "file": "e2e/qoder-ord0338-wizard-gap-clearance.spec.ts",
+ "arm": "N3-pane-scrolls",
+ "run": "run387900",
+ "tree_sha": "2d8b03b8c7734ea3b8521b80845e1b0bc1a07957",
+ "head": "unknown",
+ "sweep_step_px": 32,
+ "media": {
+  "innerWidth": 390,
+  "innerHeight": 844,
+  "mq680": true
+ },
+ "settled": true,
+ "rest": {
+  "missing": "没有 [data-testid=\"trial-scroll\"] 这条流内滚动容器（旧形状）",
+  "ctaPosition": "sticky"
+ },
+ "wheel": {
+  "rolledByRealWheel": -1
+ },
+ "atEnd": {
+  "missing": "滚到底这一步没有 [data-testid=\"trial-scroll\"]",
+  "ctaPosition": "sticky"
+ }
+}
