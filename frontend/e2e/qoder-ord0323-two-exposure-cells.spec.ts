@@ -966,6 +966,10 @@ test("N7_F4_the_draft_review_shows_its_own_fields_not_the_model_s_sentence — F
     held_text: clean(await page.getByTestId("v13-2-draft-summary-held").textContent().catch(() => "")) ?? "",
     interpretation_text: interp,
     interpretation_percent_field: (interp.match(/(\d+)\s*%/) || [null, ""])[1],
+    /* the held notice sits against the payment value with no separator, so it is taken out before the
+       field is parsed -- otherwise the "equality" would compare a glued string */
+    payment_field: ((interp.replace("reasoning_summary=held 原文不在这一屏", "")
+      .match(/支付\s*·\s*([^\s·]+)/)) || [null, ""])[1],
     own_fields_present: review.includes("到站") || review.includes("MID_TRIP") || /0\.8|80%/.test(review),
   };
   expect(readings[arm].sentinel_on_screen, node(arm, `F4: 模型的推理摘要被待审那一屏当成自己的话说出来了（${review.slice(0, 200)}）`)).toBe(false);
@@ -973,4 +977,9 @@ test("N7_F4_the_draft_review_shows_its_own_fields_not_the_model_s_sentence — F
   expect(readings[arm].held_token_present, node(arm, "F4: 待审那一屏不再说明摘要存在但不在这里展示")).toBe(true);
   expect(readings[arm].held_text,
     node(arm, `F4: 那一格写的不是这句设备自己的话（"${String(readings[arm].held_text)}"）`)).toBe("reasoning_summary=held 原文不在这一屏");
+  /* the two directions of F4 read different fields, so each is compared whole */
+  expect(readings[arm].payment_field,
+    node(arm, `F4: 支付那一格不再是这台设备从这份答复里读到的值（"${String(readings[arm].payment_field)}" / ${interp.slice(0, 200)}）`)).toBe("已支付");
+  expect(readings[arm].interpretation_percent_field,
+    node(arm, `F4: 置信度那一格不是 80%（"${String(readings[arm].interpretation_percent_field)}"）`)).toBe("80");
 });
