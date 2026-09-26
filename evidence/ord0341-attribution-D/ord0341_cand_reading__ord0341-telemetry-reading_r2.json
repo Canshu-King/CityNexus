@@ -1,0 +1,47 @@
+{
+ "generatedBy": "e345b9d6",
+ "node": "ord0341-telemetry",
+ "run_id": "run406938",
+ "viewport": {
+  "width": 390,
+  "height": 844
+ },
+ "upstream_message_expected": "origin answered 200 with an unusable body (text/html; charset=utf-8)",
+ "after_sealed_demo_failure": [
+  {
+   "reason": "ORIGIN_INVALID_RESPONSE",
+   "evidence_kind": "HTTP_RESPONSE",
+   "http_status": 200,
+   "source_layer": "RUNTIME",
+   "retryable": true,
+   "recovery_action": "retry",
+   "message_key": "failure.originInvalidResponse",
+   "content_type": "text/html; charset=utf-8",
+   "telemetry": "attribution_reason=ORIGIN_INVALID_RESPONSE evidence_kind=HTTP_RESPONSE http_status=200 source_layer=RUNTIME retryable=true recovery_action=retry content_type=text/html; charset=utf-8",
+   "at": "2026-09-26T07:16:36.240Z",
+   "context": "wizard.sealedDemo.enter"
+  }
+ ],
+ "after_control_boot_read": [
+  {
+   "reason": "ORIGIN_INVALID_RESPONSE",
+   "evidence_kind": "HTTP_RESPONSE",
+   "http_status": 200,
+   "source_layer": "RUNTIME",
+   "retryable": true,
+   "recovery_action": "retry",
+   "message_key": "failure.originInvalidResponse",
+   "content_type": "text/html; charset=utf-8",
+   "telemetry": "attribution_reason=ORIGIN_INVALID_RESPONSE evidence_kind=HTTP_RESPONSE http_status=200 source_layer=RUNTIME retryable=true recovery_action=retry content_type=text/html; charset=utf-8 cached_copy_present=false",
+   "cached_copy_present": false,
+   "at": "2026-09-26T07:16:36.482Z",
+   "context": "shell.boot.journeyRead"
+  }
+ ],
+ "control_answer": {
+  "status": 200,
+  "content_type": "text/html; charset=utf-8"
+ },
+ "control_context": "shell.boot.journeyRead",
+ "sealed_sink_contexts_required_to_include": "a context naming this read (wizard/sealedDemo)"
+}
