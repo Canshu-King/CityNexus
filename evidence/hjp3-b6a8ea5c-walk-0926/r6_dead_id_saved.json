@@ -1,0 +1,501 @@
+{
+ "started_at": "2026-09-26T09:40:31.782Z",
+ "base": "https://administrator-personality-supervisor-peers.trycloudflare.com",
+ "dead_id": "00000000-0000-0000-0000-000000000000",
+ "real_id": "5eb4eb13-6045-4b8b-8d02-a0fe3475bc3e",
+ "clicks": 0,
+ "keystrokes": 0,
+ "cases": {
+  "C1_dead_stored_id_as_it_lands": {
+   "read": {
+    "url": "https://administrator-personality-supervisor-peers.trycloudflare.com/",
+    "text_len": 110,
+    "text": "连接正常\n\n这台服务器上没有这一趟行程了\n\n这台设备还记得行程 00000000…，但服务器明确回答它不存在（HTTP 404）。这不是网络问题：服务器刚才答得出来。你的其它行程没有受影响。\n\n选一趟行程\n重试\n归因详情",
+    "receipts_on_screen": [],
+    "claims_offline": false,
+    "claims_saved_shown": false,
+    "names_not_found": true,
+    "denies_network_reading": true,
+    "pending_words": false,
+    "buttons": [
+     {
+      "text": "选一趟行程",
+      "disabled": false,
+      "top": 206,
+      "cls": "v8-primary-button"
+     },
+     {
+      "text": "重试",
+      "disabled": false,
+      "top": 250,
+      "cls": "v8-outline-button"
+     }
+    ],
+    "links": [],
+    "details_count": 1,
+    "details": [
+     {
+      "open": false,
+      "summary": "归因详情",
+      "inner_len": 4
+     }
+    ],
+    "aria_live": [
+     {
+      "level": "assertive",
+      "text": "连接正常\n\n这台服务器上没有这一趟行程了\n\n这台设备还记得行程 00000000…，但服务器明确回答它不存在（HTTP 404）。这不是网络问题：服务器刚才答得出来。你的其它行程没有受影响。\n\n选一趟行程\n重试\n归因详情"
+     }
+    ],
+    "exception_in_text": false,
+    "attr_hits": [],
+    "ls": [],
+    "sw_controller": false
+   },
+   "legs": [
+    {
+     "at": "2026-09-26T09:40:40.981Z",
+     "url": "/api/v1/journeys/00000000-0000-0000-0000-000000000000/experience",
+     "m": "GET",
+     "status": 404,
+     "ct": null,
+     "req_bytes": 0,
+     "resp_bytes": 235,
+     "server_receipt_id": null,
+     "server_code_field": null
+    }
+   ],
+   "shot": {
+    "file": "C1_dead_id_closed.png",
+    "abs": "D:\\moodle\\_hjp3_b6a8_0926\\C1_dead_id_closed.png",
+    "exists": true,
+    "bytes": 111782,
+    "sha256": "506b2325532b1c703a136a04523890634d5e0ceb549400d4575bd8dfcece904d"
+   }
+  },
+  "C2_same_screen_with_every_fold_open": {
+   "read": {
+    "text_len": 266,
+    "receipts": [],
+    "text": "连接正常\n\n这台服务器上没有这一趟行程了\n\n这台设备还记得行程 00000000…，但服务器明确回答它不存在（HTTP 404）。这不是网络问题：服务器刚才答得出来。你的其它行程没有受影响。\n\n选一趟行程\n重试\n归因详情\nattribution_reason=JOURNEY_NOT_FOUND evidence_kind=HTTP_RESPONSE http_status=404 source_layer=RESOURCE_STATE retryable=false recovery_action=choose-journey",
+    "details": [
+     {
+      "summary": "归因详情",
+      "inner_len": 160
+     }
+    ]
+   },
+   "shot": {
+    "file": "C2_dead_id_open.png",
+    "abs": "D:\\moodle\\_hjp3_b6a8_0926\\C2_dead_id_open.png",
+    "exists": true,
+    "bytes": 144535,
+    "sha256": "718a35b0a368c7ae997e2ae2a49c20d3c6297f29b178b6dca61d2c2a70896197"
+   }
+  },
+  "C3_device_state_after_the_rejection": {
+   "journey_id_left_in_localStorage": null,
+   "keys": []
+  },
+  "C4_journey_legs": [
+   {
+    "at": "2026-09-26T09:40:40.981Z",
+    "url": "/api/v1/journeys/00000000-0000-0000-0000-000000000000/experience",
+    "m": "GET",
+    "status": 404,
+    "ct": null,
+    "req_bytes": 0,
+    "resp_bytes": 235,
+    "server_receipt_id": null,
+    "server_code_field": null
+   }
+  ],
+  "E_real_journey_boot": {
+   "marks": [
+    {
+     "at_ms": 11539,
+     "text_len": 585,
+     "pending": false,
+     "receipts": [],
+     "buttons": [
+      "今天",
+      "实时行程",
+      "地图",
+      "行程工作台",
+      "住宿选择",
+      "城市探索",
+      "旅行票夹",
+      "Copilot",
+      "恢复与执行",
+      "智能守护",
+      "旅行者画像",
+      "TITianjin2 位旅行者•••"
+     ],
+     "claims_saved_shown": false,
+     "claims_offline": false,
+     "details_count": 0
+    }
+   ],
+   "waited_ms": 11548,
+   "settled": {
+    "url": "https://administrator-personality-supervisor-peers.trycloudflare.com/",
+    "text_len": 585,
+    "text": "菜单\n/\n今天\n跟随系统\nEN\nTI\n\n下午好\n\n天津之旅\n\n10月2日 10:00 — 10月3日 20:00 · 2 位旅行者 · 2 天\n\nAI 帮我规划\n试用其他城市\n打开行程工作台\n今天\n还没有安排\n“现在”取自服务器场景（执行游标。服务器没有给出这一分钟的执行游标，这一屏的时间按行程的时间窗来读）：9月21日 10:00 · 现在/接下来由服务器的执行投影给出\n路线上下文\n7 段路程\n供应商支持的路线 · WGS84\n\n单指拖动地图 · 双指缩放 · 想翻这一页就拖地图以外的地方\n\n住宿\n还没有选定\n到达\n10月2日 10:00\n出发\n10月3日 20:00\n一切正常\n\n方案概览\n\n每一天，紧密相连。\n对比住宿 →\n\n以下只是其中一个候选方案的预览，你还没有采用它。\n\n第 1 天\n星期五\n\n天津站 · Italian Style Town · Check in · Haihe Riverside Hotel · Overnight · Haihe Riverside Hotel\n\n驾车 抵达锚点\n第 2 天\n星期六\n\nFive Great Avenues · Check out · Haihe Riverside Hotel · Tianjin Museum · 天津滨海国际机场\n\n公交地铁 离开锚点\n今天\n行程\n地图\nCopilot\n我的",
+    "receipts_on_screen": [],
+    "claims_offline": false,
+    "claims_saved_shown": false,
+    "names_not_found": false,
+    "denies_network_reading": false,
+    "pending_words": false,
+    "buttons": [
+     {
+      "text": "今天",
+      "disabled": false,
+      "top": 0,
+      "cls": "active"
+     },
+     {
+      "text": "实时行程",
+      "disabled": false,
+      "top": 0,
+      "cls": ""
+     },
+     {
+      "text": "地图",
+      "disabled": false,
+      "top": 0,
+      "cls": ""
+     },
+     {
+      "text": "行程工作台",
+      "disabled": false,
+      "top": 0,
+      "cls": ""
+     },
+     {
+      "text": "住宿选择",
+      "disabled": false,
+      "top": 0,
+      "cls": ""
+     },
+     {
+      "text": "城市探索",
+      "disabled": false,
+      "top": 0,
+      "cls": ""
+     },
+     {
+      "text": "旅行票夹",
+      "disabled": false,
+      "top": 0,
+      "cls": ""
+     },
+     {
+      "text": "Copilot",
+      "disabled": false,
+      "top": 0,
+      "cls": ""
+     },
+     {
+      "text": "恢复与执行",
+      "disabled": false,
+      "top": 0,
+      "cls": ""
+     },
+     {
+      "text": "智能守护",
+      "disabled": false,
+      "top": 0,
+      "cls": ""
+     },
+     {
+      "text": "旅行者画像",
+      "disabled": false,
+      "top": 0,
+      "cls": ""
+     },
+     {
+      "text": "TITianjin2 位旅行者•••",
+      "disabled": false,
+      "top": 0,
+      "cls": "v8-user"
+     },
+     {
+      "text": "菜单",
+      "disabled": false,
+      "top": 19,
+      "cls": "v8-mobile-menu"
+     },
+     {
+      "text": "跟随系统",
+      "disabled": false,
+      "top": 17,
+      "cls": "v9-language"
+     },
+     {
+      "text": "EN",
+      "disabled": false,
+      "top": 17,
+      "cls": "v9-language"
+     },
+     {
+      "text": "◌",
+      "disabled": false,
+      "top": 0,
+      "cls": "v8-icon-button"
+     },
+     {
+      "text": "TI",
+      "disabled": false,
+      "top": 25,
+      "cls": "v8-avatar"
+     },
+     {
+      "text": "AI 帮我规划",
+      "disabled": false,
+      "top": 200,
+      "cls": "v8-quiet-button"
+     },
+     {
+      "text": "试用其他城市",
+      "disabled": false,
+      "top": 200,
+      "cls": "v8-quiet-button"
+     },
+     {
+      "text": "打开行程工作台",
+      "disabled": false,
+      "top": 200,
+      "cls": "v8-quiet-button"
+     },
+     {
+      "text": "对比住宿 →",
+      "disabled": false,
+      "top": 869,
+      "cls": "v8-text-button"
+     },
+     {
+      "text": "第 1 天\n星期五\n\n天津站 · Italian Style Tow",
+      "disabled": false,
+      "top": 999,
+      "cls": "v8-day-card"
+     },
+     {
+      "text": "第 2 天\n星期六\n\nFive Great Avenues · Ch",
+      "disabled": false,
+      "top": 1181,
+      "cls": "v8-day-card"
+     },
+     {
+      "text": "",
+      "disabled": false,
+      "top": 718,
+      "cls": "cn-copilot-edge"
+     },
+     {
+      "text": "今天",
+      "disabled": false,
+      "top": 789,
+      "cls": "active"
+     },
+     {
+      "text": "行程",
+      "disabled": false,
+      "top": 789,
+      "cls": ""
+     },
+     {
+      "text": "地图",
+      "disabled": false,
+      "top": 789,
+      "cls": ""
+     },
+     {
+      "text": "Copilot",
+      "disabled": false,
+      "top": 789,
+      "cls": ""
+     },
+     {
+      "text": "我的",
+      "disabled": false,
+      "top": 789,
+      "cls": ""
+     },
+     {
+      "text": "",
+      "disabled": false,
+      "top": 646,
+      "cls": "cn-sim-ball"
+     }
+    ],
+    "links": [],
+    "details_count": 0,
+    "details": [],
+    "aria_live": [],
+    "exception_in_text": false,
+    "attr_hits": [],
+    "ls": [
+     {
+      "key": "citynexus.v8.journey_id",
+      "value_len": 36,
+      "looks_like_a_journey_id": true
+     },
+     {
+      "key": "citynexus.copilot.history.5eb4eb13-6045-4b8b-8d02-a0fe3475bc3e",
+      "value_len": 2,
+      "looks_like_a_journey_id": false
+     }
+    ],
+    "sw_controller": false
+   },
+   "legs": [
+    {
+     "at": "2026-09-26T09:41:00.976Z",
+     "url": "/api/v1/journeys/5eb4eb13-6045-4b8b-8d02-a0fe3475bc3e/experience",
+     "m": "GET",
+     "status": 200,
+     "ct": "application/json",
+     "req_bytes": 0,
+     "resp_bytes": 132102,
+     "server_receipt_id": null,
+     "server_code_field": null
+    },
+    {
+     "at": "2026-09-26T09:41:01.692Z",
+     "url": "/api/v1/journeys/5eb4eb13-6045-4b8b-8d02-a0fe3475bc3e/replans",
+     "m": "GET",
+     "status": 200,
+     "ct": "application/json",
+     "req_bytes": 0,
+     "resp_bytes": 2,
+     "server_receipt_id": null,
+     "server_code_field": null
+    },
+    {
+     "at": "2026-09-26T09:41:01.942Z",
+     "url": "/api/v1/journeys/5eb4eb13-6045-4b8b-8d02-a0fe3475bc3e/plans",
+     "m": "GET",
+     "status": 200,
+     "ct": "application/json",
+     "req_bytes": 0,
+     "resp_bytes": 2,
+     "server_receipt_id": null,
+     "server_code_field": null
+    },
+    {
+     "at": "2026-09-26T09:41:01.958Z",
+     "url": "/api/v1/journeys/5eb4eb13-6045-4b8b-8d02-a0fe3475bc3e/agent-feed?limit=200",
+     "m": "GET",
+     "status": 200,
+     "ct": "application/json",
+     "req_bytes": 0,
+     "resp_bytes": 574,
+     "server_receipt_id": null,
+     "server_code_field": null
+    },
+    {
+     "at": "2026-09-26T09:41:02.005Z",
+     "url": "/api/v1/journeys/5eb4eb13-6045-4b8b-8d02-a0fe3475bc3e/twin",
+     "m": "GET",
+     "status": 200,
+     "ct": "application/json",
+     "req_bytes": 0,
+     "resp_bytes": 896,
+     "server_receipt_id": null,
+     "server_code_field": null
+    },
+    {
+     "at": "2026-09-26T09:41:02.368Z",
+     "url": "/api/v1/journeys/5eb4eb13-6045-4b8b-8d02-a0fe3475bc3e/agent-feed?limit=200",
+     "m": "GET",
+     "status": 200,
+     "ct": "application/json",
+     "req_bytes": 0,
+     "resp_bytes": 574,
+     "server_receipt_id": null,
+     "server_code_field": null
+    },
+    {
+     "at": "2026-09-26T09:41:02.408Z",
+     "url": "/api/v1/journeys/5eb4eb13-6045-4b8b-8d02-a0fe3475bc3e/wallet",
+     "m": "GET",
+     "status": 200,
+     "ct": "application/json",
+     "req_bytes": 0,
+     "resp_bytes": 109,
+     "server_receipt_id": null,
+     "server_code_field": null
+    },
+    {
+     "at": "2026-09-26T09:41:02.439Z",
+     "url": "/api/v1/travelers/109c44b3-b4ad-4a6d-b2e6-a9bbaa1bd0a8/agent-policy",
+     "m": "GET",
+     "status": 200,
+     "ct": "application/json",
+     "req_bytes": 0,
+     "resp_bytes": 527,
+     "server_receipt_id": null,
+     "server_code_field": null
+    },
+    {
+     "at": "2026-09-26T09:41:02.644Z",
+     "url": "/api/v1/demo/scene",
+     "m": "GET",
+     "status": 200,
+     "ct": "application/json",
+     "req_bytes": 0,
+     "resp_bytes": 610,
+     "server_receipt_id": null,
+     "server_code_field": null
+    },
+    {
+     "at": "2026-09-26T09:41:02.678Z",
+     "url": "/api/v1/journeys/5eb4eb13-6045-4b8b-8d02-a0fe3475bc3e/offline-snapshot",
+     "m": "GET",
+     "status": 200,
+     "ct": "application/json",
+     "req_bytes": 0,
+     "resp_bytes": 797,
+     "server_receipt_id": null,
+     "server_code_field": null
+    },
+    {
+     "at": "2026-09-26T09:41:02.687Z",
+     "url": "/api/v1/agent/runtime-status",
+     "m": "GET",
+     "status": 200,
+     "ct": "application/json",
+     "req_bytes": 0,
+     "resp_bytes": 379,
+     "server_receipt_id": null,
+     "server_code_field": null
+    }
+   ],
+   "device_stores": {
+    "indexedDB_databases": [
+     {
+      "name": "citynexus-offline",
+      "version": 10
+     }
+    ],
+    "offline_store_rows": null,
+    "caches_keys": [
+     "workbox-precache-v2-https://administrator-personality-supervisor-peers.trycloudflare.com/"
+    ],
+    "errors": [],
+    "store_names": [
+     "journeys"
+    ]
+   },
+   "shot": {
+    "file": "E1_real_journey_settled.png",
+    "abs": "D:\\moodle\\_hjp3_b6a8_0926\\E1_real_journey_settled.png",
+    "exists": true,
+    "bytes": 234937,
+    "sha256": "59c179f59bb70cd3645b083980f86641ad2b92dba22863f5f6766ab181b2b750"
+   }
+  }
+ },
+ "chromium_version": "153.0.8010.12",
+ "finished_at": "2026-09-26T09:41:03.687Z"
+}
