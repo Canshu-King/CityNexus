@@ -1,0 +1,38 @@
+{
+ "order": "ORD-0332",
+ "config": "frontend/tsconfig.typecheck.json",
+ "include": [
+  "src/**/*.ts",
+  "src/**/*.tsx"
+ ],
+ "trees": {
+  "parent_tree": {
+   "rc": 0,
+   "error_lines": 0,
+   "first_lines": [],
+   "files_listed": 870,
+   "new_file_in_program": false
+  },
+  "candidate_tree": {
+   "rc": 0,
+   "error_lines": 0,
+   "first_lines": [],
+   "files_listed": 871,
+   "new_file_in_program": true
+  }
+ },
+ "negative_arm": {
+  "injected": "const ORD0332_TEETH_PROBE: number = \"not a number\";",
+  "rc": 2,
+  "error_lines": 1,
+  "line_names_new_file": [
+   "src/lib/errorReceipt.ts(75,7): error TS2322: Type 'string' is not assignable to type 'number'."
+  ],
+  "restored_byte_equal": true,
+  "sha1_before": "7fbf21e0d18d44e55a0922817913c4f32b425b55",
+  "sha1_after": "7fbf21e0d18d44e55a0922817913c4f32b425b55"
+ },
+ "selftest": "SELFTEST_PASS",
+ "claimed_result": "SELFTEST_PASS：两棵树 typecheck:all 都 0 错（父尖 0 行 / 候选 0 行），注入一行类型错后 rc=2 且错误行点名 src/lib/errorReceipt.ts，还原后字节等值",
+ "derived_result": null
+}
