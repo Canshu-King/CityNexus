@@ -1,0 +1,22 @@
+{
+ "run_id": "0323f1f1440",
+ "arm": "Q68b",
+ "card_text": "没有生成可行方案服务器说这次没排出可行方案，但没有给出具体原因编号，所以我们不替你猜是预算、措辞还是数据的问题。你的行程没有被改动；原因原文在“技术详情”里，可以再试一次或换一座城市。技术详情服务器给出的原因q68_forbidden_prose_行程过长无法在三日预算内排布这台设备自己量到的回读字段http_status=200 content-type=application/json bytes=108",
+ "reason_fold_text": "q68_forbidden_prose_行程过长无法在三日预算内排布",
+ "uppercased_prose_in_code_slot": false,
+ "uppercased_prose_in_attributes": false,
+ "attribute_pairs_swept": 124,
+ "attributed_sentence_in_fold": true,
+ "fold_text_equals_the_sentence": true,
+ "server_label_present": true,
+ "needle_in_dom": true,
+ "no_code_branch_on_screen": true,
+ "no_code_copy_in_the_code_slot": false,
+ "no_code_copy_in_the_no_plan_state": true,
+ "which_no_code_branch": "no_plan_state",
+ "uppercased_prose_anywhere_but_the_fold": false,
+ "prose_anywhere_but_the_fold": false,
+ "page_text_length": 1109,
+ "nodeid": "D:\\moodle\\_qoder_b_lane_20260923\\frontend\\e2e\\qoder-ord0323-two-exposure-cells.spec.ts:565 > N6_Q68b_a_sentence_only_refusal_is_not_presentation_as_a_code — 编号那格：只有句子时，编号位上不许出现句子，句子归技术详情",
+ "test_status": "passed"
+}
