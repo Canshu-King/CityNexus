@@ -1,0 +1,33 @@
+{
+ "run_id": "cmdr144954o342ver",
+ "tree": "824fca398d27db4c0078407b42e544c84048d3dd",
+ "worktree": "D:/moodle/_qoder_cmdr_land_0342",
+ "target": "e2e/qoder-ord0342-two-anchor-cells.spec.ts e2e/qoder-ord0323-two-exposure-cells.spec.ts e2e/qoder-plan-ai-thinking.spec.ts e2e/qoder-plan-ai-contrast.spec.ts",
+ "full": false,
+ "grep": null,
+ "ports": {
+  "frontend": 4400,
+  "backend": 5400
+ },
+ "python": "D:/moodle/CityNexus/.venv/Scripts/python.exe",
+ "db": "_cmdr144954o342ver.db",
+ "env_keys_dropped_names_only": [
+  "DEEPSEEK_API_KEY",
+  "OPENAI_API_KEY",
+  "WB2API_KEY"
+ ],
+ "node_modules": {
+  "mode": "present",
+  "path": "D:/moodle/_qoder_cmdr_land_0342/frontend/node_modules"
+ },
+ "exit_code": 0,
+ "verdict": "GREEN",
+ "counts": {
+  "passed": 40
+ },
+ "listed_case_count": 0,
+ "started_local": "2026-09-26T14:49:54",
+ "duration_s": 86.233115,
+ "log": "D:/moodle/_qoder_cmdr_ref_20260921/live_checks/e2e_logs/o342ver_824fca39_144954.log",
+ "log_bytes": 87315
+}
