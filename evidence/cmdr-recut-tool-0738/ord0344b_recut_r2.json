@@ -1,0 +1,62 @@
+{
+ "order": "ORD-0344b",
+ "line": "origin/mirror/integration-frontend-apple-pass1",
+ "tip": "d9a0811318c62c5d4d176c29f9b707f149c20fec",
+ "cand": "391c6d0a30e9a4d192b31d6c3d76fa61d5b82647",
+ "merge_base": "ab12c17a65450c2c3062c9232e27a26c4ae1b485",
+ "commits_tip_ahead_of_base": 5,
+ "commits_cand_ahead_of_base": 3,
+ "merge_tree_rc": 0,
+ "changed_files": [
+  "frontend/e2e/qoder-ord0344b-sentence-move-keeps-attribution.spec.ts",
+  "frontend/playwright.ord0344b-S1.config.ts",
+  "frontend/src/app/V8Experience.tsx",
+  "frontend/src/features/agent/CopilotDock.tsx"
+ ],
+ "files": [
+  {
+   "path": "frontend/e2e/qoder-ord0344b-sentence-move-keeps-attribution.spec.ts",
+   "cand_blob": "53af5df8e163e74ea047dcb4bceb84073d0d6f31",
+   "merged_blob": "53af5df8e163e74ea047dcb4bceb84073d0d6f31",
+   "identical": true,
+   "cand_changed_the_file": true
+  },
+  {
+   "path": "frontend/playwright.ord0344b-S1.config.ts",
+   "cand_blob": "911d87f90565106c66b1734647c5e1b1258a4cb5",
+   "merged_blob": "911d87f90565106c66b1734647c5e1b1258a4cb5",
+   "identical": true,
+   "cand_changed_the_file": true
+  },
+  {
+   "path": "frontend/src/app/V8Experience.tsx",
+   "cand_blob": "d5f2908bb7012083e6347abec760dd4c177015f4",
+   "merged_blob": "d5f2908bb7012083e6347abec760dd4c177015f4",
+   "identical": true,
+   "cand_changed_the_file": true
+  },
+  {
+   "path": "frontend/src/features/agent/CopilotDock.tsx",
+   "cand_blob": "df611e1961a869e4e252fd35cbc79424eb426c54",
+   "merged_blob": "df611e1961a869e4e252fd35cbc79424eb426c54",
+   "identical": true,
+   "cand_changed_the_file": true
+  }
+ ],
+ "merged_tree": "9fe930bd2be6a973a2e0c5f29fd29c14e654a598",
+ "auto_merged_files": [],
+ "recut_commit": "2d8b03b8c7734ea3b8521b80845e1b0bc1a07957",
+ "readback_tree": "9fe930bd2be6a973a2e0c5f29fd29c14e654a598",
+ "readback_tree_matches": true,
+ "readback_parents": [
+  "d9a0811318c62c5d4d176c29f9b707f149c20fec",
+  "391c6d0a30e9a4d192b31d6c3d76fa61d5b82647"
+ ],
+ "readback_parent_tip": true,
+ "verdict": "RECUT_OK",
+ "pushed_ref": "refs/heads/cmdr/land-ord0344b-recut-r2",
+ "push_rc": 0,
+ "push_stderr": "remote: \nremote: Create a pull request for 'cmdr/land-ord0344b-recut-r2' on GitHub by visiting:        \nremote:      https://github.com/Canshu-King/CityNexus/pull/new/cmdr/land-ord0344b-recut-r2        \nremote: \nTo github.com:Canshu-King/CityNexus.git\n * [new branch]        2d8b03b8c7734ea3b8521b80845e1b0bc1a07957 -> cmdr/land-ord0344b-recut-r2",
+ "ls_remote": "2d8b03b8c7734ea3b8521b80845e1b0bc1a07957\trefs/heads/cmdr/land-ord0344b-recut-r2",
+ "ls_remote_matches": true
+}
