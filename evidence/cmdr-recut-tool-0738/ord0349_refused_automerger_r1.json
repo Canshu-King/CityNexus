@@ -1,0 +1,59 @@
+{
+ "order": "ORD-0349",
+ "line": "origin/mirror/integration-frontend-apple-pass1",
+ "tip": "2d8b03b8c7734ea3b8521b80845e1b0bc1a07957",
+ "cand": "d1b82c8b293bb788cb2249ee679f3e5db866458d",
+ "merge_base": "046fc98723e2eacfe3cb8eb00a7fd3abdbd26efe",
+ "commits_tip_ahead_of_base": 6,
+ "commits_cand_ahead_of_base": 1,
+ "merge_tree_rc": 0,
+ "changed_files": [
+  "frontend/e2e/fixtures/ord0349-sealed-alert-harness.tsx",
+  "frontend/e2e/qoder-ord0349-two-legs-two-sentences.spec.ts",
+  "frontend/playwright.ord0349-S1.config.ts",
+  "frontend/src/app/V8Experience.tsx",
+  "frontend/src/i18n/LocaleContext.tsx"
+ ],
+ "files": [
+  {
+   "path": "frontend/e2e/fixtures/ord0349-sealed-alert-harness.tsx",
+   "cand_blob": "b0f83836d359b35cd238991ce6851cd5d201a390",
+   "merged_blob": "b0f83836d359b35cd238991ce6851cd5d201a390",
+   "identical": true,
+   "cand_changed_the_file": true
+  },
+  {
+   "path": "frontend/e2e/qoder-ord0349-two-legs-two-sentences.spec.ts",
+   "cand_blob": "7c2648eaaab969e2ed8ac504b76731b7d6b856af",
+   "merged_blob": "7c2648eaaab969e2ed8ac504b76731b7d6b856af",
+   "identical": true,
+   "cand_changed_the_file": true
+  },
+  {
+   "path": "frontend/playwright.ord0349-S1.config.ts",
+   "cand_blob": "6469327f0f96e24431dc81cfee6dbd11fe9d20a8",
+   "merged_blob": "6469327f0f96e24431dc81cfee6dbd11fe9d20a8",
+   "identical": true,
+   "cand_changed_the_file": true
+  },
+  {
+   "path": "frontend/src/app/V8Experience.tsx",
+   "cand_blob": "fe26fd8cb6561fddf7a240f1be1625ab6c3bd0c0",
+   "merged_blob": "bdd2f6447e17238d1fb64f69e7f0b62215a0395a",
+   "identical": false,
+   "cand_changed_the_file": true
+  },
+  {
+   "path": "frontend/src/i18n/LocaleContext.tsx",
+   "cand_blob": "28ecaed3446dd2df620c88696fb16d813f575a92",
+   "merged_blob": "28ecaed3446dd2df620c88696fb16d813f575a92",
+   "identical": true,
+   "cand_changed_the_file": true
+  }
+ ],
+ "merged_tree": "a4eb1d08d34679a46c8c8a836d2285ff92022d33",
+ "auto_merged_files": [
+  "frontend/src/app/V8Experience.tsx"
+ ],
+ "verdict": "REFUSED_AUTO_MERGED"
+}
