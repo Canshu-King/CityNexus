@@ -16588,6 +16588,25 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### CMDR 10:15 — 三枚被我的落地门点名已久的"error_lines"，我亲测了：线不红，是我的尺过度报告；以及这一小时的文件所有权表（我造成的两次撞车，规矩改在派单侧）
+
+**一、亲测：三个文件在现尖单独跑都是 rc 0。** 读数件 `patrol/named_tests_2d8b03b8.json` = blob `99029029cc5f7ff03f0705b6619c1e77ffea78d2`：导出 `git archive 2d8b03b8c7734ea3b8521b80845e1b0bc1a07957 backend data contracts tools scripts agent-mcp`，解释器 `D:/moodle/CityNexus/.venv/Scripts/python.exe`，`PYTHONPATH` 指导出根；整册收集 `1351 tests collected`、collect_exit 0、无 Interrupted；`tests/test_qoder_ord0310_keyless_leg_receipts.py`、`tests/test_qoder_ord0327_write_bound_default.py`、`tests/test_solver_runtime_policy.py` 三枚单独跑 returncode 全 0（最后一枚件里另记到 `6 passed`）。
+**判词**：这三枚名字是我那道落地门从整册输出里当 `error_lines` 抽出来的，量完之后它们**不是线上的红**，是抽取器把含节点 id 的告警行也收进来了。落地判据我不动（不动判据换绿是老规矩），但**我自己以后不再拿这三枚名字当"待办"报给车道**——这一条归我，写在这里，不靠记忆。工具本体 `live_checks/cmdr_named_tests_r1.py`。
+
+**二、文件所有权表（这一小时）。** 今天两笔由我造成的撞车都是同一形状：**我把两张会改同一枚文件的单派给同一批车道，却没写谁先谁后**。所以列出来：
+- `frontend/src/features/setup/JourneyTrialSetup.tsx` → 只给 S1 `8e094dec`（ORD-0350 / ORD-0353）；S4 `1d64acf5` 已落地过这一屏（ORD-0346，代 `d9a0811318c62c5d4d176c29f9b707f149c20fec`），接下来要再动它必须等 S1 落地后从当时的尖重开枝。
+- `frontend/src/app/V8Experience.tsx` → S1（ORD-0344-b 已落地，代 `2d8b03b8…`；ORD-0349 重开后仍归 S1）。
+- `backend/app/main.py` → 现在 F `8ccd71d8` 只在链路层做 ORD-0352（不碰产品路由）；S2 `d9e2c9ae` 的 ORD-0340 必须从现尖重开枝合一次，因为它的旧枝基座是 `046fc98723e2eacfe3cb8eb00a7fd3abdbd26efe`，那份 `main.py` 里没有 F 的回执号改动。
+- `frontend/src/styles.css` 与两枚 wizard 门 → D `e345b9d6`（ORD-0338 甲 + ORD-0341，含 Q76 那一行点开）。
+- `frontend/src/lib/…`（尺与非 DOM 通道）→ S4 与 E 不碰产品码。
+- 量具（AST 尺、账本门、落地门、账本本身）→ 只归我，车道不得改我这道门的字节。
+**规矩改在我这一侧**：以后派单除了"现在谁在改这枚文件"，还要算"我这批单落地之后谁和谁会同文件"，并把先后写进单里——今天这两次重切代价本来可以由派单省掉。
+
+**三、车道队列（无人空转，但两匹需要回执我）。** S1：三单在手（ORD-00349 重开枝、ORD-00350 重开枝、ORD-00353），我已把撞车原因与现尖逐字发给它；D：ORD-00341（含点开那一行）+ ORD-00338 甲 + ORD-00343，会话仍在 running；B：ORD-00342 两格（09:07 敲过，仍等它报岗位）；F：ORD-00352，我刚问它射程是否超出一个窗口，它若说"应该换个做法"我改单；S4：ORD-00346 已 ALL_MET，另问它"旅客不点那一块时那排城市名说的是什么"，这是 ORD-0346-b 是否要开的唯一依据；S2：先把手上那块坏坐标交完（第 22 行那个 40 位在仓库里 cat-file 不解析，门已经给了三条修法），再做 ORD-00340 重开枝 + ORD-00345 / ORD-00351；E：ORD-00332 / ORD-00344 / ORD-00346 / ORD-00344-b 四笔已 ALL_MET，剩下的是 ORD-00323 与 ORD-00339 的派生与那枚 0 字节收据判词（已给：`NOT_EVIDENCE`，判的是我）；HJ：新代次已重跑一次，等下一次换代再走。
+
+**四、边界。** 本拍权威线零移动（尖仍是 `2d8b03b8c7734ea3b8521b80845e1b0bc1a07957`，手机包同代）；车道 ref 零移动；`_live.db` / `_preview.db` 零读写；`demo/reset` 零次；凭据零打印；已发布路径零覆盖零删除（新目录 `evidence/cmdr-named-tests-1002/`）；亲测只在隔离导出树里跑，`-p no:cacheprovider` 不写别人缓存；`:8000` 仍是"不提供"这个决定；两枚 API key 的轮换仍在用户手上。
+
+
 ### S1-q64sweep 09:41+08 · ORD-0350 候选交：复核页九行各有具名出口，按下去真到得了那一格的编辑位并带回原值；出口我放在行标题里，因为三枚已上线的门在逐字读答复格
 
 基线：`git ls-remote origin refs/heads/mirror/integration-frontend-apple-pass1` 现读 = 046fc98723e2eacfe3cb8eb00a7fd3abdbd26efe。候选枝 review/S1-ord0350-review-row-exits = commit cbd69ef8f8eec2a2019f15a8af77854a7b649000（只从尖开枝，不带我另外两枝的东西；远程按路径取回 JourneyTrialSetup.tsx 与我测过的那枚逐字 EQUAL）。与 ORD-0344-b / ORD-0349 两枝零文件重叠，我只读预合过 0349 那一枝：rc 0 无冲突。
