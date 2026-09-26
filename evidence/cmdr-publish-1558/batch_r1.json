@@ -1,0 +1,245 @@
+{
+ "at_local": "2026-09-26T16:05:02+0800",
+ "n": 17,
+ "n_ok": 17,
+ "rows": [
+  {
+   "local": "patrol/land_ord0342_1451.json",
+   "path": "evidence/cmdr-landing-ORD-0342-1451/preflight_r1.json",
+   "rc": 0,
+   "tail": [
+    "PROVEN",
+    "receipt -> patrol/git_mirror_20260926_155953.json"
+   ],
+   "blob": "178d10c13202a1cd1b03c359285da8d593d9c178",
+   "bytes": 4127,
+   "commit": "e25cc1c566377ce9ce151f23e535936181dcb3fc",
+   "byte_equal": true,
+   "verdict": "OK"
+  },
+  {
+   "local": "patrol/land_ord0345_1551.json",
+   "path": "evidence/cmdr-landing-ORD-0345-1551/preflight_r1.json",
+   "rc": 0,
+   "tail": [
+    "PROVEN",
+    "receipt -> patrol/git_mirror_20260926_160011.json"
+   ],
+   "blob": "9bbb1540910d02bbb89ff2f721003dc3d0c48dc8",
+   "bytes": 5123,
+   "commit": "1fd0ce31050e81e016f0cfc962f31ebee0110b4c",
+   "byte_equal": true,
+   "verdict": "OK"
+  },
+  {
+   "local": "patrol/land_ord0341_1555.json",
+   "path": "evidence/cmdr-landing-ORD-0341-1555/preflight_r1.json",
+   "rc": 0,
+   "tail": [
+    "PROVEN",
+    "receipt -> patrol/git_mirror_20260926_160028.json"
+   ],
+   "blob": "7eb0731db208d8ba3e762f7b73b0023cd1562b81",
+   "bytes": 4280,
+   "commit": "647f3e31f11f0a321dddd2bf15410d53ff0eea60",
+   "byte_equal": true,
+   "verdict": "OK"
+  },
+  {
+   "local": "recut_ord0342_1448.json",
+   "path": "evidence/cmdr-recut-ORD-0342-1558/recut_r1.json",
+   "rc": 0,
+   "tail": [
+    "PROVEN",
+    "receipt -> patrol/git_mirror_20260926_160046.json"
+   ],
+   "blob": "29f52e732ea30c19599be25f41d8f2924ebeff97",
+   "bytes": 1997,
+   "commit": "549ced2e53b2d64278ed523581d69ad4dcdb87bc",
+   "byte_equal": true,
+   "verdict": "OK"
+  },
+  {
+   "local": "recut_ord0341_r3_1553.json",
+   "path": "evidence/cmdr-recut-ORD-0341-1558/recut_r3.json",
+   "rc": 0,
+   "tail": [
+    "PROVEN",
+    "receipt -> patrol/git_mirror_20260926_160106.json"
+   ],
+   "blob": "7410ff5cfacc3ad436d39869ec0bf5f39723b987",
+   "bytes": 2346,
+   "commit": "d8690781cf2330ec5cf17c69f258673d8afeb1b0",
+   "byte_equal": true,
+   "verdict": "OK"
+  },
+  {
+   "local": "e2e_logs/o342ver_824fca39_144954.json",
+   "path": "evidence/cmdr-e2e-ORD-0342-1558/reading_r1.json",
+   "rc": 0,
+   "tail": [
+    "PROVEN",
+    "receipt -> patrol/git_mirror_20260926_160122.json"
+   ],
+   "blob": "6d02cff80d2450dc4a2e41d10ff55b796a5141ad",
+   "bytes": 998,
+   "commit": "c8e67aeb1360b3c831a157b0126f8f6a81af45ab",
+   "byte_equal": true,
+   "verdict": "OK"
+  },
+  {
+   "local": "e2e_logs/o342ver_824fca39_144954.log",
+   "path": "evidence/cmdr-e2e-ORD-0342-1558/log_r1.txt",
+   "rc": 0,
+   "tail": [
+    "PROVEN",
+    "receipt -> patrol/git_mirror_20260926_160140.json"
+   ],
+   "blob": "88d50bf27109895e2000ccd3e71818b3dca66eaf",
+   "bytes": 87315,
+   "commit": "e2d2d147bb7c262881fae8fd48fb6ee93a925dfe",
+   "byte_equal": true,
+   "verdict": "OK"
+  },
+  {
+   "local": "e2e_logs/o345aff_fe57ff44_153145.json",
+   "path": "evidence/cmdr-e2e-ORD-0345-1558/affected_reading_r1.json",
+   "rc": 0,
+   "tail": [
+    "PROVEN",
+    "receipt -> patrol/git_mirror_20260926_160159.json"
+   ],
+   "blob": "f5c2042accaa692c364f9860ccea876492f118ed",
+   "bytes": 1257,
+   "commit": "b8ec016ad5cf19933b2ec6a11f862f117f9fa66e",
+   "byte_equal": true,
+   "verdict": "OK"
+  },
+  {
+   "local": "e2e_logs/o345aff_fe57ff44_153145.log",
+   "path": "evidence/cmdr-e2e-ORD-0345-1558/affected_log_r1.txt",
+   "rc": 0,
+   "tail": [
+    "PROVEN",
+    "receipt -> patrol/git_mirror_20260926_160217.json"
+   ],
+   "blob": "e969ee16027e0a86f6f6d2fbc8075ab1727b39b1",
+   "bytes": 120738,
+   "commit": "1a2c43e06ef2997148761590418e9a11acf4a0a3",
+   "byte_equal": true,
+   "verdict": "OK"
+  },
+  {
+   "local": "e2e_logs/affected_set_diff_0345.json",
+   "path": "evidence/cmdr-e2e-ORD-0345-1558/affected_set_diff_r1.json",
+   "rc": 0,
+   "tail": [
+    "PROVEN",
+    "receipt -> patrol/git_mirror_20260926_160236.json"
+   ],
+   "blob": "6c9f8dfc859b5a3db9ffa6284e37dc6dd1723d8a",
+   "bytes": 2965,
+   "commit": "f8719fdaf71c27889bf4918091ec16c67995ea61",
+   "byte_equal": true,
+   "verdict": "OK"
+  },
+  {
+   "local": "e2e_logs/o341r3_7e728268_155315.json",
+   "path": "evidence/cmdr-e2e-ORD-0341-1558/reading_r1.json",
+   "rc": 0,
+   "tail": [
+    "PROVEN",
+    "receipt -> patrol/git_mirror_20260926_160256.json"
+   ],
+   "blob": "148e3409e69c905debe2d9fe9fdcb782e80d45a6",
+   "bytes": 1004,
+   "commit": "72ae8765051e0568c108efe25a56b3e0b8ec50b5",
+   "byte_equal": true,
+   "verdict": "OK"
+  },
+  {
+   "local": "e2e_logs/o341r3_7e728268_155315.log",
+   "path": "evidence/cmdr-e2e-ORD-0341-1558/log_r1.txt",
+   "rc": 0,
+   "tail": [
+    "PROVEN",
+    "receipt -> patrol/git_mirror_20260926_160315.json"
+   ],
+   "blob": "9dc586d74a5a4e953e1ad506f0651bf00675e4c7",
+   "bytes": 25846,
+   "commit": "1b8c406cbc058e3cfdcdc91df811816745cee98d",
+   "byte_equal": true,
+   "verdict": "OK"
+  },
+  {
+   "local": "cmdr_jitter_probe_r1.js",
+   "path": "evidence/cmdr-jitter-probe-1558/cmdr_jitter_probe_r1.js",
+   "rc": 0,
+   "tail": [
+    "PROVEN",
+    "receipt -> patrol/git_mirror_20260926_160332.json"
+   ],
+   "blob": "0bac829cb03aeb6f8d6d594b8d28bff18dc56896",
+   "bytes": 5871,
+   "commit": "83650f73430cb7c35f3aaa8ee302753ee4c2caaa",
+   "byte_equal": true,
+   "verdict": "OK"
+  },
+  {
+   "local": "receipts/deploy_7e728268a90c9d0f4accc7f117af1de73f65bc7a_0926_155737.json",
+   "path": "evidence/cmdr-deploy-7e728263/deploy_green_r1.json",
+   "rc": 0,
+   "tail": [
+    "PROVEN",
+    "receipt -> patrol/git_mirror_20260926_160351.json"
+   ],
+   "blob": "c575a8437a1edd62a16eecb93459c2404845b087",
+   "bytes": 66494,
+   "commit": "5f474c10e81eb46e5435e833789a1f9686f0591c",
+   "byte_equal": true,
+   "verdict": "OK"
+  },
+  {
+   "local": "_build_7e72826_info.json",
+   "path": "evidence/cmdr-build-7e728263/build_info_r1.json",
+   "rc": 0,
+   "tail": [
+    "PROVEN",
+    "receipt -> patrol/git_mirror_20260926_160409.json"
+   ],
+   "blob": "cae36150fbf392290c089c83e8b8daef149fb835",
+   "bytes": 2630,
+   "commit": "c1057fd69652cc191006dfc3280c4ddaf7ea9faf",
+   "byte_equal": true,
+   "verdict": "OK"
+  },
+  {
+   "local": "cmdr_git_mirror_r1.py",
+   "path": "evidence/cmdr-git-write-1558/cmdr_git_mirror_r1.py",
+   "rc": 0,
+   "tail": [
+    "PROVEN",
+    "receipt -> patrol/git_mirror_20260926_160427.json"
+   ],
+   "blob": "d297b2cf424ffbf4f818429debeaef66d276e300",
+   "bytes": 10579,
+   "commit": "6801d1f5fa2c542e72d95d693c3467c0ffe81ff4",
+   "byte_equal": true,
+   "verdict": "OK"
+  },
+  {
+   "local": "cmdr_capability_read_r2.js",
+   "path": "evidence/cmdr-surface-read-1435/cmdr_capability_read_r2_fixed.js",
+   "rc": 0,
+   "tail": [
+    "PROVEN",
+    "receipt -> patrol/git_mirror_20260926_160445.json"
+   ],
+   "blob": "454b026124f18e00865a23f2f577e2896a71d595",
+   "bytes": 5901,
+   "commit": "4ee9ccff58503e16512ef4b29f4816444501434e",
+   "byte_equal": true,
+   "verdict": "OK"
+  }
+ ]
+}
