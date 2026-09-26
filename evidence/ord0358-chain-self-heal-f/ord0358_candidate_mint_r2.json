@@ -1,0 +1,201 @@
+{
+ "order": "ORD-0358",
+ "branch": "refs/heads/mirror/integration-frontend-apple-pass1",
+ "base_tip": "b6a8ea5c625d7e3e82f7348fad57d595a8a403c0",
+ "my_ref": "refs/heads/review/F-ord0358-chain-self-heal-r2",
+ "candidate_commit": "6c671f56b84ede206e75efeb810958a750d01c52",
+ "candidate_tree": "16ec0d3c2c3d40b5b06e03a0dd0a79950e0aa7c3",
+ "parent_of_second_cut": "6ee21eddba60303e8f0f46907df9501ee0149e6e",
+ "parent_subject": "6ee21edd ORD-0360: the wording arm reads the naming clause itself, and the two arms that write rows in the store clean them up",
+ "first_cut_landed_as": [
+  "2a38c7b3 ORD-0358: one entry point that relights the phone preview chain hop by hop"
+ ],
+ "tip_now": "6ee21eddba60303e8f0f46907df9501ee0149e6e",
+ "base_is_ancestor_of_tip": true,
+ "frozen_ref_not_repushed": "refs/heads/review/F-ord0358-chain-self-heal",
+ "old_ref_still_at": "2a38c7b3e6697fff4f9eae749e07c9371503c3d3",
+ "subjects": [
+  "tools/chain_self_heal.mjs",
+  "tools/CHAIN_SELF_HEAL_V1.md"
+ ],
+ "predecessor_blob_equality": {
+  "tools/chain_self_heal.mjs": {
+   "blob_at_parent": "9f1b65e1c7cafa823c6dd18d1a14a0c437fcdaba",
+   "blob_of_my_first_cut": "9f1b65e1c7cafa823c6dd18d1a14a0c437fcdaba",
+   "identical": true
+  },
+  "tools/CHAIN_SELF_HEAL_V1.md": {
+   "blob_at_parent": "740c3c293a60b56c8867fa48ba4e87f4912c2b87",
+   "blob_of_my_first_cut": "740c3c293a60b56c8867fa48ba4e87f4912c2b87",
+   "identical": true
+  }
+ },
+ "per_file_blobs": {
+  "tools/chain_self_heal.mjs": {
+   "before_blob": "9f1b65e1c7cafa823c6dd18d1a14a0c437fcdaba",
+   "after_blob": "867b3f24abc5b3f3f20c585a8e0d9e4df691324b",
+   "bytes": 26548,
+   "lines": 459,
+   "crlf_bytes": 0,
+   "equals_my_first_cut_at_parent": true
+  },
+  "tools/CHAIN_SELF_HEAL_V1.md": {
+   "before_blob": "740c3c293a60b56c8867fa48ba4e87f4912c2b87",
+   "after_blob": "7bbece68ec9eaf9968f30ee7afe726af97a2eb8a",
+   "bytes": 7653,
+   "lines": 60,
+   "crlf_bytes": 0,
+   "equals_my_first_cut_at_parent": true
+  }
+ },
+ "changed_paths": [
+  "tools/CHAIN_SELF_HEAL_V1.md",
+  "tools/chain_self_heal.mjs"
+ ],
+ "changed_path_count": 2,
+ "numstat": [
+  [
+   "22",
+   "6",
+   "tools/CHAIN_SELF_HEAL_V1.md"
+  ],
+  [
+   "107",
+   "24",
+   "tools/chain_self_heal.mjs"
+  ]
+ ],
+ "change_points": [
+  {
+   "path": "tools/CHAIN_SELF_HEAL_V1.md",
+   "new_start_line": 9,
+   "new_lines": 4,
+   "hunk_context": ""
+  },
+  {
+   "path": "tools/CHAIN_SELF_HEAL_V1.md",
+   "new_start_line": 14,
+   "new_lines": 13,
+   "hunk_context": ""
+  },
+  {
+   "path": "tools/CHAIN_SELF_HEAL_V1.md",
+   "new_start_line": 49,
+   "new_lines": 1,
+   "hunk_context": "node tools/chain_self_heal.mjs --only static,tunnel --static-port 4792 --auth-po"
+  },
+  {
+   "path": "tools/CHAIN_SELF_HEAL_V1.md",
+   "new_start_line": 52,
+   "new_lines": 2,
+   "hunk_context": "node tools/chain_self_heal.mjs --only static,tunnel --static-port 4792 --auth-po"
+  },
+  {
+   "path": "tools/CHAIN_SELF_HEAL_V1.md",
+   "new_start_line": 59,
+   "new_lines": 2,
+   "hunk_context": "node tools/chain_self_heal.mjs --only static,tunnel --static-port 4792 --auth-po"
+  },
+  {
+   "path": "tools/chain_self_heal.mjs",
+   "new_start_line": 112,
+   "new_lines": 4,
+   "hunk_context": "try:"
+  },
+  {
+   "path": "tools/chain_self_heal.mjs",
+   "new_start_line": 118,
+   "new_lines": 1,
+   "hunk_context": "try:"
+  },
+  {
+   "path": "tools/chain_self_heal.mjs",
+   "new_start_line": 125,
+   "new_lines": 1,
+   "hunk_context": "except urllib.error.HTTPError as e:"
+  },
+  {
+   "path": "tools/chain_self_heal.mjs",
+   "new_start_line": 174,
+   "new_lines": 27,
+   "hunk_context": "function parentJudgement(info) {"
+  },
+  {
+   "path": "tools/chain_self_heal.mjs",
+   "new_start_line": 204,
+   "new_lines": 1,
+   "hunk_context": "function hopSpecs() {"
+  },
+  {
+   "path": "tools/chain_self_heal.mjs",
+   "new_start_line": 209,
+   "new_lines": 1,
+   "hunk_context": "function hopSpecs() {"
+  },
+  {
+   "path": "tools/chain_self_heal.mjs",
+   "new_start_line": 216,
+   "new_lines": 1,
+   "hunk_context": "function hopSpecs() {"
+  },
+  {
+   "path": "tools/chain_self_heal.mjs",
+   "new_start_line": 233,
+   "new_lines": 6,
+   "hunk_context": "function probe(hop) {"
+  },
+  {
+   "path": "tools/chain_self_heal.mjs",
+   "new_start_line": 250,
+   "new_lines": 2,
+   "hunk_context": "function tunnelFromLog() {"
+  },
+  {
+   "path": "tools/chain_self_heal.mjs",
+   "new_start_line": 252,
+   "new_lines": 0,
+   "hunk_context": "function tunnelFromLog() {"
+  },
+  {
+   "path": "tools/chain_self_heal.mjs",
+   "new_start_line": 254,
+   "new_lines": 15,
+   "hunk_context": "function tunnelFromLog() {"
+  },
+  {
+   "path": "tools/chain_self_heal.mjs",
+   "new_start_line": 273,
+   "new_lines": 3,
+   "hunk_context": "function startHop(spec) {"
+  },
+  {
+   "path": "tools/chain_self_heal.mjs",
+   "new_start_line": 380,
+   "new_lines": 1,
+   "hunk_context": "function main() {"
+  },
+  {
+   "path": "tools/chain_self_heal.mjs",
+   "new_start_line": 387,
+   "new_lines": 3,
+   "hunk_context": "function main() {"
+  },
+  {
+   "path": "tools/chain_self_heal.mjs",
+   "new_start_line": 403,
+   "new_lines": 21,
+   "hunk_context": "function main() {"
+  },
+  {
+   "path": "tools/chain_self_heal.mjs",
+   "new_start_line": 425,
+   "new_lines": 20,
+   "hunk_context": "function main() {"
+  }
+ ],
+ "remote_ref_readback": "6c671f56b84ede206e75efeb810958a750d01c52",
+ "authoritative_line_after": "6ee21eddba60303e8f0f46907df9501ee0149e6e",
+ "authoritative_line_untouched_by_me": true,
+ "how_this_receipt_was_made": "`o358_mint_r2.py` 在 push 之后自身 NameError 中断（脚本里一处 TIP 没跟着改成 PARENT）。这一枚脚本只读回验：远端 ref 与本地 ref 等值、父是落地代、两枚 blob 与磁盘字节等值、前身与我第一切等值。全程没有第二次 push、没有 --force、权威线一个字节没动。被试文件在候选里的坐标 = 6c671f56b84ede206e75efeb810958a750d01c52",
+ "supersedes": "ord0358_candidate_mint_r1.json 那枚 2a38c7b3e6697fff4f9eae749e07c9371503c3d3 已由号令者落地（落地那笔 = 2a38c7b3 ORD-0358: one entry point that relights the phone preview chain hop by hop），ref 冻结不重推（Q37）。本枚 = 落地代之上的第二切，改动面还是那两枚 tools/ 文件。"
+}
