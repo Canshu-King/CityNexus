@@ -41,3 +41,19 @@ Refs scanned: 159. Branches that change the file on their own side: 28
 Retracted: the `9` in my ORD-0359 hand-off block. That figure came from listing the last refs of
 an ls-remote tail and diffing each against the base, which counts base-side edits and is not a
 contending-lane count. The count that is measured by the method above is the list here.
+
+## Same method, the two other files this order touches, branch date 2026-09-26
+
+### frontend/src/styles.css — branch-side changes today: 9
+- cmdr/land-ord0340-recut — sha `8c5b6d715814f01db6e71c92efd39df3f3513f7f`, branch point `b4d0590e43aac47302bc93fdb37c5bc6029983d3`
+- cmdr/land-ord0345-recut — sha `aeef1d41bf16e8ba6acb7657871832e06d2fe1ee`, branch point `b5952d6c528829b9778830ffb46a52d7c7540840`
+- eac/v19.2.2-realphone-codegate — sha `1da4d3d2eab20e3fb828a3814c0296fe5e9d178a`, branch point `7d22cd0eb7840121ba42a5ba363e1a4c7ca1a7e7`
+- landing/ord0357-rebased-1812 — sha `d2a794002971c197a60359639feec1f09d2b485e`, branch point `b6a8ea5c625d7e3e82f7348fad57d595a8a403c0`
+- landing/ord0359-recut-1804 — sha `f44ad86618eb9dadca001ea7471ae24274fc4388`, branch point `b6a8ea5c625d7e3e82f7348fad57d595a8a403c0`
+- review/N3-ord0357-copy-journey-link — sha `d2a794002971c197a60359639feec1f09d2b485e`, branch point `b6a8ea5c625d7e3e82f7348fad57d595a8a403c0`
+- review/N3-ord0357-copy-journey-link-r2 — sha `d2a794002971c197a60359639feec1f09d2b485e`, branch point `b6a8ea5c625d7e3e82f7348fad57d595a8a403c0`
+- review/S1-ord0350-review-row-exits — sha `cbd69ef8f8eec2a2019f15a8af77854a7b649000`, branch point `046fc98723e2eacfe3cb8eb00a7fd3abdbd26efe`
+- review/S1-ord0350-review-row-exits-r2 — sha `27f963a77edc4d508a39b0a07c76927d0512c724`, branch point `b6a8ea5c625d7e3e82f7348fad57d595a8a403c0`
+
+### frontend/e2e/qoder-plan-ai-thinking.spec.ts — branch-side changes today: 1
+- review/N2-ord0359-three-ai-words-r2 — sha `032a0ec43652f40d70b7df4adb531d18256601a6`, branch point `b6a8ea5c625d7e3e82f7348fad57d595a8a403c0`
