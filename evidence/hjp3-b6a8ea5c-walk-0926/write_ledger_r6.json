@@ -1,0 +1,77 @@
+{
+ "ran_at_local": "2026-09-26T18:23:47+0800",
+ "branch": "commander/control",
+ "tip_read": "35ef3815e7f6370245c4b5a159ba6ec7375f6028",
+ "prefix": "evidence/hjp3-b6a8ea5c-walk-0926/",
+ "method": "GET /repos/.../commits?sha=<branch>&path=<file> - one commit at a name means written once",
+ "files_under_prefix": 41,
+ "tree_entries_excluded": [
+  "evidence/hjp3-b6a8ea5c-walk-0926/instruments",
+  "evidence/hjp3-b6a8ea5c-walk-0926/shots"
+ ],
+ "why_the_tree_entries_are_excluded": "a commits?path=<directory> query legitimately returns every commit that touched anything under it, so counting a directory as a write would manufacture a re-PUT that never happened",
+ "commits_per_path": {
+  "evidence/hjp3-b6a8ea5c-walk-0926/instruments/r6_dead_id_saved.cjs": 1,
+  "evidence/hjp3-b6a8ea5c-walk-0926/instruments/r6_dest_block.cjs": 1,
+  "evidence/hjp3-b6a8ea5c-walk-0926/instruments/r6_dest_block_r2.cjs": 1,
+  "evidence/hjp3-b6a8ea5c-walk-0926/instruments/r6_dest_block_r3.cjs": 1,
+  "evidence/hjp3-b6a8ea5c-walk-0926/instruments/r6_drift.py": 1,
+  "evidence/hjp3-b6a8ea5c-walk-0926/instruments/r6_gen_check.py": 1,
+  "evidence/hjp3-b6a8ea5c-walk-0926/instruments/r6_receipt_anchor_offline.cjs": 1,
+  "evidence/hjp3-b6a8ea5c-walk-0926/instruments/r6_score.py": 1,
+  "evidence/hjp3-b6a8ea5c-walk-0926/instruments/r6_tunnel_watch.py": 1,
+  "evidence/hjp3-b6a8ea5c-walk-0926/instruments/r6_walked_asset_witness.py": 1,
+  "evidence/hjp3-b6a8ea5c-walk-0926/instruments/r6_wizard_create.cjs": 1,
+  "evidence/hjp3-b6a8ea5c-walk-0926/r6_dead_id_saved.json": 1,
+  "evidence/hjp3-b6a8ea5c-walk-0926/r6_dest_block.json": 1,
+  "evidence/hjp3-b6a8ea5c-walk-0926/r6_dest_block_r2.json": 1,
+  "evidence/hjp3-b6a8ea5c-walk-0926/r6_dest_block_r3.json": 1,
+  "evidence/hjp3-b6a8ea5c-walk-0926/r6_drift.json": 1,
+  "evidence/hjp3-b6a8ea5c-walk-0926/r6_gen_check.json": 1,
+  "evidence/hjp3-b6a8ea5c-walk-0926/r6_readings_scored.json": 1,
+  "evidence/hjp3-b6a8ea5c-walk-0926/r6_receipt_anchor_offline.json": 1,
+  "evidence/hjp3-b6a8ea5c-walk-0926/r6_tunnel_watch.json": 1,
+  "evidence/hjp3-b6a8ea5c-walk-0926/r6_walked_asset_witness.json": 1,
+  "evidence/hjp3-b6a8ea5c-walk-0926/r6_wizard_create.json": 1,
+  "evidence/hjp3-b6a8ea5c-walk-0926/ship_result_r6.json": 1,
+  "evidence/hjp3-b6a8ea5c-walk-0926/ship_result_r6b.json": 1,
+  "evidence/hjp3-b6a8ea5c-walk-0926/shots/A1_dest_closed.png": 1,
+  "evidence/hjp3-b6a8ea5c-walk-0926/shots/A2_1_closed.png": 1,
+  "evidence/hjp3-b6a8ea5c-walk-0926/shots/A2_2_just_opened.png": 1,
+  "evidence/hjp3-b6a8ea5c-walk-0926/shots/A2_3_settled.png": 1,
+  "evidence/hjp3-b6a8ea5c-walk-0926/shots/A3_1_closed.png": 1,
+  "evidence/hjp3-b6a8ea5c-walk-0926/shots/A3_2_just_opened.png": 1,
+  "evidence/hjp3-b6a8ea5c-walk-0926/shots/A3_3_settled.png": 1,
+  "evidence/hjp3-b6a8ea5c-walk-0926/shots/B1_review_before_press.png": 1,
+  "evidence/hjp3-b6a8ea5c-walk-0926/shots/B2_after_confirm.png": 1,
+  "evidence/hjp3-b6a8ea5c-walk-0926/shots/B3_after_opening_folds.png": 1,
+  "evidence/hjp3-b6a8ea5c-walk-0926/shots/C1_dead_id_closed.png": 1,
+  "evidence/hjp3-b6a8ea5c-walk-0926/shots/C2_dead_id_open.png": 1,
+  "evidence/hjp3-b6a8ea5c-walk-0926/shots/E1_real_journey_settled.png": 1,
+  "evidence/hjp3-b6a8ea5c-walk-0926/shots/F1_dead_closed.png": 1,
+  "evidence/hjp3-b6a8ea5c-walk-0926/shots/F2_dead_opened.png": 1,
+  "evidence/hjp3-b6a8ea5c-walk-0926/shots/F3_real_journey.png": 1,
+  "evidence/hjp3-b6a8ea5c-walk-0926/shots/F4_after_tab_walk.png": 1
+ },
+ "paths_with_more_than_one_commit": [],
+ "controls_known_to_hold_two_writes": [
+  {
+   "path": "evidence/ord0300-c2-pairing-hjp3/evidence_manifest_full40_c2.json",
+   "commits": 2
+  },
+  {
+   "path": "evidence/ord0288-t1-durable-ownership-hjp3/evidence_manifest_full40_o0288_r2.json",
+   "commits": 2
+  },
+  {
+   "path": "evidence/ord0300-hjp3-write-cells/RECEIPT_O0300-2610.json",
+   "commits": 2
+  }
+ ],
+ "verdict": {
+  "no_path_in_this_prefix_was_written_twice": true,
+  "the_counter_is_not_blind": true,
+  "a_directory_was_counted_until_it_was_excluded": true,
+  "ALL_HOLD": true
+ }
+}
