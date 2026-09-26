@@ -1,0 +1,150 @@
+{
+ "base": "http://127.0.0.1:4782",
+ "surface": "auth proxy (the surface the phone opens)",
+ "responses": [
+  {
+   "status": 200,
+   "content_type": "application/json",
+   "served_by_service_worker": false,
+   "body_bytes": 1424,
+   "shape": {
+    "query": "厦门",
+    "capability": "HYDRATABLE",
+    "reason_code": "COVERAGE_INCOMPLETE"
+   },
+   "query_in_url": "厦门"
+  },
+  {
+   "status": 200,
+   "content_type": "application/json",
+   "served_by_service_worker": false,
+   "body_bytes": 1452,
+   "shape": {
+    "query": "福州",
+    "capability": "UNAVAILABLE",
+    "reason_code": "NO_CANONICAL_IDENTITY"
+   },
+   "query_in_url": "福州"
+  },
+  {
+   "status": 200,
+   "content_type": "application/json",
+   "served_by_service_worker": false,
+   "body_bytes": 1426,
+   "shape": {
+    "query": "上海",
+    "capability": "HYDRATABLE",
+    "reason_code": "COVERAGE_INCOMPLETE"
+   },
+   "query_in_url": "上海"
+  },
+  {
+   "status": 200,
+   "content_type": "application/json",
+   "served_by_service_worker": false,
+   "body_bytes": 1427,
+   "shape": {
+    "query": "广州",
+    "capability": "HYDRATABLE",
+    "reason_code": "COVERAGE_INCOMPLETE"
+   },
+   "query_in_url": "广州"
+  },
+  {
+   "status": 200,
+   "content_type": "application/json",
+   "served_by_service_worker": false,
+   "body_bytes": 1425,
+   "shape": {
+    "query": "天津",
+    "capability": "HYDRATABLE",
+    "reason_code": "COVERAGE_INCOMPLETE"
+   },
+   "query_in_url": "天津"
+  },
+  {
+   "status": 200,
+   "content_type": "application/json",
+   "served_by_service_worker": false,
+   "body_bytes": 1541,
+   "shape": {
+    "query": "北京",
+    "capability": "HYDRATABLE",
+    "reason_code": "COVERAGE_INCOMPLETE"
+   },
+   "query_in_url": "北京"
+  },
+  {
+   "status": 200,
+   "content_type": "application/json",
+   "served_by_service_worker": false,
+   "body_bytes": 1455,
+   "shape": {
+    "query": "新加坡",
+    "capability": "UNAVAILABLE",
+    "reason_code": "NO_CANONICAL_IDENTITY"
+   },
+   "query_in_url": "新加坡"
+  },
+  {
+   "status": 200,
+   "content_type": "application/json",
+   "served_by_service_worker": false,
+   "body_bytes": 1452,
+   "shape": {
+    "query": "东京",
+    "capability": "UNAVAILABLE",
+    "reason_code": "NO_CANONICAL_IDENTITY"
+   },
+   "query_in_url": "东京"
+  },
+  {
+   "status": 200,
+   "content_type": "application/json",
+   "served_by_service_worker": false,
+   "body_bytes": 1426,
+   "shape": {
+    "query": "深圳",
+    "capability": "HYDRATABLE",
+    "reason_code": "COVERAGE_INCOMPLETE"
+   },
+   "query_in_url": "深圳"
+  },
+  {
+   "status": 200,
+   "content_type": "application/json",
+   "served_by_service_worker": false,
+   "body_bytes": 1426,
+   "shape": {
+    "query": "杭州",
+    "capability": "HYDRATABLE",
+    "reason_code": "COVERAGE_INCOMPLETE"
+   },
+   "query_in_url": "杭州"
+  },
+  {
+   "status": 200,
+   "content_type": "application/json",
+   "served_by_service_worker": false,
+   "body_bytes": 1425,
+   "shape": {
+    "query": "成都",
+    "capability": "HYDRATABLE",
+    "reason_code": "COVERAGE_INCOMPLETE"
+   },
+   "query_in_url": "成都"
+  }
+ ],
+ "request_failures": [],
+ "first_paint": "用你自己的城市试用 CITYNEXUS 新建行程 三步完成。选择目的地、告诉我们怎么玩，剩下的交给 CityNexus。 EN 1 目的地与时间 2 人数与偏好 3 确认创建 目的地 看支持的目的地 已支持：服务器认得它，而且目录里有东西 READY / 有 canonical 身份且有目录行 北京 服务器给了身份 服务器认得它，目录里有 8 条，还缺 2 类事实 HYDRATABLE · COVERAGE_INCOMPLETE · START_HYDRATION 需联网才能解析：服务器现在认不出这个名字 NO_CANONICAL_IDENTITY 福州 服务器给了身份 服务器的词表和目录里都没有这个名字，要它联网解析才有答案 UNAVAILABLE · NO_CANONICAL_IDENTITY · CHOOSE_ANOTHER_DESTINATION 东京 服务器给了身份 服务器的词表和目录里都没有这个名字，要它联网解析才有答案 UNAVAILABLE · NO_CANONICAL_IDENTITY · CHOOSE_ANOTHER_DESTINATION 新加坡 服务器给了身份 ",
+ "after_open_destinations": "用你自己的城市试用 CITYNEXUS 新建行程 三步完成。选择目的地、告诉我们怎么玩，剩下的交给 CityNexus。 EN 1 目的地与时间 2 人数与偏好 3 确认创建 目的地 看支持的目的地 已支持：服务器认得它，而且目录里有东西 READY / 有 canonical 身份且有目录行 北京 服务器给了身份 服务器认得它，目录里有 8 条，还缺 2 类事实 HYDRATABLE · COVERAGE_INCOMPLETE · START_HYDRATION 需联网才能解析：服务器现在认不出这个名字 NO_CANONICAL_IDENTITY 福州 服务器给了身份 服务器的词表和目录里都没有这个名字，要它联网解析才有答案 UNAVAILABLE · NO_CANONICAL_IDENTITY · CHOOSE_ANOTHER_DESTINATION 东京 服务器给了身份 服务器的词表和目录里都没有这个名字，要它联网解析才有答案 UNAVAILABLE · NO_CANONICAL_IDENTITY · CHOOSE_ANOTHER_DESTINATION 新加坡 服务器给了身份 服务器的词表和目录里都没有这个名字，要它联网解析才有答案 UNAVAILABLE · NO_CANONICAL_IDENTITY · CHOOSE_ANOTHER_DESTINATION 未知或无数据：这一轮拿不出可规划的判定 HYDRATABLE 无目录行 / UNKNOWN_RETRYABLE / 没读到 厦门 服务器给了身份 服务器认得它，目录里有 0 条，还缺 6 类事实 HYDRATABLE · COVERAGE_INCOMPLETE · START_HYDRATION 上海 服务器给了身份 服务器认得它，目录里有 0 条，还缺 6 类事实 HYDRATABLE · COVERAGE_INCOMPLETE · START_HYDRATION 天津 服务器给了身份 服务器认得它，目录里有 0 条，还缺 6 类事实 HYDRATABLE · COVERAGE_INCOMPLETE ·",
+ "asset_served": [
+  "/assets/index-Cm7tMHft.js"
+ ],
+ "verdict": "ALL_JSON_200_ON_THE_USER_SURFACE",
+ "counts": {
+  "observed": 11,
+  "json_with_capability": 11,
+  "failed": 0
+ }
+}
