@@ -1,0 +1,165 @@
+{
+ "schema": "CNX_CMDR_LANDING_PREFLIGHT_V1",
+ "lane": "commander 494abfd7",
+ "at_local": "2026-09-26T16:10:41+0800",
+ "mode": "LAND",
+ "authoritative_line": "mirror/integration-frontend-apple-pass1",
+ "tip_re_read_from_github_before": "7e728268a90c9d0f4accc7f117af1de73f65bc7a",
+ "candidate_ref": "refs/heads/cmdr/land-ord0355-fetched",
+ "candidate_tip": "6fd43627e717a97ea779da866eb4546b8acb9deb",
+ "genealogy": {
+  "ff_possible_rc": 0,
+  "ff_possible": true,
+  "merge_base": "7e728268a90c9d0f4accc7f117af1de73f65bc7a",
+  "line_only_commits": 0,
+  "candidate_only_commits": 1
+ },
+ "file_sets": {
+  "line_side_since_base": [],
+  "candidate_side_since_base": [
+   "backend/app/db/models.py",
+   "backend/app/db/session.py",
+   "backend/app/main.py",
+   "backend/app/operations/v9.py",
+   "backend/app/stay_mobility.py",
+   "backend/db/apply_ord0355_stay_budget_declared.py",
+   "backend/db/schema.sql",
+   "backend/tests/test_qoder_ord0355_honest_stay_budget.py",
+   "backend/tests/test_qoder_stay_generation_operations.py",
+   "backend/tests/test_qoder_stay_generation_phases.py"
+  ],
+  "intersection": [],
+  "product_introduced_by_candidate": [
+   "backend/app/db/models.py",
+   "backend/app/db/session.py",
+   "backend/app/main.py",
+   "backend/app/operations/v9.py",
+   "backend/app/stay_mobility.py"
+  ]
+ },
+ "merge_tree": {
+  "exit": 0,
+  "first_line": "22cdfacae3be35b4e9c7db3070c757bcd77eadbb",
+  "conflict_reported": false,
+  "stderr_head": ""
+ },
+ "gate_run": {
+  "requested": [
+   "test_qoder_ord0355_honest_stay_budget.py"
+  ],
+  "collect_exit": 0,
+  "collected": null,
+  "test_exit": 0,
+  "summary": [
+   "11 passed, 2 warnings in 1.66s"
+  ],
+  "export": "D:/moodle/_qoder_cmdr_ref_20260921/snap_preflight_161017",
+  "blob_equality": [
+   {
+    "path": "backend/app/db/models.py",
+    "candidate_blob": "32029b9ac19b991a9632a46b641036973132acf1",
+    "export_blob": "32029b9ac19b991a9632a46b641036973132acf1",
+    "equal": true
+   },
+   {
+    "path": "backend/app/db/session.py",
+    "candidate_blob": "ad400098286b07411dfbd3bc316ba43865543f3d",
+    "export_blob": "ad400098286b07411dfbd3bc316ba43865543f3d",
+    "equal": true
+   },
+   {
+    "path": "backend/app/main.py",
+    "candidate_blob": "be541c49bdbf292cd065c5ec1e839a117765dc7f",
+    "export_blob": "be541c49bdbf292cd065c5ec1e839a117765dc7f",
+    "equal": true
+   },
+   {
+    "path": "backend/app/operations/v9.py",
+    "candidate_blob": "9e65bd1d94835ea342fa8884b8a093e8fe97ec4c",
+    "export_blob": "9e65bd1d94835ea342fa8884b8a093e8fe97ec4c",
+    "equal": true
+   },
+   {
+    "path": "backend/app/stay_mobility.py",
+    "candidate_blob": "a0e07216e2d8e1958c1f1b60651a0daf69b14a89",
+    "export_blob": "a0e07216e2d8e1958c1f1b60651a0daf69b14a89",
+    "equal": true
+   },
+   {
+    "path": "backend/db/apply_ord0355_stay_budget_declared.py",
+    "candidate_blob": "38d3fdee0f338d069f7aafdaeffe8ca54d7ec8b1",
+    "export_blob": "38d3fdee0f338d069f7aafdaeffe8ca54d7ec8b1",
+    "equal": true
+   },
+   {
+    "path": "backend/db/schema.sql",
+    "candidate_blob": "4d7dfeee728d9abf35896fa808fbcb9384a530a6",
+    "export_blob": "4d7dfeee728d9abf35896fa808fbcb9384a530a6",
+    "equal": true
+   },
+   {
+    "path": "backend/tests/test_qoder_ord0355_honest_stay_budget.py",
+    "candidate_blob": "f3e0a0a3462933867d132b1b3c8531003a847259",
+    "export_blob": "f3e0a0a3462933867d132b1b3c8531003a847259",
+    "equal": true
+   },
+   {
+    "path": "backend/tests/test_qoder_stay_generation_operations.py",
+    "candidate_blob": "57439666385fbcbcb828ee00eefdadc3faa5738c",
+    "export_blob": "57439666385fbcbcb828ee00eefdadc3faa5738c",
+    "equal": true
+   },
+   {
+    "path": "backend/tests/test_qoder_stay_generation_phases.py",
+    "candidate_blob": "ab252b8fc4346e68862baaf6547e52c532de19ac",
+    "export_blob": "ab252b8fc4346e68862baaf6547e52c532de19ac",
+    "equal": true
+   }
+  ],
+  "whole_suite": {
+   "collect_exit": 0,
+   "collected": 1369,
+   "interrupted": false,
+   "error_lines": [
+    "tests/test_qoder_ord0332_error_receipt.py::test_R7_the_envelope_keeps_every_field_it_already_had",
+    "tests/test_qoder_ord0332_error_receipt.py::test_R8_the_seed_is_read_off_the_real_request_not_just_the_dataclass",
+    "tests/test_solver_runtime_policy.py::test_unexpected_solver_programming_error_is_not_silently_hidden"
+   ],
+   "tail": [
+    "    _PortalFactoryType = Callable[[], AbstractContextManager[anyio.abc.BlockingPortal]]",
+    "-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html",
+    "1369 tests collected in 6.92s"
+   ],
+   "cmd": "D:/moodle/CityNexus/.venv/Scripts/python.exe -m pytest --collect-only -q tests  (cwd=<export>/backend, PYTHONPATH=<export>)"
+  },
+  "collect_stdout_tail": [
+   "",
+   "-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html",
+   "11 tests collected in 1.88s"
+  ],
+  "interpreter": "Python 3.12.14 (main, Aug 25 2026, 14:01:42) [MSC v.1944 64 bit (AMD64)]",
+  "exposure": {
+   "skipped": "no frontend/src file changed"
+  }
+ },
+ "problems": [],
+ "verdict": "READY_TO_LAND",
+ "landing": {
+  "http": 200,
+  "response_head": "{'ref': 'refs/heads/mirror/integration-frontend-apple-pass1', 'node_id': 'REF_kwDOUhlJJ9oAMnJlZnMvaGVhZHMvbWlycm9yL2ludGVncmF0aW9uLWZyb250ZW5kLWFwcGxlLXBhc3Mx', 'url': 'https://api.github.com/repos/Ca",
+  "tip_after": "6fd43627e717a97ea779da866eb4546b8acb9deb",
+  "branches_route": "6fd43627e717a97ea779da866eb4546b8acb9deb",
+  "both_routes_agree": true,
+  "landed": true
+ },
+ "discipline": {
+  "evidence_paths_overwritten": 0,
+  "databases_opened": 0,
+  "surfaces_started_or_stopped": 0,
+  "credential_values_printed": 0,
+  "candidate_refs_pushed_by_commander": 0
+ },
+ "claim_kind": "git_and_pytest_determined",
+ "claimed_result": null,
+ "derived_result": null
+}
