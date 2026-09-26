@@ -4,13 +4,13 @@
   "local_name": "ui_exposure_taint_ast_r6.cjs",
   "published_as": "ui_exposure_taint_ast_r3.cjs",
   "blob": "6a251d3a6bea70329e06581384a81d5ef54c96a6",
-  "blob_verified": false
+  "blob_verified": true
  },
  "mode": "--tree (module graph); --file/--ref is neither an upper nor a lower bound on it",
  "attribute_blind_spot": "r6 does not treat an attribute as a sink, so it can neither see nor clear what this order added; Q71 is measured by the arms instead",
  "trees": {
   "pre_fix_38277c4e": {
-   "sha": "c4a1b3392a78f91d10c4afa634b3e3877414ba29",
+   "sha": "38277c4e9787b1ddf0bf69487060ba0e40c14146",
    "cells": 12,
    "raw": "ord0342_r6_pre_38277c4e_r1.json"
   },
