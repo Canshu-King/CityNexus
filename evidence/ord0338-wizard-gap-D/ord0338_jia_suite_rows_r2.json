@@ -1,0 +1,2657 @@
+{
+ "schema": "CNX_ORD0338_SUITE_ROWS_V1",
+ "run_id": "run383585",
+ "tree": "candidate commit 1a779b69 (local branch agent/d-e345b9d6-ord0338, base tip 2d8b03b8)",
+ "workers": 1,
+ "rows_total": 294,
+ "green": 242,
+ "red": 52,
+ "rows": [
+  {
+   "project": "chromium",
+   "spec": "_qoder-ord0338-instrument-selfdiag.spec.ts",
+   "location": "e2e\\_qoder-ord0338-instrument-selfdiag.spec.ts:24:1",
+   "title": "diagnose the injected-padding arm",
+   "nodeid": "_qoder-ord0338-instrument-selfdiag.spec.ts::diagnose the injected-padding arm",
+   "result": "green",
+   "seconds": 0.837
+  },
+  {
+   "project": "chromium",
+   "spec": "_qoder-ord0338-mechanism-diagnostic.spec.ts",
+   "location": "e2e\\_qoder-ord0338-mechanism-diagnostic.spec.ts:90:1",
+   "title": "D1 候选形状与旧形状在同一 procedures 下的几何对照",
+   "nodeid": "_qoder-ord0338-mechanism-diagnostic.spec.ts::D1 候选形状与旧形状在同一 procedures 下的几何对照",
+   "result": "green",
+   "seconds": 5.6
+  },
+  {
+   "project": "chromium",
+   "spec": "golden.spec.ts",
+   "location": "e2e\\golden.spec.ts:55:1",
+   "title": "an accepted closure recovery is backend truth on V8 Live and survives reload",
+   "nodeid": "golden.spec.ts::an accepted closure recovery is backend truth on V8 Live and survives reload",
+   "result": "green",
+   "seconds": 1.6
+  },
+  {
+   "project": "chromium",
+   "spec": "live-autopilot-v5.spec.ts",
+   "location": "e2e\\live-autopilot-v5.spec.ts:50:1",
+   "title": "the guardian autopilot recovers a live journey from a provider event with no traveller action",
+   "nodeid": "live-autopilot-v5.spec.ts::the guardian autopilot recovers a live journey from a provider event with no traveller action",
+   "result": "green",
+   "seconds": 2.3
+  },
+  {
+   "project": "chromium",
+   "spec": "predictive-real-city-v6.spec.ts",
+   "location": "e2e\\predictive-real-city-v6.spec.ts:86:1",
+   "title": "a forecast is prevented before the failure happens, and the traveller can see why",
+   "nodeid": "predictive-real-city-v6.spec.ts::a forecast is prevented before the failure happens, and the traveller can see why",
+   "result": "green",
+   "seconds": 9.5
+  },
+  {
+   "project": "chromium",
+   "spec": "product-hardening.spec.ts",
+   "location": "e2e\\product-hardening.spec.ts:83:1",
+   "title": "an autonomous recovery executes inside its envelope and is observable on the current recovery surface",
+   "nodeid": "product-hardening.spec.ts::an autonomous recovery executes inside its envelope and is observable on the current recovery surface",
+   "result": "green",
+   "seconds": 0.854
+  },
+  {
+   "project": "chromium",
+   "spec": "product-v8.spec.ts",
+   "location": "e2e\\product-v8.spec.ts:13:3",
+   "title": "V8 product experience > completes the multi-day stay and autonomous recovery journey",
+   "nodeid": "product-v8.spec.ts::V8 product experience > completes the multi-day stay and autonomous recovery journey",
+   "result": "green",
+   "seconds": 4.5
+  },
+  {
+   "project": "chromium",
+   "spec": "product-v8.spec.ts",
+   "location": "e2e\\product-v8.spec.ts:59:3",
+   "title": "V8 product experience > keeps the mobile Journey, Map, AI, Bookings, Me composition usable",
+   "nodeid": "product-v8.spec.ts::V8 product experience > keeps the mobile Journey, Map, AI, Bookings, Me composition usable",
+   "result": "green",
+   "seconds": 2.9
+  },
+  {
+   "project": "chromium",
+   "spec": "qoder-a-refusal-says-what-it-is.spec.ts",
+   "location": "e2e\\qoder-a-refusal-says-what-it-is.spec.ts:68:1",
+   "title": "ord0126d-a-403-says-permission-and-not-login — 403 不许被说成「重新登录」",
+   "nodeid": "qoder-a-refusal-says-what-it-is.spec.ts::ord0126d-a-403-says-permission-and-not-login — 403 不许被说成「重新登录」",
+   "result": "green",
+   "seconds": 0.412
+  },
+  {
+   "project": "chromium",
+   "spec": "qoder-a-refusal-says-what-it-is.spec.ts",
+   "location": "e2e\\qoder-a-refusal-says-what-it-is.spec.ts:123:1",
+   "title": "ord0126d-b-401-still-says-sign-in — 两条拒绝不许塌成一句",
+   "nodeid": "qoder-a-refusal-says-what-it-is.spec.ts::ord0126d-b-401-still-says-sign-in — 两条拒绝不许塌成一句",
+   "result": "green",
+   "seconds": 0.346
+  },
+  {
+   "project": "chromium",
+   "spec": "qoder-a-refusal-says-what-it-is.spec.ts",
+   "location": "e2e\\qoder-a-refusal-says-what-it-is.spec.ts:145:1",
+   "title": "ord0126d-c-the-screen-submits-the-journey-it-shows — 屏上那趟和提交那趟必须同一个",
+   "nodeid": "qoder-a-refusal-says-what-it-is.spec.ts::ord0126d-c-the-screen-submits-the-journey-it-shows — 屏上那趟和提交那趟必须同一个",
+   "result": "green",
+   "seconds": 0.947
+  },
+  {
+   "project": "chromium",
+   "spec": "qoder-ack-rendered.spec.ts",
+   "location": "e2e\\qoder-ack-rendered.spec.ts:198:3",
+   "title": "T3 acknowledgement vs resolution (rendered integration) > an ACKNOWLEDGED disruption with no linked acceptance stays open: both '发生了什么' and '已知晓，仍待处理' render",
+   "nodeid": "qoder-ack-rendered.spec.ts::T3 acknowledgement vs resolution (rendered integration) > an ACKNOWLEDGED disruption with no linked acceptance stays open: both '发生了什么' and '已知晓，仍待处理' render",
+   "result": "green",
+   "seconds": 0.535
+  },
+  {
+   "project": "chromium",
+   "spec": "qoder-ack-rendered.spec.ts",
+   "location": "e2e\\qoder-ack-rendered.spec.ts:223:3",
+   "title": "T3 acknowledgement vs resolution (rendered integration) > an ACCEPTED proposal linked to the event by trigger_event_id closes it: no open/acknowledged notice, shown as handled",
+   "nodeid": "qoder-ack-rendered.spec.ts::T3 acknowledgement vs resolution (rendered integration) > an ACCEPTED proposal linked to the event by trigger_event_id closes it: no open/acknowledged notice, shown as handled",
+   "result": "green",
+   "seconds": 0.443
+  },
+  {
+   "project": "chromium",
+   "spec": "qoder-ack-rendered.spec.ts",
+   "location": "e2e\\qoder-ack-rendered.spec.ts:246:3",
+   "title": "T3 acknowledgement vs resolution (rendered integration) > an ACCEPTED proposal with an UNRELATED trigger_event_id leaves the event open",
+   "nodeid": "qoder-ack-rendered.spec.ts::T3 acknowledgement vs resolution (rendered integration) > an ACCEPTED proposal with an UNRELATED trigger_event_id leaves the event open",
+   "result": "green",
+   "seconds": 0.523
+  },
+  {
+   "project": "chromium",
+   "spec": "qoder-ack-rendered.spec.ts",
+   "location": "e2e\\qoder-ack-rendered.spec.ts:280:3",
+   "title": "T3 ack vs resolution — Today surface (rendered integration) > an ACKNOWLEDGED event with no acceptance stays an unresolved change on Today",
+   "nodeid": "qoder-ack-rendered.spec.ts::T3 ack vs resolution — Today surface (rendered integration) > an ACKNOWLEDGED event with no acceptance stays an unresolved change on Today",
+   "result": "green",
+   "seconds": 0.407
+  },
+  {
+   "project": "chromium",
+   "spec": "qoder-ack-rendered.spec.ts",
+   "location": "e2e\\qoder-ack-rendered.spec.ts:292:3",
+   "title": "T3 ack vs resolution — Today surface (rendered integration) > a matching ACCEPTED replan clears the change count on Today",
+   "nodeid": "qoder-ack-rendered.spec.ts::T3 ack vs resolution — Today surface (rendered integration) > a matching ACCEPTED replan clears the change count on Today",
+   "result": "green",
+   "seconds": 0.405
+  },
+  {
+   "project": "chromium",
+   "spec": "qoder-ack-rendered.spec.ts",
+   "location": "e2e\\qoder-ack-rendered.spec.ts:311:3",
+   "title": "T3 ack vs resolution — Today surface (rendered integration) > an UNRELATED accepted proposal still leaves the change unresolved on Today",
+   "nodeid": "qoder-ack-rendered.spec.ts::T3 ack vs resolution — Today surface (rendered integration) > an UNRELATED accepted proposal still leaves the change unresolved on Today",
+   "result": "green",
+   "seconds": 0.429
+  },
+  {
+   "project": "chromium",
+   "spec": "qoder-ack-resolution.spec.ts",
+   "location": "e2e\\qoder-ack-resolution.spec.ts:17:3",
+   "title": "T3 acknowledgement vs resolution (unit) > acknowledged-only stays open; only linked acceptance resolves",
+   "nodeid": "qoder-ack-resolution.spec.ts::T3 acknowledgement vs resolution (unit) > acknowledged-only stays open; only linked acceptance resolves",
+   "result": "green",
+   "seconds": 0.299
+  },
+  {
+   "project": "chromium",
+   "spec": "qoder-advanced-summary-is-tappable.spec.ts",
+   "location": "e2e\\qoder-advanced-summary-is-tappable.spec.ts:76:1",
+   "title": "ord0247-1-the-disclosure-box-is-at-least-the-products-touch-floor — 命中框够 44px",
+   "nodeid": "qoder-advanced-summary-is-tappable.spec.ts::ord0247-1-the-disclosure-box-is-at-least-the-products-touch-floor — 命中框够 44px",
+   "result": "green",
+   "seconds": 0.511
+  },
+  {
+   "project": "chromium",
+   "spec": "qoder-advanced-summary-is-tappable.spec.ts",
+   "location": "e2e\\qoder-advanced-summary-is-tappable.spec.ts:96:1",
+   "title": "ord0247-2-a-tap-at-the-centre-belongs-to-that-summary-and-opens-it — 命中的就是它自己",
+   "nodeid": "qoder-advanced-summary-is-tappable.spec.ts::ord0247-2-a-tap-at-the-centre-belongs-to-that-summary-and-opens-it — 命中的就是它自己",
+   "result": "green",
+   "seconds": 0.493
+  },
+  {
+   "project": "chromium",
+   "spec": "qoder-advanced-summary-is-tappable.spec.ts",
+   "location": "e2e\\qoder-advanced-summary-is-tappable.spec.ts:128:1",
+   "title": "ord0247-3-the-44px-floor-is-mobile-only-desktop-stays-compact — 桌面仍按紧凑密度",
+   "nodeid": "qoder-advanced-summary-is-tappable.spec.ts::ord0247-3-the-44px-floor-is-mobile-only-desktop-stays-compact — 桌面仍按紧凑密度",
+   "result": "green",
+   "seconds": 0.472
+  },
+  {
+   "project": "chromium",
+   "spec": "qoder-ai-sheet-blocked.spec.ts",
+   "location": "e2e\\qoder-ai-sheet-blocked.spec.ts:89:1",
+   "title": "ord0107-ai-sheet-names-why-it-could-not-plan — 排不出来必须说得出是哪一类",
+   "nodeid": "qoder-ai-sheet-blocked.spec.ts::ord0107-ai-sheet-names-why-it-could-not-plan — 排不出来必须说得出是哪一类",
+   "result": "green",
+   "seconds": 5.1
+  },
+  {
+   "project": "chromium",
+   "spec": "qoder-ai-sheet-blocked.spec.ts",
+   "location": "e2e\\qoder-ai-sheet-blocked.spec.ts:345:1",
+   "title": "ord0104-ai-sheet-examples-follow-the-destination — 例子要么跟这趟走，要么没有",
+   "nodeid": "qoder-ai-sheet-blocked.spec.ts::ord0104-ai-sheet-examples-follow-the-destination — 例子要么跟这趟走，要么没有",
+   "result": "red",
+   "seconds": 0.886
+  },
+  {
+   "project": "chromium",
+   "spec": "qoder-ai-sheet-blocked.spec.ts",
+   "location": "e2e\\qoder-ai-sheet-blocked.spec.ts:512:1",
+   "title": "ord0134-ai-sheet-actions-stay-inside-the-visible-viewport — 键盘顶起来时最后两枚动作仍要点得到",
+   "nodeid": "qoder-ai-sheet-blocked.spec.ts::ord0134-ai-sheet-actions-stay-inside-the-visible-viewport — 键盘顶起来时最后两枚动作仍要点得到",
+   "result": "red",
+   "seconds": 40.5
+  },
+  {
+   "project": "chromium",
+   "spec": "qoder-budget-advisory-tiers.spec.ts",
+   "location": "e2e\\qoder-budget-advisory-tiers.spec.ts:113:1",
+   "title": "ord0212-the-hub-keeps-only-the-tight-verdict-and-it-keeps-its-caveat-and-action — 主页只留 tight，且 caveat 和动作都在",
+   "nodeid": "qoder-budget-advisory-tiers.spec.ts::ord0212-the-hub-keeps-only-the-tight-verdict-and-it-keeps-its-caveat-and-action — 主页只留 tight，且 caveat 和动作都在",
+   "result": "green",
+   "seconds": 2.1
+  },
+  {
+   "project": "chromium",
+   "spec": "qoder-budget-advisory-tiers.spec.ts",
+   "location": "e2e\\qoder-budget-advisory-tiers.spec.ts:174:1",
+   "title": "ord0212-the-hub-does-not-render-the-averaged-reference-tier — 非 tight 那档整块从主页消失",
+   "nodeid": "qoder-budget-advisory-tiers.spec.ts::ord0212-the-hub-does-not-render-the-averaged-reference-tier — 非 tight 那档整块从主页消失",
+   "result": "green",
+   "seconds": 2.2
+  },
+  {
+   "project": "chromium",
+   "spec": "qoder-budget-advisory-tiers.spec.ts",
+   "location": "e2e\\qoder-budget-advisory-tiers.spec.ts:214:1",
+   "title": "ord0212-stripping-the-caveat-while-keeping-the-number-must-go-red — 只留数字删掉 caveat 必须红",
+   "nodeid": "qoder-budget-advisory-tiers.spec.ts::ord0212-stripping-the-caveat-while-keeping-the-number-must-go-red — 只留数字删掉 caveat 必须红",
+   "result": "green",
+   "seconds": 2.0
+  },
+  {
+   "project": "chromium",
+   "spec": "qoder-budget-advisory-tiers.spec.ts",
+   "location": "e2e\\qoder-budget-advisory-tiers.spec.ts:284:1",
+   "title": "ord0220-1-the-tight-caveat-cannot-contradict-itself — caveat 说了什么也要断言",
+   "nodeid": "qoder-budget-advisory-tiers.spec.ts::ord0220-1-the-tight-caveat-cannot-contradict-itself — caveat 说了什么也要断言",
+   "result": "green",
+   "seconds": 2.0
+  },
+  {
+   "project": "chromium",
+   "spec": "qoder-budget-advisory-tiers.spec.ts",
+   "location": "e2e\\qoder-budget-advisory-tiers.spec.ts:351:1",
+   "title": "ord0226-e-the-english-caveat-reaches-the-screen-and-is-the-frozen-sentence — 英文那句先量可达性再钉",
+   "nodeid": "qoder-budget-advisory-tiers.spec.ts::ord0226-e-the-english-caveat-reaches-the-screen-and-is-the-frozen-sentence — 英文那句先量可达性再钉",
+   "result": "green",
+   "seconds": 0.93
+  },
+  {
+   "project": "chromium",
+   "spec": "qoder-budget-evidence.spec.ts",
+   "location": "e2e\\qoder-budget-evidence.spec.ts:19:3",
+   "title": "T4 budget evidence coverage (unit) > NONE / PARTIAL / FULL are distinct, and only FULL allows a verdict",
+   "nodeid": "qoder-budget-evidence.spec.ts::T4 budget evidence coverage (unit) > NONE / PARTIAL / FULL are distinct, and only FULL allows a verdict",
+   "result": "green",
+   "seconds": 0.332
+  },
+  {
+   "project": "chromium",
+   "spec": "qoder-budget-evidence.spec.ts",
+   "location": "e2e\\qoder-budget-evidence.spec.ts:67:3",
+   "title": "T4 budget evidence coverage (unit) > B4: all activities priced but an unknown hotel/booking stays PARTIAL (no trip verdict)",
+   "nodeid": "qoder-budget-evidence.spec.ts::T4 budget evidence coverage (unit) > B4: all activities priced but an unknown hotel/booking stays PARTIAL (no trip verdict)",
+   "result": "green",
+   "seconds": 0.339
+  },
+  {
+   "project": "chromium",
+   "spec": "qoder-budget-rendered.spec.ts",
+   "location": "e2e\\qoder-budget-rendered.spec.ts:171:3",
+   "title": "T4 budget evidence coverage (rendered integration) > B4: all stops priced but an unknown stay/transport -> the block refuses a verified-budget verdict and shows PARTIAL wording",
+   "nodeid": "qoder-budget-rendered.spec.ts::T4 budget evidence coverage (rendered integration) > B4: all stops priced but an unknown stay/transport -> the block refuses a verified-budget verdict and shows PARTIAL wording",
+   "result": "green",
+   "seconds": 0.443
+  },
+  {
+   "project": "chromium",
+   "spec": "qoder-budget-rendered.spec.ts",
+   "location": "e2e\\qoder-budget-rendered.spec.ts:195:3",
+   "title": "T4 budget evidence coverage (rendered integration) > only when every budget-relevant item is known does the FULL verdict wording render",
+   "nodeid": "qoder-budget-rendered.spec.ts::T4 budget evidence coverage (rendered integration) > only when every budget-relevant item is known does the FULL verdict wording render",
+   "result": "green",
+   "seconds": 0.465
+  },
+  {
+   "project": "chromium",
+   "spec": "qoder-budget-rendered.spec.ts",
+   "location": "e2e\\qoder-budget-rendered.spec.ts:215:3",
+   "title": "T4 budget evidence coverage (rendered integration) > a KNOWN_FREE (0 amount) stop counts as known and keeps the block at FULL",
+   "nodeid": "qoder-budget-rendered.spec.ts::T4 budget evidence coverage (rendered integration) > a KNOWN_FREE (0 amount) stop counts as known and keeps the block at FULL",
+   "result": "green",
+   "seconds": 0.451
+  },
+  {
+   "project": "chromium",
+   "spec": "qoder-continuation-owner.spec.ts",
+   "location": "e2e\\qoder-continuation-owner.spec.ts:119:1",
+   "title": "ord0269-cell1-reveals-and-names-its-boundary — 腿1 之后重进必须看见那句话和那扇门",
+   "nodeid": "qoder-continuation-owner.spec.ts::ord0269-cell1-reveals-and-names-its-boundary — 腿1 之后重进必须看见那句话和那扇门",
+   "result": "green",
+   "seconds": 1.8
+  },
+  {
+   "project": "chromium",
+   "spec": "qoder-continuation-owner.spec.ts",
+   "location": "e2e\\qoder-continuation-owner.spec.ts:206:1",
+   "title": "ord0269-cell3-feed-failure-and-page-exclusion-are-named — 读不到就明说，不静默",
+   "nodeid": "qoder-continuation-owner.spec.ts::ord0269-cell3-feed-failure-and-page-exclusion-are-named — 读不到就明说，不静默",
+   "result": "green",
+   "seconds": 1.6
+  },
+  {
+   "project": "chromium",
+   "spec": "qoder-continuation-owner.spec.ts",
+   "location": "e2e\\qoder-continuation-owner.spec.ts:263:1",
+   "title": "ord0269-r6-page-exclusion-yields-no-conclusion — 本页不含目标轮次 ⇒ 不下结论",
+   "nodeid": "qoder-continuation-owner.spec.ts::ord0269-r6-page-exclusion-yields-no-conclusion — 本页不含目标轮次 ⇒ 不下结论",
+   "result": "green",
+   "seconds": 1.4
+  },
+  {
+   "project": "chromium",
+   "spec": "qoder-continuation-owner.spec.ts",
+   "location": "e2e\\qoder-continuation-owner.spec.ts:309:1",
+   "title": "ord0269-r4-a-brand-new-journey-shows-nothing — 全新行程不得亮待续卡",
+   "nodeid": "qoder-continuation-owner.spec.ts::ord0269-r4-a-brand-new-journey-shows-nothing — 全新行程不得亮待续卡",
+   "result": "green",
+   "seconds": 1.4
+  },
+  {
+   "project": "chromium",
+   "spec": "qoder-continuation-resume-carries-identity.spec.ts",
+   "location": "e2e\\qoder-continuation-resume-carries-identity.spec.ts:109:1",
+   "title": "ord0278-positive-the-resume-request-carries-both-keys — 续发那一发真的带着两枚键",
+   "nodeid": "qoder-continuation-resume-carries-identity.spec.ts::ord0278-positive-the-resume-request-carries-both-keys — 续发那一发真的带着两枚键",
+   "result": "red",
+   "seconds": 1.7
+  },
+  {
+   "project": "chromium",
+   "spec": "qoder-continuation-resume-carries-identity.spec.ts",
+   "location": "e2e\\qoder-continuation-resume-carries-identity.spec.ts:190:1",
+   "title": "ord0278-negative-no-marker-sends-nothing — 没有 marker 就没有第二腿",
+   "nodeid": "qoder-continuation-resume-carries-identity.spec.ts::ord0278-negative-no-marker-sends-nothing — 没有 marker 就没有第二腿",
+   "result": "green",
+   "seconds": 1.3
+  },
+  {
+   "project": "chromium",
+   "spec": "qoder-continuation-resume-carries-identity.spec.ts",
+   "location": "e2e\\qoder-continuation-resume-carries-identity.spec.ts:212:1",
+   "title": "ord0278-negative-off-page-sends-nothing — 翻不到那一轮就不许猜",
+   "nodeid": "qoder-continuation-resume-carries-identity.spec.ts::ord0278-negative-off-page-sends-nothing — 翻不到那一轮就不许猜",
+   "result": "red",
+   "seconds": 8.6
+  },
+  {
+   "project": "chromium",
+   "spec": "qoder-continuation-resume-carries-identity.spec.ts",
+   "location": "e2e\\qoder-continuation-resume-carries-identity.spec.ts:249:1",
+   "title": "ord0278-negative-refused-keeps-the-marker-and-says-whose-words-these-are — 被拒不清 marker，句子分得清是谁说的",
+   "nodeid": "qoder-continuation-resume-carries-identity.spec.ts::ord0278-negative-refused-keeps-the-marker-and-says-whose-words-these-are — 被拒不清 marker，句子分得清是谁说的",
+   "result": "green",
+   "seconds": 2.5
+  },
+  {
+   "project": "chromium",
+   "spec": "qoder-contrast-audit.spec.ts",
+   "location": "e2e\\qoder-contrast-audit.spec.ts:194:5",
+   "title": "Qoder contrast audit (Today + Live, light + dark) > no contrast violations on Today/Live, light + dark (mobile)",
+   "nodeid": "qoder-contrast-audit.spec.ts::Qoder contrast audit (Today + Live, light + dark) > no contrast violations on Today/Live, light + dark (mobile)",
+   "result": "red",
+   "seconds": 26.4
+  },
+  {
+   "project": "chromium",
+   "spec": "qoder-contrast-audit.spec.ts",
+   "location": "e2e\\qoder-contrast-audit.spec.ts:214:5",
+   "title": "Qoder contrast audit (Today + Live, light + dark) > focus indicators clear 3:1 on Today/Live, light + dark (mobile)",
+   "nodeid": "qoder-contrast-audit.spec.ts::Qoder contrast audit (Today + Live, light + dark) > focus indicators clear 3:1 on Today/Live, light + dark (mobile)",
+   "result": "red",
+   "seconds": 26.1
+  },
+  {
+   "project": "chromium",
+   "spec": "qoder-contrast-audit.spec.ts",
+   "location": "e2e\\qoder-contrast-audit.spec.ts:194:5",
+   "title": "Qoder contrast audit (Today + Live, light + dark) > no contrast violations on Today/Live, light + dark (desktop)",
+   "nodeid": "qoder-contrast-audit.spec.ts::Qoder contrast audit (Today + Live, light + dark) > no contrast violations on Today/Live, light + dark (desktop)",
+   "result": "red",
+   "seconds": 26.1
+  },
+  {
+   "project": "chromium",
+   "spec": "qoder-contrast-audit.spec.ts",
+   "location": "e2e\\qoder-contrast-audit.spec.ts:214:5",
+   "title": "Qoder contrast audit (Today + Live, light + dark) > focus indicators clear 3:1 on Today/Live, light + dark (desktop)",
+   "nodeid": "qoder-contrast-audit.spec.ts::Qoder contrast audit (Today + Live, light + dark) > focus indicators clear 3:1 on Today/Live, light + dark (desktop)",
+   "result": "red",
+   "seconds": 26.1
+  },
+  {
+   "project": "chromium",
+   "spec": "qoder-demo-entry-addresses-dont-create.spec.ts",
+   "location": "e2e\\qoder-demo-entry-addresses-dont-create.spec.ts:60:1",
+   "title": "ord0209-the-demo-entry-addresses-the-sealed-journey — 点 3 次入口，0 次新建，进去的是封存那趟",
+   "nodeid": "qoder-demo-entry-addresses-dont-create.spec.ts::ord0209-the-demo-entry-addresses-the-sealed-journey — 点 3 次入口，0 次新建，进去的是封存那趟",
+   "result": "green",
+   "seconds": 3.1
+  },
+  {
+   "project": "chromium",
+   "spec": "qoder-demo-entry-addresses-dont-create.spec.ts",
+   "location": "e2e\\qoder-demo-entry-addresses-dont-create.spec.ts:145:1",
+   "title": "ord0209-no-sealed-journey-fails-closed-in-words — 没有封存就具名关死，不偷偷建",
+   "nodeid": "qoder-demo-entry-addresses-dont-create.spec.ts::ord0209-no-sealed-journey-fails-closed-in-words — 没有封存就具名关死，不偷偷建",
+   "result": "green",
+   "seconds": 0.971
+  },
+  {
+   "project": "chromium",
+   "spec": "qoder-demo-entry-copy-matches-the-stage.spec.ts",
+   "location": "e2e\\qoder-demo-entry-copy-matches-the-stage.spec.ts:92:1",
+   "title": "ord0216d-zh-the-wizard-never-says-a-city-name — 中文向导整屏渲染文字里不许出现任何城市名",
+   "nodeid": "qoder-demo-entry-copy-matches-the-stage.spec.ts::ord0216d-zh-the-wizard-never-says-a-city-name — 中文向导整屏渲染文字里不许出现任何城市名",
+   "result": "green",
+   "seconds": 0.472
+  },
+  {
+   "project": "chromium",
+   "spec": "qoder-demo-entry-copy-matches-the-stage.spec.ts",
+   "location": "e2e\\qoder-demo-entry-copy-matches-the-stage.spec.ts:119:1",
+   "title": "ord0216d-en-the-wizard-never-says-a-city-name — 英文向导同一屏也不能出现城市名",
+   "nodeid": "qoder-demo-entry-copy-matches-the-stage.spec.ts::ord0216d-en-the-wizard-never-says-a-city-name — 英文向导同一屏也不能出现城市名",
+   "result": "green",
+   "seconds": 0.366
+  },
+  {
+   "project": "chromium",
+   "spec": "qoder-demo-entry-copy-matches-the-stage.spec.ts",
+   "location": "e2e\\qoder-demo-entry-copy-matches-the-stage.spec.ts:139:1",
+   "title": "ord0216d-the-city-the-traveller-lands-on-comes-from-data — 入口不说城市，落地页必须把服务器那趟的城市给出来",
+   "nodeid": "qoder-demo-entry-copy-matches-the-stage.spec.ts::ord0216d-the-city-the-traveller-lands-on-comes-from-data — 入口不说城市，落地页必须把服务器那趟的城市给出来",
+   "result": "green",
+   "seconds": 1.0
+  },
+  {
+   "project": "chromium",
+   "spec": "qoder-destination-preparation.spec.ts",
+   "location": "e2e\\qoder-destination-preparation.spec.ts:67:1",
+   "title": "ord0193-a-destination-that-needs-preparing-says-what-is-missing-and-offers-to — 需要准备就说得清缺什么",
+   "nodeid": "qoder-destination-preparation.spec.ts::ord0193-a-destination-that-needs-preparing-says-what-is-missing-and-offers-to — 需要准备就说得清缺什么",
+   "result": "green",
+   "seconds": 1.2
+  },
+  {
+   "project": "chromium",
+   "spec": "qoder-destination-preparation.spec.ts",
+   "location": "e2e\\qoder-destination-preparation.spec.ts:118:1",
+   "title": "ord0193-starting-the-preparation-shows-the-servers-own-phase-and-no-invented-progress — 进度只报服务器给的",
+   "nodeid": "qoder-destination-preparation.spec.ts::ord0193-starting-the-preparation-shows-the-servers-own-phase-and-no-invented-progress — 进度只报服务器给的",
+   "result": "green",
+   "seconds": 2.7
+  },
+  {
+   "project": "chromium",
+   "spec": "qoder-destination-preparation.spec.ts",
+   "location": "e2e\\qoder-destination-preparation.spec.ts:244:1",
+   "title": "ord0193-a-structural-verdict-is-not-called-a-network-failure — 结构性的“认不出来”不许说成网络不可用",
+   "nodeid": "qoder-destination-preparation.spec.ts::ord0193-a-structural-verdict-is-not-called-a-network-failure — 结构性的“认不出来”不许说成网络不可用",
+   "result": "green",
+   "seconds": 1.3
+  },
+  {
+   "project": "chromium",
+   "spec": "qoder-destination-preparation.spec.ts",
+   "location": "e2e\\qoder-destination-preparation.spec.ts:315:1",
+   "title": "ord0193-a-retryable-runtime-failure-offers-a-retry-and-a-structural-one-does-not — 可重试的才给重试",
+   "nodeid": "qoder-destination-preparation.spec.ts::ord0193-a-retryable-runtime-failure-offers-a-retry-and-a-structural-one-does-not — 可重试的才给重试",
+   "result": "green",
+   "seconds": 4.2
+  },
+  {
+   "project": "chromium",
+   "spec": "qoder-destination-preparation.spec.ts",
+   "location": "e2e\\qoder-destination-preparation.spec.ts:436:1",
+   "title": "ord0193-a-ready-destination-offers-planning-and-not-preparing — READY 就给“去规划”",
+   "nodeid": "qoder-destination-preparation.spec.ts::ord0193-a-ready-destination-offers-planning-and-not-preparing — READY 就给“去规划”",
+   "result": "green",
+   "seconds": 1.2
+  },
+  {
+   "project": "chromium",
+   "spec": "qoder-dock-geometry.spec.ts",
+   "location": "e2e\\qoder-dock-geometry.spec.ts:128:5",
+   "title": "Copilot dock geometry at phone size > /v8/live: no actionable element may rest under the dock at any settled scroll position",
+   "nodeid": "qoder-dock-geometry.spec.ts::Copilot dock geometry at phone size > /v8/live: no actionable element may rest under the dock at any settled scroll position",
+   "result": "green",
+   "seconds": 3.7
+  },
+  {
+   "project": "chromium",
+   "spec": "qoder-dock-geometry.spec.ts",
+   "location": "e2e\\qoder-dock-geometry.spec.ts:128:5",
+   "title": "Copilot dock geometry at phone size > /v8/hub: no actionable element may rest under the dock at any settled scroll position",
+   "nodeid": "qoder-dock-geometry.spec.ts::Copilot dock geometry at phone size > /v8/hub: no actionable element may rest under the dock at any settled scroll position",
+   "result": "green",
+   "seconds": 3.8
+  },
+  {
+   "project": "chromium",
+   "spec": "qoder-dock-geometry.spec.ts",
+   "location": "e2e\\qoder-dock-geometry.spec.ts:205:3",
+   "title": "Copilot dock geometry at phone size > a yielded pill is not a ghost control: hidden, unfocusable, and back again",
+   "nodeid": "qoder-dock-geometry.spec.ts::Copilot dock geometry at phone size > a yielded pill is not a ghost control: hidden, unfocusable, and back again",
+   "result": "green",
+   "seconds": 3.0
+  },
+  {
+   "project": "chromium",
+   "spec": "qoder-dropped-candidates-say-why.spec.ts",
+   "location": "e2e\\qoder-dropped-candidates-say-why.spec.ts:142:1",
+   "title": "ord0232-1-a-dropped-candidate-names-its-stop-and-its-condition — 少掉的每一站要点名",
+   "nodeid": "qoder-dropped-candidates-say-why.spec.ts::ord0232-1-a-dropped-candidate-names-its-stop-and-its-condition — 少掉的每一站要点名",
+   "result": "green",
+   "seconds": 0.684
+  },
+  {
+   "project": "chromium",
+   "spec": "qoder-dropped-candidates-say-why.spec.ts",
+   "location": "e2e\\qoder-dropped-candidates-say-why.spec.ts:206:1",
+   "title": "ord0232-2-no-rejection-event-puts-nothing-on-the-screen — 没有事实就没有话",
+   "nodeid": "qoder-dropped-candidates-say-why.spec.ts::ord0232-2-no-rejection-event-puts-nothing-on-the-screen — 没有事实就没有话",
+   "result": "green",
+   "seconds": 2.6
+  },
+  {
+   "project": "chromium",
+   "spec": "qoder-dropped-candidates-say-why.spec.ts",
+   "location": "e2e\\qoder-dropped-candidates-say-why.spec.ts:232:1",
+   "title": "ord0232-3-raw-ids-and-raw-codes-reach-neither-the-eye-nor-a-screen-reader — 目录查不到也不许贴原文",
+   "nodeid": "qoder-dropped-candidates-say-why.spec.ts::ord0232-3-raw-ids-and-raw-codes-reach-neither-the-eye-nor-a-screen-reader — 目录查不到也不许贴原文",
+   "result": "green",
+   "seconds": 0.634
+  },
+  {
+   "project": "chromium",
+   "spec": "qoder-dropped-candidates-say-why.spec.ts",
+   "location": "e2e\\qoder-dropped-candidates-say-why.spec.ts:261:1",
+   "title": "ord0232-4-the-card-is-painted-not-only-spoken — 只给读屏器说不算做到",
+   "nodeid": "qoder-dropped-candidates-say-why.spec.ts::ord0232-4-the-card-is-painted-not-only-spoken — 只给读屏器说不算做到",
+   "result": "green",
+   "seconds": 0.665
+  },
+  {
+   "project": "chromium",
+   "spec": "qoder-e2e-config-guard.spec.ts",
+   "location": "e2e\\qoder-e2e-config-guard.spec.ts:85:1",
+   "title": "an authoritative run missing a required variable exits non-zero and names that variable",
+   "nodeid": "qoder-e2e-config-guard.spec.ts::an authoritative run missing a required variable exits non-zero and names that variable",
+   "result": "green",
+   "seconds": 2.2
+  },
+  {
+   "project": "chromium",
+   "spec": "qoder-e2e-config-guard.spec.ts",
+   "location": "e2e\\qoder-e2e-config-guard.spec.ts:121:1",
+   "title": "an authoritative run that omits the interpreter cannot fall back to a system Python",
+   "nodeid": "qoder-e2e-config-guard.spec.ts::an authoritative run that omits the interpreter cannot fall back to a system Python",
+   "result": "green",
+   "seconds": 0.443
+  },
+  {
+   "project": "chromium",
+   "spec": "qoder-e2e-config-guard.spec.ts",
+   "location": "e2e\\qoder-e2e-config-guard.spec.ts:132:1",
+   "title": "a live external AI key refuses the deterministic suite instead of silently spending it",
+   "nodeid": "qoder-e2e-config-guard.spec.ts::a live external AI key refuses the deterministic suite instead of silently spending it",
+   "result": "green",
+   "seconds": 0.426
+  },
+  {
+   "project": "chromium",
+   "spec": "qoder-e2e-config-guard.spec.ts",
+   "location": "e2e\\qoder-e2e-config-guard.spec.ts:149:1",
+   "title": "a complete authoritative environment is accepted and announces who it started",
+   "nodeid": "qoder-e2e-config-guard.spec.ts::a complete authoritative environment is accepted and announces who it started",
+   "result": "green",
+   "seconds": 0.506
+  },
+  {
+   "project": "chromium",
+   "spec": "qoder-empty-request-says-what-is-missing.spec.ts",
+   "location": "e2e\\qoder-empty-request-says-what-is-missing.spec.ts:64:1",
+   "title": "ord0250-1-a-refused-press-leaves-a-reason-on-the-screen — 点了不说为什么，就是没点",
+   "nodeid": "qoder-empty-request-says-what-is-missing.spec.ts::ord0250-1-a-refused-press-leaves-a-reason-on-the-screen — 点了不说为什么，就是没点",
+   "result": "green",
+   "seconds": 1.0
+  },
+  {
+   "project": "chromium",
+   "spec": "qoder-empty-request-says-what-is-missing.spec.ts",
+   "location": "e2e\\qoder-empty-request-says-what-is-missing.spec.ts:147:1",
+   "title": "ord0250-2-the-floor-is-a-real-boundary-not-a-vibe — 边界就是代码里那一格",
+   "nodeid": "qoder-empty-request-says-what-is-missing.spec.ts::ord0250-2-the-floor-is-a-real-boundary-not-a-vibe — 边界就是代码里那一格",
+   "result": "green",
+   "seconds": 2.6
+  },
+  {
+   "project": "chromium",
+   "spec": "qoder-empty-request-says-what-is-missing.spec.ts",
+   "location": "e2e\\qoder-empty-request-says-what-is-missing.spec.ts:193:1",
+   "title": "ord0250-3-the-control-says-it-cannot-be-advanced-and-is-still-reachable — 不能走也要说得清",
+   "nodeid": "qoder-empty-request-says-what-is-missing.spec.ts::ord0250-3-the-control-says-it-cannot-be-advanced-and-is-still-reachable — 不能走也要说得清",
+   "result": "green",
+   "seconds": 0.988
+  },
+  {
+   "project": "chromium",
+   "spec": "qoder-every-summary-is-tappable.spec.ts",
+   "location": "e2e\\qoder-every-summary-is-tappable.spec.ts:93:1",
+   "title": "ord0247w-1-every-disclosure-clears-the-touch-floor — 整类 summary 都够 44px",
+   "nodeid": "qoder-every-summary-is-tappable.spec.ts::ord0247w-1-every-disclosure-clears-the-touch-floor — 整类 summary 都够 44px",
+   "result": "green",
+   "seconds": 6.1
+  },
+  {
+   "project": "chromium",
+   "spec": "qoder-every-summary-is-tappable.spec.ts",
+   "location": "e2e\\qoder-every-summary-is-tappable.spec.ts:129:1",
+   "title": "ord0247w-2-the-sweep-really-reached-the-reported-controls — 扫到的是那两处",
+   "nodeid": "qoder-every-summary-is-tappable.spec.ts::ord0247w-2-the-sweep-really-reached-the-reported-controls — 扫到的是那两处",
+   "result": "green",
+   "seconds": 6.1
+  },
+  {
+   "project": "chromium",
+   "spec": "qoder-every-summary-is-tappable.spec.ts",
+   "location": "e2e\\qoder-every-summary-is-tappable.spec.ts:152:1",
+   "title": "ord0247w-3-the-touch-floor-stays-out-of-the-pointer-layout — 桌面不被撑大",
+   "nodeid": "qoder-every-summary-is-tappable.spec.ts::ord0247w-3-the-touch-floor-stays-out-of-the-pointer-layout — 桌面不被撑大",
+   "result": "green",
+   "seconds": 6.2
+  },
+  {
+   "project": "chromium",
+   "spec": "qoder-failure-has-an-exit.spec.ts",
+   "location": "e2e\\qoder-failure-has-an-exit.spec.ts:112:1",
+   "title": "ord0169-a-stale-journey-404-is-never-called-a-network-failure — 死 id 的 404 不许说成网络不可用",
+   "nodeid": "qoder-failure-has-an-exit.spec.ts::ord0169-a-stale-journey-404-is-never-called-a-network-failure — 死 id 的 404 不许说成网络不可用",
+   "result": "red",
+   "seconds": 20.7
+  },
+  {
+   "project": "chromium",
+   "spec": "qoder-failure-has-an-exit.spec.ts",
+   "location": "e2e\\qoder-failure-has-an-exit.spec.ts:184:1",
+   "title": "ord0169-the-recovered-shell-brings-the-map-back — 恢复之后地图必须回来",
+   "nodeid": "qoder-failure-has-an-exit.spec.ts::ord0169-the-recovered-shell-brings-the-map-back — 恢复之后地图必须回来",
+   "result": "red",
+   "seconds": 20.5
+  },
+  {
+   "project": "chromium",
+   "spec": "qoder-failure-has-an-exit.spec.ts",
+   "location": "e2e\\qoder-failure-has-an-exit.spec.ts:219:1",
+   "title": "ord0169-a-real-transport-failure-still-says-offline — 真断网仍须说网络不可用（反向门）",
+   "nodeid": "qoder-failure-has-an-exit.spec.ts::ord0169-a-real-transport-failure-still-says-offline — 真断网仍须说网络不可用（反向门）",
+   "result": "green",
+   "seconds": 2.0
+  },
+  {
+   "project": "chromium",
+   "spec": "qoder-failure-has-an-exit.spec.ts",
+   "location": "e2e\\qoder-failure-has-an-exit.spec.ts:316:1",
+   "title": "ord0169-a-server-5xx-is-not-offline — 服务器自己出错不许说成网络问题",
+   "nodeid": "qoder-failure-has-an-exit.spec.ts::ord0169-a-server-5xx-is-not-offline — 服务器自己出错不许说成网络问题",
+   "result": "red",
+   "seconds": 20.4
+  },
+  {
+   "project": "chromium",
+   "spec": "qoder-generation-wait.spec.ts",
+   "location": "e2e\\qoder-generation-wait.spec.ts:102:3",
+   "title": "ORD-0047 the stay search says what it is waiting for > gen-wait-phase-stays-visible — the phase line is on screen the whole time, in both locales",
+   "nodeid": "qoder-generation-wait.spec.ts::ORD-0047 the stay search says what it is waiting for > gen-wait-phase-stays-visible — the phase line is on screen the whole time, in both locales",
+   "result": "green",
+   "seconds": 14.4
+  },
+  {
+   "project": "chromium",
+   "spec": "qoder-generation-wait.spec.ts",
+   "location": "e2e\\qoder-generation-wait.spec.ts:170:3",
+   "title": "ORD-0047 the stay search says what it is waiting for > gen-wait-stop-waiting-aborts — stopping the wait aborts the request without claiming a server cancel",
+   "nodeid": "qoder-generation-wait.spec.ts::ORD-0047 the stay search says what it is waiting for > gen-wait-stop-waiting-aborts — stopping the wait aborts the request without claiming a server cancel",
+   "result": "green",
+   "seconds": 1.3
+  },
+  {
+   "project": "chromium",
+   "spec": "qoder-generation-wait.spec.ts",
+   "location": "e2e\\qoder-generation-wait.spec.ts:245:3",
+   "title": "ORD-0047 the stay search says what it is waiting for > gen-empty-options-is-not-success — a 200 with zero results is drawn as zero results",
+   "nodeid": "qoder-generation-wait.spec.ts::ORD-0047 the stay search says what it is waiting for > gen-empty-options-is-not-success — a 200 with zero results is drawn as zero results",
+   "result": "green",
+   "seconds": 3.7
+  },
+  {
+   "project": "chromium",
+   "spec": "qoder-generation-wait.spec.ts",
+   "location": "e2e\\qoder-generation-wait.spec.ts:292:3",
+   "title": "ORD-0047 the stay search says what it is waiting for > gen-three-states-distinguishable — waiting, empty and refused must not share a face",
+   "nodeid": "qoder-generation-wait.spec.ts::ORD-0047 the stay search says what it is waiting for > gen-three-states-distinguishable — waiting, empty and refused must not share a face",
+   "result": "green",
+   "seconds": 12.7
+  },
+  {
+   "project": "chromium",
+   "spec": "qoder-generation-wait.spec.ts",
+   "location": "e2e\\qoder-generation-wait.spec.ts:407:3",
+   "title": "ORD-0047 the stay search says what it is waiting for > gen-empty-reason-comes-from-the-server — a reported cause is named, an unreported one stays unknown",
+   "nodeid": "qoder-generation-wait.spec.ts::ORD-0047 the stay search says what it is waiting for > gen-empty-reason-comes-from-the-server — a reported cause is named, an unreported one stays unknown",
+   "result": "green",
+   "seconds": 3.6
+  },
+  {
+   "project": "chromium",
+   "spec": "qoder-inbox-review-queue.spec.ts",
+   "location": "e2e\\qoder-inbox-review-queue.spec.ts:99:1",
+   "title": "ord0146-review-entry-is-on-the-page-that-asked-for-review — 说了要审核，这一屏就得有审核的地方",
+   "nodeid": "qoder-inbox-review-queue.spec.ts::ord0146-review-entry-is-on-the-page-that-asked-for-review — 说了要审核，这一屏就得有审核的地方",
+   "result": "green",
+   "seconds": 2.1
+  },
+  {
+   "project": "chromium",
+   "spec": "qoder-inbox-review-queue.spec.ts",
+   "location": "e2e\\qoder-inbox-review-queue.spec.ts:207:1",
+   "title": "ord0146-passing-a-review-is-the-servers-answer — 过没过是服务器说的，不是前端自己盖的章",
+   "nodeid": "qoder-inbox-review-queue.spec.ts::ord0146-passing-a-review-is-the-servers-answer — 过没过是服务器说的，不是前端自己盖的章",
+   "result": "green",
+   "seconds": 2.7
+  },
+  {
+   "project": "chromium",
+   "spec": "qoder-inbox-review-queue.spec.ts",
+   "location": "e2e\\qoder-inbox-review-queue.spec.ts:306:1",
+   "title": "ord0146-a-protected-badge-needs-the-servers-commitment — 说「受保护」的每一张卡都得有服务器那条承诺链接",
+   "nodeid": "qoder-inbox-review-queue.spec.ts::ord0146-a-protected-badge-needs-the-servers-commitment — 说「受保护」的每一张卡都得有服务器那条承诺链接",
+   "result": "green",
+   "seconds": 1.9
+  },
+  {
+   "project": "chromium",
+   "spec": "qoder-live-recovery-cursor.spec.ts",
+   "location": "e2e\\qoder-live-recovery-cursor.spec.ts:96:1",
+   "title": "the recovery card follows the cursor the product itself advanced",
+   "nodeid": "qoder-live-recovery-cursor.spec.ts::the recovery card follows the cursor the product itself advanced",
+   "result": "green",
+   "seconds": 0.578
+  },
+  {
+   "project": "chromium",
+   "spec": "qoder-live-recovery-cursor.spec.ts",
+   "location": "e2e\\qoder-live-recovery-cursor.spec.ts:138:1",
+   "title": "a plan that holds no activities invents no current step",
+   "nodeid": "qoder-live-recovery-cursor.spec.ts::a plan that holds no activities invents no current step",
+   "result": "green",
+   "seconds": 0.484
+  },
+  {
+   "project": "chromium",
+   "spec": "qoder-live-recovery-cursor.spec.ts",
+   "location": "e2e\\qoder-live-recovery-cursor.spec.ts:215:1",
+   "title": "a cursor that resolves to a finished step yields no Now on the Live heading",
+   "nodeid": "qoder-live-recovery-cursor.spec.ts::a cursor that resolves to a finished step yields no Now on the Live heading",
+   "result": "green",
+   "seconds": 0.53
+  },
+  {
+   "project": "chromium",
+   "spec": "qoder-live-recovery-cursor.spec.ts",
+   "location": "e2e\\qoder-live-recovery-cursor.spec.ts:267:1",
+   "title": "an unresolvable cursor makes the recovery card name nothing",
+   "nodeid": "qoder-live-recovery-cursor.spec.ts::an unresolvable cursor makes the recovery card name nothing",
+   "result": "green",
+   "seconds": 0.558
+  },
+  {
+   "project": "chromium",
+   "spec": "qoder-live-structure.spec.ts",
+   "location": "e2e\\qoder-live-structure.spec.ts:224:3",
+   "title": "Qoder Live structure order (Phase 2) > sections stack Current -> Map -> Disruption -> Replan (bounding rect)",
+   "nodeid": "qoder-live-structure.spec.ts::Qoder Live structure order (Phase 2) > sections stack Current -> Map -> Disruption -> Replan (bounding rect)",
+   "result": "green",
+   "seconds": 1.0
+  },
+  {
+   "project": "chromium",
+   "spec": "qoder-live-structure.spec.ts",
+   "location": "e2e\\qoder-live-structure.spec.ts:302:3",
+   "title": "Qoder Live accepted transition (Phase 3) > accepting a proposal surfaces the confirmation before the open warning collapses",
+   "nodeid": "qoder-live-structure.spec.ts::Qoder Live accepted transition (Phase 3) > accepting a proposal surfaces the confirmation before the open warning collapses",
+   "result": "green",
+   "seconds": 0.99
+  },
+  {
+   "project": "chromium",
+   "spec": "qoder-live-structure.spec.ts",
+   "location": "e2e\\qoder-live-structure.spec.ts:367:3",
+   "title": "Qoder Live state-coverage matrix (Phase 1) > L0 NORMAL: current/next real, no disruption, no Accept CTA",
+   "nodeid": "qoder-live-structure.spec.ts::Qoder Live state-coverage matrix (Phase 1) > L0 NORMAL: current/next real, no disruption, no Accept CTA",
+   "result": "green",
+   "seconds": 0.485
+  },
+  {
+   "project": "chromium",
+   "spec": "qoder-live-structure.spec.ts",
+   "location": "e2e\\qoder-live-structure.spec.ts:374:3",
+   "title": "Qoder Live state-coverage matrix (Phase 1) > L1 UNRESOLVED: disruption shown, no proposal, no Accept CTA, safe notice",
+   "nodeid": "qoder-live-structure.spec.ts::Qoder Live state-coverage matrix (Phase 1) > L1 UNRESOLVED: disruption shown, no proposal, no Accept CTA, safe notice",
+   "result": "green",
+   "seconds": 0.566
+  },
+  {
+   "project": "chromium",
+   "spec": "qoder-live-structure.spec.ts",
+   "location": "e2e\\qoder-live-structure.spec.ts:382:3",
+   "title": "Qoder Live state-coverage matrix (Phase 1) > L2 PROPOSAL_READY: one real differing proposal, exactly one Accept CTA",
+   "nodeid": "qoder-live-structure.spec.ts::Qoder Live state-coverage matrix (Phase 1) > L2 PROPOSAL_READY: one real differing proposal, exactly one Accept CTA",
+   "result": "green",
+   "seconds": 0.479
+  },
+  {
+   "project": "chromium",
+   "spec": "qoder-live-structure.spec.ts",
+   "location": "e2e\\qoder-live-structure.spec.ts:396:3",
+   "title": "Qoder Live state-coverage matrix (Phase 1) > L3 ACCEPTED: Accept CTA gone, handled confirmation shown",
+   "nodeid": "qoder-live-structure.spec.ts::Qoder Live state-coverage matrix (Phase 1) > L3 ACCEPTED: Accept CTA gone, handled confirmation shown",
+   "result": "green",
+   "seconds": 0.46
+  },
+  {
+   "project": "chromium",
+   "spec": "qoder-live-structure.spec.ts",
+   "location": "e2e\\qoder-live-structure.spec.ts:412:3",
+   "title": "Qoder Live state-coverage matrix (Phase 1) > L4 MOBILITY_UNAVAILABLE-safe: rejected proposal offers no fake Accept CTA",
+   "nodeid": "qoder-live-structure.spec.ts::Qoder Live state-coverage matrix (Phase 1) > L4 MOBILITY_UNAVAILABLE-safe: rejected proposal offers no fake Accept CTA",
+   "result": "green",
+   "seconds": 0.459
+  },
+  {
+   "project": "chromium",
+   "spec": "qoder-live-structure.spec.ts",
+   "location": "e2e\\qoder-live-structure.spec.ts:435:3",
+   "title": "Qoder Live dark replan-state audit (Phase 4) > L1 UNRESOLVED and L2 PROPOSAL_READY have no dark contrast violations",
+   "nodeid": "qoder-live-structure.spec.ts::Qoder Live dark replan-state audit (Phase 4) > L1 UNRESOLVED and L2 PROPOSAL_READY have no dark contrast violations",
+   "result": "green",
+   "seconds": 0.762
+  },
+  {
+   "project": "chromium",
+   "spec": "qoder-live-structure.spec.ts",
+   "location": "e2e\\qoder-live-structure.spec.ts:503:3",
+   "title": "Qoder Live map height + first screen (Phase 4) > map is 240 normal and 200-216 when a decision is active; disruption reaches the fold",
+   "nodeid": "qoder-live-structure.spec.ts::Qoder Live map height + first screen (Phase 4) > map is 240 normal and 200-216 when a decision is active; disruption reaches the fold",
+   "result": "green",
+   "seconds": 3.7
+  },
+  {
+   "project": "chromium",
+   "spec": "qoder-map-gesture-ownership.spec.ts",
+   "location": "e2e\\qoder-map-gesture-ownership.spec.ts:146:1",
+   "title": "ord0134-map-gesture-ownership — 拖地图地图动、拖页面页面动，各不抢对方的手势 (5.0m)",
+   "nodeid": "qoder-map-gesture-ownership.spec.ts::ord0134-map-gesture-ownership — 拖地图地图动、拖页面页面动，各不抢对方的手势 (5.0m)",
+   "result": "red",
+   "seconds": 0.0
+  },
+  {
+   "project": "chromium",
+   "spec": "qoder-map-interaction.spec.ts",
+   "location": "e2e\\qoder-map-interaction.spec.ts:90:3",
+   "title": "ORD-0037 the journey map takes gestures and reads as a map > drag-moves-camera + ctrl-wheel-zooms — gestures reach the camera",
+   "nodeid": "qoder-map-interaction.spec.ts::ORD-0037 the journey map takes gestures and reads as a map > drag-moves-camera + ctrl-wheel-zooms — gestures reach the camera",
+   "result": "red",
+   "seconds": 26.1
+  },
+  {
+   "project": "chromium",
+   "spec": "qoder-map-interaction.spec.ts",
+   "location": "e2e\\qoder-map-interaction.spec.ts:146:3",
+   "title": "ORD-0037 the journey map takes gestures and reads as a map > route-feature-count + route-width-follows-zoom + route-casing-layer — not one big line",
+   "nodeid": "qoder-map-interaction.spec.ts::ORD-0037 the journey map takes gestures and reads as a map > route-feature-count + route-width-follows-zoom + route-casing-layer — not one big line",
+   "result": "red",
+   "seconds": 26.0
+  },
+  {
+   "project": "chromium",
+   "spec": "qoder-map-interaction.spec.ts",
+   "location": "e2e\\qoder-map-interaction.spec.ts:198:3",
+   "title": "ORD-0037 the journey map takes gestures and reads as a map > the gesture split is stated on the panel, not left to be discovered",
+   "nodeid": "qoder-map-interaction.spec.ts::ORD-0037 the journey map takes gestures and reads as a map > the gesture split is stated on the panel, not left to be discovered",
+   "result": "red",
+   "seconds": 26.1
+  },
+  {
+   "project": "chromium",
+   "spec": "qoder-mobile-overflow.spec.ts",
+   "location": "e2e\\qoder-mobile-overflow.spec.ts:82:3",
+   "title": "Qoder mobile-overflow (Today + Live) > no horizontal overflow at 360/412/430 on Today and Live",
+   "nodeid": "qoder-mobile-overflow.spec.ts::Qoder mobile-overflow (Today + Live) > no horizontal overflow at 360/412/430 on Today and Live",
+   "result": "red",
+   "seconds": 26.0
+  },
+  {
+   "project": "chromium",
+   "spec": "qoder-mobile-ui-overnight.spec.ts",
+   "location": "e2e\\qoder-mobile-ui-overnight.spec.ts:186:3",
+   "title": "Qoder mobile-overnight gate (Today/Live/Wallet x 360/390/412) > no overflow, 44px targets, unblocked CTA, no truncation",
+   "nodeid": "qoder-mobile-ui-overnight.spec.ts::Qoder mobile-overnight gate (Today/Live/Wallet x 360/390/412) > no overflow, 44px targets, unblocked CTA, no truncation",
+   "result": "red",
+   "seconds": 26.1
+  },
+  {
+   "project": "chromium",
+   "spec": "qoder-mobile-ui-overnight.spec.ts",
+   "location": "e2e\\qoder-mobile-ui-overnight.spec.ts:213:3",
+   "title": "Qoder mobile-overnight gate (Journey creation, first entry) > no overflow, 44px targets, unblocked CTA, no truncation",
+   "nodeid": "qoder-mobile-ui-overnight.spec.ts::Qoder mobile-overnight gate (Journey creation, first entry) > no overflow, 44px targets, unblocked CTA, no truncation",
+   "result": "green",
+   "seconds": 4.6
+  },
+  {
+   "project": "chromium",
+   "spec": "qoder-mobile-ui-overnight.spec.ts",
+   "location": "e2e\\qoder-mobile-ui-overnight.spec.ts:311:3",
+   "title": "Qoder touch-target contract is layered (F-2) > fine-pointer desktop keeps the compact density, mobile takes >=44px",
+   "nodeid": "qoder-mobile-ui-overnight.spec.ts::Qoder touch-target contract is layered (F-2) > fine-pointer desktop keeps the compact density, mobile takes >=44px",
+   "result": "red",
+   "seconds": 26.1
+  },
+  {
+   "project": "chromium",
+   "spec": "qoder-model-words-are-labelled.spec.ts",
+   "location": "e2e\\qoder-model-words-are-labelled.spec.ts:174:1",
+   "title": "ord0240-1-no-model-sentence-in-the-main-flow — 中文主文案里不得出现模型原文",
+   "nodeid": "qoder-model-words-are-labelled.spec.ts::ord0240-1-no-model-sentence-in-the-main-flow — 中文主文案里不得出现模型原文",
+   "result": "green",
+   "seconds": 1.2
+  },
+  {
+   "project": "chromium",
+   "spec": "qoder-model-words-are-labelled.spec.ts",
+   "location": "e2e\\qoder-model-words-are-labelled.spec.ts:187:1",
+   "title": "ord0240-2-the-disclosure-says-whose-words-they-are — 展开必须写明是谁的话",
+   "nodeid": "qoder-model-words-are-labelled.spec.ts::ord0240-2-the-disclosure-says-whose-words-they-are — 展开必须写明是谁的话",
+   "result": "green",
+   "seconds": 0.979
+  },
+  {
+   "project": "chromium",
+   "spec": "qoder-model-words-are-labelled.spec.ts",
+   "location": "e2e\\qoder-model-words-are-labelled.spec.ts:241:1",
+   "title": "ord0240-3-the-only-home-for-raw-words-is-the-technical-disclosure — 原文唯一的住处",
+   "nodeid": "qoder-model-words-are-labelled.spec.ts::ord0240-3-the-only-home-for-raw-words-is-the-technical-disclosure — 原文唯一的住处",
+   "result": "green",
+   "seconds": 1.2
+  },
+  {
+   "project": "chromium",
+   "spec": "qoder-no-internal-words-or-sentinels.spec.ts",
+   "location": "e2e\\qoder-no-internal-words-or-sentinels.spec.ts:63:1",
+   "title": "ord0251-1-the-push-card-says-the-state-in-plain-words — 状态句不得是服务器标签",
+   "nodeid": "qoder-no-internal-words-or-sentinels.spec.ts::ord0251-1-the-push-card-says-the-state-in-plain-words — 状态句不得是服务器标签",
+   "result": "green",
+   "seconds": 0.877
+  },
+  {
+   "project": "chromium",
+   "spec": "qoder-no-internal-words-or-sentinels.spec.ts",
+   "location": "e2e\\qoder-no-internal-words-or-sentinels.spec.ts:127:1",
+   "title": "ord0251-2-a-label-this-screen-does-not-know-is-not-echoed — 不认识的标签不许原样回显",
+   "nodeid": "qoder-no-internal-words-or-sentinels.spec.ts::ord0251-2-a-label-this-screen-does-not-know-is-not-echoed — 不认识的标签不许原样回显",
+   "result": "green",
+   "seconds": 0.548
+  },
+  {
+   "project": "chromium",
+   "spec": "qoder-no-internal-words-or-sentinels.spec.ts",
+   "location": "e2e\\qoder-no-internal-words-or-sentinels.spec.ts:178:1",
+   "title": "ord0251-3-the-plan-count-attribute-never-carries-the-unknown-sentinel — 「不知道」不是负数",
+   "nodeid": "qoder-no-internal-words-or-sentinels.spec.ts::ord0251-3-the-plan-count-attribute-never-carries-the-unknown-sentinel — 「不知道」不是负数",
+   "result": "green",
+   "seconds": 0.933
+  },
+  {
+   "project": "chromium",
+   "spec": "qoder-not-answered-cell.spec.ts",
+   "location": "e2e\\qoder-not-answered-cell.spec.ts:82:1",
+   "title": "ord0203-the-fourth-cell-renders-and-its-retry-consumes-retryable — 第四格上屏，重试真的吃 retryable (5.0m)",
+   "nodeid": "qoder-not-answered-cell.spec.ts::ord0203-the-fourth-cell-renders-and-its-retry-consumes-retryable — 第四格上屏，重试真的吃 retryable (5.0m)",
+   "result": "red",
+   "seconds": 0.0
+  },
+  {
+   "project": "chromium",
+   "spec": "qoder-not-answered-cell.spec.ts",
+   "location": "e2e\\qoder-not-answered-cell.spec.ts:192:1",
+   "title": "ord0203-the-retry-actually-re-asks-the-server — 点“稍后重试”要真再问一次 (5.0m)",
+   "nodeid": "qoder-not-answered-cell.spec.ts::ord0203-the-retry-actually-re-asks-the-server — 点“稍后重试”要真再问一次 (5.0m)",
+   "result": "red",
+   "seconds": 0.0
+  },
+  {
+   "project": "chromium",
+   "spec": "qoder-not-answered-cell.spec.ts",
+   "location": "e2e\\qoder-not-answered-cell.spec.ts:234:1",
+   "title": "ord0203-the-fourth-cell-is-readable-in-dark — 深色下自己先看一眼 (5.0m)",
+   "nodeid": "qoder-not-answered-cell.spec.ts::ord0203-the-fourth-cell-is-readable-in-dark — 深色下自己先看一眼 (5.0m)",
+   "result": "red",
+   "seconds": 0.0
+  },
+  {
+   "project": "chromium",
+   "spec": "qoder-offline-persistence.spec.ts",
+   "location": "e2e\\qoder-offline-persistence.spec.ts:81:1",
+   "title": "ord0178-measure-offline-persistence — 先量：成功加载后到底落没落行",
+   "nodeid": "qoder-offline-persistence.spec.ts::ord0178-measure-offline-persistence — 先量：成功加载后到底落没落行",
+   "result": "red",
+   "seconds": 30.5
+  },
+  {
+   "project": "chromium",
+   "spec": "qoder-offline-persistence.spec.ts",
+   "location": "e2e\\qoder-offline-persistence.spec.ts:190:1",
+   "title": "ord0178-the-saved-copy-claim-follows-the-rowcount — 有行才准说已保存，没行就不许说（双向）",
+   "nodeid": "qoder-offline-persistence.spec.ts::ord0178-the-saved-copy-claim-follows-the-rowcount — 有行才准说已保存，没行就不许说（双向）",
+   "result": "red",
+   "seconds": 20.5
+  },
+  {
+   "project": "chromium",
+   "spec": "qoder-onboarding-failure.spec.ts",
+   "location": "e2e\\qoder-onboarding-failure.spec.ts:53:3",
+   "title": "ORD-0034 onboarding surfaces a failed create > a 500 on journey creation shows a visible, named failure instead of silence",
+   "nodeid": "qoder-onboarding-failure.spec.ts::ORD-0034 onboarding surfaces a failed create > a 500 on journey creation shows a visible, named failure instead of silence",
+   "result": "green",
+   "seconds": 2.7
+  },
+  {
+   "project": "chromium",
+   "spec": "qoder-onboarding-failure.spec.ts",
+   "location": "e2e\\qoder-onboarding-failure.spec.ts:129:3",
+   "title": "ORD-0034 onboarding surfaces a failed create > the named backend reason reaches the onboarding screen",
+   "nodeid": "qoder-onboarding-failure.spec.ts::ORD-0034 onboarding surfaces a failed create > the named backend reason reaches the onboarding screen",
+   "result": "red",
+   "seconds": 12.7
+  },
+  {
+   "project": "chromium",
+   "spec": "qoder-onboarding-failure.spec.ts",
+   "location": "e2e\\qoder-onboarding-failure.spec.ts:187:3",
+   "title": "ORD-0034 onboarding surfaces a failed create > legal-window-create-advances — a legal trip reaches the app within 5s",
+   "nodeid": "qoder-onboarding-failure.spec.ts::ORD-0034 onboarding surfaces a failed create > legal-window-create-advances — a legal trip reaches the app within 5s",
+   "result": "green",
+   "seconds": 2.6
+  },
+  {
+   "project": "chromium",
+   "spec": "qoder-onboarding-failure.spec.ts",
+   "location": "e2e\\qoder-onboarding-failure.spec.ts:221:3",
+   "title": "ORD-0034 onboarding surfaces a failed create > missing-anchor-is-named-before-submit",
+   "nodeid": "qoder-onboarding-failure.spec.ts::ORD-0034 onboarding surfaces a failed create > missing-anchor-is-named-before-submit",
+   "result": "green",
+   "seconds": 1.6
+  },
+  {
+   "project": "chromium",
+   "spec": "qoder-onboarding-failure.spec.ts",
+   "location": "e2e\\qoder-onboarding-failure.spec.ts:314:3",
+   "title": "ORD-0034 onboarding surfaces a failed create > review-page-says-missing-anchor-is-required",
+   "nodeid": "qoder-onboarding-failure.spec.ts::ORD-0034 onboarding surfaces a failed create > review-page-says-missing-anchor-is-required",
+   "result": "green",
+   "seconds": 0.848
+  },
+  {
+   "project": "chromium",
+   "spec": "qoder-onboarding-failure.spec.ts",
+   "location": "e2e\\qoder-onboarding-failure.spec.ts:385:3",
+   "title": "ORD-0034 onboarding surfaces a failed create > backend-reason-lands-on-its-own-field",
+   "nodeid": "qoder-onboarding-failure.spec.ts::ORD-0034 onboarding surfaces a failed create > backend-reason-lands-on-its-own-field",
+   "result": "red",
+   "seconds": 12.6
+  },
+  {
+   "project": "chromium",
+   "spec": "qoder-ord0261-overlap-readonly-reproduction.spec.ts",
+   "location": "e2e\\qoder-ord0261-overlap-readonly-reproduction.spec.ts:82:1",
+   "title": "ord0261-readonly-1-the-reproduction-at-current-head — 复现：中心到底命中谁",
+   "nodeid": "qoder-ord0261-overlap-readonly-reproduction.spec.ts::ord0261-readonly-1-the-reproduction-at-current-head — 复现：中心到底命中谁",
+   "result": "green",
+   "seconds": 1.4
+  },
+  {
+   "project": "chromium",
+   "spec": "qoder-ord0280-attribution-label-speaks-for-itself.spec.ts",
+   "location": "e2e\\qoder-ord0280-attribution-label-speaks-for-itself.spec.ts:185:1",
+   "title": "ord0280-A1 agent/commands refused with NO server sentence does not wear the attribution label",
+   "nodeid": "qoder-ord0280-attribution-label-speaks-for-itself.spec.ts::ord0280-A1 agent/commands refused with NO server sentence does not wear the attribution label",
+   "result": "green",
+   "seconds": 0.92
+  },
+  {
+   "project": "chromium",
+   "spec": "qoder-ord0280-attribution-label-speaks-for-itself.spec.ts",
+   "location": "e2e\\qoder-ord0280-attribution-label-speaks-for-itself.spec.ts:193:1",
+   "title": "ord0280-A2 agent/commands refused WITH a server sentence shows it verbatim under the label",
+   "nodeid": "qoder-ord0280-attribution-label-speaks-for-itself.spec.ts::ord0280-A2 agent/commands refused WITH a server sentence shows it verbatim under the label",
+   "result": "green",
+   "seconds": 0.958
+  },
+  {
+   "project": "chromium",
+   "spec": "qoder-ord0280-attribution-label-speaks-for-itself.spec.ts",
+   "location": "e2e\\qoder-ord0280-attribution-label-speaks-for-itself.spec.ts:205:1",
+   "title": "ord0280-B1 GET /places unreadable with NO sentence is named as this device's reading",
+   "nodeid": "qoder-ord0280-attribution-label-speaks-for-itself.spec.ts::ord0280-B1 GET /places unreadable with NO sentence is named as this device's reading",
+   "result": "green",
+   "seconds": 1.0
+  },
+  {
+   "project": "chromium",
+   "spec": "qoder-ord0280-attribution-label-speaks-for-itself.spec.ts",
+   "location": "e2e\\qoder-ord0280-attribution-label-speaks-for-itself.spec.ts:220:1",
+   "title": "ord0280-B2 GET /places refused with a detail sentence quotes the server",
+   "nodeid": "qoder-ord0280-attribution-label-speaks-for-itself.spec.ts::ord0280-B2 GET /places refused with a detail sentence quotes the server",
+   "result": "green",
+   "seconds": 0.957
+  },
+  {
+   "project": "chromium",
+   "spec": "qoder-ord0280-attribution-label-speaks-for-itself.spec.ts",
+   "location": "e2e\\qoder-ord0280-attribution-label-speaks-for-itself.spec.ts:233:1",
+   "title": "ord0280-C1 plans/generate refused with NO sentence is not the server's reason",
+   "nodeid": "qoder-ord0280-attribution-label-speaks-for-itself.spec.ts::ord0280-C1 plans/generate refused with NO sentence is not the server's reason",
+   "result": "green",
+   "seconds": 0.927
+  },
+  {
+   "project": "chromium",
+   "spec": "qoder-ord0280-attribution-label-speaks-for-itself.spec.ts",
+   "location": "e2e\\qoder-ord0280-attribution-label-speaks-for-itself.spec.ts:252:1",
+   "title": "ord0280-C2 plans/generate refused with a message quotes it exactly",
+   "nodeid": "qoder-ord0280-attribution-label-speaks-for-itself.spec.ts::ord0280-C2 plans/generate refused with a message quotes it exactly",
+   "result": "green",
+   "seconds": 0.963
+  },
+  {
+   "project": "chromium",
+   "spec": "qoder-ord0280-attribution-label-speaks-for-itself.spec.ts",
+   "location": "e2e\\qoder-ord0280-attribution-label-speaks-for-itself.spec.ts:272:1",
+   "title": "ord0280-D the <2-places count this screen measured is a device statement too",
+   "nodeid": "qoder-ord0280-attribution-label-speaks-for-itself.spec.ts::ord0280-D the <2-places count this screen measured is a device statement too",
+   "result": "green",
+   "seconds": 0.929
+  },
+  {
+   "project": "chromium",
+   "spec": "qoder-ord0281-keyed-write-deadline.spec.ts",
+   "location": "e2e\\qoder-ord0281-keyed-write-deadline.spec.ts:175:3",
+   "title": "ORD-0281 keyed write deadline > ord0281-TA a keyed write answered inside the bound shows no deadline sentence",
+   "nodeid": "qoder-ord0281-keyed-write-deadline.spec.ts::ORD-0281 keyed write deadline > ord0281-TA a keyed write answered inside the bound shows no deadline sentence",
+   "result": "green",
+   "seconds": 1.1
+  },
+  {
+   "project": "chromium",
+   "spec": "qoder-ord0281-keyed-write-deadline.spec.ts",
+   "location": "e2e\\qoder-ord0281-keyed-write-deadline.spec.ts:198:3",
+   "title": "ORD-0281 keyed write deadline > ord0281-TB an unanswered keyed write ends at our bound and names itself, not the network",
+   "nodeid": "qoder-ord0281-keyed-write-deadline.spec.ts::ORD-0281 keyed write deadline > ord0281-TB an unanswered keyed write ends at our bound and names itself, not the network",
+   "result": "red",
+   "seconds": 17.7
+  },
+  {
+   "project": "chromium",
+   "spec": "qoder-ord0302-unreadable-server-body.spec.ts",
+   "location": "e2e\\qoder-ord0302-unreadable-server-body.spec.ts:137:3",
+   "title": "ord0302-N1 a non-JSON 5xx stays an HTTP answer with a visible device reading",
+   "nodeid": "qoder-ord0302-unreadable-server-body.spec.ts::ord0302-N1 a non-JSON 5xx stays an HTTP answer with a visible device reading",
+   "result": "green",
+   "seconds": 1.0
+  },
+  {
+   "project": "chromium",
+   "spec": "qoder-ord0302-unreadable-server-body.spec.ts",
+   "location": "e2e\\qoder-ord0302-unreadable-server-body.spec.ts:137:3",
+   "title": "ord0302-N2 a 4xx with the server's sentence still quotes it verbatim (positive control)",
+   "nodeid": "qoder-ord0302-unreadable-server-body.spec.ts::ord0302-N2 a 4xx with the server's sentence still quotes it verbatim (positive control)",
+   "result": "green",
+   "seconds": 0.984
+  },
+  {
+   "project": "chromium",
+   "spec": "qoder-ord0302-unreadable-server-body.spec.ts",
+   "location": "e2e\\qoder-ord0302-unreadable-server-body.spec.ts:137:3",
+   "title": "ord0302-N3 a genuine network failure keeps NETWORK and still renders the detail block",
+   "nodeid": "qoder-ord0302-unreadable-server-body.spec.ts::ord0302-N3 a genuine network failure keeps NETWORK and still renders the detail block",
+   "result": "green",
+   "seconds": 0.92
+  },
+  {
+   "project": "chromium",
+   "spec": "qoder-ord0302-unreadable-server-body.spec.ts",
+   "location": "e2e\\qoder-ord0302-unreadable-server-body.spec.ts:295:1",
+   "title": "ord0302-X1 every 200 shape whose card points at 技术详情 renders a block that carries a reading",
+   "nodeid": "qoder-ord0302-unreadable-server-body.spec.ts::ord0302-X1 every 200 shape whose card points at 技术详情 renders a block that carries a reading",
+   "result": "green",
+   "seconds": 5.0
+  },
+  {
+   "project": "chromium",
+   "spec": "qoder-ord0302-unreadable-server-body.spec.ts",
+   "location": "e2e\\qoder-ord0302-unreadable-server-body.spec.ts:335:1",
+   "title": "ord0302-X2 a promise-free card stays honest, and the empty-block direction is named as unmeasured",
+   "nodeid": "qoder-ord0302-unreadable-server-body.spec.ts::ord0302-X2 a promise-free card stays honest, and the empty-block direction is named as unmeasured",
+   "result": "green",
+   "seconds": 1.1
+  },
+  {
+   "project": "chromium",
+   "spec": "qoder-ord0310-keyless-write-deadline.spec.ts",
+   "location": "e2e\\qoder-ord0310-keyless-write-deadline.spec.ts:121:1",
+   "title": "K1 无键写腿到点：屏幕说结果未知、不能补问，秒数与计时器同源 (1.0m)",
+   "nodeid": "qoder-ord0310-keyless-write-deadline.spec.ts::K1 无键写腿到点：屏幕说结果未知、不能补问，秒数与计时器同源 (1.0m)",
+   "result": "green",
+   "seconds": 0.0
+  },
+  {
+   "project": "chromium",
+   "spec": "qoder-ord0310-keyless-write-deadline.spec.ts",
+   "location": "e2e\\qoder-ord0310-keyless-write-deadline.spec.ts:148:1",
+   "title": "K2 正控：服务器两秒内答完时，这枚期限不碰正常结局",
+   "nodeid": "qoder-ord0310-keyless-write-deadline.spec.ts::K2 正控：服务器两秒内答完时，这枚期限不碰正常结局",
+   "result": "green",
+   "seconds": 0.976
+  },
+  {
+   "project": "chromium",
+   "spec": "qoder-ord0310-keyless-write-deadline.spec.ts",
+   "location": "e2e\\qoder-ord0310-keyless-write-deadline.spec.ts:166:1",
+   "title": "K3 反控：旅行者按取消时，期限不许冒充用户",
+   "nodeid": "qoder-ord0310-keyless-write-deadline.spec.ts::K3 反控：旅行者按取消时，期限不许冒充用户",
+   "result": "green",
+   "seconds": 0.955
+  },
+  {
+   "project": "chromium",
+   "spec": "qoder-ord0323-two-exposure-cells.spec.ts",
+   "location": "e2e\\qoder-ord0323-two-exposure-cells.spec.ts:119:1",
+   "title": "N1_boundary_panel_keeps_its_own_readings_and_drops_the_failure_prose — 边界自己量的字段还在，失败原文与组件帧不在屏上",
+   "nodeid": "qoder-ord0323-two-exposure-cells.spec.ts::N1_boundary_panel_keeps_its_own_readings_and_drops_the_failure_prose — 边界自己量的字段还在，失败原文与组件帧不在屏上",
+   "result": "green",
+   "seconds": 1.4
+  },
+  {
+   "project": "chromium",
+   "spec": "qoder-ord0323-two-exposure-cells.spec.ts",
+   "location": "e2e\\qoder-ord0323-two-exposure-cells.spec.ts:220:1",
+   "title": "N2_rejected_readings_render_their_own_status_and_content_type_not_the_reply_s_sentence — 顶回来的两条读数各自还在，回复原话不在屏上",
+   "nodeid": "qoder-ord0323-two-exposure-cells.spec.ts::N2_rejected_readings_render_their_own_status_and_content_type_not_the_reply_s_sentence — 顶回来的两条读数各自还在，回复原话不在屏上",
+   "result": "green",
+   "seconds": 0.568
+  },
+  {
+   "project": "chromium",
+   "spec": "qoder-ord0323-two-exposure-cells.spec.ts",
+   "location": "e2e\\qoder-ord0323-two-exposure-cells.spec.ts:305:1",
+   "title": "N3_confirm_fold_carries_the_attempt_reading_not_the_attempt_s_words — 确认那一折带着这台设备的读数，不带回复的原话",
+   "nodeid": "qoder-ord0323-two-exposure-cells.spec.ts::N3_confirm_fold_carries_the_attempt_reading_not_the_attempt_s_words — 确认那一折带着这台设备的读数，不带回复的原话",
+   "result": "green",
+   "seconds": 1.2
+  },
+  {
+   "project": "chromium",
+   "spec": "qoder-ord0323-two-exposure-cells.spec.ts",
+   "location": "e2e\\qoder-ord0323-two-exposure-cells.spec.ts:539:1",
+   "title": "N6_Q68a_a_server_code_still_reaches_the_code_slot — 编号那格：服务器真给了编号时，编号还在屏上",
+   "nodeid": "qoder-ord0323-two-exposure-cells.spec.ts::N6_Q68a_a_server_code_still_reaches_the_code_slot — 编号那格：服务器真给了编号时，编号还在屏上",
+   "result": "green",
+   "seconds": 1.1
+  },
+  {
+   "project": "chromium",
+   "spec": "qoder-ord0323-two-exposure-cells.spec.ts",
+   "location": "e2e\\qoder-ord0323-two-exposure-cells.spec.ts:561:1",
+   "title": "N6_Q68b_a_sentence_only_refusal_is_not_presentation_as_a_code — 编号那格：只有句子时，编号位上不许出现句子，句子归技术详情",
+   "nodeid": "qoder-ord0323-two-exposure-cells.spec.ts::N6_Q68b_a_sentence_only_refusal_is_not_presentation_as_a_code — 编号那格：只有句子时，编号位上不许出现句子，句子归技术详情",
+   "result": "green",
+   "seconds": 0.961
+  },
+  {
+   "project": "chromium",
+   "spec": "qoder-ord0323-two-exposure-cells.spec.ts",
+   "location": "e2e\\qoder-ord0323-two-exposure-cells.spec.ts:640:3",
+   "title": "N6_Q68c_a_machine_code_in_code_reaches_the_code_slot — 编号那格：code 这一形给了真编号时，编号还在屏上",
+   "nodeid": "qoder-ord0323-two-exposure-cells.spec.ts::N6_Q68c_a_machine_code_in_code_reaches_the_code_slot — 编号那格：code 这一形给了真编号时，编号还在屏上",
+   "result": "green",
+   "seconds": 0.918
+  },
+  {
+   "project": "chromium",
+   "spec": "qoder-ord0323-two-exposure-cells.spec.ts",
+   "location": "e2e\\qoder-ord0323-two-exposure-cells.spec.ts:640:3",
+   "title": "N6_Q68d_a_machine_code_in_message_key_reaches_the_code_slot — 编号那格：message_key 这一形给了真编号时，编号还在屏上",
+   "nodeid": "qoder-ord0323-two-exposure-cells.spec.ts::N6_Q68d_a_machine_code_in_message_key_reaches_the_code_slot — 编号那格：message_key 这一形给了真编号时，编号还在屏上",
+   "result": "green",
+   "seconds": 0.927
+  },
+  {
+   "project": "chromium",
+   "spec": "qoder-ord0323-two-exposure-cells.spec.ts",
+   "location": "e2e\\qoder-ord0323-two-exposure-cells.spec.ts:666:3",
+   "title": "N4_T06_a_refused_POST_leaves_no_reply_words_and_keeps_its_own_reading — T06：自己那句原话不在屏上，自己那次读数还在屏上",
+   "nodeid": "qoder-ord0323-two-exposure-cells.spec.ts::N4_T06_a_refused_POST_leaves_no_reply_words_and_keeps_its_own_reading — T06：自己那句原话不在屏上，自己那次读数还在屏上",
+   "result": "green",
+   "seconds": 0.922
+  },
+  {
+   "project": "chromium",
+   "spec": "qoder-ord0323-two-exposure-cells.spec.ts",
+   "location": "e2e\\qoder-ord0323-two-exposure-cells.spec.ts:666:3",
+   "title": "N4_T07_a_refused_GET_leaves_no_reply_words_and_keeps_its_own_reading — T07：自己那句原话不在屏上，自己那次读数还在屏上",
+   "nodeid": "qoder-ord0323-two-exposure-cells.spec.ts::N4_T07_a_refused_GET_leaves_no_reply_words_and_keeps_its_own_reading — T07：自己那句原话不在屏上，自己那次读数还在屏上",
+   "result": "green",
+   "seconds": 0.438
+  },
+  {
+   "project": "chromium",
+   "spec": "qoder-ord0323-two-exposure-cells.spec.ts",
+   "location": "e2e\\qoder-ord0323-two-exposure-cells.spec.ts:666:3",
+   "title": "N4_T08_a_refused_GET_leaves_no_reply_words_and_keeps_its_own_reading — T08：自己那句原话不在屏上，自己那次读数还在屏上",
+   "nodeid": "qoder-ord0323-two-exposure-cells.spec.ts::N4_T08_a_refused_GET_leaves_no_reply_words_and_keeps_its_own_reading — T08：自己那句原话不在屏上，自己那次读数还在屏上",
+   "result": "green",
+   "seconds": 0.413
+  },
+  {
+   "project": "chromium",
+   "spec": "qoder-ord0323-two-exposure-cells.spec.ts",
+   "location": "e2e\\qoder-ord0323-two-exposure-cells.spec.ts:666:3",
+   "title": "N4_T09_a_refused_POST_leaves_no_reply_words_and_keeps_its_own_reading — T09：自己那句原话不在屏上，自己那次读数还在屏上",
+   "nodeid": "qoder-ord0323-two-exposure-cells.spec.ts::N4_T09_a_refused_POST_leaves_no_reply_words_and_keeps_its_own_reading — T09：自己那句原话不在屏上，自己那次读数还在屏上",
+   "result": "green",
+   "seconds": 0.913
+  },
+  {
+   "project": "chromium",
+   "spec": "qoder-ord0323-two-exposure-cells.spec.ts",
+   "location": "e2e\\qoder-ord0323-two-exposure-cells.spec.ts:666:3",
+   "title": "N4_T10_a_refused_POST_leaves_no_reply_words_and_keeps_its_own_reading — T10：自己那句原话不在屏上，自己那次读数还在屏上",
+   "nodeid": "qoder-ord0323-two-exposure-cells.spec.ts::N4_T10_a_refused_POST_leaves_no_reply_words_and_keeps_its_own_reading — T10：自己那句原话不在屏上，自己那次读数还在屏上",
+   "result": "green",
+   "seconds": 1.0
+  },
+  {
+   "project": "chromium",
+   "spec": "qoder-ord0323-two-exposure-cells.spec.ts",
+   "location": "e2e\\qoder-ord0323-two-exposure-cells.spec.ts:666:3",
+   "title": "N4_T11_a_refused_POST_leaves_no_reply_words_and_keeps_its_own_reading — T11：自己那句原话不在屏上，自己那次读数还在屏上",
+   "nodeid": "qoder-ord0323-two-exposure-cells.spec.ts::N4_T11_a_refused_POST_leaves_no_reply_words_and_keeps_its_own_reading — T11：自己那句原话不在屏上，自己那次读数还在屏上",
+   "result": "green",
+   "seconds": 0.93
+  },
+  {
+   "project": "chromium",
+   "spec": "qoder-ord0323-two-exposure-cells.spec.ts",
+   "location": "e2e\\qoder-ord0323-two-exposure-cells.spec.ts:666:3",
+   "title": "N4_T12_a_refused_POST_leaves_no_reply_words_and_keeps_its_own_reading — T12：自己那句原话不在屏上，自己那次读数还在屏上",
+   "nodeid": "qoder-ord0323-two-exposure-cells.spec.ts::N4_T12_a_refused_POST_leaves_no_reply_words_and_keeps_its_own_reading — T12：自己那句原话不在屏上，自己那次读数还在屏上",
+   "result": "green",
+   "seconds": 1.0
+  },
+  {
+   "project": "chromium",
+   "spec": "qoder-ord0323-two-exposure-cells.spec.ts",
+   "location": "e2e\\qoder-ord0323-two-exposure-cells.spec.ts:666:3",
+   "title": "N4_T13_a_refused_PATCH_leaves_no_reply_words_and_keeps_its_own_reading — T13：自己那句原话不在屏上，自己那次读数还在屏上",
+   "nodeid": "qoder-ord0323-two-exposure-cells.spec.ts::N4_T13_a_refused_PATCH_leaves_no_reply_words_and_keeps_its_own_reading — T13：自己那句原话不在屏上，自己那次读数还在屏上",
+   "result": "green",
+   "seconds": 1.0
+  },
+  {
+   "project": "chromium",
+   "spec": "qoder-ord0325-upstream-prose-not-on-screen.spec.ts",
+   "location": "e2e\\qoder-ord0325-upstream-prose-not-on-screen.spec.ts:199:1",
+   "title": "A1 住宿被拒（未映射的 422）：原话不上屏、三行读数在屏 — 中文半边",
+   "nodeid": "qoder-ord0325-upstream-prose-not-on-screen.spec.ts::A1 住宿被拒（未映射的 422）：原话不上屏、三行读数在屏 — 中文半边",
+   "result": "green",
+   "seconds": 1.2
+  },
+  {
+   "project": "chromium",
+   "spec": "qoder-ord0325-upstream-prose-not-on-screen.spec.ts",
+   "location": "e2e\\qoder-ord0325-upstream-prose-not-on-screen.spec.ts:225:1",
+   "title": "A2 住宿冲突码仍由 token 决定（正控）：换成行程冲突句，且原话仍不上屏",
+   "nodeid": "qoder-ord0325-upstream-prose-not-on-screen.spec.ts::A2 住宿冲突码仍由 token 决定（正控）：换成行程冲突句，且原话仍不上屏",
+   "result": "green",
+   "seconds": 1.2
+  },
+  {
+   "project": "chromium",
+   "spec": "qoder-ord0325-upstream-prose-not-on-screen.spec.ts",
+   "location": "e2e\\qoder-ord0325-upstream-prose-not-on-screen.spec.ts:249:1",
+   "title": "A3 住宿被拒：英文那半边同样两问",
+   "nodeid": "qoder-ord0325-upstream-prose-not-on-screen.spec.ts::A3 住宿被拒：英文那半边同样两问",
+   "result": "green",
+   "seconds": 1.1
+  },
+  {
+   "project": "chromium",
+   "spec": "qoder-ord0325-upstream-prose-not-on-screen.spec.ts",
+   "location": "e2e\\qoder-ord0325-upstream-prose-not-on-screen.spec.ts:275:1",
+   "title": "B1 采用方案被拒（409）：原话不上屏、三行读数在屏",
+   "nodeid": "qoder-ord0325-upstream-prose-not-on-screen.spec.ts::B1 采用方案被拒（409）：原话不上屏、三行读数在屏",
+   "result": "green",
+   "seconds": 0.902
+  },
+  {
+   "project": "chromium",
+   "spec": "qoder-ord0325-upstream-prose-not-on-screen.spec.ts",
+   "location": "e2e\\qoder-ord0325-upstream-prose-not-on-screen.spec.ts:355:1",
+   "title": "C1 建行程后的住宿搜索被拒：banner 不印 error.message，改印本机读数",
+   "nodeid": "qoder-ord0325-upstream-prose-not-on-screen.spec.ts::C1 建行程后的住宿搜索被拒：banner 不印 error.message，改印本机读数",
+   "result": "green",
+   "seconds": 1.8
+  },
+  {
+   "project": "chromium",
+   "spec": "qoder-ord0325-upstream-prose-not-on-screen.spec.ts",
+   "location": "e2e\\qoder-ord0325-upstream-prose-not-on-screen.spec.ts:403:1",
+   "title": "C2 建行程这一步本身被拒：向导里的拒绝句也不印上游原话",
+   "nodeid": "qoder-ord0325-upstream-prose-not-on-screen.spec.ts::C2 建行程这一步本身被拒：向导里的拒绝句也不印上游原话",
+   "result": "green",
+   "seconds": 1.2
+  },
+  {
+   "project": "chromium",
+   "spec": "qoder-ord0338-wizard-gap-clearance.spec.ts",
+   "location": "e2e\\qoder-ord0338-wizard-gap-clearance.spec.ts:244:3",
+   "title": "mobile 390x844 > N1 带上界：步骤条与「目的地」之间不再有一整块空白",
+   "nodeid": "qoder-ord0338-wizard-gap-clearance.spec.ts::mobile 390x844 > N1 带上界：步骤条与「目的地」之间不再有一整块空白",
+   "result": "green",
+   "seconds": 0.711
+  },
+  {
+   "project": "chromium",
+   "spec": "qoder-ord0338-wizard-gap-clearance.spec.ts",
+   "location": "e2e\\qoder-ord0338-wizard-gap-clearance.spec.ts:259:3",
+   "title": "mobile 390x844 > N2 不许「占高但不显示」：带内 0 枚内容节点",
+   "nodeid": "qoder-ord0338-wizard-gap-clearance.spec.ts::mobile 390x844 > N2 不许「占高但不显示」：带内 0 枚内容节点",
+   "result": "green",
+   "seconds": 0.7
+  },
+  {
+   "project": "chromium",
+   "spec": "qoder-ord0338-wizard-gap-clearance.spec.ts",
+   "location": "e2e\\qoder-ord0338-wizard-gap-clearance.spec.ts:272:3",
+   "title": "mobile 390x844 > N3 面板自己滚、条钉在面板底边（两种形状都量）",
+   "nodeid": "qoder-ord0338-wizard-gap-clearance.spec.ts::mobile 390x844 > N3 面板自己滚、条钉在面板底边（两种形状都量）",
+   "result": "green",
+   "seconds": 0.87
+  },
+  {
+   "project": "chromium",
+   "spec": "qoder-ord0338-wizard-gap-clearance.spec.ts",
+   "location": "e2e\\qoder-ord0338-wizard-gap-clearance.spec.ts:327:3",
+   "title": "mobile 390x844 > N4 条在任何滚动位置都不盖内容（结构 + 逐点命中）",
+   "nodeid": "qoder-ord0338-wizard-gap-clearance.spec.ts::mobile 390x844 > N4 条在任何滚动位置都不盖内容（结构 + 逐点命中）",
+   "result": "green",
+   "seconds": 1.2
+  },
+  {
+   "project": "chromium",
+   "spec": "qoder-ord0338-wizard-gap-clearance.spec.ts",
+   "location": "e2e\\qoder-ord0338-wizard-gap-clearance.spec.ts:344:3",
+   "title": "mobile 390x844 > N5 条不撞舞台球（我删了那条 bottom，得自己站住）",
+   "nodeid": "qoder-ord0338-wizard-gap-clearance.spec.ts::mobile 390x844 > N5 条不撞舞台球（我删了那条 bottom，得自己站住）",
+   "result": "green",
+   "seconds": 0.737
+  },
+  {
+   "project": "chromium",
+   "spec": "qoder-ord0338-wizard-gap-clearance.spec.ts",
+   "location": "e2e\\qoder-ord0338-wizard-gap-clearance.spec.ts:370:3",
+   "title": "mobile 390x844 > N6 臂甲：只把面板退回「窗口滚动 + sticky 条」（padding 一律不加回），N4 必须当场红",
+   "nodeid": "qoder-ord0338-wizard-gap-clearance.spec.ts::mobile 390x844 > N6 臂甲：只把面板退回「窗口滚动 + sticky 条」（padding 一律不加回），N4 必须当场红",
+   "result": "green",
+   "seconds": 1.5
+  },
+  {
+   "project": "chromium",
+   "spec": "qoder-ord0338-wizard-gap-clearance.spec.ts",
+   "location": "e2e\\qoder-ord0338-wizard-gap-clearance.spec.ts:414:3",
+   "title": "mobile 390x844 > N7 臂乙：只把那条 padding 装回来，带高必须回到一整块",
+   "nodeid": "qoder-ord0338-wizard-gap-clearance.spec.ts::mobile 390x844 > N7 臂乙：只把那条 padding 装回来，带高必须回到一整块",
+   "result": "green",
+   "seconds": 1.0
+  },
+  {
+   "project": "chromium",
+   "spec": "qoder-ord0338-wizard-gap-clearance.spec.ts",
+   "location": "e2e\\qoder-ord0338-wizard-gap-clearance.spec.ts:457:3",
+   "title": "desktop 1280x800 > D1 带上界（桌面档：那条声明的 76px 分支也归本单删）",
+   "nodeid": "qoder-ord0338-wizard-gap-clearance.spec.ts::desktop 1280x800 > D1 带上界（桌面档：那条声明的 76px 分支也归本单删）",
+   "result": "green",
+   "seconds": 0.708
+  },
+  {
+   "project": "chromium",
+   "spec": "qoder-ord0338-wizard-gap-clearance.spec.ts",
+   "location": "e2e\\qoder-ord0338-wizard-gap-clearance.spec.ts:471:3",
+   "title": "desktop 1280x800 > D2 桌面：条不盖内容",
+   "nodeid": "qoder-ord0338-wizard-gap-clearance.spec.ts::desktop 1280x800 > D2 桌面：条不盖内容",
+   "result": "green",
+   "seconds": 1.1
+  },
+  {
+   "project": "chromium",
+   "spec": "qoder-ord0338-wizard-gap-clearance.spec.ts",
+   "location": "e2e\\qoder-ord0338-wizard-gap-clearance.spec.ts:486:3",
+   "title": "desktop 1280x800 > D3 桌面：条不撞舞台球",
+   "nodeid": "qoder-ord0338-wizard-gap-clearance.spec.ts::desktop 1280x800 > D3 桌面：条不撞舞台球",
+   "result": "green",
+   "seconds": 0.78
+  },
+  {
+   "project": "chromium",
+   "spec": "qoder-ord0339-exception-words-stay-out-of-the-dom.spec.ts",
+   "location": "e2e\\qoder-ord0339-exception-words-stay-out-of-the-dom.spec.ts:115:1",
+   "title": "ORD-0339 clean arm — the alert still speaks, and holds no exception words",
+   "nodeid": "qoder-ord0339-exception-words-stay-out-of-the-dom.spec.ts::ORD-0339 clean arm — the alert still speaks, and holds no exception words",
+   "result": "green",
+   "seconds": 0.53
+  },
+  {
+   "project": "chromium",
+   "spec": "qoder-ord0339-exception-words-stay-out-of-the-dom.spec.ts",
+   "location": "e2e\\qoder-ord0339-exception-words-stay-out-of-the-dom.spec.ts:146:1",
+   "title": "ORD-0339 teeth arm — the pre-fix attributes must be reported by the same predicate",
+   "nodeid": "qoder-ord0339-exception-words-stay-out-of-the-dom.spec.ts::ORD-0339 teeth arm — the pre-fix attributes must be reported by the same predicate",
+   "result": "green",
+   "seconds": 0.149
+  },
+  {
+   "project": "chromium",
+   "spec": "qoder-plan-ai-contrast.spec.ts",
+   "location": "e2e\\qoder-plan-ai-contrast.spec.ts:111:5",
+   "title": "ORD-0035 plan-ai sheet ink is legible in both themes > light: sheet and textarea clear AA",
+   "nodeid": "qoder-plan-ai-contrast.spec.ts::ORD-0035 plan-ai sheet ink is legible in both themes > light: sheet and textarea clear AA",
+   "result": "red",
+   "seconds": 26.1
+  },
+  {
+   "project": "chromium",
+   "spec": "qoder-plan-ai-contrast.spec.ts",
+   "location": "e2e\\qoder-plan-ai-contrast.spec.ts:111:5",
+   "title": "ORD-0035 plan-ai sheet ink is legible in both themes > dark: sheet and textarea clear AA",
+   "nodeid": "qoder-plan-ai-contrast.spec.ts::ORD-0035 plan-ai sheet ink is legible in both themes > dark: sheet and textarea clear AA",
+   "result": "red",
+   "seconds": 26.0
+  },
+  {
+   "project": "chromium",
+   "spec": "qoder-plan-ai-contrast.spec.ts",
+   "location": "e2e\\qoder-plan-ai-contrast.spec.ts:141:1",
+   "title": "no .plan-ai-* rule pairs a literal light fill with an inherited foreground",
+   "nodeid": "qoder-plan-ai-contrast.spec.ts::no .plan-ai-* rule pairs a literal light fill with an inherited foreground",
+   "result": "green",
+   "seconds": 0.008
+  },
+  {
+   "project": "chromium",
+   "spec": "qoder-plan-ai-thinking.spec.ts",
+   "location": "e2e\\qoder-plan-ai-thinking.spec.ts:71:5",
+   "title": "ORD-0038 the AI sheet reports what it actually knows > plan-ai-elapsed-ticks — the waiting number advances (English copy)",
+   "nodeid": "qoder-plan-ai-thinking.spec.ts::ORD-0038 the AI sheet reports what it actually knows > plan-ai-elapsed-ticks — the waiting number advances (English copy)",
+   "result": "red",
+   "seconds": 26.1
+  },
+  {
+   "project": "chromium",
+   "spec": "qoder-plan-ai-thinking.spec.ts",
+   "location": "e2e\\qoder-plan-ai-thinking.spec.ts:71:5",
+   "title": "ORD-0038 the AI sheet reports what it actually knows > plan-ai-elapsed-ticks — the waiting number advances (Chinese copy)",
+   "nodeid": "qoder-plan-ai-thinking.spec.ts::ORD-0038 the AI sheet reports what it actually knows > plan-ai-elapsed-ticks — the waiting number advances (Chinese copy)",
+   "result": "red",
+   "seconds": 26.1
+  },
+  {
+   "project": "chromium",
+   "spec": "qoder-plan-ai-thinking.spec.ts",
+   "location": "e2e\\qoder-plan-ai-thinking.spec.ts:114:3",
+   "title": "ORD-0038 the AI sheet reports what it actually knows > plan-ai-no-fabricated-stage — no step may claim done before it was awaited",
+   "nodeid": "qoder-plan-ai-thinking.spec.ts::ORD-0038 the AI sheet reports what it actually knows > plan-ai-no-fabricated-stage — no step may claim done before it was awaited",
+   "result": "red",
+   "seconds": 26.1
+  },
+  {
+   "project": "chromium",
+   "spec": "qoder-plan-ai-thinking.spec.ts",
+   "location": "e2e\\qoder-plan-ai-thinking.spec.ts:172:3",
+   "title": "ORD-0038 the AI sheet reports what it actually knows > plan-ai-cancel-aborts-request — cancel stops the request, and says what it cannot undo",
+   "nodeid": "qoder-plan-ai-thinking.spec.ts::ORD-0038 the AI sheet reports what it actually knows > plan-ai-cancel-aborts-request — cancel stops the request, and says what it cannot undo",
+   "result": "red",
+   "seconds": 26.1
+  },
+  {
+   "project": "chromium",
+   "spec": "qoder-plan-ai-thinking.spec.ts",
+   "location": "e2e\\qoder-plan-ai-thinking.spec.ts:235:3",
+   "title": "ORD-0038 the AI sheet reports what it actually knows > plan-ai-cancel-before-send — cancelling the baseline read really did send nothing",
+   "nodeid": "qoder-plan-ai-thinking.spec.ts::ORD-0038 the AI sheet reports what it actually knows > plan-ai-cancel-before-send — cancelling the baseline read really did send nothing",
+   "result": "red",
+   "seconds": 26.1
+  },
+  {
+   "project": "chromium",
+   "spec": "qoder-plan-ai-thinking.spec.ts",
+   "location": "e2e\\qoder-plan-ai-thinking.spec.ts:296:3",
+   "title": "ORD-0038 the AI sheet reports what it actually knows > plan-ai-failure-not-loading — a refused request is named, and the fallback may not answer for it",
+   "nodeid": "qoder-plan-ai-thinking.spec.ts::ORD-0038 the AI sheet reports what it actually knows > plan-ai-failure-not-loading — a refused request is named, and the fallback may not answer for it",
+   "result": "red",
+   "seconds": 26.1
+  },
+  {
+   "project": "chromium",
+   "spec": "qoder-plan-ai-thinking.spec.ts",
+   "location": "e2e\\qoder-plan-ai-thinking.spec.ts:359:3",
+   "title": "ORD-0038 the AI sheet reports what it actually knows > plan-ai-no-synthetic-success — rows the fallback assembled are not an AI result",
+   "nodeid": "qoder-plan-ai-thinking.spec.ts::ORD-0038 the AI sheet reports what it actually knows > plan-ai-no-synthetic-success — rows the fallback assembled are not an AI result",
+   "result": "red",
+   "seconds": 26.1
+  },
+  {
+   "project": "chromium",
+   "spec": "qoder-plan-ai-thinking.spec.ts",
+   "location": "e2e\\qoder-plan-ai-thinking.spec.ts:436:3",
+   "title": "ORD-0038 the AI sheet reports what it actually knows > plan-ai-preflight-honest — an unreadable AI status is reported as unknown, never as ready",
+   "nodeid": "qoder-plan-ai-thinking.spec.ts::ORD-0038 the AI sheet reports what it actually knows > plan-ai-preflight-honest — an unreadable AI status is reported as unknown, never as ready",
+   "result": "red",
+   "seconds": 26.2
+  },
+  {
+   "project": "chromium",
+   "spec": "qoder-preventive-lifecycle.spec.ts",
+   "location": "e2e\\qoder-preventive-lifecycle.spec.ts:42:1",
+   "title": "a preventive run that was still planning updates to executed without a reload",
+   "nodeid": "qoder-preventive-lifecycle.spec.ts::a preventive run that was still planning updates to executed without a reload",
+   "result": "green",
+   "seconds": 5.5
+  },
+  {
+   "project": "chromium",
+   "spec": "qoder-raw-enums-never-reach-the-traveller.spec.ts",
+   "location": "e2e\\qoder-raw-enums-never-reach-the-traveller.spec.ts:155:1",
+   "title": "ord0222-1-visual-scan-no-raw-enums-and-no-mixed-english — 旅客看得见的字里不许有内部枚举，被改的行不许中英混排",
+   "nodeid": "qoder-raw-enums-never-reach-the-traveller.spec.ts::ord0222-1-visual-scan-no-raw-enums-and-no-mixed-english — 旅客看得见的字里不许有内部枚举，被改的行不许中英混排",
+   "result": "red",
+   "seconds": 20.5
+  },
+  {
+   "project": "chromium",
+   "spec": "qoder-raw-enums-never-reach-the-traveller.spec.ts",
+   "location": "e2e\\qoder-raw-enums-never-reach-the-traveller.spec.ts:210:1",
+   "title": "ord0222-2-accessible-scan-no-raw-enums — 读屏输出里也不许有内部枚举",
+   "nodeid": "qoder-raw-enums-never-reach-the-traveller.spec.ts::ord0222-2-accessible-scan-no-raw-enums — 读屏输出里也不许有内部枚举",
+   "result": "green",
+   "seconds": 5.2
+  },
+  {
+   "project": "chromium",
+   "spec": "qoder-raw-enums-never-reach-the-traveller.spec.ts",
+   "location": "e2e\\qoder-raw-enums-never-reach-the-traveller.spec.ts:239:1",
+   "title": "ord0222-3-an-unknown-value-says-unknown-in-chinese — 新枚举进来时中文要 fail closed",
+   "nodeid": "qoder-raw-enums-never-reach-the-traveller.spec.ts::ord0222-3-an-unknown-value-says-unknown-in-chinese — 新枚举进来时中文要 fail closed",
+   "result": "red",
+   "seconds": 30.3
+  },
+  {
+   "project": "chromium",
+   "spec": "qoder-raw-enums-never-reach-the-traveller.spec.ts",
+   "location": "e2e\\qoder-raw-enums-never-reach-the-traveller.spec.ts:284:1",
+   "title": "ord0222-5-dark-scheme-carries-the-same-words — 同一批屏在深色下再扫一遍",
+   "nodeid": "qoder-raw-enums-never-reach-the-traveller.spec.ts::ord0222-5-dark-scheme-carries-the-same-words — 同一批屏在深色下再扫一遍",
+   "result": "red",
+   "seconds": 5.2
+  },
+  {
+   "project": "chromium",
+   "spec": "qoder-raw-enums-never-reach-the-traveller.spec.ts",
+   "location": "e2e\\qoder-raw-enums-never-reach-the-traveller.spec.ts:313:1",
+   "title": "ord0222-4-day-payload-versus-visible-card — Check in / Overnight 的来源先交并排收据",
+   "nodeid": "qoder-raw-enums-never-reach-the-traveller.spec.ts::ord0222-4-day-payload-versus-visible-card — Check in / Overnight 的来源先交并排收据",
+   "result": "red",
+   "seconds": 30.3
+  },
+  {
+   "project": "chromium",
+   "spec": "qoder-replan-review-actions.spec.ts",
+   "location": "e2e\\qoder-replan-review-actions.spec.ts:102:1",
+   "title": "ord0180-the-bridge-is-marked-and-presence-is-not-permission — 过渡桥有标记，列表出现不等于获准",
+   "nodeid": "qoder-replan-review-actions.spec.ts::ord0180-the-bridge-is-marked-and-presence-is-not-permission — 过渡桥有标记，列表出现不等于获准",
+   "result": "green",
+   "seconds": 11.0
+  },
+  {
+   "project": "chromium",
+   "spec": "qoder-reset-from-wizard.spec.ts",
+   "location": "e2e\\qoder-reset-from-wizard.spec.ts:119:3",
+   "title": "ord0081-reset-reaches-today [wizard] — 出发点按[重置]就该到 Today",
+   "nodeid": "qoder-reset-from-wizard.spec.ts::ord0081-reset-reaches-today [wizard] — 出发点按[重置]就该到 Today",
+   "result": "green",
+   "seconds": 6.6
+  },
+  {
+   "project": "chromium",
+   "spec": "qoder-reset-from-wizard.spec.ts",
+   "location": "e2e\\qoder-reset-from-wizard.spec.ts:119:3",
+   "title": "ord0081-reset-reaches-today [stale] — 出发点按[重置]就该到 Today",
+   "nodeid": "qoder-reset-from-wizard.spec.ts::ord0081-reset-reaches-today [stale] — 出发点按[重置]就该到 Today",
+   "result": "green",
+   "seconds": 6.6
+  },
+  {
+   "project": "chromium",
+   "spec": "qoder-reset-from-wizard.spec.ts",
+   "location": "e2e\\qoder-reset-from-wizard.spec.ts:119:3",
+   "title": "ord0081-reset-reaches-today [live] — 出发点按[重置]就该到 Today",
+   "nodeid": "qoder-reset-from-wizard.spec.ts::ord0081-reset-reaches-today [live] — 出发点按[重置]就该到 Today",
+   "result": "green",
+   "seconds": 6.6
+  },
+  {
+   "project": "chromium",
+   "spec": "qoder-reset-from-wizard.spec.ts",
+   "location": "e2e\\qoder-reset-from-wizard.spec.ts:162:1",
+   "title": "ord0081-stage-chain-from-the-wizard-reaches-execution — 三步链真能跑到执行中",
+   "nodeid": "qoder-reset-from-wizard.spec.ts::ord0081-stage-chain-from-the-wizard-reaches-execution — 三步链真能跑到执行中",
+   "result": "green",
+   "seconds": 7.4
+  },
+  {
+   "project": "chromium",
+   "spec": "qoder-same-tick-double-tap-plans-once.spec.ts",
+   "location": "e2e\\qoder-same-tick-double-tap-plans-once.spec.ts:130:1",
+   "title": "ord0246-1-a-same-tick-double-tap-creates-one-run-and-one-row — 同 tick 两击只留一次任务",
+   "nodeid": "qoder-same-tick-double-tap-plans-once.spec.ts::ord0246-1-a-same-tick-double-tap-creates-one-run-and-one-row — 同 tick 两击只留一次任务",
+   "result": "green",
+   "seconds": 1.4
+  },
+  {
+   "project": "chromium",
+   "spec": "qoder-same-tick-double-tap-plans-once.spec.ts",
+   "location": "e2e\\qoder-same-tick-double-tap-plans-once.spec.ts:174:1",
+   "title": "ord0246-2-the-guard-is-one-shot-a-settled-run-does-not-block-the-next-one — 门是一次性的",
+   "nodeid": "qoder-same-tick-double-tap-plans-once.spec.ts::ord0246-2-the-guard-is-one-shot-a-settled-run-does-not-block-the-next-one — 门是一次性的",
+   "result": "green",
+   "seconds": 2.9
+  },
+  {
+   "project": "chromium",
+   "spec": "qoder-same-tick-double-tap-plans-once.spec.ts",
+   "location": "e2e\\qoder-same-tick-double-tap-plans-once.spec.ts:232:1",
+   "title": "ord0246-3-the-refused-click-is-silent-and-does-not-hurt-the-run — 被拒的那一下不许伤到活着的那次",
+   "nodeid": "qoder-same-tick-double-tap-plans-once.spec.ts::ord0246-3-the-refused-click-is-silent-and-does-not-hurt-the-run — 被拒的那一下不许伤到活着的那次",
+   "result": "green",
+   "seconds": 1.5
+  },
+  {
+   "project": "chromium",
+   "spec": "qoder-sealed-failure-speaks-and-offers-retry.spec.ts",
+   "location": "e2e\\qoder-sealed-failure-speaks-and-offers-retry.spec.ts:65:1",
+   "title": "ord0273-text-the-sentence-is-the-key-and-no-shape-leaks — 主文案是键值，不漏技术形状",
+   "nodeid": "qoder-sealed-failure-speaks-and-offers-retry.spec.ts::ord0273-text-the-sentence-is-the-key-and-no-shape-leaks — 主文案是键值，不漏技术形状",
+   "result": "red",
+   "seconds": 1.5
+  },
+  {
+   "project": "chromium",
+   "spec": "qoder-sealed-failure-speaks-and-offers-retry.spec.ts",
+   "location": "e2e\\qoder-sealed-failure-speaks-and-offers-retry.spec.ts:106:1",
+   "title": "ord0273-text-en-arm-speaks-english-and-neither-side-leaks — 英文臂不得说中文",
+   "nodeid": "qoder-sealed-failure-speaks-and-offers-retry.spec.ts::ord0273-text-en-arm-speaks-english-and-neither-side-leaks — 英文臂不得说中文",
+   "result": "red",
+   "seconds": 1.5
+  },
+  {
+   "project": "chromium",
+   "spec": "qoder-sealed-failure-speaks-and-offers-retry.spec.ts",
+   "location": "e2e\\qoder-sealed-failure-speaks-and-offers-retry.spec.ts:169:1",
+   "title": "ord0273-action-retry-is-a-real-executable-step — 失败屏带着能走的那一步",
+   "nodeid": "qoder-sealed-failure-speaks-and-offers-retry.spec.ts::ord0273-action-retry-is-a-real-executable-step — 失败屏带着能走的那一步",
+   "result": "green",
+   "seconds": 15.5
+  },
+  {
+   "project": "chromium",
+   "spec": "qoder-service-worker.spec.ts",
+   "location": "e2e\\qoder-service-worker.spec.ts:39:3",
+   "title": "ORD-0036 the dev service worker degrades honestly > sw-never-answers-script-with-html — a failed module request stays a failure",
+   "nodeid": "qoder-service-worker.spec.ts::ORD-0036 the dev service worker degrades honestly > sw-never-answers-script-with-html — a failed module request stays a failure",
+   "result": "green",
+   "seconds": 0.885
+  },
+  {
+   "project": "chromium",
+   "spec": "qoder-service-worker.spec.ts",
+   "location": "e2e\\qoder-service-worker.spec.ts:164:3",
+   "title": "ORD-0036 the dev service worker degrades honestly > sw-activate-keeps-foreign-caches — its cleanup must not wipe another strategy's caches",
+   "nodeid": "qoder-service-worker.spec.ts::ORD-0036 the dev service worker degrades honestly > sw-activate-keeps-foreign-caches — its cleanup must not wipe another strategy's caches",
+   "result": "green",
+   "seconds": 2.2
+  },
+  {
+   "project": "chromium",
+   "spec": "qoder-service-worker.spec.ts",
+   "location": "e2e\\qoder-service-worker.spec.ts:254:3",
+   "title": "ORD-0036 the dev service worker degrades honestly > sw-offline-boot-serves-cached-code — refusing HTML for code must not refuse the cache",
+   "nodeid": "qoder-service-worker.spec.ts::ORD-0036 the dev service worker degrades honestly > sw-offline-boot-serves-cached-code — refusing HTML for code must not refuse the cache",
+   "result": "green",
+   "seconds": 3.2
+  },
+  {
+   "project": "chromium",
+   "spec": "qoder-sheet-legs-carry-idempotency-key.spec.ts",
+   "location": "e2e\\qoder-sheet-legs-carry-idempotency-key.spec.ts:159:1",
+   "title": "ord0253-both-legs-of-one-intent-share-one-key — 一次意图两腿同键，从真请求里读",
+   "nodeid": "qoder-sheet-legs-carry-idempotency-key.spec.ts::ord0253-both-legs-of-one-intent-share-one-key — 一次意图两腿同键，从真请求里读",
+   "result": "green",
+   "seconds": 1.1
+  },
+  {
+   "project": "chromium",
+   "spec": "qoder-sheet-legs-carry-idempotency-key.spec.ts",
+   "location": "e2e\\qoder-sheet-legs-carry-idempotency-key.spec.ts:187:1",
+   "title": "ord0253-each-intent-mints-a-fresh-key — 第二次真按压必须是新键，且两腿仍同键",
+   "nodeid": "qoder-sheet-legs-carry-idempotency-key.spec.ts::ord0253-each-intent-mints-a-fresh-key — 第二次真按压必须是新键，且两腿仍同键",
+   "result": "green",
+   "seconds": 1.1
+  },
+  {
+   "project": "chromium",
+   "spec": "qoder-sheet-legs-carry-idempotency-key.spec.ts",
+   "location": "e2e\\qoder-sheet-legs-carry-idempotency-key.spec.ts:229:1",
+   "title": "ord0253-a-burst-consumes-no-key — 同 tick 的第二下连键都不该领",
+   "nodeid": "qoder-sheet-legs-carry-idempotency-key.spec.ts::ord0253-a-burst-consumes-no-key — 同 tick 的第二下连键都不该领",
+   "result": "green",
+   "seconds": 0.906
+  },
+  {
+   "project": "chromium",
+   "spec": "qoder-simulation-scene.spec.ts",
+   "location": "e2e\\qoder-simulation-scene.spec.ts:74:3",
+   "title": "ORD-0059 the Simulation entry reads the stage from the server > sim-entry-390-declares-stage-in-plain-words — 390 亮暗：入口可见＋人话声明＋字段名在诊断行",
+   "nodeid": "qoder-simulation-scene.spec.ts::ORD-0059 the Simulation entry reads the stage from the server > sim-entry-390-declares-stage-in-plain-words — 390 亮暗：入口可见＋人话声明＋字段名在诊断行",
+   "result": "green",
+   "seconds": 2.6
+  },
+  {
+   "project": "chromium",
+   "spec": "qoder-simulation-scene.spec.ts",
+   "location": "e2e\\qoder-simulation-scene.spec.ts:144:3",
+   "title": "ORD-0059 the Simulation entry reads the stage from the server > sim-scene-time-is-the-servers-not-the-devices — 前端自有时钟的杀点",
+   "nodeid": "qoder-simulation-scene.spec.ts::ORD-0059 the Simulation entry reads the stage from the server > sim-scene-time-is-the-servers-not-the-devices — 前端自有时钟的杀点",
+   "result": "green",
+   "seconds": 1.4
+  },
+  {
+   "project": "chromium",
+   "spec": "qoder-simulation-scene.spec.ts",
+   "location": "e2e\\qoder-simulation-scene.spec.ts:208:3",
+   "title": "ORD-0059 the Simulation entry reads the stage from the server > sim-scene-advances-on-server — 服务器场景真的推进了，且 Today 那行字跟着变（两者共担）",
+   "nodeid": "qoder-simulation-scene.spec.ts::ORD-0059 the Simulation entry reads the stage from the server > sim-scene-advances-on-server — 服务器场景真的推进了，且 Today 那行字跟着变（两者共担）",
+   "result": "green",
+   "seconds": 8.1
+  },
+  {
+   "project": "chromium",
+   "spec": "qoder-simulation-scene.spec.ts",
+   "location": "e2e\\qoder-simulation-scene.spec.ts:315:3",
+   "title": "ORD-0059 the Simulation entry reads the stage from the server > sim-refusal-is-not-drawn-as-success — 具名 503 不许画成做完了",
+   "nodeid": "qoder-simulation-scene.spec.ts::ORD-0059 the Simulation entry reads the stage from the server > sim-refusal-is-not-drawn-as-success — 具名 503 不许画成做完了",
+   "result": "green",
+   "seconds": 1.9
+  },
+  {
+   "project": "chromium",
+   "spec": "qoder-simulation-scene.spec.ts",
+   "location": "e2e\\qoder-simulation-scene.spec.ts:362:3",
+   "title": "ORD-0059 the Simulation entry reads the stage from the server > sim-reset-hands-the-stage-to-today — 点完重置不该被扔回三步向导",
+   "nodeid": "qoder-simulation-scene.spec.ts::ORD-0059 the Simulation entry reads the stage from the server > sim-reset-hands-the-stage-to-today — 点完重置不该被扔回三步向导",
+   "result": "green",
+   "seconds": 2.0
+  },
+  {
+   "project": "chromium",
+   "spec": "qoder-simulation-scene.spec.ts",
+   "location": "e2e\\qoder-simulation-scene.spec.ts:421:3",
+   "title": "ORD-0059 the Simulation entry reads the stage from the server > sim-blocked-action-explains-itself-and-stays-reachable — 灰掉不算交代",
+   "nodeid": "qoder-simulation-scene.spec.ts::ORD-0059 the Simulation entry reads the stage from the server > sim-blocked-action-explains-itself-and-stays-reachable — 灰掉不算交代",
+   "result": "green",
+   "seconds": 1.9
+  },
+  {
+   "project": "chromium",
+   "spec": "qoder-speaks-the-travellers-language.spec.ts",
+   "location": "e2e\\qoder-speaks-the-travellers-language.spec.ts:59:1",
+   "title": "ord0208-the-clock-sentence-speaks-human — 游标缺失说人话，时间按行程时区",
+   "nodeid": "qoder-speaks-the-travellers-language.spec.ts::ord0208-the-clock-sentence-speaks-human — 游标缺失说人话，时间按行程时区",
+   "result": "green",
+   "seconds": 0.64
+  },
+  {
+   "project": "chromium",
+   "spec": "qoder-speaks-the-travellers-language.spec.ts",
+   "location": "e2e\\qoder-speaks-the-travellers-language.spec.ts:168:1",
+   "title": "ord0208-chips-carry-their-state-for-ears-not-only-eyes — 选中态读得出，不只看得出",
+   "nodeid": "qoder-speaks-the-travellers-language.spec.ts::ord0208-chips-carry-their-state-for-ears-not-only-eyes — 选中态读得出，不只看得出",
+   "result": "green",
+   "seconds": 0.965
+  },
+  {
+   "project": "chromium",
+   "spec": "qoder-speaks-the-travellers-language.spec.ts",
+   "location": "e2e\\qoder-speaks-the-travellers-language.spec.ts:233:1",
+   "title": "ord0208-inferred-defaults-are-marked-on-the-confirmation-step — 默认值不再冒充你填的",
+   "nodeid": "qoder-speaks-the-travellers-language.spec.ts::ord0208-inferred-defaults-are-marked-on-the-confirmation-step — 默认值不再冒充你填的",
+   "result": "green",
+   "seconds": 0.942
+  },
+  {
+   "project": "chromium",
+   "spec": "qoder-speaks-the-travellers-language.spec.ts",
+   "location": "e2e\\qoder-speaks-the-travellers-language.spec.ts:318:1",
+   "title": "ord0208-the-day-card-speaks-the-language-the-screen-uses — 日卡不再混内部枚举",
+   "nodeid": "qoder-speaks-the-travellers-language.spec.ts::ord0208-the-day-card-speaks-the-language-the-screen-uses — 日卡不再混内部枚举",
+   "result": "green",
+   "seconds": 0.628
+  },
+  {
+   "project": "chromium",
+   "spec": "qoder-stale-cursor.spec.ts",
+   "location": "e2e\\qoder-stale-cursor.spec.ts:36:1",
+   "title": "a cursor the plan cannot resolve is reported as unresolved, not as a plausible step",
+   "nodeid": "qoder-stale-cursor.spec.ts::a cursor the plan cannot resolve is reported as unresolved, not as a plausible step",
+   "result": "green",
+   "seconds": 0.695
+  },
+  {
+   "project": "chromium",
+   "spec": "qoder-stated-versus-stored-versus-planned.spec.ts",
+   "location": "e2e\\qoder-stated-versus-stored-versus-planned.spec.ts:59:1",
+   "title": "ord0238-1-the-review-screen-shows-what-she-picked — 第一层：她说了什么",
+   "nodeid": "qoder-stated-versus-stored-versus-planned.spec.ts::ord0238-1-the-review-screen-shows-what-she-picked — 第一层：她说了什么",
+   "result": "green",
+   "seconds": 0.957
+  },
+  {
+   "project": "chromium",
+   "spec": "qoder-stated-versus-stored-versus-planned.spec.ts",
+   "location": "e2e\\qoder-stated-versus-stored-versus-planned.spec.ts:75:1",
+   "title": "ord0238-2-the-server-holds-what-she-said-after-the-trip-exists — 第二层：系统保存了什么",
+   "nodeid": "qoder-stated-versus-stored-versus-planned.spec.ts::ord0238-2-the-server-holds-what-she-said-after-the-trip-exists — 第二层：系统保存了什么",
+   "result": "green",
+   "seconds": 1.4
+  },
+  {
+   "project": "chromium",
+   "spec": "qoder-stated-versus-stored-versus-planned.spec.ts",
+   "location": "e2e\\qoder-stated-versus-stored-versus-planned.spec.ts:125:1",
+   "title": "ord0238-3-the-plan-headline-claims-only-inputs-the-planner-takes — 第三层：系统真的按什么规划",
+   "nodeid": "qoder-stated-versus-stored-versus-planned.spec.ts::ord0238-3-the-plan-headline-claims-only-inputs-the-planner-takes — 第三层：系统真的按什么规划",
+   "result": "green",
+   "seconds": 1.9
+  },
+  {
+   "project": "chromium",
+   "spec": "qoder-theme-contract.spec.ts",
+   "location": "e2e\\qoder-theme-contract.spec.ts:108:3",
+   "title": "Ruling ④ the theme root contract > theme-system-default-follows-the-os",
+   "nodeid": "qoder-theme-contract.spec.ts::Ruling ④ the theme root contract > theme-system-default-follows-the-os",
+   "result": "red",
+   "seconds": 26.0
+  },
+  {
+   "project": "chromium",
+   "spec": "qoder-theme-contract.spec.ts",
+   "location": "e2e\\qoder-theme-contract.spec.ts:128:3",
+   "title": "Ruling ④ the theme root contract > theme-choice-persists-and-overrides-the-os",
+   "nodeid": "qoder-theme-contract.spec.ts::Ruling ④ the theme root contract > theme-choice-persists-and-overrides-the-os",
+   "result": "red",
+   "seconds": 26.1
+  },
+  {
+   "project": "chromium",
+   "spec": "qoder-theme-contract.spec.ts",
+   "location": "e2e\\qoder-theme-contract.spec.ts:163:3",
+   "title": "Ruling ④ the theme root contract > theme-control-cycles-all-three-choices",
+   "nodeid": "qoder-theme-contract.spec.ts::Ruling ④ the theme root contract > theme-control-cycles-all-three-choices",
+   "result": "red",
+   "seconds": 26.1
+  },
+  {
+   "project": "chromium",
+   "spec": "qoder-theme-contract.spec.ts",
+   "location": "e2e\\qoder-theme-contract.spec.ts:259:3",
+   "title": "Ruling ④ the theme root contract > theme-pinned-dark-legible-on-light-os",
+   "nodeid": "qoder-theme-contract.spec.ts::Ruling ④ the theme root contract > theme-pinned-dark-legible-on-light-os",
+   "result": "red",
+   "seconds": 26.1
+  },
+  {
+   "project": "chromium",
+   "spec": "qoder-theme-contract.spec.ts",
+   "location": "e2e\\qoder-theme-contract.spec.ts:290:3",
+   "title": "Ruling ④ the theme root contract > theme-root-attribute-is-the-only-dark-switch",
+   "nodeid": "qoder-theme-contract.spec.ts::Ruling ④ the theme root contract > theme-root-attribute-is-the-only-dark-switch",
+   "result": "green",
+   "seconds": 0.007
+  },
+  {
+   "project": "chromium",
+   "spec": "qoder-today-follows-the-stage.spec.ts",
+   "location": "e2e\\qoder-today-follows-the-stage.spec.ts:164:5",
+   "title": "sim-today-hero-follows-the-stage [zh-CN@390] — hero 按服务器游标选站",
+   "nodeid": "qoder-today-follows-the-stage.spec.ts::sim-today-hero-follows-the-stage [zh-CN@390] — hero 按服务器游标选站",
+   "result": "green",
+   "seconds": 3.6
+  },
+  {
+   "project": "chromium",
+   "spec": "qoder-today-follows-the-stage.spec.ts",
+   "location": "e2e\\qoder-today-follows-the-stage.spec.ts:297:5",
+   "title": "today-clock-source-is-spoken-when-device-time-is-used [zh-CN@390] — 回落不许静默",
+   "nodeid": "qoder-today-follows-the-stage.spec.ts::today-clock-source-is-spoken-when-device-time-is-used [zh-CN@390] — 回落不许静默",
+   "result": "green",
+   "seconds": 0.518
+  },
+  {
+   "project": "chromium",
+   "spec": "qoder-today-follows-the-stage.spec.ts",
+   "location": "e2e\\qoder-today-follows-the-stage.spec.ts:164:5",
+   "title": "sim-today-hero-follows-the-stage [en@390] — hero 按服务器游标选站",
+   "nodeid": "qoder-today-follows-the-stage.spec.ts::sim-today-hero-follows-the-stage [en@390] — hero 按服务器游标选站",
+   "result": "green",
+   "seconds": 3.5
+  },
+  {
+   "project": "chromium",
+   "spec": "qoder-today-follows-the-stage.spec.ts",
+   "location": "e2e\\qoder-today-follows-the-stage.spec.ts:297:5",
+   "title": "today-clock-source-is-spoken-when-device-time-is-used [en@390] — 回落不许静默",
+   "nodeid": "qoder-today-follows-the-stage.spec.ts::today-clock-source-is-spoken-when-device-time-is-used [en@390] — 回落不许静默",
+   "result": "green",
+   "seconds": 0.482
+  },
+  {
+   "project": "chromium",
+   "spec": "qoder-today-follows-the-stage.spec.ts",
+   "location": "e2e\\qoder-today-follows-the-stage.spec.ts:164:5",
+   "title": "sim-today-hero-follows-the-stage [zh-CN@412] — hero 按服务器游标选站",
+   "nodeid": "qoder-today-follows-the-stage.spec.ts::sim-today-hero-follows-the-stage [zh-CN@412] — hero 按服务器游标选站",
+   "result": "green",
+   "seconds": 3.5
+  },
+  {
+   "project": "chromium",
+   "spec": "qoder-today-follows-the-stage.spec.ts",
+   "location": "e2e\\qoder-today-follows-the-stage.spec.ts:297:5",
+   "title": "today-clock-source-is-spoken-when-device-time-is-used [zh-CN@412] — 回落不许静默",
+   "nodeid": "qoder-today-follows-the-stage.spec.ts::today-clock-source-is-spoken-when-device-time-is-used [zh-CN@412] — 回落不许静默",
+   "result": "green",
+   "seconds": 0.559
+  },
+  {
+   "project": "chromium",
+   "spec": "qoder-today-follows-the-stage.spec.ts",
+   "location": "e2e\\qoder-today-follows-the-stage.spec.ts:164:5",
+   "title": "sim-today-hero-follows-the-stage [en@412] — hero 按服务器游标选站",
+   "nodeid": "qoder-today-follows-the-stage.spec.ts::sim-today-hero-follows-the-stage [en@412] — hero 按服务器游标选站",
+   "result": "green",
+   "seconds": 3.5
+  },
+  {
+   "project": "chromium",
+   "spec": "qoder-today-follows-the-stage.spec.ts",
+   "location": "e2e\\qoder-today-follows-the-stage.spec.ts:297:5",
+   "title": "today-clock-source-is-spoken-when-device-time-is-used [en@412] — 回落不许静默",
+   "nodeid": "qoder-today-follows-the-stage.spec.ts::today-clock-source-is-spoken-when-device-time-is-used [en@412] — 回落不许静默",
+   "result": "green",
+   "seconds": 0.479
+  },
+  {
+   "project": "chromium",
+   "spec": "qoder-today-follows-the-stage.spec.ts",
+   "location": "e2e\\qoder-today-follows-the-stage.spec.ts:360:1",
+   "title": "today-attention-does-not-contradict-the-map — 同屏不能又\"没坐标\"又\"一切正常\"",
+   "nodeid": "qoder-today-follows-the-stage.spec.ts::today-attention-does-not-contradict-the-map — 同屏不能又\"没坐标\"又\"一切正常\"",
+   "result": "green",
+   "seconds": 1.3
+  },
+  {
+   "project": "chromium",
+   "spec": "qoder-today-follows-the-stage.spec.ts",
+   "location": "e2e\\qoder-today-follows-the-stage.spec.ts:412:1",
+   "title": "today-scene-window-is-not-called-device-time — 有场景分钟、没投影时不许说\"设备自己的时间\"",
+   "nodeid": "qoder-today-follows-the-stage.spec.ts::today-scene-window-is-not-called-device-time — 有场景分钟、没投影时不许说\"设备自己的时间\"",
+   "result": "green",
+   "seconds": 1.6
+  },
+  {
+   "project": "chromium",
+   "spec": "qoder-today-follows-the-stage.spec.ts",
+   "location": "e2e\\qoder-today-follows-the-stage.spec.ts:674:1",
+   "title": "sim-stage-actions-are-reachable-and-never-in-the-nav-band — 悬浮球不遮内容，展开后每行都可按、导航仍可点",
+   "nodeid": "qoder-today-follows-the-stage.spec.ts::sim-stage-actions-are-reachable-and-never-in-the-nav-band — 悬浮球不遮内容，展开后每行都可按、导航仍可点",
+   "result": "green",
+   "seconds": 11.5
+  },
+  {
+   "project": "chromium",
+   "spec": "qoder-today-follows-the-stage.spec.ts",
+   "location": "e2e\\qoder-today-follows-the-stage.spec.ts:1099:1",
+   "title": "sim-window-scrolls-under-a-finger — 手指能滑到第十一枚按钮",
+   "nodeid": "qoder-today-follows-the-stage.spec.ts::sim-window-scrolls-under-a-finger — 手指能滑到第十一枚按钮",
+   "result": "green",
+   "seconds": 2.6
+  },
+  {
+   "project": "chromium",
+   "spec": "qoder-today-follows-the-stage.spec.ts",
+   "location": "e2e\\qoder-today-follows-the-stage.spec.ts:1211:1",
+   "title": "sim-replan-actions-follow-the-server-list — 没有方案就不许点",
+   "nodeid": "qoder-today-follows-the-stage.spec.ts::sim-replan-actions-follow-the-server-list — 没有方案就不许点",
+   "result": "green",
+   "seconds": 1.8
+  },
+  {
+   "project": "chromium",
+   "spec": "qoder-today-follows-the-stage.spec.ts",
+   "location": "e2e\\qoder-today-follows-the-stage.spec.ts:1245:1",
+   "title": "today-hero-meta-does-not-contradict-the-sequence — “暂无安排”要真的是没有",
+   "nodeid": "qoder-today-follows-the-stage.spec.ts::today-hero-meta-does-not-contradict-the-sequence — “暂无安排”要真的是没有",
+   "result": "green",
+   "seconds": 1.3
+  },
+  {
+   "project": "chromium",
+   "spec": "qoder-today-follows-the-stage.spec.ts",
+   "location": "e2e\\qoder-today-follows-the-stage.spec.ts:1298:1",
+   "title": "sim-booking-row-follows-the-journey-state — 行程不在 PLANNED 时先说清规则再置灰",
+   "nodeid": "qoder-today-follows-the-stage.spec.ts::sim-booking-row-follows-the-journey-state — 行程不在 PLANNED 时先说清规则再置灰",
+   "result": "green",
+   "seconds": 3.1
+  },
+  {
+   "project": "chromium",
+   "spec": "qoder-today-follows-the-stage.spec.ts",
+   "location": "e2e\\qoder-today-follows-the-stage.spec.ts:1424:1",
+   "title": "sim-replan-receipt-names-the-proposal-the-row-sends — 印出来的方案 id 就是被送出去的那一个",
+   "nodeid": "qoder-today-follows-the-stage.spec.ts::sim-replan-receipt-names-the-proposal-the-row-sends — 印出来的方案 id 就是被送出去的那一个",
+   "result": "green",
+   "seconds": 2.3
+  },
+  {
+   "project": "chromium",
+   "spec": "qoder-today-follows-the-stage.spec.ts",
+   "location": "e2e\\qoder-today-follows-the-stage.spec.ts:1576:1",
+   "title": "sim-booking-target-is-an-activity-the-server-gives-a-slot-for — 默认目标由服务器说了才算",
+   "nodeid": "qoder-today-follows-the-stage.spec.ts::sim-booking-target-is-an-activity-the-server-gives-a-slot-for — 默认目标由服务器说了才算",
+   "result": "green",
+   "seconds": 9.4
+  },
+  {
+   "project": "chromium",
+   "spec": "qoder-today-follows-the-stage.spec.ts",
+   "location": "e2e\\qoder-today-follows-the-stage.spec.ts:1945:1",
+   "title": "sim-action-in-flight-is-perceivable — 按下去要看得出在跑",
+   "nodeid": "qoder-today-follows-the-stage.spec.ts::sim-action-in-flight-is-perceivable — 按下去要看得出在跑",
+   "result": "green",
+   "seconds": 1.8
+  },
+  {
+   "project": "chromium",
+   "spec": "qoder-today-follows-the-stage.spec.ts",
+   "location": "e2e\\qoder-today-follows-the-stage.spec.ts:1985:1",
+   "title": "sim-refusal-does-not-outlive-the-reading — “还在读”不能读完还挂着",
+   "nodeid": "qoder-today-follows-the-stage.spec.ts::sim-refusal-does-not-outlive-the-reading — “还在读”不能读完还挂着",
+   "result": "green",
+   "seconds": 1.1
+  },
+  {
+   "project": "chromium",
+   "spec": "qoder-today-follows-the-stage.spec.ts",
+   "location": "e2e\\qoder-today-follows-the-stage.spec.ts:2070:1",
+   "title": "today-attention-agrees-with-the-map-when-nothing-can-be-placed — 无坐标时两屏同一句话",
+   "nodeid": "qoder-today-follows-the-stage.spec.ts::today-attention-agrees-with-the-map-when-nothing-can-be-placed — 无坐标时两屏同一句话",
+   "result": "green",
+   "seconds": 0.627
+  },
+  {
+   "project": "chromium",
+   "spec": "qoder-today-follows-the-stage.spec.ts",
+   "location": "e2e\\qoder-today-follows-the-stage.spec.ts:2147:1",
+   "title": "sim-evidence-state-says-what-is-sealed — 冻着但没到期不许读成没数据",
+   "nodeid": "qoder-today-follows-the-stage.spec.ts::sim-evidence-state-says-what-is-sealed — 冻着但没到期不许读成没数据",
+   "result": "green",
+   "seconds": 0.624
+  },
+  {
+   "project": "chromium",
+   "spec": "qoder-today-follows-the-stage.spec.ts",
+   "location": "e2e\\qoder-today-follows-the-stage.spec.ts:2211:1",
+   "title": "nav-reservation-covers-the-rendered-bar — 预留高度不许比导航条本身矮",
+   "nodeid": "qoder-today-follows-the-stage.spec.ts::nav-reservation-covers-the-rendered-bar — 预留高度不许比导航条本身矮",
+   "result": "green",
+   "seconds": 1.3
+  },
+  {
+   "project": "chromium",
+   "spec": "qoder-today-hero.spec.ts",
+   "location": "e2e\\qoder-today-hero.spec.ts:16:3",
+   "title": "Qoder Today single-focus hero > hero has one primary CTA, bounded height, no empty Now slot, no overflow",
+   "nodeid": "qoder-today-hero.spec.ts::Qoder Today single-focus hero > hero has one primary CTA, bounded height, no empty Now slot, no overflow",
+   "result": "red",
+   "seconds": 26.2
+  },
+  {
+   "project": "chromium",
+   "spec": "qoder-today-hero.spec.ts",
+   "location": "e2e\\qoder-today-hero.spec.ts:108:3",
+   "title": "Qoder Today single-focus hero > reduced-motion disables the hero reveal transform",
+   "nodeid": "qoder-today-hero.spec.ts::Qoder Today single-focus hero > reduced-motion disables the hero reveal transform",
+   "result": "red",
+   "seconds": 26.1
+  },
+  {
+   "project": "chromium",
+   "spec": "qoder-trial-state.spec.ts",
+   "location": "e2e\\qoder-trial-state.spec.ts:51:3",
+   "title": "ORD-0036 (d) the trial wizard survives a reload > trial-state-survives-reload — step and typed draft both come back",
+   "nodeid": "qoder-trial-state.spec.ts::ORD-0036 (d) the trial wizard survives a reload > trial-state-survives-reload — step and typed draft both come back",
+   "result": "green",
+   "seconds": 3.8
+  },
+  {
+   "project": "chromium",
+   "spec": "qoder-trip-shape-and-budget.spec.ts",
+   "location": "e2e\\qoder-trip-shape-and-budget.spec.ts:100:3",
+   "title": "ORD-0063/0064a Today states the projected shape and currency > trip-length-comes-from-the-backend",
+   "nodeid": "qoder-trip-shape-and-budget.spec.ts::ORD-0063/0064a Today states the projected shape and currency > trip-length-comes-from-the-backend",
+   "result": "green",
+   "seconds": 5.8
+  },
+  {
+   "project": "chromium",
+   "spec": "qoder-trip-shape-and-budget.spec.ts",
+   "location": "e2e\\qoder-trip-shape-and-budget.spec.ts:146:3",
+   "title": "ORD-0063/0064a Today states the projected shape and currency > budget-line-never-borrows-a-symbol",
+   "nodeid": "qoder-trip-shape-and-budget.spec.ts::ORD-0063/0064a Today states the projected shape and currency > budget-line-never-borrows-a-symbol",
+   "result": "green",
+   "seconds": 7.3
+  },
+  {
+   "project": "chromium",
+   "spec": "qoder-trip-shape-and-budget.spec.ts",
+   "location": "e2e\\qoder-trip-shape-and-budget.spec.ts:223:3",
+   "title": "ORD-0063/0064a Today states the projected shape and currency > no-client-side-day-or-currency-invention",
+   "nodeid": "qoder-trip-shape-and-budget.spec.ts::ORD-0063/0064a Today states the projected shape and currency > no-client-side-day-or-currency-invention",
+   "result": "green",
+   "seconds": 0.005
+  },
+  {
+   "project": "chromium",
+   "spec": "qoder-wallet-commitments.spec.ts",
+   "location": "e2e\\qoder-wallet-commitments.spec.ts:91:1",
+   "title": "ord0087-booked-commitment-is-on-the-wallet-screen — 真链路建出来的承诺要在 Wallet 上看得见",
+   "nodeid": "qoder-wallet-commitments.spec.ts::ord0087-booked-commitment-is-on-the-wallet-screen — 真链路建出来的承诺要在 Wallet 上看得见",
+   "result": "green",
+   "seconds": 5.7
+  },
+  {
+   "project": "chromium",
+   "spec": "qoder-wallet-commitments.spec.ts",
+   "location": "e2e\\qoder-wallet-commitments.spec.ts:396:1",
+   "title": "ord0087-unknown-price-is-said-unknown — 不知道价格就不许显示 0",
+   "nodeid": "qoder-wallet-commitments.spec.ts::ord0087-unknown-price-is-said-unknown — 不知道价格就不许显示 0",
+   "result": "green",
+   "seconds": 0.572
+  },
+  {
+   "project": "chromium",
+   "spec": "qoder-wallet-commitments.spec.ts",
+   "location": "e2e\\qoder-wallet-commitments.spec.ts:428:1",
+   "title": "ord0087-simulated-label-comes-from-the-field — 真供应商不许被误标",
+   "nodeid": "qoder-wallet-commitments.spec.ts::ord0087-simulated-label-comes-from-the-field — 真供应商不许被误标",
+   "result": "green",
+   "seconds": 0.604
+  },
+  {
+   "project": "chromium",
+   "spec": "qoder-wallet-commitments.spec.ts",
+   "location": "e2e\\qoder-wallet-commitments.spec.ts:463:1",
+   "title": "ord0087-empty-list-is-not-labelled-mock — 没有承诺时不该有任何“模拟承诺”",
+   "nodeid": "qoder-wallet-commitments.spec.ts::ord0087-empty-list-is-not-labelled-mock — 没有承诺时不该有任何“模拟承诺”",
+   "result": "green",
+   "seconds": 0.416
+  },
+  {
+   "project": "chromium",
+   "spec": "qoder-wizard-advanced-is-tappable.spec.ts",
+   "location": "e2e\\qoder-wizard-advanced-is-tappable.spec.ts:175:1",
+   "title": "ord0261-sticky-bar-must-not-cover-the-summary-row — 条在任何形状下都不许盖住 summary 行",
+   "nodeid": "qoder-wizard-advanced-is-tappable.spec.ts::ord0261-sticky-bar-must-not-cover-the-summary-row — 条在任何形状下都不许盖住 summary 行",
+   "result": "red",
+   "seconds": 1.6
+  },
+  {
+   "project": "chromium",
+   "spec": "qoder-wizard-advanced-is-tappable.spec.ts",
+   "location": "e2e\\qoder-wizard-advanced-is-tappable.spec.ts:199:1",
+   "title": "ord0264-opener-is-scroll-reachable-and-tappable — 高级入口在任何形状下都点得动，且不伤草稿",
+   "nodeid": "qoder-wizard-advanced-is-tappable.spec.ts::ord0264-opener-is-scroll-reachable-and-tappable — 高级入口在任何形状下都点得动，且不伤草稿",
+   "result": "green",
+   "seconds": 1.6
+  },
+  {
+   "project": "chromium",
+   "spec": "qoder-wizard-advanced-is-tappable.spec.ts",
+   "location": "e2e\\qoder-wizard-advanced-is-tappable.spec.ts:252:1",
+   "title": "ord0264-arm-chrome-overlay-must-turn-the-verdict-red — 臂：把条退回覆盖层，判据必须当场红",
+   "nodeid": "qoder-wizard-advanced-is-tappable.spec.ts::ord0264-arm-chrome-overlay-must-turn-the-verdict-red — 臂：把条退回覆盖层，判据必须当场红",
+   "result": "red",
+   "seconds": 1.4
+  },
+  {
+   "project": "chromium",
+   "spec": "qoder-wizard-blocked-next-a11y.spec.ts",
+   "location": "e2e\\qoder-wizard-blocked-next-a11y.spec.ts:89:5",
+   "title": "ORD-0066 the wizard's blocked Next can be reached and heard > a11y-blocked-next-takes-focus [zh-CN] — reachability, with both controls",
+   "nodeid": "qoder-wizard-blocked-next-a11y.spec.ts::ORD-0066 the wizard's blocked Next can be reached and heard > a11y-blocked-next-takes-focus [zh-CN] — reachability, with both controls",
+   "result": "green",
+   "seconds": 1.7
+  },
+  {
+   "project": "chromium",
+   "spec": "qoder-wizard-blocked-next-a11y.spec.ts",
+   "location": "e2e\\qoder-wizard-blocked-next-a11y.spec.ts:149:5",
+   "title": "ORD-0066 the wizard's blocked Next can be reached and heard > a11y-blocked-next-carries-its-reason-in-the-a11y-tree [zh-CN]",
+   "nodeid": "qoder-wizard-blocked-next-a11y.spec.ts::ORD-0066 the wizard's blocked Next can be reached and heard > a11y-blocked-next-carries-its-reason-in-the-a11y-tree [zh-CN]",
+   "result": "green",
+   "seconds": 1.6
+  },
+  {
+   "project": "chromium",
+   "spec": "qoder-wizard-blocked-next-a11y.spec.ts",
+   "location": "e2e\\qoder-wizard-blocked-next-a11y.spec.ts:189:5",
+   "title": "ORD-0066 the wizard's blocked Next can be reached and heard > a11y-refused-tap-speaks-and-does-not-advance [zh-CN]",
+   "nodeid": "qoder-wizard-blocked-next-a11y.spec.ts::ORD-0066 the wizard's blocked Next can be reached and heard > a11y-refused-tap-speaks-and-does-not-advance [zh-CN]",
+   "result": "green",
+   "seconds": 1.8
+  },
+  {
+   "project": "chromium",
+   "spec": "qoder-wizard-blocked-next-a11y.spec.ts",
+   "location": "e2e\\qoder-wizard-blocked-next-a11y.spec.ts:89:5",
+   "title": "ORD-0066 the wizard's blocked Next can be reached and heard > a11y-blocked-next-takes-focus [en] — reachability, with both controls",
+   "nodeid": "qoder-wizard-blocked-next-a11y.spec.ts::ORD-0066 the wizard's blocked Next can be reached and heard > a11y-blocked-next-takes-focus [en] — reachability, with both controls",
+   "result": "green",
+   "seconds": 1.6
+  },
+  {
+   "project": "chromium",
+   "spec": "qoder-wizard-blocked-next-a11y.spec.ts",
+   "location": "e2e\\qoder-wizard-blocked-next-a11y.spec.ts:149:5",
+   "title": "ORD-0066 the wizard's blocked Next can be reached and heard > a11y-blocked-next-carries-its-reason-in-the-a11y-tree [en]",
+   "nodeid": "qoder-wizard-blocked-next-a11y.spec.ts::ORD-0066 the wizard's blocked Next can be reached and heard > a11y-blocked-next-carries-its-reason-in-the-a11y-tree [en]",
+   "result": "green",
+   "seconds": 1.6
+  },
+  {
+   "project": "chromium",
+   "spec": "qoder-wizard-blocked-next-a11y.spec.ts",
+   "location": "e2e\\qoder-wizard-blocked-next-a11y.spec.ts:189:5",
+   "title": "ORD-0066 the wizard's blocked Next can be reached and heard > a11y-refused-tap-speaks-and-does-not-advance [en]",
+   "nodeid": "qoder-wizard-blocked-next-a11y.spec.ts::ORD-0066 the wizard's blocked Next can be reached and heard > a11y-refused-tap-speaks-and-does-not-advance [en]",
+   "result": "green",
+   "seconds": 1.8
+  },
+  {
+   "project": "chromium",
+   "spec": "qoder-wizard-blocked-next-a11y.spec.ts",
+   "location": "e2e\\qoder-wizard-blocked-next-a11y.spec.ts:260:3",
+   "title": "ORD-0066 the wizard's blocked Next can be reached and heard > a11y-step2-block-is-named-too — no new silent blocker one step down",
+   "nodeid": "qoder-wizard-blocked-next-a11y.spec.ts::ORD-0066 the wizard's blocked Next can be reached and heard > a11y-step2-block-is-named-too — no new silent blocker one step down",
+   "result": "green",
+   "seconds": 1.7
+  },
+  {
+   "project": "chromium",
+   "spec": "qoder-wizard-city-basis.spec.ts",
+   "location": "e2e\\qoder-wizard-city-basis.spec.ts:66:5",
+   "title": "ORD-0072 an unrecognised destination falls back, it does not inherit > stale-city-basis-is-not-called-the-default [zh-CN] — 门 A, by sequence",
+   "nodeid": "qoder-wizard-city-basis.spec.ts::ORD-0072 an unrecognised destination falls back, it does not inherit > stale-city-basis-is-not-called-the-default [zh-CN] — 门 A, by sequence",
+   "result": "green",
+   "seconds": 1.6
+  },
+  {
+   "project": "chromium",
+   "spec": "qoder-wizard-city-basis.spec.ts",
+   "location": "e2e\\qoder-wizard-city-basis.spec.ts:146:5",
+   "title": "ORD-0072 an unrecognised destination falls back, it does not inherit > previous-city-auto-set-line-does-not-survive [zh-CN] — 门 C",
+   "nodeid": "qoder-wizard-city-basis.spec.ts::ORD-0072 an unrecognised destination falls back, it does not inherit > previous-city-auto-set-line-does-not-survive [zh-CN] — 门 C",
+   "result": "green",
+   "seconds": 1.6
+  },
+  {
+   "project": "chromium",
+   "spec": "qoder-wizard-city-basis.spec.ts",
+   "location": "e2e\\qoder-wizard-city-basis.spec.ts:66:5",
+   "title": "ORD-0072 an unrecognised destination falls back, it does not inherit > stale-city-basis-is-not-called-the-default [en] — 门 A, by sequence",
+   "nodeid": "qoder-wizard-city-basis.spec.ts::ORD-0072 an unrecognised destination falls back, it does not inherit > stale-city-basis-is-not-called-the-default [en] — 门 A, by sequence",
+   "result": "green",
+   "seconds": 1.6
+  },
+  {
+   "project": "chromium",
+   "spec": "qoder-wizard-city-basis.spec.ts",
+   "location": "e2e\\qoder-wizard-city-basis.spec.ts:146:5",
+   "title": "ORD-0072 an unrecognised destination falls back, it does not inherit > previous-city-auto-set-line-does-not-survive [en] — 门 C",
+   "nodeid": "qoder-wizard-city-basis.spec.ts::ORD-0072 an unrecognised destination falls back, it does not inherit > previous-city-auto-set-line-does-not-survive [en] — 门 C",
+   "result": "green",
+   "seconds": 1.6
+  },
+  {
+   "project": "chromium",
+   "spec": "qoder-wizard-city-basis.spec.ts",
+   "location": "e2e\\qoder-wizard-city-basis.spec.ts:180:3",
+   "title": "ORD-0072 an unrecognised destination falls back, it does not inherit > submitted-basis-matches-what-the-screen-said — 门 A 的深度：words == wire",
+   "nodeid": "qoder-wizard-city-basis.spec.ts::ORD-0072 an unrecognised destination falls back, it does not inherit > submitted-basis-matches-what-the-screen-said — 门 A 的深度：words == wire",
+   "result": "green",
+   "seconds": 1.8
+  },
+  {
+   "project": "chromium",
+   "spec": "qoder-wizard-city-copy.spec.ts",
+   "location": "e2e\\qoder-wizard-city-copy.spec.ts:32:3",
+   "title": "ORD-0060 the wizard describes the destination it will actually plan > city-label-follows-the-recognised-city",
+   "nodeid": "qoder-wizard-city-copy.spec.ts::ORD-0060 the wizard describes the destination it will actually plan > city-label-follows-the-recognised-city",
+   "result": "green",
+   "seconds": 3.0
+  },
+  {
+   "project": "chromium",
+   "spec": "qoder-wizard-city-copy.spec.ts",
+   "location": "e2e\\qoder-wizard-city-copy.spec.ts:77:3",
+   "title": "ORD-0060 the wizard describes the destination it will actually plan > unrecognised-city-assumption-is-said-out-loud",
+   "nodeid": "qoder-wizard-city-copy.spec.ts::ORD-0060 the wizard describes the destination it will actually plan > unrecognised-city-assumption-is-said-out-loud",
+   "result": "green",
+   "seconds": 1.6
+  },
+  {
+   "project": "chromium",
+   "spec": "qoder-wizard-city-copy.spec.ts",
+   "location": "e2e\\qoder-wizard-city-copy.spec.ts:121:3",
+   "title": "ORD-0060 the wizard describes the destination it will actually plan > supported-destinations-are-reachable-without-an-invented-count",
+   "nodeid": "qoder-wizard-city-copy.spec.ts::ORD-0060 the wizard describes the destination it will actually plan > supported-destinations-are-reachable-without-an-invented-count",
+   "result": "green",
+   "seconds": 1.5
+  },
+  {
+   "project": "chromium",
+   "spec": "qoder-wizard-hint-surface-readings.spec.ts",
+   "location": "e2e\\qoder-wizard-hint-surface-readings.spec.ts:150:1",
+   "title": "ord0221-3-step2-the-hint-clears-in-front-of-the-traveller — 第 2 步改完当场消失的可见文本",
+   "nodeid": "qoder-wizard-hint-surface-readings.spec.ts::ord0221-3-step2-the-hint-clears-in-front-of-the-traveller — 第 2 步改完当场消失的可见文本",
+   "result": "green",
+   "seconds": 0.798
+  },
+  {
+   "project": "chromium",
+   "spec": "qoder-wizard-hint-surface-readings.spec.ts",
+   "location": "e2e\\qoder-wizard-hint-surface-readings.spec.ts:208:1",
+   "title": "ord0221-4-step3-visible-hint-and-live-region-read-apart — 第 3 步：看见的与听到的分开量",
+   "nodeid": "qoder-wizard-hint-surface-readings.spec.ts::ord0221-4-step3-visible-hint-and-live-region-read-apart — 第 3 步：看见的与听到的分开量",
+   "result": "green",
+   "seconds": 0.954
+  },
+  {
+   "project": "chromium",
+   "spec": "qoder-wizard-hint-surface-readings.spec.ts",
+   "location": "e2e\\qoder-wizard-hint-surface-readings.spec.ts:269:1",
+   "title": "ord0220-2-the-announcement-retires-when-the-field-is-fixed — 听的那句也要跟现值重算",
+   "nodeid": "qoder-wizard-hint-surface-readings.spec.ts::ord0220-2-the-announcement-retires-when-the-field-is-fixed — 听的那句也要跟现值重算",
+   "result": "green",
+   "seconds": 0.949
+  },
+  {
+   "project": "chromium",
+   "spec": "qoder-wizard-hint-surface-readings.spec.ts",
+   "location": "e2e\\qoder-wizard-hint-surface-readings.spec.ts:330:1",
+   "title": "ord0220-3-a-refused-press-brings-its-reason-on-screen — 按下去什么都没发生，这一格不再成立",
+   "nodeid": "qoder-wizard-hint-surface-readings.spec.ts::ord0220-3-a-refused-press-brings-its-reason-on-screen — 按下去什么都没发生，这一格不再成立",
+   "result": "green",
+   "seconds": 0.814
+  },
+  {
+   "project": "chromium",
+   "spec": "qoder-wizard-hint-surface-readings.spec.ts",
+   "location": "e2e\\qoder-wizard-hint-surface-readings.spec.ts:411:1",
+   "title": "ord0222-6-the-announcement-is-still-gone-after-the-trip-exists — 创建成功之后也不该再播那一句",
+   "nodeid": "qoder-wizard-hint-surface-readings.spec.ts::ord0222-6-the-announcement-is-still-gone-after-the-trip-exists — 创建成功之后也不该再播那一句",
+   "result": "green",
+   "seconds": 1.3
+  },
+  {
+   "project": "chromium",
+   "spec": "qoder-wizard-speaks-human-and-survives-reload.spec.ts",
+   "location": "e2e\\qoder-wizard-speaks-human-and-survives-reload.spec.ts:80:1",
+   "title": "ord0135-the-wizard-survives-a-refresh-on-the-step-you-were-on — 填到第 3 步刷新，还在第 3 步且字还在",
+   "nodeid": "qoder-wizard-speaks-human-and-survives-reload.spec.ts::ord0135-the-wizard-survives-a-refresh-on-the-step-you-were-on — 填到第 3 步刷新，还在第 3 步且字还在",
+   "result": "green",
+   "seconds": 0.989
+  },
+  {
+   "project": "chromium",
+   "spec": "qoder-wizard-speaks-human-and-survives-reload.spec.ts",
+   "location": "e2e\\qoder-wizard-speaks-human-and-survives-reload.spec.ts:115:1",
+   "title": "ord0135-the-confirmation-step-prints-no-internal-key — 确认页不许把 relaxed 这类内部枚举给用户看",
+   "nodeid": "qoder-wizard-speaks-human-and-survives-reload.spec.ts::ord0135-the-confirmation-step-prints-no-internal-key — 确认页不许把 relaxed 这类内部枚举给用户看",
+   "result": "green",
+   "seconds": 0.895
+  },
+  {
+   "project": "chromium",
+   "spec": "qoder-wizard-speaks-human-and-survives-reload.spec.ts",
+   "location": "e2e\\qoder-wizard-speaks-human-and-survives-reload.spec.ts:150:1",
+   "title": "ord0135-the-review-step-button-carries-what-the-screen-already-says — 确认创建也要反映缺项",
+   "nodeid": "qoder-wizard-speaks-human-and-survives-reload.spec.ts::ord0135-the-review-step-button-carries-what-the-screen-already-says — 确认创建也要反映缺项",
+   "result": "green",
+   "seconds": 1.7
+  },
+  {
+   "project": "chromium",
+   "spec": "qoder-wizard-speaks-human-and-survives-reload.spec.ts",
+   "location": "e2e\\qoder-wizard-speaks-human-and-survives-reload.spec.ts:282:1",
+   "title": "ord0135-a-missing-field-is-a-route-not-only-a-diagnosis — 「还需要填写」要点得过去",
+   "nodeid": "qoder-wizard-speaks-human-and-survives-reload.spec.ts::ord0135-a-missing-field-is-a-route-not-only-a-diagnosis — 「还需要填写」要点得过去",
+   "result": "green",
+   "seconds": 0.836
+  },
+  {
+   "project": "chromium",
+   "spec": "qoder-wizard-speaks-human-and-survives-reload.spec.ts",
+   "location": "e2e\\qoder-wizard-speaks-human-and-survives-reload.spec.ts:336:1",
+   "title": "ord0216-a-fixed-field-leaves-the-hint-on-the-next-step — 补上的缺项不许跟着进确认屏",
+   "nodeid": "qoder-wizard-speaks-human-and-survives-reload.spec.ts::ord0216-a-fixed-field-leaves-the-hint-on-the-next-step — 补上的缺项不许跟着进确认屏",
+   "result": "green",
+   "seconds": 0.815
+  },
+  {
+   "project": "chromium",
+   "spec": "real-world-trip-operations-v9.spec.ts",
+   "location": "e2e\\real-world-trip-operations-v9.spec.ts:4:1",
+   "title": "real-world trip operations: inbox to luggage-aware autonomous recovery",
+   "nodeid": "real-world-trip-operations-v9.spec.ts::real-world trip operations: inbox to luggage-aware autonomous recovery",
+   "result": "red",
+   "seconds": 14.9
+  },
+  {
+   "project": "chromium",
+   "spec": "v10-accessibility.spec.ts",
+   "location": "e2e\\v10-accessibility.spec.ts:5:1",
+   "title": "V10 live execution surface has no automated accessibility violations",
+   "nodeid": "v10-accessibility.spec.ts::V10 live execution surface has no automated accessibility violations",
+   "result": "green",
+   "seconds": 1.3
+  },
+  {
+   "project": "chromium",
+   "spec": "v10-inbox.spec.ts",
+   "location": "e2e\\v10-inbox.spec.ts:4:1",
+   "title": "V10 Journey Inbox exposes text, image, and deterministic code paths",
+   "nodeid": "v10-inbox.spec.ts::V10 Journey Inbox exposes text, image, and deterministic code paths",
+   "result": "green",
+   "seconds": 0.598
+  },
+  {
+   "project": "chromium",
+   "spec": "v10-live-execution.spec.ts",
+   "location": "e2e\\v10-live-execution.spec.ts:4:1",
+   "title": "V10 live execution panel exposes the server clock and evidence trail",
+   "nodeid": "v10-live-execution.spec.ts::V10 live execution panel exposes the server clock and evidence trail",
+   "result": "green",
+   "seconds": 0.705
+  },
+  {
+   "project": "chromium",
+   "spec": "v10-quality-budget.spec.ts",
+   "location": "e2e\\v10-quality-budget.spec.ts:5:3",
+   "title": "V10 product-quality budget > Live Journey becomes usable without layout or server-error regressions",
+   "nodeid": "v10-quality-budget.spec.ts::V10 product-quality budget > Live Journey becomes usable without layout or server-error regressions",
+   "result": "green",
+   "seconds": 0.688
+  },
+  {
+   "project": "chromium",
+   "spec": "v13-5-fully-grounded.spec.ts",
+   "location": "e2e\\v13-5-fully-grounded.spec.ts:51:1",
+   "title": "City Discovery renders the fully grounded Journey proof",
+   "nodeid": "v13-5-fully-grounded.spec.ts::City Discovery renders the fully grounded Journey proof",
+   "result": "green",
+   "seconds": 1.7
+  },
+  {
+   "project": "chromium",
+   "spec": "v13-authoritative-integrity.spec.ts",
+   "location": "e2e\\v13-authoritative-integrity.spec.ts:20:1",
+   "title": "accepted authoritative execution truth converges to Dexie offline truth",
+   "nodeid": "v13-authoritative-integrity.spec.ts::accepted authoritative execution truth converges to Dexie offline truth",
+   "result": "red",
+   "seconds": 11.3
+  }
+ ]
+}
