@@ -65,8 +65,16 @@ async function probe(page: Page, selector: string, shape: string) {
       const cx = Math.round(box.left + box.width / 2);
       const cy = Math.round(box.top + box.height / 2);
       const bar = cta.getBoundingClientRect();
+      const sr = scroller.getBoundingClientRect();
       const landed = document.elementFromPoint(cx, cy);
-      const inScrollport = box.height > 0 && cy >= 0 && cy <= window.innerHeight;
+      /* "On screen" means inside the scroll container's own box.  Content the container clipped
+         away is not covered by chrome -- measured on this very candidate, the 高级设置 summary sits
+         below the clip edge at rest and elementFromPoint at its centre returns the CTA's 下一步
+         button, which an unfiltered viewport test reads as "chrome covers the control". */
+      const inScrollport =
+        box.height > 0 &&
+        cy >= Math.max(0, sr.top) &&
+        cy <= Math.min(window.innerHeight, sr.bottom);
       return {
         shape: shapeName,
         present: true,
