@@ -1,0 +1,62 @@
+{
+ "order": "ORD-0346",
+ "line": "origin/mirror/integration-frontend-apple-pass1",
+ "tip": "046fc98723e2eacfe3cb8eb00a7fd3abdbd26efe",
+ "cand": "021898bb8d15f0075077a04b87b151b2ee6790a2",
+ "merge_base": "c740f45d68f337c460a1a43b995162689d0110af",
+ "commits_tip_ahead_of_base": 8,
+ "commits_cand_ahead_of_base": 1,
+ "merge_tree_rc": 0,
+ "changed_files": [
+  "frontend/e2e/qoder-ord0346-honest-destinations.spec.ts",
+  "frontend/playwright.ord0346-S4.config.ts",
+  "frontend/src/design-tokens.css",
+  "frontend/src/features/setup/JourneyTrialSetup.tsx"
+ ],
+ "files": [
+  {
+   "path": "frontend/e2e/qoder-ord0346-honest-destinations.spec.ts",
+   "cand_blob": "4ada377782b73e9ed2571bdd01af03b37738c2f0",
+   "merged_blob": "4ada377782b73e9ed2571bdd01af03b37738c2f0",
+   "identical": true,
+   "cand_changed_the_file": true
+  },
+  {
+   "path": "frontend/playwright.ord0346-S4.config.ts",
+   "cand_blob": "c1b8d7a9ecf2c541d844228263d5bea093956887",
+   "merged_blob": "c1b8d7a9ecf2c541d844228263d5bea093956887",
+   "identical": true,
+   "cand_changed_the_file": true
+  },
+  {
+   "path": "frontend/src/design-tokens.css",
+   "cand_blob": "52dd3cb1ed0b66d8d08e7a97523b779b665b9243",
+   "merged_blob": "52dd3cb1ed0b66d8d08e7a97523b779b665b9243",
+   "identical": true,
+   "cand_changed_the_file": true
+  },
+  {
+   "path": "frontend/src/features/setup/JourneyTrialSetup.tsx",
+   "cand_blob": "4821ec238c97dd17e2ad9417cac9a71c4f26caa1",
+   "merged_blob": "4821ec238c97dd17e2ad9417cac9a71c4f26caa1",
+   "identical": true,
+   "cand_changed_the_file": true
+  }
+ ],
+ "merged_tree": "db4f542a15602484323eabb5e9f11ac179a15235",
+ "auto_merged_files": [],
+ "recut_commit": "d9a0811318c62c5d4d176c29f9b707f149c20fec",
+ "readback_tree": "db4f542a15602484323eabb5e9f11ac179a15235",
+ "readback_tree_matches": true,
+ "readback_parents": [
+  "046fc98723e2eacfe3cb8eb00a7fd3abdbd26efe",
+  "021898bb8d15f0075077a04b87b151b2ee6790a2"
+ ],
+ "readback_parent_tip": true,
+ "verdict": "RECUT_OK",
+ "pushed_ref": "refs/heads/cmdr/land-ord0346-recut",
+ "push_rc": 0,
+ "push_stderr": "remote: \nremote: Create a pull request for 'cmdr/land-ord0346-recut' on GitHub by visiting:        \nremote:      https://github.com/Canshu-King/CityNexus/pull/new/cmdr/land-ord0346-recut        \nremote: \nTo github.com:Canshu-King/CityNexus.git\n * [new branch]        d9a0811318c62c5d4d176c29f9b707f149c20fec -> cmdr/land-ord0346-recut",
+ "ls_remote": "d9a0811318c62c5d4d176c29f9b707f149c20fec\trefs/heads/cmdr/land-ord0346-recut",
+ "ls_remote_matches": true
+}
