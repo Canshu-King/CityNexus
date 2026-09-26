@@ -1,0 +1,14 @@
+{
+ "run_id": "0323f3f1440",
+ "arm": "Q68d",
+ "asked_key": "message_key",
+ "asked_code": "ZZ_Q68_MESSAGE_KEY",
+ "card_text": "这次排不出方案：数据不够，不是你说的不对服务器回的原因编号是 ZZ_Q68_MESSAGE_KEY，这条我们还没有本地文案，所以不替你解释它——原话在\"技术详情\"里。技术详情服务器给出的原因q68_forbidden_prose_行程过长无法在三日预算内排布这台设备自己量到的回读字段http_status=200 content-type=application/json bytes=108 照原话再试一次",
+ "code_in_card": true,
+ "prose_outside_the_fold": "这次排不出方案：数据不够，不是你说的不对服务器回的原因编号是 ZZ_Q68_MESSAGE_KEY，这条我们还没有本地文案，所以不替你解释它——原话在\"技术详情\"里。技术详情服务器给出的原因这台设备自己量到的回读字段http_status=200 content-type=application/json bytes=108 照原话再试一次",
+ "needle_in_dom": true,
+ "sweep_sees_the_tested_card": true,
+ "attribute_pairs_swept": 126,
+ "nodeid": "D:\\moodle\\_qoder_b_lane_20260923\\frontend\\e2e\\qoder-ord0323-two-exposure-cells.spec.ts:647 > N6_Q68d_a_machine_code_in_message_key_reaches_the_code_slot — 编号那格：message_key 这一形给了真编号时，编号还在屏上",
+ "test_status": "passed"
+}
