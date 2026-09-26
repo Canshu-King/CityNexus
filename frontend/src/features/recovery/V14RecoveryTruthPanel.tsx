@@ -1,5 +1,9 @@
 import { useEffect, useState } from "react";
+import { useLocale } from "../../i18n/LocaleContext";
 import { formatMinorMoney } from "../../lib/money";
+import { type RawFacts } from "../../lib/rawFacts";
+import { rejectionWithFacts, RejectionWithFacts } from "../../lib/rejectionFacts";
+import { CnxMeasuredFacts } from "../../components/CnxMeasuredFacts";
 import {
   fetchWithWriteDeadline,
   isWriteDeadlineMissed,
@@ -55,6 +59,10 @@ export function V14RecoveryTruthPanel({ journeyId, policy, currency = "CNY", onA
   const [proposal, setProposal] = useState<Proposal | null>(null);
   const [busy, setBusy] = useState(false);
   const [message, setMessage] = useState<string | null>(null);
+  const [failureFacts, setFailureFacts] = useState<RawFacts | null>(null);
+  const [failureEnvelope, setFailureEnvelope] = useState<unknown>(null);
+  const { locale } = useLocale();
+  const zh = locale.startsWith("zh");
 
   const refresh = async () => {
     const response = await fetch(`/api/v1/journeys/${journeyId}/replans`);
@@ -78,20 +86,25 @@ export function V14RecoveryTruthPanel({ journeyId, policy, currency = "CNY", onA
           "Idempotency-Key": `v14-ui-${proposal.id}`,
         },
       });
-      const body = await response.json();
-      if (!response.ok) throw new Error(body?.detail ?? "Recovery acceptance failed");
+      if (!response.ok) throw await rejectionWithFacts(response);
+      await response.json();
       setMessage("Recovery accepted · the child PlanVersion is now authoritative.");
       await refresh();
       onAccepted?.();
     } catch (error) {
       /* ORD-0281: a bound this device ran out with is not a server statement and not a failed
-         parse.  Raw English debug text used to be handed to the traveller here. */
+         parse.  Raw English debug text used to be handed to the traveller here.  ORD-0345 closes the
+         remaining half of that: an answered refusal also printed the server's own sentence, so the
+         fallthrough now names only what this device knows -- no confirmable answer, result unknown --
+         and the diagnosable part is the reading this device took, in the fold below. */
+      setFailureFacts(error instanceof RejectionWithFacts ? error.facts : null);
+      setFailureEnvelope(error instanceof RejectionWithFacts ? error.envelope : null);
       setMessage(
         isWriteDeadlineMissed(error)
           ? `${writeDeadlineCopy(false).title} ${writeDeadlineCopy(false).body}`
-          : error instanceof Error
-            ? error.message
-            : "Recovery acceptance failed",
+          : zh
+            ? "这步接受没有得到可确认的答复，结果未知。"
+            : "This acceptance got no confirmable answer; the result is unknown.",
       );
     } finally {
       setBusy(false);
@@ -159,7 +172,26 @@ export function V14RecoveryTruthPanel({ journeyId, policy, currency = "CNY", onA
               verified?.impact_resolution?.semantic_reason ??
               `Impact interpreted by ${proposal.explanation?.impact_provider ?? "CityNexus"} · ${proposal.explanation?.impact_model ?? "deterministic gate"}.`}
           </p>
-          {message && <p role="status">{message}</p>}
+          {message && (
+            <>
+              <p role="status" data-testid="v14-recovery-message">{message}</p>
+              {/* Q70/Q71: one element per contract field, named by the field, values measured here --
+                  and no fragment of the answer's text, in the attributes either. */}
+              {failureFacts && (
+                <details className="v14-recovery-technical" data-testid="v14-recovery-technical">
+                  <summary data-testid="v14-recovery-technical-toggle">
+                    {zh ? "技术详情" : "Technical detail"}
+                  </summary>
+                  <CnxMeasuredFacts
+                    facts={failureFacts}
+                    zh={zh}
+                    testId="v14-recovery-fact"
+                    envelope={failureEnvelope}
+                  />
+                </details>
+              )}
+            </>
+          )}
           {proposal.status === "PRESENTED" && (
             <button
               className="v8-primary"

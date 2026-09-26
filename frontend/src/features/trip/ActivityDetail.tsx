@@ -202,9 +202,17 @@ export function ActivityDetail({
         </div>
         <div>
           <dt>{zh ? "营业时间" : "Opening hours"}</dt>
-          <dd data-testid="activity-hours">
+          {/* ORD-0345 shape call: this value is the place record's own `opening_hours.raw` -- supplier
+              content the traveller is asking for, not a rejection's sentence. It stays, but it is no
+              longer unattributed: the line names whose words they are, and Q70 anchors the element with
+              the contract field it comes from. The ruler may still flag the shape; the readings say
+              what this is rather than leaving it to a name-match. */}
+          <dd
+            data-testid="activity-hours"
+            {...(openingKnown && opening?.raw ? { "data-cnx-field": "opening_hours.raw" } : {})}
+          >
             {openingKnown
-              ? opening?.raw || (zh ? "已提供" : "Provided")
+              ? `${opening?.raw || (zh ? "已提供" : "Provided")}${opening?.raw ? (zh ? " · 供应商原文" : " · provider's own text") : ""}`
               : zh
                 ? "暂无数据"
                 : "Not available"}
