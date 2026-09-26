@@ -1,0 +1,195 @@
+{
+ "tree": "72ed733e85e450ab0a7c28a46316e34546711d0c",
+ "lease_ms_read_from_the_module": "75000",
+ "journey_id": "22222222-2222-4222-8222-222222222222",
+ "A_crash_after_claim": {
+  "status": 500,
+  "body": "Internal Server Error",
+  "elapsed_ms": 15,
+  "row_after": {
+   "present": true,
+   "queried_key": "plans.generate:ord0340-dead-9c5bc3d0",
+   "operation": "plans.generate",
+   "response_status": null,
+   "response_json_is_null": true,
+   "response_json_bytes": 0,
+   "created_at": "2026-09-26T00:30:30.944835+00:00",
+   "expires_at": "2026-10-03T00:30:30.944835+00:00",
+   "journal_mode": "wal",
+   "idempotency_rows_in_db": 1
+  }
+ },
+ "B_replay_dead_key": {
+  "status": 409,
+  "body": "{\"error\":{\"code\":\"CONFLICT\",\"message\":\"agent idempotency record is incomplete\",\"message_key\":\"plan_generation.in_flight\",\"trace_id\":\"fb9c614d-612f-4266-a64d-62c62abc5651\",\"details\":{\"retry_after_ms\":73735,\"attempt_id\":\"22144523039b4a9394a82f1f3d015575\",\"lease_ms\":75000},\"reason_code\":\"PLAN_GENERATION_IN_FLIGHT\"}}",
+  "elapsed_ms": 843,
+  "row": {
+   "present": true,
+   "queried_key": "plans.generate:ord0340-dead-9c5bc3d0",
+   "operation": "plans.generate",
+   "response_status": null,
+   "response_json_is_null": true,
+   "response_json_bytes": 0,
+   "created_at": "2026-09-26T00:30:30.944835+00:00",
+   "expires_at": "2026-10-03T00:30:30.944835+00:00",
+   "journal_mode": "wal",
+   "idempotency_rows_in_db": 1
+  },
+  "pid": 36444
+ },
+ "C_replay_dead_key_again": {
+  "status": 409,
+  "body": "{\"error\":{\"code\":\"CONFLICT\",\"message\":\"agent idempotency record is incomplete\",\"message_key\":\"plan_generation.in_flight\",\"trace_id\":\"db0829f1-29ed-49dc-ac05-8129bb3737f7\",\"details\":{\"retry_after_ms\":71686,\"attempt_id\":\"22144523039b4a9394a82f1f3d015575\",\"lease_ms\":75000},\"reason_code\":\"PLAN_GENERATION_IN_FLIGHT\"}}",
+  "elapsed_ms": 813,
+  "row": {
+   "present": true,
+   "queried_key": "plans.generate:ord0340-dead-9c5bc3d0",
+   "operation": "plans.generate",
+   "response_status": null,
+   "response_json_is_null": true,
+   "response_json_bytes": 0,
+   "created_at": "2026-09-26T00:30:30.944835+00:00",
+   "expires_at": "2026-10-03T00:30:30.944835+00:00",
+   "journal_mode": "wal",
+   "idempotency_rows_in_db": 1
+  },
+  "pid": 56324
+ },
+ "holder_pid": 57880,
+ "D_row_null_while_worker_alive": {
+  "present": true,
+  "queried_key": "plans.generate:ord0340-live-098af9f1",
+  "operation": "plans.generate",
+  "response_status": null,
+  "response_json_is_null": true,
+  "response_json_bytes": 0,
+  "created_at": "2026-09-26T00:30:36.271809+00:00",
+  "expires_at": "2026-10-03T00:30:36.271809+00:00",
+  "journal_mode": "wal",
+  "idempotency_rows_in_db": 2
+ },
+ "E_replay_while_alive": {
+  "status": 409,
+  "body": "{\"error\":{\"code\":\"CONFLICT\",\"message\":\"agent idempotency record is incomplete\",\"message_key\":\"plan_generation.in_flight\",\"trace_id\":\"5e024a00-e140-4de8-8535-1a3a6dafbb64\",\"details\":{\"retry_after_ms\":73871,\"attempt_id\":\"9629ed14a56f4626bbfee87638e05e21\",\"lease_ms\":75000},\"reason_code\":\"PLAN_GENERATION_IN_FLIGHT\"}}",
+  "elapsed_ms": 828,
+  "row": {
+   "present": true,
+   "queried_key": "plans.generate:ord0340-live-098af9f1",
+   "operation": "plans.generate",
+   "response_status": null,
+   "response_json_is_null": true,
+   "response_json_bytes": 0,
+   "created_at": "2026-09-26T00:30:36.271809+00:00",
+   "expires_at": "2026-10-03T00:30:36.271809+00:00",
+   "journal_mode": "wal",
+   "idempotency_rows_in_db": 2
+  },
+  "pid": 35124
+ },
+ "F_holder_result": {
+  "status": 201,
+  "body": "[{\"id\":\"55523d40-cafe-5bd2-b30a-de057ec7a839\",\"journey_id\":\"22222222-2222-4222-8222-222222222222\",\"version_no\":1,\"planning_mode\":\"balanced\",\"status\":\"CANDIDATE\",\"source\":\"INITIAL\",\"parent_plan_version_id\":null,\"total_cost\":{\"amount_minor\":37000,\"currency\":\"CNY\"},\"utility_score\":0.9298,\"score_breakdown\":{\"commitment_preservation\":0.98,\"stability\":0.95,\"time_reliability\":0.94,\"preference_fit\":0.92,\"",
+  "elapsed_ms": 12047,
+  "row_after": {
+   "present": true,
+   "queried_key": "plans.generate:ord0340-live-098af9f1",
+   "operation": "plans.generate",
+   "response_status": 201,
+   "response_json_is_null": false,
+   "response_json_bytes": 37193,
+   "created_at": "2026-09-26T00:30:36.271809+00:00",
+   "expires_at": "2026-10-03T00:30:36.271809+00:00",
+   "journal_mode": "wal",
+   "idempotency_rows_in_db": 2
+  },
+  "pid": 31392
+ },
+ "G_replay_after_finished": {
+  "status": 201,
+  "body": "[{\"activities\":[{\"activity_type\":\"visit\",\"city_service_id\":null,\"cost_status\":\"UNKNOWN\",\"end_at\":\"2026-10-10T10:15:00+08:00\",\"estimated_cost\":{\"amount_minor\":0,\"currency\":\"CNY\"},\"id\":\"3a58c470-524c-5854-aa39-6c37a350eb80\",\"locked\":false,\"metadata\":{\"category\":\"heritage\",\"crs\":\"WGS84\",\"latitude\":39.1,\"longitude\":117.18,\"opening_hours\":{\"close\":\"18:00\",\"open\":\"08:30\"}},\"place_id\":\"place-old-town\",\"s",
+  "elapsed_ms": 15,
+  "row": {
+   "present": true,
+   "queried_key": "plans.generate:ord0340-live-098af9f1",
+   "operation": "plans.generate",
+   "response_status": 201,
+   "response_json_is_null": false,
+   "response_json_bytes": 37193,
+   "created_at": "2026-09-26T00:30:36.271809+00:00",
+   "expires_at": "2026-10-03T00:30:36.271809+00:00",
+   "journal_mode": "wal",
+   "idempotency_rows_in_db": 2
+  },
+  "pid": 61528
+ },
+ "H_control_fresh_key": {
+  "status": 201,
+  "body": "[{\"id\":\"0a1dcd9c-85cc-54bc-943c-5b46d6f3426c\",\"journey_id\":\"22222222-2222-4222-8222-222222222222\",\"version_no\":2,\"planning_mode\":\"balanced\",\"status\":\"CANDIDATE\",\"source\":\"INITIAL\",\"parent_plan_version_id\":null,\"total_cost\":{\"amount_minor\":37000,\"currency\":\"CNY\"},\"utility_score\":0.9298,\"score_breakdown\":{\"commitment_preservation\":0.98,\"stability\":0.95,\"time_reliability\":0.94,\"preference_fit\":0.92,\"",
+  "elapsed_ms": 47,
+  "row": {
+   "present": true,
+   "queried_key": "plans.generate:ord0340-fresh-d86640e5",
+   "operation": "plans.generate",
+   "response_status": 201,
+   "response_json_is_null": false,
+   "response_json_bytes": 37193,
+   "created_at": "2026-09-26T00:30:51.264494+00:00",
+   "expires_at": "2026-10-03T00:30:51.264494+00:00",
+   "journal_mode": "wal",
+   "idempotency_rows_in_db": 3
+  },
+  "pid": 52828
+ },
+ "comparison": {
+  "dead_claim_named": {
+   "status": 409,
+   "reason_code": "PLAN_GENERATION_IN_FLIGHT",
+   "message_key": "plan_generation.in_flight",
+   "details": {
+    "retry_after_ms": 73735,
+    "attempt_id": "22144523039b4a9394a82f1f3d015575",
+    "lease_ms": 75000
+   },
+   "elapsed_ms": 843,
+   "envelope_unchanged_when_trace_removed": null
+  },
+  "in_flight_named": {
+   "status": 409,
+   "reason_code": "PLAN_GENERATION_IN_FLIGHT",
+   "message_key": "plan_generation.in_flight",
+   "details": {
+    "retry_after_ms": 73871,
+    "attempt_id": "9629ed14a56f4626bbfee87638e05e21",
+    "lease_ms": 75000
+   },
+   "elapsed_ms": 828,
+   "envelope_unchanged_when_trace_removed": null
+  },
+  "refusals_are_now_named": true,
+  "the_two_are_the_same_named_state_by_design": true,
+  "why_that_is_the_right_answer": "a NULL receipt within an unexpired lease is genuinely still claimed - the server cannot know the worker died, and it no longer pretends it does: it names the state and bounds it",
+  "the_dead_shape_counts_down": {
+   "retry_after_ms_on_the_second_replay": 73735,
+   "retry_after_ms_on_the_third_replay": 71686,
+   "attempt_id_stable_across_replays": true
+  },
+  "message_field_still_the_accepted_sentence": true,
+  "holder_final": 201,
+  "replay_after_the_holder_finished": {
+   "status": 201,
+   "reason_code": null,
+   "message_key": null,
+   "details": null,
+   "elapsed_ms": 15,
+   "envelope_unchanged_when_trace_removed": null
+  },
+  "dead_key_after_three_replays_is_still_null": true,
+  "cross_process_pids": [
+   47116,
+   57880,
+   36444,
+   35124,
+   61528
+  ]
+ }
+}
