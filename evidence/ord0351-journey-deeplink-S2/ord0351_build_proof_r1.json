@@ -1,0 +1,22 @@
+{
+  "what": "a production build of the delivered frontend, used only to prove the new entry survives bundling (the phone ships a built bundle, not the dev server)",
+  "order": "ORD-0351",
+  "lane": "S2-hermes (d9e2c9ae)",
+  "commit_built": "7f26b2f24ccb5893e194bb27da39cc2284aa47d1",
+  "its_parent": "2d8b03b8c7734ea3b8521b80845e1b0bc1a07957",
+  "command": "cd wt/frontend && npm run build   (vite build, PWA generateSW)",
+  "exit": 0,
+  "entry_chunk": "dist/assets/index-MDQPfxic.js",
+  "entry_chunk_bytes": 1266477,
+  "entry_chunk_local_sha1_object_id": "d56a0667ec06c5f998668a9453dc9de6e828cf1d",
+  "entry_chunk_retrievable": "NO -- this is a build output hashed locally with `git hash-object --no-filters`; it was never committed or pushed, so `git cat-file -t d56a0667ec06c5f998668a9453dc9de6e828cf1d` resolves in no repository. Recompute: run the `command` field above in `entry_chunk`'s directory, then hash-object.",
+  "strings_measured_in_that_chunk": {
+    "journey_id_uuid_pattern": 1,
+    "citynexus_v8_journey_id_key": 7,
+    "legacy_branch": 2,
+    "v8_prefix_strip": 3
+  },
+  "claim_this_artifact_supports": "the adoption code is present in the shipped bundle, so the entry is not a dev-server-only effect",
+  "claim_this_artifact_does_not_support": "it says nothing about which generation is deployed on the phone; that is the commander's swap step",
+  "generated_at": "2026-09-26T13:54:37+08:00"
+}
