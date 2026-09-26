@@ -1,0 +1,184 @@
+{
+ "order": "ORD-0332",
+ "gate": "tests/test_qoder_ord0332_error_receipt.py",
+ "tree": "D:\\moodle\\_qoder_f_run\\work_0332",
+ "python": "D:/moodle/CityNexus/.venv/Scripts/python.exe",
+ "cells": [
+  "test_R1_the_field_name_is_single_and_documented",
+  "test_R2_a_real_rejection_carries_a_recitable_id",
+  "test_R3_the_same_call_resends_to_the_same_id_while_the_trace_does_not",
+  "test_R4_the_seed_reads_the_call_itself_not_the_moment",
+  "test_R4b_a_real_query_reorder_over_http_is_the_same_call",
+  "test_R5_without_a_request_the_key_is_absent_not_empty",
+  "test_R6_the_log_carries_the_same_id_and_the_database_carries_no_receipt_table",
+  "test_R7_the_envelope_keeps_every_field_it_already_had",
+  "test_R8_the_seed_is_read_off_the_real_request_not_just_the_dataclass"
+ ],
+ "arms": [
+  {
+   "arm": "A1_query_order_matters",
+   "file": "backend/app/error_receipt.py",
+   "claim": "种子里查询参数不再排序 ⇒ 同一发换个顺序就成了另一发",
+   "anchor_hits": 1,
+   "shape": "m1:39b2c188b0",
+   "expected_by_design": [
+    "test_R4b_a_real_query_reorder_over_http_is_the_same_call"
+   ],
+   "derived_result": null,
+   "returncode": 1,
+   "red_cells": [
+    "test_R4_the_seed_reads_the_call_itself_not_the_moment",
+    "test_R4b_a_real_query_reorder_over_http_is_the_same_call"
+   ],
+   "red_count": 2,
+   "caught_as_designed": true,
+   "claimed_result": "KILLS（2/9 格为它变红）"
+  },
+  {
+   "arm": "A2_no_idempotency_key",
+   "file": "backend/app/error_receipt.py",
+   "claim": "种子不再读调用方自带的幂等键 ⇒ 两发不同调用共用一枚号",
+   "anchor_hits": 1,
+   "shape": "m1:1c618d55fd",
+   "expected_by_design": [
+    "test_R8_the_seed_is_read_off_the_real_request_not_just_the_dataclass"
+   ],
+   "derived_result": null,
+   "returncode": 1,
+   "red_cells": [
+    "test_R8_the_seed_is_read_off_the_real_request_not_just_the_dataclass"
+   ],
+   "red_count": 1,
+   "caught_as_designed": true,
+   "claimed_result": "KILLS（1/9 格为它变红）"
+  },
+  {
+   "arm": "A3_code_not_in_digest",
+   "file": "backend/app/error_receipt.py",
+   "claim": "code 不进摘要 ⇒ 同一发两种失败糊成一枚号",
+   "anchor_hits": 1,
+   "shape": "m1:49152347fe",
+   "expected_by_design": [
+    "test_R4_the_seed_reads_the_call_itself_not_the_moment"
+   ],
+   "derived_result": null,
+   "returncode": 1,
+   "red_cells": [
+    "test_R4_the_seed_reads_the_call_itself_not_the_moment"
+   ],
+   "red_count": 1,
+   "caught_as_designed": true,
+   "claimed_result": "KILLS（1/9 格为它变红）"
+  },
+  {
+   "arm": "A4_per_call_salt",
+   "file": "backend/app/error_receipt.py",
+   "claim": "种子里混进每次调用都变的东西（进程内不可重复）",
+   "anchor_hits": 1,
+   "shape": "m1:1e267ef5c2",
+   "expected_by_design": [
+    "test_R3_the_same_call_resends_to_the_same_id_while_the_trace_does_not"
+   ],
+   "derived_result": null,
+   "returncode": 1,
+   "red_cells": [
+    "test_R3_the_same_call_resends_to_the_same_id_while_the_trace_does_not",
+    "test_R4_the_seed_reads_the_call_itself_not_the_moment",
+    "test_R4b_a_real_query_reorder_over_http_is_the_same_call",
+    "test_R8_the_seed_is_read_off_the_real_request_not_just_the_dataclass"
+   ],
+   "red_count": 4,
+   "caught_as_designed": true,
+   "claimed_result": "KILLS（4/9 格为它变红）"
+  },
+  {
+   "arm": "A5_empty_string_written",
+   "file": "backend/app/main.py",
+   "claim": "拿不到号时写空串而不是不写键 ⇒ 屏幕把空值读成『有个号，只是空的』",
+   "anchor_hits": 1,
+   "shape": "m1:dbb24c1cfd",
+   "expected_by_design": [
+    "test_R5_without_a_request_the_key_is_absent_not_empty"
+   ],
+   "derived_result": null,
+   "returncode": 1,
+   "red_cells": [
+    "test_R5_without_a_request_the_key_is_absent_not_empty"
+   ],
+   "red_count": 1,
+   "caught_as_designed": true,
+   "claimed_result": "KILLS（1/9 格为它变红）"
+  },
+  {
+   "arm": "A6_no_log_line",
+   "file": "backend/app/main.py",
+   "claim": "不落那行日志 ⇒ 号还能看见但查不回来",
+   "anchor_hits": 1,
+   "shape": "m1:357a0ec956",
+   "expected_by_design": [
+    "test_R6_the_log_carries_the_same_id_and_the_database_carries_no_receipt_table"
+   ],
+   "derived_result": null,
+   "returncode": 1,
+   "red_cells": [
+    "test_R6_the_log_carries_the_same_id_and_the_database_carries_no_receipt_table"
+   ],
+   "red_count": 1,
+   "caught_as_designed": true,
+   "claimed_result": "KILLS（1/9 格为它变红）"
+  },
+  {
+   "arm": "A7_no_middleware_arm",
+   "file": "backend/app/main.py",
+   "claim": "中间件不再挂种子 ⇒ 每发的号都不该存在",
+   "anchor_hits": 1,
+   "shape": "m1:b69dc2fe5d",
+   "expected_by_design": [
+    "test_R2_a_real_rejection_carries_a_recitable_id",
+    "test_R3_the_same_call_resends_to_the_same_id_while_the_trace_does_not"
+   ],
+   "derived_result": null,
+   "returncode": 1,
+   "red_cells": [
+    "test_R2_a_real_rejection_carries_a_recitable_id",
+    "test_R3_the_same_call_resends_to_the_same_id_while_the_trace_does_not",
+    "test_R4b_a_real_query_reorder_over_http_is_the_same_call",
+    "test_R6_the_log_carries_the_same_id_and_the_database_carries_no_receipt_table",
+    "test_R7_the_envelope_keeps_every_field_it_already_had",
+    "test_R8_the_seed_is_read_off_the_real_request_not_just_the_dataclass"
+   ],
+   "red_count": 6,
+   "caught_as_designed": true,
+   "claimed_result": "KILLS（6/9 格为它变红）"
+  }
+ ],
+ "subject_blobs_sha1_disk": {
+  "backend/app/error_receipt.py": "5acc4c5bdecdb830c9c8cf2f93270401f5dfc1bf",
+  "backend/app/main.py": "f6a2f6cecae4b40308e35ee3b78fec346b6ddd8c"
+ },
+ "control_round": {
+  "returncode": 0,
+  "cell_verdicts": {
+   "test_R1_the_field_name_is_single_and_documented": "PASSED",
+   "test_R2_a_real_rejection_carries_a_recitable_id": "PASSED",
+   "test_R3_the_same_call_resends_to_the_same_id_while_the_trace_does_not": "PASSED",
+   "test_R4_the_seed_reads_the_call_itself_not_the_moment": "PASSED",
+   "test_R4b_a_real_query_reorder_over_http_is_the_same_call": "PASSED",
+   "test_R5_without_a_request_the_key_is_absent_not_empty": "PASSED",
+   "test_R6_the_log_carries_the_same_id_and_the_database_carries_no_receipt_table": "PASSED",
+   "test_R7_the_envelope_keeps_every_field_it_already_had": "PASSED",
+   "test_R8_the_seed_is_read_off_the_real_request_not_just_the_dataclass": "PASSED"
+  },
+  "summary": [
+   "======================== 9 passed, 2 warnings in 3.03s ========================"
+  ]
+ },
+ "campaign_valid": true,
+ "restored_clean": true,
+ "kills": 7,
+ "survivors": [],
+ "missed_expectations": [],
+ "anchor_misses": [],
+ "claimed_result": "控制轮 绿；7 臂里 7 臂让门变红、0 臂存活；每臂都红在我设计预期的格集合里 = 7/7",
+ "supersedes": "ord0332_gate_mutation_campaign_r1.json：那一读里 A2_no_idempotency_key 存活 —— 红的不是产品，是门缺格（R4 手搓 ReceiptSeed，没人走 `seed_for_request`）。已补 test_R8 那格（真 HTTP 带两枚键），本代重跑"
+}
