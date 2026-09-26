@@ -1,0 +1,100 @@
+{
+ "schema": "CNX_CMDR_LANDING_PREFLIGHT_V1",
+ "lane": "commander 494abfd7",
+ "at_local": "2026-09-26T19:12:01+0800",
+ "mode": "DRY_RUN",
+ "authoritative_line": "mirror/integration-frontend-apple-pass1",
+ "tip_re_read_from_github_before": "282dc65a487b6be35c7268e41f358463d575aed3",
+ "candidate_ref": "refs/heads/landing/ord0360-recut-1828",
+ "candidate_tip": "6ee21eddba60303e8f0f46907df9501ee0149e6e",
+ "genealogy": {
+  "ff_possible_rc": 1,
+  "ff_possible": false,
+  "merge_base": "6ee21eddba60303e8f0f46907df9501ee0149e6e",
+  "line_only_commits": 4,
+  "candidate_only_commits": 0
+ },
+ "file_sets": {
+  "line_side_since_base": [
+   "frontend/e2e/qoder-plan-ai-thinking.spec.ts",
+   "frontend/src/features/planning/PlanWithAiSheet.tsx",
+   "review/ord0359-readings/LANES_SCAN.md",
+   "review/ord0359-readings/PROXY_PROBE.md",
+   "tools/CHAIN_SELF_HEAL_V1.md",
+   "tools/chain_self_heal.mjs"
+  ],
+  "candidate_side_since_base": [],
+  "intersection": [],
+  "product_introduced_by_candidate": []
+ },
+ "merge_tree": {
+  "exit": 0,
+  "first_line": "02c5474245766dbf48e373bf095d67ac6b0bc49f",
+  "conflict_reported": false,
+  "stderr_head": ""
+ },
+ "gate_run": {
+  "requested": [
+   "backend/tests/test_qoder_ord0360_single_active_anchor.py"
+  ],
+  "collect_exit": 0,
+  "collected": null,
+  "test_exit": 0,
+  "summary": [
+   "11 passed, 2 warnings in 2.18s"
+  ],
+  "export": "D:/moodle/_qoder_cmdr_ref_20260921/snap_preflight_191139",
+  "blob_equality": [],
+  "whole_suite": {
+   "collect_exit": 0,
+   "collected": 1388,
+   "interrupted": false,
+   "error_lines": [
+    "tests/test_qoder_ord0332_error_receipt.py::test_R7_the_envelope_keeps_every_field_it_already_had",
+    "tests/test_qoder_ord0332_error_receipt.py::test_R8_the_seed_is_read_off_the_real_request_not_just_the_dataclass",
+    "tests/test_solver_runtime_policy.py::test_unexpected_solver_programming_error_is_not_silently_hidden"
+   ],
+   "tail": [
+    "    _PortalFactoryType = Callable[[], AbstractContextManager[anyio.abc.BlockingPortal]]",
+    "-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html",
+    "1388 tests collected in 4.47s"
+   ],
+   "cmd": "D:/moodle/CityNexus/.venv/Scripts/python.exe -m pytest --collect-only -q tests  (cwd=<export>/backend, PYTHONPATH=<export>)"
+  },
+  "collect_stdout_tail": [
+   "",
+   "-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html",
+   "11 tests collected in 2.10s"
+  ],
+  "rooted_tests": {
+   "paths": [
+    "backend/tests/test_qoder_ord0360_single_active_anchor.py"
+   ],
+   "exit": 0,
+   "summary": [
+    "11 passed, 2 warnings in 2.18s"
+   ]
+  },
+  "interpreter": "Python 3.12.14 (main, Aug 25 2026, 14:01:42) [MSC v.1944 64 bit (AMD64)]",
+  "exposure": {
+   "skipped": "no frontend/src file changed"
+  }
+ },
+ "problems": [
+  "candidate is NOT a descendant of the tip (merge-base --is-ancestor rc=1) - landing it would move the authoritative line backwards",
+  "candidate misses 4 commit(s) the line already has - ask the lane to re-cut onto the tip",
+  "candidate adds nothing over the tip (ahead=0) - there is nothing to land"
+ ],
+ "verdict": "REFUSED",
+ "landing": null,
+ "discipline": {
+  "evidence_paths_overwritten": 0,
+  "databases_opened": 0,
+  "surfaces_started_or_stopped": 0,
+  "credential_values_printed": 0,
+  "candidate_refs_pushed_by_commander": 0
+ },
+ "claim_kind": "git_and_pytest_determined",
+ "claimed_result": "refused: candidate is NOT a descendant of the tip (merge-base --is-ancestor rc=1) - landing it would move the authoritative line backwards | candidate misses 4 commit(s) the line already has - ask the lane to re-cut onto the tip | candidate adds nothing over the tip (ahead=0) - there is nothing to land",
+ "derived_result": null
+}
