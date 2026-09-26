@@ -1,0 +1,395 @@
+{
+ "order": "ORD-0346",
+ "lane": "S4-ast-taint",
+ "generation": "c740f45d68f337c460a1a43b995162689d0110af",
+ "screen": {
+  "file": "frontend/src/features/setup/JourneyTrialSetup.tsx",
+  "summary_line": 677,
+  "first_mention_of_the_panel_name": 676,
+  "list_rendered_at": [
+   689
+  ],
+  "source_table": "CITY_FACTS at frontend/src/features/setup/JourneyTrialSetup.tsx:105-128",
+  "derived_list": "SUPPORTED_CITIES at frontend/src/features/setup/JourneyTrialSetup.tsx:163",
+  "routes_read_by_the_screen_before_this_change": [],
+  "note": "the panel read no route at all: the names came from a client-side spelling table, and the heading called them supported destinations"
+ },
+ "server_side": {
+  "vocabulary_table": "backend/app/main.py:10669-10686",
+  "vocabulary_codes": 16,
+  "capability_route": "backend/app/main.py:2908 GET /api/v1/destinations/capability -> evaluate_capability",
+  "identity_field": "canonical_destination_id (backend/app/anywhere_capability.py:344-357 identity_fields)",
+  "resolver_seam": "CITYNEXUS_ANYWHERE_RESOLVER, off by default (backend/app/anywhere_capability.py:205-206)"
+ },
+ "set_difference": {
+  "advertised_zh_spellings": 11,
+  "advertised_en_spellings": 11,
+  "advertised_zh": [
+   "厦门",
+   "北京",
+   "上海",
+   "天津",
+   "福州",
+   "广州",
+   "深圳",
+   "成都",
+   "杭州",
+   "东京",
+   "新加坡"
+  ],
+  "backend_vocabulary_labels": 16,
+  "in_both": [
+   "上海",
+   "北京",
+   "厦门",
+   "天津",
+   "广州",
+   "成都",
+   "杭州",
+   "深圳"
+  ],
+  "in_both_count": 8,
+  "advertised_but_not_in_the_backend_vocabulary": [
+   "东京",
+   "新加坡",
+   "福州"
+  ],
+  "in_the_backend_vocabulary_but_not_advertised": [
+   "三亚",
+   "南京",
+   "昆明",
+   "武汉",
+   "苏州",
+   "西安",
+   "重庆",
+   "青岛"
+  ]
+ },
+ "measured_against_the_server": {
+  "reading_artifact": "capability_reading_r1.json",
+  "port": 8846,
+  "database": "sqlite:///D:/moodle/_qoder_lane_S4_0926/work/ord0346/ord0346_S4_r1.db",
+  "resolver_seam": "off",
+  "named_by_the_server": [
+   "厦门",
+   "北京",
+   "上海",
+   "天津",
+   "广州",
+   "深圳",
+   "成都",
+   "杭州"
+  ],
+  "named_count": 8,
+  "not_named": [
+   "福州",
+   "东京",
+   "新加坡"
+  ],
+  "not_named_count": 3,
+  "with_catalogue_rows": [
+   "北京"
+  ],
+  "capability_READY": [],
+  "capability_READY_count": 0,
+  "per_name": {
+   "厦门": {
+    "capability": "HYDRATABLE",
+    "reason_code": "COVERAGE_INCOMPLETE",
+    "recommended_action": "START_HYDRATION",
+    "destination_state": "RESOLVED",
+    "destination_resolution": "vocabulary",
+    "canonical_destination_id": "CN-XIAMEN",
+    "pending_destination_label": "厦门",
+    "resolver_query_normalized": "厦门",
+    "destination_pending_key": null,
+    "pending_label_fidelity": "EXACT_RAW",
+    "retryable": false,
+    "place_count": 0,
+    "missing_categories": [
+     "attractions",
+     "food",
+     "nightlife",
+     "lodging",
+     "mobility",
+     "booking"
+    ],
+    "provenance_source_kinds": [],
+    "provider_status_present": false
+   },
+   "北京": {
+    "capability": "HYDRATABLE",
+    "reason_code": "COVERAGE_INCOMPLETE",
+    "recommended_action": "START_HYDRATION",
+    "destination_state": "RESOLVED",
+    "destination_resolution": "catalog",
+    "canonical_destination_id": "CN-BEIJING",
+    "pending_destination_label": "北京",
+    "resolver_query_normalized": "北京",
+    "destination_pending_key": null,
+    "pending_label_fidelity": "EXACT_RAW",
+    "retryable": false,
+    "place_count": 8,
+    "missing_categories": [
+     "nightlife",
+     "lodging"
+    ],
+    "provenance_source_kinds": [
+     "GOLDEN_FIXTURE"
+    ],
+    "provider_status_present": false
+   },
+   "上海": {
+    "capability": "HYDRATABLE",
+    "reason_code": "COVERAGE_INCOMPLETE",
+    "recommended_action": "START_HYDRATION",
+    "destination_state": "RESOLVED",
+    "destination_resolution": "vocabulary",
+    "canonical_destination_id": "CN-SHANGHAI",
+    "pending_destination_label": "上海",
+    "resolver_query_normalized": "上海",
+    "destination_pending_key": null,
+    "pending_label_fidelity": "EXACT_RAW",
+    "retryable": false,
+    "place_count": 0,
+    "missing_categories": [
+     "attractions",
+     "food",
+     "nightlife",
+     "lodging",
+     "mobility",
+     "booking"
+    ],
+    "provenance_source_kinds": [],
+    "provider_status_present": false
+   },
+   "天津": {
+    "capability": "HYDRATABLE",
+    "reason_code": "COVERAGE_INCOMPLETE",
+    "recommended_action": "START_HYDRATION",
+    "destination_state": "RESOLVED",
+    "destination_resolution": "vocabulary",
+    "canonical_destination_id": "CN-TIANJIN",
+    "pending_destination_label": "天津",
+    "resolver_query_normalized": "天津",
+    "destination_pending_key": null,
+    "pending_label_fidelity": "EXACT_RAW",
+    "retryable": false,
+    "place_count": 0,
+    "missing_categories": [
+     "attractions",
+     "food",
+     "nightlife",
+     "lodging",
+     "mobility",
+     "booking"
+    ],
+    "provenance_source_kinds": [],
+    "provider_status_present": false
+   },
+   "福州": {
+    "capability": "UNAVAILABLE",
+    "reason_code": "NO_CANONICAL_IDENTITY",
+    "recommended_action": "CHOOSE_ANOTHER_DESTINATION",
+    "destination_state": "NO_MATCH",
+    "destination_resolution": "unresolved",
+    "canonical_destination_id": null,
+    "pending_destination_label": "福州",
+    "resolver_query_normalized": "福州",
+    "destination_pending_key": null,
+    "pending_label_fidelity": "EXACT_RAW",
+    "retryable": false,
+    "place_count": 0,
+    "missing_categories": [
+     "attractions",
+     "food",
+     "nightlife",
+     "lodging",
+     "mobility",
+     "booking"
+    ],
+    "provenance_source_kinds": [],
+    "provider_status_present": false
+   },
+   "广州": {
+    "capability": "HYDRATABLE",
+    "reason_code": "COVERAGE_INCOMPLETE",
+    "recommended_action": "START_HYDRATION",
+    "destination_state": "RESOLVED",
+    "destination_resolution": "vocabulary",
+    "canonical_destination_id": "CN-GUANGZHOU",
+    "pending_destination_label": "广州",
+    "resolver_query_normalized": "广州",
+    "destination_pending_key": null,
+    "pending_label_fidelity": "EXACT_RAW",
+    "retryable": false,
+    "place_count": 0,
+    "missing_categories": [
+     "attractions",
+     "food",
+     "nightlife",
+     "lodging",
+     "mobility",
+     "booking"
+    ],
+    "provenance_source_kinds": [],
+    "provider_status_present": false
+   },
+   "深圳": {
+    "capability": "HYDRATABLE",
+    "reason_code": "COVERAGE_INCOMPLETE",
+    "recommended_action": "START_HYDRATION",
+    "destination_state": "RESOLVED",
+    "destination_resolution": "vocabulary",
+    "canonical_destination_id": "CN-SHENZHEN",
+    "pending_destination_label": "深圳",
+    "resolver_query_normalized": "深圳",
+    "destination_pending_key": null,
+    "pending_label_fidelity": "EXACT_RAW",
+    "retryable": false,
+    "place_count": 0,
+    "missing_categories": [
+     "attractions",
+     "food",
+     "nightlife",
+     "lodging",
+     "mobility",
+     "booking"
+    ],
+    "provenance_source_kinds": [],
+    "provider_status_present": false
+   },
+   "成都": {
+    "capability": "HYDRATABLE",
+    "reason_code": "COVERAGE_INCOMPLETE",
+    "recommended_action": "START_HYDRATION",
+    "destination_state": "RESOLVED",
+    "destination_resolution": "vocabulary",
+    "canonical_destination_id": "CN-CHENGDU",
+    "pending_destination_label": "成都",
+    "resolver_query_normalized": "成都",
+    "destination_pending_key": null,
+    "pending_label_fidelity": "EXACT_RAW",
+    "retryable": false,
+    "place_count": 0,
+    "missing_categories": [
+     "attractions",
+     "food",
+     "nightlife",
+     "lodging",
+     "mobility",
+     "booking"
+    ],
+    "provenance_source_kinds": [],
+    "provider_status_present": false
+   },
+   "杭州": {
+    "capability": "HYDRATABLE",
+    "reason_code": "COVERAGE_INCOMPLETE",
+    "recommended_action": "START_HYDRATION",
+    "destination_state": "RESOLVED",
+    "destination_resolution": "vocabulary",
+    "canonical_destination_id": "CN-HANGZHOU",
+    "pending_destination_label": "杭州",
+    "resolver_query_normalized": "杭州",
+    "destination_pending_key": null,
+    "pending_label_fidelity": "EXACT_RAW",
+    "retryable": false,
+    "place_count": 0,
+    "missing_categories": [
+     "attractions",
+     "food",
+     "nightlife",
+     "lodging",
+     "mobility",
+     "booking"
+    ],
+    "provenance_source_kinds": [],
+    "provider_status_present": false
+   },
+   "东京": {
+    "capability": "UNAVAILABLE",
+    "reason_code": "NO_CANONICAL_IDENTITY",
+    "recommended_action": "CHOOSE_ANOTHER_DESTINATION",
+    "destination_state": "NO_MATCH",
+    "destination_resolution": "unresolved",
+    "canonical_destination_id": null,
+    "pending_destination_label": "东京",
+    "resolver_query_normalized": "东京",
+    "destination_pending_key": null,
+    "pending_label_fidelity": "EXACT_RAW",
+    "retryable": false,
+    "place_count": 0,
+    "missing_categories": [
+     "attractions",
+     "food",
+     "nightlife",
+     "lodging",
+     "mobility",
+     "booking"
+    ],
+    "provenance_source_kinds": [],
+    "provider_status_present": false
+   },
+   "新加坡": {
+    "capability": "UNAVAILABLE",
+    "reason_code": "NO_CANONICAL_IDENTITY",
+    "recommended_action": "CHOOSE_ANOTHER_DESTINATION",
+    "destination_state": "NO_MATCH",
+    "destination_resolution": "unresolved",
+    "canonical_destination_id": null,
+    "pending_destination_label": "新加坡",
+    "resolver_query_normalized": "新加坡",
+    "destination_pending_key": null,
+    "pending_label_fidelity": "EXACT_RAW",
+    "retryable": false,
+    "place_count": 0,
+    "missing_categories": [
+     "attractions",
+     "food",
+     "nightlife",
+     "lodging",
+     "mobility",
+     "booking"
+    ],
+    "provenance_source_kinds": [],
+    "provider_status_present": false
+   }
+  }
+ },
+ "identity_column": {
+  "readings_where_any_field_held_a_placeholder_shaped_string": [
+   "福州",
+   "东京",
+   "新加坡",
+   "Fuzhou",
+   "Tokyo",
+   "Singapore",
+   "亚特兰大",
+   "Atlanta",
+   "云和县"
+  ],
+  "the_values_that_matched": [
+   "pending-request-v1"
+  ],
+  "the_paths_that_matched": [
+   ".namespace"
+  ],
+  "identity_fields_holding_any_of_them": [],
+  "identity_values_seen": [
+   "CN-BEIJING",
+   "CN-CHENGDU",
+   "CN-GUANGZHOU",
+   "CN-HANGZHOU",
+   "CN-SHANGHAI",
+   "CN-SHENZHEN",
+   "CN-TIANJIN",
+   "CN-XIAMEN",
+   "None"
+  ],
+  "destination_pending_key_values_seen": [
+   "None"
+  ],
+  "note": "the placeholder this order named was retired from the server's identity fields before this generation; what remains is the trap that made it look present: for a name the server cannot resolve, pending_destination_label and resolver_query_normalized are non-empty beside a null canonical_destination_id, so a column that reads 'not blank' reports an identity that was never given"
+ }
+}
