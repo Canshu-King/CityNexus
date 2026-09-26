@@ -189,9 +189,12 @@ def _settled(operation_id: str) -> bool:
     return row is None or row.status not in OPEN_STATUSES
 
 
-def _journey(*, days: int = 3, traveler: str | None = None) -> str:
+def _journey(
+    *, days: int = 3, traveler: str | None = None, stay_budget: dict | None = None
+) -> str:
     """Create a journey.  Passing `traveler` skips the reset, which would otherwise wipe a
-    journey an earlier call in the same test still needs."""
+    journey an earlier call in the same test still needs.  Passing `stay_budget` declares one,
+    which ORD-0355 needs for the cases that must be read as a money constraint."""
 
     if traveler is None:
         traveler = client.post("/api/v1/demo/reset").json()["traveler_id"]
@@ -207,6 +210,7 @@ def _journey(*, days: int = 3, traveler: str | None = None) -> str:
             "end_at": (start + timedelta(days=days - 1, hours=8)).isoformat(),
             "budget": {"amount_minor": 90000, "currency": "CNY"},
             "planning_mode": "balanced",
+            **({"stay_budget": stay_budget} if stay_budget else {}),
         },
     )
     assert created.status_code == 201, created.text
@@ -378,7 +382,9 @@ def test_every_hotel_conflicting_with_the_itinerary_completes_as_rejected(monkey
         raise _Conflict("pinned window")
 
     monkeypatch.setattr(stay_mobility, "build_candidate_nodes", _refuse)
-    journey_id = _journey()
+    # ORD-0355: this answer is the money-naming one, so it now requires a budget the traveller
+    # really declared.  Without it the same trip reports STAY_BUDGET_NOT_DECLARED instead.
+    journey_id = _journey(stay_budget={"amount_minor": 30000, "currency": "CNY"})
     finished = _wait(journey_id, _submit(journey_id)["operation_id"])
     assert finished["outcome"] == "ALL_CANDIDATES_REJECTED", finished
     assert finished["result"]["top_k"] == [], finished

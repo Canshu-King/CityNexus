@@ -805,6 +805,13 @@ class JourneyTripContext(Base):
     occupancy_json: Mapped[str] = mapped_column(Text, default="{}", server_default="{}")
     stay_budget_amount_minor: Mapped[int] = mapped_column(Integer, default=0, server_default="0")
     stay_budget_currency: Mapped[str] = mapped_column(String, default="CNY", server_default="CNY")
+    # ORD-0355: whether the traveller ever named a lodging budget at all.  The amount column
+    # above cannot carry that fact - `0` there means both "the traveller said zero" and "nobody
+    # asked", and the second reading was being sent to suppliers as the first.  Three states on
+    # purpose: True declared, False not declared, NULL recorded by a build that never asked and
+    # therefore cannot say.  NULL is deliberately not folded into False, because a legacy row
+    # may hold an amount a traveller really typed.
+    stay_budget_declared: Mapped[bool | None] = mapped_column(Boolean, nullable=True, default=None)
     created_at: Mapped[str] = mapped_column(String)
     updated_at: Mapped[str] = mapped_column(String)
 

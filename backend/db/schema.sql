@@ -653,6 +653,10 @@ CREATE TABLE IF NOT EXISTS journey_trip_contexts (
     occupancy_json TEXT NOT NULL DEFAULT '{}',
     stay_budget_amount_minor INTEGER NOT NULL DEFAULT 0 CHECK (stay_budget_amount_minor >= 0),
     stay_budget_currency TEXT NOT NULL DEFAULT 'CNY',
+    -- ORD-0355: additive, and three-valued. NULL is a row written before this build could ask
+    -- the question, not an answer of "not declared"; see `stay_budget_declared` in
+    -- `app/db/models.py`.  The amount column above keeps its type and nullability unchanged.
+    stay_budget_declared INTEGER CHECK (stay_budget_declared IN (0, 1)),
     created_at TEXT NOT NULL,
     updated_at TEXT NOT NULL
 );

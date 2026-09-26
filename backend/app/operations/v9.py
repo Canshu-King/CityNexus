@@ -1136,6 +1136,9 @@ def confirm_reservation_draft(
             occupancy_json=_json({"adults": 1}),
             stay_budget_amount_minor=0,
             stay_budget_currency=journey.budget_currency,
+            # An imported reservation says nothing about a lodging budget, so this row records
+            # "never asked" rather than inventing either an answer or a price.
+            stay_budget_declared=None,
             created_at=now,
             updated_at=now,
         )

@@ -2839,6 +2839,10 @@ def create_journey(payload: JourneyCreate, session: Session = Depends(get_sessio
         occupancy_json=json.dumps(occupancy, ensure_ascii=False),
         stay_budget_amount_minor=payload.stay_budget.amount_minor if payload.stay_budget else 0,
         stay_budget_currency=payload.stay_budget.currency if payload.stay_budget else payload.budget.currency,
+        # ORD-0355: `stay_budget` absent from the request is the traveller's silence and is
+        # stored as such.  The amount above keeps its 0 so no existing reader of that column
+        # changes shape; nothing outside this row may read the 0 as a declared price.
+        stay_budget_declared=payload.stay_budget is not None,
         created_at=now,
         updated_at=now,
     )

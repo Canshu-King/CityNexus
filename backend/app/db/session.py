@@ -658,6 +658,21 @@ def ensure_schema(target_engine: Engine = engine) -> None:
                 connection.exec_driver_sql(
                     "ALTER TABLE stay_journey_options ADD COLUMN materialized_plan_version_id TEXT"
                 )
+            # ORD-0355: an *additive* column, and deliberately without a DEFAULT.  A default of
+            # 0 would rewrite every pre-existing row into "the traveller was asked and said no",
+            # which is the very fabrication this order removes; NULL leaves those rows as what
+            # they are - never recorded - and the code that reads them keeps its old answer.
+            trip_context_columns = {
+                row[1]
+                for row in connection.exec_driver_sql(
+                    "PRAGMA table_info(journey_trip_contexts)"
+                )
+            }
+            if trip_context_columns and "stay_budget_declared" not in trip_context_columns:
+                connection.exec_driver_sql(
+                    "ALTER TABLE journey_trip_contexts ADD COLUMN stay_budget_declared INTEGER"
+                    " CHECK (stay_budget_declared IN (0, 1))"
+                )
             mobility_columns = {
                 row[1] for row in connection.exec_driver_sql("PRAGMA table_info(mobility_facts)")
             }
