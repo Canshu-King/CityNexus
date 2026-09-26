@@ -250,15 +250,24 @@ test("N8_A4_the_missions_stored_reason_names_mission_failure_reason — 行程�
     generateBody: jsonBody({}),
   });
   const { reasonText, shape } = await cellReadings(page);
+  const dom = await domReading(page);
   readings[arm] = {
     cell: "PlanWithAiSheet.tsx:1048",
     fold_text: reasonText,
     code_cnx_field: shape?.code_cnx_field ?? null,
     code_cnx_value: shape?.code_cnx_value ?? null,
+    sentence_in_any_attribute: dom.attrs.includes(SENT_MISSION),
+    attribute_pairs_swept: dom.attr_pairs,
   };
   expect(reasonText, node(arm, `折叠里不是行程存下的那句（"${reasonText.slice(0, 200)}"）`)).toBe(SENT_MISSION);
   expect(shape?.code_cnx_field ?? null,
     node(arm, `Q70: mission.failure_reason 这一枚没有锚（"${String(shape?.code_cnx_field)}"）`)).toBe("mission.failure_reason");
+  /* the same Q71 leg A1 and A2 carry: this sentence reaches the fold through a different site, so an
+     attribute copy of it would have gone unmeasured had the leg lived only on the envelope legs. */
+  expect(shape?.code_cnx_value ?? null,
+    node(arm, `Q71: 行程存下的那句被复制进 data-cnx-value（"${String(shape?.code_cnx_value)}"）`)).toBe(null);
+  expect(dom.attrs.includes(SENT_MISSION),
+    node(arm, `Q71: 这句出现在某个 data-/aria- 取值里（${String(dom.attr_pairs)} 对已扫）`)).toBe(false);
 });
 
 /* ------------------------------------------------------------------ cell B, `:1021` 编号那一行 */
