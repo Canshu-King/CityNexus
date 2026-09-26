@@ -1,6 +1,10 @@
 import { useEffect, useState } from "react";
 import { useT, useLocale } from "../../i18n/LocaleContext";
 import { formatMinorMoney } from "../../lib/money";
+import { namedCodeIn, type RawFacts } from "../../lib/rawFacts";
+import { rejectionWithFacts, RejectionWithFacts } from "../../lib/rejectionFacts";
+import { OriginResponseUnusableError } from "../../lib/failureAttribution";
+import { CnxMeasuredFacts } from "../../components/CnxMeasuredFacts";
 
 type Candidate = {
   id: string;
@@ -60,9 +64,28 @@ async function request<T>(path: string, init?: RequestInit): Promise<T> {
     headers: { "Content-Type": "application/json", ...(init?.headers ?? {}) },
     ...init,
   });
-  const body = await response.json();
+  const contentType = response.headers.get("content-type");
   if (!response.ok) {
-    throw new Error(body?.error?.message ?? body?.detail ?? `Request failed (${response.status})`);
+    /* Only a refusal is read as text, and only two things survive from it: what this device measured,
+       and the contract field the receipt number is read out of. The answer's own sentence stops here --
+       it is what the traveller used to be shown. */
+    throw await rejectionWithFacts(response);
+  }
+  let body: unknown = null;
+  try {
+    body = await response.json();
+  } catch {
+    body = null;
+  }
+  if (body === null) {
+    /* Answered 2xx with a body that is not this screen's data: a bare `null` used to become a
+       TypeError two frames later and be reported as no network (ORD-0263's fifth state). The status
+       and the media type the answer really carried ride on the error instead. */
+    throw new OriginResponseUnusableError(
+      response.status,
+      contentType,
+      (contentType ?? "").includes("html") ? "html" : "not_json",
+    );
   }
   return body as T;
 }
@@ -86,6 +109,8 @@ export function RealCityDiscoveryPanel({
   const [result, setResult] = useState<DiscoveryResponse | null>(null);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [failureFacts, setFailureFacts] = useState<RawFacts | null>(null);
+  const [failureEnvelope, setFailureEnvelope] = useState<unknown>(null);
 
   useEffect(() => {
     setMode(supportsTianjinReplay ? "captured_replay" : "live");
@@ -99,6 +124,8 @@ export function RealCityDiscoveryPanel({
   const runDiscovery = async () => {
     setBusy(true);
     setError(null);
+    setFailureFacts(null);
+    setFailureEnvelope(null);
     try {
       const next = await request<DiscoveryResponse>(`/api/v1/journeys/${journeyId}/real-city/intelligence`, {
         method: "POST",
@@ -108,12 +135,18 @@ export function RealCityDiscoveryPanel({
       await onComplete();
     } catch (cause) {
       const message = cause instanceof Error ? cause.message : "";
-      if (message === "V13_DISCOVERY_NO_FEASIBLE_PLACE_SET") {
+      /* Q64: the machine token is what is matched, the sentence is what is dropped. `namedCodeIn`
+         scans the text instead of assuming one path, so a re-shaped envelope cannot turn a named
+         refusal back into a generic one -- and the branch that matches nothing prints this screen's
+         own sentence, never what the answer happened to say. */
+      setFailureFacts(cause instanceof RejectionWithFacts ? cause.facts : null);
+      setFailureEnvelope(cause instanceof RejectionWithFacts ? cause.envelope : null);
+      if (namedCodeIn(message, ["V13_DISCOVERY_NO_FEASIBLE_PLACE_SET"]) === "V13_DISCOVERY_NO_FEASIBLE_PLACE_SET") {
         setError(t("discovery.noGroundedCandidates"));
       } else if (message.startsWith("DeepSeek discovery failed")) {
         setError(t("discovery.aiUnavailable"));
       } else {
-        setError(message || t("discovery.composeError"));
+        setError(t("discovery.composeError"));
       }
     } finally {
       setBusy(false);
@@ -147,7 +180,29 @@ export function RealCityDiscoveryPanel({
           {!supportsTianjinReplay && <p className="v8-sheet-note">{t("discovery.genericCityLiveNote")}</p>}
         </div>
       </div>
-      {error && <div className="v8-message" role="alert">{error}</div>}
+      {error && (
+        <>
+          <div className="v8-message" role="alert" data-testid="v13-discovery-error">
+            {error}
+          </div>
+          {/* Q64=1: what stays diagnosable is this device's own reading, in a technical-detail fold --
+              one element per contract field (Q70), and no fragment of the answer's text anywhere,
+              attribute included (Q71). With no measurement there is no anchor to mount. */}
+          {failureFacts && (
+            <details className="v8-advanced" data-testid="v13-discovery-technical">
+              <summary data-testid="v13-discovery-technical-toggle">
+                {locale.startsWith("zh") ? "技术详情" : "Technical detail"}
+              </summary>
+              <CnxMeasuredFacts
+                facts={failureFacts}
+                zh={locale.startsWith("zh")}
+                testId="v13-discovery-fact"
+                envelope={failureEnvelope}
+              />
+            </details>
+          )}
+        </>
+      )}
       {result && (
         <div className="v8-intelligence-grid" data-testid="v13-discovery-result">
           <article className="v8-intel-hero">
