@@ -1,0 +1,7 @@
+{
+  "generatedBy": "e345b9d6",
+  "order": "ORD-0060",
+  "node": "supported-destinations-are-reachable-without-an-invented-count",
+  "summary": "看支持的目的地",
+  "list": "看支持的目的地 已支持：服务器认得它，而且目录里有东西 READY / 有 canonical 身份且有目录行 这一轮没有名字落在这一组。 需联网才能解析：服务器现在认不出这个名字 NO_CANONICAL_IDENTITY 这一轮没有名字落在这一组。 未知或无数据：这一轮拿不出可规划的判定 HYDRATABLE 无目录行 / UNKNOWN_RETRYABLE / 没读到 厦门 身份还没读到 还没问过服务器 not-asked 北京 身份还没读到 还没问过服务器 not-a"
+}
