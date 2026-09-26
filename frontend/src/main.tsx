@@ -1690,6 +1690,36 @@ function LegacyApp() {
   );
 }
 
+/* ORD-0351: `/v8/<journey id>` was an address nothing read.  `routeFromPath` (app/V8Experience.tsx:461)
+   maps an unknown first segment to Today, and boot reads only `localStorage`, so opening a link to a
+   saved trip rendered whatever *else* this device held -- or the wizard -- while the address bar went on
+   naming a journey no request had ever asked about.  Adopting the reference here, before the first
+   render, hands it to the one read path that already classifies a failed journey reference: the shell's
+   boot, which is where the leg-by-leg attribution, the measured offline-copy offer and the picker live.
+   This file adds no state vocabulary and no second failure surface on purpose -- duplicating that
+   surface is how two screens start disagreeing about one answer. */
+const v8JourneyReferenceKey = "citynexus.v8.journey_id";
+/** A canonical server-issued UUID, and nothing else: no route key or alias in routes/v8Routes.ts is. */
+const journeyIdSegmentPattern = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+
+function journeyReferenceFromPath(pathname: string): string | null {
+  const first = pathname.replace(/^\/v8\/+/, "").split("/")[0] ?? "";
+  return journeyIdSegmentPattern.test(first) ? first : null;
+}
+
+function adoptJourneyReferenceFromUrl(): void {
+  if (window.location.pathname.startsWith("/legacy")) return;
+  const referenced = journeyReferenceFromPath(window.location.pathname);
+  if (!referenced) return;
+  try {
+    localStorage.setItem(v8JourneyReferenceKey, referenced);
+  } catch {
+    /* Blocked storage means the reference cannot be adopted, so this document will describe the
+       journey this device holds rather than the one the address names.  Left unnamed on purpose:
+       closing it needs the boot surface, which is not this file's to edit. */
+  }
+}
+
 function App() {
   // The default entry is the modern traveler product.  LegacyApp is retained
   // for internal/back-compat access only, behind an explicit /legacy path, so a
@@ -1702,6 +1732,10 @@ function App() {
     </ProductErrorBoundary>
   );
 }
+
+/* Once per document, before anything mounts: the reference has to exist by the time the shell's boot
+   chooses which journey to read, and a render-phase write would re-run on every re-render. */
+adoptJourneyReferenceFromUrl();
 
 createRoot(document.getElementById("root")!).render(
   <QueryClientProvider client={citynexusQueryClient}>
