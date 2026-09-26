@@ -1,0 +1,37 @@
+{
+ "slice_files_on_the_line": 11,
+ "slice_files_on_the_candidate": 12,
+ "line": {
+  "exit": 0,
+  "passed": 54,
+  "failed": 0,
+  "errors": 0,
+  "red_tests": [],
+  "tail": "54 passed, 1 xfailed, 2 warnings in 7.67s"
+ },
+ "candidate": {
+  "exit": 0,
+  "passed": 60,
+  "failed": 0,
+  "errors": 0,
+  "red_tests": [],
+  "tail": "60 passed, 1 xfailed, 2 warnings in 12.37s"
+ },
+ "new_tests_added_by_this_change": [
+  "none"
+ ],
+ "candidate_red_is_a_subset_of_line_red": true,
+ "red_set_difference_candidate_only": [],
+ "counts": {
+  "line": [
+   54,
+   0,
+   0
+  ],
+  "candidate": [
+   60,
+   0,
+   0
+  ]
+ }
+}
