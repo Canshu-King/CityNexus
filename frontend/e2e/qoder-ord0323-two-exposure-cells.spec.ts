@@ -739,7 +739,8 @@ for (const leg of LEGS) {
       status_asked: leg.status,
       slot_text: text,
       status_in_slot: text.includes(String(leg.status)),
-      status_field_equals_asked: (text.match(/http_status=(\d+)/) || [null, ""])[1] === String(leg.status),
+      status_field: (text.match(/http_status=(\d+)/) || text.match(/HTTP (\d+)/) || [null, ""])[1],
+      status_field_equals_asked: (text.match(/http_status=(\d+)/) || text.match(/HTTP (\d+)/) || [null, ""])[1] === String(leg.status),
       needles_found: found,
       needles_found_in_attributes: foundInAttrs,
       attribute_pairs_swept: dom.attr_pairs,
@@ -751,8 +752,8 @@ for (const leg of LEGS) {
     expect(text.includes(String(leg.status)),
       node(arm, `${leg.cell}: the slot no longer states the status this device measured for THIS request (${text})`)).toBe(true);
     /* equality on the parsed field, so a substring of another leg's status cannot pass for this one */
-    expect((text.match(/http_status=(\d+)/) || [null, "(absent)"])[1],
-      node(arm, `${leg.cell}: the parsed http_status field is "${(text.match(/http_status=(\d+)/) || [null, "(absent)"])[1]}", this leg asked ${leg.status} (${text})`)).toBe(String(leg.status));
+    expect((text.match(/http_status=(\d+)/) || text.match(/HTTP (\d+)/) || [null, "(absent)"])[1],
+      node(arm, `${leg.cell}: the status read off this slot is "${(text.match(/http_status=(\d+)/) || text.match(/HTTP (\d+)/) || [null, "(absent)"])[1]}", this leg asked ${leg.status} (${text})`)).toBe(String(leg.status));
     expect(foreign,
       node(arm, `${leg.cell}: the slot shows another leg's status ${JSON.stringify(foreign)} instead of its own (${text})`)).toEqual([]);
     if (leg.slot !== "message") {
