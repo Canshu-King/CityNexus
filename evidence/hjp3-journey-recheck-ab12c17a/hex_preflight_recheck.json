@@ -1,0 +1,34 @@
+{
+ "ran_at_local": "2026-09-26T09:44:03+0800",
+ "block": "D:\\moodle\\_qoder_ledger_inbox\\_processed\\aad2d1f2_0930.md.inserted_093424",
+ "block_bytes": 13403,
+ "method": "GET /git/blobs/<sha> then GET /commits/<sha> over the API; 0 local writes, 0 refs touched",
+ "hexes_found": 21,
+ "resolved": {
+  "1147bb294b45a113651172d2e0c9675576ad87d1": "blob",
+  "129c52fdc2e7b60da4be5eeb1240cf56af351326": "blob",
+  "161168044daf948d8ecc793d33f57b333669bf50": "blob",
+  "26928a63df3fb9812440f72cae92534a061557ef": "blob",
+  "2d8b03b8c7734ea3b8521b80845e1b0bc1a07957": "commit",
+  "2fcaaf3e49295a06f3fe9c03db3f54239bf6e610": "blob",
+  "35cc8a2f750fc9fc718cd44a458e2cdf822d1d08": "blob",
+  "452fc2fd4917f8c7953bb7eed2e02319a5ae5321": "blob",
+  "4a9e518ddc06497dd6df3eab6b745263baa286eb": "blob",
+  "58457c9fb1fd84760a4649ab3d035002ee351425": "blob",
+  "651116fddaf7bcad9fa0050243f4857550c9c0cb": "blob",
+  "8a852451245764c0eb6fc0b0a58fc43abb1f777b": "blob",
+  "8b148ea1c5d6d1bcdbd37501f511c99a19911f6e": "blob",
+  "a75ccfcc8dbad9e03f09d731d4822f1c3efaf602": "blob",
+  "ab12c17a65450c2c3062c9232e27a26c4ae1b485": "commit",
+  "b249ba92db9c717933b52d9fff56d6989f056835": "blob",
+  "c77a655ab27360111a8ba86be9ec2169b3fd5eec": "blob",
+  "cf530b426f9c78c0cfccd5e49098a40273615cd8": "blob",
+  "d099105836a7af1b955ac3a7fdd26eb58f9b42ec": "blob",
+  "dcf8290b6e999e6310bfddf5aaf1bf828f5d88cd": "commit",
+  "f0d59217862e81388ac7d017efffb7b49d1a3a5e": "blob"
+ },
+ "unresolved": [],
+ "verdict": {
+  "every_hex_in_the_block_resolves": true
+ }
+}
