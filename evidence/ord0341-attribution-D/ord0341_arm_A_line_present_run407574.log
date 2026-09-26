@@ -1,0 +1,44 @@
+[WebServer] INFO:     127.0.0.1:64587 - "GET /api/v1/health HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:55503 - "GET /api/v1/health HTTP/1.1" 200 OK
+
+Running 5 tests using 1 worker
+
+[WebServer] INFO:     127.0.0.1:56383 - "POST /api/v1/travelers HTTP/1.1" 201 Created
+[WebServer] INFO:     127.0.0.1:56384 - "POST /api/v1/journeys HTTP/1.1" 201 Created
+[WebServer] INFO:     127.0.0.1:56383 - "POST /api/v1/journeys/16621403-220f-482b-bf64-e81c4f6780c3/stay-options/generate HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:56384 - "GET /api/v1/journeys/16621403-220f-482b-bf64-e81c4f6780c3/stay-options HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:56383 - "POST /api/v1/journeys/16621403-220f-482b-bf64-e81c4f6780c3/stay-options/a82fd3b8-65d3-425f-99e2-1b5470732aef/select HTTP/1.1" 200 OK
+[qoder-real-seed] journey=16621403-220f-482b-bf64-e81c4f6780c3 options=4 chosen=a82fd3b8-65d3-425f-99e2-1b5470732aef (Haihe Riverside Hotel)
+[WebServer] INFO:     127.0.0.1:63275 - "GET /api/v1/journeys/16621403-220f-482b-bf64-e81c4f6780c3/experience HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:63276 - "GET /api/v1/journeys/16621403-220f-482b-bf64-e81c4f6780c3/replans HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:62987 - "GET /api/v1/journeys/16621403-220f-482b-bf64-e81c4f6780c3/execution-clock HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:63277 - "GET /api/v1/journeys/16621403-220f-482b-bf64-e81c4f6780c3/twin HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:62986 - "GET /api/v1/journeys/16621403-220f-482b-bf64-e81c4f6780c3/plans HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:62989 - "GET /api/v1/journeys/16621403-220f-482b-bf64-e81c4f6780c3/replans HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:62988 - "GET /api/v1/journeys/16621403-220f-482b-bf64-e81c4f6780c3/experience HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:65124 - "GET /api/v1/journeys/16621403-220f-482b-bf64-e81c4f6780c3/web-observations HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:65125 - "GET /api/v1/travelers/2372870b-a6d3-4a75-b073-837b4fb93db1/agent-policy HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:65127 - "GET /api/v1/journeys/16621403-220f-482b-bf64-e81c4f6780c3/offline-snapshot HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:65126 - "GET /api/v1/journeys/16621403-220f-482b-bf64-e81c4f6780c3/wallet HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:59692 - "GET /api/v1/journeys/16621403-220f-482b-bf64-e81c4f6780c3/experience HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:65123 - "GET /api/v1/agent/runtime-status HTTP/1.1" 200 OK
+[qoder-real-seed] trialWizard=false live-journey-current=true
+  ok 1 [real-seed] › e2e\_qoderRealSeed.setup.ts:110:1 › seed a real journey through the product API (5.9s)
+[WebServer] INFO:     127.0.0.1:53677 - "GET /api/v1/demo/scene HTTP/1.1" 200 OK
+  ok 2 [chromium] › e2e\qoder-sealed-failure-speaks-and-offers-retry.spec.ts:140:1 › ord0273-text-the-sentence-is-the-key-and-no-shape-leaks — 主文案是键值，不漏技术形状 (1.5s)
+[WebServer] INFO:     127.0.0.1:62053 - "GET /api/v1/demo/scene HTTP/1.1" 200 OK
+  ok 3 [chromium] › e2e\qoder-sealed-failure-speaks-and-offers-retry.spec.ts:262:1 › ord0273-text-en-arm-speaks-english-and-neither-side-leaks — 英文臂不得说中文 (1.4s)
+[WebServer] INFO:     127.0.0.1:55064 - "GET /api/v1/demo/scene HTTP/1.1" 200 OK
+  ok 4 [chromium] › e2e\qoder-sealed-failure-speaks-and-offers-retry.spec.ts:346:1 › ord0341-telemetry-the-facts-have-a-sink-off-the-dom — 离开 DOM 之后技术事实仍有落点 (1.7s)
+[WebServer] INFO:     127.0.0.1:59422 - "GET /api/v1/demo/scene HTTP/1.1" 200 OK
+  ok 5 [chromium] › e2e\qoder-sealed-failure-speaks-and-offers-retry.spec.ts:446:1 › ord0273-action-retry-is-a-real-executable-step — 失败屏带着能走的那一步 (15.4s)
+
+  5 passed (44.6s)
+[citynexus e2e] suite=current-product authoritative=true python=D:/moodle/CityNexus/.venv/Scripts/python.exe frontend=:5310 backend=:9310 db=sqlite:///D:/moodle/_qoder_d_ord0341_20260926/review/evidence/_run407574.db ai=disabled reuseExistingServer=false
+[WebServer] INFO:     Started server process [22748]
+[WebServer] INFO:     Waiting for application startup.
+[WebServer] INFO:     Application startup complete.
+[WebServer] INFO:     Uvicorn running on http://127.0.0.1:9310 (Press CTRL+C to quit)
+[citynexus e2e] provenance ok: run=run407574 frontend=:5310 -> backend=:9310 ai=disabled db=_run407574.db
+[citynexus e2e] suite=current-product authoritative=true python=D:/moodle/CityNexus/.venv/Scripts/python.exe frontend=:5310 backend=:9310 db=sqlite:///D:/moodle/_qoder_d_ord0341_20260926/review/evidence/_run407574.db ai=disabled reuseExistingServer=false
+[citynexus e2e] suite=current-product authoritative=true python=D:/moodle/CityNexus/.venv/Scripts/python.exe frontend=:5310 backend=:9310 db=sqlite:///D:/moodle/_qoder_d_ord0341_20260926/review/evidence/_run407574.db ai=disabled reuseExistingServer=false
