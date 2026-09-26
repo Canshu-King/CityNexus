@@ -1,0 +1,60 @@
+{
+ "schema": "CNX_CMDR_PHONE_SIDE_PROBE_V1",
+ "probed_at_local": "2026-09-26 17:20:26 +0800",
+ "serve_root": "D:\\moodle\\_qoder_preview_20260920\\dist",
+ "tunnel_host": "administrator-personality-supervisor-peers.trycloudflare.com",
+ "generation_under_test": "unknown",
+ "credential_handling": "auth read from the file by path; value never printed nor stored in this artifact",
+ "index_named_refs": [
+  "/assets/index-BOIAHTWw.js",
+  "/assets/index-DzHXVT59.css"
+ ],
+ "assets_probed": 3,
+ "rows": [
+  {
+   "path": "/assets/index-BOIAHTWw.js",
+   "http_status": 200,
+   "content_type": "text/javascript",
+   "served_bytes": 1271252,
+   "disk_bytes": 1271252,
+   "served_sha256": "005735b8e911508e69a143d3ede3682261841083d7206243769e13ac1f813b56",
+   "disk_sha256": "005735b8e911508e69a143d3ede3682261841083d7206243769e13ac1f813b56",
+   "bytes_equal": true,
+   "is_html_fallback": false,
+   "js_mime_is_script": true
+  },
+  {
+   "path": "/assets/index-DzHXVT59.css",
+   "http_status": 200,
+   "content_type": "text/css",
+   "served_bytes": 184459,
+   "disk_bytes": 184459,
+   "served_sha256": "7c78836a0d1c5f87d66bc0897a61374e3824a8b1e4554681095a8ec38a6e9f15",
+   "disk_sha256": "7c78836a0d1c5f87d66bc0897a61374e3824a8b1e4554681095a8ec38a6e9f15",
+   "bytes_equal": true,
+   "is_html_fallback": false,
+   "js_mime_is_script": true
+  },
+  {
+   "path": "/v10-sw.js",
+   "http_status": 200,
+   "content_type": "text/javascript",
+   "served_bytes": 2055,
+   "disk_bytes": 2055,
+   "served_sha256": "40da47e26b328d5a20fa820c4aba05e7a6182180816f8fabb9eeb7acd4147478",
+   "disk_sha256": "40da47e26b328d5a20fa820c4aba05e7a6182180816f8fabb9eeb7acd4147478",
+   "bytes_equal": true,
+   "is_html_fallback": false,
+   "js_mime_is_script": true
+  }
+ ],
+ "decisions": {
+  "every_named_asset_present_on_disk": true,
+  "all_200": true,
+  "all_bytes_equal_to_disk": true,
+  "no_asset_served_as_html": true,
+  "js_content_type_correct": true
+ },
+ "overall": "DEPLOYED_AND_BYTE_IDENTICAL_ON_PHONE_SIDE",
+ "scope": "Transport-level identity only (status, content type, bytes). It does not prove the app renders or that a traveller can finish a plan - that is the walkthrough gate."
+}
