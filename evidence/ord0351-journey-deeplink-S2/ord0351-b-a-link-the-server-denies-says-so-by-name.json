@@ -1,0 +1,43 @@
+{
+  "node": "ord0351-b-a-link-the-server-denies-says-so-by-name",
+  "link": "/v8/6d57c2be-31d8-4b90-bb1d-8d9791ab81d7",
+  "in_page_probes": {
+    "target": 404,
+    "health": 200,
+    "onLine": true
+  },
+  "machine": {
+    "reason": "JOURNEY_NOT_FOUND",
+    "evidence_kind": "HTTP_RESPONSE",
+    "http_status": "404",
+    "source_layer": "RESOURCE_STATE",
+    "recovery_action": "choose-journey"
+  },
+  "visible_heading": "这台服务器上没有这一趟行程了",
+  "visible_body": "连接正常 这台服务器上没有这一趟行程了 这台设备还记得行程 6d57c2be…，但服务器明确回答它不存在（HTTP 404）。这不是网络问题：服务器刚才答得出来。你的其它行程没有受影响。 选一趟行程 重试 归因详情",
+  "wizard_shown": false,
+  "experience_reads": [
+    {
+      "url": "http://127.0.0.1:4791/api/v1/journeys/6d57c2be-31d8-4b90-bb1d-8d9791ab81d7/experience",
+      "status": 404
+    },
+    {
+      "url": "http://127.0.0.1:4791/api/v1/journeys/6d57c2be-31d8-4b90-bb1d-8d9791ab81d7/experience",
+      "status": 404
+    }
+  ],
+  "telemetry": [
+    {
+      "reason": "JOURNEY_NOT_FOUND",
+      "evidence_kind": "HTTP_RESPONSE",
+      "http_status": 404,
+      "context": "shell.boot.journeyRead"
+    },
+    {
+      "reason": "JOURNEY_NOT_FOUND",
+      "evidence_kind": "HTTP_RESPONSE",
+      "http_status": 404,
+      "context": "shell.boot.cleared:citynexus.v8.journey_id"
+    }
+  ]
+}
