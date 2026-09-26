@@ -1,0 +1,3 @@
+sha 10f57b8c tree a2ba27a3 collected=1388 (collect rc 0)
+  test_qoder_ord0360_single_active_anchor.py     GREEN passed=11 failed=None rc=0
+reading -> D:/moodle/_qoder_cmdr_ref_20260921/live_checks/patrol/backend_named_ord0360-recut_10f57b8c.json
