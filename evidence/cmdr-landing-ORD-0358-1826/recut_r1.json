@@ -1,0 +1,41 @@
+{
+ "order": "ORD-0358",
+ "line": "origin/mirror/integration-frontend-apple-pass1",
+ "tip": "d2a794002971c197a60359639feec1f09d2b485e",
+ "cand": "2a38c7b3e6697fff4f9eae749e07c9371503c3d3",
+ "merge_base": "b6a8ea5c625d7e3e82f7348fad57d595a8a403c0",
+ "commits_tip_ahead_of_base": 8,
+ "commits_cand_ahead_of_base": 1,
+ "merge_tree_rc": 0,
+ "changed_files": [
+  "tools/CHAIN_SELF_HEAL_V1.md",
+  "tools/chain_self_heal.mjs"
+ ],
+ "files": [
+  {
+   "path": "tools/CHAIN_SELF_HEAL_V1.md",
+   "cand_blob": "740c3c293a60b56c8867fa48ba4e87f4912c2b87",
+   "merged_blob": "740c3c293a60b56c8867fa48ba4e87f4912c2b87",
+   "identical": true,
+   "cand_changed_the_file": true
+  },
+  {
+   "path": "tools/chain_self_heal.mjs",
+   "cand_blob": "9f1b65e1c7cafa823c6dd18d1a14a0c437fcdaba",
+   "merged_blob": "9f1b65e1c7cafa823c6dd18d1a14a0c437fcdaba",
+   "identical": true,
+   "cand_changed_the_file": true
+  }
+ ],
+ "merged_tree": "da1e0af1bd2bf52254f5780ce6510705386a5119",
+ "auto_merged_files": [],
+ "recut_commit": "ca31443589a451473c8384ea96f53c888ff9512f",
+ "readback_tree": "da1e0af1bd2bf52254f5780ce6510705386a5119",
+ "readback_tree_matches": true,
+ "readback_parents": [
+  "d2a794002971c197a60359639feec1f09d2b485e",
+  "2a38c7b3e6697fff4f9eae749e07c9371503c3d3"
+ ],
+ "readback_parent_tip": true,
+ "verdict": "RECUT_OK"
+}
