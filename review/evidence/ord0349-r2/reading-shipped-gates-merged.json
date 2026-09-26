@@ -1,0 +1,32 @@
+{
+ "run_id": "n1r2135558shippedgates",
+ "tree": "86738395ea5572b8a77aa6c1e4cbb67e09555b81",
+ "worktree": "D:/moodle/_qoder_n1_ord0349_r2",
+ "target": "e2e/qoder-sealed-failure-speaks-and-offers-retry.spec.ts e2e/qoder-ord0344b-sentence-move-keeps-attribution.spec.ts e2e/qoder-continuation-resume-carries-identity.spec.ts",
+ "config": "playwright.config.ts",
+ "arm": "shipped-gates",
+ "ports": {
+  "frontend": 5200,
+  "backend": null,
+  "note": "this instrument starts vite dev only; no backend is contacted"
+ },
+ "python": "D:/moodle/CityNexus/.venv/Scripts/python.exe",
+ "db": "_n1r2135558shippedgates.db",
+ "db_created": true,
+ "env_keys_dropped_names_only": [
+  "DEEPSEEK_API_KEY",
+  "OPENAI_API_KEY",
+  "WB2API_KEY"
+ ],
+ "exit_code": 1,
+ "verdict": "RED",
+ "counts": {
+  "passed": 9,
+  "failed": 3
+ },
+ "listed_case_count": 0,
+ "started_local": "2026-09-26T13:55:58",
+ "duration_s": 62.174634,
+ "log": "D:/moodle/_qoder_n1_ord0349_r2/review/evidence/n1_shipped-gates_86738395_135558.log",
+ "log_bytes": 22343
+}
