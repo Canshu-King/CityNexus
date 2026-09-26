@@ -1,0 +1,27 @@
+{
+ "cand_log": "e2e_logs\\o338aff_436d4a36_134457.log",
+ "base_log": "e2e_logs\\o338bas_38277c4e_140415.log",
+ "cand_failed": [
+  "[chromium] › e2e\\qoder-not-answered-cell.spec.ts:82:1 › ord0203-the-fourth-cell-renders-and-its-retry-consumes-retryable — 第四格上屏，重试真的吃 retryable",
+  "[chromium] › e2e\\qoder-not-answered-cell.spec.ts:192:1 › ord0203-the-retry-actually-re-asks-the-server — 点“稍后重试”要真再问一次",
+  "[chromium] › e2e\\qoder-not-answered-cell.spec.ts:234:1 › ord0203-the-fourth-cell-is-readable-in-dark — 深色下自己先看一眼",
+  "[chromium] › e2e\\qoder-onboarding-failure.spec.ts:129:3 › ORD-0034 onboarding surfaces a failed create › the named backend reason reaches the onboarding screen",
+  "[chromium] › e2e\\qoder-onboarding-failure.spec.ts:385:3 › ORD-0034 onboarding surfaces a failed create › backend-reason-lands-on-its-own-field",
+  "[chromium] › e2e\\qoder-sealed-failure-speaks-and-offers-retry.spec.ts:65:1 › ord0273-text-the-sentence-is-the-key-and-no-shape-leaks — 主文案是键值，不漏技术形状",
+  "[chromium] › e2e\\qoder-sealed-failure-speaks-and-offers-retry.spec.ts:106:1 › ord0273-text-en-arm-speaks-english-and-neither-side-leaks — 英文臂不得说中文",
+  "[chromium] › e2e\\qoder-today-hero.spec.ts:16:3 › Qoder Today single-focus hero › hero has one primary CTA, bounded height, no empty Now slot, no overflow"
+ ],
+ "base_failed": [
+  "[chromium] › e2e\\qoder-not-answered-cell.spec.ts:82:1 › ord0203-the-fourth-cell-renders-and-its-retry-consumes-retryable — 第四格上屏，重试真的吃 retryable",
+  "[chromium] › e2e\\qoder-not-answered-cell.spec.ts:192:1 › ord0203-the-retry-actually-re-asks-the-server — 点“稍后重试”要真再问一次",
+  "[chromium] › e2e\\qoder-not-answered-cell.spec.ts:234:1 › ord0203-the-fourth-cell-is-readable-in-dark — 深色下自己先看一眼",
+  "[chromium] › e2e\\qoder-onboarding-failure.spec.ts:129:3 › ORD-0034 onboarding surfaces a failed create › the named backend reason reaches the onboarding screen",
+  "[chromium] › e2e\\qoder-onboarding-failure.spec.ts:385:3 › ORD-0034 onboarding surfaces a failed create › backend-reason-lands-on-its-own-field",
+  "[chromium] › e2e\\qoder-sealed-failure-speaks-and-offers-retry.spec.ts:65:1 › ord0273-text-the-sentence-is-the-key-and-no-shape-leaks — 主文案是键值，不漏技术形状",
+  "[chromium] › e2e\\qoder-sealed-failure-speaks-and-offers-retry.spec.ts:106:1 › ord0273-text-en-arm-speaks-english-and-neither-side-leaks — 英文臂不得说中文",
+  "[chromium] › e2e\\qoder-today-hero.spec.ts:16:3 › Qoder Today single-focus hero › hero has one primary CTA, bounded height, no empty Now slot, no overflow"
+ ],
+ "only_in_candidate": [],
+ "only_in_base": [],
+ "identical_sets": true
+}
