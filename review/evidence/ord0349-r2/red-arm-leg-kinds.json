@@ -1,0 +1,6 @@
+{
+ "refused": "TRANSPORT",
+ "deadline": "TRANSPORT",
+ "answeredHtml200": "HTTP_RESPONSE",
+ "answeredEmpty500": "HTTP_RESPONSE"
+}
