@@ -1,0 +1,344 @@
+{
+ "at_local": "2026-09-26T14:40:30+0800",
+ "n": 28,
+ "n_ok": 28,
+ "n_missing": 0,
+ "rows": [
+  {
+   "local": "recut_ord0338_1338.json",
+   "path": "evidence/cmdr-recut-ORD-0338-1436/recut_r1.json",
+   "blob": "d7a95ce1375280b9c3f846fb6d7e44fb6f9d7f65",
+   "bytes": 2307,
+   "rc": 0,
+   "secs": 7.4,
+   "tail": [
+    " \"bytes\": 2307",
+    "}"
+   ]
+  },
+  {
+   "local": "recut_ord0351_r2_1425.json",
+   "path": "evidence/cmdr-recut-ORD-0351-1436/recut_r2.json",
+   "blob": "180c0f83e5a013cb8f297aaee7dfb73953ba8091",
+   "bytes": 1968,
+   "rc": 0,
+   "secs": 7.4,
+   "tail": [
+    " \"bytes\": 1968",
+    "}"
+   ]
+  },
+  {
+   "local": "recut_ord0340_1425.json",
+   "path": "evidence/cmdr-recut-ORD-0340-1436/recut_r1.json",
+   "blob": "94193415fc4b962afe34ed7aebbf001b18b1a98f",
+   "bytes": 2711,
+   "rc": 0,
+   "secs": 8.9,
+   "tail": [
+    " \"bytes\": 2711",
+    "}"
+   ]
+  },
+  {
+   "local": "recut_ord0340_r2_1427.json",
+   "path": "evidence/cmdr-recut-ORD-0340-1436/recut_r2.json",
+   "blob": "39ba5a963eea6db863c8e9226764d779eeace8cb",
+   "bytes": 2726,
+   "rc": 0,
+   "secs": 8.5,
+   "tail": [
+    " \"bytes\": 2726",
+    "}"
+   ]
+  },
+  {
+   "local": "patrol/land_ord0338_1424.json",
+   "path": "evidence/cmdr-landing-ORD-0338-1424/preflight_r1.json",
+   "blob": "7556916e5aa29a4d427aef1b025037cf08c58ace",
+   "bytes": 4696,
+   "rc": 0,
+   "secs": 8.2,
+   "tail": [
+    " \"bytes\": 4696",
+    "}"
+   ]
+  },
+  {
+   "local": "patrol/land_ord0351_1426.json",
+   "path": "evidence/cmdr-landing-ORD-0351-1426/preflight_r1.json",
+   "blob": "0125a6f86dd5ee491d0567ca7d3e4016bfa624ee",
+   "bytes": 3796,
+   "rc": 0,
+   "secs": 6.8,
+   "tail": [
+    " \"bytes\": 3796",
+    "}"
+   ]
+  },
+  {
+   "local": "patrol/land_ord0340_1428.json",
+   "path": "evidence/cmdr-landing-ORD-0340-1428/preflight_r1.json",
+   "blob": "fe9f0879a12e2d8d1f695bd5439ad1ca4c30327c",
+   "bytes": 4315,
+   "rc": 0,
+   "secs": 6.8,
+   "tail": [
+    " \"bytes\": 4315",
+    "}"
+   ]
+  },
+  {
+   "local": "cmdr_e2e_r1.py",
+   "path": "evidence/cmdr-e2e-runner-1436/cmdr_e2e_r1.py",
+   "blob": "5ca7b4688ce145324a0985871839e96f1b8b4c7d",
+   "bytes": 8533,
+   "rc": 0,
+   "secs": 8.6,
+   "tail": [
+    " \"bytes\": 8533",
+    "}"
+   ]
+  },
+  {
+   "local": "cmdr_local_lane_sweep_r1.py",
+   "path": "evidence/cmdr-local-sweep-1436/cmdr_local_lane_sweep_r1.py",
+   "blob": "2cf5a224f5029f4ebd2f38e29e2e4afa9b6dddf6",
+   "bytes": 5966,
+   "rc": 0,
+   "secs": 6.6,
+   "tail": [
+    " \"bytes\": 5966",
+    "}"
+   ]
+  },
+  {
+   "local": "patrol/sweep_1406.json",
+   "path": "evidence/cmdr-local-sweep-1436/sweep_r1.json",
+   "blob": "4c737a69cd0a3930ef3451043d52f1c98c4d3d28",
+   "bytes": 1635,
+   "rc": 0,
+   "secs": 8.8,
+   "tail": [
+    " \"bytes\": 1635",
+    "}"
+   ]
+  },
+  {
+   "local": "e2e_logs/o338clr_436d4a36_134402.json",
+   "path": "evidence/cmdr-e2e-ORD-0338-1436/clearance_reading_r1.json",
+   "blob": "a93c4df3c0587264b3188f0b0a5bc615150c78d0",
+   "bytes": 892,
+   "rc": 0,
+   "secs": 6.5,
+   "tail": [
+    " \"bytes\": 892",
+    "}"
+   ]
+  },
+  {
+   "local": "e2e_logs/o338clr_436d4a36_134402.log",
+   "path": "evidence/cmdr-e2e-ORD-0338-1436/clearance_log_r1.txt",
+   "blob": "963d3039216722845bff6a101928a1c9fc880992",
+   "bytes": 9375,
+   "rc": 0,
+   "secs": 7.6,
+   "tail": [
+    " \"bytes\": 9375",
+    "}"
+   ]
+  },
+  {
+   "local": "e2e_logs/o338aff_436d4a36_134457.json",
+   "path": "evidence/cmdr-e2e-ORD-0338-1436/affected_candidate_reading_r1.json",
+   "blob": "469406fcdf5b78402c21ff144c22c798ed1d7687",
+   "bytes": 1263,
+   "rc": 0,
+   "secs": 7.1,
+   "tail": [
+    " \"bytes\": 1263",
+    "}"
+   ]
+  },
+  {
+   "local": "e2e_logs/o338aff_436d4a36_134457.log",
+   "path": "evidence/cmdr-e2e-ORD-0338-1436/affected_candidate_log_r1.txt",
+   "blob": "b4e0979920173039600836b03c206fa6393154d7",
+   "bytes": 121238,
+   "rc": 0,
+   "secs": 9.8,
+   "tail": [
+    " \"bytes\": 121238",
+    "}"
+   ]
+  },
+  {
+   "local": "e2e_logs/o338bas_38277c4e_140415.json",
+   "path": "evidence/cmdr-e2e-ORD-0338-1436/affected_base_reading_r1.json",
+   "blob": "3d2755816075b5598e9f16e8071d0f4c55a7d80a",
+   "bytes": 1263,
+   "rc": 0,
+   "secs": 8.1,
+   "tail": [
+    " \"bytes\": 1263",
+    "}"
+   ]
+  },
+  {
+   "local": "e2e_logs/o338bas_38277c4e_140415.log",
+   "path": "evidence/cmdr-e2e-ORD-0338-1436/affected_base_log_r1.txt",
+   "blob": "0c475b2969bc835bf11ae27c67cc68ab15ad7ef5",
+   "bytes": 121443,
+   "rc": 0,
+   "secs": 9.3,
+   "tail": [
+    " \"bytes\": 121443",
+    "}"
+   ]
+  },
+  {
+   "local": "e2e_logs/affected_set_diff_1423.json",
+   "path": "evidence/cmdr-e2e-ORD-0338-1436/affected_set_diff_r1.json",
+   "blob": "bbcef71d1a04c7d0d867b20083ac04fb0e9d3a08",
+   "bytes": 2918,
+   "rc": 0,
+   "secs": 6.9,
+   "tail": [
+    " \"bytes\": 2918",
+    "}"
+   ]
+  },
+  {
+   "local": "e2e_logs/o351ver_dbe6d285_142542.json",
+   "path": "evidence/cmdr-e2e-ORD-0351-1436/reading_r1.json",
+   "blob": "118c9e9954816568bf49a3130b34ff49a424a005",
+   "bytes": 937,
+   "rc": 0,
+   "secs": 6.7,
+   "tail": [
+    " \"bytes\": 937",
+    "}"
+   ]
+  },
+  {
+   "local": "e2e_logs/o351ver_dbe6d285_142542.log",
+   "path": "evidence/cmdr-e2e-ORD-0351-1436/log_r1.txt",
+   "blob": "ac785cebeda2f6a7ed9a19f7627ec68da7f3eb59",
+   "bytes": 24726,
+   "rc": 0,
+   "secs": 9.0,
+   "tail": [
+    " \"bytes\": 24726",
+    "}"
+   ]
+  },
+  {
+   "local": "cmdr_backend_named_r2.py",
+   "path": "evidence/cmdr-backend-named-ORD-0340-1436/cmdr_backend_named_r2.py",
+   "blob": "30097391531c87398779c32b138a6dc20a47f08f",
+   "bytes": 5048,
+   "rc": 0,
+   "secs": 6.0,
+   "tail": [
+    " \"bytes\": 5048",
+    "}"
+   ]
+  },
+  {
+   "local": "patrol/backend_named_ord0340_76464263.json",
+   "path": "evidence/cmdr-backend-named-ORD-0340-1436/reading_r1.json",
+   "blob": "85fa455a3b3a6b5f80f56d53b290d6d6e4d0e017",
+   "bytes": 1532,
+   "rc": 0,
+   "secs": 7.3,
+   "tail": [
+    " \"bytes\": 1532",
+    "}"
+   ]
+  },
+  {
+   "local": "receipts/deploy_76464263244b7dbf0510ee616b33b3f1cfe36969_0926_143214.json",
+   "path": "evidence/cmdr-deploy-76464263/deploy_green_r1.json",
+   "blob": "651c41788f5dc25cf2735cf776d391595affd1dc",
+   "bytes": 66492,
+   "rc": 0,
+   "secs": 9.5,
+   "tail": [
+    " \"bytes\": 66492",
+    "}"
+   ]
+  },
+  {
+   "local": "receipts/deploy_refused_preflight_0926_143031.json",
+   "path": "evidence/cmdr-deploy-76464263/deploy_refused_preflight_r1.json",
+   "blob": "430074f0c6dccfde8c341b4c2a49eaf0c9f84b94",
+   "bytes": 23393,
+   "rc": 0,
+   "secs": 6.7,
+   "tail": [
+    " \"bytes\": 23393",
+    "}"
+   ]
+  },
+  {
+   "local": "_build_dbe6d28_info.json",
+   "path": "evidence/cmdr-build-dbe6d28/build_info_r1.json",
+   "blob": "c516f67f83c822374d50a43a0636a8eb517b50f4",
+   "bytes": 2630,
+   "rc": 0,
+   "secs": 7.3,
+   "tail": [
+    " \"bytes\": 2630",
+    "}"
+   ]
+  },
+  {
+   "local": "cmdr_capability_read_r1.js",
+   "path": "evidence/cmdr-surface-read-1435/cmdr_capability_read_r1.js",
+   "blob": "eac17a704b24bf27a3d5d8b255dee564feb6cb6e",
+   "bytes": 4983,
+   "rc": 0,
+   "secs": 8.4,
+   "tail": [
+    " \"bytes\": 4983",
+    "}"
+   ]
+  },
+  {
+   "local": "cmdr_capability_read_r2.js",
+   "path": "evidence/cmdr-surface-read-1435/cmdr_capability_read_r2.js",
+   "blob": "454b026124f18e00865a23f2f577e2896a71d595",
+   "bytes": 5901,
+   "rc": 0,
+   "secs": 5.9,
+   "tail": [
+    " \"bytes\": 5901",
+    "}"
+   ]
+  },
+  {
+   "local": "patrol/capability_read_1433.json",
+   "path": "evidence/cmdr-surface-read-1435/wrong_surface_4781_r1.json",
+   "blob": "098d19db975a07a3120c6a4dd3f045691b8d827d",
+   "bytes": 5707,
+   "rc": 0,
+   "secs": 7.1,
+   "tail": [
+    " \"bytes\": 5707",
+    "}"
+   ]
+  },
+  {
+   "local": "patrol/capability_read_1435.json",
+   "path": "evidence/cmdr-surface-read-1435/user_surface_4782_r1.json",
+   "blob": "552454f4a7265bff77130bdb48604c426c60340d",
+   "bytes": 5938,
+   "rc": 0,
+   "secs": 6.7,
+   "tail": [
+    " \"bytes\": 5938",
+    "}"
+   ]
+  }
+ ]
+}
