@@ -1,0 +1,8 @@
+M1 fold removed from the failure screen (the ORD-0353 shape before this order)
+  exit=1 bit_nodes=['fold-present'] unexpectedly_green=False
+M2 the answered body's own text rides into a data-* attribute (Q71 class r6 cannot see)
+  exit=1 bit_nodes=['q64-sentinels'] unexpectedly_green=False
+M3 the screen invents a receipt-shaped number when the server sent none (Q68)
+  exit=1 bit_nodes=['bare-named'] unexpectedly_green=False
+AFTER RESTORE exit=0 green=True
+VERDICT: all three mutations caught, restored tree green
