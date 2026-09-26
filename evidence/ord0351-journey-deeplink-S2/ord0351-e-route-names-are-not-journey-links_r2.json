@@ -1,0 +1,92 @@
+{
+  "node": "ord0351-e-route-names-are-not-journey-links",
+  "route_names_and_aliases": [
+    {
+      "name": "hub",
+      "uuid_shaped": false
+    },
+    {
+      "name": "live",
+      "uuid_shaped": false
+    },
+    {
+      "name": "map",
+      "uuid_shaped": false
+    },
+    {
+      "name": "studio",
+      "uuid_shaped": false
+    },
+    {
+      "name": "stay",
+      "uuid_shaped": false
+    },
+    {
+      "name": "discover",
+      "uuid_shaped": false
+    },
+    {
+      "name": "bookings",
+      "uuid_shaped": false
+    },
+    {
+      "name": "agent",
+      "uuid_shaped": false
+    },
+    {
+      "name": "authoritative",
+      "uuid_shaped": false
+    },
+    {
+      "name": "intelligence",
+      "uuid_shaped": false
+    },
+    {
+      "name": "twin",
+      "uuid_shaped": false
+    },
+    {
+      "name": "trips",
+      "uuid_shaped": false
+    },
+    {
+      "name": "me",
+      "uuid_shaped": false
+    },
+    {
+      "name": "today",
+      "uuid_shaped": false
+    },
+    {
+      "name": "copilot",
+      "uuid_shaped": false
+    },
+    {
+      "name": "wallet",
+      "uuid_shaped": false
+    },
+    {
+      "name": "itinerary",
+      "uuid_shaped": false
+    },
+    {
+      "name": "stays",
+      "uuid_shaped": false
+    },
+    {
+      "name": "home",
+      "uuid_shaped": false
+    }
+  ],
+  "server_issued_id_matches_shape": true,
+  "paths_walked": [
+    "/v8/hub",
+    "/v8/live",
+    "/v8/authoritative",
+    "/v8/today",
+    "/v8/bookings",
+    "/v8/stays"
+  ],
+  "alias_source": "app/V8Experience.tsx:447 ROUTE_ALIASES",
+  "held_journey": "b41c5f49-e9c6-4f48-ae3b-ea33ebca0fbe"
+}
