@@ -134,10 +134,11 @@
    "cell": "cells_before_red",
    "claimed_result": "MET",
    "derived_result": "MET",
-   "why": "改前红：把 38277c4e9787 那一代的产品文件放回去，九臂里 6 臂转红（A1 A2 A4 B1 B2 B3），三枚缺席断言仍绿——它们量的正是改前也没有的东西。同一枚文件 blob 在 436d4a36c64c 上逐字节相同，所以这枚红对现尖同样成立。",
+   "why": "改前红：把 38277c4e9787b1ddf0bf69487060ba0e40c14146 那一代的产品文件放回去，九臂里 6 臂转红（A1 A2 A4 B1 B2 B3），三枚缺席断言仍绿——它们量的正是改前也没有的东西。同一枚文件 blob 在 436d4a36c64c1b54a0b105f0f346425286a15701 上逐字节相同，所以这枚红对现尖同样成立。",
    "readings": {
     "pre_fix_generation": "38277c4e9787b1ddf0bf69487060ba0e40c14146",
     "authority_tip": "436d4a36c64c1b54a0b105f0f346425286a15701",
+    "pre_fix_red_count": 6,
     "red_arms": [
      "A1",
      "A2",
@@ -159,6 +160,7 @@
      "268bdf9c5f06d9d22e8b1b5dbe6d614be65cb354",
      "38277c4e9787b1ddf0bf69487060ba0e40c14146",
      "436d4a36c64c1b54a0b105f0f346425286a15701",
+     "6",
      "9",
      "A1",
      "A2",
