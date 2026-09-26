@@ -1,0 +1,15 @@
+authority tip read from refs/heads/mirror/integration-frontend-apple-pass1
+authority tip: 436d4a36c64c1b54a0b105f0f346425286a15701
+candidate: 003886ca83294a9ec97a98215cb8cc2e8232189b
+branch: review/B-ord0342-anchor-two-cells-b
+pre_fix_generation (the branch point): c4a1b3392a78f91d10c4afa634b3e3877414ba29
+merge-base(authority, candidate): 38277c4e9787b1ddf0bf69487060ba0e40c14146
+commits the authority moved since the branch point: 5
+git merge-tree --write-tree exit: 0 (no conflicted path printed)
+predicted merge tree: 52218c0c1f23433a7e0699edc71addbdd3b6ddcb
+sheet blob on the candidate: a15d4950c2c255b3f62fe2ce5c9237dcb0e5764c
+same blob reached through the merge: a15d4950c2c255b3f62fe2ce5c9237dcb0e5764c
+sheet blob on the pre-fix generation: a15d4950c2c255b3f62fe2ce5c9237dcb0e5764c
+sheet blob on the authority tip: 268bdf9c5f06d9d22e8b1b5dbe6d614be65cb354
+files the authority moved since the base: frontend/e2e/qoder-ord0338-wizard-gap-clearance.spec.ts, frontend/e2e/qoder-ord0342-two-anchor-cells.spec.ts, frontend/e2e/qoder-wizard-advanced-is-tappable.spec.ts, frontend/src/design-tokens.css, frontend/src/features/planning/PlanWithAiSheet.tsx, frontend/src/features/setup/JourneyTrialSetup.tsx, frontend/src/styles.css
+files this order moved: frontend/e2e/qoder-ord0342-two-anchor-cells.spec.ts
