@@ -20,6 +20,7 @@ base tree `D:/moodle/_qoder_n2_ord0355_base7e7` HEAD 7e728268a90c9d0f4accc7f117a
 | N2R2-G | base | - | 10 | 1332 | 15 | 1 | 1 | 170.42 | _n2r2_g.db | 9f85789c94afe16f4008bea98cb57316dbe1bd8e |
 | N2R2-H | cand | - | 3 | 6 | - | 1 | 1 | 5.73 | _n2r2_h.db | daa8cc14c4717d0a8cf29150fbb5753212539ad3 |
 | N2R2-I | base | - | 2 | 7 | - | 1 | 1 | 8.58 | _n2r2_i.db | c92504f027f31e12e89f23cc87591232a12abc0e |
+| N2R2-J | base | - | 9 | 2 | - | - | 1 | 2.04 | _n2r2_j.db | 9d8a52babcfdc6358ab15df345f7ab6b344aedfc |
 
 ## Red nodeids per full-suite run
 

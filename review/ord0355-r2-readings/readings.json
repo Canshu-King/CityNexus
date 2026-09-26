@@ -193,5 +193,32 @@
       "tests/test_qoder_anywhere_lock_duration.py::test_g9a_the_instrument_actually_sees_write_transactions_and_provider_calls",
       "tests/test_qoder_anywhere_lock_duration.py::test_g9b_provider_http_never_runs_inside_an_open_write_transaction"
     ]
+  },
+  {
+    "run_id": "N2R2-J",
+    "tree": "base",
+    "tree_dir": "D:/moodle/_qoder_n2_ord0355_base7e7/backend",
+    "command": "D:/moodle/CityNexus/.venv/Scripts/python.exe -m pytest -q -p no:randomly tests/test_qoder_ord0355_honest_stay_budget.py",
+    "database": "D:/moodle/_qoder_n2_ord0355_base7e7/backend/_n2r2_j.db",
+    "database_existed_after_run": true,
+    "exit_code": 1,
+    "wall_seconds": 2.04,
+    "log": "D:/moodle/_qoder_n2_ord0355_r2/review/ord0355-r2-readings/N2R2-J.log",
+    "log_bytes": 15362,
+    "log_sha1": "9d8a52babcfdc6358ab15df345f7ab6b344aedfc",
+    "collected": null,
+    "summary_line": "9 failed, 2 passed, 2 warnings in 1.56s",
+    "tail_line": "9 failed, 2 passed, 2 warnings in 1.56s",
+    "failed_nodeids": [
+      "tests/test_qoder_ord0355_honest_stay_budget.py::test_a_trip_posted_without_a_stay_budget_stores_not_declared",
+      "tests/test_qoder_ord0355_honest_stay_budget.py::test_a_declared_zero_is_stored_differently_from_a_trip_that_said_nothing",
+      "tests/test_qoder_ord0355_honest_stay_budget.py::test_a_declared_amount_above_zero_is_stored_with_its_amount_and_its_flag",
+      "tests/test_qoder_ord0355_honest_stay_budget.py::test_an_undeclared_budget_sends_no_invented_amount_minor",
+      "tests/test_qoder_ord0355_honest_stay_budget.py::test_a_declared_zero_still_sends_zero_and_a_declared_amount_still_sends_it",
+      "tests/test_qoder_ord0355_honest_stay_budget.py::test_a_row_written_before_the_column_existed_keeps_the_amount_it_already_held",
+      "tests/test_qoder_ord0355_honest_stay_budget.py::test_stay_budget_body_covers_all_three_states_from_the_row_alone",
+      "tests/test_qoder_ord0355_honest_stay_budget.py::test_an_undeclared_budget_that_returns_nothing_is_not_blamed_on_money",
+      "tests/test_qoder_ord0355_honest_stay_budget.py::test_the_additive_migration_arrives_without_touching_the_existing_row_or_column"
+    ]
   }
 ]
