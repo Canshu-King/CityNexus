@@ -1,0 +1,164 @@
+{
+ "order": "ORD-0341 (+ Q76 addendum)",
+ "lane": "D e345b9d6",
+ "generated_by": "ord0341_receipt.py",
+ "base_tip": "dbe6d285cb9dbe7654cf43caeb12940b2d5437c8",
+ "tip_export_blobs": {
+  "frontend/e2e/qoder-sealed-failure-speaks-and-offers-retry.spec.ts": {
+   "tip_commit": "89c8a1113d0655fae003e24dbec0df0cdf0894f5",
+   "export": "89c8a1113d0655fae003e24dbec0df0cdf0894f5"
+  },
+  "frontend/e2e/qoder-continuation-resume-carries-identity.spec.ts": {
+   "tip_commit": "d05399c868909e1f51ba515d8ba3062e9c844512",
+   "export": "d05399c868909e1f51ba515d8ba3062e9c844512"
+  },
+  "frontend/src/app/V8Experience.tsx": {
+   "tip_commit": "d5f2908bb7012083e6347abec760dd4c177015f4",
+   "export": "d5f2908bb7012083e6347abec760dd4c177015f4"
+  },
+  "frontend/src/lib/failureAttribution.ts": {
+   "tip_commit": "5956e880abf625591d371d369fe54b72bd2ffce8",
+   "export": "5956e880abf625591d371d369fe54b72bd2ffce8"
+  },
+  "frontend/src/features/setup/JourneyTrialSetup.tsx": {
+   "tip_commit": "94568c0bc7f963bc72de0b2abf796bc26b6b2c52",
+   "export": "94568c0bc7f963bc72de0b2abf796bc26b6b2c52"
+  }
+ },
+ "candidate_head": "5c4f4c4f4c96cabfa4ea30d390d5d595e95f9a84",
+ "candidate_branch": "agent/d-e345b9d6-ord0341",
+ "candidate_commits": [
+  "5c4f4c4f ORD-0341 / Q76 (lane D e345b9d6): the fold stays closed -- the gate opens it like a user does.",
+  "31cf782c ORD-0341 (lane D e345b9d6): re-derive the two ord0273-text nodes onto the non-DOM channel and sweep the exception's words out of the whole screen."
+ ],
+ "changed_files": [
+  "frontend/e2e/qoder-continuation-resume-carries-identity.spec.ts",
+  "frontend/e2e/qoder-sealed-failure-speaks-and-offers-retry.spec.ts"
+ ],
+ "tip_run": "run-run404309.log",
+ "candidate_run": "run-run404459.log",
+ "comparison": {
+  "tip_nodes": 24,
+  "candidate_nodes": 25,
+  "common_nodes": 24,
+  "candidate_only": [
+   "qoder-sealed-failure-speaks-and-offers-retry.spec.ts::ord0341-telemetry-the-facts-have-a-sink-off-the-dom — 离开 DOM 之后技术事实仍有落点"
+  ],
+  "tip_only": [],
+  "introduced_by_this_change": [],
+  "red_on_both_pre_existing": [
+   "qoder-demo-entry-addresses-dont-create.spec.ts::ord0209-no-sealed-journey-fails-closed-in-words — 没有封存就具名关死，不偷偷建"
+  ],
+  "tip_red_candidate_green": [
+   "qoder-continuation-resume-carries-identity.spec.ts::ord0278-negative-refused-keeps-the-marker-and-says-whose-words-these-are — 被拒不清 marker，句子分",
+   "qoder-sealed-failure-speaks-and-offers-retry.spec.ts::ord0273-text-en-arm-speaks-english-and-neither-side-leaks — 英文臂不得说中文",
+   "qoder-sealed-failure-speaks-and-offers-retry.spec.ts::ord0273-text-the-sentence-is-the-key-and-no-shape-leaks — 主文案是键值，不漏技术形状"
+  ],
+  "candidate_green_count": 23,
+  "tip_green_count": 20
+ },
+ "rows_tip": {
+  "qoder-continuation-resume-carries-identity.spec.ts::ord0278-positive-the-resume-request-carries-both-keys — 续发那一发真的带着两枚键": "green",
+  "qoder-continuation-resume-carries-identity.spec.ts::ord0278-negative-no-marker-sends-nothing — 没有 marker 就没有第二腿": "green",
+  "qoder-continuation-resume-carries-identity.spec.ts::ord0278-negative-off-page-sends-nothing — 翻不到那一轮就不许猜": "green",
+  "qoder-continuation-resume-carries-identity.spec.ts::ord0278-negative-refused-keeps-the-marker-and-says-whose-words-these-are — 被拒不清 marker，句子分": "red",
+  "qoder-demo-entry-addresses-dont-create.spec.ts::ord0209-the-demo-entry-addresses-the-sealed-journey — 点 3 次入口，0 次新建，进去的是封存那趟": "green",
+  "qoder-demo-entry-addresses-dont-create.spec.ts::ord0209-no-sealed-journey-fails-closed-in-words — 没有封存就具名关死，不偷偷建": "red",
+  "qoder-failure-has-an-exit.spec.ts::ord0169-a-stale-journey-404-is-never-called-a-network-failure — 死 id 的 404 不许说成网络不可用": "green",
+  "qoder-failure-has-an-exit.spec.ts::ord0169-the-recovered-shell-brings-the-map-back — 恢复之后地图必须回来": "green",
+  "qoder-failure-has-an-exit.spec.ts::ord0169-a-real-transport-failure-still-says-offline — 真断网仍须说网络不可用（反向门）": "green",
+  "qoder-failure-has-an-exit.spec.ts::ord0169-a-server-5xx-is-not-offline — 服务器自己出错不许说成网络问题": "green",
+  "qoder-ord0339-exception-words-stay-out-of-the-dom.spec.ts::ORD-0339 clean arm — the alert still speaks, and holds no exception words": "green",
+  "qoder-ord0339-exception-words-stay-out-of-the-dom.spec.ts::ORD-0339 teeth arm — the pre-fix attributes must be reported by the same predicate": "green",
+  "qoder-ord0344b-sentence-move-keeps-attribution.spec.ts::the shape that shipped before ORD-0344-b: all three predicates pass (baseline is real)": "green",
+  "qoder-ord0344b-sentence-move-keeps-attribution.spec.ts::the shape ORD-0344-b writes: the paragraph is ours, and a closed fold is not on screen": "green",
+  "qoder-ord0344b-sentence-move-keeps-attribution.spec.ts::the same shape with the fold opened: the attributed words are intact for a reader": "green",
+  "qoder-ord0344b-sentence-move-keeps-attribution.spec.ts::the channel the commander named, measured: copyFor's title is not the sentence the gate ho": "green",
+  "qoder-sealed-failure-speaks-and-offers-retry.spec.ts::ord0273-text-the-sentence-is-the-key-and-no-shape-leaks — 主文案是键值，不漏技术形状": "red",
+  "qoder-sealed-failure-speaks-and-offers-retry.spec.ts::ord0273-text-en-arm-speaks-english-and-neither-side-leaks — 英文臂不得说中文": "red",
+  "qoder-sealed-failure-speaks-and-offers-retry.spec.ts::ord0273-action-retry-is-a-real-executable-step — 失败屏带着能走的那一步": "green",
+  "qoder-stored-journey-link-is-an-entry.spec.ts::ORD-0351 · 已存行程的链接是一个入口 › ord0351-a-a-link-to-a-saved-trip-opens-that-trip — 真存在的 id 走通到那一": "green",
+  "qoder-stored-journey-link-is-an-entry.spec.ts::ORD-0351 · 已存行程的链接是一个入口 › ord0351-b-a-link-the-server-denies-says-so-by-name — 不存在的 id 到具名": "green",
+  "qoder-stored-journey-link-is-an-entry.spec.ts::ORD-0351 · 已存行程的链接是一个入口 › ord0351-c-an-unanswered-link-is-never-blamed-on-the-server — 发不出": "green",
+  "qoder-stored-journey-link-is-an-entry.spec.ts::ORD-0351 · 已存行程的链接是一个入口 › ord0351-d-a-dead-link-empties-a-reference-not-a-trip — 死链接只作废引用，": "green",
+  "qoder-stored-journey-link-is-an-entry.spec.ts::ORD-0351 · 已存行程的链接是一个入口 › ord0351-e-route-names-are-not-journey-links — 路由名与别名不是一条待认领的行程": "green"
+ },
+ "rows_candidate": {
+  "qoder-continuation-resume-carries-identity.spec.ts::ord0278-positive-the-resume-request-carries-both-keys — 续发那一发真的带着两枚键": "green",
+  "qoder-continuation-resume-carries-identity.spec.ts::ord0278-negative-no-marker-sends-nothing — 没有 marker 就没有第二腿": "green",
+  "qoder-continuation-resume-carries-identity.spec.ts::ord0278-negative-off-page-sends-nothing — 翻不到那一轮就不许猜": "green",
+  "qoder-continuation-resume-carries-identity.spec.ts::ord0278-negative-refused-keeps-the-marker-and-says-whose-words-these-are — 被拒不清 marker，句子分": "green",
+  "qoder-demo-entry-addresses-dont-create.spec.ts::ord0209-the-demo-entry-addresses-the-sealed-journey — 点 3 次入口，0 次新建，进去的是封存那趟": "green",
+  "qoder-demo-entry-addresses-dont-create.spec.ts::ord0209-no-sealed-journey-fails-closed-in-words — 没有封存就具名关死，不偷偷建": "red",
+  "qoder-failure-has-an-exit.spec.ts::ord0169-a-stale-journey-404-is-never-called-a-network-failure — 死 id 的 404 不许说成网络不可用": "green",
+  "qoder-failure-has-an-exit.spec.ts::ord0169-the-recovered-shell-brings-the-map-back — 恢复之后地图必须回来": "green",
+  "qoder-failure-has-an-exit.spec.ts::ord0169-a-real-transport-failure-still-says-offline — 真断网仍须说网络不可用（反向门）": "green",
+  "qoder-failure-has-an-exit.spec.ts::ord0169-a-server-5xx-is-not-offline — 服务器自己出错不许说成网络问题": "green",
+  "qoder-ord0339-exception-words-stay-out-of-the-dom.spec.ts::ORD-0339 clean arm — the alert still speaks, and holds no exception words": "green",
+  "qoder-ord0339-exception-words-stay-out-of-the-dom.spec.ts::ORD-0339 teeth arm — the pre-fix attributes must be reported by the same predicate": "green",
+  "qoder-ord0344b-sentence-move-keeps-attribution.spec.ts::the shape that shipped before ORD-0344-b: all three predicates pass (baseline is real)": "green",
+  "qoder-ord0344b-sentence-move-keeps-attribution.spec.ts::the shape ORD-0344-b writes: the paragraph is ours, and a closed fold is not on screen": "green",
+  "qoder-ord0344b-sentence-move-keeps-attribution.spec.ts::the same shape with the fold opened: the attributed words are intact for a reader": "green",
+  "qoder-ord0344b-sentence-move-keeps-attribution.spec.ts::the channel the commander named, measured: copyFor's title is not the sentence the gate ho": "green",
+  "qoder-sealed-failure-speaks-and-offers-retry.spec.ts::ord0273-text-the-sentence-is-the-key-and-no-shape-leaks — 主文案是键值，不漏技术形状": "green",
+  "qoder-sealed-failure-speaks-and-offers-retry.spec.ts::ord0273-text-en-arm-speaks-english-and-neither-side-leaks — 英文臂不得说中文": "green",
+  "qoder-sealed-failure-speaks-and-offers-retry.spec.ts::ord0341-telemetry-the-facts-have-a-sink-off-the-dom — 离开 DOM 之后技术事实仍有落点": "red",
+  "qoder-sealed-failure-speaks-and-offers-retry.spec.ts::ord0273-action-retry-is-a-real-executable-step — 失败屏带着能走的那一步": "green",
+  "qoder-stored-journey-link-is-an-entry.spec.ts::ORD-0351 · 已存行程的链接是一个入口 › ord0351-a-a-link-to-a-saved-trip-opens-that-trip — 真存在的 id 走通到那一": "green",
+  "qoder-stored-journey-link-is-an-entry.spec.ts::ORD-0351 · 已存行程的链接是一个入口 › ord0351-b-a-link-the-server-denies-says-so-by-name — 不存在的 id 到具名": "green",
+  "qoder-stored-journey-link-is-an-entry.spec.ts::ORD-0351 · 已存行程的链接是一个入口 › ord0351-c-an-unanswered-link-is-never-blamed-on-the-server — 发不出": "green",
+  "qoder-stored-journey-link-is-an-entry.spec.ts::ORD-0351 · 已存行程的链接是一个入口 › ord0351-d-a-dead-link-empties-a-reference-not-a-trip — 死链接只作废引用，": "green",
+  "qoder-stored-journey-link-is-an-entry.spec.ts::ORD-0351 · 已存行程的链接是一个入口 › ord0351-e-route-names-are-not-journey-links — 路由名与别名不是一条待认领的行程": "green"
+ },
+ "readings": {
+  "sealed_demo_failure_records_on_attribution_channel": 0,
+  "control_boot_read_records_on_attribution_channel": 1,
+  "control_record": {
+   "reason": "ORIGIN_INVALID_RESPONSE",
+   "evidence_kind": "HTTP_RESPONSE",
+   "http_status": 200,
+   "source_layer": "RUNTIME",
+   "retryable": true,
+   "recovery_action": "retry",
+   "message_key": "failure.originInvalidResponse",
+   "content_type": "text/html; charset=utf-8",
+   "telemetry": "attribution_reason=ORIGIN_INVALID_RESPONSE evidence_kind=HTTP_RESPONSE http_status=200 source_layer=RUNTIME retryable=true recovery_action=retry content_type=text/html; charset=utf-8 cached_copy_present=false",
+   "cached_copy_present": false,
+   "at": "2026-09-26T06:35:25.189Z",
+   "context": "shell.boot.journeyRead"
+  },
+  "sealed_record_contexts": [],
+  "arm_attribute_hits_present": 2,
+  "arm_visible_hits_present": 3,
+  "arm_hits_after_removal": 0,
+  "arm_visible_hits_after_removal": 0,
+  "prose_in_dom_attributes_zh": 0,
+  "prose_in_visible_text_zh": 0,
+  "prose_in_dom_attributes_en": 0,
+  "prose_in_visible_text_en": 0,
+  "fold_collapsed": {
+   "details_open": false,
+   "reason_visible": false
+  },
+  "fold_opened_by_click": {
+   "details_open": true,
+   "reason_visible": true,
+   "reason_text": "服务器给出的原因：another request is still writing this journey"
+  },
+  "alert_attributes_zh": [
+   "class=trial-city-warning",
+   "data-testid=trial-sealed-unavailable",
+   "role=alert"
+  ]
+ },
+ "verdicts": {
+  "sealed_path_leaves_no_sink": true,
+  "channel_is_readable_from_this_gate": true,
+  "fold_stays_closed_until_clicked": true,
+  "clicking_the_summary_reveals_the_servers_words": true,
+  "reverse_scans_have_teeth": true,
+  "clean_screen_carries_no_exception_words": true,
+  "telemetry_node_did_not_exist_on_tip": true,
+  "zero_product_bytes_changed": true
+ }
+}
