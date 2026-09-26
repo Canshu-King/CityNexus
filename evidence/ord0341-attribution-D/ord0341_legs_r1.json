@@ -1,0 +1,94 @@
+{
+ "order": "ORD-0341 (lane D e345b9d6)",
+ "generated_by": "ord0341_legs_r1.py",
+ "commander_request": "bus -- 读数件给我具名到腿，不要拿两棵树都红当成不需解释",
+ "logs": {
+  "tip_38277c4e_sealed": "run-run403138.log",
+  "tip_38277c4e_continuation": "run-run403266.log",
+  "tip_dbe6d285_seven": "run-run404309.log",
+  "candidate_dbe6d285_seven": "run-run404459.log"
+ },
+ "nodes_in_scope": 4,
+ "legs": [
+  {
+   "node": "qoder-continuation-resume-carries-identity.spec.ts::ord0278-negative-refused-keeps-the-marker-and-says-whose-words-these-a",
+   "state_on_tip_dbe6d285": "red",
+   "state_on_candidate": "green",
+   "failing_leg_named": {
+    "node": "qoder-continuation-resume-carries-identity.spec.ts::ord0278-negative-refused-keeps-the-marker-and-says-whose-words-these-a",
+    "assertion_message_as_printed": "e2e/qoder-continuation-resume-carries-identity.spec.ts :: ord0278-negative-refused — the server sent a reason and it is nowhere on screen",
+    "read_back": "Received: hidden",
+    "failed_at": "D:\\moodle\\_qoder_d_ord0341_20260926\\frontend\\e2e\\qoder-continuation-resume-carries-identity.spec.ts:276:118"
+   }
+  },
+  {
+   "node": "qoder-sealed-failure-speaks-and-offers-retry.spec.ts::ord0273-text-en-arm-speaks-english-and-neither-side-leaks — 英文臂不得说中文",
+   "state_on_tip_dbe6d285": "red",
+   "state_on_candidate": "green",
+   "failing_leg_named": {
+    "node": "qoder-sealed-failure-speaks-and-offers-retry.spec.ts::ord0273-text-en-arm-speaks-english-and-neither-side-leaks — 英文臂不得说中文",
+    "assertion_message_as_printed": "e2e/qoder-sealed-failure-speaks-and-offers-retry.spec.ts :: ord0273-text-en — the technical detail vanished under locale=en too -- telemetry lost its facts",
+    "read_back": "Received: false",
+    "failed_at": "D:\\moodle\\_qoder_d_ord0341_20260926\\frontend\\e2e\\qoder-sealed-failure-speaks-and-offers-retry.spec.ts:148:5"
+   }
+  },
+  {
+   "node": "qoder-sealed-failure-speaks-and-offers-retry.spec.ts::ord0273-text-the-sentence-is-the-key-and-no-shape-leaks — 主文案是键值，不漏技术形",
+   "state_on_tip_dbe6d285": "red",
+   "state_on_candidate": "green",
+   "failing_leg_named": {
+    "node": "qoder-sealed-failure-speaks-and-offers-retry.spec.ts::ord0273-text-the-sentence-is-the-key-and-no-shape-leaks — 主文案是键值，不漏技术形",
+    "assertion_message_as_printed": "e2e/qoder-sealed-failure-speaks-and-offers-retry.spec.ts :: ord0273-text — the technical detail vanished entirely -- telemetry lost its facts",
+    "read_back": "Received: false",
+    "failed_at": "D:\\moodle\\_qoder_d_ord0341_20260926\\frontend\\e2e\\qoder-sealed-failure-speaks-and-offers-retry.spec.ts:95:5"
+   }
+  },
+  {
+   "node": "qoder-sealed-failure-speaks-and-offers-retry.spec.ts::ord0341-telemetry-the-facts-have-a-sink-off-the-dom — 离开 DOM 之后技术事实仍有落",
+   "state_on_tip_dbe6d285": "ABSENT_ON_TIP",
+   "state_on_candidate": "red",
+   "failing_leg_named": null
+  }
+ ],
+ "new_node_leg_named": {
+  "node": "qoder-sealed-failure-speaks-and-offers-retry.spec.ts::ord0341-telemetry-the-facts-have-a-sink-off-the-dom — 离开 DOM 之后技术事实仍有落",
+  "assertion_message_as_printed": "e2e/qoder-sealed-failure-speaks-and-offers-retry.spec.ts :: ord0341-telemetry — the sealed-demo failure left 0 record(s) on the attribution channel (contexts seen: none) -- Q71 took the words out of the DOM and nothing replaced them, so this failure is undiagnosable off the screen. Fix site: V8Experience.tsx:894 catch -- recordAttribution(classifyReadFailure(error), \"wizard.sealedDemo.enter\")",
+  "read_back": "Received: undefined",
+  "failed_at": "D:\\moodle\\_qoder_d_ord0341_20260926\\frontend\\e2e\\qoder-sealed-failure-speaks-and-offers-retry.spec.ts:443:5"
+ },
+ "new_node_two_readings": {
+  "sealed_demo_failure_records_on_channel": 0,
+  "control_boot_read_records_on_channel": 1,
+  "control_record_fields": {
+   "reason": "ORIGIN_INVALID_RESPONSE",
+   "evidence_kind": "HTTP_RESPONSE",
+   "http_status": 200,
+   "source_layer": "RUNTIME",
+   "retryable": true,
+   "recovery_action": "retry",
+   "message_key": "failure.originInvalidResponse",
+   "content_type": "text/html; charset=utf-8",
+   "telemetry": "attribution_reason=ORIGIN_INVALID_RESPONSE evidence_kind=HTTP_RESPONSE http_status=200 source_layer=RUNTIME retryable=true recovery_action=retry content_type=text/html; charset=utf-8 cached_copy_present=false",
+   "cached_copy_present": false,
+   "at": "2026-09-26T06:35:25.189Z",
+   "context": "shell.boot.journeyRead"
+  }
+ },
+ "summary_computed_from_rows": {
+  "red_on_tip": [
+   "qoder-continuation-resume-carries-identity.spec.ts::ord0278-negative-refused-keeps-the-marker-and-says-whose-words-these-a",
+   "qoder-demo-entry-addresses-dont-create.spec.ts::ord0209-no-sealed-journey-fails-closed-in-words — 没有封存就具名关死，不偷偷建",
+   "qoder-sealed-failure-speaks-and-offers-retry.spec.ts::ord0273-text-en-arm-speaks-english-and-neither-side-leaks — 英文臂不得说中文",
+   "qoder-sealed-failure-speaks-and-offers-retry.spec.ts::ord0273-text-the-sentence-is-the-key-and-no-shape-leaks — 主文案是键值，不漏技术形"
+  ],
+  "green_on_candidate_for_those": [
+   "qoder-continuation-resume-carries-identity.spec.ts::ord0278-negative-refused-keeps-the-marker-and-says-whose-words-these-a",
+   "qoder-sealed-failure-speaks-and-offers-retry.spec.ts::ord0273-text-en-arm-speaks-english-and-neither-side-leaks — 英文臂不得说中文",
+   "qoder-sealed-failure-speaks-and-offers-retry.spec.ts::ord0273-text-the-sentence-is-the-key-and-no-shape-leaks — 主文案是键值，不漏技术形"
+  ],
+  "still_red_on_candidate": [
+   "qoder-demo-entry-addresses-dont-create.spec.ts::ord0209-no-sealed-journey-fails-closed-in-words — 没有封存就具名关死，不偷偷建",
+   "qoder-sealed-failure-speaks-and-offers-retry.spec.ts::ord0341-telemetry-the-facts-have-a-sink-off-the-dom — 离开 DOM 之后技术事实仍有落"
+  ]
+ }
+}
