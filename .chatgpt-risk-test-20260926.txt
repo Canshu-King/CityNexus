@@ -1,0 +1,4 @@
+ChatGPT GitHub connector high-risk capability test.
+Target: default branch eac/v19.2.2-realphone-codegate
+Date: 2026-09-26
+Purpose: verify direct write access to the default branch; file will be deleted immediately after verification.
