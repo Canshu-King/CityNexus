@@ -884,7 +884,7 @@ test("N7_F3_a_memory_row_shows_what_it_measured_not_the_model_s_sentence — F3�
       body: jsonBody({items: [memoryRow]})});
   });
   await openWallet(page, id);
-  const row = page.locator('#v13-2-memory li').first();
+  const row = page.getByTestId("v13-2-memory").locator("li").first();
   await expect(row, node(arm, "F3: 这台设备的记忆行根本没渲染，摘要在不在屏上就没有可判的对象")).toBeVisible({timeout: 30_000});
   const rowText = clean(await row.textContent());
   const dom = await domReading(page);
