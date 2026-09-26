@@ -1,0 +1,55 @@
+{
+ "ran_at_local": "2026-09-26T09:16:16+0800",
+ "chain": "http://127.0.0.1:4781",
+ "method": "GET the shell, then GET each asset the shell names, plus the service worker; sha256 over the bytes I received",
+ "requests_made": 4,
+ "clicks": 0,
+ "writes": 0,
+ "credentials_sent": false,
+ "shell": {
+  "path": "/",
+  "http_status": 200,
+  "content_type": "text/html",
+  "server_header": null,
+  "bytes_received": 1200,
+  "sha256_of_bytes_i_received": "2fa8006b46187f1bc0a7ae4818b1260f42248712023fdcefb2027e36b258a887",
+  "elapsed_ms": 5
+ },
+ "assets_named_by_the_shell": {
+  "js": "/assets/index-D6IOFaQS.js",
+  "css": "/assets/index-I45CQek8.css",
+  "service_worker": "/v10-sw.js"
+ },
+ "rows": [
+  {
+   "path": "/assets/index-D6IOFaQS.js",
+   "http_status": 200,
+   "content_type": "text/javascript",
+   "server_header": null,
+   "bytes_received": 1260443,
+   "sha256_of_bytes_i_received": "937df73efc1c633980b2ad27e9a6b199ecdf0b088fdc95a2d095a016517320cd",
+   "elapsed_ms": 4
+  },
+  {
+   "path": "/assets/index-I45CQek8.css",
+   "http_status": 200,
+   "content_type": "text/css",
+   "server_header": null,
+   "bytes_received": 183897,
+   "sha256_of_bytes_i_received": "1b3632785212847b19ecbdbbdeb4fbae19ea9ce75060ed19739dc908c8f6a58f",
+   "elapsed_ms": 25
+  },
+  {
+   "path": "/v10-sw.js",
+   "http_status": 200,
+   "content_type": "text/javascript",
+   "server_header": null,
+   "bytes_received": 2055,
+   "sha256_of_bytes_i_received": "8100dd64a4c0d10741121429720eaa57c6827078e1996b6b504fd7c6b8b946ed",
+   "elapsed_ms": 1
+  }
+ ],
+ "js_row_equals_my_click_pass": true,
+ "js_row_equals_my_anchor_scan": true,
+ "every_row_has_a_server_header": false
+}
