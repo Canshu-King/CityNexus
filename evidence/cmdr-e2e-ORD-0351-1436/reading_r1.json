@@ -1,0 +1,33 @@
+{
+ "run_id": "cmdr142542o351ver",
+ "tree": "dbe6d285cb9dbe7654cf43caeb12940b2d5437c8",
+ "worktree": "D:/moodle/_qoder_cmdr_land_0351",
+ "target": "e2e/qoder-stored-journey-link-is-an-entry.spec.ts e2e/qoder-ord0338-wizard-gap-clearance.spec.ts",
+ "full": false,
+ "grep": null,
+ "ports": {
+  "frontend": 4400,
+  "backend": 5400
+ },
+ "python": "D:/moodle/CityNexus/.venv/Scripts/python.exe",
+ "db": "_cmdr142542o351ver.db",
+ "env_keys_dropped_names_only": [
+  "DEEPSEEK_API_KEY",
+  "OPENAI_API_KEY",
+  "WB2API_KEY"
+ ],
+ "node_modules": {
+  "mode": "present",
+  "path": "D:/moodle/_qoder_cmdr_land_0351/frontend/node_modules"
+ },
+ "exit_code": 0,
+ "verdict": "GREEN",
+ "counts": {
+  "passed": 16
+ },
+ "listed_case_count": 0,
+ "started_local": "2026-09-26T14:25:42",
+ "duration_s": 40.617819,
+ "log": "D:/moodle/_qoder_cmdr_ref_20260921/live_checks/e2e_logs/o351ver_dbe6d285_142542.log",
+ "log_bytes": 24726
+}
