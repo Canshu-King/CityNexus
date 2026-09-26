@@ -16588,6 +16588,69 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### N3 17:46+08 ORD-0357 交付：手机上把当前行程的链接复制出去（候选 ref，权威线未动）
+
+- 单 ORD-0357。候选 ref `refs/heads/review/N3-ord0357-copy-journey-link`，GitHub `ls-remote` 回读到的 40 位尖是 `706f760bf478f8501f57fa50a689c3f7193fb264`（退出码读到 0）。base = 现尖 `b6a8ea5c625d7e3e82f7348fad57d595a8a403c0`，`git merge-base --is-ancestor` 的退出码读到 0，parent 逐字等于那枚现尖。开工与提交前各读一次 `git -C D:/moodle/CityNexus ls-remote origin refs/heads/mirror/integration-frontend-apple-pass1`，两次退出码都读到 0、两次读数都是 `b6a8ea5c625d7e3e82f7348fad57d595a8a403c0`，所以这一臂不欠换代。
+
+- 差集：`git diff --numstat b6a8ea5c625d7e3e82f7348fad57d595a8a403c0 706f760bf478f8501f57fa50a689c3f7193fb264` 的读数落在 6 个文件、新增 505 行、删除 0 行——`frontend/e2e/qoder-ord0357-journey-link.spec.ts:1` 起占 345 行，`frontend/src/lib/journeyLink.ts:1` 起占 67 行，`frontend/src/features/inbox/JourneyLinkAction.tsx:1` 起占 76 行。产品侧改动只落在 `frontend/src/features/inbox/JourneyInboxWorkbench.tsx:3` 与 `frontend/src/features/inbox/JourneyInboxWorkbench.tsx:601`、`frontend/src/i18n/LocaleContext.tsx:523`（en 五键）与 `frontend/src/i18n/LocaleContext.tsx:1230`（zh 五键）、`frontend/src/v10.css:41`、`frontend/src/v10.css:46`、`frontend/src/v10.css:47`。R4 那句：同一枚 diff 里 `frontend/src/app/V8Experience.tsx` 命中 0 个文件（出处 `refs/heads/review/N3-ord0357-copy-journey-link`，`git diff --name-only` 的现读）。
+
+- 选型理由（R4 要的那句）：挂在 `frontend/src/features/inbox/JourneyInboxWorkbench.tsx:601`，因为它是现尖 `b6a8ea5c625d7e3e82f7348fad57d595a8a403c0` 上唯一既在行程工作面里、又从 props 已拿到 `journeyId: string` 的组件，签名在同文件 `frontend/src/features/inbox/JourneyInboxWorkbench.tsx:268`，一次插入即拿到 uuid。没选 `frontend/src/app/V8Experience.tsx:1` 那层壳：R4 点名禁改，且动作会跟到每一屏。没选新建路由或新失败屏：撞 R3。该组件在 `frontend/src/app/V8Experience.tsx:1824` 与 `frontend/src/app/V8Experience.tsx:2059` 两处渲染、分属互斥分支，所以同屏只出现一枚按钮（按钮定义在 `frontend/src/features/inbox/JourneyLinkAction.tsx:58`）。
+
+- 门：`frontend/e2e/qoder-ord0357-journey-link.spec.ts:130` 起共 6 格。绿跑 run_id `cmdr174308n3`，量具退出码读到 0、Playwright 退出码读到 0、日志读数 7 passed（逐条点名：`[1/7]` 是 `frontend/e2e/_qoderRealSeed.setup.ts:110` 的 real-seed project，`[2/7]` 到 `[7/7]` 是本单 spec 的 `frontend/e2e/qoder-ord0357-journey-link.spec.ts:130`、`:159`、`:203`、`:263`、`:288`、`:314` 六格）。日志那行用时读到 21 秒、量具 JSON 的 `duration_s` 字段读到 23 秒。端口 5470 与端口 6470 由 `review/n3_e2e_r1.py:43` 在 5470 到 5499 这段里选，跑前 `netstat -ano -p tcp` 对该段命中 0 条 LISTENING（可绑判据在 `review/n3_e2e_r1.py:25`）；这层 wrapper 对共享量具唯一的改动是 `review/n3_e2e_r1.py:55` 那一行替换选口函数，`live_checks/cmdr_e2e_r1.py` 原件与它的退出码路径一个字没动。一次性库 `review/evidence/_cmdr174308n3.db`；子进程剔除的 key 只报名字：`DEEPSEEK_API_KEY`、`OPENAI_API_KEY`、`WB2API_KEY`（第三枚是量具原有的，值从未打印）。
+
+- R1 读数（`review/evidence/ord0357/cmdr174308n3__B1.json`，那一跑的 `tree` 字段就是 `b6a8ea5c625d7e3e82f7348fad57d595a8a403c0`）：按钮文案逐字「复制行程链接」（`frontend/src/features/inbox/JourneyLinkAction.tsx:58`）；剪贴板从 0 B 变成 61 B，正文是 `http://127.0.0.1:5470/v8/7fc9a47e-dfda-451e-9431-c1d9812a55a4`，尾段等于当屏行程 id（绝对性、路径、尾段三项由同一个谓词判，那格的 `shape_reason` 读到 null）。基座取 `window.location.origin` 那一句在 `frontend/src/features/inbox/JourneyLinkAction.tsx:45`，所以端口 5470 上与手机链上同形，`origin` 探针也读到同一个口。
+
+- R2 三臂各自落地（同一枚 env 探针三形互不相同，才敢说不是同一条臂被复述）：`review/evidence/ord0357/cmdr174308n3__B2.json` 的 `clipboard_present` 读到 false、`is_secure` 读到 true → 文案说这台设备拒绝剪贴板写入，`claims_journey_lost` 读到 false；`review/evidence/ord0357/cmdr174308n3__B3.json` 的 `clipboard_present` 读到 true、`is_secure` 读到 false → 文案说当前地址不是安全上下文，`claims_journey_lost` 也读到 false（两条 `page_origin` 探针都在同一份 JSON 里，出处 `frontend/src/features/inbox/JourneyLinkAction.tsx:46`）。纯函数格 `review/evidence/ord0357/cmdr174308n3__A2.json` 双向都读到位：三种失败正向各报自己那枚、健康环境三条全部报 null、「无剪贴板且无行程」报 NO_JOURNEY、「非安全且无剪贴板」报 INSECURE_CONTEXT（先后次序写在 `frontend/src/lib/journeyLink.ts:47` 与 `frontend/src/lib/journeyLink.ts:48`）、被策略拒的写仍留着那条 61 B 链接。如实一条：屏面级「无行程」不可达，因为工造区只在有行程时渲染，那一臂只在纯函数层量到（`review/evidence/ord0357/cmdr174308n3__A1.json` 的 `hollow_url` 与 `blank_url` 两格都读 null）。
+
+- R3：`review/evidence/ord0357/cmdr174308n3__B2.json` 与 `cmdr174308n3__B3.json` 各扫一次属性，`attribute_pairs_swept` 都读到 66 对，两条 `sentence_in_attributes` 都读空表——三条文案没有一句被塞进 data-/aria-。`review/evidence/ord0357/cmdr174308n3__B4.json` 里六个 Q64 字段名（`http_status content_type body_bytes response_received elapsed_ms request_id`）的 `q64_field_names_on_screen` 与 `q64_field_names_in_attributes` 两格都读空表，`error_prototypes` 那格也读空表，两条断言的出处是 `frontend/e2e/qoder-ord0357-journey-link.spec.ts:341` 与 `frontend/e2e/qoder-ord0357-journey-link.spec.ts:343`；拒绝之后 `.v10-inbox-workbench`、`inbox-tab-paste`、`inbox-tab-manual` 三件仍可见，所以没有第二屏。屏幕外钩子只有两枚、贴名不贴值：`frontend/src/features/inbox/JourneyLinkAction.tsx:59` 与 `frontend/src/features/inbox/JourneyLinkAction.tsx:69`。
+
+- 反例（真跑，不是推演）：`review/n3_mutation_hollow_r1.py:16` 删掉 `frontend/src/lib/journeyLink.ts:36` 那句空 id 守卫后复跑，run_id `cmdr174352n3hollow`，量具退出码读到 1、Playwright 退出码读到 1、日志读数 5 passed 与 2 failed，用时读到 27 秒。红的两格是 A1（原文 `an absent uuid produced a link anyway — this is the pseudo link R1 forbids`）与 A2（原文 `NO_JOURNEY: the refusal is not named (null)`），也就是 R1 那一格与被 R2 拿走的那一命名同时塌。文件按字节还原：`review/evidence/ord0357/mutation_n3_hollow_r1.json` 的 `sha256_before` 与 `sha256_after_restore` 逐字相同，都是 `76a5953531ab6c4e56459a96a02613d11d645c599edafb53aa66cc26af712e9e`，`restored_byte_identical` 读到 true。两把 typecheck 的退出码都读到 0：`npx tsc -p tsconfig.check.json --noEmit` 与 `npx tsc -p tsconfig.typecheck.json --noEmit`，跑在候选 `706f760bf478f8501f57fa50a689c3f7193fb264` 上。
+
+- 我这侧的链路事实（环境读数，不是产品红，给其他车道对照自纠）：`curl https://api.github.com/meta` 直连答 200、`time_total` 那格读 1838ms；而 `git ls-remote https://github.com/Canshu-King/CityNexus.git` 直连超时、退出码读到 128。归因不在外网：`netstat -ano` 对会话环境里那四个 proxy 变量（`HTTP_PROXY`、`HTTPS_PROXY`、`http_proxy`、`https_proxy`）所指的端口 7892 命中 0 条 LISTENING。改走端口 7897 之后到端到通：推送退出码读到 0、`ls-remote` 回读退出码读到 0，落点就是 `refs/heads/review/N3-ord0357-copy-journey-link` 那一枚 `706f760bf478f8501f57fa50a689c3f7193fb264`。手机链与部署门我没碰，`POST /api/v1/demo/reset` 一次没跑，`_live.db` 与 `_preview.db` 只读，权威线 0 次移动、换代归号令者。
+
+- 未做（别当成已验）：整套 e2e 回归没跑，只跑本单 spec 与它自带的 real-seed project；这枚按钮没在手机链上真点过（那要在 `b6a8ea5c625d7e3e82f7348fad57d595a8a403c0` 之后的发布物上看）；`/v8/<uuid>` 那条读路本身的行为属 ORD-0351 的单，本单只依赖它、没测它。
+
+
+### ORD-0362 · 车道 N1 · 旧壳与新 payload 的兼容面：11 条在现尖全部 EMPTY（无可摘），交付面改成只量 payload 的兼容闸门，双臂同形只差一枚键名
+
+**送达坐标**：`refs/heads/review/N1-ord0362-old-shell-payload-compat`，`git ls-remote` 回读 = `e83f81619dc7825da25755b460ac4ef9e9f35100`；父提交 = `b6a8ea5c625d7e3e82f7348fad57d595a8a403c0`（本枝构建时它就是权威尖；本枝只加一枚 spec 与 `review/evidence/ord0362/` 读数件，产品码改动量为 0 字节）。交付时 `git ls-remote origin refs/heads/mirror/integration-frontend-apple-pass1` 已是 `27f963a77edc4d508a39b0a07c76927d0512c724`，本枝父提交是它的祖先（`git merge-base --is-ancestor` 退出码 0）。规格件 blob `da2aecb2e0264a9b121ca199b6d7da4ebd3a67ee`。
+
+**要件 1：具名清单（逐条 40 位；来源是账本收据 `3f060dc10f89b5f5efd7711a330d2c177047b3dc` 与 `20b83a3959f6bc64e9f2834c2a3e410399b49297`，不是本帖转述）**
+
+`d76992aa593d2950058a34fcbe110ac603255ea7` 2026-09-21T18:15+08 → 修：the panel itself scrolls, so the node a probe names is the node that answers；文件 `frontend/e2e/qoder-today-follows-the-stage.spec.ts`；在尖上摘取结果=EMPTY
+`e9efec6bff2fef9e09231cf1a87cc7139fc0a856` 2026-09-21T18:31+08 → 修：the example places are ordered by name, not by the read's order；文件 `frontend/src/features/planning/PlanWithAiSheet.tsx`；在尖上摘取结果=EMPTY
+`2d3b3fba82504b02d75ebaa08635be9653bf223b` 2026-09-21T19:54+08 → 修：the AI sheet is sized by what the traveller can see, and its footer never scrolls；文件 `frontend/e2e/qoder-ai-sheet-blocked.spec.ts`；在尖上摘取结果=EMPTY
+`4176e7b6c238cd296b40a80303b07366183a2cad` 2026-09-21T20:43+08 → 修：a finger on the map moves the map, a finger on the page moves the page；文件 `frontend/e2e/qoder-map-gesture-ownership.spec.ts`；在尖上摘取结果=EMPTY
+`6b208ee33df9492d9cb03f670746e1daa675c46a` 2026-09-21T21:38+08 → 修：what the screen asks to review now has somewhere to be reviewed；文件 `frontend/e2e/qoder-inbox-review-queue.spec.ts`；在尖上摘取结果=EMPTY
+`758020684db9e5bf66dd6dc973d08cc047e38ed6` 2026-09-21T22:04+08 → 修：a failed read now says which kind of failure it is, and leaves a door；文件 `frontend/e2e/qoder-failure-has-an-exit.spec.ts`；在尖上摘取结果=EMPTY
+`82f136f5b2fc36d2f5d2cf1a06fbd94bc26c251d` 2026-09-21T22:38+08 → 修：the wizard stops speaking its own vocabulary and offers a route to what is missing；文件 `frontend/e2e/qoder-wizard-speaks-human-and-survives-reload.spec.ts`；在尖上摘取结果=EMPTY
+`107e2db7a102f5497d38377e5f6edd2bc8851f92` 2026-09-22T01:01+08 → 修：the review actions carry their idempotency key, and the bridge is marked；文件 `frontend/e2e/qoder-replan-review-actions.spec.ts`；在尖上摘取结果=EMPTY
+`952ec4075877870d34cf8c5904819c3ee3310cc6` 2026-09-22T15:08+08 → 修：the demo entry addresses the sealed journey instead of creating one；文件 `frontend/e2e/qoder-demo-entry-addresses-dont-create.spec.ts`；在尖上摘取结果=EMPTY
+`56d20ec3b09a5836ddb2838368bb7cf4a5ecfe7a` 2026-09-22T15:22+08 → 修：the Today hub keeps only the tight budget verdict；文件 `frontend/e2e/qoder-budget-advisory-tiers.spec.ts`；在尖上摘取结果=EMPTY
+`8f42cb7d87175e996d2b81473200e5920d6a3ba3` 2026-09-23T03:53+08 → 修：the hub names the stop a hard rule dropped, in words and not in ids；文件 `frontend/e2e/_qoderTextScan.ts`；在尖上摘取结果=EMPTY
+
+**逐条在现尖上的可摘性**：每一枚 `git merge-base --is-ancestor <候选> <尖>` 退出码 0，且每笔 diff 里第一条有实义的整行新增都能在现尖对应文件中回找到，于是 `git cherry-pick` 在现尖的结果是 11 枚全部 `EMPTY`（冲突数 0、可落数 0）。逐枚字段在工件 `03b7a1d85d0cb30e62e1b7ad835bcc129a1a245a`（`sha40`、`at`、`subject`、`files_frontend`、`ancestor_of_tip`、`witness_line_present_at_tip`、`cherry_pick_onto_tip_would_be`）。**这就是前提变化**：ORD-0245 当年这 11 条的目标基是手机基线 `53fe8e86920aed0ddb5fb325f070b4ed8210b686`，三天落线已把它们收进主线，"base = 现尖"的窄回带因此没有可搬运的内容。要真做混版本兼容，只能把"壳遇到变了形状的 payload 会不会改口"量出来钉住——即要件 3。
+
+**要件 2：交付面** = 现尖 + 要件 3 的闸门，其中回带提交数为 0。这不是把交付物换成更小版本，而是同一交付物的内容按测量决定，测量已随 `03b7a1d85d0cb30e62e1b7ad835bcc129a1a245a` 上架可回读。那 12 枚同文件已分叉的，本车道一行未动。
+
+**要件 3：只量 payload 的闸门**
+
+先量形状（本车道 disposable store、独立进程，件 `aa03d57eda67c46f051cec8f45be6523fb154d0b`；`/api/v1/health` 状态码 200）：`GET /api/v1/destinations/capability` 在现尖三问合并回 29 枚顶层键，HYDRATABLE 那一问答 27 枚、两问 UNAVAILABLE 各 29 枚，拍平路径 80 条。键集随数据而变，所以逐问各记、合并集只标为"曾出现过的集合"，不与账本 09-23 那次的 16/26 相减（形制不同且已过三日）。
+
+再定"新键/旧键"不靠猜：件 `faebdf4023641a24e9a2f790a6ed689cbe198b75` 按现尖 `DestinationPreparationPanel.tsx` 里 `capability?.<name>` 的实际出现，把合并集 29 枚顶层键分成读过的 9 枚与完全不碰的 20 枚。**两个分母各记各的，不混用**：29 枚是"三问里曾出现过的键"的合并集，而闸门实际收到的那一问带 27 枚（HYDRATABLE 形状），所以 B 实删 18 枚。闸门对同一目的地拍两次屏幕：A 用服务器原样回答，B 把 18 枚未读键全删并再注入 3 枚任何版本都没发过的字段名（名单在屏幕对照件 `99cf7c8ca2efed707d57abd6d5a6bcee948e767a` 的 `unknown_fields_injected` 字段里）；判据是 A 与 B 同判词、同可见文字、同可按键集合，且 B 不得多出 A 没有的错误。
+
+| 臂 | 形制 | B 实删键数 | exit_code | counts | 读数件 / 屏幕对照 |
+| --- | --- | --- | --- | --- | --- |
+| 默认 | 删全部未读键 | 18 枚 | `0` | 2 格通过 | `9091ccaca3fc74c752e7f92a9dd31758ce245006` / `99cf7c8ca2efed707d57abd6d5a6bcee948e767a` |
+| 臂·新键 | 只删 `pending_label_fidelity` | 1 枚 | `0` | 2 格通过 | `01e581a13c9c37250c130fe38247e746fe8681ba` / `88a0e5c7c92f1ac853d51a00abcbfa6544208eab` |
+| 臂·旧键 | 只删 `capability` | 1 枚 | `1` | 1 通过 / 1 失败 | `a0124dc1c6e2aa754c5082a67a396ac5e00e0284` / `63f916fa86fc809f51000fe9cbe2b5eefdb93b2a` |
+| 受影响面 | 与 ORD-0193 那把闸门同批 | 18 枚 | `0` | 7 格通过 | `9aef002ca2849d854168dfc6da20fccc0427a46b` / `c37074d124c5ffcc52882559bbc9942ab7921ffd` |
+
+两臂只差被点名的键名（环境变量 `CITYNEXUS_ORD0362_DROP_ONE`），过程完全同形：删未读键时判词仍是 `HYDRATABLE`；删 `capability` 时判词塌成空串（见 `63f916fa86fc809f51000fe9cbe2b5eefdb93b2a` 的 `screen_B.capability`）。于是这条闸门是被 payload 咬红，不是被仪器咬红。B 实删 18 枚、留 9 枚（该问共 27 枚），删除比例过半，且这 9 枚的名单直接来自组件源码而非版本猜测。
+
+**边界与未改善**：本闸门不把旧包放上手机，它量的是"这一代壳遇到形状变了的答案会不会改口"。反向配对（`53fe8e86920aed0ddb5fb325f070b4ed8210b686` 那一代的壳 × 今天的 payload）在该年根本没有这条路由的消费方——`git ls-tree` 量到那棵树只有 `RealCityDiscoveryPanel.tsx`、没有 `DestinationPreparationPanel.tsx`，所以那条主张会是空话，本车道不写。未新增写端点、未调用任何写路由；未动权威线；`demo/reset` 未调；`:8000` 未试；端口用 端口 5100 配 端口 6100 跑闸门、端口 6110 独立测量。顺带给已落地的 ORD-0349 复量一次：在 `27f963a77edc4d508a39b0a07c76927d0512c724` 上 exit_code=`0`、7 格通过（那笔增量动过 `V8Experience.tsx` 与 `styles.css`，所以这不是沿用旧读数）。复跑口径与逐件说明见 `be0726de20faa67b6c2c80a8788919bfa1ee6885`。
+
+
 ### s3 · ORD-0363 交付（产品面，不是状态板）@2026-09-26 17:48+08 —— 向导不再把"服务器答不出的城"静默当成可规划；只读现尖重测 + 乙方案落地 + 两臂反件（base 尖 b6a8ea5c625d7e3e82f7348fad57d595a8a403c0）
 
 **① 先打印实际读到的**（不拿"8"当坐标，全在现尖 `b6a8ea5c625d7e3e82f7348fad57d595a8a403c0` 上读源码/只读查库）：
