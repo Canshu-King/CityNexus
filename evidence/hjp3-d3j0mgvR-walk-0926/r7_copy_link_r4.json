@@ -1,0 +1,1205 @@
+{
+ "started_at": "2026-09-26T10:45:14.188Z",
+ "base": "https://jets-saints-tomatoes-eric.trycloudflare.com",
+ "journey_id": "fa5cebdc-fabc-4067-ab02-4812ddb950e5",
+ "launches": 1,
+ "contexts": 2,
+ "chromium_version": "153.0.8010.12",
+ "trips_as_landed": {
+  "url": "https://jets-saints-tomatoes-eric.trycloudflare.com/v8/trips",
+  "text_len": 134,
+  "text": "菜单\n/\n行程\n跟随系统\nEN\nTI\n行程\n住宿\n预订\n花费\n\n行程\n\n还没有可看的行程\n\n这个行程还没有选定的方案。先让 AI 帮你规划，选定方案后这里会显示逐日安排。\n\nAI 帮我规划\n✦\nCityNexus Copilot\n今天\n行程\n地图\nCopilot\n我的",
+  "copy_button_present": false,
+  "copy_button_disabled": null,
+  "copy_button_text": null,
+  "copy_button_field_attr": null,
+  "copy_button_top": null,
+  "copy_button_in_view": null,
+  "message_present": false,
+  "message_text": null,
+  "message_field_attr": null,
+  "testids": [
+   "topbar-theme",
+   "topbar-language",
+   "trips-tabs",
+   "trips-tab-itinerary",
+   "trips-tab-stay",
+   "trips-tab-bookings",
+   "trips-tab-spend",
+   "trip-itinerary-empty",
+   "v18-copilot-dock",
+   "nav-hub",
+   "nav-trips",
+   "nav-map",
+   "nav-agent",
+   "nav-me"
+  ],
+  "buttons": [
+   {
+    "text": "今天",
+    "aria": null,
+    "testid": null,
+    "disabled": false
+   },
+   {
+    "text": "实时行程",
+    "aria": null,
+    "testid": null,
+    "disabled": false
+   },
+   {
+    "text": "地图",
+    "aria": null,
+    "testid": null,
+    "disabled": false
+   },
+   {
+    "text": "行程工作台",
+    "aria": null,
+    "testid": null,
+    "disabled": false
+   },
+   {
+    "text": "住宿选择",
+    "aria": null,
+    "testid": null,
+    "disabled": false
+   },
+   {
+    "text": "城市探索",
+    "aria": null,
+    "testid": null,
+    "disabled": false
+   },
+   {
+    "text": "旅行票夹",
+    "aria": null,
+    "testid": null,
+    "disabled": false
+   },
+   {
+    "text": "Copilot",
+    "aria": null,
+    "testid": null,
+    "disabled": false
+   },
+   {
+    "text": "恢复与执行",
+    "aria": null,
+    "testid": null,
+    "disabled": false
+   },
+   {
+    "text": "智能守护",
+    "aria": null,
+    "testid": null,
+    "disabled": false
+   },
+   {
+    "text": "旅行者画像",
+    "aria": null,
+    "testid": null,
+    "disabled": false
+   },
+   {
+    "text": "TITianjin2 位旅行者•••",
+    "aria": null,
+    "testid": null,
+    "disabled": false
+   },
+   {
+    "text": "菜单",
+    "aria": "打开导航",
+    "testid": null,
+    "disabled": false
+   },
+   {
+    "text": "跟随系统",
+    "aria": "Theme: following the system. Choose light, dark, or back to system.",
+    "testid": "topbar-theme",
+    "disabled": false
+   },
+   {
+    "text": "EN",
+    "aria": "Switch language",
+    "testid": "topbar-language",
+    "disabled": false
+   },
+   {
+    "text": "◌",
+    "aria": "通知 · 无活跃",
+    "testid": null,
+    "disabled": false
+   },
+   {
+    "text": "TI",
+    "aria": null,
+    "testid": null,
+    "disabled": false
+   },
+   {
+    "text": "行程",
+    "aria": null,
+    "testid": "trips-tab-itinerary",
+    "disabled": false
+   },
+   {
+    "text": "住宿",
+    "aria": null,
+    "testid": "trips-tab-stay",
+    "disabled": false
+   },
+   {
+    "text": "预订",
+    "aria": null,
+    "testid": "trips-tab-bookings",
+    "disabled": false
+   },
+   {
+    "text": "花费",
+    "aria": null,
+    "testid": "trips-tab-spend",
+    "disabled": false
+   },
+   {
+    "text": "AI 帮我规划",
+    "aria": null,
+    "testid": null,
+    "disabled": false
+   },
+   {
+    "text": "✦\nCityNexus Copilot",
+    "aria": "CityNexus Copilot",
+    "testid": null,
+    "disabled": false
+   },
+   {
+    "text": "今天",
+    "aria": null,
+    "testid": "nav-hub",
+    "disabled": false
+   },
+   {
+    "text": "行程",
+    "aria": null,
+    "testid": "nav-trips",
+    "disabled": false
+   },
+   {
+    "text": "地图",
+    "aria": null,
+    "testid": "nav-map",
+    "disabled": false
+   },
+   {
+    "text": "Copilot",
+    "aria": null,
+    "testid": "nav-agent",
+    "disabled": false
+   },
+   {
+    "text": "我的",
+    "aria": null,
+    "testid": "nav-me",
+    "disabled": false
+   }
+  ],
+  "body_sha": "ebb55dfef3e41dceefc57f6780e926615f0bd36ce464a4d6ee6d26382a26efde",
+  "ls_keys": [
+   "citynexus.v8.journey_id",
+   "citynexus.copilot.history.fa5cebdc-fabc-4067-ab02-4812ddb950e5"
+  ],
+  "journey_id": "fa5cebdc-fabc-4067-ab02-4812ddb950e5",
+  "is_secure_context": true,
+  "clipboard_api": true,
+  "receipts": []
+ },
+ "shots": {
+  "trips": {
+   "file": "I1_trips_as_landed.png",
+   "abs": "D:\\moodle\\_hjp3_d3j0_0926\\I1_trips_as_landed.png",
+   "exists": true,
+   "bytes": 125879,
+   "sha256": "5a54993498493f9fb727a1204466bccbf47105613aa89f230bd602b8670d693c"
+  },
+  "bookings": {
+   "file": "I2_bookings_tab.png",
+   "abs": "D:\\moodle\\_hjp3_d3j0_0926\\I2_bookings_tab.png",
+   "exists": true,
+   "bytes": 182421,
+   "sha256": "c4b3391cd55ab378b4947e7e85b03ed17d7709b8d465c935189c40559bd0fe4d"
+  },
+  "copied": {
+   "file": "I3_after_copy.png",
+   "abs": "D:\\moodle\\_hjp3_d3j0_0926\\I3_after_copy.png",
+   "exists": true,
+   "bytes": 203712,
+   "sha256": "d8b372d0299c751e6324262a7a4d09091c57a662ca5e8fef80e35b31434be574"
+  },
+  "reopen": {
+   "file": "I4_reopened_link.png",
+   "abs": "D:\\moodle\\_hjp3_d3j0_0926\\I4_reopened_link.png",
+   "exists": true,
+   "bytes": 884369,
+   "sha256": "8e54235a5568f921d67904403fb9e21decf4158605aab1e3faafb0fe564aaae9"
+  }
+ },
+ "tab_found": 1,
+ "tab_press": "clicked",
+ "on_bookings": {
+  "url": "https://jets-saints-tomatoes-eric.trycloudflare.com/v8/trips",
+  "text_len": 240,
+  "text": "菜单\n/\n行程\n跟随系统\nEN\nTI\n行程\n住宿\n预订\n花费\n多模态收件箱\n将确认带入行程\n已读取 · 已核对 · 已记住\n复制行程链接\n粘贴确认信息\n手动填写\n粘贴的确认\n提取文本草稿\n确认截图\n图片字节仅用于此次提取请求。\n提取图片草稿\n权威记忆\nJourney Memory\n0 个受保护事实\n\n暂无已确认工件绑定到此行程。\n\n等你审核的确认单\n\n这里没有等你审核的确认单。\n\n高级 / 开发者\n✦\nCityNexus Copilot\n今天\n行程\n地图\nCopilot\n我的",
+  "copy_button_present": true,
+  "copy_button_disabled": false,
+  "copy_button_text": "复制行程链接",
+  "copy_button_field_attr": "journey_link_url",
+  "copy_button_top": 315,
+  "copy_button_in_view": true,
+  "message_present": false,
+  "message_text": null,
+  "message_field_attr": null,
+  "testids": [
+   "topbar-theme",
+   "topbar-language",
+   "trips-tabs",
+   "trips-tab-itinerary",
+   "trips-tab-stay",
+   "trips-tab-bookings",
+   "trips-tab-spend",
+   "journey-link-copy",
+   "inbox-tab-paste",
+   "inbox-tab-manual",
+   "v13-2-memory",
+   "inbox-pending-queue",
+   "inbox-pending-empty",
+   "trips-commitments",
+   "v8-bookings",
+   "bookings-stay-total",
+   "bookings-advanced",
+   "bookings-json-input",
+   "v18-copilot-dock",
+   "nav-hub",
+   "nav-trips",
+   "nav-map",
+   "nav-agent",
+   "nav-me"
+  ],
+  "buttons": [
+   {
+    "text": "今天",
+    "aria": null,
+    "testid": null,
+    "disabled": false
+   },
+   {
+    "text": "实时行程",
+    "aria": null,
+    "testid": null,
+    "disabled": false
+   },
+   {
+    "text": "地图",
+    "aria": null,
+    "testid": null,
+    "disabled": false
+   },
+   {
+    "text": "行程工作台",
+    "aria": null,
+    "testid": null,
+    "disabled": false
+   },
+   {
+    "text": "住宿选择",
+    "aria": null,
+    "testid": null,
+    "disabled": false
+   },
+   {
+    "text": "城市探索",
+    "aria": null,
+    "testid": null,
+    "disabled": false
+   },
+   {
+    "text": "旅行票夹",
+    "aria": null,
+    "testid": null,
+    "disabled": false
+   },
+   {
+    "text": "Copilot",
+    "aria": null,
+    "testid": null,
+    "disabled": false
+   },
+   {
+    "text": "恢复与执行",
+    "aria": null,
+    "testid": null,
+    "disabled": false
+   },
+   {
+    "text": "智能守护",
+    "aria": null,
+    "testid": null,
+    "disabled": false
+   },
+   {
+    "text": "旅行者画像",
+    "aria": null,
+    "testid": null,
+    "disabled": false
+   },
+   {
+    "text": "TITianjin2 位旅行者•••",
+    "aria": null,
+    "testid": null,
+    "disabled": false
+   },
+   {
+    "text": "菜单",
+    "aria": "打开导航",
+    "testid": null,
+    "disabled": false
+   },
+   {
+    "text": "跟随系统",
+    "aria": "Theme: following the system. Choose light, dark, or back to system.",
+    "testid": "topbar-theme",
+    "disabled": false
+   },
+   {
+    "text": "EN",
+    "aria": "Switch language",
+    "testid": "topbar-language",
+    "disabled": false
+   },
+   {
+    "text": "◌",
+    "aria": "通知 · 无活跃",
+    "testid": null,
+    "disabled": false
+   },
+   {
+    "text": "TI",
+    "aria": null,
+    "testid": null,
+    "disabled": false
+   },
+   {
+    "text": "行程",
+    "aria": null,
+    "testid": "trips-tab-itinerary",
+    "disabled": false
+   },
+   {
+    "text": "住宿",
+    "aria": null,
+    "testid": "trips-tab-stay",
+    "disabled": false
+   },
+   {
+    "text": "预订",
+    "aria": null,
+    "testid": "trips-tab-bookings",
+    "disabled": false
+   },
+   {
+    "text": "花费",
+    "aria": null,
+    "testid": "trips-tab-spend",
+    "disabled": false
+   },
+   {
+    "text": "复制行程链接",
+    "aria": null,
+    "testid": "journey-link-copy",
+    "disabled": false
+   },
+   {
+    "text": "粘贴确认信息",
+    "aria": null,
+    "testid": "inbox-tab-paste",
+    "disabled": false
+   },
+   {
+    "text": "手动填写",
+    "aria": null,
+    "testid": "inbox-tab-manual",
+    "disabled": false
+   },
+   {
+    "text": "提取文本草稿",
+    "aria": null,
+    "testid": null,
+    "disabled": true
+   },
+   {
+    "text": "提取图片草稿",
+    "aria": null,
+    "testid": null,
+    "disabled": true
+   },
+   {
+    "text": "✦\nCityNexus Copilot",
+    "aria": "CityNexus Copilot",
+    "testid": null,
+    "disabled": false
+   },
+   {
+    "text": "今天",
+    "aria": null,
+    "testid": "nav-hub",
+    "disabled": false
+   },
+   {
+    "text": "行程",
+    "aria": null,
+    "testid": "nav-trips",
+    "disabled": false
+   },
+   {
+    "text": "地图",
+    "aria": null,
+    "testid": "nav-map",
+    "disabled": false
+   },
+   {
+    "text": "Copilot",
+    "aria": null,
+    "testid": "nav-agent",
+    "disabled": false
+   },
+   {
+    "text": "我的",
+    "aria": null,
+    "testid": "nav-me",
+    "disabled": false
+   }
+  ],
+  "body_sha": "d39142e18d05426574c68f0f225c5ecb3c107a1ad1fff1552272fb0c5f59baf0",
+  "ls_keys": [
+   "citynexus.v8.journey_id",
+   "citynexus.copilot.history.fa5cebdc-fabc-4067-ab02-4812ddb950e5"
+  ],
+  "journey_id": "fa5cebdc-fabc-4067-ab02-4812ddb950e5",
+  "is_secure_context": true,
+  "clipboard_api": true,
+  "receipts": []
+ },
+ "press": "clicked",
+ "after_press": {
+  "url": "https://jets-saints-tomatoes-eric.trycloudflare.com/v8/trips",
+  "text_len": 269,
+  "text": "菜单\n/\n行程\n跟随系统\nEN\nTI\n行程\n住宿\n预订\n花费\n多模态收件箱\n将确认带入行程\n已读取 · 已核对 · 已记住\n复制行程链接\n\n行程链接已复制到这台设备的剪贴板，可以发给同行的人。\n\n粘贴确认信息\n手动填写\n粘贴的确认\n提取文本草稿\n确认截图\n图片字节仅用于此次提取请求。\n提取图片草稿\n权威记忆\nJourney Memory\n0 个受保护事实\n\n暂无已确认工件绑定到此行程。\n\n等你审核的确认单\n\n这里没有等你审核的确认单。\n\n高级 / 开发者\n✦\nCityNexus Copilot\n今天\n行程\n地图\nCopilot\n我的",
+  "copy_button_present": true,
+  "copy_button_disabled": false,
+  "copy_button_text": "复制行程链接",
+  "copy_button_field_attr": "journey_link_url",
+  "copy_button_top": 315,
+  "copy_button_in_view": true,
+  "message_present": true,
+  "message_text": "行程链接已复制到这台设备的剪贴板，可以发给同行的人。",
+  "message_field_attr": "journey_link_url",
+  "testids": [
+   "topbar-theme",
+   "topbar-language",
+   "trips-tabs",
+   "trips-tab-itinerary",
+   "trips-tab-stay",
+   "trips-tab-bookings",
+   "trips-tab-spend",
+   "journey-link-copy",
+   "journey-link-message",
+   "inbox-tab-paste",
+   "inbox-tab-manual",
+   "v13-2-memory",
+   "inbox-pending-queue",
+   "inbox-pending-empty",
+   "trips-commitments",
+   "v8-bookings",
+   "bookings-stay-total",
+   "bookings-advanced",
+   "bookings-json-input",
+   "v18-copilot-dock",
+   "nav-hub",
+   "nav-trips",
+   "nav-map",
+   "nav-agent",
+   "nav-me"
+  ],
+  "buttons": [
+   {
+    "text": "今天",
+    "aria": null,
+    "testid": null,
+    "disabled": false
+   },
+   {
+    "text": "实时行程",
+    "aria": null,
+    "testid": null,
+    "disabled": false
+   },
+   {
+    "text": "地图",
+    "aria": null,
+    "testid": null,
+    "disabled": false
+   },
+   {
+    "text": "行程工作台",
+    "aria": null,
+    "testid": null,
+    "disabled": false
+   },
+   {
+    "text": "住宿选择",
+    "aria": null,
+    "testid": null,
+    "disabled": false
+   },
+   {
+    "text": "城市探索",
+    "aria": null,
+    "testid": null,
+    "disabled": false
+   },
+   {
+    "text": "旅行票夹",
+    "aria": null,
+    "testid": null,
+    "disabled": false
+   },
+   {
+    "text": "Copilot",
+    "aria": null,
+    "testid": null,
+    "disabled": false
+   },
+   {
+    "text": "恢复与执行",
+    "aria": null,
+    "testid": null,
+    "disabled": false
+   },
+   {
+    "text": "智能守护",
+    "aria": null,
+    "testid": null,
+    "disabled": false
+   },
+   {
+    "text": "旅行者画像",
+    "aria": null,
+    "testid": null,
+    "disabled": false
+   },
+   {
+    "text": "TITianjin2 位旅行者•••",
+    "aria": null,
+    "testid": null,
+    "disabled": false
+   },
+   {
+    "text": "菜单",
+    "aria": "打开导航",
+    "testid": null,
+    "disabled": false
+   },
+   {
+    "text": "跟随系统",
+    "aria": "Theme: following the system. Choose light, dark, or back to system.",
+    "testid": "topbar-theme",
+    "disabled": false
+   },
+   {
+    "text": "EN",
+    "aria": "Switch language",
+    "testid": "topbar-language",
+    "disabled": false
+   },
+   {
+    "text": "◌",
+    "aria": "通知 · 无活跃",
+    "testid": null,
+    "disabled": false
+   },
+   {
+    "text": "TI",
+    "aria": null,
+    "testid": null,
+    "disabled": false
+   },
+   {
+    "text": "行程",
+    "aria": null,
+    "testid": "trips-tab-itinerary",
+    "disabled": false
+   },
+   {
+    "text": "住宿",
+    "aria": null,
+    "testid": "trips-tab-stay",
+    "disabled": false
+   },
+   {
+    "text": "预订",
+    "aria": null,
+    "testid": "trips-tab-bookings",
+    "disabled": false
+   },
+   {
+    "text": "花费",
+    "aria": null,
+    "testid": "trips-tab-spend",
+    "disabled": false
+   },
+   {
+    "text": "复制行程链接",
+    "aria": null,
+    "testid": "journey-link-copy",
+    "disabled": false
+   },
+   {
+    "text": "粘贴确认信息",
+    "aria": null,
+    "testid": "inbox-tab-paste",
+    "disabled": false
+   },
+   {
+    "text": "手动填写",
+    "aria": null,
+    "testid": "inbox-tab-manual",
+    "disabled": false
+   },
+   {
+    "text": "提取文本草稿",
+    "aria": null,
+    "testid": null,
+    "disabled": true
+   },
+   {
+    "text": "提取图片草稿",
+    "aria": null,
+    "testid": null,
+    "disabled": true
+   },
+   {
+    "text": "✦\nCityNexus Copilot",
+    "aria": "CityNexus Copilot",
+    "testid": null,
+    "disabled": false
+   },
+   {
+    "text": "今天",
+    "aria": null,
+    "testid": "nav-hub",
+    "disabled": false
+   },
+   {
+    "text": "行程",
+    "aria": null,
+    "testid": "nav-trips",
+    "disabled": false
+   },
+   {
+    "text": "地图",
+    "aria": null,
+    "testid": "nav-map",
+    "disabled": false
+   },
+   {
+    "text": "Copilot",
+    "aria": null,
+    "testid": "nav-agent",
+    "disabled": false
+   },
+   {
+    "text": "我的",
+    "aria": null,
+    "testid": "nav-me",
+    "disabled": false
+   }
+  ],
+  "body_sha": "bf12cd12c89f1c71f8633e716a21ee219387f1b6fcfa28d129524570b9e04543",
+  "ls_keys": [
+   "citynexus.v8.journey_id",
+   "citynexus.copilot.history.fa5cebdc-fabc-4067-ab02-4812ddb950e5"
+  ],
+  "journey_id": "fa5cebdc-fabc-4067-ab02-4812ddb950e5",
+  "is_secure_context": true,
+  "clipboard_api": true,
+  "receipts": []
+ },
+ "clipboard": "https://jets-saints-tomatoes-eric.trycloudflare.com/v8/fa5cebdc-fabc-4067-ab02-4812ddb950e5",
+ "legs1": [
+  {
+   "url": "/api/v1/journeys/fa5cebdc-fabc-4067-ab02-4812ddb950e5/experience",
+   "m": "GET",
+   "status": 200,
+   "ct": "application/json",
+   "resp_bytes": 132102,
+   "from_service_worker": false
+  },
+  {
+   "url": "/api/v1/journeys/fa5cebdc-fabc-4067-ab02-4812ddb950e5/twin",
+   "m": "GET",
+   "status": 200,
+   "ct": "application/json",
+   "resp_bytes": 896,
+   "from_service_worker": false
+  },
+  {
+   "url": "/api/v1/journeys/fa5cebdc-fabc-4067-ab02-4812ddb950e5/plans",
+   "m": "GET",
+   "status": 200,
+   "ct": "application/json",
+   "resp_bytes": 2,
+   "from_service_worker": false
+  },
+  {
+   "url": "/api/v1/journeys/fa5cebdc-fabc-4067-ab02-4812ddb950e5/replans",
+   "m": "GET",
+   "status": 200,
+   "ct": "application/json",
+   "resp_bytes": 2,
+   "from_service_worker": false
+  },
+  {
+   "url": "/api/v1/journeys/fa5cebdc-fabc-4067-ab02-4812ddb950e5/wallet",
+   "m": "GET",
+   "status": 200,
+   "ct": "application/json",
+   "resp_bytes": 109,
+   "from_service_worker": false
+  },
+  {
+   "url": "/api/v1/agent/runtime-status",
+   "m": "GET",
+   "status": 200,
+   "ct": "application/json",
+   "resp_bytes": 408,
+   "from_service_worker": false
+  },
+  {
+   "url": "/api/v1/travelers/244b231a-43fb-4521-bd8b-09df06924cac/agent-policy",
+   "m": "GET",
+   "status": 200,
+   "ct": "application/json",
+   "resp_bytes": 527,
+   "from_service_worker": false
+  },
+  {
+   "url": "/api/v1/journeys/fa5cebdc-fabc-4067-ab02-4812ddb950e5/offline-snapshot",
+   "m": "GET",
+   "status": 200,
+   "ct": "application/json",
+   "resp_bytes": 797,
+   "from_service_worker": false
+  },
+  {
+   "url": "/api/v1/journeys/fa5cebdc-fabc-4067-ab02-4812ddb950e5/inbox",
+   "m": "GET",
+   "status": 200,
+   "ct": "application/json",
+   "resp_bytes": 65,
+   "from_service_worker": false
+  },
+  {
+   "url": "/api/v1/journeys/fa5cebdc-fabc-4067-ab02-4812ddb950e5/memory",
+   "m": "GET",
+   "status": 200,
+   "ct": "application/json",
+   "resp_bytes": 89,
+   "from_service_worker": false
+  }
+ ],
+ "reopen": {
+  "url": "https://jets-saints-tomatoes-eric.trycloudflare.com/v8/fa5cebdc-fabc-4067-ab02-4812ddb950e5",
+  "text_len": 605,
+  "text": "菜单\n/\n今天\n跟随系统\nEN\nTI\n\n晚上好\n\n天津之旅\n\n10月2日 10:00 — 10月3日 20:00 · 2 位旅行者 · 2 天\n\nAI 帮我规划\n试用其他城市\n打开行程工作台\n今天\n还没有安排\n“现在”取自服务器场景（执行游标。服务器没有给出这一分钟的执行游标，这一屏的时间按行程的时间窗来读）：9月21日 10:00 · 现在/接下来由服务器的执行投影给出\n1\n\n底图未加载，显示的是路线示意。\n\n路线上下文\n7 段路程\n供应商支持的路线 · WGS84\n\n单指拖动地图 · 双指缩放 · 想翻这一页就拖地图以外的地方\n\n住宿\n还没有选定\n到达\n10月2日 10:00\n出发\n10月3日 20:00\n一切正常\n\n方案概览\n\n每一天，紧密相连。\n对比住宿 →\n\n以下只是其中一个候选方案的预览，你还没有采用它。\n\n第 1 天\n星期五\n\n天津站 · Italian Style Town · Check in · Haihe Riverside Hotel · Overnight · Haihe Riverside Hotel\n\n驾车 抵达锚点\n第 2 天\n星期六\n\nFive Great Avenues · Check out · Haihe Riverside Hotel · Tianjin Museum · 天津滨海国际机场\n\n公交地铁 离开锚点\n今天\n行程\n地图\nCopilot\n我的",
+  "copy_button_present": false,
+  "copy_button_disabled": null,
+  "copy_button_text": null,
+  "copy_button_field_attr": null,
+  "copy_button_top": null,
+  "copy_button_in_view": null,
+  "message_present": false,
+  "message_text": null,
+  "message_field_attr": null,
+  "testids": [
+   "topbar-theme",
+   "topbar-language",
+   "today-heading",
+   "today-when",
+   "hub-secondary-actions",
+   "hub-plan-with-ai",
+   "today-hero",
+   "today-next",
+   "today-clock-source",
+   "v8-maplibre-panel",
+   "v8-maplibre-canvas",
+   "v8-map-tile-notice",
+   "v8-map-gesture-hint",
+   "today-strip",
+   "today-stay",
+   "today-attention-band",
+   "today-attention",
+   "hub-glance-caveat",
+   "v18-copilot-dock",
+   "nav-hub",
+   "nav-trips",
+   "nav-map",
+   "nav-agent",
+   "nav-me",
+   "sim-float",
+   "sim-ball",
+   "sim-ball-dot"
+  ],
+  "buttons": [
+   {
+    "text": "今天",
+    "aria": null,
+    "testid": null,
+    "disabled": false
+   },
+   {
+    "text": "实时行程",
+    "aria": null,
+    "testid": null,
+    "disabled": false
+   },
+   {
+    "text": "地图",
+    "aria": null,
+    "testid": null,
+    "disabled": false
+   },
+   {
+    "text": "行程工作台",
+    "aria": null,
+    "testid": null,
+    "disabled": false
+   },
+   {
+    "text": "住宿选择",
+    "aria": null,
+    "testid": null,
+    "disabled": false
+   },
+   {
+    "text": "城市探索",
+    "aria": null,
+    "testid": null,
+    "disabled": false
+   },
+   {
+    "text": "旅行票夹",
+    "aria": null,
+    "testid": null,
+    "disabled": false
+   },
+   {
+    "text": "Copilot",
+    "aria": null,
+    "testid": null,
+    "disabled": false
+   },
+   {
+    "text": "恢复与执行",
+    "aria": null,
+    "testid": null,
+    "disabled": false
+   },
+   {
+    "text": "智能守护",
+    "aria": null,
+    "testid": null,
+    "disabled": false
+   },
+   {
+    "text": "旅行者画像",
+    "aria": null,
+    "testid": null,
+    "disabled": false
+   },
+   {
+    "text": "TITianjin2 位旅行者•••",
+    "aria": null,
+    "testid": null,
+    "disabled": false
+   },
+   {
+    "text": "菜单",
+    "aria": "打开导航",
+    "testid": null,
+    "disabled": false
+   },
+   {
+    "text": "跟随系统",
+    "aria": "Theme: following the system. Choose light, dark, or back to system.",
+    "testid": "topbar-theme",
+    "disabled": false
+   },
+   {
+    "text": "EN",
+    "aria": "Switch language",
+    "testid": "topbar-language",
+    "disabled": false
+   },
+   {
+    "text": "◌",
+    "aria": "通知 · 无活跃",
+    "testid": null,
+    "disabled": false
+   },
+   {
+    "text": "TI",
+    "aria": null,
+    "testid": null,
+    "disabled": false
+   },
+   {
+    "text": "AI 帮我规划",
+    "aria": null,
+    "testid": "hub-plan-with-ai",
+    "disabled": false
+   },
+   {
+    "text": "试用其他城市",
+    "aria": null,
+    "testid": null,
+    "disabled": false
+   },
+   {
+    "text": "打开行程工作台",
+    "aria": null,
+    "testid": null,
+    "disabled": false
+   },
+   {
+    "text": "对比住宿 →",
+    "aria": null,
+    "testid": null,
+    "disabled": false
+   },
+   {
+    "text": "第 1 天\n星期五\n\n天津站 · Italian Style Town ",
+    "aria": null,
+    "testid": null,
+    "disabled": false
+   },
+   {
+    "text": "第 2 天\n星期六\n\nFive Great Avenues · Chec",
+    "aria": null,
+    "testid": null,
+    "disabled": false
+   },
+   {
+    "text": "",
+    "aria": "CityNexus Copilot",
+    "testid": null,
+    "disabled": false
+   },
+   {
+    "text": "今天",
+    "aria": null,
+    "testid": "nav-hub",
+    "disabled": false
+   },
+   {
+    "text": "行程",
+    "aria": null,
+    "testid": "nav-trips",
+    "disabled": false
+   },
+   {
+    "text": "地图",
+    "aria": null,
+    "testid": "nav-map",
+    "disabled": false
+   },
+   {
+    "text": "Copilot",
+    "aria": null,
+    "testid": "nav-agent",
+    "disabled": false
+   },
+   {
+    "text": "我的",
+    "aria": null,
+    "testid": "nav-me",
+    "disabled": false
+   },
+   {
+    "text": "",
+    "aria": "模拟舞台（舞台上有场景）：教学模拟舞台 · 屏幕上的“现在”由服务器给定：2026-09-21 02:00 +00:00",
+    "testid": "sim-ball",
+    "disabled": false
+   }
+  ],
+  "body_sha": "e81a2835b5cb0143d9ef80c7b4eda7682cd63e4a4fa528550446594b4bab947a",
+  "ls_keys": [
+   "citynexus.v8.journey_id",
+   "citynexus.copilot.history.fa5cebdc-fabc-4067-ab02-4812ddb950e5"
+  ],
+  "journey_id": "fa5cebdc-fabc-4067-ab02-4812ddb950e5",
+  "is_secure_context": true,
+  "clipboard_api": true,
+  "receipts": []
+ },
+ "reopen_legs": [
+  {
+   "url": "/api/v1/journeys/fa5cebdc-fabc-4067-ab02-4812ddb950e5/experience",
+   "m": "GET",
+   "status": 200,
+   "ct": "application/json",
+   "resp_bytes": 132102,
+   "from_service_worker": false
+  },
+  {
+   "url": "/api/v1/journeys/fa5cebdc-fabc-4067-ab02-4812ddb950e5/replans",
+   "m": "GET",
+   "status": 200,
+   "ct": "application/json",
+   "resp_bytes": 2,
+   "from_service_worker": false
+  },
+  {
+   "url": "/api/v1/journeys/fa5cebdc-fabc-4067-ab02-4812ddb950e5/twin",
+   "m": "GET",
+   "status": 200,
+   "ct": "application/json",
+   "resp_bytes": 896,
+   "from_service_worker": false
+  },
+  {
+   "url": "/api/v1/journeys/fa5cebdc-fabc-4067-ab02-4812ddb950e5/plans",
+   "m": "GET",
+   "status": 200,
+   "ct": "application/json",
+   "resp_bytes": 2,
+   "from_service_worker": false
+  },
+  {
+   "url": "/api/v1/demo/scene",
+   "m": "GET",
+   "status": 200,
+   "ct": "application/json",
+   "resp_bytes": 610,
+   "from_service_worker": false
+  },
+  {
+   "url": "/api/v1/journeys/fa5cebdc-fabc-4067-ab02-4812ddb950e5/agent-feed?limit=200",
+   "m": "GET",
+   "status": 200,
+   "ct": "application/json",
+   "resp_bytes": 574,
+   "from_service_worker": false
+  },
+  {
+   "url": "/api/v1/journeys/fa5cebdc-fabc-4067-ab02-4812ddb950e5/agent-feed?limit=200",
+   "m": "GET",
+   "status": 200,
+   "ct": "application/json",
+   "resp_bytes": 574,
+   "from_service_worker": false
+  },
+  {
+   "url": "/api/v1/journeys/fa5cebdc-fabc-4067-ab02-4812ddb950e5/offline-snapshot",
+   "m": "GET",
+   "status": 200,
+   "ct": "application/json",
+   "resp_bytes": 797,
+   "from_service_worker": false
+  },
+  {
+   "url": "/api/v1/journeys/fa5cebdc-fabc-4067-ab02-4812ddb950e5/wallet",
+   "m": "GET",
+   "status": 200,
+   "ct": "application/json",
+   "resp_bytes": 109,
+   "from_service_worker": false
+  },
+  {
+   "url": "/api/v1/agent/runtime-status",
+   "m": "GET",
+   "status": 200,
+   "ct": "application/json",
+   "resp_bytes": 408,
+   "from_service_worker": false
+  },
+  {
+   "url": "/api/v1/travelers/244b231a-43fb-4521-bd8b-09df06924cac/agent-policy",
+   "m": "GET",
+   "status": 200,
+   "ct": "application/json",
+   "resp_bytes": 527,
+   "from_service_worker": false
+  }
+ ],
+ "acceptance": {
+  "link": "https://jets-saints-tomatoes-eric.trycloudflare.com/v8/fa5cebdc-fabc-4067-ab02-4812ddb950e5",
+  "reopened_url": "https://jets-saints-tomatoes-eric.trycloudflare.com/v8/fa5cebdc-fabc-4067-ab02-4812ddb950e5",
+  "same_rendered_text_as_the_copy_screen": false,
+  "copy_screen_len": 269,
+  "reopen_len": 605,
+  "copy_screen_sha": "bf12cd12c89f1c71f8633e716a21ee219387f1b6fcfa28d129524570b9e04543",
+  "reopen_sha": "e81a2835b5cb0143d9ef80c7b4eda7682cd63e4a4fa528550446594b4bab947a",
+  "journey_id_now_in_the_device": "fa5cebdc-fabc-4067-ab02-4812ddb950e5",
+  "ls_keys": [
+   "citynexus.v8.journey_id",
+   "citynexus.copilot.history.fa5cebdc-fabc-4067-ab02-4812ddb950e5"
+  ],
+  "control_still_there": false,
+  "reopen_text_head": "菜单\n/\n今天\n跟随系统\nEN\nTI\n\n晚上好\n\n天津之旅\n\n10月2日 10:00 — 10月3日 20:00 · 2 位旅行者 · 2 天\n\nAI 帮我规划\n试用其他城市\n打开行程工作台\n今天\n还没有安排\n“现在”取自服务器场景（执行游标。服务器没有给出这一分钟的执行游标，这一屏的时间按行程的时间窗来读）：9月21日 10:00 · 现在/接下来由服务器的执行投影给出\n1\n\n底图未加载，显示的是路线示意。\n\n路线上下文\n7 段路程\n供应商支持的路线 · WGS84\n\n单指拖动地图 · 双指缩放 · 想翻这一页就拖地图以外的地方\n\n住宿\n还没有选定\n到达\n10月2日 10:00\n出发\n10月3日 20:00\n一切正常\n\n方案概览\n\n每一天，紧密相连。\n对比住宿 →\n\n以下只是其中一个候选方案的预览，你还没有采用它。\n\n第 1 天\n星期五\n\n天津站 · Italian Style Town · Check in · Haihe Riverside Hotel · Overnight · Haihe Riverside Hotel\n\n驾车 抵达锚点\n第 2 天\n星期六\n\nFive Great Avenues · Check out · Haihe Riverside Hotel · Tianjin Museum · 天津滨海国际机场\n\n公交地铁 离开锚点\n今天\n行程\n地图\nCopil",
+  "buttons_copy_screen": [
+   "今天",
+   "实时行程",
+   "地图",
+   "行程工作台",
+   "住宿选择",
+   "城市探索",
+   "旅行票夹",
+   "Copilot",
+   "恢复与执行",
+   "智能守护",
+   "旅行者画像",
+   "TITianjin2 位旅行者•••",
+   "菜单",
+   "跟随系统",
+   "EN",
+   "◌",
+   "TI",
+   "行程",
+   "住宿",
+   "预订"
+  ],
+  "buttons_reopen": [
+   "今天",
+   "实时行程",
+   "地图",
+   "行程工作台",
+   "住宿选择",
+   "城市探索",
+   "旅行票夹",
+   "Copilot",
+   "恢复与执行",
+   "智能守护",
+   "旅行者画像",
+   "TITianjin2 位旅行者•••",
+   "菜单",
+   "跟随系统",
+   "EN",
+   "◌",
+   "TI",
+   "AI 帮我规划",
+   "试用其他城市",
+   "打开行程工作台"
+  ]
+ },
+ "finished_at": "2026-09-26T10:45:54.542Z"
+}
