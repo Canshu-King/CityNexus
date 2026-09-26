@@ -37,15 +37,128 @@ const GATE_ANSWERED_SENTENCE_EN =
 
 /** Only the alert box, not the whole wizard: the surrounding form pre-fills dates from "now", and two
  *  mounts a few milliseconds apart would then differ for a reason that has nothing to do with the
- *  sentence under test -- which is exactly the false difference a control arm exists to catch. */
-async function sha256OfAlert(page: import("@playwright/test").Page, caseName: string): Promise<string> {
-  /* Freeze sticky/absolute overlays so a fixed band cannot fall inside one shot and not another;
-     applied to every load, so it cannot flatter the comparison. */
-  await page.addStyleTag({ content: "*, *::before, *::after { position: static !important; }" });
-  const buf = await page
-    .locator('[data-testid="trial-sealed-unavailable"]')
-    .screenshot({ animations: "disabled", caret: "hide", scale: "css" });
-  return createHash("sha256").update(buf).digest("hex");
+ *  sentence under test -- which is exactly the false difference a control arm exists to catch.
+ *
+ * r3: the shot no longer asks Playwright to keep a moving element still, and it no longer moves the
+ * layout itself.  On the current line with the backend up this arm hung on "element is not stable"
+ * until the test timeout.  The mover is named by measurement, not guess: this instrument's own
+ * blanket `position: static` override grows the wizard wrapper by a few hundred pixels every frame
+ * (see the reading inside shotAlert), because ORD-0338 ruling 甲 made the CTA a grid row and
+ * left `.cn-onboarding__scroll` as the only scroller.  With the override removed the document height
+ * is constant, so stability is now checked on my own bounded predicate: pin the document and every
+ * scrollable ancestor of the alert to 0, require the box to repeat identically across a pair of
+ * animation frames, retry up to 20 times, and crop in page coordinates rather than scrolling the
+ * element into view.  The two claims are untouched: two sentences still have to give two pictures,
+ * one sentence repeated still has to give one picture, and each leg is still shot from its own
+ * mount. */
+const ALERT_SELECTOR = '[data-testid="trial-sealed-unavailable"]';
+
+type BoxReading = { x: number; y: number; width: number; height: number };
+
+type AlertGeometry = {
+  /** viewport-relative, which is what `page.screenshot({ clip })` takes without `fullPage`. */
+  clip: BoxReading;
+  /** document-relative, recorded so a reader can see where the shot was taken from. */
+  page: BoxReading;
+  scroller: { cls: string; scrollTop: number; clientHeight: number; scrollHeight: number } | null;
+  withinScroller: boolean;
+  withinViewport: boolean;
+};
+
+/** Put the alert at the top of whatever actually scrolls it, then read where it landed.
+ *
+ * "scrollTop = 0" is not the deterministic state on this line: after ORD-0338 ruling 甲 the wizard's
+ * own content is taller than `.cn-onboarding__scroll`, so at 0 the alert can sit below the
+ * container's client box and the browser clips it -- a clip position that depends on how much copy
+ * the sentence carries, which is precisely the thing under test.  Aligning the alert's top to the
+ * scroller's top names a state that is the same for both legs. */
+async function alignAndRead(page: import("@playwright/test").Page): Promise<AlertGeometry | null> {
+  return page.evaluate((sel) => {
+    const el = document.querySelector(sel) as HTMLElement | null;
+    if (!el) return null;
+    let scroller: HTMLElement | null = el.parentElement;
+    while (scroller && scroller.scrollHeight <= scroller.clientHeight) scroller = scroller.parentElement;
+    for (let i = 0; i < 2; i += 1) {
+      // once through the scroller, once through the window: each shift changes the other's offset.
+      if (scroller) {
+        const s = scroller.getBoundingClientRect();
+        scroller.scrollTop += el.getBoundingClientRect().top - s.top;
+      }
+      window.scrollTo(0, window.scrollY + el.getBoundingClientRect().top);
+    }
+    const b = el.getBoundingClientRect();
+    const s = scroller ? scroller.getBoundingClientRect() : null;
+    return {
+      clip: { x: b.x, y: b.y, width: b.width, height: b.height },
+      page: { x: b.x + window.scrollX, y: b.y + window.scrollY, width: b.width, height: b.height },
+      scroller: scroller
+        ? {
+            cls: scroller.className,
+            scrollTop: scroller.scrollTop,
+            clientHeight: scroller.clientHeight,
+            scrollHeight: scroller.scrollHeight,
+          }
+        : null,
+      withinScroller: s === null ? true : b.top >= s.top - 0.5 && b.bottom <= s.bottom + 0.5,
+      withinViewport: b.top >= -0.5 && b.bottom <= window.innerHeight + 0.5,
+    };
+  }, ALERT_SELECTOR);
+}
+
+async function shotAlert(page: import("@playwright/test").Page, caseName: string): Promise<{ hash: string; geometry: AlertGeometry }> {
+  /* r3: the blanket `position: static !important` this instrument used to inject on every load is
+     gone, and it is the reason the arm went red on the current line.  Measured on a backend-up page,
+     12 consecutive animation frames, node count and height of the document:
+       without the override  h = 1837 / 1835 / 1834 / 1869 / 1869 / 1830 ...  nodes 344 -> 362 (settles)
+       with the override   h = 1499 -> 1910 -> 2177 -> 2489 -> 3113 -> 3425 -> 5883, nodes 361 -> 363
+     No nodes were being appended -- the same wizard wrapper grew every frame, because forcing
+     `position: static` dissolves the containment ORD-0338 ruling 甲 relies on (the CTA is a grid row
+     and `.cn-onboarding__scroll` is the only scroller).  A layout the instrument itself keeps
+     changing cannot support any stability predicate, Playwright's or mine, which is what the
+     "element is not stable" loop was measuring.
+     What the override was for -- a fixed band landing in one shot and not another -- is now answered
+     by the control arm instead of by an assertion of faith: the same sentence, mounted twice, must
+     still hash identically.  If a band ever starts overlapping, that control goes red and the
+     difference arm loses its authority. */
+
+  /* Stability on MY predicate, with a ceiling: two aligned readings of the same box across a pair of
+     animation frames.  If it never repeats, the arm says so instead of quietly shooting whatever
+     frame happened to be first, and it says so in well under the test timeout rather than after it. */
+  let settled: AlertGeometry | null = null;
+  for (let attempt = 0; attempt < 20 && !settled; attempt += 1) {
+    const first = await alignAndRead(page);
+    await page.evaluate(() => new Promise<void>((resolve) => {
+      requestAnimationFrame(() => requestAnimationFrame(() => resolve()));
+    }));
+    const second = await alignAndRead(page);
+    if (first && second && JSON.stringify(first.clip) === JSON.stringify(second.clip)) settled = second;
+    else await page.waitForTimeout(100);
+  }
+  if (!settled) {
+    throw new Error(
+      `${FILE} :: pixels — the ${caseName} leg's box did not repeat within 20 aligned samples; ` +
+        "refusing to shoot a moving element",
+    );
+  }
+  if (!settled.withinScroller || !settled.withinViewport) {
+    /* Either bound would let the container's clip rectangle, not the sentence, decide the picture. */
+    throw new Error(
+      `${FILE} :: pixels — the ${caseName} leg is not fully inside its scroller/viewport; ` +
+        JSON.stringify({ scroller: settled.scroller, clip: settled.clip }),
+    );
+  }
+  const buf = await page.screenshot({
+    clip: {
+      x: Math.round(settled.clip.x),
+      y: Math.round(settled.clip.y),
+      width: Math.round(settled.clip.width),
+      height: Math.round(settled.clip.height),
+    },
+    animations: "disabled",
+    caret: "hide",
+    scale: "css",
+  });
+  return { hash: createHash("sha256").update(buf).digest("hex"), geometry: settled };
 }
 
 async function mount(page: import("@playwright/test").Page, locale: "zh-CN" | "en", caseName = "answered") {
@@ -109,14 +222,14 @@ test("the shipped classifier tells the legs apart the way the sentence choice no
 
 test("the two legs render as two pictures, and the same sentence renders as one", async ({ page }) => {
   await mount(page, "zh-CN", "answered");
-  const answered = await sha256OfAlert(page, "answered");
+  const answered = (await shotAlert(page, "answered")).hash;
   await mount(page, "zh-CN", "no-answer");
-  const noAnswer = await sha256OfAlert(page, "no-answer");
+  const noAnswer = (await shotAlert(page, "no-answer")).hash;
   /* The control: the same load again.  If this hashes differently, pixel comparison is noise here and
      the arm below has no business claiming a difference. */
   const page2 = await page.context().newPage();
   await mount(page2, "zh-CN", "no-answer");
-  const again = await sha256OfAlert(page2, "no-answer");
+  const again = (await shotAlert(page2, "no-answer")).hash;
   await page2.close();
   writeFileSync(
     evidencePath("ord0349-pixels.json"),
@@ -126,6 +239,33 @@ test("the two legs render as two pictures, and the same sentence renders as one"
   /* The control first: if identical content did not hash identically, a difference would be noise. */
   expect(noAnswer === again, node("pixels", "the same sentence did not screenshot identically -- the instrument is unstable")).toBe(true);
   expect(answered !== noAnswer, node("pixels", "the two legs still produce the same pixels")).toBe(true);
+});
+
+test("the shot is taken from the alert's own box, not from wherever the page happened to scroll", async ({ page }) => {
+  /* Where the two pictures above come from, stated rather than assumed: the alert is aligned to the
+     top of the scroller that ruling 甲 left owning the scroll, it is inside that scroller and inside
+     the viewport, and both legs land in the same box.  Nothing here compares sentences; it records
+     the geometry the pixel arm depends on, so a future change to the wizard shows up as a named
+     reading instead of a mystery difference. */
+  await mount(page, "zh-CN", "answered");
+  const first = await shotAlert(page, "answered");
+  await mount(page, "zh-CN", "no-answer");
+  const second = await shotAlert(page, "no-answer");
+  writeFileSync(
+    evidencePath("ord0349-shot-geometry.json"),
+    JSON.stringify({ answered: first.geometry, noAnswer: second.geometry }, null, 1),
+  );
+  expect(first.geometry.scroller?.cls, node("geometry", "no single scroller was named")).toContain("cn-onboarding__scroll");
+  expect(first.geometry.withinScroller, node("geometry", "the answered leg was clipped by its scroller")).toBe(true);
+  expect(first.geometry.withinViewport, node("geometry", "the answered leg was outside the viewport")).toBe(true);
+  expect(second.geometry.withinScroller, node("geometry", "the no-answer leg was clipped by its scroller")).toBe(true);
+  expect(second.geometry.withinViewport, node("geometry", "the no-answer leg was outside the viewport")).toBe(true);
+  /* What makes the two pictures comparable is that each is the alert's own box in the same column at
+     the same measure -- not that the boxes are equal.  Their height is a function of the sentence,
+     which is the thing the arm above claims differs, so demanding an identical box here would demand
+     the opposite claim. */
+  expect(first.geometry.clip.x, node("geometry", "the two legs were shot at different x")).toBe(second.geometry.clip.x);
+  expect(first.geometry.clip.width, node("geometry", "the two legs were shot at different widths")).toBe(second.geometry.clip.width);
 });
 
 test("the English arm matches the shipped gate's English sentence too", async ({ page }) => {
