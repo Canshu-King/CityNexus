@@ -11,6 +11,7 @@
  * collapsed fold is invisible to a traveller would be a guess.
  */
 import { expect, test } from "@playwright/test";
+import { classifyReadFailure, copyFor } from "../src/lib/failureAttribution";
 import { writeFileSync } from "node:fs";
 import { evidencePath } from "./_qoderEvidence";
 
@@ -18,9 +19,11 @@ const FILE = "e2e/qoder-ord0344b-sentence-move-keeps-attribution.spec.ts";
 const node = (id: string, detail: string) => `${FILE} :: ${id} — ${detail}`;
 
 /** The server's own sentence as this refusal actually arrives (lane D's gate names the same shape). */
-const SERVER_SENTENCE = "another request is still writing this journey, try again in a moment";
-/** This screen's own refusal line, which must stay on the traveller's line either way. */
-const OUR_SENTENCE = "这一步没有完成：服务器拒绝了这次请求。";
+const SERVER_SENTENCE = "another request is still writing this journey";
+/** The refusal line, held here exactly as the shipped gate holds it
+ *  (`qoder-continuation-resume-carries-identity.spec.ts:33`, whose value is the i18n string at
+ *  `LocaleContext.tsx:863`) -- a fixture that invents its own sentence tests nothing real. */
+const OUR_SENTENCE = "服务器拒绝了这一次尝试。没有产生新东西，上次的记录还在，你可以再试一次。";
 const HTTP = 409;
 
 /** The three predicates the shipped gate runs, lifted here so the comparison is its own, not mine. */
@@ -102,4 +105,21 @@ test("the same shape with the fold opened: the attributed words are intact for a
   expect(p.serverLineVisible, node("after-opened", "opened fold still invisible")).toBe(true);
   expect(p.serverLineHoldsItsOwnWords, node("after-opened", "opened fold lost the server's words")).toBe(true);
   expect(p.noClientWrittenHttpStatusInThatParagraph, node("after-opened", "the status inside the fold bled into the paragraph")).toBe(true);
+});
+
+test("the channel the commander named, measured: copyFor's title is not the sentence the gate holds", async () => {
+  /* Imported from the product module, so this is the channel's own output rather than my reading
+     of it.  It is why the main line keeps the i18n refusal: swapping in copyFor's title here would
+     redden `:273`-`:274`, which is the same shipped node the order says not to touch. */
+  const attribution = classifyReadFailure(null, { status: HTTP, code: null, message: null });
+  const copy = copyFor(attribution, true);
+  writeFileSync(
+    evidencePath("ord0344b-channel-words.json"),
+    JSON.stringify({ status: HTTP, reason: attribution.reason, messageKey: attribution.message_key,
+                     title: copy.title, body: copy.body, gateExpected: OUR_SENTENCE,
+                     titleEqualsGateExpected: copy.title === OUR_SENTENCE,
+                     titleCarriesHttpStatus: /HTTP\s?\d\d\d/.test(copy.title) }, null, 1),
+  );
+  expect(copy.title === OUR_SENTENCE, node("channel", "copyFor's title now equals the gate's sentence -- re-check the plan")).toBe(false);
+  expect(/HTTP\s?\d\d\d/.test(copy.title), node("channel", "the title now carries an HTTP number")).toBe(false);
 });

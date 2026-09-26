@@ -2283,6 +2283,19 @@ function Hub({
        Clause 5 in the other direction: nothing here clears the marker before a request goes out. */
     if (outcome.kind === "accepted") clearPendingContinuation(data.journey.id);
     setResumeOutcome(outcome);
+    if (outcome.kind === "refused") {
+      /* ORD-0344-b: the server's sentence left the traveller's line, so the diagnosis goes through
+         the channel that was never about the DOM -- `classifyReadFailure` + `recordAttribution`,
+         the same sink ORD-0273's technical facts use.  It is classified from the status this device
+         saw; when the answer sent no code the record stays unclassified, which is the honest state
+         rather than a guessed cause.  `copyFor` is deliberately not painted here: its title for a
+         409 is 「这一次没读到」, while this paragraph says the attempt was refused and a shipped gate
+         holds that exact sentence. */
+      recordAttribution(
+        classifyReadFailure(null, { status: outcome.httpStatus, code: null, message: null }),
+        "hub.continuation.resume.refused",
+      );
+    }
     setResuming(false);
     resumingRef.current = false;
     if (outcome.kind === "accepted" && outcome.planIds.length > 0) onStageChanged();
@@ -2646,6 +2659,18 @@ function Hub({
                     {zh
                       ? `这台设备看到的回读：HTTP ${resumeOutcome.httpStatus}`
                       : `This device's reading: HTTP ${resumeOutcome.httpStatus}`}
+                  </span>
+                  {/* Q68: the number a traveller could repeat is the one thing this refusal did not
+                      send -- `continuePendingPlan` hands back a status and a sentence, no code.  The
+                      screen says that instead of leaving the slot empty or dressing the status up
+                      as a code.  No anchor, because there is no value to anchor. */}
+                  <span
+                    className="today-continuation-technical-nocode"
+                    data-testid="continuation-resume-no-request-id"
+                  >
+                    {zh
+                      ? "这一屏没有拿到可复述的编号（这条读取没把它送过来）。"
+                      : "This screen holds no repeatable code -- this read did not carry one."}
                   </span>
                 </details>
               )}
