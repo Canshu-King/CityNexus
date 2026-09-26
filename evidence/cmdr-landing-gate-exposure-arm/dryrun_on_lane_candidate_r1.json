@@ -1,0 +1,138 @@
+{
+ "schema": "CNX_CMDR_LANDING_PREFLIGHT_V1",
+ "lane": "commander 494abfd7",
+ "at_local": "2026-09-26T10:32:23+0800",
+ "mode": "DRY_RUN",
+ "authoritative_line": "mirror/integration-frontend-apple-pass1",
+ "tip_re_read_from_github_before": "2d8b03b8c7734ea3b8521b80845e1b0bc1a07957",
+ "candidate_ref": "refs/heads/cmdr/exposure-arm-dryrun-r1",
+ "candidate_tip": "d1b82c8b293bb788cb2249ee679f3e5db866458d",
+ "genealogy": {
+  "ff_possible_rc": 1,
+  "ff_possible": false,
+  "merge_base": "046fc98723e2eacfe3cb8eb00a7fd3abdbd26efe",
+  "line_only_commits": 6,
+  "candidate_only_commits": 1
+ },
+ "file_sets": {
+  "line_side_since_base": [
+   "frontend/e2e/qoder-ord0344b-sentence-move-keeps-attribution.spec.ts",
+   "frontend/e2e/qoder-ord0346-honest-destinations.spec.ts",
+   "frontend/playwright.ord0344b-S1.config.ts",
+   "frontend/playwright.ord0346-S4.config.ts",
+   "frontend/src/app/V8Experience.tsx",
+   "frontend/src/design-tokens.css",
+   "frontend/src/features/setup/JourneyTrialSetup.tsx"
+  ],
+  "candidate_side_since_base": [
+   "frontend/e2e/fixtures/ord0349-sealed-alert-harness.tsx",
+   "frontend/e2e/qoder-ord0349-two-legs-two-sentences.spec.ts",
+   "frontend/playwright.ord0349-S1.config.ts",
+   "frontend/src/app/V8Experience.tsx",
+   "frontend/src/i18n/LocaleContext.tsx"
+  ],
+  "intersection": [
+   "frontend/src/app/V8Experience.tsx"
+  ],
+  "product_introduced_by_candidate": [
+   "frontend/src/app/V8Experience.tsx",
+   "frontend/src/i18n/LocaleContext.tsx"
+  ]
+ },
+ "merge_tree": {
+  "exit": 0,
+  "first_line": "a4eb1d08d34679a46c8c8a836d2285ff92022d33",
+  "conflict_reported": false,
+  "stderr_head": ""
+ },
+ "gate_run": {
+  "requested": [],
+  "collect_exit": null,
+  "collected": null,
+  "test_exit": null,
+  "summary": null,
+  "export": "D:/moodle/_qoder_cmdr_ref_20260921/snap_preflight_103205",
+  "blob_equality": [
+   {
+    "path": "frontend/e2e/fixtures/ord0349-sealed-alert-harness.tsx",
+    "candidate_blob": "b0f83836d359b35cd238991ce6851cd5d201a390",
+    "export_blob": "b0f83836d359b35cd238991ce6851cd5d201a390",
+    "equal": true
+   },
+   {
+    "path": "frontend/e2e/qoder-ord0349-two-legs-two-sentences.spec.ts",
+    "candidate_blob": "7c2648eaaab969e2ed8ac504b76731b7d6b856af",
+    "export_blob": "7c2648eaaab969e2ed8ac504b76731b7d6b856af",
+    "equal": true
+   },
+   {
+    "path": "frontend/playwright.ord0349-S1.config.ts",
+    "candidate_blob": "6469327f0f96e24431dc81cfee6dbd11fe9d20a8",
+    "export_blob": "6469327f0f96e24431dc81cfee6dbd11fe9d20a8",
+    "equal": true
+   },
+   {
+    "path": "frontend/src/app/V8Experience.tsx",
+    "candidate_blob": "fe26fd8cb6561fddf7a240f1be1625ab6c3bd0c0",
+    "export_blob": "fe26fd8cb6561fddf7a240f1be1625ab6c3bd0c0",
+    "equal": true
+   },
+   {
+    "path": "frontend/src/i18n/LocaleContext.tsx",
+    "candidate_blob": "28ecaed3446dd2df620c88696fb16d813f575a92",
+    "export_blob": "28ecaed3446dd2df620c88696fb16d813f575a92",
+    "equal": true
+   }
+  ],
+  "whole_suite": {
+   "collect_exit": 0,
+   "collected": 1351,
+   "interrupted": false,
+   "error_lines": [
+    "tests/test_qoder_ord0332_error_receipt.py::test_R7_the_envelope_keeps_every_field_it_already_had",
+    "tests/test_qoder_ord0332_error_receipt.py::test_R8_the_seed_is_read_off_the_real_request_not_just_the_dataclass",
+    "tests/test_solver_runtime_policy.py::test_unexpected_solver_programming_error_is_not_silently_hidden"
+   ],
+   "tail": [
+    "    _PortalFactoryType = Callable[[], AbstractContextManager[anyio.abc.BlockingPortal]]",
+    "-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html",
+    "1351 tests collected in 5.00s"
+   ],
+   "cmd": "D:/moodle/CityNexus/.venv/Scripts/python.exe -m pytest --collect-only -q tests  (cwd=<export>/backend, PYTHONPATH=<export>)"
+  },
+  "interpreter": "Python 3.12.14 (main, Aug 25 2026, 14:01:42) [MSC v.1944 64 bit (AMD64)]",
+  "exposure": {
+   "ruler_blob": "6a251d3a6bea70329e06581384a81d5ef54c96a6",
+   "ruler_file": "ui_exposure_taint_ast_r3.cjs",
+   "candidate_files_in_view": 2,
+   "tip_cells": 12,
+   "cand_cells": 12,
+   "growth_by_file_and_rule": {},
+   "added_line_exact": [
+    "V8Experience.tsx:2621|UPSTREAM_TEXT_VIA_HELPER_TO_DOM"
+   ],
+   "shifted_only": true,
+   "removed_count": 1,
+   "removed": [
+    "V8Experience.tsx:2649|UPSTREAM_TEXT_VIA_HELPER_TO_DOM"
+   ]
+  }
+ },
+ "problems": [
+  "candidate is NOT a descendant of the tip (merge-base --is-ancestor rc=1) - landing it would move the authoritative line backwards",
+  "candidate misses 6 commit(s) the line already has - ask the lane to re-cut onto the tip",
+  "file intersection with the line is non-empty: frontend/src/app/V8Experience.tsx"
+ ],
+ "verdict": "REFUSED",
+ "landing": null,
+ "discipline": {
+  "evidence_paths_overwritten": 0,
+  "databases_opened": 0,
+  "surfaces_started_or_stopped": 0,
+  "credential_values_printed": 0,
+  "candidate_refs_pushed_by_commander": 0
+ },
+ "claim_kind": "git_and_pytest_determined",
+ "claimed_result": "refused: candidate is NOT a descendant of the tip (merge-base --is-ancestor rc=1) - landing it would move the authoritative line backwards | candidate misses 6 commit(s) the line already has - ask the lane to re-cut onto the tip | file intersection with the line is non-empty: frontend/src/app/V8Experience.tsx",
+ "derived_result": null
+}
