@@ -20,8 +20,29 @@ const node = (id: string, detail: string) => `${FILE} :: ${id} — ${detail}`;
 const DRAFT_KEY = "citynexus.v8.trial_draft";
 
 /** Plant the upstream sentence in the body the screen reads: if any of it reaches the DOM, Q64/Q71
- *  is broken wherever it landed, including inside a data-* attribute. */
-const SENTINEL = "SENTINEL-UPSTREAM-4227 stay window overlaps an existing commitment";
+ *  is broken wherever it landed, including inside a data-* attribute.
+ *
+ *  The token is deliberately short and sits at the head of the value.  The first version of this
+ *  gate searched for the whole sentence, and a mutation that copied only the leading 40 characters
+ *  of the body into `data-body-head` walked through it green -- a canary long enough to be truncated
+ *  is not a canary. */
+const SENTINEL_TOKEN = "SENT-9F2K-4227";
+const SENTINEL_TAIL = "stay window overlaps an existing commitment, upstream wording";
+const SENTINEL = `${SENTINEL_TOKEN} ${SENTINEL_TAIL}`;
+/** Q71 read as structure rather than as prose: these are the only carriers this fold may wear.  A
+ *  new attribute is a red even when its value happens to look clean, because "clean today" is not
+ *  a property of an attribute name the contract never named.  Only `data-*` / `aria-*` are judged --
+ *  `class` and the `<details>` element's own `open` state are not evidence carriers. */
+const ALLOWED_FOLD_CARRIERS = [
+  "data-cnx-field",
+  "data-cnx-receipt",
+  "data-cnx-receipt-present",
+  "data-cnx-value",
+  "data-raw-bytes",
+  "data-raw-content-type",
+  "data-raw-http-status",
+  "data-testid",
+];
 /** The contract shape (contracts/ERROR_RECEIPT_ID_V1.md): CNX- plus eight Crockford-alphabet chars. */
 const RECEIPT = "CNX-7K3M9QTB";
 const RECEIPT_TOKEN = /\bCNX-[23456789ABCDEFGHJKMNPQRSTVWXYZ]{8}\b/;
@@ -94,6 +115,16 @@ const anchorsOnScreen = (page: Page) =>
 const foldFields = (page: Page) =>
   page.locator('[data-testid="trial-create-error"] details [data-cnx-field="http_status"], [data-testid="trial-create-error"] details [data-cnx-field="content_type"], [data-testid="trial-create-error"] details [data-cnx-field="body_bytes"]');
 
+/** Every attribute name worn inside the fold, this element and all of its descendants. */
+const foldAttrNames = (page: Page) =>
+  page.locator('[data-testid="trial-create-error"] details').evaluate((root) => {
+    const names = new Set<string>();
+    for (const el of [root, ...Array.from(root.querySelectorAll("*"))]) {
+      for (const attr of Array.from(el.attributes)) names.add(attr.name);
+    }
+    return [...names].sort();
+  });
+
 const readings: Record<string, unknown> = {};
 
 test("the fold is on the failure screen, closed, and holds nothing but measurements", async ({ page }) => {
@@ -117,7 +148,7 @@ test("the fold is on the failure screen, closed, and holds nothing but measureme
 
   readings.closed_fold_html = await page.content();
   expect(
-    readings.closed_fold_html.includes(SENTINEL),
+    String(readings.closed_fold_html).includes(SENTINEL_TOKEN),
     node("q64-sentinels", "the upstream sentence reached the DOM while the fold was closed"),
   ).toBe(false);
 
@@ -193,9 +224,22 @@ test("the fold is on the failure screen, closed, and holds nothing but measureme
 
   const html = await page.content();
   expect(
-    html.includes(SENTINEL),
-    node("q71-open", "with the fold open the upstream sentence still may not be in the DOM"),
+    html.includes(SENTINEL_TOKEN),
+    node("q71-open", "with the fold open the upstream wording is still in the DOM"),
   ).toBe(false);
+  /* The same rule as a shape: nothing outside the allow-list may be worn inside this fold, so a
+     carrier that forwards the answer's text is caught on the name, not on a guess about its value. */
+  const worn = (await foldAttrNames(page)).filter(
+    (name) => name.startsWith("data-") || name.startsWith("aria-"),
+  );
+  readings.fold_attributes = worn;
+  expect(
+    worn.filter((name) => !ALLOWED_FOLD_CARRIERS.includes(name)),
+    node(
+      "fold-carriers",
+      `the fold wears ${JSON.stringify(worn.filter((n) => !ALLOWED_FOLD_CARRIERS.includes(n)))} outside the allow-list`,
+    ),
+  ).toEqual([]);
 });
 
 test("no receipt key: the line names its own absence and no number appears", async ({ page }) => {
