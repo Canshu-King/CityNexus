@@ -1,0 +1,171 @@
+{
+ "ran_at_local": "2026-09-26T18:49:29+0800",
+ "named_asset_by_the_commander": "/assets/index-D3j0mgvR.js",
+ "method": "GET the shell and the asset it names on both entries, GET /api/v1/health, then a literal search over the asset bytes; no-proxy opener because this shell exports HTTP(S)_PROXY at a dead port",
+ "requests_made": 6,
+ "clicks": 0,
+ "writes": 0,
+ "entries": [
+  {
+   "base": "http://127.0.0.1:4781",
+   "auth_sent": false,
+   "username_used": "cnx",
+   "shell": {
+    "path": "/",
+    "status": 200,
+    "content_type": "text/html",
+    "server": null,
+    "bytes": 1200,
+    "sha256": "77eda5c00ad2483d3c9508e62095c41e27ba24e632c4a5e91618ea818017f3af",
+    "elapsed_ms": 7
+   },
+   "asset_named_by_the_shell": "/assets/index-D3j0mgvR.js",
+   "asset_row": {
+    "path": "/assets/index-D3j0mgvR.js",
+    "status": 200,
+    "content_type": "text/javascript",
+    "server": null,
+    "bytes": 1276676,
+    "sha256": "acfd43158bcaa41a7a3e4d977e08c23ed211dd771bc981ab1913f10432288366",
+    "elapsed_ms": 8
+   },
+   "asset_matches_the_name_the_commander_gave": true,
+   "health_row": {
+    "path": "/api/v1/health",
+    "status": 200,
+    "content_type": "application/json",
+    "server": "uvicorn",
+    "bytes": 113,
+    "sha256": "d343302af6f4ac01d98b73ac523e99a93ff877526f37d119a34f363631252957",
+    "elapsed_ms": 3
+   },
+   "health_field_names": [
+    "ai",
+    "ai_state",
+    "database",
+    "e2e_database_id",
+    "e2e_run_id",
+    "status"
+   ],
+   "health_ai_fields": {
+    "ai": "disabled",
+    "ai_state": "DISABLED_BY_OPS"
+   }
+  },
+  {
+   "base": "https://jets-saints-tomatoes-eric.trycloudflare.com",
+   "auth_sent": true,
+   "username_used": "cnx",
+   "shell": {
+    "path": "/",
+    "status": 200,
+    "content_type": "text/html",
+    "server": "cloudflare",
+    "bytes": 1200,
+    "sha256": "77eda5c00ad2483d3c9508e62095c41e27ba24e632c4a5e91618ea818017f3af",
+    "elapsed_ms": 1013
+   },
+   "asset_named_by_the_shell": "/assets/index-D3j0mgvR.js",
+   "asset_row": {
+    "path": "/assets/index-D3j0mgvR.js",
+    "status": 200,
+    "content_type": "text/javascript",
+    "server": "cloudflare",
+    "bytes": 1276676,
+    "sha256": "acfd43158bcaa41a7a3e4d977e08c23ed211dd771bc981ab1913f10432288366",
+    "elapsed_ms": 2548
+   },
+   "asset_matches_the_name_the_commander_gave": true,
+   "health_row": {
+    "path": "/api/v1/health",
+    "status": 200,
+    "content_type": "application/json",
+    "server": "cloudflare",
+    "bytes": 113,
+    "sha256": "d343302af6f4ac01d98b73ac523e99a93ff877526f37d119a34f363631252957",
+    "elapsed_ms": 902
+   },
+   "health_field_names": [
+    "ai",
+    "ai_state",
+    "database",
+    "e2e_database_id",
+    "e2e_run_id",
+    "status"
+   ],
+   "health_ai_fields": {
+    "ai": "disabled",
+    "ai_state": "DISABLED_BY_OPS"
+   }
+  }
+ ],
+ "same_asset_name_on_both_entries": true,
+ "same_asset_bytes_on_both_entries": true,
+ "asset_literal_search_over_the_served_bytes": {
+  "journey-link-copy": {
+   "occurrences": 1,
+   "first_byte_offset": 866467
+  },
+  "journey-link-message": {
+   "occurrences": 2,
+   "first_byte_offset": 866621
+  },
+  "journey-link-action": {
+   "occurrences": 1,
+   "first_byte_offset": 866361
+  },
+  "data-cnx-field": {
+   "occurrences": 12,
+   "first_byte_offset": 359209
+  },
+  "inbox.copyJourneyLink": {
+   "occurrences": 3,
+   "first_byte_offset": 315289
+  },
+  "inbox.journeyLinkCopied": {
+   "occurrences": 3,
+   "first_byte_offset": 315333
+  },
+  "inbox.journeyLinkNoJourney": {
+   "occurrences": 3,
+   "first_byte_offset": 315446
+  },
+  "inbox.journeyLinkInsecureContext": {
+   "occurrences": 3,
+   "first_byte_offset": 315539
+  },
+  "inbox.journeyLinkClipboardUnavailable": {
+   "occurrences": 3,
+   "first_byte_offset": 315727
+  },
+  "trips-tab-bookings": {
+   "occurrences": 0,
+   "first_byte_offset": -1
+  },
+  "trip-itinerary-empty": {
+   "occurrences": 1,
+   "first_byte_offset": 406550
+  },
+  "先让 AI 帮你规划": {
+   "occurrences": 1,
+   "first_byte_offset": 406832
+  },
+  "还没有可看的行程": {
+   "occurrences": 1,
+   "first_byte_offset": 406745
+  },
+  "这台服务已接入 AI 模型": {
+   "occurrences": 1,
+   "first_byte_offset": 395911
+  },
+  "ai_state": {
+   "occurrences": 0,
+   "first_byte_offset": -1
+  },
+  "DISABLED_BY_OPS": {
+   "occurrences": 0,
+   "first_byte_offset": -1
+  }
+ },
+ "data_cnx_field_literal_count": 12
+}
