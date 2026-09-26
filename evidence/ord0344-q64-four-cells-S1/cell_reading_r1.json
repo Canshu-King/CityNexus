@@ -1,0 +1,164 @@
+{
+  "schema": "CNX_ORD0344_CELL_READING_V1",
+  "order": "ORD-0344 (CMDR: converge the four cells named under Q64/Q68/Q70/Q71)",
+  "lane": "S1-q64sweep",
+  "generation": "c740f45d68f337c460a1a43b995162689d0110af",
+  "derived_at_utc": "2026-09-26T00:20:25Z",
+  "ruler": {
+    "name": "ui_exposure_taint_ast_r3.cjs",
+    "blob": "6a251d3a6bea70329e06581384a81d5ef54c96a6",
+    "mode": "--tree (module graph), the mode the pre-landing gate must run"
+  },
+  "cell_rules_from": {
+    "path": "evidence/cmdr-q64-census-0749/r6_tree_tip_c740f45d.json",
+    "blob": "95c6c24639ed0fca8f8bad4a2fc1fd6f863b3e0d"
+  },
+  "runs": {
+    "before": {
+      "tree": "git archive c740f45d68f337c460a1a43b995162689d0110af frontend/src",
+      "hits": 15,
+      "claimed_result": "EXPOSURE_SHAPE_FOUND over 76 modules: 15 hit(s) [\"UPSTREAM_TEXT_VIA_HELPER_TO_DOM@app/V8Experience.tsx:2609\",\"UPSTREAM_READ_DIRECT@features/agent/AgentRunRail.tsx:18\",\"UPSTREAM_EXCEPTION_TO_DOM@features/discovery/DestinationPreparationPanel.tsx:346\",\"UPSTREAM_EXCEPTION_TO_DOM@features/discovery/DestinationPreparationPanel.tsx:469\",\"UPSTREAM_EXCEPTION_TO_DOM@features/discovery/DestinationPreparationPanel.tsx:522\",\"UPSTREAM_EXCEPTION_TO_DOM@featu"
+    },
+    "after": {
+      "tree": "review/S1-ord0344-q64-fanout working tree",
+      "hits": 12,
+      "claimed_result": "EXPOSURE_SHAPE_FOUND over 76 modules: 12 hit(s) [\"UPSTREAM_TEXT_VIA_HELPER_TO_DOM@app/V8Experience.tsx:2609\",\"UPSTREAM_EXCEPTION_TO_DOM@features/discovery/DestinationPreparationPanel.tsx:346\",\"UPSTREAM_EXCEPTION_TO_DOM@features/discovery/DestinationPreparationPanel.tsx:469\",\"UPSTREAM_EXCEPTION_TO_DOM@features/discovery/DestinationPreparationPanel.tsx:522\",\"UPSTREAM_EXCEPTION_TO_DOM@features/discovery/RealCityDiscoveryPanel.tsx:150\",\"UPSTREAM_TE"
+    }
+  },
+  "cells": [
+    {
+      "cell": "1",
+      "site": "main.tsx:968",
+      "rule": "UPSTREAM_TEXT_VIA_HELPER_TO_DOM",
+      "origin_kind": "exception",
+      "snippet": "<p data-testid={testIds.journeyStatus}>ERROR · {error}</p>",
+      "taint_chain": ":138 upstream read error.message off error -> :138 errorMessage() returns error instanceof Error ? error.message : \"CityNexus request failed\" -> :946 state `error` written by setError(...) -> :968 rendered here",
+      "red_before": true,
+      "green_after": true,
+      "status": "CONVERGED",
+      "fix": "the error state no longer holds a sentence: it holds this screen's own note plus the one allowed field it measured (http_status), and the element carries the Q70 anchor pair when that status exists",
+      "fix_cites": [
+        {
+          "path": "frontend/src/main.tsx",
+          "line": 133,
+          "text": "/** Q64=1: a screen may say only what this device measured, in this device's own words.  The"
+        },
+        {
+          "path": "frontend/src/main.tsx",
+          "line": 985,
+          "text": ": { \"data-cnx-field\": \"http_status\", \"data-cnx-value\": String(error.http_status) })}"
+        },
+        {
+          "path": "frontend/src/main.tsx",
+          "line": 987,
+          "text": "ERROR · {error.note}"
+        }
+      ]
+    },
+    {
+      "cell": "2",
+      "site": "main.tsx:992",
+      "rule": "UPSTREAM_TEXT_VIA_HELPER_TO_DOM",
+      "origin_kind": "exception",
+      "snippet": "{error && <p className=\"error-note\">{error}</p>}",
+      "taint_chain": ":138 upstream read error.message off error -> :138 errorMessage() returns error instanceof Error ? error.message : \"CityNexus request failed\" -> :946 state `error` written by setError(...) -> :992 rendered here",
+      "red_before": true,
+      "green_after": true,
+      "status": "CONVERGED",
+      "fix": "same channel as cell 1 -- the header note reads error.note, never the answer's words",
+      "fix_cites": [
+        {
+          "path": "frontend/src/main.tsx",
+          "line": 1018,
+          "text": "\"data-cnx-field\": \"http_status\","
+        },
+        {
+          "path": "frontend/src/main.tsx",
+          "line": 1022,
+          "text": "{error.note}"
+        }
+      ]
+    },
+    {
+      "cell": "3",
+      "site": "features/agent/AgentRunRail.tsx:18",
+      "rule": "UPSTREAM_READ_DIRECT",
+      "origin_kind": "prose",
+      "snippet": "{step.detail && <small>{step.detail}</small>}",
+      "taint_chain": ":18 upstream read step.detail -> :18 rendered here",
+      "red_before": true,
+      "green_after": true,
+      "status": "CONVERGED",
+      "fix": "the rail's slot is renamed off the upstream field name (`detail` -> `runMeta`) and documented as this screen's own wording; its only caller stops publishing the server-authored result_summary into the DOM at all",
+      "fix_cites": [
+        {
+          "path": "frontend/src/features/agent/AgentRunRail.tsx",
+          "line": 10,
+          "text": "runMeta?: ReactNode;"
+        },
+        {
+          "path": "frontend/src/features/agent/AgentRunRail.tsx",
+          "line": 21,
+          "text": "{step.runMeta && <small>{step.runMeta}</small>}"
+        },
+        {
+          "path": "frontend/src/features/agent/CopilotDock.tsx",
+          "line": 312,
+          "text": "/* `result_summary` is left out on purpose: the server builds it from whatever a tool"
+        }
+      ]
+    },
+    {
+      "cell": "4",
+      "site": "app/V8Experience.tsx:2609",
+      "rule": "UPSTREAM_TEXT_VIA_HELPER_TO_DOM",
+      "origin_kind": "raw-body",
+      "snippet": "{resumeOutcome.serverReason}",
+      "taint_chain": ":151 upstream read detail.error off detail -> :150 `serverReason` = (typeof detail?.error?.message === \"string\" ? detail.error.message : null) ?? ... -> :154 continuePendingPlan() returns { kind: \"refused\", httpStatus: response.status, serverReason } -> :2273 came back from continuePendingPlan imported from ../api/journeyContinuation -> :2273 `outcome` = continuePendingPlan({ journeyId: data.journey.id, missionId, idempotencyKey: c... -> :2285 state `resumeOutcome` written by setResumeOutcome(...) -> :2609 rendered here",
+      "red_before": true,
+      "green_after": false,
+      "status": "NOT_CONVERGED_RULE_COLLISION",
+      "fix": "left as it is: the text is the server's own sentence under an attribution label, which Q67=1 declared compliant, and the shipped gate requires both directions of that decision (see collision_cites)",
+      "fix_cites": [
+        {
+          "path": "frontend/src/app/V8Experience.tsx",
+          "line": 2607,
+          "text": "<span data-testid=\"continuation-resume-server-reason\">"
+        },
+        {
+          "path": "frontend/e2e/qoder-continuation-resume-carries-identity.spec.ts",
+          "line": 281,
+          "text": "serverReasonShown.includes(\"another request is still writing this journey\"),"
+        },
+        {
+          "path": "frontend/e2e/qoder-continuation-resume-carries-identity.spec.ts",
+          "line": 285,
+          "text": "/HTTP\\s?\\d\\d\\d/.test(refusedText),"
+        }
+      ]
+    }
+  ],
+  "converged": [
+    "main.tsx:968",
+    "main.tsx:992",
+    "features/agent/AgentRunRail.tsx:18"
+  ],
+  "not_converged": [
+    "app/V8Experience.tsx:2609"
+  ],
+  "collateral": {
+    "cells_that_stopped_being_reported": [
+      "features/agent/AgentRunRail.tsx:18",
+      "main.tsx:968",
+      "main.tsx:992"
+    ],
+    "cells_newly_reported": [],
+    "newly_reported_count": 0,
+    "other_lanes_cells_still_reported_unchanged": 12,
+    "note": "the 11 hits outside my four are other lanes' named cells and are untouched by this candidate -- listed so a reviewer can see I neither widened nor quieted the census"
+  },
+  "not_claimed": [
+    "no CLOSED here; closure needs verifier E's derived_result",
+    "cell 4 is delivered as an evidenced non-convergence, not as fixed"
+  ]
+}
