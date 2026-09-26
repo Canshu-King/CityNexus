@@ -1,0 +1,40 @@
+{
+ "wt": "D:/moodle/_qoder_cmdr_ctl0349",
+ "port": 4462,
+ "started": "Sat Sep 26 2026 15:24:24 GMT+0800 (中国标准时间)",
+ "pre_click_used": true,
+ "settle_ms": 0,
+ "probe": {
+  "present": true,
+  "samples": 120,
+  "distinct_x": 1,
+  "distinct_y": 6,
+  "distinct_w": 1,
+  "distinct_h": 1,
+  "distinct_scrollTop": 1,
+  "scroll_tops_seen": [
+   null
+  ],
+  "moved": true,
+  "reattached": 0,
+  "mutations": 0,
+  "first": [
+   0,
+   20,
+   644.55,
+   353,
+   175.92,
+   null
+  ],
+  "last": [
+   5999,
+   20,
+   634.55,
+   353,
+   175.92,
+   null
+  ],
+  "parent_tag": "SECTION",
+  "scroll_containers": []
+ }
+}
