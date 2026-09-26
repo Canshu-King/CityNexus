@@ -996,23 +996,49 @@ body {
   text-rendering: optimizeLegibility;
 }
 /* The onboarding surface's own foundation — declared, not inherited by accident.
-   It intentionally renders no .v8-mobile-nav. */
+   It intentionally renders no .v8-mobile-nav.
+
+   ORD-0338 (甲): it is a two-row app pane -- row 1 is the only thing that scrolls, row 2 is
+   the CTA band.  Until now the band was `position: sticky`, so it painted over whatever
+   happened to be under it and the content had to keep a reserve of padding away from it; that
+   reserve (76px + the stage clearance, 212px measured) is the blank band ORD-0338 was opened
+   for, and it was load-bearing for ORD-0261/0264.  A layout row cannot be painted over, so the
+   reserve has nothing to protect and both ends of that dependency are gone.
+   `--vv-height` is published by `installVisualViewportVars()` (V8Experience.tsx:811, which runs
+   on this surface too); the `100dvh` fallback is what a browser without a visual viewport gets. */
 .cn-onboarding {
   box-sizing: border-box;
-  min-height: 100vh;
+  display: grid;
+  grid-template-rows: minmax(0, 1fr) auto;
+  height: var(--vv-height, 100dvh);
   max-width: 1370px;
   margin: 0 auto;
-  padding: calc(var(--cn-s-32) + var(--cn-safe-top)) var(--cn-gutter)
-    calc(var(--cn-s-32) + env(safe-area-inset-bottom, 0px));
+  padding: calc(var(--cn-s-32) + var(--cn-safe-top)) 0 0;
+  /* One inset table for the pane's two rows: the scroller and the CTA band line up because they
+     read the same inherited property, not because two media queries repeat a number. */
+  --cn-onboarding-inset: var(--cn-gutter);
   background: var(--v8-canvas);
   color: var(--v8-ink);
   font-family: var(--cn-font);
 }
 @media (min-width: 961px) {
-  .cn-onboarding { padding-left: 46px; padding-right: 46px; }
+  .cn-onboarding { --cn-onboarding-inset: 46px; }
 }
 @media (max-width: 960px) and (min-width: 681px) {
-  .cn-onboarding { padding-left: 26px; padding-right: 26px; }
+  .cn-onboarding { --cn-onboarding-inset: 26px; }
+}
+/* The scroller.  `min-height: 0` is what lets a grid row scroll instead of pushing the pane
+   taller than the viewport; `overscroll-behavior: contain` stops a flick at the end of the
+   wizard from dragging the document behind it.  The horizontal inset lives here rather than on
+   the section so the whole width of the pane answers to a thumb -- an inset on the section would
+   leave two dead gutters that scroll nothing.  The top inset stays on the section, because that
+   band is the notch and content must not scroll into it. */
+.cn-onboarding__scroll {
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
+  padding: 0 var(--cn-onboarding-inset);
 }
 
 /* Three step labels cannot share 360px, and the ellipsis was eating

@@ -770,6 +770,7 @@ export function JourneyTrialSetup({
 
   return (
     <section className="v8-page cn-onboarding" data-testid="trial-setup">
+      <div className="cn-onboarding__scroll" data-testid="trial-scroll">
       <div className="v8-page-intro compact">
         <div>
           <p className="v8-kicker">{t("trial.kicker")}</p>
@@ -1398,7 +1399,54 @@ export function JourneyTrialSetup({
           </p>
         </div>
       )}
-      {/* Sticky CTA: always reachable, never below a wall of scrolling. */}
+
+      {/* Secondary, de-emphasised: the sealed demo is not the golden path. */}
+      {sealedDemoUnavailable && (
+        /* ORD-0209 5: fail-closed with the reason, never a silent creation fallback.
+           ORD-0273-TEXT: the sentence is an i18n key, never the error's own words.
+           ORD-0339 (Q71): those words may not ride in `data-*` either.  An attribute is not on
+           screen, but it is in the DOM, and from there a screen reader, an export or any later
+           render can speak it.  What may land here is a Q64 field this device measured, with its
+           contract-name anchor (Q70) - and nothing that comes out of an exception.
+           ORD-0273-ACTION: an executable next step travels with the failure -- retry the same
+           read here; creating one's own trip stays available below regardless. */
+        <div
+          className="trial-city-warning"
+          data-testid="trial-sealed-unavailable"
+          role="alert"
+        >
+          <p>{sealedDemoUnavailable}</p>
+          <button
+            type="button"
+            className="trial-back-link"
+            data-testid="trial-sealed-retry"
+            disabled={busy}
+            onClick={() => void onUseSealedDemo()}
+          >
+            {zh ? "重试" : "Retry"}
+          </button>
+        </div>
+      )}
+      <div className="trial-secondary">
+        {/* ORD-0216 ④: the label comes from `trial.tianjinDemo` and must stay **city-neutral** --
+            `GET /api/v1/demo/scene` decides which sealed journey this hands over, so naming a city
+            here is the `HUMAN_MISLEADING` defect HJ-P1 read with her own eyes.  The test id keeps
+            its original spelling deliberately: it is a gate hook other specs select on, not text a
+            traveller can see, and renaming it would break their reach for no product gain. */}
+        <button
+          type="button"
+          className="trial-back-link"
+          data-testid="trial-tianjin-demo"
+          disabled={busy}
+          onClick={() => void onUseSealedDemo()}
+        >
+          {t("trial.tianjinDemo")}
+        </button>
+      </div>
+      </div>{/* /cn-onboarding__scroll */}
+
+      {/* ORD-0338 (甲): the CTA is the pane's own bottom row, so nothing it used to cover
+          is left under chrome.  It is deliberately the last child of the section. */}
       <div className="trial-sticky-cta" data-testid="trial-sticky-cta">
         {step > 1 && (
           <button
@@ -1459,50 +1507,6 @@ export function JourneyTrialSetup({
             {busy ? t("trial.creating") : zh ? "确认创建" : "Create trip"}
           </button>
         )}
-      </div>
-
-      {/* Secondary, de-emphasised: the sealed demo is not the golden path. */}
-      {sealedDemoUnavailable && (
-        /* ORD-0209 5: fail-closed with the reason, never a silent creation fallback.
-           ORD-0273-TEXT: the sentence is an i18n key, never the error's own words.
-           ORD-0339 (Q71): those words may not ride in `data-*` either.  An attribute is not on
-           screen, but it is in the DOM, and from there a screen reader, an export or any later
-           render can speak it.  What may land here is a Q64 field this device measured, with its
-           contract-name anchor (Q70) - and nothing that comes out of an exception.
-           ORD-0273-ACTION: an executable next step travels with the failure -- retry the same
-           read here; creating one's own trip stays available below regardless. */
-        <div
-          className="trial-city-warning"
-          data-testid="trial-sealed-unavailable"
-          role="alert"
-        >
-          <p>{sealedDemoUnavailable}</p>
-          <button
-            type="button"
-            className="trial-back-link"
-            data-testid="trial-sealed-retry"
-            disabled={busy}
-            onClick={() => void onUseSealedDemo()}
-          >
-            {zh ? "重试" : "Retry"}
-          </button>
-        </div>
-      )}
-      <div className="trial-secondary">
-        {/* ORD-0216 ④: the label comes from `trial.tianjinDemo` and must stay **city-neutral** --
-            `GET /api/v1/demo/scene` decides which sealed journey this hands over, so naming a city
-            here is the `HUMAN_MISLEADING` defect HJ-P1 read with her own eyes.  The test id keeps
-            its original spelling deliberately: it is a gate hook other specs select on, not text a
-            traveller can see, and renaming it would break their reach for no product gain. */}
-        <button
-          type="button"
-          className="trial-back-link"
-          data-testid="trial-tianjin-demo"
-          disabled={busy}
-          onClick={() => void onUseSealedDemo()}
-        >
-          {t("trial.tianjinDemo")}
-        </button>
       </div>
     </section>
   );
