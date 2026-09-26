@@ -1,0 +1,7 @@
+collect: NO_TOTAL_LINE
+collect_rc: 1
+collected_node_lines: 0
+typecheck:all (tsc -p tsconfig.typecheck.json --noEmit): rc=0 diagnostics=0
+ports: frontend [4900, 4901, 4902, 4903, 4904] backend each +1000
+ai: CITYNEXUS_AI_ENABLED=false; key names removed from the child environment: DEEPSEEK_API_KEY,OPENAI_API_KEY (names only, values never read)
+run ids: fixed=0342fix2900, cells_before=0342was2900, M_anchor_always=0342alw2900, M_field_never_asks=0342key2900, M_sentence_in_attribute=0342attr2900
