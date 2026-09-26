@@ -16588,6 +16588,87 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### SESSION=e345b9d6 @2026-09-26 14:43+08 —— **ORD-0341 交（含 Q76 那一笔）：两枚 `ord0273-text-*` 节点我在现尖上量到红了（红在哪一行有日志），判据改到非 DOM 归因通道；同批新加一枚 `ord0341-telemetry-*` 把「技术事实仍有落点」这句量出来——封存演示那条失败在通道上留 0 枚记录，对照那一枚留 1 枚（同形：ORIGIN_INVALID_RESPONSE / 200 / text/html），所以这是产品的洞不是量具瞎；Q76 折叠的两向读数都在；候选 rebase 到现尖之上并推成 `review/D-ord0341-r2`，产品字节 0 改**
+
+代次：现读尖 commit=`dbe6d285cb9dbe7654cf43caeb12940b2d5437c8`（`ls-remote` 读到，`fetch` 后 `merge-tree` 只读预测＝无冲突，随后 rebase 上去）。这单我开工时尖还是 `38277c4e9787b1ddf0bf69487060ba0e40c14146`，中途线进了 2 笔：`436d4a36c64c1b54a0b105f0f346425286a15701`（我的 ORD-0338 甲落地）与 `dbe6d285…`（ORD-0351）。我改的两枚 spec 与这两笔改的文件集不相交（那两笔动 `design-tokens.css`、`styles.css`、`JourneyTrialSetup.tsx`、`main.tsx` 与两枚 0338 门；我动 `frontend/e2e/qoder-sealed-failure-speaks-and-offers-retry.spec.ts`、`frontend/e2e/qoder-continuation-resume-carries-identity.spec.ts`），所以 rebase 是干净的；rebase 后七枚 spec 全套重跑（第五段）。现尖之上 `2` 笔：`31cf782caf2f079c118b356f01985cf2bade501a`（判据重推）与 `5c4f4c4f4c96cabfa4ea30d390d5d595e95f9a84`（Q76 那笔），枝=`agent/d-e345b9d6-ord0341`。
+
+**一、你说的「预见红」我量到了，不是推出来的**（数出自两枚日志：`run_id=run403138` 与 `run_id=run403266`，件在架上）
+
+`frontend/e2e/qoder-sealed-failure-speaks-and-offers-retry.spec.ts` 在 `38277c4e…` 上跑：4 枚节点里 2 枚红。红的不是文案，是同一句「技术事实仍可诊断」：zh 那枚红在旧文件的 `:95`（断言 `data-error-message` 非空，回读 `Received: false`），en 那枚红在旧文件的 `:148` 同一句。文案那两半在尖上是绿的——句子逐字等于 `FROZEN_SENTENCE` / `FROZEN_SENTENCE_EN`、六个 LEAK_SHAPES 一个没漏进主文案；`ord0273-action-retry-*` 也绿。尖侧日志：`ord0341_tip_run_run403138_sealed_at_38277c4e.log` blob `cc96655491acc4ad10a4f1b67cae64cd1eb61c99`。
+
+同一棵尖上 `frontend/e2e/qoder-continuation-resume-carries-identity.spec.ts`：5 枚节点里 1 枚红，红在旧文件的 `:276`——`await expect(serverLine).toBeVisible()`，Playwright 回读 `Received: hidden`。这就是 Q76 说的那件事：`continuation-resume-server-reason` 在 `<details>` 里，折叠是合着的，门没点开它就先判它不在屏上。尖侧日志：`ord0341_tip_run_run403266_continuation_at_38277c4e.log` blob `ba55cf2cfcfa0ccf8fb28c35e8a9ae337faeeb9c`。
+
+**二、两枚节点的判据搬到哪儿了**（件：`ord0341_instrument__qoder-sealed-failure-speaks-and-offers-retry.spec.ts` blob `ef766fd79d279ba1b9e834525bcf0cb596a9a58d`）
+
+节点名逐字不动（`ord0273-text-the-sentence-is-the-key-and-no-shape-leaks`、`ord0273-text-en-arm-speaks-english-and-neither-side-leaks`），这样你与 E 之前的引用还能落到同一枚节点上。搬的是「事实仍可诊断」这半句读的地方：`failureAttribution.recordAttribution` 把每条记录同时镜像到 `window.citynexusAttribution`（`frontend/src/lib/failureAttribution.ts:273-282`），门读这个镜像，不再读 DOM。DOM 那一侧反过来判（Q71）：异常自己产出的那几句话——`origin answered 200 with an unusable body (text/html; charset=utf-8)`、错误名 `OriginResponseUnusableError`、以及它的两个短语——既不得出现在可见正文（`document.body.innerText` 全筛），也不得出现在任何 `data-*` / `aria-*` 值里（全树 `attributes` 扫）。我扫的是异常产出的句子，不是「凡技术 token 都算违规」：一个被本机量到的标量按 Q70 的契约名贴在自己的锚点上仍然合法，把它一并判红就是跟 Q70 打架。候选上的实测读数：两枚 locale 各 0 处命中，`trial-sealed-unavailable` 那枚元素上只剩 `class` / `data-testid` / `role` 三枚属性（`ord0341_cand_reading__ord0273-text-reading.json` blob `ded65948d1a784c84939f079df995fe57e96efcc`、`ord0341_cand_reading__ord0273-text-en-reading.json` blob `07af0a960fde4f3c8fd3abe7ee386fb2df878d4c`）。
+
+这两把扫的牙齿（同一件里，臂只在测试页里插节点，不落盘）：注入一枚带 `data-error-message` 与 `aria-label`、正文也是那句话的 div 之后，属性扫到 2 处命中、正文扫到 3 处命中；回读注入值确实在（不是空操作）；拔掉之后两把都回到 0。这几枚数出自 `ord0341_cand_reading__ord0273-text-reading.json` blob `ded65948d1a784c84939f079df995fe57e96efcc` 的 `arm` 那一节。
+
+**三、新那一枚节点量出来的是一件产品的洞**（件：`ord0341_cand_reading__ord0341-telemetry-reading.json` blob `d3cec94152abb28ae91c9a3ae80730be0a2165a5`）
+
+`ord0341-telemetry-the-facts-have-a-sink-off-the-dom` 两半都读同一个镜像：
+- 对照半（证明量具看得见这条通道）：把同一种回答（200 + `text/html; charset=utf-8`）打在一条**确实走分类器**的读上——boot 的行程读，`frontend/src/app/V8Experience.tsx:741-759`——通道上得到 1 枚记录：`reason=ORIGIN_INVALID_RESPONSE`、`http_status=200`、`content_type=text/html; charset=utf-8`、`context=shell.boot.journeyRead`。
+- 受试半：向导里那条封存演示的读失败之后，通道上 0 枚记录。
+
+成因我按你教的规矩先复现再命名，不复现就不写：`enterSealedDemo` 的 catch（`frontend/src/app/V8Experience.tsx:890-899`）只 `setSealedDemoDetail({message, name})`；那枚 state 在 `frontend/src/app/V8Experience.tsx:861` 声明、`:1399` 传下去，而 `JourneyTrialSetup.tsx:473` 只有类型声明、组件既不解构也不渲染它（全树 grep `sealedDemoDetail` = 这 3 处命中，无第 4 处）。也就是说 Q71 把话从 DOM 拿走之后，这条路上没有任何东西接住它——不是「换了个地方存」，是真的没存。这一枚节点因此是红的，红得有产品依据；它不在尖上存在过，所以不是我引入的回归（尖上的 24 枚里没有它）。修点一句话就能写：那个 catch 里补 `recordAttribution(classifyReadFailure(error), "wizard.sealedDemo.enter")`。**这句要你裁**：它要动 `V8Experience.tsx`，而你这几天把该文件连着派给 S1（ORD-0349 与 ORD-0350 的 re-cut）；ORD-0341 的要件是「0 产品字节」，所以我不动它，只把洞与修点交回来。要么你把那一行批给我（我按 0338 那套走：改→重跑→新枝交），要么派给握着那枚文件的车道。
+
+**四、Q76 那一笔：折叠保持合着，门自己点开**（件：`ord0341_instrument__qoder-continuation-resume-carries-identity.spec.ts` blob `7169fdf00d336badb245127b10915e15f18004a7`；读数：`ord0341_cand_reading__ord0278-negative-refused-reading.json` blob `e5d81882564b57c9235fdfe0ca51cc12056dbf42`）
+
+`ord0278-negative-refused-*` 现在按用户的样子读两遍并都留档：合着时 `details_open=false`、`reason_visible=false`（先证明它真是合着的，不是我以为）；点 `continuation-technical-toggle` 之后 `details_open=true`、`reason_visible=true`，标签里逐字带着服务器原话「服务器给出的原因：another request is still writing this journey」。既有断言一处没改：`HTTP\d\d\d` 不得出现在旅客那句里、marker 不清、第二腿恰好 1 发，全都还在。这一枚由红转绿是靠操作界面，不是靠放宽判据。
+
+**五、回归射程（分母是具名那一对，不是整套观测）**：拿现尖 `dbe6d285…` 的 `git archive` 导出树与本候选各 fresh 跑一遍同一批七枚 spec（按 grep 这几条通道逐枚列名：`citynexusAttribution` / `data-error-*` / `continuation-technical-toggle` / `continuation-resume-server-reason` / `trial-sealed-unavailable`，外加 ORD-0351 新那枚读 boot 路径的 spec）。导出的五枚相关文件逐个与 `<tip>:<path>` 的 blob 对过，全 identical（对差表在 `ord0341_receipt_r1.json` blob `6e5a69ca4540095d695a381990046a9fda12020e` 的 `tip_export_blobs`）。尖上 24 枚节点（绿 20 红 4），候选 25 枚（绿 23 红 2），共同 24 枚：**候选红而尖绿＝我引入的 0 枚**；两棵树同红 1 枚，`qoder-demo-entry-addresses-dont-create.spec.ts::ord0209-no-sealed-journey-fails-closed-in-words`（我 0338 那笔的两棵树对差里它就是同红，本单没碰它）；尖红而候选绿 3 枚，逐枚是上面第二、四段那三枚我负责的名字；候选独有 1 枚（本单新那枚 telemetry，红因见第三段）。两枚完整日志：尖侧 `ord0341_tip_run_run404309_seven_at_dbe6d285.log` blob `f8fa58cf0492c6afa9a2f229b8c66a42aad25dad`，候选侧 `ord0341_candidate_run_run404459_seven.log` blob `6262f1f5b0a2b78ac5e0f134091bb198e744560b`，对应 `run_id=run404309` 与 `run_id=run404459`。整套 `e2e/` 我这一轮没跑，按常设口径那只能当观测、不当判据。
+
+**六、我自报两件仪器错（都不是产品的）**：① 收据第一版把两棵树的节点配错了 7 对——我把时长尾巴写成正则 `[m?s]`，那是字符类而不是「可选的 m」，所以 `(636ms)` 这种两位单位没被剥掉，同一枚节点在两边成了两个名字。改成 `(?:ms|s|m)` 并加了一道「名字里还留着时长就 ABORT」的守卫后重出，`tip_only` 从 7 枚变 0 枚（第一版那份留在本地不覆写，r1 是修好之后重出的那份）。② 我在候选上跑了六枚 spec 的中间一轮（`run_id=run404067`）之后才把可见正文那把扫加进 zh/en 两枚节点——那一轮读的是加扫之前的字节，所以它不进判据，判据只认第五段那一对（`run_id=run404309` 与 `run_id=run404459`）。
+
+**七、要你点的三件**：甲=候选可以落：`review/D-ord0341-r2` = `5c4f4c4f4c96cabfa4ea30d390d5d595e95f9a84`（现尖之上 2 笔，author 未改写、0 force；早先那枚基在 `38277c4e…` 的 `review/D-ord0341` = `a9d75da46ee10a13ee09911363453212ebdea44b` 我没删也没动，两条 `ls-remote` 回读都在，落就落后一条）。乙=第三段那一行产品的裁决（批给我也行，派给 S1 也行；不批我就把 `ord0341-telemetry-*` 留在红上并具名报着，不 skip、不改判据换绿）。丙=0343（四枚 `data-cnx-field` 锚点）我排在 0341 之后开工——它碰 `DestinationPreparationPanel.tsx` 与 `RecoveryRequiredPanel.tsx`，与 S1 的 `JourneyTrialSetup.tsx` 不同文件，若你已把前两枚派给别人，你说一句我就停。
+
+复跑口径：`CNX_LANE_ROOT=<树> python review/run_spec.py e2e/qoder-sealed-failure-speaks-and-offers-retry.spec.ts <port>`（`run_spec.py` 自己在 `frontend/` 下起 playwright，参数只要 `e2e/<文件>`）。我这一轮用的 port 是 `:5310` 配 `:9310`、以及 `:5320` 配 `:9320`，起之前逐个 netstat 验过空闲；我整轮只走自己声明的 `:5200` 到 `:5399` 那一段，避开了你的 `:4400` 到 `:4799` 与 `:5400` 到 `:5799`、N1 的 `:5100` 与 `:6100`、B 的 `:4900` 与 `:5900`、S2 的 `:4800` 与 `:5800`。
+
+边界回验：权威线 0 写、他人 ref 0 推、本车道 0 force/0 amend（两笔都是新提交）；产品字节 0 改（`git diff --numstat dbe6d285…..HEAD` 只有两枚 `frontend/e2e/` 文件，331 行增、26 行删，全在 spec 里，坐标在第五段那两枚日志与 `ord0341_receipt_r1.json` blob `6e5a69ca4540095d695a381990046a9fda12020e` 的 `changed_files`）；既有断言改写 0 处（`ord0273-text-*` 只搬了「事实在哪读」，旅客句子那半逐字未动；Q76 那笔只加动作）；skip 0；`demo/reset` 0；`_live`/`_preview` 库 0 读写；手机链 0 碰；`vite build` 0 次；`frontend/node_modules` 是 junction（0 安装 0 改）；凭据 0 打印。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
+### S4-ast-taint 14:40+08 · ORD-0354 + ORD-0348 合成一枝 r7 交：属性位现在报格了，你那枚探针抓到了；但普查分母里 22 格住在 review/ 的旧副本，门的口径要先定
+
+新尺 blob `3272a4336f60ddd183875000c11e5b5ead6be2be`（120,958 B，本机与 `live_checks/ui_exposure_taint_ast_r7.cjs` 同一把字节，`git hash-object` 两处相同；已发布件回读 blob 逐字等值）。r6 的字节一字未动（blob 仍是 `6a251d3a6bea70329e06581384a81d5ef54c96a6`，回执里带这条断言）。**从 r7 起本机文件名等于发布代次名**——r4/r5/r6 分别叫 r1/r2/r3.cjs，这正是"给了 blob 还是不知道读的哪把字节"的来源。
+
+一、属性位规则（ORD-0354 要件 1）
+- 新规则名 `UPSTREAM_PROSE_TO_ATTRIBUTE_SLOT`，与现有四条（RAW_TEXT_INTERPOLATION / UPSTREAM_TEXT_VIA_HELPER_TO_DOM / UPSTREAM_EXCEPTION_TO_DOM / RAW_BODY_TO_DOM / UPSTREAM_READ_DIRECT / DANGEROUS_HTML）不重名，收据里这条是算出来的不是写的。
+- 两条触发，缺一不可：**① 溯源**——与文本位同一套污点判定，envelope/结构级不报（数字、枚举、契约 id 留在 `data-*` 是 Q70 要的，不是违规）；**② 字段名**——`FORBIDDEN_ALWAYS` 加 `message`/`stack` 落进属性位即报，不看溯源。第二条是被你逼出来的：你种的那枚探针（commit `7c0d21b7cbe968378d964e2dde856274fca7da86`，`data-error-message={sealedDemoDetail?.message ?? ""}`）的值是**跨组件 prop 边界**送进来的，模块图不建模 JSX 属性到组件形参这条边，所以只有字段名能守住这一格。
+- 实测两向：探针代次上 r6 看不见、r7 报在 `frontend/src/features/setup/JourneyTrialSetup.tsx:1478`；现尖 `38277c4e9787b1ddf0bf69487060ba0e40c14146` 上 r7 另外报出一枚**线上既存**的属性格 `frontend/src/features/planning/PlanWithAiSheet.tsx:1009`（`data-result-status={result?.status ?? ""}`）。这枚我标成"形状待解释"而不是结论：链显示那个 status 是从 `PLACES_HTTP_${...}` 拼出来的设备侧组合枚举，可能属 `.value`/`.from` 那一族误报，判与不判归你或 B。
+
+二、详情面归属例外（ORD-0348 要件 1-3）
+- 判据读渲染结构：最近的 `<details>`，或任何带 `data-cnx-fold` 的元素；且**同一个容器里**有一枚 `data-cnx-field` 字面值等于六枚允许字段之一。类名、testid、注释一概不开例外（自测臂 R7_9 用 `className="today-technical-detail"` 试、R7_10 用 `data-cnx-field="server_message"` 试，两臂都仍报）。
+- 只开给文本位：属性位即使在带标签的详情面里也照报（臂 R7_7）。被豁免的格不静默消失，搬进 `attributed_in_fold` 并附上容器行号与锚点行号，谁都能对着文件核。
+- 真代码上生效一处：`frontend/src/app/V8Experience.tsx:2649`（S1 按 Q75 搬进详情的那句）从命中变成豁免，锚是同一容器 `details:2643` 里的 `data-cnx-field=http_status:2656`。
+- 我不遮的限度：尺能证明"折叠 + 归属锚"这个**结构**，证明不了那枚锚的值是真读数——有人可以只写 `data-cnx-field="http_status"` 不测。那一半仍归读渲染数字的 e2e 门，r7 不声称自己管得到。
+
+三、双向自测（要件 2）：12 臂，两向同断
+`R7_1` 主屏仍报 / `R7_2` 同句进带锚详情面不报且豁免计数 1 / `R7_3` 删锚恢复报 / `R7_4` 属性位违规新增一格 / `R7_5` 删掉那格回到原分母 / `R7_6` 结构属性合法 / `R7_7` 详情面不豁免属性 / `R7_8` `data-cnx-fold` 算详情面 / `R7_9` 类名不开 / `R7_10` 六枚之外的锚不开 / `R7_11` prop 带来的 `message` 靠字段名报 / `R7_12` 同一枚成员放文本位仍按旧规则（不报）。两面自测：`SELFTEST_PASS`，夹具 20/20、跳档 7/7、模式 2/2、新臂 12/12（面 A cwd 车道目录、面 B cwd `CityNexus/frontend`，同一 TypeScript 5.9.3）。
+
+四、新分母（要件 3），两个口径分开写，别合
+`census_r7_tip_38277c4e.json` = e7e5363268438547f2124b5cf176b5b272492a51：现尖全树普查 34 格，其中 `review/` 下的旧副本占 22 格。
+`census_r6_tip_38277c4e_for_comparison.json` = b775eadf838203b2158143f8b82cd4b11d6d051a：r6 在同一代同一树也是 34 格，差别只在活的 12 格里 r6 是文本 12、r7 是文本 11 加属性 1（一格被豁免、一格新见）。
+副本的来源是仓里带着检点包：`src/main.tsx` 一份有 13 个副本，每份各贡献 2 格，全在 `review/<checkpoint>/frontend/` 下。
+`census_r7_probe_7c0d21b7.json` = 2d301d4b6851aee98638311a205cf665eee7fe6d：探针代次活面 13 格（文本 11 加属性 2），多出来那格正是你种的 `JourneyTrialSetup.tsx:1478`。
+所以账本里该钉的分母是活面那 12 格（`frontend/src/` 之下），不是 34；`preflight_and_land_r1.py` 若把 `--tree` 指向仓根，它六成的判词落在没人编辑的归档副本上。要么门改成只扫 `frontend/src`，要么在收据里永远并列两个口径——这条请你定，我按你说的重跑，不自作主张改门的射程。
+你说的旧分母 15 格我没沿用：r6 在现尖活面实测 12 格、全树 34 格（blob b775eadf838203b2158143f8b82cd4b11d6d051a），15 属更早一代，本块不拿它当基准。
+
+五、ORD-0342 那两格我先回一句现场，不动文件
+你这条派单把我叫成「B」，但 `PlanWithAiSheet.tsx` 按你 05:xx 的 Q68 裁定归 lane B（ORD-0323 就是他 05:37 落的 e6c402eb），而 c01d72a3 此刻在跑（它自己的 JSONL 刚写过）。同文件双车道是你自己立的规矩拦过的，所以我没开那枚文件；要真归我，请回一句"1d64acf5 改 PlanWithAiSheet"，我从当时尖重开。旁证一条：r7 独立报出的三格里有两格正是你点名的 `:1021`、`:1048`，另加 `:1009` —— 谁改都先用得上这把尺。
+
+六、自报两处，都在架上不覆盖
+① 本收据第一版把格身份键成 `frontend/` 之后的尾路径，于是 13 份 `main.tsx` 副本被并成一格、普查读成 18 格；错在量具不在产品，改成整路径后是 34/12 两个口径，第一版 JSON 留着。② 两条 lane E 的对照夹具期望值在本代**变了**：`clean_tainted_but_attribute_only.tsx` 与 `e0319r3_E3_control_attribute_only.tsx`（lane E 原 blob `b5fda05334fd0b5088571cb7cd6394ea088be8c5`）从 0 变 1 —— 它们当初的"净"就是因为尺不看属性位；夹具源字节我逐字保留（输出里打 fixture_blob_sha1 供核），只把期望值改在明处的 `R7_EXPECTATION_CHANGES` 表里，没有去改任何人的 spec。
+
+七、我卡在哪（你要的三行）
+① 两单已合成交 r7，属性位与详情面各自带反控，两面自测绿；② 反控就是上面第三节那 12 臂的三对（删锚恢复报 / 属性违规必新增 / 文本位旧行为不变，唯一变动是那格被豁免并留名）；③ 卡在你这边两件：门的 `--tree` 射程（仓根还是 `frontend/src`），以及 ORD-0342 到底归谁。产品字节本单一根没碰：我的 worktree 在 `review/S4-ord0346-honest-cities` 上 `git status --porcelain` 空，r6 字节未变，发布路径全是新增。
+
+证据目录 `evidence/ord0354-0348-attributed-fold-S4/`：尺 `ruler/ui_exposure_taint_ast_r7.cjs` = `3272a4336f60ddd183875000c11e5b5ead6be2be`、收据 `receipt_r1.json` = `4a52b863d6c47de348849f2455ec6997f39077b0`、两面自测 `selftest_surface_A.json` = `bfc7dcb5118f1401d65835a790c6fc5f7d80cb47` 与 `selftest_surface_B.json` = `464d2a0be8d9270ab0eb3041504f1e04f5faa343`、普查四件 `census_r7_tip_38277c4e.json` = `e7e5363268438547f2124b5cf176b5b272492a51`、`census_r7_probe_7c0d21b7.json` = `2d301d4b6851aee98638311a205cf665eee7fe6d`、对照 `census_r6_tip_38277c4e_for_comparison.json` = `b775eadf838203b2158143f8b82cd4b11d6d051a` 与 `census_r6_probe_7c0d21b7_for_comparison.json` = `375b823d5639934fcccda7561add88dea5343ddf`、量具 `instruments/build_receipt_r1.py` = `70e88ee7c97afa781a0301da7e1e2f837d41a4ed`。
+
+claimed_result = R7_PUBLISHED + 两件待你定（门的射程、0342 归属）；不宣布 CLOSED，尺的闭单等你把 `preflight_and_land_r1.py` 指过来并跑一次它的自测。
+
+
 ### CMDR 14:42 — ORD-0338 甲落地并换代手机；ORD-0351 / ORD-0340 进线；本机对象库成为新的巡逻面
 
 **一、权威线本拍移动三笔，全部 ff-only、落地前一毫秒重读 GitHub 尖、两条路由回读一致。**
