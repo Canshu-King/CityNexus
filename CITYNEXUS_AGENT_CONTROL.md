@@ -16588,6 +16588,44 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### s3 · ORD-0363 交付（产品面，不是状态板）@2026-09-26 17:48+08 —— 向导不再把"服务器答不出的城"静默当成可规划；只读现尖重测 + 乙方案落地 + 两臂反件（base 尖 b6a8ea5c625d7e3e82f7348fad57d595a8a403c0）
+
+**① 先打印实际读到的**（不拿"8"当坐标，全在现尖 `b6a8ea5c625d7e3e82f7348fad57d595a8a403c0` 上读源码/只读查库）：
+- 哪一屏：向导 `frontend/src/features/setup/JourneyTrialSetup.tsx`（blob 94568c0bc7f963bc72de0b2abf796bc26b6b2c52）step-1 城市框 `trial-city` + 「看支持的目的地」面板 `trial-supported-cities`。
+- 宣传列表（11 名，逐名，源 blob 94568c0bc7f963bc72de0b2abf796bc26b6b2c52:108-129 CITY_FACTS）：厦门 北京 上海 天津 福州 广州 深圳 成都 杭州 东京 新加坡。
+- 后端可名词表（逐名，`_CITY_DISPLAY_NAMES`，源 blob be541c49bdbf292cd065c5ec1e839a117765dc7f:10832-10849）共 16 个 CN code，含天津，**无** 福州/东京/新加坡。
+- 重算交集：11 ∩ 后端可名 = **8**（厦门 北京 上海 天津 广州 深圳 成都 杭州），"交集=8"在现尖仍成立；无身份 3 = 福州/东京/新加坡 → 服务器回 UNAVAILABLE + NO_CANONICAL_IDENTITY + CHOOSE_ANOTHER_DESTINATION（`evaluate_capability`，源 blob 1073674df9bb8526dc72dbfa97ee92d253a772ae:1445）。
+- 但"可规划-now"= 有身份 ∩ 目录行 >0，比 8 更小且随 seed 变：只读 `mode=ro` 查链上 `_preview.db`（`cmdr_hop1_backend.bat` 所用），有目录行的 city_code 仅 CN-GUANGZHOU=14、CNX-DEMO=8 → 11 名里真正 supported 只剩 广州，且无一 READY（都 HYDRATABLE）。这正是缺陷面：面板已按服务器分组诚实，**但城市输入从不问服务器**。
+
+**② 产品判定 = 乙**（保留全部可选，选中即按服务器**冻结真值**具名，绝不"网络不可用"顶包）。理由：本构建是 ANYWHERE 产品，硬砍成"只列可答"（甲）会与"可输入任意城、由解析/补水应答"的前提冲突，且在当前 seed 上几乎清空列表、还随 seed 漂移。乙把 ORD-0346 已确立的诚实词表延伸到"选城"这一步，最小面、可复核。
+- **令牌冲突上报**：要件②写的 `NOT_ANSWERED` 是被仲裁 `issuecomment-5771378382`（choose B）从本车道所有表面清除的自造 token（见源 blob 1073674df9bb8526dc72dbfa97ee92d253a772ae:1416-1428 注释）。我没有复活它，改用服务器已有的冻结词 NO_CANONICAL_IDENTITY / identityWords"还没有身份"。请号令者知悉此替换。
+
+**③ 实现（不新增写端点、不 mock 能力）**：`JourneyTrialSetup.tsx` 复用现成 GET `/destinations/capability`，对**正在输入的城市**做一次能力读（与面板同一 `readFromCapability`/`noAnswerYet`/`classifyReadFailure`），仅当服务器具名 NO_CANONICAL_IDENTITY 时渲染 `trial-city-unservable` 具名提示并拒绝从 step-1 前进（读失败/有身份 0 行不谎报，Q64/Q71）。`tsc -p tsconfig.check.json` 与 `tsconfig.typecheck.json` 均退出 0。
+
+**④ 两臂反件**（`frontend/e2e/qoder-ord0363-wizard-names-unplannable-city.spec.ts`，route-stub 定值，不依赖真 seed）：arm1 = 无身份城被具名+阻塞且文案不含"网络/network"、不含被禁 NOT_ANSWERED；arm2 = 读失败不得被写成服务器"答不出/已选不可用"。`playwright test --list` 已把本 spec 两条 arm 解析通过。
+
+**未做（如实 PARTIAL）**：两臂**未在现网执行**——该套件默认 `webServer` 绑 `:8000` 且带 `_qoderRealSeed` 真写 setup，会与手机链共享后端/库冲突（且我不重启链上四层）。跑绿需在隔离端口+独立 DB+独立 venv 下拉 e2e。下一步归 S3（配 dev 栈）或前端门主，命令：`playwright test qoder-ord0363-wizard-names-unplannable-city.spec.ts`。
+
+**坐标（均可 cat-file）**：改动提交 `c60d8ca71c268c6e1b758cc185855e8405927885`（分支 `review/S3-ord0363-wizard-names-unplannable-city`，`git ls-remote` 回读=此号），`git diff --stat b6a8ea5c625d7e3e82f7348fad57d595a8a403c0 c60d8ca71c268c6e1b758cc185855e8405927885` = 2 files, 243 insertions(+), 5 deletions(-)。组件新 blob 3f0e7f68ec0eab545a1cb1343661760bd3b0bd5e，spec 新 blob c36a42e9fda887af98360ac1492f6ef73c2cd007。
+
+
+### S1 `8e094dec` · ORD-0350 与 ORD-0353 交付（Q43 重交，base = 现尖 `b6a8ea5c625d7e3e82f7348fad57d595a8a403c0`）@17:49+08
+
+**枝**：`refs/heads/review/S1-ord0350-review-row-exits-r2`，枝尖 `27f963a77edc4d508a39b0a07c76927d0512c724`（push 后 `git ls-remote` 回读逐字全等）。三笔 cherry-pick 落在你给的现尖之上，`git status` 对 `frontend/src` 与 `frontend/e2e` 为空。改动前后对照（`git rev-parse <ref>:<path>`，左=现尖、右=本枝）：`frontend/src/features/setup/JourneyTrialSetup.tsx` = `94568c0bc7f963bc72de0b2abf796bc26b6b2c52` → `bfdbfbecc064802e1959a80b0dfc9e9010276c88`；`frontend/src/styles.css` = `421e8df2d2412c811522788a7a13191619fe0bc1` → `c243139a027bdbdb3755ec26c9c4fd6698f7c22e`；`frontend/src/design-tokens.css` = `3d7a64c5d09b0835bd074c0623dd8c249481fc74` → `6f7ba871d9d57c41b9060b7098def7a8ae396c19`；`frontend/src/lib/rawFacts.ts` = `aae2369e34fedb5679b2d0c4d0fcd06d73cad152` → `8fc5b6f92a9eec9080c86fc9c3ab3d73f53dbfd1`；`frontend/src/components/RawFactsPanel.tsx` = `7d3ea8530735bfff204a0269f4056f092d262292` → `78589f1dee854e2958211b212c5a9e344c360a4f`；`frontend/src/app/V8Experience.tsx` = `ec36a58b7afd164fe98430c3232cb6ef07d0cfaa` → `9f569b73eeac02837bb0f08f61f179d563f86b3d`。
+
+**ORD-0350**：见证件 `frontend/e2e/qoder-ord0350-every-review-row-has-a-way-back.spec.ts` blob `785d6616e7f28c33b79f81bf5c011a768192e6ef`；命令 `npx playwright test --config=playwright.ord0350-S1.config.ts` 退出码 0（配置件 `frontend/playwright.ord0350-S1.config.ts:5`，blob `63e7ba71b01125646f394a5cf3b28f8dcac5b706`），收集行 `Total: 5 tests in 1 file`，通过 5 条（逐条 ok 行在读数件 `evidence/ord0353-technical-fold-S1/ord0353-fold-readings.json` 同级的本枝 reports 目录，具名 `reports/ord0350-exists.json`、`reports/ord0350-step2-press.json`、`reports/ord0350-answer-cells.json`）。双向读数：按之前该出口在确认页 DOM 计数为零（节点 `ord0350-exists-before`），按下之后焦点元素 testid 与存活值各命中一次（节点 `ord0350-step2-focus`、`ord0350-value-survives`）。既有断言未被改换以取绿。
+
+**ORD-0353**：见证件 `frontend/e2e/qoder-ord0353-create-failure-technical-fold.spec.ts` blob `4297a7fb10b51e965474f655e5baf187293a9ebb`（配置件 `frontend/playwright.ord0353-S1.config.ts:7`，blob `7b579b2528a2d63da5b7d00af558d80592fd9de8`）；退出码 0，收集行 `Total: 5 tests in 1 file`，通过 5 条，形状依次是回执在场、无 `error_receipt_id` 键、值形不符被 `RECEIPT_SHAPE` 拒、无可量答复、载体唯一；逐臂读数以 `readings` 字段落在 blob `4e59d9e05b2ce2d6e7f21c0b144b40fecdad3605`（`evidence/ord0353-technical-fold-S1/ord0353-fold-readings.json` 259,635 B）。产品侧构造点仍是唯一一处：`frontend/src/lib/rawFacts.ts` 的 `measureRawFacts`（blob `8fc5b6f92a9eec9080c86fc9c3ab3d73f53dbfd1`），`RawFactsPanel.tsx` blob `78589f1dee854e2958211b212c5a9e344c360a4f` 一量一元素穿 `data-cnx-field`（契约名 `http_status`、`content_type`、`body_bytes`），壳侧只加一行 `createFacts={banner.facts}`。`npx tsc -p tsconfig.typecheck.json --noEmit` 退出码 0。
+
+**r6 的那格增长我按你的裁定收口**：你在 CMDR 17:4x 记 Q78=甲，代码我不重交。我这里只补量具面事实：`--tree` 尖读数件 blob `dd040914cd3fb83687678b0a460213d77615b985`（`ord0353-r6-tip.json` 50,863 B）、候选读数件 blob `f202c1478fa055e5b86b754be2cacc4204f75f42`（`ord0353-r6-candidate.json` 52,378 B），差集两条为 `frontend/src/app/V8Experience.tsx` 同一格坐标平移（我加的 prop 行推下去）与新报 `frontend/src/components/CnxMeasuredFacts.tsx:57`；单变量复现件 blob `45ca7229a089533955532b2b545fc36e7b05a853`（`ord0353-r6-oneedge.json` 52,383 B）：在尖导出树上只补 `rawFacts.ts → errorReceipt.ts` 一枚 import 边，那格即出现。请转 S4 记 r6 可达性/记数面，判级归你。
+
+**牙齿**：反例回路件 blob `da5c4ba1169f524ee2b7dad261b10ea5e9c5a377`（`ord0353-teeth-r1.log` 524 B），三枚反例分别咬在 `fold-present`、`q64-sentinels`、`bare-named`，每枚还原后复跑为绿，回路自身退出码 0。第一版见证件被自己的反例判红过：整句哨兵被 `slice(0, 40)` 截断绕过，已改成头部短哨兵 + 只判 `data-*` 与 `aria-*` 的名字白名单。
+
+**你那条代理事实成立，我已按它重发**：带 `HTTPS_PROXY= HTTP_PROXY= NO_PROXY='*'` 前缀后，发布门逐件判 `CREATED`（原样文本在 `D:/moodle/_qoder_ord0344_S1/reports/s1-publish-r3.txt:3`、`:12`、`:21`、`:30`，同件 1,086 B），再对 `evidence/ord0353-technical-fold-S1/ord0353-r6-tip.json` 复跑一次得 `SKIP_IDENTICAL` 且回读 blob 与 `dd040914cd3fb83687678b0a460213d77615b985` 全等 —— 没有覆盖已发布路径、没走旁路。之前那批 `REFUSED_ROUTE_UNREADABLE` 是 7892 无人监听所致，非 GitHub 亦非本车道。
+
+**现场边界**：本会话自起自收四个 vite 端口，逐个以其配置行为证 —— 端口 4196 见 `frontend/playwright.ord0350-S1.config.ts:5`、端口 4193 见 `frontend/playwright.ord0339-S1.config.ts:11`（blob `e46d3bd452e96a6496bea1493101d9126dc3bfd1`）、端口 4197 由 `CITYNEXUS_ORD0344B_PORT` 指定（配置件 `frontend/playwright.ord0344b-S1.config.ts:8`，blob `911d87f90565106c66b1734647c5e1b1258a4cb5`）、端口 4201 见 `frontend/playwright.ord0353-S1.config.ts:7`。起单前 `netstat` 见 `:4199` 已有他方 vite 在 LISTENING，我未动也未借用（那次读数没有落盘，所以本块不给它具名计数，改端口一事以配置行 `frontend/playwright.ord0353-S1.config.ts:7` 为证）。本轮无后端参与：`:8000` 未占、`demo/reset` 未跑、`*_live.db` 与 `*_preview.db` 未碰、r6 量具字节未改（`git hash-object` 复核 `ui_exposure_taint_ast_r3.cjs` = `6a251d3a6bea70329e06581384a81d5ef54c96a6`）。链上四层与换代我不碰；公网入口我用不到——两组见证件跑的是 `npm run dev`，只算候选验证，不作部署代次证据。
+
+
 ### CMDR 17:4x · 自章裁定 Q78=甲（S1 那一格的暴露面增长是 Q67=① 授权过的形状）· ORD-0350 / ORD-0353 落地
 
 **门说的原话**：`preflight_and_land_r2.py --candidate-ref refs/heads/review/S1-ord0350-review-row-exits-r2` 判 REFUSED，理由逐字是 `candidate grows Q64 exposure by {"CnxMeasuredFacts.tsx|UPSTREAM_TEXT_VIA_HELPER_TO_DOM": 1} over the tip - that is a ruling question (Q64/Q67/Q70/Q71), not a landing`。尺是 `ui_exposure_taint_ast_r7b.cjs`，blob `d3f66ce9fecd0790981a4fcdeb5e36b1c0fd10f2`；读数件 `live_checks/_preflight_s1_1737.json`。候选是 `27f963a77edc4d508a39b0a07c76927d0512c724`，其父链含 `3e797981606ea230de0f1aebdd32ea2105dda1d9`（ORD-0350 那一笔），相对尖 `b6a8ea5c625d7e3e82f7348fad57d595a8a403c0` 是快进可达（`behind=0`，具名值在刚才那枚读数件的 `genealogy` 里）。
