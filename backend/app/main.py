@@ -599,7 +599,8 @@ async def http_error(_: Request, exc: HTTPException) -> JSONResponse:
         # every existing `raise HTTPException(...)` renders exactly as it did before.
         reason_code=getattr(exc, "reason_code", None),
         details=getattr(exc, "error_details", None),
-        message_key=HTTP_MESSAGE_KEYS.get(exc.status_code, f"error.{code.lower()}"),
+        message_key=getattr(exc, "message_key", None)
+        or HTTP_MESSAGE_KEYS.get(exc.status_code, f"error.{code.lower()}"),
     )
 
 
@@ -4758,10 +4759,12 @@ def generate_journey_plans(
         if replayed is not None:
             return _plan_generation_http_answer(replayed)
         now = datetime.now(timezone.utc)
-        raced = _claim_plan_generation(keys, signature, session, now)
+        claim_token = uuid4().hex
+        raced = _claim_plan_generation(keys, signature, session, now, claim_token)
         if raced is not None:
             return _plan_generation_http_answer(raced)
-        answer = _execute_plan_generation_claimed(journey, request, keys, continuation_id, now)
+        answer = _execute_plan_generation_claimed(journey, request, keys, continuation_id,
+                                                  now, claim_token)
     return _plan_generation_http_answer(answer)
 
 
@@ -4810,7 +4813,7 @@ def _replay_plan_generation(session: Session, keys: list[str],
 
 
 def _claim_plan_generation(keys: list[str], signature: str, session: Session,
-                           now: datetime) -> dict | None:
+                           now: datetime, token: str) -> dict | None:
     """Phase A CLAIM：一把或多把 NULL 占位**先独立提交**，唯一索引在生成之前裁决所有权。
 
     抢不到 ⇒ 只读别人的答案；等不到 ⇒ 现成那句 409。绝不删占位、绝不按 expires_at 回收、
@@ -4830,6 +4833,8 @@ def _claim_plan_generation(keys: list[str], signature: str, session: Session,
                         response_json=None,
                         created_at=now.isoformat(),
                         expires_at=(now + timedelta(days=7)).isoformat(),
+                        claim_token=token,
+                        claim_deadline=_lease_deadline(now),
                     )
                 )
             with write_attempt(SCENARIO_PLANS_GENERATE):
@@ -4839,15 +4844,123 @@ def _claim_plan_generation(keys: list[str], signature: str, session: Session,
             raced = _replay_plan_generation(session, keys, signature, wait=True)
             if raced is not None:
                 return raced
-            raise HTTPException(
-                409, "agent idempotency record is incomplete"
-            ) from exc
+            if _take_over_lapsed_claims(session, keys, now, token):
+                return None
+            raise _plan_claim_in_flight(session, keys, now) from exc
     return None
+
+
+PLAN_CLAIM_LEASE_MS = int(settings.write_deadline_ms) + int(settings.write_busy_timeout_ms)
+
+
+def _lease_deadline(now: datetime) -> str:
+    """When this attempt stops protecting its own claim.
+
+    Derived from the two budgets this route already obeys - its declared write deadline plus the
+    SQLite lock wait it may spend inside that budget - so an honest attempt cannot outlive its own
+    lease. If a knob is tightened later, the error direction is a longer lease: that delays a
+    take-over rather than stealing a claim that is still being written.
+    """
+
+    return (now + timedelta(milliseconds=PLAN_CLAIM_LEASE_MS)).isoformat()
+
+
+def _lease_expiry(row: IdempotencyKey) -> datetime:
+    """A receipt written before leases existed is judged by the instant its Phase A committed,
+    which is exactly what `created_at` records."""
+
+    if row.claim_deadline:
+        return datetime.fromisoformat(row.claim_deadline)
+    return datetime.fromisoformat(row.created_at) + timedelta(milliseconds=PLAN_CLAIM_LEASE_MS)
+
+
+def _take_over_lapsed_claims(session: Session, keys: list[str], now: datetime,
+                             token: str) -> bool:
+    """Take over a claim only once its own lease has lapsed, and only by a conditional write that
+    fails if another reclaimer moved first. Every key is won, or none is.
+
+    This cannot duplicate work: a receipt still NULL carries no durable candidate, because Phase B
+    commits its candidates and its receipt in the same transaction. Measured in
+    evidence/ord0340-claim-lease-S2/reclaim_premise_r1.json.
+    """
+
+    won = 0
+    for key in keys:
+        session.expire_all()
+        row = session.get(IdempotencyKey, key)
+        if row is None or row.response_json is not None:
+            session.rollback()
+            return False
+        if _lease_expiry(row) > now:
+            session.rollback()
+            return False
+        conditions = [IdempotencyKey.key == key, IdempotencyKey.response_json.is_(None)]
+        if row.claim_deadline is None:
+            conditions += [IdempotencyKey.claim_deadline.is_(None),
+                           IdempotencyKey.created_at == row.created_at]
+        else:
+            conditions += [IdempotencyKey.claim_deadline == row.claim_deadline]
+        took = session.execute(
+            update(IdempotencyKey).where(*conditions)
+            .values(claim_token=token, claim_deadline=_lease_deadline(now))
+            .execution_options(synchronize_session=False)
+        ).rowcount
+        if took != 1:
+            session.rollback()
+            return False
+        won += 1
+    if won == 0 or won != len(keys):
+        session.rollback()
+        return False
+    session.commit()
+    return True
+
+
+def _held_claim_view(session: Session, keys: list[str], now: datetime) -> dict:
+    """What the attempt that still holds the claim can honestly tell a caller."""
+
+    for key in keys:
+        session.expire_all()
+        row = session.get(IdempotencyKey, key)
+        if row is None or row.response_json is not None:
+            continue
+        return {
+            "retry_after_ms": max(0, int((_lease_expiry(row) - now).total_seconds() * 1000)),
+            "attempt_id": row.claim_token,
+            "lease_ms": PLAN_CLAIM_LEASE_MS,
+        }
+    return {"retry_after_ms": PLAN_CLAIM_LEASE_MS, "attempt_id": None,
+            "lease_ms": PLAN_CLAIM_LEASE_MS}
+
+
+def _plan_claim_in_flight(session: Session, keys: list[str], now: datetime) -> HTTPException:
+    """Another attempt still holds an unexpired lease.
+
+    The sentence stays what three already-accepted gates pin, so nothing agreed is quietly
+    reworded; what is new is the name and the numbers a client needs in order to say *why* and
+    *when to come back*. `attempt_id` is read off the durable row, not invented here.
+    """
+
+    exc = HTTPException(409, "agent idempotency record is incomplete")
+    exc.reason_code = "PLAN_GENERATION_IN_FLIGHT"
+    exc.message_key = "plan_generation.in_flight"
+    exc.error_details = _held_claim_view(session, keys, now)
+    return exc
+
+
+def _plan_claim_superseded(token: str | None, expected: int, filled: int) -> HTTPException:
+    """This attempt lost its claim, so its answer must not land on top of the winner's."""
+
+    exc = HTTPException(409, "agent idempotency record is incomplete")
+    exc.reason_code = "PLAN_GENERATION_ATTEMPT_SUPERSEDED"
+    exc.message_key = "plan_generation.attempt_superseded"
+    exc.error_details = {"attempt_id": token, "keys_expected": expected, "keys_filled": filled}
+    return exc
 
 
 def _execute_plan_generation_claimed(journey: Journey, request: GeneratePlansRequest,
                                      keys: list[str], continuation_id: str | None,
-                                     now: datetime) -> dict:
+                                     now: datetime, token: str | None = None) -> dict:
     """Phase B EXECUTE：候选、审计链接与"占位 → 完成回执"在同一次可回滚提交里。
 
     回执存的是**渲染失败要用到的那几样输入**（状态/原话/具名理由），不是另抄一份错误正文：
@@ -4880,17 +4993,24 @@ def _execute_plan_generation_claimed(journey: Journey, request: GeneratePlansReq
                     mode="json", by_alias=True) for plan in plans]}
             filled = 0
             for key in keys:
+                fill_conditions = [IdempotencyKey.key == key,
+                                   IdempotencyKey.response_json.is_(None)]
+                if token is not None:
+                    # ORD-0340: only the attempt that holds the lease may fill it, so a worker
+                    # that wakes up after being taken over cannot write its answer over the one
+                    # that replaced it. The direct Phase-B call an already-accepted gate uses
+                    # keeps its pre-lease shape rather than being silently repurposed.
+                    fill_conditions.append(IdempotencyKey.claim_token == token)
                 filled += work_session.execute(
                     update(IdempotencyKey)
-                    .where(IdempotencyKey.key == key,
-                           IdempotencyKey.response_json.is_(None))
+                    .where(*fill_conditions)
                     .values(response_status=422 if "refusal" in answer else 201,
                             response_json=json.dumps(answer, sort_keys=True))
                     .execution_options(synchronize_session=False)
                 ).rowcount
             if filled != len(keys):
                 # 只允许 NULL → 完成：覆盖别人填好的回执，就是拿别人的答案冒充自己的
-                raise HTTPException(409, "agent idempotency record is incomplete")
+                raise _plan_claim_superseded(token, len(keys), filled)
             return answer
         finally:
             work_session.close()

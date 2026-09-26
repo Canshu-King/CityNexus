@@ -401,7 +401,9 @@ CREATE TABLE IF NOT EXISTS idempotency_keys (
     response_status INTEGER,
     response_json TEXT,
     created_at TEXT NOT NULL,
-    expires_at TEXT NOT NULL
+    expires_at TEXT NOT NULL,
+    claim_token TEXT,
+    claim_deadline TEXT
 );
 
 CREATE TABLE IF NOT EXISTS action_approvals (

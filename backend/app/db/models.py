@@ -661,6 +661,9 @@ class ProviderCall(Base):
 
 
 class IdempotencyKey(Base):
+    # ORD-0340: `expires_at` stays what it always meant (how long a finished receipt may be
+    # replayed). The lease is a separate clock: `claim_token` names the attempt that owns the
+    # row now, and `claim_deadline` is when another attempt may take it over.
     __tablename__ = "idempotency_keys"
     key: Mapped[str] = mapped_column(String, primary_key=True)
     operation: Mapped[str] = mapped_column(String)
@@ -669,6 +672,8 @@ class IdempotencyKey(Base):
     response_json: Mapped[str | None] = mapped_column(Text, nullable=True)
     created_at: Mapped[str] = mapped_column(String)
     expires_at: Mapped[str] = mapped_column(String)
+    claim_token: Mapped[str | None] = mapped_column(String, nullable=True)
+    claim_deadline: Mapped[str | None] = mapped_column(String, nullable=True)
 
 
 class ActionApproval(Base):
