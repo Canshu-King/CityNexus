@@ -1,0 +1,37 @@
+{
+  "node": "ord0351-d-a-dead-link-empties-a-reference-not-a-trip",
+  "device_held_before_link": "88b8d280-d340-4ee3-b37d-76194158363c",
+  "link": "/v8/6d57c2be-31d8-4b90-bb1d-8d9791ab81d7",
+  "machine": {
+    "reason": "JOURNEY_NOT_FOUND",
+    "evidence_kind": "HTTP_RESPONSE",
+    "http_status": "404"
+  },
+  "reference_keys_after": [
+    [
+      "citynexus.v8.journey_id",
+      null
+    ],
+    [
+      "citynexus.demo.journey_id",
+      null
+    ],
+    [
+      "citynexus.demo.agent_run_id",
+      null
+    ]
+  ],
+  "other_journey_row_read_status": 200,
+  "other_journey_row_unchanged": true,
+  "ghost_read_status_after": 404,
+  "experience_reads": [
+    {
+      "url": "http://127.0.0.1:4791/api/v1/journeys/88b8d280-d340-4ee3-b37d-76194158363c/experience",
+      "status": 200
+    },
+    {
+      "url": "http://127.0.0.1:4791/api/v1/journeys/6d57c2be-31d8-4b90-bb1d-8d9791ab81d7/experience",
+      "status": 404
+    }
+  ]
+}
