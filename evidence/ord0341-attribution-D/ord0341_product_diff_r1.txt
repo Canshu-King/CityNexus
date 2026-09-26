@@ -1,0 +1,22 @@
+diff --git a/frontend/src/app/V8Experience.tsx b/frontend/src/app/V8Experience.tsx
+index d5f2908b..2e74a675 100644
+--- a/frontend/src/app/V8Experience.tsx
++++ b/frontend/src/app/V8Experience.tsx
+@@ -889,9 +889,15 @@ export function V8Experience() {
+       navigate("hub");
+     } catch (error) {
+       /* ORD-0273-TEXT: the user sentence comes from an i18n key -- the raw error.message (with its
+-         MIME/content-type and error shapes) must not reach the main copy.  The technical facts stay
+-         available to telemetry through the data-* attributes on the wizard's alert element. */
++         MIME/content-type and error shapes) must not reach the main copy.
++         ORD-0341 (CMDR 15:3x, 甲): ORD-0339's Q71 removed the `data-*` carriers that used to hold
++         these facts, and nothing replaced them -- the gate measured 0 records on the attribution
++         channel for this failure, so the trip was undiagnosable off the screen.  The facts go to the
++         channel that was never about the DOM, classified from the error this read actually raised
++         rather than re-worded here, and `sealedDemoDetail` stays as the state the wizard no longer
++         renders (removing it is a separate edit with its own blast radius). */
+       setSealedDemoUnavailable(t("trial.sealedUnreadable"));
++      recordAttribution(classifyReadFailure(error), "wizard.sealedDemo.enter");
+       setSealedDemoDetail(
+         error instanceof Error
+           ? { message: error.message, name: error.name }
