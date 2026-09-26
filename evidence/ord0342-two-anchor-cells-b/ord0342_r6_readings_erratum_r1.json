@@ -1,0 +1,28 @@
+{
+ "schema": "CNX_ORD0342_PUBLISHED_PATH_ERRATUM_V1",
+ "order": "ORD-0342",
+ "lane": "B c01d72a3",
+ "what_happened": "The wrapper at evidence/ord0342-two-anchor-cells-b/ord0342_r6_readings_r1.json was written twice: the first pass labelled the pre-fix generation with the candidate's own first commit (which already holds the fix) and computed the ruler's blob id as a bare sha1 of the file, so it reported blob_verified=false for a ruler that does match. The corrected document then went to the SAME path, which is a published coordinate and should never have been re-PUT.",
+ "was": {
+  "commit": "d42cac6581",
+  "blob": "d33f0b6e29f40bb3df458420e781281d72abe2a2",
+  "size_bytes": 1741,
+  "pre_fix_tree_labelled": "c4a1b3392a78f91d10c4afa634b3e3877414ba29",
+  "ruler_blob_verified": false
+ },
+ "now": {
+  "commit": "60442182",
+  "blob": "d9914d2d00d4b2e47e3719eb06fb3c0a469ffcb0",
+  "size_bytes": 1740,
+  "pre_fix_tree": "38277c4e9787b1ddf0bf69487060ba0e40c14146",
+  "ruler_blob_verified": true
+ },
+ "which_to_quote": "the now blob; the was document's pre-fix label named a tree that already contains the fix, so any 'before' claim read out of it is void",
+ "reading_back": "both versions were fetched from the commits API by path+ref and their blob ids recomputed with git's own header rule (sha1 over 'blob <len>' + NUL + bytes)",
+ "rule_fitted_after": "ord0342_deliver.py push() now refuses a same-name different-bytes publish and demands a new revision file, so the door itself cannot repeat this",
+ "coordinates_outside_this_dir": {
+  "ruler_blob": "6a251d3a6bea70329e06581384a81d5ef54c96a6",
+  "candidate": "003886ca83294a9ec97a98215cb8cc2e8232189b",
+  "pre_fix_generation": "38277c4e9787b1ddf0bf69487060ba0e40c14146"
+ }
+}
