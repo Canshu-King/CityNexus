@@ -1,0 +1,60 @@
+{
+ "sha": "6fd43627e717a97ea779da866eb4546b8acb9deb",
+ "tree": "22cdfacae3be35b4e9c7db3070c757bcd77eadbb",
+ "export": "D:/moodle/_qoder_cmdr_ref_20260921/live_checks/snap_ord0355_6fd43627",
+ "archive_rc": 0,
+ "at_local": "2026-09-26T16:09:25+0800",
+ "interpreter": "D:/moodle/CityNexus/.venv/Scripts/python.exe",
+ "command": "python -m pytest -p no:cacheprovider -q tests/<file>",
+ "files": [
+  {
+   "file": "test_qoder_ord0355_honest_stay_budget.py",
+   "rc": 0,
+   "tail": [
+    "-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html",
+    "11 passed, 2 warnings in 2.43s"
+   ],
+   "passed": 11,
+   "failed": null,
+   "verdict": "GREEN"
+  },
+  {
+   "file": "test_qoder_stay_generation_operations.py",
+   "rc": 0,
+   "tail": [
+    "-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html",
+    "26 passed, 2 warnings in 13.74s"
+   ],
+   "passed": 26,
+   "failed": null,
+   "verdict": "GREEN"
+  },
+  {
+   "file": "test_qoder_stay_generation_phases.py",
+   "rc": 0,
+   "tail": [
+    "-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html",
+    "7 passed, 2 warnings in 2.53s"
+   ],
+   "passed": 7,
+   "failed": null,
+   "verdict": "GREEN"
+  },
+  {
+   "file": "test_qoder_ord0340_claim_lease.py",
+   "rc": 0,
+   "tail": [
+    "-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html",
+    "7 passed, 2 warnings in 7.73s"
+   ],
+   "passed": 7,
+   "failed": null,
+   "verdict": "GREEN"
+  }
+ ],
+ "whole_suite": {
+  "collect_exit": 0,
+  "collected": 1369,
+  "interrupted": false
+ }
+}
