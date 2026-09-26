@@ -116,7 +116,12 @@ async function band(page: Page): Promise<any> {
           stepsPaddingBottom: getComputedStyle(steps).paddingBottom,
           cardPaddingBottom: getComputedStyle(document.querySelector(".trial-card")!).paddingBottom,
           sectionDisplay: getComputedStyle(document.querySelector(".cn-onboarding")!).display,
-          scrollOverflow: getComputedStyle(document.querySelector(".cn-onboarding__scroll")!).overflowY,
+          /* Read defensively on purpose: on a tree without the pane this element does not exist,
+             and `getComputedStyle(null)` would turn a product red into a TypeError. */
+          scrollOverflow: (() => {
+            const el = document.querySelector(".cn-onboarding__scroll");
+            return el ? getComputedStyle(el).overflowY : "NO-PANE";
+          })(),
           ctaPosition: getComputedStyle(document.querySelector(".trial-sticky-cta")!).position,
         },
       };
@@ -300,7 +305,8 @@ test.describe("mobile 390x844", () => {
       [SCROLL, CTA] as const,
     );
     await page.evaluate((sc) => {
-      (document.querySelector(sc) as HTMLElement).scrollTop = 0;
+      const el = document.querySelector(sc) as HTMLElement | null;
+      if (el) el.scrollTop = 0;
     }, SCROLL);
     const rolledBy = await rollWheel(page);
     const atEnd = await page.evaluate(
@@ -398,13 +404,17 @@ test.describe("mobile 390x844", () => {
     await page.waitForTimeout(300);
     const after = await overlaps(page);
     const landed = await page.evaluate(
-      ([ct, sc]) => ({
-        ctaPosition: getComputedStyle(document.querySelector(ct) as HTMLElement).position,
-        sectionDisplay: getComputedStyle(document.querySelector(".cn-onboarding") as HTMLElement).display,
-        scrollOverflow: getComputedStyle(document.querySelector(sc) as HTMLElement).overflowY,
-        documentScrollable:
-          Math.round((document.scrollingElement as HTMLElement).scrollHeight - window.innerHeight) > 0,
-      }),
+      ([ct, sc]) => {
+        const pane = document.querySelector(ct) as HTMLElement | null;
+        const scrollEl = document.querySelector(sc) as HTMLElement | null;
+        return {
+          ctaPosition: pane ? getComputedStyle(pane).position : "NO-CTA",
+          sectionDisplay: getComputedStyle(document.querySelector(".cn-onboarding") as HTMLElement).display,
+          scrollOverflow: scrollEl ? getComputedStyle(scrollEl).overflowY : "NO-PANE",
+          documentScrollable:
+            Math.round((document.scrollingElement as HTMLElement).scrollHeight - window.innerHeight) > 0,
+        };
+      },
       [CTA, SCROLL] as const,
     );
     writeArm("N6-arm-sticky-overlay", {
