@@ -512,7 +512,6 @@ button { display: block; width: 100%; margin-top: 12px; border: 0; border-radius
   display: flex;
   flex-direction: column;
   gap: 12px;
-  padding-bottom: 84px; /* clears the sticky CTA */
 }
 .trial-field {
   display: flex;
@@ -657,42 +656,25 @@ button { display: block; width: 100%; margin-top: 12px; border: 0; border-radius
    colour, carry the distinction -- the same rule the dark-contrast pass settled on. */
 .trial-default-mark { color: var(--v8-muted, #8994a3); font-size: var(--cn-fs-caption, 11px); font-weight: 500; }
 
-/* The primary action must never be invisible or buried. */
+/* The primary action must never be invisible or buried.  ORD-0338 (甲) settles *how*: the band is
+   the onboarding pane's second grid row (design-tokens.css `.cn-onboarding`), not an overlay that
+   floats over the scrolling content.  So it no longer needs `position: sticky`, no longer needs a
+   gradient to fake a soft edge over what it covered, and the content no longer needs padding to
+   hide from it.  The stage ball stays clear of it by its own `--cn-sim-float-clearance`
+   (SimulationPanel.css:20/122), which measured 136px+safe on a phone against a band of 68px. */
 .trial-sticky-cta {
-  position: sticky;
-  bottom: 0;
-  z-index: 5;
   display: flex;
   gap: 10px;
   justify-content: flex-end;
-  padding: 12px 0 calc(12px + env(safe-area-inset-bottom, 0px));
-  background: linear-gradient(to top, var(--v8-canvas) 70%, transparent);
+  padding: 12px var(--cn-onboarding-inset) calc(12px + env(safe-area-inset-bottom, 0px));
+  background: var(--v8-canvas);
 }
-/* ORD-0261: the bar's gradient paints over whatever scrolls beneath it, and measured at 390x844 the
-   "高级设置" summary's centre landed on the bar's 下一步 button -- a control hidden by chrome. The bar
-   keeps its job (the primary action stays reachable); the scrolling content (.trial-steps wraps all
-   step content) now ends above the bar, so at rest it overlaps only the bar's own padding.  The
-   reserve rides the same media query as the bar's own bottom clearance, and it must track the bar's
-   real height (two 44px buttons + padding ≈ 76px). */
-.cn-onboarding .trial-steps {
-  padding-bottom: calc(76px + env(safe-area-inset-bottom, 0px));
-}
-@media (max-width: 680px) {
-  .cn-onboarding .trial-steps {
-    padding-bottom: calc(76px + var(--cn-sim-float-clearance, 132px) + env(safe-area-inset-bottom, 0px));
-  }
-}
+/* ORD-0261 used to reserve 76px (desktop) and 76px + stage clearance (phone) of `padding-bottom`
+   on `.trial-steps`, i.e. a blank band between the step row and the card, purely to keep content
+   out of the sticky bar's paint-over range.  Deleted with the overlay: the bar cannot cover
+   content any more, so the reserve has nothing left to do. */
 .trial-sticky-cta .v8-primary-button {
   min-width: 140px;
-}
-/* The onboarding surface sits outside `.v8-product-shell`, so it inherits no bottom band while the
-   stage ball is still mounted on it (V8Experience mounts `SimulationEntry` here too).  Without this
-   the sticky CTA rests in the same corner as the fixed ball: measured at 360x800, CTA 626..670
-   against ball 668..728, which the mobile gate reports as chrome covering the primary action. */
-@media (max-width: 680px) {
-  .trial-sticky-cta {
-    bottom: var(--cn-sim-float-clearance, 132px);
-  }
 }
 .v8-primary-button {
   background: var(--v8-accent, #0f766e);
