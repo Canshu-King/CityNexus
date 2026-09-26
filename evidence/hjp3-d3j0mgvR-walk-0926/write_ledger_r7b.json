@@ -1,0 +1,81 @@
+{
+ "ran_at_local": "2026-09-26T19:09:07+0800",
+ "branch": "commander/control",
+ "tip_read": "a2f1a96b42f9d5159734571cdd0dd7e06d3d4be6",
+ "prefix": "evidence/hjp3-d3j0mgvR-walk-0926/",
+ "method": "GET /repos/.../commits?sha=<branch>&path=<file> - one commit at a name means written once",
+ "files_under_prefix": 45,
+ "tree_entries_excluded": [
+  "evidence/hjp3-d3j0mgvR-walk-0926/instruments",
+  "evidence/hjp3-d3j0mgvR-walk-0926/shots"
+ ],
+ "why_the_tree_entries_are_excluded": "a commits?path=<directory> query legitimately returns every commit that touched anything under it, so counting a directory as a write would manufacture a re-PUT that never happened",
+ "commits_per_path": {
+  "evidence/hjp3-d3j0mgvR-walk-0926/instruments/r7_ai_disabled.cjs": 1,
+  "evidence/hjp3-d3j0mgvR-walk-0926/instruments/r7_block.py": 1,
+  "evidence/hjp3-d3j0mgvR-walk-0926/instruments/r7_bus.py": 1,
+  "evidence/hjp3-d3j0mgvR-walk-0926/instruments/r7_copy_link.cjs": 1,
+  "evidence/hjp3-d3j0mgvR-walk-0926/instruments/r7_copy_link_r2.cjs": 1,
+  "evidence/hjp3-d3j0mgvR-walk-0926/instruments/r7_copy_link_r3.cjs": 1,
+  "evidence/hjp3-d3j0mgvR-walk-0926/instruments/r7_copy_link_r4.cjs": 1,
+  "evidence/hjp3-d3j0mgvR-walk-0926/instruments/r7_entry_check.py": 1,
+  "evidence/hjp3-d3j0mgvR-walk-0926/instruments/r7_hex_preflight.py": 1,
+  "evidence/hjp3-d3j0mgvR-walk-0926/instruments/r7_score.py": 1,
+  "evidence/hjp3-d3j0mgvR-walk-0926/instruments/r7_walk.cjs": 1,
+  "evidence/hjp3-d3j0mgvR-walk-0926/instruments/r7_write_ledger.py": 1,
+  "evidence/hjp3-d3j0mgvR-walk-0926/ledger_inbox_proof_r7_q43r4d.json": 1,
+  "evidence/hjp3-d3j0mgvR-walk-0926/r7_ai_disabled.json": 1,
+  "evidence/hjp3-d3j0mgvR-walk-0926/r7_bus_note.md": 1,
+  "evidence/hjp3-d3j0mgvR-walk-0926/r7_bus_note_readback.json": 1,
+  "evidence/hjp3-d3j0mgvR-walk-0926/r7_copy_link.json": 1,
+  "evidence/hjp3-d3j0mgvR-walk-0926/r7_copy_link_r2.json": 1,
+  "evidence/hjp3-d3j0mgvR-walk-0926/r7_copy_link_r3.json": 1,
+  "evidence/hjp3-d3j0mgvR-walk-0926/r7_copy_link_r4.json": 1,
+  "evidence/hjp3-d3j0mgvR-walk-0926/r7_entry_check.json": 1,
+  "evidence/hjp3-d3j0mgvR-walk-0926/r7_hex_preflight.json": 1,
+  "evidence/hjp3-d3j0mgvR-walk-0926/r7_pixel_identity_with_previous.json": 1,
+  "evidence/hjp3-d3j0mgvR-walk-0926/r7_scored.json": 1,
+  "evidence/hjp3-d3j0mgvR-walk-0926/r7_walk.json": 1,
+  "evidence/hjp3-d3j0mgvR-walk-0926/ship_result_r7.json": 1,
+  "evidence/hjp3-d3j0mgvR-walk-0926/ship_result_r7b.json": 1,
+  "evidence/hjp3-d3j0mgvR-walk-0926/shots/A1_review.png": 1,
+  "evidence/hjp3-d3j0mgvR-walk-0926/shots/A2_after_confirm.png": 1,
+  "evidence/hjp3-d3j0mgvR-walk-0926/shots/A3_copy_affordance.png": 1,
+  "evidence/hjp3-d3j0mgvR-walk-0926/shots/C1_dead_id_closed.png": 1,
+  "evidence/hjp3-d3j0mgvR-walk-0926/shots/C2_dead_id_open.png": 1,
+  "evidence/hjp3-d3j0mgvR-walk-0926/shots/D1_real_journey_hub.png": 1,
+  "evidence/hjp3-d3j0mgvR-walk-0926/shots/D2_after_tab_walk.png": 1,
+  "evidence/hjp3-d3j0mgvR-walk-0926/shots/G1_hub_with_journey.png": 1,
+  "evidence/hjp3-d3j0mgvR-walk-0926/shots/G2_last_tab.png": 1,
+  "evidence/hjp3-d3j0mgvR-walk-0926/shots/G2_workbench.png": 1,
+  "evidence/hjp3-d3j0mgvR-walk-0926/shots/H1_hub.png": 1,
+  "evidence/hjp3-d3j0mgvR-walk-0926/shots/I1_trips_as_landed.png": 1,
+  "evidence/hjp3-d3j0mgvR-walk-0926/shots/I2_bookings_tab.png": 1,
+  "evidence/hjp3-d3j0mgvR-walk-0926/shots/I3_after_copy.png": 1,
+  "evidence/hjp3-d3j0mgvR-walk-0926/shots/I4_reopened_link.png": 1,
+  "evidence/hjp3-d3j0mgvR-walk-0926/shots/J1_trips_before.png": 1,
+  "evidence/hjp3-d3j0mgvR-walk-0926/shots/J2_after_press.png": 1,
+  "evidence/hjp3-d3j0mgvR-walk-0926/write_ledger_r7.json": 1
+ },
+ "paths_with_more_than_one_commit": [],
+ "controls_known_to_hold_two_writes": [
+  {
+   "path": "evidence/ord0300-c2-pairing-hjp3/evidence_manifest_full40_c2.json",
+   "commits": 2
+  },
+  {
+   "path": "evidence/ord0288-t1-durable-ownership-hjp3/evidence_manifest_full40_o0288_r2.json",
+   "commits": 2
+  },
+  {
+   "path": "evidence/ord0300-hjp3-write-cells/RECEIPT_O0300-2610.json",
+   "commits": 2
+  }
+ ],
+ "verdict": {
+  "no_path_in_this_prefix_was_written_twice": true,
+  "the_counter_is_not_blind": true,
+  "a_directory_was_counted_until_it_was_excluded": true,
+  "ALL_HOLD": true
+ }
+}
