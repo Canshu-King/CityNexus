@@ -16588,6 +16588,17 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### CMDR 19:3x · 第 8 次移动权威线：把指挥仪器本身落进 `tools/`（并用刚修的 r3 门完成它的第一笔真落地）
+
+**落地**：`refs/heads/review/CMDR-chain-instruments-1936` → `baaa07117003320292d76a5f0c383952071b7364`，快进进权威线（门判 READY_TO_LAND、两条 GitHub 路由回读一致，收据 blob `a4d1ea22787d8f8f9729a899891994adfed55786`）。带进去的是这几件：`tools/cmdr_net_env_guard_r1.py`（探到已配置的代理端口无人监听就清掉代理并打印决定，今天它拆掉四笔假红的地方）、`tools/phone_side_probe_r1.py`（从公网入口把手机真正拿到的那一代读回来，不看盘）、`tools/cmdr_local_lane_sweep_r1.py`（本机对象库巡逻——车道的 `origin` 指本机时，这是能看见它们交付的唯一渠道）、`tools/merge_ledger_then_mirror_r1.py`（单写账本的镜像与不信任写调用本身的回读）。
+
+**为什么不含门本体，写清楚而不是默默省略**：`preflight_and_land_r3.py` 我一度也复制进去了，随后删掉——它带着一枚暴露尺的身份螺栓（要求它旁边那份 `.cjs` 的 blob 与常量逐字相同），而那把尺并没有被跟踪在 `tools/` 下。仓库里放一份"看着能用、其实过不了自己那道螺栓"的副本，比不放更坏。尺属于 `1d64acf5` 的 ORD-0364 范围，等它把尺（含授权集）落进 `tools/`，门本体再跟着进去。
+
+**自我验证的一句**：这一笔是用 `preflight_and_land_r3.py` 落的，也就是刚补好"零目标也算过"那道缺口的那把门第一次接真活——它判 READY_TO_LAND 并落地成功，而这次候选不含任何前端文件，所以增长判据是零变动的平凡真；不把这句当 r3 的功能证明（功能证明是 19:1x 那次双向自测（放行方向与拒绝方向各一件），两件都在 `evidence/cmdr-door-r3-1912/`）。另外我在那棵新树上不带参数跑了一次仓库里的 `tools/phone_side_probe_r1.py`，它先打印代理螺栓的决定、再给出 `NOT_VERIFIED`（因为没有 `--tunnel` 参数），这证明副本可执行，不证明它在我没给的输入下能出绿判。
+
+**本班权威线依次移动于**：ORD-0350、ORD-0353、ORD-0359、ORD-0357、ORD-0358、ORD-0358-r2、ORD-0359 续跳，以及本块这一笔指挥仪器——逐笔的落地收据都在 `evidence/cmdr-landing-*` 各目录里（本块引用的那枚 blob 是最新一枚）；手机侧换代发生在 17:20、18:14 与 19:0x 三个时刻，每一次的逐字节回读件也都在 `evidence/cmdr-chain-switch-*` 与 `evidence/cmdr-switch-*` 目录下（同上一条块里的 blob 引用）。
+
+
 ### CMDR 19:3x · 演示库里的草稿行程不会刷屏：手机上根本没有"全部行程"那一屏（量过，不是推断）
 
 今天走查在用户库里留下了几趟 DRAFT 状态的行程（草稿的名字是走查用的通用名），我一度担心用户今晚打开手机会被一屏测试数据糊住。核对后不成立，两处证据：
