@@ -1,0 +1,143 @@
+{
+ "base": "http://127.0.0.1:4781",
+ "responses": [
+  {
+   "url": "/api/v1/destinations/capability?query=%E5%8E%A6%E9%97%A8",
+   "status": 500,
+   "content_type": "text/plain",
+   "served_by_service_worker": false,
+   "body_bytes": 0,
+   "json_shape": {
+    "parse_error": "SyntaxError: Unexpected end of JSON input"
+   },
+   "body_head": ""
+  },
+  {
+   "url": "/api/v1/destinations/capability?query=%E5%8C%97%E4%BA%AC",
+   "status": 500,
+   "content_type": "text/plain",
+   "served_by_service_worker": false,
+   "body_bytes": 0,
+   "json_shape": {
+    "parse_error": "SyntaxError: Unexpected end of JSON input"
+   },
+   "body_head": ""
+  },
+  {
+   "url": "/api/v1/destinations/capability?query=%E4%B8%8A%E6%B5%B7",
+   "status": 500,
+   "content_type": "text/plain",
+   "served_by_service_worker": false,
+   "body_bytes": 0,
+   "json_shape": {
+    "parse_error": "SyntaxError: Unexpected end of JSON input"
+   },
+   "body_head": ""
+  },
+  {
+   "url": "/api/v1/destinations/capability?query=%E5%A4%A9%E6%B4%A5",
+   "status": 500,
+   "content_type": "text/plain",
+   "served_by_service_worker": false,
+   "body_bytes": 0,
+   "json_shape": {
+    "parse_error": "SyntaxError: Unexpected end of JSON input"
+   },
+   "body_head": ""
+  },
+  {
+   "url": "/api/v1/destinations/capability?query=%E7%A6%8F%E5%B7%9E",
+   "status": 500,
+   "content_type": "text/plain",
+   "served_by_service_worker": false,
+   "body_bytes": 0,
+   "json_shape": {
+    "parse_error": "SyntaxError: Unexpected end of JSON input"
+   },
+   "body_head": ""
+  },
+  {
+   "url": "/api/v1/destinations/capability?query=%E5%B9%BF%E5%B7%9E",
+   "status": 500,
+   "content_type": "text/plain",
+   "served_by_service_worker": false,
+   "body_bytes": 0,
+   "json_shape": {
+    "parse_error": "SyntaxError: Unexpected end of JSON input"
+   },
+   "body_head": ""
+  },
+  {
+   "url": "/api/v1/destinations/capability?query=%E6%B7%B1%E5%9C%B3",
+   "status": 500,
+   "content_type": "text/plain",
+   "served_by_service_worker": false,
+   "body_bytes": 0,
+   "json_shape": {
+    "parse_error": "SyntaxError: Unexpected end of JSON input"
+   },
+   "body_head": ""
+  },
+  {
+   "url": "/api/v1/destinations/capability?query=%E6%88%90%E9%83%BD",
+   "status": 500,
+   "content_type": "text/plain",
+   "served_by_service_worker": false,
+   "body_bytes": 0,
+   "json_shape": {
+    "parse_error": "SyntaxError: Unexpected end of JSON input"
+   },
+   "body_head": ""
+  },
+  {
+   "url": "/api/v1/destinations/capability?query=%E6%9D%AD%E5%B7%9E",
+   "status": 500,
+   "content_type": "text/plain",
+   "served_by_service_worker": false,
+   "body_bytes": 0,
+   "json_shape": {
+    "parse_error": "SyntaxError: Unexpected end of JSON input"
+   },
+   "body_head": ""
+  },
+  {
+   "url": "/api/v1/destinations/capability?query=%E4%B8%9C%E4%BA%AC",
+   "status": 500,
+   "content_type": "text/plain",
+   "served_by_service_worker": false,
+   "body_bytes": 0,
+   "json_shape": {
+    "parse_error": "SyntaxError: Unexpected end of JSON input"
+   },
+   "body_head": ""
+  },
+  {
+   "url": "/api/v1/destinations/capability?query=%E6%96%B0%E5%8A%A0%E5%9D%A1",
+   "status": 500,
+   "content_type": "text/plain",
+   "served_by_service_worker": false,
+   "body_bytes": 0,
+   "json_shape": {
+    "parse_error": "SyntaxError: Unexpected end of JSON input"
+   },
+   "body_head": ""
+  }
+ ],
+ "request_failures": [],
+ "panel_text": "用你自己的城市试用 CITYNEXUS 新建行程 三步完成。选择目的地、告诉我们怎么玩，剩下的交给 CityNexus。 EN 1 目的地与时间 2 人数与偏好 3 确认创建 目的地 看支持的目的地 已支持：服务器认得它，而且目录里有东西 READY / 有 canonical 身份且有目录行 这一轮没有名字落在这一组。 需联网才能解析：服务器现在认不出这个名字 NO_CANONICAL_IDENTITY 这一轮没有名字落在这一组。 未知或无数据：这一轮拿不出可规划的判定 HYDRATABLE 无目录行 / UNKNOWN_RETRYABLE / 没读到 厦门 身份还没读到 这一轮没读到服务器的判定（读不到不等于服务器说不知道） SERVER_ERROR 北京 身份还没读到 这一轮没读到服务器的判定（读不到不等于服务器说不知道） SERVER_ERROR 上海 身份还没读到 这一轮没读到服务器的判定（读不到不等于服务器说不知道） SERVER_ERROR 天津 身份还没读到 这一轮没读到服务器的判定（读不到不等于服务器说不知道） SERVER_ERROR 福州 身份还没读到 这一轮没读到服务器的判定（读不到不等于服务器说不知道） SERVER_ERROR 广州 身份还没读到 这一轮没读到服务器的判定（读不到不等于服务器说不知道） SERVER_ERROR 深圳 身份还没读到 这一轮没读到服务器的判定（读不到不等于服务器说不知道） SERVER_ERROR 成都 身份还没读到 这一轮没读到服务器的判定（读不到不等于服务器说不知道） SERVER_ERROR 杭州 身份还没读到 这一轮没读到服务器的判定（读不到不等于服务器说不知道） SERVER_ERROR 东京 身份还没读到 这一轮没读到服务器的判定（读不到不等于服务器说不知道） SERVER_ERROR 新加坡 身份还没读到 这一轮没读到服务器的判定（读不到不等于服务器说不知道） SERVER_ERROR 抵达地点 离开地点 抵达时间 离开时间 高级设置 高级设置 还需要填写：目的地、抵达地点、离开地点 使用封存的演示",
+ "sw_registrations": [
+  {
+   "scope": "http://127.0.0.1:4781/",
+   "state": "activated"
+  }
+ ],
+ "caches": [
+  "workbox-precache-v2-http://127.0.0.1:4781/"
+ ],
+ "verdict": "SOME_LEG_FAILED",
+ "counts": {
+  "observed": 11,
+  "json_200": 0,
+  "failed": 0
+ }
+}
