@@ -1,0 +1,40 @@
+{
+ "order": "ORD-0341 counter-example (arm the commander asked for)",
+ "lane": "D e345b9d6",
+ "generated_by": "inline, parsed from the two run logs",
+ "base_tip": "824fca398d27db4c0078407b42e544c84048d3dd",
+ "candidate_ref": "refs/heads/review/D-ord0341-r3",
+ "candidate_head": "e2ab3bc8a2a9e9251d760c138065ca722f070d59",
+ "arm_A_line_present": {
+  "run_id": "run407574",
+  "exit_code": 0,
+  "nodes": "5 passed",
+  "telemetry_node": "green"
+ },
+ "arm_B_line_removed": {
+  "run_id": "run407634",
+  "exit_code": 1,
+  "nodes": "1 failed / 4 passed",
+  "telemetry_node": "red",
+  "read_back": "the sealed-demo failure left 0 record(s) on the attribution channel (contexts seen: none)"
+ },
+ "only_difference_between_arms": "one statement: recordAttribution(classifyReadFailure(error), \"wizard.sealedDemo.enter\");",
+ "tree_restored": {
+  "working_tree": "clean",
+  "file_blob": "2e74a6751f0cd8751bada62ba6a673b0162fa37c",
+  "head_blob_same": true
+ },
+ "channel_layer_answer": {
+  "name": "window.citynexusAttribution (+ CustomEvent \"citynexus:attribution\" per record)",
+  "not_added_by_this_order": true,
+  "defined_at": "frontend/src/lib/failureAttribution.ts:262-286",
+  "layer": "frontend lib module -> browser global; not a backend endpoint, not component props",
+  "fields_per_record": "reason, evidence_kind, http_status, source_layer, retryable, recovery_action, message_key, optional server_code/content_type, telemetry, at, context",
+  "measured_new_record_fields": [],
+  "reuse_limits": [
+   "ring buffer capped at TELEMETRY_LIMIT=50 (failureAttribution.ts:264) — oldest records are dropped",
+   "module-level array: a page reload resets it, so a consumer must read within the same document lifetime",
+   "no error.message and no upstream prose is carried — the measured record above shows content_type as the only free-text-ish field, and it is a Q64 allowed field"
+  ]
+ }
+}
