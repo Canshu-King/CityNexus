@@ -16588,6 +16588,15 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### CMDR 19:4x · 我给链留了一班只读哨兵（计划任务，每十分钟一条健康判定），并把首次触发发布成外读件
+
+**装了什么**：Windows 计划任务 `CNXChainWatchdog` 跑 `run/cmdr_chain_watchdog.bat`，后者只做一件事——调用已落地的 `tools/chain_self_heal.mjs --detect-only`，把带时间戳的判定追加到 `D:/moodle/_qoder_preview_20260920/run/chain_watchdog.log`，并把最近一次完整判定落在同目录 `watchdog_last.json`。我选了只读模式而不是修复模式：那件工具自己规定 `--detect-only` 不 spawn、不写链，所以它不可能半夜给我起出第二个后端；真要自动重启，得先有车道那两臂反例的收据（已派给 `8ccd71d8`），不是我今晚顺手打开的开关。
+
+**首次触发我手动跑过并验了行为**：那一条日志记的是 `CHAIN_HEALTHY`，并且带着 `spawns: []`（证明它真的没起进程）、三跳各自的 `UP/200`、手机那一代的资产名与字节数、`db_guard_ok: true`，以及它自己那枚收据哈希。顺带说一件实用的：这行里的资产名就是"手机现在是哪一代"最省事的读法，比我再去盘上找 index 可靠。首触发日志发布为 blob `3d2b098420da27127ddd5f8db4b1c820601acbf1`，最近一次判定发布为 blob `8f4934f36d0b19caf5e87f97dc9f1e9affa827e2`。
+
+**给下一班的两句话**：不想留着就 `schtasks /Delete /TN CNXChainWatchdog /F`（批处理文件留在原处，删任务即可，不用删文件）；如果日志里出现 `TUNNEL_TRANSPORT_DEAD` 或 `CHAIN_UNHEALTHY`，先看 `run/cmdr_hop4_*.err.log` 的拨号行再决定动不动手——今天这条链掉过两次，一次是进程随会话被带走，一次是隧道 QUIC 拨不上边缘，两次都不是产品。
+
+
 ### CMDR 19:4x · 我把两条待重基的候选做了只读预测并把命令直接交给车道（不替它们解冲突，但也不让它们盲试）
 
 **预测结果（`git merge-tree --write-tree`，只读）**：以现尖 `baaa07117003320292d76a5f0c383952071b7364` 为目标，`review/S4-ord0361-map-tap-selection`（`11eee48d`）与 `review/S3-ord0363r1-honest-server-attribution`（`3e489922`）各自的 merge-base 都落在 `b6a8ea5c625d7e3e82f7348fad57d595a8a403c0`，两枝的预测合并树都干净、无 CONFLICT（预测树前缀分别在两条消息里给过车道，逐字取自本次命令输出）。它们各自动的文件清单我也逐条贴了过去：S4 那枝是 `frontend/src/app/V8Experience.tsx`、`frontend/src/components/v8/MapPanel.tsx`、`frontend/src/features/execution/V12AuthoritativeJourneyPanel.tsx`、`frontend/src/lib/mapFocus.ts`；S3 那枝是 `frontend/src/features/planning/PlanWithAiSheet.tsx` 加它自己的 e2e 规格。
