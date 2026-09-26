@@ -16588,6 +16588,19 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### CMDR 18:0x · ORD-0359 已落地（车道 base 落后由我重切）· 落地门的 `--tests` 臂有仪器缺口（记为 ORD-0365，不拿它当产品红）· 手机链换新址
+
+**落地**：`9759f1ac` 的 ORD-0359 落在权威线，新尖 `f44ad86618eb9dadca001ea7471ae24274fc4388`（落地收据 blob `3e2d1be58fc5dc0994acb330f4c23513f0bd8d78`，两条 GitHub 路由回读一致）。它那一枝 base 停在 `b6a8ea5c625d7e3e82f7348fad57d595a8a403c0`、落后四笔，所以我用 `live_checks/cmdr_recut_r1.py` 重切到当时的尖 `27f963a77edc4d508a39b0a07c76927d0512c724`：merge-tree 干净、逐文件 `merged_blob == cand_blob`、父两枚分别是尖与车道原提交 `324753e0688a5f2682071f23cefeff832443b8bc`，重切件发布为 blob `9b7f039c3bc121a5b8066824dd35322857f22708`，并推到 `refs/heads/landing/ord0359-recut-1804`（`git ls-remote` 回读同一枚 40 位才交给门）。
+
+**我自己量的那笔（也是放行依据）**：`live_checks/cmdr_backend_named_r2.py --sha f44ad86618eb9dadca001ea7471ae24274fc4388 --files test_qoder_ord0359_ai_state_three_ways.py` 的完整输出已发布为 blob `7ab19e942304ed5f8ae6eb83bc6114a38aa61d25`，整树采集数与该件的通过数与退出码都写在那份原样输出里（我跑过两遍，两遍同数；采集数与车道块里那个数互相咬得上，这是两把独立仪器同数，不是我把它的数字抄过来）。
+
+**我仪器的一处缺口，如实登记**：`preflight_and_land_r2.py --tests` 只接受 `backend/tests` 下的裸文件名，带路径分隔符的目标被静默丢掉，于是它先给出一次 `test_exit: 0` 且 `summary` 写着"此请求里没有后端相对目标"的空过（收据 blob `d8f99e9d0df04de9cad006396dc103288be04d44`），我换了形之后又撞上"导出树里根本没有后端目录"的硬拒（收据 blob `7f5c03a7518ebb64da30bed5148e13968627f334`）。两笔都是门自己的问题，不是候选的红，所以我没拿它去判车道，也不允许自己拿"门说绿"当放行理由 —— 这次放行靠的是上面那笔点名亲测。缺口开成 ORD-0365（落地门必须能跑点名的后端测试，并且"零目标"要判红而不是判过），归我修，修好前所有后端单都要附一把能跑的点名尺。
+
+**手机链换新址（今天第二次）**：`https://jets-saints-tomatoes-eric.trycloudflare.com`。上一跳死于隧道连接器的 QUIC 拨边（`run/cmdr_hop4_1712.err.log` 尾部原话 `failed to dial to edge with quic: timeout: no recent network activity`，本地三段那时仍正常可取），改为 `--protocol http2` 后恢复；旧址归档 `run/tunnel_url.txt.dead_1752`、`run/tunnel_url.txt.dead_1754`，桌面留言已更新（备份 `CityNexus_包工头留言_bak_1757.txt`）。**手机上现在的前端代仍是 `27f963a7…` 那一包**，ORD-0359 是后端跳：我 18:2x 会重启 `:8693` 并换一次前端代，那之前"三态那句"在手机上看不见 —— 状态是"已落地、手机未部署"，不是"已经生效"。
+
+**账本与派单**：本块之前代插成功的是 `s1_1749.md`、`s3_1749.md`、`n1_1755.md`、`n3_1746.md`；仍被 Q43 挡的是 `b_1742.md`、`n2_1753.md`（逐行原话已分头转给两条车道，我不代改别人的字）。新开的单：ORD-0362（`352ef353`，旧壳吃 26 键 payload）、ORD-0360（`c01d72a3`，同一 semantic_key 不得两条 ACTIVE）、ORD-0361（`1d64acf5`，地图点选要有可观察后果）、ORD-0363（`a17ae861`，我开重了 —— ORD-0346 已由 `1d64acf5` 落地，我 17:3x 已把它改范围为残余那一半：句子必须由服务器给、"服务器给的编号"不许客户端自造）、ORD-0358（`8ccd71d8`，链自恢复工具）、ORD-0359（已落）、ORD-0364（`1d64acf5`，给暴露尺加具名授权集）、ORD-0365（我自己的门）。`S3` 那一枝重切被门拒为 `REFUSED_AUTO_MERGED`（它与刚落的两跳同改 `frontend/src/features/setup/JourneyTrialSetup.tsx` 与那两支 e2e），按 Q72 归它自己重基，我不代解冲突。
+
+
 ### N3 18:05+08 ORD-0357 交付（勘误重发并按你 17:51 的口径重基到新尖）：手机上把当前行程的链接复制出去，权威线 0 次移动
 
 - 单 ORD-0357。候选 ref `refs/heads/review/N3-ord0357-copy-journey-link-r2`，GitHub `ls-remote` 回读到尖 `d9fe7dbef1f4b431ed49757e1bc43f482bbe5afa`（同一条读里 `refs/heads/review/N3-ord0357-copy-journey-link` 回读到 `706f760bf478f8501f57fa50a689c3f7193fb264`，我没覆盖那条先发布的旧枝，只另发 `-r2`）。base = 现尖 `27f963a77edc4d508a39b0a07c76927d0512c724`（`git -C D:/moodle/CityNexus ls-remote origin refs/heads/mirror/integration-frontend-apple-pass1` 退出码 0 读到）。重基前先只读预测：`git merge-tree --write-tree 27f963a77edc4d508a39b0a07c76927d0512c724 706f760bf478f8501f57fa50a689c3f7193fb264` 退出码 0、预测树 `132ae0ef4df796e6675114709d54e320cbe71cdc`；重基后 HEAD 的树逐字等于那枚预测树，CONFLICT 行数读到 0。
