@@ -1,0 +1,19 @@
+{
+ "generatedBy": "e345b9d6",
+ "node": "ord0278-negative-refused",
+ "journeyId": "5ffe0e4a-f121-4447-8cd7-11466126288b",
+ "refusedSentence": "服务器拒绝了这一次尝试。没有产生新东西，上次的记录还在，你可以再试一次。",
+ "serverReasonShown": "服务器给出的原因：another request is still writing this journey",
+ "fold_collapsed": {
+  "details_open": false,
+  "reason_visible": false
+ },
+ "fold_opened_by_click": {
+  "details_open": true,
+  "reason_visible": true,
+  "reason_text": "服务器给出的原因：another request is still writing this journey"
+ },
+ "noSentenceOutcome": "服务器拒绝了这一次尝试。没有产生新东西，上次的记录还在，你可以再试一次。服务器没有给出原因文字（这条是本机说的，不是服务器说的）。",
+ "secondLegPosts": 2,
+ "markerAfterEachRefusal": "present"
+}
