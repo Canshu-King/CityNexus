@@ -1,0 +1,112 @@
+{
+ "started_at": "2026-09-26T00:24:14.444Z",
+ "chain": "http://127.0.0.1:4781",
+ "viewport": {
+  "width": 390,
+  "height": 844
+ },
+ "candidate_buttons": [
+  {
+   "i": 0,
+   "text": "EN",
+   "disabled": false,
+   "cls": "v8-outline-button",
+   "top": 134
+  },
+  {
+   "i": 1,
+   "text": "返回",
+   "disabled": false,
+   "cls": "v8-outline-button",
+   "top": 640
+  },
+  {
+   "i": 2,
+   "text": "确认创建",
+   "disabled": false,
+   "cls": "v8-primary-button",
+   "top": 652
+  },
+  {
+   "i": 3,
+   "text": "使用封存的演示行程",
+   "disabled": false,
+   "cls": "trial-back-link",
+   "top": 862
+  },
+  {
+   "i": 4,
+   "text": "",
+   "disabled": false,
+   "cls": "cn-sim-ball",
+   "top": 568
+  }
+ ],
+ "confirm_button_found_by_text": [
+  {
+   "i": 2,
+   "text": "确认创建",
+   "disabled": false,
+   "cls": "v8-primary-button",
+   "top": 652
+  }
+ ],
+ "press_confirm": {
+  "press": "clicked",
+  "leg_after_press": [
+   {
+    "url": "/api/v1/demo/scene",
+    "m": "GET",
+    "status": 500,
+    "ct": "text/plain",
+    "post_body_len": 0
+   },
+   {
+    "url": "/api/v1/travelers",
+    "m": "POST",
+    "status": 500,
+    "ct": "text/plain",
+    "post_body_len": 76
+   }
+  ],
+  "painted_before_capped": "用你自己的城市试用 CITYNEXUS\n\n新建行程\n\n三步完成。选择目的地、告诉我们怎么玩，剩下的交给 CityNexus。\n\nEN\n✓\n目的地与时间\n✓\n人数与偏好\n3\n确认创建\n目的地\n天津\n抵达\n天津站 · 2026-10-02 10:00\n离开\n天津滨海国际机场 · 2026-10-03 20:00\n人数 / 房间\n2 · 1 · 我们替你填的\n总预算 / 住宿\nCNY 3000 / 1000 · 我们替你填的\n节奏\n轻松 · 我们替你填的\n兴趣\n—\n特殊要求\n—\n自动设置\nCN · CNY · Asia/Shanghai\n\n返回\n确认创建\n使用封存的演示行程",
+  "painted_after_capped": "用你自己的城市试用 CITYNEXUS\n\n新建行程\n\n三步完成。选择目的地、告诉我们怎么玩，剩下的交给 CityNexus。\n\nEN\n✓\n目的地与时间\n✓\n人数与偏好\n3\n确认创建\n目的地\n天津\n抵达\n天津站 · 2026-10-02 10:00\n离开\n天津滨海国际机场 · 2026-10-03 20:00\n人数 / 房间\n2 · 1 · 我们替你填的\n总预算 / 住宿\nCNY 3000 / 1000 · 我们替你填的\n节奏\n轻松 · 我们替你填的\n兴趣\n—\n特殊要求\n—\n自动设置\nCN · CNY · Asia/Shanghai\n这一步没有成功，行程还没有创建。\n服务器拒绝了这一步（HTTP 500）。你的行程没有因此改变，可以检查后重试。\n\n返回\n确认创建\n使用封存的演示行程",
+  "painted_after_len": 344,
+  "painted_after_sha256": "b66658c4f1a2193318ab01c32c207663dc77d5812d26fabc3e628f9908940422",
+  "url_after": "http://127.0.0.1:4781/",
+  "details_after": [],
+  "still_on_wizard": true,
+  "reached_hub": false,
+  "screenshot": {
+   "file": "W3_9_after_confirm.png",
+   "exists": true,
+   "bytes": 218930
+  }
+ },
+ "stored_journey_id": null,
+ "collapse_self_test": {
+  "at_rest": {
+   "body_includes": false,
+   "details_own": 4,
+   "p_own": 0,
+   "p_textcontent": 30
+  },
+  "after_opening": {
+   "body_includes": true,
+   "details_own": 36,
+   "p_own": 30,
+   "p_textcontent": 30
+  },
+  "derived": {
+   "body_level_read_hides_it_when_collapsed": true,
+   "element_inner_text_hides_it_when_collapsed": true,
+   "element_text_content_never_hides_it": true
+  },
+  "screenshot": {
+   "file": "W3_8_collapse_fixture.png",
+   "exists": true,
+   "bytes": 25824
+  }
+ },
+ "finished_at": "2026-09-26T00:24:23.667Z"
+}
