@@ -1,0 +1,88 @@
+{
+ "schema": "CNX_CMDR_UI_EVIDENCE_EXPOSURE_GATE_V1_R6",
+ "ruler": {
+  "name": "ui_exposure_taint_ast_r3.cjs",
+  "supersedes": "ui_exposure_taint_ast_r2.cjs (r5, same decision, scope reporting added)",
+  "supersedes_blob": "ff98091cf3accb0d836ae25ba49820170b92d932",
+  "also_supersedes_r4": {
+   "file": "ui_exposure_taint_ast_r1.cjs",
+   "blob": "eb262f59e54d5142ad0e8041704e751eac473ace"
+  },
+  "rule_lineage": "r1 regex -> r2 regex -> r3 regex -> r4 AST per-file -> r5 AST with the module graph",
+  "order": "ORD-0331",
+  "also_supersedes": {
+   "r3": "ui_exposure_field_check_r3.py",
+   "r3_blob": "44e062e6ce9c7b5d97d78e09e432072da102292c"
+  },
+  "generation": "r5 / AST taint + module graph"
+ },
+ "typescript": "5.9.3",
+ "scope": "per-file: no module graph is built here (--file / --ref --path)",
+ "scope_note": "a per-file count is neither an upper nor a lower bound on --tree: a call into an imported helper is opaque, so a value the helper actually returns as device wording is still reported here (over-report); and poison that arrives through an import has no edge to follow, so the screen reads clean here (under-report). Both directions are pinned by selftest arms F and G, and the split measured on generation 821a0eb54cca1b305a4aa75c1ca8d46a95d51bba is 1 cell only per-file, 3 cells only in --tree.",
+ "upper_bound_claim": "REFUTED on the live generation: 1 cell here does not exist under --tree and 3 cells under --tree do not exist here; see selftest arms F and G",
+ "method": "per-file AST taint through the TypeScript compiler API: poison source, spread along assignment / object-property value / destructure / template hole / call argument by position / return / useState setter, property-path sensitive, fixpoint over the call graph. No regular expression decides anything.",
+ "standing_rule": "Q64=1 (arbiter): data reaching UI / screenshot / evidence artifacts must pass source classification -> allowed fields -> render. mask is a helper, never the first gate.",
+ "allowed_fields": [
+  "http_status",
+  "content_type",
+  "body_bytes",
+  "response_received",
+  "elapsed_ms",
+  "request_id"
+ ],
+ "forbidden": [
+  "raw body",
+  "raw detail",
+  "raw exception",
+  "the answer's own words reaching the DOM by any route, including a forwarding helper"
+ ],
+ "rules_fired": [],
+ "per_rule": {},
+ "files_scanned": 1,
+ "files_failed": 0,
+ "parse_diagnostics_total": 0,
+ "per_file": [
+  {
+   "file": "c740f45d68f3:frontend/src/features/setup/JourneyTrialSetup.tsx",
+   "hits": 0,
+   "parse_diagnostics": 0,
+   "depth_cut_lookups": 0,
+   "graph": {
+    "bindings": 195,
+    "functions": 79,
+    "call_sites": 207,
+    "state_pairs": [
+     "touched/setTouched",
+     "touched/setTouched",
+     "step/setStep",
+     "step/setStep",
+     "advanced/setAdvanced",
+     "advanced/setAdvanced",
+     "createAttemptFailed/setCreateAttemptFailed",
+     "createAttemptFailed/setCreateAttemptFailed",
+     "spokenReason/setSpokenReason",
+     "spokenReason/setSpokenReason",
+     "spokenKey/setSpokenKey",
+     "spokenKey/setSpokenKey",
+     "draft/setDraft",
+     "draft/setDraft",
+     "roomsTouched/setRoomsTouched",
+     "roomsTouched/setRoomsTouched"
+    ],
+    "sinks": 113
+   }
+  }
+ ],
+ "resolution_depth_cap": 40,
+ "resolution_truncated_total": 0,
+ "truncated_meaning": "how many times a lookup ran out of depth and had to answer \"unknown\" - a clean verdict with a nonzero value here is NOT a proven clean verdict",
+ "targets_scanned": [
+  "c740f45d68f3:frontend/src/features/setup/JourneyTrialSetup.tsx"
+ ],
+ "hits": [],
+ "verdict": "NO_EXPOSURE_SHAPE_FOUND",
+ "interpretation_limit": "a hit names a shape to justify, not a defect verdict",
+ "claim_kind": "pattern_determined",
+ "claimed_result": "NO_EXPOSURE_SHAPE_FOUND across 1 scanned file(s): 0 hit(s) []",
+ "derived_result": null
+}
