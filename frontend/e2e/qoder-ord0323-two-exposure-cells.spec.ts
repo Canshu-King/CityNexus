@@ -104,6 +104,8 @@ const armOf = (title: string): string =>
 test.afterEach(({}, info) => {
   const arm = armOf(info.title);
   const body: Readings = { ...(readings[arm] ?? {}) };
+  /* E's signoff criterion: a reading is worth nothing unless it says which test produced it. */
+  body.nodeid = info.titlePath().join(" > ");
   /* A red arm has to carry its own readings too, or the counter-example proves nothing about which
      direction flipped. */
   body.test_status = info.status;
@@ -165,6 +167,7 @@ test("N1_boundary_panel_keeps_its_own_readings_and_drops_the_failure_prose — �
     panel_copy: clean(((await panel.textContent()) ?? "")),
     error_detail_text: detail,
     console_error_count: consoleErrors.length,
+    failure_text_rendered_field: (detail.match(/failure_text_rendered=(\w+)/) || [null, ""])[1],
     console_error_head: consoleErrors.slice(0, 2).map((s) => s.slice(0, 220)),
     root_text_length: dom.root.length,
     overlay_hosts: dom.overlay,
@@ -192,9 +195,9 @@ test("N1_boundary_panel_keeps_its_own_readings_and_drops_the_failure_prose — �
     node(arm, `the fold dropped the device's own connectivity reading; it reads "${detail.slice(0, 200)}"`),
   ).toBe(true);
   expect(
-    detail.includes("failure_text_rendered=no"),
-    node(arm, `the fold no longer states its own boundary; it reads "${detail.slice(0, 200)}"`),
-  ).toBe(true);
+    (detail.match(/failure_text_rendered=(\w+)/) || [null, ""])[1],
+    node(arm, `the fold no longer states its own boundary as the word no; it reads "${detail.slice(0, 200)}"`),
+  ).toBe("no");
 
   /* NEGATIVE -- the failure prose and the component frames are not in the DOM. Asserted on textContent,
      not innerText: a collapsed fold is still a page a screenshot tool can expand. */
@@ -442,7 +445,7 @@ const LEGS: Leg[] = [
 const draftRow = {
   id: "ORD0323-D3",
   artifact_type: "STRUCTURED_JSON",
-  extracted: {title: "天津西 → 北京南 高铁", reservation_type: "RAIL"},
+  extracted: {title: "天津西 → 北京南 高铁", reservation_type: "RAIL", anchor_role: "MID_TRIP"},
   status: "NEEDS_REVIEW",
   unresolved_fields: [],
   extraction_mode: "RULE",
@@ -586,6 +589,7 @@ test("N6_Q68b_a_sentence_only_refusal_is_not_presentation_as_a_code — 编号�
     uppercased_prose_in_attributes: dom.attrs.toUpperCase().includes(Q68_PROSE.toUpperCase().slice(0, 18)),
     attribute_pairs_swept: dom.attr_pairs,
     attributed_sentence_in_fold: reasonText.includes(Q68_PROSE),
+    fold_text_equals_the_sentence: reasonText === Q68_PROSE,
     server_label_present: /服务器给出的原因|Reason the server gave/.test(cardAll),
     needle_in_dom: dom.body.includes(Q68_PROSE),
     no_code_branch_on_screen: noCodeAnyWording,
@@ -612,6 +616,8 @@ test("N6_Q68b_a_sentence_only_refusal_is_not_presentation_as_a_code — 编号�
     node(arm, `Q71: the sentence is in a data / aria attribute value (${String((readings[arm] as Readings).attribute_pairs_swept)} pairs swept) even though the visible slot is clean`),
   ).toBe(false);
   /* and Q67=①'s home for it is still there: the attributed sentence inside 技术详情 */
+  expect(reasonText,
+    node(arm, `技术详情 holds something other than the reply's own sentence verbatim (${reasonText.slice(0, 200)})`)).toBe(Q68_PROSE);
   expect(reasonText.includes(Q68_PROSE),
     node(arm, `the sentence vanished from 技术详情 too (${reasonText.slice(0, 160)}) -- Q68 says the code slot is not its place, not that it may be deleted`)).toBe(true);
   expect(/服务器给出的原因|Reason the server gave/.test(cardAll),
@@ -733,6 +739,7 @@ for (const leg of LEGS) {
       status_asked: leg.status,
       slot_text: text,
       status_in_slot: text.includes(String(leg.status)),
+      status_field_equals_asked: (text.match(/http_status=(\d+)/) || [null, ""])[1] === String(leg.status),
       needles_found: found,
       needles_found_in_attributes: foundInAttrs,
       attribute_pairs_swept: dom.attr_pairs,
@@ -743,6 +750,9 @@ for (const leg of LEGS) {
     expect(foundInAttrs, node(arm, `${leg.cell}: Q71 counts an attribute as the screen -- a reply's words sit in a data / aria value (${JSON.stringify(foundInAttrs)} of ${String(dom.attr_pairs)} pairs swept)`)).toEqual([]);
     expect(text.includes(String(leg.status)),
       node(arm, `${leg.cell}: the slot no longer states the status this device measured for THIS request (${text})`)).toBe(true);
+    /* equality on the parsed field, so a substring of another leg's status cannot pass for this one */
+    expect((text.match(/http_status=(\d+)/) || [null, "(absent)"])[1],
+      node(arm, `${leg.cell}: the parsed http_status field is "${(text.match(/http_status=(\d+)/) || [null, "(absent)"])[1]}", this leg asked ${leg.status} (${text})`)).toBe(String(leg.status));
     expect(foreign,
       node(arm, `${leg.cell}: the slot shows another leg's status ${JSON.stringify(foreign)} instead of its own (${text})`)).toEqual([]);
     if (leg.slot !== "message") {
@@ -781,7 +791,9 @@ const memoryRow = {
 const interpretationDraft = {
   ...draftRow,
   id: "ORD0323-D4",
-  interpretation: {...draftRow.interpretation, reasoning_summary: F_SENTINELS.F4, payment_status: "PAID"},
+  interpretation: {...draftRow.interpretation, reasoning_summary: F_SENTINELS.F4, payment_status: "PAID",
+                   anchor_role_confidence: 0.8},
+  extracted: {...draftRow.extracted, anchor_role: "MID_TRIP"},
 };
 
 async function openWallet(page: Page, id: string): Promise<void> {
@@ -832,6 +844,9 @@ test("N7_F1_an_answered_body_that_is_not_json_is_not_filed_as_a_transport_failur
     sentinel_on_screen: dom.root.includes(F_SENTINELS.F1) || dom.body.includes(F_SENTINELS.F1),
     sentinel_in_attributes: [F_SENTINELS.F1].filter((n) => dom.attrs.includes(n)),
     attribute_pairs_swept: dom.attr_pairs,
+    machine_half: (text.split(" · ").slice(-1)[0] ?? "").trim(),
+    machine_half_equals: (text.split(" · ").slice(-1)[0] ?? "").trim()
+      === "http_status=200 content_type=text/html;charset=UTF-8 evidence=HTTP_RESPONSE",
     fields_in_line: /http_status=200/.test(text) && /content_type=text\/html/.test(text),
     answered_evidence: /evidence=HTTP_RESPONSE/.test(text),
     filed_as_transport: /evidence=TRANSPORT/.test(text),
@@ -841,6 +856,9 @@ test("N7_F1_an_answered_body_that_is_not_json_is_not_filed_as_a_transport_failur
   expect(readings[arm].filed_as_transport, node(arm, `F1: 明明答了 200，这一行把它说成网络问题（${text.slice(0, 220)}）`)).toBe(false);
   expect(readings[arm].answered_evidence, node(arm, `F1: 没有把「这是回答，不是断线」写进读数（${text.slice(0, 220)}）`)).toBe(true);
   expect(readings[arm].fields_in_line, node(arm, `F1: 这一行没有这台设备自己量的状态与媒体类型（${text.slice(0, 220)}）`)).toBe(true);
+  expect((text.split(" · ").slice(-1)[0] ?? "").trim(),
+    node(arm, `F1: 机器那一半与这台设备答的不逐字相同（${(text.split(" · ").slice(-1)[0] ?? "").trim()}）`),
+  ).toBe("http_status=200 content_type=text/html;charset=UTF-8 evidence=HTTP_RESPONSE");
 });
 
 test("N7_F2_a_rejected_extraction_shows_its_machine_status_not_the_reply_s_sentence — F2：服务器那句 reason 不再当状态行", async ({
@@ -867,10 +885,14 @@ test("N7_F2_a_rejected_extraction_shows_its_machine_status_not_the_reply_s_sente
     sentinel_in_attributes: [F_SENTINELS.F2].filter((n) => dom.attrs.includes(n)),
     attribute_pairs_swept: dom.attr_pairs,
     machine_status_in_line: text.includes("REJECTED"),
+    last_token_equals: (text.trim().split(/\s+/).slice(-1)[0] ?? "") === "REJECTED",
   };
   expect(readings[arm].sentinel_on_screen, node(arm, `F2: 服务器那句原话又成了这一屏的状态行（${text.slice(0, 220)}）`)).toBe(false);
   expect(readings[arm].sentinel_in_attributes, node(arm, `F2: Q71 口径下原话进了属性也是上屏（${String(dom.attr_pairs)} 对）`)).toEqual([]);
   expect(readings[arm].machine_status_in_line, node(arm, `F2: 状态行不再说明这台答复自己的机器状态（${text.slice(0, 220)}）`)).toBe(true);
+  expect((text.trim().split(/\s+/).slice(-1)[0] ?? ""),
+    node(arm, `F2: 这一行的最后一个记号不是那枚机器枚举，而是 "${(text.trim().split(/\s+/).slice(-1)[0] ?? "")}"（${text.slice(0, 220)}）`),
+  ).toBe("REJECTED");
 });
 
 test("N7_F3_a_memory_row_shows_what_it_measured_not_the_model_s_sentence — F3：纪念册那一行的推理摘要不再原样上屏", async ({
@@ -894,11 +916,14 @@ test("N7_F3_a_memory_row_shows_what_it_measured_not_the_model_s_sentence — F3�
     sentinel_in_attributes: [F_SENTINELS.F3].filter((n) => dom.attrs.includes(n)),
     attribute_pairs_swept: dom.attr_pairs,
     held_token_present: (await page.getByTestId("v13-2-memory-summary-held").count()) > 0,
+    held_text: clean(await page.getByTestId("v13-2-memory-summary-held").textContent().catch(() => "")) ?? "",
     own_fields_present: rowText.includes("ORD0323-M1-LABEL") && rowText.includes("62"),
   };
   expect(readings[arm].sentinel_on_screen, node(arm, `F3: 模型的推理摘要被这一屏当成自己的话说出来了（${rowText.slice(0, 200)}）`)).toBe(false);
   expect(readings[arm].sentinel_in_attributes, node(arm, `F3: Q71 口径下摘要进了属性也是上屏（${String(dom.attr_pairs)} 对）`)).toEqual([]);
   expect(readings[arm].held_token_present, node(arm, "F3: 这一行不再说明摘要存在但不在这里展示")).toBe(true);
+  expect(readings[arm].held_text,
+    node(arm, `F3: 那一格写的不是这句设备自己的话（"${String(readings[arm].held_text)}"）`)).toBe("reasoning_summary=held 原文不在这一屏");
   expect(readings[arm].own_fields_present, node(arm, `F3: 这一行自己的读数不在了（${rowText.slice(0, 200)}）`)).toBe(true);
 });
 
@@ -930,15 +955,21 @@ test("N7_F4_the_draft_review_shows_its_own_fields_not_the_model_s_sentence — F
   ).toBeVisible({timeout: 30_000});
   const dom = await domReading(page);
   const review = clean(await page.getByTestId("v13-2-review").textContent());
+  const interp = clean(await page.getByTestId("v13-2-interpretation").textContent().catch(() => ""));
   readings[arm] = {
     review_text: review,
     sentinel_on_screen: dom.root.includes(F_SENTINELS.F4) || dom.body.includes(F_SENTINELS.F4),
     sentinel_in_attributes: [F_SENTINELS.F4].filter((n) => dom.attrs.includes(n)),
     attribute_pairs_swept: dom.attr_pairs,
     held_token_present: (await page.getByTestId("v13-2-draft-summary-held").count()) > 0,
+    held_text: clean(await page.getByTestId("v13-2-draft-summary-held").textContent().catch(() => "")) ?? "",
+    interpretation_text: interp,
+    interpretation_percent_field: (interp.match(/(\d+)\s*%/) || [null, ""])[1],
     own_fields_present: review.includes("到站") || review.includes("MID_TRIP") || /0\.8|80%/.test(review),
   };
   expect(readings[arm].sentinel_on_screen, node(arm, `F4: 模型的推理摘要被待审那一屏当成自己的话说出来了（${review.slice(0, 200)}）`)).toBe(false);
   expect(readings[arm].sentinel_in_attributes, node(arm, `F4: Q71 口径下摘要进了属性也是上屏（${String(dom.attr_pairs)} 对）`)).toEqual([]);
   expect(readings[arm].held_token_present, node(arm, "F4: 待审那一屏不再说明摘要存在但不在这里展示")).toBe(true);
+  expect(readings[arm].held_text,
+    node(arm, `F4: 那一格写的不是这句设备自己的话（"${String(readings[arm].held_text)}"）`)).toBe("reasoning_summary=held 原文不在这一屏");
 });
