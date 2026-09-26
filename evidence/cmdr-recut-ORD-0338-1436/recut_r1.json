@@ -1,0 +1,65 @@
+{
+ "order": "ORD-0338",
+ "line": "origin/mirror/integration-frontend-apple-pass1",
+ "tip": "38277c4e9787b1ddf0bf69487060ba0e40c14146",
+ "cand": "1a779b694d7c04f7dea8d74b0cff7af90441ae22",
+ "merge_base": "2d8b03b8c7734ea3b8521b80845e1b0bc1a07957",
+ "commits_tip_ahead_of_base": 7,
+ "commits_cand_ahead_of_base": 4,
+ "merge_tree_rc": 0,
+ "changed_files": [
+  "frontend/e2e/qoder-ord0338-wizard-gap-clearance.spec.ts",
+  "frontend/e2e/qoder-wizard-advanced-is-tappable.spec.ts",
+  "frontend/src/design-tokens.css",
+  "frontend/src/features/setup/JourneyTrialSetup.tsx",
+  "frontend/src/styles.css"
+ ],
+ "files": [
+  {
+   "path": "frontend/e2e/qoder-ord0338-wizard-gap-clearance.spec.ts",
+   "cand_blob": "9d14da4957b78493850fafe3ab452829d41c98a1",
+   "merged_blob": "9d14da4957b78493850fafe3ab452829d41c98a1",
+   "identical": true,
+   "cand_changed_the_file": true
+  },
+  {
+   "path": "frontend/e2e/qoder-wizard-advanced-is-tappable.spec.ts",
+   "cand_blob": "bdf75ffa0b6de02bb2442b547358e55c505eeafc",
+   "merged_blob": "bdf75ffa0b6de02bb2442b547358e55c505eeafc",
+   "identical": true,
+   "cand_changed_the_file": true
+  },
+  {
+   "path": "frontend/src/design-tokens.css",
+   "cand_blob": "3d7a64c5d09b0835bd074c0623dd8c249481fc74",
+   "merged_blob": "3d7a64c5d09b0835bd074c0623dd8c249481fc74",
+   "identical": true,
+   "cand_changed_the_file": true
+  },
+  {
+   "path": "frontend/src/features/setup/JourneyTrialSetup.tsx",
+   "cand_blob": "94568c0bc7f963bc72de0b2abf796bc26b6b2c52",
+   "merged_blob": "94568c0bc7f963bc72de0b2abf796bc26b6b2c52",
+   "identical": true,
+   "cand_changed_the_file": true
+  },
+  {
+   "path": "frontend/src/styles.css",
+   "cand_blob": "421e8df2d2412c811522788a7a13191619fe0bc1",
+   "merged_blob": "421e8df2d2412c811522788a7a13191619fe0bc1",
+   "identical": true,
+   "cand_changed_the_file": true
+  }
+ ],
+ "merged_tree": "99403ef0f7a43fa0c85abb10259f232c2ac742e7",
+ "auto_merged_files": [],
+ "recut_commit": "436d4a36c64c1b54a0b105f0f346425286a15701",
+ "readback_tree": "99403ef0f7a43fa0c85abb10259f232c2ac742e7",
+ "readback_tree_matches": true,
+ "readback_parents": [
+  "38277c4e9787b1ddf0bf69487060ba0e40c14146",
+  "1a779b694d7c04f7dea8d74b0cff7af90441ae22"
+ ],
+ "readback_parent_tip": true,
+ "verdict": "RECUT_OK"
+}
