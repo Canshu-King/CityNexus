@@ -1,0 +1,81 @@
+{
+ "order": "ORD-0360",
+ "line": "origin/mirror/integration-frontend-apple-pass1",
+ "tip": "ca31443589a451473c8384ea96f53c888ff9512f",
+ "cand": "10f57b8c1cd9aaf8c9b74d886ec0045838ae0953",
+ "merge_base": "d2a794002971c197a60359639feec1f09d2b485e",
+ "commits_tip_ahead_of_base": 2,
+ "commits_cand_ahead_of_base": 3,
+ "merge_tree_rc": 0,
+ "changed_files": [
+  "backend/app/db/session.py",
+  "backend/app/operations/reservation_identity.py",
+  "backend/app/operations/v9.py",
+  "backend/app/planning/anchors.py",
+  "backend/app/services.py",
+  "backend/db/schema.sql",
+  "backend/tests/test_qoder_ord0360_single_active_anchor.py"
+ ],
+ "files": [
+  {
+   "path": "backend/app/db/session.py",
+   "cand_blob": "788fb854c6a79dddaca90520ea4ffefdff5ae531",
+   "merged_blob": "788fb854c6a79dddaca90520ea4ffefdff5ae531",
+   "identical": true,
+   "cand_changed_the_file": true
+  },
+  {
+   "path": "backend/app/operations/reservation_identity.py",
+   "cand_blob": "12222b251608ccf7cada1d76923235aa9e3fe1b7",
+   "merged_blob": "12222b251608ccf7cada1d76923235aa9e3fe1b7",
+   "identical": true,
+   "cand_changed_the_file": true
+  },
+  {
+   "path": "backend/app/operations/v9.py",
+   "cand_blob": "9e884b8906b66797605d3c3ff95b666b9f9849b8",
+   "merged_blob": "9e884b8906b66797605d3c3ff95b666b9f9849b8",
+   "identical": true,
+   "cand_changed_the_file": true
+  },
+  {
+   "path": "backend/app/planning/anchors.py",
+   "cand_blob": "7acd89b65814f42e11dfb8c2b2860fb293886b03",
+   "merged_blob": "7acd89b65814f42e11dfb8c2b2860fb293886b03",
+   "identical": true,
+   "cand_changed_the_file": true
+  },
+  {
+   "path": "backend/app/services.py",
+   "cand_blob": "13dbf0271ce2b130d621056ee34a76f7cf845342",
+   "merged_blob": "13dbf0271ce2b130d621056ee34a76f7cf845342",
+   "identical": true,
+   "cand_changed_the_file": true
+  },
+  {
+   "path": "backend/db/schema.sql",
+   "cand_blob": "119e047b7a5b7e369cb1d6242be2bc37e52b7d87",
+   "merged_blob": "119e047b7a5b7e369cb1d6242be2bc37e52b7d87",
+   "identical": true,
+   "cand_changed_the_file": true
+  },
+  {
+   "path": "backend/tests/test_qoder_ord0360_single_active_anchor.py",
+   "cand_blob": "c376c4932babb56408c6dfe9064cb31fec6668e6",
+   "merged_blob": "c376c4932babb56408c6dfe9064cb31fec6668e6",
+   "identical": true,
+   "cand_changed_the_file": true
+  }
+ ],
+ "merged_tree": "9c49aa7cbed508723def97d845a74e12b1d9c740",
+ "auto_merged_files": [],
+ "recut_commit": "6ee21eddba60303e8f0f46907df9501ee0149e6e",
+ "readback_tree": "9c49aa7cbed508723def97d845a74e12b1d9c740",
+ "readback_tree_matches": true,
+ "readback_parents": [
+  "ca31443589a451473c8384ea96f53c888ff9512f",
+  "10f57b8c1cd9aaf8c9b74d886ec0045838ae0953"
+ ],
+ "readback_parent_tip": true,
+ "verdict": "RECUT_OK"
+}
