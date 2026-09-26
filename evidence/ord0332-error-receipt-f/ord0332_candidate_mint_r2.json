@@ -1,0 +1,231 @@
+{
+ "order": "ORD-0332",
+ "branch": "refs/heads/mirror/integration-frontend-apple-pass1",
+ "my_ref": "refs/heads/review/ord0332-error-receipt-f-r2",
+ "export_generation": "c740f45d68f337c460a1a43b995162689d0110af",
+ "tip_now": "ab12c17a65450c2c3062c9232e27a26c4ae1b485",
+ "export_is_ancestor_of_tip": true,
+ "my_ref_absent_before": true,
+ "subject_blob_equality": {
+  "backend/app/error_receipt.py": {
+   "blob_at_export_generation": "(absent)",
+   "blob_at_tip": "(absent)",
+   "identical": true,
+   "kind": "absent_at_both_generations_new_file"
+  },
+  "backend/app/main.py": {
+   "blob_at_export_generation": "e2ff3ffb6f9b74c82cc1663980d6e46dacc6938e",
+   "blob_at_tip": "e2ff3ffb6f9b74c82cc1663980d6e46dacc6938e",
+   "identical": true,
+   "kind": "predecessor_must_be_byte_identical"
+  },
+  "backend/tests/test_qoder_ord0332_error_receipt.py": {
+   "blob_at_export_generation": "(absent)",
+   "blob_at_tip": "(absent)",
+   "identical": true,
+   "kind": "absent_at_both_generations_new_file"
+  },
+  "contracts/ERROR_RECEIPT_ID_V1.md": {
+   "blob_at_export_generation": "(absent)",
+   "blob_at_tip": "(absent)",
+   "identical": true,
+   "kind": "absent_at_both_generations_new_file"
+  },
+  "contracts/openapi.yaml": {
+   "blob_at_export_generation": "484c64cdaaa41e72d252563b84cef915cb4e80eb",
+   "blob_at_tip": "484c64cdaaa41e72d252563b84cef915cb4e80eb",
+   "identical": true,
+   "kind": "predecessor_must_be_byte_identical"
+  },
+  "frontend/src/lib/errorReceipt.ts": {
+   "blob_at_export_generation": "(absent)",
+   "blob_at_tip": "(absent)",
+   "identical": true,
+   "kind": "absent_at_both_generations_new_file"
+  },
+  "frontend/tools/ord0332_receipt_readings.mjs": {
+   "blob_at_export_generation": "(absent)",
+   "blob_at_tip": "(absent)",
+   "identical": true,
+   "kind": "absent_at_both_generations_new_file"
+  }
+ },
+ "subject_kinds": {
+  "absent_at_both_generations_new_file": 5,
+  "predecessor_must_be_byte_identical": 2
+ },
+ "per_file_blobs": {
+  "backend/app/error_receipt.py": {
+   "before_blob": "(absent at tip)",
+   "after_blob": "32a64b80d6faecb1e51eb106f3cdf8c97ecc3bb0",
+   "before_bytes": 0,
+   "after_bytes": 4423,
+   "before_lines": 0,
+   "after_lines": 110,
+   "crlf_bytes_after": 0
+  },
+  "backend/app/main.py": {
+   "before_blob": "e2ff3ffb6f9b74c82cc1663980d6e46dacc6938e",
+   "after_blob": "a40c7644f2a4440c903cee992f58452e48450f2a",
+   "before_bytes": 486698,
+   "after_bytes": 488688,
+   "before_lines": 11490,
+   "after_lines": 11529,
+   "crlf_bytes_after": 0
+  },
+  "backend/tests/test_qoder_ord0332_error_receipt.py": {
+   "before_blob": "(absent at tip)",
+   "after_blob": "1d5ad8666faaab5d790c7de29959ad0038130d98",
+   "before_bytes": 0,
+   "after_bytes": 11258,
+   "before_lines": 0,
+   "after_lines": 237,
+   "crlf_bytes_after": 0
+  },
+  "contracts/ERROR_RECEIPT_ID_V1.md": {
+   "before_blob": "(absent at tip)",
+   "after_blob": "1dacb00acfa49f0ba6a7ae8a92213572e9919fd2",
+   "before_bytes": 0,
+   "after_bytes": 4605,
+   "before_lines": 0,
+   "after_lines": 75,
+   "crlf_bytes_after": 0
+  },
+  "contracts/openapi.yaml": {
+   "before_blob": "484c64cdaaa41e72d252563b84cef915cb4e80eb",
+   "after_blob": "11d3d4e92fcf732aafe6589803d5df7db2bfa733",
+   "before_bytes": 106971,
+   "after_bytes": 107555,
+   "before_lines": 2584,
+   "after_lines": 2590,
+   "crlf_bytes_after": 0
+  },
+  "frontend/src/lib/errorReceipt.ts": {
+   "before_blob": "(absent at tip)",
+   "after_blob": "7180165475df488f87147eea441dc4325d878008",
+   "before_bytes": 0,
+   "after_bytes": 3671,
+   "before_lines": 0,
+   "after_lines": 73,
+   "crlf_bytes_after": 0
+  },
+  "frontend/tools/ord0332_receipt_readings.mjs": {
+   "before_blob": "(absent at tip)",
+   "after_blob": "69084844ecaaf34e7dec5133c07a19573e2d519e",
+   "before_bytes": 0,
+   "after_bytes": 8000,
+   "before_lines": 0,
+   "after_lines": 149,
+   "crlf_bytes_after": 0
+  }
+ },
+ "candidate_commit": "3a3feea3a290156cd84bd740a1ea45250d95b419",
+ "candidate_tree": "e9e9890a6e44630f95dcfe1911525ebfe7a64f05",
+ "changed_paths": [
+  "backend/app/error_receipt.py",
+  "backend/app/main.py",
+  "backend/tests/test_qoder_ord0332_error_receipt.py",
+  "contracts/ERROR_RECEIPT_ID_V1.md",
+  "contracts/openapi.yaml",
+  "frontend/src/lib/errorReceipt.ts",
+  "frontend/tools/ord0332_receipt_readings.mjs"
+ ],
+ "changed_path_count": 7,
+ "numstat": [
+  [
+   "110",
+   "0",
+   "backend/app/error_receipt.py"
+  ],
+  [
+   "39",
+   "0",
+   "backend/app/main.py"
+  ],
+  [
+   "237",
+   "0",
+   "backend/tests/test_qoder_ord0332_error_receipt.py"
+  ],
+  [
+   "75",
+   "0",
+   "contracts/ERROR_RECEIPT_ID_V1.md"
+  ],
+  [
+   "6",
+   "0",
+   "contracts/openapi.yaml"
+  ],
+  [
+   "73",
+   "0",
+   "frontend/src/lib/errorReceipt.ts"
+  ],
+  [
+   "149",
+   "0",
+   "frontend/tools/ord0332_receipt_readings.mjs"
+  ]
+ ],
+ "change_points": [
+  {
+   "path": "backend/app/error_receipt.py",
+   "new_start_line": 1,
+   "new_lines": 110,
+   "hunk_context": ""
+  },
+  {
+   "path": "backend/app/main.py",
+   "new_start_line": 177,
+   "new_lines": 7,
+   "hunk_context": "from app.db.write_deadline import ("
+  },
+  {
+   "path": "backend/app/main.py",
+   "new_start_line": 503,
+   "new_lines": 14,
+   "hunk_context": "def error("
+  },
+  {
+   "path": "backend/app/main.py",
+   "new_start_line": 642,
+   "new_lines": 18,
+   "hunk_context": "def write_deadline_answer(_: Request, exc: WriteDeadlineExceeded) -> JSONRespons"
+  },
+  {
+   "path": "backend/tests/test_qoder_ord0332_error_receipt.py",
+   "new_start_line": 1,
+   "new_lines": 237,
+   "hunk_context": ""
+  },
+  {
+   "path": "contracts/ERROR_RECEIPT_ID_V1.md",
+   "new_start_line": 1,
+   "new_lines": 75,
+   "hunk_context": ""
+  },
+  {
+   "path": "contracts/openapi.yaml",
+   "new_start_line": 1825,
+   "new_lines": 6,
+   "hunk_context": "components:"
+  },
+  {
+   "path": "frontend/src/lib/errorReceipt.ts",
+   "new_start_line": 1,
+   "new_lines": 73,
+   "hunk_context": ""
+  },
+  {
+   "path": "frontend/tools/ord0332_receipt_readings.mjs",
+   "new_start_line": 1,
+   "new_lines": 149,
+   "hunk_context": ""
+  }
+ ],
+ "remote_ref_readback": "3a3feea3a290156cd84bd740a1ea45250d95b419",
+ "authoritative_line_after": "ab12c17a65450c2c3062c9232e27a26c4ae1b485",
+ "authoritative_line_untouched": true,
+ "supersedes": "ord0332_candidate_mint_r1.json 那枚 65c13c6f9953aa8f0dabb3d5db692586cc894d35 已推到 ref `review/ord0332-error-receipt-f` 并冻结（Q37 不重推）；本枚是它的第二切：唯一差异是门里 多了一格 test_R8（A2 那一臂存活逼出来的），产品字节一字未改"
+}
