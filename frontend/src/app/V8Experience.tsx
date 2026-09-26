@@ -2283,6 +2283,19 @@ function Hub({
        Clause 5 in the other direction: nothing here clears the marker before a request goes out. */
     if (outcome.kind === "accepted") clearPendingContinuation(data.journey.id);
     setResumeOutcome(outcome);
+    if (outcome.kind === "refused") {
+      /* ORD-0344-b: the server's sentence left the traveller's line, so the diagnosis goes through
+         the channel that was never about the DOM -- `classifyReadFailure` + `recordAttribution`,
+         the same sink ORD-0273's technical facts use.  It is classified from the status this device
+         saw; when the answer sent no code the record stays unclassified, which is the honest state
+         rather than a guessed cause.  `copyFor` is deliberately not painted here: its title for a
+         409 is 「这一次没读到」, while this paragraph says the attempt was refused and a shipped gate
+         holds that exact sentence. */
+      recordAttribution(
+        classifyReadFailure(null, { status: outcome.httpStatus, code: null, message: null }),
+        "hub.continuation.resume.refused",
+      );
+    }
     setResuming(false);
     resumingRef.current = false;
     if (outcome.kind === "accepted" && outcome.planIds.length > 0) onStageChanged();
@@ -2590,38 +2603,78 @@ function Hub({
               which unmounts the card, and a sentence living inside it would vanish with it -- a
               successful continue would then be the one outcome the screen says nothing about. */}
           {resumeOutcome && (
-            <p
-              className="today-continuation-resume-outcome"
-              data-testid="continuation-resume-outcome"
-              data-outcome={resumeOutcome.kind}
-            >
-              {resumeOutcome.kind === "accepted"
-                ? resumeOutcome.planIds.length > 0
-                  ? t("hub.continuationResumed")
-                  : t("hub.continuationResumedEmpty")
-                : null}
-              {resumeOutcome.kind === "refused" && (
-                <>
-                  {t("hub.continuationResumeRefused")}
-                  {resumeOutcome.serverReason ? (
-                    <span data-testid="continuation-resume-server-reason">
-                      {`${zh ? "服务器给出的原因：" : "Server's own reason: "}`}
-                      {resumeOutcome.serverReason}
-                    </span>
-                  ) : (
-                    /* The label the traveller must not be lied to about: an HTTP status this screen
-                       wrote itself is not "the server's reason". */
-                    <span data-testid="continuation-resume-no-server-reason">
-                      {zh
-                        ? "服务器没有给出原因文字（这条是本机说的，不是服务器说的）。"
-                        : "The server sent no reason text -- this sentence is ours, not the server's."}
-                    </span>
-                  )}
-                </>
+            <>
+              <p
+                className="today-continuation-resume-outcome"
+                data-testid="continuation-resume-outcome"
+                data-outcome={resumeOutcome.kind}
+              >
+                {resumeOutcome.kind === "accepted"
+                  ? resumeOutcome.planIds.length > 0
+                    ? t("hub.continuationResumed")
+                    : t("hub.continuationResumedEmpty")
+                  : null}
+                {resumeOutcome.kind === "refused" && (
+                  <>
+                    {t("hub.continuationResumeRefused")}
+                    {!resumeOutcome.serverReason && (
+                      /* The label the traveller must not be lied to about: an HTTP status this screen
+                         wrote itself is not "the server's reason".  Q68 says the same line from the
+                         other side -- no number reached us, so the screen names that instead of
+                         borrowing one. */
+                      <span data-testid="continuation-resume-no-server-reason">
+                        {zh
+                          ? "服务器没有给出原因文字（这条是本机说的，不是服务器说的）。"
+                          : "The server sent no reason text -- this sentence is ours, not the server's."}
+                      </span>
+                    )}
+                  </>
+                )}
+                {resumeOutcome.kind === "deadline" && t("hub.continuationResumeDeadline")}
+                {resumeOutcome.kind === "transport" && t("hub.continuationResumeTransport")}
+              </p>
+              {resumeOutcome.kind === "refused" && resumeOutcome.serverReason && (
+                /* ORD-0344-b (Q64): the server's own words stay attributed but leave the
+                   traveller's line -- they sit in the technical-detail fold, the same home ORD-0323
+                   accepted for the plan sheet.  The fold is a sibling of the paragraph, not a child:
+                   a `<details>` inside a `<p>` makes the browser close the paragraph early, and then
+                   the sentence this screen wrote and the sentence the server wrote no longer share
+                   one element for a gate to read. */
+                <details className="today-continuation-technical" data-testid="continuation-technical-details">
+                  <summary data-testid="continuation-technical-toggle">
+                    {zh ? "技术详情" : "Technical detail"}
+                  </summary>
+                  <span data-testid="continuation-resume-server-reason">
+                    {`${zh ? "服务器给出的原因：" : "Server's own reason: "}`}
+                    {resumeOutcome.serverReason}
+                  </span>
+                  {/* Q70: the field this device measured, under its contract name, on the element
+                      carrying it. */}
+                  <span
+                    className="today-continuation-technical-reading"
+                    data-testid="continuation-resume-http-status"
+                    data-cnx-field="http_status"
+                    data-cnx-value={String(resumeOutcome.httpStatus)}
+                  >
+                    {zh
+                      ? `这台设备看到的回读：HTTP ${resumeOutcome.httpStatus}`
+                      : `This device's reading: HTTP ${resumeOutcome.httpStatus}`}
+                  </span>
+                  {/* Q68: the number a traveller could repeat is the one thing this refusal did not
+                      send -- `continuePendingPlan` hands back a status and a sentence, no code.  The
+                      screen says that instead of leaving the slot empty or dressing the status up
+                      as a code.  No anchor, because there is no value to anchor. */}
+                  <span
+                    className="today-continuation-technical-nocode"
+                    data-testid="continuation-resume-no-request-id"
+                  >
+                    {zh
+                      ? "这一屏没有拿到可复述的编号（这条读取没把它送过来）。"
+                      : "This screen holds no repeatable code -- this read did not carry one."}
+                  </span>
+                </details>
               )}
-              {resumeOutcome.kind === "deadline" && t("hub.continuationResumeDeadline")}
-              {resumeOutcome.kind === "transport" && t("hub.continuationResumeTransport")}
-            </p>
+            </>
           )}
           {continuation.kind === "unconfirmable" && (
             /* ORD-0269 cell 3: a marker exists but the feed cannot confirm the mission (read failed
