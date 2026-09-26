@@ -1,0 +1,514 @@
+{
+ "schema": "CNX_ORD0340_CLAIM_LEASE_V1",
+ "order": "ORD-0340",
+ "lane": "S2-hermes-port",
+ "at_local": "2026-09-26T08:39+0800",
+ "live_tip_read_this_run": "ab12c17a65450c2c3062c9232e27a26c4ae1b485",
+ "candidate": "75904f2eea18cf663df933a4baa53d24f3052e93",
+ "base_of_the_original_commit": "c740f45d68f337c460a1a43b995162689d0110af",
+ "pre_recut_commit": "72ed733e85e450ab0a7c28a46316e34546711d0c",
+ "candidate_branch": "refs/heads/agent/S2-ord0340-claim-lease-candidates",
+ "recut_reason": "the line moved five times while this order was in progress; the branch was re-cut onto the live tip so the landing can stay ff-only, and the five blobs are byte-identical to what every reading below was taken against",
+ "ahead_behind_vs_live_tip": {
+  "ahead": 1,
+  "behind": 0
+ },
+ "changed_paths": [
+  "backend/app/db/models.py",
+  "backend/app/db/session.py",
+  "backend/app/main.py",
+  "backend/db/schema.sql",
+  "backend/tests/test_qoder_ord0340_claim_lease.py"
+ ],
+ "numstat": [
+  "5\t0\tbackend/app/db/models.py",
+  "9\t0\tbackend/app/db/session.py",
+  "131\t11\tbackend/app/main.py",
+  "3\t1\tbackend/db/schema.sql",
+  "322\t0\tbackend/tests/test_qoder_ord0340_claim_lease.py"
+ ],
+ "blobs": {
+  "backend/app/main.py": {
+   "candidate": "579c2f87740f0d1b8a50e46143f9c943b601be59",
+   "live_tip": "e2ff3ffb6f9b74c82cc1663980d6e46dacc6938e",
+   "pre_recut": "579c2f87740f0d1b8a50e46143f9c943b601be59"
+  },
+  "backend/db/schema.sql": {
+   "candidate": "2c8b0e7a22a477fe49bbaff435e5081e3d3c55d4",
+   "live_tip": "6e536c7b1090f6a46e115ee9788bed5b052bf35f",
+   "pre_recut": "2c8b0e7a22a477fe49bbaff435e5081e3d3c55d4"
+  },
+  "backend/app/db/models.py": {
+   "candidate": "6db91a1f688a36d40dda99b146c864b67dfc83d2",
+   "live_tip": "dc18710d2ece66104406cd8f1b927dbc7a86a019",
+   "pre_recut": "6db91a1f688a36d40dda99b146c864b67dfc83d2"
+  },
+  "backend/app/db/session.py": {
+   "candidate": "76937b0786acd0140de3a7514e6500b8eb6b7c20",
+   "live_tip": "3ef99ffe398c048ff729ffd0016e61b8ce0ae678",
+   "pre_recut": "76937b0786acd0140de3a7514e6500b8eb6b7c20"
+  },
+  "backend/tests/test_qoder_ord0340_claim_lease.py": {
+   "candidate": "479c2c05baf5f4508fd6960a554aa44f1508bc22",
+   "live_tip": "absent",
+   "pre_recut": "479c2c05baf5f4508fd6960a554aa44f1508bc22"
+  }
+ },
+ "coordinates_measured": {
+  "claim_token_param": [
+   4777
+  ],
+  "lease_constant": [
+   4814
+  ],
+  "take_over_call": [
+   4808
+  ],
+  "fence": [
+   4964
+  ],
+  "named_in_flight": [
+   4906
+  ],
+  "named_superseded": [
+   4916
+  ],
+  "sentence_kept": [
+   4905,
+   4915
+  ],
+  "schema_columns": [
+   405
+  ],
+  "additive_migration": [
+   544
+  ],
+  "gate_cells": [
+   162,
+   182,
+   205,
+   229,
+   274,
+   303
+  ],
+  "client_key_order": [
+   150
+  ]
+ },
+ "lease_derivation_line": "PLAN_CLAIM_LEASE_MS = int(settings.write_deadline_ms) + int(settings.write_busy_timeout_ms)",
+ "what_changed": {
+  "durable": "idempotency_keys gains claim_token and claim_deadline; expires_at keeps meaning receipt validity",
+  "claim": "Phase A stamps the attempt token and a lease derived from the two configured budgets",
+  "reclaim": "a NULL receipt whose own lease lapsed is taken over by a conditional write on the observed deadline; every key won or none is",
+  "fence": "the fill only lands while the row still carries this attempt's token",
+  "naming": "the refusal carries reason_code, message_key and details with retry_after_ms and the durable attempt_id; the message itself is unchanged"
+ },
+ "readings": {
+  "gate_on_live_tip": {
+   "generation": "ab12c17a65450c2c3062c9232e27a26c4ae1b485",
+   "whole_collected": 1342,
+   "collect_errors": 0,
+   "harness": [
+    72,
+    72
+   ],
+   "exit": 0,
+   "verdict": "HERMES_GATE_GREEN whole_collected=1342 harness_collected=72 harness_passed=72"
+  },
+  "gate_on_candidate": {
+   "generation": "75904f2eea18cf663df933a4baa53d24f3052e93",
+   "whole_collected": 1348,
+   "collect_errors": 0,
+   "harness": [
+    72,
+    72
+   ],
+   "exit": 0,
+   "verdict": "HERMES_GATE_GREEN whole_collected=1348 harness_collected=72 harness_passed=72"
+  },
+  "affected_slice": {
+   "slice_files_on_the_line": 11,
+   "slice_files_on_the_candidate": 12,
+   "line": {
+    "exit": 0,
+    "passed": 54,
+    "failed": 0,
+    "errors": 0,
+    "red_tests": [],
+    "tail": "54 passed, 1 xfailed, 2 warnings in 7.67s"
+   },
+   "candidate": {
+    "exit": 0,
+    "passed": 60,
+    "failed": 0,
+    "errors": 0,
+    "red_tests": [],
+    "tail": "60 passed, 1 xfailed, 2 warnings in 12.37s"
+   },
+   "new_tests_added_by_this_change": [
+    "none"
+   ],
+   "candidate_red_is_a_subset_of_line_red": true,
+   "red_set_difference_candidate_only": [],
+   "counts": {
+    "line": [
+     54,
+     0,
+     0
+    ],
+    "candidate": [
+     60,
+     0,
+     0
+    ]
+   }
+  },
+  "mutations": {
+   "control_uncut": {
+    "exit": 0,
+    "passed": 22,
+    "failed": 0,
+    "red_cells": [],
+    "red_by_file": {},
+    "tail": "22 passed, 2 warnings in 8.30s"
+   },
+   "M1_take_over_disabled": {
+    "exit": 1,
+    "passed": 19,
+    "failed": 3,
+    "red_cells": [
+     "test_L1_a_lapsed_claim_is_taken_over_and_the_new_answer_lands",
+     "test_L4_a_claim_that_died_mid_attempt_stops_being_permanent",
+     "test_L5_the_lease_comes_from_the_two_budgets_and_no_receipt_is_ever_deleted"
+    ],
+    "red_by_file": {
+     "test_qoder_ord0340_claim_lease.py": [
+      "test_L1_a_lapsed_claim_is_taken_over_and_the_new_answer_lands",
+      "test_L4_a_claim_that_died_mid_attempt_stops_being_permanent",
+      "test_L5_the_lease_comes_from_the_two_budgets_and_no_receipt_is_ever_deleted"
+     ]
+    },
+    "tail": "3 failed, 19 passed, 2 warnings in 8.10s",
+    "edits": [
+     "            if _take_over_lapsed_claims(session, keys, now, token):"
+    ],
+    "expected_red": [
+     "test_L1_a_lapsed_claim_is_taken_over_and_the_new_answer_lands",
+     "test_L4_a_claim_that_died_mid_attempt_stops_being_permanent",
+     "test_L5_the_lease_comes_from_the_two_budgets_and_no_receipt_is_ever_deleted"
+    ],
+    "meets_expectation": true
+   },
+   "M2_fence_disabled": {
+    "exit": 1,
+    "passed": 21,
+    "failed": 1,
+    "red_cells": [
+     "test_L6_only_the_lease_holder_may_fill_an_open_claim"
+    ],
+    "red_by_file": {
+     "test_qoder_ord0340_claim_lease.py": [
+      "test_L6_only_the_lease_holder_may_fill_an_open_claim"
+     ]
+    },
+    "tail": "1 failed, 21 passed, 2 warnings in 8.46s",
+    "edits": [
+     "                if token is not None:"
+    ],
+    "expected_red": [
+     "test_L6_only_the_lease_holder_may_fill_an_open_claim"
+    ],
+    "meets_expectation": true
+   },
+   "M3_written_deadline_ignored": {
+    "exit": 1,
+    "passed": 19,
+    "failed": 3,
+    "red_cells": [
+     "test_L1_a_lapsed_claim_is_taken_over_and_the_new_answer_lands",
+     "test_L2_an_unexpired_lease_refuses_by_name_and_runs_no_generation",
+     "test_L5_the_lease_comes_from_the_two_budgets_and_no_receipt_is_ever_deleted"
+    ],
+    "red_by_file": {
+     "test_qoder_ord0340_claim_lease.py": [
+      "test_L1_a_lapsed_claim_is_taken_over_and_the_new_answer_lands",
+      "test_L2_an_unexpired_lease_refuses_by_name_and_runs_no_generation",
+      "test_L5_the_lease_comes_from_the_two_budgets_and_no_receipt_is_ever_deleted"
+     ]
+    },
+    "tail": "3 failed, 19 passed, 2 warnings in 9.07s",
+    "edits": [
+     "    if row.claim_deadline:"
+    ],
+    "expected_red": [
+     "test_L1_a_lapsed_claim_is_taken_over_and_the_new_answer_lands",
+     "test_L2_an_unexpired_lease_refuses_by_name_and_runs_no_generation",
+     "test_L5_the_lease_comes_from_the_two_budgets_and_no_receipt_is_ever_deleted"
+    ],
+    "meets_expectation": true
+   },
+   "M4_in_flight_not_named": {
+    "exit": 1,
+    "passed": 20,
+    "failed": 2,
+    "red_cells": [
+     "test_L2_an_unexpired_lease_refuses_by_name_and_runs_no_generation",
+     "test_L4_a_claim_that_died_mid_attempt_stops_being_permanent"
+    ],
+    "red_by_file": {
+     "test_qoder_ord0340_claim_lease.py": [
+      "test_L2_an_unexpired_lease_refuses_by_name_and_runs_no_generation",
+      "test_L4_a_claim_that_died_mid_attempt_stops_being_permanent"
+     ]
+    },
+    "tail": "2 failed, 20 passed, 2 warnings in 7.93s",
+    "edits": [
+     "    exc.reason_code = \"PLAN_GENERATION_IN_FLIGHT\""
+    ],
+    "expected_red": [
+     "test_L2_an_unexpired_lease_refuses_by_name_and_runs_no_generation",
+     "test_L4_a_claim_that_died_mid_attempt_stops_being_permanent"
+    ],
+    "meets_expectation": true
+   },
+   "M5_null_guard_disabled": {
+    "exit": 1,
+    "passed": 21,
+    "failed": 1,
+    "red_cells": [
+     "test_K1_a_receipt_another_writer_already_filled_is_never_rewritten_and_refuses_by_name"
+    ],
+    "red_by_file": {
+     "test_qoder_ord0287_k8_carrier.py": [
+      "test_K1_a_receipt_another_writer_already_filled_is_never_rewritten_and_refuses_by_name"
+     ]
+    },
+    "tail": "1 failed, 21 passed, 2 warnings in 9.15s",
+    "edits": [
+     "                                   IdempotencyKey.response_json.is_(No"
+    ],
+    "expected_red": [
+     "test_K1_a_receipt_another_writer_already_filled_is_never_rewritten_and_refuses_by_name"
+    ],
+    "meets_expectation": true
+   },
+   "M6_both_fill_protections_disabled": {
+    "exit": 1,
+    "passed": 19,
+    "failed": 3,
+    "red_cells": [
+     "test_K1_a_receipt_another_writer_already_filled_is_never_rewritten_and_refuses_by_name",
+     "test_L3_a_resurrected_original_cannot_write_over_the_winners_bytes",
+     "test_L6_only_the_lease_holder_may_fill_an_open_claim"
+    ],
+    "red_by_file": {
+     "test_qoder_ord0287_k8_carrier.py": [
+      "test_K1_a_receipt_another_writer_already_filled_is_never_rewritten_and_refuses_by_name"
+     ],
+     "test_qoder_ord0340_claim_lease.py": [
+      "test_L3_a_resurrected_original_cannot_write_over_the_winners_bytes",
+      "test_L6_only_the_lease_holder_may_fill_an_open_claim"
+     ]
+    },
+    "tail": "3 failed, 19 passed, 2 warnings in 9.48s",
+    "edits": [
+     "                if token is not None:",
+     "                                   IdempotencyKey.response_json.is_(No"
+    ],
+    "expected_red": [
+     "test_K1_a_receipt_another_writer_already_filled_is_never_rewritten_and_refuses_by_name",
+     "test_L3_a_resurrected_original_cannot_write_over_the_winners_bytes",
+     "test_L6_only_the_lease_holder_may_fill_an_open_claim"
+    ],
+    "meets_expectation": true
+   }
+  },
+  "mutation_killed_counts": {
+   "M1_take_over_disabled": 3,
+   "M2_fence_disabled": 1,
+   "M3_written_deadline_ignored": 3,
+   "M4_in_flight_not_named": 2,
+   "M5_null_guard_disabled": 1,
+   "M6_both_fill_protections_disabled": 3
+  },
+  "before_the_change": {
+   "A_dead_worker_http": [
+    500,
+    "Internal Server Error"
+   ],
+   "A_row_left": {
+    "present": true,
+    "queried_key": "plans.generate:ord0340-dead-cffc4a2e",
+    "operation": "plans.generate",
+    "response_status": null,
+    "response_json_is_null": true,
+    "response_json_bytes": 0,
+    "created_at": "2026-09-25T23:30:51.699141+00:00",
+    "expires_at": "2026-10-02T23:30:51.699141+00:00",
+    "journal_mode": "wal",
+    "idempotency_rows_in_db": 1
+   },
+   "B_dead_replay": [
+    409,
+    812,
+    true,
+    "2026-10-02T23:30:51.699141+00:00"
+   ],
+   "C_second_replay_same": [
+    409,
+    true
+   ],
+   "D_null_row_while_alive": {
+    "present": true,
+    "queried_key": "plans.generate:ord0340-live-c5d745ad",
+    "operation": "plans.generate",
+    "response_status": null,
+    "response_json_is_null": true,
+    "response_json_bytes": 0,
+    "created_at": "2026-09-25T23:30:56.953076+00:00",
+    "expires_at": "2026-10-02T23:30:56.953076+00:00",
+    "journal_mode": "wal",
+    "idempotency_rows_in_db": 2
+   },
+   "E_alive_replay": [
+    409,
+    828,
+    true
+   ],
+   "F_alive_worker_final": 201,
+   "G_replay_after_it_finished": [
+    201,
+    16,
+    true
+   ],
+   "H_fresh_key": 201,
+   "pids": [
+    38896,
+    20752,
+    28708,
+    58888,
+    13192
+   ],
+   "cross_process_all_distinct": true
+  },
+  "after_the_change": {
+   "dead_claim_named": {
+    "status": 409,
+    "reason_code": "PLAN_GENERATION_IN_FLIGHT",
+    "message_key": "plan_generation.in_flight",
+    "details": {
+     "retry_after_ms": 73735,
+     "attempt_id": "22144523039b4a9394a82f1f3d015575",
+     "lease_ms": 75000
+    },
+    "elapsed_ms": 843,
+    "envelope_unchanged_when_trace_removed": null
+   },
+   "in_flight_named": {
+    "status": 409,
+    "reason_code": "PLAN_GENERATION_IN_FLIGHT",
+    "message_key": "plan_generation.in_flight",
+    "details": {
+     "retry_after_ms": 73871,
+     "attempt_id": "9629ed14a56f4626bbfee87638e05e21",
+     "lease_ms": 75000
+    },
+    "elapsed_ms": 828,
+    "envelope_unchanged_when_trace_removed": null
+   },
+   "refusals_are_now_named": true,
+   "the_two_are_the_same_named_state_by_design": true,
+   "why_that_is_the_right_answer": "a NULL receipt within an unexpired lease is genuinely still claimed - the server cannot know the worker died, and it no longer pretends it does: it names the state and bounds it",
+   "the_dead_shape_counts_down": {
+    "retry_after_ms_on_the_second_replay": 73735,
+    "retry_after_ms_on_the_third_replay": 71686,
+    "attempt_id_stable_across_replays": true
+   },
+   "message_field_still_the_accepted_sentence": true,
+   "holder_final": 201,
+   "replay_after_the_holder_finished": {
+    "status": 201,
+    "reason_code": null,
+    "message_key": null,
+    "details": null,
+    "elapsed_ms": 15,
+    "envelope_unchanged_when_trace_removed": null
+   },
+   "dead_key_after_three_replays_is_still_null": true,
+   "cross_process_pids": [
+    47116,
+    57880,
+    36444,
+    35124,
+    61528
+   ]
+  },
+  "client_slot_reader": {
+   "file": "frontend/src/features/planning/PlanWithAiSheet.tsx",
+   "line": 150,
+   "key_order": [
+    "reason_code",
+    "code",
+    "message_key"
+   ]
+  }
+ },
+ "named_boundaries": {
+  "in_flight_and_dead_are_one_named_state_while_the_lease_holds": "the server cannot observe the difference, so it names the state and bounds it instead of declaring death forever",
+  "retry_after_ms_NOT_RENDERED": "emitted by the server, read by no client surface: frontend/src/api/journeyContinuation.ts:150 forwards only error.message, and the resume line renders it at frontend/src/app/V8Experience.tsx:2609, which is S1's in-flight ORD-0344 cell",
+  "the_sheet_slot_needs_no_edit": "PlanWithAiSheet's serverReasonCode takes error.reason_code first, so the name reaches the 原因编号 slot as shipped. Read from the shipped key order; no render of that slot was run in this batch",
+  "external_effect_not_rollbackable": "still ORD-0270; a lease bounds the durable claim, it does not undo a model call the dead attempt already made",
+  "instrument_self_faults_disclosed": [
+   "the first slice run pointed PYTHONPATH at backend/ instead of the export root, so scripts.* imports failed and BOTH trees read 0 passed / 3 errors; corrected, the same slice reads 54 passed on the line and 60 on the candidate",
+   "a hand-typed tip sha dropped one character twice, which made three existing test files look absent from the line; from then on every sha is read from a file or ls-remote",
+   "the first after-fix run gave the spawned holder no CITYNEXUS_DATABASE_URL, so it opened a different database; the quoted pass is the corrected one"
+  ]
+ },
+ "checks": {
+  "parent_is_the_live_tip": true,
+  "recut_carried_no_bytes": true,
+  "only_the_five_declared_paths": true,
+  "gate_green_on_the_live_tip": true,
+  "gate_green_on_the_candidate": true,
+  "collection_grew_by_exactly_six": true,
+  "harness_72_of_72_on_both_trees": true,
+  "slice_runs_clean_on_both_trees": true,
+  "slice_grew_by_exactly_six": true,
+  "accepted_gates_byte_identical": true,
+  "control_arm_is_green": true,
+  "every_arm_killed_a_cell": true,
+  "every_arm_matched_its_prediction": true,
+  "all_six_of_my_cells_are_killable": true,
+  "null_guard_still_owned_by_K1": true,
+  "wire_refusals_are_named": true,
+  "accepted_sentence_not_reworded": true,
+  "the_lease_counts_down": true,
+  "healthy_worker_lands_and_key_recovers": true,
+  "lease_derives_from_both_budgets": true,
+  "no_receipt_delete_path_exists": true,
+  "cross_process_pids_distinct_both_runs": true,
+  "client_slot_reader_takes_reason_code_first": true
+ },
+ "checks_met": "23_of_23",
+ "verdict": "ORD0340_ALL_CHECKS_MET 23_of_23",
+ "verdict_derivation": "verdict_of() counts the checks dict; each predicate compares two artifacts read in this run (git plumbing, the two gate receipts, the slice comparison, the mutation file, the before/after probe cells) or re-reads a source line",
+ "selftest_flip_each_check_changes_verdict": true,
+ "discipline": {
+  "refs_pushed_by_lane": 1,
+  "candidate_branch_only": true,
+  "authoritative_branch_moved_by_lane": 0,
+  "product_bytes_changed_outside_the_five_paths": 0,
+  "frontend_bytes_changed": 0,
+  "accepted_test_files_edited": 0,
+  "assertions_reworded_to_get_green": 0,
+  "skips_or_marks_added": 0,
+  "demo_reset_invoked_by_lane": 0,
+  "credentials_printed": 0,
+  "model_calls_made": 0,
+  "live_or_preview_db_touched": 0,
+  "junctions_created": 0,
+  "worktree_removals_used_force": 0
+ },
+ "derived_result": null,
+ "derived_result_policy": "null by standing rule - sign-off belongs to the verifier"
+}
