@@ -616,7 +616,9 @@ button { display: block; width: 100%; margin-top: 12px; border: 0; border-radius
    the mobile gate's 44px chrome-coverage rule went red).  Inline targets inside a sentence are the
    WGAC 2.5.8 inline exception -- the sentence line is the tap target -- and it stays a real button,
    so it remains keyboard-reachable. */
-.trial-missing-jump {
+/* ORD-0350: the confirmation rows' own exits share this rule on purpose -- a boxy button per row
+   would grow the review card, and the measured sticky-CTA/stage-ball collision above applies. */
+.trial-missing-jump, .trial-review-edit {
   display: inline;
   min-height: 0;
   margin: 0;
