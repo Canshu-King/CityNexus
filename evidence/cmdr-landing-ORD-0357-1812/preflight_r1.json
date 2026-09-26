@@ -1,0 +1,140 @@
+{
+ "schema": "CNX_CMDR_LANDING_PREFLIGHT_V1",
+ "lane": "commander 494abfd7",
+ "at_local": "2026-09-26T18:12:58+0800",
+ "mode": "LAND",
+ "authoritative_line": "mirror/integration-frontend-apple-pass1",
+ "tip_re_read_from_github_before": "f44ad86618eb9dadca001ea7471ae24274fc4388",
+ "candidate_ref": "refs/heads/landing/ord0357-rebased-1812",
+ "candidate_tip": "d2a794002971c197a60359639feec1f09d2b485e",
+ "genealogy": {
+  "ff_possible_rc": 0,
+  "ff_possible": true,
+  "merge_base": "f44ad86618eb9dadca001ea7471ae24274fc4388",
+  "line_only_commits": 0,
+  "candidate_only_commits": 1
+ },
+ "file_sets": {
+  "line_side_since_base": [],
+  "candidate_side_since_base": [
+   "frontend/e2e/qoder-ord0357-journey-link.spec.ts",
+   "frontend/src/features/inbox/JourneyInboxWorkbench.tsx",
+   "frontend/src/features/inbox/JourneyLinkAction.tsx",
+   "frontend/src/i18n/LocaleContext.tsx",
+   "frontend/src/lib/journeyLink.ts",
+   "frontend/src/v10.css"
+  ],
+  "intersection": [],
+  "product_introduced_by_candidate": [
+   "frontend/src/features/inbox/JourneyInboxWorkbench.tsx",
+   "frontend/src/features/inbox/JourneyLinkAction.tsx",
+   "frontend/src/i18n/LocaleContext.tsx",
+   "frontend/src/lib/journeyLink.ts",
+   "frontend/src/v10.css"
+  ]
+ },
+ "merge_tree": {
+  "exit": 0,
+  "first_line": "1d264bece08b9e2eda4695d34c58ddf905d3f243",
+  "conflict_reported": false,
+  "stderr_head": ""
+ },
+ "gate_run": {
+  "requested": [],
+  "collect_exit": null,
+  "collected": null,
+  "test_exit": null,
+  "summary": null,
+  "export": "D:/moodle/_qoder_cmdr_ref_20260921/snap_preflight_181236",
+  "blob_equality": [
+   {
+    "path": "frontend/e2e/qoder-ord0357-journey-link.spec.ts",
+    "candidate_blob": "120a43c8f486c93489d029cdbc2795775e4adc3f",
+    "export_blob": "120a43c8f486c93489d029cdbc2795775e4adc3f",
+    "equal": true
+   },
+   {
+    "path": "frontend/src/features/inbox/JourneyInboxWorkbench.tsx",
+    "candidate_blob": "ba928b61a635d0a0b567fe3de63eaeb68a887abf",
+    "export_blob": "ba928b61a635d0a0b567fe3de63eaeb68a887abf",
+    "equal": true
+   },
+   {
+    "path": "frontend/src/features/inbox/JourneyLinkAction.tsx",
+    "candidate_blob": "63183664365a3a733805109c78a57bb83ecd79bb",
+    "export_blob": "63183664365a3a733805109c78a57bb83ecd79bb",
+    "equal": true
+   },
+   {
+    "path": "frontend/src/i18n/LocaleContext.tsx",
+    "candidate_blob": "f7272db5ff16ba367563e746f3054c41ea078ffa",
+    "export_blob": "f7272db5ff16ba367563e746f3054c41ea078ffa",
+    "equal": true
+   },
+   {
+    "path": "frontend/src/lib/journeyLink.ts",
+    "candidate_blob": "fb59b55557446f6baf48be1dc1ea8f89c3c35fc1",
+    "export_blob": "fb59b55557446f6baf48be1dc1ea8f89c3c35fc1",
+    "equal": true
+   },
+   {
+    "path": "frontend/src/v10.css",
+    "candidate_blob": "ae111b31f9703f86c772fda78cc81ac69841827f",
+    "export_blob": "ae111b31f9703f86c772fda78cc81ac69841827f",
+    "equal": true
+   }
+  ],
+  "whole_suite": {
+   "collect_exit": 0,
+   "collected": 1377,
+   "interrupted": false,
+   "error_lines": [
+    "tests/test_qoder_ord0332_error_receipt.py::test_R7_the_envelope_keeps_every_field_it_already_had",
+    "tests/test_qoder_ord0332_error_receipt.py::test_R8_the_seed_is_read_off_the_real_request_not_just_the_dataclass",
+    "tests/test_solver_runtime_policy.py::test_unexpected_solver_programming_error_is_not_silently_hidden"
+   ],
+   "tail": [
+    "    _PortalFactoryType = Callable[[], AbstractContextManager[anyio.abc.BlockingPortal]]",
+    "-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html",
+    "1377 tests collected in 6.17s"
+   ],
+   "cmd": "D:/moodle/CityNexus/.venv/Scripts/python.exe -m pytest --collect-only -q tests  (cwd=<export>/backend, PYTHONPATH=<export>)"
+  },
+  "interpreter": "Python 3.12.14 (main, Aug 25 2026, 14:01:42) [MSC v.1944 64 bit (AMD64)]",
+  "exposure": {
+   "ruler_blob": "d3f66ce9fecd0790981a4fcdeb5e36b1c0fd10f2",
+   "ruler_blob_computed": null,
+   "ruler_file": "ui_exposure_taint_ast_r7b.cjs",
+   "candidate_files_in_view": 5,
+   "tip_cells": 11,
+   "cand_cells": 11,
+   "growth_by_file_and_rule": {},
+   "unpaired_added": [],
+   "added_line_exact": [],
+   "shifted_only": false,
+   "removed_count": 0,
+   "removed": [],
+   "disclosed_slip": "a same-file, same-rule relocation with equal counts reads as a shift; the AST ruler has no cell identity"
+  }
+ },
+ "problems": [],
+ "verdict": "READY_TO_LAND",
+ "landing": {
+  "http": 200,
+  "response_head": "{'ref': 'refs/heads/mirror/integration-frontend-apple-pass1', 'node_id': 'REF_kwDOUhlJJ9oAMnJlZnMvaGVhZHMvbWlycm9yL2ludGVncmF0aW9uLWZyb250ZW5kLWFwcGxlLXBhc3Mx', 'url': 'https://api.github.com/repos/Ca",
+  "tip_after": "d2a794002971c197a60359639feec1f09d2b485e",
+  "branches_route": "d2a794002971c197a60359639feec1f09d2b485e",
+  "both_routes_agree": true,
+  "landed": true
+ },
+ "discipline": {
+  "evidence_paths_overwritten": 0,
+  "databases_opened": 0,
+  "surfaces_started_or_stopped": 0,
+  "credential_values_printed": 0,
+  "candidate_refs_pushed_by_commander": 0
+ },
+ "claim_kind": "git_and_pytest_determined",
+ "claimed_result": null,
+ "derived_result": null
+}
