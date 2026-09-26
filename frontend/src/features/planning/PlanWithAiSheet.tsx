@@ -367,6 +367,52 @@ function statusCopy(
  * fetch() rejects a cancelled request with a DOMException named AbortError.  Without
  * this, "I pressed cancel" and "the network died" collapse into the same message.
  */
+/**
+ * ORD-0359: the only place this screen turns the server's word into a state.
+ *
+ * The server now names three different facts (`ai_state`) instead of folding them into one
+ * boolean, and the sentences below must not collapse that back: an operator who left the switch
+ * off, a store with no credential, and a provider that looked at the request and said no are
+ * three different things, and none of them is the traveller's fault.  `deepseek_configured` is
+ * still read so a server without the new field keeps answering the way it did.
+ */
+export type AiPreflightState =
+  | "checking"
+  | "ready"
+  | "not_configured"
+  | "disabled_by_ops"
+  | "provider_refused"
+  | "unknown";
+
+/** The tone a state is painted with. `styles.css` is held by other lanes today, so the three new
+ * states reuse the class the old `unconfigured` state already had rather than adding one. */
+export function aiPreflightClass(state: AiPreflightState): string {
+  return state === "ready" ? "ready" : state === "checking" ? "checking" : state === "unknown" ? "unknown" : "unconfigured";
+}
+
+export function aiStateFromServer(body: {
+  ai_state?: unknown;
+  deepseek_configured?: unknown;
+} | null): AiPreflightState {
+  if (!body) return "unknown";
+  switch (typeof body.ai_state === "string" ? body.ai_state : "") {
+    case "READY":
+      return "ready";
+    case "NOT_CONFIGURED":
+      return "not_configured";
+    case "DISABLED_BY_OPS":
+      return "disabled_by_ops";
+    case "PROVIDER_REFUSED":
+      return "provider_refused";
+    default:
+      break;
+  }
+  if (typeof body.deepseek_configured === "boolean") {
+    return body.deepseek_configured ? "ready" : "not_configured";
+  }
+  return "unknown";
+}
+
 function isAbort(cause: unknown): boolean {
   return cause instanceof Error && cause.name === "AbortError";
 }
@@ -403,9 +449,7 @@ export function PlanWithAiSheet({
   const [requestTooShort, setRequestTooShort] = useState(false);
   const [phase, setPhase] = useState<PhaseKey | null>(null);
   const [elapsed, setElapsed] = useState(0);
-  const [aiState, setAiState] = useState<"checking" | "ready" | "unconfigured" | "unknown">(
-    "checking",
-  );
+  const [aiState, setAiState] = useState<AiPreflightState>("checking");
   const [result, setResult] = useState<null | {
     status: string;
     failureReason: FailureNote | null;
@@ -475,13 +519,7 @@ export function PlanWithAiSheet({
       .then((response) => (response.ok ? response.json() : null))
       .then((body) => {
         if (stale) return;
-        setAiState(
-          body && typeof body.deepseek_configured === "boolean"
-            ? body.deepseek_configured
-              ? "ready"
-              : "unconfigured"
-            : "unknown",
-        );
+        setAiState(aiStateFromServer(body as Parameters<typeof aiStateFromServer>[0]));
       })
       .catch(() => {
         /* A failed pre-flight is reported as unknown, never as "ready". */
@@ -978,16 +1016,24 @@ export function PlanWithAiSheet({
 
         {aiState !== "checking" && (
           <p
-            className={`plan-ai-preflight ${aiState}`}
+            className={`plan-ai-preflight ${aiPreflightClass(aiState)}`}
             data-testid="plan-ai-preflight"
             data-ai-state={aiState}
           >
             {aiState === "ready" &&
               (zh ? "这台服务已接入 AI 模型。" : "A model is configured on this server.")}
-            {aiState === "unconfigured" &&
+            {aiState === "not_configured" &&
               (zh
-                ? "这台服务没有接入 AI 模型：现在提交不会真的由 AI 规划，结果会走其它路径。"
-                : "No model is configured here, so submitting will not be planned by AI.")}
+                ? "这台服务没有配置 AI 凭据。这是服务器少了一样东西，与你写了什么、你的预算或你的网络都无关；行程不会被改动。"
+                : "This server has no AI credential configured. Something is missing on the server — not in what you wrote, not your budget, not your connection. Your trip is unchanged.")}
+            {aiState === "disabled_by_ops" &&
+              (zh
+                ? "这台服务的 AI 开关处于关闭状态，这是运营侧的设置，不是你的操作结果。开关本身不代表某次失败的原因。"
+                : "The AI switch on this server is switched off. That is an operator setting, not something you did. It names the switch, not the cause of any one failure.")}
+            {aiState === "provider_refused" &&
+              (zh
+                ? "模型这一侧答复了请求但拒绝了这次生成；原文在“技术详情”里，逐字是服务器给的。这不是你的措辞问题。"
+                : "The model side answered and refused this generation; its own words are under “Technical detail”, verbatim from the server. This is not about how you phrased it.")}
             {aiState === "unknown" &&
               (zh
                 ? "读不到 AI 状态（状态接口没有应答）。这只说明我们不知道，不代表它可用或不可用。"

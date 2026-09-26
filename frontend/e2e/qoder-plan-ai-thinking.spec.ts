@@ -439,7 +439,15 @@ test.describe("ORD-0038 the AI sheet reports what it actually knows", () => {
     test.setTimeout(150_000);
     const cases: { label: string; fail?: boolean; status: number; body: string; want: string }[] = [
       { label: "configured", status: 200, body: '{"deepseek_configured":true}', want: "ready" },
-      { label: "not configured", status: 200, body: '{"deepseek_configured":false}', want: "unconfigured" },
+      { label: "not configured", status: 200, body: '{"deepseek_configured":false}', want: "not_configured" },
+      // ORD-0359: three causes, three words. A server that names the operator's switch must not be
+      // painted as a missing credential, and neither may be painted as the provider refusing.
+      { label: "switch off", status: 200, body: '{"ai_state":"DISABLED_BY_OPS","deepseek_configured":true}', want: "disabled_by_ops" },
+      { label: "no credential", status: 200, body: '{"ai_state":"NOT_CONFIGURED","deepseek_configured":false}', want: "not_configured" },
+      { label: "provider refused", status: 200, body: '{"ai_state":"PROVIDER_REFUSED","deepseek_configured":true}', want: "provider_refused" },
+      { label: "server says ready", status: 200, body: '{"ai_state":"READY","deepseek_configured":true}', want: "ready" },
+      // the named field wins over the boolean, so a stale `deepseek_configured` cannot overrule it
+      { label: "named beats boolean", status: 200, body: '{"ai_state":"DISABLED_BY_OPS","deepseek_configured":true}', want: "disabled_by_ops" },
       { label: "http 500", status: 500, body: "boom", want: "unknown" },
       { label: "no such field", status: 200, body: '{"runtime_identity":"x"}', want: "unknown" },
       // The transport-failure branch: fetch() rejects here, which no fulfill can produce.
