@@ -361,8 +361,9 @@ def test_ORD0360_A9_a_block_is_never_reported_as_the_network_or_as_vagueness(cli
     assert message.startswith(BASE_SENTENCE), (
         f"the base sentence is read by an existing gate and must stay byte-identical: {message!r}"
     )
-    assert message != BASE_SENTENCE, (
-        f"a block with nothing after the sentence tells the traveller nothing: {message!r}"
+    assert "blocking commitment" in message, (
+        "a code with nobody behind it is the answer this order exists to retire: "
+        f"{message!r}"
     )
     lowered = message.lower()
     for forbidden in ("network", "unavailable", "temporarily", "retry", "网络", "不可用"):
