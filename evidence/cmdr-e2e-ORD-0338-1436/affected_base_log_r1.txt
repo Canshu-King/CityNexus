@@ -1,0 +1,1929 @@
+run_id=cmdr140415o338bas tree=38277c4e9787b1ddf0bf69487060ba0e40c14146 port=4400/5400 target=e2e/qoder-wizard-advanced-is-tappable.spec.ts e2e/qoder-onboarding-failure.spec.ts e2e/qoder-plan-ai-contrast.spec.ts e2e/qoder-plan-ai-thinking.spec.ts e2e/qoder-raw-enums-never-reach-the-traveller.spec.ts e2e/qoder-theme-contract.spec.ts e2e/qoder-today-hero.spec.ts e2e/qoder-not-answered-cell.spec.ts e2e/qoder-sealed-failure-speaks-and-offers-retry.spec.ts e2e/qoder-offline-persistence.spec.ts full=False db=_cmdr140415o338bas.db
+[citynexus e2e] suite=current-product authoritative=true python=D:/moodle/CityNexus/.venv/Scripts/python.exe frontend=:4400 backend=:5400 db=sqlite:///D:/moodle/_qoder_cmdr_ord0338_base/review/evidence/_cmdr140415o338bas.db ai=disabled reuseExistingServer=false
+[WebServer] INFO:     Started server process [33312]
+[WebServer] INFO:     Waiting for application startup.
+
+[WebServer] INFO:     Application startup complete.
+[WebServer] INFO:     Uvicorn running on http://127.0.0.1:5400 (Press CTRL+C to quit)
+
+[WebServer] INFO:     127.0.0.1:59937 - "GET /api/v1/health HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:59950 - "GET /api/v1/health HTTP/1.1" 200 OK
+
+[citynexus e2e] provenance ok: run=cmdr140415o338bas frontend=:4400 -> backend=:5400 ai=disabled db=_cmdr140415o338bas.db
+
+Running 40 tests using 1 worker
+
+[citynexus e2e] suite=current-product authoritative=true python=D:/moodle/CityNexus/.venv/Scripts/python.exe frontend=:4400 backend=:5400 db=sqlite:///D:/moodle/_qoder_cmdr_ord0338_base/review/evidence/_cmdr140415o338bas.db ai=disabled reuseExistingServer=false
+
+[1/40] [real-seed] › e2e\_qoderRealSeed.setup.ts:110:1 › seed a real journey through the product API
+[WebServer] INFO:     127.0.0.1:55935 - "POST /api/v1/travelers HTTP/1.1" 201 Created
+
+[WebServer] INFO:     127.0.0.1:55938 - "POST /api/v1/journeys HTTP/1.1" 201 Created
+
+[WebServer] INFO:     127.0.0.1:55935 - "POST /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/stay-options/generate HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:55938 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/stay-options HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:55935 - "POST /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/stay-options/8ae546e8-73bc-448a-9199-ebe0578805c6/select HTTP/1.1" 200 OK
+
+[real-seed] › e2e\_qoderRealSeed.setup.ts:110:1 › seed a real journey through the product API
+[qoder-real-seed] journey=8d2d129d-9dba-4114-8646-f719ee18c54d options=4 chosen=8ae546e8-73bc-448a-9199-ebe0578805c6 (Haihe Riverside Hotel)
+
+[WebServer] INFO:     127.0.0.1:49216 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/experience HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:49217 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/replans HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:57828 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/execution-clock HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:49222 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/twin HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:57829 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/replans HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:57827 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/plans HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:57830 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/experience HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:58313 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/web-observations HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:58317 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/offline-snapshot HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:58316 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/wallet HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:58314 - "GET /api/v1/travelers/cd245fee-c740-4c29-95e0-a92ae110983c/agent-policy HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:57884 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/experience HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:58315 - "GET /api/v1/agent/runtime-status HTTP/1.1" 200 OK
+
+[qoder-real-seed] trialWizard=false live-journey-current=true
+
+[citynexus e2e] suite=current-product authoritative=true python=D:/moodle/CityNexus/.venv/Scripts/python.exe frontend=:4400 backend=:5400 db=sqlite:///D:/moodle/_qoder_cmdr_ord0338_base/review/evidence/_cmdr140415o338bas.db ai=disabled reuseExistingServer=false
+
+[2/40] [chromium] › e2e\qoder-not-answered-cell.spec.ts:82:1 › ord0203-the-fourth-cell-renders-and-its-retry-consumes-retryable — 第四格上屏，重试真的吃 retryable
+[WebServer] INFO:     127.0.0.1:62440 - "GET /api/v1/demo/scene HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:53731 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/experience HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:53732 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/replans HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:53733 - "GET /api/v1/demo/scene HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:56950 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/agent-feed?limit=200 HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:63855 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/wallet HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:55794 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/experience HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:55795 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/replans HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:50085 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/offline-snapshot HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:59247 - "GET /api/v1/travelers/cd245fee-c740-4c29-95e0-a92ae110983c/agent-policy HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:50083 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/wallet HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:55796 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/plans HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:55797 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/twin HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:50084 - "GET /api/v1/agent/runtime-status HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:50087 - "GET /api/v1/destinations/capability?query=%E8%B4%A1%E5%B1%B1%E7%8B%AC%E9%BE%99%E6%97%8F%E6%80%92%E6%97%8F%E8%87%AA%E6%B2%BB%E5%8E%BF HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:50736 - "GET /api/v1/destinations/capability?query=%E8%B4%A1%E5%B1%B1%E7%8B%AC%E9%BE%99%E6%97%8F%E6%80%92%E6%97%8F%E8%87%AA%E6%B2%BB%E5%8E%BF HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:64505 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/twin HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:62269 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/twin HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:55119 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/twin HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:49670 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/twin HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:59423 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/twin HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:53178 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/twin HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:59437 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/twin HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:56877 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/twin HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:56430 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/twin HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:61007 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/twin HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:53262 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/twin HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:58556 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/twin HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:64749 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/twin HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:51189 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/twin HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:61548 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/twin HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:59940 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/twin HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:50507 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/twin HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:63843 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/twin HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:58786 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/twin HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:63581 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/twin HTTP/1.1" 200 OK
+
+  1) [chromium] › e2e\qoder-not-answered-cell.spec.ts:82:1 › ord0203-the-fourth-cell-renders-and-its-retry-consumes-retryable — 第四格上屏，重试真的吃 retryable 
+
+    Test timeout of 300000ms exceeded.
+
+    Error: page.evaluate: Target page, context or browser has been closed
+
+      57 |     body: await page.getByTestId("prep-verdict-body").innerText().catch(() => ""),
+      58 |     providers: await page.getByTestId("prep-providers").innerText().catch(() => ""),
+    > 59 |     focusable: await page.evaluate(() =>
+         |                           ^
+      60 |       Array.from(document.querySelectorAll<HTMLElement>("[data-testid^='prep-']"))
+      61 |         .filter(
+      62 |           (el) =>
+        at onScreen (D:\moodle\_qoder_cmdr_ord0338_base\frontend\e2e\qoder-not-answered-cell.spec.ts:59:27)
+        at D:\moodle\_qoder_cmdr_ord0338_base\frontend\e2e\qoder-not-answered-cell.spec.ts:99:17
+
+    Error Context: test-results\qoder-not-answered-cell-or-061ac-ble-—-第四格上屏，重试真的吃-retryable-chromium\error-context.md
+
+
+[citynexus e2e] suite=current-product authoritative=true python=D:/moodle/CityNexus/.venv/Scripts/python.exe frontend=:4400 backend=:5400 db=sqlite:///D:/moodle/_qoder_cmdr_ord0338_base/review/evidence/_cmdr140415o338bas.db ai=disabled reuseExistingServer=false
+
+[3/40] [chromium] › e2e\qoder-not-answered-cell.spec.ts:192:1 › ord0203-the-retry-actually-re-asks-the-server — 点“稍后重试”要真再问一次
+[WebServer] INFO:     127.0.0.1:58159 - "GET /api/v1/demo/scene HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:59181 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/experience HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:59206 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/replans HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:59210 - "GET /api/v1/demo/scene HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:50391 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/experience HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:50392 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/replans HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:57782 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/offline-snapshot HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:57783 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/wallet HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:57781 - "GET /api/v1/travelers/cd245fee-c740-4c29-95e0-a92ae110983c/agent-policy HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:50393 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/plans HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:57780 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/twin HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:57784 - "GET /api/v1/agent/runtime-status HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:55927 - "GET /api/v1/destinations/capability?query=%E8%B4%A1%E5%B1%B1%E7%8B%AC%E9%BE%99%E6%97%8F%E6%80%92%E6%97%8F%E8%87%AA%E6%B2%BB%E5%8E%BF HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:55106 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/twin HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:52983 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/twin HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:51641 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/twin HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:62103 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/twin HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:52756 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/twin HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:51066 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/twin HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:62761 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/twin HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:61939 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/twin HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:62851 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/twin HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:50483 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/twin HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:63787 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/twin HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:54619 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/twin HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:58194 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/twin HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:62688 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/twin HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:58394 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/twin HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:58515 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/twin HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:49389 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/twin HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:52557 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/twin HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:56046 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/twin HTTP/1.1" 200 OK
+
+  2) [chromium] › e2e\qoder-not-answered-cell.spec.ts:192:1 › ord0203-the-retry-actually-re-asks-the-server — 点“稍后重试”要真再问一次 
+
+    Test timeout of 300000ms exceeded.
+
+    Error: locator.click: Test timeout of 300000ms exceeded.
+    Call log:
+      - waiting for getByTestId('prep-retry-later')
+
+
+      207 |   ).toBeGreaterThan(0);
+      208 |
+    > 209 |   await page.getByTestId("prep-retry-later").click();
+          |                                              ^
+      210 |   await expect
+      211 |     .poll(() => capabilityCalls.length, {
+      212 |       timeout: 30_000,
+        at D:\moodle\_qoder_cmdr_ord0338_base\frontend\e2e\qoder-not-answered-cell.spec.ts:209:46
+
+    Error Context: test-results\qoder-not-answered-cell-or-0d165--the-server-—-点“稍后重试”要真再问一次-chromium\error-context.md
+
+
+[citynexus e2e] suite=current-product authoritative=true python=D:/moodle/CityNexus/.venv/Scripts/python.exe frontend=:4400 backend=:5400 db=sqlite:///D:/moodle/_qoder_cmdr_ord0338_base/review/evidence/_cmdr140415o338bas.db ai=disabled reuseExistingServer=false
+
+[4/40] [chromium] › e2e\qoder-not-answered-cell.spec.ts:234:1 › ord0203-the-fourth-cell-is-readable-in-dark — 深色下自己先看一眼
+[WebServer] INFO:     127.0.0.1:64980 - "GET /api/v1/demo/scene HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:59096 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/experience HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:52203 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/replans HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:51638 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/experience HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:51639 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/replans HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:51643 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/plans HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:65365 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/offline-snapshot HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:65364 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/wallet HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:65363 - "GET /api/v1/travelers/cd245fee-c740-4c29-95e0-a92ae110983c/agent-policy HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:51644 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/twin HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:65366 - "GET /api/v1/agent/runtime-status HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:55099 - "GET /api/v1/destinations/capability?query=%E8%B4%A1%E5%B1%B1%E7%8B%AC%E9%BE%99%E6%97%8F%E6%80%92%E6%97%8F%E8%87%AA%E6%B2%BB%E5%8E%BF HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:63381 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/twin HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:53645 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/twin HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:57097 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/twin HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:57611 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/twin HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:55967 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/twin HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:56626 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/twin HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:55210 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/twin HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:54176 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/twin HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:50465 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/twin HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:58062 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/twin HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:50000 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/twin HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:63016 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/twin HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:52916 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/twin HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:50297 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/twin HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:60398 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/twin HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:53382 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/twin HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:49213 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/twin HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:49231 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/twin HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:65015 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/twin HTTP/1.1" 200 OK
+
+  3) [chromium] › e2e\qoder-not-answered-cell.spec.ts:234:1 › ord0203-the-fourth-cell-is-readable-in-dark — 深色下自己先看一眼 
+
+    Test timeout of 300000ms exceeded.
+
+    Error: page.evaluate: Target page, context or browser has been closed
+
+      57 |     body: await page.getByTestId("prep-verdict-body").innerText().catch(() => ""),
+      58 |     providers: await page.getByTestId("prep-providers").innerText().catch(() => ""),
+    > 59 |     focusable: await page.evaluate(() =>
+         |                           ^
+      60 |       Array.from(document.querySelectorAll<HTMLElement>("[data-testid^='prep-']"))
+      61 |         .filter(
+      62 |           (el) =>
+        at onScreen (D:\moodle\_qoder_cmdr_ord0338_base\frontend\e2e\qoder-not-answered-cell.spec.ts:59:27)
+        at D:\moodle\_qoder_cmdr_ord0338_base\frontend\e2e\qoder-not-answered-cell.spec.ts:241:17
+
+    Error Context: test-results\qoder-not-answered-cell-or-8c685-eadable-in-dark-—-深色下自己先看一眼-chromium\error-context.md
+
+
+[citynexus e2e] suite=current-product authoritative=true python=D:/moodle/CityNexus/.venv/Scripts/python.exe frontend=:4400 backend=:5400 db=sqlite:///D:/moodle/_qoder_cmdr_ord0338_base/review/evidence/_cmdr140415o338bas.db ai=disabled reuseExistingServer=false
+
+[5/40] [chromium] › e2e\qoder-offline-persistence.spec.ts:81:1 › ord0178-measure-offline-persistence — 先量：成功加载后到底落没落行
+[WebServer] INFO:     127.0.0.1:50235 - "GET /api/v1/demo/scene HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:62880 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/experience HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:62885 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/replans HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:62905 - "GET /api/v1/demo/scene HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:59144 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/agent-feed?limit=200 HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:59149 - "GET /api/v1/travelers/cd245fee-c740-4c29-95e0-a92ae110983c/agent-policy HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:59150 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/wallet HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:51898 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/offline-snapshot HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:59147 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/plans HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:59148 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/twin HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:59312 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/agent-feed?limit=200 HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:53689 - "GET /api/v1/agent/runtime-status HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:60455 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/experience HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:60456 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/replans HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:60458 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/agent-feed?limit=200 HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:60457 - "GET /api/v1/demo/scene HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:60459 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/plans HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:63826 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/offline-snapshot HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:63825 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/wallet HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:51816 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/agent-feed?limit=200 HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:63824 - "GET /api/v1/travelers/cd245fee-c740-4c29-95e0-a92ae110983c/agent-policy HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:60460 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/twin HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:53151 - "GET /api/v1/agent/runtime-status HTTP/1.1" 200 OK
+
+[chromium] › e2e\qoder-offline-persistence.spec.ts:81:1 › ord0178-measure-offline-persistence — 先量：成功加载后到底落没落行
+{
+  "verdict": "PERSISTED",
+  "hasRow": true,
+  "claimsSaved": false,
+  "before": {
+    "databases": [],
+    "cacheKeys": [
+      "citynexus-recovery-citynexus-recovery-m3-a4-v1"
+    ],
+    "serviceWorkerController": false,
+    "localStorageKeys": [
+      "citynexus.v8.journey_id",
+      "citynexus.locale"
+    ]
+  },
+  "atHeroVisible": {
+    "databases": [],
+    "cacheKeys": [
+      "citynexus-recovery-citynexus-recovery-m3-a4-v1"
+    ],
+    "serviceWorkerController": false,
+    "localStorageKeys": [
+      "citynexus.v8.journey_id",
+      "citynexus.locale",
+      "citynexus.copilot.history.8d2d129d-9dba-4114-8646-f719ee18c54d"
+    ]
+  },
+  "afterFirstLoad": {
+    "databases": [
+      {
+        "name": "citynexus-offline",
+        "version": 10,
+        "stores": [
+          {
+            "store": "journeys",
+            "rows": 1
+          }
+        ]
+      }
+    ],
+    "cacheKeys": [
+      "citynexus-recovery-citynexus-recovery-m3-a4-v1"
+    ],
+    "serviceWorkerController": false,
+    "localStorageKeys": [
+      "citynexus.v8.journey_id",
+      "citynexus.locale",
+      "citynexus.copilot.history.8d2d129d-9dba-4114-8646-f719ee18c54d"
+    ]
+  },
+  "readBack": {
+    "found": true,
+    "rows": 1
+  }
+}
+
+[6/40] [chromium] › e2e\qoder-offline-persistence.spec.ts:190:1 › ord0178-the-saved-copy-claim-follows-the-rowcount — 有行才准说已保存，没行就不许说（双向）
+[WebServer] INFO:     127.0.0.1:57852 - "GET /api/v1/demo/scene HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:61940 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/experience HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:61941 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/replans HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:57956 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/agent-feed?limit=200 HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:57959 - "GET /api/v1/travelers/cd245fee-c740-4c29-95e0-a92ae110983c/agent-policy HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:61942 - "GET /api/v1/demo/scene HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:65484 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/offline-snapshot HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:57957 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/plans HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:57958 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/twin HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:57960 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/wallet HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:51837 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/agent-feed?limit=200 HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:62559 - "GET /api/v1/agent/runtime-status HTTP/1.1" 200 OK
+
+[7/40] [chromium] › e2e\qoder-onboarding-failure.spec.ts:53:3 › ORD-0034 onboarding surfaces a failed create › a 500 on journey creation shows a visible, named failure instead of silence
+[WebServer] INFO:     127.0.0.1:55868 - "GET /api/v1/demo/scene HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:55902 - "POST /api/v1/travelers HTTP/1.1" 201 Created
+
+[8/40] [chromium] › e2e\qoder-onboarding-failure.spec.ts:129:3 › ORD-0034 onboarding surfaces a failed create › the named backend reason reaches the onboarding screen
+[WebServer] INFO:     127.0.0.1:50586 - "GET /api/v1/demo/scene HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:63089 - "POST /api/v1/travelers HTTP/1.1" 201 Created
+
+  4) [chromium] › e2e\qoder-onboarding-failure.spec.ts:129:3 › ORD-0034 onboarding surfaces a failed create › the named backend reason reaches the onboarding screen 
+
+    Error: e2e/qoder-onboarding-failure.spec.ts :: named reason inside trial-create-error
+
+    expect(locator).toContainText(expected) failed
+
+    Locator: getByTestId('trial-create-error')
+    Expected substring: "arrival_anchor.location"
+    Received string:    "This step did not complete — no journey was created.The server refused this step (HTTP 422). Your trip is unchanged; check the details and try again."
+    Timeout: 10000ms
+
+    Call log:
+      - e2e/qoder-onboarding-failure.spec.ts :: named reason inside trial-create-error getByTestId('trial-create-error') with timeout 10000ms
+      - waiting for getByTestId('trial-create-error')
+        24 × locator resolved to <div role="alert" class="trial-create-error" data-testid="trial-create-error">…</div>
+           - unexpected value "This step did not complete — no journey was created.The server refused this step (HTTP 422). Your trip is unchanged; check the details and try again."
+
+
+      168 |       error,
+      169 |       "e2e/qoder-onboarding-failure.spec.ts :: named reason inside trial-create-error",
+    > 170 |     ).toContainText("arrival_anchor.location");
+          |       ^
+      171 |     await expect(
+      172 |       error,
+      173 |       "e2e/qoder-onboarding-failure.spec.ts :: named reason inside trial-create-error",
+        at D:\moodle\_qoder_cmdr_ord0338_base\frontend\e2e\qoder-onboarding-failure.spec.ts:170:7
+
+    Error Context: test-results\qoder-onboarding-failure-O-42c44-aches-the-onboarding-screen-chromium\error-context.md
+
+
+[citynexus e2e] suite=current-product authoritative=true python=D:/moodle/CityNexus/.venv/Scripts/python.exe frontend=:4400 backend=:5400 db=sqlite:///D:/moodle/_qoder_cmdr_ord0338_base/review/evidence/_cmdr140415o338bas.db ai=disabled reuseExistingServer=false
+
+[9/40] [chromium] › e2e\qoder-onboarding-failure.spec.ts:187:3 › ORD-0034 onboarding surfaces a failed create › legal-window-create-advances — a legal trip reaches the app within 5s
+[WebServer] INFO:     127.0.0.1:58173 - "GET /api/v1/demo/scene HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:50131 - "POST /api/v1/travelers HTTP/1.1" 201 Created
+
+[WebServer] INFO:     127.0.0.1:55284 - "POST /api/v1/journeys HTTP/1.1" 201 Created
+
+[WebServer] INFO:     127.0.0.1:55772 - "GET /api/v1/travelers/5abc656f-6b7d-4dd8-ab2f-1045cb34b2ef/preferences HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:57298 - "PUT /api/v1/travelers/5abc656f-6b7d-4dd8-ab2f-1045cb34b2ef/preferences HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:59943 - "GET /api/v1/travelers/5abc656f-6b7d-4dd8-ab2f-1045cb34b2ef/preferences HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:64670 - "POST /api/v1/journeys/9942f8a1-4688-4282-a1c2-2db7cbb16b5c/stay-options/generate HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:50515 - "GET /api/v1/journeys/9942f8a1-4688-4282-a1c2-2db7cbb16b5c/experience HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:53106 - "GET /api/v1/journeys/9942f8a1-4688-4282-a1c2-2db7cbb16b5c/replans HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:58646 - "GET /api/v1/journeys/9942f8a1-4688-4282-a1c2-2db7cbb16b5c/plans HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:58647 - "GET /api/v1/journeys/9942f8a1-4688-4282-a1c2-2db7cbb16b5c/twin HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:61866 - "GET /api/v1/journeys/9942f8a1-4688-4282-a1c2-2db7cbb16b5c/wallet HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:61865 - "GET /api/v1/travelers/5abc656f-6b7d-4dd8-ab2f-1045cb34b2ef/agent-policy HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:61867 - "GET /api/v1/journeys/9942f8a1-4688-4282-a1c2-2db7cbb16b5c/offline-snapshot HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:61868 - "GET /api/v1/agent/runtime-status HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:54371 - "GET /api/v1/places?city_code=CN-TIANJIN HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:54369 - "GET /api/v1/journeys/9942f8a1-4688-4282-a1c2-2db7cbb16b5c/agent-feed?limit=200 HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:56353 - "GET /api/v1/journeys/9942f8a1-4688-4282-a1c2-2db7cbb16b5c/agent-feed?limit=200 HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:55360 - "GET /api/v1/agent/runtime-status HTTP/1.1" 200 OK
+
+[chromium] › e2e\qoder-onboarding-failure.spec.ts:187:3 › ORD-0034 onboarding surfaces a failed create › legal-window-create-advances — a legal trip reaches the app within 5s
+legal-window-create-advances reached the shell in 7420ms
+
+[10/40] [chromium] › e2e\qoder-onboarding-failure.spec.ts:221:3 › ORD-0034 onboarding surfaces a failed create › missing-anchor-is-named-before-submit
+[WebServer] INFO:     127.0.0.1:50418 - "GET /api/v1/demo/scene HTTP/1.1" 200 OK
+
+[11/40] [chromium] › e2e\qoder-onboarding-failure.spec.ts:314:3 › ORD-0034 onboarding surfaces a failed create › review-page-says-missing-anchor-is-required
+[WebServer] INFO:     127.0.0.1:64449 - "GET /api/v1/demo/scene HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:61185 - "GET /api/v1/demo/scene HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:54909 - "GET /api/v1/demo/scene HTTP/1.1" 200 OK
+
+[12/40] [chromium] › e2e\qoder-onboarding-failure.spec.ts:385:3 › ORD-0034 onboarding surfaces a failed create › backend-reason-lands-on-its-own-field
+[WebServer] INFO:     127.0.0.1:52744 - "GET /api/v1/demo/scene HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:61393 - "POST /api/v1/travelers HTTP/1.1" 201 Created
+
+  5) [chromium] › e2e\qoder-onboarding-failure.spec.ts:385:3 › ORD-0034 onboarding surfaces a failed create › backend-reason-lands-on-its-own-field 
+
+    Error: e2e/qoder-onboarding-failure.spec.ts :: backend-reason-lands-on-its-own-field — the 422 named arrival_anchor.location but the field shows nothing
+
+    expect(locator).toContainText(expected) failed
+
+    Locator: getByTestId('trial-arrival-problem')
+    Expected substring: "String should have at least 1 character"
+    Timeout: 10000ms
+    Error: element(s) not found
+
+    Call log:
+      - e2e/qoder-onboarding-failure.spec.ts :: backend-reason-lands-on-its-own-field — the 422 named arrival_anchor.location but the field shows nothing getByTestId('trial-arrival-problem') with timeout 10000ms
+      - waiting for getByTestId('trial-arrival-problem')
+
+
+      423 |       "e2e/qoder-onboarding-failure.spec.ts :: backend-reason-lands-on-its-own-field — the 422 " +
+      424 |         "named arrival_anchor.location but the field shows nothing",
+    > 425 |     ).toContainText("String should have at least 1 character", { timeout: 10_000 });
+          |       ^
+      426 |     await expect(
+      427 |       page.getByTestId("trial-departure"),
+      428 |       "e2e/qoder-onboarding-failure.spec.ts :: backend-reason-lands-on-its-own-field — a complaint " +
+        at D:\moodle\_qoder_cmdr_ord0338_base\frontend\e2e\qoder-onboarding-failure.spec.ts:425:7
+
+    Error Context: test-results\qoder-onboarding-failure-O-b5e29-ason-lands-on-its-own-field-chromium\error-context.md
+
+
+[citynexus e2e] suite=current-product authoritative=true python=D:/moodle/CityNexus/.venv/Scripts/python.exe frontend=:4400 backend=:5400 db=sqlite:///D:/moodle/_qoder_cmdr_ord0338_base/review/evidence/_cmdr140415o338bas.db ai=disabled reuseExistingServer=false
+
+[13/40] [chromium] › e2e\qoder-plan-ai-contrast.spec.ts:111:5 › ORD-0035 plan-ai sheet ink is legible in both themes › light: sheet and textarea clear AA
+[WebServer] INFO:     127.0.0.1:53491 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/experience HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:50796 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/replans HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:50801 - "GET /api/v1/demo/scene HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:52745 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/agent-feed?limit=200 HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:49729 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/wallet HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:49738 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/offline-snapshot HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:49713 - "GET /api/v1/travelers/cd245fee-c740-4c29-95e0-a92ae110983c/agent-policy HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:52746 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/plans HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:52747 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/twin HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:64750 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/agent-feed?limit=200 HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:50660 - "GET /api/v1/agent/runtime-status HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:61281 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/experience HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:61288 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/replans HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:61289 - "GET /api/v1/demo/scene HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:60314 - "GET /api/v1/travelers/cd245fee-c740-4c29-95e0-a92ae110983c/agent-policy HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:61290 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/agent-feed?limit=200 HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:60315 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/wallet HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:61291 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/plans HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:65068 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/offline-snapshot HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:61292 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/twin HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:51090 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/agent-feed?limit=200 HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:51089 - "GET /api/v1/agent/runtime-status HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:59981 - "GET /api/v1/places?city_code=CN-TIANJIN HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:59982 - "GET /api/v1/agent/runtime-status HTTP/1.1" 200 OK
+
+[14/40] [chromium] › e2e\qoder-plan-ai-contrast.spec.ts:111:5 › ORD-0035 plan-ai sheet ink is legible in both themes › dark: sheet and textarea clear AA
+[WebServer] INFO:     127.0.0.1:56938 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/experience HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:56939 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/replans HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:57380 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/agent-feed?limit=200 HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:57383 - "GET /api/v1/travelers/cd245fee-c740-4c29-95e0-a92ae110983c/agent-policy HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:57079 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/offline-snapshot HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:57384 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/wallet HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:56940 - "GET /api/v1/demo/scene HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:57381 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/plans HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:57382 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/twin HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:59186 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/agent-feed?limit=200 HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:61371 - "GET /api/v1/agent/runtime-status HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:53297 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/experience HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:53302 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/replans HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:53303 - "GET /api/v1/demo/scene HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:55856 - "GET /api/v1/travelers/cd245fee-c740-4c29-95e0-a92ae110983c/agent-policy HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:53304 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/agent-feed?limit=200 HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:55860 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/wallet HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:54180 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/offline-snapshot HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:53305 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/plans HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:53306 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/twin HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:50454 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/agent-feed?limit=200 HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:58440 - "GET /api/v1/agent/runtime-status HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:61954 - "GET /api/v1/places?city_code=CN-TIANJIN HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:61955 - "GET /api/v1/agent/runtime-status HTTP/1.1" 200 OK
+
+[15/40] [chromium] › e2e\qoder-plan-ai-contrast.spec.ts:141:1 › no .plan-ai-* rule pairs a literal light fill with an inherited foreground
+[16/40] [chromium] › e2e\qoder-plan-ai-thinking.spec.ts:71:5 › ORD-0038 the AI sheet reports what it actually knows › plan-ai-elapsed-ticks — the waiting number advances (English copy)
+[WebServer] INFO:     127.0.0.1:50001 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/experience HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:50005 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/replans HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:51461 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/agent-feed?limit=200 HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:51463 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/agent-feed?limit=200 HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:51469 - "GET /api/v1/travelers/cd245fee-c740-4c29-95e0-a92ae110983c/agent-policy HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:65236 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/wallet HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:51459 - "GET /api/v1/demo/scene HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:51580 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/offline-snapshot HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:51465 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/plans HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:51467 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/twin HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:58849 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/experience HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:58850 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/replans HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:52579 - "GET /api/v1/travelers/cd245fee-c740-4c29-95e0-a92ae110983c/agent-policy HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:52575 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/agent-feed?limit=200 HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:52576 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/agent-feed?limit=200 HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:52577 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/plans HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:52574 - "GET /api/v1/demo/scene HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:60240 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/wallet HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:56075 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/offline-snapshot HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:52578 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/twin HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:55023 - "GET /api/v1/places?city_code=CN-TIANJIN HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:61749 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/plans HTTP/1.1" 200 OK
+
+[17/40] [chromium] › e2e\qoder-plan-ai-thinking.spec.ts:71:5 › ORD-0038 the AI sheet reports what it actually knows › plan-ai-elapsed-ticks — the waiting number advances (Chinese copy)
+[WebServer] INFO:     127.0.0.1:58783 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/experience HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:58785 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/replans HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:57277 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/agent-feed?limit=200 HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:57276 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/agent-feed?limit=200 HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:57280 - "GET /api/v1/travelers/cd245fee-c740-4c29-95e0-a92ae110983c/agent-policy HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:50167 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/offline-snapshot HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:65506 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/wallet HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:57275 - "GET /api/v1/demo/scene HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:57278 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/plans HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:57279 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/twin HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:63062 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/experience HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:63064 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/replans HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:61231 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/agent-feed?limit=200 HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:61230 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/agent-feed?limit=200 HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:61234 - "GET /api/v1/travelers/cd245fee-c740-4c29-95e0-a92ae110983c/agent-policy HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:61229 - "GET /api/v1/demo/scene HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:61232 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/plans HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:61233 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/twin HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:62533 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/offline-snapshot HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:56108 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/wallet HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:63267 - "GET /api/v1/places?city_code=CN-TIANJIN HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:64271 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/plans HTTP/1.1" 200 OK
+
+[18/40] [chromium] › e2e\qoder-plan-ai-thinking.spec.ts:114:3 › ORD-0038 the AI sheet reports what it actually knows › plan-ai-no-fabricated-stage — no step may claim done before it was awaited
+[WebServer] INFO:     127.0.0.1:49814 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/experience HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:49818 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/replans HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:55823 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/agent-feed?limit=200 HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:55821 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/agent-feed?limit=200 HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:55829 - "GET /api/v1/travelers/cd245fee-c740-4c29-95e0-a92ae110983c/agent-policy HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:55213 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/offline-snapshot HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:55212 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/wallet HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:55819 - "GET /api/v1/demo/scene HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:55825 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/plans HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:55827 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/twin HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:53397 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/experience HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:53398 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/replans HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:58184 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/agent-feed?limit=200 HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:58185 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/agent-feed?limit=200 HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:58188 - "GET /api/v1/travelers/cd245fee-c740-4c29-95e0-a92ae110983c/agent-policy HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:65456 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/offline-snapshot HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:53934 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/wallet HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:58183 - "GET /api/v1/demo/scene HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:58186 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/plans HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:58187 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/twin HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:65440 - "GET /api/v1/places?city_code=CN-TIANJIN HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:56389 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/plans HTTP/1.1" 200 OK
+
+[19/40] [chromium] › e2e\qoder-plan-ai-thinking.spec.ts:172:3 › ORD-0038 the AI sheet reports what it actually knows › plan-ai-cancel-aborts-request — cancel stops the request, and says what it cannot undo
+[WebServer] INFO:     127.0.0.1:58992 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/experience HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:58993 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/replans HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:64295 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/agent-feed?limit=200 HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:64303 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/agent-feed?limit=200 HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:64320 - "GET /api/v1/travelers/cd245fee-c740-4c29-95e0-a92ae110983c/agent-policy HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:51010 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/wallet HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:62472 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/offline-snapshot HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:64291 - "GET /api/v1/demo/scene HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:64312 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/plans HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:64316 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/twin HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:58157 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/experience HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:58162 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/replans HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:58082 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/agent-feed?limit=200 HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:58086 - "GET /api/v1/travelers/cd245fee-c740-4c29-95e0-a92ae110983c/agent-policy HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:58083 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/agent-feed?limit=200 HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:58084 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/plans HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:58081 - "GET /api/v1/demo/scene HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:58085 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/twin HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:60263 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/offline-snapshot HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:51486 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/wallet HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:63575 - "GET /api/v1/places?city_code=CN-TIANJIN HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:50008 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/plans HTTP/1.1" 200 OK
+
+[20/40] [chromium] › e2e\qoder-plan-ai-thinking.spec.ts:235:3 › ORD-0038 the AI sheet reports what it actually knows › plan-ai-cancel-before-send — cancelling the baseline read really did send nothing
+[WebServer] INFO:     127.0.0.1:52694 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/experience HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:52705 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/replans HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:57165 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/agent-feed?limit=200 HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:57169 - "GET /api/v1/travelers/cd245fee-c740-4c29-95e0-a92ae110983c/agent-policy HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:57166 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/agent-feed?limit=200 HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:50475 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/offline-snapshot HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:57167 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/plans HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:52158 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/wallet HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:57164 - "GET /api/v1/demo/scene HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:57168 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/twin HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:59693 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/experience HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:59702 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/replans HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:60442 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/agent-feed?limit=200 HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:60441 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/agent-feed?limit=200 HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:60445 - "GET /api/v1/travelers/cd245fee-c740-4c29-95e0-a92ae110983c/agent-policy HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:63396 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/wallet HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:63329 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/offline-snapshot HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:60440 - "GET /api/v1/demo/scene HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:60443 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/plans HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:60444 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/twin HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:53990 - "GET /api/v1/places?city_code=CN-TIANJIN HTTP/1.1" 200 OK
+
+[21/40] [chromium] › e2e\qoder-plan-ai-thinking.spec.ts:296:3 › ORD-0038 the AI sheet reports what it actually knows › plan-ai-failure-not-loading — a refused request is named, and the fallback may not answer for it
+[WebServer] INFO:     127.0.0.1:52495 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/experience HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:52502 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/replans HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:53331 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/agent-feed?limit=200 HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:53330 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/agent-feed?limit=200 HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:53334 - "GET /api/v1/travelers/cd245fee-c740-4c29-95e0-a92ae110983c/agent-policy HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:55953 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/wallet HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:50633 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/offline-snapshot HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:53329 - "GET /api/v1/demo/scene HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:53332 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/plans HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:53333 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/twin HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:57075 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/experience HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:57077 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/replans HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:51217 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/agent-feed?limit=200 HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:51216 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/agent-feed?limit=200 HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:51222 - "GET /api/v1/travelers/cd245fee-c740-4c29-95e0-a92ae110983c/agent-policy HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:63303 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/offline-snapshot HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:63979 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/wallet HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:51213 - "GET /api/v1/demo/scene HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:51218 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/plans HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:51221 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/twin HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:56334 - "GET /api/v1/places?city_code=CN-TIANJIN HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:64535 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/plans HTTP/1.1" 200 OK
+
+[22/40] [chromium] › e2e\qoder-plan-ai-thinking.spec.ts:359:3 › ORD-0038 the AI sheet reports what it actually knows › plan-ai-no-synthetic-success — rows the fallback assembled are not an AI result
+[WebServer] INFO:     127.0.0.1:62819 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/experience HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:65495 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/replans HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:57012 - "GET /api/v1/travelers/cd245fee-c740-4c29-95e0-a92ae110983c/agent-policy HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:57010 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/agent-feed?limit=200 HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:57009 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/agent-feed?limit=200 HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:57013 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/wallet HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:57008 - "GET /api/v1/demo/scene HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:63156 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/offline-snapshot HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:57011 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/twin HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:54783 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/experience HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:54785 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/replans HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:60274 - "GET /api/v1/travelers/cd245fee-c740-4c29-95e0-a92ae110983c/agent-policy HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:60269 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/agent-feed?limit=200 HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:60271 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/agent-feed?limit=200 HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:60276 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/wallet HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:60267 - "GET /api/v1/demo/scene HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:49686 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/offline-snapshot HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:60272 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/twin HTTP/1.1" 200 OK
+
+[23/40] [chromium] › e2e\qoder-plan-ai-thinking.spec.ts:436:3 › ORD-0038 the AI sheet reports what it actually knows › plan-ai-preflight-honest — an unreadable AI status is reported as unknown, never as ready
+[WebServer] INFO:     127.0.0.1:59299 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/experience HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:59306 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/replans HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:57864 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/agent-feed?limit=200 HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:57867 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/agent-feed?limit=200 HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:57874 - "GET /api/v1/travelers/cd245fee-c740-4c29-95e0-a92ae110983c/agent-policy HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:50685 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/wallet HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:53767 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/offline-snapshot HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:57862 - "GET /api/v1/demo/scene HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:57870 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/plans HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:57872 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/twin HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:64238 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/experience HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:64242 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/replans HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:51346 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/agent-feed?limit=200 HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:51350 - "GET /api/v1/travelers/cd245fee-c740-4c29-95e0-a92ae110983c/agent-policy HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:51347 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/agent-feed?limit=200 HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:54857 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/wallet HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:58632 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/offline-snapshot HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:51345 - "GET /api/v1/demo/scene HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:51348 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/plans HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:51349 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/twin HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:56938 - "GET /api/v1/places?city_code=CN-TIANJIN HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:56758 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/experience HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:65200 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/replans HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:52239 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/agent-feed?limit=200 HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:52238 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/agent-feed?limit=200 HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:52237 - "GET /api/v1/demo/scene HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:52240 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/plans HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:55329 - "GET /api/v1/travelers/cd245fee-c740-4c29-95e0-a92ae110983c/agent-policy HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:52241 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/twin HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:55330 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/wallet HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:55331 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/offline-snapshot HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:53378 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/experience HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:53379 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/replans HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:63885 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/agent-feed?limit=200 HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:63883 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/agent-feed?limit=200 HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:63891 - "GET /api/v1/travelers/cd245fee-c740-4c29-95e0-a92ae110983c/agent-policy HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:52664 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/offline-snapshot HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:51243 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/wallet HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:63881 - "GET /api/v1/demo/scene HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:63887 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/plans HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:63889 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/twin HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:63757 - "GET /api/v1/places?city_code=CN-TIANJIN HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:56685 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/experience HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:56686 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/replans HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:50612 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/agent-feed?limit=200 HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:50613 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/agent-feed?limit=200 HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:50616 - "GET /api/v1/travelers/cd245fee-c740-4c29-95e0-a92ae110983c/agent-policy HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:50061 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/wallet HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:50611 - "GET /api/v1/demo/scene HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:53952 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/offline-snapshot HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:50614 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/plans HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:50615 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/twin HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:60246 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/experience HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:60247 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/replans HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:50057 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/agent-feed?limit=200 HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:50058 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/agent-feed?limit=200 HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:50062 - "GET /api/v1/travelers/cd245fee-c740-4c29-95e0-a92ae110983c/agent-policy HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:56325 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/offline-snapshot HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:51935 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/wallet HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:50059 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/plans HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:50056 - "GET /api/v1/demo/scene HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:50060 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/twin HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:61930 - "GET /api/v1/places?city_code=CN-TIANJIN HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:59652 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/experience HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:59653 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/replans HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:49742 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/agent-feed?limit=200 HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:49753 - "GET /api/v1/travelers/cd245fee-c740-4c29-95e0-a92ae110983c/agent-policy HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:49744 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/agent-feed?limit=200 HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:54301 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/wallet HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:49739 - "GET /api/v1/demo/scene HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:56672 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/offline-snapshot HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:49747 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/plans HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:49749 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/twin HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:59066 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/experience HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:52076 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/replans HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:55457 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/agent-feed?limit=200 HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:55455 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/agent-feed?limit=200 HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:55463 - "GET /api/v1/travelers/cd245fee-c740-4c29-95e0-a92ae110983c/agent-policy HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:55453 - "GET /api/v1/demo/scene HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:63118 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/offline-snapshot HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:55459 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/plans HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:58635 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/wallet HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:55461 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/twin HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:65315 - "GET /api/v1/places?city_code=CN-TIANJIN HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:61718 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/experience HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:57494 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/replans HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:65513 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/agent-feed?limit=200 HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:65514 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/agent-feed?limit=200 HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:65517 - "GET /api/v1/travelers/cd245fee-c740-4c29-95e0-a92ae110983c/agent-policy HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:62567 - "GET /api/v1/health HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:64034 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/offline-snapshot HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:61416 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/wallet HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:65512 - "GET /api/v1/demo/scene HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:65515 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/plans HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:65516 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/twin HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:63684 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/experience HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:63703 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/replans HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:49885 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/agent-feed?limit=200 HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:49884 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/agent-feed?limit=200 HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:49888 - "GET /api/v1/travelers/cd245fee-c740-4c29-95e0-a92ae110983c/agent-policy HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:57300 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/wallet HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:56399 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/offline-snapshot HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:49883 - "GET /api/v1/demo/scene HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:49886 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/plans HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:64986 - "GET /api/v1/health HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:49887 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/twin HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:54813 - "GET /api/v1/places?city_code=CN-TIANJIN HTTP/1.1" 200 OK
+
+[24/40] [chromium] › e2e\qoder-raw-enums-never-reach-the-traveller.spec.ts:155:1 › ord0222-1-visual-scan-no-raw-enums-and-no-mixed-english — 旅客看得见的字里不许有内部枚举，被改的行不许中英混排
+[WebServer] INFO:     127.0.0.1:54817 - "GET /api/v1/demo/scene HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:64040 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/experience HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:64042 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/replans HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:64044 - "GET /api/v1/demo/scene HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:52372 - "GET /api/v1/travelers/cd245fee-c740-4c29-95e0-a92ae110983c/agent-policy HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:52369 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/agent-feed?limit=200 HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:52373 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/wallet HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:54830 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/experience HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:54832 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/replans HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:54834 - "GET /api/v1/demo/scene HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:54836 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/agent-feed?limit=200 HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:54838 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/plans HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:57002 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/offline-snapshot HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:57004 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/wallet HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:57003 - "GET /api/v1/travelers/cd245fee-c740-4c29-95e0-a92ae110983c/agent-policy HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:55690 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/agent-feed?limit=200 HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:54840 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/twin HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:53571 - "GET /api/v1/agent/runtime-status HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:57274 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/replans HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:63877 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/execution-clock HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:63893 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/web-observations HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:63875 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/experience HTTP/1.1" 200 OK
+
+[25/40] [chromium] › e2e\qoder-raw-enums-never-reach-the-traveller.spec.ts:210:1 › ord0222-2-accessible-scan-no-raw-enums — 读屏输出里也不许有内部枚举
+[WebServer] INFO:     127.0.0.1:61354 - "GET /api/v1/demo/scene HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:51381 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/experience HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:51382 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/replans HTTP/1.1" 200 OK
+
+[WebServer] JourneyTwin cache write skipped during transient SQLite contention: (sqlite3.OperationalError) database is locked
+[WebServer] [SQL: UPDATE journey_twins SET snapshot_at=?, updated_at=? WHERE journey_twins.journey_id = ?]
+[WebServer] [parameters: ('2026-09-26T06:22:18.144758+00:00', '2026-09-26T06:22:18.144758+00:00', '8d2d129d-9dba-4114-8646-f719ee18c54d')]
+[WebServer] (Background on this error at: https://sqlalche.me/e/20/e3q8)
+
+[WebServer] INFO:     127.0.0.1:62117 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/experience HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:62121 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/replans HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:62123 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/agent-feed?limit=200 HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:51489 - "GET /api/v1/travelers/cd245fee-c740-4c29-95e0-a92ae110983c/agent-policy HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:62122 - "GET /api/v1/demo/scene HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:62373 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/wallet HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:56859 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/offline-snapshot HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:65285 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/agent-feed?limit=200 HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:62124 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/plans HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:62125 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/twin HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:56860 - "GET /api/v1/agent/runtime-status HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:64549 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/execution-clock HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:64550 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/web-observations HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:64545 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/replans HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:64547 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/experience HTTP/1.1" 200 OK
+
+[26/40] [chromium] › e2e\qoder-raw-enums-never-reach-the-traveller.spec.ts:239:1 › ord0222-3-an-unknown-value-says-unknown-in-chinese — 新枚举进来时中文要 fail closed
+[WebServer] INFO:     127.0.0.1:62275 - "GET /api/v1/demo/scene HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:54728 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/experience HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:54730 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/replans HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:63805 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/agent-feed?limit=200 HTTP/1.1" 200 OK
+
+[27/40] [chromium] › e2e\qoder-raw-enums-never-reach-the-traveller.spec.ts:284:1 › ord0222-5-dark-scheme-carries-the-same-words — 同一批屏在深色下再扫一遍
+[WebServer] INFO:     127.0.0.1:49700 - "GET /api/v1/demo/scene HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:63093 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/experience HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:63094 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/replans HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:63095 - "GET /api/v1/demo/scene HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:53429 - "GET /api/v1/travelers/cd245fee-c740-4c29-95e0-a92ae110983c/agent-policy HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:53430 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/wallet HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:50363 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/agent-feed?limit=200 HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:53431 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/offline-snapshot HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:61518 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/experience HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:64539 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/replans HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:64541 - "GET /api/v1/demo/scene HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:64543 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/agent-feed?limit=200 HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:64547 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/plans HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:55153 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/offline-snapshot HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:55152 - "GET /api/v1/travelers/cd245fee-c740-4c29-95e0-a92ae110983c/agent-policy HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:62997 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/wallet HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:52233 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/agent-feed?limit=200 HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:57342 - "GET /api/v1/agent/runtime-status HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:64551 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/twin HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:61031 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/replans HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:54394 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/execution-clock HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:54395 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/web-observations HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:54393 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/experience HTTP/1.1" 200 OK
+
+[28/40] [chromium] › e2e\qoder-raw-enums-never-reach-the-traveller.spec.ts:313:1 › ord0222-4-day-payload-versus-visible-card — Check in / Overnight 的来源先交并排收据
+[WebServer] INFO:     127.0.0.1:49715 - "GET /api/v1/demo/scene HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:49725 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/experience HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:57461 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/experience HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:53235 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/replans HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:53241 - "GET /api/v1/demo/scene HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:59770 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/agent-feed?limit=200 HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:56763 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/wallet HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:56762 - "GET /api/v1/travelers/cd245fee-c740-4c29-95e0-a92ae110983c/agent-policy HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:56764 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/offline-snapshot HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:59771 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/plans HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:52138 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/agent-feed?limit=200 HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:59772 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/twin HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:52137 - "GET /api/v1/agent/runtime-status HTTP/1.1" 200 OK
+
+[29/40] [chromium] › e2e\qoder-sealed-failure-speaks-and-offers-retry.spec.ts:65:1 › ord0273-text-the-sentence-is-the-key-and-no-shape-leaks — 主文案是键值，不漏技术形状
+[WebServer] INFO:     127.0.0.1:54960 - "GET /api/v1/demo/scene HTTP/1.1" 200 OK
+
+  6) [chromium] › e2e\qoder-sealed-failure-speaks-and-offers-retry.spec.ts:65:1 › ord0273-text-the-sentence-is-the-key-and-no-shape-leaks — 主文案是键值，不漏技术形状 
+
+    Error: e2e/qoder-sealed-failure-speaks-and-offers-retry.spec.ts :: ord0273-text — the technical detail vanished entirely -- telemetry lost its facts
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: true
+    Received: false
+
+      93 |     detail.errorMessage.length > 0,
+      94 |     node("ord0273-text", "the technical detail vanished entirely -- telemetry lost its facts"),
+    > 95 |   ).toBe(true);
+         |     ^
+      96 |
+      97 |   writeFileSync(
+      98 |     evidencePath("ord0273-text-reading.json"),
+        at D:\moodle\_qoder_cmdr_ord0338_base\frontend\e2e\qoder-sealed-failure-speaks-and-offers-retry.spec.ts:95:5
+
+    Error Context: test-results\qoder-sealed-failure-speak-cb878-shape-leaks-—-主文案是键值，不漏技术形状-chromium\error-context.md
+
+
+[citynexus e2e] suite=current-product authoritative=true python=D:/moodle/CityNexus/.venv/Scripts/python.exe frontend=:4400 backend=:5400 db=sqlite:///D:/moodle/_qoder_cmdr_ord0338_base/review/evidence/_cmdr140415o338bas.db ai=disabled reuseExistingServer=false
+
+[30/40] [chromium] › e2e\qoder-sealed-failure-speaks-and-offers-retry.spec.ts:106:1 › ord0273-text-en-arm-speaks-english-and-neither-side-leaks — 英文臂不得说中文
+[WebServer] INFO:     127.0.0.1:60788 - "GET /api/v1/demo/scene HTTP/1.1" 200 OK
+
+  7) [chromium] › e2e\qoder-sealed-failure-speaks-and-offers-retry.spec.ts:106:1 › ord0273-text-en-arm-speaks-english-and-neither-side-leaks — 英文臂不得说中文 
+
+    Error: e2e/qoder-sealed-failure-speaks-and-offers-retry.spec.ts :: ord0273-text-en — the technical detail vanished under locale=en too -- telemetry lost its facts
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: true
+    Received: false
+
+      146 |     detail.errorMessage.length > 0,
+      147 |     node("ord0273-text-en", "the technical detail vanished under locale=en too -- telemetry lost its facts"),
+    > 148 |   ).toBe(true);
+          |     ^
+      149 |
+      150 |   writeFileSync(
+      151 |     evidencePath("ord0273-text-en-reading.json"),
+        at D:\moodle\_qoder_cmdr_ord0338_base\frontend\e2e\qoder-sealed-failure-speaks-and-offers-retry.spec.ts:148:5
+
+    Error Context: test-results\qoder-sealed-failure-speak-54823-ither-side-leaks-—-英文臂不得说中文-chromium\error-context.md
+
+
+[citynexus e2e] suite=current-product authoritative=true python=D:/moodle/CityNexus/.venv/Scripts/python.exe frontend=:4400 backend=:5400 db=sqlite:///D:/moodle/_qoder_cmdr_ord0338_base/review/evidence/_cmdr140415o338bas.db ai=disabled reuseExistingServer=false
+
+[31/40] [chromium] › e2e\qoder-sealed-failure-speaks-and-offers-retry.spec.ts:169:1 › ord0273-action-retry-is-a-real-executable-step — 失败屏带着能走的那一步
+[WebServer] INFO:     127.0.0.1:57791 - "GET /api/v1/demo/scene HTTP/1.1" 200 OK
+
+[32/40] [chromium] › e2e\qoder-theme-contract.spec.ts:108:3 › Ruling ④ the theme root contract › theme-system-default-follows-the-os
+[WebServer] INFO:     127.0.0.1:57801 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/experience HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:57802 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/replans HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:64220 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/agent-feed?limit=200 HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:64225 - "GET /api/v1/travelers/cd245fee-c740-4c29-95e0-a92ae110983c/agent-policy HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:57803 - "GET /api/v1/demo/scene HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:64226 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/wallet HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:64222 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/plans HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:52847 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/offline-snapshot HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:53616 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/agent-feed?limit=200 HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:64224 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/twin HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:52848 - "GET /api/v1/agent/runtime-status HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:51574 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/experience HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:51575 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/replans HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:49378 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/wallet HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:51577 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/agent-feed?limit=200 HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:49377 - "GET /api/v1/travelers/cd245fee-c740-4c29-95e0-a92ae110983c/agent-policy HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:51576 - "GET /api/v1/demo/scene HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:59082 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/offline-snapshot HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:50284 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/agent-feed?limit=200 HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:51578 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/plans HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:51579 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/twin HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:59083 - "GET /api/v1/agent/runtime-status HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:55716 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/experience HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:55717 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/replans HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:55718 - "GET /api/v1/demo/scene HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:55719 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/agent-feed?limit=200 HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:56976 - "GET /api/v1/travelers/cd245fee-c740-4c29-95e0-a92ae110983c/agent-policy HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:56977 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/wallet HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:54680 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/offline-snapshot HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:62980 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/agent-feed?limit=200 HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:55720 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/plans HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:55721 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/twin HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:60984 - "GET /api/v1/agent/runtime-status HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:54476 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/experience HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:54477 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/replans HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:54479 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/agent-feed?limit=200 HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:52278 - "GET /api/v1/travelers/cd245fee-c740-4c29-95e0-a92ae110983c/agent-policy HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:51741 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/offline-snapshot HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:54478 - "GET /api/v1/demo/scene HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:52279 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/wallet HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:54480 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/plans HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:54481 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/twin HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:59638 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/agent-feed?limit=200 HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:55864 - "GET /api/v1/agent/runtime-status HTTP/1.1" 200 OK
+
+[33/40] [chromium] › e2e\qoder-theme-contract.spec.ts:128:3 › Ruling ④ the theme root contract › theme-choice-persists-and-overrides-the-os
+[WebServer] INFO:     127.0.0.1:64369 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/experience HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:64370 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/replans HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:64371 - "GET /api/v1/demo/scene HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:59362 - "GET /api/v1/travelers/cd245fee-c740-4c29-95e0-a92ae110983c/agent-policy HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:59363 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/wallet HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:59359 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/agent-feed?limit=200 HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:59364 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/offline-snapshot HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:59360 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/plans HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:59361 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/twin HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:64797 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/agent-feed?limit=200 HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:65249 - "GET /api/v1/agent/runtime-status HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:65366 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/experience HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:65367 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/replans HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:65369 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/agent-feed?limit=200 HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:55697 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/wallet HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:65368 - "GET /api/v1/demo/scene HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:65370 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/plans HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:55696 - "GET /api/v1/travelers/cd245fee-c740-4c29-95e0-a92ae110983c/agent-policy HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:65371 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/twin HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:61236 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/offline-snapshot HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:61238 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/agent-feed?limit=200 HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:61237 - "GET /api/v1/agent/runtime-status HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:65238 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/experience HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:65239 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/replans HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:65240 - "GET /api/v1/demo/scene HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:65241 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/agent-feed?limit=200 HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:54763 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/wallet HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:51746 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/offline-snapshot HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:54762 - "GET /api/v1/travelers/cd245fee-c740-4c29-95e0-a92ae110983c/agent-policy HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:65242 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/plans HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:65243 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/twin HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:51731 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/agent-feed?limit=200 HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:55438 - "GET /api/v1/agent/runtime-status HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:50784 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/experience HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:50785 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/replans HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:50786 - "GET /api/v1/demo/scene HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:50787 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/agent-feed?limit=200 HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:55507 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/offline-snapshot HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:55506 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/wallet HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:50788 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/plans HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:55505 - "GET /api/v1/travelers/cd245fee-c740-4c29-95e0-a92ae110983c/agent-policy HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:50789 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/twin HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:63639 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/agent-feed?limit=200 HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:64925 - "GET /api/v1/agent/runtime-status HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:50462 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/experience HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:50464 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/replans HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:50468 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/agent-feed?limit=200 HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:60452 - "GET /api/v1/travelers/cd245fee-c740-4c29-95e0-a92ae110983c/agent-policy HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:60453 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/wallet HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:55102 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/offline-snapshot HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:50466 - "GET /api/v1/demo/scene HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:50470 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/plans HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:49989 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/agent-feed?limit=200 HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:50472 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/twin HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:65168 - "GET /api/v1/agent/runtime-status HTTP/1.1" 200 OK
+
+[34/40] [chromium] › e2e\qoder-theme-contract.spec.ts:163:3 › Ruling ④ the theme root contract › theme-control-cycles-all-three-choices
+[WebServer] INFO:     127.0.0.1:57513 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/experience HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:64845 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/replans HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:64846 - "GET /api/v1/demo/scene HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:50417 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/agent-feed?limit=200 HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:50423 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/wallet HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:50422 - "GET /api/v1/travelers/cd245fee-c740-4c29-95e0-a92ae110983c/agent-policy HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:63279 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/offline-snapshot HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:50420 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/plans HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:62247 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/agent-feed?limit=200 HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:50421 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/twin HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:49314 - "GET /api/v1/agent/runtime-status HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:59416 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/experience HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:59417 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/replans HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:59419 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/agent-feed?limit=200 HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:57432 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/wallet HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:57430 - "GET /api/v1/travelers/cd245fee-c740-4c29-95e0-a92ae110983c/agent-policy HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:56884 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/offline-snapshot HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:59420 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/plans HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:59418 - "GET /api/v1/demo/scene HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:62243 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/agent-feed?limit=200 HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:54152 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/twin HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:56885 - "GET /api/v1/agent/runtime-status HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:64002 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/experience HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:64003 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/replans HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:64005 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/agent-feed?limit=200 HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:51964 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/wallet HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:51963 - "GET /api/v1/travelers/cd245fee-c740-4c29-95e0-a92ae110983c/agent-policy HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:63334 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/offline-snapshot HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:64004 - "GET /api/v1/demo/scene HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:64006 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/plans HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:50204 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/agent-feed?limit=200 HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:64007 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/twin HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:52522 - "GET /api/v1/agent/runtime-status HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:56160 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/experience HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:59374 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/replans HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:59376 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/agent-feed?limit=200 HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:50605 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/wallet HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:50604 - "GET /api/v1/travelers/cd245fee-c740-4c29-95e0-a92ae110983c/agent-policy HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:50263 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/offline-snapshot HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:59375 - "GET /api/v1/demo/scene HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:55955 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/agent-feed?limit=200 HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:59377 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/plans HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:59378 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/twin HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:60749 - "GET /api/v1/agent/runtime-status HTTP/1.1" 200 OK
+
+[35/40] [chromium] › e2e\qoder-theme-contract.spec.ts:259:3 › Ruling ④ the theme root contract › theme-pinned-dark-legible-on-light-os
+[WebServer] INFO:     127.0.0.1:64557 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/experience HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:64558 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/replans HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:64559 - "GET /api/v1/demo/scene HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:50518 - "GET /api/v1/travelers/cd245fee-c740-4c29-95e0-a92ae110983c/agent-policy HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:50522 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/offline-snapshot HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:50512 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/agent-feed?limit=200 HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:50520 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/wallet HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:50514 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/plans HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:50516 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/twin HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:57426 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/agent-feed?limit=200 HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:59625 - "GET /api/v1/agent/runtime-status HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:58569 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/experience HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:58570 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/replans HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:58573 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/agent-feed?limit=200 HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:54312 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/wallet HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:54311 - "GET /api/v1/travelers/cd245fee-c740-4c29-95e0-a92ae110983c/agent-policy HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:65413 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/offline-snapshot HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:58571 - "GET /api/v1/demo/scene HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:58574 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/plans HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:56694 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/agent-feed?limit=200 HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:58575 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/twin HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:63828 - "GET /api/v1/agent/runtime-status HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:54551 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/experience HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:54552 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/replans HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:54625 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/replans HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:54627 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/execution-clock HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:54628 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/web-observations HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:62937 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/wallet HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:63976 - "GET /api/v1/travelers/cd245fee-c740-4c29-95e0-a92ae110983c/agent-policy HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:53664 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/offline-snapshot HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:60044 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/plans HTTP/1.1" 200 OK
+
+[WebServer] JourneyTwin cache write skipped during transient SQLite contention: (sqlite3.OperationalError) database is locked
+[WebServer] [SQL: UPDATE journey_twins SET snapshot_at=?, updated_at=? WHERE journey_twins.journey_id = ?]
+[WebServer] [parameters: ('2026-09-26T06:23:13.562393+00:00', '2026-09-26T06:23:13.562393+00:00', '8d2d129d-9dba-4114-8646-f719ee18c54d')]
+[WebServer] (Background on this error at: https://sqlalche.me/e/20/e3q8)
+
+[WebServer] INFO:     127.0.0.1:54553 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/twin HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:54626 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/experience HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:58353 - "GET /api/v1/agent/runtime-status HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:55849 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/experience HTTP/1.1" 200 OK
+
+[36/40] [chromium] › e2e\qoder-theme-contract.spec.ts:290:3 › Ruling ④ the theme root contract › theme-root-attribute-is-the-only-dark-switch
+[37/40] [chromium] › e2e\qoder-today-hero.spec.ts:16:3 › Qoder Today single-focus hero › hero has one primary CTA, bounded height, no empty Now slot, no overflow
+[WebServer] INFO:     127.0.0.1:63451 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/experience HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:63452 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/replans HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:64269 - "GET /api/v1/travelers/cd245fee-c740-4c29-95e0-a92ae110983c/agent-policy HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:64266 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/agent-feed?limit=200 HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:64270 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/wallet HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:60174 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/offline-snapshot HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:63453 - "GET /api/v1/demo/scene HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:64267 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/plans HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:58718 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/agent-feed?limit=200 HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:64268 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/twin HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:57385 - "GET /api/v1/agent/runtime-status HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:59028 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/experience HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:59029 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/replans HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:59031 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/agent-feed?limit=200 HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:64243 - "GET /api/v1/travelers/cd245fee-c740-4c29-95e0-a92ae110983c/agent-policy HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:64244 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/wallet HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:64139 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/offline-snapshot HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:59030 - "GET /api/v1/demo/scene HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:50739 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/agent-feed?limit=200 HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:59032 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/plans HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:59203 - "GET /api/v1/agent/runtime-status HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:59033 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/twin HTTP/1.1" 200 OK
+
+  8) [chromium] › e2e\qoder-today-hero.spec.ts:16:3 › Qoder Today single-focus hero › hero has one primary CTA, bounded height, no empty Now slot, no overflow 
+
+    Error: hero@360: data-now should be false pre-trip
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "false"
+    Received: "true"
+
+      87 |       const nowAttr = await hero.getAttribute("data-now");
+      88 |       const nowCount = await page.getByTestId("today-now").count();
+    > 89 |       expect(nowAttr, `hero@${width}: data-now should be false pre-trip`).toBe("false");
+         |                                                                           ^
+      90 |       expect(nowCount, `hero@${width}: empty "Now" block must not render`).toBe(0);
+      91 |
+      92 |       // 6. The CTA appears iff there is a genuine next stop — never an empty
+        at D:\moodle\_qoder_cmdr_ord0338_base\frontend\e2e\qoder-today-hero.spec.ts:89:75
+
+    Error Context: test-results\qoder-today-hero-Qoder-Tod-0f706--empty-Now-slot-no-overflow-chromium\error-context.md
+
+
+[citynexus e2e] suite=current-product authoritative=true python=D:/moodle/CityNexus/.venv/Scripts/python.exe frontend=:4400 backend=:5400 db=sqlite:///D:/moodle/_qoder_cmdr_ord0338_base/review/evidence/_cmdr140415o338bas.db ai=disabled reuseExistingServer=false
+
+[38/40] [chromium] › e2e\qoder-today-hero.spec.ts:108:3 › Qoder Today single-focus hero › reduced-motion disables the hero reveal transform
+[WebServer] INFO:     127.0.0.1:51516 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/experience HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:51524 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/replans HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:51525 - "GET /api/v1/demo/scene HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:60652 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/wallet HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:59500 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/agent-feed?limit=200 HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:60651 - "GET /api/v1/travelers/cd245fee-c740-4c29-95e0-a92ae110983c/agent-policy HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:59501 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/plans HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:59502 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/twin HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:60534 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/offline-snapshot HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:60536 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/agent-feed?limit=200 HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:60535 - "GET /api/v1/agent/runtime-status HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:56602 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/experience HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:56603 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/replans HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:56605 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/agent-feed?limit=200 HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:56604 - "GET /api/v1/demo/scene HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:56606 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/plans HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:56607 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/twin HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:59380 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/wallet HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:59379 - "GET /api/v1/travelers/cd245fee-c740-4c29-95e0-a92ae110983c/agent-policy HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:54621 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/offline-snapshot HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:54623 - "GET /api/v1/journeys/8d2d129d-9dba-4114-8646-f719ee18c54d/agent-feed?limit=200 HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:54622 - "GET /api/v1/agent/runtime-status HTTP/1.1" 200 OK
+
+[39/40] [chromium] › e2e\qoder-wizard-advanced-is-tappable.spec.ts:110:1 › ord0261-sticky-bar-must-not-cover-the-summary-row — sticky 条不许压住 summary 行
+[WebServer] INFO:     127.0.0.1:49881 - "GET /api/v1/demo/scene HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:53208 - "GET /api/v1/demo/scene HTTP/1.1" 200 OK
+
+[40/40] [chromium] › e2e\qoder-wizard-advanced-is-tappable.spec.ts:143:1 › ord0264-opener-is-scroll-reachable-and-tappable — 高级入口要滚得到、点得动、不伤草稿
+[WebServer] INFO:     127.0.0.1:53221 - "GET /api/v1/demo/scene HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:55134 - "GET /api/v1/demo/scene HTTP/1.1" 200 OK
+
+  8 failed
+    [chromium] › e2e\qoder-not-answered-cell.spec.ts:82:1 › ord0203-the-fourth-cell-renders-and-its-retry-consumes-retryable — 第四格上屏，重试真的吃 retryable 
+    [chromium] › e2e\qoder-not-answered-cell.spec.ts:192:1 › ord0203-the-retry-actually-re-asks-the-server — 点“稍后重试”要真再问一次 
+    [chromium] › e2e\qoder-not-answered-cell.spec.ts:234:1 › ord0203-the-fourth-cell-is-readable-in-dark — 深色下自己先看一眼 
+    [chromium] › e2e\qoder-onboarding-failure.spec.ts:129:3 › ORD-0034 onboarding surfaces a failed create › the named backend reason reaches the onboarding screen 
+    [chromium] › e2e\qoder-onboarding-failure.spec.ts:385:3 › ORD-0034 onboarding surfaces a failed create › backend-reason-lands-on-its-own-field 
+    [chromium] › e2e\qoder-sealed-failure-speaks-and-offers-retry.spec.ts:65:1 › ord0273-text-the-sentence-is-the-key-and-no-shape-leaks — 主文案是键值，不漏技术形状 
+    [chromium] › e2e\qoder-sealed-failure-speaks-and-offers-retry.spec.ts:106:1 › ord0273-text-en-arm-speaks-english-and-neither-side-leaks — 英文臂不得说中文 
+    [chromium] › e2e\qoder-today-hero.spec.ts:16:3 › Qoder Today single-focus hero › hero has one primary CTA, bounded height, no empty Now slot, no overflow 
+  32 passed (19.2m)
