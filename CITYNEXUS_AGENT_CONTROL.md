@@ -16588,6 +16588,21 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### CMDR 16:32 — ORD-0351 在手机链上亲自走了一遍；我自己的一枚判据假阳性，两份读数都留
+
+**一、这条是"旅客能不能用"的验收，不是门禁绿。** 我在用户真正打开的那一面（经端口 4782 的口令门，Pixel-5 上下文，服务资产 `/assets/index-2YDNZeOr.js`）跑两趟：
+- A 趟：行程 id 不是我打的，是从链上产品自己读的（`GET /api/v1/demo/scene` 回 HTTP 200 里的 `journey_id`）。打开 `/v8/<那枚 id>` 之后，页面**真把这枚 id 拿去问了服务器**——URL 里含它的 API 请求 8 条（这条数是这趟的承重读数：屏面绿但请求数为 0 就说明链接仍是装饰；它记在 `walk_r2.json` blob `c9d4686970b01a4edbb90771498d98cf7566c87c` 的 `A.requests_carrying_it_count` 字段里）；屏上写着「下午好 Demo之旅 10月10日 09:00 — 10月10日 19:00 · 1 位旅行者 · 1 天」。
+- B 趟：一枚形状合法但服务器没有的 id。屏上回的是「这台服务器上没有这一趟行程了 … 服务器明确回答它不存在（HTTP 404）。这不是网络问题：服务器刚才答得出来。你的其它行程没有受影响。」⇒ 具名到"谁答的"、没有洗成网络故障，并明确说了别的行程没被波及。这正是 ORD-0263/ORD-0264 那条线要的形状。
+
+**二、自报一次仪器错（我自己的，不是产品的）。** 第一版把"屏上有网络字样"当成洗白的证据，于是 B 趟被判成 `B_network_washed = true` —— 而那句话本身就是**否定**网络读数（"这不是网络问题"）。修法是判"主张"而不是判"话题"：现在匹配 `网络不可用 / 无法连接 / 请检查网络 / network unavailable` 这类断言，并另记一条"屏面是否显式否掉网络读数"。修好后同一趟重跑：`A_asked=true, A_count=8, B_missing_named=true, B_network_washed=false`。两份读数都在账上，**含那份错的**：`evidence/cmdr-journey-link-walk-1630/walk_with_false_positive_r1.json` blob `5c6c92d27a0bcbe5d260a1193a07c83da0441fc5`（大小 2964 B）与 `walk_r2.json` blob `c9d4686970b01a4edbb90771498d98cf7566c87c`（大小 3017 B）；工具件 blob `5288a262e1c7aed8778a2e4f2ad1a9378eba34e0`（大小 6549 B）。同族教训：**否证句不是主张句**——任何"屏上写了什么"的判据都要问它在肯定还是在否定。
+
+**三、这条走查顺带把 ORD-0357 的事实钉住了。** 入口能开、能具名失败，但旅客手里没有那串链接：`git grep -i "clipboard|复制链接|shareLink|copyLink|navigator.share"` 在现尖 `6fd43627e717a97ea779da866eb4546b8acb9deb` 上 0 命中，只有 `V8Experience.tsx:844` 会把 `/v8/<uuid>` 写进地址栏。所以 lane N3（16:14 开的车道）正在补"复制行程链接"，明令不许动 `V8Experience.tsx`（那枚文件同时挂在 lane D 与 ORD-0349 上）。
+
+**四、车道在手（本拍无人空转；等我的只有两件）。** lane D 在 ORD-0343 的 `RecoveryRequiredPanel.tsx:166`（我裁"先修，不许报不修"）；lane N1 在 ORD-0349 的 r4（要求两行都留、两组门同跑）；lane S1 在 ORD-0350/0353；lane F 在 ORD-0352；lane S2 在 ORD-0353 要件拆解与 ORD-0345 剩下三格（新尺 r7b 在现尖的分母是 10 格，其中 `ActivityDetail.tsx:214` 是 `RAW_BODY_TO_DOM`）；lane N3 在 ORD-0357；lane E 无欠账（已签 ORD-0342 / ORD-0354+0348 三枚）。等我的两件仍是：**（1）预览库那句"可以重启"**（ORD-0340 与 ORD-0355 的服务端半边都卡在它后面）；**（2）两枚 API key 的轮换**。
+
+**五、边界。** 本拍权威线 0 移动（尖仍是 `6fd43627e717a97ea779da866eb4546b8acb9deb`）；车道 ref 零移动；`_live.db` / `_preview.db` 零读写；`demo/reset` 零次；凭据零打印（走查工具把口令读进子进程内存，收据里只有状态码与字节数）；已发布路径零覆盖零删除（本拍新发 3 枚证据件，全部 BYTE-LEVEL MATCH）；`端口 8000` 仍是"不提供"这个决定。
+
+
 ### CMDR 16:24 — ORD-0355 落线；落地门升到 r2（跑 r7b 尺并验尺身份）；红队三枚签级入账
 
 **一、权威线又移动一笔（今日第 25 次，ff-only，落地前一毫秒重读 GitHub 尖，两条路由回读一致）。**
