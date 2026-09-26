@@ -16588,6 +16588,49 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### SESSION=e345b9d6 @2026-09-26 10:38+08 —— **ORD-0338 第三块（Q73 裁的「甲」做完了）：CTA 现在是布局行，三处 padding hack 一起删，移动那段空白 17px、桌面 17px；同一笔里 ord0261/ord0264 按承诺重推（三形状，`scrolled > 0` 降级成读数）；候选上 13 枚节点全绿（A 10 + B 3），同一把 A 在尖上 7 红 3 绿；候选 1a779b69… 落本地枝未推，承诺改动请 E 复签**
+
+代次：现读尖 commit=`2d8b03b8c7734ea3b8521b80845e1b0bc1a07957`（`ls-remote` → `fetch` → 复读一致），尖那枚是「ORD-0344-b: route the refusal's diagnosis th…」。这单我开工时尖还是 `e9a392db…`，中途线又进了 11 笔（ORD-0332/0344/0346 等，其中 2 枚与我改的文件同名：`frontend/src/design-tokens.css`、`frontend/src/features/setup/JourneyTrialSetup.tsx`），所以我把 `agent/d-e345b9d6-ord0338` 从 `9b84a5fe…` 快进到 `e9a392db…`、落甲，再 rebase 到现尖 `2d8b03b8…` 上重验一遍（`git merge-tree --write-tree` 只读预测＝无冲突；rebase 后两把门与全套件都重跑，见第四、五段）。现尖之上 `4` 笔：`1a779b69…`；`68bd1a31…`；`7e2bdba7…`；`4a0b4128…`（本地枝，未推任何 ref）。我 ORD-0325 那枚 `c1bea4c20ea8cd5f1cc5c9d87053c005b2a24400` 仍是现尖祖先 （`merge-base --is-ancestor` = `True`）。
+
+**一、改了什么（三枚产品文件，逐字节差在架上：`ord0338_jia_candidate_patch_r1.txt` blob `607990f8d5291f95dec6e27a5dbbeaca6f330a1a`）**)
+
+1) `.cn-onboarding` 从「一块跟着窗口滚的文档」改成两行网格：`grid-template-rows: minmax(0,1fr) auto` + `height: var(--vv-height, 100dvh)`；第一行 `.cn-onboarding__scroll` 是**唯一**的滚动容器，第二行是 CTA 本体（`frontend/src/design-tokens.css` 尖 blob `52dd3cb1ed0b…` → 候选 `3d7a64c5d09b…`）。
+2) `.trial-sticky-cta` 摘掉 `position: sticky` / `bottom` / `z-index` 和那道渐变遮罩 （`frontend/src/styles.css` 尖 `b942bf640365…` → 候选 `421e8df2d241…`）。
+3) 三处预留一起删：`.cn-onboarding .trial-steps` 的 ≤680px 分支（实算值见 `ord0338_gap_anatomy_r1.json` blob `ebb8ab5c96fbc19a3f1fe26de82e502eeead9004` 里 `band.height` 那一枚读数）与 >680px 分支（同一把门桌面档量到 93px 的带，含它自己的 margin）——以及 `.trial-card` 那枚写死用来清条高的 `padding-bottom`；顺带删掉 ≤680px 那条 `bottom: var(--cn-sim-float-clearance)`——条不再浮起，它跟舞台球是否让开改成现场量（N5/D3），不再靠那条规则兜着。
+4) `frontend/src/features/setup/JourneyTrialSetup.tsx`：CTA 移到 `</section>` 之前的最后一枚子节点，其余内容包进滚动行（尖 `4821ec238c97…` → 候选 `94568c0bc7f9…`，差 6 枚 hunk 在补丁里逐条可数）。
+
+**二、空白结果（判据读渲染后的文档，不读源码字符串）**（数出自：`ord0338_fix_jia_r2.json` blob `50df1b34adde8384f04f03b5f350e1e6641c10da`）
+
+移动档（`hasTouch`，与已签的 ORD-0261/0264 同一枚介质）：那段带高从尖上的 229px 变成 **17px**，上界 60px （`ord0338_jia_candidate_N1-band-bound__run388490.json` blob `7cba8cd64cfbefc92f62b3e5d546cd5d6f57911c`）；尖上同一枚臂件 （`ord0338_jia_tip_N1-band-bound__run387900.json` blob `394a75a4e08398dcc475087aa4ee39d102dda0d8`）。两侧 computed 回读 `stepsPaddingBottom=0px` / `cardPaddingBottom=0px`，`section display=grid`、条 `position=static`、滚动行 `overflow=auto`。桌面档同一枚量具：带高 93px → **17px** （`ord0338_jia_candidate_D1-band-bound-desktop__run388490.json` blob `2270111e5569b674c3362f99c70cfb0f0e217453`），尖上的对应件 （`ord0338_jia_tip_D1-band-bound-desktop__run387900.json` blob `0004a301381eaed63cfde740696cddeac9df77e8`）（桌面那一档我在上一块说过『没量过就不顺手改』，这次它跟着甲一起改了，所以它跟着一起被量）。
+带内 0 枚带文字的节点（N2），也没有『占高不显示』的透明节点。反向臂 N7：只在页面里把那条 padding 按实测 212px 装回去，带高立刻回到 229px （`ord0338_jia_candidate_N7-arm-old-padding-back__run388490.json` blob `a80ba9820e7629552608beaf0980f3f1ec5c7bb6`） —— 量具对这条声明有牙齿，不是换了个说法。
+
+**三、可达性（Q73 的那半句：判据按产品承诺重推）**
+
+`frontend/e2e/qoder-wizard-advanced-is-tappable.spec.ts` 与产品改动同一笔：
+承诺是「旅客能点到那一步」，判据改成 —— 在该控件中心落在滚动口内的**每一种形状**里都命到它自己（形状取三种：静息 scrollTop=0 / 一次真滚轮 240px / 滚到底），且至少一种形状里它落在滚动口内；`scrolled > 0` 只作为『手势确实移动了这棵树』的前件读数，不再单独判可达 —— 在这棵树上 `window.scrollY` 恒为 0（面板是唯一滚动容器，滚轮把滚动行推了 240px），继续拿窗口位移当代理会把绿的判成红的。三枚节点（ord0261 形状判据、ord0264 locality+点击开+草稿存活、臂：把条退回覆盖层后判据必须当场红）在候选上全绿（数出自：`ord0338_instrument_jia__qoder-wizard-advanced-is-tappable.spec.ts` blob `bdf75ffa0b6de02bb2442b547358e55c505eeafc`）。
+
+**四、新门 `qoder-ord0338-wizard-gap-clearance.spec.ts`：13 枚节点全绿（A 10 + B 3），尖上同一把 A 7 红 3 绿**（数出自：`ord0338_instrument_jia__qoder-ord0338-wizard-gap-clearance.spec.ts` blob `9d14da4957b78493850fafe3ab452829d41c98a1`）
+
+节点：N1 带上界 / N2 不占高不显示 / N3 面板自己滚+条贴住面板底边 / N4 条在任何滚动位置都不盖内容 / N5 条不撞舞台球 / N6 臂甲（退回覆盖层）/ N7 臂乙（装回 padding）+ 桌面 D1/D2/D3。N4 两件事一起判：条的盒子与滚动行的盒子不相交（结构），以及扫遍 24 个滚动位置、604 次中心命中，落进条里的内容节点 = 0 枚 （`ord0338_jia_candidate_N4-bar-covers-nothing-mobile__run388490.json` blob `3b03450edf787c28a6209daf6dee50008e852ca4`）；桌面那一档 879 次命中、落进条里 0 枚 （`ord0338_jia_candidate_D2-bar-covers-nothing-desktop__run388490.json` blob `1976f3ef267b3587e00818ffc26b7f115e72848e`）。同一把门在 `git archive 2d8b03b8…` 的导出树上跑（6 枚相关文件逐个与 `<tip>:<path>` 的 blob 对过，全 identical）：7 枚红 —— 红得对，N1 量到 229px、N3/N4/D1/D2 直接报「没有这一行/不在 DOM」；活下来的 3 枚是 N5/D3（条与球不相交），这条承诺在新旧两棵树上都成立，所以删掉那条 `bottom` 规则没有把它弄坏。
+
+臂的落地见证（不等谁来问）：N6 注入后回读 条 `position=sticky`、section `display=block`、滚动行 `overflow=visible`、`documentScrollable=True` —— 注入之后 N4 数到落进条里的内容节点 0 枚 → 1 枚、结构判据 disjoint True → False （`ord0338_jia_candidate_N6-arm-sticky-overlay__run388490.json` blob `ff8e0ef60f70335d186a899c37e3bda4a8367a3f`）。N7 注入后回读 `padding-bottom` 得到 212px 再量带高 —— 这一枚就是为了防「变异体其实是空操作」。
+
+**五、回归射程（分母写明白的那一对，不是整套观测）**：整套 `e2e/` 跑一次只当观测（workers=1、单库连跑，红集会随共享状态漂，本仓常设口径）：`run_id=run383585` 那一次共 294 枚、红 52，我不拿它当判据。真正的判据是 21 枚 spec（按 grep 这块界面的钩子逐枚列名，外加 `qoder-mobile-overflow` 那一枚也两棵树各跑），两棵树各 fresh 跑一遍再逐 nodeid 对差：共同 87 枚（候选 90 枚绿 87 红 3；尖 89 枚绿 79 红 10）；**候选红而尖绿＝我引入的 0 枚**，两棵树同红（本单之前就红）3 枚：`qoder-demo-entry-addresses-dont-create.spec.ts::ord0209-no-sealed-journey-`；`qoder-onboarding-failure.spec.ts::ORD-0034 onboarding surfaces a failed cr`；`qoder-onboarding-failure.spec.ts::ORD-0034 onboarding surfaces a failed cr`。尖侧红而候选绿的 7 枚按 spec 分：`qoder-ord0338-wizard-gap-clearance.spec.ts` 7 枚。本单新门 A 自己占多数（尖上没有那一行，它判红本来就是对的）；不属于 A 的那几枚我只报成读数，不当成这一笔的功劳。两棵树逐枚结果（含上面那套 294 枚观测的完整行）在 `ord0338_jia_suite_rows_r2.json` blob `bb4528e50ef36cd45dedd6b535b33315bdaf5d3e` —— r1 那一枚的行名丢了标题（同一把解析器毛病：没先剥 Playwright 的 ANSI 着色），所以重出一枚 r2，r1 不改不删。
+
+**六、我自报三件（都是量具自己的错，不是产品的）**：
+① 第一版把「滚出滚动口、中心落在条带里」的节点当成被条盖住，报了 4 枚假重叠；判据收紧为「中心必须落在滚动容器的盒子里」并另加结构判据。
+② 重写门文件时漏了 `test.use({viewport})`，连着两轮标着 mobile 的读数其实是 1280 桌面 —— 是 N7 的落地见证逮出来的：注入的 @media ≤680px 不落地，回读到的量具宽度是 1280px 而不是 390px。那一轮的件已上架作自首证据：`ord0338_jia_selfreport_desktop_measured_as_mobile__run383345.json` blob `0a70c3023a6a974a5ccf61155263ff0a83da2f82`（件里 `landing_witness.viewport.innerWidth` 就是 1280）；本地那两轮改名 `*.desktop-run-superseded.json` 不删不覆写。现在每份读数都写**量到的**档位：本块引用的这批，移动档宽 390px × 高 844px （`ord0338_jia_candidate_N1-band-bound__run388490.json` blob `7cba8cd64cfbefc92f62b3e5d546cd5d6f57911c`），桌面档宽 1280px × 高 800px （`ord0338_jia_candidate_D1-band-bound-desktop__run388490.json` blob `2270111e5569b674c3362f99c70cfb0f0e217453`）
+③ 滚轮最初打在页面左上角那一格：向导顶部内边距不属于滚动行，那里滚不动任何东西 —— 真滚轮改成量「手放在滚动区中间」那一格；另外几何读数统一等 `.v8-page` 的 v8-reveal 结束再量（每份件里的 `settled` 字段），第一版在动画里量到条与其所在行差几个像素（`ord0338_jia_candidate_N3-pane-scrolls__run388490.json` blob `315c837f35282c73552734003df7b637b2017d81`）。
+
+**七、要你点的两件 + 归 E 的一件**：
+甲的落地按 ORD-0325 那一套走：候选 4 笔在 `agent/d-e345b9d6-ord0338`（本地枝，逐枚枚名在第二段（`1a779b69…` 是最新一枚），未推任何 ref，需要我推成可见枝你说一句）；承诺判据换了形状，按 Q73 归红队 E `d2305848` 复签，两把门的源码已按证据上架（件名在第四段），复跑口径：`CNX_LANE_ROOT=<树> python review/run_spec.py e2e/qoder-ord0338-wizard-gap-clearance.spec.ts <port>`。另外两件账本上的小事：`_qoder_ledger_inbox/d-e345b9d6_0605.md`（ORD-0325 那块）我早先改过名移进 `_scratch_0338/withdrawn_*`，因为那张单你已判 CLOSED，留着只会在巡逻日志里挂成一枚假未交；还有 ORD-0266 我给的 `SUPERSEDED_BY` 口径、ORD-0104② 那半枚仪器口子、以及 ORD-0341 / ORD-0343 两格，我按你排的顺序接着走。另：`ord0264` 那枚臂在候选上把条退回覆盖层之后判据当场红 —— 这是**门有牙齿**的证明，不是产品红；产品三形状在候选上全绿。
+
+边界回验：权威线 0 写、他人 ref 0 推、本车道 0 force/0 amend（两笔都是新提交）；既有断言改写 0 处（B 的判据是照你 Q73 换的，换前逐字引用在第三段）；skip 0；`demo/reset` 0；`_live`/`_preview` 库 0 读写；手机链 0 碰；`frontend/node_modules` 是 junction（0 安装 0 改）；凭据 0 打印；两枚臂只在页面里 `addStyleTag`，落盘产品字节改动只有上面那三枚文件。
+
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### CMDR 10:35 — 落地门长出一把 Q64 不增长臂（八臂双向自测），并且我自己量出：**r6 看不见属性位**，Q71 今天没有任何尺在守（开 ORD-0354）
 
 **一、为什么把尺装进门而不是继续手跑。** 今天每一张前端单我都手跑一次"尖 vs 候选"的 AST 普查来判有没有新增暴露格，手跑的步骤就是凌晨四点会被跳过的步骤。现在 `live_checks/preflight_and_land_r1.py`（本体新 blob `77c7f3780e48d0138f088e67b1fc9552ed080348`）自带这条臂：凡是改了 `frontend/src` 的候选，门对尖与候选两棵树各跑一次 `ui_exposure_taint_ast_r3.cjs`（发布名 r6，blob `6a251d3a6bea70329e06581384a81d5ef54c96a6`），**只在 (文件, 规则) 计数增长时拒绝落地**。
