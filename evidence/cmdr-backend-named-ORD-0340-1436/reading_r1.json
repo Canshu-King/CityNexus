@@ -1,0 +1,60 @@
+{
+ "sha": "76464263244b7dbf0510ee616b33b3f1cfe36969",
+ "tree": "5ac95e95edfca9fc7b8e904bd65d824278bab1d9",
+ "export": "D:/moodle/_qoder_cmdr_ref_20260921/live_checks/snap_ord0340_76464263",
+ "archive_rc": 0,
+ "at_local": "2026-09-26T14:27:42+0800",
+ "interpreter": "D:/moodle/CityNexus/.venv/Scripts/python.exe",
+ "command": "python -m pytest -p no:cacheprovider -q tests/<file>",
+ "files": [
+  {
+   "file": "test_qoder_ord0340_claim_lease.py",
+   "rc": 0,
+   "tail": [
+    "-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html",
+    "7 passed, 2 warnings in 9.39s"
+   ],
+   "passed": 7,
+   "failed": null,
+   "verdict": "GREEN"
+  },
+  {
+   "file": "test_qoder_ord0272_continuation.py",
+   "rc": 0,
+   "tail": [
+    "-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html",
+    "8 passed, 2 warnings in 3.41s"
+   ],
+   "passed": 8,
+   "failed": null,
+   "verdict": "GREEN"
+  },
+  {
+   "file": "test_qoder_ord0287_k8_carrier.py",
+   "rc": 0,
+   "tail": [
+    "-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html",
+    "2 passed, 2 warnings in 1.43s"
+   ],
+   "passed": 2,
+   "failed": null,
+   "verdict": "GREEN"
+  },
+  {
+   "file": "test_qoder_ord0310_keyless_leg_receipts.py",
+   "rc": 0,
+   "tail": [
+    "-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html",
+    "6 passed, 2 warnings in 1.73s"
+   ],
+   "passed": 6,
+   "failed": null,
+   "verdict": "GREEN"
+  }
+ ],
+ "whole_suite": {
+  "collect_exit": 0,
+  "collected": 1358,
+  "interrupted": false
+ }
+}
