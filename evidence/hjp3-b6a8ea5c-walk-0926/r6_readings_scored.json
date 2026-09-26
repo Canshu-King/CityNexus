@@ -1,0 +1,564 @@
+{
+ "ran_at_local": "2026-09-26T17:57:52+0800",
+ "lane": "HJ-P3 aad2d1f2-4de9-406b-a5df-afa0e2bcea58",
+ "order": "re-walk the two reported defects and the three new screens on the rebuilt phone chain",
+ "measurement_scope": {
+  "scope": "public tunnel entry as a real phone, control read over the local hop; five cells named below",
+  "generation": "27f963a77edc4d508a39b0a07c76927d0512c724",
+  "generation_named_by_the_commander": "b6a8ea5c625d7e3e82f7348fad57d595a8a403c0",
+  "how_generation_was_read": "git ls-remote of refs/heads/mirror/integration-frontend-apple-pass1, then the asset the served shell names on each entry",
+  "asset_served": {
+   "local": "/assets/index-BOIAHTWw.js",
+   "public": null,
+   "bytes": null,
+   "sha256": null
+  },
+  "measurement_method": "own headless Chromium 390x844@3 touch zh-CN, one fresh context per cell, no proxy; legs read off the browser response objects; device state read inside the page"
+ },
+ "backend_is_live": {
+  "signature_per_path_local": {
+   "/api/v1/health": "(200, 'application/json', 84, '19557a775cb37da0daee85d12ebaa2c19dcc5ec1276f6682e77f998694d013b0')",
+   "/api/v1/journeys": "(405, 'application/json', 31, '83c09ba9a8daedb136f90b17a294caa90ad471a016e430df6e229acb5a81e100')",
+   "/api/v1/demo/scene": "(200, 'application/json', 610, '64b82c423af43a0f8212637b6b762a7868b65aac65d399f241e2aba2d9e31cf3')",
+   "/api/v1/zzz-hjp3-canary-path": "(404, 'application/json', 22, '37ec4665a8102d115ffd1ac20dae94c98b4dac64b0c1a68228aa2a531caeb35d')"
+  },
+  "distinct_signatures_local": 4,
+  "canary_path_answers_like_real_paths": false,
+  "server_header_local_hop": [
+   "uvicorn",
+   "uvicorn",
+   "uvicorn",
+   "uvicorn"
+  ],
+  "server_header_public_entry": [
+   "cloudflare",
+   "cloudflare",
+   "cloudflare",
+   "cloudflare"
+  ],
+  "both_entries_serve_the_same_asset_bytes_at_the_minute_of_the_later_check": false,
+  "scene_leg_on_the_boot": [
+   200,
+   610
+  ]
+ },
+ "cell_A_destinations_block": {
+  "closed_visible_text_len": 168,
+  "names_visible_when_closed": [],
+  "just_opened_len": 666,
+  "names_marked_not_asked_just_after_the_tap": 11,
+  "settled_len": 1334,
+  "settled_after_ms": 4556,
+  "capability_legs_the_app_fired": 11,
+  "capability_leg_bytes_by_name": {
+   "%E6%96%B0%E5%8A%A0%E5%9D%A1": [
+    200,
+    1760
+   ],
+   "%E6%B7%B1%E5%9C%B3": [
+    200,
+    1728
+   ],
+   "%E6%9D%AD%E5%B7%9E": [
+    200,
+    1728
+   ],
+   "%E6%88%90%E9%83%BD": [
+    200,
+    1727
+   ],
+   "%E4%B8%9C%E4%BA%AC": [
+    200,
+    1751
+   ],
+   "%E7%A6%8F%E5%B7%9E": [
+    200,
+    1751
+   ],
+   "%E5%A4%A9%E6%B4%A5": [
+    200,
+    1727
+   ],
+   "%E4%B8%8A%E6%B5%B7": [
+    200,
+    1728
+   ],
+   "%E5%8C%97%E4%BA%AC": [
+    200,
+    1727
+   ],
+   "%E5%8E%A6%E9%97%A8": [
+    200,
+    1726
+   ],
+   "%E5%B9%BF%E5%B7%9E": [
+    200,
+    5715
+   ]
+  },
+  "group_heading_counts_mine_corrected": {
+   "已支持：服务器认得它，而且目录里有东西": 1,
+   "需联网才能解析：服务器现在认不出这个名字": 3,
+   "未知或无数据：这一轮拿不出可规划的判定": 7
+  },
+  "group_heading_counts_my_first_pass_wrong": {
+   "已支持：服务器认得它，而且目录里有东西": 0,
+   "需联网才能解析：服务器现在认不出这个名字": 0,
+   "未知或无数据：这一轮拿不出可规划的判定": 11
+  },
+  "per_name_group": {
+   "厦门": "未知或无数据：这一轮拿不出可规划的判定",
+   "北京": "未知或无数据：这一轮拿不出可规划的判定",
+   "上海": "未知或无数据：这一轮拿不出可规划的判定",
+   "天津": "未知或无数据：这一轮拿不出可规划的判定",
+   "福州": "需联网才能解析：服务器现在认不出这个名字",
+   "广州": "已支持：服务器认得它，而且目录里有东西",
+   "深圳": "未知或无数据：这一轮拿不出可规划的判定",
+   "成都": "未知或无数据：这一轮拿不出可规划的判定",
+   "杭州": "未知或无数据：这一轮拿不出可规划的判定",
+   "东京": "需联网才能解析：服务器现在认不出这个名字",
+   "新加坡": "需联网才能解析：服务器现在认不出这个名字"
+  },
+  "heading_texts": [
+   "已支持：服务器认得它，而且目录里有东西",
+   "需联网才能解析：服务器现在认不出这个名字",
+   "未知或无数据：这一轮拿不出可规划的判定"
+  ],
+  "block_is_a_details_element": null
+ },
+ "cell_B_wizard_create": {
+  "advance_presses": [
+   {
+    "press": "clicked",
+    "text_len_before": 187,
+    "text_len_after": 175,
+    "changed": true
+   },
+   {
+    "press": "clicked",
+    "text_len_before": 175,
+    "text_len_after": 287,
+    "changed": true
+   }
+  ],
+  "node_pressed": [
+   {
+    "text": "确认创建",
+    "disabled": false,
+    "top": 788,
+    "cls": "v8-primary-button"
+   }
+  ],
+  "legs_after_press": [
+   [
+    "POST",
+    "/api/v1/travelers",
+    201,
+    76,
+    219
+   ],
+   [
+    "POST",
+    "/api/v1/journeys",
+    201,
+    501,
+    395
+   ],
+   [
+    "GET",
+    "/api/v1/travelers/109c44b3-b4ad-4a6d-b2e6-a9bbaa1bd0a8/preferences",
+    200,
+    0,
+    2
+   ],
+   [
+    "PUT",
+    "/api/v1/travelers/109c44b3-b4ad-4a6d-b2e6-a9bbaa1bd0a8/preferences",
+    200,
+    2,
+    2
+   ],
+   [
+    "GET",
+    "/api/v1/travelers/109c44b3-b4ad-4a6d-b2e6-a9bbaa1bd0a8/preferences",
+    200,
+    0,
+    2
+   ],
+   [
+    "POST",
+    "/api/v1/journeys/5eb4eb13-6045-4b8b-8d02-a0fe3475bc3e/stay-options/generate",
+    200,
+    33,
+    20543
+   ],
+   [
+    "GET",
+    "/api/v1/journeys/5eb4eb13-6045-4b8b-8d02-a0fe3475bc3e/experience",
+    200,
+    0,
+    132102
+   ],
+   [
+    "GET",
+    "/api/v1/journeys/5eb4eb13-6045-4b8b-8d02-a0fe3475bc3e/replans",
+    200,
+    0,
+    2
+   ],
+   [
+    "GET",
+    "/api/v1/journeys/5eb4eb13-6045-4b8b-8d02-a0fe3475bc3e/plans",
+    200,
+    0,
+    2
+   ],
+   [
+    "GET",
+    "/api/v1/journeys/5eb4eb13-6045-4b8b-8d02-a0fe3475bc3e/twin",
+    200,
+    0,
+    896
+   ]
+  ],
+  "created_201_legs": [
+   [
+    "POST",
+    "/api/v1/travelers",
+    201,
+    76,
+    219
+   ],
+   [
+    "POST",
+    "/api/v1/journeys",
+    201,
+    501,
+    395
+   ]
+  ],
+  "stored_journey_id": "5eb4eb13-6045-4b8b-8d02-a0fe3475bc3e",
+  "screen_9_s_after_the_press": {
+   "text_len": 406,
+   "pending_words": true,
+   "tail_lines": [
+    "CN · CNY · Asia/Shanghai",
+    "返回当前行程",
+    "正在载入行程数据",
+    "已等待 9 秒",
+    "第一次搜索一座城市实测要两分钟左右。服务器不会中途汇报进度，所以这里只有真实秒数，没有编出来的数字。",
+    "停止等待",
+    "停止等待只是离开这块屏幕：服务器不会因此停下，行程数据也不会丢失。",
+    "使用封存的演示行程",
+    "返回",
+    "正在创建…"
+   ]
+  },
+  "journey_id_already_issued_while_screen_said_creating": true,
+  "failing_legs_on_this_path": [],
+  "receipts_on_screen": [],
+  "shots": [
+   "cd1fb9a6f28a",
+   "6dc65f837577",
+   "b15cd6e01af6"
+  ]
+ },
+ "cell_C_dead_stored_id": {
+  "text_a_traveller_reads_first": "连接正常\n\n这台服务器上没有这一趟行程了\n\n这台设备还记得行程 00000000…，但服务器明确回答它不存在（HTTP 404）。这不是网络问题：服务器刚才答得出来。你的其它行程没有受影响。\n\n选一趟行程\n重试\n归因详情",
+  "claims_the_network_is_down": false,
+  "names_that_it_does_not_exist": true,
+  "explicitly_denies_a_network_reading": true,
+  "actions_offered": [
+   "选一趟行程",
+   "重试"
+  ],
+  "aria_live_regions": [
+   {
+    "level": "assertive",
+    "text": "连接正常\n\n这台服务器上没有这一趟行程了\n\n这台设备还记得行程 00000000…，但服务器明确回答它不存在（HTTP 404）。这不是网络问题：服务器刚才答得出来。你的其它行程没有受影响。\n\n选一趟行程\n重试\n归因详情"
+   }
+  ],
+  "journey_id_left_in_localStorage": null,
+  "localStorage_keys_after": [],
+  "the_leg_that_answered": [
+   "GET",
+   "/api/v1/journeys/00000000-0000-0000-0000-000000000000/experience",
+   404,
+   235,
+   null,
+   false,
+   "CNX-FM7GYKRT",
+   "NOT_FOUND"
+  ],
+  "fold": {
+   "summaries_closed": [
+    "归因详情"
+   ],
+   "attribution_fold_inner_len_closed": 4,
+   "attribution_fold_inner_len_open": 160,
+   "attribution_line_inner_len_closed": 0,
+   "attribution_line_inner_len_open": 155,
+   "attribution_line_text_head_open": "attribution_reason=JOURNEY_NOT_FOUND evi",
+   "attribution_line_sha_open": "797a8c359ca272a9443468af3568fd774f84cfe34d0968bbc0e9d14b9d2e9815",
+   "attribution_line_len_open": 155,
+   "details_count_closed": 1,
+   "details_count_open": 1,
+   "view_len_closed": 110,
+   "view_len_open": 266
+  },
+  "anchors_present": [
+   "failure-attribution",
+   "failure-attribution-line",
+   "failure-choose-journey",
+   "failure-reason",
+   "failure-retry",
+   "failure-view"
+  ]
+ },
+ "receipt_reaches_the_screen": {
+  "receipt_the_server_sent_for_that_leg": "CNX-FM7GYKRT",
+  "CNX_tokens_visible_with_the_fold_closed": [],
+  "CNX_tokens_visible_with_the_fold_open": [],
+  "client_anchor_for_the_receipt_present": false,
+  "clients_own_NOT_EMITTED_word_on_screen": false,
+  "machinery_exists_in_the_served_bundle": {
+   "error_receipt_id_literal_occurrences": 1,
+   "CNX_dash_literal_occurrences": 2,
+   "how_read": "literal search over the exact asset bytes the shell names"
+  }
+ },
+ "receipt_is_per_incident_or_per_route": {
+  "samples": 3,
+  "distinct_receipts": 1,
+  "distinct_trace_ids": 3,
+  "distinct_body_hashes": 3,
+  "note": "three separate GETs of the same route minutes apart returned the same receipt and three different trace ids; measured directly against the local hop"
+ },
+ "cell_E_device_holds_a_copy": {
+  "indexedDB_databases": [
+   {
+    "name": "citynexus-offline",
+    "version": 10
+   }
+  ],
+  "target_db": "citynexus-offline",
+  "store_names": [
+   "journeys"
+  ],
+  "rows_per_store": {
+   "journeys": 1
+  },
+  "caches_keys": [
+   "workbox-precache-v2-https://administrator-personality-supervisor-peers.trycloudflare.com/"
+  ],
+  "cache_entry_counts": {
+   "workbox-precache-v2-https://administrator-personality-supervisor-peers.trycloudflare.com/": 5
+  },
+  "service_worker_controls_the_page": false,
+  "offline_snapshot_leg": [
+   [
+    200,
+    797
+   ]
+  ],
+  "sentences_claiming_saved_on_the_hub_or_profile": [
+   {
+    "label": "旅行票夹",
+    "affordance_present": false
+   },
+   {
+    "label": "恢复与执行",
+    "affordance_present": false
+   },
+   {
+    "label": "我的",
+    "affordance_present": true,
+    "body_text_len": 289,
+    "body_text_len_here": 289,
+    "saved_sentences": [],
+    "details_count": 1,
+    "receipts_in_text": []
+   },
+   {
+    "label": "行程工作台",
+    "affordance_present": false
+   }
+  ],
+  "boot_ms_until_the_hub_rendered": 11548
+ },
+ "ref_drift_during_the_walk": {
+  "named_by_the_commander": "b6a8ea5c625d7e3e82f7348fad57d595a8a403c0",
+  "tip_read_when_i_scored": "27f963a77edc4d508a39b0a07c76927d0512c724",
+  "tip_read_by_the_drift_pass": "27f963a77edc4d508a39b0a07c76927d0512c724",
+  "commits_ahead": 4,
+  "subjects": [
+   [
+    "3e79798160",
+    "ORD-0350: every confirmation row gets its own way back to the field it names"
+   ],
+   [
+    "20ab10f444",
+    "ORD-0353: give the create-failure screen a fold that holds measurements, not sentences"
+   ],
+   [
+    "be00873ce4",
+    "ORD-0353 witness: judge the fold's carriers by name, and keep the canary short enough to survive a slice"
+   ],
+   [
+    "27f963a77e",
+    "ORD-0353: naming the missing receipt is opt-in per mount, so the banner three landed gates read keeps its own text"
+   ]
+  ],
+  "files_changed": [
+   "frontend/e2e/qoder-ord0350-every-review-row-has-a-way-back.spec.ts",
+   "frontend/e2e/qoder-ord0353-create-failure-technical-fold.spec.ts",
+   "frontend/playwright.ord0350-S1.config.ts",
+   "frontend/playwright.ord0353-S1.config.ts",
+   "frontend/src/app/V8Experience.tsx",
+   "frontend/src/components/RawFactsPanel.tsx",
+   "frontend/src/design-tokens.css",
+   "frontend/src/features/setup/JourneyTrialSetup.tsx",
+   "frontend/src/lib/rawFacts.ts",
+   "frontend/src/styles.css"
+  ],
+  "touches_the_wizard_source": true,
+  "asset_the_chain_served_during_the_walk": {
+   "http://127.0.0.1:4781": "/assets/index-BOIAHTWw.js",
+   "https://administrator-personality-supervisor-peers.trycloudflare.com": "/assets/index-BOIAHTWw.js"
+  },
+  "asset_the_chain_serves_now": [
+   "/assets/index-BOIAHTWw.js",
+   null
+  ],
+  "chain_still_serves_what_i_walked": false,
+  "what_i_did_not_do": "no rebuild, no re-cut, no second walk; the readings stay bound to the bundle the chain served while I took them"
+ },
+ "walked_bundle_witness": {
+  "ran_at_local": "2026-09-26T17:55:52+0800",
+  "asset_path_recorded_by_the_browser_passes": "/assets/index-BOIAHTWw.js",
+  "recorded_by": {
+   "r6_wizard_create.json": "https://administrator-personality-supervisor-peers.trycloudflare.com/assets/index-BOIAHTWw.js",
+   "r6_dest_block.json": "/assets/index-BOIAHTWw.js",
+   "r6_dest_block_r2.json": "https://administrator-personality-supervisor-peers.trycloudflare.com/assets/index-BOIAHTWw.js",
+   "r6_dest_block_r3.json": "https://administrator-personality-supervisor-peers.trycloudflare.com/assets/index-BOIAHTWw.js"
+  },
+  "re_read_over_the_local_hop": {
+   "path": "/assets/index-BOIAHTWw.js",
+   "http_status": 200,
+   "content_type": "text/javascript",
+   "bytes": 1271252,
+   "sha256": "005735b8e911508e69a143d3ede3682261841083d7206243769e13ac1f813b56",
+   "elapsed_ms": 10
+  },
+  "equals_the_local_row_of_the_later_generation_check": true,
+  "public_entry_state_at_that_minute": {
+   "path": "/",
+   "http_status": 530,
+   "content_type": "text/plain; charset=UTF-8",
+   "server_header": "cloudflare",
+   "bytes": 17,
+   "body_sha256": "764ac7d5e8b966adcdcf56e0fe583a848c828957209c0881aa733675c3edd4df",
+   "elapsed_ms": 2027
+  },
+  "what_this_is_not": "this re-read proves which bytes sit behind that name on the local hop now; it is not a second reading of the public entry during the walk, and the walk-time public row was overwritten by my own re-run of r6_gen_check.py - named as an instrument fault"
+ },
+ "public_entry_after_the_walk": {
+  "samples": [
+   {
+    "path": "/",
+    "status": 530,
+    "bytes": 17,
+    "server": "cloudflare",
+    "cf_ray": "a41163d37ddde0ae-LAX",
+    "elapsed_ms": 4013
+   },
+   {
+    "path": "/",
+    "status": 530,
+    "bytes": 17,
+    "server": "cloudflare",
+    "cf_ray": "a41163d9af506dd5-SJC",
+    "elapsed_ms": 854
+   },
+   {
+    "path": "/",
+    "status": 530,
+    "bytes": 17,
+    "server": "cloudflare",
+    "cf_ray": "a41163dfce476d20-LAX",
+    "elapsed_ms": 836
+   }
+  ],
+  "distinct_cf_ray_ids": [
+   "a41163d37ddde0ae-LAX",
+   "a41163d9af506dd5-SJC",
+   "a41163dfce476d20-LAX"
+  ],
+  "local_hop_still_serving": true,
+  "walked_bundle_still_on_the_local_hop": true
+ },
+ "instrument_faults_of_mine": [
+  {
+   "said": "all eleven cities sit under the first group heading",
+   "signal": "the same screen showed three names under 需联网 and seven under 未知, which cannot be true at once with 11 / 0 / 0",
+   "cause": "I climbed ancestors and let the OUTERMOST heading overwrite the inner one",
+   "fixed_in": "r6_dest_block_r3.cjs, which breaks at the first heading and now reports 1 / 3 / 7"
+  },
+  {
+   "said": "citynexus-offline reported store names with a null row map",
+   "signal": "store_names was [\"journeys\"] while rows was never attached before the promise resolved",
+   "cause": "the counting callback resolved without assigning the collected rows",
+   "fixed_in": "r6_receipt_anchor_offline.cjs, which reports rows_per_store = {\"journeys\": 1}"
+  },
+  {
+   "said": "the server sent no receipt for the 404 leg",
+   "signal": "the same route answered with error_receipt_id over a plain GET, and the leg carried content_type_on_the_page_side = null only over the tunnel",
+   "cause": "my listener decided whether to parse JSON by the content-type header, which the public entry does not carry for that response",
+   "fixed_in": "the listener now parses by body shape, and the leg reads CNX-FM7GYKRT / NOT_FOUND"
+  },
+  {
+   "said": "the tunnel refused my connection, so I nearly reported the public entry as down",
+   "signal": "DNS resolved and a direct TCP 443 succeeded in 574 ms while urllib failed with WinError 10061",
+   "cause": "this shell exports HTTP(S)_PROXY=127.0.0.1:7892 where nothing listens",
+   "fixed_in": "a no-proxy opener in every instrument here"
+  },
+  {
+   "said": "the tunnel answered 401 to my first authenticated request",
+   "signal": "the auth file holds 24 chars and no colon: it is user TAB secret",
+   "cause": "I split on \":\" and then on \" \", so the whole line became the username; the line also reached my local console once - it was never written into any artefact, post or block",
+   "fixed_in": "split on any whitespace or colon, plus an assert that refuses to write the artefact if either field appears in it"
+  },
+  {
+   "said": "the two entries do not serve the same bytes",
+   "signal": "that judgment flipped from true to false between two runs of my own scorer with no phone action in between",
+   "cause": "I re-ran r6_gen_check.py to look for a re-cut, and it writes to its own output name, so the walk-time rows were replaced by a later reading taken after the tunnel had already gone 530",
+   "fixed_in": "r6_walked_asset_witness.py pins the bundle by the name every browser pass recorded and re-reads those bytes over the local hop; the walk-time agreement is carried from r6_drift.json instead"
+  }
+ ],
+ "boundaries": "product bytes 0 changed; nothing repaired on the road; 0 writes to the authoritative line; no ref pushed that is not mine; no demo/reset; _live.db and _preview.db never opened; no git apply; no credential printed into an artefact; the four chain layers (:8693 / :4781 / :4782 / tunnel) only driven as a user or read by GET; own Chromium with a fresh context per cell; every screenshot written to an absolute path and re-verified",
+ "judgments": {
+  "the_tip_still_is_the_one_he_named": false,
+  "the_mirror_moved_during_the_walk": true,
+  "the_pending_commits_reach_the_wizard_source": true,
+  "same_asset_name_on_both_entries_during_the_walk": true,
+  "the_public_entry_was_up_during_the_walk_and_answers_530_now": true,
+  "the_bundle_i_walked_is_still_fetchable_by_its_recorded_name": true,
+  "both_entries_serve_the_same_asset_bytes_at_the_minute_of_the_later_check": false,
+  "an_application_answers_on_this_chain": true,
+  "B_traveller_now_reaches_a_real_journey": true,
+  "B_screen_still_says_creating_after_the_journey_exists": true,
+  "B_no_failing_leg_so_no_receipt_was_due": true,
+  "C_dead_id_screen_no_longer_claims_the_network_is_down": true,
+  "C_dead_id_screen_offers_a_way_onward": true,
+  "C_stored_id_is_cleared_after_the_rejection": true,
+  "C_server_sent_a_receipt_that_the_screen_never_shows": true,
+  "C_no_receipt_anchor_is_rendered_at_all": true,
+  "A_grouping_lives_only_behind_the_tap": true,
+  "A_there_is_a_transient_not_asked_frame": true,
+  "A_settled_split_matches_the_visible_headings": true,
+  "E_the_device_really_holds_one_offline_copy": true,
+  "E_the_page_is_not_controlled_by_the_service_worker_yet": true,
+  "E_no_saved_sentence_rendered_on_the_two_tabs": true
+ },
+ "judgments_note": "readings only; grading belongs to E. Each key is a computation over the fields named in this file and in the raw passes it scores"
+}
