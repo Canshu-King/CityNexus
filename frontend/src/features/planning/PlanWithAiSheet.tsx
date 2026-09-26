@@ -217,6 +217,7 @@ function statusCopy(
   status: string,
   zh: boolean,
   planCount = 0,
+  serverBacked = false,
 ): {
   title: string;
   body: string;
@@ -224,20 +225,33 @@ function statusCopy(
   action?: "another-city" | "retry";
 } {
   const s = (status || "").toUpperCase();
-  /* A named block from the server's own envelope.  The code decides the words; nothing here is
-     inferred from how a provider phrased its sentence. */
+  /* A BLOCKED reason.  `serverBacked` says the code actually arrived in the server's refusal
+     envelope (result.reasonCode) -- only then may the sentence call it 服务器给的.  When this screen
+     instead synthesised the code itself (it counted `GET /places` and got too few -- the CATALOG_*
+     readings), the same code is spoken of as what THIS DEVICE measured, never as a server verdict.
+     ORD-0363-r1: the label follows where the number came from, the way the Q70 anchor already does;
+     we no longer hang a client-invented code under "服务器给的原因编号". */
   if (s.startsWith("BLOCKED:")) {
     const code = s.slice("BLOCKED:".length);
     const known = BLOCKED_BY_CODE[code];
+    const attribution = serverBacked
+      ? zh
+        ? `（服务器给的原因编号：${code}）`
+        : ` (server reason code: ${code})`
+      : zh
+        ? `（这台设备自己的读数，服务器这次没给这个编号：${code}）`
+        : ` (this device's own reading; the server sent no such code: ${code})`;
     return {
       title: zh ? "这次排不出方案：数据不够，不是你说的不对" : "No plan this time: the data is short, not your wording",
       body: known
-        ? zh
-          ? `${known.zh}（服务器给的原因编号：${code}）`
-          : `${known.en} (server reason code: ${code})`
-        : zh
-          ? `服务器回的原因编号是 ${code || "（没给编号）"}，这条我们还没有本地文案，所以不替你解释它——原话在"技术详情"里。`
-          : `The server's reason code is ${code || "(none given)"} and we have no wording for it, so we quote rather than explain — the sentence is under "Technical detail".`,
+        ? `${zh ? known.zh : known.en}${attribution}`
+        : serverBacked
+          ? zh
+            ? `服务器回的原因编号是 ${code || "（没给编号）"}，这条我们还没有本地文案，所以不替你解释它——原话在"技术详情"里。`
+            : `The server's reason code is ${code || "(none given)"} and we have no wording for it, so we quote rather than explain — the sentence is under "Technical detail".`
+          : zh
+            ? `这台设备读到 ${code || "（无编号）"}，服务器这次没有给编号，所以不替你解释它——原话在"技术详情"里。`
+            : `This device read ${code || "(none)"}; the server gave no code, so we quote rather than explain — the sentence is under "Technical detail".`,
       tone: "warn",
       action: known ? known.action === "another-city" ? "another-city" : "retry" : "retry",
     };
@@ -919,7 +933,16 @@ export function PlanWithAiSheet({
     abortRef.current?.abort();
   };
 
-  const copy = result ? statusCopy(result.status, zh, result.planCount ?? 0) : null;
+  const copy = result
+    ? statusCopy(
+        result.status,
+        zh,
+        result.planCount ?? 0,
+        // ORD-0363-r1: "服务器给的" only when a real server reasonCode backs this exact BLOCKED code,
+        // the same predicate the Q70 anchor below uses -- so label and anchor can never disagree.
+        !!(result.reasonCode && result.status === `BLOCKED:${result.reasonCode.code}`),
+      )
+    : null;
   /* Q70, one-way by construction: an anchor may only name a code the traveller can actually read on the
      line it sits on.  Derived from `result.status` -- the very string `statusCopy` was handed -- so the
      attribute and the sentence it labels cannot disagree, and a state that shows no code shows no anchor. */
@@ -1111,6 +1134,7 @@ export function PlanWithAiSheet({
                 and Q68's「没给编号」branch has nothing to name either.  No rendered word is added: the
                 attributes carry the code the sentence already shows, so anchor and sentence cannot drift. */}
             <p
+              data-testid="plan-ai-headline"
               {...(reasonAnchor
                 ? {
                     "data-cnx-field": reasonAnchor.field,
