@@ -1,0 +1,199 @@
+{
+ "pushed": [
+  {
+   "remote": "evidence/hjp3-d3j0mgvR-walk-0926/r7_entry_check.json",
+   "local": "D:/moodle/_hjp3_d3j0_0926/r7_entry_check.json",
+   "rc": 0,
+   "at": "18:52:44",
+   "blob_on_branch": "4d6f3309652a8d38ccc1dbc7a0e0094589a16197",
+   "local_bytes_now": 4345,
+   "local_matches_branch_bytes": true
+  },
+  {
+   "remote": "evidence/hjp3-d3j0mgvR-walk-0926/r7_walk.json",
+   "local": "D:/moodle/_hjp3_d3j0_0926/r7_walk.json",
+   "rc": 0,
+   "at": "18:52:54",
+   "blob_on_branch": "2f551d741212b6b9af85a01fadaf8c699b049233",
+   "local_bytes_now": 32935,
+   "local_matches_branch_bytes": true
+  },
+  {
+   "remote": "evidence/hjp3-d3j0mgvR-walk-0926/r7_copy_link.json",
+   "local": "D:/moodle/_hjp3_d3j0_0926/r7_copy_link.json",
+   "rc": 0,
+   "at": "18:53:02",
+   "blob_on_branch": "3ffda3ceafa7f220e5b3a6a569c1f998821a4dfb",
+   "local_bytes_now": 9940,
+   "local_matches_branch_bytes": true
+  },
+  {
+   "remote": "evidence/hjp3-d3j0mgvR-walk-0926/r7_copy_link_r2.json",
+   "local": "D:/moodle/_hjp3_d3j0_0926/r7_copy_link_r2.json",
+   "rc": 0,
+   "at": "18:53:10",
+   "blob_on_branch": "1dfa692ee6554fb0290559bb3b6bc17311bdca82",
+   "local_bytes_now": 8404,
+   "local_matches_branch_bytes": true
+  },
+  {
+   "remote": "evidence/hjp3-d3j0mgvR-walk-0926/r7_copy_link_r3.json",
+   "local": "D:/moodle/_hjp3_d3j0_0926/r7_copy_link_r3.json",
+   "rc": 0,
+   "at": "18:53:21",
+   "blob_on_branch": "127e257cf55788f6f6549702f9c9b2e0993b3a9c",
+   "local_bytes_now": 17465,
+   "local_matches_branch_bytes": true
+  },
+  {
+   "remote": "evidence/hjp3-d3j0mgvR-walk-0926/r7_copy_link_r4.json",
+   "local": "D:/moodle/_hjp3_d3j0_0926/r7_copy_link_r4.json",
+   "rc": 0,
+   "at": "18:53:30",
+   "blob_on_branch": "5658664006ec72393d0563ca083af56a81ac073c",
+   "local_bytes_now": 29218,
+   "local_matches_branch_bytes": true
+  },
+  {
+   "remote": "evidence/hjp3-d3j0mgvR-walk-0926/r7_ai_disabled.json",
+   "local": "D:/moodle/_hjp3_d3j0_0926/r7_ai_disabled.json",
+   "rc": 0,
+   "at": "18:53:39",
+   "blob_on_branch": "6fb18d62a2c7570619b251e9d8b65ef1eec63168",
+   "local_bytes_now": 13065,
+   "local_matches_branch_bytes": true
+  },
+  {
+   "remote": "evidence/hjp3-d3j0mgvR-walk-0926/r7_scored.json",
+   "local": "D:/moodle/_hjp3_d3j0_0926/r7_scored.json",
+   "rc": 0,
+   "at": "18:53:49",
+   "blob_on_branch": "066df562dcee4018d093a2ac2982b80b012cbc65",
+   "local_bytes_now": 13781,
+   "local_matches_branch_bytes": true
+  },
+  {
+   "remote": "evidence/hjp3-d3j0mgvR-walk-0926/r7_pixel_identity_with_previous.json",
+   "local": "D:/moodle/_hjp3_d3j0_0926/r7_pixel_identity_with_previous.json",
+   "rc": 0,
+   "at": "18:53:59",
+   "blob_on_branch": "b5468ddd79d5da9c391ae6903761426872c913a5",
+   "local_bytes_now": 697,
+   "local_matches_branch_bytes": true
+  },
+  {
+   "remote": "evidence/hjp3-d3j0mgvR-walk-0926/shots/A1_review.png",
+   "local": "D:/moodle/_hjp3_d3j0_0926/A1_review.png",
+   "rc": 0,
+   "at": "18:54:08",
+   "blob_on_branch": "36926a8482ff66206cc4467d4354de488b09bd05",
+   "local_bytes_now": 188506,
+   "local_matches_branch_bytes": true
+  },
+  {
+   "remote": "evidence/hjp3-d3j0mgvR-walk-0926/shots/A2_after_confirm.png",
+   "local": "D:/moodle/_hjp3_d3j0_0926/A2_after_confirm.png",
+   "rc": 0,
+   "at": "18:54:18",
+   "blob_on_branch": "7bcbe79351b2df16a5ad7ccf8e75cf0fc851c62e",
+   "local_bytes_now": 210614,
+   "local_matches_branch_bytes": true
+  },
+  {
+   "remote": "evidence/hjp3-d3j0mgvR-walk-0926/shots/A3_copy_affordance.png",
+   "local": "D:/moodle/_hjp3_d3j0_0926/A3_copy_affordance.png",
+   "rc": 0,
+   "at": "18:54:28",
+   "blob_on_branch": "7bcbe79351b2df16a5ad7ccf8e75cf0fc851c62e",
+   "local_bytes_now": 210614,
+   "local_matches_branch_bytes": true
+  },
+  {
+   "remote": "evidence/hjp3-d3j0mgvR-walk-0926/shots/C1_dead_id_closed.png",
+   "local": "D:/moodle/_hjp3_d3j0_0926/C1_dead_id_closed.png",
+   "rc": 0,
+   "at": "18:54:37",
+   "blob_on_branch": "1b067b0359468de905d7ab3367dc3c459116436e",
+   "local_bytes_now": 111782,
+   "local_matches_branch_bytes": true
+  },
+  {
+   "remote": "evidence/hjp3-d3j0mgvR-walk-0926/shots/C2_dead_id_open.png",
+   "local": "D:/moodle/_hjp3_d3j0_0926/C2_dead_id_open.png",
+   "rc": 0,
+   "at": "18:54:47",
+   "blob_on_branch": "941b6d606f8800c8ddbb2df844490f60de37115c",
+   "local_bytes_now": 144535,
+   "local_matches_branch_bytes": true
+  },
+  {
+   "remote": "evidence/hjp3-d3j0mgvR-walk-0926/shots/D1_real_journey_hub.png",
+   "local": "D:/moodle/_hjp3_d3j0_0926/D1_real_journey_hub.png",
+   "rc": 0,
+   "at": "18:54:58",
+   "blob_on_branch": "e344dfcb940dce361e6e069e0a21bc5c23d03696",
+   "local_bytes_now": 884431,
+   "local_matches_branch_bytes": true
+  },
+  {
+   "remote": "evidence/hjp3-d3j0mgvR-walk-0926/shots/D2_after_tab_walk.png",
+   "local": "D:/moodle/_hjp3_d3j0_0926/D2_after_tab_walk.png",
+   "rc": 0,
+   "at": "18:55:06",
+   "blob_on_branch": "11b91ce2d0e25af2b32365e3c6d2954425eda008",
+   "local_bytes_now": 163348,
+   "local_matches_branch_bytes": true
+  },
+  {
+   "remote": "evidence/hjp3-d3j0mgvR-walk-0926/shots/G1_hub_with_journey.png",
+   "local": "D:/moodle/_hjp3_d3j0_0926/G1_hub_with_journey.png",
+   "rc": 0,
+   "at": "18:55:18",
+   "blob_on_branch": "e344dfcb940dce361e6e069e0a21bc5c23d03696",
+   "local_bytes_now": 884431,
+   "local_matches_branch_bytes": true
+  },
+  {
+   "remote": "evidence/hjp3-d3j0mgvR-walk-0926/shots/G2_workbench.png",
+   "local": "D:/moodle/_hjp3_d3j0_0926/G2_workbench.png",
+   "rc": 0,
+   "at": "18:55:27",
+   "blob_on_branch": "a35377f9e4ec18455d759973ae4bdb8b9e775b0f",
+   "local_bytes_now": 198552,
+   "local_matches_branch_bytes": true
+  },
+  {
+   "remote": "evidence/hjp3-d3j0mgvR-walk-0926/shots/G2_last_tab.png",
+   "local": "D:/moodle/_hjp3_d3j0_0926/G2_last_tab.png",
+   "rc": 0,
+   "at": "18:55:38",
+   "blob_on_branch": "0313ff74fa6aa8d052f42b106d72a4e181734e8b",
+   "local_bytes_now": 252275,
+   "local_matches_branch_bytes": true
+  },
+  {
+   "remote": "evidence/hjp3-d3j0mgvR-walk-0926/shots/H1_hub.png",
+   "local": "D:/moodle/_hjp3_d3j0_0926/H1_hub.png",
+   "rc": 0,
+   "at": "18:55:49",
+   "blob_on_branch": "e344dfcb940dce361e6e069e0a21bc5c23d03696",
+   "local_bytes_now": 884431,
+   "local_matches_branch_bytes": true
+  },
+  {
+   "remote": "evidence/hjp3-d3j0mgvR-walk-0926/shots/I1_trips_as_landed.png",
+   "local": "D:/moodle/_hjp3_d3j0_0926/I1_trips_as_landed.png",
+   "rc": 3,
+   "at": "18:55:55",
+   "blob_on_branch": "NOT_ON_BRANCH",
+   "local_bytes_now": 125879,
+   "local_matches_branch_bytes": false
+  }
+ ],
+ "stopped_at": "evidence/hjp3-d3j0mgvR-walk-0926/shots/I1_trips_as_landed.png",
+ "branch_tip": "c366616cfdd4d674bf0acefaf03f4d65a750d467",
+ "tip_read_at": "18:56:20",
+ "all_rc_zero": false,
+ "every_recorded_path_resolves": false,
+ "every_local_copy_still_matches_the_branch": false
+}
