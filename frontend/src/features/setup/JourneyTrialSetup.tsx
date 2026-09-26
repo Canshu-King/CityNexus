@@ -416,9 +416,65 @@ const STEP_OF_TARGET: Record<string, 1 | 2 | 3> = {
   "trial-city": 1,
   "trial-arrival": 1,
   "trial-departure": 1,
+  "trial-start": 1,
+  "trial-end": 1,
+  "trial-show-advanced": 1,
   "trial-party": 2,
+  "trial-rooms": 2,
   "trial-budget": 2,
+  "trial-stay-budget": 2,
+  "trial-pace-fieldset": 2,
+  "trial-interests-fieldset": 2,
+  "trial-special": 2,
 };
+
+/** One review row's exit.  The accessible name says which item it changes, because a row of bare
+ *  「改这一项」 buttons reads as nothing at all to a screen reader. */
+function ReviewEdit({
+  row,
+  zh,
+  onEdit,
+}: {
+  row: ReviewTarget;
+  zh: boolean;
+  onEdit: (target: string) => void;
+}) {
+  return (
+    <button
+      type="button"
+      className="trial-review-edit"
+      data-testid={`review-edit-${row.name}`}
+      data-target={row.target}
+      aria-label={(zh ? "改这一项：" : "Change ") + (zh ? row.zh : row.en)}
+      onClick={() => onEdit(row.target)}
+    >
+      {zh ? "改这一项" : "Change"}
+    </button>
+  );
+}
+
+/**
+ * ORD-0350 (HJ-P3): the confirmation step says 我们替你填的 next to values nobody typed, but the way
+ * back to one of them was to leave the review step and hunt for the control.  Every row therefore
+ * carries its own named exit, and it lands on the control that edits that value -- the same route
+ * ORD-0135 ③ already used for a missing field, because a jump from step 3 has to mount the owning
+ * step before focusing anything.
+ */
+type ReviewTarget = { name: string; zh: string; en: string; target: string };
+
+const REVIEW_ROWS: ReviewTarget[] = [
+  { name: "city", zh: "目的地", en: "Destination", target: "trial-city" },
+  { name: "arrival", zh: "抵达", en: "Arrival", target: "trial-arrival" },
+  { name: "departure", zh: "离开", en: "Departure", target: "trial-departure" },
+  { name: "party", zh: "人数 / 房间", en: "Travellers / rooms", target: "trial-party" },
+  { name: "budget", zh: "总预算 / 住宿", en: "Total / stay budget", target: "trial-budget" },
+  { name: "pace", zh: "节奏", en: "Pace", target: "trial-pace-fieldset" },
+  { name: "interests", zh: "兴趣", en: "Interests", target: "trial-interests-fieldset" },
+  { name: "special", zh: "特殊要求", en: "Special requirements", target: "trial-special" },
+  /* The auto-set row edits three values at once, and their controls sit behind a disclosure on step
+     one -- so its exit is that disclosure, named as such rather than pointed at a hidden input. */
+  { name: "auto-set", zh: "自动设置", en: "Auto-set", target: "trial-show-advanced" },
+];
 
 /**
  * ORD-0208 3: the marker that keeps inferred values in their own grammar.  HJ-P1 measured the
@@ -535,7 +591,29 @@ export function JourneyTrialSetup({
   const [touched, setTouched] = useState<Set<string>>(
     () => new Set(Object.keys(restored.draft).filter((key) => restored.draft[key] !== defaultDraft[key as keyof JourneyTrialDraft])),
   );
+  /** Each confirmation row's own way back, addressed by name so a row cannot lose it silently. */
+  const reviewEdit = (name: string) => {
+    const row = REVIEW_ROWS.find((item) => item.name === name);
+    if (!row) return null;
+    return <ReviewEdit row={row} zh={zh} onEdit={jumpToField} />;
+  };
   const [step, setStep] = useState<1 | 2 | 3>(restored.step);
+
+  /* ORD-0135 ③'s route, now shared with the review rows (ORD-0350): from step 3 the target is on an
+     earlier step and not in the DOM yet, so the jump moves first and focuses once it exists. */
+  const jumpToField = (target: string) => {
+    const owningStep = STEP_OF_TARGET[target] ?? step;
+    if (owningStep !== step) setStep(owningStep);
+    const focusTarget = () => {
+      const node =
+        document.getElementById(target) ??
+        document.querySelector<HTMLElement>(`[data-testid="${target}"]`);
+      node?.focus();
+    };
+    if (owningStep === step) focusTarget();
+    else window.setTimeout(focusTarget, 80);
+  };
+
   const [advanced, setAdvanced] = useState(false);
   /* createJourney catches its own failure and does not rethrow, so a resolved
      `await onCreate()` here does not mean a journey exists.  Its success path closes this
@@ -1112,7 +1190,7 @@ export function JourneyTrialSetup({
             </label>
           </div>
 
-          <fieldset className="trial-fieldset">
+          <fieldset className="trial-fieldset" data-testid="trial-pace-fieldset" tabIndex={-1}>
             <legend>{zh ? "旅行节奏" : "Pace"}</legend>
             <div className="trial-chips">
               {PACE_OPTIONS.map((option) => (
@@ -1134,7 +1212,7 @@ export function JourneyTrialSetup({
             </div>
           </fieldset>
 
-          <fieldset className="trial-fieldset">
+          <fieldset className="trial-fieldset" data-testid="trial-interests-fieldset" tabIndex={-1}>
             <legend>{zh ? "兴趣" : "Interests"}</legend>
             <div className="trial-chips">
               {INTEREST_OPTIONS.map((option) => {
@@ -1183,7 +1261,7 @@ export function JourneyTrialSetup({
         <div className="v8-card trial-card" data-testid="trial-step3-body">
           <dl className="trial-review">
             <div>
-              <dt>{zh ? "目的地" : "Destination"}</dt>
+              <dt>{zh ? "目的地" : "Destination"}{reviewEdit("city")}</dt>
               <dd data-testid="review-city">{draft.cityName || "—"}</dd>
               {/* The step-1 caution has to be here too: this is the screen the traveller
                   confirms from, and an assumption shown only two steps back is gone. */}
@@ -1196,7 +1274,7 @@ export function JourneyTrialSetup({
               )}
             </div>
             <div>
-              <dt>{zh ? "抵达" : "Arrival"}</dt>
+              <dt>{zh ? "抵达" : "Arrival"}{reviewEdit("arrival")}</dt>
               {/* A bare "—" read as an acceptable blank, and the API rejects it. Say so here. */}
               <dd
                 data-testid="review-arrival"
@@ -1208,7 +1286,7 @@ export function JourneyTrialSetup({
               </dd>
             </div>
             <div>
-              <dt>{zh ? "离开" : "Departure"}</dt>
+              <dt>{zh ? "离开" : "Departure"}{reviewEdit("departure")}</dt>
               <dd
                 data-testid="review-departure"
                 data-missing={draft.departureLocation.trim() ? undefined : "true"}
@@ -1219,38 +1297,38 @@ export function JourneyTrialSetup({
               </dd>
             </div>
             <div>
-              <dt>{zh ? "人数 / 房间" : "Travellers / rooms"}</dt>
+              <dt>{zh ? "人数 / 房间" : "Travellers / rooms"}{reviewEdit("party")}</dt>
               <dd data-testid="review-party">
                 {draft.partySize} · {draft.rooms}
                 {!touched.has("partySize") && <DefaultMark zh={zh} />}
               </dd>
             </div>
             <div>
-              <dt>{zh ? "总预算 / 住宿" : "Total / stay budget"}</dt>
+              <dt>{zh ? "总预算 / 住宿" : "Total / stay budget"}{reviewEdit("budget")}</dt>
               <dd data-testid="review-budget">
                 {draft.currency} {draft.budgetMajor} / {draft.stayBudgetMajor}
                 {(!touched.has("budgetMajor") || !touched.has("stayBudgetMajor")) && <DefaultMark zh={zh} />}
               </dd>
             </div>
             <div>
-              <dt>{zh ? "节奏" : "Pace"}</dt>
+              <dt>{zh ? "节奏" : "Pace"}{reviewEdit("pace")}</dt>
               <dd data-testid="review-pace">
                 {optionLabels(draft.pace ? [draft.pace] : [], PACE_OPTIONS, zh) || "—"}
                 {!touched.has("pace") && <DefaultMark zh={zh} />}
               </dd>
             </div>
             <div>
-              <dt>{zh ? "兴趣" : "Interests"}</dt>
+              <dt>{zh ? "兴趣" : "Interests"}{reviewEdit("interests")}</dt>
               <dd data-testid="review-interests">
                 {optionLabels(draft.interests ?? [], INTEREST_OPTIONS, zh) || "—"}
               </dd>
             </div>
             <div>
-              <dt>{zh ? "特殊要求" : "Special requirements"}</dt>
+              <dt>{zh ? "特殊要求" : "Special requirements"}{reviewEdit("special")}</dt>
               <dd data-testid="review-special">{draft.specialRequirements || "—"}</dd>
             </div>
             <div>
-              <dt>{zh ? "自动设置" : "Auto-set"}</dt>
+              <dt>{zh ? "自动设置" : "Auto-set"}{reviewEdit("auto-set")}</dt>
               <dd>
                 {draft.countryCode} · {draft.currency} · {draft.timezone}
               </dd>
@@ -1316,23 +1394,7 @@ export function JourneyTrialSetup({
                 className="trial-missing-jump"
                 data-testid="trial-missing-jump"
                 data-target={field.target}
-                onClick={() => {
-                  /* From step 3 the target lives on an earlier step, where focusing it would do
-                     nothing because the input is not mounted.  Move to the step that owns the field
-                     first, then focus it once it exists. */
-                  const owningStep = STEP_OF_TARGET[field.target] ?? step;
-                  if (owningStep !== step) setStep(owningStep);
-                  const focusTarget = () => {
-                    const target =
-                      document.getElementById(field.target) ??
-                      document.querySelector<HTMLElement>(
-                        `[data-testid="${field.target}"]`,
-                      );
-                    target?.focus();
-                  };
-                  if (owningStep === step) focusTarget();
-                  else window.setTimeout(focusTarget, 80);
-                }}
+                onClick={() => jumpToField(field.target)}
               >
                 {field.label}
               </button>
