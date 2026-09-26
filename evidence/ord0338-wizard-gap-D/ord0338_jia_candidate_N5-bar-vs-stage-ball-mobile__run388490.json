@@ -1,0 +1,25 @@
+{
+ "generatedBy": "e345b9d6",
+ "order": "ORD-0338",
+ "file": "e2e/qoder-ord0338-wizard-gap-clearance.spec.ts",
+ "arm": "N5-bar-vs-stage-ball-mobile",
+ "run": "run388490",
+ "tree_sha": "2d8b03b8c7734ea3b8521b80845e1b0bc1a07957",
+ "head": "1a779b694d7c04f7dea8d74b0cff7af90441ae22",
+ "sweep_step_px": 32,
+ "viewport": {
+  "innerWidth": 390,
+  "innerHeight": 844
+ },
+ "ballPresent": true,
+ "cta": [
+  764,
+  844
+ ],
+ "ball": [
+  692,
+  752
+ ],
+ "clearanceVar": "calc(124px + 0px + 12px)",
+ "intersects": false
+}
