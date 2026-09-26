@@ -1,0 +1,84 @@
+candidate 003886ca83294a9ec97a98215cb8cc2e8232189b / pre-fix generation 38277c4e9787b1ddf0bf69487060ba0e40c14146 / sheet matches the commit: True
+collect rc=0 Total: 10 tests in 2 files
+
+fixed: rc=0 run=0342fix2900 as_expected=True agree=True
+   A1 want=passed  got=passed   err=None
+   A2 want=passed  got=passed   err=None
+   A3 want=passed  got=passed   err=None
+   A4 want=passed  got=passed   err=None
+   B1 want=passed  got=passed   err=None
+   B2 want=passed  got=passed   err=None
+   B3 want=passed  got=passed   err=None
+   B4 want=passed  got=passed   err=None
+   B5 want=passed  got=passed   err=None
+   restored sheet=True src dirty=''
+
+cells_before: rc=1 run=0342was2900 as_expected=True agree=True
+   A1 want=failed  got=failed   err=Error: e2e/qoder-ord0342-two-anchor-cells.spec.ts :: A1 — Q70: 承载这句话的元
+   A2 want=failed  got=failed   err=Error: e2e/qoder-ord0342-two-anchor-cells.spec.ts :: A2 — Q70: 这句来自 de
+   A3 want=passed  got=passed   err=None
+   A4 want=failed  got=failed   err=Error: e2e/qoder-ord0342-two-anchor-cells.spec.ts :: A4 — Q70: mission
+   B1 want=failed  got=failed   err=Error: e2e/qoder-ord0342-two-anchor-cells.spec.ts :: B1 — Q70: 写着编号的那一
+   B2 want=failed  got=failed   err=Error: e2e/qoder-ord0342-two-anchor-cells.spec.ts :: B2 — 编号来自 code，锚却
+   B3 want=failed  got=failed   err=Error: e2e/qoder-ord0342-two-anchor-cells.spec.ts :: B3 — message_key 
+   B4 want=passed  got=passed   err=None
+   B5 want=passed  got=passed   err=None
+   restored sheet=True src dirty=''
+
+M_anchor_always: rc=1 run=0342alw2900 as_expected=True agree=True
+   A1 want=passed  got=passed   err=None
+   A2 want=passed  got=passed   err=None
+   A3 want=failed  got=failed   err=Error: e2e/qoder-ord0342-two-anchor-cells.spec.ts :: A3 — 设备自己写的一句挂上了契
+   A4 want=passed  got=passed   err=None
+   B1 want=passed  got=passed   err=None
+   B2 want=passed  got=passed   err=None
+   B3 want=passed  got=passed   err=None
+   B4 want=failed  got=failed   err=Error: e2e/qoder-ord0342-two-anchor-cells.spec.ts :: B4 — 没有编号却贴了锚 "re
+   B5 want=failed  got=failed   err=Error: e2e/qoder-ord0342-two-anchor-cells.spec.ts :: B5 — 本屏自造的名字挂上了契约
+   restored sheet=True src dirty=''
+
+M_field_never_asks: rc=1 run=0342key2900 as_expected=True agree=True
+   A1 want=passed  got=passed   err=None
+   A2 want=failed  got=failed   err=Error: e2e/qoder-ord0342-two-anchor-cells.spec.ts :: A2 — Q70: 这句来自 de
+   A3 want=passed  got=passed   err=None
+   A4 want=failed  got=failed   err=Error: e2e/qoder-ord0342-two-anchor-cells.spec.ts :: A4 — Q70: mission
+   B1 want=passed  got=passed   err=None
+   B2 want=failed  got=failed   err=Error: e2e/qoder-ord0342-two-anchor-cells.spec.ts :: B2 — 编号来自 code，锚却
+   B3 want=failed  got=failed   err=Error: e2e/qoder-ord0342-two-anchor-cells.spec.ts :: B3 — message_key 
+   B4 want=passed  got=passed   err=None
+   B5 want=passed  got=passed   err=None
+   restored sheet=True src dirty=''
+
+M_sentence_in_attribute: rc=1 run=0342attr2900 as_expected=True agree=True
+   A1 want=failed  got=failed   err=Error: e2e/qoder-ord0342-two-anchor-cells.spec.ts :: A1 — Q71: 原话被复制进 
+   A2 want=failed  got=failed   err=Error: e2e/qoder-ord0342-two-anchor-cells.spec.ts :: A2 — Q71: detail 
+   A3 want=passed  got=passed   err=None
+   A4 want=failed  got=failed   err=Error: e2e/qoder-ord0342-two-anchor-cells.spec.ts :: A4 — Q71: 行程存下的那句
+   B1 want=passed  got=passed   err=None
+   B2 want=passed  got=passed   err=None
+   B3 want=passed  got=passed   err=None
+   B4 want=failed  got=failed   err=Error: e2e/qoder-ord0342-two-anchor-cells.spec.ts :: B4 — Q71: 原话出现在某个
+   B5 want=passed  got=passed   err=None
+   restored sheet=True src dirty=''
+
+{
+ "shapes_measured": 5,
+ "shapes_matching_their_declaration": 5,
+ "candidate_green_on_every_arm": true,
+ "pre_fix_reds": [
+  "A1",
+  "A2",
+  "A4",
+  "B1",
+  "B2",
+  "B3"
+ ],
+ "counter_examples_that_bit": [
+  "M_anchor_always",
+  "M_field_never_asks",
+  "M_sentence_in_attribute"
+ ],
+ "verdict": "TEETH_AND_BASELINE"
+}
+matrix: D:\moodle\_qoder_b_ord0342_20260926\ord0342_arms_matrix_r2.json
+MATRIX_EXIT=0
