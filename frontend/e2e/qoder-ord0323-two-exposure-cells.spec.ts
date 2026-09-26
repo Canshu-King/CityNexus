@@ -908,7 +908,7 @@ test("N7_F3_a_memory_row_shows_what_it_measured_not_the_model_s_sentence — F3�
   });
   await openWallet(page, id);
   const row = page.getByTestId("v13-2-memory").locator("li").first();
-  await expect(row, node(arm, "F3: 这台设备的记忆行根本没渲染，摘要在不在屏上就没有可判的对象")).toBeVisible({timeout: 30_000});
+  await expect(row, node(arm, "F3: 这台设备的记忆行根本没渲染，摘要在不在屏上就没有可判的对象")).toBeVisible({timeout: 10_000});
   const rowText = clean(await row.textContent());
   const dom = await domReading(page);
   readings[arm] = {
@@ -917,7 +917,9 @@ test("N7_F3_a_memory_row_shows_what_it_measured_not_the_model_s_sentence — F3�
     sentinel_in_attributes: [F_SENTINELS.F3].filter((n) => dom.attrs.includes(n)),
     attribute_pairs_swept: dom.attr_pairs,
     held_token_present: (await page.getByTestId("v13-2-memory-summary-held").count()) > 0,
-    held_text: clean(await page.getByTestId("v13-2-memory-summary-held").textContent().catch(() => "")) ?? "",
+    held_text: (await page.getByTestId("v13-2-memory-summary-held").count())
+      ? clean(await page.getByTestId("v13-2-memory-summary-held").textContent().catch(() => "")) ?? ""
+      : "",
     own_fields_present: rowText.includes("ORD0323-M1-LABEL") && rowText.includes("62"),
   };
   expect(readings[arm].sentinel_on_screen, node(arm, `F3: 模型的推理摘要被这一屏当成自己的话说出来了（${rowText.slice(0, 200)}）`)).toBe(false);
@@ -956,14 +958,18 @@ test("N7_F4_the_draft_review_shows_its_own_fields_not_the_model_s_sentence — F
   ).toBeVisible({timeout: 30_000});
   const dom = await domReading(page);
   const review = clean(await page.getByTestId("v13-2-review").textContent());
-  const interp = clean(await page.getByTestId("v13-2-interpretation").textContent().catch(() => ""));
+  const interp = (await page.getByTestId("v13-2-interpretation").count())
+    ? clean(await page.getByTestId("v13-2-interpretation").textContent().catch(() => "")) ?? ""
+    : "";
   readings[arm] = {
     review_text: review,
     sentinel_on_screen: dom.root.includes(F_SENTINELS.F4) || dom.body.includes(F_SENTINELS.F4),
     sentinel_in_attributes: [F_SENTINELS.F4].filter((n) => dom.attrs.includes(n)),
     attribute_pairs_swept: dom.attr_pairs,
     held_token_present: (await page.getByTestId("v13-2-draft-summary-held").count()) > 0,
-    held_text: clean(await page.getByTestId("v13-2-draft-summary-held").textContent().catch(() => "")) ?? "",
+    held_text: (await page.getByTestId("v13-2-draft-summary-held").count())
+      ? clean(await page.getByTestId("v13-2-draft-summary-held").textContent().catch(() => "")) ?? ""
+      : "",
     interpretation_text: interp,
     interpretation_percent_field: (interp.match(/(\d+)\s*%/) || [null, ""])[1],
     /* the held notice sits against the payment value with no separator, so it is taken out before the
