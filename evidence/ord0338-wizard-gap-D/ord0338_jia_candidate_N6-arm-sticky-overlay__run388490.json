@@ -1,0 +1,59 @@
+{
+ "generatedBy": "e345b9d6",
+ "order": "ORD-0338",
+ "file": "e2e/qoder-ord0338-wizard-gap-clearance.spec.ts",
+ "arm": "N6-arm-sticky-overlay",
+ "run": "run388490",
+ "tree_sha": "2d8b03b8c7734ea3b8521b80845e1b0bc1a07957",
+ "head": "1a779b694d7c04f7dea8d74b0cff7af90441ae22",
+ "sweep_step_px": 32,
+ "landing_witness": {
+  "ctaPosition": "sticky",
+  "sectionDisplay": "block",
+  "scrollOverflow": "visible",
+  "documentScrollable": true
+ },
+ "candidate_unmodified": {
+  "viewport": {
+   "innerWidth": 390,
+   "innerHeight": 844
+  },
+  "max": 387,
+  "sampled": 14,
+  "nodesProbed": 847,
+  "scrollBottom": 764,
+  "barTop": 764,
+  "barBottom": 844,
+  "disjoint": true,
+  "hits": [],
+  "hitCount": 0
+ },
+ "retrofitted_to_sticky_overlay_without_any_reserve": {
+  "viewport": {
+   "innerWidth": 390,
+   "innerHeight": 844
+  },
+  "max": 0,
+  "sampled": 1,
+  "nodesProbed": 35,
+  "scrollBottom": 1151,
+  "barTop": 764,
+  "barBottom": 844,
+  "disjoint": false,
+  "hits": [
+   {
+    "offset": 0,
+    "el": "trial-supported-row-广州",
+    "elText": "广州身份还没读到还没问过服务器not-asked",
+    "centre": [
+     195,
+     786
+    ],
+    "landed": "trial-sticky-cta",
+    "scrollportBottom": 1151,
+    "barTop": 764
+   }
+  ],
+  "hitCount": 1
+ }
+}
