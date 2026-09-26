@@ -16588,6 +16588,40 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### SESSION=e345b9d6 @2026-09-26 09:44+08 —— **ORD-0338 第二半（要件③「修它」）：候选修法做出来了、空白确实消掉（229px→17px），但被现尖那把 ORD-0264 门当场否掉 —— 我不交会红的候选，0 commit 0 push；要我继续就得先在甲/乙/丙里裁一个口径**
+
+代次：现读尖 commit=`9b84a5fea9e7b38f3cace4160508f7a1b46c1418`（`ls-remote` + `fetch` + 复读一致）；号令者要件④写的 `a8237d7b…` 之后线又进了三枚（ORD-0336/0337 等），我按 `GENERATION_TRANSFER` 从现尖开枝 `agent/d-e345b9d6-ord0338`（worktree `D:/moodle/_qoder_d_ord0338_fix`，0 commit / 0 push）。我 ORD-0325 那枚 `c1bea4c20ea8cd5f1cc5c9d87053c005b2a24400` 仍是现尖的祖先。要件①的 `:8000` 那条我上一块已经否掉了（带内 0 枚内容节点、静默前后等高），本块只答要件③。
+
+**一、我试的修法（逐字在收据 `what_i_tried.patch_verbatim`）**：把 `.cn-onboarding .trial-steps` 在 ≤680px 下那 212px 的 `padding-bottom` 取消，同一份 clearance 交给真正结束在 sticky 条附近的 `.trial-card`（`padding-bottom` = 84 + clearance，实算 `cardPad 220px`，（数出自：`ord0338-gate-G1-band-bound.json` blob `5bcf9b8c620a8fa51973021530e171d6c509fff7`；`run_id=run378417`））；更宽那一档一字不动 —— 桌面我没量过，就不顺手改。
+
+**二、空白确实消掉了（三枚读数，全在候选树上跑）**：（数出自：`ord0338_gap_anatomy_r1.json` blob `ebb8ab5c96fbc19a3f1fe26de82e502eeead9004`） 尖上那段带高 229px，候选同一处只剩 17px，上界 60px，G1 绿（件 `ord0338-gate-G1-band-bound.json` blob `5bcf9b8c620a8fa51973021530e171d6c509fff7`）；带内内容节点 0 枚、最高节点 0px，G2 绿（件 `ord0338-gate-G2-no-invisible-reserved.json` blob `1405fd196a93e20bae5307c84461a9382f9e96aa`，堵掉『占高但不显示』这条路）；反向臂 G4：把旧形状用 addStyleTag 装回页面，带高回到 229px 又一整块（件 `ord0338-gate-G4-reverse-arm.json` blob `1d53126b74de0a37280ddf2b09b470c86b808cd0`）—— 所以 G1 量的就是这条声明，不是别的东西。
+
+**三、但它被现尖的门否掉（这是本块要你决策的唯一事实）**：同一棵候选树上跑 `frontend/e2e/qoder-wizard-advanced-is-tappable.spec.ts` —— `ord0264-opener-is-scroll-reachable-and-tappable` 红（复跑两次都红在同一枚节点：`run_id=run378417` 与第二次那趟），同文件另外两枚（节点 `ord0261` 与 `ord0264` 的 locality／draft 存活段）仍绿。红的那条判据原文是从门的源码里逐字取的，不是我复述：
+```text
+const roll = await wheelToControl(page, '[data-testid="trial-show-advanced"]');
+  expect(
+    roll.scrolled,
+    node("ord0264", `the wheel rolled 0px -- the opener is not scroll-reachable (${JSON.stringify(roll)})`),
+  ).toBeGreaterThan(0);
+```
+
+**四、为什么『挪位置』这条路走不通（读数，不是推测）**：（数出自：`ord0338_fix_attempt_r2.json` blob `af9290c4dbe5195d18a341a5cc017b5698279f84`） 尖上入口 `trial-show-advanced` at rest 在 y=959px（视口高度 844px 之外），`stepsPad 212px` / `cardPad 84px`，所以 `wheelToControl` 一定滚得动（实测滚 240px，件 `ord0338-mechanism-comparison-candidate.json` blob `4645f2c6fc0f18e5ff8b886639cf50107ee5c5d5`）；候选把那份 clearance 挪到卡片底之后，同一棵树上我读到两件事：(a) 按门自己的单字段 procedure 复跑诊断，入口 at rest 上移到 y=747、已完整在视口内，于是滚轮滚 0px —— 先塌的就是上面那条 `scrolled > 0`；(b) 我的 G3 填了三格（城市+抵达+离开），入口中心到了 195px, 650px，正落在 sticky 条的带里：起于 628px，止于 708px，命中的是「下一步」——这一条与门自己报的红文一致。两趟的红文不一样（同一枚节点、同一棵候选树），我怀疑与那句「已自动设置」段落何时落地有关（它一出现就把下面所有东西再往下推），**但我没把这枚 flake 钉死，它写在收据 `why_the_move_cannot_work.unreconciled` 里，不假装解释过**。两条红因都来自同一件事：那 212px 同时扛着『让入口一开始在视口外』和『让内容不落进条的带』，所以它不是放错元素的装饰，删或挪都必塌其一。要把 flake 钉死得在门里加读数，那是动它的断言行文，归你裁不归我改。
+
+**五、我要你裁的一句（三选项，射程与代价都写清了）**：
+
+- 甲：给 sticky 条一份真正的布局预留（把条做成流内元素或在它前面放一枚占位块），两处 padding hack 一起删（代价：动 ORD-0261 与 ORD-0264 两枚门的几何前提，需要重推它们的臂，且要 E 复签；空白结果：0（不留白））
+- 乙：把那块空白变成有内容的东西：步骤条补一条进度轨／当前步的说明句，clearance 原地不动（代价：最小，但『用内容填空白』是文案口径，得你点头；不解决 sticky 条的机制问题；空白结果：212px 有内容）
+- 丙：承认 sticky 条会盖住内容，把判据改成『入口在任意滚动位置都可点』（即给条一份不透明底 + 内容末尾真留白）（代价：这是改既有断言的形状，按规矩必须你先裁，我不能自己换绿；空白结果：不定）
+
+我的推荐是甲：它同时答你 06:05 ⑤ 那两个猜想的真成因（条盖内容），且不需要任何一块无主空白。你点头我就按 ORD-0325 那一套交：门双向 + 逐臂 (sha,nodeid,shape) 三元组 + 控制轮先绿 + 收据 + 上架回读，`4` 枚节点起步（本块引用的那枚候选门我已按证据上架，名字在下一段）。
+
+**六、证据与坐标**：`evidence/ord0338-wizard-gap-D/` 现在 22 件（两批，第一批 13 件 + 本批 9 件；（数出自：`ord0338_fix_attempt_r2.json` blob `af9290c4dbe5195d18a341a5cc017b5698279f84`） 旧名字一件没覆写 —— 门对同名改字节判 `REFUSE_OVERWRITE`，所以第二批的回读件走 `ord0338_publish_readback_r2.json`）。本批主收据两枚：`ord0338_fix_attempt_r1.json` blob `13088b67422b3574a89fd381defa7c82fb04a2bc`，与本块实际取数的那枚 `ord0338_fix_attempt_r2.json` blob `af9290c4dbe5195d18a341a5cc017b5698279f84`（r2 = r1 + 门上下文复测；发布名不可覆写，所以出第二枚而不是改第一枚）；候选那棵树的几何 `ord0338-mechanism-comparison-candidate.json` blob `4645f2c6fc0f18e5ff8b886639cf50107ee5c5d5`；四枚门读数 `ord0338-gate-G1..G4` 逐件在架上；候选门源码副本（未推 ref，所以按证据上架供人复跑）blob `57290548a51f6775e07029d3dfe5b41099215a43`；上架回读 `ord0338_publish_readback_r2.json` blob `39d1a7e0f36e9a5dce5a98b58617a302b406ae43`。
+
+**七、边界**：只读 + 实验 + 证据上架（这一段的计数记在收据 `discipline` 字段，（数出自：`ord0338_fix_attempt_r2.json` blob `af9290c4dbe5195d18a341a5cc017b5698279f84`））。候选 CSS 只在本地 worktree 里存在过，量完 `git checkout --` 还原并回验：`frontend/src/styles.css` 现在 == 尖上 blob `b942bf640365c013fa02897f19e8a34b5c9d9c46`，worktree 干净（只剩我新增的两枚 spec 与四份 stdout，未 add）；产品字节 0 留在改动里、权威线 0 写、ref 0 推（0 commit，所以没有可推的东西）、`vite build` 0 次、`demo/reset` 0 次、手机链 0 碰、`frontend/node_modules` 是 junction（0 安装 0 改）、既有门的断言改写 0 处、skip 0、凭据 0 打印。**没有交会红的候选**：`claimed_result` 只到「候选修法（同一份 padding 挪位置）被现尖的门否掉，成因量出来并写清；空白可消已被 G1/G2 证成，但消它的同时保住 ord0264 需要结构改动」，`derived_result` 留 null，等级归红队。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### ORD-0340 → 红队 E `d2305848` 交（ORD-0323/0339 签级 + 0 字节判词 · 2026-09-26 09:3x+08）
 
 **派生件**：`evidence/ord0340-two-signoffs-verdict-d2305848/ord0340_derived_d2305848.json` blob `58a51879f5d3ea6178ec09d0dd3a2f1a87395bb1`（7,805 B，树回验相符）。总线帖 `5841379129`。
