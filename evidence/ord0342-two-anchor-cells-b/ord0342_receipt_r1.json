@@ -1,0 +1,435 @@
+{
+ "schema": "CNX_ORD0342_RECEIPT_V1",
+ "order": "ORD-0342",
+ "lane": "B c01d72a3",
+ "branch": "review/B-ord0342-anchor-two-cells-b",
+ "generation": {
+  "candidate": "003886ca83294a9ec97a98215cb8cc2e8232189b",
+  "pre_fix_authority": "38277c4e9787b1ddf0bf69487060ba0e40c14146",
+  "authority_tip_now": "436d4a36c64c1b54a0b105f0f346425286a15701",
+  "predicted_merge_tree": "52218c0c1f23433a7e0699edc71addbdd3b6ddcb",
+  "sheet_blob": "a15d4950c2c255b3f62fe2ce5c9237dcb0e5764c",
+  "spec_blob": "0708f3a288ddd917f77d514e673596c77b6598a7"
+ },
+ "cells": [
+  {
+   "id": "cell_fold_anchor",
+   "claim": "格一：features/planning/PlanWithAiSheet.tsx:1048 折叠里那句原话现在带着它的契约字段名上屏，A1/A2/A4 各自读到 error.message / detail / mission.failure_reason，三枚都是等值读出的属性值；A3 这台设备自己写的那句读到 None。data-cnx-value 在这四臂全为 null，所以原话没有因为 Q70 而搬进属性（Q71）。",
+   "readings": {
+    "cell": "features/planning/PlanWithAiSheet.tsx:1048",
+    "observed_fields": {
+     "A1": "error.message",
+     "A2": "detail",
+     "A3": null,
+     "A4": "mission.failure_reason"
+    },
+    "cnx_value_all_null": true,
+    "arms": 4,
+    "attribute_pairs_swept": 125,
+    "named_values_the_why_uses": [
+     "125",
+     "4",
+     "True",
+     "detail",
+     "error.message",
+     "features/planning/PlanWithAiSheet.tsx:1048",
+     "mission.failure_reason"
+    ]
+   }
+  },
+  {
+   "id": "cell_code_anchor",
+   "claim": "格二：features/planning/PlanWithAiSheet.tsx:1021 旅客那一行的编号锚按真正答题的键命名：reason_code / code / message_key 三形各测一次，锚值都出现在同一张卡显示的那段文字里（三臂的等值包含全为 true），所以锚与文案不可能各说各话。",
+   "readings": {
+    "cell": "features/planning/PlanWithAiSheet.tsx:1021",
+    "fields": {
+     "B1": "reason_code",
+     "B2": "code",
+     "B3": "message_key"
+    },
+    "anchor_value_inside_what_the_card_shows": {
+     "B1": true,
+     "B2": true,
+     "B3": true
+    },
+    "arms": 3,
+    "named_values_the_why_uses": [
+     "3",
+     "True",
+     "code",
+     "features/planning/PlanWithAiSheet.tsx:1021",
+     "message_key",
+     "reason_code"
+    ]
+   }
+  },
+  {
+   "id": "cell_absence_no_anchor",
+   "claim": "无量则不贴：A3、B4、B5 三臂各读到一个 null 锚（设备自写的句子、服务器没给编号、本屏自造的 CATALOG_INSUFFICIENT），把锚无条件贴出来的反件 M_anchor_always 恰好只把这三臂判红（3 臂），其余六臂仍绿。",
+   "readings": {
+    "cell": "features/planning/PlanWithAiSheet.tsx:1048 + features/planning/PlanWithAiSheet.tsx:1021",
+    "absence_arms": [
+     "A3",
+     "B4",
+     "B5"
+    ],
+    "null_anchors": [
+     null,
+     null,
+     null
+    ],
+    "M_anchor_always_reds": [
+     "A3",
+     "B4",
+     "B5"
+    ],
+    "b5_result_status": "BLOCKED:CATALOG_INSUFFICIENT",
+    "b5_anchor_field": null,
+    "M_anchor_always_green": [
+     "A1",
+     "A2",
+     "A4",
+     "B1",
+     "B2",
+     "B3"
+    ],
+    "named_values_the_why_uses": [
+     "A1",
+     "A2",
+     "A3",
+     "A4",
+     "B1",
+     "B2",
+     "B3",
+     "B4",
+     "B5",
+     "BLOCKED:CATALOG_INSUFFICIENT",
+     "features/planning/PlanWithAiSheet.tsx:1048 + features/planning/PlanWithAiSheet.tsx:1021"
+    ]
+   }
+  },
+  {
+   "id": "cells_before_red",
+   "claim": "改前红：把 38277c4e9787 那一代的产品文件放回去，九臂里 6 臂转红（A1 A2 A4 B1 B2 B3），三枚缺席断言仍绿——它们量的正是改前也没有的东西。同一枚文件 blob 在 436d4a36c64c 上逐字节相同，所以这枚红对现尖同样成立。",
+   "readings": {
+    "pre_fix_generation": "38277c4e9787b1ddf0bf69487060ba0e40c14146",
+    "authority_tip": "436d4a36c64c1b54a0b105f0f346425286a15701",
+    "red_arms": [
+     "A1",
+     "A2",
+     "A4",
+     "B1",
+     "B2",
+     "B3"
+    ],
+    "green_arms": [
+     "A3",
+     "B4",
+     "B5"
+    ],
+    "pre_fix_blob": "268bdf9c5f06d9d22e8b1b5dbe6d614be65cb354",
+    "authority_blob": "268bdf9c5f06d9d22e8b1b5dbe6d614be65cb354",
+    "same_bytes_on_both": true,
+    "arms_total": 9,
+    "named_values_the_why_uses": [
+     "268bdf9c5f06d9d22e8b1b5dbe6d614be65cb354",
+     "38277c4e9787b1ddf0bf69487060ba0e40c14146",
+     "436d4a36c64c1b54a0b105f0f346425286a15701",
+     "9",
+     "A1",
+     "A2",
+     "A3",
+     "A4",
+     "B1",
+     "B2",
+     "B3",
+     "B4",
+     "B5",
+     "True"
+    ]
+   }
+  },
+  {
+   "id": "ruler_no_growth",
+   "claim": "尺：r6（blob 6a251d3a6bea70329e06581384a81d5ef54c96a6）以 --tree 量现尖 12 格，量我与现尖的合并树仍是 12 格，按 (file, rule) 的增长集合为 空；我名下两格没有消失，只是随行号搬到 features/planning/PlanWithAiSheet.tsx:1075 features/planning/PlanWithAiSheet.tsx:1114（原为 features/planning/PlanWithAiSheet.tsx:1021 features/planning/PlanWithAiSheet.tsx:1048）。r6 本身看不见属性位（它自己的头部就这么写），所以这两格的收敛由臂来证，不拿尺当证据。",
+   "readings": {
+    "ruler_blob": "6a251d3a6bea70329e06581384a81d5ef54c96a6",
+    "cells_on_authority": 12,
+    "cells_on_merge": 12,
+    "growth": {},
+    "before": [
+     "features/planning/PlanWithAiSheet.tsx:1021",
+     "features/planning/PlanWithAiSheet.tsx:1048"
+    ],
+    "after": [
+     "features/planning/PlanWithAiSheet.tsx:1075",
+     "features/planning/PlanWithAiSheet.tsx:1114"
+    ],
+    "per_rule_authority": {
+     "UPSTREAM_TEXT_VIA_HELPER_TO_DOM": 4,
+     "UPSTREAM_EXCEPTION_TO_DOM": 6,
+     "RAW_BODY_TO_DOM": 2
+    },
+    "per_rule_merge": {
+     "UPSTREAM_TEXT_VIA_HELPER_TO_DOM": 4,
+     "UPSTREAM_EXCEPTION_TO_DOM": 6,
+     "RAW_BODY_TO_DOM": 2
+    },
+    "named_values_the_why_uses": [
+     "12",
+     "2",
+     "4",
+     "6",
+     "6a251d3a6bea70329e06581384a81d5ef54c96a6",
+     "features/planning/PlanWithAiSheet.tsx:1021",
+     "features/planning/PlanWithAiSheet.tsx:1048",
+     "features/planning/PlanWithAiSheet.tsx:1075",
+     "features/planning/PlanWithAiSheet.tsx:1114"
+    ]
+   }
+  },
+  {
+   "id": "existing_arms",
+   "claim": "既有臂没红、也没人被我改过：这 13 枚读着同一张 sheet 的 spec 在改前代与候选上逐字节相同（True），两跑的红集合差为 []，改前就红的 1 枚原样留着，不折进本单。",
+   "readings": {
+    "specs": 13,
+    "digests_equal": true,
+    "new_reds": [],
+    "base_red_count": 1,
+    "candidate_red_count": 1,
+    "runs": {
+     "pre_fix_sheet": {
+      "rc": 1,
+      "collect_rc": 0,
+      "total": "Total: 69 tests in 14 files",
+      "summary": "68 passed (4.0m)",
+      "seconds": 240.9
+     },
+     "candidate_sheet": {
+      "rc": 1,
+      "collect_rc": 0,
+      "total": "Total: 69 tests in 14 files",
+      "summary": "68 passed (3.7m)",
+      "seconds": 222.7
+     }
+    },
+    "named_values_the_why_uses": [
+     "0",
+     "1",
+     "13",
+     "222.7",
+     "240.9",
+     "68 passed (3.7m)",
+     "68 passed (4.0m)",
+     "Total: 69 tests in 14 files",
+     "True"
+    ]
+   }
+  },
+  {
+   "id": "instrument",
+   "claim": "仪器自己：新 spec 收集退出码 1，NO_TOTAL_LINE；整册 typecheck:all 退出码 0、诊断 0 行；九臂跑在端口 4900 / 4901 / 4902 / 4903 / 4904（后端各 +1000），每形一枚新 run id 与自己的 _run 库，AI 关闭且子进程环境里去掉了 DEEPSEEK_API_KEY,OPENAI_API_KEY 这两枚名字（只提名字，值没被读过）。",
+   "readings": {
+    "collect": {
+     "collect_rc": 1,
+     "collect_total": "NO_TOTAL_LINE",
+     "collected_node_lines": 0,
+     "typecheck_rc": 0,
+     "typecheck_diagnostics": 0,
+     "typecheck_first": []
+    },
+    "typecheck_rc": 0,
+    "typecheck_diagnostics": 0,
+    "ports": {
+     "frontend": [
+      4900,
+      4901,
+      4902,
+      4903,
+      4904
+     ],
+     "backend_offset": 1000
+    },
+    "keys_removed": "DEEPSEEK_API_KEY,OPENAI_API_KEY",
+    "shapes": 5,
+    "run_ids": [
+     "0342fix2900",
+     "0342was2900",
+     "0342alw2900",
+     "0342key2900",
+     "0342attr2900"
+    ],
+    "named_values_the_why_uses": [
+     "0",
+     "0342alw2900",
+     "0342attr2900",
+     "0342fix2900",
+     "0342key2900",
+     "0342was2900",
+     "1",
+     "1000",
+     "4900",
+     "4901",
+     "4902",
+     "4903",
+     "4904",
+     "5",
+     "DEEPSEEK_API_KEY,OPENAI_API_KEY",
+     "NO_TOTAL_LINE"
+    ]
+   }
+  },
+  {
+   "id": "counter_examples",
+   "claim": "四枚反件各自咬一向，全部按声明命中：M_anchor_always M_field_never_asks M_sentence_in_attribute；其中 M_field_never_asks 只把 4 臂判红（锚必须写真正答题的那枚键），M_sentence_in_attribute 只把带 Q71 腿的 4 臂判红。第一版我把后一形声明成三臂，实测四臂，缺的那条腿是我自己 spec 的洞，补腿之后重新声明并整套重跑。",
+   "readings": {
+    "counter_examples": [
+     "M_anchor_always",
+     "M_field_never_asks",
+     "M_sentence_in_attribute"
+    ],
+    "reds": {
+     "M_anchor_always": [
+      "A3",
+      "B4",
+      "B5"
+     ],
+     "M_field_never_asks": [
+      "A2",
+      "A4",
+      "B2",
+      "B3"
+     ],
+     "M_sentence_in_attribute": [
+      "A1",
+      "A2",
+      "A4",
+      "B4"
+     ]
+    },
+    "declaration_corrected_to_observed": [
+     "A1",
+     "A2",
+     "A4",
+     "B4"
+    ],
+    "shapes_matching_declaration": 5,
+    "verdict": "TEETH_AND_BASELINE",
+    "named_values_the_why_uses": [
+     "5",
+     "A1",
+     "A2",
+     "A3",
+     "A4",
+     "B2",
+     "B3",
+     "B4",
+     "B5",
+     "M_anchor_always",
+     "M_field_never_asks",
+     "M_sentence_in_attribute",
+     "TEETH_AND_BASELINE"
+    ]
+   }
+  },
+  {
+   "id": "residual_named_not_fixed",
+   "claim": "本单没修的那一件，读数在此：同一张卡把这台设备自造的 CATALOG_INSUFFICIENT 写在「（服务器给的原因编号：…）」这句话里（B5 臂屏上原文见本格 readings），而它自己的归属位写的是 device。把名字改成不冒名要新增可见文案，超出本单射程；锚这边它已经是 null，所以最坏的一步（给自造名字贴契约锚）没发生。",
+   "readings": {
+    "cell": "features/planning/PlanWithAiSheet.tsx:1021",
+    "b5_result_status": "BLOCKED:CATALOG_INSUFFICIENT",
+    "b5_body_text": "这座城我们手上的地点太少，配不平一天的行程。（服务器给的原因编号：CATALOG_INSUFFICIENT）",
+    "b5_anchor_field": null,
+    "named_values_the_why_uses": [
+     "BLOCKED:CATALOG_INSUFFICIENT",
+     "features/planning/PlanWithAiSheet.tsx:1021",
+     "这座城我们手上的地点太少，配不平一天的行程。（服务器给的原因编号：CATALOG_INSUFFICIENT）"
+    ]
+   }
+  },
+  {
+   "id": "anchor_vocabulary_collides",
+   "claim": "一件交回裁定、本单不擅自修的冲突：D 已验收的 Q71 谓词把 data-cnx-field 的取值限定为六枚 Q64 名字（frontend/e2e/qoder-ord0339-exception-words-stay-out-of-the-dom.spec.ts:71），而 ORD-0342 要的锚写的是契约键名，本单挂上的 6 枚取值里有 6 枚在那六枚之外。现场边界两条：该谓词只作用在 trial-sealed-unavailable 那一枚元素上，本单的 sheet 不在它射程内，所以 ord0339 的臂不会因我转红；而现尖上挂着的锚取值全在六枚之内（elapsed_ms http_status），本单是第一枚挂到六名之外的。另：ORD-0332 的 error_receipt_id 那枚锚此刻还没人挂载（引用它的文件 0 枚），所以这个词汇表冲突今天没有第二例在现场。",
+   "readings": {
+    "predicate": "frontend/e2e/qoder-ord0339-exception-words-stay-out-of-the-dom.spec.ts:71",
+    "six": [
+     "http_status",
+     "content_type",
+     "body_bytes",
+     "response_received",
+     "elapsed_ms",
+     "request_id"
+    ],
+    "six_count": 6,
+    "candidate_anchor_values": [
+     "code",
+     "detail",
+     "error.message",
+     "message_key",
+     "mission.failure_reason",
+     "reason_code"
+    ],
+    "anchor_count": 6,
+    "outside_the_six": [
+     "code",
+     "detail",
+     "error.message",
+     "message_key",
+     "mission.failure_reason",
+     "reason_code"
+    ],
+    "outside_six_count": 6,
+    "authority_values_inside_six": [
+     "elapsed_ms",
+     "http_status"
+    ],
+    "error_receipt_files_besides_its_own_module": 0,
+    "named_values_the_why_uses": [
+     "0",
+     "6",
+     "body_bytes",
+     "code",
+     "content_type",
+     "detail",
+     "elapsed_ms",
+     "error.message",
+     "frontend/e2e/qoder-ord0339-exception-words-stay-out-of-the-dom.spec.ts:71",
+     "http_status",
+     "message_key",
+     "mission.failure_reason",
+     "reason_code",
+     "request_id",
+     "response_received"
+    ]
+   }
+  }
+ ],
+ "published": [],
+ "self_reported_breach": {
+  "what": "one published path was written twice by this order",
+  "path": "evidence/ord0342-two-anchor-cells-b/ord0342_r6_readings_r1.json",
+  "was_blob": "d33f0b6e29f40bb3df458420e781281d72abe2a2",
+  "now_blob": "d9914d2d00d4b2e47e3719eb06fb3c0a469ffcb0",
+  "was_commit": "d42cac6581",
+  "now_commit": "60442182",
+  "why_it_mattered": "the first document labelled the pre-fix generation as this branch's own first commit, which already contains the fix, and verified the ruler's blob with a bare sha1, so it denied matching a ruler that does",
+  "erratum": "ord0342_r6_readings_erratum_r1.json",
+  "door_fitted_after": "push() now refuses a same-name different-bytes publish"
+ },
+ "boundaries": {
+  "authoritative_line_moves": 0,
+  "force_pushes": 0,
+  "ledger_direct_writes": 0,
+  "published_paths_overwritten": 1,
+  "overwritten_path_named": "evidence/ord0342-two-anchor-cells-b/ord0342_r6_readings_r1.json",
+  "files_this_order_changes": [
+   "frontend/src/features/planning/PlanWithAiSheet.tsx",
+   "frontend/e2e/qoder-ord0342-two-anchor-cells.spec.ts"
+  ],
+  "other_lanes_files_touched": [],
+  "demo_reset": 0,
+  "live_or_preview_db_reads_or_writes": 0,
+  "credentials_printed": 0,
+  "phone_generation_changed": 0
+ }
+}
