@@ -10,6 +10,7 @@ import { HotelsPanel } from "../features/stay/HotelsPanel";
 import { PlanComparison } from "../features/planning/PlanComparison";
 import { LiveRecovery } from "../features/execution/LiveRecovery";
 import { liveActivityWindow } from "../lib/executionWindow";
+import { readMapFocus, writeMapFocus } from "../lib/mapFocus";
 import { installVisualViewportVars } from "../lib/visualViewport";
 import {
   classifyHealthProbe,
@@ -3327,6 +3328,23 @@ function AuthoritativeExecution({
     twin?.context as
       { execution?: { next_activity_id?: string | null } } | undefined
   )?.execution;
+  /* ORD-0361: the stop the traveller picked on the map, kept per journey so it survives a reload.
+     The server owns where the trip *is*; nothing here claims that -- this is which card the
+     traveller asked to look at, and the store is named (`citynexus.v8.map_focus.<journeyId>`). */
+  const planActivityIds = useMemo(
+    () => ((plan?.activities ?? []) as Array<{ id: string }>).map((item) => item.id),
+    [plan],
+  );
+  const [focusedActivityId, setFocusedActivityId] = useState<string | null>(null);
+  useEffect(() => {
+    if (!plan || focusedActivityId) return;
+    const stored = readMapFocus(journeyId, planActivityIds);
+    if (stored) setFocusedActivityId(stored);
+  }, [plan, journeyId, planActivityIds, focusedActivityId]);
+  const pickActivity = (activityId: string) => {
+    setFocusedActivityId(activityId);
+    writeMapFocus(journeyId, activityId);
+  };
   return (
     <section className="v8-page" data-testid="v12-authoritative-page">
       <div className="v8-page-intro compact">
@@ -3364,6 +3382,8 @@ function AuthoritativeExecution({
             plan={plan}
             nowActivityId={twin?.current_activity_id}
             nextActivityId={execution?.next_activity_id ?? null}
+            focusedActivityId={focusedActivityId}
+            onSelectActivity={pickActivity}
             onTransition={onRefresh}
           />
           <V12TripStudioPanel
@@ -3401,6 +3421,23 @@ function Live({
 }) {
   const t = useT();
   const { locale } = useLocale();
+  /* ORD-0361: the Live tab owns a map but not the per-stop rail (the rail is on the
+     `authoritative` tab), so on this surface a pick is recorded and named, and the card-to-focus
+     half waits for the pairing to be decided rather than being faked with a stand-in list. */
+  const livePlanActivityIds = useMemo(
+    () => ((data.active_plan?.activities ?? []) as Array<{ id: string }>).map((item) => item.id),
+    [data.active_plan],
+  );
+  const [focusedActivityId, setFocusedActivityId] = useState<string | null>(null);
+  useEffect(() => {
+    if (focusedActivityId) return;
+    const stored = readMapFocus(data.journey.id, livePlanActivityIds);
+    if (stored) setFocusedActivityId(stored);
+  }, [data.journey.id, livePlanActivityIds, focusedActivityId]);
+  const pickActivity = (activityId: string) => {
+    setFocusedActivityId(activityId);
+    writeMapFocus(data.journey.id, activityId);
+  };
   const {
     now,
     next,
@@ -3475,7 +3512,12 @@ function Live({
                 : t("live.awaitingPlanUpper")}
           </strong>
         </div>
-        <MapPanel data={data} option={selected} />
+        <MapPanel
+          data={data}
+          option={selected}
+          focusedActivityId={focusedActivityId}
+          onSelectActivity={pickActivity}
+        />
       </div>
     </section>
   );

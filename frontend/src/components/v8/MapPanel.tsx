@@ -2,6 +2,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import "maplibre-gl/dist/maplibre-gl.css";
 import type { FeatureCollection } from "geojson";
 import type { V8Data } from "../../app/v8Types";
+import { unpickableCopy } from "../../lib/mapFocus";
 import { useT, useLocale } from "../../i18n/LocaleContext";
 
 /**
@@ -25,6 +26,8 @@ export function MapPanel({
   data,
   option,
   onNoLocationChange = null,
+  focusedActivityId = null,
+  onSelectActivity = null,
 }: {
   data: V8Data | null;
   option: V8Data["options"][number] | null;
@@ -32,8 +35,19 @@ export function MapPanel({
       counts, and a trip with no located activity can still have a route.  Attention needs that
       same answer or one screen can say "没有可信的坐标" and "一切正常" at once. */
   onNoLocationChange?: ((value: boolean) => void) | null;
+  /** ORD-0361: the stop the traveller picked, so its marker can say it is the picked one. */
+  focusedActivityId?: string | null;
+  /** ORD-0361: a tap on a catalogued stop.  Without this the map was a picture: pressing a marker
+      produced no observable consequence anywhere on the screen. */
+  onSelectActivity?: ((activityId: string) => void) | null;
 }) {
   const host = useRef<HTMLDivElement | null>(null);
+  /* The markers keyed by the activity they stand for, so a selection can repaint them without
+     tearing the map down and rebuilding it (which would reset the camera under the finger). */
+  const markerRefs = useRef(new Map<string, HTMLElement>());
+  /* The named reason a marker could not be picked.  State, not a console line, because the
+     traveller has to be able to read the answer. */
+  const [unpickable, setUnpickable] = useState<{ title: string; role: string } | null>(null);
   // Map truth: never centre on a hardcoded city.  If the Journey has no
   // trustworthy coordinates we say so explicitly instead of silently showing
   // an unrelated city (design corrections §10).
@@ -86,6 +100,9 @@ export function MapPanel({
           ? [
               {
                 title: item.title,
+                /* ORD-0361: the marker has to say *which* stop it is, or a tap cannot be answered.
+                   The plan's activity id is the only identity here that a card can be matched on. */
+                activityId: item.id,
                 longitude: item.metadata.longitude,
                 latitude: item.metadata.latitude,
                 role: item.metadata.role,
@@ -103,6 +120,9 @@ export function MapPanel({
     if (!data) return [];
     return data.offers.slice(0, 1).map((offer) => ({
       title: offer.property_name,
+      // A stay offer is not a catalogued stop on the rail, and the panel says so instead of
+      // swallowing the tap.
+      activityId: null as string | null,
       longitude: offer.location.longitude,
       latitude: offer.location.latitude,
       role: "STAY",
@@ -286,7 +306,37 @@ export function MapPanel({
       const marker = document.createElement("div");
       marker.className = `v9-map-marker ${point.role === "STAY" ? "stay" : ""} ${point.protected ? "protected" : ""} ${point.current ? "current" : ""} ${point.disrupted ? "disrupted" : ""}`;
       marker.textContent = String(index + 1);
+      /* ORD-0361: the marker becomes a control.  `role=button` plus a tabIndex is what makes the
+         tap answerable by a keyboard and by a screen reader as well as by a finger, and the
+         activity id rides along as the only thing a card can be matched on. */
+      marker.setAttribute("role", "button");
+      marker.setAttribute("tabindex", "0");
       marker.setAttribute("aria-label", point.title);
+      marker.setAttribute("aria-pressed", String(point.activityId === focusedActivityId && point.activityId != null));
+      if (point.activityId) {
+        marker.setAttribute("data-activity-id", point.activityId);
+        markerRefs.current.set(point.activityId, marker);
+      } else {
+        marker.setAttribute("data-activity-id", "uncatalogued");
+      }
+      const pick = () => {
+        if (point.activityId) {
+          setUnpickable(null);
+          onSelectActivity?.(point.activityId);
+          return;
+        }
+        /* Not on the rail: say why, in the traveller's words, with the contract field that decided
+           it named beside the sentence (Q70). Silence here is the original defect. */
+        setUnpickable({ title: point.title, role: String(point.role ?? "unknown") });
+      };
+      marker.addEventListener("click", pick);
+      marker.addEventListener("keydown", (event) => {
+        const key = (event as KeyboardEvent).key;
+        if (key === "Enter" || key === " ") {
+          event.preventDefault();
+          pick();
+        }
+      });
         new maplibregl.Marker({ element: marker })
         .setLngLat([point.longitude, point.latitude])
         .addTo(mapInstance);
@@ -343,9 +393,20 @@ export function MapPanel({
     return () => {
       disposed = true;
       resizeObserver?.disconnect();
+      markerRefs.current.clear();
       map?.remove();
     };
   }, [data, points, route]);
+
+  /* The picked marker is repainted rather than rebuilt: tearing the map down to change one class
+     would move the camera the traveller is looking through. */
+  useEffect(() => {
+    for (const [activityId, element] of markerRefs.current) {
+      const picked = activityId === focusedActivityId;
+      element.classList.toggle("picked", picked);
+      element.setAttribute("aria-pressed", String(picked));
+    }
+  }, [focusedActivityId, points]);
   if (noLocation) {
     return (
       <div
@@ -395,6 +456,24 @@ export function MapPanel({
           ? "单指拖动地图 · 双指缩放 · 想翻这一页就拖地图以外的地方"
           : "One finger drags the map · two fingers zoom · to move the page, drag outside the map"}
       </p>
+      {unpickable && (
+        /* ORD-0361: a marker that has no card answers out loud.  The role is quoted from the field
+           that decided it, under its contract name (Q70), so the sentence can be checked against the
+           payload instead of trusted. */
+        <p
+          className="v8-map-unpickable"
+          data-testid="v8-map-unpickable"
+          data-map-target="uncatalogued"
+          role="status"
+          aria-live="polite"
+        >
+          <b>{unpickable.title}</b>
+          <span>{unpickableCopy(unpickable.role, locale.startsWith("zh"))}</span>
+          <span className="v8-sr-only" data-cnx-field="role">
+            {unpickable.role}
+          </span>
+        </p>
+      )}
     </div>
   );
 }

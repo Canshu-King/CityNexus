@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { Check, ChevronRight, Circle, LockKeyhole, MapPin, ShieldCheck } from "lucide-react";
 import { transitionActivity, type PlanVersion } from "../../api/v12Authoritative";
 import { useT } from "../../i18n/LocaleContext";
@@ -30,6 +30,11 @@ type Props = {
   nextActivityId?: string | null;
   offline?: boolean;
   onTransition?: (activityId: string, state: ExecutionState) => void;
+  /** ORD-0361: the stop picked on the map.  Its card is brought into view and takes focus, which is
+      the observable consequence the map tap used to lack. */
+  focusedActivityId?: string | null;
+  /** Tapping a card picks the same stop the other way round, so one selection serves both surfaces. */
+  onSelectActivity?: (activityId: string) => void;
 };
 
 const transitions: Record<string, "depart" | "arrive" | "begin" | "complete"> = {
@@ -63,9 +68,12 @@ export function V12AuthoritativeJourneyPanel({
   nextActivityId,
   offline = false,
   onTransition,
+  focusedActivityId = null,
+  onSelectActivity = null,
 }: Props) {
   const t = useT();
   const [busy, setBusy] = useState(false);
+  const rowRefs = useRef(new Map<string, HTMLDivElement>());
   const activities = useMemo(
     () => (plan?.activities ?? []) as ExecutionActivity[],
     [plan],
@@ -75,6 +83,18 @@ export function V12AuthoritativeJourneyPanel({
   const next = activities.find((item) => item.id === nextActivityId) ??
     activities.find((item) => item.id !== now?.id && !["COMPLETED", "SKIPPED"].includes(item.status ?? ""));
   const action = now ? transitions[now.status ?? "NOT_STARTED"] : undefined;
+  /* ORD-0361: the consequence of a map tap.  The card is scrolled to and given focus, in that order
+     and without an animation -- `behavior:"smooth"` never advances in this project's mobile
+     emulation (measured in ORD-0220 ③), so a smooth scroll would make the reachable state depend on
+     the compositor.  Focus is legitimate on these rows because they are controls (role=button with a
+     tabIndex), not because a paragraph was made focusable to satisfy a gate. */
+  useEffect(() => {
+    if (!focusedActivityId) return;
+    const row = rowRefs.current.get(focusedActivityId);
+    if (!row) return;
+    row.scrollIntoView({ block: "center" });
+    row.focus({ preventScroll: true });
+  }, [focusedActivityId, activities]);
   const advance = async () => {
     if (!journeyId || !now || !action || offline) return;
     setBusy(true);
@@ -114,7 +134,26 @@ export function V12AuthoritativeJourneyPanel({
       </div>
       <div className="v12-activity-rail" aria-label={t("exec.railLabel")}>
         {activities.map((item) => (
-          <div className={`v12-activity-row ${item.id === now?.id ? "current" : ""}`} key={item.id}>
+          <div
+            className={`v12-activity-row ${item.id === now?.id ? "current" : ""} ${item.id === focusedActivityId ? "picked" : ""}`}
+            key={item.id}
+            ref={(node) => {
+              if (node) rowRefs.current.set(item.id, node);
+              else rowRefs.current.delete(item.id);
+            }}
+            data-activity-id={item.id}
+            data-testid={`v12-activity-row-${item.id}`}
+            role="button"
+            tabIndex={0}
+            aria-current={item.id === focusedActivityId ? "true" : undefined}
+            onClick={() => onSelectActivity?.(item.id)}
+            onKeyDown={(event) => {
+              if (event.key === "Enter" || event.key === " ") {
+                event.preventDefault();
+                onSelectActivity?.(item.id);
+              }
+            }}
+          >
             <span className="v12-activity-index">{item.status === "COMPLETED" || item.status === "SKIPPED" ? <Check size={14} /> : item.sequence_no}</span>
             <span className="v12-activity-title">{item.title}</span>
             <span className={`v12-activity-status state-${(item.status ?? "NOT_STARTED").toLowerCase()}`}>{label(item.status, t)}</span>
