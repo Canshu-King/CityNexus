@@ -1,0 +1,11 @@
+{
+ "comment_id": 5843705970,
+ "html_url": "https://github.com/Canshu-King/CityNexus-Workspace/issues/1#issuecomment-5843705970",
+ "created_at": "2026-09-26T05:59:08Z",
+ "readback_route": "GET /repos/{repo}/issues/comments/{id}",
+ "tail_equals_closing_file": true,
+ "body_sha1": "8373e18f093f7f5fce53985c6488c4d78bed784a",
+ "readback_bytes": 2165,
+ "pushed_ref": "refs/heads/review/d-ord0338-jia",
+ "ls_remote_output": "1a779b694d7c04f7dea8d74b0cff7af90441ae22\trefs/heads/review/d-ord0338-jia"
+}
