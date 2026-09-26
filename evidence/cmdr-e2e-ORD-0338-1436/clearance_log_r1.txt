@@ -1,0 +1,137 @@
+run_id=cmdr134402o338clr tree=436d4a36c64c1b54a0b105f0f346425286a15701 port=4400/5400 target=e2e/qoder-ord0338-wizard-gap-clearance.spec.ts full=False db=_cmdr134402o338clr.db
+[citynexus e2e] suite=current-product authoritative=true python=D:/moodle/CityNexus/.venv/Scripts/python.exe frontend=:4400 backend=:5400 db=sqlite:///D:/moodle/_qoder_cmdr_ord0338_land/review/evidence/_cmdr134402o338clr.db ai=disabled reuseExistingServer=false
+[WebServer] INFO:     Started server process [30244]
+
+[WebServer] INFO:     Waiting for application startup.
+[WebServer] INFO:     Application startup complete.
+[WebServer] INFO:     Uvicorn running on http://127.0.0.1:5400 (Press CTRL+C to quit)
+
+[WebServer] INFO:     127.0.0.1:58070 - "GET /api/v1/health HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:58135 - "GET /api/v1/health HTTP/1.1" 200 OK
+
+[citynexus e2e] provenance ok: run=cmdr134402o338clr frontend=:4400 -> backend=:5400 ai=disabled db=_cmdr134402o338clr.db
+
+Running 11 tests using 1 worker
+
+[citynexus e2e] suite=current-product authoritative=true python=D:/moodle/CityNexus/.venv/Scripts/python.exe frontend=:4400 backend=:5400 db=sqlite:///D:/moodle/_qoder_cmdr_ord0338_land/review/evidence/_cmdr134402o338clr.db ai=disabled reuseExistingServer=false
+
+[1/11] [real-seed] › e2e\_qoderRealSeed.setup.ts:110:1 › seed a real journey through the product API
+[WebServer] INFO:     127.0.0.1:58142 - "POST /api/v1/travelers HTTP/1.1" 201 Created
+
+[WebServer] INFO:     127.0.0.1:58143 - "POST /api/v1/journeys HTTP/1.1" 201 Created
+
+[WebServer] INFO:     127.0.0.1:58142 - "POST /api/v1/journeys/2b5ec283-411c-442a-8954-1377ea3d5c7f/stay-options/generate HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:58143 - "GET /api/v1/journeys/2b5ec283-411c-442a-8954-1377ea3d5c7f/stay-options HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:58142 - "POST /api/v1/journeys/2b5ec283-411c-442a-8954-1377ea3d5c7f/stay-options/2a43e1cd-c2ab-47b0-9d66-cc870fdaa69f/select HTTP/1.1" 200 OK
+
+[real-seed] › e2e\_qoderRealSeed.setup.ts:110:1 › seed a real journey through the product API
+[qoder-real-seed] journey=2b5ec283-411c-442a-8954-1377ea3d5c7f options=4 chosen=2a43e1cd-c2ab-47b0-9d66-cc870fdaa69f (Haihe Riverside Hotel)
+
+[WebServer] INFO:     127.0.0.1:56393 - "GET /api/v1/journeys/2b5ec283-411c-442a-8954-1377ea3d5c7f/experience HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:56394 - "GET /api/v1/journeys/2b5ec283-411c-442a-8954-1377ea3d5c7f/replans HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:53397 - "GET /api/v1/journeys/2b5ec283-411c-442a-8954-1377ea3d5c7f/replans HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:53398 - "GET /api/v1/journeys/2b5ec283-411c-442a-8954-1377ea3d5c7f/execution-clock HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:53396 - "GET /api/v1/journeys/2b5ec283-411c-442a-8954-1377ea3d5c7f/plans HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:56395 - "GET /api/v1/journeys/2b5ec283-411c-442a-8954-1377ea3d5c7f/twin HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:64143 - "GET /api/v1/journeys/2b5ec283-411c-442a-8954-1377ea3d5c7f/web-observations HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:64146 - "GET /api/v1/journeys/2b5ec283-411c-442a-8954-1377ea3d5c7f/offline-snapshot HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:64145 - "GET /api/v1/journeys/2b5ec283-411c-442a-8954-1377ea3d5c7f/wallet HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:53399 - "GET /api/v1/journeys/2b5ec283-411c-442a-8954-1377ea3d5c7f/experience HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:64144 - "GET /api/v1/travelers/7a36ab90-3eb8-4542-a51b-9c120f38ad92/agent-policy HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:65053 - "GET /api/v1/journeys/2b5ec283-411c-442a-8954-1377ea3d5c7f/experience HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:64147 - "GET /api/v1/agent/runtime-status HTTP/1.1" 200 OK
+
+[qoder-real-seed] trialWizard=false live-journey-current=true
+
+[citynexus e2e] suite=current-product authoritative=true python=D:/moodle/CityNexus/.venv/Scripts/python.exe frontend=:4400 backend=:5400 db=sqlite:///D:/moodle/_qoder_cmdr_ord0338_land/review/evidence/_cmdr134402o338clr.db ai=disabled reuseExistingServer=false
+
+[2/11] [chromium] › e2e\qoder-ord0338-wizard-gap-clearance.spec.ts:260:3 › mobile 390x844 › N1 带上界：步骤条与「目的地」之间不再有一整块空白
+[WebServer] INFO:     127.0.0.1:62268 - "GET /api/v1/demo/scene HTTP/1.1" 200 OK
+
+[3/11] [chromium] › e2e\qoder-ord0338-wizard-gap-clearance.spec.ts:275:3 › mobile 390x844 › N2 不许「占高但不显示」：带内 0 枚内容节点
+[WebServer] INFO:     127.0.0.1:58591 - "GET /api/v1/demo/scene HTTP/1.1" 200 OK
+
+[4/11] [chromium] › e2e\qoder-ord0338-wizard-gap-clearance.spec.ts:288:3 › mobile 390x844 › N3 面板自己滚、条钉在面板底边（两种形状都量）
+[WebServer] INFO:     127.0.0.1:61241 - "GET /api/v1/demo/scene HTTP/1.1" 200 OK
+
+[5/11] [chromium] › e2e\qoder-ord0338-wizard-gap-clearance.spec.ts:350:3 › mobile 390x844 › N4 条在任何滚动位置都不盖内容（结构 + 逐点命中）
+[WebServer] INFO:     127.0.0.1:54680 - "GET /api/v1/demo/scene HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:61030 - "GET /api/v1/destinations/capability?query=%E7%A6%8F%E5%B7%9E HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:61031 - "GET /api/v1/destinations/capability?query=%E5%B9%BF%E5%B7%9E HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:54683 - "GET /api/v1/destinations/capability?query=%E5%8E%A6%E9%97%A8 HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:61028 - "GET /api/v1/destinations/capability?query=%E4%B8%8A%E6%B5%B7 HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:61027 - "GET /api/v1/destinations/capability?query=%E5%8C%97%E4%BA%AC HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:61029 - "GET /api/v1/destinations/capability?query=%E5%A4%A9%E6%B4%A5 HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:61477 - "GET /api/v1/destinations/capability?query=%E6%B7%B1%E5%9C%B3 HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:58014 - "GET /api/v1/destinations/capability?query=%E4%B8%9C%E4%BA%AC HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:58015 - "GET /api/v1/destinations/capability?query=%E6%96%B0%E5%8A%A0%E5%9D%A1 HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:58013 - "GET /api/v1/destinations/capability?query=%E6%9D%AD%E5%B7%9E HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:58012 - "GET /api/v1/destinations/capability?query=%E6%88%90%E9%83%BD HTTP/1.1" 200 OK
+
+[6/11] [chromium] › e2e\qoder-ord0338-wizard-gap-clearance.spec.ts:367:3 › mobile 390x844 › N5 条不撞舞台球（我删了那条 bottom，得自己站住）
+[WebServer] INFO:     127.0.0.1:59885 - "GET /api/v1/demo/scene HTTP/1.1" 200 OK
+
+[7/11] [chromium] › e2e\qoder-ord0338-wizard-gap-clearance.spec.ts:393:3 › mobile 390x844 › N6 臂甲：只把面板退回「窗口滚动 + sticky 条」（padding 一律不加回），N4 必须当场红
+[WebServer] INFO:     127.0.0.1:55289 - "GET /api/v1/demo/scene HTTP/1.1" 200 OK
+
+[8/11] [chromium] › e2e\qoder-ord0338-wizard-gap-clearance.spec.ts:441:3 › mobile 390x844 › N7 臂乙：只把那条 padding 装回来，带高必须回到一整块
+[WebServer] INFO:     127.0.0.1:62494 - "GET /api/v1/demo/scene HTTP/1.1" 200 OK
+
+[9/11] [chromium] › e2e\qoder-ord0338-wizard-gap-clearance.spec.ts:484:3 › desktop 1280x800 › D1 带上界（桌面档：那条声明的 76px 分支也归本单删）
+[WebServer] INFO:     127.0.0.1:53611 - "GET /api/v1/demo/scene HTTP/1.1" 200 OK
+
+[10/11] [chromium] › e2e\qoder-ord0338-wizard-gap-clearance.spec.ts:498:3 › desktop 1280x800 › D2 桌面：条不盖内容
+[WebServer] INFO:     127.0.0.1:63505 - "GET /api/v1/demo/scene HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:55942 - "GET /api/v1/destinations/capability?query=%E7%A6%8F%E5%B7%9E HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:63508 - "GET /api/v1/destinations/capability?query=%E5%8E%A6%E9%97%A8 HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:55939 - "GET /api/v1/destinations/capability?query=%E5%8C%97%E4%BA%AC HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:55943 - "GET /api/v1/destinations/capability?query=%E5%B9%BF%E5%B7%9E HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:55940 - "GET /api/v1/destinations/capability?query=%E4%B8%8A%E6%B5%B7 HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:64901 - "GET /api/v1/destinations/capability?query=%E6%B7%B1%E5%9C%B3 HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:55941 - "GET /api/v1/destinations/capability?query=%E5%A4%A9%E6%B4%A5 HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:63606 - "GET /api/v1/destinations/capability?query=%E6%88%90%E9%83%BD HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:58245 - "GET /api/v1/destinations/capability?query=%E4%B8%9C%E4%BA%AC HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:58244 - "GET /api/v1/destinations/capability?query=%E6%9D%AD%E5%B7%9E HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:57557 - "GET /api/v1/destinations/capability?query=%E6%96%B0%E5%8A%A0%E5%9D%A1 HTTP/1.1" 200 OK
+
+[11/11] [chromium] › e2e\qoder-ord0338-wizard-gap-clearance.spec.ts:513:3 › desktop 1280x800 › D3 桌面：条不撞舞台球
+[WebServer] INFO:     127.0.0.1:55471 - "GET /api/v1/demo/scene HTTP/1.1" 200 OK
+
+  11 passed (27.1s)
