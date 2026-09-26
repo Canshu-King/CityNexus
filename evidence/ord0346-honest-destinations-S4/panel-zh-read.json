@@ -1,0 +1,162 @@
+{
+ "generatedBy": "S4-ast-taint",
+ "order": "ORD-0346",
+ "arm": "zh real reads",
+ "panel": {
+  "summary": "看支持的目的地",
+  "groups": [
+   {
+    "key": "supported",
+    "title": "已支持：服务器认得它，而且目录里有东西",
+    "rule": "READY / 有 canonical 身份且有目录行",
+    "empty": null
+   },
+   {
+    "key": "needs_lookup",
+    "title": "需联网才能解析：服务器现在认不出这个名字",
+    "rule": "NO_CANONICAL_IDENTITY",
+    "empty": null
+   },
+   {
+    "key": "unknown",
+    "title": "未知或无数据：这一轮拿不出可规划的判定",
+    "rule": "HYDRATABLE 无目录行 / UNKNOWN_RETRYABLE / 没读到",
+    "empty": null
+   }
+  ],
+  "rows": [
+   {
+    "spelling": "北京",
+    "group": "supported",
+    "answered": "yes",
+    "capability": "HYDRATABLE",
+    "reasonCode": "COVERAGE_INCOMPLETE",
+    "action": "START_HYDRATION",
+    "identityAttr": "CN-BEIJING",
+    "identityText": "服务器给了身份",
+    "verdictText": "服务器认得它，目录里有 8 条，还缺 2 类事实",
+    "fieldsText": "HYDRATABLE · COVERAGE_INCOMPLETE · START_HYDRATION"
+   },
+   {
+    "spelling": "福州",
+    "group": "needs_lookup",
+    "answered": "yes",
+    "capability": "UNAVAILABLE",
+    "reasonCode": "NO_CANONICAL_IDENTITY",
+    "action": "CHOOSE_ANOTHER_DESTINATION",
+    "identityAttr": null,
+    "identityText": "还没有身份",
+    "verdictText": "服务器的词表和目录里都没有这个名字，要它联网解析才有答案",
+    "fieldsText": "UNAVAILABLE · NO_CANONICAL_IDENTITY · CHOOSE_ANOTHER_DESTINATION"
+   },
+   {
+    "spelling": "东京",
+    "group": "needs_lookup",
+    "answered": "yes",
+    "capability": "UNAVAILABLE",
+    "reasonCode": "NO_CANONICAL_IDENTITY",
+    "action": "CHOOSE_ANOTHER_DESTINATION",
+    "identityAttr": null,
+    "identityText": "还没有身份",
+    "verdictText": "服务器的词表和目录里都没有这个名字，要它联网解析才有答案",
+    "fieldsText": "UNAVAILABLE · NO_CANONICAL_IDENTITY · CHOOSE_ANOTHER_DESTINATION"
+   },
+   {
+    "spelling": "新加坡",
+    "group": "needs_lookup",
+    "answered": "yes",
+    "capability": "UNAVAILABLE",
+    "reasonCode": "NO_CANONICAL_IDENTITY",
+    "action": "CHOOSE_ANOTHER_DESTINATION",
+    "identityAttr": null,
+    "identityText": "还没有身份",
+    "verdictText": "服务器的词表和目录里都没有这个名字，要它联网解析才有答案",
+    "fieldsText": "UNAVAILABLE · NO_CANONICAL_IDENTITY · CHOOSE_ANOTHER_DESTINATION"
+   },
+   {
+    "spelling": "厦门",
+    "group": "unknown",
+    "answered": "yes",
+    "capability": "HYDRATABLE",
+    "reasonCode": "COVERAGE_INCOMPLETE",
+    "action": "START_HYDRATION",
+    "identityAttr": "CN-XIAMEN",
+    "identityText": "服务器给了身份",
+    "verdictText": "服务器认得它，目录里有 0 条，还缺 6 类事实",
+    "fieldsText": "HYDRATABLE · COVERAGE_INCOMPLETE · START_HYDRATION"
+   },
+   {
+    "spelling": "上海",
+    "group": "unknown",
+    "answered": "yes",
+    "capability": "HYDRATABLE",
+    "reasonCode": "COVERAGE_INCOMPLETE",
+    "action": "START_HYDRATION",
+    "identityAttr": "CN-SHANGHAI",
+    "identityText": "服务器给了身份",
+    "verdictText": "服务器认得它，目录里有 0 条，还缺 6 类事实",
+    "fieldsText": "HYDRATABLE · COVERAGE_INCOMPLETE · START_HYDRATION"
+   },
+   {
+    "spelling": "天津",
+    "group": "unknown",
+    "answered": "yes",
+    "capability": "HYDRATABLE",
+    "reasonCode": "COVERAGE_INCOMPLETE",
+    "action": "START_HYDRATION",
+    "identityAttr": "CN-TIANJIN",
+    "identityText": "服务器给了身份",
+    "verdictText": "服务器认得它，目录里有 0 条，还缺 6 类事实",
+    "fieldsText": "HYDRATABLE · COVERAGE_INCOMPLETE · START_HYDRATION"
+   },
+   {
+    "spelling": "广州",
+    "group": "unknown",
+    "answered": "yes",
+    "capability": "HYDRATABLE",
+    "reasonCode": "COVERAGE_INCOMPLETE",
+    "action": "START_HYDRATION",
+    "identityAttr": "CN-GUANGZHOU",
+    "identityText": "服务器给了身份",
+    "verdictText": "服务器认得它，目录里有 0 条，还缺 6 类事实",
+    "fieldsText": "HYDRATABLE · COVERAGE_INCOMPLETE · START_HYDRATION"
+   },
+   {
+    "spelling": "深圳",
+    "group": "unknown",
+    "answered": "yes",
+    "capability": "HYDRATABLE",
+    "reasonCode": "COVERAGE_INCOMPLETE",
+    "action": "START_HYDRATION",
+    "identityAttr": "CN-SHENZHEN",
+    "identityText": "服务器给了身份",
+    "verdictText": "服务器认得它，目录里有 0 条，还缺 6 类事实",
+    "fieldsText": "HYDRATABLE · COVERAGE_INCOMPLETE · START_HYDRATION"
+   },
+   {
+    "spelling": "成都",
+    "group": "unknown",
+    "answered": "yes",
+    "capability": "HYDRATABLE",
+    "reasonCode": "COVERAGE_INCOMPLETE",
+    "action": "START_HYDRATION",
+    "identityAttr": "CN-CHENGDU",
+    "identityText": "服务器给了身份",
+    "verdictText": "服务器认得它，目录里有 0 条，还缺 6 类事实",
+    "fieldsText": "HYDRATABLE · COVERAGE_INCOMPLETE · START_HYDRATION"
+   },
+   {
+    "spelling": "杭州",
+    "group": "unknown",
+    "answered": "yes",
+    "capability": "HYDRATABLE",
+    "reasonCode": "COVERAGE_INCOMPLETE",
+    "action": "START_HYDRATION",
+    "identityAttr": "CN-HANGZHOU",
+    "identityText": "服务器给了身份",
+    "verdictText": "服务器认得它，目录里有 0 条，还缺 6 类事实",
+    "fieldsText": "HYDRATABLE · COVERAGE_INCOMPLETE · START_HYDRATION"
+   }
+  ]
+ }
+}
