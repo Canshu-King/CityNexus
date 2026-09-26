@@ -1,0 +1,159 @@
+{
+ "selftest_checks": {
+  "exempt_HTTP_STATUS": true,
+  "fire_quantity_ms": true,
+  "fire_status_with_unit": true,
+  "exempt_YEAR": true,
+  "exempt_run_id_coordinate": true,
+  "exempt_PORT": true,
+  "exempt_LINE_REF": true,
+  "advisory_line_ref_only_vouch": true,
+  "exempt_PORT_with_filename_nearby": true,
+  "fire_run_id_without_coordinate": true,
+  "exempt_DIMENSION_with_receipt": true,
+  "fire_DIMENSION_without_receipt": true,
+  "exempt_DISCIPLINE_ZERO": true,
+  "fire_ZERO_on_a_product_noun": true,
+  "fire_NONZERO_after_a_discipline_noun": true,
+  "fire_DISCIPLINE_ZERO_without_receipt": true,
+  "r4e_erratum_citing_three_blobs_passes": true,
+  "r4e_two_blobs_is_the_boundary_and_passes": true,
+  "r4e_one_blob_still_refused": true,
+  "r4e_empty_block_still_refused": true,
+  "r4e_does_not_excuse_an_unvouched_quantity": true
+ },
+ "overall_pass": true,
+ "samples": [
+  {
+   "sample": "exempt_HTTP_STATUS",
+   "claims": 0,
+   "findings": [],
+   "exempt": {
+    "HTTP_STATUS": 1
+   }
+  },
+  {
+   "sample": "fire_quantity_ms",
+   "claims": 1,
+   "findings": [
+    "NUMBER_WITHOUT_COORDINATE"
+   ],
+   "exempt": {}
+  },
+  {
+   "sample": "fire_status_with_unit",
+   "claims": 1,
+   "findings": [
+    "NUMBER_WITHOUT_COORDINATE"
+   ],
+   "exempt": {
+    "HTTP_STATUS": 1
+   }
+  },
+  {
+   "sample": "exempt_YEAR",
+   "claims": 0,
+   "findings": [],
+   "exempt": {
+    "YEAR": 1
+   }
+  },
+  {
+   "sample": "exempt_run_id_coordinate",
+   "claims": 1,
+   "findings": [],
+   "exempt": {}
+  },
+  {
+   "sample": "exempt_PORT",
+   "claims": 0,
+   "findings": [],
+   "exempt": {
+    "PORT": 1
+   }
+  },
+  {
+   "sample": "exempt_LINE_REF",
+   "claims": 1,
+   "findings": [],
+   "exempt": {
+    "LINE_REF": 2
+   }
+  },
+  {
+   "sample": "advisory_line_ref_only_vouch",
+   "claims": 2,
+   "findings": [],
+   "exempt": {
+    "LINE_REF": 1
+   }
+  },
+  {
+   "sample": "exempt_PORT_with_filename_nearby",
+   "claims": 0,
+   "findings": [],
+   "exempt": {
+    "PORT": 1
+   }
+  },
+  {
+   "sample": "fire_run_id_without_coordinate",
+   "claims": 1,
+   "findings": [
+    "NUMBER_WITHOUT_COORDINATE"
+   ],
+   "exempt": {}
+  },
+  {
+   "sample": "exempt_DIMENSION_with_receipt",
+   "claims": 0,
+   "findings": [],
+   "exempt": {
+    "DIMENSION": 2
+   }
+  },
+  {
+   "sample": "fire_DIMENSION_without_receipt",
+   "claims": 2,
+   "findings": [
+    "NUMBER_WITHOUT_COORDINATE",
+    "NUMBER_WITHOUT_COORDINATE"
+   ],
+   "exempt": {}
+  },
+  {
+   "sample": "exempt_DISCIPLINE_ZERO",
+   "claims": 0,
+   "findings": [],
+   "exempt": {
+    "DISCIPLINE_ZERO": 2
+   }
+  },
+  {
+   "sample": "fire_ZERO_on_a_product_noun",
+   "claims": 1,
+   "findings": [
+    "NUMBER_WITHOUT_COORDINATE"
+   ],
+   "exempt": {}
+  },
+  {
+   "sample": "fire_NONZERO_after_a_discipline_noun",
+   "claims": 1,
+   "findings": [
+    "NUMBER_WITHOUT_COORDINATE"
+   ],
+   "exempt": {
+    "DISCIPLINE_ZERO": 1
+   }
+  },
+  {
+   "sample": "fire_DISCIPLINE_ZERO_without_receipt",
+   "claims": 1,
+   "findings": [
+    "NUMBER_WITHOUT_COORDINATE"
+   ],
+   "exempt": {}
+  }
+ ]
+}
