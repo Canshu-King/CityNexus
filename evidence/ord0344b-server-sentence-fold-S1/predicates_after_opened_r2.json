@@ -1,0 +1,7 @@
+{
+ "refusalSentenceOnTheLine": true,
+ "serverLineVisible": true,
+ "serverLineHoldsItsOwnWords": true,
+ "noClientWrittenHttpStatusInThatParagraph": true,
+ "outcomeText": "服务器拒绝了这一次尝试。没有产生新东西，上次的记录还在，你可以再试一次。"
+}
