@@ -1,12 +1,14 @@
 """ORD-0340 - the agent-command claim gets a lease, and a dead claim stops being permanent.
 
-Five cells, all reading durability through a second sqlite connection (process memory is not proof):
+Seven cells, all reading durability through a second sqlite connection (process memory is not proof):
 
   L1 a lapsed claim may be taken over, and the new answer lands            (acceptance 1)
   L2 an unexpired claim is refused *by name* and runs no generation        (acceptance 2)
   L3 a resurrected original cannot write over the winner's bytes           (acceptance 3)
   L4 the measured dead-end shape stops being permanent                     (acceptance 4)
   L5 the lease comes from the two budgets, and nobody deletes a receipt    (the never-do rule)
+  L6 only the lease holder may fill an open claim                          (the fence, alone)
+  L7 the named refusal carries ORD-0332's recitable receipt number         (added by the re-cut)
 
 L2 deliberately keeps the sentence three already-accepted gates pin
 (`test_qoder_ord0272_continuation.py`, `test_qoder_ord0287_k8_carrier.py`,
@@ -33,6 +35,7 @@ from app.commerce.idempotency import canonical_request_signature
 from app.core.config import settings
 from app.db.models import Journey, Place
 from app.db.session import SessionLocal, ensure_schema
+from app.error_receipt import RECEIPT_FIELD, is_receipt_shape
 from app.main import _execute_plan_generation_claimed, app
 from app.schemas import GeneratePlansRequest
 from app.services import seed_demo
@@ -200,6 +203,47 @@ def test_L2_an_unexpired_lease_refuses_by_name_and_runs_no_generation() -> None:
         f"L2: retry_after_ms must be the real remaining lease: {details}")
     assert _plan_count(jid) == plans_before, "L2: a refused attempt produced candidates anyway"
     assert _receipt(key)[0] == "unfilled", "L2: the refuser wrote into the holder's claim"
+
+
+def test_L7_the_in_flight_refusal_carries_a_number_the_traveller_can_read_back() -> None:
+    """The one cell this file could not have carried at it was written: ORD-0332 landed after it.
+
+    My first candidate reported the lease refusal with `retry_after_ms`/`attempt_id` and, for a repeatable
+    id, the honest answer was NOT-EMITTED -- the envelope had none. F's receipt is now emitted by `error()`
+    itself, so the pair has to be tested together rather than assumed compatible: the same call, refused
+    twice with the same transport key, must hand back the *same* recitable number, and that number must
+    not be `trace_id` wearing a different name (trace_id is minted per envelope and is exactly the thing a
+    traveller cannot read back).
+    """
+
+    jid = _journey()
+    transport = f"o340L7-{uuid.uuid4().hex[:10]}"
+    key, signature = _identity(jid, transport)
+    _plant_claim(key, signature, deadline=datetime.now(timezone.utc) + timedelta(seconds=60),
+                 token=f"live-worker-{uuid.uuid4().hex[:8]}")
+
+    envelopes = {}
+    for label in ("first", "second"):
+        response = _generate(jid, transport)
+        assert response.status_code == 409, (
+            f"L7: the {label} attempt is not the named refusal: {response.text[:200]}")
+        assert _name_of(response) == "PLAN_GENERATION_IN_FLIGHT", (
+            f"L7: the {label} refusal is not named: {response.text[:200]}")
+        envelopes[label] = _envelope(response)["error"]
+
+    for label, body in envelopes.items():
+        receipt = body.get(RECEIPT_FIELD)
+        assert receipt is not None, f"L7: the {label} envelope carries no receipt field at all: {sorted(body)}"
+        assert is_receipt_shape(receipt), (
+            f"L7: {receipt!r} is not the shape contracts/ERROR_RECEIPT_ID_V1.md fixes: {sorted(body)}")
+
+    first, second = envelopes["first"], envelopes["second"]
+    assert first[RECEIPT_FIELD] == second[RECEIPT_FIELD], (
+        f"L7: one call refused twice gave two numbers ({first[RECEIPT_FIELD]} vs {second[RECEIPT_FIELD]}) "
+        "-- a traveller cannot read back whichever one they happened to be told")
+    assert first["trace_id"] != second["trace_id"], (
+        "L7: both envelopes share a trace_id, so the equality above would be about the wrong field")
+    assert first[RECEIPT_FIELD] != first["trace_id"], "L7: the receipt is just trace_id renamed"
 
 
 def test_L3_a_resurrected_original_cannot_write_over_the_winners_bytes() -> None:
