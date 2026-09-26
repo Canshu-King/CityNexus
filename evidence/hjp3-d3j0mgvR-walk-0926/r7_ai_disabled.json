@@ -1,0 +1,614 @@
+{
+ "started_at": "2026-09-26T10:47:35.955Z",
+ "base": "https://jets-saints-tomatoes-eric.trycloudflare.com",
+ "journey_id": "fa5cebdc-fabc-4067-ab02-4812ddb950e5",
+ "launches": 1,
+ "contexts": 1,
+ "clicks": 1,
+ "legs": [
+  {
+   "url": "/api/v1/journeys/fa5cebdc-fabc-4067-ab02-4812ddb950e5/experience",
+   "m": "GET",
+   "status": 200,
+   "ct": "application/json",
+   "req_bytes": 0,
+   "resp_bytes": 132102,
+   "server_receipt_id": null,
+   "server_code": null
+  },
+  {
+   "url": "/api/v1/journeys/fa5cebdc-fabc-4067-ab02-4812ddb950e5/replans",
+   "m": "GET",
+   "status": 200,
+   "ct": "application/json",
+   "req_bytes": 0,
+   "resp_bytes": 2,
+   "server_receipt_id": null,
+   "server_code": null
+  },
+  {
+   "url": "/api/v1/journeys/fa5cebdc-fabc-4067-ab02-4812ddb950e5/plans",
+   "m": "GET",
+   "status": 200,
+   "ct": "application/json",
+   "req_bytes": 0,
+   "resp_bytes": 2,
+   "server_receipt_id": null,
+   "server_code": null
+  },
+  {
+   "url": "/api/v1/journeys/fa5cebdc-fabc-4067-ab02-4812ddb950e5/twin",
+   "m": "GET",
+   "status": 200,
+   "ct": "application/json",
+   "req_bytes": 0,
+   "resp_bytes": 896,
+   "server_receipt_id": null,
+   "server_code": null
+  },
+  {
+   "url": "/api/v1/agent/runtime-status",
+   "m": "GET",
+   "status": 200,
+   "ct": "application/json",
+   "req_bytes": 0,
+   "resp_bytes": 408,
+   "server_receipt_id": null,
+   "server_code": null
+  },
+  {
+   "url": "/api/v1/journeys/fa5cebdc-fabc-4067-ab02-4812ddb950e5/wallet",
+   "m": "GET",
+   "status": 200,
+   "ct": "application/json",
+   "req_bytes": 0,
+   "resp_bytes": 109,
+   "server_receipt_id": null,
+   "server_code": null
+  },
+  {
+   "url": "/api/v1/journeys/fa5cebdc-fabc-4067-ab02-4812ddb950e5/offline-snapshot",
+   "m": "GET",
+   "status": 200,
+   "ct": "application/json",
+   "req_bytes": 0,
+   "resp_bytes": 797,
+   "server_receipt_id": null,
+   "server_code": null
+  },
+  {
+   "url": "/api/v1/travelers/244b231a-43fb-4521-bd8b-09df06924cac/agent-policy",
+   "m": "GET",
+   "status": 200,
+   "ct": "application/json",
+   "req_bytes": 0,
+   "resp_bytes": 527,
+   "server_receipt_id": null,
+   "server_code": null
+  },
+  {
+   "url": "/api/v1/agent/runtime-status",
+   "m": "GET",
+   "status": 200,
+   "ct": "application/json",
+   "req_bytes": 0,
+   "resp_bytes": 408,
+   "server_receipt_id": null,
+   "server_code": null
+  },
+  {
+   "url": "/api/v1/places?city_code=CN-TIANJIN",
+   "m": "GET",
+   "status": 200,
+   "ct": "application/json",
+   "req_bytes": 0,
+   "resp_bytes": 2,
+   "server_receipt_id": null,
+   "server_code": null
+  },
+  {
+   "url": "/api/v1/journeys/fa5cebdc-fabc-4067-ab02-4812ddb950e5/twin",
+   "m": "GET",
+   "status": 200,
+   "ct": "application/json",
+   "req_bytes": 0,
+   "resp_bytes": 896,
+   "server_receipt_id": null,
+   "server_code": null
+  }
+ ],
+ "chromium_version": "153.0.8010.12",
+ "before": {
+  "url": "https://jets-saints-tomatoes-eric.trycloudflare.com/v8/trips",
+  "text_len": 134,
+  "text": "菜单\n/\n行程\n跟随系统\nEN\nTI\n行程\n住宿\n预订\n花费\n\n行程\n\n还没有可看的行程\n\n这个行程还没有选定的方案。先让 AI 帮你规划，选定方案后这里会显示逐日安排。\n\nAI 帮我规划\n✦\nCityNexus Copilot\n今天\n行程\n地图\nCopilot\n我的",
+  "buttons": [
+   {
+    "text": "今天",
+    "disabled": false,
+    "aria": null,
+    "testid": null
+   },
+   {
+    "text": "实时行程",
+    "disabled": false,
+    "aria": null,
+    "testid": null
+   },
+   {
+    "text": "地图",
+    "disabled": false,
+    "aria": null,
+    "testid": null
+   },
+   {
+    "text": "行程工作台",
+    "disabled": false,
+    "aria": null,
+    "testid": null
+   },
+   {
+    "text": "住宿选择",
+    "disabled": false,
+    "aria": null,
+    "testid": null
+   },
+   {
+    "text": "城市探索",
+    "disabled": false,
+    "aria": null,
+    "testid": null
+   },
+   {
+    "text": "旅行票夹",
+    "disabled": false,
+    "aria": null,
+    "testid": null
+   },
+   {
+    "text": "Copilot",
+    "disabled": false,
+    "aria": null,
+    "testid": null
+   },
+   {
+    "text": "恢复与执行",
+    "disabled": false,
+    "aria": null,
+    "testid": null
+   },
+   {
+    "text": "智能守护",
+    "disabled": false,
+    "aria": null,
+    "testid": null
+   },
+   {
+    "text": "旅行者画像",
+    "disabled": false,
+    "aria": null,
+    "testid": null
+   },
+   {
+    "text": "TITianjin2 位旅行者•••",
+    "disabled": false,
+    "aria": null,
+    "testid": null
+   },
+   {
+    "text": "菜单",
+    "disabled": false,
+    "aria": "打开导航",
+    "testid": null
+   },
+   {
+    "text": "跟随系统",
+    "disabled": false,
+    "aria": "Theme: following the system. Choose light, dark, or back to system.",
+    "testid": "topbar-theme"
+   },
+   {
+    "text": "EN",
+    "disabled": false,
+    "aria": "Switch language",
+    "testid": "topbar-language"
+   },
+   {
+    "text": "◌",
+    "disabled": false,
+    "aria": "通知 · 无活跃",
+    "testid": null
+   },
+   {
+    "text": "TI",
+    "disabled": false,
+    "aria": null,
+    "testid": null
+   },
+   {
+    "text": "行程",
+    "disabled": false,
+    "aria": null,
+    "testid": "trips-tab-itinerary"
+   },
+   {
+    "text": "住宿",
+    "disabled": false,
+    "aria": null,
+    "testid": "trips-tab-stay"
+   },
+   {
+    "text": "预订",
+    "disabled": false,
+    "aria": null,
+    "testid": "trips-tab-bookings"
+   },
+   {
+    "text": "花费",
+    "disabled": false,
+    "aria": null,
+    "testid": "trips-tab-spend"
+   },
+   {
+    "text": "AI 帮我规划",
+    "disabled": false,
+    "aria": null,
+    "testid": null
+   },
+   {
+    "text": "✦\nCityNexus Copilot",
+    "disabled": false,
+    "aria": "CityNexus Copilot",
+    "testid": null
+   },
+   {
+    "text": "今天",
+    "disabled": false,
+    "aria": null,
+    "testid": "nav-hub"
+   },
+   {
+    "text": "行程",
+    "disabled": false,
+    "aria": null,
+    "testid": "nav-trips"
+   },
+   {
+    "text": "地图",
+    "disabled": false,
+    "aria": null,
+    "testid": "nav-map"
+   },
+   {
+    "text": "Copilot",
+    "disabled": false,
+    "aria": null,
+    "testid": "nav-agent"
+   },
+   {
+    "text": "我的",
+    "disabled": false,
+    "aria": null,
+    "testid": "nav-me"
+   }
+  ],
+  "testids": [
+   "topbar-theme",
+   "topbar-language",
+   "trips-tabs",
+   "trips-tab-itinerary",
+   "trips-tab-stay",
+   "trips-tab-bookings",
+   "trips-tab-spend",
+   "trip-itinerary-empty",
+   "v18-copilot-dock",
+   "nav-hub",
+   "nav-trips",
+   "nav-map",
+   "nav-agent",
+   "nav-me"
+  ],
+  "dialogs": [],
+  "aria_live": [],
+  "receipts": [],
+  "pending": false,
+  "scroll_overflow_px": 80
+ },
+ "shots": {
+  "before": {
+   "file": "J1_trips_before.png",
+   "abs": "D:\\moodle\\_hjp3_d3j0_0926\\J1_trips_before.png",
+   "exists": true,
+   "bytes": 125879,
+   "sha256": "5a54993498493f9fb727a1204466bccbf47105613aa89f230bd602b8670d693c"
+  },
+  "after": {
+   "file": "J2_after_press.png",
+   "abs": "D:\\moodle\\_hjp3_d3j0_0926\\J2_after_press.png",
+   "exists": true,
+   "bytes": 173521,
+   "sha256": "70b44f059ea7d29c6ce3ab9191b677c550e91ecc12c89c6a9f83d83b91ce91d5"
+  }
+ },
+ "button_found": 1,
+ "button_state": {
+  "disabled": false,
+  "text": "AI 帮我规划",
+  "top": 314
+ },
+ "press": "clicked",
+ "after": {
+  "url": "https://jets-saints-tomatoes-eric.trycloudflare.com/v8/trips",
+  "text_len": 194,
+  "text": "菜单\n/\n行程\n跟随系统\nEN\nTI\n行程\n住宿\n预订\n花费\n\n行程\n\n还没有可看的行程\n\n这个行程还没有选定的方案。先让 AI 帮你规划，选定方案后这里会显示逐日安排。\n\nAI 帮我规划\n✦\nCityNexus Copilot\nAI 帮我规划\n用你自己的话描述这趟旅行，越具体越好。\n×\n旅行需求\n\n这台服务已接入 AI 模型。\n\n稍后\n开始规划\n今天\n行程\n地图\nCopilot\n我的",
+  "buttons": [
+   {
+    "text": "今天",
+    "disabled": false,
+    "aria": null,
+    "testid": null
+   },
+   {
+    "text": "实时行程",
+    "disabled": false,
+    "aria": null,
+    "testid": null
+   },
+   {
+    "text": "地图",
+    "disabled": false,
+    "aria": null,
+    "testid": null
+   },
+   {
+    "text": "行程工作台",
+    "disabled": false,
+    "aria": null,
+    "testid": null
+   },
+   {
+    "text": "住宿选择",
+    "disabled": false,
+    "aria": null,
+    "testid": null
+   },
+   {
+    "text": "城市探索",
+    "disabled": false,
+    "aria": null,
+    "testid": null
+   },
+   {
+    "text": "旅行票夹",
+    "disabled": false,
+    "aria": null,
+    "testid": null
+   },
+   {
+    "text": "Copilot",
+    "disabled": false,
+    "aria": null,
+    "testid": null
+   },
+   {
+    "text": "恢复与执行",
+    "disabled": false,
+    "aria": null,
+    "testid": null
+   },
+   {
+    "text": "智能守护",
+    "disabled": false,
+    "aria": null,
+    "testid": null
+   },
+   {
+    "text": "旅行者画像",
+    "disabled": false,
+    "aria": null,
+    "testid": null
+   },
+   {
+    "text": "TITianjin2 位旅行者•••",
+    "disabled": false,
+    "aria": null,
+    "testid": null
+   },
+   {
+    "text": "菜单",
+    "disabled": false,
+    "aria": "打开导航",
+    "testid": null
+   },
+   {
+    "text": "跟随系统",
+    "disabled": false,
+    "aria": "Theme: following the system. Choose light, dark, or back to system.",
+    "testid": "topbar-theme"
+   },
+   {
+    "text": "EN",
+    "disabled": false,
+    "aria": "Switch language",
+    "testid": "topbar-language"
+   },
+   {
+    "text": "◌",
+    "disabled": false,
+    "aria": "通知 · 无活跃",
+    "testid": null
+   },
+   {
+    "text": "TI",
+    "disabled": false,
+    "aria": null,
+    "testid": null
+   },
+   {
+    "text": "行程",
+    "disabled": false,
+    "aria": null,
+    "testid": "trips-tab-itinerary"
+   },
+   {
+    "text": "住宿",
+    "disabled": false,
+    "aria": null,
+    "testid": "trips-tab-stay"
+   },
+   {
+    "text": "预订",
+    "disabled": false,
+    "aria": null,
+    "testid": "trips-tab-bookings"
+   },
+   {
+    "text": "花费",
+    "disabled": false,
+    "aria": null,
+    "testid": "trips-tab-spend"
+   },
+   {
+    "text": "AI 帮我规划",
+    "disabled": false,
+    "aria": null,
+    "testid": null
+   },
+   {
+    "text": "✦\nCityNexus Copilot",
+    "disabled": false,
+    "aria": "CityNexus Copilot",
+    "testid": null
+   },
+   {
+    "text": "×",
+    "disabled": false,
+    "aria": "关闭",
+    "testid": null
+   },
+   {
+    "text": "稍后",
+    "disabled": false,
+    "aria": null,
+    "testid": "plan-ai-dismiss"
+   },
+   {
+    "text": "开始规划",
+    "disabled": false,
+    "aria": null,
+    "testid": "plan-ai-submit"
+   },
+   {
+    "text": "今天",
+    "disabled": false,
+    "aria": null,
+    "testid": "nav-hub"
+   },
+   {
+    "text": "行程",
+    "disabled": false,
+    "aria": null,
+    "testid": "nav-trips"
+   },
+   {
+    "text": "地图",
+    "disabled": false,
+    "aria": null,
+    "testid": "nav-map"
+   },
+   {
+    "text": "Copilot",
+    "disabled": false,
+    "aria": null,
+    "testid": "nav-agent"
+   },
+   {
+    "text": "我的",
+    "disabled": false,
+    "aria": null,
+    "testid": "nav-me"
+   }
+  ],
+  "testids": [
+   "topbar-theme",
+   "topbar-language",
+   "trips-tabs",
+   "trips-tab-itinerary",
+   "trips-tab-stay",
+   "trips-tab-bookings",
+   "trips-tab-spend",
+   "trip-itinerary-empty",
+   "v18-copilot-dock",
+   "plan-ai-sheet",
+   "plan-ai-scroll",
+   "plan-ai-input",
+   "plan-ai-examples",
+   "plan-ai-preflight",
+   "plan-ai-dismiss",
+   "plan-ai-submit",
+   "nav-hub",
+   "nav-trips",
+   "nav-map",
+   "nav-agent",
+   "nav-me"
+  ],
+  "dialogs": [
+   {
+    "cls": "v8-sheet-backdrop",
+    "text_len": 59,
+    "text_head": "AI 帮我规划\n用你自己的话描述这趟旅行，越具体越好。\n×\n旅行需求\n\n这台服务已接入 AI 模型。\n\n稍后\n开始规划"
+   },
+   {
+    "cls": "plan-ai-sheet",
+    "text_len": 59,
+    "text_head": "AI 帮我规划\n用你自己的话描述这趟旅行，越具体越好。\n×\n旅行需求\n\n这台服务已接入 AI 模型。\n\n稍后\n开始规划"
+   }
+  ],
+  "aria_live": [],
+  "receipts": [],
+  "pending": true,
+  "scroll_overflow_px": 80
+ },
+ "legs_for_the_press": [
+  {
+   "url": "/api/v1/agent/runtime-status",
+   "m": "GET",
+   "status": 200,
+   "ct": "application/json",
+   "req_bytes": 0,
+   "resp_bytes": 408,
+   "server_receipt_id": null,
+   "server_code": null
+  },
+  {
+   "url": "/api/v1/places?city_code=CN-TIANJIN",
+   "m": "GET",
+   "status": 200,
+   "ct": "application/json",
+   "req_bytes": 0,
+   "resp_bytes": 2,
+   "server_receipt_id": null,
+   "server_code": null
+  },
+  {
+   "url": "/api/v1/journeys/fa5cebdc-fabc-4067-ab02-4812ddb950e5/twin",
+   "m": "GET",
+   "status": 200,
+   "ct": "application/json",
+   "req_bytes": 0,
+   "resp_bytes": 896,
+   "server_receipt_id": null,
+   "server_code": null
+  }
+ ],
+ "after_offer": [
+  "这个行程还没有选定的方案。先让 AI 帮你规划，选定方案后这里会显示逐日安排。",
+  "AI 帮我规划",
+  "AI 帮我规划",
+  "这台服务已接入 AI 模型。",
+  "稍后",
+  "开始规划"
+ ],
+ "health": null,
+ "finished_at": "2026-09-26T10:47:58.720Z"
+}
