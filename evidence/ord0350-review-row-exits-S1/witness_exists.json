@@ -1,0 +1,50 @@
+{
+ "rowCount": 9,
+ "rows": [
+  {
+   "name": "city",
+   "accessible": "改这一项：目的地",
+   "target": "trial-city"
+  },
+  {
+   "name": "arrival",
+   "accessible": "改这一项：抵达",
+   "target": "trial-arrival"
+  },
+  {
+   "name": "departure",
+   "accessible": "改这一项：离开",
+   "target": "trial-departure"
+  },
+  {
+   "name": "party",
+   "accessible": "改这一项：人数 / 房间",
+   "target": "trial-party"
+  },
+  {
+   "name": "budget",
+   "accessible": "改这一项：总预算 / 住宿",
+   "target": "trial-budget"
+  },
+  {
+   "name": "pace",
+   "accessible": "改这一项：节奏",
+   "target": "trial-pace-fieldset"
+  },
+  {
+   "name": "interests",
+   "accessible": "改这一项：兴趣",
+   "target": "trial-interests-fieldset"
+  },
+  {
+   "name": "special",
+   "accessible": "改这一项：特殊要求",
+   "target": "trial-special"
+  },
+  {
+   "name": "auto-set",
+   "accessible": "改这一项：自动设置",
+   "target": "trial-show-advanced"
+  }
+ ]
+}
