@@ -889,9 +889,21 @@ export function V8Experience() {
       navigate("hub");
     } catch (error) {
       /* ORD-0273-TEXT: the user sentence comes from an i18n key -- the raw error.message (with its
-         MIME/content-type and error shapes) must not reach the main copy.  The technical facts stay
-         available to telemetry through the data-* attributes on the wizard's alert element. */
-      setSealedDemoUnavailable(t("trial.sealedUnreadable"));
+         MIME/content-type and error shapes) must not reach the main copy.
+         ORD-0349 (HJ-P3): one sentence was covering two different legs.  A leg that never connected
+         was told with "the server answered just now", which asserts something that did not happen,
+         and the two fates came out as pixel-identical screenshots.  The legs are separated by the
+         evidence this device already records -- `evidence_kind`, TRANSPORT versus HTTP_RESPONSE --
+         not by a guess at the cause. */
+      const attribution = classifyReadFailure(error);
+      setSealedDemoUnavailable(
+        attribution.evidence_kind === "HTTP_RESPONSE"
+          ? t("trial.sealedUnreadable")
+          : t("trial.sealedNoAnswer"),
+      );
+      /* The diagnosis does not live in the DOM any more (Q71 / ORD-0339), so it goes to the
+         telemetry sink the same module owns -- which is also where ORD-0341 can look. */
+      recordAttribution(attribution, "shell.sealedDemo.entryRead");
       setSealedDemoDetail(
         error instanceof Error
           ? { message: error.message, name: error.name }
