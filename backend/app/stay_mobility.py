@@ -168,12 +168,37 @@ def _context(session: Session, journey: Journey) -> JourneyTripContext:
             occupancy_json=_json({"adults": 1}),
             stay_budget_amount_minor=0,
             stay_budget_currency=journey.budget_currency,
+            # This row was not created by a traveller answering a question, so it declares
+            # nothing either way: NULL is "never asked", which is what actually happened here.
+            stay_budget_declared=None,
             created_at=now,
             updated_at=now,
         )
         session.add(row)
         session.flush()
     return row
+
+
+def stay_budget_body(context: JourneyTripContext) -> dict[str, Any]:
+    """The trip's lodging budget in the exact shape that leaves this process.
+
+    ORD-0355: a traveller who never typed a lodging budget used to have `amount_minor: 0`
+    carried outward anyway, and a supplier that filters on that number answers "no
+    availability" - which then reads back as if the traveller's own money was the reason.
+    Absence now travels as null with `declared: false` beside it, because null is the
+    traveller's silence and 0 is a price.  A row whose state is NULL is *unknown*, not
+    undeclared, and keeps sending its stored amount: that amount may be one a traveller
+    genuinely typed before this column existed.
+    """
+
+    declared = context.stay_budget_declared
+    return {
+        "declared": declared,
+        "amount_minor": (
+            None if declared is False else context.stay_budget_amount_minor
+        ),
+        "currency": context.stay_budget_currency,
+    }
 
 
 def _operations_context(session: Session, journey: Journey) -> JourneyOperationsContext:
@@ -1575,12 +1600,23 @@ def generate_stay_options(
         # mapped hotels, a provider that answered nothing, a one-day trip that needs no
         # stay, or hotels that all conflicted with the itinerary.
         reasons = [str(reason) for _offer, reason in rejected]
+        trip_row = session.get(JourneyTripContext, journey.id)
+        stay_declared = None if trip_row is None else trip_row.stay_budget_declared
         if ranked:
             outcome = "OPTIONS_FOUND"
         elif any(item.get("outcome") == "zero_nights" for item in provider_attempts):
             outcome = "NOT_APPLICABLE_ZERO_NIGHTS"
         elif not offers:
             outcome = "NO_OFFERS_FROM_PROVIDER"
+        elif stay_declared is False:
+            # ORD-0355: `ALL_CANDIDATES_REJECTED` is the one answer in this vocabulary whose
+            # sentence on the traveller's screen names 预算 as a constraint the trip failed.
+            # A traveller who never typed a lodging budget must not be read past that
+            # sentence, so this says the one thing genuinely known here: the budget was not
+            # declared.  It is a disclosure, not a claimed cause - no planner leg prices a
+            # stay against `stay_budget_amount_minor`, which is why the reasons the solver
+            # actually gave stay in `rejections_by_reason` beside this code.
+            outcome = "STAY_BUDGET_NOT_DECLARED"
         else:
             outcome = "ALL_CANDIDATES_REJECTED"
         generation_out.update(
@@ -1774,10 +1810,7 @@ def experience_payload(session: Session, journey: Journey) -> dict[str, Any]:
             "party_size": context.party_size,
             "occupancy": _load(context.occupancy_json, {}),
             "budget_reference": budget_reference.as_payload(),
-            "stay_budget": {
-                "amount_minor": context.stay_budget_amount_minor,
-                "currency": context.stay_budget_currency,
-            },
+            "stay_budget": stay_budget_body(context),
             "baggage": {
                 "present": bool(operations.baggage_present),
                 "size_class": operations.baggage_size_class,

@@ -107,7 +107,9 @@ def _use_http(monkeypatch, http: _FakeHttp) -> None:
     )
 
 
-def _cold_journey(city_code: str = "CN-XIAMEN", days: int = 3) -> str:
+def _cold_journey(
+    city_code: str = "CN-XIAMEN", days: int = 3, stay_budget: dict | None = None
+) -> str:
     traveler = client.post("/api/v1/demo/reset").json()["traveler_id"]
     start = datetime(2026, 11, 3, 9, 0, tzinfo=TZ)
     created = client.post(
@@ -121,6 +123,7 @@ def _cold_journey(city_code: str = "CN-XIAMEN", days: int = 3) -> str:
             "end_at": (start + timedelta(days=days - 1, hours=8)).isoformat(),
             "budget": {"amount_minor": 90000, "currency": "CNY"},
             "planning_mode": "balanced",
+            **({"stay_budget": stay_budget} if stay_budget else {}),
         },
     )
     assert created.status_code == 201, created.text
@@ -223,7 +226,9 @@ def test_a_real_provider_answer_on_a_fixture_city_still_reports_what_it_used(mon
 def test_every_hotel_conflicting_with_the_itinerary_is_named_as_rejected(monkeypatch) -> None:
     monkeypatch.delenv("CITYNEXUS_PROVIDER_TIMING", raising=False)
     _use_http(monkeypatch, _FakeHttp(fail_overpass=False))
-    journey_id = _cold_journey()
+    # ORD-0355: naming a money constraint needs a budget the traveller declared; an
+    # undeclared one now reports STAY_BUDGET_NOT_DECLARED instead of this.
+    journey_id = _cold_journey(stay_budget={"amount_minor": 30000, "currency": "CNY"})
 
     def _conflict(*_args, **_kwargs):
         raise stay_mobility.StayItineraryConflict("pinned window")
