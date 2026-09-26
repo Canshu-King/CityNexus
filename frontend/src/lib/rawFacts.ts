@@ -8,10 +8,18 @@
  * of that one sheet so the three ORD-0325 fixes do not each re-implement it.
  */
 
+import { readErrorReceipt, type ReceiptView } from "./errorReceipt";
+
 export type RawFacts = {
   http_status: number | null;
   content_type: string | null;
   bytes: number | null;
+  /**
+   * ORD-0353: the recitable number, read out of the same text the byte count measured.  Carried
+   * here rather than at each mount so a screen cannot print a 编号 the server did not send --
+   * `readErrorReceipt` returns the named missing token when the key is absent, empty or malformed.
+   */
+  receipt: ReceiptView;
 };
 
 export function measureRawFacts(
@@ -22,6 +30,7 @@ export function measureRawFacts(
     http_status: response.status,
     content_type: response.headers.get("content-type"),
     bytes: new TextEncoder().encode(rawText).length,
+    receipt: readErrorReceipt(parseJsonOrNull(rawText)),
   };
 }
 
@@ -53,13 +62,26 @@ export function parseJsonOrNull(text: string): unknown {
   }
 }
 
-/** The three whitelisted lines, in the order the screen prints them. */
-export function rawFactLines(facts: RawFacts): string[] {
-  return [
-    `http_status=${facts.http_status ?? ""}`,
-    `content-type=${facts.content_type ?? ""}`,
-    `bytes=${facts.bytes ?? ""}`,
+/**
+ * The three whitelisted readings, each carrying the Q64 contract name it stands for.
+ *
+ * ORD-0353 ③ / Q70: the words printed beside a number belong to this screen, so the machine-readable
+ * name has to travel on the element holding the value.  `field` is that name in the contract's own
+ * spelling (`body_bytes`), and `line` is what the mount prints -- the two are deliberately not the
+ * same string, which is the whole point of the anchor.
+ */
+export function rawFactEntries(
+  facts: RawFacts,
+): Array<{ field: string; value: string; line: string }> {
+  const readings: Array<{ field: string; label: string; value: number | string | null }> = [
+    { field: "http_status", label: "http_status", value: facts.http_status },
+    { field: "content_type", label: "content-type", value: facts.content_type },
+    { field: "body_bytes", label: "bytes", value: facts.bytes },
   ];
+  return readings.map((reading) => {
+    const value = reading.value == null ? "" : String(reading.value);
+    return { field: reading.field, value, line: `${reading.label}=${value}` };
+  });
 }
 
 /**

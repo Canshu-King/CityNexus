@@ -2,6 +2,8 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useLocale, useT } from "../../i18n/LocaleContext";
 import { cityNexusApi, type DestinationCapability } from "../../api/citynexus";
 import { classifyReadFailure } from "../../lib/failureAttribution";
+import { RawFactsPanel } from "../../components/RawFactsPanel";
+import type { RawFacts } from "../../lib/rawFacts";
 import { useElapsedSeconds } from "../../lib/waitClock";
 
 /**
@@ -513,6 +515,7 @@ export function JourneyTrialSetup({
   onCancel,
   busy,
   message,
+  createFacts = null,
   phase = null,
   startedAt = null,
   journeyCreated = false,
@@ -535,6 +538,10 @@ export function JourneyTrialSetup({
      Optional on purpose: the wizard's own "this step did not complete" visibility must not
      depend on the reason being available. */
   message?: string | null;
+  /** ORD-0353: this device's readings on the answer that refused the create, so the fold under the
+   *  failure can show a measurement instead of a claim about one.  Null means nothing was answered
+   *  or measured, and the fold says that by name rather than printing an empty block. */
+  createFacts?: RawFacts | null;
   /** Which request the shell is awaiting right now, or null when it is not waiting. */
   phase?: TrialPhase | null;
   /** Epoch millis of the first request in this attempt; the clock must read the wall. */
@@ -1357,6 +1364,27 @@ export function JourneyTrialSetup({
                 : "This step did not complete — no journey was created."}
           </strong>
           {message ? <span>{message}</span> : null}
+          {/* ORD-0353: the phone gate counted zero <details> blocks on this failure, which left the
+              recitable number the server sends with nowhere to be read aloud.  The fold stays closed
+              -- the traveller gets this screen's sentence first -- and inside it there is only what
+              this device measured plus the server's own number. */}
+          <details className="trial-technical" data-testid="create-technical-details">
+            <summary data-testid="create-technical-toggle">
+              {zh ? "技术详情" : "Technical detail"}
+            </summary>
+            {createFacts ? (
+              <RawFactsPanel facts={createFacts} zh={zh} testId="create-raw-facts" />
+            ) : (
+              /* No `data-cnx-field` here on purpose: "this device has nothing measured" is not the
+                 same reading as "no answer arrived", and naming a contract field with a value this
+                 screen did not measure is the invention Q68 forbids. */
+              <span className="trial-technical-none" data-testid="create-technical-none">
+                {zh
+                  ? "这一屏没有量到可陈列的回读字段，因此也没有可复述的编号。"
+                  : "This screen measured no displayable answer fields, so there is no number to recite either."}
+              </span>
+            )}
+          </details>
         </div>
       )}
       {stoppedWaiting && !busy && message && (

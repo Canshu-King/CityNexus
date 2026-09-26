@@ -1104,7 +1104,19 @@ body {
   line-height: 1.45;
 }
 .trial-create-error strong { font-weight: 750; }
-/* The named reason is the whole point of this panel, and it inherited --v8-muted, which
+/* ORD-0353: the measured fields fold.  Wrapped rather than scrolled so a long content-type cannot
+   push the confirm button out of reach on a 390px screen, and no colour is set here -- the block
+   inherits the alert's own ink, so the dark gate's contrast ruling is not re-opened by a new pair. */
+.trial-technical { font-size: var(--cn-fs-body); }
+.trial-technical summary { cursor: pointer; }
+.trial-technical .cnx-raw-facts { display: grid; gap: var(--cn-s-8); }
+.trial-technical .cnx-raw-facts-reading {
+  margin: 0;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+.trial-technical-none,
+.trial-technical .cnx-raw-facts-receipt { overflow-wrap: anywhere; }/* The named reason is the whole point of this panel, and it inherited --v8-muted, which
    styles.css overrides theme-blind -- the same hole ORD-0035 recorded. Full ink; size and
    the leading rule carry the hierarchy instead of a grey that may not be readable. */
 .trial-create-error span { color: var(--v8-ink); overflow-wrap: anywhere; }

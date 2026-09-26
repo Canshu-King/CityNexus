@@ -1425,6 +1425,10 @@ export function V8Experience() {
            button is gated on the wizard's own createAttemptFailed - without this prop the
            reason never arrives, and a stale message from an earlier step still cannot. */
           message={message}
+          /* ORD-0353: the same banner already carries this device's readings for the shell's own
+             message; the wizard's create failure is that same read, so the fold under it shows the
+             measurement rather than a sentence about one. */
+          createFacts={banner.facts}
           phase={createPhase}
           startedAt={createStartedAt}
           journeyCreated={journeyCreated}
