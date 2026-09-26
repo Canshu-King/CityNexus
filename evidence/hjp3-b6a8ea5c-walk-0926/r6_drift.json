@@ -1,0 +1,56 @@
+{
+ "ran_at_local": "2026-09-26T17:51:23+0800",
+ "ref": "refs/heads/mirror/integration-frontend-apple-pass1",
+ "named_by_the_commander": "b6a8ea5c625d7e3e82f7348fad57d595a8a403c0",
+ "tip_read_now": "27f963a77edc4d508a39b0a07c76927d0512c724",
+ "method": "git ls-remote plus GET /compare/<named>...<now>; 0 builds, 0 requests to the phone chain, 0 refs written",
+ "commits_ahead": 4,
+ "subjects": [
+  [
+   "3e79798160",
+   "ORD-0350: every confirmation row gets its own way back to the field it names"
+  ],
+  [
+   "20ab10f444",
+   "ORD-0353: give the create-failure screen a fold that holds measurements, not sentences"
+  ],
+  [
+   "be00873ce4",
+   "ORD-0353 witness: judge the fold's carriers by name, and keep the canary short enough to survive a slice"
+  ],
+  [
+   "27f963a77e",
+   "ORD-0353: naming the missing receipt is opt-in per mount, so the banner three landed gates read keeps its own text"
+  ]
+ ],
+ "files_changed": [
+  "frontend/e2e/qoder-ord0350-every-review-row-has-a-way-back.spec.ts",
+  "frontend/e2e/qoder-ord0353-create-failure-technical-fold.spec.ts",
+  "frontend/playwright.ord0350-S1.config.ts",
+  "frontend/playwright.ord0353-S1.config.ts",
+  "frontend/src/app/V8Experience.tsx",
+  "frontend/src/components/RawFactsPanel.tsx",
+  "frontend/src/design-tokens.css",
+  "frontend/src/features/setup/JourneyTrialSetup.tsx",
+  "frontend/src/lib/rawFacts.ts",
+  "frontend/src/styles.css"
+ ],
+ "frontend_files_changed": [
+  "frontend/e2e/qoder-ord0350-every-review-row-has-a-way-back.spec.ts",
+  "frontend/e2e/qoder-ord0353-create-failure-technical-fold.spec.ts",
+  "frontend/playwright.ord0350-S1.config.ts",
+  "frontend/playwright.ord0353-S1.config.ts",
+  "frontend/src/app/V8Experience.tsx",
+  "frontend/src/components/RawFactsPanel.tsx",
+  "frontend/src/design-tokens.css",
+  "frontend/src/features/setup/JourneyTrialSetup.tsx",
+  "frontend/src/lib/rawFacts.ts",
+  "frontend/src/styles.css"
+ ],
+ "touches_the_wizard_source": true,
+ "asset_the_chain_served_during_my_walk": {
+  "http://127.0.0.1:4781": "/assets/index-BOIAHTWw.js",
+  "https://administrator-personality-supervisor-peers.trycloudflare.com": "/assets/index-BOIAHTWw.js"
+ },
+ "what_i_did_not_do": "no rebuild, no re-cut, no second walk; the readings stay bound to the bundle the chain served while I took them"
+}
