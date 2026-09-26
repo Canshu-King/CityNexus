@@ -1,0 +1,21 @@
+{
+ "launcher_process_id": 45864,
+ "backend_port": 8851,
+ "frontend_port": 4196,
+ "database_url": "sqlite:///D:/moodle/_qoder_lane_S4_0926/work/ord0346/ord0346_S4_r1.db",
+ "listener_process_id": 59916,
+ "store_identity": {
+  "marker_rows": 1,
+  "marker_id_expected": "cbfab803-f3ea-4b3d-a1fc-070aa85c0840",
+  "marker_id_returned": [
+   "cbfab803-f3ea-4b3d-a1fc-070aa85c0840"
+  ],
+  "absent_rows": 0
+ },
+ "spec_exit_code": 0,
+ "spec_output_tail": "[WebServer] \n[WebServer] > dev\n[WebServer] > vite --host 127.0.0.1 --port 4196\n[WebServer] \n[WebServer] \n[WebServer]   VITE v7.3.6  ready in 202 ms\n[WebServer] \n[WebServer]   ➜  Local:   http://127.0.0.1:4196/\n\nRunning 8 tests using 3 workers\n\n  ok 1 e2e\\qoder-wizard-advanced-is-tappable.spec.ts:110:1 › ord0261-sticky-bar-must-not-cover-the-summary-row — sticky 条不许压住 summary 行 (2.5s)\n  ok 2 e2e\\qoder-ord0346-honest-destinations.spec.ts:94:3 › ORD-0346 the supported-destinations panel speaks from the server's answer › zh-arms-supported-not-mislabelled-and-unnamed-not-claimed (3.3s)\n  ok 4 e2e\\qoder-wizard-advanced-is-tappable.spec.ts:143:1 › ord0264-opener-is-scroll-reachable-and-tappable — 高级入口要滚得到、点得动、不伤草稿 (1.6s)\n  ok 3 e2e\\qoder-wizard-city-copy.spec.ts:32:3 › ORD-0060 the wizard describes the destination it will actually plan › city-label-follows-the-recognised-city (4.1s)\n  ok 5 e2e\\qoder-ord0346-honest-destinations.spec.ts:179:3 › ORD-0346 the supported-destinations panel speaks from the server's answer › en-spellings-group-the-same-way (1.7s)\n  ok 6 e2e\\qoder-wizard-city-copy.spec.ts:77:3 › ORD-0060 the wizard describes the destination it will actually plan › unrecognised-city-assumption-is-said-out-loud (1.7s)\n  ok 7 e2e\\qoder-ord0346-honest-destinations.spec.ts:199:3 › ORD-0346 the supported-destinations panel speaks from the server's answer › a-read-that-never-lands-is-not-reported-as-a-server-verdict (1.7s)\n  ok 8 e2e\\qoder-wizard-city-copy.spec.ts:121:3 › ORD-0060 the wizard describes the destination it will actually plan › supported-destinations-are-reachable-without-an-invented-count (1.6s)\n\n  8 passed (9.3s)\n",
+ "started_at_local": "2026-09-26T08:56:37+0800",
+ "finished_at_local": "2026-09-26T08:56:47+0800",
+ "listener_after_teardown": null,
+ "specs_matched": "qoder-(ord0346-honest-destinations|wizard-city-copy|wizard-advanced-is-tappable)\\.spec\\.ts"
+}
