@@ -1,0 +1,11 @@
+{
+ "refusalSentenceOnTheLine": true,
+ "serverLineVisible": false,
+ "serverLineHoldsItsOwnWords": false,
+ "noClientWrittenHttpStatusInThatParagraph": true,
+ "outcomeText": "这一步没有完成：服务器拒绝了这次请求。",
+ "anchor": {
+  "field": "http_status",
+  "value": "409"
+ }
+}
