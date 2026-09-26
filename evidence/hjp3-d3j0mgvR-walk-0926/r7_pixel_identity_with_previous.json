@@ -1,0 +1,17 @@
+{
+ "method": "sha256 over the PNG bytes of the same cell taken on the two generations, both produced by this lane",
+ "pairs": {
+  "C1_dead_id_closed.png": {
+   "previous_generation_file": "F1_dead_closed.png",
+   "this_sha256": "506b2325532b1c703a136a04523890634d5e0ceb549400d4575bd8dfcece904d",
+   "previous_sha256": "506b2325532b1c703a136a04523890634d5e0ceb549400d4575bd8dfcece904d",
+   "identical": true
+  },
+  "C2_dead_id_open.png": {
+   "previous_generation_file": "F2_dead_opened.png",
+   "this_sha256": "718a35b0a368c7ae997e2ae2a49c20d3c6297f29b178b6dca61d2c2a70896197",
+   "previous_sha256": "718a35b0a368c7ae997e2ae2a49c20d3c6297f29b178b6dca61d2c2a70896197",
+   "identical": true
+  }
+ }
+}
