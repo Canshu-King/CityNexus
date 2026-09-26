@@ -1,0 +1,80 @@
+{
+ "sha": "7e728268a90c9d0f4accc7f117af1de73f65bc7a",
+ "tag": "7e72826",
+ "at_local": "2026-09-26T15:56:33+0800",
+ "steps": [
+  {
+   "step": "archive",
+   "rc": 0,
+   "err": ""
+  },
+  {
+   "step": "junction_node_modules",
+   "rc": 0,
+   "out": ""
+  },
+  {
+   "step": "vite_build",
+   "rc": 0,
+   "secs": 10.6,
+   "tail": [
+    "\u001b[2mdist/\u001b[22m\u001b[36massets/index-2YDNZeOr.js        \u001b[39m\u001b[1m\u001b[33m1,270.78 kB\u001b[39m\u001b[22m\u001b[2m │ gzip: 384.75 kB\u001b[22m",
+    "\u001b[32m✓ built in 6.48s\u001b[39m",
+    "",
+    "PWA v1.3.0",
+    "mode      generateSW",
+    "precache  8 entries (2462.29 KiB)",
+    "files generated",
+    "  dist/v10-sw.js",
+    "  dist/workbox-6923124b.js",
+    "\u001b[33m",
+    "(!) Some chunks are larger than 500 kB after minification. Consider:",
+    "- Using dynamic import() to code-split the application",
+    "- Use build.rollupOptions.output.manualChunks to improve chunking: https://rollupjs.org/configuration-options/#output-manualchunks",
+    "- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.\u001b[39m"
+   ]
+  }
+ ],
+ "live_tree": "189126254f62fc5fc64ba16c25bdff3c3c17e05d",
+ "export_blob_equality": {
+  "frontend/package.json": {
+   "export_blob": "3bdc4709f27ac2d2d8e806b8a937991ac96b452f",
+   "tip_blob": "3bdc4709f27ac2d2d8e806b8a937991ac96b452f",
+   "identical": true
+  },
+  "frontend/vite.config.ts": {
+   "export_blob": "f40aff0ad7ec9a840edf93f265603ad8c2503b92",
+   "tip_blob": "f40aff0ad7ec9a840edf93f265603ad8c2503b92",
+   "identical": true
+  },
+  "frontend/src/features/planning/PlanWithAiSheet.tsx": {
+   "export_blob": "a15d4950c2c255b3f62fe2ce5c9237dcb0e5764c",
+   "tip_blob": "a15d4950c2c255b3f62fe2ce5c9237dcb0e5764c",
+   "identical": true
+  },
+  "frontend/src/components/ProductErrorBoundary.tsx": {
+   "export_blob": "e8073263167f1eac165441d633e808156914ca84",
+   "tip_blob": "e8073263167f1eac165441d633e808156914ca84",
+   "identical": true
+  },
+  "frontend/src/features/inbox/JourneyInboxWorkbench.tsx": {
+   "export_blob": "0a9a6803d8f8ac9198d3a62c4139cedb989da728",
+   "tip_blob": "0a9a6803d8f8ac9198d3a62c4139cedb989da728",
+   "identical": true
+  },
+  "frontend/src/features/setup/JourneyTrialSetup.tsx": {
+   "export_blob": "94568c0bc7f963bc72de0b2abf796bc26b6b2c52",
+   "tip_blob": "94568c0bc7f963bc72de0b2abf796bc26b6b2c52",
+   "identical": true
+  }
+ },
+ "build": {
+  "dist_exists": true,
+  "index_exists": true,
+  "asset_refs": [
+   "/assets/index-2YDNZeOr.js",
+   "/assets/index-DzHXVT59.css"
+  ],
+  "index_bytes": 1200
+ }
+}
