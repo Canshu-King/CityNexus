@@ -1,0 +1,126 @@
+{
+ "schema": "CNX_ORD0352_CHAIN_SHAPE_PROBE_V1",
+ "lane": "F 8ccd71d8",
+ "at_local": "2026-09-26T16:56:10+0800",
+ "authority_tip_read_now": "b6a8ea5c625d7e3e82f7348fad57d595a8a403c0",
+ "what_i_did_to_this_chain": "只读：netstat 一次、Get-CimInstance 读两枚 pid 的命令行、对 127.0.0.1:4781/4782 发过未认证 GET（被代理记为 DENY）。0 启动、0 停止、0 改配置、0 读认证文件内容、0 读 _live.db/_preview.db",
+ "in_vivo_matrix_at_13_57_by_previous_turn": {
+  "4781 /api 三条腿": [
+   {
+    "status": 500,
+    "content_type": "text/plain",
+    "bytes": 0,
+    "body_sha1_12": "da39a3ee5e6b",
+    "server_header": null
+   },
+   {
+    "status": 500,
+    "content_type": "text/plain",
+    "bytes": 0,
+    "body_sha1_12": "da39a3ee5e6b",
+    "server_header": null
+   },
+   {
+    "status": 500,
+    "content_type": "text/plain",
+    "bytes": 0,
+    "body_sha1_12": "da39a3ee5e6b",
+    "server_header": null
+   }
+  ],
+  "4781 静态 index": {
+   "status": 200,
+   "content_type": "text/html",
+   "bytes": 1200,
+   "body_sha1_12": "a23f1acd901b",
+   "server_header": null
+  },
+  "4782 四条腿未认证": {
+   "status": 401,
+   "content_type": null,
+   "bytes": 0,
+   "body_sha1_12": "da39a3ee5e6b",
+   "server_header": "BaseHTTP/0.6 Python/3.12.14"
+  },
+  "signature_distinct_count": 3,
+  "note": "这一格是我上一轮在同一台机器上量到并存进会话的原样读数；本轮链已停，无法在同代复跑，所以它由链自己的日志（下面 `chain_logs`）佐证，不冒充是本轮量的"
+ },
+ "chain_now": {
+  "4781 静态 vite preview": {
+   "listening": false,
+   "probe_canary": {
+    "url": "http://127.0.0.1:4781/api/v1/zzz-hjp3-canary-path",
+    "connect_error": "URLError",
+    "errno": null
+   }
+  },
+  "4782 鉴权代理": {
+   "listening": false,
+   "probe_canary": {
+    "url": "http://127.0.0.1:4782/api/v1/zzz-hjp3-canary-path",
+    "connect_error": "URLError",
+    "errno": null
+   }
+  },
+  "8693 后端": {
+   "listening": false,
+   "probe_canary": {
+    "url": "http://127.0.0.1:8693/api/v1/zzz-hjp3-canary-path",
+    "connect_error": "URLError",
+    "errno": null
+   }
+  },
+  "8000 vite 的默认目标": {
+   "listening": false,
+   "probe_canary": {
+    "url": "http://127.0.0.1:8000/api/v1/zzz-hjp3-canary-path",
+    "connect_error": "URLError",
+    "errno": null
+   }
+  }
+ },
+ "signature_distinct_count_now": 1,
+ "chain_logs": {
+  "backend_bind": [
+   {
+    "line": 4,
+    "text": "INFO:     Uvicorn running on http://127.0.0.1:8693 (Press CTRL+C to quit)"
+   }
+  ],
+  "auth_proxy_denies_canary": [
+   {
+    "line": 26822,
+    "text": "DENY  GET /api/v1/zzz-hjp3-canary-path from 127.0.0.1"
+   }
+  ],
+  "vite_preview_proxy_errors_canary": [
+   {
+    "line": 119,
+    "text": "\u001b[2m08:24:52\u001b[22m \u001b[31m\u001b[1m[vite]\u001b[22m\u001b[39m \u001b[31mhttp proxy error: /api/v1/zzz-hjp3-canary-path\u001b[39m"
+   },
+   {
+    "line": 137,
+    "text": "\u001b[2m08:26:39\u001b[22m \u001b[31m\u001b[1m[vite]\u001b[22m\u001b[39m \u001b[31mhttp proxy error: /api/v1/zzz-hjp3-canary-path\u001b[39m"
+   },
+   {
+    "line": 275,
+    "text": "\u001b[2m13:57:18\u001b[22m \u001b[31m\u001b[1m[vite]\u001b[22m\u001b[39m \u001b[31mhttp proxy error: /api/v1/zzz-hjp3-canary-path\u001b[39m"
+   }
+  ]
+ },
+ "the_decisive_fact": {
+  "backend_listened_on": "127.0.0.1:8693",
+  "vite_proxy_target_source": [
+   "frontend/vite.config.ts:132 target: `http://127.0.0.1:${Number(process.env.CITYNEXUS_BACKEND_PORT ?? 8000)}`,",
+   "frontend/vite.config.ts:143 target: `http://127.0.0.1:${Number(process.env.CITYNEXUS_BACKEND_PORT ?? 8000)}`,"
+  ],
+  "consequence": "vite preview 的 /api 目标默认是 :8000（`CITYNEXUS_BACKEND_PORT ?? 8000`），而后端在 8693 ⇒ 14:34 那批 `http proxy error ... ECONNREFUSED 127.0.0.1:8000` 与 13:57 canary 那行同源：**四条腿同形不是「没有后端」，是「代理指向了一个没在监听的端口，然后代理自己答」**——这正是 ORD-0352 要件 ① 要署名的那一次自答",
+  "for_the_restart": "重启 4781 那一枚 vite preview 时必须带 CITYNEXUS_BACKEND_PORT=8693（或该代后端的实际端口），否则换代之后 /api 仍是 500/0 B，HJ 会读成「后端不在」"
+ },
+ "not_measured": [
+  "隧道域名的三面同形（隧道 URL 文件在我这边只剩 tunnel_url.txt.dead*，且我不重启别人的进程）",
+  "产品自己的 404 与代理自答 500 的签名差（需活后端；本轮 8693 不在监听 ⇒ NOT_MEASURED，不写「不等」）"
+ ],
+ "claimed_result": "本轮读数：三个端口[false, false, false, false]（含 :8000）全为 false；断链时刻由链自身日志的末次写入定位到 16:30 前后",
+ "derived_result": null
+}
