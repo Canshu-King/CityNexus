@@ -1,0 +1,79 @@
+{
+ "schema": "CNX_ORD0332_FRONTEND_RECEIPT_READINGS_V1",
+ "lane": "F 8ccd71d8",
+ "source_file": "frontend/src/lib/errorReceipt.ts",
+ "source_bytes": 3671,
+ "toolchain": {
+  "typescript": "5.9.3",
+  "tslib_path": "D:/moodle/CityNexus/frontend/node_modules/typescript",
+  "node": "v24.14.0",
+  "python": "D:/moodle/CityNexus/.venv/Scripts/python.exe"
+ },
+ "field_name": "error_receipt_id",
+ "missing_token": "NOT-EMITTED",
+ "receipt_shape_source": "/^CNX-[23456789ABCDEFGHJKMNPQRSTVWXYZ]{8}$/",
+ "contract_pattern": "^CNX-[23456789ABCDEFGHJKMNPQRSTVWXYZ]{8}$",
+ "server_side": {
+  "http_status": 422,
+  "receipt": "CNX-A4KGW4F2",
+  "trace_id": "5928292a-9f98-47fc-abb2-3aa77ac94714",
+  "no_context_key_present": false,
+  "how": "同一棵导出树里 TestClient 走真 ASGI 一发 422（不依赖 :8000）"
+ },
+ "shapes": [
+  {
+   "input": "absent-key",
+   "present": false,
+   "text": "NOT-EMITTED",
+   "observed": "absent-key"
+  },
+  {
+   "input": "empty",
+   "present": false,
+   "text": "NOT-EMITTED",
+   "observed": "empty"
+  },
+  {
+   "input": "whitespace",
+   "present": false,
+   "text": "NOT-EMITTED",
+   "observed": "empty"
+  },
+  {
+   "input": "a code",
+   "present": false,
+   "text": "NOT-EMITTED",
+   "observed": "wrong-shape"
+  },
+  {
+   "input": "a uuid (that is trace_id's job)",
+   "present": false,
+   "text": "NOT-EMITTED",
+   "observed": "wrong-shape"
+  },
+  {
+   "input": "truncated uppercase prose",
+   "present": false,
+   "text": "NOT-EMITTED",
+   "observed": "wrong-shape"
+  },
+  {
+   "input": "nested error absent",
+   "present": false,
+   "text": "NOT-EMITTED",
+   "observed": "absent-key"
+  }
+ ],
+ "counterfeit_accepted_by_strict_shape": [],
+ "counterfeit_accepted_after_relaxing": 5,
+ "q71_attribute_leaks": [],
+ "q70_anchor_present_on_every_view": true,
+ "counts": {
+  "shapes_tested": 7,
+  "rejected": 7,
+  "attrs_inspected": 24
+ },
+ "selftest": "SELFTEST_PASS",
+ "claimed_result": "服务器那枚号被收下、7 形 counterfeit 全部 NOT-EMITTED；放松正则后 5 形反而被收 ⇒ 形状检查有牙",
+ "derived_result": null
+}
