@@ -1,0 +1,50 @@
+{
+ "schema": "CNX_ORD0342_PREFLIGHT_FALSE_FREE_V1",
+ "order": "ORD-0342",
+ "lane": "B c01d72a3",
+ "instrument": "D:\\moodle\\_qoder_d_lane_20260923\\review\\lane_push_preflight_r1.py",
+ "instrument_read_only": true,
+ "what_it_claims": "verdict PUSH_PATH_OK plus whether the planned ref name is already taken",
+ "defect": "`ls_remote()` keys its map by the FULLY QUALIFIED ref name it gets back, but the free-name check looks up the string the caller typed. The documented and commanded call form is the bare name (`review/B-...`), so the lookup never hits and every ref reads as free.",
+ "code_lines": {
+  "map_built_from_full_names": [
+   33
+  ],
+  "bare_name_looked_up": [
+   49
+  ]
+ },
+ "arms": {
+  "mine_bare_name": {
+   "asked": "review/B-ord0342-anchor-two-cells-b",
+   "target_ref_free_claimed": true,
+   "target_ref_now_claimed": "",
+   "truth_on_github": "003886ca83294a9ec97a98215cb8cc2e8232189b"
+  },
+  "control_authority_bare_name": {
+   "asked": "mirror/integration-frontend-apple-pass1",
+   "target_ref_free_claimed": true,
+   "truth_on_github": "6fd43627e717a97ea779da866eb4546b8acb9deb",
+   "why_this_is_decisive": "the authority branch is by definition occupied; reading it as free cannot be an artifact of my own case"
+  },
+  "control_authority_fully_qualified": {
+   "asked": "refs/heads/mirror/integration-frontend-apple-pass1",
+   "target_ref_free_claimed": false,
+   "target_ref_now_claimed": "6fd43627e717a97ea779da866eb4546b8acb9deb",
+   "matches_github": true
+  }
+ },
+ "blast_radius_honest_limits": [
+  "it does not let a lane clobber history: a non-fast-forward push is still refused by git without --force, and my own second push (c4a1b339 -> 003886ca) was a fast-forward of my own branch",
+  "what it does break is the promise the tool's header makes -- report a taken name so the lane publishes a NEW revision instead of assuming the name is unused -- and any patrol that reads target_ref_free as evidence",
+  "I did not edit the instrument: per R14 its owner fixes it, this file only carries the readings"
+ ],
+ "suggested_fix_by_owner": "look the target up as `\"refs/heads/\" + ref` (or normalise both sides), and add an arm that asks for a ref known to be occupied -- the control above is that arm and costs one line",
+ "landing": {
+  "authority_tip_now": "6fd43627e717a97ea779da866eb4546b8acb9deb",
+  "candidate_is_ancestor_of_tip": true,
+  "spec_blob_on_tip": "0708f3a288ddd917f77d514e673596c77b6598a7",
+  "sheet_blob_on_tip": "a15d4950c2c255b3f62fe2ce5c9237dcb0e5764c",
+  "blobs_equal_to_the_candidate": true
+ }
+}
