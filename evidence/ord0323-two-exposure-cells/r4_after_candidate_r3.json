@@ -1,0 +1,202 @@
+{
+ "schema": "CNX_CMDR_UI_EVIDENCE_EXPOSURE_GATE_V1_R4",
+ "ruler": {
+  "name": "ui_exposure_taint_ast_r1.cjs",
+  "supersedes": "ui_exposure_field_check_r3.py",
+  "supersedes_blob": "44e062e6ce9c7b5d97d78e09e432072da102292c",
+  "generation": "r4 / AST taint"
+ },
+ "typescript": "5.9.3",
+ "method": "per-file AST taint through the TypeScript compiler API: poison source, spread along assignment / object-property value / destructure / template hole / call argument by position / return / useState setter, property-path sensitive, fixpoint over the call graph. No regular expression decides anything.",
+ "standing_rule": "Q64=1 (arbiter): data reaching UI / screenshot / evidence artifacts must pass source classification -> allowed fields -> render. mask is a helper, never the first gate.",
+ "allowed_fields": [
+  "http_status",
+  "content_type",
+  "body_bytes",
+  "response_received",
+  "elapsed_ms",
+  "request_id"
+ ],
+ "forbidden": [
+  "raw body",
+  "raw detail",
+  "raw exception",
+  "the answer's own words reaching the DOM by any route, including a forwarding helper"
+ ],
+ "rules_fired": [
+  "UPSTREAM_TEXT_VIA_HELPER_TO_DOM"
+ ],
+ "per_rule": {
+  "UPSTREAM_TEXT_VIA_HELPER_TO_DOM": 2
+ },
+ "files_scanned": 3,
+ "files_failed": 0,
+ "parse_diagnostics_total": 0,
+ "per_file": [
+  {
+   "file": "ProductErrorBoundary.tsx__cand.tsx",
+   "hits": 0,
+   "parse_diagnostics": 0,
+   "depth_cut_lookups": 0,
+   "graph": {
+    "bindings": 13,
+    "functions": 8,
+    "call_sites": 14,
+    "state_pairs": [],
+    "sinks": 7
+   }
+  },
+  {
+   "file": "JourneyInboxWorkbench.tsx__cand.tsx",
+   "hits": 0,
+   "parse_diagnostics": 0,
+   "depth_cut_lookups": 0,
+   "graph": {
+    "bindings": 176,
+    "functions": 75,
+    "call_sites": 327,
+    "state_pairs": [
+     "text/setText",
+     "text/setText",
+     "image/setImage",
+     "image/setImage",
+     "draft/setDraft",
+     "draft/setDraft",
+     "pending/setPending",
+     "pending/setPending",
+     "pendingError/setPendingError",
+     "pendingError/setPendingError",
+     "confirmDetail/setConfirmDetail",
+     "confirmDetail/setConfirmDetail",
+     "memory/setMemory",
+     "memory/setMemory",
+     "message/setMessage",
+     "message/setMessage",
+     "busy/setBusy",
+     "busy/setBusy",
+     "role/setRole",
+     "role/setRole",
+     "scheduledDeparture/setScheduledDeparture",
+     "scheduledDeparture/setScheduledDeparture",
+     "scheduledArrival/setScheduledArrival",
+     "scheduledArrival/setScheduledArrival",
+     "manualOpen/setManualOpen",
+     "manualOpen/setManualOpen",
+     "manualType/setManualType",
+     "manualType/setManualType",
+     "manualTitle/setManualTitle",
+     "manualTitle/setManualTitle",
+     "manualRef/setManualRef",
+     "manualRef/setManualRef",
+     "manualFrom/setManualFrom",
+     "manualFrom/setManualFrom",
+     "manualTo/setManualTo",
+     "manualTo/setManualTo",
+     "manualDepart/setManualDepart",
+     "manualDepart/setManualDepart",
+     "manualArrive/setManualArrive",
+     "manualArrive/setManualArrive",
+     "manualAmount/setManualAmount",
+     "manualAmount/setManualAmount"
+    ],
+    "sinks": 105
+   }
+  },
+  {
+   "file": "PlanWithAiSheet.tsx__cand.tsx",
+   "hits": 2,
+   "parse_diagnostics": 0,
+   "depth_cut_lookups": 0,
+   "graph": {
+    "bindings": 128,
+    "functions": 49,
+    "call_sites": 164,
+    "state_pairs": [
+     "text/setText",
+     "text/setText",
+     "placeNames/setPlaceNames",
+     "placeNames/setPlaceNames",
+     "namesRead/setNamesRead",
+     "namesRead/setNamesRead",
+     "busy/setBusy",
+     "busy/setBusy",
+     "requestTooShort/setRequestTooShort",
+     "requestTooShort/setRequestTooShort",
+     "phase/setPhase",
+     "phase/setPhase",
+     "elapsed/setElapsed",
+     "elapsed/setElapsed",
+     "aiState/setAiState",
+     "aiState/setAiState",
+     "result/setResult",
+     "result/setResult"
+    ],
+    "sinks": 41
+   }
+  }
+ ],
+ "resolution_depth_cap": 40,
+ "resolution_truncated_total": 0,
+ "truncated_meaning": "how many times a lookup ran out of depth and had to answer \"unknown\" - a clean verdict with a nonzero value here is NOT a proven clean verdict",
+ "targets_scanned": [
+  "ProductErrorBoundary.tsx__cand.tsx",
+  "JourneyInboxWorkbench.tsx__cand.tsx",
+  "PlanWithAiSheet.tsx__cand.tsx"
+ ],
+ "hits": [
+  {
+   "rule": "UPSTREAM_TEXT_VIA_HELPER_TO_DOM",
+   "line": 1021,
+   "sink": "jsx-text",
+   "origin_kind": "raw-body",
+   "function_boundaries": 3,
+   "snippet": "<p>{copy.body}</p>",
+   "taint_trace": [
+    ":148 upstream read (body as { error?: Record<string, unknown> } | null)?.error off body",
+    ":148 `error` = (body as { error?: Record<string, unknown> } | null)?.error",
+    ":151 read off error through a computed key",
+    ":151 `value` = error[key]",
+    ":152 .trim(...) passes it on",
+    ":152 .toUpperCase(...) passes it on",
+    ":152 serverReasonCode() returns value.trim().toUpperCase()",
+    ":664 interpolated into `BLOCKED:${serverReasonCode(unreadable) || `PLACES_HTTP_${placesResponse.statu...",
+    ":663 state `result` written by setResult(...)",
+    ":848 result.status was handed to statusCopy() as `status`",
+    ":207 .toUpperCase(...) passes it on",
+    ":207 `s` = (status || \"\").toUpperCase()",
+    ":211 .slice(...) passes it on",
+    ":211 `code` = s.slice(\"BLOCKED:\".length)",
+    ":217 interpolated into `${known.zh}（服务器给的原因编号：${code}）`",
+    ":213 statusCopy() returns { title: zh ? \"这次排不出方案：数据不够，不是你说的不对\" : \"No plan this time: the data is short, ...",
+    ":848 `copy` = result ? statusCopy(result.status, zh, result.planCount ?? 0) : null",
+    ":1021 rendered here"
+   ],
+   "taint_chain": ":148 upstream read (body as { error?: Record<string, unknown> } | null)?.error off body -> :148 `error` = (body as { error?: Record<string, unknown> } | null)?.error -> :151 read off error through a computed key -> :151 `value` = error[key] -> :152 .trim(...) passes it on -> :152 .toUpperCase(...) passes it on -> :152 serverReasonCode() returns value.trim().toUpperCase() -> :664 interpolated into `BLOCKED:${serverReasonCode(unreadable) || `PLACES_HTTP_${placesResponse.statu... -> :663 state `result` written by setResult(...) -> :848 result.status was handed to statusCopy() as `status` -> :207 .toUpperCase(...) passes it on -> :207 `s` = (status || \"\").toUpperCase() -> :211 .slice(...) passes it on -> :211 `code` = s.slice(\"BLOCKED:\".length) -> :217 interpolated into `${known.zh}（服务器给的原因编号：${code}）` -> :213 statusCopy() returns { title: zh ? \"这次排不出方案：数据不够，不是你说的不对\" : \"No plan this time: the data is short, ... -> :848 `copy` = result ? statusCopy(result.status, zh, result.planCount ?? 0) : null -> :1021 rendered here",
+   "file": "PlanWithAiSheet.tsx__cand.tsx"
+  },
+  {
+   "rule": "UPSTREAM_TEXT_VIA_HELPER_TO_DOM",
+   "line": 1048,
+   "sink": "jsx-text",
+   "origin_kind": "prose",
+   "function_boundaries": 3,
+   "snippet": "<code data-testid=\"plan-ai-reason\">{result.failureReason.text}</code>",
+   "taint_trace": [
+    ":164 upstream read (body as { detail?: unknown } | null)?.detail",
+    ":164 `detail` = (body as { detail?: unknown } | null)?.detail",
+    ":165 serverReasonSentence() returns detail",
+    ":604 serverReasonSentence(body) was handed to failureNote() as `serverText`",
+    ":192 failureNote() returns serverText ? { text: serverText, from: \"server\" } : { text: deviceText, from: ...",
+    ":596 state `result` written by setResult(...)",
+    ":1048 rendered here"
+   ],
+   "taint_chain": ":164 upstream read (body as { detail?: unknown } | null)?.detail -> :164 `detail` = (body as { detail?: unknown } | null)?.detail -> :165 serverReasonSentence() returns detail -> :604 serverReasonSentence(body) was handed to failureNote() as `serverText` -> :192 failureNote() returns serverText ? { text: serverText, from: \"server\" } : { text: deviceText, from: ... -> :596 state `result` written by setResult(...) -> :1048 rendered here",
+   "file": "PlanWithAiSheet.tsx__cand.tsx"
+  }
+ ],
+ "verdict": "EXPOSURE_SHAPE_FOUND",
+ "interpretation_limit": "a hit names a shape to justify, not a defect verdict",
+ "claim_kind": "pattern_determined",
+ "claimed_result": "EXPOSURE_SHAPE_FOUND across 3 scanned file(s): 2 hit(s) [\"UPSTREAM_TEXT_VIA_HELPER_TO_DOM@PlanWithAiSheet.tsx__cand.tsx:1021\",\"UPSTREAM_TEXT_VIA_HELPER_TO_DOM@PlanWithAiSheet.tsx__cand.tsx:1048\"]",
+ "derived_result": null
+}
