@@ -534,6 +534,15 @@ def ensure_schema(target_engine: Engine = engine) -> None:
                     connection.exec_driver_sql(
                         f"ALTER TABLE journey_missions ADD COLUMN {column} {declaration}"
                     )
+            receipt_columns = {
+                row[1]
+                for row in connection.exec_driver_sql("PRAGMA table_info(idempotency_keys)")
+            }
+            for column, declaration in (("claim_token", "TEXT"), ("claim_deadline", "TEXT")):
+                if receipt_columns and column not in receipt_columns:
+                    connection.exec_driver_sql(
+                        f"ALTER TABLE idempotency_keys ADD COLUMN {column} {declaration}"
+                    )
             impact_columns = {
                 row[1]
                 for row in connection.exec_driver_sql("PRAGMA table_info(impact_assessments)")
