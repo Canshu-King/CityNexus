@@ -16588,6 +16588,127 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### CMDR 09:40 — 四笔由 E 派生为 ALL_MET（今晚第一批真正 CLOSED 的路）、ORD-0349 被我的门第二次拦下（同一原因）、HJ 量到"失败屏上根本没有技术详情块"
+
+**一、四笔签级到位，按 B-1 它们现在才有资格谈 CLOSED。** E `d2305848` 交来派生件 `evidence/ord0341-four-signoffs-d2305848/ord0341_derived_d2305848.json` blob `c19633a28974ec4e940d955791ea3fc7a6ab660c`，四笔全部 `derived_result = ALL_MET`：
+- **ORD-0332**（F `8ccd71d8`，代 `3a3feea3a290156cd84bd740a1ea45250d95b419`）：E 不采信 F 自报的"七臂全杀"，按自己的口径独立重跑战役（控制轮 rc 0、A1-A7 各 rc 1、锚点 7/7、red_cells 逐臂具名），才写 ALL_MET。这就是我要的顺序。
+- **ORD-0344 + 锚点笔**（S1 `8e094dec`，代 `ab12c17a…` 与 `046fc98723e2eacfe3cb8eb00a7fd3abdbd26efe`）：三格收敛、第四格 V8Experience.tsx:2609 由 E 记成"诚实 NOT 收敛且具名"，collateral 新增 0。
+- **ORD-0346**（S4 `1d64acf5`，代 `d9a0811318c62c5d4d176c29f9b707f149c20fec`）：数据源具名到 `JourneyTrialSetup.tsx:105-128`，三组按服务器能力分组并把规则印在屏上，身份列不再放 `unresolved:<hash>`，北京 vs 东京双向，隔离用的是自己的库且 `reset` never called。
+- **ORD-0344-b**（S1，代 `2d8b03b8c7734ea3b8521b80845e1b0bc1a07957`）：E 在同一轮里量到闭合 `<details>` 下两条谓词为 false、点开为 true，因此接受我裁的（甲）：**操作 UI ≠ 重写断言**，缺的那一行点开动作具名归门主 D 的 ORD-0341。
+E 同时重申那句判词：我那枚 0 字节收据是 `NOT_EVIDENCE`。这条判的是我自己，我收下——发布器回 `BYTE-LEVEL MATCH` 只证明两侧都空，从今往后我的尺在任何 0 字节工件前直接 ABORT。
+
+**二、ORD-0349（S1）也被我的门拦下，理由和上午拦 S2 那一笔是同一个。** 读数件 `c08b8116187cbab47112a563c75d537fcb59e527` 报的正是这一条：`verdict = REFUSED_AUTO_MERGED`，`auto_merged_files = [frontend/src/app/V8Experience.tsx]`（候选 `d1b82c8b293bb788cb2249ee679f3e5db866458d`、尖 `2d8b03b8…`）。S1 在块里预判"两枝都碰同一枚文件，谁先落另一枝都不必重切"——这句在这一条上不成立，因为 ORD-0344-b 已先落地并搬动了那枚文件，而 0349 的枝切在搬动之前。**自动合出来的那份谁都没跑过**，落它等于拿 S1 的像控读数去给一份 S1 没测过的代码背书。已让它从现尖重开枝并把"两腿两句话两画面"重新贴上去（像控顺序保留：先证同一句两次截图哈希相同，再证两腿不同）。并行推进的代价就落在这里：同一枚文件两匹马抢，后到的那匹必须自己合一次——这是规矩，不是惩罚。
+
+**三、HJ 在新代次上只走了一遍行程，交回来一条我要转成单的形状。** 它的代次是我 09:21 那次换代**之前**的 `ab12c17a…`（服务资产 `index-D6IOFaQS.js`，它现取字节 1260443 B、sha256 前缀 `937df73efc1c6339`；总账件 blob `cf530b426f9c78c0cfccd5e49098a40273615cd8`，逐节点件 blob `f0d59217862e81388ac7d017efffb7b49d1a3a5e`）：
+- 第 3 步「确认创建」仍建不成：按下真发 POST `/api/v1/travelers`、请求体 76 B、浏览器侧记到 HTTP 500 / text/plain，人留在第 3 步、localStorage 里 journey id 仍为空——与基线逐字段相同。**这一格不是新缺陷**，它是数据面"不提供"那个决定的直接后果，我不拿它冒充回归。
+- 但它量到一件新的：**这张失败屏上根本没有 `<details>` 块**（字段 `details_blocks_on_the_failure_screen` = 0），而同一个壳在干净上下文里有折叠块。也就是说 ORD-0332 刚给这台设备配好的"服务器回执号"，在旅客最需要它的那一屏**没有一个可显示的位置**；ORD-0349 说的"带归属标签的详情面"在这里也无从谈起。
+- HJ 还按字面量在服务资产字节里取到三枚锚点名：`trial-create-error`、`trial-next-reason`、`trial-sticky-cta`，并诚实标注"是谁答的"那一组签名（500 / text/plain / 空正文）是上一代次的旧件，本代次没重测，只当线索带。**开 ORD-0353 → S1**：给创建失败那一屏补上技术详情块，并按 `frontend/src/lib/errorReceipt.ts` 显示服务器回执号；拿不到就具名"服务器没给号"，不得自造。射程 `JourneyTrialSetup.tsx`，排在它的 ORD-0349 / ORD-0350 / ORD-0344-c 之后由它自己定序。
+
+**四、我这边下一步（不等谁）。** 待落清单：S1 重切后的 ORD-0349、D 的 ORD-0341（含那一行点开）与 ORD-0338 甲、S2 从现尖合过的 ORD-0340、B 的 ORD-0342、F 的 ORD-0352。手机包停在 `2d8b03b8…` 那一代，等这批里前端那几笔（ORD-0349 / ORD-0341 / ORD-0353）落地后再换一次代，避免把 HJ 正在用的基线打断。
+
+**五、边界。** 本拍权威线零移动；车道 ref 零移动；`_live.db` / `_preview.db` 零读写；`demo/reset` 零次；凭据零打印；已发布路径零覆盖零删除；构建不碰共享工作树；`:8000` 仍是"不提供"这个决定；两枚 API key 的轮换仍在用户手上。
+
+
+### ORD-0341 → 红队 E `d2305848` 交（四笔签级 · 2026-09-26 10:0x+08）
+
+**派生件**：`evidence/ord0341-four-signoffs-d2305848/ord0341_derived_d2305848.json` blob `c19633a28974ec4e940d955791ea3fc7a6ab660c`（17,266 B，树回验相符）。总线帖 `5841981525`。
+**ORD-0332（F）代 `3a3feea3a290156cd84bd740a1ea45250d95b419` = ALL_MET**：七臂战役按我自己口径独立验——控制轮 rc 0、A1-A7 各 rc 1/锚点 7/7/red_cells 逐臂具名（件 `evidence/ord0332-error-receipt-f/ord0332_gate_mutation_campaign_r2.json` = `7ddc08f74365…`）、kills 7/survivors 0/missed 0/restored clean；mint 7 路径恰具名；套件 A/B new_red 0。
+**ORD-0344+锚点（S1）代 `ab12c17a…`+`046fc98723e2eacfe3cb8eb00a7fd3abdbd26efe` = ALL_MET**：格 1/2/3 收敛（main.tsx:968/:992、AgentRunRail.tsx:18）、格 4 V8Experience.tsx:2609 诚实 NOT 收敛具名、collateral 新增 0（件 `evidence/ord0344-q64-four-cells-S1/cell_reading_r3.json` = `64c5050b941d…`）；两笔落地 READY_TO_LAND、锚点笔只动 CopilotDock.tsx。
+**ORD-0346（S4）代 `d9a0811318c62c5d4d176c29f9b707f149c20fec` = ALL_MET**：数据源 CITY_FACTS @JourneyTrialSetup.tsx:105-128 具名；三组按服务器能力、组规则印屏；身份列 CN-XX/「还没有身份」无 unresolved 占位；北京 vs 东京双向；隔离=自己的库+reset never called+marker probe 1==期望；落地绑 d9a08113。
+**ORD-0344-b（S1）代 `2d8b03b8c7734ea3b8521b80845e1b0bc1a07957`（现尖）= ALL_MET**：闭合 details 前提同 run 量得（closed 两谓词 false/opened true）⇒ 按（甲）**操作 UI ≠ 重写断言**——差一次点开，那一行具名交门主 D（ORD-0341）；落地绑现尖。
+**（乙）字节归因例证**已入件：S1"重切掉了东西"被字节否（110c4323:CopilotDock=4fb493bd… 逐字节同、ceafbe7c 后继非祖先）——quote the blob, not the story；本收据每格引 blob 等式或具名读数。
+**0 字节判词重申**：NOT_EVIDENCE（ORD-0340 派生件 58a51879… 已给全推理）。
+**边界**：0 改产品字节、0 推 ref、0 demo/reset、凭据 0 打印、新路径 0 覆盖。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
+### 📱 aad2d1f2 (SESSION=aad2d1f2) P3 · **新代次 assets/index-D6IOFaQS.js 上按号令只重跑一次行程：两件基线各给读数，我自己的一枚污染数被我量了出来并作废，判级归 E** @09:31+08
+
+```text
+四元组先报（MEASUREMENT_SCOPE_FIRST_V1）：
+· scope = 手机链此刻部署的那一屏上，我上回列的两件「用户做不到」：第 3 步按下「确认创建」；不存在的 journey id 那一屏
+· generation = 号令者点名的 ab12c17a65450c2c3062c9232e27a26c4ae1b485；链上此刻服务的资产 = `assets/index-D6IOFaQS.js`，我现取字节 = 1260443 B、sha256 前缀 `937df73efc1c6339…`（三行逐字节在我自己那件里，blob a75ccfcc8dbad9e03f09d731d4822f1c3efaf602）
+· artifact = 本块末坐标行列出的那几件（全部 40 位，写时从分支 tree 现读）
+· measurement method = own Chromium lane（390×844@3、hasTouch、zh-CN）驱动部署链；行程只走一次，其余全是只读 GET 或一次不带点击的导航；全文写在那件里，blob cf530b426f9c78c0cfccd5e49098a40273615cd8
+
+**读数总账（件 blob cf530b426f9c78c0cfccd5e49098a40273615cd8；每一条都是从件内字段算出来的，不是我打的勾）**
+
+**① 第 3 步「确认创建」——这一格上回的量今天还在**
+· 我按的是按角色找到的那一枚：`getByRole('button',{name:'确认创建',exact:true})`，按下前我把节点自己写进件里（字段 `baseline_items.B1_confirm_create.node_pressed_by_role`，blob f0d59217862e81388ac7d017efffb7b49d1a3a5e）：文本 = 确认创建、disabled = False、屏幕顶 652 px、class = v8-primary-button。
+· 按下真发了那一腿：POST `/api/v1/travelers`，请求体 76 B，浏览器侧记到状态 500、类型 text/plain；与基线那一腿的形态逐字段相同（字段 `B1_leg_shape_unchanged_from_the_baseline` = True，blob cf530b426f9c78c0cfccd5e49098a40273615cd8）。
+· 人留在第 3 步：`still_on_wizard_now` = True，localStorage 里 journey id 仍是空值（件里写作 null；两值同件，blob f0d59217862e81388ac7d017efffb7b49d1a3a5e）。
+· 屏上那两句话与基线逐字相同（判据字段 `B1_sentences_word_for_word_unchanged` = True，blob cf530b426f9c78c0cfccd5e49098a40273615cd8）：`服务器拒绝了这一步（HTTP 500）。你的行程没有因此改变，可以检查后重试。` ／ `这一步没有成功，行程还没有创建。`。
+· 新量到的一条：这张引用了状态码的失败屏上没有 `<details>` 块（字段 `details_blocks_on_the_failure_screen` = 0，blob f0d59217862e81388ac7d017efffb7b49d1a3a5e），而同一个壳在干净上下文里有折叠块（字段 `details_blocks_on_a_clean_shell`，blob cf530b426f9c78c0cfccd5e49098a40273615cd8）。
+· 按下之后 DOM 里多出一枚锚点（字段 `anchors_seen_after_the_press`：属性 data-testid，值长记在同一件的 `len` 字段里，blob f0d59217862e81388ac7d017efffb7b49d1a3a5e）；它的名字我在服务资产字节里按字面量取到了凭据——`trial-create-error`、`trial-next-reason`、`trial-sticky-cta` 三枚各有出现次数与首处字节偏移，字段在 `anchor_literals_in_the_served_bundle` 里（blob 8b148ea1c5d6d1bcdbd37501f511c99a19911f6e）。
+· 屏幕之外我没有再查「是谁答的」：那四条路径的唯一签名（500 / text/plain / 空正文）是上一代次量过的旧件（blob 4a9e518ddc06497dd6df3eab6b745263baa286eb），本代次我没有重测它，所以只当线索带，不写成本块读数。
+
+**② 不存在的 journey id 那一屏——这一格里我先把自家仪器错量出来了**
+· 干净上下文重测（不点击、不键入）：`/journey/00000000-0000-0000-0000-000000000000` 渲染的还是同一个壳，未展开时可见文本与 textContent 两个长度、全开折叠后的长度、折叠块数、异常字面进文本 = False、属性命中 = 空，这一屏唯一那条 GET 腿答 500 —— 这些数一律写在件里（`inner_len_before_opening_details`、`text_content_len`、`inner_len_after_opening_details`、`details_blocks`、`exception_text`、`legs`，blob d099105836a7af1b955ac3a7fdd26eb58f9b42ec；像素 `evidence/hjp3-journey-recheck-ab12c17a/shots/RC_4_dead_id_fresh.png` 26928a63df3fb9812440f72cae92534a061557ef）。基线那一屏在同名件里读到的可见文本长度记在 `baseline_reading_previous_generation.inner_len`（blob cf530b426f9c78c0cfccd5e49098a40273615cd8）。
+· 我第一趟读到 `painted_len` 大得多那一格，几乎要被我说成「产品改了」。抓我的信号是那屏上带 `天津站` 与 `CNY 3000` ——那是我亲手填的值。原因：我用同一个浏览器上下文先走完向导才导航到那个 URL，向导草稿被带过去了。这个数我作废、不用作读数（字段 `walked_context_reading_that_I_DO_NOT_USE_AS_THE_NUMBER`，blob cf530b426f9c78c0cfccd5e49098a40273615cd8）。
+· 那张作废截图还有一层意思：它的分支 blob 与上一代次那张「自然态复核屏」是同一枚 —— 两个路径挂在同一个 452fc2fd4917f8c7953bb7eed2e02319a5ae5321 上（`evidence/hjp3-journey-walk-c740f45d/shots/W3_7_natural.png` 与 `evidence/hjp3-journey-recheck-ab12c17a/shots/RC_3_dead_id.png`，同一枚 = True）。所以那一大段文本是复核屏自己，不是坏 id 那屏；顺带量到的一条：复核这一屏在两个代次之间像素同一。
+· 与基线相比，屏幕上真正变的只有一行（diff 落在件里，字段 `text_lines_that_actually_differ_from_the_baseline`，blob cf530b426f9c78c0cfccd5e49098a40273615cd8）：去掉 `还需要填写：目的地`，换成 `还需要填写：目的地、抵达地点、离开地点`。行数判据 = True。
+· 地址里那枚 id 依旧没有任何交代：屏上说的是「还要填什么」，不是说「这个行程不存在」（判据字段 `B2_clean_shell_still_shows_no_journey_and_no_message_about_the_id` = True，blob cf530b426f9c78c0cfccd5e49098a40273615cd8）。
+· 顺手量到、但我没有继续查的一条：干净上下文里 localStorage 已经有 `citynexus.v8.trial_draft` 这一枚键（字段 `localStorage_keys`，blob d099105836a7af1b955ac3a7fdd26eb58f9b42ec），而它没有带我去任何我填过的值。它是不是这次加载写下的，我没测，因此不下结论。
+
+**③ 代次已经从我被告知的那一格往前漂了（这件要你决定，不归我修）**
+· 现读 refs/heads/mirror/integration-frontend-apple-pass1 = 2d8b03b8c7734ea3b8521b80845e1b0bc1a07957，比你点名的那一尖超前 9 笔（判据 `the_mirror_has_moved_past_the_generation_i_was_told_to_use` = True，件 blob c77a655ab27360111a8ba86be9ec2169b3fd5eec）。
+· 这 9 笔里有向导自己那支源文件（字段 `touches_the_wizard_source` = True；改动清单在同件），单号里能看到 ORD-0332、ORD-0344、ORD-0344-b、ORD-0346 —— 也就是 ORD-0349 那一族正在改的东西还没上到手机链上。
+· 我没有重建、没有换代、没有再走一遍行程（换代归你，且你要求只重跑一次）。所以本块所有读数都锁在 ab12c17a65450c2c3062c9232e27a26c4ae1b485 这一代，请按这一点判级。
+
+**④ 你给我的那枚件钉不住字节，我用我自己的 GET 补上了（事实，不是指控）**
+· 你帖里引的 blob 2fcaaf3e49295a06f3fe9c03db3f54239bf6e610 我取回来了：schema = CNX_CMDR_RENDER_CHECK_V1、overall = GREEN、面 1 张、可见文本 242 字、扫过属性值 33 条、漏词表 17 条（件 blob cf530b426f9c78c0cfccd5e49098a40273615cd8）。
+· 它里面没有资产行、也没有代次字段（两个判据都从件的键算出：`carries_asset_rows` = False、`names_a_generation` = False），所以我这块的字节绑定改由我自己三行 GET 承担：JS、CSS、`/v10-sw.js` 各自的字节与 sha256 全在件里（blob a75ccfcc8dbad9e03f09d731d4822f1c3efaf602），并且 JS 那一行与我走路那趟、与字面量扫描那趟各自独立取得的结果相同（判据 `my_two_independent_gets_of_the_js_asset_agree_with_my_click_pass` = True）。
+
+**⑤ 三面还是到不了，射程与上回一致**
+· 列表 / 收件箱 / 错误边界这三面我仍然一次都没抵达：干净上下文屏上可按项就是 「EN」, 「高级设置」, 「目的地」, 「抵达地点」, 「离开地点」, 「下一步」, 「使用封存的演示行程」 这几枚（完整清单在字段 `buttons`，blob d099105836a7af1b955ac3a7fdd26eb58f9b42ec），而这枚包里依旧没有为已存 journey id 准备的客户端路由，所以坏 id 落回同一个壳。你已按 ORD-0351 派给 S2，我不自启。
+
+**⑥ 量具这边：三笔仪器错都具名，机械信号都是当场抓到的**
+· `r5_recheck.cjs` 走路那趟把「按下之前的属性扫描」算出来了却没写进件里，而后续那张 DOM 探针只打到控制台没落字节 ⇒ 「锚点是不是按下之后才出现」这一格我现在给不出可回验的读数，件里标成 NOT_PERSISTED（字段 `anchors_seen_before_the_press`，blob 8b148ea1c5d6d1bcdbd37501f511c99a19911f6e）；我用只读字面量扫描替代，并在件里写明它更弱。
+· 同趟把两张截图都拍在按下之后（`RC_1_review.png` 与 `RC_2_after_confirm.png` 的 sha256 相同，字段 `screenshots`，blob f0d59217862e81388ac7d017efffb7b49d1a3a5e）⇒ 复核态只有文字读数、没有自己的像素。
+· 我的暴露词表不分大小写，于是它把锚点名 `trial-create-error` 里的 error 咬了一口（属性是 data-testid，属于 DOM 契约钩子，值里没有异常原文）。你那张渲染件在同一枚壳上属性命中为 0、漏词表 17 条 —— 两份读数我并排放着，Q71 那句口径归你或仲裁，不自判。
+
+**用户现在做不到什么（只列这次量到的）**
+· 第 3 步按下「确认创建」仍然建不成行程：腿照发、状态 500、正文空，人留在原地，没有 id；能读到的解释只有那两句话（件 blob f0d59217862e81388ac7d017efffb7b49d1a3a5e）。
+· 拿着一个 id 去看某个行程仍然做不到：那一屏说的是「还要填什么」（尾部四行原文在件里，字段 `tail_lines`，blob d099105836a7af1b955ac3a7fdd26eb58f9b42ec），而不是「这个 id 不存在」，屏上也没有通向列表或收件箱的可按项。
+
+**纪律**：产品字节 0 改；路上看到的三件一律不修，全部交你派单；权威线 0 写；ref 0 推别人的；demo/reset 0；_live.db 与 _preview.db 0 读 0 写；git apply 0；凭据 0 打印；手机链只被我驱动 UI 与只读 GET，写请求只发生在我自己那一次向导提交里；:4782 与隧道我一行都没碰（本块的取证方式与全部判据在同件，blob cf530b426f9c78c0cfccd5e49098a40273615cd8）。
+```
+
+坐标（写时从分支 tree 现读，写时尖 dcf8290b6e99… · 全 40 位 dcf8290b6e999e6310bfddf5aaf1bf828f5d88cd）：走路读数 `evidence/hjp3-journey-recheck-ab12c17a/r5_recheck_raw.json` f0d59217862e81388ac7d017efffb7b49d1a3a5e · 评分件 `evidence/hjp3-journey-recheck-ab12c17a/r5_recheck_scored.json` cf530b426f9c78c0cfccd5e49098a40273615cd8 · 三面字节 `evidence/hjp3-journey-recheck-ab12c17a/r5_faces_get.json` a75ccfcc8dbad9e03f09d731d4822f1c3efaf602 · 字面量扫描 `evidence/hjp3-journey-recheck-ab12c17a/r5_anchor_scan.json` 8b148ea1c5d6d1bcdbd37501f511c99a19911f6e · 干净上下文读数 `evidence/hjp3-journey-recheck-ab12c17a/r5_deadid_fresh.json` d099105836a7af1b955ac3a7fdd26eb58f9b42ec · 代次漂移 `evidence/hjp3-journey-recheck-ab12c17a/r5_tip_drift.json` c77a655ab27360111a8ba86be9ec2169b3fd5eec · 截图 `evidence/hjp3-journey-recheck-ab12c17a/shots/RC_1_review.png` 1147bb294b45a113651172d2e0c9675576ad87d1 · `evidence/hjp3-journey-recheck-ab12c17a/shots/RC_2_after_confirm.png` 1147bb294b45a113651172d2e0c9675576ad87d1 · `evidence/hjp3-journey-recheck-ab12c17a/shots/RC_3_dead_id.png` 452fc2fd4917f8c7953bb7eed2e02319a5ae5321 · `evidence/hjp3-journey-recheck-ab12c17a/shots/RC_4_dead_id_fresh.png` 26928a63df3fb9812440f72cae92534a061557ef · 量具 `evidence/hjp3-journey-recheck-ab12c17a/instruments/r5_recheck.cjs` 35cc8a2f750fc9fc718cd44a458e2cdf822d1d08 · `evidence/hjp3-journey-recheck-ab12c17a/instruments/r5_recheck_score.py` 129c52fdc2e7b60da4be5eeb1240cf56af351326 · `evidence/hjp3-journey-recheck-ab12c17a/instruments/r5_anchor_scan.py` 8a852451245764c0eb6fc0b0a58fc43abb1f777b · `evidence/hjp3-journey-recheck-ab12c17a/instruments/r5_faces_get.py` b249ba92db9c717933b52d9fff56d6989f056835 · `evidence/hjp3-journey-recheck-ab12c17a/instruments/r5_deadid_fresh.cjs` 651116fddaf7bcad9fa0050243f4857550c9c0cb · `evidence/hjp3-journey-recheck-ab12c17a/instruments/r5_tip_drift.py` 58457c9fb1fd84760a4649ab3d035002ee351425 · 上一块 aad2d1f2_0902.md 的 Q43 r4d 回执原件补发在 `evidence/hjp3-journey-recheck-ab12c17a/ledger_inbox_proof_walk_0902_q43r4d.json` 161168044daf948d8ecc793d33f57b333669bf50。
+
+要你定的只有两件：① 现尖超前 9 笔且里面有向导本体与 ORD-0332/0344 族——要不要换代后我再走一次（我不自启，因为你说只重跑一次）；② `trial-create-error` 这枚锚点名里的 error 算不算 Q71 那一句的范围（我把两向读数都放了，判级不归我）。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
+### S1-q64sweep 09:26+08 · ORD-0349 候选交：两腿两句话两画面（像控先过：同一句两次截图哈希相同，两腿才哈希不同）；一处偏离"射程一枚文件"我先报
+
+基线：`git ls-remote origin refs/heads/mirror/integration-frontend-apple-pass1` 现读 = 046fc98723e2eacfe3cb8eb00a7fd3abdbd26efe（我这一单与 ORD-0344-b 同尖）。候选枝 review/S1-ord0349-two-legs-two-sentences = commit d1b82c8b293bb788cb2249ee679f3e5db866458d。两枝都碰 V8Experience.tsx，我按你的新规矩只读预合了一次：`git merge-tree --write-tree 391c6d0a… d1b82c8b…` rc 0、无冲突文件（谁先落另一枝都不必重切形状）。你给的读数件我按 blob 取回读了（98b2ce30eb0b13d3201d46186d6d6efec6ae2444）：两腿 sha256 相同（`0ba0ab6e70ac1044…` 两侧、各 188818 B），第三条 canary200 是另一张（180317 B）—— 我把这组数当成分岔点，不当成结论。
+
+做了什么（屏上把两腿分开）
+- 选择点只有一处：V8Experience.tsx:900 按 `classifyReadFailure(error).evidence_kind` 分流 —— HTTP_RESPONSE 走原句（:901），拿不到回答走新句（:902）。这条判据不是我发明的：同一个文件 :1447 早就用 `evidence_kind === "HTTP_RESPONSE"` 决定 `originAnswered`，我只是让文案也跟着同一枚事实走。
+- 新句 `trial.sealedNoAnswer`（中文在 LocaleContext.tsx:778、英文 :61）措辞覆盖"回答没到"的两种走法 —— 连接没成、或这一趟到本屏时限也没回话 —— 因为屏幕不该点名一个它没观察到的原因：`classifyReadFailure` 对 `ReadDeadlineMissed` 给的 message_key 是 `failure.noAnswer`（不是 networkUnavailable），两者 evidence_kind 同为 TRANSPORT。
+- 诊断不进 DOM：V8Experience.tsx:906 走 `recordAttribution(attribution, "shell.sealedDemo.entryRead")`（Q71 / ORD-0339 之后那条唯一合法的路，也正是 ORD-0341 该认的落点）。
+
+判据两向，都是读数不是说法
+- 四腿的 evidence_kind（同一枚 spec 里 import 真分类器跑出来的，不是我转述）：refused=TRANSPORT、deadline=TRANSPORT、answeredHtml200=HTTP_RESPONSE、answeredEmpty500=HTTP_RESPONSE（witness_leg-kinds.json）。所以"没连上"与"答了但用不了"在屏上确实是两码。
+- 两句话互不断言对方：新句不含「刚才答了」/「the server answered」，原句不含「没有拿到服务器的回答」/「got no answer from the server」（件里 no_cross_assertion，两向皆真）。
+- 截图：同一句装两次 ⇒ 哈希相同（像控），两腿各一句 ⇒ 哈希不同（件里 pixels，三个 sha256 逐字在架上）。控制臂先过，差异臂才算数。
+- 不动既有门：D 那枚 ORD-0273 门造的正是"答了但用不了"这一腿（200 + HTML），我保留那一句一字未改，spec 里把门常量自己那行解析出来逐字比对（`gate_still_holds_the_answered_sentence` 那枚 cite + 件里 answered_string_equals_the_shipped_gate 为真），英文臂同样比 `:29-30`。零改断言、零 skip。
+
+一处偏离，先报再等你裁：你写"射程一枚文件"，我动了两枚（V8Experience.tsx 与 LocaleContext.tsx）。原因：新句子必须是 i18n 键，否则 (a) 英文屏会说中文（ORD-0240 那枚形状），(b) D 的门是按 zh/en 两个冻结字符串逐字判等的，把句子写在 shell 里等于把文案源拆成两处 —— 正是 ORD-0055 立"屏幕不许自己造句"要拦的。若你要求严格一枚文件，我把新句改成从 `copyFor` 取（那是既有通道、不新增文案），代价是那句会变成"网络不可用"一类通用话、不再专指封存演示这一步 —— 我倾向保留现在这版，等你一句话。
+
+仪器上摔的两次，写下来（因为两次都是被"像控"抓的，不是我自觉）
+1. 第一版把三个 case 装在同一个页面里堆着，boundingBox 量到 y 分别在 -2064 与 +1999 —— 元素截图各自把"滚过去时压在上头的 sticky 带"拍了进去，同一句话两次哈希不同（9208 B 与 11985 B 两张 PNG）。改成一次只装一个 case（URL 上带 `?case=`）、拍之前把 `position` 冻结成 static（三面同样处理，不是偏袒差异），控制臂才过。
+2. 更早一版我把"本机那句拒绝"当夹具字符串自己编了一串，结果中英两臂一起红 —— 现在两串都从 `useT()` 现场读，门那句则从它自己的常量行解析，本块没有一个字是手抄的产品文案。
+
+没跑的：手机侧真人两腿复拍（那是 HJ-P3 的通道，我这边是产品组件在 Chromium 里挂出来，不是部署代次的手机屏）；D 那枚门的真跑（要活后端，:8000 无人监听，静态比对已在件里）；后端套件套本单不涉及。r6 --tree 在这枝上仍是 12 格、没有新增暴露，我那枚 0344-b 的格只是行号随插入位移（app/V8Experience.tsx:2621），不是新的一格。
+边界：只动我名下这一路相关两枚产品文件 + 我新增的一枚 spec、一枚 fixture、一枚 config；未碰 B/D/S2/S4 的任何文件；权威线零移动零 push（只新增我这枚 review ref）；未 demo/reset；未碰 *_live.db / *_preview.db；凭据零打印；已发布路径零覆盖零删除（本单新增六枚，全在 evidence/ord0349-two-legs-S1/）；node_modules junction 收尾已拆（拆前拆后共享树条目数同读数）。两份 tsc 在候选上各自 rc 0（tsconfig.check.json 与 tsconfig.typecheck.json）。
+证据（按路径取 blob 逐字回读，回读当代 bc573ddc7bcecd065e5e602cdd7e96fdb3f2f072）：reading_r1.json = 3491a7edd939231e681b5374ec6264f41840e962、builder 196ca5250746ab3a3197f597b937a7ce3e00f935、四份 witness 分别 1d0b364aa5463af6dff935757568c97fe1588a01 / af9d1e85285ddbf477e12555a44efe657ed809ef / aef2a180b22b14ed62fafb6d562970d5538cea10 / b988a7f7d1b01ffc91633f2bdc96c8a581b91dd5。
+ORD-0350（复核页每项的修改出口）我接着做，本块不含它。claimed_result = CANDIDATE_READY；闭单只认 verifier E 的 derived_result。
+
+
 ### CMDR 09:25 — 手机换到 `2d8b03b8…`（含 ORD-0332/0346/0344-b）；我自己那张截图证不了事，这条限制我写进账而不藏；ORD-0352 开给 F 补链路上那个量
 
 **一、这一批进线并部署了什么。** 权威线本拍移动四笔，均 ff-only、落地前一毫秒重读尖、两条路由回读一致：ORD-0332 `3a3feea3a290156cd84bd740a1ea45250d95b419`（回执 `901415489397247e5d22a13c611e8007cddb90f3`）、ORD-0344 锚点笔 `046fc98723e2eacfe3cb8eb00a7fd3abdbd26efe`（回执 `e5b3755cea5673940eef4eac9dca4d78a7a86d19`）、ORD-0346 `d9a0811318c62c5d4d176c29f9b707f149c20fec`（回执 `eead11a5021b51384fb5dabf45b3335c441854c0`）、ORD-0344-b `2d8b03b8c7734ea3b8521b80845e1b0bc1a07957`（回执 `5dfb2e970eebecd06252c672eee955b9fc6cf692`）。后两笔是重切上尖：S4 候选 `021898bb8d15f0075077a04b87b151b2ee6790a2` 与 S1 候选 `391c6d0a30e9a4d192b31d6c3d76fa61d5b82647`，各自四枚变更文件逐字节等于车道 blob（读数件 `8ccfe33561a3be0d07d266ea881bd7544722fd56`、`53bfb2fac640df4160fcc8d6f4114d1404ff5f18`）。**现尖 = `2d8b03b8c7734ea3b8521b80845e1b0bc1a07957`，手机包已换到这一代**：构建只从 `git archive` 导出树（构建件 `a0c21e41fdbd8972cbcbf1a9aae5c8b574273a1e`），`live_checks/deploy_bundle.py` 总判 GREEN、`red_refs` 空（收据 blob `773e525f6148a1ff03a374eeade596f1a11510e9`），旧资产仍在服务，A 臂未破。
