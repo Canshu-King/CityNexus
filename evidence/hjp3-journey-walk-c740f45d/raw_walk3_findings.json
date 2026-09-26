@@ -1,0 +1,670 @@
+{
+ "started_at": "2026-09-26T00:21:49.731Z",
+ "chain": "http://127.0.0.1:4781",
+ "viewport": {
+  "width": 390,
+  "height": 844
+ },
+ "canary": "CNXCANARY7788",
+ "cells": {
+  "W1_wizard_filled": {
+   "at_rest": {
+    "url": "http://127.0.0.1:4781/",
+    "inner_len": 168,
+    "nodes": 89,
+    "painted_capped": "用你自己的城市试用 CITYNEXUS\n\n新建行程\n\n三步完成。选择目的地、告诉我们怎么玩，剩下的交给 CityNexus。\n\nEN\n1\n目的地与时间\n2\n人数与偏好\n3\n确认创建\n目的地\n看支持的目的地\n抵达地点\n离开地点\n抵达时间\n离开时间\n高级设置\n高级设置\n\n还需要填写：目的地、抵达地点、离开地点\n\n下一步\n使用封存的演示行程",
+    "painted_truncated": false,
+    "painted_sha256_full": "c9ed1a942d7f0af449c32b0c696a62e3c8c9325c9fb3347a3133ca258fb07844",
+    "need_line": "还需要填写：目的地、抵达地点、离开地点",
+    "action_verbs_present": true,
+    "details_elements": [
+     {
+      "open": false,
+      "summary": "看支持的目的地",
+      "text_len_when_open": 7
+     },
+     {
+      "open": false,
+      "summary": "高级设置",
+      "text_len_when_open": 4
+     }
+    ],
+    "stack_frame": false,
+    "long_machine_text": false,
+    "exception_in_text": [],
+    "exception_in_attributes": [],
+    "canary_in_text": null,
+    "canary_in_attributes": null
+   },
+   "band_at_rest": {
+    "steps_found": true,
+    "padding_bottom_px": 212,
+    "step_dots": [
+     {
+      "cls": "trial-step-dot",
+      "text": "1",
+      "top": 260
+     },
+     {
+      "cls": "trial-step-dot",
+      "text": "2",
+      "top": 260
+     },
+     {
+      "cls": "trial-step-dot",
+      "text": "3",
+      "top": 260
+     }
+    ],
+    "gap_steps_box_to_card_px": 16,
+    "dot_row_top_px": 260,
+    "card_top_px": 510,
+    "visual_gap_dot_to_card_px": 250,
+    "viewport": 844,
+    "scroll_overflow_px": 636,
+    "card_visible_at_rest": true
+   },
+   "shot_rest": {
+    "file": "W3_1_rest.png",
+    "exists": true,
+    "bytes": 84342
+   },
+   "fill": [
+    {
+     "sel": "input[placeholder^=\"例如\"] (目的地)",
+     "found": 1,
+     "ok": true
+    },
+    {
+     "places_filled": 2,
+     "datetimes_filled": 2
+    }
+   ],
+   "after_fill": {
+    "url": "http://127.0.0.1:4781/",
+    "inner_len": 173,
+    "nodes": 83,
+    "painted_capped": "用你自己的城市试用 CITYNEXUS\n\n新建行程\n\n三步完成。选择目的地、告诉我们怎么玩，剩下的交给 CityNexus。\n\nEN\n1\n目的地与时间\n2\n人数与偏好\n3\n确认创建\n目的地\n\n已自动设置：中国 · 人民币 · 中国标准时间\n\n看支持的目的地\n抵达天津\n离开天津\n抵达时间\n离开时间\n高级设置\n高级设置\n\n下一步\n使用封存的演示行程",
+    "painted_truncated": false,
+    "painted_sha256_full": "5416419491a3d1ec0cb3f1048eba7ece75fd1d830f11bfe1b916dc8ab1e88264",
+    "need_line": null,
+    "action_verbs_present": true,
+    "details_elements": [
+     {
+      "open": false,
+      "summary": "看支持的目的地",
+      "text_len_when_open": 7
+     },
+     {
+      "open": false,
+      "summary": "高级设置",
+      "text_len_when_open": 4
+     }
+    ],
+    "stack_frame": false,
+    "long_machine_text": false,
+    "exception_in_text": [],
+    "exception_in_attributes": [],
+    "canary_in_text": null,
+    "canary_in_attributes": null
+   },
+   "band_after_fill": {
+    "steps_found": true,
+    "padding_bottom_px": 212,
+    "step_dots": [
+     {
+      "cls": "trial-step-dot",
+      "text": "1",
+      "top": 204
+     },
+     {
+      "cls": "trial-step-dot",
+      "text": "2",
+      "top": 204
+     },
+     {
+      "cls": "trial-step-dot",
+      "text": "3",
+      "top": 204
+     }
+    ],
+    "gap_steps_box_to_card_px": 16,
+    "dot_row_top_px": 204,
+    "card_top_px": 455,
+    "visual_gap_dot_to_card_px": 251,
+    "viewport": 844,
+    "scroll_overflow_px": 424,
+    "card_visible_at_rest": true
+   },
+   "shot_filled": {
+    "file": "W3_2_filled.png",
+    "exists": true,
+    "bytes": 189558
+   },
+   "steps": [
+    {
+     "press_next_returned": true,
+     "before_need_line": null,
+     "after": {
+      "url": "http://127.0.0.1:4781/",
+      "inner_len": 175,
+      "nodes": 72,
+      "painted_capped": "用你自己的城市试用 CITYNEXUS\n\n新建行程\n\n三步完成。选择目的地、告诉我们怎么玩，剩下的交给 CityNexus。\n\nEN\n✓\n目的地与时间\n2\n人数与偏好\n3\n确认创建\n旅行人数\n房间数（建议值，可调整）\n总预算\n住宿预算\n旅行节奏\n轻松\n适中\n紧凑\n兴趣\n美食\n自然\n人文\n海边\n购物\n亲子\n特殊要求\n\n返回\n下一步\n使用封存的演示行程",
+      "painted_truncated": false,
+      "painted_sha256_full": "8134d01a6165a7f6ecee8618ed5b77a4bafe68d4b92b25c6736e5b3934fd3110",
+      "need_line": null,
+      "action_verbs_present": true,
+      "details_elements": [],
+      "stack_frame": false,
+      "long_machine_text": false,
+      "exception_in_text": [],
+      "exception_in_attributes": [],
+      "canary_in_text": null,
+      "canary_in_attributes": null
+     },
+     "advanced": true,
+     "band": {
+      "steps_found": true,
+      "padding_bottom_px": 212,
+      "step_dots": [
+       {
+        "cls": "trial-step-dot",
+        "text": "✓",
+        "top": -184
+       },
+       {
+        "cls": "trial-step-dot",
+        "text": "2",
+        "top": -184
+       },
+       {
+        "cls": "trial-step-dot",
+        "text": "3",
+        "top": -184
+       }
+      ],
+      "gap_steps_box_to_card_px": 16,
+      "dot_row_top_px": -184,
+      "card_top_px": 66,
+      "visual_gap_dot_to_card_px": 250,
+      "viewport": 844,
+      "scroll_overflow_px": 772,
+      "card_visible_at_rest": true
+     },
+     "shot": {
+      "file": "W3_3_next1.png",
+      "exists": true,
+      "bytes": 127846
+     }
+    },
+    {
+     "press_next_returned": true,
+     "before_need_line": null,
+     "after": {
+      "url": "http://127.0.0.1:4781/",
+      "inner_len": 287,
+      "nodes": 71,
+      "painted_capped": "用你自己的城市试用 CITYNEXUS\n\n新建行程\n\n三步完成。选择目的地、告诉我们怎么玩，剩下的交给 CityNexus。\n\nEN\n✓\n目的地与时间\n✓\n人数与偏好\n3\n确认创建\n目的地\n天津\n抵达\n天津站 · 2026-10-02 10:00\n离开\n天津滨海国际机场 · 2026-10-03 20:00\n人数 / 房间\n2 · 1 · 我们替你填的\n总预算 / 住宿\nCNY 3000 / 1000 · 我们替你填的\n节奏\n轻松 · 我们替你填的\n兴趣\n—\n特殊要求\n—\n自动设置\nCN · CNY · Asia/Shanghai\n\n返回\n确认创建\n使用封存的演示行程",
+      "painted_truncated": false,
+      "painted_sha256_full": "91ed3c62200894741805990aa8eb72cda3ccfb4f9c7c56fed1fb8c305e66ef53",
+      "need_line": null,
+      "action_verbs_present": true,
+      "details_elements": [],
+      "stack_frame": false,
+      "long_machine_text": false,
+      "exception_in_text": [],
+      "exception_in_attributes": [],
+      "canary_in_text": null,
+      "canary_in_attributes": null
+     },
+     "advanced": true,
+     "band": {
+      "steps_found": true,
+      "padding_bottom_px": 212,
+      "step_dots": [
+       {
+        "cls": "trial-step-dot",
+        "text": "✓",
+        "top": 111
+       },
+       {
+        "cls": "trial-step-dot",
+        "text": "✓",
+        "top": 111
+       },
+       {
+        "cls": "trial-step-dot",
+        "text": "3",
+        "top": 111
+       }
+      ],
+      "gap_steps_box_to_card_px": 16,
+      "dot_row_top_px": 111,
+      "card_top_px": 361,
+      "visual_gap_dot_to_card_px": 250,
+      "viewport": 844,
+      "scroll_overflow_px": 129,
+      "card_visible_at_rest": true
+     },
+     "shot": {
+      "file": "W3_3_next2.png",
+      "exists": true,
+      "bytes": 155294
+     }
+    },
+    {
+     "press_next_returned": false,
+     "before_need_line": null,
+     "after": {
+      "url": "http://127.0.0.1:4781/",
+      "inner_len": 287,
+      "nodes": 71,
+      "painted_capped": "用你自己的城市试用 CITYNEXUS\n\n新建行程\n\n三步完成。选择目的地、告诉我们怎么玩，剩下的交给 CityNexus。\n\nEN\n✓\n目的地与时间\n✓\n人数与偏好\n3\n确认创建\n目的地\n天津\n抵达\n天津站 · 2026-10-02 10:00\n离开\n天津滨海国际机场 · 2026-10-03 20:00\n人数 / 房间\n2 · 1 · 我们替你填的\n总预算 / 住宿\nCNY 3000 / 1000 · 我们替你填的\n节奏\n轻松 · 我们替你填的\n兴趣\n—\n特殊要求\n—\n自动设置\nCN · CNY · Asia/Shanghai\n\n返回\n确认创建\n使用封存的演示行程",
+      "painted_truncated": false,
+      "painted_sha256_full": "91ed3c62200894741805990aa8eb72cda3ccfb4f9c7c56fed1fb8c305e66ef53",
+      "need_line": null,
+      "action_verbs_present": true,
+      "details_elements": [],
+      "stack_frame": false,
+      "long_machine_text": false,
+      "exception_in_text": [],
+      "exception_in_attributes": [],
+      "canary_in_text": null,
+      "canary_in_attributes": null
+     },
+     "advanced": false,
+     "band": {
+      "steps_found": true,
+      "padding_bottom_px": 212,
+      "step_dots": [
+       {
+        "cls": "trial-step-dot",
+        "text": "✓",
+        "top": 111
+       },
+       {
+        "cls": "trial-step-dot",
+        "text": "✓",
+        "top": 111
+       },
+       {
+        "cls": "trial-step-dot",
+        "text": "3",
+        "top": 111
+       }
+      ],
+      "gap_steps_box_to_card_px": 16,
+      "dot_row_top_px": 111,
+      "card_top_px": 361,
+      "visual_gap_dot_to_card_px": 250,
+      "viewport": 844,
+      "scroll_overflow_px": 129,
+      "card_visible_at_rest": true
+     },
+     "shot": {
+      "file": "W3_3_next3.png",
+      "exists": true,
+      "bytes": 155294
+     }
+    }
+   ]
+  },
+  "W2_sealed_demo_three_fates": {
+   "refused": {
+    "fate": "refused",
+    "leg_paths": [
+     {
+      "method": "GET",
+      "url": "/api/v1/demo/scene"
+     },
+     {
+      "method": "GET",
+      "url": "/api/v1/demo/scene"
+     }
+    ],
+    "details_opened_by_me": 0,
+    "at_rest": {
+     "url": "http://127.0.0.1:4781/",
+     "inner_len": 333,
+     "nodes": 74,
+     "painted_capped": "用你自己的城市试用 CITYNEXUS\n\n新建行程\n\n三步完成。选择目的地、告诉我们怎么玩，剩下的交给 CityNexus。\n\nEN\n✓\n目的地与时间\n✓\n人数与偏好\n3\n确认创建\n目的地\n天津\n抵达\n天津站 · 2026-10-02 10:00\n离开\n天津滨海国际机场 · 2026-10-03 20:00\n人数 / 房间\n2 · 1 · 我们替你填的\n总预算 / 住宿\nCNY 3000 / 1000 · 我们替你填的\n节奏\n轻松 · 我们替你填的\n兴趣\n—\n特殊要求\n—\n自动设置\nCN · CNY · Asia/Shanghai\n\n返回\n确认创建\n\n没读到封存演示的信息：服务器刚才答了，但答的内容我们用不了。这不是你填错了什么。\n\n重试\n使用封存的演示行程",
+     "painted_truncated": false,
+     "painted_sha256_full": "47a29cc50d97c7d51834ab5677f8564430d1bf99e3f601126f80d691681b4fd0",
+     "need_line": null,
+     "action_verbs_present": true,
+     "details_elements": [],
+     "stack_frame": false,
+     "long_machine_text": false,
+     "exception_in_text": [],
+     "exception_in_attributes": [],
+     "canary_in_text": false,
+     "canary_in_attributes": false
+    },
+    "after_opening_details": {
+     "url": "http://127.0.0.1:4781/",
+     "inner_len": 333,
+     "nodes": 74,
+     "painted_capped": "用你自己的城市试用 CITYNEXUS\n\n新建行程\n\n三步完成。选择目的地、告诉我们怎么玩，剩下的交给 CityNexus。\n\nEN\n✓\n目的地与时间\n✓\n人数与偏好\n3\n确认创建\n目的地\n天津\n抵达\n天津站 · 2026-10-02 10:00\n离开\n天津滨海国际机场 · 2026-10-03 20:00\n人数 / 房间\n2 · 1 · 我们替你填的\n总预算 / 住宿\nCNY 3000 / 1000 · 我们替你填的\n节奏\n轻松 · 我们替你填的\n兴趣\n—\n特殊要求\n—\n自动设置\nCN · CNY · Asia/Shanghai\n\n返回\n确认创建\n\n没读到封存演示的信息：服务器刚才答了，但答的内容我们用不了。这不是你填错了什么。\n\n重试\n使用封存的演示行程",
+     "painted_truncated": false,
+     "painted_sha256_full": "47a29cc50d97c7d51834ab5677f8564430d1bf99e3f601126f80d691681b4fd0",
+     "need_line": null,
+     "action_verbs_present": true,
+     "details_elements": [],
+     "stack_frame": false,
+     "long_machine_text": false,
+     "exception_in_text": [],
+     "exception_in_attributes": [],
+     "canary_in_text": false,
+     "canary_in_attributes": false
+    },
+    "screenshot": {
+     "file": "W3_4_fate_refused.png",
+     "exists": true,
+     "bytes": 188818
+    }
+   },
+   "empty500": {
+    "fate": "empty500",
+    "leg_paths": [
+     {
+      "method": "GET",
+      "url": "/api/v1/demo/scene"
+     },
+     {
+      "method": "GET",
+      "url": "/api/v1/demo/scene"
+     }
+    ],
+    "details_opened_by_me": 0,
+    "at_rest": {
+     "url": "http://127.0.0.1:4781/",
+     "inner_len": 333,
+     "nodes": 74,
+     "painted_capped": "用你自己的城市试用 CITYNEXUS\n\n新建行程\n\n三步完成。选择目的地、告诉我们怎么玩，剩下的交给 CityNexus。\n\nEN\n✓\n目的地与时间\n✓\n人数与偏好\n3\n确认创建\n目的地\n天津\n抵达\n天津站 · 2026-10-02 10:00\n离开\n天津滨海国际机场 · 2026-10-03 20:00\n人数 / 房间\n2 · 1 · 我们替你填的\n总预算 / 住宿\nCNY 3000 / 1000 · 我们替你填的\n节奏\n轻松 · 我们替你填的\n兴趣\n—\n特殊要求\n—\n自动设置\nCN · CNY · Asia/Shanghai\n\n返回\n确认创建\n\n没读到封存演示的信息：服务器刚才答了，但答的内容我们用不了。这不是你填错了什么。\n\n重试\n使用封存的演示行程",
+     "painted_truncated": false,
+     "painted_sha256_full": "47a29cc50d97c7d51834ab5677f8564430d1bf99e3f601126f80d691681b4fd0",
+     "need_line": null,
+     "action_verbs_present": true,
+     "details_elements": [],
+     "stack_frame": false,
+     "long_machine_text": false,
+     "exception_in_text": [],
+     "exception_in_attributes": [],
+     "canary_in_text": false,
+     "canary_in_attributes": false
+    },
+    "after_opening_details": {
+     "url": "http://127.0.0.1:4781/",
+     "inner_len": 333,
+     "nodes": 74,
+     "painted_capped": "用你自己的城市试用 CITYNEXUS\n\n新建行程\n\n三步完成。选择目的地、告诉我们怎么玩，剩下的交给 CityNexus。\n\nEN\n✓\n目的地与时间\n✓\n人数与偏好\n3\n确认创建\n目的地\n天津\n抵达\n天津站 · 2026-10-02 10:00\n离开\n天津滨海国际机场 · 2026-10-03 20:00\n人数 / 房间\n2 · 1 · 我们替你填的\n总预算 / 住宿\nCNY 3000 / 1000 · 我们替你填的\n节奏\n轻松 · 我们替你填的\n兴趣\n—\n特殊要求\n—\n自动设置\nCN · CNY · Asia/Shanghai\n\n返回\n确认创建\n\n没读到封存演示的信息：服务器刚才答了，但答的内容我们用不了。这不是你填错了什么。\n\n重试\n使用封存的演示行程",
+     "painted_truncated": false,
+     "painted_sha256_full": "47a29cc50d97c7d51834ab5677f8564430d1bf99e3f601126f80d691681b4fd0",
+     "need_line": null,
+     "action_verbs_present": true,
+     "details_elements": [],
+     "stack_frame": false,
+     "long_machine_text": false,
+     "exception_in_text": [],
+     "exception_in_attributes": [],
+     "canary_in_text": false,
+     "canary_in_attributes": false
+    },
+    "screenshot": {
+     "file": "W3_5_fate_empty500.png",
+     "exists": true,
+     "bytes": 188818
+    }
+   },
+   "canary200": {
+    "fate": "canary200",
+    "leg_paths": [
+     {
+      "method": "GET",
+      "url": "/api/v1/demo/scene"
+     },
+     {
+      "method": "GET",
+      "url": "/api/v1/demo/scene"
+     }
+    ],
+    "details_opened_by_me": 0,
+    "at_rest": {
+     "url": "http://127.0.0.1:4781/",
+     "inner_len": 334,
+     "nodes": 74,
+     "painted_capped": "用你自己的城市试用 CITYNEXUS\n\n新建行程\n\n三步完成。选择目的地、告诉我们怎么玩，剩下的交给 CityNexus。\n\nEN\n✓\n目的地与时间\n✓\n人数与偏好\n3\n确认创建\n目的地\n天津\n抵达\n天津站 · 2026-10-02 10:00\n离开\n天津滨海国际机场 · 2026-10-03 20:00\n人数 / 房间\n2 · 1 · 我们替你填的\n总预算 / 住宿\nCNY 3000 / 1000 · 我们替你填的\n节奏\n轻松 · 我们替你填的\n兴趣\n—\n特殊要求\n—\n自动设置\nCN · CNY · Asia/Shanghai\n\n返回\n确认创建\n\n这台部署不是演示舞台（demo_mode=false），所以没有可进入的封存演示。\n\n重试\n使用封存的演示行程",
+     "painted_truncated": false,
+     "painted_sha256_full": "ee7fc85c49f78252238580ba785b9a8fa08da6514913fb93adbf91f8c2cf06e0",
+     "need_line": null,
+     "action_verbs_present": true,
+     "details_elements": [],
+     "stack_frame": false,
+     "long_machine_text": false,
+     "exception_in_text": [],
+     "exception_in_attributes": [],
+     "canary_in_text": false,
+     "canary_in_attributes": false
+    },
+    "after_opening_details": {
+     "url": "http://127.0.0.1:4781/",
+     "inner_len": 334,
+     "nodes": 74,
+     "painted_capped": "用你自己的城市试用 CITYNEXUS\n\n新建行程\n\n三步完成。选择目的地、告诉我们怎么玩，剩下的交给 CityNexus。\n\nEN\n✓\n目的地与时间\n✓\n人数与偏好\n3\n确认创建\n目的地\n天津\n抵达\n天津站 · 2026-10-02 10:00\n离开\n天津滨海国际机场 · 2026-10-03 20:00\n人数 / 房间\n2 · 1 · 我们替你填的\n总预算 / 住宿\nCNY 3000 / 1000 · 我们替你填的\n节奏\n轻松 · 我们替你填的\n兴趣\n—\n特殊要求\n—\n自动设置\nCN · CNY · Asia/Shanghai\n\n返回\n确认创建\n\n这台部署不是演示舞台（demo_mode=false），所以没有可进入的封存演示。\n\n重试\n使用封存的演示行程",
+     "painted_truncated": false,
+     "painted_sha256_full": "ee7fc85c49f78252238580ba785b9a8fa08da6514913fb93adbf91f8c2cf06e0",
+     "need_line": null,
+     "action_verbs_present": true,
+     "details_elements": [],
+     "stack_frame": false,
+     "long_machine_text": false,
+     "exception_in_text": [],
+     "exception_in_attributes": [],
+     "canary_in_text": false,
+     "canary_in_attributes": false
+    },
+    "screenshot": {
+     "file": "W3_6_fate_canary200.png",
+     "exists": true,
+     "bytes": 180317
+    }
+   }
+  },
+  "W3_natural_state_no_route": {
+   "at_rest": {
+    "url": "http://127.0.0.1:4781/",
+    "inner_len": 287,
+    "nodes": 71,
+    "painted_capped": "用你自己的城市试用 CITYNEXUS\n\n新建行程\n\n三步完成。选择目的地、告诉我们怎么玩，剩下的交给 CityNexus。\n\nEN\n✓\n目的地与时间\n✓\n人数与偏好\n3\n确认创建\n目的地\n天津\n抵达\n天津站 · 2026-10-02 10:00\n离开\n天津滨海国际机场 · 2026-10-03 20:00\n人数 / 房间\n2 · 1 · 我们替你填的\n总预算 / 住宿\nCNY 3000 / 1000 · 我们替你填的\n节奏\n轻松 · 我们替你填的\n兴趣\n—\n特殊要求\n—\n自动设置\nCN · CNY · Asia/Shanghai\n\n返回\n确认创建\n使用封存的演示行程",
+    "painted_truncated": false,
+    "painted_sha256_full": "91ed3c62200894741805990aa8eb72cda3ccfb4f9c7c56fed1fb8c305e66ef53",
+    "need_line": null,
+    "action_verbs_present": true,
+    "details_elements": [],
+    "stack_frame": false,
+    "long_machine_text": false,
+    "exception_in_text": [],
+    "exception_in_attributes": [],
+    "canary_in_text": null,
+    "canary_in_attributes": null
+   },
+   "after_opening_details": {
+    "url": "http://127.0.0.1:4781/",
+    "inner_len": 287,
+    "nodes": 71,
+    "painted_capped": "用你自己的城市试用 CITYNEXUS\n\n新建行程\n\n三步完成。选择目的地、告诉我们怎么玩，剩下的交给 CityNexus。\n\nEN\n✓\n目的地与时间\n✓\n人数与偏好\n3\n确认创建\n目的地\n天津\n抵达\n天津站 · 2026-10-02 10:00\n离开\n天津滨海国际机场 · 2026-10-03 20:00\n人数 / 房间\n2 · 1 · 我们替你填的\n总预算 / 住宿\nCNY 3000 / 1000 · 我们替你填的\n节奏\n轻松 · 我们替你填的\n兴趣\n—\n特殊要求\n—\n自动设置\nCN · CNY · Asia/Shanghai\n\n返回\n确认创建\n使用封存的演示行程",
+    "painted_truncated": false,
+    "painted_sha256_full": "91ed3c62200894741805990aa8eb72cda3ccfb4f9c7c56fed1fb8c305e66ef53",
+    "need_line": null,
+    "action_verbs_present": true,
+    "details_elements": [],
+    "stack_frame": false,
+    "long_machine_text": false,
+    "exception_in_text": [],
+    "exception_in_attributes": [],
+    "canary_in_text": null,
+    "canary_in_attributes": null
+   },
+   "legs": [
+    {
+     "url": "/api/v1/demo/scene",
+     "m": "GET",
+     "status": null,
+     "failure": "net::ERR_CONNECTION_REFUSED"
+    },
+    {
+     "url": "/api/v1/demo/scene",
+     "m": "GET",
+     "status": 500,
+     "ct": "text/plain; charset=utf-8"
+    },
+    {
+     "url": "/api/v1/demo/scene",
+     "m": "GET",
+     "status": 500,
+     "ct": "text/plain; charset=utf-8"
+    },
+    {
+     "url": "/api/v1/demo/scene",
+     "m": "GET",
+     "status": 200,
+     "ct": "application/json"
+    },
+    {
+     "url": "/api/v1/demo/scene",
+     "m": "GET",
+     "status": 200,
+     "ct": "application/json"
+    },
+    {
+     "url": "/api/v1/demo/scene",
+     "m": "GET",
+     "status": 500,
+     "ct": "text/plain"
+    }
+   ],
+   "shot": {
+    "file": "W3_7_natural.png",
+    "exists": true,
+    "bytes": 167940
+   }
+  },
+  "W4_reachable_surfaces_inventory": {
+   "visible_buttons": [
+    "用你自己的城市试用 CITYNEXUS",
+    "新建行程",
+    "三步完成。选择目的地、告诉我们怎么玩，剩下的交给 CityNexus。",
+    "EN",
+    "✓",
+    "目的地与时间",
+    "✓",
+    "人数与偏好",
+    "3",
+    "确认创建",
+    "目的地",
+    "天津",
+    "抵达",
+    "天津站 · 2026-10-02 10:00",
+    "离开",
+    "天津滨海国际机场 · 2026-10-03 20:00",
+    "人数 / 房间",
+    "2 · 1 · 我们替你填的",
+    "总预算 / 住宿",
+    "CNY 3000 / 1000 · 我们替你填的",
+    "节奏",
+    "轻松 · 我们替你填的",
+    "兴趣",
+    "—",
+    "特殊要求",
+    "—",
+    "自动设置",
+    "CN · CNY · Asia/Shanghai",
+    "返回",
+    "确认创建",
+    "使用封存的演示行程"
+   ],
+   "inner_len": 287,
+   "note": "no client-side router strings for /journey/<id> were found in the served bundle, so a dead stored id is not a reachable surface on this build; the list above is what a traveller can actually press right now"
+  }
+ },
+ "chromium_version": "153.0.8010.12",
+ "legs": [
+  {
+   "url": "/api/v1/demo/scene",
+   "m": "GET",
+   "status": 500,
+   "ct": "text/plain"
+  },
+  {
+   "url": "/api/v1/demo/scene",
+   "m": "GET",
+   "status": null,
+   "failure": "net::ERR_CONNECTION_REFUSED"
+  },
+  {
+   "url": "/api/v1/demo/scene",
+   "m": "GET",
+   "status": null,
+   "failure": "net::ERR_CONNECTION_REFUSED"
+  },
+  {
+   "url": "/api/v1/demo/scene",
+   "m": "GET",
+   "status": 500,
+   "ct": "text/plain; charset=utf-8"
+  },
+  {
+   "url": "/api/v1/demo/scene",
+   "m": "GET",
+   "status": 500,
+   "ct": "text/plain; charset=utf-8"
+  },
+  {
+   "url": "/api/v1/demo/scene",
+   "m": "GET",
+   "status": 200,
+   "ct": "application/json"
+  },
+  {
+   "url": "/api/v1/demo/scene",
+   "m": "GET",
+   "status": 200,
+   "ct": "application/json"
+  },
+  {
+   "url": "/api/v1/demo/scene",
+   "m": "GET",
+   "status": 500,
+   "ct": "text/plain"
+  }
+ ],
+ "generation_binding": {
+  "served_index_status": 200,
+  "served_index_bytes": 1200,
+  "asset_named_by_the_served_page": "assets/index-rDBD_4P2.js",
+  "asset_bytes": 1260179,
+  "asset_sha256_64_hex": "b182add85b84240ee7a1e7645d23a61f47df521f9b4a77d18182729236a24ade"
+ },
+ "instrument_self_test": {
+  "leaky_collapsed": {
+   "exception_in_text": 1,
+   "exception_in_attributes": 1
+  },
+  "leaky_after_opening": {
+   "exception_in_text": 1,
+   "exception_in_attributes": 1
+  },
+  "clean": {
+   "exception_in_text": 0,
+   "exception_in_attributes": 0,
+   "action_verbs": true
+  },
+  "derived": {
+   "detector_fires_once_the_block_is_open": true,
+   "a_collapsed_read_would_have_missed_it": false,
+   "detector_is_silent_on_a_clean_page": true
+  }
+ },
+ "leg_count": 8,
+ "finished_at": "2026-09-26T00:22:21.637Z"
+}
