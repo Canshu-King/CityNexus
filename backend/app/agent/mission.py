@@ -11,6 +11,7 @@ from pydantic import BaseModel, ConfigDict, Field
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
+from app.agent.ai_availability import ai_availability_state, ai_state_from_failure_reason
 from app.capabilities import canonicalize_capabilities, extract_capabilities_from_text
 from app.core.money import major_to_minor
 from app.db.models import Activity, Journey, JourneyMission, Place
@@ -571,5 +572,15 @@ def mission_payload(mission: JourneyMission) -> dict[str, Any]:
         "started_at": mission.started_at,
         "completed_at": mission.completed_at,
         "failure_reason": mission.failure_reason,
+        # ORD-0359: additive.  When this mission stored its own reason, that stored sentence is
+        # what gets named - so a refusal is never reported as a missing credential, and an
+        # unrecognised reason names nothing rather than the nearest of the three.  Only a mission
+        # that stored no reason falls back to the configuration state, which is a statement about
+        # the switch, not about this run.
+        "ai_state": (
+            ai_state_from_failure_reason(mission.failure_reason)
+            if mission.failure_reason
+            else ai_availability_state()
+        ),
         "mission_plan": mission_plan_for_model(mission),
     }

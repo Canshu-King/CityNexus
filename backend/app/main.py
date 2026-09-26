@@ -61,6 +61,7 @@ from app.agent.predictive import (
     snapshot_payload,
 )
 from app.agent.principal import resolve_agent_principal
+from app.agent.ai_availability import ai_availability_state, ai_state_from_failure_reason
 from app.agent.runtime_identity import runtime_status
 from app.agent.runtime import (
     AgentRuntimeUnavailable,
@@ -790,6 +791,9 @@ def health() -> dict[str, str]:
         "status": "ok",
         "database": "ok",
         "ai": "enabled" if settings.ai_enabled and settings.ai_api_key else "disabled",
+        # ORD-0359: additive, and the `ai` line above is untouched so a client that still reads
+        # it keeps the same two words.  `ai` cannot tell three facts apart; `ai_state` can.
+        "ai_state": ai_availability_state(),
         # Echoed for the authoritative E2E gate (frontend/playwright.config.ts).
         # Empty unless this process was started with CITYNEXUS_E2E_RUN_ID, which
         # only a suite that owns the server does.

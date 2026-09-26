@@ -189,6 +189,11 @@ paths:
                   mcp_server: {type: string}
                   deepseek_configured: {type: boolean}
                   hermes_compat_configured: {type: boolean}
+                  # ORD-0359: additive and deliberately NOT in `required`, so a client written
+                  # against the old shape neither breaks on it nor is promised the field.
+                  ai_state:
+                    type: string
+                    enum: [READY, NOT_CONFIGURED, DISABLED_BY_OPS, PROVIDER_REFUSED]
                   hermes_native_gateway: {type: object}
   /agent/hermes/capabilities:
     get:
@@ -1810,6 +1815,11 @@ components:
         status: {type: string, enum: [ok, degraded]}
         database: {type: string, enum: [ok, error]}
         ai: {type: string, enum: [available, unavailable, disabled]}
+        # ORD-0359: additive. `ai` keeps its two words for existing clients; `ai_state` names the
+        # reason, which `ai` cannot do because it folds three different facts into one string.
+        ai_state:
+          type: string
+          enum: [READY, NOT_CONFIGURED, DISABLED_BY_OPS, PROVIDER_REFUSED]
     ErrorEnvelope:
       type: object
       required: [error]
