@@ -1,0 +1,724 @@
+{
+ "started_at": "2026-09-26T10:42:45.010Z",
+ "base": "https://jets-saints-tomatoes-eric.trycloudflare.com",
+ "journey_id": "fa5cebdc-fabc-4067-ab02-4812ddb950e5",
+ "launches": 1,
+ "contexts": 2,
+ "stops": [
+  {
+   "label": "nav-trips",
+   "selector": "[data-testid=\"nav-trips\"]",
+   "found": 1,
+   "before_url": "https://jets-saints-tomatoes-eric.trycloudflare.com/v8/hub",
+   "role_name_probe": 0,
+   "after": {
+    "url": "https://jets-saints-tomatoes-eric.trycloudflare.com/v8/trips",
+    "text_len": 114,
+    "copy_button_present": false,
+    "copy_button_disabled": null,
+    "copy_button_text": null,
+    "copy_button_top": null,
+    "copy_button_in_view": null,
+    "message_text": null,
+    "testids_with_inbox_or_link": [
+     "trips-tab-bookings"
+    ]
+   }
+  },
+  {
+   "label": "nav-me",
+   "selector": "[data-testid=\"nav-me\"]",
+   "found": 1,
+   "before_url": "https://jets-saints-tomatoes-eric.trycloudflare.com/v8/trips",
+   "role_name_probe": 0,
+   "after": {
+    "url": "https://jets-saints-tomatoes-eric.trycloudflare.com/v8/me",
+    "text_len": 289,
+    "copy_button_present": false,
+    "copy_button_disabled": null,
+    "copy_button_text": null,
+    "copy_button_top": null,
+    "copy_button_in_view": null,
+    "message_text": null,
+    "testids_with_inbox_or_link": []
+   }
+  },
+  {
+   "label": "旅行票夹-by-text",
+   "selector": "button:has-text",
+   "found": 1,
+   "before_url": "https://jets-saints-tomatoes-eric.trycloudflare.com/v8/me",
+   "role_name_probe": 0,
+   "click_error": "locator.click: Timeout 5000ms exceeded.\nCall log:\n\u001b[2m  - waiting for ",
+   "after": {
+    "url": "https://jets-saints-tomatoes-eric.trycloudflare.com/v8/me",
+    "text_len": 289,
+    "copy_button_present": false,
+    "copy_button_disabled": null,
+    "copy_button_text": null,
+    "copy_button_top": null,
+    "copy_button_in_view": null,
+    "message_text": null,
+    "testids_with_inbox_or_link": []
+   }
+  },
+  {
+   "label": "行程工作台-by-text",
+   "selector": "button:has-text",
+   "found": 1,
+   "before_url": "https://jets-saints-tomatoes-eric.trycloudflare.com/v8/me",
+   "role_name_probe": 0,
+   "click_error": "locator.click: Timeout 5000ms exceeded.\nCall log:\n\u001b[2m  - waiting for ",
+   "after": {
+    "url": "https://jets-saints-tomatoes-eric.trycloudflare.com/v8/me",
+    "text_len": 289,
+    "copy_button_present": false,
+    "copy_button_disabled": null,
+    "copy_button_text": null,
+    "copy_button_top": null,
+    "copy_button_in_view": null,
+    "message_text": null,
+    "testids_with_inbox_or_link": []
+   }
+  },
+  {
+   "label": "收件箱-by-text",
+   "selector": "button:has-text",
+   "found": 0,
+   "before_url": "https://jets-saints-tomatoes-eric.trycloudflare.com/v8/me"
+  }
+ ],
+ "chromium_version": "153.0.8010.12",
+ "hub": {
+  "url": "https://jets-saints-tomatoes-eric.trycloudflare.com/v8/hub",
+  "text_len": 605,
+  "text_head": "菜单\n/\n今天\n跟随系统\nEN\nTI\n\n晚上好\n\n天津之旅\n\n10月2日 10:00 — 10月3日 20:00 · 2 位旅行者 · 2 天\n\nAI 帮我规划\n试用其他城市\n打开行程工作台\n今天\n还没有安排\n“现在”取自服务器场景（执行游标。服务器没有给出这一分钟的执行游标，这一屏的时间按行程的时间窗来读）：9月21日 10:00 · 现在/接下来由服务器的执行投影给出\n1\n\n底图未加载，显示的是路线示意。\n\n路线上下文\n7 段路程\n供应商支持的路线 · WGS84\n\n单指拖动地图 · 双指缩放 · 想翻这一页就拖地图以外的地方\n\n住宿\n还没有选定\n到达\n10月2日 10:00\n出发\n10月3日 20:00\n一切正常\n\n方案概览\n\n每一天，紧密相连。\n对比住宿 →\n\n以下只是其中一个候选方案的预览，你还没有采用它。\n\n第 1 天\n星期五\n\n天津站 · Italian Style Town · Check in · Haihe Riverside Hotel · Overnight · Haihe Riverside Hotel\n\n驾车 抵达锚点\n第 2 天\n星期六\n\nFive Great Avenues · Check out · Haihe Riverside Hotel · Tianjin Museum · 天津滨海国际机场\n\n公交地铁 离开锚点\n今天\n行程\n地图\nCopilot\n我的",
+  "copy_button_present": false,
+  "copy_button_disabled": null,
+  "copy_button_text": null,
+  "copy_button_field_attr": null,
+  "copy_button_top": null,
+  "copy_button_in_view": null,
+  "message_present": false,
+  "message_text": null,
+  "message_field_attr": null,
+  "buttons": [
+   {
+    "text": "今天",
+    "aria": null,
+    "testid": null,
+    "title": null
+   },
+   {
+    "text": "实时行程",
+    "aria": null,
+    "testid": null,
+    "title": null
+   },
+   {
+    "text": "地图",
+    "aria": null,
+    "testid": null,
+    "title": null
+   },
+   {
+    "text": "行程工作台",
+    "aria": null,
+    "testid": null,
+    "title": null
+   },
+   {
+    "text": "住宿选择",
+    "aria": null,
+    "testid": null,
+    "title": null
+   },
+   {
+    "text": "城市探索",
+    "aria": null,
+    "testid": null,
+    "title": null
+   },
+   {
+    "text": "旅行票夹",
+    "aria": null,
+    "testid": null,
+    "title": null
+   },
+   {
+    "text": "Copilot",
+    "aria": null,
+    "testid": null,
+    "title": null
+   },
+   {
+    "text": "恢复与执行",
+    "aria": null,
+    "testid": null,
+    "title": null
+   },
+   {
+    "text": "智能守护",
+    "aria": null,
+    "testid": null,
+    "title": null
+   },
+   {
+    "text": "旅行者画像",
+    "aria": null,
+    "testid": null,
+    "title": null
+   },
+   {
+    "text": "TITianjin2 位旅行者•••",
+    "aria": null,
+    "testid": null,
+    "title": null
+   },
+   {
+    "text": "菜单",
+    "aria": "打开导航",
+    "testid": null,
+    "title": null
+   },
+   {
+    "text": "跟随系统",
+    "aria": "Theme: following the system. Choose light, dark, or back to system.",
+    "testid": "topbar-theme",
+    "title": null
+   },
+   {
+    "text": "EN",
+    "aria": "Switch language",
+    "testid": "topbar-language",
+    "title": null
+   },
+   {
+    "text": "◌",
+    "aria": "通知 · 无活跃",
+    "testid": null,
+    "title": null
+   },
+   {
+    "text": "TI",
+    "aria": null,
+    "testid": null,
+    "title": null
+   },
+   {
+    "text": "AI 帮我规划",
+    "aria": null,
+    "testid": "hub-plan-with-ai",
+    "title": null
+   },
+   {
+    "text": "试用其他城市",
+    "aria": null,
+    "testid": null,
+    "title": null
+   },
+   {
+    "text": "打开行程工作台",
+    "aria": null,
+    "testid": null,
+    "title": null
+   },
+   {
+    "text": "对比住宿 →",
+    "aria": null,
+    "testid": null,
+    "title": null
+   },
+   {
+    "text": "第 1 天\n星期五\n\n天津站 · Italian Style Town · Ch",
+    "aria": null,
+    "testid": null,
+    "title": null
+   },
+   {
+    "text": "第 2 天\n星期六\n\nFive Great Avenues · Check ou",
+    "aria": null,
+    "testid": null,
+    "title": null
+   },
+   {
+    "text": "",
+    "aria": "CityNexus Copilot",
+    "testid": null,
+    "title": null
+   },
+   {
+    "text": "今天",
+    "aria": null,
+    "testid": "nav-hub",
+    "title": null
+   },
+   {
+    "text": "行程",
+    "aria": null,
+    "testid": "nav-trips",
+    "title": null
+   },
+   {
+    "text": "地图",
+    "aria": null,
+    "testid": "nav-map",
+    "title": null
+   },
+   {
+    "text": "Copilot",
+    "aria": null,
+    "testid": "nav-agent",
+    "title": null
+   },
+   {
+    "text": "我的",
+    "aria": null,
+    "testid": "nav-me",
+    "title": null
+   },
+   {
+    "text": "",
+    "aria": "模拟舞台（舞台上有场景）：教学模拟舞台 · 屏幕上的“现在”由服务器给定：2026-09-21 02:00 +00:00",
+    "testid": "sim-ball",
+    "title": null
+   }
+  ],
+  "testids": [
+   "topbar-theme",
+   "topbar-language",
+   "today-heading",
+   "today-when",
+   "hub-secondary-actions",
+   "hub-plan-with-ai",
+   "today-hero",
+   "today-next",
+   "today-clock-source",
+   "v8-maplibre-panel",
+   "v8-maplibre-canvas",
+   "v8-map-tile-notice",
+   "v8-map-gesture-hint",
+   "today-strip",
+   "today-stay",
+   "today-attention-band",
+   "today-attention",
+   "hub-glance-caveat",
+   "v18-copilot-dock",
+   "nav-hub",
+   "nav-trips",
+   "nav-map",
+   "nav-agent",
+   "nav-me",
+   "sim-float",
+   "sim-ball",
+   "sim-ball-dot"
+  ],
+  "body_sha": "e81a2835b5cb0143d9ef80c7b4eda7682cd63e4a4fa528550446594b4bab947a",
+  "ls_keys": [
+   "citynexus.v8.journey_id",
+   "citynexus.copilot.history.fa5cebdc-fabc-4067-ab02-4812ddb950e5"
+  ],
+  "journey_id": "fa5cebdc-fabc-4067-ab02-4812ddb950e5",
+  "is_secure_context": true,
+  "clipboard_api": true
+ },
+ "shots": {
+  "hub": {
+   "file": "H1_hub.png",
+   "abs": "D:\\moodle\\_hjp3_d3j0_0926\\H1_hub.png",
+   "exists": true,
+   "bytes": 884431,
+   "sha256": "e5cf3eed2871a2ab1e2dc681ef4ed937c43328c93541ba59753884912d2370ca"
+  }
+ },
+ "last": {
+  "url": "https://jets-saints-tomatoes-eric.trycloudflare.com/v8/me",
+  "text_len": 289,
+  "text_head": "菜单\n/\n我的\n跟随系统\nEN\nTI\n\n我的\n\n我的行程与偏好\n\n这里是你这趟行程的事实：同行人数、预算、住宿和已确认的预订。\n\n这趟行程\n天津\n\n2 位旅行者 · ¥3,000.00\n\n住宿\n还没有选定\n\n在「行程 · 住宿」里挑选\n\n已确认的预订\n还没有\n\n在「行程 · 预订」里导入你的票或确认单。\n\n改动偏好\n仅提供建议\n\n任何会影响已确认预订或受保护安排的改动，都会先征得你同意。\n\n开启自动执行\n通知\n只记录，不发推送\n\n服务器没有配置推送密钥，所以通知只会记在行程里，不会弹到这台设备上。\n\n启用 Web Push\n高级详情\n今天\n行程\n地图\nCopilot\n我的",
+  "copy_button_present": false,
+  "copy_button_disabled": null,
+  "copy_button_text": null,
+  "copy_button_field_attr": null,
+  "copy_button_top": null,
+  "copy_button_in_view": null,
+  "message_present": false,
+  "message_text": null,
+  "message_field_attr": null,
+  "buttons": [
+   {
+    "text": "今天",
+    "aria": null,
+    "testid": null,
+    "title": null
+   },
+   {
+    "text": "实时行程",
+    "aria": null,
+    "testid": null,
+    "title": null
+   },
+   {
+    "text": "地图",
+    "aria": null,
+    "testid": null,
+    "title": null
+   },
+   {
+    "text": "行程工作台",
+    "aria": null,
+    "testid": null,
+    "title": null
+   },
+   {
+    "text": "住宿选择",
+    "aria": null,
+    "testid": null,
+    "title": null
+   },
+   {
+    "text": "城市探索",
+    "aria": null,
+    "testid": null,
+    "title": null
+   },
+   {
+    "text": "旅行票夹",
+    "aria": null,
+    "testid": null,
+    "title": null
+   },
+   {
+    "text": "Copilot",
+    "aria": null,
+    "testid": null,
+    "title": null
+   },
+   {
+    "text": "恢复与执行",
+    "aria": null,
+    "testid": null,
+    "title": null
+   },
+   {
+    "text": "智能守护",
+    "aria": null,
+    "testid": null,
+    "title": null
+   },
+   {
+    "text": "旅行者画像",
+    "aria": null,
+    "testid": null,
+    "title": null
+   },
+   {
+    "text": "TITianjin2 位旅行者•••",
+    "aria": null,
+    "testid": null,
+    "title": null
+   },
+   {
+    "text": "菜单",
+    "aria": "打开导航",
+    "testid": null,
+    "title": null
+   },
+   {
+    "text": "跟随系统",
+    "aria": "Theme: following the system. Choose light, dark, or back to system.",
+    "testid": "topbar-theme",
+    "title": null
+   },
+   {
+    "text": "EN",
+    "aria": "Switch language",
+    "testid": "topbar-language",
+    "title": null
+   },
+   {
+    "text": "◌",
+    "aria": "通知 · 无活跃",
+    "testid": null,
+    "title": null
+   },
+   {
+    "text": "TI",
+    "aria": null,
+    "testid": null,
+    "title": null
+   },
+   {
+    "text": "启用 Web Push",
+    "aria": null,
+    "testid": null,
+    "title": null
+   },
+   {
+    "text": "",
+    "aria": "CityNexus Copilot",
+    "testid": null,
+    "title": null
+   },
+   {
+    "text": "今天",
+    "aria": null,
+    "testid": "nav-hub",
+    "title": null
+   },
+   {
+    "text": "行程",
+    "aria": null,
+    "testid": "nav-trips",
+    "title": null
+   },
+   {
+    "text": "地图",
+    "aria": null,
+    "testid": "nav-map",
+    "title": null
+   },
+   {
+    "text": "Copilot",
+    "aria": null,
+    "testid": "nav-agent",
+    "title": null
+   },
+   {
+    "text": "我的",
+    "aria": null,
+    "testid": "nav-me",
+    "title": null
+   }
+  ],
+  "testids": [
+   "topbar-theme",
+   "topbar-language",
+   "v8-me",
+   "me-mode-toggle",
+   "push-capability",
+   "me-advanced",
+   "v18-copilot-dock",
+   "nav-hub",
+   "nav-trips",
+   "nav-map",
+   "nav-agent",
+   "nav-me"
+  ],
+  "body_sha": "a0670684e713e9969e02308a705b0fe72996d3c44f594032c8c96adb2bd3ca52",
+  "ls_keys": [
+   "citynexus.v8.journey_id",
+   "citynexus.copilot.history.fa5cebdc-fabc-4067-ab02-4812ddb950e5"
+  ],
+  "journey_id": "fa5cebdc-fabc-4067-ab02-4812ddb950e5",
+  "is_secure_context": true,
+  "clipboard_api": true
+ },
+ "press": "CONTROL_NOT_FOUND_ON_ANY_STOP",
+ "legs1": [
+  {
+   "url": "/api/v1/journeys/fa5cebdc-fabc-4067-ab02-4812ddb950e5/experience",
+   "m": "GET",
+   "status": 200,
+   "ct": "application/json",
+   "resp_bytes": 132102,
+   "from_service_worker": false
+  },
+  {
+   "url": "/api/v1/journeys/fa5cebdc-fabc-4067-ab02-4812ddb950e5/replans",
+   "m": "GET",
+   "status": 200,
+   "ct": "application/json",
+   "resp_bytes": 2,
+   "from_service_worker": false
+  },
+  {
+   "url": "/api/v1/journeys/fa5cebdc-fabc-4067-ab02-4812ddb950e5/agent-feed?limit=200",
+   "m": "GET",
+   "status": 200,
+   "ct": "application/json",
+   "resp_bytes": 574,
+   "from_service_worker": false
+  },
+  {
+   "url": "/api/v1/journeys/fa5cebdc-fabc-4067-ab02-4812ddb950e5/agent-feed?limit=200",
+   "m": "GET",
+   "status": 200,
+   "ct": "application/json",
+   "resp_bytes": 574,
+   "from_service_worker": false
+  },
+  {
+   "url": "/api/v1/journeys/fa5cebdc-fabc-4067-ab02-4812ddb950e5/twin",
+   "m": "GET",
+   "status": 200,
+   "ct": "application/json",
+   "resp_bytes": 896,
+   "from_service_worker": false
+  },
+  {
+   "url": "/api/v1/demo/scene",
+   "m": "GET",
+   "status": 200,
+   "ct": "application/json",
+   "resp_bytes": 610,
+   "from_service_worker": false
+  },
+  {
+   "url": "/api/v1/journeys/fa5cebdc-fabc-4067-ab02-4812ddb950e5/plans",
+   "m": "GET",
+   "status": 200,
+   "ct": "application/json",
+   "resp_bytes": 2,
+   "from_service_worker": false
+  },
+  {
+   "url": "/api/v1/journeys/fa5cebdc-fabc-4067-ab02-4812ddb950e5/wallet",
+   "m": "GET",
+   "status": 200,
+   "ct": "application/json",
+   "resp_bytes": 109,
+   "from_service_worker": false
+  },
+  {
+   "url": "/api/v1/travelers/244b231a-43fb-4521-bd8b-09df06924cac/agent-policy",
+   "m": "GET",
+   "status": 200,
+   "ct": "application/json",
+   "resp_bytes": 527,
+   "from_service_worker": false
+  },
+  {
+   "url": "/api/v1/agent/runtime-status",
+   "m": "GET",
+   "status": 200,
+   "ct": "application/json",
+   "resp_bytes": 408,
+   "from_service_worker": false
+  },
+  {
+   "url": "/api/v1/journeys/fa5cebdc-fabc-4067-ab02-4812ddb950e5/offline-snapshot",
+   "m": "GET",
+   "status": 200,
+   "ct": "application/json",
+   "resp_bytes": 797,
+   "from_service_worker": false
+  },
+  {
+   "url": "/api/v1/travelers/244b231a-43fb-4521-bd8b-09df06924cac/push-config",
+   "m": "GET",
+   "status": 200,
+   "ct": "application/json",
+   "resp_bytes": 122,
+   "from_service_worker": false
+  },
+  {
+   "url": "/api/v1/journeys/fa5cebdc-fabc-4067-ab02-4812ddb950e5/twin",
+   "m": "GET",
+   "status": 200,
+   "ct": "application/json",
+   "resp_bytes": 896,
+   "from_service_worker": false
+  },
+  {
+   "url": "/api/v1/journeys/fa5cebdc-fabc-4067-ab02-4812ddb950e5/twin",
+   "m": "GET",
+   "status": 200,
+   "ct": "application/json",
+   "resp_bytes": 896,
+   "from_service_worker": false
+  }
+ ],
+ "all_testids_by_stop": [
+  {
+   "label": "nav-trips",
+   "after": "https://jets-saints-tomatoes-eric.trycloudflare.com/v8/trips",
+   "testids": [
+    "topbar-theme",
+    "topbar-language",
+    "v8-me",
+    "me-mode-toggle",
+    "push-capability",
+    "me-advanced",
+    "v18-copilot-dock",
+    "nav-hub",
+    "nav-trips",
+    "nav-map",
+    "nav-agent",
+    "nav-me"
+   ]
+  },
+  {
+   "label": "nav-me",
+   "after": "https://jets-saints-tomatoes-eric.trycloudflare.com/v8/me",
+   "testids": [
+    "topbar-theme",
+    "topbar-language",
+    "v8-me",
+    "me-mode-toggle",
+    "push-capability",
+    "me-advanced",
+    "v18-copilot-dock",
+    "nav-hub",
+    "nav-trips",
+    "nav-map",
+    "nav-agent",
+    "nav-me"
+   ]
+  },
+  {
+   "label": "旅行票夹-by-text",
+   "after": "https://jets-saints-tomatoes-eric.trycloudflare.com/v8/me",
+   "testids": [
+    "topbar-theme",
+    "topbar-language",
+    "v8-me",
+    "me-mode-toggle",
+    "push-capability",
+    "me-advanced",
+    "v18-copilot-dock",
+    "nav-hub",
+    "nav-trips",
+    "nav-map",
+    "nav-agent",
+    "nav-me"
+   ]
+  },
+  {
+   "label": "行程工作台-by-text",
+   "after": "https://jets-saints-tomatoes-eric.trycloudflare.com/v8/me",
+   "testids": [
+    "topbar-theme",
+    "topbar-language",
+    "v8-me",
+    "me-mode-toggle",
+    "push-capability",
+    "me-advanced",
+    "v18-copilot-dock",
+    "nav-hub",
+    "nav-trips",
+    "nav-map",
+    "nav-agent",
+    "nav-me"
+   ]
+  },
+  {
+   "label": "收件箱-by-text",
+   "testids": [
+    "topbar-theme",
+    "topbar-language",
+    "v8-me",
+    "me-mode-toggle",
+    "push-capability",
+    "me-advanced",
+    "v18-copilot-dock",
+    "nav-hub",
+    "nav-trips",
+    "nav-map",
+    "nav-agent",
+    "nav-me"
+   ]
+  }
+ ],
+ "acceptance": "SKIPPED - the clipboard never gave back a URL",
+ "finished_at": "2026-09-26T10:43:26.609Z"
+}
