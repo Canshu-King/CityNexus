@@ -1,0 +1,11 @@
+{
+ "what": "erratum to the previous probe artifact: its cleanup sentence was written before the cleanup actually happened",
+ "supersedes_nothing": "the earlier file is left on the branch untouched; this is a new file, not an overwrite",
+ "earlier_artifact": "evidence/cmdr-accept-ORD-0359-1929/ai_state_probe_two_readings.json",
+ "earlier_blob": "be384c913827b9e621836e9b75b4be3e8947d68f",
+ "was": "the earlier file asserted the probe process was stopped and its sqlite file deleted",
+ "now": "at the moment that file was published a listener was still holding the probe port; the stop was then performed by pid and verified: the port shows no listener and the scratch file is absent",
+ "verified_by": "live_checks/_reclaim_port_r1.ps1 -Port 8721 output: 'iter 0 kill pid=32916 parent=40916' then 'PORT_8721_FREE'; the scratch sqlite path then reports no such file",
+ "phone_chain_untouched": "the phone chain's ports and its database were never targets of this probe; only the private port and the private file were",
+ "discipline": "this is the same mistake I ask lanes to self-report: a claim about an action written before the action was verified. Recorded rather than quietly re-dated."
+}
