@@ -16588,6 +16588,42 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### CMDR 07:50 — ORD-0323 / ORD-0339 两笔落地、手机已换到新代、Q72 / Q73 两枚裁定，以及现尖 15 格 Q64 残留按 owner 派单
+
+**一、落地（两笔都是我把陈旧基座重切上尖的，走 GENERATION_TRANSFER_BY_CITED_BLOB_EQUALITY_V1）。**
+- ORD-0323（lane B `c01d72a3`，十格曝光面 + Q68 的「原因编号」槽）：车道候选 `499522db0903790c3eaba5837bf8e8e3764b7463`、基座 `09dffbb70c151e6734221d6d3d69d88775a1fbd0`（落后六代）→ 我重切 `03ad438dc66b17ab313f9c216b044a38d33b101d`，四枚变更文件的合并树 blob 与车道 blob 逐字节全等，读数件 `ade9ca71d8f395293ffa7aff63ae7213f46ccf92`；
+- ORD-0339（lane S1 `8e094dec`，异常文字不进 DOM，含 `data-*`）：车道候选 `dbea61064b577ec7214d6f97183b04e507d0d511`、基座 `f45489c6d17f16973faad161618789237ac3814e` → 我重切 `c740f45d68f337c460a1a43b995162689d0110af`，同样逐字节全等，读数件 `6878a91223b6cd9a34f7a858b022c6d33955ff1b`。
+两笔都由 `live_checks/preflight_and_land_r1.py --land` 执行（ff-only、落地前一毫秒重读尖、两条路由回读一致），回执 `4df306ba9ed8bdf6cbf7ad67b8e84600762567d7` 与 `21bde1d3707df84daf79ede7e750ac0511605da1`。这两代的后端整册收集臂都收满、没有 `Interrupted`（同一回执里 `whole_suite.collected` 一栏）。现尖 = `c740f45d68f337c460a1a43b995162689d0110af`。
+
+**二、我给自己新添的一道门，连同它第一轮的红。**`live_checks/cmdr_recut_r1.py` 本体 blob `d3256e9999b096bce8c44d860a4dd79a0f246734`，四臂双向自测本体 `cc26397b6c76cc759fcb4be1ef61ec06679fdb14`、读数件 `c583cd1b722de479260e6faca775f47c47eb8f5c`：干净件判 RECUT_OK、同一行两向改写判 MERGE_TREE_REFUSED、两向都碰同一文件（哪怕不同区域）判 REFUSED_AUTO_MERGED、候选已在尖上判 FAST_FORWARD_POSSIBLE。第一次自测我只拿到四臂全中里的四格：`git merge-base --is-ancestor` 我读了它的 stdout 而不是退出码，所以"已在尖上"那条分支永远不触发；而合成尖无法注入，B / C 两臂是假绿。两条都在门里修好（加了 `--line` 让门可被合成分尖检验），修完才敢拿它切车道的候选。教训归我：**只允许对权威线跑的门，我无法证明它的拒绝是有牙的。**
+
+**三、手机换代（DEPLOY_BUNDLE_RETENTION：先并集 → 证可达 → 才切 index）。**构建只从导出树做，不碰共享工作树：`git -C D:/moodle/CityNexus archive c740f45d68f337c460a1a43b995162689d0110af frontend | tar -x`，六枚关键文件的导出字节对尖 blob 全等（构建件 `a2921b9c389484b594b12b02cd45cfe119ac40d1`，本体 `b77e5d6c0e9f9a5e0a031bf3867d2657eb896101`）；`live_checks/deploy_bundle.py` 总判 GREEN 且 `red_refs` 为空（收据 blob `b622ee943444003a7144bb1e90322a8831f390e8`）。手机上那枚 JS 从 `index-CUtQgnyQ.js` 换到 `index-rDBD_4P2.js`，三个面（本机端口 4781 的静态服务、端口 4782 的鉴权代理、隧道域名）回读同一枚新 index；隧道地址未变，旧资产仍在服务（A 臂），所以老客户端不会撞上 `200 + HTML`。
+
+**四、我按用户的方式自己读了一遍新代，不是我车道读的。**`live_checks/cmdr_render_check_r1.py` 本体 blob `361210300d2e2d220ec1d62b1b1726079813e4c2`：headless Chromium 以视口 390×844 渲染真页面，判据读的是渲染后文档里的**可见文字**与 `data-*` / `aria-*` 取值，不是 bundle 里的字符串常量。它先自证有牙（`--selftest` 三臂：干净页必须 GREEN、我埋的「Failed to fetch / TypeError …」必须 RED、只把异常文字塞 `data-error-message` 也必须 RED，因为 Q71 说属性也是 DOM），再读真面：GREEN，屏上异常形状零命中、属性里异常文字零命中，可见文字开头是「CityNexus Trip Operations 用你自己的城市试用 CityNexus 新建行程 三步完成 … 1 目的地与时间 2 人数与偏好 3 确认创建 目的地 看支持的目的地 厦门 北京 上海 …」。读数件 `764169e443a85a06e48360de7ac0192a1cfa3249`，截图 `evidence/cmdr-render-check-0747/render_c740f45d_390x844_r1.png`。
+
+**五、Q72 = ORD-0339 赢；ORD-0273 那枚门由 D 自己重推，别人不动它一个字。**S1 报的冲突我逐字节复核为真：尖上 `frontend/e2e/qoder-sealed-failure-speaks-and-offers-retry.spec.ts:89` / `:90` 与 `:142` / `:143` 读 `data-error-name` / `data-error-message`，并断言其长度大于零；而 ORD-0339 落地的事实就是这两枚属性不再存在。所以**第一次真跑必然红的节点是两枚**，名字钉死为 `ord0273-text-the-sentence-is-the-key-and-no-shape-leaks`（该 spec 内起点 :65）与 `ord0273-text-en-arm-speaks-english-and-neither-side-leaks`（:106）；第三枚 `ord0273-action-retry-is-a-real-executable-step`（:169）不受影响。这不是谁改坏了：ORD-0273 验收在前、Q71 在后，两条要件到今天才互相矛盾。**开 ORD-0341 → D `e345b9d6`**：只改你自己那枚 spec，把"技术事实仍可诊断"这一条从 DOM 通道换到非 DOM 通道去证（`frontend/src/lib/failureAttribution.ts` 里 `recordAttribution` / telemetry 那条已落地的口，起点 :265），并新增一条反向断言：异常原文既不得出现在可见文字里、也不得出现在任何 `data-*` / `aria-*` 取值里。射程一枚 spec 文件，产品字节零改动。**我拒绝"由 S1 顺手改 D 的断言"这一支**：R14 归属在先，且一条已验收的断言被第二方改绿正是我要拦的形状。这两枚节点在新代上目前是**可预见的红**，具名、有主、有单，不是回归。
+
+**六、Q73 = ORD-0338 按甲做，丙单独走不允许。**D 的定性我收下并已落章（那 212px 的留白归一条具名 CSS 声明，且它当前是 load-bearing）；关键的追加事实是 D 后来量出来的那一条：把这份 clearance 挪去 `.trial-card` 也会红 —— 尖上 `frontend/e2e/qoder-wizard-advanced-is-tappable.spec.ts` 的 `ord0264` 第一判据是 `expect(roll.scrolled).toBeGreaterThan(0)`，它把"控件起始在折叠线以下"写成了"控件可达"。裁：
+1. **甲 = 做**：给 sticky bar 一份真正的 in-flow 预留，两处 padding hack 一起删；同一笔提交里把 `ord0261` / `ord0264` 的判据按**产品承诺**重推 —— 承诺是"旅客能点到那一步"，因此"静息已可见"与"滚一轮后可见"两种形状都必须判 GREEN，`scrolled > 0` 不得再当作可达性的代理；
+2. **丙 = 只作为甲的后果被允许**：改承诺必须与 CSS 变更同笔、且写清"为什么旧代理断言在量别的东西"，并且由红队 E 复签（`d2305848`，同代、逐 nodeid + shape 署）；
+3. **乙（往带里塞内容）不裁**：那是产品新增，需要另开一张设计单，不在本单射程里。
+D 若判断甲的射程超出一个窗口，就按"先把事实与下一步交回来"办，别把改动停在半路。**开 ORD-0341 与 ORD-0338 修复笔可以并行**，两者不碰同一文件。
+
+**七、Q64 残留在现尖的普查，按 owner 派单。**尺 = `ui_exposure_taint_ast_r3.cjs`（发布名 r6，blob `6a251d3a6bea70329e06581384a81d5ef54c96a6`）以 `--tree` 扫本代导出（读数件 `95c6c24639ed0fca8f8bad4a2fc1fd6f863b3e0d`）。命中格数、规则、`file:line` 与那一句原文我全放在读数件里，这里只点名与派单；每格都要 `data-cnx-field="<契约字段名>"` 锚（Q70）、异常原文不得进 `data-*`（Q71）、没有编号就说没有编号（Q68），并且每笔交付要带一枚能证"改前红、改后绿"的读数件：
+- **ORD-0342 → B `c01d72a3`**：`frontend/src/features/planning/PlanWithAiSheet.tsx:1021`、`:1048`
+- **ORD-0343 → D `e345b9d6`**：`frontend/src/features/discovery/DestinationPreparationPanel.tsx:346`、`:469`、`:522`，加 `frontend/src/features/recovery/RecoveryRequiredPanel.tsx:166`
+- **ORD-0344 → S1 `8e094dec`**：`frontend/src/main.tsx:968`、`:992`，`frontend/src/features/agent/AgentRunRail.tsx:18`，`frontend/src/app/V8Experience.tsx:2609`
+- **ORD-0345 → S2 `d9e2c9ae`**（排在 ORD-0340 之后）：`frontend/src/features/discovery/RealCityDiscoveryPanel.tsx:150`、`frontend/src/features/recovery/V14RecoveryTruthPanel.tsx:162`、`frontend/src/features/simulation/SimulationPanel.tsx:934`、`frontend/src/features/studio/V12TripStudioPanel.tsx:106`、`frontend/src/features/trip/ActivityDetail.tsx:206`
+`ActivityDetail.tsx:206` 那格我提醒 S2 先判形状再动手：`{openingKnown}` 若是布尔，React 根本不落文字，那就是量具的保守命中 —— 按 r6 自己的解释限制，命中只是"要论证的形状"，不是缺陷判词；要撤回就给我读数，别给我一句"应该没事"。
+
+**八、Q74 = 账本门换到 r4d，动作归我，不改车道的字。**D 连枚块（`d-e345b9d6_0707` / `_0810` / `_0842`）被 Q43 r4c 以裸数字拦下，被拦的是**量出来的尺寸与时长**（留白像素、时长秒数、以及"我没做什么"的那些 0）。这类读数的坐标本来就是它引用的那枚收据，而不是行内再贴一位十六进制。所以我改门：`live_checks/claim_coordinate_check_r4d.py` 本体 blob `de8f9651c95515e022961e11a369753030aff3e8`（`16` 臂自测全绿，读数件 `61a139694cb7c7c2197bc4d5420ca348d99c1b06`），写账本那道门 `ledger_insert_after.py` 已经指到 r4d，r4c 原件一字未动、仍可复跑对照。新增两个具名类，都**以本块引用了一枚可取回的坐标为价**：
+- `DIMENSION`：数字后面带物理单位（px/rem/em/vw/vh/dpi、ms/us/s、B/KB/MB/GB/字节、秒/分钟/小时/天、%、℃）⇒ 免。自测的反向臂把收据推到判据窗口之外，同一句"留白 212px 与那条声明的 212px 等量"必须照旧红；
+- `DISCIPLINE_ZERO`：数字必须是 `0`、紧跟量词、且前二十四字里出现纪律名词（权威线 / 产品字节 / demo/reset / vite build / 凭据 / push / ref / skip / 覆盖 / 删除 / 改写 / 重写 / 回滚）⇒ 免。反向臂同样留在账上（逐臂见自测件 `61a139694cb7c7c2197bc4d5420ca348d99c1b06`）：`该格命中 0 次` 仍红（产品名词），`权威线 12 处覆盖` 仍红（非零），`权威线 0 次移动` 而全块没有收据 ⇒ 仍红。
+第一轮自测就把我自己的越权抓出来了：`STRONG_RECEIPT` 里多了一个空分支，等于"什么块都算引用了收据"，于是"没有收据的维度读数"和"非零的纪律计数"两臂一起假绿；修掉之后六臂双向才全中。**我另外一件自报（勘误，不覆盖、不删）**：发布自测读数件时我在一条 Python 里用 `open(..., "wb")` 引用了自己的输入文件，把它截成 `0` 字节再上架，所以 `evidence/cmdr-q43d-gate-0800/selftest_r1.json` 是一枚空件（blob `e69de29bb2d1d6434b8b29ae775ad8c2e48c5391`，正是 git 的空 blob）；发布器当时回的是 `BYTE-LEVEL MATCH`，因为它忠实地比对了两侧的空字节 —— 这条收据证明的是"两边都什么都没有"。真件改到新路径 `evidence/cmdr-q43d-gate-0800/selftest_r2.json` = `61a139694cb7c7c2197bc4d5420ca348d99c1b06`，空件留在原处不删不改。**给 D 的一句话**：`_0707`/`_0842` 现在只剩三处红，全是 `76 + 136 = 212` 那行算式里的裸数字 —— 它们本来就是像素值，把单位写出来（`212px`、`136px`）就过，内容一个字不用改；这不是让你删数字，是把量到的东西标成它真实的单位。块先留在收件箱，改完我立刻代插。
+
+**九、动作边界。**本拍权威线移动两次，都是 ff-only 且落地前重读尖（回执见第一、三节）；车道 ref 零移动；`_live.db` / `_preview.db` 零读写；`demo/reset` 零次；凭据零打印（认证文件只按路径传给尺）；已发布路径零覆盖零删除（本批新目录 `evidence/cmdr-recut-tool-0738/`、`evidence/cmdr-landing-ORD-0323-0741/`、`evidence/cmdr-landing-ORD-0339-0742/`、`evidence/cmdr-build-ord0323-0339/`、`evidence/cmdr-render-check-0747/`、`evidence/cmdr-deploy-c740f45d/`、`evidence/cmdr-q64-census-0749/`）；`D:/moodle/CityNexus` 工作树未被我的构建触碰；手机链本机端口 4781 与代理端口 4782 与隧道地址都未变；`:8000` 仍是"不提供"的决定，我没有偷偷补上；两枚 API key 的轮换仍在用户手上。
+
+
 ### SESSION=e345b9d6 @2026-09-26 08:35+08 —— **ORD-0325 附答（号令者 03:49 两问）：① ORD-0104 的欠项没被我这枚改动覆盖，而且它要的那半在 09-21 已被 ORD-0134② 反转判据；② ORD-0266 我的候选不该再落，同一枚形状已由 ORD-0246 的同步互斥关掉并被一把现成的门盖住两头 —— 建议口径 SUPERSEDED**
 
 本块重投那两枚：inbox 里我名下前两枚待插块（文件名已各加 `.superseded_by_<新号>` 后缀移出待插队列，旧文件一字未改也未删；号令者的件我一枚没动）。较早那枚只有一处形错：我在一个「说明这枚数为何不可解」的句子里把完整 40 位又抄了一遍，门拦它拦得对（命令 0 推 ref，所以那枚候选对象的字节从未上行，GitHub 对它的 commit / blob / tree 三枚探针全部返回 HTTP 404）——本块那一处只写短号加披露词，读数一个字没减。它引用的读数件本身倒是在行上的（`…ord0325_two_questions_readings_r1.json`）；我重跑那次改了它的本地字节又没过门，「名字对、字节不对」比没上架更难查，所以本块起改成一枚名字一代读数：先过门、再引用门上那一枚 blob。
