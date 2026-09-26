@@ -1,0 +1,45 @@
+{
+ "order": "ORD-0342",
+ "lane": "B c01d72a3",
+ "candidate": "003886ca83294a9ec97a98215cb8cc2e8232189b",
+ "branch": "review/B-ord0342-anchor-two-cells-b",
+ "parent": "c4a1b3392a78f91d10c4afa634b3e3877414ba29",
+ "channel_reality": {
+  "lane_origin": "iso\tD:/moodle/_qoder_th_20260918 (fetch)",
+  "why_this_matters": "`git push origin ...` from D:/moodle/_qoder_b_lane_20260923 writes to the local mirror D:/moodle/CityNexus only; it is NOT GitHub. My first push at 14:28 went that way, so between 14:28 and 15:0x the candidate existed on GitHub nowhere -- had the commander checked the remote in that window it would have read as unpushed.",
+  "what_works_from_this_box": "git@github.com:Canshu-King/CityNexus.git (ssh), and the REST API with the stored token",
+  "what_does_not": "https://github.com/... -- git asks for a password interactively and this shell has no /dev/tty, so it fails rc 128 rather than falling back to a helper",
+  "readback_ssh_rc": 0,
+  "readback_via_api": "003886ca83294a9ec97a98215cb8cc2e8232189b"
+ },
+ "collides_with_ORD_0338": [],
+ "files_mine": [
+  "frontend/e2e/qoder-ord0342-two-anchor-cells.spec.ts",
+  "frontend/src/features/planning/PlanWithAiSheet.tsx"
+ ],
+ "files_ORD_0338_on_the_tip": [
+  "frontend/e2e/qoder-ord0338-wizard-gap-clearance.spec.ts",
+  "frontend/e2e/qoder-wizard-advanced-is-tappable.spec.ts",
+  "frontend/src/design-tokens.css",
+  "frontend/src/features/setup/JourneyTrialSetup.tsx",
+  "frontend/src/styles.css"
+ ],
+ "authority_tip_now": "436d4a36c64c1b54a0b105f0f346425286a15701",
+ "tip_already_contains_my_candidate": false,
+ "merge_prediction": {
+  "command": "git merge-tree --write-tree 436d4a36c64c1b54a0b105f0f346425286a15701 003886ca83294a9ec97a98215cb8cc2e8232189b",
+  "exit": 0,
+  "tree": "52218c0c1f23433a7e0699edc71addbdd3b6ddcb",
+  "conflicted_paths": "none printed",
+  "frontend/src/features/planning/PlanWithAiSheet.tsx": {
+   "on_candidate": "a15d4950c2c255b3f62fe2ce5c9237dcb0e5764c",
+   "through_the_merge": "a15d4950c2c255b3f62fe2ce5c9237dcb0e5764c",
+   "identical": true
+  }
+ },
+ "fetch_recipe_for_commander": [
+  "git -C D:/moodle/CityNexus fetch git@github.com:Canshu-King/CityNexus.git refs/heads/review/B-ord0342-anchor-two-cells-b",
+  "git -C D:/moodle/CityNexus rev-parse FETCH_HEAD   # 003886ca83294a9ec97a98215cb8cc2e8232189b"
+ ],
+ "what_that_means": "the authority tip 436d4a36... does NOT contain the candidate; it is a review ref waiting for the landing gate"
+}
