@@ -1,0 +1,451 @@
+{
+ "schema": "CNX_ORD0338_PUBLISH_READBACK_V1",
+ "evidence_dir": "evidence/ord0338-wizard-gap-D",
+ "batch": "ORD-0338 甲 (fix implementation)",
+ "file_count": 27,
+ "runs": {
+  "gate_candidate": "run388490",
+  "gate_on_tip_export": "run387900",
+  "full_suite_on_candidate": "run388176"
+ },
+ "how": "每件过门后再从 commander/control 的 contents API 取回、逐字节比、两侧各重算一次 blob",
+ "per_file": {
+  "ord0338_fix_jia_r1.json": {
+   "exit": 0,
+   "first_line": "door rc=0 decision=CREATED",
+   "readback": {
+    "file": "evidence/ord0338-wizard-gap-D/ord0338_fix_jia_r1.json",
+    "door_decision": "CREATED",
+    "local_bytes": 23974,
+    "remote_bytes": 23974,
+    "local_blob": "b40871191dc939ffb63d309aa744714923b04202",
+    "remote_blob": "b40871191dc939ffb63d309aa744714923b04202",
+    "byte_identical": true,
+    "blob_recomputed_matches_api_sha": true
+   },
+   "bytes": 23974,
+   "local_blob": "b40871191dc939ffb63d309aa744714923b04202"
+  },
+  "ord0338_instrument_jia__qoder-ord0338-wizard-gap-clearance.spec.ts": {
+   "exit": 0,
+   "first_line": "door rc=0 decision=CREATED",
+   "readback": {
+    "file": "evidence/ord0338-wizard-gap-D/ord0338_instrument_jia__qoder-ord0338-wizard-gap-clearance.spec.ts",
+    "door_decision": "CREATED",
+    "local_bytes": 27340,
+    "remote_bytes": 27340,
+    "local_blob": "9d14da4957b78493850fafe3ab452829d41c98a1",
+    "remote_blob": "9d14da4957b78493850fafe3ab452829d41c98a1",
+    "byte_identical": true,
+    "blob_recomputed_matches_api_sha": true
+   },
+   "bytes": 27340,
+   "local_blob": "9d14da4957b78493850fafe3ab452829d41c98a1"
+  },
+  "ord0338_instrument_jia__qoder-wizard-advanced-is-tappable.spec.ts": {
+   "exit": 0,
+   "first_line": "door rc=0 decision=CREATED",
+   "readback": {
+    "file": "evidence/ord0338-wizard-gap-D/ord0338_instrument_jia__qoder-wizard-advanced-is-tappable.spec.ts",
+    "door_decision": "CREATED",
+    "local_bytes": 14248,
+    "remote_bytes": 14248,
+    "local_blob": "bdf75ffa0b6de02bb2442b547358e55c505eeafc",
+    "remote_blob": "bdf75ffa0b6de02bb2442b547358e55c505eeafc",
+    "byte_identical": true,
+    "blob_recomputed_matches_api_sha": true
+   },
+   "bytes": 14248,
+   "local_blob": "bdf75ffa0b6de02bb2442b547358e55c505eeafc"
+  },
+  "ord0338_jia_candidate_D1-band-bound-desktop__run388490.json": {
+   "exit": 0,
+   "first_line": "door rc=0 decision=CREATED",
+   "readback": {
+    "file": "evidence/ord0338-wizard-gap-D/ord0338_jia_candidate_D1-band-bound-desktop__run388490.json",
+    "door_decision": "CREATED",
+    "local_bytes": 736,
+    "remote_bytes": 736,
+    "local_blob": "2270111e5569b674c3362f99c70cfb0f0e217453",
+    "remote_blob": "2270111e5569b674c3362f99c70cfb0f0e217453",
+    "byte_identical": true,
+    "blob_recomputed_matches_api_sha": true
+   },
+   "bytes": 736,
+   "local_blob": "2270111e5569b674c3362f99c70cfb0f0e217453"
+  },
+  "ord0338_jia_candidate_D2-bar-covers-nothing-desktop__run388490.json": {
+   "exit": 0,
+   "first_line": "door rc=0 decision=CREATED",
+   "readback": {
+    "file": "evidence/ord0338-wizard-gap-D/ord0338_jia_candidate_D2-bar-covers-nothing-desktop__run388490.json",
+    "door_decision": "CREATED",
+    "local_bytes": 599,
+    "remote_bytes": 599,
+    "local_blob": "1976f3ef267b3587e00818ffc26b7f115e72848e",
+    "remote_blob": "1976f3ef267b3587e00818ffc26b7f115e72848e",
+    "byte_identical": true,
+    "blob_recomputed_matches_api_sha": true
+   },
+   "bytes": 599,
+   "local_blob": "1976f3ef267b3587e00818ffc26b7f115e72848e"
+  },
+  "ord0338_jia_candidate_D3-bar-vs-stage-ball-desktop__run388490.json": {
+   "exit": 0,
+   "first_line": "door rc=0 decision=CREATED",
+   "readback": {
+    "file": "evidence/ord0338-wizard-gap-D/ord0338_jia_candidate_D3-bar-vs-stage-ball-desktop__run388490.json",
+    "door_decision": "CREATED",
+    "local_bytes": 510,
+    "remote_bytes": 510,
+    "local_blob": "3327bd4a8fc54f945aa6d685f0a6c37a1aaccd40",
+    "remote_blob": "3327bd4a8fc54f945aa6d685f0a6c37a1aaccd40",
+    "byte_identical": true,
+    "blob_recomputed_matches_api_sha": true
+   },
+   "bytes": 510,
+   "local_blob": "3327bd4a8fc54f945aa6d685f0a6c37a1aaccd40"
+  },
+  "ord0338_jia_candidate_N1-band-bound__run388490.json": {
+   "exit": 0,
+   "first_line": "door rc=0 decision=CREATED",
+   "readback": {
+    "file": "evidence/ord0338-wizard-gap-D/ord0338_jia_candidate_N1-band-bound__run388490.json",
+    "door_decision": "CREATED",
+    "local_bytes": 743,
+    "remote_bytes": 743,
+    "local_blob": "7cba8cd64cfbefc92f62b3e5d546cd5d6f57911c",
+    "remote_blob": "7cba8cd64cfbefc92f62b3e5d546cd5d6f57911c",
+    "byte_identical": true,
+    "blob_recomputed_matches_api_sha": true
+   },
+   "bytes": 743,
+   "local_blob": "7cba8cd64cfbefc92f62b3e5d546cd5d6f57911c"
+  },
+  "ord0338_jia_candidate_N2-no-invisible-reserved__run388490.json": {
+   "exit": 0,
+   "first_line": "door rc=0 decision=CREATED",
+   "readback": {
+    "file": "evidence/ord0338-wizard-gap-D/ord0338_jia_candidate_N2-no-invisible-reserved__run388490.json",
+    "door_decision": "CREATED",
+    "local_bytes": 661,
+    "remote_bytes": 661,
+    "local_blob": "de71bbcb2369e12106d1db858d2ba6108d42966d",
+    "remote_blob": "de71bbcb2369e12106d1db858d2ba6108d42966d",
+    "byte_identical": true,
+    "blob_recomputed_matches_api_sha": true
+   },
+   "bytes": 661,
+   "local_blob": "de71bbcb2369e12106d1db858d2ba6108d42966d"
+  },
+  "ord0338_jia_candidate_N3-pane-scrolls__run388490.json": {
+   "exit": 0,
+   "first_line": "door rc=0 decision=CREATED",
+   "readback": {
+    "file": "evidence/ord0338-wizard-gap-D/ord0338_jia_candidate_N3-pane-scrolls__run388490.json",
+    "door_decision": "CREATED",
+    "local_bytes": 627,
+    "remote_bytes": 627,
+    "local_blob": "315c837f35282c73552734003df7b637b2017d81",
+    "remote_blob": "315c837f35282c73552734003df7b637b2017d81",
+    "byte_identical": true,
+    "blob_recomputed_matches_api_sha": true
+   },
+   "bytes": 627,
+   "local_blob": "315c837f35282c73552734003df7b637b2017d81"
+  },
+  "ord0338_jia_candidate_N4-bar-covers-nothing-mobile__run388490.json": {
+   "exit": 0,
+   "first_line": "door rc=0 decision=CREATED",
+   "readback": {
+    "file": "evidence/ord0338-wizard-gap-D/ord0338_jia_candidate_N4-bar-covers-nothing-mobile__run388490.json",
+    "door_decision": "CREATED",
+    "local_bytes": 595,
+    "remote_bytes": 595,
+    "local_blob": "3b03450edf787c28a6209daf6dee50008e852ca4",
+    "remote_blob": "3b03450edf787c28a6209daf6dee50008e852ca4",
+    "byte_identical": true,
+    "blob_recomputed_matches_api_sha": true
+   },
+   "bytes": 595,
+   "local_blob": "3b03450edf787c28a6209daf6dee50008e852ca4"
+  },
+  "ord0338_jia_candidate_N5-bar-vs-stage-ball-mobile__run388490.json": {
+   "exit": 0,
+   "first_line": "door rc=0 decision=CREATED",
+   "readback": {
+    "file": "evidence/ord0338-wizard-gap-D/ord0338_jia_candidate_N5-bar-vs-stage-ball-mobile__run388490.json",
+    "door_decision": "CREATED",
+    "local_bytes": 508,
+    "remote_bytes": 508,
+    "local_blob": "4f182e31668951be3875bd5534c4454cb9cc8c7f",
+    "remote_blob": "4f182e31668951be3875bd5534c4454cb9cc8c7f",
+    "byte_identical": true,
+    "blob_recomputed_matches_api_sha": true
+   },
+   "bytes": 508,
+   "local_blob": "4f182e31668951be3875bd5534c4454cb9cc8c7f"
+  },
+  "ord0338_jia_candidate_N6-arm-sticky-overlay__run388490.json": {
+   "exit": 0,
+   "first_line": "door rc=0 decision=CREATED",
+   "readback": {
+    "file": "evidence/ord0338-wizard-gap-D/ord0338_jia_candidate_N6-arm-sticky-overlay__run388490.json",
+    "door_decision": "CREATED",
+    "local_bytes": 1250,
+    "remote_bytes": 1250,
+    "local_blob": "ff8e0ef60f70335d186a899c37e3bda4a8367a3f",
+    "remote_blob": "ff8e0ef60f70335d186a899c37e3bda4a8367a3f",
+    "byte_identical": true,
+    "blob_recomputed_matches_api_sha": true
+   },
+   "bytes": 1250,
+   "local_blob": "ff8e0ef60f70335d186a899c37e3bda4a8367a3f"
+  },
+  "ord0338_jia_candidate_N7-arm-old-padding-back__run388490.json": {
+   "exit": 0,
+   "first_line": "door rc=0 decision=CREATED",
+   "readback": {
+    "file": "evidence/ord0338-wizard-gap-D/ord0338_jia_candidate_N7-arm-old-padding-back__run388490.json",
+    "door_decision": "CREATED",
+    "local_bytes": 1408,
+    "remote_bytes": 1408,
+    "local_blob": "a80ba9820e7629552608beaf0980f3f1ec5c7bb6",
+    "remote_blob": "a80ba9820e7629552608beaf0980f3f1ec5c7bb6",
+    "byte_identical": true,
+    "blob_recomputed_matches_api_sha": true
+   },
+   "bytes": 1408,
+   "local_blob": "a80ba9820e7629552608beaf0980f3f1ec5c7bb6"
+  },
+  "ord0338_jia_candidate_patch_r1.txt": {
+   "exit": 0,
+   "first_line": "door rc=0 decision=CREATED",
+   "readback": {
+    "file": "evidence/ord0338-wizard-gap-D/ord0338_jia_candidate_patch_r1.txt",
+    "door_decision": "CREATED",
+    "local_bytes": 12238,
+    "remote_bytes": 12238,
+    "local_blob": "607990f8d5291f95dec6e27a5dbbeaca6f330a1a",
+    "remote_blob": "607990f8d5291f95dec6e27a5dbbeaca6f330a1a",
+    "byte_identical": true,
+    "blob_recomputed_matches_api_sha": true
+   },
+   "bytes": 12238,
+   "local_blob": "607990f8d5291f95dec6e27a5dbbeaca6f330a1a"
+  },
+  "ord0338_jia_candidate_shot_ord0338-jia-D2-desktop-run388490.png": {
+   "exit": 0,
+   "first_line": "door rc=0 decision=CREATED",
+   "readback": {
+    "file": "evidence/ord0338-wizard-gap-D/ord0338_jia_candidate_shot_ord0338-jia-D2-desktop-run388490.png",
+    "door_decision": "CREATED",
+    "local_bytes": 102336,
+    "remote_bytes": 102336,
+    "local_blob": "e8e2182c84f2cd883e54a18561e89eff52c25350",
+    "remote_blob": "e8e2182c84f2cd883e54a18561e89eff52c25350",
+    "byte_identical": true,
+    "blob_recomputed_matches_api_sha": true
+   },
+   "bytes": 102336,
+   "local_blob": "e8e2182c84f2cd883e54a18561e89eff52c25350"
+  },
+  "ord0338_jia_candidate_shot_ord0338-jia-N4-mobile-run388490.png": {
+   "exit": 0,
+   "first_line": "door rc=0 decision=CREATED",
+   "readback": {
+    "file": "evidence/ord0338-wizard-gap-D/ord0338_jia_candidate_shot_ord0338-jia-N4-mobile-run388490.png",
+    "door_decision": "CREATED",
+    "local_bytes": 48026,
+    "remote_bytes": 48026,
+    "local_blob": "4214c378b8a8b43d3edeaf9c4b9739f6ac53f9cc",
+    "remote_blob": "4214c378b8a8b43d3edeaf9c4b9739f6ac53f9cc",
+    "byte_identical": true,
+    "blob_recomputed_matches_api_sha": true
+   },
+   "bytes": 48026,
+   "local_blob": "4214c378b8a8b43d3edeaf9c4b9739f6ac53f9cc"
+  },
+  "ord0338_jia_suite_rows.json": {
+   "exit": 0,
+   "first_line": "door rc=0 decision=CREATED",
+   "readback": {
+    "file": "evidence/ord0338-wizard-gap-D/ord0338_jia_suite_rows.json",
+    "door_decision": "CREATED",
+    "local_bytes": 139337,
+    "remote_bytes": 139337,
+    "local_blob": "70aef52451db5501234b5c88494f99bded4a3456",
+    "remote_blob": "70aef52451db5501234b5c88494f99bded4a3456",
+    "byte_identical": true,
+    "blob_recomputed_matches_api_sha": true
+   },
+   "bytes": 139337,
+   "local_blob": "70aef52451db5501234b5c88494f99bded4a3456"
+  },
+  "ord0338_jia_tip_D1-band-bound-desktop__run387900.json": {
+   "exit": 0,
+   "first_line": "door rc=0 decision=CREATED",
+   "readback": {
+    "file": "evidence/ord0338-wizard-gap-D/ord0338_jia_tip_D1-band-bound-desktop__run387900.json",
+    "door_decision": "CREATED",
+    "local_bytes": 709,
+    "remote_bytes": 709,
+    "local_blob": "0004a301381eaed63cfde740696cddeac9df77e8",
+    "remote_blob": "0004a301381eaed63cfde740696cddeac9df77e8",
+    "byte_identical": true,
+    "blob_recomputed_matches_api_sha": true
+   },
+   "bytes": 709,
+   "local_blob": "0004a301381eaed63cfde740696cddeac9df77e8"
+  },
+  "ord0338_jia_tip_D2-bar-covers-nothing-desktop__run387900.json": {
+   "exit": 0,
+   "first_line": "door rc=0 decision=CREATED",
+   "readback": {
+    "file": "evidence/ord0338-wizard-gap-D/ord0338_jia_tip_D2-bar-covers-nothing-desktop__run387900.json",
+    "door_decision": "CREATED",
+    "local_bytes": 387,
+    "remote_bytes": 387,
+    "local_blob": "22fb9bbbf008e25f0db5104e72eb94a9fb01e078",
+    "remote_blob": "22fb9bbbf008e25f0db5104e72eb94a9fb01e078",
+    "byte_identical": true,
+    "blob_recomputed_matches_api_sha": true
+   },
+   "bytes": 387,
+   "local_blob": "22fb9bbbf008e25f0db5104e72eb94a9fb01e078"
+  },
+  "ord0338_jia_tip_D3-bar-vs-stage-ball-desktop__run387900.json": {
+   "exit": 0,
+   "first_line": "door rc=0 decision=CREATED",
+   "readback": {
+    "file": "evidence/ord0338-wizard-gap-D/ord0338_jia_tip_D3-bar-vs-stage-ball-desktop__run387900.json",
+    "door_decision": "CREATED",
+    "local_bytes": 477,
+    "remote_bytes": 477,
+    "local_blob": "58dafd42f7a6e20a5a17341636c95b80c2582ded",
+    "remote_blob": "58dafd42f7a6e20a5a17341636c95b80c2582ded",
+    "byte_identical": true,
+    "blob_recomputed_matches_api_sha": true
+   },
+   "bytes": 477,
+   "local_blob": "58dafd42f7a6e20a5a17341636c95b80c2582ded"
+  },
+  "ord0338_jia_tip_N1-band-bound__run387900.json": {
+   "exit": 0,
+   "first_line": "door rc=0 decision=CREATED",
+   "readback": {
+    "file": "evidence/ord0338-wizard-gap-D/ord0338_jia_tip_N1-band-bound__run387900.json",
+    "door_decision": "CREATED",
+    "local_bytes": 718,
+    "remote_bytes": 718,
+    "local_blob": "394a75a4e08398dcc475087aa4ee39d102dda0d8",
+    "remote_blob": "394a75a4e08398dcc475087aa4ee39d102dda0d8",
+    "byte_identical": true,
+    "blob_recomputed_matches_api_sha": true
+   },
+   "bytes": 718,
+   "local_blob": "394a75a4e08398dcc475087aa4ee39d102dda0d8"
+  },
+  "ord0338_jia_tip_N2-no-invisible-reserved__run387900.json": {
+   "exit": 0,
+   "first_line": "door rc=0 decision=CREATED",
+   "readback": {
+    "file": "evidence/ord0338-wizard-gap-D/ord0338_jia_tip_N2-no-invisible-reserved__run387900.json",
+    "door_decision": "CREATED",
+    "local_bytes": 636,
+    "remote_bytes": 636,
+    "local_blob": "ad0b190c428eaeaf08cab4f2c360852f81cacd6d",
+    "remote_blob": "ad0b190c428eaeaf08cab4f2c360852f81cacd6d",
+    "byte_identical": true,
+    "blob_recomputed_matches_api_sha": true
+   },
+   "bytes": 636,
+   "local_blob": "ad0b190c428eaeaf08cab4f2c360852f81cacd6d"
+  },
+  "ord0338_jia_tip_N3-pane-scrolls__run387900.json": {
+   "exit": 0,
+   "first_line": "door rc=0 decision=CREATED",
+   "readback": {
+    "file": "evidence/ord0338-wizard-gap-D/ord0338_jia_tip_N3-pane-scrolls__run387900.json",
+    "door_decision": "CREATED",
+    "local_bytes": 642,
+    "remote_bytes": 642,
+    "local_blob": "d74d3c6d7249c54880870bcb4f0e6eb9dc563525",
+    "remote_blob": "d74d3c6d7249c54880870bcb4f0e6eb9dc563525",
+    "byte_identical": true,
+    "blob_recomputed_matches_api_sha": true
+   },
+   "bytes": 642,
+   "local_blob": "d74d3c6d7249c54880870bcb4f0e6eb9dc563525"
+  },
+  "ord0338_jia_tip_N4-bar-covers-nothing-mobile__run387900.json": {
+   "exit": 0,
+   "first_line": "door rc=0 decision=CREATED",
+   "readback": {
+    "file": "evidence/ord0338-wizard-gap-D/ord0338_jia_tip_N4-bar-covers-nothing-mobile__run387900.json",
+    "door_decision": "CREATED",
+    "local_bytes": 384,
+    "remote_bytes": 384,
+    "local_blob": "7033851b9a6c1e326e30b8f203c90c4881eb7efa",
+    "remote_blob": "7033851b9a6c1e326e30b8f203c90c4881eb7efa",
+    "byte_identical": true,
+    "blob_recomputed_matches_api_sha": true
+   },
+   "bytes": 384,
+   "local_blob": "7033851b9a6c1e326e30b8f203c90c4881eb7efa"
+  },
+  "ord0338_jia_tip_N5-bar-vs-stage-ball-mobile__run387900.json": {
+   "exit": 0,
+   "first_line": "door rc=0 decision=CREATED",
+   "readback": {
+    "file": "evidence/ord0338-wizard-gap-D/ord0338_jia_tip_N5-bar-vs-stage-ball-mobile__run387900.json",
+    "door_decision": "CREATED",
+    "local_bytes": 475,
+    "remote_bytes": 475,
+    "local_blob": "3962bf546f6a40c5c9b89d26aa187caa69855139",
+    "remote_blob": "3962bf546f6a40c5c9b89d26aa187caa69855139",
+    "byte_identical": true,
+    "blob_recomputed_matches_api_sha": true
+   },
+   "bytes": 475,
+   "local_blob": "3962bf546f6a40c5c9b89d26aa187caa69855139"
+  },
+  "ord0338_jia_tip_N6-arm-sticky-overlay__run387900.json": {
+   "exit": 0,
+   "first_line": "door rc=0 decision=CREATED",
+   "readback": {
+    "file": "evidence/ord0338-wizard-gap-D/ord0338_jia_tip_N6-arm-sticky-overlay__run387900.json",
+    "door_decision": "CREATED",
+    "local_bytes": 573,
+    "remote_bytes": 573,
+    "local_blob": "97df12f8f3ecb007740bde26a488d3aeb90abdf9",
+    "remote_blob": "97df12f8f3ecb007740bde26a488d3aeb90abdf9",
+    "byte_identical": true,
+    "blob_recomputed_matches_api_sha": true
+   },
+   "bytes": 573,
+   "local_blob": "97df12f8f3ecb007740bde26a488d3aeb90abdf9"
+  },
+  "ord0338_jia_tip_N7-arm-old-padding-back__run387900.json": {
+   "exit": 0,
+   "first_line": "door rc=0 decision=CREATED",
+   "readback": {
+    "file": "evidence/ord0338-wizard-gap-D/ord0338_jia_tip_N7-arm-old-padding-back__run387900.json",
+    "door_decision": "CREATED",
+    "local_bytes": 1388,
+    "remote_bytes": 1388,
+    "local_blob": "13dd68b406d0b2deed536d651bad2337efe8063d",
+    "remote_blob": "13dd68b406d0b2deed536d651bad2337efe8063d",
+    "byte_identical": true,
+    "blob_recomputed_matches_api_sha": true
+   },
+   "bytes": 1388,
+   "local_blob": "13dd68b406d0b2deed536d651bad2337efe8063d"
+  }
+ },
+ "all_byte_identical": true,
+ "all_blobs_agree": true,
+ "decisions": [
+  "CREATED"
+ ]
+}
