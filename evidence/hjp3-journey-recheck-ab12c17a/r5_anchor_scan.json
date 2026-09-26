@@ -1,0 +1,67 @@
+{
+ "ran_at_local": "2026-09-26T09:14:22+0800",
+ "chain": "http://127.0.0.1:4781",
+ "method": "read-only GET of the served shell and of the single JS asset it names, then literal search over those bytes; the wizard was NOT walked again in this run",
+ "requests_made": 2,
+ "clicks": 0,
+ "writes": 0,
+ "credentials_sent": false,
+ "shell": {
+  "path": "/",
+  "http_status": 200,
+  "content_type": "text/html",
+  "server_header": null,
+  "bytes": 1200,
+  "body_sha256": "2fa8006b46187f1bc0a7ae4818b1260f42248712023fdcefb2027e36b258a887",
+  "elapsed_ms": 4
+ },
+ "asset_named_by_the_served_page": "/assets/index-D6IOFaQS.js",
+ "asset": {
+  "path": "/assets/index-D6IOFaQS.js",
+  "http_status": 200,
+  "content_type": "text/javascript",
+  "server_header": null,
+  "bytes": 1260443,
+  "body_sha256": "937df73efc1c633980b2ad27e9a6b199ecdf0b088fdc95a2d095a016517320cd",
+  "elapsed_ms": 4
+ },
+ "asset_equals_what_my_click_pass_hashed": true,
+ "anchor_literals_in_the_served_bundle": {
+  "trial-create-error": {
+   "occurrences": 2,
+   "first_byte_offset": 1013316
+  },
+  "trial-next-reason": {
+   "occurrences": 2,
+   "first_byte_offset": 1014533
+  },
+  "trial-sticky-cta": {
+   "occurrences": 3,
+   "first_byte_offset": 959415
+  }
+ },
+ "data_testid_attribute_literals_in_the_bundle": 419,
+ "failure_sentences_literals_in_the_served_bundle": {
+  "这一步没有成功，行程还没有创建。": {
+   "occurrences": 1,
+   "first_byte_offset": 1013536
+  },
+  "服务器拒绝了这一步（HTTP ": {
+   "occurrences": 1,
+   "first_byte_offset": 1121597
+  }
+ },
+ "limit_named": "these are bundle-level literal counts. They show the anchor names and the two sentences ship inside this generation; they do NOT show when the anchor mounts in the DOM, which is the field my click pass dropped and which is marked NOT_PERSISTED in the scored file",
+ "dom_side_readings": {
+  "anchors_seen_after_the_press": [
+   {
+    "tag": "div",
+    "attr": "data-testid",
+    "len": 18,
+    "sha256": "deferred_to_node_side"
+   }
+  ],
+  "details_blocks_on_the_failure_screen": 0,
+  "anchors_seen_before_the_press": "NOT_PERSISTED - computed by the click pass and dropped from its output file; the follow-up DOM probe printed to console only, so this field has no bytes to re-hash"
+ }
+}
