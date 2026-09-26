@@ -1,0 +1,19 @@
+{
+ "run_id": "0323f3p1440",
+ "arm": "T08",
+ "cell": "T08",
+ "route": "/inbox",
+ "method": "GET",
+ "status_asked": 503,
+ "slot_text": "待审清单读不出来： http_status=503 content_type=application/json evidence=HTTP_RESPONSE 重读清单",
+ "status_in_slot": true,
+ "status_field": "503",
+ "status_field_equals_asked": true,
+ "needles_found": [],
+ "needles_found_in_attributes": [],
+ "attribute_pairs_swept": 63,
+ "foreign_status_found": [],
+ "internal_token_on_screen": false,
+ "nodeid": "D:\\moodle\\_qoder_b_lane_20260923\\frontend\\e2e\\qoder-ord0323-two-exposure-cells.spec.ts:673 > N4_T08_a_refused_GET_leaves_no_reply_words_and_keeps_its_own_reading — T08：自己那句原话不在屏上，自己那次读数还在屏上",
+ "test_status": "passed"
+}
