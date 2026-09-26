@@ -1,0 +1,34 @@
+{
+ "run_id": "cmdr151300o349bis",
+ "tree": "725bb7d43a13a120434ec553fb022a8fabfc3479",
+ "worktree": "D:/moodle/_qoder_cmdr_bisect_0349jia",
+ "target": "e2e/qoder-ord0349-two-legs-two-sentences.spec.ts",
+ "full": false,
+ "grep": null,
+ "ports": {
+  "frontend": 4400,
+  "backend": 5400
+ },
+ "python": "D:/moodle/CityNexus/.venv/Scripts/python.exe",
+ "db": "_cmdr151300o349bis.db",
+ "env_keys_dropped_names_only": [
+  "DEEPSEEK_API_KEY",
+  "OPENAI_API_KEY",
+  "WB2API_KEY"
+ ],
+ "node_modules": {
+  "mode": "present",
+  "path": "D:/moodle/_qoder_cmdr_bisect_0349jia/frontend/node_modules"
+ },
+ "exit_code": 1,
+ "verdict": "RED",
+ "counts": {
+  "passed": 5,
+  "failed": 1
+ },
+ "listed_case_count": 0,
+ "started_local": "2026-09-26T15:13:00",
+ "duration_s": 89.530024,
+ "log": "D:/moodle/_qoder_cmdr_ref_20260921/live_checks/e2e_logs/o349bis_725bb7d4_151300.log",
+ "log_bytes": 12740
+}
