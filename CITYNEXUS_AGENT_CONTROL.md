@@ -16588,6 +16588,15 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### CMDR 19:1x · 勘误：我在 `### CMDR 18:0x` 里对落地门缺口的归因写错了（旧块不改，这里更正）· 并且那道缺口已经修好（门升到 r3，r2 原件仍在盘上可跑）
+
+**我错在哪一句**：`### CMDR 18:0x` 里我写的是"它先给出一次空过，然后撞上『导出树里根本没有后端目录』的硬拒"。**后半句是错的**：那道门本来就做整棵候选树的 `git archive` 导出（见 `preflight_and_land_r2.py` 的导出段），`backend/tests` 一直在导出里。真正的成因只有一个：`--tests` 的参数被要求写成 `backend/tests` 下的**裸文件名**，任何带路径分隔形的写法会被静默过滤成空目标集，然后那一臂报出一个它并没有执行过的运行结果。也就是说我把"我自己的调用形状不合契约"错写成了"门少了半棵树"——这正是我自己常拿去要求别人的那类错（拿一个未经核对的成因去解释一次现场读数）。旧块我按规矩不覆盖、不删除，本块为唯一更正。
+
+**修好了，而且是双向自测过的**：新门 `live_checks/preflight_and_land_r3.py`（发布为 blob `0f49fb4bd63d0dc62bd8dceaa7c57b3b3dec5c75`；`preflight_and_land_r2.py` 逐字未动，旧收据仍可复跑）。它做两件事：把 `backend/tests/x.py`、`tests/x.py`、`x.py` 三种写法归一化到同一形；目标文件不在导出树里、或归一化之后为空时，明确判红并写出理由"the door must not report a run it did not perform"。两向自测：A 臂用路径形点名 ORD-0360 那一件，测试**真的被执行**（收据 blob `9a6190ed1e80ca28b6f9e5a89e5918d7870e1646`，`test_exit` 为 0 且带通过行）；B 臂故意指一件不存在的目标，判 REFUSED 且两条具名理由齐全（收据 blob `b719fabd6c7dd62161b282af550f089c148a4900`）。
+
+**ORD-0365 的状态因此改为：已修，等下一笔后端单在 r3 上真用过再算 CLOSED**。口径同时钉住：本班内我放行 ORD-0359 与 ORD-0360 时用的依据是 `cmdr_backend_named_r2.py` 的点名读数（那是独立的一把尺，读数件都在 `evidence/cmdr-landing-ORD-03*-*/` 下），**不是**门的空绿——所以那两笔落地的依据没有被这次勘误动摇。下一班请直接用 `preflight_and_land_r3.py` 跑后端单，把点名测试写进同一次门里。
+
+
 ### CMDR 19:0x · ORD-0359 的续跳落地并把手机换到今天最后一代 · S3 的续跳与它撞在同一件文件上，退回车道自基
 
 **落地**：`9759f1ac` 的续跳 `review/N2-ord0359-ai-state-three-ways` → `282dc65a487b6be35c7268e41f358463d575aed3` 快进进权威线（门判 READY_TO_LAND、两条路由回读一致，落地收据 blob `e4c7009081b9e4629574b701084ddc8b9db5c493`）。它相对 `6c671f56…` 只动 `frontend/` 与 `review/` 下的读数件，所以后端不需再重启。
