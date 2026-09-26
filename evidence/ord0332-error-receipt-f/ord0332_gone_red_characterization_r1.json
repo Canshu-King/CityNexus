@@ -1,0 +1,44 @@
+{
+ "order": "ORD-0332",
+ "cell": "tests/test_qoder_ord224_g3_generation_measurement.py::test_shape_a_terminal_job_then_five_requests_is_two_generations_not_one",
+ "why": "整套件 A/B 里唯一一枚\"消失的红\"，先定性再交付：它不是我修好的东西",
+ "reps": 3,
+ "trees": {
+  "tip_ab12c17a": [
+   {
+    "rc": 0,
+    "verdict": "green",
+    "summary": "1 passed, 2 warnings in 1.37s"
+   },
+   {
+    "rc": 0,
+    "verdict": "green",
+    "summary": "1 passed, 2 warnings in 1.20s"
+   },
+   {
+    "rc": 0,
+    "verdict": "green",
+    "summary": "1 passed, 2 warnings in 1.24s"
+   }
+  ],
+  "candidate_3a3feea3": [
+   {
+    "rc": 0,
+    "verdict": "green",
+    "summary": "1 passed, 2 warnings in 1.22s"
+   },
+   {
+    "rc": 0,
+    "verdict": "green",
+    "summary": "1 passed, 2 warnings in 1.20s"
+   },
+   {
+    "rc": 0,
+    "verdict": "green",
+    "summary": "1 passed, 2 warnings in 1.17s"
+   }
+  ]
+ },
+ "reads_same_across_trees": true,
+ "claimed_result": "两棵树单跑都是同一读法 ⇒ 那一枚是随并发翻的格子（g3 那一族，shape_b 同类），不是我这单修好的东西"
+}
