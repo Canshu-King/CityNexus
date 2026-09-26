@@ -1,0 +1,58 @@
+{
+ "generatedBy": "e345b9d6",
+ "order": "ORD-0338",
+ "file": "e2e/qoder-ord0338-wizard-gap-clearance.spec.ts",
+ "arm": "N7-arm-old-padding-back",
+ "run": "run383345",
+ "tree_sha": "e9a392db4f596362ffe3365174e1fef1366f3247",
+ "head": "e9a392db4f596362ffe3365174e1fef1366f3247",
+ "viewport": {
+  "width": 390,
+  "height": 844
+ },
+ "bound_px": 60,
+ "sweep_step_px": 32,
+ "candidate_unmodified": {
+  "band": {
+   "top": 180,
+   "bottom": 197,
+   "height": 17
+  },
+  "label": "目的地",
+  "members": [],
+  "tallestMember": 0,
+  "computed": {
+   "stepsPaddingBottom": "0px",
+   "cardPaddingBottom": "0px",
+   "sectionDisplay": "grid",
+   "ctaPosition": "static"
+  }
+ },
+ "with_that_padding_back": {
+  "band": {
+   "top": 180,
+   "bottom": 197,
+   "height": 17
+  },
+  "label": "目的地",
+  "members": [],
+  "tallestMember": 0,
+  "computed": {
+   "stepsPaddingBottom": "0px",
+   "cardPaddingBottom": "0px",
+   "sectionDisplay": "grid",
+   "ctaPosition": "static"
+  }
+ },
+ "landing_witness": {
+  "innerWidth": 1280,
+  "mq680": false,
+  "matches": 1,
+  "insideOnboarding": true,
+  "stepsPaddingBottom": "0px",
+  "olHeight": 22,
+  "sheets": 6,
+  "injectedSheet": "@media (max-width: 680px) {\n  .cn-onboarding .trial-steps { padding-bottom: 212px !important; }\n}"
+ },
+ "injected_css": "212px literal, effective value of the deleted declaration"
+}
