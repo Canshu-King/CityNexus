@@ -1,0 +1,484 @@
+{
+  "order": "ORD-0351",
+  "lane": "S2-hermes (d9e2c9ae)",
+  "commit_under_test": "7f26b2f24ccb5893e194bb27da39cc2284aa47d1",
+  "its_parent_is_the_authoritative_tip": true,
+  "base_tip_commit": "2d8b03b8c7734ea3b8521b80845e1b0bc1a07957",
+  "built_from": "git worktree at the tip; LF endings, core.autocrlf=false (measured, not assumed)",
+  "delivered_ref": "review/S2-ord0351-journey-deeplink-r2 (re-cut onto the live tip; product blobs equal to the base-generation commit)",
+  "change": {
+    "files": {
+      "frontend/src/main.tsx": {
+        "tip_blob": "4769a6e3712955cc9e5f20b43ee80e893676a9c0",
+        "fixed_blob": "341017e14314c67c6891c337967fb9379ee0223b",
+        "numstat": {
+          "added": 34,
+          "removed": 0
+        },
+        "lines_read_by_the_browser": "one: the id-shaped first path segment, adopted into the key boot already reads"
+      },
+      "frontend/e2e/qoder-stored-journey-link-is-an-entry.spec.ts": {
+        "numstat": {
+          "added": 358,
+          "removed": 0
+        },
+        "kind": "gate added by this order"
+      }
+    },
+    "why": "the named state, the per-leg attribution, the measured offline-copy offer and the picker all already live behind the shell's boot; this entry only hands that boot the reference the address bar already carried"
+  },
+  "no_new_surface_computed": {
+    "added_lines_measured": 34,
+    "non_comment_added_lines_scanned": 30,
+    "added_lines_with_jsx": [],
+    "added_lines_with_a_reason_or_copy_literal": [],
+    "failureAttribution_dirty_in_worktree": "",
+    "failureAttribution_untouched": true
+  },
+  "premise_measured_on_the_tip": {
+    "no_call_site_carries_a_journey_id": true,
+    "navigate_call_sites_measured": 11,
+    "navigate_argument_forms_observed": [
+      "\"agent\"",
+      "\"authoritative\"",
+      "\"hub\"",
+      "\"map\"",
+      "\"me\"",
+      "item.key"
+    ],
+    "unknown_path_falls_back_to_hub": [
+      {
+        "file": "frontend/src/app/V8Experience.tsx",
+        "line": 465,
+        "text": "if (!raw) return \"hub\";"
+      },
+      {
+        "file": "frontend/src/app/V8Experience.tsx",
+        "line": 472,
+        "text": "return \"hub\";"
+      }
+    ],
+    "boot_reads_the_id_only_from_storage": [
+      {
+        "file": "frontend/src/app/V8Experience.tsx",
+        "line": 731,
+        "text": "let journeyId = localStorage.getItem(\"citynexus.v8.journey_id\");"
+      },
+      {
+        "file": "frontend/src/app/V8Experience.tsx",
+        "line": 791,
+        "text": "journeyId: localStorage.getItem(\"citynexus.v8.journey_id\"),"
+      }
+    ],
+    "the_only_url_writer_is_navigate": [
+      {
+        "file": "frontend/src/app/V8Experience.tsx",
+        "line": 844,
+        "text": "window.history.pushState({}, \"\", `/v8/${value}`);"
+      }
+    ],
+    "tip_entry_branches_only_on_legacy": [
+      {
+        "file": "frontend/src/main.tsx",
+        "line": 1698,
+        "text": "if (path.startsWith(\"/legacy\")) return <LegacyApp />;"
+      }
+    ]
+  },
+  "two_way": {
+    "readings_file": "ord0351_two_way_readings_r1_092736.json",
+    "pre_written_expectations": {
+      "tip": {
+        "ord0351-a-a-link-to-a-saved-trip-opens-that-trip": "failed",
+        "ord0351-b-a-link-the-server-denies-says-so-by-name": "failed",
+        "ord0351-c-an-unanswered-link-is-never-blamed-on-the-server": "failed",
+        "ord0351-d-a-dead-link-empties-a-reference-not-a-trip": "failed",
+        "ord0351-e-route-names-are-not-journey-links": "passed"
+      },
+      "fixed": {
+        "ord0351-a-a-link-to-a-saved-trip-opens-that-trip": "passed",
+        "ord0351-b-a-link-the-server-denies-says-so-by-name": "passed",
+        "ord0351-c-an-unanswered-link-is-never-blamed-on-the-server": "passed",
+        "ord0351-d-a-dead-link-empties-a-reference-not-a-trip": "passed",
+        "ord0351-e-route-names-are-not-journey-links": "passed"
+      }
+    },
+    "statuses": {
+      "tip": {
+        "ord0351-a-a-link-to-a-saved-trip-opens-that-trip": "failed",
+        "ord0351-b-a-link-the-server-denies-says-so-by-name": "failed",
+        "ord0351-c-an-unanswered-link-is-never-blamed-on-the-server": "failed",
+        "ord0351-d-a-dead-link-empties-a-reference-not-a-trip": "failed",
+        "ord0351-e-route-names-are-not-journey-links": "passed"
+      },
+      "fixed": {
+        "ord0351-a-a-link-to-a-saved-trip-opens-that-trip": "passed",
+        "ord0351-b-a-link-the-server-denies-says-so-by-name": "passed",
+        "ord0351-c-an-unanswered-link-is-never-blamed-on-the-server": "passed",
+        "ord0351-d-a-dead-link-empties-a-reference-not-a-trip": "passed",
+        "ord0351-e-route-names-are-not-journey-links": "passed"
+      }
+    },
+    "tip_matches_expectation": true,
+    "fixed_matches_expectation": true,
+    "two_way": true,
+    "restored_equals_fixed": true,
+    "tip_named_failures": {
+      "ord0351-a-a-link-to-a-saved-trip-opens-that-trip": "Error: e2e/qoder-stored-journey-link-is-an-entry.spec.ts :: ord0351-a-a-link-to-a-saved-trip-opens-that-trip — 地址栏写着 f2474cd0-9d7a-4bc9-ae87-4f54c365e52b，屏上没有出现那一趟的 Today",
+      "ord0351-b-a-link-the-server-denies-says-so-by-name": "Error: e2e/qoder-stored-journey-link-is-an-entry.spec.ts :: ord0351-b-a-link-the-server-denies-says-so-by-name — 死链接没有任何具名屏（读数 []）",
+      "ord0351-c-an-unanswered-link-is-never-blamed-on-the-server": "Error: e2e/qoder-stored-journey-link-is-an-entry.spec.ts :: ord0351-c-an-unanswered-link-is-never-blamed-on-the-server — 这一腿没有任何具名屏",
+      "ord0351-d-a-dead-link-empties-a-reference-not-a-trip": "Error: e2e/qoder-stored-journey-link-is-an-entry.spec.ts :: ord0351-d-a-dead-link-empties-a-reference-not-a-trip — 死链接没有具名屏",
+      "ord0351-e-route-names-are-not-journey-links": ""
+    },
+    "harness": {
+      "playwright": "1.63.0",
+      "node": "3.12.14 / v24.14.0",
+      "python": null,
+      "frontend_port": 4791,
+      "backend_port": 8139,
+      "databases": {
+        "tip": "sqlite:///D:/moodle/_qoder_ord0351_S2/db/_o351tip092736.db",
+        "fixed": "sqlite:///D:/moodle/_qoder_ord0351_S2/db/_o351fixed092736.db"
+      },
+      "run_ids": {
+        "tip": "o351tip092736",
+        "fixed": "o351fixed092736"
+      },
+      "commands": {
+        "tip": "node node_modules/@playwright/test/cli.js test e2e/qoder-stored-journey-link-is-an-entry.spec.ts --project=chromium --no-deps --reporter=json",
+        "fixed": "node node_modules/@playwright/test/cli.js test e2e/qoder-stored-journey-link-is-an-entry.spec.ts --project=chromium --no-deps --reporter=json"
+      },
+      "ai_key_names_removed_from_child_env": [
+        "DEEPSEEK_API_KEY"
+      ]
+    }
+  },
+  "per_node_readings_fixed": {
+    "ord0351-a-a-link-to-a-saved-trip-opens-that-trip": {
+      "node": "ord0351-a-a-link-to-a-saved-trip-opens-that-trip",
+      "journeys": {
+        "this_link": "2dc834ab-2e62-4527-97bf-4a653b4700ad",
+        "another_on_the_same_server": "f4e94f23-399c-432f-99dd-c818b4e00e0a"
+      },
+      "link": "/v8/2dc834ab-2e62-4527-97bf-4a653b4700ad",
+      "heading_on_screen": "天津之旅",
+      "wizard_shown": false,
+      "experience_reads": [
+        {
+          "url": "http://127.0.0.1:4791/api/v1/journeys/2dc834ab-2e62-4527-97bf-4a653b4700ad/experience",
+          "status": 200
+        }
+      ],
+      "stored_reference_after": "2dc834ab-2e62-4527-97bf-4a653b4700ad",
+      "failure_view_present": false
+    },
+    "ord0351-b-a-link-the-server-denies-says-so-by-name": {
+      "node": "ord0351-b-a-link-the-server-denies-says-so-by-name",
+      "link": "/v8/6d57c2be-31d8-4b90-bb1d-8d9791ab81d7",
+      "in_page_probes": {
+        "target": 404,
+        "health": 200,
+        "onLine": true
+      },
+      "machine": {
+        "reason": "JOURNEY_NOT_FOUND",
+        "evidence_kind": "HTTP_RESPONSE",
+        "http_status": "404",
+        "source_layer": "RESOURCE_STATE",
+        "recovery_action": "choose-journey"
+      },
+      "visible_heading": "这台服务器上没有这一趟行程了",
+      "visible_body": "连接正常 这台服务器上没有这一趟行程了 这台设备还记得行程 6d57c2be…，但服务器明确回答它不存在（HTTP 404）。这不是网络问题：服务器刚才答得出来。你的其它行程没有受影响。 选一趟行程 重试 归因详情",
+      "wizard_shown": false,
+      "experience_reads": [
+        {
+          "url": "http://127.0.0.1:4791/api/v1/journeys/6d57c2be-31d8-4b90-bb1d-8d9791ab81d7/experience",
+          "status": 404
+        },
+        {
+          "url": "http://127.0.0.1:4791/api/v1/journeys/6d57c2be-31d8-4b90-bb1d-8d9791ab81d7/experience",
+          "status": 404
+        }
+      ],
+      "telemetry": [
+        {
+          "reason": "JOURNEY_NOT_FOUND",
+          "evidence_kind": "HTTP_RESPONSE",
+          "http_status": 404,
+          "context": "shell.boot.journeyRead"
+        },
+        {
+          "reason": "JOURNEY_NOT_FOUND",
+          "evidence_kind": "HTTP_RESPONSE",
+          "http_status": 404,
+          "context": "shell.boot.cleared:citynexus.v8.journey_id"
+        }
+      ]
+    },
+    "ord0351-c-an-unanswered-link-is-never-blamed-on-the-server": {
+      "node": "ord0351-c-an-unanswered-link-is-never-blamed-on-the-server",
+      "link": "/v8/6d57c2be-31d8-4b90-bb1d-8d9791ab81d7",
+      "route_interception_active": {},
+      "machine": {
+        "reason": "NETWORK_UNAVAILABLE",
+        "evidence_kind": "TRANSPORT",
+        "http_status": "",
+        "source_layer": "TRANSPORT",
+        "recovery_action": "retry"
+      },
+      "visible_heading": "网络不可用",
+      "visible_body": "连接 网络不可用 这一发请求没能出去，也没有收到任何回答，所以这是网络问题。这台设备上还没有可看的离线副本，所以现在没有可显示的内容。请检查网络后重试。 重试 归因详情",
+      "in_page_probes": {
+        "target": "rejected: TypeError",
+        "health": 200
+      },
+      "experience_reads": [],
+      "telemetry": [
+        {
+          "reason": "NETWORK_UNAVAILABLE",
+          "evidence_kind": "TRANSPORT",
+          "http_status": null,
+          "context": "shell.boot.journeyRead"
+        }
+      ]
+    },
+    "ord0351-d-a-dead-link-empties-a-reference-not-a-trip": {
+      "node": "ord0351-d-a-dead-link-empties-a-reference-not-a-trip",
+      "device_held_before_link": "88b8d280-d340-4ee3-b37d-76194158363c",
+      "link": "/v8/6d57c2be-31d8-4b90-bb1d-8d9791ab81d7",
+      "machine": {
+        "reason": "JOURNEY_NOT_FOUND",
+        "evidence_kind": "HTTP_RESPONSE",
+        "http_status": "404"
+      },
+      "reference_keys_after": [
+        [
+          "citynexus.v8.journey_id",
+          null
+        ],
+        [
+          "citynexus.demo.journey_id",
+          null
+        ],
+        [
+          "citynexus.demo.agent_run_id",
+          null
+        ]
+      ],
+      "other_journey_row_read_status": 200,
+      "other_journey_row_unchanged": true,
+      "ghost_read_status_after": 404,
+      "experience_reads": [
+        {
+          "url": "http://127.0.0.1:4791/api/v1/journeys/88b8d280-d340-4ee3-b37d-76194158363c/experience",
+          "status": 200
+        },
+        {
+          "url": "http://127.0.0.1:4791/api/v1/journeys/6d57c2be-31d8-4b90-bb1d-8d9791ab81d7/experience",
+          "status": 404
+        }
+      ]
+    },
+    "ord0351-e-route-names-are-not-journey-links": {
+      "node": "ord0351-e-route-names-are-not-journey-links",
+      "route_names_and_aliases": [
+        {
+          "name": "hub",
+          "uuid_shaped": false
+        },
+        {
+          "name": "live",
+          "uuid_shaped": false
+        },
+        {
+          "name": "map",
+          "uuid_shaped": false
+        },
+        {
+          "name": "studio",
+          "uuid_shaped": false
+        },
+        {
+          "name": "stay",
+          "uuid_shaped": false
+        },
+        {
+          "name": "discover",
+          "uuid_shaped": false
+        },
+        {
+          "name": "bookings",
+          "uuid_shaped": false
+        },
+        {
+          "name": "agent",
+          "uuid_shaped": false
+        },
+        {
+          "name": "authoritative",
+          "uuid_shaped": false
+        },
+        {
+          "name": "intelligence",
+          "uuid_shaped": false
+        },
+        {
+          "name": "twin",
+          "uuid_shaped": false
+        },
+        {
+          "name": "trips",
+          "uuid_shaped": false
+        },
+        {
+          "name": "me",
+          "uuid_shaped": false
+        },
+        {
+          "name": "today",
+          "uuid_shaped": false
+        },
+        {
+          "name": "copilot",
+          "uuid_shaped": false
+        },
+        {
+          "name": "wallet",
+          "uuid_shaped": false
+        },
+        {
+          "name": "itinerary",
+          "uuid_shaped": false
+        },
+        {
+          "name": "stays",
+          "uuid_shaped": false
+        },
+        {
+          "name": "home",
+          "uuid_shaped": false
+        }
+      ],
+      "server_issued_id_matches_shape": true,
+      "paths_walked": [
+        "/v8/hub",
+        "/v8/live",
+        "/v8/authoritative",
+        "/v8/today",
+        "/v8/bookings",
+        "/v8/stays"
+      ],
+      "alias_source": "app/V8Experience.tsx:447 ROUTE_ALIASES",
+      "held_journey": "b41c5f49-e9c6-4f48-ae3b-ea33ebca0fbe"
+    }
+  },
+  "per_node_readings_tip_present": {
+    "ord0351-a-a-link-to-a-saved-trip-opens-that-trip": false,
+    "ord0351-b-a-link-the-server-denies-says-so-by-name": false,
+    "ord0351-c-an-unanswered-link-is-never-blamed-on-the-server": false,
+    "ord0351-d-a-dead-link-empties-a-reference-not-a-trip": false,
+    "ord0351-e-route-names-are-not-journey-links": true
+  },
+  "what_each_node_claims": {
+    "ord0351-a-a-link-to-a-saved-trip-opens-that-trip": "the page itself asked the server for the id in the address bar and got 200, and the rendered heading is that trip's city, not the other trip that exists on the same server",
+    "ord0351-b-a-link-the-server-denies-says-so-by-name": "a ghost id reaches the named screen, classified JOURNEY_NOT_FOUND on HTTP_RESPONSE evidence with the 404 it classified on, and the visible sentence is the copy table's own",
+    "ord0351-c-an-unanswered-link-is-never-blamed-on-the-server": "the same link with its read aborted never reaches JOURNEY_NOT_FOUND and never prints the not-found sentence -- the two legs stay separate",
+    "ord0351-d-a-dead-link-empties-a-reference-not-a-trip": "a dead link voids the device's reference and nothing else: the other journey's row reads byte-identical before and after, and the ghost still 404s (nothing was created)",
+    "ord0351-e-route-names-are-not-journey-links": "no route key or alias is UUID-shaped, a server-issued id is, and walking six real routes neither adopts nor drops a reference"
+  },
+  "neighbor_gates_not_owned_by_this_lane": {
+    "zero_drift": true,
+    "per_gate": {
+      "product-v8": {
+        "spec": "e2e/product-v8.spec.ts",
+        "nodes_compared": 2,
+        "tip": {
+          "completes the multi-day stay and autonomous recovery journey": "passed",
+          "keeps the mobile Journey, Map, AI, Bookings, Me composition usable": "passed"
+        },
+        "fixed": {
+          "completes the multi-day stay and autonomous recovery journey": "passed",
+          "keeps the mobile Journey, Map, AI, Bookings, Me composition usable": "passed"
+        },
+        "red_both_arms": [],
+        "drift": []
+      },
+      "exit-gate-a": {
+        "spec": "e2e/qoder-failure-has-an-exit.spec.ts",
+        "nodes_compared": 1,
+        "tip": {
+          "ord0169-a-stale-journey-404-is-never-called-a-network-failure": "passed"
+        },
+        "fixed": {
+          "ord0169-a-stale-journey-404-is-never-called-a-network-failure": "passed"
+        },
+        "red_both_arms": [],
+        "drift": []
+      }
+    },
+    "readings_file": "ord0351_neighbor_gates_r1_092946.json"
+  },
+  "boundaries": {
+    "demo_reset_route_present_in_specs_run": [],
+    "seed_project_skipped": true,
+    "own_ports_and_own_sqlite": true,
+    "shared_live_or_preview_db_touched": [],
+    "product_files_touched": [
+      "frontend/e2e/qoder-stored-journey-link-is-an-entry.spec.ts",
+      "frontend/src/main.tsx"
+    ],
+    "existing_assertions_edited": "see verdict nothing_removed_from_the_product_file: removed=0",
+    "derived_result": null
+  },
+  "self_faults_disclosed": {
+    "first_run_raced_its_own_fixture": {
+      "readings_kept": [
+        "ord0351_two_way_readings_r1_091546.json"
+      ],
+      "what_was_wrong": "seedStoredId asserted on a response array before the reload's boot read had landed, so nodes d and e reported a setup failure that was not the product's; the fix was a waitForResponse in the helper",
+      "expectations_changed": false,
+      "pre_written_expectations_still": {
+        "tip": {
+          "ord0351-a-a-link-to-a-saved-trip-opens-that-trip": "failed",
+          "ord0351-b-a-link-the-server-denies-says-so-by-name": "failed",
+          "ord0351-c-an-unanswered-link-is-never-blamed-on-the-server": "failed",
+          "ord0351-d-a-dead-link-empties-a-reference-not-a-trip": "failed",
+          "ord0351-e-route-names-are-not-journey-links": "passed"
+        },
+        "fixed": {
+          "ord0351-a-a-link-to-a-saved-trip-opens-that-trip": "passed",
+          "ord0351-b-a-link-the-server-denies-says-so-by-name": "passed",
+          "ord0351-c-an-unanswered-link-is-never-blamed-on-the-server": "passed",
+          "ord0351-d-a-dead-link-empties-a-reference-not-a-trip": "passed",
+          "ord0351-e-route-names-are-not-journey-links": "passed"
+        }
+      }
+    },
+    "status_join_first_draft": "playwright titles carry the node id plus an em-dash and a Chinese clause; the first join keyed on the whole title and reported MISSING for every node",
+    "two_gauge_false_positives_fixed_before_publishing": {
+      "jsx_probe_ate_a_comment": "the surface gauge matched `<journey id>` inside my own block comment; it now scans non-comment added lines only",
+      "demo_reset_probe_ate_prose": "the boundary gauge grepped the words `demo/reset`, which my spec header uses to say it does not call it; it now looks for the route a caller uses, `/api/v1/demo/reset`"
+    }
+  },
+  "open_residual_named": {
+    "url_is_an_entry_not_a_persistent_identity": "after the entry hands off, any navigation inside the shell rewrites the address to a route name (app/V8Experience.tsx:844 navigate); making the journey id survive in-address belongs to frontend/src/app/V8Experience.tsx, which lane S1 holds an in-flight change on (ORD-0344b)",
+    "blocked_storage": "if localStorage.setItem throws, the address still names a journey this document cannot adopt and the shell will speak of the journey the device holds; closing that needs the boot surface, so it is named rather than fixed here",
+    "healthy_probe_with_aborted_read": "measured in node c: an aborted request plus a 200 /api/v1/health keeps reason NETWORK_UNAVAILABLE -- the sentence's body only claims what that one request did, which was measured, so no change is claimed here; it is reported for whoever owns the classifier's call sites"
+  },
+  "claimed_result": "OBSERVED",
+  "written_at": "2026-09-26T09:30:56+0800",
+  "verdicts": {
+    "two_way_matched_pre_written_expectations": true,
+    "all_five_nodes_green_on_the_fixed_generation": true,
+    "four_expected_nodes_red_on_the_tip": true,
+    "control_node_green_on_both_generations": true,
+    "per_node_readings_written": true,
+    "nothing_removed_from_the_product_file": true,
+    "worktree_restored_to_measured_bytes": true,
+    "neighbor_gates_zero_drift": true,
+    "entry_adds_no_jsx": true,
+    "entry_adds_no_reason_or_copy_literal": true,
+    "shared_classifier_file_untouched": true
+  },
+  "all_verdicts_true": true
+}
