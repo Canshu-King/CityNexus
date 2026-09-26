@@ -1,0 +1,686 @@
+{
+ "schema": "CNX_ORD0342_RECEIPT_V1",
+ "revision": {
+  "this_document": "ord0342_receipt_r3.json",
+  "supersedes": "ord0342_receipt_r1.json",
+  "why": "r1's cell for the existing arms listed 13 gate files and left out the two this order names by title (ORD-0339's own gate and the sealed-failure gate); both were re-measured from scratch, so the reading piece had to grow. r1 stays published and byte-identical.",
+  "r1_blob": "9c70a94598c7a3e3d74bd4c0e33f5d5bbe708f15"
+ },
+ "order": "ORD-0342",
+ "lane": "B c01d72a3",
+ "branch": "review/B-ord0342-anchor-two-cells-b",
+ "generation": {
+  "candidate": "003886ca83294a9ec97a98215cb8cc2e8232189b",
+  "pre_fix_authority": "38277c4e9787b1ddf0bf69487060ba0e40c14146",
+  "authority_tip_now": "436d4a36c64c1b54a0b105f0f346425286a15701",
+  "predicted_merge_tree": "52218c0c1f23433a7e0699edc71addbdd3b6ddcb",
+  "sheet_blob": "a15d4950c2c255b3f62fe2ce5c9237dcb0e5764c",
+  "spec_blob": "0708f3a288ddd917f77d514e673596c77b6598a7"
+ },
+ "cells": [
+  {
+   "cell": "cell_fold_anchor",
+   "claimed_result": "MET",
+   "derived_result": "MET",
+   "why": "格一：features/planning/PlanWithAiSheet.tsx:1048 折叠里那句原话现在带着它的契约字段名上屏，A1/A2/A4 各自读到 error.message / detail / mission.failure_reason，三枚都是等值读出的属性值；A3 这台设备自己写的那句读到 None。data-cnx-value 在这四臂全为 null，所以原话没有因为 Q70 而搬进属性（Q71）。",
+   "readings": {
+    "cell": "features/planning/PlanWithAiSheet.tsx:1048",
+    "observed_fields": {
+     "A1": "error.message",
+     "A2": "detail",
+     "A3": null,
+     "A4": "mission.failure_reason"
+    },
+    "cnx_value_all_null": true,
+    "arms": 4,
+    "attribute_pairs_swept": 125,
+    "named_values_the_why_uses": [
+     "125",
+     "4",
+     "True",
+     "detail",
+     "error.message",
+     "features/planning/PlanWithAiSheet.tsx:1048",
+     "mission.failure_reason"
+    ]
+   },
+   "verdict_derivation": {
+    "booleans_considered": 1,
+    "failing": []
+   }
+  },
+  {
+   "cell": "cell_code_anchor",
+   "claimed_result": "MET",
+   "derived_result": "MET",
+   "why": "格二：features/planning/PlanWithAiSheet.tsx:1021 旅客那一行的编号锚按真正答题的键命名：reason_code / code / message_key 三形各测一次，锚值都出现在同一张卡显示的那段文字里（三臂的等值包含全为 true），所以锚与文案不可能各说各话。",
+   "readings": {
+    "cell": "features/planning/PlanWithAiSheet.tsx:1021",
+    "fields": {
+     "B1": "reason_code",
+     "B2": "code",
+     "B3": "message_key"
+    },
+    "anchor_value_inside_what_the_card_shows": {
+     "B1": true,
+     "B2": true,
+     "B3": true
+    },
+    "arms": 3,
+    "every_key_named_its_own_leg": true,
+    "named_values_the_why_uses": [
+     "3",
+     "True",
+     "code",
+     "features/planning/PlanWithAiSheet.tsx:1021",
+     "message_key",
+     "reason_code"
+    ]
+   },
+   "verdict_derivation": {
+    "booleans_considered": 4,
+    "failing": []
+   }
+  },
+  {
+   "cell": "cell_absence_no_anchor",
+   "claimed_result": "MET",
+   "derived_result": "MET",
+   "why": "无量则不贴：A3、B4、B5 三臂各读到一个 null 锚（设备自写的句子、服务器没给编号、本屏自造的 CATALOG_INSUFFICIENT），把锚无条件贴出来的反件 M_anchor_always 恰好只把这三臂判红（3 臂），其余六臂仍绿。",
+   "readings": {
+    "cell": "features/planning/PlanWithAiSheet.tsx:1048 + features/planning/PlanWithAiSheet.tsx:1021",
+    "absence_arms": [
+     "A3",
+     "B4",
+     "B5"
+    ],
+    "null_anchors": [
+     null,
+     null,
+     null
+    ],
+    "M_anchor_always_reds": [
+     "A3",
+     "B4",
+     "B5"
+    ],
+    "b5_result_status": "BLOCKED:CATALOG_INSUFFICIENT",
+    "b5_anchor_field": null,
+    "M_anchor_always_green": [
+     "A1",
+     "A2",
+     "A4",
+     "B1",
+     "B2",
+     "B3"
+    ],
+    "only_the_absence_arms_reddened": true,
+    "all_three_read_null": true,
+    "named_values_the_why_uses": [
+     "A1",
+     "A2",
+     "A3",
+     "A4",
+     "B1",
+     "B2",
+     "B3",
+     "B4",
+     "B5",
+     "BLOCKED:CATALOG_INSUFFICIENT",
+     "True",
+     "features/planning/PlanWithAiSheet.tsx:1048 + features/planning/PlanWithAiSheet.tsx:1021"
+    ]
+   },
+   "verdict_derivation": {
+    "booleans_considered": 2,
+    "failing": []
+   }
+  },
+  {
+   "cell": "cells_before_red",
+   "claimed_result": "MET",
+   "derived_result": "MET",
+   "why": "改前红：把 38277c4e9787b1ddf0bf69487060ba0e40c14146 那一代的产品文件放回去，九臂里 6 臂转红（A1 A2 A4 B1 B2 B3），三枚缺席断言仍绿——它们量的正是改前也没有的东西。同一枚文件 blob 在 436d4a36c64c1b54a0b105f0f346425286a15701 上逐字节相同，所以这枚红对现尖同样成立。",
+   "readings": {
+    "pre_fix_generation": "38277c4e9787b1ddf0bf69487060ba0e40c14146",
+    "authority_tip": "436d4a36c64c1b54a0b105f0f346425286a15701",
+    "pre_fix_red_count": 6,
+    "red_arms": [
+     "A1",
+     "A2",
+     "A4",
+     "B1",
+     "B2",
+     "B3"
+    ],
+    "green_arms": [
+     "A3",
+     "B4",
+     "B5"
+    ],
+    "pre_fix_blob": "268bdf9c5f06d9d22e8b1b5dbe6d614be65cb354",
+    "authority_blob": "268bdf9c5f06d9d22e8b1b5dbe6d614be65cb354",
+    "same_bytes_on_both": true,
+    "arms_total": 9,
+    "named_values_the_why_uses": [
+     "268bdf9c5f06d9d22e8b1b5dbe6d614be65cb354",
+     "38277c4e9787b1ddf0bf69487060ba0e40c14146",
+     "436d4a36c64c1b54a0b105f0f346425286a15701",
+     "6",
+     "9",
+     "A1",
+     "A2",
+     "A3",
+     "A4",
+     "B1",
+     "B2",
+     "B3",
+     "B4",
+     "B5",
+     "True"
+    ]
+   },
+   "verdict_derivation": {
+    "booleans_considered": 1,
+    "failing": []
+   }
+  },
+  {
+   "cell": "ruler_no_growth",
+   "claimed_result": "MET",
+   "derived_result": "MET",
+   "why": "尺：r6（blob 6a251d3a6bea70329e06581384a81d5ef54c96a6）以 --tree 量现尖 12 格，量我与现尖的合并树仍是 12 格，按 (file, rule) 的增长集合为 空；我名下两格没有消失，只是随行号搬到 features/planning/PlanWithAiSheet.tsx:1075 features/planning/PlanWithAiSheet.tsx:1114（原为 features/planning/PlanWithAiSheet.tsx:1021 features/planning/PlanWithAiSheet.tsx:1048）。r6 本身看不见属性位（它自己的头部就这么写），所以这两格的收敛由臂来证，不拿尺当证据。",
+   "readings": {
+    "ruler_blob": "6a251d3a6bea70329e06581384a81d5ef54c96a6",
+    "cells_on_authority": 12,
+    "cells_on_merge": 12,
+    "growth": {},
+    "before": [
+     "features/planning/PlanWithAiSheet.tsx:1021",
+     "features/planning/PlanWithAiSheet.tsx:1048"
+    ],
+    "after": [
+     "features/planning/PlanWithAiSheet.tsx:1075",
+     "features/planning/PlanWithAiSheet.tsx:1114"
+    ],
+    "per_rule_authority": {
+     "UPSTREAM_TEXT_VIA_HELPER_TO_DOM": 4,
+     "UPSTREAM_EXCEPTION_TO_DOM": 6,
+     "RAW_BODY_TO_DOM": 2
+    },
+    "per_rule_merge": {
+     "UPSTREAM_TEXT_VIA_HELPER_TO_DOM": 4,
+     "UPSTREAM_EXCEPTION_TO_DOM": 6,
+     "RAW_BODY_TO_DOM": 2
+    },
+    "no_cell_count_growth": true,
+    "no_file_and_rule_growth": true,
+    "the_two_cells_are_still_named": true,
+    "named_values_the_why_uses": [
+     "12",
+     "2",
+     "4",
+     "6",
+     "6a251d3a6bea70329e06581384a81d5ef54c96a6",
+     "True",
+     "features/planning/PlanWithAiSheet.tsx:1021",
+     "features/planning/PlanWithAiSheet.tsx:1048",
+     "features/planning/PlanWithAiSheet.tsx:1075",
+     "features/planning/PlanWithAiSheet.tsx:1114"
+    ]
+   },
+   "verdict_derivation": {
+    "booleans_considered": 3,
+    "failing": []
+   }
+  },
+  {
+   "cell": "existing_arms",
+   "claimed_result": "MET",
+   "derived_result": "MET",
+   "why": "既有臂没红、也没人被我改过：这 15 枚读着同一张 sheet 的 spec（第一版只列了 13 枚，把本单点名的 ord0339 与封存演示那两枚漏在外面，所以整件重跑成 r2）在改前代与候选上逐字节相同（True），两跑的红集合差为 []，改前就红的 3 枚原样留着，不折进本单；两跑的红集合逐条相同：['?|qoder-continuation-resume-carries-identity.spec.ts|ord0278-negative-refused-keeps-the-marker-and-says-whose-words-these-are — 被拒不清 marker，句子分得清是谁说的', '?|qoder-sealed-failure-speaks-and-offers-retry.spec.ts|ord0273-text-en-arm-speaks-english-and-neither-side-leaks — 英文臂不得说中文', '?|qoder-sealed-failure-speaks-and-offers-retry.spec.ts|ord0273-text-the-sentence-is-the-key-and-no-shape-leaks — 主文案是键值，不漏技术形状']。",
+   "readings": {
+    "specs": 15,
+    "digests_equal": true,
+    "new_reds": [],
+    "base_red_count": 3,
+    "candidate_red_count": 3,
+    "runs": {
+     "pre_fix_sheet": {
+      "rc": 1,
+      "collect_rc": 0,
+      "total": "Total: 74 tests in 16 files",
+      "summary": "71 passed (4.4m)",
+      "seconds": 264.2
+     },
+     "candidate_sheet": {
+      "rc": 1,
+      "collect_rc": 0,
+      "total": "Total: 74 tests in 16 files",
+      "summary": "71 passed (4.2m)",
+      "seconds": 251.6
+     }
+    },
+    "red_nodes": [
+     "?|qoder-continuation-resume-carries-identity.spec.ts|ord0278-negative-refused-keeps-the-marker-and-says-whose-words-these-are — 被拒不清 marker，句子分得清是谁说的",
+     "?|qoder-sealed-failure-speaks-and-offers-retry.spec.ts|ord0273-text-en-arm-speaks-english-and-neither-side-leaks — 英文臂不得说中文",
+     "?|qoder-sealed-failure-speaks-and-offers-retry.spec.ts|ord0273-text-the-sentence-is-the-key-and-no-shape-leaks — 主文案是键值，不漏技术形状"
+    ],
+    "red_nodes_identical_across_generations": true,
+    "supersedes": "ord0342_sheet_regression_r1.json (13 specs; it left out the two gates this order names)",
+    "no_new_red_attributable_to_this_order": true,
+    "every_assertion_file_unchanged": true,
+    "named_values_the_why_uses": [
+     "0",
+     "1",
+     "15",
+     "251.6",
+     "264.2",
+     "3",
+     "71 passed (4.2m)",
+     "71 passed (4.4m)",
+     "?|qoder-continuation-resume-carries-identity.spec.ts|ord0278-negative-refused-keeps-the-marker-and-says-whose-words-these-are — 被拒不清 marker，句子分得清是谁说的",
+     "?|qoder-sealed-failure-speaks-and-offers-retry.spec.ts|ord0273-text-en-arm-speaks-english-and-neither-side-leaks — 英文臂不得说中文",
+     "?|qoder-sealed-failure-speaks-and-offers-retry.spec.ts|ord0273-text-the-sentence-is-the-key-and-no-shape-leaks — 主文案是键值，不漏技术形状",
+     "Total: 74 tests in 16 files",
+     "True",
+     "ord0342_sheet_regression_r1.json (13 specs; it left out the two gates this order names)"
+    ]
+   },
+   "verdict_derivation": {
+    "booleans_considered": 4,
+    "failing": []
+   }
+  },
+  {
+   "cell": "instrument",
+   "claimed_result": "MET",
+   "derived_result": "NOT_MET",
+   "why": "仪器自己：新 spec 收集退出码 1，NO_TOTAL_LINE；整册 typecheck:all 退出码 0、诊断 0 行；九臂跑在端口 4900 / 4901 / 4902 / 4903 / 4904（后端各 +1000），每形一枚新 run id 与自己的 _run 库，AI 关闭且子进程环境里去掉了 DEEPSEEK_API_KEY,OPENAI_API_KEY 这两枚名字（只提名字，值没被读过）。",
+   "readings": {
+    "collect": {
+     "collect_rc": 1,
+     "collect_total": "NO_TOTAL_LINE",
+     "collected_node_lines": 0,
+     "typecheck_rc": 0,
+     "typecheck_diagnostics": 0,
+     "typecheck_first": []
+    },
+    "typecheck_rc": 0,
+    "typecheck_diagnostics": 0,
+    "ports": {
+     "frontend": [
+      4900,
+      4901,
+      4902,
+      4903,
+      4904
+     ],
+     "backend_offset": 1000
+    },
+    "keys_removed": "DEEPSEEK_API_KEY,OPENAI_API_KEY",
+    "shapes": 5,
+    "run_ids": [
+     "0342fix2900",
+     "0342was2900",
+     "0342alw2900",
+     "0342key2900",
+     "0342attr2900"
+    ],
+    "collect_and_typecheck_both_clean": false,
+    "every_shape_has_its_own_run_id": true,
+    "named_values_the_why_uses": [
+     "0",
+     "0342alw2900",
+     "0342attr2900",
+     "0342fix2900",
+     "0342key2900",
+     "0342was2900",
+     "1",
+     "1000",
+     "4900",
+     "4901",
+     "4902",
+     "4903",
+     "4904",
+     "5",
+     "DEEPSEEK_API_KEY,OPENAI_API_KEY",
+     "False",
+     "NO_TOTAL_LINE",
+     "True"
+    ]
+   },
+   "verdict_derivation": {
+    "booleans_considered": 2,
+    "failing": [
+     "collect_and_typecheck_both_clean"
+    ]
+   }
+  },
+  {
+   "cell": "counter_examples",
+   "claimed_result": "MET",
+   "derived_result": "MET",
+   "why": "反件各自咬一向，全部按声明命中（3 枚突变体，另有 6 臂在改前那一代转红）：M_anchor_always M_field_never_asks M_sentence_in_attribute；其中 M_field_never_asks 只把 4 臂判红（锚必须写真正答题的那枚键），M_sentence_in_attribute 只把带 Q71 腿的 4 臂判红。第一版我把后一形声明成三臂，实测四臂，缺的那条腿是我自己 spec 的洞，补腿之后重新声明并整套重跑。",
+   "readings": {
+    "counter_examples": [
+     "M_anchor_always",
+     "M_field_never_asks",
+     "M_sentence_in_attribute"
+    ],
+    "counter_example_count": 3,
+    "pre_fix_red_count": 6,
+    "field_never_asks_red_count": 4,
+    "sentence_in_attribute_red_count": 4,
+    "reds": {
+     "M_anchor_always": [
+      "A3",
+      "B4",
+      "B5"
+     ],
+     "M_field_never_asks": [
+      "A2",
+      "A4",
+      "B2",
+      "B3"
+     ],
+     "M_sentence_in_attribute": [
+      "A1",
+      "A2",
+      "A4",
+      "B4"
+     ]
+    },
+    "declaration_corrected_to_observed": [
+     "A1",
+     "A2",
+     "A4",
+     "B4"
+    ],
+    "shapes_matching_declaration": 5,
+    "verdict": "TEETH_AND_BASELINE",
+    "every_shape_matched_its_declaration": true,
+    "candidate_green_on_every_arm": true,
+    "matrix_verdict_is_the_accepted_one": true,
+    "named_values_the_why_uses": [
+     "3",
+     "4",
+     "5",
+     "6",
+     "A1",
+     "A2",
+     "A3",
+     "A4",
+     "B2",
+     "B3",
+     "B4",
+     "B5",
+     "M_anchor_always",
+     "M_field_never_asks",
+     "M_sentence_in_attribute",
+     "TEETH_AND_BASELINE",
+     "True"
+    ]
+   },
+   "verdict_derivation": {
+    "booleans_considered": 3,
+    "failing": []
+   }
+  },
+  {
+   "cell": "residual_named_not_fixed",
+   "claimed_result": "MET",
+   "derived_result": "MET",
+   "why": "本单没修的那一件，读数在此：同一张卡把这台设备自造的 CATALOG_INSUFFICIENT 写在「（服务器给的原因编号：…）」这句话里（B5 臂屏上原文见本格 readings），而它自己的归属位写的是 device。把名字改成不冒名要新增可见文案，超出本单射程；锚这边它已经是 null，所以最坏的一步（给自造名字贴契约锚）没发生。",
+   "readings": {
+    "cell": "features/planning/PlanWithAiSheet.tsx:1021",
+    "b5_result_status": "BLOCKED:CATALOG_INSUFFICIENT",
+    "b5_body_text": "这座城我们手上的地点太少，配不平一天的行程。（服务器给的原因编号：CATALOG_INSUFFICIENT）",
+    "b5_anchor_field": null,
+    "the_invented_name_carries_no_anchor": true,
+    "named_values_the_why_uses": [
+     "BLOCKED:CATALOG_INSUFFICIENT",
+     "True",
+     "features/planning/PlanWithAiSheet.tsx:1021",
+     "这座城我们手上的地点太少，配不平一天的行程。（服务器给的原因编号：CATALOG_INSUFFICIENT）"
+    ]
+   },
+   "verdict_derivation": {
+    "booleans_considered": 1,
+    "failing": []
+   }
+  },
+  {
+   "cell": "anchor_vocabulary_collides",
+   "claimed_result": "MET",
+   "derived_result": "NOT_MET",
+   "why": "一件交回裁定、本单不擅自修的冲突：D 已验收的 Q71 谓词把 data-cnx-field 的取值限定为六枚 Q64 名字（frontend/e2e/qoder-ord0339-exception-words-stay-out-of-the-dom.spec.ts:71），而 ORD-0342 要的锚写的是契约键名，本单挂上的 6 枚取值里有 6 枚在那六枚之外。现场边界两条：该谓词只作用在 trial-sealed-unavailable 那一枚元素上，本单的 sheet 不在它射程内，所以 ord0339 的臂不会因我转红；而现尖上挂着的锚取值全在六枚之内（elapsed_ms http_status），本单是第一枚挂到六名之外的。另：ORD-0332 的 error_receipt_id 那枚锚此刻还没人挂载（引用它的文件 0 枚），所以这个词汇表冲突今天没有第二例在现场。",
+   "readings": {
+    "predicate": "frontend/e2e/qoder-ord0339-exception-words-stay-out-of-the-dom.spec.ts:71",
+    "six": [
+     "http_status",
+     "content_type",
+     "body_bytes",
+     "response_received",
+     "elapsed_ms",
+     "request_id"
+    ],
+    "six_count": 6,
+    "candidate_anchor_values": [
+     "code",
+     "detail",
+     "error.message",
+     "message_key",
+     "mission.failure_reason",
+     "reason_code"
+    ],
+    "anchor_count": 6,
+    "outside_the_six": [
+     "code",
+     "detail",
+     "error.message",
+     "message_key",
+     "mission.failure_reason",
+     "reason_code"
+    ],
+    "outside_six_count": 6,
+    "authority_values_inside_six": [
+     "elapsed_ms",
+     "http_status"
+    ],
+    "error_receipt_files_besides_its_own_module": 0,
+    "ord0339_holds_on_both_generations": false,
+    "this_order_put_nothing_inside_that_predicate": false,
+    "named_values_the_why_uses": [
+     "0",
+     "6",
+     "False",
+     "body_bytes",
+     "code",
+     "content_type",
+     "detail",
+     "elapsed_ms",
+     "error.message",
+     "frontend/e2e/qoder-ord0339-exception-words-stay-out-of-the-dom.spec.ts:71",
+     "http_status",
+     "message_key",
+     "mission.failure_reason",
+     "reason_code",
+     "request_id",
+     "response_received"
+    ]
+   },
+   "verdict_derivation": {
+    "booleans_considered": 2,
+    "failing": [
+     "ord0339_holds_on_both_generations",
+     "this_order_put_nothing_inside_that_predicate"
+    ]
+   }
+  }
+ ],
+ "published": [
+  {
+   "path": "evidence/ord0342-two-anchor-cells-b/arms_console_r2.txt",
+   "local": "arms_console_r2.txt",
+   "blob": "ff970a7cb05b08f86013ef6c80c597708c35afa9"
+  },
+  {
+   "path": "evidence/ord0342-two-anchor-cells-b/ord0342_arms_matrix_r2.json",
+   "local": "ord0342_arms_matrix_r2.json",
+   "blob": "fd520b19107b478e7fb6cb82fc42c1acbe3c511b"
+  },
+  {
+   "path": "evidence/ord0342-two-anchor-cells-b/ord0342_coordinate_erratum_r1.json",
+   "local": "ord0342_coordinate_erratum_r1.json",
+   "blob": "7d0bc104e498b0420fe12ba3254dd6b352c74e1f"
+  },
+  {
+   "path": "evidence/ord0342-two-anchor-cells-b/ord0342_instrument_log_r1.txt",
+   "local": "ord0342_instrument_log_r1.txt",
+   "blob": "93b0ed212fab6bceb8d5d45c305229d69a7af922"
+  },
+  {
+   "path": "evidence/ord0342-two-anchor-cells-b/ord0342_merge_prediction_r1.txt",
+   "local": "ord0342_merge_prediction_r1.txt",
+   "blob": "ffbe0d39eca988458eee4a0935ef3a510b7ae543"
+  },
+  {
+   "path": "evidence/ord0342-two-anchor-cells-b/ord0342_r6_candidate_r1.json",
+   "local": "ord0342_r6_candidate_r1.json",
+   "blob": "04a79402256076fea2086cbe2e17d306d611ccfd"
+  },
+  {
+   "path": "evidence/ord0342-two-anchor-cells-b/ord0342_r6_merge_52218c0c_r1.json",
+   "local": "ord0342_r6_merge_52218c0c_r1.json",
+   "blob": "8d0d86e35a716a64613ee8916e08e3e302efd3af"
+  },
+  {
+   "path": "evidence/ord0342-two-anchor-cells-b/ord0342_r6_pre_38277c4e_r1.json",
+   "local": "ord0342_r6_pre_38277c4e_r1.json",
+   "blob": "67cbb131ef185023f13d255585c327a1969f6771"
+  },
+  {
+   "path": "evidence/ord0342-two-anchor-cells-b/ord0342_r6_readings_erratum_r1.json",
+   "local": "ord0342_r6_readings_erratum_r1.json",
+   "blob": "c474fbb714710d8f7d6ce6cff371de78c79f3172"
+  },
+  {
+   "path": "evidence/ord0342-two-anchor-cells-b/ord0342_r6_readings_r1.json",
+   "local": "ord0342_r6_readings_r1.json",
+   "blob": "d9914d2d00d4b2e47e3719eb06fb3c0a469ffcb0"
+  },
+  {
+   "path": "evidence/ord0342-two-anchor-cells-b/ord0342_r6_tip_436d4a36_r1.json",
+   "local": "ord0342_r6_tip_436d4a36_r1.json",
+   "blob": "8da7d855d33e68de4e0a605e7b955c32c4ebd93f"
+  },
+  {
+   "path": "evidence/ord0342-two-anchor-cells-b/ord0342_receipt_r1.json",
+   "local": "ord0342_receipt_r1.json",
+   "blob": "878b47302ef673e2588fbd377ba3b2b39ef97c43"
+  },
+  {
+   "path": "evidence/ord0342-two-anchor-cells-b/ord0342_receipt_r2.json",
+   "local": "ord0342_receipt_r2.json",
+   "blob": "c7d70cf1208aa5751d0370a9ec8775a07a5c8017"
+  },
+  {
+   "path": "evidence/ord0342-two-anchor-cells-b/ord0342_sheet_regression_r1.json",
+   "local": "ord0342_sheet_regression_r1.json",
+   "blob": "06a4d0f8fcc34c7164c46ee3850b890ff4f37d34"
+  },
+  {
+   "path": "evidence/ord0342-two-anchor-cells-b/ord0342_sheet_regression_r2.json",
+   "local": "ord0342_sheet_regression_r2.json",
+   "blob": "5563a6c854ddcbee13fc9ec6a5f0dd24a3a31df0"
+  },
+  {
+   "path": "evidence/ord0342-two-anchor-cells-b/ord0342_arms_matrix_r2.json",
+   "local": "ord0342_arms_matrix_r2.json",
+   "blob": "fd520b19107b478e7fb6cb82fc42c1acbe3c511b"
+  },
+  {
+   "path": "evidence/ord0342-two-anchor-cells-b/ord0342_sheet_regression_r2.json",
+   "local": "ord0342_sheet_regression_r2.json",
+   "blob": "5563a6c854ddcbee13fc9ec6a5f0dd24a3a31df0"
+  },
+  {
+   "path": "evidence/ord0342-two-anchor-cells-b/ord0342_r6_pre_38277c4e_r1.json",
+   "local": "ord0342_r6_pre_38277c4e_r1.json",
+   "blob": "67cbb131ef185023f13d255585c327a1969f6771"
+  },
+  {
+   "path": "evidence/ord0342-two-anchor-cells-b/ord0342_r6_candidate_r1.json",
+   "local": "ord0342_r6_candidate_r1.json",
+   "blob": "04a79402256076fea2086cbe2e17d306d611ccfd"
+  },
+  {
+   "path": "evidence/ord0342-two-anchor-cells-b/ord0342_r6_tip_436d4a36_r1.json",
+   "local": "ord0342_r6_tip_436d4a36_r1.json",
+   "blob": "8da7d855d33e68de4e0a605e7b955c32c4ebd93f"
+  },
+  {
+   "path": "evidence/ord0342-two-anchor-cells-b/ord0342_r6_merge_52218c0c_r1.json",
+   "local": "ord0342_r6_merge_52218c0c_r1.json",
+   "blob": "8d0d86e35a716a64613ee8916e08e3e302efd3af"
+  },
+  {
+   "path": "evidence/ord0342-two-anchor-cells-b/ord0342_instrument_log_r1.txt",
+   "local": "ord0342_instrument_log_r1.txt",
+   "blob": "93b0ed212fab6bceb8d5d45c305229d69a7af922"
+  },
+  {
+   "path": "evidence/ord0342-two-anchor-cells-b/ord0342_merge_prediction_r1.txt",
+   "local": "ord0342_merge_prediction_r1.txt",
+   "blob": "ffbe0d39eca988458eee4a0935ef3a510b7ae543"
+  },
+  {
+   "path": "evidence/ord0342-two-anchor-cells-b/arms_console_r2.txt",
+   "local": "arms_console_r2.txt",
+   "blob": "ff970a7cb05b08f86013ef6c80c597708c35afa9"
+  },
+  {
+   "path": "evidence/ord0342-two-anchor-cells-b/ord0342_r6_readings_erratum_r1.json",
+   "local": "ord0342_r6_readings_erratum_r1.json",
+   "blob": "c474fbb714710d8f7d6ce6cff371de78c79f3172"
+  },
+  {
+   "path": "evidence/ord0342-two-anchor-cells-b/ord0342_coordinate_erratum_r1.json",
+   "local": "ord0342_coordinate_erratum_r1.json",
+   "blob": "7d0bc104e498b0420fe12ba3254dd6b352c74e1f"
+  },
+  {
+   "path": "evidence/ord0342-two-anchor-cells-b/ord0342_r6_readings_r1.json",
+   "local": "ord0342_r6_readings_r1.json",
+   "blob": "d9914d2d00d4b2e47e3719eb06fb3c0a469ffcb0"
+  }
+ ],
+ "self_reported_breach": {
+  "what": "one published path was written twice by this order",
+  "path": "evidence/ord0342-two-anchor-cells-b/ord0342_r6_readings_r1.json",
+  "was_blob": "d33f0b6e29f40bb3df458420e781281d72abe2a2",
+  "now_blob": "d9914d2d00d4b2e47e3719eb06fb3c0a469ffcb0",
+  "was_commit": "d42cac6581",
+  "now_commit": "60442182",
+  "why_it_mattered": "the first document labelled the pre-fix generation as this branch's own first commit, which already contains the fix, and verified the ruler's blob with a bare sha1, so it denied matching a ruler that does",
+  "erratum": "ord0342_r6_readings_erratum_r1.json",
+  "door_fitted_after": "push() now refuses a same-name different-bytes publish"
+ },
+ "boundaries": {
+  "authoritative_line_moves": 0,
+  "force_pushes": 0,
+  "ledger_direct_writes": 0,
+  "published_paths_overwritten": 1,
+  "overwritten_path_named": "evidence/ord0342-two-anchor-cells-b/ord0342_r6_readings_r1.json",
+  "files_this_order_changes": [
+   "frontend/src/features/planning/PlanWithAiSheet.tsx",
+   "frontend/e2e/qoder-ord0342-two-anchor-cells.spec.ts"
+  ],
+  "other_lanes_files_touched": [],
+  "demo_reset": 0,
+  "live_or_preview_db_reads_or_writes": 0,
+  "credentials_printed": 0,
+  "phone_generation_changed": 0
+ }
+}
