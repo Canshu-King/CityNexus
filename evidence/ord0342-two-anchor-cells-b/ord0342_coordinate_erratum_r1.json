@@ -1,0 +1,13 @@
+{
+ "schema": "CNX_ORD0342_PUBLISHED_COORDINATE_ERRATUM_V1",
+ "order": "ORD-0342",
+ "lane": "B c01d72a3",
+ "defect": "a 40-hex coordinate quoted inside a published receipt was hand-typed from a console line and was the bare sha1 of the file's bytes, not a git blob id, so it resolves nowhere",
+ "where": "ord0342_receipt_r2.json -> revision.superseded_blob",
+ "wrong_value": "9c70a94598c7a3e3d74bd4c0e33f5d5bbe708f15",
+ "wrong_because": "git's blob id is sha1 over 'blob <len>' + NUL + bytes; the console line that was transcribed printed the publisher's raw sha1 of the content instead",
+ "correct_value_for_ord0342_receipt_r1.json": "878b47302ef673e2588fbd377ba3b2b39ef97c43",
+ "r2_itself": "c7d70cf1208aa5751d0370a9ec8775a07a5c8017",
+ "correction_ships_in": "ord0342_receipt_r3.json (r2 stays published and byte-identical)",
+ "rule_fitted_after": "the receipt now takes that field from published_blob(), which reads the publisher's own rows, so no 40-hex in the block or the receipt is typed by hand"
+}
