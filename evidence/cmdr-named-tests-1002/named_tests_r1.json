@@ -1,0 +1,52 @@
+{
+ "sha": "2d8b03b8c7734ea3b8521b80845e1b0bc1a07957",
+ "tree": "9fe930bd2be6a973a2e0c5f29fd29c14e654a598",
+ "export": "D:/moodle/_qoder_cmdr_ref_20260921/live_checks\\snap_named_tests_2d8b03b8",
+ "archive_rc": 0,
+ "at_local": "2026-09-26T10:02:22+0800",
+ "interpreter": "D:/moodle/CityNexus/.venv/Scripts/python.exe",
+ "files": [
+  {
+   "file": "test_qoder_ord0310_keyless_leg_receipts.py",
+   "rc": 0,
+   "tail": [
+    "    _PortalFactoryType = Callable[[], AbstractContextManager[anyio.abc.BlockingPortal]]",
+    "-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html",
+    "6 passed, 2 warnings in 1.25s"
+   ],
+   "passed": null,
+   "failed": null,
+   "verdict": "GREEN"
+  },
+  {
+   "file": "test_qoder_ord0327_write_bound_default.py",
+   "rc": 0,
+   "tail": [
+    "    _PortalFactoryType = Callable[[], AbstractContextManager[anyio.abc.BlockingPortal]]",
+    "-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html",
+    "7 passed, 2 warnings in 3.66s"
+   ],
+   "passed": null,
+   "failed": null,
+   "verdict": "GREEN"
+  },
+  {
+   "file": "test_solver_runtime_policy.py",
+   "rc": 0,
+   "tail": [
+    "......                                                                   [100%]",
+    "6 passed in 0.04s"
+   ],
+   "passed": null,
+   "failed": null,
+   "verdict": "GREEN"
+  }
+ ],
+ "whole_suite": {
+  "collect_exit": 0,
+  "collected": 1351,
+  "interrupted": false
+ },
+ "reading_note": "three files my landing gate has been naming as whole_suite.error_lines since ORD-0323; each run standalone on the current tip returns rc 0, so the extractor over-reports (a warning line that contains a node id) rather than the line being red. Verdicts here are derived from the recorded rc of each run, none typed by hand.",
+ "derived_result": "NOT_A_RED_ON_THE_LINE"
+}
