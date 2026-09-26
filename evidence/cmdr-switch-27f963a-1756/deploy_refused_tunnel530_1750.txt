@@ -1,0 +1,15 @@
+proxy guard: {'proxy_env_before': {'HTTPS_PROXY': 'http://127.0.0.1:7892', 'HTTP_PROXY': 'http://127.0.0.1:7892'}, 'refused': ['HTTPS_PROXY=127.0.0.1:7892', 'HTTP_PROXY=127.0.0.1:7892'], 'action': 'PROXY_CLEARED_AND_DIRECT'}
+[pre] served index.html references: ['/assets/index-BOIAHTWw.js', '/assets/index-DzHXVT59.css']
+[pre] build references          : ['/assets/index-KlTESvvs.js', '/assets/index-E7SOVfSq.css']
+[union] added 4 new asset(s); 0 already byte-identical; 79 name->digest bindings written
+[gate] 2 new asset(s) reachable x2, real bytes vs the build export, no HTML fallback
+[preflight] BLOCKED / promotion=PENDING_POST_SWITCH  (B_pre/C_pre/G_pre/I_pre/F_pre/A_pre; reds=7)
+  RED: ? :: [None]
+  RED: ? :: ['None/None', '530/None']
+  RED: /assets/index-KlTESvvs.js :: 
+  RED: /assets/index-KlTESvvs.js :: 
+  RED: ? :: ['530/None', '530/None']
+  RED: / :: 
+  RED: / :: 
+REFUSED: pre-flight is BLOCKED, so the old generation stays live and nothing is switched: ? :: [None]; ? :: ['None/None', '530/None']; /assets/index-KlTESvvs.js :: ; /assets/index-KlTESvvs.js :: 
+[receipt] D:\moodle\_qoder_cmdr_ref_20260921\live_checks\receipts\deploy_refused_preflight_0926_175021.json
