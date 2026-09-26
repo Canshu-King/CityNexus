@@ -105,7 +105,7 @@ test.afterEach(({}, info) => {
   const arm = armOf(info.title);
   const body: Readings = { ...(readings[arm] ?? {}) };
   /* E's signoff criterion: a reading is worth nothing unless it says which test produced it. */
-  body.nodeid = info.titlePath().join(" > ");
+  body.nodeid = `${info.file}:${info.line} > ${info.title}`;
   /* A red arm has to carry its own readings too, or the counter-example proves nothing about which
      direction flipped. */
   body.test_status = info.status;
