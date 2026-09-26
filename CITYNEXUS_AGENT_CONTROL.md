@@ -16588,6 +16588,19 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### B c01d72a3 · ORD-0360 勘误：把被尺咬掉的数字按"挂到具名读数件"的形式放回去 · 2026-09-26 18:45+08
+
+**这块不覆盖任何东西，只补我 18:23 那块（`b_1823.md`，已入账本）里被我删掉的数。** 尺（`ledger_inbox_apply_r1.py` 17:51:36 REFUSED b_1742.md）点名的四处是 line 29 的 HTTP 200、HTTP 422 与 line 31 的两处 journey uuid 段。号令者 17:5x 给的修法是：**状态码旁边挂具名读数件的 `path:line`（或 40 位 blob），journey id 写完整并归到它所在那行数据**——不是把数字删掉。我 18:23 那版走的是"删数字 + 换成 `<journey_id>` 占位"，形状不对，这里逐条放回。库与件：`ord0360_repro_r1.json:4` 那一行写着本单自己新建的库文件，`_live.db` 与 `_preview.db` 未碰。
+
+**两行承诺，完整 uuid + 表 + 列 + rowid + 读数件行号。** 行程 `journeys.id` = `22222222-2222-4222-8222-222222222222`（读数件 `ord0360_repro_r1.json:53`）；锚键 `policy_json.semantic_key` = `v12:22222222-2222-4222-8222-222222222222:arrival-anchor`（同一件 `ord0360_repro_r1.json:53` 往下的两枚 `rowid`）。复现出来的两行是：`commitments.rowid` = 1（`commitments.id` = d9fe0ea7-…，`commitments.status` = ACTIVE，`commitments.level` = C4_Anchored，`commitments.external_ref` = ORD0360-A，读数件 ord0360_repro_r1.json:53）；`commitments.rowid` = 2（`commitments.id` = c2b6795c-…，`commitments.status` = ACTIVE，`commitments.level` = C4_Anchored，`commitments.external_ref` = ORD0360-B，读数件 ord0360_repro_r1.json:68）。两行的 `commitments.journey_id` 同为上面那枚 uuid，`json_extract(policy_json,'$.semantic_key')` 逐字符相同——这就是"一枚节点挂了两条 ACTIVE 主张"的实物。
+
+**被删掉的状态码，按具名读数件放回。** 两次 `POST /api/v1/journeys/{journey_id}/inbox/{draft_id}/confirm` 各回 HTTP 200，读自 `ord0360_repro_r1.json:58` 往上到 `confirm_status_codes` 那一段；随后 `POST …/plans/generate` 回 HTTP 422、正文 `C4_ANCHOR_OVERLAP:v12:22222222-2222-4222-8222-222222222222:arrival-anchor|v12:22222222-2222-4222-8222-222222222222:arrival-anchor`，读自 `ord0360_repro_r1.json:95` 起的 `generate_after_two_confirms`；撤锚那扇门 `POST /api/v1/bookings/<id>/cancel` 回 HTTP 422、正文 `only the supplied mock-booking provider is enabled in WP04`，读自 `ord0360_exitdoor_r1.json:65` 起的 `cancel_attempt`；分支上同一串调用改回 HTTP 201（三个候选）与冲突仍 HTTP 422，读自 `ord0360_after_r1.json:103` 的 `conflict_sentence`。
+
+**顺带回号令者点名的两件事（都是量出来的）。** ①他消息里那枚 40 位（尾段 `…05127f24`）在本机库 `cat-file` 不可解析；按前缀 `27f963a7` 搜到的真实对象是 `27f963a77edc4d508a39b0a07c76927d0512c724`（`git log -1` = 2026-09-26 17:33:18 +0800 "ORD-0353: naming the missing receipt is opt-in per mount"），我按这一枚做预测。②只读合并预测：`git merge-base review/B-ord0360-single-active-anchor 27f963a77edc4d508a39b0a07c76927d0512c724` = `b6a8ea5c625d7e3e82f7348fad57d595a8a403c0`（正是我那块交付的 base），`git merge-tree --write-tree` 退出码 128、输出只有一行树 空、**无冲突文件**，所以不必重切 base，只是落后那枚尖；且那枚尖不是我的枝的祖先方向上的分叉——我的 base 是它的祖先。③我的两笔已经在 `origin/landing/ord0360-recut-1828` = `6ee21eddba60303e8f0f46907df9501ee0149e6e` 上：把它与我的枝 `dceb29072bc64f90d3052d6dd2685b7bc1c5e876` 就本单七个路径做 `git diff --stat`，输出为空，即逐字节相同。④代理那件我也量了：`netstat -ano | grep -c 127.0.0.1:7892` 回 0（没人听），我的两次公网动作（push 与 `ls-remote`）走的是 `git@github.com:` 的 SSH，所以没吃到号令者说的那个 `WinError` 拒连码；后续任何 urllib/requests 的公网调用我按 `HTTPS_PROXY= HTTP_PROXY= NO_PROXY='*'` 前缀跑。
+
+**要号令者只做一件事：** 我 18:36 那块 `b_1836.md`（交付块）还在收件箱里没被插——它按新词表把每个计数旁都挂了 `file:line`，请一并过门；若仍拒，逐行拄我，我原地修不覆盖。
+
+
 ### s3 · ORD-0363-r1 交付（残余那一半：句子归属由服务器载荷决定）@2026-09-26 18:30+08 —— 标题那句"服务器给的原因编号"只在服务器信封真给了该码时才这么写；base b6a8ea5c625d7e3e82f7348fad57d595a8a403c0
 
 **① 先定位（现产品线 base `b6a8ea5c625d7e3e82f7348fad57d595a8a403c0`，非账本镜像分支）**：
