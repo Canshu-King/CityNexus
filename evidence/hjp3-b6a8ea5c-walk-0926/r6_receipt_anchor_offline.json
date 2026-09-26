@@ -1,0 +1,778 @@
+{
+ "started_at": "2026-09-26T09:45:20.757Z",
+ "base": "https://administrator-personality-supervisor-peers.trycloudflare.com",
+ "dead_id": "00000000-0000-0000-0000-000000000000",
+ "real_id": "5eb4eb13-6045-4b8b-8d02-a0fe3475bc3e",
+ "clicks": 1,
+ "chromium_version": "153.0.8010.12",
+ "dead_closed": {
+  "anchors": [
+   {
+    "tag": "section",
+    "testid": "failure-view",
+    "cnx_field": null,
+    "cnx_receipt": null,
+    "aria_live": "assertive",
+    "role": "alert",
+    "visible": true,
+    "text_len": 110,
+    "text_sha256": "d80782ec7756bdfb0ef525e24c0720b703cf604ca6724571a536b4988e244cde",
+    "text_head": "连接正常\n\n这台服务器上没有这一趟行程了\n\n这台设备还记得行程 00000000",
+    "open": null
+   },
+   {
+    "tag": "p",
+    "testid": "failure-reason",
+    "cnx_field": null,
+    "cnx_receipt": null,
+    "aria_live": null,
+    "role": null,
+    "visible": true,
+    "text_len": 73,
+    "text_sha256": "7d343a3032297ddd8624b5c26787b31829f7b55e770044bbc5e3ea993bae192b",
+    "text_head": "这台设备还记得行程 00000000…，但服务器明确回答它不存在（HTTP 40",
+    "open": null
+   },
+   {
+    "tag": "button",
+    "testid": "failure-choose-journey",
+    "cnx_field": null,
+    "cnx_receipt": null,
+    "aria_live": null,
+    "role": null,
+    "visible": true,
+    "text_len": 5,
+    "text_sha256": "9bc9c448a66b427b2be0de61003c063f6807a295df70bffce7389fdd882e76fa",
+    "text_head": "选一趟行程",
+    "open": null
+   },
+   {
+    "tag": "button",
+    "testid": "failure-retry",
+    "cnx_field": null,
+    "cnx_receipt": null,
+    "aria_live": null,
+    "role": null,
+    "visible": true,
+    "text_len": 2,
+    "text_sha256": "b8784c8dd5636ff231b121892144e4a3977d5b874f21934c53f850cde7bac0ea",
+    "text_head": "重试",
+    "open": null
+   },
+   {
+    "tag": "details",
+    "testid": "failure-attribution",
+    "cnx_field": null,
+    "cnx_receipt": null,
+    "aria_live": null,
+    "role": null,
+    "visible": true,
+    "text_len": 4,
+    "text_sha256": "1d7035d6c9827c84a43647335b762b079228cb0c0fbc5181500e7f02807c626c",
+    "text_head": "归因详情",
+    "open": false
+   },
+   {
+    "tag": "code",
+    "testid": "failure-attribution-line",
+    "cnx_field": null,
+    "cnx_receipt": null,
+    "aria_live": null,
+    "role": null,
+    "visible": true,
+    "text_len": 0,
+    "text_sha256": null,
+    "text_head": null,
+    "open": null
+   }
+  ],
+  "receipts_in_text": [],
+  "not_emitted_word_in_text": false,
+  "body_text_len": 110,
+  "details_count": 1,
+  "sw_controller": false
+ },
+ "shot_dead_closed": {
+  "file": "F1_dead_closed.png",
+  "abs": "D:\\moodle\\_hjp3_b6a8_0926\\F1_dead_closed.png",
+  "exists": true,
+  "bytes": 111782,
+  "sha256": "506b2325532b1c703a136a04523890634d5e0ceb549400d4575bd8dfcece904d"
+ },
+ "dead_opened": {
+  "anchors": [
+   {
+    "tag": "section",
+    "testid": "failure-view",
+    "cnx_field": null,
+    "cnx_receipt": null,
+    "aria_live": "assertive",
+    "role": "alert",
+    "visible": true,
+    "text_len": 266,
+    "text_sha256": "d73f18d8ed090d1afa227cbde324f341e7adae6da22c9d6035db9e24fa97e28f",
+    "text_head": "连接正常\n\n这台服务器上没有这一趟行程了\n\n这台设备还记得行程 00000000",
+    "open": null
+   },
+   {
+    "tag": "p",
+    "testid": "failure-reason",
+    "cnx_field": null,
+    "cnx_receipt": null,
+    "aria_live": null,
+    "role": null,
+    "visible": true,
+    "text_len": 73,
+    "text_sha256": "7d343a3032297ddd8624b5c26787b31829f7b55e770044bbc5e3ea993bae192b",
+    "text_head": "这台设备还记得行程 00000000…，但服务器明确回答它不存在（HTTP 40",
+    "open": null
+   },
+   {
+    "tag": "button",
+    "testid": "failure-choose-journey",
+    "cnx_field": null,
+    "cnx_receipt": null,
+    "aria_live": null,
+    "role": null,
+    "visible": true,
+    "text_len": 5,
+    "text_sha256": "9bc9c448a66b427b2be0de61003c063f6807a295df70bffce7389fdd882e76fa",
+    "text_head": "选一趟行程",
+    "open": null
+   },
+   {
+    "tag": "button",
+    "testid": "failure-retry",
+    "cnx_field": null,
+    "cnx_receipt": null,
+    "aria_live": null,
+    "role": null,
+    "visible": true,
+    "text_len": 2,
+    "text_sha256": "b8784c8dd5636ff231b121892144e4a3977d5b874f21934c53f850cde7bac0ea",
+    "text_head": "重试",
+    "open": null
+   },
+   {
+    "tag": "details",
+    "testid": "failure-attribution",
+    "cnx_field": null,
+    "cnx_receipt": null,
+    "aria_live": null,
+    "role": null,
+    "visible": true,
+    "text_len": 160,
+    "text_sha256": "858466d47595808d1a294f91ac55139e94547c84b8a89c10e559afd202468852",
+    "text_head": "归因详情\nattribution_reason=JOURNEY_NOT_FOUN",
+    "open": true
+   },
+   {
+    "tag": "code",
+    "testid": "failure-attribution-line",
+    "cnx_field": null,
+    "cnx_receipt": null,
+    "aria_live": null,
+    "role": null,
+    "visible": true,
+    "text_len": 155,
+    "text_sha256": "797a8c359ca272a9443468af3568fd774f84cfe34d0968bbc0e9d14b9d2e9815",
+    "text_head": "attribution_reason=JOURNEY_NOT_FOUND evi",
+    "open": null
+   }
+  ],
+  "receipts_in_text": [],
+  "not_emitted_word_in_text": false,
+  "body_text_len": 266,
+  "details_count": 1,
+  "sw_controller": false
+ },
+ "shot_dead_opened": {
+  "file": "F2_dead_opened.png",
+  "abs": "D:\\moodle\\_hjp3_b6a8_0926\\F2_dead_opened.png",
+  "exists": true,
+  "bytes": 144535,
+  "sha256": "718a35b0a368c7ae997e2ae2a49c20d3c6297f29b178b6dca61d2c2a70896197"
+ },
+ "dead_legs": [
+  {
+   "url": "/api/v1/journeys/00000000-0000-0000-0000-000000000000/experience",
+   "m": "GET",
+   "status": 404,
+   "content_type_on_the_page_side": null,
+   "resp_bytes": 235,
+   "from_service_worker": false,
+   "server_receipt_id": "CNX-FM7GYKRT",
+   "server_code": "NOT_FOUND"
+  }
+ ],
+ "dead_ls_after": {
+  "journey_id": null,
+  "keys": []
+ },
+ "real_settled": {
+  "anchors": [
+   {
+    "tag": "button",
+    "testid": "topbar-theme",
+    "cnx_field": null,
+    "cnx_receipt": null,
+    "aria_live": null,
+    "role": null,
+    "visible": true,
+    "text_len": 4,
+    "text_sha256": "217cfe7db1e3d10a734f5a0342df7977e5c1eb3c8906b28716732f72330cf181",
+    "text_head": "跟随系统",
+    "open": null
+   },
+   {
+    "tag": "button",
+    "testid": "topbar-language",
+    "cnx_field": null,
+    "cnx_receipt": null,
+    "aria_live": null,
+    "role": null,
+    "visible": true,
+    "text_len": 2,
+    "text_sha256": "69374b09b1681162ba2d6bba92d6a167ea5ca5921eb172eb173e999e3be5d8ba",
+    "text_head": "EN",
+    "open": null
+   },
+   {
+    "tag": "h1",
+    "testid": "today-heading",
+    "cnx_field": null,
+    "cnx_receipt": null,
+    "aria_live": null,
+    "role": null,
+    "visible": true,
+    "text_len": 4,
+    "text_sha256": "14710ed58c751b687746cc6f4f7d86752d7727d26a08e223e34e584a607983c0",
+    "text_head": "天津之旅",
+    "open": null
+   },
+   {
+    "tag": "p",
+    "testid": "today-when",
+    "cnx_field": null,
+    "cnx_receipt": null,
+    "aria_live": null,
+    "role": null,
+    "visible": true,
+    "text_len": 40,
+    "text_sha256": "a29a30bd099b557cfd51cca56026c48b47daf3f75d11d4db780acc43cd17c390",
+    "text_head": "10月2日 10:00 — 10月3日 20:00 · 2 位旅行者 · 2 天",
+    "open": null
+   },
+   {
+    "tag": "div",
+    "testid": "hub-secondary-actions",
+    "cnx_field": null,
+    "cnx_receipt": null,
+    "aria_live": null,
+    "role": null,
+    "visible": true,
+    "text_len": 22,
+    "text_sha256": "4b7f267e60c87a39f65e174af7dcadb63b90934a62cb9931fab51347123febda",
+    "text_head": "AI 帮我规划\n试用其他城市\n打开行程工作台",
+    "open": null
+   },
+   {
+    "tag": "button",
+    "testid": "hub-plan-with-ai",
+    "cnx_field": null,
+    "cnx_receipt": null,
+    "aria_live": null,
+    "role": null,
+    "visible": true,
+    "text_len": 7,
+    "text_sha256": "5d10e828407e9ac905e75b748608d49a107457a172bc1ce71ff1a2eac0262366",
+    "text_head": "AI 帮我规划",
+    "open": null
+   },
+   {
+    "tag": "article",
+    "testid": "today-hero",
+    "cnx_field": null,
+    "cnx_receipt": null,
+    "aria_live": null,
+    "role": null,
+    "visible": true,
+    "text_len": 91,
+    "text_sha256": "a4ee6e6c6b320d6803c089d3bb67a5dd38ef9e3a58c4ecb1ed8e1ddfd7fde25c",
+    "text_head": "今天\n还没有安排\n“现在”取自服务器场景（执行游标。服务器没有给出这一分钟的执行",
+    "open": null
+   },
+   {
+    "tag": "div",
+    "testid": "today-next",
+    "cnx_field": null,
+    "cnx_receipt": null,
+    "aria_live": null,
+    "role": null,
+    "visible": true,
+    "text_len": 8,
+    "text_sha256": "c499a82d241d4bdff114f12ba9fb8b3a510333c7a36da6e59f6fc4c90a5ac25c",
+    "text_head": "今天\n还没有安排",
+    "open": null
+   },
+   {
+    "tag": "small",
+    "testid": "today-clock-source",
+    "cnx_field": null,
+    "cnx_receipt": null,
+    "aria_live": null,
+    "role": null,
+    "visible": true,
+    "text_len": 82,
+    "text_sha256": "e785913b822aa7f5d78496a7259c267865db2be53a01eaf736d6200f7abca860",
+    "text_head": "“现在”取自服务器场景（执行游标。服务器没有给出这一分钟的执行游标，这一屏的时间",
+    "open": null
+   },
+   {
+    "tag": "div",
+    "testid": "v8-maplibre-panel",
+    "cnx_field": null,
+    "cnx_receipt": null,
+    "aria_live": null,
+    "role": null,
+    "visible": true,
+    "text_len": 80,
+    "text_sha256": "af297c747ce2cbc8305356478b3b2e4d9d9262249c84dcc6472b0bd5c0a8b82e",
+    "text_head": "1\n\n底图未加载，显示的是路线示意。\n\n路线上下文\n7 段路程\n供应商支持的路线",
+    "open": null
+   },
+   {
+    "tag": "div",
+    "testid": "v8-maplibre-canvas",
+    "cnx_field": null,
+    "cnx_receipt": null,
+    "aria_live": null,
+    "role": null,
+    "visible": true,
+    "text_len": 1,
+    "text_sha256": "6b86b273ff34fce19d6b804eff5a3f5747ada4eaa22f1d49c01e52ddb7875b4b",
+    "text_head": "1",
+    "open": null
+   },
+   {
+    "tag": "p",
+    "testid": "v8-map-tile-notice",
+    "cnx_field": null,
+    "cnx_receipt": null,
+    "aria_live": null,
+    "role": "status",
+    "visible": true,
+    "text_len": 15,
+    "text_sha256": "8e3cbc537dcc36a8ad644300c1772d9f28d4d2d0731c1b79fa4ed4175f86b70c",
+    "text_head": "底图未加载，显示的是路线示意。",
+    "open": null
+   },
+   {
+    "tag": "p",
+    "testid": "v8-map-gesture-hint",
+    "cnx_field": null,
+    "cnx_receipt": null,
+    "aria_live": null,
+    "role": null,
+    "visible": true,
+    "text_len": 30,
+    "text_sha256": "f6f5c267be3e3c4cb51062e974df1bd69795e7ded5aafefa1e505ecadadfb524",
+    "text_head": "单指拖动地图 · 双指缩放 · 想翻这一页就拖地图以外的地方",
+    "open": null
+   },
+   {
+    "tag": "div",
+    "testid": "today-strip",
+    "cnx_field": null,
+    "cnx_receipt": null,
+    "aria_live": null,
+    "role": null,
+    "visible": true,
+    "text_len": 38,
+    "text_sha256": "4e105870bd302182511fb725f4b0ace3509cf6e5b5943d32a8deaaaea7f2da63",
+    "text_head": "住宿\n还没有选定\n到达\n10月2日 10:00\n出发\n10月3日 20:00",
+    "open": null
+   },
+   {
+    "tag": "strong",
+    "testid": "today-stay",
+    "cnx_field": null,
+    "cnx_receipt": null,
+    "aria_live": null,
+    "role": null,
+    "visible": true,
+    "text_len": 5,
+    "text_sha256": "88bc00c03f40d76b46b5917ac486503fed929719690054e0796ba202ed44336c",
+    "text_head": "还没有选定",
+    "open": null
+   },
+   {
+    "tag": "section",
+    "testid": "today-attention-band",
+    "cnx_field": null,
+    "cnx_receipt": null,
+    "aria_live": null,
+    "role": null,
+    "visible": true,
+    "text_len": 4,
+    "text_sha256": "6fb51ac22914a0943ad6eb991d3b5c51e99b5b062933d69ea39af7b59da3a023",
+    "text_head": "一切正常",
+    "open": null
+   },
+   {
+    "tag": "strong",
+    "testid": "today-attention",
+    "cnx_field": null,
+    "cnx_receipt": null,
+    "aria_live": null,
+    "role": null,
+    "visible": true,
+    "text_len": 4,
+    "text_sha256": "6fb51ac22914a0943ad6eb991d3b5c51e99b5b062933d69ea39af7b59da3a023",
+    "text_head": "一切正常",
+    "open": null
+   },
+   {
+    "tag": "p",
+    "testid": "hub-glance-caveat",
+    "cnx_field": null,
+    "cnx_receipt": null,
+    "aria_live": null,
+    "role": null,
+    "visible": true,
+    "text_len": 24,
+    "text_sha256": "73081d00626e3bbaeab9ebaaacec347c47fe8729d028ad394f8ccdb7017750b9",
+    "text_head": "以下只是其中一个候选方案的预览，你还没有采用它。",
+    "open": null
+   },
+   {
+    "tag": "aside",
+    "testid": "v18-copilot-dock",
+    "cnx_field": null,
+    "cnx_receipt": null,
+    "aria_live": null,
+    "role": null,
+    "visible": true,
+    "text_len": 0,
+    "text_sha256": null,
+    "text_head": null,
+    "open": null
+   },
+   {
+    "tag": "button",
+    "testid": "nav-hub",
+    "cnx_field": null,
+    "cnx_receipt": null,
+    "aria_live": null,
+    "role": null,
+    "visible": true,
+    "text_len": 2,
+    "text_sha256": "d5f5a7a010731feb6cc67fcbde1bc7133c86019f6d88186e5075344f59de5ff5",
+    "text_head": "今天",
+    "open": null
+   },
+   {
+    "tag": "button",
+    "testid": "nav-trips",
+    "cnx_field": null,
+    "cnx_receipt": null,
+    "aria_live": null,
+    "role": null,
+    "visible": true,
+    "text_len": 2,
+    "text_sha256": "1fcc0ccba7f52778ce29e784975c4fb7e479c856d07ea3909beed43fcf5ab03c",
+    "text_head": "行程",
+    "open": null
+   },
+   {
+    "tag": "button",
+    "testid": "nav-map",
+    "cnx_field": null,
+    "cnx_receipt": null,
+    "aria_live": null,
+    "role": null,
+    "visible": true,
+    "text_len": 2,
+    "text_sha256": "41ab2e0ecbec6674679cf06ce2e2e184fe4fa74b84784f5de53f62e3523eb218",
+    "text_head": "地图",
+    "open": null
+   },
+   {
+    "tag": "button",
+    "testid": "nav-agent",
+    "cnx_field": null,
+    "cnx_receipt": null,
+    "aria_live": null,
+    "role": null,
+    "visible": true,
+    "text_len": 7,
+    "text_sha256": "49f5b0e488cfa66c69e6981896474e446daad70848f21cdd555e8c9d17ddae83",
+    "text_head": "Copilot",
+    "open": null
+   },
+   {
+    "tag": "button",
+    "testid": "nav-me",
+    "cnx_field": null,
+    "cnx_receipt": null,
+    "aria_live": null,
+    "role": null,
+    "visible": true,
+    "text_len": 2,
+    "text_sha256": "7f1d9dd04cd1c7b8d8ab488980624bde64ea370ebafc9eb7b1c4d8dc757c976a",
+    "text_head": "我的",
+    "open": null
+   },
+   {
+    "tag": "div",
+    "testid": "sim-float",
+    "cnx_field": null,
+    "cnx_receipt": null,
+    "aria_live": null,
+    "role": null,
+    "visible": true,
+    "text_len": 0,
+    "text_sha256": null,
+    "text_head": null,
+    "open": null
+   },
+   {
+    "tag": "button",
+    "testid": "sim-ball",
+    "cnx_field": null,
+    "cnx_receipt": null,
+    "aria_live": null,
+    "role": null,
+    "visible": true,
+    "text_len": 0,
+    "text_sha256": null,
+    "text_head": null,
+    "open": null
+   },
+   {
+    "tag": "span",
+    "testid": "sim-ball-dot",
+    "cnx_field": null,
+    "cnx_receipt": null,
+    "aria_live": null,
+    "role": null,
+    "visible": true,
+    "text_len": 0,
+    "text_sha256": null,
+    "text_head": null,
+    "open": null
+   }
+  ],
+  "receipts_in_text": [],
+  "not_emitted_word_in_text": false,
+  "body_text_len": 605,
+  "details_count": 0,
+  "sw_controller": false
+ },
+ "real_device_stores": {
+  "databases": [
+   {
+    "name": "citynexus-offline",
+    "version": 10
+   }
+  ],
+  "target_db": "citynexus-offline",
+  "store_names": [
+   "journeys"
+  ],
+  "rows": {
+   "journeys": 1
+  },
+  "caches_keys": [
+   "workbox-precache-v2-https://administrator-personality-supervisor-peers.trycloudflare.com/"
+  ],
+  "cache_entry_counts": {
+   "workbox-precache-v2-https://administrator-personality-supervisor-peers.trycloudflare.com/": 5
+  },
+  "errors": [],
+  "rows_attached": true
+ },
+ "shot_real": {
+  "file": "F3_real_journey.png",
+  "abs": "D:\\moodle\\_hjp3_b6a8_0926\\F3_real_journey.png",
+  "exists": true,
+  "bytes": 884016,
+  "sha256": "f3a90a3f3e0f123eafe411eb87ab64278da5a92bf72106563f05e2806debd742"
+ },
+ "real_saved_scan": [
+  {
+   "label": "旅行票夹",
+   "affordance_present": false
+  },
+  {
+   "label": "恢复与执行",
+   "affordance_present": false
+  },
+  {
+   "label": "我的",
+   "affordance_present": true,
+   "body_text_len": 289,
+   "body_text_len_here": 289,
+   "saved_sentences": [],
+   "details_count": 1,
+   "receipts_in_text": []
+  },
+  {
+   "label": "行程工作台",
+   "affordance_present": false
+  }
+ ],
+ "real_device_stores_after_walk": {
+  "databases": [
+   {
+    "name": "citynexus-offline",
+    "version": 10
+   }
+  ],
+  "target_db": "citynexus-offline",
+  "store_names": [
+   "journeys"
+  ],
+  "rows": {
+   "journeys": 1
+  },
+  "caches_keys": [
+   "workbox-precache-v2-https://administrator-personality-supervisor-peers.trycloudflare.com/"
+  ],
+  "cache_entry_counts": {
+   "workbox-precache-v2-https://administrator-personality-supervisor-peers.trycloudflare.com/": 5
+  },
+  "errors": [],
+  "rows_attached": true
+ },
+ "real_legs": [
+  {
+   "url": "/api/v1/journeys/5eb4eb13-6045-4b8b-8d02-a0fe3475bc3e/experience",
+   "m": "GET",
+   "status": 200,
+   "content_type_on_the_page_side": "application/json",
+   "resp_bytes": 132102,
+   "from_service_worker": false,
+   "server_receipt_id": null,
+   "server_code": null
+  },
+  {
+   "url": "/api/v1/journeys/5eb4eb13-6045-4b8b-8d02-a0fe3475bc3e/replans",
+   "m": "GET",
+   "status": 200,
+   "content_type_on_the_page_side": "application/json",
+   "resp_bytes": 2,
+   "from_service_worker": false,
+   "server_receipt_id": null,
+   "server_code": null
+  },
+  {
+   "url": "/api/v1/journeys/5eb4eb13-6045-4b8b-8d02-a0fe3475bc3e/agent-feed?limit=200",
+   "m": "GET",
+   "status": 200,
+   "content_type_on_the_page_side": "application/json",
+   "resp_bytes": 574,
+   "from_service_worker": false,
+   "server_receipt_id": null,
+   "server_code": null
+  },
+  {
+   "url": "/api/v1/journeys/5eb4eb13-6045-4b8b-8d02-a0fe3475bc3e/agent-feed?limit=200",
+   "m": "GET",
+   "status": 200,
+   "content_type_on_the_page_side": "application/json",
+   "resp_bytes": 574,
+   "from_service_worker": false,
+   "server_receipt_id": null,
+   "server_code": null
+  },
+  {
+   "url": "/api/v1/demo/scene",
+   "m": "GET",
+   "status": 200,
+   "content_type_on_the_page_side": "application/json",
+   "resp_bytes": 610,
+   "from_service_worker": false,
+   "server_receipt_id": null,
+   "server_code": null
+  },
+  {
+   "url": "/api/v1/journeys/5eb4eb13-6045-4b8b-8d02-a0fe3475bc3e/plans",
+   "m": "GET",
+   "status": 200,
+   "content_type_on_the_page_side": "application/json",
+   "resp_bytes": 2,
+   "from_service_worker": false,
+   "server_receipt_id": null,
+   "server_code": null
+  },
+  {
+   "url": "/api/v1/journeys/5eb4eb13-6045-4b8b-8d02-a0fe3475bc3e/twin",
+   "m": "GET",
+   "status": 200,
+   "content_type_on_the_page_side": "application/json",
+   "resp_bytes": 896,
+   "from_service_worker": false,
+   "server_receipt_id": null,
+   "server_code": null
+  },
+  {
+   "url": "/api/v1/journeys/5eb4eb13-6045-4b8b-8d02-a0fe3475bc3e/wallet",
+   "m": "GET",
+   "status": 200,
+   "content_type_on_the_page_side": "application/json",
+   "resp_bytes": 109,
+   "from_service_worker": false,
+   "server_receipt_id": null,
+   "server_code": null
+  },
+  {
+   "url": "/api/v1/journeys/5eb4eb13-6045-4b8b-8d02-a0fe3475bc3e/offline-snapshot",
+   "m": "GET",
+   "status": 200,
+   "content_type_on_the_page_side": "application/json",
+   "resp_bytes": 797,
+   "from_service_worker": false,
+   "server_receipt_id": null,
+   "server_code": null
+  },
+  {
+   "url": "/api/v1/travelers/109c44b3-b4ad-4a6d-b2e6-a9bbaa1bd0a8/agent-policy",
+   "m": "GET",
+   "status": 200,
+   "content_type_on_the_page_side": "application/json",
+   "resp_bytes": 527,
+   "from_service_worker": false,
+   "server_receipt_id": null,
+   "server_code": null
+  },
+  {
+   "url": "/api/v1/agent/runtime-status",
+   "m": "GET",
+   "status": 200,
+   "content_type_on_the_page_side": "application/json",
+   "resp_bytes": 379,
+   "from_service_worker": false,
+   "server_receipt_id": null,
+   "server_code": null
+  },
+  {
+   "url": "/api/v1/travelers/109c44b3-b4ad-4a6d-b2e6-a9bbaa1bd0a8/push-config",
+   "m": "GET",
+   "status": 200,
+   "content_type_on_the_page_side": "application/json",
+   "resp_bytes": 122,
+   "from_service_worker": false,
+   "server_receipt_id": null,
+   "server_code": null
+  }
+ ],
+ "shot_real_walked": {
+  "file": "F4_after_tab_walk.png",
+  "abs": "D:\\moodle\\_hjp3_b6a8_0926\\F4_after_tab_walk.png",
+  "exists": true,
+  "bytes": 163348,
+  "sha256": "dbbf603e3c31c9a50fff2b13eec406208952e8111a96a24de5a8e58aacf3bc45"
+ },
+ "finished_at": "2026-09-26T09:45:58.418Z"
+}
