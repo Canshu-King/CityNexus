@@ -1,0 +1,26 @@
+{
+ "what": "commander's own two-state measurement of ORD-0359's ai_state vocabulary, on a private port with a private sqlite file (never the phone chain)",
+ "at_local": "2026-09-26T19:2x+08",
+ "tree": "D:/moodle/_qoder_cmdr_backend_live_1813  (detached at 6c671f56b84ede206e75efeb810958a750d01c52)",
+ "port": 8721,
+ "readings": [
+  {
+   "env": "CITYNEXUS_AI_ENABLED=true, DEEPSEEK_API_KEY empty",
+   "health_ai": "disabled",
+   "ai_state": "NOT_CONFIGURED"
+  },
+  {
+   "env": "CITYNEXUS_AI_ENABLED=true, DEEPSEEK_API_KEY set to a deliberately invalid string",
+   "health_ai": "enabled",
+   "ai_state": "READY"
+  },
+  {
+   "env": "the phone chain (backend at the shipped tip, ops flag off)",
+   "health_ai": "disabled",
+   "ai_state": "DISABLED_BY_OPS"
+  }
+ ],
+ "finding": "READY is derived from the mere presence of a key string: with a garbage credential the server still says READY, so the traveller cannot distinguish 'configured and about to work' from 'configured with a dead credential' until a call fails.",
+ "not_measured": "the PROVIDER_REFUSED branch was not exercised live: my scratch database has no seeded journey (demo scene reports a null journey), and seeding it was out of scope for this probe. That branch is covered only by the named test file, not by this measurement.",
+ "cleanup": "the probe process is stopped by pid and its sqlite file deleted; the phone chain's ports and database were never touched by this run"
+}
