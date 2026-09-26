@@ -1,0 +1,554 @@
+{
+ "schema": "CNX_ORD0338_FIX_JIA_V1",
+ "order": "ORD-0338",
+ "half": "甲 implementation (Q73 ruling), second delivery of this order",
+ "lane": "D e345b9d6",
+ "generated_by_reads": "every value below is read from a file or a command at build time; no number in this receipt is typed by hand",
+ "generation": {
+  "tip": "2d8b03b8c7734ea3b8521b80845e1b0bc1a07957",
+  "tip_subject": "ORD-0344-b: route the refusal's diagnosis through the channel that is actually on the line",
+  "tip_date": "2026-09-26 09:19:20 +0800",
+  "how_read": "git ls-remote + fetch + ls-remote again, two reads must agree",
+  "ord0325_is_ancestor_of_tip": true,
+  "candidate_branch": "agent/d-e345b9d6-ord0338",
+  "candidate_head": "1a779b694d7c04f7dea8d74b0cff7af90441ae22",
+  "candidate_commit_list": [
+   "1a779b69 ORD-0338 (lane D e345b9d6): a centre on the boundary row is not an occlusion",
+   "68bd1a31 ORD-0338 (lane D e345b9d6): a clipped control is not a covered one",
+   "7e2bdba7 ORD-0338 (lane D e345b9d6): read the old shape as a red, not as a TypeError",
+   "4a0b4128 ORD-0338 (lane D e345b9d6, ruling 甲): make the wizard's CTA a layout row and delete the three padding reserves it was paying for"
+  ],
+  "candidate_commits_ahead_of_tip": 4,
+  "worktree_dirty_paths": [
+   "?? frontend/e2e/_qoder-ord0338-instrument-selfdiag.spec.ts",
+   "?? frontend/e2e/_qoder-ord0338-mechanism-diagnostic.spec.ts",
+   "?? ord0338_existing.out",
+   "?? ord0338_gate.out",
+   "?? ord0338_jia_candidate.out",
+   "?? ord0338_jia_candidate_r2.out",
+   "?? ord0338_jia_candidate_r3.out",
+   "?? ord0338_jia_candidate_r4.out",
+   "?? ord0338_jia_candidate_suite.out",
+   "?? ord0338_three_state.out"
+  ],
+  "pushed_refs": "## agent/d-e345b9d6-ord0338",
+  "tip_export_blob_verified": {
+   "frontend/src/styles.css": {
+    "export": "b942bf640365c013fa02897f19e8a34b5c9d9c46",
+    "tip": "b942bf640365c013fa02897f19e8a34b5c9d9c46",
+    "identical": true
+   },
+   "frontend/src/design-tokens.css": {
+    "export": "52dd3cb1ed0b66d8d08e7a97523b779b665b9243",
+    "tip": "52dd3cb1ed0b66d8d08e7a97523b779b665b9243",
+    "identical": true
+   },
+   "frontend/src/features/setup/JourneyTrialSetup.tsx": {
+    "export": "4821ec238c97dd17e2ad9417cac9a71c4f26caa1",
+    "tip": "4821ec238c97dd17e2ad9417cac9a71c4f26caa1",
+    "identical": true
+   },
+   "frontend/e2e/qoder-wizard-advanced-is-tappable.spec.ts": {
+    "export": "82f79682a7837b27eb3d281b9725d76bbfdf8f48",
+    "tip": "82f79682a7837b27eb3d281b9725d76bbfdf8f48",
+    "identical": true
+   },
+   "frontend/e2e/_qoderEvidence.ts": {
+    "export": "dfc496a5d5ecbc16944bc5a48711cebdb24001a0",
+    "tip": "dfc496a5d5ecbc16944bc5a48711cebdb24001a0",
+    "identical": true
+   },
+   "frontend/playwright.config.ts": {
+    "export": "290a507b368aeab3f25c3c1ec6ba4a6016fafb32",
+    "tip": "290a507b368aeab3f25c3c1ec6ba4a6016fafb32",
+    "identical": true
+   }
+  }
+ },
+ "product_change": {
+  "files": {
+   "frontend/src/styles.css": {
+    "tip_blob": "b942bf640365c013fa02897f19e8a34b5c9d9c46",
+    "candidate_blob": "421e8df2d2412c811522788a7a13191619fe0bc1",
+    "changed": true
+   },
+   "frontend/src/design-tokens.css": {
+    "tip_blob": "52dd3cb1ed0b66d8d08e7a97523b779b665b9243",
+    "candidate_blob": "3d7a64c5d09b0835bd074c0623dd8c249481fc74",
+    "changed": true
+   },
+   "frontend/src/features/setup/JourneyTrialSetup.tsx": {
+    "tip_blob": "4821ec238c97dd17e2ad9417cac9a71c4f26caa1",
+    "candidate_blob": "94568c0bc7f963bc72de0b2abf796bc26b6b2c52",
+    "changed": true
+   }
+  },
+  "hunks": [
+   {
+    "file": "frontend/src/design-tokens.css",
+    "hunk_header": "@@ -996,23 +996,49 @@ body {",
+    "lines_in_new": 49
+   },
+   {
+    "file": "frontend/src/features/setup/JourneyTrialSetup.tsx",
+    "hunk_header": "@@ -770,6 +770,7 @@ export function JourneyTrialSetup({",
+    "lines_in_new": 7
+   },
+   {
+    "file": "frontend/src/features/setup/JourneyTrialSetup.tsx",
+    "hunk_header": "@@ -1398,7 +1399,54 @@ export function JourneyTrialSetup({",
+    "lines_in_new": 54
+   },
+   {
+    "file": "frontend/src/features/setup/JourneyTrialSetup.tsx",
+    "hunk_header": "@@ -1460,50 +1508,6 @@ export function JourneyTrialSetup({",
+    "lines_in_new": 6
+   },
+   {
+    "file": "frontend/src/styles.css",
+    "hunk_header": "@@ -512,7 +512,6 @@ button { display: block; width: 100%; margin-top: 12px; border: 0; border-radius",
+    "lines_in_new": 6
+   },
+   {
+    "file": "frontend/src/styles.css",
+    "hunk_header": "@@ -657,43 +656,26 @@ button { display: block; width: 100%; margin-top: 12px; border: 0; border-radius",
+    "lines_in_new": 26
+   }
+  ],
+  "patch_bytes": 12237,
+  "patch_verbatim_sha1": "2d39b1ea0fc86bfd4cdc67a4ee4950ace87dc5d6",
+  "patch_staged_copy": {
+   "path": "review/evidence/ord0338-jia-candidate.patch.txt",
+   "sha1": "607990f8d5291f95dec6e27a5dbbeaca6f330a1a"
+  },
+  "what_i_changed_in_words": [
+   "`.cn-onboarding` 从『窗口滚动的一块文档』改成两行网格：第一行 `.cn-onboarding__scroll` 是唯一的滚动容器，第二行是 CTA 本体（design-tokens.css）",
+   "`.trial-sticky-cta` 去掉 `position: sticky` / `bottom` / 渐变遮罩，改成一个不透明、自己带 safe-area 下留白的布局行（styles.css）",
+   "删掉三处 padding hack：`.cn-onboarding .trial-steps` 的 ≤680px 分支（实算 212px）、它的 >680px 分支（76px）、`.trial-card` 的 `padding-bottom: 84px`",
+   "≤680px 那条 `bottom: var(--cn-sim-float-clearance)` 一起删：条不再浮起，球是否让开改由 N5/D3 现场量",
+   "`JourneyTrialSetup.tsx`：CTA 移到 section 末尾（它必须是最后一行），其余内容包进 `.cn-onboarding__scroll`"
+  ]
+ },
+ "gates": {
+  "A_new": {
+   "path": "frontend/e2e/qoder-ord0338-wizard-gap-clearance.spec.ts",
+   "tip_blob": "2d8b03b8c7734ea3b8521b80845e1b0bc1a07957:frontend/e2e/qoder-ord0338-wizard-gap-clearance.spec.ts",
+   "candidate_blob": "9d14da4957b78493850fafe3ab452829d41c98a1",
+   "same_blob_as_ran_on_tip_export": true
+  },
+  "B_rederived": {
+   "path": "frontend/e2e/qoder-wizard-advanced-is-tappable.spec.ts",
+   "tip_blob": "82f79682a7837b27eb3d281b9725d76bbfdf8f48",
+   "candidate_blob": "bdf75ffa0b6de02bb2442b547358e55c505eeafc",
+   "same_blob_as_ran_on_tip_export": false,
+   "note": "同一笔提交里按 Q73 重推的既有门；`scrolled > 0` 不再是可达性代理"
+  }
+ },
+ "runs": {
+  "gate_candidate": {
+   "run_id": "run388490",
+   "rows": [
+    {
+     "run_id": "run388490",
+     "tree_sha": "2d8b03b8c7734ea3b8521b80845e1b0bc1a07957",
+     "nodeid": "qoder-ord0338-wizard-gap-clearance.spec.ts::mobile 390x844 › N1 带上界：步骤条与「目的地」之间不再有一整块空白",
+     "result": "green",
+     "shape": "unmodified candidate @ 390x844 hasTouch",
+     "seconds": 0.694
+    },
+    {
+     "run_id": "run388490",
+     "tree_sha": "2d8b03b8c7734ea3b8521b80845e1b0bc1a07957",
+     "nodeid": "qoder-ord0338-wizard-gap-clearance.spec.ts::mobile 390x844 › N2 不许「占高但不显示」：带内 0 枚内容节点",
+     "result": "green",
+     "shape": "unmodified candidate @ 390x844 hasTouch",
+     "seconds": 0.655
+    },
+    {
+     "run_id": "run388490",
+     "tree_sha": "2d8b03b8c7734ea3b8521b80845e1b0bc1a07957",
+     "nodeid": "qoder-ord0338-wizard-gap-clearance.spec.ts::mobile 390x844 › N3 面板自己滚、条钉在面板底边（两种形状都量）",
+     "result": "green",
+     "shape": "unmodified candidate @ 390x844 hasTouch",
+     "seconds": 0.799
+    },
+    {
+     "run_id": "run388490",
+     "tree_sha": "2d8b03b8c7734ea3b8521b80845e1b0bc1a07957",
+     "nodeid": "qoder-ord0338-wizard-gap-clearance.spec.ts::mobile 390x844 › N4 条在任何滚动位置都不盖内容（结构 + 逐点命中）",
+     "result": "green",
+     "shape": "unmodified candidate @ 390x844 hasTouch",
+     "seconds": 1.6
+    },
+    {
+     "run_id": "run388490",
+     "tree_sha": "2d8b03b8c7734ea3b8521b80845e1b0bc1a07957",
+     "nodeid": "qoder-ord0338-wizard-gap-clearance.spec.ts::mobile 390x844 › N5 条不撞舞台球（我删了那条 bottom，得自己站住）",
+     "result": "green",
+     "shape": "unmodified candidate @ 390x844 hasTouch",
+     "seconds": 0.646
+    },
+    {
+     "run_id": "run388490",
+     "tree_sha": "2d8b03b8c7734ea3b8521b80845e1b0bc1a07957",
+     "nodeid": "qoder-ord0338-wizard-gap-clearance.spec.ts::mobile 390x844 › N6 臂甲：只把面板退回「窗口滚动 + sticky 条」（padding 一律不加回），N4 必须当场红",
+     "result": "green",
+     "shape": "arm: pane reverted to window-scroll + sticky overlay (page-side addStyleTag only)",
+     "seconds": 1.5
+    },
+    {
+     "run_id": "run388490",
+     "tree_sha": "2d8b03b8c7734ea3b8521b80845e1b0bc1a07957",
+     "nodeid": "qoder-ord0338-wizard-gap-clearance.spec.ts::mobile 390x844 › N7 臂乙：只把那条 padding 装回来，带高必须回到一整块",
+     "result": "green",
+     "shape": "arm: the deleted padding declaration re-applied at its measured 212px (page-side only)",
+     "seconds": 0.963
+    },
+    {
+     "run_id": "run388490",
+     "tree_sha": "2d8b03b8c7734ea3b8521b80845e1b0bc1a07957",
+     "nodeid": "qoder-ord0338-wizard-gap-clearance.spec.ts::desktop 1280x800 › D1 带上界（桌面档：那条声明的 76px 分支也归本单删）",
+     "result": "green",
+     "shape": "unmodified candidate @ 1280x800",
+     "seconds": 0.651
+    },
+    {
+     "run_id": "run388490",
+     "tree_sha": "2d8b03b8c7734ea3b8521b80845e1b0bc1a07957",
+     "nodeid": "qoder-ord0338-wizard-gap-clearance.spec.ts::desktop 1280x800 › D2 桌面：条不盖内容",
+     "result": "green",
+     "shape": "unmodified candidate @ 1280x800",
+     "seconds": 1.6
+    },
+    {
+     "run_id": "run388490",
+     "tree_sha": "2d8b03b8c7734ea3b8521b80845e1b0bc1a07957",
+     "nodeid": "qoder-ord0338-wizard-gap-clearance.spec.ts::desktop 1280x800 › D3 桌面：条不撞舞台球",
+     "result": "green",
+     "shape": "unmodified candidate @ 1280x800",
+     "seconds": 0.66
+    },
+    {
+     "run_id": "run388490",
+     "tree_sha": "2d8b03b8c7734ea3b8521b80845e1b0bc1a07957",
+     "nodeid": "qoder-wizard-advanced-is-tappable.spec.ts::ord0261-sticky-bar-must-not-cover-the-summary-row — 条在任何形状下都不许盖住 summary 行",
+     "result": "green",
+     "shape": "unmodified candidate @ 390x844 hasTouch",
+     "seconds": 1.6
+    },
+    {
+     "run_id": "run388490",
+     "tree_sha": "2d8b03b8c7734ea3b8521b80845e1b0bc1a07957",
+     "nodeid": "qoder-wizard-advanced-is-tappable.spec.ts::ord0264-opener-is-scroll-reachable-and-tappable — 高级入口在任何形状下都点得动，且不伤草稿",
+     "result": "green",
+     "shape": "unmodified candidate @ 390x844 hasTouch",
+     "seconds": 1.5
+    },
+    {
+     "run_id": "run388490",
+     "tree_sha": "2d8b03b8c7734ea3b8521b80845e1b0bc1a07957",
+     "nodeid": "qoder-wizard-advanced-is-tappable.spec.ts::ord0264-arm-chrome-overlay-must-turn-the-verdict-red — 臂：把条退回覆盖层，判据必须当场红",
+     "result": "green",
+     "shape": "unmodified candidate @ 390x844 hasTouch",
+     "seconds": 4.1
+    }
+   ],
+   "green": 13,
+   "red": 0,
+   "denominator_note": "runner 的分母含 [real-seed] 前置，本表已剔除并单列"
+  },
+  "gate_on_tip_export": {
+   "run_id": "run387900",
+   "rows": [
+    {
+     "run_id": "run387900",
+     "tree_sha": "2d8b03b8c7734ea3b8521b80845e1b0bc1a07957",
+     "nodeid": "qoder-ord0338-wizard-gap-clearance.spec.ts::mobile 390x844 › N1 带上界：步骤条与「目的地」之间不再有一整块空白",
+     "result": "red",
+     "shape": "tip tree (window-scroll + sticky bar), mobile medium",
+     "seconds": 0.686
+    },
+    {
+     "run_id": "run387900",
+     "tree_sha": "2d8b03b8c7734ea3b8521b80845e1b0bc1a07957",
+     "nodeid": "qoder-ord0338-wizard-gap-clearance.spec.ts::mobile 390x844 › N2 不许「占高但不显示」：带内 0 枚内容节点",
+     "result": "green",
+     "shape": "tip tree (window-scroll + sticky bar), mobile medium",
+     "seconds": 0.67
+    },
+    {
+     "run_id": "run387900",
+     "tree_sha": "2d8b03b8c7734ea3b8521b80845e1b0bc1a07957",
+     "nodeid": "qoder-ord0338-wizard-gap-clearance.spec.ts::mobile 390x844 › N3 面板自己滚、条钉在面板底边（两种形状都量）",
+     "result": "red",
+     "shape": "tip tree (window-scroll + sticky bar), mobile medium",
+     "seconds": 0.652
+    },
+    {
+     "run_id": "run387900",
+     "tree_sha": "2d8b03b8c7734ea3b8521b80845e1b0bc1a07957",
+     "nodeid": "qoder-ord0338-wizard-gap-clearance.spec.ts::mobile 390x844 › N4 条在任何滚动位置都不盖内容（结构 + 逐点命中）",
+     "result": "red",
+     "shape": "tip tree (window-scroll + sticky bar), mobile medium",
+     "seconds": 0.792
+    },
+    {
+     "run_id": "run387900",
+     "tree_sha": "2d8b03b8c7734ea3b8521b80845e1b0bc1a07957",
+     "nodeid": "qoder-ord0338-wizard-gap-clearance.spec.ts::mobile 390x844 › N5 条不撞舞台球（我删了那条 bottom，得自己站住）",
+     "result": "green",
+     "shape": "tip tree (window-scroll + sticky bar), mobile medium",
+     "seconds": 0.671
+    },
+    {
+     "run_id": "run387900",
+     "tree_sha": "2d8b03b8c7734ea3b8521b80845e1b0bc1a07957",
+     "nodeid": "qoder-ord0338-wizard-gap-clearance.spec.ts::mobile 390x844 › N6 臂甲：只把面板退回「窗口滚动 + sticky 条」（padding 一律不加回），N4 必须当场红",
+     "result": "red",
+     "shape": "tip tree (window-scroll + sticky bar), mobile medium",
+     "seconds": 1.0
+    },
+    {
+     "run_id": "run387900",
+     "tree_sha": "2d8b03b8c7734ea3b8521b80845e1b0bc1a07957",
+     "nodeid": "qoder-ord0338-wizard-gap-clearance.spec.ts::mobile 390x844 › N7 臂乙：只把那条 padding 装回来，带高必须回到一整块",
+     "result": "red",
+     "shape": "tip tree (window-scroll + sticky bar), mobile medium",
+     "seconds": 0.983
+    },
+    {
+     "run_id": "run387900",
+     "tree_sha": "2d8b03b8c7734ea3b8521b80845e1b0bc1a07957",
+     "nodeid": "qoder-ord0338-wizard-gap-clearance.spec.ts::desktop 1280x800 › D1 带上界（桌面档：那条声明的 76px 分支也归本单删）",
+     "result": "red",
+     "shape": "tip tree, no pane exists yet",
+     "seconds": 0.677
+    },
+    {
+     "run_id": "run387900",
+     "tree_sha": "2d8b03b8c7734ea3b8521b80845e1b0bc1a07957",
+     "nodeid": "qoder-ord0338-wizard-gap-clearance.spec.ts::desktop 1280x800 › D2 桌面：条不盖内容",
+     "result": "red",
+     "shape": "tip tree, no pane exists yet",
+     "seconds": 0.825
+    },
+    {
+     "run_id": "run387900",
+     "tree_sha": "2d8b03b8c7734ea3b8521b80845e1b0bc1a07957",
+     "nodeid": "qoder-ord0338-wizard-gap-clearance.spec.ts::desktop 1280x800 › D3 桌面：条不撞舞台球",
+     "result": "green",
+     "shape": "tip tree, no pane exists yet",
+     "seconds": 0.647
+    }
+   ],
+   "green": 3,
+   "red": 7
+  },
+  "wizard_scoped_before_after": {
+   "denominator": "the 22 spec files that touch the onboarding surface, run fresh on both trees",
+   "candidate_run_id": "run388176",
+   "tip_run_id": "run387900",
+   "tip_tree": "git archive of the tip, blob-verified file by file",
+   "rows_compared": 86,
+   "candidate_rows": 89,
+   "candidate_green": 86,
+   "candidate_red": 3,
+   "tip_rows": 88,
+   "tip_green": 78,
+   "tip_red": 10,
+   "specs_in_both": [
+    "qoder-ai-sheet-blocked.spec.ts",
+    "qoder-demo-entry-addresses-dont-create.spec.ts",
+    "qoder-demo-entry-copy-matches-the-stage.spec.ts",
+    "qoder-failure-has-an-exit.spec.ts",
+    "qoder-generation-wait.spec.ts",
+    "qoder-mobile-ui-overnight.spec.ts",
+    "qoder-onboarding-failure.spec.ts",
+    "qoder-ord0261-overlap-readonly-reproduction.spec.ts",
+    "qoder-ord0325-upstream-prose-not-on-screen.spec.ts",
+    "qoder-ord0338-wizard-gap-clearance.spec.ts",
+    "qoder-reset-from-wizard.spec.ts",
+    "qoder-simulation-scene.spec.ts",
+    "qoder-speaks-the-travellers-language.spec.ts",
+    "qoder-stated-versus-stored-versus-planned.spec.ts",
+    "qoder-trial-state.spec.ts",
+    "qoder-wizard-blocked-next-a11y.spec.ts",
+    "qoder-wizard-city-basis.spec.ts",
+    "qoder-wizard-city-copy.spec.ts",
+    "qoder-wizard-hint-surface-readings.spec.ts",
+    "qoder-wizard-speaks-human-and-survives-reload.spec.ts"
+   ],
+   "candidate_red_tip_green_introduced_by_this_change": [],
+   "red_on_both_pre_existing": [
+    "qoder-demo-entry-addresses-dont-create.spec.ts::ord0209-no-sealed-journey-fails-closed-in-words — 没有封存就具名关死，不偷偷建",
+    "qoder-onboarding-failure.spec.ts::ORD-0034 onboarding surfaces a failed create › the named backend reason reaches the onboarding screen",
+    "qoder-onboarding-failure.spec.ts::ORD-0034 onboarding surfaces a failed create › backend-reason-lands-on-its-own-field"
+   ],
+   "candidate_green_tip_red": [
+    "qoder-ord0338-wizard-gap-clearance.spec.ts::mobile 390x844 › N1 带上界：步骤条与「目的地」之间不再有一整块空白",
+    "qoder-ord0338-wizard-gap-clearance.spec.ts::mobile 390x844 › N3 面板自己滚、条钉在面板底边（两种形状都量）",
+    "qoder-ord0338-wizard-gap-clearance.spec.ts::mobile 390x844 › N4 条在任何滚动位置都不盖内容（结构 + 逐点命中）",
+    "qoder-ord0338-wizard-gap-clearance.spec.ts::mobile 390x844 › N6 臂甲：只把面板退回「窗口滚动 + sticky 条」（padding 一律不加回），N4 必须当场红",
+    "qoder-ord0338-wizard-gap-clearance.spec.ts::mobile 390x844 › N7 臂乙：只把那条 padding 装回来，带高必须回到一整块",
+    "qoder-ord0338-wizard-gap-clearance.spec.ts::desktop 1280x800 › D1 带上界（桌面档：那条声明的 76px 分支也归本单删）",
+    "qoder-ord0338-wizard-gap-clearance.spec.ts::desktop 1280x800 › D2 桌面：条不盖内容"
+   ],
+   "candidate_green_tip_red_by_spec": {
+    "qoder-ord0338-wizard-gap-clearance.spec.ts": 7
+   },
+   "candidate_red_absent_on_tip_side": [],
+   "verdict": "REGRESSION_FREE_ON_COMPARED_NODES"
+  },
+  "full_suite_on_candidate_OBSERVATION_NOT_BASELINE": {
+   "run_id": "run383585",
+   "generation_note": "this observation was taken before the re-parent, on base e9a392db (its own HEAD is recorded in the run log), so it is not even a reading of the tree this candidate now carries",
+   "why_it_is_only_an_observation": "one worker, one fresh DB, 308 nodes in a row: the shared-state specs drift, so its red set is not a baseline and is not used here as a regression claim (standing rule). The claim lives in wizard_scoped_before_after, which runs the 22 onboarding-touching specs fresh on both trees and compares nodeid by nodeid.",
+   "rows_total": 294,
+   "green": 242,
+   "red": 52,
+   "red_by_spec": {
+    "qoder-plan-ai-thinking.spec.ts": 8,
+    "qoder-contrast-audit.spec.ts": 4,
+    "qoder-raw-enums-never-reach-the-traveller.spec.ts": 4,
+    "qoder-theme-contract.spec.ts": 4,
+    "qoder-failure-has-an-exit.spec.ts": 3,
+    "qoder-map-interaction.spec.ts": 3,
+    "qoder-not-answered-cell.spec.ts": 3,
+    "qoder-ai-sheet-blocked.spec.ts": 2,
+    "qoder-continuation-resume-carries-identity.spec.ts": 2,
+    "qoder-mobile-ui-overnight.spec.ts": 2,
+    "qoder-offline-persistence.spec.ts": 2,
+    "qoder-onboarding-failure.spec.ts": 2,
+    "qoder-plan-ai-contrast.spec.ts": 2,
+    "qoder-sealed-failure-speaks-and-offers-retry.spec.ts": 2,
+    "qoder-today-hero.spec.ts": 2,
+    "qoder-wizard-advanced-is-tappable.spec.ts": 2,
+    "qoder-map-gesture-ownership.spec.ts": 1,
+    "qoder-mobile-overflow.spec.ts": 1,
+    "qoder-ord0281-keyed-write-deadline.spec.ts": 1,
+    "real-world-trip-operations-v9.spec.ts": 1,
+    "v13-authoritative-integrity.spec.ts": 1
+   },
+   "wall_minutes": 24.6
+  }
+ },
+ "measurements": {
+  "candidate": {
+   "evidence_run_id": "run388490",
+   "band_bound_px": 60,
+   "mobile_band_height_px": 17,
+   "mobile_band_top_px": 262,
+   "mobile_band_bottom_px": 279,
+   "mobile_viewport_measured": {
+    "innerWidth": 390,
+    "innerHeight": 844,
+    "mq680": true
+   },
+   "steps_padding_bottom": "0px",
+   "card_padding_bottom": "0px",
+   "cta_position": "static",
+   "section_display": "grid",
+   "scroll_overflow": "auto",
+   "pane_overflow_px": 249,
+   "wheel_moved_pane_px": 240,
+   "window_scrollY_rest": 0,
+   "window_scrollY_end": 0,
+   "bar_gap_to_pane_rest_px": 0,
+   "sweep_offsets": 24,
+   "sweep_max_px": 734,
+   "centre_probes": 604,
+   "covered_nodes": 0,
+   "bar_and_scroller_disjoint": true,
+   "bar_rect": [
+    764,
+    844
+   ],
+   "ball_rect": [
+    692,
+    752
+   ],
+   "bar_ball_intersect": false,
+   "desktop_band_height_px": 17,
+   "desktop_viewport_measured": {
+    "innerWidth": 1280,
+    "innerHeight": 800,
+    "mq680": false
+   },
+   "desktop_centre_probes": 879,
+   "desktop_covered_nodes": 0,
+   "desktop_bar_rect": [
+    720,
+    800
+   ],
+   "desktop_ball_rect": [
+    648,
+    708
+   ]
+  },
+  "tip": {
+   "evidence_run_id": "run387900",
+   "mobile_band_height_px": 229,
+   "steps_padding_bottom": "212px",
+   "cta_position": "sticky",
+   "desktop_band_height_px": 93,
+   "N4_reading": "面板或条不在 DOM",
+   "N3_reading": {
+    "missing": "没有 [data-testid=\"trial-scroll\"] 这条流内滚动容器（旧形状）",
+    "ctaPosition": "sticky"
+   }
+  }
+ },
+ "arms": {
+  "N6_landing_witness": {
+   "ctaPosition": "sticky",
+   "sectionDisplay": "block",
+   "scrollOverflow": "visible",
+   "documentScrollable": true
+  },
+  "N6_before": {
+   "hitCount": 0,
+   "disjoint": true,
+   "sampled": 14,
+   "nodesProbed": 847
+  },
+  "N6_after": {
+   "hitCount": 1,
+   "disjoint": false,
+   "sampled": 1,
+   "max": 0
+  },
+  "N7_landing_witness": {
+   "stepsPaddingBottom": "212px",
+   "viewport": {
+    "innerWidth": 390,
+    "innerHeight": 844
+   },
+   "media": {
+    "innerWidth": 390,
+    "innerHeight": 844,
+    "mq680": true
+   }
+  },
+  "N7_band_with_padding_back_px": 229
+ },
+ "cross_checks": {
+  "mobile_and_desktop_screenshots_are_different_bytes": true,
+  "staged_patch_copy_equals_live_diff": true,
+  "receipt_evidence_files": 10
+ },
+ "self_reports": {
+  "instrument_failed_twice_before_trusting_it": [
+   "run run382645 之前：`overlaps()` 把『滚出滚动口、中心落在条带里』的节点当成被条盖住，报了 4 枚假重叠（trial-country / trial-currency）；判据已收紧为『中心必须落在滚动容器的盒子里』，并另加一条结构判据（条与滚动行不相交）",
+   "run run383013 / run383155：重写门文件时漏掉 `test.use({viewport})`，整批标着 mobile 的读数其实是 1280 桌面档 —— 是 N7 的落地见证（注入后回读 computed padding）把它逮出来的。那两轮的 JSON 已就地改名为 *.desktop-run-superseded.json 保留，不删不覆写；现在每份读数都把**量到的** innerWidth/innerHeight 写进收据。",
+   "同一轮还在 (0,0) 处滚滚轮：向导的顶部内边距不属于滚动行，滚轮在那里滚不动任何东西，真滚轮改量『把手放在滚动区中间』那一格"
+  ],
+  "reveal_animation": "几何读数前统一等 `.v8-page` 的 v8-reveal 结束（`settled` 字段），第一版在动画里量到条差 6px"
+ },
+ "not_done_here": [
+  "候选未推任何 ref：commit 数与推送状态见 generation，落地由号令者按 ORD-0325 那一套搬",
+  "B 门重推后的承诺改动需红队 E d2305848 复签（Q73 明写）",
+  "手机链 0 碰：本单只在本地导出树上量，未上 `:8000`/隧道"
+ ],
+ "claimed_result": "甲做出来了：那段空白在移动与桌面两档都从整块降到读数级，条改由布局行负责；同一笔提交里 ord0261/ord0264 的判据按 Q73 重推（三形状 + 一枚臂，`scrolled > 0` 降级成读数）；候选上 A+B 全绿、尖上同一把 A 判红；回归口径 = 22 枚碰这块界面的 spec 在两棵树各 fresh 跑一遍逐 nodeid 对差，整套 308 枚那一次只当观测（共享状态会漂，见 runs.full_suite_on_candidate_OBSERVATION_NOT_BASELINE）",
+ "derived_result": null
+}
