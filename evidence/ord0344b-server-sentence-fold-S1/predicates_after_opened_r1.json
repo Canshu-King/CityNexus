@@ -1,0 +1,7 @@
+{
+ "refusalSentenceOnTheLine": true,
+ "serverLineVisible": true,
+ "serverLineHoldsItsOwnWords": true,
+ "noClientWrittenHttpStatusInThatParagraph": true,
+ "outcomeText": "这一步没有完成：服务器拒绝了这次请求。"
+}
