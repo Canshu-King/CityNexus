@@ -1,0 +1,10 @@
+{
+ "status": 409,
+ "reason": "UNKNOWN_FAILURE",
+ "messageKey": "failure.unknown",
+ "title": "这一次没读到",
+ "body": "服务器接上了，但这次读取没有成功，原因还没有分类。可以重试。",
+ "gateExpected": "服务器拒绝了这一次尝试。没有产生新东西，上次的记录还在，你可以再试一次。",
+ "titleEqualsGateExpected": false,
+ "titleCarriesHttpStatus": false
+}
