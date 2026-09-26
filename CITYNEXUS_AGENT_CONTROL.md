@@ -16588,6 +16588,48 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### ORD-0340 → 红队 E `d2305848` 交（ORD-0323/0339 签级 + 0 字节判词 · 2026-09-26 09:3x+08）
+
+**派生件**：`evidence/ord0340-two-signoffs-verdict-d2305848/ord0340_derived_d2305848.json` blob `58a51879f5d3ea6178ec09d0dd3a2f1a87395bb1`（7,805 B，树回验相符）。总线帖 `5841379129`。
+**ORD-0323（B）代 `03ad438dc66b17ab313f9c216b044a38d33b101d` = ALL_MET**：r6 --tree（尺 `6a251d3a6bea70329e06581384a81d5ef54c96a6`）全树 27→22、B 三文件 7→2、7 枚基线格全消、残留 2 枚只在 PlanWithAiSheet.tsx:1021/:1048（Q67=① 合规链行移位）、其它文件变动 0；r5-vs-r6 分歧有界具名（仅 V8Experience.tsx:1314 两侧同差，B 格两侧全一致）；落地 READY_TO_LAND、四枚文件 blob_equality 4/4 equal。
+**ORD-0339（S1）代 `c740f45d68f337c460a1a43b995162689d0110af` = ALL_MET**：req1 data-error-* 直接撤除无发明值、元素只剩 class/data-testid/role；req2 双向 clean 绿（句子==冻结 i18n、canary 不在 document）+ teeth 8 规则两属性均被点名 + 反向突变 KILLED 字节还原；req3 Q70 锚点诚实 NOT_APPLICABLE（撤除后无 Q64 字段可锚，产值方 V8Experience.tsx:897 具名未做）；落地 READY_TO_LAND、blob_equality 4/4 equal。
+**0 字节判词**：`evidence/cmdr-q43d-gate-0800/selftest_r1.json`（blob `e69de29bb2d1d6434b8b29ae775ad8c2e48c5391` = 规范空 blob）⇒ **NOT_EVIDENCE**：空比较非测量（两侧零字节时 BYTE-LEVEL MATCH 必然成立、零信息），且自指（自称"拒绝空主张"之门的 selftest 自己为空）；属流程缺陷非产品缺陷（r2 `61a139694cb7c7c2197bc4d5420ca348d99c1b06` 同小时取代、16 臂双向）。处置建议：字节保留+标 SUPERSEDED_BY、写门拒 evidence/ 下 0 字节 PUT（除声明空工件 schema 的路径）。
+**r4d 独立复跑**：本体 pull 后 sha1 全等 `de8f9651c95515e022961e11a369753030aff3e8`、selftest rc 0 十六判全过；对我 0335/0338 总线帖正文判 RED（ORD-#### 裸写）而 r4b 曾判 GREEN——总线帖非账本块，差异记观察供定 r4d 适用面。
+**可预见红**：ord0273 两格按 Q72 不归因回归/不归因 0339 改坏（要件今日才矛盾，归 ORD-0341）。
+**边界**：0 改产品字节、0 推 ref、0 demo/reset、凭据 0 打印、新路径 0 覆盖（发布器带 0 字节拒收）。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
+### SESSION=e345b9d6 @2026-09-26 09:00+08 —— **ORD-0338 定性完成（只读）：步骤条与「目的地」之间那一整块不是等数据的插槽，也不是布局塌了，是 212px 的真实留白，归属到一条具名 CSS 声明；并且实测证成它当前是 load-bearing —— 直接删会让尖上现成的门当场红**
+
+代次与量具：现读尖 commit=`f45489c6d17f16973faad161618789237ac3814e`（`git ls-remote` 读、`fetch` 后复读一致才继续；上一枚块写完后尖又进了一代）。测量在一棵 `git archive f45489c6d17f16973faad161618789237ac3814e | tar -x` 的导出树上做，6 枚相关文件逐个把导出字节与 `f45489c6d17f16973faad161618789237ac3814e:<path>` 的 blob 对过，全部 identical = True。门文件 `frontend/e2e/qoder-ord0338-wizard-gap-anatomy.spec.ts`（本次新增，未推任何 ref；为了让别人能重跑，它的副本已作为证据上架：`evidence/ord0338-wizard-gap-D/ord0338_instrument_copy__qoder-ord0338-wizard-gap-anatomy.spec.ts` blob `c7635b6b07e7a3d5ba9e7a3a678bddd7512c7c0a`）。视口 390×844、locale zh-CN，判据全部读渲染后的文档（getBoundingClientRect / getComputedStyle / document.styleSheets），不读源码字符串。
+
+**一、定性（三问三答，逐问都有两向读数）**
+
+1) 那段里有没有节点？没有。（数出自家：`ord0338-N1-at-rest.json` blob `8903d097201864273ef850118f870f52787e366b`；`run_id=run376920`） 带 = top 279 / bottom 508 / height 229，其中自带内容且完整落在带内的元素 0 枚，role=status / aria-live / skeleton / loading 之类「我在等」的节点 0 枚。（第一次跑我数到 6 枚，那是跨过该带的祖先盒，不算带内物；判据已按「完整落在带内」收紧，见同件的 `bandElements` 字段。）
+2) 它等不等数据？不等。（数出自家：`ord0338-N3-not-data-gated.json` blob `9da8c08dc6672d9973d1cb8abc2e0a80ae696344`；`run_id=run376920`） 同一次加载里网络静默前带高 230px、静默后再等 2 秒 229px；同一次运行里 N1 那枚节点读到 229px ⇒ 我这台量具本身有 ±1px 噪声（这一条只当限制记着，不解释成因，也不拿它当结论），带下方第一枚渲染文字仍是「目的地」，上方是 1目的地与时间 / 2人数与偏好 / 3确认创建。⇒ `:8000` 恢不恢复都不改变这一段，你 06:05 ⑤ 那两个猜想里「等数据的插槽」这条被否。
+3) 那这空白归谁？（数出自家：`ord0338_gap_anatomy_r1.json` blob `ebb8ab5c96fbc19a3f1fe26de82e502eeead9004`） 归 `.cn-onboarding .trial-steps` 在 `@media (max-width: 680px)` 下的那一条 `padding-bottom: calc(76px + var(--cn-sim-float-clearance, 132px) + env(safe-area-inset-bottom, 0px))`。算式两侧都是量出来的（字段 `arithmetic`，同件 `ord0338_gap_anatomy_r1.json` blob `ebb8ab5c96fbc19a3f1fe26de82e502eeead9004`）：effective computed = `212px`，而 `--cn-sim-float-clearance` 在 `:root` 上的实际定义是 `calc(124px + 0px + 12px)` = 136px，`76 + 136 = 212` 与 computed 一致（True）。顺带一条 CSS 字面量与实算不一致（本轮 `run_id=run376920` 写的 `ord0338-N1-at-rest.json`）：那条 calc 的 fallback 值与 `:root` 真正给的 clearance 不是同一个数，两个值我写在收据的 `arithmetic.note` 与上面那条 `owning_rule` 里，不在这句里重抄。带高 229px = padding 212 + margin-bottom 16 + 那 ±1px 噪声。
+
+**二、单变量证明（不是靠读 CSS 就下结论）**
+
+在页面内用 `addStyleTag` 只把那一条 padding 置 0（落盘文件一字未动），（数出自家：`ord0338-N2-single-variable.json` blob `78c706826a39fbfd0e2794a27fa30b90292b0cb6`；`run_id=run376920`） 带高从 229px 变成 17px，缩掉的 212px 与该声明的 212px 等量（True）。底轮 `run_id=run376920` = 未改动那一轮，4 枚节点全绿（runner 的分母是 5 枚，多的那 1 枚是 `[real-seed]` 前置，两个分母我分开写）；臂轮 `run_id=run376977` = 只把那条 padding 置 0 那一轮，其中 N1 当场红，红得对——带高真的只剩 17px，其余 N2/N3/N4 仍绿。截图两张也上架了（同一棵树的两个状态，字节不同：`True`）。
+
+**自报两件（不等谁来问）**：这台量具自己先红过两轮，成因都是我的判据而不是产品——（数出自家：`ord0338_gap_anatomy_r1.json` blob `ebb8ab5c96fbc19a3f1fe26de82e502eeead9004`） `run_id=run376627` 那轮我把「跨过该带的祖先盒」数成了带内元素（6 枚假节点），`run_id=run376977` 那轮我把「静默前后完全等值」写成判据，被 ±1px 噪声打掉一次。两轮都不删，运行行原样留在收据的 `instrument.runs` 字段里；现在的判据是「完整落在带内」与 ±2px 容差。
+
+**三、这件为什么不能「顺手删掉就好」**
+
+把同一条 padding 置 0 之后，尖上现成的门 `frontend/e2e/qoder-wizard-advanced-is-tappable.spec.ts` 当场红：`ord0264` 报 「the opener's centre hit \<BUTTON\> 下一步 instead of the button -- chrome covering it at rest」（红轮 `[run376993]` 端口 5800 库 _run376993.db，绿轮 `[run377109]` 端口 5802 库 _run377109.db，两行都在收据里，红集合按 run_id 署名）。也就是说这 212px（底轮 `run_id=run376920`、臂轮 `run_id=run376977`，两行都在 `ord0338_gap_anatomy_r1.json` blob `ebb8ab5c96fbc19a3f1fe26de82e502eeead9004` 的 `instrument.runs` 字段）正在替 `.trial-card` 的 `padding-bottom: 84px /* clears the sticky CTA */` 挡住 sticky CTA，钱付错了地方：付在页面顶部的步骤条上，于是旅客在步骤条与第一个字段之间看到 229px 空段，而真正该拿这份留白的元素在它下面。
+
+**四、修复方向（本块不写产品码，等你点头再开）**：把这份 clearance 从 `.cn-onboarding .trial-steps` 挪到 `.trial-card` 的底部留白上（它本来就贴着 sticky CTA），两条既有门（`ord0261-sticky-bar-must-not-cover-the-summary-row`、`ord0264-opener-is-scroll-reachable-and-tappable`）必须仍绿，并新增一枚带高上界断言（例如 ≤ 一个 `--cn-s-16` 级别的名义值）防止第二次「把 clearance 付在顶部」。要我按这个口径做就说一声，射程是 1 枚 CSS 文件 + 那两枚门的复跑。
+
+证据全部经号令者那道门 `live_checks/publish_evidence_gated_r1.py` 上架在 `evidence/ord0338-wizard-gap-D/`（22 件，逐件从 `commander/control` contents API 取回逐字节比、两侧重算 blob 全等；回执 `ord0338_publish_readback_r1.json` blob `4ecc9d5e2fd335c093b507a223e93389ba15e146`）。本块主收据 `ord0338_gap_anatomy_r1.json` blob `ebb8ab5c96fbc19a3f1fe26de82e502eeead9004`，其中的裁决字符串都是从解析出来的运行行推导的，没有一枚是我手打的 PASS。
+
+本块边界：只读 + 证据上架。产品字节 0 改（两枚既有门的实验只在本地导出树里改 styles.css，跑完按字节还原并回验 blob：还原后 == 尖上 blob `b942bf640365c013fa02897f19e8a34b5c9d9c46`，文件里 ARM 标记残留 0 处，还原后再跑同一枚 spec = "5 passed (14.9s)"）；权威线 0 写、0 推 ref、`vite build` 0 次、`demo/reset` 0 次、手机链 0 碰（以上逐项记在 `ord0338_gap_anatomy_r1.json` 的 `discipline` 字段，blob `ebb8ab5c96fbc19a3f1fe26de82e502eeead9004`）；`frontend/node_modules` 是 junction（0 安装 0 改）、凭据 0 打印、为了绿改断言 0 次、skip 0。`claimed_result` 只到观测（「定性完成：留白，归属到一条具名 CSS 声明，且证成它当前是 load-bearing；修复方向已给但未写码」），`derived_result` 留 null，等级归红队。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### CMDR 07:50 — ORD-0323 / ORD-0339 两笔落地、手机已换到新代、Q72 / Q73 两枚裁定，以及现尖 15 格 Q64 残留按 owner 派单
 
 **一、落地（两笔都是我把陈旧基座重切上尖的，走 GENERATION_TRANSFER_BY_CITED_BLOB_EQUALITY_V1）。**
