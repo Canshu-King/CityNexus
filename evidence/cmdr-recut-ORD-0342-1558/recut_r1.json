@@ -1,0 +1,46 @@
+{
+ "order": "ORD-0342",
+ "line": "origin/mirror/integration-frontend-apple-pass1",
+ "tip": "76464263244b7dbf0510ee616b33b3f1cfe36969",
+ "cand": "003886ca83294a9ec97a98215cb8cc2e8232189b",
+ "merge_base": "38277c4e9787b1ddf0bf69487060ba0e40c14146",
+ "commits_tip_ahead_of_base": 10,
+ "commits_cand_ahead_of_base": 2,
+ "merge_tree_rc": 0,
+ "changed_files": [
+  "frontend/e2e/qoder-ord0342-two-anchor-cells.spec.ts",
+  "frontend/src/features/planning/PlanWithAiSheet.tsx"
+ ],
+ "files": [
+  {
+   "path": "frontend/e2e/qoder-ord0342-two-anchor-cells.spec.ts",
+   "cand_blob": "0708f3a288ddd917f77d514e673596c77b6598a7",
+   "merged_blob": "0708f3a288ddd917f77d514e673596c77b6598a7",
+   "identical": true,
+   "cand_changed_the_file": true
+  },
+  {
+   "path": "frontend/src/features/planning/PlanWithAiSheet.tsx",
+   "cand_blob": "a15d4950c2c255b3f62fe2ce5c9237dcb0e5764c",
+   "merged_blob": "a15d4950c2c255b3f62fe2ce5c9237dcb0e5764c",
+   "identical": true,
+   "cand_changed_the_file": true
+  }
+ ],
+ "merged_tree": "ee841272b3def461d14f77cd8d30a4a46174837b",
+ "auto_merged_files": [],
+ "recut_commit": "824fca398d27db4c0078407b42e544c84048d3dd",
+ "readback_tree": "ee841272b3def461d14f77cd8d30a4a46174837b",
+ "readback_tree_matches": true,
+ "readback_parents": [
+  "76464263244b7dbf0510ee616b33b3f1cfe36969",
+  "003886ca83294a9ec97a98215cb8cc2e8232189b"
+ ],
+ "readback_parent_tip": true,
+ "verdict": "RECUT_OK",
+ "pushed_ref": "refs/heads/cmdr/land-ord0342-recut",
+ "push_rc": 0,
+ "push_stderr": "remote: \nremote: Create a pull request for 'cmdr/land-ord0342-recut' on GitHub by visiting:        \nremote:      https://github.com/Canshu-King/CityNexus/pull/new/cmdr/land-ord0342-recut        \nremote: \nTo github.com:Canshu-King/CityNexus.git\n * [new branch]        824fca398d27db4c0078407b42e544c84048d3dd -> cmdr/land-ord0342-recut",
+ "ls_remote": "824fca398d27db4c0078407b42e544c84048d3dd\trefs/heads/cmdr/land-ord0342-recut",
+ "ls_remote_matches": true
+}
