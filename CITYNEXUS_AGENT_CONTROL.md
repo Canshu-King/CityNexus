@@ -16588,6 +16588,146 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### 📱 aad2d1f2 (SESSION=aad2d1f2) P3 · **真人行程复验已在手机新代次上走完：读数、我自己的仪器错、用户做不到的事都按步骤具名；只交读数，不写 PASS** @09:02+08
+
+· 本块取代 `aad2d1f2_0843.md`（10368 B，你在 08:59:10 已按它派了三单，账本 CMDR 09:00 具名 ORD-0349 / ORD-0350 / ORD-0351，那格历史不动）。这里只改一处手续：你门下拦下的那四处「命中数与仪器错数」计数，现在每一处紧邻都标了它自己的 40 位与件内字段名；读数一个字节没动。
+· 一句不含糊的分歧：这四处在我的快照尺（同一份 r4d，20,640 B，07:58）上是被窗口内已有的 40 位放行过的，你那把门没放行。窗宽是你的仪器的事情，我不拿它当理由，只按你说的办法把坐标挪到数字旁边，一个数字都不删。
+
+```text
+四元组先报（MEASUREMENT_SCOPE_FIRST_V1）：
+· scope = 手机链此刻在部署的那一屏（新建行程三步 → 确认创建；封存演示入口；三处故意弄坏）
+· generation = `c740f45d68f337c460a1a43b995162689d0110af`（git ls-remote of refs/heads/mirror/integration-frontend-appl…；链上页面点名的资产 = `assets/index-rDBD_4P2.js`，我取的字节 = 1260179 B、sha256 `b182add85b84240e…`，与你说的名字同号 = True）
+· artifact = 本块末坐标行那几件（全 40 位，现读分支 tree `7d01ff0bdc58…`）
+· measurement method = own Chromium lane against the deployed chain at 127.0.0.1:4781; clicks by role and by the exact …（写在本块末行那件里，全文不缩）
+
+**读数总账（件 blob `98b2ce30eb0b13d3201d46186d6d6efec6ae2444`）：走到的格 5 格、被我排除的仪器跑 3 次、由件内字段算出的判据 8 条为真 / 共 9 条；逐条都不是我打的勾**
+· 能走到第三步复核页 = True；按「下一步」两次都换页 = [True, True, False]；第三步上按钮清单 = `EN / 返回 / 确认创建 / 使用封存的演示行程`
+· 现在能不能建成行程 = False（按真按钮之后仍停在向导 True、localStorage 里 journey id = `None`、进了主界面 = False）
+· 失败那屏说了人话且有动作 = True / 明说没改动任何东西 = True / 讲清原因 = True：`这一步没有成功，行程还没有创建。；服务器拒绝了这一步（HTTP 500）。你的行程没有因此改变，可以检查后重试。`
+· 那一次按下去真发了请求：POST `/api/v1/travelers`，浏览器侧记到状态 500、类型 `text/plain`、请求体 76 B；截图 `8a9f51ea6d30eba31ad9b6b410039af87a7dcdeb`（全 40 位亦在末行）
+
+**① 三步向导与那段留白（ORD-0338 的定性我自己重测）**
+· 步骤条 padding-bottom = 212 px，圆点行顶 260 px、卡片顶 510 px ⇒ 视觉上点与卡之间 250 px，而步骤条盒子底到卡片只 16 px；卡片在不滚动的当下就看得见 = True，整页可滚溢出 636 px。
+· 所以这条与 ORD-0338 的定性一致：那是真 padding，不是「在等数据」（判据 `agrees_with_ORD-0338_that_the_band_is_a_real_padding_not_data_waiting` = True）；提交按钮此刻在 652 px，不需要滚就按得到。修复不归我：产品字节 0 改。
+
+**② 封存演示入口：同一句话盖住了两种不同的腿（这是要你派单的一件）**
+· 三种腿各测一遍、每种都读两次（先原样读、再把所有 details 全开再读）：
+    `refused` 开块后：异常字面 文本 0 处、属性 0 处、堆栈 False、长机器串 False、canary 到 DOM = False（截图 blob `d6b6ca5c3717b10782e0c38474935151d3a95d38`；尾部三行 `没读到封存演示的信息：服务器刚才答了，但答的内容我们用不了。这不是你填错了什么。 ▏ 重试 ▏ 使用封存的演示行程`）
+    `empty500` 开块后：异常字面 文本 0 处、属性 0 处、堆栈 False、长机器串 False、canary 到 DOM = False（截图 blob `d6b6ca5c3717b10782e0c38474935151d3a95d38`；尾部三行 `没读到封存演示的信息：服务器刚才答了，但答的内容我们用不了。这不是你填错了什么。 ▏ 重试 ▏ 使用封存的演示行程`）
+    `canary200` 开块后：异常字面 文本 0 处、属性 0 处、堆栈 False、长机器串 False、canary 到 DOM = False（截图 blob `8020ea46af1a0d5c8b158f4b5876e157bbb99670`；尾部三行 `这台部署不是演示舞台（demo_mode=false），所以没有可进入的封存演示。 ▏ 重试 ▏ 使用封存的演示行程`）
+· 关键一条：腿被拒（根本没连上）与「答了但内容用不了」两屏的截图 sha256 完全相同 = True（两张各 188818 B；而 canary 那屏与它们不同 = True），且这句话写的是「服务器刚才答了」 ⇒ True。我不判它对不对，只把两条事实放这儿：像素不可分、句子做了一种腿断言。
+· 而「谁答的」是量出来的（件 blob `4a9e518ddc06497dd6df3eab6b745263baa286eb`）：True —— 我编了一条产品不可能有的路径（`/api/v1/zzz-hjp3-canary-path`）与三条真路径比签名，4 条路径的（状态/类型/字节/正文哈希）签名只有 1 种：`500 / text/plain / 0 B`，且都没有 server 头 = True、正文都 0 B = True ⇒ 那枚 500 里没有任何应用专属内容。
+· 还有两件小的（截图 blob `452fc2fd4917f8c7953bb7eed2e02319a5ae5321`）：链上不当我动手时也是这个态（自然态屏上尾部三行 `返回 ▏ 确认创建 ▏ 使用封存的演示行程`，有没有给你动作 = True）；而场景读失败在用户按下什么之前完全不说 = True。
+
+**③ 量具自己先自证（两向）**
+· 暴露判据的两向自检：我自建一张真会漏的页（异常字面进文本也进 data-* 属性，Q71 的属性位一并扫），再拿一张已知干净的面跑同一条判据。夹具截图 blob `330b5bc3152620cd6045e3fd7a2207a13c1c354e`，两份原始读数 blob `916bec6022086b986c9ddd91c814b6431629f248` 与 `7a5e64e2376898f35bea42928ff50282bcade823`。
+    漏的那页判到：文本命中 1 处（字段 instrument_self_tests.exposure_detector_two_way.leaky_fixture_authored_by_me_after_opening.exception_in_text，blob `916bec6022086b986c9ddd91c814b6431629f248`）；属性命中 1 处（同件的 …leaky_fixture_authored_by_me_after_opening.exception_in_attributes，blob `916bec6022086b986c9ddd91c814b6431629f248`）
+    干净的那页判到：文本 0 处、属性 0 处（字段 instrument_self_tests.exposure_detector_two_way.clean_fixture.exception_in_text / …clean_fixture.exception_in_attributes，blob `916bec6022086b986c9ddd91c814b6431629f248`）⇒ 两向都过 = True / True
+· 折叠敏感度我改了测法（原始读数 blob `7a5e64e2376898f35bea42928ff50282bcade823`）：元素级 innerText 在折叠时确实读不到（True），body 级 innerText 同样会漏（True），而我的判据读的是节点 nodeValue，text_content 那一层从不被折叠遮住 = True ⇒ 「扫不到」不等于「屏上没有」这条我按两种读法各自交代。
+· 记账的仪器错 3 次（字段 runs_excluded 的长度，件 blob `98b2ce30eb0b13d3201d46186d6d6efec6ae2444`；逐笔的机械信号与真因在原始读数 blob `916bec6022086b986c9ddd91c814b6431629f248` 与 `7a5e64e2376898f35bea42928ff50282bcade823` 里，不是我事后认）：
+    `take 1 (r5_walk.cjs)` 我说过「the wizard does not advance」；抓它的信号 = the painted 还需要填写：目的地、抵达地点、离开地点 line unchanged and the same painted length before and after each press；真因 = I pressed 下一步 on an unfilled form; my fill selector looked for 城市 while the placeholder reads 例如：天津、东京、新加坡
+    `take 1/2 label probe` 我说过「there is no 封存演示 entry」；抓它的信号 = the visible-button inventory lists 使用封存的演示行程；真因 = name probe on a label I had not read
+    `take 3 first press` 我说过「confirming sends nothing」；抓它的信号 = no POST leg recorded, and the node my locator picked was the step-dot label whose text is also 确认创建；真因 = wrong node; on the role-based press a 76-byte POST is sent and answered
+· 我这批不比 pass-3：手机链上没有我的跳板可发 pair_id，服务器侧只能取浏览器网络层（件里 `pairing_note` 一句已写明它是更弱的一侧，不当等价物用）。
+
+**用户现在做不到什么（按步骤具名，只列我做过的路上读到的）**
+· 第 3 步「确认创建」按下去建不成行程：请求发出后浏览器记到的状态是 500、正文 76 B 的请求换回 0 B 空正文，人留在第 3 步（能读到的解释只有那两句，没有可点的替代出口去任何列表或收件箱）。
+· 列表/收件箱这一路到不了：此刻可见的可按项只有 `用你自己的城市试用 CITYNEXUS / 新建行程 / 三步完成。选择目的地、告诉我们怎么玩，剩下的交给 CityNexus。 / EN / ✓ / 目的地与时间` 这些；而这枚包里没有为存储 journey id 准备的客户端路由，所以 /journey/<坏 id> 渲染的是同一个壳（那屏 158 字）⇒ 错误边界我**到不了**，因此不敢说它干净。
+· 第三步复核页（截图 blob `78e3a868729d4aa0f0cf586af6bb154e91e2a4c4`）上写着「2 · 1 · 我们替你填的」这类话（3 处，字段 cells.C1_new_journey_wizard.values_the_product_filled_for_me，件 blob `98b2ce30eb0b13d3201d46186d6d6efec6ae2444`）：它自己标了「替你填」，这一条是诚实的，但用户要改就得回去挨个找 —— 我不替它判定好坏，只报读到的。
+
+**纪律**：产品字节 0 改（路上看到的一切不修，全交你派单）；权威线 0 写；ref 0 推别人的；demo/reset 0；_live.db 与 _preview.db 0 读 0 写；git apply 0；凭据 0 打印；手机链只被我驱动 UI 与只读 GET，写请求只发生在我自己的浏览器上下文里（route 拦截），隧道与 :4782 我一行没碰；自己的泳道是临时 profile，截图全写绝对路径并逐张回验存在与字节；Q43 用的是你 07:50 换的 r4d，原判在本块末行那件里。
+```
+
+坐标（本块写时从分支 tree 现读，写时尖 `230d3eaa50253e61c9ecef17081492236a0dbed5` · tree `7d01ff0bdc58f380d0b18461851a106d6dca3f20`）：读数件 `evidence/hjp3-journey-walk-c740f45d/journey_walk_readings.json` `98b2ce30eb0b13d3201d46186d6d6efec6ae2444` · 量具 `evidence/hjp3-journey-walk-c740f45d/instruments/r5_walk3.cjs` `fb28ce4f104bab8a351ed950705f7b7fdd529973` · `evidence/hjp3-journey-walk-c740f45d/instruments/r5_finish.cjs` `7d95f71d23380991a2b6838a42cd478ee8db84b5` · `evidence/hjp3-journey-walk-c740f45d/instruments/r5_who_answered.py` `567f3b77e4c57517ee72874a4e3e16b41dc15248` · `evidence/hjp3-journey-walk-c740f45d/instruments/r5_consolidate_2.py` `1ff9f05f0b5d9e30a25d753943c93a16243820a4` · 截图（三屏对照的关键三张）`evidence/hjp3-journey-walk-c740f45d/shots/W3_4_fate_refused.png` `d6b6ca5c3717b10782e0c38474935151d3a95d38` · `evidence/hjp3-journey-walk-c740f45d/shots/W3_5_fate_empty500.png` `d6b6ca5c3717b10782e0c38474935151d3a95d38` · `evidence/hjp3-journey-walk-c740f45d/shots/W3_9_after_confirm.png` `8a9f51ea6d30eba31ad9b6b410039af87a7dcdeb`。
+
+要你定的只有两件：① 那句「服务器刚才答了」要不要按腿分叉（我可以补一判据：同一屏在两种腿下像素不可分 = 事实，句子里的断言是否属于产品该负责的口径，归你或仲裁）；② 列表/收件箱/错误边界这三面在这枚包里没有可点入口，是要我按路由名去查源（只读）还是你直接派单。其余不自启：ORD-0316 那件已交完并量到闸回绝，ORD-0312 的读数已在新代次上重做完。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
+### S4-ast-taint 09:12+08 · ORD-0346 交候选：那 11 种写法是拼写表，不是能力表 —— 屏上改成按服务器这一轮的回答分组，身份列只认 canonical_destination_id
+
+基座：本枝从 c740f45d68f337c460a1a43b995162689d0110af 切出，一笔 021898bb8d15f0075077a04b87b151b2ee6790a2；写块时权威线已前进到 046fc98723e2eacfe3cb8eb00a7fd3abdbd26efe（`git ls-remote origin refs/heads/mirror/integration-frontend-apple-pass1` 现读）。按令不重切。差集我核了：`git diff --name-only c740f45d..046fc987 -- frontend/src/features/setup/JourneyTrialSetup.tsx frontend/src/design-tokens.css frontend/e2e` 只回一枚 ORD-0323 的 spec，我那两枚产品文件在两代之间零移动，所以 re-cut 不该掉我的块。review 枝已推 GitHub 并 `ls-remote` 回读同值。
+
+一、事实（要件 1）：这一屏什么都没问，"支持"两字是本机词表给的
+- 屏与行的坐标：入口 summary 在 frontend/src/features/setup/JourneyTrialSetup.tsx:677，列表渲染在 JourneyTrialSetup.tsx:689，数据源 CITY_FACTS 在 JourneyTrialSetup.tsx:105-128，那份名单由它派生在 JourneyTrialSetup.tsx:163。
+- 它实际读的路由/字段：改之前一条都没有 —— 本文件除 i18n、localStorage、waitClock 之外不 import 任何 api，`routes_read_by_the_screen_before_this_change` 在 fact_sheet_r2.json = 914ca7b760b357a3f96d0c494fd4d28ccc0a4200 里就是空集合。
+- 后端词表 backend/app/main.py:10669-10686 列 16 枚 CN 码；它与那 11 种中文写法的交集是 8 枚，缺的正是 福州、东京、新加坡（fact_sheet_r2.json 的 set_difference 一节逐名列出）。
+- 真读数（自己的端口与自己的 sqlite，resolver seam 关着）：服务器给得出身份的 8 座、给不出的 3 座（capability=UNAVAILABLE、reason_code=NO_CANONICAL_IDENTITY、canonical_destination_id=null）、READY 的一座没有（`capability_READY` 字段为空列表）；有目录行的只有 北京，place_count=8 且还缺 nightlife 与 lodging 两类。读数 capability_reading_r1.json = bbb1818f48f5e53e48cf083656f995316cdf9732，逐座整身在 capability_bodies_r2.json = d1c02b56855b6673c515d8282dbaaa8d88d80611。
+
+二、改动（要件 2、3）：三组各自印出自己的判据，身份列不接受任何"看着像有值"
+- 分组：已支持 / 需联网才能解析 / 未知或无数据，代码在 JourneyTrialSetup.tsx:231（groupOfDestination）、标题与判据文案在 JourneyTrialSetup.tsx:283，渲染在 JourneyTrialSetup.tsx:871-874 —— 每组除了名字还把"这一组凭哪几个服务器字段成立"打在屏上（`group_rules_printed_on_screen`），旅客不必信我的转述。
+- 用词：屏上出现的服务器 token 全部来自 backend/app/anywhere_capability.py:74-147 那几张既有表（receipt_r2.json = 9dab73fbb302c8a98f4385b91181cf1847522ad2 的 `tokens_the_route_never_emits` 字段为空列表），没有新开词表。
+- 身份列：只读 canonical_destination_id（JourneyTrialSetup.tsx:247-251、属性在 JourneyTrialSetup.tsx:894）。这一代服务器已经不再把 `unresolved:<hash>` 放进身份列（读数里所有 destination_pending_key 都是 null；答案里唯一带 pending 字样的值是 fingerprint 的 namespace 常量 pending-request-v1，路径 .namespace，它不是身份列），所以要件 3 真正的坑是另一半：东京那一问的 pending_destination_label 与 resolver_query_normalized 都非空、canonical_destination_id 却是 null —— "这一格不是空的"从来不等于"有身份"。
+- 没读到不等于服务器说不知道：读失败只落本机归因枚举（走既有通道 lib/failureAttribution.ts:150 的 classifyReadFailure），身份那一格写"身份还没读到"，绝不写"还没有身份"，也不把 error.message 搬进 DOM（JourneyTrialSetup.tsx:607 起）。
+- 顺手替你避一枚雷：ORD-0060 那枚门断言 summary 里不许有数字，所以计数只出现在分组体内，summary 一字未变。
+
+三、两向读数（要件 4）：支持的不被误列、不支持的谎称不了，另加一形中间态
+- 正向：北京落在 supported，身份属性 CN-BEIJING 且逐字等于服务器给的那枚，屏上句子是"服务器认得它，目录里有 8 条，还缺 2 类事实"，同屏带着 HYDRATABLE · COVERAGE_INCOMPLETE · START_HYDRATION（panel-zh-read.json = e77ca0dd085692515f3a9adea39f81d3102f49ac）。
+- 反向：东京落在 needs_lookup，身份属性不存在，身份那一格回读为"还没有身份"，且 supported 分组里逐字查不到"东京"（同一件的 negative 断言，spec frontend/e2e/qoder-ord0346-honest-destinations.spec.ts:94 起）。
+- 中间态：厦门有身份 CN-XIAMEN 但目录 0 条，落在未知或无数据 —— 这正是旧名单抹掉的那一格。
+- 英文写法同判：Beijing=supported、Tokyo=needs_lookup，11 个名字与中文逐一对齐（panel-en-read.json = 586efdcafb7d64a91ecd5c048877d8f3b04ea7e3）。
+- 反件：把 capability 路由整条 abort 之后重走一遍，11 行全部 answered=no、没有一行进 supported、身份列齐声"身份还没读到"、失败原因只有一枚 NETWORK_UNAVAILABLE（panel-unread.json = 10ee1f30c44c2d48c91f65e74a4c8b08c6ffa15f）。
+- 改之前屏上长什么样，用 ORD-0060 那枚门自己的证据取：panel-text-before.json = dde3b6ec0ef052fb8624f9f099e7808550870424 里那一行只有 11 个名字、零个服务器字段；改之后同门同字段是 panel-text-after.json = da2643373fb65f66fe12d8779d0f01e8b979c78c。
+- 图我看了：panel-zh-light.png = b92d6a26743650a73221b371fdfc92578ae1e05c、暗色 panel-zh-dark.png = 9af558ee3688c45fcee803fbf57ee820276b1a4a、反件 panel-unread.png = 20ad83d5ed9884263b9de3096bafc3ed837ec9e0。
+
+四、隔离（要件 5）：自己的端口、自己的一次性库、:8000 没碰
+- 读数端口 8846、e2e 后端 8851、前端 4196；库文件 D:/moodle/_qoder_lane_S4_0926/work/ord0346/ord0346_S4_r1.db，起服务前该文件由本车道 `seed_demo()` 新建。:8000 与 :4173/:4174/:4781/:4782/:8693 一律不在我的端口清单里（receipt_r2.json 的 `no_borrowed_port_appears`）。
+- 归属证明三件：监听 pid 53164 的父 pid 就是我起的 22492、它的命令行带 `--port 8846`、双向探针（只有我库里有的 marker 行回 1 行、一枚不存在的 city code 回 0 行）—— 见 e2e_proofs_all_arms.json = 61cd00a14f001c73ec0bad90413211817d4365b2 与 marker_probe.json = ed9b8b0cb8794461fc9cf4853c11159c39a87b99。
+- 未跑 demo/reset、未读写任何 `*_live.db` / `*_preview.db`、凭据零打印。
+- 一处我没绕过去、按原样上架的：第一次读数我照 E2E 规矩设了 CITYNEXUS_E2E_RUN_ID，产品自己的守卫 backend/app/db/session.py:21-45 拒绝"已识别的运行重开一枚已存在的库"，于是那条路必须新建库、而我要读的是已 seed 好的库。我没有删库也没有改守卫，把拒绝原文留在架上：e2e_guard_refusal_r1.txt = c059226317deb897fa3640f3f918ab29bca7f1fb，改用 marker 行认库。
+
+五、我自己的量具先吃自己（r6 是落地前必跑尺，那这条对我自己也算）
+- 逐文件模式：改前 0 格、改后 0 格（ruler_per_file_before.json = 6ba97d4d16a0fe6d247cf5ab18fd2c309737904c、ruler_per_file_after.json = e3544425b2de37394b3455c46e49bb52d875e78d）。
+- 同一次调用里带上邻座作活体对照：DestinationPreparationPanel.tsx 仍报 UPSTREAM_EXCEPTION_TO_DOM 三格（:346、:469、:522），所以那个 0 是尺在读一枚干净文件，不是尺停了（ruler_per_file_control_pair.json = 905888d3eae654dd26f3396994979e4fb9fff4ae）。
+- 模块图模式两代对跑：21 格对 21 格，新增 0 格、丢失 0 格（ruler_tree_before.json = 08e804d480c121ddc811540bf5c790bb24bd83aa、ruler_tree_after.json = 06c0d27e7ac7ef2bc362eb3cbff3b3a3b7f0b623）。尺体 blob 6a251d3a6bea70329e06581384a81d5ef54c96a6，一字未动。
+
+六、验证过与没验证
+- 跑过：`tsc -p tsconfig.check.json --noEmit` 与 `tsc -p tsconfig.typecheck.json --noEmit` 各自 rc 0；本单 spec 三臂 + ORD-0060 三测 + ORD-0261/0264 两测在同一代字节上 8 测全绿（playwright-report-all-arms.json = ae18eee3bc4307352a34f4b100d546d7dbe485f3）；那两枚既有门我是在自己的栈上重跑的，不是权威门跑。
+- 没跑：后端套件（本单零后端字节改动）、手机真机、:8000 与手机包（按令仍是不提供那个决定）。所有读数在 loopback 上，功能读数成立，时延读数不成立我也没报。
+- 自报三处，都在架上不覆盖：① spec 的结构断言第一版把摘要正则写成含 `sha`，结果咬中 CN-SHANGHAI 这枚合法身份，第一跑因此红过一次 —— 错的是我的判据不是产品，改后 digest 词逐字写全；② receipt 第一版有两枚 derivation 本身写错（一枚在拼写键的表里查分组键、恒假，另一枚拿英文分组和中文分组直接相等比），所以它先报了两格 NOT_MET，修好后才 MET，两版都在架上；③ fact sheet r1 把"面板名字第一次出现的那一行"当成了控件行（两者只差一行），r2 拆成 summary_line 与 first_mention 两个字段，r1 保留。
+
+七、两件要你裁的，我不自行定
+- 「已支持」的定义：我按你括号里的"服务器能给身份与能力"实现成 READY、或有 canonical 身份且有目录行 —— 于是北京进已支持（屏上同带 HYDRATABLE 原词）。若你要的是 READY-only，实测 READY 的一座没有，那一组会印"这一轮没有名字落在这一组。"，屏幕其余部分一字不用改。这条我按你裁的结果改，不预先两头都写。
+- 同族一枚占位假值在本单射程外：frontend/src/app/V8Experience.tsx:2651 写 data-place-id={row.placeId ?? "unresolved"}，形与你说的那枚同类，但那是 hub 的掉站行、不是这一屏，而且那枚文件 lane D 在 c1bea4c2 之后还在动、Q64/Q67 的分裂也未合。我只报坐标与形状，不顺手改；要改请派给握着那枚文件的车道或明令我改。
+- 另：r6 再钉一次那件事按令排在本单之后，我没启动。
+
+证据目录 evidence/ord0346-honest-destinations-S4/（架上按路径取 blob 已逐字回读；本单只新增该目录，零覆盖零删除，receipt 与 fact sheet 各留两版）。量具在 instruments/ 下同名上架：db_setup_r1.py = e97b0d6b251d11c0f295f8b9d6e4603a3a57f7dd、capability_reading_r1.py = 978e9da02e6f75a276a04f8af929307d7dd47341、run_e2e_r1.py = fd45130d471ed827fe60820a087fba9233f959ee、fact_sheet_r2.py = da0577e476cbbde1af75f0e02553069eaee9b954、build_receipt_r2.py = 3fdef6603b7e378b382d48d2ee99182355af4f0c。
+
+不宣布 CLOSED：本块 claimed_result = CANDIDATE_DELIVERED + 一件待裁（已支持的定义）+ 一件待派（V8Experience.tsx:2651 的占位身份）；闭单只认 verifier 的 derived_result。
+
+
+### S1-q64sweep 09:06+08 · ORD-0344-b 增量：按你勘误后指定的真实通道做了；有一处我没照抄，因为量出来会撞同一枚节点的另一种
+
+你的勘误与我架上那一处对上：尖上 `frontend/src/lib/serverReason.ts` 与 `components/ServerReasonDetail.tsx` 确为 ABSENT、`describeServerReason` 全仓 0 命中 —— 我 08:52 那块第六节打的清单就是这件事，不必我再动。`git rev-parse <代>:<路径>` 不存在时把参数原样打印这条我也记下了（我 08:52 那句"回 0 行"用的是 `git grep`，退出码与"不存在"我按你说的分开读）。
+
+基线与枝：`git ls-remote origin refs/heads/mirror/integration-frontend-apple-pass1` 现读 = ab12c17a65450c2c3062c9232e27a26c4ae1b485；枝 review/S1-ord0344b-server-sentence-fold 现在三笔，本增量 = 391c6d0a30e9a4d192b31d6c3d76fa61d5b82647（远程按路径取回 blob d5f2908bb7012083e6347abec760dd4c177015f4 与我测过的工作树逐字相等）。
+
+一、照你指定的真实通道做的部分（那两枚符号我逐个核过再用）
+- 诊断不再靠 DOM：拒绝发生时走 `classifyReadFailure(null, {status: outcome.httpStatus, code: null, message: null})` + `recordAttribution(attribution, "hub.continuation.resume.refused")`（V8Experience.tsx:2296 那一行是调用点）。这两个名字确在你给的 blob 5956e880abf625591d371d369fe54b72bd2ffce8 上（:150 / :273），V8Experience 本来就 import 了它们（:16 那一组），没新增依赖、没新造模块。ORD-0341 要找"技术事实的新家"，就是这个 sink。
+- 服务器原话连归属标签搬进 `<details>` 技术面（V8Experience.tsx:2643 起、:2647 那枚 span 带着 data-testid="continuation-resume-server-reason" 一起搬），面里带 Q70 锚（:2656 `data-cnx-field="http_status"`，值是原始数字）。
+- Q68 另一半：这一路确实没有可复述编号（生产者 frontend/src/api/journeyContinuation.ts:107 的 refused 形只有 httpStatus 与 serverReason，:151 把 reason_code 读进类型却没取），所以技术面里用具名的一句说明"这一屏没拿到编号"（V8Experience.tsx:2669），不空着、也不把状态码装扮成编号。措辞我挑的是"这一屏没拿到"而不是"服务器没给"——后者是我没读到的事实。
+
+二、一处我没照抄，理由是量出来的（不是我不想办）
+你写"主屏文字走 copyFor 的本机文案"。我把那枚通道 import 进读数件真跑了一次（不是我转述它的措辞）：对 409 这一形，`classifyReadFailure` 给 reason=UNKNOWN_FAILURE / key=failure.unknown，`copyFor(...).title` = 「这一次没读到」，`.body` = 「服务器接上了，但这次读取没有成功，原因还没有分类。可以重试。」（逐字在架上 channel_words_r1.json）。而同一枚已上线节点比的是另一句：`qoder-continuation-resume-carries-identity.spec.ts:33` 的 REFUSED_TEXT = 「服务器拒绝了这一次尝试。没有产生新东西，上次的记录还在，你可以再试一次。」，那正是 `LocaleContext.tsx:863` 的 i18n 值，也是 `:273-:274` 拿来逐字判等的东西。所以把 copyFor 的 title 放上那一行 ⇒ `:274` 红（同一枚节点，你要求不动的那种）。我因此主屏保留 i18n 那句、把通道用在诊断 sink 上，并把"两串不等"这件事做成一条读数断言（`titleEqualsGateExpected: false`）——如果哪天两边对齐了，那臂会自己反过来告诉我们。
+另一半也顺手量了：对 500/503，`copyFor(...).body` 里含「（HTTP 500）」，那一串若进这段文字会同时撞 `:285` 与读 B 的 `:314`（那两臂判的都是 `!/HTTP\\s?\\d\\d\\d/`）。所以"走 copyFor 的 body"这条路在这一格不是风格问题，是必然红。
+
+三、上一条你在 08:52 那块已经收到的形状问题，仍然等你选：折叠合着时 `:276` 与 `:280-283` 会红（闭合 details 里 isVisible()=false、innerText 空串，我当场量的），门要的是加一行 `await page.getByTestId("continuation-technical-toggle").click();`；或那枚 `<details>` 带 `open` 落地（门零修改，代价是原话又可见）。我没碰 D 的 spec 一字（Q72）。
+
+四、我自己一处读数不干净，主动换掉并留在架上（不删不改旧件）
+第一版三臂夹具里"本机那句拒绝"是我**自己编的一串**，不是门真正判的那句。已改成从门的常量与 i18n 逐字取来，三臂重跑：predicates_before_shape_r2.json、predicates_after_closed_r2.json、predicates_after_opened_r2.json；r1 三枚原样留在架上，本块说的是"我换了夹具，不是结论变了"——三臂的通过/失败模式与 r1 一致（基线全过、合着时两判据不通过、点开时全过）。
+
+五、验证与普查
+- r6 --tree 在第三笔之后：总命中 12 格不变、新增 0 格，我这格随句子移到 V8Experience.tsx:2649，仍按你拍的 ATTRIBUTED_IN_DETAILS 交，尺的例外归 ORD-0348 / S4。
+- 两份 tsc 各自 rc 0（typecheck 与 check）；四臂读数件全绿。
+- 没跑：D 那枚门的真跑（要活后端，`:8000` 无人监听）、手机侧亲测、后端套件套。手机包按你说的不催，等这单一起换。
+- 边界：产品字节只落 V8Experience.tsx 与 CopilotDock.tsx（后者是上一笔补锚）；D 与 B 的 spec 一字未动；未 demo/reset；未碰 *_live.db / *_preview.db；凭据零打印；已发布路径零覆盖零删除；node_modules junction 收尾已拆（拆前拆后共享树条目数同读数、typescript 仍可 require）。
+- 我推枝那条老错这次避开了：三笔都从 worktree 内推且回读 `git ls-remote` 核 tip。
+
+证据（架上按路径取 blob 逐字回读，回读当代 8f2c80f8d289e2f321a4f52d991193a2647fdaae）：move_reading_r3.json = 3d5584b933ff04a2e1cf76294ad44eefab5600d6、builder 29cbb2b8945b2faa7cf149eea821e017136deeb4、r6_tree_after_move_r3.json = 1f10d1976c62bb0d6e1d80c436c7ddccc91f9ef0、通道原话 channel_words_r1.json = 1ddf1e57240bc1d41f2f99ea5a4f7c1fbdde60b7、三臂 r2 = f57dca2c26dccad250e8f8e7fdfcca5f257f1622 / 1ea7fb842defed7c2f4ad22f7cc3897929fdacae / d815d93ebb0634969a5cb3a07b1d7f3e85dc7bd8。上一块已上架的 r1 与 r2 各件保留不动。
+claimed_result = CANDIDATE_READY + 两条要你选的（`:274` 那条是否要为通道让路；折叠点开的行 vs `open`）。闭单只认 verifier E 的 derived_result。
+
+
 ### CMDR 09:10 — ORD-0332 落地（服务器现在真给得出可复述的回执号）、Q76（折叠保持合着，门要"像用户那样点开"）、以及一条被我用字节否掉的归因
 
 **一、ORD-0332 落地，这是今晚最实的一次产品推进。** lane F `8ccd71d8` 的候选 `3a3feea3a290156cd84bd740a1ea45250d95b419` 是现尖的直接后继，所以我的门报 `FAST_FORWARD_POSSIBLE`，不用重切、直落（回执 `901415489397247e5d22a13c611e8007cddb90f3`；落地时后端 `backend/tests/test_qoder_ord0332_error_receipt.py` 在导出树上 9 passed、整册收集无 Interrupted）。引入的产品文件 `backend/app/error_receipt.py`、`backend/app/main.py`、`frontend/src/lib/errorReceipt.ts`，并新出一份契约 `contracts/ERROR_RECEIPT_ID_V1.md`。**意义**：屏上那句「服务器给出的编号」从今晚起有真东西可指 —— 此前 `request_id` 只存在于入站契约、错误信封只有 `trace_id`，任何"服务器编号"都是客户端自造的（这条我从 08:28 起就在等 F）。
