@@ -1,0 +1,162 @@
+{
+ "generatedBy": "S4-ast-taint",
+ "order": "ORD-0346",
+ "arm": "reads aborted",
+ "panel": {
+  "summary": "看支持的目的地",
+  "groups": [
+   {
+    "key": "supported",
+    "title": "已支持：服务器认得它，而且目录里有东西",
+    "rule": "READY / 有 canonical 身份且有目录行",
+    "empty": "这一轮没有名字落在这一组。"
+   },
+   {
+    "key": "needs_lookup",
+    "title": "需联网才能解析：服务器现在认不出这个名字",
+    "rule": "NO_CANONICAL_IDENTITY",
+    "empty": "这一轮没有名字落在这一组。"
+   },
+   {
+    "key": "unknown",
+    "title": "未知或无数据：这一轮拿不出可规划的判定",
+    "rule": "HYDRATABLE 无目录行 / UNKNOWN_RETRYABLE / 没读到",
+    "empty": null
+   }
+  ],
+  "rows": [
+   {
+    "spelling": "厦门",
+    "group": "unknown",
+    "answered": "no",
+    "capability": null,
+    "reasonCode": null,
+    "action": null,
+    "identityAttr": null,
+    "identityText": "身份还没读到",
+    "verdictText": "这一轮没读到服务器的判定（读不到不等于服务器说不知道）",
+    "fieldsText": "NETWORK_UNAVAILABLE"
+   },
+   {
+    "spelling": "北京",
+    "group": "unknown",
+    "answered": "no",
+    "capability": null,
+    "reasonCode": null,
+    "action": null,
+    "identityAttr": null,
+    "identityText": "身份还没读到",
+    "verdictText": "这一轮没读到服务器的判定（读不到不等于服务器说不知道）",
+    "fieldsText": "NETWORK_UNAVAILABLE"
+   },
+   {
+    "spelling": "上海",
+    "group": "unknown",
+    "answered": "no",
+    "capability": null,
+    "reasonCode": null,
+    "action": null,
+    "identityAttr": null,
+    "identityText": "身份还没读到",
+    "verdictText": "这一轮没读到服务器的判定（读不到不等于服务器说不知道）",
+    "fieldsText": "NETWORK_UNAVAILABLE"
+   },
+   {
+    "spelling": "天津",
+    "group": "unknown",
+    "answered": "no",
+    "capability": null,
+    "reasonCode": null,
+    "action": null,
+    "identityAttr": null,
+    "identityText": "身份还没读到",
+    "verdictText": "这一轮没读到服务器的判定（读不到不等于服务器说不知道）",
+    "fieldsText": "NETWORK_UNAVAILABLE"
+   },
+   {
+    "spelling": "福州",
+    "group": "unknown",
+    "answered": "no",
+    "capability": null,
+    "reasonCode": null,
+    "action": null,
+    "identityAttr": null,
+    "identityText": "身份还没读到",
+    "verdictText": "这一轮没读到服务器的判定（读不到不等于服务器说不知道）",
+    "fieldsText": "NETWORK_UNAVAILABLE"
+   },
+   {
+    "spelling": "广州",
+    "group": "unknown",
+    "answered": "no",
+    "capability": null,
+    "reasonCode": null,
+    "action": null,
+    "identityAttr": null,
+    "identityText": "身份还没读到",
+    "verdictText": "这一轮没读到服务器的判定（读不到不等于服务器说不知道）",
+    "fieldsText": "NETWORK_UNAVAILABLE"
+   },
+   {
+    "spelling": "深圳",
+    "group": "unknown",
+    "answered": "no",
+    "capability": null,
+    "reasonCode": null,
+    "action": null,
+    "identityAttr": null,
+    "identityText": "身份还没读到",
+    "verdictText": "这一轮没读到服务器的判定（读不到不等于服务器说不知道）",
+    "fieldsText": "NETWORK_UNAVAILABLE"
+   },
+   {
+    "spelling": "成都",
+    "group": "unknown",
+    "answered": "no",
+    "capability": null,
+    "reasonCode": null,
+    "action": null,
+    "identityAttr": null,
+    "identityText": "身份还没读到",
+    "verdictText": "这一轮没读到服务器的判定（读不到不等于服务器说不知道）",
+    "fieldsText": "NETWORK_UNAVAILABLE"
+   },
+   {
+    "spelling": "杭州",
+    "group": "unknown",
+    "answered": "no",
+    "capability": null,
+    "reasonCode": null,
+    "action": null,
+    "identityAttr": null,
+    "identityText": "身份还没读到",
+    "verdictText": "这一轮没读到服务器的判定（读不到不等于服务器说不知道）",
+    "fieldsText": "NETWORK_UNAVAILABLE"
+   },
+   {
+    "spelling": "东京",
+    "group": "unknown",
+    "answered": "no",
+    "capability": null,
+    "reasonCode": null,
+    "action": null,
+    "identityAttr": null,
+    "identityText": "身份还没读到",
+    "verdictText": "这一轮没读到服务器的判定（读不到不等于服务器说不知道）",
+    "fieldsText": "NETWORK_UNAVAILABLE"
+   },
+   {
+    "spelling": "新加坡",
+    "group": "unknown",
+    "answered": "no",
+    "capability": null,
+    "reasonCode": null,
+    "action": null,
+    "identityAttr": null,
+    "identityText": "身份还没读到",
+    "verdictText": "这一轮没读到服务器的判定（读不到不等于服务器说不知道）",
+    "fieldsText": "NETWORK_UNAVAILABLE"
+   }
+  ]
+ }
+}
