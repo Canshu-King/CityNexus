@@ -1,0 +1,50 @@
+{
+ "base": "https://jets-saints-tomatoes-eric.trycloudflare.com",
+ "at": "Sat Sep 26 2026 18:49:30 GMT+0800 (中国标准时间)",
+ "scene": {
+  "status": 200,
+  "ctype": "application/json",
+  "bytes": 610,
+  "journey_id": "9c6c3d73-8b8e-4f71-beaf-32bc87aba035"
+ },
+ "A_real_link": {
+  "label": "real journey from the chain's own scene read",
+  "id": "9c6c3d73-8b8e-4f71-beaf-32bc87aba035",
+  "url_shown": "/v8/9c6c3d73-8b8e-4f71-beaf-32bc87aba035",
+  "requests_carrying_this_id": [
+   "/v8/9c6c3d73-8b8e-4f71-beaf-32bc87aba035",
+   "/api/v1/journeys/9c6c3d73-8b8e-4f71-beaf-32bc87aba035/experience",
+   "/api/v1/journeys/9c6c3d73-8b8e-4f71-beaf-32bc87aba035/replans",
+   "/api/v1/journeys/9c6c3d73-8b8e-4f71-beaf-32bc87aba035/agent-feed?limit=200",
+   "/api/v1/journeys/9c6c3d73-8b8e-4f71-beaf-32bc87aba035/plans",
+   "/api/v1/journeys/9c6c3d73-8b8e-4f71-beaf-32bc87aba035/twin"
+  ],
+  "requests_carrying_it_count": 8,
+  "screen_head": "菜单 / 今天 跟随系统 EN GU 晚上好 广州之旅 9月21日 10:00 — 9月22日 18:00 · 1 位旅行者 · 2 天 AI 帮我规划 试用其他城市 打开行程工作台 现在 广州南站 接下来 14:00 Check in · 7天酒店 今天还有 3 项安排 查看实时行程 “现在”取自服务器场景（执行游标）：9月21日 10:00 · 现在/接下来由服务器的执行投影给出 1 2 3 4 5 底图未加载，显示的是路线示意。 路线上下文 4 段路程 供应商支持的路线 · WGS84 单指拖动地图 · 双指缩放 · 想翻这一页就拖地图以外的地方 住宿 7天酒店 到达 9月21日 10:00 出发 9月22日 18:00 一切正常 方案概览 每一天，紧密相连。 对比住宿 → 第 1 天 星期一 广州南站 · Check in · 7天酒店 · Overnight · 7天酒店 公交地铁 抵达锚点 第 2 天 星期二 Che",
+  "asset_served": [
+   "/assets/index-D3j0mgvR.js"
+  ]
+ },
+ "B_unknown_link": {
+  "label": "well-formed but unknown journey id",
+  "id": "00000000-0000-4000-8000-000000000000",
+  "url_shown": "/v8/00000000-0000-4000-8000-000000000000",
+  "requests_carrying_this_id": [
+   "/v8/00000000-0000-4000-8000-000000000000",
+   "/api/v1/journeys/00000000-0000-4000-8000-000000000000/experience"
+  ],
+  "requests_carrying_it_count": 2,
+  "screen_head": "连接正常 这台服务器上没有这一趟行程了 这台设备还记得行程 00000000…，但服务器明确回答它不存在（HTTP 404）。这不是网络问题：服务器刚才答得出来。你的其它行程没有受影响。 选一趟行程 重试 归因详情",
+  "asset_served": [
+   "/assets/index-D3j0mgvR.js"
+  ]
+ },
+ "verdict": {
+  "A_the_address_bar_id_was_actually_asked": true,
+  "B_unknown_id_named_as_missing_on_screen": true,
+  "B_not_laundered_as_network_failure": true,
+  "B_explicitly_disclaims_the_network_reading": true,
+  "same_asset_served_on_both": true
+ },
+ "note": "requests_carrying_this_id counts API requests whose URL contains the id from the address bar; a green A with zero such requests would mean the link is still decorative, so the count is the load-bearing number."
+}
