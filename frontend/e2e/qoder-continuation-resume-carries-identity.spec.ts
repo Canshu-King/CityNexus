@@ -272,8 +272,34 @@ test("ord0278-negative-refused-keeps-the-marker-and-says-whose-words-these-are �
   const postsAfterA = sent.length;
   const refusedText = (await outcome.innerText()).replace(/\s+/g, " ").trim();
   expect(refusedText, node("ord0278-negative-refused", `the refusal sentence reads "${refusedText}"`)).toContain(REFUSED_TEXT);
+  /* Q76, carried by ORD-0341: ORD-0344-b moved the server's own sentence into the technical-detail
+     fold, and the fold stays closed -- a gate may not ask the product to leave it open just so the
+     gate reads green.  So this reads the two shapes a traveller actually meets, in order: closed
+     (the label is not on screen, and the `<details>` really is closed), then opened by clicking the
+     real `<summary>`, where the label must be holding the server's words.  Operating the UI is not
+     rewriting the assertion; both readings are written to the evidence file. */
+  const fold = page.getByTestId("continuation-technical-details");
   const serverLine = page.getByTestId("continuation-resume-server-reason");
-  await expect(serverLine, node("ord0278-negative-refused", "the server sent a reason and it is nowhere on screen")).toBeVisible();
+  const collapsedOpen = await fold.evaluate((el) => (el as HTMLDetailsElement).open);
+  const collapsedVisible = await serverLine.isVisible();
+  expect(
+    collapsedOpen,
+    node("ord0278-negative-refused", "the technical fold is open before anything touched it -- Q76 says it stays closed"),
+  ).toBe(false);
+  expect(
+    collapsedVisible,
+    node("ord0278-negative-refused", "the server's sentence sits on the traveller's line while the fold is closed"),
+  ).toBe(false);
+  await page.getByTestId("continuation-technical-toggle").click();
+  const openedFold = await fold.evaluate((el) => (el as HTMLDetailsElement).open);
+  expect(
+    openedFold,
+    node("ord0278-negative-refused", "clicking 「技术详情」 did not open the fold -- the label below has no witness"),
+  ).toBe(true);
+  await expect(
+    serverLine,
+    node("ord0278-negative-refused", "the fold is open and still no reason from the server is shown"),
+  ).toBeVisible();
   /* Captured NOW, into a value: by the time the reading block at the bottom runs, read B has replaced
      this outcome and re-querying the locator would wait the whole test timeout on a vanished node. */
   const serverReasonShown = (await serverLine.innerText()).replace(/\s+/g, " ").trim();
@@ -333,6 +359,8 @@ test("ord0278-negative-refused-keeps-the-marker-and-says-whose-words-these-are �
         journeyId,
         refusedSentence: refusedText,
         serverReasonShown,
+        fold_collapsed: { details_open: collapsedOpen, reason_visible: collapsedVisible },
+        fold_opened_by_click: { details_open: openedFold, reason_visible: true, reason_text: serverReasonShown },
         noSentenceOutcome: bare,
         secondLegPosts: sent.length,
         markerAfterEachRefusal: "present",
