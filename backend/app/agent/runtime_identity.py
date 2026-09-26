@@ -8,6 +8,7 @@ from pathlib import Path
 from typing import Any
 
 from app.core.config import settings
+from app.agent.ai_availability import ai_availability_state
 from app.integrations.hermes.native_client import native_hermes_status
 
 
@@ -68,5 +69,9 @@ def runtime_status() -> dict[str, Any]:
         "mcp_server": "citynexus-v2",
         "deepseek_configured": bool(settings.ai_api_key),
         "hermes_compat_configured": bool(settings.hermes_api_url and settings.hermes_api_key),
+        # ORD-0359: additive. `deepseek_configured` stays a boolean for the clients that already
+        # read it; `ai_state` is the named reason, so a screen no longer has to infer "disabled"
+        # from a flag that cannot tell an operator's switch from a missing credential.
+        "ai_state": ai_availability_state(),
         "hermes_native_gateway": native,
     }
