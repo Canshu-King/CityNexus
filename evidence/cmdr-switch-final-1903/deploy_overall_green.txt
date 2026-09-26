@@ -1,0 +1,99 @@
+proxy guard: {'proxy_env_before': {'HTTPS_PROXY': 'http://127.0.0.1:7892', 'HTTP_PROXY': 'http://127.0.0.1:7892'}, 'refused': ['HTTPS_PROXY=127.0.0.1:7892', 'HTTP_PROXY=127.0.0.1:7892'], 'action': 'PROXY_CLEARED_AND_DIRECT'}
+[pre] served index.html references: ['/assets/index-D3j0mgvR.js', '/assets/index-BOtUwGz0.css']
+[pre] build references          : ['/assets/index-Chsqoxa2.js', '/assets/index-BOtUwGz0.css']
+[union] added 3 new asset(s); 1 already byte-identical; 86 name->digest bindings written
+[gate] 2 new asset(s) reachable x2, real bytes vs the build export, no HTML fallback
+[preflight] READY_TO_SWITCH / promotion=PENDING_POST_SWITCH  (B_pre/C_pre/G_pre/I_pre/F_pre/A_pre; reds=0)
+[switch] backed up 5 root file(s) -> D:\moodle\_qoder_preview_20260920\dist_bak_190345_1790420625874070300
+[switch] installed ['index.html', 'manifest.webmanifest', 'sw.js', 'v10-sw.js', 'workbox-6923124b.js']
+[receipt] D:\moodle\_qoder_cmdr_ref_20260921\live_checks\receipts\deploy_282dc65a487b6be35c7268e41f358463d575aed3_0926_190355.json
+{
+ "A_OLD_ASSET_still_served": {
+  "ref": "/assets/index-D3j0mgvR.js",
+  "status": 200,
+  "content_type": "text/javascript",
+  "is_html": false,
+  "disk_bytes": 1276676,
+  "verdict": "GREEN"
+ },
+ "B_NEW_INDEX": {
+  "status": 200,
+  "refs_match_new": true,
+  "new_refs_present": true,
+  "old_refs_absent": true,
+  "old_ref_tested": "/assets/index-D3j0mgvR.js",
+  "verdict": "GREEN"
+ },
+ "C_NEW_ASSET": [
+  {
+   "verdict": "GREEN",
+   "times": 2,
+   "statuses": [
+    200,
+    200
+   ],
+   "probes": [
+    {
+     "path": "/assets/index-Chsqoxa2.js",
+     "status": 200,
+     "content_type": "text/javascript",
+     "length": "1277879",
+     "cache_control": "no-cache",
+     "head_bytes": "const __vite__mapDeps=(i",
+     "sha256": "84684c53917a48893eb4b8596fd6d41b3c3a7cd10e9a8e3073c8a113583f5d44",
+     "is_html_fallback": false,
+     "error": null,
+     "base": "http://127.0.0.1:4781",
+     "auth_applied": false,
+     "body_size": 1277879,
+     "disk_present": true,
+     "disk_bytes": 1277879,
+     "disk_sha256": "84684c53917a48893eb4b8596fd6d41b3c3a7cd10e9a8e3073c8a113583f5d44",
+     "expect_content_type_substring": "javascript",
+     "verdict": "GREEN"
+    },
+    {
+     "path": "/assets/index-Chsqoxa2.js",
+     "status": 200,
+     "content_type": "text/javascript",
+     "length": "1277879",
+     "cache_control": "no-cache",
+     "head_bytes": "const __vite__mapDeps=(i",
+     "sha256": "84684c53917a48893eb4b8596fd6d41b3c3a7cd10e9a8e3073c8a113583f5d44",
+     "is_html_fallback": false,
+     "error": null,
+     "base": "http://127.0.0.1:4781",
+     "auth_applied": false,
+     "body_size": 1277879,
+     "disk_present": true,
+     "disk_bytes": 1277879,
+     "disk_sha256": "84684c53917a48893eb4b8596fd6d41b3c3a7cd10e9a8e3073c8a113583f5d44",
+     "expect_content_type_substring": "javascript",
+     "verdict": "GREEN"
+    }
+   ],
+   "red_refs": []
+  },
+  {
+   "verdict": "GREEN",
+   "times": 2,
+   "statuses": [
+    200,
+    200
+   ],
+   "probes": [
+    {
+     "path": "/assets/index-BOtUwGz0.css",
+     "status": 200,
+     "content_type": "text/css",
+     "length": "185021",
+     "cache_control": "no-cache",
+     "head_bytes": ".v10-execution-panel{wid",
+     "sha256": "b910dd8bb8db8432851cf692ffa325ab48f2c8b27f10027ee333caa573cceec7",
+     "is_html_fallback": false,
+     "error": null,
+     "base": "http://127.0.0.1:4781",
+     "auth_applied": false,
+     "body_size": 185021,
+  
+OVERALL GREEN
