@@ -1,0 +1,61 @@
+{
+ "started_at": "2026-09-26T01:18:12.933Z",
+ "chain": "http://127.0.0.1:4781",
+ "url_asked": "http://127.0.0.1:4781/journey/00000000-0000-0000-0000-000000000000",
+ "clicks": 0,
+ "keystrokes": 0,
+ "legs": [
+  {
+   "url": "/api/v1/demo/scene",
+   "m": "GET",
+   "status": 500,
+   "ct": "text/plain"
+  }
+ ],
+ "chromium_version": "153.0.8010.12",
+ "before_opening_details": {
+  "url": "http://127.0.0.1:4781/journey/00000000-0000-0000-0000-000000000000",
+  "inner_len": 168,
+  "text_content_len": 187,
+  "details_count": 2,
+  "buttons": [
+   "EN",
+   "高级设置",
+   "目的地",
+   "抵达地点",
+   "离开地点",
+   "下一步",
+   "使用封存的演示行程",
+   ""
+  ],
+  "localStorage_keys": [
+   "citynexus.v8.trial_draft"
+  ],
+  "session_contains_a_journey_id": null
+ },
+ "painted_before": "用你自己的城市试用 CITYNEXUS\n\n新建行程\n\n三步完成。选择目的地、告诉我们怎么玩，剩下的交给 CityNexus。\n\nEN\n1\n目的地与时间\n2\n人数与偏好\n3\n确认创建\n目的地\n看支持的目的地\n抵达地点\n离开地点\n抵达时间\n离开时间\n高级设置\n高级设置\n\n还需要填写：目的地、抵达地点、离开地点\n\n下一步\n使用封存的演示行程",
+ "after_opening_details": {
+  "url": "http://127.0.0.1:4781/journey/00000000-0000-0000-0000-000000000000",
+  "inner_len": 216,
+  "text_content_len": 187,
+  "details_count": 2,
+  "exception_in_text": false,
+  "attr_hits": [],
+  "tail_lines": [
+   "高级设置",
+   "还需要填写：目的地、抵达地点、离开地点",
+   "下一步",
+   "使用封存的演示行程"
+  ],
+  "carries_my_filled_wizard_values": false
+ },
+ "painted_after": "用你自己的城市试用 CITYNEXUS\n\n新建行程\n\n三步完成。选择目的地、告诉我们怎么玩，剩下的交给 CityNexus。\n\nEN\n1\n目的地与时间\n2\n人数与偏好\n3\n确认创建\n目的地\n看支持的目的地\n厦门\n北京\n上海\n天津\n福州\n广州\n深圳\n成都\n杭州\n东京\n新加坡\n抵达地点\n离开地点\n抵达时间\n离开时间\n高级设置\n国家/地区代码\n时区\n货币\n高级设置\n\n还需要填写：目的地、抵达地点、离开地点\n\n下一步\n使用封存的演示行程",
+ "screenshot": {
+  "file": "RC_4_dead_id_fresh.png",
+  "exists": true,
+  "bytes": 157063,
+  "sha256": "63726e8337b5d682c0d7bb09ed4366feb41d7ffdc8d6f8eda854d04f11052739"
+ },
+ "leg_count": 1,
+ "finished_at": "2026-09-26T01:18:16.913Z"
+}
