@@ -1373,7 +1373,12 @@ export function JourneyTrialSetup({
               {zh ? "技术详情" : "Technical detail"}
             </summary>
             {createFacts ? (
-              <RawFactsPanel facts={createFacts} zh={zh} testId="create-raw-facts" />
+              <RawFactsPanel
+                facts={createFacts}
+                zh={zh}
+                testId="create-raw-facts"
+                nameMissingReceipt
+              />
             ) : (
               /* No `data-cnx-field` here on purpose: "this device has nothing measured" is not the
                  same reading as "no answer arrived", and naming a contract field with a value this

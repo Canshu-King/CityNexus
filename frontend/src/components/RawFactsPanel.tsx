@@ -13,17 +13,25 @@ import { receiptLabel } from "../lib/errorReceipt";
  * ORD-0353 ③ / Q70: each reading is its own element wearing `data-cnx-field` with the contract
  * name, because the printed label is this screen's wording and a translation or a re-word cannot
  * be allowed to silently rename the field.  The receipt line is the one value here the server
- * authored, and `errorReceipt.ts` already decided whether it exists: when it does not, the line
- * says so by name instead of leaving a 编号 slot to be filled by anything nearby.
+ * authored, and `errorReceipt.ts` already decided whether it exists: when it does, the number shows
+ * under the contract name it was issued under.
  */
 export function RawFactsPanel({
   facts,
   zh,
   testId,
+  nameMissingReceipt = false,
 }: {
   facts: RawFacts;
   zh: boolean;
   testId: string;
+  /** ORD-0353 also wants "the server sent no number" said out loud, where a 编号 slot could otherwise
+   *  be filled by anything nearby.  That sentence is new copy inside `.v8-message`, and three landed
+   *  gates read that banner's own text (ORD-0325 at
+   *  `e2e/qoder-ord0325-upstream-prose-not-on-screen.spec.ts:382`, plus ORD-0323 and the inbox
+   *  queue), so naming the absence is opt-in per mount and the wizard mounts it with the flag on.  A
+   *  number the server really sent is always shown -- hiding one is not honesty. */
+  nameMissingReceipt?: boolean;
 }) {
   return (
     <div className="cnx-raw-facts">
@@ -49,13 +57,15 @@ export function RawFactsPanel({
           </span>
         ))}
       </pre>
-      <span
-        className="cnx-raw-facts-receipt"
-        data-testid={`${testId}-receipt`}
-        {...facts.receipt.attrs}
-      >
-        {`${receiptLabel(facts.receipt.present, zh)}：${facts.receipt.text}`}
-      </span>
+      {(facts.receipt.present || nameMissingReceipt) && (
+        <span
+          className="cnx-raw-facts-receipt"
+          data-testid={`${testId}-receipt`}
+          {...facts.receipt.attrs}
+        >
+          {`${receiptLabel(facts.receipt.present, zh)}：${facts.receipt.text}`}
+        </span>
+      )}
     </div>
   );
 }
