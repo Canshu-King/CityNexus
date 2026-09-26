@@ -1,0 +1,436 @@
+{
+ "ran_at_local": "2026-09-26T18:51:38+0800",
+ "lane": "HJ-P3 aad2d1f2-4de9-406b-a5df-afa0e2bcea58",
+ "order": "re-measure two reported defects, accept ORD-0357 by using it, and report new user-visible findings",
+ "measurement_scope": {
+  "scope": "死 stored journey id 那一屏；「已保存」这类话背后的设备行；行程自身链接的复制与重开；行程底栏与 AI 引导的两屏",
+  "generation_read_from_the_ref_in_this_run": "6ee21eddba60303e8f0f46907df9501ee0149e6e",
+  "generation_named_by_the_commander": null,
+  "bundle_under_test": {
+   "asset": "/assets/index-D3j0mgvR.js",
+   "bytes": 1276676,
+   "sha256": "acfd43158bcaa41a7a3e4d977e08c23ed211dd771bc981ab1913f10432288366",
+   "matches_the_name_he_gave": true,
+   "same_bytes_on_both_entries": true
+  },
+  "health_fields": {
+   "ai": "disabled",
+   "ai_state": "DISABLED_BY_OPS"
+  },
+  "health_row": {
+   "path": "/api/v1/health",
+   "status": 200,
+   "content_type": "application/json",
+   "server": "cloudflare",
+   "bytes": 113,
+   "sha256": "d343302af6f4ac01d98b73ac523e99a93ff877526f37d119a34f363631252957",
+   "elapsed_ms": 902
+  },
+  "measurement_method": "own headless Chromium 390x844@3 touch zh-CN over the public tunnel entry, fresh context per cell, legs read off browser response objects, clipboard read inside the page, device stores counted inside the page"
+ },
+ "cell_1a_dead_stored_id": {
+  "verbatim_screen_text": "连接正常\n\n这台服务器上没有这一趟行程了\n\n这台设备还记得行程 00000000…，但服务器明确回答它不存在（HTTP 404）。这不是网络问题：服务器刚才答得出来。你的其它行程没有受影响。\n\n选一趟行程\n重试\n归因详情",
+  "text_len_closed": 110,
+  "text_len_open": 266,
+  "claims_the_network_is_down": false,
+  "names_that_it_does_not_exist": true,
+  "denies_a_network_reading": true,
+  "mentions_http_404_on_screen": true,
+  "actions_offered": [
+   "选一趟行程",
+   "重试"
+  ],
+  "the_leg": [
+   [
+    "GET",
+    "/api/v1/journeys/00000000-0000-0000-0000-000000000000/experience",
+    404,
+    235,
+    null,
+    "CNX-FM7GYKRT",
+    "NOT_FOUND"
+   ]
+  ],
+  "receipt_on_screen_closed": [],
+  "receipt_on_screen_open": [],
+  "fold": {
+   "closed": [
+    {
+     "open": false,
+     "summary": "归因详情",
+     "inner_len": 4
+    }
+   ],
+   "open": [
+    {
+     "open": true,
+     "summary": "归因详情",
+     "inner_len": 160
+    }
+   ]
+  },
+  "ls_after": {
+   "journey_id": null,
+   "keys": []
+  },
+  "identical_to_the_previous_generation_word_for_word": true,
+  "previous_generation_text_sha": "d80782ec7756bdfb0ef525e24c0720b703cf604ca6724571a536b4988e244cde",
+  "this_generation_text_sha": "d80782ec7756bdfb0ef525e24c0720b703cf604ca6724571a536b4988e244cde"
+ },
+ "cell_1b_saved_behind_rows": {
+  "device_after_a_real_boot": {
+   "databases": [
+    {
+     "name": "citynexus-offline",
+     "version": 10
+    }
+   ],
+   "target_db": "citynexus-offline",
+   "store_names": [
+    "journeys"
+   ],
+   "rows": {
+    "journeys": 1
+   },
+   "caches_keys": [
+    "workbox-precache-v2-https://jets-saints-tomatoes-eric.trycloudflare.com/"
+   ],
+   "cache_entry_counts": {
+    "workbox-precache-v2-https://jets-saints-tomatoes-eric.trycloudflare.com/": 8
+   },
+   "errors": []
+  },
+  "device_after_the_tab_walk": {
+   "databases": [
+    {
+     "name": "citynexus-offline",
+     "version": 10
+    }
+   ],
+   "target_db": "citynexus-offline",
+   "store_names": [
+    "journeys"
+   ],
+   "rows": {
+    "journeys": 1
+   },
+   "caches_keys": [
+    "workbox-precache-v2-https://jets-saints-tomatoes-eric.trycloudflare.com/"
+   ],
+   "cache_entry_counts": {
+    "workbox-precache-v2-https://jets-saints-tomatoes-eric.trycloudflare.com/": 8
+   },
+   "errors": []
+  },
+  "boot_ms": 12007,
+  "saved_sentences_on_the_hub": [],
+  "saved_sentences_per_tab": [
+   {
+    "label": "我的",
+    "affordance_present": true,
+    "saved_sentences": [],
+    "text_len": 289
+   },
+   {
+    "label": "旅行票夹",
+    "affordance_present": false,
+    "saved_sentences": null,
+    "text_len": null
+   },
+   {
+    "label": "恢复与执行",
+    "affordance_present": false,
+    "saved_sentences": null,
+    "text_len": null
+   },
+   {
+    "label": "行程工作台",
+    "affordance_present": false,
+    "saved_sentences": null,
+    "text_len": null
+   }
+  ],
+  "offline_snapshot_leg": [
+   [
+    "GET",
+    "/api/v1/journeys/fa5cebdc-fabc-4067-ab02-4812ddb950e5/offline-snapshot",
+    200,
+    797
+   ]
+  ],
+  "service_worker_controls": true,
+  "bundle_contains_saved_strings": {
+   "journey-link-copy": 1,
+   "journey-link-message": 2,
+   "journey-link-action": 1,
+   "data-cnx-field": 12,
+   "inbox.copyJourneyLink": 3,
+   "inbox.journeyLinkCopied": 3,
+   "inbox.journeyLinkNoJourney": 3,
+   "inbox.journeyLinkInsecureContext": 3,
+   "inbox.journeyLinkClipboardUnavailable": 3,
+   "trips-tab-bookings": 0,
+   "trip-itinerary-empty": 1,
+   "先让 AI 帮你规划": 1,
+   "还没有可看的行程": 1,
+   "这台服务已接入 AI 模型": 1,
+   "ai_state": 0,
+   "DISABLED_BY_OPS": 0
+  },
+  "limit_named": "我只走了这五屏（今天/我的/行程/预订/行程工作台）；「已保存」这句话在这五屏上没渲染，其余屏幕我没到过，因此不说它不存在"
+ },
+ "cell_2_ord0357_copy_link": {
+  "path_taken_by_me": {
+   "first_stop_without_control": [
+    {
+     "label": "旅行票夹",
+     "affordance_present": false
+    },
+    {
+     "label": "打开行程工作台",
+     "affordance_present": true,
+     "url": "https://jets-saints-tomatoes-eric.trycloudflare.com/v8/studio",
+     "copy_button_present": false,
+     "text_len": 488,
+     "testids": [
+      "topbar-theme",
+      "topbar-language",
+      "v8-trip-studio",
+      "studio-preview-caveat",
+      "studio-stay-total",
+      "studio-walking",
+      "studio-no-plan",
+      "v18-copilot-dock",
+      "nav-hub",
+      "nav-trips",
+      "nav-map",
+      "nav-agent",
+      "nav-me"
+     ]
+    }
+   ],
+   "trips_landing_len": 134,
+   "sub_tab_anchor": "trips-tab-bookings",
+   "control_appeared_after": "the 预订 sub-tab of /v8/trips"
+  },
+  "control": {
+   "testid": "journey-link-copy",
+   "text": "复制行程链接",
+   "data_cnx_field": "journey_link_url",
+   "top_px": 315,
+   "disabled": false,
+   "in_viewport": true
+  },
+  "press_result": "clicked",
+  "clipboard": "https://jets-saints-tomatoes-eric.trycloudflare.com/v8/fa5cebdc-fabc-4067-ab02-4812ddb950e5",
+  "message_line_verbatim": "行程链接已复制到这台设备的剪贴板，可以发给同行的人。",
+  "message_field_attr": "journey_link_url",
+  "reopen_in_a_clean_device": {
+   "link": "https://jets-saints-tomatoes-eric.trycloudflare.com/v8/fa5cebdc-fabc-4067-ab02-4812ddb950e5",
+   "reopened_url": "https://jets-saints-tomatoes-eric.trycloudflare.com/v8/fa5cebdc-fabc-4067-ab02-4812ddb950e5",
+   "journey_id_now_in_the_device": "fa5cebdc-fabc-4067-ab02-4812ddb950e5",
+   "ls_keys": [
+    "citynexus.v8.journey_id",
+    "citynexus.copilot.history.fa5cebdc-fabc-4067-ab02-4812ddb950e5"
+   ],
+   "same_rendered_text_as_the_copy_screen": false,
+   "copy_screen_len": 269,
+   "reopen_len": 605
+  },
+  "journey_identity_on_the_reopened_screen": true,
+  "journey_identity_on_the_copy_screen": false,
+  "legs_after_reopening": [
+   [
+    "GET",
+    "/api/v1/journeys/fa5cebdc-fabc-4067-ab02-4812ddb950e5/experience",
+    200,
+    132102
+   ],
+   [
+    "GET",
+    "/api/v1/journeys/fa5cebdc-fabc-4067-ab02-4812ddb950e5/replans",
+    200,
+    2
+   ],
+   [
+    "GET",
+    "/api/v1/journeys/fa5cebdc-fabc-4067-ab02-4812ddb950e5/twin",
+    200,
+    896
+   ],
+   [
+    "GET",
+    "/api/v1/journeys/fa5cebdc-fabc-4067-ab02-4812ddb950e5/plans",
+    200,
+    2
+   ],
+   [
+    "GET",
+    "/api/v1/demo/scene",
+    200,
+    610
+   ],
+   [
+    "GET",
+    "/api/v1/journeys/fa5cebdc-fabc-4067-ab02-4812ddb950e5/agent-feed?limit=200",
+    200,
+    574
+   ],
+   [
+    "GET",
+    "/api/v1/journeys/fa5cebdc-fabc-4067-ab02-4812ddb950e5/agent-feed?limit=200",
+    200,
+    574
+   ],
+   [
+    "GET",
+    "/api/v1/journeys/fa5cebdc-fabc-4067-ab02-4812ddb950e5/offline-snapshot",
+    200,
+    797
+   ]
+  ]
+ },
+ "cell_3_new_findings": {
+  "f1_trips_landing_says_there_is_nothing_to_look_at": {
+   "screen": "/v8/trips",
+   "text_verbatim": "菜单\n/\n行程\n跟随系统\nEN\nTI\n行程\n住宿\n预订\n花费\n\n行程\n\n还没有可看的行程\n\n这个行程还没有选定的方案。先让 AI 帮你规划，选定方案后这里会显示逐日安排。\n\nAI 帮我规划\n✦\nCityNexus Copilot\n今天\n行程\n地图\nCopilot\n我的",
+   "what_the_same_journey_shows_on_the_hub": true,
+   "hub_day_rows_rendered": 2,
+   "plans_leg": [
+    [
+     "GET",
+     "/api/v1/journeys/fa5cebdc-fabc-4067-ab02-4812ddb950e5/plans",
+     200,
+     2
+    ]
+   ],
+   "places_leg": [
+    [
+     "GET",
+     "/api/v1/places?city_code=CN-TIANJIN",
+     200,
+     2
+    ]
+   ],
+   "experience_leg": [
+    [
+     "GET",
+     "/api/v1/journeys/fa5cebdc-fabc-4067-ab02-4812ddb950e5/experience",
+     200,
+     132102
+    ]
+   ]
+  },
+  "f2_ai_state_and_the_sheet_disagree": {
+   "health_fields": {
+    "ai": "disabled",
+    "ai_state": "DISABLED_BY_OPS"
+   },
+   "health_bytes": 113,
+   "sheet_lines_verbatim": [
+    "这个行程还没有选定的方案。先让 AI 帮你规划，选定方案后这里会显示逐日安排。",
+    "AI 帮我规划",
+    "AI 帮我规划",
+    "这台服务已接入 AI 模型。",
+    "稍后",
+    "开始规划"
+   ],
+   "sheet_dialog": {
+    "cls": "v8-sheet-backdrop",
+    "text_len": 59,
+    "text_head": "AI 帮我规划\n用你自己的话描述这趟旅行，越具体越好。\n×\n旅行需求\n\n这台服务已接入 AI 模型。\n\n稍后\n开始规划"
+   },
+   "cta_before_press": {
+    "disabled": false,
+    "text": "AI 帮我规划",
+    "top": 314
+   },
+   "runtime_status_leg": [
+    [
+     "GET",
+     "/api/v1/agent/runtime-status",
+     200,
+     408
+    ]
+   ],
+   "what_i_did_not_do": "我没有按「开始规划」：那会启动一条比走查更长的流程，而且 AI 的开关归运维与用户，不该由我替它试穿"
+  },
+  "f3_desktop_entries_unreachable_at_390": {
+   "buttons_at_top_zero": [
+    "今天",
+    "实时行程",
+    "地图",
+    "行程工作台",
+    "住宿选择",
+    "城市探索",
+    "旅行票夹",
+    "Copilot",
+    "恢复与执行",
+    "智能守护",
+    "旅行者画像",
+    "TITianjin2 位旅行者•••",
+    "◌"
+   ],
+   "bottom_nav_at_390": [
+    "今天",
+    "行程",
+    "地图",
+    "Copilot",
+    "我的"
+   ],
+   "role_query_hit_for_the_desktop_label": {
+    "label": "旅行票夹",
+    "role_count": 0,
+    "dom_text_count": 1
+   },
+   "hops_to_the_copy_control": 2
+  }
+ },
+ "instrument_faults_of_mine": [
+  {
+   "said": "我一开始报「复制控件不存在」",
+   "signal": "包里 `journey-link-copy` 与四句文案都在，而我在 hub 与 studio 两屏都没找到它",
+   "cause": "控件在 `/v8/trips` 的「预订」子页里，我停在了上一跳",
+   "fixed_in": "r7_copy_link_r4.cjs，两份未找到的探索件也一起交（r7_copy_link_r2/r3）"
+  },
+  {
+   "said": "我用 getByRole 找不到「旅行票夹」，一度当成读屏命名缺口",
+   "signal": "同一枚标签用 DOM 文本命中 1、role 命中 0，而它的 top 是 0，移动底栏五枚的 top 都是 789",
+   "cause": "那是桌面那支侧栏在 390 宽下不可达，不是命名缺失；判据应写成「两份同名入口只有一份可达」",
+   "fixed_in": "改读法为按 top 分组并写出两组清单（字段 `f3_desktop_entries_unreachable_at_390`）"
+  },
+  {
+   "said": "我在浏览器里调了 Node 端的 SHA 助手",
+   "signal": "page.evaluate 报 ReferenceError: SHA is not defined",
+   "cause": "evaluate 里只能用页面内函数",
+   "fixed_in": "改用 crypto.subtle 在页面内哈希"
+  },
+  {
+   "said": "第一条命令里我把公网入口当成没起来",
+   "signal": "这台 shell 导出的 HTTP(S)_PROXY 指着一个没人听的端口，urlopen 报 10061，而直连 TCP 443 成功",
+   "cause": "代理环境变量",
+   "fixed_in": "每条命令前缀不走代理（号令者随后也确认了这条）"
+  }
+ ],
+ "launches_on_this_lane": 6,
+ "contexts": 9,
+ "boundaries": "product bytes 0 changed; nothing repaired; 权威线 0 写; ref 0 推别人的; demo/reset 0; _live.db 与 _preview.db 0 读 0 写; git apply 0; 凭据不写进任何交付件（每件带断言）; 链上四层只当用户驱动或只读 GET; 反复起车的瓦片通道风险我按具名计数记在 `launches_on_this_lane`，因此本块不对底图状态下结论",
+ "judgments": {
+  "both_entries_serve_the_bundle_the_commander_named": true,
+  "health_reports_the_ai_disabled_field": true,
+  "C_dead_id_screen_still_does_not_claim_the_network": true,
+  "C_dead_id_screen_text_is_word_for_word_the_previous_generation": true,
+  "C_stored_id_is_still_cleared_after_the_rejection": true,
+  "C_server_receipt_still_never_reaches_the_screen": true,
+  "D_the_device_holds_one_offline_copy": true,
+  "D_no_saved_sentence_rendered_on_the_five_screens": true,
+  "E_copy_control_exists_but_is_two_taps_deep": true,
+  "E_pressing_it_puts_a_journey_url_on_the_clipboard": true,
+  "E_the_copied_link_lands_a_clean_device_on_that_journey": true,
+  "E_the_reopened_screen_is_not_the_screen_the_copy_came_from": true,
+  "F_trips_landing_offers_ai_while_health_says_the_ai_is_off": true,
+  "F_the_sheet_the_ai_button_opens_claims_the_service_has_models": true,
+  "G_desktop_entries_are_unreachable_at_this_width": true
+ },
+ "judgments_note": "readings only; grading belongs to E. Each key above is a computation over the fields named in this file; the previous-generation comparison uses that generation's stored file, not my recollection"
+}
