@@ -174,6 +174,13 @@ from app.db.write_deadline import (
     start_request_budget,
     write_attempt,
 )
+from app.error_receipt import (  # ORD-0332: 一枚可复述回执号，唯一字段名
+    RECEIPT_FIELD,
+    arm_receipt_seed,
+    clear_receipt_seed,
+    current_receipt_seed,
+    receipt_id_for,
+)
 from app.security.credential_literals import (  # ORD-0307: 字面量凭据的常驻启动门
     startup_report as credential_gate_startup,
 )
@@ -493,6 +500,20 @@ def error(
     }
     if reason_code:
         body["reason_code"] = reason_code
+    # ORD-0332: one number the traveller can read back to us.  Written only when there is a request
+    # to be a receipt for -- an empty string would be a number-shaped lie for the screen to refuse.
+    seed = current_receipt_seed()
+    receipt = receipt_id_for(seed, code)
+    if receipt is not None:
+        body[RECEIPT_FIELD] = receipt
+    # The other half of "念得出就查得到": the receipt, the route, the class and the envelope's own
+    # trace id on one line.  5xx at WARNING because that is the class a screen calls 结果未知 and an
+    # operator must be able to grep without re-configuring anything; 4xx at INFO so a routine
+    # validation refusal cannot flood the log.  `details` is deliberately not dumped here.
+    where = f"{seed.method} {seed.path}" if seed is not None else "no-request-context"
+    line = (f"{RECEIPT_FIELD}={receipt or 'NOT-EMITTED'} code={code} status={status} "
+            f"route={where} trace_id={body['trace_id']}")
+    (logger.warning if status >= 500 else logger.info)(line)
     return JSONResponse(status_code=status, content={"error": body})
 
 
@@ -616,6 +637,24 @@ def write_deadline_answer(_: Request, exc: WriteDeadlineExceeded) -> JSONRespons
     """
 
     return error(exc.code, str(exc), status=503, details=exc.details())
+
+
+@app.middleware("http")
+async def error_receipt_per_request(request: Request, call_next):
+    """ORD-0332: one request, one receipt seed -- so a rejection has a number worth reading aloud.
+
+    `trace_id` is minted per envelope and cannot be reproduced by a retry; this arms the *call's*
+    identity instead, from which `error()` derives the same `error_receipt_id` every time the same
+    call fails the same way.  Nothing is hashed that a retry would change: no clock, no worker, no
+    process.  Outside a request -- a job, a script, a direct call into `error()` -- no seed exists, and
+    the field is simply not written.
+    """
+
+    arm_receipt_seed(request)
+    try:
+        return await call_next(request)
+    finally:
+        clear_receipt_seed()
 
 
 @app.middleware("http")
