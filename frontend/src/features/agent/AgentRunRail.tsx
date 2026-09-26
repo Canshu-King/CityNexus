@@ -4,7 +4,10 @@ export type AgentRailStep = {
   id: string;
   label: string;
   status: "pending" | "active" | "done" | "approval" | "failed";
-  detail?: ReactNode;
+  /* This screen's own wording, built by the caller.  It used to be called `detail`, which is the
+     name an upstream answer uses for its sentence, and a rail that renders a slot by that name
+     cannot be told apart from one forwarding that sentence (Q64/Q71). */
+  runMeta?: ReactNode;
 };
 
 export function AgentRunRail({ steps }: { steps: AgentRailStep[] }) {
@@ -15,7 +18,7 @@ export function AgentRunRail({ steps }: { steps: AgentRailStep[] }) {
           <span className="cn-agent-step-mark" aria-hidden="true" />
           <div>
             <b>{step.label}</b>
-            {step.detail && <small>{step.detail}</small>}
+            {step.runMeta && <small>{step.runMeta}</small>}
           </div>
         </li>
       ))}

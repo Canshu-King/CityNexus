@@ -130,12 +130,25 @@ function proposalDeltaText(proposal: ReplanProposal, currency: string): string {
   );
 }
 
-function errorMessage(error: unknown): string {
-  if (error instanceof CityNexusApiError) {
-    const body = error.body as { error?: { message?: string } } | null;
-    return body?.error?.message ?? error.message;
-  }
-  return error instanceof Error ? error.message : "CityNexus request failed";
+/** Q64=1: a screen may say only what this device measured, in this device's own words.  The
+ *  server's sentence and the exception's message are both out -- and Q71 closes the side door that
+ *  used to make them look safe: moving them into a `data-*` puts them in the DOM anyway. */
+type ErrorNote = { note: string; http_status: number | null };
+
+function errorNote(error: unknown): ErrorNote {
+  const raw = (error as { status?: unknown } | null)?.status;
+  const status =
+    error instanceof CityNexusApiError
+      ? error.status
+      : typeof raw === "number"
+        ? raw
+        : null;
+  return {
+    note: status === null
+      ? "CityNexus request failed"
+      : `CityNexus request refused (HTTP ${status})`,
+    http_status: status,
+  };
 }
 
 function LegacyApp() {
@@ -171,7 +184,7 @@ function LegacyApp() {
   const [replanRejected, setReplanRejected] = useState(false);
   const [loading, setLoading] = useState(true);
   const [busy, setBusy] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const [error, setError] = useState<ErrorNote | null>(null);
   const [lastAction, setLastAction] = useState<string | null>(null);
   const [liveOperations, setLiveOperations] = useState<
     Array<{ event_type: string; summary: string; timestamp: string }>
@@ -286,8 +299,8 @@ function LegacyApp() {
         actor.send({ type: "BOOTSTRAP_OK" });
       } catch (loadError) {
         if (cancelled) return;
-        setError(errorMessage(loadError));
-        actor.send({ type: "FAIL", message: errorMessage(loadError) });
+        setError(errorNote(loadError));
+        actor.send({ type: "FAIL", message: errorNote(loadError).note });
       } finally {
         if (!cancelled) setLoading(false);
       }
@@ -362,7 +375,7 @@ function LegacyApp() {
       setTravelerTwin(await cityNexusApi.clearTravelerTwinLearned(session.travelerId));
       setLastAction("TravelerTwin learned soft evidence cleared · explicit preferences retained");
     } catch (twinError) {
-      setError(errorMessage(twinError));
+      setError(errorNote(twinError));
     } finally {
       setBusy(false);
     }
@@ -588,7 +601,7 @@ function LegacyApp() {
         "Agent run " + response.run.status + " · " + response.run.tool_steps.length + " tool calls persisted",
       );
     } catch (commandError) {
-      setError(errorMessage(commandError));
+      setError(errorNote(commandError));
     } finally {
       setBusy(false);
     }
@@ -608,7 +621,7 @@ function LegacyApp() {
       setGuardianStatus(await cityNexusApi.getGuardianStatus(session.journeyId));
       setLastAction("Standing mission activated · Guardian is watching persisted city signals");
     } catch (guardianError) {
-      setError(errorMessage(guardianError));
+      setError(errorNote(guardianError));
     } finally {
       setBusy(false);
     }
@@ -632,7 +645,7 @@ function LegacyApp() {
       await refreshAutopilotTruth(session.journeyId);
       setLastAction("Live Journey Autopilot started · provider fixture is NORMAL");
     } catch (autopilotError) {
-      setError(errorMessage(autopilotError));
+      setError(errorNote(autopilotError));
     } finally {
       setBusy(false);
     }
@@ -648,7 +661,7 @@ function LegacyApp() {
       });
       setLastAction("Provider fixture transitioned to " + state + " · waiting for server pulse");
     } catch (fixtureError) {
-      setError(errorMessage(fixtureError));
+      setError(errorNote(fixtureError));
     } finally {
       setBusy(false);
     }
@@ -688,7 +701,7 @@ function LegacyApp() {
       await refreshAutopilotTruth(session.journeyId);
       setLastAction("Predictive Real-City Twin · weakness detected and preventive recovery evaluated");
     } catch (predictiveError) {
-      setError(errorMessage(predictiveError));
+      setError(errorNote(predictiveError));
     } finally {
       setBusy(false);
     }
@@ -740,7 +753,7 @@ function LegacyApp() {
           " · persisted proactive run " + guardianRun.id.slice(0, 8),
       );
     } catch (guardianError) {
-      setError(errorMessage(guardianError));
+      setError(errorNote(guardianError));
     } finally {
       setBusy(false);
     }
@@ -822,7 +835,7 @@ function LegacyApp() {
     try {
       await request;
     } catch (policyError) {
-      setError(errorMessage(policyError));
+      setError(errorNote(policyError));
     }
   }
 
@@ -869,8 +882,8 @@ function LegacyApp() {
       setLastAction("Closure event and backend replan proposals loaded");
       actor.send({ type: "REPLANS_READY" });
     } catch (runError) {
-      setError(errorMessage(runError));
-      actor.send({ type: "FAIL", message: errorMessage(runError) });
+      setError(errorNote(runError));
+      actor.send({ type: "FAIL", message: errorNote(runError).note });
     } finally {
       setBusy(false);
     }
@@ -921,8 +934,8 @@ function LegacyApp() {
         }
       }
     } catch (acceptError) {
-      setError(errorMessage(acceptError));
-      actor.send({ type: "FAIL", message: errorMessage(acceptError) });
+      setError(errorNote(acceptError));
+      actor.send({ type: "FAIL", message: errorNote(acceptError).note });
     } finally {
       setBusy(false);
     }
@@ -943,8 +956,8 @@ function LegacyApp() {
       setLastAction("Rejected backend proposal " + rejected.id);
       actor.send({ type: "REJECTED" });
     } catch (rejectError) {
-      setError(errorMessage(rejectError));
-      actor.send({ type: "FAIL", message: errorMessage(rejectError) });
+      setError(errorNote(rejectError));
+      actor.send({ type: "FAIL", message: errorNote(rejectError).note });
     } finally {
       setBusy(false);
     }
@@ -965,7 +978,14 @@ function LegacyApp() {
       <main className="shell loading-shell">
         <p className="eyebrow">CityNexus · deterministic journey mode</p>
         <h1>Journey connection unavailable</h1>
-        <p data-testid={testIds.journeyStatus}>ERROR · {error}</p>
+        <p
+          data-testid={testIds.journeyStatus}
+          {...(error.http_status === null
+            ? {}
+            : { "data-cnx-field": "http_status", "data-cnx-value": String(error.http_status) })}
+        >
+          ERROR · {error.note}
+        </p>
         <button onClick={() => window.location.reload()}>Retry backend connection</button>
       </main>
     );
@@ -989,7 +1009,19 @@ function LegacyApp() {
           UI workflow · {workflowState}
           {lastAction ? " · " + lastAction : ""}
         </p>
-        {error && <p className="error-note">{error}</p>}
+        {error && (
+          <p
+            className="error-note"
+            {...(error.http_status === null
+              ? {}
+              : {
+                  "data-cnx-field": "http_status",
+                  "data-cnx-value": String(error.http_status),
+                })}
+          >
+            {error.note}
+          </p>
+        )}
       </header>
       <section className="command-center" data-testid="agent-command-center">
         <div className="command-copy">

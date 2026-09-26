@@ -298,7 +298,7 @@ export function NativeMissionTimeline({
     const humanStep = event.tool_name
       ? (toolLabels[event.tool_name]?.[zh ? "zh" : "en"] ?? humanAgentStatus(event.status, zh))
       : humanAgentStatus(event.status, zh);
-    const detail: ReactNode = (
+    const runMeta: ReactNode = (
       <span className="cn-agent-event-detail">
         {humanStep}
         {event.duration_ms != null && ` · ${formatDuration(Number(event.duration_ms))}`}
@@ -309,15 +309,18 @@ export function NativeMissionTimeline({
       id: `${index}-${eventKey(event)}`,
       label: summaryText(event, zh),
       status: statusForEvent(event),
-      detail: (
+      /* `result_summary` is left out on purpose: the server builds it from whatever a tool
+         returned, so it can carry a sentence this screen cannot vouch for.  Q64 lets the allowed
+         fields through, not the answer's prose -- and Q71 says a collapsed block is still in the
+         DOM. */
+      runMeta: (
         <>
-          {detail}
+          {runMeta}
           <details className="cn-agent-raw">
             <summary>{zh ? "运行详情" : "Runtime details"}</summary>
             <code>{safeJson({
               event_type: event.raw_event_type ?? event.event_type,
               source: event.source,
-              result_summary: event.result_summary,
               policy_decision: event.policy_decision,
             })}</code>
           </details>
