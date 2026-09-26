@@ -1,0 +1,92 @@
+{
+  "order": "ORD-0351",
+  "generation": "r2",
+  "generated_at": "2026-09-26T13:56:10+08:00",
+  "note": "index does not contain itself; each row's blob came from git rev-parse against origin/commander/control and its size from git cat-file -s",
+  "added_since_r1_index": [
+    "ord0351_build_proof_r1.json",
+    "ord0351_index_r2.json (this file)"
+  ],
+  "artifacts": [
+    {
+      "name": "build_receipt_r1.py",
+      "git_blob": "f7d9d93a4d2a665d554d7cb008013528eeaa1159",
+      "bytes": 16541
+    },
+    {
+      "name": "ord0351-a-a-link-to-a-saved-trip-opens-that-trip.json",
+      "git_blob": "4f788ebcb02553e7f76bd315a055943115917245",
+      "bytes": 598
+    },
+    {
+      "name": "ord0351-b-a-link-the-server-denies-says-so-by-name.json",
+      "git_blob": "669aca7fd5805959a67a24e0ea4c09dd1a13a080",
+      "bytes": 1448
+    },
+    {
+      "name": "ord0351-c-an-unanswered-link-is-never-blamed-on-the-server.json",
+      "git_blob": "18ea34bdae3444fb8bd06aa70f3b4d19b35fa99b",
+      "bytes": 934
+    },
+    {
+      "name": "ord0351-d-a-dead-link-empties-a-reference-not-a-trip.json",
+      "git_blob": "be0464b2040d60af35dee8b6f819297bcb2222b2",
+      "bytes": 930
+    },
+    {
+      "name": "ord0351-e-route-names-are-not-journey-links.json",
+      "git_blob": "735f618b6ca3d60c9bd3bc077bb368ad5d20f792",
+      "bytes": 1604
+    },
+    {
+      "name": "ord0351-e-route-names-are-not-journey-links_r2.json",
+      "git_blob": "9f52054ca0cb64f2626621f7c403cdb10173280e",
+      "bytes": 1604
+    },
+    {
+      "name": "ord0351_build_proof_r1.json",
+      "git_blob": "b3c55754fef109251267ded50387aa28db7ca541",
+      "bytes": 1415
+    },
+    {
+      "name": "ord0351_index_r1.json",
+      "git_blob": "3ad591562d3d549b7c92989bffcb3760c3cadd96",
+      "bytes": 3496
+    },
+    {
+      "name": "ord0351_neighbor_gates_r1_092946.json",
+      "git_blob": "ec00e1d7d45f60dd9324f53a98cf94af560e575e",
+      "bytes": 4938
+    },
+    {
+      "name": "ord0351_receipt_r1.json",
+      "git_blob": "88444e660fe7cddef52c11cdcb05d8f6ee9184ca",
+      "bytes": 20369
+    },
+    {
+      "name": "ord0351_two_way_readings_r1_091546.json",
+      "git_blob": "3a9c58f1d05d282c6244341d8710677c2d25f51b",
+      "bytes": 10996
+    },
+    {
+      "name": "ord0351_two_way_readings_r1_092736.json",
+      "git_blob": "38c9573e510a9e23d5d148b6db60af79ca8d6663",
+      "bytes": 9509
+    },
+    {
+      "name": "qoder-stored-journey-link-is-an-entry.spec.ts",
+      "git_blob": "79672c08eebe6c6fef04a27207f67d31b95b41d8",
+      "bytes": 19817
+    },
+    {
+      "name": "run_arms_r1.py",
+      "git_blob": "f22f8137e3967fa4d3d26a46320a66904e1ca2b8",
+      "bytes": 8629
+    },
+    {
+      "name": "run_neighbors_r1.py",
+      "git_blob": "fca6afc2a600cfa206c53196334aa8246efdbb01",
+      "bytes": 6157
+    }
+  ]
+}
