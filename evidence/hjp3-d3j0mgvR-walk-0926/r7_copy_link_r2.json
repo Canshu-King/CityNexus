@@ -1,0 +1,308 @@
+{
+ "started_at": "2026-09-26T10:40:23.345Z",
+ "base": "https://jets-saints-tomatoes-eric.trycloudflare.com",
+ "journey_id": "fa5cebdc-fabc-4067-ab02-4812ddb950e5",
+ "launches": 1,
+ "contexts": 2,
+ "chromium_version": "153.0.8010.12",
+ "at_hub": {
+  "url": "https://jets-saints-tomatoes-eric.trycloudflare.com/v8/hub",
+  "text_len": 605,
+  "text_head": "菜单\n/\n今天\n跟随系统\nEN\nTI\n\n晚上好\n\n天津之旅\n\n10月2日 10:00 — 10月3日 20:00 · 2 位旅行者 · 2 天\n\nAI 帮我规划\n试用其他城市\n打开行程工作台\n今天\n还没有安排\n“现在”取自服务器场景（执行游标。服务器没有给出这一分钟的执行游标，这一屏的时间按行程的时间窗来读）：9月21日 10:00 · 现在/接下来由服务器的执行投影给出\n1\n\n底图未加载，显示的是路线示意。\n\n路线上下文\n7 段路程\n供应商支持的路线 · WGS84\n\n单指拖动地图 · 双指缩放 · 想翻这一页就拖地图以外的地方\n\n住宿\n还没有选定\n到达\n10月2日 10:00\n出发\n10月3日 20:00\n一切正常\n\n方案概览\n\n每一天，紧密相连。\n对比住宿 →\n\n以下只是其中一个候选方案的预览，你还没有采用它。\n\n第 1 天\n星期五\n\n天津站 · Italian Style Town · Check in · Haihe Riverside Hotel · Overnight · Haihe Riverside Hotel\n\n驾车 抵达锚点\n第 2 天\n星期六\n\nFive Great Avenues · Check out · Haihe Riverside Hotel · Tianjin Museum · 天津滨海国际机场\n\n公交地铁 离开锚点\n今天\n行程\n地图\nCopilot\n我的",
+  "copy_button_present": false,
+  "copy_button_disabled": null,
+  "copy_button_text": null,
+  "copy_button_field_attr": null,
+  "copy_button_top": null,
+  "message_present": false,
+  "message_text": null,
+  "message_field_attr": null,
+  "action_wrap_present": false,
+  "inbox_markers": [
+   {
+    "sel": ".journey-link-action",
+    "found": false
+   },
+   {
+    "sel": "[data-testid=\"journey-link-copy\"]",
+    "found": false
+   },
+   {
+    "sel": "[data-testid=\"inbox-extract\"]",
+    "found": false
+   }
+  ],
+  "buttons": [
+   "今天",
+   "实时行程",
+   "地图",
+   "行程工作台",
+   "住宿选择",
+   "城市探索",
+   "旅行票夹",
+   "Copilot",
+   "恢复与执行",
+   "智能守护",
+   "旅行者画像",
+   "TITianjin2 位旅行者•••",
+   "菜单",
+   "跟随系统",
+   "EN",
+   "◌",
+   "TI",
+   "AI 帮我规划",
+   "试用其他城市",
+   "打开行程工作台",
+   "对比住宿 →",
+   "第 1 天\n星期五\n\n天津站 · Italian Style Town · Check in · Haihe Riverside Hotel · Overnight · Haihe Riverside Hotel\n\n驾车 抵达锚点",
+   "第 2 天\n星期六\n\nFive Great Avenues · Check out · Haihe Riverside Hotel · Tianjin Museum · 天津滨海国际机场\n\n公交地铁 离开锚点",
+   "今天",
+   "行程",
+   "地图",
+   "Copilot",
+   "我的"
+  ],
+  "testids": [
+   "topbar-theme",
+   "topbar-language",
+   "today-heading",
+   "today-when",
+   "hub-secondary-actions",
+   "hub-plan-with-ai",
+   "today-hero",
+   "today-next",
+   "today-clock-source",
+   "v8-maplibre-panel",
+   "v8-maplibre-canvas",
+   "v8-map-tile-notice",
+   "v8-map-gesture-hint",
+   "today-strip",
+   "today-stay",
+   "today-attention-band",
+   "today-attention",
+   "hub-glance-caveat",
+   "v18-copilot-dock",
+   "nav-hub",
+   "nav-trips",
+   "nav-map",
+   "nav-agent",
+   "nav-me",
+   "sim-float",
+   "sim-ball",
+   "sim-ball-dot"
+  ],
+  "body_sha": "e81a2835b5cb0143d9ef80c7b4eda7682cd63e4a4fa528550446594b4bab947a",
+  "ls_keys": [
+   "citynexus.v8.journey_id",
+   "citynexus.copilot.history.fa5cebdc-fabc-4067-ab02-4812ddb950e5"
+  ],
+  "journey_id": "fa5cebdc-fabc-4067-ab02-4812ddb950e5"
+ },
+ "shots": {
+  "hub": {
+   "file": "G1_hub_with_journey.png",
+   "abs": "D:\\moodle\\_hjp3_d3j0_0926\\G1_hub_with_journey.png",
+   "exists": true,
+   "bytes": 884431,
+   "sha256": "e5cf3eed2871a2ab1e2dc681ef4ed937c43328c93541ba59753884912d2370ca"
+  },
+  "workbench_last": {
+   "file": "G2_last_tab.png",
+   "abs": "D:\\moodle\\_hjp3_d3j0_0926\\G2_last_tab.png",
+   "exists": true,
+   "bytes": 252275,
+   "sha256": "4058beb0f12a7af54c83947a76af1b76a404ae1db9995a115356fe3788e7721a"
+  }
+ },
+ "tab_tries": [
+  {
+   "label": "旅行票夹",
+   "affordance_present": false
+  },
+  {
+   "label": "打开行程工作台",
+   "affordance_present": true,
+   "url": "https://jets-saints-tomatoes-eric.trycloudflare.com/v8/studio",
+   "copy_button_present": false,
+   "text_len": 488,
+   "testids": [
+    "topbar-theme",
+    "topbar-language",
+    "v8-trip-studio",
+    "studio-preview-caveat",
+    "studio-stay-total",
+    "studio-walking",
+    "studio-no-plan",
+    "v18-copilot-dock",
+    "nav-hub",
+    "nav-trips",
+    "nav-map",
+    "nav-agent",
+    "nav-me"
+   ]
+  },
+  {
+   "label": "城市探索",
+   "affordance_present": false
+  },
+  {
+   "label": "住宿选择",
+   "affordance_present": false
+  },
+  {
+   "label": "恢复与执行",
+   "affordance_present": false
+  },
+  {
+   "label": "智能守护",
+   "affordance_present": false
+  },
+  {
+   "label": "旅行者画像",
+   "affordance_present": false
+  },
+  {
+   "label": "Copilot",
+   "affordance_present": true,
+   "url": "https://jets-saints-tomatoes-eric.trycloudflare.com/v8/agent",
+   "copy_button_present": false,
+   "text_len": 334,
+   "testids": [
+    "topbar-theme",
+    "topbar-language",
+    "v15-copilot",
+    "v15-copilot-input",
+    "v15-copilot-submit",
+    "v18-copilot-dock",
+    "nav-hub",
+    "nav-trips",
+    "nav-map",
+    "nav-agent",
+    "nav-me"
+   ]
+  }
+ ],
+ "copy_screen": "https://jets-saints-tomatoes-eric.trycloudflare.com/v8/hub",
+ "press": "NO_CONTROL_ON_EITHER_SCREEN",
+ "clipboard": null,
+ "testids_seen_on_both_screens": {
+  "hub": [
+   "topbar-theme",
+   "topbar-language",
+   "today-heading",
+   "today-when",
+   "hub-secondary-actions",
+   "hub-plan-with-ai",
+   "today-hero",
+   "today-next",
+   "today-clock-source",
+   "v8-maplibre-panel",
+   "v8-maplibre-canvas",
+   "v8-map-tile-notice",
+   "v8-map-gesture-hint",
+   "today-strip",
+   "today-stay",
+   "today-attention-band",
+   "today-attention",
+   "hub-glance-caveat",
+   "v18-copilot-dock",
+   "nav-hub",
+   "nav-trips",
+   "nav-map",
+   "nav-agent",
+   "nav-me",
+   "sim-float",
+   "sim-ball",
+   "sim-ball-dot"
+  ],
+  "workbench": null
+ },
+ "legs1": [
+  {
+   "url": "/api/v1/journeys/fa5cebdc-fabc-4067-ab02-4812ddb950e5/experience",
+   "m": "GET",
+   "status": 200,
+   "ct": "application/json",
+   "resp_bytes": 132102
+  },
+  {
+   "url": "/api/v1/journeys/fa5cebdc-fabc-4067-ab02-4812ddb950e5/replans",
+   "m": "GET",
+   "status": 200,
+   "ct": "application/json",
+   "resp_bytes": 2
+  },
+  {
+   "url": "/api/v1/demo/scene",
+   "m": "GET",
+   "status": 200,
+   "ct": "application/json",
+   "resp_bytes": 610
+  },
+  {
+   "url": "/api/v1/journeys/fa5cebdc-fabc-4067-ab02-4812ddb950e5/agent-feed?limit=200",
+   "m": "GET",
+   "status": 200,
+   "ct": "application/json",
+   "resp_bytes": 574
+  },
+  {
+   "url": "/api/v1/journeys/fa5cebdc-fabc-4067-ab02-4812ddb950e5/plans",
+   "m": "GET",
+   "status": 200,
+   "ct": "application/json",
+   "resp_bytes": 2
+  },
+  {
+   "url": "/api/v1/journeys/fa5cebdc-fabc-4067-ab02-4812ddb950e5/twin",
+   "m": "GET",
+   "status": 200,
+   "ct": "application/json",
+   "resp_bytes": 896
+  },
+  {
+   "url": "/api/v1/journeys/fa5cebdc-fabc-4067-ab02-4812ddb950e5/agent-feed?limit=200",
+   "m": "GET",
+   "status": 200,
+   "ct": "application/json",
+   "resp_bytes": 574
+  },
+  {
+   "url": "/api/v1/agent/runtime-status",
+   "m": "GET",
+   "status": 200,
+   "ct": "application/json",
+   "resp_bytes": 408
+  },
+  {
+   "url": "/api/v1/journeys/fa5cebdc-fabc-4067-ab02-4812ddb950e5/wallet",
+   "m": "GET",
+   "status": 200,
+   "ct": "application/json",
+   "resp_bytes": 109
+  },
+  {
+   "url": "/api/v1/travelers/244b231a-43fb-4521-bd8b-09df06924cac/agent-policy",
+   "m": "GET",
+   "status": 200,
+   "ct": "application/json",
+   "resp_bytes": 527
+  },
+  {
+   "url": "/api/v1/journeys/fa5cebdc-fabc-4067-ab02-4812ddb950e5/offline-snapshot",
+   "m": "GET",
+   "status": 200,
+   "ct": "application/json",
+   "resp_bytes": 797
+  },
+  {
+   "url": "/api/v1/journeys/fa5cebdc-fabc-4067-ab02-4812ddb950e5/twin",
+   "m": "GET",
+   "status": 200,
+   "ct": "application/json",
+   "resp_bytes": 896
+  }
+ ],
+ "acceptance": "SKIPPED - no URL came back from the clipboard",
+ "finished_at": "2026-09-26T10:40:49.006Z"
+}
