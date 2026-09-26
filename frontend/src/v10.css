@@ -38,8 +38,13 @@
   .v10-inbox-inputs input,
   .v10-inbox-inputs button,
   .v10-inbox-draft button,
+  .journey-link-action button,
   .v8-secondary { min-height: var(--cn-touch-min); }
 }
+/* ORD-0357: the journey-link row.  Its own class on purpose -- `.v10-inbox-message` is the slot other
+   gates read for extraction statuses, and sharing it would put this row's sentence in their way. */
+.journey-link-action { display: flex; flex-wrap: wrap; align-items: center; gap: var(--cn-s-12); }
+.journey-link-message { margin: 0; color: var(--v8-ink); font-size: var(--cn-fs-body); overflow-wrap: anywhere; }
 
 /* V14 trial-readiness: first-run city setup and prominent locale control. */
 .v8-trial-setup { min-height: 100vh; padding: 24px; background: var(--v8-bg, #f4f6f2); }

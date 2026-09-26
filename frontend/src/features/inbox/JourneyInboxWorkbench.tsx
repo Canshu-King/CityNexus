@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useLocale, useT } from "../../i18n/LocaleContext";
+import { JourneyLinkAction } from "./JourneyLinkAction";
 import {
   classifyReadFailure,
   copyFor,
@@ -597,6 +598,7 @@ export function JourneyInboxWorkbench({ journeyId, decodedText, onConfirmed, imp
         </div>
         <span className="v10-truth-pill">{t("inbox.semanticDraft")}</span>
       </div>
+      <JourneyLinkAction journeyId={journeyId} />
       <div className="inbox-entry-tabs">
         <button
           type="button"
