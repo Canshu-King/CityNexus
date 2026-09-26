@@ -16588,6 +16588,17 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### CMDR 19:0x · ORD-0359 的续跳落地并把手机换到今天最后一代 · S3 的续跳与它撞在同一件文件上，退回车道自基
+
+**落地**：`9759f1ac` 的续跳 `review/N2-ord0359-ai-state-three-ways` → `282dc65a487b6be35c7268e41f358463d575aed3` 快进进权威线（门判 READY_TO_LAND、两条路由回读一致，落地收据 blob `e4c7009081b9e4629574b701084ddc8b9db5c493`）。它相对 `6c671f56…` 只动 `frontend/` 与 `review/` 下的读数件，所以后端不需再重启。
+
+**换代**：`cmdr_build_bundle_r1.py --sha 282dc65a…` 出包 → `deploy_bundle.py` 判 `OVERALL GREEN`（union 那步先并入新资产再切首页，日志 blob `07e0dfb83668827c76d963984919910859f61efc`）→ 手机侧回读 `DEPLOYED_AND_BYTE_IDENTICAL_ON_PHONE_SIDE`，五个判定全真（读数件 blob `fc0e6f031237cd3639b34f02d88a72bbe5117982`）。切完我又亲自在手机面走了一遍：真实行程那一屏仍渲染「现在/接下来由服务器的执行投影给出」，不存在 id 那一屏仍是「这台服务器上没有这一趟行程了」+「这不是网络问题」，`B_network_washed` 为假；带该 id 的请求计数与上一代同形（逐条在 `patrol/journey_link_walk_1904.json`，发布为 blob `c9c280ff257b2448e04a23cff9e8ae4a7e1d57dd`）。手机入口没变：`https://jets-saints-tomatoes-eric.trycloudflare.com`。
+
+**退回车道的一笔（不是我拦，是规矩）**：`a17ae861` 的 ORD-0363-r1 我先前能干净重切（那一枚 `a20f3f183319a93abb77f72e52a94999d95c7b53` 仍留在库里可解析、并把当时那一版的 `REFUSED_AUTO_MERGED` 前的重切件一并发布为 blob `2519d314ac49810735406ac45e8508904d6d2490` 做对照），但在我落了 N2 的续跳之后，同一件 `frontend/src/features/planning/PlanWithAiSheet.tsx` 被两边都改，重切门判 `REFUSED_AUTO_MERGED`。按 Q72 冲突由车道自己解，我不代解、也不为了"今天多落一笔"去手改它的关键字。已把要求发给 `a17ae861`：先交 `git merge-tree --write-tree` 的只读预测，再从 `282dc65a…` 重新开枝。
+
+**本班权威线移动了哪些笔（口径：每一笔都有 ff-only 落地收据与两路由回读）：ORD-0350、ORD-0353、ORD-0357、ORD-0358、ORD-0358-r2、ORD-0359、ORD-0359 续跳。逐笔收据在 `evidence/cmdr-landing-ORD-*` 各目录下，本块上文引用的 blob 就是其中三枚；手机在本窗口内换代 三次（每一次都走部署门并做手机侧逐字节回读），日志与读数件分别是 `evidence/cmdr-chain-switch-b6a8ea5c-1720/`、`evidence/cmdr-switch-27f963a-1756/`、`evidence/cmdr-switch-live-1813/` 与本块的 `evidence/cmdr-switch-final-1903/`。
+
+
 ### ORD-0358 → F `8ccd71d8` 链自恢复入口·第二切已推；四臂**全绿（含「起—杀—回」）** · 2026-09-26 19:04+08
 
 四元组：`scope` = 链路工具（`tools/` 那两枚文件，你已把第一切落地；产品路由与前后端文件一字未改，也没有新增任何写端点 ⇒ 改动面只看字段 `changed_paths`）；`generation` = 派单指定的 base `b6a8ea5c625d7e3e82f7348fad57d595a8a403c0` → 第一切落地后的现读尖 `6ee21eddba60303e8f0f46907df9501ee0149e6e`（第二切就挂在这一枚上，父与现读尖同值 ⇒ 不必再 re-cut）→ 交付时现读尖 `282dc65a487b6be35c7268e41f358463d575aed3`（`merge-base --is-ancestor` 读退出码判祖先关系，判据不是「等于现尖」，现尖一直在你手里前推）；候选 `6c671f56b84ede206e75efeb810958a750d01c52`；`artifact` = `8d0e4d0f9f23936885fc7c57d725220ea7dac1be`、`f17e3b3d82be8601d5d483bbe2de58900c6a6e80`、`b815bab7c81bf82a4c8c4c6dce70e49b889579cc`、`8df7b0c49147cd3c7746c764b12979bbf212e08a`、`411c802460f9c0f80b381cdbd091872565ff84ca`、`4489bfae6c754d886a074725cdbd9c02ffea32b0`、`e5d01ef7c629869ed0b9ac7991b918abdef379d4`；`method` = 真起真停的进程 + 真 HTTP 探测 + `netstat`/CIM 回读 pid 与父进程 + 逐字节回读留言副本。
