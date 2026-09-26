@@ -1,0 +1,436 @@
+{
+ "schema": "CNX_LANE_E_ORD0341_DERIVED_V1",
+ "verifier": "lane E d2305848",
+ "at": "2026-09-26T09:30:27+0800",
+ "orders": {
+  "ORD-0332": {
+   "lane": "F 8ccd71d8",
+   "generation": "3a3feea3a290156cd84bd740a1ea45250d95b419",
+   "cells": [
+    {
+     "cell": "seven-arm mutation campaign: control green, 7/7 kill, 0 survivors, 0 anchor misses, restored clean",
+     "derived_result": "MET",
+     "readings": {
+      "control_returncode": 0,
+      "kills": 7,
+      "survivors": [],
+      "anchor_misses": [],
+      "restored_clean": true,
+      "per_arm_red_cells": {
+       "A1_query_order_matters": [
+        "test_R4_the_seed_reads_the_call_itself_not_the_moment",
+        "test_R4b_a_real_query_reorder_over_http_is_the_same_call"
+       ],
+       "A2_no_idempotency_key": [
+        "test_R8_the_seed_is_read_off_the_real_request_not_just_the_dataclass"
+       ],
+       "A3_code_not_in_digest": [
+        "test_R4_the_seed_reads_the_call_itself_not_the_moment"
+       ],
+       "A4_per_call_salt": [
+        "test_R3_the_same_call_resends_to_the_same_id_while_the_trace_does_not",
+        "test_R4_the_seed_reads_the_call_itself_not_the_moment",
+        "test_R4b_a_real_query_reorder_over_http_is_the_same_call",
+        "test_R8_the_seed_is_read_off_the_real_request_not_just_the_dataclass"
+       ],
+       "A5_empty_string_written": [
+        "test_R5_without_a_request_the_key_is_absent_not_empty"
+       ],
+       "A6_no_log_line": [
+        "test_R6_the_log_carries_the_same_id_and_the_database_carries_no_receipt_table"
+       ],
+       "A7_no_middleware_arm": [
+        "test_R2_a_real_rejection_carries_a_recitable_id",
+        "test_R3_the_same_call_resends_to_the_same_id_while_the_trace_does_not",
+        "test_R4b_a_real_query_reorder_over_http_is_the_same_call",
+        "test_R6_the_log_carries_the_same_id_and_the_database_carries_no_receipt_table",
+        "test_R7_the_envelope_keeps_every_field_it_already_had",
+        "test_R8_the_seed_is_read_off_the_real_request_not_just_the_dataclass"
+       ]
+      },
+      "cells_total": 9,
+      "source": "ord0332_gate_mutation_campaign_r2.json"
+     }
+    },
+    {
+     "cell": "mint + landing: candidate 3a3feea3 on byte-identical predecessors, 7 changed paths, READY_TO_LAND",
+     "derived_result": "MET",
+     "readings": {
+      "candidate": "3a3feea3a290156cd84bd740a1ea45250d95b419",
+      "changed_paths": [
+       "backend/app/error_receipt.py",
+       "backend/app/main.py",
+       "backend/tests/test_qoder_ord0332_error_receipt.py",
+       "contracts/ERROR_RECEIPT_ID_V1.md",
+       "contracts/openapi.yaml",
+       "frontend/src/lib/errorReceipt.ts",
+       "frontend/tools/ord0332_receipt_readings.mjs"
+      ],
+      "landing_verdict": "READY_TO_LAND",
+      "pred_equal": {
+       "backend/app/error_receipt.py": true,
+       "backend/app/main.py": true,
+       "backend/tests/test_qoder_ord0332_error_receipt.py": true,
+       "contracts/ERROR_RECEIPT_ID_V1.md": true,
+       "contracts/openapi.yaml": true,
+       "frontend/src/lib/errorReceipt.ts": true,
+       "frontend/tools/ord0332_receipt_readings.mjs": true
+      },
+      "source": "ord0332_candidate_mint_r2.json + landing preflight_r1.json"
+     }
+    },
+    {
+     "cell": "frontend two-way readings + tsc teeth + suite A/B 0 new red",
+     "derived_result": "MET",
+     "readings": {
+      "fe_readings": {
+       "lane": "F 8ccd71d8",
+       "source_file": "frontend/src/lib/errorReceipt.ts",
+       "source_bytes": 3671,
+       "toolchain": {
+        "typescript": "5.9.3",
+        "tslib_path": "D:/moodle/CityNexus/frontend/node_modules/typescript",
+        "node": "v24.14.0",
+        "python": "D:/moodle/CityNexus/.venv/Scripts/python.exe"
+       },
+       "field_name": "error_receipt_id",
+       "missing_token": "NOT-EMITTED",
+       "receipt_shape_source": "/^CNX-[23456789ABCDEFGHJKMNPQRSTVWXYZ]{8}$/",
+       "contract_pattern": "^CNX-[23456789ABCDEFGHJKMNPQRSTVWXYZ]{8}$",
+       "server_side": {
+        "http_status": 422,
+        "receipt": "CNX-A4KGW4F2",
+        "trace_id": "5928292a-9f98-47fc-abb2-3aa77ac94714",
+        "no_context_key_present": false,
+        "how": "同一棵导出树里 TestClient 走真 ASGI 一发 422（不依赖 :8000）"
+       },
+       "shapes": [
+        {
+         "input": "absent-key",
+         "present": false,
+         "text": "NOT-EMITTED",
+         "observed": "absent-key"
+        },
+        {
+         "input": "empty",
+         "present": false,
+         "text": "NOT-EMITTED",
+         "observed": "empty"
+        },
+        {
+         "input": "whitespace",
+         "present": false,
+         "text": "NOT-EMITTED",
+         "observed": "empty"
+        },
+        {
+         "input": "a code",
+         "present": false,
+         "text": "NOT-EMITTED",
+         "observed": "wrong-shape"
+        },
+        {
+         "input": "a uuid (that is trace_id's job)",
+         "present": false,
+         "text": "NOT-EMITTED",
+         "observed": "wrong-shape"
+        },
+        {
+         "input": "truncated uppercase prose",
+         "present": false,
+         "text": "NOT-EMITTED",
+         "observed": "wrong-shape"
+        },
+        {
+         "input": "nested error absent",
+         "present": false,
+         "text": "NOT-EMITTED",
+         "observed": "absent-key"
+        }
+       ],
+       "counterfeit_accepted_by_strict_shape": [],
+       "counterfeit_accepted_after_relaxing": 5,
+       "q71_attribute_leaks": [],
+       "q70_anchor_present_on_every_view": true,
+       "counts": {
+        "shapes_tested": 7,
+        "rejected": 7,
+        "attrs_inspected": 24
+       },
+       "selftest": "SELFTEST_PASS",
+       "claimed_result": "服务器那枚号被收下、7 形 counterfeit 全部 NOT-EMITTED；放松正则后 5 形反而被收 ⇒ 形状检查有牙",
+       "derived_result": null
+      },
+      "ab": {
+       "tip_red": 414,
+       "candidate_red": 413,
+       "new_red": [],
+       "gone_red": [
+        "tests/test_qoder_ord224_g3_generation_measurement.py::test_shape_a_terminal_job_then_five_requests_is_two_generations_not_one"
+       ]
+      },
+      "tsc": "see o332_tsc.json",
+      "source": "ord0332_frontend_receipt_readings_r2.json + suite_ab_r2.json + tsc_teeth_r1.json"
+     }
+    }
+   ],
+   "top_level_derived_result": "ALL_MET"
+  },
+  "ORD-0344": {
+   "lane": "S1-q64sweep",
+   "generation": "ab12c17a65450c2c3062c9232e27a26c4ae1b485 + anchors 046fc98723e2eacfe3cb8eb00a7fd3abdbd26efe",
+   "cells": [
+    {
+     "cell": "cells 1/2/3 converged (main.tsx:968/:992, AgentRunRail.tsx:18); cell 4 (V8Experience.tsx:2609) honestly NOT converged and named; collateral: 0 newly reported cells elsewhere",
+     "derived_result": "MET",
+     "readings": {
+      "converged": [
+       "main.tsx:968",
+       "main.tsx:992",
+       "features/agent/AgentRunRail.tsx:18"
+      ],
+      "not_converged": [
+       "app/V8Experience.tsx:2609"
+      ],
+      "collateral": {
+       "cells_that_stopped_being_reported": [
+        "features/agent/AgentRunRail.tsx:18",
+        "main.tsx:968",
+        "main.tsx:992"
+       ],
+       "cells_newly_reported": [],
+       "newly_reported_count": 0,
+       "other_lanes_cells_still_reported_unchanged": 12,
+       "note": "the 11 hits outside my four are other lanes' named cells and are untouched by this candidate -- listed so a reviewer can see I neither widened nor quieted the census"
+      },
+      "r6_before_hits": 15,
+      "r6_after_hits": 12,
+      "ruler": "6a251d3a6bea70329e06581384a81d5ef54c96a6 (--tree per the pre-landing gate)",
+      "source": "cell_reading_r3.json"
+     }
+    },
+    {
+     "cell": "landings: 0344 ab12c17a READY_TO_LAND; anchors commit 046fc987 READY_TO_LAND (CopilotDock only) - the elapsed_ms cell was killed by the anchor commit's CopilotDock edit",
+     "derived_result": "MET",
+     "readings": {
+      "landing_0344": {
+       "cand": "ab12c17a65450c2c3062c9232e27a26c4ae1b485",
+       "verdict": "READY_TO_LAND"
+      },
+      "landing_anchors": {
+       "cand": "046fc98723e2eacfe3cb8eb00a7fd3abdbd26efe",
+       "verdict": "READY_TO_LAND",
+       "files": [
+        "frontend/src/features/agent/CopilotDock.tsx"
+       ]
+      },
+      "source": "cmdr-landing-ORD-0344-0828 + cmdr-landing-ORD-0344-anchors-0905 preflights"
+     }
+    }
+   ],
+   "top_level_derived_result": "ALL_MET"
+  },
+  "ORD-0346": {
+   "lane": "S4 1d64acf5",
+   "generation": "d9a0811318c62c5d4d176c29f9b707f149c20fec (order pinned c740f45d)",
+   "cells": [
+    {
+     "cell": "req1-3: data source named to file:line (CITY_FACTS @JourneyTrialSetup.tsx:105-128, rendered :689); three groups rendered with server-capability rules printed on screen; identity column carries CN-XX identities or named 还没有身份 - no unresolved:<hash> placeholder",
+     "derived_result": "MET",
+     "readings": {
+      "data_source": "CITY_FACTS at frontend/src/features/setup/JourneyTrialSetup.tsx:105-128",
+      "groups_rendered": [
+       "supported",
+       "needs_lookup",
+       "unknown"
+      ],
+      "group_rules_printed": {
+       "supported": "READY / 有 canonical 身份且有目录行",
+       "needs_lookup": "NO_CANONICAL_IDENTITY",
+       "unknown": "HYDRATABLE 无目录行 / UNKNOWN_RETRYABLE / 没读到"
+      },
+      "identity_values_seen": [
+       "CN-BEIJING",
+       "CN-CHENGDU",
+       "CN-GUANGZHOU",
+       "CN-HANGZHOU",
+       "CN-SHANGHAI",
+       "CN-SHENZHEN",
+       "CN-TIANJIN",
+       "CN-XIAMEN",
+       "None"
+      ],
+      "source": "ord0346 receipt_r2.json requirements 1-3"
+     }
+    },
+    {
+     "cell": "req4 two-way: 北京 supported (CN-BEIJING, 8 catalog rows, 缺 2 类事实) vs 东京 needs_lookup (还没有身份), each read both directions",
+     "derived_result": "MET",
+     "readings": {
+      "supported_leg": {
+       "name": "北京",
+       "group": "supported",
+       "identity": "CN-BEIJING",
+       "server_fields": "HYDRATABLE · COVERAGE_INCOMPLETE · START_HYDRATION",
+       "verdict_line": "服务器认得它，目录里有 8 条，还缺 2 类事实"
+      },
+      "unsupported_leg": {
+       "name": "东京",
+       "group": "needs_lookup",
+       "identity_attribute": null,
+       "identity_line": "还没有身份",
+       "server_fields": "UNAVAILABLE · NO_CANONICAL_IDENTITY · CHOOSE_ANOTHER_DESTINATION"
+      },
+      "source": "ord0346 receipt_r2.json requirement_4"
+     }
+    },
+    {
+     "cell": "req5 isolation: own port + own sqlite (named path, seeded once in own process, POST demo/reset never called, store identity probe marker row 1 == expected id, no _live/_preview); r6 --tree gate 0 cells on the changed files",
+     "derived_result": "MET",
+     "readings": {
+      "database_url": "sqlite:///D:/moodle/_qoder_lane_S4_0926/work/ord0346/ord0346_S4_r1.db",
+      "reset_never_called": true,
+      "store_identity_probe": {
+       "marker_status": 200,
+       "marker_rows": 1,
+       "marker_ids_returned": [
+        "cbfab803-f3ea-4b3d-a1fc-070aa85c0840"
+       ],
+       "marker_id_expected": "cbfab803-f3ea-4b3d-a1fc-070aa85c0840",
+       "marker_name_in_body": true,
+       "absent_status": 200,
+       "absent_rows": 0
+      },
+      "ports": {
+       "reading": 8846,
+       "e2e_backend": 8851,
+       "e2e_frontend": 4196
+      },
+      "ruler_gate": [],
+      "source": "ord0346 receipt_r2.json requirement_5 + ruler_gate_r6"
+     }
+    },
+    {
+     "cell": "landing binds d9a08113 READY_TO_LAND (order pinned generation c740f45d)",
+     "derived_result": "MET",
+     "readings": {
+      "landing_cand": "d9a0811318c62c5d4d176c29f9b707f149c20fec",
+      "verdict": "READY_TO_LAND",
+      "order_pinned_generation": "c740f45d68f337c460a1a43b995162689d0110af",
+      "delivered_commit": "021898bb8d15f0075077a04b87b151b2ee6790a2",
+      "source": "ord0346 receipt_r2.json + landing preflight_r1.json"
+     }
+    }
+   ],
+   "top_level_derived_result": "ALL_MET"
+  },
+  "ORD-0344-b": {
+   "lane": "S1-q64sweep",
+   "generation": "2d8b03b8c7734ea3b8521b80845e1b0bc1a07957 (current tip)",
+   "cells": [
+    {
+     "cell": "traveller's line clean + attribution survives; the closed-fold premise is measured, not assumed: serverLineVisible/serverLineHoldsItsOwnWords fail while closed, hold once opened - judged per 甲: operating the UI (one toggle click) is NOT rewriting the gate's assertion; the one-line click is handed to the gate owner D (ORD-0341)",
+     "derived_result": "MET",
+     "readings": {
+      "measurements": {
+       "travellers_line_clean": true,
+       "attribution_survives": true,
+       "gate_premise_holds_for": [
+        "refusalSentenceOnTheLine",
+        "noClientWrittenHttpStatusInThatParagraph"
+       ],
+       "gate_premise_fails_for": [
+        "serverLineVisible",
+        "serverLineHoldsItsOwnWords"
+       ],
+       "reason": "a closed <details> reports isVisible=false and innerText='' -- measured in the same run, not assumed -- so the span keeps its testid but the two nodes that read it need one toggle click"
+      },
+      "predicates_closed": {
+       "refusalSentenceOnTheLine": true,
+       "serverLineVisible": false,
+       "serverLineHoldsItsOwnWords": false,
+       "noClientWrittenHttpStatusInThatParagraph": true,
+       "outcomeText": "服务器拒绝了这一次尝试。没有产生新东西，上次的记录还在，你可以再试一次。",
+       "anchor": {
+        "field": "http_status",
+        "value": "409"
+       }
+      },
+      "predicates_opened": {
+       "refusalSentenceOnTheLine": true,
+       "serverLineVisible": true,
+       "serverLineHoldsItsOwnWords": true,
+       "noClientWrittenHttpStatusInThatParagraph": true,
+       "outcomeText": "服务器拒绝了这一次尝试。没有产生新东西，上次的记录还在，你可以再试一次。"
+      },
+      "one_line_for_gate_owner": "await page.getByTestId(\"continuation-technical-toggle\").click();",
+      "alternative_zero_edits": "put `open` on the <details> at V8Experience.tsx:2630 -- the fold then renders its contents on the hub card again",
+      "source": "move_reading_r3.json + predicates_after_opened/closed_r2.json"
+     }
+    },
+    {
+     "cell": "landing binds 2d8b03b8 (current tip, READY_TO_LAND); e2e witness shows the moved patterns gone from the old sites",
+     "derived_result": "MET",
+     "readings": {
+      "landing_cand": "2d8b03b8c7734ea3b8521b80845e1b0bc1a07957",
+      "verdict": "READY_TO_LAND",
+      "e2e_witness": {
+       "cn-agent-event-detail": {
+        "hits": 0,
+        "lines": []
+       },
+       "cn-agent-rail": {
+        "hits": 0,
+        "lines": []
+       },
+       "CityNexus request failed": {
+        "hits": 0,
+        "lines": []
+       },
+       "CityNexus API ": {
+        "hits": 0,
+        "lines": []
+       },
+       "runMeta": {
+        "hits": 0,
+        "lines": []
+       },
+       "data-cnx-field": {
+        "hits": 5,
+        "lines": [
+         "e2e/qoder-ord0339-exception-words-stay-out-of-the-dom.spec.ts:44:const ANCHOR_ATTRS = [\"data-cnx-field\", \"data-cnx-value\"];",
+         "e2e/qoder-ord0339-exception-words-stay-out-of-the-dom.spec.ts:71:      if (name === \"data-cnx-field\" && value !== \"\" && !Q64_FIELDS.includes(value as (typeof Q64_FIELDS)[number])) {",
+         "e2e/qoder-ord0339-exception-words-stay-out-of-the-dom.spec.ts:72:        dirty.push(`data-cnx-field=\"${value}\": not one of the six Q64 field names`);",
+         "e2e/qoder-ord0344b-sentence-move-keeps-attribution.spec.ts:52:    <span data-testid=\"continuation-resume-http-status\" data-cnx-field=\"http_status\"",
+         "e2e/qoder-ord0344b-sentence-move-keeps-attribution.spec.ts:79:    field: el.getAttribute(\"data-cnx-field\"),"
+        ]
+       }
+      },
+      "source": "landing preflight_r1.json + e2e_witness_r1.json"
+     }
+    }
+   ],
+   "top_level_derived_result": "ALL_MET"
+  }
+ },
+ "byte_attribution_exemplar": {
+  "case": "S1 self-reported 'recut dropped something'; commander refuted it with bytes: 110c4323:CopilotDock.tsx = 4fb493bddea7... byte-equal to the landed line's same file; ceafbe7c is the SUCCESSOR (with anchors), not an ancestor - and was subsequently landed too",
+  "lesson": "attribution needs bytes: a lane's prose self-report about ancestry was wrong and only git blob equality settled it; recorded in this receipt as the standing example for 'quote the blob, not the story'",
+  "ruling_followed": "ceafbe7c landed on the tip afterwards; no reading in this receipt depends on either story - every cell cites blob-equality or named readings"
+ },
+ "zero_byte_receipt_verdict": "NOT_EVIDENCE (as delivered in ORD-0340, receipt 58a51879f5d3ea6178ec09d0dd3a2f1a87395bb1): a receipt that can only prove both sides are empty is a vacuous comparison, not a measurement; keep the bytes, mark SUPERSEDED_BY selftest_r2 61a13969..., and bolt the write door against 0-byte evidence PUTs",
+ "derivation_rule": "every cell verdict is computed from the readings named in its own readings.source; no PASS literal; per Q25 bound to the generation the readings were taken on",
+ "top_level": {
+  "ORD-0332": "ALL_MET",
+  "ORD-0344": "ALL_MET",
+  "ORD-0346": "ALL_MET",
+  "ORD-0344-b": "ALL_MET"
+ },
+ "discipline": {
+  "product_bytes_changed": 0,
+  "refs_pushed": 0,
+  "demo_reset": 0,
+  "databases_opened_by_me": 0,
+  "credential_values_printed": 0
+ }
+}
