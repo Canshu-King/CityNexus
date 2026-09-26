@@ -1,0 +1,51 @@
+{
+  "schema": "CNX_ORD0350_READING_V1",
+  "order": "ORD-0350 (CMDR: HJ-P3's read that a 我们替你填的 row has no reachable way back)",
+  "lane": "S1-q64sweep",
+  "generation": "046fc98723e2eacfe3cb8eb00a7fd3abdbd26efe",
+  "candidate_branch": "review/S1-ord0350-review-row-exits",
+  "candidate_commit": "cbd69ef8f8eec2a2019f15a8af77854a7b649000",
+  "derived_at_utc": "2026-09-26T01:39:32Z",
+  "witness_spec": "frontend/e2e/qoder-ord0350-every-review-row-has-a-way-back.spec.ts",
+  "rows_with_an_exit": 9,
+  "exit_row_names": [
+    "city",
+    "arrival",
+    "departure",
+    "party",
+    "budget",
+    "pace",
+    "interests",
+    "special",
+    "auto-set"
+  ],
+  "every_exit_names_its_item_in_the_accessible_name": true,
+  "step2_press": {
+    "value_before": "2",
+    "focused_after": "trial-party",
+    "editable_after": "3"
+  },
+  "answer_cells_free_of_button_words": {
+    "review-pace": true,
+    "review-interests": true,
+    "review-party": true,
+    "review-budget": true,
+    "review-city": true
+  },
+  "answer_cells_non_empty": {
+    "review-pace": true,
+    "review-interests": true,
+    "review-party": true,
+    "review-budget": true,
+    "review-city": true
+  },
+  "jump_route_shared_with_ORD-0135": {
+    "re_measured": true,
+    "focused": "trial-arrival"
+  },
+  "not_run": [
+    "the shipped wizard gates (they need this order's branch under playwright.config.ts with a live backend)",
+    "phone re-walk -- HJ-P3's channel"
+  ],
+  "self_declared": "candidate only; no CLOSED"
+}
