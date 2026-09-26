@@ -1,0 +1,34 @@
+{
+ "run_id": "cmdr144138o341ver",
+ "tree": "23efb2eb3a1a56b3bf234fab93636d5666216f45",
+ "worktree": "D:/moodle/_qoder_cmdr_land_0341",
+ "target": "e2e/qoder-sealed-failure-speaks-and-offers-retry.spec.ts e2e/qoder-continuation-resume-carries-identity.spec.ts",
+ "full": false,
+ "grep": null,
+ "ports": {
+  "frontend": 4400,
+  "backend": 5400
+ },
+ "python": "D:/moodle/CityNexus/.venv/Scripts/python.exe",
+ "db": "_cmdr144138o341ver.db",
+ "env_keys_dropped_names_only": [
+  "DEEPSEEK_API_KEY",
+  "OPENAI_API_KEY",
+  "WB2API_KEY"
+ ],
+ "node_modules": {
+  "mode": "present",
+  "path": "D:/moodle/_qoder_cmdr_land_0341/frontend/node_modules"
+ },
+ "exit_code": 1,
+ "verdict": "RED",
+ "counts": {
+  "passed": 8,
+  "failed": 1
+ },
+ "listed_case_count": 0,
+ "started_local": "2026-09-26T14:41:38",
+ "duration_s": 56.881063,
+ "log": "D:/moodle/_qoder_cmdr_ref_20260921/live_checks/e2e_logs/o341ver_23efb2eb_144138.log",
+ "log_bytes": 19096
+}
