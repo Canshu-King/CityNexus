@@ -1,0 +1,271 @@
+{
+ "pushed": [
+  {
+   "remote": "evidence/hjp3-b6a8ea5c-walk-0926/r6_gen_check.json",
+   "local": "D:/moodle/_hjp3_b6a8_0926/r6_gen_check.json",
+   "rc": 0,
+   "at": "18:03:40",
+   "blob_on_branch": "f882f5c07d00ab0c85a883ff1e902e6cd1939604",
+   "local_bytes_now": 6411,
+   "local_matches_branch_bytes": true
+  },
+  {
+   "remote": "evidence/hjp3-b6a8ea5c-walk-0926/r6_dest_block.json",
+   "local": "D:/moodle/_hjp3_b6a8_0926/r6_dest_block.json",
+   "rc": 0,
+   "at": "18:03:50",
+   "blob_on_branch": "1684d4be87fc36780f99241a6bade4ce4d85f5b5",
+   "local_bytes_now": 44283,
+   "local_matches_branch_bytes": true
+  },
+  {
+   "remote": "evidence/hjp3-b6a8ea5c-walk-0926/r6_dest_block_r2.json",
+   "local": "D:/moodle/_hjp3_b6a8_0926/r6_dest_block_r2.json",
+   "rc": 0,
+   "at": "18:03:59",
+   "blob_on_branch": "2f12459b39fb4787a24744d46f725d7fc23433bb",
+   "local_bytes_now": 20592,
+   "local_matches_branch_bytes": true
+  },
+  {
+   "remote": "evidence/hjp3-b6a8ea5c-walk-0926/r6_dest_block_r3.json",
+   "local": "D:/moodle/_hjp3_b6a8_0926/r6_dest_block_r3.json",
+   "rc": 0,
+   "at": "18:04:09",
+   "blob_on_branch": "591e5c7f425460904b6f2cdf4d58d2ff160265b2",
+   "local_bytes_now": 20600,
+   "local_matches_branch_bytes": true
+  },
+  {
+   "remote": "evidence/hjp3-b6a8ea5c-walk-0926/r6_wizard_create.json",
+   "local": "D:/moodle/_hjp3_b6a8_0926/r6_wizard_create.json",
+   "rc": 0,
+   "at": "18:04:18",
+   "blob_on_branch": "1ace17dc18d205f552b654b5fd7ad8101f289c61",
+   "local_bytes_now": 10839,
+   "local_matches_branch_bytes": true
+  },
+  {
+   "remote": "evidence/hjp3-b6a8ea5c-walk-0926/r6_dead_id_saved.json",
+   "local": "D:/moodle/_hjp3_b6a8_0926/r6_dead_id_saved.json",
+   "rc": 0,
+   "at": "18:04:27",
+   "blob_on_branch": "5ea2fc9fc3e54c2cce75ce3a1af84dd83ef68ff7",
+   "local_bytes_now": 13552,
+   "local_matches_branch_bytes": true
+  },
+  {
+   "remote": "evidence/hjp3-b6a8ea5c-walk-0926/r6_receipt_anchor_offline.json",
+   "local": "D:/moodle/_hjp3_b6a8_0926/r6_receipt_anchor_offline.json",
+   "rc": 0,
+   "at": "18:04:36",
+   "blob_on_branch": "ab65d57eaf9d0f91dad5b920633fb85488b20acd",
+   "local_bytes_now": 20462,
+   "local_matches_branch_bytes": true
+  },
+  {
+   "remote": "evidence/hjp3-b6a8ea5c-walk-0926/r6_readings_scored.json",
+   "local": "D:/moodle/_hjp3_b6a8_0926/r6_readings_scored.json",
+   "rc": 0,
+   "at": "18:04:45",
+   "blob_on_branch": "4cc4bba6aa0369bc6c5cf8b2ce17186eafd5f8c9",
+   "local_bytes_now": 19430,
+   "local_matches_branch_bytes": true
+  },
+  {
+   "remote": "evidence/hjp3-b6a8ea5c-walk-0926/r6_drift.json",
+   "local": "D:/moodle/_hjp3_b6a8_0926/r6_drift.json",
+   "rc": 0,
+   "at": "18:04:55",
+   "blob_on_branch": "82a9f2b53fa7b0322195e75a0310f81654b4371d",
+   "local_bytes_now": 2289,
+   "local_matches_branch_bytes": true
+  },
+  {
+   "remote": "evidence/hjp3-b6a8ea5c-walk-0926/r6_tunnel_watch.json",
+   "local": "D:/moodle/_hjp3_b6a8_0926/r6_tunnel_watch.json",
+   "rc": 0,
+   "at": "18:05:03",
+   "blob_on_branch": "a9670c3db3f312a4617e488e4c57bc0b099da070",
+   "local_bytes_now": 1602,
+   "local_matches_branch_bytes": true
+  },
+  {
+   "remote": "evidence/hjp3-b6a8ea5c-walk-0926/r6_walked_asset_witness.json",
+   "local": "D:/moodle/_hjp3_b6a8_0926/r6_walked_asset_witness.json",
+   "rc": 0,
+   "at": "18:05:12",
+   "blob_on_branch": "98589d9ddd2b27524d92e8eaac8b4b7af7cacef9",
+   "local_bytes_now": 1440,
+   "local_matches_branch_bytes": true
+  },
+  {
+   "remote": "evidence/hjp3-b6a8ea5c-walk-0926/shots/A1_dest_closed.png",
+   "local": "D:/moodle/_hjp3_b6a8_0926/A1_dest_closed.png",
+   "rc": 0,
+   "at": "18:05:22",
+   "blob_on_branch": "411001b91ae067b47b062418a8b0a93bb4c4bfd0",
+   "local_bytes_now": 163237,
+   "local_matches_branch_bytes": true
+  },
+  {
+   "remote": "evidence/hjp3-b6a8ea5c-walk-0926/shots/A2_1_closed.png",
+   "local": "D:/moodle/_hjp3_b6a8_0926/A2_1_closed.png",
+   "rc": 0,
+   "at": "18:05:32",
+   "blob_on_branch": "411001b91ae067b47b062418a8b0a93bb4c4bfd0",
+   "local_bytes_now": 163237,
+   "local_matches_branch_bytes": true
+  },
+  {
+   "remote": "evidence/hjp3-b6a8ea5c-walk-0926/shots/A2_2_just_opened.png",
+   "local": "D:/moodle/_hjp3_b6a8_0926/A2_2_just_opened.png",
+   "rc": 0,
+   "at": "18:05:42",
+   "blob_on_branch": "4df7667ad3c46607fa4c13bc33d79fa01cc0ec0e",
+   "local_bytes_now": 307341,
+   "local_matches_branch_bytes": true
+  },
+  {
+   "remote": "evidence/hjp3-b6a8ea5c-walk-0926/shots/A2_3_settled.png",
+   "local": "D:/moodle/_hjp3_b6a8_0926/A2_3_settled.png",
+   "rc": 0,
+   "at": "18:05:53",
+   "blob_on_branch": "f64e9d60a83237dacf6aeca089eab3576b44e32d",
+   "local_bytes_now": 277692,
+   "local_matches_branch_bytes": true
+  },
+  {
+   "remote": "evidence/hjp3-b6a8ea5c-walk-0926/shots/A3_1_closed.png",
+   "local": "D:/moodle/_hjp3_b6a8_0926/A3_1_closed.png",
+   "rc": 0,
+   "at": "18:06:03",
+   "blob_on_branch": "411001b91ae067b47b062418a8b0a93bb4c4bfd0",
+   "local_bytes_now": 163237,
+   "local_matches_branch_bytes": true
+  },
+  {
+   "remote": "evidence/hjp3-b6a8ea5c-walk-0926/shots/A3_2_just_opened.png",
+   "local": "D:/moodle/_hjp3_b6a8_0926/A3_2_just_opened.png",
+   "rc": 0,
+   "at": "18:06:13",
+   "blob_on_branch": "4df7667ad3c46607fa4c13bc33d79fa01cc0ec0e",
+   "local_bytes_now": 307341,
+   "local_matches_branch_bytes": true
+  },
+  {
+   "remote": "evidence/hjp3-b6a8ea5c-walk-0926/shots/A3_3_settled.png",
+   "local": "D:/moodle/_hjp3_b6a8_0926/A3_3_settled.png",
+   "rc": 0,
+   "at": "18:06:23",
+   "blob_on_branch": "f64e9d60a83237dacf6aeca089eab3576b44e32d",
+   "local_bytes_now": 277692,
+   "local_matches_branch_bytes": true
+  },
+  {
+   "remote": "evidence/hjp3-b6a8ea5c-walk-0926/shots/B1_review_before_press.png",
+   "local": "D:/moodle/_hjp3_b6a8_0926/B1_review_before_press.png",
+   "rc": 0,
+   "at": "18:06:34",
+   "blob_on_branch": "c27cda41cea34762d4bc172d7315895f69cff81a",
+   "local_bytes_now": 193892,
+   "local_matches_branch_bytes": true
+  },
+  {
+   "remote": "evidence/hjp3-b6a8ea5c-walk-0926/shots/B2_after_confirm.png",
+   "local": "D:/moodle/_hjp3_b6a8_0926/B2_after_confirm.png",
+   "rc": 0,
+   "at": "18:06:44",
+   "blob_on_branch": "bfbaad98a12655967f0a006cd23e73961470c9a2",
+   "local_bytes_now": 283319,
+   "local_matches_branch_bytes": true
+  },
+  {
+   "remote": "evidence/hjp3-b6a8ea5c-walk-0926/shots/B3_after_opening_folds.png",
+   "local": "D:/moodle/_hjp3_b6a8_0926/B3_after_opening_folds.png",
+   "rc": 0,
+   "at": "18:06:55",
+   "blob_on_branch": "f97dbcdaaba7a6e32e987c40a2328f2edf3989b2",
+   "local_bytes_now": 283308,
+   "local_matches_branch_bytes": true
+  },
+  {
+   "remote": "evidence/hjp3-b6a8ea5c-walk-0926/shots/C1_dead_id_closed.png",
+   "local": "D:/moodle/_hjp3_b6a8_0926/C1_dead_id_closed.png",
+   "rc": 0,
+   "at": "18:07:05",
+   "blob_on_branch": "1b067b0359468de905d7ab3367dc3c459116436e",
+   "local_bytes_now": 111782,
+   "local_matches_branch_bytes": true
+  },
+  {
+   "remote": "evidence/hjp3-b6a8ea5c-walk-0926/shots/C2_dead_id_open.png",
+   "local": "D:/moodle/_hjp3_b6a8_0926/C2_dead_id_open.png",
+   "rc": 0,
+   "at": "18:07:15",
+   "blob_on_branch": "941b6d606f8800c8ddbb2df844490f60de37115c",
+   "local_bytes_now": 144535,
+   "local_matches_branch_bytes": true
+  },
+  {
+   "remote": "evidence/hjp3-b6a8ea5c-walk-0926/shots/E1_real_journey_settled.png",
+   "local": "D:/moodle/_hjp3_b6a8_0926/E1_real_journey_settled.png",
+   "rc": 0,
+   "at": "18:07:25",
+   "blob_on_branch": "e0f177e82b240d5bab387094d0c649ac14db4fbb",
+   "local_bytes_now": 234937,
+   "local_matches_branch_bytes": true
+  },
+  {
+   "remote": "evidence/hjp3-b6a8ea5c-walk-0926/shots/F1_dead_closed.png",
+   "local": "D:/moodle/_hjp3_b6a8_0926/F1_dead_closed.png",
+   "rc": 0,
+   "at": "18:07:36",
+   "blob_on_branch": "1b067b0359468de905d7ab3367dc3c459116436e",
+   "local_bytes_now": 111782,
+   "local_matches_branch_bytes": true
+  },
+  {
+   "remote": "evidence/hjp3-b6a8ea5c-walk-0926/shots/F2_dead_opened.png",
+   "local": "D:/moodle/_hjp3_b6a8_0926/F2_dead_opened.png",
+   "rc": 0,
+   "at": "18:07:46",
+   "blob_on_branch": "941b6d606f8800c8ddbb2df844490f60de37115c",
+   "local_bytes_now": 144535,
+   "local_matches_branch_bytes": true
+  },
+  {
+   "remote": "evidence/hjp3-b6a8ea5c-walk-0926/shots/F3_real_journey.png",
+   "local": "D:/moodle/_hjp3_b6a8_0926/F3_real_journey.png",
+   "rc": 0,
+   "at": "18:07:59",
+   "blob_on_branch": "ef7364867e4c519b1e60a7c71815da938a27b3d5",
+   "local_bytes_now": 884016,
+   "local_matches_branch_bytes": true
+  },
+  {
+   "remote": "evidence/hjp3-b6a8ea5c-walk-0926/shots/F4_after_tab_walk.png",
+   "local": "D:/moodle/_hjp3_b6a8_0926/F4_after_tab_walk.png",
+   "rc": 0,
+   "at": "18:08:12",
+   "blob_on_branch": "11b91ce2d0e25af2b32365e3c6d2954425eda008",
+   "local_bytes_now": 163348,
+   "local_matches_branch_bytes": true
+  },
+  {
+   "remote": "evidence/hjp3-b6a8ea5c-walk-0926/instruments/r6_gen_check.py",
+   "local": "D:/moodle/HJ-P3_evidence/r6_gen_check.py",
+   "rc": 3,
+   "at": "18:08:17",
+   "blob_on_branch": "NOT_ON_BRANCH",
+   "local_bytes_now": 8652,
+   "local_matches_branch_bytes": false
+  }
+ ],
+ "stopped_at": "evidence/hjp3-b6a8ea5c-walk-0926/instruments/r6_gen_check.py",
+ "branch_tip": "c9c07e719fce4243571293950f942045a4d0dc27",
+ "tip_read_at": "18:08:55",
+ "all_rc_zero": false,
+ "every_recorded_path_resolves": false,
+ "every_local_copy_still_matches_the_branch": false
+}
