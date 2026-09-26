@@ -1,0 +1,19 @@
+{
+ "run_id": "0323f3f1440",
+ "arm": "T13",
+ "cell": "T13",
+ "route": "PATCH_INBOX",
+ "method": "PATCH",
+ "status_asked": 511,
+ "slot_text": "服务器自己报错了（HTTP 511）。这是它那边的问题，不是你填错了什么。可以重试；如果一直这样，稍后再来。",
+ "status_in_slot": true,
+ "status_field": "511",
+ "status_field_equals_asked": true,
+ "needles_found": [],
+ "needles_found_in_attributes": [],
+ "attribute_pairs_swept": 72,
+ "foreign_status_found": [],
+ "internal_token_on_screen": false,
+ "nodeid": "D:\\moodle\\_qoder_b_lane_20260923\\frontend\\e2e\\qoder-ord0323-two-exposure-cells.spec.ts:673 > N4_T13_a_refused_PATCH_leaves_no_reply_words_and_keeps_its_own_reading — T13：自己那句原话不在屏上，自己那次读数还在屏上",
+ "test_status": "passed"
+}
