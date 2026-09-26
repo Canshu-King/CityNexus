@@ -1,0 +1,105 @@
+{
+ "B_pre_index_names_new_refs": {
+  "refs": [
+   "/assets/index-BOIAHTWw.js",
+   "/assets/index-DzHXVT59.css"
+  ],
+  "all_present": true,
+  "verdict": "GREEN"
+ },
+ "C_pre_new_assets_reach_the_live_server": [
+  {
+   "verdict": "GREEN",
+   "times": 2,
+   "statuses": [
+    200,
+    200
+   ],
+   "probes": [
+    {
+     "path": "/assets/index-BOIAHTWw.js",
+     "status": 200,
+     "content_type": "text/javascript",
+     "length": "1271252",
+     "cache_control": "no-cache",
+     "head_bytes": "const __vite__mapDeps=(i",
+     "sha256": "005735b8e911508e69a143d3ede3682261841083d7206243769e13ac1f813b56",
+     "is_html_fallback": false,
+     "error": null,
+     "base": "http://127.0.0.1:4781",
+     "auth_applied": false,
+     "body_size": 1271252,
+     "disk_present": true,
+     "disk_bytes": 1271252,
+     "disk_sha256": "005735b8e911508e69a143d3ede3682261841083d7206243769e13ac1f813b56",
+     "expect_content_type_substring": "javascript",
+     "verdict": "GREEN"
+    },
+    {
+     "path": "/assets/index-BOIAHTWw.js",
+     "status": 200,
+     "content_type": "text/javascript",
+     "length": "1271252",
+     "cache_control": "no-cache",
+     "head_bytes": "const __vite__mapDeps=(i",
+     "sha256": "005735b8e911508e69a143d3ede3682261841083d7206243769e13ac1f813b56",
+     "is_html_fallback": false,
+     "error": null,
+     "base": "http://127.0.0.1:4781",
+     "auth_applied": false,
+     "body_size": 1271252,
+     "disk_present": true,
+     "disk_bytes": 1271252,
+     "disk_sha256": "005735b8e911508e69a143d3ede3682261841083d7206243769e13ac1f813b56",
+     "expect_content_type_substring": "javascript",
+     "verdict": "GREEN"
+    }
+   ],
+   "red_refs": []
+  },
+  {
+   "verdict": "GREEN",
+   "times": 2,
+   "statuses": [
+    200,
+    200
+   ],
+   "probes": [
+    {
+     "path": "/assets/index-DzHXVT59.css",
+     "status": 200,
+     "content_type": "text/css",
+     "length": "184459",
+     "cache_control": "no-cache",
+     "head_bytes": ".v10-execution-panel{wid",
+     "sha256": "7c78836a0d1c5f87d66bc0897a61374e3824a8b1e4554681095a8ec38a6e9f15",
+     "is_html_fallback": false,
+     "error": null,
+     "base": "http://127.0.0.1:4781",
+     "auth_applied": false,
+     "body_size": 184459,
+     "disk_present": true,
+     "disk_bytes": 184459,
+     "disk_sha256": "7c78836a0d1c5f87d66bc0897a61374e3824a8b1e4554681095a8ec38a6e9f15",
+     "expect_content_type_substring": "css",
+     "verdict": "GREEN"
+    },
+    {
+     "path": "/assets/index-DzHXVT59.css",
+     "status": 200,
+     "content_type": "text/css",
+     "length": "184459",
+     "cache_control": "no-cache",
+     "head_bytes": ".v10-execution-panel{wid",
+     "sha256": "7c78836a0d1c5f87d66bc0897a61374e3824a8b1e4554681095a8ec38a6e9f15",
+     "is_html_fallback": false,
+     "error": null,
+     "base": "http://127.0.0.1:4781",
+     "auth_applied": false,
+     "body_size": 184459,
+     "disk_present": true,
+     "disk_bytes": 184459,
+     "disk_sha256": "7c78836a0d1c5f87d66bc0897a61374e3824a8b1e4554681095a8ec38a6e9f15",
+ 
+[receipt] D:\moodle\_qoder_cmdr_ref_20260921\live_checks\receipts\preflight_0926_171938.json
+PREFLIGHT READY_TO_SWITCH promotion=PENDING_POST_SWITCH
