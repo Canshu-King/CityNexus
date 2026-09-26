@@ -1,0 +1,84 @@
+{
+ "schema": "CNX_CHAIN_SELF_HEAL_V1",
+ "lane": "F 8ccd71d8",
+ "instance": "live",
+ "at_local": "Sat Sep 26 2026 18:45:03 GMT+0800 (中国标准时间)",
+ "mode": "detect-only",
+ "boundary": {
+  "allowed_db": "D:/moodle/_qoder_preview_20260920/_preview.db",
+  "credentials": "按路径取用，绝不打印",
+  "detect_only": true
+ },
+ "hops": [
+  {
+   "hop": "backend",
+   "port": 8693,
+   "url": "http://127.0.0.1:8693/api/v1/health",
+   "listening": 36772,
+   "http": {
+    "status": 200,
+    "content_type": "application/json",
+    "server": "uvicorn",
+    "bytes": 113,
+    "sha1_12": "1328f49ce556",
+    "head": "{\"status\":\"ok\",\"database\":\"ok\",\"ai\":\"disabled\",\"ai_state\":\"DISABLED_BY_OPS\",\"e2e_run_id\":\"\",\"e2e_database_id\":\"\"}",
+    "body_head": "{\"status\":\"ok\",\"database\":\"ok\",\"ai\":\"disabled\",\"ai_state\":\"DISABLED_BY_OPS\",\"e2e_run_id\":\"\",\"e2e_database_id\":\"\"}"
+   },
+   "healthy": true
+  },
+  {
+   "hop": "static",
+   "port": 4781,
+   "url": "http://127.0.0.1:4781/",
+   "listening": 33920,
+   "http": {
+    "status": 200,
+    "content_type": "text/html",
+    "server": null,
+    "bytes": 1200,
+    "sha1_12": "6d09b6cee258",
+    "head": "<!doctype html>\n<html lang=\"en\">\n  <head>\n    <meta charset=\"UTF-8\" />\n    <!-- viewport-fit=cover is only safe because .v8-mobile-nav / .v8-topbar /\n         .v8-product-shell now carry real env(safe-area-inset-*) padding; adding\n         ",
+    "body_head": "<!doctype html>\n<html lang=\"en\">\n  <head>\n    <meta charset=\"UTF-8\" />\n    <!-- viewport-fit=cover is only safe because .v8-mobile-nav / .v8-topbar /\n         .v8-product-shell now carry real env(safe-area-inset-*) padding; adding\n         this meta without that chrome would put content under the home indicator. -->\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0, viewport-fit=cover\" />\n    <link rel=\"icon\" href=\"/favicon.svg\" />\n    <link rel=\"manifest\" href=\"/manifest.webmanifest\" />\n    <!-- theme-color follows the design tokens; the old #172945 matched no surface in the\n         app. The last *matching* declaration wins, so the always-matching light value is\n         declared first and the dark one after it. -->\n    <meta name=\"theme-color\" content=\"#f5f5f7\" />\n    <meta name=\"theme-color\" media=\"(prefers-color-scheme: dark)\" content=\"#000000\" />\n    <title>CityNexus Trip Operations</title>\n    <script type=\"module\" crossorigin src=\"/assets/index-D3j0mgvR.js\"></script>\n    <link rel=\"stylesheet\" crossorigin href=\"/assets/index-BOtUwGz0.css\">\n  <link rel=\"manifest\" href=\"/manifest.webmanifest\"></head>\n  <body>\n    <div id=\"root\"></div>\n  </body>\n</html>\n"
+   },
+   "healthy": true
+  },
+  {
+   "hop": "auth_proxy",
+   "port": 4782,
+   "url": "http://127.0.0.1:4782/api/v1/health",
+   "listening": 14408,
+   "http": {
+    "status": 200,
+    "content_type": "application/json",
+    "server": "BaseHTTP/0.6 Python/3.12.14",
+    "bytes": 113,
+    "sha1_12": "1328f49ce556",
+    "head": "{\"status\":\"ok\",\"database\":\"ok\",\"ai\":\"disabled\",\"ai_state\":\"DISABLED_BY_OPS\",\"e2e_run_id\":\"\",\"e2e_database_id\":\"\"}",
+    "body_head": "{\"status\":\"ok\",\"database\":\"ok\",\"ai\":\"disabled\",\"ai_state\":\"DISABLED_BY_OPS\",\"e2e_run_id\":\"\",\"e2e_database_id\":\"\"}"
+   },
+   "healthy": true
+  }
+ ],
+ "spawns": [],
+ "phone_generation": {
+  "asset": "index-D3j0mgvR.js",
+  "bytes": 1276676,
+  "sha1_12": "935808ebcc80",
+  "ok": true
+ },
+ "tunnel": {
+  "url": "https://obligation-plain-arcade-bean.trycloudflare.com",
+  "source": "run/tunnel_0925_0417.err.log"
+ },
+ "published": null,
+ "db_guard": {
+  "ok": true,
+  "resolved": "d:/moodle/_qoder_preview_20260920/_preview.db"
+ },
+ "tunnel_probe": {
+  "connect_error": "URLError",
+  "message": "<urlopen error [WinError 10061] 由于目标计算机积极拒绝，无法连接。>"
+ },
+ "verdict": "CHAIN_UNHEALTHY",
+ "exit": 3
+}
