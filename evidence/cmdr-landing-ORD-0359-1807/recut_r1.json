@@ -1,0 +1,81 @@
+{
+ "order": "ORD-0359",
+ "line": "origin/mirror/integration-frontend-apple-pass1",
+ "tip": "27f963a77edc4d508a39b0a07c76927d0512c724",
+ "cand": "324753e0688a5f2682071f23cefeff832443b8bc",
+ "merge_base": "b6a8ea5c625d7e3e82f7348fad57d595a8a403c0",
+ "commits_tip_ahead_of_base": 4,
+ "commits_cand_ahead_of_base": 2,
+ "merge_tree_rc": 0,
+ "changed_files": [
+  "backend/app/agent/ai_availability.py",
+  "backend/app/agent/mission.py",
+  "backend/app/agent/runtime_identity.py",
+  "backend/app/main.py",
+  "backend/tests/test_qoder_ord0359_ai_state_three_ways.py",
+  "contracts/openapi.yaml",
+  "review/ord0359-readings/SUITE_ROUND.md"
+ ],
+ "files": [
+  {
+   "path": "backend/app/agent/ai_availability.py",
+   "cand_blob": "5f4afff6f84e7fc25f2c39ddf5acd94452740e94",
+   "merged_blob": "5f4afff6f84e7fc25f2c39ddf5acd94452740e94",
+   "identical": true,
+   "cand_changed_the_file": true
+  },
+  {
+   "path": "backend/app/agent/mission.py",
+   "cand_blob": "64637ab5cf9c428dfb8c713268171e5d1b17f8a5",
+   "merged_blob": "64637ab5cf9c428dfb8c713268171e5d1b17f8a5",
+   "identical": true,
+   "cand_changed_the_file": true
+  },
+  {
+   "path": "backend/app/agent/runtime_identity.py",
+   "cand_blob": "4fac110f54bac7b199b3e53de96c6a1e9c0dc6e8",
+   "merged_blob": "4fac110f54bac7b199b3e53de96c6a1e9c0dc6e8",
+   "identical": true,
+   "cand_changed_the_file": true
+  },
+  {
+   "path": "backend/app/main.py",
+   "cand_blob": "828e1bea668fce423f0449e6ebdda957952e6495",
+   "merged_blob": "828e1bea668fce423f0449e6ebdda957952e6495",
+   "identical": true,
+   "cand_changed_the_file": true
+  },
+  {
+   "path": "backend/tests/test_qoder_ord0359_ai_state_three_ways.py",
+   "cand_blob": "7812aa2e62a46c37b2b9aef16aee1b88fc180059",
+   "merged_blob": "7812aa2e62a46c37b2b9aef16aee1b88fc180059",
+   "identical": true,
+   "cand_changed_the_file": true
+  },
+  {
+   "path": "contracts/openapi.yaml",
+   "cand_blob": "f7ab122c8ce741eb4b9fca366fe4852b1edebe77",
+   "merged_blob": "f7ab122c8ce741eb4b9fca366fe4852b1edebe77",
+   "identical": true,
+   "cand_changed_the_file": true
+  },
+  {
+   "path": "review/ord0359-readings/SUITE_ROUND.md",
+   "cand_blob": "6b9225044ff398734857bdd1daf90ac16b78e652",
+   "merged_blob": "6b9225044ff398734857bdd1daf90ac16b78e652",
+   "identical": true,
+   "cand_changed_the_file": true
+  }
+ ],
+ "merged_tree": "a17aeb346ddfc7cba13974a0c46369cfa43b9a9b",
+ "auto_merged_files": [],
+ "recut_commit": "f44ad86618eb9dadca001ea7471ae24274fc4388",
+ "readback_tree": "a17aeb346ddfc7cba13974a0c46369cfa43b9a9b",
+ "readback_tree_matches": true,
+ "readback_parents": [
+  "27f963a77edc4d508a39b0a07c76927d0512c724",
+  "324753e0688a5f2682071f23cefeff832443b8bc"
+ ],
+ "readback_parent_tip": true,
+ "verdict": "RECUT_OK"
+}
