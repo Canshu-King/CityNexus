@@ -1,0 +1,60 @@
+{
+ "ran_at_local": "2026-09-26T09:38:17+0800",
+ "branch": "commander/control",
+ "tip_read": "0392c4335f2a2d1758e9f2a188f2c7c6254212e8",
+ "prefix": "evidence/hjp3-journey-recheck-ab12c17a/",
+ "method": "GET /repos/.../commits?sha=<branch>&path=<file> - one commit at a name means written once",
+ "files_under_prefix": 24,
+ "tree_entries_excluded": [
+  "evidence/hjp3-journey-recheck-ab12c17a/instruments",
+  "evidence/hjp3-journey-recheck-ab12c17a/shots"
+ ],
+ "why_the_tree_entries_are_excluded": "a commits?path=<directory> query legitimately returns every commit that touched anything under it, so counting a directory as a write would manufacture a re-PUT that never happened",
+ "commits_per_path": {
+  "evidence/hjp3-journey-recheck-ab12c17a/instruments/r5_anchor_scan.py": 1,
+  "evidence/hjp3-journey-recheck-ab12c17a/instruments/r5_block_recheck.py": 1,
+  "evidence/hjp3-journey-recheck-ab12c17a/instruments/r5_bus_recheck.py": 1,
+  "evidence/hjp3-journey-recheck-ab12c17a/instruments/r5_deadid_fresh.cjs": 1,
+  "evidence/hjp3-journey-recheck-ab12c17a/instruments/r5_faces_get.py": 1,
+  "evidence/hjp3-journey-recheck-ab12c17a/instruments/r5_recheck.cjs": 1,
+  "evidence/hjp3-journey-recheck-ab12c17a/instruments/r5_recheck_score.py": 1,
+  "evidence/hjp3-journey-recheck-ab12c17a/instruments/r5_tip_drift.py": 1,
+  "evidence/hjp3-journey-recheck-ab12c17a/instruments/r5_write_ledger_recheck.py": 1,
+  "evidence/hjp3-journey-recheck-ab12c17a/ledger_inbox_proof_recheck_0930_q43r4d.json": 1,
+  "evidence/hjp3-journey-recheck-ab12c17a/ledger_inbox_proof_walk_0902_q43r4d.json": 1,
+  "evidence/hjp3-journey-recheck-ab12c17a/r5_anchor_scan.json": 1,
+  "evidence/hjp3-journey-recheck-ab12c17a/r5_bus_recheck.md": 1,
+  "evidence/hjp3-journey-recheck-ab12c17a/r5_bus_recheck_readback.json": 1,
+  "evidence/hjp3-journey-recheck-ab12c17a/r5_deadid_fresh.json": 1,
+  "evidence/hjp3-journey-recheck-ab12c17a/r5_faces_get.json": 1,
+  "evidence/hjp3-journey-recheck-ab12c17a/r5_recheck_raw.json": 1,
+  "evidence/hjp3-journey-recheck-ab12c17a/r5_recheck_scored.json": 1,
+  "evidence/hjp3-journey-recheck-ab12c17a/r5_tip_drift.json": 1,
+  "evidence/hjp3-journey-recheck-ab12c17a/shots/RC_1_review.png": 1,
+  "evidence/hjp3-journey-recheck-ab12c17a/shots/RC_2_after_confirm.png": 1,
+  "evidence/hjp3-journey-recheck-ab12c17a/shots/RC_3_dead_id.png": 1,
+  "evidence/hjp3-journey-recheck-ab12c17a/shots/RC_4_dead_id_fresh.png": 1,
+  "evidence/hjp3-journey-recheck-ab12c17a/write_ledger_recheck.json": 1
+ },
+ "paths_with_more_than_one_commit": [],
+ "controls_known_to_hold_two_writes": [
+  {
+   "path": "evidence/ord0300-c2-pairing-hjp3/evidence_manifest_full40_c2.json",
+   "commits": 2
+  },
+  {
+   "path": "evidence/ord0288-t1-durable-ownership-hjp3/evidence_manifest_full40_o0288_r2.json",
+   "commits": 2
+  },
+  {
+   "path": "evidence/ord0300-hjp3-write-cells/RECEIPT_O0300-2610.json",
+   "commits": 2
+  }
+ ],
+ "verdict": {
+  "no_path_in_this_prefix_was_written_twice": true,
+  "the_counter_is_not_blind": true,
+  "a_directory_was_counted_until_it_was_excluded": true,
+  "ALL_HOLD": true
+ }
+}
