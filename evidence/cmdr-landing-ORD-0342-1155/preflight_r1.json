@@ -1,0 +1,105 @@
+{
+ "schema": "CNX_CMDR_LANDING_PREFLIGHT_V1",
+ "lane": "commander 494abfd7",
+ "at_local": "2026-09-26T11:55:18+0800",
+ "mode": "LAND",
+ "authoritative_line": "mirror/integration-frontend-apple-pass1",
+ "tip_re_read_from_github_before": "2d8b03b8c7734ea3b8521b80845e1b0bc1a07957",
+ "candidate_ref": "refs/heads/cmdr/land-ord0342-b",
+ "candidate_tip": "38277c4e9787b1ddf0bf69487060ba0e40c14146",
+ "genealogy": {
+  "ff_possible_rc": 0,
+  "ff_possible": true,
+  "merge_base": "2d8b03b8c7734ea3b8521b80845e1b0bc1a07957",
+  "line_only_commits": 0,
+  "candidate_only_commits": 7
+ },
+ "file_sets": {
+  "line_side_since_base": [],
+  "candidate_side_since_base": [
+   "frontend/e2e/qoder-ord0323-two-exposure-cells.spec.ts",
+   "frontend/src/features/inbox/JourneyInboxWorkbench.tsx"
+  ],
+  "intersection": [],
+  "product_introduced_by_candidate": [
+   "frontend/src/features/inbox/JourneyInboxWorkbench.tsx"
+  ]
+ },
+ "merge_tree": {
+  "exit": 0,
+  "first_line": "123c824b9d9ce2a1a802c9a27d4f51f429a4d316",
+  "conflict_reported": false,
+  "stderr_head": ""
+ },
+ "gate_run": {
+  "requested": [],
+  "collect_exit": null,
+  "collected": null,
+  "test_exit": null,
+  "summary": null,
+  "export": "D:/moodle/_qoder_cmdr_ref_20260921/snap_preflight_115501",
+  "blob_equality": [
+   {
+    "path": "frontend/e2e/qoder-ord0323-two-exposure-cells.spec.ts",
+    "candidate_blob": "db401a3ccb550103f94c8e4a8f3504adc73d7700",
+    "export_blob": "db401a3ccb550103f94c8e4a8f3504adc73d7700",
+    "equal": true
+   },
+   {
+    "path": "frontend/src/features/inbox/JourneyInboxWorkbench.tsx",
+    "candidate_blob": "0a9a6803d8f8ac9198d3a62c4139cedb989da728",
+    "export_blob": "0a9a6803d8f8ac9198d3a62c4139cedb989da728",
+    "equal": true
+   }
+  ],
+  "whole_suite": {
+   "collect_exit": 0,
+   "collected": 1351,
+   "interrupted": false,
+   "error_lines": [
+    "tests/test_qoder_ord0332_error_receipt.py::test_R7_the_envelope_keeps_every_field_it_already_had",
+    "tests/test_qoder_ord0332_error_receipt.py::test_R8_the_seed_is_read_off_the_real_request_not_just_the_dataclass",
+    "tests/test_solver_runtime_policy.py::test_unexpected_solver_programming_error_is_not_silently_hidden"
+   ],
+   "tail": [
+    "    _PortalFactoryType = Callable[[], AbstractContextManager[anyio.abc.BlockingPortal]]",
+    "-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html",
+    "1351 tests collected in 4.92s"
+   ],
+   "cmd": "D:/moodle/CityNexus/.venv/Scripts/python.exe -m pytest --collect-only -q tests  (cwd=<export>/backend, PYTHONPATH=<export>)"
+  },
+  "interpreter": "Python 3.12.14 (main, Aug 25 2026, 14:01:42) [MSC v.1944 64 bit (AMD64)]",
+  "exposure": {
+   "ruler_blob": "6a251d3a6bea70329e06581384a81d5ef54c96a6",
+   "ruler_file": "ui_exposure_taint_ast_r3.cjs",
+   "candidate_files_in_view": 1,
+   "tip_cells": 12,
+   "cand_cells": 12,
+   "growth_by_file_and_rule": {},
+   "added_line_exact": [],
+   "shifted_only": false,
+   "removed_count": 0,
+   "removed": []
+  }
+ },
+ "problems": [],
+ "verdict": "READY_TO_LAND",
+ "landing": {
+  "http": 200,
+  "response_head": "{'ref': 'refs/heads/mirror/integration-frontend-apple-pass1', 'node_id': 'REF_kwDOUhlJJ9oAMnJlZnMvaGVhZHMvbWlycm9yL2ludGVncmF0aW9uLWZyb250ZW5kLWFwcGxlLXBhc3Mx', 'url': 'https://api.github.com/repos/Ca",
+  "tip_after": "38277c4e9787b1ddf0bf69487060ba0e40c14146",
+  "branches_route": "38277c4e9787b1ddf0bf69487060ba0e40c14146",
+  "both_routes_agree": true,
+  "landed": true
+ },
+ "discipline": {
+  "evidence_paths_overwritten": 0,
+  "databases_opened": 0,
+  "surfaces_started_or_stopped": 0,
+  "credential_values_printed": 0,
+  "candidate_refs_pushed_by_commander": 0
+ },
+ "claim_kind": "git_and_pytest_determined",
+ "claimed_result": null,
+ "derived_result": null
+}
