@@ -1,0 +1,39 @@
+{
+ "schema": "CNX_GREP_WITNESS_V1",
+ "lane": "S1-q64sweep",
+ "generated_at_utc": "2026-09-26T00:47:34Z",
+ "command": "grep -rn --include=*.ts <pattern> e2e   (run in frontend/ of the candidate tree)",
+ "tree": "review/S1-ord0344b-server-sentence-fold",
+ "patterns": {
+  "cn-agent-event-detail": {
+   "hits": 0,
+   "lines": []
+  },
+  "cn-agent-rail": {
+   "hits": 0,
+   "lines": []
+  },
+  "CityNexus request failed": {
+   "hits": 0,
+   "lines": []
+  },
+  "CityNexus API ": {
+   "hits": 0,
+   "lines": []
+  },
+  "runMeta": {
+   "hits": 0,
+   "lines": []
+  },
+  "data-cnx-field": {
+   "hits": 5,
+   "lines": [
+    "e2e/qoder-ord0339-exception-words-stay-out-of-the-dom.spec.ts:44:const ANCHOR_ATTRS = [\"data-cnx-field\", \"data-cnx-value\"];",
+    "e2e/qoder-ord0339-exception-words-stay-out-of-the-dom.spec.ts:71:      if (name === \"data-cnx-field\" && value !== \"\" && !Q64_FIELDS.includes(value as (typeof Q64_FIELDS)[number])) {",
+    "e2e/qoder-ord0339-exception-words-stay-out-of-the-dom.spec.ts:72:        dirty.push(`data-cnx-field=\"${value}\": not one of the six Q64 field names`);",
+    "e2e/qoder-ord0344b-sentence-move-keeps-attribution.spec.ts:52:    <span data-testid=\"continuation-resume-http-status\" data-cnx-field=\"http_status\"",
+    "e2e/qoder-ord0344b-sentence-move-keeps-attribution.spec.ts:79:    field: el.getAttribute(\"data-cnx-field\"),"
+   ]
+  }
+ }
+}
