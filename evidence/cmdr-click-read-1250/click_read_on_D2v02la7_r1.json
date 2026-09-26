@@ -1,0 +1,34 @@
+{
+ "base": "http://127.0.0.1:4781",
+ "viewport": "390x844-ish (Pixel 5)",
+ "at_local": "Sat Sep 26 2026 13:01:07 GMT+0800 (中国标准时间)",
+ "clicked": true,
+ "shots": [
+  {
+   "stage": "first_paint",
+   "len": 163,
+   "head": "用你自己的城市试用 CITYNEXUS 新建行程 三步完成。选择目的地、告诉我们怎么玩，剩下的交给 CityNexus。 EN 1 目的地与时间 2 人数与偏好 3 确认创建 目的地 看支持的目的地 抵达地点 离开地点 抵达时间 离开时间 高级设置 高级设置 还需要填写：目的地、抵达地点、离开地点 下一步 使用封存的演示行程"
+  },
+  {
+   "stage": "after_open_destinations",
+   "len": 906,
+   "added_text": "DY / 有 canonical 身份且有目录行 这一轮没有名字落在这一组。 需联网才能解析：服务器现在认不出这个名字 NO_CANONICAL_IDENTITY 这一轮没有名字落在这一组。 未知或无数据：这一轮拿不出可规划的判定 HYDRATABLE 无目录行 / UNKNOWN_RETRYABLE / 没读到 厦门 身份还没读到 这一轮没读到服务器的判定（读不到不等于服务器说不知道） SERVER_ERROR 北京 身份还没读到 这一轮没读到服务器的判定（读不到不等于服务器说不知道） SERVER_ERROR 上海 身份还没读到 这一轮没读到服务器的判定（读不到不等于服务器说不知道） SERVER_ERROR 天津 身份还没读到 这一轮没读到服务器的判定（读不到不等于服务器说不知道） SERVER_ERROR 福州 身份还没读到 这一轮没读到服务器的判定（读不到不等于服务器说不知道） SERVER_ERROR 广州 身份还没读到 这一轮没读到服务器的判定（读不到不等于服务器说不知道） SERVER_ERROR 深圳 身份还没读到 这一轮没读到服务器的判定（读不到不等于服务器说不知道） SERVER_ERROR 成都 身份还没读到 这一轮没读到服务器的判定（读不到不等于服务器说不知道） SERVER_ERROR 杭州 身份还没读到 这一轮没读到服务器的判定（读不到不等于服务器说不知道） SERVER_ERROR 东京 身份还没读到 这一轮没读到服务器的判定（读不到不等于服务器说不知道） SERVER_ERROR 新加坡 身份还没读到 这一轮没读到服务器的判定（读不到不等于服务器说不知道） SERVER_ERROR 抵达地点 离开地点 抵达时间 离开时间 高级设置 高级设置 还需要填写：目的地、抵达地点、离开地点 下一步 使用封存的演示行程"
+  }
+ ],
+ "details_blocks": [
+  {
+   "summary": "看支持的目的地",
+   "open": true,
+   "inner": "看支持的目的地 已支持：服务器认得它，而且目录里有东西 READY / 有 canonical 身份且有目录行 这一轮没有名字落在这一组。 需联网才能解析：服务器现在认不出这个名字 NO_CANONICAL_IDENTITY 这一轮没有名字落在这一组。 未知或无数据：这一轮拿不出可规划的判定 HYDRATABLE 无目录行 / UNKNOWN_RETRYABLE / 没读到 厦门 身份还没读到 这一轮没读到服务器的判定（读不到不等于服务器说不知道） SERVER_ERROR 北京 身份还没读到 这一轮没读到服务器的判定（读不到不等于服务器说不知道） SERVER_ERROR 上海 身份还没读到",
+   "fields": []
+  },
+  {
+   "summary": "高级设置",
+   "open": false,
+   "inner": "高级设置",
+   "fields": []
+  }
+ ],
+ "suspect_attribute_values": [],
+ "leak_shapes_on_screen": []
+}
