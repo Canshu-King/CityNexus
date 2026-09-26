@@ -1,0 +1,144 @@
+{
+ "schema": "CNX_CMDR_LANDING_PREFLIGHT_V1",
+ "lane": "commander 494abfd7",
+ "at_local": "2026-09-26T18:05:21+0800",
+ "mode": "LAND",
+ "authoritative_line": "mirror/integration-frontend-apple-pass1",
+ "tip_re_read_from_github_before": "27f963a77edc4d508a39b0a07c76927d0512c724",
+ "candidate_ref": "refs/heads/landing/ord0359-recut-1804",
+ "candidate_tip": "f44ad86618eb9dadca001ea7471ae24274fc4388",
+ "genealogy": {
+  "ff_possible_rc": 0,
+  "ff_possible": true,
+  "merge_base": "27f963a77edc4d508a39b0a07c76927d0512c724",
+  "line_only_commits": 0,
+  "candidate_only_commits": 3
+ },
+ "file_sets": {
+  "line_side_since_base": [],
+  "candidate_side_since_base": [
+   "backend/app/agent/ai_availability.py",
+   "backend/app/agent/mission.py",
+   "backend/app/agent/runtime_identity.py",
+   "backend/app/main.py",
+   "backend/tests/test_qoder_ord0359_ai_state_three_ways.py",
+   "contracts/openapi.yaml",
+   "review/ord0359-readings/SUITE_ROUND.md"
+  ],
+  "intersection": [],
+  "product_introduced_by_candidate": [
+   "backend/app/agent/ai_availability.py",
+   "backend/app/agent/mission.py",
+   "backend/app/agent/runtime_identity.py",
+   "backend/app/main.py"
+  ]
+ },
+ "merge_tree": {
+  "exit": 0,
+  "first_line": "a17aeb346ddfc7cba13974a0c46369cfa43b9a9b",
+  "conflict_reported": false,
+  "stderr_head": ""
+ },
+ "gate_run": {
+  "requested": [
+   "tests/test_qoder_ord0359_ai_state_three_ways.py"
+  ],
+  "collect_exit": 0,
+  "collected": null,
+  "test_exit": 4,
+  "summary": [],
+  "export": "D:/moodle/_qoder_cmdr_ref_20260921/snap_preflight_180501",
+  "blob_equality": [
+   {
+    "path": "backend/app/agent/ai_availability.py",
+    "candidate_blob": "5f4afff6f84e7fc25f2c39ddf5acd94452740e94",
+    "export_blob": "5f4afff6f84e7fc25f2c39ddf5acd94452740e94",
+    "equal": true
+   },
+   {
+    "path": "backend/app/agent/mission.py",
+    "candidate_blob": "64637ab5cf9c428dfb8c713268171e5d1b17f8a5",
+    "export_blob": "64637ab5cf9c428dfb8c713268171e5d1b17f8a5",
+    "equal": true
+   },
+   {
+    "path": "backend/app/agent/runtime_identity.py",
+    "candidate_blob": "4fac110f54bac7b199b3e53de96c6a1e9c0dc6e8",
+    "export_blob": "4fac110f54bac7b199b3e53de96c6a1e9c0dc6e8",
+    "equal": true
+   },
+   {
+    "path": "backend/app/main.py",
+    "candidate_blob": "828e1bea668fce423f0449e6ebdda957952e6495",
+    "export_blob": "828e1bea668fce423f0449e6ebdda957952e6495",
+    "equal": true
+   },
+   {
+    "path": "backend/tests/test_qoder_ord0359_ai_state_three_ways.py",
+    "candidate_blob": "7812aa2e62a46c37b2b9aef16aee1b88fc180059",
+    "export_blob": "7812aa2e62a46c37b2b9aef16aee1b88fc180059",
+    "equal": true
+   },
+   {
+    "path": "contracts/openapi.yaml",
+    "candidate_blob": "f7ab122c8ce741eb4b9fca366fe4852b1edebe77",
+    "export_blob": "f7ab122c8ce741eb4b9fca366fe4852b1edebe77",
+    "equal": true
+   },
+   {
+    "path": "review/ord0359-readings/SUITE_ROUND.md",
+    "candidate_blob": "6b9225044ff398734857bdd1daf90ac16b78e652",
+    "export_blob": "6b9225044ff398734857bdd1daf90ac16b78e652",
+    "equal": true
+   }
+  ],
+  "whole_suite": {
+   "collect_exit": 0,
+   "collected": 1377,
+   "interrupted": false,
+   "error_lines": [
+    "tests/test_qoder_ord0332_error_receipt.py::test_R7_the_envelope_keeps_every_field_it_already_had",
+    "tests/test_qoder_ord0332_error_receipt.py::test_R8_the_seed_is_read_off_the_real_request_not_just_the_dataclass",
+    "tests/test_solver_runtime_policy.py::test_unexpected_solver_programming_error_is_not_silently_hidden"
+   ],
+   "tail": [
+    "    _PortalFactoryType = Callable[[], AbstractContextManager[anyio.abc.BlockingPortal]]",
+    "-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html",
+    "1377 tests collected in 2.85s"
+   ],
+   "cmd": "D:/moodle/CityNexus/.venv/Scripts/python.exe -m pytest --collect-only -q tests  (cwd=<export>/backend, PYTHONPATH=<export>)"
+  },
+  "collect_stdout_tail": [
+   "",
+   "-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html",
+   "1377 tests collected in 5.61s"
+  ],
+  "rooted_tests": {
+   "paths": [
+    "tests/test_qoder_ord0359_ai_state_three_ways.py"
+   ],
+   "exit": 4,
+   "summary": []
+  },
+  "interpreter": "Python 3.12.14 (main, Aug 25 2026, 14:01:42) [MSC v.1944 64 bit (AMD64)]",
+  "exposure": {
+   "skipped": "no frontend/src file changed"
+  }
+ },
+ "problems": [
+  "gate run not green (collect rc=0 test rc=4)",
+  "gate run produced no summary line - instrument did not measure"
+ ],
+ "verdict": "REFUSED",
+ "landing": null,
+ "discipline": {
+  "evidence_paths_overwritten": 0,
+  "databases_opened": 0,
+  "surfaces_started_or_stopped": 0,
+  "credential_values_printed": 0,
+  "candidate_refs_pushed_by_commander": 0
+ },
+ "claim_kind": "git_and_pytest_determined",
+ "claimed_result": "refused: gate run not green (collect rc=0 test rc=4) | gate run produced no summary line - instrument did not measure",
+ "derived_result": null
+}
