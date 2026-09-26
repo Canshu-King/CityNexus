@@ -1,0 +1,18 @@
+{
+  "node": "ord0351-a-a-link-to-a-saved-trip-opens-that-trip",
+  "journeys": {
+    "this_link": "2dc834ab-2e62-4527-97bf-4a653b4700ad",
+    "another_on_the_same_server": "f4e94f23-399c-432f-99dd-c818b4e00e0a"
+  },
+  "link": "/v8/2dc834ab-2e62-4527-97bf-4a653b4700ad",
+  "heading_on_screen": "天津之旅",
+  "wizard_shown": false,
+  "experience_reads": [
+    {
+      "url": "http://127.0.0.1:4791/api/v1/journeys/2dc834ab-2e62-4527-97bf-4a653b4700ad/experience",
+      "status": 200
+    }
+  ],
+  "stored_reference_after": "2dc834ab-2e62-4527-97bf-4a653b4700ad",
+  "failure_view_present": false
+}
