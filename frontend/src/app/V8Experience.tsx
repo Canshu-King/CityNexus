@@ -895,9 +895,22 @@ export function V8Experience() {
          channel for this failure, so the trip was undiagnosable off the screen.  The facts go to the
          channel that was never about the DOM, classified from the error this read actually raised
          rather than re-worded here, and `sealedDemoDetail` stays as the state the wizard no longer
-         renders (removing it is a separate edit with its own blast radius). */
-      setSealedDemoUnavailable(t("trial.sealedUnreadable"));
-      recordAttribution(classifyReadFailure(error), "wizard.sealedDemo.enter");
+         renders (removing it is a separate edit with its own blast radius).
+         ORD-0349 (HJ-P3): one sentence was covering two different legs.  A leg that never connected
+         was told with "the server answered just now", which asserts something that did not happen,
+         and the two fates came out as pixel-identical screenshots.  The legs are separated by the
+         evidence this device already records -- `evidence_kind`, TRANSPORT versus HTTP_RESPONSE --
+         not by a guess at the cause.
+         The two orders read the same classification, so one call serves both: ORD-0341 named the
+         sink `wizard.sealedDemo.enter` and its shipped gate quotes that string, so ORD-0349's first
+         cut borrows the name rather than writing the same record twice under two contexts. */
+      const attribution = classifyReadFailure(error);
+      setSealedDemoUnavailable(
+        attribution.evidence_kind === "HTTP_RESPONSE"
+          ? t("trial.sealedUnreadable")
+          : t("trial.sealedNoAnswer"),
+      );
+      recordAttribution(attribution, "wizard.sealedDemo.enter");
       setSealedDemoDetail(
         error instanceof Error
           ? { message: error.message, name: error.name }
