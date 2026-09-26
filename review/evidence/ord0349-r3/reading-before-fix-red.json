@@ -1,0 +1,32 @@
+{
+ "run_id": "n1r2153448reprobackend",
+ "tree": "702f1e089f8a60337cf186167e03b38124a26da4",
+ "worktree": "D:/moodle/_qoder_n1_ord0349_r3",
+ "target": "e2e/qoder-ord0349-two-legs-two-sentences.spec.ts",
+ "config": "playwright.config.ts",
+ "arm": "repro-backend",
+ "ports": {
+  "frontend": 5100,
+  "backend": null,
+  "note": "this instrument starts vite dev only; no backend is contacted"
+ },
+ "python": "D:/moodle/CityNexus/.venv/Scripts/python.exe",
+ "db": "_n1r2153448reprobackend.db",
+ "db_created": true,
+ "env_keys_dropped_names_only": [
+  "DEEPSEEK_API_KEY",
+  "OPENAI_API_KEY",
+  "WB2API_KEY"
+ ],
+ "exit_code": 1,
+ "verdict": "RED",
+ "counts": {
+  "passed": 5,
+  "failed": 1
+ },
+ "listed_case_count": 0,
+ "started_local": "2026-09-26T15:34:48",
+ "duration_s": 92.174096,
+ "log": "D:/moodle/_qoder_n1_ord0349_r3/review/evidence/arm-repro-backend/n1_repro-backend_702f1e08_153448.log",
+ "log_bytes": 13021
+}

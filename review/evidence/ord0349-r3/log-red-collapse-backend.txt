@@ -1,0 +1,17 @@
+# red-collapse-backend  (extract of the run log n1_red-collapse-backend_e6b29af1_154928.log, stability lines only)
+[2/7] [chromium] › e2e\qoder-ord0349-two-legs-two-sentences.spec.ts:178:1 › the dictionary separates the legs, and neither sentence asserts the other
+  1) [chromium] › e2e\qoder-ord0349-two-legs-two-sentences.spec.ts:178:1 › the dictionary separates the legs, and neither sentence asserts the other 
+    Error: e2e/qoder-ord0349-two-legs-two-sentences.spec.ts :: sentences — both legs still share one sentence
+        at D:\moodle\_qoder_n1_ord0349_r3\frontend\e2e\qoder-ord0349-two-legs-two-sentences.spec.ts:189:90
+[3/7] [chromium] › e2e\qoder-ord0349-two-legs-two-sentences.spec.ts:204:1 › the shipped classifier tells the legs apart the way the sentence choice now assumes
+[4/7] [chromium] › e2e\qoder-ord0349-two-legs-two-sentences.spec.ts:223:1 › the two legs render as two pictures, and the same sentence renders as one
+  2) [chromium] › e2e\qoder-ord0349-two-legs-two-sentences.spec.ts:223:1 › the two legs render as two pictures, and the same sentence renders as one 
+    Error: e2e/qoder-ord0349-two-legs-two-sentences.spec.ts :: pixels — the two legs still produce the same pixels
+        at D:\moodle\_qoder_n1_ord0349_r3\frontend\e2e\qoder-ord0349-two-legs-two-sentences.spec.ts:241:95
+[5/7] [chromium] › e2e\qoder-ord0349-two-legs-two-sentences.spec.ts:244:1 › the shot is taken from the alert's own box, not from wherever the page happened to scroll
+[6/7] [chromium] › e2e\qoder-ord0349-two-legs-two-sentences.spec.ts:271:1 › the English arm matches the shipped gate's English sentence too
+[7/7] [chromium] › e2e\qoder-ord0349-two-legs-two-sentences.spec.ts:285:1 › ORD-0339's rule still holds on these mounts: no exception words in the DOM
+  2 failed
+    [chromium] › e2e\qoder-ord0349-two-legs-two-sentences.spec.ts:178:1 › the dictionary separates the legs, and neither sentence asserts the other 
+    [chromium] › e2e\qoder-ord0349-two-legs-two-sentences.spec.ts:223:1 › the two legs render as two pictures, and the same sentence renders as one 
+  5 passed (19.5s)

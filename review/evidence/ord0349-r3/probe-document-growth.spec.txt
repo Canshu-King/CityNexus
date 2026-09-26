@@ -1,0 +1,42 @@
+/* LANE N1 PROBE -- archived as evidence, not part of the acceptance suite.
+ * Question: does this instrument's own blanket `position: static` override change the layout it is
+ * trying to photograph?  Read the document height and node count on consecutive animation frames,
+ * with and without the override, on a backend-up page.
+ */
+import { test } from "@playwright/test";
+
+const FREEZE = "*, *::before, *::after { position: static !important; }";
+
+async function setup(page: import("@playwright/test").Page, freeze: boolean) {
+  await page.goto("/?case=answered", { waitUntil: "load" });
+  await page.addScriptTag({ type: "module", url: "/e2e/fixtures/ord0349-sealed-alert-harness.tsx" });
+  await page.waitForSelector('[data-testid="ord0349-case"]');
+  await page.evaluate(() => document.fonts.ready);
+  if (freeze) await page.addStyleTag({ content: FREEZE });
+}
+
+async function frames(page: import("@playwright/test").Page) {
+  return page.evaluate(async () => {
+    const out: any[] = [];
+    for (let i = 0; i < 12; i += 1) {
+      const el = document.querySelector('[data-testid="trial-sealed-unavailable"]') as HTMLElement | null;
+      const b = el ? el.getBoundingClientRect() : null;
+      out.push({
+        h: Math.round(document.documentElement.scrollHeight),
+        nodes: document.querySelectorAll("*").length,
+        alertY: b ? Math.round((b.y + window.scrollY) * 100) / 100 : null,
+      });
+      await new Promise<void>((r) => requestAnimationFrame(() => r()));
+    }
+    return out;
+  });
+}
+
+test("document growth with and without the blanket static override", async ({ page }) => {
+  await setup(page, false);
+  console.log("N1GROWTH no_override=" + JSON.stringify(await frames(page)));
+  await page.close();
+  const page2 = await page.context().newPage();
+  await setup(page2, true);
+  console.log("N1GROWTH with_override=" + JSON.stringify(await frames(page2)));
+});

@@ -1,0 +1,31 @@
+{
+ "run_id": "n1r2154809ownconfig2",
+ "tree": "702f1e089f8a60337cf186167e03b38124a26da4",
+ "worktree": "D:/moodle/_qoder_n1_ord0349_r3",
+ "target": "e2e/qoder-ord0349-two-legs-two-sentences.spec.ts",
+ "config": "playwright.ord0349-S1.config.ts",
+ "arm": "own-config2",
+ "ports": {
+  "frontend": 5102,
+  "backend": null,
+  "note": "this instrument starts vite dev only; no backend is contacted"
+ },
+ "python": "D:/moodle/CityNexus/.venv/Scripts/python.exe",
+ "db": "_n1r2154809ownconfig2.db",
+ "db_created": false,
+ "env_keys_dropped_names_only": [
+  "DEEPSEEK_API_KEY",
+  "OPENAI_API_KEY",
+  "WB2API_KEY"
+ ],
+ "exit_code": 0,
+ "verdict": "GREEN",
+ "counts": {
+  "passed": 6
+ },
+ "listed_case_count": 0,
+ "started_local": "2026-09-26T15:48:09",
+ "duration_s": 11.922301,
+ "log": "D:/moodle/_qoder_n1_ord0349_r3/review/evidence/arm-own-config2/n1_own-config2_702f1e08_154809.log",
+ "log_bytes": 3107
+}

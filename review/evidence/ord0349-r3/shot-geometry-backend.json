@@ -1,0 +1,46 @@
+{
+ "answered": {
+  "clip": {
+   "x": 46,
+   "y": 445.765625,
+   "width": 1188,
+   "height": 126.640625
+  },
+  "page": {
+   "x": 46,
+   "y": 1555.765625,
+   "width": 1188,
+   "height": 126.640625
+  },
+  "scroller": {
+   "cls": "cn-onboarding__scroll",
+   "scrollTop": 384,
+   "clientHeight": 608,
+   "scrollHeight": 992
+  },
+  "withinScroller": true,
+  "withinViewport": true
+ },
+ "noAnswer": {
+  "clip": {
+   "x": 46,
+   "y": 445.765625,
+   "width": 1188,
+   "height": 126.640625
+  },
+  "page": {
+   "x": 46,
+   "y": 1555.765625,
+   "width": 1188,
+   "height": 126.640625
+  },
+  "scroller": {
+   "cls": "cn-onboarding__scroll",
+   "scrollTop": 384,
+   "clientHeight": 608,
+   "scrollHeight": 992
+  },
+  "withinScroller": true,
+  "withinViewport": true
+ }
+}

@@ -1,0 +1,32 @@
+{
+ "run_id": "n1r2155130minegates",
+ "tree": "e6b29af100a1151764935c07197aecbb570fe539",
+ "worktree": "D:/moodle/_qoder_n1_ord0349_r3",
+ "target": "e2e/qoder-sealed-failure-speaks-and-offers-retry.spec.ts e2e/qoder-ord0344b-sentence-move-keeps-attribution.spec.ts e2e/qoder-continuation-resume-carries-identity.spec.ts",
+ "config": "playwright.config.ts",
+ "arm": "mine-gates",
+ "ports": {
+  "frontend": 5100,
+  "backend": null,
+  "note": "this instrument starts vite dev only; no backend is contacted"
+ },
+ "python": "D:/moodle/CityNexus/.venv/Scripts/python.exe",
+ "db": "_n1r2155130minegates.db",
+ "db_created": true,
+ "env_keys_dropped_names_only": [
+  "DEEPSEEK_API_KEY",
+  "OPENAI_API_KEY",
+  "WB2API_KEY"
+ ],
+ "exit_code": 1,
+ "verdict": "RED",
+ "counts": {
+  "passed": 9,
+  "failed": 3
+ },
+ "listed_case_count": 0,
+ "started_local": "2026-09-26T15:51:30",
+ "duration_s": 93.834376,
+ "log": "D:/moodle/_qoder_n1_ord0349_r3/review/evidence/arm-mine-gates/n1_mine-gates_e6b29af1_155130.log",
+ "log_bytes": 22252
+}

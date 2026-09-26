@@ -1,0 +1,25 @@
+# repro-backend  (extract of the run log n1_repro-backend_702f1e08_153448.log, stability lines only)
+[2/6] [chromium] › e2e\qoder-ord0349-two-legs-two-sentences.spec.ts:65:1 › the dictionary separates the legs, and neither sentence asserts the other
+[3/6] [chromium] › e2e\qoder-ord0349-two-legs-two-sentences.spec.ts:91:1 › the shipped classifier tells the legs apart the way the sentence choice now assumes
+[4/6] [chromium] › e2e\qoder-ord0349-two-legs-two-sentences.spec.ts:110:1 › the two legs render as two pictures, and the same sentence renders as one
+  1) [chromium] › e2e\qoder-ord0349-two-legs-two-sentences.spec.ts:110:1 › the two legs render as two pictures, and the same sentence renders as one 
+    Test timeout of 60000ms exceeded.
+    Error: locator.screenshot: Test timeout of 60000ms exceeded.
+      - attempting scroll into view action
+        2 × waiting for element to be stable
+          - element is not stable
+        - retrying scroll into view action
+        2 × waiting for element to be stable
+          - element is not stable
+        - retrying scroll into view action
+        39 × waiting for element to be stable
+           - element is not stable
+         - retrying scroll into view action
+        - waiting for element to be stable
+        at sha256OfAlert (D:\moodle\_qoder_n1_ord0349_r3\frontend\e2e\qoder-ord0349-two-legs-two-sentences.spec.ts:47:6)
+        at D:\moodle\_qoder_n1_ord0349_r3\frontend\e2e\qoder-ord0349-two-legs-two-sentences.spec.ts:112:20
+[5/6] [chromium] › e2e\qoder-ord0349-two-legs-two-sentences.spec.ts:131:1 › the English arm matches the shipped gate's English sentence too
+[6/6] [chromium] › e2e\qoder-ord0349-two-legs-two-sentences.spec.ts:145:1 › ORD-0339's rule still holds on these mounts: no exception words in the DOM
+  1 failed
+    [chromium] › e2e\qoder-ord0349-two-legs-two-sentences.spec.ts:110:1 › the two legs render as two pictures, and the same sentence renders as one 
+  5 passed (1.5m)

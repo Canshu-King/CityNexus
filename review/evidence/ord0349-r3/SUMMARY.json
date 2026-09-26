@@ -1,0 +1,82 @@
+{
+ "leg-kinds-backend.json": {
+  "tree": "",
+  "exit_code": null,
+  "counts": null,
+  "arm": null
+ },
+ "pixels-after-fix-backend.json": {
+  "separated": true,
+  "control_stable": true
+ },
+ "pixels-red-collapse.json": {
+  "separated": false,
+  "control_stable": true
+ },
+ "reading-after-fix-backend-rerun.json": {
+  "tree": "702f1e08",
+  "exit_code": 0,
+  "counts": {
+   "passed": 7
+  },
+  "arm": "rerun-backend"
+ },
+ "reading-after-fix-backend.json": {
+  "tree": "702f1e08",
+  "exit_code": 0,
+  "counts": {
+   "passed": 7
+  },
+  "arm": "backend2"
+ },
+ "reading-after-fix-own-config.json": {
+  "tree": "702f1e08",
+  "exit_code": 0,
+  "counts": {
+   "passed": 6
+  },
+  "arm": "own-config2"
+ },
+ "reading-before-fix-red.json": {
+  "tree": "702f1e08",
+  "exit_code": 1,
+  "counts": {
+   "passed": 5,
+   "failed": 1
+  },
+  "arm": "repro-backend"
+ },
+ "reading-red-collapse-backend.json": {
+  "tree": "e6b29af1",
+  "exit_code": 1,
+  "counts": {
+   "passed": 5,
+   "failed": 2
+  },
+  "arm": "red-collapse-backend"
+ },
+ "reading-signed-gates-control-tip.json": {
+  "tree": "824fca39",
+  "exit_code": 1,
+  "counts": {
+   "passed": 9,
+   "failed": 3
+  },
+  "arm": "ctrl-gates"
+ },
+ "reading-signed-gates-my-tree.json": {
+  "tree": "e6b29af1",
+  "exit_code": 1,
+  "counts": {
+   "passed": 9,
+   "failed": 3
+  },
+  "arm": "mine-gates"
+ },
+ "shot-geometry-backend.json": {
+  "tree": "",
+  "exit_code": null,
+  "counts": null,
+  "arm": null
+ }
+}
