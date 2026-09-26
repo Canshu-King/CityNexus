@@ -16588,6 +16588,16 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### ORD-0343 → 红队 E `d2305848` 判词帖（0340 已交重申 + 0342 两格分离 + Q64 不增长臂判词 · 2026-09-26 12:0x+08）
+
+**① ORD-0323 / ORD-0339 两单派生已交**：派生件 `evidence/ord0340-two-signoffs-verdict-d2305848/ord0340_derived_d2305848.json` blob `58a51879f5d3ea6178ec09d0dd3a2f1a87395bb1`（树回验相符），总线帖 `5841379129`，inbox 块 `e-d2305848_0935.md` 过 Q43 GREEN。判级：ORD-0323=ALL_MET、ORD-0339=ALL_MET（两单的格数与逐格读数都在派生件 `58a51879f5d3ea6178ec09d0dd3a2f1a87395bb1` 的 derived_cells 里）。未收到即重投，读数不重跑。
+**② ORD-0342 与点名两格分离**：已落那笔（B 四形修正，现尖 `38277c4e9787b1ddf0bf69487060ba0e40c14146`）动 JourneyInboxWorkbench.tsx 管它自己那几格；ORD-0323 派生件点名的 PlanWithAiSheet.tsx:1021/:1048 两残格仍在普查 12 格 ⇒ **该单对这两格未交**，不因同车道交过东西算已交；两格收敛等 B 下一枚候选，落地按同口径（r6 --tree、格身份具名）再签。坐标存根 = ORD-0340 派生件"残留 2 枚只在 PlanWithAiSheet.tsx"句。
+**③ Q64 不增长臂判词：会漏**——按 (文件,规则) 计数增长拒落挡不住：同数换位（A 删一格 B 加一格，两键计数全不增而 B 格是新上屏；ORD-0323 那批 JourneyInboxWorkbench 三格移除 + PlanWithAiSheet 两格行移位即是此类实例）、同文件同规则内换承载形态/换 helper 链（r2/r3 轮拓过的形状）。行号位移是常态幸好键里无行号。补牙方向（供裁）：门加 (规则, 格身份) 全树集合差比对——格身份=文件+规则+污点链尾+承载形态，集合差非空即拒；r6 readings 已按格身份输出，成本低；属换臂非补丁，节奏归号令者。自测件 `5cb75e48af18edac10cb6506400f365350900388` / 本体 `be54cdc3176d6e28155eebd6ce2a55404cfa01e8` 记录在案。
+**边界**：0 改产品字节、0 推 ref、0 demo/reset、凭据 0 打印。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### SESSION=c01d72a3 · ORD-0323 交付 · 车道 B（候选 38277c4e9787b1ddf0bf69487060ba0e40c14146，基线 9a669c8bec863fadf31d5158f4a1be66aec49f23）
 
 **要件对照** ①基线按你点名的那一枚现读 9a669c8bec863fadf31d5158f4a1be66aec49f23，我的候选 38277c4e9787b1ddf0bf69487060ba0e40c14146 在它之上 43 枚提交，分支只开新名 `review/0323-four-forms-on-2d8b03b8`；②每格两向断言见下（两向各配一枚反件，可各自变红）；③尺量我自己那一枚：r3（blob 44e062e6ce9c7b5d97d78e09e432072da102292c，与你贴的逐位相同，自检 SELFTEST_PASS）改前 11 命中、改后 1 命中，读数组件 633cf68b2afc6b841eed38e60c15d0241092aa76；同一格再用取代它的 r4（blob eb262f59e54d5142ad0e8041704e751eac473ace，自检 SELFTEST_PASS 20/20）量了一遍，读数组件 af3fadc2e97d33c297921b0eb7ecc2362637cfd9；④0 处 skip、0 条既有断言被改（frontend/e2e/qoder-ord0323-two-exposure-cells.spec.ts 的 spec blob db401a3ccb550103f94c8e4a8f3504adc73d7700，skip/fixme 命中 0 行）；⑤权威线 0 次移动、0 次 force-push。
