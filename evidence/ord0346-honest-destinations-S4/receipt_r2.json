@@ -1,0 +1,428 @@
+{
+ "schema": "CNX_CMDR_S4_ORD0346_RECEIPT_V1",
+ "order": "ORD-0346",
+ "lane": "S4-ast-taint (1d64acf5)",
+ "at_local": "2026-09-26T09:10:21+0800",
+ "generation_pinned": "c740f45d68f337c460a1a43b995162689d0110af",
+ "delivered_branch": "review/S4-ord0346-honest-cities",
+ "delivered_commit": "021898bb8d15f0075077a04b87b151b2ee6790a2",
+ "delivered_blobs": {
+  "frontend/e2e/qoder-ord0346-honest-destinations.spec.ts": "4ada377782b73e9ed2571bdd01af03b37738c2f0",
+  "frontend/playwright.ord0346-S4.config.ts": "c1b8d7a9ecf2c541d844228263d5bea093956887",
+  "frontend/src/design-tokens.css": "52dd3cb1ed0b66d8d08e7a97523b779b665b9243",
+  "frontend/src/features/setup/JourneyTrialSetup.tsx": "4821ec238c97dd17e2ad9417cac9a71c4f26caa1"
+ },
+ "change_footprint": {
+  "files": [
+   {
+    "path": "frontend/e2e/qoder-ord0346-honest-destinations.spec.ts",
+    "added_lines": 242,
+    "removed_lines": 0
+   },
+   {
+    "path": "frontend/playwright.ord0346-S4.config.ts",
+    "added_lines": 48,
+    "removed_lines": 0
+   },
+   {
+    "path": "frontend/src/design-tokens.css",
+    "added_lines": 48,
+    "removed_lines": 0
+   },
+   {
+    "path": "frontend/src/features/setup/JourneyTrialSetup.tsx",
+    "added_lines": 237,
+    "removed_lines": 11
+   }
+  ],
+  "total_added_lines": 575,
+  "total_removed_lines": 11
+ },
+ "requirement_1_facts": {
+  "asked": "the screen's data source and every route/field it reads, named to file:line, plus a real reading for the 11-vs-8 difference",
+  "screen_file": "frontend/src/features/setup/JourneyTrialSetup.tsx",
+  "summary_at_line": 677,
+  "first_mention_of_the_panel_name_at_line": 676,
+  "list_rendered_at_lines": [
+   689
+  ],
+  "data_source": "CITY_FACTS at frontend/src/features/setup/JourneyTrialSetup.tsx:105-128",
+  "derived_list": "SUPPORTED_CITIES at frontend/src/features/setup/JourneyTrialSetup.tsx:163",
+  "routes_read_before_this_change": [],
+  "server_vocabulary_table": "backend/app/main.py:10669-10686",
+  "capability_route": "backend/app/main.py:2908 GET /api/v1/destinations/capability -> evaluate_capability",
+  "identity_field": "canonical_destination_id (backend/app/anywhere_capability.py:344-357 identity_fields)",
+  "resolver_seam": "CITYNEXUS_ANYWHERE_RESOLVER, off by default (backend/app/anywhere_capability.py:205-206)",
+  "advertised_spellings_zh": [
+   "厦门",
+   "北京",
+   "上海",
+   "天津",
+   "福州",
+   "广州",
+   "深圳",
+   "成都",
+   "杭州",
+   "东京",
+   "新加坡"
+  ],
+  "advertised_count": 11,
+  "backend_vocabulary_count": 16,
+  "in_both": [
+   "上海",
+   "北京",
+   "厦门",
+   "天津",
+   "广州",
+   "成都",
+   "杭州",
+   "深圳"
+  ],
+  "in_both_count": 8,
+  "advertised_but_absent_from_the_backend_vocabulary": [
+   "东京",
+   "新加坡",
+   "福州"
+  ],
+  "in_the_backend_vocabulary_but_not_advertised": [
+   "三亚",
+   "南京",
+   "昆明",
+   "武汉",
+   "苏州",
+   "西安",
+   "重庆",
+   "青岛"
+  ],
+  "server_named": [
+   "厦门",
+   "北京",
+   "上海",
+   "天津",
+   "广州",
+   "深圳",
+   "成都",
+   "杭州"
+  ],
+  "server_unnamed": [
+   "福州",
+   "东京",
+   "新加坡"
+  ],
+  "capability_READY": [],
+  "reading_artifact": "capability_reading_r1.json",
+  "fact_sheet_artifact": "fact_sheet_r2.json",
+  "verdict_derivation": {
+   "advertised_minus_absent_equals_intersection": true,
+   "the_server_agrees_with_the_vocabulary_intersection": true,
+   "the_unnamed_are_exactly_the_absent": true,
+   "the_screen_read_no_route_at_all": true,
+   "the_control_and_the_list_are_named_to_lines": true
+  },
+  "verdict": "MET"
+ },
+ "requirement_2_three_groups": {
+  "asked": "group the screen by server capability, existing vocabulary only, no new word list",
+  "groups_rendered": [
+   "supported",
+   "needs_lookup",
+   "unknown"
+  ],
+  "group_titles": {
+   "supported": "已支持：服务器认得它，而且目录里有东西",
+   "needs_lookup": "需联网才能解析：服务器现在认不出这个名字",
+   "unknown": "未知或无数据：这一轮拿不出可规划的判定"
+  },
+  "group_rules_printed_on_screen": {
+   "supported": "READY / 有 canonical 身份且有目录行",
+   "needs_lookup": "NO_CANONICAL_IDENTITY",
+   "unknown": "HYDRATABLE 无目录行 / UNKNOWN_RETRYABLE / 没读到"
+  },
+  "membership": {
+   "北京": "supported",
+   "福州": "needs_lookup",
+   "东京": "needs_lookup",
+   "新加坡": "needs_lookup",
+   "厦门": "unknown",
+   "上海": "unknown",
+   "天津": "unknown",
+   "广州": "unknown",
+   "深圳": "unknown",
+   "成都": "unknown",
+   "杭州": "unknown"
+  },
+  "counts_per_group": {
+   "supported": 1,
+   "needs_lookup": 3,
+   "unknown": 7
+  },
+  "server_tokens_used_on_screen": [
+   "CHOOSE_ANOTHER_DESTINATION",
+   "COVERAGE_INCOMPLETE",
+   "HYDRATABLE",
+   "NO_CANONICAL_IDENTITY",
+   "START_HYDRATION",
+   "UNAVAILABLE"
+  ],
+  "tokens_the_route_never_emits": [],
+  "tokens_the_route_may_emit": [
+   "ACCEPT_PARTIAL_PLAN",
+   "CATALOG_CURRENT",
+   "CATALOG_STALE",
+   "CHOOSE_ANOTHER_DESTINATION",
+   "COVERAGE_INCOMPLETE",
+   "DESTINATION_AMBIGUOUS",
+   "DESTINATION_RESOLVER_UNAVAILABLE",
+   "HYDRATABLE",
+   "MISSING",
+   "NO_CANONICAL_IDENTITY",
+   "PARTIAL",
+   "READY",
+   "RETRY_LATER",
+   "START_HYDRATION",
+   "UNAVAILABLE",
+   "UNKNOWN_RETRYABLE"
+  ],
+  "verdict_derivation": {
+   "three_groups_in_the_named_order": true,
+   "every_offered_name_is_placed": true,
+   "each_group_names_its_own_rule_on_screen": true,
+   "no_new_word_list": true,
+   "all_three_groups_are_populated_or_say_so": true
+  },
+  "judgement_call_for_the_commander": "「已支持」is implemented as the server's READY verdict, or a canonical identity with catalogue rows behind it; with the shipped demo seed that is 北京, and the seven vocabulary-only names fall to 未知或无数据.  A READY-only reading of the same heading is measured too: capability_READY is [], so under that rule the first group would print 「这一轮没有名字落在这一组。」.  Every row carries the server's own token beside it, so the heading is checkable name by name.",
+  "verdict": "MET"
+ },
+ "requirement_3_identity_column": {
+  "asked": "no unresolved:<hash>-shaped placeholder in the identity column; a named 还没有身份 instead",
+  "server_identity_values_seen": [
+   "CN-BEIJING",
+   "CN-CHENGDU",
+   "CN-GUANGZHOU",
+   "CN-HANGZHOU",
+   "CN-SHANGHAI",
+   "CN-SHENZHEN",
+   "CN-TIANJIN",
+   "CN-XIAMEN",
+   "None"
+  ],
+  "server_pending_key_values_seen": [
+   "None"
+  ],
+  "placeholder_shaped_values_anywhere_in_the_answers": [
+   "pending-request-v1"
+  ],
+  "at_paths": [
+   ".namespace"
+  ],
+  "identity_fields_holding_a_placeholder": [],
+  "identity_attributes_on_screen": [
+   "CN-BEIJING",
+   "CN-CHENGDU",
+   "CN-GUANGZHOU",
+   "CN-HANGZHOU",
+   "CN-SHANGHAI",
+   "CN-SHENZHEN",
+   "CN-TIANJIN",
+   "CN-XIAMEN",
+   "None"
+  ],
+  "unnamed_rows_identity_text": [
+   "还没有身份"
+  ],
+  "placeholder_shaped_attributes_on_screen": [],
+  "verdict_derivation": {
+   "no_identity_field_carried_a_placeholder_shape": true,
+   "every_unnamed_row_says_the_one_named_words": true,
+   "nothing_placeholder_shaped_reached_the_dom": true,
+   "a_read_that_never_landed_claims_no_identity": true
+  },
+  "found_but_not_mine": "frontend/src/app/V8Experience.tsx:2651 writes data-place-id={row.placeId ?? \"unresolved\"} on the hub's dropped-candidate row: the same placeholder shape in a machine-readable identity slot, on a screen this order does not cover, in a file lane D last edited at c1bea4c2 and where the Q64/Q67 split is still open. Reported for a ruling; not changed here.",
+  "verdict": "MET"
+ },
+ "requirement_4_two_way_readings": {
+  "asked": "one genuinely supported city and one unsupported city, each verified in both directions",
+  "supported_leg": {
+   "name": "北京",
+   "group": "supported",
+   "identity": "CN-BEIJING",
+   "server_fields": "HYDRATABLE · COVERAGE_INCOMPLETE · START_HYDRATION",
+   "verdict_line": "服务器认得它，目录里有 8 条，还缺 2 类事实"
+  },
+  "unsupported_leg": {
+   "name": "东京",
+   "group": "needs_lookup",
+   "identity_attribute": null,
+   "identity_line": "还没有身份",
+   "server_fields": "UNAVAILABLE · NO_CANONICAL_IDENTITY · CHOOSE_ANOTHER_DESTINATION"
+  },
+  "middle_case": {
+   "name": "厦门",
+   "group": "unknown",
+   "identity_line": "服务器给了身份",
+   "verdict_line": "服务器认得它，目录里有 0 条，还缺 6 类事实"
+  },
+  "english_membership": {
+   "Beijing": "supported",
+   "Fuzhou": "needs_lookup",
+   "Tokyo": "needs_lookup",
+   "Singapore": "needs_lookup",
+   "Xiamen": "unknown",
+   "Shanghai": "unknown",
+   "Tianjin": "unknown",
+   "Guangzhou": "unknown",
+   "Shenzhen": "unknown",
+   "Chengdu": "unknown",
+   "Hangzhou": "unknown"
+  },
+  "before_panel_text": "看支持的目的地 厦门 北京 上海 天津 福州 广州 深圳 成都 杭州 东京 新加坡",
+  "after_panel_text_head": "看支持的目的地 已支持：服务器认得它，而且目录里有东西 READY / 有 canonical 身份且有目录行 这一轮没有名字落在这一组。 需联网才能解析：服务器现在认不出这个名字 NO_CANONICAL_IDENTITY 这一轮没有名字落在这一组。 未知或无数据：这一轮拿不出可规划的判定 HYDRATABLE 无目录行 / UNKNOWN_RETRYABLE / 没读到 厦门 身份还没读到 还没问过服务器 not-asked 北京 身份还没读到 还没问过服务器 not-a",
+  "negative_control_reads_that_never_landed": {
+   "rows": 11,
+   "claiming_an_answer": 0,
+   "placed_in_supported": [],
+   "supported_group_says": "这一轮没有名字落在这一组。",
+   "device_cause_shown": [
+    "NETWORK_UNAVAILABLE"
+   ]
+  },
+  "verdict_derivation": {
+   "the_supported_city_is_not_listed_as_unknown": true,
+   "the_supported_city_identity_is_the_servers_own": true,
+   "the_unsupported_city_cannot_claim_supported": true,
+   "the_unsupported_city_is_where_the_server_puts_it": true,
+   "the_supported_group_does_not_contain_the_unsupported_name": true,
+   "english_and_chinese_partition_the_same_way": true,
+   "a_failed_read_places_nothing_in_the_supported_group": true,
+   "the_before_state_carried_no_server_word": true
+  },
+  "verdict": "MET"
+ },
+ "requirement_5_isolation": {
+  "asked": "no demo/reset, no _live.db / _preview.db, own port and own sqlite",
+  "database_url_named_by_this_lane": "sqlite:///D:/moodle/_qoder_lane_S4_0926/work/ord0346/ord0346_S4_r1.db",
+  "how_the_data_got_there": "`app.services.seed_demo(session)` called once in this lane's own process against a file that did not exist before it (db_setup_r1.py), plus one instrument marker row (db_marker_r1.py). `POST /api/v1/demo/reset` was never called; the server served that same lane-owned file, and no shared store was opened anywhere in this order.",
+  "reading_port": 8846,
+  "e2e_backend_port": 8851,
+  "e2e_frontend_port": 4196,
+  "resolver_seam": "off",
+  "photon_tripwire": "http://127.0.0.1:9",
+  "store_identity_probe": {
+   "marker_status": 200,
+   "marker_rows": 1,
+   "marker_ids_returned": [
+    "cbfab803-f3ea-4b3d-a1fc-070aa85c0840"
+   ],
+   "marker_id_expected": "cbfab803-f3ea-4b3d-a1fc-070aa85c0840",
+   "marker_name_in_body": true,
+   "absent_status": 200,
+   "absent_rows": 0
+  },
+  "launcher_process_id": 22492,
+  "listener_process_id": 53164,
+  "listener_parent_process_id": "22492",
+  "listener_command_line": "\"C:\\Users\\������\\AppData\\Roaming\\uv\\python\\cpython-3.12.14-windows-x86_64-none\\python.exe\" -X utf8 -m uvicorn app.main:app --host 127.0.0.1 --port 8846 --log-level info",
+  "e2e_listener_after_teardown": null,
+  "e2e_store_identity": {
+   "marker_rows": 1,
+   "marker_id_expected": "cbfab803-f3ea-4b3d-a1fc-070aa85c0840",
+   "marker_id_returned": [
+    "cbfab803-f3ea-4b3d-a1fc-070aa85c0840"
+   ],
+   "absent_rows": 0
+  },
+  "shared_stores_touched": [],
+  "demo_reset_called": false,
+  "e2e_guard_refusal_kept_not_worked_around": "e2e_guard_refusal_r1.txt",
+  "verdict_derivation": {
+   "the_database_is_inside_this_lane's_directory": true,
+   "no_shared_store_is_named_in_the_reading": true,
+   "the_listener_was_reading_this_lanes_file": true,
+   "an_absent_code_returned_nothing": true,
+   "the_e2e_run_proved_the_same_way": true,
+   "no_borrowed_port_appears": true,
+   "the_backend_was_gone_after_teardown": true,
+   "the_listener_was_this_runs_child": true
+  },
+  "verdict": "MET"
+ },
+ "ruler_gate_r6": {
+  "instrument": "D:/moodle/_qoder_lane_S4_0926/work/ui_exposure_taint_ast_r3.cjs",
+  "instrument_bytes": 101413,
+  "instrument_blob": "6a251d3a6bea70329e06581384a81d5ef54c96a6",
+  "instrument_sha1_of_bytes_not_a_blob": "62411651d95a0897068af88e4aee9d54ee0af999",
+  "per_file_before": {
+   "cells": [],
+   "scope": "per-file: no module graph is built here (--file / --ref --path)"
+  },
+  "per_file_after": {
+   "cells": [],
+   "scope": "per-file: no module graph is built here (--file / --ref --path)"
+  },
+  "instrument_alive_in_the_same_run": {
+   "cells": [
+    "UPSTREAM_EXCEPTION_TO_DOM@DestinationPreparationPanel.tsx:346",
+    "UPSTREAM_EXCEPTION_TO_DOM@DestinationPreparationPanel.tsx:469",
+    "UPSTREAM_EXCEPTION_TO_DOM@DestinationPreparationPanel.tsx:522"
+   ],
+   "files_scanned": 2,
+   "targets": [
+    "JourneyTrialSetup.tsx",
+    "DestinationPreparationPanel.tsx"
+   ]
+  },
+  "module_graph_before_cells": 21,
+  "module_graph_after_cells": 21,
+  "module_graph_only_after": [],
+  "module_graph_only_before": [],
+  "scope_note": "a per-file count is neither an upper nor a lower bound on --tree: a call into an imported helper is opaque, so a value the helper actually returns as device wording is still reported here (over-report); and poison that arrives through an import has no edge to follow, so the screen reads clean here (under-report). Both directions are pinned by selftest arms F and G, and the split measured on generation 821a0eb54cca1b305a4aa75c1ca8d46a95d51bba is 1 cell only per-file, 3 cells only in --tree.",
+  "verdict_derivation": {
+   "per_file_added_no_cell": true,
+   "graph_added_no_cell": true,
+   "graph_lost_no_cell": true,
+   "the_control_run_still_reports_cells": true
+  },
+  "verdict": "MET"
+ },
+ "gates_run_on_the_delivered_bytes": {
+  "typecheck_check": "exit 0 (node node_modules/typescript/bin/tsc -p tsconfig.check.json --noEmit)",
+  "typecheck_all": "exit 0 (node node_modules/typescript/bin/tsc -p tsconfig.typecheck.json --noEmit)",
+  "playwright_specs_in_the_run": 8,
+  "playwright_stats": {
+   "startTime": "2026-09-26T00:56:38.251Z",
+   "duration": 9269.667000000001,
+   "expected": 8,
+   "skipped": 0,
+   "unexpected": 0,
+   "flaky": 0
+  },
+  "this_order's_spec": "frontend/e2e/qoder-ord0346-honest-destinations.spec.ts (3 arms)",
+  "existing_wizard_gates_re_run": [
+   "e2e/qoder-wizard-city-copy.spec.ts (ORD-0060, 3 tests)",
+   "e2e/qoder-wizard-advanced-is-tappable.spec.ts (ORD-0261/ORD-0264, 2 tests)"
+  ],
+  "lane_config": "frontend/playwright.ord0346-S4.config.ts"
+ },
+ "self_faults_and_corrections": [
+  "fact sheet r1 named the panel's control at the line where the *warning sentence* mentions it (the two are one line apart, and r1 took the first match of the name). r2 separates summary_at_line from first_mention_of_the_panel_name; r1 stays on the shelf, unmodified.",
+  "the receipt's first build printed NOT_MET for two requirements because two of its own derivations were written wrong, not because the screen failed: one looked a group key up in a spelling-keyed map (so it could never be true), and the other compared the English partition to the Chinese one without translating the names across. Both are fixed here and the broken first build was not overwritten.",
+  "the identity-column structural check first carried a bare `sha` alternative, which matched CN-SHANGHAI and reddened a valid identity: the instrument was wrong, not the product. Fixed in the spec (the digest words are now named in full); the failing first run is left in the evidence rather than hidden.",
+  "the first attempt at the reading set CITYNEXUS_E2E_RUN_ID, and the product's own guard (`backend/app/db/session.py:21-45`) refused to boot an identified run on a database that already existed. The refusal is published as e2e_guard_refusal_r1.txt; the store is identified by the marker-row probe instead.",
+  "db_marker_r1.py first called secrets.uuid4(), which does not exist; it failed before writing anything and was rerun with uuid.uuid4()."
+ ],
+ "not_measured": [
+  "the phone itself: every reading here is on loopback at 390x844 emulation. Functional readings are valid there; latency readings are not, and no latency number is claimed.",
+  "a partial read (some names answered, some not): the code merges per name and the arms cover all-answered and none-answered only."
+ ],
+ "claim_kind": "reading_determined",
+ "claimed_result": "branch review/S4-ord0346-honest-cities @ 021898bb: panel groups 1/3/7 (supported/needs_lookup/unknown); the server named 8 of the 11 advertised names, 3 unnamed, 0 READY; ruler r6 added 0 cells per-file and 0 in module-graph mode; requirements {\"requirement_1_facts\": \"MET\", \"requirement_2_three_groups\": \"MET\", \"requirement_3_identity_column\": \"MET\", \"requirement_4_two_way_readings\": \"MET\", \"requirement_5_isolation\": \"MET\", \"ruler_gate_r6\": \"MET\"}",
+ "derived_result": null,
+ "requirements": {
+  "requirement_1_facts": "MET",
+  "requirement_2_three_groups": "MET",
+  "requirement_3_identity_column": "MET",
+  "requirement_4_two_way_readings": "MET",
+  "requirement_5_isolation": "MET",
+  "ruler_gate_r6": "MET"
+ }
+}
