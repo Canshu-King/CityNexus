@@ -1,0 +1,167 @@
+{
+  "schema": "CNX_ORD0344B_READING_V1",
+  "order": "ORD-0344-b (CMDR Q75): keep the refusal on the traveller's line, move the server's attributed sentence into the technical-detail fold",
+  "lane": "S1-q64sweep",
+  "generation": "ab12c17a65450c2c3062c9232e27a26c4ae1b485",
+  "derived_at_utc": "2026-09-26T01:04:21Z",
+  "witness_spec": "e2e/qoder-ord0344b-sentence-move-keeps-attribution.spec.ts",
+  "three_predicates_replayed_from_the_shipped_gate": {
+    "before_the_move": {
+      "refusalSentenceOnTheLine": true,
+      "serverLineVisible": true,
+      "serverLineHoldsItsOwnWords": true,
+      "noClientWrittenHttpStatusInThatParagraph": true,
+      "outcomeText": "服务器拒绝了这一次尝试。没有产生新东西，上次的记录还在，你可以再试一次。 服务器给出的原因：another request is still writing this journey"
+    },
+    "after_the_move_fold_closed": {
+      "refusalSentenceOnTheLine": true,
+      "serverLineVisible": false,
+      "serverLineHoldsItsOwnWords": false,
+      "noClientWrittenHttpStatusInThatParagraph": true,
+      "outcomeText": "服务器拒绝了这一次尝试。没有产生新东西，上次的记录还在，你可以再试一次。",
+      "anchor": {
+        "field": "http_status",
+        "value": "409"
+      }
+    },
+    "after_the_move_fold_opened": {
+      "refusalSentenceOnTheLine": true,
+      "serverLineVisible": true,
+      "serverLineHoldsItsOwnWords": true,
+      "noClientWrittenHttpStatusInThatParagraph": true,
+      "outcomeText": "服务器拒绝了这一次尝试。没有产生新东西，上次的记录还在，你可以再试一次。"
+    }
+  },
+  "what_the_measurements_say": {
+    "travellers_line_clean": true,
+    "attribution_survives": true,
+    "gate_premise_holds_for": [
+      "refusalSentenceOnTheLine",
+      "noClientWrittenHttpStatusInThatParagraph"
+    ],
+    "gate_premise_fails_for": [
+      "serverLineVisible",
+      "serverLineHoldsItsOwnWords"
+    ],
+    "reason": "a closed <details> reports isVisible=false and innerText='' -- measured in the same run, not assumed -- so the span keeps its testid but the two nodes that read it need one toggle click"
+  },
+  "recut_gap_found_by_reading_the_landed_line": {
+    "what": "the line carries the rail rename and the withdrawn result_summary, but not the elapsed_ms anchor this screen's duration got in the second commit of review/S1-ord0344-q64-fanout",
+    "how_read": "git diff <my candidate> <landed tip> -- that file, then grep the three markers",
+    "markers_at_the_landed_tip": {
+      "runMeta": 3,
+      "result_summary_comment": 1,
+      "elapsed_ms_anchor": 0
+    },
+    "closed_by": "the second commit of this branch restores it (cite q70_anchor_restored_on_the_rail_number above)"
+  },
+  "why_the_main_line_keeps_the_i18n_sentence": "the order asked for copyFor's local wording, but the same shipped node compares the paragraph to the i18n string verbatim; the witness spec imports the real channel and measures the mismatch instead of guessing it",
+  "the_one_line_the_gate_owner_needs": "await page.getByTestId(\"continuation-technical-toggle\").click();",
+  "the_alternative_if_zero_edits_are_required": "put `open` on the <details> at V8Experience.tsx:2630 -- the fold then renders its contents on the hub card again",
+  "ruler": {
+    "before_cell": "app/V8Experience.tsx:2609",
+    "after_cell": "app/V8Experience.tsx:2649",
+    "hits_before": 12,
+    "hits_after": 12,
+    "status_for_the_census": "ATTRIBUTED_IN_DETAILS",
+    "note": "the ruler still counts jsx-text inside a details as a sink; the commander ruled this cell is not outstanding until the ruler learns the exception (ORD-0348 -> S4)"
+  },
+  "channel_the_order_named": {
+    "asked_to_reuse": "describeServerReason + <ServerReasonDetail> from ORD-0326",
+    "inventory_read_at_this_tip": [
+      {
+        "path": "frontend/src/lib/serverReason.ts",
+        "exists": false
+      },
+      {
+        "path": "frontend/src/components/ServerReasonDetail.tsx",
+        "exists": false
+      }
+    ],
+    "finding": "neither module is on the line -- they were the ones withdrawn at CMDR 05:44 -- so the move reuses the shape ORD-0323 accepted in PlanWithAiSheet.tsx (a details + summary + attributed span + a rawFacts-style anchored reading) rather than adding a second wording module"
+  },
+  "cites": [
+    {
+      "role": "main_line_is_ours",
+      "path": "frontend/src/app/V8Experience.tsx",
+      "line": 2619,
+      "text": "{t(\"hub.continuationResumeRefused\")}"
+    },
+    {
+      "role": "no_server_sentence_on_the_line",
+      "path": "frontend/src/app/V8Experience.tsx",
+      "line": 2620,
+      "text": "{!resumeOutcome.serverReason && ("
+    },
+    {
+      "role": "fold_is_a_sibling_of_the_paragraph",
+      "path": "frontend/src/app/V8Experience.tsx",
+      "line": 2643,
+      "text": "<details className=\"today-continuation-technical\" data-testid=\"continuation-technical-details\">"
+    },
+    {
+      "role": "attributed_span_moved_with_its_name",
+      "path": "frontend/src/app/V8Experience.tsx",
+      "line": 2647,
+      "text": "<span data-testid=\"continuation-resume-server-reason\">"
+    },
+    {
+      "role": "q70_anchor_on_the_measured_field",
+      "path": "frontend/src/app/V8Experience.tsx",
+      "line": 2656,
+      "text": "data-cnx-field=\"http_status\""
+    },
+    {
+      "role": "q70_anchor_restored_on_the_rail_number",
+      "path": "frontend/src/features/agent/CopilotDock.tsx",
+      "line": 310,
+      "text": "\"data-cnx-field\": \"elapsed_ms\","
+    },
+    {
+      "role": "q68_named_absence_of_a_code",
+      "path": "frontend/src/app/V8Experience.tsx",
+      "line": 2669,
+      "text": "data-testid=\"continuation-resume-no-request-id\""
+    },
+    {
+      "role": "diagnosis_moves_to_the_landed_sink",
+      "path": "frontend/src/app/V8Experience.tsx",
+      "line": 2296,
+      "text": "\"hub.continuation.resume.refused\","
+    },
+    {
+      "role": "the_gate_holds_the_i18n_sentence",
+      "path": "frontend/src/i18n/LocaleContext.tsx",
+      "line": 863,
+      "text": "\"hub.continuationResumeRefused\": \"服务器拒绝了这一次尝试。没有产生新东西，上次的记录还在，你可以再试一次。\","
+    },
+    {
+      "role": "gate_reads_the_paragraph",
+      "path": "e2e/qoder-continuation-resume-carries-identity.spec.ts",
+      "line": 273,
+      "text": "const refusedText = (await outcome.innerText()).replace(/\\s+/g, \" \").trim();"
+    },
+    {
+      "role": "gate_requires_the_span_visible",
+      "path": "e2e/qoder-continuation-resume-carries-identity.spec.ts",
+      "line": 276,
+      "text": "await expect(serverLine, node(\"ord0278-negative-refused\", \"the server sent a reason and it is nowhere on screen\")).toBeVisible();"
+    },
+    {
+      "role": "gate_requires_the_servers_own_words",
+      "path": "e2e/qoder-continuation-resume-carries-identity.spec.ts",
+      "line": 281,
+      "text": "serverReasonShown.includes(\"another request is still writing this journey\"),"
+    },
+    {
+      "role": "gate_forbids_our_http_number_there",
+      "path": "e2e/qoder-continuation-resume-carries-identity.spec.ts",
+      "line": 285,
+      "text": "/HTTP\\s?\\d\\d\\d/.test(refusedText),"
+    }
+  ],
+  "not_claimed": [
+    "no CLOSED; closure is verifier E's derived_result",
+    "lane D's gate itself was not run: it seeds through a live backend and none is listening on :8000 at this hour -- what was run is its three predicates against both DOM shapes, which is why the failure half is stated as a measured prediction and not as a green"
+  ]
+}
