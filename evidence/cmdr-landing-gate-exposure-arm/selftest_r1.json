@@ -1,0 +1,79 @@
+{
+ "DISCOVERY_attribute_blind_spot": {
+  "status": "MEASURED",
+  "commit": "7c0d21b7cbe968378d964e2dde856274fca7da86",
+  "cells_before": 12,
+  "cells_after": 12,
+  "added": [],
+  "ruler_can_see_attribute_position": false
+ },
+ "shift_fixture": {
+  "commit": "7bc398752e81cf6d937b16dcd03faeaf35a4e1dc",
+  "line_exact_added": [
+   "PlanWithAiSheet.tsx:1019|UPSTREAM_TEXT_VIA_HELPER_TO_DOM",
+   "PlanWithAiSheet.tsx:1046|UPSTREAM_TEXT_VIA_HELPER_TO_DOM"
+  ],
+  "growth": {}
+ },
+ "tool": "preflight_and_land_r1.py --exposure-arm",
+ "ruler_file": "ui_exposure_taint_ast_r3.cjs",
+ "ruler_blob_claimed": "6a251d3a6bea70329e06581384a81d5ef54c96a6",
+ "ruler_blob_actual": "6a251d3a6bea70329e06581384a81d5ef54c96a6",
+ "tip": "2d8b03b8c7734ea3b8521b80845e1b0bc1a07957",
+ "poison_commit": "5ae77791c7a7958d5212d35c877309097da2961f",
+ "poison_tree": "6c5513421119d83b9593724d03c0b73b7a3bc4dc",
+ "victim": "frontend/src/components/ProductErrorBoundary.tsx",
+ "tip_cells": 12,
+ "poison_cells": 14,
+ "added": [
+  "ProductErrorBoundary.tsx:104|UPSTREAM_EXCEPTION_TO_DOM",
+  "ProductErrorBoundary.tsx:105|UPSTREAM_EXCEPTION_TO_DOM"
+ ],
+ "removed": [],
+ "checks": [
+  {
+   "arm": "tip baseline is not empty (a zero-cell line would make any add/removal test vacuous)",
+   "holds": true,
+   "reading": "12 cells on the line"
+  },
+  {
+   "arm": "poison ADDS a cell the line already banned (arm has teeth)",
+   "holds": true,
+   "reading": "added=['ProductErrorBoundary.tsx:104|UPSTREAM_EXCEPTION_TO_DOM', 'ProductErrorBoundary.tsx:105|UPSTREAM_EXCEPTION_TO_DOM']"
+  },
+  {
+   "arm": "poison does not silently remove anything",
+   "holds": true,
+   "reading": "removed=[]"
+  },
+  {
+   "arm": "the added cell is the same file I poisoned",
+   "holds": true,
+   "reading": "poison blob round-trips"
+  },
+  {
+   "arm": "re-running the ruler on the tip is stable (instrument determinism)",
+   "holds": true,
+   "reading": "12 cells, same set"
+  },
+  {
+   "arm": "arm is silent when candidate == tip (no self-flagging)",
+   "holds": true,
+   "reading": "delta empty"
+  },
+  {
+   "arm": "shift-only fixture is NOT refused (line moves are not new exposure)",
+   "holds": true,
+   "reading": "line-exact added=['PlanWithAiSheet.tsx:1019|UPSTREAM_TEXT_VIA_HELPER_TO_DOM', 'PlanWithAiSheet.tsx:1046|UPSTREAM_TEXT_VIA_HELPER_TO_DOM'] growth={}"
+  },
+  {
+   "arm": "the ruler the door runs == the published r6 blob",
+   "holds": true,
+   "reading": "6a251d3a6bea vs 6a251d3a6bea"
+  }
+ ],
+ "ruler_blob_matches_published": true,
+ "n_checks": 8,
+ "n_holds": 8,
+ "all_holds": true
+}
