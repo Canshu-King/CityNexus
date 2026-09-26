@@ -1,0 +1,108 @@
+{
+ "pushed": [
+  {
+   "remote": "evidence/hjp3-d3j0mgvR-walk-0926/ledger_inbox_proof_r7_q43r4d.json",
+   "local": "D:/moodle/_hjp3_d3j0_0926/ledger_inbox_proof_r7.json",
+   "rc": 0,
+   "at": "19:06:43",
+   "blob_on_branch": "a9756b08db7d444a7decf50c082134377b166328",
+   "local_bytes_now": 622,
+   "local_matches_branch_bytes": true
+  },
+  {
+   "remote": "evidence/hjp3-d3j0mgvR-walk-0926/r7_hex_preflight.json",
+   "local": "D:/moodle/_hjp3_d3j0_0926/r7_hex_preflight.json",
+   "rc": 0,
+   "at": "19:06:46",
+   "blob_on_branch": "2d59a0bf931c39c8c40731701ae5b51509782683",
+   "local_bytes_now": 1600,
+   "local_matches_branch_bytes": true
+  },
+  {
+   "remote": "evidence/hjp3-d3j0mgvR-walk-0926/instruments/r7_hex_preflight.py",
+   "local": "D:/moodle/HJ-P3_evidence/r7_hex_preflight.py",
+   "rc": 0,
+   "at": "19:06:49",
+   "blob_on_branch": "45bf2854fe90f6962332b52f37df1b5ee3d23c67",
+   "local_bytes_now": 2261,
+   "local_matches_branch_bytes": true
+  },
+  {
+   "remote": "evidence/hjp3-d3j0mgvR-walk-0926/write_ledger_r7.json",
+   "local": "D:/moodle/_hjp3_d3j0_0926/write_ledger_r7.json",
+   "rc": 0,
+   "at": "19:06:56",
+   "blob_on_branch": "5e3495a9e59dab58b4856de51f232862e8c63742",
+   "local_bytes_now": 3738,
+   "local_matches_branch_bytes": true
+  },
+  {
+   "remote": "evidence/hjp3-d3j0mgvR-walk-0926/instruments/r7_write_ledger.py",
+   "local": "D:/moodle/HJ-P3_evidence/r7_write_ledger.py",
+   "rc": 0,
+   "at": "19:07:04",
+   "blob_on_branch": "5a4c8731efabd1f96a33c25c79c20d10e710e724",
+   "local_bytes_now": 3917,
+   "local_matches_branch_bytes": true
+  },
+  {
+   "remote": "evidence/hjp3-d3j0mgvR-walk-0926/instruments/r7_block.py",
+   "local": "D:/moodle/HJ-P3_evidence/r7_block.py",
+   "rc": 0,
+   "at": "19:07:14",
+   "blob_on_branch": "0815c1afd3a81cb2796e8a1417552d7129a25663",
+   "local_bytes_now": 17614,
+   "local_matches_branch_bytes": true
+  },
+  {
+   "remote": "evidence/hjp3-d3j0mgvR-walk-0926/instruments/r7_bus.py",
+   "local": "D:/moodle/HJ-P3_evidence/r7_bus.py",
+   "rc": 0,
+   "at": "19:07:23",
+   "blob_on_branch": "95fbebcb81703cc4aea9d18dd76d73777bd99e20",
+   "local_bytes_now": 11400,
+   "local_matches_branch_bytes": true
+  },
+  {
+   "remote": "evidence/hjp3-d3j0mgvR-walk-0926/r7_bus_note.md",
+   "local": "D:/moodle/_hjp3_d3j0_0926/r7_bus_note.md",
+   "rc": 0,
+   "at": "19:07:32",
+   "blob_on_branch": "cf49ada9dd72b07c79d90b3e756efa09f1ec5abd",
+   "local_bytes_now": 5153,
+   "local_matches_branch_bytes": true
+  },
+  {
+   "remote": "evidence/hjp3-d3j0mgvR-walk-0926/r7_bus_note_readback.json",
+   "local": "D:/moodle/_hjp3_d3j0_0926/r7_bus_note_readback.json",
+   "rc": 0,
+   "at": "19:07:40",
+   "blob_on_branch": "5871ba13b61527c86394f27237ab8563aa5ebb60",
+   "local_bytes_now": 405,
+   "local_matches_branch_bytes": true
+  },
+  {
+   "remote": "evidence/hjp3-d3j0mgvR-walk-0926/ship_result_r7.json",
+   "local": "D:/moodle/_hjp3_d3j0_0926/ship_result_r7.json",
+   "rc": 0,
+   "at": "19:07:48",
+   "blob_on_branch": "cc4ffd3f8a38b891aced40c2a1e60d328a6ad7a6",
+   "local_bytes_now": 6744,
+   "local_matches_branch_bytes": true
+  },
+  {
+   "remote": "evidence/hjp3-d3j0mgvR-walk-0926/ship_result_r7b.json",
+   "local": "D:/moodle/_hjp3_d3j0_0926/ship_result_r7b.json",
+   "rc": 0,
+   "at": "19:07:57",
+   "blob_on_branch": "0c320c07e60c95f5f12b4aa597576bdf55f98a78",
+   "local_bytes_now": 4557,
+   "local_matches_branch_bytes": true
+  }
+ ],
+ "branch_tip": "ebf157ae977b3da7e1c5714079ba4c38e368aace",
+ "tip_read_at": "19:08:09",
+ "all_rc_zero": true,
+ "every_recorded_path_resolves": true,
+ "every_local_copy_still_matches_the_branch": true
+}
