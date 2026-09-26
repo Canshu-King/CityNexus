@@ -17,7 +17,9 @@ from app.replanning.commitment_remap import (
     resolve_commitment_target,
 )
 from app.operations.reservation_identity import (
+    ANCHOR_RETIRE_MARKER,
     quarantine_duplicate_confirmation_identities,
+    retire_superseded_active_anchor,
 )
 from app.db.models import (
     AccommodationOfferSnapshot,
@@ -1040,6 +1042,31 @@ def confirm_reservation_draft(
     quarantine_duplicate_confirmation_identities(session, journey.id)
     session.flush()
     now = _now()
+    # A node can be claimed by one ACTIVE anchor at a time.  The guard above refuses the same
+    # provider reference twice; this one handles the *different* reference for the *same* node -
+    # a re-issued ticket - which used to leave two ACTIVE rows and made the planner report the
+    # traveller's own duplicate back as an unsatisfiable constraint.
+    displaced = retire_superseded_active_anchor(
+        session,
+        journey,
+        identity=semantic_key,
+        replaced_by_external_ref=confirmation_ref,
+        now=now,
+    )
+    for previous in displaced:
+        record_audit(
+            session,
+            action="commitment.anchor_superseded",
+            entity_type="Commitment",
+            entity_id=previous.id,
+            journey_id=journey.id,
+            before={"status": "ACTIVE", "external_ref": previous.external_ref},
+            after={
+                "status": "CANCELLED",
+                "retire_reason": ANCHOR_RETIRE_MARKER,
+                "superseded_by_confirmation_ref": confirmation_ref,
+            },
+        )
     # Accept both spellings.  The consumer manual-entry form posts
     # ``amount_minor`` while extracted artifacts carry ``price_amount_minor``;
     # reading only one silently dropped a price the traveller typed in.

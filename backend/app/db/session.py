@@ -308,6 +308,130 @@ def _collapse_duplicate_active_plans(connection) -> None:
         )
 
 
+def _anchor_identity_groups(connection) -> list[tuple[str, str, list[str]]]:
+    """``(journey_id, identity, ids survivor-first)`` for each duplicated ACTIVE C4 anchor.
+
+    The identity expression is the same node split ``anchor_claim_identity`` and
+    ``resolve_plan_anchors`` make: ARRIVAL and DEPARTURE collapse onto the Journey's structural
+    node (so the role alone identifies them), MID_TRIP carries its stored place/service key.  A
+    MID_TRIP row with no key anchors nothing - it is reported unresolved - and the unique indexes
+    count its NULL key as distinct, so it is left out here too rather than being retired by a
+    rule the schema deliberately does not enforce.
+
+    The ``ORDER BY`` is the survivor rule, applied in Python instead of through ``group_concat``
+    because the concatenation order of that aggregate is not defined: a rule that only holds when
+    the scan happens to come out in the right order is not a rule.  Bound to the Journey's
+    executing plan first, then the most recent confirmation, then the lowest rowid so the same
+    database repairs the same way twice.
+    """
+
+    rows = connection.exec_driver_sql(
+        """
+        SELECT journey_id, identity, id
+          FROM (
+            SELECT c.id AS id,
+                   c.journey_id AS journey_id,
+                   c.created_at AS created_at,
+                   c.rowid AS rowid,
+                   CASE upper(json_extract(c.policy_json, '$.anchor_role'))
+                     WHEN 'ARRIVAL'   THEN '#arrival'
+                     WHEN 'DEPARTURE' THEN '#departure'
+                     ELSE json_extract(c.policy_json, '$.semantic_key')
+                   END AS identity,
+                   (SELECT COUNT(*) FROM activities a
+                     JOIN plan_versions p ON p.id = a.plan_version_id
+                    WHERE a.id = c.activity_id
+                      AND p.journey_id = c.journey_id
+                      AND p.status IN ('ACTIVE', 'SELECTED')) AS bound
+              FROM commitments c
+             WHERE c.status = 'ACTIVE'
+               AND c.level = 'C4_Anchored'
+               AND json_valid(c.policy_json)
+               AND upper(json_extract(c.policy_json, '$.anchor_role'))
+                   IN ('ARRIVAL', 'DEPARTURE', 'MID_TRIP')
+          )
+         WHERE identity IS NOT NULL
+         ORDER BY journey_id, identity, bound DESC, created_at DESC, rowid ASC
+        """
+    ).fetchall()
+    grouped: dict[tuple[str, str], list[str]] = {}
+    for journey_id, identity, row_id in rows:
+        grouped.setdefault((str(journey_id), str(identity)), []).append(str(row_id))
+    return [
+        (journey_id, identity, ids)
+        for (journey_id, identity), ids in grouped.items()
+        if len(ids) > 1
+    ]
+
+
+def _retire_duplicate_active_anchors(connection) -> int:
+    """Clear duplicate ACTIVE anchors so ORD-0360's unique indexes can be created.
+
+    Runs before the schema script, the way ``_collapse_duplicate_active_plans`` does for plans.
+    Unlike that repair this one never refuses to migrate: the survivor rule is total (bound to
+    the executing plan, then newest, then lowest rowid), so a legacy database boots instead of
+    deadlocking on an unfixable row - and unlike a duplicate ACTIVE PlanVersion, retiring an
+    anchor does not decide which plan the traveller executes, it only decides which of two
+    tickets for one node the planner constrains the itinerary with.  Nothing is deleted: the
+    loser keeps its row, its ``external_ref`` and its Booking, and each group gets one durable
+    Event naming who was retired and who stayed, as ``_quarantine_duplicates`` does.
+    """
+
+    if not _table_exists(connection, "commitments"):
+        return 0
+    columns = {
+        row[1] for row in connection.exec_driver_sql("PRAGMA table_info(commitments)")
+    }
+    if not {"policy_json", "status", "level", "journey_id"} <= columns:
+        return 0
+    repaired = 0
+    for journey_id, identity, ids in _anchor_identity_groups(connection):
+        keep, *losers = ids
+        for row_id in losers:
+            connection.exec_driver_sql(
+                "UPDATE commitments SET status = 'CANCELLED', updated_at = datetime('now'),"
+                " policy_json = json_set("
+                "   policy_json,"
+                "   '$.retire_reason', 'SUPERSEDED_BY_NEWER_CONFIRMATION',"
+                "   '$.superseded_by_commitment_id', ?,"
+                "   '$.retired_at', datetime('now')"
+                " ) WHERE id = ?",
+                (keep, row_id),
+            )
+            repaired += 1
+        connection.exec_driver_sql(
+            """
+            INSERT INTO events (
+                id, journey_id, provider_key, provenance, event_type, severity,
+                status, affected_activity_id, occurred_at, detected_at,
+                resolved_at, payload_json, created_at
+            ) VALUES (
+                lower(hex(randomblob(16))), ?, 'citynexus-reservation',
+                'SYSTEM_DERIVED', 'USER_CHANGE', 'MAJOR', 'RESOLVED', NULL,
+                datetime('now'), datetime('now'), datetime('now'), ?, datetime('now')
+            )
+            """,
+            (
+                journey_id,
+                json.dumps(
+                    {
+                        "kind": "C4_ANCHOR_SUPERSEDED_BY_NEWER_CONFIRMATION",
+                        "identity": identity,
+                        "kept_commitment_id": keep,
+                        "retired_commitment_ids": losers,
+                        "found_active_rows": len(ids),
+                        "policy": "SUPERSEDED_BY_NEWER_CONFIRMATION",
+                        "repair": "ensure_schema",
+                    },
+                    ensure_ascii=False,
+                    sort_keys=True,
+                ),
+            ),
+        )
+        repaired += len(losers)
+    return repaired
+
+
 def _migrate_reservation_identity(connection) -> None:
     """Make the reservation uniqueness rule actually enforceable.
 
@@ -424,6 +548,7 @@ def ensure_schema(target_engine: Engine = engine) -> None:
         if target_engine.dialect.name == "sqlite":
             _quarantine_existing_duplicates(connection)
             _collapse_duplicate_active_plans(connection)
+            _retire_duplicate_active_anchors(connection)
             # ORD-0167: parked before the script so the new table is the one in `db/schema.sql`.
             _preserve_legacy_hydration_table(connection)
         if hasattr(raw, "executescript"):

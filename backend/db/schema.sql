@@ -436,6 +436,28 @@ CREATE UNIQUE INDEX IF NOT EXISTS ux_plan_versions_single_active
     ON plan_versions(journey_id) WHERE status = 'ACTIVE';
 CREATE INDEX IF NOT EXISTS idx_activities_plan ON activities(plan_version_id, sequence_no);
 CREATE INDEX IF NOT EXISTS idx_commitments_journey ON commitments(journey_id, status, level);
+-- ORD-0360: a Journey claims a node with at most one ACTIVE C4 anchor.  Two ACTIVE rows for
+-- one node are not two constraints - resolve_plan_anchors() emits one anchor per row, the pair
+-- then overlaps with itself, and generation answered the traveller's own duplicate reservation
+-- as "no feasible plan candidates".  Python cannot guarantee this across processes (see the
+-- note on ux_plan_versions_single_active), so it is stated where it can be enforced.
+-- The role split below is the same one resolve_plan_anchors()/anchor_claim_identity() use:
+-- ARRIVAL and DEPARTURE collapse onto the Journey's structural node, MID_TRIP carries its own
+-- place/service key.  Rows with no $.anchor_role - the commerce booking/order commitments -
+-- match none of these on purpose: they share the semantic_key namespace but are protected
+-- through activity_id, so two of them for one place stay legal.
+CREATE UNIQUE INDEX IF NOT EXISTS uq_commitments_one_active_arrival_anchor
+    ON commitments(journey_id)
+    WHERE status = 'ACTIVE' AND level = 'C4_Anchored' AND json_valid(policy_json)
+      AND upper(json_extract(policy_json, '$.anchor_role')) = 'ARRIVAL';
+CREATE UNIQUE INDEX IF NOT EXISTS uq_commitments_one_active_departure_anchor
+    ON commitments(journey_id)
+    WHERE status = 'ACTIVE' AND level = 'C4_Anchored' AND json_valid(policy_json)
+      AND upper(json_extract(policy_json, '$.anchor_role')) = 'DEPARTURE';
+CREATE UNIQUE INDEX IF NOT EXISTS uq_commitments_one_active_mid_trip_anchor
+    ON commitments(journey_id, json_extract(policy_json, '$.semantic_key'))
+    WHERE status = 'ACTIVE' AND level = 'C4_Anchored' AND json_valid(policy_json)
+      AND upper(json_extract(policy_json, '$.anchor_role')) = 'MID_TRIP';
 CREATE INDEX IF NOT EXISTS idx_events_journey ON events(journey_id, detected_at);
 CREATE INDEX IF NOT EXISTS idx_impact_assessments_event ON impact_assessments(event_id, created_at);
 CREATE INDEX IF NOT EXISTS idx_replans_journey ON replan_proposals(journey_id, created_at);

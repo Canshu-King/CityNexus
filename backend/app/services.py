@@ -39,11 +39,13 @@ from app.planning.anchor_schedule import (
     ANCHOR_DURATION_MIN,
     CandidateActivity,
     MID_TRIP_ROLE,
+    active_c4_commitments,
     effective_journey_window,
     resolve_plan_anchors,
     schedule_template_with_anchors,
     validate_anchor_timeline,
 )
+from app.planning.anchors import anchor_claim_identity
 from app.replanning.protected_commitments import active_c4_hard_constraints
 from app.replanning.reference_replanner import WEIGHTS
 from app.schemas import Activity as ActivitySchema
@@ -820,6 +822,42 @@ def _safe_estimate_minutes(provider, origin: str | None, destination: str | None
         return 0
 
 
+def _blocking_anchor_names(session: Session, journey: Journey, identities: set[str]) -> str:
+    """Name the confirmed reservations sitting on the nodes an anchor conflict is about.
+
+    The conflict codes identify a *node* (``v12:<journey>:arrival-anchor``) - nothing a traveller
+    ever typed - and while one Journey could hold two ACTIVE claims on the same node the sentence
+    read as a single anchor conflicting with itself.  Each commitment behind the conflict is
+    therefore named by its own confirmation reference and the time it claims: the two facts a
+    traveller can check against the ticket in their hand.
+    """
+
+    if not identities:
+        return ""
+    try:
+        rows = active_c4_commitments(session, journey)
+    except Exception:  # noqa: BLE001 - reason text must never break generation
+        return ""
+    named: set[str] = set()
+    for row in rows:
+        try:
+            policy = json.loads(row.policy_json or "{}")
+        except (TypeError, ValueError):
+            continue
+        if not isinstance(policy, Mapping):
+            continue
+        identity = anchor_claim_identity(policy, journey_id=journey.id)
+        if identity not in identities:
+            continue
+        reference = str(row.external_ref or "no confirmation reference")
+        claimed = str(policy.get("scheduled_start_at") or "no scheduled time")
+        role = str(policy.get("anchor_role") or "ANCHOR")
+        named.add(f"{role} '{reference}' claiming {claimed} (commitment {row.id})")
+    if not named:
+        return ""
+    return "; blocking commitment: " + "; ".join(sorted(named))
+
+
 def _anchor_block_reason(session: Session, journey: Journey) -> str:
     """Name the C4 anchor that blocked generation, when there is one.
 
@@ -832,7 +870,11 @@ def _anchor_block_reason(session: Session, journey: Journey) -> str:
     except Exception:  # noqa: BLE001 - reason text must never break generation
         return ""
     if unresolved:
-        return ": C4_ANCHOR_UNRESOLVED:" + ",".join(sorted(set(unresolved)))
+        wanted = {item.split(":", 1)[1] for item in unresolved if ":" in item}
+        return (
+            ": C4_ANCHOR_UNRESOLVED:" + ",".join(sorted(set(unresolved)))
+            + _blocking_anchor_names(session, journey, wanted)
+        )
     if not anchors:
         return ""
     # Prefer the precise structural reason (overlap, arrival-after-departure,
@@ -846,10 +888,11 @@ def _anchor_block_reason(session: Session, journey: Journey) -> str:
         )
     except Exception:  # noqa: BLE001
         conflict = None
+    keys = {anchor.semantic_key for anchor in anchors if anchor.semantic_key}
     if conflict:
-        return f": {conflict}"
-    keys = ", ".join(sorted({anchor.semantic_key for anchor in anchors}))
-    return f": C4_ANCHOR_BLOCKED:{keys}"
+        return f": {conflict}" + _blocking_anchor_names(session, journey, keys)
+    joined = ", ".join(sorted(keys))
+    return f": C4_ANCHOR_BLOCKED:{joined}" + _blocking_anchor_names(session, journey, keys)
 
 
 # How much of a day a traveller actually spends moving between and visiting

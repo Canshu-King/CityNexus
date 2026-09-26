@@ -149,6 +149,32 @@ def resolve_anchor_key(
     return candidate
 
 
+def anchor_claim_identity(
+    policy: Mapping[str, Any], *, journey_id: str
+) -> str | None:
+    """The node identity a persisted C4 policy claims, or ``None`` when it claims none.
+
+    ``None`` is the case that keeps commerce commitments out of the single-ACTIVE rule:
+    a booking/order policy carries no ``anchor_role``, and ``resolve_plan_anchors`` skips
+    those rows before it ever forms an anchor.  The two branches below are the same split
+    that function makes when it builds ``ResolvedAnchor.semantic_key`` - structural key for
+    ARRIVAL/DEPARTURE, the stored place/service key for MID_TRIP - so a duplicate is
+    recognised by the exact value that collides inside the planner rather than by a second
+    vocabulary invented here.
+    """
+
+    role = normalise_role(policy.get("anchor_role"))
+    if not role:
+        return None
+    if role in (ARRIVAL_ROLE, DEPARTURE_ROLE):
+        return structural_place_id(journey_id, role)
+    return (
+        str(policy.get("semantic_key") or "").strip()
+        or str(policy.get("semantic_node_key") or "").strip()
+        or None
+    )
+
+
 def anchor_identity_from_policy(
     policy: Mapping[str, Any],
     *,
