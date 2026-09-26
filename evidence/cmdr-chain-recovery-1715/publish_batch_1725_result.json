@@ -1,0 +1,145 @@
+[
+ {
+  "local": "_preflight_b6a8ea5_1719.json",
+  "path": "evidence/cmdr-chain-recovery-1715/preflight_red_stale_proxy_env_1719.json",
+  "rc": 0,
+  "tail": [
+   "ALREADY_LIVE no write needed, blob ddf12ac0b4c977f61b26eeda398746f6d3d6fa0a"
+  ],
+  "verdict": "ALREADY"
+ },
+ {
+  "local": "_preflight_b6a8ea5_1721.json",
+  "path": "evidence/cmdr-chain-recovery-1715/preflight_ready_to_switch_1721.json",
+  "rc": 0,
+  "tail": [
+   "ALREADY_LIVE no write needed, blob fc3ac12316081f915d2febad774f19378e5037cd"
+  ],
+  "verdict": "ALREADY"
+ },
+ {
+  "local": "receipts/preflight_0926_171938.json",
+  "path": "evidence/cmdr-chain-recovery-1715/preflight_receipt_0926_171938.json",
+  "rc": 0,
+  "tail": [
+   "ALREADY_LIVE no write needed, blob 61c440db79eb7a86f74293dead326fcd05d9107e"
+  ],
+  "verdict": "ALREADY"
+ },
+ {
+  "local": "_deploy_b6a8ea5_1722.log",
+  "path": "evidence/cmdr-chain-switch-b6a8ea5c-1720/deploy_overall_green_1722.txt",
+  "rc": 0,
+  "tail": [
+   "ALREADY_LIVE no write needed, blob 7eefda6814f9b412ba4952ea2eb4fec225dd33ea"
+  ],
+  "verdict": "ALREADY"
+ },
+ {
+  "local": "_phone_chain_1720.json",
+  "path": "evidence/cmdr-chain-switch-b6a8ea5c-1720/phone_side_probe_1720.json",
+  "rc": 0,
+  "tail": [
+   "ALREADY_LIVE no write needed, blob bbd260b461aae4dbf6d6a10e26669b9751cf3352"
+  ],
+  "verdict": "ALREADY"
+ },
+ {
+  "local": "D:/moodle/_qoder_preview_20260920/run/preview_db_state_1716.json",
+  "path": "evidence/cmdr-chain-recovery-1715/preview_db_state_1716.json",
+  "rc": 0,
+  "tail": [
+   "PROVEN",
+   "receipt -> patrol/git_mirror_20260926_172451.json"
+  ],
+  "blob": "eab696253ac63d6208f84512377ff1effedfa0ac",
+  "bytes": 3205,
+  "commit": "93d3270a1fd92b1f3cd0875565d2f0fc32ccb7d1",
+  "byte_equal": true,
+  "verdict": "OK"
+ },
+ {
+  "local": "D:/moodle/_qoder_preview_20260920/run/_desk_note_head_1716.txt",
+  "path": "evidence/cmdr-chain-recovery-1715/desk_note_head_1716.txt",
+  "rc": 0,
+  "tail": [
+   "PROVEN",
+   "receipt -> patrol/git_mirror_20260926_172507.json"
+  ],
+  "blob": "e0e66e2ef6e52ee2570a26c6a366ef524dc0ab42",
+  "bytes": 2865,
+  "commit": "139bdf07c8c64720b222072a9aa7eb2447ccbdbf",
+  "byte_equal": true,
+  "verdict": "OK"
+ },
+ {
+  "local": "D:/moodle/_qoder_preview_20260920/run/cmdr_hop1_backend.bat",
+  "path": "evidence/cmdr-chain-recovery-1715/hop1_backend_8693.bat",
+  "rc": 0,
+  "tail": [
+   "PROVEN",
+   "receipt -> patrol/git_mirror_20260926_172523.json"
+  ],
+  "blob": "d9f53e966574d70b5f9114b1b78f5727628e5257",
+  "bytes": 400,
+  "commit": "f35a503dc7d77ee5538131b6e91e54391183f644",
+  "byte_equal": true,
+  "verdict": "OK"
+ },
+ {
+  "local": "D:/moodle/_qoder_preview_20260920/run/cmdr_hop2_preview.bat",
+  "path": "evidence/cmdr-chain-recovery-1715/hop2_vite_preview_4781.bat",
+  "rc": 0,
+  "tail": [
+   "PROVEN",
+   "receipt -> patrol/git_mirror_20260926_172542.json"
+  ],
+  "blob": "adc004b2c35cfd8e3972f8b14e3367801c5d964c",
+  "bytes": 280,
+  "commit": "dce9b7c0d5040df64e7706abb06eaf335d943323",
+  "byte_equal": true,
+  "verdict": "OK"
+ },
+ {
+  "local": "D:/moodle/_qoder_preview_20260920/run/cmdr_hop3_proxy.bat",
+  "path": "evidence/cmdr-chain-recovery-1715/hop3_auth_proxy_4782.bat",
+  "rc": 0,
+  "tail": [
+   "PROVEN",
+   "receipt -> patrol/git_mirror_20260926_172600.json"
+  ],
+  "blob": "47f1c58a5dd539dd9c1dc04b40a6e2652c5822b6",
+  "bytes": 267,
+  "commit": "463fd3095fee255f99f36bf539b6063c6400c494",
+  "byte_equal": true,
+  "verdict": "OK"
+ },
+ {
+  "local": "D:/moodle/_qoder_preview_20260920/run/cmdr_hop4_tunnel.bat",
+  "path": "evidence/cmdr-chain-recovery-1715/hop4_cloudflared.bat",
+  "rc": 0,
+  "tail": [
+   "PROVEN",
+   "receipt -> patrol/git_mirror_20260926_172618.json"
+  ],
+  "blob": "f6d0981a2d5eed0e1d22be17965da6f5314dd2e7",
+  "bytes": 213,
+  "commit": "58a772e357cdfa81771f70f531a18e8c56062f26",
+  "byte_equal": true,
+  "verdict": "OK"
+ },
+ {
+  "local": "D:/moodle/_qoder_preview_20260920/run/cmdr_hop1_1710.err.log",
+  "path": "evidence/cmdr-chain-recovery-1715/hop1_boot_log.txt",
+  "rc": 0,
+  "tail": [
+   "PROVEN",
+   "receipt -> patrol/git_mirror_20260926_172635.json"
+  ],
+  "blob": "3bfcd8c246223d675fc74277bd7404012fe5f5bc",
+  "bytes": 202,
+  "commit": "4fb7d34862116285a2a5b32fb954a1797f3c3e90",
+  "byte_equal": true,
+  "verdict": "OK"
+ }
+]
