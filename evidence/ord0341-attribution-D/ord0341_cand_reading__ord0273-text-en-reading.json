@@ -1,0 +1,35 @@
+{
+ "generatedBy": "e345b9d6",
+ "node": "ord0273-text-en",
+ "run_id": "run404459",
+ "viewport": {
+  "width": 390,
+  "height": 844
+ },
+ "locale": "en",
+ "sentence": "Couldn't read the sealed demo: the server answered just now, but what it answered isn't something we can use. Nothing you filled in caused this.",
+ "cjkInEnglishArm": false,
+ "cjkControlOnChineseConstant": true,
+ "leakShapesChecked": [
+  "origin answered",
+  "unusable body",
+  "text/html",
+  "text/plain",
+  "Error",
+  "TypeError"
+ ],
+ "upstreamProseChecked": [
+  "origin answered 200 with an unusable body (text/html; charset=utf-8)",
+  "OriginResponseUnusableError",
+  "origin answered",
+  "unusable body"
+ ],
+ "domAttributeCount": 110,
+ "proseInDomAttributes": [],
+ "proseInVisibleText": [],
+ "alertAttributes": [
+  "class=trial-city-warning",
+  "data-testid=trial-sealed-unavailable",
+  "role=alert"
+ ]
+}
