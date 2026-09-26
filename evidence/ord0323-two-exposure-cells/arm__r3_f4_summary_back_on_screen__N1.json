@@ -1,0 +1,21 @@
+{
+ "run_id": "0323f4p1440",
+ "arm": "N1",
+ "panel_copy": "Something went wrong hereYour trip data has not been lost. You can retry this screen or go back to Today.Try againBack to TodayReload the appTechnical detailcaught_at=2026-09-26T02:21:19.338Z route=/v8/bookings failures_caught_here=1 online_at_this_device=yes failure_text_rendered=no",
+ "error_detail_text": "caught_at=2026-09-26T02:21:19.338Z\nroute=/v8/bookings\nfailures_caught_here=1\nonline_at_this_device=yes\nfailure_text_rendered=no",
+ "console_error_count": 1,
+ "failure_text_rendered_field": "no",
+ "console_error_head": [
+  "%o\n\n%s\n\n%s\n TypeError: Cannot read properties of undefined (reading 'length')\n    at http://127.0.0.1:4494/src/features/inbox/JourneyInboxWorkbench.tsx:969:82\n    at Array.map (<anonymous>)\n    at JourneyInboxWorkbench ("
+ ],
+ "root_text_length": 284,
+ "overlay_hosts": [
+  "div#root",
+  "script"
+ ],
+ "leaked_needles_still_on_screen": [],
+ "leaked_needles_in_attributes": [],
+ "attribute_pairs_swept": 12,
+ "nodeid": "D:\\moodle\\_qoder_b_lane_20260923\\frontend\\e2e\\qoder-ord0323-two-exposure-cells.spec.ts:122 > N1_boundary_panel_keeps_its_own_readings_and_drops_the_failure_prose — 边界自己量的字段还在，失败原文与组件帧不在屏上",
+ "test_status": "passed"
+}
