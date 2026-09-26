@@ -676,6 +676,42 @@ export function JourneyTrialSetup({
      recognised it; until then the label says what it knows. */
   const identifiedCity = facts ? draft.cityName.trim() : "";
   const unrecognizedCity = draft.cityName.trim().length > 0 && !facts;
+  /* ORD-0363: the destination field is a spelling-table entry, and every name the table knows --
+     including 东京 / 福州 / 新加坡, which `GET /destinations/capability` answers with
+     `NO_CANONICAL_IDENTITY` -- used to look plannable here: the traveller got a neutral "已自动设置",
+     advanced, and the empty plan surfaced as a network-shaped failure. Ask the same route the panel
+     already uses about the city being typed, and speak the server's own verdict at selection time.
+     A read that never lands is NOT a server verdict (Q64/Q71): it must not be laundered into
+     "unanswerable", and the token used here is the frozen vocabulary, never the `NOT_ANSWERED` this
+     project already struck (anywhere_capability.py: the arbiter froze the four states on choose B). */
+  const selectedSpelling = draft.cityName.trim();
+  const [selectedReading, setSelectedReading] = useState<DestinationReading | null>(null);
+  const selectedCapSeq = useRef(0);
+  useEffect(() => {
+    const spelling = selectedSpelling;
+    if (!spelling || !inferCityFacts(spelling)) {
+      selectedCapSeq.current += 1;
+      setSelectedReading(null);
+      return;
+    }
+    const seq = ++selectedCapSeq.current;
+    setSelectedReading(noAnswerYet(spelling, null));
+    cityNexusApi
+      .getDestinationCapability(spelling)
+      .then((answer) => {
+        if (selectedCapSeq.current === seq)
+          setSelectedReading(readFromCapability(spelling, answer));
+      })
+      .catch((reason) => {
+        if (selectedCapSeq.current === seq)
+          setSelectedReading(noAnswerYet(spelling, classifyReadFailure(reason).reason));
+      });
+  }, [selectedSpelling]);
+  /* Only the server's own structural verdict may block the traveller -- a failed read never does. */
+  const serverSaysNoIdentity =
+    !!selectedReading &&
+    selectedReading.answered &&
+    selectedReading.reason_code === "NO_CANONICAL_IDENTITY";
   /* ORD-0072 #2: one pass, one basis.  Every screen that names the planning basis reads this
      object -- the step-1 caution, the step-3 confirmation, the auto-set line -- and it is the
      same triple `submit()` hands the shell, so three places cannot tell three stories. */
@@ -816,7 +852,13 @@ export function JourneyTrialSetup({
               value={draft.cityName}
               onChange={(event) => applyCity(event.target.value)}
               placeholder={zh ? "例如：天津、东京、新加坡" : "e.g. Tianjin, Tokyo, Singapore"}
-              aria-describedby={unrecognizedCity ? "trial-city-warning" : undefined}
+              aria-describedby={
+                unrecognizedCity
+                  ? "trial-city-warning"
+                  : facts && serverSaysNoIdentity
+                    ? "trial-city-unservable"
+                    : undefined
+              }
               autoFocus
             />
           </label>
@@ -841,6 +883,22 @@ export function JourneyTrialSetup({
               {zh
                 ? `没认出「${draft.cityName.trim()}」：已退回中立口径 ${basisWords.country} / ${basisWords.currency}（${basisWords.currencyCode}）/ ${basisWords.timezone} 规划，不沿用上一次识别到的城市。换个写法，或在"看支持的目的地"里挑一个。`
                 : `"${draft.cityName.trim()}" is not recognised: planning falls back to the neutral basis ${basisWords.country} / ${basisWords.currency} (${basisWords.currencyCode}) / ${basisWords.timezone}, and does not keep the city you last recognised. Try another spelling, or pick one from "See supported destinations".`}
+            </p>
+          )}
+          {facts && serverSaysNoIdentity && selectedReading && (
+            /* ORD-0363: this name is in the spelling table (so it is NOT the branch above) yet the
+               server gives it no identity.  Speak the server's own frozen fields -- reason_code and
+               recommended_action and the identity line -- not "网络不可用" (the cover the traveller
+               must never be handed) and not the struck `NOT_ANSWERED` token. */
+            <p
+              className="trial-city-unservable"
+              data-testid="trial-city-unservable"
+              id="trial-city-unservable"
+              role="status"
+            >
+              {zh
+                ? `服务器认不出「${selectedSpelling}」（${selectedReading.reason_code ?? "NO_CANONICAL_IDENTITY"} · ${selectedReading.recommended_action ?? "CHOOSE_ANOTHER_DESTINATION"}）：${identityWords(selectedReading, true)}，这一构建现在不能规划它。请在"看支持的目的地"里挑一个 supported 的，或换个写法。`
+                : `the server cannot name "${selectedSpelling}" (${selectedReading.reason_code ?? "NO_CANONICAL_IDENTITY"} · ${selectedReading.recommended_action ?? "CHOOSE_ANOTHER_DESTINATION"}): ${identityWords(selectedReading, false)} — this build cannot plan it now. Pick a supported one under "See supported destinations", or try another spelling.`}
             </p>
           )}
           <details
@@ -1469,12 +1527,24 @@ export function JourneyTrialSetup({
                it.  Measured on the rebuilt production bundle: focus could not land even with
                `aria-describedby` injected.  aria-disabled carries the same "not yet" semantics
                while staying focusable; the click below still refuses to advance and says why. */
-            aria-disabled={blockedNow ? "true" : undefined}
-            aria-describedby={blockedNow ? "trial-required-hint" : undefined}
+            aria-disabled={blockedNow || (step === 1 && serverSaysNoIdentity) ? "true" : undefined}
+            aria-describedby={
+              blockedNow
+                ? "trial-required-hint"
+                : step === 1 && serverSaysNoIdentity
+                  ? "trial-city-unservable"
+                  : undefined
+            }
             onClick={() => {
               if (blockedNow) {
                 speak(missingLine, missingKey);
                 revealReason();
+                return;
+              }
+              /* ORD-0363: a city the server cannot name is present, not missing -- so it must not be
+                 spoken as "未填写 · 必填". Refuse the advance and point at the named caution instead. */
+              if (step === 1 && serverSaysNoIdentity) {
+                document.getElementById("trial-city")?.focus();
                 return;
               }
               setStep((current) => (current === 1 ? 2 : 3));
@@ -1493,12 +1563,21 @@ export function JourneyTrialSetup({
                each) and that knowledge has to reach this control.  Same accessible form as 下一步:
                `aria-disabled` rather than `disabled`, because a hard-disabled button leaves the tab
                sequence and the reason beside it is then unreachable (ORD-0066 甲, measured). */
-            aria-disabled={blockedNow ? "true" : undefined}
-            aria-describedby={blockedNow ? "trial-required-hint" : undefined}
+            aria-disabled={blockedNow || serverSaysNoIdentity ? "true" : undefined}
+            aria-describedby={
+              blockedNow ? "trial-required-hint" : serverSaysNoIdentity ? "review-city-warning" : undefined
+            }
             onClick={() => {
               if (blockedNow) {
                 speak(missingLine, missingKey);
                 revealReason();
+                return;
+              }
+              /* ORD-0363: a draft restored straight to the review step must not submit a city the
+                 server cannot name -- take the traveller back to where the caution is spoken. */
+              if (serverSaysNoIdentity) {
+                setStep(1);
+                window.setTimeout(() => document.getElementById("trial-city")?.focus(), 80);
                 return;
               }
               void submit();
