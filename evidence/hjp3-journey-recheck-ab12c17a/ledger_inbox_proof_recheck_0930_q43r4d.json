@@ -1,0 +1,14 @@
+{
+ "block_file": "D:\\moodle\\_qoder_ledger_inbox\\aad2d1f2_0930.md",
+ "bytes": 13403,
+ "gate": "claim_coordinate_check_r4d.py",
+ "q43_rc": 0,
+ "q43_out": "version Q43_r4d | input D:\\moodle\\_qoder_ledger_inbox\\aad2d1f2_0930.md 13403 B\nclaims checked 9 | exempt {\"DIMENSION\": 5, \"HTTP_STATUS\": 5, \"PORT\": 1} | overall Q43_GATE_GREEN | findings 0 []\n",
+ "q43_err": "",
+ "generation": "ab12c17a65450c2c3062c9232e27a26c4ae1b485",
+ "mirror_tip_at_block_write": "2d8b03b8c7734ea3b8521b80845e1b0bc1a07957",
+ "branch_tip_at_block_write": "dcf8290b6e999e6310bfddf5aaf1bf828f5d88cd",
+ "ledger_written_by_this_lane": false,
+ "baseline_items_re_measured": 2,
+ "judgments_computed_in_the_scored_file": 15
+}
