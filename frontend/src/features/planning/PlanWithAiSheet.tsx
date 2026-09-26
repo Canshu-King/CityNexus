@@ -142,27 +142,33 @@ const BLOCKED_BY_CODE: Record<
   },
 };
 
-/** The server's name for a refusal, from its envelope.  Empty when it gave none -- and then this
-    screen says it does not know, rather than guessing a cause. */
-function serverReasonCode(body: unknown): string {
+/** The three envelope keys this server puts a machine name in (`main.py:497-502`), in the order the
+ *  envelope is written them.  Named here so the Q70 anchor below can only ever say a key the backend
+ *  really owns. */
+const REASON_CODE_KEYS = ["reason_code", "code", "message_key"] as const;
+
+/** The server's name for a refusal, from its envelope, and WHICH key it was read out of.  `null` when
+    it gave none -- and then this screen says it does not know, rather than guessing a cause. */
+function serverReasonCode(body: unknown): { code: string; field: string } | null {
   const error = (body as { error?: Record<string, unknown> } | null)?.error;
-  if (!error || typeof error !== "object") return "";
-  for (const key of ["reason_code", "code", "message_key"]) {
+  if (!error || typeof error !== "object") return null;
+  for (const key of REASON_CODE_KEYS) {
     const value = error[key];
-    if (typeof value === "string" && value.trim()) return value.trim().toUpperCase();
+    /* Q68 (CMDR 04:45): a slot named 原因编号 carries a code or it carries nothing. The reply's sentence
+       already has an attributed home in 技术详情 (Q67=①), and the caller's `|| PLACES_HTTP_n` /
+       `NO_PLANS_PRODUCED` fallbacks are this device's own readings. */
+    if (typeof value === "string" && value.trim()) return { code: value.trim().toUpperCase(), field: key };
   }
-  /* Q68 (CMDR 04:45): a slot named 原因编号 carries a code or it carries nothing. The reply's sentence
-     already has an attributed home in 技术详情 (Q67=①), and the caller's `|| PLACES_HTTP_n` /
-     `NO_PLANS_PRODUCED` fallbacks are this device's own readings. */
-  return "";
+  return null;
 }
 
-/** The server's own sentence, kept verbatim for 技术详情. */
-function serverReasonSentence(body: unknown): string | null {
+/** The server's own sentence, kept verbatim for 技术详情, plus the envelope key it was read off. */
+function serverReasonSentence(body: unknown): { text: string; field: string } | null {
   const error = (body as { error?: Record<string, unknown> } | null)?.error;
-  if (error && typeof error.message === "string" && error.message.trim()) return error.message;
+  if (error && typeof error.message === "string" && error.message.trim())
+    return { text: error.message, field: "error.message" };
   const detail = (body as { detail?: unknown } | null)?.detail;
-  if (typeof detail === "string" && detail.trim()) return detail;
+  if (typeof detail === "string" && detail.trim()) return { text: detail, field: "detail" };
   return null;
 }
 
@@ -178,7 +184,15 @@ function serverReasonSentence(body: unknown): string | null {
  * here as one decision point so all three refusal legs share it.  Nothing is deleted: a device-composed
  * line stays visible as what it is, because the status code really was observed and is worth reading.
  */
-type FailureNote = { text: string; from: "server" | "device" };
+type FailureNote = {
+  text: string;
+  from: "server" | "device";
+  /** Q70: which contract field these words were read out of (`error.message`, `detail`,
+   *  `mission.failure_reason`).  Absent when this device composed them -- 无量则不贴锚: an anchor for a
+   *  field nobody sent would be an invented fact.  Only the NAME travels here; Q71 counts `data-*` as
+   *  the screen, so the sentence itself stays in the text node and never rides an attribute. */
+  field?: string;
+};
 
 /** What this device measured on the leg that answered, before it tried to understand any of it.
  *  Field names are labels; the values are the answer's own bytes, unedited. */
@@ -188,8 +202,13 @@ type RawReading = {
   bytes: number | null;
 };
 
-function failureNote(serverText: string | null, deviceText: string): FailureNote {
-  return serverText ? { text: serverText, from: "server" } : { text: deviceText, from: "device" };
+function failureNote(
+  server: { text: string; field: string } | null,
+  deviceText: string,
+): FailureNote {
+  return server
+    ? { text: server.text, from: "server", field: server.field }
+    : { text: deviceText, from: "device" };
 }
 
 
@@ -394,6 +413,10 @@ export function PlanWithAiSheet({
     rawReading?: RawReading | null;
     planCount?: number;
     newPlanIds?: string[];
+    /** Q70 for the 原因编号 slot: the code only reaches the traveller's line with the envelope key it
+     *  came from.  Set solely where `serverReasonCode` actually answered -- a `CATALOG_*` or
+     *  `PLACES_HTTP_n` this screen composed itself carries no field to name, so it gets no anchor. */
+    reasonCode?: { code: string; field: string } | null;
   }>(null);
   const abortRef = useRef<AbortController | null>(null);
   /* ORD-0246: `disabled={busy}` is a *rendered* fact, and two clicks inside one tick both arrive
@@ -647,6 +670,9 @@ export function PlanWithAiSheet({
       // has already materialised for this journey.  Only attempted when the
       // baseline is KNOWN — otherwise we cannot attribute what it created.
       let blockedCode = "";
+      /* Q70: which envelope key that code was read off, or null when the refusal never named one.
+       * `blockedCode` stays a plain string so the branch order below keeps the narrowing it had. */
+      let blockedReasonCode: { code: string; field: string } | null = null;
       let blockedSentence: FailureNote | null = null;
       if (baseline !== null && planCount === 0) {
         enter("fallback");
@@ -660,8 +686,10 @@ export function PlanWithAiSheet({
              produced nothing".  A failed read is now its own named state. */
           if (!placesResponse.ok) {
             const unreadable = await placesResponse.json().catch(() => null);
+            const refusedCode = serverReasonCode(unreadable);
             setResult({
-              status: `BLOCKED:${serverReasonCode(unreadable) || `PLACES_HTTP_${placesResponse.status}`}`,
+              status: `BLOCKED:${refusedCode ? refusedCode.code : `PLACES_HTTP_${placesResponse.status}`}`,
+              reasonCode: refusedCode,
               /* ORD-0280 site 2 of 3. */
               failureReason: failureNote(
                 serverReasonSentence(unreadable),
@@ -734,7 +762,8 @@ export function PlanWithAiSheet({
             planCount = newPlanIds.length;
           } else {
             const refused = await generate.json().catch(() => null);
-            blockedCode = serverReasonCode(refused);
+            blockedReasonCode = serverReasonCode(refused);
+            blockedCode = blockedReasonCode ? blockedReasonCode.code : "";
             /* ORD-0280 site 3 of 3. */
             blockedSentence = failureNote(
               serverReasonSentence(refused),
@@ -780,6 +809,7 @@ export function PlanWithAiSheet({
       setResult({
         status,
         newPlanIds,
+        reasonCode: blockedReasonCode,
         /* `failure_reason` is the mission's own stored field, i.e. words that came off this server, so
            it is labelled as such; the refused-request note carries its own origin from where it was set.
            ORD-0302 X-5: this branch's own card text tells the traveller the reason sits under 技术详情,
@@ -791,7 +821,13 @@ export function PlanWithAiSheet({
            (status, content-type, byte count): Q64=① forbids forwarding upstream body text into the DOM,
            so the block renders without any of the answer's bytes in it. */
         failureReason: mission?.failure_reason
-          ? { text: mission.failure_reason, from: "server" as const }
+          ? {
+              text: mission.failure_reason,
+              from: "server" as const,
+              /* The mission's stored reason is the server's own words, and the field this device read
+                 them from has a contract name -- so 技术详情 can say which one without quoting it. */
+              field: "mission.failure_reason",
+            }
           : blockedSentence,
         summary: mission?.reasoning_summary ?? null,
         rawReading,
@@ -846,6 +882,11 @@ export function PlanWithAiSheet({
   };
 
   const copy = result ? statusCopy(result.status, zh, result.planCount ?? 0) : null;
+  /* Q70, one-way by construction: an anchor may only name a code the traveller can actually read on the
+     line it sits on.  Derived from `result.status` -- the very string `statusCopy` was handed -- so the
+     attribute and the sentence it labels cannot disagree, and a state that shows no code shows no anchor. */
+  const reasonAnchor =
+    result?.reasonCode && result.status === `BLOCKED:${result.reasonCode.code}` ? result.reasonCode : null;
   const examples = examplesFor(placeNames, zh);
   const here = phase ? PHASES.findIndex((item) => item.key === phase) : -1;
   const currentPhase = here >= 0 ? PHASES[here] : null;
@@ -1018,7 +1059,21 @@ export function PlanWithAiSheet({
             role="status"
           >
             <b>{copy.title}</b>
-            <p>{copy.body}</p>
+            {/* ORD-0342 (Q70): this line names a 原因编号, so the element carrying it says which envelope
+                field that number was read out of.  The pair is emitted only when a real code arrived --
+                `CATALOG_*` / `PLACES_HTTP_n` are this screen's own readings and get no anchor (无量则不贴),
+                and Q68's「没给编号」branch has nothing to name either.  No rendered word is added: the
+                attributes carry the code the sentence already shows, so anchor and sentence cannot drift. */}
+            <p
+              {...(reasonAnchor
+                ? {
+                    "data-cnx-field": reasonAnchor.field,
+                    "data-cnx-value": reasonAnchor.code,
+                  }
+                : {})}
+            >
+              {copy.body}
+            </p>
             {(result?.failureReason || result?.summary || result?.rawReading) && (
               <details className="plan-ai-detail">
                 <summary data-testid="plan-ai-detail-toggle">
@@ -1045,7 +1100,18 @@ export function PlanWithAiSheet({
                           ? "这台设备自己的读数（服务器没给句子）"
                           : "This device's own reading (the server sent no sentence)"}
                     </span>
-                    <code data-testid="plan-ai-reason">{result.failureReason.text}</code>
+                    {/* ORD-0342 (Q70/Q71): 技术详情 may quote the answer, and the element quoting it now
+                        says WHICH envelope field the words are -- `error.message`, `detail` or
+                        `mission.failure_reason`.  The anchor carries the name only: a `data-cnx-value`
+                        holding the sentence would move upstream words into an attribute, and Q71 counts
+                        attributes as the screen.  A line this device composed has no field to name, so it
+                        gets no anchor at all rather than a name borrowed from a response. */}
+                    <code
+                      data-testid="plan-ai-reason"
+                      {...(result.failureReason.field
+                        ? { "data-cnx-field": result.failureReason.field }
+                        : {})}
+                    >{result.failureReason.text}</code>
                   </>
                 )}
                 {result?.rawReading && (
