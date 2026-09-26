@@ -1,0 +1,33 @@
+{
+ "order": "ORD-0323-b2",
+ "line": "origin/mirror/integration-frontend-apple-pass1",
+ "tip": "c740f45d68f337c460a1a43b995162689d0110af",
+ "cand": "106195159dbbffd948763299e572905dff19ee16",
+ "merge_base": "499522db0903790c3eaba5837bf8e8e3764b7463",
+ "commits_tip_ahead_of_base": 9,
+ "commits_cand_ahead_of_base": 2,
+ "merge_tree_rc": 0,
+ "changed_files": [
+  "frontend/e2e/qoder-ord0323-two-exposure-cells.spec.ts"
+ ],
+ "files": [
+  {
+   "path": "frontend/e2e/qoder-ord0323-two-exposure-cells.spec.ts",
+   "cand_blob": "e3bd91f34ff998e32bbe30e7078e3951b1104df1",
+   "merged_blob": "e3bd91f34ff998e32bbe30e7078e3951b1104df1",
+   "identical": true,
+   "cand_changed_the_file": true
+  }
+ ],
+ "merged_tree": "48abd9a327b6b7a9e37d2e874d56b99c59a486a6",
+ "auto_merged_files": [],
+ "recut_commit": "e9a392db4f596362ffe3365174e1fef1366f3247",
+ "readback_tree": "48abd9a327b6b7a9e37d2e874d56b99c59a486a6",
+ "readback_tree_matches": true,
+ "readback_parents": [
+  "c740f45d68f337c460a1a43b995162689d0110af",
+  "106195159dbbffd948763299e572905dff19ee16"
+ ],
+ "readback_parent_tip": true,
+ "verdict": "RECUT_OK"
+}
