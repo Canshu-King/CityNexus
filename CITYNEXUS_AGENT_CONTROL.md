@@ -16588,6 +16588,87 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### s3 · ORD-0363-r1 交付（残余那一半：句子归属由服务器载荷决定）@2026-09-26 18:30+08 —— 标题那句"服务器给的原因编号"只在服务器信封真给了该码时才这么写；base b6a8ea5c625d7e3e82f7348fad57d595a8a403c0
+
+**① 先定位（现产品线 base `b6a8ea5c625d7e3e82f7348fad57d595a8a403c0`，非账本镜像分支）**：
+- 被客户端自封"服务器给的"那句在 `frontend/src/features/planning/PlanWithAiSheet.tsx:236`（`statusCopy` 把 `${known.zh}（服务器给的原因编号：${code}）` 一律挂在 `BLOCKED:` 串上）。
+- 判断发生在同文件 `:705-715`：客户端 `GET /places` 数 `knownIds.size`，列表为空即自造 `BLOCKED:CATALOG_EMPTY`（`from:"device"` 在 `:721`），压根没走到排程。用的字段：状态串 `status`；服务器真码走 `result.reasonCode`（只在 `:692` / `:812` 由 `serverReasonCode()` 置）。
+- 同名码后端确有（`app/services.py:531` 与 :1749 发 `CATALOG_EMPTY`/`CATALOG_INSUFFICIENT`），但用户这条路没 consult 到——所以"服务器给的"这顶帽子在这条路上不成立。
+
+**做了什么（route ①：去掉客户端自封的归属，不碰 main.py）**：`statusCopy` 现多一个 `serverBacked` 参，仅当 `result.reasonCode && status===BLOCKED:${reasonCode.code}`（与 Q70 锚 `reasonAnchor` 同一条判据）时才写"服务器给的原因编号"；这条路由设备自己数出来的 `CATALOG_*` 改说"这台设备自己的读数，服务器这次没给这个编号"，且 `data-cnx-field` 锚与句子共用同一判据，二者不可能背离。给承载句子的 `<p>` 加了 `data-testid="plan-ai-headline"`（不新增可见文案）。前端 only，不新增写端点、不 mock、不碰 `frontend/src/features/setup/JourneyTrialSetup.tsx` 与那两支 ORD-0346 e2e（故不触发 `REFUSED_AUTO_MERGED`）。
+
+**route ② 未做、归 8c66aa92**：把这句话真正变成"服务器给的"需让这条用户路径真去 consult 后端那个码，若需改 `backend/app/main.py` ⇒ 那是 `8c66aa92` 的写域，我按规矩只明写不改。
+
+**④ 坐标（可 cat-file）**：候选提交 `3e4899228454658cc37e68d5a0ad4da9c92d7197`（分支 `review/S3-ord0363r1-honest-server-attribution`，base `b6a8ea5c625d7e3e82f7348fad57d595a8a403c0`），`git diff --stat b6a8ea5c625d7e3e82f7348fad57d595a8a403c0 3e4899228454658cc37e68d5a0ad4da9c92d7197` = 2 files, 150 insertions(+), 9 deletions(-)。改后 sheet blob `55e5489ccb05d5dd37a0bcfa576d559d595e7e59`；新 spec blob `d1573eddf804d4a7d79c8cd88b74f7ffc140a189`。
+
+**③ 两臂**（`frontend/e2e/qoder-ord0363r1-headline-attribution-is-servers.spec.ts`，route-stub 定值）：arm_server = `/places` 给足、`/plans/generate` 回带 `reason_code:CATALOG_INSUFFICIENT` 的 refusal ⇒ 标题含"服务器给的原因编号"、`data-cnx-field==reason_code`；arm_device = `/places` 返回空列表触发客户端 `CATALOG_EMPTY` ⇒ 标题不得含"服务器给的原因编号"、须含"这台设备"、且无 `data-cnx-field`。两个 mutate（必红）：A 把 `serverBacked` 恒置真（客户端码仍挂"服务器给的"）→ arm_device 红；B 给无 `reasonCode` 的设备码贴 `data-cnx-field` → arm_device 锚断言红。
+
+**已验**：`tsc -p tsconfig.check.json` 退出 0；`playwright --list` 两臂均解析（含 real-seed setup）。**未做（PARTIAL）**：两臂未在现网执行——该 e2e 默认绑共享 `:8000` 且 `_qoderRealSeed` 真写、并需 hub+journey 上下文，我不擅动链上四层。跑绿需隔离端口+独立 DB+独立 venv，命令 `playwright test qoder-ord0363r1-headline-attribution-is-servers.spec.ts`，归 S3（配 dev 栈）或前端门主。
+
+**⑤ 剔除声明（不静默保留）**：上一枝 `c60d8ca71c268c6e1b758cc185855e8405927885`（分支 `review/S3-ord0363-wizard-names-unplannable-city`）**整支作废、不进候选**——它改 `frontend/src/features/setup/JourneyTrialSetup.tsx`：新增 `selectedSpelling/selectedReading/useEffect/serverSaysNoIdentity`、城市输入的 `aria-describedby` 三态、`trial-city-unservable` 块、Next 门控与 create 门控，及那支同名新 spec（改动的行位置以 blob `c03b50880d35c266f54cfe85dbcc21a2c5dac396` 与本块所述函数名为准，逐 diff 见该 ref）。这些是 ORD-0346 已落地且属"客户端自己判"的那半，且与刚落两跳同改该文件被门拒为 `REFUSED_AUTO_MERGED`；按 Q72 我不保留、不动那文件分组逻辑。问：要不要我删这条作废 remote 分支？（删远端是共享操作，我不擅自删。）
+
+
+### CMDR 18:4x · 本班第 6 笔落地：ORD-0357 / ORD-0358 / ORD-0360 已进权威线并部署到手机链 · 我撤回一条自己差点报出去的缺陷 · ORD-0361 待车道自基
+
+**权威线现尖**：`6ee21eddba60303e8f0f46907df9501ee0149e6e`（ORD-0360，`c01d72a3`）。本窗口落地的三笔各带收据：ORD-0357 `d2a794002971c197a60359639feec1f09d2b485e`（车道自己重基后我把同一枚对象挂到 `refs/heads/landing/ord0357-rebased-1812` 再交给门；收据 blob `163d5967aeadf36961a8a46819e788eb3c48977c`）、ORD-0358 `ca31443589a451473c8384ea96f53c888ff9512f`（`8ccd71d8` 的链自恢复：`tools/chain_self_heal.mjs` 与 `tools/CHAIN_SELF_HEAL_V1.md` 两件都在这一笔里）、ORD-0360 那笔落地收据 blob 与两次点名尺读数在 `evidence/cmdr-landing-ORD-0360-1829/` 目录里（同一件我重发一次，门回的是"字节相同→跳过"，说明第一次就已经在分支上）。车道 base 落后时我一律用 `cmdr_recut_r1.py` 重切（逐文件 merged_blob==cand_blob 才算过），切不动的（两边同改一文件）退回车道自己重基：本轮 `11eee48d`（ORD-0361）就是 `REFUSED_AUTO_MERGED`，按 Q72 归 S4。
+
+**部署与"手机现在是哪一代"**：前端 18:14 已过门换到 `d2a79400…` 那一包，`git diff --name-only` 在 `d2a79400` 与现尖之间**没有任何 `frontend/` 路径**（清单：`backend/app/db/session.py`、`backend/app/operations/{reservation_identity,v9}.py`、`backend/app/planning/anchors.py`、`backend/app/services.py`、`backend/db/schema.sql`、`backend/tests/test_qoder_ord0360_single_active_anchor.py`、`tools/CHAIN_SELF_HEAL_V1.md`、`tools/chain_self_heal.mjs`），所以手机上那一包就是现尖那一包，不需要再换一次代 —— 这一句我是量的，不是推的。后端 18:40 起在现尖树上（`D:/moodle/_qoder_cmdr_backend_live_1813` 已 `checkout --detach` 到那枚），本地与公网两处 `/api/v1/health` 都返回新增的 `ai_state`，旧字段 `ai` 一字未动。
+
+**我撤回一条差点报出去的缺陷（写下来，因为它差点变成一条错的派单）**：重启后我先用 `type='table'` 比对新旧库，看到表数没变、新增表为空，就怀疑"ORD-0360 加在 `schema.sql` 里的东西在既有库上没落地"。我没有把这句发出去，而是先去读那一笔到底加了什么：加的是三枚**部分唯一索引**（`CREATE UNIQUE INDEX IF NOT EXISTS uq_commitments_one_active_{arrival,departure,mid_trip}_anchor`，谓词各自不同），而索引按 SQLite 的记法不在 `type='table'` 里。改用 `type='index'` 再读，那三枚在用户库 `D:/moodle/_qoder_preview_20260920/_preview.db` 里都在，且与 `ux_plan_versions_single_active` 并存 —— 也就是**不变量现在就在用户库上被数据库本身强制**，不是只在 Python 里。教训按 [[verify-relayed-mechanism]] 记：判"没生效"要先问"我读的是不是它待的地方"。前后两份快照发布在 `evidence/cmdr-landing-ORD-0360-1829/preview_db_before_restart.json` 与同目录 `preview_db_after_restart.json`（两份的表数同为 55，新增与丢失都为空；期间行数变化的那几张是车道正在真走手机面留下的写入，不是我这轮改的）。
+
+**下一步（我在等的）**：`1d64acf5` 的 ORD-0361 重基后落；`49fe0d7b`、`c01d72a3`、`9759f1ac` 各自块的坐标自修；`8ccd71d8` 把 ORD-0358 的两臂反例收据交齐（工具已经进门，缺的是它自己的证据件）。仍是"只有用户能做"的三件：两枚 API key 轮换、`:8000` 数据面要不要恢复、以及真机上换址后需要重扫一次二维码（今天换了两次址，都是隧道层原因，桌面留言里逐次写清了）。
+
+
+### B c01d72a3 · ORD-0360 交（一节点一枚 ACTIVE 锚 · 分支 dceb2907 · 2026-09-26 18:36+08）
+
+**裁定：退休，不拒。** 三条实测理由，不是偏好。①现尖上同一节点确实能挂两条 ACTIVE C4 锚：收据 `ord0360_repro_r1.json` 量到 `commitments.rowid` = 1, `commitments.rowid` = 2 两行同为 `status=ACTIVE`、`level=C4_Anchored`、同一个 `policy_json.semantic_key`，`plans/generate` 回 HTTP 422，正文原话 `C4_ANCHOR_OVERLAP:<该键>|<该键>`（要件①清单那块已更正过：这形走 OVERLAP 不走 BLOCKED；`C4_ANCHOR_BLOCKED` 全树只有 `backend/app/services.py:852` 一处产生，且被 `:849-850` 抢先返回）。②旅行者自己撤不回进口锚：拿 rowid 最小的那枚锚对应的 Booking 去敲全树唯一会把承诺搬出 ACTIVE 的用户面门 `POST /api/v1/bookings/<id>/cancel`，回 HTTP 422、正文 `only the supplied mock-booking provider is enabled in WP04`，之后两行仍 ACTIVE、`generate` 仍同一句（`ord0360_exitdoor_r1.json` 的三个 verdict：true / false / false）。③产品对"新声明替旧声明"本来就是这个口径：`backend/app/main.py:5807` 先把 base 置 SUPERSEDED、`backend/app/main.py:5842` 再提升新的，`backend/app/operations/v9.py:743-749` 同形。所以：同一 `confirmation_ref` 仍按原样拒（`backend/app/operations/v9.py:1008-1016` 一字未动），不同而节点相同 → 旧锚就地退休。
+
+**invariant 落三层。** ①确认时：`backend/app/operations/reservation_identity.py:179` 新增 `retire_superseded_active_anchor()`，调用点 `backend/app/operations/v9.py:1049`；身份由 `backend/app/planning/anchors.py:152` 新增的 `anchor_claim_identity()` 给出，它照抄 `resolve_plan_anchors` 自己那两条分流（`backend/app/planning/anchor_schedule.py:167-172` 结构键、`backend/app/planning/anchor_schedule.py:176-191` 真实 place/service 键），所以不引入第二套词表；没有 `anchor_role` 的 commerce 承诺返回 None、天然在规则之外（`backend/app/planning/anchor_schedule.py:153-156` 本来就不把它们当锚）。退休只把 `commitments.status` 改成 `CANCELLED`（`backend/db/schema.sql:230` 的 CHECK 里没有 SUPERSEDED；`backend/app/commerce/service_impl.py:779` 现有级退休用的正是这一枚），行不删、`external_ref` 留着、`policy_json` 打上 `retire_reason` / `superseded_by_confirmation_ref` / `retired_at`，另补一枚 Event 与一条 audit；旧 Booking 不动（那是钱的事实，锚只是对节点的一声 claim）。②建库前：`backend/app/db/session.py:311` 的 `_anchor_identity_groups` 与 `backend/app/db/session.py:367` 的 `_retire_duplicate_active_anchors`，与 `_collapse_duplicate_active_plans` 同一手（在 schema 脚本之前把历史重复迁走）；幸存者规则是全序（绑在执行计划上的优先 → 最新确认 → rowid 最小），所以不存在"判不开就拒迁"那一支——它不像 plan_versions 那样决定旅行者执行哪张计划。③库里：`backend/db/schema.sql:449-459`（该文件在分支上的 blob 119e047b7a5b7e369cb1d6242be2bc37e52b7d87；`.sql` 的行号不在这把尺的坐标词表里，所以逐处补 blob）三枚部分唯一索引（ARRIVAL 与 DEPARTURE 各按 `(journey_id)`、MID_TRIP 按 `(journey_id, json_extract(policy_json,'$.semantic_key'))`，都带 `status='ACTIVE' AND level='C4_Anchored' AND json_valid(policy_json)`）。独立 sqlite 探针逐形量一遍：`ord0360_index_probe_r1.json` 里 14 形全部与预期一致（同键第二条拒、C3 同键放行、无 `anchor_role` 的两条 commerce 放行、非 JSON 的 policy 放行、已 CANCELLED 的第二条放行、退休之后可再确认），SQLite 3.53.1。
+
+**要件③：仍 blocked 时具名。** 句子由产品自己写（分支 dceb29072bc64f90d3052d6dd2685b7bc1c5e876，走查件 ord0360_after_r1.json:103，第二次冲突走查的原样读数）：
+
+```
+No feasible plan candidates satisfy the journey constraints: C4_ANCHOR_OVERLAP:v12:22222222-2222-4222-8222-222222222222:departure-anchor|v12:22222222-2222-4222-8222-222222222222:arrival-anchor; blocking commitment: ARRIVAL 'TICKET-IN' claiming 2026-10-10T09:15:00+08:00 (commitment b0b8228f-2648-40db-8167-ff88055bb9a0); DEPARTURE 'TICKET-OUT' claiming 2026-10-10T09:20:00+08:00 (commitment 10eb685c-9603-45ed-9dd2-bd4c3db0da74)
+```
+
+基句 `No feasible plan candidates satisfy the journey constraints` 逐字未动——`backend/tests/test_qoder_catalog_reason_code.py:171` 按相等断它、`:104` 与 `:125` 按 startswith、`backend/tests/test_qoder_beijing_catalogue.py:229` 与 `backend/tests/test_rx4_c4_generate_gate.py:411` 按子串，这几份文件我一字没改；具名段接在机器码之后：`; blocking commitment: <role> '<confirmation_ref>' claiming <scheduled_start_at> (commitment <id>)`，几枚在挡就列几枚。Q64 / Q70 / Q71 不受影响，因为这单 0 个前端文件改动（`git diff --name-only` 在 base b6a8ea5c 与分支 dceb29072bc64f90d3052d6dd2685b7bc1c5e876 之间只有 backend 七个路径）；r6 尺读的是源码、看不见运行时数据，所以收敛不靠尺、靠下面那六形。
+
+**要件④：两枚反例臂 + 改前那一代。** 闸的 blob c376c4932babb56408c6dfe9064cb31fec6668e6，读数件 `ord0360_arms_matrix_r2.json`（六形各跑一轮，跑完逐文件 sha256 回验等于分支字节、`worktree_after_run: clean`；下面每一处的红集合就是该件里 `shapes[*].failed` 的原样条数）：`fixed` → 11 passed, 2 warnings in 2.99s；`tip_behaviour_before_fix`（现尖的产品文件放回去）→ 红 9 条：backend/tests/test_qoder_ord0360_single_active_anchor.py:381（A10）、backend/tests/test_qoder_ord0360_single_active_anchor.py:450（A11）、backend/tests/test_qoder_ord0360_single_active_anchor.py:167（A1）、backend/tests/test_qoder_ord0360_single_active_anchor.py:191（A2）、backend/tests/test_qoder_ord0360_single_active_anchor.py:210（A3）、backend/tests/test_qoder_ord0360_single_active_anchor.py:239（A4）、backend/tests/test_qoder_ord0360_single_active_anchor.py:263（A5）、backend/tests/test_qoder_ord0360_single_active_anchor.py:323（A8）、backend/tests/test_qoder_ord0360_single_active_anchor.py:353（A9）；`M_old_anchor_left_ACTIVE`（退休变 no-op）→ 红 5 条：backend/tests/test_qoder_ord0360_single_active_anchor.py:167（A1）、backend/tests/test_qoder_ord0360_single_active_anchor.py:191（A2）、backend/tests/test_qoder_ord0360_single_active_anchor.py:210（A3）、backend/tests/test_qoder_ord0360_single_active_anchor.py:239（A4）、backend/tests/test_qoder_ord0360_single_active_anchor.py:263（A5）；`M_blocked_reason_becomes_network_words`（具名句换成 "the network is unavailable, please retry later"）→ 红 2 条：backend/tests/test_qoder_ord0360_single_active_anchor.py:323（A8）、backend/tests/test_qoder_ord0360_single_active_anchor.py:353（A9）；`M_blocked_reason_keeps_only_the_code`（只剩机器码、不具名）→ 红 2 条：backend/tests/test_qoder_ord0360_single_active_anchor.py:323（A8）、backend/tests/test_qoder_ord0360_single_active_anchor.py:353（A9）；`M_boot_repair_neutralised` → 红 2 条：backend/tests/test_qoder_ord0360_single_active_anchor.py:381（A10）、backend/tests/test_qoder_ord0360_single_active_anchor.py:450（A11）（A11 顺带红是证据不是噪声：迁移不修，`CREATE UNIQUE INDEX` 就建不起来，库等于没设防）。六形 verdict 全为 GREEN / AS_DECLARED，申报的红集合与实测逐条对齐：无意外红、无漏红、无该绿被打破。
+
+**r1 那一次我自己踩的坑，先报。** 第一版矩阵 `ord0360_arms_matrix_r1.json`（留着不删）把"改前那一代"整树还原，连 `anchors.py` 里我那枚新增函数一起抹掉，于是那一代 import 不到符号、收集退出码 2、一条没跑，红集合为空——看着像"改前不红"，其实是空跑。r2 改成逐文件还原（只留 `anchors.py`，行为仍是现尖的行为），并把每形的 `collected_line` 一起进件。
+
+**回归（两套完整检出各跑一遍全后端套件）。** 分支 dceb29072bc64f90d3052d6dd2685b7bc1c5e876。现尖读数件 suite_before_r3.txt:312 → 8 failed, 1345 passed, 15 skipped, 1 xfailed；分支读数件 suite_after_r3.txt:312 → 8 failed, 1356 passed, 15 skipped, 1 xfailed；红集合按 nodeid 逐条比，两边是同一组 8 条（g5、g8a、g9b、g10、g14a、g14c、G4、city_failure_reasons 那支，逐条在 ord0360_receipt_r1.json:160 里），新增红 0 条；绿数差 11 条 = 本单新增的闸 11 条（闸从 backend/tests/test_qoder_ord0360_single_active_anchor.py:167 起）。两份原样输出留在 `suite_before_r3.txt` 与 `suite_after_r3.txt`；收据 ord0360_receipt_r1.json:12 里 12 格 verdict 全 MET，每格的 `derived_result` 由脚本从具名工件读出、`claimed_result` 是单上原文。跑前发现的那枚 `test_qoder_ord0332_error_receipt.py::test_R4` 假红出自**上一轮单文件跑遗留的库状态**：它的 `_journey_ids(1)[0]` 直接取库里第一条行程 id 再把末位换成 `9` 当反例，状态饥渴；清库重跑不复现，我没有为它改任何断言。
+
+**仪器自述。** 全程 `CITYNEXUS_AI_ENABLED=false`；子进程环境去掉 `DEEPSEEK_API_KEY`、`OPENAI_API_KEY`、`CITYNEXUS_AI_API_KEY` 三枚名字（只提名字，值没被读过）；解释器 `D:\moodle\CityNexus\.venv\Scripts\python.exe`（3.12.14，本机唯一能跑这套的那枚）；本单没起任何端口（TestClient 走进程内 ASGI，所以端口表为空）；`ord0360_repro_r1.json` 与 `ord0360_after_r1.json` 各自新建、各自删掉了自己的 `_ord0360_*.db`，两处都调用了 `POST /api/v1/demo/reset`——它按产品语义清 52 张表，但只可能清到脚本自己刚建的空库；`_live.db` 与 `_preview.db` 一个字节没碰。
+
+**没做的，说明白。** ①屏幕那一跳我没真机走：只读到 `frontend/src/features/planning/PlanWithAiSheet.tsx:1110-1114` 直出 `failureReason.text`、无截断，而"服务器原话逐字进技术详情"这件事已由 ORD-0342 落地的 A2 臂（`detail` 等值 + `data-cnx-field="detail"`）把住；这一屏的逐字等值我没有新的读数。②两条路径的 survivor 规则不完全同轨：确认时"新者胜"，建库迁移时"绑在执行计划上的优先、否则新者"——要它俩严格同一，我把确认侧也接上同一条全序，一句话的事。③仍开放的老事实：commerce 的 `policy_json.semantic_key` 与锚共用一个命名空间（`backend/app/commerce/validators.py:44-52` 取 Activity 的 place/service id），我用"只作用于有 `anchor_role` 的行"绕开，命名空间本身没分家。
+
+**坐标（均可在 GitHub `Canshu-King/CityNexus` 上 `cat-file`，本单从 `git ls-tree` 读、非手打）：** 分支 `refs/heads/review/B-ord0360-single-active-anchor` = dceb29072bc64f90d3052d6dd2685b7bc1c5e876；blob 7acd89b65814f42e11dfb8c2b2860fb293886b03（身份函数）、12222b251608ccf7cada1d76923235aa9e3fe1b7（退休）、9e884b8906b66797605d3c3ff95b666b9f9849b8（调用点与 audit）、788fb854c6a79dddaca90520ea4ffefdff5ae531（迁移）、13dbf0271ce2b130d621056ee34a76f7cf845342（具名句）、119e047b7a5b7e369cb1d6242be2bc37e52b7d87（三枚索引）、c376c4932babb56408c6dfe9064cb31fec6668e6（闸）。base = b6a8ea5c625d7e3e82f7348fad57d595a8a403c0，`git merge-base --is-ancestor` 回真。
+
+
+### 📱 aad2d1f2 (SESSION=aad2d1f2) P3 · **勘误：上一块标题里那枚代次指错了 —— 我走的是 /assets/index-BOIAHTWw.js 那一代，不是漂移现尖那一代；旧块一字不改** @18:30+08
+
+```text
+was / now（只改标题的指代，正文一字不动）：
+· was = 已插入那一块的标题行现在长这样：`### 📱 aad2d1f2 (SESSION=aad2d1f2) P3 · **公网手机上真人走过五格（27f963a7…那一代）：两件旧缺陷都量到新态，服务器给的回执号上了线没上屏；公网入…`，全文在 `aad2d1f2_1817.md.inserted_182409`（19289 B，落在账本第 [16701] 行）
+· now = 本批五格读数走的代次 = 号令者点名的 b6a8ea5c625d7e3e82f7348fad57d595a8a403c0，链上当时服务的 bundle = `/assets/index-BOIAHTWw.js`，字节与 sha256 由每趟浏览器记下的名字回读钉住（见证件 blob 98589d9ddd2b27524d92e8eaac8b4b7af7cacef9，字段 `re_read_over_the_local_hop`）；`27f963a77edc4d508a39b0a07c76927d0512c724` 是我在该块⑥里报的「镜子漂移现尖」，不是我走的那一代（漂移件 blob 82a9f2b53fa7b0322195e75a0310f81654b4371d，字段 `named_by_the_commander` 与 `tip_read_now` 各归各）
+· 为什么会被指错：标题那格我插的是「评分时读到的现尖」，而不是「走路那代」——我的插值取错了字段，这一格以后按 `named_by_the_commander` 写（评分件里两条字段都在，blob 4cc4bba6aa0369bc6c5cf8b2ce17186eafd5f8c9）
+
+补三条旧块应用之后才量到、当时不在块上的事实：
+· 本前缀写入计数：50 枚路径，每枚都只有一笔提交 = True，三枚已知双发的反控各读到 2 笔（件 blob 006975ecf9bb8be62cad1e36f3167c7d7462d0f4）；中间那次 409 乐观并发拒投没有落笔，两轮日志也上架了（blob 0b284f7310e1fc14347d90ae9e40aa4cfa9105d2 与 06df83cae9e66ca17e8a101ca4c76f184359d98d）
+· 旧块里每一枚 40 位都取得回来：33 枚全部解析为 blob 或 commit（预飞件 blob f650dcc7674cf5d4c1d23655a1d203671a54af27）
+· 旧块自己的 Q43 r4d 原判：rc 0、claims 14、findings 0（回执件 blob 5174969e32eba5867de309a2a4ef45453d672b23）；本块同样自跑现行门，回执随后按新名上架
+
+总线那条续帖的编号是 issuecomment-5845469270，里面 generation 一格写的就是 b6a8ea5c625d7e3e82f7348fad57d595a8a403c0，与上面 now 一致，无需改帖。
+
+**纪律**：旧块一字不改、不删、不覆盖；产品字节 0 改；权威线 0 写；ref 0 推别人的；链上四层一行没动；本块只纠正我自己那一格指代。
+```
+
+坐标（写时从分支 tree 现读，写时尖 225b42f156789ee3b3a46b3b6e2059d03f553781）：见证件 `evidence/hjp3-b6a8ea5c-walk-0926/r6_walked_asset_witness.json` 98589d9ddd2b27524d92e8eaac8b4b7af7cacef9 · 评分件 `evidence/hjp3-b6a8ea5c-walk-0926/r6_readings_scored.json` 4cc4bba6aa0369bc6c5cf8b2ce17186eafd5f8c9 · 漂移件 `evidence/hjp3-b6a8ea5c-walk-0926/r6_drift.json` 82a9f2b53fa7b0322195e75a0310f81654b4371d · 写入计数 `evidence/hjp3-b6a8ea5c-walk-0926/write_ledger_r6b.json` 006975ecf9bb8be62cad1e36f3167c7d7462d0f4 · 坐标预飞 `evidence/hjp3-b6a8ea5c-walk-0926/hex_preflight_r6.json` f650dcc7674cf5d4c1d23655a1d203671a54af27 · 旧块回执 `evidence/hjp3-b6a8ea5c-walk-0926/ledger_inbox_proof_r6_q43r4d.json` 5174969e32eba5867de309a2a4ef45453d672b23 · 两轮发布日志 `evidence/hjp3-b6a8ea5c-walk-0926/ship_result_r6.json` 0b284f7310e1fc14347d90ae9e40aa4cfa9105d2 与 `evidence/hjp3-b6a8ea5c-walk-0926/ship_result_r6b.json` 06df83cae9e66ca17e8a101ca4c76f184359d98d · 本块构建件 `evidence/hjp3-b6a8ea5c-walk-0926/instruments/r6_block_erratum.py`（名字在此，blob 在本块之后按新名上架）。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### N3 18:15+08 ORD-0357 交付坐标勘误（第三块；不改已落账那两块的账）
 
 - 为什么再来一块：已落账那块记的候选是 `d9fe7dbef1f4b431ed49757e1bc43f482bbe5afa`、base 是 `27f963a77edc4d508a39b0a07c76927d0512c724`。你 18:02 之后 `refs/heads/mirror/integration-frontend-apple-pass1` 又前移到 `f44ad86618eb9dadca001ea7471ae24274fc4388`（`live_checks/e2e_logs/n3_lsremote_r4.json:4` 读到，同件 `:2` 的 `ls_remote_exit_code` 读到 0），所以按同一口径再基一次并顶枝。**最终坐标以本块为准。**
