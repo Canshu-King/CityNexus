@@ -1,0 +1,369 @@
+{
+ "ran_at_local": "2026-09-26T08:31:16+0800",
+ "lane": "HJ-P3 aad2d1f2-4de9-406b-a5df-afa0e2bcea58",
+ "order": "real-journey walkthrough on the re-cut phone generation (ORD-0323 + ORD-0339)",
+ "scope": "what a traveller can and cannot do on the deployed phone chain right now, and what the screen says when they cannot",
+ "generation": "c740f45d68f337c460a1a43b995162689d0110af",
+ "generation_how_read": "git ls-remote of refs/heads/mirror/integration-frontend-apple-pass1, plus the asset the served index.html names, hashed from the bytes I fetched",
+ "artifact": {
+  "viewport": "390x844 @3x, zh-CN, Asia/Shanghai, hasTouch",
+  "chromium": "153.0.8010.12",
+  "served_index_bytes": 1200,
+  "asset_named_by_the_served_page": "assets/index-rDBD_4P2.js",
+  "asset_bytes": 1260179,
+  "asset_sha256_64_hex": "b182add85b84240ee7a1e7645d23a61f47df521f9b4a77d18182729236a24ade",
+  "name_matches_what_the_commander_named": true
+ },
+ "measurement_method": "own Chromium lane against the deployed chain at 127.0.0.1:4781; clicks by role and by the exact painted label; screenshots to files; every DOM read taken twice (at rest and after opening all details blocks); leg outcomes from the browser network layer; 0 product bytes written",
+ "cells": {
+  "C1_new_journey_wizard": {
+   "destination_field_placeholder": "例如：天津、东京、新加坡",
+   "fields_filled_by_me": {
+    "目的地": "天津",
+    "抵达地点": "天津站",
+    "离开地点": "天津滨海国际机场",
+    "抵达时间": "2026-10-02T10:00",
+    "离开时间": "2026-10-03T20:00"
+   },
+   "presses_returned_ok": [
+    true,
+    true,
+    false
+   ],
+   "screen_changed_after_each_press": [
+    true,
+    true,
+    false
+   ],
+   "the_still_needed_line_after_each_press": [
+    null,
+    null,
+    null
+   ],
+   "reached_step3_review": true,
+   "values_the_product_filled_for_me": [
+    "2 · 1 · 我们替你填的",
+    "CNY 3000 / 1000 · 我们替你填的",
+    "轻松 · 我们替你填的"
+   ],
+   "band_between_step_bar_and_first_control": {
+    "trial_steps_padding_bottom_px": 212,
+    "step_dot_row_top_px": 260,
+    "card_top_px": 510,
+    "visual_gap_dot_row_to_card_px": 250,
+    "gap_from_the_steps_box_to_the_card_px": 16,
+    "card_visible_at_rest": true,
+    "scroll_overflow_px": 636,
+    "submit_button_top_px": [
+     652
+    ],
+    "agrees_with_ORD-0338_that_the_band_is_a_real_padding_not_data_waiting": true
+   },
+   "pressing_the_real_submit_button": {
+    "the_button_found_by_text": [
+     {
+      "i": 2,
+      "text": "确认创建",
+      "disabled": false,
+      "cls": "v8-primary-button",
+      "top": 652
+     }
+    ],
+    "all_buttons_painted_at_step3": [
+     "EN",
+     "返回",
+     "确认创建",
+     "使用封存的演示行程",
+     ""
+    ],
+    "press_result": "clicked",
+    "legs_after_the_press": [
+     {
+      "url": "/api/v1/travelers",
+      "m": "POST",
+      "status": 500,
+      "ct": "text/plain",
+      "post_body_len": 76
+     }
+    ],
+    "journey_id_stored_in_localStorage_after": null,
+    "still_on_the_wizard_afterwards": true,
+    "reached_the_hub": false,
+    "lines_the_traveller_reads": [
+     "这一步没有成功，行程还没有创建。",
+     "服务器拒绝了这一步（HTTP 500）。你的行程没有因此改变，可以检查后重试。"
+    ],
+    "screenshot": {
+     "file": "W3_9_after_confirm.png",
+     "exists": true,
+     "bytes": 218930
+    }
+   },
+   "screenshots": [
+    {
+     "file": "W3_3_next1.png",
+     "exists": true,
+     "bytes": 127846
+    },
+    {
+     "file": "W3_3_next2.png",
+     "exists": true,
+     "bytes": 155294
+    },
+    {
+     "file": "W3_3_next3.png",
+     "exists": true,
+     "bytes": 155294
+    }
+   ]
+  },
+  "C2_sealed_demo_entry": {
+   "label_actually_painted": "使用封存的演示行程",
+   "the_tail_lines_it_shows": [
+    "没读到封存演示的信息：服务器刚才答了，但答的内容我们用不了。这不是你填错了什么。",
+    "重试",
+    "使用封存的演示行程"
+   ],
+   "painted_len": 204,
+   "buttons_after_the_click": [
+    "EN",
+    "高级设置",
+    "目的地",
+    "下一步",
+    "重试",
+    "使用封存的演示行程"
+   ],
+   "forbidden_shapes_found_in_this_take_only_at_rest": {
+    "exception_in_text": 0,
+    "exception_in_attributes": 0,
+    "stack_frame": false,
+    "long_machine_text": false,
+    "why_this_one_is_weaker": "take 2 read at rest without opening anything; the take-3 fates are the reads taken twice"
+   }
+  },
+  "C3_read_failure_copy": {
+   "the_chains_own_fate": "4 条只读路径签名完全相同 = True（状态 500、正文 0 B）",
+   "distinct_signatures": [
+    "500 / text/plain / 0 B"
+   ],
+   "what_the_shell_says_without_me_breaking_anything": [
+    "返回",
+    "确认创建",
+    "使用封存的演示行程"
+   ],
+   "an_action_is_offered_at_rest": true,
+   "the_scene_failure_is_silent_until_the_traveller_presses_something": true,
+   "who_actually_answered": {
+    "a_path_the_app_cannot_have": "/api/v1/zzz-hjp3-canary-path",
+    "made_up_path_answers_identically": true,
+    "no_server_header_on_any_answer": true,
+    "every_answer_body_is_zero_bytes": true,
+    "empty_body_sha256": "e3b0c44298fc1c14"
+   },
+   "screenshot": {
+    "file": "W3_7_natural.png",
+    "exists": true,
+    "bytes": 167940
+   }
+  },
+  "C4_broken_three_ways": {
+   "per_fate": {
+    "refused": {
+     "the_lines_it_shows": [
+      "没读到封存演示的信息：服务器刚才答了，但答的内容我们用不了。这不是你填错了什么。",
+      "重试",
+      "使用封存的演示行程"
+     ],
+     "exception_in_text_after_opening_details": 0,
+     "exception_in_attributes_after_opening_details": 0,
+     "stack_frame": false,
+     "long_machine_text": false,
+     "canary_reached_the_dom": false,
+     "details_elements": [],
+     "screenshot": {
+      "file": "W3_4_fate_refused.png",
+      "exists": true,
+      "bytes": 188818
+     }
+    },
+    "empty500": {
+     "the_lines_it_shows": [
+      "没读到封存演示的信息：服务器刚才答了，但答的内容我们用不了。这不是你填错了什么。",
+      "重试",
+      "使用封存的演示行程"
+     ],
+     "exception_in_text_after_opening_details": 0,
+     "exception_in_attributes_after_opening_details": 0,
+     "stack_frame": false,
+     "long_machine_text": false,
+     "canary_reached_the_dom": false,
+     "details_elements": [],
+     "screenshot": {
+      "file": "W3_5_fate_empty500.png",
+      "exists": true,
+      "bytes": 188818
+     }
+    },
+    "canary200": {
+     "the_lines_it_shows": [
+      "这台部署不是演示舞台（demo_mode=false），所以没有可进入的封存演示。",
+      "重试",
+      "使用封存的演示行程"
+     ],
+     "exception_in_text_after_opening_details": 0,
+     "exception_in_attributes_after_opening_details": 0,
+     "stack_frame": false,
+     "long_machine_text": false,
+     "canary_reached_the_dom": false,
+     "details_elements": [],
+     "screenshot": {
+      "file": "W3_6_fate_canary200.png",
+      "exists": true,
+      "bytes": 180317
+     }
+    }
+   },
+   "the_same_sentence_covers_a_refusal_and_an_unusable_answer": true,
+   "journey_list_and_inbox_reachability": {
+    "labels_a_traveller_can_press_now": [
+     "用你自己的城市试用 CITYNEXUS",
+     "新建行程",
+     "三步完成。选择目的地、告诉我们怎么玩，剩下的交给 CityNexus。",
+     "EN",
+     "✓",
+     "目的地与时间",
+     "✓",
+     "人数与偏好",
+     "3",
+     "确认创建",
+     "目的地",
+     "天津",
+     "抵达",
+     "天津站 · 2026-10-02 10:00",
+     "离开",
+     "天津滨海国际机场 · 2026-10-03 20:00",
+     "人数 / 房间",
+     "2 · 1 · 我们替你填的",
+     "总预算 / 住宿",
+     "CNY 3000 / 1000 · 我们替你填的",
+     "节奏",
+     "轻松 · 我们替你填的",
+     "兴趣",
+     "—",
+     "特殊要求",
+     "—",
+     "自动设置",
+     "CN · CNY · Asia/Shanghai",
+     "返回",
+     "确认创建",
+     "使用封存的演示行程"
+    ],
+    "note": "no client-side router strings for /journey/<id> were found in the served bundle, so a dead stored id is not a reachable surface on this build; the list above is what a traveller can actually press right now"
+   }
+  },
+  "C5_error_boundary_three_places": {
+   "dead_stored_id_paint_len": 158,
+   "finding": "the served bundle carries no client route for a stored journey id, so /journey/<id> renders the same shell; the error boundary could not be reached by a bad URL on this build, so I do not claim that surface is clean - I could not get to it"
+  }
+ },
+ "instrument_self_tests": {
+  "exposure_detector_two_way": {
+   "leaky_fixture_authored_by_me_after_opening": {
+    "exception_in_text": 1,
+    "exception_in_attributes": 1
+   },
+   "clean_fixture": {
+    "exception_in_text": 0,
+    "exception_in_attributes": 0,
+    "action_verbs": true
+   },
+   "derived": {
+    "detector_fires_once_the_block_is_open": true,
+    "a_collapsed_read_would_have_missed_it": false,
+    "detector_is_silent_on_a_clean_page": true
+   }
+  },
+  "collapse_sensitivity_at_element_level": {
+   "at_rest": {
+    "body_includes": false,
+    "details_own": 4,
+    "p_own": 0,
+    "p_textcontent": 30
+   },
+   "after_opening": {
+    "body_includes": true,
+    "details_own": 36,
+    "p_own": 30,
+    "p_textcontent": 30
+   },
+   "derived": {
+    "body_level_read_hides_it_when_collapsed": true,
+    "element_inner_text_hides_it_when_collapsed": true,
+    "element_text_content_never_hides_it": true
+   },
+   "screenshot": {
+    "file": "W3_8_collapse_fixture.png",
+    "exists": true,
+    "bytes": 25824
+   }
+  },
+  "pairing_note": "this walk runs against the deployed chain, so no hop of mine mints pair ids; the server side of a leg here is the browser network layer, which is named as weaker than the pass-3 pairing rather than presented as equivalent"
+ },
+ "runs_excluded": [
+  {
+   "run": "take 1 (r5_walk.cjs)",
+   "what_I_claimed": "the wizard does not advance",
+   "mechanical_signal": "the painted 还需要填写：目的地、抵达地点、离开地点 line unchanged and the same painted length before and after each press",
+   "real_cause": "I pressed 下一步 on an unfilled form; my fill selector looked for 城市 while the placeholder reads 例如：天津、东京、新加坡"
+  },
+  {
+   "run": "take 1/2 label probe",
+   "what_I_claimed": "there is no 封存演示 entry",
+   "mechanical_signal": "the visible-button inventory lists 使用封存的演示行程",
+   "real_cause": "name probe on a label I had not read"
+  },
+  {
+   "run": "take 3 first press",
+   "what_I_claimed": "confirming sends nothing",
+   "mechanical_signal": "no POST leg recorded, and the node my locator picked was the step-dot label whose text is also 确认创建",
+   "real_cause": "wrong node; on the role-based press a 76-byte POST is sent and answered"
+  }
+ ],
+ "boundaries": "product bytes 0 changed; 0 write to the shared tree, release dist, tunnels or another lane; every failure was manufactured inside my own browser by route interception; demo/reset 0; _live.db and _preview.db 0 read 0 write; git apply 0; no credential printed; nothing I saw on the way was fixed",
+ "judgments": {
+  "traveller_can_reach_the_review_step": true,
+  "traveller_can_create_a_journey_on_this_chain_right_now": false,
+  "the_refusal_screen_offers_an_action": true,
+  "the_refusal_screen_states_nothing_was_changed": true,
+  "confirm_press_tells_the_traveller_why_in_words": true,
+  "the_screen_speaks_for_a_server_that_never_answered_in_at_least_one_fate": true,
+  "nothing_forbidden_reached_the_dom_on_the_surfaces_I_reached": true,
+  "the_ORD-0338_band_is_a_real_padding_not_data_waiting": true,
+  "every_excluded_run_carries_a_mechanical_signal": true
+ },
+ "judgments_note": "no PASS is asserted anywhere in this file; each key above is a computation over the fields it names, and the grading belongs to the ledger owner",
+ "screenshot_pixel_identity": {
+  "refused_vs_empty500": {
+   "left_sha256": "0ba0ab6e70ac1044",
+   "right_sha256": "0ba0ab6e70ac1044",
+   "pixel_identical": true,
+   "left_bytes": 188818,
+   "right_bytes": 188818
+  },
+  "refused_vs_canary200": {
+   "left_sha256": "0ba0ab6e70ac1044",
+   "right_sha256": "a8cacffb76f35da5",
+   "pixel_identical": false,
+   "left_bytes": 188818,
+   "right_bytes": 180317
+  },
+  "confirm_press_vs_rest": {
+   "left_sha256": "ae9a1c4082937e08",
+   "right_sha256": "b605268016bc39da",
+   "pixel_identical": false,
+   "left_bytes": 218930,
+   "right_bytes": 84342
+  },
+  "what_this_proves": "the refused fate and the answered-but-unusable fate paint byte-identical pixels, so the screen cannot distinguish them and the sentence it chooses is not derived from the leg"
+ }
+}
