@@ -1,0 +1,59 @@
+{
+ "schema": "CNX_ORD0342_R6_CENSUS_V1",
+ "ruler": {
+  "local_name": "ui_exposure_taint_ast_r6.cjs",
+  "published_as": "ui_exposure_taint_ast_r3.cjs",
+  "blob": "6a251d3a6bea70329e06581384a81d5ef54c96a6",
+  "blob_verified": false
+ },
+ "mode": "--tree (module graph); --file/--ref is neither an upper nor a lower bound on it",
+ "attribute_blind_spot": "r6 does not treat an attribute as a sink, so it can neither see nor clear what this order added; Q71 is measured by the arms instead",
+ "trees": {
+  "pre_fix_38277c4e": {
+   "sha": "c4a1b3392a78f91d10c4afa634b3e3877414ba29",
+   "cells": 12,
+   "raw": "ord0342_r6_pre_38277c4e_r1.json"
+  },
+  "candidate": {
+   "sha": "003886ca83294a9ec97a98215cb8cc2e8232189b",
+   "cells": 12,
+   "raw": "ord0342_r6_candidate_r1.json"
+  },
+  "authority_436d4a36": {
+   "sha": "436d4a36c64c1b54a0b105f0f346425286a15701",
+   "cells": 12,
+   "raw": "ord0342_r6_tip_436d4a36_r1.json"
+  },
+  "merge_of_authority_and_candidate": {
+   "tree": "52218c0c1f23433a7e0699edc71addbdd3b6ddcb",
+   "cells": 12,
+   "raw": "ord0342_r6_merge_52218c0c_r1.json"
+  }
+ },
+ "no_growth_gate": {
+  "compared": "merge tree vs the authority tip",
+  "by_file_and_rule_growth": {},
+  "cells_before": 12,
+  "cells_after": 12,
+  "my_cells_before": [
+   "features/planning/PlanWithAiSheet.tsx:1021",
+   "features/planning/PlanWithAiSheet.tsx:1048"
+  ],
+  "my_cells_after": [
+   "features/planning/PlanWithAiSheet.tsx:1075",
+   "features/planning/PlanWithAiSheet.tsx:1114"
+  ]
+ },
+ "per_rule": {
+  "authority": {
+   "UPSTREAM_TEXT_VIA_HELPER_TO_DOM": 4,
+   "UPSTREAM_EXCEPTION_TO_DOM": 6,
+   "RAW_BODY_TO_DOM": 2
+  },
+  "merge": {
+   "UPSTREAM_TEXT_VIA_HELPER_TO_DOM": 4,
+   "UPSTREAM_EXCEPTION_TO_DOM": 6,
+   "RAW_BODY_TO_DOM": 2
+  }
+ }
+}
