@@ -1,0 +1,153 @@
+{
+  "order": "ORD-0351",
+  "spec": "e2e/qoder-stored-journey-link-is-an-entry.spec.ts",
+  "pre_written_expectations": {
+    "tip": {
+      "ord0351-a-a-link-to-a-saved-trip-opens-that-trip": "failed",
+      "ord0351-b-a-link-the-server-denies-says-so-by-name": "failed",
+      "ord0351-c-an-unanswered-link-is-never-blamed-on-the-server": "failed",
+      "ord0351-d-a-dead-link-empties-a-reference-not-a-trip": "failed",
+      "ord0351-e-route-names-are-not-journey-links": "passed"
+    },
+    "fixed": {
+      "ord0351-a-a-link-to-a-saved-trip-opens-that-trip": "passed",
+      "ord0351-b-a-link-the-server-denies-says-so-by-name": "passed",
+      "ord0351-c-an-unanswered-link-is-never-blamed-on-the-server": "passed",
+      "ord0351-d-a-dead-link-empties-a-reference-not-a-trip": "passed",
+      "ord0351-e-route-names-are-not-journey-links": "passed"
+    }
+  },
+  "playwright_version": "1.63.0",
+  "node_version": "3.12.14 / v24.14.0",
+  "worktree_head": "7f26b2f24ccb5893e194bb27da39cc2284aa47d1",
+  "main_tsx_tip_blob": "4769a6e3712955cc9e5f20b43ee80e893676a9c0",
+  "main_tsx_fixed_blob": "341017e14314c67c6891c337967fb9379ee0223b",
+  "ports": {
+    "4791": "free",
+    "8139": "free"
+  },
+  "arms": {
+    "tip": {
+      "arm": "tip",
+      "command": "node node_modules/@playwright/test/cli.js test e2e/qoder-stored-journey-link-is-an-entry.spec.ts --project=chromium --no-deps --reporter=json",
+      "cwd": "D:\\moodle\\_qoder_ord0351_S2\\wt\\frontend",
+      "exit": 1,
+      "run_id": "o351tip092736",
+      "database_url": "sqlite:///D:/moodle/_qoder_ord0351_S2/db/_o351tip092736.db",
+      "db_exists": true,
+      "ai_key_names_removed_from_child_env": [
+        "DEEPSEEK_API_KEY"
+      ],
+      "stderr_tail": "[citynexus e2e] suite=current-product authoritative=true python=D:/moodle/CityNexus/.venv/Scripts/python.exe frontend=:4791 backend=:8139 db=sqlite:///D:/moodle/_qoder_ord0351_S2/db/_o351tip092736.db ai=disabled reuseExistingServer=false\n[citynexus e2e] provenance ok: run=o351tip092736 frontend=:4791 -> backend=:8139 ai=disabled db=_o351tip092736.db\n",
+      "results": {
+        "ord0351-a-a-link-to-a-saved-trip-opens-that-trip": {
+          "status": "failed",
+          "duration_ms": 20492,
+          "error": "Error: e2e/qoder-stored-journey-link-is-an-entry.spec.ts :: ord0351-a-a-link-to-a-saved-trip-opens-that-trip — 地址栏写着 f2474cd0-9d7a-4bc9-ae87-4f54c365e52b，屏上没有出现那一趟的 Today\n\n\u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: getByTestId('today-heading')\nExpected: visible\nTimeout: 20000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - e2e/qoder-stored-journey-link-is-an-entry.spec.ts :: ord0351-a-a-link-to-a-saved-trip-opens-that-trip — 地址栏写着 f2474cd0-9d7a-4bc9-ae87-4f54c365e52b，屏上没有出现那一趟的 Today getByTestId('today-heading') with timeout 20000ms\u001b[22m\n\u001b[2m "
+        },
+        "ord0351-b-a-link-the-server-denies-says-so-by-name": {
+          "status": "failed",
+          "duration_ms": 20460,
+          "error": "Error: e2e/qoder-stored-journey-link-is-an-entry.spec.ts :: ord0351-b-a-link-the-server-denies-says-so-by-name — 死链接没有任何具名屏（读数 []）\n\n\u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: getByTestId('failure-view')\nExpected: visible\nTimeout: 20000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - e2e/qoder-stored-journey-link-is-an-entry.spec.ts :: ord0351-b-a-link-the-server-denies-says-so-by-name — 死链接没有任何具名屏（读数 []） getByTestId('failure-view') with timeout 20000ms\u001b[22m\n\u001b[2m  - waiting for getByTestId('failure-view')\u001b[22m\n"
+        },
+        "ord0351-c-an-unanswered-link-is-never-blamed-on-the-server": {
+          "status": "failed",
+          "duration_ms": 20486,
+          "error": "Error: e2e/qoder-stored-journey-link-is-an-entry.spec.ts :: ord0351-c-an-unanswered-link-is-never-blamed-on-the-server — 这一腿没有任何具名屏\n\n\u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: getByTestId('failure-view')\nExpected: visible\nTimeout: 20000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - e2e/qoder-stored-journey-link-is-an-entry.spec.ts :: ord0351-c-an-unanswered-link-is-never-blamed-on-the-server — 这一腿没有任何具名屏 getByTestId('failure-view') with timeout 20000ms\u001b[22m\n\u001b[2m  - waiting for getByTestId('failure-view')\u001b[22m\n"
+        },
+        "ord0351-d-a-dead-link-empties-a-reference-not-a-trip": {
+          "status": "failed",
+          "duration_ms": 20783,
+          "error": "Error: e2e/qoder-stored-journey-link-is-an-entry.spec.ts :: ord0351-d-a-dead-link-empties-a-reference-not-a-trip — 死链接没有具名屏\n\n\u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: getByTestId('failure-view')\nExpected: visible\nTimeout: 20000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - e2e/qoder-stored-journey-link-is-an-entry.spec.ts :: ord0351-d-a-dead-link-empties-a-reference-not-a-trip — 死链接没有具名屏 getByTestId('failure-view') with timeout 20000ms\u001b[22m\n\u001b[2m  - waiting for getByTestId('failure-view')\u001b[22m\n"
+        },
+        "ord0351-e-route-names-are-not-journey-links": {
+          "status": "passed",
+          "duration_ms": 2794,
+          "error": ""
+        },
+        "_collected_executed": 5
+      }
+    },
+    "fixed": {
+      "arm": "fixed",
+      "command": "node node_modules/@playwright/test/cli.js test e2e/qoder-stored-journey-link-is-an-entry.spec.ts --project=chromium --no-deps --reporter=json",
+      "cwd": "D:\\moodle\\_qoder_ord0351_S2\\wt\\frontend",
+      "exit": 0,
+      "run_id": "o351fixed092736",
+      "database_url": "sqlite:///D:/moodle/_qoder_ord0351_S2/db/_o351fixed092736.db",
+      "db_exists": true,
+      "ai_key_names_removed_from_child_env": [
+        "DEEPSEEK_API_KEY"
+      ],
+      "stderr_tail": "[citynexus e2e] suite=current-product authoritative=true python=D:/moodle/CityNexus/.venv/Scripts/python.exe frontend=:4791 backend=:8139 db=sqlite:///D:/moodle/_qoder_ord0351_S2/db/_o351fixed092736.db ai=disabled reuseExistingServer=false\n[citynexus e2e] provenance ok: run=o351fixed092736 frontend=:4791 -> backend=:8139 ai=disabled db=_o351fixed092736.db\n",
+      "results": {
+        "ord0351-a-a-link-to-a-saved-trip-opens-that-trip": {
+          "status": "passed",
+          "duration_ms": 565,
+          "error": ""
+        },
+        "ord0351-b-a-link-the-server-denies-says-so-by-name": {
+          "status": "passed",
+          "duration_ms": 465,
+          "error": ""
+        },
+        "ord0351-c-an-unanswered-link-is-never-blamed-on-the-server": {
+          "status": "passed",
+          "duration_ms": 504,
+          "error": ""
+        },
+        "ord0351-d-a-dead-link-empties-a-reference-not-a-trip": {
+          "status": "passed",
+          "duration_ms": 659,
+          "error": ""
+        },
+        "ord0351-e-route-names-are-not-journey-links": {
+          "status": "passed",
+          "duration_ms": 2889,
+          "error": ""
+        },
+        "_collected_executed": 5
+      }
+    }
+  },
+  "written_at": "2026-09-26T09:27:36+0800",
+  "restored_blob_after_run": "341017e14314c67c6891c337967fb9379ee0223b",
+  "restored_equals_fixed": true,
+  "verdicts": {
+    "tip": {
+      "expected": {
+        "ord0351-a-a-link-to-a-saved-trip-opens-that-trip": "failed",
+        "ord0351-b-a-link-the-server-denies-says-so-by-name": "failed",
+        "ord0351-c-an-unanswered-link-is-never-blamed-on-the-server": "failed",
+        "ord0351-d-a-dead-link-empties-a-reference-not-a-trip": "failed",
+        "ord0351-e-route-names-are-not-journey-links": "passed"
+      },
+      "got": {
+        "ord0351-a-a-link-to-a-saved-trip-opens-that-trip": "failed",
+        "ord0351-b-a-link-the-server-denies-says-so-by-name": "failed",
+        "ord0351-c-an-unanswered-link-is-never-blamed-on-the-server": "failed",
+        "ord0351-d-a-dead-link-empties-a-reference-not-a-trip": "failed",
+        "ord0351-e-route-names-are-not-journey-links": "passed"
+      },
+      "matches_expectation": true
+    },
+    "fixed": {
+      "expected": {
+        "ord0351-a-a-link-to-a-saved-trip-opens-that-trip": "passed",
+        "ord0351-b-a-link-the-server-denies-says-so-by-name": "passed",
+        "ord0351-c-an-unanswered-link-is-never-blamed-on-the-server": "passed",
+        "ord0351-d-a-dead-link-empties-a-reference-not-a-trip": "passed",
+        "ord0351-e-route-names-are-not-journey-links": "passed"
+      },
+      "got": {
+        "ord0351-a-a-link-to-a-saved-trip-opens-that-trip": "passed",
+        "ord0351-b-a-link-the-server-denies-says-so-by-name": "passed",
+        "ord0351-c-an-unanswered-link-is-never-blamed-on-the-server": "passed",
+        "ord0351-d-a-dead-link-empties-a-reference-not-a-trip": "passed",
+        "ord0351-e-route-names-are-not-journey-links": "passed"
+      },
+      "matches_expectation": true
+    }
+  },
+  "two_way": true
+}
