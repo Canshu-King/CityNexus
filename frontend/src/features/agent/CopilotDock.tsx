@@ -299,7 +299,18 @@ export function NativeMissionTimeline({
       ? (toolLabels[event.tool_name]?.[zh ? "zh" : "en"] ?? humanAgentStatus(event.status, zh))
       : humanAgentStatus(event.status, zh);
     const runMeta: ReactNode = (
-      <span className="cn-agent-event-detail">
+      /* The number on screen stays this screen's own formatting, but the element carrying it says
+         which allowed field it measured, under the contract name (Q70) -- so a gauge binds the
+         field and not the words around it.  No duration means no anchor, not a zero. */
+      <span
+        className="cn-agent-event-detail"
+        {...(event.duration_ms == null
+          ? {}
+          : {
+              "data-cnx-field": "elapsed_ms",
+              "data-cnx-value": String(Number(event.duration_ms)),
+            })}
+      >
         {humanStep}
         {event.duration_ms != null && ` · ${formatDuration(Number(event.duration_ms))}`}
         {""}
