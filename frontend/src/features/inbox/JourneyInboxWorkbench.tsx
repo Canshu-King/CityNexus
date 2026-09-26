@@ -3,6 +3,7 @@ import { useLocale, useT } from "../../i18n/LocaleContext";
 import {
   classifyReadFailure,
   copyFor,
+  OriginResponseUnusableError,
 } from "../../lib/failureAttribution";
 import {
   artifactTypeLabel as artifactTypeLabelShared,
@@ -103,11 +104,25 @@ class InboxRequestRejected extends Error {
 
 async function requestJson<T>(path: string, init?: RequestInit): Promise<T> {
   const response = await fetch(path, init);
-  const payload = (await response.json()) as T;
+  /* ORD-0323 form F1 (CMDR 04:53).  The body used to be parsed straight away, so a reply that was not
+     JSON at all raised the engine's own sentence -- a string that quotes the beginning of whatever came
+     back -- and that is what the catch sites printed.  The body is read once as text here, and an
+     unusable one is reported as what this device observed: which status answered, with which media type,
+     and in what shape the body arrived. */
+  const contentType = response.headers.get("content-type") ?? "";
+  const raw = await response.text().catch(() => null);
   if (!response.ok) {
-    throw new InboxRequestRejected(response.status, response.headers.get("content-type") ?? "");
+    throw new InboxRequestRejected(response.status, contentType);
   }
-  return payload;
+  if (raw === null || raw.trim() === "") {
+    throw new OriginResponseUnusableError(response.status, contentType || null, "empty");
+  }
+  try {
+    return JSON.parse(raw) as T;
+  } catch {
+    const looksHtml = /^\s*<(?:!doctype|html|[a-z][a-z0-9-]*[\s>])/i.test(raw);
+    throw new OriginResponseUnusableError(response.status, contentType || null, looksHtml ? "html" : "not_json");
+  }
 }
 
 async function postJson<T>(path: string, body: unknown): Promise<T> {
@@ -288,7 +303,11 @@ export function JourneyInboxWorkbench({ journeyId, decodedText, onConfirmed, imp
     const a = classifyReadFailure(error);
     /* The classification carries the status; the media type is this device's own header read, and the
        channel does not put it on SERVER_ERROR, so it is taken from the measurement rather than invented. */
-    const ct = error instanceof InboxRequestRejected ? error.content_type : "";
+    const ct = error instanceof InboxRequestRejected
+      ? error.content_type
+      : error instanceof OriginResponseUnusableError
+        ? error.content_type ?? ""
+        : "";
     return `http_status=${a.http_status ?? "none"} content_type=${ct || "none"} evidence=${a.evidence_kind}`;
   };
 
@@ -346,7 +365,9 @@ export function JourneyInboxWorkbench({ journeyId, decodedText, onConfirmed, imp
     try {
       setMemory(await requestJson<Memory>(`/api/v1/journeys/${journeyId}/memory`));
     } catch (error) {
-      setMessage(deviceCopy(error));
+      /* ORD-0323 form F1's other half (CMDR 04:53): the sentence alone cannot be checked, so this line
+         carries what the device measured too -- which status answered, with which media type. */
+      setMessage(`${deviceCopy(error)} · ${deviceFields(error)}`);
     }
   };
 
@@ -397,7 +418,10 @@ export function JourneyInboxWorkbench({ journeyId, decodedText, onConfirmed, imp
         ? t("inbox.semanticReady")
         : result.status === "NOT_CONFIGURED"
           ? t("inbox.notConfigured")
-          : result.reason ?? `${t("inbox.extractionStatus")} ${result.status}`,
+          /* ORD-0323 form F2 (CMDR 04:53): `result.reason` is the reply's own sentence, and it was being
+             used as this screen's status line.  What the traveller reads now is this device's copy plus the
+             reply's machine status; the sentence is not re-labelled as our explanation of it. */
+          : `${t("inbox.extractionStatus")} ${result.status}`,
     );
   };
 
@@ -737,7 +761,9 @@ export function JourneyInboxWorkbench({ journeyId, decodedText, onConfirmed, imp
                 <strong>{item.title} · {roleLabel(item.role, zh)}</strong>
                 <span>{item.label} · {item.at ?? t("inbox.timePending")}</span>
                 <small>{item.protected ? t("inbox.protected") : t("inbox.candidate")} · {confidence(item.confidence)}</small>
-                {item.reasoning_summary && <p>{item.reasoning_summary}</p>}
+                {/* ORD-0323 forms F3/F4 (CMDR 04:53): the summary is the upstream's sentence, and printed
+                    here it read as this panel's own claim.  The row keeps stating what it measured. */}
+                {item.reasoning_summary ? <small data-testid="v13-2-memory-summary-held">reasoning_summary=held 原文不在这一屏</small> : null}
               </li>
             ))}
           </ol>
@@ -820,7 +846,9 @@ export function JourneyInboxWorkbench({ journeyId, decodedText, onConfirmed, imp
               {t("inbox.payment")}{" "}
               {paymentStatusLabel(draft.interpretation?.payment_status ?? "UNKNOWN", zh)}
             </span>
-            {draft.interpretation?.reasoning_summary && <p>{draft.interpretation.reasoning_summary}</p>}
+            {draft.interpretation?.reasoning_summary
+              ? <small data-testid="v13-2-draft-summary-held">reasoning_summary=held 原文不在这一屏</small>
+              : null}
           </section>
           <section className="v13-2-review" data-testid="v13-2-review" aria-label={t("inbox.reviewSemantic")}>
             <label>
