@@ -1,0 +1,21 @@
+## 公网手机上真人走过五格（号令者 17:2x 那一代）：后端活了、两件旧缺陷量到新态、服务器给的回执号上了线没上屏 · HJ-P3 aad2d1f2
+
+四元组：**scope** = `看支持的目的地` 不开/开了、新建行程三步到确认创建之后、设备里存着一枚服务器不认识的 journey id 那一屏（归因详情开与不开）、「已保存」这类话背后的设备行数；**generation** = `b6a8ea5c625d7e3e82f7348fad57d595a8a403c0`（链上服务的是 `/assets/index-BOIAHTWw.js`，1271252 B、sha256 前缀 `005735b8e911508e…`，见见证件）；**artifact** = 末段那几条 40 位；**method** = own headless Chromium 390×844@3 touch zh-CN，公网入口，每格一个全新上下文，腿从浏览器响应对象读，设备侧读数在页面里取。
+
+**链路形状（和上一代不同，值得先知道）**：四条 API 路径四种签名、我编的那条路径不与真路径同签名 = True；本地那跳 server: uvicorn、公网那跳 server: cloudflare，走路那一分钟两边点名同一枚 bundle = True。
+
+**要派单的三件（只交读数）**：
+· ① 回执号上了线、没上屏：那一腿 GET `/api/v1/journeys/00000000-0000-0000-0000-000000000000/experience` 答 404、正文 235 B，服务器字段 `error.code=NOT_FOUND`、`error_receipt_id=CNX-FM7GYKRT`；屏上（不开与开了折叠）CNX 形式计数都是 0，`data-cnx-field`/`data-cnx-receipt` 锚点 0 枚，客户端自己那句 `NOT-EMITTED` 也没出现 = True / True。折叠开以后是一行 telemetry（155 字，哈希在件里，开头 `attribution_reason=JOURNEY_NOT_FOUND evi`）。同一枚 bundle 里机件是有的（字段 `machinery_exists_in_the_served_bundle`）。
+· ② 那枚号不是「每次故障一个」：同一路由连取三次 = 号 1 枚、trace_id 3 枚、正文哈希 3 枚（字段 `receipt_is_per_incident_or_per_route`）。它够不够当「旅客读回来就能定位这一次」的口径，我不判。
+· ③ 建得成但屏上还写「正在创建…」：两条 201（travelers / journeys，请求与响应字节在字段 `created_201_legs`）、id 已落进 localStorage = True，九秒后仍写 `正在创建…` 与 `已等待 9 秒` = True；这段文案本身是老实的（两句话原文在块里，并给了「停止等待」）。
+
+**两件现场事实**：镜子在走路期间又超前 4 笔（主题含 ORD-0350 / ORD-0353，改动含向导本体那支源文件 = True），我没有重建也没有再走第二遍；公网入口回头观测已经三次 530（cf-ray 三枚不同），而本地那跳同一分钟 200、我走过那枚 bundle 仍按名字取得到同样字节 = True。另外这台 shell 现在导出的 HTTP(S)_PROXY 指着一个没人听的本地端口，我这条发布通道被它挡过一次（首批 39 件 0 落地，改为本进程不走代理后重投）—— 其它车道若用同一个 urlopen 取 GitHub 会撞同一件事（两轮发布日志都在件里，坐标见末段）。
+
+**旧事两件的现态**：死 id 那一屏不再说「网络不可用」而是说 `这台服务器上没有这一趟行程了` 并给两枚出口 = True / True，拒收后那枚 id 被清掉 = True；「已保存背后 0 行」这一格量到的是设备里 `citynexus-offline/journeys` 行数 = 1，而我走过两屏都没出现含「已保存」的整句 = True（那句话现在住在哪一屏我没找全，不自称量过）；SW controller 在新上下文仍为 False = True。
+**目的地块**：不开时屏上只有标签（城市名 0 枚在屏上）= True；刚点开 11 枚全写「还没问过服务器 / not-asked」；落定后分组 = 已支持 1 / 需联网 3 / 未知 7，与屏上三个小标题一致 = True；过渡态那一段的毫秒数与 11 条 capability 腿的字节都在件里。
+
+**ORD-0312 状态一句**：M3 与 M4 已交（代次绑定与同代重跑，件 `evidence/ord0312-target-generation-reread/ord0312_m3_binding_reread_gen2.json` 等已在账上）；唯一还在跑的是 M2 的 RED 向，它过去卡在具名前提「产品侧有没有可发的具名码路径」—— 今天这一尖上我量到该前提成立（404 与 422 正文都带 `error.code` 与 `message_key`，例：NOT_FOUND / `resource.not_found`）。要你一句话定口径：判别量用 `error.code` 还是 `message_key`，定了我就开那一趟。
+
+坐标：评分件 `evidence/hjp3-b6a8ea5c-walk-0926/r6_readings_scored.json` 4cc4bba6aa0369bc6c5cf8b2ce17186eafd5f8c9；走路 bundle 见证 `evidence/hjp3-b6a8ea5c-walk-0926/r6_walked_asset_witness.json` 98589d9ddd2b27524d92e8eaac8b4b7af7cacef9；两入口绑定 `evidence/hjp3-b6a8ea5c-walk-0926/r6_gen_check.json` f882f5c07d00ab0c85a883ff1e902e6cd1939604；目的地块 `evidence/hjp3-b6a8ea5c-walk-0926/r6_dest_block_r3.json` 591e5c7f425460904b6f2cdf4d58d2ff160265b2（被取代的那读 `evidence/hjp3-b6a8ea5c-walk-0926/r6_dest_block_r2.json` 2f12459b39fb4787a24744d46f725d7fc23433bb）；向导格 `evidence/hjp3-b6a8ea5c-walk-0926/r6_wizard_create.json` 1ace17dc18d205f552b654b5fd7ad8101f289c61；死 id 格 `evidence/hjp3-b6a8ea5c-walk-0926/r6_dead_id_saved.json` 5ea2fc9fc3e54c2cce75ce3a1af84dd83ef68ff7；锚点与设备存储 `evidence/hjp3-b6a8ea5c-walk-0926/r6_receipt_anchor_offline.json` ab65d57eaf9d0f91dad5b920633fb85488b20acd；漂移 `evidence/hjp3-b6a8ea5c-walk-0926/r6_drift.json` 82a9f2b53fa7b0322195e75a0310f81654b4371d；入口观测 `evidence/hjp3-b6a8ea5c-walk-0926/r6_tunnel_watch.json` a9670c3db3f312a4617e488e4c57bc0b099da070；关键像素 `evidence/hjp3-b6a8ea5c-walk-0926/shots/C1_dead_id_closed.png` 1b067b0359468de905d7ab3367dc3c459116436e 与 `evidence/hjp3-b6a8ea5c-walk-0926/shots/C2_dead_id_open.png` 941b6d606f8800c8ddbb2df844490f60de37115c（两次独立起车像素同一）、`evidence/hjp3-b6a8ea5c-walk-0926/shots/B2_after_confirm.png` bfbaad98a12655967f0a006cd23e73961470c9a2；本块 Q43 r4d 回执 `evidence/hjp3-b6a8ea5c-walk-0926/ledger_inbox_proof_r6_q43r4d.json` 5174969e32eba5867de309a2a4ef45453d672b23；坐标预飞 `evidence/hjp3-b6a8ea5c-walk-0926/hex_preflight_r6.json` f650dcc7674cf5d4c1d23655a1d203671a54af27；写入计数（每枚名字一笔提交）`evidence/hjp3-b6a8ea5c-walk-0926/write_ledger_r6.json` 43e3622892ac4c2b6e1e5726e9e520420f08e740；两轮发布日志 `evidence/hjp3-b6a8ea5c-walk-0926/ship_result_r6.json` 0b284f7310e1fc14347d90ae9e40aa4cfa9105d2 与 `evidence/hjp3-b6a8ea5c-walk-0926/ship_result_r6b.json` 06df83cae9e66ca17e8a101ca4c76f184359d98d。块 aad2d1f2_1817.md，门内 claims/findings 数在那枚回执里。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
