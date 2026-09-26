@@ -1,0 +1,21 @@
+{
+ "launcher_process_id": 39528,
+ "backend_port": 8851,
+ "frontend_port": 4196,
+ "database_url": "sqlite:///D:/moodle/_qoder_lane_S4_0926/work/ord0346/ord0346_S4_r1.db",
+ "listener_process_id": 3248,
+ "store_identity": {
+  "marker_rows": 1,
+  "marker_id_expected": "cbfab803-f3ea-4b3d-a1fc-070aa85c0840",
+  "marker_id_returned": [
+   "cbfab803-f3ea-4b3d-a1fc-070aa85c0840"
+  ],
+  "absent_rows": 0
+ },
+ "spec_exit_code": 0,
+ "spec_output_tail": "[WebServer] \n[WebServer] > dev\n[WebServer] > vite --host 127.0.0.1 --port 4196\n[WebServer] \n[WebServer] \n[WebServer]   VITE v7.3.6  ready in 264 ms\n[WebServer] \n[WebServer]   ➜  Local:   http://127.0.0.1:4196/\n\nRunning 3 tests using 1 worker\n\n  ok 1 e2e\\qoder-wizard-city-copy.spec.ts:32:3 › ORD-0060 the wizard describes the destination it will actually plan › city-label-follows-the-recognised-city (4.0s)\n  ok 2 e2e\\qoder-wizard-city-copy.spec.ts:77:3 › ORD-0060 the wizard describes the destination it will actually plan › unrecognised-city-assumption-is-said-out-loud (1.7s)\n  ok 3 e2e\\qoder-wizard-city-copy.spec.ts:121:3 › ORD-0060 the wizard describes the destination it will actually plan › supported-destinations-are-reachable-without-an-invented-count (1.5s)\n\n  3 passed (9.2s)\n",
+ "started_at_local": "2026-09-26T08:56:11+0800",
+ "finished_at_local": "2026-09-26T08:56:20+0800",
+ "listener_after_teardown": null,
+ "specs_matched": "qoder-wizard-city-copy\\.spec\\.ts"
+}
