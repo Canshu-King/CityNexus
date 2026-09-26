@@ -1,0 +1,100 @@
+{
+ "schema": "CNX_LANE_E_ORD0342_DERIVED_V1",
+ "order": "ORD-0342 (ORD-0338 甲 re-sign, commander 10:43 knock on the 10:38 block)",
+ "verifier": "lane E d2305848",
+ "at": "2026-09-26T10:58:35+0800",
+ "generation": {
+  "tip_at_block": "2d8b03b8c7734ea3b8521b80845e1b0bc1a07957",
+  "candidate_head": "1a779b694d7c04f7dea8d74b0cff7af90441ae22",
+  "candidate_branch": "agent/d-e345b9d6-ord0338 (local, no ref pushed - landing is the commander's move)",
+  "ord0325_is_ancestor_of_tip": true
+ },
+ "claim_kind": "RUNTIME_MEASURED (rendered-document readings from D's own gate runs; per Q25 bound to the trees named in the runs)",
+ "derived_cells": [
+  {
+   "cell": "band 229px -> 17px (mobile) and 93px -> 17px (desktop), measured on the rendered document; computed padding-bottom 0 on both wrappers, CTA static in a grid row; teeth arms prove the gauge bites (N7: padding re-installed -> 229px; N6: sticky overlay re-injected -> hitCount 0->1, disjoint false)",
+   "derived_result": "MET",
+   "readings": {
+    "candidate": {
+     "mobile_band": 17,
+     "bound": 60,
+     "desktop": 17,
+     "viewport": {
+      "innerWidth": 390,
+      "innerHeight": 844,
+      "mq680": true
+     }
+    },
+    "tip": {
+     "mobile_band": 229,
+     "desktop_band": 93,
+     "steps_padding": "212px",
+     "cta": "sticky"
+    },
+    "arms": {
+     "N7_band_with_padding_back": 229,
+     "N6_hits": [
+      0,
+      1
+     ],
+     "N6_disjoint": [
+      true,
+      false
+     ]
+    },
+    "source": "ord0338_fix_jia_r2.json measurements + arms"
+   }
+  },
+  {
+   "cell": "new gate A: candidate 13 nodes all green; same gate on the blob-verified tip export 7 red / 3 green; the 3 green (N5/D3 bar-vs-ball) hold on both trees so removing the old bottom rule broke nothing",
+   "derived_result": "MET",
+   "readings": {
+    "candidate_rows": 13,
+    "candidate_red": 0,
+    "tip_rows": 10,
+    "tip_green": [
+     ".ts::mobile 390x844 ",
+     ".ts::mobile 390x844 ",
+     "s::desktop 1280x800 "
+    ],
+    "tip_red_count": 7,
+    "gate_A_blob": "9d14da4957b78493850fafe3ab452829d41c98a1",
+    "same_blob_as_ran_on_tip": true,
+    "source": "ord0338_fix_jia_r2.json runs.gate_candidate / gate_on_tip_export"
+   }
+  },
+  {
+   "cell": "re-derived gate B on the candidate all green (ord0261 shapes / ord0264 locality+tap+draft / witness arm turns red when the bar is returned to the overlay); scrolled>0 demoted to a precondition reading per Q73",
+   "derived_result": "MET",
+   "readings": {
+    "gate_B_blob": "bdf75ffa0b6de02bb2442b547358e55c505eeafc",
+    "note": "同一笔提交里按 Q73 重推的既有门；`scrolled > 0` 不再是可达性代理",
+    "source": "ord0338_fix_jia_r2.json gates.B_rederived + block section 三"
+   }
+  },
+  {
+   "cell": "regression scope: 21-spec fresh-both-trees comparison - candidate red & tip green = 0 (no red introduced by this change); 3 shared reds pre-date this order (named); tip-red 7 are the new gate's own A nodes (correct: the tip has no layout row); full 294-row run kept as observation",
+   "derived_result": "MET",
+   "readings": {
+    "rows_compared": 87,
+    "candidate_green": 87,
+    "candidate_red": 3,
+    "tip_green": 79,
+    "tip_red": 10,
+    "introduced_red_counted_from_rows_artifact": 0,
+    "rows_artifact": "ord0338_jia_suite_rows_r2.json (r1 retired for the ANSI-parser defect; r2 replaces, r1 untouched)",
+    "source": "ord0338_fix_jia_r2.json runs.wizard_scoped_before_after + ord0338_jia_suite_rows_r2.json"
+   }
+  }
+ ],
+ "top_level_derived_result": "ALL_MET",
+ "self_report_ack": "D's three self-reports (fake-overlap tightening, viewport mislabel caught by N7's landing witness, wheel aimed at the wrong cell) are instrument faults self-caught; the desktop-mislabeled rounds are published as *.desktop-run-superseded.json, kept not deleted - consistent with the standing evidence discipline",
+ "derivation_rule": "every cell verdict is computed from the readings named in its own readings.source; no PASS literal",
+ "discipline": {
+  "product_bytes_changed": 0,
+  "refs_pushed": 0,
+  "demo_reset": 0,
+  "databases_opened_by_me": 0,
+  "credential_values_printed": 0
+ }
+}
