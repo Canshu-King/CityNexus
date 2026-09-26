@@ -1,0 +1,47 @@
+{
+ "schema": "CNX_CHAIN_SELF_HEAL_V1",
+ "lane": "F 8ccd71d8",
+ "instance": "live",
+ "at_local": "Sat Sep 26 2026 18:58:26 GMT+0800 (中国标准时间)",
+ "mode": "arm:db-guard",
+ "boundary": {
+  "allowed_db": "D:/moodle/_qoder_preview_20260920/_preview.db",
+  "credentials": "按路径取用，绝不打印",
+  "detect_only": false
+ },
+ "hops": [],
+ "spawns": [],
+ "phone_generation": null,
+ "tunnel": null,
+ "published": null,
+ "db_guard": {
+  "ok": true,
+  "resolved": "d:/moodle/_qoder_preview_20260920/_preview.db"
+ },
+ "db_guard_arm": {
+  "refused": true,
+  "reason": {
+   "ok": false,
+   "allowed": "D:/moodle/_qoder_preview_20260920/_live.db",
+   "resolved": "d:/moodle/_qoder_preview_20260920/_live.db",
+   "forbidden_seen": [
+    "_live.db"
+   ]
+  },
+  "ports_touched": [
+   {
+    "hop": "backend",
+    "pid": 36772
+   },
+   {
+    "hop": "static",
+    "pid": 33920
+   },
+   {
+    "hop": "auth_proxy",
+    "pid": 14408
+   }
+  ]
+ },
+ "exit": 4
+}
