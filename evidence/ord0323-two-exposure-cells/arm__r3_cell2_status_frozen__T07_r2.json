@@ -1,0 +1,22 @@
+{
+ "run_id": "0323c2s1440",
+ "arm": "T07",
+ "cell": "T07",
+ "route": "/memory",
+ "method": "GET",
+ "status_asked": 500,
+ "slot_text": "服务器自己报错了（HTTP 500）。这是它那边的问题，不是你填错了什么。可以重试；如果一直这样，稍后再来。 · http_status=503 content_type=application/json evidence=HTTP_RESPONSE",
+ "status_in_slot": true,
+ "status_field": "503",
+ "status_field_equals_asked": false,
+ "needles_found": [],
+ "needles_found_in_attributes": [],
+ "attribute_pairs_swept": 63,
+ "foreign_status_found": [
+  "503"
+ ],
+ "internal_token_on_screen": false,
+ "nodeid": "D:\\moodle\\_qoder_b_lane_20260923\\frontend\\e2e\\qoder-ord0323-two-exposure-cells.spec.ts:673 > N4_T07_a_refused_GET_leaves_no_reply_words_and_keeps_its_own_reading — T07：自己那句原话不在屏上，自己那次读数还在屏上",
+ "test_status": "failed",
+ "error_head": "Error: e2e/qoder-ord0323-two-exposure-cells.spec.ts :: T07 — T07: the status read off this slot is \"503\", this leg asked 500 (服务器自己报错了（HTTP 500）。这是它那边的问题，不是你填错了什么。可以重试；如果一直这样，稍后再来。 · http_status=503 content_type=application/json evidence=HTTP_RESPONSE) \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m Expected: \u001b[32m\"50\u001b[7m0\u001b[27m\"\u001b[39m Received: \u001b[31m\"50\u001b[7m3\u001b[27m\"\u001b[39m"
+}
