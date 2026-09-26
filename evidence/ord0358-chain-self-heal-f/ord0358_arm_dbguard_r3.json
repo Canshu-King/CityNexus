@@ -1,0 +1,27 @@
+{
+ "schema": "CNX_CHAIN_SELF_HEAL_V1",
+ "lane": "F 8ccd71d8",
+ "instance": "live",
+ "at_local": "Sat Sep 26 2026 18:49:38 GMT+0800 (中国标准时间)",
+ "mode": "arm:db-guard",
+ "boundary": {
+  "allowed_db": "D:/moodle/_qoder_preview_20260920/_live.db",
+  "credentials": "按路径取用，绝不打印",
+  "detect_only": false
+ },
+ "hops": [],
+ "spawns": [],
+ "phone_generation": null,
+ "tunnel": null,
+ "published": null,
+ "db_guard": {
+  "ok": false,
+  "allowed": "D:/moodle/_qoder_preview_20260920/_live.db",
+  "resolved": "d:/moodle/_qoder_preview_20260920/_live.db",
+  "forbidden_seen": [
+   "_live.db"
+  ]
+ },
+ "verdict": "REFUSED_DB_PATH",
+ "exit": 4
+}
