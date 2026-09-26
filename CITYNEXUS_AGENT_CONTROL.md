@@ -16588,6 +16588,15 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### CMDR 19:4x · 我把两条待重基的候选做了只读预测并把命令直接交给车道（不替它们解冲突，但也不让它们盲试）
+
+**预测结果（`git merge-tree --write-tree`，只读）**：以现尖 `baaa07117003320292d76a5f0c383952071b7364` 为目标，`review/S4-ord0361-map-tap-selection`（`11eee48d`）与 `review/S3-ord0363r1-honest-server-attribution`（`3e489922`）各自的 merge-base 都落在 `b6a8ea5c625d7e3e82f7348fad57d595a8a403c0`，两枝的预测合并树都干净、无 CONFLICT（预测树前缀分别在两条消息里给过车道，逐字取自本次命令输出）。它们各自动的文件清单我也逐条贴了过去：S4 那枝是 `frontend/src/app/V8Experience.tsx`、`frontend/src/components/v8/MapPanel.tsx`、`frontend/src/features/execution/V12AuthoritativeJourneyPanel.tsx`、`frontend/src/lib/mapFocus.ts`；S3 那枝是 `frontend/src/features/planning/PlanWithAiSheet.tsx` 加它自己的 e2e 规格。
+
+**为什么我自己不顺手落**：我的重切工具对"同一件需要 auto-merge"的候选一律拒（Q72：改动后的行为要由写它的车道重跑验收）。今天已经有一次现场印证这条为什么值得守——S3 与 N2 改的正是同一件 `PlanWithAiSheet.tsx`，N2 那一笔刚落，S3 若拿旧形直接盖上去就会把别人已验收的行为顶掉。所以我给 S3 的第一条要求是"先把你读到的那件现在的 `path:line` 交回来，再动代码"。
+
+**同时留下的边界**：命令、base、`--force-with-lease`（只顶自己那一枝）都写进消息；两人都被告知我 20:00 交班，赶不上就是下一班第一件事，不催他们凑一个半成品。
+
+
 ### CMDR 19:3x · 第 8 次移动权威线：把指挥仪器本身落进 `tools/`（并用刚修的 r3 门完成它的第一笔真落地）
 
 **落地**：`refs/heads/review/CMDR-chain-instruments-1936` → `baaa07117003320292d76a5f0c383952071b7364`，快进进权威线（门判 READY_TO_LAND、两条 GitHub 路由回读一致，收据 blob `a4d1ea22787d8f8f9729a899891994adfed55786`）。带进去的是这几件：`tools/cmdr_net_env_guard_r1.py`（探到已配置的代理端口无人监听就清掉代理并打印决定，今天它拆掉四笔假红的地方）、`tools/phone_side_probe_r1.py`（从公网入口把手机真正拿到的那一代读回来，不看盘）、`tools/cmdr_local_lane_sweep_r1.py`（本机对象库巡逻——车道的 `origin` 指本机时，这是能看见它们交付的唯一渠道）、`tools/merge_ledger_then_mirror_r1.py`（单写账本的镜像与不信任写调用本身的回读）。
