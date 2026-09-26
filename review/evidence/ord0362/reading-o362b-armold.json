@@ -1,0 +1,32 @@
+{
+ "run_id": "n1r2174434o362barmold",
+ "tree": "b6a8ea5c625d7e3e82f7348fad57d595a8a403c0",
+ "worktree": "D:/moodle/_qoder_n1_ord0362",
+ "target": "e2e/qoder-ord0362-old-shell-payload-compat.spec.ts",
+ "config": "playwright.config.ts",
+ "arm": "o362b-armold",
+ "ports": {
+  "frontend": 5100,
+  "backend": null,
+  "note": "this instrument starts vite dev only; no backend is contacted"
+ },
+ "python": "D:/moodle/CityNexus/.venv/Scripts/python.exe",
+ "db": "_n1r2174434o362barmold.db",
+ "db_created": true,
+ "env_keys_dropped_names_only": [
+  "DEEPSEEK_API_KEY",
+  "OPENAI_API_KEY",
+  "WB2API_KEY"
+ ],
+ "exit_code": 1,
+ "verdict": "RED",
+ "counts": {
+  "passed": 1,
+  "failed": 1
+ },
+ "listed_case_count": 0,
+ "started_local": "2026-09-26T17:44:34",
+ "duration_s": 26.751056,
+ "log": "D:/moodle/_qoder_n1_ord0362/review/evidence/arm-o362b-armold/n1_o362b-armold_b6a8ea5c_174434.log",
+ "log_bytes": 11489
+}

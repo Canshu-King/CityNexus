@@ -1,0 +1,228 @@
+{
+ "tip": "b6a8ea5c625d7e3e82f7348fad57d595a8a403c0",
+ "measured_at": "payload_shape_173458.json",
+ "panel_path": "frontend/src/features/discovery/DestinationPreparationPanel.tsx",
+ "panel_reads_capability_fields": [
+  "candidates",
+  "capability",
+  "coverage",
+  "missing_categories",
+  "pending_destination_label",
+  "provider_status",
+  "py",
+  "query",
+  "reason_code",
+  "recommended_action",
+  "retryable"
+ ],
+ "union_top_level_count": 29,
+ "read_by_panel": [
+  "candidates",
+  "capability",
+  "coverage",
+  "missing_categories",
+  "pending_destination_label",
+  "query",
+  "reason_code",
+  "recommended_action",
+  "retryable"
+ ],
+ "unread_by_panel": [
+  "canonical_destination_id",
+  "catalog_schema_version",
+  "coverage_detail",
+  "destination_pending_key",
+  "destination_resolution",
+  "destination_state",
+  "fingerprint",
+  "hard_gaps",
+  "malformed_candidates",
+  "matched_label",
+  "namespace",
+  "pending_label_fidelity",
+  "place_count",
+  "places",
+  "provenance",
+  "provider_policy_version",
+  "readiness_policy_version",
+  "resolver_query_normalized",
+  "scope",
+  "unclassified_categories"
+ ],
+ "rows": [
+  {
+   "key": "candidates",
+   "read_by_panel": true,
+   "declared_in_api_interface": true,
+   "panel_occurrences": 7
+  },
+  {
+   "key": "canonical_destination_id",
+   "read_by_panel": false,
+   "declared_in_api_interface": true,
+   "panel_occurrences": 0
+  },
+  {
+   "key": "capability",
+   "read_by_panel": true,
+   "declared_in_api_interface": true,
+   "panel_occurrences": 26
+  },
+  {
+   "key": "catalog_schema_version",
+   "read_by_panel": false,
+   "declared_in_api_interface": false,
+   "panel_occurrences": 0
+  },
+  {
+   "key": "coverage",
+   "read_by_panel": true,
+   "declared_in_api_interface": true,
+   "panel_occurrences": 4
+  },
+  {
+   "key": "coverage_detail",
+   "read_by_panel": false,
+   "declared_in_api_interface": false,
+   "panel_occurrences": 0
+  },
+  {
+   "key": "destination_pending_key",
+   "read_by_panel": false,
+   "declared_in_api_interface": false,
+   "panel_occurrences": 0
+  },
+  {
+   "key": "destination_resolution",
+   "read_by_panel": false,
+   "declared_in_api_interface": true,
+   "panel_occurrences": 0
+  },
+  {
+   "key": "destination_state",
+   "read_by_panel": false,
+   "declared_in_api_interface": true,
+   "panel_occurrences": 0
+  },
+  {
+   "key": "fingerprint",
+   "read_by_panel": false,
+   "declared_in_api_interface": true,
+   "panel_occurrences": 0
+  },
+  {
+   "key": "hard_gaps",
+   "read_by_panel": false,
+   "declared_in_api_interface": false,
+   "panel_occurrences": 0
+  },
+  {
+   "key": "malformed_candidates",
+   "read_by_panel": false,
+   "declared_in_api_interface": false,
+   "panel_occurrences": 0
+  },
+  {
+   "key": "matched_label",
+   "read_by_panel": false,
+   "declared_in_api_interface": true,
+   "panel_occurrences": 0
+  },
+  {
+   "key": "missing_categories",
+   "read_by_panel": true,
+   "declared_in_api_interface": true,
+   "panel_occurrences": 2
+  },
+  {
+   "key": "namespace",
+   "read_by_panel": false,
+   "declared_in_api_interface": false,
+   "panel_occurrences": 0
+  },
+  {
+   "key": "pending_destination_label",
+   "read_by_panel": true,
+   "declared_in_api_interface": true,
+   "panel_occurrences": 2
+  },
+  {
+   "key": "pending_label_fidelity",
+   "read_by_panel": false,
+   "declared_in_api_interface": false,
+   "panel_occurrences": 0
+  },
+  {
+   "key": "place_count",
+   "read_by_panel": false,
+   "declared_in_api_interface": true,
+   "panel_occurrences": 0
+  },
+  {
+   "key": "places",
+   "read_by_panel": false,
+   "declared_in_api_interface": false,
+   "panel_occurrences": 0
+  },
+  {
+   "key": "provenance",
+   "read_by_panel": false,
+   "declared_in_api_interface": true,
+   "panel_occurrences": 0
+  },
+  {
+   "key": "provider_policy_version",
+   "read_by_panel": false,
+   "declared_in_api_interface": false,
+   "panel_occurrences": 0
+  },
+  {
+   "key": "query",
+   "read_by_panel": true,
+   "declared_in_api_interface": true,
+   "panel_occurrences": 11
+  },
+  {
+   "key": "readiness_policy_version",
+   "read_by_panel": false,
+   "declared_in_api_interface": false,
+   "panel_occurrences": 0
+  },
+  {
+   "key": "reason_code",
+   "read_by_panel": true,
+   "declared_in_api_interface": true,
+   "panel_occurrences": 4
+  },
+  {
+   "key": "recommended_action",
+   "read_by_panel": true,
+   "declared_in_api_interface": true,
+   "panel_occurrences": 4
+  },
+  {
+   "key": "resolver_query_normalized",
+   "read_by_panel": false,
+   "declared_in_api_interface": true,
+   "panel_occurrences": 0
+  },
+  {
+   "key": "retryable",
+   "read_by_panel": true,
+   "declared_in_api_interface": true,
+   "panel_occurrences": 11
+  },
+  {
+   "key": "scope",
+   "read_by_panel": false,
+   "declared_in_api_interface": true,
+   "panel_occurrences": 0
+  },
+  {
+   "key": "unclassified_categories",
+   "read_by_panel": false,
+   "declared_in_api_interface": false,
+   "panel_occurrences": 0
+  }
+ ]
+}

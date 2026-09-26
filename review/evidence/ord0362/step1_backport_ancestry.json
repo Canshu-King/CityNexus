@@ -1,0 +1,191 @@
+{
+ "measured_by": "lane N1",
+ "tip": "b6a8ea5c625d7e3e82f7348fad57d595a8a403c0",
+ "tip_source": "git ls-remote origin refs/heads/mirror/integration-frontend-apple-pass1",
+ "receipt_blob_backport_classification": "3f060dc10f89b5f5efd7711a330d2c177047b3dc",
+ "receipt_blob_payload_diff": "20b83a3959f6bc64e9f2834c2a3e410399b49297",
+ "receipt_at": "fd656f1641de9cc4a457a78f761eea42991f9a7f:evidence/ord0245/ord0245_backport_classification.json",
+ "all_11_ancestors_of_tip": true,
+ "all_11_witness_present": true,
+ "candidates": [
+  {
+   "sha40": "d76992aa593d2950058a34fcbe110ac603255ea7",
+   "at": "2026-09-21T18:15+08",
+   "subject": "fix(frontend): the panel itself scrolls, so the node a probe names is the node that answers",
+   "files_touched": 2,
+   "files_frontend": [
+    "frontend/e2e/qoder-today-follows-the-stage.spec.ts",
+    "frontend/src/features/simulation/SimulationPanel.css"
+   ],
+   "ancestor_of_tip": true,
+   "cherry_pick_onto_tip_would_be": "EMPTY",
+   "ord0245_verdict_onto_baseline": "CLEAN",
+   "witness_file": "frontend/e2e/qoder-today-follows-the-stage.spec.ts",
+   "witness_line_present_at_tip": true
+  },
+  {
+   "sha40": "e9efec6bff2fef9e09231cf1a87cc7139fc0a856",
+   "at": "2026-09-21T18:31+08",
+   "subject": "refactor(frontend): the example places are ordered by name, not by the read's order",
+   "files_touched": 1,
+   "files_frontend": [
+    "frontend/src/features/planning/PlanWithAiSheet.tsx"
+   ],
+   "ancestor_of_tip": true,
+   "cherry_pick_onto_tip_would_be": "EMPTY",
+   "ord0245_verdict_onto_baseline": "CLEAN",
+   "witness_file": "frontend/src/features/planning/PlanWithAiSheet.tsx",
+   "witness_line_present_at_tip": true
+  },
+  {
+   "sha40": "2d3b3fba82504b02d75ebaa08635be9653bf223b",
+   "at": "2026-09-21T19:54+08",
+   "subject": "fix(frontend): the AI sheet is sized by what the traveller can see, and its footer never scrolls",
+   "files_touched": 6,
+   "files_frontend": [
+    "frontend/e2e/qoder-ai-sheet-blocked.spec.ts",
+    "frontend/src/app/V8Experience.tsx",
+    "frontend/src/features/planning/PlanWithAiSheet.tsx",
+    "frontend/src/lib/visualViewport.ts",
+    "frontend/src/styles.css"
+   ],
+   "ancestor_of_tip": true,
+   "cherry_pick_onto_tip_would_be": "EMPTY",
+   "ord0245_verdict_onto_baseline": "CLEAN",
+   "witness_file": "frontend/e2e/qoder-ai-sheet-blocked.spec.ts",
+   "witness_line_present_at_tip": true
+  },
+  {
+   "sha40": "4176e7b6c238cd296b40a80303b07366183a2cad",
+   "at": "2026-09-21T20:43+08",
+   "subject": "fix(frontend): a finger on the map moves the map, a finger on the page moves the page",
+   "files_touched": 4,
+   "files_frontend": [
+    "frontend/e2e/qoder-map-gesture-ownership.spec.ts",
+    "frontend/src/components/v8/MapPanel.tsx",
+    "frontend/src/styles.css"
+   ],
+   "ancestor_of_tip": true,
+   "cherry_pick_onto_tip_would_be": "EMPTY",
+   "ord0245_verdict_onto_baseline": "CLEAN",
+   "witness_file": "frontend/e2e/qoder-map-gesture-ownership.spec.ts",
+   "witness_line_present_at_tip": true
+  },
+  {
+   "sha40": "6b208ee33df9492d9cb03f670746e1daa675c46a",
+   "at": "2026-09-21T21:38+08",
+   "subject": "fix(frontend): what the screen asks to review now has somewhere to be reviewed (ORD-0146)",
+   "files_touched": 7,
+   "files_frontend": [
+    "frontend/e2e/qoder-inbox-review-queue.spec.ts",
+    "frontend/src/app/V8Experience.tsx",
+    "frontend/src/features/inbox/JourneyInboxWorkbench.tsx",
+    "frontend/src/i18n/LocaleContext.tsx",
+    "frontend/src/styles.css",
+    "frontend/src/v10.css"
+   ],
+   "ancestor_of_tip": true,
+   "cherry_pick_onto_tip_would_be": "EMPTY",
+   "ord0245_verdict_onto_baseline": "CONFLICT",
+   "witness_file": "frontend/e2e/qoder-inbox-review-queue.spec.ts",
+   "witness_line_present_at_tip": true
+  },
+  {
+   "sha40": "758020684db9e5bf66dd6dc973d08cc047e38ed6",
+   "at": "2026-09-21T22:04+08",
+   "subject": "fix(frontend): a failed read now says which kind of failure it is, and leaves a door (ORD-0126)",
+   "files_touched": 4,
+   "files_frontend": [
+    "frontend/e2e/qoder-failure-has-an-exit.spec.ts",
+    "frontend/src/app/V8Experience.tsx",
+    "frontend/src/i18n/LocaleContext.tsx"
+   ],
+   "ancestor_of_tip": true,
+   "cherry_pick_onto_tip_would_be": "EMPTY",
+   "ord0245_verdict_onto_baseline": "CONFLICT",
+   "witness_file": "frontend/e2e/qoder-failure-has-an-exit.spec.ts",
+   "witness_line_present_at_tip": true
+  },
+  {
+   "sha40": "82f136f5b2fc36d2f5d2cf1a06fbd94bc26c251d",
+   "at": "2026-09-21T22:38+08",
+   "subject": "fix(frontend): the wizard stops speaking its own vocabulary and offers a route to what is missing (ORD-0135)",
+   "files_touched": 3,
+   "files_frontend": [
+    "frontend/e2e/qoder-wizard-speaks-human-and-survives-reload.spec.ts",
+    "frontend/src/features/setup/JourneyTrialSetup.tsx"
+   ],
+   "ancestor_of_tip": true,
+   "cherry_pick_onto_tip_would_be": "EMPTY",
+   "ord0245_verdict_onto_baseline": "CONFLICT",
+   "witness_file": "frontend/e2e/qoder-wizard-speaks-human-and-survives-reload.spec.ts",
+   "witness_line_present_at_tip": true
+  },
+  {
+   "sha40": "107e2db7a102f5497d38377e5f6edd2bc8851f92",
+   "at": "2026-09-22T01:01+08",
+   "subject": "feat(frontend): the review actions carry their idempotency key, and the bridge is marked (ORD-0180/0183)",
+   "files_touched": 5,
+   "files_frontend": [
+    "frontend/e2e/qoder-replan-review-actions.spec.ts",
+    "frontend/e2e/qoder-today-follows-the-stage.spec.ts",
+    "frontend/src/features/simulation/SimulationPanel.tsx"
+   ],
+   "ancestor_of_tip": true,
+   "cherry_pick_onto_tip_would_be": "EMPTY",
+   "ord0245_verdict_onto_baseline": "CONFLICT",
+   "witness_file": "frontend/e2e/qoder-replan-review-actions.spec.ts",
+   "witness_line_present_at_tip": true
+  },
+  {
+   "sha40": "952ec4075877870d34cf8c5904819c3ee3310cc6",
+   "at": "2026-09-22T15:08+08",
+   "subject": "fix(frontend): the demo entry addresses the sealed journey instead of creating one (ORD-0209)",
+   "files_touched": 6,
+   "files_frontend": [
+    "frontend/e2e/qoder-demo-entry-addresses-dont-create.spec.ts",
+    "frontend/src/app/V8Experience.tsx",
+    "frontend/src/features/setup/JourneyTrialSetup.tsx"
+   ],
+   "ancestor_of_tip": true,
+   "cherry_pick_onto_tip_would_be": "EMPTY",
+   "ord0245_verdict_onto_baseline": "CONFLICT",
+   "witness_file": "frontend/e2e/qoder-demo-entry-addresses-dont-create.spec.ts",
+   "witness_line_present_at_tip": true
+  },
+  {
+   "sha40": "56d20ec3b09a5836ddb2838368bb7cf4a5ecfe7a",
+   "at": "2026-09-22T15:22+08",
+   "subject": "fix(frontend): the Today hub keeps only the tight budget verdict (ORD-0212, user's direct instruction)",
+   "files_touched": 6,
+   "files_frontend": [
+    "frontend/e2e/qoder-budget-advisory-tiers.spec.ts",
+    "frontend/e2e/qoder-trip-shape-and-budget.spec.ts",
+    "frontend/src/app/V8Experience.tsx"
+   ],
+   "ancestor_of_tip": true,
+   "cherry_pick_onto_tip_would_be": "EMPTY",
+   "ord0245_verdict_onto_baseline": "CONFLICT",
+   "witness_file": "frontend/e2e/qoder-budget-advisory-tiers.spec.ts",
+   "witness_line_present_at_tip": true
+  },
+  {
+   "sha40": "8f42cb7d87175e996d2b81473200e5920d6a3ba3",
+   "at": "2026-09-23T03:53+08",
+   "subject": "feat(frontend): the hub names the stop a hard rule dropped, in words and not in ids (ORD-0232)",
+   "files_touched": 5,
+   "files_frontend": [
+    "frontend/e2e/_qoderTextScan.ts",
+    "frontend/e2e/qoder-dropped-candidates-say-why.spec.ts",
+    "frontend/src/api/candidateRejections.ts",
+    "frontend/src/app/V8Experience.tsx",
+    "frontend/src/i18n/LocaleContext.tsx"
+   ],
+   "ancestor_of_tip": true,
+   "cherry_pick_onto_tip_would_be": "EMPTY",
+   "ord0245_verdict_onto_baseline": "CLEAN",
+   "witness_file": "frontend/e2e/_qoderTextScan.ts",
+   "witness_line_present_at_tip": true
+  }
+ ]
+}
