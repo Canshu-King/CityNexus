@@ -16588,6 +16588,33 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### CMDR 16:24 — ORD-0355 落线；落地门升到 r2（跑 r7b 尺并验尺身份）；红队三枚签级入账
+
+**一、权威线又移动一笔（今日第 25 次，ff-only，落地前一毫秒重读 GitHub 尖，两条路由回读一致）。**
+ORD-0355（lane N2 `9759f1ac`）：`7e728268a90c9d0f4accc7f117af1de73f65bc7a` → `6fd43627e717a97ea779da866eb4546b8acb9deb`，门回执件 blob `1ee6cf81b366a28db58bcb4aeedc972e6141aa81`（大小 5728 B）。**自报一次**：这块的草稿里那枚 blob 我又凭印象写成 `f0e99b90b4f2b3e4cd6f9c6e0c3d1e0a9c3b6f21`，此枚不可 cat-file、从未入 git，是我造的第三次同一族错；它被这块自己的坐标预接挡下（下面的 COORD-BOLT 行就是证据），所以我没有把假坐标发出去。规则「先发后引」我还没做到位：以后必须先把发布器打印的 blob 粘进正文，禁止手打。。
+**这一单改的是旅客被归错的原因**：住宿预算没填的时候，产品以前会把它存成"填了 0"，再把"没有方案"说成是旅客的钱不够。lane N2 把它重开在现尖上（它自己 rebase 的，我没手合），我量到的门内读数：`--collect-only` 收集 1369 条（退出码 0，同一枚读数件 blob `c2cef3530757bd781eaf41bc4e8feaea7c924f56` 里记着这条分母），`test_qoder_ord0355_honest_stay_budget.py` 通过 11 条、`test_qoder_stay_generation_operations.py` 通过 26 条、`test_qoder_stay_generation_phases.py` 通过 7 条、`test_qoder_ord0340_claim_lease.py` 通过 7 条（读数件 `evidence/cmdr-backend-named-ORD-0355-1611/reading_r1.json`，blob `c2cef3530757bd781eaf41bc4e8feaea7c924f56`，大小 1545 B）。它带一枚新增列的可空迁移脚本 `backend/db/apply_ord0355_stay_budget_declared.py`，**我没有对任何共享库执行它**（与 ORD-0340 的服务端半边同一条边界，等用户那句"可以重启"）。
+
+**二、红队 lane E 的三枚签级已入账（derived_result 口径，不是我给的等级）。**
+- ORD-0342（lane B）候选 `003886ca83294a9ec97a98215cb8cc2e8232189b` = **ALL_MET**；
+- ORD-0354 + ORD-0348（lane S4 的量具 r7b）blob `d3f66ce9fecd0790981a4fcdeb5e36b1c0fd10f2` = **ALL_MET**；
+- 派生件 `evidence/ord0345-three-signoffs-0342-0354-d2305848/ord0345_derived_d2305848.json` blob `f656f5092ba42fce9bdbd8232e2db6b08c8d0363`（大小 13767 B，树回验相符）。
+
+**三、落地门升到 r2：尺换成 r7b，而且尺的身份改成"量出来的"。**
+- 换尺的理由是我自己上午量的盲区：r6 看不见"设备事实被取到属性位"这种形状，而那正是 Q71 禁的面（r6  blob `6a251d3a6bea70329e06581384a81d5ef54c96a6`）。
+- 更值得记的是第二个错：**r1 只把 blob 当常量抄在收据里，从不哈希它真正要执行的那个文件** —— 如果本机尺与已发布 blob 漂移了，收据仍会印那枚已发布的值。r2 改成运行前算一次、不一致就 ABORT。双向自测：A 臂正常跑出 10 格且计算值等于声明值；B 臂我把声明常量改成 40 个 0 后同一调用直接拒（原文 `exposure ruler identity drift ... door declares 000000000000`）。新门 `evidence/cmdr-landing-door-1623/preflight_and_land_r2.py`，blob `642bfcab6acf124f8dbf2f6e76c801ba69a6bdd9`（大小 28975 B）；r1 原样留在盘上且仍可跑，旧收据继续可复推。
+- 尺文件我没有重写、没有另存：本机 `ui_exposure_taint_ast_r7b.cjs` 与已签的那枚逐字节相同（计算 blob 与声明 blob 都是 `d3f66ce9fecd…`，大小 129082 B）。
+
+**四、r7b 的第一笔实际收益（不是宣传，是差分）。** 我用 r7b 对 ORD-0345 落地前后各跑一次（读数件 `evidence/cmdr-exposure-census-1623/r7b_census_r1.json`，blob `c3225a213f486b34e17beb2e5268be2522fa2257`）：
+- 落地前 `824fca398d27db4c0078407b42e544c84048d3dd` 量到 10 与 12 中的 **12 格**；落地后 `fe57ff44cc523399307300d6e236654e7dc31a39` 量到 **10 格**；
+- 按 (文件, 规则) 的**增长集合为空**，消失两格：`RealCityDiscoveryPanel.tsx|UPSTREAM_EXCEPTION_TO_DOM` 与 `V14RecoveryTruthPanel.tsx|UPSTREAM_EXCEPTION_TO_DOM`；
+- 整格层面 `ActivityDetail.tsx` 从 `:206` 搬到 `:214`（同文件同规则，只是行号移动），这正是我门为什么按 (文件,规则) 判增长而不是按行号 —— 否则一次搬家就误判成新增；
+- 现尖 `6fd43627e717a97ea779da866eb4546b8acb9deb` 的分母是 **10 格**，这是后续所有候选比对的基线。
+
+**五、车道在手（无人空转；每一项都具名到节点）。** lane D：ORD-0343 的 `RecoveryRequiredPanel.tsx:166`（`RAW_BODY_TO_DOM`，我裁"先修、不许报不修"）+ `DestinationPreparationPanel.tsx:346`/`:522`/`:469`（走 ORD-0342 的锚配方）；lane N1：ORD-0349 交 r4，要件是"我的那一行与 D 的那一行都留、两组门同跑"；lane S1：ORD-0350/ORD-0353 在写（它的 probe ref 我见过，未落）；lane F：ORD-0352（代理自答要署名）；lane S2：ORD-0353 要件拆解 + ORD-0345 剩下三格（`ActivityDetail.tsx:214` 那格现在是 r7b 看得见的新目标）；lane N3（我 16:14 新开）：**ORD-0357 —— 手机上没有入口能拿到行程链接**，我量的事实是 `git grep -i "clipboard|复制链接|shareLink|copyLink|navigator.share"` 在尖上 0 命中，而 `V8Experience.tsx:844` 已经会把 `/v8/<uuid>` 写进地址栏；入口要补在行程组件里，明令它不许动 `V8Experience.tsx`。
+
+**六、边界。** 权威线只由我移动（本拍一笔；今日累计 25 笔，全 ff-only）；车道 ref 零移动、零 force；`_live.db` / `_preview.db` 零读写，`apply_ord0355_*` 与 ORD-0340 的启动 ALTER 都未执行；`demo/reset` 零次；凭据零打印（认证文件只按路径传给尺）；已发布路径零覆盖零删除（本拍新发 2 枚证据件，全部 BYTE-LEVEL MATCH）；尺与门的旧版本一律不重写（r1/r6 原样保留）；`端口 8000` 仍是"不提供"这个决定；两枚 API key 的轮换仍在用户手上。
+
+
 ### ORD-0345 → 红队 E `d2305848` 交（三枚签级 · 2026-09-26 16:2x+08）
 
 **派生件**：`evidence/ord0345-three-signoffs-0342-0354-d2305848/ord0345_derived_d2305848.json` blob `f656f5092ba42fce9bdbd8232e2db6b08c8d0363`（13,767 B，树回验相符）。总线帖 `5844474002`。
