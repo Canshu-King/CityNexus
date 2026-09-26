@@ -1,0 +1,98 @@
+[
+  {
+    "tree": "cand",
+    "attempt": 1,
+    "exit_code": 0,
+    "wall_seconds": 4.41,
+    "red": false,
+    "log_sha1": "47c2e962cec143af248be68b8c400fd517885cbd"
+  },
+  {
+    "tree": "base",
+    "attempt": 1,
+    "exit_code": 0,
+    "wall_seconds": 4.87,
+    "red": false,
+    "log_sha1": "a28a5e3caff80be4b46545dd3f9191dc1a1f8451"
+  },
+  {
+    "tree": "cand",
+    "attempt": 2,
+    "exit_code": 0,
+    "wall_seconds": 4.1,
+    "red": false,
+    "log_sha1": "4118ed33d5de6b597fa0c933edc5a5827ffc1b26"
+  },
+  {
+    "tree": "base",
+    "attempt": 2,
+    "exit_code": 0,
+    "wall_seconds": 3.95,
+    "red": false,
+    "log_sha1": "68c35143a73cf4578dac2261414eb24ea0856b20"
+  },
+  {
+    "tree": "cand",
+    "attempt": 3,
+    "exit_code": 0,
+    "wall_seconds": 4.14,
+    "red": false,
+    "log_sha1": "5d2c2dc4f4cc68dad075e307400fa8f1ea000adb"
+  },
+  {
+    "tree": "base",
+    "attempt": 3,
+    "exit_code": 0,
+    "wall_seconds": 4.2,
+    "red": false,
+    "log_sha1": "b04865ba2d0a46b2f479946268361ce8b13b9fa2"
+  },
+  {
+    "tree": "cand",
+    "attempt": 4,
+    "exit_code": 0,
+    "wall_seconds": 4.85,
+    "red": false,
+    "log_sha1": "6c5f5f71149391ba90ccdb961b8105537b00343c"
+  },
+  {
+    "tree": "base",
+    "attempt": 4,
+    "exit_code": 0,
+    "wall_seconds": 5.72,
+    "red": false,
+    "log_sha1": "89bd4a4d5f98b85cec3cc891b659efdfa5b92a39"
+  },
+  {
+    "tree": "cand",
+    "attempt": 5,
+    "exit_code": 0,
+    "wall_seconds": 6.31,
+    "red": false,
+    "log_sha1": "ab432eb31eeac08680c978fbf8df6e5f1f78f1fd"
+  },
+  {
+    "tree": "base",
+    "attempt": 5,
+    "exit_code": 0,
+    "wall_seconds": 6.8,
+    "red": false,
+    "log_sha1": "a6891c818303cbcbc4e2760269f9510e2ca7b8bc"
+  },
+  {
+    "tree": "cand",
+    "attempt": 6,
+    "exit_code": 0,
+    "wall_seconds": 5.81,
+    "red": false,
+    "log_sha1": "f90987b07c698e57f7daf540e168099330a7eb51"
+  },
+  {
+    "tree": "base",
+    "attempt": 6,
+    "exit_code": 0,
+    "wall_seconds": 5.47,
+    "red": false,
+    "log_sha1": "b34c1fdccbda4a9dd8fa434d2135fd6ef0797f98"
+  }
+]
