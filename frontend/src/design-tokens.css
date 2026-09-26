@@ -1145,6 +1145,54 @@ dd.trial-city-warning {
   list-style: disc;
 }
 
+/* ORD-0346 — the panel groups by what the server answered, so a row is a sentence now and not a
+   name in a two-column flow.  Every line of it carries meaning, so all of it is full ink:
+   --v8-muted is overridden theme-blind in styles.css, which is the hole ORD-0035 recorded. */
+.trial-supported-group {
+  margin-top: var(--cn-s-12);
+}
+.trial-supported-group-title {
+  margin: 0;
+  color: var(--v8-ink);
+  font-size: var(--cn-fs-secondary);
+  font-weight: 750;
+  line-height: var(--cn-lh-body);
+}
+.trial-supported-group-rule {
+  margin: 2px 0 0;
+  color: var(--v8-ink);
+  font-size: var(--cn-fs-caption);
+  line-height: 1.4;
+  overflow-wrap: anywhere;
+}
+.trial-supported-none {
+  margin: var(--cn-s-8) 0 0;
+  color: var(--v8-ink);
+  font-size: var(--cn-fs-caption);
+}
+.trial-supported-group .trial-supported-list {
+  flex-direction: column;
+  gap: var(--cn-s-8);
+  padding-left: 0;
+  columns: auto;
+  list-style: none;
+}
+.trial-supported-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2px var(--cn-s-8);
+  color: var(--v8-ink);
+  line-height: 1.4;
+  overflow-wrap: anywhere;
+}
+.trial-supported-name { font-weight: 750; }
+.trial-supported-fields {
+  /* The route's own field values, so a reader can check the group heading against the answer
+     rather than trust the gloss.  Technical, and sized as such -- but still full ink. */
+  color: var(--v8-ink);
+  font-size: var(--cn-fs-caption);
+}
+
 /* ORD-0037 — the map must say what it is doing.
    The tile notice is the honest counterpart to the flat canvas fallback; the gesture
    hint exists because a two-finger-only map is undiscoverable without being told. */

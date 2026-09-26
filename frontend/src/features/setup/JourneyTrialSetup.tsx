@@ -1,5 +1,7 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useLocale, useT } from "../../i18n/LocaleContext";
+import { cityNexusApi, type DestinationCapability } from "../../api/citynexus";
+import { classifyReadFailure } from "../../lib/failureAttribution";
 import { useElapsedSeconds } from "../../lib/waitClock";
 
 /**
@@ -165,6 +167,137 @@ const SUPPORTED_CITIES = {
   en: Object.keys(CITY_FACTS)
     .filter((name) => /^[\x00-\x7F]+$/.test(name))
     .map((name) => name.charAt(0).toUpperCase() + name.slice(1)),
+};
+
+/**
+ * ORD-0346: what the server actually said about each spelling this screen offers.
+ *
+ * `CITY_FACTS` is a spelling table -- it records which names `applyCity` can fill a basis from -- and
+ * the wizard was handing it out as a list of supported destinations.  Asked directly at
+ * `c740f45d` (`GET /destinations/capability`, resolver seam `off`), three of the eleven Chinese
+ * spellings get no identity at all and none of the eleven comes back `READY`.  So the panel asks the
+ * server per name and groups by the answer, printing only fields that route publishes.
+ *
+ * The identity column is `canonical_destination_id` and nothing else.  The same answer for 东京
+ * carries a non-empty `pending_destination_label` and `resolver_query_normalized` beside a *null*
+ * identity, which is exactly why "the column was not blank" could never be evidence of an identity.
+ */
+type DestinationReading = {
+  spelling: string;
+  /** False until this device holds an answer, so a read that never landed cannot join a server group. */
+  answered: boolean;
+  capability: string | null;
+  reason_code: string | null;
+  recommended_action: string | null;
+  canonical_destination_id: string | null;
+  place_count: number | null;
+  missing_categories: string[];
+  /** This device's own cause when nothing was read: the shared classifier's enum, never a message. */
+  failure: string | null;
+};
+
+function noAnswerYet(spelling: string, failure: string | null): DestinationReading {
+  return {
+    spelling,
+    answered: false,
+    capability: null,
+    reason_code: null,
+    recommended_action: null,
+    canonical_destination_id: null,
+    place_count: null,
+    missing_categories: [],
+    failure,
+  };
+}
+
+function readFromCapability(spelling: string, answer: DestinationCapability): DestinationReading {
+  return {
+    spelling,
+    answered: true,
+    capability: answer.capability ?? null,
+    reason_code: answer.reason_code ?? null,
+    recommended_action: answer.recommended_action ?? null,
+    canonical_destination_id: answer.canonical_destination_id ?? null,
+    place_count: Number.isFinite(Number(answer.place_count)) ? Number(answer.place_count) : null,
+    missing_categories: Array.isArray(answer.missing_categories) ? answer.missing_categories : [],
+    failure: null,
+  };
+}
+
+/** The three groups the panel shows, in the order the traveller meets them. */
+export type DestinationGroup = "supported" | "needs_lookup" | "unknown";
+export const DESTINATION_GROUPS: DestinationGroup[] = ["supported", "needs_lookup", "unknown"];
+
+export function groupOfDestination(row: DestinationReading): DestinationGroup {
+  if (!row.answered) return "unknown";
+  if (row.reason_code === "NO_CANONICAL_IDENTITY") return "needs_lookup";
+  if (row.capability === "READY") return "supported";
+  /* A `HYDRATABLE` that carries an identity and rows says the server named the place *and* holds
+     material for it.  The row prints the verdict beside it, so the heading glosses this and the
+     traveller is never left to trust the gloss. */
+  if (row.canonical_destination_id && (row.place_count ?? 0) > 0) return "supported";
+  return "unknown";
+}
+
+/**
+ * The identity column, spoken.  A destination the server could not name reads 还没有身份 -- the
+ * traveller's own words, the folded form of them and any operation token are *not* identities, so
+ * none of them may stand in this slot (see `DestinationResolution` in `anywhere_capability.py`).
+ */
+export function identityWords(row: DestinationReading, zh: boolean): string {
+  if (!row.answered) return zh ? "身份还没读到" : "identity not read yet";
+  if (row.canonical_destination_id) return zh ? "服务器给了身份" : "the server named it";
+  return zh ? "还没有身份" : "no identity yet";
+}
+
+/** What the server answered, said once in plain words and once in the route's own field values. */
+function verdictWords(row: DestinationReading, zh: boolean): string {
+  if (!row.answered) {
+    return row.failure
+      ? zh
+        ? "这一轮没读到服务器的判定（读不到不等于服务器说不知道）"
+        : "no server verdict was read this round (a failed read is not the server saying it does not know)"
+      : zh
+        ? "还没问过服务器"
+        : "the server has not been asked yet";
+  }
+  if (row.capability === "READY") {
+    return zh ? "服务器说这座城现在就能规划" : "the server says this destination can be planned now";
+  }
+  if (row.reason_code === "NO_CANONICAL_IDENTITY") {
+    return zh
+      ? "服务器的词表和目录里都没有这个名字，要它联网解析才有答案"
+      : "nothing the server consults names this spelling; it would have to resolve it over the network";
+  }
+  if (row.capability === "UNKNOWN_RETRYABLE") {
+    return zh ? "问了，这一轮没人回答" : "it was asked, and nothing answered this round";
+  }
+  if (row.canonical_destination_id) {
+    return zh
+      ? `服务器认得它，目录里有 ${row.place_count ?? 0} 条，还缺 ${row.missing_categories.length} 类事实`
+      : `the server names it, holds ${row.place_count ?? 0} rows and is short ${row.missing_categories.length} categories`;
+  }
+  return zh ? "服务器给了别的判定" : "the server gave some other verdict";
+}
+
+const GROUP_HEAD: Record<DestinationGroup, [string, string, string]> = {
+  /* [中文标题, English title, 中文依据] -- the third string names which server fields decide the
+     group, so a reader can check the rule against the row instead of trusting the heading. */
+  supported: [
+    "已支持：服务器认得它，而且目录里有东西",
+    "Supported: the server names it and holds material",
+    "READY / 有 canonical 身份且有目录行",
+  ],
+  needs_lookup: [
+    "需联网才能解析：服务器现在认不出这个名字",
+    "Needs a network lookup: nothing the server consults names it",
+    "NO_CANONICAL_IDENTITY",
+  ],
+  unknown: [
+    "未知或无数据：这一轮拿不出可规划的判定",
+    "Unknown or empty: no plannable verdict came back this round",
+    "HYDRATABLE 无目录行 / UNKNOWN_RETRYABLE / 没读到",
+  ],
 };
 
 export function currencyLabel(currency: string, locale: string) {
@@ -465,6 +598,38 @@ export function JourneyTrialSetup({
       mounted.current = false;
     };
   }, []);
+  /* ORD-0346: what the server answered for each spelling this screen offers, keyed by spelling.
+     `null` means this panel has never asked -- the names stay on screen either way, so a read in
+     flight cannot empty the list the traveller is looking at. */
+  const [destinationReadings, setDestinationReadings] =
+    useState<Record<string, DestinationReading> | null>(null);
+  const destinationReadSeq = useRef(0);
+  const readDestinations = useCallback(async () => {
+    const names = zh ? SUPPORTED_CITIES.zh : SUPPORTED_CITIES.en;
+    const seq = ++destinationReadSeq.current;
+    setDestinationReadings((current) => {
+      const next: Record<string, DestinationReading> = { ...(current ?? {}) };
+      for (const name of names) next[name] = next[name]?.answered ? next[name] : noAnswerYet(name, null);
+      return next;
+    });
+    const settled = await Promise.allSettled(
+      names.map((name) => cityNexusApi.getDestinationCapability(name)),
+    );
+    if (!mounted.current || seq !== destinationReadSeq.current) return;
+    setDestinationReadings((current) => {
+      const next: Record<string, DestinationReading> = { ...(current ?? {}) };
+      settled.forEach((entry, index) => {
+        const name = names[index];
+        next[name] =
+          entry.status === "fulfilled"
+            ? readFromCapability(name, entry.value)
+            : /* Q64/Q71: the classifier's enum is this device's conclusion; `entry.reason.message`
+                 can carry the proxy's or the origin's own sentence, and none of that crosses here. */
+              noAnswerYet(name, classifyReadFailure(entry.reason).reason);
+      });
+      return next;
+    });
+  }, [zh]);
   const [draft, setDraft] = useState<JourneyTrialDraft>(() =>
     /* A draft stored by the previous build can name a city the table does not know while
        still carrying the triple of the last city it did know.  Coerce on the way in, so the
@@ -677,19 +842,80 @@ export function JourneyTrialSetup({
                 : `"${draft.cityName.trim()}" is not recognised: planning falls back to the neutral basis ${basisWords.country} / ${basisWords.currency} (${basisWords.currencyCode}) / ${basisWords.timezone}, and does not keep the city you last recognised. Try another spelling, or pick one from "See supported destinations".`}
             </p>
           )}
-          <details className="trial-supported" data-testid="trial-supported-cities">
-            {/* No count is printed: the authoritative number of supported cities is not this
-                lane's to derive, and a headcount read off the local table would be its own
-                claim. The names the table does know are shown, which is what a traveller
-                can act on. */}
+          <details
+            className="trial-supported"
+            data-testid="trial-supported-cities"
+            onToggle={(event) => {
+              /* One round of reads per opening, and only because the traveller asked to see this.
+                 The panel cannot say anything about a destination it has not asked about, so the
+                 names are listed first and the server's answer is attached as it lands. */
+              if (event.currentTarget.open) void readDestinations();
+            }}
+          >
+            {/* ORD-0060 #3 still holds for the entry itself: the summary carries no headcount, because
+                the number of supported destinations is not this table's to publish.  ORD-0346 changed
+                what the *body* is: it used to print this client-side spelling table under the words
+                "supported destinations", which is what a traveller read as a promise.  The body now
+                groups the same names by what `GET /destinations/capability` answered for each one. */}
             <summary data-testid="trial-supported-toggle">
               {zh ? "看支持的目的地" : "See supported destinations"}
             </summary>
-            <ul className="trial-supported-list">
-              {(zh ? SUPPORTED_CITIES.zh : SUPPORTED_CITIES.en).map((name) => (
-                <li key={name}>{name}</li>
-              ))}
-            </ul>
+            {DESTINATION_GROUPS.map((group) => {
+              const rows = (zh ? SUPPORTED_CITIES.zh : SUPPORTED_CITIES.en)
+                .map((name) => (destinationReadings && destinationReadings[name]) || noAnswerYet(name, null))
+                .filter((row) => groupOfDestination(row) === group);
+              return (
+                <section
+                  className="trial-supported-group"
+                  key={group}
+                  data-testid={`trial-supported-group-${group}`}
+                >
+                  <h4 className="trial-supported-group-title">{zh ? GROUP_HEAD[group][0] : GROUP_HEAD[group][1]}</h4>
+                  <p className="trial-supported-group-rule" data-testid={`trial-supported-group-rule-${group}`}>
+                    {GROUP_HEAD[group][2]}
+                  </p>
+                  {rows.length === 0 ? (
+                    <p className="trial-supported-none" data-testid={`trial-supported-none-${group}`}>
+                      {zh ? "这一轮没有名字落在这一组。" : "No name landed in this group this round."}
+                    </p>
+                  ) : (
+                    <ul className="trial-supported-list">
+                      {rows.map((row) => (
+                        <li
+                          key={row.spelling}
+                          className="trial-supported-row"
+                          data-testid={`trial-supported-row-${row.spelling}`}
+                          data-answered={row.answered ? "yes" : "no"}
+                          data-capability={row.capability ?? undefined}
+                          data-reason-code={row.reason_code ?? undefined}
+                          data-recommended-action={row.recommended_action ?? undefined}
+                          /* The identity column.  Absent, not filled in, when there is no identity:
+                             a placeholder here is what let `unresolved:<hash>` pass for a name. */
+                          data-canonical-destination-id={row.canonical_destination_id ?? undefined}
+                        >
+                          <span className="trial-supported-name">{row.spelling}</span>
+                          <span
+                            className="trial-supported-identity"
+                            data-testid={`trial-supported-identity-${row.spelling}`}
+                          >
+                            {identityWords(row, zh)}
+                          </span>
+                          <span className="trial-supported-verdict">{verdictWords(row, zh)}</span>
+                          <span
+                            className="trial-supported-fields"
+                            data-testid={`trial-supported-fields-${row.spelling}`}
+                          >
+                            {row.answered
+                              ? `${row.capability} · ${row.reason_code} · ${row.recommended_action}`
+                              : (row.failure ?? "not-asked")}
+                          </span>
+                        </li>
+                      ))}
+                    </ul>
+                  )}
+                </section>
+              );
+            })}
           </details>
 
           <label className="trial-field">
