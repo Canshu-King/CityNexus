@@ -1,0 +1,54 @@
+{
+ "order": "ORD-0341",
+ "line": "origin/mirror/integration-frontend-apple-pass1",
+ "tip": "fe57ff44cc523399307300d6e236654e7dc31a39",
+ "cand": "e2ab3bc8a2a9e9251d760c138065ca722f070d59",
+ "merge_base": "824fca398d27db4c0078407b42e544c84048d3dd",
+ "commits_tip_ahead_of_base": 2,
+ "commits_cand_ahead_of_base": 3,
+ "merge_tree_rc": 0,
+ "changed_files": [
+  "frontend/e2e/qoder-continuation-resume-carries-identity.spec.ts",
+  "frontend/e2e/qoder-sealed-failure-speaks-and-offers-retry.spec.ts",
+  "frontend/src/app/V8Experience.tsx"
+ ],
+ "files": [
+  {
+   "path": "frontend/e2e/qoder-continuation-resume-carries-identity.spec.ts",
+   "cand_blob": "7169fdf00d336badb245127b10915e15f18004a7",
+   "merged_blob": "7169fdf00d336badb245127b10915e15f18004a7",
+   "identical": true,
+   "cand_changed_the_file": true
+  },
+  {
+   "path": "frontend/e2e/qoder-sealed-failure-speaks-and-offers-retry.spec.ts",
+   "cand_blob": "ef766fd79d279ba1b9e834525bcf0cb596a9a58d",
+   "merged_blob": "ef766fd79d279ba1b9e834525bcf0cb596a9a58d",
+   "identical": true,
+   "cand_changed_the_file": true
+  },
+  {
+   "path": "frontend/src/app/V8Experience.tsx",
+   "cand_blob": "2e74a6751f0cd8751bada62ba6a673b0162fa37c",
+   "merged_blob": "2e74a6751f0cd8751bada62ba6a673b0162fa37c",
+   "identical": true,
+   "cand_changed_the_file": true
+  }
+ ],
+ "merged_tree": "189126254f62fc5fc64ba16c25bdff3c3c17e05d",
+ "auto_merged_files": [],
+ "recut_commit": "7e728268a90c9d0f4accc7f117af1de73f65bc7a",
+ "readback_tree": "189126254f62fc5fc64ba16c25bdff3c3c17e05d",
+ "readback_tree_matches": true,
+ "readback_parents": [
+  "fe57ff44cc523399307300d6e236654e7dc31a39",
+  "e2ab3bc8a2a9e9251d760c138065ca722f070d59"
+ ],
+ "readback_parent_tip": true,
+ "verdict": "RECUT_OK",
+ "pushed_ref": "refs/heads/cmdr/land-ord0341-recut-r3",
+ "push_rc": 0,
+ "push_stderr": "remote: \nremote: Create a pull request for 'cmdr/land-ord0341-recut-r3' on GitHub by visiting:        \nremote:      https://github.com/Canshu-King/CityNexus/pull/new/cmdr/land-ord0341-recut-r3        \nremote: \nTo github.com:Canshu-King/CityNexus.git\n * [new branch]        7e728268a90c9d0f4accc7f117af1de73f65bc7a -> cmdr/land-ord0341-recut-r3",
+ "ls_remote": "7e728268a90c9d0f4accc7f117af1de73f65bc7a\trefs/heads/cmdr/land-ord0341-recut-r3",
+ "ls_remote_matches": true
+}
