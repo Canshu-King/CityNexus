@@ -1,0 +1,21 @@
+{
+ "schema": "CNX_ORD0342_PUBLISHED_COORDINATE_ERRATUM_V2",
+ "order": "ORD-0342",
+ "lane": "B c01d72a3",
+ "supersedes": "ord0342_coordinate_erratum_r1.json",
+ "defect": "a published receipt quoted a 40-hex coordinate for its own earlier revision that is not a git object: it was the bare sha1 of the file's bytes, transcribed from a console line",
+ "wrong_value": "9c70a94598c7a3e3d74bd4c0e33f5d5bbe708f15",
+ "carried_by": [
+  "ord0342_receipt_r2.json",
+  "ord0342_receipt_r3.json"
+ ],
+ "correct_value_for_ord0342_receipt_r1.json": "878b47302ef673e2588fbd377ba3b2b39ef97c43",
+ "blobs_of_the_revisions_read_back": {
+  "ord0342_receipt_r1.json": "878b47302ef673e2588fbd377ba3b2b39ef97c43",
+  "ord0342_receipt_r2.json": "c7d70cf1208aa5751d0370a9ec8775a07a5c8017"
+ },
+ "correction_ships_in": "ord0342_receipt_r4.json, whose every coordinate is produced by git ls-tree / git rev-parse inside the run",
+ "why_the_wrong_one_matters": "a reader who tried to cat-file it would get nothing, which is exactly the failure the ledger's coordinate gate exists to stop",
+ "rule_fitted_after": "published_blob() looks a coordinate up in this run's own read-back of refs/heads/commander/control, and the delivery script refuses to publish a path whose bytes differ from what is already there",
+ "old_files_untouched": "r1, r2, r3 and coordinate_erratum_r1 stay published, byte-identical, not deleted"
+}
