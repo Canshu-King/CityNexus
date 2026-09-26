@@ -109,17 +109,20 @@ if mode == "auth":
     h["authorization"] = "Basic " + base64.b64encode(f"{user}:{secret}".encode()).decode()
 try:
     req = urllib.request.Request(url, headers=h)
-    with urllib.request.urlopen(req, timeout=15) as r:
+    # 探针必须钉死走哪条路：这台机器环境变量里的 HTTPS_PROXY 指着一条无监听的口（:7892），
+    # 跟着它走会把"对端拒连"读成"链断了"。一律直连，并把这一事实记进读数。
+    op = urllib.request.build_opener(urllib.request.ProxyHandler({}))
+    with op.open(req, timeout=15) as r:
         body = r.read()
         print(json.dumps({"status": r.status, "content_type": r.headers.get("content-type"),
-                          "server": r.headers.get("server"), "bytes": len(body),
+                          "server": r.headers.get("server"), "bytes": len(body), "proxy": "bypassed",
                           "sha1_12": hashlib.sha1(body).hexdigest()[:12],
                           "head": body[:240].decode("utf-8", "replace"),
                           "body_head": body[:20000].decode("utf-8", "replace")}))
 except urllib.error.HTTPError as e:
     body = e.read()
     print(json.dumps({"status": e.code, "content_type": e.headers.get("content-type"),
-                      "server": e.headers.get("server"), "bytes": len(body),
+                      "server": e.headers.get("server"), "bytes": len(body), "proxy": "bypassed",
                       "sha1_12": hashlib.sha1(body).hexdigest()[:12],
                       "head": body[:240].decode("utf-8", "replace"),
                           "body_head": body[:20000].decode("utf-8", "replace")}))
@@ -168,22 +171,49 @@ function parentJudgement(info) {
            why: liveShell ? "父进程还活着且是某个 agent 的 shell —— 会话一停就会被带走"
                           : "父进程不是任何 agent 会话的 shell（经 cmd /c start 自立控制台）" };
 }
+// 「200 + HTML」不算 API 活着：这条链上栽过一次（对端没应用层被读成"服务器答了"），所以判据按
+// content-type 与正文里的字段名判，不按状态码判。静态那一跳反过来必须真是 HTML。
+function apiJson(h) {
+  return h.status === 200 && String(h.content_type || "").includes("application/json")
+    && /"status"\s*:/.test(String(h.head || ""));
+}
+function isHtml(h) {
+  return String(h.content_type || "").includes("text/html") && /<!doctype html>/i.test(String(h.head || ""));
+}
+// 隧道的对端答了没有，分三层看：连不上 / 边缘代答（还没绑上连接器）/ 对端真答。
+// 对端真答里还有一形要具名：vite 自己的 Host 白名单会把 `*.trycloudflare.com` 拒成
+// `403 + Blocked request. This host (...)` —— 那是 origin 在说话（cloudflared 也会给 origin 的应答
+// 盖一个 `Server: cloudflare`，所以不能拿这个头判"谁在答"）。
+function originRefusedHost(h) {
+  return Number(h?.status) === 403 && /Blocked request\.\s*This host/i.test(String(h?.head || ""));
+}
+function edgeNotReady(h) {
+  if (!h || !h.status) return true;
+  if (originRefusedHost(h)) return false;
+  return [502, 503, 521, 522, 523, 530].includes(Number(h.status));
+}
+function answerShape(h) {
+  if (!h || h.connect_error) return "no-answer";
+  if (apiJson(h)) return "api-json";
+  if (originRefusedHost(h)) return "origin-refused-host";
+  return isHtml(h) ? "html" : "other";
+}
 function hopSpecs() {
   return [
     { hop: "backend", port: CFG.backendPort, url: `http://127.0.0.1:${CFG.backendPort}/api/v1/health`,
-      auth: false, expect: (h) => h.status === 200,
+      auth: false, kind: "api", expect: apiJson,
       bat: ["@echo off", `cd /d "${CFG.backendDir}"`,
             `set CITYNEXUS_DATABASE_URL=sqlite:///${CFG.allowedDb.split("\\").join("/")}`,
             `"${CFG.venvPython}" -m uvicorn app.main:app --host 127.0.0.1 --port ${CFG.backendPort}`] },
     { hop: "static", port: CFG.staticPort, url: `http://127.0.0.1:${CFG.staticPort}/`,
-      auth: false, expect: (h) => h.status === 200 && h.bytes > 200,
+      auth: false, kind: "static", expect: (h) => h.status === 200 && h.bytes > 200 && isHtml(h),
       bat: ["@echo off", `cd /d "${CFG.frontendDir}"`,
             `"${CFG.node}" node_modules/vite/bin/vite.js preview --outDir "${CFG.dist}"` +
             ` --host 127.0.0.1 --port ${CFG.staticPort} --strictPort`] },
     // 那把鉴权代理尺把自己钉在 4782、把静态上游钉在 4781（`raw/preview_auth_proxy.py:25` 与 `:31`），
     // 只有 API 上游可由 `CNX_PROXY_API_UPSTREAM` 改（`:30`）—— 所以它只能整条一起起，不能挪端口实验
     { hop: "auth_proxy", port: CFG.authPort, url: `http://127.0.0.1:${CFG.authPort}/api/v1/health`,
-      auth: true, expect: (h) => h.status === 200,
+      auth: true, kind: "api", expect: apiJson,
       bat: ["@echo off", `cd /d "${CFG.proxyCwd}"`,
             `set CNX_PROXY_API_UPSTREAM=http://127.0.0.1:${CFG.backendPort}`,
             `"${CFG.venvPython}" ${CFG.proxyScript}`] },
@@ -200,8 +230,12 @@ function writeBat(spec) {
 }
 function probe(hop) {
   const got = fetch(hop.url, { auth: hop.auth });
-  return { hop: hop.hop, port: hop.port, url: hop.url, listening: listenerPid(hop.port),
-           http: got, healthy: Boolean(got.status) && hop.expect(got) };
+  return { hop: hop.hop, port: hop.port, url: hop.url, kind: hop.kind, listening: listenerPid(hop.port),
+           http: { status: got.status ?? null, content_type: got.content_type ?? null,
+                   server: got.server ?? null, bytes: got.bytes ?? null, sha1_12: got.sha1_12 ?? null,
+                   connect_error: got.connect_error ?? null, head60: String(got.head || "").slice(0, 60) },
+           healthy: Boolean(got.status) && hop.expect(got),
+           shape: answerShape(got) };
 }
 function phoneGeneration() {
   // 手机那一代的指纹 = 首页点名的那个 JS 资产名 + 它的字节数，不是"端口在听"
@@ -213,20 +247,32 @@ function phoneGeneration() {
            ok: Boolean(asset.status) && asset.status < 400 && (asset.bytes || 0) > 1000 };
 }
 function tunnelFromLog() {
+  // 现值只有一个权威来源：`run/tunnel_url.txt`。旧日志里的地址不是现址 —— 实测这份目录里
+  // `tunnel_0925_0417.err.log` 的 mtime 比什么都新，里面是一条早已死掉的 quick tunnel。
   const dir = CFG.runDir;
-  const logs = fs.existsSync(dir) ? fs.readdirSync(dir).filter((f) => /^tunnel.*\.log$/i.test(f))
-    .map((f) => ({ f, m: fs.statSync(path.join(dir, f)).mtimeMs })).sort((a, b) => b.m - a.m) : [];
-  for (const l of logs) {
-    const m = TUNNEL_URL.exec(fs.readFileSync(path.join(dir, l.f), "utf-8").slice(-40000));
-    if (m) return { url: m[1], source: `run/${l.f}` };
-  }
   const f = path.join(dir, "tunnel_url.txt");
-  return fs.existsSync(f) ? { url: fs.readFileSync(f, "utf-8").trim(), source: "run/tunnel_url.txt" } : { url: null };
+  const cur = fs.existsSync(f) ? fs.readFileSync(f, "utf-8").trim() : "";
+  const newest = (() => {
+    const logs = fs.existsSync(dir) ? fs.readdirSync(dir).filter((x) => /^tunnel.*\.log$/i.test(x))
+      .map((x) => ({ x, m: fs.statSync(path.join(dir, x)).mtimeMs })).sort((a, b) => b.m - a.m) : [];
+    for (const l of logs) {
+      const m = TUNNEL_URL.exec(fs.readFileSync(path.join(dir, l.x), "utf-8").slice(-40000));
+      if (m) return { url: m[1], source: `run/${l.x}` };
+    }
+    return null;
+  })();
+  if (cur) {
+    return { url: cur, source: "run/tunnel_url.txt",
+             from_newest_log: newest && newest.url !== cur ? newest : null };
+  }
+  return newest || { url: null, source: null };
 }
 function startHop(spec) {
   const before = listenerPid(spec.port);
   const file = writeBat(spec);
-  const r = sh("cmd", ["/c", "start", '""', "/min", file], { timeout: 30000,
+  // stdio 必须 "ignore"：`start` 一个 .bat 起的是 `cmd /K 那份.bat`，那个 cmd 一直握着从我这里继承的
+  // 管道写端且不退出 ⇒ spawnSync 等到天荒地老（实测把整趟 recover 挂死在 900 秒上）。
+  const r = sh("cmd", ["/c", "start", '""', "/min", file], { timeout: 30000, stdio: "ignore",
     windowsVerbatimArguments: true });
   if (r.status !== 0) {
     return { started: false, bat: path.basename(file), spawn_stderr: (r.stderr || "").slice(0, 200) };
@@ -331,16 +377,16 @@ function main() {
       report.spawns.push({ hop: spec.hop, ...startHop(spec) });
     }
       const tun = tunnelFromLog();
-    const tunAlive = !CFG.freshTunnel && tun.url
-      && String(fetch(tun.url + "/api/v1/health", { auth: true }).status || "").startsWith("2");
+    const tunAlive = !CFG.freshTunnel && tun.url && apiJson(fetch(tun.url + "/api/v1/health", { auth: true }));
     if (CFG.only.includes("tunnel") && !tunAlive) {
       const stamp = localHHMM();
       const log = path.join(CFG.runDir, `tunnel_selfheal_${stamp}.log`);
       const tbat = path.join(CFG.runDir, `hop_tunnel_${stamp}.bat`);
       fs.writeFileSync(tbat, ["@echo off", `cd /d "${CFG.runDir}"`,
         `"${CFG.cloudflared}" tunnel --url http://127.0.0.1:${CFG.authPort} --no-autoupdate` +
-        ` > "${log}" 2>&1`].join("\r\n") + "\r\n", "ascii");
-      sh("cmd", ["/c", "start", '""', "/min", tbat], { windowsVerbatimArguments: true });
+        ` --protocol http2 > "${log}" 2>&1`].join("\r\n") + "\r\n", "ascii");
+      sh("cmd", ["/c", "start", '""', "/min", tbat], { windowsVerbatimArguments: true,
+        stdio: "ignore", timeout: 30000 });
       let found = { url: null };
       for (let i = 0; i < 24 && !found.url; i += 1) {
         Atomics.wait(new Int32Array(new SharedArrayBuffer(4)), 0, 0, 2500);
@@ -354,11 +400,48 @@ function main() {
   }
   report.phone_generation = CFG.only.includes("static") ? phoneGeneration() : { ok: false, skipped: true };
   report.tunnel = tunnelFromLog();
-  report.tunnel_probe = report.tunnel.url ? fetch(`${report.tunnel.url}/api/v1/health`, { auth: true }) : null;
+  // 刚打印出地址 ≠ 边缘已经能转发：quick tunnel 注册要几秒到一分多钟（实测两种都遇过）。
+  // 所以有界地等（探不到就再等 5 秒，最多 24 次），每次探到的状态按顺序进 `tunnel_probe_statuses`，
+  // 不靠"多试几次直到绿"——拿不到对端真答就照实判 CHAIN_UNHEALTHY。
+  let tp = null;
+  report.tunnel_probe_attempts = 0;
+  report.tunnel_probe_waited_ms = 0;
+  report.tunnel_probe_statuses = [];
+  if (report.tunnel.url) {
+    for (let i = 0; i < 24; i += 1) {
+      tp = fetch(`${report.tunnel.url}/api/v1/health`, { auth: true });
+      report.tunnel_probe_attempts = i + 1;
+      report.tunnel_probe_statuses.push(tp.status || tp.connect_error || "empty");
+      if (!edgeNotReady(tp)) break;
+      Atomics.wait(new Int32Array(new SharedArrayBuffer(4)), 0, 0, 5000);
+      report.tunnel_probe_waited_ms = (i + 1) * 5000;
+    }
+  }
+  report.tunnel_probe = tp && { status: tp.status ?? null, content_type: tp.content_type ?? null,
+    server: tp.server ?? null, bytes: tp.bytes ?? null, sha1_12: tp.sha1_12 ?? null,
+    connect_error: tp.connect_error ?? null, head60: String(tp.head || "").slice(0, 60),
+    shape: answerShape(tp) };
   const hopsOk = report.hops.every((h) => h.healthy);
-  report.verdict = hopsOk && report.phone_generation.ok && report.tunnel_probe?.status === 200
-    ? "CHAIN_HEALTHY" : "CHAIN_UNHEALTHY";
-  report.exit = report.verdict === "CHAIN_HEALTHY" ? 0 : 3;
+  const apiLegInScope = report.hops.some((h) => h.kind === "api");
+  const tunnelInScope = CFG.only.includes("tunnel");
+  const edgeReady = !tunnelInScope || !edgeNotReady(tp);
+  // 隧道指向静态服（我这台自己的实验实例就是这形）⇒ 对端答了、但这条实例根本没有 API 腿：必须具名，不能算绿
+  const apiNotCarried = tunnelInScope && !apiLegInScope && edgeReady && !apiJson(tp);
+  const tunnelOk = !tunnelInScope || Boolean(tp && apiJson(tp));
+  report.verdict = hopsOk && report.phone_generation.ok && tunnelOk
+    ? "CHAIN_HEALTHY" : (hopsOk && report.phone_generation.ok && apiNotCarried
+      ? "STATIC_SIDE_HEALTHY_API_NOT_CARRIED" : "CHAIN_UNHEALTHY");
+  report.verdict_reason = { hops_ok: hopsOk, phone_generation_ok: Boolean(report.phone_generation.ok),
+    api_leg_in_scope: apiLegInScope, tunnel_in_scope: tunnelInScope,
+    tunnel_shape: report.tunnel_probe ? report.tunnel_probe.shape : "no-url",
+    tunnel_edge_state: !report.tunnel.url ? "no-url" : (edgeNotReady(tp) ? "edge_only_or_no_answer"
+      : (originRefusedHost(tp) ? "origin_answered_but_refused_host" : "origin_answered")),
+    api_leg: apiLegInScope ? "carried" : (apiNotCarried ? "NOT_CARRIED_BY_THIS_INSTANCE" : "NOT_IN_SCOPE"),
+    why_not_full_green: apiLegInScope ? null : "这一台实例的隧道直指静态服，中间没有那把鉴权代理 ⇒ vite 用自己的 "
+      + "Host 白名单把 `*.trycloudflare.com` 拒成 403（`origin_refused_host`）；现网那一腿能过，是因为代理把 "
+      + "Host 改写成 `127.0.0.1:4781`（`raw/preview_auth_proxy.py:124` 丢掉入站 Host、`:127` 显式加这一个）" };
+  report.exit = report.verdict === "CHAIN_HEALTHY" ? 0
+    : (report.verdict === "STATIC_SIDE_HEALTHY_API_NOT_CARRIED" ? 2 : 3);
   emit(report);
 }
 function emit(report) {
