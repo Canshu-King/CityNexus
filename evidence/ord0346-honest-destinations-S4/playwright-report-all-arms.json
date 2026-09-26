@@ -1,0 +1,400 @@
+{
+  "config": {
+    "argv": [
+      "C:\\Program Files\\nodejs\\node.exe",
+      "D:\\moodle\\_qoder_ord0346_S4\\frontend\\node_modules\\@playwright\\test\\cli.js",
+      "test",
+      "-c",
+      "playwright.ord0346-S4.config.ts"
+    ],
+    "configFile": "D:\\moodle\\_qoder_ord0346_S4\\frontend\\playwright.ord0346-S4.config.ts",
+    "rootDir": "D:/moodle/_qoder_ord0346_S4/frontend/e2e",
+    "failOnFlakyTests": false,
+    "forbidOnly": false,
+    "fullyParallel": false,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "actualWorkers": 3
+    },
+    "preserveOutput": "always",
+    "projects": [
+      {
+        "outputDir": "D:/moodle/_qoder_ord0346_S4/frontend/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 3
+        },
+        "id": "",
+        "name": "",
+        "testDir": "D:/moodle/_qoder_ord0346_S4/frontend/e2e",
+        "testIgnore": [],
+        "testMatch": [
+          "/qoder-(ord0346-honest-destinations|wizard-city-copy|wizard-advanced-is-tappable)\\.spec\\.ts/"
+        ],
+        "timeout": 240000
+      }
+    ],
+    "quiet": false,
+    "reporter": [
+      [
+        "list",
+        null
+      ],
+      [
+        "json",
+        {
+          "outputFile": "D:\\moodle\\_qoder_lane_S4_0926\\work\\ord0346\\report-all-arms.json"
+        }
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "shard": null,
+    "tags": [],
+    "updateSnapshots": "missing",
+    "updateSourceMethod": "patch",
+    "version": "1.63.0",
+    "workers": 16,
+    "webServer": {
+      "command": "npm run dev -- --host 127.0.0.1 --port 4196",
+      "port": 4196,
+      "reuseExistingServer": false,
+      "timeout": 150000,
+      "stdout": "pipe",
+      "stderr": "pipe"
+    }
+  },
+  "suites": [
+    {
+      "title": "qoder-ord0346-honest-destinations.spec.ts",
+      "file": "qoder-ord0346-honest-destinations.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "ORD-0346 the supported-destinations panel speaks from the server's answer",
+          "file": "qoder-ord0346-honest-destinations.spec.ts",
+          "line": 93,
+          "column": 6,
+          "specs": [
+            {
+              "title": "zh-arms-supported-not-mislabelled-and-unnamed-not-claimed",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 200000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "",
+                  "projectName": "",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 3311,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-09-26T00:56:39.550Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "0df97a4ebc58884dcbd0-75f5ee8ba6e944e6d248",
+              "file": "qoder-ord0346-honest-destinations.spec.ts",
+              "line": 94,
+              "column": 3
+            },
+            {
+              "title": "en-spellings-group-the-same-way",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 200000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "",
+                  "projectName": "",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1677,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-09-26T00:56:42.976Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "0df97a4ebc58884dcbd0-e18c048ea8f0a52fe323",
+              "file": "qoder-ord0346-honest-destinations.spec.ts",
+              "line": 179,
+              "column": 3
+            },
+            {
+              "title": "a-read-that-never-lands-is-not-reported-as-a-server-verdict",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 200000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "",
+                  "projectName": "",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1702,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-09-26T00:56:44.666Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "0df97a4ebc58884dcbd0-f01515d374c0b7aa6a58",
+              "file": "qoder-ord0346-honest-destinations.spec.ts",
+              "line": 199,
+              "column": 3
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "qoder-wizard-advanced-is-tappable.spec.ts",
+      "file": "qoder-wizard-advanced-is-tappable.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "ord0261-sticky-bar-must-not-cover-the-summary-row — sticky 条不许压住 summary 行",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 180000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 1,
+                  "status": "passed",
+                  "duration": 2514,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-09-26T00:56:39.547Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "bc15093a18fe00e6233e-63bb0d565528bb8f36e3",
+          "file": "qoder-wizard-advanced-is-tappable.spec.ts",
+          "line": 110,
+          "column": 1
+        },
+        {
+          "title": "ord0264-opener-is-scroll-reachable-and-tappable — 高级入口要滚得到、点得动、不伤草稿",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 240000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 1,
+                  "status": "passed",
+                  "duration": 1598,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-09-26T00:56:42.176Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "bc15093a18fe00e6233e-5f565cdb9780300b8a98",
+          "file": "qoder-wizard-advanced-is-tappable.spec.ts",
+          "line": 143,
+          "column": 1
+        }
+      ]
+    },
+    {
+      "title": "qoder-wizard-city-copy.spec.ts",
+      "file": "qoder-wizard-city-copy.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "ORD-0060 the wizard describes the destination it will actually plan",
+          "file": "qoder-wizard-city-copy.spec.ts",
+          "line": 31,
+          "column": 6,
+          "specs": [
+            {
+              "title": "city-label-follows-the-recognised-city",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 150000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "",
+                  "projectName": "",
+                  "results": [
+                    {
+                      "workerIndex": 2,
+                      "parallelIndex": 2,
+                      "status": "passed",
+                      "duration": 4097,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-09-26T00:56:39.565Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "ec86237265f60b9cd200-d123d5ae14e6d898b46c",
+              "file": "qoder-wizard-city-copy.spec.ts",
+              "line": 32,
+              "column": 3
+            },
+            {
+              "title": "unrecognised-city-assumption-is-said-out-loud",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 150000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "",
+                  "projectName": "",
+                  "results": [
+                    {
+                      "workerIndex": 2,
+                      "parallelIndex": 2,
+                      "status": "passed",
+                      "duration": 1673,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-09-26T00:56:43.789Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "ec86237265f60b9cd200-78d6450f944b683009c3",
+              "file": "qoder-wizard-city-copy.spec.ts",
+              "line": 77,
+              "column": 3
+            },
+            {
+              "title": "supported-destinations-are-reachable-without-an-invented-count",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 150000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "",
+                  "projectName": "",
+                  "results": [
+                    {
+                      "workerIndex": 2,
+                      "parallelIndex": 2,
+                      "status": "passed",
+                      "duration": 1564,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-09-26T00:56:45.475Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "ec86237265f60b9cd200-8ba78f5604b124eb4034",
+              "file": "qoder-wizard-city-copy.spec.ts",
+              "line": 121,
+              "column": 3
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2026-09-26T00:56:38.251Z",
+    "duration": 9269.667000000001,
+    "expected": 8,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  }
+}
