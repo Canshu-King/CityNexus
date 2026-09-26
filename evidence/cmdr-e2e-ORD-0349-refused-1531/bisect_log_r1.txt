@@ -1,0 +1,204 @@
+run_id=cmdr151300o349bis tree=725bb7d43a13a120434ec553fb022a8fabfc3479 port=4400/5400 target=e2e/qoder-ord0349-two-legs-two-sentences.spec.ts full=False db=_cmdr151300o349bis.db
+[citynexus e2e] suite=current-product authoritative=true python=D:/moodle/CityNexus/.venv/Scripts/python.exe frontend=:4400 backend=:5400 db=sqlite:///D:/moodle/_qoder_cmdr_bisect_0349jia/review/evidence/_cmdr151300o349bis.db ai=disabled reuseExistingServer=false
+[WebServer] INFO:     Started server process [7548]
+[WebServer] INFO:     Waiting for application startup.
+
+[WebServer] INFO:     Application startup complete.
+[WebServer] INFO:     Uvicorn running on http://127.0.0.1:5400 (Press CTRL+C to quit)
+
+[WebServer] INFO:     127.0.0.1:53847 - "GET /api/v1/health HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:59791 - "GET /api/v1/health HTTP/1.1" 200 OK
+
+[citynexus e2e] provenance ok: run=cmdr151300o349bis frontend=:4400 -> backend=:5400 ai=disabled db=_cmdr151300o349bis.db
+
+Running 6 tests using 1 worker
+
+[citynexus e2e] suite=current-product authoritative=true python=D:/moodle/CityNexus/.venv/Scripts/python.exe frontend=:4400 backend=:5400 db=sqlite:///D:/moodle/_qoder_cmdr_bisect_0349jia/review/evidence/_cmdr151300o349bis.db ai=disabled reuseExistingServer=false
+
+[1/6] [real-seed] › e2e\_qoderRealSeed.setup.ts:110:1 › seed a real journey through the product API
+[WebServer] INFO:     127.0.0.1:53663 - "POST /api/v1/travelers HTTP/1.1" 201 Created
+
+[WebServer] INFO:     127.0.0.1:53664 - "POST /api/v1/journeys HTTP/1.1" 201 Created
+
+[WebServer] INFO:     127.0.0.1:53663 - "POST /api/v1/journeys/6e8bc485-fa7f-43b1-a6cb-31ae740395c4/stay-options/generate HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:53664 - "GET /api/v1/journeys/6e8bc485-fa7f-43b1-a6cb-31ae740395c4/stay-options HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:53663 - "POST /api/v1/journeys/6e8bc485-fa7f-43b1-a6cb-31ae740395c4/stay-options/4e0305dd-dc68-4872-833f-714d03e69c32/select HTTP/1.1" 200 OK
+
+[real-seed] › e2e\_qoderRealSeed.setup.ts:110:1 › seed a real journey through the product API
+[qoder-real-seed] journey=6e8bc485-fa7f-43b1-a6cb-31ae740395c4 options=4 chosen=4e0305dd-dc68-4872-833f-714d03e69c32 (Haihe Riverside Hotel)
+
+[WebServer] INFO:     127.0.0.1:55389 - "GET /api/v1/journeys/6e8bc485-fa7f-43b1-a6cb-31ae740395c4/experience HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:55390 - "GET /api/v1/journeys/6e8bc485-fa7f-43b1-a6cb-31ae740395c4/replans HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:49682 - "GET /api/v1/journeys/6e8bc485-fa7f-43b1-a6cb-31ae740395c4/replans HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:49688 - "GET /api/v1/journeys/6e8bc485-fa7f-43b1-a6cb-31ae740395c4/execution-clock HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:49687 - "GET /api/v1/journeys/6e8bc485-fa7f-43b1-a6cb-31ae740395c4/web-observations HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:49670 - "GET /api/v1/journeys/6e8bc485-fa7f-43b1-a6cb-31ae740395c4/plans HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:65255 - "GET /api/v1/journeys/6e8bc485-fa7f-43b1-a6cb-31ae740395c4/twin HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:49742 - "GET /api/v1/journeys/6e8bc485-fa7f-43b1-a6cb-31ae740395c4/offline-snapshot HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:49740 - "GET /api/v1/travelers/4f5f92b8-576c-4803-ac1c-7908d8cd9680/agent-policy HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:49741 - "GET /api/v1/journeys/6e8bc485-fa7f-43b1-a6cb-31ae740395c4/wallet HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:49739 - "GET /api/v1/journeys/6e8bc485-fa7f-43b1-a6cb-31ae740395c4/experience HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:49744 - "GET /api/v1/journeys/6e8bc485-fa7f-43b1-a6cb-31ae740395c4/experience HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:49743 - "GET /api/v1/agent/runtime-status HTTP/1.1" 200 OK
+
+[qoder-real-seed] trialWizard=false live-journey-current=true
+
+[citynexus e2e] suite=current-product authoritative=true python=D:/moodle/CityNexus/.venv/Scripts/python.exe frontend=:4400 backend=:5400 db=sqlite:///D:/moodle/_qoder_cmdr_bisect_0349jia/review/evidence/_cmdr151300o349bis.db ai=disabled reuseExistingServer=false
+
+[2/6] [chromium] › e2e\qoder-ord0349-two-legs-two-sentences.spec.ts:65:1 › the dictionary separates the legs, and neither sentence asserts the other
+[WebServer] INFO:     127.0.0.1:59130 - "GET /api/v1/journeys/6e8bc485-fa7f-43b1-a6cb-31ae740395c4/experience HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:59131 - "GET /api/v1/journeys/6e8bc485-fa7f-43b1-a6cb-31ae740395c4/replans HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:59132 - "GET /api/v1/demo/scene HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:59414 - "GET /api/v1/journeys/6e8bc485-fa7f-43b1-a6cb-31ae740395c4/agent-feed?limit=200 HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:52455 - "GET /api/v1/journeys/6e8bc485-fa7f-43b1-a6cb-31ae740395c4/wallet HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:59417 - "GET /api/v1/travelers/4f5f92b8-576c-4803-ac1c-7908d8cd9680/agent-policy HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:52456 - "GET /api/v1/journeys/6e8bc485-fa7f-43b1-a6cb-31ae740395c4/offline-snapshot HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:59415 - "GET /api/v1/journeys/6e8bc485-fa7f-43b1-a6cb-31ae740395c4/plans HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:59416 - "GET /api/v1/journeys/6e8bc485-fa7f-43b1-a6cb-31ae740395c4/twin HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:56747 - "GET /api/v1/journeys/6e8bc485-fa7f-43b1-a6cb-31ae740395c4/agent-feed?limit=200 HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:53692 - "GET /api/v1/agent/runtime-status HTTP/1.1" 200 OK
+
+[3/6] [chromium] › e2e\qoder-ord0349-two-legs-two-sentences.spec.ts:91:1 › the shipped classifier tells the legs apart the way the sentence choice now assumes
+[4/6] [chromium] › e2e\qoder-ord0349-two-legs-two-sentences.spec.ts:110:1 › the two legs render as two pictures, and the same sentence renders as one
+[WebServer] INFO:     127.0.0.1:64639 - "GET /api/v1/journeys/6e8bc485-fa7f-43b1-a6cb-31ae740395c4/experience HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:64640 - "GET /api/v1/journeys/6e8bc485-fa7f-43b1-a6cb-31ae740395c4/replans HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:64641 - "GET /api/v1/demo/scene HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:63922 - "GET /api/v1/journeys/6e8bc485-fa7f-43b1-a6cb-31ae740395c4/plans HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:63920 - "GET /api/v1/journeys/6e8bc485-fa7f-43b1-a6cb-31ae740395c4/agent-feed?limit=200 HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:63929 - "GET /api/v1/journeys/6e8bc485-fa7f-43b1-a6cb-31ae740395c4/wallet HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:63928 - "GET /api/v1/travelers/4f5f92b8-576c-4803-ac1c-7908d8cd9680/agent-policy HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:52370 - "GET /api/v1/journeys/6e8bc485-fa7f-43b1-a6cb-31ae740395c4/offline-snapshot HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:63923 - "GET /api/v1/journeys/6e8bc485-fa7f-43b1-a6cb-31ae740395c4/twin HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:62871 - "GET /api/v1/journeys/6e8bc485-fa7f-43b1-a6cb-31ae740395c4/agent-feed?limit=200 HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:62870 - "GET /api/v1/agent/runtime-status HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:64558 - "GET /api/v1/journeys/6e8bc485-fa7f-43b1-a6cb-31ae740395c4/twin HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:49751 - "GET /api/v1/journeys/6e8bc485-fa7f-43b1-a6cb-31ae740395c4/twin HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:63821 - "GET /api/v1/journeys/6e8bc485-fa7f-43b1-a6cb-31ae740395c4/twin HTTP/1.1" 200 OK
+
+  1) [chromium] › e2e\qoder-ord0349-two-legs-two-sentences.spec.ts:110:1 › the two legs render as two pictures, and the same sentence renders as one 
+
+    Test timeout of 60000ms exceeded.
+
+    Error: locator.screenshot: Test timeout of 60000ms exceeded.
+    Call log:
+      - taking element screenshot
+        - disabled all CSS animations
+      - waiting for fonts to load...
+      - fonts loaded
+      - attempting scroll into view action
+        2 × waiting for element to be stable
+          - element is not stable
+        - retrying scroll into view action
+        - waiting 20ms
+        2 × waiting for element to be stable
+          - element is not stable
+        - retrying scroll into view action
+          - waiting 100ms
+        41 × waiting for element to be stable
+           - element is not stable
+         - retrying scroll into view action
+           - waiting 500ms
+
+
+      45 |   const buf = await page
+      46 |     .locator('[data-testid="trial-sealed-unavailable"]')
+    > 47 |     .screenshot({ animations: "disabled", caret: "hide", scale: "css" });
+         |      ^
+      48 |   return createHash("sha256").update(buf).digest("hex");
+      49 | }
+      50 |
+        at sha256OfAlert (D:\moodle\_qoder_cmdr_bisect_0349jia\frontend\e2e\qoder-ord0349-two-legs-two-sentences.spec.ts:47:6)
+        at D:\moodle\_qoder_cmdr_bisect_0349jia\frontend\e2e\qoder-ord0349-two-legs-two-sentences.spec.ts:112:20
+
+    Error Context: test-results\qoder-ord0349-two-legs-two-a9002-ame-sentence-renders-as-one-chromium\error-context.md
+
+
+[citynexus e2e] suite=current-product authoritative=true python=D:/moodle/CityNexus/.venv/Scripts/python.exe frontend=:4400 backend=:5400 db=sqlite:///D:/moodle/_qoder_cmdr_bisect_0349jia/review/evidence/_cmdr151300o349bis.db ai=disabled reuseExistingServer=false
+
+[5/6] [chromium] › e2e\qoder-ord0349-two-legs-two-sentences.spec.ts:131:1 › the English arm matches the shipped gate's English sentence too
+[WebServer] INFO:     127.0.0.1:62511 - "GET /api/v1/journeys/6e8bc485-fa7f-43b1-a6cb-31ae740395c4/experience HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:62512 - "GET /api/v1/journeys/6e8bc485-fa7f-43b1-a6cb-31ae740395c4/replans HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:62513 - "GET /api/v1/demo/scene HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:58825 - "GET /api/v1/journeys/6e8bc485-fa7f-43b1-a6cb-31ae740395c4/agent-feed?limit=200 HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:58828 - "GET /api/v1/travelers/4f5f92b8-576c-4803-ac1c-7908d8cd9680/agent-policy HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:58826 - "GET /api/v1/journeys/6e8bc485-fa7f-43b1-a6cb-31ae740395c4/plans HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:58827 - "GET /api/v1/journeys/6e8bc485-fa7f-43b1-a6cb-31ae740395c4/twin HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:55352 - "GET /api/v1/journeys/6e8bc485-fa7f-43b1-a6cb-31ae740395c4/offline-snapshot HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:55351 - "GET /api/v1/journeys/6e8bc485-fa7f-43b1-a6cb-31ae740395c4/wallet HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:60363 - "GET /api/v1/journeys/6e8bc485-fa7f-43b1-a6cb-31ae740395c4/agent-feed?limit=200 HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:65263 - "GET /api/v1/agent/runtime-status HTTP/1.1" 200 OK
+
+[6/6] [chromium] › e2e\qoder-ord0349-two-legs-two-sentences.spec.ts:145:1 › ORD-0339's rule still holds on these mounts: no exception words in the DOM
+[WebServer] INFO:     127.0.0.1:57542 - "GET /api/v1/journeys/6e8bc485-fa7f-43b1-a6cb-31ae740395c4/experience HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:51522 - "GET /api/v1/journeys/6e8bc485-fa7f-43b1-a6cb-31ae740395c4/replans HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:51523 - "GET /api/v1/demo/scene HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:63640 - "GET /api/v1/journeys/6e8bc485-fa7f-43b1-a6cb-31ae740395c4/agent-feed?limit=200 HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:63643 - "GET /api/v1/travelers/4f5f92b8-576c-4803-ac1c-7908d8cd9680/agent-policy HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:63644 - "GET /api/v1/journeys/6e8bc485-fa7f-43b1-a6cb-31ae740395c4/wallet HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:57353 - "GET /api/v1/journeys/6e8bc485-fa7f-43b1-a6cb-31ae740395c4/offline-snapshot HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:63641 - "GET /api/v1/journeys/6e8bc485-fa7f-43b1-a6cb-31ae740395c4/plans HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:63642 - "GET /api/v1/journeys/6e8bc485-fa7f-43b1-a6cb-31ae740395c4/twin HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:49993 - "GET /api/v1/journeys/6e8bc485-fa7f-43b1-a6cb-31ae740395c4/agent-feed?limit=200 HTTP/1.1" 200 OK
+
+[WebServer] INFO:     127.0.0.1:56511 - "GET /api/v1/agent/runtime-status HTTP/1.1" 200 OK
+
+  1 failed
+    [chromium] › e2e\qoder-ord0349-two-legs-two-sentences.spec.ts:110:1 › the two legs render as two pictures, and the same sentence renders as one 
+  5 passed (1.5m)
