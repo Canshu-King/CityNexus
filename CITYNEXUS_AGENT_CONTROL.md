@@ -16588,6 +16588,34 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### ORD-0349-r2 · 车道 N1 · re-parent 落地：cherry-pick 自动合并，零手工合并，零回退
+
+**送达坐标**：`refs/heads/review/N1-ord0349-two-legs-two-sentences-r2`，`git ls-remote` 回读 tip = `2286b62e11fb32efe6c6e7ac7364db0d27d6b980`。其中代码提交 = `86738395ea5572b8a77aa6c1e4cbb67e09555b81`（后一枚只新增读数件，`git diff 86738395ea5572b8a77aa6c1e4cbb67e09555b81 2286b62e11fb32efe6c6e7ac7364db0d27d6b980 -- frontend` 输出为空）。被重定位的原件 = `d1b82c8b293bb788cb2249ee679f3e5db866458d`，其 base = `046fc98723e2eacfe3cb8eb00a7fd3abdbd26efe`。权威尖由本车道 `git ls-remote origin refs/heads/mirror/integration-frontend-apple-pass1` 读得 = `38277c4e9787b1ddf0bf69487060ba0e40c14146`，命令 exit_code=0。
+
+**合并方式（要点：不是手工合并）**：`git cherry-pick d1b82c8b293bb788cb2249ee679f3e5db866458d` 在 `frontend/src/app/V8Experience.tsx`（尖 blob `d5f2908bb7012083e6347abec760dd4c177015f4`，本树 blob `bdd2f6447e17238d1fb64f69e7f0b62215a0395a`）上自动合并，无冲突标记，退出码 0。可核对的成因：尖相对 base 有 `13` 笔提交，其中 `2` 笔碰到本单点名的两个文件，它们对该文件的改动共 `2` 个 hunk，全部落在 `Hub` 的 continuation 折叠区（起点 `frontend/src/app/V8Experience.tsx:2643` 的 `continuation-technical-details`）；ORD-0349 改的是 `V8Experience()` 的 sealed-demo catch 区，两段行区间不相交。`git diff 38277c4e9787b1ddf0bf69487060ba0e40c14146 86738395ea5572b8a77aa6c1e4cbb67e09555b81 -- frontend/src/app/V8Experience.tsx` 为新增 `15` 行、删除 `3` 行，删除侧全部是 ORD-0349 自己替换的那三行。server-reason 折叠、`data-cnx-field` 锚点、no-request-id 句均在结果里存活：折叠起点由 `frontend/src/app/V8Experience.tsx:2643` 位移到 `frontend/src/app/V8Experience.tsx:2655`，位移 `12` 行，即 ORD-0349 在其上方插入的行数，逐字节未变。`git diff --name-only 38277c4e9787b1ddf0bf69487060ba0e40c14146 86738395ea5572b8a77aa6c1e4cbb67e09555b81` 共 `5` 个文件，全部是本单元名的源码件；读数件在 `2286b62e11fb32efe6c6e7ac7364db0d27d6b980` 那一枚里单独追加。`frontend/src/lib/errorReceipt.ts` 不在改动名单内（`d1b82c8b293bb788cb2249ee679f3e5db866458d` 自身 numstat 为 `5` 行文件清单，与本树一致）。
+
+**HARD LIMIT 未触发**：我没有把 raw device/network facts 新增进任何可见文字，也没有改任何已交付断言。新 i18n 键在 `frontend/src/i18n/LocaleContext.tsx:778`（本树 blob `28ecaed3446dd2df620c88696fb16d813f575a92`，尖 blob `ece74118543434e855b874420dcc075df31f4f05`）。`npm run typecheck` exit_code=0。
+
+**本单仪表读数（端口 5100 首跑 / 端口 5101 红臂 / 端口 5102 复跑，均 vite 单进程，`db_created` 为 false 佐证未碰后端）**
+
+- 绿臂 `frontend/e2e/qoder-ord0349-two-legs-two-sentences.spec.ts`（blob `7c2648eaaab969e2ed8ac504b76731b7d6b856af`）配 `frontend/playwright.ord0349-S1.config.ts`（blob `6469327f0f96e24431dc81cfee6dbd11fe9d20a8`）：exit_code=`0`、`5` 条通过，读数件 blob `0af3b0f4450e44a43c473f5d6af6396683bef200`；同规格换新 run id 复跑：exit_code=`0`、`5` 条通过、耗时 `23.4` 秒，读数件 blob `3cecadf79edcb26641d90fea84f4e4ee62af0e2c`。两腿的像素哈希互不相同、而同一句子重复挂载两次得同哈希（控制臂成立），见件 blob `b988a7f7d1b01ffc91633f2bdc96c8a581b91dd5` 的 `answered` / `noAnswer` / `noAnswerAgain` / `control_stable` 四个字段。
+- 红臂（re-install 旧形状）：只把工作树里 `frontend/src/i18n/LocaleContext.tsx:778` 的 zh-CN 值改回与 answered 句同一句；不是提交，跑完 `git status --porcelain` 回到 0 行。结果 exit_code=`1`、`2` 条失败 / `3` 条通过，读数件 blob `80904d67ac7fd4720f88d4e0f6f8aa35d0c981bc`，像素件 blob `006ac0e037011a14d12e546d20f4f96ab73a163a` 的 `separated` 为 false。红的是 `sentences` 与 `pixels` 两条断言，说明仪表能红；规格自身在任何臂里都没被改。夹具 blob `b0f83836d359b35cd238991ce6851cd5d201a390`。
+- 分类器四形实测（件 blob `aef2a180b22b14ed62fafb6d562970d5538cea10`）：refused=`TRANSPORT`、deadline=`TRANSPORT`、answeredHtml200=`HTTP_RESPONSE`、answeredEmpty500=`HTTP_RESPONSE`。
+
+**已签闸门配对（同一批规格，两棵树，一次一后端：端口 5200 加 端口 6200 本树 / 端口 5300 加 端口 6300 尖对照树）**
+
+- 本树：exit_code=`1`、`3` 条失败 / `9` 条通过、耗时 `62.2` 秒，件 blob `293bec50a4f0278b5d44b432581452b6aebd057c`。
+- 尖对照树（同一尖、不含 ORD-0349）：exit_code=`1`、`3` 条失败 / `9` 条通过、耗时 `66.5` 秒，件 blob `fe54e71ae7c290d86274e955d96c2b40129776a2`。
+- 两侧失败的 nodeid 逐名相同：`ord0273-text`、`ord0273-text-en`、`ord0278-negative-refused`。⇒ 本单引入的回归为 0 条。但这三条在权威尖 `38277c4e9787b1ddf0bf69487060ba0e40c14146` 上本来就红（前两条报 "the technical detail vanished entirely"，第三条 Expected visible / Received hidden）。这是线上的存量红，不归本单，建议另开单处置。
+
+**两件要报给号令者的仪器事实**
+
+1. `live_checks/cmdr_e2e_r1.py` 在本单直接用不了：它不带 `--config`，只会走默认 current-product 配置（会起 ORD-0349 根本不用的后端），且 `free_port(4400)` 会落进 端口 4400 / 端口 5400 这一带，`netstat` 实测这两个此刻都在 LISTENING。我改用自己的 runner（同字段名、同 `summarize` 正则），可脱离任何车道私有脚本复跑的命令已写进 `review/evidence/ord0349-r2/README.md`（blob `684abe73fd8fdf1a798c6fe266d99667d45f8660`）。
+2. ORD-0349 的规格不经过 catch 站点：它把句子直接喂给 `JourneyTrialSetup`（夹具 `frontend/e2e/fixtures/ord0349-sealed-alert-harness.tsx`）。所以 `frontend/src/app/V8Experience.tsx:902` 那个按 `evidence_kind` 选句的三元若被反向，本规格不会红；HTTP_RESPONSE 方向由上面那两条 `ord0273` 守着，而那两条现红于 telemetry 原因。要不要补这条臂，请裁，我不擅自加断言。
+
+**未改善**：ORD-0349 的可见结果在本次 re-parent 后与在旧 base 上等价，没有任何新能力；`:8000` 依旧不可用；三条存量红仍在。
+
+
 ### SESSION=e345b9d6 @2026-09-26 14:43+08 —— **ORD-0341 交（含 Q76 那一笔）：两枚 `ord0273-text-*` 节点我在现尖上量到红了（红在哪一行有日志），判据改到非 DOM 归因通道；同批新加一枚 `ord0341-telemetry-*` 把「技术事实仍有落点」这句量出来——封存演示那条失败在通道上留 0 枚记录，对照那一枚留 1 枚（同形：ORIGIN_INVALID_RESPONSE / 200 / text/html），所以这是产品的洞不是量具瞎；Q76 折叠的两向读数都在；候选 rebase 到现尖之上并推成 `review/D-ord0341-r2`，产品字节 0 改**
 
 代次：现读尖 commit=`dbe6d285cb9dbe7654cf43caeb12940b2d5437c8`（`ls-remote` 读到，`fetch` 后 `merge-tree` 只读预测＝无冲突，随后 rebase 上去）。这单我开工时尖还是 `38277c4e9787b1ddf0bf69487060ba0e40c14146`，中途线进了 2 笔：`436d4a36c64c1b54a0b105f0f346425286a15701`（我的 ORD-0338 甲落地）与 `dbe6d285…`（ORD-0351）。我改的两枚 spec 与这两笔改的文件集不相交（那两笔动 `design-tokens.css`、`styles.css`、`JourneyTrialSetup.tsx`、`main.tsx` 与两枚 0338 门；我动 `frontend/e2e/qoder-sealed-failure-speaks-and-offers-retry.spec.ts`、`frontend/e2e/qoder-continuation-resume-carries-identity.spec.ts`），所以 rebase 是干净的；rebase 后七枚 spec 全套重跑（第五段）。现尖之上 `2` 笔：`31cf782caf2f079c118b356f01985cf2bade501a`（判据重推）与 `5c4f4c4f4c96cabfa4ea30d390d5d595e95f9a84`（Q76 那笔），枝=`agent/d-e345b9d6-ord0341`。
