@@ -1,0 +1,408 @@
+{
+ "started_at": "2026-09-26T09:38:30.877Z",
+ "base": "https://administrator-personality-supervisor-peers.trycloudflare.com",
+ "viewport": {
+  "width": 390,
+  "height": 844
+ },
+ "keystrokes": "typed into four fields by me",
+ "legs": [
+  {
+   "at": "2026-09-26T09:38:39.599Z",
+   "url": "/api/v1/demo/scene",
+   "m": "GET",
+   "status": 200,
+   "ct": "application/json",
+   "req_bytes": 0,
+   "resp_bytes": 610,
+   "idempotency_key_sent": false
+  },
+  {
+   "at": "2026-09-26T09:38:45.208Z",
+   "url": "/api/v1/travelers",
+   "m": "POST",
+   "status": 201,
+   "ct": "application/json",
+   "req_bytes": 76,
+   "resp_bytes": 219,
+   "idempotency_key_sent": false
+  },
+  {
+   "at": "2026-09-26T09:38:46.285Z",
+   "url": "/api/v1/journeys",
+   "m": "POST",
+   "status": 201,
+   "ct": "application/json",
+   "req_bytes": 501,
+   "resp_bytes": 395,
+   "idempotency_key_sent": false
+  },
+  {
+   "at": "2026-09-26T09:38:47.045Z",
+   "url": "/api/v1/travelers/109c44b3-b4ad-4a6d-b2e6-a9bbaa1bd0a8/preferences",
+   "m": "GET",
+   "status": 200,
+   "ct": "application/json",
+   "req_bytes": 0,
+   "resp_bytes": 2,
+   "idempotency_key_sent": false
+  },
+  {
+   "at": "2026-09-26T09:38:47.881Z",
+   "url": "/api/v1/travelers/109c44b3-b4ad-4a6d-b2e6-a9bbaa1bd0a8/preferences",
+   "m": "PUT",
+   "status": 200,
+   "ct": "application/json",
+   "req_bytes": 2,
+   "resp_bytes": 2,
+   "idempotency_key_sent": false
+  },
+  {
+   "at": "2026-09-26T09:38:48.615Z",
+   "url": "/api/v1/travelers/109c44b3-b4ad-4a6d-b2e6-a9bbaa1bd0a8/preferences",
+   "m": "GET",
+   "status": 200,
+   "ct": "application/json",
+   "req_bytes": 0,
+   "resp_bytes": 2,
+   "idempotency_key_sent": false
+  },
+  {
+   "at": "2026-09-26T09:38:50.553Z",
+   "url": "/api/v1/journeys/5eb4eb13-6045-4b8b-8d02-a0fe3475bc3e/stay-options/generate",
+   "m": "POST",
+   "status": 200,
+   "ct": "application/json",
+   "req_bytes": 33,
+   "resp_bytes": 20543,
+   "idempotency_key_sent": false
+  },
+  {
+   "at": "2026-09-26T09:38:51.724Z",
+   "url": "/api/v1/journeys/5eb4eb13-6045-4b8b-8d02-a0fe3475bc3e/experience",
+   "m": "GET",
+   "status": 200,
+   "ct": "application/json",
+   "req_bytes": 0,
+   "resp_bytes": 132102,
+   "idempotency_key_sent": false
+  },
+  {
+   "at": "2026-09-26T09:38:52.747Z",
+   "url": "/api/v1/journeys/5eb4eb13-6045-4b8b-8d02-a0fe3475bc3e/replans",
+   "m": "GET",
+   "status": 200,
+   "ct": "application/json",
+   "req_bytes": 0,
+   "resp_bytes": 2,
+   "idempotency_key_sent": false
+  },
+  {
+   "at": "2026-09-26T09:38:52.747Z",
+   "url": "/api/v1/journeys/5eb4eb13-6045-4b8b-8d02-a0fe3475bc3e/plans",
+   "m": "GET",
+   "status": 200,
+   "ct": "application/json",
+   "req_bytes": 0,
+   "resp_bytes": 2,
+   "idempotency_key_sent": false
+  },
+  {
+   "at": "2026-09-26T09:38:52.797Z",
+   "url": "/api/v1/journeys/5eb4eb13-6045-4b8b-8d02-a0fe3475bc3e/twin",
+   "m": "GET",
+   "status": 200,
+   "ct": "application/json",
+   "req_bytes": 0,
+   "resp_bytes": 896,
+   "idempotency_key_sent": false
+  }
+ ],
+ "cells": {
+  "B1_review_before_press": {
+   "text_len": 287,
+   "buttons": [
+    {
+     "text": "EN",
+     "disabled": false,
+     "top": 169,
+     "cls": "v8-outline-button"
+    },
+    {
+     "text": "使用封存的演示行程",
+     "disabled": false,
+     "top": 521,
+     "cls": "trial-back-link"
+    },
+    {
+     "text": "返回",
+     "disabled": false,
+     "top": 776,
+     "cls": "v8-outline-button"
+    },
+    {
+     "text": "确认创建",
+     "disabled": false,
+     "top": 788,
+     "cls": "v8-primary-button"
+    },
+    {
+     "text": "",
+     "disabled": false,
+     "top": 704,
+     "cls": "cn-sim-ball"
+    }
+   ],
+   "details_count": 0,
+   "receipts_on_screen": [],
+   "ls": [
+    {
+     "key": "citynexus.v8.trial_draft",
+     "len": 333
+    }
+   ]
+  },
+  "B2_node_pressed_candidates": [
+   {
+    "text": "确认创建",
+    "disabled": false,
+    "top": 788,
+    "cls": "v8-primary-button"
+   }
+  ],
+  "B3_after_press": {
+   "press_result": "clicked",
+   "legs": [
+    {
+     "at": "2026-09-26T09:38:45.208Z",
+     "url": "/api/v1/travelers",
+     "m": "POST",
+     "status": 201,
+     "ct": "application/json",
+     "req_bytes": 76,
+     "resp_bytes": 219,
+     "idempotency_key_sent": false
+    },
+    {
+     "at": "2026-09-26T09:38:46.285Z",
+     "url": "/api/v1/journeys",
+     "m": "POST",
+     "status": 201,
+     "ct": "application/json",
+     "req_bytes": 501,
+     "resp_bytes": 395,
+     "idempotency_key_sent": false
+    },
+    {
+     "at": "2026-09-26T09:38:47.045Z",
+     "url": "/api/v1/travelers/109c44b3-b4ad-4a6d-b2e6-a9bbaa1bd0a8/preferences",
+     "m": "GET",
+     "status": 200,
+     "ct": "application/json",
+     "req_bytes": 0,
+     "resp_bytes": 2,
+     "idempotency_key_sent": false
+    },
+    {
+     "at": "2026-09-26T09:38:47.881Z",
+     "url": "/api/v1/travelers/109c44b3-b4ad-4a6d-b2e6-a9bbaa1bd0a8/preferences",
+     "m": "PUT",
+     "status": 200,
+     "ct": "application/json",
+     "req_bytes": 2,
+     "resp_bytes": 2,
+     "idempotency_key_sent": false
+    },
+    {
+     "at": "2026-09-26T09:38:48.615Z",
+     "url": "/api/v1/travelers/109c44b3-b4ad-4a6d-b2e6-a9bbaa1bd0a8/preferences",
+     "m": "GET",
+     "status": 200,
+     "ct": "application/json",
+     "req_bytes": 0,
+     "resp_bytes": 2,
+     "idempotency_key_sent": false
+    },
+    {
+     "at": "2026-09-26T09:38:50.553Z",
+     "url": "/api/v1/journeys/5eb4eb13-6045-4b8b-8d02-a0fe3475bc3e/stay-options/generate",
+     "m": "POST",
+     "status": 200,
+     "ct": "application/json",
+     "req_bytes": 33,
+     "resp_bytes": 20543,
+     "idempotency_key_sent": false
+    },
+    {
+     "at": "2026-09-26T09:38:51.724Z",
+     "url": "/api/v1/journeys/5eb4eb13-6045-4b8b-8d02-a0fe3475bc3e/experience",
+     "m": "GET",
+     "status": 200,
+     "ct": "application/json",
+     "req_bytes": 0,
+     "resp_bytes": 132102,
+     "idempotency_key_sent": false
+    },
+    {
+     "at": "2026-09-26T09:38:52.747Z",
+     "url": "/api/v1/journeys/5eb4eb13-6045-4b8b-8d02-a0fe3475bc3e/replans",
+     "m": "GET",
+     "status": 200,
+     "ct": "application/json",
+     "req_bytes": 0,
+     "resp_bytes": 2,
+     "idempotency_key_sent": false
+    },
+    {
+     "at": "2026-09-26T09:38:52.747Z",
+     "url": "/api/v1/journeys/5eb4eb13-6045-4b8b-8d02-a0fe3475bc3e/plans",
+     "m": "GET",
+     "status": 200,
+     "ct": "application/json",
+     "req_bytes": 0,
+     "resp_bytes": 2,
+     "idempotency_key_sent": false
+    },
+    {
+     "at": "2026-09-26T09:38:52.797Z",
+     "url": "/api/v1/journeys/5eb4eb13-6045-4b8b-8d02-a0fe3475bc3e/twin",
+     "m": "GET",
+     "status": 200,
+     "ct": "application/json",
+     "req_bytes": 0,
+     "resp_bytes": 896,
+     "idempotency_key_sent": false
+    }
+   ],
+   "url_after": "https://administrator-personality-supervisor-peers.trycloudflare.com/",
+   "text_len": 406,
+   "body_text_head": "用你自己的城市试用 CITYNEXUS\n\n新建行程\n\n三步完成。选择目的地、告诉我们怎么玩，剩下的交给 CityNexus。\n\nEN\n✓\n目的地与时间\n✓\n人数与偏好\n3\n确认创建\n目的地\n天津\n抵达\n天津站 · 2026-10-02 10:00\n离开\n天津滨海国际机场 · 2026-10-03 20:00\n人数 / 房间\n2 · 1 · 我们替你填的\n总预算 / 住宿\nCNY 3000 / 1000 · 我们替你填的\n节奏\n轻松 · 我们替你填的\n兴趣\n—\n特殊要求\n—\n自动设置\nCN · CNY · Asia/Shanghai\n返回当前行程\n\n正在载入行程数据\n已等待 9 秒\n\n第一次搜索一座城市实测要两分钟左右。服务器不会中途汇报进度，所以这里只有真实秒数，没有编出来的数字。\n\n停止等待\n\n停止等待只是离开这块屏幕：服务器不会因此停下，行程数据也不会丢失。\n\n使用封存的演示行程\n返回\n正在创建…",
+   "receipts_on_screen": [],
+   "buttons": [
+    {
+     "text": "EN",
+     "disabled": false,
+     "top": 169,
+     "cls": "v8-outline-button"
+    },
+    {
+     "text": "返回当前行程",
+     "disabled": false,
+     "top": 520,
+     "cls": "trial-back-link"
+    },
+    {
+     "text": "停止等待",
+     "disabled": false,
+     "top": 690,
+     "cls": "v8-outline-button trial-wait-stop"
+    },
+    {
+     "text": "使用封存的演示行程",
+     "disabled": true,
+     "top": 816,
+     "cls": "trial-back-link"
+    },
+    {
+     "text": "返回",
+     "disabled": true,
+     "top": 776,
+     "cls": "v8-outline-button"
+    },
+    {
+     "text": "正在创建…",
+     "disabled": true,
+     "top": 788,
+     "cls": "v8-primary-button"
+    },
+    {
+     "text": "",
+     "disabled": false,
+     "top": 704,
+     "cls": "cn-sim-ball"
+    }
+   ],
+   "links": [],
+   "details_count": 0,
+   "details_summaries": [],
+   "aria_live": [
+    {
+     "level": "polite",
+     "text": ""
+    }
+   ],
+   "exception_in_text": false,
+   "attr_hits": [],
+   "stored_journey_id": "5eb4eb13-6045-4b8b-8d02-a0fe3475bc3e",
+   "ls": [
+    {
+     "key": "citynexus.v8.journey_id",
+     "len": 36
+    },
+    {
+     "key": "citynexus.v8.trial_draft",
+     "len": 333
+    }
+   ],
+   "still_on_the_wizard": true
+  },
+  "B4_after_opening_every_fold": {
+   "text_len": 406,
+   "receipts": [],
+   "tail": [
+    "CN · CNY · Asia/Shanghai",
+    "返回当前行程",
+    "正在载入行程数据",
+    "已等待 9 秒",
+    "第一次搜索一座城市实测要两分钟左右。服务器不会中途汇报进度，所以这里只有真实秒数，没有编出来的数字。",
+    "停止等待",
+    "停止等待只是离开这块屏幕：服务器不会因此停下，行程数据也不会丢失。",
+    "使用封存的演示行程",
+    "返回",
+    "正在创建…"
+   ]
+  }
+ },
+ "chromium_version": "153.0.8010.12",
+ "served_asset": "https://administrator-personality-supervisor-peers.trycloudflare.com/assets/index-BOIAHTWw.js",
+ "place_field_count": 2,
+ "advance": [
+  {
+   "press": "clicked",
+   "text_len_before": 187,
+   "text_len_after": 175,
+   "changed": true
+  },
+  {
+   "press": "clicked",
+   "text_len_before": 175,
+   "text_len_after": 287,
+   "changed": true
+  }
+ ],
+ "shot_review": {
+  "file": "B1_review_before_press.png",
+  "abs": "D:\\moodle\\_hjp3_b6a8_0926\\B1_review_before_press.png",
+  "exists": true,
+  "bytes": 193892,
+  "sha256": "cd1fb9a6f28aed2b021d168b6d0b15f44d873115a8e93df7d02df330cdfe39fb"
+ },
+ "shot_after": {
+  "file": "B2_after_confirm.png",
+  "abs": "D:\\moodle\\_hjp3_b6a8_0926\\B2_after_confirm.png",
+  "exists": true,
+  "bytes": 283319,
+  "sha256": "6dc65f837577cd754f010063dd3d104202ebe3082519932e3eec253ee9b03ff6"
+ },
+ "shot_opened": {
+  "file": "B3_after_opening_folds.png",
+  "abs": "D:\\moodle\\_hjp3_b6a8_0926\\B3_after_opening_folds.png",
+  "exists": true,
+  "bytes": 283308,
+  "sha256": "b15cd6e01af6e1add71435de10a50e5a9659798df4f71d332666aecd50852e05"
+ },
+ "pairing": [],
+ "receipt_on_screen": [],
+ "leg_count": 11,
+ "finished_at": "2026-09-26T09:38:53.965Z"
+}
