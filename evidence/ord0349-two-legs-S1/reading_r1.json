@@ -1,0 +1,136 @@
+{
+  "schema": "CNX_ORD0349_READING_V1",
+  "order": "ORD-0349 (CMDR: HJ-P3's phone measurement, one sentence covering two legs)",
+  "lane": "S1-q64sweep",
+  "generation": "046fc98723e2eacfe3cb8eb00a7fd3abdbd26efe",
+  "derived_at_utc": "2026-09-26T01:23:47Z",
+  "phone_reading_this_order_answers": {
+    "lane": "HJ-P3 aad2d1f2",
+    "blob": "98b2ce30eb0b13d3201d46186d6d6efec6ae2444",
+    "refused_vs_empty500_pixel_identical": true,
+    "both_screenshots_bytes": 188818
+  },
+  "witness_spec": "frontend/e2e/qoder-ord0349-two-legs-two-sentences.spec.ts",
+  "witness_fixture": "frontend/e2e/fixtures/ord0349-sealed-alert-harness.tsx",
+  "requirement_split_the_legs_on_screen": {
+    "verdict": "MET",
+    "how": "the sentence is chosen by classifyReadFailure's evidence_kind at the catch site; a leg that never got an answer can no longer borrow the sentence that says the server answered",
+    "cite": [
+      {
+        "role": "leg_choice_is_by_evidence_kind",
+        "path": "frontend/src/app/V8Experience.tsx",
+        "line": 900,
+        "text": "attribution.evidence_kind === \"HTTP_RESPONSE\""
+      },
+      {
+        "role": "answered_sentence_still_first",
+        "path": "frontend/src/app/V8Experience.tsx",
+        "line": 901,
+        "text": "? t(\"trial.sealedUnreadable\")"
+      },
+      {
+        "role": "no_answer_sentence_second",
+        "path": "frontend/src/app/V8Experience.tsx",
+        "line": 902,
+        "text": ": t(\"trial.sealedNoAnswer\"),"
+      }
+    ]
+  },
+  "sentences": {
+    "zh": {
+      "answered": "没读到封存演示的信息：服务器刚才答了，但答的内容我们用不了。这不是你填错了什么。",
+      "noAnswer": "没读到封存演示的信息：这台设备没有拿到服务器的回答——连接没成，或者这一趟到时限也没有回话。这不是你填错了什么。",
+      "gateAnswered": "没读到封存演示的信息：服务器刚才答了，但答的内容我们用不了。这不是你填错了什么。"
+    },
+    "en": {
+      "answered": "Couldn't read the sealed demo: the server answered just now, but what it answered isn't something we can use. Nothing you filled in caused this.",
+      "noAnswer": "Couldn't read the sealed demo: this device got no answer from the server -- the connection did not come up, or this read ended without a reply. Nothing you filled in caused this."
+    },
+    "answered_string_equals_the_shipped_gate": true
+  },
+  "classifier_kinds_for_the_four_legs": {
+    "refused": "TRANSPORT",
+    "deadline": "TRANSPORT",
+    "answeredHtml200": "HTTP_RESPONSE",
+    "answeredEmpty500": "HTTP_RESPONSE"
+  },
+  "pixels": {
+    "answered_sha256": "1b33e59b3b236220bb298491123b43d6b69aa3759e1bfb7b42fd20825cce5e7b",
+    "no_answer_sha256": "8243022dedc81fa08010c38a15e7f9562a53f64e8b3d38aa04ac751e767db552",
+    "control_repeat_sha256": "8243022dedc81fa08010c38a15e7f9562a53f64e8b3d38aa04ac751e767db552",
+    "control_stable_derived_here": true,
+    "legs_separated_derived_here": true,
+    "note": "the control is recomputed from the three hashes the run wrote, not taken from its own summary field -- a summary the writer got wrong would otherwise be laundered"
+  },
+  "no_cross_assertion": {
+    "no_answer_sentence_free_of_answered_claims": true,
+    "answered_sentence_free_of_no_answer_claims": true,
+    "checked_shapes": {
+      "answered_claims": [
+        "刚才答了",
+        "the server answered"
+      ],
+      "no_answer_claims": [
+        "没有拿到服务器的回答",
+        "got no answer from the server"
+      ]
+    }
+  },
+  "what_was_not_run": [
+    "the phone leg-by-leg screenshots on this generation -- HJ-P3 owns that channel, and the pixel pair here is the product component mounted under Chromium, not the deployed bundle",
+    "lane D's sealed-failure gate: it needs a live backend and none is listening; the answered-arm string is compared here instead (cite gate_still_holds_the_answered_sentence)"
+  ],
+  "cites": [
+    {
+      "role": "leg_choice_is_by_evidence_kind",
+      "path": "frontend/src/app/V8Experience.tsx",
+      "line": 900,
+      "text": "attribution.evidence_kind === \"HTTP_RESPONSE\""
+    },
+    {
+      "role": "answered_sentence_still_first",
+      "path": "frontend/src/app/V8Experience.tsx",
+      "line": 901,
+      "text": "? t(\"trial.sealedUnreadable\")"
+    },
+    {
+      "role": "no_answer_sentence_second",
+      "path": "frontend/src/app/V8Experience.tsx",
+      "line": 902,
+      "text": ": t(\"trial.sealedNoAnswer\"),"
+    },
+    {
+      "role": "diagnosis_goes_to_the_sink",
+      "path": "frontend/src/app/V8Experience.tsx",
+      "line": 906,
+      "text": "recordAttribution(attribution, \"shell.sealedDemo.entryRead\");"
+    },
+    {
+      "role": "new_key_present_en",
+      "path": "frontend/src/i18n/LocaleContext.tsx",
+      "line": 61,
+      "text": "\"trial.sealedNoAnswer\":"
+    },
+    {
+      "role": "new_key_present_zh",
+      "path": "frontend/src/i18n/LocaleContext.tsx",
+      "line": 778,
+      "text": "\"trial.sealedNoAnswer\": \"没读到封存演示的信息：这台设备没有拿到服务器的回答——连接没成，或者这一趟到时限也没有回话。这不是你填错了什么。\","
+    },
+    {
+      "role": "gate_still_holds_the_answered_sentence",
+      "path": "frontend/e2e/qoder-sealed-failure-speaks-and-offers-retry.spec.ts",
+      "line": 27,
+      "text": "const FROZEN_SENTENCE = \"没读到封存演示的信息：服务器刚才答了，但答的内容我们用不了。这不是你填错了什么。\";"
+    },
+    {
+      "role": "gate_zh_arm_compares_it",
+      "path": "frontend/e2e/qoder-sealed-failure-speaks-and-offers-retry.spec.ts",
+      "line": 80,
+      "text": ").toBe(FROZEN_SENTENCE);"
+    }
+  ],
+  "not_claimed": [
+    "no CLOSED; that is verifier E's derived_result"
+  ]
+}
