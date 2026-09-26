@@ -1,0 +1,174 @@
+{
+ "ran_at_local": "2026-09-26T17:52:01+0800",
+ "generation_named_by_the_commander": "b6a8ea5c625d7e3e82f7348fad57d595a8a403c0",
+ "asset_he_named_two_messages_ago": "index-Ci_qm-KU.js",
+ "requests_made": 12,
+ "writes": 0,
+ "clicks": 0,
+ "proxy_environment": {
+  "HTTPS_PROXY": "http://127.0.0.1:7892",
+  "HTTP_PROXY": "http://127.0.0.1:7892",
+  "TUNNEL_CLIENT_HTTP_PROXY": "http://127.0.0.1:7897",
+  "NO_PROXY": "localhost,127.0.0.1,::1,.qoder.sh,qoder.sh,qoder.com"
+ },
+ "reachability_control": {
+  "tunnel_host_dns": [
+   "104.16.230.132",
+   "104.16.231.132"
+  ],
+  "tcp": {
+   "administrator-personality-supervisor-peers.trycloudflare.com": "OK",
+   "api.github.com": "OK"
+  }
+ },
+ "entry_points": [
+  {
+   "base": "http://127.0.0.1:4781",
+   "auth_sent": false,
+   "username_used": "cnx",
+   "shell": {
+    "path": "/",
+    "http_status": 200,
+    "content_type": "text/html",
+    "server_header": null,
+    "bytes": 1200,
+    "body_sha256": "22b660d649c5dfc9aecbb37443fa500be1032c6594984f93dd3d310e08690c30",
+    "elapsed_ms": 26
+   },
+   "asset_named_by_the_shell": "/assets/index-BOIAHTWw.js",
+   "css_named_by_the_shell": "/assets/index-DzHXVT59.css",
+   "asset_row": {
+    "path": "/assets/index-BOIAHTWw.js",
+    "http_status": 200,
+    "content_type": "text/javascript",
+    "server_header": null,
+    "bytes": 1271252,
+    "body_sha256": "005735b8e911508e69a143d3ede3682261841083d7206243769e13ac1f813b56",
+    "elapsed_ms": 6
+   },
+   "api_rows": [
+    {
+     "path": "/api/v1/health",
+     "http_status": 200,
+     "content_type": "application/json",
+     "server_header": "uvicorn",
+     "bytes": 84,
+     "body_sha256": "19557a775cb37da0daee85d12ebaa2c19dcc5ec1276f6682e77f998694d013b0",
+     "elapsed_ms": 9
+    },
+    {
+     "path": "/api/v1/journeys",
+     "http_status": 405,
+     "content_type": "application/json",
+     "server_header": "uvicorn",
+     "bytes": 31,
+     "body_sha256": "83c09ba9a8daedb136f90b17a294caa90ad471a016e430df6e229acb5a81e100",
+     "elapsed_ms": 12
+    },
+    {
+     "path": "/api/v1/demo/scene",
+     "http_status": 200,
+     "content_type": "application/json",
+     "server_header": "uvicorn",
+     "bytes": 610,
+     "body_sha256": "64b82c423af43a0f8212637b6b762a7868b65aac65d399f241e2aba2d9e31cf3",
+     "elapsed_ms": 61
+    },
+    {
+     "path": "/api/v1/zzz-hjp3-canary-path",
+     "http_status": 404,
+     "content_type": "application/json",
+     "server_header": "uvicorn",
+     "bytes": 22,
+     "body_sha256": "37ec4665a8102d115ffd1ac20dae94c98b4dac64b0c1a68228aa2a531caeb35d",
+     "elapsed_ms": 4
+    }
+   ],
+   "signature_per_path": {
+    "/api/v1/health": "(200, 'application/json', 84, '19557a775cb37da0daee85d12ebaa2c19dcc5ec1276f6682e77f998694d013b0')",
+    "/api/v1/journeys": "(405, 'application/json', 31, '83c09ba9a8daedb136f90b17a294caa90ad471a016e430df6e229acb5a81e100')",
+    "/api/v1/demo/scene": "(200, 'application/json', 610, '64b82c423af43a0f8212637b6b762a7868b65aac65d399f241e2aba2d9e31cf3')",
+    "/api/v1/zzz-hjp3-canary-path": "(404, 'application/json', 22, '37ec4665a8102d115ffd1ac20dae94c98b4dac64b0c1a68228aa2a531caeb35d')"
+   },
+   "distinct_signatures": [
+    "(200, 'application/json', 610, '64b82c423af43a0f8212637b6b762a7868b65aac65d399f241e2aba2d9e31cf3')",
+    "(200, 'application/json', 84, '19557a775cb37da0daee85d12ebaa2c19dcc5ec1276f6682e77f998694d013b0')",
+    "(404, 'application/json', 22, '37ec4665a8102d115ffd1ac20dae94c98b4dac64b0c1a68228aa2a531caeb35d')",
+    "(405, 'application/json', 31, '83c09ba9a8daedb136f90b17a294caa90ad471a016e430df6e229acb5a81e100')"
+   ],
+   "canary_answers_like_the_real_paths": false,
+   "any_path_returns_a_nonempty_json_body": true,
+   "every_row_carries_a_server_header": true
+  },
+  {
+   "base": "https://administrator-personality-supervisor-peers.trycloudflare.com",
+   "auth_sent": true,
+   "username_used": "cnx",
+   "shell": {
+    "path": "/",
+    "http_status": 530,
+    "content_type": "text/plain; charset=UTF-8",
+    "server_header": "cloudflare",
+    "bytes": 17,
+    "body_sha256": "764ac7d5e8b966adcdcf56e0fe583a848c828957209c0881aa733675c3edd4df",
+    "elapsed_ms": 2027
+   },
+   "asset_named_by_the_shell": null,
+   "css_named_by_the_shell": null,
+   "asset_row": null,
+   "api_rows": [
+    {
+     "path": "/api/v1/health",
+     "http_status": 530,
+     "content_type": "text/plain; charset=UTF-8",
+     "server_header": "cloudflare",
+     "bytes": 17,
+     "body_sha256": "764ac7d5e8b966adcdcf56e0fe583a848c828957209c0881aa733675c3edd4df",
+     "elapsed_ms": 1978
+    },
+    {
+     "path": "/api/v1/journeys",
+     "http_status": 530,
+     "content_type": "text/plain; charset=UTF-8",
+     "server_header": "cloudflare",
+     "bytes": 17,
+     "body_sha256": "764ac7d5e8b966adcdcf56e0fe583a848c828957209c0881aa733675c3edd4df",
+     "elapsed_ms": 3958
+    },
+    {
+     "path": "/api/v1/demo/scene",
+     "http_status": 530,
+     "content_type": "text/plain; charset=UTF-8",
+     "server_header": "cloudflare",
+     "bytes": 17,
+     "body_sha256": "764ac7d5e8b966adcdcf56e0fe583a848c828957209c0881aa733675c3edd4df",
+     "elapsed_ms": 1803
+    },
+    {
+     "path": "/api/v1/zzz-hjp3-canary-path",
+     "http_status": 530,
+     "content_type": "text/plain; charset=UTF-8",
+     "server_header": "cloudflare",
+     "bytes": 17,
+     "body_sha256": "764ac7d5e8b966adcdcf56e0fe583a848c828957209c0881aa733675c3edd4df",
+     "elapsed_ms": 771
+    }
+   ],
+   "signature_per_path": {
+    "/api/v1/health": "(530, 'text/plain; charset=UTF-8', 17, '764ac7d5e8b966adcdcf56e0fe583a848c828957209c0881aa733675c3edd4df')",
+    "/api/v1/journeys": "(530, 'text/plain; charset=UTF-8', 17, '764ac7d5e8b966adcdcf56e0fe583a848c828957209c0881aa733675c3edd4df')",
+    "/api/v1/demo/scene": "(530, 'text/plain; charset=UTF-8', 17, '764ac7d5e8b966adcdcf56e0fe583a848c828957209c0881aa733675c3edd4df')",
+    "/api/v1/zzz-hjp3-canary-path": "(530, 'text/plain; charset=UTF-8', 17, '764ac7d5e8b966adcdcf56e0fe583a848c828957209c0881aa733675c3edd4df')"
+   },
+   "distinct_signatures": [
+    "(530, 'text/plain; charset=UTF-8', 17, '764ac7d5e8b966adcdcf56e0fe583a848c828957209c0881aa733675c3edd4df')"
+   ],
+   "canary_answers_like_the_real_paths": true,
+   "any_path_returns_a_nonempty_json_body": false,
+   "every_row_carries_a_server_header": true
+  }
+ ],
+ "same_asset_name_on_both_entries": false,
+ "same_asset_bytes_on_both_entries": false,
+ "asset_differs_from_the_hint_he_gave": true
+}
