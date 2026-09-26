@@ -1,0 +1,183 @@
+{
+ "schema": "CNX_LANE_E_ORD0340_DERIVED_V1",
+ "verifier": "lane E d2305848",
+ "at": "2026-09-26T08:11:54+0800",
+ "orders": {
+  "ORD-0323": {
+   "lane": "B c01d72a3",
+   "generation": "03ad438dc66b17ab313f9c216b044a38d33b101d",
+   "cells": [
+    {
+     "cell": "r6 --tree on the landed generation: B's three files 7 -> 2 cells; the 7 baseline cells all gone; the 2 remaining sit only in PlanWithAiSheet.tsx (line-shifted 1019->1021 / 1046->1048, the known Q67=① compliant attribution path), 0 new cells anywhere else",
+     "derived_result": "MET",
+     "readings": {
+      "counts": {
+       "before": 7,
+       "after": 2,
+       "gone": 7,
+       "untouched": 0,
+       "only_at_candidate": 2
+      },
+      "only_at_candidate": [
+       "PlanWithAiSheet.tsx:1021[UPSTREAM_TEXT_VIA_HELPER_TO_DOM]",
+       "PlanWithAiSheet.tsx:1048[UPSTREAM_TEXT_VIA_HELPER_TO_DOM]"
+      ],
+      "tree_wide": {
+       "before_hits": 27,
+       "after_hits": 22,
+       "delta": -5,
+       "changed_files_outside_my_three": []
+      },
+      "ruler": "6a251d3a6bea70329e06581384a81d5ef54c96a6 (--tree mode per the order; mode_arms F/G both assertion_met)",
+      "source": "ord0323_r6_readings_r1.json"
+     }
+    },
+    {
+     "cell": "r5-vs-r6 divergence is bounded and named: one cell (V8Experience.tsx:1314) differs on both sides; B's own three-file cells agree before AND after; no unexplained drift",
+     "derived_result": "MET",
+     "readings": {
+      "agreement": {
+       "before_same": false,
+       "after_same": false,
+       "my_cells_before_same": true,
+       "my_cells_after_same": true
+      },
+      "cells_only_r5_reports": {
+       "before": [
+        "V8Experience.tsx:1314[UPSTREAM_TEXT_VIA_HELPER_TO_DOM]"
+       ],
+       "after": [
+        "V8Experience.tsx:1314[UPSTREAM_TEXT_VIA_HELPER_TO_DOM]"
+       ]
+      },
+      "r5_tree_wide": [
+       28,
+       23
+      ],
+      "r6_tree_wide": [
+       27,
+       22
+      ],
+      "source": "ord0323_r6_readings_r1.json cross_check_against_r5"
+     }
+    },
+    {
+     "cell": "landing binds 03ad438d (READY_TO_LAND); all four changed files byte-equal to the lane's blobs",
+     "derived_result": "MET",
+     "readings": {
+      "candidate_tip": "03ad438dc66b17ab313f9c216b044a38d33b101d",
+      "verdict": "READY_TO_LAND",
+      "problems": [],
+      "blob_equality": {
+       "qoder-ord0323-two-exposure-cells.spec.ts": true,
+       "ProductErrorBoundary.tsx": true,
+       "JourneyInboxWorkbench.tsx": true,
+       "PlanWithAiSheet.tsx": true
+      },
+      "changed_files": [
+       "frontend/e2e/qoder-ord0323-two-exposure-cells.spec.ts",
+       "frontend/src/components/ProductErrorBoundary.tsx",
+       "frontend/src/features/inbox/JourneyInboxWorkbench.tsx",
+       "frontend/src/features/planning/PlanWithAiSheet.tsx"
+      ],
+      "source": "landing_0323.json (cmdr-landing-ORD-0323-0741/preflight_r1.json)"
+     }
+    }
+   ],
+   "top_level_derived_result": "ALL_MET"
+  },
+  "ORD-0339": {
+   "lane": "S1-q64sweep (8e094dec)",
+   "generation": "c740f45d68f337c460a1a43b995162689d0110af",
+   "cells": [
+    {
+     "cell": "req1: the two data-error-* attributes withdrawn outright (no invented value); element left with only class/data-testid/role; 0 forbidden patterns left in the product file",
+     "derived_result": "MET",
+     "readings": {
+      "attributes_left": [
+       "class",
+       "data-testid",
+       "role"
+      ],
+      "scanned_for": [
+       "data-error-name=",
+       "data-error-message="
+      ],
+      "left_in_product": [],
+      "source": "ord0339 receipt_r1.json requirement_1"
+     }
+    },
+    {
+     "cell": "req2 two-sided: clean arm green (sentence == frozen i18n, canary absent from document); teeth arm fires 8 rules naming both attributes with the CANARY payload; reverse mutation KILLED (attributes re-added -> assertion failure -> bytes restored)",
+     "derived_result": "MET",
+     "readings": {
+      "green": {
+       "passed": true,
+       "sentence_equals_frozen_i18n": true,
+       "canary_found": false
+      },
+      "teeth_rules_fired": 8,
+      "teeth_named_both_attributes": true,
+      "reverse_mutation": {
+       "verdict": "KILLED",
+       "restored": true
+      },
+      "source": "ord0339 receipt_r1.json requirement_2"
+     }
+    },
+    {
+     "cell": "req3 Q70 anchor honestly NOT-APPLICABLE at this element (no Q64 field is carried after the withdrawal; adding one without a value would be an invented fact); producer change named (V8Experience.tsx:897, D's file), not made",
+     "derived_result": "MET",
+     "readings": {
+      "verdict": "NOT_APPLICABLE_AT_THIS_ELEMENT_YET",
+      "anchor_count_after": 0,
+      "what_would_fill_it": "the caught read's http_status (and content_type / body_bytes if the read is measured the way lib/rawFacts.ts does it) -- but that value is minted in frontend/sr",
+      "source": "ord0339 receipt_r1.json requirement_3"
+     }
+    },
+    {
+     "cell": "landing binds c740f45d (READY_TO_LAND); all four changed files byte-equal to the lane's blobs",
+     "derived_result": "MET",
+     "readings": {
+      "candidate_tip": "c740f45d68f337c460a1a43b995162689d0110af",
+      "verdict": "READY_TO_LAND",
+      "problems": [],
+      "blob_equality": {
+       "ord0339-sealed-alert-harness.tsx": true,
+       "qoder-ord0339-exception-words-stay-out-of-the-dom.spec.ts": true,
+       "playwright.ord0339-S1.config.ts": true,
+       "JourneyTrialSetup.tsx": true
+      },
+      "source": "landing_0339.json (cmdr-landing-ORD-0339-0742/preflight_r1.json)"
+     }
+    }
+   ],
+   "top_level_derived_result": "ALL_MET"
+  }
+ },
+ "zero_byte_receipt_verdict": {
+  "artifact": "evidence/cmdr-q43d-gate-0800/selftest_r1.json",
+  "blob": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391 (the canonical EMPTY blob; I fetched it: 0 bytes)",
+  "question": "does a receipt that can only prove both sides are empty count as published evidence?",
+  "my_verdict": "NOT_EVIDENCE - it is a vacuous comparison, not a measurement",
+  "reasoning": [
+   "a BYTE-LEVEL MATCH receipt derives its verdict from a byte comparison of two sides; with zero bytes on both sides the comparison succeeds with no input, so the receipt carries no information about any claim - the same shape my rulers call a vacuous kill",
+   "it is also self-referential: a selftest receipt for a gate whose whole job is refusing empty claims was itself published empty; the gate it belongs to (r4d) now explicitly fires on DIMENSION/ZERO without a receipt, i.e. the class of thing this file is has been named by the same revision",
+   "it did not deceive anyone into a wrong product verdict (r2 superseded it the same hour, 16 arms two-sided), so it is a PROCESS defect, not a product one - same family as my 21:47 ledger overwrite: the write path accepted something the read path cannot make meaningful"
+  ],
+  "consequence_I_would_apply": "keep the bytes (never delete published history), mark the path SUPERSEDED_BY selftest_r2.json 61a139694cb7c7c2197bc4d5420ca348d99c1b06 in the next post, and bolt the publisher: refuse PUT of a 0-byte body under evidence/ unless the path itself declares an empty-artifact schema - a write door, not a read-side fix"
+ },
+ "foreseeable_red_note": "the two ord0273 cells (text-the-sentence-is-the-key... / en-arm...) are foreseen-red per Q72 (D rewrites its own assertions, ORD-0341): I attribute NEITHER to a regression NOR to ORD-0339 breaking something; the two requirements only contradicted each other today",
+ "derivation_rule": "every cell verdict is computed from the readings named in its own readings.source; no PASS literal",
+ "top_level": {
+  "ORD-0323": "ALL_MET",
+  "ORD-0339": "ALL_MET"
+ },
+ "discipline": {
+  "product_bytes_changed": 0,
+  "refs_pushed": 0,
+  "demo_reset": 0,
+  "databases_opened_by_me": 0,
+  "credential_values_printed": 0
+ }
+}
