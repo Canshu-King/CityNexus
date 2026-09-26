@@ -1,0 +1,102 @@
+{
+ "before_0345": {
+  "rev": "824fca398d27db4c0078407b42e544c84048d3dd",
+  "cells": [
+   "ActivityDetail.tsx:206|RAW_BODY_TO_DOM",
+   "DestinationPreparationPanel.tsx:346|UPSTREAM_EXCEPTION_TO_DOM",
+   "DestinationPreparationPanel.tsx:469|UPSTREAM_EXCEPTION_TO_DOM",
+   "DestinationPreparationPanel.tsx:522|UPSTREAM_EXCEPTION_TO_DOM",
+   "PlanWithAiSheet.tsx:1050|UPSTREAM_PROSE_TO_ATTRIBUTE_SLOT",
+   "PlanWithAiSheet.tsx:1075|UPSTREAM_TEXT_VIA_HELPER_TO_DOM",
+   "PlanWithAiSheet.tsx:1114|UPSTREAM_TEXT_VIA_HELPER_TO_DOM",
+   "RealCityDiscoveryPanel.tsx:150|UPSTREAM_EXCEPTION_TO_DOM",
+   "RecoveryRequiredPanel.tsx:166|RAW_BODY_TO_DOM",
+   "SimulationPanel.tsx:934|UPSTREAM_TEXT_VIA_HELPER_TO_DOM",
+   "V12TripStudioPanel.tsx:106|UPSTREAM_EXCEPTION_TO_DOM",
+   "V14RecoveryTruthPanel.tsx:162|UPSTREAM_EXCEPTION_TO_DOM"
+  ],
+  "cell_count": 12,
+  "file_rule_pairs": [
+   "ActivityDetail.tsx|RAW_BODY_TO_DOM",
+   "DestinationPreparationPanel.tsx|UPSTREAM_EXCEPTION_TO_DOM",
+   "PlanWithAiSheet.tsx|UPSTREAM_PROSE_TO_ATTRIBUTE_SLOT",
+   "PlanWithAiSheet.tsx|UPSTREAM_TEXT_VIA_HELPER_TO_DOM",
+   "RealCityDiscoveryPanel.tsx|UPSTREAM_EXCEPTION_TO_DOM",
+   "RecoveryRequiredPanel.tsx|RAW_BODY_TO_DOM",
+   "SimulationPanel.tsx|UPSTREAM_TEXT_VIA_HELPER_TO_DOM",
+   "V12TripStudioPanel.tsx|UPSTREAM_EXCEPTION_TO_DOM",
+   "V14RecoveryTruthPanel.tsx|UPSTREAM_EXCEPTION_TO_DOM"
+  ]
+ },
+ "after_0345": {
+  "rev": "fe57ff44cc523399307300d6e236654e7dc31a39",
+  "cells": [
+   "ActivityDetail.tsx:214|RAW_BODY_TO_DOM",
+   "DestinationPreparationPanel.tsx:346|UPSTREAM_EXCEPTION_TO_DOM",
+   "DestinationPreparationPanel.tsx:469|UPSTREAM_EXCEPTION_TO_DOM",
+   "DestinationPreparationPanel.tsx:522|UPSTREAM_EXCEPTION_TO_DOM",
+   "PlanWithAiSheet.tsx:1050|UPSTREAM_PROSE_TO_ATTRIBUTE_SLOT",
+   "PlanWithAiSheet.tsx:1075|UPSTREAM_TEXT_VIA_HELPER_TO_DOM",
+   "PlanWithAiSheet.tsx:1114|UPSTREAM_TEXT_VIA_HELPER_TO_DOM",
+   "RecoveryRequiredPanel.tsx:166|RAW_BODY_TO_DOM",
+   "SimulationPanel.tsx:934|UPSTREAM_TEXT_VIA_HELPER_TO_DOM",
+   "V12TripStudioPanel.tsx:106|UPSTREAM_EXCEPTION_TO_DOM"
+  ],
+  "cell_count": 10,
+  "file_rule_pairs": [
+   "ActivityDetail.tsx|RAW_BODY_TO_DOM",
+   "DestinationPreparationPanel.tsx|UPSTREAM_EXCEPTION_TO_DOM",
+   "PlanWithAiSheet.tsx|UPSTREAM_PROSE_TO_ATTRIBUTE_SLOT",
+   "PlanWithAiSheet.tsx|UPSTREAM_TEXT_VIA_HELPER_TO_DOM",
+   "RecoveryRequiredPanel.tsx|RAW_BODY_TO_DOM",
+   "SimulationPanel.tsx|UPSTREAM_TEXT_VIA_HELPER_TO_DOM",
+   "V12TripStudioPanel.tsx|UPSTREAM_EXCEPTION_TO_DOM"
+  ]
+ },
+ "tip_now": {
+  "rev": "6fd43627e717a97ea779da866eb4546b8acb9deb",
+  "cells": [
+   "ActivityDetail.tsx:214|RAW_BODY_TO_DOM",
+   "DestinationPreparationPanel.tsx:346|UPSTREAM_EXCEPTION_TO_DOM",
+   "DestinationPreparationPanel.tsx:469|UPSTREAM_EXCEPTION_TO_DOM",
+   "DestinationPreparationPanel.tsx:522|UPSTREAM_EXCEPTION_TO_DOM",
+   "PlanWithAiSheet.tsx:1050|UPSTREAM_PROSE_TO_ATTRIBUTE_SLOT",
+   "PlanWithAiSheet.tsx:1075|UPSTREAM_TEXT_VIA_HELPER_TO_DOM",
+   "PlanWithAiSheet.tsx:1114|UPSTREAM_TEXT_VIA_HELPER_TO_DOM",
+   "RecoveryRequiredPanel.tsx:166|RAW_BODY_TO_DOM",
+   "SimulationPanel.tsx:934|UPSTREAM_TEXT_VIA_HELPER_TO_DOM",
+   "V12TripStudioPanel.tsx:106|UPSTREAM_EXCEPTION_TO_DOM"
+  ],
+  "cell_count": 10,
+  "file_rule_pairs": [
+   "ActivityDetail.tsx|RAW_BODY_TO_DOM",
+   "DestinationPreparationPanel.tsx|UPSTREAM_EXCEPTION_TO_DOM",
+   "PlanWithAiSheet.tsx|UPSTREAM_PROSE_TO_ATTRIBUTE_SLOT",
+   "PlanWithAiSheet.tsx|UPSTREAM_TEXT_VIA_HELPER_TO_DOM",
+   "RecoveryRequiredPanel.tsx|RAW_BODY_TO_DOM",
+   "SimulationPanel.tsx|UPSTREAM_TEXT_VIA_HELPER_TO_DOM",
+   "V12TripStudioPanel.tsx|UPSTREAM_EXCEPTION_TO_DOM"
+  ]
+ },
+ "ruler": {
+  "file": "ui_exposure_taint_ast_r7b.cjs",
+  "declared_blob": "d3f66ce9fecd0790981a4fcdeb5e36b1c0fd10f2",
+  "computed_blob": "d3f66ce9fecd0790981a4fcdeb5e36b1c0fd10f2"
+ },
+ "diff": {
+  "new_file_rule_after_0345": [],
+  "gone_file_rule_after_0345": [
+   "RealCityDiscoveryPanel.tsx|UPSTREAM_EXCEPTION_TO_DOM",
+   "V14RecoveryTruthPanel.tsx|UPSTREAM_EXCEPTION_TO_DOM"
+  ],
+  "new_cells_after_0345": [
+   "ActivityDetail.tsx:214|RAW_BODY_TO_DOM"
+  ],
+  "gone_cells_after_0345": [
+   "ActivityDetail.tsx:206|RAW_BODY_TO_DOM",
+   "RealCityDiscoveryPanel.tsx:150|UPSTREAM_EXCEPTION_TO_DOM",
+   "V14RecoveryTruthPanel.tsx:162|UPSTREAM_EXCEPTION_TO_DOM"
+  ]
+ },
+ "rule": "r7b sees attribute positions (r6 could not); growth is judged on (file,rule); a cell that only moves line is not growth"
+}
