@@ -1,0 +1,38 @@
+{
+ "schema": "CNX_CHAIN_SELF_HEAL_V1",
+ "lane": "F 8ccd71d8",
+ "instance": "live",
+ "at_local": "Sat Sep 26 2026 18:49:38 GMT+0800 (中国标准时间)",
+ "mode": "arm:note-append",
+ "boundary": {
+  "allowed_db": "D:/moodle/_qoder_preview_20260920/_preview.db",
+  "credentials": "按路径取用，绝不打印",
+  "detect_only": false
+ },
+ "hops": [],
+ "spawns": [],
+ "phone_generation": null,
+ "tunnel": null,
+ "published": null,
+ "db_guard": {
+  "ok": true,
+  "resolved": "d:/moodle/_qoder_preview_20260920/_preview.db"
+ },
+ "note_append_arm": {
+  "dir": "D:\\moodle\\_qoder_f_run\\note-arm-i14k1Z",
+  "old_bytes_kept_verbatim": true,
+  "new_block_at_top": true,
+  "record": {
+   "old_url": null,
+   "archived_to": null,
+   "new_url": "https://example-arm-arm-arm.trycloudflare.com",
+   "desk_note": {
+    "path": "D:\\moodle\\_qoder_f_run\\note-arm-i14k1Z\\note.txt",
+    "bytes_before": 28,
+    "bytes_after": 204,
+    "old_bytes_preserved": true
+   }
+  }
+ },
+ "exit": 0
+}
