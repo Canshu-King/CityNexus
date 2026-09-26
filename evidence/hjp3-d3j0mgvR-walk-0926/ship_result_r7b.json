@@ -1,0 +1,135 @@
+{
+ "pushed": [
+  {
+   "remote": "evidence/hjp3-d3j0mgvR-walk-0926/shots/I1_trips_as_landed.png",
+   "local": "D:/moodle/_hjp3_d3j0_0926/I1_trips_as_landed.png",
+   "rc": 0,
+   "at": "18:57:18",
+   "blob_on_branch": "ee940e6c839280a74cb4791cf18cdcef8b6d7306",
+   "local_bytes_now": 125879,
+   "local_matches_branch_bytes": true
+  },
+  {
+   "remote": "evidence/hjp3-d3j0mgvR-walk-0926/shots/I2_bookings_tab.png",
+   "local": "D:/moodle/_hjp3_d3j0_0926/I2_bookings_tab.png",
+   "rc": 0,
+   "at": "18:57:42",
+   "blob_on_branch": "cf6b1aec459fdf07e6cc2ef281eec5b4a0c8ac71",
+   "local_bytes_now": 182421,
+   "local_matches_branch_bytes": true
+  },
+  {
+   "remote": "evidence/hjp3-d3j0mgvR-walk-0926/shots/I3_after_copy.png",
+   "local": "D:/moodle/_hjp3_d3j0_0926/I3_after_copy.png",
+   "rc": 0,
+   "at": "18:57:56",
+   "blob_on_branch": "f52d775d14a1e6b55b7983535528461c2eb2215c",
+   "local_bytes_now": 203712,
+   "local_matches_branch_bytes": true
+  },
+  {
+   "remote": "evidence/hjp3-d3j0mgvR-walk-0926/shots/I4_reopened_link.png",
+   "local": "D:/moodle/_hjp3_d3j0_0926/I4_reopened_link.png",
+   "rc": 0,
+   "at": "18:58:08",
+   "blob_on_branch": "abe8d84592fb5e410b6d6e78d2cba8b86c82ecfe",
+   "local_bytes_now": 884369,
+   "local_matches_branch_bytes": true
+  },
+  {
+   "remote": "evidence/hjp3-d3j0mgvR-walk-0926/shots/J1_trips_before.png",
+   "local": "D:/moodle/_hjp3_d3j0_0926/J1_trips_before.png",
+   "rc": 0,
+   "at": "18:58:17",
+   "blob_on_branch": "ee940e6c839280a74cb4791cf18cdcef8b6d7306",
+   "local_bytes_now": 125879,
+   "local_matches_branch_bytes": true
+  },
+  {
+   "remote": "evidence/hjp3-d3j0mgvR-walk-0926/shots/J2_after_press.png",
+   "local": "D:/moodle/_hjp3_d3j0_0926/J2_after_press.png",
+   "rc": 0,
+   "at": "18:58:26",
+   "blob_on_branch": "5add597df650a9232ff6b0d47fb62294d04fb027",
+   "local_bytes_now": 173521,
+   "local_matches_branch_bytes": true
+  },
+  {
+   "remote": "evidence/hjp3-d3j0mgvR-walk-0926/instruments/r7_walk.cjs",
+   "local": "D:/moodle/HJ-P3_evidence/r7_walk.cjs",
+   "rc": 0,
+   "at": "18:58:35",
+   "blob_on_branch": "1d7c69c79bcecefe529812a743a1464deb6d1d1e",
+   "local_bytes_now": 18136,
+   "local_matches_branch_bytes": true
+  },
+  {
+   "remote": "evidence/hjp3-d3j0mgvR-walk-0926/instruments/r7_copy_link.cjs",
+   "local": "D:/moodle/HJ-P3_evidence/r7_copy_link.cjs",
+   "rc": 0,
+   "at": "18:58:42",
+   "blob_on_branch": "5d4d3adb7d5e76454d2ad2cbf4319b1a323e53e2",
+   "local_bytes_now": 9215,
+   "local_matches_branch_bytes": true
+  },
+  {
+   "remote": "evidence/hjp3-d3j0mgvR-walk-0926/instruments/r7_copy_link_r2.cjs",
+   "local": "D:/moodle/HJ-P3_evidence/r7_copy_link_r2.cjs",
+   "rc": 0,
+   "at": "18:58:51",
+   "blob_on_branch": "2bae87415636a6ec6dbb1d37688106c94a5dafcd",
+   "local_bytes_now": 10125,
+   "local_matches_branch_bytes": true
+  },
+  {
+   "remote": "evidence/hjp3-d3j0mgvR-walk-0926/instruments/r7_copy_link_r3.cjs",
+   "local": "D:/moodle/HJ-P3_evidence/r7_copy_link_r3.cjs",
+   "rc": 0,
+   "at": "18:58:59",
+   "blob_on_branch": "9ddec8f0514c0bb9670df724f19d67fc163d8ebb",
+   "local_bytes_now": 9976,
+   "local_matches_branch_bytes": true
+  },
+  {
+   "remote": "evidence/hjp3-d3j0mgvR-walk-0926/instruments/r7_copy_link_r4.cjs",
+   "local": "D:/moodle/HJ-P3_evidence/r7_copy_link_r4.cjs",
+   "rc": 0,
+   "at": "18:59:08",
+   "blob_on_branch": "76dd1f2971eed2c5b223b94f5f0051fd9715a211",
+   "local_bytes_now": 9062,
+   "local_matches_branch_bytes": true
+  },
+  {
+   "remote": "evidence/hjp3-d3j0mgvR-walk-0926/instruments/r7_ai_disabled.cjs",
+   "local": "D:/moodle/HJ-P3_evidence/r7_ai_disabled.cjs",
+   "rc": 0,
+   "at": "18:59:16",
+   "blob_on_branch": "1c4cdc8a13b8374887133d0e768f12b9f862ca35",
+   "local_bytes_now": 6524,
+   "local_matches_branch_bytes": true
+  },
+  {
+   "remote": "evidence/hjp3-d3j0mgvR-walk-0926/instruments/r7_entry_check.py",
+   "local": "D:/moodle/HJ-P3_evidence/r7_entry_check.py",
+   "rc": 0,
+   "at": "18:59:25",
+   "blob_on_branch": "f56fc5b671ed505f64bb004e43105618d9cb0b0d",
+   "local_bytes_now": 6621,
+   "local_matches_branch_bytes": true
+  },
+  {
+   "remote": "evidence/hjp3-d3j0mgvR-walk-0926/instruments/r7_score.py",
+   "local": "D:/moodle/HJ-P3_evidence/r7_score.py",
+   "rc": 0,
+   "at": "18:59:33",
+   "blob_on_branch": "1c13b8e24ce61cb5940b9bd017a651d2f9baab8f",
+   "local_bytes_now": 15474,
+   "local_matches_branch_bytes": true
+  }
+ ],
+ "branch_tip": "495bfe42b685b9a498cbeeb14776a536b19689c2",
+ "tip_read_at": "18:59:51",
+ "all_rc_zero": true,
+ "every_recorded_path_resolves": true,
+ "every_local_copy_still_matches_the_branch": true
+}
