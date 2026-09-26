@@ -54,6 +54,12 @@ const en: Dict = {
      defect wearing the other coat. */
   "trial.sealedUnreadable":
     "Couldn't read the sealed demo: the server answered just now, but what it answered isn't something we can use. Nothing you filled in caused this.",
+  /* ORD-0349 (HJ-P3): this leg never got an answer, so it may not borrow the sentence that says the
+     server answered.  The wording covers both ways an answer can fail to arrive -- the connection
+     never came up, or this read reached its own deadline -- because the screen is not allowed to
+     name a cause it did not observe. */
+  "trial.sealedNoAnswer":
+    "Couldn't read the sealed demo: this device got no answer from the server -- the connection did not come up, or this read ended without a reply. Nothing you filled in caused this.",
 
   "trial.city": "Destination city",
   "trial.country": "Country/region code",
@@ -767,6 +773,9 @@ const zhCN: Dict = {
      这条选择规则）。写任何城市名都是 `HUMAN_MISLEADING`；改成"广州"同样只是把不一致挪个地方。 */
   "trial.tianjinDemo": "使用封存的演示行程",
   "trial.sealedUnreadable": "没读到封存演示的信息：服务器刚才答了，但答的内容我们用不了。这不是你填错了什么。",
+  /* ORD-0349：这一腿根本没拿到回答，所以不许借用"服务器答了"那一句。措辞覆盖拿不到回答的两种走法
+     —— 连接没成，或这一趟到时限也没回话 —— 因为屏幕不许点名一个它没观察到的原因。 */
+  "trial.sealedNoAnswer": "没读到封存演示的信息：这台设备没有拿到服务器的回答——连接没成，或者这一趟到时限也没有回话。这不是你填错了什么。",
 
   "trial.city": "目的城市",
   "trial.country": "国家/地区代码",
