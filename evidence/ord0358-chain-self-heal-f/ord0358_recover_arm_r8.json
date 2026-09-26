@@ -1,0 +1,315 @@
+{
+ "order": "ORD-0358",
+ "arm": "recover",
+ "gen": "r8",
+ "tool_sha1_disk": "dc849cdac097df64a02f902733733f26b96363ab",
+ "instance": {
+  "static_port": 4792,
+  "tunnel_points_at": "http://127.0.0.1:4792",
+  "run_dir": "D:\\moodle\\_qoder_f_run\\_recover358_4df1ae\\run",
+  "note": "D:\\moodle\\_qoder_f_run\\_recover358_4df1ae\\note_copy.txt",
+  "为什么不在现网上演": "号令者 17:2x 明写「不要再重启这四层」；杀现网一跳会让用户此刻用不了演示"
+ },
+ "pre": {
+  "port_listeners_before": [
+   20136
+  ],
+  "my_cloudflared_before": [],
+  "live_tunnel_url_sha1_before": "e4636a5979d6ce869118156e7bbffe276fe94b82",
+  "live_hop_files_before": [],
+  "live_selfheal_files_before": [],
+  "port_free_after_first_sweep": true
+ },
+ "pass1_start": {
+  "rc": 2,
+  "seconds": 73.8,
+  "verdict": "STATIC_SIDE_HEALTHY_API_NOT_CARRIED",
+  "verdict_reason": {
+   "hops_ok": true,
+   "phone_generation_ok": true,
+   "api_leg_in_scope": false,
+   "tunnel_in_scope": true,
+   "tunnel_shape": "origin-refused-host",
+   "tunnel_edge_state": "origin_answered_but_refused_host",
+   "api_leg": "NOT_CARRIED_BY_THIS_INSTANCE",
+   "why_not_full_green": "这一台实例的隧道直指静态服，中间没有那把鉴权代理 ⇒ vite 用自己的 Host 白名单把 `*.trycloudflare.com` 拒成 403（`origin_refused_host`）；现网那一腿能过，是因为代理把 Host 改写成 `127.0.0.1:4781`（`raw/preview_auth_proxy.py:124` 丢掉入站 Host、`:127` 显式加这一个）"
+  },
+  "spawns": [
+   {
+    "hop": "static",
+    "pid": 3920,
+    "bat": "hop_static_1847.bat",
+    "parent": {
+     "pid": 3920,
+     "parent_pid": 29476,
+     "parent_name": "cmd.exe",
+     "parent_alive": true,
+     "ok": true,
+     "why": "父进程不是任何 agent 会话的 shell（经 cmd /c start 自立控制台）"
+    }
+   }
+  ],
+  "hops": [
+   {
+    "hop": "static",
+    "port": 4792,
+    "url": "http://127.0.0.1:4792/",
+    "kind": "static",
+    "listening": 3920,
+    "http": {
+     "status": 200,
+     "content_type": "text/html",
+     "server": null,
+     "bytes": 1200,
+     "sha1_12": "6d09b6cee258",
+     "connect_error": null,
+     "head60": "<!doctype html>\n<html lang=\"en\">\n  <head>\n    <meta charset="
+    },
+    "healthy": true,
+    "shape": "html"
+   }
+  ],
+  "published": {
+   "old_url": null,
+   "archived_to": null,
+   "new_url": "https://grey-status-degree-lang.trycloudflare.com",
+   "desk_note": {
+    "path": "D:\\moodle\\_qoder_f_run\\_recover358_4df1ae\\note_copy.txt",
+    "bytes_before": 138,
+    "bytes_after": 318,
+    "old_bytes_preserved": true
+   }
+  },
+  "tunnel_probe": {
+   "status": 403,
+   "content_type": "text/plain",
+   "server": "cloudflare",
+   "bytes": 201,
+   "sha1_12": "dfa78c4adfb7",
+   "connect_error": null,
+   "head60": "Blocked request. This host (\"grey-status-degree-lang.tryclou",
+   "shape": "origin-refused-host"
+  },
+  "tunnel_probe_attempts": 13,
+  "tunnel_probe_waited_ms": 60000,
+  "phone_generation": {
+   "asset": "index-D3j0mgvR.js",
+   "bytes": 1276676,
+   "sha1_12": "935808ebcc80",
+   "ok": true
+  }
+ },
+ "children_survive_launcher_exit": {
+  "rows": [
+   {
+    "hop": "static",
+    "pid": 3920,
+    "info_after_launcher_exited": {
+     "pid": 3920,
+     "parent": 29476,
+     "name": "node.exe",
+     "cmd": "\"C:\\Program Files\\nodejs\\node.exe\"  node_modules/vite/bin/vite.js preview --outDir \"D:/moodle/_qoder_preview_20260920/dist\" --host 127.0.0.1 --port 4792 --strictPort"
+    }
+   }
+  ],
+  "all_alive": {
+   "static": true
+  }
+ },
+ "kill_by_pid": {
+  "before": {
+   "port_listeners": [
+    3920
+   ],
+   "cloudflared": [
+    {
+     "pid": 49000,
+     "cmd": "\"D:/moodle/_qoder_preview_20260920/tools/cloudflared.exe\"  tunnel --url http://127.0.0.1:4792 --no-autoupdate --protocol http2 "
+    }
+   ]
+  },
+  "attempts": [
+   {
+    "pid": 3920,
+    "rc": 0,
+    "out": "�ɹ�: ����ֹ PID 47324 (���� PID 3920 �ӽ���)�Ľ��̡�\n�ɹ�: ����ֹ PID 3920 (���� PID 29476 �ӽ���)�Ľ��̡�"
+   },
+   {
+    "pid": 49000,
+    "rc": 0,
+    "out": "�ɹ�: ����ֹ PID 49000 (���� PID 39628 �ӽ���)�Ľ��̡�"
+   }
+  ],
+  "port_free": true,
+  "still_listening": []
+ },
+ "pass2_recover": {
+  "rc": 2,
+  "seconds": 29.3,
+  "verdict": "STATIC_SIDE_HEALTHY_API_NOT_CARRIED",
+  "verdict_reason": {
+   "hops_ok": true,
+   "phone_generation_ok": true,
+   "api_leg_in_scope": false,
+   "tunnel_in_scope": true,
+   "tunnel_shape": "origin-refused-host",
+   "tunnel_edge_state": "origin_answered_but_refused_host",
+   "api_leg": "NOT_CARRIED_BY_THIS_INSTANCE",
+   "why_not_full_green": "这一台实例的隧道直指静态服，中间没有那把鉴权代理 ⇒ vite 用自己的 Host 白名单把 `*.trycloudflare.com` 拒成 403（`origin_refused_host`）；现网那一腿能过，是因为代理把 Host 改写成 `127.0.0.1:4781`（`raw/preview_auth_proxy.py:124` 丢掉入站 Host、`:127` 显式加这一个）"
+  },
+  "spawns": [
+   {
+    "hop": "static",
+    "pid": 1952,
+    "parent": {
+     "pid": 1952,
+     "parent_pid": 45720,
+     "parent_name": "cmd.exe",
+     "parent_alive": true,
+     "ok": true,
+     "why": "父进程不是任何 agent 会话的 shell（经 cmd /c start 自立控制台）"
+    }
+   }
+  ],
+  "hops": [
+   {
+    "hop": "static",
+    "port": 4792,
+    "url": "http://127.0.0.1:4792/",
+    "kind": "static",
+    "listening": 1952,
+    "http": {
+     "status": 200,
+     "content_type": "text/html",
+     "server": null,
+     "bytes": 1200,
+     "sha1_12": "6d09b6cee258",
+     "connect_error": null,
+     "head60": "<!doctype html>\n<html lang=\"en\">\n  <head>\n    <meta charset="
+    },
+    "healthy": true,
+    "shape": "html"
+   }
+  ],
+  "tunnel": {
+   "url": "https://principal-relation-theorem-survey.trycloudflare.com",
+   "source": "run/tunnel_url.txt",
+   "from_newest_log": null
+  },
+  "published": {
+   "old_url": "https://grey-status-degree-lang.trycloudflare.com",
+   "archived_to": "tunnel_url.txt.dead_1848",
+   "new_url": "https://principal-relation-theorem-survey.trycloudflare.com",
+   "desk_note": {
+    "path": "D:\\moodle\\_qoder_f_run\\_recover358_4df1ae\\note_copy.txt",
+    "bytes_before": 318,
+    "bytes_after": 564,
+    "old_bytes_preserved": true
+   }
+  },
+  "tunnel_probe": {
+   "status": 403,
+   "content_type": "text/plain",
+   "server": "cloudflare",
+   "bytes": 221,
+   "sha1_12": "83139e0f0690",
+   "connect_error": null,
+   "head60": "Blocked request. This host (\"principal-relation-theorem-surv",
+   "shape": "origin-refused-host"
+  },
+  "tunnel_probe_attempts": 4,
+  "tunnel_probe_waited_ms": 15000,
+  "phone_generation": {
+   "asset": "index-D3j0mgvR.js",
+   "bytes": 1276676,
+   "sha1_12": "935808ebcc80",
+   "ok": true
+  }
+ },
+ "url_changed_and_archived": {
+  "first_url": "https://grey-status-degree-lang.trycloudflare.com",
+  "second_url": "https://principal-relation-theorem-survey.trycloudflare.com",
+  "archived_to": "tunnel_url.txt.dead_1848",
+  "different": true,
+  "dead_files": [
+   "tunnel_url.txt.dead_1848"
+  ]
+ },
+ "note_only_appended": {
+  "old_bytes_kept": true,
+  "new_block_at_top": true
+ },
+ "live_files_untouched": {
+  "live_tunnel_url_sha1_before": "e4636a5979d6ce869118156e7bbffe276fe94b82",
+  "live_tunnel_url_sha1_now": "e4636a5979d6ce869118156e7bbffe276fe94b82",
+  "same": true,
+  "attribution_note": "现网那份在 17:52/17:54/17:55 被号令者自己的重启动过三次（见 run/cmdr_hop4_tunnel.bat 与 run/tunnel_url.txt.dead_1752/_1754）；我的工具只写我这台的 OUT/run。本栏只主张「我这一趟没写它」，不主张全局不变。",
+  "my_writes_never_landed_in_live_dir": {
+   "hop_files_same": true,
+   "selfheal_files_same": true
+  },
+  "same_excluded_from_arm_passes": true
+ },
+ "cleanup": {
+  "first_sweep": {
+   "attempts": [
+    {
+     "pid": 20136,
+     "rc": 0,
+     "out": "�ɹ�: ����ֹ PID 42796 (���� PID 20136 �ӽ���)�Ľ��̡�\n�ɹ�: ����ֹ PID 20136 (���� PID 48888 �ӽ���)�Ľ��̡�"
+    }
+   ],
+   "port_free": true,
+   "still_listening": []
+  },
+  "final_sweep": {
+   "left_by_pass2": [
+    {
+     "hop": "static",
+     "pid": 1952
+    },
+    {
+     "hop": "tunnel",
+     "pid": 47628
+    }
+   ],
+   "attempts": [
+    {
+     "pid": 1952,
+     "rc": 0,
+     "out": "�ɹ�: ����ֹ PID 18008 (���� PID 1952 �ӽ���)�Ľ��̡�\n�ɹ�: ����ֹ PID 1952 (���� PID 45720 �ӽ���)�Ľ��̡�"
+    },
+    {
+     "pid": 47628,
+     "rc": 0,
+     "out": "�ɹ�: ����ֹ PID 47628 (���� PID 44768 �ӽ���)�Ľ��̡�"
+    }
+   ],
+   "port_free": true,
+   "still_listening": []
+  },
+  "after_final_sweep_port_free": true,
+  "my_cloudflared_left": [],
+  "live_chain_still_up_now": [
+   "8693=UP",
+   "4781=UP",
+   "4782=UP"
+  ]
+ },
+ "api_leg": {
+  "本实例": "隧道指向静态服 ⇒ 没有 API 腿，只能判 STATIC_SIDE_HEALTHY_API_NOT_CARRIED（exit 2），判 CHAIN_HEALTHY 才算绿是错的",
+  "全腿在现网证": "ord0358_detect_live_r5.json（只读、未重启任何一跳）"
+ },
+ "arm_passes": true,
+ "tunnel_probe_shapes": {
+  "pass1": "origin-refused-host",
+  "pass2": "origin-refused-host"
+ },
+ "tunnel_edge_states": {
+  "pass1": "origin_answered_but_refused_host",
+  "pass2": "origin_answered_but_refused_host"
+ },
+ "本实例该拿哪一档": "隧道指向静态服、中间没有那把鉴权代理 ⇒ vite 按自己的 Host 白名单把隧道域名拒成 403（形状 `origin-refused-host`）；就算放行也到不了 JSON，因为 vite 的 /api 上游按决定是 :8000（不提供）。API 契约的 JSON ⇒ 只能判 STATIC_SIDE_HEALTHY_API_NOT_CARRIED。真拿到 JSON 的那种绿只在现网只读那一趟里证（ord0358_detect_live_r5.json）。",
+ "claimed_result": "我的隔离实例上：起（spawns 有 pid、父进程不是任何 agent shell）→ 活过工具退出 → 按 pid 杀并回验端口空 → 再跑一趟重新起回来、隧道换了新址并归档旧址、留言只追加；现网那四层我一个字节、一个进程都没碰。全腿 CHAIN_HEALTHY 由现网只读那趟证。",
+ "derived_result": null
+}
