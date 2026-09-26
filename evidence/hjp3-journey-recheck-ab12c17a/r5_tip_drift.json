@@ -1,0 +1,78 @@
+{
+ "ran_at_local": "2026-09-26T09:23:23+0800",
+ "method": "git ls-remote of refs/heads/mirror/integration-frontend-apple-pass1 plus GET /compare/<named>...<now> over the GitHub API; 0 builds run, 0 requests to the phone chain, 0 refs written",
+ "generation_named_by_the_commander": "ab12c17a65450c2c3062c9232e27a26c4ae1b485",
+ "mirror_tip_read_now": "2d8b03b8c7734ea3b8521b80845e1b0bc1a07957",
+ "tip_equals_the_named_generation": false,
+ "commits_ahead": 9,
+ "compare_status": "ahead",
+ "commits": [
+  {
+   "sha": "ceafbe7c0e20fe6fc6fc19d66785d5c696833034",
+   "subject": "ORD-0344: anchor the one number the agent rail shows, under its contract field name"
+  },
+  {
+   "sha": "3a3feea3a290156cd84bd740a1ea45250d95b419",
+   "subject": "ORD-0332: every rejection now carries a number the traveller can read back"
+  },
+  {
+   "sha": "cfcdbd7798a06ee82841cede0f5935178d7b6299",
+   "subject": "ORD-0344-b: the server's attributed sentence moves into the technical-detail fold"
+  },
+  {
+   "sha": "7ff8f28915e47dd5812b1257e060e8df14eb553a",
+   "subject": "ORD-0344-b: restore the elapsed_ms anchor the re-cut left behind"
+  },
+  {
+   "sha": "021898bb8d15f0075077a04b87b151b2ee6790a2",
+   "subject": "ORD-0346: 看支持的目的地 groups by what the server answered, not by a spelling table"
+  },
+  {
+   "sha": "391c6d0a30e9a4d192b31d6c3d76fa61d5b82647",
+   "subject": "ORD-0344-b: route the refusal's diagnosis through the channel that is actually on the line"
+  },
+  {
+   "sha": "046fc98723e2eacfe3cb8eb00a7fd3abdbd26efe",
+   "subject": "ORD-0344: anchor the one number the agent rail shows, under its contract field name"
+  },
+  {
+   "sha": "d9a0811318c62c5d4d176c29f9b707f149c20fec",
+   "subject": "ORD-0346: 看支持的目的地 groups by what the server answered, not by a spelling table"
+  },
+  {
+   "sha": "2d8b03b8c7734ea3b8521b80845e1b0bc1a07957",
+   "subject": "ORD-0344-b: route the refusal's diagnosis through the channel that is actually on the line"
+  }
+ ],
+ "files_changed": [
+  "backend/app/error_receipt.py",
+  "backend/app/main.py",
+  "backend/tests/test_qoder_ord0332_error_receipt.py",
+  "contracts/ERROR_RECEIPT_ID_V1.md",
+  "contracts/openapi.yaml",
+  "frontend/e2e/qoder-ord0344b-sentence-move-keeps-attribution.spec.ts",
+  "frontend/e2e/qoder-ord0346-honest-destinations.spec.ts",
+  "frontend/playwright.ord0344b-S1.config.ts",
+  "frontend/playwright.ord0346-S4.config.ts",
+  "frontend/src/app/V8Experience.tsx",
+  "frontend/src/design-tokens.css",
+  "frontend/src/features/agent/CopilotDock.tsx",
+  "frontend/src/features/setup/JourneyTrialSetup.tsx",
+  "frontend/src/lib/errorReceipt.ts",
+  "frontend/tools/ord0332_receipt_readings.mjs"
+ ],
+ "frontend_files_changed": [
+  "frontend/e2e/qoder-ord0344b-sentence-move-keeps-attribution.spec.ts",
+  "frontend/e2e/qoder-ord0346-honest-destinations.spec.ts",
+  "frontend/playwright.ord0344b-S1.config.ts",
+  "frontend/playwright.ord0346-S4.config.ts",
+  "frontend/src/app/V8Experience.tsx",
+  "frontend/src/design-tokens.css",
+  "frontend/src/features/agent/CopilotDock.tsx",
+  "frontend/src/features/setup/JourneyTrialSetup.tsx",
+  "frontend/src/lib/errorReceipt.ts",
+  "frontend/tools/ord0332_receipt_readings.mjs"
+ ],
+ "touches_the_wizard_source": true,
+ "what_i_did_not_do": "I did not re-cut, rebuild or re-walk. Deploying a generation is the commander's action, and my one allowed pass on the named generation is already recorded"
+}
