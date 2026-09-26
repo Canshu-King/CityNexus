@@ -1,0 +1,124 @@
+{
+ "schema": "CNX_ORD0342_SHEET_REGRESSION_V1",
+ "generation": {
+  "candidate": "003886ca83294a9ec97a98215cb8cc2e8232189b",
+  "pre_fix_authority": "38277c4e9787b1ddf0bf69487060ba0e40c14146"
+ },
+ "specs": [
+  "qoder-ai-sheet-blocked.spec.ts",
+  "qoder-model-words-are-labelled.spec.ts",
+  "qoder-no-internal-words-or-sentinels.spec.ts",
+  "qoder-ord0280-attribution-label-speaks-for-itself.spec.ts",
+  "qoder-ord0302-unreadable-server-body.spec.ts",
+  "qoder-ord0310-keyless-write-deadline.spec.ts",
+  "qoder-ord0323-two-exposure-cells.spec.ts",
+  "qoder-plan-ai-thinking.spec.ts",
+  "qoder-sheet-legs-carry-idempotency-key.spec.ts",
+  "qoder-same-tick-double-tap-plans-once.spec.ts",
+  "qoder-every-summary-is-tappable.spec.ts",
+  "qoder-ord0339-exception-words-stay-out-of-the-dom.spec.ts",
+  "qoder-sealed-failure-speaks-and-offers-retry.spec.ts",
+  "qoder-continuation-owner.spec.ts",
+  "qoder-continuation-resume-carries-identity.spec.ts"
+ ],
+ "assertion_bytes_unchanged": {
+  "qoder-ai-sheet-blocked.spec.ts": true,
+  "qoder-model-words-are-labelled.spec.ts": true,
+  "qoder-no-internal-words-or-sentinels.spec.ts": true,
+  "qoder-ord0280-attribution-label-speaks-for-itself.spec.ts": true,
+  "qoder-ord0302-unreadable-server-body.spec.ts": true,
+  "qoder-ord0310-keyless-write-deadline.spec.ts": true,
+  "qoder-ord0323-two-exposure-cells.spec.ts": true,
+  "qoder-plan-ai-thinking.spec.ts": true,
+  "qoder-sheet-legs-carry-idempotency-key.spec.ts": true,
+  "qoder-same-tick-double-tap-plans-once.spec.ts": true,
+  "qoder-every-summary-is-tappable.spec.ts": true,
+  "qoder-ord0339-exception-words-stay-out-of-the-dom.spec.ts": true,
+  "qoder-sealed-failure-speaks-and-offers-retry.spec.ts": true,
+  "qoder-continuation-owner.spec.ts": true,
+  "qoder-continuation-resume-carries-identity.spec.ts": true
+ },
+ "spec_digests": {
+  "qoder-ai-sheet-blocked.spec.ts": "c782aa8171a0abadaf2d77992d3dc31d591c5fb3b72826ab110fe565f6bd5ad6",
+  "qoder-model-words-are-labelled.spec.ts": "3635ae1d11df0d2327c53c51676020d9f7f6e91682398dc5f3d44edb3a88de53",
+  "qoder-no-internal-words-or-sentinels.spec.ts": "227f46737796e7836fe3720e712fe0eb45571c5b47a12f98fe14ee5d81945a84",
+  "qoder-ord0280-attribution-label-speaks-for-itself.spec.ts": "b07024360fcaa5159d3eae252e24691bcfdbb436459cfeb2830b1642699af447",
+  "qoder-ord0302-unreadable-server-body.spec.ts": "e0faa7ced685de8d266e7bf826469553ebfc2a834930cca924ca7753e4bd9ed1",
+  "qoder-ord0310-keyless-write-deadline.spec.ts": "5564713d382d559a4b7a75fc0c8b7c9a2c8f84b9a5881c479812b27724eedd9f",
+  "qoder-ord0323-two-exposure-cells.spec.ts": "32442f7e3a96ae88619b59e1cc698238824a006ace632b9c88943e17780215eb",
+  "qoder-plan-ai-thinking.spec.ts": "c63cdba4d82d880369d7df2a8311f065053ac3a33a83470804abc5a58d6ccdbe",
+  "qoder-sheet-legs-carry-idempotency-key.spec.ts": "1a472ff1d854ec7cd240ce4cfcaae83e2684d4bd83a10c87d55d7f9f48b5e6cb",
+  "qoder-same-tick-double-tap-plans-once.spec.ts": "9fce78bb274a128d51e82e3b8840419460028e2c5934d80ee28ebfb571ef4e3b",
+  "qoder-every-summary-is-tappable.spec.ts": "15d4c6919fcdce8227d98adf275886ba86a66fd9da5a8f120fd457cdbc050ec2",
+  "qoder-ord0339-exception-words-stay-out-of-the-dom.spec.ts": "1414087c6db736deac19a059d2136e1bc8f01c009d0fccf15d0674407f2309e8",
+  "qoder-sealed-failure-speaks-and-offers-retry.spec.ts": "31cd1f021e13e392a328aa30319cf47f3d6fdd505ac33c1593523a64f6f00c62",
+  "qoder-continuation-owner.spec.ts": "8e6eddd169015db8e837eeb70357e7b78d7dea38435394131c1cb417f93cd2e7",
+  "qoder-continuation-resume-carries-identity.spec.ts": "f9428f38450f6139837762f49885cc33534dff32bad8b83c49209a8ebad00e75"
+ },
+ "runs": {
+  "pre_fix_sheet": {
+   "rc": 1,
+   "seconds": 264.2,
+   "red_nodes": {
+    "?|qoder-continuation-resume-carries-identity.spec.ts|ord0278-negative-refused-keeps-the-marker-and-says-whose-words-these-are — 被拒不清 marker，句子分得清是谁说的": "failed",
+    "?|qoder-sealed-failure-speaks-and-offers-retry.spec.ts|ord0273-text-the-sentence-is-the-key-and-no-shape-leaks — 主文案是键值，不漏技术形状": "failed",
+    "?|qoder-sealed-failure-speaks-and-offers-retry.spec.ts|ord0273-text-en-arm-speaks-english-and-neither-side-leaks — 英文臂不得说中文": "failed"
+   },
+   "summary_line": "71 passed (4.4m)",
+   "keys_removed": [
+    "DEEPSEEK_API_KEY",
+    "OPENAI_API_KEY"
+   ],
+   "report": "regress_0342rgwas0336.json",
+   "collect": {
+    "rc": 0,
+    "total": "Total: 74 tests in 16 files",
+    "node_lines": 74
+   }
+  },
+  "candidate_sheet": {
+   "rc": 1,
+   "seconds": 251.6,
+   "red_nodes": {
+    "?|qoder-continuation-resume-carries-identity.spec.ts|ord0278-negative-refused-keeps-the-marker-and-says-whose-words-these-are — 被拒不清 marker，句子分得清是谁说的": "failed",
+    "?|qoder-sealed-failure-speaks-and-offers-retry.spec.ts|ord0273-text-the-sentence-is-the-key-and-no-shape-leaks — 主文案是键值，不漏技术形状": "failed",
+    "?|qoder-sealed-failure-speaks-and-offers-retry.spec.ts|ord0273-text-en-arm-speaks-english-and-neither-side-leaks — 英文臂不得说中文": "failed"
+   },
+   "summary_line": "71 passed (4.2m)",
+   "keys_removed": [
+    "DEEPSEEK_API_KEY",
+    "OPENAI_API_KEY"
+   ],
+   "report": "regress_0342rgnow0336.json",
+   "collect": {
+    "rc": 0,
+    "total": "Total: 74 tests in 16 files",
+    "node_lines": 74
+   }
+  }
+ },
+ "derived_result": {
+  "every_spec_byte_identical_between_generations": true,
+  "red_on_base_only_were_already_red": [],
+  "new_reds_attributable_to_this_order": [],
+  "no_new_red": true,
+  "base_red_count": 3,
+  "candidate_red_count": 3
+ },
+ "revision_note": {
+  "this_document": "r2 content, written under the runner's r1 filename; published as ord0342_sheet_regression_r2.json",
+  "supersedes": "ord0342_sheet_regression_r1.json (published, left byte-for-byte alone)",
+  "what_changed": "the order names ORD-0339's arms, so its spec plus the sealed-failure gate were added to the blast-radius list: 13 specs became 15, and each generation was re-run from scratch rather than reusing the earlier pass",
+  "specs_now": 15,
+  "collect": {
+   "pre_fix_sheet": "Total: 74 tests in 16 files",
+   "candidate_sheet": "Total: 74 tests in 16 files"
+  },
+  "red_nodes": [
+   "?|qoder-continuation-resume-carries-identity.spec.ts|ord0278-negative-refused-keeps-the-marker-and-says-whose-words-these-are — 被拒不清 marker，句子分得清是谁说的",
+   "?|qoder-sealed-failure-speaks-and-offers-retry.spec.ts|ord0273-text-en-arm-speaks-english-and-neither-side-leaks — 英文臂不得说中文",
+   "?|qoder-sealed-failure-speaks-and-offers-retry.spec.ts|ord0273-text-the-sentence-is-the-key-and-no-shape-leaks — 主文案是键值，不漏技术形状"
+  ],
+  "red_nodes_identical_across_generations": true
+ }
+}
