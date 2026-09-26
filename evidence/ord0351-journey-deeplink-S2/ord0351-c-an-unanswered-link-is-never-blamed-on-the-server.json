@@ -1,0 +1,27 @@
+{
+  "node": "ord0351-c-an-unanswered-link-is-never-blamed-on-the-server",
+  "link": "/v8/6d57c2be-31d8-4b90-bb1d-8d9791ab81d7",
+  "route_interception_active": {},
+  "machine": {
+    "reason": "NETWORK_UNAVAILABLE",
+    "evidence_kind": "TRANSPORT",
+    "http_status": "",
+    "source_layer": "TRANSPORT",
+    "recovery_action": "retry"
+  },
+  "visible_heading": "网络不可用",
+  "visible_body": "连接 网络不可用 这一发请求没能出去，也没有收到任何回答，所以这是网络问题。这台设备上还没有可看的离线副本，所以现在没有可显示的内容。请检查网络后重试。 重试 归因详情",
+  "in_page_probes": {
+    "target": "rejected: TypeError",
+    "health": 200
+  },
+  "experience_reads": [],
+  "telemetry": [
+    {
+      "reason": "NETWORK_UNAVAILABLE",
+      "evidence_kind": "TRANSPORT",
+      "http_status": null,
+      "context": "shell.boot.journeyRead"
+    }
+  ]
+}
