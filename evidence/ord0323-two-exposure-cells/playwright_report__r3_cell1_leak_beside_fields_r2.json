@@ -1,0 +1,827 @@
+{
+  "config": {
+    "argv": [
+      "C:\\Program Files\\nodejs\\node.exe",
+      "D:\\moodle\\_qoder_b_lane_20260923\\frontend\\node_modules\\@playwright\\test\\cli.js",
+      "test",
+      "-c",
+      "playwright.config.ts",
+      "e2e/qoder-ord0323-two-exposure-cells.spec.ts",
+      "--reporter=json"
+    ],
+    "configFile": "D:\\moodle\\_qoder_b_lane_20260923\\frontend\\playwright.config.ts",
+    "rootDir": "D:/moodle/_qoder_b_lane_20260923/frontend/e2e",
+    "failOnFlakyTests": false,
+    "forbidOnly": false,
+    "fullyParallel": false,
+    "globalSetup": "D:\\moodle\\_qoder_b_lane_20260923\\frontend\\e2e\\_qoderAuthoritativeSetup.ts",
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "actualWorkers": 1
+    },
+    "preserveOutput": "always",
+    "projects": [
+      {
+        "outputDir": "D:/moodle/_qoder_b_lane_20260923/frontend/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "real-seed",
+        "name": "real-seed",
+        "testDir": "D:/moodle/_qoder_b_lane_20260923/frontend/e2e",
+        "testIgnore": [
+          "/[\\\\/]e2e[\\\\/]legacy[\\\\/]/"
+        ],
+        "testMatch": [
+          "/_qoderRealSeed\\.setup\\.ts/"
+        ],
+        "timeout": 60000
+      },
+      {
+        "outputDir": "D:/moodle/_qoder_b_lane_20260923/frontend/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "chromium",
+        "name": "chromium",
+        "testDir": "D:/moodle/_qoder_b_lane_20260923/frontend/e2e",
+        "testIgnore": [
+          "/[\\\\/]e2e[\\\\/]legacy[\\\\/]/"
+        ],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 60000
+      }
+    ],
+    "quiet": false,
+    "reporter": [
+      [
+        "json"
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "shard": null,
+    "tags": [],
+    "updateSnapshots": "missing",
+    "updateSourceMethod": "patch",
+    "version": "1.63.0",
+    "workers": 1,
+    "webServer": null
+  },
+  "suites": [
+    {
+      "title": "_qoderRealSeed.setup.ts",
+      "file": "_qoderRealSeed.setup.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "seed a real journey through the product API",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "real-seed",
+              "projectName": "real-seed",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 4819,
+                  "errors": [],
+                  "stdout": [
+                    {
+                      "text": "[qoder-real-seed] journey=de0f88d8-6167-4ac3-a73d-11f521f7e743 options=4 chosen=42225332-54d6-42b3-96fb-b01d9e4b9a5f (Haihe Riverside Hotel)\n"
+                    },
+                    {
+                      "text": "[qoder-real-seed] trialWizard=false live-journey-current=true\n"
+                    }
+                  ],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-09-26T02:15:37.603Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "e5b963f3c8f6099f74d0-d425156f0efa8e024368",
+          "file": "_qoderRealSeed.setup.ts",
+          "line": 110,
+          "column": 1
+        }
+      ]
+    },
+    {
+      "title": "qoder-ord0323-two-exposure-cells.spec.ts",
+      "file": "qoder-ord0323-two-exposure-cells.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "N1_boundary_panel_keeps_its_own_readings_and_drops_the_failure_prose — 边界自己量的字段还在，失败原文与组件帧不在屏上",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 300000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "failed",
+                  "duration": 941,
+                  "error": {
+                    "message": "Error: e2e/qoder-ord0323-two-exposure-cells.spec.ts :: N1 — the fold no longer states its own boundary as the word no; it reads \"caught_at=2026-09-26T02:15:43.399Z\nroute=/v8/bookings\nfailures_caught_here=1\nonline_at_this_device=yes\nfailure_text_rendered=noCannot read properties of undefined (reading 'length')\"\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m\"no\"\u001b[39m\nReceived: \u001b[31m\"no\u001b[7mCannot\u001b[27m\"\u001b[39m",
+                    "stack": "Error: e2e/qoder-ord0323-two-exposure-cells.spec.ts :: N1 — the fold no longer states its own boundary as the word no; it reads \"caught_at=2026-09-26T02:15:43.399Z\nroute=/v8/bookings\nfailures_caught_here=1\nonline_at_this_device=yes\nfailure_text_rendered=noCannot read properties of undefined (reading 'length')\"\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m\"no\"\u001b[39m\nReceived: \u001b[31m\"no\u001b[7mCannot\u001b[27m\"\u001b[39m\n    at D:\\moodle\\_qoder_b_lane_20260923\\frontend\\e2e\\qoder-ord0323-two-exposure-cells.spec.ts:200:5",
+                    "location": {
+                      "file": "D:\\moodle\\_qoder_b_lane_20260923\\frontend\\e2e\\qoder-ord0323-two-exposure-cells.spec.ts",
+                      "column": 5,
+                      "line": 200
+                    },
+                    "snippet": "\u001b[0m \u001b[90m 198 |\u001b[39m     (detail\u001b[33m.\u001b[39mmatch(\u001b[35m/failure_text_rendered=(\\w+)/\u001b[39m) \u001b[33m||\u001b[39m [\u001b[36mnull\u001b[39m\u001b[33m,\u001b[39m \u001b[32m\"\"\u001b[39m])[\u001b[35m1\u001b[39m]\u001b[33m,\u001b[39m\n \u001b[90m 199 |\u001b[39m     node(arm\u001b[33m,\u001b[39m \u001b[32m`the fold no longer states its own boundary as the word no; it reads \"${detail.slice(0, 200)}\"`\u001b[39m)\u001b[33m,\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 200 |\u001b[39m   )\u001b[33m.\u001b[39mtoBe(\u001b[32m\"no\"\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m     |\u001b[39m     \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 201 |\u001b[39m\n \u001b[90m 202 |\u001b[39m   \u001b[90m/* NEGATIVE -- the failure prose and the component frames are not in the DOM. Asserted on textContent,\u001b[39m\n \u001b[90m 203 |\u001b[39m \u001b[90m     not innerText: a collapsed fold is still a page a screenshot tool can expand. */\u001b[39m\u001b[0m"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "D:\\moodle\\_qoder_b_lane_20260923\\frontend\\e2e\\qoder-ord0323-two-exposure-cells.spec.ts",
+                        "column": 5,
+                        "line": 200
+                      },
+                      "message": "Error: e2e/qoder-ord0323-two-exposure-cells.spec.ts :: N1 — the fold no longer states its own boundary as the word no; it reads \"caught_at=2026-09-26T02:15:43.399Z\nroute=/v8/bookings\nfailures_caught_here=1\nonline_at_this_device=yes\nfailure_text_rendered=noCannot read properties of undefined (reading 'length')\"\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m\"no\"\u001b[39m\nReceived: \u001b[31m\"no\u001b[7mCannot\u001b[27m\"\u001b[39m\n\n  198 |     (detail.match(/failure_text_rendered=(\\w+)/) || [null, \"\"])[1],\n  199 |     node(arm, `the fold no longer states its own boundary as the word no; it reads \"${detail.slice(0, 200)}\"`),\n> 200 |   ).toBe(\"no\");\n      |     ^\n  201 |\n  202 |   /* NEGATIVE -- the failure prose and the component frames are not in the DOM. Asserted on textContent,\n  203 |      not innerText: a collapsed fold is still a page a screenshot tool can expand. */\n    at D:\\moodle\\_qoder_b_lane_20260923\\frontend\\e2e\\qoder-ord0323-two-exposure-cells.spec.ts:200:5"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-09-26T02:15:42.881Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "D:\\moodle\\_qoder_b_lane_20260923\\frontend\\test-results\\qoder-ord0323-two-exposure-5e54f-e-—-边界自己量的字段还在，失败原文与组件帧不在屏上-chromium\\error-context.md"
+                    }
+                  ],
+                  "errorLocation": {
+                    "file": "D:\\moodle\\_qoder_b_lane_20260923\\frontend\\e2e\\qoder-ord0323-two-exposure-cells.spec.ts",
+                    "column": 5,
+                    "line": 200
+                  }
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "10b2d8883c0bec666957-23d909069f0d27801731",
+          "file": "qoder-ord0323-two-exposure-cells.spec.ts",
+          "line": 122,
+          "column": 1
+        },
+        {
+          "title": "N2_rejected_readings_render_their_own_status_and_content_type_not_the_reply_s_sentence — 顶回来的两条读数各自还在，回复原话不在屏上",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 300000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 2,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 502,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-09-26T02:15:44.297Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "10b2d8883c0bec666957-e9b970889ed65a93377e",
+          "file": "qoder-ord0323-two-exposure-cells.spec.ts",
+          "line": 224,
+          "column": 1
+        },
+        {
+          "title": "N3_confirm_fold_carries_the_attempt_reading_not_the_attempt_s_words — 确认那一折带着这台设备的读数，不带回复的原话",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 300000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 2,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 966,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-09-26T02:15:44.893Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "10b2d8883c0bec666957-7b32271c01e9f8430b42",
+          "file": "qoder-ord0323-two-exposure-cells.spec.ts",
+          "line": 309,
+          "column": 1
+        },
+        {
+          "title": "N6_Q68a_a_server_code_still_reaches_the_code_slot — 编号那格：服务器真给了编号时，编号还在屏上",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 300000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 2,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 855,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-09-26T02:15:45.865Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "10b2d8883c0bec666957-f7e992ac16cf1f04accb",
+          "file": "qoder-ord0323-two-exposure-cells.spec.ts",
+          "line": 543,
+          "column": 1
+        },
+        {
+          "title": "N6_Q68b_a_sentence_only_refusal_is_not_presentation_as_a_code — 编号那格：只有句子时，编号位上不许出现句子，句子归技术详情",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 300000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 2,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 842,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-09-26T02:15:46.726Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "10b2d8883c0bec666957-b10b825c92a72b78c984",
+          "file": "qoder-ord0323-two-exposure-cells.spec.ts",
+          "line": 565,
+          "column": 1
+        },
+        {
+          "title": "N6_Q68c_a_machine_code_in_code_reaches_the_code_slot — 编号那格：code 这一形给了真编号时，编号还在屏上",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 300000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 2,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 905,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-09-26T02:15:47.579Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "10b2d8883c0bec666957-683b51eb56ee715b5b08",
+          "file": "qoder-ord0323-two-exposure-cells.spec.ts",
+          "line": 647,
+          "column": 3
+        },
+        {
+          "title": "N6_Q68d_a_machine_code_in_message_key_reaches_the_code_slot — 编号那格：message_key 这一形给了真编号时，编号还在屏上",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 300000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 2,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 947,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-09-26T02:15:48.496Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "10b2d8883c0bec666957-6f6bcdd9c7df051fb906",
+          "file": "qoder-ord0323-two-exposure-cells.spec.ts",
+          "line": 647,
+          "column": 3
+        },
+        {
+          "title": "N4_T06_a_refused_POST_leaves_no_reply_words_and_keeps_its_own_reading — T06：自己那句原话不在屏上，自己那次读数还在屏上",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 120000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 2,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 911,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-09-26T02:15:49.453Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "10b2d8883c0bec666957-8bf96ef88f6ef91740fe",
+          "file": "qoder-ord0323-two-exposure-cells.spec.ts",
+          "line": 673,
+          "column": 3
+        },
+        {
+          "title": "N4_T07_a_refused_GET_leaves_no_reply_words_and_keeps_its_own_reading — T07：自己那句原话不在屏上，自己那次读数还在屏上",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 120000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 2,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 448,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-09-26T02:15:50.373Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "10b2d8883c0bec666957-7bf18318fcd33cef1b28",
+          "file": "qoder-ord0323-two-exposure-cells.spec.ts",
+          "line": 673,
+          "column": 3
+        },
+        {
+          "title": "N4_T08_a_refused_GET_leaves_no_reply_words_and_keeps_its_own_reading — T08：自己那句原话不在屏上，自己那次读数还在屏上",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 120000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 2,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 446,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-09-26T02:15:50.827Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "10b2d8883c0bec666957-3e014726171d435110ae",
+          "file": "qoder-ord0323-two-exposure-cells.spec.ts",
+          "line": 673,
+          "column": 3
+        },
+        {
+          "title": "N4_T09_a_refused_POST_leaves_no_reply_words_and_keeps_its_own_reading — T09：自己那句原话不在屏上，自己那次读数还在屏上",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 120000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 2,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 897,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-09-26T02:15:51.279Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "10b2d8883c0bec666957-7959f50fbf02bfe36e11",
+          "file": "qoder-ord0323-two-exposure-cells.spec.ts",
+          "line": 673,
+          "column": 3
+        },
+        {
+          "title": "N4_T10_a_refused_POST_leaves_no_reply_words_and_keeps_its_own_reading — T10：自己那句原话不在屏上，自己那次读数还在屏上",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 120000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 2,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 999,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-09-26T02:15:52.183Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "10b2d8883c0bec666957-91095dc63cd520fe8a51",
+          "file": "qoder-ord0323-two-exposure-cells.spec.ts",
+          "line": 673,
+          "column": 3
+        },
+        {
+          "title": "N4_T11_a_refused_POST_leaves_no_reply_words_and_keeps_its_own_reading — T11：自己那句原话不在屏上，自己那次读数还在屏上",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 120000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 2,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 951,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-09-26T02:15:53.191Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "10b2d8883c0bec666957-ec265ef2ff2b9f1eb944",
+          "file": "qoder-ord0323-two-exposure-cells.spec.ts",
+          "line": 673,
+          "column": 3
+        },
+        {
+          "title": "N4_T12_a_refused_POST_leaves_no_reply_words_and_keeps_its_own_reading — T12：自己那句原话不在屏上，自己那次读数还在屏上",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 120000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 2,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1027,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-09-26T02:15:54.148Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "10b2d8883c0bec666957-503a4fa317013aab8948",
+          "file": "qoder-ord0323-two-exposure-cells.spec.ts",
+          "line": 673,
+          "column": 3
+        },
+        {
+          "title": "N4_T13_a_refused_PATCH_leaves_no_reply_words_and_keeps_its_own_reading — T13：自己那句原话不在屏上，自己那次读数还在屏上",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 120000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 2,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1039,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-09-26T02:15:55.184Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "10b2d8883c0bec666957-46bbb40efe72c539a0bc",
+          "file": "qoder-ord0323-two-exposure-cells.spec.ts",
+          "line": 673,
+          "column": 3
+        },
+        {
+          "title": "N7_F1_an_answered_body_that_is_not_json_is_not_filed_as_a_transport_failure — F1：回答到了但正文不能用，不许说成网络断了，也不许把正文带上屏",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 300000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 2,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 435,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-09-26T02:15:56.233Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "10b2d8883c0bec666957-61ae87c473d7c4853630",
+          "file": "qoder-ord0323-two-exposure-cells.spec.ts",
+          "line": 820,
+          "column": 1
+        },
+        {
+          "title": "N7_F2_a_rejected_extraction_shows_its_machine_status_not_the_reply_s_sentence — F2：服务器那句 reason 不再当状态行",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 300000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 2,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 884,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-09-26T02:15:56.677Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "10b2d8883c0bec666957-91206715ea7fa9ee4220",
+          "file": "qoder-ord0323-two-exposure-cells.spec.ts",
+          "line": 865,
+          "column": 1
+        },
+        {
+          "title": "N7_F3_a_memory_row_shows_what_it_measured_not_the_model_s_sentence — F3：纪念册那一行的推理摘要不再原样上屏",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 300000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 2,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 452,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-09-26T02:15:57.568Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "10b2d8883c0bec666957-91acbed1a2f9d668625a",
+          "file": "qoder-ord0323-two-exposure-cells.spec.ts",
+          "line": 899,
+          "column": 1
+        },
+        {
+          "title": "N7_F4_the_draft_review_shows_its_own_fields_not_the_model_s_sentence — F4：待审那一屏的推理摘要不再原样上屏",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 300000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 2,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 877,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-09-26T02:15:58.027Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "10b2d8883c0bec666957-0c7afdfdb8057d1ac166",
+          "file": "qoder-ord0323-two-exposure-cells.spec.ts",
+          "line": 933,
+          "column": 1
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2026-09-26T02:15:34.166Z",
+    "duration": 25471.36,
+    "expected": 19,
+    "skipped": 0,
+    "unexpected": 1,
+    "flaky": 0
+  }
+}
