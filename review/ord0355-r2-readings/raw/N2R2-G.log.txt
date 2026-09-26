@@ -1,0 +1,590 @@
+........................................................................ [  5%]
+........................................................................ [ 10%]
+.......................s................................................ [ 15%]
+...........................F...FF.....F.F....F...F...................... [ 21%]
+..............F......................................................... [ 26%]
+........................................................................ [ 31%]
+...........F................................................x........... [ 37%]
+........................................................................ [ 42%]
+........................................................................ [ 47%]
+........................................................................ [ 53%]
+..........F............................................................. [ 58%]
+........................................................................ [ 63%]
+........................................................................ [ 68%]
+........................................................................ [ 74%]
+...............................sssssssssssss............................ [ 79%]
+........................................................................ [ 84%]
+........................................................................ [ 90%]
+............s........................................................... [ 95%]
+..............................................................           [100%]
+================================== FAILURES ===================================
+____________ test_g5_an_ai_run_that_changed_must_say_which_it_was _____________
+
+    def test_g5_an_ai_run_that_changed_must_say_which_it_was():
+        """��11: 0 mutations / 0 proposals / 0 errors must not vanish silently.
+    
+        Measured shape today (`4c8c911`, own DB, AI off): the response is
+        `{event_id, mission, run}`; `run.outcome` exists but is `null`; `run.status` and
+        `mission.status` are the runtime label `SKIPPED_EXTERNAL_DEPENDENCY`. So the seam is
+        already there - what is missing is the truth poured into it.
+        """
+        journey_id = _seeded_journey_id()
+        response = client.post(
+            f"/api/v1/journeys/{journey_id}/agent/commands",
+            json={"command": "���Ұ������г����°���һ��", "requested_autonomy": "PLAN_ONLY"},
+        )
+        assert response.status_code < 500, (
+            f"������AI �޶���/����ҲҪ�����ɶ��ش𣬶����� 5xx��ʵ�ʣ�{_summary(response)}"
+        )
+        body = response.json() if isinstance(response.json(), dict) else {}
+        run = body.get("run")
+        assert isinstance(run, dict) and run, (
+            f"��������Ӧ���� `run`����11 ˵ outcome ������һ�㣩��ʵ�ʣ������ {sorted(body)[:10]}��"
+            f"{_summary(response)[:160]}"
+        )
+    
+        outcome = run.get("outcome")
+>       assert isinstance(outcome, dict) and outcome, (
+            f"������`run.outcome` ���� ��11 �Ļ����ɶ����壻ʵ�ʣ�run.outcome={outcome!r}��"
+            f"�� run.status={run.get('status')!r} / failure_reason={str(run.get('failure_reason'))[:60]!r} ���� "
+            "�������ȷʵʲô��û�ģ�û key��û������������ֻ����һ������ʱ��ǩ��"
+            "һ����û�仯Ҳûԭ��� 200�������û����Ͽ������Ǿ䡸ת�˰���ɶҲû������"
+        )
+E       AssertionError: ������`run.outcome` ���� ��11 �Ļ����ɶ����壻ʵ�ʣ�run.outcome=None���� run.status='SKIPPED_EXTERNAL_DEPENDENCY' / failure_reason='DeepSeek API key is not configured' ���� �������ȷʵʲô��û�ģ�û key��û������������ֻ����һ������ʱ��ǩ��һ����û�仯Ҳûԭ��� 200�������û����Ͽ������Ǿ䡸ת�˰���ɶҲû������
+E       assert (False)
+E        +  where False = isinstance(None, dict)
+
+tests\test_qoder_anywhere_gates.py:842: AssertionError
+_ test_g9a_the_instrument_actually_sees_write_transactions_and_provider_calls _
+
+    def test_g9a_the_instrument_actually_sees_write_transactions_and_provider_calls():
+        _reset_seed()  # һ��ȷ����д·����reset �� seed ���ɱ�
+        writes = _write_windows()
+        assert writes, (
+            "��������������֪д·��������ץ�� 1 ��д���񴰿ڣ����� G9b �ġ����ص�������û�⣩��"
+            f"ʵ�ʣ�д���� {len(writes)}��ȫ�����񴰿� {len(_windows)}"
+        )
+    
+>       with pytest.raises(Exception):  # noqa: BLE001 - ���ɽ�����Ԥ��ʧ�ܣ�ֻҪ���ڱ���¼
+             ^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE <class 'Exception'>
+
+tests\test_qoder_anywhere_lock_duration.py:207: Failed
+_____ test_g9b_provider_http_never_runs_inside_an_open_write_transaction ______
+
+    def test_g9b_provider_http_never_runs_inside_an_open_write_transaction():
+        """��6/��7: �̶� �� ���� �� ���� �� ��д�����������Ǿ�˳��Ĵ�����ʽ��"""
+        _reset_seed()
+        started = client.post(HYDRATIONS, json={"query": UNSEEN_COUNTY})
+        assert not (started.status_code == 404 and started.json().get("detail") == "Not Found"), (
+            f"������{HYDRATIONS} ��ʵ�֣���17E Ҫ���ľ�����������ʱ�ղ���д������ʵ�ʣ�{_summary(started)}"
+        )
+        assert started.status_code in (200, 202), f"���� 200/202 ������ʵ�ʣ�{_summary(started)}"
+        operation_id = started.json().get("operation_id")
+    
+        deadline = time.perf_counter() + 60.0
+        body: dict = {}
+        while time.perf_counter() < deadline:
+            poll = client.get(f"{HYDRATIONS}/{operation_id}")
+            assert poll.status_code == 200, f"���� GET ����̬ 200��ʵ�ʣ�{_summary(poll)}"
+            body = poll.json()
+            if body.get("terminal") is True or body.get("status") in {"COMPLETED", "FAILED", "UNAVAILABLE", "ABANDONED"}:
+                break
+            time.sleep(0.2)
+    
+        provider_calls = [c for c in _calls if c["host"] in LIVE_HOSTS]
+>       assert provider_calls, (
+            "���������ˮ������߹� provider������û�ص����Ǽٵġ�����ʲô��û������"
+            f"ʵ�ʣ�observed provider calls = 0������̬ {str(body)[:180]}"
+        )
+E       AssertionError: ���������ˮ������߹� provider������û�ص����Ǽٵġ�����ʲô��û������ʵ�ʣ�observed provider calls = 0������̬ {'operation_id': 'a615de3e-619e-4582-b870-a25e9137de8f', 'fingerprint': '2d373c471fa007e5612db8267aef8040', 'reused': False, 'status': 'UNAVAILABLE', 'recorded_status': 'UNAVAILABL
+E       assert []
+
+tests\test_qoder_anywhere_lock_duration.py:242: AssertionError
+_______ test_g14a_an_oversized_matrix_fails_closed_and_invents_no_facts _______
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x0000025E9F748D40>
+
+    def test_g14a_an_oversized_matrix_fails_closed_and_invents_no_facts(monkeypatch):
+        """N=11 ײ 400 ʱ�����Ѿ��������ǡ��������²��������ס�����˻��ɰ��ž���"""
+    
+        probe = MatrixProbe()
+        result = _capture(monkeypatch, probe, 11)
+        assert probe.matrix_requests, "SETUP ʧ�ܣ��� provider һ�ζ�û�����ã��������ǿ���"
+>       assert result["status"] == "FAILED", (
+            f"������Խ��ľ����� FAILED��NOT_CONFIGURED ˵�� live_valhalla_url û��������"
+            f"����������ʲô����ͨ������ʵ�ʣ�{result['status']}"
+        )
+E       AssertionError: ������Խ��ľ����� FAILED��NOT_CONFIGURED ˵�� live_valhalla_url û������������������ʲô����ͨ������ʵ�ʣ�CAPTURED
+E       assert 'CAPTURED' == 'FAILED'
+E         
+E         - FAILED
+E         + CAPTURED
+
+tests\test_qoder_anywhere_matrix_truth.py:374: AssertionError
+_______ test_g14c_the_verdict_must_not_depend_on_the_providers_wording ________
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x0000025E9BC8E810>
+
+    def test_g14c_the_verdict_must_not_depend_on_the_providers_wording(monkeypatch):
+        """���������ֲ��Ǿ��ӣ���һ���İ������� "locations" һ��ȥ�����ж�����һģһ����"""
+    
+        with_locations = MatrixProbe()
+        reworded = MatrixProbe(
+            error_body={"error_code": 150, "status_code": 400, "error": "�ꥯ�����Ȥ��󤭤����ޤ�"}
+        )
+        assert "locations" in json.dumps(with_locations.error_body)
+        assert "locations" not in json.dumps(reworded.error_body), "SETUP ʧ�ܣ������İ�û������ͬ"
+        first = _capture(monkeypatch, with_locations, 11)
+        second = _capture(monkeypatch, reworded, 11)
+        assert with_locations.matrix_requests and reworded.matrix_requests, "SETUP ʧ�ܣ�һ������û����"
+        assert [item["cells"] for item in with_locations.matrix_requests] == [
+            item["cells"] for item in reworded.matrix_requests
+        ], "SETUP ʧ�ܣ����η�������״��ͬ���Ƚ��޴ӳ���"
+        for key in ("status", "error_type", "supported_modes", "route_provenance", "time_basis"):
+>           assert first[key] == second[key], (
+                   ^^^^^^^^^^
+                f"����������ֻ�� cells ������ ���� provider ��һ�仰�ͻ�һ�����ۣ����ڰѿ������������İ���"
+                f"�ֶ� {key}��{first[key]!r} vs {second[key]!r}"
+            )
+E           KeyError: 'error_type'
+
+tests\test_qoder_anywhere_matrix_truth.py:465: KeyError
+___________ test_g8a_default_suite_contains_no_live_provider_calls ____________
+
+    def test_g8a_default_suite_contains_no_live_provider_calls():
+        """��17C: �����׼��ﲻ����������ĵ��á������� = ���ǻ��������ǳɾ�֤����"""
+        offenders = _live_call_offenders()
+>       assert not offenders, (
+            "������backend/tests/** ��û�ж� provider ��������ʵ���ã���17C��live ֻ���� "
+            "backend/live_checks/ �� opt-in smoke����ʵ�ʣ�" + " ; ".join(offenders)
+        )
+E       AssertionError: ������backend/tests/** ��û�ж� provider ��������ʵ���ã���17C��live ֻ���� backend/live_checks/ �� opt-in smoke����ʵ�ʣ�backend\tests\test_qoder_catalog_hydration.py:608: httpx.get("https://photon.komoot.io/api/?q=instrument-selftest", timeout=1.0) ; backend\tests\test_qoder_provider_identity.py:325: status, headers, body = transport.get("https://photon.komoot.io/api/", {"q": "x"})
+E       assert not ['backend\\tests\\test_qoder_catalog_hydration.py:608: httpx.get("https://photon.komoot.io/api/?q=instrument-selftest"...st_qoder_provider_identity.py:325: status, headers, body = transport.get("https://photon.komoot.io/api/", {"q": "x"})']
+
+tests\test_qoder_anywhere_provider_independence.py:70: AssertionError
+_ test_g10_every_normalised_place_carries_a_usable_coordinate_including_nodes _
+
+    def test_g10_every_normalised_place_carries_a_usable_coordinate_including_nodes():
+        """\xa717 \u6559\u8bad\u4e00\uff1averbosity \u4e0d\u5403 node \u5750\u6807 \u21d2 11/24 \u884c\u3001\u65e0\u62a5\u9519\uff0c\u5c31\u662f\u9759\u9ed8\u4e22\u6570\u636e\u3002"""
+        _require("POST /api/v1/catalog-hydrations", client.post(HYDRATIONS, json={"query": UNSEEN_COUNTY}))
+        # ������������֮����е�����ˮ�ϲ����ĵص㼯�ϱ����� kind �����ꡣ
+        listing = client.get(CAPABILITY, params={"query": UNSEEN_COUNTY})
+        _require("GET /api/v1/destinations/capability", listing)
+        body = listing.json()
+        places = body.get("places") or body.get("catalog") or []
+>       assert places, (
+            f"�������淶��Ŀ¼�������еص�ɲ飨B ʵ�� Overpass `out center` �᷵�� node/way/relation ���ࣩ��"
+            f"ʵ�ʣ��գ���Ӧ�� {sorted(body)[:12]}"
+        )
+E       AssertionError: �������淶��Ŀ¼�������еص�ɲ飨B ʵ�� Overpass `out center` �᷵�� node/way/relation ���ࣩ��ʵ�ʣ��գ���Ӧ�� ['candidates', 'canonical_destination_id', 'capability', 'catalog_schema_version', 'coverage', 'coverage_detail', 'destination_pending_key', 'destination_resolution', 'destination_state', 'fingerprint', 'hard_gaps', 'malformed_candidates']
+E       assert []
+
+tests\test_qoder_anywhere_provider_truth.py:78: AssertionError
+_____ test_a_live_failure_arrives_named_and_carries_the_stage_it_broke_at _____
+
+_providers = {}
+
+    def test_a_live_failure_arrives_named_and_carries_the_stage_it_broke_at(_providers) -> None:
+        """Clause ��: provider-shaped outcomes and our own bad request, all distinguishable.
+    
+        Asserted at the mapping seam so every shape is named, and again through the endpoint for
+        the ones that can be driven there, because a mapping no response can reach proves nothing.
+        """
+    
+        assert real_city.live_failure_reason(httpx.ConnectTimeout("t")) == "PROVIDER_TIMEOUT"
+        assert real_city.live_failure_reason(httpx.ReadError("x")) == "RESOLVER_UNREACHABLE"
+        assert real_city.live_failure_reason(_status_error(429)) == "PROVIDER_RATE_LIMITED"
+>       assert real_city.live_failure_reason(_status_error(500)) == "PROVIDER_BAD_RESPONSE"
+E       AssertionError: assert 'PROVIDER_SERVER_ERROR' == 'PROVIDER_BAD_RESPONSE'
+E         
+E         - PROVIDER_BAD_RESPONSE
+E         + PROVIDER_SERVER_ERROR
+
+tests\test_qoder_city_failure_reasons.py:196: AssertionError
+____________ test_G4_the_lock_wait_is_written_in_exactly_one_place ____________
+
+    def test_G4_the_lock_wait_is_written_in_exactly_one_place() -> None:
+        """G4 �о�2 / 0281 T-c ���������������ݣ�`DEADLINE_CONSTANT_NOT_SINGLE_SOURCE`�����뵱���졣
+    
+        ɨ���ǲ�ƷԴ��`app/**` �ﲻ���ٳ��ֵڶ������������ȴ����֡�
+        """
+    
+        offenders: dict[str, list[int]] = {}
+        others: dict[str, list[str]] = {}
+        for path in sorted((BACKEND_ROOT / "app").rglob("*.py")):
+            for i, line in enumerate(path.read_text(encoding="utf-8").splitlines(), 1):
+                if any(needle in line for needle in ("busy_timeout=30000", "busy_timeout = 30000",
+                                                     '"timeout": 30')):
+                    offenders.setdefault(str(path.relative_to(BACKEND_ROOT)), []).append(i)
+                elif "busy_timeout" in line:
+                    others.setdefault(str(path.relative_to(BACKEND_ROOT)), []).append(line.strip()[:58])
+        assert offenders == {}, f"a second inline copy of the request-path lock wait is back: {offenders}"
+        # �����ᵽ busy_timeout �ĵط��� worker �Լ��Ķ̵ȴ���500/1500/200 ms������̲�ͬ������������̵�
+>       assert sorted(Path(k).name for k in others) == [
+            "catalog_hydration_operations.py", "config.py", "session.py", "stay_generation_operations.py",
+            "write_deadline.py"], {k: v for k, v in others.items()}
+E       AssertionError: {'app\\catalog_hydration_operations.py': ['session.execute(text("PRAGMA busy_timeout = 500"))'], 'app\\core\\config.py...settings.write_busy_timeout_ms)', 'def busy_timeout_seconds() -> float:', 'return busy_timeout_ms() / 1000', ...], ...}
+E       assert ['catalog_hyd..._deadline.py'] == ['catalog_hyd..._deadline.py']
+E         
+E         At index 2 diff: 'main.py' != 'session.py'
+E         Left contains one more item: 'write_deadline.py'
+E         Use -v to get more diff
+
+tests\test_qoder_ord0296_write_deadline.py:212: AssertionError
+________________ test_guardian_status_lists_runs_newest_first _________________
+
+self = <sqlalchemy.engine.base.Connection object at 0x0000025EA2B9F230>
+dialect = <sqlalchemy.dialects.sqlite.pysqlite.SQLiteDialect_pysqlite object at 0x0000025EEB8D0F80>
+context = <sqlalchemy.dialects.sqlite.base.SQLiteExecutionContext object at 0x0000025E9F6F5820>
+statement = <sqlalchemy.dialects.sqlite.base.SQLiteCompiler object at 0x0000025EA0A69E50>
+parameters = [(0, '2026-09-26T08:12:29.464696+00:00', '22222222-2222-4222-8222-222222222222')]
+
+    def _exec_single_context(
+        self,
+        dialect: Dialect,
+        context: ExecutionContext,
+        statement: Union[str, Compiled],
+        parameters: Optional[_AnyMultiExecuteParams],
+    ) -> CursorResult[Any]:
+        """continue the _execute_context() method for a single DBAPI
+        cursor.execute() or cursor.executemany() call.
+    
+        """
+        if dialect.bind_typing is BindTyping.SETINPUTSIZES:
+            generic_setinputsizes = context._prepare_set_input_sizes()
+    
+            if generic_setinputsizes:
+                try:
+                    dialect.do_set_input_sizes(
+                        context.cursor, generic_setinputsizes, context
+                    )
+                except BaseException as e:
+                    self._handle_dbapi_exception(
+                        e, str(statement), parameters, None, context
+                    )
+    
+        cursor, str_statement, parameters = (
+            context.cursor,
+            context.statement,
+            context.parameters,
+        )
+    
+        effective_parameters: Optional[_AnyExecuteParams]
+    
+        if not context.executemany:
+            effective_parameters = parameters[0]
+        else:
+            effective_parameters = parameters
+    
+        if self._has_events or self.engine._has_events:
+            for fn in self.dispatch.before_cursor_execute:
+                str_statement, effective_parameters = fn(
+                    self,
+                    cursor,
+                    str_statement,
+                    effective_parameters,
+                    context,
+                    context.executemany,
+                )
+    
+        if self._echo:
+            self._log_info(str_statement)
+    
+            stats = context._get_cache_stats()
+    
+            if not self.engine.hide_parameters:
+                self._log_info(
+                    "[%s] %r",
+                    stats,
+                    sql_util._repr_params(
+                        effective_parameters,
+                        batches=10,
+                        ismulti=context.executemany,
+                    ),
+                )
+            else:
+                self._log_info(
+                    "[%s] [SQL parameters hidden due to hide_parameters=True]",
+                    stats,
+                )
+    
+        evt_handled: bool = False
+        try:
+            if context.execute_style is ExecuteStyle.EXECUTEMANY:
+                effective_parameters = cast(
+                    "_CoreMultiExecuteParams", effective_parameters
+                )
+                if self.dialect._has_events:
+                    for fn in self.dialect.dispatch.do_executemany:
+                        if fn(
+                            cursor,
+                            str_statement,
+                            effective_parameters,
+                            context,
+                        ):
+                            evt_handled = True
+                            break
+                if not evt_handled:
+                    self.dialect.do_executemany(
+                        cursor,
+                        str_statement,
+                        effective_parameters,
+                        context,
+                    )
+            elif not effective_parameters and context.no_parameters:
+                if self.dialect._has_events:
+                    for fn in self.dialect.dispatch.do_execute_no_params:
+                        if fn(cursor, str_statement, context):
+                            evt_handled = True
+                            break
+                if not evt_handled:
+                    self.dialect.do_execute_no_params(
+                        cursor, str_statement, context
+                    )
+            else:
+                effective_parameters = cast(
+                    "_CoreSingleExecuteParams", effective_parameters
+                )
+                if self.dialect._has_events:
+                    for fn in self.dialect.dispatch.do_execute:
+                        if fn(
+                            cursor,
+                            str_statement,
+                            effective_parameters,
+                            context,
+                        ):
+                            evt_handled = True
+                            break
+                if not evt_handled:
+>                   self.dialect.do_execute(
+                        cursor, str_statement, effective_parameters, context
+                    )
+
+..\..\CityNexus\.venv\Lib\site-packages\sqlalchemy\engine\base.py:1969: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = <sqlalchemy.dialects.sqlite.pysqlite.SQLiteDialect_pysqlite object at 0x0000025EEB8D0F80>
+cursor = <sqlite3.Cursor object at 0x0000025EA1E3AC40>
+statement = 'UPDATE autopilot_enrollments SET enabled=?, updated_at=? WHERE autopilot_enrollments.journey_id = ?'
+parameters = (0, '2026-09-26T08:12:29.464696+00:00', '22222222-2222-4222-8222-222222222222')
+context = <sqlalchemy.dialects.sqlite.base.SQLiteExecutionContext object at 0x0000025E9F6F5820>
+
+    def do_execute(self, cursor, statement, parameters, context=None):
+>       cursor.execute(statement, parameters)
+E       sqlite3.OperationalError: database is locked
+
+..\..\CityNexus\.venv\Lib\site-packages\sqlalchemy\engine\default.py:952: OperationalError
+
+The above exception was the direct cause of the following exception:
+
+    def test_guardian_status_lists_runs_newest_first() -> None:
+        """The panel may not guess which end of the list is current.
+    
+        Either this ordering is a contract, or the consumer has to sort.  It is a
+        contract, so it is pinned; the panel sorts anyway, which costs nothing and
+        stops a future re-sort from silently describing an old run.
+        """
+>       _, runs = _guardian_runs()
+                  ^^^^^^^^^^^^^^^^
+
+tests\test_sol_guardian_projection.py:90: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\test_sol_guardian_projection.py:79: in _guardian_runs
+    client.post(f"/api/v1/journeys/{journey_id}/guardian/autopilot/stop", json={})
+..\..\CityNexus\.venv\Lib\site-packages\starlette\testclient.py:556: in post
+    return super().post(
+..\..\CityNexus\.venv\Lib\site-packages\httpx\_client.py:1144: in post
+    return self.request(
+..\..\CityNexus\.venv\Lib\site-packages\starlette\testclient.py:455: in request
+    return super().request(
+..\..\CityNexus\.venv\Lib\site-packages\httpx\_client.py:825: in request
+    return self.send(request, auth=auth, follow_redirects=follow_redirects)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+..\..\CityNexus\.venv\Lib\site-packages\httpx\_client.py:914: in send
+    response = self._send_handling_auth(
+..\..\CityNexus\.venv\Lib\site-packages\httpx\_client.py:942: in _send_handling_auth
+    response = self._send_handling_redirects(
+..\..\CityNexus\.venv\Lib\site-packages\httpx\_client.py:979: in _send_handling_redirects
+    response = self._send_single_request(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+..\..\CityNexus\.venv\Lib\site-packages\httpx\_client.py:1014: in _send_single_request
+    response = transport.handle_request(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+..\..\CityNexus\.venv\Lib\site-packages\starlette\testclient.py:354: in handle_request
+    raise exc
+..\..\CityNexus\.venv\Lib\site-packages\starlette\testclient.py:351: in handle_request
+    portal.call(self.app, scope, receive, send)
+..\..\CityNexus\.venv\Lib\site-packages\anyio\from_thread.py:340: in call
+    return cast(T_Retval, self.start_task_soon(func, *args).result())
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\������\AppData\Roaming\uv\python\cpython-3.12.14-windows-x86_64-none\Lib\concurrent\futures\_base.py:456: in result
+    return self.__get_result()
+           ^^^^^^^^^^^^^^^^^^^
+C:\Users\������\AppData\Roaming\uv\python\cpython-3.12.14-windows-x86_64-none\Lib\concurrent\futures\_base.py:401: in __get_result
+    raise self._exception
+..\..\CityNexus\.venv\Lib\site-packages\anyio\from_thread.py:265: in _call_func
+    retval = await retval_or_awaitable
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+..\..\CityNexus\.venv\Lib\site-packages\fastapi\applications.py:1163: in __call__
+    await super().__call__(scope, receive, send)
+..\..\CityNexus\.venv\Lib\site-packages\starlette\applications.py:96: in __call__
+    await self.middleware_stack(scope, receive, send)
+..\..\CityNexus\.venv\Lib\site-packages\starlette\middleware\errors.py:186: in __call__
+    raise exc
+..\..\CityNexus\.venv\Lib\site-packages\starlette\middleware\errors.py:164: in __call__
+    await self.app(scope, receive, _send)
+..\..\CityNexus\.venv\Lib\site-packages\starlette\middleware\base.py:193: in __call__
+    response = await self.dispatch_func(request, call_next)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+app\main.py:676: in write_budget_per_request
+    return await call_next(request)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+..\..\CityNexus\.venv\Lib\site-packages\starlette\middleware\base.py:168: in call_next
+    raise app_exc from app_exc.__cause__ or app_exc.__context__
+..\..\CityNexus\.venv\Lib\site-packages\starlette\middleware\base.py:144: in coro
+    await self.app(scope, receive_or_disconnect, send_no_error)
+..\..\CityNexus\.venv\Lib\site-packages\starlette\middleware\base.py:193: in __call__
+    response = await self.dispatch_func(request, call_next)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+app\main.py:656: in error_receipt_per_request
+    return await call_next(request)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+..\..\CityNexus\.venv\Lib\site-packages\starlette\middleware\base.py:168: in call_next
+    raise app_exc from app_exc.__cause__ or app_exc.__context__
+..\..\CityNexus\.venv\Lib\site-packages\starlette\middleware\base.py:144: in coro
+    await self.app(scope, receive_or_disconnect, send_no_error)
+..\..\CityNexus\.venv\Lib\site-packages\starlette\middleware\exceptions.py:63: in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+..\..\CityNexus\.venv\Lib\site-packages\starlette\_exception_handler.py:59: in wrapped_app
+    response = await handler(conn, exc)  # type: ignore[arg-type]
+               ^^^^^^^^^^^^^^^^^^^^^^^^
+app\main.py:697: in write_contention_answer
+    raise exc
+..\..\CityNexus\.venv\Lib\site-packages\starlette\_exception_handler.py:42: in wrapped_app
+    await app(scope, receive, sender)
+..\..\CityNexus\.venv\Lib\site-packages\fastapi\middleware\asyncexitstack.py:18: in __call__
+    await self.app(scope, receive, send)
+..\..\CityNexus\.venv\Lib\site-packages\starlette\routing.py:670: in __call__
+    await self.middleware_stack(scope, receive, send)
+..\..\CityNexus\.venv\Lib\site-packages\fastapi\routing.py:2734: in app
+    await route.handle(scope, receive, send)
+..\..\CityNexus\.venv\Lib\site-packages\fastapi\routing.py:1281: in handle
+    await super().handle(scope, receive, send)
+..\..\CityNexus\.venv\Lib\site-packages\starlette\routing.py:280: in handle
+    await self.app(scope, receive, send)
+..\..\CityNexus\.venv\Lib\site-packages\fastapi\routing.py:158: in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+..\..\CityNexus\.venv\Lib\site-packages\starlette\_exception_handler.py:59: in wrapped_app
+    response = await handler(conn, exc)  # type: ignore[arg-type]
+               ^^^^^^^^^^^^^^^^^^^^^^^^
+app\main.py:697: in write_contention_answer
+    raise exc
+..\..\CityNexus\.venv\Lib\site-packages\starlette\_exception_handler.py:42: in wrapped_app
+    await app(scope, receive, sender)
+..\..\CityNexus\.venv\Lib\site-packages\fastapi\routing.py:144: in app
+    response = await f(request)
+               ^^^^^^^^^^^^^^^^
+..\..\CityNexus\.venv\Lib\site-packages\fastapi\routing.py:706: in app
+    raw_response = await run_endpoint_function(
+..\..\CityNexus\.venv\Lib\site-packages\fastapi\routing.py:354: in run_endpoint_function
+    return await run_in_threadpool(dependant.call, **values)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+..\..\CityNexus\.venv\Lib\site-packages\starlette\concurrency.py:34: in run_in_threadpool
+    return await anyio.to_thread.run_sync(func)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+..\..\CityNexus\.venv\Lib\site-packages\anyio\to_thread.py:65: in run_sync
+    return await get_async_backend().run_sync_in_worker_thread(
+..\..\CityNexus\.venv\Lib\site-packages\anyio\_backends\_asyncio.py:2706: in run_sync_in_worker_thread
+    return await future
+           ^^^^^^^^^^^^
+..\..\CityNexus\.venv\Lib\site-packages\anyio\_backends\_asyncio.py:1100: in run
+    result = context.run(func, *args)
+             ^^^^^^^^^^^^^^^^^^^^^^^^
+app\main.py:1492: in stop_guardian_autopilot
+    session.commit()
+..\..\CityNexus\.venv\Lib\site-packages\sqlalchemy\orm\session.py:2035: in commit
+    trans.commit(_to_root=True)
+<string>:2: in commit
+    ???
+..\..\CityNexus\.venv\Lib\site-packages\sqlalchemy\orm\state_changes.py:137: in _go
+    ret_value = fn(self, *arg, **kw)
+                ^^^^^^^^^^^^^^^^^^^^
+..\..\CityNexus\.venv\Lib\site-packages\sqlalchemy\orm\session.py:1316: in commit
+    self._prepare_impl()
+<string>:2: in _prepare_impl
+    ???
+..\..\CityNexus\.venv\Lib\site-packages\sqlalchemy\orm\state_changes.py:137: in _go
+    ret_value = fn(self, *arg, **kw)
+                ^^^^^^^^^^^^^^^^^^^^
+..\..\CityNexus\.venv\Lib\site-packages\sqlalchemy\orm\session.py:1290: in _prepare_impl
+    self.session.flush()
+..\..\CityNexus\.venv\Lib\site-packages\sqlalchemy\orm\session.py:4353: in flush
+    self._flush(objects)
+..\..\CityNexus\.venv\Lib\site-packages\sqlalchemy\orm\session.py:4488: in _flush
+    with util.safe_reraise():
+         ^^^^^^^^^^^^^^^^^^^
+..\..\CityNexus\.venv\Lib\site-packages\sqlalchemy\util\langhelpers.py:122: in __exit__
+    raise exc_value.with_traceback(exc_tb)
+..\..\CityNexus\.venv\Lib\site-packages\sqlalchemy\orm\session.py:4449: in _flush
+    flush_context.execute()
+..\..\CityNexus\.venv\Lib\site-packages\sqlalchemy\orm\unitofwork.py:465: in execute
+    rec.execute(self)
+..\..\CityNexus\.venv\Lib\site-packages\sqlalchemy\orm\unitofwork.py:641: in execute
+    util.preloaded.orm_persistence.save_obj(
+..\..\CityNexus\.venv\Lib\site-packages\sqlalchemy\orm\persistence.py:86: in save_obj
+    _emit_update_statements(
+..\..\CityNexus\.venv\Lib\site-packages\sqlalchemy\orm\persistence.py:913: in _emit_update_statements
+    c = connection.execute(
+..\..\CityNexus\.venv\Lib\site-packages\sqlalchemy\engine\base.py:1421: in execute
+    return meth(
+..\..\CityNexus\.venv\Lib\site-packages\sqlalchemy\sql\elements.py:526: in _execute_on_connection
+    return connection._execute_clauseelement(
+..\..\CityNexus\.venv\Lib\site-packages\sqlalchemy\engine\base.py:1643: in _execute_clauseelement
+    ret = self._execute_context(
+..\..\CityNexus\.venv\Lib\site-packages\sqlalchemy\engine\base.py:1848: in _execute_context
+    return self._exec_single_context(
+..\..\CityNexus\.venv\Lib\site-packages\sqlalchemy\engine\base.py:1988: in _exec_single_context
+    self._handle_dbapi_exception(
+..\..\CityNexus\.venv\Lib\site-packages\sqlalchemy\engine\base.py:2365: in _handle_dbapi_exception
+    raise sqlalchemy_exception.with_traceback(exc_info[2]) from e
+..\..\CityNexus\.venv\Lib\site-packages\sqlalchemy\engine\base.py:1969: in _exec_single_context
+    self.dialect.do_execute(
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = <sqlalchemy.dialects.sqlite.pysqlite.SQLiteDialect_pysqlite object at 0x0000025EEB8D0F80>
+cursor = <sqlite3.Cursor object at 0x0000025EA1E3AC40>
+statement = 'UPDATE autopilot_enrollments SET enabled=?, updated_at=? WHERE autopilot_enrollments.journey_id = ?'
+parameters = (0, '2026-09-26T08:12:29.464696+00:00', '22222222-2222-4222-8222-222222222222')
+context = <sqlalchemy.dialects.sqlite.base.SQLiteExecutionContext object at 0x0000025E9F6F5820>
+
+    def do_execute(self, cursor, statement, parameters, context=None):
+>       cursor.execute(statement, parameters)
+E       sqlalchemy.exc.OperationalError: (sqlite3.OperationalError) database is locked
+E       [SQL: UPDATE autopilot_enrollments SET enabled=?, updated_at=? WHERE autopilot_enrollments.journey_id = ?]
+E       [parameters: (0, '2026-09-26T08:12:29.464696+00:00', '22222222-2222-4222-8222-222222222222')]
+E       (Background on this error at: https://sqlalche.me/e/20/e3q8)
+
+..\..\CityNexus\.venv\Lib\site-packages\sqlalchemy\engine\default.py:952: OperationalError
+============================== warnings summary ===============================
+..\..\CityNexus\.venv\Lib\site-packages\fastapi\testclient.py:1
+  D:\moodle\CityNexus\.venv\Lib\site-packages\fastapi\testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.
+    from starlette.testclient import TestClient as TestClient  # noqa
+
+..\..\CityNexus\.venv\Lib\site-packages\starlette\testclient.py:53
+  D:\moodle\CityNexus\.venv\Lib\site-packages\starlette\testclient.py:53: DeprecationWarning: The anyio.abc.BlockingPortal alias is deprecated, use anyio.from_thread.BlockingPortal instead.
+    _PortalFactoryType = Callable[[], AbstractContextManager[anyio.abc.BlockingPortal]]
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ===========================
+FAILED tests/test_qoder_anywhere_gates.py::test_g5_an_ai_run_that_changed_must_say_which_it_was
+FAILED tests/test_qoder_anywhere_lock_duration.py::test_g9a_the_instrument_actually_sees_write_transactions_and_provider_calls
+FAILED tests/test_qoder_anywhere_lock_duration.py::test_g9b_provider_http_never_runs_inside_an_open_write_transaction
+FAILED tests/test_qoder_anywhere_matrix_truth.py::test_g14a_an_oversized_matrix_fails_closed_and_invents_no_facts
+FAILED tests/test_qoder_anywhere_matrix_truth.py::test_g14c_the_verdict_must_not_depend_on_the_providers_wording
+FAILED tests/test_qoder_anywhere_provider_independence.py::test_g8a_default_suite_contains_no_live_provider_calls
+FAILED tests/test_qoder_anywhere_provider_truth.py::test_g10_every_normalised_place_carries_a_usable_coordinate_including_nodes
+FAILED tests/test_qoder_city_failure_reasons.py::test_a_live_failure_arrives_named_and_carries_the_stage_it_broke_at
+FAILED tests/test_qoder_ord0296_write_deadline.py::test_G4_the_lock_wait_is_written_in_exactly_one_place
+FAILED tests/test_sol_guardian_projection.py::test_guardian_status_lists_runs_newest_first
+10 failed, 1332 passed, 15 skipped, 1 xfailed, 2 warnings in 168.82s (0:02:48)

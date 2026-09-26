@@ -1,0 +1,97 @@
+FF...x.F..                                                               [100%]
+================================== FAILURES ===================================
+_ test_g9a_the_instrument_actually_sees_write_transactions_and_provider_calls _
+
+    def test_g9a_the_instrument_actually_sees_write_transactions_and_provider_calls():
+        _reset_seed()  # һ��ȷ����д·����reset �� seed ���ɱ�
+        writes = _write_windows()
+        assert writes, (
+            "��������������֪д·��������ץ�� 1 ��д���񴰿ڣ����� G9b �ġ����ص�������û�⣩��"
+            f"ʵ�ʣ�д���� {len(writes)}��ȫ�����񴰿� {len(_windows)}"
+        )
+    
+>       with pytest.raises(Exception):  # noqa: BLE001 - ���ɽ�����Ԥ��ʧ�ܣ�ֻҪ���ڱ���¼
+             ^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE <class 'Exception'>
+
+tests\test_qoder_anywhere_lock_duration.py:207: Failed
+_____ test_g9b_provider_http_never_runs_inside_an_open_write_transaction ______
+
+    def test_g9b_provider_http_never_runs_inside_an_open_write_transaction():
+        """��6/��7: �̶� �� ���� �� ���� �� ��д�����������Ǿ�˳��Ĵ�����ʽ��"""
+        _reset_seed()
+        started = client.post(HYDRATIONS, json={"query": UNSEEN_COUNTY})
+        assert not (started.status_code == 404 and started.json().get("detail") == "Not Found"), (
+            f"������{HYDRATIONS} ��ʵ�֣���17E Ҫ���ľ�����������ʱ�ղ���д������ʵ�ʣ�{_summary(started)}"
+        )
+        assert started.status_code in (200, 202), f"���� 200/202 ������ʵ�ʣ�{_summary(started)}"
+        operation_id = started.json().get("operation_id")
+    
+        deadline = time.perf_counter() + 60.0
+        body: dict = {}
+        while time.perf_counter() < deadline:
+            poll = client.get(f"{HYDRATIONS}/{operation_id}")
+            assert poll.status_code == 200, f"���� GET ����̬ 200��ʵ�ʣ�{_summary(poll)}"
+            body = poll.json()
+            if body.get("terminal") is True or body.get("status") in {"COMPLETED", "FAILED", "UNAVAILABLE", "ABANDONED"}:
+                break
+            time.sleep(0.2)
+    
+        provider_calls = [c for c in _calls if c["host"] in LIVE_HOSTS]
+>       assert provider_calls, (
+            "���������ˮ������߹� provider������û�ص����Ǽٵġ�����ʲô��û������"
+            f"ʵ�ʣ�observed provider calls = 0������̬ {str(body)[:180]}"
+        )
+E       AssertionError: ���������ˮ������߹� provider������û�ص����Ǽٵġ�����ʲô��û������ʵ�ʣ�observed provider calls = 0������̬ {'operation_id': '63b30e4f-2719-4b32-b92d-9efe775b4c8a', 'fingerprint': '2d373c471fa007e5612db8267aef8040', 'reused': False, 'status': 'UNAVAILABLE', 'recorded_status': 'UNAVAILABL
+E       assert []
+
+tests\test_qoder_anywhere_lock_duration.py:242: AssertionError
+_ test_r3_an_empty_answer_proves_it_came_from_a_reply_and_not_from_an_outage __
+
+seeded = '11111111-1111-4111-8111-111111111111'
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001ECFFE52060>
+
+    def test_r3_an_empty_answer_proves_it_came_from_a_reply_and_not_from_an_outage(
+        seeded, monkeypatch
+    ) -> None:
+        """NO_MATCH ��������֤"���˴��ˡ������û��"�������Ǳ�д�ɵġ�"""
+    
+        _enable(monkeypatch)
+        _answer(monkeypatch, features=())
+        body = _capability(RAW_COUNTY)
+        assert body["destination_state"] == "NO_MATCH", body["destination_state"]
+        assert body["canonical_destination_id"] is None, body
+        assert body["pending_destination_label"] == RAW_COUNTY, body
+        cells = [
+            item
+            for item in (body.get("provider_status") or [])
+            if isinstance(item, dict) and item.get("stage") == "resolving_destination"
+        ]
+        assert len(cells) == 1 and cells[0]["status"] == "OK", cells
+        assert cells[0]["answered"] is True and cells[0]["attempts"][0]["http_status"] == 200, cells
+        a, b, job = _replay_semantics(RAW_COUNTY)
+        assert job["canonical_destination_id"] is None, job
+        assert job["pending_destination_label"] == RAW_COUNTY, job
+>       assert _audit(job).get("provider_attempts"), sorted(job["payload"])
+E       AssertionError: []
+E       assert None
+E        +  where None = <built-in method get of dict object at 0x000001ECFFDA6940>('provider_attempts')
+E        +    where <built-in method get of dict object at 0x000001ECFFDA6940> = {}.get
+E        +      where {} = _audit({'canonical_destination_id': None, 'destination_pending_key': 'pend-72031444-9869-4002-b78d-17defd2a59ba', 'fingerprint': 'fa257eb06835c315974769b090617cdc', 'outcome': None, ...})
+
+tests\test_qoder_ord197_four_class_receipt.py:472: AssertionError
+============================== warnings summary ===============================
+..\..\CityNexus\.venv\Lib\site-packages\fastapi\testclient.py:1
+  D:\moodle\CityNexus\.venv\Lib\site-packages\fastapi\testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.
+    from starlette.testclient import TestClient as TestClient  # noqa
+
+..\..\CityNexus\.venv\Lib\site-packages\starlette\testclient.py:53
+  D:\moodle\CityNexus\.venv\Lib\site-packages\starlette\testclient.py:53: DeprecationWarning: The anyio.abc.BlockingPortal alias is deprecated, use anyio.from_thread.BlockingPortal instead.
+    _PortalFactoryType = Callable[[], AbstractContextManager[anyio.abc.BlockingPortal]]
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ===========================
+FAILED tests/test_qoder_anywhere_lock_duration.py::test_g9a_the_instrument_actually_sees_write_transactions_and_provider_calls
+FAILED tests/test_qoder_anywhere_lock_duration.py::test_g9b_provider_http_never_runs_inside_an_open_write_transaction
+FAILED tests/test_qoder_ord197_four_class_receipt.py::test_r3_an_empty_answer_proves_it_came_from_a_reply_and_not_from_an_outage
+3 failed, 6 passed, 1 xfailed, 2 warnings in 5.03s

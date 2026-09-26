@@ -1,0 +1,282 @@
+FFFFFFFF..F                                                              [100%]
+================================== FAILURES ===================================
+________ test_a_trip_posted_without_a_stay_budget_stores_not_declared _________
+
+    def test_a_trip_posted_without_a_stay_budget_stores_not_declared() -> None:
+        journey_id = _journey(stay_budget=None)
+    
+>       stored = _stored_trip_context(journey_id)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\test_qoder_ord0355_honest_stay_budget.py:141: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+journey_id = '5414c26b-002e-4bee-baaf-1f0ca9f3b0ec'
+
+    def _stored_trip_context(journey_id: str) -> dict:
+        """Read the row back with plain SQLite: no ORM default can dress this up.
+    
+        Table `journey_trip_contexts`, columns `stay_budget_declared` and
+        `stay_budget_amount_minor`, keyed by `journey_id` = the trip the request created.
+        """
+    
+        from conftest import RESOLVED_TEST_DATABASE
+    
+        path = Path(RESOLVED_TEST_DATABASE.replace("sqlite:///", "", 1))
+        with sqlite3.connect(path) as connection:
+            connection.row_factory = sqlite3.Row
+            columns = [
+                str(row[1])
+                for row in connection.execute("PRAGMA table_info(journey_trip_contexts)").fetchall()
+            ]
+>           assert "stay_budget_declared" in columns, (
+                f"journey_trip_contexts stores {columns}: nothing in the row records whether a"
+                " lodging budget was declared"
+            )
+E           AssertionError: journey_trip_contexts stores ['journey_id', 'arrival_anchor_json', 'departure_anchor_json', 'party_size', 'occupancy_json', 'stay_budget_amount_minor', 'stay_budget_currency', 'created_at', 'updated_at']: nothing in the row records whether a lodging budget was declared
+E           assert 'stay_budget_declared' in ['journey_id', 'arrival_anchor_json', 'departure_anchor_json', 'party_size', 'occupancy_json', 'stay_budget_amount_minor', ...]
+
+tests\test_qoder_ord0355_honest_stay_budget.py:122: AssertionError
+__ test_a_declared_zero_is_stored_differently_from_a_trip_that_said_nothing ___
+
+    def test_a_declared_zero_is_stored_differently_from_a_trip_that_said_nothing() -> None:
+        """The required negative case: a real 0 must not become an absence.
+    
+        Both trips end up with `stay_budget_amount_minor == 0`.  Before ORD-0355 they were the
+        same row; now the one where the traveller actually typed zero declares itself as such.
+        """
+    
+        declared_zero = _journey(stay_budget={"amount_minor": 0, "currency": "CNY"})
+        never_asked = _journey(stay_budget=None)
+    
+>       first = _stored_trip_context(declared_zero)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\test_qoder_ord0355_honest_stay_budget.py:159: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+journey_id = '979f08bd-1398-4751-9b80-454a70b09434'
+
+    def _stored_trip_context(journey_id: str) -> dict:
+        """Read the row back with plain SQLite: no ORM default can dress this up.
+    
+        Table `journey_trip_contexts`, columns `stay_budget_declared` and
+        `stay_budget_amount_minor`, keyed by `journey_id` = the trip the request created.
+        """
+    
+        from conftest import RESOLVED_TEST_DATABASE
+    
+        path = Path(RESOLVED_TEST_DATABASE.replace("sqlite:///", "", 1))
+        with sqlite3.connect(path) as connection:
+            connection.row_factory = sqlite3.Row
+            columns = [
+                str(row[1])
+                for row in connection.execute("PRAGMA table_info(journey_trip_contexts)").fetchall()
+            ]
+>           assert "stay_budget_declared" in columns, (
+                f"journey_trip_contexts stores {columns}: nothing in the row records whether a"
+                " lodging budget was declared"
+            )
+E           AssertionError: journey_trip_contexts stores ['journey_id', 'arrival_anchor_json', 'departure_anchor_json', 'party_size', 'occupancy_json', 'stay_budget_amount_minor', 'stay_budget_currency', 'created_at', 'updated_at']: nothing in the row records whether a lodging budget was declared
+E           assert 'stay_budget_declared' in ['journey_id', 'arrival_anchor_json', 'departure_anchor_json', 'party_size', 'occupancy_json', 'stay_budget_amount_minor', ...]
+
+tests\test_qoder_ord0355_honest_stay_budget.py:122: AssertionError
+__ test_a_declared_amount_above_zero_is_stored_with_its_amount_and_its_flag ___
+
+    def test_a_declared_amount_above_zero_is_stored_with_its_amount_and_its_flag() -> None:
+        journey_id = _journey(stay_budget={"amount_minor": 30000, "currency": "CNY"})
+    
+>       stored = _stored_trip_context(journey_id)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\test_qoder_ord0355_honest_stay_budget.py:172: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+journey_id = '0b036230-8db9-43e7-958b-1dc1ff064de0'
+
+    def _stored_trip_context(journey_id: str) -> dict:
+        """Read the row back with plain SQLite: no ORM default can dress this up.
+    
+        Table `journey_trip_contexts`, columns `stay_budget_declared` and
+        `stay_budget_amount_minor`, keyed by `journey_id` = the trip the request created.
+        """
+    
+        from conftest import RESOLVED_TEST_DATABASE
+    
+        path = Path(RESOLVED_TEST_DATABASE.replace("sqlite:///", "", 1))
+        with sqlite3.connect(path) as connection:
+            connection.row_factory = sqlite3.Row
+            columns = [
+                str(row[1])
+                for row in connection.execute("PRAGMA table_info(journey_trip_contexts)").fetchall()
+            ]
+>           assert "stay_budget_declared" in columns, (
+                f"journey_trip_contexts stores {columns}: nothing in the row records whether a"
+                " lodging budget was declared"
+            )
+E           AssertionError: journey_trip_contexts stores ['journey_id', 'arrival_anchor_json', 'departure_anchor_json', 'party_size', 'occupancy_json', 'stay_budget_amount_minor', 'stay_budget_currency', 'created_at', 'updated_at']: nothing in the row records whether a lodging budget was declared
+E           assert 'stay_budget_declared' in ['journey_id', 'arrival_anchor_json', 'departure_anchor_json', 'party_size', 'occupancy_json', 'stay_budget_amount_minor', ...]
+
+tests\test_qoder_ord0355_honest_stay_budget.py:122: AssertionError
+__________ test_an_undeclared_budget_sends_no_invented_amount_minor ___________
+
+    def test_an_undeclared_budget_sends_no_invented_amount_minor() -> None:
+        journey_id = _journey(stay_budget=None)
+    
+        built = _built_trip_body(journey_id)
+    
+        # Asserted first, so an unmigrated tree fails on the fabrication itself rather than on a
+        # missing key: this is the number that went out as if the traveller had named it.
+>       assert built["amount_minor"] is None, built
+E       AssertionError: {'amount_minor': 0, 'currency': 'CNY'}
+E       assert 0 is None
+
+tests\test_qoder_ord0355_honest_stay_budget.py:199: AssertionError
+_ test_a_declared_zero_still_sends_zero_and_a_declared_amount_still_sends_it __
+
+    def test_a_declared_zero_still_sends_zero_and_a_declared_amount_still_sends_it() -> None:
+        declared_zero = _journey(stay_budget={"amount_minor": 0, "currency": "CNY"})
+        declared_amount = _journey(stay_budget={"amount_minor": 30000, "currency": "CNY"})
+    
+        zero_body = _built_trip_body(declared_zero)
+        amount_body = _built_trip_body(declared_amount)
+    
+>       assert zero_body == {"declared": True, "amount_minor": 0, "currency": "CNY"}, zero_body
+E       AssertionError: {'amount_minor': 0, 'currency': 'CNY'}
+E       assert {'amount_mino...rency': 'CNY'} == {'amount_mino...clared': True}
+E         
+E         Omitting 2 identical items, use -vv to show
+E         Right contains 1 more item:
+E         {'declared': True}
+E         Use -v to get more diff
+
+tests\test_qoder_ord0355_honest_stay_budget.py:214: AssertionError
+_ test_a_row_written_before_the_column_existed_keeps_the_amount_it_already_held _
+
+    def test_a_row_written_before_the_column_existed_keeps_the_amount_it_already_held() -> None:
+        """NULL means "never recorded", and must not be silently read as "the traveller said no".
+    
+        A legacy row may hold an amount somebody really typed (the V12 fixtures store 6000), so
+        folding unknown into not-declared would throw that money away and change a working trip.
+        """
+    
+        journey_id = _journey(stay_budget={"amount_minor": 6000, "currency": "CNY"})
+        with SessionLocal() as session:
+            row = session.get(JourneyTripContext, journey_id)
+            assert row is not None, journey_id
+            row.stay_budget_declared = None  # exactly what a pre-ORD-0355 row holds
+            session.commit()
+    
+        built = _built_trip_body(journey_id)
+    
+>       assert built["declared"] is None, built
+               ^^^^^^^^^^^^^^^^^
+E       KeyError: 'declared'
+
+tests\test_qoder_ord0355_honest_stay_budget.py:238: KeyError
+______ test_stay_budget_body_covers_all_three_states_from_the_row_alone _______
+
+    def test_stay_budget_body_covers_all_three_states_from_the_row_alone() -> None:
+        def context(declared, amount: int = 0) -> JourneyTripContext:
+            row = JourneyTripContext(journey_id="probe", stay_budget_amount_minor=amount)
+            row.stay_budget_declared = declared
+            row.stay_budget_currency = "CNY"
+            return row
+    
+>       assert stay_budget_body(context(False))["amount_minor"] is None
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\test_qoder_ord0355_honest_stay_budget.py:249: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+context = <app.db.models.JourneyTripContext object at 0x000001E97FD1E420>
+
+    def stay_budget_body(context):  # noqa: N802 - mirrors the production symbol name
+        """Resolved lazily so the R1/R3/R4 readings still run on an unmigrated tree.
+    
+        A module-level import of this name would turn the before-fix run into one collection
+        error, which proves nothing about which of the four requirements was unmet.
+        """
+    
+        from app import stay_mobility as module
+    
+>       return module.stay_budget_body(context)
+               ^^^^^^^^^^^^^^^^^^^^^^^
+E       AttributeError: module 'app.stay_mobility' has no attribute 'stay_budget_body'
+
+tests\test_qoder_ord0355_honest_stay_budget.py:51: AttributeError
+____ test_an_undeclared_budget_that_returns_nothing_is_not_blamed_on_money ____
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001E9742DEE40>
+
+    def test_an_undeclared_budget_that_returns_nothing_is_not_blamed_on_money(monkeypatch) -> None:
+        _no_hotel_survives(monkeypatch)
+        journey_id = _journey(stay_budget=None)
+    
+        generation = _generation(journey_id)
+    
+>       assert generation["outcome"] == "STAY_BUDGET_NOT_DECLARED", generation
+E       AssertionError: {'offers_from_provider': 2, 'options_ranked': 0, 'outcome': 'ALL_CANDIDATES_REJECTED', 'provider_attempts': [{'detail': '2', 'outcome': 'answered', 'step': 'provider'}], ...}
+E       assert 'ALL_CANDIDATES_REJECTED' == 'STAY_BUDGET_NOT_DECLARED'
+E         
+E         - STAY_BUDGET_NOT_DECLARED
+E         + ALL_CANDIDATES_REJECTED
+
+tests\test_qoder_ord0355_honest_stay_budget.py:296: AssertionError
+_ test_the_additive_migration_arrives_without_touching_the_existing_row_or_column _
+
+tmp_path = WindowsPath('C:/Users/������/AppData/Local/Temp/pytest-of-������/pytest-1305/test_the_additive_migration_ar0')
+
+    def test_the_additive_migration_arrives_without_touching_the_existing_row_or_column(
+        tmp_path,
+    ) -> None:
+        """A database built with the pre-ORD-0355 DDL, migrated, and read back.
+    
+        This store is a `tmp_path` file created by this test and deleted with it.  No shared
+        database was opened, and none of `_live.db` / `_preview.db` /
+        `D:/moodle/_qoder_preview_20260920` was named by any code path below.
+        """
+    
+        database = tmp_path / "_ord0355_legacy.db"
+        with sqlite3.connect(database) as connection:
+            connection.executescript(LEGACY_DDL)
+    
+        before = sqlite3.connect(database).execute(
+            "SELECT name FROM pragma_table_info('journey_trip_contexts')"
+        ).fetchall()
+        assert ("stay_budget_declared",) not in before, before
+    
+        engine = make_engine(f"sqlite:///{database.as_posix()}")
+        ensure_schema(engine)
+    
+        after = sqlite3.connect(database).execute(
+            "SELECT name, \"notnull\", dflt_value FROM pragma_table_info('journey_trip_contexts')"
+            " WHERE name IN ('stay_budget_declared','stay_budget_amount_minor')"
+        ).fetchall()
+        columns = {str(row[0]): row for row in after}
+>       assert "stay_budget_declared" in columns, sorted(columns)
+E       AssertionError: ['stay_budget_amount_minor']
+E       assert 'stay_budget_declared' in {'stay_budget_amount_minor': ('stay_budget_amount_minor', 1, '0')}
+
+tests\test_qoder_ord0355_honest_stay_budget.py:398: AssertionError
+============================== warnings summary ===============================
+..\..\CityNexus\.venv\Lib\site-packages\fastapi\testclient.py:1
+  D:\moodle\CityNexus\.venv\Lib\site-packages\fastapi\testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.
+    from starlette.testclient import TestClient as TestClient  # noqa
+
+..\..\CityNexus\.venv\Lib\site-packages\starlette\testclient.py:53
+  D:\moodle\CityNexus\.venv\Lib\site-packages\starlette\testclient.py:53: DeprecationWarning: The anyio.abc.BlockingPortal alias is deprecated, use anyio.from_thread.BlockingPortal instead.
+    _PortalFactoryType = Callable[[], AbstractContextManager[anyio.abc.BlockingPortal]]
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ===========================
+FAILED tests/test_qoder_ord0355_honest_stay_budget.py::test_a_trip_posted_without_a_stay_budget_stores_not_declared
+FAILED tests/test_qoder_ord0355_honest_stay_budget.py::test_a_declared_zero_is_stored_differently_from_a_trip_that_said_nothing
+FAILED tests/test_qoder_ord0355_honest_stay_budget.py::test_a_declared_amount_above_zero_is_stored_with_its_amount_and_its_flag
+FAILED tests/test_qoder_ord0355_honest_stay_budget.py::test_an_undeclared_budget_sends_no_invented_amount_minor
+FAILED tests/test_qoder_ord0355_honest_stay_budget.py::test_a_declared_zero_still_sends_zero_and_a_declared_amount_still_sends_it
+FAILED tests/test_qoder_ord0355_honest_stay_budget.py::test_a_row_written_before_the_column_existed_keeps_the_amount_it_already_held
+FAILED tests/test_qoder_ord0355_honest_stay_budget.py::test_stay_budget_body_covers_all_three_states_from_the_row_alone
+FAILED tests/test_qoder_ord0355_honest_stay_budget.py::test_an_undeclared_budget_that_returns_nothing_is_not_blamed_on_money
+FAILED tests/test_qoder_ord0355_honest_stay_budget.py::test_the_additive_migration_arrives_without_touching_the_existing_row_or_column
+9 failed, 2 passed, 2 warnings in 1.56s
