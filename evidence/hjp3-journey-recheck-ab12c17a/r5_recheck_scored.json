@@ -1,0 +1,322 @@
+{
+ "ran_at_local": "2026-09-26T09:24:07+0800",
+ "lane": "HJ-P3 aad2d1f2-4de9-406b-a5df-afa0e2bcea58",
+ "order": "one-pass recheck of the two baseline blocked items on the newest phone generation, readings only",
+ "measurement_scope": {
+  "scope": "① the step-3 确认创建 press on the deployed wizard; ② a journey id that does not exist",
+  "generation": "ab12c17a65450c2c3062c9232e27a26c4ae1b485",
+  "artifact": "the files this run wrote under D:\\moodle\\_hjp3_0323walk_0926 and the branch paths listed at the end of the ledger block",
+  "measurement_method": "own Chromium lane against the deployed chain at 127.0.0.1:4781 at 390x844@3 with touch and zh-CN; one journey walk, plus GET-only passes over the shell, the assets it names and one fresh-context navigation"
+ },
+ "generation_how_read": "git ls-remote of refs/heads/mirror/integration-frontend-apple-pass1 in this run, compared with the tip the commander named",
+ "mirror_tip_read_at_this_minute": "2d8b03b8c7734ea3b8521b80845e1b0bc1a07957",
+ "mirror_equals_the_tip_he_named": false,
+ "mirror_ref_drift_read_separately": {
+  "named": "ab12c17a65450c2c3062c9232e27a26c4ae1b485",
+  "tip_read_now": "2d8b03b8c7734ea3b8521b80845e1b0bc1a07957",
+  "commits_ahead_of_the_named_generation": 9,
+  "subjects": [
+   "ORD-0344: anchor the one number the agent rail shows, under its contract field name",
+   "ORD-0332: every rejection now carries a number the traveller can read back",
+   "ORD-0344-b: the server's attributed sentence moves into the technical-detail fold",
+   "ORD-0344-b: restore the elapsed_ms anchor the re-cut left behind",
+   "ORD-0346: 看支持的目的地 groups by what the server answered, not by a spelling table",
+   "ORD-0344-b: route the refusal's diagnosis through the channel that is actually on the line",
+   "ORD-0344: anchor the one number the agent rail shows, under its contract field name",
+   "ORD-0346: 看支持的目的地 groups by what the server answered, not by a spelling table",
+   "ORD-0344-b: route the refusal's diagnosis through the channel that is actually on the line"
+  ],
+  "frontend_files_in_the_drift": [
+   "frontend/e2e/qoder-ord0344b-sentence-move-keeps-attribution.spec.ts",
+   "frontend/e2e/qoder-ord0346-honest-destinations.spec.ts",
+   "frontend/playwright.ord0344b-S1.config.ts",
+   "frontend/playwright.ord0346-S4.config.ts",
+   "frontend/src/app/V8Experience.tsx",
+   "frontend/src/design-tokens.css",
+   "frontend/src/features/agent/CopilotDock.tsx",
+   "frontend/src/features/setup/JourneyTrialSetup.tsx",
+   "frontend/src/lib/errorReceipt.ts",
+   "frontend/tools/ord0332_receipt_readings.mjs"
+  ],
+  "touches_the_wizard_source": true,
+  "what_i_did_not_do": "I did not re-cut, rebuild or re-walk. Deploying a generation is the commander's action, and my one allowed pass on the named generation is already recorded",
+  "how_read": "git ls-remote of refs/heads/mirror/integration-frontend-apple-pass1 plus GET /compare/<named>...<now> over the GitHub API; 0 builds run, 0 requests to the phone chain, 0 refs written"
+ },
+ "commander_artefact_as_I_READ_IT": {
+  "blob_cited": "2fcaaf3e49295a06f3fe9c03db3f54239bf6e610",
+  "blob_recomputed_from_bytes_i_read": "2fcaaf3e49295a06f3fe9c03db3f54239bf6e610",
+  "cited_equals_recomputed": true,
+  "bytes": 1134,
+  "schema": "CNX_CMDR_RENDER_CHECK_V1",
+  "overall": "GREEN",
+  "surface_count": 1,
+  "surface_verdicts": [
+   "GREEN"
+  ],
+  "visible_text_chars_surface_0": 242,
+  "attr_values_scanned_surface_0": 33,
+  "leak_patterns_in_his_ruler": 17,
+  "wait_ms": 12000,
+  "dom_bytes_surface_0": 5398,
+  "png_bytes_surface_0": 25810,
+  "carries_asset_rows": false,
+  "names_a_generation": false,
+  "limit": "this artefact is a rendering check: it has no asset rows and no generation field, so it cannot pin bytes. My generation binding is the GET block below, which I took myself"
+ },
+ "faces_i_read_myself_over_get": {
+  "shell": {
+   "path": "/",
+   "http_status": 200,
+   "content_type": "text/html",
+   "server_header": null,
+   "bytes_received": 1200,
+   "sha256_of_bytes_i_received": "2fa8006b46187f1bc0a7ae4818b1260f42248712023fdcefb2027e36b258a887",
+   "elapsed_ms": 5
+  },
+  "assets_named_by_the_shell": {
+   "js": "/assets/index-D6IOFaQS.js",
+   "css": "/assets/index-I45CQek8.css",
+   "service_worker": "/v10-sw.js"
+  },
+  "rows": [
+   {
+    "path": "/assets/index-D6IOFaQS.js",
+    "http_status": 200,
+    "content_type": "text/javascript",
+    "server_header": null,
+    "bytes_received": 1260443,
+    "sha256_of_bytes_i_received": "937df73efc1c633980b2ad27e9a6b199ecdf0b088fdc95a2d095a016517320cd",
+    "elapsed_ms": 4
+   },
+   {
+    "path": "/assets/index-I45CQek8.css",
+    "http_status": 200,
+    "content_type": "text/css",
+    "server_header": null,
+    "bytes_received": 183897,
+    "sha256_of_bytes_i_received": "1b3632785212847b19ecbdbbdeb4fbae19ea9ce75060ed19739dc908c8f6a58f",
+    "elapsed_ms": 25
+   },
+   {
+    "path": "/v10-sw.js",
+    "http_status": 200,
+    "content_type": "text/javascript",
+    "server_header": null,
+    "bytes_received": 2055,
+    "sha256_of_bytes_i_received": "8100dd64a4c0d10741121429720eaa57c6827078e1996b6b504fd7c6b8b946ed",
+    "elapsed_ms": 1
+   }
+  ],
+  "js_row_equals_the_bytes_my_click_pass_hashed": true,
+  "js_row_equals_the_bytes_my_anchor_scan_hashed": true,
+  "requests_made": 4,
+  "clicks": 0,
+  "writes": 0
+ },
+ "anchor_literals_in_the_served_bundle": {
+  "trial-create-error": {
+   "occurrences": 2,
+   "first_byte_offset": 1013316
+  },
+  "trial-next-reason": {
+   "occurrences": 2,
+   "first_byte_offset": 1014533
+  },
+  "trial-sticky-cta": {
+   "occurrences": 3,
+   "first_byte_offset": 959415
+  }
+ },
+ "data_testid_attribute_literals_in_the_bundle": 419,
+ "failure_sentence_literals_in_the_served_bundle": {
+  "这一步没有成功，行程还没有创建。": {
+   "occurrences": 1,
+   "first_byte_offset": 1013536
+  },
+  "服务器拒绝了这一步（HTTP ": {
+   "occurrences": 1,
+   "first_byte_offset": 1121597
+  }
+ },
+ "bundle_side_scan_limit": "these are bundle-level literal counts. They show the anchor names and the two sentences ship inside this generation; they do NOT show when the anchor mounts in the DOM, which is the field my click pass dropped and which is marked NOT_PERSISTED in the scored file",
+ "baseline_items": {
+  "B1_confirm_create": {
+   "node_pressed_by_role": [
+    {
+     "text": "确认创建",
+     "disabled": false,
+     "top": 652,
+     "cls": "v8-primary-button"
+    }
+   ],
+   "press_result": "clicked",
+   "leg_now": {
+    "url": "/api/v1/travelers",
+    "m": "POST",
+    "status": 500,
+    "ct": "text/plain",
+    "req_bytes": 76
+   },
+   "leg_on_the_previous_generation": {
+    "url": "/api/v1/travelers",
+    "m": "POST",
+    "status": 500,
+    "ct": "text/plain",
+    "post_body_len": 76
+   },
+   "sentences_now": [
+    "服务器拒绝了这一步（HTTP 500）。你的行程没有因此改变，可以检查后重试。",
+    "这一步没有成功，行程还没有创建。"
+   ],
+   "sentences_then": [
+    "服务器拒绝了这一步（HTTP 500）。你的行程没有因此改变，可以检查后重试。",
+    "这一步没有成功，行程还没有创建。"
+   ],
+   "stored_journey_id_now": null,
+   "stored_journey_id_then": null,
+   "still_on_wizard_now": true,
+   "still_on_wizard_then": true,
+   "exception_text_after_opening_details": false,
+   "details_blocks_on_the_failure_screen": 0,
+   "attribute_hits_after_the_press": [
+    {
+     "tag": "div",
+     "attr": "data-testid",
+     "len": 18,
+     "sha256": "deferred_to_node_side"
+    }
+   ],
+   "screenshots": {
+    "review": {
+     "file": "RC_1_review.png",
+     "exists": true,
+     "bytes": 185501,
+     "sha256": "5773f5b1b4da3b5ae5297511af4c5fcab39391a345ae4c08aded3a10fa5fef6a"
+    },
+    "after": {
+     "file": "RC_2_after_confirm.png",
+     "exists": true,
+     "bytes": 185501,
+     "sha256": "5773f5b1b4da3b5ae5297511af4c5fcab39391a345ae4c08aded3a10fa5fef6a"
+    }
+   }
+  },
+  "B2_dead_journey_id": {
+   "fresh_context_reading": {
+    "url": "http://127.0.0.1:4781/journey/00000000-0000-0000-0000-000000000000",
+    "inner_len_before_opening_details": 168,
+    "text_content_len": 187,
+    "details_blocks": 2,
+    "inner_len_after_opening_details": 216,
+    "buttons": [
+     "EN",
+     "高级设置",
+     "目的地",
+     "抵达地点",
+     "离开地点",
+     "下一步",
+     "使用封存的演示行程",
+     ""
+    ],
+    "tail_lines": [
+     "高级设置",
+     "还需要填写：目的地、抵达地点、离开地点",
+     "下一步",
+     "使用封存的演示行程"
+    ],
+    "exception_text": false,
+    "attribute_hits": [],
+    "localStorage_keys": [
+     "citynexus.v8.trial_draft"
+    ],
+    "screenshot": {
+     "file": "RC_4_dead_id_fresh.png",
+     "exists": true,
+     "bytes": 157063,
+     "sha256": "63726e8337b5d682c0d7bb09ed4366feb41d7ffdc8d6f8eda854d04f11052739"
+    },
+    "legs": [
+     {
+      "url": "/api/v1/demo/scene",
+      "m": "GET",
+      "status": 500,
+      "ct": "text/plain"
+     }
+    ],
+    "clicks": 0,
+    "keystrokes": 0
+   },
+   "baseline_reading_previous_generation": {
+    "inner_len": 158,
+    "text_content_len": 177,
+    "details_blocks": "NOT_RECORDED_BY_THAT_PASS",
+    "exception_in_text": [],
+    "exception_in_attributes": []
+   },
+   "walked_context_reading_that_I_DO_NOT_USE_AS_THE_NUMBER": {
+    "inner_len": 287,
+    "carries_my_filled_wizard_values": true,
+    "why_it_is_confounded": "the journey was walked first in this same browser context, so the persisted trial draft was painted instead of a clean shell; the length difference against the baseline is mine, not the product's"
+   },
+   "text_lines_that_actually_differ_from_the_baseline": [
+    "-还需要填写：目的地",
+    "+还需要填写：目的地、抵达地点、离开地点"
+   ]
+  }
+ },
+ "new_on_this_generation": {
+  "anchors_seen_after_the_press": [
+   {
+    "tag": "div",
+    "attr": "data-testid",
+    "len": 18,
+    "sha256": "deferred_to_node_side"
+   }
+  ],
+  "anchor_names_that_ship_in_the_served_bundle": [
+   "trial-create-error",
+   "trial-next-reason",
+   "trial-sticky-cta"
+  ],
+  "anchors_seen_before_the_press": "NOT_PERSISTED - computed by the click pass and dropped from its output file; the follow-up DOM probe printed to console only, so this field has no bytes to re-hash",
+  "details_blocks_on_the_failure_screen": 0,
+  "details_blocks_on_a_clean_shell": 2,
+  "how_the_anchor_names_were_made_durable": "read-only literal search over the exact asset bytes the shell names, with byte offsets"
+ },
+ "instrument_faults_disclosed": [
+  {
+   "fault": "my single allowed walk painted 287 characters at /journey/<dead id> and I nearly reported that as a change",
+   "signal_that_caught_it": "the text carried 天津站 and CNY 3000, which only my own typing put there, and the baseline file shows 158 from a context that never filled the form",
+   "what_i_did": "a fresh-context navigation instrument was added and the confounded number is kept, labelled, and not used as the reading"
+  },
+  {
+   "fault": "the walk computed the pre-press attribute scan and then dropped that field from its output, and the follow-up DOM probe printed to console without writing bytes",
+   "signal_that_caught_it": "the only durable attribute record in the raw file is the post-press one, whose value hash is the placeholder string deferred_to_node_side",
+   "what_i_did": "substituted a GET-only bundle scan that names the anchor literals and their byte offsets in the served asset, and marked the DOM pre-press field NOT_PERSISTED instead of guessing it"
+  },
+  {
+   "fault": "my exposure word-list is case-insensitive, so it flags the anchor name trial-create-error for containing the word error",
+   "signal_that_caught_it": "the hit's attribute is data-testid, a DOM contract hook, and its value has no exception text; the commander's own ruler reports 0 hits in attributes on the shell with 17 leak patterns",
+   "what_i_did": "reported both readings side by side and left the wording of Q71 to the arbiter rather than grading my own regex"
+  }
+ ],
+ "boundaries": "one journey walk on this generation as instructed; every other pass here is GET-only or a single navigation with 0 clicks and 0 keystrokes; 0 product bytes changed; 0 writes to the authoritative line; no ref pushed that is not mine; no demo/reset; _live.db and _preview.db never opened; no credentials printed; the tunnel and :4782 untouched",
+ "judgments": {
+  "his_cited_blob_resolves_to_the_bytes_i_read": true,
+  "his_artefact_carries_neither_asset_rows_nor_a_generation_field": true,
+  "the_mirror_tip_still_is_the_generation_he_named": false,
+  "the_mirror_has_moved_past_the_generation_i_was_told_to_use": true,
+  "the_pending_commits_reach_the_wizard_source": true,
+  "the_shell_serves_the_asset_he_named": true,
+  "my_two_independent_gets_of_the_js_asset_agree_with_my_click_pass": true,
+  "B1_press_still_ends_without_a_journey": true,
+  "B1_leg_shape_unchanged_from_the_baseline": true,
+  "B1_sentences_word_for_word_unchanged": true,
+  "B2_clean_shell_still_shows_no_journey_and_no_message_about_the_id": true,
+  "B2_shell_text_differs_from_the_baseline_by_exactly_one_line": true,
+  "B2_my_walked_number_was_confounded_by_my_own_context": true,
+  "nothing_reached_either_screen_as_exception_text": true,
+  "the_failure_screen_that_quotes_a_status_code_carries_no_detail_block": true
+ },
+ "judgments_note": "readings only; grading belongs to E. Each key above is a computation over the fields it names, and the baseline it is compared against is the stored previous-generation file, not my recollection"
+}
