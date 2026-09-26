@@ -16588,6 +16588,17 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### ORD-0342 → 红队 E `d2305848` 交（ORD-0338 甲复签 = ALL_MET · 2026-09-26 11:1x+08）
+
+**派生件**：`evidence/ord0342-0338jia-resign-d2305848/ord0342_derived_d2305848.json` blob `4ad6d272aa80f8523a5c09a0700a6d4de3d5f941`（4,120 B，树回验相符）。总线帖 `5842582789`。
+**四格（源 = D 的 `evidence/ord0338-wizard-gap-D/ord0338_fix_jia_r2.json` = `50df1b34adde8384f04f03b5f350e1e6641c10da` 与 `ord0338_jia_suite_rows_r2.json` = `bb4528e50ef36cd45dedd6b535b33315bdaf5d3e`，pull 后 sha1 全等）**：① 带高移动 229px→17px（上界 60px；229 的读数与上界都在件 `ord0338_jia_candidate_N1-band-bound__run388490.json` = `7cba8cd64cfbefc92f62b3e5d546cd5d6f57911c` 内的 band.height/band_bound_px）/桌面 93px→17px（渲染后文档量），computed padding 0、CTA static、section grid；牙齿双向（N7 装回 padding→带高回 229px，读数在件 `ord0338_jia_candidate_N7-arm-old-padding-back__run388490.json` = `a80ba9820e7629552608beaf0980f3f1ec5c7bb6` 内 band 字段；N6 注入 sticky→hitCount 0→1、disjoint 翻转）。② 新门 A（13 枚节点，件 `ord0338_instrument_jia__qoder-ord0338-wizard-gap-clearance.spec.ts` = `9d14da49…`）候选全绿；同把门在尖导出树 7 红 3 绿（逐枚读数自 `ord0338_fix_jia_r2.json` = `50df1b34adde8384f04f03b5f350e1e6641c10da` 的 runs.gate_on_tip_export.rows；3 绿=N5/D3 条与球不相交，两树都成立）。③ 门 B 按 Q73 重推（三形状、scrolled>0 降前件读数，件 `ord0338_instrument_jia__qoder-wizard-advanced-is-tappable.spec.ts` = `bdf75ffa…`）候选全绿；ord0264 臂退回覆盖层当场红=门有牙。④ 回归射程：候选红而尖绿 0 枚（引入 0 红，计数自 `ord0338_jia_suite_rows_r2.json` = `bb4528e50ef36cd45dedd6b535b33315bdaf5d3e` 的两树逐枚行）；3 枚同红先前即红；尖红 7 枚全是新门 A 自己；整套 294 枚那一跑只作观测（rows 件 r2，r1 因 ANSI 解析毛病由 r2 取代、r1 不改不删）。
+**D 三件自报**（假重叠收紧/viewport 错标被 N7 逮出/滚轮打错格）按"量具自错自纠"记档，superseded 件保留不删。
+**落地**：候选 4 笔在 `agent/d-e345b9d6-ord0338` 本地枝未推——落不落是号令者的动作。
+**边界**：0 改产品字节、0 推 ref、0 demo/reset、凭据 0 打印、新路径 0 覆盖。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### SESSION=e345b9d6 @2026-09-26 10:38+08 —— **ORD-0338 第三块（Q73 裁的「甲」做完了）：CTA 现在是布局行，三处 padding hack 一起删，移动那段空白 17px、桌面 17px；同一笔里 ord0261/ord0264 按承诺重推（三形状，`scrolled > 0` 降级成读数）；候选上 13 枚节点全绿（A 10 + B 3），同一把 A 在尖上 7 红 3 绿；候选 1a779b69… 落本地枝未推，承诺改动请 E 复签**
 
 代次：现读尖 commit=`2d8b03b8c7734ea3b8521b80845e1b0bc1a07957`（`ls-remote` → `fetch` → 复读一致），尖那枚是「ORD-0344-b: route the refusal's diagnosis th…」。这单我开工时尖还是 `e9a392db…`，中途线又进了 11 笔（ORD-0332/0344/0346 等，其中 2 枚与我改的文件同名：`frontend/src/design-tokens.css`、`frontend/src/features/setup/JourneyTrialSetup.tsx`），所以我把 `agent/d-e345b9d6-ord0338` 从 `9b84a5fe…` 快进到 `e9a392db…`、落甲，再 rebase 到现尖 `2d8b03b8…` 上重验一遍（`git merge-tree --write-tree` 只读预测＝无冲突；rebase 后两把门与全套件都重跑，见第四、五段）。现尖之上 `4` 笔：`1a779b69…`；`68bd1a31…`；`7e2bdba7…`；`4a0b4128…`（本地枝，未推任何 ref）。我 ORD-0325 那枚 `c1bea4c20ea8cd5f1cc5c9d87053c005b2a24400` 仍是现尖祖先 （`merge-base --is-ancestor` = `True`）。
