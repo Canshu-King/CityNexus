@@ -1,0 +1,124 @@
+{
+ "schema": "CNX_CMDR_LANDING_PREFLIGHT_V1",
+ "lane": "commander 494abfd7",
+ "at_local": "2026-09-28T01:20:01+0800",
+ "mode": "LAND",
+ "authoritative_line": "mirror/integration-frontend-apple-pass1",
+ "tip_re_read_from_github_before": "5899829c3ebaed9e582c92a0790cf809f113da6b",
+ "candidate_ref": "refs/heads/cmdr/land-ord0366-recut",
+ "candidate_tip": "c215342802e7acc5073624555bb46fefeae336a0",
+ "genealogy": {
+  "ff_possible_rc": 0,
+  "ff_possible": true,
+  "merge_base": "5899829c3ebaed9e582c92a0790cf809f113da6b",
+  "line_only_commits": 0,
+  "candidate_only_commits": 7
+ },
+ "file_sets": {
+  "line_side_since_base": [],
+  "candidate_side_since_base": [
+   "frontend/e2e/qoder-ord0366-share-link-one-tap.spec.ts",
+   "frontend/src/app/V8Experience.tsx",
+   "frontend/src/design-tokens.css",
+   "frontend/src/features/inbox/JourneyLinkAction.tsx"
+  ],
+  "intersection": [],
+  "product_introduced_by_candidate": [
+   "frontend/src/app/V8Experience.tsx",
+   "frontend/src/design-tokens.css",
+   "frontend/src/features/inbox/JourneyLinkAction.tsx"
+  ]
+ },
+ "merge_tree": {
+  "exit": 0,
+  "first_line": "bba4d64c67b6ef05d43c899dd763447aa7a4ca87",
+  "conflict_reported": false,
+  "stderr_head": ""
+ },
+ "gate_run": {
+  "requested": [],
+  "collect_exit": null,
+  "collected": null,
+  "test_exit": null,
+  "summary": null,
+  "export": "D:/moodle/_qoder_cmdr_ref_20260921/snap_preflight_011935",
+  "blob_equality": [
+   {
+    "path": "frontend/e2e/qoder-ord0366-share-link-one-tap.spec.ts",
+    "candidate_blob": "042d0474092f3f1a538569b38d8e4a4ff5a167e7",
+    "export_blob": "042d0474092f3f1a538569b38d8e4a4ff5a167e7",
+    "equal": true
+   },
+   {
+    "path": "frontend/src/app/V8Experience.tsx",
+    "candidate_blob": "0278ae8541d37a8fd0314c2557eedab2258ef54b",
+    "export_blob": "0278ae8541d37a8fd0314c2557eedab2258ef54b",
+    "equal": true
+   },
+   {
+    "path": "frontend/src/design-tokens.css",
+    "candidate_blob": "11d4403325c0dd07f6f69d16b0d72dd47d49f9d9",
+    "export_blob": "11d4403325c0dd07f6f69d16b0d72dd47d49f9d9",
+    "equal": true
+   },
+   {
+    "path": "frontend/src/features/inbox/JourneyLinkAction.tsx",
+    "candidate_blob": "cb9e2525c090cd01cb1c31e00bdb5bafbb101301",
+    "export_blob": "cb9e2525c090cd01cb1c31e00bdb5bafbb101301",
+    "equal": true
+   }
+  ],
+  "whole_suite": {
+   "collect_exit": 0,
+   "collected": 1393,
+   "interrupted": false,
+   "error_lines": [
+    "tests/test_qoder_ord0332_error_receipt.py::test_R7_the_envelope_keeps_every_field_it_already_had",
+    "tests/test_qoder_ord0332_error_receipt.py::test_R8_the_seed_is_read_off_the_real_request_not_just_the_dataclass",
+    "tests/test_solver_runtime_policy.py::test_unexpected_solver_programming_error_is_not_silently_hidden"
+   ],
+   "tail": [
+    "    _PortalFactoryType = Callable[[], AbstractContextManager[anyio.abc.BlockingPortal]]",
+    "-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html",
+    "1393 tests collected in 7.24s"
+   ],
+   "cmd": "D:/moodle/CityNexus/.venv/Scripts/python.exe -m pytest --collect-only -q tests  (cwd=<export>/backend, PYTHONPATH=<export>)"
+  },
+  "interpreter": "Python 3.12.14 (main, Aug 25 2026, 14:01:42) [MSC v.1944 64 bit (AMD64)]",
+  "exposure": {
+   "ruler_blob": "d3f66ce9fecd0790981a4fcdeb5e36b1c0fd10f2",
+   "ruler_blob_computed": null,
+   "ruler_file": "ui_exposure_taint_ast_r7b.cjs",
+   "candidate_files_in_view": 3,
+   "tip_cells": 11,
+   "cand_cells": 11,
+   "growth_by_file_and_rule": {},
+   "unpaired_added": [],
+   "added_line_exact": [],
+   "shifted_only": false,
+   "removed_count": 0,
+   "removed": [],
+   "disclosed_slip": "a same-file, same-rule relocation with equal counts reads as a shift; the AST ruler has no cell identity"
+  }
+ },
+ "problems": [],
+ "verdict": "READY_TO_LAND",
+ "landing": {
+  "http": 200,
+  "response_head": "{'ref': 'refs/heads/mirror/integration-frontend-apple-pass1', 'node_id': 'REF_kwDOUhlJJ9oAMnJlZnMvaGVhZHMvbWlycm9yL2ludGVncmF0aW9uLWZyb250ZW5kLWFwcGxlLXBhc3Mx', 'url': 'https://api.github.com/repos/Ca",
+  "tip_after": "c215342802e7acc5073624555bb46fefeae336a0",
+  "branches_route": "c215342802e7acc5073624555bb46fefeae336a0",
+  "both_routes_agree": true,
+  "landed": true
+ },
+ "discipline": {
+  "evidence_paths_overwritten": 0,
+  "databases_opened": 0,
+  "surfaces_started_or_stopped": 0,
+  "credential_values_printed": 0,
+  "candidate_refs_pushed_by_commander": 0
+ },
+ "claim_kind": "git_and_pytest_determined",
+ "claimed_result": null,
+ "derived_result": null
+}
