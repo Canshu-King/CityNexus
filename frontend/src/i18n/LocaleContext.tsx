@@ -677,6 +677,10 @@ const en: Dict = {
   "studio.v12Sub": "Reorder ordinary activities against the same frozen mobility matrix. Protected anchors stay in place.",
   "studio.sameEvidence": "same evidence",
   "studio.evidencePending": "evidence pending",
+  /* ORD-0370: after t("studio.frozenEvidence") the word "evidence" is already on screen, so the
+     snapshot-state slot gets its own key rather than borrowing that one and saying it twice.
+     The English value is the word this row printed before, byte for byte. */
+  "studio.snapshotPending": "pending",
   "studio.draftDiffers": "Draft differs from active plan",
   "studio.noDraft": "No draft changes",
   "studio.lockedLegend": "locked/protected positions never move",
@@ -1389,6 +1393,7 @@ const zhCN: Dict = {
   "studio.v12Sub": "在相同的冻结出行矩阵上重排普通活动。受保护锚点保持不动。",
   "studio.sameEvidence": "相同证据",
   "studio.evidencePending": "证据待定",
+  "studio.snapshotPending": "待定",
   "studio.draftDiffers": "草稿与活跃方案不同",
   "studio.noDraft": "无草稿变更",
   "studio.lockedLegend": "锁定/受保护位置为确定性",

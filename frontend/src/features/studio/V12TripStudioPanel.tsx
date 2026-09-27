@@ -88,7 +88,7 @@ export function V12TripStudioPanel({ journeyId, plan, onAccepted }: Props) {
           {!preview.can_accept && <p className="v12-studio-error"><AlertTriangle size={14} /> {String((preview.deterministic_gate as { failures?: string[] }).failures?.join(", ") ?? t("studio.gateFailed"))}</p>}
           {preview.can_accept && <p className="v12-studio-success"><CheckCircle2 size={14} /> {t("studio.readyNext")}</p>}
           <small className="v8-muted" data-testid="v13-frozen-evidence-summary">
-            {t("studio.frozenEvidence")} {preview.evidence_snapshot_id ?? "pending"} · cost Δ {String((preview.impact as { cost_delta_minor?: number }).cost_delta_minor ?? 0)} · time Δ {String((preview.impact as { time_delta_min?: number }).time_delta_min ?? 0)} min
+            {t("studio.frozenEvidence")} {preview.evidence_snapshot_id ?? t("studio.snapshotPending")} · cost Δ {String((preview.impact as { cost_delta_minor?: number }).cost_delta_minor ?? 0)} · time Δ {String((preview.impact as { time_delta_min?: number }).time_delta_min ?? 0)} min
           </small>
         </div>
       )}
