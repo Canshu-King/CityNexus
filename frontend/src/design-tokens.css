@@ -822,6 +822,12 @@ button[data-testid^="mode-"],
 @media (max-width: 680px) {
   .v8-hub-actions .v8-quiet-button { min-height: var(--cn-touch-min); }
 }
+/* ORD-0366: the share entry joins this row as its fourth quiet item. It arrives wrapped in its own
+   element because it also owns the feedback line, so it is laid out as one inline piece. A middot
+   separator was tried first and rejected by looking at the phone-width screenshot: at 390px the row
+   already wraps, so the separator landed alone at the start of the second line and read as a stray
+   bullet rather than as part of the list. */
+.v8-hub-actions .journey-link-action { display: inline-flex; align-items: center; gap: 8px; }
 /* A border-left separator looked wrong here: these buttons inherit a
    border-radius, so the 1px edge drew an arc. A typographic middot keeps the
    row quiet without painting a box. */

@@ -181,6 +181,10 @@ test("I1_every_named_node_on_today_is_struck_at_its_own_centre — Today 屏上�
   ).toBeVisible({ timeout: 30_000 });
   const sweep = await sweepLabel(page);
   readings[arm] = { ...sweep, journey_id: id };
+  await page.screenshot({ path: evidencePath(`ord0366/${RUN}__I1_today_pose.png`) });
+  /* A reachability claim that never looked at the rendering can be satisfied by a control that is
+     technically struck and visually buried, so the pose is kept as an artefact next to the numbers. */
+  await page.screenshot({ path: evidencePath(`ord0366/${RUN}__I1_today_pose.png`) });
   expect(sweep.matches.length, node(arm, `no node on Today carries the label 「${LABEL}」 -- the entry is not reachable from this screen`)).toBeGreaterThan(0);
   expect(sweep.zero_size, node(arm, `a same-named node has no size (${JSON.stringify(sweep.matches.filter((m) => m.w <= 0 || m.h <= 0))}) -- it sits in the tree where a finger cannot go`)).toBe(0);
   expect(sweep.unhit, node(arm, `a same-named node did not answer elementFromPoint at its own centre (${JSON.stringify(sweep.matches.filter((m) => !m.hit_self))})`)).toBe(0);
