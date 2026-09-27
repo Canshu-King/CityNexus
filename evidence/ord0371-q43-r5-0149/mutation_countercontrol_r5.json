@@ -1,0 +1,132 @@
+{
+ "ruler": "Q43_r5",
+ "control": {
+  "variant": "CONTROL (unmutated)",
+  "caught_by": [],
+  "selftest_exit": 0,
+  "arms": 52
+ },
+ "variants": [
+  {
+   "variant": "block_level_receipt_again",
+   "caught_by": [
+    "class_dimension_far_from_the_receipt_is_a_claim",
+    "class_discipline_zero_far_from_the_receipt",
+    "fire_DIMENSION_receipt_out_of_range",
+    "fire_DISCIPLINE_ZERO_receipt_out_of_range"
+   ],
+   "selftest_exit": 6,
+   "arms_total": 52
+  },
+  {
+   "variant": "status_word_anywhere_in_40_again",
+   "caught_by": [
+    "class_status_word_21_chars_away_is_not",
+    "class_status_word_adjacent_is_a_status",
+    "determinism_status_with_adjacent_word",
+    "fire_HTTP_STATUS_word_not_adjacent"
+   ],
+   "selftest_exit": 6,
+   "arms_total": 52
+  },
+  {
+   "variant": "no_status_word_after_the_number",
+   "caught_by": [
+    "class_status_word_adjacent_is_a_status",
+    "determinism_status_with_adjacent_word"
+   ],
+   "selftest_exit": 6,
+   "arms_total": 52
+  },
+  {
+   "variant": "count_word_read_as_a_dimension",
+   "caught_by": [
+    "class_count_word_is_never_a_dimension",
+    "class_discipline_zero_beside_a_receipt",
+    "class_nonzero_beside_a_discipline_noun",
+    "class_product_noun_zero_beside_a_receipt",
+    "exempt_DISCIPLINE_ZERO_receipt_beside"
+   ],
+   "selftest_exit": 6,
+   "arms_total": 52
+  },
+  {
+   "variant": "no_address_octet_rule",
+   "caught_by": [
+    "class_octet_of_a_dotted_address",
+    "exempt_ADDRESS_PART_octet"
+   ],
+   "selftest_exit": 6,
+   "arms_total": 52
+  },
+  {
+   "variant": "no_occurrence_dedupe",
+   "caught_by": [
+    "class_one_number_is_one_occurrence",
+    "r5_one_number_is_one_claim_and_one_finding"
+   ],
+   "selftest_exit": 6,
+   "arms_total": 52
+  },
+  {
+   "variant": "narrow_extension_list_again",
+   "caught_by": [
+    "class_line_number_after_a_path",
+    "exempt_MJS_path_line_coordinate"
+   ],
+   "selftest_exit": 6,
+   "arms_total": 52
+  },
+  {
+   "variant": "line_ref_looks_back_only",
+   "caught_by": [
+    "class_line_number_after_a_path",
+    "exempt_MJS_path_line_coordinate"
+   ],
+   "selftest_exit": 6,
+   "arms_total": 52
+  },
+  {
+   "variant": "no_host_port_rule",
+   "caught_by": [
+    "class_port_after_a_host",
+    "exempt_PORT_host_port"
+   ],
+   "selftest_exit": 6,
+   "arms_total": 52
+  },
+  {
+   "variant": "no_identifier_boundary_rule",
+   "caught_by": [
+    "class_digits_glued_inside_a_name",
+    "exempt_IDENTIFIER_bundled_in_a_name"
+   ],
+   "selftest_exit": 6,
+   "arms_total": 52
+  },
+  {
+   "variant": "advisory_channel_blinded",
+   "caught_by": [
+    "advisory_line_ref_only_vouch"
+   ],
+   "selftest_exit": 6,
+   "arms_total": 52
+  }
+ ],
+ "checks": {
+  "control_passes": true,
+  "caught_block_level_receipt_again": true,
+  "caught_status_word_anywhere_in_40_again": true,
+  "caught_no_status_word_after_the_number": true,
+  "caught_count_word_read_as_a_dimension": true,
+  "caught_no_address_octet_rule": true,
+  "caught_no_occurrence_dedupe": true,
+  "caught_narrow_extension_list_again": true,
+  "caught_line_ref_looks_back_only": true,
+  "caught_no_host_port_rule": true,
+  "caught_no_identifier_boundary_rule": true,
+  "caught_advisory_channel_blinded": true
+ },
+ "uncaught_mutations": [],
+ "overall_pass": true
+}
