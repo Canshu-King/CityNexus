@@ -1,0 +1,353 @@
+{
+ "ruler": "r5b",
+ "blocks": [
+  {
+   "block": "n2_0101.md",
+   "r5b": {
+    "exit": 3,
+    "refused": [
+     "1367",
+     "1392 条"
+    ]
+   },
+   "jia": {
+    "exit": 3,
+    "refused": [
+     "1367",
+     "1392 条"
+    ]
+   },
+   "claims_newly_excluded_by_jia": []
+  },
+  {
+   "block": "n2_0105.md",
+   "r5b": {
+    "exit": 3,
+    "refused": [
+     "138"
+    ]
+   },
+   "jia": {
+    "exit": 0,
+    "refused": []
+   },
+   "claims_newly_excluded_by_jia": [
+    "138"
+   ]
+  },
+  {
+   "block": "n2_0144.md",
+   "r5b": {
+    "exit": 3,
+    "refused": [
+     "0.4 GB",
+     "401"
+    ]
+   },
+   "jia": {
+    "exit": 3,
+    "refused": [
+     "0.4 GB"
+    ]
+   },
+   "claims_newly_excluded_by_jia": [
+    "401"
+   ]
+  },
+  {
+   "block": "n2_0152.md",
+   "r5b": {
+    "exit": 3,
+    "refused": [
+     "0.4 GB",
+     "401",
+     "6 条"
+    ]
+   },
+   "jia": {
+    "exit": 3,
+    "refused": [
+     "0.4 GB",
+     "6 条"
+    ]
+   },
+   "claims_newly_excluded_by_jia": [
+    "401"
+   ]
+  },
+  {
+   "block": "n2_0156.md",
+   "r5b": {
+    "exit": 3,
+    "refused": [
+     "6 条"
+    ]
+   },
+   "jia": {
+    "exit": 3,
+    "refused": [
+     "6 条"
+    ]
+   },
+   "claims_newly_excluded_by_jia": []
+  },
+  {
+   "block": "n2_0200.md",
+   "r5b": {
+    "exit": 3,
+    "refused": [
+     "0 处",
+     "0373"
+    ]
+   },
+   "jia": {
+    "exit": 3,
+    "refused": [
+     "0 处",
+     "0373"
+    ]
+   },
+   "claims_newly_excluded_by_jia": []
+  },
+  {
+   "block": "n2_0213.md",
+   "r5b": {
+    "exit": 3,
+    "refused": [
+     "0 条",
+     "1667",
+     "1668",
+     "1669",
+     "6 条",
+     "888",
+     "889"
+    ]
+   },
+   "jia": {
+    "exit": 3,
+    "refused": [
+     "0 条",
+     "1667",
+     "1668",
+     "1669",
+     "6 条"
+    ]
+   },
+   "claims_newly_excluded_by_jia": [
+    "888",
+    "889"
+   ]
+  },
+  {
+   "block": "n2_1759.md",
+   "r5b": {
+    "exit": 3,
+    "refused": [
+     "2148",
+     "52 秒",
+     "7892",
+     "7897"
+    ]
+   },
+   "jia": {
+    "exit": 3,
+    "refused": [
+     "2148",
+     "52 秒",
+     "7892",
+     "7897"
+    ]
+   },
+   "claims_newly_excluded_by_jia": []
+  },
+  {
+   "block": "n2_1824.md",
+   "r5b": {
+    "exit": 3,
+    "refused": [
+     "401"
+    ]
+   },
+   "jia": {
+    "exit": 0,
+    "refused": []
+   },
+   "claims_newly_excluded_by_jia": [
+    "401"
+   ]
+  },
+  {
+   "block": "n3_0212.md",
+   "r5b": {
+    "exit": 3,
+    "refused": [
+     "0 次",
+     "1.58 GB",
+     "1440",
+     "3 格",
+     "390",
+     "680",
+     "681",
+     "7.53 秒",
+     "900"
+    ]
+   },
+   "jia": {
+    "exit": 3,
+    "refused": [
+     "0 次",
+     "1.58 GB",
+     "1440",
+     "3 格",
+     "7.53 秒"
+    ]
+   },
+   "claims_newly_excluded_by_jia": [
+    "390",
+    "680",
+    "681",
+    "900"
+   ]
+  },
+  {
+   "block": "qoder-0370_0130.md",
+   "r5b": {
+    "exit": 3,
+    "refused": [
+     "3 处",
+     "38 处",
+     "4 处",
+     "409",
+     "617",
+     "629",
+     "81 个",
+     "875 个"
+    ]
+   },
+   "jia": {
+    "exit": 3,
+    "refused": [
+     "3 处",
+     "38 处",
+     "4 处",
+     "81 个",
+     "875 个"
+    ]
+   },
+   "claims_newly_excluded_by_jia": [
+    "409",
+    "617",
+    "629"
+   ]
+  },
+  {
+   "block": "qoder-0370_0148.md",
+   "r5b": {
+    "exit": 3,
+    "refused": [
+     "0 处",
+     "0148",
+     "129 个",
+     "174",
+     "4 个",
+     "77 处"
+    ]
+   },
+   "jia": {
+    "exit": 3,
+    "refused": [
+     "0 处",
+     "0148",
+     "129 个",
+     "4 个",
+     "77 处"
+    ]
+   },
+   "claims_newly_excluded_by_jia": [
+    "174"
+   ]
+  }
+ ],
+ "option_jia_frees_these_claims": [
+  {
+   "block": "n2_0105.md",
+   "token": "138"
+  },
+  {
+   "block": "n2_0144.md",
+   "token": "401"
+  },
+  {
+   "block": "n2_0152.md",
+   "token": "401"
+  },
+  {
+   "block": "n2_0213.md",
+   "token": "888"
+  },
+  {
+   "block": "n2_0213.md",
+   "token": "889"
+  },
+  {
+   "block": "n2_1824.md",
+   "token": "401"
+  },
+  {
+   "block": "n3_0212.md",
+   "token": "390"
+  },
+  {
+   "block": "n3_0212.md",
+   "token": "680"
+  },
+  {
+   "block": "n3_0212.md",
+   "token": "681"
+  },
+  {
+   "block": "n3_0212.md",
+   "token": "900"
+  },
+  {
+   "block": "qoder-0370_0130.md",
+   "token": "409"
+  },
+  {
+   "block": "qoder-0370_0130.md",
+   "token": "617"
+  },
+  {
+   "block": "qoder-0370_0130.md",
+   "token": "629"
+  },
+  {
+   "block": "qoder-0370_0148.md",
+   "token": "174"
+  }
+ ],
+ "option_jia_selftest_exit": 6,
+ "option_jia_breaks_these_arms": [
+  "class_digits_after_a_fullwidth_colon",
+  "class_dimension_far_from_the_receipt_is_a_claim",
+  "class_domain_colon_is_a_port",
+  "class_line_number_after_a_path",
+  "class_source_colon_is_still_a_line",
+  "class_status_word_21_chars_away_is_not",
+  "class_three_digits_without_a_status_word_is_a_claim",
+  "exempt_LINE_REF",
+  "exempt_LINE_REF_source_colon",
+  "exempt_MJS_path_line_coordinate",
+  "exempt_PORT_domain_colon",
+  "fire_DIMENSION_receipt_out_of_range",
+  "fire_DIMENSION_without_receipt",
+  "fire_HTTP_STATUS_word_not_adjacent",
+  "fire_number_after_fullwidth_colon",
+  "fire_three_digits_no_status_word"
+ ],
+ "control_sentence": "这一格本轮命中 1392，附近没有任何件也没有行号",
+ "control_under_jia": [
+  "1392"
+ ],
+ "three_digit_control_under_jia": []
+}
