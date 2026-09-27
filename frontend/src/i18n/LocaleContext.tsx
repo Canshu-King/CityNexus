@@ -52,14 +52,12 @@ const en: Dict = {
      This is the `en` copy: the same key in `zhCN` below carries the Chinese sentence, and neither
      dictionary may hold the other's language -- an English screen speaking Chinese is the ORD-0240
      defect wearing the other coat. */
-  "trial.sealedUnreadable":
-    "Couldn't read the sealed demo: the server answered just now, but what it answered isn't something we can use. Nothing you filled in caused this.",
+  "trial.sealedUnreadable": "Couldn't read the sealed demo: the server answered just now, but what it answered isn't something we can use. Nothing you filled in caused this.",
   /* ORD-0349 (HJ-P3): this leg never got an answer, so it may not borrow the sentence that says the
      server answered.  The wording covers both ways an answer can fail to arrive -- the connection
      never came up, or this read reached its own deadline -- because the screen is not allowed to
      name a cause it did not observe. */
-  "trial.sealedNoAnswer":
-    "Couldn't read the sealed demo: this device got no answer from the server -- the connection did not come up, or this read ended without a reply. Nothing you filled in caused this.",
+  "trial.sealedNoAnswer": "Couldn't read the sealed demo: this device got no answer from the server -- the connection did not come up, or this read ended without a reply. Nothing you filled in caused this.",
 
   "trial.city": "Destination city",
   "trial.country": "Country/region code",
@@ -151,24 +149,18 @@ const en: Dict = {
      English screen answering a traveller in Chinese is ORD-0240's defect in the other coat.
      `nav.language` stays 「中文」 on purpose: a language switcher names each language in its own
      script, which is a value, not a leaked sentence. */
-  "hub.continuationPending":
-    "A plan started on this device did not finish: the first step completed, but no plan came out of it.",
+  "hub.continuationPending": "A plan started on this device did not finish: the first step completed, but no plan came out of it.",
   "hub.continuationResume": "Continue this plan",
   /* ORD-0278: pressing this re-issues the SECOND leg carrying the recorded mission.  Each outcome
      says what actually happened.  A refusal never dresses an HTTP status up as the server's reason:
      that label is only ever filled with text the server itself sent. */
   "hub.continuationResuming": "Continuing…",
   "hub.continuationResumed": "The second step went through, and the new plans are below.",
-  "hub.continuationResumedEmpty":
-    "The second step went through, but this round produced no new plan.",
-  "hub.continuationResumeRefused":
-    "The server refused this attempt. Nothing was created, and the record is still here so you can try again.",
-  "hub.continuationResumeDeadline":
-    "This wait reached the limit this screen allows. The request may or may not have arrived -- refresh to check before pressing again.",
-  "hub.continuationResumeTransport":
-    "This device could not send the request at all (connection failure). The record is still here.",
-  "hub.continuationUnconfirmable":
-    "There is a record of the last plan, but its progress cannot be read now, so how far it got is unconfirmed.",
+  "hub.continuationResumedEmpty": "The second step went through, but this round produced no new plan.",
+  "hub.continuationResumeRefused": "The server refused this attempt. Nothing was created, and the record is still here so you can try again.",
+  "hub.continuationResumeDeadline": "This wait reached the limit this screen allows. The request may or may not have arrived -- refresh to check before pressing again.",
+  "hub.continuationResumeTransport": "This device could not send the request at all (connection failure). The record is still here.",
+  "hub.continuationUnconfirmable": "There is a record of the last plan, but its progress cannot be read now, so how far it got is unconfirmed.",
 
 
 
@@ -538,7 +530,7 @@ const en: Dict = {
   "inbox.unboundTarget": "Unbound semantic target",
   "inbox.inboxExtraction": "Journey Inbox extraction",
   "inbox.copyJourneyLink": "Copy journey link",
-  "inbox.journeyLinkCopied": "Journey link copied to this device's clipboard — send it to whoever is coming along.",
+  "inbox.journeyLinkCopied": "Journey link copied to this device's clipboard. Anyone with this link can open this journey.",
   "inbox.journeyLinkNoJourney": "No journey is open here, so there is no journey link to copy.",
   "inbox.journeyLinkInsecureContext": "This address is not a secure context, so the browser will not let the link be copied. The journey is intact — it copies over HTTPS or on this machine.",
   "inbox.journeyLinkClipboardUnavailable": "This device refused the clipboard write, so the link was not copied. The journey is intact and the link still works.",
@@ -747,17 +739,13 @@ const en: Dict = {
   /* ORD-0251: the server's own labels (RECORD_ONLY / DEPENDENCY_MISSING / WEB_PUSH_CONFIGURED) are not
      prose, and an unknown one is reported as unknown rather than echoed back. */
   "push.capRecordOnly": "Recorded, not pushed",
-  "push.capRecordOnlyHelp":
-    "The server has no push key, so notifications stay in the journey and never reach this device.",
+  "push.capRecordOnlyHelp": "The server has no push key, so notifications stay in the journey and never reach this device.",
   "push.capDependencyMissing": "Push component missing on the server",
-  "push.capDependencyMissingHelp":
-    "A push component is missing on the server, so records stay in the journey. That is the server's to install, not yours to fix.",
+  "push.capDependencyMissingHelp": "A push component is missing on the server, so records stay in the journey. That is the server's to install, not yours to fix.",
   "push.capWebPushConfigured": "Push is configured",
-  "push.capWebPushConfiguredHelp":
-    "The server can send push. The button below asks the browser to subscribe this device.",
+  "push.capWebPushConfiguredHelp": "The server can send push. The button below asks the browser to subscribe this device.",
   "push.capUnknown": "Push availability unclear",
-  "push.capUnknownHelp":
-    "The server answered with a status this screen does not know, so we do not guess whether it can push.",
+  "push.capUnknownHelp": "The server answered with a status this screen does not know, so we do not guess whether it can push.",
   "push.capUnread": "Push status unreadable",
 
   // ── Shared formatting ──
@@ -1302,7 +1290,7 @@ const zhCN: Dict = {
   "inbox.unboundTarget": "未绑定的语义目标",
   "inbox.inboxExtraction": "行程收件箱提取",
   "inbox.copyJourneyLink": "复制行程链接",
-  "inbox.journeyLinkCopied": "行程链接已复制到这台设备的剪贴板，可以发给同行的人。",
+  "inbox.journeyLinkCopied": "行程链接已复制到本机剪贴板。谁拿到都能打开这份行程。",
   "inbox.journeyLinkNoJourney": "这里没有打开的行程，所以没有可复制的行程链接。",
   "inbox.journeyLinkInsecureContext": "当前地址不是安全上下文，浏览器不允许复制这条链接。行程本身没有丢，走 HTTPS 或本机地址就能复制。",
   "inbox.journeyLinkClipboardUnavailable": "这台设备拒绝了剪贴板写入，链接没有复制成功。行程本身没有丢，这条链接依然有效。",
@@ -1503,8 +1491,7 @@ const zhCN: Dict = {
   "push.capRecordOnly": "只记录，不发推送",
   "push.capRecordOnlyHelp": "服务器没有配置推送密钥，所以通知只会记在行程里，不会弹到这台设备上。",
   "push.capDependencyMissing": "服务器缺推送组件",
-  "push.capDependencyMissingHelp":
-    "服务器少了一个推送组件，目前只能记在行程里；这一格要服务器装上才会变，不是你这边的问题。",
+  "push.capDependencyMissingHelp": "服务器少了一个推送组件，目前只能记在行程里；这一格要服务器装上才会变，不是你这边的问题。",
   "push.capWebPushConfigured": "推送已配置",
   "push.capWebPushConfiguredHelp": "服务器已经能发推送；下面的按钮是让浏览器把这台设备加进订阅。",
   "push.capUnknown": "说不准推送能不能用",
