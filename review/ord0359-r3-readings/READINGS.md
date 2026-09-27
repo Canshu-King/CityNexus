@@ -24,3 +24,13 @@ Failed nodeids in that round:
 - tests/test_qoder_ord0296_write_deadline.py::test_G4_the_lock_wait_is_written_in_exactly_one_place
 
 OpenAPI parity at the r3 commit: `OpenAPI 3.1.0; formal 149; runtime 149; missing 0; extra 0`.
+
+## Named-module runs and mutation arms
+
+Module `backend/tests/test_qoder_ord0359_ai_state_three_ways.py`; same interpreter, PYTHONPATH and
+rootdir rule as above, one fresh database per row.
+
+- control (as committed): 13 passed, 2 warnings in 2.49s — db `_n2r3_x0.db`
+- mutate: skip path back to the fixed literal: 1 failed, 12 passed, 2 warnings in 3.42s — db `_n2r3_x1.db`
+  - FAILED tests/test_qoder_ord0359_ai_state_three_ways.py::test_the_skip_path_stores_this_state_not_a_fixed_literal
+- restored control: 13 passed, 2 warnings in 2.96s — db `_n2r3_x2.db`
