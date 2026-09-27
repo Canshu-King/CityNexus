@@ -16588,6 +16588,36 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### cmdr 03:4x — 落地门自己有个盲区（改名/删除的文件被当成"缺失"），已修成 r5 并落 3 笔；ORD-0381 的文案阶梯上线
+
+**门的缺陷（我自己的尺），现场证据是一对收据**
+
+- ORD-0369 的证据件候选 `c00703d1db9512e8c96099a26c08442b827a9357` 被 r4 判 REFUSED，理由两条：`exported tree has no review/ord0369-phone-replan/canary_proof_r2.json` 与 `...gate-report-r2.json`。收据 `evidence/cmdr-landing-ORD-0369e-0333/preflight_r4_REFUSED_rename_blindspot.json` blob `fb073dd2622496d0a61478862efb9bc9aff614f7`
+- 成因（读代码定位，不是猜）：r4 用 `git diff --name-only base cand` 取"候选引入的文件"，这条命令**把被删除的路径也列进来**，随后逐条要求它们在导出树里存在 ⇒ 任何改名/删除都会被按"旧名字找不到"拒掉。旧名 `gate-report-r2.json` 在新树里确实不存在，同目录里躺着的是 `gate-report-r3-with-regressions.json`（`git ls-tree` 实测）
+- 修法走新文件（Q57，不覆盖 r4）：`tools/make_preflight_r5.py` 用三处唯一锚点从 r4 派生 r5，`ast.parse` 通过才落盘；派生器与尺件本身已随 `9eb20d9656307c6f1046f9d9c36bd049f4992aa0` 上线（收据 `evidence/cmdr-landing-CMDR-INSTR-r5-0336/preflight_r5.json` blob `788163913b649281f688891e92d258a4fbe68c12`，`product introduced: (none)`）
+- **双向都有据**：正向 = 同一候选在 r5 下 READY_TO_LAND 并落地，收据 `evidence/cmdr-landing-ORD-0369e-0333/preflight_r5.json` blob `354137d3ad052886f57ec4f6fab2e34e46e47fc1`；反向 = 新加的删除臂不是空转，它记录了 `deleted_by_candidate` 两条、`still_present_in_export` 为空数组（同一 blob 的 `gate_run.deletions` 格）。也就是说：旧名不再被要求存在，但"说要删却没删掉"从此会被拒。
+
+**这一轮落的 3 笔（fast-forward only，两路 GitHub 路由逐字一致）**
+
+- `7c9edf9f…` → `c00703d1db9512e8c96099a26c08442b827a9357`（ORD-0369 的 `review/` 读数件，9/9 与车道 blob 逐字节相同）
+- → `9eb20d9656307c6f1046f9d9c36bd049f4992aa0`（门 r5 仪表件，0 产品字节）
+- → `895ec1a11aca730041b42f2358b9607c9bb5a67e`（**ORD-0381 文案阶梯 r2**，携载 `frontend/src/i18n/LocaleContext.tsx`，重切 4/4 与车道 blob 相同；收据 `evidence/cmdr-landing-ORD-0381r2-0338/preflight_r5.json` blob `3a41c01bad6c9aaef7fd970e8f38a2db165921b2`，重切件 `evidence/cmdr-landing-ORD-0381r2-0338/recut_r5.json` blob `7bd7bafd52989e3ab24ec9fe13ef70c51ac10771`）
+- 车道 0381 采纳了 rebase 要求：它把字典改动收成交付前最后一笔，第二次交件就不撞了。这条经验有效，后续工单继续这么写。
+
+**换代到 895ec1a1…（手机侧）**
+
+- 换代尺一次 GREEN（配了 `CNX_DEPLOY_PROXY_BASE` 与 `CNX_DEPLOY_TUNNEL_BASE`，F 臂真探测，不再 `F_UNPROBED_DECLARED`）：`evidence/cmdr-swap-895ec1a1-0339/deploy_r1.json` blob `192b7efe294c40eaca82223e7fb14b383dce243a`
+- 手机侧探针 `evidence/cmdr-swap-895ec1a1-0339/phone_probe_r1.json` blob `306fe1820bf4223e329b664c1c69d2588713b58d`：五格全 true
+
+**程序事实**
+
+- 权威尖只由我经门移动；本轮我把 r5 用在了自己身上（仪表件也过同一道门），没有旁路。
+- 我**代车道推过 1 次**同名 `review/*` ref（`review/Q-ord0369-replan-walkthrough-r3`，内容一个字节没改，读回 sha 与本地全等），原因是车道只在本地提交、门的 GitHub 路由查不到该 ref 而拒绝落地。对策是工单里加了"交前自己 push"这一条，实测已生效：`origin/review/Q-ord0382-ai-three-stage` 与 `origin/review/N3-ord0384-pretrip-checklist` 都是车道自己推上来的。
+- ORD-0388 仍排队：尖上尺报 `RENDER_TIERS` tier 1 有 9 处"已证会渲染但没有语言分支护着"的裸字面量，具名清单在 `evidence/cmdr-ruler-on-tip-0325/cnx_copy_tiers_r1_7c9edf9f.txt` blob `9b722f11828576fe9be98a7884a4ca4fc4f5bfe5`。不开新窗口的原因也记在这：本机物理内存只剩 1.4 GB。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### ORD-0381 **r2** · 车道 qoder-0381 · Q72 rebase 完成 · 2026-09-28 0332+08
 
 按令 rebase 到现尖 `7c9edf9fae25f8dccacf59be9e5c23c1c09cda46`。新分支 `review/Q-ord0381-copy-honesty-ladder-r2`，tip `7c80427ff9e9372d07724239f56fe51cf8f1abdf`
