@@ -1584,3 +1584,128 @@ button { display: block; width: 100%; margin-top: 12px; border: 0; border-radius
 .inbox-advanced-raw dt { color: #8b95a3; font-size: 9px; letter-spacing: 0.04em; text-transform: uppercase; }
 .inbox-advanced-raw dd { margin: 0; color: #4c5872; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 10px; overflow-wrap: anywhere; }
 @media (max-width: 480px) { .inbox-advanced-raw { grid-template-columns: 1fr; } }
+
+/* ORD-0382 — the three-stage AI wait: a stage that survives closing the sheet.
+ * Same construction rule as the sheet block above: every declaration names a token that already
+ * flips with the theme, so nothing here can become the next "一片白，字看不清" report, and no new
+ * surface is added to the !important pile.  The strip's text is --v8-ink at every size on purpose:
+ * hierarchy here comes from weight and size, not from a lighter grey that would fail AA on dark.
+ */
+.plan-ai-wait-exits {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--cn-s-8);
+}
+.plan-ai-scope {
+  display: grid;
+  gap: var(--cn-s-4, 4px);
+  padding: var(--cn-s-8) var(--cn-s-12);
+  border-left: 3px solid var(--cn-accent);
+  background: var(--cn-surface);
+}
+.plan-ai-scope p {
+  margin: 0;
+  color: var(--v8-ink);
+  font-size: var(--cn-fs-caption);
+  line-height: 1.45;
+}
+.plan-ai-units {
+  margin: 0;
+  color: var(--v8-ink);
+  font-size: var(--cn-fs-body);
+  font-weight: 650;
+  line-height: 1.45;
+}
+.plan-ai-aftermath {
+  display: grid;
+  gap: var(--cn-s-4, 4px);
+  margin-top: var(--cn-s-8);
+  padding-top: var(--cn-s-8);
+  border-top: 1px solid var(--cn-hairline);
+}
+.plan-ai-aftermath p {
+  margin: 0;
+  color: var(--v8-ink);
+  font-size: var(--cn-fs-body);
+  line-height: 1.45;
+}
+/* The two doors, shown only when leaving would otherwise have destroyed a live run. */
+.plan-ai-leave-choice {
+  display: grid;
+  gap: var(--cn-s-8);
+  padding: var(--cn-s-12);
+  border: 1px solid var(--cn-hairline);
+  border-radius: var(--cn-r-control);
+  background: var(--cn-surface);
+}
+.plan-ai-leave-choice p {
+  margin: 0;
+  color: var(--v8-ink);
+  font-size: var(--cn-fs-body);
+  line-height: 1.45;
+}
+.plan-ai-leave-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--cn-s-8);
+}
+/* Fixed, above the tab bar, and never covered by the content it reports on: this is the only
+   surface that says "something is still running" once the sheet is gone. */
+.plan-ai-run-strip {
+  position: fixed;
+  right: var(--cn-s-16);
+  bottom: var(--cn-s-16);
+  left: var(--cn-s-16);
+  z-index: 9;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--cn-s-12);
+  max-width: 520px;
+  margin: 0 auto;
+  padding: var(--cn-s-12) var(--cn-s-16);
+  border: 1px solid var(--cn-hairline);
+  border-radius: var(--cn-r-control);
+  background: var(--cn-surface);
+  box-shadow: var(--cn-shadow-raised);
+  color: var(--v8-ink);
+}
+.plan-ai-run-copy {
+  display: grid;
+  gap: 2px;
+  min-width: 0;
+}
+.plan-ai-run-copy b {
+  font-size: var(--cn-fs-body);
+}
+.plan-ai-run-copy small {
+  color: var(--v8-ink);
+  font-size: var(--cn-fs-caption);
+  line-height: 1.4;
+  overflow-wrap: anywhere;
+}
+.plan-ai-run-actions {
+  display: flex;
+  flex: none;
+  gap: var(--cn-s-8);
+}
+@media (max-width: 680px) {
+  .plan-ai-run-strip {
+    right: var(--cn-s-12);
+    bottom: calc(var(--cn-nav-clearance, 76px) + env(safe-area-inset-bottom, 0px));
+    left: var(--cn-s-12);
+    align-items: stretch;
+    flex-direction: column;
+  }
+  .plan-ai-run-actions {
+    justify-content: flex-end;
+  }
+  /* Amendment F: the 44px floor is the mobile/touch layer's contract, and these are thumbs-on-glass
+     controls whose whole job is to be reachable while something else is happening. */
+  .plan-ai-wait-exits button,
+  .plan-ai-leave-actions button,
+  .plan-ai-run-actions button {
+    min-height: var(--cn-touch-min);
+  }
+}
