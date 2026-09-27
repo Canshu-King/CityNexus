@@ -1,0 +1,189 @@
+{
+ "question": "what happens to the inbox if the +-WINDOW neighbour fallback is removed",
+ "mutation": {
+  "old": "    m = DURABLE.search(window)",
+  "new": "    m = None"
+ },
+ "ruler_blob": "b6c31b19d14d33f61996500bff83ce8bfc633e00",
+ "blocks": 25,
+ "blocks_that_get_redder": [
+  "cmdr_0447.md",
+  "map_0343.md",
+  "map_0404.md",
+  "map_0447.md",
+  "n2_0101.md",
+  "n2_0105.md",
+  "n2_0200.md",
+  "n2_0213.md",
+  "n2_1759.md",
+  "n2_1824.md",
+  "qoder-0370_0130.md",
+  "qoder-0370_0148.md",
+  "qoder-0380_0314.md",
+  "qoder-0385_0356.md",
+  "qoder-0388r3_0447.md",
+  "rel_0338.md",
+  "rel_0408.md",
+  "rel_0437.md"
+ ],
+ "blocks_redder": 18,
+ "total_findings_as_shipped": 118,
+ "total_findings_without_window": 234,
+ "rel_0338": {
+  "as_shipped": 27,
+  "without_window": 36
+ },
+ "verdict": "the reverted direction is measurably worse; r5f keeps the window and arms it",
+ "rows": [
+  {
+   "file": "cmdr_0447.md",
+   "as_shipped": 0,
+   "without_window": 8,
+   "delta": 8
+  },
+  {
+   "file": "map_0343.md",
+   "as_shipped": 4,
+   "without_window": 5,
+   "delta": 1
+  },
+  {
+   "file": "map_0404.md",
+   "as_shipped": 2,
+   "without_window": 4,
+   "delta": 2
+  },
+  {
+   "file": "map_0447.md",
+   "as_shipped": 9,
+   "without_window": 16,
+   "delta": 7
+  },
+  {
+   "file": "n2_0101.md",
+   "as_shipped": 0,
+   "without_window": 2,
+   "delta": 2
+  },
+  {
+   "file": "n2_0105.md",
+   "as_shipped": 1,
+   "without_window": 2,
+   "delta": 1
+  },
+  {
+   "file": "n2_0144.md",
+   "as_shipped": 1,
+   "without_window": 1,
+   "delta": 0
+  },
+  {
+   "file": "n2_0152.md",
+   "as_shipped": 2,
+   "without_window": 2,
+   "delta": 0
+  },
+  {
+   "file": "n2_0156.md",
+   "as_shipped": 4,
+   "without_window": 4,
+   "delta": 0
+  },
+  {
+   "file": "n2_0200.md",
+   "as_shipped": 1,
+   "without_window": 3,
+   "delta": 2
+  },
+  {
+   "file": "n2_0213.md",
+   "as_shipped": 3,
+   "without_window": 8,
+   "delta": 5
+  },
+  {
+   "file": "n2_0219.md",
+   "as_shipped": 1,
+   "without_window": 1,
+   "delta": 0
+  },
+  {
+   "file": "n2_0224.md",
+   "as_shipped": 1,
+   "without_window": 1,
+   "delta": 0
+  },
+  {
+   "file": "n2_0228.md",
+   "as_shipped": 4,
+   "without_window": 4,
+   "delta": 0
+  },
+  {
+   "file": "n2_0430.md",
+   "as_shipped": 1,
+   "without_window": 1,
+   "delta": 0
+  },
+  {
+   "file": "n2_1759.md",
+   "as_shipped": 2,
+   "without_window": 3,
+   "delta": 1
+  },
+  {
+   "file": "n2_1824.md",
+   "as_shipped": 0,
+   "without_window": 4,
+   "delta": 4
+  },
+  {
+   "file": "qoder-0370_0130.md",
+   "as_shipped": 13,
+   "without_window": 58,
+   "delta": 45
+  },
+  {
+   "file": "qoder-0370_0148.md",
+   "as_shipped": 6,
+   "without_window": 15,
+   "delta": 9
+  },
+  {
+   "file": "qoder-0380_0314.md",
+   "as_shipped": 1,
+   "without_window": 2,
+   "delta": 1
+  },
+  {
+   "file": "qoder-0385_0356.md",
+   "as_shipped": 5,
+   "without_window": 16,
+   "delta": 11
+  },
+  {
+   "file": "qoder-0388r3_0447.md",
+   "as_shipped": 2,
+   "without_window": 3,
+   "delta": 1
+  },
+  {
+   "file": "rel_0338.md",
+   "as_shipped": 27,
+   "without_window": 36,
+   "delta": 9
+  },
+  {
+   "file": "rel_0408.md",
+   "as_shipped": 11,
+   "without_window": 17,
+   "delta": 6
+  },
+  {
+   "file": "rel_0437.md",
+   "as_shipped": 17,
+   "without_window": 18,
+   "delta": 1
+  }
+ ]
+}
