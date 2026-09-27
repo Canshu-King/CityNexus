@@ -1,0 +1,118 @@
+{
+ "schema": "CNX_CMDR_LANDING_PREFLIGHT_V1",
+ "lane": "commander 494abfd7",
+ "at_local": "2026-09-28T03:21:32+0800",
+ "mode": "LAND",
+ "authoritative_line": "mirror/integration-frontend-apple-pass1",
+ "tip_re_read_from_github_before": "090c048f220a3089506f565929ceda1511315a09",
+ "candidate_ref": "refs/heads/review/Q-cn-token-night-axis",
+ "candidate_tip": "7c9edf9fae25f8dccacf59be9e5c23c1c09cda46",
+ "genealogy": {
+  "ff_possible_rc": 0,
+  "ff_possible": true,
+  "merge_base": "090c048f220a3089506f565929ceda1511315a09",
+  "line_only_commits": 0,
+  "candidate_only_commits": 5
+ },
+ "file_sets": {
+  "line_side_since_base": [],
+  "candidate_side_since_base": [
+   "review/cn-token-night/BUILD.txt",
+   "review/cn-token-night/GATE.txt",
+   "review/cn-token-night/PAIRING.json",
+   "review/cn-token-night/PAIRING.txt",
+   "tools/cnx_token_tiers_r1.py"
+  ],
+  "intersection": [],
+  "product_introduced_by_candidate": []
+ },
+ "merge_tree": {
+  "exit": 0,
+  "first_line": "ff942ab3f5f704712168cdaf5cd444b4c405c671",
+  "conflict_reported": false,
+  "stderr_head": ""
+ },
+ "gate_run": {
+  "requested": [],
+  "collect_exit": null,
+  "collected": null,
+  "test_exit": null,
+  "summary": null,
+  "export": "D:/moodle/_qoder_cmdr_ref_20260921/snap_preflight_032105",
+  "blob_equality": [
+   {
+    "path": "review/cn-token-night/BUILD.txt",
+    "candidate_blob": "7c4195c2dbe1eff76e83e59c475950db78cb3dd3",
+    "export_blob": "7c4195c2dbe1eff76e83e59c475950db78cb3dd3",
+    "equal": true
+   },
+   {
+    "path": "review/cn-token-night/GATE.txt",
+    "candidate_blob": "98186d94a7e14cd51f38abb358542712c11548e8",
+    "export_blob": "98186d94a7e14cd51f38abb358542712c11548e8",
+    "equal": true
+   },
+   {
+    "path": "review/cn-token-night/PAIRING.json",
+    "candidate_blob": "dd21e42d07e0e210714d0bcc4e16cbae8d87932b",
+    "export_blob": "dd21e42d07e0e210714d0bcc4e16cbae8d87932b",
+    "equal": true
+   },
+   {
+    "path": "review/cn-token-night/PAIRING.txt",
+    "candidate_blob": "4cdd70a5571542d2a7f8e714c8ce9dc6cce688b7",
+    "export_blob": "4cdd70a5571542d2a7f8e714c8ce9dc6cce688b7",
+    "equal": true
+   },
+   {
+    "path": "tools/cnx_token_tiers_r1.py",
+    "candidate_blob": "ec448eff407083fd666881a112483afba9481fe1",
+    "export_blob": "ec448eff407083fd666881a112483afba9481fe1",
+    "equal": true
+   }
+  ],
+  "whole_suite": {
+   "collect_exit": 0,
+   "collected": 1393,
+   "interrupted": false,
+   "error_lines": [
+    "tests/test_qoder_ord0332_error_receipt.py::test_R7_the_envelope_keeps_every_field_it_already_had",
+    "tests/test_qoder_ord0332_error_receipt.py::test_R8_the_seed_is_read_off_the_real_request_not_just_the_dataclass",
+    "tests/test_solver_runtime_policy.py::test_unexpected_solver_programming_error_is_not_silently_hidden"
+   ],
+   "tail": [
+    "    _PortalFactoryType = Callable[[], AbstractContextManager[anyio.abc.BlockingPortal]]",
+    "-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html",
+    "1393 tests collected in 12.54s"
+   ],
+   "cmd": "D:/moodle/CityNexus/.venv/Scripts/python.exe -m pytest --collect-only -q tests  (cwd=<export>/backend, PYTHONPATH=<export>)"
+  },
+  "interpreter": "Python 3.12.14 (main, Aug 25 2026, 14:01:42) [MSC v.1944 64 bit (AMD64)]",
+  "exposure": {
+   "skipped": "no frontend/src file changed"
+  },
+  "frontend_build": {
+   "skipped": "no frontend/src file in this candidate"
+  }
+ },
+ "problems": [],
+ "verdict": "READY_TO_LAND",
+ "landing": {
+  "http": 200,
+  "response_head": "{'ref': 'refs/heads/mirror/integration-frontend-apple-pass1', 'node_id': 'REF_kwDOUhlJJ9oAMnJlZnMvaGVhZHMvbWlycm9yL2ludGVncmF0aW9uLWZyb250ZW5kLWFwcGxlLXBhc3Mx', 'url': 'https://api.github.com/repos/Ca",
+  "tip_after": "7c9edf9fae25f8dccacf59be9e5c23c1c09cda46",
+  "branches_route": "7c9edf9fae25f8dccacf59be9e5c23c1c09cda46",
+  "both_routes_agree": true,
+  "landed": true
+ },
+ "discipline": {
+  "evidence_paths_overwritten": 0,
+  "databases_opened": 0,
+  "surfaces_started_or_stopped": 0,
+  "credential_values_printed": 0,
+  "candidate_refs_pushed_by_commander": 0
+ },
+ "claim_kind": "git_and_pytest_determined",
+ "claimed_result": null,
+ "derived_result": null
+}
