@@ -16588,6 +16588,45 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### ORD-0369 追加一格（lane Q）— 你点名的「AI 面验收目标是屏上诚实表达不可用」我原来没量，量了，其中一处确实不诚实，已修
+
+先回你两个坑：两个我这轮都是**先清再判**，所以没有产生假红。
+- 毒代理：本车道每一条出网/探口的命令前都带 `HTTPS_PROXY= HTTP_PROXY= NO_PROXY='*'`（例：`D:/moodle/_qoder_q_ord0369_wk/canary_setup.py` 里 pop 掉两个变量再启进程），所以我全程没出现过你那种假不可达（curl rc=7、响应码为空；读数形状见 `live_checks/cmdr_tunnel_read_r1.py:1`）；`:8693` 与 `:4782` 我第一手就是 HTTP 200 与 HTTP 401。你给的 `live_checks/cmdr_tunnel_read_r1.py` 我记下了，本轮没需要（我没走公网隧道那一段，手机视口全部在回环上量）。
+- TAB 凭据：`frontend`/驱动脚本里按 `"\t"` 切，切不到就 REFUSE，值只进请求头不进任何件（`D:/moodle/_qoder_q_ord0369_wk/cnx.mjs:22`）。我最早那次挂住是我把分隔符猜成冒号触发了 curl 的交互提问，当场改成按 TAB 切之后没有再复现。
+
+内存这条也照办了：全程只起一份后端 + 一份静态面 + 一个浏览器；收尾按 pid 与命令行归属确认后关掉，回读 `:8711`、`:4187`、`:4188` 无监听，你的 `:8693`、`:4781`、`:4782` 原 pid 仍在。没有新建任何 node_modules junction；构建用的是导出目录里的硬链接件，与被服的 dist 无关。
+
+新量的一格与结论
+- 面板打开时的预检是诚实的，原文：「这台服务的 AI 开关处于关闭状态，这是运营侧的设置，不是你的操作结果。开关本身不代表某次失败的原因。」这条不改。
+- 不诚实的是**按下提交之后**：实测 `POST .../agent/commands` 在开关关着时仍答 HTTP 200、`mission.status` 为 COMPLETED、`reasoning_summary` 有内容，而同一份 mission 自己带着 `ai_state = DISABLED_BY_OPS`。ORD-0240 把这个字段里的句子一律标成「模型原始输出」，于是**没模型写的字被算在模型头上**——正是 ORD-0240 关掉的那个洞的镜像。
+- 修法只认服务器自己说的状态：`READY`/`PROVIDER_REFUSED` 保持 ORD-0240 那句冻结标签一字不改；`DISABLED_BY_OPS`/`NOT_CONFIGURED` 改说「服务器给这句总结（这台部署的 AI 开关是关的，所以它不是模型写的）」；**状态缺席时保持既有标签**，因为"没被告知"不是"没跑过"的证据。判据函数 `frontend/src/features/planning/PlanWithAiSheet.tsx:433`，归属位上屏 `frontend/src/features/planning/PlanWithAiSheet.tsx:1222`，批次 sha `a3d4499941827f3e972d8f38815a1eb50bc883ea`，件 blob `4d20c9e85f2e7933920c93cee8b5a8ef9afd074b`。
+
+判据与回归（这一格必须证明我没把别人的门弄红）
+- 新增三条臂：`frontend/e2e/qoder-ord0369-replan-walkthrough.spec.ts:358`（实测形）、`:365`（正控 READY）、`:371`（反控 无状态）。spec blob `a9edbf2d45cbe99d2a69f765e93198451c54d595`。
+- 与 ORD-0240 自己那三条臂**同一套栈同一次跑**：`expected 15 / unexpected 0 / skipped 0 / flaky 0`，耗时 31232.919 毫秒，报告件 blob `9a2c86e6165abdcf2ac7ee560d13cc56f61165d2`（`review/ord0369-phone-replan/playwright-report-15-passed.json`）。其中 `qoder-model-words-are-labelled.spec.ts` 的 `ord0240-1..3` 三条状态全为 expected，即那条已验收的门一字未动仍然绿。
+- 这三条形是桩出来的（封存演示那座城对 AI 请求答 `CATALOG_EMPTY`，真链路走不到成功分支），但喂进去的字段是真响应里有的；`REPRODUCED(simulated)`，不是真机。
+
+分支现尖 `a3d4499941827f3e972d8f38815a1eb50bc883ea`，`git ls-remote origin refs/heads/review/Q-ord0369-replan-walkthrough` 逐字符回读同值。前面那块 `qoder-0369_0204.md` 我不改，本块是追加。
+
+仍然没改善的：AI 面在开关关着时**提交按钮仍可按下并拿到一个 COMPLETED**，我没有把它改成不可用（那会替运营做一个"关掉就等于禁用"的决定，而服务器明确区分这两件事）；我只把"这是谁写的"说对了。要真按不可用处理，需要你先裁 `DISABLED_BY_OPS` 是否等于禁用入口。
+
+
+### N3 02:12+08 ORD-0373 交付：把「名字查得到 ≠ 打得着」做成共享杠杆，并按实测选 (b)
+
+- 交付 A：`refs/heads/review/N3-ord0373-name-hit-scope` 逐字回验到 `4f2b56326f110407886ceeb8815ebf5394ce9cee`（`review/evidence/ord0373/diff_r1.json:3`；`git ls-remote origin` 退出码读到 0）。两批 full 40 位在 `diff_r1.json:25`（gate 那批 `4f2b56326f110407886ceeb8815ebf5394ce9cee`）与 `diff_r1.json:26`（杠杆那批 `135309fc97df6a49782a79037ecb87d32826f86f`）。base = 我开工时读到的现尖 `961836390c5325863acdc1834d4a4cd16fd97081`（`diff_r1.json:2`）。
+- 落地状态：推完之后现尖又前移到 `bb3f5853d35835bd5078a2cccba15e2e7a82f213`（`diff_r1.json:4`），而 `diff_r1.json:22` 与 `:23` 两格读到**我交付头的树与现尖的树逐字相同**（都是 `fd8ca26efb2c731dd0a14edda1050654ad2659c3`），两枚文件 blob 也相同（`diff_r1.json:19` 的 `cf81c3d287f31efd8e1d3cb8346e61e04f96fee2` 与 `diff_r1.json:20` 的 `567d9aecc1b20a44b89e346504653cb9c4532557`），我未重基的那枚头 `affe9f6fccdbf6f926b42e0950e61638c0518588` 是现尖的祖先（`merge-base --is-ancestor` 退出码读到 0）。所以内容已在线上，我没有再追第三跳——线每几分钟动一次，追下去读数永远对不上交付字节。
+- 差集：`diff_r1.json:5` 读到改动落在 2 个文件、`:6` 新增 354 行、`:7` 删除 0 行；逐文件在 `diff_r1.json:10`（杠杆 111 行）与 `diff_r1.json:14`（门 243 行）。**`frontend/src` 命中 0 个文件**（同一枚 `git diff --name-only` 的现读，两枚路径就是 `diff_r1.json:9` 与 `:13`）。
+- 要件 2 的实测依据（不读代码下结论），全部在 `review/evidence/ord0373/cmdr020624n3__P1.json`：窄端 390x844 那格侧栏 `display` 读到 none（`review/evidence/ord0373/cmdr020624n3__P1.json:31`），按名字 role 查命中 1 枚（`review/evidence/ord0373/cmdr020624n3__P1.json:43`），按文本查命中 1 枚（`review/evidence/ord0373/cmdr020624n3__P1.json:44`），而那枚 first 不可见（`review/evidence/ord0373/cmdr020624n3__P1.json:45`）。680x900 同形（`review/evidence/ord0373/cmdr020624n3__P1.json:70`、`:82`、`:83`、`:84`）。断点在 681x900：侧栏 `display` 读到 flex（`review/evidence/ord0373/cmdr020624n3__P1.json:109`）、role 查命中 2 枚（`:121`）、first 可见（`:123`）；960x900 与 1440x900 同形（`review/evidence/ord0373/cmdr020624n3__P1.json:148`、`:162`、`:187`、`:201`）。排除原因逐枚记在 `review/evidence/ord0373/cmdr020624n3__P1.json:16`、`:25`、`:55`、`:64`，四格都读到 `display:none@aside.v8-sidebar`。
+- 因此三选一选 **(b)**：(a) 删——被实测否掉，681px 以上那枚导航项是可见且打得着的（`cmdr020624n3__P1.json:109` 与 `:123`），删它等于拿走桌面导航；(c) 修可见性——也被否掉，窄视口下可访问性树本来就对（`:43` 读到 role 查询只给 1 枚可见的），没有"本该可达却被误封"。剩下的真问题是**按文本查会拿到那枚隐藏孪生**，所以处置是给名字查询加作用域与命中筛，落在 `frontend/e2e/_qoderNamedHits.ts:31`（survey）、`frontend/e2e/_qoderNamedHits.ts:69`（strikeableOnly）、`frontend/e2e/_qoderNamedHits.ts:78`（strikeableByName 宁可拒也不给打不着的节点）。
+- 要件 1（把经验变成杆杆）：共享件 `frontend/e2e/_qoderNamedHits.ts` 导出 `surveyName` / `strikeableOnly` / `strikeableByName` / `strikeableLocator` 四枚，任何车道按名字定位都能直接用；`strikeableLocator` 是**遍历候选逐个命中测试**而不是按下标取（`frontend/e2e/_qoderNamedHits.ts:94`），因为 DOM survey 与 Playwright 文本查询返回的集合不同——探针实测一边 2 枚、一边 1 枚（`cmdr020624n3__N1.json:7` 读到 survey 2、`cmdr020624n3__P1.json:44` 读到 by_text_count 1），按下标映射会在别人改了嵌套层级的那天选错节点（遍历那段在 `frontend/e2e/_qoderNamedHits.ts:98`）。
+- 三格门（`frontend/e2e/qoder-ord0373-name-hit-scope.spec.ts`）：run_id `cmdr020624n3`，`live_checks/e2e_logs/n3_4f2b5632_020624.json` 的 `exit_code` 读到 0、`verdict` 读到 GREEN、`passed` 读到 4（P1、N1、N2 加 real-seed project 一格）、`duration_s` 读到 23.522861。N1 在 390×844 同时钉住两侧：`:13` 读到朴素文本查询的 first 不可见（陷阱还在），`:17` 读到杠杆**拒绝返回**打不着的节点（`lever_refused_unstriking` true），`:16` 读到 role 查询那 1 枚是可见的（正确目标）。N2 用合成夹具（一隐一现同名）证明是过滤器在起作用：`cmdr020624n3__N2.json:6` 读到 survey 4 枚、`:7` 读到筛后 2 枚、`:14` 读到朴素 first 仍不可见。
+- 反例（两枚，真跑且按字节还原）：`review/evidence/ord0373/mutations_r1.json` —— M1 把 `strikeableOnly` 改成不过滤，`:8` 退出码读到 3、`:9` `gate_went_red` 读到 true；M2 把祖先排除行走删成只看自身，`:24` 退出码读到 3、`:25` 读到 true。`:18` 与 `:34` 的 `restored_byte_identical` 都读到 true，还原后 sha256 同为 `:17` 与 `:33` 的 `8f292d2432d89aa4c07b215e42cd61ab2db16ebd8156e80de44faf312dcd6…`。**M2 第一次跑是绿的**：说明我原来的断言只测了结果、没测"为什么被排除"，于是给 N1 补了钉住排除原因的断言（`frontend/e2e/qoder-ord0373-name-hit-scope.spec.ts:198`），补完 M2 才红。这条按实报，不写成一次到位。
+- 编译臂自查（本单没有 `frontend/src` 改动，仍自己先过）：`npx tsc -p tsconfig.check.json --noEmit`、`-p tsconfig.typecheck.json`、以及 e2e 两枚的独立 typecheck，退出码都读到 0；`node node_modules/vite/bin/vite.js build --outDir ../review/build_n3_0373 --emptyOutDir` 的退出码读到 0（`review/evidence/ord0373/env_and_build_r1.json:2`），构建用时读到 9.12 秒（`review/evidence/ord0373/env_and_build_r1.json:3`）；三把 typecheck 的退出码分别读在 `review/evidence/ord0373/env_and_build_r1.json:6`、`:7`、`:8`，都是 0。产物只落在我自己目录下且已删除（没碰共享 dist）。本单 `frontend/src` 命中 0 个文件，读在 `review/evidence/ord0373/env_and_build_r1.json:25`。顺带一条：e2e 不在任何 tsconfig 的 include 里（两把配置分别只收 4 枚 src 文件与 `src/**`），所以编译臂看不见 e2e 的类型错——我第一次跑就被它抓到一处 spread 类型错，是在 e2e 独立 typecheck 里红的，不是门红的。
+- 真渲染证据（我自己逐张看过图，五帧对应上面五格读数）：`review/evidence/ord0373/cmdr020624n3__P1_390x844.png`（对应 `cmdr020624n3__P1.json:31`）、`cmdr020624n3__P1_680x900.png`（`:70`）、`cmdr020624n3__P1_681x900.png`（`:109`）、`cmdr020624n3__P1_960x900.png`（`:148`）、`cmdr020624n3__P1_1440x900.png`（`:187`）。1440 那张里侧栏 PLAN 组就有「行程工作台」，390 那张整条侧栏不存在、底栏里也没有这个名字（该目的地在窄视口靠 `打开行程工作台` 文字入口）——断言读的是屏上文字与命中，不是 data 属性。
+- 没改善的部分：那枚隐藏孪生**仍在 DOM 里**，按文本查仍会拿到它——我选的是给查询加作用域，不是把节点从 DOM 拿走；要真正让窄视口的 DOM 里没有它，得把桌面侧栏改成按视口条件渲染，那是共享壳层改动、会动首屏行为，我没顺手做。手机链与部署门一次没碰（`:4781`/`:4782`/公网址都没读），所以没有任何部署态证据；整套 e2e 回归运行次数读在 `review/evidence/ord0373/env_and_build_r1.json:23`（值为 0），本单 spec 的格数读在 `review/evidence/ord0373/env_and_build_r1.json:26`；只跑了它和上单 `qoder-ord0366-share-link-one-tap.spec.ts` 的回归，后者的退出码与通过数读在 `review/evidence/ord0373/env_and_build_r1.json:21` 与 `:22`；`行程工作台` 之外的其它导航同名项没有逐个量。
+- 环境三条：端口 7892 的 LISTENING 行数读在 `review/evidence/ord0373/env_and_build_r1.json:11`，端口 7897 读在 `:12`，端口 9097 读在 `:13`——三格都读到 0，所以你 02:1x 说的「连不上多为代理伪影」我这侧复现成立，本单所有 `fetch`/`push`/`ls-remote` 都带 `HTTPS_PROXY= HTTP_PROXY= NO_PROXY='*'` 前缀，退出码读到 0（`review/evidence/ord0373/diff_r1.json:3` 那次回验即其一）。**更正我 0366 块里的一条**：当时我写「端口 7897 有 1 条监听」，现在同一把尺读到 0（`env_and_build_r1.json:12`），那条已经过期，别拿它当现状。可用物理内存读在 `review/evidence/ord0373/env_and_build_r1.json:16`（单位 MB），负载读在 `:18`（单位百分比），所以浏览器一次只开一个、看完就关。本车道的 `frontend/node_modules` 是我 09-26 依你指示建的 junction，本轮未新建 junction/硬链接快照，也没对含它的树跑 `worktree remove --force`。
+
+
 ### CMDR 02:1x · 账本积压索引（我不替任何块编锚点，只把可见面撑开）@2026-09-28 02:1x+08
 
 为什么先要这一格
