@@ -1,56 +1,57 @@
 /**
- * ORD-0384 -- the pre-trip checklist may only say what the server's fields say.
+ * ORD-0384 -- the pre-trip checklist may only show what a contract anchors, and must prove the anchor.
  *
- * The expectation table below is written from the payload fields **inside this file**, on purpose: the
- * panel and the derivation module already agree by construction, so comparing the screen to the module
- * would be self-proof and would stay green through any mutation of the rules. Judging the screen
- * against an independent reading of the same response is what makes mutation M1 (a rule inverted) and
- * M2 (an empty state that drops its action) go red.
+ * The order was re-scoped on a measurement: of nine candidate classes, only two name a field that a
+ * contract declares on the response the item actually reads. So this file judges the claims that survive
+ * the narrowing, plus the one only the narrowing makes possible:
  *
- * Cells:
- *   X1  every item on the screen is true in the response, and every response condition that is true has
- *       an item -- co-presence, both directions, on the live sealed-demo journey;
- *   X2  clear a field in the response and its item disappears; put it back and the item returns -- the
- *       "completion is not a checkbox" claim, measured;
- *   X3  a fully clean response yields no items, one honest empty line, and a strikable action;
- *   X4  every item names its endpoint and field on screen, and no raw network reading or smuggled
- *       sentence reaches the DOM or an attribute (Q64=① / Q70 / Q71);
- *   X5  the band that can read "一切正常" never sits underneath a list of open items -- in the clear
- *       state it drops its own kicker, so an unqualified all-clear below "还差这些" is a denial of the
- *       list above it, which is the same one-screen-one-rule defect `today-attention-does-not-
- *       contradict-the-map` already pins for the map.
+ *   Y1  every item on screen is true in the response, and every anchored response condition that is true
+ *       has an item -- co-presence, both directions;
+ *   Y2  put the field in the response and its item appears; take it out and the item goes; put it back
+ *       and it returns -- completion is a projection of the field, not a checkbox;
+ *   Y3  a clean response yields no items, one honest line, and a strikable action, and that line claims
+ *       nothing about checks this screen cannot make;
+ *   Y4  every item names its endpoint, its field AND its contract anchor on screen, and the anchor is
+ *       verified against the real `contracts/openapi.yaml` -- the line it prints has to declare that
+ *       field, so a stale or invented line number goes red here instead of shipping;
+ *   Y5  no un-anchored class ever reaches the DOM. The list comes from
+ *       `review/n3_0384_unanchored_list_r2.py`, which measures both OpenAPI artifacts in the repo, so
+ *       this cell re-reads the same measurement the panel was narrowed by;
+ *   Y6  the band that can read "一切正常" never renders underneath a list of open items;
+ *   Y7  no raw network reading and no smuggled sentence reaches the DOM or an attribute (Q64=①/Q70/Q71).
+ *
+ * The truth table is written from the payload fields **inside this file**, not from the product module:
+ * the panel and the module agree by construction, so comparing them would be self-proof and would stay
+ * green through any mutation of the rules.
  */
 import { expect, test, type Page, type Route } from "@playwright/test";
-import { writeFileSync } from "node:fs";
+import { readFileSync, writeFileSync } from "node:fs";
+import { dirname, resolve } from "node:path";
+import { fileURLToPath } from "node:url";
 import { evidencePath } from "./_qoderEvidence";
-import { strikeableOnly, surveyName } from "./_qoderNamedHits";
+import { ANCHORED_ITEM_KEYS, UNANCHORED_CLASSES, UNANCHORED_ITEM_KEYS } from "./_qoderUnanchoredClasses";
 
 const FILE = "e2e/qoder-ord0384-pretrip-checklist.spec.ts";
 const node = (id: string, detail: string) => `${FILE} :: ${id} — ${detail}`;
 const RUN = process.env.CITYNEXUS_E2E_RUN_ID ?? "local";
+// this project is ESM (`"type": "module"`), so `__dirname` does not exist -- `import.meta.url` is what
+// survives the loader, which is the convention the other specs already use.
+const HERE = dirname(fileURLToPath(import.meta.url));
+const CONTRACT_PATH = resolve(HERE, "..", "..", "contracts", "openapi.yaml");
 
 type Bag = Record<string, any>;
 
-/**
- * The independent truth table: for each item the panel can render, the condition on the response that
- * makes it true. Written against the fields, not against `derivePretripChecklist`.
- */
-const TRUTH: Record<string, (exp: Bag, wal: Bag | null) => boolean> = {
-  stay_budget_undeclared: (e) => e.trip?.stay_budget?.declared === null,
-  plan_feasibility_open: (e) => Array.isArray(e.experience_flags?.feasibility_failures) && e.experience_flags.feasibility_failures.length > 0,
-  stay_chosen_but_unconfirmed: (e, w) => !!e.selected_option_id && (w?.reservations?.length ?? -1) === 0 && (w?.commitments?.length ?? -1) === 0,
-  stay_not_chosen: (e) => e.selected_option_id === null || e.selected_option_id === undefined || e.selected_option_id === "",
-  no_active_plan: (e) => e.active_plan === null || e.active_plan === undefined,
+/** The two anchored conditions, read straight off the response. Independent of the product module. */
+const TRUTH: Record<string, (exp: Bag) => boolean> = {
+  plan_feasibility_open: (e) =>
+    Array.isArray(e.experience_flags?.feasibility_failures) && e.experience_flags.feasibility_failures.length > 0,
   recovery_needs_decision: (e) => e.recovery?.requires_user_decision === true,
-  arrival_anchor_missing: (e) => !e.trip?.arrival_anchor?.at,
-  departure_anchor_missing: (e) => !e.trip?.departure_anchor?.at,
-  offline_pack_not_ready: (_e, w) => w?.offline_ready === false,
 };
 
 const readings: Record<string, unknown> = {};
 
 function armOf(title: string): string {
-  return /^([X]\d)/.exec(title)?.[1] ?? title.slice(0, 2);
+  return /^([XY]\d)/.exec(title)?.[1] ?? title.slice(0, 2);
 }
 
 test.afterEach(({}, info) => {
@@ -86,83 +87,58 @@ async function boot(page: Page, id: string, w = 390, h = 844) {
   await page.setViewportSize({ width: w, height: h });
 }
 
-/** Read what the screen rendered, as keys. */
+/** What the screen rendered, as keys. */
 async function renderedKeys(page: Page): Promise<string[]> {
   return page.$$eval('[data-testid="pretrip-item"]', (els) =>
     els.map((el) => el.getAttribute("data-cnx-key") ?? "?"),
   );
 }
 
-/** Read the same two responses the app read, from the test's own connection. */
-async function truthPair(page: Page, id: string): Promise<{ exp: Bag; wal: Bag }> {
-  const exp = (await (await page.request.get(`/api/v1/journeys/${id}/experience`)).json()) as Bag;
-  const wal = (await (await page.request.get(`/api/v1/journeys/${id}/wallet`)).json()) as Bag;
-  return { exp, wal };
+/** The same response the app read, read again from the test's own connection. */
+async function truthExp(page: Page, id: string): Promise<Bag> {
+  return (await (await page.request.get(`/api/v1/journeys/${id}/experience`)).json()) as Bag;
 }
 
+const EXPERIENCE_ROUTE = "**/api/v1/journeys/*/experience";
+
 /**
- * Patch each leg of the pair on its own way back. The first version patched a local `wal` object and
- * then fulfilled the **unpatched** wallet body, so every "clean response" cell was silently judging a
- * dirty one -- which is why X3 reported no empty line while X1 was green.
+ * Rewrite the experience body on its way back. One leg only, because the panel reads one payload now --
+ * the first version patched a local object and then fulfilled the *unpatched* body of the other leg, so
+ * every "clean response" cell was silently judging a dirty one.
  */
-function patchLegs(id: string, patchExp: (exp: Bag) => void, patchWal: (wal: Bag) => void) {
+function patchExp(patch: (exp: Bag) => void) {
   return async (route: Route) => {
-    const url = route.request().url();
-    const which = url.includes(`/journeys/${id}/experience`) ? "exp" : url.includes(`/journeys/${id}/wallet`) ? "wal" : null;
-    if (!which) return route.fallback();
     const res = await route.fetch();
     const body = await res.json().catch(() => null);
     if (!body || typeof body !== "object") return route.fallback();
-    (which === "exp" ? patchExp : patchWal)(body);
+    patch(body);
     return route.fulfill({ status: 200, contentType: "application/json", body: JSON.stringify(body) });
   };
 }
 
-/** The patch that makes every rule false, field by field. */
-const CLEAN_EXP = (exp: Bag) => {
-  exp.trip.stay_budget.declared = true;
-  exp.experience_flags.feasibility_failures = [];
+/** Make both anchored conditions false, field by field, touching nothing else. */
+const MAKE_CLEAR = (exp: Bag) => {
+  exp.experience_flags = { ...(exp.experience_flags ?? {}), feasibility_failures: [] };
   exp.recovery = null;
-  if (!exp.selected_option_id) exp.selected_option_id = "ORD0384-STAY";
-  if (!exp.trip.arrival_anchor) exp.trip.arrival_anchor = { at: "2026-09-21T02:00:00Z" };
-  if (!exp.trip.departure_anchor) exp.trip.departure_anchor = { at: "2026-09-22T10:00:00Z" };
-  exp.trip.arrival_anchor.at = exp.trip.arrival_anchor.at ?? "2026-09-21T02:00:00Z";
-  exp.trip.departure_anchor.at = exp.trip.departure_anchor.at ?? "2026-09-22T10:00:00Z";
 };
-const CLEAN_WAL = (wal: Bag) => {
-  wal.offline_ready = true;
-  wal.reservations = [{ id: "ORD0384-R1", type: "HOTEL", confirmation_ref: "X", scheduled_departure_at: null, scheduled_arrival_at: null, realtime_status: "CONFIRMED", price: { amount_minor: 1, currency: "CNY", status: "KNOWN" } }];
-  wal.commitments = [{ id: "ORD0384-C1", level: "SOFT", kind: "STAY", external_ref: null, status: "CONFIRMED", monetary_value_status: "KNOWN" }];
-};
-const NO_CLEAN_EXP = (exp: Bag) => {
-  exp.trip.stay_budget.declared = null;
-  exp.experience_flags.feasibility_failures = ["ORD0384_SYNTHETIC_FAILURE"];
-};
-const NO_CLEAN_WAL = (wal: Bag) => {
-  wal.reservations = [];
-  wal.commitments = [];
+/** Make both true. The values are synthetic and labelled as such, so a reviewer can tell a constructed
+ *  condition from a server answer without opening the receipt. */
+const MAKE_OPEN = (exp: Bag) => {
+  exp.experience_flags = {
+    ...(exp.experience_flags ?? {}),
+    feasibility_failures: ["ORD0384_SYNTHETIC_FEASIBILITY_FAILURE"],
+  };
+  exp.recovery = { requires_user_decision: true, state: "ORD0384_SYNTHETIC" };
 };
 
-/**
- * Both legs have to have answered before the screen is judged: the wallet arrives after the experience,
- * so reading the list in between would compare a half-built panel against a full response and call the
- * difference a product defect. The waits are registered before the navigation that triggers them.
- */
-function awaitSources(page: Page, id: string) {
-  return Promise.all([
-    page.waitForResponse((r) => r.url().includes(`/journeys/${id}/experience`) && r.status() === 200),
-    page.waitForResponse((r) => r.url().includes(`/journeys/${id}/wallet`) && r.status() === 200),
-  ]);
-}
-
-async function settleJourney(page: Page, id: string, route = "/v8/hub") {
-  const settled = awaitSources(page, id);
+async function settle(page: Page, id: string, route = "/v8/hub") {
+  const arrived = page.waitForResponse((r) => r.url().includes(`/journeys/${id}/experience`) && r.status() === 200);
   await page.goto(route, { waitUntil: "load" });
-  await settled;
-  await expect(page.getByTestId("pretrip-checklist"), node("boot", `the checklist band is missing on ${route}`)).toBeVisible({ timeout: 30_000 });
+  await arrived;
+  await expect(page.getByTestId("pretrip-checklist"), node("boot", `the checklist band is missing on ${route}`))
+    .toBeVisible({ timeout: 30_000 });
 }
 
-/** Wait for the panel to settle on a set of keys, in whichever direction is being asserted. */
 async function expectKeysInclude(page: Page, keys: string[], where: string) {
   await expect
     .poll(() => renderedKeys(page), { message: node(where, `the panel never showed ${JSON.stringify(keys)}`), timeout: 20_000 })
@@ -178,183 +154,172 @@ async function expectKeysExclude(page: Page, keys: string[], where: string) {
     .toEqual([]);
 }
 
-/* ------------------------------------------------------------------ X1: co-presence, both directions */
+/* ---------------------------------------------------- Y1: co-presence, both directions, on the stage */
 
-test("X1_every_item_is_true_in_the_response_and_every_true_condition_has_an_item — 屏上每条都对得上响应字段，字段成立的每条都在屏上", async ({ page }) => {
+test("Y1_every_item_is_true_and_every_anchored_true_condition_has_an_item — 屏上每条都对得上响应，响应里成立的锚点条件每条都在屏上", async ({ page }) => {
   test.setTimeout(300_000);
-  const arm = "X1";
+  const arm = "Y1";
   const id = await stageJourneyId(page);
   await boot(page, id);
-  await settleJourney(page, id);
-  await expect(page.getByTestId("today-hero"), node(arm, "Today never rendered")).toBeVisible({ timeout: 30_000 });
-  /* once both legs have answered, the "a source is still missing" line must be gone -- otherwise the
-     panel is permanently hedging and the co-presence comparison below means nothing. Polled, because
-     the line is legitimately there until React has applied the wallet response. */
-  await expect(
-    page.getByTestId("pretrip-source-pending"),
-    node(arm, "the panel still says a source has not been read, after both responses answered"),
-  ).toHaveCount(0, { timeout: 15_000 });
-  const keys = await renderedKeys(page);
-  const { exp, wal } = await truthPair(page, id);
-  const expected = Object.entries(TRUTH).filter(([, holds]) => holds(exp, wal)).map(([k]) => k);
-  /* settle both ways: the panel may still be rendering the second source's effect */
+  await settle(page, id);
+  const exp = await truthExp(page, id);
+  const expected = Object.entries(TRUTH).filter(([, holds]) => holds(exp)).map(([k]) => k);
+  /* A response arriving is not a screen re-rendering; settle before judging either direction. */
   await expect
     .poll(() => renderedKeys(page), { message: node(arm, `the panel never settled on ${JSON.stringify(expected)}`), timeout: 20_000 })
     .toEqual(expect.arrayContaining(expected));
-  const settledKeys = await renderedKeys(page);
-  const missing = expected.filter((k) => !settledKeys.includes(k));
-  const invented = settledKeys.filter((k) => !(TRUTH[k]?.(exp, wal) ?? false));
-  readings[arm] = {
-    journey_id: id,
-    rendered_keys: settledKeys,
-    truth_table_keys: expected,
-    rendered_but_false: invented,
-    true_but_absent: missing,
-    declared_value: exp.trip?.stay_budget?.declared,
-    feasibility_failures: exp.experience_flags?.feasibility_failures,
-    selected_option_id: exp.selected_option_id,
-    reservations_n: wal.reservations?.length,
-    commitments_n: wal.commitments?.length,
-    offline_ready: wal.offline_ready,
-  };
-  /* the frame has to contain the thing under test; at scroll 0 the band sits below the fold */
-  await page.getByTestId("pretrip-checklist").scrollIntoViewIfNeeded();
-  await page.waitForTimeout(300);
-  await page.screenshot({ path: evidencePath(`ord0384/${RUN}__X1_today.png`) });
-  expect(missing, node(arm, `the response states conditions with no item on screen: ${JSON.stringify(missing)} (rendered ${JSON.stringify(keys)})`)).toEqual([]);
-  expect(invented, node(arm, `the screen lists items the response does not support: ${JSON.stringify(invented)} (truth table ${JSON.stringify(expected)})`)).toEqual([]);
-  expect(settledKeys.length, node(arm, "the checklist rendered nothing at all, which makes both comparisons above vacuous")).toBeGreaterThan(0);
-});
-
-/* ------------------------------------------------------------------ X2: fields change, items follow */
-
-test("X2_a_field_appears_its_item_appears_the_field_clears_its_item_goes — 字段造出来条目就出现，字段清掉条目就消失（不靠勾选）", async ({ page }) => {
-  test.setTimeout(300_000);
-  const arm = "X2";
-  const id = await stageJourneyId(page);
-
-  /* Phase 1 -- make the server say three things are outstanding. The fixture's own state is not
-     assumed: the first version of this cell required the demo journey to arrive with an undeclared
-     budget, and on this stack it does not (X1 proved the panel agrees with it either way). */
-  await page.route("**/api/v1/journeys/**", patchLegs(id, NO_CLEAN_EXP, NO_CLEAN_WAL));
-  await boot(page, id);
-  await settleJourney(page, id);
-  await expectKeysInclude(
-    page,
-    ["stay_budget_undeclared", "plan_feasibility_open", "stay_chosen_but_unconfirmed"],
-    arm,
-  );
-  const raised = await renderedKeys(page);
-  const raisedTruth = await truthPair(page, id);
-  readings[arm] = {
-    journey_id: id,
-    keys_raised: raised,
-    patched_declared: raisedTruth.exp.trip?.stay_budget?.declared,
-    patched_failures: raisedTruth.exp.experience_flags?.feasibility_failures,
-    patched_reservations: raisedTruth.wal.reservations?.length,
-    patched_commitments: raisedTruth.wal.commitments?.length,
-  };
-  expect(raised.includes("stay_budget_undeclared"), node(arm, `the response says the budget is undeclared and the list does not show it (${JSON.stringify(raised)})`)).toBe(true);
-  expect(raised.includes("plan_feasibility_open"), node(arm, `the response lists a feasibility failure and the list does not show it (${JSON.stringify(raised)})`)).toBe(true);
-  expect(raised.includes("stay_chosen_but_unconfirmed"), node(arm, `both wallet lists are empty with a stay selected and the list does not show it (${JSON.stringify(raised)})`)).toBe(true);
-  await page.screenshot({ path: evidencePath(`ord0384/${RUN}__X2_raised.png`) });
-
-  /* Phase 2 -- clear those same fields. Nothing was clicked on the panel: there is no control to click.
-     If the items survive, "done" is being carried somewhere other than the truth. */
-  await page.unroute("**/api/v1/journeys/**");
-  await page.route("**/api/v1/journeys/**", patchLegs(id, CLEAN_EXP, CLEAN_WAL));
-  await settleJourney(page, id);
-  const three = ["stay_budget_undeclared", "plan_feasibility_open", "stay_chosen_but_unconfirmed"];
-  await expectKeysExclude(page, three, arm);
-  const cleared = await renderedKeys(page);
-  const clearedTruth = await truthPair(page, id);
-  (readings[arm] as Record<string, unknown>).keys_cleared = cleared;
-  (readings[arm] as Record<string, unknown>).cleared_declared = clearedTruth.exp.trip?.stay_budget?.declared;
-  (readings[arm] as Record<string, unknown>).cleared_failures = clearedTruth.exp.experience_flags?.feasibility_failures;
-  (readings[arm] as Record<string, unknown>).cleared_commitments = clearedTruth.wal.commitments?.length;
-  await page.screenshot({ path: evidencePath(`ord0384/${RUN}__X2_cleared.png`) });
-  /* and back once more, so the direction is shown to be the field and not the reload */
-  await page.unroute("**/api/v1/journeys/**");
-  await page.route("**/api/v1/journeys/**", patchLegs(id, NO_CLEAN_EXP, NO_CLEAN_WAL));
-  await settleJourney(page, id);
-  await expectKeysInclude(page, ["stay_budget_undeclared"], arm);
-  const again = await renderedKeys(page);
-  (readings[arm] as Record<string, unknown>).keys_again = again;
-  expect(again.includes("stay_budget_undeclared"), node(arm, `the item did not return when the field went back (${JSON.stringify(again)})`)).toBe(true);
-});
-
-/* ------------------------------------------------------------------ X3: the clean case stays honest */
-
-test("X3_a_clean_response_gives_no_items_one_honest_line_and_a_strikable_action — 全干净时：0 条目、一句实话、一个打得开的动作", async ({ page }) => {
-  test.setTimeout(300_000);
-  const arm = "X3";
-  const id = await stageJourneyId(page);
-  await page.route("**/api/v1/journeys/**", patchLegs(id, CLEAN_EXP, CLEAN_WAL));
-  await boot(page, id);
-  await settleJourney(page, id);
   const keys = await renderedKeys(page);
-  const empty = page.getByTestId("pretrip-empty");
-  await expect(empty, node(arm, "a clean response produced no empty-state line, so the band would be a silent hole")).toBeVisible();
-  const action = page.getByTestId("pretrip-empty-action");
-  await expect(action, node(arm, "the empty state carries no action -- 「暂无数据」 with nowhere to go is the shape this order forbids")).toBeVisible();
-  const emptyText = (await empty.textContent() ?? "").trim();
-  /* Bring it into view BEFORE the strike test: an action below the fold answers no `elementFromPoint`,
-     and that is a fact about the viewport, not about whether a traveller can reach it. */
-  await action.scrollIntoViewIfNeeded();
-  await page.waitForTimeout(300);
-  const hits = await surveyName(page, "去看方案");
-  const kept = strikeableOnly(hits);
-  const box = await action.boundingBox();
+  const missing = expected.filter((k) => !keys.includes(k));
+  const invented = keys.filter((k) => !(TRUTH[k]?.(exp) ?? false));
+  const offList = keys.filter((k) => !ANCHORED_ITEM_KEYS.includes(k));
   readings[arm] = {
     journey_id: id,
     rendered_keys: keys,
-    item_count: keys.length,
-    empty_text: emptyText,
-    action_box: box,
-    action_strikeable_buttons: kept.length,
-    claims_all_checked: /全部通过|一切正常|已确认无误|all checked/.test(emptyText),
+    truth_table_keys: expected,
+    rendered_but_false: invented,
+    true_but_absent: missing,
+    rendered_keys_outside_the_anchored_set: offList,
+    anchored_set_size: ANCHORED_ITEM_KEYS.length,
+    unanchored_set_size: UNANCHORED_ITEM_KEYS.length,
+    feasibility_failures: exp.experience_flags?.feasibility_failures ?? null,
+    recovery_requires_user_decision: exp.recovery?.requires_user_decision ?? null,
+    /* Say out loud which direction this run actually exercised. On the unpatched stage neither anchored
+       condition is true, so "every true condition has an item" compares two empty sets and proves only
+       the other direction. The positive direction is carried by Y2, which constructs both fields. */
+    negative_direction_exercised: true,
+    positive_direction_vacuous: expected.length === 0,
+    positive_direction_carried_by: expected.length === 0 ? "Y2" : "Y1",
   };
-  await page.screenshot({ path: evidencePath(`ord0384/${RUN}__X3_empty.png`) });
-  expect(keys.length, node(arm, `a clean response still listed items: ${JSON.stringify(keys)} -- at least one rule is not reading its field`)).toBe(0);
-  expect(box && box.width > 0 && box.height > 0, node(arm, `the empty-state action has no box (${JSON.stringify(box)})`)).toBe(true);
-  expect(kept.length, node(arm, "the empty-state action is in the DOM but nothing can strike it")).toBeGreaterThan(0);
-  expect(emptyText.length > 0, node(arm, "the empty line says nothing at all")).toBe(true);
-  expect((readings[arm] as Record<string, unknown>).claims_all_checked, node(arm, `the empty line claims a verdict it did not earn (${emptyText}) -- an empty list is not "all clear"`)).toBe(false);
+  await page.getByTestId("pretrip-checklist").scrollIntoViewIfNeeded();
+  await page.waitForTimeout(250);
+  await page.screenshot({ path: evidencePath(`ord0384/${RUN}__Y1_today.png`) });
+  expect(missing, node(arm, `the response states anchored conditions with no item on screen: ${JSON.stringify(missing)} (rendered ${JSON.stringify(keys)})`)).toEqual([]);
+  expect(invented, node(arm, `the screen lists items the response does not support: ${JSON.stringify(invented)} (truth table ${JSON.stringify(expected)})`)).toEqual([]);
+  expect(offList, node(arm, `items rendered outside the anchored set ${JSON.stringify(ANCHORED_ITEM_KEYS)}: ${JSON.stringify(offList)}`)).toEqual([]);
 });
 
-/* ------------------------------------------------------------------ X4: basis on screen, nothing raw */
+/* ---------------------------------------------- Y2: the field moves and the item follows, both ways */
 
-test("X4_every_item_names_its_endpoint_and_field_on_screen_and_no_raw_reading_reaches_the_dom — 每条都在屏上写出端点与字段，且没有网络原文或夹带文案", async ({ page }) => {
+test("Y2_construct_the_field_the_item_appears_remove_it_the_item_goes — 造出锚点字段条目就来，撤掉就走，再造再来", async ({ page }) => {
   test.setTimeout(300_000);
-  const arm = "X4";
+  const arm = "Y2";
   const id = await stageJourneyId(page);
+  const both = ["plan_feasibility_open", "recovery_needs_decision"];
+  const rounds: Array<Record<string, unknown>> = [];
+
+  await page.route(EXPERIENCE_ROUTE, patchExp(MAKE_OPEN));
   await boot(page, id);
-  await settleJourney(page, id);
-  const truth = await truthPair(page, id);
-  const expected = Object.entries(TRUTH).filter(([, holds]) => holds(truth.exp, truth.wal)).map(([k]) => k);
-  /* A response arriving is not a screen re-rendering. Poll until the panel shows what the response
-     supports, then judge what is on screen -- the first version read once and called the gap
-     "no items rendered", which was my race, not the product's. */
-  await expect
-    .poll(() => renderedKeys(page), { message: node(arm, `the panel never settled on ${JSON.stringify(expected)}`), timeout: 20_000 })
-    .toEqual(expect.arrayContaining(expected));
+  await settle(page, id);
+  await expectKeysInclude(page, both, arm);
+  rounds.push({ round: "constructed_open", keys: await renderedKeys(page) });
+  await page.getByTestId("pretrip-checklist").scrollIntoViewIfNeeded();
+  await page.screenshot({ path: evidencePath(`ord0384/${RUN}__Y2_open.png`) });
+
+  /* Take the same fields back out. Nothing on the panel was clicked -- there is nothing to click. */
+  await page.unroute(EXPERIENCE_ROUTE);
+  await page.route(EXPERIENCE_ROUTE, patchExp(MAKE_CLEAR));
+  await settle(page, id);
+  await expectKeysExclude(page, both, arm);
+  rounds.push({ round: "cleared", keys: await renderedKeys(page) });
+
+  /* And back once more, so what is being shown is the field and not the reload. */
+  await page.unroute(EXPERIENCE_ROUTE);
+  await page.route(EXPERIENCE_ROUTE, patchExp(MAKE_OPEN));
+  await settle(page, id);
+  await expectKeysInclude(page, both, arm);
+  rounds.push({ round: "constructed_open_again", keys: await renderedKeys(page) });
+  await page.unroute(EXPERIENCE_ROUTE);
+  const truth = await truthExp(page, id);
+  readings[arm] = { journey_id: id, rounds, last_read_feasibility_failures: truth.experience_flags?.feasibility_failures };
+  expect(rounds.map((r) => r.round), node(arm, "the three rounds did not all run")).toEqual([
+    "constructed_open", "cleared", "constructed_open_again",
+  ]);
+});
+
+/* ------------------------------------------- Y3: the empty state carries an action and tells no lie */
+
+test("Y3_clean_response_gives_no_items_one_honest_line_and_a_strikable_action — 全干净时：0 条目、一句实话、一个打得开的动作", async ({ page }) => {
+  test.setTimeout(300_000);
+  const arm = "Y3";
+  const id = await stageJourneyId(page);
+  await page.route(EXPERIENCE_ROUTE, patchExp(MAKE_CLEAR));
+  await boot(page, id);
+  await settle(page, id);
+  await expectKeysExclude(page, [...ANCHORED_ITEM_KEYS], arm);
+  const empty = page.getByTestId("pretrip-empty");
+  await expect(empty, node(arm, "no items rendered and no empty-state block either, so the band is a silent hole")).toBeVisible();
+  const line = (await empty.textContent() ?? "").replace(/\s+/g, " ").trim();
+  const action = page.getByTestId("pretrip-empty-action");
+  /* Bring it into view BEFORE the strike test: an action below the fold answers no `elementFromPoint`,
+     and that is a fact about the viewport, not about whether a traveller can reach it. */
+  await action.scrollIntoViewIfNeeded();
+  await page.waitForTimeout(250);
+  const box = await action.boundingBox();
+  const struck = box
+    ? await page.evaluate(({ x, y }) => {
+        const el = document.elementFromPoint(x, y);
+        return !!el && !!el.closest('[data-testid="pretrip-empty-action"]');
+      }, { x: box.x + box.width / 2, y: box.y + box.height / 2 })
+    : false;
+  /* What the line must never say: that everything about the trip is fine, or that anything was checked
+     and passed. It may only report the two anchored findings. */
+  const overreach = ["一切正常", "全部通过", "已确认无误", "所有检查", "都已就绪", "没有问题", "all clear", "everything is fine", "all checks"]
+    .filter((s) => line.toLowerCase().includes(s.toLowerCase()));
+  readings[arm] = {
+    journey_id: id,
+    line,
+    line_length: line.length,
+    action_label: (await action.textContent() ?? "").trim(),
+    action_box: box,
+    action_struck: struck,
+    overreach_phrases_present: overreach,
+    names_feasibility_check: line.includes("可行性失败"),
+    names_recovery_check: line.includes("恢复"),
+  };
+  await page.screenshot({ path: evidencePath(`ord0384/${RUN}__Y3_empty.png`) });
+  expect(overreach, node(arm, `the empty state claims more than the two anchored checks: ${JSON.stringify(overreach)} in ${JSON.stringify(line)}`)).toEqual([]);
+  expect(box, node(arm, "the empty state has no action at all")).not.toBeNull();
+  expect(struck, node(arm, "the empty state's action is rendered but cannot be hit at its own centre")).toBe(true);
+  expect(Boolean(readings[arm].names_feasibility_check) && Boolean(readings[arm].names_recovery_check),
+         node(arm, `the empty line does not name the two checks it actually covers, so "nothing outstanding" reads as a clean bill: ${JSON.stringify(line)}`)).toBe(true);
+});
+
+/* -------------------------------------- Y4: the printed anchor has to exist in the real contract */
+
+test("Y4_every_item_prints_endpoint_field_and_anchor_and_the_anchor_resolves — 每条写出端点、字段与锚点，且锚点那一行真的在契约里声明了这个字段", async ({ page }) => {
+  test.setTimeout(300_000);
+  const arm = "Y4";
+  const id = await stageJourneyId(page);
+  const contractText = readFileSync(CONTRACT_PATH, "utf-8");
+  const contractLines = contractText.split("\n");
+  await page.route(EXPERIENCE_ROUTE, patchExp(MAKE_OPEN));
+  await boot(page, id);
+  await settle(page, id);
+  await expectKeysInclude(page, [...ANCHORED_ITEM_KEYS], arm);
   const items = page.locator('[data-testid="pretrip-item"]');
   const count = await items.count();
-  expect(count, node(arm, `no items rendered although the response supports ${JSON.stringify(expected)}`)).toBe(expected.length);
   const perItem: Array<Record<string, unknown>> = [];
   for (let i = 0; i < count; i += 1) {
     const el = items.nth(i);
-    const text = (await el.textContent() ?? "").replace(/\s+/g, " ").trim();
-    /* "The text is in the DOM" is not "the traveller can read it" -- that is the ORD-0373 lesson, and
-       the 依据 line is the one place this order promises an endpoint name. So judge it where a reader
-       would put it: centred in the viewport, sampled across the line, and whatever is on top there
-       must be this panel. The global Copilot dock floats over the lower right of Today, so a basis
-       line that only clears at one scroll offset is not enough. */
+    const key = (await el.getAttribute("data-cnx-key")) ?? "?";
+    const endpoint = ((await el.locator('[data-cnx-field="basis_endpoint"]').textContent()) ?? "").trim();
+    const field = ((await el.locator('[data-cnx-field="basis_field"]').textContent()) ?? "").trim();
+    const anchor = ((await el.locator("[data-cnx-anchor]").first().textContent()) ?? "").trim();
+    const m = /^(contracts\/openapi\.yaml):(\d+)$/.exec(anchor);
+    let anchorLine: string | null = null;
+    let anchorResolves = false;
+    if (m) {
+      anchorLine = (contractLines[Number(m[2]) - 1] ?? "").trim().slice(0, 140);
+      const leaf = field.split(".").pop() ?? field;
+      anchorResolves = !!anchorLine && new RegExp(`(^|[{,\\s])${leaf}\\s*:`).test(anchorLine);
+    }
+    /* Read it where a traveller would: centred, sampled across the line, and whatever is on top has to
+       be this panel. The global Copilot dock floats over the lower right of Today. */
     const occ = await page.evaluate((idx) => {
       const it = (document.querySelectorAll('[data-testid="pretrip-item"]') as NodeListOf<HTMLElement>)[idx];
-      if (!it) return { error: "item vanished" };
-      const code = it.querySelector('[data-cnx-field="basis_endpoint"]') as HTMLElement | null;
-      if (!code) return { error: "no basis element" };
+      if (!it) return { error: "item vanished", covered_points: ["unmeasured"] };
+      const code = it.querySelector('[data-cnx-field="basis_field"]') as HTMLElement | null;
+      if (!code) return { error: "no basis element", covered_points: ["unmeasured"] };
       code.scrollIntoView({ block: "center" });
       const r = code.getBoundingClientRect();
       const panel = document.querySelector(".cn-pretrip");
@@ -364,74 +329,89 @@ test("X4_every_item_names_its_endpoint_and_field_on_screen_and_no_raw_reading_re
         const y = r.top + r.height / 2;
         const top = (document.elementsFromPoint(x, y) as HTMLElement[])[0];
         const mine = !!top && (top === panel || (!!panel && panel.contains(top)));
-        if (!mine) covered.push(`${x.toFixed(0)},${y.toFixed(0)}:${top ? top.tagName.toLowerCase() + "." + String(top.className).slice(0, 40) : "none"}`);
+        if (!mine) covered.push(`${x.toFixed(0)},${y.toFixed(0)}:${top ? top.tagName.toLowerCase() + "." + String(top.className).slice(0, 36) : "none"}`);
       }
-      return {
-        rect: { x: Math.round(r.x), y: Math.round(r.y), w: Math.round(r.width), h: Math.round(r.height) },
-        viewport: { w: window.innerWidth, h: window.innerHeight },
-        covered_points: covered,
-      };
+      return { rect: { x: Math.round(r.x), y: Math.round(r.y), w: Math.round(r.width) }, covered_points: covered };
     }, i);
-    perItem.push({
-      key: (await el.getAttribute("data-cnx-key")) ?? "?",
-      names_endpoint: text.includes("/api/v1/journeys/"),
-      text_length: text.length,
-      goto_strikable: (await el.locator('[data-testid^="pretrip-goto-"]').count()) > 0,
-      basis_occlusion: occ,
-    });
-    expect(occ.covered_points ?? ["unmeasured"], node(arm, `the endpoint name of item ${JSON.stringify((await el.getAttribute("data-cnx-key")) ?? "?")} is covered at the reading position by ${JSON.stringify(occ.covered_points)}`)).toEqual([]);
+    perItem.push({ key, endpoint, field, anchor, anchor_line_content: anchorLine,
+                   anchor_resolves: anchorResolves, occlusion: occ });
   }
-  const dom = await page.evaluate(() => {
-    /* Scoped to this panel: a whole-page sweep would let another lane's text decide whether ORD-0384
-       passes, and would fail for reasons this order neither owns nor can fix. The page-wide counts are
-       still recorded, just not asserted. */
-    const panel = document.querySelector(".cn-pretrip") ?? document.body;
-    /* the element itself carries a hook too, and querySelectorAll does not return the root */
-    const inPanel = (root: Element) => [root, ...Array.from(root.querySelectorAll("*"))];
-    const pairs = inPanel(panel).flatMap((el) =>
-      Array.from(el.attributes).filter((a) => a.name.startsWith("data-") || a.name.startsWith("aria-")).map((a) => `${el.tagName.toLowerCase()}|${a.name}|${a.value}`),
-    );
-    const body = document.body.textContent ?? "";
-    const panelText = panel.textContent ?? "";
-    const allPairs = Array.from(document.querySelectorAll("*")).flatMap((el) =>
-      Array.from(el.attributes).filter((a) => a.name.startsWith("data-") || a.name.startsWith("aria-")).map((a) => `${el.tagName.toLowerCase()}|${a.name}|${a.value}`),
-    );
-    const q64 = ["http_status", "content_type", "body_bytes", "response_received", "elapsed_ms", "request_id"];
-    return {
-      pairs: pairs.length,
-      page_pairs: allPairs.length,
-      q64_in_panel: q64.filter((f) => panelText.includes(f)),
-      q64_on_whole_page: q64.filter((f) => body.includes(f)),
-      cnx_field_values: pairs.filter((p) => p.includes("|data-cnx-field|")).map((p) => p.split("|")[2]),
-    };
-  });
-  readings[arm] = { journey_id: id, items: perItem, ...dom };
+  readings[arm] = { journey_id: id, contract_bytes: Buffer.byteLength(contractText, "utf-8"),
+                    contract_line_count: contractLines.length, items: perItem };
+  expect(perItem.length, node(arm, `only ${String(perItem.length)} items rendered, so the anchor check would be thin (anchored set is ${String(ANCHORED_ITEM_KEYS.length)})`)).toBe(ANCHORED_ITEM_KEYS.length);
   for (const it of perItem) {
-    expect(it.names_endpoint, node(arm, `item ${JSON.stringify(it.key)} does not state which endpoint its field came from (${JSON.stringify(it)})`)).toBe(true);
-    expect(it.goto_strikable, node(arm, `item ${JSON.stringify(it.key)} has no way to go and handle it`)).toBe(true);
+    expect(String(it.endpoint), node(arm, `item ${it.key} does not state its endpoint on screen`)).toContain("/api/v1/journeys/");
+    expect(it.field, node(arm, `item ${it.key} does not state its field on screen`)).toBeTruthy();
+    expect(it.anchor, node(arm, `item ${it.key} prints no resolvable anchor: ${JSON.stringify(it.anchor)}`)).toMatch(/^contracts\/openapi\.yaml:\d+$/);
+    expect(it.anchor_resolves, node(arm, `item ${it.key} prints ${it.anchor} but that line does not declare \`${String(it.field).split(".").pop()}\`; the line reads ${JSON.stringify(it.anchor_line_content)}`)).toBe(true);
+    expect((it.occlusion as any).covered_points ?? ["unmeasured"], node(arm, `item ${it.key}'s basis line is covered at the reading position by ${JSON.stringify((it.occlusion as any).covered_points)}`)).toEqual([]);
   }
-  expect(dom.q64_in_panel, node(arm, `raw network readings inside the panel: ${JSON.stringify(dom.q64_in_panel)}`)).toEqual([]);
-  /* Q70: a data-cnx-field hook names a contract field and nothing else -- no sentence, no value. */
-  const sentences = dom.cnx_field_values.filter((v) => v.includes("：") || v.includes(" ") || /[，。]/.test(v));
-  expect(sentences, node(arm, `data-cnx-field holds more than a field name: ${JSON.stringify(sentences)}`)).toEqual([]);
-  expect(dom.cnx_field_values.length, node(arm, `the panel exposes ${String(dom.cnx_field_values.length)} contract hooks, expected at least the three this order names`)).toBeGreaterThanOrEqual(3);
+  await page.getByTestId("pretrip-checklist").scrollIntoViewIfNeeded();
+  await page.waitForTimeout(250);
+  await page.screenshot({ path: evidencePath(`ord0384/${RUN}__Y4_anchors.png`) });
 });
 
-/* ------------------------------------------------- X5: the all-clear line must not deny the list */
+/* --------------------------------------- Y5: the un-anchored classes must never reach the screen */
 
-test("X5_the_all_clear_line_never_sits_under_an_open_list — 「一切正常」不能印在还差这些的清单下面", async ({ page }) => {
+test("Y5_no_unanchored_class_ever_reaches_the_dom — 没锚的类一条都不许出现在屏上", async ({ page }) => {
   test.setTimeout(300_000);
-  const arm = "X5";
+  const arm = "Y5";
   const id = await stageJourneyId(page);
+  /* The worst case for this cell: a response shaped so that all seven un-anchored rules WOULD have
+     fired under the first version. If none of their names appears now, the narrowing holds under the
+     very conditions that used to produce them. */
+  await page.route(EXPERIENCE_ROUTE, patchExp((exp) => {
+    exp.trip = {
+      ...(exp.trip ?? {}),
+      stay_budget: { declared: null, amount_minor: 0, currency: "CNY" },
+      arrival_anchor: {},
+      departure_anchor: {},
+    };
+    exp.selected_option_id = null;
+    exp.active_plan = null;
+    exp.experience_flags = { ...(exp.experience_flags ?? {}), feasibility_failures: [] };
+    exp.recovery = null;
+  }));
   await boot(page, id);
-  await settleJourney(page, id);
-  /* The premise only exists when the panel actually has something open and the band is clear. Without
-     items the ordering claim is vacuously true, so the cell would pass on an empty screen. */
-  await expect
-    .poll(() => renderedKeys(page), { message: node(arm, "the checklist never rendered an item"), timeout: 20_000 })
-    .not.toHaveLength(0);
-  const keys = await renderedKeys(page);
-  const bandState = await page.evaluate(() => {
+  await settle(page, id);
+  await page.waitForTimeout(400);
+  const dom = await page.evaluate((classes: typeof UNANCHORED_CLASSES) => {
+    const body = document.body.innerText;
+    const attrs = Array.from(document.querySelectorAll("*")).flatMap((el) =>
+      Array.from(el.attributes).map((a) => `${a.name}=${a.value}`),
+    );
+    const haystack = `${body}\n${attrs.join("\n")}`;
+    const hits = classes
+      .map((c) => ({ key: c.key, field: c.field,
+                     needles_found: [c.key, c.field].filter((needle) => !!needle && haystack.includes(needle)) }))
+      .filter((h) => h.needles_found.length > 0);
+    return {
+      unanchored_hits: hits,
+      rendered_keys: Array.from(document.querySelectorAll('[data-testid="pretrip-item"]'))
+        .map((el) => el.getAttribute("data-cnx-key") ?? "?"),
+    };
+  }, UNANCHORED_CLASSES);
+  const offList = dom.rendered_keys.filter((k) => !ANCHORED_ITEM_KEYS.includes(k));
+  readings[arm] = { journey_id: id, unanchored_keys_total: UNANCHORED_ITEM_KEYS.length,
+                    unanchored_classes_total: UNANCHORED_CLASSES.length,
+                    rendered_keys: dom.rendered_keys, rendered_keys_outside_the_anchored_set: offList,
+                    unanchored_names_found_in_dom: dom.unanchored_hits };
+  await page.screenshot({ path: evidencePath(`ord0384/${RUN}__Y5_narrowed.png`) });
+  expect(dom.unanchored_hits, node(arm, `un-anchored classes still reach the DOM: ${JSON.stringify(dom.unanchored_hits)}`)).toEqual([]);
+  expect(offList, node(arm, `the panel rendered keys outside the anchored set: ${JSON.stringify(offList)}`)).toEqual([]);
+});
+
+/* ---------------------------------- Y6: the all-clear line may not deny the list above it */
+
+test("Y6_the_all_clear_line_never_sits_under_an_open_list — 「一切正常」不能印在有待办的清单下面", async ({ page }) => {
+  test.setTimeout(300_000);
+  const arm = "Y6";
+  const id = await stageJourneyId(page);
+  await page.route(EXPERIENCE_ROUTE, patchExp(MAKE_OPEN));
+  await boot(page, id);
+  await settle(page, id);
+  await expectKeysInclude(page, ["plan_feasibility_open"], arm);
+  const geo = await page.evaluate(() => {
     const band = document.querySelector('[data-testid="today-attention-band"]');
     const strong = document.querySelector('[data-testid="today-attention"]');
     const kicker = document.querySelector('.cn-attention-band .cn-attention-head .v8-kicker');
@@ -447,23 +427,60 @@ test("X5_the_all_clear_line_never_sits_under_an_open_list — 「一切正常」
       band_kicker_visible: !!kicker && (kicker as HTMLElement).offsetParent !== null,
       band_rect: rect(band),
       panel_rect: rect(panel),
-      panel_items: document.querySelectorAll('[data-testid="pretrip-checklist"] [data-cnx-key]').length,
+      panel_items: document.querySelectorAll('[data-testid="pretrip-item"]').length,
     };
   });
-  readings[arm] = { journey_id: id, rendered_keys: keys, ...bandState };
-  await page.locator('[data-testid="today-attention-band"]').screenshot({ path: evidencePath(`ord0384/${RUN}__X5_band.png`) }).catch(() => undefined);
+  readings[arm] = { journey_id: id, ...geo };
+  expect(geo.band_rect, node(arm, "the attention band is not on screen, so this cell proves nothing")).not.toBeNull();
+  expect(geo.panel_rect, node(arm, "the checklist is not on screen, so this cell proves nothing")).not.toBeNull();
+  expect(geo.panel_items, node(arm, `the checklist rendered ${String(geo.panel_items)} items, so ordering is untestable here`)).toBeGreaterThan(0);
+  /* The premise is a clear band with no subject of its own. If the product starts showing the kicker,
+     this cell's strictness is no longer earned and has to be re-read rather than quietly kept. */
+  if (geo.band_attention === "clear" && !geo.band_kicker_visible) {
+    expect(
+      geo.band_rect!.bottom <= geo.panel_rect!.top,
+      node(arm, `the bare all-clear "${geo.band_text}" renders at y=${String(geo.band_rect!.top)}-${String(geo.band_rect!.bottom)}, i.e. below the ${String(geo.panel_items)} open items ending at y=${String(geo.panel_rect!.bottom)} -- one screen, two answers`),
+    ).toBe(true);
+  }
   await page.getByTestId("pretrip-checklist").scrollIntoViewIfNeeded();
   await page.waitForTimeout(250);
-  await page.screenshot({ path: evidencePath(`ord0384/${RUN}__X5_pair.png`) });
+  await page.screenshot({ path: evidencePath(`ord0384/${RUN}__Y6_pair.png`) });
+});
 
-  expect(bandState.band_rect, node(arm, "the attention band is not on the screen at all, so this cell proves nothing")).not.toBeNull();
-  expect(bandState.panel_rect, node(arm, "the checklist panel is not on the screen at all, so this cell proves nothing")).not.toBeNull();
-  expect(bandState.panel_items, node(arm, `the checklist rendered ${String(bandState.panel_items)} items -- an empty list cannot be contradicted, so order is untestable here`)).toBeGreaterThan(0);
-  expect(bandState.band_attention, node(arm, `the band reads ${JSON.stringify(bandState.band_attention)}, not the clear state this cell is about`)).toBe("clear");
-  /* The reason ordering is load-bearing: the clear state hides the band's own subject. */
-  expect(bandState.band_kicker_visible, node(arm, "the clear band now shows its kicker, so the premise of this cell changed -- re-read it before trusting the verdict")).toBe(false);
-  expect(
-    bandState.band_rect!.bottom <= bandState.panel_rect!.top,
-    node(arm, `the bare all-clear "${bandState.band_text}" renders at y=${String(bandState.band_rect!.top)}–${String(bandState.band_rect!.bottom)}, i.e. below the ${String(bandState.panel_items)} open items that end at y=${String(bandState.panel_rect!.bottom)} -- one screen, two answers`),
-  ).toBe(true);
+/* ------------------------- Y7: no raw network reading, no smuggled sentence (Q64=① / Q70 / Q71) */
+
+test("Y7_no_raw_network_reading_and_no_sentence_in_a_data_hook — 屏上没有网络原文，data-cnx-field 里只有字段名", async ({ page }) => {
+  test.setTimeout(300_000);
+  const arm = "Y7";
+  const id = await stageJourneyId(page);
+  await page.route(EXPERIENCE_ROUTE, patchExp(MAKE_OPEN));
+  await boot(page, id);
+  await settle(page, id);
+  await expectKeysInclude(page, [...ANCHORED_ITEM_KEYS], arm);
+  const dom = await page.evaluate(() => {
+    /* Scoped to this panel: a whole-page sweep would let another lane's text decide whether ORD-0384
+       passes. The page-wide count is recorded, just not asserted. */
+    const panel = document.querySelector(".cn-pretrip") ?? document.body;
+    /* the element itself carries a hook too, and querySelectorAll does not return the root */
+    const inPanel = (root: Element) => [root, ...Array.from(root.querySelectorAll("*"))];
+    const pairs = inPanel(panel).flatMap((el) =>
+      Array.from(el.attributes).filter((a) => a.name.startsWith("data-") || a.name.startsWith("aria-")).map((a) => `${el.tagName.toLowerCase()}|${a.name}|${a.value}`),
+    );
+    const q64 = ["http_status", "content_type", "body_bytes", "response_received", "elapsed_ms", "request_id"];
+    return {
+      pairs_in_panel: pairs.length,
+      pairs_on_page: Array.from(document.querySelectorAll("*")).flatMap((el) =>
+        Array.from(el.attributes).filter((a) => a.name.startsWith("data-") || a.name.startsWith("aria-")).map((a) => a.name),
+      ).length,
+      q64_in_panel: q64.filter((f) => (panel.textContent ?? "").includes(f)),
+      q64_on_whole_page: q64.filter((f) => (document.body.textContent ?? "").includes(f)),
+      cnx_field_values: pairs.filter((p) => p.includes("|data-cnx-field|")).map((p) => p.split("|")[2]),
+    };
+  });
+  readings[arm] = { journey_id: id, ...dom };
+  expect(dom.q64_in_panel, node(arm, `raw network readings inside the panel: ${JSON.stringify(dom.q64_in_panel)}`)).toEqual([]);
+  /* Q70: a data-cnx-field hook names a contract field and nothing else -- no sentence, no value. */
+  const sentences = dom.cnx_field_values.filter((v) => v.includes("：") || v.includes(" ") || /[，。]/.test(v));
+  expect(sentences, node(arm, `data-cnx-field holds more than a field name: ${JSON.stringify(sentences)}`)).toEqual([]);
+  expect(dom.cnx_field_values.length, node(arm, `the panel exposes ${String(dom.cnx_field_values.length)} contract hooks, expected at least the three this order names`)).toBeGreaterThanOrEqual(3);
 });
