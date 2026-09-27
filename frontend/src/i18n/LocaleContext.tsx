@@ -695,13 +695,31 @@ const en: Dict = {
   "studio.previewLegend": "Preview is stateless; accept rechecks the live plan and evidence",
   "studio.impactPass": "The edited order preserves commitments and has captured route evidence.",
   "studio.impactFail": "This change did not pass our safety checks.",
-  "studio.gateFailed": "Gate failed",
   "studio.readyNext": "Ready to build the next version of your plan.",
   "studio.frozenEvidence": "Frozen evidence",
   "studio.checking": "Checking…",
   "studio.previewImpact": "Preview impact",
   "studio.accepting": "Accepting…",
   "studio.acceptEdit": "Accept edit",
+  /* ORD-0369: measured on a 390x844 viewport -- reordering the sealed demo's plan answered with
+     `PROTECTED_ACTIVITY_REORDER, FROZEN_ROUTE_EVIDENCE_MISSING, STALE_FROZEN_EVIDENCE,
+     MOBILITY_DATA_UNAVAILABLE:<uuid>|<uuid> ×4` pasted straight into the traveller's line. The codes
+     are contract vocabulary, so they are now translated one by one; anything outside the declared
+     set is counted and left in the technical fold rather than printed as if it were an explanation. */
+  "studio.allProtected": "All {n} activities on this plan are protected anchors, so no reorder here can be accepted. Nothing has been changed.",
+  "studio.dragHint": "Hold an activity and drag it to a new position to draft a change.",
+  "studio.blockedReasons": "Why this change cannot be accepted:",
+  "studio.gate.PROTECTED_ACTIVITY_REORDER": "the new order moves a protected commitment",
+  "studio.gate.FROZEN_ROUTE_EVIDENCE_MISSING": "this plan holds no frozen route evidence for the new order",
+  "studio.gate.FROZEN_EVIDENCE_INTEGRITY_MISMATCH": "the frozen evidence on file does not match this plan",
+  "studio.gate.STALE_FROZEN_EVIDENCE": "the frozen evidence expired before it could be used",
+  "studio.gate.INVALID_FROZEN_EVIDENCE_EXPIRY": "the frozen evidence carries an expiry this device cannot read",
+  "studio.gate.MOBILITY_DATA_UNAVAILABLE": "live route data is unavailable for {n} leg(s) of the new order",
+  "studio.gate.unknown": "{n} further refusal(s) this screen cannot name — the server's own words are in the technical detail",
+  "studio.technicalDetail": "Technical detail",
+  "studio.requestRefused": "The server refused this request (HTTP {status}). The draft on this screen is unchanged.",
+  "studio.costDelta": "cost Δ {v}",
+  "studio.timeDelta": "time Δ {n} min",
 
   // ── Traveler Twin ──
   "twin.kicker": "Traveler Twin · soft context",
@@ -758,6 +776,29 @@ const en: Dict = {
   "mapComp.providerRoute": "Provider-backed route · WGS84",
   "mapComp.disruptionScope": "Disruption scope",
   "mapComp.maplibreLabel": "MapLibre Journey map",
+
+  // ── Recovery / stale-evidence card ──
+  /* ORD-0369: this card is what a traveller hits first when a chosen plan can no longer be
+     verified, and every sentence in it used to be a hardcoded English literal inside the component
+     -- an unreadable gate in front of the only way out of a stale plan. */
+  "recovery.staleTitle": "Trip evidence needs re-syncing",
+  "recovery.staleDetail": "The route evidence this plan was built on has expired, so a change to it cannot be checked yet. Nothing about your trip has been altered.",
+  "recovery.noAltTitle": "No safe alternative is available",
+  "recovery.noAltDetail": "A replan was attempted for {code} and produced no feasible alternative. The current plan stays unverified.",
+  "recovery.decisionTitle": "Your trip needs a decision",
+  "recovery.decisionDetail": "A new hard requirement ({code}) means the current plan can no longer be confirmed as safe. Your existing plan has not been changed.",
+  "recovery.generate": "Generate new options",
+  "recovery.generating": "Generating…",
+  "recovery.generated": "Fresh options generated. Select one to clear this warning - it stays until then.",
+  "recovery.generateRefused": "The server refused to generate new options (HTTP {status}, named {code}). No plan was changed.",
+  "recovery.acknowledge": "Acknowledge warning",
+  "recovery.acknowledged": "Warning acknowledged",
+  "recovery.ackRefused": "The server did not accept the acknowledgement (HTTP {status}, named {code}). The warning is still showing because the plan is still unverified.",
+  "recovery.noOpenRecovery": "There is no recovery decision open on this journey to acknowledge: what is stale here is the plan's evidence, and the server says so. This warning clears when a verified plan is selected.",
+  "recovery.failureCount": "The server listed {n} refusal(s) against this plan; its own words are in the technical detail.",
+  "recovery.technicalDetail": "Technical detail",
+  "recovery.serverReason": "Reason the server gave",
+  "recovery.deviceReason": "This device's own reading (the server sent no sentence)",
 };
 
 const zhCN: Dict = {
@@ -1413,13 +1454,26 @@ const zhCN: Dict = {
   "studio.previewLegend": "预览无状态；接受将重新检查活跃方案和证据",
   "studio.impactPass": "编辑后的顺序保留了承诺并已采集路线证据。",
   "studio.impactFail": "此修改未通过安全检查。",
-  "studio.gateFailed": "门控失败",
   "studio.readyNext": "已准备好生成方案的下一版本。",
   "studio.frozenEvidence": "冻结证据",
   "studio.checking": "检查中…",
   "studio.previewImpact": "预览影响",
   "studio.accepting": "接受中…",
   "studio.acceptEdit": "接受编辑",
+  "studio.allProtected": "这一版 {n} 个活动全部是受保护锚点，所以在这里无论怎么重排都不会被接受。什么也没有被改动。",
+  "studio.dragHint": "按住一项活动，拖到新的位置，就是一次草稿改动。",
+  "studio.blockedReasons": "这次改动不能被接受的原因：",
+  "studio.gate.PROTECTED_ACTIVITY_REORDER": "新的顺序挪动了受保护的承诺",
+  "studio.gate.FROZEN_ROUTE_EVIDENCE_MISSING": "这一版在新顺序上没有冻结的路线证据",
+  "studio.gate.FROZEN_EVIDENCE_INTEGRITY_MISMATCH": "档案里的冻结证据与这一版对不上",
+  "studio.gate.STALE_FROZEN_EVIDENCE": "冻结证据在能被使用之前就已经过期",
+  "studio.gate.INVALID_FROZEN_EVIDENCE_EXPIRY": "冻结证据上的过期时间这台设备读不出来",
+  "studio.gate.MOBILITY_DATA_UNAVAILABLE": "新顺序里有 {n} 段路程拿不到实时路线数据",
+  "studio.gate.unknown": "还有 {n} 条这个界面叫不出名字的拒绝，原文在技术详情里",
+  "studio.technicalDetail": "技术详情",
+  "studio.requestRefused": "服务器拒绝了这次请求（HTTP {status}）。这个屏幕上的草稿没有变化。",
+  "studio.costDelta": "成本变化 {v}",
+  "studio.timeDelta": "时间变化 {n} 分钟",
 
   // ── 旅行者画像 ──
   "twin.kicker": "旅行者画像 · 软上下文",
@@ -1473,6 +1527,26 @@ const zhCN: Dict = {
   "mapComp.providerRoute": "供应商支持的路线 · WGS84",
   "mapComp.disruptionScope": "中断范围",
   "mapComp.maplibreLabel": "MapLibre 行程地图",
+
+  // ── 恢复与证据过期卡片 ──
+  "recovery.staleTitle": "这趟行程的出行证据需要重新同步",
+  "recovery.staleDetail": "这套方案当初依据的路线证据已经过期，所以现在对它的改动还没法校验。你行程上的任何东西都没有被改动。",
+  "recovery.noAltTitle": "没有安全的替代方案",
+  "recovery.noAltDetail": "针对 {code} 试过一次重规划，没有产出可行的替代方案。当前方案仍未通过校验。",
+  "recovery.decisionTitle": "你的行程需要你做一个决定",
+  "recovery.decisionDetail": "新增加的一条硬性要求（{code}）让当前方案无法再被确认为安全。你原有的方案没有被改动。",
+  "recovery.generate": "重新生成可选方案",
+  "recovery.generating": "正在生成…",
+  "recovery.generated": "已经生成新的可选方案。选定其中一份之后这条提醒才会消失——在那之前它会一直显示。",
+  "recovery.generateRefused": "服务器拒绝了这次生成（HTTP {status}，具名 {code}）。没有任何方案被改动。",
+  "recovery.acknowledge": "我知道了这条提醒",
+  "recovery.acknowledged": "已确认收到提醒",
+  "recovery.ackRefused": "服务器没有接受这次确认（HTTP {status}，具名 {code}）。提醒仍在显示，因为方案仍未通过校验。",
+  "recovery.noOpenRecovery": "这趟行程现在没有等待确认的恢复决定：这里过期的是方案的证据，服务器就是这么答的。选定一份通过校验的方案后这条提醒才会消失。",
+  "recovery.failureCount": "服务器针对这一版列出了 {n} 条拒绝，原文在技术详情里。",
+  "recovery.technicalDetail": "技术详情",
+  "recovery.serverReason": "服务器给出的原因",
+  "recovery.deviceReason": "这台设备自己的读数（服务器没给句子）",
 };
 
 const dictionaries: Record<TripLocale, Dict> = { en, "zh-CN": zhCN };

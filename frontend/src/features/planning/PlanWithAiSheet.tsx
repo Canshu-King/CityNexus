@@ -417,6 +417,34 @@ function isAbort(cause: unknown): boolean {
   return cause instanceof Error && cause.name === "AbortError";
 }
 
+/**
+ * ORD-0369: who actually wrote `reasoning_summary`.
+ *
+ * Measured against the running backend with the AI switch off: `POST .../agent/commands` still
+ * answers HTTP 200 with `mission.status = "COMPLETED"` and a populated `reasoning_summary`, and the
+ * mission itself carries `ai_state = "DISABLED_BY_OPS"`. Mounting that sentence under ORD-0240's
+ * 「模型原始输出」 label credits a model for text the deterministic compiler wrote -- the mirror
+ * image of the defect ORD-0240 closed.
+ *
+ * The vocabulary is the one `backend/app/agent/ai_availability.py:36-44` produces after ORD-0359,
+ * which renamed `READY` away because "a key exists" was promising that it works. So
+ * `CONFIGURED_UNVERIFIED` deliberately does **not** mean a model wrote this -- mapping it to
+ * "model" would re-open 0359's hole one level up. Only `PROVIDER_REFUSED` states that the provider
+ * was actually reached and answered. Everything else, including a missing state, keeps today's
+ * wording, because "we were not told" is not evidence that nothing ran either.
+ */
+type SummaryOrigin = "model" | "no_model" | "not_stated";
+
+export function summaryOriginOf(mission: unknown): SummaryOrigin {
+  if (!mission || typeof mission !== "object") return "not_stated";
+  const stated = mission as { ai_state?: unknown; deepseek_configured?: unknown };
+  const state = typeof stated.ai_state === "string" ? stated.ai_state : "";
+  if (state === "DISABLED_BY_OPS" || state === "NOT_CONFIGURED") return "no_model";
+  if (state === "PROVIDER_REFUSED") return "model";
+  if (state === "" && stated.deepseek_configured === false) return "no_model";
+  return "not_stated";
+}
+
 export function PlanWithAiSheet({
   journeyId,
   cityCode,
@@ -454,6 +482,9 @@ export function PlanWithAiSheet({
     status: string;
     failureReason: FailureNote | null;
     summary: string | null;
+    /** ORD-0369: whose sentence `summary` is, taken from the mission's own `ai_state` -- never from
+     *  whether this screen happened to reach the success branch. */
+    summaryOrigin?: SummaryOrigin;
     rawReading?: RawReading | null;
     planCount?: number;
     newPlanIds?: string[];
@@ -868,6 +899,7 @@ export function PlanWithAiSheet({
             }
           : blockedSentence,
         summary: mission?.reasoning_summary ?? null,
+        summaryOrigin: summaryOriginOf(mission ?? null),
         rawReading,
         planCount,
       });
@@ -1190,8 +1222,18 @@ export function PlanWithAiSheet({
                         static table would be claimed as "already translated", which is the hole this
                         order closes.  Unlabelled in the main flow, a Chinese traveller read it as our
                         promise. */}
-                    <span className="plan-ai-detail-label" data-testid="plan-ai-model-label">
-                      {zh ? "模型原始输出（未翻译，不代表本界面的结论）" : "Model's own words (not translated, not this screen's conclusion)"}
+                    <span
+                      className="plan-ai-detail-label"
+                      data-testid="plan-ai-model-label"
+                      data-summary-origin={result?.summaryOrigin ?? "not_stated"}
+                    >
+                      {(result?.summaryOrigin ?? "not_stated") === "no_model"
+                        ? zh
+                          ? "服务器给这句总结（这台部署的 AI 开关是关的，所以它不是模型写的）"
+                          : "The server's own summary (the AI switch on this deployment is off, so no model wrote this)"
+                        : zh
+                          ? "模型原始输出（未翻译，不代表本界面的结论）"
+                          : "Model's own words (not translated, not this screen's conclusion)"}
                     </span>
                     <code data-testid="plan-ai-model-output">{result.summary}</code>
                   </>

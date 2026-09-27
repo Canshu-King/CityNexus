@@ -1584,3 +1584,44 @@ button { display: block; width: 100%; margin-top: 12px; border: 0; border-radius
 .inbox-advanced-raw dt { color: #8b95a3; font-size: 9px; letter-spacing: 0.04em; text-transform: uppercase; }
 .inbox-advanced-raw dd { margin: 0; color: #4c5872; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 10px; overflow-wrap: anywhere; }
 @media (max-width: 480px) { .inbox-advanced-raw { grid-template-columns: 1fr; } }
+
+/* ORD-0369: the stale-evidence card carried its colours as inline styles, so `.v8-feasibility`'s
+   green "checks passed" look is what a *warning* fell back to the moment the inline style went
+   away.  The rule states the warning in tokens instead, the way `.trial-city-warning` (ORD-0060)
+   already does: the sentence carries the meaning, the colour only reinforces it. */
+.v8-recovery-required {
+  margin-top: 12px;
+  padding: var(--cn-s-12) var(--cn-s-16);
+  border-left: 3px solid var(--cn-warning);
+  border-radius: var(--cn-r-control);
+  background: var(--cn-secondary);
+  color: var(--v8-ink);
+  font-size: var(--cn-fs-caption);
+  line-height: 1.45;
+  overflow-wrap: anywhere;
+}
+.recovery-required-detail { margin-top: 4px; }
+.recovery-failures { margin: 8px 0 0; padding-left: 18px; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: var(--cn-fs-caption); }
+.recovery-actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+.recovery-message { display: block; margin-top: 8px; color: var(--v8-ink); font-size: var(--cn-fs-caption); }
+
+/* ORD-0369: the Trip Studio list is reorder-by-drag only (a PointerSensor and nothing else), so a
+   row that is a drag handle has to look like one -- measured `cursor: auto` on a plain text row. */
+.v12-trip-studio .v8-activity { cursor: grab; }
+.v12-trip-studio .v8-activity:active { cursor: grabbing; }
+.v12-studio-blocked { margin-top: 8px; color: var(--v8-ink); font-size: var(--cn-fs-caption); }
+
+/* ORD-0369: the refusal list this panel used to paste as one comma-joined line of server tokens
+   (with a leg UUID pair per entry) is now one readable sentence per named condition. */
+.v12-studio-reasons { margin: 8px 0 0; padding-left: 18px; color: var(--v8-ink); font-size: var(--cn-fs-caption); line-height: 1.45; }
+.v12-studio-reasons li { margin: 2px 0; }
+
+/* ORD-0369 B4: `.v8-primary` had no `:disabled` rule (only `.v8-primary-button` did), so the
+   studio's 接受编辑 -- disabled until a trial passes, which on this plan is never -- was painted
+   exactly like the enabled one. Measured opacity 1 on a 390x844 screenshot. */
+.v8-primary:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.v12-studio-reasons-head { margin: 10px 0 2px; color: var(--v8-ink); font-size: var(--cn-fs-caption); font-weight: 700; }

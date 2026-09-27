@@ -121,6 +121,26 @@ function retryHint(error: unknown): string {
   return ms <= 0 ? "（现在就可以再试）" : `（约 ${Math.round(ms)} 毫秒后再试）`;
 }
 
+/** `POST .../replans` answers 422 with the *reason* as a bare machine token in `error.message`
+ *  while `message_key` stays the generic `request.invalid` (measured on the sealed demo journey:
+ *  code VALIDATION_ERROR, message MOBILITY_DATA_UNAVAILABLE, one gap whose evidence state is
+ *  FACT_PRESENT_BUT_NOT_HARD_ELIGIBLE).  Reporting only the key told a traveller "your request was
+ *  invalid"; quoting only the token told them nothing they could act on.  These wordings name the
+ *  condition the server's own detail carries, keep its code visible, and say what did not change. */
+function mobilityRefusal(error: unknown): { legs: number; states: string[] } | null {
+  if (serverSentence(error) !== "MOBILITY_DATA_UNAVAILABLE") return null;
+  const gaps = (bodyOf(error)?.error?.details as { gaps?: unknown } | undefined)?.gaps;
+  if (!Array.isArray(gaps)) return { legs: 0, states: [] };
+  const states = [
+    ...new Set(
+      gaps
+        .map((gap) => (gap as { evidence_state?: unknown }).evidence_state)
+        .filter((state): state is string => typeof state === "string" && state.length > 0),
+    ),
+  ];
+  return { legs: gaps.length, states };
+}
+
 export function describeFailure(error: unknown): NamedFailure {
   const { code, status } = failureCode(error);
   const fields = code === "VALIDATION_ERROR" ? fieldsOf(error) : "";
@@ -129,6 +149,18 @@ export function describeFailure(error: unknown): NamedFailure {
   if (hit) {
     const extra = busy ? retryHint(error) : fields;
     return { code, status, zh: hit.zh(status, extra), en: hit.en(status, extra) };
+  }
+  const mobility = mobilityRefusal(error);
+  if (mobility) {
+    const states = mobility.states.length ? mobility.states.join("、") : "服务器未给证据状态";
+    const legs = mobility.legs > 0 ? ` ${mobility.legs} 段` : "";
+    const legsEn = mobility.legs > 0 ? ` ${mobility.legs} leg(s)` : "";
+    return {
+      code,
+      status,
+      zh: `重算这一版需要能当作硬依据的路线证据。服务器说这些路程${legs}的证据在档，但达不到可硬用的标准（它给的码：MOBILITY_DATA_UNAVAILABLE，证据状态 ${states}）。所以它没有算出任何替代方案，你现在的方案没有变化——这一步要接上真实的路线数据源才会通。`,
+      en: `Recomputing this plan needs route evidence that can be treated as a hard basis. The server says these${legsEn} have facts on file that do not meet that bar (its code: MOBILITY_DATA_UNAVAILABLE, evidence state ${mobility.states.join(", ") || "not given"}). It produced no alternative, and your current plan is unchanged -- this step needs a real routing data source connected.`,
+    };
   }
   if (code.startsWith("INVALID_ACTIVITY_TRANSITION")) {
     /* The server's own name carries the from->to it refused, so the sentence can quote the fact
