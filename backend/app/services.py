@@ -628,6 +628,7 @@ def plan_schema(
         mobility_snapshot_id=item.mobility_snapshot_id,
         mobility_evidence=json.loads(item.mobility_evidence_json or "{}"),
         explanation=json.loads(item.explanation_json or "{}"),
+        created_at=item.created_at or None,
         stale=stale,
         selectable=not stale,
         stale_reason=stale_reason,

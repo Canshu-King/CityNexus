@@ -2322,6 +2322,9 @@ components:
         score_breakdown: {oneOf: [{$ref: '#/components/schemas/ScoreBreakdown'}, {type: 'null'}]}
         mobility_snapshot_id: {type: [string, 'null']}
         mobility_evidence: {type: object, additionalProperties: true}
+        # ORD-0386: the moment this version was written, so a history list is not read
+        # from array order. Null only on rows persisted before the column existed.
+        created_at: {type: [string, 'null'], format: date-time}
         # ORD-0097: the server's own answer to "is this the plan the journey runs", taken
         # from journey.active_plan_version_id - never from status, order, or version_no.
         is_current: {type: boolean, description: 'True only on the row named by journey.active_plan_version_id; false on all rows when the journey has no pointer'}
