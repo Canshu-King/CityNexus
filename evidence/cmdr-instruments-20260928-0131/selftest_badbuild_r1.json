@@ -1,0 +1,103 @@
+{
+ "schema": "CNX_CMDR_LANDING_PREFLIGHT_V1",
+ "lane": "commander 494abfd7",
+ "at_local": "2026-09-28T01:29:02+0800",
+ "mode": "DRY_RUN",
+ "authoritative_line": "mirror/integration-frontend-apple-pass1",
+ "tip_re_read_from_github_before": "53a00d5e6552006ebfb7cc03d109cf4b675450dc",
+ "candidate_ref": "refs/heads/review/cmdr-selftest-badbuild-r1",
+ "candidate_tip": "fe5a8ef5f5a44eeca4d85fdb9c7757323d4af3fb",
+ "genealogy": {
+  "ff_possible_rc": 0,
+  "ff_possible": true,
+  "merge_base": "53a00d5e6552006ebfb7cc03d109cf4b675450dc",
+  "line_only_commits": 0,
+  "candidate_only_commits": 1
+ },
+ "file_sets": {
+  "line_side_since_base": [],
+  "candidate_side_since_base": [
+   "frontend/src/features/planning/PlanWithAiSheet.tsx"
+  ],
+  "intersection": [],
+  "product_introduced_by_candidate": [
+   "frontend/src/features/planning/PlanWithAiSheet.tsx"
+  ]
+ },
+ "merge_tree": {
+  "exit": 0,
+  "first_line": "bba4d64c67b6ef05d43c899dd763447aa7a4ca87",
+  "conflict_reported": false,
+  "stderr_head": ""
+ },
+ "gate_run": {
+  "requested": [],
+  "collect_exit": null,
+  "collected": null,
+  "test_exit": null,
+  "summary": null,
+  "export": "D:/moodle/_qoder_cmdr_ref_20260921/snap_preflight_012839",
+  "blob_equality": [
+   {
+    "path": "frontend/src/features/planning/PlanWithAiSheet.tsx",
+    "candidate_blob": "f66d367655bd6a76d57a318e92d2201b5db21576",
+    "export_blob": "f66d367655bd6a76d57a318e92d2201b5db21576",
+    "equal": true
+   }
+  ],
+  "whole_suite": {
+   "collect_exit": 0,
+   "collected": 1393,
+   "interrupted": false,
+   "error_lines": [
+    "tests/test_qoder_ord0332_error_receipt.py::test_R7_the_envelope_keeps_every_field_it_already_had",
+    "tests/test_qoder_ord0332_error_receipt.py::test_R8_the_seed_is_read_off_the_real_request_not_just_the_dataclass",
+    "tests/test_solver_runtime_policy.py::test_unexpected_solver_programming_error_is_not_silently_hidden"
+   ],
+   "tail": [
+    "    _PortalFactoryType = Callable[[], AbstractContextManager[anyio.abc.BlockingPortal]]",
+    "-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html",
+    "1393 tests collected in 8.08s"
+   ],
+   "cmd": "D:/moodle/CityNexus/.venv/Scripts/python.exe -m pytest --collect-only -q tests  (cwd=<export>/backend, PYTHONPATH=<export>)"
+  },
+  "interpreter": "Python 3.12.14 (main, Aug 25 2026, 14:01:42) [MSC v.1944 64 bit (AMD64)]",
+  "exposure": {
+   "skipped": "arm off"
+  },
+  "frontend_build": {
+   "builder_rc": 1,
+   "vite_build_rc": 1,
+   "dist_exists": false,
+   "index_exists": false,
+   "asset_refs": null,
+   "live_tree": "bba4d64c67b6ef05d43c899dd763447aa7a4ca87",
+   "info_file": "D:\\moodle\\_qoder_cmdr_ref_20260921\\live_checks\\_build_fe5a8ef_info.json",
+   "build_tail": [
+    "    at file:///D:/moodle/CityNexus/frontend/node_modules/rollup/dist/es/shared/node-entry.js:23759:39",
+    "    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)",
+    "    at async catchUnfinishedHookActions (file:///D:/moodle/CityNexus/frontend/node_modules/rollup/dist/es/shared/node-entry.js:23215:16)",
+    "    at async rollupInternal (file:///D:/moodle/CityNexus/frontend/node_modules/rollup/dist/es/shared/node-entry.js:23742:5)",
+    "    at async buildEnvironment (file:///D:/moodle/CityNexus/frontend/node_modules/vite/dist/node/chunks/config.js:33621:12)",
+    "    at async Object.build (file:///D:/moodle/CityNexus/frontend/node_modules/vite/dist/node/chunks/config.js:33980:19)",
+    "    at async Object.buildApp (file:///D:/moodle/CityNexus/frontend/node_modules/vite/dist/node/chunks/config.js:33977:153)",
+    "    at async CAC.<anonymous> (file:///D:/moodle/CityNexus/frontend/node_modules/vite/dist/node/cli.js:629:3)\u001b[39m"
+   ]
+  }
+ },
+ "problems": [
+  "candidate does not COMPILE: vite_build rc=1 dist=False index=False -- refusing to land a frontend the bundler rejects.  tail=nc rollupInternal (file:///D:/moodle/CityNexus/frontend/node_modules/rollup/dist/es/shared/node-entry.js:23742:5) |     at async buildEnvironment (file:///D:/moodle/CityNexus/frontend/node_modules/vite/dist/node/chunks/config.js:33621:12) |     at async Object.build (file:///D:/moodle/CityNexus/frontend/node_modules/vite/dist/node/chunks/config.js:33980:19) |     at async Object.buildApp (file:///D:/moodle/CityNexus/frontend/node_modules/vite/dist/node/chunks/config.js:33977:153) |     at async CAC.<anonymous> (file:///D:/moodle/CityNexus/frontend/node_modules/vite/dist/node/cli.js:629:3)\u001b[39m"
+ ],
+ "verdict": "REFUSED",
+ "landing": null,
+ "discipline": {
+  "evidence_paths_overwritten": 0,
+  "databases_opened": 0,
+  "surfaces_started_or_stopped": 0,
+  "credential_values_printed": 0,
+  "candidate_refs_pushed_by_commander": 0
+ },
+ "claim_kind": "git_and_pytest_determined",
+ "claimed_result": "refused: candidate does not COMPILE: vite_build rc=1 dist=False index=False -- refusing to land a frontend the bundler rejects.  tail=nc rollupInternal (file:///D:/moodle/CityNexus/frontend/node_modules/rollup/dist/es/shared/node-entry.js:23742:5) |     at async buildEnvironment (file:///D:/moodle/CityNexus/frontend/node_modules/vite/dist/node/chunks/config.js:33621:12) |     at async Object.build (file:///D:/moodle/CityNexus/frontend/node_modules/vite/dist/node/chunks/config.js:33980:19) |     at async Object.buildApp (file:///D:/moodle/CityNexus/frontend/node_modules/vite/dist/node/chunks/config.js:33977:153) |     at async CAC.<anonymous> (file:///D:/moodle/CityNexus/frontend/node_modules/vite/dist/node/cli.js:629:3)\u001b[39m",
+ "derived_result": null
+}
