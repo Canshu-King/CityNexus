@@ -4,6 +4,7 @@ import { MapPanel, tripHasNoCoordinates } from "../components/v8/MapPanel";
 import { AgentComposer } from "../features/agent/AgentComposer";
 import { CopilotDock } from "../features/agent/CopilotDock";
 import { PlanWithAiSheet } from "../features/planning/PlanWithAiSheet";
+import { PlanAiRunStrip } from "../features/planning/PlanAiRunStrip";
 import { TripItinerary } from "../features/trip/TripItinerary";
 import { ActivityDetail } from "../features/trip/ActivityDetail";
 import { HotelsPanel } from "../features/stay/HotelsPanel";
@@ -1872,6 +1873,16 @@ export function V8Experience() {
         </div>
       </main>
       <CopilotDock data={data} onNavigate={navigate} />
+      {/* ORD-0382: the run is no longer owned by whichever surface started it.  This strip is what the
+          traveller still sees after closing the sheet -- same seconds, same step words, and the same
+          two doors the reference product names (查看会话 / 继续生成). */}
+      <PlanAiRunStrip
+        journeyId={data.journey.id}
+        onOpenRun={() => setPlanAiOpen(true)}
+        /* No chat door while the session page is the page on screen -- the strip would be offering to
+           walk someone to where they already are. */
+        onViewChat={route === "agent" ? undefined : () => navigate("agent")}
+      />
       {planAiOpen && (
         <PlanWithAiSheet
           journeyId={data.journey.id}
@@ -1879,6 +1890,10 @@ export function V8Experience() {
           onClose={() => setPlanAiOpen(false)}
           onPlanned={() => void load(data.journey.id)}
           onChooseAnotherCity={() => setSetupOpen(true)}
+          onViewChat={() => {
+            setPlanAiOpen(false);
+            navigate("agent");
+          }}
         />
       )}
       <nav className="v8-mobile-nav" aria-label="Mobile navigation">

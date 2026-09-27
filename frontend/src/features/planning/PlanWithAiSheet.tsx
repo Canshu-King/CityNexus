@@ -15,37 +15,30 @@
  *    internals are never rendered;
  *  - a provider failure is shown honestly with a retry, never faked as success
  *    (master mission Phase 10), and a cancellation is neither.
+ *
+ * ORD-0382: the run itself moved to `aiGenerationRun.ts`, because a run owned by a modal dies with
+ * the modal.  This file is now the *select* and *result* stages of the three-stage shape, and it can
+ * be closed mid-wait without stopping anything: the two exits the traveller gets are 去看会话 and
+ * 继续生成, named the way the reference product names them.
  */
 
 import { useEffect, useRef, useState } from "react";
-import { useLocale } from "../../i18n/LocaleContext";
-import { markPendingContinuation } from "../../api/journeyContinuation";
-/* ORD-0310: the keyless write leg's own deadline, and the only sentence shape it is allowed to say.
-   The number a traveller reads and the timer that ended the request come from one exported constant. */
+import { useLocale, useT } from "../../i18n/LocaleContext";
 import {
-  fetchWithKeylessWriteDeadline,
-  isKeylessWriteDeadlineMissed,
-  keylessWriteUnknownReading,
-} from "../../lib/keylessWriteDeadline";
-
-/** The phases this component itself drives, in the order it can enter them. */
-type PhaseKey = "baseline" | "request" | "verify" | "fallback";
+  beginAiRun,
+  getRunSnapshot,
+  PHASES,
+  stopWaiting,
+  unwatchRun,
+  useAiRun,
+  watchRun,
+  type Aftermath,
+} from "./aiGenerationRun";
 
 /* ORD-0250: this floor used to be a bare `8` inside submit() while the button next to it refused
    silently -- so an empty box looked like a button that did nothing.  Named once, read by the
    refusal, the control's aria-disabled and the reason we now paint on screen. */
 const REQUEST_MIN_LENGTH = 8;
-
-const PHASES: { key: PhaseKey; zh: string; en: string }[] = [
-  { key: "baseline", zh: "读取已有方案作为基线", en: "Reading existing plans as a baseline" },
-  { key: "request", zh: "发出请求，等待模型返回", en: "Request sent, waiting for the model" },
-  { key: "verify", zh: "核对本次是否真的产出了新方案", en: "Checking whether this run produced plans" },
-  {
-    key: "fallback",
-    zh: "改用已发现的城市地点重新排一版",
-    en: "Re-planning from the places already discovered",
-  },
-];
 
 /*
  * ORD-0104 ①: an example has to be about *this* trip, or there is no example.
@@ -142,78 +135,14 @@ const BLOCKED_BY_CODE: Record<
   },
 };
 
-/** The three envelope keys this server puts a machine name in (`main.py:497-502`), in the order the
- *  envelope is written them.  Named here so the Q70 anchor below can only ever say a key the backend
- *  really owns. */
-const REASON_CODE_KEYS = ["reason_code", "code", "message_key"] as const;
-
-/** The server's name for a refusal, from its envelope, and WHICH key it was read out of.  `null` when
-    it gave none -- and then this screen says it does not know, rather than guessing a cause. */
-function serverReasonCode(body: unknown): { code: string; field: string } | null {
-  const error = (body as { error?: Record<string, unknown> } | null)?.error;
-  if (!error || typeof error !== "object") return null;
-  for (const key of REASON_CODE_KEYS) {
-    const value = error[key];
-    /* Q68 (CMDR 04:45): a slot named 原因编号 carries a code or it carries nothing. The reply's sentence
-       already has an attributed home in 技术详情 (Q67=①), and the caller's `|| PLACES_HTTP_n` /
-       `NO_PLANS_PRODUCED` fallbacks are this device's own readings. */
-    if (typeof value === "string" && value.trim()) return { code: value.trim().toUpperCase(), field: key };
-  }
-  return null;
-}
-
-/** The server's own sentence, kept verbatim for 技术详情, plus the envelope key it was read off. */
-function serverReasonSentence(body: unknown): { text: string; field: string } | null {
-  const error = (body as { error?: Record<string, unknown> } | null)?.error;
-  if (error && typeof error.message === "string" && error.message.trim())
-    return { text: error.message, field: "error.message" };
-  const detail = (body as { detail?: unknown } | null)?.detail;
-  if (typeof detail === "string" && detail.trim()) return { text: detail, field: "detail" };
-  return null;
-}
-
 /**
- * ORD-0280: which mouth a failure sentence came from, carried with the sentence.
- *
- * `server` means this very answer carried the words; `device` means this screen composed them.  The
- * distinction used to be lost at render time, so a client-invented `HTTP 500` sat under the label
- * 「服务器给出的原因」 and a traveller read our guess as the backend's own statement -- the same trust hole
- * ORD-0262 closed for the copilot's copy, in a different sheet.
- *
- * The shape is `simulationAdapter.ts`'s existing `said ? <quote it> : <say we have no wording>`, moved
- * here as one decision point so all three refusal legs share it.  Nothing is deleted: a device-composed
- * line stays visible as what it is, because the status code really was observed and is worth reading.
+ * ORD-0280/0342: `FailureNote`, `RawReading` and the envelope readers now sit with the legs that
+ * produce them (`aiGenerationRun.ts`), so there is one definition of "who spoke" and the run can be
+ * driven from a surface that is not this sheet.
  */
-type FailureNote = {
-  text: string;
-  from: "server" | "device";
-  /** Q70: which contract field these words were read out of (`error.message`, `detail`,
-   *  `mission.failure_reason`).  Absent when this device composed them -- 无量则不贴锚: an anchor for a
-   *  field nobody sent would be an invented fact.  Only the NAME travels here; Q71 counts `data-*` as
-   *  the screen, so the sentence itself stays in the text node and never rides an attribute. */
-  field?: string;
-};
-
-/** What this device measured on the leg that answered, before it tried to understand any of it.
- *  Field names are labels; the values are the answer's own bytes, unedited. */
-type RawReading = {
-  http_status: number;
-  content_type: string;
-  bytes: number | null;
-};
-
-function failureNote(
-  server: { text: string; field: string } | null,
-  deviceText: string,
-): FailureNote {
-  return server
-    ? { text: server.text, from: "server", field: server.field }
-    : { text: deviceText, from: "device" };
-}
-
 
 /** Map internal mission status -> traveller language. */
-function statusCopy(
+export function statusCopy(
   status: string,
   zh: boolean,
   planCount = 0,
@@ -364,10 +293,6 @@ function statusCopy(
 }
 
 /**
- * fetch() rejects a cancelled request with a DOMException named AbortError.  Without
- * this, "I pressed cancel" and "the network died" collapse into the same message.
- */
-/**
  * ORD-0359: the only place this screen turns the server's word into a state.
  *
  * The server now names three different facts (`ai_state`) instead of folding them into one
@@ -413,36 +338,69 @@ export function aiStateFromServer(body: {
   return "unknown";
 }
 
-function isAbort(cause: unknown): boolean {
-  return cause instanceof Error && cause.name === "AbortError";
-}
+/** A dictionary sentence: which key, with which measured numbers plugged in. */
+type CopyLine = { key: string; params?: Record<string, string | number> };
 
 /**
- * ORD-0369: who actually wrote `reasoning_summary`.
+ * ORD-0382 ③: what an interruption left behind, composed *only* out of what the read-back answered.
  *
- * Measured against the running backend with the AI switch off: `POST .../agent/commands` still
- * answers HTTP 200 with `mission.status = "COMPLETED"` and a populated `reasoning_summary`, and the
- * mission itself carries `ai_state = "DISABLED_BY_OPS"`. Mounting that sentence under ORD-0240's
- * 「模型原始输出」 label credits a model for text the deterministic compiler wrote -- the mirror
- * image of the defect ORD-0240 closed.
- *
- * The vocabulary is the one `backend/app/agent/ai_availability.py:36-44` produces after ORD-0359,
- * which renamed `READY` away because "a key exists" was promising that it works. So
- * `CONFIGURED_UNVERIFIED` deliberately does **not** mean a model wrote this -- mapping it to
- * "model" would re-open 0359's hole one level up. Only `PROVIDER_REFUSED` states that the provider
- * was actually reached and answered. Everything else, including a missing state, keeps today's
- * wording, because "we were not told" is not evidence that nothing ran either.
+ * Three questions have to be on screen after a stop, and each one is answered by a measured value or
+ * not at all: where it stopped (`stoppedAt`, the same step words the waiting list just showed),
+ * whether anything produced survived (`landedNewPlanIds`, from a fresh `GET /plans`), and whether the
+ * trip moved (`currentBefore` vs `currentAfter`, both read off rows the server sent).  When the
+ * confirming read did not answer, the last two are simply absent from this list -- 「行程没有被改动」 is
+ * never emitted here as a comfort, because that is the sentence this order exists to earn.
  */
-type SummaryOrigin = "model" | "no_model" | "not_stated";
-
-export function summaryOriginOf(mission: unknown): SummaryOrigin {
-  if (!mission || typeof mission !== "object") return "not_stated";
-  const stated = mission as { ai_state?: unknown; deepseek_configured?: unknown };
-  const state = typeof stated.ai_state === "string" ? stated.ai_state : "";
-  if (state === "DISABLED_BY_OPS" || state === "NOT_CONFIGURED") return "no_model";
-  if (state === "PROVIDER_REFUSED") return "model";
-  if (state === "" && stated.deepseek_configured === false) return "no_model";
-  return "not_stated";
+function aftermathLines(aftermath: Aftermath, stepName: string | null): CopyLine[] {
+  const lines: CopyLine[] = [];
+  if (stepName) lines.push({ key: "agent.aiRunStoppedAt", params: { step: stepName } });
+  if (!aftermath.requestSent) {
+    lines.push({ key: "agent.aiRunStoppedBeforeSend" });
+    return lines;
+  }
+  if (aftermath.read === "checking") {
+    lines.push({ key: "agent.aiRunChecking" });
+    return lines;
+  }
+  if (aftermath.read === "failed") {
+    lines.push({ key: "agent.aiRunUnreadable" });
+    return lines;
+  }
+  lines.push(
+    aftermath.landedNewPlanIds.length > 0
+      ? { key: "agent.aiRunLanded", params: { n: aftermath.landedNewPlanIds.length } }
+      : { key: "agent.aiRunNothingLanded" },
+  );
+  const { currentBefore, currentAfter } = aftermath;
+  if (currentBefore && currentAfter) {
+    const same = currentBefore.id === currentAfter.id;
+    const versioned = currentBefore.versionNo !== null && currentAfter.versionNo !== null;
+    lines.push(
+      same
+        ? versioned
+          ? { key: "agent.aiRunTripUnmoved", params: { version: currentAfter.versionNo as number } }
+          : { key: "agent.aiRunSamePlan" }
+        : versioned
+          ? {
+              key: "agent.aiRunTripMoved",
+              params: {
+                before: currentBefore.versionNo as number,
+                after: currentAfter.versionNo as number,
+              },
+            }
+          : { key: "agent.aiRunOtherPlan" },
+    );
+  } else if (!currentBefore && currentAfter) {
+    lines.push({
+      key: currentAfter.versionNo === null ? "agent.aiRunSamePlan" : "agent.aiRunPlanAppeared",
+      params: currentAfter.versionNo === null ? undefined : { version: currentAfter.versionNo },
+    });
+  } else if (!currentAfter) {
+    /* The read answered and named nothing in force: all rows came back SUPERSEDED.  That is its own
+       fact, and "your trip is unchanged" is not it. */
+    lines.push({ key: "agent.aiRunNoCurrentPlan" });
+  }
+  return lines;
 }
 
 export function PlanWithAiSheet({
@@ -451,6 +409,7 @@ export function PlanWithAiSheet({
   onClose,
   onPlanned,
   onChooseAnotherCity,
+  onViewChat,
 }: {
   journeyId: string;
   cityCode?: string;
@@ -460,9 +419,21 @@ export function PlanWithAiSheet({
       button to offer. */
   onChooseAnotherCity?: () => void;
   onPlanned?: () => void;
+  /**
+   * ORD-0382 exit 1: leave the wait and go read the session.  Optional because a mount with no
+   * session surface to go to still has to offer exit 2 -- the wait itself is never a cage.
+   */
+  onViewChat?: () => void;
 }) {
   const { locale } = useLocale();
+  const t = useT();
   const zh = locale.startsWith("zh");
+  const run = useAiRun();
+  const mine = run.journeyId === journeyId;
+  const busy = mine && run.running;
+  const phase = busy ? run.phase : null;
+  const result = mine ? run.result : null;
+  const aftermath = mine ? run.aftermath : null;
   const [text, setText] = useState("");
   /* The destination's own words, from the same read the fallback uses.  Read once when the sheet
      opens; a failure leaves `[]`, which means "no examples", not "use the old ones". */
@@ -471,46 +442,46 @@ export function PlanWithAiSheet({
      input means "this city has nothing to suggest" and "we are still looking" at once, and a traveller
      watching suggestions appear a second later has no way to tell which happened. */
   const [namesRead, setNamesRead] = useState(false);
-  const [busy, setBusy] = useState(false);
   /* Set when a press was refused because there is nothing to plan from; the reason is painted, not
      announced only to a screen reader.  Cleared by the same gate once the words are long enough. */
   const [requestTooShort, setRequestTooShort] = useState(false);
-  const [phase, setPhase] = useState<PhaseKey | null>(null);
-  const [elapsed, setElapsed] = useState(0);
   const [aiState, setAiState] = useState<AiPreflightState>("checking");
-  const [result, setResult] = useState<null | {
-    status: string;
-    failureReason: FailureNote | null;
-    summary: string | null;
-    /** ORD-0369: whose sentence `summary` is, taken from the mission's own `ai_state` -- never from
-     *  whether this screen happened to reach the success branch. */
-    summaryOrigin?: SummaryOrigin;
-    rawReading?: RawReading | null;
-    planCount?: number;
-    newPlanIds?: string[];
-    /** Q70 for the 原因编号 slot: the code only reaches the traveller's line with the envelope key it
-     *  came from.  Set solely where `serverReasonCode` actually answered -- a `CATALOG_*` or
-     *  `PLACES_HTTP_n` this screen composed itself carries no field to name, so it gets no anchor. */
-    reasonCode?: { code: string; field: string } | null;
-  }>(null);
-  const abortRef = useRef<AbortController | null>(null);
-  /* ORD-0246: `disabled={busy}` is a *rendered* fact, and two clicks inside one tick both arrive
-     before React re-renders, so the render cannot be the re-entry guard. This ref can. */
-  const runningRef = useRef(false);
-  const startedAt = useRef(0);
+  /* The seconds, derived from the run's own start so leaving and coming back shows a bigger number
+     rather than a reset one. */
+  const [elapsed, setElapsed] = useState(0);
+  /* ORD-0382: pressing the close control while a run is going no longer silently aborts it.  It asks,
+     and the two answers are the pair the reference product names: 去看会话 / 继续生成. */
+  const [leaveChoice, setLeaveChoice] = useState(false);
 
-  /* The only number this sheet is allowed to animate is one it can prove: seconds
-     that really passed since the request was made. */
   useEffect(() => {
-    if (!busy) return;
-    const tick = () => setElapsed(Math.floor((Date.now() - startedAt.current) / 1000));
+    if (!busy) {
+      setElapsed(0);
+      return;
+    }
+    const tick = () => setElapsed(Math.max(0, Math.floor((Date.now() - run.startedAt) / 1000)));
     tick();
     const id = window.setInterval(tick, 1000);
     return () => window.clearInterval(id);
-  }, [busy]);
+  }, [busy, run.startedAt]);
 
-  /* Closing the sheet must not leave a request running that nobody can see or stop. */
-  useEffect(() => () => abortRef.current?.abort(), []);
+  /* Mounting this sheet *is* watching the run; unmounting is walking away from it.  Neither stops
+     anything -- `stopWaiting` is the only control that does, which is the whole point of ORD-0382.
+     Scoped to `mine` so opening this journey's sheet cannot mark another journey's unread outcome
+     as read. */
+  useEffect(() => {
+    if (!mine) return;
+    watchRun();
+    return () => unwatchRun();
+  }, [mine]);
+
+  /* The sheet used to call `onPlanned` inline at the end of submit(); the run can now finish while
+     this component is not on screen, so the refresh rides the outcome instead.  One call per run. */
+  const reportedRef = useRef(0);
+  useEffect(() => {
+    if (!result || reportedRef.current === run.runId) return;
+    reportedRef.current = run.runId;
+    if (result.status === "COMPLETED") onPlanned?.();
+  }, [result, run.runId, onPlanned]);
 
   /* ORD-0104 ①: the examples are read from this journey's own city.  A non-2xx or a short list leaves
      the list empty, and empty means "show no examples" -- the fallback is silence, not the old Xiamen
@@ -561,37 +532,17 @@ export function PlanWithAiSheet({
     };
   }, []);
 
-  /**
-   * Ids of every candidate plan that already existed, or `null` when the
-   * baseline could not be fetched.
-   *
-   * Fail-CLOSED: an empty set means "there really were no plans before this
-   * run".  A failed / non-OK / unparsable lookup must NOT masquerade as an
-   * empty baseline — otherwise an old plan appears later and is mis-attributed
-   * to THIS run.  `null` = the baseline is indeterminate.
-   */
-  const existingPlanIds = async (signal: AbortSignal): Promise<Set<string> | null> => {
-    try {
-      const response = await fetch(`/api/v1/journeys/${journeyId}/plans`, {
-        headers: { Accept: "application/json" },
-        signal,
-      });
-      if (!response.ok) return null;
-      const plans = await response.json();
-      // A non-array body is not a trustworthy "no plans" answer either.
-      if (!Array.isArray(plans)) return null;
-      return new Set(
-        plans.map((item: { id?: string }) => item?.id).filter(Boolean) as string[],
-      );
-    } catch (cause) {
-      // A cancellation is a decision, not an indeterminate baseline.
-      if (isAbort(cause)) throw cause;
-      return null;
-    }
-  };
+  /* A run that outlived this sheet comes back carrying its own words: the request the traveller typed
+     lives on the run, so re-opening mid-flight shows *what* is being waited for, and 「照原话再试一次」
+     still has a 原话 behind it after a detach -- which it did not, the first time this was driven on a
+     real screen.  Only fills an empty box; it never overwrites what someone is typing now. */
+  useEffect(() => {
+    if (!mine || !run.command) return;
+    setText((current) => (current.trim().length === 0 ? run.command : current));
+  }, [mine, run.command]);
 
-  const submit = async () => {
-    const command = text.trim();
+  const submit = (override?: string) => {
+    const command = (override ?? text).trim();
     if (command.length < REQUEST_MIN_LENGTH) {
       /* ORD-0250: this `return` used to be silent -- no request, no word, nothing to read.  The press
          is still refused (there is genuinely nothing to plan from) but it now leaves a reason on the
@@ -600,356 +551,54 @@ export function PlanWithAiSheet({
       return;
     }
     setRequestTooShort(false);
-    /* Synchronous, ahead of every await and every setState below: the second click of a same-tick
-       double tap reaches this function while the button is still rendered as enabled, so refusing
-       it here is the only place it can be refused.  Silence is deliberate -- the first request is
-       running and the screen already says so. */
-    if (runningRef.current) return;
-    runningRef.current = true;
-    /* ORD-0253: one identity per submission INTENT.  Minted here -- after the synchronous guard that
-       refuses the second click of a same-tick double tap, and before the first await -- so a refused
-       burst never gets one, both legs of the accepted press carry the same one, and the next deliberate
-       press mints a new one.  Not held in state, storage or a cooldown: none of those is the intent,
-       and a cooldown dressed up as correctness would let two different asks reuse a key.
-       The leg that matters is `plans/generate` -- the server reads the transport key there
-       (`main.py`, ORD-0272), and its validator wants 8..128 characters, which a v4 UUID satisfies. */
-    const idempotencyKey = crypto.randomUUID();
-    const controller = new AbortController();
-    abortRef.current = controller;
-    const signal = controller.signal;
-    setBusy(true);
-    setResult(null);
-    setElapsed(0);
-    startedAt.current = Date.now();
-    /* How far we actually got, kept in a local because state is stale inside this
-       closure.  A cancel before the request leaves is a clean cancellation; one after
-       it is not, because the backend may already have produced plans. */
-    let reached: PhaseKey = "baseline";
-    const enter = (next: PhaseKey) => {
-      reached = next;
-      setPhase(next);
-    };
-    enter("baseline");
-    let baseline: Set<string> | null = null;
-    try {
-      // This run must be judged on what IT produced.  Counting all plans let an
-      // old ACTIVE/SELECTED plan satisfy a failed new run.  `null` means we could
-      // not read the baseline at all, so nothing can be attributed to this run —
-      // fail CLOSED instead of assuming an empty baseline.
-      baseline = await existingPlanIds(signal);
-      enter("request");
-      const response = await fetchWithKeylessWriteDeadline(
-        `/api/v1/journeys/${journeyId}/agent/commands`,
-        {
-          method: "POST",
-          /* The transport key travels with the whole intent.  This route declares no such parameter
-             today, so it is inert HERE -- the leg that reads it is plans/generate below.  The body
-             gains nothing: AgentCommandRequest is extra="forbid", so a new key would be a 422.
-             ORD-0310: because that key buys nothing on this leg, this is the one leg whose deadline
-             may not promise a replay, and the wrapper below is what enforces that. */
-          headers: {
-            "Content-Type": "application/json",
-            Accept: "application/json",
-            "Idempotency-Key": idempotencyKey,
-          },
-          body: JSON.stringify({ command }),
-          signal,
-        },
-      );
-      /* Q53=①: the answer is kept as the bytes it arrived in, because a byte count and a body head cannot be
-         recovered once `json()` has thrown -- the old one-liner turned "the origin answered 200 with nothing
-         usable" into the same unreadable state as "nothing answered at all". */
-      const raw = await response.text().catch(() => null);
-      let body: unknown = null;
-      if (raw !== null) {
-        try {
-          body = JSON.parse(raw);
-        } catch {
-          body = null;
-        }
-      }
-      const rawReading: RawReading = {
-        http_status: response.status,
-        content_type: response.headers.get("content-type") ?? "",
-        bytes: raw === null ? null : new TextEncoder().encode(raw).length,
-      };
-      const mission = (body as { mission?: { id?: string; status?: string; failure_reason?: string | null;
-                                             reasoning_summary?: string | null } } | null)?.mission ?? null;
-      /* ORD-0269 clause 1: the pending marker is written the moment leg 1 returns a mission id --
-         after the response is in hand and before leg 2 could ever be sent.  It is NOT cleared when
-         a request goes out (clause 5); only a visible outcome supersedes it. */
-      if (mission?.id) {
-        markPendingContinuation(journeyId, String(mission.id));
-      }
-      if (!response.ok) {
-        /* A refused or failed request is reported as what it is.  Letting the
-           fallback re-plan run here would let a synthetic plan answer for a request
-           the backend explicitly rejected. */
-        setResult({
-          status: `HTTP_${response.status}`,
-          /* ORD-0280 site 1 of 3.  The server fields are read through the same helper the other legs
-             use, so one envelope cannot be "from the server" here and "unknown" there; the status line
-             is kept as what it is, and the LABEL is what says who spoke.  Side effect worth stating:
-             when an answer carries BOTH `error.message` and `detail`, `error.message` wins now, where
-             the old inline chain answered `detail` first -- the other two legs already treat
-             `error.message` as the server's sentence, so the sheet now agrees with itself. */
-          failureReason: failureNote(
-            serverReasonSentence(body),
-            `agent/commands -> HTTP ${response.status}`,
-          ),
-          summary: null,
-          rawReading,
-          planCount: -1,
-          newPlanIds: [],
-        });
-        return;
-      }
-      // A plan id only counts as "new" when we KNOW it was absent from the
-      // pre-run baseline.  With an indeterminate baseline there is no such id.
-      const isNewPlanId = (id: string | undefined): id is string =>
-        typeof id === "string" && id.length > 0 && baseline !== null && !baseline.has(id);
-      // A COMPLETED mission only means the request compiled.  It does NOT mean
-      // candidate plans exist, so the real plan count decides what we report.
-      // Reporting "plans are ready" without checking was a false success.
-      // Returns `null` when the answer is unknowable (bad baseline OR bad
-      // re-count) — NOT the same as "[] = no new plans".
-      const countNewPlans = async (): Promise<string[] | null> => {
-        if (baseline === null) return null;
-        try {
-          const plansResponse = await fetch(`/api/v1/journeys/${journeyId}/plans`, {
-            headers: { Accept: "application/json" },
-            signal,
-          });
-          if (!plansResponse.ok) return null;
-          const plans = await plansResponse.json();
-          if (!Array.isArray(plans)) return null;
-          return plans.map((item: { id?: string }) => item?.id).filter(isNewPlanId);
-        } catch (cause) {
-          if (isAbort(cause)) throw cause;
-          return null;
-        }
-      };
-      enter("verify");
-      const counted = await countNewPlans();
-      let newPlanIds: string[] = counted ?? [];
-      let planCount = counted === null ? -1 : newPlanIds.length;
-      // The mission compiler can succeed while the agent runtime (an external
-      // dependency) produces nothing.  Before reporting failure, try the real
-      // product path: compose candidates from the city places that discovery
-      // has already materialised for this journey.  Only attempted when the
-      // baseline is KNOWN — otherwise we cannot attribute what it created.
-      let blockedCode = "";
-      /* Q70: which envelope key that code was read off, or null when the refusal never named one.
-       * `blockedCode` stays a plain string so the branch order below keeps the narrowing it had. */
-      let blockedReasonCode: { code: string; field: string } | null = null;
-      let blockedSentence: FailureNote | null = null;
-      if (baseline !== null && planCount === 0) {
-        enter("fallback");
-        try {
-          const placesResponse = await fetch(
-            `/api/v1/places?city_code=${encodeURIComponent(cityCode)}`,
-            { headers: { Accept: "application/json" }, signal },
-          );
-          /* ORD-0107 ②: this read used to answer `[]` on any non-2xx, which made "we could not look"
-             indistinguishable from "this city has nothing" and, three lines later, from "your request
-             produced nothing".  A failed read is now its own named state. */
-          if (!placesResponse.ok) {
-            const unreadable = await placesResponse.json().catch(() => null);
-            const refusedCode = serverReasonCode(unreadable);
-            setResult({
-              status: `BLOCKED:${refusedCode ? refusedCode.code : `PLACES_HTTP_${placesResponse.status}`}`,
-              reasonCode: refusedCode,
-              /* ORD-0280 site 2 of 3. */
-              failureReason: failureNote(
-                serverReasonSentence(unreadable),
-                `GET /places -> HTTP ${placesResponse.status}`,
-              ),
-              summary: null,
-              planCount: -1,
-              newPlanIds: [],
-            });
-            return;
-          }
-          const catalogue = await placesResponse.json();
-          const knownIds = new Set(
-            (Array.isArray(catalogue) ? catalogue : [])
-              .map((item: { id?: string }) => item?.id)
-              .filter((id: unknown): id is string => typeof id === "string" && id.length > 0),
-          );
-          if (knownIds.size < 2) {
-            /* The old code simply did not send the request and the traveller saw nothing.  Two places is
-               the server's own floor (`schemas.py:423 min_length=2`), so this is a fact about our data,
-               said as one. */
-            setResult({
-              status: knownIds.size === 0 ? "BLOCKED:CATALOG_EMPTY" : "BLOCKED:CATALOG_INSUFFICIENT",
-              /* A count this screen measured out of a 200 it was allowed to read.  It is a fact about
-                 our data, said as one, and it is NOT the server's reason -- ORD-0280 puts the label
-                 where the words came from. */
-              failureReason: {
-                text: `GET /places?city_code=${cityCode} -> ${knownIds.size} places`,
-                from: "device",
-              },
-              summary: null,
-              planCount: -1,
-              newPlanIds: [],
-            });
-            return;
-          }
-          /* ORD-0107 ①: the positional slice is gone.  Taking the first eight ids in whatever order the
-             read returned was this screen inventing a shortlist -- the model proposes no places at all
-             (`app/agent/mission.py:21-35` carries objectives and bounds, `:490-498` adds policy bounds;
-             neither has a place id), so there was no proposal to intersect and no basis for the order.
-             Sending no `place_ids` hands the choice back to the server's catalogue path
-             (`services.py` `_catalogue_templates`), the same one the demo stage plans through. */
-          const generate = await fetch(
-            `/api/v1/journeys/${journeyId}/plans/generate`,
-            {
-              method: "POST",
-              /* ORD-0253's whole point: this is the leg the server reads the transport key on.
-                 Without it the request reaches the route with no identity at all, and the durable
-                 receipt machinery never sees this submission -- "the phone's press leaves no trace"
-                 is literally this header being absent. */
-              headers: {
-                "Content-Type": "application/json",
-                Accept: "application/json",
-                "Idempotency-Key": idempotencyKey,
-              },
-              body: JSON.stringify({ candidate_count: 3 }),
-              signal,
-            },
-          );
-          if (generate.ok) {
-            const created = await generate.json();
-            // Only artifacts this run created count as success.
-            newPlanIds = (Array.isArray(created) ? created : [])
-              .map((item: { id?: string }) => item?.id)
-              .filter(isNewPlanId);
-            if (newPlanIds.length === 0) {
-              const recounted = await countNewPlans();
-              if (recounted !== null) newPlanIds = recounted;
-            }
-            planCount = newPlanIds.length;
-          } else {
-            const refused = await generate.json().catch(() => null);
-            blockedReasonCode = serverReasonCode(refused);
-            blockedCode = blockedReasonCode ? blockedReasonCode.code : "";
-            /* ORD-0280 site 3 of 3. */
-            blockedSentence = failureNote(
-              serverReasonSentence(refused),
-              `POST /plans/generate -> HTTP ${generate.status}`,
-            );
-          }
-        } catch (cause) {
-          if (isAbort(cause)) throw cause;
-          /* keep planCount at 0 and report honestly */
-        }
-      }
+    /* Synchronous, ahead of every await: the second click of a same-tick double tap reaches this
+       function while the button is still rendered as enabled, so the guard has to read live module
+       state, not this render's snapshot.  Checked before the key is minted, so a refused burst never
+       gets one (ORD-0253). */
+    if (getRunSnapshot().running) return;
+    setLeaveChoice(false);
+    void beginAiRun({
+      journeyId,
+      cityCode,
+      command,
+      idempotencyKey: crypto.randomUUID(),
+    });
+  };
 
-      const missionStatus = String(mission?.status ?? "").toUpperCase();
-      /* A mission that did not complete is not a success, however many rows exist
-         afterwards.  Measured on the production build with no model configured: the
-         mission came back with `DeepSeek API key is not configured`, the fallback re-plan
-         produced 2 plans, and the sheet reported "已生成 2 个可选方案" as plain success.
-         Those rows are real, but nothing about them answers what the traveller typed. */
-      const missionCompleted = missionStatus === "COMPLETED" || missionStatus === "SUCCEEDED";
-      let status: string;
-      if (baseline === null) {
-        // Indeterminate baseline: whatever we see afterwards cannot be
-        // attributed to this run, so success is never claimed.  The harness
-        // reads planCount === -1 as "not a success".
-        status = "BASELINE_UNAVAILABLE";
-        planCount = -1;
-        newPlanIds = [];
-      } else if (planCount > 0 && missionCompleted) {
-        status = "COMPLETED";
-      } else if (planCount > 0) {
-        status = "PLANS_WITHOUT_AI";
-      } else if (blockedCode) {
-        /* Ahead of the "AI unavailable" branch on purpose: when the compose step named a data cause,
-           that is both more specific and more actionable than "retry later", and the mission's own
-           reason still sits under 技术详情. */
-        status = `BLOCKED:${blockedCode}`;
-      } else if (missionStatus.includes("EXTERNAL") || missionStatus.includes("SKIPPED")) {
-        status = "SKIPPED_EXTERNAL_DEPENDENCY";
-      } else {
-        // Compiled, but produced nothing the traveller can use.
-        status = "NO_PLANS_PRODUCED";
-      }
-      setResult({
-        status,
-        newPlanIds,
-        reasonCode: blockedReasonCode,
-        /* `failure_reason` is the mission's own stored field, i.e. words that came off this server, so
-           it is labelled as such; the refused-request note carries its own origin from where it was set.
-           ORD-0302 X-5: this branch's own card text tells the traveller the reason sits under 技术详情,
-           so it may not render a screen where that block does not exist.  Q53=① chose "render it" over
-           "soften the sentence", so when the mission stored no reason we show what THIS screen measured
-           -- a count it derived from the two reads it was allowed to make -- labelled as a device reading. */
-        /* Q53=① deleted the device-composed count sentence this line used to fall back to: the card already
-           points at 技术详情, and what belongs under it is only the fields THIS device measured
-           (status, content-type, byte count): Q64=① forbids forwarding upstream body text into the DOM,
-           so the block renders without any of the answer's bytes in it. */
-        failureReason: mission?.failure_reason
-          ? {
-              text: mission.failure_reason,
-              from: "server" as const,
-              /* The mission's stored reason is the server's own words, and the field this device read
-                 them from has a contract name -- so 技术详情 can say which one without quoting it. */
-              field: "mission.failure_reason",
-            }
-          : blockedSentence,
-        summary: mission?.reasoning_summary ?? null,
-        summaryOrigin: summaryOriginOf(mission ?? null),
-        rawReading,
-        planCount,
-      });
-      if (status === "COMPLETED") onPlanned?.();
-    } catch (cause) {
-      if (isKeylessWriteDeadlineMissed(cause)) {
-        /* ORD-0310 (Q54=①): this device stopped waiting on a write the server cannot recognise.  There
-           is no receipt row to read back and no key the server took, so the only honest state here is
-           UNKNOWN -- not "cancelled", not "did not happen", and deliberately not a re-press invitation:
-           a second press on this leg is measured to produce a second mission (ORD-0288 baseline). */
-        setResult({
-          status: "UNKNOWN_KEYLESS_WRITE_DEADLINE",
-          failureReason: keylessWriteUnknownReading(cause.method, cause.path, cause.deadlineMs),
-          summary: null,
-          planCount: -1,
-          newPlanIds: [],
-        });
-        return;
-      }
-      if (isAbort(cause)) {
-        /* `reached` is "request" or later once the POST has been issued, which is
-           the point after which cancelling no longer guarantees nothing happened. */
-        setResult({
-          status: reached === "baseline" ? "CANCELLED" : "CANCELLED_AFTER_SEND",
-          failureReason: null,
-          summary: null,
-        });
-      } else {
-        /* ORD-0302 ②: this used to write `failureReason: null`, and because 技术详情 is gated on
-           `failureReason || summary`, the whole block left the DOM -- a traveller looking at 「连不上服务端」
-           had nothing to open, and no way to tell "the origin never answered" from "we could not read what
-           it answered".  A note THIS device composed, labelled as such, is the honest minimum: it says we got
-           no wording, without inventing the server's. */
-        setResult({
-          status: "NETWORK",
-          failureReason: failureNote(null, "no readable answer reached this device (network or origin)"),
-          summary: null,
-        });
-      }
-    } finally {
-      abortRef.current = null;
-      runningRef.current = false;
-      setBusy(false);
-      setPhase(null);
+  /** Exit 1.  The run keeps going; the strip is what carries it from here. */
+  const goWatchSession = () => {
+    unwatchRun();
+    setLeaveChoice(false);
+    if (onViewChat) onViewChat();
+    else onClose();
+  };
+
+  /** Exit 2, from the leave prompt: stay, and keep watching the same run. */
+  const keepWaiting = () => {
+    setLeaveChoice(false);
+    watchRun();
+  };
+
+  /** 「停止等待」 -- the only control that aborts, and it stays honest about what it stops. */
+  const stopWaitingNow = () => {
+    void stopWaiting();
+  };
+
+  const leave = () => {
+    if (busy) {
+      setLeaveChoice(true);
+      return;
     }
+    onClose();
   };
 
-  const cancel = () => {
-    abortRef.current?.abort();
-  };
+  /* The prompt is the answer to a press, so it has to be where the eyes already are.  Measured on the
+     first 390px run: the sheet's own scroll region grew past it, and the two doors sat below the fold
+     -- a confirmation nobody can see is the same dead end as a button that does nothing (ORD-0250). */
+  const leaveRef = useRef<HTMLDivElement | null>(null);
+  useEffect(() => {
+    if (leaveChoice) leaveRef.current?.scrollIntoView({ block: "nearest" });
+  }, [leaveChoice]);
 
   const copy = result ? statusCopy(result.status, zh, result.planCount ?? 0) : null;
   /* Q70, one-way by construction: an anchor may only name a code the traveller can actually read on the
@@ -967,6 +616,14 @@ export function PlanWithAiSheet({
     : zh
       ? "正在处理"
       : "Working";
+  /* Where the interruption landed, named with the same step words the waiting list just showed --
+     one vocabulary, so a traveller can point at the row they were watching. */
+  const stoppedLabel = aftermath?.stoppedAt
+    ? (() => {
+        const row = PHASES.find((item) => item.key === aftermath.stoppedAt);
+        return row ? (zh ? row.zh : row.en) : null;
+      })()
+    : null;
 
   return (
     <div className="v8-sheet-backdrop" role="dialog" aria-modal="true" data-testid="plan-ai-sheet">
@@ -980,7 +637,7 @@ export function PlanWithAiSheet({
                 : "Describe the trip in your own words — the more specific the better."}
             </small>
           </div>
-          <button type="button" className="plan-ai-close" aria-label={zh ? "关闭" : "Close"} onClick={onClose}>
+          <button type="button" className="plan-ai-close" aria-label={zh ? "关闭" : "Close"} onClick={leave}>
             ×
           </button>
         </header>
@@ -1081,6 +738,7 @@ export function PlanWithAiSheet({
             data-testid="plan-ai-live"
             data-elapsed-seconds={elapsed}
             data-phase={phase ?? ""}
+            data-watched={run.watched ? "sheet" : "strip"}
           >
             <p className="plan-ai-live-line" data-testid="plan-ai-elapsed">
               <span className="plan-ai-pulse" aria-hidden="true" />
@@ -1093,6 +751,29 @@ export function PlanWithAiSheet({
                 ? "后端不会中途汇报进度，所以这里只有真实等待时间，没有百分比，也没有猜。"
                 : "The backend reports nothing until it finishes, so this is measured waiting time — no percentage, no guessing."}
             </p>
+            {/* Whose ask this is, quoted back from the run rather than from the box: the traveller who
+                walked away and came back has to be able to tell two rounds apart. */}
+            {run.command && (
+              <p className="plan-ai-asked" data-testid="plan-ai-asked">
+                {t("agent.aiRunAsked", { asked: run.command })}
+              </p>
+            )}
+            {/* ORD-0382 ②: the units a traveller can check by eye, read from the plan row this run
+                already fetched, plus the one unit this screen is NOT allowed to show.  The reference
+                product reports 正在更新第 N 天; our backend emits no per-day signal at all, so saying
+                "this trip is 2 days" and "we cannot tell you which day" is the honest half of that,
+                and inventing the counter would be the same lie wearing a better label. */}
+            {run.current && (
+              <div className="plan-ai-scope" data-testid="plan-ai-scope">
+                <p>
+                  {t("agent.aiRunScope", {
+                    days: run.current.days,
+                    activities: run.current.activities,
+                  })}
+                </p>
+                <p>{t("agent.aiRunNoDaySignal")}</p>
+              </div>
+            )}
             <ol className="plan-ai-steps" data-testid="plan-ai-steps">
               {PHASES.map((item, index) => {
                 if (item.key === "fallback" && phase !== "fallback") return null;
@@ -1112,14 +793,63 @@ export function PlanWithAiSheet({
                 );
               })}
             </ol>
-            <button
-              type="button"
-              className="plan-ai-cancel v8-outline-button"
-              data-testid="plan-ai-cancel"
-              onClick={cancel}
-            >
-              {zh ? "取消" : "Cancel"}
-            </button>
+            <div className="plan-ai-wait-exits">
+              <button
+                type="button"
+                className="plan-ai-cancel v8-outline-button"
+                data-testid="plan-ai-cancel"
+                onClick={stopWaitingNow}
+              >
+                {t("agent.aiRunStop")}
+              </button>
+              {/* ORD-0382 ①: leaving is no longer the same act as cancelling.  Until now the only way
+                  out of this panel was to kill the request, so "I want to look at something else"
+                  cost the whole run. */}
+              {onViewChat && !leaveChoice && (
+                <button
+                  type="button"
+                  className="v8-secondary plan-ai-view-chat"
+                  data-testid="plan-ai-view-chat"
+                  onClick={goWatchSession}
+                >
+                  {t("agent.aiRunViewChat")}
+                </button>
+              )}
+            </div>
+          </div>
+        )}
+
+        {/* The named pair, shown when a leave press would otherwise have destroyed a live run.
+            Kept in one place so 去看会话 is never on screen twice and cannot be read as two doors. */}
+        {busy && leaveChoice && (
+          <div
+            className="plan-ai-leave-choice"
+            ref={leaveRef}
+            data-testid="plan-ai-leave-choice"
+            role="group"
+            aria-label={t("agent.aiRunLeavePrompt")}
+          >
+            <p data-testid="plan-ai-leave-prompt">{t("agent.aiRunLeavePrompt")}</p>
+            <div className="plan-ai-leave-actions">
+              {onViewChat && (
+                <button
+                  type="button"
+                  className="v8-outline-button"
+                  data-testid="plan-ai-view-chat"
+                  onClick={goWatchSession}
+                >
+                  {t("agent.aiRunViewChat")}
+                </button>
+              )}
+              <button
+                type="button"
+                className="v8-primary-button"
+                data-testid="plan-ai-continue"
+                onClick={keepWaiting}
+              >
+                {t("agent.aiRunContinue")}
+              </button>
+            </div>
           </div>
         )}
 
@@ -1154,6 +884,40 @@ export function PlanWithAiSheet({
             >
               {copy.body}
             </p>
+            {/* ORD-0382 ②: the result counted in units the traveller can go and check, summed over the
+                rows the compose leg actually returned.  Absent, not zero, when this run composed
+                nothing -- a 0 here would be read as "empty plans" rather than "no plans from us". */}
+            {result?.units && (
+              <p className="plan-ai-units" data-testid="plan-ai-units">
+                {t("agent.aiRunUnits", {
+                  landed: result.units.landed,
+                  activities: result.units.activities,
+                  days: result.units.days,
+                })}
+              </p>
+            )}
+            {/* ORD-0382 ③: the closing state of an interruption.  Every line below is a read-back, and
+                nothing is emitted for a question the read-back could not answer. */}
+            {aftermath && (
+              <div
+                className="plan-ai-aftermath"
+                data-testid="plan-ai-aftermath"
+                data-aftermath-read={aftermath.read}
+                data-aftermath-stopped-at={aftermath.stoppedAt ?? ""}
+                data-aftermath-landed={aftermath.landedNewPlanIds.length}
+                data-aftermath-http-status={aftermath.httpStatus ?? ""}
+                {...(aftermath.attribution
+                  ? { "data-aftermath-cause": aftermath.attribution.reason }
+                  : {})}
+              >
+                {aftermathLines(aftermath, stoppedLabel).map((line) => (
+                  <p key={line.key}>{t(line.key, line.params)}</p>
+                ))}
+                {/* The shared channel's verdict stays in `data-aftermath-cause` above: an
+                    Attribution reason is this app's machine vocabulary, and the design rule at the top
+                    of this file forbids putting any of it on the traveller's screen. */}
+              </div>
+            )}
             {(result?.failureReason || result?.summary || result?.rawReading) && (
               <details className="plan-ai-detail">
                 <summary data-testid="plan-ai-detail-toggle">
@@ -1262,7 +1026,9 @@ export function PlanWithAiSheet({
                 className="v8-primary-button plan-ai-next-step"
                 data-testid="plan-ai-next-step"
                 data-next-step="retry"
-                onClick={() => void submit()}
+                /* The 原话 comes off the run, not off this mount: after a detach the box was empty and
+                   this button pressed into nothing. */
+                onClick={() => submit(run.command || text)}
               >
                 {zh ? "照原话再试一次" : "Try again with the same words"}
               </button>
@@ -1277,12 +1043,11 @@ export function PlanWithAiSheet({
             type="button"
             className="v8-outline-button"
             data-testid="plan-ai-dismiss"
-            onClick={() => {
-              abortRef.current?.abort();
-              onClose();
-            }}
+            onClick={leave}
           >
-            {busy ? (zh ? "取消并关闭" : "Cancel & close") : zh ? "稍后" : "Later"}
+            {/* This control used to say 「取消并关闭」 while a run was going, and did exactly that: one
+                press destroyed the run and the panel together.  It now only leaves, and says so. */}
+            {busy ? t("agent.aiRunLeaveNow") : t("agent.aiRunLater")}
           </button>
           <button
             type="button"
@@ -1294,7 +1059,7 @@ export function PlanWithAiSheet({
                dead surface.  The existing `[aria-disabled="true"]` rule keeps it looking unwalkable. */
             disabled={busy}
             aria-disabled={text.trim().length < REQUEST_MIN_LENGTH || undefined}
-            onClick={() => void submit()}
+            onClick={() => submit()}
           >
             {busy ? (zh ? "规划中…" : "Planning…") : zh ? "开始规划" : "Plan my trip"}
           </button>
