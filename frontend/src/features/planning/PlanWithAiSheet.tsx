@@ -606,7 +606,10 @@ export function PlanWithAiSheet({
      scroll.  Same treatment as the leave prompt above. */
   const resultRef = useRef<HTMLDivElement | null>(null);
   useEffect(() => {
-    if (result) resultRef.current?.scrollIntoView({ block: "nearest" });
+    /* `nearest` was the first attempt and it does nothing when the element top is already on screen,
+       which is exactly the case here -- the card opens with its head visible and its tail under the
+       fold.  `end` is what brings the last line up. */
+    if (result) resultRef.current?.scrollIntoView({ block: "end" });
   }, [result, run.runId]);
 
   const copy = result ? statusCopy(result.status, zh, result.planCount ?? 0) : null;
