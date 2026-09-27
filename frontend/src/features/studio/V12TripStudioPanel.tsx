@@ -150,11 +150,16 @@ export function V12TripStudioPanel({ journeyId, plan, onAccepted }: Props) {
             summary={preview.can_accept ? t("studio.impactPass") : t("studio.impactFail")}
           />
           {!preview.can_accept && gateReasons.length > 0 && (
-            <ul className="v12-studio-reasons" data-testid="v12-gate-reasons">
-              {gateReasons.map((reason) => (
-                <li key={reason.key} data-testid="v12-gate-reason">{reason.text}</li>
-              ))}
-            </ul>
+            <>
+              <p className="v12-studio-reasons-head" data-testid="v12-gate-reasons-head">
+                {t("studio.blockedReasons")}
+              </p>
+              <ul className="v12-studio-reasons" data-testid="v12-gate-reasons">
+                {gateReasons.map((reason) => (
+                  <li key={reason.key} data-testid="v12-gate-reason">{reason.text}</li>
+                ))}
+              </ul>
+            </>
           )}
           {!preview.can_accept && rawFailures.length > 0 && (
             <details className="v8-advanced" data-testid="v12-gate-technical">

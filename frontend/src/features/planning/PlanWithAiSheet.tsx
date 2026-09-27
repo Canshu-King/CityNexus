@@ -424,20 +424,24 @@ function isAbort(cause: unknown): boolean {
  * answers HTTP 200 with `mission.status = "COMPLETED"` and a populated `reasoning_summary`, and the
  * mission itself carries `ai_state = "DISABLED_BY_OPS"`. Mounting that sentence under ORD-0240's
  * 「模型原始输出」 label credits a model for text the deterministic compiler wrote -- the mirror
- * image of the defect ORD-0240 closed. Only the two states that *prove* a model could not have run
- * change the label; an answer that names no state keeps today's wording, because "we were not told"
- * is not evidence that nothing ran.
+ * image of the defect ORD-0240 closed.
+ *
+ * The vocabulary is the one `backend/app/agent/ai_availability.py:36-44` produces after ORD-0359,
+ * which renamed `READY` away because "a key exists" was promising that it works. So
+ * `CONFIGURED_UNVERIFIED` deliberately does **not** mean a model wrote this -- mapping it to
+ * "model" would re-open 0359's hole one level up. Only `PROVIDER_REFUSED` states that the provider
+ * was actually reached and answered. Everything else, including a missing state, keeps today's
+ * wording, because "we were not told" is not evidence that nothing ran either.
  */
 type SummaryOrigin = "model" | "no_model" | "not_stated";
 
 export function summaryOriginOf(mission: unknown): SummaryOrigin {
   if (!mission || typeof mission !== "object") return "not_stated";
   const stated = mission as { ai_state?: unknown; deepseek_configured?: unknown };
-  if (stated.ai_state === undefined && stated.deepseek_configured === undefined) return "not_stated";
   const state = typeof stated.ai_state === "string" ? stated.ai_state : "";
   if (state === "DISABLED_BY_OPS" || state === "NOT_CONFIGURED") return "no_model";
-  if (state === "READY" || state === "PROVIDER_REFUSED") return "model";
-  if (state === "") return stated.deepseek_configured === false ? "no_model" : "not_stated";
+  if (state === "PROVIDER_REFUSED") return "model";
+  if (state === "" && stated.deepseek_configured === false) return "no_model";
   return "not_stated";
 }
 
