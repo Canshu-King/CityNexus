@@ -163,6 +163,7 @@ export function NativeMissionTimeline({
   onExecutionChange?: (executed: boolean) => void;
 }) {
   const { locale } = useLocale();
+  const t = useT();
   const zh = locale === "zh-CN";
   const [events, setEvents] = useState<NativeRuntimeEvent[]>(() =>
     mergeEvents(run.initial_events, readStoredEvents(data.journey.id, run.run_id)),
@@ -361,7 +362,7 @@ export function NativeMissionTimeline({
     } catch (cause) {
       const attribution: Attribution = classifyReadFailure(cause);
       setActionFacts(attribution.telemetry);
-      setActionState(copyFor(attribution, zh).body ?? (zh ? "停止失败" : "Stop failed"));
+      setActionState(copyFor(attribution, zh).body ?? t("agent.stopFailed"));
     }
   };
 
@@ -381,7 +382,7 @@ export function NativeMissionTimeline({
     } catch (cause) {
       const attribution: Attribution = classifyReadFailure(cause);
       setActionFacts(attribution.telemetry);
-      setActionState(copyFor(attribution, zh).body ?? (zh ? "确认失败" : "Approval failed"));
+      setActionState(copyFor(attribution, zh).body ?? t("agent.approvalFailed"));
     }
   };
 
@@ -412,7 +413,7 @@ export function NativeMissionTimeline({
           <span><b>{zh ? "任务编号" : "task id"}</b> <code>{run.run_id}</code></span>
           {run.mission_id && <span><b>{zh ? "内部任务" : "mission"}</b> <code>{run.mission_id}</code></span>}
           <span><b>{zh ? "已用步骤" : "steps"}</b> {toolEvents.length}</span>
-          <span><b>{zh ? "当前" : "current"}</b> {currentTool ? (toolLabels[currentTool]?.[zh ? "zh" : "en"] ?? (zh ? "处理中" : "Working")) : "—"}</span>
+          <span><b>{zh ? "当前" : "current"}</b> {currentTool ? (toolLabels[currentTool]?.[zh ? "zh" : "en"] ?? t("agent.toolWorking")) : "—"}</span>
           {currentTool && (
             <span><b>{zh ? "工具" : "tool"}</b> <code>{currentTool}</code></span>
           )}

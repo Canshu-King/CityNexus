@@ -236,7 +236,7 @@ export function LiveRecovery({
         const raw =
           body?.error?.message ??
           body?.detail ??
-          (zh ? "暂时无法接受这个调整。" : "Could not accept this change.");
+          t("live.acceptFailed");
         setMessage(humanReplanReason(raw, zh));
         return;
       }

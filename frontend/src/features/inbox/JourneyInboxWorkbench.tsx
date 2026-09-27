@@ -803,7 +803,7 @@ export function JourneyInboxWorkbench({ journeyId, decodedText, onConfirmed, imp
               {String(
                 item.extracted.confirmation_ref ??
                   item.extracted.title ??
-                  (zh ? "没有订单号的一条" : "an unnamed one"),
+                  t("inbox.unnamedArtifact"),
               )}
             </b>
             <small>

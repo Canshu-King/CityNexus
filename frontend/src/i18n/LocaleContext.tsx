@@ -223,6 +223,10 @@ const en: Dict = {
   // different fact from "no plan yet"; the UI must not claim the latter.
   "live.unresolvedStep": "Execution position unresolved",
   "live.unresolvedStepHint": "The saved position points at a step this plan no longer contains, so no current or next step can be shown honestly.",
+  /* ORD-0370: the accept path's own last-resort line, read from here rather than from a
+     `zh ? … : …` branch inside LiveRecovery -- which is what let a Chinese screen be handed
+     English when the server returned no body. */
+  "live.acceptFailed": "Couldn't accept this change.",
   "live.nothingDue": "Nothing is due right now",
   "live.nextLeg": "NEXT · {title} · {mode} · {duration}{unit}",
   "live.nextSelect": "NEXT · Select a plan to calculate the next leg",
@@ -370,6 +374,11 @@ const en: Dict = {
   "agent.whatIfStudio": "Preview a change",
   "agent.whatIfStudioSub": "Preview time, cost and walking without changing your chosen plan.",
   "agent.sendError": "Copilot could not reach CityNexus.",
+  /* ORD-0370: the Copilot dock's three fallbacks, moved out of the component. The Chinese side
+     keeps the previous value's length on purpose, so re-wording is not re-sizing. */
+  "agent.stopFailed": "Couldn't stop.",
+  "agent.approvalFailed": "Couldn't approve.",
+  "agent.toolWorking": "Working",
 
   // ── Discovery ──
   "discovery.kicker": "Grounded city discovery",
@@ -573,6 +582,9 @@ const en: Dict = {
   "inbox.needsReview": "Needs review:",
   "inbox.pendingQueue": "Confirmations waiting on you",
   "inbox.queueEmpty": "Nothing here is waiting for your review.",
+  /* ORD-0370: a queue row with neither a confirmation number nor a title still needs a label;
+     the component may not invent one in whichever language it happens to be compiled for. */
+  "inbox.unnamedArtifact": "an unnamed one",
   "inbox.readyToConfirm": "The server says this one is ready to accept",
   "inbox.openReview": "Open to review",
   "inbox.pendingUnreadable": "The review list could not be read:",
@@ -930,6 +942,7 @@ const zhCN: Dict = {
   "live.awaitingPlan": "等待方案",
   "live.unresolvedStep": "执行位置无法确认",
   "live.unresolvedStepHint": "已保存的位置指向当前方案中不再存在的步骤，没能如实显示当前或下一步。",
+  "live.acceptFailed": "没能接受这个调整。",
   "live.nothingDue": "现在没有待进行的步骤",
   "live.nextLeg": "下一步 · {title} · {mode} · {duration}{unit}",
   "live.nextSelect": "下一步 · 选择方案以计算下一段路程",
@@ -1077,6 +1090,9 @@ const zhCN: Dict = {
   "agent.whatIfStudio": "试算一次改动",
   "agent.whatIfStudioSub": "在不改动已选方案的前提下，预览时间和成本变化。",
   "agent.sendError": "Copilot 暂时没能连上 CityNexus。",
+  "agent.stopFailed": "没能停止",
+  "agent.approvalFailed": "没能确认",
+  "agent.toolWorking": "处理中",
 
   // ── Discovery ──
   "discovery.kicker": "真实依据城市探索",
@@ -1280,6 +1296,7 @@ const zhCN: Dict = {
   "inbox.needsReview": "需要审核：",
   "inbox.pendingQueue": "等你审核的确认单",
   "inbox.queueEmpty": "这里没有等你审核的确认单。",
+  "inbox.unnamedArtifact": "没有订单号的一条",
   "inbox.readyToConfirm": "服务器说这条可以收下了",
   "inbox.openReview": "打开核对",
   "inbox.pendingUnreadable": "待审清单读不出来：",
