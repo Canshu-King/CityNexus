@@ -9,6 +9,10 @@ import {
 
 type Props = {
   journeyId: string;
+  /** `quiet` puts the control in a text row (Today), `primary` keeps the button the work bench
+      already shipped.  The label is the same either way -- ORD-0366 asks for one more reachable
+      entry, not for a second name to learn. */
+  variant?: "primary" | "quiet";
 };
 
 const FAILURE_COPY: Record<JourneyLinkFailure, string> = {
@@ -33,7 +37,7 @@ function outcomeCopy(outcome: JourneyLinkOutcome, t: (key: string) => string): s
  * scroll for it.  One row, one sentence of feedback: a refusal must not grow a second failure screen,
  * so the message replaces itself in the same slot rather than taking the panel over.
  */
-export function JourneyLinkAction({ journeyId }: Props) {
+export function JourneyLinkAction({ journeyId, variant = "primary" }: Props) {
   const t = useT();
   const [outcome, setOutcome] = useState<JourneyLinkOutcome | null>(null);
   const [busy, setBusy] = useState(false);
@@ -54,7 +58,7 @@ export function JourneyLinkAction({ journeyId }: Props) {
     <div className="journey-link-action">
       <button
         type="button"
-        className="v8-primary-button"
+        className={variant === "quiet" ? "v8-quiet-button" : "v8-primary-button"}
         data-testid="journey-link-copy"
         data-cnx-field="journey_link_url"
         disabled={busy}

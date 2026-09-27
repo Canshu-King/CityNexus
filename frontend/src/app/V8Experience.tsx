@@ -42,6 +42,7 @@ import { ControlTowerPanel } from "../features/intelligence/ControlTowerPanel";
 import { V10LiveExecutionPanel } from "../features/execution/V10LiveExecutionPanel";
 import { BookingArtifactScanner } from "../features/inbox/BookingArtifactScanner";
 import { JourneyInboxWorkbench, fieldLabel } from "../features/inbox/JourneyInboxWorkbench";
+import { JourneyLinkAction } from "../features/inbox/JourneyLinkAction";
 import { PushCapabilityCard } from "../features/notifications/PushCapabilityCard";
 import { TwinPanel } from "../features/traveler-twin/TwinPanel";
 import { SortableActivityList } from "../features/studio/SortableActivityList";
@@ -2784,6 +2785,10 @@ function Hub({
           >
             {t("hub.openStudio")}
           </button>
+          {/* ORD-0366: Today is the screen a traveller is actually on when they want to hand the
+              trip to someone, so the link action lives here too -- in this same quiet row, not as a
+              second primary button competing with the hero (Pass-8 ruling #1/#2 above stays intact). */}
+          <JourneyLinkAction journeyId={data.journey.id} variant="quiet" />
         </div>
       </div>
       {/* ORD-0059: the Simulation entry belongs on Today, because Today is the screen whose
