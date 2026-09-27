@@ -167,7 +167,7 @@ residue_rows=1
 row	frontend/src/app/V8Experience.tsx:229	verdict=keep-copy-layer-elsewhere	hand_check=the sentence is `服务器答了 HTTP ${status}，…Content-Type: ${content_type ?? "未知"}`; source-named and unit-named, zh and en agree at :229 and :230
 row	frontend/src/features/discovery/DestinationPreparationPanel.tsx:237	verdict=keep-copy-layer-elsewhere	hand_check=`服务器说现在在「phase」…已用 ${elapsed}` -- names who and the unit
 row	frontend/src/features/recovery/RecoveryRequiredPanel.tsx:81	verdict=keep-consumed-by-named-copy	hand_check=that HTTP string is only a fallback `code`; the number the traveller reads goes through params.status into `studio.requestRefused` at frontend/src/i18n/LocaleContext.tsx:744 and :1523, which reads "The server refused this request (HTTP {status})"
-row	frontend/src/studio	verdict=n/a	hand_check=V12TripStudioPanel.tsx:210 renders studio.requestRefused too, same sentence
+row	frontend/src/features/studio/V12TripStudioPanel.tsx:210	verdict=keep-consumed-by-named-copy	hand_check=renders the same studio.requestRefused sentence as above (frontend/src/i18n/LocaleContext.tsx:744 and :1523)
 row	frontend/src/lib/failureAttribution.ts:140	verdict=not-a-bare-number	hand_check=residue test flagged it only because the sentence has no prose source word; the row builds `content_type=${value}`, i.e. the key names the number -- the same shape the gauge produces
 
 ## step 2 -- product edits: none made, and why
