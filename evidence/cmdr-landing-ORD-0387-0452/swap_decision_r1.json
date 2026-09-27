@@ -1,0 +1,28 @@
+{
+ "tip": "0813d3aae826b7b4bdf311e70ed48c40f5c515d3",
+ "built_dist": null,
+ "built_refs": [
+  "/assets/index-D6DgWYca.js",
+  "/assets/index-je4YrqHN.css"
+ ],
+ "served_disk_refs": [
+  "/assets/index-Bl6bFjw6.js",
+  "/assets/index-Bo2rybZP.css"
+ ],
+ "online_refs": [
+  "/assets/index-Bl6bFjw6.js",
+  "/assets/index-Bo2rybZP.css"
+ ],
+ "previous_generation": "e022093dcc198367d779fc92692c6ccfc6824a2a",
+ "source_diff_frontend_src": [
+  "frontend/src/app/V8Experience.tsx",
+  "frontend/src/components/PlaceProvenance.tsx",
+  "frontend/src/features/planning/PlanAiRunStrip.tsx",
+  "frontend/src/features/planning/PlanWithAiSheet.tsx",
+  "frontend/src/features/planning/aiGenerationRun.ts",
+  "frontend/src/i18n/LocaleContext.tsx",
+  "frontend/src/i18n/placeProvenanceCopy.ts",
+  "frontend/src/styles.css"
+ ],
+ "decision": "SWAP_REQUIRED"
+}
