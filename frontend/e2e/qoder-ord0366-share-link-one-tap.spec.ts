@@ -145,6 +145,10 @@ async function primeClipboard(page: Page): Promise<string> {
 }
 
 function armOf(title: string): string {
+  /* The three scroll poses are three arms: keying them all `T1` made every afterEach write the same
+     file, so only the last pose survived and "all three poses are green" was never provable. */
+  const pose = /^T1_today_one_strike_at_scroll_(top|middle|bottom)/.exec(title);
+  if (pose) return `T1_${pose[1]}`;
   return /^([ITBM]\d)/.exec(title)?.[1] ?? title.slice(0, 2);
 }
 
