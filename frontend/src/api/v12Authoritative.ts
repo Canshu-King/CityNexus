@@ -1,4 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { rejectionWithFacts } from "../lib/rejectionFacts";
 import type { components, paths } from "../generated/api";
 
 export type AuthoritativeComposeRequest =
@@ -22,11 +23,14 @@ async function request<T>(path: string, init?: RequestInit): Promise<T> {
     headers: { "Content-Type": "application/json", ...(init?.headers ?? {}) },
     ...init,
   });
-  const body = await response.json();
   if (!response.ok) {
-    throw new Error(body?.detail ?? body?.error?.message ?? `Request failed (${response.status})`);
+    /* ORD-0369: this used to be `throw new Error(body?.detail ?? body?.error?.message ?? ...)`, so
+       the backend's sentence travelled as `error.message` and the panel that rendered it put the
+       server's prose on the traveller's line. The refusal now travels as what this device measured
+       (`lib/rejectionFacts`), and the text is kept only to match machine tokens against. */
+    throw await rejectionWithFacts(response);
   }
-  return body as T;
+  return (await response.json()) as T;
 }
 
 export function useAuthoritativePlans(journeyId: string | null) {
