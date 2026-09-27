@@ -2127,7 +2127,7 @@ components:
             active: {type: boolean}
     Place:
       type: object
-      required: [id, name, category, location, city_code]
+      required: [id, name, category, location, city_code, provider_key, coordinate_system]
       properties:
         id: {type: string}
         name: {type: string}
@@ -2135,6 +2135,14 @@ components:
         city_code: {type: string}
         location: {$ref: '#/components/schemas/GeoPoint'}
         tags: {type: array, items: {type: string}}
+        provider_key: {type: string}
+        # The system the stored geometry is written in; NOT NULL in the schema.
+        coordinate_system: {type: string}
+        # What the provider handed us before any conversion.  Absent/null means it
+        # was never recorded -- deliberately not the same thing as WGS84, and
+        # therefore typed nullable and left out of `required` (the CityService
+        # .place_id precedent at this component's neighbour does the same).
+        source_coordinate_system: {type: [string, 'null']}
     CityService:
       type: object
       required: [id, name, service_type, city_code]

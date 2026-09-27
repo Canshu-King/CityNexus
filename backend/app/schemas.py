@@ -379,6 +379,15 @@ class Place(BaseModel):
     city_code: str
     location: GeoPoint
     tags: list[str] = Field(default_factory=list)
+    # A coordinate means nothing without the system it is written in, and a place
+    # read from a provider is only checkable if the payload says which provider.
+    # No defaults on purpose: a producer has to state these, so the value that
+    # reaches a traveller is always read from the row, never typed at the call site.
+    provider_key: str
+    coordinate_system: str
+    # What the provider actually handed us; None means it was never recorded --
+    # which is a different fact from "WGS84" and must not collapse into it.
+    source_coordinate_system: str | None
 
 
 class CityService(BaseModel):

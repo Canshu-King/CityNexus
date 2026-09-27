@@ -5,6 +5,7 @@ import { namedCodeIn, type RawFacts } from "../../lib/rawFacts";
 import { rejectionWithFacts, RejectionWithFacts } from "../../lib/rejectionFacts";
 import { OriginResponseUnusableError } from "../../lib/failureAttribution";
 import { CnxMeasuredFacts } from "../../components/CnxMeasuredFacts";
+import { PlaceProvenance } from "../../components/PlaceProvenance";
 
 type Candidate = {
   id: string;
@@ -13,6 +14,8 @@ type Candidate = {
   provider_key?: string;
   latitude: number;
   longitude: number;
+  coordinate_system?: string | null;
+  source_coordinate_system?: string | null;
   opening_hours?: { status?: string; open?: string; close?: string; source_urls?: string[] };
   cost_evidence?: { status?: string; amount_minor?: number | null; currency?: string };
 };
@@ -226,11 +229,18 @@ export function RealCityDiscoveryPanel({
           {result.discovery.candidates.slice(0, 4).map((candidate) => {
             const rank = result.curation.ranked.find((item) => item.candidate_id === candidate.id);
             const eligible = result.feasibility.eligible.some((item) => item.id === candidate.id);
+            const sourceUrl = candidate.opening_hours?.source_urls?.[0];
             return <article className={eligible ? "v8-stay-card selected" : "v8-stay-card"} key={candidate.id}>
               <div className="v8-stay-card-body"><div className="v8-stay-card-title"><div><span className="v8-rank">{eligible ? "✓" : "—"}</span><h3>{candidate.name}</h3></div><span className="v8-selected-label">{eligible ? t("discovery.eligible") : t("discovery.rejected")}</span></div>
-                <p>{candidate.category} · {candidate.provider_key ?? t("discovery.providerGrounded")}</p>
+                <PlaceProvenance
+                  name={candidate.name}
+                  category={candidate.category}
+                  providerKey={candidate.provider_key}
+                  coordinateSystem={candidate.coordinate_system}
+                  sourceCoordinateSystem={candidate.source_coordinate_system}
+                  host={sourceUrl ? new URL(sourceUrl).hostname : null}
+                />
                 <div className="v8-stay-impact"><span>{candidate.opening_hours?.status ?? t("discovery.hoursUnknown")}</span><b>{money(candidate.cost_evidence?.amount_minor, candidate.cost_evidence?.currency)}</b><em>{rank ? t("discovery.semanticFit", { n: Math.round(rank.semantic_fit * 100) }) : t("discovery.notRanked")}</em></div>
-                {candidate.opening_hours?.source_urls?.[0] && <small>{t("discovery.sourceCaptured", { url: new URL(candidate.opening_hours.source_urls[0]).hostname })}</small>}
                 {rank?.reason && <small>{rank.reason}</small>}
               </div>
             </article>;
