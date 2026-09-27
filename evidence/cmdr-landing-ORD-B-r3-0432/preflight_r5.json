@@ -1,0 +1,158 @@
+{
+ "schema": "CNX_CMDR_LANDING_PREFLIGHT_V1",
+ "lane": "commander 494abfd7",
+ "at_local": "2026-09-28T04:32:39+0800",
+ "mode": "LAND",
+ "authoritative_line": "mirror/integration-frontend-apple-pass1",
+ "tip_re_read_from_github_before": "3e75ab2bbbac19c47ab042fce9ea90be0f04829b",
+ "candidate_ref": "refs/heads/cmdr/land-ordBr3-recut",
+ "candidate_tip": "e022093dcc198367d779fc92692c6ccfc6824a2a",
+ "genealogy": {
+  "ff_possible_rc": 0,
+  "ff_possible": true,
+  "merge_base": "3e75ab2bbbac19c47ab042fce9ea90be0f04829b",
+  "line_only_commits": 0,
+  "candidate_only_commits": 3
+ },
+ "file_sets": {
+  "line_side_since_base": [],
+  "candidate_side_since_base": [
+   "backend/app/main.py",
+   "backend/app/schemas.py",
+   "contracts/openapi.yaml",
+   "frontend/src/components/PlaceProvenance.tsx",
+   "frontend/src/i18n/placeProvenanceCopy.ts"
+  ],
+  "intersection": [],
+  "product_introduced_by_candidate": [
+   "backend/app/main.py",
+   "backend/app/schemas.py",
+   "frontend/src/components/PlaceProvenance.tsx",
+   "frontend/src/i18n/placeProvenanceCopy.ts"
+  ]
+ },
+ "merge_tree": {
+  "exit": 0,
+  "first_line": "d3468f86eb00e8b3e6debc552189cb7c68618c52",
+  "conflict_reported": false,
+  "stderr_head": ""
+ },
+ "gate_run": {
+  "requested": [],
+  "collect_exit": null,
+  "collected": null,
+  "test_exit": null,
+  "summary": null,
+  "export": "D:/moodle/_qoder_cmdr_ref_20260921/snap_preflight_043154",
+  "blob_equality": [
+   {
+    "path": "backend/app/main.py",
+    "candidate_blob": "a5e820007f3772578d3431343fa7159fa14d4bd2",
+    "export_blob": "a5e820007f3772578d3431343fa7159fa14d4bd2",
+    "equal": true
+   },
+   {
+    "path": "backend/app/schemas.py",
+    "candidate_blob": "5b484409e98933bf609a5416d9b759bf8daa028c",
+    "export_blob": "5b484409e98933bf609a5416d9b759bf8daa028c",
+    "equal": true
+   },
+   {
+    "path": "contracts/openapi.yaml",
+    "candidate_blob": "139cd23330c194fd2748c83e0d0e9cba1f2842b3",
+    "export_blob": "139cd23330c194fd2748c83e0d0e9cba1f2842b3",
+    "equal": true
+   },
+   {
+    "path": "frontend/src/components/PlaceProvenance.tsx",
+    "candidate_blob": "c6efa999202c0a126065d8c4ffadc8f8f65e9af1",
+    "export_blob": "c6efa999202c0a126065d8c4ffadc8f8f65e9af1",
+    "equal": true
+   },
+   {
+    "path": "frontend/src/i18n/placeProvenanceCopy.ts",
+    "candidate_blob": "aad71e31640262387456840051de66a770752b8f",
+    "export_blob": "aad71e31640262387456840051de66a770752b8f",
+    "equal": true
+   }
+  ],
+  "whole_suite": {
+   "collect_exit": 0,
+   "collected": 1393,
+   "interrupted": false,
+   "error_lines": [
+    "tests/test_qoder_ord0332_error_receipt.py::test_R7_the_envelope_keeps_every_field_it_already_had",
+    "tests/test_qoder_ord0332_error_receipt.py::test_R8_the_seed_is_read_off_the_real_request_not_just_the_dataclass",
+    "tests/test_solver_runtime_policy.py::test_unexpected_solver_programming_error_is_not_silently_hidden"
+   ],
+   "tail": [
+    "    _PortalFactoryType = Callable[[], AbstractContextManager[anyio.abc.BlockingPortal]]",
+    "-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html",
+    "1393 tests collected in 8.95s"
+   ],
+   "cmd": "D:/moodle/CityNexus/.venv/Scripts/python.exe -m pytest --collect-only -q tests  (cwd=<export>/backend, PYTHONPATH=<export>)"
+  },
+  "deletions": {
+   "deleted_by_candidate": [],
+   "still_present_in_export": []
+  },
+  "interpreter": "Python 3.12.14 (main, Aug 25 2026, 14:01:42) [MSC v.1944 64 bit (AMD64)]",
+  "exposure": {
+   "ruler_blob": "d3f66ce9fecd0790981a4fcdeb5e36b1c0fd10f2",
+   "ruler_blob_computed": null,
+   "ruler_file": "ui_exposure_taint_ast_r7b.cjs",
+   "candidate_files_in_view": 2,
+   "tip_cells": 10,
+   "cand_cells": 10,
+   "growth_by_file_and_rule": {},
+   "unpaired_added": [],
+   "added_line_exact": [],
+   "shifted_only": false,
+   "removed_count": 0,
+   "removed": [],
+   "disclosed_slip": "a same-file, same-rule relocation with equal counts reads as a shift; the AST ruler has no cell identity"
+  },
+  "frontend_build": {
+   "builder_rc": 0,
+   "vite_build_rc": 0,
+   "dist_exists": true,
+   "index_exists": true,
+   "asset_refs": [
+    "/assets/index-Bl6bFjw6.js",
+    "/assets/index-Bo2rybZP.css"
+   ],
+   "live_tree": "d3468f86eb00e8b3e6debc552189cb7c68618c52",
+   "info_file": "D:\\moodle\\_qoder_cmdr_ref_20260921\\live_checks\\_build_e022093_info.json",
+   "build_tail": [
+    "files generated",
+    "  dist/v10-sw.js",
+    "  dist/workbox-6923124b.js",
+    "\u001b[33m",
+    "(!) Some chunks are larger than 500 kB after minification. Consider:",
+    "- Using dynamic import() to code-split the application",
+    "- Use build.rollupOptions.output.manualChunks to improve chunking: https://rollupjs.org/configuration-options/#output-manualchunks",
+    "- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.\u001b[39m"
+   ]
+  }
+ },
+ "problems": [],
+ "verdict": "READY_TO_LAND",
+ "landing": {
+  "http": 200,
+  "response_head": "{'ref': 'refs/heads/mirror/integration-frontend-apple-pass1', 'node_id': 'REF_kwDOUhlJJ9oAMnJlZnMvaGVhZHMvbWlycm9yL2ludGVncmF0aW9uLWZyb250ZW5kLWFwcGxlLXBhc3Mx', 'url': 'https://api.github.com/repos/Ca",
+  "tip_after": "e022093dcc198367d779fc92692c6ccfc6824a2a",
+  "branches_route": "e022093dcc198367d779fc92692c6ccfc6824a2a",
+  "both_routes_agree": true,
+  "landed": true
+ },
+ "discipline": {
+  "evidence_paths_overwritten": 0,
+  "databases_opened": 0,
+  "surfaces_started_or_stopped": 0,
+  "credential_values_printed": 0,
+  "candidate_refs_pushed_by_commander": 0
+ },
+ "claim_kind": "git_and_pytest_determined",
+ "claimed_result": null,
+ "derived_result": null
+}
