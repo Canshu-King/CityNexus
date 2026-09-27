@@ -1,12 +1,13 @@
 ORD-0380 FRONTSRC_BUILD_PREREQ receipt
 
-Tree built: the merge commit b23f8cabade3b089d1ebe1fa837b0be5e79a381a on branch
-      review/Q-cn-token-night-axis, which has the authoritative tip
-      04071b8258ebcdcf1e9e4c9714fb516283d1e1ad as an ancestor -- so what got built is the merged
-      tree, not the bb3f5853 tree the order was drafted against. The receipt commit that carries
-      this file adds only review/ and tools/ paths; frontend/ is byte-identical between the two.
+Tree built: the merge commit on branch review/Q-cn-token-night-axis that has 090c048f220a3089506f565929ceda1511315a09
+      as an ancestor. The authoritative line moved twice while this order ran (bb3f5853 ->
+      04071b82 -> 090c048f) and 090c048f already carries this order's step 1 and step 2, so
+      what got type-checked and built here is the merged tree, not the bb3f5853 tree the
+      order was drafted against. frontend/src/design-tokens.css on this tree is byte-identical
+      to that tip's blob (sha256 below), which is the product-byte claim.
 Dependency source: Windows junction frontend/node_modules -> D:\moodle\CityNexus\frontend\node_modules
-      (reparse point, not a copy; unmounted with a plain rmdir before anything else)
+      (a reparse point, not a copy; unmounted with a plain rmdir before anything else)
 
 Commands, run in frontend/, proxies unset (this box exports HTTP(S)_PROXY=127.0.0.1:7892 and
 nothing listens on it; npm_config_offline=true so npx could not reach a registry):
@@ -14,33 +15,29 @@ nothing listens on it; npm_config_offline=true so npx could not reach a registry
   npx tsc -p tsconfig.check.json         # the narrow 5-file check that ships in the tree
   npx vite build
 
-frontend/ has no bare tsconfig.json, so a plain `npx tsc --noEmit` has no project to read;
-noEmit is set inside both configs above. Both were run, not just one.
+frontend/ ships no bare tsconfig.json, so a plain `npx tsc --noEmit` has no project to read;
+noEmit is set inside both configs named above. Both were run, not one.
 
-Results (exit codes taken from the runs themselves):
+Results, on the merged tree (exit codes from the runs themselves):
   tsconfig.typecheck.json      exit=0  log=0 bytes  (empty: no diagnostics)
   tsconfig.check.json          exit=0  log=0 bytes  (empty: no diagnostics)
   vite build                   exit=0  log=1355 bytes
 
-vite build, the lines that show it really produced a bundle:
-      | [32m✓ built in 14.43s[39m
-      | precache  8 entries (2471.53 KiB)
+vite build lines that show a bundle really came out:
+      | [32m✓ built in 13.71s[39m
+      | precache  8 entries (2485.36 KiB)
       | dist/v10-sw.js
 
 Junction lifecycle:
-  mklink /J -> rc=0; os.lstat carried FILE_ATTRIBUTE_REPARSE_POINT=True
-  399 entries visible through it
-  cmd /c rmdir <link> -> rc=0; link exists after removal: False
-  target after removal: exists=True entries=399 .bin/tsc=True
-  Nothing was deleted recursively in either tree; no `rd /s /q` was run.
+  mklink /J -> rc=0; os.lstat carried FILE_ATTRIBUTE_REPARSE_POINT=True; 399 entries visible
+  cmd /c rmdir <link> -> rc=0; link gone after: True
+  target after removal: exists=True entries=399 (unchanged) .bin/tsc=True
+  Nothing was deleted recursively in either tree; no `rd /s /q` was run anywhere.
 
-cnx_token_tiers_r1.py writes M*.css next to --tokens and removes them; frontend/src now
-holds exactly: design-tokens.css, styles.css, v10.css
-
-Product bytes this order contributes to frontend/: 0 files (see GATE.txt for the blob and
-sha256 that prove the merged design-tokens.css equals the authoritative tip's blob).
+cnx_token_tiers_r1.py writes M*.css next to --tokens and unlinks them; frontend/src holds
+exactly: design-tokens.css, styles.css, v10.css
 
 sha256 of the built-from inputs:
   fc150ae0d4c5e68cedd7cd7a4ed888d456153d7f10768bea9ae6277db4dec354  frontend/src/design-tokens.css
-  e2cfb2fc013d23403f4e43d32ca13600723aefbecff5ca2b216dfc72bf529fb8  frontend/src/styles.css
+  5fcf56c6a0e90ee246603da1005730bb03314beaf6c85526880d96c75e295c74  frontend/src/styles.css
   1ce30e4ec1cdabf02a65207aa0a0d8446d6a572aeb54e5ab1b8d29136f07b2cd  frontend/src/v10.css

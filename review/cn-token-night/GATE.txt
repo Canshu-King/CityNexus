@@ -1,19 +1,20 @@
 ORD-0380 gate receipt -- tools/cnx_token_tiers_r1.py over frontend/src/design-tokens.css
 
-Measured on the merged tree: this branch has 04071b8258eb as an ancestor, so the landing can stay
-fast-forward, and the baseline below is that tip rather than the older bb3f5853 the order
-was written against (the line moved mid-flight and six commits touched this CSS file).
+Tree: this branch after merging the authoritative line twice (it moved mid-order, and the line
+already carries this order's step 1 and step 2 as 54a4a291 and 20b14d60). Baseline below is
+090c048f220a3089506f565929ceda1511315a09, the tip at the time of the run.
 
 Product bytes this order contributes to frontend/: none.
-  sha256(merged frontend/src/design-tokens.css) = fc150ae0d4c5e68cedd7cd7a4ed888d456153d7f10768bea9ae6277db4dec354
-  git rev-parse 04071b8258ebcdcf1e9e4c9714fb516283d1e1ad:frontend/src/design-tokens.css   = 35280bccb425e503500b380f2a55473bb303a28f
+  git rev-parse 090c048f220a3089506f565929ceda1511315a09:frontend/src/design-tokens.css = 35280bccb425e503500b380f2a55473bb303a28f
+  sha256(the same file as merged on this branch)                = fc150ae0d4c5e68cedd7cd7a4ed888d456153d7f10768bea9ae6277db4dec354
 
-Reproduce from a tree at this branch tip (repository root):
-  git show 04071b8258ebcdcf1e9e4c9714fb516283d1e1ad:frontend/src/design-tokens.css > baseline.css
+Reproduce from a checkout of this branch (repository root):
+  git show 090c048f220a3089506f565929ceda1511315a09:frontend/src/design-tokens.css > baseline.css
   python tools/cnx_token_tiers_r1.py --tokens frontend/src/design-tokens.css --baseline baseline.css --styles frontend/src/styles.css --consume frontend/src/v10.css --mutant
 
 exit(new ruler: 7 cells + 8 mutants) = 0
-exit(shipped ruler: 5 cells + 4 mutants) = 0
+exit(the ruler as it shipped before this order: 5 cells + 4 mutants) = 0
+cells reading VIOLATION in the run above: 0
 
 == freeze proof for the five cells that shipped before this order
 name+measure+detail byte-identical: PARITY, TIERS, LADDER_USED, CONSTANT_DUP, CONSTANT_IN_DARK (5 of 5)
@@ -25,7 +26,7 @@ cells missing from the new output: none
   CONSTANT_IN_DARK identical=true
 
 == full output of the new ruler
-== cnx_token_tiers_r1  tokens=frontend/src/design-tokens.css baseline=../probe/design-tokens.tip04071b.css styles=yes consume=1
+== cnx_token_tiers_r1  tokens=frontend/src/design-tokens.css baseline=../probe/design-tokens.tip090c048f.css styles=yes consume=1
   [MET] PARITY             79 (token,scope) baseline readings re-resolved
           detail: none moved
   [MET] TIERS              inline rgba() remaining inside :root theme blocks: 0
@@ -53,5 +54,5 @@ exit=0
 
 == sha256 of the inputs every verdict above was read from
   fc150ae0d4c5e68cedd7cd7a4ed888d456153d7f10768bea9ae6277db4dec354  frontend/src/design-tokens.css
-  e2cfb2fc013d23403f4e43d32ca13600723aefbecff5ca2b216dfc72bf529fb8  frontend/src/styles.css
+  5fcf56c6a0e90ee246603da1005730bb03314beaf6c85526880d96c75e295c74  frontend/src/styles.css
   1ce30e4ec1cdabf02a65207aa0a0d8446d6a572aeb54e5ab1b8d29136f07b2cd  frontend/src/v10.css
