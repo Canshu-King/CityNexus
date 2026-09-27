@@ -108,10 +108,12 @@ async function boot(page: Page, journeyId: string) {
  * Two independent statements of "the current journey": what the shell adopted at boot, and what the
  * server says the stage is. They must agree before the clipboard is judged against either.
  */
-async function currentJourney(page: Page): Promise<{ stored: string; staged: string }> {
+async function currentJourney(page: Page): Promise<{ stored: string; staged: string; origin: string }> {
   const staged = (await (await page.request.get("/api/v1/demo/scene")).json()) as { journey_id?: string };
   const stored = await page.evaluate(() => localStorage.getItem("citynexus.v8.journey_id") ?? "");
-  return { stored: stored.trim(), staged: String(staged.journey_id ?? "").trim() };
+  /* Read off the page: the expected string is never assembled from a port this file guessed. */
+  const origin = await page.evaluate(() => window.location.origin);
+  return { stored: stored.trim(), staged: String(staged.journey_id ?? "").trim(), origin };
 }
 
 /** Strike the centre point with the mouse: a locator click would succeed on a node a real finger cannot reach. */
@@ -127,6 +129,19 @@ async function clipboardText(page: Page): Promise<string> {
       return "__unreadable__";
     }
   });
+}
+
+/**
+ * Chromium's clipboard is shared by every context in one browser instance, so "it changed from what it
+ * was" is not a property this file can assert across tests -- an earlier arm's write would satisfy it.
+ * The clipboard is therefore primed with a sentinel that is not a journey link, and the claim is the
+ * exact value after the strike. A write that never happens leaves the sentinel in place.
+ */
+const SENTINEL = "n3-ord0366-sentinel-not-a-journey-link";
+
+async function primeClipboard(page: Page): Promise<string> {
+  await page.evaluate((text: string) => navigator.clipboard.writeText(text), SENTINEL);
+  return clipboardText(page);
 }
 
 function armOf(title: string): string {
@@ -199,7 +214,7 @@ async function tapAtPose(page: Page, pose: "top" | "middle" | "bottom") {
   expect(sweep.zero_size, node(armOf(`T1_${pose}`), `a same-named node has no size at scroll pose ${pose} (${JSON.stringify(sweep.matches.filter((m) => m.w <= 0 || m.h <= 0))})`)).toBe(0);
   const target = sweep.matches.find((m) => m.hit_self && m.w > 0 && m.h > 0);
   expect(!!target, node("T", `at scroll pose ${pose}, once brought into view, nothing with that label answers a strike at its own centre -- something is covering it (matches: ${JSON.stringify(sweep.matches)})`)).toBe(true);
-  const before = await clipboardText(page);
+  const before = await primeClipboard(page);
   await strike(page, target!.x + target!.w / 2, target!.y + target!.h / 2);
   await expect(
     page.getByTestId("journey-link-message").first(),
@@ -222,11 +237,14 @@ for (const pose of ["top", "middle", "bottom"] as const) {
     await page.goto("/v8/hub", { waitUntil: "load" });
     await expect(page.getByTestId("today-hero"), node(arm, "Today never rendered")).toBeVisible({ timeout: 30_000 });
     const r = await tapAtPose(page, pose);
+    const expected = `${r.ids.origin}/v8/${r.ids.staged}`;
     readings[arm] = {
       pose,
       journey_id: id,
       stored_id: r.ids.stored,
       staged_id: r.ids.staged,
+      page_origin: r.ids.origin,
+      expected_link: expected,
       two_sources_agree: r.ids.stored === r.ids.staged,
       clipboard_before: r.before,
       clipboard_after: r.after,
@@ -240,7 +258,8 @@ for (const pose of ["top", "middle", "bottom"] as const) {
     };
     expect(r.ids.stored, node(arm, `the id the shell adopted (${r.ids.stored}) is not the one the stage names (${r.ids.staged}) -- cannot say which journey is "current"`)).toBe(r.ids.staged);
     expect(PLACEHOLDERISH.test(r.ids.staged), node(arm, `the current journey id looks like a placeholder (${r.ids.staged})`)).toBe(false);
-    expect(r.after, node(arm, "the strike changed nothing in the clipboard -- text without a write is the defect M1 reproduces")).not.toBe(r.before);
+    expect(r.before, node(arm, `the clipboard was not primed before the strike (it read "${r.before}") -- without the sentinel nothing here distinguishes a write from a leftover`)).toBe(SENTINEL);
+    expect(r.after, node(arm, `the strike left the clipboard reading "${r.after}" instead of the current journey's link ${expected} -- text without a write is the defect M1 reproduces`)).toBe(expected);
     expect(/^https?:\/\/[^\s]+\/v8\/[0-9a-fA-F-]{36}$/.test(r.after), node(arm, `the clipboard does not hold an absolute journey link (${r.after})`)).toBe(true);
     expect(r.after.endsWith(`/${r.ids.staged}`), node(arm, `the tail is not the CURRENT journey's id (${r.after}) -- M2 reproduces this shape`)).toBe(true);
     expect(r.message.includes("复制"), node(arm, `the line beside the control does not speak of a copy (${r.message})`)).toBe(true);
@@ -268,7 +287,7 @@ test("B1_the_work_bench_entry_still_writes_the_same_link — 工作台那一枚�
   await button.scrollIntoViewIfNeeded();
   const box = await button.boundingBox();
   expect(!!box, node(arm, "the bench control reports no box")).toBe(true);
-  const before = await clipboardText(page);
+  const before = await primeClipboard(page);
   await strike(page, (box as { x: number; y: number; width: number; height: number }).x + box!.width / 2, (box as { x: number; y: number; width: number; height: number }).y + box!.height / 2);
   await expect(
     page.getByTestId("journey-link-message").first(),
@@ -276,16 +295,19 @@ test("B1_the_work_bench_entry_still_writes_the_same_link — 工作台那一枚�
   ).toBeVisible({ timeout: 15_000 });
   const after = await clipboardText(page);
   const ids = await currentJourney(page);
+  const expected = `${ids.origin}/v8/${ids.staged}`;
   readings.B1 = {
     journey_id: id,
     matched_nodes: sweep.matches.length,
     struck_box: box,
+    page_origin: ids.origin,
+    expected_link: expected,
     clipboard_before: before,
     clipboard_after: after,
     clipboard_after_length: after.length,
     two_sources_agree: ids.stored === ids.staged,
     tail_matches_current_id: after.endsWith(`/${ids.staged}`),
   };
-  expect(after, node(arm, "the bench strike did not write the clipboard")).not.toBe(before);
-  expect(after.endsWith(`/${ids.staged}`), node(arm, `the bench wrote something else (${after})`)).toBe(true);
+  expect(before, node(arm, `the bench clipboard was not primed (it read "${before}") -- the sentinel is what makes a missing write visible`)).toBe(SENTINEL);
+  expect(after, node(arm, `the bench strike left "${after}" instead of ${expected}`)).toBe(expected);
 });
