@@ -1,0 +1,623 @@
+{
+ "ruler": "Q43_r5e",
+ "injections_attempted": 12,
+ "whole_block_wipes": [
+  {
+   "block": "n2_0101.md",
+   "coordinates_removed": 22,
+   "verdict_before": "Q43_GATE_GREEN",
+   "verdict_after": "Q43_GATE_RED",
+   "exit_before": 0,
+   "exit_after": 3,
+   "refusals_added": [
+    "1 failed",
+    "13 passed",
+    "1367 passed",
+    "1392 条",
+    "149",
+    "15 s",
+    "3 次",
+    "7892",
+    "9 failed",
+    "9 格",
+    "LS_EXIT=0"
+   ],
+   "monotone_never_shrinks": true,
+   "bite": true
+  },
+  {
+   "block": "n2_0105.md",
+   "coordinates_removed": 8,
+   "verdict_before": "Q43_GATE_RED",
+   "verdict_after": "Q43_GATE_RED",
+   "exit_before": 3,
+   "exit_after": 3,
+   "refusals_added": [
+    "5252"
+   ],
+   "monotone_never_shrinks": true,
+   "bite": true
+  },
+  {
+   "block": "n2_0144.md",
+   "coordinates_removed": 8,
+   "verdict_before": "Q43_GATE_RED",
+   "verdict_after": "Q43_GATE_RED",
+   "exit_before": 3,
+   "exit_after": 3,
+   "refusals_added": [
+    "0 格"
+   ],
+   "monotone_never_shrinks": true,
+   "bite": true
+  },
+  {
+   "block": "n2_0152.md",
+   "coordinates_removed": 3,
+   "verdict_before": "Q43_GATE_RED",
+   "verdict_after": "Q43_GATE_RED",
+   "exit_before": 3,
+   "exit_after": 3,
+   "refusals_added": [],
+   "monotone_never_shrinks": true,
+   "bite": false
+  },
+  {
+   "block": "n2_0156.md",
+   "coordinates_removed": 3,
+   "verdict_before": "Q43_GATE_RED",
+   "verdict_after": "Q43_GATE_RED",
+   "exit_before": 3,
+   "exit_after": 3,
+   "refusals_added": [],
+   "monotone_never_shrinks": true,
+   "bite": false
+  },
+  {
+   "block": "n2_0200.md",
+   "coordinates_removed": 4,
+   "verdict_before": "Q43_GATE_RED",
+   "verdict_after": "Q43_GATE_RED",
+   "exit_before": 3,
+   "exit_after": 3,
+   "refusals_added": [
+    "6 条",
+    "9 个"
+   ],
+   "monotone_never_shrinks": true,
+   "bite": true
+  },
+  {
+   "block": "n2_0213.md",
+   "coordinates_removed": 4,
+   "verdict_before": "Q43_GATE_RED",
+   "verdict_after": "Q43_GATE_RED",
+   "exit_before": 3,
+   "exit_after": 3,
+   "refusals_added": [
+    "0.4 GB"
+   ],
+   "monotone_never_shrinks": true,
+   "bite": true
+  },
+  {
+   "block": "n2_0219.md",
+   "coordinates_removed": 2,
+   "verdict_before": "Q43_GATE_RED",
+   "verdict_after": "Q43_GATE_RED",
+   "exit_before": 3,
+   "exit_after": 3,
+   "refusals_added": [],
+   "monotone_never_shrinks": true,
+   "bite": false
+  },
+  {
+   "block": "n2_0224.md",
+   "coordinates_removed": 2,
+   "verdict_before": "Q43_GATE_RED",
+   "verdict_after": "Q43_GATE_RED",
+   "exit_before": 3,
+   "exit_after": 3,
+   "refusals_added": [],
+   "monotone_never_shrinks": true,
+   "bite": false
+  },
+  {
+   "block": "n2_0228.md",
+   "coordinates_removed": 2,
+   "verdict_before": "Q43_GATE_RED",
+   "verdict_after": "Q43_GATE_RED",
+   "exit_before": 3,
+   "exit_after": 3,
+   "refusals_added": [],
+   "monotone_never_shrinks": true,
+   "bite": false
+  },
+  {
+   "block": "n2_1759.md",
+   "coordinates_removed": 19,
+   "verdict_before": "Q43_GATE_RED",
+   "verdict_after": "Q43_GATE_RED",
+   "exit_before": 3,
+   "exit_after": 3,
+   "refusals_added": [
+    "0 处",
+    "1 条",
+    "10 failed",
+    "11 failed",
+    "11 条",
+    "1358",
+    "1369",
+    "149",
+    "1727",
+    "2 failed",
+    "3 failed",
+    "5 passed",
+    "5026",
+    "6 passed",
+    "8 passed",
+    "9 failed"
+   ],
+   "monotone_never_shrinks": true,
+   "bite": true
+  },
+  {
+   "block": "n2_1824.md",
+   "coordinates_removed": 11,
+   "verdict_before": "Q43_GATE_GREEN",
+   "verdict_after": "Q43_GATE_RED",
+   "exit_before": 0,
+   "exit_after": 3,
+   "refusals_added": [
+    "0B",
+    "1027",
+    "1031",
+    "1035",
+    "1352 passed",
+    "1377",
+    "1377 条",
+    "15 s",
+    "236.13 秒",
+    "4 次",
+    "5252",
+    "8 条",
+    "9 failed"
+   ],
+   "monotone_never_shrinks": true,
+   "bite": true
+  },
+  {
+   "block": "qoder-0369_0310.md",
+   "coordinates_removed": 13,
+   "verdict_before": "Q43_GATE_GREEN",
+   "verdict_after": "Q43_GATE_RED",
+   "exit_before": 0,
+   "exit_after": 3,
+   "refusals_added": [
+    "13 条",
+    "13.84 秒",
+    "19 条",
+    "25396236",
+    "3 条",
+    "351517",
+    "390",
+    "5 个",
+    "665",
+    "8 条",
+    "844",
+    "875 个"
+   ],
+   "monotone_never_shrinks": true,
+   "bite": true
+  },
+  {
+   "block": "qoder-0369_0320.md",
+   "coordinates_removed": 14,
+   "verdict_before": "Q43_GATE_GREEN",
+   "verdict_after": "Q43_GATE_RED",
+   "exit_before": 0,
+   "exit_after": 3,
+   "refusals_added": [
+    "217",
+    "8 个"
+   ],
+   "monotone_never_shrinks": true,
+   "bite": true
+  },
+  {
+   "block": "qoder-0370_0130.md",
+   "coordinates_removed": 67,
+   "verdict_before": "Q43_GATE_RED",
+   "verdict_after": "Q43_GATE_RED",
+   "exit_before": 3,
+   "exit_after": 3,
+   "refusals_added": [
+    "0 个",
+    "0 处",
+    "0 条",
+    "1 处",
+    "10 个",
+    "100 个",
+    "11 个",
+    "11 处",
+    "13 个",
+    "14 处",
+    "15 处",
+    "155 处",
+    "16 个",
+    "183",
+    "2 处",
+    "213 条",
+    "22 处",
+    "238",
+    "3 个",
+    "5 处",
+    "6 个",
+    "606",
+    "72 个",
+    "77 处",
+    "78 处",
+    "8 条",
+    "805",
+    "875",
+    "9 处"
+   ],
+   "monotone_never_shrinks": true,
+   "bite": true
+  },
+  {
+   "block": "qoder-0370_0148.md",
+   "coordinates_removed": 29,
+   "verdict_before": "Q43_GATE_RED",
+   "verdict_after": "Q43_GATE_RED",
+   "exit_before": 3,
+   "exit_after": 3,
+   "refusals_added": [
+    "0 个",
+    "1 个",
+    "1 处",
+    "16 个",
+    "2 个",
+    "2 处",
+    "80 个"
+   ],
+   "monotone_never_shrinks": true,
+   "bite": true
+  },
+  {
+   "block": "qoder-0380_0314.md",
+   "coordinates_removed": 43,
+   "verdict_before": "Q43_GATE_RED",
+   "verdict_after": "Q43_GATE_RED",
+   "exit_before": 3,
+   "exit_after": 3,
+   "refusals_added": [
+    "1 次",
+    "255,255,255,1",
+    "4 次",
+    "5 个",
+    "79 次"
+   ],
+   "monotone_never_shrinks": true,
+   "bite": true
+  },
+  {
+   "block": "qoder-0381_0312.md",
+   "coordinates_removed": 27,
+   "verdict_before": "Q43_GATE_GREEN",
+   "verdict_after": "Q43_GATE_RED",
+   "exit_before": 0,
+   "exit_after": 3,
+   "refusals_added": [
+    "0 条",
+    "10 个",
+    "12.61s",
+    "1255",
+    "13590",
+    "14.23s",
+    "16 条",
+    "2 条",
+    "24 个",
+    "24 条",
+    "29 个",
+    "3 条",
+    "394",
+    "5 处",
+    "5 条",
+    "622",
+    "634",
+    "700"
+   ],
+   "monotone_never_shrinks": true,
+   "bite": true
+  }
+ ],
+ "every_wipe_caught": false,
+ "monotone_all": true,
+ "nothing_left_to_break": 5,
+ "green_blocks_before": 5,
+ "green_blocks_flipped_red": 5,
+ "single_erase_visible": 4,
+ "injected": [
+  {
+   "block": "n2_0101.md",
+   "line": 28,
+   "coordinate_erased": "952ad7dbc2f8796ab37b0f0d",
+   "verdict_before": "Q43_GATE_GREEN",
+   "verdict_after": "Q43_GATE_RED",
+   "exit_before": 0,
+   "exit_after": 3,
+   "claim_tokens_on_that_line": [
+    "1392 条",
+    "9 failed",
+    "1367 passed",
+    "9 格"
+   ],
+   "newly_refused_tokens": [
+    "1367 passed",
+    "1392 条",
+    "15 s",
+    "9 failed",
+    "9 格"
+   ],
+   "remedy_offered": "count of things: cite the artifact that counted it, `<path>:<line>` or a full 40-hex blob, ON THE SAME LINE; do not delete the number",
+   "predicate_offered": "P0_no_class_matched_it_is_a_quantity",
+   "bite": true,
+   "erase_visible": true
+  },
+  {
+   "block": "n2_0144.md",
+   "line": 21,
+   "coordinate_erased": "2ffa97a5e98fa3d80209636e",
+   "verdict_before": "Q43_GATE_RED",
+   "verdict_after": "Q43_GATE_RED",
+   "exit_before": 3,
+   "exit_after": 3,
+   "claim_tokens_on_that_line": [
+    "0 格"
+   ],
+   "newly_refused_tokens": [],
+   "remedy_offered": null,
+   "predicate_offered": null,
+   "bite": false,
+   "erase_visible": false
+  },
+  {
+   "block": "n2_0200.md",
+   "line": 8,
+   "coordinate_erased": "9c2a388d76f15d1908a41f16",
+   "verdict_before": "Q43_GATE_RED",
+   "verdict_after": "Q43_GATE_RED",
+   "exit_before": 3,
+   "exit_after": 3,
+   "claim_tokens_on_that_line": [
+    "6 条"
+   ],
+   "newly_refused_tokens": [
+    "6 条",
+    "9 个"
+   ],
+   "remedy_offered": "count of things: cite the artifact that counted it, `<path>:<line>` or a full 40-hex blob, ON THE SAME LINE; do not delete the number",
+   "predicate_offered": "P0_no_class_matched_it_is_a_quantity",
+   "bite": false,
+   "erase_visible": true
+  },
+  {
+   "block": "n2_0213.md",
+   "line": 8,
+   "coordinate_erased": "9c2a388d76f15d1908a41f16",
+   "verdict_before": "Q43_GATE_RED",
+   "verdict_after": "Q43_GATE_RED",
+   "exit_before": 3,
+   "exit_after": 3,
+   "claim_tokens_on_that_line": [
+    "6 条"
+   ],
+   "newly_refused_tokens": [],
+   "remedy_offered": null,
+   "predicate_offered": null,
+   "bite": false,
+   "erase_visible": false
+  },
+  {
+   "block": "n2_1759.md",
+   "line": 14,
+   "coordinate_erased": "b7c3bbac09e52f30fa3032fe",
+   "verdict_before": "Q43_GATE_RED",
+   "verdict_after": "Q43_GATE_RED",
+   "exit_before": 3,
+   "exit_after": 3,
+   "claim_tokens_on_that_line": [
+    "1727",
+    "11 条",
+    "1369",
+    "1358"
+   ],
+   "newly_refused_tokens": [],
+   "remedy_offered": null,
+   "predicate_offered": null,
+   "bite": false,
+   "erase_visible": false
+  },
+  {
+   "block": "n2_1824.md",
+   "line": 16,
+   "coordinate_erased": "review/ord0359-readings/",
+   "verdict_before": "Q43_GATE_GREEN",
+   "verdict_after": "Q43_GATE_GREEN",
+   "exit_before": 0,
+   "exit_after": 0,
+   "claim_tokens_on_that_line": [
+    "5252"
+   ],
+   "newly_refused_tokens": [],
+   "remedy_offered": null,
+   "predicate_offered": null,
+   "bite": false,
+   "erase_visible": false
+  },
+  {
+   "block": "qoder-0369_0310.md",
+   "line": 10,
+   "coordinate_erased": "d0bd51f2a597c39ca360ef29",
+   "verdict_before": "Q43_GATE_GREEN",
+   "verdict_after": "Q43_GATE_RED",
+   "exit_before": 0,
+   "exit_after": 3,
+   "claim_tokens_on_that_line": [
+    "665"
+   ],
+   "newly_refused_tokens": [
+    "665"
+   ],
+   "remedy_offered": "bare number: if it names something write it as a reference (`ORD-0373`, `review/x.json:12`, or backtick-quoted like `7897`); if it counts something, p",
+   "predicate_offered": "P0_no_class_matched_it_is_a_quantity",
+   "bite": true,
+   "erase_visible": true
+  },
+  {
+   "block": "qoder-0369_0320.md",
+   "line": 12,
+   "coordinate_erased": "08f9dedf26b79609dcc872ed",
+   "verdict_before": "Q43_GATE_GREEN",
+   "verdict_after": "Q43_GATE_GREEN",
+   "exit_before": 0,
+   "exit_after": 0,
+   "claim_tokens_on_that_line": [
+    "8 个",
+    "217"
+   ],
+   "newly_refused_tokens": [],
+   "remedy_offered": null,
+   "predicate_offered": null,
+   "bite": false,
+   "erase_visible": false
+  },
+  {
+   "block": "qoder-0370_0130.md",
+   "line": 35,
+   "coordinate_erased": "frontend/src/features/ag",
+   "verdict_before": "Q43_GATE_RED",
+   "verdict_after": "Q43_GATE_RED",
+   "exit_before": 3,
+   "exit_after": 3,
+   "claim_tokens_on_that_line": [
+    "5 处"
+   ],
+   "newly_refused_tokens": [],
+   "remedy_offered": null,
+   "predicate_offered": null,
+   "bite": false,
+   "erase_visible": false
+  },
+  {
+   "block": "qoder-0370_0148.md",
+   "line": 89,
+   "coordinate_erased": "frontend/src/app/V8Exper",
+   "verdict_before": "Q43_GATE_RED",
+   "verdict_after": "Q43_GATE_RED",
+   "exit_before": 3,
+   "exit_after": 3,
+   "claim_tokens_on_that_line": [
+    "2 处"
+   ],
+   "newly_refused_tokens": [],
+   "remedy_offered": null,
+   "predicate_offered": null,
+   "bite": false,
+   "erase_visible": false
+  },
+  {
+   "block": "qoder-0380_0314.md",
+   "line": 16,
+   "coordinate_erased": "review/cn-token-night/PA",
+   "verdict_before": "Q43_GATE_RED",
+   "verdict_after": "Q43_GATE_RED",
+   "exit_before": 3,
+   "exit_after": 3,
+   "claim_tokens_on_that_line": [
+    "255,255,255,1"
+   ],
+   "newly_refused_tokens": [],
+   "remedy_offered": null,
+   "predicate_offered": null,
+   "bite": false,
+   "erase_visible": false
+  },
+  {
+   "block": "qoder-0381_0312.md",
+   "line": 10,
+   "coordinate_erased": "review/cnx-copy-ladder/L",
+   "verdict_before": "Q43_GATE_GREEN",
+   "verdict_after": "Q43_GATE_RED",
+   "exit_before": 0,
+   "exit_after": 3,
+   "claim_tokens_on_that_line": [
+    "634",
+    "634",
+    "1255"
+   ],
+   "newly_refused_tokens": [
+    "1255",
+    "634"
+   ],
+   "remedy_offered": "bare number: if it names something write it as a reference (`ORD-0373`, `review/x.json:12`, or backtick-quoted like `7897`); if it counts something, p",
+   "predicate_offered": "P0_no_class_matched_it_is_a_quantity",
+   "bite": true,
+   "erase_visible": true
+  }
+ ],
+ "every_injection_still_caught": false,
+ "blocks_where_the_door_was_already_red": 7,
+ "single_erase_note": "invisible erases are the +-200 window from a neighbouring line, which is r4 scope, not laundering",
+ "contrast_r4e": [
+  {
+   "block": "n2_0101.md",
+   "r4e_exit_after_injection": 3
+  },
+  {
+   "block": "n2_0144.md",
+   "r4e_exit_after_injection": 3
+  },
+  {
+   "block": "n2_0200.md",
+   "r4e_exit_after_injection": 3
+  },
+  {
+   "block": "n2_0213.md",
+   "r4e_exit_after_injection": 3
+  },
+  {
+   "block": "n2_1759.md",
+   "r4e_exit_after_injection": 3
+  },
+  {
+   "block": "n2_1824.md",
+   "r4e_exit_after_injection": 3
+  },
+  {
+   "block": "qoder-0369_0310.md",
+   "r4e_exit_after_injection": 3
+  },
+  {
+   "block": "qoder-0369_0320.md",
+   "r4e_exit_after_injection": 0
+  },
+  {
+   "block": "qoder-0370_0130.md",
+   "r4e_exit_after_injection": 3
+  },
+  {
+   "block": "qoder-0370_0148.md",
+   "r4e_exit_after_injection": 3
+  },
+  {
+   "block": "qoder-0380_0314.md",
+   "r4e_exit_after_injection": 3
+  },
+  {
+   "block": "qoder-0381_0312.md",
+   "r4e_exit_after_injection": 3
+  }
+ ]
+}
