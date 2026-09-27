@@ -1,6 +1,6 @@
 ORD-0389 -- which test files were changed, and to what
 
-Total .py files changed under backend/tests: 89 (including the 2 new ones).
+Total .py files changed under backend/tests: 91 (including the 2 new ones).
 Call sites given the header: 126.
 
 Rule used per site, decided from the code rather than by blanket replace:
@@ -54,6 +54,8 @@ Files:
   backend/tests/test_qoder_ord0219_capability_write_vocabulary.py
   backend/tests/test_qoder_ord0219_write_side_rule_guard.py
   backend/tests/test_qoder_ord0360_single_active_anchor.py
+  backend/tests/test_qoder_ord0386_plan_version_history.py
+  backend/tests/test_qoder_ord0387_ai_state_contract_sync.py
   backend/tests/test_qoder_ord0389_reset_token_gate.py
   backend/tests/test_qoder_ord197_four_class_receipt.py
   backend/tests/test_qoder_ord213_ask_store_before_world.py

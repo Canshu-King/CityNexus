@@ -4,8 +4,8 @@ frontend/src was touched (generated/api.ts, SimulationPanel.tsx), so all three r
   npx tsc -p tsconfig.typecheck.json   exit=0  log=0 bytes  (no diagnostics)
   npx tsc -p tsconfig.check.json       exit=0  log=0 bytes  (no diagnostics)
   npx vite build                       exit=0  log=1355 bytes
-      | [32m✓ built in 11.01s[39m
-      | precache  8 entries (2489.40 KiB)
+      | [32m✓ built in 13.15s[39m
+      | precache  8 entries (2508.82 KiB)
 
 frontend/ ships no bare tsconfig.json, so a literal `npx tsc --noEmit` has no project; noEmit
 is set inside both configs named above and both were run.
@@ -20,6 +20,6 @@ unmounted with a plain `cmd /c rmdir` (rc=0, link gone, target entries 399 -> 39
 present). No recursive delete, no `rd /s /q`, no touch of the shared node_modules itself.
 
 sha256 of the files the verdicts above were read from:
-  132635652bac5f9e8130a575c7e0c86da0eeb8646aa493b098c6e10c508d7d63  contracts/openapi.yaml
-  712f8205cc08e03ce0e51fd52901839f877fe90f249f98b690d3dad1410a0688  frontend/src/generated/api.ts
-  a7356ec90c44c94134fd8f1876549677d4985a11ed43d92ea9ff06e0ce65bfea  backend/app/main.py
+  b865072d07a471423ffc0089ed0c8a2e727082dc8133c8fa376e7a461067316e  contracts/openapi.yaml
+  07e2cf146049a00220d9ae56c650040cc405aa855e60b7704d1537331032c859  frontend/src/generated/api.ts
+  9e10523b2ee57dc8131b1eb04939cc03d1b1ce06f3ee410ef1c3c3a869d34c46  backend/app/main.py
