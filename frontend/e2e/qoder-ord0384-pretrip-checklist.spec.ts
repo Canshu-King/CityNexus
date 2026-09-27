@@ -14,7 +14,11 @@
  *       "completion is not a checkbox" claim, measured;
  *   X3  a fully clean response yields no items, one honest empty line, and a strikable action;
  *   X4  every item names its endpoint and field on screen, and no raw network reading or smuggled
- *       sentence reaches the DOM or an attribute (Q64=① / Q70 / Q71).
+ *       sentence reaches the DOM or an attribute (Q64=① / Q70 / Q71);
+ *   X5  the band that can read "一切正常" never sits underneath a list of open items -- in the clear
+ *       state it drops its own kicker, so an unqualified all-clear below "还差这些" is a denial of the
+ *       list above it, which is the same one-screen-one-rule defect `today-attention-does-not-
+ *       contradict-the-map` already pins for the map.
  */
 import { expect, test, type Page, type Route } from "@playwright/test";
 import { writeFileSync } from "node:fs";
@@ -341,12 +345,41 @@ test("X4_every_item_names_its_endpoint_and_field_on_screen_and_no_raw_reading_re
   for (let i = 0; i < count; i += 1) {
     const el = items.nth(i);
     const text = (await el.textContent() ?? "").replace(/\s+/g, " ").trim();
+    /* "The text is in the DOM" is not "the traveller can read it" -- that is the ORD-0373 lesson, and
+       the 依据 line is the one place this order promises an endpoint name. So judge it where a reader
+       would put it: centred in the viewport, sampled across the line, and whatever is on top there
+       must be this panel. The global Copilot dock floats over the lower right of Today, so a basis
+       line that only clears at one scroll offset is not enough. */
+    const occ = await page.evaluate((idx) => {
+      const it = (document.querySelectorAll('[data-testid="pretrip-item"]') as NodeListOf<HTMLElement>)[idx];
+      if (!it) return { error: "item vanished" };
+      const code = it.querySelector('[data-cnx-field="basis_endpoint"]') as HTMLElement | null;
+      if (!code) return { error: "no basis element" };
+      code.scrollIntoView({ block: "center" });
+      const r = code.getBoundingClientRect();
+      const panel = document.querySelector(".cn-pretrip");
+      const covered: string[] = [];
+      for (const f of [0.08, 0.3, 0.5, 0.7, 0.92]) {
+        const x = r.left + r.width * f;
+        const y = r.top + r.height / 2;
+        const top = (document.elementsFromPoint(x, y) as HTMLElement[])[0];
+        const mine = !!top && (top === panel || (!!panel && panel.contains(top)));
+        if (!mine) covered.push(`${x.toFixed(0)},${y.toFixed(0)}:${top ? top.tagName.toLowerCase() + "." + String(top.className).slice(0, 40) : "none"}`);
+      }
+      return {
+        rect: { x: Math.round(r.x), y: Math.round(r.y), w: Math.round(r.width), h: Math.round(r.height) },
+        viewport: { w: window.innerWidth, h: window.innerHeight },
+        covered_points: covered,
+      };
+    }, i);
     perItem.push({
       key: (await el.getAttribute("data-cnx-key")) ?? "?",
       names_endpoint: text.includes("/api/v1/journeys/"),
       text_length: text.length,
       goto_strikable: (await el.locator('[data-testid^="pretrip-goto-"]').count()) > 0,
+      basis_occlusion: occ,
     });
+    expect(occ.covered_points ?? ["unmeasured"], node(arm, `the endpoint name of item ${JSON.stringify((await el.getAttribute("data-cnx-key")) ?? "?")} is covered at the reading position by ${JSON.stringify(occ.covered_points)}`)).toEqual([]);
   }
   const dom = await page.evaluate(() => {
     /* Scoped to this panel: a whole-page sweep would let another lane's text decide whether ORD-0384
@@ -382,4 +415,55 @@ test("X4_every_item_names_its_endpoint_and_field_on_screen_and_no_raw_reading_re
   const sentences = dom.cnx_field_values.filter((v) => v.includes("：") || v.includes(" ") || /[，。]/.test(v));
   expect(sentences, node(arm, `data-cnx-field holds more than a field name: ${JSON.stringify(sentences)}`)).toEqual([]);
   expect(dom.cnx_field_values.length, node(arm, `the panel exposes ${String(dom.cnx_field_values.length)} contract hooks, expected at least the three this order names`)).toBeGreaterThanOrEqual(3);
+});
+
+/* ------------------------------------------------- X5: the all-clear line must not deny the list */
+
+test("X5_the_all_clear_line_never_sits_under_an_open_list — 「一切正常」不能印在还差这些的清单下面", async ({ page }) => {
+  test.setTimeout(300_000);
+  const arm = "X5";
+  const id = await stageJourneyId(page);
+  await boot(page, id);
+  await settleJourney(page, id);
+  /* The premise only exists when the panel actually has something open and the band is clear. Without
+     items the ordering claim is vacuously true, so the cell would pass on an empty screen. */
+  await expect
+    .poll(() => renderedKeys(page), { message: node(arm, "the checklist never rendered an item"), timeout: 20_000 })
+    .not.toHaveLength(0);
+  const keys = await renderedKeys(page);
+  const bandState = await page.evaluate(() => {
+    const band = document.querySelector('[data-testid="today-attention-band"]');
+    const strong = document.querySelector('[data-testid="today-attention"]');
+    const kicker = document.querySelector('.cn-attention-band .cn-attention-head .v8-kicker');
+    const panel = document.querySelector('[data-testid="pretrip-checklist"]');
+    const rect = (el: Element | null) => {
+      if (!el) return null;
+      const r = (el as HTMLElement).getBoundingClientRect();
+      return { top: Math.round(r.top + window.scrollY), bottom: Math.round(r.bottom + window.scrollY) };
+    };
+    return {
+      band_attention: band?.getAttribute("data-attention") ?? null,
+      band_text: strong ? (strong.textContent ?? "").trim() : null,
+      band_kicker_visible: !!kicker && (kicker as HTMLElement).offsetParent !== null,
+      band_rect: rect(band),
+      panel_rect: rect(panel),
+      panel_items: document.querySelectorAll('[data-testid="pretrip-checklist"] [data-cnx-key]').length,
+    };
+  });
+  readings[arm] = { journey_id: id, rendered_keys: keys, ...bandState };
+  await page.locator('[data-testid="today-attention-band"]').screenshot({ path: evidencePath(`ord0384/${RUN}__X5_band.png`) }).catch(() => undefined);
+  await page.getByTestId("pretrip-checklist").scrollIntoViewIfNeeded();
+  await page.waitForTimeout(250);
+  await page.screenshot({ path: evidencePath(`ord0384/${RUN}__X5_pair.png`) });
+
+  expect(bandState.band_rect, node(arm, "the attention band is not on the screen at all, so this cell proves nothing")).not.toBeNull();
+  expect(bandState.panel_rect, node(arm, "the checklist panel is not on the screen at all, so this cell proves nothing")).not.toBeNull();
+  expect(bandState.panel_items, node(arm, `the checklist rendered ${String(bandState.panel_items)} items -- an empty list cannot be contradicted, so order is untestable here`)).toBeGreaterThan(0);
+  expect(bandState.band_attention, node(arm, `the band reads ${JSON.stringify(bandState.band_attention)}, not the clear state this cell is about`)).toBe("clear");
+  /* The reason ordering is load-bearing: the clear state hides the band's own subject. */
+  expect(bandState.band_kicker_visible, node(arm, "the clear band now shows its kicker, so the premise of this cell changed -- re-read it before trusting the verdict")).toBe(false);
+  expect(
+    bandState.band_rect!.bottom <= bandState.panel_rect!.top,
+    node(arm, `the bare all-clear "${bandState.band_text}" renders at y=${String(bandState.band_rect!.top)}–${String(bandState.band_rect!.bottom)}, i.e. below the ${String(bandState.panel_items)} open items that end at y=${String(bandState.panel_rect!.bottom)} -- one screen, two answers`),
+  ).toBe(true);
 });
