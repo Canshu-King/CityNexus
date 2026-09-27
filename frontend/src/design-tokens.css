@@ -16,8 +16,10 @@
   --cn-accent: #0a66ff;
   /* Fill for controls that carry white text. Kept at the deeper blue even in
      dark so a button label clears AA (white on #0a66ff ≈ 4.8:1), unlike the
-     brighter #0a84ff link accent which only reaches ~3.6:1 against white. */
-  --cn-accent-solid: #0a66ff;
+     brighter #0a84ff link accent which only reaches ~3.6:1 against white.
+     That is a *constant*, not a theme value, so it lives in the always family
+     and this line is an alias kept for existing consumers (--v8-accent). */
+  --cn-accent-solid: var(--cn-always-accent-solid);
   /* Accent used as *text* (eyebrow / kicker) on a light page. #0a66ff is the
      Apple link blue, but against the #f5f5f7 canvas it only reaches 4.42:1 and
      fails WCAG AA for 10px bold uppercase — a real axe failure, not a taste
@@ -30,7 +32,44 @@
   --cn-success: #248a3d;
   --cn-warning: #b06000;
   --cn-danger: #d70015;
-  --cn-hairline: rgba(0, 0, 0, 0.08);
+
+  /* ── Alpha tier ladder ────────────────────────────────────────────────
+     A tint is drawn from this closed set instead of being written inline, so
+     "an 8% hairline" means the same number in every rule and a reviewer can
+     see at once when a ninth tier is being invented. The ladder is harvested
+     from the values this file already used (0.04 / 0.06 / 0.08 / 0.1 / 0.4 /
+     0.5 / 0.6 / 0.95) — introducing it changes no computed value anywhere.
+     Naming is the point, not the palette.                        [T1 tiers] */
+  --cn-tint-black-04: rgba(0, 0, 0, 0.04);
+  --cn-tint-black-06: rgba(0, 0, 0, 0.06);
+  --cn-tint-black-08: rgba(0, 0, 0, 0.08);
+  --cn-tint-black-10: rgba(0, 0, 0, 0.1);
+  --cn-tint-black-40: rgba(0, 0, 0, 0.4);
+  --cn-tint-black-50: rgba(0, 0, 0, 0.5);
+  --cn-tint-black-60: rgba(0, 0, 0, 0.6);
+  --cn-tint-white-10: rgba(255, 255, 255, 0.1);
+  --cn-tint-white-95: rgba(255, 255, 255, 0.95);
+  --cn-tint-surface-95: rgba(28, 28, 30, 0.95);
+
+  /* ── Constant family (never re-themed) ────────────────────────────────
+     `--cn-always-*` is the declaration "this value is identical under both
+     themes, on purpose". A colour earns it when something else is painted on
+     top of it and the pair's contrast must not move: --cn-always-accent-solid
+     below holds white button labels at ~4.8:1 in either theme, which is why
+     the brighter link accent (#0a84ff, ~3.6:1 under white) cannot be used for
+     fills.
+     Shadows deliberately do NOT join this family: dark chrome needs a heavier
+     shadow, not the same one, so they stay tiered tints. A future scrim over
+     live map imagery would be a genuine candidate.
+     The gate enforces the converse too: an `always` token that appears inside
+     :root[data-theme="dark"] is a contradiction, and a token whose light and
+     dark values are equal but which is NOT named `always` is a missed
+     declaration. Both read as red.                            [T2 constant] */
+  --cn-always-accent-solid: #0a66ff;
+
+  /* Same 8% it carried before, now named against the ladder. */
+  --cn-hairline: var(--cn-tint-black-08);
+
   /* Boundary for controls whose only affordance is their outline (language
      toggle, outline buttons) — must clear 3:1 vs the page. Decorative
      separators stay on the softer --cn-hairline. #7d8797 is the light twin of
@@ -73,8 +112,8 @@
   --cn-r-pill: 999px;
 
   /* Depth — restrained */
-  --cn-shadow-card: 0 1px 2px rgba(0, 0, 0, 0.04), 0 8px 28px rgba(0, 0, 0, 0.06);
-  --cn-shadow-raised: 0 2px 8px rgba(0, 0, 0, 0.06), 0 18px 40px rgba(0, 0, 0, 0.1);
+  --cn-shadow-card: 0 1px 2px var(--cn-tint-black-04), 0 8px 28px var(--cn-tint-black-06);
+  --cn-shadow-raised: 0 2px 8px var(--cn-tint-black-06), 0 18px 40px var(--cn-tint-black-10);
 
   /* Motion tokens */
   --cn-ease-standard: cubic-bezier(0.2, 0.8, 0.2, 1);
@@ -98,7 +137,11 @@
     --cn-ink-secondary: #aeaeb2;
     --cn-ink-tertiary: #8e8e93;
     --cn-accent: #0a84ff;
-    --cn-accent-solid: #0a66ff;
+    /* --cn-accent-solid is deliberately NOT re-declared here. Its single value
+       --cn-always-accent-solid (#0a66ff) is byte-identical to what this block
+       used to repeat, so the override was dead weight whose real cost was
+       semantic: re-stating it in the dark block hid the fact that the fill
+       under a white label must never move. */
     /* #0a84ff on the #000000 dark canvas is 5.76:1 — already AA, so the dark
        theme keeps the brighter accent for text. */
     --cn-accent-text: #0a84ff;
@@ -106,11 +149,12 @@
     --cn-success: #30d158;
     --cn-warning: #ff9f0a;
     --cn-danger: #ff453a;
-    --cn-hairline: rgba(255, 255, 255, 0.1);
-    --cn-nav-bg: rgba(28, 28, 30, 0.95);
+    --cn-hairline: var(--cn-tint-white-10);
+    --cn-nav-bg: var(--cn-tint-surface-95);
     --cn-control-border: #7c7c82;
-    --cn-shadow-card: 0 1px 2px rgba(0, 0, 0, 0.4), 0 8px 28px rgba(0, 0, 0, 0.5);
-    --cn-shadow-raised: 0 2px 8px rgba(0, 0, 0, 0.5), 0 18px 40px rgba(0, 0, 0, 0.6);
+    /* Shadows get heavier in dark, so they are tiered rather than constant. */
+    --cn-shadow-card: 0 1px 2px var(--cn-tint-black-40), 0 8px 28px var(--cn-tint-black-50);
+    --cn-shadow-raised: 0 2px 8px var(--cn-tint-black-50), 0 18px 40px var(--cn-tint-black-60);
   }
 
 
@@ -156,7 +200,7 @@
      happened to be"; the nav itself carried no safe-area at all.  48 + 8 + 7 = 63
      is the arithmetic the old literal stood for, now written out. */
   --cn-touch-min: 44px;
-  --cn-nav-bg: rgba(255, 255, 255, 0.95);
+  --cn-nav-bg: var(--cn-tint-white-95);
   --cn-nav-item-h: max(48px, var(--cn-touch-min));
   --cn-nav-pad-top: 8px;
   --cn-nav-pad-bottom: 7px;
