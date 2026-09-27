@@ -1,0 +1,430 @@
+{
+ "blocks": [
+  {
+   "block": "n2_0101.md",
+   "r5b": {
+    "exit": 3,
+    "refused": [
+     "1367",
+     "1392 条"
+    ]
+   },
+   "wu": {
+    "exit": 3,
+    "refused": [
+     "1367 passed",
+     "1392 条",
+     "9 failed"
+    ]
+   },
+   "freed": [
+    "1367"
+   ],
+   "newly_refused": [
+    "1367 passed",
+    "9 failed"
+   ]
+  },
+  {
+   "block": "n2_0105.md",
+   "r5b": {
+    "exit": 3,
+    "refused": [
+     "138"
+    ]
+   },
+   "wu": {
+    "exit": 3,
+    "refused": [
+     "138"
+    ]
+   },
+   "freed": [],
+   "newly_refused": []
+  },
+  {
+   "block": "n2_0144.md",
+   "r5b": {
+    "exit": 3,
+    "refused": [
+     "0.4 GB",
+     "401"
+    ]
+   },
+   "wu": {
+    "exit": 3,
+    "refused": [
+     "0.4 GB"
+    ]
+   },
+   "freed": [
+    "401"
+   ],
+   "newly_refused": []
+  },
+  {
+   "block": "n2_0152.md",
+   "r5b": {
+    "exit": 3,
+    "refused": [
+     "0.4 GB",
+     "401",
+     "6 条"
+    ]
+   },
+   "wu": {
+    "exit": 3,
+    "refused": [
+     "0.4 GB",
+     "6 条"
+    ]
+   },
+   "freed": [
+    "401"
+   ],
+   "newly_refused": []
+  },
+  {
+   "block": "n2_0156.md",
+   "r5b": {
+    "exit": 3,
+    "refused": [
+     "6 条"
+    ]
+   },
+   "wu": {
+    "exit": 3,
+    "refused": [
+     "6 条"
+    ]
+   },
+   "freed": [],
+   "newly_refused": []
+  },
+  {
+   "block": "n2_0200.md",
+   "r5b": {
+    "exit": 3,
+    "refused": [
+     "0 处",
+     "0373"
+    ]
+   },
+   "wu": {
+    "exit": 3,
+    "refused": [
+     "0 处",
+     "0373"
+    ]
+   },
+   "freed": [],
+   "newly_refused": []
+  },
+  {
+   "block": "n2_0213.md",
+   "r5b": {
+    "exit": 3,
+    "refused": [
+     "0 条",
+     "1667",
+     "1668",
+     "1669",
+     "6 条",
+     "888",
+     "889"
+    ]
+   },
+   "wu": {
+    "exit": 3,
+    "refused": [
+     "0 条",
+     "1667",
+     "1668",
+     "1669",
+     "6 条",
+     "888",
+     "889"
+    ]
+   },
+   "freed": [],
+   "newly_refused": []
+  },
+  {
+   "block": "n2_1759.md",
+   "r5b": {
+    "exit": 3,
+    "refused": [
+     "2148",
+     "52 秒",
+     "7892",
+     "7897"
+    ]
+   },
+   "wu": {
+    "exit": 3,
+    "refused": [
+     "2 failed",
+     "2148",
+     "3 failed",
+     "5 passed",
+     "52 秒",
+     "6 passed",
+     "7892",
+     "7897",
+     "8 passed"
+    ]
+   },
+   "freed": [],
+   "newly_refused": [
+    "2 failed",
+    "3 failed",
+    "5 passed",
+    "6 passed",
+    "8 passed"
+   ]
+  },
+  {
+   "block": "n2_1824.md",
+   "r5b": {
+    "exit": 3,
+    "refused": [
+     "401"
+    ]
+   },
+   "wu": {
+    "exit": 0,
+    "refused": []
+   },
+   "freed": [
+    "401"
+   ],
+   "newly_refused": []
+  },
+  {
+   "block": "n3_0212.md",
+   "r5b": {
+    "exit": 3,
+    "refused": [
+     "0 次",
+     "1.58 GB",
+     "1440",
+     "3 格",
+     "390",
+     "680",
+     "681",
+     "7.53 秒",
+     "900"
+    ]
+   },
+   "wu": {
+    "exit": 3,
+    "refused": [
+     "0 次",
+     "1.58 GB",
+     "1440",
+     "3 格",
+     "390",
+     "680",
+     "681",
+     "7.53 秒",
+     "900"
+    ]
+   },
+   "freed": [],
+   "newly_refused": []
+  },
+  {
+   "block": "qoder-0370_0130.md",
+   "r5b": {
+    "exit": 3,
+    "refused": [
+     "3 处",
+     "38 处",
+     "4 处",
+     "409",
+     "617",
+     "629",
+     "81 个",
+     "875 个"
+    ]
+   },
+   "wu": {
+    "exit": 3,
+    "refused": [
+     "27G",
+     "28G",
+     "3 处",
+     "38 处",
+     "4 处",
+     "409M",
+     "617",
+     "629",
+     "81 个",
+     "875 个"
+    ]
+   },
+   "freed": [
+    "409"
+   ],
+   "newly_refused": [
+    "27G",
+    "28G",
+    "409M"
+   ]
+  },
+  {
+   "block": "qoder-0370_0148.md",
+   "r5b": {
+    "exit": 3,
+    "refused": [
+     "0 处",
+     "0148",
+     "129 个",
+     "174",
+     "4 个",
+     "77 处"
+    ]
+   },
+   "wu": {
+    "exit": 3,
+    "refused": [
+     "0 处",
+     "0148",
+     "129 个",
+     "174",
+     "4 个",
+     "77 处"
+    ]
+   },
+   "freed": [],
+   "newly_refused": []
+  }
+ ],
+ "freed_by_wu": [
+  {
+   "block": "n2_0101.md",
+   "token": "1367"
+  },
+  {
+   "block": "n2_0144.md",
+   "token": "401"
+  },
+  {
+   "block": "n2_0152.md",
+   "token": "401"
+  },
+  {
+   "block": "n2_1824.md",
+   "token": "401"
+  },
+  {
+   "block": "qoder-0370_0130.md",
+   "token": "409"
+  }
+ ],
+ "newly_refused_by_wu": [
+  {
+   "block": "n2_0101.md",
+   "token": "1367 passed"
+  },
+  {
+   "block": "n2_0101.md",
+   "token": "9 failed"
+  },
+  {
+   "block": "n2_1759.md",
+   "token": "2 failed"
+  },
+  {
+   "block": "n2_1759.md",
+   "token": "3 failed"
+  },
+  {
+   "block": "n2_1759.md",
+   "token": "5 passed"
+  },
+  {
+   "block": "n2_1759.md",
+   "token": "6 passed"
+  },
+  {
+   "block": "n2_1759.md",
+   "token": "8 passed"
+  },
+  {
+   "block": "qoder-0370_0130.md",
+   "token": "27G"
+  },
+  {
+   "block": "qoder-0370_0130.md",
+   "token": "28G"
+  },
+  {
+   "block": "qoder-0370_0130.md",
+   "token": "409M"
+  }
+ ],
+ "wu_selftest_exit": 6,
+ "wu_breaks_these_arms": [
+  "class_digits_after_a_fullwidth_colon",
+  "class_status_word_21_chars_away_is_not",
+  "fire_HTTP_STATUS_word_not_adjacent",
+  "fire_number_after_fullwidth_colon"
+ ],
+ "controls": {
+  "409M_du_reading": {
+   "r5b": [
+    "409"
+   ],
+   "wu": [
+    "409M"
+   ]
+  },
+  "629_hang": {
+   "r5b": [
+    "629"
+   ],
+   "wu": [
+    "629"
+   ]
+  },
+  "617_dui": {
+   "r5b": [
+    "617"
+   ],
+   "wu": [
+    "617"
+   ]
+  },
+  "bare_138": {
+   "r5b": [
+    "138"
+   ],
+   "wu": [
+    "138"
+   ]
+  },
+  "bare_401_no_word": {
+   "r5b": [
+    "401"
+   ],
+   "wu": []
+  },
+  "1667_line": {
+   "r5b": [
+    "1667"
+   ],
+   "wu": [
+    "1667"
+   ]
+  },
+  "1392_tiao": {
+   "r5b": [
+    "1392 条"
+   ],
+   "wu": [
+    "1392 条"
+   ]
+  }
+ }
+}
