@@ -1,0 +1,489 @@
+{
+ "snapshot_local_time": "03:1x",
+ "ruler": "Q43_r5c",
+ "lane_blocks": 17,
+ "green": {
+  "r4e": 3,
+  "r5": 3,
+  "third": 4
+ },
+ "remaining_refusals_by_cause": {
+  "计数或计量主张_需作者补同行锚": 40,
+  "裸数字_需作者补同行锚": 19,
+  "已归类_收据不在±80内(DIMENSION)": 4,
+  "逗号枚举被读成一枚数": 3,
+  "已归类_收据不在±80内(DISCIPLINE_ZERO)": 1
+ },
+ "total_remaining": 67,
+ "per_token": [
+  {
+   "block": "n2_0101.md",
+   "token": "1392 条",
+   "line": 28,
+   "class_by_shape": null,
+   "category": "计数或计量主张_需作者补同行锚"
+  },
+  {
+   "block": "n2_0101.md",
+   "token": "9 failed",
+   "line": 28,
+   "class_by_shape": null,
+   "category": "计数或计量主张_需作者补同行锚"
+  },
+  {
+   "block": "n2_0101.md",
+   "token": "1367 passed",
+   "line": 28,
+   "class_by_shape": null,
+   "category": "计数或计量主张_需作者补同行锚"
+  },
+  {
+   "block": "n2_0105.md",
+   "token": "138",
+   "line": 11,
+   "class_by_shape": null,
+   "category": "裸数字_需作者补同行锚"
+  },
+  {
+   "block": "n2_0144.md",
+   "token": "0.4 GB",
+   "line": 15,
+   "class_by_shape": "DIMENSION",
+   "category": "已归类_收据不在±80内(DIMENSION)"
+  },
+  {
+   "block": "n2_0152.md",
+   "token": "0.4 GB",
+   "line": 15,
+   "class_by_shape": "DIMENSION",
+   "category": "已归类_收据不在±80内(DIMENSION)"
+  },
+  {
+   "block": "n2_0152.md",
+   "token": "6 条",
+   "line": 16,
+   "class_by_shape": null,
+   "category": "计数或计量主张_需作者补同行锚"
+  },
+  {
+   "block": "n2_0156.md",
+   "token": "6 条",
+   "line": 1,
+   "class_by_shape": null,
+   "category": "计数或计量主张_需作者补同行锚"
+  },
+  {
+   "block": "n2_0156.md",
+   "token": "6 条",
+   "line": 8,
+   "class_by_shape": null,
+   "category": "计数或计量主张_需作者补同行锚"
+  },
+  {
+   "block": "n2_0156.md",
+   "token": "6 条",
+   "line": 10,
+   "class_by_shape": null,
+   "category": "计数或计量主张_需作者补同行锚"
+  },
+  {
+   "block": "n2_0156.md",
+   "token": "6 条",
+   "line": 21,
+   "class_by_shape": null,
+   "category": "计数或计量主张_需作者补同行锚"
+  },
+  {
+   "block": "n2_0200.md",
+   "token": "0 处",
+   "line": 12,
+   "class_by_shape": null,
+   "category": "计数或计量主张_需作者补同行锚"
+  },
+  {
+   "block": "n2_0213.md",
+   "token": "6 条",
+   "line": 11,
+   "class_by_shape": null,
+   "category": "计数或计量主张_需作者补同行锚"
+  },
+  {
+   "block": "n2_0213.md",
+   "token": "0 条",
+   "line": 14,
+   "class_by_shape": null,
+   "category": "计数或计量主张_需作者补同行锚"
+  },
+  {
+   "block": "n2_0213.md",
+   "token": "6 条",
+   "line": 14,
+   "class_by_shape": null,
+   "category": "计数或计量主张_需作者补同行锚"
+  },
+  {
+   "block": "n2_0213.md",
+   "token": "1668",
+   "line": 15,
+   "class_by_shape": null,
+   "category": "裸数字_需作者补同行锚"
+  },
+  {
+   "block": "n2_0213.md",
+   "token": "888",
+   "line": 15,
+   "class_by_shape": null,
+   "category": "裸数字_需作者补同行锚"
+  },
+  {
+   "block": "n2_0213.md",
+   "token": "1668",
+   "line": 15,
+   "class_by_shape": null,
+   "category": "裸数字_需作者补同行锚"
+  },
+  {
+   "block": "n2_0213.md",
+   "token": "889",
+   "line": 15,
+   "class_by_shape": null,
+   "category": "裸数字_需作者补同行锚"
+  },
+  {
+   "block": "n2_0213.md",
+   "token": "1669",
+   "line": 15,
+   "class_by_shape": null,
+   "category": "裸数字_需作者补同行锚"
+  },
+  {
+   "block": "n2_0213.md",
+   "token": "888",
+   "line": 15,
+   "class_by_shape": null,
+   "category": "裸数字_需作者补同行锚"
+  },
+  {
+   "block": "n2_0213.md",
+   "token": "1667",
+   "line": 15,
+   "class_by_shape": null,
+   "category": "裸数字_需作者补同行锚"
+  },
+  {
+   "block": "n2_0213.md",
+   "token": "888",
+   "line": 15,
+   "class_by_shape": null,
+   "category": "裸数字_需作者补同行锚"
+  },
+  {
+   "block": "n2_0213.md",
+   "token": "1669",
+   "line": 15,
+   "class_by_shape": null,
+   "category": "裸数字_需作者补同行锚"
+  },
+  {
+   "block": "n2_0213.md",
+   "token": "889",
+   "line": 15,
+   "class_by_shape": null,
+   "category": "裸数字_需作者补同行锚"
+  },
+  {
+   "block": "n2_0213.md",
+   "token": "1667",
+   "line": 15,
+   "class_by_shape": null,
+   "category": "裸数字_需作者补同行锚"
+  },
+  {
+   "block": "n2_0213.md",
+   "token": "889",
+   "line": 15,
+   "class_by_shape": null,
+   "category": "裸数字_需作者补同行锚"
+  },
+  {
+   "block": "n2_0219.md",
+   "token": "6 条",
+   "line": 8,
+   "class_by_shape": null,
+   "category": "计数或计量主张_需作者补同行锚"
+  },
+  {
+   "block": "n2_0219.md",
+   "token": "6 条",
+   "line": 8,
+   "class_by_shape": null,
+   "category": "计数或计量主张_需作者补同行锚"
+  },
+  {
+   "block": "n2_0219.md",
+   "token": "6 条",
+   "line": 8,
+   "class_by_shape": null,
+   "category": "计数或计量主张_需作者补同行锚"
+  },
+  {
+   "block": "n2_0224.md",
+   "token": "3 条",
+   "line": 16,
+   "class_by_shape": null,
+   "category": "计数或计量主张_需作者补同行锚"
+  },
+  {
+   "block": "n2_0228.md",
+   "token": "1 个",
+   "line": 7,
+   "class_by_shape": null,
+   "category": "计数或计量主张_需作者补同行锚"
+  },
+  {
+   "block": "n2_0228.md",
+   "token": "0,145,522,44",
+   "line": 7,
+   "class_by_shape": null,
+   "category": "逗号枚举被读成一枚数"
+  },
+  {
+   "block": "n2_0228.md",
+   "token": "206",
+   "line": 7,
+   "class_by_shape": null,
+   "category": "裸数字_需作者补同行锚"
+  },
+  {
+   "block": "n2_0228.md",
+   "token": "2 个",
+   "line": 8,
+   "class_by_shape": null,
+   "category": "计数或计量主张_需作者补同行锚"
+  },
+  {
+   "block": "n2_0228.md",
+   "token": "0 个",
+   "line": 8,
+   "class_by_shape": null,
+   "category": "计数或计量主张_需作者补同行锚"
+  },
+  {
+   "block": "n2_0228.md",
+   "token": "0,75,522,43",
+   "line": 8,
+   "class_by_shape": null,
+   "category": "逗号枚举被读成一枚数"
+  },
+  {
+   "block": "n2_0228.md",
+   "token": "0,258,522,44",
+   "line": 9,
+   "class_by_shape": null,
+   "category": "逗号枚举被读成一枚数"
+  },
+  {
+   "block": "n2_1759.md",
+   "token": "52 秒",
+   "line": 8,
+   "class_by_shape": "DIMENSION",
+   "category": "已归类_收据不在±80内(DIMENSION)"
+  },
+  {
+   "block": "n2_1759.md",
+   "token": "2148",
+   "line": 9,
+   "class_by_shape": "DIMENSION",
+   "category": "已归类_收据不在±80内(DIMENSION)"
+  },
+  {
+   "block": "n2_1759.md",
+   "token": "8 passed",
+   "line": 18,
+   "class_by_shape": null,
+   "category": "计数或计量主张_需作者补同行锚"
+  },
+  {
+   "block": "n2_1759.md",
+   "token": "2 failed",
+   "line": 18,
+   "class_by_shape": null,
+   "category": "计数或计量主张_需作者补同行锚"
+  },
+  {
+   "block": "n2_1759.md",
+   "token": "6 passed",
+   "line": 18,
+   "class_by_shape": null,
+   "category": "计数或计量主张_需作者补同行锚"
+  },
+  {
+   "block": "n2_1759.md",
+   "token": "3 failed",
+   "line": 18,
+   "class_by_shape": null,
+   "category": "计数或计量主张_需作者补同行锚"
+  },
+  {
+   "block": "n2_1759.md",
+   "token": "5 passed",
+   "line": 18,
+   "class_by_shape": null,
+   "category": "计数或计量主张_需作者补同行锚"
+  },
+  {
+   "block": "n2_1759.md",
+   "token": "8 passed",
+   "line": 18,
+   "class_by_shape": null,
+   "category": "计数或计量主张_需作者补同行锚"
+  },
+  {
+   "block": "n2_1759.md",
+   "token": "7892",
+   "line": 21,
+   "class_by_shape": "PORT",
+   "category": "裸数字_需作者补同行锚"
+  },
+  {
+   "block": "n2_1759.md",
+   "token": "7897",
+   "line": 21,
+   "class_by_shape": "PORT",
+   "category": "裸数字_需作者补同行锚"
+  },
+  {
+   "block": "qoder-0370_0130.md",
+   "token": "4 处",
+   "line": 70,
+   "class_by_shape": null,
+   "category": "计数或计量主张_需作者补同行锚"
+  },
+  {
+   "block": "qoder-0370_0130.md",
+   "token": "3 处",
+   "line": 71,
+   "class_by_shape": null,
+   "category": "计数或计量主张_需作者补同行锚"
+  },
+  {
+   "block": "qoder-0370_0130.md",
+   "token": "3 处",
+   "line": 72,
+   "class_by_shape": null,
+   "category": "计数或计量主张_需作者补同行锚"
+  },
+  {
+   "block": "qoder-0370_0130.md",
+   "token": "3 处",
+   "line": 73,
+   "class_by_shape": null,
+   "category": "计数或计量主张_需作者补同行锚"
+  },
+  {
+   "block": "qoder-0370_0130.md",
+   "token": "875 个",
+   "line": 119,
+   "class_by_shape": null,
+   "category": "计数或计量主张_需作者补同行锚"
+  },
+  {
+   "block": "qoder-0370_0130.md",
+   "token": "81 个",
+   "line": 120,
+   "class_by_shape": null,
+   "category": "计数或计量主张_需作者补同行锚"
+  },
+  {
+   "block": "qoder-0370_0130.md",
+   "token": "409M",
+   "line": 149,
+   "class_by_shape": null,
+   "category": "计数或计量主张_需作者补同行锚"
+  },
+  {
+   "block": "qoder-0370_0130.md",
+   "token": "27G",
+   "line": 151,
+   "class_by_shape": null,
+   "category": "计数或计量主张_需作者补同行锚"
+  },
+  {
+   "block": "qoder-0370_0130.md",
+   "token": "28G",
+   "line": 151,
+   "class_by_shape": null,
+   "category": "计数或计量主张_需作者补同行锚"
+  },
+  {
+   "block": "qoder-0370_0130.md",
+   "token": "875 个",
+   "line": 152,
+   "class_by_shape": null,
+   "category": "计数或计量主张_需作者补同行锚"
+  },
+  {
+   "block": "qoder-0370_0130.md",
+   "token": "38 处",
+   "line": 159,
+   "class_by_shape": null,
+   "category": "计数或计量主张_需作者补同行锚"
+  },
+  {
+   "block": "qoder-0370_0130.md",
+   "token": "617",
+   "line": 160,
+   "class_by_shape": null,
+   "category": "裸数字_需作者补同行锚"
+  },
+  {
+   "block": "qoder-0370_0130.md",
+   "token": "629",
+   "line": 160,
+   "class_by_shape": null,
+   "category": "裸数字_需作者补同行锚"
+  },
+  {
+   "block": "qoder-0370_0148.md",
+   "token": "129 个",
+   "line": 34,
+   "class_by_shape": null,
+   "category": "计数或计量主张_需作者补同行锚"
+  },
+  {
+   "block": "qoder-0370_0148.md",
+   "token": "4 个",
+   "line": 36,
+   "class_by_shape": null,
+   "category": "计数或计量主张_需作者补同行锚"
+  },
+  {
+   "block": "qoder-0370_0148.md",
+   "token": "174",
+   "line": 49,
+   "class_by_shape": null,
+   "category": "裸数字_需作者补同行锚"
+  },
+  {
+   "block": "qoder-0370_0148.md",
+   "token": "0 处",
+   "line": 81,
+   "class_by_shape": "DISCIPLINE_ZERO",
+   "category": "已归类_收据不在±80内(DISCIPLINE_ZERO)"
+  },
+  {
+   "block": "qoder-0370_0148.md",
+   "token": "77 处",
+   "line": 81,
+   "class_by_shape": null,
+   "category": "计数或计量主张_需作者补同行锚"
+  },
+  {
+   "block": "qoder-0370_0148.md",
+   "token": "77 处",
+   "line": 82,
+   "class_by_shape": null,
+   "category": "计数或计量主张_需作者补同行锚"
+  }
+ ]
+}
