@@ -1,0 +1,176 @@
+{
+ "blocks": [
+  {
+   "block": "n2_1824.md",
+   "bytes": 4650,
+   "r4e": {
+    "verdict": "Q43_GATE_RED",
+    "exit": 3,
+    "claims": 21,
+    "exempt": {
+     "HTTP_STATUS": 3,
+     "PORT": 3,
+     "DIMENSION": 2
+    },
+    "findings_total": 3,
+    "moved": [
+     "401"
+    ]
+   },
+   "r5": {
+    "verdict": "Q43_GATE_RED",
+    "exit": 3,
+    "claims": 19,
+    "exempt": {
+     "HTTP_STATUS": 2,
+     "PORT": 5,
+     "ADDRESS_PART": 1
+    },
+    "findings_total": 3,
+    "moved": [
+     "401"
+    ]
+   }
+  },
+  {
+   "block": "n2_0105.md",
+   "bytes": 4627,
+   "r4e": {
+    "verdict": "Q43_GATE_RED",
+    "exit": 3,
+    "claims": 8,
+    "exempt": {
+     "PORT": 1
+    },
+    "findings_total": 6,
+    "moved": [
+     "000",
+     "138",
+     "35752",
+     "7892",
+     "7897"
+    ]
+   },
+   "r5": {
+    "verdict": "Q43_GATE_RED",
+    "exit": 3,
+    "claims": 8,
+    "exempt": {
+     "PORT": 1
+    },
+    "findings_total": 6,
+    "moved": [
+     "000",
+     "138",
+     "35752",
+     "7892",
+     "7897"
+    ]
+   }
+  },
+  {
+   "block": "n2_0101.md",
+   "bytes": 6720,
+   "r4e": {
+    "verdict": "Q43_GATE_RED",
+    "exit": 3,
+    "claims": 17,
+    "exempt": {
+     "PORT": 5,
+     "LINE_REF": 1,
+     "DIMENSION": 1
+    },
+    "findings_total": 3,
+    "moved": [
+     "1367",
+     "1392",
+     "1392 条"
+    ]
+   },
+   "r5": {
+    "verdict": "Q43_GATE_RED",
+    "exit": 3,
+    "claims": 11,
+    "exempt": {
+     "ADDRESS_PART": 1,
+     "PORT": 5,
+     "LINE_REF": 6
+    },
+    "findings_total": 2,
+    "moved": [
+     "1367",
+     "1392 条"
+    ]
+   }
+  },
+  {
+   "block": "n2_1759.md",
+   "bytes": 5550,
+   "r4e": {
+    "verdict": "Q43_GATE_RED",
+    "exit": 3,
+    "claims": 14,
+    "exempt": {
+     "DIMENSION": 3,
+     "HTTP_STATUS": 1,
+     "DISCIPLINE_ZERO": 1
+    },
+    "findings_total": 7,
+    "moved": [
+     "127",
+     "35752",
+     "443",
+     "7892",
+     "7897"
+    ]
+   },
+   "r5": {
+    "verdict": "Q43_GATE_RED",
+    "exit": 3,
+    "claims": 13,
+    "exempt": {
+     "DIMENSION": 1,
+     "DISCIPLINE_ZERO": 1,
+     "ADDRESS_PART": 2,
+     "PORT": 2
+    },
+    "findings_total": 6,
+    "moved": [
+     "2148",
+     "35752",
+     "443",
+     "52 秒",
+     "7892",
+     "7897"
+    ]
+   }
+  },
+  {
+   "block": "n2_0116.md",
+   "bytes": 4555,
+   "r4e": {
+    "verdict": "Q43_GATE_GREEN",
+    "exit": 0,
+    "claims": 1,
+    "exempt": {
+     "HTTP_STATUS": 1,
+     "DIMENSION": 1
+    },
+    "findings_total": 0,
+    "moved": []
+   },
+   "r5": {
+    "verdict": "Q43_GATE_RED",
+    "exit": 3,
+    "claims": 3,
+    "exempt": {},
+    "findings_total": 1,
+    "moved": [
+     "22s"
+    ]
+   }
+  }
+ ],
+ "refused_by_r4e_and_accepted_by_r5": [],
+ "no_widening": true
+}
