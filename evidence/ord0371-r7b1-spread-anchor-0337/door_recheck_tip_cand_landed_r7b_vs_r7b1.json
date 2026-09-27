@@ -1,0 +1,276 @@
+{
+ "rulers": {
+  "r7b": {
+   "file": "ui_exposure_taint_ast_r7b.cjs",
+   "blob": "d3f66ce9fecd0790981a4fcdeb5e36b1c0fd10f2",
+   "bytes": 129082
+  },
+  "r7b1": {
+   "file": "ui_exposure_taint_ast_r7b1.cjs",
+   "blob": "b6716d9a3c67dafc72fef501bfaff101c84e918a",
+   "bytes": 139058
+  }
+ },
+ "candidate_files_in_view": 8,
+ "door_view": {
+  "r7b": {
+   "tip_cells": 11,
+   "cand_cells": 10,
+   "growth_by_file_and_rule": {
+    "RecoveryRequiredPanel.tsx|UPSTREAM_TEXT_VIA_HELPER_TO_DOM": 1
+   },
+   "unpaired_added": [
+    "RecoveryRequiredPanel.tsx:298|UPSTREAM_TEXT_VIA_HELPER_TO_DOM"
+   ],
+   "added_line_exact": [
+    "PlanWithAiSheet.tsx:1130|UPSTREAM_PROSE_TO_ATTRIBUTE_SLOT",
+    "PlanWithAiSheet.tsx:1155|UPSTREAM_TEXT_VIA_HELPER_TO_DOM",
+    "PlanWithAiSheet.tsx:1194|UPSTREAM_TEXT_VIA_HELPER_TO_DOM",
+    "RecoveryRequiredPanel.tsx:298|UPSTREAM_TEXT_VIA_HELPER_TO_DOM"
+   ],
+   "removed_count": 5,
+   "named_handle_present": true,
+   "gate_would": "REFUSE",
+   "landed_090c048f_cells": 10
+  },
+  "r7b1": {
+   "tip_cells": 11,
+   "cand_cells": 9,
+   "growth_by_file_and_rule": {},
+   "unpaired_added": [],
+   "added_line_exact": [
+    "PlanWithAiSheet.tsx:1130|UPSTREAM_PROSE_TO_ATTRIBUTE_SLOT",
+    "PlanWithAiSheet.tsx:1155|UPSTREAM_TEXT_VIA_HELPER_TO_DOM",
+    "PlanWithAiSheet.tsx:1194|UPSTREAM_TEXT_VIA_HELPER_TO_DOM"
+   ],
+   "removed_count": 5,
+   "named_handle_present": false,
+   "gate_would": "PASS",
+   "landed_090c048f_cells": 9
+  }
+ },
+ "runs": {
+  "r7b|tip_before_landing": {
+   "generation": "r7b",
+   "ruler_blob": "d3f66ce9fecd0790981a4fcdeb5e36b1c0fd10f2",
+   "rev": "04071b8258ebcdcf1e9e4c9714fb516283d1e1ad",
+   "files_found": 81,
+   "modules_in_graph": 81,
+   "parse_diagnostics_total": 0,
+   "resolution_truncated_total": 52,
+   "unresolved_import_count": 37,
+   "cells_total": 11,
+   "cells": [
+    "ActivityDetail.tsx:214|RAW_BODY_TO_DOM",
+    "CnxMeasuredFacts.tsx:57|UPSTREAM_TEXT_VIA_HELPER_TO_DOM",
+    "DestinationPreparationPanel.tsx:346|UPSTREAM_EXCEPTION_TO_DOM",
+    "DestinationPreparationPanel.tsx:469|UPSTREAM_EXCEPTION_TO_DOM",
+    "DestinationPreparationPanel.tsx:522|UPSTREAM_EXCEPTION_TO_DOM",
+    "PlanWithAiSheet.tsx:1098|UPSTREAM_PROSE_TO_ATTRIBUTE_SLOT",
+    "PlanWithAiSheet.tsx:1123|UPSTREAM_TEXT_VIA_HELPER_TO_DOM",
+    "PlanWithAiSheet.tsx:1162|UPSTREAM_TEXT_VIA_HELPER_TO_DOM",
+    "RecoveryRequiredPanel.tsx:166|RAW_BODY_TO_DOM",
+    "SimulationPanel.tsx:934|UPSTREAM_TEXT_VIA_HELPER_TO_DOM",
+    "V12TripStudioPanel.tsx:106|UPSTREAM_EXCEPTION_TO_DOM"
+   ],
+   "attributed_in_fold_count": 1,
+   "fold_without_anchor_count": 1,
+   "named_cell_counts": 0,
+   "candidate_files_with_cells": [
+    "PlanWithAiSheet.tsx",
+    "RecoveryRequiredPanel.tsx",
+    "V12TripStudioPanel.tsx"
+   ]
+  },
+  "r7b|candidate_25396236063f": {
+   "generation": "r7b",
+   "ruler_blob": "d3f66ce9fecd0790981a4fcdeb5e36b1c0fd10f2",
+   "rev": "25396236063f13827312c33960be0b9510845fc3",
+   "files_found": 81,
+   "modules_in_graph": 81,
+   "parse_diagnostics_total": 0,
+   "resolution_truncated_total": 52,
+   "unresolved_import_count": 37,
+   "cells_total": 10,
+   "cells": [
+    "ActivityDetail.tsx:214|RAW_BODY_TO_DOM",
+    "CnxMeasuredFacts.tsx:57|UPSTREAM_TEXT_VIA_HELPER_TO_DOM",
+    "DestinationPreparationPanel.tsx:346|UPSTREAM_EXCEPTION_TO_DOM",
+    "DestinationPreparationPanel.tsx:469|UPSTREAM_EXCEPTION_TO_DOM",
+    "DestinationPreparationPanel.tsx:522|UPSTREAM_EXCEPTION_TO_DOM",
+    "PlanWithAiSheet.tsx:1130|UPSTREAM_PROSE_TO_ATTRIBUTE_SLOT",
+    "PlanWithAiSheet.tsx:1155|UPSTREAM_TEXT_VIA_HELPER_TO_DOM",
+    "PlanWithAiSheet.tsx:1194|UPSTREAM_TEXT_VIA_HELPER_TO_DOM",
+    "RecoveryRequiredPanel.tsx:298|UPSTREAM_TEXT_VIA_HELPER_TO_DOM",
+    "SimulationPanel.tsx:934|UPSTREAM_TEXT_VIA_HELPER_TO_DOM"
+   ],
+   "attributed_in_fold_count": 1,
+   "fold_without_anchor_count": 2,
+   "named_cell_counts": 1,
+   "candidate_files_with_cells": [
+    "PlanWithAiSheet.tsx",
+    "RecoveryRequiredPanel.tsx"
+   ]
+  },
+  "r7b|landed_090c048f": {
+   "generation": "r7b",
+   "ruler_blob": "d3f66ce9fecd0790981a4fcdeb5e36b1c0fd10f2",
+   "rev": "090c048f220a3089506f565929ceda1511315a09",
+   "files_found": 81,
+   "modules_in_graph": 81,
+   "parse_diagnostics_total": 0,
+   "resolution_truncated_total": 52,
+   "unresolved_import_count": 37,
+   "cells_total": 10,
+   "cells": [
+    "ActivityDetail.tsx:214|RAW_BODY_TO_DOM",
+    "CnxMeasuredFacts.tsx:57|UPSTREAM_TEXT_VIA_HELPER_TO_DOM",
+    "DestinationPreparationPanel.tsx:346|UPSTREAM_EXCEPTION_TO_DOM",
+    "DestinationPreparationPanel.tsx:469|UPSTREAM_EXCEPTION_TO_DOM",
+    "DestinationPreparationPanel.tsx:522|UPSTREAM_EXCEPTION_TO_DOM",
+    "PlanWithAiSheet.tsx:1130|UPSTREAM_PROSE_TO_ATTRIBUTE_SLOT",
+    "PlanWithAiSheet.tsx:1155|UPSTREAM_TEXT_VIA_HELPER_TO_DOM",
+    "PlanWithAiSheet.tsx:1194|UPSTREAM_TEXT_VIA_HELPER_TO_DOM",
+    "RecoveryRequiredPanel.tsx:298|UPSTREAM_TEXT_VIA_HELPER_TO_DOM",
+    "SimulationPanel.tsx:934|UPSTREAM_TEXT_VIA_HELPER_TO_DOM"
+   ],
+   "attributed_in_fold_count": 1,
+   "fold_without_anchor_count": 2,
+   "named_cell_counts": 1,
+   "candidate_files_with_cells": [
+    "PlanWithAiSheet.tsx",
+    "RecoveryRequiredPanel.tsx"
+   ]
+  },
+  "r7b1|tip_before_landing": {
+   "generation": "r7b1",
+   "ruler_blob": "b6716d9a3c67dafc72fef501bfaff101c84e918a",
+   "rev": "04071b8258ebcdcf1e9e4c9714fb516283d1e1ad",
+   "files_found": 81,
+   "modules_in_graph": 81,
+   "parse_diagnostics_total": 0,
+   "resolution_truncated_total": 52,
+   "unresolved_import_count": 37,
+   "cells_total": 11,
+   "cells": [
+    "ActivityDetail.tsx:214|RAW_BODY_TO_DOM",
+    "CnxMeasuredFacts.tsx:57|UPSTREAM_TEXT_VIA_HELPER_TO_DOM",
+    "DestinationPreparationPanel.tsx:346|UPSTREAM_EXCEPTION_TO_DOM",
+    "DestinationPreparationPanel.tsx:469|UPSTREAM_EXCEPTION_TO_DOM",
+    "DestinationPreparationPanel.tsx:522|UPSTREAM_EXCEPTION_TO_DOM",
+    "PlanWithAiSheet.tsx:1098|UPSTREAM_PROSE_TO_ATTRIBUTE_SLOT",
+    "PlanWithAiSheet.tsx:1123|UPSTREAM_TEXT_VIA_HELPER_TO_DOM",
+    "PlanWithAiSheet.tsx:1162|UPSTREAM_TEXT_VIA_HELPER_TO_DOM",
+    "RecoveryRequiredPanel.tsx:166|RAW_BODY_TO_DOM",
+    "SimulationPanel.tsx:934|UPSTREAM_TEXT_VIA_HELPER_TO_DOM",
+    "V12TripStudioPanel.tsx:106|UPSTREAM_EXCEPTION_TO_DOM"
+   ],
+   "attributed_in_fold_count": 1,
+   "fold_without_anchor_count": 1,
+   "named_cell_counts": 0,
+   "candidate_files_with_cells": [
+    "PlanWithAiSheet.tsx",
+    "RecoveryRequiredPanel.tsx",
+    "V12TripStudioPanel.tsx"
+   ]
+  },
+  "r7b1|candidate_25396236063f": {
+   "generation": "r7b1",
+   "ruler_blob": "b6716d9a3c67dafc72fef501bfaff101c84e918a",
+   "rev": "25396236063f13827312c33960be0b9510845fc3",
+   "files_found": 81,
+   "modules_in_graph": 81,
+   "parse_diagnostics_total": 0,
+   "resolution_truncated_total": 52,
+   "unresolved_import_count": 37,
+   "cells_total": 9,
+   "cells": [
+    "ActivityDetail.tsx:214|RAW_BODY_TO_DOM",
+    "CnxMeasuredFacts.tsx:57|UPSTREAM_TEXT_VIA_HELPER_TO_DOM",
+    "DestinationPreparationPanel.tsx:346|UPSTREAM_EXCEPTION_TO_DOM",
+    "DestinationPreparationPanel.tsx:469|UPSTREAM_EXCEPTION_TO_DOM",
+    "DestinationPreparationPanel.tsx:522|UPSTREAM_EXCEPTION_TO_DOM",
+    "PlanWithAiSheet.tsx:1130|UPSTREAM_PROSE_TO_ATTRIBUTE_SLOT",
+    "PlanWithAiSheet.tsx:1155|UPSTREAM_TEXT_VIA_HELPER_TO_DOM",
+    "PlanWithAiSheet.tsx:1194|UPSTREAM_TEXT_VIA_HELPER_TO_DOM",
+    "SimulationPanel.tsx:934|UPSTREAM_TEXT_VIA_HELPER_TO_DOM"
+   ],
+   "attributed_in_fold_count": 2,
+   "fold_without_anchor_count": 1,
+   "named_cell_counts": 0,
+   "candidate_files_with_cells": [
+    "PlanWithAiSheet.tsx"
+   ]
+  },
+  "r7b1|landed_090c048f": {
+   "generation": "r7b1",
+   "ruler_blob": "b6716d9a3c67dafc72fef501bfaff101c84e918a",
+   "rev": "090c048f220a3089506f565929ceda1511315a09",
+   "files_found": 81,
+   "modules_in_graph": 81,
+   "parse_diagnostics_total": 0,
+   "resolution_truncated_total": 52,
+   "unresolved_import_count": 37,
+   "cells_total": 9,
+   "cells": [
+    "ActivityDetail.tsx:214|RAW_BODY_TO_DOM",
+    "CnxMeasuredFacts.tsx:57|UPSTREAM_TEXT_VIA_HELPER_TO_DOM",
+    "DestinationPreparationPanel.tsx:346|UPSTREAM_EXCEPTION_TO_DOM",
+    "DestinationPreparationPanel.tsx:469|UPSTREAM_EXCEPTION_TO_DOM",
+    "DestinationPreparationPanel.tsx:522|UPSTREAM_EXCEPTION_TO_DOM",
+    "PlanWithAiSheet.tsx:1130|UPSTREAM_PROSE_TO_ATTRIBUTE_SLOT",
+    "PlanWithAiSheet.tsx:1155|UPSTREAM_TEXT_VIA_HELPER_TO_DOM",
+    "PlanWithAiSheet.tsx:1194|UPSTREAM_TEXT_VIA_HELPER_TO_DOM",
+    "SimulationPanel.tsx:934|UPSTREAM_TEXT_VIA_HELPER_TO_DOM"
+   ],
+   "attributed_in_fold_count": 2,
+   "fold_without_anchor_count": 1,
+   "named_cell_counts": 0,
+   "candidate_files_with_cells": [
+    "PlanWithAiSheet.tsx"
+   ]
+  }
+ },
+ "door_arithmetic_reproduces_receipt": {
+  "tip_cells": {
+   "mine": 11,
+   "door_receipt": 11,
+   "equal": true
+  },
+  "cand_cells": {
+   "mine": 10,
+   "door_receipt": 10,
+   "equal": true
+  },
+  "removed_count": {
+   "mine": 5,
+   "door_receipt": 5,
+   "equal": true
+  },
+  "growth_by_file_and_rule": {
+   "mine": {
+    "RecoveryRequiredPanel.tsx|UPSTREAM_TEXT_VIA_HELPER_TO_DOM": 1
+   },
+   "door_receipt": {
+    "RecoveryRequiredPanel.tsx|UPSTREAM_TEXT_VIA_HELPER_TO_DOM": 1
+   },
+   "equal": true
+  },
+  "unpaired_added": {
+   "mine": [
+    "RecoveryRequiredPanel.tsx:298|UPSTREAM_TEXT_VIA_HELPER_TO_DOM"
+   ],
+   "door_receipt": [
+    "RecoveryRequiredPanel.tsx:298|UPSTREAM_TEXT_VIA_HELPER_TO_DOM"
+   ],
+   "equal": true
+  },
+  "ruler_blob": {
+   "mine": "d3f66ce9fecd0790981a4fcdeb5e36b1c0fd10f2",
+   "door_receipt": "d3f66ce9fecd0790981a4fcdeb5e36b1c0fd10f2",
+   "equal": true
+  }
+ },
+ "all_fields_agree": true,
+ "r7b_receipt_under_test": "evidence/cmdr-landing-ORD-0369r3-0300/preflight_REFUSED_exposure_r1.json 7d81a39bc11a101333e664b7e737d23fbc7d4cfa"
+}
