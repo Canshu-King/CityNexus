@@ -70,6 +70,17 @@ bytes rather than asserted:
                      REACT_KEY      `key={`. The one slot this face may state cannot
                                     render: React consumes key to reconcile and
                                     never emits it into the DOM.
+                     COMPARISON_OPERAND  the value closes a parenthesis an equality
+                                    operator immediately reads -- `(x ?? "…") === "…"`
+                                    -- so both sides are consumed by the test and
+                                    neither is printed. Proven unable to reach a
+                                    screen from that slot, the same way key={} is.
+                                    Found by an actual site, not a hypothesis:
+                                    frontend/src/features/planning/PlanWithAiSheet.tsx:1230,
+                                    where the comparison only selects which of four
+                                    bilingual labels gets painted, and the sentinel is
+                                    mirrored into data-summary-origin one line above on
+                                    purpose (the technical-fact channel).
                      STATE_WRITE / TELEMETRY_STRING / JS_VALUE / OTHER / ATTR_OTHER
                                     undetermined -- reaching a screen depends on who
                                     reads the field, which text cannot settle.
@@ -251,6 +262,13 @@ def render_pos(text, abs_off):
     line_head = text[line_start:abs_off]
     in_lang = bool(LANG_ARM.search(line_head)) or bool(
         LANG_ARM.search(text[max(0, abs_off - 700):abs_off][-700:]))
+    # Compared before the brace walk on purpose: a value consumed by `===` is not
+    # painted wherever the test happens to sit, so this outranks JSX_CHILD.
+    # Measured on frontend/src/features/planning/PlanWithAiSheet.tsx:1230.
+    tail = text[abs_off:abs_off + 200]
+    if re.search(r'"\s*\)\s*(?:===|!==|==|!=)', tail):
+        return ("COMPARISON_OPERAND", in_lang)
+
     # innermost unmatched `{` before the hit
     depth = 0
     open_at = -1
@@ -314,7 +332,7 @@ def render_pos(text, abs_off):
 
 
 TIER1_SLOTS = {"JSX_CHILD", "ATTR_VISIBLE"}
-CANNOT_RENDER = {"REACT_KEY"}
+CANNOT_RENDER = {"REACT_KEY", "COMPARISON_OPERAND"}
 # A literal only has something to localise if it carries a letter. `—` sitting in
 # element text is a render slot and no language branch guards it, but no dictionary
 # key can make an em dash read better in Chinese, and calling it tier 1 would keep
@@ -523,6 +541,10 @@ def render_tier_mutants():
         # the shape that bit this ruler once: a control block's `{` is not element
         # text, and a state setter's argument only reaches a screen if some JSX
         # later reads that state -- which text cannot settle
+        # a fallback feeding `===` is consumed by the test, never printed
+        ("K7k_comparison_operand_cannot_render",
+         "  return <p>{(origin ?? \"not_stated\") === \"no_model\" ? \"甲\" : \"乙\"}</p>;\n",
+         3, "COMPARISON_OPERAND"),
         ("K7j_control_block_is_not_jsx_child",
          '  async function go(): Promise<void> {\n'
          '    if (!r.ok) {\n'

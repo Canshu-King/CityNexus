@@ -993,7 +993,7 @@ export function JourneyTrialSetup({
                           >
                             {row.answered
                               ? `${row.capability} · ${row.reason_code} · ${row.recommended_action}`
-                              : (row.failure ?? "not-asked")}
+                              : (row.failure ?? t("trial.notAsked"))}
                           </span>
                         </li>
                       ))}

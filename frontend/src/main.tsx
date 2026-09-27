@@ -36,7 +36,7 @@ import {
 import { journeyModeMachine } from "./state/journeyModeMachine";
 import { V8Experience } from "./app/V8Experience";
 import { ProductErrorBoundary } from "./components/ProductErrorBoundary";
-import { LocaleProvider } from "./i18n/LocaleContext";
+import { LocaleProvider, useT } from "./i18n/LocaleContext";
 import { applyTheme, followSystemTheme } from "./theme";
 import "./styles.css";
 import "./design-tokens.css";
@@ -152,6 +152,7 @@ function errorNote(error: unknown): ErrorNote {
 }
 
 function LegacyApp() {
+  const t = useT();
   const actor = useMemo(() => createActor(journeyModeMachine), []);
   const [workflowState, setWorkflowState] = useState(() =>
     String(actor.getSnapshot().value),
@@ -1129,7 +1130,7 @@ function LegacyApp() {
         </div>
         <p className="guardian-summary">
           {guardianStatus?.latest?.reasoning_summary ??
-            "Activate a standing mission once; subsequent city signals can launch recovery without a new chat message."}
+            t("legacy.guardianIdle")}
         </p>
           <div className="guardian-actions">
           <button
@@ -1390,12 +1391,12 @@ function LegacyApp() {
               ))}
             </ol>
             <p data-testid="agent-policy-decision" className="impact-summary">
-              Server decision · {serverDecision ?? "not evaluated"}
+              Server decision · {serverDecision ?? t("legacy.notEvaluated")}
               {confirmationRequired ? " · confirmation required" : ""}
             </p>
             {impactResolution && (
               <p className="impact-summary">
-                Impact evidence · {impactResolution.status ?? "unknown"} ·{" "}
+                Impact evidence · {impactResolution.status ?? t("legacy.unknown")} ·{" "}
                 {impactResolution.provider_key ?? "deterministic"} ·{" "}
                 {impactResolution.selected_activity_id
                   ? (impactResolution.maturity_stage ?? "validated Activity")
@@ -1438,7 +1439,7 @@ function LegacyApp() {
             ) : (
               travelerTwin.explicit_preferences.map((item, index) => (
                 <span key={(String(item.dimension ?? "explicit")) + index}>
-                  {String(item.dimension ?? item.category ?? "preference")} · {String(item.explanation ?? "user-provided")}
+                  {String(item.dimension ?? item.category ?? t("legacy.preference"))} · {String(item.explanation ?? "user-provided")}
                 </span>
               ))
             )}
@@ -1449,7 +1450,7 @@ function LegacyApp() {
             ) : (
               travelerTwin.learned_soft_preferences.map((item, index) => (
                 <span key={(item.dimension ?? "learned") + (item.direction ?? "") + index}>
-                  {item.direction ?? item.dimension ?? "preference"} · strength {Math.round((item.strength ?? 0) * 100)}% ·
+                  {item.direction ?? item.dimension ?? t("legacy.preference")} · strength {Math.round((item.strength ?? 0) * 100)}% ·
                   evidence {item.evidence_count ?? 0} · observed {item.last_evidence_at?.slice(0, 10) ?? "unknown"} · {item.explanation ?? "outcome evidence"}
                 </span>
               ))
@@ -1462,7 +1463,7 @@ function LegacyApp() {
             ) : (
               travelerTwin.conflicts.map((item, index) => (
                 <span key={String(item.dimension ?? "conflict") + index}>
-                  {String(item.dimension ?? "preference")} · {Array.isArray(item.directions) ? item.directions.join(" vs ") : "conflict"} · {String(item.resolution ?? "explicit wins")}
+                  {String(item.dimension ?? t("legacy.preference"))} · {Array.isArray(item.directions) ? item.directions.join(" vs ") : "conflict"} · {String(item.resolution ?? "explicit wins")}
                 </span>
               ))
             )}
@@ -1526,7 +1527,7 @@ function LegacyApp() {
         </div>
         <aside className="evidence-card">
           <h2 data-testid={testIds.protectedCommitment}>
-            🔒 {c4Activity?.title ?? "No active C4"} ·{" "}
+            🔒 {c4Activity?.title ?? t("legacy.noActiveC4")} ·{" "}
             {c4Commitment ? formatTime(c4Commitment.policy.scheduled_start_at) : "—"} C4
           </h2>
           <p data-testid={testIds.nextCommitment}>
