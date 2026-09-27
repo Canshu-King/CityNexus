@@ -16,10 +16,10 @@ import { fillHistory, historyCopy, type PlanVersionCopyKey } from "./planVersion
  * shell already fills (`["v12-authoritative-plans", journeyId]`), so this costs no second request.
  *
  * `created_at` and `is_current` are typed locally rather than taken from `generated/api.ts`,
- * because that committed file is already 497 lines away (13 hunks) from what openapi-typescript
+ * because that committed file is already 552 lines away (15 hunks) from what openapi-typescript
  * 7.13.0 produces from today's contract: it has no `/demo/prepare-scenario`, and its `PlanVersion`
  * carries neither of these two fields even though the contract declares both -- `created_at` from
- * this order, `is_current` since ORD-0097 (contracts/openapi.yaml:2275). Regenerating it here would
+ * this order, `is_current` since ORD-0097 (contracts/openapi.yaml:2330). Regenerating it here would
  * fold other orders' drift into this one's diff, so the fields are declared where they are used and
  * the contract stays the source of truth. Measurement: `review/ord0386-plan-version-history/api_ts_drift.txt`.
  */

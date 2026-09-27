@@ -1,8 +1,8 @@
 {
  "base": "http://127.0.0.1:4192",
  "api": "http://127.0.0.1:8713",
- "served_bundle": "index-Bn2LR9Bv.js",
- "served_bundle_sha256": "d8a87094091f58720fff25d1fca50038f4941a647d7948010b65f085c6824aef",
+ "served_bundle": "index-DaHo2ke-.js",
+ "served_bundle_sha256": "8329f80f7b657ca2af68b6b4c78d4432146136a68d42bbf1998266fdfa40caee",
  "runs": [
   {
    "name": "scene",

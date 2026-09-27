@@ -1573,4 +1573,4 @@ ERROR tests/test_v18_hermes_r7_human_approval_probe.py
 ERROR tests/test_v18_hermes_r8_context_probe.py
 ERROR tests/test_v18_hermes_r9_mcp_context_probe.py
 !!!!!!!!!!!!!!!!!! Interrupted: 20 errors during collection !!!!!!!!!!!!!!!!!!!
-1341 tests collected, 20 errors in 4.05s
+1341 tests collected, 20 errors in 6.06s

@@ -4,7 +4,7 @@
  * Deliberately NOT in `i18n/LocaleContext.tsx`: two other lanes are editing that file tonight and
  * the commander ruled the shared dictionary off-limits for this order, so a same-key collision
  * cannot silently take the last value. This file is therefore read directly, per locale, through
- * `historyCopy()` below -- `useT()` cannot reach these keys, because `LocaleContext.tsx:1589`
+ * `historyCopy()` below -- `useT()` cannot reach these keys, because `LocaleContext.tsx:1635`
  * looks keys up in its own two dictionaries only and has no fallback-dictionary parameter.
  *
  * Wording rule from the order: this screen says 「历史版本 / 还原」. The word 恢复 already means
@@ -13,8 +13,8 @@
  */
 /**
  * Each label names only what the source code actually proves. The server writes exactly three
- * values (`backend/app/schemas.py:434`) from six places, and `MANUAL` is the one that is easy to
- * over-claim: `main.py:5715` writes it when a traveller re-orders activities in the trip studio
+ * values (`backend/app/schemas.py:495`) from six places, and `MANUAL` is the one that is easy to
+ * over-claim: `main.py:5721` writes it when a traveller re-orders activities in the trip studio
  * (`product_path = V12_TRIP_STUDIO_ACCEPT`), and `operations/v9.py:580` writes it for a stay-driven
  * rewrite. So it says 人工改动 and names both, rather than claiming one of them.
  */
@@ -53,7 +53,7 @@ export const planVersionHistoryCopy = {
     /* "no cap" is a structural reading, not an extrapolation: nothing in the backend prunes a kept
        version (`grep -riE 'retention|prune|max_versions' backend/app` -> no hits), and the only
        DELETEs that touch plan versions remove a *proposal the hard gate refused before it was ever
-       returned* (`backend/app/main.py:9781`, `backend/app/operations/v9.py:733`). Measured against
+       returned* (`backend/app/main.py:9787`, `backend/app/operations/v9.py:733`). Measured against
        real writes: 7 generate rounds left 21 rows, version_no 1..21 with no hole
        (backend/tests/test_qoder_ord0386_plan_version_history.py, test_3). */
     "history.retention": "这台服务器没有设保留上限：目前这趟共有 {n} 份版本，这里全部列出。写新版本不会丢掉旧的。",

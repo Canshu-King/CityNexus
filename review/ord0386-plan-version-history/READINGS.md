@@ -9,7 +9,7 @@
 
 | 转达的说法 | 现场读数 | 结论 |
 | --- | --- | --- |
-| 「没有版本列表路由，要新建一条只读 GET」 | `backend/app/main.py:5111` 已有 `@app.get("/api/v1/journeys/{journey_id}/plans")`，docstring 自陈 "Every version this journey has ever had"，且刻意不按 status 过滤 | 路由**不需要新建**。本单真正缺的是投影里没有写入时间：改动前 `backend/app/services.py:609` 的 `PlanSchema(...)` 传了 18 个字段（计数：`re.findall(r'^\s{8}(\w+)=', <该调用体>, re.M)` 作用在 `git show HEAD:backend/app/services.py`），里面没有 `created_at` |
+| 「没有版本列表路由，要新建一条只读 GET」 | `backend/app/main.py:5116` 已有 `@app.get("/api/v1/journeys/{journey_id}/plans")`，docstring 自陈 "Every version this journey has ever had"，且刻意不按 status 过滤 | 路由**不需要新建**。本单真正缺的是投影里没有写入时间：改动前 `backend/app/services.py:612` 的 `PlanSchema(...)` 传了 18 个字段（计数：`re.findall(r'^\s{8}(\w+)=', <该调用体>, re.M)` 作用在 `git show HEAD:backend/app/services.py`），里面没有 `created_at` |
 | 「studio 的版本徽标在 `V12TripStudioPanel.tsx:96`」 | `:96` 是 gate-reasons 的 memo 收尾大括号；徽标实际在 `frontend/src/features/studio/V12TripStudioPanel.tsx:195` | 坐标写错，按现场行号引用 |
 
 因为路由本来就有，本单后端只动三处：`backend/app/schemas.py`（`PlanVersion` 加 `created_at: str | None`）、
@@ -37,13 +37,13 @@ select source, count(*) ... -> INITIAL 21
 
 代码侧的交叉验证（不是只靠一次跑数）：`grep -riE 'retention|prune|max_versions|keep_last' backend/app`
 零命中；全仓对 `plan_versions` 的 DELETE 只有两处，且删的都是**硬闸门当场拒掉、从未返回给调用方的候选**
-（`backend/app/main.py:9781`、`backend/app/operations/v9.py:733`），不是已入档的历史。
+（`backend/app/main.py:9787`、`backend/app/operations/v9.py:733`），不是已入档的历史。
 所以屏上那句「这台服务器没有设保留上限」是结构读数 + 实测行数，不是外推。
 
 ## 3. 屏（不另起外壳）
 
 挂在 authoritative 那一段里，`frontend/src/app/V8Experience.tsx` 的两行改动：import 一行 +
-`<PlanVersionHistoryPanel journeyId={journeyId} />` 一行（现尖 `:3374`）。
+`<PlanVersionHistoryPanel journeyId={journeyId} />` 一行（现尖 `frontend/src/app/V8Experience.tsx:3389`）。
 **位置是这单的一个产品结论**：面板原先挂在 `V12TripStudioPanel` 内，而那个面板只在 `plan` 读到之后才挂载——
 于是"列表读失败"整块消失，旅客只剩 `LocaleContext` 的 `auth.noPlan`「你还没有选定方案。」，
 把一次没答上的读说成了方案层的判断。现在面板自己持读（React Query 同一 key，不多发一次请求），
@@ -54,12 +54,12 @@ select source, count(*) ... -> INITIAL 21
 词面只用「历史版本 / 还原」，本屏不出现「恢复」（H4 逐字判）。
 
 一处诚实修正：`MANUAL` 最初被译成「来自一次住宿变更」。现场有两个写入点，
-`backend/app/main.py:5715` 写的是行程工作台的活动重排（`product_path = V12_TRIP_STUDIO_ACCEPT`），
+`backend/app/main.py:5721` 写的是行程工作台的活动重排（`product_path = V12_TRIP_STUDIO_ACCEPT`），
 `backend/app/operations/v9.py:580` 写的才是住宿驱动的重写。而封存演示那 9 行**全是 MANUAL**，
 所以那句错话会真的上屏。现在写成「来自一次人工改动（调整活动顺序或换住宿）」。
 
 `created_at`/`is_current` 在面板里本地声明，没有重生成 `frontend/src/generated/api.ts`：
-该文件与当前契约已差 497 行 / 13 个 hunk（量法与逐对象证据见 `api_ts_drift.txt`），
+该文件与当前契约已差 552 行 / 15 个 hunk（量法与逐对象证据见 `api_ts_drift.txt`；r1 那代量到的是 497 行 / 13 个 hunk；两代相差 55 行，其中可以指认的部分是 ORD-B 今天落进契约的 `RealCityDiscoveryCandidate`（重算后 committed 文件里 0 次命中）、`RealCityDiscoveryResponse`（0 次）与 `coordinate_system`（0 次）），
 重生成会把别的单的漂移并进本单 diff。
 
 ## 4. 门禁与它咬不咬
@@ -90,7 +90,8 @@ H1 判"真行程 9 行逐条对得上服务器实发"，H7 判 390×844 下每�
 `getBoundingClientRect()` + `getComputedStyle().margin*`）。
 同时删掉了原先给列表加的 `padding-bottom: calc(var(--cn-nav-h, 80px) + 64px)`：
 把它去掉后 H7 仍然绿（单独一次重建 + 复跑，读数存 `mutant_M6_no_list_padding.json`：
-stats.expected 1 / unexpected 0），说明那 144px 对"可达"并不承重，留着只是把最后一行和那句解释推远。
+stats.expected 1 / unexpected 0；那次测量是在 r1 那代做的，r2 交付的树里这行 padding 已经不在，
+H7 在 r2 上重新跑过并仍然绿），说明那 144px 对"可达"并不承重，留着只是把最后一行和那句解释推远。
 
 ## 6. 没改善的部分
 
@@ -102,11 +103,43 @@ stats.expected 1 / unexpected 0），说明那 144px 对"可达"并不承重，�
 3. **REPLAN 这一枚来源没有真行**：这台部署上没有任何一趟留有 `source=REPLAN` 的版本
    （ORD-0369 已量过：重规划的接受腿被 422 非硬可用证据与 5/5 受保护锚点挡住）。
    H6 因此只能把真行的 source 改成契约声明的三枚码来判标签，不能算"走了一次真重规划"。
-4. **行程工作台底栏仍把机器码写在旅客行上**：现尖 `frontend/src/features/studio/V12TripStudioPanel.tsx:195`
-   渲染 `PlanVersion {version_no} · {source}`，实测屏上文字为「PlanVersion 9 · MANUAL」
+4. **行程工作台底栏仍把机器码写在旅客行上**：现尖 `frontend/src/features/studio/V12TripStudioPanel.tsx:195` 渲染 `PlanVersion {version_no} · {source}`，实测屏上文字为「PlanVersion 9 · MANUAL」
    （读数存 `D:/moodle/_qoder_q_ord0369_wk/o0386_footer.json`）。它属于 Q64 那一类暴露面，
    但不在本单要件里，且改它要动别的车道刚落地的那段文字——留给号令者定单，本单没碰。
-5. **`generated/api.ts` 的 497 行漂移仍在**：本单绕开它（本地声明两枚字段），没有替别的单收拾。
+5. **`generated/api.ts` 的 552 行漂移仍在**：本单绕开它（本地声明两枚字段），没有替别的单收拾。
    谁重生成，都会把不属于自己的改动卷进 diff。
 6. **列表只到"看得见"**：没有按状态筛、没有分页、没有导出。21 行一次全列，
    真跑上百版的行程会不会太长，本单没量（也没有那样的行程可量）。
+
+## 7. 换代：本收据的所有坐标按 r2 那代重新量过
+
+工单写的起点是 `090c048f220a3089506f565929ceda1511315a09`。开工后权威线又走了 26 笔到
+`e022093dcc198367d779fc92692c6ccfc6824a2a`，而我这 5 个文件里有 4 个在上游被改过
+（`git diff --name-only 090c048f..e022093d -- <我的文件>` 报出 schemas.py / services.py / openapi.yaml /
+V8Experience.tsx / styles.css）。`git merge-tree --write-tree` 对 HEAD×线尖回 rc=0（无冲突），
+但**无冲突不等于合并出的字节被我描述过**，所以本车道自己 rebase 到新尖并重跑全套，
+交的是 r2：`review/Q-ord0386-plan-version-history-r2`，r1（base 090c048f）没有 push 过。
+
+rebase 之后逐条重新定位，本收据里引用的行号都是 r2 那代的现值；括号里是 r1 那代的旧值，
+差值就是上游这 26 笔挤进来的行数：
+
+| 锚点 | r2 现值 | r1 旧值 |
+| --- | --- | --- |
+| 版本列表路由 `@app.get(.../plans)` | `backend/app/main.py:5116` | (5111) |
+| 投影调用 `return PlanSchema(` | `backend/app/services.py:612` | (609) |
+| 工作台写入 MANUAL | `backend/app/main.py:5721` | (5715) |
+| 被拒候选的删除 | `backend/app/main.py:9787` | (9781) |
+| 来源三值 Literal | `backend/app/schemas.py:495` | (434) |
+| 契约里的 `is_current` | `contracts/openapi.yaml:2330` | (2275) |
+| 本屏挂载行 | `frontend/src/app/V8Experience.tsx:3389` | (3374) |
+| 工作台徽标行（未移动） | `frontend/src/features/studio/V12TripStudioPanel.tsx:195` | (195) |
+
+另一枚是工单自己给的坐标：「本项目"恢复"已被 autonomous recovery 占用（`LocaleContext.tsx:18/750`）」。
+现尖实测 `:18` 是英文 `"nav.authoritative": "Recovery"`（对得上），`:750` 是 `"twin.title"`（与恢复无关）；
+中文「恢复」最早出现在 `frontend/src/i18n/LocaleContext.tsx:835`（`"nav.authoritative": "恢复与执行"`），
+全文件含「恢复」的行共 11 行（`grep -c 恢复`）。词面约束照办，只是第二枚行号要按现值引用。
+
+同一批里还有一枚本车道自己写错的行号：`planVersionHistoryCopy.ts` 原先解释"为什么不能用 `useT()`"时
+指向 `LocaleContext.tsx:1589`，那是一行 `recovery.generateRefused` 文案；真正的取词函数在
+`frontend/src/i18n/LocaleContext.tsx:1635`（`dictionaries[locale][key]` → 回落 `dictionaries.en[key] ?? key`，
+没有接收外部字典的参数），已按现值改正。

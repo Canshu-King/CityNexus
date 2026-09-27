@@ -8,7 +8,7 @@
   "expected": 0,
   "killed": true,
   "restored_byte_identical": true,
-  "report": "mutant-0386-M1-time-from-nowhere-1790540503.json",
+  "report": "mutant-0386-M1-time-from-nowhere-1790542192.json",
   "first_error": "Error: e2e/qoder-ord0386-plan-version-history.spec.ts :: H3 — 空时间被编成了别的东西，实读=—",
   "why": "a missing write time rendered through the same formatter instead of 没有记录写入时间"
  },
@@ -21,7 +21,7 @@
   "expected": 0,
   "killed": true,
   "restored_byte_identical": true,
-  "report": "mutant-0386-M2-count-is-a-literal-1790540517.json",
+  "report": "mutant-0386-M2-count-is-a-literal-1790542210.json",
   "first_error": "Error: e2e/qoder-ord0386-plan-version-history.spec.ts :: H2 — 上限句还写着旧份数",
   "why": "the cap sentence carries a number this file knows instead of the rows on screen"
  },
@@ -34,7 +34,7 @@
   "expected": 0,
   "killed": true,
   "restored_byte_identical": true,
-  "report": "mutant-0386-M3-mount-behind-plan-1790540531.json",
+  "report": "mutant-0386-M3-mount-behind-plan-1790542228.json",
   "first_error": "Error: e2e/qoder-ord0386-plan-version-history.spec.ts :: stage — 版本历史面板没有挂在 authoritative 这一段里",
   "why": "restoring the old mount: a failed list read takes the whole panel away"
  },
@@ -47,7 +47,7 @@
   "expected": 0,
   "killed": true,
   "restored_byte_identical": true,
-  "report": "mutant-0386-M4-raw-source-token-1790540576.json",
+  "report": "mutant-0386-M4-raw-source-token-1790542275.json",
   "first_error": "Error: e2e/qoder-ord0386-plan-version-history.spec.ts :: H6 — INITIAL 没有译成人话，实读=INITIAL",
   "why": "the server's machine code lands on the traveller's line"
  },
@@ -60,7 +60,7 @@
   "expected": 0,
   "killed": true,
   "restored_byte_identical": true,
-  "report": "mutant-0386-M5-restore-button-1790540591.json",
+  "report": "mutant-0386-M5-restore-button-1790542296.json",
   "first_error": "Error: e2e/qoder-ord0386-plan-version-history.spec.ts :: H4 — 只读屏上出现了 1 个可交互元素",
   "why": "a control grows on a screen that is supposed to be read-only"
  }

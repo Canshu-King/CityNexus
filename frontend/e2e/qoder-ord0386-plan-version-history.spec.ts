@@ -9,7 +9,7 @@
  * walk into:
  *   H3 `created_at: null` -- every stored version here has a write time (9 of 9), so the "no time
  *                            recorded" branch is only reachable by taking the value away;
- *   H6 the three sources -- `backend/app/schemas.py:434` declares INITIAL / REPLAN / MANUAL, but
+ *   H6 the three sources -- `backend/app/schemas.py:495` declares INITIAL / REPLAN / MANUAL, but
  *                            this journey holds only MANUAL rows;
  *   H5 HTTP 500            -- the read has to actually fail for the failure sentence to be judged.
  * Mutation is single-variable, applied to the real response fetched with `route.fetch()`: no field
@@ -301,7 +301,7 @@ test("H4 这一屏只读：没有可点的东西、没有写请求、也不借�
   expect(keyed, node("H4", `只读的列表带上了幂等键：${keyed} 次`)).toBe(0);
 
   /* Scoped to this panel on purpose: 恢复 already means autonomous recovery in this product
-     (frontend/src/i18n/LocaleContext.tsx:18 and :750), and that copy belongs on its own screens.
+     (frontend/src/i18n/LocaleContext.tsx:18 is the English nav label "Recovery" and :835 its Chinese 「恢复与执行」), and that copy belongs on its own screens.
      This order's rule is that *this* list never borrows the word. */
   const panelText = clean(await panel.innerText());
   expect(panelText.includes("恢复"), node("H4", `本屏出现了「恢复」，实读=${panelText.slice(0, 160)}`)).toBe(false);
