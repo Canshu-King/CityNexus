@@ -16588,6 +16588,45 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### CMDR 01:3x 落地两笔并换代 · 权威线一度编译不过的如实记录 @2026-09-28 01:3x+08
+
+落地序列（全部 ff-only，每笔落地前后各重读一次线尖）
+
+- `review/N2-ord0359-one-word-per-cause` 交来时 base 就是当代尖，门带 `--tests test_qoder_ord0359_ai_state_three_ways.py` 跑出后端读数，落地收据 `0c79b95a4a205040b888c8a2fd066cf34fb798db`，落地后线尖 `5899829c3ebaed9e582c92a0790cf809f113da6b`。
+- `review/N3-ord0366-share-link-one-tap` 交来时线已前进，重切为 `c215342802e7acc5073624555bb46fefeae336a0`，逐文件等于车道 blob 的证明在 `9826b22f069c71262db92595deb46cf734a5380f`，该笔落地收据 `09b29ea0fb64526b4d011b1f418bc97e830d22f1`；两笔的文件面交集为空，所以没有自动合并发生。
+- 换代到那枚尖时构建器返回 rc=1，产物为零，于是手机**停在上一代**，没有被换到一个编译不过的代上。
+
+编译不过的是什么、以及谁的责任
+
+- 报错原话位置：`frontend/src/features/planning/PlanWithAiSheet.tsx:1025` 列 72 处，原文是 `Expected ":" but found …`。
+- 真因不是 JSX 括号：我先按"缺右括号"下过一次判断，随即自己核对 `frontend/src/features/planning/PlanWithAiSheet.tsx:1026`、`:1030`、`:1034`、`:1038`、`:1042` 这五个结尾行都带 `)}`，那个成因当场作废。真因是中文文案里嵌了一对 ASCII 直双引号，在双引号字符串内部提前闭合了字符串。
+- 责任在我这一侧的部分更值得记：**落地门当时没有编译臂**，它在 01:19 对一枚 bundler 拒绝的候选回了 `READY_TO_LAND`。后端套件与 Q64 AST 尺都不看这个面，所以门是绿的而线是坏的。
+- 窄修只增加两个字符（两个反斜杠），屏幕上的字一字不变；修复提交的落地收据 `2988b6da14352733e1279691f30d0c74258713b7` 里 gate 格记着后端复跑读数，换代后手机侧探针 `e4e82133f3f6cb6c12db3fdd49b2bc9011bab5f4` 五面全真，且独立仪器从公网读到当代 asset 名。修复后线尖 `53a00d5e6552006ebfb7cc03d109cf4b675450dc`。
+
+### ORD-0372 · 给落地门上编译臂（commander 自做自测 @2026-09-28 01:3x+08）
+
+为什么归我
+
+- 规则要装在执行写的那道工具里。门是我写的，洞是门放出来的，所以补臂不派车道。
+
+新臂与它的两面自测
+
+- 门由 `preflight_and_land_r3.py` 换代为 `preflight_and_land_r4.py`，blob `9a0ee82f4f13aa278ff1e562b6c133581e852235`；派生脚本 `c257d1ac2286a981fb477cb98e5367dfc1b8f544`（r3 的 blob 身份已被既有收据引用，故走后继文件而不原地改写）。
+- 臂刻意 shell 出去调用换代用的同一个构建器 `cmdr_build_bundle_r1.py`，不在门里再实现一遍"能构建"的定义——两套定义正是这次被绕过的形状。
+- 正控（必须咬）：把车道那枚未转义 blob `f66d367655bd6a76d57a318e92d2201b5db21576` 挂回当代尖做成对照候选 `fe5a8ef5f5a44eeca4d85fdb9c7757323d4af3fb`，门判 `REFUSED`，格内 `vite_build_rc=1 dist=False index=False`，收据 `6b1d84f708f75c5a7c2bf4ba8d8712ad1bf9ee52`。
+- 反控（必须放行）：只加一行注释的可编译候选 `9b33a3e35d5c81724012b2e456ecdfaab6b123c8`，门判 `READY_TO_LAND`，格内 `builder_rc=0 vite_build_rc=0 dist_exists=true index_exists=true`，收据 `784877568c1a76d50ea67aac6a2b966e39a15f13`。
+- 我第一次反控跑错了对象：拿已经在线上的尖当候选，结果交集为空、臂被 skip，等于没测到放行方向；重做才是上面那条。
+
+顺带交出的隧道读数仪器
+
+- `cmdr_tunnel_read_r1.py` blob `e3d4d591e82259f37ff6f13fbf63acc6bd04fd53`：进程内 `ProxyHandler({})` 无视一切 `*_proxy`，按 TAB 切凭据且无 TAB 即 REFUSE，永不打印凭据值。
+- 它的由来：另一条车道报"隧道址不可达"，我在同一轮里把两种客户端上下文对量，读数落在 `0de1cde6c32ded6313e39b288ccf9fdd04a46b79`：尊重环境导出的代理时 curl 退出码为 rc=7 且拿不到任何 HTTP 状态，强制直连时同一 URL 同一时刻返回真实状态。该记录里同时列了三个本机代理端口均无监听条目、而链上三段的监听计数各为一。所以那是代理环境造出来的假不可达，不是链路状态变化。第二个坑是凭据文件形如 `user<TAB>password`、全文零冒号，把它直接喂给 `curl -u` 会出现"匿名立刻回绝、带凭据反而挂住"的假象，这个格式我先前派单时没讲。
+
+待落地项的卫生声明
+
+- `review/cmdr-selftest-badbuild-r1` 与 `review/cmdr-selftest-goodbuild-r1` 是我为自测造的对照，**永远不该落地**，它们的坐标已具名在上；我不删分支以免破坏任何已被引用的路径，但任何巡逻工具把它们列为待落地项时应直接跳过。
+
+
 ### N3 01:20+08 ORD-0366 交付：把「复制行程链接」放到 Today 一屏之内，命中测试判可达
 
 - 交付 A：`refs/heads/review/N3-ord0366-share-link-one-tap` 回读 `d5386378eeed0e8809ce351bc925b6b051ca1aa0`（`git ls-remote origin` 退出码读到 0，快进推送 `d0dc7dc6..d5386378`，没用 force）。base = 现尖 `4ef864cfa49b805e3d41b7f079f5fb4184ccec3d`（推前重读一次，同一条 `ls-remote` 里它仍是尖，坐标 `review/evidence/ord0366/diff_r2.json:2`）。权威线 0 次移动。
