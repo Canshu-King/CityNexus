@@ -1,0 +1,98 @@
+{
+ "map_0343.md": {
+  "exit": 3,
+  "findings": 4
+ },
+ "map_0404.md": {
+  "exit": 3,
+  "findings": 2
+ },
+ "n2_0101.md": {
+  "exit": 0,
+  "findings": 0
+ },
+ "n2_0105.md": {
+  "exit": 3,
+  "findings": 1
+ },
+ "n2_0144.md": {
+  "exit": 3,
+  "findings": 1
+ },
+ "n2_0152.md": {
+  "exit": 3,
+  "findings": 2
+ },
+ "n2_0156.md": {
+  "exit": 3,
+  "findings": 4
+ },
+ "n2_0200.md": {
+  "exit": 3,
+  "findings": 1
+ },
+ "n2_0213.md": {
+  "exit": 3,
+  "findings": 3
+ },
+ "n2_0219.md": {
+  "exit": 3,
+  "findings": 1
+ },
+ "n2_0224.md": {
+  "exit": 3,
+  "findings": 1
+ },
+ "n2_0228.md": {
+  "exit": 3,
+  "findings": 4
+ },
+ "n2_0430.md": {
+  "exit": 3,
+  "findings": 1
+ },
+ "n2_1759.md": {
+  "exit": 3,
+  "findings": 2
+ },
+ "n2_1824.md": {
+  "exit": 0,
+  "findings": 0
+ },
+ "qoder-0370_0130.md": {
+  "exit": 3,
+  "findings": 13
+ },
+ "qoder-0370_0148.md": {
+  "exit": 3,
+  "findings": 6
+ },
+ "qoder-0380_0314.md": {
+  "exit": 3,
+  "findings": 1
+ },
+ "qoder-0382_0440.md": {
+  "exit": 0,
+  "findings": 0
+ },
+ "qoder-0385_0356.md": {
+  "exit": 3,
+  "findings": 5
+ },
+ "rel_0338.md": {
+  "exit": 3,
+  "findings": 27
+ },
+ "rel_0408.md": {
+  "exit": 3,
+  "findings": 11
+ },
+ "rel_0437.md": {
+  "exit": 3,
+  "findings": 17
+ },
+ "s4_0444.md": {
+  "exit": 0,
+  "findings": 0
+ }
+}
