@@ -16588,6 +16588,48 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### N3 01:20+08 ORD-0366 交付：把「复制行程链接」放到 Today 一屏之内，命中测试判可达
+
+- 交付 A：`refs/heads/review/N3-ord0366-share-link-one-tap` 回读 `d5386378eeed0e8809ce351bc925b6b051ca1aa0`（`git ls-remote origin` 退出码读到 0，快进推送 `d0dc7dc6..d5386378`，没用 force）。base = 现尖 `4ef864cfa49b805e3d41b7f079f5fb4184ccec3d`（推前重读一次，同一条 `ls-remote` 里它仍是尖，坐标 `review/evidence/ord0366/diff_r2.json:2`）。权威线 0 次移动。
+- 分批 6 枚 sha（`review/evidence/ord0366/diff_r2.json:31` 起，逐枚可 `git cat-file`）：`86a9cc717706e6bb344a956b0e548638d7668fe5` 产品挂载、`07cc0ac1e295e1d72925f0d616b70b6ff7763753` 门、`749d7db22b7aff522eb777a4cda0e62e70563950` 门的测法修正、`d1036f5f4686f515450262bbdf6aacd2ab9fb227` 可访问性树判据修正、`d0dc7dc6e7d95854bb4888be83a770cac0f3444e` 视觉修正、`d5386378eeed0e8809ce351bc925b6b051ca1aa0` 每臂一份读数。
+- 差集：`review/evidence/ord0366/diff_r2.json:4` 读到改动落在 4 个文件、`:5` 新增 412 行、`:6` 删除 2 行。逐文件：`diff_r2.json:9` spec 新增 395 行、`:13` `frontend/src/app/V8Experience.tsx` 新增 5 行、`:17` `frontend/src/design-tokens.css` 新增 6 行、`:21` `frontend/src/features/inbox/JourneyLinkAction.tsx` 新增 6 行与 `:22` 删除 2 行。四枚 blob 在 `diff_r2.json:26`、`:27`、`:28`、`:29`。
+- 改了什么、为什么：`frontend/src/app/V8Experience.tsx:2791` 在 Today 的 `hub-secondary-actions` 那一行末尾挂 `<JourneyLinkAction journeyId={data.journey.id} variant="quiet" />`，因为要件要的是一屏一次点击，而那一行是这一屏已有的 quiet 文本行——不新建屏，也不给 hero 之外再造第二枚主按钮（Pass-8 裁定保住，见截图）。`frontend/src/features/inbox/JourneyLinkAction.tsx:15` 加 `variant`（默认值与样式分支在 `frontend/src/features/inbox/JourneyLinkAction.tsx:40` 与 `:61`），只换按钮的样式类，标签仍走同一个键 `inbox.copyJourneyLink`（`frontend/src/i18n/LocaleContext.tsx:1230`），所以是**同名**入口而不是第二个名字。本单动了 `V8Experience.tsx` 共 5 行：ORD-0357 的 R4 当时禁改那枚文件，但本单的要件本身就落在 Today 屏上，而 Today 屏就在那文件里（`function Hub` 在 `frontend/src/app/V8Experience.tsx:2231`），没有第二条不改它就能满足要件的路；改动只是 import 与一次挂载，未动其中任何既有文案。
+- 要件 1（两臂，都读 `readText()` 正文，不读 aria/data）：`live_checks/e2e_logs/n3_d5386378_011535.json:23` 退出码读到 0、`:24` verdict 读到 GREEN、`:26` passed 读到 7（6 臂 + real-seed project）。Today 臂 `review/evidence/ord0366/cmdr011535n3__T1_top.json:13` 读到剪贴板正文 `http://127.0.0.1:5470/v8/bf873fbb-b038-4c15-87d5-828ca7fffea9`，长度 `:14` 读到 61 B，`:12` 打之前先写进哨兵 `n3-ord0366-sentinel-not-a-journey-link`，`:11` 的 `two_sources_agree` 读到 true（`:8` 的 `staged_id` 与 shell 采纳的 id 两处独立取到再比）。工作台臂 `cmdr011535n3__B1.json` 的 `clipboard_after` 与 `expected_link` 同值、`struck_box` 高度读到 44 px。
+- 要件 1 的可达性判据是命中测试：`cmdr011535n3__T1_top.json:16` 的 `struck_box` 记 x=17、y=246、w=78、h=44，三个滚动位各自先量 `scroll_y_before_centring`（`:22` 读到 0，middle 那件读到 510，bottom 那件读到 1020），把控件滚进视野、等 sticky 落定，再用 `document.elementFromPoint(中心)` 确认命中的是它本身（`frontend/e2e/qoder-ord0366-share-link-one-tap.spec.ts:69`），最后用鼠标坐标打那一点（`frontend/e2e/qoder-ord0366-share-link-one-tap.spec.ts:294`）。`scrolled > 0` 这类间接量没有用作判据。
+- 要件 2（零尺寸同名节点，实测结论与你的现场不同）：`review/evidence/ord0366/cmdr011535n3__I2.json:20` 读到 Today 上 `行程工作台` 有一枚可打节点 w=118 h=44、`excluded_by` 读到 null；`:39`、`:52`、`:76`、`:89` 四格读到 `excluded_by` = `display:none@aside.v8-sidebar`、w=0 h=0。也就是你点超时的那枚在桌面侧栏里，被祖先 `display:none` 排除，**本来就不在可访问性树里**（读屏也不读它），它是按名字查询会命中的自动化坑，不是用户点得到的入口。所以这一格我没有改产品，而是把判据写成「凡仍在可访问性树里的同名节点，必须有尺寸且中心打得着」（`frontend/e2e/qoder-ord0366-share-link-one-tap.spec.ts:259`，判据定义在同件 `:243`），第一版我按节点自身样式判、把侧栏那枚误判成违规，修正在 `d1036f5f4686f515450262bbdf6aacd2ab9fb227`。若你要的是把桌面侧栏在手机上整个不渲染（而不是 `display:none`），说一声我另开一单，那是共享壳层的改动、不该我顺手做。
+- 要件 2 的另一半（我的控件自己有没有零尺寸孪生）：`cmdr011535n3__I1.json` 的 `zero_size` 与 `unhit` 两格都读到 0，`matched_nodes` 读到 2（外层 div 与按钮，两枚都有尺寸都打得着）；工作台臂同一根杆在 `cmdr011535n3__B1.json` 也读到 0。
+- 反例（真跑，最终头上）：`review/evidence/ord0366/mutations_r1.json:8` 读到 M1（只写文案不写剪贴板）量具退出码 3、`:9` `gate_went_red` 读到 true、`:10` run_id `cmdr011628n3te`、失败 4 格（三滚动位 + 工作台）；`:24`、`:25`、`:26` 是 M2（写占位 uuid）同样 4 格红、run_id `cmdr011656n3id`。两件都按字节还原：`:17` 与 `:33` 的 `restored_byte_identical` 读到 true，还原后 sha256 分别是 `:16` 的 `56c976404fe3a871…` 与 `:32` 的 `76a5953531ab6c4e…`。
+- Q64/Q70/Q71：本单屏上没有新增任何网络或设备原文，`data-cnx-field` 仍只贴契约字段名（`frontend/src/features/inbox/JourneyLinkAction.tsx:63` 与 `:73`），判据读的是 `readText()` 正文而不是 aria 或 data 属性。
+- 我自己走的那条路径：起自己的栈（`live_checks/e2e_logs/n3_d5386378_011535.json:9` 与 `:10` 读到端口内 5470 与后端 6470，一次性库 `_cmdr011535n3.db`，AI 关、剔 key 只报名字），390×844 真 Chromium，从 Today 一次点击复制，再回工作台点一次对同一枚 id；并且**看了截图**——`review/evidence/ord0366/cmdr011535n3__I1_today_pose.png`。第一版截图里这条入口孤零零掉在第二行、我补的间隔点还落在行首成了游离符号，那是我自己引入的毛病，修在 `d0dc7dc6e7d95854bb4888be83a770cac0f3444e`，第三张图才读作同一列表的续行。
+- 什么没有改善：手机链 `:4781`/`:4782` 与公网隧道我一次没碰，那上面跑的是你的构建产物，不含这 6 批，所以「手机上真机点过」这句只有我自己的 Chromium 证据、没有部署态证据；整套 e2e 回归读到 0 次运行（只跑本单 spec 与上单 `qoder-ord0357-journey-link.spec.ts` 的回归，后者在 `live_checks/e2e_logs/n3_d5386378_011917.json:23` 退出码读到 0、`:26` passed 读到 7）；桌面侧栏在手机上仍是以 `display:none` 隐藏而非不渲染；`/v8/<uuid>` 读路行为仍属 ORD-0351，本单没测。
+- 落地状态（写块之后现场又动了，按新读数补一条）：`review/evidence/ord0366/landing_r1.json:2` 读到 `ls-remote` 退出码 0，`:4` 读到现尖已是 `c215342802e7acc5073624555bb46fefeae336a0`、`:5` 读到我的 `refs/heads/review/N3-ord0366-share-link-one-tap` 仍是 `d5386378eeed0e8809ce351bc925b6b051ca1aa0`；`:7` 读到「交付头是现尖的祖先」退出码 0，也就是这六批已经在权威线里、不需要我再重基。四枚文件在尖上与在我头上逐字相同：`landing_r1.json:9`、`:10`、`:11`、`:12` 四格都读到 true。
+- 一条现场事实要报备：本车道的 `frontend/node_modules` 是我 09-26 依你当时的指示建的 junction（指向 `_qoder_integration_20260919`），本轮**没有新建**任何 junction 或硬链接快照，也没有对含 junction 的树跑 `worktree remove --force`；若要收掉这棵树，请先按 HARDLINK_SNAPSHOT_PROHIBITION_V1 的方式只 `cmd /c rmdir` 那个链接。
+
+
+### ORD-0359 渲染臂重跑（lane N2）— 撤回"新址不可达"的成因：是毒代理＋凭据分隔符两项，不是链路；仪器原输出已落盘为可 cat-file 的件
+
+一、撤回与改写成因（不覆盖旧块，Q57：`n2_0101.md`、`n2_0105.md` 原样留）
+- 撤回：`n2_0105.md` 里"09-26 量到鉴权拒绝、今天量到连不上，两回事"这句链路结论。它不成立。同一条址在两种客户端上下文下的两种读数，不是两种故障。
+- 改成因一（毒代理）：这台机器导出的 `HTTP_PROXY`/`HTTPS_PROXY` 指向无人监听的本地口，`curl` 走它就是 exit 7 + http_code 000。你的对照我复现了：同样的探针在进程内禁代理后拿到 200。
+- 改成因二（凭据分隔符）：`D:/moodle/_qoder_preview_20260920/run/preview_auth.txt` 是 `user<TAB>password`，零个冒号。我此前用 `cat` 结果整串塞进 `-u`，含 TAB 的串被当成用户名，于是"匿名秒回、带凭据反而挂"，我误读成链路问题。
+- 因此"需要你在能出网的位置代量"这句也撤回：新址在我这侧可达，是我自己的两处仪器错。
+
+二、用你的仪器重跑（原输出未手转述）
+件 `review/ord0359-r3-readings/TUNNEL_RAW.json`，blob `b4fd94526dac7f9f62ce2c3b8c34f8c35d42147b`（在候选头 `5899829c3ebaed9e582c92a0790cf809f113da6b` 上，`git ls-remote` 回读同值）。跑法就是你给的：系统 python 3.10、毒代理留在环境里不剔、`--base` 指向新址。件内两枚探针（第 5 行与第 12 行起）给出：`/` 与 `/api/v1/health` 的 http_status、content_type、body_bytes、elapsed_ms、以及首页点名的 asset 枚数；第 3 行是 authenticated 标记，第 2 行是 base。工具自己的判语行写着 2/2 probes answered with an HTTP status。
+代次点名（同件 asset 列）：`assets/index-BEEP22s_.js` 与 `assets/index-DpqSOpMP.css`，健康体 `ai_state=DISABLED_BY_OPS`、`status=ok`、`database=ok`。这正是 ORD-0367 换代那一代。
+
+三、渲染臂的真实状态：**0/3 仍未量到**（这一格的依据是下节件 `review/ord0359-r3-readings/BUNDLE_PROBE.json` 与同目录 `TUNNEL_RAW.json`：它们给的是包内字符串与 HTTP 层，不是屏上文字），但原因换了一条更准的
+仪器给的是 HTTP 层读数（状态码/字节数/代次名），不是屏上渲染文字，所以我不能用它抵渲染臂。为把"能不能拿到"这件事说清，我另外量了一次**部署包里到底有没有那几句**：件 `review/ord0359-r3-readings/BUNDLE_PROBE.json`，blob `bbb776fb5dd06cbf05bf9a02c4f79d8f6e799e07`，同头。它取首页自己点名的那枚 JS（大小与 sha256 前 12 位都在件里），按字符串探四句：缺凭据、运营侧的设置、答复了请求但拒绝 = **命中**；r3 新写的正向句"配了一个 AI 凭据" = **未命中**。
+读法（这是本轮最有价值的一条现场事实）：那一代带着 r2 的三句，不带 r3 改写的正向句——与"r3 还只是 review ref、没落权威线"完全一致，说明换代口径没骗人。
+渲染仍取不到的具体障碍：那一屏要 (a) 带基本鉴权的浏览器会话（仪器在进程内处理鉴权，浏览器顶层导航只能把凭据放进 URL，我不会那么做，也不想在任何日志里留下它），(b) 点开"AI 帮我规划"这一步交互，(c) 三种态要三种服务端环境，而线上这台只有 `DISABLED_BY_OPS` 一种。所以我不能在同一代上量到三句渲染文字，只能量到一句——而且我至今一次都没真正渲染过。
+要闭这条臂请给我其一：许可我用本机 Chrome 会话走一次带鉴权的交互（我把凭据留在浏览器凭据管理里、不进命令行），或者你在换代时顺手截三张分别处于三种环境的屏。我不拿包内字符串冒充当屏上文字。
+
+四、r3 本体不变（你已收到，这里只登记）
+枚举三态实测、跳过路径改为从唯一 `STATE_SENTENCES` 取词、读路由与 `/health` 同源；`PROVIDER_REFUSED` 仍记"夹具覆盖、无线上读数"，保持"未改善"而不是"已交付"。本块新增两个件都在候选头 `5899829c3ebaed9e582c92a0790cf809f113da6b` 上，未动权威线。
+
+自测：本块内每一枚满 40 位 token 都逐枚 `git -C D:/moodle/CityNexus cat-file -e` 通过（我不写枚数——枚数会随这句话本身改变，属自引用，量具线 ORD-0371 在收的那类不一致）；无非-40 位 hex 残片、无省略号；每个计数所在行同句带件名与行号或 blob。
+
+
 ### ORD-0367 勘误补格 · 文案尺看不见的 RENDERED 格（commander @2026-09-28 01:0x+08，不改已插块）
 
 已插入的 `### ORD-0367` 块原文不动（已发布路径不重写，常设规则 Q57），本块只补一格并收窄一句过头主张。
