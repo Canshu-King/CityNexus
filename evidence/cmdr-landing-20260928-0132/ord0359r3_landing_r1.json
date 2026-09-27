@@ -1,0 +1,183 @@
+{
+ "schema": "CNX_CMDR_LANDING_PREFLIGHT_V1",
+ "lane": "commander 494abfd7",
+ "at_local": "2026-09-28T01:17:11+0800",
+ "mode": "LAND",
+ "authoritative_line": "mirror/integration-frontend-apple-pass1",
+ "tip_re_read_from_github_before": "4ef864cfa49b805e3d41b7f079f5fb4184ccec3d",
+ "candidate_ref": "refs/heads/review/N2-ord0359-one-word-per-cause",
+ "candidate_tip": "5899829c3ebaed9e582c92a0790cf809f113da6b",
+ "genealogy": {
+  "ff_possible_rc": 0,
+  "ff_possible": true,
+  "merge_base": "4ef864cfa49b805e3d41b7f079f5fb4184ccec3d",
+  "line_only_commits": 0,
+  "candidate_only_commits": 6
+ },
+ "file_sets": {
+  "line_side_since_base": [],
+  "candidate_side_since_base": [
+   "backend/app/agent/ai_availability.py",
+   "backend/app/agent/runtime.py",
+   "backend/tests/test_qoder_ord0359_ai_state_three_ways.py",
+   "contracts/openapi.yaml",
+   "frontend/e2e/qoder-plan-ai-thinking.spec.ts",
+   "frontend/src/features/planning/PlanWithAiSheet.tsx",
+   "review/ord0359-r3-readings/BUNDLE_PROBE.json",
+   "review/ord0359-r3-readings/READINGS.md",
+   "review/ord0359-r3-readings/TRANSPORT_TUNNEL.md",
+   "review/ord0359-r3-readings/TUNNEL_RAW.json"
+  ],
+  "intersection": [],
+  "product_introduced_by_candidate": [
+   "backend/app/agent/ai_availability.py",
+   "backend/app/agent/runtime.py",
+   "frontend/src/features/planning/PlanWithAiSheet.tsx"
+  ]
+ },
+ "merge_tree": {
+  "exit": 0,
+  "first_line": "098108fab5e93c5fbe5d72c8feabf613917dd642",
+  "conflict_reported": false,
+  "stderr_head": ""
+ },
+ "gate_run": {
+  "requested": [
+   "test_qoder_ord0359_ai_state_three_ways.py"
+  ],
+  "collect_exit": 0,
+  "collected": null,
+  "test_exit": 0,
+  "summary": [
+   "13 passed, 2 warnings in 2.60s"
+  ],
+  "export": "D:/moodle/_qoder_cmdr_ref_20260921/snap_preflight_011634",
+  "blob_equality": [
+   {
+    "path": "backend/app/agent/ai_availability.py",
+    "candidate_blob": "88295bd6d5940cfbaaa80da2443cfcd3228fd4ca",
+    "export_blob": "88295bd6d5940cfbaaa80da2443cfcd3228fd4ca",
+    "equal": true
+   },
+   {
+    "path": "backend/app/agent/runtime.py",
+    "candidate_blob": "02e0314fa531a3d89904ededa74a8f4d80a1d41f",
+    "export_blob": "02e0314fa531a3d89904ededa74a8f4d80a1d41f",
+    "equal": true
+   },
+   {
+    "path": "backend/tests/test_qoder_ord0359_ai_state_three_ways.py",
+    "candidate_blob": "b70b07e3c14ce2c4c5cbb8212c726b43e152d59d",
+    "export_blob": "b70b07e3c14ce2c4c5cbb8212c726b43e152d59d",
+    "equal": true
+   },
+   {
+    "path": "contracts/openapi.yaml",
+    "candidate_blob": "60a8730409c16e87cfe092fc66345aef0fdf02c3",
+    "export_blob": "60a8730409c16e87cfe092fc66345aef0fdf02c3",
+    "equal": true
+   },
+   {
+    "path": "frontend/e2e/qoder-plan-ai-thinking.spec.ts",
+    "candidate_blob": "dfc5d644ddece489ccfe7912134ddd80beb5ed5c",
+    "export_blob": "dfc5d644ddece489ccfe7912134ddd80beb5ed5c",
+    "equal": true
+   },
+   {
+    "path": "frontend/src/features/planning/PlanWithAiSheet.tsx",
+    "candidate_blob": "f66d367655bd6a76d57a318e92d2201b5db21576",
+    "export_blob": "f66d367655bd6a76d57a318e92d2201b5db21576",
+    "equal": true
+   },
+   {
+    "path": "review/ord0359-r3-readings/BUNDLE_PROBE.json",
+    "candidate_blob": "bbb776fb5dd06cbf05bf9a02c4f79d8f6e799e07",
+    "export_blob": "bbb776fb5dd06cbf05bf9a02c4f79d8f6e799e07",
+    "equal": true
+   },
+   {
+    "path": "review/ord0359-r3-readings/READINGS.md",
+    "candidate_blob": "6824d5547eebcc519b58342bbfd58330f7956181",
+    "export_blob": "6824d5547eebcc519b58342bbfd58330f7956181",
+    "equal": true
+   },
+   {
+    "path": "review/ord0359-r3-readings/TRANSPORT_TUNNEL.md",
+    "candidate_blob": "e31c84105be8bd0f7ea6a3ad6f905f84aee08c2d",
+    "export_blob": "e31c84105be8bd0f7ea6a3ad6f905f84aee08c2d",
+    "equal": true
+   },
+   {
+    "path": "review/ord0359-r3-readings/TUNNEL_RAW.json",
+    "candidate_blob": "b4fd94526dac7f9f62ce2c3b8c34f8c35d42147b",
+    "export_blob": "b4fd94526dac7f9f62ce2c3b8c34f8c35d42147b",
+    "equal": true
+   }
+  ],
+  "whole_suite": {
+   "collect_exit": 0,
+   "collected": 1393,
+   "interrupted": false,
+   "error_lines": [
+    "tests/test_qoder_ord0332_error_receipt.py::test_R7_the_envelope_keeps_every_field_it_already_had",
+    "tests/test_qoder_ord0332_error_receipt.py::test_R8_the_seed_is_read_off_the_real_request_not_just_the_dataclass",
+    "tests/test_solver_runtime_policy.py::test_unexpected_solver_programming_error_is_not_silently_hidden"
+   ],
+   "tail": [
+    "    _PortalFactoryType = Callable[[], AbstractContextManager[anyio.abc.BlockingPortal]]",
+    "-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html",
+    "1393 tests collected in 7.32s"
+   ],
+   "cmd": "D:/moodle/CityNexus/.venv/Scripts/python.exe -m pytest --collect-only -q tests  (cwd=<export>/backend, PYTHONPATH=<export>)"
+  },
+  "collect_stdout_tail": [
+   "",
+   "-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html",
+   "13 tests collected in 3.27s"
+  ],
+  "interpreter": "Python 3.12.14 (main, Aug 25 2026, 14:01:42) [MSC v.1944 64 bit (AMD64)]",
+  "exposure": {
+   "ruler_blob": "d3f66ce9fecd0790981a4fcdeb5e36b1c0fd10f2",
+   "ruler_blob_computed": null,
+   "ruler_file": "ui_exposure_taint_ast_r7b.cjs",
+   "candidate_files_in_view": 1,
+   "tip_cells": 11,
+   "cand_cells": 11,
+   "growth_by_file_and_rule": {},
+   "unpaired_added": [],
+   "added_line_exact": [
+    "PlanWithAiSheet.tsx:1098|UPSTREAM_PROSE_TO_ATTRIBUTE_SLOT",
+    "PlanWithAiSheet.tsx:1123|UPSTREAM_TEXT_VIA_HELPER_TO_DOM",
+    "PlanWithAiSheet.tsx:1162|UPSTREAM_TEXT_VIA_HELPER_TO_DOM"
+   ],
+   "shifted_only": true,
+   "removed_count": 3,
+   "removed": [
+    "PlanWithAiSheet.tsx:1096|UPSTREAM_PROSE_TO_ATTRIBUTE_SLOT",
+    "PlanWithAiSheet.tsx:1121|UPSTREAM_TEXT_VIA_HELPER_TO_DOM",
+    "PlanWithAiSheet.tsx:1160|UPSTREAM_TEXT_VIA_HELPER_TO_DOM"
+   ],
+   "disclosed_slip": "a same-file, same-rule relocation with equal counts reads as a shift; the AST ruler has no cell identity"
+  }
+ },
+ "problems": [],
+ "verdict": "READY_TO_LAND",
+ "landing": {
+  "http": 200,
+  "response_head": "{'ref': 'refs/heads/mirror/integration-frontend-apple-pass1', 'node_id': 'REF_kwDOUhlJJ9oAMnJlZnMvaGVhZHMvbWlycm9yL2ludGVncmF0aW9uLWZyb250ZW5kLWFwcGxlLXBhc3Mx', 'url': 'https://api.github.com/repos/Ca",
+  "tip_after": "5899829c3ebaed9e582c92a0790cf809f113da6b",
+  "branches_route": "5899829c3ebaed9e582c92a0790cf809f113da6b",
+  "both_routes_agree": true,
+  "landed": true
+ },
+ "discipline": {
+  "evidence_paths_overwritten": 0,
+  "databases_opened": 0,
+  "surfaces_started_or_stopped": 0,
+  "credential_values_printed": 0,
+  "candidate_refs_pushed_by_commander": 0
+ },
+ "claim_kind": "git_and_pytest_determined",
+ "claimed_result": null,
+ "derived_result": null
+}
