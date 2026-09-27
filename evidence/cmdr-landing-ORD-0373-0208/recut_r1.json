@@ -1,0 +1,46 @@
+{
+ "order": "ORD-0373",
+ "line": "origin/mirror/integration-frontend-apple-pass1",
+ "tip": "961836390c5325863acdc1834d4a4cd16fd97081",
+ "cand": "affe9f6fccdbf6f926b42e0950e61638c0518588",
+ "merge_base": "53a00d5e6552006ebfb7cc03d109cf4b675450dc",
+ "commits_tip_ahead_of_base": 6,
+ "commits_cand_ahead_of_base": 2,
+ "merge_tree_rc": 0,
+ "changed_files": [
+  "frontend/e2e/_qoderNamedHits.ts",
+  "frontend/e2e/qoder-ord0373-name-hit-scope.spec.ts"
+ ],
+ "files": [
+  {
+   "path": "frontend/e2e/_qoderNamedHits.ts",
+   "cand_blob": "cf81c3d287f31efd8e1d3cb8346e61e04f96fee2",
+   "merged_blob": "cf81c3d287f31efd8e1d3cb8346e61e04f96fee2",
+   "identical": true,
+   "cand_changed_the_file": true
+  },
+  {
+   "path": "frontend/e2e/qoder-ord0373-name-hit-scope.spec.ts",
+   "cand_blob": "567d9aecc1b20a44b89e346504653cb9c4532557",
+   "merged_blob": "567d9aecc1b20a44b89e346504653cb9c4532557",
+   "identical": true,
+   "cand_changed_the_file": true
+  }
+ ],
+ "merged_tree": "fd8ca26efb2c731dd0a14edda1050654ad2659c3",
+ "auto_merged_files": [],
+ "recut_commit": "bb3f5853d35835bd5078a2cccba15e2e7a82f213",
+ "readback_tree": "fd8ca26efb2c731dd0a14edda1050654ad2659c3",
+ "readback_tree_matches": true,
+ "readback_parents": [
+  "961836390c5325863acdc1834d4a4cd16fd97081",
+  "affe9f6fccdbf6f926b42e0950e61638c0518588"
+ ],
+ "readback_parent_tip": true,
+ "verdict": "RECUT_OK",
+ "pushed_ref": "refs/heads/cmdr/land-ord0373-recut",
+ "push_rc": 0,
+ "push_stderr": "remote: \nremote: Create a pull request for 'cmdr/land-ord0373-recut' on GitHub by visiting:        \nremote:      https://github.com/Canshu-King/CityNexus/pull/new/cmdr/land-ord0373-recut        \nremote: \nTo github.com:Canshu-King/CityNexus.git\n * [new branch]        bb3f5853d35835bd5078a2cccba15e2e7a82f213 -> cmdr/land-ord0373-recut",
+ "ls_remote": "bb3f5853d35835bd5078a2cccba15e2e7a82f213\trefs/heads/cmdr/land-ord0373-recut",
+ "ls_remote_matches": true
+}
