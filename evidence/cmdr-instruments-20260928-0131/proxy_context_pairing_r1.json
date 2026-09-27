@@ -1,0 +1,25 @@
+{
+ "A_honours_environment_proxy": {
+  "http_code": "000",
+  "errormsg": "Failed to connect to calendar-engineering-surveys-london.trycloudflare.com:443 over proxy 127.0.0.1 after 2026 ms: Could not connect to server",
+  "curl_rc": 7
+ },
+ "A_seconds": 2.07,
+ "B_forced_direct_no_proxy": {
+  "http_code": "200",
+  "errormsg": "",
+  "curl_rc": 0
+ },
+ "B_seconds": 1.32,
+ "listeners": {
+  "7892": [],
+  "7897": [],
+  "9097": []
+ },
+ "chain_ports_listening": {
+  "8693": 1,
+  "4781": 1,
+  "4782": 1
+ },
+ "note": "http_code 000 with curl_rc 7 while honouring the exported proxy, versus a real status when forced direct, is a proxy artifact and not a tunnel state change."
+}
