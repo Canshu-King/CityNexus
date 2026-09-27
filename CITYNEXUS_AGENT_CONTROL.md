@@ -16588,6 +16588,38 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### ORD-0367 · 收「APP解析与应用」车道的文案语域档与色阶档 · commander @2026-09-28 00:5x+08
+
+来源与形状
+
+- 车道分支 `review/Q-pitravel-token-tiers` 的 tip 是 `031e381e0f2c6412ac63a7f1314c0951c5609125`，它切的 base 是 `6ee21eddba60303e8f0f46907df9501ee0149e6e`。
+- 两枚产品文件在车道 base 与当时的权威尖 `baaa07117003320292d76a5f0c383952071b7364` 上 blob 相同：`frontend/src/design-tokens.css` 为 `6f7ba871d9d57c41b9060b7098def7a8ae396c19`，`frontend/src/i18n/LocaleContext.tsx` 为 `f7272db5ff16ba367563e746f3054c41ea078ffa`，所以本单没有合并面。
+- 重切结果 `4ef864cfa49b805e3d41b7f079f5fb4184ccec3d`（merged tree `cacb483db09e994f103dd222291006df6646cc3e`）落地后成为现权威尖，逐文件等于车道 blob 的证明在 `80767f02e6e132f7d804c6aead9772f913a9f5b3`。
+
+commander 亲跑两把尺（不采信车道自述的读数）
+
+- 色阶尺 `tools/cnx_token_tiers_r1.py` blob `47bf6317d4dd7fc2fbb35c6bbc35b591640ae870`：PARITY 那一格的基线重解析计数印在 `948398a35a69611bbf8c3a9f0c5eeabaae1e9e6f`；`--mutant` 臂的注入与捕获印在 `f41169fcb4c246a30b8d7565125118dac6347462`，四格 M1 到 M4 全被抓。
+- 文案尺 `tools/cnx_copy_tiers_r1.py` blob `b9d2300773da37a098b8e8995d662face9063a9f`：REGISTER_PARITY 与 NO_GROWTH 的实测行印在 `02e4bb89553311c2105f97c65b38d64ecf6d631f`；`--mutant` 臂印在 `1dc692897b05b4997485b70096f993eb1b73177e`，K1 到 K3 全被抓。
+- 我在尺之外自己反查了一处最危险的形：被 e2e 逐字钉住的 `hub.continuationUnconfirmable` 在候选与基线里是同一行文本，行位 `frontend/src/i18n/LocaleContext.tsx:880`，钉它的断言在 `frontend/e2e/qoder-continuation-owner.spec.ts:30` 与 `frontend/e2e/qoder-continuation-resume-carries-identity.spec.ts:31`。
+- 我还把全部改动旧值及其片段回扫了 e2e 树，粗扫器报出的两处耦合经眼看完上下文后判为假阳性：`frontend/e2e/v10-inbox.spec.ts:13` 匹配的是表单 label 而不是本单改的 key，`frontend/e2e/qoder-ord0323-two-exposure-cells.spec.ts:147` 的 `extraction_mode` 是后端字段名。
+
+手机换代
+
+- 换代收据 `2a583d1ba546159d7cf9901ba6e216cacafa0103` 的 overall 一格从实测行导出；手机侧探针 `622f000511f42bfef23a90d30f1ba4b259c91e35` 判 DEPLOYED_AND_BYTE_IDENTICAL_ON_PHONE_SIDE，五面决策位全为真。
+- 同一枚探针 blob 里照抄了它自己的边界原话：传输层同一性，不证明应用可渲染，也不证明旅客能走完一个方案。这句话不因为本单绿了就作废。
+
+本单没有声称的部分
+
+- 未跑后端套件：落地门把 test_exit 与 collect_exit 记为未测量，见 `8b7c6a8d96c83c32cb8ec786e89165403c5530ed`，原因是我没有向门传 `--tests`；候选不含 `backend/` 路径。
+- 隧道址在换代时换过：旧址归档未删，新址只写进本机 `D:/moodle/_qoder_preview_20260920/run/tunnel_url.txt` 与换代收据。
+
+换代时顺手量到的新缺陷（另开 ORD-0370，本单不修）
+
+- 在**已部署的 asset** 里量到组件自己造句的兜底：`body ?? (flag ? "确认失败" : "Approval failed")`，源站具名 `frontend/src/features/agent/CopilotDock.tsx:384`。
+- 同一形其余具名：`frontend/src/features/agent/CopilotDock.tsx:364`、`frontend/src/features/agent/CopilotDock.tsx:415`、`frontend/src/features/execution/LiveRecovery.tsx:238`、`frontend/src/features/inbox/JourneyInboxWorkbench.tsx:805`。
+- 更宽的裸兜底面计数与口径区分（真缺陷数与任意双语三元的分母不是一回事）写在 `b83202eb7f9b165c1c8428615e86e00f37be122c`。文案尺看不见这一族，因为它只读 `frontend/src/i18n/LocaleContext.tsx`。
+
+
 ### CMDR 19:4x · 我给链留了一班只读哨兵（计划任务，每十分钟一条健康判定），并把首次触发发布成外读件
 
 **装了什么**：Windows 计划任务 `CNXChainWatchdog` 跑 `run/cmdr_chain_watchdog.bat`，后者只做一件事——调用已落地的 `tools/chain_self_heal.mjs --detect-only`，把带时间戳的判定追加到 `D:/moodle/_qoder_preview_20260920/run/chain_watchdog.log`，并把最近一次完整判定落在同目录 `watchdog_last.json`。我选了只读模式而不是修复模式：那件工具自己规定 `--detect-only` 不 spawn、不写链，所以它不可能半夜给我起出第二个后端；真要自动重启，得先有车道那两臂反例的收据（已派给 `8ccd71d8`），不是我今晚顺手打开的开关。
