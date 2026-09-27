@@ -828,14 +828,13 @@ button[data-testid^="mode-"],
    already wraps, so the separator landed alone at the start of the second line and read as a stray
    bullet rather than as part of the list. */
 .v8-hub-actions .journey-link-action { display: inline-flex; align-items: center; gap: 8px; }
-/* A border-left separator looked wrong here: these buttons inherit a
-   border-radius, so the 1px edge drew an arc. A typographic middot keeps the
-   row quiet without painting a box. */
-.v8-hub-actions .v8-quiet-button + .v8-quiet-button::before {
-  content: "·";
-  margin-right: 16px;
-  color: var(--cn-ink-tertiary);
-}
+/* ORD-0375: no typographic separator here, in either direction. The row was measured at 320x568,
+   360x740, 390x844 and 430x932 (`review/evidence/ord0375/cmdr022639n3__Q1.json`) and it wraps at every
+   one of those widths. A leading `::before` put a lone middot at the start of the wrapped line (seen at
+   320); moving it to a trailing `::after` did not fix that, it moved the orphan to the end of line one
+   at all four widths -- the same defect, wider. A pseudo-element cannot know where a line break lands,
+   so the punctuation is gone and the row's own 16px column gap carries the separation. Nothing was
+   removed but decoration: all four controls are still rendered and strikable at all four widths. */
 
 
 /* ---------------------------------------------------------------------------
