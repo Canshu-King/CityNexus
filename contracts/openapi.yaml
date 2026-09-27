@@ -1293,7 +1293,11 @@ paths:
     post:
       operationId: discoverProviderMesh
       responses:
-        '200': {description: Provider mesh discovery and evidence}
+        '200':
+          description: Provider mesh discovery and evidence
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/RealCityDiscoveryResponse'}
   /journeys/{journey_id}/real-city/discover:
     parameters: [{$ref: '#/components/parameters/JourneyId'}]
     post:
@@ -1303,7 +1307,11 @@ paths:
         content:
           application/json: {schema: {type: object}}
       responses:
-        '200': {description: Real or sealed captured city candidates}
+        '200':
+          description: Real or sealed captured city candidates
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/RealCityDiscoveryResponse'}
   /journeys/{journey_id}/real-city/intelligence:
     parameters: [{$ref: '#/components/parameters/JourneyId'}]
     post:
@@ -2169,7 +2177,7 @@ components:
             active: {type: boolean}
     Place:
       type: object
-      required: [id, name, category, location, city_code, provider_key, coordinate_system]
+      required: [id, name, category, location, city_code, provider_key, coordinate_system, source_coordinate_system]
       properties:
         id: {type: string}
         name: {type: string}
@@ -2180,11 +2188,50 @@ components:
         provider_key: {type: string}
         # The system the stored geometry is written in; NOT NULL in the schema.
         coordinate_system: {type: string}
-        # What the provider handed us before any conversion.  Absent/null means it
-        # was never recorded -- deliberately not the same thing as WGS84, and
-        # therefore typed nullable and left out of `required` (the CityService
-        # .place_id precedent at this component's neighbour does the same).
+        # What the provider handed us before any conversion.  The key is always in
+        # the body -- FastAPI says so too, once the route declares response_model --
+        # and a null value is the server answering "never recorded", which is not the
+        # same fact as WGS84 and is therefore typed nullable rather than defaulted.
         source_coordinate_system: {type: [string, 'null']}
+    RealCityDiscoveryCandidate:
+      type: object
+      x-fastapi-extra: allow
+      required: [id, external_id, provider_key, name, category, latitude, longitude, tags,
+                 distance_m, opening_hours, metadata, cost_evidence, materialized_place_id,
+                 coordinate_system, source_coordinate_system]
+      properties:
+        id: {type: string}
+        external_id: {type: string}
+        provider_key: {type: string}
+        name: {type: string}
+        category: {type: string}
+        latitude: {type: number}
+        longitude: {type: number}
+        tags: {type: array, items: {type: string}}
+        distance_m: {type: [number, 'null']}
+        opening_hours: {type: object}
+        metadata: {type: object}
+        cost_evidence: {type: object}
+        materialized_place_id: {type: string}
+        coordinate_system: {type: string}
+        source_coordinate_system: {type: [string, 'null']}
+    RealCityDiscoveryResponse:
+      type: object
+      x-fastapi-extra: allow
+      required: [journey_id, city_code, city_context, mode, captured_at, expires_at,
+                 provider_status, provider_evidence, provenance, runtime_provenance, candidates]
+      properties:
+        journey_id: {type: string}
+        city_code: {type: string}
+        city_context: {type: string}
+        mode: {type: string}
+        captured_at: {type: string}
+        expires_at: {type: string}
+        provider_status: {type: object}
+        provider_evidence: {type: object}
+        provenance: {type: string}
+        runtime_provenance: {type: string}
+        candidates: {type: array, items: {$ref: '#/components/schemas/RealCityDiscoveryCandidate'}}
     CityService:
       type: object
       required: [id, name, service_type, city_code]
@@ -2317,6 +2364,9 @@ components:
         score_breakdown: {oneOf: [{$ref: '#/components/schemas/ScoreBreakdown'}, {type: 'null'}]}
         mobility_snapshot_id: {type: [string, 'null']}
         mobility_evidence: {type: object, additionalProperties: true}
+        # ORD-0386: the moment this version was written, so a history list is not read
+        # from array order. Null only on rows persisted before the column existed.
+        created_at: {type: [string, 'null'], format: date-time}
         # ORD-0097: the server's own answer to "is this the plan the journey runs", taken
         # from journey.active_plan_version_id - never from status, order, or version_no.
         is_current: {type: boolean, description: 'True only on the row named by journey.active_plan_version_id; false on all rows when the journey has no pointer'}

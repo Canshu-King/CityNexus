@@ -390,6 +390,58 @@ class Place(BaseModel):
     source_coordinate_system: str | None
 
 
+class RealCityDiscoveryCandidate(BaseModel):
+    """One place candidate as `materialize_candidates` emits it -- the single dict
+    site the screen's place card reads.
+
+    ``extra="allow"`` is load-bearing, not a courtesy: FastAPI filters a response
+    through its model, so a strict model here would silently drop any key a live
+    provider carries that the replay shape did not.  Declaring a contract must not
+    become a way of un-sending facts.
+    """
+
+    model_config = ConfigDict(extra="allow")
+
+    id: str
+    external_id: str
+    provider_key: str
+    name: str
+    category: str
+    latitude: float
+    longitude: float
+    tags: list[str]
+    distance_m: float | None
+    opening_hours: dict[str, Any]
+    metadata: dict[str, Any]
+    cost_evidence: dict[str, Any]
+    materialized_place_id: str
+    coordinate_system: str
+    source_coordinate_system: str | None
+
+
+class RealCityDiscoveryResponse(BaseModel):
+    """The wrapper both `capture_real_city_candidates` return sites build.
+
+    Measured on the tree: the cache-hit return (real_city.py:1346) and the main
+    return (real_city.py:1550) carry the same 11 keys, so nothing here is optional
+    just in case.
+    """
+
+    model_config = ConfigDict(extra="allow")
+
+    journey_id: str
+    city_code: str
+    city_context: str
+    mode: str
+    captured_at: str
+    expires_at: str
+    provider_status: dict[str, Any]
+    provider_evidence: dict[str, Any]
+    provenance: str
+    runtime_provenance: str
+    candidates: list[RealCityDiscoveryCandidate]
+
+
 class CityService(BaseModel):
     id: str
     name: str
@@ -449,6 +501,11 @@ class PlanVersion(BaseModel):
     mobility_snapshot_id: str | None = None
     mobility_evidence: dict[str, Any] = Field(default_factory=dict)
     explanation: dict[str, Any] = Field(default_factory=dict)
+    # ORD-0386: a version list cannot be read as history without the moment each row was
+    # written. `version_no` orders the chain but says nothing about when, and the screen that
+    # shows "版本 3 / 版本 4" without a time is the one that makes a traveller guess whether
+    # the old plan was this morning or last month.
+    created_at: str | None = None
     # Stale/recompose-required projection.  A plan whose frozen evidence has
     # expired must not look like an ordinary current recommendation; selection
     # revalidation remains the final guard.

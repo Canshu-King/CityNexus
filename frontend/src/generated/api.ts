@@ -2761,7 +2761,37 @@ export interface components {
             tags?: string[];
             provider_key: string;
             coordinate_system: string;
-            source_coordinate_system?: string | null;
+            source_coordinate_system: string | null;
+        };
+        RealCityDiscoveryCandidate: {
+            id: string;
+            external_id: string;
+            provider_key: string;
+            name: string;
+            category: string;
+            latitude: number;
+            longitude: number;
+            tags: string[];
+            distance_m: number | null;
+            opening_hours: Record<string, never>;
+            metadata: Record<string, never>;
+            cost_evidence: Record<string, never>;
+            materialized_place_id: string;
+            coordinate_system: string;
+            source_coordinate_system: string | null;
+        };
+        RealCityDiscoveryResponse: {
+            journey_id: string;
+            city_code: string;
+            city_context: string;
+            mode: string;
+            captured_at: string;
+            expires_at: string;
+            provider_status: Record<string, never>;
+            provider_evidence: Record<string, never>;
+            provenance: string;
+            runtime_provenance: string;
+            candidates: components["schemas"]["RealCityDiscoveryCandidate"][];
         };
         CityService: {
             id: string;
@@ -2882,6 +2912,8 @@ export interface components {
             mobility_evidence?: {
                 [key: string]: unknown;
             };
+            /** Format: date-time */
+            created_at?: string | null;
             /** @description True only on the row named by journey.active_plan_version_id; false on all rows when the journey has no pointer */
             is_current?: boolean;
             activities: components["schemas"]["Activity"][];
@@ -5435,7 +5467,9 @@ export interface operations {
                 headers: {
                     [name: string]: unknown;
                 };
-                content?: never;
+                content: {
+                    "application/json": components["schemas"]["RealCityDiscoveryResponse"];
+                };
             };
         };
     };
@@ -5459,7 +5493,9 @@ export interface operations {
                 headers: {
                     [name: string]: unknown;
                 };
-                content?: never;
+                content: {
+                    "application/json": components["schemas"]["RealCityDiscoveryResponse"];
+                };
             };
         };
     };
