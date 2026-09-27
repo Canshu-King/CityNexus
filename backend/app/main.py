@@ -379,6 +379,9 @@ from app.schemas import (
     Place as PlaceSchema,
 )
 from app.schemas import (
+    RealCityDiscoveryResponse,
+)
+from app.schemas import (
     ReplanProposal as ReplanProposalSchema,
 )
 from app.schemas import (
@@ -1711,8 +1714,8 @@ def get_journey_provider_mesh(
     }
 
 
-@app.post("/api/v1/journeys/{journey_id}/real-city/discover")
-@app.post("/api/v1/journeys/{journey_id}/provider-mesh/discover")
+@app.post("/api/v1/journeys/{journey_id}/real-city/discover", response_model=RealCityDiscoveryResponse)
+@app.post("/api/v1/journeys/{journey_id}/provider-mesh/discover", response_model=RealCityDiscoveryResponse)
 def discover_real_city_services(
     journey_id: UUID,
     payload: RealCityDiscoveryRequest,

@@ -1259,7 +1259,11 @@ paths:
     post:
       operationId: discoverProviderMesh
       responses:
-        '200': {description: Provider mesh discovery and evidence}
+        '200':
+          description: Provider mesh discovery and evidence
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/RealCityDiscoveryResponse'}
   /journeys/{journey_id}/real-city/discover:
     parameters: [{$ref: '#/components/parameters/JourneyId'}]
     post:
@@ -1269,7 +1273,11 @@ paths:
         content:
           application/json: {schema: {type: object}}
       responses:
-        '200': {description: Real or sealed captured city candidates}
+        '200':
+          description: Real or sealed captured city candidates
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/RealCityDiscoveryResponse'}
   /journeys/{journey_id}/real-city/intelligence:
     parameters: [{$ref: '#/components/parameters/JourneyId'}]
     post:
@@ -2143,6 +2151,45 @@ components:
         # and a null value is the server answering "never recorded", which is not the
         # same fact as WGS84 and is therefore typed nullable rather than defaulted.
         source_coordinate_system: {type: [string, 'null']}
+    RealCityDiscoveryCandidate:
+      type: object
+      x-fastapi-extra: allow
+      required: [id, external_id, provider_key, name, category, latitude, longitude, tags,
+                 distance_m, opening_hours, metadata, cost_evidence, materialized_place_id,
+                 coordinate_system, source_coordinate_system]
+      properties:
+        id: {type: string}
+        external_id: {type: string}
+        provider_key: {type: string}
+        name: {type: string}
+        category: {type: string}
+        latitude: {type: number}
+        longitude: {type: number}
+        tags: {type: array, items: {type: string}}
+        distance_m: {type: [number, 'null']}
+        opening_hours: {type: object}
+        metadata: {type: object}
+        cost_evidence: {type: object}
+        materialized_place_id: {type: string}
+        coordinate_system: {type: string}
+        source_coordinate_system: {type: [string, 'null']}
+    RealCityDiscoveryResponse:
+      type: object
+      x-fastapi-extra: allow
+      required: [journey_id, city_code, city_context, mode, captured_at, expires_at,
+                 provider_status, provider_evidence, provenance, runtime_provenance, candidates]
+      properties:
+        journey_id: {type: string}
+        city_code: {type: string}
+        city_context: {type: string}
+        mode: {type: string}
+        captured_at: {type: string}
+        expires_at: {type: string}
+        provider_status: {type: object}
+        provider_evidence: {type: object}
+        provenance: {type: string}
+        runtime_provenance: {type: string}
+        candidates: {type: array, items: {$ref: '#/components/schemas/RealCityDiscoveryCandidate'}}
     CityService:
       type: object
       required: [id, name, service_type, city_code]
