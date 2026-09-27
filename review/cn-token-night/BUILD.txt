@@ -1,0 +1,42 @@
+ORD-0380 FRONTSRC_BUILD_PREREQ receipt
+
+Tree: a git worktree of review/Q-cn-token-night-axis at the tip recorded in the ledger block,
+      opened off bb3f5853d35835bd5078a2cccba15e2e7a82f213 (authoritative mirror tip, fetched before writing).
+Dependency source: a Windows junction at frontend/node_modules -> D:\moodle\CityNexus\frontend\node_modules
+                 (reparse point, not a copy; removed with a plain rmdir before anything else)
+
+Commands, run in frontend/, proxies unset (HTTP_PROXY/HTTPS_PROXY point at 127.0.0.1:7892,
+which nothing listens on here; npm_config_offline=true so npx could not reach a registry):
+  npx tsc -p tsconfig.typecheck.json     # repo-wide, include src/**/*.ts(x)
+  npx tsc -p tsconfig.check.json         # the narrow 5-file check that ships in the tree
+  npx vite build
+
+There is no bare tsconfig.json in frontend/, so a plain `npx tsc --noEmit` has no project to
+read; noEmit is set inside both configs above. Both were run, not one.
+
+Results (each exit code taken from the run, not inferred):
+  npx tsc -p tsconfig.typecheck.json  exit=0  log=0 bytes  (empty output, no diagnostics)
+  npx tsc -p tsconfig.check.json      exit=0  log=0 bytes  (empty output, no diagnostics)
+  npx vite build                      exit=0  log=1355 bytes
+      | [32m✓ built in 12.98s[39m
+      | precache  8 entries (2471.13 KiB)
+      | dist/v10-sw.js
+
+Junction lifecycle, in order:
+  mklink /J  -> rc=0, `dir /al` reports <JUNCTION> node_modules [target]
+  os.lstat st_file_attributes carries FILE_ATTRIBUTE_REPARSE_POINT: True
+  entries visible through it: 399
+  cmd /c rmdir <link>  -> rc=0; link exists after: False
+  target after removal: exists=True entries=399 .bin/tsc=True
+  Nothing was deleted recursively, in either tree. No `rd /s /q` was run anywhere.
+
+Mutant scratch files: cnx_token_tiers_r1.py writes M*.css next to --tokens and unlinks them;
+  frontend/src now holds exactly: design-tokens.css, styles.css, v10.css
+
+Product bytes touched by this order: none.
+  git diff --name-only bb3f5853d35835bd5078a2cccba15e2e7a82f213 -- frontend/  -> 0 files
+
+sha256 of the built-from inputs:
+  5921d36ad105dbe0347a34fef114375d83c49bbd558fe1a63a98f6b9bf9a2c96  frontend/src/design-tokens.css
+  e2cfb2fc013d23403f4e43d32ca13600723aefbecff5ca2b216dfc72bf529fb8  frontend/src/styles.css
+  1ce30e4ec1cdabf02a65207aa0a0d8446d6a572aeb54e5ab1b8d29136f07b2cd  frontend/src/v10.css

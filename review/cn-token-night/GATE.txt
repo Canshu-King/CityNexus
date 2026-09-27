@@ -1,0 +1,49 @@
+ORD-0380 gate receipt -- tools/cnx_token_tiers_r1.py over frontend/src/design-tokens.css
+
+Reproduce from a tree off bb3f5853d35835bd5078a2cccba15e2e7a82f213 (run from the repository root):
+  git show bb3f5853d35835bd5078a2cccba15e2e7a82f213:frontend/src/design-tokens.css > baseline.css
+  python tools/cnx_token_tiers_r1.py --tokens frontend/src/design-tokens.css --baseline baseline.css --styles frontend/src/styles.css --consume frontend/src/v10.css --mutant
+
+exit(new ruler: 7 cells + 8 mutants) = 0
+exit(shipped ruler: 5 cells + 4 mutants) = 0
+
+== freeze proof for the five cells that shipped before this order
+name+measure+detail byte-identical: PARITY, TIERS, LADDER_USED, CONSTANT_DUP, CONSTANT_IN_DARK (5 of 5)
+cells missing from the new output: none
+  PARITY           identical=true
+  TIERS            identical=true
+  LADDER_USED      identical=true
+  CONSTANT_DUP     identical=true
+  CONSTANT_IN_DARK identical=true
+
+== full output of the new ruler
+== cnx_token_tiers_r1  tokens=frontend/src/design-tokens.css baseline=../probe/design-tokens.baseline.css styles=yes consume=1
+  [MET] PARITY             79 (token,scope) baseline readings re-resolved
+          detail: none moved
+  [MET] TIERS              inline rgba() remaining inside :root theme blocks: 0
+          detail: none
+  [MET] LADDER_USED        tint tiers defined 10, unreferenced 0
+          detail: every tier has at least one consumer
+  [MET] CONSTANT_DUP       tokens re-declared identically in the dark block: 0
+          detail: none
+  [MET] CONSTANT_IN_DARK   --cn-always-* present inside :root[data-theme=dark]: 0
+          detail: none
+  [MET] NIGHT_PAIRING      40 colour tokens in root theme scopes: own_dark=17 by_chain=10 by_name=13 unexplained=0
+          detail: every colour token explained; neutrality claimed by --cn-always-x1; --cn-tint-x10
+  [MET] CONSTANT_CLAIM_USED --cn-always-* declared 1, with no var() consumer: 0
+          detail: --cn-always-accent-solid
+  -- ruler self-test: each injected defect must be caught by its owner --
+  [MET] M1_value_moved             PARITY bit it  [red: PARITY]
+  [MET] M2_inline_alpha            TIERS bit it  [red: LADDER_USED,TIERS]
+  [MET] M3_always_in_dark          CONSTANT_IN_DARK bit it  [red: CONSTANT_IN_DARK,NIGHT_PAIRING]
+  [MET] M4_identical_not_always    CONSTANT_DUP bit it  [red: CONSTANT_DUP,PARITY]
+  [MET] M5_dark_pairing_deleted    NIGHT_PAIRING bit it  [red: NIGHT_PAIRING,PARITY]
+  [MET] M6_flipping_base_named_always NIGHT_PAIRING bit it, control CONSTANT_DUP,CONSTANT_IN_DARK stayed green  [red: CONSTANT_CLAIM_USED,NIGHT_PAIRING,PARITY]
+  [MET] M7_pairing_changes_no_colour NIGHT_PAIRING bit it, control CONSTANT_DUP,TIERS stayed green  [red: NIGHT_PAIRING,PARITY]
+  [MET] M8_always_claim_unconsumed CONSTANT_CLAIM_USED bit it, control NIGHT_PAIRING stayed green  [red: CONSTANT_CLAIM_USED]
+exit=0
+
+== sha256 of the inputs every verdict above was read from
+  5921d36ad105dbe0347a34fef114375d83c49bbd558fe1a63a98f6b9bf9a2c96  frontend/src/design-tokens.css
+  e2cfb2fc013d23403f4e43d32ca13600723aefbecff5ca2b216dfc72bf529fb8  frontend/src/styles.css
+  1ce30e4ec1cdabf02a65207aa0a0d8446d6a572aeb54e5ab1b8d29136f07b2cd  frontend/src/v10.css
