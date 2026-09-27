@@ -113,5 +113,125 @@
   "frame_dir": "D:/moodle/_qoder_q_ord0382_evidence/online",
   "withheld_legs": "POST agent/commands held 25s then answered locally with the empty object the repo gate arm plan-ai-cancel-aborts-request already uses; POST plans/generate answered 422 locally",
   "proof_of_zero_write": "other_writes_forwarded=0 with every GET forwarded to the live server, per online_readings_r1.json step 9-traffic"
+ },
+ "layout_probe": {
+  "probe": {
+   "probe_layout_r1.mjs": {
+    "sha256": "8b71d4fa9228c63d4a85d147d5e54e06a1b7aaf0bf9b20cc1e34bfd2636d33e5",
+    "bytes": 7721
+   },
+   "layout/measurements_before.json": {
+    "sha256": "6640b9bfbb27e260fc521738cffeaaec9f654452d83482ba5fce5db1c459bc98",
+    "bytes": 9875
+   },
+   "layout/measurements_after.json": {
+    "sha256": "915eeb39268c0d24f2821ad143d1b63d355e2d3b41e89f385b1c18da7d7fea75",
+    "bytes": 10823
+   }
+  },
+  "frames": {
+   "320": {
+    "sha256": "afb6dd13410e66caed9d0166e0603601deae3277948a87b8f513d75fddea7792",
+    "bytes": 44709
+   },
+   "360": {
+    "sha256": "0fc21e85e6e2898e715ccb770a040ec80ce8e727bf7e16c2ad94e03830c108d3",
+    "bytes": 47502
+   },
+   "390": {
+    "sha256": "88d5300ca136ea4a981b1aec529fb186eaca8a17207067a4fac835c4eee2fbf8",
+    "bytes": 48483
+   },
+   "414": {
+    "sha256": "93399169f6ffe114856555cc353d174c0c33cee52b0c66db975bd217f73b6be4",
+    "bytes": 49028
+   }
+  },
+  "delta": {
+   "320": {
+    "close_width_before": 132,
+    "close_width_after": 44,
+    "title_column_before": 144,
+    "title_column_after": 232,
+    "subtitle_lines_before": 3,
+    "subtitle_lines_after": 2,
+    "chip_label_equals_submitted_before": false,
+    "chip_label_equals_submitted_after": true,
+    "footer_heights_before": [
+     56,
+     44
+    ],
+    "footer_heights_after": [
+     44,
+     44
+    ],
+    "primary_weight_before": "400",
+    "primary_weight_after": "750",
+    "hit_test_all_true_after": true
+   },
+   "360": {
+    "close_width_before": 161,
+    "close_width_after": 44,
+    "title_column_before": 155,
+    "title_column_after": 272,
+    "subtitle_lines_before": 3,
+    "subtitle_lines_after": 2,
+    "chip_label_equals_submitted_before": false,
+    "chip_label_equals_submitted_after": true,
+    "footer_heights_before": [
+     56,
+     44
+    ],
+    "footer_heights_after": [
+     44,
+     44
+    ],
+    "primary_weight_before": "400",
+    "primary_weight_after": "750",
+    "hit_test_all_true_after": true
+   },
+   "390": {
+    "close_width_before": 184,
+    "close_width_after": 44,
+    "title_column_before": 162,
+    "title_column_after": 302,
+    "subtitle_lines_before": 3,
+    "subtitle_lines_after": 2,
+    "chip_label_equals_submitted_before": false,
+    "chip_label_equals_submitted_after": true,
+    "footer_heights_before": [
+     56,
+     44
+    ],
+    "footer_heights_after": [
+     44,
+     44
+    ],
+    "primary_weight_before": "400",
+    "primary_weight_after": "750",
+    "hit_test_all_true_after": true
+   },
+   "414": {
+    "close_width_before": 202,
+    "close_width_after": 44,
+    "title_column_before": 168,
+    "title_column_after": 326,
+    "subtitle_lines_before": 3,
+    "subtitle_lines_after": 1,
+    "chip_label_equals_submitted_before": false,
+    "chip_label_equals_submitted_after": true,
+    "footer_heights_before": [
+     56,
+     44
+    ],
+    "footer_heights_after": [
+     44,
+     44
+    ],
+    "primary_weight_before": "400",
+    "primary_weight_after": "750",
+    "hit_test_all_true_after": true
+   }
+  }
  }
 }
