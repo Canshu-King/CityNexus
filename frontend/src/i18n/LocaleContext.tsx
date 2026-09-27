@@ -31,6 +31,14 @@ const en: Dict = {
   "shell.noJourney": "No journey available",
   "shell.offlineMsg": "Network unavailable · showing your read-only saved journey.",
   "shell.loadError": "Unable to load the journey",
+  /* ORD-0388: the /legacy surface reaches a screen -- frontend/src/main.tsx:1728 mounts LegacyApp
+     on any path starting /legacy -- so its placeholders are traveller-facing copy. Every English
+     value here is the exact string the component printed before, byte for byte. */
+  "legacy.guardianIdle": "Activate a standing mission once; subsequent city signals can launch recovery without a new chat message.",
+  "legacy.notEvaluated": "not evaluated",
+  "legacy.unknown": "unknown",
+  "legacy.preference": "preference",
+  "legacy.noActiveC4": "No active C4",
 
   // ── Shell: sidebar ──
   "shell.brand": "CityNexus",
@@ -77,6 +85,9 @@ const en: Dict = {
   "trial.creating": "Creating…",
   "trial.cancel": "Back to current journey",
   "trial.newJourney": "Try another city",
+  /* ORD-0388: the trial capability row prints the server's own codes when it has them and this
+     word when it has none, so the word belongs to the dictionary, not to the component. */
+  "trial.notAsked": "not-asked",
   "trial.createdLiveHint": "Journey created. Open City Discovery to use live providers for this city.",
   "shell.workspace": "Workspace",
   "shell.workspaceSub": "Trip operations",
@@ -828,6 +839,11 @@ const zhCN: Dict = {
   "shell.noJourney": "暂无行程",
   "shell.offlineMsg": "网络不可用 · 正在显示只读的已保存行程。",
   "shell.loadError": "没能加载行程",
+  "legacy.guardianIdle": "启动一次常驻任务后，后续城市信号无需再发一条消息即可触发恢复。",
+  "legacy.notEvaluated": "未评估",
+  "legacy.unknown": "未知",
+  "legacy.preference": "偏好项",
+  "legacy.noActiveC4": "没有进行中的 C4",
 
   // ── 外壳：侧边栏 ──
   "shell.brand": "CityNexus",
@@ -863,6 +879,7 @@ const zhCN: Dict = {
   "trial.creating": "正在创建…",
   "trial.cancel": "返回当前行程",
   "trial.newJourney": "试用其他城市",
+  "trial.notAsked": "未询问",
   "trial.createdLiveHint": "行程已创建。进入“城市探索”后可使用该城市的实时数据源。",
   "shell.workspace": "工作区",
   "shell.workspaceSub": "行程运营",

@@ -1,0 +1,23 @@
+ORD-0388 screen readings. Each line is document.body.innerText -- the painted text -- read by
+Playwright in a zh-CN context (documentElement.lang confirmed per page). data-* attributes are
+deliberately not used as evidence here: they are a different channel, and the defect being cleared
+is a Chinese screen showing English words.
+
+before  http://127.0.0.1:4781/legacy  (the deployed bundle of the line, index-DQjdRuBa.js)
+after   http://[::1]:4811/legacy      (this candidate's own vite build, index-DaGdhbKQ.js)
+
+note: vite bound the IPv6 loopback, so 127.0.0.1:4811 refuses while [::1]:4811 answers 200;
+the reading says which address it came from rather than assuming both are the same host.
+
+deployed-line(:4781)   route=http://127.0.0.1:4781/legacy status=200 lang=zh-CN innerText_chars=4123
+   english_fallbacks_present=['not evaluated', 'Activate a standing mission once']
+   chinese_replacements_present=none
+my-build(:4811)        route=/legacy status=200 lang=zh-CN innerText_chars=3985
+   english_fallbacks_present=none
+   chinese_replacements_present=['未评估', '启动一次常驻任务后']
+deployed-line-home     route=http://127.0.0.1:4781/ status=200 lang=zh-CN innerText_chars=168
+   english_fallbacks_present=none
+   chinese_replacements_present=none
+my-build-home          route=/ status=200 lang=zh-CN innerText_chars=168
+   english_fallbacks_present=none
+   chinese_replacements_present=none
