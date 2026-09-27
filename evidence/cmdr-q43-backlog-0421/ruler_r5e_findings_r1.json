@@ -1,0 +1,95 @@
+{
+ "ruler_files": {
+  "r4e": "claim_coordinate_check_r4e.py",
+  "r5e": "claim_coordinate_check_r5e.py"
+ },
+ "files": {
+  "n2_0213.md": {
+   "r4e": {
+    "exit": 2,
+    "findings": null,
+    "exempt": null,
+    "tokens": []
+   },
+   "r5e": {
+    "exit": 3,
+    "findings": 3,
+    "exempt": "\"HTTP_STATUS\": 1, \"IDENTIFIER_PART\": 12, \"PORT\": 2",
+    "tokens": [
+     "6 条 ",
+     "0 条 ",
+     "6 条 "
+    ]
+   }
+  },
+  "n2_0228.md": {
+   "r4e": {
+    "exit": 2,
+    "findings": null,
+    "exempt": null,
+    "tokens": []
+   },
+   "r5e": {
+    "exit": 3,
+    "findings": 4,
+    "exempt": "\"PORT\": 1, \"IDENTIFIER_PART\": 3",
+    "tokens": [
+     "1 个 ",
+     "206 ",
+     "2 个 ",
+     "0 个 "
+    ]
+   }
+  },
+  "qoder-0370_0148.md": {
+   "r4e": {
+    "exit": 2,
+    "findings": null,
+    "exempt": null,
+    "tokens": []
+   },
+   "r5e": {
+    "exit": 3,
+    "findings": 6,
+    "exempt": "\"YEAR\": 5, \"IDENTIFIER_PART\": 3, \"DISCIPLINE_ZERO\": 1, \"LINE_REF\": 14, \"HTTP_STATUS\": 1",
+    "tokens": [
+     "129 个 ",
+     "4 个 ",
+     "174 ",
+     "0 处 ",
+     "77 处 ",
+     "77 处 "
+    ]
+   }
+  },
+  "rel_0338.md": {
+   "r4e": {
+    "exit": 2,
+    "findings": null,
+    "exempt": null,
+    "tokens": []
+   },
+   "r5e": {
+    "exit": 3,
+    "findings": 27,
+    "exempt": "\"YEAR\": 1, \"IDENTIFIER_PART\": 10, \"HTTP_STATUS\": 6, \"PORT\": 6, \"LINE_REF\": 21",
+    "tokens": [
+     "745472 B ",
+     "2423 B ",
+     "2423 B ",
+     "56660 B ",
+     "56660 B ",
+     "5 条 ",
+     "1393 ",
+     "5.77s ",
+     "5.56s ",
+     "4 个 ",
+     "62 passed ",
+     "11.97s ",
+     "10 failed ",
+     "1367 passed "
+    ]
+   }
+  }
+ }
+}
