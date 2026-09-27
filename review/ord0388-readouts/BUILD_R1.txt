@@ -1,0 +1,31 @@
+ORD-0388 FRONTSRC_BUILD_PREREQ readout, written by the measuring run.
+
+Host: non-git export directory D:/moodle/_qoder_lane_0388_wk/build/frontend, from
+`git archive 895ec1a1... frontend` with src/ wiped and re-copied from the working
+tree so the candidate's own edits are what gets compiled, node_modules via `cp -al`.
+
+tsc_typecheck_noemit_exit  = 0
+tsc_files_in_program       = 875
+tsc_files_under_src        = 81
+export_proof_call_sites    = 1     # grep 'legacy.noActiveC4' in the export's src/main.tsx
+export_proof_dictionary    = 2     # rows for "legacy.noActiveC4" in the export's dictionary
+node_modules_link_nlink    = 4     # typescript/package.json, >1 proves a hardlink not a copy
+vite_build_exit            = 0
+vite_built_in_seconds      = 9.66
+vite_bundle_asset          = index-DaGdhbKQ.js
+vite_asset_size_kB         = 1,292.89
+vite_precache_entries      = 8
+bundle_grep_zh_no_active_c4 = 1    # 没有进行中的 C4, read out of dist/assets/index-DaGdhbKQ.js
+bundle_grep_zh_not_asked    = 1    # 未询问, same file
+screen_before_url          = http://127.0.0.1:4781/legacy   # line bundle index-DQjdRuBa.js
+screen_before_lang         = zh-CN
+screen_before_innerText_chars = 4123
+screen_before_english_present = not evaluated; Activate a standing mission once
+screen_after_url           = http://[::1]:4811/legacy       # this candidate's build
+screen_after_lang          = zh-CN
+screen_after_innerText_chars = 3985
+screen_after_english_present = none
+screen_after_chinese_present = 未评估; 启动一次常驻任务后
+vite_bound_address_note    = 127.0.0.1:4811 refuses while [::1]:4811 answers 200
+shared_node_modules_untouched = 394  # D:/moodle/CityNexus/frontend/node_modules, counted after everything
+preview_process_cleaned_up   = pid 712 terminated by this lane
