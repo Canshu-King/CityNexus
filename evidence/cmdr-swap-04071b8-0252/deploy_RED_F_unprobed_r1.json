@@ -1,0 +1,1629 @@
+{
+ "sha": "04071b8258ebcdcf1e9e4c9714fb516283d1e1ad",
+ "src": "_build_04071b8\\frontend\\dist",
+ "serve": "D:\\moodle\\_qoder_preview_20260920\\dist",
+ "t": "2026-09-28T02:50:30+0800",
+ "gauge": {
+  "gauge_path": "D:\\moodle\\_qoder_cmdr_ref_20260921\\live_checks\\deploy_bundle.py",
+  "gauge_bytes": 109551,
+  "gauge_content_digest_sha256": "a9b6608579c6ed90c35d5e94d7359f9ae74b0dc5edd4aba46f899c705adcf4b8",
+  "gauge_git_blob_sha1": "6079a6a69df7a89002749d0fd78f9ab67927ad46",
+  "gauge_git_blob_len": 40,
+  "rule": "a receipt may only endorse the exact gauge bytes it names (arbiter D1-5)"
+ },
+ "surface_base": {
+  "http_base": "http://127.0.0.1:4781",
+  "declared_via_env": true,
+  "disk_serve": "D:\\moodle\\_qoder_preview_20260920\\dist",
+  "rule": "the HTTP side and the disk side must belong to the same deployment",
+  "declares_cmdr_live_explicitly": false,
+  "resolved_serve": "D:\\moodle\\_qoder_preview_20260920\\dist",
+  "resolved_cmdr_dist": "D:\\moodle\\_qoder_preview_20260920",
+  "inside_cmdr_dist_resolved": true,
+  "base_port": 4781,
+  "base_is_cmdr_like": true
+ },
+ "new_index_refs": [
+  "/assets/index-CnUOxIWz.js",
+  "/assets/index-CuNe7Fij.css"
+ ],
+ "old_index_refs": [
+  "/assets/index-B800Wnn2.js",
+  "/assets/index-240iHFm5.css"
+ ],
+ "generation_OLD": {
+  "ref": "/assets/index-B800Wnn2.js",
+  "probe": {
+   "path": "/assets/index-B800Wnn2.js",
+   "status": 200,
+   "content_type": "text/javascript",
+   "length": "1278693",
+   "cache_control": "no-cache",
+   "head_bytes": "const __vite__mapDeps=(i",
+   "sha256": "2983e321e8cddd2ad735feab6ee86562dc8bc5d0486df71a3413f6ba653c1677",
+   "is_html_fallback": false,
+   "error": null,
+   "base": "http://127.0.0.1:4781",
+   "auth_applied": false,
+   "body_size": 1278693
+  },
+  "disk_bytes": 1278693
+ },
+ "assets_union": {
+  "added": [
+   "index-CnUOxIWz.js",
+   "index-CuNe7Fij.css",
+   "JourneyMap-Wo1Q4AJM.js",
+   "maplibre-gl-Dp9Ivj2W.js"
+  ],
+  "already_identical": [],
+  "total_in_serve_assets": 101
+ },
+ "asset_manifest": {
+  "path": "D:\\moodle\\_qoder_preview_20260920\\dist\\assets_manifest.json",
+  "assets_bound": 101,
+  "gauge": {
+   "gauge_path": "D:\\moodle\\_qoder_cmdr_ref_20260921\\live_checks\\deploy_bundle.py",
+   "gauge_bytes": 109551,
+   "gauge_content_digest_sha256": "a9b6608579c6ed90c35d5e94d7359f9ae74b0dc5edd4aba46f899c705adcf4b8",
+   "gauge_git_blob_sha1": "6079a6a69df7a89002749d0fd78f9ab67927ad46",
+   "gauge_git_blob_len": 40,
+   "rule": "a receipt may only endorse the exact gauge bytes it names (arbiter D1-5)"
+  }
+ },
+ "pre_switch_asset_probes": [
+  {
+   "verdict": "GREEN",
+   "times": 2,
+   "statuses": [
+    200,
+    200
+   ],
+   "probes": [
+    {
+     "path": "/assets/index-CnUOxIWz.js",
+     "status": 200,
+     "content_type": "text/javascript",
+     "length": "1279223",
+     "cache_control": "no-cache",
+     "head_bytes": "const __vite__mapDeps=(i",
+     "sha256": "15a52f7e0780cf7afaf0e1d27bcc2256dac6ca38e020724802314e2e6164656f",
+     "is_html_fallback": false,
+     "error": null,
+     "base": "http://127.0.0.1:4781",
+     "auth_applied": false,
+     "body_size": 1279223,
+     "disk_present": true,
+     "disk_bytes": 1279223,
+     "disk_sha256": "15a52f7e0780cf7afaf0e1d27bcc2256dac6ca38e020724802314e2e6164656f",
+     "expect_content_type_substring": "javascript",
+     "verdict": "GREEN"
+    },
+    {
+     "path": "/assets/index-CnUOxIWz.js",
+     "status": 200,
+     "content_type": "text/javascript",
+     "length": "1279223",
+     "cache_control": "no-cache",
+     "head_bytes": "const __vite__mapDeps=(i",
+     "sha256": "15a52f7e0780cf7afaf0e1d27bcc2256dac6ca38e020724802314e2e6164656f",
+     "is_html_fallback": false,
+     "error": null,
+     "base": "http://127.0.0.1:4781",
+     "auth_applied": false,
+     "body_size": 1279223,
+     "disk_present": true,
+     "disk_bytes": 1279223,
+     "disk_sha256": "15a52f7e0780cf7afaf0e1d27bcc2256dac6ca38e020724802314e2e6164656f",
+     "expect_content_type_substring": "javascript",
+     "verdict": "GREEN"
+    }
+   ],
+   "red_refs": []
+  },
+  {
+   "verdict": "GREEN",
+   "times": 2,
+   "statuses": [
+    200,
+    200
+   ],
+   "probes": [
+    {
+     "path": "/assets/index-CuNe7Fij.css",
+     "status": 200,
+     "content_type": "text/css",
+     "length": "185472",
+     "cache_control": "no-cache",
+     "head_bytes": ".v10-execution-panel{wid",
+     "sha256": "11e23f804b3939d9c10d536c80f963e502a28e60e8be9fb8947a9e07a815c155",
+     "is_html_fallback": false,
+     "error": null,
+     "base": "http://127.0.0.1:4781",
+     "auth_applied": false,
+     "body_size": 185472,
+     "disk_present": true,
+     "disk_bytes": 185472,
+     "disk_sha256": "11e23f804b3939d9c10d536c80f963e502a28e60e8be9fb8947a9e07a815c155",
+     "expect_content_type_substring": "css",
+     "verdict": "GREEN"
+    },
+    {
+     "path": "/assets/index-CuNe7Fij.css",
+     "status": 200,
+     "content_type": "text/css",
+     "length": "185472",
+     "cache_control": "no-cache",
+     "head_bytes": ".v10-execution-panel{wid",
+     "sha256": "11e23f804b3939d9c10d536c80f963e502a28e60e8be9fb8947a9e07a815c155",
+     "is_html_fallback": false,
+     "error": null,
+     "base": "http://127.0.0.1:4781",
+     "auth_applied": false,
+     "body_size": 185472,
+     "disk_present": true,
+     "disk_bytes": 185472,
+     "disk_sha256": "11e23f804b3939d9c10d536c80f963e502a28e60e8be9fb8947a9e07a815c155",
+     "expect_content_type_substring": "css",
+     "verdict": "GREEN"
+    }
+   ],
+   "red_refs": []
+  }
+ ],
+ "preflight_before_switch": {
+  "B_pre_index_names_new_refs": {
+   "refs": [
+    "/assets/index-CnUOxIWz.js",
+    "/assets/index-CuNe7Fij.css"
+   ],
+   "all_present": true,
+   "verdict": "GREEN"
+  },
+  "C_pre_new_assets_reach_the_live_server": [
+   {
+    "verdict": "GREEN",
+    "times": 2,
+    "statuses": [
+     200,
+     200
+    ],
+    "probes": [
+     {
+      "path": "/assets/index-CnUOxIWz.js",
+      "status": 200,
+      "content_type": "text/javascript",
+      "length": "1279223",
+      "cache_control": "no-cache",
+      "head_bytes": "const __vite__mapDeps=(i",
+      "sha256": "15a52f7e0780cf7afaf0e1d27bcc2256dac6ca38e020724802314e2e6164656f",
+      "is_html_fallback": false,
+      "error": null,
+      "base": "http://127.0.0.1:4781",
+      "auth_applied": false,
+      "body_size": 1279223,
+      "disk_present": true,
+      "disk_bytes": 1279223,
+      "disk_sha256": "15a52f7e0780cf7afaf0e1d27bcc2256dac6ca38e020724802314e2e6164656f",
+      "expect_content_type_substring": "javascript",
+      "verdict": "GREEN"
+     },
+     {
+      "path": "/assets/index-CnUOxIWz.js",
+      "status": 200,
+      "content_type": "text/javascript",
+      "length": "1279223",
+      "cache_control": "no-cache",
+      "head_bytes": "const __vite__mapDeps=(i",
+      "sha256": "15a52f7e0780cf7afaf0e1d27bcc2256dac6ca38e020724802314e2e6164656f",
+      "is_html_fallback": false,
+      "error": null,
+      "base": "http://127.0.0.1:4781",
+      "auth_applied": false,
+      "body_size": 1279223,
+      "disk_present": true,
+      "disk_bytes": 1279223,
+      "disk_sha256": "15a52f7e0780cf7afaf0e1d27bcc2256dac6ca38e020724802314e2e6164656f",
+      "expect_content_type_substring": "javascript",
+      "verdict": "GREEN"
+     }
+    ],
+    "red_refs": []
+   },
+   {
+    "verdict": "GREEN",
+    "times": 2,
+    "statuses": [
+     200,
+     200
+    ],
+    "probes": [
+     {
+      "path": "/assets/index-CuNe7Fij.css",
+      "status": 200,
+      "content_type": "text/css",
+      "length": "185472",
+      "cache_control": "no-cache",
+      "head_bytes": ".v10-execution-panel{wid",
+      "sha256": "11e23f804b3939d9c10d536c80f963e502a28e60e8be9fb8947a9e07a815c155",
+      "is_html_fallback": false,
+      "error": null,
+      "base": "http://127.0.0.1:4781",
+      "auth_applied": false,
+      "body_size": 185472,
+      "disk_present": true,
+      "disk_bytes": 185472,
+      "disk_sha256": "11e23f804b3939d9c10d536c80f963e502a28e60e8be9fb8947a9e07a815c155",
+      "expect_content_type_substring": "css",
+      "verdict": "GREEN"
+     },
+     {
+      "path": "/assets/index-CuNe7Fij.css",
+      "status": 200,
+      "content_type": "text/css",
+      "length": "185472",
+      "cache_control": "no-cache",
+      "head_bytes": ".v10-execution-panel{wid",
+      "sha256": "11e23f804b3939d9c10d536c80f963e502a28e60e8be9fb8947a9e07a815c155",
+      "is_html_fallback": false,
+      "error": null,
+      "base": "http://127.0.0.1:4781",
+      "auth_applied": false,
+      "body_size": 185472,
+      "disk_present": true,
+      "disk_bytes": 185472,
+      "disk_sha256": "11e23f804b3939d9c10d536c80f963e502a28e60e8be9fb8947a9e07a815c155",
+      "expect_content_type_substring": "css",
+      "verdict": "GREEN"
+     }
+    ],
+    "red_refs": []
+   }
+  ],
+  "G_pre_precache_of_the_new_sw_resolves": [
+   {
+    "sw": "sw.js",
+    "sw_sha256_src": "1fc94905be2dbf920f7d933ebf65d81af531728bc2688a3f657066bc0b629ac9",
+    "urls_found": 0,
+    "probes": [],
+    "hashed_assets_checked": 0,
+    "root_docs_declared_pending": [],
+    "illegal_temporal_declarations": [],
+    "verdict": "DECLARED_NO_PRECACHE_ARRAY"
+   },
+   {
+    "sw": "v10-sw.js",
+    "sw_sha256_src": "860a6fdd6515f205ddcb6cee5a7259363e4aa0879b6777ec07ae28a653641fdf",
+    "urls_found": 8,
+    "probes": [
+     {
+      "ref": "/sw.js",
+      "verdict": "DECLARED_NOT_YET_PUBLISHED_PRE_SWITCH",
+      "src_sha256": "1fc94905be2dbf920f7d933ebf65d81af531728bc2688a3f657066bc0b629ac9",
+      "src_present": true,
+      "served_status": 200,
+      "served_sha256": "1fc94905be2dbf920f7d933ebf65d81af531728bc2688a3f657066bc0b629ac9",
+      "must_discharge_post_action": true,
+      "discharged_by": "post-switch arms G_PRECACHE_INTEGRITY + D_SERVICE_WORKER (strict, same predicate, after the root file is replaced)"
+     },
+     {
+      "ref": "/index.html",
+      "verdict": "DECLARED_NOT_YET_PUBLISHED_PRE_SWITCH",
+      "src_sha256": "297db7963de1a0ab656b6771fb4323690fbbbafd4fe5744f787ac76bbf586629",
+      "src_present": true,
+      "served_status": 200,
+      "served_sha256": "9545404149b578a461f38f77f0047148cdb4159c79eb046b196b4d297d38d1c3",
+      "must_discharge_post_action": true,
+      "discharged_by": "post-switch arms G_PRECACHE_INTEGRITY + D_SERVICE_WORKER (strict, same predicate, after the root file is replaced)"
+     },
+     {
+      "ref": "/assets/maplibre-gl-Dp9Ivj2W.js",
+      "got": {
+       "verdict": "GREEN",
+       "times": 2,
+       "statuses": [
+        200,
+        200
+       ],
+       "probes": [
+        {
+         "path": "/assets/maplibre-gl-Dp9Ivj2W.js",
+         "status": 200,
+         "content_type": "text/javascript",
+         "length": "1053381",
+         "cache_control": "no-cache",
+         "head_bytes": "import{g as B_}from\"./in",
+         "sha256": "70e9d7dbc542586be8aa9683c976b1254e7d8afa5238c16406403bfd1f9ecdc0",
+         "is_html_fallback": false,
+         "error": null,
+         "base": "http://127.0.0.1:4781",
+         "auth_applied": false,
+         "body_size": 1053381,
+         "disk_present": true,
+         "disk_bytes": 1053381,
+         "disk_sha256": "70e9d7dbc542586be8aa9683c976b1254e7d8afa5238c16406403bfd1f9ecdc0",
+         "expect_content_type_substring": "javascript",
+         "verdict": "GREEN"
+        },
+        {
+         "path": "/assets/maplibre-gl-Dp9Ivj2W.js",
+         "status": 200,
+         "content_type": "text/javascript",
+         "length": "1053381",
+         "cache_control": "no-cache",
+         "head_bytes": "import{g as B_}from\"./in",
+         "sha256": "70e9d7dbc542586be8aa9683c976b1254e7d8afa5238c16406403bfd1f9ecdc0",
+         "is_html_fallback": false,
+         "error": null,
+         "base": "http://127.0.0.1:4781",
+         "auth_applied": false,
+         "body_size": 1053381,
+         "disk_present": true,
+         "disk_bytes": 1053381,
+         "disk_sha256": "70e9d7dbc542586be8aa9683c976b1254e7d8afa5238c16406403bfd1f9ecdc0",
+         "expect_content_type_substring": "javascript",
+         "verdict": "GREEN"
+        }
+       ],
+       "red_refs": []
+      }
+     },
+     {
+      "ref": "/assets/JourneyMap-Wo1Q4AJM.js",
+      "got": {
+       "verdict": "GREEN",
+       "times": 2,
+       "statuses": [
+        200,
+        200
+       ],
+       "probes": [
+        {
+         "path": "/assets/JourneyMap-Wo1Q4AJM.js",
+         "status": 200,
+         "content_type": "text/javascript",
+         "length": "4392",
+         "cache_control": "no-cache",
+         "head_bytes": "import{r as h,u as M,j a",
+         "sha256": "f05e715e710b7e5cf56d3ce1d7f280cb8e8378f0fed5c7f37f4c3dce370a1d46",
+         "is_html_fallback": false,
+         "error": null,
+         "base": "http://127.0.0.1:4781",
+         "auth_applied": false,
+         "body_size": 4392,
+         "disk_present": true,
+         "disk_bytes": 4392,
+         "disk_sha256": "f05e715e710b7e5cf56d3ce1d7f280cb8e8378f0fed5c7f37f4c3dce370a1d46",
+         "expect_content_type_substring": "javascript",
+         "verdict": "GREEN"
+        },
+        {
+         "path": "/assets/JourneyMap-Wo1Q4AJM.js",
+         "status": 200,
+         "content_type": "text/javascript",
+         "length": "4392",
+         "cache_control": "no-cache",
+         "head_bytes": "import{r as h,u as M,j a",
+         "sha256": "f05e715e710b7e5cf56d3ce1d7f280cb8e8378f0fed5c7f37f4c3dce370a1d46",
+         "is_html_fallback": false,
+         "error": null,
+         "base": "http://127.0.0.1:4781",
+         "auth_applied": false,
+         "body_size": 4392,
+         "disk_present": true,
+         "disk_bytes": 4392,
+         "disk_sha256": "f05e715e710b7e5cf56d3ce1d7f280cb8e8378f0fed5c7f37f4c3dce370a1d46",
+         "expect_content_type_substring": "javascript",
+         "verdict": "GREEN"
+        }
+       ],
+       "red_refs": []
+      }
+     },
+     {
+      "ref": "/assets/index-CuNe7Fij.css",
+      "got": {
+       "verdict": "GREEN",
+       "times": 2,
+       "statuses": [
+        200,
+        200
+       ],
+       "probes": [
+        {
+         "path": "/assets/index-CuNe7Fij.css",
+         "status": 200,
+         "content_type": "text/css",
+         "length": "185472",
+         "cache_control": "no-cache",
+         "head_bytes": ".v10-execution-panel{wid",
+         "sha256": "11e23f804b3939d9c10d536c80f963e502a28e60e8be9fb8947a9e07a815c155",
+         "is_html_fallback": false,
+         "error": null,
+         "base": "http://127.0.0.1:4781",
+         "auth_applied": false,
+         "body_size": 185472,
+         "disk_present": true,
+         "disk_bytes": 185472,
+         "disk_sha256": "11e23f804b3939d9c10d536c80f963e502a28e60e8be9fb8947a9e07a815c155",
+         "expect_content_type_substring": "css",
+         "verdict": "GREEN"
+        },
+        {
+         "path": "/assets/index-CuNe7Fij.css",
+         "status": 200,
+         "content_type": "text/css",
+         "length": "185472",
+         "cache_control": "no-cache",
+         "head_bytes": ".v10-execution-panel{wid",
+         "sha256": "11e23f804b3939d9c10d536c80f963e502a28e60e8be9fb8947a9e07a815c155",
+         "is_html_fallback": false,
+         "error": null,
+         "base": "http://127.0.0.1:4781",
+         "auth_applied": false,
+         "body_size": 185472,
+         "disk_present": true,
+         "disk_bytes": 185472,
+         "disk_sha256": "11e23f804b3939d9c10d536c80f963e502a28e60e8be9fb8947a9e07a815c155",
+         "expect_content_type_substring": "css",
+         "verdict": "GREEN"
+        }
+       ],
+       "red_refs": []
+      }
+     },
+     {
+      "ref": "/assets/index-CnUOxIWz.js",
+      "got": {
+       "verdict": "GREEN",
+       "times": 2,
+       "statuses": [
+        200,
+        200
+       ],
+       "probes": [
+        {
+         "path": "/assets/index-CnUOxIWz.js",
+         "status": 200,
+         "content_type": "text/javascript",
+         "length": "1279223",
+         "cache_control": "no-cache",
+         "head_bytes": "const __vite__mapDeps=(i",
+         "sha256": "15a52f7e0780cf7afaf0e1d27bcc2256dac6ca38e020724802314e2e6164656f",
+         "is_html_fallback": false,
+         "error": null,
+         "base": "http://127.0.0.1:4781",
+         "auth_applied": false,
+         "body_size": 1279223,
+         "disk_present": true,
+         "disk_bytes": 1279223,
+         "disk_sha256": "15a52f7e0780cf7afaf0e1d27bcc2256dac6ca38e020724802314e2e6164656f",
+         "expect_content_type_substring": "javascript",
+         "verdict": "GREEN"
+        },
+        {
+         "path": "/assets/index-CnUOxIWz.js",
+         "status": 200,
+         "content_type": "text/javascript",
+         "length": "1279223",
+         "cache_control": "no-cache",
+         "head_bytes": "const __vite__mapDeps=(i",
+         "sha256": "15a52f7e0780cf7afaf0e1d27bcc2256dac6ca38e020724802314e2e6164656f",
+         "is_html_fallback": false,
+         "error": null,
+         "base": "http://127.0.0.1:4781",
+         "auth_applied": false,
+         "body_size": 1279223,
+         "disk_present": true,
+         "disk_bytes": 1279223,
+         "disk_sha256": "15a52f7e0780cf7afaf0e1d27bcc2256dac6ca38e020724802314e2e6164656f",
+         "expect_content_type_substring": "javascript",
+         "verdict": "GREEN"
+        }
+       ],
+       "red_refs": []
+      }
+     },
+     {
+      "ref": "/favicon.svg",
+      "got": {
+       "verdict": "GREEN",
+       "times": 2,
+       "statuses": [
+        200,
+        200
+       ],
+       "probes": [
+        {
+         "path": "/favicon.svg",
+         "status": 200,
+         "content_type": "image/svg+xml",
+         "length": "199",
+         "cache_control": "no-cache",
+         "head_bytes": "<svg xmlns=\"http://www.w",
+         "sha256": "daae73a74d90412ba924a82bba737946f735c0abb15d16b2c28a0d843f42a140",
+         "is_html_fallback": false,
+         "error": null,
+         "base": "http://127.0.0.1:4781",
+         "auth_applied": false,
+         "body_size": 199,
+         "disk_present": true,
+         "disk_bytes": 199,
+         "disk_sha256": "daae73a74d90412ba924a82bba737946f735c0abb15d16b2c28a0d843f42a140",
+         "expect_content_type_substring": "svg",
+         "verdict": "GREEN"
+        },
+        {
+         "path": "/favicon.svg",
+         "status": 200,
+         "content_type": "image/svg+xml",
+         "length": "199",
+         "cache_control": "no-cache",
+         "head_bytes": "<svg xmlns=\"http://www.w",
+         "sha256": "daae73a74d90412ba924a82bba737946f735c0abb15d16b2c28a0d843f42a140",
+         "is_html_fallback": false,
+         "error": null,
+         "base": "http://127.0.0.1:4781",
+         "auth_applied": false,
+         "body_size": 199,
+         "disk_present": true,
+         "disk_bytes": 199,
+         "disk_sha256": "daae73a74d90412ba924a82bba737946f735c0abb15d16b2c28a0d843f42a140",
+         "expect_content_type_substring": "svg",
+         "verdict": "GREEN"
+        }
+       ],
+       "red_refs": []
+      }
+     },
+     {
+      "ref": "/manifest.webmanifest",
+      "verdict": "DECLARED_NOT_YET_PUBLISHED_PRE_SWITCH",
+      "src_sha256": "643f91ecc6d80155ebad6b42a64c1e5d1ec5eab8eb0b32460ab83f02324b56e0",
+      "src_present": true,
+      "served_status": 200,
+      "served_sha256": "643f91ecc6d80155ebad6b42a64c1e5d1ec5eab8eb0b32460ab83f02324b56e0",
+      "must_discharge_post_action": true,
+      "discharged_by": "post-switch arms G_PRECACHE_INTEGRITY + D_SERVICE_WORKER (strict, same predicate, after the root file is replaced)"
+     }
+    ],
+    "hashed_assets_checked": 5,
+    "root_docs_declared_pending": [
+     "/sw.js",
+     "/index.html",
+     "/manifest.webmanifest"
+    ],
+    "illegal_temporal_declarations": [],
+    "verdict": "GREEN"
+   }
+  ],
+  "I_pre_sw_register_params_of_new_bundle": [
+   {
+    "source": "src /assets/index-CnUOxIWz.js",
+    "rule": "every navigator.serviceWorker.register() in the SERVED bundle must declare scope \"/\" and updateViaCache \"none\"",
+    "calls": [
+     {
+      "sw_url": "/v10-sw.js",
+      "scope": "/",
+      "updateViaCache": "none",
+      "opts_present": true,
+      "scope_ok": true,
+      "update_via_cache_ok": true
+     }
+    ],
+    "verdict": "GREEN",
+    "register_mentions_in_code": 1,
+    "register_calls_parsed": 1,
+    "unresolved_registrations": 0,
+    "src_sha256": "15a52f7e0780cf7afaf0e1d27bcc2256dac6ca38e020724802314e2e6164656f"
+   }
+  ],
+  "F_pre_user_surfaces": {
+   "probes": [
+    {
+     "surface": "proxy_4782",
+     "verdict": "NOT_CONFIGURED",
+     "base": null
+    },
+    {
+     "surface": "tunnel",
+     "verdict": "NOT_CONFIGURED",
+     "base": null
+    }
+   ],
+   "verdict": "F_UNPROBED_DECLARED"
+  },
+  "A_pre_current_generation_still_served": {
+   "ref": "/assets/index-B800Wnn2.js",
+   "got": {
+    "path": "/assets/index-B800Wnn2.js",
+    "status": 200,
+    "content_type": "text/javascript",
+    "length": "1278693",
+    "cache_control": "no-cache",
+    "head_bytes": "const __vite__mapDeps=(i",
+    "sha256": "2983e321e8cddd2ad735feab6ee86562dc8bc5d0486df71a3413f6ba653c1677",
+    "is_html_fallback": false,
+    "error": null,
+    "base": "http://127.0.0.1:4781",
+    "auth_applied": false,
+    "body_size": 1278693,
+    "disk_present": true,
+    "disk_bytes": 1278693,
+    "disk_sha256": "2983e321e8cddd2ad735feab6ee86562dc8bc5d0486df71a3413f6ba653c1677",
+    "expect_content_type_substring": "javascript",
+    "verdict": "GREEN"
+   }
+  },
+  "temporal_obligations": [
+   {
+    "ref": "/sw.js",
+    "verdict": "DECLARED_NOT_YET_PUBLISHED_PRE_SWITCH",
+    "src_sha256": "1fc94905be2dbf920f7d933ebf65d81af531728bc2688a3f657066bc0b629ac9",
+    "src_present": true,
+    "served_status": 200,
+    "served_sha256": "1fc94905be2dbf920f7d933ebf65d81af531728bc2688a3f657066bc0b629ac9",
+    "must_discharge_post_action": true,
+    "discharged_by": "post-switch arms G_PRECACHE_INTEGRITY + D_SERVICE_WORKER (strict, same predicate, after the root file is replaced)"
+   },
+   {
+    "ref": "/index.html",
+    "verdict": "DECLARED_NOT_YET_PUBLISHED_PRE_SWITCH",
+    "src_sha256": "297db7963de1a0ab656b6771fb4323690fbbbafd4fe5744f787ac76bbf586629",
+    "src_present": true,
+    "served_status": 200,
+    "served_sha256": "9545404149b578a461f38f77f0047148cdb4159c79eb046b196b4d297d38d1c3",
+    "must_discharge_post_action": true,
+    "discharged_by": "post-switch arms G_PRECACHE_INTEGRITY + D_SERVICE_WORKER (strict, same predicate, after the root file is replaced)"
+   },
+   {
+    "ref": "/manifest.webmanifest",
+    "verdict": "DECLARED_NOT_YET_PUBLISHED_PRE_SWITCH",
+    "src_sha256": "643f91ecc6d80155ebad6b42a64c1e5d1ec5eab8eb0b32460ab83f02324b56e0",
+    "src_present": true,
+    "served_status": 200,
+    "served_sha256": "643f91ecc6d80155ebad6b42a64c1e5d1ec5eab8eb0b32460ab83f02324b56e0",
+    "must_discharge_post_action": true,
+    "discharged_by": "post-switch arms G_PRECACHE_INTEGRITY + D_SERVICE_WORKER (strict, same predicate, after the root file is replaced)"
+   }
+  ],
+  "switch_readiness": "READY_TO_SWITCH",
+  "promotion_state": "PENDING_POST_SWITCH",
+  "verdict": "READY_TO_SWITCH",
+  "reds": [],
+  "rule": "read-only arms judged against the live server + build export BEFORE index.html moves; BLOCKED means the old generation stays served and nothing is written; PENDING_POST_SWITCH means final overall may not go GREEN until every obligation is discharged by the named strict post-switch arm"
+ },
+ "backup_generation_id": "025031_1790535031192986700",
+ "previous_index_sha256": "9545404149b578a461f38f77f0047148cdb4159c79eb046b196b4d297d38d1c3",
+ "backup_dir": "D:\\moodle\\_qoder_preview_20260920\\dist_bak_025031_1790535031192986700",
+ "backed_up": [
+  "index.html",
+  "manifest.webmanifest",
+  "sw.js",
+  "v10-sw.js",
+  "workbox-6923124b.js"
+ ],
+ "switched": [
+  "index.html",
+  "manifest.webmanifest",
+  "sw.js",
+  "v10-sw.js",
+  "workbox-6923124b.js"
+ ],
+ "served_after_switch_refs": [
+  "/assets/index-CnUOxIWz.js",
+  "/assets/index-CuNe7Fij.css"
+ ],
+ "receipt_FGH_blindspot_arms": {
+  "G_PRECACHE_INTEGRITY": [
+   {
+    "sw": "sw.js",
+    "urls_found": 0,
+    "probes": [],
+    "declared_no_precache_array": "hand-written service worker, no workbox precacheAndRoute array",
+    "measured_bytes": 7178,
+    "measured_sha256": "1fc94905be2dbf920f7d933ebf65d81af531728bc2688a3f657066bc0b629ac9",
+    "verdict": "DECLARED_NO_PRECACHE_ARRAY"
+   },
+   {
+    "sw": "v10-sw.js",
+    "urls_found": 8,
+    "probes": [
+     {
+      "ref": "/sw.js",
+      "got": {
+       "verdict": "GREEN",
+       "times": 2,
+       "statuses": [
+        200,
+        200
+       ],
+       "probes": [
+        {
+         "path": "/sw.js",
+         "status": 200,
+         "content_type": "text/javascript",
+         "length": "7178",
+         "cache_control": "no-cache",
+         "head_bytes": "const SW_VERSION = \"city",
+         "sha256": "1fc94905be2dbf920f7d933ebf65d81af531728bc2688a3f657066bc0b629ac9",
+         "is_html_fallback": false,
+         "error": null,
+         "base": "http://127.0.0.1:4781",
+         "auth_applied": false,
+         "body_size": 7178,
+         "disk_present": true,
+         "disk_bytes": 7178,
+         "disk_sha256": "1fc94905be2dbf920f7d933ebf65d81af531728bc2688a3f657066bc0b629ac9",
+         "expect_content_type_substring": "javascript",
+         "verdict": "GREEN"
+        },
+        {
+         "path": "/sw.js",
+         "status": 200,
+         "content_type": "text/javascript",
+         "length": "7178",
+         "cache_control": "no-cache",
+         "head_bytes": "const SW_VERSION = \"city",
+         "sha256": "1fc94905be2dbf920f7d933ebf65d81af531728bc2688a3f657066bc0b629ac9",
+         "is_html_fallback": false,
+         "error": null,
+         "base": "http://127.0.0.1:4781",
+         "auth_applied": false,
+         "body_size": 7178,
+         "disk_present": true,
+         "disk_bytes": 7178,
+         "disk_sha256": "1fc94905be2dbf920f7d933ebf65d81af531728bc2688a3f657066bc0b629ac9",
+         "expect_content_type_substring": "javascript",
+         "verdict": "GREEN"
+        }
+       ],
+       "red_refs": []
+      }
+     },
+     {
+      "ref": "/index.html",
+      "got": {
+       "verdict": "GREEN",
+       "times": 2,
+       "statuses": [
+        200,
+        200
+       ],
+       "probes": [
+        {
+         "path": "/index.html",
+         "status": 200,
+         "content_type": "text/html;charset=utf-8",
+         "length": "1200",
+         "cache_control": "no-cache",
+         "head_bytes": "<!doctype html>\n<html la",
+         "sha256": "297db7963de1a0ab656b6771fb4323690fbbbafd4fe5744f787ac76bbf586629",
+         "is_html_fallback": true,
+         "error": null,
+         "base": "http://127.0.0.1:4781",
+         "auth_applied": false,
+         "body_size": 1200,
+         "disk_present": true,
+         "disk_bytes": 1200,
+         "disk_sha256": "297db7963de1a0ab656b6771fb4323690fbbbafd4fe5744f787ac76bbf586629",
+         "expect_content_type_substring": "html",
+         "verdict": "GREEN"
+        },
+        {
+         "path": "/index.html",
+         "status": 200,
+         "content_type": "text/html;charset=utf-8",
+         "length": "1200",
+         "cache_control": "no-cache",
+         "head_bytes": "<!doctype html>\n<html la",
+         "sha256": "297db7963de1a0ab656b6771fb4323690fbbbafd4fe5744f787ac76bbf586629",
+         "is_html_fallback": true,
+         "error": null,
+         "base": "http://127.0.0.1:4781",
+         "auth_applied": false,
+         "body_size": 1200,
+         "disk_present": true,
+         "disk_bytes": 1200,
+         "disk_sha256": "297db7963de1a0ab656b6771fb4323690fbbbafd4fe5744f787ac76bbf586629",
+         "expect_content_type_substring": "html",
+         "verdict": "GREEN"
+        }
+       ],
+       "red_refs": []
+      }
+     },
+     {
+      "ref": "/assets/maplibre-gl-Dp9Ivj2W.js",
+      "got": {
+       "verdict": "GREEN",
+       "times": 2,
+       "statuses": [
+        200,
+        200
+       ],
+       "probes": [
+        {
+         "path": "/assets/maplibre-gl-Dp9Ivj2W.js",
+         "status": 200,
+         "content_type": "text/javascript",
+         "length": "1053381",
+         "cache_control": "no-cache",
+         "head_bytes": "import{g as B_}from\"./in",
+         "sha256": "70e9d7dbc542586be8aa9683c976b1254e7d8afa5238c16406403bfd1f9ecdc0",
+         "is_html_fallback": false,
+         "error": null,
+         "base": "http://127.0.0.1:4781",
+         "auth_applied": false,
+         "body_size": 1053381,
+         "disk_present": true,
+         "disk_bytes": 1053381,
+         "disk_sha256": "70e9d7dbc542586be8aa9683c976b1254e7d8afa5238c16406403bfd1f9ecdc0",
+         "expect_content_type_substring": "javascript",
+         "verdict": "GREEN"
+        },
+        {
+         "path": "/assets/maplibre-gl-Dp9Ivj2W.js",
+         "status": 200,
+         "content_type": "text/javascript",
+         "length": "1053381",
+         "cache_control": "no-cache",
+         "head_bytes": "import{g as B_}from\"./in",
+         "sha256": "70e9d7dbc542586be8aa9683c976b1254e7d8afa5238c16406403bfd1f9ecdc0",
+         "is_html_fallback": false,
+         "error": null,
+         "base": "http://127.0.0.1:4781",
+         "auth_applied": false,
+         "body_size": 1053381,
+         "disk_present": true,
+         "disk_bytes": 1053381,
+         "disk_sha256": "70e9d7dbc542586be8aa9683c976b1254e7d8afa5238c16406403bfd1f9ecdc0",
+         "expect_content_type_substring": "javascript",
+         "verdict": "GREEN"
+        }
+       ],
+       "red_refs": []
+      }
+     },
+     {
+      "ref": "/assets/JourneyMap-Wo1Q4AJM.js",
+      "got": {
+       "verdict": "GREEN",
+       "times": 2,
+       "statuses": [
+        200,
+        200
+       ],
+       "probes": [
+        {
+         "path": "/assets/JourneyMap-Wo1Q4AJM.js",
+         "status": 200,
+         "content_type": "text/javascript",
+         "length": "4392",
+         "cache_control": "no-cache",
+         "head_bytes": "import{r as h,u as M,j a",
+         "sha256": "f05e715e710b7e5cf56d3ce1d7f280cb8e8378f0fed5c7f37f4c3dce370a1d46",
+         "is_html_fallback": false,
+         "error": null,
+         "base": "http://127.0.0.1:4781",
+         "auth_applied": false,
+         "body_size": 4392,
+         "disk_present": true,
+         "disk_bytes": 4392,
+         "disk_sha256": "f05e715e710b7e5cf56d3ce1d7f280cb8e8378f0fed5c7f37f4c3dce370a1d46",
+         "expect_content_type_substring": "javascript",
+         "verdict": "GREEN"
+        },
+        {
+         "path": "/assets/JourneyMap-Wo1Q4AJM.js",
+         "status": 200,
+         "content_type": "text/javascript",
+         "length": "4392",
+         "cache_control": "no-cache",
+         "head_bytes": "import{r as h,u as M,j a",
+         "sha256": "f05e715e710b7e5cf56d3ce1d7f280cb8e8378f0fed5c7f37f4c3dce370a1d46",
+         "is_html_fallback": false,
+         "error": null,
+         "base": "http://127.0.0.1:4781",
+         "auth_applied": false,
+         "body_size": 4392,
+         "disk_present": true,
+         "disk_bytes": 4392,
+         "disk_sha256": "f05e715e710b7e5cf56d3ce1d7f280cb8e8378f0fed5c7f37f4c3dce370a1d46",
+         "expect_content_type_substring": "javascript",
+         "verdict": "GREEN"
+        }
+       ],
+       "red_refs": []
+      }
+     },
+     {
+      "ref": "/assets/index-CuNe7Fij.css",
+      "got": {
+       "verdict": "GREEN",
+       "times": 2,
+       "statuses": [
+        200,
+        200
+       ],
+       "probes": [
+        {
+         "path": "/assets/index-CuNe7Fij.css",
+         "status": 200,
+         "content_type": "text/css",
+         "length": "185472",
+         "cache_control": "no-cache",
+         "head_bytes": ".v10-execution-panel{wid",
+         "sha256": "11e23f804b3939d9c10d536c80f963e502a28e60e8be9fb8947a9e07a815c155",
+         "is_html_fallback": false,
+         "error": null,
+         "base": "http://127.0.0.1:4781",
+         "auth_applied": false,
+         "body_size": 185472,
+         "disk_present": true,
+         "disk_bytes": 185472,
+         "disk_sha256": "11e23f804b3939d9c10d536c80f963e502a28e60e8be9fb8947a9e07a815c155",
+         "expect_content_type_substring": "css",
+         "verdict": "GREEN"
+        },
+        {
+         "path": "/assets/index-CuNe7Fij.css",
+         "status": 200,
+         "content_type": "text/css",
+         "length": "185472",
+         "cache_control": "no-cache",
+         "head_bytes": ".v10-execution-panel{wid",
+         "sha256": "11e23f804b3939d9c10d536c80f963e502a28e60e8be9fb8947a9e07a815c155",
+         "is_html_fallback": false,
+         "error": null,
+         "base": "http://127.0.0.1:4781",
+         "auth_applied": false,
+         "body_size": 185472,
+         "disk_present": true,
+         "disk_bytes": 185472,
+         "disk_sha256": "11e23f804b3939d9c10d536c80f963e502a28e60e8be9fb8947a9e07a815c155",
+         "expect_content_type_substring": "css",
+         "verdict": "GREEN"
+        }
+       ],
+       "red_refs": []
+      }
+     },
+     {
+      "ref": "/assets/index-CnUOxIWz.js",
+      "got": {
+       "verdict": "GREEN",
+       "times": 2,
+       "statuses": [
+        200,
+        200
+       ],
+       "probes": [
+        {
+         "path": "/assets/index-CnUOxIWz.js",
+         "status": 200,
+         "content_type": "text/javascript",
+         "length": "1279223",
+         "cache_control": "no-cache",
+         "head_bytes": "const __vite__mapDeps=(i",
+         "sha256": "15a52f7e0780cf7afaf0e1d27bcc2256dac6ca38e020724802314e2e6164656f",
+         "is_html_fallback": false,
+         "error": null,
+         "base": "http://127.0.0.1:4781",
+         "auth_applied": false,
+         "body_size": 1279223,
+         "disk_present": true,
+         "disk_bytes": 1279223,
+         "disk_sha256": "15a52f7e0780cf7afaf0e1d27bcc2256dac6ca38e020724802314e2e6164656f",
+         "expect_content_type_substring": "javascript",
+         "verdict": "GREEN"
+        },
+        {
+         "path": "/assets/index-CnUOxIWz.js",
+         "status": 200,
+         "content_type": "text/javascript",
+         "length": "1279223",
+         "cache_control": "no-cache",
+         "head_bytes": "const __vite__mapDeps=(i",
+         "sha256": "15a52f7e0780cf7afaf0e1d27bcc2256dac6ca38e020724802314e2e6164656f",
+         "is_html_fallback": false,
+         "error": null,
+         "base": "http://127.0.0.1:4781",
+         "auth_applied": false,
+         "body_size": 1279223,
+         "disk_present": true,
+         "disk_bytes": 1279223,
+         "disk_sha256": "15a52f7e0780cf7afaf0e1d27bcc2256dac6ca38e020724802314e2e6164656f",
+         "expect_content_type_substring": "javascript",
+         "verdict": "GREEN"
+        }
+       ],
+       "red_refs": []
+      }
+     },
+     {
+      "ref": "/favicon.svg",
+      "got": {
+       "verdict": "GREEN",
+       "times": 2,
+       "statuses": [
+        200,
+        200
+       ],
+       "probes": [
+        {
+         "path": "/favicon.svg",
+         "status": 200,
+         "content_type": "image/svg+xml",
+         "length": "199",
+         "cache_control": "no-cache",
+         "head_bytes": "<svg xmlns=\"http://www.w",
+         "sha256": "daae73a74d90412ba924a82bba737946f735c0abb15d16b2c28a0d843f42a140",
+         "is_html_fallback": false,
+         "error": null,
+         "base": "http://127.0.0.1:4781",
+         "auth_applied": false,
+         "body_size": 199,
+         "disk_present": true,
+         "disk_bytes": 199,
+         "disk_sha256": "daae73a74d90412ba924a82bba737946f735c0abb15d16b2c28a0d843f42a140",
+         "expect_content_type_substring": "svg",
+         "verdict": "GREEN"
+        },
+        {
+         "path": "/favicon.svg",
+         "status": 200,
+         "content_type": "image/svg+xml",
+         "length": "199",
+         "cache_control": "no-cache",
+         "head_bytes": "<svg xmlns=\"http://www.w",
+         "sha256": "daae73a74d90412ba924a82bba737946f735c0abb15d16b2c28a0d843f42a140",
+         "is_html_fallback": false,
+         "error": null,
+         "base": "http://127.0.0.1:4781",
+         "auth_applied": false,
+         "body_size": 199,
+         "disk_present": true,
+         "disk_bytes": 199,
+         "disk_sha256": "daae73a74d90412ba924a82bba737946f735c0abb15d16b2c28a0d843f42a140",
+         "expect_content_type_substring": "svg",
+         "verdict": "GREEN"
+        }
+       ],
+       "red_refs": []
+      }
+     },
+     {
+      "ref": "/manifest.webmanifest",
+      "got": {
+       "verdict": "GREEN",
+       "times": 2,
+       "statuses": [
+        200,
+        200
+       ],
+       "probes": [
+        {
+         "path": "/manifest.webmanifest",
+         "status": 200,
+         "content_type": "application/manifest+json",
+         "length": "314",
+         "cache_control": "no-cache",
+         "head_bytes": "{\"name\":\"CityNexus Live ",
+         "sha256": "643f91ecc6d80155ebad6b42a64c1e5d1ec5eab8eb0b32460ab83f02324b56e0",
+         "is_html_fallback": false,
+         "error": null,
+         "base": "http://127.0.0.1:4781",
+         "auth_applied": false,
+         "body_size": 314,
+         "disk_present": true,
+         "disk_bytes": 314,
+         "disk_sha256": "643f91ecc6d80155ebad6b42a64c1e5d1ec5eab8eb0b32460ab83f02324b56e0",
+         "expect_content_type_substring": "json",
+         "verdict": "GREEN"
+        },
+        {
+         "path": "/manifest.webmanifest",
+         "status": 200,
+         "content_type": "application/manifest+json",
+         "length": "314",
+         "cache_control": "no-cache",
+         "head_bytes": "{\"name\":\"CityNexus Live ",
+         "sha256": "643f91ecc6d80155ebad6b42a64c1e5d1ec5eab8eb0b32460ab83f02324b56e0",
+         "is_html_fallback": false,
+         "error": null,
+         "base": "http://127.0.0.1:4781",
+         "auth_applied": false,
+         "body_size": 314,
+         "disk_present": true,
+         "disk_bytes": 314,
+         "disk_sha256": "643f91ecc6d80155ebad6b42a64c1e5d1ec5eab8eb0b32460ab83f02324b56e0",
+         "expect_content_type_substring": "json",
+         "verdict": "GREEN"
+        }
+       ],
+       "red_refs": []
+      }
+     }
+    ],
+    "verdict": "GREEN"
+   }
+  ],
+  "H_PREVIOUS_GENERATION": {
+   "refs_probed": 2,
+   "probes": [
+    {
+     "ref": "/assets/index-B800Wnn2.js",
+     "got": {
+      "verdict": "GREEN",
+      "times": 2,
+      "statuses": [
+       200,
+       200
+      ],
+      "probes": [
+       {
+        "path": "/assets/index-B800Wnn2.js",
+        "status": 200,
+        "content_type": "text/javascript",
+        "length": "1278693",
+        "cache_control": "no-cache",
+        "head_bytes": "const __vite__mapDeps=(i",
+        "sha256": "2983e321e8cddd2ad735feab6ee86562dc8bc5d0486df71a3413f6ba653c1677",
+        "is_html_fallback": false,
+        "error": null,
+        "base": "http://127.0.0.1:4781",
+        "auth_applied": false,
+        "body_size": 1278693,
+        "disk_present": true,
+        "disk_bytes": 1278693,
+        "disk_sha256": "2983e321e8cddd2ad735feab6ee86562dc8bc5d0486df71a3413f6ba653c1677",
+        "expect_content_type_substring": "javascript",
+        "verdict": "GREEN"
+       },
+       {
+        "path": "/assets/index-B800Wnn2.js",
+        "status": 200,
+        "content_type": "text/javascript",
+        "length": "1278693",
+        "cache_control": "no-cache",
+        "head_bytes": "const __vite__mapDeps=(i",
+        "sha256": "2983e321e8cddd2ad735feab6ee86562dc8bc5d0486df71a3413f6ba653c1677",
+        "is_html_fallback": false,
+        "error": null,
+        "base": "http://127.0.0.1:4781",
+        "auth_applied": false,
+        "body_size": 1278693,
+        "disk_present": true,
+        "disk_bytes": 1278693,
+        "disk_sha256": "2983e321e8cddd2ad735feab6ee86562dc8bc5d0486df71a3413f6ba653c1677",
+        "expect_content_type_substring": "javascript",
+        "verdict": "GREEN"
+       }
+      ],
+      "red_refs": []
+     }
+    },
+    {
+     "ref": "/assets/index-240iHFm5.css",
+     "got": {
+      "verdict": "GREEN",
+      "times": 2,
+      "statuses": [
+       200,
+       200
+      ],
+      "probes": [
+       {
+        "path": "/assets/index-240iHFm5.css",
+        "status": 200,
+        "content_type": "text/css",
+        "length": "185589",
+        "cache_control": "no-cache",
+        "head_bytes": ".v10-execution-panel{wid",
+        "sha256": "efa3650698e1d256181b00f7acd85d865707dd113598674e04127314bff03c09",
+        "is_html_fallback": false,
+        "error": null,
+        "base": "http://127.0.0.1:4781",
+        "auth_applied": false,
+        "body_size": 185589,
+        "disk_present": true,
+        "disk_bytes": 185589,
+        "disk_sha256": "efa3650698e1d256181b00f7acd85d865707dd113598674e04127314bff03c09",
+        "expect_content_type_substring": "css",
+        "verdict": "GREEN"
+       },
+       {
+        "path": "/assets/index-240iHFm5.css",
+        "status": 200,
+        "content_type": "text/css",
+        "length": "185589",
+        "cache_control": "no-cache",
+        "head_bytes": ".v10-execution-panel{wid",
+        "sha256": "efa3650698e1d256181b00f7acd85d865707dd113598674e04127314bff03c09",
+        "is_html_fallback": false,
+        "error": null,
+        "base": "http://127.0.0.1:4781",
+        "auth_applied": false,
+        "body_size": 185589,
+        "disk_present": true,
+        "disk_bytes": 185589,
+        "disk_sha256": "efa3650698e1d256181b00f7acd85d865707dd113598674e04127314bff03c09",
+        "expect_content_type_substring": "css",
+        "verdict": "GREEN"
+       }
+      ],
+      "red_refs": []
+     }
+    }
+   ],
+   "verdict": "GREEN"
+  },
+  "I_SW_REGISTER_PARAMS": {
+   "arms": [
+    {
+     "source": "served /assets/index-CnUOxIWz.js",
+     "rule": "every navigator.serviceWorker.register() in the SERVED bundle must declare scope \"/\" and updateViaCache \"none\"",
+     "calls": [
+      {
+       "sw_url": "/v10-sw.js",
+       "scope": "/",
+       "updateViaCache": "none",
+       "opts_present": true,
+       "scope_ok": true,
+       "update_via_cache_ok": true
+      }
+     ],
+     "verdict": "GREEN",
+     "register_mentions_in_code": 1,
+     "register_calls_parsed": 1,
+     "unresolved_registrations": 0,
+     "served_sha256": "15a52f7e0780cf7afaf0e1d27bcc2256dac6ca38e020724802314e2e6164656f",
+     "served_body_size": 1279223,
+     "fetch_status": 200
+    }
+   ],
+   "verdict": "GREEN"
+  },
+  "J_ASSET_NAME_CONTENT_BINDING": {
+   "manifest": "D:\\moodle\\_qoder_preview_20260920\\dist\\assets_manifest.json",
+   "rule": "served bytes == disk bytes == digest recorded at publication",
+   "checked": [
+    {
+     "ref": "/assets/index-CnUOxIWz.js",
+     "bound_in_manifest": true,
+     "served_status": 200,
+     "served_sha256": "15a52f7e0780cf7afaf0e1d27bcc2256dac6ca38e020724802314e2e6164656f",
+     "disk_sha256": "15a52f7e0780cf7afaf0e1d27bcc2256dac6ca38e020724802314e2e6164656f",
+     "manifest_sha256": "15a52f7e0780cf7afaf0e1d27bcc2256dac6ca38e020724802314e2e6164656f",
+     "manifest_bytes": 1279223,
+     "served_matches_manifest": true,
+     "disk_matches_manifest": true,
+     "verdict": "GREEN"
+    },
+    {
+     "ref": "/assets/index-CuNe7Fij.css",
+     "bound_in_manifest": true,
+     "served_status": 200,
+     "served_sha256": "11e23f804b3939d9c10d536c80f963e502a28e60e8be9fb8947a9e07a815c155",
+     "disk_sha256": "11e23f804b3939d9c10d536c80f963e502a28e60e8be9fb8947a9e07a815c155",
+     "manifest_sha256": "11e23f804b3939d9c10d536c80f963e502a28e60e8be9fb8947a9e07a815c155",
+     "manifest_bytes": 185472,
+     "served_matches_manifest": true,
+     "disk_matches_manifest": true,
+     "verdict": "GREEN"
+    },
+    {
+     "ref": "/assets/index-B800Wnn2.js",
+     "bound_in_manifest": true,
+     "served_status": 200,
+     "served_sha256": "2983e321e8cddd2ad735feab6ee86562dc8bc5d0486df71a3413f6ba653c1677",
+     "disk_sha256": "2983e321e8cddd2ad735feab6ee86562dc8bc5d0486df71a3413f6ba653c1677",
+     "manifest_sha256": "2983e321e8cddd2ad735feab6ee86562dc8bc5d0486df71a3413f6ba653c1677",
+     "manifest_bytes": 1278693,
+     "served_matches_manifest": true,
+     "disk_matches_manifest": true,
+     "verdict": "GREEN"
+    },
+    {
+     "ref": "/assets/index-240iHFm5.css",
+     "bound_in_manifest": true,
+     "served_status": 200,
+     "served_sha256": "efa3650698e1d256181b00f7acd85d865707dd113598674e04127314bff03c09",
+     "disk_sha256": "efa3650698e1d256181b00f7acd85d865707dd113598674e04127314bff03c09",
+     "manifest_sha256": "efa3650698e1d256181b00f7acd85d865707dd113598674e04127314bff03c09",
+     "manifest_bytes": 185589,
+     "served_matches_manifest": true,
+     "disk_matches_manifest": true,
+     "verdict": "GREEN"
+    }
+   ],
+   "manifest_gauge": {
+    "gauge_path": "D:\\moodle\\_qoder_cmdr_ref_20260921\\live_checks\\deploy_bundle.py",
+    "gauge_bytes": 109551,
+    "gauge_content_digest_sha256": "a9b6608579c6ed90c35d5e94d7359f9ae74b0dc5edd4aba46f899c705adcf4b8",
+    "gauge_git_blob_sha1": "6079a6a69df7a89002749d0fd78f9ab67927ad46",
+    "gauge_git_blob_len": 40,
+    "rule": "a receipt may only endorse the exact gauge bytes it names (arbiter D1-5)"
+   },
+   "refs_checked": 4,
+   "verdict": "GREEN"
+  },
+  "F_PROXY_AND_TUNNEL": {
+   "probes": [
+    {
+     "surface": "proxy_4782",
+     "verdict": "NOT_CONFIGURED",
+     "base": null
+    },
+    {
+     "surface": "tunnel",
+     "verdict": "NOT_CONFIGURED",
+     "base": null
+    }
+   ],
+   "verdict": "F_UNPROBED_DECLARED",
+   "why": "BASE is 127.0.0.1:4781 (no auth proxy); the proxy and the tunnel were never probed by A-E - redteam bus 5788606895"
+  }
+ },
+ "temporal_obligation_ledger": {
+  "rule": "PRE_ACTION_TEMPORAL_OBLIGATION_V1 - DECLARED_NOT_YET_PUBLISHED_PRE_<ACTION> is a debt; final overall may not go GREEN while anything is UNDISCHARGED",
+  "pending_at_pre_flight": 3,
+  "discharged": [
+   {
+    "ref": "/sw.js",
+    "served_sha256": "1fc94905be2dbf920f7d933ebf65d81af531728bc2688a3f657066bc0b629ac9",
+    "matches_src": true,
+    "discharged_by": "post-switch arms G_PRECACHE_INTEGRITY + D_SERVICE_WORKER (strict, same predicate, after the root file is replaced)"
+   },
+   {
+    "ref": "/index.html",
+    "served_sha256": "297db7963de1a0ab656b6771fb4323690fbbbafd4fe5744f787ac76bbf586629",
+    "matches_src": true,
+    "discharged_by": "post-switch arms G_PRECACHE_INTEGRITY + D_SERVICE_WORKER (strict, same predicate, after the root file is replaced)"
+   },
+   {
+    "ref": "/manifest.webmanifest",
+    "served_sha256": "643f91ecc6d80155ebad6b42a64c1e5d1ec5eab8eb0b32460ab83f02324b56e0",
+    "matches_src": true,
+    "discharged_by": "post-switch arms G_PRECACHE_INTEGRITY + D_SERVICE_WORKER (strict, same predicate, after the root file is replaced)"
+   }
+  ],
+  "undischarged": [],
+  "verdict": "DISCHARGED"
+ },
+ "arms": {
+  "A": "GREEN",
+  "B": "see receipt_ABCDE",
+  "G_precache": [
+   "DECLARED_NO_PRECACHE_ARRAY",
+   "GREEN"
+  ],
+  "H_prevgen": "GREEN",
+  "I_sw_register": "GREEN",
+  "J_name_content_binding": "GREEN",
+  "temporal_obligations": "DISCHARGED",
+  "F_proxy_tunnel": "F_UNPROBED_DECLARED",
+  "all_green_requires": "A,B,C,D,E + G + I + J + F + discharged temporal obligations"
+ },
+ "receipt_ABCDE": {
+  "A_OLD_ASSET_still_served": {
+   "ref": "/assets/index-B800Wnn2.js",
+   "status": 200,
+   "content_type": "text/javascript",
+   "is_html": false,
+   "disk_bytes": 1278693,
+   "verdict": "GREEN"
+  },
+  "B_NEW_INDEX": {
+   "status": 200,
+   "refs_match_new": true,
+   "new_refs_present": true,
+   "old_refs_absent": true,
+   "old_ref_tested": "/assets/index-B800Wnn2.js",
+   "verdict": "GREEN"
+  },
+  "C_NEW_ASSET": [
+   {
+    "verdict": "GREEN",
+    "times": 2,
+    "statuses": [
+     200,
+     200
+    ],
+    "probes": [
+     {
+      "path": "/assets/index-CnUOxIWz.js",
+      "status": 200,
+      "content_type": "text/javascript",
+      "length": "1279223",
+      "cache_control": "no-cache",
+      "head_bytes": "const __vite__mapDeps=(i",
+      "sha256": "15a52f7e0780cf7afaf0e1d27bcc2256dac6ca38e020724802314e2e6164656f",
+      "is_html_fallback": false,
+      "error": null,
+      "base": "http://127.0.0.1:4781",
+      "auth_applied": false,
+      "body_size": 1279223,
+      "disk_present": true,
+      "disk_bytes": 1279223,
+      "disk_sha256": "15a52f7e0780cf7afaf0e1d27bcc2256dac6ca38e020724802314e2e6164656f",
+      "expect_content_type_substring": "javascript",
+      "verdict": "GREEN"
+     },
+     {
+      "path": "/assets/index-CnUOxIWz.js",
+      "status": 200,
+      "content_type": "text/javascript",
+      "length": "1279223",
+      "cache_control": "no-cache",
+      "head_bytes": "const __vite__mapDeps=(i",
+      "sha256": "15a52f7e0780cf7afaf0e1d27bcc2256dac6ca38e020724802314e2e6164656f",
+      "is_html_fallback": false,
+      "error": null,
+      "base": "http://127.0.0.1:4781",
+      "auth_applied": false,
+      "body_size": 1279223,
+      "disk_present": true,
+      "disk_bytes": 1279223,
+      "disk_sha256": "15a52f7e0780cf7afaf0e1d27bcc2256dac6ca38e020724802314e2e6164656f",
+      "expect_content_type_substring": "javascript",
+      "verdict": "GREEN"
+     }
+    ],
+    "red_refs": []
+   },
+   {
+    "verdict": "GREEN",
+    "times": 2,
+    "statuses": [
+     200,
+     200
+    ],
+    "probes": [
+     {
+      "path": "/assets/index-CuNe7Fij.css",
+      "status": 200,
+      "content_type": "text/css",
+      "length": "185472",
+      "cache_control": "no-cache",
+      "head_bytes": ".v10-execution-panel{wid",
+      "sha256": "11e23f804b3939d9c10d536c80f963e502a28e60e8be9fb8947a9e07a815c155",
+      "is_html_fallback": false,
+      "error": null,
+      "base": "http://127.0.0.1:4781",
+      "auth_applied": false,
+      "body_size": 185472,
+      "disk_present": true,
+      "disk_bytes": 185472,
+      "disk_sha256": "11e23f804b3939d9c10d536c80f963e502a28e60e8be9fb8947a9e07a815c155",
+      "expect_content_type_substring": "css",
+      "verdict": "GREEN"
+     },
+     {
+      "path": "/assets/index-CuNe7Fij.css",
+      "status": 200,
+      "content_type": "text/css",
+      "length": "185472",
+      "cache_control": "no-cache",
+      "head_bytes": ".v10-execution-panel{wid",
+      "sha256": "11e23f804b3939d9c10d536c80f963e502a28e60e8be9fb8947a9e07a815c155",
+      "is_html_fallback": false,
+      "error": null,
+      "base": "http://127.0.0.1:4781",
+      "auth_applied": false,
+      "body_size": 185472,
+      "disk_present": true,
+      "disk_bytes": 185472,
+      "disk_sha256": "11e23f804b3939d9c10d536c80f963e502a28e60e8be9fb8947a9e07a815c155",
+      "expect_content_type_substring": "css",
+      "verdict": "GREEN"
+     }
+    ],
+    "red_refs": []
+   }
+  ],
+  "D_SERVICE_WORKER": [
+   {
+    "verdict": "GREEN",
+    "times": 2,
+    "statuses": [
+     200,
+     200
+    ],
+    "probes": [
+     {
+      "path": "/sw.js",
+      "status": 200,
+      "content_type": "text/javascript",
+      "length": "7178",
+      "cache_control": "no-cache",
+      "head_bytes": "const SW_VERSION = \"city",
+      "sha256": "1fc94905be2dbf920f7d933ebf65d81af531728bc2688a3f657066bc0b629ac9",
+      "is_html_fallback": false,
+      "error": null,
+      "base": "http://127.0.0.1:4781",
+      "auth_applied": false,
+      "body_size": 7178,
+      "disk_present": true,
+      "disk_bytes": 7178,
+      "disk_sha256": "1fc94905be2dbf920f7d933ebf65d81af531728bc2688a3f657066bc0b629ac9",
+      "expect_content_type_substring": "javascript",
+      "verdict": "GREEN"
+     },
+     {
+      "path": "/sw.js",
+      "status": 200,
+      "content_type": "text/javascript",
+      "length": "7178",
+      "cache_control": "no-cache",
+      "head_bytes": "const SW_VERSION = \"city",
+      "sha256": "1fc94905be2dbf920f7d933ebf65d81af531728bc2688a3f657066bc0b629ac9",
+      "is_html_fallback": false,
+      "error": null,
+      "base": "http://127.0.0.1:4781",
+      "auth_applied": false,
+      "body_size": 7178,
+      "disk_present": true,
+      "disk_bytes": 7178,
+      "disk_sha256": "1fc94905be2dbf920f7d933ebf65d81af531728bc2688a3f657066bc0b629ac9",
+      "expect_content_type_substring": "javascript",
+      "verdict": "GREEN"
+     }
+    ],
+    "red_refs": []
+   },
+   {
+    "verdict": "GREEN",
+    "times": 2,
+    "statuses": [
+     200,
+     200
+    ],
+    "probes": [
+     {
+      "path": "/v10-sw.js",
+      "status": 200,
+      "content_type": "text/javascript",
+      "length": "2055",
+      "cache_control": "no-cache",
+      "head_bytes": "if(!self.define){let e,s",
+      "sha256": "860a6fdd6515f205ddcb6cee5a7259363e4aa0879b6777ec07ae28a653641fdf",
+      "is_html_fallback": false,
+      "error": null,
+      "base": "http://127.0.0.1:4781",
+      "auth_applied": false,
+      "body_size": 2055,
+      "disk_present": true,
+      "disk_bytes": 2055,
+      "disk_sha256": "860a6fdd6515f205ddcb6cee5a7259363e4aa0879b6777ec07ae28a653641fdf",
+      "expect_content_type_substring": "javascript",
+      "verdict": "GREEN"
+     },
+     {
+      "path": "/v10-sw.js",
+      "status": 200,
+      "content_type": "text/javascript",
+      "length": "2055",
+      "cache_control": "no-cache",
+      "head_bytes": "if(!self.define){let e,s",
+      "sha256": "860a6fdd6515f205ddcb6cee5a7259363e4aa0879b6777ec07ae28a653641fdf",
+      "is_html_fallback": false,
+      "error": null,
+      "base": "http://127.0.0.1:4781",
+      "auth_applied": false,
+      "body_size": 2055,
+      "disk_present": true,
+      "disk_bytes": 2055,
+      "disk_sha256": "860a6fdd6515f205ddcb6cee5a7259363e4aa0879b6777ec07ae28a653641fdf",
+      "expect_content_type_substring": "javascript",
+      "verdict": "GREEN"
+     }
+    ],
+    "red_refs": []
+   }
+  ],
+  "E_NOTE": "200 alone is never sufficient: a 200 that carries HTML at a .js URL is DEPLOYMENT_RED / STALE_CLIENT_BREAKAGE_RISK. Every entry above records the first bytes and content-type, not just the status."
+ },
+ "overall": "RED"
+}
