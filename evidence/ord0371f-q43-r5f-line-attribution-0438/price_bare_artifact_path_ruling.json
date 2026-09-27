@@ -1,0 +1,580 @@
+{
+ "ruler": {
+  "file": "claim_coordinate_check_r5f.py",
+  "blob": "0efaa7dd7c23cbda574e42b33a723cf7df5fd7cd"
+ },
+ "hypothesis_under_test": "a bare artifact path (with an extension, no `:line`) counts as a same-line coordinate",
+ "not_applied": "This tool does not change the ruler; it prices the decision for the commander. r5f still accepts only `path:line` and a full 40-hex.",
+ "summary": {
+  "blocks": 22,
+  "findings_as_ordered": 107,
+  "findings_with_bare_path": 23,
+  "green_as_ordered": 2,
+  "green_with_bare_path": 11,
+  "blocks_needing_this_ruling": [
+   "map_0343.md",
+   "map_0404.md",
+   "n2_0105.md",
+   "n2_0213.md",
+   "n2_0224.md",
+   "n2_0430.md",
+   "n2_1759.md",
+   "qoder-0380_0314.md",
+   "rel_0408.md"
+  ],
+  "blocks_still_red_after_it": [
+   "n2_0144.md",
+   "n2_0152.md",
+   "n2_0156.md",
+   "n2_0200.md",
+   "n2_0219.md",
+   "n2_0228.md",
+   "qoder-0370_0130.md",
+   "qoder-0370_0148.md",
+   "qoder-0385_0356.md",
+   "rel_0338.md",
+   "rel_0437.md"
+  ]
+ },
+ "blocks": [
+  {
+   "file": "map_0343.md",
+   "bytes": 9791,
+   "as_ordered": {
+    "claims": 7,
+    "findings": 4,
+    "verdict": "Q43_GATE_RED",
+    "tokens": [
+     "1 次",
+     "119",
+     "3 个",
+     "5 个"
+    ]
+   },
+   "bare_path_also_counts": {
+    "claims": 3,
+    "findings": 0,
+    "verdict": "Q43_GATE_GREEN",
+    "tokens": []
+   },
+   "cleared_by_bare_path": 4,
+   "green_only_with_bare_path": true
+  },
+  {
+   "file": "map_0404.md",
+   "bytes": 6999,
+   "as_ordered": {
+    "claims": 8,
+    "findings": 2,
+    "verdict": "Q43_GATE_RED",
+    "tokens": [
+     "119 个",
+     "6 passed"
+    ]
+   },
+   "bare_path_also_counts": {
+    "claims": 5,
+    "findings": 0,
+    "verdict": "Q43_GATE_GREEN",
+    "tokens": []
+   },
+   "cleared_by_bare_path": 2,
+   "green_only_with_bare_path": true
+  },
+  {
+   "file": "n2_0101.md",
+   "bytes": 6720,
+   "as_ordered": {
+    "claims": 4,
+    "findings": 0,
+    "verdict": "Q43_GATE_GREEN",
+    "tokens": []
+   },
+   "bare_path_also_counts": {
+    "claims": 4,
+    "findings": 0,
+    "verdict": "Q43_GATE_GREEN",
+    "tokens": []
+   },
+   "cleared_by_bare_path": 0,
+   "green_only_with_bare_path": false
+  },
+  {
+   "file": "n2_0105.md",
+   "bytes": 4627,
+   "as_ordered": {
+    "claims": 2,
+    "findings": 1,
+    "verdict": "Q43_GATE_RED",
+    "tokens": [
+     "138"
+    ]
+   },
+   "bare_path_also_counts": {
+    "claims": 2,
+    "findings": 0,
+    "verdict": "Q43_GATE_GREEN",
+    "tokens": []
+   },
+   "cleared_by_bare_path": 1,
+   "green_only_with_bare_path": true
+  },
+  {
+   "file": "n2_0144.md",
+   "bytes": 4253,
+   "as_ordered": {
+    "claims": 1,
+    "findings": 1,
+    "verdict": "Q43_GATE_RED",
+    "tokens": [
+     "0.4 GB"
+    ]
+   },
+   "bare_path_also_counts": {
+    "claims": 1,
+    "findings": 1,
+    "verdict": "Q43_GATE_RED",
+    "tokens": [
+     "0.4 GB"
+    ]
+   },
+   "cleared_by_bare_path": 0,
+   "green_only_with_bare_path": false
+  },
+  {
+   "file": "n2_0152.md",
+   "bytes": 3181,
+   "as_ordered": {
+    "claims": 3,
+    "findings": 2,
+    "verdict": "Q43_GATE_RED",
+    "tokens": [
+     "0.4 GB",
+     "6 条"
+    ]
+   },
+   "bare_path_also_counts": {
+    "claims": 3,
+    "findings": 2,
+    "verdict": "Q43_GATE_RED",
+    "tokens": [
+     "0.4 GB",
+     "6 条"
+    ]
+   },
+   "cleared_by_bare_path": 0,
+   "green_only_with_bare_path": false
+  },
+  {
+   "file": "n2_0156.md",
+   "bytes": 3300,
+   "as_ordered": {
+    "claims": 5,
+    "findings": 4,
+    "verdict": "Q43_GATE_RED",
+    "tokens": [
+     "6 条"
+    ]
+   },
+   "bare_path_also_counts": {
+    "claims": 5,
+    "findings": 2,
+    "verdict": "Q43_GATE_RED",
+    "tokens": [
+     "6 条"
+    ]
+   },
+   "cleared_by_bare_path": 2,
+   "green_only_with_bare_path": false
+  },
+  {
+   "file": "n2_0200.md",
+   "bytes": 3935,
+   "as_ordered": {
+    "claims": 3,
+    "findings": 1,
+    "verdict": "Q43_GATE_RED",
+    "tokens": [
+     "0 处"
+    ]
+   },
+   "bare_path_also_counts": {
+    "claims": 3,
+    "findings": 1,
+    "verdict": "Q43_GATE_RED",
+    "tokens": [
+     "0 处"
+    ]
+   },
+   "cleared_by_bare_path": 0,
+   "green_only_with_bare_path": false
+  },
+  {
+   "file": "n2_0213.md",
+   "bytes": 3475,
+   "as_ordered": {
+    "claims": 8,
+    "findings": 3,
+    "verdict": "Q43_GATE_RED",
+    "tokens": [
+     "0 条",
+     "6 条"
+    ]
+   },
+   "bare_path_also_counts": {
+    "claims": 6,
+    "findings": 0,
+    "verdict": "Q43_GATE_GREEN",
+    "tokens": []
+   },
+   "cleared_by_bare_path": 3,
+   "green_only_with_bare_path": true
+  },
+  {
+   "file": "n2_0219.md",
+   "bytes": 3333,
+   "as_ordered": {
+    "claims": 3,
+    "findings": 1,
+    "verdict": "Q43_GATE_RED",
+    "tokens": [
+     "6 条"
+    ]
+   },
+   "bare_path_also_counts": {
+    "claims": 3,
+    "findings": 1,
+    "verdict": "Q43_GATE_RED",
+    "tokens": [
+     "6 条"
+    ]
+   },
+   "cleared_by_bare_path": 0,
+   "green_only_with_bare_path": false
+  },
+  {
+   "file": "n2_0224.md",
+   "bytes": 2882,
+   "as_ordered": {
+    "claims": 1,
+    "findings": 1,
+    "verdict": "Q43_GATE_RED",
+    "tokens": [
+     "3 条"
+    ]
+   },
+   "bare_path_also_counts": {
+    "claims": 1,
+    "findings": 0,
+    "verdict": "Q43_GATE_GREEN",
+    "tokens": []
+   },
+   "cleared_by_bare_path": 1,
+   "green_only_with_bare_path": true
+  },
+  {
+   "file": "n2_0228.md",
+   "bytes": 3059,
+   "as_ordered": {
+    "claims": 4,
+    "findings": 4,
+    "verdict": "Q43_GATE_RED",
+    "tokens": [
+     "0 个",
+     "1 个",
+     "2 个",
+     "206"
+    ]
+   },
+   "bare_path_also_counts": {
+    "claims": 4,
+    "findings": 2,
+    "verdict": "Q43_GATE_RED",
+    "tokens": [
+     "0 个",
+     "2 个"
+    ]
+   },
+   "cleared_by_bare_path": 2,
+   "green_only_with_bare_path": false
+  },
+  {
+   "file": "n2_0430.md",
+   "bytes": 4519,
+   "as_ordered": {
+    "claims": 1,
+    "findings": 1,
+    "verdict": "Q43_GATE_RED",
+    "tokens": [
+     "16623"
+    ]
+   },
+   "bare_path_also_counts": {
+    "claims": 1,
+    "findings": 0,
+    "verdict": "Q43_GATE_GREEN",
+    "tokens": []
+   },
+   "cleared_by_bare_path": 1,
+   "green_only_with_bare_path": true
+  },
+  {
+   "file": "n2_1759.md",
+   "bytes": 5550,
+   "as_ordered": {
+    "claims": 8,
+    "findings": 2,
+    "verdict": "Q43_GATE_RED",
+    "tokens": [
+     "2148",
+     "52 秒"
+    ]
+   },
+   "bare_path_also_counts": {
+    "claims": 7,
+    "findings": 0,
+    "verdict": "Q43_GATE_GREEN",
+    "tokens": []
+   },
+   "cleared_by_bare_path": 2,
+   "green_only_with_bare_path": true
+  },
+  {
+   "file": "n2_1824.md",
+   "bytes": 4650,
+   "as_ordered": {
+    "claims": 9,
+    "findings": 0,
+    "verdict": "Q43_GATE_GREEN",
+    "tokens": []
+   },
+   "bare_path_also_counts": {
+    "claims": 5,
+    "findings": 0,
+    "verdict": "Q43_GATE_GREEN",
+    "tokens": []
+   },
+   "cleared_by_bare_path": 0,
+   "green_only_with_bare_path": false
+  },
+  {
+   "file": "qoder-0370_0130.md",
+   "bytes": 13921,
+   "as_ordered": {
+    "claims": 63,
+    "findings": 13,
+    "verdict": "Q43_GATE_RED",
+    "tokens": [
+     "27G",
+     "28G",
+     "3 处",
+     "38 处",
+     "4 处",
+     "409M",
+     "617",
+     "629",
+     "81 个",
+     "875 个"
+    ]
+   },
+   "bare_path_also_counts": {
+    "claims": 49,
+    "findings": 1,
+    "verdict": "Q43_GATE_RED",
+    "tokens": [
+     "409M"
+    ]
+   },
+   "cleared_by_bare_path": 12,
+   "green_only_with_bare_path": false
+  },
+  {
+   "file": "qoder-0370_0148.md",
+   "bytes": 8630,
+   "as_ordered": {
+    "claims": 16,
+    "findings": 6,
+    "verdict": "Q43_GATE_RED",
+    "tokens": [
+     "0 处",
+     "129 个",
+     "174",
+     "4 个",
+     "77 处"
+    ]
+   },
+   "bare_path_also_counts": {
+    "claims": 16,
+    "findings": 5,
+    "verdict": "Q43_GATE_RED",
+    "tokens": [
+     "0 处",
+     "129 个",
+     "4 个",
+     "77 处"
+    ]
+   },
+   "cleared_by_bare_path": 1,
+   "green_only_with_bare_path": false
+  },
+  {
+   "file": "qoder-0380_0314.md",
+   "bytes": 8179,
+   "as_ordered": {
+    "claims": 4,
+    "findings": 1,
+    "verdict": "Q43_GATE_RED",
+    "tokens": [
+     "399"
+    ]
+   },
+   "bare_path_also_counts": {
+    "claims": 3,
+    "findings": 0,
+    "verdict": "Q43_GATE_GREEN",
+    "tokens": []
+   },
+   "cleared_by_bare_path": 1,
+   "green_only_with_bare_path": true
+  },
+  {
+   "file": "qoder-0385_0356.md",
+   "bytes": 10017,
+   "as_ordered": {
+    "claims": 23,
+    "findings": 5,
+    "verdict": "Q43_GATE_RED",
+    "tokens": [
+     "17 条",
+     "216 条",
+     "399",
+     "73 处",
+     "9 处"
+    ]
+   },
+   "bare_path_also_counts": {
+    "claims": 22,
+    "findings": 4,
+    "verdict": "Q43_GATE_RED",
+    "tokens": [
+     "17 条",
+     "216 条",
+     "73 处",
+     "9 处"
+    ]
+   },
+   "cleared_by_bare_path": 1,
+   "green_only_with_bare_path": false
+  },
+  {
+   "file": "rel_0338.md",
+   "bytes": 13470,
+   "as_ordered": {
+    "claims": 43,
+    "findings": 27,
+    "verdict": "Q43_GATE_RED",
+    "tokens": [
+     "0 条",
+     "1 passed",
+     "1 条",
+     "10 failed",
+     "11.97s",
+     "120 个",
+     "1367 passed",
+     "1393",
+     "15 s",
+     "235.93s",
+     "2423 B",
+     "4 个",
+     "4 处",
+     "4 条",
+     "5 条",
+     "5.56s",
+     "5.77s",
+     "56660 B",
+     "62 passed",
+     "71 个"
+    ]
+   },
+   "bare_path_also_counts": {
+    "claims": 19,
+    "findings": 1,
+    "verdict": "Q43_GATE_RED",
+    "tokens": [
+     "4 处"
+    ]
+   },
+   "cleared_by_bare_path": 26,
+   "green_only_with_bare_path": false
+  },
+  {
+   "file": "rel_0408.md",
+   "bytes": 10219,
+   "as_ordered": {
+    "claims": 19,
+    "findings": 11,
+    "verdict": "Q43_GATE_RED",
+    "tokens": [
+     "1368 passed",
+     "149",
+     "15 s",
+     "198.95s",
+     "23992",
+     "2423 B",
+     "62 passed",
+     "8.46s",
+     "89 个",
+     "9 failed"
+    ]
+   },
+   "bare_path_also_counts": {
+    "claims": 10,
+    "findings": 0,
+    "verdict": "Q43_GATE_GREEN",
+    "tokens": []
+   },
+   "cleared_by_bare_path": 11,
+   "green_only_with_bare_path": true
+  },
+  {
+   "file": "rel_0437.md",
+   "bytes": 9285,
+   "as_ordered": {
+    "claims": 23,
+    "findings": 17,
+    "verdict": "Q43_GATE_RED",
+    "tokens": [
+     "1 failed",
+     "1368 passed",
+     "136979",
+     "1393",
+     "141104 B",
+     "149",
+     "15 s",
+     "204.69s",
+     "4 个",
+     "4 处",
+     "4.77s",
+     "5 个",
+     "5 条",
+     "56630 B",
+     "78 passed",
+     "8140",
+     "9 failed"
+    ]
+   },
+   "bare_path_also_counts": {
+    "claims": 15,
+    "findings": 3,
+    "verdict": "Q43_GATE_RED",
+    "tokens": [
+     "1393",
+     "4.77s",
+     "56630 B"
+    ]
+   },
+   "cleared_by_bare_path": 14,
+   "green_only_with_bare_path": false
+  }
+ ]
+}
