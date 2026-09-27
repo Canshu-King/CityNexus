@@ -193,7 +193,7 @@ paths:
                   # against the old shape neither breaks on it nor is promised the field.
                   ai_state:
                     type: string
-                    enum: [READY, NOT_CONFIGURED, DISABLED_BY_OPS, PROVIDER_REFUSED]
+                    enum: [CONFIGURED_UNVERIFIED, NOT_CONFIGURED, DISABLED_BY_OPS, PROVIDER_REFUSED]
                   hermes_native_gateway: {type: object}
   /agent/hermes/capabilities:
     get:
@@ -1819,7 +1819,7 @@ components:
         # reason, which `ai` cannot do because it folds three different facts into one string.
         ai_state:
           type: string
-          enum: [READY, NOT_CONFIGURED, DISABLED_BY_OPS, PROVIDER_REFUSED]
+          enum: [CONFIGURED_UNVERIFIED, NOT_CONFIGURED, DISABLED_BY_OPS, PROVIDER_REFUSED]
     ErrorEnvelope:
       type: object
       required: [error]

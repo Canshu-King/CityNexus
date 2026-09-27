@@ -30,12 +30,20 @@ from __future__ import annotations
 
 from app.core.config import settings
 
-AI_READY = "READY"
+# r2 called this READY. Measured on a private backend at the tip 4ef864cfa49b805e3d41b7f079f5fb4184ccec3d,
+# a deliberately fake key string produced `ai=enabled, ai_state=READY` - the word promised "it works" on
+# the strength of "a string is present". The name now says exactly what is known and nothing more.
+AI_CONFIGURED_UNVERIFIED = "CONFIGURED_UNVERIFIED"
 AI_NOT_CONFIGURED = "NOT_CONFIGURED"
 AI_DISABLED_BY_OPS = "DISABLED_BY_OPS"
 AI_PROVIDER_REFUSED = "PROVIDER_REFUSED"
 
-AI_STATES = (AI_READY, AI_NOT_CONFIGURED, AI_DISABLED_BY_OPS, AI_PROVIDER_REFUSED)
+AI_STATES = (
+    AI_CONFIGURED_UNVERIFIED,
+    AI_NOT_CONFIGURED,
+    AI_DISABLED_BY_OPS,
+    AI_PROVIDER_REFUSED,
+)
 
 
 def ai_availability_state(*, provider_refused: bool = False) -> str:
@@ -47,7 +55,7 @@ def ai_availability_state(*, provider_refused: bool = False) -> str:
         return AI_DISABLED_BY_OPS
     if not settings.ai_api_key and not (settings.hermes_api_url and settings.hermes_api_key):
         return AI_NOT_CONFIGURED
-    return AI_READY
+    return AI_CONFIGURED_UNVERIFIED
 
 
 # The sentences this product writes into `AgentRun.failure_reason` / `JourneyMission.failure_reason`.
@@ -57,10 +65,29 @@ _CONFIGURED_SENTENCES = (
     "DeepSeek API key is not configured",
     "Hermes runtime endpoint is not configured",
 )
+_OPS_SENTENCE = "AI is switched off by the operator"
 _REFUSED_SENTENCES = (
     "DeepSeek Agent completion failed",
     "Hermes Agent completion failed",
 )
+
+
+# One table, so a run's stored sentence and the health endpoint's word cannot drift apart: the
+# sentence is written FROM the state and read BACK into the same state.
+STATE_SENTENCES = {
+    AI_NOT_CONFIGURED: "No AI credential is configured on this server",
+    AI_DISABLED_BY_OPS: "AI is switched off by the operator",
+    AI_PROVIDER_REFUSED: "The configured AI provider refused this request",
+    AI_CONFIGURED_UNVERIFIED: "An AI credential is configured but has not been verified",
+}
+
+
+def reason_sentence(state: str) -> str:
+    """The server's own words for a state, from the same table the parser reads."""
+
+    if state not in STATE_SENTENCES:
+        raise ValueError(f"unknown AI availability state: {state}")
+    return STATE_SENTENCES[state]
 
 
 def ai_state_from_failure_reason(reason: str | None) -> str | None:
@@ -73,4 +100,6 @@ def ai_state_from_failure_reason(reason: str | None) -> str | None:
         return AI_PROVIDER_REFUSED
     if any(marker in text for marker in _CONFIGURED_SENTENCES):
         return AI_NOT_CONFIGURED
+    if _OPS_SENTENCE in text:
+        return AI_DISABLED_BY_OPS
     return None

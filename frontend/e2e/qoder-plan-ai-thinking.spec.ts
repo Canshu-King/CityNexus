@@ -438,14 +438,14 @@ test.describe("ORD-0038 the AI sheet reports what it actually knows", () => {
   }) => {
     test.setTimeout(150_000);
     const cases: { label: string; fail?: boolean; status: number; body: string; want: string }[] = [
-      { label: "configured", status: 200, body: '{"deepseek_configured":true}', want: "ready" },
+      { label: "configured", status: 200, body: '{"deepseek_configured":true}', want: "configured_unverified" },
       { label: "not configured", status: 200, body: '{"deepseek_configured":false}', want: "not_configured" },
       // ORD-0359: three causes, three words. A server that names the operator's switch must not be
       // painted as a missing credential, and neither may be painted as the provider refusing.
       { label: "switch off", status: 200, body: '{"ai_state":"DISABLED_BY_OPS","deepseek_configured":true}', want: "disabled_by_ops" },
       { label: "no credential", status: 200, body: '{"ai_state":"NOT_CONFIGURED","deepseek_configured":false}', want: "not_configured" },
       { label: "provider refused", status: 200, body: '{"ai_state":"PROVIDER_REFUSED","deepseek_configured":true}', want: "provider_refused" },
-      { label: "server says ready", status: 200, body: '{"ai_state":"READY","deepseek_configured":true}', want: "ready" },
+      { label: "server says configured", status: 200, body: '{"ai_state":"CONFIGURED_UNVERIFIED","deepseek_configured":true}', want: "configured_unverified" },
       // the named field wins over the boolean, so a stale `deepseek_configured` cannot overrule it
       { label: "named beats boolean", status: 200, body: '{"ai_state":"DISABLED_BY_OPS","deepseek_configured":true}', want: "disabled_by_ops" },
       { label: "http 500", status: 500, body: "boom", want: "unknown" },
@@ -474,7 +474,8 @@ test.describe("ORD-0038 the AI sheet reports what it actually knows", () => {
       const text = (await chip.innerText()).trim();
       seen[item.label] = `${got} :: ${text}`;
       expect(
-        /已接入 AI 模型|A model is configured on this server/.test(text) && item.want !== "ready",
+        /已接入 AI 模型|A model is configured on this server|配了一个 AI 凭据/.test(text) &&
+          item.want !== "configured_unverified",
         node("plan-ai-preflight-honest",
           `the sheet claimed a model was configured after case ${JSON.stringify(item.label)}: `
           + `${JSON.stringify(text)}`),

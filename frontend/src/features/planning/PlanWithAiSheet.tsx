@@ -378,7 +378,7 @@ function statusCopy(
  */
 export type AiPreflightState =
   | "checking"
-  | "ready"
+  | "configured_unverified"
   | "not_configured"
   | "disabled_by_ops"
   | "provider_refused"
@@ -387,7 +387,7 @@ export type AiPreflightState =
 /** The tone a state is painted with. `styles.css` is held by other lanes today, so the three new
  * states reuse the class the old `unconfigured` state already had rather than adding one. */
 export function aiPreflightClass(state: AiPreflightState): string {
-  return state === "ready" ? "ready" : state === "checking" ? "checking" : state === "unknown" ? "unknown" : "unconfigured";
+  return state === "configured_unverified" ? "ready" : state === "checking" ? "checking" : state === "unknown" ? "unknown" : "unconfigured";
 }
 
 export function aiStateFromServer(body: {
@@ -396,8 +396,8 @@ export function aiStateFromServer(body: {
 } | null): AiPreflightState {
   if (!body) return "unknown";
   switch (typeof body.ai_state === "string" ? body.ai_state : "") {
-    case "READY":
-      return "ready";
+    case "CONFIGURED_UNVERIFIED":
+      return "configured_unverified";
     case "NOT_CONFIGURED":
       return "not_configured";
     case "DISABLED_BY_OPS":
@@ -408,7 +408,7 @@ export function aiStateFromServer(body: {
       break;
   }
   if (typeof body.deepseek_configured === "boolean") {
-    return body.deepseek_configured ? "ready" : "not_configured";
+    return body.deepseek_configured ? "configured_unverified" : "not_configured";
   }
   return "unknown";
 }
@@ -1020,8 +1020,10 @@ export function PlanWithAiSheet({
             data-testid="plan-ai-preflight"
             data-ai-state={aiState}
           >
-            {aiState === "ready" &&
-              (zh ? "这台服务已接入 AI 模型。" : "A model is configured on this server.")}
+            {aiState === "configured_unverified" &&
+              (zh
+                ? "这台服务配了一个 AI 凭据。这里只说明"配了"，没有验证过它能用；这一句不代表你下一次提交会成功。"
+                : "This server has an AI credential configured. That says something is set, not that it works — it is no promise that your next submission succeeds.")}
             {aiState === "not_configured" &&
               (zh
                 ? "这台服务没有配置 AI 凭据。这是服务器少了一样东西，与你写了什么、你的预算或你的网络都无关；行程不会被改动。"

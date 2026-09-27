@@ -16,6 +16,11 @@ from app.agent.runtime_identity import NATIVE_DEEPSEEK_TOOL_LOOP, runtime_identi
 from app.agent.tool_catalog import RUNTIME_MCP_ALLOWLIST_V2
 from app.core.audit import record_audit
 from app.core.config import settings
+from app.agent.ai_availability import (
+    ai_availability_state,
+    ai_state_from_failure_reason,
+    reason_sentence,
+)
 from app.db.models import AgentRun, AgentRunStep, Journey, JourneyMission
 from app.execution.traveler_twin import refresh_snapshot, snapshot_payload
 from app.integrations.ai.responses import DeepSeekResponsesClient, DeepSeekResponsesError
@@ -236,6 +241,14 @@ def persisted_agent_run_payload(session: Session, run: AgentRun) -> dict[str, An
         "status": run.status,
         "outcome": run.outcome,
         "failure_reason": run.failure_reason,
+        # The read route answers with the same enumeration the health endpoint uses. A run that
+        # stored a reason reports that reason; a run that stored none reports the current state,
+        # which is a statement about the switch and the credential, not about this run.
+        "ai_state": (
+            ai_state_from_failure_reason(run.failure_reason)
+            if run.failure_reason
+            else ai_availability_state()
+        ),
         "created_at": run.created_at,
         "started_at": run.started_at,
         "completed_at": run.completed_at,
@@ -640,7 +653,10 @@ def unavailable_run_payload(
         provider_key="deepseek",
         model_key=_model_name(),
         status="SKIPPED_EXTERNAL_DEPENDENCY",
-        failure_reason="DeepSeek API key is not configured",
+        # r2 stored this fixed literal no matter why the door above declined. The word now comes
+        # from the same table `/health` reads, so a run can never claim a missing credential while
+        # the operator's switch is what the server actually reports.
+        failure_reason=reason_sentence(ai_availability_state()),
         created_at=now,
         started_at=now,
         completed_at=now,

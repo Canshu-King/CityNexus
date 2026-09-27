@@ -36,7 +36,7 @@ from app.agent.ai_availability import (
     AI_DISABLED_BY_OPS,
     AI_NOT_CONFIGURED,
     AI_PROVIDER_REFUSED,
-    AI_READY,
+    AI_CONFIGURED_UNVERIFIED,
     ai_availability_state,
     ai_state_from_failure_reason,
 )
@@ -96,7 +96,7 @@ def test_the_three_causes_are_three_different_words(monkeypatch) -> None:
         provider_said_no,
     )
     # and the fourth name is not one of the three complaints
-    assert ai_availability_state() == AI_READY
+    assert ai_availability_state() == AI_CONFIGURED_UNVERIFIED
 
 
 def test_the_producer_is_the_only_place_that_invents_a_word(monkeypatch) -> None:
@@ -258,3 +258,126 @@ def test_a_mission_that_stored_its_reason_is_read_from_that_reason(monkeypatch) 
     assert payload["ai_state"] == AI_PROVIDER_REFUSED, payload
     # the switch is off in this arm, and that must not have overwritten the run's own reason
     assert payload["ai_state"] != AI_DISABLED_BY_OPS, payload
+
+
+# ------------------------------------------------ ORD-0359 r3: one word per cause, everywhere
+
+
+def test_the_positive_word_cannot_be_read_as_a_working_model(monkeypatch) -> None:
+    """r2 emitted `READY` for a store holding a garbage credential string.
+
+    Measured on a private backend at 4ef864cfa49b805e3d41b7f079f5fb4184ccec3d: a deliberately fake
+    key produced `ai=enabled, ai_state=READY`. "Ready" is a promise about the next request, and the
+    only fact available at that moment is that some string is configured, so the vocabulary now
+    says the weaker thing. This arm fails if the old word comes back or if the new one is
+    reintroduced as a claim of working.
+    """
+
+    _configure(monkeypatch, enabled=True, key="definitely-not-a-real-key")
+
+    state = ai_availability_state()
+
+    assert state == "CONFIGURED_UNVERIFIED", state
+    assert state != "READY", state
+    # Substring checks are the trap here: `CONFIGURED_UNVERIFIED` legitimately contains
+    # "verified", so a naive `"verified" not in state` fails on the correct answer. Compare whole
+    # words, and require the negation to be present rather than implying success by absence.
+    assert state.split("_")[-1] != "READY", state
+    assert "UNVERIFIED" in state, state
+    assert state.upper() not in {"READY", "AVAILABLE", "OK", "WORKING"}, state
+
+
+def test_health_and_a_run_read_route_answer_with_the_same_word(monkeypatch) -> None:
+    """The order's requirement: the read route and the health endpoint give one word."""
+
+    _configure(monkeypatch, enabled=False, key=None)
+
+    health = client.get("/api/v1/health").json()
+    status = runtime_status()
+
+    assert health["ai_state"] == "DISABLED_BY_OPS", health
+    assert status["ai_state"] == health["ai_state"], (status["ai_state"], health["ai_state"])
+
+
+def test_a_stored_reason_and_the_state_table_round_trip(monkeypatch) -> None:
+    """The sentence a run stores is written from the table and reads back into the same state.
+
+    Before r3 the skip path stored a fixed literal whatever the reason was, so a run could claim a
+    missing credential while the server's own switch word said something else.
+    """
+
+    from app.agent.ai_availability import reason_sentence
+
+    _configure(monkeypatch, enabled=False, key="test-key-present")
+
+    state = ai_availability_state()
+    sentence = reason_sentence(state)
+    read_back = ai_state_from_failure_reason(sentence)
+
+    assert state == AI_DISABLED_BY_OPS, state
+    assert sentence == "AI is switched off by the operator", sentence
+    assert read_back == state, (sentence, read_back)
+    # sentences already stored by the previous tip still resolve - rows are real user state
+    assert ai_state_from_failure_reason("DeepSeek API key is not configured") == AI_NOT_CONFIGURED
+    assert ai_state_from_failure_reason("DeepSeek Agent completion failed") == AI_PROVIDER_REFUSED
+
+
+def test_reason_sentence_refuses_to_invent_a_word_for_an_unknown_state() -> None:
+    import pytest
+
+    from app.agent.ai_availability import reason_sentence
+
+    with pytest.raises(ValueError):
+        reason_sentence("SOMETHING_ELSE")
+
+
+def test_the_skip_path_stores_this_state_not_a_fixed_literal(monkeypatch) -> None:
+    """The arm that makes the wiring, not the vocabulary table, the thing under test.
+
+    `unavailable_run_payload` used to write one literal sentence whatever the reason was. Driving
+    it with the operator switch off (and a credential present, so the old literal would have been
+    wrong in two ways at once) proves the stored reason comes from the same call `/health` makes.
+    """
+
+    from app.agent.runtime import unavailable_run_payload
+    from app.db.models import Journey, JourneyMission, Traveler
+    from app.db.session import SessionLocal
+    from app.agent.ai_availability import reason_sentence
+
+    _configure(monkeypatch, enabled=False, key="a-key-is-present")
+    now = datetime.now(timezone.utc).isoformat()
+    traveler_id, journey_id, mission_id = str(uuid4()), str(uuid4()), str(uuid4())
+    with SessionLocal() as session:
+        session.add(
+            Traveler(
+                id=traveler_id, display_name="ORD-0359 r3", email=None, locale="zh-CN",
+                timezone="Asia/Shanghai", created_at=now, updated_at=now,
+            )
+        )
+        session.flush()
+        session.add(
+            Journey(
+                id=journey_id, traveler_id=traveler_id, title="ORD-0359 r3",
+                city_code="CN-XIAMEN", timezone="Asia/Shanghai", start_at=now,
+                end_at=(datetime.now(timezone.utc) + timedelta(days=2)).isoformat(),
+                budget_currency="CNY", budget_amount_minor=90000, planning_mode="balanced",
+                status="DRAFT", active_plan_version_id=None, current_activity_id=None,
+                created_at=now, updated_at=now,
+            )
+        )
+        session.flush()
+        mission = JourneyMission(
+            id=mission_id, journey_id=journey_id, traveler_id=traveler_id,
+            user_text="plan it", status="SKIPPED_EXTERNAL_DEPENDENCY",
+            created_at=now,
+        )
+        session.add(mission)
+        session.commit()
+        payload = unavailable_run_payload(session, journey=session.get(Journey, journey_id),
+                                          mission=session.get(JourneyMission, mission_id))
+        session.rollback()
+
+    assert payload["ai_state"] == AI_DISABLED_BY_OPS, payload
+    assert payload["failure_reason"] == reason_sentence(AI_DISABLED_BY_OPS), payload
+    assert payload["failure_reason"] != "DeepSeek API key is not configured", payload
+    assert payload["mission"]["ai_state"] == AI_DISABLED_BY_OPS, payload["mission"]
