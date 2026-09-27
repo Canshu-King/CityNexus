@@ -1,0 +1,37 @@
+DOM length: 13477
+button labels: 31
+  [0] 今天
+  [1] 实时行程
+  [2] 地图
+  [3] 行程工作台
+  [4] 住宿选择
+  [5] 城市探索
+  [6] 旅行票夹
+  [7] Copilot
+  [8] 恢复与执行
+  [9] 智能守护
+  [10] 旅行者画像
+  [11] GU Guangzhou 1 位旅行者 •••
+  [12] 菜单
+  [13] 跟随系统
+  [14] EN
+  [15] ◌
+  [16] GU
+  [17] AI 帮我规划
+  [18] 试用其他城市
+  [19] 打开行程工作台
+  [20] 复制行程链接
+  [21] 查看实时行程
+  [22] 对比住宿 →
+  [23] 第 1 天 星期一 广州南站 · Check in · 7天酒店 · Overnight · 7天酒店 公交地铁 抵达锚点
+  [24] 第 2 天 星期二 Check out · 7天酒店 · 广州南站 驾车 离开锚点
+  [25] ✦ CityNexus Copilot
+  [26] 今天
+  [27] 行程
+  [28] 地图
+  [29] Copilot
+  [30] 我的
+
+share control markup (trimmed):
+  NOT FOUND as a plain button tag
+  surrounding context: s" data-testid="hub-secondary-actions"><button type="button" class="v8-quiet-button" data-testid="hub-plan-with-ai">AI 帮我规划</button><button type="button" class="v8-quiet-button">试用其他城市</button><button type="button" class="v8-quiet-button">打开行程工作台</button><div class="journey-link-action"><button type="button" class="v8-quiet-button" data-testid="journey-link-copy" data-cnx-field="journey_link_url">复制行程链接</button></div></div></div><div class="v8-hero-grid"><article class="v8-trip-hero cn-now-next-hero" data-testid="t
