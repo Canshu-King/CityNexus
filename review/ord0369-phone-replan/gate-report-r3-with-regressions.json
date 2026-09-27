@@ -19,7 +19,7 @@
     "grepInvert": null,
     "maxFailures": 0,
     "metadata": {
-      "actualWorkers": 2
+      "actualWorkers": 3
     },
     "preserveOutput": "always",
     "projects": [
@@ -28,14 +28,14 @@
         "repeatEach": 1,
         "retries": 0,
         "metadata": {
-          "actualWorkers": 2
+          "actualWorkers": 3
         },
         "id": "",
         "name": "",
         "testDir": "D:/moodle/_qoder_q_ord0369_wk/build/frontend/e2e",
         "testIgnore": [],
         "testMatch": [
-          "/qoder-ord0369-|qoder-model-words-are-labelled/"
+          "/qoder-ord0369-|qoder-model-words-are-labelled|qoder-ord0373-/"
         ],
         "timeout": 240000
       }
@@ -49,7 +49,7 @@
       [
         "json",
         {
-          "outputFile": "D:/moodle/_qoder_q_ord0369_wk\\report-ord0369-1790533918.json"
+          "outputFile": "D:/moodle/_qoder_q_ord0369_wk\\report-ord0369-1790535288.json"
         }
       ]
     ],
@@ -95,12 +95,12 @@
                   "workerIndex": 0,
                   "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 3846,
+                  "duration": 6191,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-09-27T18:32:02.027Z",
+                  "startTime": "2026-09-27T18:54:51.857Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -129,12 +129,12 @@
                   "workerIndex": 0,
                   "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 1675,
+                  "duration": 2002,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-09-27T18:32:06.135Z",
+                  "startTime": "2026-09-27T18:54:58.420Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -163,12 +163,12 @@
                   "workerIndex": 0,
                   "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 1522,
+                  "duration": 2362,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-09-27T18:32:07.826Z",
+                  "startTime": "2026-09-27T18:55:00.441Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -205,12 +205,12 @@
                   "workerIndex": 1,
                   "parallelIndex": 1,
                   "status": "passed",
-                  "duration": 1522,
+                  "duration": 1692,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-09-27T18:32:22.800Z",
+                  "startTime": "2026-09-27T18:55:17.420Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -220,7 +220,7 @@
           ],
           "id": "8cd7a36f7228cb326ef4-1c41122ba6edd51e4038",
           "file": "qoder-ord0369-replan-walkthrough.spec.ts",
-          "line": 358,
+          "line": 361,
           "column": 1
         },
         {
@@ -239,12 +239,12 @@
                   "workerIndex": 1,
                   "parallelIndex": 1,
                   "status": "passed",
-                  "duration": 1379,
+                  "duration": 1600,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-09-27T18:32:24.333Z",
+                  "startTime": "2026-09-27T18:55:19.130Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -254,7 +254,7 @@
           ],
           "id": "8cd7a36f7228cb326ef4-df51cc914631ae0b2b9e",
           "file": "qoder-ord0369-replan-walkthrough.spec.ts",
-          "line": 365,
+          "line": 368,
           "column": 1
         },
         {
@@ -273,12 +273,12 @@
                   "workerIndex": 1,
                   "parallelIndex": 1,
                   "status": "passed",
-                  "duration": 1330,
+                  "duration": 1619,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-09-27T18:32:25.725Z",
+                  "startTime": "2026-09-27T18:55:20.748Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -288,7 +288,7 @@
           ],
           "id": "8cd7a36f7228cb326ef4-ef68758f33f036e27898",
           "file": "qoder-ord0369-replan-walkthrough.spec.ts",
-          "line": 373,
+          "line": 376,
           "column": 1
         },
         {
@@ -307,12 +307,12 @@
                   "workerIndex": 1,
                   "parallelIndex": 1,
                   "status": "passed",
-                  "duration": 1460,
+                  "duration": 1733,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-09-27T18:32:27.067Z",
+                  "startTime": "2026-09-27T18:55:22.383Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -322,7 +322,7 @@
           ],
           "id": "8cd7a36f7228cb326ef4-26f9c1d86135a57e7a8f",
           "file": "qoder-ord0369-replan-walkthrough.spec.ts",
-          "line": 379,
+          "line": 382,
           "column": 1
         }
       ],
@@ -349,12 +349,12 @@
                       "workerIndex": 1,
                       "parallelIndex": 1,
                       "status": "passed",
-                      "duration": 3844,
+                      "duration": 5914,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-09-27T18:32:02.040Z",
+                      "startTime": "2026-09-27T18:54:51.843Z",
                       "annotations": [],
                       "attachments": []
                     }
@@ -383,12 +383,12 @@
                       "workerIndex": 1,
                       "parallelIndex": 1,
                       "status": "passed",
-                      "duration": 2071,
+                      "duration": 2164,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-09-27T18:32:06.136Z",
+                      "startTime": "2026-09-27T18:54:58.144Z",
                       "annotations": [],
                       "attachments": []
                     }
@@ -417,12 +417,12 @@
                       "workerIndex": 1,
                       "parallelIndex": 1,
                       "status": "passed",
-                      "duration": 2114,
+                      "duration": 2786,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-09-27T18:32:08.233Z",
+                      "startTime": "2026-09-27T18:55:00.330Z",
                       "annotations": [],
                       "attachments": []
                     }
@@ -451,12 +451,12 @@
                       "workerIndex": 1,
                       "parallelIndex": 1,
                       "status": "passed",
-                      "duration": 1401,
+                      "duration": 1865,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-09-27T18:32:10.358Z",
+                      "startTime": "2026-09-27T18:55:03.135Z",
                       "annotations": [],
                       "attachments": []
                     }
@@ -493,12 +493,12 @@
                       "workerIndex": 1,
                       "parallelIndex": 1,
                       "status": "passed",
-                      "duration": 1620,
+                      "duration": 1786,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-09-27T18:32:11.773Z",
+                      "startTime": "2026-09-27T18:55:05.018Z",
                       "annotations": [],
                       "attachments": []
                     }
@@ -527,12 +527,12 @@
                       "workerIndex": 1,
                       "parallelIndex": 1,
                       "status": "passed",
-                      "duration": 3021,
+                      "duration": 3334,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-09-27T18:32:13.417Z",
+                      "startTime": "2026-09-27T18:55:06.823Z",
                       "annotations": [],
                       "attachments": []
                     }
@@ -561,12 +561,12 @@
                       "workerIndex": 1,
                       "parallelIndex": 1,
                       "status": "passed",
-                      "duration": 2235,
+                      "duration": 2557,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-09-27T18:32:16.450Z",
+                      "startTime": "2026-09-27T18:55:10.174Z",
                       "annotations": [],
                       "attachments": []
                     }
@@ -576,7 +576,7 @@
               ],
               "id": "8cd7a36f7228cb326ef4-3f08c2a8ac78095f2da9",
               "file": "qoder-ord0369-replan-walkthrough.spec.ts",
-              "line": 227,
+              "line": 230,
               "column": 3
             },
             {
@@ -595,12 +595,12 @@
                       "workerIndex": 1,
                       "parallelIndex": 1,
                       "status": "passed",
-                      "duration": 1564,
+                      "duration": 1739,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-09-27T18:32:18.696Z",
+                      "startTime": "2026-09-27T18:55:12.747Z",
                       "annotations": [],
                       "attachments": []
                     }
@@ -610,7 +610,7 @@
               ],
               "id": "8cd7a36f7228cb326ef4-9718b742ff061634989c",
               "file": "qoder-ord0369-replan-walkthrough.spec.ts",
-              "line": 246,
+              "line": 249,
               "column": 3
             }
           ]
@@ -618,7 +618,7 @@
         {
           "title": "ORD-0369 the teaching stage's replan leg",
           "file": "qoder-ord0369-replan-walkthrough.spec.ts",
-          "line": 258,
+          "line": 261,
           "column": 6,
           "specs": [
             {
@@ -637,12 +637,12 @@
                       "workerIndex": 1,
                       "parallelIndex": 1,
                       "status": "passed",
-                      "duration": 2517,
+                      "duration": 2898,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-09-27T18:32:20.270Z",
+                      "startTime": "2026-09-27T18:55:14.504Z",
                       "annotations": [],
                       "attachments": []
                     }
@@ -652,19 +652,129 @@
               ],
               "id": "8cd7a36f7228cb326ef4-d7a034ab49794f5a08d3",
               "file": "qoder-ord0369-replan-walkthrough.spec.ts",
-              "line": 259,
+              "line": 262,
               "column": 3
             }
           ]
+        }
+      ]
+    },
+    {
+      "title": "qoder-ord0373-name-hit-scope.spec.ts",
+      "file": "qoder-ord0373-name-hit-scope.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "P1_probe_name_resolution_per_viewport — 逐视口量：侧栏可见性、按名字查到几个、first 落到谁",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 300000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 2,
+                  "parallelIndex": 2,
+                  "status": "passed",
+                  "duration": 10908,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-09-27T18:54:51.844Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "25be9310d88eb45846ae-57010052e97b0d2651f5",
+          "file": "qoder-ord0373-name-hit-scope.spec.ts",
+          "line": 55,
+          "column": 1
+        },
+        {
+          "title": "N1_at_phone_width_the_text_query_aims_at_a_node_nothing_can_hit — 390 下朴素按名字查会打到隐藏孪生，杠杆不会",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 300000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 2,
+                  "parallelIndex": 2,
+                  "status": "passed",
+                  "duration": 1300,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-09-27T18:55:03.139Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "25be9310d88eb45846ae-fc2f2023ba80f4a76225",
+          "file": "qoder-ord0373-name-hit-scope.spec.ts",
+          "line": 150,
+          "column": 1
+        },
+        {
+          "title": "N2_the_filter_is_what_does_the_work_not_the_page — 合成夹具：一隐一现同名两枚，筛的必须是可命中那枚",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 300000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 2,
+                  "parallelIndex": 2,
+                  "status": "passed",
+                  "duration": 309,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-09-27T18:55:04.460Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "25be9310d88eb45846ae-2e6cbba40d4cd144abde",
+          "file": "qoder-ord0373-name-hit-scope.spec.ts",
+          "line": 208,
+          "column": 1
         }
       ]
     }
   ],
   "errors": [],
   "stats": {
-    "startTime": "2026-09-27T18:31:59.277Z",
-    "duration": 29870.18,
-    "expected": 16,
+    "startTime": "2026-09-27T18:54:48.915Z",
+    "duration": 35868.723000000005,
+    "expected": 19,
     "skipped": 0,
     "unexpected": 0,
     "flaky": 0
