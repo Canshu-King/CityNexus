@@ -1,0 +1,62 @@
+{
+ "order": "ORD-0367",
+ "line": "origin/mirror/integration-frontend-apple-pass1",
+ "tip": "baaa07117003320292d76a5f0c383952071b7364",
+ "cand": "031e381e0f2c6412ac63a7f1314c0951c5609125",
+ "merge_base": "6ee21eddba60303e8f0f46907df9501ee0149e6e",
+ "commits_tip_ahead_of_base": 5,
+ "commits_cand_ahead_of_base": 2,
+ "merge_tree_rc": 0,
+ "changed_files": [
+  "frontend/src/design-tokens.css",
+  "frontend/src/i18n/LocaleContext.tsx",
+  "tools/cnx_copy_tiers_r1.py",
+  "tools/cnx_token_tiers_r1.py"
+ ],
+ "files": [
+  {
+   "path": "frontend/src/design-tokens.css",
+   "cand_blob": "ce95d9bb0d3765f1077ae293dc049ff3ca74cdd9",
+   "merged_blob": "ce95d9bb0d3765f1077ae293dc049ff3ca74cdd9",
+   "identical": true,
+   "cand_changed_the_file": true
+  },
+  {
+   "path": "frontend/src/i18n/LocaleContext.tsx",
+   "cand_blob": "cb80ad55d7c1626a74ef73299fcadf43c4b1f094",
+   "merged_blob": "cb80ad55d7c1626a74ef73299fcadf43c4b1f094",
+   "identical": true,
+   "cand_changed_the_file": true
+  },
+  {
+   "path": "tools/cnx_copy_tiers_r1.py",
+   "cand_blob": "b9d2300773da37a098b8e8995d662face9063a9f",
+   "merged_blob": "b9d2300773da37a098b8e8995d662face9063a9f",
+   "identical": true,
+   "cand_changed_the_file": true
+  },
+  {
+   "path": "tools/cnx_token_tiers_r1.py",
+   "cand_blob": "47bf6317d4dd7fc2fbb35c6bbc35b591640ae870",
+   "merged_blob": "47bf6317d4dd7fc2fbb35c6bbc35b591640ae870",
+   "identical": true,
+   "cand_changed_the_file": true
+  }
+ ],
+ "merged_tree": "cacb483db09e994f103dd222291006df6646cc3e",
+ "auto_merged_files": [],
+ "recut_commit": "4ef864cfa49b805e3d41b7f079f5fb4184ccec3d",
+ "readback_tree": "cacb483db09e994f103dd222291006df6646cc3e",
+ "readback_tree_matches": true,
+ "readback_parents": [
+  "baaa07117003320292d76a5f0c383952071b7364",
+  "031e381e0f2c6412ac63a7f1314c0951c5609125"
+ ],
+ "readback_parent_tip": true,
+ "verdict": "RECUT_OK",
+ "pushed_ref": "refs/heads/cmdr/land-ord0367-recut",
+ "push_rc": 0,
+ "push_stderr": "remote: \nremote: Create a pull request for 'cmdr/land-ord0367-recut' on GitHub by visiting:        \nremote:      https://github.com/Canshu-King/CityNexus/pull/new/cmdr/land-ord0367-recut        \nremote: \nTo github.com:Canshu-King/CityNexus.git\n * [new branch]        4ef864cfa49b805e3d41b7f079f5fb4184ccec3d -> cmdr/land-ord0367-recut",
+ "ls_remote": "4ef864cfa49b805e3d41b7f079f5fb4184ccec3d\trefs/heads/cmdr/land-ord0367-recut",
+ "ls_remote_matches": true
+}
