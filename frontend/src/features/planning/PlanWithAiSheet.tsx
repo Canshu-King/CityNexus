@@ -1022,7 +1022,7 @@ export function PlanWithAiSheet({
           >
             {aiState === "configured_unverified" &&
               (zh
-                ? "这台服务配了一个 AI 凭据。这里只说明\"配了\"，没有验证过它能用；这一句不代表你下一次提交会成功。"
+                ? "这台服务配了一个 AI 凭据。这里只说明"配了"，没有验证过它能用；这一句不代表你下一次提交会成功。"
                 : "This server has an AI credential configured. That says something is set, not that it works — it is no promise that your next submission succeeds.")}
             {aiState === "not_configured" &&
               (zh
