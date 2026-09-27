@@ -1,0 +1,139 @@
+{
+ "schema": "CNX_CMDR_LANDING_PREFLIGHT_V1",
+ "lane": "commander 494abfd7",
+ "at_local": "2026-09-28T03:33:12+0800",
+ "mode": "LAND",
+ "authoritative_line": "mirror/integration-frontend-apple-pass1",
+ "tip_re_read_from_github_before": "7c9edf9fae25f8dccacf59be9e5c23c1c09cda46",
+ "candidate_ref": "refs/heads/cmdr/land-ord0369e-recut",
+ "candidate_tip": "c00703d1db9512e8c96099a26c08442b827a9357",
+ "genealogy": {
+  "ff_possible_rc": 0,
+  "ff_possible": true,
+  "merge_base": "7c9edf9fae25f8dccacf59be9e5c23c1c09cda46",
+  "line_only_commits": 0,
+  "candidate_only_commits": 3
+ },
+ "file_sets": {
+  "line_side_since_base": [],
+  "candidate_side_since_base": [
+   "review/ord0369-phone-replan/MERGED_BUILD_EVIDENCE.txt",
+   "review/ord0369-phone-replan/READINGS.md",
+   "review/ord0369-phone-replan/canary_proof.json",
+   "review/ord0369-phone-replan/candidate_stage_refusal.png",
+   "review/ord0369-phone-replan/candidate_studio_trial.png",
+   "review/ord0369-phone-replan/face_user_4781_served-generation.png",
+   "review/ord0369-phone-replan/gate-report-r3-with-regressions.json"
+  ],
+  "intersection": [],
+  "product_introduced_by_candidate": []
+ },
+ "merge_tree": {
+  "exit": 0,
+  "first_line": "d844c988f3fdcda22b05470cff044969a7237ab6",
+  "conflict_reported": false,
+  "stderr_head": ""
+ },
+ "gate_run": {
+  "requested": [],
+  "collect_exit": null,
+  "collected": null,
+  "test_exit": null,
+  "summary": null,
+  "export": "D:/moodle/_qoder_cmdr_ref_20260921/snap_preflight_033245",
+  "blob_equality": [
+   {
+    "path": "review/ord0369-phone-replan/MERGED_BUILD_EVIDENCE.txt",
+    "candidate_blob": "6da92435866d0cb6f16957675432171475fdb3d0",
+    "export_blob": "6da92435866d0cb6f16957675432171475fdb3d0",
+    "equal": true
+   },
+   {
+    "path": "review/ord0369-phone-replan/READINGS.md",
+    "candidate_blob": "42c4c3687295118a494b8dae90745c0a3dfd5556",
+    "export_blob": "42c4c3687295118a494b8dae90745c0a3dfd5556",
+    "equal": true
+   },
+   {
+    "path": "review/ord0369-phone-replan/canary_proof.json",
+    "candidate_blob": "cefbb1175affc54a1dd7eb8dcd66625822b45faa",
+    "export_blob": "cefbb1175affc54a1dd7eb8dcd66625822b45faa",
+    "equal": true
+   },
+   {
+    "path": "review/ord0369-phone-replan/candidate_stage_refusal.png",
+    "candidate_blob": "328b58b1fa9c487b982240dd3e952dc0f9bd9845",
+    "export_blob": "328b58b1fa9c487b982240dd3e952dc0f9bd9845",
+    "equal": true
+   },
+   {
+    "path": "review/ord0369-phone-replan/candidate_studio_trial.png",
+    "candidate_blob": "3ffb730a3f2ba00f32a97ba7cd30370d69b7b506",
+    "export_blob": "3ffb730a3f2ba00f32a97ba7cd30370d69b7b506",
+    "equal": true
+   },
+   {
+    "path": "review/ord0369-phone-replan/face_user_4781_served-generation.png",
+    "candidate_blob": "07b43f505992489b6dd287b8c4722002dfe85473",
+    "export_blob": "07b43f505992489b6dd287b8c4722002dfe85473",
+    "equal": true
+   },
+   {
+    "path": "review/ord0369-phone-replan/gate-report-r3-with-regressions.json",
+    "candidate_blob": "c33d246c9696b9698c6af632819a2800ef9565ed",
+    "export_blob": "c33d246c9696b9698c6af632819a2800ef9565ed",
+    "equal": true
+   }
+  ],
+  "whole_suite": {
+   "collect_exit": 0,
+   "collected": 1393,
+   "interrupted": false,
+   "error_lines": [
+    "tests/test_qoder_ord0332_error_receipt.py::test_R7_the_envelope_keeps_every_field_it_already_had",
+    "tests/test_qoder_ord0332_error_receipt.py::test_R8_the_seed_is_read_off_the_real_request_not_just_the_dataclass",
+    "tests/test_solver_runtime_policy.py::test_unexpected_solver_programming_error_is_not_silently_hidden"
+   ],
+   "tail": [
+    "    _PortalFactoryType = Callable[[], AbstractContextManager[anyio.abc.BlockingPortal]]",
+    "-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html",
+    "1393 tests collected in 12.21s"
+   ],
+   "cmd": "D:/moodle/CityNexus/.venv/Scripts/python.exe -m pytest --collect-only -q tests  (cwd=<export>/backend, PYTHONPATH=<export>)"
+  },
+  "deletions": {
+   "deleted_by_candidate": [
+    "review/ord0369-phone-replan/canary_proof_r2.json",
+    "review/ord0369-phone-replan/gate-report-r2.json"
+   ],
+   "still_present_in_export": []
+  },
+  "interpreter": "Python 3.12.14 (main, Aug 25 2026, 14:01:42) [MSC v.1944 64 bit (AMD64)]",
+  "exposure": {
+   "skipped": "no frontend/src file changed"
+  },
+  "frontend_build": {
+   "skipped": "no frontend/src file in this candidate"
+  }
+ },
+ "problems": [],
+ "verdict": "READY_TO_LAND",
+ "landing": {
+  "http": 200,
+  "response_head": "{'ref': 'refs/heads/mirror/integration-frontend-apple-pass1', 'node_id': 'REF_kwDOUhlJJ9oAMnJlZnMvaGVhZHMvbWlycm9yL2ludGVncmF0aW9uLWZyb250ZW5kLWFwcGxlLXBhc3Mx', 'url': 'https://api.github.com/repos/Ca",
+  "tip_after": "c00703d1db9512e8c96099a26c08442b827a9357",
+  "branches_route": "c00703d1db9512e8c96099a26c08442b827a9357",
+  "both_routes_agree": true,
+  "landed": true
+ },
+ "discipline": {
+  "evidence_paths_overwritten": 0,
+  "databases_opened": 0,
+  "surfaces_started_or_stopped": 0,
+  "credential_values_printed": 0,
+  "candidate_refs_pushed_by_commander": 0
+ },
+ "claim_kind": "git_and_pytest_determined",
+ "claimed_result": null,
+ "derived_result": null
+}
