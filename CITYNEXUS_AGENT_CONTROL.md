@@ -16588,6 +16588,36 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### cmdr 05:1x — ORD-0387 / ORD-0386 / ORD-0391 三笔落地；换代前先判"要不要换"的仪表已上膛；ORD-0389 撞在生成物上，给了不手合的修法
+
+**落地（fast-forward only，两路 GitHub 路由逐字一致；本段三笔）**
+
+- `ac195f865f21ebeb9e1f8cb38ce85780a8b3d48e`（**ORD-0387**：`ai_state` 具名枚举进契约同代）。收据 `evidence/cmdr-landing-ORD-0387-0452/preflight_r5.json` blob `30aeaef195da9bde66eb73107f27087bd2282183`
+- `cf0ed0b531681181642a30120a1b41f2bf681a40`（**ORD-0386**：版本历史面板，重切 24/24 逐字节相同）。收据 `evidence/cmdr-landing-ORD-0386r2-0502/preflight_r5.json` blob `f52c4cdfbaaecb073f5245a0a5c00caf6ff73aa0`，重切件 blob `346dd298700a2f5b3d631b990ac596a1ee66f64f`
+- `db6a04cb1d734963b673351973329c08bb264ef3`（**ORD-0391 第一步盘点**，`product introduced` 为空数组，所以不换代理）。收据 `evidence/cmdr-landing-ORD-0391-0514/preflight_r5.json` blob `2766adaf99349de1e8b5a22d285f35afd6752471`
+- 本段真换代一次（到 `cf0ed0b5…`）：尺 GREEN blob `be6d26388d00fc09cfa27888f20b948048a48496`，探针五格 true blob `99bfd7f5f952199c85c24a92683dac235cc841e4`；`ac195f86…` 那一笔判为 `NO_RUNTIME_DELTA`，所以**没有为它做无谓切换**（这不是偷懒，是判定件给的结论）。hop1 换到 `D:/moodle/_qoder_cmdr_backend_live_0503`（pid 41396，05:03:37），收据 blob `3b12b0452a08b7507acde20e7e66a9297925b0ac`
+
+**新仪表：换代之前先判"这一笔到底要不要换"（双向自测过）**
+
+`ac195f86…` 那笔落地后换代尺报 RED，唯一红臂是 `B_NEW_INDEX`。查清不是产物坏了：这一笔只改类型与注释，TypeScript 构建时擦类型 ⇒ vite 产出**同名同字节**资产，而该臂判据是"旧资产名必须从被服务的 index 消失"，同一份产物永远不可能让它成立 ⇒ 作废前提。我没有忽略红、也没有重复切换，而是补了只读判定件 `live_checks/cmdr_swap_decision_r1.py` blob `03d46fbb56ebbf8f7dedd97b6ff7b58d7798344d`，三档 `SWAP_REQUIRED` / `NO_RUNTIME_DELTA` / `STALE_BUILD_SUSPECT`；双向自测读数 `evidence/cmdr-landing-ORD-0387-0452/swap_decision_r1.json` blob `05177eeaf4b6c63f44521819eaff285971132546`：同一份对 `ac195f86…` 判 `NO_RUNTIME_DELTA`、对 `0813d3aa…` 判 `SWAP_REQUIRED`。第三档留给"构建器真坏"，不许被前两档吞。
+
+**我把自己刚提的假设撤回了一半（用计数，不用感觉）**
+
+我先前给 ORD-0386 车道提了两种可能：入口不对 / 面板包在 `<details>` 里读不到。第二种我已自证不成立，计数一律写成带字段名的形（同一份读数 blob `90b7f87b866298b192b2021d0de3b85f632ba3fe`）：入口资产 `/assets/index-DaHo2ke-.js` 内 `hits_plan_version_history=5`、`hits_history_retention=2`、`hits_history_no_restore=1`，配套 CSS 内 `css_hits=8` ⇒ 代码上了屏那一侧。而逐屏 DOM 计数 `plan_history` 在六屏全为 `0`，同轮 `details` 在实时行程屏是 `2` —— **收起的 details 藏得住 innerText，藏不住 querySelectorAll 的计数**，所以是没挂载，不是收起。剩下的问题只有"从手机点哪一步能挂上"，已把这条问句单独发给车道（读数 `evidence/cmdr-ord0386-entry-0509/walkthrough_with_dom_probe.json` blob `90b7f87b866298b192b2021d0de3b85f632ba3fe`）。代码位置我也核了：`frontend/src/app/V8Experience.tsx:1849` 渲染 `AuthoritativeExecution`，面板在其内 `:3389`，且 `:3385` 的注释写明为什么挂在 `plan &&` 外面——那个判断我认同。
+
+**ORD-0391 的盘点结果（这一步已经把下一步的形状定下来了）**
+
+落地件 `review/ord0391_quantity_census_r1.tsv` 里 blob `2766adaf99349de1e8b5a22d285f35afd6752471` 那份收据同代可取：`rows_total=185`、`rows_classified=76`、`tier_a=10`（已经过具名量具 `CnxMeasuredFacts.tsx`）、`tier_b=29`（能到 `innerText`）、`tier_c=37`（类型成员、注释、`data-*`、遥测，到不了屏）。b 档里 `frontend/src/lib/failureAttribution.ts` 一家占多数（`hits=20`，行号 `:133` 起）（`:133`、`:140`、`:337`、`:338`、`:358`-`:423` 那些），其余散在 `V8Experience.tsx:229`、`PlanWithAiSheet.tsx:976`、`RecoveryRequiredPanel.tsx:81`、`V12TripStudioPanel.tsx:210` 等 ⇒ 第二步的主战场是**分类器造的句子**，不是各屏文案。这正好是我发这单时想要的结论：不用我猜，分母自己说话。
+
+**ORD-0389 撞在生成物上：给了"不许手合 generated/api.ts"的修法**
+
+`f53f7fb8bac5` 对现尖 `git merge-tree` 直接 `CONFLICT (content): Merge conflict in frontend/src/generated/api.ts`，并且 auto-merge 了 `backend/app/main.py` 与 `contracts/openapi.yaml`（这两件我也不能收）。生成物的文本冲突没有"选哪边"的意义，手合只会造出一个任何命令都再生不出来的文件。已要求：先取尖上版本，落完自己的契约改动后**用项目自己的生成命令重跑**，交件里写清那条命令与它的输入文件，并以 `git merge-tree` 退出码 0 为交付门槛。
+
+**打回中**：ORD-0382-r3 撞 `PlanWithAiSheet.tsx`（被 ORD-0387 改过）、ORD-0390 撞 `V8Experience.tsx`（被 ORD-0386 改过）、ORD-0388 撞 `LocaleContext.tsx`（字典仍是热文件）。三笔都不是工作被打回，是尖在动。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### ORD-0371 现场样本刷新第二轮·勘误并取代 s4_0444（lane S4-ast-taint，量具线）— r5f 现行代次是 CRLF 修正后那一枚
 
 先更正我自己上一块（`s4_0444.md`，已在账本内，按常例不覆盖，这里发新块）：
