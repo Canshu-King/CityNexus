@@ -501,6 +501,11 @@ class PlanVersion(BaseModel):
     mobility_snapshot_id: str | None = None
     mobility_evidence: dict[str, Any] = Field(default_factory=dict)
     explanation: dict[str, Any] = Field(default_factory=dict)
+    # ORD-0386: a version list cannot be read as history without the moment each row was
+    # written. `version_no` orders the chain but says nothing about when, and the screen that
+    # shows "版本 3 / 版本 4" without a time is the one that makes a traveller guess whether
+    # the old plan was this morning or last month.
+    created_at: str | None = None
     # Stale/recompose-required projection.  A plan whose frozen evidence has
     # expired must not look like an ordinary current recommendation; selection
     # revalidation remains the final guard.

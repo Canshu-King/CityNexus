@@ -54,6 +54,7 @@ import { V14RecoveryTruthPanel } from "../features/recovery/V14RecoveryTruthPane
 import { V14PreventivePanel } from "../features/recovery/V14PreventivePanel";
 import { RecoveryRequiredPanel } from "../features/recovery/RecoveryRequiredPanel";
 import { V12TripStudioPanel } from "../features/studio/V12TripStudioPanel";
+import { PlanVersionHistoryPanel } from "../features/studio/PlanVersionHistoryPanel";
 import { RealCityDiscoveryPanel } from "../features/discovery/RealCityDiscoveryPanel";
 import { DestinationPreparationPanel } from "../features/discovery/DestinationPreparationPanel";
 import {
@@ -3381,6 +3382,11 @@ function AuthoritativeExecution({
           </div>
         </div>
       )}
+      {/* ORD-0386: the version list is mounted here rather than inside V12TripStudioPanel, because
+          that panel only exists once a plan was read. Behind `plan &&` a failed list read left the
+          traveller with 「你还没有选定方案。」 -- a plan-shaped sentence about a read that never
+          answered. Listing versions is its own question and gets its own answer. */}
+      <PlanVersionHistoryPanel journeyId={journeyId} />
       {plan && (
         <>
           <V12AuthoritativeJourneyPanel
