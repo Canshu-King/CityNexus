@@ -672,6 +672,7 @@ def audit(after_path, base_path, e2e_dir, src_dir=None):
     # report VIOLATION with its count. Without --src nothing was read, which is
     # reported as NOT_RUN rather than as a pass.
     findings.append(coverage_finding(after_path))
+    findings.extend(shape_findings(after_path, src_dir))
     if src_dir:
         findings.append(component_fallback(src_dir))
         findings.append(render_tiers_finding(src_dir))
@@ -967,12 +968,317 @@ def rendered_mutants(after_path, base_path, src_dir):
     return out
 
 
+# --------------------------------------------------------------------------
+# COPY HONESTY LADDER (ORD-0381) -- six tiers taken from the Pi Travel string
+# corpus (D:/moodle/_apk_analysis_pi_travel/PI_TRAVEL_APK_ANALYSIS.md section 4).
+# The source's own numbering is ①..⑥ where ① is the bilingual-register tier;
+# the dispatch renumbers its list 1..3 = source ②③ and keeps ④⑤⑥ in place, so
+# every tier below is named by the SOURCE numeral and the dispatch number is
+# mapped in the printed header.
+#
+# Every vocabulary is printed by --ladder. A count without its matcher is not a
+# measurement, it is an opinion, and the point of this file is that the copy
+# claims become checkable.
+# --------------------------------------------------------------------------
+VALUE_ROW = re.compile(r'^\s*"([A-Za-z0-9._-]+)"\s*:\s*(?:"((?:[^"\\]|\\.)*)"\s*,?\s*)?$')
+
+
+def dicts_full(path):
+    """{lang: {key: (value, line)}} reading BOTH dictionary row shapes.
+
+    `dicts()` sees only rows whose value sits on the key's line, and this file
+    already reports 12 rows that wrap their value onto the next. A ladder count
+    computed over the single-line subset would be a ratio over a denominator the
+    file does not have, so this parser is the one the ladder uses.
+    """
+    lines = Path(path).read_text(encoding="utf-8").split("\n")
+    marks = [i for i, ln in enumerate(lines) if re.match(r"^const (en|zhCN): Dict", ln)]
+    if len(marks) < 2:
+        raise SystemExit("FATAL expected `en` and `zhCN` Dict blocks in %s" % path)
+    out = {}
+    for idx, start in enumerate(marks):
+        lang = re.match(r"^const (\w+):", lines[start]).group(1)
+        stop = marks[idx + 1] if idx + 1 < len(marks) else len(lines)
+        table = {}
+        for i in range(start, stop):
+            m = VALUE_ROW.match(lines[i].rstrip("\r"))
+            if not m:
+                continue
+            key, val = m.group(1), m.group(2)
+            if val is None:
+                # wrapped: the value is on the next non-comment line
+                j = i + 1
+                while j < stop and lines[j].strip().startswith(("/*", "*", "//")):
+                    j += 1
+                vm = re.match(r'^\s*"((?:[^"\\]|\\.)*)"\s*,?\s*$', lines[j].rstrip("\r")) if j < stop else None
+                val = vm.group(1) if vm else ""
+            table.setdefault(key, (val, i + 1))
+        out[lang] = table
+    return out
+
+
+LADDER = {
+    # tier: (subject detector over the merged text, satisfaction detector, what
+    # satisfaction means in one line)
+    "①register": (
+        re.compile(r"失败|无法|没能|未能|couldn'?t|can'?t|unable|could not", re.I),
+        re.compile(r"没能|未能|请再试|稍后再试|couldn'?t|can'?t|unable|could not", re.I),
+        "failure copy speaks the agreed register in BOTH languages (ORD-0367's rule)"),
+    "②provenance": (
+        re.compile(r"\bAI\b|智能|生成|Copilot|assistant|generated", re.I),
+        re.compile(r"由 ?AI|AI ?生成|Generated|仅供参考|for reference|Sources|参考来源|来源", re.I),
+        "AI-produced copy names its origin, and a mixed origin is admitted"),
+    "③destructive": (
+        re.compile(r"删除|移除|取消|替换|覆盖|撤销|delete|remove|cancel|replace|discard|overwrite", re.I),
+        re.compile(r"整个|全部|全局|your entire|all of|移入|待规划|保留|可恢复|回收|不会|仍|never|retained|remain|undo|recovered|最多|上限", re.I),
+        "the consequence names its scope, a destination, or a retention limit"),
+    "④empty-action": (
+        re.compile(r"^\s*(暂无|没有|尚未|空空|这里没|现在没)|^\s*(No |Nothing|None|empty|There is no)", re.I),
+        re.compile(r"试试|来|添加|创建|选择|打开|重试|查看|开始|填写|点|告诉|\b(add|create|pick|choose|open|try|start|select|switch|tell|browse|enter|record)\b", re.I),
+        "an empty state offers the next action, not just the absence"),
+    "⑤metric-shape": (
+        re.compile(r"\{n\}|个|处|条|段|次"),
+        re.compile(r"·.*·|\b\d+ .+ .+ \d+", re.I),
+        "counters show the shape that will be filled, e.g. 0 · 0 · 0"),
+    "⑥estimate": (
+        re.compile(r"Δ|cost|费用|时长|风险|risk|分钟|min\b|预估|参考价|est\b", re.I),
+        re.compile(r"Est\.|预估|约|大约|approx|reference price|参考价|not .*run|没有.*跑|未跑", re.I),
+        "a value that was estimated says so with a prefix; nothing uncomputed is promised"),
+}
+ACTION_SIBLING = re.compile(r"(Action|Cta|Hint|Empty|Add|Create|Retry)$")
+
+
+def action_sibling(key, keys):
+    """An empty state counts as honest if this same namespace also carries the
+    action as its own label -- the shape CityNexus already uses (a status line
+    plus a button). The sibling must share the key's own subject word, so a
+    random `...Create` elsewhere in the namespace cannot silence a miss."""
+    stem = key.split(".", 1)[1].lower() if "." in key else key.lower()
+    for o in keys:
+        if o == key or "." not in o or not o.startswith(key.split(".")[0] + "."):
+            continue
+        if not ACTION_SIBLING.search(o):
+            continue
+        os = o.split(".", 1)[1].lower()
+        if os.startswith(stem) or stem in os:
+            return o
+    return None
+
+
+def ladder_data(i18n_path, src_dir=None):
+    """Per-tier population, satisfaction and misses, over both dictionaries."""
+    d = dicts_full(i18n_path)
+    keys = sorted(set(d["en"]) | set(d["zhCN"]))
+    rows = {}
+    shapes = shape_cells(i18n_path, src_dir)
+    for tier, (subj, sat, meaning) in LADDER.items():
+        gate = {"④empty-action": "EMPTY_ACTION", "⑥estimate": "ESTIMATE_PREFIX"}.get(tier)
+        if gate:
+            # one truth per tier: the printed row and the gated cell share a body
+            s = shapes[gate]
+            rows[tier] = dict(pop=s["pop"], ok=s["good"], miss=[(k,) for k in s["miss"]],
+                              meaning=meaning + (" (read rows only)" if s["filtered"] else ""))
+            continue
+        ok, miss = [], []
+        for k in keys:
+            zh = d["zhCN"].get(k, ("", 0))[0]
+            en = d["en"].get(k, ("", 0))[0]
+            text = "%s %s" % (zh, en)
+            if not subj.search(text):
+                continue
+            (ok if sat.search(text) else miss).append((k, zh, en))
+        rows[tier] = dict(pop=len(ok) + len(miss), ok=[x[0] for x in ok], miss=miss, meaning=meaning)
+    both = set(d["en"]) & set(d["zhCN"])
+    ns = {}
+    for k in keys:
+        ns.setdefault(k.split(".")[0], 0)
+        ns[k.split(".")[0]] += 1
+    wrapped = sum(len(v) for v in dicts_all_wrapped_rows(i18n_path).values())
+    return dict(d=d, keys=keys, both=len(both), rows=rows, ns=ns, single=dicts(i18n_path),
+                wrapped=wrapped)
+
+
+def dicts_all_wrapped_rows(path):
+    """Rows whose value sits on the line after the key -- the single-line parser's
+    blind spot, counted so a ladder denominator can be checked against it."""
+    lines = Path(path).read_text(encoding="utf-8").split("\n")
+    marks = [i for i, ln in enumerate(lines) if re.match(r"^const (en|zhCN): Dict", ln)]
+    out = {}
+    for idx, start in enumerate(marks):
+        lang = re.match(r"^const (\w+):", lines[start]).group(1)
+        stop = marks[idx + 1] if idx + 1 < len(marks) else len(lines)
+        for i in range(start, stop):
+            if re.match(r'^\s*"([A-Za-z0-9._-]+)"\s*:\s*$', lines[i].rstrip("\r")):
+                out.setdefault(lang, []).append((re.match(r'^\s*"([A-Za-z0-9._-]+)"', lines[i]).group(1), i + 1))
+    return out
+
+
+def ladder_finding(i18n_path):
+    """The measurement cell. Ungated: this reports where the copy stands, and the
+    two tiers this order actually fixed are gated separately by EMPTY_ACTION and
+    ESTIMATE_PREFIX below."""
+    L = ladder_data(i18n_path)
+    parts = []
+    for tier in LADDER:
+        r = L["rows"][tier]
+        parts.append("%s %d/%d" % (tier, len(r["ok"]), r["pop"]))
+    return ("LADDER_REPORT",
+            "%d keys in the denominator (%d in both blocks, %d single-line-parseable, %d rows wrap their "
+            "value onto the next line); satisfied/population per tier: %s"
+            % (len(L["keys"]), L["both"], sum(len(v) for v in L["single"].values()), L["wrapped"],
+               " | ".join(parts)),
+            True,
+            "not gated on purpose: a population found by a regex is not a promise the tier is met. "
+            "The two tiers this order fixes are gated by their own cells. Misses are listed by "
+            "--ladder. Namespaces scanned: %d." % len(L["ns"]))
+
+
+def ladder_mutants():
+    """One injected miss per adopted tier must be caught, and one honest line per
+    tier must stay quiet."""
+    cases = [
+        ("K8a_empty_without_action_caught", "暂无行程。", "No trips.", "EMPTY_ACTION", False),
+        ("K8b_empty_with_action_quiet", "暂无行程，创建一个看看。", "No trips yet. Add one to see it.", "EMPTY_ACTION", True),
+        ("K8c_estimate_unmarked_caught", "影响 Δ 12 分钟", "Impact Δ 12 min", "ESTIMATE_PREFIX", False),
+        ("K8d_estimate_marked_quiet", "预估影响 Δ 12 分钟", "Est. impact Δ 12 min", "ESTIMATE_PREFIX", True),
+    ]
+    out = []
+    for label, zh, en, cell, want_pass in cases:
+        ok = check_shape(cell, zh, en, {})[0]
+        if ok == want_pass:
+            out.append((label, "%s verdict as expected" % ("pass" if ok else "fail"), True))
+        else:
+            out.append((label, "%s verdict, wanted %s -- the shape is not the claim"
+                        % ("pass" if ok else "fail", "pass" if want_pass else "fail"), False))
+    return out
+
+
+EMPTY_SUBJECT = re.compile(r"^\s*(暂无|没有|尚未|空空|这里没|现在没)|^\s*(No |Nothing|None\b|empty|There is no)", re.I)
+EMPTY_ACTION = re.compile(r"试试|创建|添加|选择|打开|重试|查看|开始|填写|告诉|\b(add|create|pick|choose|open|try|start|select|switch|tell|browse|enter|record)\b", re.I)
+# A line is estimate-shaped only when it both carries a value (a digit, a Δ, or a
+# `{placeholder}`) AND is about a cost/time/risk figure. Without the second half
+# this matcher claimed 「费用」/`Cost`, a bare label, owed an `Est.` prefix.
+EST_SUBJECT = re.compile(r"Δ|\{[a-z_]+\}")
+EST_ABOUT = re.compile(r"影响|impact|\brisk\b|风险|花费|费用|成本|时长|分钟|\bmin\b|参考价|\bcost\b|walk", re.I)
+EST_MARK = re.compile(r"Est\.|预估|^约|约 ?\d|大约|approx|reference|未跑|没有.*跑|will not claim", re.I)
+
+
+def check_shape(cell, zh, en, ctx=None):
+    """The two adopted tiers, as one function so the gate, the listing and the
+    counter-control arms cannot drift apart.
+
+    Returns (passes, why). A value outside the tier's subject population passes
+    vacuously, which is why every cell prints its population next to its verdict.
+    """
+    ctx = ctx or {}
+    if cell == "EMPTY_ACTION":
+        if not (EMPTY_SUBJECT.search(zh) or EMPTY_SUBJECT.search(en)):
+            return True, "not an empty state"
+        if "?" in zh + en or "？" in zh + en:
+            return True, "not an empty state (it is a question)"
+        if EMPTY_ACTION.search(zh) or EMPTY_ACTION.search(en):
+            return True, "action named in the line"
+        if ctx.get("sibling_action"):
+            return True, "action lives in a sibling key %s" % ctx["sibling_action"]
+        return False, "empty state with no action in the line and no action sibling"
+    if cell == "ESTIMATE_PREFIX":
+        joined = zh + " " + en
+        if not ((EST_SUBJECT.search(zh) or EST_SUBJECT.search(en)) and EST_ABOUT.search(joined)):
+            return True, "not an estimate-shaped value"
+        if EST_MARK.search(zh) or EST_MARK.search(en):
+            return True, "carries an estimate marker"
+        return False, "states a computed quantity with no Est/约/预估 marker"
+    raise AssertionError("no such shape %s" % cell)
+
+
+def shape_cells(i18n_path, src_dir=None):
+    """Run the two adopted shapes over both dictionaries.
+
+    A tier describes what a traveller reads. A row no component ever asks for is
+    not copy anyone can be dishonest AT, and it is already reported -- gated, for
+    rows this run touched -- by RENDERED. So when --src is present the population
+    is read rows and the unread ones are counted out loud; when --src is absent
+    nothing is filtered and the cell says so rather than pretending."""
+    d = dicts_full(i18n_path)
+    keys = sorted(set(d["en"]) | set(d["zhCN"]))
+    read = None
+    if src_dir:
+        uses, _scanned, _skipped = rendered_uses(src_dir, keys)
+        read = {k for k in keys if uses.get(k)}
+    out = {}
+    for cell in ("EMPTY_ACTION", "ESTIMATE_PREFIX"):
+        pop, miss, unread, good = 0, [], [], []
+        for k in keys:
+            zh = d["zhCN"].get(k, ("", 0))[0]
+            en = d["en"].get(k, ("", 0))[0]
+            sib = action_sibling(k, keys)
+            ok, why = check_shape(cell, zh, en, {"sibling_action": sib})
+            if why.startswith("not an empty state") or why == "not an estimate-shaped value":
+                continue
+            if read is not None and k not in read:
+                # this tier's row, but no component reads it: RENDERED owns it
+                unread.append(k)
+                continue
+            pop += 1
+            (good if ok else miss).append(
+                k if ok else "%s:%d %r / %r (%s)" % (k, d["zhCN"].get(k, ("", 0))[1], zh, en, why))
+        out[cell] = dict(pop=pop, miss=miss, unread=unread, good=good, filtered=read is not None)
+    return out
+
+
+def shape_findings(i18n_path, src_dir=None):
+    d = shape_cells(i18n_path, src_dir)
+    findings = []
+    for cell, label in (("EMPTY_ACTION", "LADDER_TIER④_EMPTY_ACTION"),
+                        ("ESTIMATE_PREFIX", "LADDER_TIER⑥_ESTIMATE_PREFIX")):
+        pop, miss, unread = d[cell]["pop"], d[cell]["miss"], d[cell]["unread"]
+        filtered = d[cell]["filtered"]
+        measure = ("%d read key(s) in this tier's population, %d miss the shape "
+                   "(%d unread row(s) %s)"
+                   % (pop, len(miss), len(unread),
+                      "counted out, they belong to RENDERED" if filtered
+                      else "NOT filtered: no --src"))
+        detail = ("population and matcher are printed by --ladder; a miss is listed by key and "
+                  "line. First three: %s" % (miss[:3] or "none"))
+        findings.append((label, measure, not miss, detail))
+    return findings
+
+
+def print_ladder(i18n_path, src_dir=None):
+    L = ladder_data(i18n_path, src_dir)
+    print("  -- ORD-0381 copy honesty ladder --")
+    print("     denominator: %d distinct keys (%d present in both blocks); %d rows are single-line-"
+          "parseable by KEY_RE, %d rows wrap their value onto the next line and are counted here anyway"
+          % (len(L["keys"]), L["both"], sum(len(v) for v in L["single"].values()), L["wrapped"]))
+    print("     namespaces scanned: %d, largest: %s"
+          % (len(L["ns"]), ", ".join("%s=%d" % kv for kv in sorted(L["ns"].items(), key=lambda x: -x[1])[:6])))
+    for tier in LADDER:
+        subj, sat, meaning = LADDER[tier]
+        r = L["rows"][tier]
+        print("     %-16s %-5d/%-5d  %s" % (tier, len(r["ok"]), r["pop"], meaning))
+        print("                      subject=%s" % subj.pattern)
+        print("                      satisfy=%s" % sat.pattern)
+        if r["miss"]:
+            # ④/⑥ hand back rendered strings, the rest hand back triples
+            names = [(m if isinstance(m, str) else m[0]) for m in r["miss"]]
+            print("                      misses (first 8 of %d): %s"
+                  % (len(r["miss"]), ", ".join(n[:110] for n in names[:8])))
+    for cell in ("EMPTY_ACTION", "ESTIMATE_PREFIX"):
+        sc = shape_cells(i18n_path, src_dir)[cell]
+        pop, miss, unread, filtered = sc["pop"], sc["miss"], sc["unread"], sc["filtered"]
+        print("     gated %-16s read-population=%d missing=%d unread-excluded=%d%s"
+              % (cell, pop, len(miss), len(unread), "" if filtered else " (no --src: NOT filtered)"))
+        for m in miss[:10]:
+            print("        ", m[:150])
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--i18n", required=True)
     ap.add_argument("--baseline")
     ap.add_argument("--e2e")
     ap.add_argument("--src", help="frontend/src, for the HARDCODED_FALLBACK face")
+    ap.add_argument("--ladder", action="store_true", help="print the ORD-0381 six-tier measurement with its matchers")
     ap.add_argument("--list-fallbacks", action="store_true",
                     help="print every HARDCODED_FALLBACK hit as path:line, not just three")
     ap.add_argument("--list-rendered", action="store_true",
@@ -997,6 +1303,8 @@ def main():
             print(f"  -- tier {tier}: {len(rows)} hit(s) --")
             for t, f, ln, lit, why, shape, rtier, slot in sorted(rows, key=lambda r: (r[1], r[2])):
                 print(f"     {t} T{rtier} [{slot:17s}] {f}:{ln} {lit!r}  <- {why}")
+    if a.ladder:
+        print_ladder(a.i18n, a.src)
     if a.src and a.list_rendered:
         d = rendered_data(a.i18n, a.baseline, a.src)
         print("  -- RENDERED per-key listing (denominator = %d non-dictionary files, %d dictionary "
@@ -1026,6 +1334,10 @@ def main():
         print("  -- HARDCODED_FALLBACK self-test: injected copy must be caught, machine tokens must stay quiet --")
         for label, detail, ok in fallback_mutants():
             print(f"  [{'MET' if ok else 'VIOLATION'}] {label:24s} {detail}")
+            rc |= 0 if ok else 1
+        print("  -- ladder shape self-test: an injected miss must be caught, honest copy must stay quiet --")
+        for label, detail, ok in ladder_mutants():
+            print(f"  [{'MET' if ok else 'VIOLATION'}] {label:26s} {detail}")
             rc |= 0 if ok else 1
         print("  -- render-tier self-test: each tier claim needs its own arm --")
         for label, detail, ok in render_tier_mutants():
