@@ -862,399 +862,392 @@
       "selector": ".v8-hub-actions .journey-link-action"
     },
     {
-      "brace_line": 834,
-      "decls_taken": 0,
-      "pure_root_selector": false,
-      "scope": "refused",
-      "selector": ".v8-hub-actions .v8-quiet-button + .v8-quiet-button::before"
-    },
-    {
-      "brace_line": 844,
+      "brace_line": 843,
       "decls_taken": 0,
       "pure_root_selector": false,
       "scope": "refused",
       "selector": ".cn-live-toolbar"
     },
     {
-      "brace_line": 853,
+      "brace_line": 852,
       "decls_taken": 0,
       "pure_root_selector": false,
       "scope": "refused",
       "selector": ".cn-live-toolbar .v8-quiet-button"
     },
     {
-      "brace_line": 859,
+      "brace_line": 858,
       "decls_taken": 0,
       "pure_root_selector": false,
       "scope": "refused",
       "selector": "@media (max-width: 680px)"
     },
     {
-      "brace_line": 862,
+      "brace_line": 861,
       "decls_taken": 0,
       "pure_root_selector": false,
       "scope": "refused",
       "selector": ".cn-live-toolbar .v8-quiet-button + .v8-quiet-button::before"
     },
     {
-      "brace_line": 873,
+      "brace_line": 872,
       "decls_taken": 0,
       "pure_root_selector": false,
       "scope": "refused",
       "selector": ".v8-page .v8-map-panel.v8-map-empty"
     },
     {
-      "brace_line": 880,
+      "brace_line": 879,
       "decls_taken": 0,
       "pure_root_selector": false,
       "scope": "refused",
       "selector": ".v8-page .v8-map-empty .v8-map-empty-body p"
     },
     {
-      "brace_line": 901,
+      "brace_line": 900,
       "decls_taken": 0,
       "pure_root_selector": false,
       "scope": "refused",
       "selector": ".v8-content"
     },
     {
-      "brace_line": 904,
+      "brace_line": 903,
       "decls_taken": 0,
       "pure_root_selector": false,
       "scope": "refused",
       "selector": ".cn-copilot-dock.yield-to-surface"
     },
     {
-      "brace_line": 909,
+      "brace_line": 908,
       "decls_taken": 0,
       "pure_root_selector": false,
       "scope": "refused",
       "selector": ".cn-copilot-dock.yield-to-surface .cn-copilot-edge"
     },
     {
-      "brace_line": 927,
+      "brace_line": 926,
       "decls_taken": 0,
       "pure_root_selector": false,
       "scope": "refused",
       "selector": ".today-advisory strong"
     },
     {
-      "brace_line": 930,
+      "brace_line": 929,
       "decls_taken": 0,
       "pure_root_selector": false,
       "scope": "refused",
       "selector": ".today-advisory span"
     },
     {
-      "brace_line": 935,
+      "brace_line": 934,
       "decls_taken": 0,
       "pure_root_selector": false,
       "scope": "refused",
       "selector": ".v8-avatar"
     },
     {
-      "brace_line": 952,
+      "brace_line": 951,
       "decls_taken": 0,
       "pure_root_selector": false,
       "scope": "refused",
       "selector": ".v9-map-marker.current"
     },
     {
-      "brace_line": 966,
+      "brace_line": 965,
       "decls_taken": 0,
       "pure_root_selector": false,
       "scope": "refused",
       "selector": ".v8-day-card p, .v8-day-card span, .v8-day-card small, .v8-day-detail-"
     },
     {
-      "brace_line": 974,
+      "brace_line": 973,
       "decls_taken": 0,
       "pure_root_selector": false,
       "scope": "refused",
       "selector": ".cn-copilot-dock.idle-compact"
     },
     {
-      "brace_line": 987,
+      "brace_line": 986,
       "decls_taken": 0,
       "pure_root_selector": false,
       "scope": "refused",
       "selector": ".cn-copilot-dock.idle-compact.yield-at-rest"
     },
     {
-      "brace_line": 998,
+      "brace_line": 997,
       "decls_taken": 0,
       "pure_root_selector": false,
       "scope": "refused",
       "selector": "@media (prefers-reduced-motion: reduce)"
     },
     {
-      "brace_line": 1001,
+      "brace_line": 1000,
       "decls_taken": 0,
       "pure_root_selector": false,
       "scope": "refused",
       "selector": ".cn-copilot-dock.idle-compact .cn-copilot-edge"
     },
     {
-      "brace_line": 1014,
+      "brace_line": 1013,
       "decls_taken": 0,
       "pure_root_selector": false,
       "scope": "refused",
       "selector": ".v8-live-label"
     },
     {
-      "brace_line": 1041,
+      "brace_line": 1040,
       "decls_taken": 0,
       "pure_root_selector": false,
       "scope": "refused",
       "selector": "body"
     },
     {
-      "brace_line": 1059,
+      "brace_line": 1058,
       "decls_taken": 0,
       "pure_root_selector": false,
       "scope": "refused",
       "selector": ".cn-onboarding"
     },
     {
-      "brace_line": 1074,
+      "brace_line": 1073,
       "decls_taken": 0,
       "pure_root_selector": false,
       "scope": "refused",
       "selector": "@media (min-width: 961px)"
     },
     {
-      "brace_line": 1077,
+      "brace_line": 1076,
       "decls_taken": 0,
       "pure_root_selector": false,
       "scope": "refused",
       "selector": "@media (max-width: 960px) and (min-width: 681px)"
     },
     {
-      "brace_line": 1086,
+      "brace_line": 1085,
       "decls_taken": 0,
       "pure_root_selector": false,
       "scope": "refused",
       "selector": ".cn-onboarding__scroll"
     },
     {
-      "brace_line": 1100,
+      "brace_line": 1099,
       "decls_taken": 0,
       "pure_root_selector": false,
       "scope": "refused",
       "selector": "@media (max-width: 680px)"
     },
     {
-      "brace_line": 1120,
+      "brace_line": 1119,
       "decls_taken": 0,
       "pure_root_selector": false,
       "scope": "refused",
       "selector": ".trial-field input, .trial-field textarea, .trial-field select"
     },
     {
-      "brace_line": 1129,
+      "brace_line": 1128,
       "decls_taken": 0,
       "pure_root_selector": false,
       "scope": "refused",
       "selector": "@media (max-width: 680px)"
     },
     {
-      "brace_line": 1133,
+      "brace_line": 1132,
       "decls_taken": 0,
       "pure_root_selector": false,
       "scope": "refused",
       "selector": ".trial-field textarea"
     },
     {
-      "brace_line": 1135,
+      "brace_line": 1134,
       "decls_taken": 0,
       "pure_root_selector": false,
       "scope": "refused",
       "selector": ".trial-field input::placeholder, .trial-field textarea::placeholder"
     },
     {
-      "brace_line": 1137,
+      "brace_line": 1136,
       "decls_taken": 0,
       "pure_root_selector": false,
       "scope": "refused",
       "selector": ".trial-field input[type=\"datetime-local\"]"
     },
     {
-      "brace_line": 1144,
+      "brace_line": 1143,
       "decls_taken": 0,
       "pure_root_selector": false,
       "scope": "refused",
       "selector": ".trial-create-error"
     },
     {
-      "brace_line": 1156,
+      "brace_line": 1155,
       "decls_taken": 0,
       "pure_root_selector": false,
       "scope": "refused",
       "selector": ".trial-create-error strong"
     },
     {
-      "brace_line": 1160,
+      "brace_line": 1159,
       "decls_taken": 0,
       "pure_root_selector": false,
       "scope": "refused",
       "selector": ".trial-technical"
     },
     {
-      "brace_line": 1161,
+      "brace_line": 1160,
       "decls_taken": 0,
       "pure_root_selector": false,
       "scope": "refused",
       "selector": ".trial-technical summary"
     },
     {
-      "brace_line": 1162,
+      "brace_line": 1161,
       "decls_taken": 0,
       "pure_root_selector": false,
       "scope": "refused",
       "selector": ".trial-technical .cnx-raw-facts"
     },
     {
-      "brace_line": 1163,
+      "brace_line": 1162,
       "decls_taken": 0,
       "pure_root_selector": false,
       "scope": "refused",
       "selector": ".trial-technical .cnx-raw-facts-reading"
     },
     {
-      "brace_line": 1169,
+      "brace_line": 1168,
       "decls_taken": 0,
       "pure_root_selector": false,
       "scope": "refused",
       "selector": ".trial-technical-none, .trial-technical .cnx-raw-facts-receipt"
     },
     {
-      "brace_line": 1172,
+      "brace_line": 1171,
       "decls_taken": 0,
       "pure_root_selector": false,
       "scope": "refused",
       "selector": ".trial-create-error span"
     },
     {
-      "brace_line": 1174,
+      "brace_line": 1173,
       "decls_taken": 0,
       "pure_root_selector": false,
       "scope": "refused",
       "selector": ".trial-required-hint"
     },
     {
-      "brace_line": 1186,
+      "brace_line": 1185,
       "decls_taken": 0,
       "pure_root_selector": false,
       "scope": "refused",
       "selector": ".trial-field-problem"
     },
     {
-      "brace_line": 1196,
+      "brace_line": 1195,
       "decls_taken": 0,
       "pure_root_selector": false,
       "scope": "refused",
       "selector": ".trial-city-warning"
     },
     {
-      "brace_line": 1207,
+      "brace_line": 1206,
       "decls_taken": 0,
       "pure_root_selector": false,
       "scope": "refused",
       "selector": "dd.trial-city-warning"
     },
     {
-      "brace_line": 1212,
+      "brace_line": 1211,
       "decls_taken": 0,
       "pure_root_selector": false,
       "scope": "refused",
       "selector": ".trial-supported"
     },
     {
-      "brace_line": 1217,
+      "brace_line": 1216,
       "decls_taken": 0,
       "pure_root_selector": false,
       "scope": "refused",
       "selector": ".trial-supported summary"
     },
     {
-      "brace_line": 1226,
+      "brace_line": 1225,
       "decls_taken": 0,
       "pure_root_selector": false,
       "scope": "refused",
       "selector": ".trial-supported-list"
     },
     {
-      "brace_line": 1239,
+      "brace_line": 1238,
       "decls_taken": 0,
       "pure_root_selector": false,
       "scope": "refused",
       "selector": ".trial-supported-group"
     },
     {
-      "brace_line": 1242,
+      "brace_line": 1241,
       "decls_taken": 0,
       "pure_root_selector": false,
       "scope": "refused",
       "selector": ".trial-supported-group-title"
     },
     {
-      "brace_line": 1249,
+      "brace_line": 1248,
       "decls_taken": 0,
       "pure_root_selector": false,
       "scope": "refused",
       "selector": ".trial-supported-group-rule"
     },
     {
-      "brace_line": 1256,
+      "brace_line": 1255,
       "decls_taken": 0,
       "pure_root_selector": false,
       "scope": "refused",
       "selector": ".trial-supported-none"
     },
     {
-      "brace_line": 1261,
+      "brace_line": 1260,
       "decls_taken": 0,
       "pure_root_selector": false,
       "scope": "refused",
       "selector": ".trial-supported-group .trial-supported-list"
     },
     {
-      "brace_line": 1268,
+      "brace_line": 1267,
       "decls_taken": 0,
       "pure_root_selector": false,
       "scope": "refused",
       "selector": ".trial-supported-row"
     },
     {
-      "brace_line": 1276,
+      "brace_line": 1275,
       "decls_taken": 0,
       "pure_root_selector": false,
       "scope": "refused",
       "selector": ".trial-supported-name"
     },
     {
-      "brace_line": 1277,
+      "brace_line": 1276,
       "decls_taken": 0,
       "pure_root_selector": false,
       "scope": "refused",
       "selector": ".trial-supported-fields"
     },
     {
-      "brace_line": 1287,
+      "brace_line": 1286,
       "decls_taken": 0,
       "pure_root_selector": false,
       "scope": "refused",
       "selector": ".v8-map-tile-notice"
     },
     {
-      "brace_line": 1301,
+      "brace_line": 1300,
       "decls_taken": 0,
       "pure_root_selector": false,
       "scope": "refused",
       "selector": ".v8-map-gesture-hint"
     },
     {
-      "brace_line": 1329,
+      "brace_line": 1328,
       "decls_taken": 0,
       "pure_root_selector": false,
       "scope": "refused",

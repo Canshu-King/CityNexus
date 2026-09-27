@@ -1,7 +1,15 @@
 ORD-0380 gate receipt -- tools/cnx_token_tiers_r1.py over frontend/src/design-tokens.css
 
-Reproduce from a tree off bb3f5853d35835bd5078a2cccba15e2e7a82f213 (run from the repository root):
-  git show bb3f5853d35835bd5078a2cccba15e2e7a82f213:frontend/src/design-tokens.css > baseline.css
+Measured on the merged tree: this branch has 04071b8258eb as an ancestor, so the landing can stay
+fast-forward, and the baseline below is that tip rather than the older bb3f5853 the order
+was written against (the line moved mid-flight and six commits touched this CSS file).
+
+Product bytes this order contributes to frontend/: none.
+  sha256(merged frontend/src/design-tokens.css) = fc150ae0d4c5e68cedd7cd7a4ed888d456153d7f10768bea9ae6277db4dec354
+  git rev-parse 04071b8258ebcdcf1e9e4c9714fb516283d1e1ad:frontend/src/design-tokens.css   = 35280bccb425e503500b380f2a55473bb303a28f
+
+Reproduce from a tree at this branch tip (repository root):
+  git show 04071b8258ebcdcf1e9e4c9714fb516283d1e1ad:frontend/src/design-tokens.css > baseline.css
   python tools/cnx_token_tiers_r1.py --tokens frontend/src/design-tokens.css --baseline baseline.css --styles frontend/src/styles.css --consume frontend/src/v10.css --mutant
 
 exit(new ruler: 7 cells + 8 mutants) = 0
@@ -17,7 +25,7 @@ cells missing from the new output: none
   CONSTANT_IN_DARK identical=true
 
 == full output of the new ruler
-== cnx_token_tiers_r1  tokens=frontend/src/design-tokens.css baseline=../probe/design-tokens.baseline.css styles=yes consume=1
+== cnx_token_tiers_r1  tokens=frontend/src/design-tokens.css baseline=../probe/design-tokens.tip04071b.css styles=yes consume=1
   [MET] PARITY             79 (token,scope) baseline readings re-resolved
           detail: none moved
   [MET] TIERS              inline rgba() remaining inside :root theme blocks: 0
@@ -44,6 +52,6 @@ cells missing from the new output: none
 exit=0
 
 == sha256 of the inputs every verdict above was read from
-  5921d36ad105dbe0347a34fef114375d83c49bbd558fe1a63a98f6b9bf9a2c96  frontend/src/design-tokens.css
+  fc150ae0d4c5e68cedd7cd7a4ed888d456153d7f10768bea9ae6277db4dec354  frontend/src/design-tokens.css
   e2cfb2fc013d23403f4e43d32ca13600723aefbecff5ca2b216dfc72bf529fb8  frontend/src/styles.css
   1ce30e4ec1cdabf02a65207aa0a0d8446d6a572aeb54e5ab1b8d29136f07b2cd  frontend/src/v10.css

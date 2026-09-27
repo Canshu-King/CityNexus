@@ -2,7 +2,7 @@
    line     8  light  pure-root=True  decls= 63  :root
    line   132  dark   pure-root=False decls= 17  :root[data-theme="dark"]
    line   173  light  pure-root=False decls= 19  :root, .v8-product-shell
-   180 rules seen, 99 token declarations taken, 177 rules carry no :root branch (correctly not treated as theme roots)
+   179 rules seen, 99 token declarations taken, 176 rules carry no :root branch (correctly not treated as theme roots)
 
 == N1  light :root writes a literal colour
    literal-colour tokens            : 24
@@ -56,4 +56,4 @@
    dark-only tokens                 : []
    non-colour tokens in scope       : 42
    unresolvable colour chains       : []
-json written: review/cn-token-night/PAIRING.json (161081 bytes)
+json written: review/cn-token-night/PAIRING.json (160878 bytes)
