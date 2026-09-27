@@ -717,7 +717,11 @@ export function PlanWithAiSheet({
               disabled={busy}
               onClick={() => setText(zh ? item.zh : item.en)}
             >
-              {zh ? item.zh.slice(0, 18) + "…" : item.en.slice(0, 26) + "…"}
+              {/* Measured on the live chain at 320/360/390/414: the label was the first 18 characters
+                  plus an ellipsis while the click put the whole sentence in the box, so the chip
+                  promised one thing and submitted another -- and no amount of CSS would have made the
+                  hidden half readable.  The chip now speaks exactly what it submits. */}
+              {zh ? item.zh : item.en}
             </button>
           ))}
         </div>
