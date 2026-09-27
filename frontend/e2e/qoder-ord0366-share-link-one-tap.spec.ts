@@ -186,6 +186,74 @@ test("I1_every_named_node_on_today_is_struck_at_its_own_centre — Today 屏上�
   expect(sweep.unhit, node(arm, `a same-named node did not answer elementFromPoint at its own centre (${JSON.stringify(sweep.matches.filter((m) => !m.hit_self))})`)).toBe(0);
 });
 
+/* ------------------------------------------------------------------ I2: the other same-named entries on these screens */
+
+test("I2_no_studio_label_sits_on_these_screens_without_a_size — 这两屏上带「工作台」名子的节点都得有尺寸且打得到（零尺寸同名节点就是本单一半的由来）", async ({ page }) => {
+  test.setTimeout(300_000);
+  const arm = "I2";
+  const staged = (await (await page.request.get("/api/v1/demo/scene")).json()) as { journey_id?: string };
+  const id = String(staged.journey_id ?? "");
+  expect(id.length > 0, node(arm, "the stage named no journey")).toBe(true);
+  const wanted = ["打开行程工作台", "行程工作台"];
+  const perScreen: Readings = {};
+  for (const route of ["/v8/hub", "/v8/bookings"]) {
+    await boot(page, id);
+    await page.goto(route, { waitUntil: "load" });
+    await page.waitForTimeout(1_200);
+    for (const label of wanted) {
+      const sweep = await page.evaluate((name: string) => {
+        const nameOf = (el: Element) => (el.getAttribute("aria-label") || (el.textContent ?? "")).trim();
+        /* "In the accessibility tree" is not a property of the node alone: an ancestor with
+           display:none excludes the whole subtree, and that is the difference between a node a finger
+           cannot reach and a node a screen reader cannot reach. */
+        const exclusion = (el: Element): string | null => {
+          for (let cur: Element | null = el; cur; cur = cur.parentElement) {
+            const cs = getComputedStyle(cur);
+            if (cs.display === "none") return `display:none@${cur.tagName.toLowerCase()}.${(cur.getAttribute("class") || "").split(" ")[0]}`;
+            if (cs.visibility === "hidden") return `visibility:hidden@${cur.tagName.toLowerCase()}`;
+            if ((cur as HTMLElement).hidden) return `hidden@${cur.tagName.toLowerCase()}`;
+            if (cur.getAttribute("aria-hidden") === "true") return `aria-hidden@${cur.tagName.toLowerCase()}`;
+          }
+          return null;
+        };
+        const matches = Array.from(document.querySelectorAll("*"))
+          .filter((el) => nameOf(el) === name)
+          .map((el) => {
+            const r = el.getBoundingClientRect();
+            const cs = getComputedStyle(el);
+            const struck = r.width > 0 && r.height > 0 ? document.elementFromPoint(r.left + r.width / 2, r.top + r.height / 2) : null;
+            return {
+              tag: el.tagName.toLowerCase(),
+              cls: (el.getAttribute("class") || "").slice(0, 50),
+              aria: el.getAttribute("aria-label") || "",
+              path: `${el.parentElement?.tagName.toLowerCase() || ""}>${el.tagName.toLowerCase()}`,
+              w: Math.round(r.width),
+              h: Math.round(r.height),
+              display: cs.display,
+              visibility: cs.visibility,
+              excluded_by: exclusion(el),
+              in_a11y_tree: exclusion(el) === null,
+              hit_self: !!struck && (struck === el || el.contains(struck)),
+            };
+          });
+        return { label: name, count: matches.length, matches };
+      }, label);
+      perScreen[`${route}::${label}`] = sweep;
+    }
+  }
+  readings[arm] = { journey_id: id, screens: perScreen };
+  /* The claim: any node that is still in the accessibility tree under one of these names has a box and
+     answers a strike at its own centre. A node the browser already excludes (display:none / hidden) is
+     not "in the tree", which is the second remedy the order allows. */
+  const offenders = Object.entries(perScreen).flatMap(([key, v]) => {
+    const sweep = v as unknown as { matches: Array<Record<string, unknown>> };
+    return sweep.matches
+      .filter((m) => m.in_a11y_tree === true && ((m.w as number) <= 0 || (m.h as number) <= 0 || m.hit_self === false))
+      .map((m) => ({ where: key, ...m }));
+  });
+  expect(offenders, node(arm, `named nodes nobody can strike: ${JSON.stringify(offenders)}`)).toEqual([]);
+});
+
 /* ------------------------------------------------------------------ T1/T2: one tap, three scroll poses */
 
 async function tapAtPose(page: Page, pose: "top" | "middle" | "bottom") {
@@ -280,11 +348,17 @@ test("B1_the_work_bench_entry_still_writes_the_same_link — 工作台那一枚�
     page.getByTestId("inbox-tab-paste"),
     node(arm, "the work bench never rendered, so this arm has no surface"),
   ).toBeVisible({ timeout: 30_000 });
+  const button = page.getByTestId("journey-link-copy").first();
+  await button.scrollIntoViewIfNeeded();
+  await page.waitForTimeout(300);
+  /* Bring it into view first, then judge -- sweeping at the resting scroll offset would grade the
+     offset rather than the control, which is the mistake the first pass of this file made. */
   const sweep = await sweepLabel(page);
   expect(sweep.matches.length, node(arm, "the bench lost its own copy of the entry")).toBeGreaterThan(0);
   expect(sweep.zero_size, node(arm, `a bench-side same-named node has no size (${JSON.stringify(sweep.matches)})`)).toBe(0);
-  const button = page.getByTestId("journey-link-copy").first();
-  await button.scrollIntoViewIfNeeded();
+  /* The same bar Today is held to: a labelled node that answers no strike is a trap for the next
+     reader, and the bench is the screen this order was written because of. */
+  expect(sweep.unhit, node(arm, `a bench-side same-named node did not answer a strike at its own centre (${JSON.stringify(sweep.matches)})`)).toBe(0);
   const box = await button.boundingBox();
   expect(!!box, node(arm, "the bench control reports no box")).toBe(true);
   const before = await primeClipboard(page);
