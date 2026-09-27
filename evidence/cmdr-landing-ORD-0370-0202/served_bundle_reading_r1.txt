@@ -1,0 +1,17 @@
+ORD-0370 served-bundle reading -- values taken from the LANDED dictionary (wrapped rows honoured), not guessed
+  agent.stopFailed         [en] len= 14 bundle_hits=1  "Couldn't stop."
+  agent.stopFailed         [zh] len=  4 bundle_hits=2  '没能停止'
+  agent.approvalFailed     [en] len= 17 bundle_hits=1  "Couldn't approve."
+  agent.approvalFailed     [zh] len=  4 bundle_hits=2  '没能确认'
+  agent.toolWorking        [en] len=  7 bundle_hits=9  'Working'
+  agent.toolWorking        [zh] len=  3 bundle_hits=2  '处理中'
+  live.acceptFailed        [en] len= 28 bundle_hits=1  "Couldn't accept this change."
+  live.acceptFailed        [zh] len=  9 bundle_hits=1  '没能接受这个调整。'
+  inbox.unnamedArtifact    [en] len= 14 bundle_hits=1  'an unnamed one'
+  inbox.unnamedArtifact    [zh] len=  8 bundle_hits=1  '没有订单号的一条'
+  studio.snapshotPending   [en] len=  7 bundle_hits=162  'pending'
+  studio.snapshotPending   [zh] len=  2 bundle_hits=6  '待定'
+
+  key-name literals present in bundle: 6/6
+  'an unnamed one' remaining in bundle: 1
+  its surrounding bytes: '":"Nothing here is waiting for your review.","inbox.unnamedArtifact":"an unnamed one","inbox.readyTo'
