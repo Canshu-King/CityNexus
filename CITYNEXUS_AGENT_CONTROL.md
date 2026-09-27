@@ -16588,6 +16588,56 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### ORD-0381 **r2** · 车道 qoder-0381 · Q72 rebase 完成 · 2026-09-28 0332+08
+
+按令 rebase 到现尖 `7c9edf9fae25f8dccacf59be9e5c23c1c09cda46`。新分支 `review/Q-ord0381-copy-honesty-ladder-r2`，tip `7c80427ff9e9372d07724239f56fe51cf8f1abdf`
+（树 `1a5ae222ab1d8fa921ab65a5c693ab81507cb84d`；两笔：尺 `2b144c9a863d0cc0703ac5bf2c4cedc9f4c852ea`，字典+读数 `7c80427ff9e9372d07724239f56fe51cf8f1abdf`）。
+只读自检：`git merge-tree --write-tree 7c9edf9fae25f8dccacf59be9e5c23c1c09cda46 HEAD` 退出码 **0**，且现尖是本 HEAD 的祖先 ⇒ 可 ff-only。
+**旧分支我没动也没 force-push**：`review/Q-ord0381-copy-honesty-ladder` 仍指 `89d4303a6bb96b491d9be649f3eaa0edb3a2d0cf`，要丢由您来丢。
+
+## 撞车面只有字典，且尺的 blob 逐字节未变（您第 3 条要的那件事）
+
+尺 = blob `8f1b40022fcba770ac6ec6ce501aab2ecb93882b`，与旧基上那枚**同一 40 位**（旧基 `89d4303a6bb96b491d9be649f3eaa0edb3a2d0cf` 的尺 blob 同为 `8f1b4002…`）⇒ 本次 rebase 没动任何量具代码。
+字典 = blob `41370129864a64788026570e5fa5d3a2506b948b`，旧基是 `4ee88bdbcb48c7c6f3d9a3f39b7ceb5077ee96bd` —— 变了是**应该变**：新基上 ORD-0369/0380 自己就往字典加了 31 枚 key（见下）。
+两份读数件也跟着重出，这是必然而非事故：它们是**对某棵树某一次运行的测量**，`LADDER_R2.txt` blob `2335434db88e71f3e4bc5bc939e8c63f89103c36`、`BUILD_R2.txt` blob `512460e39324f95f594dd5dc90698128e833da2a`。
+采纳您的减摩建议 1：**字典改动收在最后一笔**（上面两笔的顺序就是为此），下次线再动只需重跑一次。
+
+## rebase 后必须重算的读数（不是抄旧块）
+
+分母 634 → **665** 枚 distinct key（review/cnx-copy-ladder/LADDER_R2.txt:23）——线上新增，不是我的判据变了。
+tier B 存量 72 → **73** 处（review/cnx-copy-ladder/LADDER_R2.txt:16）：ORD-0369 的组件改动带进来一处新硬兜底，尺如实抓到。
+档④ 读得到群体 24 → **26**，缺 16 → **17**（review/cnx-copy-ladder/LADDER_R2.txt:12）；档⑥ **7/7 且闸 MET**（review/cnx-copy-ladder/LADDER_R2.txt:14）。
+① 语域 20/23（review/cnx-copy-ladder/LADDER_R2.txt:25）。反控 29 臂全 MET、尺退出码 1（review/cnx-copy-ladder/LADDER_R2.txt:96）。
+
+## 新基逼出来的两行档⑥改写（这正是闸该干的事）
+
+ORD-0369 刚落的 `studio.costDelta`（cost Δ {v}）与 `studio.timeDelta`（time Δ {n} min）
+**正好是档⑥的形状且不带估算标记** —— 我的闸在 rebase 后如实抓到它们。已按同一条零增长法补上：
+「成本变化 {v}」→「成本变化约{v}」、「时间变化 {n} 分钟」→「时间变化约{n}分钟」（约替掉占位符前的空格，中文一字不增）。
+于是本单共 **7 行**接档⑥：exec.min、live.slack、live.routeDuration、studio.walkingMinutes、studio.protected、
+studio.costDelta、studio.timeDelta。NO_GROWTH 实测 **14 个值变动、中文侧增 0 字符**（review/cnx-copy-ladder/LADDER_R2.txt:4）；
+REGISTER_PARITY 653 对 0 冲突（工件同段）。ORD-0367 与 ORD-0369 的既有中文值一字未改（只加标记，不改语域）。
+
+## 构建前置换了宿主形状（您的第 3 条之外我自作的一个决定，说明理由）
+
+不再用 junction。按项目内实测过的宿主：**非 git 的导出目录** + 真复制 src/e2e/public + `cp -al` 接 node_modules；
+硬链接不是 reparse point，删导出目录只会减链接数，穿删共享依赖这条路从形状上就堵死了（上次靠 `rmdir` 顺序保命，这次不需要那个顺序）。
+tsc 退出码 review/cnx-copy-ladder/BUILD_R2.txt:13、程序含 875 文件（src 内 81，非空转）、构建**前**先 grep 导出里的 `约{n}分钟` 命中 1 次（review/cnx-copy-ladder/BUILD_R2.txt:16）——
+证明测的是我这棵树而不是基线：我第一版导出用了 `git archive HEAD`，那时字典改动**还在工作树未提交**，tsc 通过的是没带我改动的树；
+发现后改成先复制工作树再测，才有上面那行 grep。vite 退出码 review/cnx-copy-ladder/BUILD_R2.txt:17、产物 `index-DQjdRuBa.js`、本次 built in 10.71s（review/cnx-copy-ladder/BUILD_R2.txt:17）；
+产物内 grep 到 `约{n}分钟`、`Est. {n} min`、`成本变化约`、`时间变化约` 四条（review/cnx-copy-ladder/BUILD_R2.txt:21 到 :24 四行）。
+共享依赖 D:/moodle/CityNexus/frontend/node_modules 全程只读，收尾回验条目数 **394**（review/cnx-copy-ladder/BUILD_R2.txt:25）。
+
+## 没改善的部分
+
+1. 档④仍红：新基上 26 条读得到的空态里 17 条仍不给下一步动作（review/cnx-copy-ladder/LADDER_R2.txt:12）。我没动它——补它要么让中文变长、要么改组件，两者都超本单文件范围。
+2. ②provenance 2/18、③破坏性作用域 1/6、⑤数字型空态 10/70 本单一行未动（只测）。① 剩的 3 条也未动。
+3. 无任何屏上/运行时证据：没跑 e2e、没打开面板；屏上文案的依据止于产物 grep。
+4. 与 ORD-0385（另一路，动同一本字典，本笔字典 blob `41370129864a64788026570e5fa5d3a2506b948b`）撞：谁后交谁 rebase。我这边现在可 ff；若您先落它，我这笔字典会再撞一次、重跑一次即可（尺那一笔不会撞）。
+5. 旧分支 `review/Q-ord0381-copy-honesty-ladder` 仍在架上未清理（我不删远端 ref，等令）。
+6. 尺对新基刚落的两行（`studio.costDelta` 见 frontend/src/i18n/LocaleContext.tsx:1475、`studio.timeDelta` 见 :1476）做的是它自身形状内的判定；那两行是否本该由带它们进来的那一单自己标估算，属您裁归属，我不改别人的验收结论。
+
+
 ### ORD-0371 现场样本刷新交付（lane S4-ast-taint，量具线）— r5e：一枚字面串只有一个判语通道，每枚拒都写"该怎么改"
 
 先更正一处接线，因为它决定后面所有读数：**门跑的不是 r4b**。`ledger_inbox_apply_r1.py:123` 那枚 r4c 只在工具自身 --selftest 里；真正拦块的是 `ledger_insert_after.py:28`，它跑 `claim_coordinate_check_r4e.py`；rc=8 出自 `ledger_insert_after.py:34`。（尺体 b157d3f773a859f792bfb1346b1d8255da735fa7）你 02:52 那轮的拒词与 exempt 表因此都是 r4e 的输出（r4e 没有小数单位、没有闭合状态码集、没有行锁、没有瓦片/数组段）。（尺体 b157d3f773a859f792bfb1346b1d8255da735fa7 ）
