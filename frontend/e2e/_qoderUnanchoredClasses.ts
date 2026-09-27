@@ -8,7 +8,7 @@
  * UNANCHORED_ITEM_KEYS string ever reaches the DOM.
  */
 
-export const UNANCHORED_MEASURED_AT_COMMIT = 'a2baa5a23cf6618c3649efee9ce45b36ae4a9ea8';
+export const UNANCHORED_CONTRACT_BLOB = '6ba1b9ab666d914ed6fc910a0372cf85b0fe6e64';  // git rev-parse HEAD:contracts/openapi.yaml
 export const UNANCHORED_HAND_CONTRACT_SHA256 = 'ff9fca7271808a59f620a8fd91647b3db90aaeeaa34d94e905ec1e2d2355adf3';
 export const UNANCHORED_GENERATED_CONTRACT_SHA256 = '4b8439e6d5cf3c40675e22ede32b81f9fdd81cd63dbf4bd55d0baacfd38e09e2';
 export const ANCHORED_ITEM_KEYS: readonly string[] = ["plan_feasibility_open", "recovery_needs_decision"];

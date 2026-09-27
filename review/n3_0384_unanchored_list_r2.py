@@ -111,7 +111,10 @@ def hand_declared_under_response(lines, name, endpoint):
 
 
 def main():
-    head = subprocess.run(["git", "-C", WT, "rev-parse", "HEAD"], capture_output=True, text=True).stdout.strip()
+    # The contract's own blob, not HEAD: recording HEAD makes this file change on every commit, which
+    # then moves the commit it is supposed to record. The blob is the thing actually being measured.
+    head = subprocess.run(["git", "-C", WT, "rev-parse", "HEAD:contracts/openapi.yaml"],
+                          capture_output=True, text=True).stdout.strip()
     two = json.load(io.open(TWO, encoding="utf-8"))
     byfield = {r["field"]: r for r in two["fields"]}
     lines = io.open(CONTRACT, encoding="utf-8").read().splitlines()
@@ -136,7 +139,7 @@ def main():
                      "what_would_anchor": needs})
     anchored = [r["key"] for r in rows if r["status"] == "ANCHORED_ON_RESPONSE"]
     unanchored = [r["key"] for r in rows if r["status"] != "ANCHORED_ON_RESPONSE"]
-    out = {"generated_by": os.path.basename(__file__), "order": "ORD-0384", "commit": head,
+    out = {"generated_by": os.path.basename(__file__), "order": "ORD-0384", "contract_blob": head,
            "hand_contract_sha256": hashlib.sha256(io.open(CONTRACT, "rb").read()).hexdigest(),
            "generated_contract_sha256": two["generated_sha256"],
            "generated_experience_200_schema": "empty object -- see two_contracts_r1.json",
@@ -157,7 +160,7 @@ def main():
           " * UNANCHORED_ITEM_KEYS string ever reaches the DOM.",
           " */",
           "",
-          "export const UNANCHORED_MEASURED_AT_COMMIT = %r;" % head,
+          "export const UNANCHORED_CONTRACT_BLOB = %r;  // git rev-parse HEAD:contracts/openapi.yaml" % head,
           "export const UNANCHORED_HAND_CONTRACT_SHA256 = %r;" % out["hand_contract_sha256"],
           "export const UNANCHORED_GENERATED_CONTRACT_SHA256 = %r;" % out["generated_contract_sha256"],
           "export const ANCHORED_ITEM_KEYS: readonly string[] = [%s];" % ", ".join('"%s"' % k for k in anchored),
