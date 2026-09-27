@@ -1,0 +1,61 @@
+{
+ "order": "ORD-0378",
+ "read_at": "2026-09-28T02:23:38+08:00",
+ "asset": "index-B800Wnn2.js (read from the served page first)",
+ "auth_used": false,
+ "offline_method": "context.setOffline(true); no chain process stopped; single browser instance, closed after",
+ "hittability_rule": "candidates filtered by boundingBox >= 4px and document.elementFromPoint text match; no .first() shortcut",
+ "entries": [
+  {
+   "label": "看已保存的只读副本",
+   "name_nodes": 1,
+   "hittable": true,
+   "box": [
+    0,
+    145,
+    522,
+    44
+   ],
+   "url_changed": false,
+   "screen_after_chars": 206,
+   "verbatim": "CN 离线 · 只读 你未来 24 小时已保存。 重试 现在 · 活跃 广州南站 下一步 · PLANNED Check in · 7天酒店 广州南站 9月21日 10:00 → 9月21日 10:20 Check in · 7天酒店 9月21日 14:00 → 9月21日 14:20 供应商数据最后刷新于 9月20日 19:54。离线状态下财务操作已禁用。这台设备保存这份副本的时间：9月20日 20:05。"
+  },
+  {
+   "label": "重试",
+   "name_nodes": 2,
+   "hittable": true,
+   "box": [
+    0,
+    75,
+    522,
+    43
+   ],
+   "url_changed": false,
+   "screen_after_chars": 88,
+   "screen_before_chars": 88,
+   "verbatim": "连接 网络不可用 这一发请求没能出去，也没有收到任何回答，所以这是网络问题。你的行程数据没有丢失，已保存的只读副本还能看。请检查网络后重试。 看已保存的只读副本 重试 归因详情",
+   "reading": "no success claim, text neither better nor worse; character count identical before and after"
+  },
+  {
+   "label": "归因详情",
+   "name_nodes": 1,
+   "hittable": true,
+   "box": [
+    0,
+    258,
+    522,
+    44
+   ],
+   "url_changed": false,
+   "screen_after_chars": 267,
+   "verbatim_appended": "attribution_reason=NETWORK_UNAVAILABLE evidence_kind=HEALTH_PROBE http_status=none source_layer=TRANSPORT retryable=true recovery_action=read"
+  }
+ ],
+ "grade": "accurate as shipped - no frontend change, so FRONTSRC_BUILD_PREREQ does not bind",
+ "not_examined": [
+  "whether 重试 really re-fires a probe (identical text cannot distinguish \"retried and failed\" from \"no handler\"): needs a network-entry delta, not more text",
+  "the odd phrase 「你未来 24 小时已保存」 grammar - flagged, not adjudicated",
+  "console entries of this session not audited line by line"
+ ],
+ "counter_arms": "none configurable: no code was changed, so there is nothing to mutate"
+}
