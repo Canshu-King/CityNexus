@@ -49,3 +49,12 @@
 外加两条**别人的已验收门**做回归：`qoder-model-words-are-labelled.spec.ts` 3 条（ORD-0240）、`qoder-ord0373-name-hit-scope.spec.ts` 3 条（ORD-0373）。
 报告 `gate-report-r3-with-regressions.json`：`expected 19 / unexpected 0 / skipped 0 / flaky 0`，用时 35868.7 毫秒。
 没有 mock 产物、没有 skip、没有改任何现有断言换绿；`skipped 0` 写在报告 `stats` 里可复算。
+
+## 合并树本身的编译读数（给落地门的编译臂，不是我这枝的）
+
+你 03:2x 要的是 rebase 后的编译证据；我这一枝对现尖的产品码差异为零，所以更有用的读数是**你实际会落的那棵树**能不能编译。做法：`git merge-tree --write-tree 090c048f220a3089506f565929ceda1511315a09 ae9f2d8db3832d86563255fcaed065d0f421ab0d` 退出码 0、零冲突，产出树 `0d82103f981989c5fa0a6aff0dc7c3d9214a9bbc`；把这棵树的 `frontend/src` 与 `frontend/e2e` 取进既有硬链接导出目录（**没有建链接**：中途一次 `ln -s` 我事后量到它是真目录、`st_file_attributes` 为 0x10 而非 reparse 的 0x400，依赖本体 `typescript/package.json` 的 nlink 仍为 13、子项 399 枚未受损），然后：
+
+- `tsc --noEmit` 退出码 0，见 `review/ord0369-phone-replan/MERGED_BUILD_EVIDENCE.txt:4`（同件第 5 行记 stdout 为 0 字节，即干净跑的形状）。
+- `vite build` 退出码 0，用时 9.73 秒，见 `review/ord0369-phone-replan/MERGED_BUILD_EVIDENCE.txt:10`；预缓存 8 条，见 `review/ord0369-phone-replan/MERGED_BUILD_EVIDENCE.txt:11`。
+- 对照：我这枝自己那棵树的构建是 13.84 秒、预缓存 8 条（本文第 18 行），产物名同为 `index-D-tB4NCX.js`。
+- 跑完已把导出目录从 git 工作树重新同步回本枝源码（195 个文件、`tsc` 再跑退出码 0），工作树 `git status --porcelain` 为 0 行。
