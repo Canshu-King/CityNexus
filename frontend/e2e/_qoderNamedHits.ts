@@ -17,6 +17,8 @@ export type NamedHit = {
   index: number;
   tag: string;
   cls: string;
+  x: number;
+  y: number;
   w: number;
   h: number;
   excluded_by: string | null;
@@ -55,6 +57,10 @@ export async function surveyName(page: Page, name: string): Promise<NamedHit[]> 
           index,
           tag: el.tagName.toLowerCase(),
           cls: norm(el.getAttribute("class")).slice(0, 40),
+          /* Position, not just size: a survey that can only say "this has a box" cannot answer whether
+             that box sits under the fixed bottom nav or on a colliding band, which is what ORD-0375 asks. */
+          x: Math.round(r.left),
+          y: Math.round(r.top),
           w: Math.round(r.width),
           h: Math.round(r.height),
           excluded_by: excludedBy,
