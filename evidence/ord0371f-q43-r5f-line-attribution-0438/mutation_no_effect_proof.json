@@ -1,0 +1,17 @@
+{
+ "ruler": {
+  "file": "claim_coordinate_check_r5f.py",
+  "bytes": 75396,
+  "blob": "0efaa7dd7c23cbda574e42b33a723cf7df5fd7cd"
+ },
+ "mutation": {
+  "name": "uniformity_extended_to_conditional_classes",
+  "old": "        if row[\"class\"] in UNIFORM_CLASSES and row[\"token\"] not in decided:",
+  "new": "        if row[\"class\"] in UNIFORM_CLASSES + CONDITIONAL_CLASSES and row[\"token\"] not in decided:"
+ },
+ "blocks": 22,
+ "verdict_or_refusal_differences": {},
+ "identical_verdict_and_refusals_on_every_block": true,
+ "exempt_bucket_differences": {},
+ "conclusion": "22 of 22 blocks keep an identical verdict, claim count, refusal set AND exempt bucket table under the mutant (0 blocks show any bucket difference at all). The mutant is therefore not load-bearing on this inbox, and that is stated from the measurement here instead of excused in prose."
+}
