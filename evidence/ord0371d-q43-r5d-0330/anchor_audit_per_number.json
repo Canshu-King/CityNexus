@@ -1,0 +1,924 @@
+{
+ "refusals_total": 67,
+ "refusals_whose_line_holds_a_resolvable_coordinate": 10,
+ "examples_line_has_coordinate": [
+  {
+   "block": "n2_0101.md",
+   "token": "1392 条",
+   "line": "`--collect-only` collected 1392 条、exit 0（件 `:14`）；整套从 `backend/` 跑：9 failed / 1367 passed / 15 skipped / 1 xfailed（件 `:13`），逐格红名在件 `:15` 起。这 9 格里没有一枚依赖 AI 词汇，全部是 `anywhere_*` 那一族与 `g3_xproc_http`；后者我在",
+   "line_len": 385,
+   "class_by_shape": null,
+   "resolvable_coordinate_on_this_line": true,
+   "full_40hex_on_this_line": true,
+   "coordinate_shapes_on_line": [
+    "blob `952ad7dbc2"
+   ],
+   "distance_to_nearest_coord_same_line": 2492,
+   "distance_to_nearest_coord_in_block": 195
+  },
+  {
+   "block": "n2_0101.md",
+   "token": "9 failed",
+   "line": "`--collect-only` collected 1392 条、exit 0（件 `:14`）；整套从 `backend/` 跑：9 failed / 1367 passed / 15 skipped / 1 xfailed（件 `:13`），逐格红名在件 `:15` 起。这 9 格里没有一枚依赖 AI 词汇，全部是 `anywhere_*` 那一族与 `g3_xproc_http`；后者我在",
+   "line_len": 385,
+   "class_by_shape": null,
+   "resolvable_coordinate_on_this_line": true,
+   "full_40hex_on_this_line": true,
+   "coordinate_shapes_on_line": [
+    "blob `952ad7dbc2"
+   ],
+   "distance_to_nearest_coord_same_line": 2532,
+   "distance_to_nearest_coord_in_block": 192
+  },
+  {
+   "block": "n2_0101.md",
+   "token": "1367 passed",
+   "line": "`--collect-only` collected 1392 条、exit 0（件 `:14`）；整套从 `backend/` 跑：9 failed / 1367 passed / 15 skipped / 1 xfailed（件 `:13`），逐格红名在件 `:15` 起。这 9 格里没有一枚依赖 AI 词汇，全部是 `anywhere_*` 那一族与 `g3_xproc_http`；后者我在",
+   "line_len": 385,
+   "class_by_shape": null,
+   "resolvable_coordinate_on_this_line": true,
+   "full_40hex_on_this_line": true,
+   "coordinate_shapes_on_line": [
+    "blob `952ad7dbc2"
+   ],
+   "distance_to_nearest_coord_same_line": 2543,
+   "distance_to_nearest_coord_in_block": 178
+  },
+  {
+   "block": "n2_0228.md",
+   "token": "0,258,522,44",
+   "line": "- 「归因详情」：可命中，框 `[0,258,522,44]`，URL 不变，屏上多出一段**渲染文字**（不是 data 属性）：`attribution_reason=NETWORK_UNAVAILABLE evidence_kind=HEALTH_PROBE http_status=none source_layer=TRANSPORT retryable=true recovery_act",
+   "line_len": 377,
+   "class_by_shape": null,
+   "resolvable_coordinate_on_this_line": true,
+   "full_40hex_on_this_line": true,
+   "coordinate_shapes_on_line": [
+    "blob `c793ef6d9a"
+   ],
+   "distance_to_nearest_coord_same_line": 522,
+   "distance_to_nearest_coord_in_block": 299
+  },
+  {
+   "block": "n2_1759.md",
+   "token": "8 passed",
+   "line": "候选 ref `refs/heads/review/N2-ord0359-three-ai-words` 现值 `324753e0688a5f2682071f23cefeff832443b8bc`，交付块 `D:/moodle/_qoder_ledger_inbox/n2_1753.md`（仍在收件箱待门读）。R1 服务端三态具名与 openapi 同步已做、契约门回读 `formal 149; ",
+   "line_len": 599,
+   "class_by_shape": null,
+   "resolvable_coordinate_on_this_line": true,
+   "full_40hex_on_this_line": true,
+   "coordinate_shapes_on_line": [
+    "refs/heads/revie",
+    "324753e0688a5f26"
+   ],
+   "distance_to_nearest_coord_same_line": 2662,
+   "distance_to_nearest_coord_in_block": 197
+  },
+  {
+   "block": "n2_1759.md",
+   "token": "2 failed",
+   "line": "候选 ref `refs/heads/review/N2-ord0359-three-ai-words` 现值 `324753e0688a5f2682071f23cefeff832443b8bc`，交付块 `D:/moodle/_qoder_ledger_inbox/n2_1753.md`（仍在收件箱待门读）。R1 服务端三态具名与 openapi 同步已做、契约门回读 `formal 149; ",
+   "line_len": 599,
+   "class_by_shape": null,
+   "resolvable_coordinate_on_this_line": true,
+   "full_40hex_on_this_line": true,
+   "coordinate_shapes_on_line": [
+    "refs/heads/revie",
+    "324753e0688a5f26"
+   ],
+   "distance_to_nearest_coord_same_line": 2687,
+   "distance_to_nearest_coord_in_block": 222
+  }
+ ],
+ "all": [
+  {
+   "block": "n2_0101.md",
+   "token": "1392 条",
+   "line": "`--collect-only` collected 1392 条、exit 0（件 `:14`）；整套从 `backend/` 跑：9 failed / 1367 passed / 15 skipped / 1 xfailed（件 `:13`），逐格红名在件 `:15` 起。这 9 格里没有一枚依赖 AI 词汇，全部是 `anywhere_*` 那一族与 `g3_xproc_http`；后者我在",
+   "line_len": 385,
+   "class_by_shape": null,
+   "resolvable_coordinate_on_this_line": true,
+   "full_40hex_on_this_line": true,
+   "coordinate_shapes_on_line": [
+    "blob `952ad7dbc2"
+   ],
+   "distance_to_nearest_coord_same_line": 2492,
+   "distance_to_nearest_coord_in_block": 195
+  },
+  {
+   "block": "n2_0101.md",
+   "token": "9 failed",
+   "line": "`--collect-only` collected 1392 条、exit 0（件 `:14`）；整套从 `backend/` 跑：9 failed / 1367 passed / 15 skipped / 1 xfailed（件 `:13`），逐格红名在件 `:15` 起。这 9 格里没有一枚依赖 AI 词汇，全部是 `anywhere_*` 那一族与 `g3_xproc_http`；后者我在",
+   "line_len": 385,
+   "class_by_shape": null,
+   "resolvable_coordinate_on_this_line": true,
+   "full_40hex_on_this_line": true,
+   "coordinate_shapes_on_line": [
+    "blob `952ad7dbc2"
+   ],
+   "distance_to_nearest_coord_same_line": 2532,
+   "distance_to_nearest_coord_in_block": 192
+  },
+  {
+   "block": "n2_0101.md",
+   "token": "1367 passed",
+   "line": "`--collect-only` collected 1392 条、exit 0（件 `:14`）；整套从 `backend/` 跑：9 failed / 1367 passed / 15 skipped / 1 xfailed（件 `:13`），逐格红名在件 `:15` 起。这 9 格里没有一枚依赖 AI 词汇，全部是 `anywhere_*` 那一族与 `g3_xproc_http`；后者我在",
+   "line_len": 385,
+   "class_by_shape": null,
+   "resolvable_coordinate_on_this_line": true,
+   "full_40hex_on_this_line": true,
+   "coordinate_shapes_on_line": [
+    "blob `952ad7dbc2"
+   ],
+   "distance_to_nearest_coord_same_line": 2543,
+   "distance_to_nearest_coord_in_block": 178
+  },
+  {
+   "block": "n2_0105.md",
+   "token": "138",
+   "line": "- `7897`：件 A 第 13 行 = 当时 `netstat` 第 138 行原样（该地址 LISTENING），第 16 行记以它为单命令临时覆写值时 push 返回 `[new branch]` 且 `git ls-remote` 回读成功。",
+   "line_len": 126,
+   "class_by_shape": null,
+   "resolvable_coordinate_on_this_line": false,
+   "full_40hex_on_this_line": false,
+   "coordinate_shapes_on_line": [],
+   "distance_to_nearest_coord_same_line": 99999,
+   "distance_to_nearest_coord_in_block": 211
+  },
+  {
+   "block": "n2_0144.md",
+   "token": "0.4 GB",
+   "line": "- 能在不泄露凭据的前提下做到的形状只有一个：本机起一个只加 `Authorization` 头的 localhost 转发代理，凭据由代理自己从那个 TAB 文件读，浏览器只访问 localhost。这要新建一个本地监听（与\"不开第二个常驻浏览器、内存只剩约 0.4 GB\"同一条资源账），且要驱动两次交互（过 401、点开\"AI 帮我规划\"）。我这轮的上下文已不足以安全走完它——半路停手会留下一",
+   "line_len": 237,
+   "class_by_shape": "DIMENSION",
+   "resolvable_coordinate_on_this_line": false,
+   "full_40hex_on_this_line": false,
+   "coordinate_shapes_on_line": [],
+   "distance_to_nearest_coord_same_line": 99999,
+   "distance_to_nearest_coord_in_block": 391
+  },
+  {
+   "block": "n2_0152.md",
+   "token": "0.4 GB",
+   "line": "- 浏览器用完即关（`browser_close` 已执行），没留第二个常驻实例；这机器内存只剩约 0.4 GB，我按你边界只做一次会话。",
+   "line_len": 69,
+   "class_by_shape": "DIMENSION",
+   "resolvable_coordinate_on_this_line": false,
+   "full_40hex_on_this_line": false,
+   "coordinate_shapes_on_line": [],
+   "distance_to_nearest_coord_same_line": 99999,
+   "distance_to_nearest_coord_in_block": 251
+  },
+  {
+   "block": "n2_0152.md",
+   "token": "6 条",
+   "line": "- 那次会话的页面上 Playwright 报了 6 条 console error，我没展开查——它发生在部署代次的页面上、与本次读数无关（读数取自 DOM 已成功渲染之后），但不该被我顺手写成\"无异常\"。要不要单开一合格查那 6 条，你定。",
+   "line_len": 122,
+   "class_by_shape": null,
+   "resolvable_coordinate_on_this_line": false,
+   "full_40hex_on_this_line": false,
+   "coordinate_shapes_on_line": [],
+   "distance_to_nearest_coord_same_line": 99999,
+   "distance_to_nearest_coord_in_block": 209
+  },
+  {
+   "block": "n2_0156.md",
+   "token": "6 条",
+   "line": "### ORD-0374 读数（lane N2）— 那 6 条 console error 全是第三方瓦片超时，分级依据与原文同件；一格我没查的写在最后",
+   "line_len": 76,
+   "class_by_shape": null,
+   "resolvable_coordinate_on_this_line": false,
+   "full_40hex_on_this_line": false,
+   "coordinate_shapes_on_line": [],
+   "distance_to_nearest_coord_same_line": 99999,
+   "distance_to_nearest_coord_in_block": 779
+  },
+  {
+   "block": "n2_0156.md",
+   "token": "6 条",
+   "line": "所以这 6 条是**面板打开时才触发**的，不是启动噪声。",
+   "line_len": 29,
+   "class_by_shape": null,
+   "resolvable_coordinate_on_this_line": false,
+   "full_40hex_on_this_line": false,
+   "coordinate_shapes_on_line": [],
+   "distance_to_nearest_coord_same_line": 99999,
+   "distance_to_nearest_coord_in_block": 262
+  },
+  {
+   "block": "n2_0156.md",
+   "token": "6 条",
+   "line": "逐条原文（6 条，逐字，未转述）",
+   "line_len": 16,
+   "class_by_shape": null,
+   "resolvable_coordinate_on_this_line": false,
+   "full_40hex_on_this_line": false,
+   "coordinate_shapes_on_line": [],
+   "distance_to_nearest_coord_same_line": 99999,
+   "distance_to_nearest_coord_in_block": 230
+  },
+  {
+   "block": "n2_0156.md",
+   "token": "6 条",
+   "line": "瓦片失败时**地图区自己那句屏上文案诚不诚实**，我这轮没审（件里 `not_examined` 字段记着）。这属于\"面板外的一屏\"，超出\"把 6 条读成一次真读数\"的范围；要不要开一格量地图的降级文案，你定。另注：这 6 条超时在这台机器的链路条件下是可复现的环境事实（本机对公网瓦片没有可用出口），换一条能出网的链路可能就不出现，所以它也不是产品回归的门禁信号。",
+   "line_len": 183,
+   "class_by_shape": null,
+   "resolvable_coordinate_on_this_line": false,
+   "full_40hex_on_this_line": false,
+   "coordinate_shapes_on_line": [],
+   "distance_to_nearest_coord_same_line": 99999,
+   "distance_to_nearest_coord_in_block": 146
+  },
+  {
+   "block": "n2_0200.md",
+   "token": "0 处",
+   "line": "同时我**不写成\"没有状态行\"**：状态行是有的（`map_status_node_exists=true`），但它只报路线上下文，从不报底图状态。所以缺陷形状是\"底图全失败时屏上保持沉默、把空白当正常态\"，不是\"完全没有状态区\"。这条分级有依据：一边是已实测的底图失败，一边是 0 处提及。",
+   "line_len": 146,
+   "class_by_shape": null,
+   "resolvable_coordinate_on_this_line": false,
+   "full_40hex_on_this_line": false,
+   "coordinate_shapes_on_line": [],
+   "distance_to_nearest_coord_same_line": 99999,
+   "distance_to_nearest_coord_in_block": 280
+  },
+  {
+   "block": "n2_0213.md",
+   "token": "6 条",
+   "line": "- 未查那句 → 我这轮没审的是地图区自己的降级文案，标在件第 23 行 `not_examined`；把上述 `6 条` 读成一次真读数不在那一格的范围内。",
+   "line_len": 79,
+   "class_by_shape": null,
+   "resolvable_coordinate_on_this_line": false,
+   "full_40hex_on_this_line": false,
+   "coordinate_shapes_on_line": [],
+   "distance_to_nearest_coord_same_line": 99999,
+   "distance_to_nearest_coord_in_block": 227
+  },
+  {
+   "block": "n2_0213.md",
+   "token": "0 条",
+   "line": "- 导航后读 console：0 条（件第 9 行）。面板打开后读：6 条（件第 10 行）。所以触发点是面板，不是启动。",
+   "line_len": 61,
+   "class_by_shape": null,
+   "resolvable_coordinate_on_this_line": false,
+   "full_40hex_on_this_line": false,
+   "coordinate_shapes_on_line": [],
+   "distance_to_nearest_coord_same_line": 99999,
+   "distance_to_nearest_coord_in_block": 281
+  },
+  {
+   "block": "n2_0213.md",
+   "token": "6 条",
+   "line": "- 导航后读 console：0 条（件第 9 行）。面板打开后读：6 条（件第 10 行）。所以触发点是面板，不是启动。",
+   "line_len": 61,
+   "class_by_shape": null,
+   "resolvable_coordinate_on_this_line": false,
+   "full_40hex_on_this_line": false,
+   "coordinate_shapes_on_line": [],
+   "distance_to_nearest_coord_same_line": 99999,
+   "distance_to_nearest_coord_in_block": 300
+  },
+  {
+   "block": "n2_0213.md",
+   "token": "1668",
+   "line": "- 每条形状：`Failed to load resource: net::ERR_CONNECTION_TIMED_OUT @ https://tile.openstreetmap.org/11/<x>/<y>.png:0`，坐标 1668/888、1668/889、1669/888、1667/888、1669/889、1667/889（件第 12 到 17 行逐行）。",
+   "line_len": 187,
+   "class_by_shape": null,
+   "resolvable_coordinate_on_this_line": false,
+   "full_40hex_on_this_line": false,
+   "coordinate_shapes_on_line": [],
+   "distance_to_nearest_coord_same_line": 99999,
+   "distance_to_nearest_coord_in_block": 445
+  },
+  {
+   "block": "n2_0213.md",
+   "token": "888",
+   "line": "- 每条形状：`Failed to load resource: net::ERR_CONNECTION_TIMED_OUT @ https://tile.openstreetmap.org/11/<x>/<y>.png:0`，坐标 1668/888、1668/889、1669/888、1667/888、1669/889、1667/889（件第 12 到 17 行逐行）。",
+   "line_len": 187,
+   "class_by_shape": null,
+   "resolvable_coordinate_on_this_line": false,
+   "full_40hex_on_this_line": false,
+   "coordinate_shapes_on_line": [],
+   "distance_to_nearest_coord_same_line": 99999,
+   "distance_to_nearest_coord_in_block": 450
+  },
+  {
+   "block": "n2_0213.md",
+   "token": "1668",
+   "line": "- 每条形状：`Failed to load resource: net::ERR_CONNECTION_TIMED_OUT @ https://tile.openstreetmap.org/11/<x>/<y>.png:0`，坐标 1668/888、1668/889、1669/888、1667/888、1669/889、1667/889（件第 12 到 17 行逐行）。",
+   "line_len": 187,
+   "class_by_shape": null,
+   "resolvable_coordinate_on_this_line": false,
+   "full_40hex_on_this_line": false,
+   "coordinate_shapes_on_line": [],
+   "distance_to_nearest_coord_same_line": 99999,
+   "distance_to_nearest_coord_in_block": 445
+  },
+  {
+   "block": "n2_0213.md",
+   "token": "889",
+   "line": "- 每条形状：`Failed to load resource: net::ERR_CONNECTION_TIMED_OUT @ https://tile.openstreetmap.org/11/<x>/<y>.png:0`，坐标 1668/888、1668/889、1669/888、1667/888、1669/889、1667/889（件第 12 到 17 行逐行）。",
+   "line_len": 187,
+   "class_by_shape": null,
+   "resolvable_coordinate_on_this_line": false,
+   "full_40hex_on_this_line": false,
+   "coordinate_shapes_on_line": [],
+   "distance_to_nearest_coord_same_line": 99999,
+   "distance_to_nearest_coord_in_block": 459
+  },
+  {
+   "block": "n2_0213.md",
+   "token": "1669",
+   "line": "- 每条形状：`Failed to load resource: net::ERR_CONNECTION_TIMED_OUT @ https://tile.openstreetmap.org/11/<x>/<y>.png:0`，坐标 1668/888、1668/889、1669/888、1667/888、1669/889、1667/889（件第 12 到 17 行逐行）。",
+   "line_len": 187,
+   "class_by_shape": null,
+   "resolvable_coordinate_on_this_line": false,
+   "full_40hex_on_this_line": false,
+   "coordinate_shapes_on_line": [],
+   "distance_to_nearest_coord_same_line": 99999,
+   "distance_to_nearest_coord_in_block": 463
+  },
+  {
+   "block": "n2_0213.md",
+   "token": "888",
+   "line": "- 每条形状：`Failed to load resource: net::ERR_CONNECTION_TIMED_OUT @ https://tile.openstreetmap.org/11/<x>/<y>.png:0`，坐标 1668/888、1668/889、1669/888、1667/888、1669/889、1667/889（件第 12 到 17 行逐行）。",
+   "line_len": 187,
+   "class_by_shape": null,
+   "resolvable_coordinate_on_this_line": false,
+   "full_40hex_on_this_line": false,
+   "coordinate_shapes_on_line": [],
+   "distance_to_nearest_coord_same_line": 99999,
+   "distance_to_nearest_coord_in_block": 450
+  },
+  {
+   "block": "n2_0213.md",
+   "token": "1667",
+   "line": "- 每条形状：`Failed to load resource: net::ERR_CONNECTION_TIMED_OUT @ https://tile.openstreetmap.org/11/<x>/<y>.png:0`，坐标 1668/888、1668/889、1669/888、1667/888、1669/889、1667/889（件第 12 到 17 行逐行）。",
+   "line_len": 187,
+   "class_by_shape": null,
+   "resolvable_coordinate_on_this_line": false,
+   "full_40hex_on_this_line": false,
+   "coordinate_shapes_on_line": [],
+   "distance_to_nearest_coord_same_line": 99999,
+   "distance_to_nearest_coord_in_block": 472
+  },
+  {
+   "block": "n2_0213.md",
+   "token": "888",
+   "line": "- 每条形状：`Failed to load resource: net::ERR_CONNECTION_TIMED_OUT @ https://tile.openstreetmap.org/11/<x>/<y>.png:0`，坐标 1668/888、1668/889、1669/888、1667/888、1669/889、1667/889（件第 12 到 17 行逐行）。",
+   "line_len": 187,
+   "class_by_shape": null,
+   "resolvable_coordinate_on_this_line": false,
+   "full_40hex_on_this_line": false,
+   "coordinate_shapes_on_line": [],
+   "distance_to_nearest_coord_same_line": 99999,
+   "distance_to_nearest_coord_in_block": 450
+  },
+  {
+   "block": "n2_0213.md",
+   "token": "1669",
+   "line": "- 每条形状：`Failed to load resource: net::ERR_CONNECTION_TIMED_OUT @ https://tile.openstreetmap.org/11/<x>/<y>.png:0`，坐标 1668/888、1668/889、1669/888、1667/888、1669/889、1667/889（件第 12 到 17 行逐行）。",
+   "line_len": 187,
+   "class_by_shape": null,
+   "resolvable_coordinate_on_this_line": false,
+   "full_40hex_on_this_line": false,
+   "coordinate_shapes_on_line": [],
+   "distance_to_nearest_coord_same_line": 99999,
+   "distance_to_nearest_coord_in_block": 463
+  },
+  {
+   "block": "n2_0213.md",
+   "token": "889",
+   "line": "- 每条形状：`Failed to load resource: net::ERR_CONNECTION_TIMED_OUT @ https://tile.openstreetmap.org/11/<x>/<y>.png:0`，坐标 1668/888、1668/889、1669/888、1667/888、1669/889、1667/889（件第 12 到 17 行逐行）。",
+   "line_len": 187,
+   "class_by_shape": null,
+   "resolvable_coordinate_on_this_line": false,
+   "full_40hex_on_this_line": false,
+   "coordinate_shapes_on_line": [],
+   "distance_to_nearest_coord_same_line": 99999,
+   "distance_to_nearest_coord_in_block": 459
+  },
+  {
+   "block": "n2_0213.md",
+   "token": "1667",
+   "line": "- 每条形状：`Failed to load resource: net::ERR_CONNECTION_TIMED_OUT @ https://tile.openstreetmap.org/11/<x>/<y>.png:0`，坐标 1668/888、1668/889、1669/888、1667/888、1669/889、1667/889（件第 12 到 17 行逐行）。",
+   "line_len": 187,
+   "class_by_shape": null,
+   "resolvable_coordinate_on_this_line": false,
+   "full_40hex_on_this_line": false,
+   "coordinate_shapes_on_line": [],
+   "distance_to_nearest_coord_same_line": 99999,
+   "distance_to_nearest_coord_in_block": 472
+  },
+  {
+   "block": "n2_0213.md",
+   "token": "889",
+   "line": "- 每条形状：`Failed to load resource: net::ERR_CONNECTION_TIMED_OUT @ https://tile.openstreetmap.org/11/<x>/<y>.png:0`，坐标 1668/888、1668/889、1669/888、1667/888、1669/889、1667/889（件第 12 到 17 行逐行）。",
+   "line_len": 187,
+   "class_by_shape": null,
+   "resolvable_coordinate_on_this_line": false,
+   "full_40hex_on_this_line": false,
+   "coordinate_shapes_on_line": [],
+   "distance_to_nearest_coord_same_line": 99999,
+   "distance_to_nearest_coord_in_block": 459
+  },
+  {
+   "block": "n2_0219.md",
+   "token": "6 条",
+   "line": "1. 瓦片全失时地图区屏上逐字：`1 2 3 4 5 底图未加载，显示的是路线示意。 路线上下文 4 段路程 供应商支持的路线 · WGS84 单指拖动地图 · 双指缩放 · 想翻这一页就拖地图以外的地方`。失败是真失败：我拖过画布之后瓦片请求 6 条，其中 6 条 `responseStatus=0`（件里两个计数同名），同一轮 console 也是 6 条超时。",
+   "line_len": 184,
+   "class_by_shape": null,
+   "resolvable_coordinate_on_this_line": false,
+   "full_40hex_on_this_line": false,
+   "coordinate_shapes_on_line": [],
+   "distance_to_nearest_coord_same_line": 99999,
+   "distance_to_nearest_coord_in_block": 306
+  },
+  {
+   "block": "n2_0219.md",
+   "token": "6 条",
+   "line": "1. 瓦片全失时地图区屏上逐字：`1 2 3 4 5 底图未加载，显示的是路线示意。 路线上下文 4 段路程 供应商支持的路线 · WGS84 单指拖动地图 · 双指缩放 · 想翻这一页就拖地图以外的地方`。失败是真失败：我拖过画布之后瓦片请求 6 条，其中 6 条 `responseStatus=0`（件里两个计数同名），同一轮 console 也是 6 条超时。",
+   "line_len": 184,
+   "class_by_shape": null,
+   "resolvable_coordinate_on_this_line": false,
+   "full_40hex_on_this_line": false,
+   "coordinate_shapes_on_line": [],
+   "distance_to_nearest_coord_same_line": 99999,
+   "distance_to_nearest_coord_in_block": 306
+  },
+  {
+   "block": "n2_0219.md",
+   "token": "6 条",
+   "line": "1. 瓦片全失时地图区屏上逐字：`1 2 3 4 5 底图未加载，显示的是路线示意。 路线上下文 4 段路程 供应商支持的路线 · WGS84 单指拖动地图 · 双指缩放 · 想翻这一页就拖地图以外的地方`。失败是真失败：我拖过画布之后瓦片请求 6 条，其中 6 条 `responseStatus=0`（件里两个计数同名），同一轮 console 也是 6 条超时。",
+   "line_len": 184,
+   "class_by_shape": null,
+   "resolvable_coordinate_on_this_line": false,
+   "full_40hex_on_this_line": false,
+   "coordinate_shapes_on_line": [],
+   "distance_to_nearest_coord_same_line": 99999,
+   "distance_to_nearest_coord_in_block": 306
+  },
+  {
+   "block": "n2_0224.md",
+   "token": "3 条",
+   "line": "- 离线那次会话记了 3 条 console error，我没逐条查（按 0374 的形状大概率是离线的 fetch 失败，但那是推测，不是读数）。",
+   "line_len": 74,
+   "class_by_shape": null,
+   "resolvable_coordinate_on_this_line": false,
+   "full_40hex_on_this_line": false,
+   "coordinate_shapes_on_line": [],
+   "distance_to_nearest_coord_same_line": 99999,
+   "distance_to_nearest_coord_in_block": 935
+  },
+  {
+   "block": "n2_0228.md",
+   "token": "1 个",
+   "line": "- 「看已保存的只读副本」：命中 1 个节点、可命中、框 `[0,145,522,44]`、URL 不变。点完屏上从 88 字变成 206 字，逐字含「CN 离线 · 只读」「现在 · 活跃 广州南站 下一步 · PLANNED」「供应商数据最后刷新于 9月20日 19:54。离线状态下财务操作已禁用。这台设备保存这份副本的时间：9月20日 20:05。」⇒ 已保存行程在、下一步仍可读、离线只读与",
+   "line_len": 214,
+   "class_by_shape": null,
+   "resolvable_coordinate_on_this_line": false,
+   "full_40hex_on_this_line": false,
+   "coordinate_shapes_on_line": [],
+   "distance_to_nearest_coord_same_line": 99999,
+   "distance_to_nearest_coord_in_block": 249
+  },
+  {
+   "block": "n2_0228.md",
+   "token": "0,145,522,44",
+   "line": "- 「看已保存的只读副本」：命中 1 个节点、可命中、框 `[0,145,522,44]`、URL 不变。点完屏上从 88 字变成 206 字，逐字含「CN 离线 · 只读」「现在 · 活跃 广州南站 下一步 · PLANNED」「供应商数据最后刷新于 9月20日 19:54。离线状态下财务操作已禁用。这台设备保存这份副本的时间：9月20日 20:05。」⇒ 已保存行程在、下一步仍可读、离线只读与",
+   "line_len": 214,
+   "class_by_shape": null,
+   "resolvable_coordinate_on_this_line": false,
+   "full_40hex_on_this_line": false,
+   "coordinate_shapes_on_line": [],
+   "distance_to_nearest_coord_same_line": 99999,
+   "distance_to_nearest_coord_in_block": 263
+  },
+  {
+   "block": "n2_0228.md",
+   "token": "206",
+   "line": "- 「看已保存的只读副本」：命中 1 个节点、可命中、框 `[0,145,522,44]`、URL 不变。点完屏上从 88 字变成 206 字，逐字含「CN 离线 · 只读」「现在 · 活跃 广州南站 下一步 · PLANNED」「供应商数据最后刷新于 9月20日 19:54。离线状态下财务操作已禁用。这台设备保存这份副本的时间：9月20日 20:05。」⇒ 已保存行程在、下一步仍可读、离线只读与",
+   "line_len": 214,
+   "class_by_shape": null,
+   "resolvable_coordinate_on_this_line": false,
+   "full_40hex_on_this_line": false,
+   "coordinate_shapes_on_line": [],
+   "distance_to_nearest_coord_same_line": 99999,
+   "distance_to_nearest_coord_in_block": 298
+  },
+  {
+   "block": "n2_0228.md",
+   "token": "2 个",
+   "line": "- 「重试」：命中 2 个同名节点（件里 `name_nodes=2`），取到第 0 个可命中者，框 `[0,75,522,43]`，URL 不变。点完屏上仍是同样 88 字、逐字未变：没有「已重试成功」，也没变坏。",
+   "line_len": 108,
+   "class_by_shape": null,
+   "resolvable_coordinate_on_this_line": false,
+   "full_40hex_on_this_line": false,
+   "coordinate_shapes_on_line": [],
+   "distance_to_nearest_coord_same_line": 99999,
+   "distance_to_nearest_coord_in_block": 424
+  },
+  {
+   "block": "n2_0228.md",
+   "token": "0 个",
+   "line": "- 「重试」：命中 2 个同名节点（件里 `name_nodes=2`），取到第 0 个可命中者，框 `[0,75,522,43]`，URL 不变。点完屏上仍是同样 88 字、逐字未变：没有「已重试成功」，也没变坏。",
+   "line_len": 108,
+   "class_by_shape": null,
+   "resolvable_coordinate_on_this_line": false,
+   "full_40hex_on_this_line": false,
+   "coordinate_shapes_on_line": [],
+   "distance_to_nearest_coord_same_line": 99999,
+   "distance_to_nearest_coord_in_block": 393
+  },
+  {
+   "block": "n2_0228.md",
+   "token": "0,75,522,43",
+   "line": "- 「重试」：命中 2 个同名节点（件里 `name_nodes=2`），取到第 0 个可命中者，框 `[0,75,522,43]`，URL 不变。点完屏上仍是同样 88 字、逐字未变：没有「已重试成功」，也没变坏。",
+   "line_len": 108,
+   "class_by_shape": null,
+   "resolvable_coordinate_on_this_line": false,
+   "full_40hex_on_this_line": false,
+   "coordinate_shapes_on_line": [],
+   "distance_to_nearest_coord_same_line": 99999,
+   "distance_to_nearest_coord_in_block": 373
+  },
+  {
+   "block": "n2_0228.md",
+   "token": "0,258,522,44",
+   "line": "- 「归因详情」：可命中，框 `[0,258,522,44]`，URL 不变，屏上多出一段**渲染文字**（不是 data 属性）：`attribution_reason=NETWORK_UNAVAILABLE evidence_kind=HEALTH_PROBE http_status=none source_layer=TRANSPORT retryable=true recovery_act",
+   "line_len": 377,
+   "class_by_shape": null,
+   "resolvable_coordinate_on_this_line": true,
+   "full_40hex_on_this_line": true,
+   "coordinate_shapes_on_line": [
+    "blob `c793ef6d9a"
+   ],
+   "distance_to_nearest_coord_same_line": 522,
+   "distance_to_nearest_coord_in_block": 299
+  },
+  {
+   "block": "n2_1759.md",
+   "token": "52 秒",
+   "line": "- 我的判断：你在 17:2x 那次扫到的是我改标题之前的快照（我确实是在 17:2x 才把标题和正文里那枚 token 整枚删掉），门与我改盘撞在同一分钟里；`_processed` 里的代插时刻是 17:30:24，与我落盘的 17:29:32 相差 52 秒，与此一致。这一条我无法替你复现你那一瞬读到的是什么，所以我把它当\"已闭但记录不一致\"处理，不宣称你错。",
+   "line_len": 184,
+   "class_by_shape": "DIMENSION",
+   "resolvable_coordinate_on_this_line": false,
+   "full_40hex_on_this_line": false,
+   "coordinate_shapes_on_line": [],
+   "distance_to_nearest_coord_same_line": 99999,
+   "distance_to_nearest_coord_in_block": 270
+  },
+  {
+   "block": "n2_1759.md",
+   "token": "2148",
+   "line": "- 你那句\"或是手拼的\"要更正一处：那枚值是**真算出来的**。`review/ord0355-r2-readings/N2R2-A.log` 现在仍在，2148 字节，我本轮对它重跑 `hashlib.sha1` 得到的仍是同一枚 40 位，与我当初写进块里的完全一致。所以缺陷不是造假，是**我用错了哈希种类**：同一批字节走 git 的对象头是另一枚 sha，而 `cat-file` 只认后者",
+   "line_len": 264,
+   "class_by_shape": "DIMENSION",
+   "resolvable_coordinate_on_this_line": false,
+   "full_40hex_on_this_line": false,
+   "coordinate_shapes_on_line": [],
+   "distance_to_nearest_coord_same_line": 99999,
+   "distance_to_nearest_coord_in_block": 296
+  },
+  {
+   "block": "n2_1759.md",
+   "token": "8 passed",
+   "line": "候选 ref `refs/heads/review/N2-ord0359-three-ai-words` 现值 `324753e0688a5f2682071f23cefeff832443b8bc`，交付块 `D:/moodle/_qoder_ledger_inbox/n2_1753.md`（仍在收件箱待门读）。R1 服务端三态具名与 openapi 同步已做、契约门回读 `formal 149; ",
+   "line_len": 599,
+   "class_by_shape": null,
+   "resolvable_coordinate_on_this_line": true,
+   "full_40hex_on_this_line": true,
+   "coordinate_shapes_on_line": [
+    "refs/heads/revie",
+    "324753e0688a5f26"
+   ],
+   "distance_to_nearest_coord_same_line": 2662,
+   "distance_to_nearest_coord_in_block": 197
+  },
+  {
+   "block": "n2_1759.md",
+   "token": "2 failed",
+   "line": "候选 ref `refs/heads/review/N2-ord0359-three-ai-words` 现值 `324753e0688a5f2682071f23cefeff832443b8bc`，交付块 `D:/moodle/_qoder_ledger_inbox/n2_1753.md`（仍在收件箱待门读）。R1 服务端三态具名与 openapi 同步已做、契约门回读 `formal 149; ",
+   "line_len": 599,
+   "class_by_shape": null,
+   "resolvable_coordinate_on_this_line": true,
+   "full_40hex_on_this_line": true,
+   "coordinate_shapes_on_line": [
+    "refs/heads/revie",
+    "324753e0688a5f26"
+   ],
+   "distance_to_nearest_coord_same_line": 2687,
+   "distance_to_nearest_coord_in_block": 222
+  },
+  {
+   "block": "n2_1759.md",
+   "token": "6 passed",
+   "line": "候选 ref `refs/heads/review/N2-ord0359-three-ai-words` 现值 `324753e0688a5f2682071f23cefeff832443b8bc`，交付块 `D:/moodle/_qoder_ledger_inbox/n2_1753.md`（仍在收件箱待门读）。R1 服务端三态具名与 openapi 同步已做、契约门回读 `formal 149; ",
+   "line_len": 599,
+   "class_by_shape": null,
+   "resolvable_coordinate_on_this_line": true,
+   "full_40hex_on_this_line": true,
+   "coordinate_shapes_on_line": [
+    "refs/heads/revie",
+    "324753e0688a5f26"
+   ],
+   "distance_to_nearest_coord_same_line": 2698,
+   "distance_to_nearest_coord_in_block": 233
+  },
+  {
+   "block": "n2_1759.md",
+   "token": "3 failed",
+   "line": "候选 ref `refs/heads/review/N2-ord0359-three-ai-words` 现值 `324753e0688a5f2682071f23cefeff832443b8bc`，交付块 `D:/moodle/_qoder_ledger_inbox/n2_1753.md`（仍在收件箱待门读）。R1 服务端三态具名与 openapi 同步已做、契约门回读 `formal 149; ",
+   "line_len": 599,
+   "class_by_shape": null,
+   "resolvable_coordinate_on_this_line": true,
+   "full_40hex_on_this_line": true,
+   "coordinate_shapes_on_line": [
+    "refs/heads/revie",
+    "324753e0688a5f26"
+   ],
+   "distance_to_nearest_coord_same_line": 2709,
+   "distance_to_nearest_coord_in_block": 244
+  },
+  {
+   "block": "n2_1759.md",
+   "token": "5 passed",
+   "line": "候选 ref `refs/heads/review/N2-ord0359-three-ai-words` 现值 `324753e0688a5f2682071f23cefeff832443b8bc`，交付块 `D:/moodle/_qoder_ledger_inbox/n2_1753.md`（仍在收件箱待门读）。R1 服务端三态具名与 openapi 同步已做、契约门回读 `formal 149; ",
+   "line_len": 599,
+   "class_by_shape": null,
+   "resolvable_coordinate_on_this_line": true,
+   "full_40hex_on_this_line": true,
+   "coordinate_shapes_on_line": [
+    "refs/heads/revie",
+    "324753e0688a5f26"
+   ],
+   "distance_to_nearest_coord_same_line": 2720,
+   "distance_to_nearest_coord_in_block": 255
+  },
+  {
+   "block": "n2_1759.md",
+   "token": "8 passed",
+   "line": "候选 ref `refs/heads/review/N2-ord0359-three-ai-words` 现值 `324753e0688a5f2682071f23cefeff832443b8bc`，交付块 `D:/moodle/_qoder_ledger_inbox/n2_1753.md`（仍在收件箱待门读）。R1 服务端三态具名与 openapi 同步已做、契约门回读 `formal 149; ",
+   "line_len": 599,
+   "class_by_shape": null,
+   "resolvable_coordinate_on_this_line": true,
+   "full_40hex_on_this_line": true,
+   "coordinate_shapes_on_line": [
+    "refs/heads/revie",
+    "324753e0688a5f26"
+   ],
+   "distance_to_nearest_coord_same_line": 2662,
+   "distance_to_nearest_coord_in_block": 197
+  },
+  {
+   "block": "n2_1759.md",
+   "token": "7892",
+   "line": "本机 shell 的 `HTTP_PROXY`/`HTTPS_PROXY` 现在指向 `127.0.0.1:7892`，`netstat -ano` 实测在听的是 `127.0.0.1:7897`（pid 35752），直连 github.com:443 超时。所以任何走默认环境的 push/ls-remote 会红在\"连不上 7892\"。我没有改任何配置，只在单条命令前临时指定 7897。你若在",
+   "line_len": 224,
+   "class_by_shape": "PORT",
+   "resolvable_coordinate_on_this_line": false,
+   "full_40hex_on_this_line": false,
+   "coordinate_shapes_on_line": [],
+   "distance_to_nearest_coord_same_line": 99999,
+   "distance_to_nearest_coord_in_block": 579
+  },
+  {
+   "block": "n2_1759.md",
+   "token": "7897",
+   "line": "本机 shell 的 `HTTP_PROXY`/`HTTPS_PROXY` 现在指向 `127.0.0.1:7892`，`netstat -ano` 实测在听的是 `127.0.0.1:7897`（pid 35752），直连 github.com:443 超时。所以任何走默认环境的 push/ls-remote 会红在\"连不上 7892\"。我没有改任何配置，只在单条命令前临时指定 7897。你若在",
+   "line_len": 224,
+   "class_by_shape": "PORT",
+   "resolvable_coordinate_on_this_line": false,
+   "full_40hex_on_this_line": false,
+   "coordinate_shapes_on_line": [],
+   "distance_to_nearest_coord_same_line": 99999,
+   "distance_to_nearest_coord_in_block": 618
+  },
+  {
+   "block": "qoder-0370_0130.md",
+   "token": "4 处",
+   "line": "   frontend/src/features/recovery/V14RecoveryTruthPanel.tsx 4 处、",
+   "line_len": 64,
+   "class_by_shape": null,
+   "resolvable_coordinate_on_this_line": false,
+   "full_40hex_on_this_line": false,
+   "coordinate_shapes_on_line": [],
+   "distance_to_nearest_coord_same_line": 99999,
+   "distance_to_nearest_coord_in_block": 244
+  },
+  {
+   "block": "qoder-0370_0130.md",
+   "token": "3 处",
+   "line": "   frontend/src/features/recovery/RecoveryRequiredPanel.tsx 3 处、",
+   "line_len": 64,
+   "class_by_shape": null,
+   "resolvable_coordinate_on_this_line": false,
+   "full_40hex_on_this_line": false,
+   "coordinate_shapes_on_line": [],
+   "distance_to_nearest_coord_same_line": 99999,
+   "distance_to_nearest_coord_in_block": 309
+  },
+  {
+   "block": "qoder-0370_0130.md",
+   "token": "3 处",
+   "line": "   frontend/src/features/recovery/V14PreventivePanel.tsx 3 处、",
+   "line_len": 61,
+   "class_by_shape": null,
+   "resolvable_coordinate_on_this_line": false,
+   "full_40hex_on_this_line": false,
+   "coordinate_shapes_on_line": [],
+   "distance_to_nearest_coord_same_line": 99999,
+   "distance_to_nearest_coord_in_block": 267
+  },
+  {
+   "block": "qoder-0370_0130.md",
+   "token": "3 处",
+   "line": "   frontend/src/lib/failureAttribution.ts 3 处、",
+   "line_len": 46,
+   "class_by_shape": null,
+   "resolvable_coordinate_on_this_line": false,
+   "full_40hex_on_this_line": false,
+   "coordinate_shapes_on_line": [],
+   "distance_to_nearest_coord_same_line": 99999,
+   "distance_to_nearest_coord_in_block": 220
+  },
+  {
+   "block": "qoder-0370_0130.md",
+   "token": "875 个",
+   "line": "`tsc -p tsconfig.typecheck.json --noEmit` 退出码 0；`--listFilesOnly` 三次读数都是 875 个文件，",
+   "line_len": 81,
+   "class_by_shape": null,
+   "resolvable_coordinate_on_this_line": false,
+   "full_40hex_on_this_line": false,
+   "coordinate_shapes_on_line": [],
+   "distance_to_nearest_coord_same_line": 99999,
+   "distance_to_nearest_coord_in_block": 203
+  },
+  {
+   "block": "qoder-0370_0130.md",
+   "token": "81 个",
+   "line": "其中 81 个在 `frontend/src` 下。e2e 断言侧：frontend/e2e 共 100 个 spec 文件，",
+   "line_len": 63,
+   "class_by_shape": null,
+   "resolvable_coordinate_on_this_line": false,
+   "full_40hex_on_this_line": false,
+   "coordinate_shapes_on_line": [],
+   "distance_to_nearest_coord_same_line": 99999,
+   "distance_to_nearest_coord_in_block": 192
+  },
+  {
+   "block": "qoder-0370_0130.md",
+   "token": "409M",
+   "line": "7. 为跑 tsc，本车道曾在自己 worktree 里真实复制过一份 `frontend/node_modules`（`du -sh` 读数 409M，",
+   "line_len": 77,
+   "class_by_shape": null,
+   "resolvable_coordinate_on_this_line": false,
+   "full_40hex_on_this_line": false,
+   "coordinate_shapes_on_line": [],
+   "distance_to_nearest_coord_same_line": 99999,
+   "distance_to_nearest_coord_in_block": 389
+  },
+  {
+   "block": "qoder-0370_0130.md",
+   "token": "27G",
+   "line": "   删除前 `df -h /d` 可用 27G，删除后 28G，`git status --porcelain` 回读 0 项。",
+   "line_len": 65,
+   "class_by_shape": null,
+   "resolvable_coordinate_on_this_line": false,
+   "full_40hex_on_this_line": false,
+   "coordinate_shapes_on_line": [],
+   "distance_to_nearest_coord_same_line": 99999,
+   "distance_to_nearest_coord_in_block": 488
+  },
+  {
+   "block": "qoder-0370_0130.md",
+   "token": "28G",
+   "line": "   删除前 `df -h /d` 可用 27G，删除后 28G，`git status --porcelain` 回读 0 项。",
+   "line_len": 65,
+   "class_by_shape": null,
+   "resolvable_coordinate_on_this_line": false,
+   "full_40hex_on_this_line": false,
+   "coordinate_shapes_on_line": [],
+   "distance_to_nearest_coord_same_line": 99999,
+   "distance_to_nearest_coord_in_block": 496
+  },
+  {
+   "block": "qoder-0370_0130.md",
+   "token": "875 个",
+   "line": "   因此上面那个 tsc 读数（退出码 0、`--listFilesOnly` 三次都是 875 个文件）在本 worktree 里",
+   "line_len": 67,
+   "class_by_shape": null,
+   "resolvable_coordinate_on_this_line": false,
+   "full_40hex_on_this_line": false,
+   "coordinate_shapes_on_line": [],
+   "distance_to_nearest_coord_same_line": 99999,
+   "distance_to_nearest_coord_in_block": 579
+  },
+  {
+   "block": "qoder-0370_0130.md",
+   "token": "38 处",
+   "line": "- P-A：38 处那 7 张\"整屏本地化\"单，要不要我接着开？（默认不开，等令）",
+   "line_len": 41,
+   "class_by_shape": null,
+   "resolvable_coordinate_on_this_line": false,
+   "full_40hex_on_this_line": false,
+   "coordinate_shapes_on_line": [],
+   "distance_to_nearest_coord_same_line": 99999,
+   "distance_to_nearest_coord_in_block": 747
+  },
+  {
+   "block": "qoder-0370_0130.md",
+   "token": "617",
+   "line": "- P-B：`KEY_RE` 要不要扩到能吃换行值？扩了 REGISTER_PARITY 的分母会从 617 对变 629 对，",
+   "line_len": 64,
+   "class_by_shape": null,
+   "resolvable_coordinate_on_this_line": false,
+   "full_40hex_on_this_line": false,
+   "coordinate_shapes_on_line": [],
+   "distance_to_nearest_coord_same_line": 99999,
+   "distance_to_nearest_coord_in_block": 834
+  },
+  {
+   "block": "qoder-0370_0130.md",
+   "token": "629",
+   "line": "- P-B：`KEY_RE` 要不要扩到能吃换行值？扩了 REGISTER_PARITY 的分母会从 617 对变 629 对，",
+   "line_len": 64,
+   "class_by_shape": null,
+   "resolvable_coordinate_on_this_line": false,
+   "full_40hex_on_this_line": false,
+   "coordinate_shapes_on_line": [],
+   "distance_to_nearest_coord_same_line": 99999,
+   "distance_to_nearest_coord_in_block": 841
+  },
+  {
+   "block": "qoder-0370_0148.md",
+   "token": "129 个",
+   "line": "   `frontend/src` 之外的 129 个文件里出现次数 **0**。",
+   "line_len": 41,
+   "class_by_shape": null,
+   "resolvable_coordinate_on_this_line": false,
+   "full_40hex_on_this_line": false,
+   "coordinate_shapes_on_line": [],
+   "distance_to_nearest_coord_same_line": 99999,
+   "distance_to_nearest_coord_in_block": 284
+  },
+  {
+   "block": "qoder-0370_0148.md",
+   "token": "4 个",
+   "line": "\"零取用\"不是漏扫的结论另有正面依据：全树动态拼 key 只有 `nav.` 一族（4 个位点），",
+   "line_len": 49,
+   "class_by_shape": null,
+   "resolvable_coordinate_on_this_line": false,
+   "full_40hex_on_this_line": false,
+   "coordinate_shapes_on_line": [],
+   "distance_to_nearest_coord_same_line": 99999,
+   "distance_to_nearest_coord_in_block": 223
+  },
+  {
+   "block": "qoder-0370_0148.md",
+   "token": "174",
+   "line": "`--stat` = frontend/src/features/inbox/JourneyInboxWorkbench.tsx 68 行 + 新增 spec 174 行）。",
+   "line_len": 87,
+   "class_by_shape": null,
+   "resolvable_coordinate_on_this_line": false,
+   "full_40hex_on_this_line": false,
+   "coordinate_shapes_on_line": [],
+   "distance_to_nearest_coord_same_line": 99999,
+   "distance_to_nearest_coord_in_block": 192
+  },
+  {
+   "block": "qoder-0370_0148.md",
+   "token": "0 处",
+   "line": "tip 整套：22 项 MET，唯一红是 `HARDCODED_FALLBACK`（tier A 0 处、tier B 77 处），退出码 1。",
+   "line_len": 72,
+   "class_by_shape": null,
+   "resolvable_coordinate_on_this_line": false,
+   "full_40hex_on_this_line": false,
+   "coordinate_shapes_on_line": [],
+   "distance_to_nearest_coord_same_line": 99999,
+   "distance_to_nearest_coord_in_block": 267
+  },
+  {
+   "block": "qoder-0370_0148.md",
+   "token": "77 处",
+   "line": "tip 整套：22 项 MET，唯一红是 `HARDCODED_FALLBACK`（tier A 0 处、tier B 77 处），退出码 1。",
+   "line_len": 72,
+   "class_by_shape": null,
+   "resolvable_coordinate_on_this_line": false,
+   "full_40hex_on_this_line": false,
+   "coordinate_shapes_on_line": [],
+   "distance_to_nearest_coord_same_line": 99999,
+   "distance_to_nearest_coord_in_block": 255
+  },
+  {
+   "block": "qoder-0370_0148.md",
+   "token": "77 处",
+   "line": "tier B 的 77 处就是本单刻意留下的存量，我没为了让门绿去动判据。",
+   "line_len": 37,
+   "class_by_shape": null,
+   "resolvable_coordinate_on_this_line": false,
+   "full_40hex_on_this_line": false,
+   "coordinate_shapes_on_line": [],
+   "distance_to_nearest_coord_same_line": 99999,
+   "distance_to_nearest_coord_in_block": 233
+  }
+ ]
+}
