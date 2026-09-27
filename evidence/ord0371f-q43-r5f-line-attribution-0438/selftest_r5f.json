@@ -1,0 +1,861 @@
+{
+ "selftest_checks": {
+  "exempt_HTTP_STATUS": true,
+  "fire_quantity_ms": true,
+  "fire_status_with_unit": true,
+  "exempt_YEAR": true,
+  "exempt_run_id_coordinate": true,
+  "exempt_PORT": true,
+  "exempt_LINE_REF": true,
+  "advisory_line_ref_only_vouch": true,
+  "exempt_PORT_with_filename_nearby": true,
+  "fire_run_id_without_coordinate": true,
+  "fire_DIMENSION_receipt_out_of_range": true,
+  "fire_DISCIPLINE_ZERO_receipt_out_of_range": true,
+  "fire_DIMENSION_without_receipt": true,
+  "fire_DISCIPLINE_ZERO_without_receipt": true,
+  "exempt_DIMENSION_receipt_beside": true,
+  "exempt_DISCIPLINE_ZERO_receipt_beside": true,
+  "fire_ZERO_on_a_product_noun": true,
+  "fire_NONZERO_after_a_discipline_noun": true,
+  "exempt_ADDRESS_PART_octet": true,
+  "exempt_PORT_host_port": true,
+  "fire_HTTP_STATUS_word_not_adjacent": true,
+  "exempt_MJS_path_line_coordinate": true,
+  "fire_number_after_fullwidth_colon": true,
+  "fire_single_number_single_finding": true,
+  "exempt_IDENTIFIER_bundled_in_a_name": true,
+  "fire_unit_after_a_space": true,
+  "exempt_CJK_glued_blob_counts_as_a_coordinate": true,
+  "fire_hex_run_glued_to_letters_is_not_a_blob": true,
+  "exempt_DIMENSION_decimal_reading_beside_receipt": true,
+  "fire_DIMENSION_decimal_reading_alone": true,
+  "exempt_HTTP_STATUS_curl_no_response": true,
+  "fire_three_digits_no_status_word": true,
+  "exempt_IDENTIFIER_quoted_socket": true,
+  "fire_QUOTED_measure_word_still_a_claim": true,
+  "exempt_IDENTIFIER_process_id": true,
+  "exempt_PORT_domain_colon": true,
+  "exempt_LINE_REF_source_colon": true,
+  "exempt_PORT_word_after_unquoted_number": true,
+  "exempt_HTTP_STATUS_bare_code_from_the_set": true,
+  "fire_READING_classified_but_receipt_far": true,
+  "exempt_IDENTIFIER_order_number_leading_zero": true,
+  "exempt_LINE_locked_by_a_coordinate_at_the_far_end": true,
+  "fire_NEXT_LINE_coordinate_does_not_lock": true,
+  "exempt_TILE_segment_in_a_url": true,
+  "exempt_extent_array_in_brackets": true,
+  "fire_count_word_next_to_a_slashed_token": true,
+  "fire_bare_number_with_no_slash_shape": true,
+  "exempt_HTTP_STATUS_quoted_code": true,
+  "fire_three_digits_not_in_the_set": true,
+  "fire_size_shorthand_without_a_receipt": true,
+  "exempt_r5f_COUNT_attributed_on_its_own_line": true,
+  "fire_r5f_COUNT_out_of_both_channels_is_not_attributed": true,
+  "exempt_r5f_one_coordinate_attributes_the_whole_line": true,
+  "exempt_r5f_line_lock_reaches_a_bare_number_past_the_window": true,
+  "fire_r5f_bare_artifact_path_is_not_a_coordinate": true,
+  "fire_english_result_words_are_counts": true,
+  "class_dimension_beside_a_receipt_is_a_reading": true,
+  "class_dimension_far_from_the_receipt_is_a_claim": true,
+  "class_count_word_is_never_a_dimension": true,
+  "class_status_word_adjacent_is_a_status": true,
+  "class_status_word_21_chars_away_is_not": true,
+  "class_octet_of_a_dotted_address": true,
+  "class_port_after_a_host": true,
+  "class_line_number_after_a_path": true,
+  "class_digits_after_a_fullwidth_colon": true,
+  "class_discipline_zero_beside_a_receipt": true,
+  "class_product_noun_zero_beside_a_receipt": true,
+  "class_nonzero_beside_a_discipline_noun": true,
+  "class_count_word_on_a_line_with_no_coordinate": true,
+  "class_segment_before_a_punctuated_measure_word_is_not_a_count": true,
+  "class_a_measure_word_with_nothing_between_it_and_the_number_is_a_count": true,
+  "class_result_word_on_a_line_with_no_coordinate": true,
+  "class_discipline_zero_far_from_the_receipt": true,
+  "class_digits_glued_inside_a_name": true,
+  "class_the_same_tail_after_a_space_is_a_reading": true,
+  "class_decimal_reading_beside_a_receipt": true,
+  "class_decimal_reading_without_a_receipt": true,
+  "class_curl_no_response_code_beside_the_word": true,
+  "class_three_digits_beside_a_status_word_is_a_code": true,
+  "class_three_digits_without_a_status_word_is_a_claim": true,
+  "class_quoted_number_is_a_name": true,
+  "class_quoted_count_word_is_still_a_claim": true,
+  "class_pid_before_the_number_is_an_id": true,
+  "class_pid_after_the_number_is_an_id": true,
+  "class_domain_colon_is_a_port": true,
+  "class_source_colon_is_still_a_line": true,
+  "class_port_word_after_an_unquoted_number": true,
+  "class_closed_http_code_written_bare": true,
+  "class_status_word_after_a_number_that_is_not_a_code": true,
+  "class_curl_no_response_zero_written_bare": true,
+  "class_status_word_before_a_number_that_is_not_a_code": true,
+  "class_three_digits_that_are_not_a_code": true,
+  "class_size_shorthand_is_a_reading": true,
+  "class_order_number_written_with_a_leading_zero": true,
+  "class_leading_zero_with_a_count_word_is_a_claim": true,
+  "class_english_result_word_is_a_claim": true,
+  "claim_not_exempted_22s": true,
+  "claim_not_exempted_0.4 GB": true,
+  "claim_not_exempted_0 次": true,
+  "r5e_one_literal_one_verdict": true,
+  "r5e_conditional_class_uniform_exemption_per_line": true,
+  "r5e_laundering_by_unify_is_refused": true,
+  "r5e_remedy_names_the_write_for_a_count": true,
+  "r5e_remedy_for_a_reading_is_the_line_rule": true,
+  "r5e_predicate_is_named_on_every_refusal": true,
+  "r5e_repeats_collapse_to_one_finding": true,
+  "class_one_number_is_one_occurrence": true,
+  "r5_one_number_is_one_claim_and_one_finding": true,
+  "r5f_line_attributed_silence": true,
+  "r5f_wiping_the_line_coordinate_reddens_every_number_on_it": true,
+  "r5f_attribution_is_not_a_claim_count_inflation": true,
+  "r5f_coordinate_out_of_both_channels_buys_nothing": true,
+  "r5f_window_still_reaches_a_neighbouring_line": true,
+  "r5f_COUNT_named_not_hidden_62 passed": true,
+  "r5f_COUNT_named_not_hidden_5 条": true,
+  "r5f_COUNT_named_not_hidden_4 个": true,
+  "r5f_remedy_names_both_forms_and_the_line": true,
+  "r5f_bare_path_still_not_a_coordinate": true,
+  "determinism_bare_count": true,
+  "determinism_status_with_adjacent_word": true,
+  "r4e_erratum_citing_three_blobs_passes": true,
+  "r4e_two_blobs_is_the_boundary_and_passes": true,
+  "r4e_one_blob_still_refused": true,
+  "r4e_empty_block_still_refused": true,
+  "r4e_does_not_excuse_an_unvouched_quantity": true
+ },
+ "overall_pass": true,
+ "samples": [
+  {
+   "sample": "exempt_HTTP_STATUS",
+   "claims": 0,
+   "findings": [],
+   "exempt": {
+    "HTTP_STATUS": 1
+   }
+  },
+  {
+   "sample": "fire_quantity_ms",
+   "claims": 1,
+   "findings": [
+    "NUMBER_WITHOUT_COORDINATE"
+   ],
+   "exempt": {}
+  },
+  {
+   "sample": "fire_status_with_unit",
+   "claims": 1,
+   "findings": [
+    "NUMBER_WITHOUT_COORDINATE"
+   ],
+   "exempt": {}
+  },
+  {
+   "sample": "exempt_YEAR",
+   "claims": 0,
+   "findings": [],
+   "exempt": {
+    "YEAR": 1
+   }
+  },
+  {
+   "sample": "exempt_run_id_coordinate",
+   "claims": 1,
+   "findings": [],
+   "exempt": {}
+  },
+  {
+   "sample": "exempt_PORT",
+   "claims": 0,
+   "findings": [],
+   "exempt": {
+    "PORT": 1
+   }
+  },
+  {
+   "sample": "exempt_LINE_REF",
+   "claims": 0,
+   "findings": [],
+   "exempt": {
+    "LINE_REF": 3
+   }
+  },
+  {
+   "sample": "advisory_line_ref_only_vouch",
+   "claims": 0,
+   "findings": [],
+   "exempt": {
+    "LINE_REF": 2,
+    "COUNT": 1
+   }
+  },
+  {
+   "sample": "exempt_PORT_with_filename_nearby",
+   "claims": 0,
+   "findings": [],
+   "exempt": {
+    "PORT": 1
+   }
+  },
+  {
+   "sample": "fire_run_id_without_coordinate",
+   "claims": 1,
+   "findings": [
+    "NUMBER_WITHOUT_COORDINATE"
+   ],
+   "exempt": {}
+  },
+  {
+   "sample": "fire_DIMENSION_receipt_out_of_range",
+   "claims": 2,
+   "findings": [
+    "NUMBER_WITHOUT_COORDINATE"
+   ],
+   "exempt": {}
+  },
+  {
+   "sample": "fire_DISCIPLINE_ZERO_receipt_out_of_range",
+   "claims": 2,
+   "findings": [
+    "NUMBER_WITHOUT_COORDINATE",
+    "NUMBER_WITHOUT_COORDINATE"
+   ],
+   "exempt": {}
+  },
+  {
+   "sample": "fire_DIMENSION_without_receipt",
+   "claims": 2,
+   "findings": [
+    "NUMBER_WITHOUT_COORDINATE"
+   ],
+   "exempt": {}
+  },
+  {
+   "sample": "fire_DISCIPLINE_ZERO_without_receipt",
+   "claims": 1,
+   "findings": [
+    "NUMBER_WITHOUT_COORDINATE"
+   ],
+   "exempt": {}
+  },
+  {
+   "sample": "exempt_DIMENSION_receipt_beside",
+   "claims": 0,
+   "findings": [],
+   "exempt": {
+    "DIMENSION": 2
+   }
+  },
+  {
+   "sample": "exempt_DISCIPLINE_ZERO_receipt_beside",
+   "claims": 0,
+   "findings": [],
+   "exempt": {
+    "DISCIPLINE_ZERO": 2
+   }
+  },
+  {
+   "sample": "fire_ZERO_on_a_product_noun",
+   "claims": 1,
+   "findings": [
+    "NUMBER_WITHOUT_COORDINATE"
+   ],
+   "exempt": {}
+  },
+  {
+   "sample": "fire_NONZERO_after_a_discipline_noun",
+   "claims": 2,
+   "findings": [
+    "NUMBER_WITHOUT_COORDINATE",
+    "NUMBER_WITHOUT_COORDINATE"
+   ],
+   "exempt": {}
+  },
+  {
+   "sample": "exempt_ADDRESS_PART_octet",
+   "claims": 0,
+   "findings": [],
+   "exempt": {
+    "ADDRESS_PART": 1
+   }
+  },
+  {
+   "sample": "exempt_PORT_host_port",
+   "claims": 0,
+   "findings": [],
+   "exempt": {
+    "ADDRESS_PART": 1,
+    "PORT": 1
+   }
+  },
+  {
+   "sample": "fire_HTTP_STATUS_word_not_adjacent",
+   "claims": 1,
+   "findings": [
+    "NUMBER_WITHOUT_COORDINATE"
+   ],
+   "exempt": {}
+  },
+  {
+   "sample": "exempt_MJS_path_line_coordinate",
+   "claims": 0,
+   "findings": [],
+   "exempt": {
+    "LINE_REF": 1,
+    "COUNT": 1
+   }
+  },
+  {
+   "sample": "fire_number_after_fullwidth_colon",
+   "claims": 1,
+   "findings": [
+    "NUMBER_WITHOUT_COORDINATE"
+   ],
+   "exempt": {}
+  },
+  {
+   "sample": "fire_single_number_single_finding",
+   "claims": 1,
+   "findings": [
+    "NUMBER_WITHOUT_COORDINATE"
+   ],
+   "exempt": {}
+  },
+  {
+   "sample": "exempt_IDENTIFIER_bundled_in_a_name",
+   "claims": 0,
+   "findings": [],
+   "exempt": {
+    "IDENTIFIER_PART": 1
+   }
+  },
+  {
+   "sample": "fire_unit_after_a_space",
+   "claims": 1,
+   "findings": [
+    "NUMBER_WITHOUT_COORDINATE"
+   ],
+   "exempt": {}
+  },
+  {
+   "sample": "exempt_CJK_glued_blob_counts_as_a_coordinate",
+   "claims": 0,
+   "findings": [],
+   "exempt": {
+    "COUNT": 1
+   }
+  },
+  {
+   "sample": "fire_hex_run_glued_to_letters_is_not_a_blob",
+   "claims": 1,
+   "findings": [
+    "NUMBER_WITHOUT_COORDINATE"
+   ],
+   "exempt": {}
+  },
+  {
+   "sample": "exempt_DIMENSION_decimal_reading_beside_receipt",
+   "claims": 0,
+   "findings": [],
+   "exempt": {
+    "DIMENSION": 1
+   }
+  },
+  {
+   "sample": "fire_DIMENSION_decimal_reading_alone",
+   "claims": 1,
+   "findings": [
+    "NUMBER_WITHOUT_COORDINATE"
+   ],
+   "exempt": {}
+  },
+  {
+   "sample": "exempt_HTTP_STATUS_curl_no_response",
+   "claims": 0,
+   "findings": [],
+   "exempt": {
+    "HTTP_STATUS": 1
+   }
+  },
+  {
+   "sample": "fire_three_digits_no_status_word",
+   "claims": 1,
+   "findings": [
+    "NUMBER_WITHOUT_COORDINATE"
+   ],
+   "exempt": {}
+  },
+  {
+   "sample": "exempt_IDENTIFIER_quoted_socket",
+   "claims": 0,
+   "findings": [],
+   "exempt": {
+    "IDENTIFIER_PART": 1
+   }
+  },
+  {
+   "sample": "fire_QUOTED_measure_word_still_a_claim",
+   "claims": 1,
+   "findings": [
+    "NUMBER_WITHOUT_COORDINATE"
+   ],
+   "exempt": {}
+  },
+  {
+   "sample": "exempt_IDENTIFIER_process_id",
+   "claims": 0,
+   "findings": [],
+   "exempt": {
+    "IDENTIFIER_PART": 1
+   }
+  },
+  {
+   "sample": "exempt_PORT_domain_colon",
+   "claims": 0,
+   "findings": [],
+   "exempt": {
+    "PORT": 1
+   }
+  },
+  {
+   "sample": "exempt_LINE_REF_source_colon",
+   "claims": 0,
+   "findings": [],
+   "exempt": {
+    "LINE_REF": 1
+   }
+  },
+  {
+   "sample": "exempt_PORT_word_after_unquoted_number",
+   "claims": 0,
+   "findings": [],
+   "exempt": {
+    "PORT": 1
+   }
+  },
+  {
+   "sample": "exempt_HTTP_STATUS_bare_code_from_the_set",
+   "claims": 0,
+   "findings": [],
+   "exempt": {
+    "HTTP_STATUS": 1
+   }
+  },
+  {
+   "sample": "fire_READING_classified_but_receipt_far",
+   "claims": 1,
+   "findings": [
+    "NUMBER_WITHOUT_COORDINATE"
+   ],
+   "exempt": {}
+  },
+  {
+   "sample": "exempt_IDENTIFIER_order_number_leading_zero",
+   "claims": 0,
+   "findings": [],
+   "exempt": {
+    "IDENTIFIER_PART": 1
+   }
+  },
+  {
+   "sample": "exempt_LINE_locked_by_a_coordinate_at_the_far_end",
+   "claims": 0,
+   "findings": [],
+   "exempt": {
+    "COUNT": 2
+   }
+  },
+  {
+   "sample": "fire_NEXT_LINE_coordinate_does_not_lock",
+   "claims": 2,
+   "findings": [
+    "NUMBER_WITHOUT_COORDINATE",
+    "NUMBER_WITHOUT_COORDINATE"
+   ],
+   "exempt": {}
+  },
+  {
+   "sample": "exempt_TILE_segment_in_a_url",
+   "claims": 0,
+   "findings": [],
+   "exempt": {
+    "IDENTIFIER_PART": 2
+   }
+  },
+  {
+   "sample": "exempt_extent_array_in_brackets",
+   "claims": 0,
+   "findings": [],
+   "exempt": {
+    "IDENTIFIER_PART": 1
+   }
+  },
+  {
+   "sample": "fire_count_word_next_to_a_slashed_token",
+   "claims": 1,
+   "findings": [
+    "NUMBER_WITHOUT_COORDINATE"
+   ],
+   "exempt": {}
+  },
+  {
+   "sample": "fire_bare_number_with_no_slash_shape",
+   "claims": 1,
+   "findings": [
+    "NUMBER_WITHOUT_COORDINATE"
+   ],
+   "exempt": {}
+  },
+  {
+   "sample": "exempt_HTTP_STATUS_quoted_code",
+   "claims": 0,
+   "findings": [],
+   "exempt": {
+    "HTTP_STATUS": 1
+   }
+  },
+  {
+   "sample": "fire_three_digits_not_in_the_set",
+   "claims": 1,
+   "findings": [
+    "NUMBER_WITHOUT_COORDINATE"
+   ],
+   "exempt": {}
+  },
+  {
+   "sample": "fire_size_shorthand_without_a_receipt",
+   "claims": 1,
+   "findings": [
+    "NUMBER_WITHOUT_COORDINATE"
+   ],
+   "exempt": {}
+  },
+  {
+   "sample": "exempt_r5f_COUNT_attributed_on_its_own_line",
+   "claims": 0,
+   "findings": [],
+   "exempt": {
+    "COUNT": 3
+   }
+  },
+  {
+   "sample": "fire_r5f_COUNT_out_of_both_channels_is_not_attributed",
+   "claims": 3,
+   "findings": [
+    "NUMBER_WITHOUT_COORDINATE",
+    "NUMBER_WITHOUT_COORDINATE",
+    "NUMBER_WITHOUT_COORDINATE"
+   ],
+   "exempt": {}
+  },
+  {
+   "sample": "exempt_r5f_one_coordinate_attributes_the_whole_line",
+   "claims": 1,
+   "findings": [],
+   "exempt": {
+    "COUNT": 1,
+    "DIMENSION": 2
+   }
+  },
+  {
+   "sample": "exempt_r5f_line_lock_reaches_a_bare_number_past_the_window",
+   "claims": 1,
+   "findings": [],
+   "exempt": {}
+  },
+  {
+   "sample": "fire_r5f_bare_artifact_path_is_not_a_coordinate",
+   "claims": 2,
+   "findings": [
+    "NUMBER_WITHOUT_COORDINATE",
+    "NUMBER_WITHOUT_COORDINATE"
+   ],
+   "exempt": {}
+  },
+  {
+   "sample": "fire_english_result_words_are_counts",
+   "claims": 2,
+   "findings": [
+    "NUMBER_WITHOUT_COORDINATE",
+    "NUMBER_WITHOUT_COORDINATE"
+   ],
+   "exempt": {}
+  },
+  {
+   "sample": "class_dimension_beside_a_receipt_is_a_reading",
+   "token": "212",
+   "expected_class": "DIMENSION",
+   "got_class": "DIMENSION"
+  },
+  {
+   "sample": "class_dimension_far_from_the_receipt_is_a_claim",
+   "token": "212",
+   "expected_class": "DIMENSION",
+   "got_class": "DIMENSION"
+  },
+  {
+   "sample": "class_count_word_is_never_a_dimension",
+   "token": "1392 条",
+   "expected_class": "COUNT",
+   "got_class": "COUNT"
+  },
+  {
+   "sample": "class_status_word_adjacent_is_a_status",
+   "token": "401",
+   "expected_class": "HTTP_STATUS",
+   "got_class": "HTTP_STATUS"
+  },
+  {
+   "sample": "class_status_word_21_chars_away_is_not",
+   "token": "419",
+   "expected_class": null,
+   "got_class": null
+  },
+  {
+   "sample": "class_octet_of_a_dotted_address",
+   "token": "127",
+   "expected_class": "ADDRESS_PART",
+   "got_class": "ADDRESS_PART"
+  },
+  {
+   "sample": "class_port_after_a_host",
+   "token": "7892",
+   "expected_class": "PORT",
+   "got_class": "PORT"
+  },
+  {
+   "sample": "class_line_number_after_a_path",
+   "token": "215",
+   "expected_class": "LINE_REF",
+   "got_class": "LINE_REF"
+  },
+  {
+   "sample": "class_digits_after_a_fullwidth_colon",
+   "token": "419",
+   "expected_class": null,
+   "got_class": null
+  },
+  {
+   "sample": "class_discipline_zero_beside_a_receipt",
+   "token": "0 次",
+   "expected_class": "DISCIPLINE_ZERO",
+   "got_class": "DISCIPLINE_ZERO"
+  },
+  {
+   "sample": "class_product_noun_zero_beside_a_receipt",
+   "token": "0 次",
+   "expected_class": "COUNT",
+   "got_class": "COUNT"
+  },
+  {
+   "sample": "class_nonzero_beside_a_discipline_noun",
+   "token": "12 处",
+   "expected_class": "COUNT",
+   "got_class": "COUNT"
+  },
+  {
+   "sample": "class_count_word_on_a_line_with_no_coordinate",
+   "token": "0 次",
+   "expected_class": "COUNT",
+   "got_class": "COUNT"
+  },
+  {
+   "sample": "class_segment_before_a_punctuated_measure_word_is_not_a_count",
+   "token": "889",
+   "expected_class": "IDENTIFIER_PART",
+   "got_class": "IDENTIFIER_PART"
+  },
+  {
+   "sample": "class_a_measure_word_with_nothing_between_it_and_the_number_is_a_count",
+   "token": "875 个",
+   "expected_class": "COUNT",
+   "got_class": "COUNT"
+  },
+  {
+   "sample": "class_result_word_on_a_line_with_no_coordinate",
+   "token": "62 passed",
+   "expected_class": "COUNT",
+   "got_class": "COUNT"
+  },
+  {
+   "sample": "class_discipline_zero_far_from_the_receipt",
+   "token": "0 次",
+   "expected_class": "DISCIPLINE_ZERO",
+   "got_class": "DISCIPLINE_ZERO"
+  },
+  {
+   "sample": "class_digits_glued_inside_a_name",
+   "token": "22s",
+   "expected_class": "IDENTIFIER_PART",
+   "got_class": "IDENTIFIER_PART"
+  },
+  {
+   "sample": "class_the_same_tail_after_a_space_is_a_reading",
+   "token": "22s",
+   "expected_class": "DIMENSION",
+   "got_class": "DIMENSION"
+  },
+  {
+   "sample": "class_decimal_reading_beside_a_receipt",
+   "token": "0.4 GB",
+   "expected_class": "DIMENSION",
+   "got_class": "DIMENSION"
+  },
+  {
+   "sample": "class_decimal_reading_without_a_receipt",
+   "token": "0.4 GB",
+   "expected_class": "DIMENSION",
+   "got_class": "DIMENSION"
+  },
+  {
+   "sample": "class_curl_no_response_code_beside_the_word",
+   "token": "000",
+   "expected_class": "HTTP_STATUS",
+   "got_class": "HTTP_STATUS"
+  },
+  {
+   "sample": "class_three_digits_beside_a_status_word_is_a_code",
+   "token": "875",
+   "expected_class": "HTTP_STATUS",
+   "got_class": "HTTP_STATUS"
+  },
+  {
+   "sample": "class_three_digits_without_a_status_word_is_a_claim",
+   "token": "875",
+   "expected_class": null,
+   "got_class": null
+  },
+  {
+   "sample": "class_quoted_number_is_a_name",
+   "token": "7897",
+   "expected_class": "IDENTIFIER_PART",
+   "got_class": "IDENTIFIER_PART"
+  },
+  {
+   "sample": "class_quoted_count_word_is_still_a_claim",
+   "token": "875 个",
+   "expected_class": "COUNT",
+   "got_class": "COUNT"
+  },
+  {
+   "sample": "class_pid_before_the_number_is_an_id",
+   "token": "35752",
+   "expected_class": "IDENTIFIER_PART",
+   "got_class": "IDENTIFIER_PART"
+  },
+  {
+   "sample": "class_pid_after_the_number_is_an_id",
+   "token": "35752",
+   "expected_class": "IDENTIFIER_PART",
+   "got_class": "IDENTIFIER_PART"
+  },
+  {
+   "sample": "class_domain_colon_is_a_port",
+   "token": "443",
+   "expected_class": "PORT",
+   "got_class": "PORT"
+  },
+  {
+   "sample": "class_source_colon_is_still_a_line",
+   "token": "443",
+   "expected_class": "LINE_REF",
+   "got_class": "LINE_REF"
+  },
+  {
+   "sample": "class_port_word_after_an_unquoted_number",
+   "token": "7892",
+   "expected_class": "PORT",
+   "got_class": "PORT"
+  },
+  {
+   "sample": "class_closed_http_code_written_bare",
+   "token": "401",
+   "expected_class": "HTTP_STATUS",
+   "got_class": "HTTP_STATUS"
+  },
+  {
+   "sample": "class_status_word_after_a_number_that_is_not_a_code",
+   "token": "419",
+   "expected_class": "HTTP_STATUS",
+   "got_class": "HTTP_STATUS"
+  },
+  {
+   "sample": "class_curl_no_response_zero_written_bare",
+   "token": "000",
+   "expected_class": "HTTP_STATUS",
+   "got_class": "HTTP_STATUS"
+  },
+  {
+   "sample": "class_status_word_before_a_number_that_is_not_a_code",
+   "token": "138",
+   "expected_class": "HTTP_STATUS",
+   "got_class": "HTTP_STATUS"
+  },
+  {
+   "sample": "class_three_digits_that_are_not_a_code",
+   "token": "419",
+   "expected_class": null,
+   "got_class": null
+  },
+  {
+   "sample": "class_size_shorthand_is_a_reading",
+   "token": "409M",
+   "expected_class": null,
+   "got_class": null
+  },
+  {
+   "sample": "class_order_number_written_with_a_leading_zero",
+   "token": "0376",
+   "expected_class": "IDENTIFIER_PART",
+   "got_class": "IDENTIFIER_PART"
+  },
+  {
+   "sample": "class_leading_zero_with_a_count_word_is_a_claim",
+   "token": "0376 处",
+   "expected_class": "COUNT",
+   "got_class": "COUNT"
+  },
+  {
+   "sample": "class_english_result_word_is_a_claim",
+   "token": "1367 passed",
+   "expected_class": "COUNT",
+   "got_class": "COUNT"
+  },
+  {
+   "sample": "determinism_bare_count",
+   "placements": {
+    "alone": [
+     "COUNT",
+     true
+    ],
+    "after_other_numbers": [
+     "COUNT",
+     true
+    ],
+    "before_other_numbers": [
+     "COUNT",
+     true
+    ]
+   }
+  },
+  {
+   "sample": "determinism_status_with_adjacent_word",
+   "placements": {
+    "alone": [
+     "HTTP_STATUS",
+     false
+    ],
+    "after_other_numbers": [
+     "HTTP_STATUS",
+     false
+    ],
+    "before_other_numbers": [
+     "HTTP_STATUS",
+     false
+    ]
+   }
+  }
+ ]
+}
