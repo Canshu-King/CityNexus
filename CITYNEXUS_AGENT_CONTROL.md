@@ -16588,6 +16588,31 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### ORD-0371 补料交付（lane S4-ast-taint，量具线）— r5b：那三类"尺自己声明了豁免却没吃进去"的形，现在按类别进去了
+
+（本节数字取 02:45 快照，件 `evidence/ord0371b-q43-r5b-0235/pipeline_r4e_r5_r5b_0245.json`）
+
+先纠正一件仪器事实，因为它决定所有读数：**写盘门跑的尺不是 r4c**。`ledger_inbox_apply_r1.py:123` 那枚 r4c 只在工具自己的 --selftest 里调用；真正拦块的是 `ledger_insert_after.py:28`，它跑 `claim_coordinate_check_r4e.py`。所以上一条给你的 exempt 读数（含 DIMENSION）来自 r4e，我把同一条链复现成件，逐枚读数就在该件的 door 字段里（件 `evidence/ord0371b-q43-r5b-0235/door_reading_r4e_contradictions.json` = 0e83b3c79bb497a1c222f7ab4f858ce26daa1c05 ）。
+
+一、"同一枚字串同一次运行两判"是真存在，且成因不是滑动窗口被消耗，是**判类时读的距离比数字本身大**。在同一块里量到的实例（逐枚读数在件 0e83b3c79bb497a1c222f7ab4f858ce26daa1c05 ）：`127` 在一处被归 HTTP_STATUS、另一处裸拒——触发它的是 "HTTPS" 这个字串里含 "HTTP"；`4781` 一处归 PORT 一处裸拒；`7897` 同块两判。三处 r5 已修，本轮无改动。
+
+二、你点名要我修的 (a)(b) 与 `0.4 GB`，这轮按形状接住了（新尺 = 件 evidence/ord0371b-q43-r5b-0235/claim_coordinate_check_r5b.py = ad8507a5baf061feb590a9fecd42348c0c7f3c7a ，48196 B、691 行；旧尺 r4b/r4e/r5 一字节未动）：
+  `0.4 GB` 之前被拒是因 unit 匹配看不见小数点里的单位，现按 DIMENSION 归类 ad8507a5baf061feb590a9fecd42348c0c7f3c7a
+  `code 000` 之前被拒是因为类别只认 [1-5]xx，现改为"HTTP 自己那份枚举 + curl 的 000"闭合集合 ad8507a5baf061feb590a9fecd42348c0c7f3c7a
+  `github.com:443`、`实测 7892 在听`、`pid 35752`、反引号包起来的 `7897`：前两类是端口词只往前看、域名被当成源码行；现都按 PORT / IDENTIFIER_PART 接住 ad8507a5baf061feb590a9fecd42348c0c7f3c7a
+
+三、双向自测 85 臂全过；反控 21 处逐条改回旧形状，漏网 0 处（件 `evidence/ord0371b-q43-r5b-0235/mutation_countercontrol_r5b.json` = b67c8dcc932d40a4c0e46f8bfc3c31488d9e82d7 ）。这轮反控真的抓出我三条空臂：删掉"状态词在后"没人报警、闭合集合被写成空集没人报警、以及一条已被上一版取代的死分支——三条都补了具名反臂 b67c8dcc932d40a4c0e46f8bfc3c31488d9e82d7 。
+
+四、代价与不粉：收件箱现在 14 块（不含我自己这块）。门（r4e）下绿 0 枚；r5 下绿 1 枚；r5b 下绿 2 枚（件 `evidence/ord0371b-q43-r5b-0235/pipeline_r4e_r5_r5b.json` = 61cd045ec60b916f993b3e0fca28ff12cc698da4 ）。
+  也就是说**管道不是被分类 bug 堵住的，是被 (c) 类量词主张堵住的**，而 (c) 你说不由我放宽，我也没放宽：`875 个`、`38 处`、`6 条`、`52 秒`、`1392 条`、`409M`、`1367 passed` 在 r5b 下仍红（逐块红名 61cd045ec60b916f993b3e0fca28ff12cc698da4 ）。
+  明说的变宽本轮有 3 句：闭合状态码集合（不是"任意三位数"）、反引号内的纯数字算名字、尺寸简写 M/K/G/T 与 passed/failed/skipped 进入单位表。61cd045ec60b916f993b3e0fca28ff12cc698da4
+  我没做、留给你裁的两形（都只报数不擅自放宽）：URL 段里的 `1667`/`889`（n2_0213）、以及写成 `0373` 这种前导零的单号（n2_0200、n2_0224）。61cd045ec60b916f993b3e0fca28ff12cc698da4
+
+五、把"要不要更宽"标好价给你（不是建议，是读数）：把规则写成"任意三位裸数字算状态码"（甲）会一次放过 14 枚，其中 `409`/`617`/`629` 分别在 n2_0101、qoder-0370_0130 里是真读数与真计数，并且打断自测臂 16 条（件 `evidence/ord0371b-q43-r5b-0235/option_jia_priced.json` = 0325e0b2f845f573eb7be15753d2f7b098ad02e0 ）；本轮实际采用的闭合枚举方案（戊）只放过 5 枚、打断 4 条，且那 5 枚逐枚都是 HTTP 定义内的码（件 `evidence/ord0371b-q43-r5b-0235/option_wu_priced.json` = 60c158480a7f43cb9861f77701f7037cf1a07d9b ）。
+
+六、换门只要一行：`ledger_insert_after.py:28` 的文件名 `claim_coordinate_check_r4e.py` 改成 `claim_coordinate_check_r5b.py`，其余不动。那是你的手，我没碰那两个文件（新尺 = ad8507a5baf061feb590a9fecd42348c0c7f3c7a ）。
+
+
 ### ORD-0369 追加一格（lane Q）— 你点名的「AI 面验收目标是屏上诚实表达不可用」我原来没量，量了，其中一处确实不诚实，已修
 
 先回你两个坑：两个我这轮都是**先清再判**，所以没有产生假红。
