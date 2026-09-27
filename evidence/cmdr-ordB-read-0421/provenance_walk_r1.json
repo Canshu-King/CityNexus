@@ -1,0 +1,62 @@
+{
+ "base": "http://127.0.0.1:4781/",
+ "steps": [
+  {
+   "step": "landing",
+   "labels": [
+    "EN",
+    "高级设置",
+    "目的地",
+    "抵达地点",
+    "离开地点",
+    "使用封存的演示行程",
+    "下一步"
+   ],
+   "body_chars": 163
+  },
+  {
+   "step": "tap",
+   "name": "使用封存的演示行程",
+   "body_chars": 397,
+   "body_head": "菜单 / 今天 跟随系统 EN DE 还没休息 Demo之旅 10月10日 09:00 — 10月10日 19:00 · 1 位旅行者 · 1 天 AI 帮我规划 试用其他城市 打开行程工作台 复制行程链接 现在 Tech Art Center 接下来 15:30 Nexus River Cruise Pier 今天还有 6 项安排 查看实时行程 “现在”取自服务器场景（执行游标）：10月10日 13:20 · 现在/接下来由服务器的执行投影给出 尚未获取地图位置 这个行程还没有可信的坐标。添加活动地点或开启定位后，地图会显示正确的城市。 住宿 还没有选定 到达 10月10日 09:00 出发 10月10日 19:00 这个行程还没有可信的坐标 方案概览 每一天，紧密相连。 对比住宿 → 还没有可以预览的行程 选定方案后，这里会显示每天的安排。 今天 行程 地图 Copilot 我的",
+   "screenshot": "D:\\moodle\\_qoder_cmdr_ref_20260921\\live_checks\\_walk_shots\\prov_enter.png",
+   "shot_bytes": 167901
+  },
+  {
+   "step": "tap_failed",
+   "name": "菜单",
+   "err": "TimeoutError: locator.click: Timeout 8000ms exceeded. Call log: \u001b[2m - waiting for getByRole('button', { name: '菜单' }).first()\u001b[22m"
+  },
+  {
+   "step": "tap_failed",
+   "name": "城市探索",
+   "err": "TimeoutError: locator.click: Timeout 8000ms exceeded. Call log: \u001b[2m - waiting for getByRole('button', { name: '城市探索' }).first()\u001b[22m"
+  },
+  {
+   "step": "tap_failed",
+   "name": "菜单",
+   "err": "TimeoutError: locator.click: Timeout 8000ms exceeded. Call log: \u001b[2m - waiting for getByRole('button', { name: '菜单' }).first()\u001b[22m"
+  },
+  {
+   "step": "tap_failed",
+   "name": "旅行票夹",
+   "err": "TimeoutError: locator.click: Timeout 8000ms exceeded. Call log: \u001b[2m - waiting for getByRole('button', { name: '旅行票夹' }).first()\u001b[22m"
+  },
+  {
+   "step": "tap_failed",
+   "name": "菜单",
+   "err": "TimeoutError: locator.click: Timeout 8000ms exceeded. Call log: \u001b[2m - waiting for getByRole('button', { name: '菜单' }).first()\u001b[22m"
+  },
+  {
+   "step": "tap_failed",
+   "name": "住宿选择",
+   "err": "TimeoutError: locator.click: Timeout 8000ms exceeded. Call log: \u001b[2m - waiting for getByRole('button', { name: '住宿选择' }).first()\u001b[22m"
+  },
+  {
+   "step": "tap_failed",
+   "name": "菜单",
+   "err": "TimeoutError: locator.click: Timeout 8000ms exceeded. Call log: \u001b[2m - waiting for getByRole('button', { name: '菜单' }).first()\u001b[22m"
+  }
+ ],
+ "console_errors": []
+}
