@@ -1,0 +1,24 @@
+{
+ "order": "ORD-0377",
+ "read_at": "2026-09-28T02:20:30+08:00",
+ "asset": "index-B800Wnn2.js (read from the served page before concluding)",
+ "auth_used": false,
+ "offline_method": "playwright context.setOffline(true); no chain process stopped, :8693 untouched",
+ "sw_registrations": 1,
+ "sw_scope": "http://127.0.0.1:4781/",
+ "offline_reload_served": true,
+ "body_chars_offline": 88,
+ "rendered_text_verbatim": "连接 网络不可用 这一发请求没能出去，也没有收到任何回答，所以这是网络问题。你的行程数据没有丢失，已保存的只读副本还能看。请检查网络后重试。 看已保存的只读副本 重试 归因详情",
+ "independent_mechanism_probe": "fetch /api/v1/health threw TypeError (no response object at all)",
+ "separates_offline_from_server_error": true,
+ "server_error_words_on_screen": 0,
+ "saved_journey_survives": "stated on screen: 你的行程数据没有丢失，已保存的只读副本还能看",
+ "plan_or_next_step_readable_offline": false,
+ "plan_word_hits": 0,
+ "grade": "existing copy is accurate - no frontend change needed, so FRONTSRC_BUILD_PREREQ never binds",
+ "not_examined": [
+  "whether 看已保存的只读副本 / 重试 / 归因详情 are actually clickable and what each renders next",
+  "the 3 console errors logged during the offline session",
+  "behaviour with a partially cached shell (SW serving an older generation)"
+ ]
+}
