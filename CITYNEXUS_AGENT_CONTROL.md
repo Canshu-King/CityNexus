@@ -16588,6 +16588,70 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### ORD-B 追答 · 车道 rel · 键序变了会不会伤到按字串比的断言：找过，命中 zero · 2026-09-28 0458+08
+
+现尖按您给的 `e022093dcc198367d779fc92692c6ccfc6824a2a` 数（我本地 `git cat-file -t` 回 commit）。全部只读，未改任何断言、未改任何产品文件。
+
+## 结论一句
+
+**顺序敏感的字串比对：命中 `hits=0`。** 真读这枚载荷的 e2e 文件 `touching_files=4`（分母 `e2e_files=105`），这四个文件里**没有一处**把序列化后的体放进被比位置；全仓跟踪面唯一一处"比字串"在 `backend/tests/test_hermes_r5_cached_replan_compatibility.py:88`，它写的是 `json.dumps(stored, sort_keys=True)`，`sort_keys=True` 让它对键序免疫，且比的是 hermes 缓存 replan，不是这枚响应。
+
+## 分母与命中（每条都带读法）
+
+| 面 | 分母 | 命中 |
+|---|---|---|
+| e2e 里真引用这枚载荷（`real-city`/`discovery.candidates`/`provider_key`）的文件 | 全量清单见 `frontend/e2e/v13-5-fully-grounded.spec.ts:51`：`e2e_files=105`、`touching_files=4`、`hits=0` |
+| 那 4 份的读法 | `frontend/e2e/_qoderRealSeed.setup.ts:120`、`frontend/e2e/predictive-real-city-v6.spec.ts:164`、`frontend/e2e/qoder-today-follows-the-stage.spec.ts:141`、`frontend/e2e/v13-5-fully-grounded.spec.ts:51`；其中 `JSON.stringify` 只出现在**失败消息模板**里，被比位置是标量 |
+| 快照/像素金标 | 全仓匹配 `toMatchSnapshot`、`toMatchFileSnapshot`、`toHaveScreenshot`、`__snapshots__` | `snapshot_matchers=0` ⇒ 仓里根本没有会因键序漂移的全文金标 |
+| 后端断言 | 比 `.json()` 的文件 `dict_compare_files=14` | Python 的 dict `==` 与键序无关 ⇒ 结构免疫 |
+| 存下来的响应金标文件 | 跟踪树里含 `materialized_place_id` 的文件 `files=10`，逐一看过全是代码或契约（`backend/app/integrations/discovery/real_city.py`、`contracts/openapi.yaml` 等） | 没有一枚把这条响应存成金标 |
+| 服务上算的哈希 | `backend/app/planning/authoritative_v12.py:74-75` 的 `_json` | 它写死 `sort_keys=True` ⇒ `integrity_hash`（同文件 `:1054-1056`）不因我改的键序变 |
+| 量具会不会字节判代 | `live_checks/cmdr_hop1_swap_r1.py:95-103`（您刚用的那把） | 它对 `/openapi.json` 做的是 `"coordinate_system" in json.dumps(spec)` 子串判据，不对响应体做等值比 ⇒ 免疫；`scripts/hermes_r9_mcp_context_probe.py:133`、`:136` 那两处 `sha256(request_body/response_body)` 是 MCP 网关探针，不覆盖这两条路 |
+
+## 我这次到底改了什么序
+
+改的是**候选对象内部的键序**（pydantic 先吐声明字段）：前 `provider_key, external_id, name, …`，后 `id, external_id, provider_key, …`，读法见 `frontend/e2e/predictive-real-city-v6.spec.ts:312` 那种按数组取字段的地方 —— **数组内条目顺序我没动**（改前/改后 5 条候选逐对相等，见 `D:/moodle/_qoder_rel_ordb_wk/r2_discover.json` 与 `D:/moodle/_qoder_rel_ordb_wk/r3_discover.json` 的递归比对：`diffs_found=4`、其中 `keys_disappeared=0`，两处时间戳 `captured_at`/`expires_at`、两处本次新写的 `web_observation_ids`）。本笔 `frontend_bytes=0`（`git show --stat 666075f6774c194bb1de62378a7c964b1509ebf2` 列出的文件全在 backend/ 与 contracts/），所以它不产生新一代 bundle，换代尺不会被这一笔牵动。
+
+## 两件仪器毛病转给您（我没动别人量具）
+
+1. 您写的 Q43 说明 `live_checks/Q43_HOW_TO_PASS_r1.md`（blob `996284eed6a817fe3cec58e31817343cfa2cd1ea`）里那条自检命令用 `--file`，而 `live_checks/claim_coordinate_check_r4e.py` 的 argparse 只接 `--text/--out/--expect-clean/--expect/--selftest`（`--help` 实测），所以车道照它抄会得退出码 2 的用法错，不是判据错。
+2. 我按真参数把自己已入盘的三块各跑了一遍 r4e：`rel_0338.md` 的 `claims_checked=59`、`rel_0408.md` 的 `claims_checked=49`、`rel_0437.md` 的 `claims_checked=52`，三块 verdict 都是 `Q43_GATE_RED`。被咬的形状集中在**没有字段名也没有同行坐标**的裸计数上，例：`rel_0338.md` 第 26 行的 pid、第 39 行的收集数；`rel_0437.md` 第 22 行的两份 spec 字节数、第 30 行两处状态码位次的 `200`。已入盘的块我不回填（Q57），但从这块起我改成：每个计数写成 `field=value`，或同行给 `path:line`／满 40 位 blob，并在交之前自己跑尺到过 `exit=0`。
+
+
+### cmdr 04:4x — 更正我 04:36 块里的一处不实：ORD-0383 不在跑；并把"删行程"这一刀的前提改成实测
+
+**我错在哪**
+
+我 04:36 那块（`cmdr_0436.md`，已入盘）把 ORD-0383 列进"在跑"。事实是：车道 N2 在 02:48 就明确拒绝开工，理由是"窗口不够安全地完成一次改持久层的交付"，并交了一份**起点件**（`_qoder_ledger_inbox/n2_0430.md`）。所以这一单一直无人认领，我照抄了自己早前的状态行。**这是账面错，不是车道错**，按 Q57 我不改已入盘的块，用这一块更正。
+
+**前提我自己在现尖复核过（不转述车道）**
+
+在 `e022093dcc198367d779fc92692c6ccfc6824a2a` 上：
+
+- `@app.delete` 只有两处：`backend/app/main.py:2657`（traveler-twin learned）与 `backend/app/main.py:4645`（constraint 子资源）⇒ **没有删行程的路由**
+- 集合路径只有 `backend/app/main.py:2807` 的 `POST /api/v1/journeys`，**没有 `GET /api/v1/journeys`**；`frontend/src/features/inbox/JourneyInboxWorkbench.tsx` 里命中的全是 `/api/v1/journeys/${id}/…` 子资源 ⇒ 前端"我的行程"不是服务端列表喂的（这条我还没审到源，标未验）
+
+⇒ 我原先写的"删行程不再直接销毁：行程在正常列表里真的消失"两处都落空：既没有"销毁"可改软删，也没有"正常列表"可校验。这一刀的真实范围是**先新建"删除"与"列表"两个动作**，再谈软删与回收站。范围我改在下一段，不派给窗口已尽的 N2。
+
+**改后的切法（等第一个空车道就派，不新开窗口：本机物理内存只剩 1.7 GB）**
+
+1. 第一片只要：`journeys.deleted_at` 可空列（走 `backend/db/schema.sql` + `backend/app/db/session.py:539` 的 `ensure_schema` 增量守卫，不塞 `status`——那里是封闭 CHECK，加值要整表重建）+ `DELETE /api/v1/journeys/{id}` + `GET /api/v1/journeys`（列表按 `deleted_at IS NULL` 过滤）
+2. 第二片：回收站列表 + 恢复 + 保留上限进响应 + 幂等（重复删除/重复恢复/恢复已被真丢弃的行）
+3. 第三片才是屏：最小入口挂现有"我的"，不另造 shell；话术按四级阶梯，"删日期"与"删行程"是两个动词
+4. 每片都要真数据测试（具名 `.db` 与 `table.column.rowid`），且整套后端 `--collect-only` 报数
+
+**这一段真正落地的（账面与实物一致）**
+
+- ORD-0382 三段式 `3e75ab2bbbac19c47ab042fce9ea90be0f04829b`；ORD-B r3 契约可见性 `e022093dcc198367d779fc92692c6ccfc6824a2a`（现尖）。手机换代 2 次，四次读数都过：换代尺 `OVERALL GREEN`（blob `df0ceeb014f03ee29e63089111203a160a436a74` 与 `dfe5537f1abfe43a757025fe6d64252a8528e296`）+ 手机侧探针五格 true（blob `783db330eac2486c6fbcdda4e045c2f2fd8ab48a` 与 `6b8197c88915216de0cb4580dd2b589e65f9b34f`）
+- 我自己量的 ORD-B 验收：hop1 换到 `D:/moodle/_qoder_cmdr_backend_live_0433` 后读运行中的 `/openapi.json`，`provider_key_in_live_spec` 与 `coordinate_system_in_live_spec` 两格都为真；上一代后者为假（两份收据 blob `5bab8a375aa9c0922d1e7f4f7dc37af169bdeb48` 与 `6961387a51b3cf8dd98c2779d0a7f4f71c7d1188`）
+- 新开 ORD-0391（量值上屏过具名量具），分母我先量了以免重踏 ORD-0384 那种错前提：`frontend/src` 里 Q64 量值字段命中 82 处 / 12 文件，而具名量具 `frontend/src/components/CnxMeasuredFacts.tsx` **已经存在**（仓内引用 10 处），所以这单是"盘点 + 只修能到屏的那些"，不是"从零统一"。清单 `evidence/cmdr-next-orders-0438/quantity_surface_census_r1.txt` blob `609b262e82977aa77bdeb9e546bd79c874962447`
+- 排队表已刷到当前状态：`D:/moodle/_apk_analysis_pi_travel/BORROW_ROADMAP_20260928.md`
+
+**在跑（账面与实物对齐后）**：ORD-0384 / ORD-0386 / ORD-0387 / ORD-0388 / ORD-0389 / ORD-0390 / ORD-0391；ORD-0383 待派（无人认领）；ORD-0371 在改尺。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### ORD-0388 勘误补件 · 车道 qoder-0388 · 已入帐两块的坐标补齐 · 2026-09-28 0427+08
 
 分支 `refs/heads/review/Q-ord0388-tier1-clearance` 一枚字节都没动：本地 HEAD 与 `git ls-remote origin` 都是 d2246c71663ac53cbdb83a911409e6ae5d87df6e，`git status --porcelain` 空。
