@@ -1,0 +1,175 @@
+{
+ "schema": "CNX_CMDR_LANDING_PREFLIGHT_V1",
+ "lane": "commander 494abfd7",
+ "at_local": "2026-09-28T04:26:19+0800",
+ "mode": "LAND",
+ "authoritative_line": "mirror/integration-frontend-apple-pass1",
+ "tip_re_read_from_github_before": "0813d3aae826b7b4bdf311e70ed48c40f5c515d3",
+ "candidate_ref": "refs/heads/review/Q-ord0382-ai-three-stage-r2",
+ "candidate_tip": "3e75ab2bbbac19c47ab042fce9ea90be0f04829b",
+ "genealogy": {
+  "ff_possible_rc": 0,
+  "ff_possible": true,
+  "merge_base": "0813d3aae826b7b4bdf311e70ed48c40f5c515d3",
+  "line_only_commits": 0,
+  "candidate_only_commits": 1
+ },
+ "file_sets": {
+  "line_side_since_base": [],
+  "candidate_side_since_base": [
+   "frontend/src/app/V8Experience.tsx",
+   "frontend/src/features/planning/PlanAiRunStrip.tsx",
+   "frontend/src/features/planning/PlanWithAiSheet.tsx",
+   "frontend/src/features/planning/aiGenerationRun.ts",
+   "frontend/src/i18n/LocaleContext.tsx",
+   "frontend/src/styles.css"
+  ],
+  "intersection": [],
+  "product_introduced_by_candidate": [
+   "frontend/src/app/V8Experience.tsx",
+   "frontend/src/features/planning/PlanAiRunStrip.tsx",
+   "frontend/src/features/planning/PlanWithAiSheet.tsx",
+   "frontend/src/features/planning/aiGenerationRun.ts",
+   "frontend/src/i18n/LocaleContext.tsx",
+   "frontend/src/styles.css"
+  ]
+ },
+ "merge_tree": {
+  "exit": 0,
+  "first_line": "66e124cd7b0fd9a2c1eb190ac1291a3dc16dac3d",
+  "conflict_reported": false,
+  "stderr_head": ""
+ },
+ "gate_run": {
+  "requested": [],
+  "collect_exit": null,
+  "collected": null,
+  "test_exit": null,
+  "summary": null,
+  "export": "D:/moodle/_qoder_cmdr_ref_20260921/snap_preflight_042527",
+  "blob_equality": [
+   {
+    "path": "frontend/src/app/V8Experience.tsx",
+    "candidate_blob": "73088d9a8da54e748b58c22efadc4838aaa0d9ec",
+    "export_blob": "73088d9a8da54e748b58c22efadc4838aaa0d9ec",
+    "equal": true
+   },
+   {
+    "path": "frontend/src/features/planning/PlanAiRunStrip.tsx",
+    "candidate_blob": "83cab24604b0347af10801150500407c76949355",
+    "export_blob": "83cab24604b0347af10801150500407c76949355",
+    "equal": true
+   },
+   {
+    "path": "frontend/src/features/planning/PlanWithAiSheet.tsx",
+    "candidate_blob": "7ccbc4a90b7f16038d039bbc8c16cac433fbc7c0",
+    "export_blob": "7ccbc4a90b7f16038d039bbc8c16cac433fbc7c0",
+    "equal": true
+   },
+   {
+    "path": "frontend/src/features/planning/aiGenerationRun.ts",
+    "candidate_blob": "3a85fc897d3bb15456546d180eb35e096a1b5366",
+    "export_blob": "3a85fc897d3bb15456546d180eb35e096a1b5366",
+    "equal": true
+   },
+   {
+    "path": "frontend/src/i18n/LocaleContext.tsx",
+    "candidate_blob": "847ce0bc0093e881e2bbff90286369e0ea006ab4",
+    "export_blob": "847ce0bc0093e881e2bbff90286369e0ea006ab4",
+    "equal": true
+   },
+   {
+    "path": "frontend/src/styles.css",
+    "candidate_blob": "d3e769f1e01f633867831709748a6e2109c742b6",
+    "export_blob": "d3e769f1e01f633867831709748a6e2109c742b6",
+    "equal": true
+   }
+  ],
+  "whole_suite": {
+   "collect_exit": 0,
+   "collected": 1393,
+   "interrupted": false,
+   "error_lines": [
+    "tests/test_qoder_ord0332_error_receipt.py::test_R7_the_envelope_keeps_every_field_it_already_had",
+    "tests/test_qoder_ord0332_error_receipt.py::test_R8_the_seed_is_read_off_the_real_request_not_just_the_dataclass",
+    "tests/test_solver_runtime_policy.py::test_unexpected_solver_programming_error_is_not_silently_hidden"
+   ],
+   "tail": [
+    "    _PortalFactoryType = Callable[[], AbstractContextManager[anyio.abc.BlockingPortal]]",
+    "-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html",
+    "1393 tests collected in 10.33s"
+   ],
+   "cmd": "D:/moodle/CityNexus/.venv/Scripts/python.exe -m pytest --collect-only -q tests  (cwd=<export>/backend, PYTHONPATH=<export>)"
+  },
+  "deletions": {
+   "deleted_by_candidate": [],
+   "still_present_in_export": []
+  },
+  "interpreter": "Python 3.12.14 (main, Aug 25 2026, 14:01:42) [MSC v.1944 64 bit (AMD64)]",
+  "exposure": {
+   "ruler_blob": "d3f66ce9fecd0790981a4fcdeb5e36b1c0fd10f2",
+   "ruler_blob_computed": null,
+   "ruler_file": "ui_exposure_taint_ast_r7b.cjs",
+   "candidate_files_in_view": 6,
+   "tip_cells": 10,
+   "cand_cells": 10,
+   "growth_by_file_and_rule": {},
+   "unpaired_added": [],
+   "added_line_exact": [
+    "PlanWithAiSheet.tsx:860|UPSTREAM_PROSE_TO_ATTRIBUTE_SLOT",
+    "PlanWithAiSheet.tsx:885|UPSTREAM_TEXT_VIA_HELPER_TO_DOM",
+    "PlanWithAiSheet.tsx:958|UPSTREAM_TEXT_VIA_HELPER_TO_DOM"
+   ],
+   "shifted_only": true,
+   "removed_count": 3,
+   "removed": [
+    "PlanWithAiSheet.tsx:1130|UPSTREAM_PROSE_TO_ATTRIBUTE_SLOT",
+    "PlanWithAiSheet.tsx:1155|UPSTREAM_TEXT_VIA_HELPER_TO_DOM",
+    "PlanWithAiSheet.tsx:1194|UPSTREAM_TEXT_VIA_HELPER_TO_DOM"
+   ],
+   "disclosed_slip": "a same-file, same-rule relocation with equal counts reads as a shift; the AST ruler has no cell identity"
+  },
+  "frontend_build": {
+   "builder_rc": 0,
+   "vite_build_rc": 0,
+   "dist_exists": true,
+   "index_exists": true,
+   "asset_refs": [
+    "/assets/index-CUYtw6S8.js",
+    "/assets/index-Bo2rybZP.css"
+   ],
+   "live_tree": "66e124cd7b0fd9a2c1eb190ac1291a3dc16dac3d",
+   "info_file": "D:\\moodle\\_qoder_cmdr_ref_20260921\\live_checks\\_build_3e75ab2_info.json",
+   "build_tail": [
+    "files generated",
+    "  dist/v10-sw.js",
+    "  dist/workbox-6923124b.js",
+    "\u001b[33m",
+    "(!) Some chunks are larger than 500 kB after minification. Consider:",
+    "- Using dynamic import() to code-split the application",
+    "- Use build.rollupOptions.output.manualChunks to improve chunking: https://rollupjs.org/configuration-options/#output-manualchunks",
+    "- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.\u001b[39m"
+   ]
+  }
+ },
+ "problems": [],
+ "verdict": "READY_TO_LAND",
+ "landing": {
+  "http": 200,
+  "response_head": "{'ref': 'refs/heads/mirror/integration-frontend-apple-pass1', 'node_id': 'REF_kwDOUhlJJ9oAMnJlZnMvaGVhZHMvbWlycm9yL2ludGVncmF0aW9uLWZyb250ZW5kLWFwcGxlLXBhc3Mx', 'url': 'https://api.github.com/repos/Ca",
+  "tip_after": "3e75ab2bbbac19c47ab042fce9ea90be0f04829b",
+  "branches_route": "3e75ab2bbbac19c47ab042fce9ea90be0f04829b",
+  "both_routes_agree": true,
+  "landed": true
+ },
+ "discipline": {
+  "evidence_paths_overwritten": 0,
+  "databases_opened": 0,
+  "surfaces_started_or_stopped": 0,
+  "credential_values_printed": 0,
+  "candidate_refs_pushed_by_commander": 0
+ },
+ "claim_kind": "git_and_pytest_determined",
+ "claimed_result": null,
+ "derived_result": null
+}
