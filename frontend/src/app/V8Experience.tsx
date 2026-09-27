@@ -44,6 +44,7 @@ import { V10LiveExecutionPanel } from "../features/execution/V10LiveExecutionPan
 import { BookingArtifactScanner } from "../features/inbox/BookingArtifactScanner";
 import { JourneyInboxWorkbench, fieldLabel } from "../features/inbox/JourneyInboxWorkbench";
 import { JourneyLinkAction } from "../features/inbox/JourneyLinkAction";
+import { PretripChecklistPanel } from "../features/checklist/PretripChecklistPanel";
 import { PushCapabilityCard } from "../features/notifications/PushCapabilityCard";
 import { TwinPanel } from "../features/traveler-twin/TwinPanel";
 import { SortableActivityList } from "../features/studio/SortableActivityList";
@@ -1696,6 +1697,10 @@ export function V8Experience() {
                 stayAttempts={stayAttempts}
                 waitStartedAt={createStartedAt}
                 onRetryStays={() => void retryStaySearch()}
+                /* ORD-0384: the checklist reads the two payloads this screen already holds. Passing them
+                   in is what keeps the panel from issuing its own second, differently-timed read of the
+                   same truth -- and it is why "wallet" has to reach a component that never needed it. */
+                wallet={wallet}
                 onStageChanged={() => {
                   void load(data.journey.id);
                   void authoritativeTwin.refetch();
@@ -2259,6 +2264,7 @@ function Hub({
   waitStartedAt,
   onRetryStays,
   onStageChanged,
+  wallet,
 }: {
   data: V8Data;
   /** ORD-0082 ②: carries the server's own NOW/NEXT projection (`context.execution`) -- the one
@@ -2285,6 +2291,9 @@ function Hub({
   /** ORD-0082: after the stage moves, Today must re-read the journey it is showing.  The panel
       names which action ran; which journey to re-read stays this screen's own fact. */
   onStageChanged: () => void;
+  /** ORD-0384: the wallet read this screen already owns, handed to the checklist so a confirmed-booking
+      item can be derived from the same response the bookings strip uses. */
+  wallet: Wallet | null;
 }) {
   const t = useT();
   const { locale, switchLocale } = useLocale();
@@ -2968,6 +2977,13 @@ function Hub({
           <b>{dateInZone(data.trip.departure_anchor.at, locale, journeyTz)}</b>
         </div>
       </div>
+      {/* ORD-0384: what the server still reports as outstanding, derived from the two payloads this
+          screen already holds. Placed after the summary strip and before the attention band, because it
+          is neither of those: it is not "now", and nothing here has escalated. */}
+      <PretripChecklistPanel
+        sources={{ experience: data, wallet }}
+        onNavigate={onNavigate}
+      />
       {/* Attention is its own band, not a tile squeezed beside "Next"/"Stay":
           Apple hierarchy says a change that needs the traveller is the loudest
           thing after Now/Next, and an all-clear is a quiet line, not a card.
