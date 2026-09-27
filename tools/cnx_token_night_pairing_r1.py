@@ -339,7 +339,11 @@ def measure(text: str, label: str):
             "dark_declared": draw is not None,
             "dark_raw": draw, "dark_line": dline,
             "light_writes_literal": writes_literal,
-            "is_colour": bool(cl["ok"] and cl["lits"]),
+            # Resolvable in EITHER scope counts as a colour token: a token that
+            # only the dark block writes has no light chain to resolve, and
+            # judging colourness by the light side alone made such a token
+            # invisible to the pairing check it most needs (the M6 mutant).
+            "is_colour": bool((cl["ok"] and cl["lits"]) or (cd["ok"] and cd["lits"])),
             "light_is_literal_colour": writes_literal and cl["ok"] and bool(cl["lits"]),
             "light_is_var_colour": (not writes_literal) and cl["ok"] and bool(cl["lits"]),
             "light_non_colour": (not writes_literal) and not cl["ok"],
