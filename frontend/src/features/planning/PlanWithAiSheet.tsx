@@ -610,7 +610,11 @@ export function PlanWithAiSheet({
        which is exactly the case here -- the card opens with its head visible and its tail under the
        fold.  `end` is what brings the last line up. */
     if (result) resultRef.current?.scrollIntoView({ block: "end" });
-  }, [result, run.runId]);
+    /* `aftermath` is in the dependency list because the card GROWS after it lands: the settle that
+       carries CANCELLED_AFTER_SEND happens first with two lines, then the confirming read adds the
+       「当前生效的还是第 N 版」 line that was the whole reason for scrolling.  Scrolling once at settle
+       is what left that last line under the fold in both earlier attempts. */
+  }, [result, aftermath, run.runId]);
 
   const copy = result ? statusCopy(result.status, zh, result.planCount ?? 0) : null;
   /* Q70, one-way by construction: an anchor may only name a code the traveller can actually read on the
