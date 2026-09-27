@@ -2983,13 +2983,6 @@ function Hub({
           <b>{dateInZone(data.trip.departure_anchor.at, locale, journeyTz)}</b>
         </div>
       </div>
-      {/* ORD-0384: what the server still reports as outstanding, derived from the two payloads this
-          screen already holds. Placed after the summary strip and before the attention band, because it
-          is neither of those: it is not "now", and nothing here has escalated. */}
-      <PretripChecklistPanel
-        sources={{ experience: data, wallet }}
-        onNavigate={onNavigate}
-      />
       {/* Attention is its own band, not a tile squeezed beside "Next"/"Stay":
           Apple hierarchy says a change that needs the traveller is the loudest
           thing after Now/Next, and an all-clear is a quiet line, not a card.
@@ -3059,6 +3052,16 @@ function Hub({
           </button>
         )}
       </section>
+      {/* ORD-0384: what the server still reports as outstanding, derived from the two payloads this
+          screen already holds. It sits *after* the attention band on purpose: in the clear state the
+          band hides its own kicker (design-tokens.css `.cn-attention-band[data-attention="clear"]
+          .v8-kicker{display:none}`), so a bare "一切正常" rendered directly under a list of open items
+          read as a denial of the list above it. Live status answers first; the pre-trip list follows,
+          and neither sentence has to contradict the other for the traveller to make sense of it. */}
+      <PretripChecklistPanel
+        sources={{ experience: data, wallet }}
+        onNavigate={onNavigate}
+      />
       <div className="v8-section-heading">
         <div>
           <p className="v8-kicker">{t("hub.planGlance")}</p>
