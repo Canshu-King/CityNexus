@@ -392,13 +392,16 @@ export function SimulationPanel({
       id: "reset",
       zh: "重置到场景起点",
       en: "Re-seed the scenario",
-      blocked:
-        scene.phase === "ready" && !scene.scene?.demoMode
-          ? {
-              zh: "服务器说这台部署不是模拟舞台（demo_mode=false），而重置会删演示数据，所以这里不给按。",
-              en: "The server says this deployment is not a simulation stage (demo_mode=false), and re-seeding deletes demo rows, so this is refused.",
-            }
-          : null,
+      /* ORD-0389: this action deletes the whole library (`services.reset_all`, 52 tables), and it
+         now also requires a token the server reads from its own environment.  A browser cannot
+         hold that value without shipping it to every visitor, which is the same leak the flag was,
+         so the row is refused here on every deployment rather than only when demo_mode is off.
+         Kept visible on purpose: a silently missing row would hide *why* the stage cannot be
+         re-seeded from a screen, and the reason is the part a teacher needs. */
+      blocked: {
+        zh: "这一步会删掉整库（52 张表），现在还要服务器自己的环境变量里的令牌；浏览器拿不到它，也不该拿到。所以这里不给按——要重播种行程，请由运行服务器的人来做。",
+        en: "This step deletes the whole library (52 tables) and now needs a token that lives in the server's own environment. A browser cannot hold that value and should not, so this is refused on every deployment -- re-seeding is done by whoever runs the server.",
+      },
       run: async () => {
         const result = await resetStage();
         setLastEventId(null);
