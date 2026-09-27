@@ -1697,10 +1697,6 @@ export function V8Experience() {
                 stayAttempts={stayAttempts}
                 waitStartedAt={createStartedAt}
                 onRetryStays={() => void retryStaySearch()}
-                /* ORD-0384: the checklist reads the two payloads this screen already holds. Passing them
-                   in is what keeps the panel from issuing its own second, differently-timed read of the
-                   same truth -- and it is why "wallet" has to reach a component that never needed it. */
-                wallet={wallet}
                 onStageChanged={() => {
                   void load(data.journey.id);
                   void authoritativeTwin.refetch();
@@ -2264,7 +2260,6 @@ function Hub({
   waitStartedAt,
   onRetryStays,
   onStageChanged,
-  wallet,
 }: {
   data: V8Data;
   /** ORD-0082 ②: carries the server's own NOW/NEXT projection (`context.execution`) -- the one
@@ -2291,9 +2286,6 @@ function Hub({
   /** ORD-0082: after the stage moves, Today must re-read the journey it is showing.  The panel
       names which action ran; which journey to re-read stays this screen's own fact. */
   onStageChanged: () => void;
-  /** ORD-0384: the wallet read this screen already owns, handed to the checklist so a confirmed-booking
-      item can be derived from the same response the bookings strip uses. */
-  wallet: Wallet | null;
 }) {
   const t = useT();
   const { locale, switchLocale } = useLocale();
@@ -3046,16 +3038,13 @@ function Hub({
           </button>
         )}
       </section>
-      {/* ORD-0384: what the server still reports as outstanding, derived from the two payloads this
-          screen already holds. It sits *after* the attention band on purpose: in the clear state the
-          band hides its own kicker (design-tokens.css `.cn-attention-band[data-attention="clear"]
-          .v8-kicker{display:none}`), so a bare "一切正常" rendered directly under a list of open items
-          read as a denial of the list above it. Live status answers first; the pre-trip list follows,
-          and neither sentence has to contradict the other for the traveller to make sense of it. */}
-      <PretripChecklistPanel
-        sources={{ experience: data, wallet }}
-        onNavigate={onNavigate}
-      />
+      {/* ORD-0384: the two outstanding things the contract can anchor, read from the payload this
+          screen already holds -- the panel issues no second read of its own. It sits *after* the
+          attention band on purpose: in the clear state the band hides its own kicker
+          (design-tokens.css `.cn-attention-band[data-attention="clear"] .v8-kicker{display:none}`), so a
+          bare "一切正常" rendered directly under a list of open items reads as a denial of the list above
+          it. Live status answers first; the pre-trip list follows. */}
+      <PretripChecklistPanel sources={{ experience: data }} onNavigate={onNavigate} />
       <div className="v8-section-heading">
         <div>
           <p className="v8-kicker">{t("hub.planGlance")}</p>

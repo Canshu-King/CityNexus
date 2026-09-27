@@ -23,6 +23,10 @@
 .cn-pretrip-why { margin: 0; color: var(--v8-muted); font-size: var(--cn-fs-body); line-height: 1.5; }
 .cn-pretrip-basis { margin: 0; color: var(--cn-ink-tertiary); font-size: var(--cn-fs-caption); overflow-wrap: anywhere; }
 .cn-pretrip-basis code { font-family: var(--cn-font-mono, ui-monospace, monospace); font-size: 11px; }
+/* The anchor is the contract line that makes the basis claim checkable, so it must be readable and not
+   a footnote nobody can reach -- same wrap rules as the basis line above. */
+.cn-pretrip-anchor { margin: 0; color: var(--cn-ink-tertiary); font-size: var(--cn-fs-caption); overflow-wrap: anywhere; }
+.cn-pretrip-anchor code { font-family: var(--cn-font-mono, ui-monospace, monospace); font-size: 11px; }
 .cn-pretrip-list li .v8-quiet-button { width: fit-content; margin-top: 4px; }
 .cn-pretrip-empty { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin-top: 12px; color: var(--v8-muted); font-size: var(--cn-fs-body); }
 .cn-pretrip-empty .v8-quiet-button { width: fit-content; }
