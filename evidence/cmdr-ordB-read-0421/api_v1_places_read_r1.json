@@ -1,0 +1,24 @@
+{
+ "read_at_local": "2026-09-28T04:20:57.4278593+08:00",
+ "base": "http://127.0.0.1:8693",
+ "probes": [
+  {
+   "path": "/api/v1/places?city_code=CNX-DEMO",
+   "http_status": 200,
+   "content_type": "application/json",
+   "body_bytes": 2155,
+   "provider_key_occurrences": 8,
+   "coordinate_system_occurrences": 16,
+   "first_item_head": "[{\"id\":\"place-city-park\",\"name\":\"Nexus City Park\",\"category\":\"park\",\"city_code\":\"CNX-DEMO\",\"location\":{\"latitude\":39.113,\"longitude\":117.202},\"tags\":[\"waterfront\",\"relaxed\",\"outdoor\"],\"provider_key\":\"mock-city\",\"coordinate_system\":\"WGS84\",\"source_coordinate_system\":null},{\"id\":\"place-design-library\""
+  },
+  {
+   "path": "/api/v1/places?city_code=CN-GUANGZHOU",
+   "http_status": 200,
+   "content_type": "application/json",
+   "body_bytes": 2,
+   "provider_key_occurrences": 0,
+   "coordinate_system_occurrences": 0,
+   "first_item_head": "[]"
+  }
+ ]
+}
