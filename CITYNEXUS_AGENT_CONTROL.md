@@ -16588,6 +16588,126 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### ORD-0388 · 车道 qoder-0388 · tier-1 九处清零 · 2026-09-28 0420+08
+
+分支 `review/Q-ord0388-tier1-clearance`，base 现尖 `895ec1a11aca730041b42f2358b9607c9bb5a67e`，tip `d2246c71663ac53cbdb83a911409e6ae5d87df6e`（树 `ae15891d2a1d38c6d0358505ee1744fcb8c73048`）。
+三笔：尺+组件 `fe364f42cf78acb21f93c46f45af7f44cba96745`；字典+读数 `1f6b7285c43a6868ef4e9e59805713cbd3961440`；读数修正件 `d2246c71663ac53cbdb83a911409e6ae5d87df6e`（tip）。字典按您的减摩建议放在需要它的那一笔。
+只读预验：`git merge-tree --write-tree 895ec1a11aca730041b42f2358b9607c9bb5a67e HEAD` 退出码 **0** ⇒ 当前可 ff。`git ls-remote` 现读等于本地 HEAD。
+
+## 分母用我自己重跑的读数，不用转述
+
+您在 `7c9edf9f` 上那份证据 blob `9b722f11828576fe9be98a7884a4ca4fc4f5bfe5` 点名 9 处 tier-1；我在本候选基线 `895ec1a11aca730041b42f2358b9607c9bb5a67e` 上重跑同一把尺也是 9 处，
+逐处具名（这些就是本单的范围，共 9 行）：
+  frontend/src/features/planning/PlanWithAiSheet.tsx:1230
+  frontend/src/features/setup/JourneyTrialSetup.tsx:996
+  frontend/src/main.tsx:1132
+  frontend/src/main.tsx:1393
+  frontend/src/main.tsx:1398
+  frontend/src/main.tsx:1441
+  frontend/src/main.tsx:1452
+  frontend/src/main.tsx:1465
+  frontend/src/main.tsx:1529
+
+## 九处的处置：8 处进字典，1 处证明它印不出来
+
+8 处改写取用点（`t("…")`），英文值与被替换的字面量**逐字相同**，所以英文屏一动不动、英文断言不会失靶；
+中文是同 key 的新写值，语域跟 ORD-0367（直陈，不用「失败/无法」）：
+  frontend/src/features/setup/JourneyTrialSetup.tsx:996 → `trial.notAsked` 未询问
+  frontend/src/main.tsx:1132 → `legacy.guardianIdle`；:1393 → `legacy.notEvaluated` 未评估；
+  :1398 → `legacy.unknown` 未知；:1441、:1452、:1465 → `legacy.preference` 偏好项；:1529 → `legacy.noActiveC4`。
+main.tsx 从未 import 过 `useT`，这一单才补上（LegacyApp 在 frontend/src/main.tsx:1728 由 /legacy 路径挂载，
+所以它那 7 处**确实能到屏**，不能用可达性排除）。
+
+第 9 处选「证明到不了屏」，并把证明做进尺而不是停在嘴上：
+  frontend/src/features/planning/PlanWithAiSheet.tsx:1230 的 `(result?.summaryOrigin ?? "not_stated") === "no_model"`
+  —— 值合上一个括号就被相等运算符读走，两边都被消费、都不印；印出来的是它挑中的四个 `zh ? … : …` 标签之一。
+  同一枚哨兵是**故意**镜像在上一行 frontend/src/features/planning/PlanWithAiSheet.tsx:1228 的 `data-summary-origin`（技术事实通道）。
+  尺因此新增 `COMPARISON_OPERAND` → tier 3，反控臂 K7k。**这条规则第一次是错的**：放在花括号回溯之后永不触发（该位最内层未闭合括号其实是 JSX 子表达式），
+  是 K7k 立刻报红才逼出「比较优先于槽位」的顺序修正——不是我把红解释过去。
+
+## 验收读数（尺与屏）
+
+`RENDER_TIERS` tier-1 = **0**（review/ord0388-readouts/RULER_R2.txt:14），tier B 存量 73 → **65**（review/ord0388-readouts/RULER_R2.txt:13），tier A 仍 0。
+三格保护项无新红：`REGISTER_PARITY` 659 对 0 冲突（review/ord0388-readouts/RULER_R2.txt:6）、`NO_GROWTH` 0 值变动（review/ord0388-readouts/RULER_R2.txt:7，本次只新增）、
+`ASSERTIONS_STILL_HIT` 0 个 key 被编辑，对照 216 条 e2e 文本断言（review/ord0388-readouts/RULER_R2.txt:8）。反控 **30/30 臂 MET、0 红**（review/ord0388-readouts/RULER_R2.txt:48）；尺退出码 1（review/ord0388-readouts/RULER_R2.txt:46）——红的仍是存量。
+`RENDERED` 面顺带证明这 6 枚新 key 全有人读（不是死行）；`LADDER_TIER⑥` 7 读 0 缺（review/ord0388-readouts/RULER_R2.txt:12）。
+
+## 屏上文字（您要的 body.innerText，不是 data 属性）
+
+前：`http://127.0.0.1:4781/legacy`，zh-CN 上下文（`documentElement.lang` 逐页确认），`body.innerText` 共 4123 字（review/ord0388-readouts/SCREEN_R1.txt:12），
+里面**出现** `not evaluated` 与 `Activate a standing mission once`（review/ord0388-readouts/SCREEN_R1.txt:13；路由行 review/ord0388-readouts/SCREEN_R1.txt:12）。
+后：`http://[::1]:4811/legacy`，**本候选自己的 vite 产物** `index-DaGdhbKQ.js`（review/ord0388-readouts/SCREEN_R1.txt:15），同一路由同 locale，innerText 3985 字：那两句英文**不在**屏上文本里（review/ord0388-readouts/SCREEN_R1.txt:16），
+改为出现 `未评估` 与 `启动一次常驻任务后`（review/ord0388-readouts/SCREEN_R1.txt:17）。
+一个环境事实值得记：vite 把端口绑在 IPv6 回环，`127.0.0.1:4811` 连不上而 `[::1]:4811` 应答正常（review/ord0388-readouts/BUILD_R1.txt:29）；
+读数里写清取的地址，不含糊写「localhost」。用完的 preview 进程已自收（pid 见 review/ord0388-readouts/BUILD_R1.txt:31）。
+
+## 构建前置与一次差点交出去的错测
+
+宿主 = 非 git 导出目录（`git archive 基线` 解出后**先删再覆盖 src**，把我工作树的改动带进去）+ `cp -al` 硬链接依赖；教训来自上一单 ORD-0381 r2（落地尖 895ec1a11aca730041b42f2358b9607c9bb5a67e）：
+`typescript/package.json` 的 nlink=4 证是链接不是拷贝（review/ord0388-readouts/BUILD_R1.txt:12）。这次**先证明导出带上我的改动再构建**（吸取 0381 那次的教训）：
+`grep -c 'legacy.noActiveC4' 导出/src/main.tsx` 命中 1、字典里 `"legacy.noActiveC4"` 命中 2。
+`tsc --noEmit` 退出码 0、程序含 875 个文件、src 内 81 个（非空转）（review/ord0388-readouts/BUILD_R1.txt:7、review/ord0388-readouts/BUILD_R1.txt:8、review/ord0388-readouts/BUILD_R1.txt:9）；`vite build` 退出码 0（review/ord0388-readouts/BUILD_R1.txt:13）、
+9.66 s 构建完成、产物 index-DaGdhbKQ.js（review/ord0388-readouts/BUILD_R1.txt:14、review/ord0388-readouts/BUILD_R1.txt:15），新中文值 `没有进行中的 C4` 与 `未询问` 各命中 1（review/ord0388-readouts/BUILD_R1.txt:18、review/ord0388-readouts/BUILD_R1.txt:19）；
+硬链接 nlink=4（review/ord0388-readouts/BUILD_R1.txt:12）；共享依赖全程只读、收尾回验 394 项（review/ord0388-readouts/BUILD_R1.txt:30）。
+
+## 没改善的部分
+
+1. `HARDCODED_FALLBACK` 仍红：tier B 还剩 **65** 处（review/ord0388-readouts/RULER_R2.txt:13）。本单只做您点名的 tier-1，tier 2 那 60 处一行未动。
+2. 本单**新引入**一个档④缺口，说清楚而不是埋掉：`legacy.noActiveC4` 的值以 `No ` 开头，被档④认成「空态且无动作」，`LADDER_TIER④` 由 26/17 变 **27/18**（review/ord0388-readouts/RULER_R2.txt:11）。屏上字节与改前完全一致，只是这句话现在进了字典、被档④看见了。要消它得给动作（中文变长）或改组件，两者都超本单范围。
+3. main.tsx 里同一行的**另一半**没动：例如 frontend/src/main.tsx:1441 的 `item.explanation ?? "user-provided"` 与 frontend/src/main.tsx:1465 的 `: "conflict"`
+   —— 尺把它们归 tier 2（不是 `??` 兜底位或不可判定），所以本单一处未碰。那 7 行现在读起来是半本地化的。
+4. LegacyApp 整屏其余英文（25 行裸 JSX 文本一类）仍未动；本单只消 `??` 兜底位上的 7 处。
+5. 屏上证据只覆盖 `:4781` 与 `/legacy` 这一屏；`trial.notAsked` 那条我**没有**在屏上读到——
+   首页 innerText 只有 168 字（review/ord0388-readouts/SCREEN_R1.txt:18，未进入试用面板），要做到它得点进通用城市试用并让某行 answered=false，本单未做。
+6. 工件 R1（`review/ord0388-readouts/RULER_R1.txt` blob 51041b4d4323e7563f78f693c099fcfc756ec432）是**残缺证据**：它的行过滤只留了不带补位的 `[MET]` 臂线，
+   把带补位的 `[MET      ]` 四格线丢掉了 —— 恰是账本要引的那四条。已另发 R2（blob 49cd7900c6d1bfb233beba1a71242cc440b876e8）并在抬头写明；R1 原地不动。
+7. 与 ORD-0385 若撞同一本字典（`inbox.journeyLinkCopied` 一带）：按 Q72 我自己 rebase，字典在最后一笔，重跑一次即可。
+
+## 勘误：账本里 04:04:49 入帐的那块（qoder-0388_0403.md）有三个错行号
+
+那版把 `vite_build_exit` 指到 review/ord0388-readouts/BUILD_R1.txt:14（实为 :13，:14 是构建秒数），
+又把两条 bundle grep 指到 :17、:18（实为 :18、:19，:17 是 precache 条数）。
+屏上数字本身没错（Q43 当时也过，它只查同行有无坐标，不查指对没对），错的是坐标指向。
+本块（0420）已改为正确行号，并加了一道独立校验：逐行断言「我引的那一行确实含我说的那个键」，
+它现在从工件里自己重算条数并同行带坐标：校验器 D:/moodle/_qoder_lane_q0370_scratch/check_0388_citations.py:5，反控读数 arms_total=30 / met=30 / red=0（review/ord0388-readouts/RULER_R2.txt:48）。
+被校验的三件工件各行数（BUILD_R1.txt 的 16 行、RULER_R2.txt 的 7 条读数、SCREEN_R1.txt 的 4 行）逐条通过，坐标 review/ord0388-readouts/BUILD_R1.txt:31 / review/ord0388-readouts/RULER_R2.txt:48 / review/ord0388-readouts/SCREEN_R1.txt:17。
+已入帐的那块（抬头 tip d2246c71663ac53cbdb83a911409e6ae5d87df6e，现帐 D:/moodle/CITYNEXUS_AGENT_CONTROL.md:16635）按规矩原地不动，本件为勘误件。
+
+## 给 ORD-0371 的一条实测（不重改块迎合尺）
+
+本块每个数字都同行带了 path:line 或满 40 位 blob；如果仍被判裸数，那是尺的归类问题，我按您的话不动读数。
+已知一类：`ORD-0385`/`ORD-0388` 这种 4 位单号会被当裸数字主张（DURABLE 里的 run-id 形状只豁免 6–8 位），
+每辆车都会在这里撞一次；我这轮的过法是把同行换成**真所指的 path:line/blob**，不是把单号藏掉。
+
+
+### cmdr 04:0x — 手机链演示场景被一发 demo/reset 抹掉（成因、证据、我做的与没做的）；hop1 已换到现尖导出树
+
+**事实（按我读到的顺序，不掺推测）**
+
+- `D:/moodle/_qoder_preview_20260920/run/cmdr_hop1_0018.log` 里连着两条 `POST /api/v1/demo/reset HTTP/1.1 200 OK`，同一份日志最后写入时间是 03:55，再往前几行还是 `GET /api/v1/places?city_code=CN-GUANGZHOU 200 OK`
+- 只读查 `_preview.db`：`select count(*) from journeys` 回 1，那一行是 `One Day in Nexus City` / `city_code=CNX-DEMO` / `created_at 2026-09-27T19:55:04+00:00`（即 03:55:04 +08）——**广州那两天的行程不在了**
+- 路由本体在 `backend/app/main.py:2046`，它自己的注释在 `main.py:2048` 写明 `services.reset_all` 删 52 张表，唯一的门是 `CITYNEXUS_DEMO_MODE=true`；而手机链的 hop1 正是带着这个开关跑的（`run/cmdr_hop1_backend.bat`）⇒ **任何车道对 :8693 发一次 reset 就把所有人的预览抹平**，这不是比喻，是已经发生的一次
+- 没有备份可恢：同目录只有 `_ord43.db`（09-20 的旧文件），没有 `_preview.db` 的副本
+
+**我做的两件事与一件故意不做**
+
+- 做了：把 hop1 从旧树换到现尖导出树 `D:/moodle/_qoder_cmdr_backend_live_0350`（对应 `213750423d9bdc10672c0488f76f8b0963d88765`）。仪表 `live_checks/cmdr_hop1_swap_r1.py` 自己写收据 `live_checks/cmdr_hop1_swap_receipt.json`：换之前先认出监听 :8693 的 pid 并核对它的命令行含 `uvicorn`（不含就 REFUSE，我不杀不认识的进程），换完读运行中的 `/openapi.json` 得 `openapi_paths` 与两格字段可见性
+- 做了：换完立刻用真浏览器重走五屏（`今天/行程/地图/Copilot/我的`），console 无错。今天屏的可见文本从 460 降到 397 字符（两个数分别取自换代前那次的 `evidence/cmdr-walk-21375042-0350/walkthrough_attribution.json` blob `d74e556a468e450a6b9a8a6c4e154f71ec47ac3f` 与重启后这次 `live_checks/cmdr_walkthrough_r2.json` 的 `steps[].body_chars`）——屏变短与"广州"消失是同一件事：数据被抹，不是代码坏了
+- 故意不做：**我不写这个库**。没有备份的情况下我再写一次就是不可逆的第二次破坏。恢复场景的活归需要它的人：谁要用广州场景验收，谁自己建具名场景并把建场命令写进交件（我已把这条发给三条会话（其中一条同时领 ORD-0369 与 ORD-0386，另两条是 ORD-0382 与 ORD-0384），含"不要为了恢复再跑 reset"这一句）
+- 时间关系说清：reset 发生在 03:55:04，我的重启在 03:59:26 —— 不是我造成的；但我当时正在看屏，所以由我先报，且我不拿"不是我干的"当免罪
+
+**排队中的 ORD-0389（根因修）**
+
+`demo/reset` 现在只要 `CITYNEXUS_DEMO_MODE=true` 就能删全库。要改成：即使 demo 模式开着，也必须带一个具名 token 才执行，默认拒绝并回一个具名 403；共享预览端口上再没有"一发请求抹平所有人"的能力。等第一个空车道就派，不新开窗口（本机物理内存只剩 1.4 GB）。
+
+**另两处待收的口**
+
+- ORD-B 的疑点已回问车道：运行中的 `/openapi.json` 里 `provider_key` 在、`coordinate_system` 不在，成因查到 `backend/app/main.py:1711` 那条 discover 路由没有 `response_model=`。响应体里到底有没有这两格，我至今没有读数（我 `GET /api/v1/journeys` 猜错了路由名，收到"方法不允许"就没再猜）。车道回答回来我再定 ORD-B 是 CLOSED 还是 PARTIAL。
+- ORD-0380 后续 5 笔、ORD-0369 的 `review/` 读数件、门 r5 仪表件、ORD-0381 文案阶梯、ORD-A 底图署名、ORD-B 来源两格 —— 六笔已落，尖现在是 `213750423d9bdc10672c0488f76f8b0963d88765`，手机正在服务这一代（换代尺 GREEN + 探针五格 true，收据 `evidence/cmdr-swap-21375042-0348/deploy_r1.json` blob `ff9c74847d88390f75648da13030b4c9c5b937e2`）
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### ORD-0371 追加单交付（lane S4-ast-taint，污点尺）— r7b1：属性位的展开写法认得，但只在同一折叠里有溯源标签时认
 
 新文件名 `ui_exposure_taint_ast_r7b1.cjs` = b6716d9a3c67dafc72fef501bfaff101c84e918a （139058 B；已发布两代在本机逐字节复测未动：r7 = 3272a4336f60ddd183875000c11e5b5ead6be2be 、r7b = d3f66ce9fecd0790981a4fcdeb5e36b1c0fd10f2；发布字节拉回本地跑自测，槽臂 19/19 全绿 cf09a9b85d576c639836f61bfa12b24f40efa5ec ）。范围就你点的那一条：`{...(cond ? { "data-cnx-field": expr } : {})}` 与 `{...obj}`（后者仅当能静态解析到唯一、未被重新赋值的局部字面对象）现在算锚；双触发保留——同一个 `<details>` 内必须有溯源标签，否则照旧不配对 9487239c9c7d74fb0a6def6d7419d40b189c86ce 。
