@@ -1,0 +1,667 @@
+{
+ "ruler_under_test": "Q43_r5",
+ "ruler_pinned_against": "Q43_r4e",
+ "part_a_rows": [
+  {
+   "row": "http_status_radius_40_vs_16",
+   "kind": "context",
+   "token": "401",
+   "text_a": "答话里有 HTTP 这个字，然后另起一句隔了十七个字符才写 401",
+   "text_b": "界面上写了一个词，然后另起一句隔了十七个字符才写 401",
+   "r4e_a": {
+    "fired": false,
+    "claims": 0,
+    "findings_total": 0,
+    "exempt": {
+     "HTTP_STATUS": 1
+    }
+   },
+   "r4e_b": {
+    "fired": true,
+    "claims": 1,
+    "findings_total": 1,
+    "exempt": {}
+   },
+   "r5_a": {
+    "fired": true,
+    "claims": 1,
+    "findings_total": 1,
+    "exempt": {},
+    "class": null
+   },
+   "r5_b": {
+    "fired": true,
+    "claims": 1,
+    "findings_total": 1,
+    "exempt": {},
+    "class": null
+   }
+  },
+  {
+   "row": "one_char_of_an_answer_word_rescues_the_number",
+   "kind": "context",
+   "token": "401",
+   "text_a": "答话里有一个词，然后另起一句隔了十七个字符才写 401",
+   "text_b": "界面上写了一个词，然后另起一句隔了十七个字符才写 401",
+   "r4e_a": {
+    "fired": false,
+    "claims": 0,
+    "findings_total": 0,
+    "exempt": {
+     "HTTP_STATUS": 1
+    }
+   },
+   "r4e_b": {
+    "fired": true,
+    "claims": 1,
+    "findings_total": 1,
+    "exempt": {}
+   },
+   "r5_a": {
+    "fired": true,
+    "claims": 1,
+    "findings_total": 1,
+    "exempt": {},
+    "class": null
+   },
+   "r5_b": {
+    "fired": true,
+    "claims": 1,
+    "findings_total": 1,
+    "exempt": {},
+    "class": null
+   }
+  },
+  {
+   "row": "dimension_blessed_by_a_far_receipt",
+   "kind": "context",
+   "token": "212",
+   "text_a": "留白实测 212px 与那条声明等量",
+   "text_b": "留白实测 212px 与那条声明等量，这段散文只负责把收据推到判据窗口之外，它不含任何数字，也不含任何可取的坐标形状，这",
+   "r4e_a": {
+    "fired": true,
+    "claims": 1,
+    "findings_total": 1,
+    "exempt": {}
+   },
+   "r4e_b": {
+    "fired": false,
+    "claims": 0,
+    "findings_total": 0,
+    "exempt": {
+     "DIMENSION": 1
+    }
+   },
+   "r5_a": {
+    "fired": true,
+    "claims": 1,
+    "findings_total": 1,
+    "exempt": {},
+    "class": null
+   },
+   "r5_b": {
+    "fired": true,
+    "claims": 1,
+    "findings_total": 1,
+    "exempt": {},
+    "class": null
+   }
+  },
+  {
+   "row": "discipline_zero_blessed_by_a_far_receipt",
+   "kind": "context",
+   "token": "0 次",
+   "text_a": "本块边界：权威线 0 次移动",
+   "text_b": "本块边界：权威线 0 次移动，这段散文只负责把收据推到判据窗口之外，它不含任何数字，也不含任何可取的坐标形状，这段散文只",
+   "r4e_a": {
+    "fired": true,
+    "claims": 1,
+    "findings_total": 1,
+    "exempt": {}
+   },
+   "r4e_b": {
+    "fired": false,
+    "claims": 0,
+    "findings_total": 0,
+    "exempt": {
+     "DISCIPLINE_ZERO": 1
+    }
+   },
+   "r5_a": {
+    "fired": true,
+    "claims": 1,
+    "findings_total": 1,
+    "exempt": {},
+    "class": null
+   },
+   "r5_b": {
+    "fired": true,
+    "claims": 1,
+    "findings_total": 1,
+    "exempt": {},
+    "class": null
+   }
+  },
+  {
+   "row": "octet_rescued_by_https_containing_http",
+   "kind": "context",
+   "token": "127",
+   "text_a": "HTTPS_PROXY 指向 127.0.0.1 这个地址",
+   "text_b": "有人报 127.0.0.1 这个地址",
+   "r4e_a": {
+    "fired": false,
+    "claims": 0,
+    "findings_total": 0,
+    "exempt": {
+     "HTTP_STATUS": 1
+    }
+   },
+   "r4e_b": {
+    "fired": true,
+    "claims": 1,
+    "findings_total": 1,
+    "exempt": {}
+   },
+   "r5_a": {
+    "fired": false,
+    "claims": 0,
+    "findings_total": 0,
+    "exempt": {
+     "ADDRESS_PART": 1
+    },
+    "class": "ADDRESS_PART"
+   },
+   "r5_b": {
+    "fired": false,
+    "claims": 0,
+    "findings_total": 0,
+    "exempt": {
+     "ADDRESS_PART": 1
+    },
+    "class": "ADDRESS_PART"
+   }
+  },
+  {
+   "row": "port_of_a_socket_refused_as_a_bare_number",
+   "kind": "misclass",
+   "token": "7892",
+   "text_a": "HTTPS_PROXY 指向 127.0.0.1:7892，端口上无进程",
+   "text_b": "HTTPS_PROXY 指向 127.0.0.1:7892，端口上无进程",
+   "r4e_a": {
+    "fired": true,
+    "claims": 1,
+    "findings_total": 1,
+    "exempt": {
+     "HTTP_STATUS": 1
+    }
+   },
+   "r4e_b": {
+    "fired": true,
+    "claims": 1,
+    "findings_total": 1,
+    "exempt": {
+     "HTTP_STATUS": 1
+    }
+   },
+   "r5_a": {
+    "fired": false,
+    "claims": 0,
+    "findings_total": 0,
+    "exempt": {
+     "ADDRESS_PART": 1,
+     "PORT": 1
+    },
+    "class": "PORT"
+   },
+   "r5_b": {
+    "fired": false,
+    "claims": 0,
+    "findings_total": 0,
+    "exempt": {
+     "ADDRESS_PART": 1,
+     "PORT": 1
+    },
+    "class": "PORT"
+   }
+  },
+  {
+   "row": "number_with_a_unit_counted_twice",
+   "kind": "misclass",
+   "token": "1392 条",
+   "text_a": "the ledger holds 1392 条 and nothing else",
+   "text_b": "the ledger holds 1392 条 and nothing else",
+   "r4e_a": {
+    "fired": true,
+    "claims": 2,
+    "findings_total": 2,
+    "exempt": {}
+   },
+   "r4e_b": {
+    "fired": true,
+    "claims": 2,
+    "findings_total": 2,
+    "exempt": {}
+   },
+   "r5_a": {
+    "fired": true,
+    "claims": 1,
+    "findings_total": 1,
+    "exempt": {},
+    "class": null
+   },
+   "r5_b": {
+    "fired": true,
+    "claims": 1,
+    "findings_total": 1,
+    "exempt": {},
+    "class": null
+   }
+  },
+  {
+   "row": "first_path_line_not_read_as_a_coordinate",
+   "kind": "misclass",
+   "token": "215",
+   "text_a": "复现步骤落在 tools/chain_self_heal.mjs:215-224，共 3 处 命中",
+   "text_b": "复现步骤落在 tools/chain_self_heal.mjs:215-224，共 3 处 命中",
+   "r4e_a": {
+    "fired": true,
+    "claims": 2,
+    "findings_total": 2,
+    "exempt": {}
+   },
+   "r4e_b": {
+    "fired": true,
+    "claims": 2,
+    "findings_total": 2,
+    "exempt": {}
+   },
+   "r5_a": {
+    "fired": false,
+    "claims": 1,
+    "findings_total": 0,
+    "exempt": {
+     "LINE_REF": 1
+    },
+    "class": "LINE_REF"
+   },
+   "r5_b": {
+    "fired": false,
+    "claims": 1,
+    "findings_total": 0,
+    "exempt": {
+     "LINE_REF": 1
+    },
+    "class": "LINE_REF"
+   }
+  }
+ ],
+ "part_b_real_blocks": [
+  {
+   "block": "n2_1824.md",
+   "read_from": "D:\\moodle\\_qoder_ledger_inbox\\n2_1824.md",
+   "bytes": 4650,
+   "r4e": {
+    "verdict": "Q43_GATE_RED",
+    "exit": 3,
+    "claims": 21,
+    "exempt": {
+     "HTTP_STATUS": 3,
+     "PORT": 3,
+     "DIMENSION": 2
+    },
+    "findings": [
+     {
+      "token": "401",
+      "line": 1,
+      "code": "NUMBER_WITHOUT_COORDINATE"
+     },
+     {
+      "token": "401",
+      "line": 8,
+      "code": "NUMBER_WITHOUT_COORDINATE"
+     },
+     {
+      "token": "401",
+      "line": 13,
+      "code": "NUMBER_WITHOUT_COORDINATE"
+     }
+    ]
+   },
+   "r5": {
+    "verdict": "Q43_GATE_RED",
+    "exit": 3,
+    "claims": 19,
+    "exempt": {
+     "HTTP_STATUS": 2,
+     "PORT": 5,
+     "ADDRESS_PART": 1
+    },
+    "findings": [
+     {
+      "token": "401",
+      "line": 1,
+      "code": "NUMBER_WITHOUT_COORDINATE"
+     },
+     {
+      "token": "401",
+      "line": 8,
+      "code": "NUMBER_WITHOUT_COORDINATE"
+     },
+     {
+      "token": "401",
+      "line": 13,
+      "code": "NUMBER_WITHOUT_COORDINATE"
+     }
+    ]
+   },
+   "newly_refused": [],
+   "newly_cleared": []
+  },
+  {
+   "block": "n2_0105.md",
+   "read_from": "D:\\moodle\\_qoder_ledger_inbox\\n2_0105.md",
+   "bytes": 4627,
+   "r4e": {
+    "verdict": "Q43_GATE_RED",
+    "exit": 3,
+    "claims": 8,
+    "exempt": {
+     "PORT": 1
+    },
+    "findings": [
+     {
+      "token": "7897",
+      "line": 11,
+      "code": "NUMBER_WITHOUT_COORDINATE"
+     },
+     {
+      "token": "138",
+      "line": 11,
+      "code": "NUMBER_WITHOUT_COORDINATE"
+     },
+     {
+      "token": "35752",
+      "line": 12,
+      "code": "NUMBER_WITHOUT_COORDINATE"
+     },
+     {
+      "token": "7892",
+      "line": 14,
+      "code": "NUMBER_WITHOUT_COORDINATE"
+     },
+     {
+      "token": "7897",
+      "line": 14,
+      "code": "NUMBER_WITHOUT_COORDINATE"
+     },
+     {
+      "token": "000",
+      "line": 18,
+      "code": "NUMBER_WITHOUT_COORDINATE"
+     }
+    ]
+   },
+   "r5": {
+    "verdict": "Q43_GATE_RED",
+    "exit": 3,
+    "claims": 8,
+    "exempt": {
+     "PORT": 1
+    },
+    "findings": [
+     {
+      "token": "7897",
+      "line": 11,
+      "code": "NUMBER_WITHOUT_COORDINATE"
+     },
+     {
+      "token": "138",
+      "line": 11,
+      "code": "NUMBER_WITHOUT_COORDINATE"
+     },
+     {
+      "token": "35752",
+      "line": 12,
+      "code": "NUMBER_WITHOUT_COORDINATE"
+     },
+     {
+      "token": "7892",
+      "line": 14,
+      "code": "NUMBER_WITHOUT_COORDINATE"
+     },
+     {
+      "token": "7897",
+      "line": 14,
+      "code": "NUMBER_WITHOUT_COORDINATE"
+     },
+     {
+      "token": "000",
+      "line": 18,
+      "code": "NUMBER_WITHOUT_COORDINATE"
+     }
+    ]
+   },
+   "newly_refused": [],
+   "newly_cleared": []
+  },
+  {
+   "block": "n2_0101.md",
+   "read_from": "D:\\moodle\\_qoder_ledger_inbox\\n2_0101.md",
+   "bytes": 6720,
+   "r4e": {
+    "verdict": "Q43_GATE_RED",
+    "exit": 3,
+    "claims": 17,
+    "exempt": {
+     "PORT": 5,
+     "LINE_REF": 1,
+     "DIMENSION": 1
+    },
+    "findings": [
+     {
+      "token": "1392",
+      "line": 28,
+      "code": "NUMBER_WITHOUT_COORDINATE"
+     },
+     {
+      "token": "1367",
+      "line": 28,
+      "code": "NUMBER_WITHOUT_COORDINATE"
+     },
+     {
+      "token": "1392 条",
+      "line": 28,
+      "code": "NUMBER_WITHOUT_COORDINATE"
+     }
+    ]
+   },
+   "r5": {
+    "verdict": "Q43_GATE_RED",
+    "exit": 3,
+    "claims": 11,
+    "exempt": {
+     "ADDRESS_PART": 1,
+     "PORT": 5,
+     "LINE_REF": 6
+    },
+    "findings": [
+     {
+      "token": "1392 条",
+      "line": 28,
+      "code": "NUMBER_WITHOUT_COORDINATE"
+     },
+     {
+      "token": "1367",
+      "line": 28,
+      "code": "NUMBER_WITHOUT_COORDINATE"
+     }
+    ]
+   },
+   "newly_refused": [],
+   "newly_cleared": [
+    "1392"
+   ]
+  },
+  {
+   "block": "n2_1759.md",
+   "read_from": "D:\\moodle\\_qoder_ledger_inbox\\n2_1759.md",
+   "bytes": 5550,
+   "r4e": {
+    "verdict": "Q43_GATE_RED",
+    "exit": 3,
+    "claims": 14,
+    "exempt": {
+     "DIMENSION": 3,
+     "HTTP_STATUS": 1,
+     "DISCIPLINE_ZERO": 1
+    },
+    "findings": [
+     {
+      "token": "7892",
+      "line": 21,
+      "code": "NUMBER_WITHOUT_COORDINATE"
+     },
+     {
+      "token": "127",
+      "line": 21,
+      "code": "NUMBER_WITHOUT_COORDINATE"
+     },
+     {
+      "token": "7897",
+      "line": 21,
+      "code": "NUMBER_WITHOUT_COORDINATE"
+     },
+     {
+      "token": "35752",
+      "line": 21,
+      "code": "NUMBER_WITHOUT_COORDINATE"
+     },
+     {
+      "token": "443",
+      "line": 21,
+      "code": "NUMBER_WITHOUT_COORDINATE"
+     },
+     {
+      "token": "7892",
+      "line": 21,
+      "code": "NUMBER_WITHOUT_COORDINATE"
+     },
+     {
+      "token": "7897",
+      "line": 21,
+      "code": "NUMBER_WITHOUT_COORDINATE"
+     }
+    ]
+   },
+   "r5": {
+    "verdict": "Q43_GATE_RED",
+    "exit": 3,
+    "claims": 13,
+    "exempt": {
+     "DIMENSION": 1,
+     "DISCIPLINE_ZERO": 1,
+     "ADDRESS_PART": 2,
+     "PORT": 2
+    },
+    "findings": [
+     {
+      "token": "52 秒",
+      "line": 8,
+      "code": "NUMBER_WITHOUT_COORDINATE"
+     },
+     {
+      "token": "2148",
+      "line": 9,
+      "code": "NUMBER_WITHOUT_COORDINATE"
+     },
+     {
+      "token": "35752",
+      "line": 21,
+      "code": "NUMBER_WITHOUT_COORDINATE"
+     },
+     {
+      "token": "443",
+      "line": 21,
+      "code": "NUMBER_WITHOUT_COORDINATE"
+     },
+     {
+      "token": "7892",
+      "line": 21,
+      "code": "NUMBER_WITHOUT_COORDINATE"
+     },
+     {
+      "token": "7897",
+      "line": 21,
+      "code": "NUMBER_WITHOUT_COORDINATE"
+     }
+    ]
+   },
+   "newly_refused": [
+    "2148",
+    "52 秒"
+   ],
+   "newly_cleared": [
+    "127"
+   ]
+  },
+  {
+   "block": "n2_0116.md",
+   "read_from": "D:\\moodle\\_qoder_ledger_inbox\\_processed\\n2_0116.md.inserted_013411",
+   "bytes": 4555,
+   "r4e": {
+    "verdict": "Q43_GATE_GREEN",
+    "exit": 0,
+    "claims": 1,
+    "exempt": {
+     "HTTP_STATUS": 1,
+     "DIMENSION": 1
+    },
+    "findings": []
+   },
+   "r5": {
+    "verdict": "Q43_GATE_GREEN",
+    "exit": 0,
+    "claims": 2,
+    "exempt": {
+     "IDENTIFIER_PART": 1
+    },
+    "findings": []
+   },
+   "newly_refused": [],
+   "newly_cleared": []
+  }
+ ],
+ "part_b_summary": {
+  "refused_by_r4e_and_accepted_by_r5": [],
+  "accepted_by_r4e_and_refused_by_r5": []
+ },
+ "checks": {
+  "r4e_moves_http_status_radius_40_vs_16": true,
+  "r5_stable_http_status_radius_40_vs_16": true,
+  "r5_class_http_status_radius_40_vs_16": true,
+  "r4e_moves_one_char_of_an_answer_word_rescues_the_number": true,
+  "r5_stable_one_char_of_an_answer_word_rescues_the_number": true,
+  "r5_class_one_char_of_an_answer_word_rescues_the_number": true,
+  "r4e_moves_dimension_blessed_by_a_far_receipt": true,
+  "r5_stable_dimension_blessed_by_a_far_receipt": true,
+  "r5_class_dimension_blessed_by_a_far_receipt": true,
+  "r4e_moves_discipline_zero_blessed_by_a_far_receipt": true,
+  "r5_stable_discipline_zero_blessed_by_a_far_receipt": true,
+  "r5_class_discipline_zero_blessed_by_a_far_receipt": true,
+  "r4e_moves_octet_rescued_by_https_containing_http": true,
+  "r5_stable_octet_rescued_by_https_containing_http": true,
+  "r5_class_octet_rescued_by_https_containing_http": true,
+  "r4e_refuses_port_of_a_socket_refused_as_a_bare_number": true,
+  "r5_class_port_of_a_socket_refused_as_a_bare_number": true,
+  "r4e_refuses_number_with_a_unit_counted_twice": true,
+  "r5_class_number_with_a_unit_counted_twice": true,
+  "r4e_refuses_first_path_line_not_read_as_a_coordinate": true,
+  "r5_class_first_path_line_not_read_as_a_coordinate": true,
+  "r5_one_token_one_occurrence": true,
+  "r5_one_token_one_claim_one_finding": true,
+  "r4e_two_claims_two_findings_reproduced": true,
+  "no_block_turns_green": true,
+  "every_named_block_still_refused": true
+ },
+ "overall_pass": true
+}
