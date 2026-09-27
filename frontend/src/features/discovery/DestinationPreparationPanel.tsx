@@ -371,7 +371,7 @@ export function DestinationPreparationPanel({ journeyId, onOpenPlan, initialQuer
             <ul className="prep-providers" data-testid="prep-providers">
               {capability.provider_status.map((item, index) => (
                 <li key={`${item.provider ?? index}`}>
-                  {item.provider ?? "provider"} · {item.status ?? ""}
+                  {item.provider ?? t("discovery.providerUnnamed")} · {item.status ?? ""}
                   {item.message ? ` · ${item.message}` : ""}
                 </li>
               ))}
