@@ -3,12 +3,14 @@ import {
   closestCenter,
   DndContext,
   type DragEndEvent,
+  KeyboardSensor,
   PointerSensor,
   useSensor,
   useSensors,
 } from "@dnd-kit/core";
 import {
   arrayMove,
+  sortableKeyboardCoordinates,
   SortableContext,
   useSortable,
   verticalListSortingStrategy,
@@ -29,7 +31,13 @@ function SortableActivity({ activity, label, index, protectedActivity }: { activ
 
 export function SortableActivityList({ activities, protectedFirst, onDraft, labels }: { activities: string[]; protectedFirst: boolean; onDraft?: (activities: string[]) => void; labels?: Record<string, string> }) {
   const [items, setItems] = useState<string[]>(activities);
-  const sensors = useSensors(useSensor(PointerSensor, { activationConstraint: { distance: 6 } }));
+  /* dnd-kit's own `aria-describedby` on every row already tells a keyboard or screen-reader user to
+     "press the space bar … use the arrow keys". With only a PointerSensor registered that promise
+     was false: the row focused and nothing moved (ORD-0369, measured on a 390x844 viewport). */
+  const sensors = useSensors(
+    useSensor(PointerSensor, { activationConstraint: { distance: 6 } }),
+    useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates }),
+  );
   useEffect(() => {
     setItems(activities);
   }, [activities]);
