@@ -317,12 +317,22 @@ test("Y4_every_item_prints_endpoint_field_and_anchor_and_the_anchor_resolves —
        be this panel. The global Copilot dock floats over the lower right of Today. */
     const occ = await page.evaluate((idx) => {
       const it = (document.querySelectorAll('[data-testid="pretrip-item"]') as NodeListOf<HTMLElement>)[idx];
-      if (!it) return { error: "item vanished", covered_points: ["unmeasured"] };
+      if (!it) return { error: "item vanished", covered_points: ["unmeasured"], overflowing_lines: ["unmeasured"] };
       const code = it.querySelector('[data-cnx-field="basis_field"]') as HTMLElement | null;
-      if (!code) return { error: "no basis element", covered_points: ["unmeasured"] };
+      if (!code) return { error: "no basis element", covered_points: ["unmeasured"], overflowing_lines: ["unmeasured"] };
       code.scrollIntoView({ block: "center" });
       const r = code.getBoundingClientRect();
       const panel = document.querySelector(".cn-pretrip");
+      /* `elementsFromPoint` cannot see text that overflows its own box -- the glyphs sit outside the
+         element, so nothing is on top of them and the sample comes back clean while the line is clipped.
+         Measure the overflow directly, on every prose line in the item. */
+      const overflowing: string[] = [];
+      for (const sel of [".cn-pretrip-title", ".cn-pretrip-why", ".cn-pretrip-basis", ".cn-pretrip-anchor"]) {
+        for (const el of Array.from(it.querySelectorAll(sel))) {
+          const over = el.scrollWidth - el.clientWidth;
+          if (over > 1) overflowing.push(`${sel}:+${over}px`);
+        }
+      }
       const covered: string[] = [];
       for (const f of [0.08, 0.3, 0.5, 0.7, 0.92]) {
         const x = r.left + r.width * f;
@@ -331,7 +341,8 @@ test("Y4_every_item_prints_endpoint_field_and_anchor_and_the_anchor_resolves —
         const mine = !!top && (top === panel || (!!panel && panel.contains(top)));
         if (!mine) covered.push(`${x.toFixed(0)},${y.toFixed(0)}:${top ? top.tagName.toLowerCase() + "." + String(top.className).slice(0, 36) : "none"}`);
       }
-      return { rect: { x: Math.round(r.x), y: Math.round(r.y), w: Math.round(r.width) }, covered_points: covered };
+      return { rect: { x: Math.round(r.x), y: Math.round(r.y), w: Math.round(r.width) },
+               covered_points: covered, overflowing_lines: overflowing };
     }, i);
     perItem.push({ key, endpoint, field, anchor, anchor_line_content: anchorLine,
                    anchor_resolves: anchorResolves, occlusion: occ });
@@ -345,6 +356,7 @@ test("Y4_every_item_prints_endpoint_field_and_anchor_and_the_anchor_resolves —
     expect(it.anchor, node(arm, `item ${it.key} prints no resolvable anchor: ${JSON.stringify(it.anchor)}`)).toMatch(/^contracts\/openapi\.yaml:\d+$/);
     expect(it.anchor_resolves, node(arm, `item ${it.key} prints ${it.anchor} but that line does not declare \`${String(it.field).split(".").pop()}\`; the line reads ${JSON.stringify(it.anchor_line_content)}`)).toBe(true);
     expect((it.occlusion as any).covered_points ?? ["unmeasured"], node(arm, `item ${it.key}'s basis line is covered at the reading position by ${JSON.stringify((it.occlusion as any).covered_points)}`)).toEqual([]);
+    expect((it.occlusion as any).overflowing_lines ?? ["unmeasured"], node(arm, `item ${it.key} has prose clipped by its own box: ${JSON.stringify((it.occlusion as any).overflowing_lines)}`)).toEqual([]);
   }
   await page.getByTestId("pretrip-checklist").scrollIntoViewIfNeeded();
   await page.waitForTimeout(250);
