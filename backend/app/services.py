@@ -417,6 +417,9 @@ def place_schema(item: Place) -> PlaceSchema:
         city_code=item.city_code,
         location={"latitude": item.latitude, "longitude": item.longitude},
         tags=json.loads(item.tags_json),
+        provider_key=item.provider_key,
+        coordinate_system=item.coordinate_system,
+        source_coordinate_system=item.source_coordinate_system,
     )
 
 

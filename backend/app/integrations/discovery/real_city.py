@@ -1206,6 +1206,11 @@ def materialize_candidates(
                 "cost_evidence": cost_evidence,
                 "id": place.id,
                 "materialized_place_id": place.id,
+                # Read off the row that now holds these coordinates, not off the
+                # candidate: the stored system and the system the provider handed
+                # us are different claims and only the row knows both.
+                "coordinate_system": place.coordinate_system,
+                "source_coordinate_system": place.source_coordinate_system,
             }
         )
     session.flush()
