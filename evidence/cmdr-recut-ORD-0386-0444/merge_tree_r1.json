@@ -1,0 +1,215 @@
+{
+ "order": "ORD-0386",
+ "line": "origin/mirror/integration-frontend-apple-pass1",
+ "tip": "e022093dcc198367d779fc92692c6ccfc6824a2a",
+ "cand": "db875cadf226c7ec13eb9504899bfdb441afa41f",
+ "merge_base": "090c048f220a3089506f565929ceda1511315a09",
+ "commits_tip_ahead_of_base": 26,
+ "commits_cand_ahead_of_base": 4,
+ "merge_tree_rc": 0,
+ "changed_files": [
+  "backend/app/schemas.py",
+  "backend/app/services.py",
+  "backend/tests/test_qoder_ord0386_plan_version_history.py",
+  "contracts/openapi.yaml",
+  "frontend/e2e/qoder-ord0386-plan-version-history.spec.ts",
+  "frontend/playwright.ord0386-Q.config.ts",
+  "frontend/src/app/V8Experience.tsx",
+  "frontend/src/features/studio/PlanVersionHistoryPanel.tsx",
+  "frontend/src/features/studio/planVersionHistoryCopy.ts",
+  "frontend/src/styles.css",
+  "review/ord0386-plan-version-history/READINGS.md",
+  "review/ord0386-plan-version-history/api_ts_drift.txt",
+  "review/ord0386-plan-version-history/collect_candidate.txt",
+  "review/ord0386-plan-version-history/collect_control_head.txt",
+  "review/ord0386-plan-version-history/gate-report-final.json",
+  "review/ord0386-plan-version-history/mutant_M6_no_list_padding.json",
+  "review/ord0386-plan-version-history/mutant_kill_table.json",
+  "review/ord0386-plan-version-history/probe21_last_row_clear.png",
+  "review/ord0386-plan-version-history/probe21_rows.png",
+  "review/ord0386-plan-version-history/reachability.json",
+  "review/ord0386-plan-version-history/render_final.json",
+  "review/ord0386-plan-version-history/scene9_rows.png",
+  "review/ord0386-plan-version-history/scene9_viewport.png",
+  "review/ord0386-plan-version-history/studio_footer.json"
+ ],
+ "files": [
+  {
+   "path": "backend/app/schemas.py",
+   "cand_blob": "4d8e661e198de8aa1c5f9089d886d5ce84752828",
+   "merged_blob": "4c20ba9ec7a4d8970c99e22c20180db1ea1ae971",
+   "identical": false,
+   "cand_changed_the_file": true
+  },
+  {
+   "path": "backend/app/services.py",
+   "cand_blob": "8affc179d9a5c50da19da65b10d9140073d29ee8",
+   "merged_blob": "3a31edab9198a17ab0215d64cb426c9c0dc746aa",
+   "identical": false,
+   "cand_changed_the_file": true
+  },
+  {
+   "path": "backend/tests/test_qoder_ord0386_plan_version_history.py",
+   "cand_blob": "33cc13bed491b1d5286509d2d00d7ca5b73f0deb",
+   "merged_blob": "33cc13bed491b1d5286509d2d00d7ca5b73f0deb",
+   "identical": true,
+   "cand_changed_the_file": true
+  },
+  {
+   "path": "contracts/openapi.yaml",
+   "cand_blob": "c4300fbc66f52fa2b8424a25e4aa03ce947bc2f2",
+   "merged_blob": "28590a13efd85d6c52f5214d7ef94ab3e25ec83c",
+   "identical": false,
+   "cand_changed_the_file": true
+  },
+  {
+   "path": "frontend/e2e/qoder-ord0386-plan-version-history.spec.ts",
+   "cand_blob": "d6055f9a64f7b5e7a6250d61eaa41d92b1b9b915",
+   "merged_blob": "d6055f9a64f7b5e7a6250d61eaa41d92b1b9b915",
+   "identical": true,
+   "cand_changed_the_file": true
+  },
+  {
+   "path": "frontend/playwright.ord0386-Q.config.ts",
+   "cand_blob": "5ab27749d31740cd15c2c2eb54aa9e03b1ad7221",
+   "merged_blob": "5ab27749d31740cd15c2c2eb54aa9e03b1ad7221",
+   "identical": true,
+   "cand_changed_the_file": true
+  },
+  {
+   "path": "frontend/src/app/V8Experience.tsx",
+   "cand_blob": "a2d82407abbae7b8316d58bd92f7a260fa8b804b",
+   "merged_blob": "1e6cc16a714e71b0045105a285db53a91b4022c9",
+   "identical": false,
+   "cand_changed_the_file": true
+  },
+  {
+   "path": "frontend/src/features/studio/PlanVersionHistoryPanel.tsx",
+   "cand_blob": "bc5ce660217719017c369d73da43f4f9a7a7e238",
+   "merged_blob": "bc5ce660217719017c369d73da43f4f9a7a7e238",
+   "identical": true,
+   "cand_changed_the_file": true
+  },
+  {
+   "path": "frontend/src/features/studio/planVersionHistoryCopy.ts",
+   "cand_blob": "a6b585b62b5d9328a76cd411f09c245c20cb8338",
+   "merged_blob": "a6b585b62b5d9328a76cd411f09c245c20cb8338",
+   "identical": true,
+   "cand_changed_the_file": true
+  },
+  {
+   "path": "frontend/src/styles.css",
+   "cand_blob": "02a4579ba5ca8bc311b8a497780dc400d03f47aa",
+   "merged_blob": "9cf7b2e69e1317b9e09fb499835ce055024ad601",
+   "identical": false,
+   "cand_changed_the_file": true
+  },
+  {
+   "path": "review/ord0386-plan-version-history/READINGS.md",
+   "cand_blob": "20c748aab9cfda960caa4ef928f5f6a2904db473",
+   "merged_blob": "20c748aab9cfda960caa4ef928f5f6a2904db473",
+   "identical": true,
+   "cand_changed_the_file": true
+  },
+  {
+   "path": "review/ord0386-plan-version-history/api_ts_drift.txt",
+   "cand_blob": "a8c9a9067b86dd333379411c403d89f611ddbd53",
+   "merged_blob": "a8c9a9067b86dd333379411c403d89f611ddbd53",
+   "identical": true,
+   "cand_changed_the_file": true
+  },
+  {
+   "path": "review/ord0386-plan-version-history/collect_candidate.txt",
+   "cand_blob": "25f521b443cf24f60cf9f022ad3c9942d57ff069",
+   "merged_blob": "25f521b443cf24f60cf9f022ad3c9942d57ff069",
+   "identical": true,
+   "cand_changed_the_file": true
+  },
+  {
+   "path": "review/ord0386-plan-version-history/collect_control_head.txt",
+   "cand_blob": "0347cee24b3da4dd4839cc4ea169632b23191f71",
+   "merged_blob": "0347cee24b3da4dd4839cc4ea169632b23191f71",
+   "identical": true,
+   "cand_changed_the_file": true
+  },
+  {
+   "path": "review/ord0386-plan-version-history/gate-report-final.json",
+   "cand_blob": "d39847614d359588b5d969ca1b2fc6861b57019c",
+   "merged_blob": "d39847614d359588b5d969ca1b2fc6861b57019c",
+   "identical": true,
+   "cand_changed_the_file": true
+  },
+  {
+   "path": "review/ord0386-plan-version-history/mutant_M6_no_list_padding.json",
+   "cand_blob": "022475b9ea08d49fa0dedcf11c7d3942fcf78a62",
+   "merged_blob": "022475b9ea08d49fa0dedcf11c7d3942fcf78a62",
+   "identical": true,
+   "cand_changed_the_file": true
+  },
+  {
+   "path": "review/ord0386-plan-version-history/mutant_kill_table.json",
+   "cand_blob": "d2997b673dac8f1c6a38843027ab3964f0120329",
+   "merged_blob": "d2997b673dac8f1c6a38843027ab3964f0120329",
+   "identical": true,
+   "cand_changed_the_file": true
+  },
+  {
+   "path": "review/ord0386-plan-version-history/probe21_last_row_clear.png",
+   "cand_blob": "384fec56fef85ac252e2a2d90d258493494a95a8",
+   "merged_blob": "384fec56fef85ac252e2a2d90d258493494a95a8",
+   "identical": true,
+   "cand_changed_the_file": true
+  },
+  {
+   "path": "review/ord0386-plan-version-history/probe21_rows.png",
+   "cand_blob": "3399ccbf9a9252777bf59d1e3f6c63f9f279c986",
+   "merged_blob": "3399ccbf9a9252777bf59d1e3f6c63f9f279c986",
+   "identical": true,
+   "cand_changed_the_file": true
+  },
+  {
+   "path": "review/ord0386-plan-version-history/reachability.json",
+   "cand_blob": "a274adc2dbea20d284a5e705c93bae37812da8b2",
+   "merged_blob": "a274adc2dbea20d284a5e705c93bae37812da8b2",
+   "identical": true,
+   "cand_changed_the_file": true
+  },
+  {
+   "path": "review/ord0386-plan-version-history/render_final.json",
+   "cand_blob": "d8976fb62bf36ce7f0f086b8a26d74f81dadd7a6",
+   "merged_blob": "d8976fb62bf36ce7f0f086b8a26d74f81dadd7a6",
+   "identical": true,
+   "cand_changed_the_file": true
+  },
+  {
+   "path": "review/ord0386-plan-version-history/scene9_rows.png",
+   "cand_blob": "ee5e0aafd1ba90bddb341f91daa50ba25f3c1753",
+   "merged_blob": "ee5e0aafd1ba90bddb341f91daa50ba25f3c1753",
+   "identical": true,
+   "cand_changed_the_file": true
+  },
+  {
+   "path": "review/ord0386-plan-version-history/scene9_viewport.png",
+   "cand_blob": "f44b23f0fce93d0c7cd67117665c27031f426bf6",
+   "merged_blob": "f44b23f0fce93d0c7cd67117665c27031f426bf6",
+   "identical": true,
+   "cand_changed_the_file": true
+  },
+  {
+   "path": "review/ord0386-plan-version-history/studio_footer.json",
+   "cand_blob": "fb286b48d7fb94275c9a8f11a10b464dbaf9781f",
+   "merged_blob": "fb286b48d7fb94275c9a8f11a10b464dbaf9781f",
+   "identical": true,
+   "cand_changed_the_file": true
+  }
+ ],
+ "merged_tree": "4f3fc4bda5004353a19ba88754f71c209329bf93",
+ "auto_merged_files": [
+  "backend/app/schemas.py",
+  "backend/app/services.py",
+  "contracts/openapi.yaml",
+  "frontend/src/app/V8Experience.tsx",
+  "frontend/src/styles.css"
+ ],
+ "verdict": "REFUSED_AUTO_MERGED"
+}
