@@ -1,0 +1,167 @@
+{
+ "tip": "090c048f220a3089506f565929ceda1511315a09",
+ "served_asset": "/assets/index-D-tB4NCX.js",
+ "hits": [
+  [
+   "agent.advancedDetail",
+   "Advanced details"
+  ],
+  [
+   "agent.aiInterpreted",
+   "Understood by the AI assistant"
+  ],
+  [
+   "agent.approvalFailed",
+   "Couldn't approve."
+  ],
+  [
+   "agent.authorityBoundary",
+   "What I can and cannot do"
+  ],
+  [
+   "agent.boundarySub",
+   "我可以给出建议，但任何花钱或改动已确认预订的操作，都会先等你确认。"
+  ],
+  [
+   "agent.citynexus",
+   "CityNexus Copilot"
+  ],
+  [
+   "agent.citynexus",
+   "CityNexus Copilot"
+  ],
+  [
+   "agent.defaultMission",
+   "两晚酒店控制在 700 以内，避免长距离步行。下雨就坐公交或打车。帮我处理方案。"
+  ],
+  [
+   "agent.explainAgain",
+   "Keep explanation"
+  ],
+  [
+   "agent.fallbackBadge",
+   "Answered offline"
+  ],
+  [
+   "agent.fallbackInterpreted",
+   "Understood with offline rules"
+  ],
+  [
+   "agent.handlePlan",
+   "Handle this plan"
+  ],
+  [
+   "agent.inputPlaceholder",
+   "可以问为什么这样安排、试算一个假设、找地点，或报告正在发生的中断…"
+  ],
+  [
+   "agent.intentDisruption",
+   "Live disruption"
+  ],
+  [
+   "agent.intentExplain",
+   "Explain plan"
+  ],
+  [
+   "agent.intentPersonalAssistance",
+   "Personal assistance"
+  ],
+  [
+   "agent.intentPreference",
+   "Preference change"
+  ],
+  [
+   "agent.intentReplan",
+   "Replan request"
+  ],
+  [
+   "agent.intentUnknown",
+   "I need one more detail"
+  ],
+  [
+   "agent.intentVerifyFact",
+   "Verify evidence"
+  ],
+  [
+   "agent.kicker",
+   "Ask me anything about your trip"
+  ],
+  [
+   "agent.kicker",
+   "随时问关于这趟行程的任何事"
+  ],
+  [
+   "agent.lede",
+   "可以提问、试算改动，或告诉我发生了什么。任何会影响行程的改动都会先说明再应用，你已确认的预订始终受保护。"
+  ],
+  [
+   "agent.notPreserved",
+   "would be violated"
+  ],
+  [
+   "agent.openDiscovery",
+   "Open discovery"
+  ],
+  [
+   "agent.openPreferences",
+   "Review preferences"
+  ],
+  [
+   "agent.protectedCount",
+   "{n} protected commitments"
+  ],
+  [
+   "agent.protectedSummary",
+   "Arrival / departure anchors · no payment initiated"
+  ],
+  [
+   "agent.protectedSummary",
+   "到达 / 出发锚点 · 未发起支付"
+  ],
+  [
+   "agent.recentUnderstanding",
+   "What I understood"
+  ],
+  [
+   "agent.requestReplan",
+   "Open replan review"
+  ],
+  [
+   "agent.semanticBoundary",
+   "How this was understood"
+  ],
+  [
+   "agent.sendError",
+   "Copilot could not reach CityNexus."
+  ],
+  [
+   "agent.sendError",
+   "Copilot 暂时没能连上 CityNexus。"
+  ],
+  [
+   "agent.simulationOnly",
+   "SIMULATION ONLY"
+  ],
+  [
+   "agent.stayMobility",
+   "Stay + mobility intent"
+  ],
+  [
+   "agent.staySummary",
+   "Hotel total ≤ CNY 700 · low walking · rain → transit or taxi"
+  ],
+  [
+   "agent.staySummary",
+   "酒店总计 ≤ ¥700 · 少步行 · 下雨 → 公交或出租车"
+  ],
+  [
+   "agent.stopFailed",
+   "Couldn't stop."
+  ],
+  [
+   "agent.suggestionDiscover",
+   "Find an indoor place nearby"
+  ]
+ ],
+ "misses": []
+}
