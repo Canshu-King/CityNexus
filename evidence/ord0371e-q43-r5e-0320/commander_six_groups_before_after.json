@@ -1,0 +1,1429 @@
+{
+ "door_ruler_lines": {
+  "ledger_insert_after.py:28": "g = subprocess.run([sys.executable, \"claim_coordinate_check_r4e.py\", \"--text\", block_file,",
+  "ledger_inbox_apply_r1.py:123": "g = subprocess.run([sys.executable, os.path.join(HERE, \"claim_coordinate_check_r4c.py\"),"
+ },
+ "groups": [
+  {
+   "group": "HTTP_STATUS",
+   "samples": [
+    {
+     "block": "n2_0144.md",
+     "line": 14,
+     "token": "401",
+     "r4e": {
+      "refused": true,
+      "why": "no class matched"
+     },
+     "third": {
+      "refused": false,
+      "why": null
+     },
+     "third_class": "IDENTIFIER_PART",
+     "third_verdicts_in_block": [
+      "IDENTIFIER_PART"
+     ]
+    },
+    {
+     "block": "n2_0144.md",
+     "line": 15,
+     "token": "401",
+     "r4e": {
+      "refused": true,
+      "why": "no class matched"
+     },
+     "third": {
+      "refused": false,
+      "why": null
+     },
+     "third_class": "IDENTIFIER_PART",
+     "third_verdicts_in_block": [
+      "IDENTIFIER_PART"
+     ]
+    },
+    {
+     "block": "n2_1824.md",
+     "line": 1,
+     "token": "401",
+     "r4e": {
+      "refused": true,
+      "why": "no class matched"
+     },
+     "third": {
+      "refused": false,
+      "why": null
+     },
+     "third_class": "HTTP_STATUS",
+     "third_verdicts_in_block": [
+      "HTTP_STATUS"
+     ]
+    },
+    {
+     "block": "n2_1824.md",
+     "line": 8,
+     "token": "401",
+     "r4e": {
+      "refused": true,
+      "why": "no class matched"
+     },
+     "third": {
+      "refused": false,
+      "why": null
+     },
+     "third_class": "HTTP_STATUS",
+     "third_verdicts_in_block": [
+      "HTTP_STATUS"
+     ]
+    },
+    {
+     "block": "n2_1824.md",
+     "line": 13,
+     "token": "401",
+     "r4e": {
+      "refused": true,
+      "why": "no class matched"
+     },
+     "third": {
+      "refused": false,
+      "why": null
+     },
+     "third_class": "HTTP_STATUS",
+     "third_verdicts_in_block": [
+      "HTTP_STATUS"
+     ]
+    },
+    {
+     "block": "n2_0152.md",
+     "line": 3,
+     "token": "401",
+     "r4e": {
+      "refused": true,
+      "why": "no class matched"
+     },
+     "third": {
+      "refused": false,
+      "why": null
+     },
+     "third_class": "HTTP_STATUS",
+     "third_verdicts_in_block": [
+      "HTTP_STATUS"
+     ]
+    }
+   ]
+  },
+  {
+   "group": "PORT",
+   "samples": [
+    {
+     "block": "n2_0105.md",
+     "line": 14,
+     "token": "7892",
+     "r4e": {
+      "refused": true,
+      "why": "no class matched"
+     },
+     "third": {
+      "refused": false,
+      "why": null
+     },
+     "third_class": "IDENTIFIER_PART",
+     "third_verdicts_in_block": [
+      "IDENTIFIER_PART"
+     ]
+    },
+    {
+     "block": "n2_0105.md",
+     "line": 14,
+     "token": "7897",
+     "r4e": {
+      "refused": true,
+      "why": "no class matched"
+     },
+     "third": {
+      "refused": false,
+      "why": null
+     },
+     "third_class": "IDENTIFIER_PART",
+     "third_verdicts_in_block": [
+      "IDENTIFIER_PART"
+     ]
+    },
+    {
+     "block": "n2_0105.md",
+     "line": 11,
+     "token": "7897",
+     "r4e": {
+      "refused": true,
+      "why": "no class matched"
+     },
+     "third": {
+      "refused": false,
+      "why": null
+     },
+     "third_class": "IDENTIFIER_PART",
+     "third_verdicts_in_block": [
+      "IDENTIFIER_PART"
+     ]
+    },
+    {
+     "block": "n2_1759.md",
+     "line": 21,
+     "token": "35752",
+     "r4e": {
+      "refused": true,
+      "why": "no class matched"
+     },
+     "third": {
+      "refused": false,
+      "why": null
+     },
+     "third_class": "IDENTIFIER_PART",
+     "third_verdicts_in_block": [
+      "IDENTIFIER_PART"
+     ]
+    },
+    {
+     "block": "n2_1759.md",
+     "line": 21,
+     "token": "443",
+     "r4e": {
+      "refused": true,
+      "why": "no class matched"
+     },
+     "third": {
+      "refused": false,
+      "why": null
+     },
+     "third_class": "PORT",
+     "third_verdicts_in_block": [
+      "PORT"
+     ]
+    },
+    {
+     "block": "n2_1759.md",
+     "line": 21,
+     "token": "7892",
+     "r4e": {
+      "refused": true,
+      "why": "no class matched"
+     },
+     "third": {
+      "refused": false,
+      "why": null
+     },
+     "third_class": "PORT",
+     "third_verdicts_in_block": [
+      "PORT"
+     ]
+    },
+    {
+     "block": "n2_0101.md",
+     "line": 28,
+     "token": "1392",
+     "r4e": {
+      "refused": true,
+      "why": "no class matched"
+     },
+     "third": {
+      "refused": false,
+      "why": null
+     },
+     "third_class": "not judged",
+     "third_verdicts_in_block": []
+    },
+    {
+     "block": "n2_0101.md",
+     "line": 28,
+     "token": "1367",
+     "r4e": {
+      "refused": true,
+      "why": "no class matched"
+     },
+     "third": {
+      "refused": false,
+      "why": null
+     },
+     "third_class": "not judged",
+     "third_verdicts_in_block": []
+    }
+   ]
+  },
+  {
+   "group": "中文量词计数（他不要求放宽）",
+   "samples": [
+    {
+     "block": "n2_0156.md",
+     "line": 1,
+     "token": "6 条",
+     "r4e": {
+      "refused": true,
+      "why": "no class matched"
+     },
+     "third": {
+      "refused": true,
+      "why": "no class matched"
+     },
+     "third_class": null,
+     "third_verdicts_in_block": [
+      "None"
+     ]
+    },
+    {
+     "block": "n2_0156.md",
+     "line": 8,
+     "token": "6 条",
+     "r4e": {
+      "refused": true,
+      "why": "no class matched"
+     },
+     "third": {
+      "refused": true,
+      "why": "no class matched"
+     },
+     "third_class": null,
+     "third_verdicts_in_block": [
+      "None"
+     ]
+    },
+    {
+     "block": "n2_0219.md",
+     "line": 8,
+     "token": "6 条",
+     "r4e": {
+      "refused": true,
+      "why": "no class matched"
+     },
+     "third": {
+      "refused": true,
+      "why": "no class matched"
+     },
+     "third_class": null,
+     "third_verdicts_in_block": [
+      "None"
+     ]
+    },
+    {
+     "block": "n2_0213.md",
+     "line": 11,
+     "token": "6 条",
+     "r4e": {
+      "refused": true,
+      "why": "no class matched"
+     },
+     "third": {
+      "refused": true,
+      "why": "no class matched"
+     },
+     "third_class": null,
+     "third_verdicts_in_block": [
+      "None"
+     ]
+    },
+    {
+     "block": "n2_0213.md",
+     "line": 14,
+     "token": "0 条",
+     "r4e": {
+      "refused": true,
+      "why": "no class matched"
+     },
+     "third": {
+      "refused": true,
+      "why": "no class matched"
+     },
+     "third_class": null,
+     "third_verdicts_in_block": [
+      "None"
+     ]
+    },
+    {
+     "block": "n2_0224.md",
+     "line": 16,
+     "token": "3 条",
+     "r4e": {
+      "refused": true,
+      "why": "no class matched"
+     },
+     "third": {
+      "refused": true,
+      "why": "no class matched"
+     },
+     "third_class": null,
+     "third_verdicts_in_block": [
+      "None"
+     ]
+    }
+   ]
+  },
+  {
+   "group": "单号",
+   "samples": [
+    {
+     "block": "n2_0200.md",
+     "line": 21,
+     "token": "0373",
+     "r4e": {
+      "refused": true,
+      "why": "no class matched"
+     },
+     "third": {
+      "refused": false,
+      "why": null
+     },
+     "third_class": "IDENTIFIER_PART",
+     "third_verdicts_in_block": [
+      "IDENTIFIER_PART"
+     ]
+    },
+    {
+     "block": "n2_0224.md",
+     "line": 9,
+     "token": "0376",
+     "r4e": {
+      "refused": true,
+      "why": "no class matched"
+     },
+     "third": {
+      "refused": false,
+      "why": null
+     },
+     "third_class": "IDENTIFIER_PART",
+     "third_verdicts_in_block": [
+      "IDENTIFIER_PART"
+     ]
+    },
+    {
+     "block": "n2_0224.md",
+     "line": 12,
+     "token": "0376",
+     "r4e": {
+      "refused": true,
+      "why": "no class matched"
+     },
+     "third": {
+      "refused": false,
+      "why": null
+     },
+     "third_class": "IDENTIFIER_PART",
+     "third_verdicts_in_block": [
+      "IDENTIFIER_PART"
+     ]
+    },
+    {
+     "block": "n2_0224.md",
+     "line": 16,
+     "token": "0374",
+     "r4e": {
+      "refused": true,
+      "why": "no class matched"
+     },
+     "third": {
+      "refused": false,
+      "why": null
+     },
+     "third_class": "IDENTIFIER_PART",
+     "third_verdicts_in_block": [
+      "IDENTIFIER_PART"
+     ]
+    }
+   ]
+  },
+  {
+   "group": "引用形（瓦片号 / 带分隔符的数）",
+   "samples": [
+    {
+     "block": "n2_0213.md",
+     "line": 15,
+     "token": "889",
+     "r4e": {
+      "refused": true,
+      "why": "no class matched"
+     },
+     "third": {
+      "refused": false,
+      "why": null
+     },
+     "third_class": "IDENTIFIER_PART",
+     "third_verdicts_in_block": [
+      "IDENTIFIER_PART"
+     ]
+    },
+    {
+     "block": "n2_0213.md",
+     "line": 15,
+     "token": "1668",
+     "r4e": {
+      "refused": true,
+      "why": "no class matched"
+     },
+     "third": {
+      "refused": false,
+      "why": null
+     },
+     "third_class": "IDENTIFIER_PART",
+     "third_verdicts_in_block": [
+      "IDENTIFIER_PART"
+     ]
+    },
+    {
+     "block": "n2_0228.md",
+     "line": 9,
+     "token": "0,258,522,44",
+     "r4e": {
+      "refused": true,
+      "why": "no class matched"
+     },
+     "third": {
+      "refused": false,
+      "why": null
+     },
+     "third_class": "IDENTIFIER_PART",
+     "third_verdicts_in_block": [
+      "IDENTIFIER_PART"
+     ]
+    }
+   ]
+  },
+  {
+   "group": "其余量词主张",
+   "samples": [
+    {
+     "block": "qoder-0370_0130.md",
+     "line": 119,
+     "token": "875 个",
+     "r4e": {
+      "refused": true,
+      "why": "no class matched"
+     },
+     "third": {
+      "refused": true,
+      "why": "no class matched"
+     },
+     "third_class": null,
+     "third_verdicts_in_block": [
+      "None"
+     ]
+    },
+    {
+     "block": "qoder-0370_0130.md",
+     "line": 120,
+     "token": "81 个",
+     "r4e": {
+      "refused": true,
+      "why": "no class matched"
+     },
+     "third": {
+      "refused": true,
+      "why": "no class matched"
+     },
+     "third_class": null,
+     "third_verdicts_in_block": [
+      "None"
+     ]
+    },
+    {
+     "block": "qoder-0370_0130.md",
+     "line": 159,
+     "token": "38 处",
+     "r4e": {
+      "refused": true,
+      "why": "no class matched"
+     },
+     "third": {
+      "refused": true,
+      "why": "no class matched"
+     },
+     "third_class": null,
+     "third_verdicts_in_block": [
+      "None"
+     ]
+    },
+    {
+     "block": "qoder-0370_0148.md",
+     "line": 36,
+     "token": "4 个",
+     "r4e": {
+      "refused": true,
+      "why": "no class matched"
+     },
+     "third": {
+      "refused": true,
+      "why": "no class matched"
+     },
+     "third_class": null,
+     "third_verdicts_in_block": [
+      "None"
+     ]
+    },
+    {
+     "block": "qoder-0370_0148.md",
+     "line": 81,
+     "token": "0 处",
+     "r4e": {
+      "refused": true,
+      "why": "no class matched"
+     },
+     "third": {
+      "refused": true,
+      "why": "no class matched"
+     },
+     "third_class": null,
+     "third_verdicts_in_block": [
+      "DISCIPLINE_ZERO",
+      "None"
+     ]
+    },
+    {
+     "block": "qoder-0370_0148.md",
+     "line": 82,
+     "token": "77 处",
+     "r4e": {
+      "refused": true,
+      "why": "no class matched"
+     },
+     "third": {
+      "refused": true,
+      "why": "no class matched"
+     },
+     "third_class": null,
+     "third_verdicts_in_block": [
+      "None"
+     ]
+    }
+   ]
+  }
+ ],
+ "block_state": [
+  {
+   "block": "n2_0101.md",
+   "read_from": "D:\\moodle\\_qoder_ledger_inbox\\n2_0101.md",
+   "bytes": 6720,
+   "r4e": {
+    "verdict": "Q43_GATE_RED",
+    "exit": 3,
+    "claims": 17,
+    "exempt": {
+     "PORT": 5,
+     "LINE_REF": 1,
+     "DIMENSION": 1
+    },
+    "refused": [
+     [
+      "1367",
+      28
+     ],
+     [
+      "1392",
+      28
+     ],
+     [
+      "1392 条",
+      28
+     ]
+    ]
+   },
+   "third": {
+    "verdict": "Q43_GATE_GREEN",
+    "exit": 0,
+    "claims": 13,
+    "exempt": {
+     "PORT": 6,
+     "ADDRESS_PART": 1,
+     "LINE_REF": 6,
+     "HTTP_STATUS": 1
+    },
+    "refused": []
+   }
+  },
+  {
+   "block": "n2_0105.md",
+   "read_from": "D:\\moodle\\_qoder_ledger_inbox\\n2_0105.md",
+   "bytes": 4627,
+   "r4e": {
+    "verdict": "Q43_GATE_RED",
+    "exit": 3,
+    "claims": 8,
+    "exempt": {
+     "PORT": 1
+    },
+    "refused": [
+     [
+      "000",
+      18
+     ],
+     [
+      "138",
+      11
+     ],
+     [
+      "35752",
+      12
+     ],
+     [
+      "7892",
+      14
+     ],
+     [
+      "7897",
+      11
+     ],
+     [
+      "7897",
+      14
+     ]
+    ]
+   },
+   "third": {
+    "verdict": "Q43_GATE_RED",
+    "exit": 3,
+    "claims": 2,
+    "exempt": {
+     "IDENTIFIER_PART": 7
+    },
+    "refused": [
+     [
+      "138",
+      11
+     ]
+    ]
+   }
+  },
+  {
+   "block": "n2_0144.md",
+   "read_from": "D:\\moodle\\_qoder_ledger_inbox\\n2_0144.md",
+   "bytes": 4253,
+   "r4e": {
+    "verdict": "Q43_GATE_RED",
+    "exit": 3,
+    "claims": 5,
+    "exempt": {
+     "HTTP_STATUS": 1
+    },
+    "refused": [
+     [
+      "0.4 GB",
+      15
+     ],
+     [
+      "401",
+      14
+     ],
+     [
+      "401",
+      15
+     ]
+    ]
+   },
+   "third": {
+    "verdict": "Q43_GATE_RED",
+    "exit": 3,
+    "claims": 2,
+    "exempt": {
+     "HTTP_STATUS": 1,
+     "IDENTIFIER_PART": 3
+    },
+    "refused": [
+     [
+      "0.4 GB",
+      15
+     ]
+    ]
+   }
+  },
+  {
+   "block": "n2_0152.md",
+   "read_from": "D:\\moodle\\_qoder_ledger_inbox\\n2_0152.md",
+   "bytes": 3181,
+   "r4e": {
+    "verdict": "Q43_GATE_RED",
+    "exit": 3,
+    "claims": 5,
+    "exempt": {
+     "PORT": 5
+    },
+    "refused": [
+     [
+      "0.4 GB",
+      15
+     ],
+     [
+      "401",
+      3
+     ],
+     [
+      "6 条",
+      16
+     ]
+    ]
+   },
+   "third": {
+    "verdict": "Q43_GATE_RED",
+    "exit": 3,
+    "claims": 3,
+    "exempt": {
+     "PORT": 5,
+     "HTTP_STATUS": 1,
+     "LINE_REF": 1
+    },
+    "refused": [
+     [
+      "0.4 GB",
+      15
+     ],
+     [
+      "6 条",
+      16
+     ]
+    ]
+   }
+  },
+  {
+   "block": "n2_0156.md",
+   "read_from": "D:\\moodle\\_qoder_ledger_inbox\\n2_0156.md",
+   "bytes": 3300,
+   "r4e": {
+    "verdict": "Q43_GATE_RED",
+    "exit": 3,
+    "claims": 18,
+    "exempt": {
+     "PORT": 1,
+     "HTTP_STATUS": 1
+    },
+    "refused": [
+     [
+      "4781",
+      3
+     ],
+     [
+      "6 条",
+      1
+     ],
+     [
+      "6 条",
+      8
+     ],
+     [
+      "6 条",
+      10
+     ],
+     [
+      "6 条",
+      21
+     ]
+    ]
+   },
+   "third": {
+    "verdict": "Q43_GATE_RED",
+    "exit": 3,
+    "claims": 5,
+    "exempt": {
+     "PORT": 2,
+     "IDENTIFIER_PART": 13
+    },
+    "refused": [
+     [
+      "6 条",
+      1
+     ],
+     [
+      "6 条",
+      8
+     ],
+     [
+      "6 条",
+      10
+     ],
+     [
+      "6 条",
+      21
+     ]
+    ]
+   }
+  },
+  {
+   "block": "n2_0200.md",
+   "read_from": "D:\\moodle\\_qoder_ledger_inbox\\n2_0200.md",
+   "bytes": 3935,
+   "r4e": {
+    "verdict": "Q43_GATE_RED",
+    "exit": 3,
+    "claims": 5,
+    "exempt": {
+     "PORT": 2
+    },
+    "refused": [
+     [
+      "0 处",
+      12
+     ],
+     [
+      "0373",
+      21
+     ]
+    ]
+   },
+   "third": {
+    "verdict": "Q43_GATE_RED",
+    "exit": 3,
+    "claims": 4,
+    "exempt": {
+     "PORT": 2,
+     "IDENTIFIER_PART": 1
+    },
+    "refused": [
+     [
+      "0 处",
+      12
+     ]
+    ]
+   }
+  },
+  {
+   "block": "n2_0213.md",
+   "read_from": "D:\\moodle\\_qoder_ledger_inbox\\n2_0213.md",
+   "bytes": 3475,
+   "r4e": {
+    "verdict": "Q43_GATE_RED",
+    "exit": 3,
+    "claims": 23,
+    "exempt": {
+     "PORT": 2
+    },
+    "refused": [
+     [
+      "0 条",
+      14
+     ],
+     [
+      "1667",
+      15
+     ],
+     [
+      "1668",
+      15
+     ],
+     [
+      "1669",
+      15
+     ],
+     [
+      "6 条",
+      11
+     ],
+     [
+      "6 条",
+      14
+     ],
+     [
+      "888",
+      15
+     ],
+     [
+      "889",
+      15
+     ]
+    ]
+   },
+   "third": {
+    "verdict": "Q43_GATE_RED",
+    "exit": 3,
+    "claims": 10,
+    "exempt": {
+     "IDENTIFIER_PART": 13,
+     "PORT": 2
+    },
+    "refused": [
+     [
+      "0 条",
+      14
+     ],
+     [
+      "6 条",
+      11
+     ],
+     [
+      "6 条",
+      14
+     ]
+    ]
+   }
+  },
+  {
+   "block": "n2_0219.md",
+   "read_from": "D:\\moodle\\_qoder_ledger_inbox\\n2_0219.md",
+   "bytes": 3333,
+   "r4e": {
+    "verdict": "Q43_GATE_RED",
+    "exit": 3,
+    "claims": 3,
+    "exempt": {
+     "PORT": 3
+    },
+    "refused": [
+     [
+      "6 条",
+      8
+     ]
+    ]
+   },
+   "third": {
+    "verdict": "Q43_GATE_RED",
+    "exit": 3,
+    "claims": 3,
+    "exempt": {
+     "PORT": 3
+    },
+    "refused": [
+     [
+      "6 条",
+      8
+     ]
+    ]
+   }
+  },
+  {
+   "block": "n2_0224.md",
+   "read_from": "D:\\moodle\\_qoder_ledger_inbox\\n2_0224.md",
+   "bytes": 2882,
+   "r4e": {
+    "verdict": "Q43_GATE_RED",
+    "exit": 3,
+    "claims": 5,
+    "exempt": {
+     "PORT": 1,
+     "HTTP_STATUS": 1
+    },
+    "refused": [
+     [
+      "0374",
+      16
+     ],
+     [
+      "0376",
+      9
+     ],
+     [
+      "0376",
+      12
+     ],
+     [
+      "3 条",
+      16
+     ],
+     [
+      "4781",
+      8
+     ]
+    ]
+   },
+   "third": {
+    "verdict": "Q43_GATE_RED",
+    "exit": 3,
+    "claims": 1,
+    "exempt": {
+     "PORT": 1,
+     "IDENTIFIER_PART": 5
+    },
+    "refused": [
+     [
+      "3 条",
+      16
+     ]
+    ]
+   }
+  },
+  {
+   "block": "n2_0228.md",
+   "read_from": "D:\\moodle\\_qoder_ledger_inbox\\n2_0228.md",
+   "bytes": 3059,
+   "r4e": {
+    "verdict": "Q43_GATE_RED",
+    "exit": 3,
+    "claims": 7,
+    "exempt": {
+     "PORT": 1
+    },
+    "refused": [
+     [
+      "0 个",
+      8
+     ],
+     [
+      "0,145,522,44",
+      7
+     ],
+     [
+      "0,258,522,44",
+      9
+     ],
+     [
+      "0,75,522,43",
+      8
+     ],
+     [
+      "1 个",
+      7
+     ],
+     [
+      "2 个",
+      8
+     ],
+     [
+      "206",
+      7
+     ]
+    ]
+   },
+   "third": {
+    "verdict": "Q43_GATE_RED",
+    "exit": 3,
+    "claims": 4,
+    "exempt": {
+     "PORT": 1,
+     "IDENTIFIER_PART": 3
+    },
+    "refused": [
+     [
+      "0 个",
+      8
+     ],
+     [
+      "1 个",
+      7
+     ],
+     [
+      "2 个",
+      8
+     ],
+     [
+      "206",
+      7
+     ]
+    ]
+   }
+  },
+  {
+   "block": "n2_1759.md",
+   "read_from": "D:\\moodle\\_qoder_ledger_inbox\\n2_1759.md",
+   "bytes": 5550,
+   "r4e": {
+    "verdict": "Q43_GATE_RED",
+    "exit": 3,
+    "claims": 14,
+    "exempt": {
+     "DIMENSION": 3,
+     "HTTP_STATUS": 1,
+     "DISCIPLINE_ZERO": 1
+    },
+    "refused": [
+     [
+      "127",
+      21
+     ],
+     [
+      "35752",
+      21
+     ],
+     [
+      "443",
+      21
+     ],
+     [
+      "7892",
+      21
+     ],
+     [
+      "7897",
+      21
+     ]
+    ]
+   },
+   "third": {
+    "verdict": "Q43_GATE_RED",
+    "exit": 3,
+    "claims": 18,
+    "exempt": {
+     "DIMENSION": 1,
+     "DISCIPLINE_ZERO": 1,
+     "ADDRESS_PART": 2,
+     "PORT": 5,
+     "IDENTIFIER_PART": 1
+    },
+    "refused": [
+     [
+      "2148",
+      9
+     ],
+     [
+      "52 秒",
+      8
+     ]
+    ]
+   }
+  },
+  {
+   "block": "n2_1824.md",
+   "read_from": "D:\\moodle\\_qoder_ledger_inbox\\n2_1824.md",
+   "bytes": 4650,
+   "r4e": {
+    "verdict": "Q43_GATE_RED",
+    "exit": 3,
+    "claims": 21,
+    "exempt": {
+     "HTTP_STATUS": 3,
+     "PORT": 3,
+     "DIMENSION": 2
+    },
+    "refused": [
+     [
+      "401",
+      1
+     ],
+     [
+      "401",
+      8
+     ],
+     [
+      "401",
+      13
+     ]
+    ]
+   },
+   "third": {
+    "verdict": "Q43_GATE_GREEN",
+    "exit": 0,
+    "claims": 13,
+    "exempt": {
+     "HTTP_STATUS": 9,
+     "IDENTIFIER_PART": 3,
+     "ADDRESS_PART": 1,
+     "PORT": 2
+    },
+    "refused": []
+   }
+  },
+  {
+   "block": "qoder-0370_0130.md",
+   "read_from": "D:\\moodle\\_qoder_ledger_inbox\\qoder-0370_0130.md",
+   "bytes": 13921,
+   "r4e": {
+    "verdict": "Q43_GATE_RED",
+    "exit": 3,
+    "claims": 126,
+    "exempt": {
+     "YEAR": 1,
+     "LINE_REF": 21,
+     "PORT": 10,
+     "DIMENSION": 2
+    },
+    "refused": [
+     [
+      "3 处",
+      71
+     ],
+     [
+      "3 处",
+      72
+     ],
+     [
+      "3 处",
+      73
+     ],
+     [
+      "38 处",
+      159
+     ],
+     [
+      "4 处",
+      70
+     ],
+     [
+      "409",
+      149
+     ],
+     [
+      "617",
+      160
+     ],
+     [
+      "629",
+      160
+     ],
+     [
+      "81 个",
+      120
+     ],
+     [
+      "875",
+      119
+     ],
+     [
+      "875",
+      152
+     ],
+     [
+      "875 个",
+      119
+     ],
+     [
+      "875 个",
+      152
+     ]
+    ]
+   },
+   "third": {
+    "verdict": "Q43_GATE_RED",
+    "exit": 3,
+    "claims": 81,
+    "exempt": {
+     "YEAR": 1,
+     "IDENTIFIER_PART": 3,
+     "LINE_REF": 56,
+     "PORT": 12,
+     "HTTP_STATUS": 3
+    },
+    "refused": [
+     [
+      "27G",
+      151
+     ],
+     [
+      "28G",
+      151
+     ],
+     [
+      "3 处",
+      71
+     ],
+     [
+      "3 处",
+      72
+     ],
+     [
+      "3 处",
+      73
+     ],
+     [
+      "38 处",
+      159
+     ],
+     [
+      "4 处",
+      70
+     ],
+     [
+      "409M",
+      149
+     ],
+     [
+      "617",
+      160
+     ],
+     [
+      "629",
+      160
+     ],
+     [
+      "81 个",
+      120
+     ],
+     [
+      "875 个",
+      119
+     ],
+     [
+      "875 个",
+      152
+     ]
+    ]
+   }
+  },
+  {
+   "block": "qoder-0370_0148.md",
+   "read_from": "D:\\moodle\\_qoder_ledger_inbox\\qoder-0370_0148.md",
+   "bytes": 8630,
+   "r4e": {
+    "verdict": "Q43_GATE_RED",
+    "exit": 3,
+    "claims": 32,
+    "exempt": {
+     "YEAR": 5,
+     "LINE_REF": 4,
+     "DISCIPLINE_ZERO": 1
+    },
+    "refused": [
+     [
+      "0 处",
+      81
+     ],
+     [
+      "0148",
+      1
+     ],
+     [
+      "129",
+      34
+     ],
+     [
+      "129 个",
+      34
+     ],
+     [
+      "174",
+      49
+     ],
+     [
+      "4 个",
+      36
+     ],
+     [
+      "77 处",
+      81
+     ],
+     [
+      "77 处",
+      82
+     ]
+    ]
+   },
+   "third": {
+    "verdict": "Q43_GATE_RED",
+    "exit": 3,
+    "claims": 17,
+    "exempt": {
+     "YEAR": 5,
+     "IDENTIFIER_PART": 3,
+     "DISCIPLINE_ZERO": 1,
+     "LINE_REF": 14,
+     "HTTP_STATUS": 1
+    },
+    "refused": [
+     [
+      "0 处",
+      81
+     ],
+     [
+      "129 个",
+      34
+     ],
+     [
+      "174",
+      49
+     ],
+     [
+      "4 个",
+      36
+     ],
+     [
+      "77 处",
+      81
+     ],
+     [
+      "77 处",
+      82
+     ]
+    ]
+   }
+  }
+ ]
+}
