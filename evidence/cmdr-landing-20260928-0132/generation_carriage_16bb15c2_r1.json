@@ -1,0 +1,27 @@
+{
+ "rule": "GENERATION_TRANSFER_BY_CITED_BLOB_EQUALITY_V1",
+ "question": "does the tools-only landing 16bb15c2 require a new phone generation?",
+ "compared": {
+  "previous_tip": "53a00d5e6552006ebfb7cc03d109cf4b675450dc",
+  "new_tip": "16bb15c2f0c9bbf863872c545762102e7a4dba1b"
+ },
+ "frontend_tree": {
+  "at_previous": "1d1e8b54de5105091e0ae2a32b43c52436a37315",
+  "at_new": "1d1e8b54de5105091e0ae2a32b43c52436a37315"
+ },
+ "frontend_src_tree": {
+  "at_previous": "e4bb01cc72da766a18b6bdae74941cb3b5febc02",
+  "at_new": "e4bb01cc72da766a18b6bdae74941cb3b5febc02"
+ },
+ "backend_tree": {
+  "at_previous": "c9cd8922ce04b2a30bebaabc7afad891c18c99e1",
+  "at_new": "c9cd8922ce04b2a30bebaabc7afad891c18c99e1"
+ },
+ "tools_tree": {
+  "at_previous": "818d77e8319d61d0c99c16a6bc16c7b790ca91e5",
+  "at_new": "290ce83a891df5398764ac18bbe23d13e0e13a48"
+ },
+ "verdict_computed": "NO_SWAP_REQUIRED",
+ "served_generation_on_phone": "53a00d5e6552006ebfb7cc03d109cf4b675450dc",
+ "note": "Only the tools/ subtree moved. A swap would redeploy byte-identical frontend bytes, and a duration/reading taken on the served generation therefore still transfers for the frontend surface while it must NOT be claimed for tools behaviour."
+}
