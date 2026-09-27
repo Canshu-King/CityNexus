@@ -1,0 +1,123 @@
+{
+ "schema": "CNX_CMDR_LANDING_PREFLIGHT_V1",
+ "lane": "commander 494abfd7",
+ "at_local": "2026-09-28T00:29:21+0800",
+ "mode": "LAND",
+ "authoritative_line": "mirror/integration-frontend-apple-pass1",
+ "tip_re_read_from_github_before": "baaa07117003320292d76a5f0c383952071b7364",
+ "candidate_ref": "refs/heads/cmdr/land-ord0367-recut",
+ "candidate_tip": "4ef864cfa49b805e3d41b7f079f5fb4184ccec3d",
+ "genealogy": {
+  "ff_possible_rc": 0,
+  "ff_possible": true,
+  "merge_base": "baaa07117003320292d76a5f0c383952071b7364",
+  "line_only_commits": 0,
+  "candidate_only_commits": 3
+ },
+ "file_sets": {
+  "line_side_since_base": [],
+  "candidate_side_since_base": [
+   "frontend/src/design-tokens.css",
+   "frontend/src/i18n/LocaleContext.tsx",
+   "tools/cnx_copy_tiers_r1.py",
+   "tools/cnx_token_tiers_r1.py"
+  ],
+  "intersection": [],
+  "product_introduced_by_candidate": [
+   "frontend/src/design-tokens.css",
+   "frontend/src/i18n/LocaleContext.tsx"
+  ]
+ },
+ "merge_tree": {
+  "exit": 0,
+  "first_line": "cacb483db09e994f103dd222291006df6646cc3e",
+  "conflict_reported": false,
+  "stderr_head": ""
+ },
+ "gate_run": {
+  "requested": [],
+  "collect_exit": null,
+  "collected": null,
+  "test_exit": null,
+  "summary": null,
+  "export": "D:/moodle/_qoder_cmdr_ref_20260921/snap_preflight_002858",
+  "blob_equality": [
+   {
+    "path": "frontend/src/design-tokens.css",
+    "candidate_blob": "ce95d9bb0d3765f1077ae293dc049ff3ca74cdd9",
+    "export_blob": "ce95d9bb0d3765f1077ae293dc049ff3ca74cdd9",
+    "equal": true
+   },
+   {
+    "path": "frontend/src/i18n/LocaleContext.tsx",
+    "candidate_blob": "cb80ad55d7c1626a74ef73299fcadf43c4b1f094",
+    "export_blob": "cb80ad55d7c1626a74ef73299fcadf43c4b1f094",
+    "equal": true
+   },
+   {
+    "path": "tools/cnx_copy_tiers_r1.py",
+    "candidate_blob": "b9d2300773da37a098b8e8995d662face9063a9f",
+    "export_blob": "b9d2300773da37a098b8e8995d662face9063a9f",
+    "equal": true
+   },
+   {
+    "path": "tools/cnx_token_tiers_r1.py",
+    "candidate_blob": "47bf6317d4dd7fc2fbb35c6bbc35b591640ae870",
+    "export_blob": "47bf6317d4dd7fc2fbb35c6bbc35b591640ae870",
+    "equal": true
+   }
+  ],
+  "whole_suite": {
+   "collect_exit": 0,
+   "collected": 1388,
+   "interrupted": false,
+   "error_lines": [
+    "tests/test_qoder_ord0332_error_receipt.py::test_R7_the_envelope_keeps_every_field_it_already_had",
+    "tests/test_qoder_ord0332_error_receipt.py::test_R8_the_seed_is_read_off_the_real_request_not_just_the_dataclass",
+    "tests/test_solver_runtime_policy.py::test_unexpected_solver_programming_error_is_not_silently_hidden"
+   ],
+   "tail": [
+    "    _PortalFactoryType = Callable[[], AbstractContextManager[anyio.abc.BlockingPortal]]",
+    "-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html",
+    "1388 tests collected in 6.47s"
+   ],
+   "cmd": "D:/moodle/CityNexus/.venv/Scripts/python.exe -m pytest --collect-only -q tests  (cwd=<export>/backend, PYTHONPATH=<export>)"
+  },
+  "interpreter": "Python 3.12.14 (main, Aug 25 2026, 14:01:42) [MSC v.1944 64 bit (AMD64)]",
+  "exposure": {
+   "ruler_blob": "d3f66ce9fecd0790981a4fcdeb5e36b1c0fd10f2",
+   "ruler_blob_computed": null,
+   "ruler_file": "ui_exposure_taint_ast_r7b.cjs",
+   "candidate_files_in_view": 2,
+   "tip_cells": 11,
+   "cand_cells": 11,
+   "growth_by_file_and_rule": {},
+   "unpaired_added": [],
+   "added_line_exact": [],
+   "shifted_only": false,
+   "removed_count": 0,
+   "removed": [],
+   "disclosed_slip": "a same-file, same-rule relocation with equal counts reads as a shift; the AST ruler has no cell identity"
+  }
+ },
+ "problems": [],
+ "verdict": "READY_TO_LAND",
+ "landing": {
+  "http": 200,
+  "response_head": "{'ref': 'refs/heads/mirror/integration-frontend-apple-pass1', 'node_id': 'REF_kwDOUhlJJ9oAMnJlZnMvaGVhZHMvbWlycm9yL2ludGVncmF0aW9uLWZyb250ZW5kLWFwcGxlLXBhc3Mx', 'url': 'https://api.github.com/repos/Ca",
+  "tip_after": "4ef864cfa49b805e3d41b7f079f5fb4184ccec3d",
+  "branches_route": "4ef864cfa49b805e3d41b7f079f5fb4184ccec3d",
+  "both_routes_agree": true,
+  "landed": true
+ },
+ "discipline": {
+  "evidence_paths_overwritten": 0,
+  "databases_opened": 0,
+  "surfaces_started_or_stopped": 0,
+  "credential_values_printed": 0,
+  "candidate_refs_pushed_by_commander": 0
+ },
+ "claim_kind": "git_and_pytest_determined",
+ "claimed_result": null,
+ "derived_result": null
+}
