@@ -16588,6 +16588,34 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### cmdr 03:5x — 两张"仿照 App"的产品单落地：底图署名上屏（合规）与地理来源两格；另有一处我没解开的疑点已回问车道
+
+**落地（fast-forward only，两路 GitHub 路由逐字一致）**
+
+- `895ec1a11aca730041b42f2358b9607c9bb5a67e` → `78ed9424ce491dd5a81145498315b88b743d742a`（**ORD-A 底图提供方署名**，携载 `frontend/src/components/JourneyMap.tsx`、`frontend/src/components/v8/MapPanel.tsx`、`frontend/src/i18n/mapPanelCopy.ts`、`frontend/src/map-attribution.css`；车道把新文案放在**自己的新文件**里，没挤 `LocaleContext.tsx`，这是我要的形状）。收据 `evidence/cmdr-landing-ORD-A-0346/preflight_r5.json` blob `472ee687fd8159460e8a135d0a439c070c95c400`
+- → `213750423d9bdc10672c0488f76f8b0963d88765`（**ORD-B 地理来源两格**，携载 `backend/app/integrations/discovery/real_city.py`、`backend/app/schemas.py`、`backend/app/services.py`、`frontend/src/api/citynexus.ts`、`frontend/src/components/PlaceProvenance.tsx`、`frontend/src/features/discovery/RealCityDiscoveryPanel.tsx`、`frontend/src/i18n/placeProvenanceCopy.ts`）。收据 `evidence/cmdr-landing-ORD-B-0347/preflight_r5.json` blob `93086d5c45e1fc782bcae87fbb392c15a8c96767`
+- 换代到 `21375042…`：`evidence/cmdr-swap-21375042-0348/deploy_r1.json` blob `ff9c74847d88390f75648da13030b4c9c5b937e2`（F 臂真探测，整体 GREEN）；探针 `evidence/cmdr-swap-21375042-0348/phone_probe_r1.json` blob `0a68fd19f4b3e80a1c71d4542169b228f5d28d50` 五格全 true
+
+**合规这一格我用眼睛验了（不是门禁绿）**
+
+- 读数 `evidence/cmdr-walk-21375042-0350/walkthrough_attribution.json` blob `d74e556a468e450a6b9a8a6c4e154f71ec47ac3f`：390x844 真浏览器、走 :4781 正在服务的代次，屏上文本里出现"**底图数据 © OpenStreetMap 贡献者 · 瓦片服务 tile.openstreetmap.org**"，且地图屏与今天屏各出现一次；`console_errors` 为空数组
+- 截图 `evidence/cmdr-walk-21375042-0350/walk_map_attribution.png` blob `b5afdc90be06ed46f3b4dc0b1688dddf3b37ef78`：署名落在"路线上下文"卡片内，排版未破、底栏五键仍在
+- 对照：同一入口在 `090c048f…` 那一代我读过一次屏上文本，当时**没有任何提供方署名**（`evidence/cmdr-walk-090c048-0316/walkthrough_r2.json` blob `f5a260e1d69f248e896051f9bc319df4d3e0b5b7`）。这一格从"注入了但不渲染"变成"渲染出来了"。
+
+**我没解开、已回问 ORD-B 车道的疑点（不当结论发布）**
+
+- 我用 `.venv` 解释器 + 数据库副本在 `D:/moodle/_qoder_cmdr_backend_live_0350` 真起了一份 tip 后端（脚本 `evidence/cmdr-ordB-question-0355/backend_probe_r1.py` blob `e88073712cff3c8dd2ed58f96591f1c783ce6bdb`）。`backend/app/schemas.py:386` 起确实有 `provider_key` 与 `coordinate_system` 两格且故意不给默认值；但**运行中的** `/openapi.json` 里只有前者，后者 0 命中。
+- 我查到一半：`backend/app/main.py:1711` 那条 discover 路由没有 `response_model=`，所以 `Place` 不进 schema 表；TS 侧 `frontend/src/api/citynexus.ts:63` 把两格都声明成可选。
+- 剩下的分叉我不猜：要么响应体里真有值（那契约可见性要补），要么真没有（那屏上必须区分"服务器没给"与"没问过服务器"，而不是只写"未知"）。问题已带这三条坐标发给车道，回答回来我再定 ORD-B 是 CLOSED 还是 PARTIAL。
+- 我自己没验到的部分也写清：`GET /api/v1/journeys` 返回的是"方法不允许"（我路由名猜错了，没继续猜），所以**响应体里有没有这两格，我至今没有读数**。
+
+**手机链后端仍在旧树（诚实声明）**
+
+hop1 的 `:8693` 还指着 `_qoder_cmdr_backend_live_1813`（旧尖导出），而 ORD-B 动了 `backend/app`。也就是说手机现在的前端是 `213750423d9bdc10672c0488f76f8b0963d88765`、后端是上一代。我**故意没有当场重启**：ORD-0369 与 ORD-0386 两条车道正在用这条链跑真链路，重启会送给它们一个假缺陷。换后端的动作记在待办里，等下一次没有车道在链上跑验收时做，做完再回读这两格。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### cmdr 03:4x — 落地门自己有个盲区（改名/删除的文件被当成"缺失"），已修成 r5 并落 3 笔；ORD-0381 的文案阶梯上线
 
 **门的缺陷（我自己的尺），现场证据是一对收据**
