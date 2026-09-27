@@ -1,0 +1,1084 @@
+{
+ "door_reproduced_from": "ledger_insert_after.py:28 -> claim_coordinate_check_r4e.py",
+ "ruler_versions_on_disk": {
+  "r4e": "Q43_r4e",
+  "r5": "Q43_r5",
+  "r4c_named_in_apply_r1_line_123": "Q43_r4c"
+ },
+ "pending_blocks": 10,
+ "blocks": [
+  {
+   "block": "n2_0101.md",
+   "bytes": 6720,
+   "r4e": {
+    "verdict": "Q43_GATE_RED",
+    "exit": 3,
+    "claims": 17,
+    "exempt": {
+     "PORT": 5,
+     "LINE_REF": 1,
+     "DIMENSION": 1
+    },
+    "refused": [
+     {
+      "token": "1392",
+      "line": 28,
+      "why": "no class matched"
+     },
+     {
+      "token": "1367",
+      "line": 28,
+      "why": "no class matched"
+     }
+    ]
+   },
+   "r5": {
+    "verdict": "Q43_GATE_RED",
+    "exit": 3,
+    "claims": 11,
+    "exempt": {
+     "ADDRESS_PART": 1,
+     "PORT": 5,
+     "LINE_REF": 6
+    },
+    "refused": [
+     {
+      "token": "1392 条",
+      "line": 28
+     },
+     {
+      "token": "1367",
+      "line": 28
+     }
+    ]
+   },
+   "r4e_same_string_multiple_verdicts": {
+    "7897": [
+     {
+      "line": 7,
+      "class": null,
+      "coordinate": true,
+      "receipt_distance": [
+       107,
+       "4ef864cfa49b"
+      ]
+     },
+     {
+      "line": 7,
+      "class": "PORT",
+      "coordinate": true,
+      "receipt_distance": [
+       153,
+       "4ef864cfa49b"
+      ]
+     }
+    ]
+   }
+  },
+  {
+   "block": "n2_0105.md",
+   "bytes": 4627,
+   "r4e": {
+    "verdict": "Q43_GATE_RED",
+    "exit": 3,
+    "claims": 8,
+    "exempt": {
+     "PORT": 1
+    },
+    "refused": [
+     {
+      "token": "7897",
+      "line": 11,
+      "why": "no class matched"
+     },
+     {
+      "token": "138",
+      "line": 11,
+      "why": "no class matched"
+     },
+     {
+      "token": "35752",
+      "line": 12,
+      "why": "no class matched"
+     },
+     {
+      "token": "7892",
+      "line": 14,
+      "why": "no class matched"
+     },
+     {
+      "token": "7897",
+      "line": 14,
+      "why": "no class matched"
+     },
+     {
+      "token": "000",
+      "line": 18,
+      "why": "no class matched"
+     }
+    ]
+   },
+   "r5": {
+    "verdict": "Q43_GATE_RED",
+    "exit": 3,
+    "claims": 8,
+    "exempt": {
+     "PORT": 1
+    },
+    "refused": [
+     {
+      "token": "7897",
+      "line": 11
+     },
+     {
+      "token": "138",
+      "line": 11
+     },
+     {
+      "token": "35752",
+      "line": 12
+     },
+     {
+      "token": "7892",
+      "line": 14
+     },
+     {
+      "token": "7897",
+      "line": 14
+     },
+     {
+      "token": "000",
+      "line": 18
+     }
+    ]
+   },
+   "r4e_same_string_multiple_verdicts": {}
+  },
+  {
+   "block": "n2_0144.md",
+   "bytes": 4253,
+   "r4e": {
+    "verdict": "Q43_GATE_RED",
+    "exit": 3,
+    "claims": 5,
+    "exempt": {
+     "HTTP_STATUS": 1
+    },
+    "refused": [
+     {
+      "token": "401",
+      "line": 14,
+      "why": "no class matched"
+     },
+     {
+      "token": "0.4 GB",
+      "line": 15,
+      "why": "no class matched"
+     },
+     {
+      "token": "401",
+      "line": 15,
+      "why": "no class matched"
+     }
+    ]
+   },
+   "r5": {
+    "verdict": "Q43_GATE_RED",
+    "exit": 3,
+    "claims": 6,
+    "exempt": {},
+    "refused": [
+     {
+      "token": "401",
+      "line": 14
+     },
+     {
+      "token": "0.4 GB",
+      "line": 15
+     },
+     {
+      "token": "401",
+      "line": 15
+     }
+    ]
+   },
+   "r4e_same_string_multiple_verdicts": {}
+  },
+  {
+   "block": "n2_0152.md",
+   "bytes": 3181,
+   "r4e": {
+    "verdict": "Q43_GATE_RED",
+    "exit": 3,
+    "claims": 5,
+    "exempt": {
+     "PORT": 5
+    },
+    "refused": [
+     {
+      "token": "401",
+      "line": 3,
+      "why": "no class matched"
+     },
+     {
+      "token": "0.4 GB",
+      "line": 15,
+      "why": "no class matched"
+     },
+     {
+      "token": "6 条",
+      "line": 16,
+      "why": "no class matched"
+     }
+    ]
+   },
+   "r5": {
+    "verdict": "Q43_GATE_RED",
+    "exit": 3,
+    "claims": 4,
+    "exempt": {
+     "PORT": 5,
+     "LINE_REF": 1
+    },
+    "refused": [
+     {
+      "token": "401",
+      "line": 3
+     },
+     {
+      "token": "0.4 GB",
+      "line": 15
+     },
+     {
+      "token": "6 条",
+      "line": 16
+     }
+    ]
+   },
+   "r4e_same_string_multiple_verdicts": {}
+  },
+  {
+   "block": "n2_0156.md",
+   "bytes": 3300,
+   "r4e": {
+    "verdict": "Q43_GATE_RED",
+    "exit": 3,
+    "claims": 18,
+    "exempt": {
+     "PORT": 1,
+     "HTTP_STATUS": 1
+    },
+    "refused": [
+     {
+      "token": "6 条",
+      "line": 1,
+      "why": "no class matched"
+     },
+     {
+      "token": "4781",
+      "line": 3,
+      "why": "no class matched"
+     },
+     {
+      "token": "6 条",
+      "line": 8,
+      "why": "no class matched"
+     },
+     {
+      "token": "6 条",
+      "line": 10,
+      "why": "no class matched"
+     },
+     {
+      "token": "6 条",
+      "line": 21,
+      "why": "no class matched"
+     }
+    ]
+   },
+   "r5": {
+    "verdict": "Q43_GATE_RED",
+    "exit": 3,
+    "claims": 17,
+    "exempt": {
+     "PORT": 2,
+     "ADDRESS_PART": 1
+    },
+    "refused": [
+     {
+      "token": "6 条",
+      "line": 1
+     },
+     {
+      "token": "6 条",
+      "line": 8
+     },
+     {
+      "token": "6 条",
+      "line": 10
+     },
+     {
+      "token": "6 条",
+      "line": 21
+     }
+    ]
+   },
+   "r4e_same_string_multiple_verdicts": {
+    "4781": [
+     {
+      "line": 3,
+      "class": "PORT",
+      "coordinate": false,
+      "receipt_distance": [
+       713,
+       "9c2a388d76f1"
+      ]
+     },
+     {
+      "line": 3,
+      "class": null,
+      "coordinate": false,
+      "receipt_distance": [
+       670,
+       "9c2a388d76f1"
+      ]
+     }
+    ]
+   }
+  },
+  {
+   "block": "n2_1759.md",
+   "bytes": 5550,
+   "r4e": {
+    "verdict": "Q43_GATE_RED",
+    "exit": 3,
+    "claims": 14,
+    "exempt": {
+     "DIMENSION": 3,
+     "HTTP_STATUS": 1,
+     "DISCIPLINE_ZERO": 1
+    },
+    "refused": [
+     {
+      "token": "52 秒",
+      "line": 8,
+      "why": "no class matched"
+     },
+     {
+      "token": "2148",
+      "line": 9,
+      "why": "no class matched"
+     },
+     {
+      "token": "7892",
+      "line": 21,
+      "why": "no class matched"
+     },
+     {
+      "token": "127",
+      "line": 21,
+      "why": "no class matched"
+     },
+     {
+      "token": "7897",
+      "line": 21,
+      "why": "no class matched"
+     },
+     {
+      "token": "35752",
+      "line": 21,
+      "why": "no class matched"
+     },
+     {
+      "token": "443",
+      "line": 21,
+      "why": "no class matched"
+     },
+     {
+      "token": "7892",
+      "line": 21,
+      "why": "no class matched"
+     },
+     {
+      "token": "7897",
+      "line": 21,
+      "why": "no class matched"
+     }
+    ]
+   },
+   "r5": {
+    "verdict": "Q43_GATE_RED",
+    "exit": 3,
+    "claims": 13,
+    "exempt": {
+     "DIMENSION": 1,
+     "DISCIPLINE_ZERO": 1,
+     "ADDRESS_PART": 2,
+     "PORT": 2
+    },
+    "refused": [
+     {
+      "token": "52 秒",
+      "line": 8
+     },
+     {
+      "token": "2148",
+      "line": 9
+     },
+     {
+      "token": "35752",
+      "line": 21
+     },
+     {
+      "token": "443",
+      "line": 21
+     },
+     {
+      "token": "7892",
+      "line": 21
+     },
+     {
+      "token": "7897",
+      "line": 21
+     }
+    ]
+   },
+   "r4e_same_string_multiple_verdicts": {
+    "127": [
+     {
+      "line": 21,
+      "class": "HTTP_STATUS",
+      "coordinate": false,
+      "receipt_distance": [
+       569,
+       "324753e0688a"
+      ]
+     },
+     {
+      "line": 21,
+      "class": null,
+      "coordinate": false,
+      "receipt_distance": [
+       608,
+       "324753e0688a"
+      ]
+     }
+    ]
+   }
+  },
+  {
+   "block": "n2_1824.md",
+   "bytes": 4650,
+   "r4e": {
+    "verdict": "Q43_GATE_RED",
+    "exit": 3,
+    "claims": 21,
+    "exempt": {
+     "HTTP_STATUS": 3,
+     "PORT": 3,
+     "DIMENSION": 2
+    },
+    "refused": [
+     {
+      "token": "401",
+      "line": 1,
+      "why": "no class matched"
+     },
+     {
+      "token": "401",
+      "line": 8,
+      "why": "no class matched"
+     },
+     {
+      "token": "401",
+      "line": 13,
+      "why": "no class matched"
+     }
+    ]
+   },
+   "r5": {
+    "verdict": "Q43_GATE_RED",
+    "exit": 3,
+    "claims": 19,
+    "exempt": {
+     "HTTP_STATUS": 2,
+     "PORT": 5,
+     "ADDRESS_PART": 1
+    },
+    "refused": [
+     {
+      "token": "401",
+      "line": 1
+     },
+     {
+      "token": "401",
+      "line": 8
+     },
+     {
+      "token": "401",
+      "line": 13
+     }
+    ]
+   },
+   "r4e_same_string_multiple_verdicts": {
+    "401": [
+     {
+      "line": 1,
+      "class": null,
+      "coordinate": false,
+      "receipt_distance": [
+       1282,
+       "2876fd097278"
+      ]
+     },
+     {
+      "line": 6,
+      "class": "HTTP_STATUS",
+      "coordinate": true,
+      "receipt_distance": [
+       1153,
+       "2876fd097278"
+      ]
+     },
+     {
+      "line": 7,
+      "class": "HTTP_STATUS",
+      "coordinate": true,
+      "receipt_distance": [
+       1124,
+       "2876fd097278"
+      ]
+     },
+     {
+      "line": 7,
+      "class": "HTTP_STATUS",
+      "coordinate": true,
+      "receipt_distance": [
+       967,
+       "2876fd097278"
+      ]
+     },
+     {
+      "line": 8,
+      "class": null,
+      "coordinate": false,
+      "receipt_distance": [
+       833,
+       "2876fd097278"
+      ]
+     },
+     {
+      "line": 13,
+      "class": null,
+      "coordinate": false,
+      "receipt_distance": [
+       225,
+       "2876fd097278"
+      ]
+     },
+     {
+      "line": 16,
+      "class": null,
+      "coordinate": true,
+      "receipt_distance": [
+       86,
+       "6b9225044ff3"
+      ]
+     },
+     {
+      "line": 16,
+      "class": null,
+      "coordinate": true,
+      "receipt_distance": [
+       57,
+       "6b9225044ff3"
+      ]
+     },
+     {
+      "line": 24,
+      "class": null,
+      "coordinate": true,
+      "receipt_distance": [
+       37,
+       "d2a794002971"
+      ]
+     }
+    ]
+   }
+  },
+  {
+   "block": "qoder-0370_0130.md",
+   "bytes": 13921,
+   "r4e": {
+    "verdict": "Q43_GATE_RED",
+    "exit": 3,
+    "claims": 126,
+    "exempt": {
+     "YEAR": 1,
+     "LINE_REF": 21,
+     "PORT": 10,
+     "DIMENSION": 2
+    },
+    "refused": [
+     {
+      "token": "4 处",
+      "line": 70,
+      "why": "no class matched"
+     },
+     {
+      "token": "3 处",
+      "line": 71,
+      "why": "no class matched"
+     },
+     {
+      "token": "3 处",
+      "line": 72,
+      "why": "no class matched"
+     },
+     {
+      "token": "3 处",
+      "line": 73,
+      "why": "no class matched"
+     },
+     {
+      "token": "875",
+      "line": 119,
+      "why": "no class matched"
+     },
+     {
+      "token": "81 个",
+      "line": 120,
+      "why": "no class matched"
+     },
+     {
+      "token": "409",
+      "line": 149,
+      "why": "no class matched"
+     },
+     {
+      "token": "875",
+      "line": 152,
+      "why": "no class matched"
+     },
+     {
+      "token": "38 处",
+      "line": 159,
+      "why": "no class matched"
+     },
+     {
+      "token": "617",
+      "line": 160,
+      "why": "no class matched"
+     },
+     {
+      "token": "629",
+      "line": 160,
+      "why": "no class matched"
+     }
+    ]
+   },
+   "r5": {
+    "verdict": "Q43_GATE_RED",
+    "exit": 3,
+    "claims": 85,
+    "exempt": {
+     "YEAR": 1,
+     "IDENTIFIER_PART": 2,
+     "LINE_REF": 56,
+     "PORT": 10
+    },
+    "refused": [
+     {
+      "token": "4 处",
+      "line": 70
+     },
+     {
+      "token": "3 处",
+      "line": 71
+     },
+     {
+      "token": "3 处",
+      "line": 72
+     },
+     {
+      "token": "3 处",
+      "line": 73
+     },
+     {
+      "token": "875 个",
+      "line": 119
+     },
+     {
+      "token": "81 个",
+      "line": 120
+     },
+     {
+      "token": "409",
+      "line": 149
+     },
+     {
+      "token": "875 个",
+      "line": 152
+     },
+     {
+      "token": "38 处",
+      "line": 159
+     },
+     {
+      "token": "617",
+      "line": 160
+     },
+     {
+      "token": "629",
+      "line": 160
+     }
+    ]
+   },
+   "r4e_same_string_multiple_verdicts": {
+    "949": [
+     {
+      "line": 20,
+      "class": "LINE_REF",
+      "coordinate": true,
+      "receipt_distance": [
+       72,
+       "96cbc481f401"
+      ]
+     },
+     {
+      "line": 23,
+      "class": null,
+      "coordinate": true,
+      "receipt_distance": [
+       291,
+       "96cbc481f401"
+      ]
+     },
+     {
+      "line": 28,
+      "class": "PORT",
+      "coordinate": true,
+      "receipt_distance": [
+       477,
+       "7bc9b17e74e1"
+      ]
+     }
+    ],
+    "1097": [
+     {
+      "line": 21,
+      "class": "PORT",
+      "coordinate": true,
+      "receipt_distance": [
+       110,
+       "96cbc481f401"
+      ]
+     },
+     {
+      "line": 27,
+      "class": null,
+      "coordinate": true,
+      "receipt_distance": [
+       436,
+       "96cbc481f401"
+      ]
+     }
+    ],
+    "1098": [
+     {
+      "line": 21,
+      "class": "PORT",
+      "coordinate": true,
+      "receipt_distance": [
+       148,
+       "96cbc481f401"
+      ]
+     },
+     {
+      "line": 27,
+      "class": "LINE_REF",
+      "coordinate": true,
+      "receipt_distance": [
+       456,
+       "96cbc481f401"
+      ]
+     }
+    ],
+    "1099": [
+     {
+      "line": 22,
+      "class": "PORT",
+      "coordinate": true,
+      "receipt_distance": [
+       184,
+       "96cbc481f401"
+      ]
+     },
+     {
+      "line": 27,
+      "class": "LINE_REF",
+      "coordinate": true,
+      "receipt_distance": [
+       475,
+       "96cbc481f401"
+      ]
+     }
+    ],
+    "805": [
+     {
+      "line": 32,
+      "class": "LINE_REF",
+      "coordinate": true,
+      "receipt_distance": [
+       256,
+       "7bc9b17e74e1"
+      ]
+     },
+     {
+      "line": 34,
+      "class": null,
+      "coordinate": true,
+      "receipt_distance": [
+       159,
+       "7bc9b17e74e1"
+      ]
+     }
+    ],
+    "239": [
+     {
+      "line": 33,
+      "class": null,
+      "coordinate": true,
+      "receipt_distance": [
+       167,
+       "7bc9b17e74e1"
+      ]
+     },
+     {
+      "line": 36,
+      "class": null,
+      "coordinate": true,
+      "receipt_distance": [
+       8,
+       "b2a720668a6a"
+      ]
+     },
+     {
+      "line": 47,
+      "class": "LINE_REF",
+      "coordinate": true,
+      "receipt_distance": [
+       352,
+       "4ef864cfa49b"
+      ]
+     },
+     {
+      "line": 134,
+      "class": "LINE_REF",
+      "coordinate": true,
+      "receipt_distance": [
+       107,
+       "b98da27e4f3d"
+      ]
+     },
+     {
+      "line": 134,
+      "class": null,
+      "coordinate": true,
+      "receipt_distance": [
+       124,
+       "b98da27e4f3d"
+      ]
+     }
+    ],
+    "806": [
+     {
+      "line": 34,
+      "class": null,
+      "coordinate": true,
+      "receipt_distance": [
+       95,
+       "7bc9b17e74e1"
+      ]
+     },
+     {
+      "line": 37,
+      "class": null,
+      "coordinate": true,
+      "receipt_distance": [
+       8,
+       "95c56920f871"
+      ]
+     },
+     {
+      "line": 48,
+      "class": "LINE_REF",
+      "coordinate": true,
+      "receipt_distance": [
+       267,
+       "4ef864cfa49b"
+      ]
+     }
+    ],
+    "416": [
+     {
+      "line": 35,
+      "class": "LINE_REF",
+      "coordinate": true,
+      "receipt_distance": [
+       8,
+       "7bc9b17e74e1"
+      ]
+     },
+     {
+      "line": 48,
+      "class": null,
+      "coordinate": true,
+      "receipt_distance": [
+       305,
+       "4ef864cfa49b"
+      ]
+     }
+    ],
+    "384": [
+     {
+      "line": 45,
+      "class": "LINE_REF",
+      "coordinate": true,
+      "receipt_distance": [
+       390,
+       "95c56920f871"
+      ]
+     },
+     {
+      "line": 134,
+      "class": null,
+      "coordinate": true,
+      "receipt_distance": [
+       120,
+       "b98da27e4f3d"
+      ]
+     }
+    ]
+   }
+  },
+  {
+   "block": "qoder-0370_0148.md",
+   "bytes": 8630,
+   "r4e": {
+    "verdict": "Q43_GATE_RED",
+    "exit": 3,
+    "claims": 32,
+    "exempt": {
+     "YEAR": 5,
+     "LINE_REF": 4,
+     "DISCIPLINE_ZERO": 1
+    },
+    "refused": [
+     {
+      "token": "0148",
+      "line": 1,
+      "why": "no class matched"
+     },
+     {
+      "token": "129",
+      "line": 34,
+      "why": "no class matched"
+     },
+     {
+      "token": "4 个",
+      "line": 36,
+      "why": "no class matched"
+     },
+     {
+      "token": "174",
+      "line": 49,
+      "why": "no class matched"
+     },
+     {
+      "token": "0 处",
+      "line": 81,
+      "why": "no class matched"
+     },
+     {
+      "token": "77 处",
+      "line": 81,
+      "why": "no class matched"
+     },
+     {
+      "token": "77 处",
+      "line": 82,
+      "why": "no class matched"
+     }
+    ]
+   },
+   "r5": {
+    "verdict": "Q43_GATE_RED",
+    "exit": 3,
+    "claims": 20,
+    "exempt": {
+     "YEAR": 5,
+     "DISCIPLINE_ZERO": 1,
+     "LINE_REF": 15
+    },
+    "refused": [
+     {
+      "token": "0148",
+      "line": 1
+     },
+     {
+      "token": "129 个",
+      "line": 34
+     },
+     {
+      "token": "4 个",
+      "line": 36
+     },
+     {
+      "token": "174",
+      "line": 49
+     },
+     {
+      "token": "0 处",
+      "line": 81
+     },
+     {
+      "token": "77 处",
+      "line": 81
+     },
+     {
+      "token": "77 处",
+      "line": 82
+     }
+    ]
+   },
+   "r4e_same_string_multiple_verdicts": {}
+  },
+  {
+   "block": "s4_0150.md",
+   "bytes": 4223,
+   "r4e": {
+    "verdict": "Q43_GATE_GREEN",
+    "exit": 0,
+    "claims": 12,
+    "exempt": {
+     "HTTP_STATUS": 2,
+     "DIMENSION": 6
+    },
+    "refused": []
+   },
+   "r5": {
+    "verdict": "Q43_GATE_GREEN",
+    "exit": 0,
+    "claims": 9,
+    "exempt": {
+     "LINE_REF": 7,
+     "IDENTIFIER_PART": 1,
+     "DIMENSION": 2
+    },
+    "refused": []
+   },
+   "r4e_same_string_multiple_verdicts": {}
+  }
+ ]
+}
