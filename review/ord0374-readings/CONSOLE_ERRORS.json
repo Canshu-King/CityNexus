@@ -1,0 +1,27 @@
+{
+ "order": "ORD-0374",
+ "read_at": "2026-09-28T01:55:54+08:00",
+ "target": "http://127.0.0.1:4781/v8/9c6c3d73-8b8e-4f71-beaf-32bc87aba035",
+ "generation_asset": [
+  "assets/index-DW17CV9l.js"
+ ],
+ "auth_used": false,
+ "timing_navigation": "0 errors after a clean goto (level=error, all=true returned Errors: 0)",
+ "timing_panel_open": "6 errors appeared after clicking 开启 the AI 帮我规划 panel; chip still rendered its text",
+ "messages_verbatim": [
+  "Failed to load resource: net::ERR_CONNECTION_TIMED_OUT @ https://tile.openstreetmap.org/11/1668/888.png:0",
+  "Failed to load resource: net::ERR_CONNECTION_TIMED_OUT @ https://tile.openstreetmap.org/11/1668/889.png:0",
+  "Failed to load resource: net::ERR_CONNECTION_TIMED_OUT @ https://tile.openstreetmap.org/11/1669/888.png:0",
+  "Failed to load resource: net::ERR_CONNECTION_TIMED_OUT @ https://tile.openstreetmap.org/11/1667/888.png:0",
+  "Failed to load resource: net::ERR_CONNECTION_TIMED_OUT @ https://tile.openstreetmap.org/11/1669/889.png:0",
+  "Failed to load resource: net::ERR_CONNECTION_TIMED_OUT @ https://tile.openstreetmap.org/11/1667/889.png:0"
+ ],
+ "classification": "browser noise",
+ "classification_basis": [
+  "every row is a third-party tile host (tile.openstreetmap.org), not our API origin",
+  "reason is net::ERR_CONNECTION_TIMED_OUT, so there is no HTTP status at all - it is not a 4xx/5xx from the product server",
+  "no uncaught exception, no React error boundary, no console entry referencing app code",
+  "the AI pre-flight row still rendered its full sentence in the same session"
+ ],
+ "not_examined": "whether the map area itself shows honest copy while its tiles fail - not audited this round"
+}
