@@ -1623,3 +1623,5 @@ button { display: block; width: 100%; margin-top: 12px; border: 0; border-radius
   opacity: 0.45;
   cursor: not-allowed;
 }
+
+.v12-studio-reasons-head { margin: 10px 0 2px; color: var(--v8-ink); font-size: var(--cn-fs-caption); font-weight: 700; }

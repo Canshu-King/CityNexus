@@ -206,6 +206,9 @@ test.describe("ORD-0369 the Trip Studio trial", () => {
 
     const preview = page.getByTestId("v12-impact-preview");
     await expect(preview, node("B2", "按了预览影响，屏上没有试算结果")).toBeVisible({ timeout: 30_000 });
+    // The list has to read as an explanation, so it carries its own lead-in; asserting it here is
+    // also the proof that the key is read, which is what ORD-0370's copy ruler asks.
+    await expect(preview.getByTestId("v12-gate-reasons-head"), node("B2", "原因清单没有领句，读起来像系统输出")).toHaveText("这次改动不能被接受的原因：");
     const reasons = preview.getByTestId("v12-gate-reason");
     const n = await reasons.count();
     expect(n > 0, node("B2", "被拒却没有列出任何一条原因")).toBe(true);
@@ -362,9 +365,11 @@ test("E1 AI 开关关着：这句总结不得算在模型头上", async ({ page 
   expect(r.quoted, node("E1", "换了标签却把原文丢了")).toBe(SUMMARY);
 });
 
-test("E2 正控：开关开着时，ORD-0240 那句冻结标签一个字不改", async ({ page }) => {
-  const r = await submitWithMission(page, { ai_state: "READY" }, "E2");
-  expect(r.said, node("E2", `模型可用时标签被改写了，实读=${r.said}`)).toBe(MODEL_LABEL_ZH);
+test("E2 正控：提供方真的答过话时，ORD-0240 那句冻结标签一个字不改", async ({ page }) => {
+  // PROVIDER_REFUSED is the one state in `backend/app/agent/ai_availability.py:36-44` that says the
+  // provider was reached, so it is the only one allowed to keep crediting the sentence to a model.
+  const r = await submitWithMission(page, { ai_state: "PROVIDER_REFUSED" }, "E2");
+  expect(r.said, node("E2", `提供方答过话时标签被改写了，实读=${r.said}`)).toBe(MODEL_LABEL_ZH);
   expect(r.origin, node("E2", `归属位不是 model，实读=${r.origin}`)).toBe("model");
 });
 
@@ -372,4 +377,13 @@ test("E3 反控：服务器没说状态时保持既有标签（未知不等于�
   const r = await submitWithMission(page, {}, "E3");
   expect(r.said, node("E3", `没读到状态就改了既有标签，实读=${r.said}`)).toBe(MODEL_LABEL_ZH);
   expect(r.origin, node("E3", `没读到状态却声称知道了来源，实读=${r.origin}`)).toBe("not_stated");
+});
+
+test("E4 0359 的坑位：配了凭据未验证，不得被读成模型写过这句", async ({ page }) => {
+  // ORD-0359 renamed READY to CONFIGURED_UNVERIFIED because "a key exists" was promising that it
+  // works. Mapping that state to "model" here would re-open the same hole one level up, so this arm
+  // exists to keep the rename honest at the label too.
+  const r = await submitWithMission(page, { ai_state: "CONFIGURED_UNVERIFIED" }, "E4");
+  expect(r.said, node("E4", `凭据未验证却被标成模型输出，实读=${r.said}`)).toBe(MODEL_LABEL_ZH);
+  expect(r.origin, node("E4", `归属位不是 not_stated，实读=${r.origin}`)).toBe("not_stated");
 });
