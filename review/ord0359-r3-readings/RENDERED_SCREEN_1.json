@@ -1,0 +1,14 @@
+{
+ "read_at": "2026-09-28T01:51:26+08:00",
+ "target": "http://127.0.0.1:4781/v8/9c6c3d73-8b8e-4f71-beaf-32bc87aba035",
+ "auth_used": false,
+ "generation_asset": [
+  "assets/index-DW17CV9l.js"
+ ],
+ "scene_journey_id": "9c6c3d73-8b8e-4f71-beaf-32bc87aba035",
+ "trigger_button_text": "AI 帮我规划",
+ "rendered_inner_text": "这台服务的 AI 开关处于关闭状态，这是运营侧的设置，不是你的操作结果。开关本身不代表某次失败的原因。",
+ "element_located_by": "data-testid=plan-ai-preflight (locator only; the claim is the innerText)",
+ "reading_channel": "Playwright page.evaluate -> Element.innerText, visible=true",
+ "other_states": "NOT_CONFIGURED and PROVIDER_REFUSED recorded as ENVIRONMENT_NOT_PRODUCIBLE_ON_LINE per CMDR"
+}
