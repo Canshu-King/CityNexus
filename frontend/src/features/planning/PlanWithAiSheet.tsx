@@ -532,8 +532,17 @@ export function PlanWithAiSheet({
     };
   }, []);
 
-  const submit = () => {
-    const command = text.trim();
+  /* A run that outlived this sheet comes back carrying its own words: the request the traveller typed
+     lives on the run, so re-opening mid-flight shows *what* is being waited for, and 「照原话再试一次」
+     still has a 原话 behind it after a detach -- which it did not, the first time this was driven on a
+     real screen.  Only fills an empty box; it never overwrites what someone is typing now. */
+  useEffect(() => {
+    if (!mine || !run.command) return;
+    setText((current) => (current.trim().length === 0 ? run.command : current));
+  }, [mine, run.command]);
+
+  const submit = (override?: string) => {
+    const command = (override ?? text).trim();
     if (command.length < REQUEST_MIN_LENGTH) {
       /* ORD-0250: this `return` used to be silent -- no request, no word, nothing to read.  The press
          is still refused (there is genuinely nothing to plan from) but it now leaves a reason on the
@@ -734,6 +743,13 @@ export function PlanWithAiSheet({
                 ? "后端不会中途汇报进度，所以这里只有真实等待时间，没有百分比，也没有猜。"
                 : "The backend reports nothing until it finishes, so this is measured waiting time — no percentage, no guessing."}
             </p>
+            {/* Whose ask this is, quoted back from the run rather than from the box: the traveller who
+                walked away and came back has to be able to tell two rounds apart. */}
+            {run.command && (
+              <p className="plan-ai-asked" data-testid="plan-ai-asked">
+                {t("agent.aiRunAsked", { asked: run.command })}
+              </p>
+            )}
             {/* ORD-0382 ②: the units a traveller can check by eye, read from the plan row this run
                 already fetched, plus the one unit this screen is NOT allowed to show.  The reference
                 product reports 正在更新第 N 天; our backend emits no per-day signal at all, so saying
@@ -993,7 +1009,9 @@ export function PlanWithAiSheet({
                 className="v8-primary-button plan-ai-next-step"
                 data-testid="plan-ai-next-step"
                 data-next-step="retry"
-                onClick={submit}
+                /* The 原话 comes off the run, not off this mount: after a detach the box was empty and
+                   this button pressed into nothing. */
+                onClick={() => submit(run.command || text)}
               >
                 {zh ? "照原话再试一次" : "Try again with the same words"}
               </button>
@@ -1024,7 +1042,7 @@ export function PlanWithAiSheet({
                dead surface.  The existing `[aria-disabled="true"]` rule keeps it looking unwalkable. */
             disabled={busy}
             aria-disabled={text.trim().length < REQUEST_MIN_LENGTH || undefined}
-            onClick={submit}
+            onClick={() => submit()}
           >
             {busy ? (zh ? "规划中…" : "Planning…") : zh ? "开始规划" : "Plan my trip"}
           </button>

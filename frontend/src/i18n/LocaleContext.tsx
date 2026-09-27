@@ -385,6 +385,7 @@ const en: Dict = {
      to offer -- the reference product splits the same flow at the same seam (查看会话 / 继续生成), and
      only that division is borrowed, never its wording. */
   "agent.aiRunWorking": "Working",
+  "agent.aiRunAsked": "You asked: {asked}",
   "agent.aiRunStripBusy": "AI is planning this trip",
   "agent.aiRunStripDone": "This planning run has ended",
   "agent.aiRunStripWaited": "waiting {seconds}s",
@@ -1131,6 +1132,7 @@ const zhCN: Dict = {
   /* ORD-0382：三段式生成态的文案。等待中的这一屏必须能离开、能回看、能继续，两个出口就是下面
      aiRunViewChat 与 aiRunContinue；进度只报这台设备量得到的单位，服务器没回过的天数不报。 */
   "agent.aiRunWorking": "正在处理",
+  "agent.aiRunAsked": "你说的是：{asked}",
   "agent.aiRunStripBusy": "AI 正在规划这一趟",
   "agent.aiRunStripDone": "这一轮规划已经结束",
   "agent.aiRunStripWaited": "已等待 {seconds} 秒",

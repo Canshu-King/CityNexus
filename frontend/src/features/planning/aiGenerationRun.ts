@@ -127,6 +127,12 @@ export type RunSnapshot = {
   result: RunResult | null;
   /** A settled outcome nobody has read yet -- what keeps the strip alive after the run finishes. */
   unread: boolean;
+  /**
+   * The traveller's own words for this run.  The sheet holds the textarea in local state, so a run
+   * that outlives the sheet would otherwise come back to an empty box -- and 「照原话再试一次」 on a
+   * sheet with no 原话 is a button that cannot do the one thing its label promises.
+   */
+  command: string;
   aftermath: Aftermath | null;
   /**
    * Which plan was in force at this run's own baseline read, and how big it is.  The waiting surface
@@ -145,6 +151,7 @@ const EMPTY: RunSnapshot = {
   phase: null,
   result: null,
   unread: false,
+  command: "",
   aftermath: null,
   current: null,
 };
@@ -460,6 +467,7 @@ export async function beginAiRun(args: {
     phase: "baseline",
     result: null,
     unread: false,
+    command,
     aftermath: null,
     current: null,
   });
