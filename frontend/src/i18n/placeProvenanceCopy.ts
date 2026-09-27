@@ -7,7 +7,8 @@
  * The rule these strings exist to serve: a field never disappears. When the value is
  * not there, what shows instead names *which* fact is missing -- it is not a generic
  * "unavailable", not an empty string, and never a guessed provider or coordinate
- * system.
+ * system. And the two absences are kept apart: `no*` words are for a cell the server
+ * answered with "none recorded", `notSent` is for a cell this payload never carried.
  */
 
 export type PlaceProvenanceCopy = {
@@ -17,6 +18,7 @@ export type PlaceProvenanceCopy = {
   coordinateSystem: string;
   sourceCoordinateSystem: string;
   host: string;
+  notSent: string;
   noName: string;
   noSource: string;
   noCoordinateSystem: string;
@@ -32,7 +34,8 @@ export const placeProvenanceCopy: Record<"en" | "zhCN", PlaceProvenanceCopy> = {
     coordinateSystem: "Stored in",
     sourceCoordinateSystem: "Handed over in",
     host: "Source host",
-    noName: "the server sent no place name",
+    notSent: "the server did not send this cell this time",
+    noName: "the server recorded no name",
     noSource: "source not recorded",
     noCoordinateSystem: "coordinate system not recorded",
     noSourceCoordinateSystem: "original system not recorded at capture",
@@ -45,7 +48,8 @@ export const placeProvenanceCopy: Record<"en" | "zhCN", PlaceProvenanceCopy> = {
     coordinateSystem: "存储坐标系",
     sourceCoordinateSystem: "原始坐标系",
     host: "来源主机",
-    noName: "服务器未给地点名称",
+    notSent: "这一格服务器这次没有给",
+    noName: "服务器没记录名称",
     noSource: "未记录来源",
     noCoordinateSystem: "未记录坐标系",
     noSourceCoordinateSystem: "采集时未记录原始坐标系",

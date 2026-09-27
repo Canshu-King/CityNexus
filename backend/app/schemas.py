@@ -390,6 +390,58 @@ class Place(BaseModel):
     source_coordinate_system: str | None
 
 
+class RealCityDiscoveryCandidate(BaseModel):
+    """One place candidate as `materialize_candidates` emits it -- the single dict
+    site the screen's place card reads.
+
+    ``extra="allow"`` is load-bearing, not a courtesy: FastAPI filters a response
+    through its model, so a strict model here would silently drop any key a live
+    provider carries that the replay shape did not.  Declaring a contract must not
+    become a way of un-sending facts.
+    """
+
+    model_config = ConfigDict(extra="allow")
+
+    id: str
+    external_id: str
+    provider_key: str
+    name: str
+    category: str
+    latitude: float
+    longitude: float
+    tags: list[str]
+    distance_m: float | None
+    opening_hours: dict[str, Any]
+    metadata: dict[str, Any]
+    cost_evidence: dict[str, Any]
+    materialized_place_id: str
+    coordinate_system: str
+    source_coordinate_system: str | None
+
+
+class RealCityDiscoveryResponse(BaseModel):
+    """The wrapper both `capture_real_city_candidates` return sites build.
+
+    Measured on the tree: the cache-hit return (real_city.py:1346) and the main
+    return (real_city.py:1550) carry the same 11 keys, so nothing here is optional
+    just in case.
+    """
+
+    model_config = ConfigDict(extra="allow")
+
+    journey_id: str
+    city_code: str
+    city_context: str
+    mode: str
+    captured_at: str
+    expires_at: str
+    provider_status: dict[str, Any]
+    provider_evidence: dict[str, Any]
+    provenance: str
+    runtime_provenance: str
+    candidates: list[RealCityDiscoveryCandidate]
+
+
 class CityService(BaseModel):
     id: str
     name: str
