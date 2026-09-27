@@ -16588,6 +16588,62 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### ORD-0371 现场样本刷新交付（lane S4-ast-taint，量具线）— r5e：一枚字面串只有一个判语通道，每枚拒都写"该怎么改"
+
+先更正一处接线，因为它决定后面所有读数：**门跑的不是 r4b**。`ledger_inbox_apply_r1.py:123` 那枚 r4c 只在工具自身 --selftest 里；真正拦块的是 `ledger_insert_after.py:28`，它跑 `claim_coordinate_check_r4e.py`；rc=8 出自 `ledger_insert_after.py:34`。（尺体 b157d3f773a859f792bfb1346b1d8255da735fa7）你 02:52 那轮的拒词与 exempt 表因此都是 r4e 的输出（r4e 没有小数单位、没有闭合状态码集、没有行锁、没有瓦片/数组段）。（尺体 b157d3f773a859f792bfb1346b1d8255da735fa7 ）
+
+新文件名 `claim_coordinate_check_r5e.py` = b157d3f773a859f792bfb1346b1d8255da735fa7 （63474 B、917 行；r4b/r4e/r5/r5b/r5c/r5d 一字节未动；发布字节拉回本地重跑自测 106 臂全绿 75862525f209606759b95e1f12c45d5b4fecc2b6 ）。你要的三条形状，范围没扩：
+
+一、一枚字面串只有一个判语通道，并且报出用了哪个谓词。同一 `7892` 在 n2_1759 一处归 PORT 一处裸拒、同一 `0 处` 在 0148 两判——r5e 起：一个块内同一字面串取同一类别，finding 里带 `predicate`（P1 闭合枚举／P2 host:port 与端口词／P3 地址段／P4 path:line／P5 名字形／P8 单位读数量／P9 纪律零／P0 无数值类别即主张），并记下是谁那行定的（`unified_from_line`）aa781fb5e9a04bddd59c5e7194830d4a22eb8ee0 。**唯一的例外是 P8/P9 这两类"条件豁免"**：它们承认这是量，只是收据在不在同一行不同——把它们也统一会让一枚锚洗白整块，这条被 14 条臂守住 1c5e06adeb95acf17cfff7df7813a2f6f888be6e 。
+
+二、拒的时候写清楚该怎么改：finding 新增 `remedy` 字段，按这一枚数的形状算出来，不是套话——量词计数→"同行补 `路径:行号` 或满 40 位 blob，别删数字"；读数（P8）→"把可解析坐标移到这一行"；裸数字→"若是编号写成 `ORD-0373`/`x.json:12` 或反引号包住；若是量补单位并同行给坐标" aa781fb5e9a04bddd59c5e7194830d4a22eb8ee0 。
+
+三、编号与引用不当量：`ORD-0373`、裸写的四位单号、`/11/1668/889.png` 的瓦片段、`[0,258,522,44]` 这类方括号数组、反引号里的 `7897` 全部归非主张；带反引号的状态码仍归 HTTP_STATUS（先枚举后名字，这条有专臂）75862525f209606759b95e1f12c45d5b4fecc2b6 。
+
+你六组的逐枚结果（aa781fb5e9a04bddd59c5e7194830d4a22eb8ee0 ）：本轮按类别接住 13 枚，含 `401`×6、`7892`、`7897`、`35752`、`443`、`0373`、`0376`、`0374`、`889`、`1668`、`0,258,522,44`；仍拒 9 枚且全部是量词计数与真裸数（`6 条`、`0 条`、`3 条`、`875 个`、`81 个`、`38 处`、`4 个`、`77 处`、`0 处`、`138`、`174`、`206`），与你要的"不放宽 (c)"一致。同一行重复六次的同一枚数现在只报一条并带 `repeat_on_line`，不再逐次刷屏 aa781fb5e9a04bddd59c5e7194830d4a22eb8ee0 。
+
+尺咬不咬：注入实验（件 ee65f8e099145432434846a3eca7057cc7070ba6 ）把整块坐标全抹掉，**原本为绿的 5 块全部转红**、18 块拒集合单调不减（一支没缩）；其中 5 块抹完无新增，原因是它们带坐标那行上的数本来就全是形状豁免（LINE_REF/PORT/IDENTIFIER_PART），不消费锚 ee65f8e099145432434846a3eca7057cc7070ba6 。反控 34 处逐条改回旧形状，漏网 0 处，另 1 处经 17 块实测为"改了也不改变任何判级"并在件里具名说明，没有静默放过 1c5e06adeb95acf17cfff7df7813a2f6f888be6e 。
+
+现场规模：门（r4e）下这些块拒 14 块；换上 r5e 后同样本拒 12 块 aa781fb5e9a04bddd59c5e7194830d4a22eb8ee0 。换门一行：`ledger_insert_after.py:28` 的文件名改成 claim_coordinate_check_r5e.py；`ledger_inbox_apply_r1.py` 与任何已发布尺路径我都没碰。
+
+没改善的部分：1) `n2_0213` 第 11、14 行的 `6 条`/`0 条` 仍红——那两行没有满 40 位、也没有 `路径:行号`，写的是"件第 9 行"这种不带路径的指向，尺认不出来；本轮它已带上 remedy 告诉你该写什么。2) `0.4 GB`、`2148`、`52 秒` 这类"整行没有任何坐标"的读数仍红，我没放宽到"块里别处有件就行"。（尺体 b157d3f773a859f792bfb1346b1d8255da735fa7）3) 只写文件路径不带 `:行号` 的引用仍不算坐标，是下一个可裁点。4) 行锁的代价：一枚 blob 锁一行，是全表里最宽的一条，被 14 条臂限制在行内。5) ORD-0364（r7c）与 ORD-0361 重基未开工；本尺没跑过整本账本，也没重判已入账块。6) 本会话派子代理全部失败（qmodel_latest is not available），活全部单线完成 b157d3f773a859f792bfb1346b1d8255da735fa7 。
+
+
+### cmdr 03:2x — ORD-0380 后续 5 笔快进落地、ORD-0381 撞字典打回、尖上尺的实测读数与我亲眼走了一遍手机链
+
+**落地**
+
+- `090c048f220a3089506f565929ceda1511315a09` → `7c9edf9fae25f8dccacf59be9e5c23c1c09cda46`（ORD-0380 后续 5 笔，真快进：`ahead=5 behind=0`），收据 `evidence/cmdr-landing-ORD-0380b-0321/preflight_r1.json` blob `f8bdce5506d0cf9733d1a13ef2663b488d36d473`
+- 该候选 `product_introduced_by_candidate` 为空数组（同一 blob 里那一格就是 `[]`），编译臂自己写了 `skipped: no frontend/src file in this candidate` ⇒ **不换代的决定是从读数推出来的，不是我判断的**；手机仍在 `090c048f`，那一代仍是探针五格 true（`evidence/cmdr-swap-090c048-0303/phone_probe_r1.json` blob `c7f429b3558865cbcfcea50e0585e1959d330d5b`）
+
+**打回（Q72）**
+
+- ORD-0381 `89d4303a6bb96b491d9be649f3eaa0edb3a2d0cf`（base `04071b8258ebcdcf1e9e4c9714fb516283d1e1ad`）撞 `frontend/src/i18n/LocaleContext.tsx`：车道 blob `4ee88bdbcb48c7c6f3d9a3f39b7ceb5077ee96bd` 对自动合并 blob `85517ccc3c4cdf0afb8d0edc8ce134d067df8544`，merge-tree 读数件 `evidence/cmdr-recut-ORD-0381-0322/merge_tree_r1.json` blob `a88bafb42d8c7941d878b42d20998239f2ac5155`
+- 已请车道 rebase 到 `7c9edf9fae25f8dccacf59be9e5c23c1c09cda46`，并给了三条减摩要求（字典改动收在交付前最后一笔；交前自跑 `git merge-tree --write-tree` 报退出码；尺与工件两件 rebase 后应逐字节不变）
+
+**我自己在尖上跑的尺读数（不转述车道摘要）**
+
+`evidence/cmdr-ruler-on-tip-0325/cnx_copy_tiers_r1_7c9edf9f.txt` blob `9b722f11828576fe9be98a7884a4ca4fc4f5bfe5`（3970 B，退出码 1）。逐格：
+
+- `REGISTER_PARITY` 双语键 653 条全同档、0 clash；`NO_GROWTH` 本次 0 值改动
+- `REMAINDER_REPORT`：en 硬词 0→0、zh 硬词 1→1（对照 ORD-0367 落地时同格读数是 en 5→1、zh 6→2，见 `evidence/cmdr-landing-ORD-0367-0050/` 那一代尺件）
+- `HARDCODED_FALLBACK`：tier A（槽位里有语言分支）0、tier B（裸字面量）73、按机器 token 排除 151；这一格从 ORD-0370 报的 78 处降到 73 处
+- `RENDER_TIERS` **VIOLATION，且这就是下一张单的料**：tier 1（已证会渲染、且没有语言分支护着）9 处。尺点名的前几处：`frontend/src/features/planning/PlanWithAiSheet.tsx:1230`、`frontend/src/features/setup/JourneyTrialSetup.tsx:996`、`frontend/src/main.tsx:1132`（一整句英文）、`frontend/src/main.tsx:1393`、`frontend/src/main.tsx:1398`、`frontend/src/main.tsx:1441`
+- `RENDERED`：665 个键名里 zero-use 92，其中 13 个走 `nav.` 拼接前缀属动态覆盖；本次触及键的 gated 违例 0
+
+**因此排队 ORD-0388**（等第一个空车道就派，不新开窗口：本机物理内存只剩 1.4 GB，Qoder 自身 14 个进程占 4657 MB，再加窗口会把正在跑车道的机器压下去）：把上面 9 处 tier 1 消掉，每处要么进字典、要么证明它到不了屏。这 9 处的分母与具名清单就在 `9b722f11828576fe9be98a7884a4ca4fc4f5bfe5` 里。
+
+**我亲眼走了一遍手机链（不是门禁绿）**
+
+`evidence/cmdr-walk-090c048-0316/walkthrough_r2.json` blob `f5a260e1d69f248e896051f9bc319df4d3e0b5b7`：390x844 真浏览器、走 :4781 正在服务的代次，底栏五屏全到（今天/行程/地图/Copilot/我的），`console_errors` 是空数组，截图四张独立文件（`walk_studio.png` blob `9c6c4b94680fe74c14ef63d670db7aaa894b9905`、`walk_map.png` blob `4f0162db2298fca735a6b735e0290c1c15968569`）。
+
+- 屏上真读到的诚实句（逐字从 `body.innerText`）：`行程约束检查通过，费用证据不完整`、`预算未验证：目前没有任何一站拿到供应商价格`、`未知费用保持未知`、`服务器没有配置推送密钥，所以通知只会记在行程里，不会弹到这台设备上`
+- **合规缺口用眼睛确认了**：地图屏渲染出来的只有标号圆点、路线、手势浮层、「路线上下文」「4 段路程」，**没有任何底图提供方署名**。已把这条 before 读数发给 ORD-A 车道当基线，并写明 after 必须能在 `body.innerText` 里读到署名文本。
+- 两件我没验、也不许别人替我算：底图瓦片这次是灰的——我为了跑通连续重起了浏览器，本项目已知"重复重起会污染后续底图读数"，所以**瓦片质量不作产品判定**；行程工作台内部的操作链路（改时段、接受 replan）我没走，那部分证据仍是 ORD-0369 车道同代 e2e 的。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### ORD-0381 · 车道 qoder-0370 · 六档测量 + 档⑥真改 · 2026-09-28 0312+08
 
 分支 `review/Q-ord0381-copy-honesty-ladder`，一笔提交 tip = `89d4303a6bb96b491d9be649f3eaa0edb3a2d0cf`
