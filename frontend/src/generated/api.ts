@@ -480,7 +480,9 @@ export interface paths {
     "/journeys/{journey_id}/plans/generate": {
         parameters: {
             query?: never;
-            header?: never;
+            header?: {
+                "Idempotency-Key"?: components["parameters"]["IdempotencyKeyOptional"];
+            };
             path: {
                 journey_id: components["parameters"]["JourneyId"];
             };
@@ -488,6 +490,7 @@ export interface paths {
         };
         get?: never;
         put?: never;
+        /** @description Generate feasible candidates.  ORD-0272 gives a batch a server-readable owner: `mission_id` (body) says *whose* continuation this is and is what a second tab, a cleared storage or a second device replays on, while `Idempotency-Key` (header) stays the transport-level "is this the same send" control.  They are deliberately two keys - merged into one, "same mission, different request" and "same request, resent" become indistinguishable in storage.  Omit both and the operation keeps its pre-ORD-0272 shape. */
         post: operations["generatePlans"];
         delete?: never;
         options?: never;
@@ -1727,6 +1730,166 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/demo/prepare-scenario": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["prepareDemoScenario"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/demo/start-scenario": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["startDemoScenario"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/demo/scene": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["readDemoScene"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/destinations/capability": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["getDestinationCapability"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/catalog-hydrations": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["createOrReuseCatalogHydration"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/catalog-hydrations/{operation_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["getCatalogHydration"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/catalog-hydrations/{operation_id}/abandon": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["abandonCatalogHydration"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/journeys/{journey_id}/stay-generations": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["listStayGenerations"];
+        put?: never;
+        post: operations["submitStayGeneration"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/journeys/{journey_id}/stay-generations/{operation_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["readStayGeneration"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/journeys/{journey_id}/stay-generations/{operation_id}/abandon": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["abandonStayGeneration"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/journeys/{journey_id}/stay-options": {
         parameters: {
             query?: never;
@@ -2268,6 +2431,8 @@ export interface components {
             database: "ok" | "error";
             /** @enum {string} */
             ai: "available" | "unavailable" | "disabled";
+            /** @enum {string} */
+            ai_state?: "CONFIGURED_UNVERIFIED" | "NOT_CONFIGURED" | "DISABLED_BY_OPS" | "PROVIDER_REFUSED";
         };
         ErrorEnvelope: {
             error: {
@@ -2277,6 +2442,9 @@ export interface components {
                     [key: string]: unknown;
                 };
                 trace_id: string;
+                error_receipt_id?: string;
+                message_key?: string;
+                reason_code?: string;
             };
         };
         Error: components["schemas"]["ErrorEnvelope"];
@@ -2591,6 +2759,9 @@ export interface components {
             city_code: string;
             location: components["schemas"]["GeoPoint"];
             tags?: string[];
+            provider_key: string;
+            coordinate_system: string;
+            source_coordinate_system?: string | null;
         };
         CityService: {
             id: string;
@@ -2711,6 +2882,8 @@ export interface components {
             mobility_evidence?: {
                 [key: string]: unknown;
             };
+            /** @description True only on the row named by journey.active_plan_version_id; false on all rows when the journey has no pointer */
+            is_current?: boolean;
             activities: components["schemas"]["Activity"][];
         };
         BookingSlot: {
@@ -3132,6 +3305,7 @@ export interface components {
         };
     };
     parameters: {
+        DemoResetToken: string;
         TravelerId: string;
         JourneyId: string;
         ActivityId: string;
@@ -3139,6 +3313,7 @@ export interface components {
         PlanVersionId: string;
         ProposalId: string;
         IdempotencyKey: string;
+        IdempotencyKeyOptional: string;
     };
     requestBodies: never;
     headers: never;
@@ -3169,7 +3344,9 @@ export interface operations {
     resetDemo: {
         parameters: {
             query?: never;
-            header?: never;
+            header?: {
+                "X-Demo-Reset-Token"?: components["parameters"]["DemoResetToken"];
+            };
             path?: never;
             cookie?: never;
         };
@@ -3184,6 +3361,28 @@ export interface operations {
                     "application/json": {
                         /** @constant */
                         status: "reset";
+                    };
+                };
+            };
+            /** @description Refused, and nothing was deleted: either no token was presented (RESET_TOKEN_REQUIRED) or the one presented does not match, including the case where this deployment never configured one (RESET_TOKEN_INVALID).  Both are answered before the guardian worker is stopped, so a refusal has no side effect at all.  The two codes carry identical `details`, deliberately: a difference would be a free probe for "is this box resettable". */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"] & {
+                        error?: {
+                            /** @enum {string} */
+                            code?: "RESET_TOKEN_REQUIRED" | "RESET_TOKEN_INVALID" | "DEMO_MODE_REQUIRED";
+                            details?: {
+                                /** @constant */
+                                tables_protected: true;
+                                /** @constant */
+                                header?: "X-Demo-Reset-Token";
+                                /** @constant */
+                                flag?: "CITYNEXUS_DEMO_MODE";
+                            };
+                        };
                     };
                 };
             };
@@ -3467,6 +3666,8 @@ export interface operations {
                         mcp_server: string;
                         deepseek_configured: boolean;
                         hermes_compat_configured: boolean;
+                        /** @enum {string} */
+                        ai_state?: "CONFIGURED_UNVERIFIED" | "NOT_CONFIGURED" | "DISABLED_BY_OPS" | "PROVIDER_REFUSED";
                         hermes_native_gateway?: Record<string, never>;
                     };
                 };
@@ -3919,7 +4120,9 @@ export interface operations {
     generatePlans: {
         parameters: {
             query?: never;
-            header?: never;
+            header?: {
+                "Idempotency-Key"?: components["parameters"]["IdempotencyKeyOptional"];
+            };
             path: {
                 journey_id: components["parameters"]["JourneyId"];
             };
@@ -3933,6 +4136,11 @@ export interface operations {
                     candidate_count?: number;
                     /** @description Explicit selected/discovered POIs for the generic Compose Engine path. */
                     place_ids?: string[];
+                    /**
+                     * Format: uuid
+                     * @description Continuation owner (ORD-0272).  Must be a JourneyMission of *this* journey; an unknown or foreign one answers 404 and claims nothing.
+                     */
+                    mission_id?: string;
                 };
             };
         };
@@ -3946,6 +4154,7 @@ export interface operations {
                     "application/json": components["schemas"]["PlanVersion"][];
                 };
             };
+            409: components["responses"]["Conflict"];
             422: components["responses"]["Infeasible"];
         };
     };
@@ -3960,7 +4169,7 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description Journey plan versions */
+            /** @description Every plan version this journey has ever had (CANDIDATE / SELECTED / ACTIVE / SUPERSEDED / REJECTED), in version_no order. Which one the journey runs is `is_current` - the server's projection of `journey.active_plan_version_id` - and not the array position, the newest `version_no`, or the row's `status` (ORD-0097); a journey with no pointer reports `is_current: false` on every row. */
             200: {
                 headers: {
                     [name: string]: unknown;
@@ -5616,6 +5825,314 @@ export interface operations {
         requestBody?: never;
         responses: {
             /** @description Bounded Top-K stay and Journey options */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": Record<string, never>;
+                };
+            };
+        };
+    };
+    prepareDemoScenario: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Journey pushed to PLANNED with a SELECTED plan via the real pipeline; no /start */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": Record<string, never>;
+                };
+            };
+            /** @description CITYNEXUS_DEMO_MODE is not set; nothing was generated or selected */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": Record<string, never>;
+                };
+            };
+        };
+    };
+    startDemoScenario: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Scenario started through /start, with the journey status and cursor it produced */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": Record<string, never>;
+                };
+            };
+            /** @description CITYNEXUS_DEMO_MODE is not set; nothing was started */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": Record<string, never>;
+                };
+            };
+        };
+    };
+    readDemoScene: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description demo_mode, the seeded journey window, its cursor-derived effective_now, and the evidence that window is priced with: evidence_state (REFERENCED | FROZEN_WITHOUT_TTL | EVIDENCE_REFERENCE_INCONSISTENT | NO_FROZEN_EVIDENCE | NO_SCENARIO), evidence_snapshot_id, evidence_reference_consistent, and mobility_legs_total versus mobility_legs_hard_eligible. The leg counts report how much of the plan the sealed facts already cover and license nothing - /replans decides for itself */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": Record<string, never>;
+                };
+            };
+        };
+    };
+    getDestinationCapability: {
+        parameters: {
+            query: {
+                /** @description What the traveller typed (a name, not an internal city code). */
+                query: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description capability (READY | HYDRATABLE | UNKNOWN_RETRYABLE | UNAVAILABLE - four structural cells since the arbiter answer "one" on 2026-09-22; still no UNKNOWN, because "nobody looked" remains an absent provider_status and never a state, and UNKNOWN_RETRYABLE is reserved for the opposite case: we asked and nothing could answer, which is always paired with retryable true and the action RETRY_LATER rather than an invitation to prepare) + destination_state (RESOLVED | AMBIGUOUS | NO_MATCH | RUNTIME_FAILURE - what the resolver concluded about this request, a separate axis from capability) + reason_code + recommended_action + retryable + coverage for all six intents (attractions, food, nightlife, lodging, mobility, booking) each READY | PARTIAL | MISSING + coverage_detail with the counts behind each state + canonical_destination_id, which is NULL for AMBIGUOUS / NO_MATCH / RUNTIME_FAILURE and never contains user text (ORD-0167: raw text is not identity) + pending_destination_label (the traveller input verbatim) + resolver_query_normalized (the folded form matching used, also not an identity) + destination_pending_key (correlation material only, never a place or destination identifier and never a catalog join key) + candidates (populated only when the query is ambiguous, so no winner is guessed) + malformed_candidates (evidence a provider offered and this build refused: an entity reference that names no OSM element class, or a position outside the WGS-84 range; a refusal is a named RUNTIME_FAILURE with attribution_reason=PROVIDER_BAD_RESPONSE and retryable=true, never an identity, never NO_MATCH, and the refused record is kept verbatim instead of being rounded or repaired) + the attribution group attribution_reason / evidence_kind / http_status / source_layer, derived once from the same observation and arriving together or not at all, with http_status null rather than 0 when nothing answered (R14 section 8: four consumers, one classification) + hard_gaps, always present and empty when there is nothing to name, carrying MOBILITY_EVIDENCE_NOT_HARD_ELIGIBLE when the destination is named, the catalog holds rows, mobility has explicit legs, and none of that material is of a class anything may treat as a hard constraint - the mobility axis also reports source_classes and hard_eligible so the claim can be checked rather than inferred, and an empty axis is MISSING with no gap rather than a gap over nothing + provider_status whose destination cell carries the per-attempt evidence (endpoint / answered / http_status / elapsed_ms) on a successful answer as well as on a failed one, because evidence that only appears when something goes wrong is not evidence) + the fingerprint and its segments, four of them when a destination is named (canonical_destination_id + catalog_schema_version + readiness_policy_version + provider_policy_version) and a namespaced request fingerprint when it is not (pending-request-v1 + scope + resolver_query_normalized + the same three versions) + provenance (source_kinds, never upgraded by normalisation). READY is only ever the versioned server-side policy result: a place count cannot produce it, and a resolver that could not be reached keeps a destination retryable instead of declaring it structurally unusable */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": Record<string, never>;
+                };
+            };
+            /** @description Request validation failed */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+        };
+    };
+    createOrReuseCatalogHydration: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": {
+                    query: string;
+                    /** Format: uuid */
+                    journey_id?: string | null;
+                    requested_categories?: string[] | null;
+                };
+            };
+        };
+        responses: {
+            /** @description The same answer with reused=true: an open job for this identical fingerprint already exists and this caller joined it. There is deliberately no 409 - colliding with the work is success, and pushing the caller away would make them start a second chain */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": Record<string, never>;
+                };
+            };
+            /** @description Accepted and started: operation_id, fingerprint, reused=false, status QUEUED, phase, elapsed_ms, retry_after_ms, status_url, abandon_url, and the four fingerprint segments. No provider is contacted before this answer is written */
+            202: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": Record<string, never>;
+                };
+            };
+            /** @description Unprocessable: an empty or over-long query, or a journey_id this backend does not have */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+            /** @description The catalog store could not record the job inside the acceptance budget (named, retryable, with retry_after_ms) - never a silent 500 */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+        };
+    };
+    getCatalogHydration: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                operation_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description The job read from the store: operation_id, fingerprint, reused, status (QUEUED | RUNNING | COMPLETED | FAILED | UNAVAILABLE | ABANDON_REQUESTED | ABANDONED - a lifecycle axis, separate from phase, because one axis cannot tell "abandoned but still running" from "finished"), phase (the stage the worker is genuinely inside), outcome, terminal, elapsed_ms, retry_after_ms, result or error, the four fingerprint segments, status_url, abandon_url. Deliberately no progress percentage - an invented denominator is not information */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": Record<string, never>;
+                };
+            };
+            /** @description No such operation (app envelope, not a route-level 404) */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+        };
+    };
+    abandonCatalogHydration: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                operation_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Idempotent stop request: ABANDON_REQUESTED while in flight (never a claim that work already on the wire is dead), the real terminal state otherwise. An abandoned job writes no result */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": Record<string, never>;
+                };
+            };
+            /** @description No such operation */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+        };
+    };
+    listStayGenerations: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description The job this journey already has open, plus its latest operation, so a reload restores it without an id */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": Record<string, never>;
+                };
+            };
+        };
+    };
+    submitStayGeneration: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Operation accepted: operation_id, status, status_url, abandon_url, retry_after_ms, reused */
+            202: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": Record<string, never>;
+                };
+            };
+        };
+    };
+    readStayGeneration: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Status, phase, outcome, elapsed_ms, retry_after_ms, stored result or error */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": Record<string, never>;
+                };
+            };
+        };
+    };
+    abandonStayGeneration: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Idempotent stop request: ABANDON_REQUESTED while in flight, the real terminal state otherwise */
             200: {
                 headers: {
                     [name: string]: unknown;

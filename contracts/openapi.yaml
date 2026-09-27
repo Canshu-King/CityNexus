@@ -20,6 +20,14 @@ paths:
   /demo/reset:
     post:
       operationId: resetDemo
+      # ORD-0389: deleting 52 tables is not a demo convenience, it is a data-destruction route.
+      # `CITYNEXUS_DEMO_MODE=true` says the deployment may be a stage -- it does not say who may
+      # empty it, and the shared preview is started with that flag on.  The reset now also needs
+      # the operator's token, read from CITYNEXUS_DEMO_RESET_TOKEN at call time.  The product
+      # default is unset, which makes this route refuse every caller: an out-of-the-box deployment
+      # cannot be emptied through it.  No screen can satisfy this header, so none offers the action.
+      parameters:
+        - {$ref: '#/components/parameters/DemoResetToken'}
       responses:
         '200':
           description: Demo database reset and seeded
@@ -30,6 +38,32 @@ paths:
                 required: [status]
                 properties:
                   status: {type: string, const: reset}
+        '403':
+          description: >-
+            Refused, and nothing was deleted: either no token was presented
+            (RESET_TOKEN_REQUIRED) or the one presented does not match, including the case where
+            this deployment never configured one (RESET_TOKEN_INVALID).  Both are answered before
+            the guardian worker is stopped, so a refusal has no side effect at all.  The two codes
+            carry identical `details`, deliberately: a difference would be a free probe for
+            "is this box resettable".
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - {$ref: '#/components/schemas/ErrorEnvelope'}
+                  - type: object
+                    properties:
+                      error:
+                        type: object
+                        properties:
+                          code: {type: string, enum: [RESET_TOKEN_REQUIRED, RESET_TOKEN_INVALID, DEMO_MODE_REQUIRED]}
+                          details:
+                            type: object
+                            required: [tables_protected]
+                            properties:
+                              tables_protected: {type: boolean, const: true}
+                              header: {type: string, const: X-Demo-Reset-Token}
+                              flag: {type: string, const: CITYNEXUS_DEMO_MODE}
   /travelers:
     post:
       operationId: createTraveler
@@ -1736,6 +1770,14 @@ paths:
         '201': {description: Edge observation recorded as evidence, content: {application/json: {schema: {type: object}}}}
 components:
   parameters:
+    DemoResetToken:
+      # ORD-0389: the claim that opens the whole-library reset.  Optional in the schema because a
+      # caller who omits it must still get a named answer (RESET_TOKEN_REQUIRED) rather than a
+      # transport-level 422 -- the refusal is the product behaviour being pinned.
+      name: X-Demo-Reset-Token
+      in: header
+      required: false
+      schema: {type: string}
     TravelerId:
       name: traveler_id
       in: path
