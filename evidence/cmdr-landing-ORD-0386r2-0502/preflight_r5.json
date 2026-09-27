@@ -1,0 +1,293 @@
+{
+ "schema": "CNX_CMDR_LANDING_PREFLIGHT_V1",
+ "lane": "commander 494abfd7",
+ "at_local": "2026-09-28T05:02:12+0800",
+ "mode": "LAND",
+ "authoritative_line": "mirror/integration-frontend-apple-pass1",
+ "tip_re_read_from_github_before": "ac195f865f21ebeb9e1f8cb38ce85780a8b3d48e",
+ "candidate_ref": "refs/heads/cmdr/land-ord0386r2-recut",
+ "candidate_tip": "cf0ed0b531681181642a30120a1b41f2bf681a40",
+ "genealogy": {
+  "ff_possible_rc": 0,
+  "ff_possible": true,
+  "merge_base": "ac195f865f21ebeb9e1f8cb38ce85780a8b3d48e",
+  "line_only_commits": 0,
+  "candidate_only_commits": 6
+ },
+ "file_sets": {
+  "line_side_since_base": [],
+  "candidate_side_since_base": [
+   "backend/app/schemas.py",
+   "backend/app/services.py",
+   "backend/tests/test_qoder_ord0386_plan_version_history.py",
+   "contracts/openapi.yaml",
+   "frontend/e2e/qoder-ord0386-plan-version-history.spec.ts",
+   "frontend/playwright.ord0386-Q.config.ts",
+   "frontend/src/app/V8Experience.tsx",
+   "frontend/src/features/studio/PlanVersionHistoryPanel.tsx",
+   "frontend/src/features/studio/planVersionHistoryCopy.ts",
+   "frontend/src/styles.css",
+   "review/ord0386-plan-version-history/READINGS.md",
+   "review/ord0386-plan-version-history/api_ts_drift.txt",
+   "review/ord0386-plan-version-history/collect_candidate.txt",
+   "review/ord0386-plan-version-history/collect_control_head.txt",
+   "review/ord0386-plan-version-history/gate-report-final.json",
+   "review/ord0386-plan-version-history/mutant_M6_no_list_padding.json",
+   "review/ord0386-plan-version-history/mutant_kill_table.json",
+   "review/ord0386-plan-version-history/probe21_last_row_clear.png",
+   "review/ord0386-plan-version-history/probe21_rows.png",
+   "review/ord0386-plan-version-history/reachability.json",
+   "review/ord0386-plan-version-history/render_final.json",
+   "review/ord0386-plan-version-history/scene9_rows.png",
+   "review/ord0386-plan-version-history/scene9_viewport.png",
+   "review/ord0386-plan-version-history/studio_footer.json"
+  ],
+  "intersection": [],
+  "product_introduced_by_candidate": [
+   "backend/app/schemas.py",
+   "backend/app/services.py",
+   "frontend/src/app/V8Experience.tsx",
+   "frontend/src/features/studio/PlanVersionHistoryPanel.tsx",
+   "frontend/src/features/studio/planVersionHistoryCopy.ts",
+   "frontend/src/styles.css"
+  ]
+ },
+ "merge_tree": {
+  "exit": 0,
+  "first_line": "3160d4d8b0a56ab0f3c5315afa7c02204d8f6f4f",
+  "conflict_reported": false,
+  "stderr_head": ""
+ },
+ "gate_run": {
+  "requested": [],
+  "collect_exit": null,
+  "collected": null,
+  "test_exit": null,
+  "summary": null,
+  "export": "D:/moodle/_qoder_cmdr_ref_20260921/snap_preflight_050116",
+  "blob_equality": [
+   {
+    "path": "backend/app/schemas.py",
+    "candidate_blob": "4c20ba9ec7a4d8970c99e22c20180db1ea1ae971",
+    "export_blob": "4c20ba9ec7a4d8970c99e22c20180db1ea1ae971",
+    "equal": true
+   },
+   {
+    "path": "backend/app/services.py",
+    "candidate_blob": "3a31edab9198a17ab0215d64cb426c9c0dc746aa",
+    "export_blob": "3a31edab9198a17ab0215d64cb426c9c0dc746aa",
+    "equal": true
+   },
+   {
+    "path": "backend/tests/test_qoder_ord0386_plan_version_history.py",
+    "candidate_blob": "2405a7ca953882b1908a09791390bd43d00658d9",
+    "export_blob": "2405a7ca953882b1908a09791390bd43d00658d9",
+    "equal": true
+   },
+   {
+    "path": "contracts/openapi.yaml",
+    "candidate_blob": "28590a13efd85d6c52f5214d7ef94ab3e25ec83c",
+    "export_blob": "28590a13efd85d6c52f5214d7ef94ab3e25ec83c",
+    "equal": true
+   },
+   {
+    "path": "frontend/e2e/qoder-ord0386-plan-version-history.spec.ts",
+    "candidate_blob": "c713e9fd9f607eb88b8288248135c851d70231b0",
+    "export_blob": "c713e9fd9f607eb88b8288248135c851d70231b0",
+    "equal": true
+   },
+   {
+    "path": "frontend/playwright.ord0386-Q.config.ts",
+    "candidate_blob": "5ab27749d31740cd15c2c2eb54aa9e03b1ad7221",
+    "export_blob": "5ab27749d31740cd15c2c2eb54aa9e03b1ad7221",
+    "equal": true
+   },
+   {
+    "path": "frontend/src/app/V8Experience.tsx",
+    "candidate_blob": "1e6cc16a714e71b0045105a285db53a91b4022c9",
+    "export_blob": "1e6cc16a714e71b0045105a285db53a91b4022c9",
+    "equal": true
+   },
+   {
+    "path": "frontend/src/features/studio/PlanVersionHistoryPanel.tsx",
+    "candidate_blob": "c43a128a445a1a71dc84f307c8f4b9d74b0083f7",
+    "export_blob": "c43a128a445a1a71dc84f307c8f4b9d74b0083f7",
+    "equal": true
+   },
+   {
+    "path": "frontend/src/features/studio/planVersionHistoryCopy.ts",
+    "candidate_blob": "77bf442d192102c9965853f58e8c3a1a8768c2c5",
+    "export_blob": "77bf442d192102c9965853f58e8c3a1a8768c2c5",
+    "equal": true
+   },
+   {
+    "path": "frontend/src/styles.css",
+    "candidate_blob": "9cf7b2e69e1317b9e09fb499835ce055024ad601",
+    "export_blob": "9cf7b2e69e1317b9e09fb499835ce055024ad601",
+    "equal": true
+   },
+   {
+    "path": "review/ord0386-plan-version-history/READINGS.md",
+    "candidate_blob": "3c0609333b85758f936df7632955ee87f60e22bf",
+    "export_blob": "3c0609333b85758f936df7632955ee87f60e22bf",
+    "equal": true
+   },
+   {
+    "path": "review/ord0386-plan-version-history/api_ts_drift.txt",
+    "candidate_blob": "003b041c0e801716a5e210c1a17962550981bf67",
+    "export_blob": "003b041c0e801716a5e210c1a17962550981bf67",
+    "equal": true
+   },
+   {
+    "path": "review/ord0386-plan-version-history/collect_candidate.txt",
+    "candidate_blob": "c4a19b34c5cf82e8a506293bf5d696c682d99e43",
+    "export_blob": "c4a19b34c5cf82e8a506293bf5d696c682d99e43",
+    "equal": true
+   },
+   {
+    "path": "review/ord0386-plan-version-history/collect_control_head.txt",
+    "candidate_blob": "e0e91caea93b29bcd3595c5343f000c3354ee333",
+    "export_blob": "e0e91caea93b29bcd3595c5343f000c3354ee333",
+    "equal": true
+   },
+   {
+    "path": "review/ord0386-plan-version-history/gate-report-final.json",
+    "candidate_blob": "4bc272b01df726705be5969b9192f21aadeab517",
+    "export_blob": "4bc272b01df726705be5969b9192f21aadeab517",
+    "equal": true
+   },
+   {
+    "path": "review/ord0386-plan-version-history/mutant_M6_no_list_padding.json",
+    "candidate_blob": "022475b9ea08d49fa0dedcf11c7d3942fcf78a62",
+    "export_blob": "022475b9ea08d49fa0dedcf11c7d3942fcf78a62",
+    "equal": true
+   },
+   {
+    "path": "review/ord0386-plan-version-history/mutant_kill_table.json",
+    "candidate_blob": "032b207952faa2439281006fc8daafcd4e74cdc7",
+    "export_blob": "032b207952faa2439281006fc8daafcd4e74cdc7",
+    "equal": true
+   },
+   {
+    "path": "review/ord0386-plan-version-history/probe21_last_row_clear.png",
+    "candidate_blob": "384fec56fef85ac252e2a2d90d258493494a95a8",
+    "export_blob": "384fec56fef85ac252e2a2d90d258493494a95a8",
+    "equal": true
+   },
+   {
+    "path": "review/ord0386-plan-version-history/probe21_rows.png",
+    "candidate_blob": "3399ccbf9a9252777bf59d1e3f6c63f9f279c986",
+    "export_blob": "3399ccbf9a9252777bf59d1e3f6c63f9f279c986",
+    "equal": true
+   },
+   {
+    "path": "review/ord0386-plan-version-history/reachability.json",
+    "candidate_blob": "a274adc2dbea20d284a5e705c93bae37812da8b2",
+    "export_blob": "a274adc2dbea20d284a5e705c93bae37812da8b2",
+    "equal": true
+   },
+   {
+    "path": "review/ord0386-plan-version-history/render_final.json",
+    "candidate_blob": "0930aa3102e17aea37c88c0469a98909868e6177",
+    "export_blob": "0930aa3102e17aea37c88c0469a98909868e6177",
+    "equal": true
+   },
+   {
+    "path": "review/ord0386-plan-version-history/scene9_rows.png",
+    "candidate_blob": "ee5e0aafd1ba90bddb341f91daa50ba25f3c1753",
+    "export_blob": "ee5e0aafd1ba90bddb341f91daa50ba25f3c1753",
+    "equal": true
+   },
+   {
+    "path": "review/ord0386-plan-version-history/scene9_viewport.png",
+    "candidate_blob": "f44b23f0fce93d0c7cd67117665c27031f426bf6",
+    "export_blob": "f44b23f0fce93d0c7cd67117665c27031f426bf6",
+    "equal": true
+   },
+   {
+    "path": "review/ord0386-plan-version-history/studio_footer.json",
+    "candidate_blob": "fb286b48d7fb94275c9a8f11a10b464dbaf9781f",
+    "export_blob": "fb286b48d7fb94275c9a8f11a10b464dbaf9781f",
+    "equal": true
+   }
+  ],
+  "whole_suite": {
+   "collect_exit": 0,
+   "collected": 1404,
+   "interrupted": false,
+   "error_lines": [
+    "tests/test_qoder_ord0332_error_receipt.py::test_R7_the_envelope_keeps_every_field_it_already_had",
+    "tests/test_qoder_ord0332_error_receipt.py::test_R8_the_seed_is_read_off_the_real_request_not_just_the_dataclass",
+    "tests/test_solver_runtime_policy.py::test_unexpected_solver_programming_error_is_not_silently_hidden"
+   ],
+   "tail": [
+    "    _PortalFactoryType = Callable[[], AbstractContextManager[anyio.abc.BlockingPortal]]",
+    "-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html",
+    "1404 tests collected in 11.11s"
+   ],
+   "cmd": "D:/moodle/CityNexus/.venv/Scripts/python.exe -m pytest --collect-only -q tests  (cwd=<export>/backend, PYTHONPATH=<export>)"
+  },
+  "deletions": {
+   "deleted_by_candidate": [],
+   "still_present_in_export": []
+  },
+  "interpreter": "Python 3.12.14 (main, Aug 25 2026, 14:01:42) [MSC v.1944 64 bit (AMD64)]",
+  "exposure": {
+   "ruler_blob": "d3f66ce9fecd0790981a4fcdeb5e36b1c0fd10f2",
+   "ruler_blob_computed": null,
+   "ruler_file": "ui_exposure_taint_ast_r7b.cjs",
+   "candidate_files_in_view": 4,
+   "tip_cells": 10,
+   "cand_cells": 10,
+   "growth_by_file_and_rule": {},
+   "unpaired_added": [],
+   "added_line_exact": [],
+   "shifted_only": false,
+   "removed_count": 0,
+   "removed": [],
+   "disclosed_slip": "a same-file, same-rule relocation with equal counts reads as a shift; the AST ruler has no cell identity"
+  },
+  "frontend_build": {
+   "builder_rc": 0,
+   "vite_build_rc": 0,
+   "dist_exists": true,
+   "index_exists": true,
+   "asset_refs": [
+    "/assets/index-DaHo2ke-.js",
+    "/assets/index-DJ0wwAnl.css"
+   ],
+   "live_tree": "3160d4d8b0a56ab0f3c5315afa7c02204d8f6f4f",
+   "info_file": "D:\\moodle\\_qoder_cmdr_ref_20260921\\live_checks\\_build_cf0ed0b_info.json",
+   "build_tail": [
+    "files generated",
+    "  dist/v10-sw.js",
+    "  dist/workbox-6923124b.js",
+    "\u001b[33m",
+    "(!) Some chunks are larger than 500 kB after minification. Consider:",
+    "- Using dynamic import() to code-split the application",
+    "- Use build.rollupOptions.output.manualChunks to improve chunking: https://rollupjs.org/configuration-options/#output-manualchunks",
+    "- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.\u001b[39m"
+   ]
+  }
+ },
+ "problems": [],
+ "verdict": "READY_TO_LAND",
+ "landing": {
+  "http": 200,
+  "response_head": "{'ref': 'refs/heads/mirror/integration-frontend-apple-pass1', 'node_id': 'REF_kwDOUhlJJ9oAMnJlZnMvaGVhZHMvbWlycm9yL2ludGVncmF0aW9uLWZyb250ZW5kLWFwcGxlLXBhc3Mx', 'url': 'https://api.github.com/repos/Ca",
+  "tip_after": "cf0ed0b531681181642a30120a1b41f2bf681a40",
+  "branches_route": "cf0ed0b531681181642a30120a1b41f2bf681a40",
+  "both_routes_agree": true,
+  "landed": true
+ },
+ "discipline": {
+  "evidence_paths_overwritten": 0,
+  "databases_opened": 0,
+  "surfaces_started_or_stopped": 0,
+  "credential_values_printed": 0,
+  "candidate_refs_pushed_by_commander": 0
+ },
+ "claim_kind": "git_and_pytest_determined",
+ "claimed_result": null,
+ "derived_result": null
+}
