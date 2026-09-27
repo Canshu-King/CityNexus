@@ -16588,6 +16588,161 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### ORD-0371 补料2 交付（lane S4-ast-taint，量具线）— r5c：类别按形状判，豁免按紧邻判，红的原因照实写
+
+新文件名 `claim_coordinate_check_r5c.py` = 9933e419935fe6fbb621c2d6121d7103cd3e6727 （53195 B、755 行，evidence/ord0371c-q43-r5c-0315 这个目录名只是批次标签，落盘实测 02:49）。r4b/r4e/r5/r5b 全部一字节未动。发布字节我拉回来在本地跑过一遍自测：92 臂绿（件 `evidence/ord0371c-q43-r5c-0315/selftest_r5c.json` = f4eb0af6d1a1314e280d6f49ee073a6fa37cb052 ）。
+
+一、你给的两个新形，我先按复现分清楚，因为两条诊断不一样：
+  形一（带单位的量）：单位表里本来就有 GB/秒，r5b 也已能读小数点；`7.53 秒`、`1.58 GB` 在当前 n3_0212 与 n3_0240 里已经不存在（车道改写后这两块现在门与 r5c 下同为绿 2c489b0ba16d0525853ea1b0d06fc56102c8636c ）。真正还在红的是 `0.4 GB` 等 5 枚，原因不是"没归类"，是归类了但收据不在数字 ±80 字内（实测 `0.4 GB` 的最近收据距它 397 字）。旧版把这种情况写成 `no class matched`，读起来就像"尺有 DIMENSION 却没吃"——这正是你上一条的判断来源。r5c 把两件事拆开：类别照形状归，豁免照紧邻判，红的时候具名 `READING_CLASSIFIED_BUT_RECEIPT_TOO_FAR`（9933e419935fe6fbb621c2d6121d7103cd3e6727 ）。判级不变，只有原因变诚实。
+  形二（工单号）：按你说的"把前缀后的编号与独立计数分开"做，只认写出来就带前导零的四位数形（`0373`、`0376`），因为量词测试在它前面，`0 处`、`3 条` 仍算计数照旧红 922e27631ae523d52658afd301d9afda65b7f7bf 。代价照实说：一枚写成 `0373` 的裸计数现在会被放过；而 `138`、`174`、`206`、`390` 这种无前导零的裸数字仍逐枚红。
+
+二、两面验收（你要的那两条，逐枚在块里读）：
+  放宽侧：`401` 归 HTTP_STATUS 且该块转绿（n2_1824）；`0.4 GB` 归 DIMENSION；`0373` 归 IDENTIFIER_PART 922e27631ae523d52658afd301d9afda65b7f7bf
+  收紧侧：不带任何坐标的 `875 个` 仍红（qoder-0370_0130 第 119 行），`1392 条`、`38 处`、`6 条`、`52 秒`、`129 个`、`77 处`、`13 条` 全部仍红 922e27631ae523d52658afd301d9afda65b7f7bf
+  反控：24 处逐条改回旧形状，全部被咬住、漏网 0 处；其中"把 DIMENSION 的紧邻条件去掉"这一处被 12 条臂咬住——也就是"类别归了就自动豁免"这条路在这把尺里是走不通的（件 `evidence/ord0371c-q43-r5c-0315/mutation_countercontrol_r5c.json` = 360ca38cbce518e246a95e4aaacb2d92e1162ffe ）。
+
+三、管道现在的读数（不是保证）：车道块 17 枚，门 r4e 下绿 3 枚、r5 下 3 枚、r5c 下 4 枚 2c489b0ba16d0525853ea1b0d06fc56102c8636c ；剩余红 67 枚，其中 59 枚是作者补同行锚的活（量词计数与裸数字），5 枚是"已归类但收据不在 ±80 内"——这一类归你裁，不动尺；另有 3 枚是逗号枚举被读成一枚数（`0,145,522,44`），我报形不擅自放宽 922e27631ae523d52658afd301d9afda65b7f7bf 。
+
+四、换门一行：`ledger_insert_after.py:28` 的文件名改成 claim_coordinate_check_r5c.py（旧四版尺路径我都没碰，新 revision 新文件名）。我没动 `ledger_inbox_apply_r1.py`。
+
+五、没改善的部分：本轮只多让 n2_1824 一枚转绿；收件箱在跑，上面的分母是 02:49 的快照，你重跑代插时以 `evidence/ord0371c-q43-r5c-0315/pipeline_r4e_r5_r5c_0246.json` = 2c489b0ba16d0525853ea1b0d06fc56102c8636c 为本轮基线，别拿我这个数当你的；"收据必须在 ±80 字内"这条仍按 Q74 执行，我没替你把门打开；ORD-0364（r7c 具名授权集）与 ORD-0361 重基未开工；本尺只在这些真实块与自测件上跑过，没跑过整本账本。
+
+
+### ORD-0370b · 车道 qoder-0370 · 第一档交付 · 2026-09-28 0244+08
+
+分支 `review/Q-ord0370b-renderable-fallbacks`，tip = `8da7a695817175ad139d5bfcae433b1feccf84a7`（`git ls-remote origin` 现读逐字符等于本地 HEAD；
+树 `70ccc5968379b9bf65046036266f1d9272906c7f`，尺 blob `62caf46039f56eef6a0a2e4ef4836bfb2bb05e14`，字典 blob `825b32e580a1d6fbdc7562d2f0d6f068238fb8dd`，读数件 blob `21d0231ad5924902f0a3ed9102578dc60087daba`）。
+基线 = 现尖 `bb3f5853d35835bd5078a2cccba15e2e7a82f213`；权威线未被本车道移动。
+本批三笔（每批一笔，均已推）：
+  1) 尺的渲染档 `27063becb8b0b1733df7b3f417846edb99ceb283`
+  2) 产品第一档 `7afe928fb604a4eede1c037f8004e60a2f5edf8e`
+  3) 逐枚清单 `8da7a695817175ad139d5bfcae433b1feccf84a7`
+
+## 1 判据（已写进尺的 docstring，不是本块的口头话）
+
+`RENDER_TIERS` 面在 tools/cnx_copy_tiers_r1.py:56 起，档位函数在 tools/cnx_copy_tiers_r1.py:338，槽位判定在 tools/cnx_copy_tiers_r1.py:231。
+三件同时成立才算第一档，缺一件就落第二档：
+  (a) 槽位会进屏：`JSX_CHILD`（元素文本）或 `ATTR_VISIBLE`（title/placeholder/alt/label）。
+  (b) 该位上没有被语言分支守卫：`{zh ? (x ?? "甲") : (x ?? "乙")}` 虽是元素文本，但中文屏走中文臂。
+  (c) 字面量本身携带语言：`—` 在元素文本里没有可本地化的东西；点分名（`agent.intentUnknown`、`nav.`）是 t() 的参数不是文案。
+明确不主张的两件事：`data-*` 属第二档（样式表可用 attr() 打印、审阅者在 devtools 里读得到，文本尺说它"不上屏"就是没量过的断言）；
+`key={…}` 是本面唯一可断言"不可能上屏"的槽位（React 消费它做协调，不写进 DOM）。
+
+## 2 第一档：收了 5 处（读数 review/ord0370b-readouts/R1.txt:16）
+
+英文字典值与被替换的字面量逐字相同，英文屏不可能移动；只有中文屏不再读英文：
+  DestinationPreparationPanel.tsx:374 `provider` → `discovery.providerUnnamed` / 服务方（blob 825b32e580a1d6fbdc7562d2f0d6f068238fb8dd 内）
+  V14PreventivePanel.tsx:185 `unavailable` → `recovery.statusUnavailable` / 暂无状态
+  V14PreventivePanel.tsx:234 `guardian envelope` → `recovery.guardianEnvelope` / 守护授权
+  V14RecoveryTruthPanel.tsx:139 `Current activity` → `recovery.changedFromActivity` / 当前活动
+  V14RecoveryTruthPanel.tsx:141 `recovered activity` → `recovery.changedToActivity` / 恢复的活动
+V14PreventivePanel 原先不 import 任何 i18n、V14RecoveryTruthPanel 只 import useLocale，两处各补 hook；
+两面板都在默认 V8Experience 面上、且被 LocaleProvider 包着（frontend/src/main.tsx:1742）。
+字典 distinct key 由 629 到 634（读数 review/ord0370b-readouts/R1.txt:13），两块对称、无重复键。
+
+## 3 尺的读数（现跑，不是引用）
+
+tier A 0 处（读数 review/ord0370b-readouts/R1.txt:2）；tier B 由 77 到 72 处（读数 review/ord0370b-readouts/R1.txt:3）；被排除的机器令牌 150 处（读数 review/ord0370b-readouts/R1.txt:4）；
+内联双语对分母 635（读数 review/ord0370b-readouts/R1.txt:5，只作分母）。
+渲染分档：第一档 8 处（读数 review/ord0370b-readouts/R1.txt:6）、第二档 61 处（读数 review/ord0370b-readouts/R1.txt:7）、第三档 3 处（读数 review/ord0370b-readouts/R1.txt:8），三档相加等于 tier B。
+反控：`--mutant` 共 25 个具名臂（K1-K3 三、K4a-i 九、K5 一、K6a-c 三、K7a-j 九），全 MET；
+整行 MET 计数 31 处（读数 review/ord0370b-readouts/R1.txt:9）、臂红 0 处（读数 review/ord0370b-readouts/R1.txt:10）。尺退出码 1（读数 review/ord0370b-readouts/R1.txt:11）——红的是没清完的存量，不是判据被改宽。
+
+## 4 FRONTSRC_BUILD_PREREQ（我自己的 snap，junction 接依赖，完事先卸再删）
+
+snap = `git archive bb3f5853d35835bd5078a2cccba15e2e7a82f213 frontend` 解出后覆盖本批四个文件；node_modules 用 `mklink /J` 接 CityNexus 本体。
+`tsc -p tsconfig.typecheck.json --noEmit` 退出码 0（读数 review/ord0370b-readouts/R1.txt:17）；`vite build` 退出码 0（读数 review/ord0370b-readouts/R1.txt:18），9.83s 完成，
+产物 index-Ceu7aOAa.js（读数 review/ord0370b-readouts/R1.txt:19），五枚新中文值逐枚从该产物里 grep 回读到（含 ORD-0367 的 en 值仍在位）。
+`rmdir node_modules` 卸掉 junction 后才删 snap 目录；卸后回验 D:/moodle/CityNexus/frontend/node_modules 仍 394 项（本体未动）。
+
+## 5 第二、三档：本批只列不改（逐枚在 review/ord0370b-readouts/R1.txt，全文已在分支内 blob 21d0231ad5924902f0a3ed9102578dc60087daba）
+
+第三档 3 处（读数 review/ord0370b-readouts/R1.txt:8）全部在 frontend/src/main.tsx:1440、:1451、:1464 的 `key={…}` 位（清单行见读数件 T3 段）。
+第一档剩下 8 处（读数 review/ord0370b-readouts/R1.txt:6）也一律不改，两类理由：
+  · frontend/src/main.tsx:1132、:1393、:1398、:1441、:1452、:1465、:1529 共七处在 `LegacyApp` 内，
+    而 LegacyApp 只在路径以 /legacy 开头时挂载（frontend/src/main.tsx:1728），默认屏是 V8Experience；
+    且 main.tsx 全文从不调用 t()。在那儿挑七个词进字典会让一条本来整屏英文的老面"看起来本地化"，属另一张单。
+  · frontend/src/features/setup/JourneyTrialSetup.tsx:996 的 `not-asked` 与服务器能力词表同形
+    （同一行的另一臂直接打印 capability / reason_code / recommended_action 原码）。
+    把这枚显示 token 翻成中文会动到已冻结的能力词汇，那是请裁，不是夜改。
+第二档 61 处（读数 review/ord0370b-readouts/R1.txt:7）逐枚带槽位名列在 review/ord0370b-readouts/R1.txt 的 T2 段，不改的理由分四种：状态写入是否上屏取决于谁读那份 state（文本尺判不了）；
+遥测串与对象字段服务于归属通道（Q71 把技术事实钉在 data-*/`http_status=` 上）；`data-*` 属性位；以及被语言分支守卫的内联对。
+
+## 6 写这块之前被我自己抓到、并已变成反控臂的两个错
+
+K7j：前一版按"最近的未闭合 `{`"判 JSX 子元素，把 `setMessage(` 换行后的 `body?.detail ?? "No alternative plan…"`
+     判成了元素文本 —— 现场在 frontend/src/features/recovery/RecoveryRequiredPanel.tsx:71，那是 if 控制块里的状态写入。
+K7g：`${` 被当成 JSX 的 `{`，一次虚报 21 处第一档（实际 8 处），补 `$` 与"最近 `>` 到 `{` 之间不得有代码标点"后收敛。
+两处都以臂的形式留下（tools/cnx_copy_tiers_r1.py:338 下方的 cases 里），不是悄悄改宽。
+
+## 7 没改善的部分
+
+1. 尺仍红：剩余 72 处 tier B（读数 review/ord0370b-readouts/R1.txt:3）里只收了 5 处（读数 review/ord0370b-readouts/R1.txt:16），中文用户在其他位上仍会读到英文。
+2. 第一档剩 8 处（读数 review/ord0370b-readouts/R1.txt:6）我一处没收：七处属 LegacyApp（需整面本地化的单），一处待能力词汇的裁。
+3. 本批没有任何"用户一定能看见"的运行时验证：我只证到槽位、编译与产物内含。
+   我没跑 e2e、没在浏览器上打开这三块面板，因此"中文屏现在显示暂无状态"这句话是产物回读推出来的，不是截图看到的。
+4. 渲染位置的判定仍是文本级：内层 `${`、跨函数返回的 state 读取、`useState` 初值这类形状会落到第二档而不会升上来；
+   第二档 61 处（读数 review/ord0370b-readouts/R1.txt:7）里可能混有真会渲染的，本面不替它担保。
+5. V14PreventivePanel/V14RecoveryTruthPanel 整体仍未本地化：其余标签（FORECAST、Authorization、risk、CHANGED）照旧英文，
+   本批只把 5 个兜底词接进字典（读数 review/ord0370b-readouts/R1.txt:16）。
+
+## 8 请裁（接前单 P-A..P-E）
+
+- P-F：LegacyApp 是否整面本地化（含 7 处第一档）？还是干脆下线该路径？
+- P-G：`not-asked` 这类与服务器词表同形的显示 token，要不要在能力词汇里给出对应的中文显示层？
+- P-H：第二档若要清，需要能读数据流的判据（state → JSX），那不是文本尺做得住的；是否让我把它作为 AST 面另开一件？
+
+读数件与尺同源同尖：本块每个数字的行坐标都指向 blob 21d0231ad5924902f0a3ed9102578dc60087daba 里的那一行。
+
+
+### ORD-0369 r2 交付（lane Q）— 按 Q72 自基重做：机械 rebase 会静默放过的那个错我抓到了，六批意图接在 0370 之上而不是盖掉它
+
+新分支 `refs/heads/review/Q-ord0369-replan-walkthrough-r2`，base 是现尖 `961836390c5325863acdc1834d4a4cd16fd97081`。候选头 `7a7d41fdbfad7b521e1db3455863c90e32ba1c33`，`git ls-remote origin` 逐字符回验等于本地头（40 位全等）。已推的第一版那枝我不覆盖（Q57）。
+批次 sha 全 40 位：`0910f9faa9fafab834c06a262538c6ed50870206`（证据过期卡）、`e5802c1ef0ee0d2d798906f2b9dfcc278fbce5e1`（舞台那句 422）、`55edc42882e0f17916096bbff3abea4ba5ba32a8`（工作室试算）、`d9640f1503cedb881f4d5f85fd770287aa9d85f1`（门）、`36121cfb6cd30f1888656340b23712a77fa8dbb0`（AI 归属）、`4f121725241a2291aa87f80ec73aa4f336c72cc3`（重基判断）、`7a7d41fdbfad7b521e1db3455863c90e32ba1c33`（读数件）。
+
+重基抓到的两件事（这才是这单退回的价值）
+- AI 那批 cherry-pick **干净通过，因此是错的**：我的来源映射键在 `READY` 上，而 ORD-0359 已把它改名成 `CONFIGURED_UNVERIFIED`，理由在 `backend/app/agent/ai_availability.py:36`（同一枚常量声明处）——"有 key"不等于"能用"。若把 `CONFIGURED_UNVERIFIED` 读成"模型写过这句"，就是在 0359 关掉的那个洞之上再开一层。现在只有 `PROVIDER_REFUSED`（唯一说明提供方真被触达并答过话的状态）保留模型归属，`DISABLED_BY_OPS` 与 `NOT_CONFIGURED` 判非模型，其余含状态缺席保持既有标签。函数在 `frontend/src/features/planning/PlanWithAiSheet.tsx:438`，归属位上屏在 `frontend/src/features/planning/PlanWithAiSheet.tsx:1228`，件 blob `aee2983b5ceee004e7279893518858dccc073ee4`。
+- 唯一真冲突正是 0370 动过的那一行：它已把裸的 pending 换成取词 `t("studio.snapshotPending")`（`frontend/src/i18n/LocaleContext.tsx:683` 与 `frontend/src/i18n/LocaleContext.tsx:1437`）。解法保留它的取词，把本单的钱位与时长格式化接在其上。工作室面板件 blob `35f74572e0b45825cb87686eadbc39dc2f773953`。
+- 顺手补本单自己开的洞：替换 token 行之后那枚旧的 gate-failed 兜底键在全树（ts、tsx、py、cjs 四类都查过）无任何读者，已从两份字典删除；原因清单补了领句「这次改动不能被接受的原因：」，并在 B2 臂里断言（`frontend/e2e/qoder-ord0369-replan-walkthrough.spec.ts:211`），断言即"这个键真被读到"的证明，比 grep 强。spec 件 blob `da8fa643bb869c5ec374afb7d5e24cac3112e4af`。
+
+FRONTSRC_BUILD_PREREQ（两条都真跑过，不是附注）
+- `tsc --noEmit` 退出码 0；`--listFiles` 回读 875 个文件且含本单改的 4 枚源文件，排除"零文件空转的绿"。
+- `vite build` 退出码 0，用时 10.36 秒，预缓存 8 条，产物名 `assets/index-DUX9Q9Ho.js`。
+- 两者都跑在既有导出目录（依赖为硬链接件），全程没有新建 junction，被服的 dist 与本车道目录无共享 inode。
+
+canary 替身证明重做到**当前在服的那一代**（旧证明已失效，原因写在件里）
+- 号令者 01:13 记的在服产物是 `index-BEEP22s_.js`，我 02:3x 用 `live_checks/cmdr_tunnel_read_r1.py:71`（那枚 instrument 自己填 `asset_refs` 的位置）量到在服已换成 `index-B800Wnn2.js` 与 `index-240iHFm5.css`，所以旧那次的字节相等描述的是一个没人再服的 bundle。
+- 重做：在服根目录的 shell 与本车道副本同为 sha256 前 16 位 `9545404149b578a4`（副本是 `shutil.copy2` 真复制）；同一屏在用户可见面与车道替身面各截一张，两张 PNG 同为 351517 字节、sha256 前 16 位 `f113ffb86520eedb`，读数在 `review/ord0369-phone-replan/canary_proof_r2.json`，两张图同名放在该目录。
+
+门禁（新代次重跑，九格扩到十三格）
+- 本单 13 条（`frontend/e2e/qoder-ord0369-replan-walkthrough.spec.ts:69` 起）：A1-A4 卡、B1-B4 工作室、C1 舞台、E1-E4 AI 归属。只跑这 13 条那次 `expected 13 / unexpected 0 / skipped 0`，用时 32373.2 毫秒，报告件 blob `963e58975a755340e73025fb7cf8d56a3b18279a`。
+- 与 ORD-0240 那 3 条已验收臂同栈同一次跑：`expected 16 / unexpected 0 / skipped 0 / flaky 0`，用时 29870.2 毫秒，报告件 blob `5e0c48263db2ca42d119b782b002d27e8a505eed`（`review/ord0369-phone-replan/gate-report-r2-with-ord0240.json`）。`ord0240-1..3` 状态全为 expected，即那条已验收的门一字未动仍然绿。
+- 没有 mock 产物、没有 skip、没有改任何现有断言换绿；`skipped 0` 写在报告 `stats` 里可复算。
+
+仍然没改善的（换代没让它变好）
+- 手机上「提出改动 → 接受」这条链仍走不完：舞台「请求重规划」仍 HTTP 422 且 `details.gaps` 单条为 `FACT_PRESENT_BUT_NOT_HARD_ELIGIBLE`（发射器 `backend/app/main.py:5513`），工作室仍因 5 个活动全为受保护锚点而使 `can_accept` 恒假（`frontend/src/features/studio/V12TripStudioPanel.tsx:54` 与 `frontend/src/features/studio/V12TripStudioPanel.tsx:59`），因此实时屏没有 proposal、接受按钮不在屏上。接受腿的产品码只有既有门 `frontend/e2e/golden.spec.ts:55` 在 fixture 后端上覆盖。
+- AI 开关关着时提交按钮仍可按下并拿到 COMPLETED，我没改成禁用——那等于替运营做"关掉即禁用"的决定，而服务器明确区分这两件事；我只把"这句是谁写的"说对了。要真按不可用处理，需你先裁 `DISABLED_BY_OPS` 是否等于禁用入口。
+- 演示方案的冻结证据早于场景起点就过期，这张卡在手机上常驻（种子数据一格，本单没动）。实时屏上没有舞台浮球，发起改动的入口只在今天屏（设计判断，我没擅自加导航）。
+- 390×844 是设备模拟（`frontend/playwright.ord0369-Q.config.ts:37`），不是用户真机；`REPRODUCED(simulated)`。
+
+
+### N3 02:40+08 ORD-0375 交付：Today 安静行在四个窄屏宽度下逐枚命中测试，分隔点按实测撤掉
+
+- 交付 A：`refs/heads/review/N3-ord0375-quiet-row-narrow` 逐字回验到 `23b06371710bbd6908067a26e7c899f15d4e2645`（`review/evidence/ord0375/diff_r1.json:3`；`git ls-remote origin` 退出码读到 0）。base = 现尖 `bb3f5853d35835bd5078a2cccba15e2e7a82f213`（`review/evidence/ord0375/diff_r1.json:2`），推时它仍是尖，所以这一枝是干净快进、无需重基。三批 full 40 位在 `diff_r1.json:28`（gate `23b06371710bbd6908067a26e7c899f15d4e2645`）、`diff_r1.json:29`（产品 CSS `fda663f23775a0e6e7dfb8d1a365b653669a0e40`）、`diff_r1.json:30`（杠杆 `a5b56b4c64ad77938313d73148afcf53f1c14248`）。
+- 差集：`review/evidence/ord0375/diff_r1.json:4` 读到改动落在 3 个文件、`:5` 新增 289 行、`:6` 删除 8 行；逐文件在 `diff_r1.json:9`（杠杆 +6）、`diff_r1.json:13`（门 +276）、`diff_r1.json:17`（CSS +7）与 `diff_r1.json:18`（CSS −8）。含 `frontend/src` 的文件数读在 `diff_r1.json:26`（值为 1，即 `frontend/src/design-tokens.css`，其交付 blob 是 `diff_r1.json:24` 的 `35280bccb425e503500b380f2a55473bb303a28f`）。
+- 要件 1 的实测（四宽、真手机比例、复用 0373 那根杠杆而不是另造）：读数件 `review/evidence/ord0375/cmdr023704n3__Q1.json`，宽度数读在该件 `:6`（值为 4）。四枚标签各自的"可命中按钮数"在 320 那格读到 1（`review/evidence/ord0375/cmdr023704n3__Q1.json:14`、`:26`、`:38`、`:50`），360 那格同样读到 1（`:80`、`:92`、`:104`、`:116`），390 那格 1（`:146`、`:158`、`:170`、`:182`），430 那格 1（`:212`、`:224`、`:236`、`:248`）。重叠清单四格都读到空表：`review/evidence/ord0375/cmdr023704n3__Q1.json:62`、`:128`、`:194`、`:260`（比对对象是固定底栏 `nav.v8-mobile-nav`、hero 卡 `.v8-trip-hero` 与行内彼此）。门整体读数：`live_checks/e2e_logs/n3_23b06371_023704.json` 的 `exit_code` 读到 0、`verdict` 读到 GREEN、`passed` 读到 3（Q1、Q2 加 real-seed project）。
+- 要件 2（折行本身）：折行是真的，且**折行后仍可命中**，所以按你的口径它不算缺陷——行的带数在 `review/evidence/ord0375/cmdr023704n3__Q2.json:9`（320 读到 2 带）、`:18`（360 读到 2）、`:27`（390 读到 2）、`:36`（430 读到 1）；两带之间的最小间距读在 `:12`、`:21`、`:30`（三格都是 46 像素），430 单带所以那格读到 null（`:39`）。观感是我看图判的：帧在 `review/evidence/ord0375/cmdr023704n3__Q1_320x568.png`、`..._Q1_360x740.png`、`..._Q1_390x844.png`、`..._Q1_430x932.png`，另有一组居中后的 `..._centred.png`。
+- 看图报出的真缺陷与修法（要件 3，改的是 `frontend/src`，没有删任何按钮）：320 那一帧（`review/evidence/ord0375/cmdr023704n3__Q1_320x568.png`，该宽度折成 2 带读在 `review/evidence/ord0375/cmdr023704n3__Q2.json:9`）里第二行**行首有一个游离的 `·`**——它是 `design-tokens.css` 那条 `.v8-quiet-button + .v8-quiet-button::before` 分隔点，跟着折下来的项一起跑了。我先改成挂在前一项尾部（`::after`），再看图：430 那一帧（`review/evidence/ord0375/cmdr023704n3__Q1_430x932.png`，该宽度单带读在 `review/evidence/ord0375/cmdr023704n3__Q2.json:36`）第一行末尾出现悬着的 `·`，等于把只在一个宽度出现的毛病摊到四个宽度都出现，**是我的退步不是修复**，于是最终把标点整体撤掉、由该行本就有的 16 像素列间距承担分组，交付 blob `35280bccb425e503500b380f2a55473bb303a28f`（`review/evidence/ord0375/diff_r1.json:24`）。撤后四帧复看：320 是三枚加一枚折行、430 是四枚一行，都没有悬点；四枚控件仍在（`review/evidence/ord0375/cmdr023704n3__Q1.json:14` 等 16 格各读到 1 枚可命中）。Pass-8 仍成立：`primary_rendered` 在 `review/evidence/ord0375/cmdr023704n3__Q1.json:63`、`:129`、`:195`、`:261` 四格都读到 1。
+- 我这把尺自己的两处错，按实报（不是产品红）：① 第一版 Pass-8 计数用"当前滚动位能否命中"去量一个布局属性，于是在 320x568 读到 0 枚可命中并判红——hero 主按钮只是当时在视口外；改成"渲染有尺寸且未被祖先排除"与"居中后可命中"两件事分开量（`review/evidence/ord0375/cmdr023704n3__Q1.json:63` 与 `:64` 现在分别是 1 与 1）。② 杠杆的 `NamedHit` 原本只记尺寸不记位置，回答不了"是否压在底栏下"，所以补了 `x`/`y`（那批 `a5b56b4c64ad77938313d73148afcf53f1c14248`），0373 的三格未受影响（下面回归条）。
+- 要件 4（每格配反件，最后按字节还原）：`review/evidence/ord0375/mutations_r1.json` —— M1 把分享入口改成不渲染以打掉命中：`review/evidence/ord0375/mutations_r1.json:9` 的 `runner_exit_code` 读到 3、`:10` `gate_went_red` 读到 true、`:15` `failed` 读到 2（Q1 与 Q2 一起红，因为两格都依赖那枚控件）。M2 把 `·` 伪元素放回去：`:23` 退出码读到 3、`:24` 读到 true、`:29` `failed` 读到 1（只有 Q2 红，正是那格该拦的形状），`:35` `all_arms_hold` 读到 true。CSS 还原：`sha256_before` 与每件的 `sha256_after_restore` 逐字相同、`restored_byte_identical` 读到 true，且跑完后 `git status` 对 `frontend/src` 命中 0 个未提交文件。Q2 里那条伪元素防回归断言之所以能成立，是因为伪元素虽不在 DOM 里、但 `content` 可用 `getComputedStyle` 读到（读数 `review/evidence/ord0375/cmdr023704n3__Q2.json:8`、`:17`、`:26`、`:35` 四格都读到空表）。
+- 编译臂（FRONTSRC_BUILD_PREREQ，本单含 `frontend/src`）：编译臂在**门所借的那棵 node_modules** 上实测通过（CMDR 02:5x 同步后重做，不再只借我车道那棵）：`git -C D:/moodle/CityNexus archive 23b06371710bbd6908067a26e7c899f15d4e2645 frontend` 导出成 snap（rc 读在 `review/evidence/ord0375/snap_build_r1.json:8`），在 snap 的 `frontend/` 下对 `D:/moodle/CityNexus/frontend/node_modules` 建 junction（`review/evidence/ord0375/snap_build_r1.json:5` 起那段步骤，`junction_is_reparse_point` 读到 true），然后 `npx tsc -p tsconfig.check.json --noEmit` 的 rc 读在 `review/evidence/ord0375/snap_build_r1.json:18`（值为 0）、`-p tsconfig.typecheck.json` 的 rc 读在 `:23`（值为 0）、`vite build` 的 rc 读在 `:28`（值为 0）、构建用时读在 `:29`（单位秒）、模块数读在 `:30`、产出的入口资产名读在 `:32`。收尾按你给的顺序：先普通 `rmdir` 卸 junction（`junction_gone` 读到 `review/evidence/ord0375/snap_build_r1.json:48` 的 true），确认没了才 `/s /q` 扫导出（`export_gone` 读在 `:49`），最后回验权威那棵没被我碰坏：`authoritative_node_modules_intact` 读在 `:50`（true）、其 lock 的 sha256 前缀读在 `:51`。两条附带事实：我车道那棵借的是 `_qoder_integration_20260919/frontend/node_modules`，它与权威那棵的 `package-lock.json` 同为 `c40a51e52061d5a5`（同一把尺现算），所以先前那次构建结论方向一致、但现在有权威树上的直接实测；另，我这一枚头构建出的入口资产是 `review/evidence/ord0375/snap_build_r1.json:32` 那个名字，与你说的服务里在跑的 `index-B800Wnn2.js` 不同——那说明线上包不是我这枚头建的，我因此不从线上包里取任何本单结论。没有新建 node_modules junction：本车道那枚是 09-26 依你指示建的，本轮只复用。
+- 回归：上两单的门在交付内容上重跑，`live_checks/e2e_logs/n3_bb3f5853_023512.json` 退出码读到 0、`passed` 读到 4（ORD-0373 三格 + seed），`live_checks/e2e_logs/n3_bb3f5853_023536.json` 退出码读到 0、`passed` 读到 7（ORD-0366 六格 + seed）。
+- 没改善的部分：那一行在 320、360、390 三个宽度下**仍然折成两带**（带数分别读在 `review/evidence/ord0375/cmdr023704n3__Q2.json:9`、`:18`、`:27`），我只是让折行不再有悬点，没有把它变成单行；分组现在完全靠间距，读起来比原来少了标点提示，如果你要保留 `·` 就得接受它在某个宽度悬在行尾，或者改成按视口条件渲染（那是共享壳层改动，我没做）。英文标签更长、折行位置与中文不同，本单只按 `zh-CN` 量过，`en` 那一版没量。手机链 `:4781`/`:4782` 与公网隧道一次没碰，所以没有部署态证据；整套 e2e 回归没跑：跑单件 `live_checks/e2e_logs/n3_23b06371_023704.json:6` 的 `full` 读到 false、`:5` 的 `target` 只写本单 spec，另两件的 `target` 分别是 ORD-0373 与 ORD-0366 的 spec。固定底栏在更矮的屏（比 320x568 还矮一档）会不会压到这一行，没量——四个宽度是你点名的那四个。
+- 落地核实（写块之后现场又动了）：现尖到 `04071b8258ebcdcf1e9e4c9714fb516283d1e1ad`（`review/evidence/ord0375/landing_r1.json:2`），我交付的头 `23b06371710bbd6908067a26e7c899f15d4e2645` 是它的祖先（同件 `:4` 的退出码读到 0），三枚文件在尖上与在我头上逐字相同（`review/evidence/ord0375/landing_r1.json:6`、`:7`、`:8` 都读到 true，尖上的 blob 分别是 `:11`、`:12`、`:13`）。所以本单不需要再重基，我也没有追第四跳。
+
+- 环境：会话里四个 proxy 变量仍指着端口 7892，所有网络命令带 `HTTPS_PROXY= HTTP_PROXY= NO_PROXY='*'` 前缀，`fetch`/`push`/`ls-remote` 退出码都读到 0。凭据文件没读过一次（本单不需要鉴权链）。开工到交付期间浏览器实例串行使用，未并行开多个。
+
+
 ### CMDR 02:3x · 用户定新方向：前端全面仿照 Pi Travel（只借规律，不搬资产）· 三张单已出 @2026-09-28 02:3x+08
 
 方向与其边界
