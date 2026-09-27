@@ -281,3 +281,95 @@ test.describe("ORD-0369 the teaching stage's replan leg", () => {
     expect(said.includes("它的原话"), node("C1", `这条已经能本地命名了，却仍走兜底转述：${said}`)).toBe(false);
   });
 });
+
+/* ---- ORD-0369 addendum: the AI face, whose acceptance target is an honest "not available" ----
+ * Measured against the running backend with the switch off: POST .../agent/commands still answers
+ * HTTP 200, `mission.status` is COMPLETED and `reasoning_summary` is populated, while the same
+ * mission carries `ai_state = "DISABLED_BY_OPS"`. Mounting that sentence under ORD-0240's
+ * 「模型原始输出」 label credits a model for text the deterministic compiler wrote.
+ * These three arms are stub-shaped on purpose (the sealed demo's city answers CATALOG_EMPTY, so no
+ * live run can reach the success branch here); the shape each one feeds is a field the real response
+ * carries, and `qoder-model-words-are-labelled.spec.ts` stays the owner of the frozen label itself.
+ */
+const SUMMARY = "第二天减少一个点位，保留夜景。";
+const NO_MODEL_LABEL_ZH = "服务器给这句总结（这台部署的 AI 开关是关的，所以它不是模型写的）";
+const MODEL_LABEL_ZH = "模型原始输出（未翻译，不代表本界面的结论）";
+
+async function submitWithMission(page: Page, mission: Record<string, unknown>, nodeId: string) {
+  const seeded = (await (await page.request.get(`${BASE}/api/v1/demo/scene`)).json()) as { journey_id?: string };
+  const journeyId = String(seeded.journey_id ?? "");
+  expect(journeyId.length > 0, node(nodeId, "舞台没有已点名的旅程")).toBe(true);
+  await page.addInitScript((id) => {
+    localStorage.clear();
+    localStorage.setItem("citynexus.v8.journey_id", id as string);
+    localStorage.setItem("citynexus.locale", "zh-CN");
+  }, journeyId);
+  let commands = 0;
+  let planReads = 0;
+  await page.route("**/api/v1/journeys/*/agent/commands", async (route) => {
+    commands += 1;
+    await route.fulfill({
+      status: 200,
+      contentType: "application/json",
+      body: JSON.stringify({ mission: { status: "COMPLETED", failure_reason: null, reasoning_summary: SUMMARY, ...mission } }),
+    });
+  });
+  // The sheet keeps the summary only on the branch where a plan appeared, so the reads are
+  // sequenced like a run that produced one: empty baseline first, the new plan afterwards.
+  await page.route("**/api/v1/journeys/*/plans", async (route) => {
+    planReads += 1;
+    await route.fulfill({
+      status: 200,
+      contentType: "application/json",
+      body: JSON.stringify(planReads === 1 ? [] : [{ id: "ord0369-plan-1", status: "DRAFT" }]),
+    });
+  });
+  await page.route("**/api/v1/journeys/*/plans/generate", async (route) =>
+    route.fulfill({ status: 201, contentType: "application/json", body: JSON.stringify([]) }),
+  );
+  await page.route("**/api/v1/places?city_code=*", async (route) =>
+    route.fulfill({
+      status: 200,
+      contentType: "application/json",
+      body: JSON.stringify([{ id: "ord0369-place-1", name: "海河游船码头" }, { id: "ord0369-place-2", name: "天津之眼" }]),
+    }),
+  );
+  await page.goto("/v8/hub", { waitUntil: "load" });
+  await expect(page.getByTestId("today-hero"), node(nodeId, "今天屏没起来，这一格就没在真屏上量过")).toBeVisible({ timeout: 30_000 });
+  await page.getByTestId("hub-plan-with-ai").click();
+  await expect(page.getByTestId("plan-ai-sheet"), node(nodeId, "AI 面板没有打开")).toBeVisible({ timeout: 15_000 });
+  await page.getByTestId("plan-ai-input").fill("把第二天的安排改得轻松一点，不要太赶");
+  await page.getByTestId("plan-ai-submit").click();
+  await expect(page.getByTestId("plan-ai-result"), node(nodeId, `按下后面板没有回执（commands 打了 ${commands} 次）`)).toBeVisible({ timeout: 60_000 });
+  expect(commands > 0, node(nodeId, "commands 桩没有触发，这一格是空转")).toBe(true);
+  const details = page.locator(".plan-ai-detail");
+  if (!(await details.first().evaluate((el) => el.hasAttribute("open")))) {
+    await page.getByTestId("plan-ai-detail-toggle").click();
+  }
+  const label = page.getByTestId("plan-ai-model-label");
+  await expect(label, node(nodeId, "总结旁边没有任何归属标签")).toBeVisible({ timeout: 15_000 });
+  return {
+    said: clean(await label.innerText()),
+    origin: await label.getAttribute("data-summary-origin"),
+    quoted: clean(await page.getByTestId("plan-ai-model-output").innerText()),
+  };
+}
+
+test("E1 AI 开关关着：这句总结不得算在模型头上", async ({ page }) => {
+  const r = await submitWithMission(page, { ai_state: "DISABLED_BY_OPS" }, "E1");
+  expect(r.said, node("E1", `开关关着仍把句子标成模型输出，实读=${r.said}`)).toBe(NO_MODEL_LABEL_ZH);
+  expect(r.origin, node("E1", `归属位不是 no_model，实读=${r.origin}`)).toBe("no_model");
+  expect(r.quoted, node("E1", "换了标签却把原文丢了")).toBe(SUMMARY);
+});
+
+test("E2 正控：开关开着时，ORD-0240 那句冻结标签一个字不改", async ({ page }) => {
+  const r = await submitWithMission(page, { ai_state: "READY" }, "E2");
+  expect(r.said, node("E2", `模型可用时标签被改写了，实读=${r.said}`)).toBe(MODEL_LABEL_ZH);
+  expect(r.origin, node("E2", `归属位不是 model，实读=${r.origin}`)).toBe("model");
+});
+
+test("E3 反控：服务器没说状态时保持既有标签（未知不等于不可用）", async ({ page }) => {
+  const r = await submitWithMission(page, {}, "E3");
+  expect(r.said, node("E3", `没读到状态就改了既有标签，实读=${r.said}`)).toBe(MODEL_LABEL_ZH);
+  expect(r.origin, node("E3", `没读到状态却声称知道了来源，实读=${r.origin}`)).toBe("not_stated");
+});
