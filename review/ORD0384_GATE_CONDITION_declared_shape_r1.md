@@ -7,7 +7,7 @@
 | 侧 | 读数 | 坐标 |
 | --- | --- | --- |
 | 手机链 :4781（广州两日，03:55 已被 demo/reset 抹掉） | `declared` = `null` | `live_experience.json@1121` |
-| authoritative e2e（扫 18 份 X1/Y1 收据，其中 16 份真的记了这个字段） | `declared` = `false` 共 16 份；`null` 共 0 份；另有 2 份是本单改写后的 Y1，它不再记这个字段，所以不计入分母 | `review/evidence/ord0384/declared_shape_r1.json` |
+| authoritative e2e（扫 42 份 X1/Y1 收据，其中 16 份真的记了这个字段） | `declared` = `false` 共 16 份；`null` 共 0 份；另有 26 份是本单改写后的 Y1，它不再记这个字段，所以不计入分母 | `review/evidence/ord0384/declared_shape_r1.json` |
 
 e2e 侧没有一份收据出现过 `null`。也就是说：写成 `declared === null` 的规则在链上会亮，在门里永远不亮。
 
