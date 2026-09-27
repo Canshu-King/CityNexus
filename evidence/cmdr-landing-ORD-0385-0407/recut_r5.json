@@ -1,0 +1,78 @@
+{
+ "order": "ORD-0385",
+ "line": "origin/mirror/integration-frontend-apple-pass1",
+ "tip": "213750423d9bdc10672c0488f76f8b0963d88765",
+ "cand": "120a45cda1ce8643c127619eb854625562810860",
+ "merge_base": "895ec1a11aca730041b42f2358b9607c9bb5a67e",
+ "commits_tip_ahead_of_base": 4,
+ "commits_cand_ahead_of_base": 5,
+ "merge_tree_rc": 0,
+ "changed_files": [
+  "frontend/src/i18n/LocaleContext.tsx",
+  "review/ord0385-inbox-link/A_BEFORE_AFTER.txt",
+  "review/ord0385-inbox-link/B_CREDENTIALLESS_READ.txt",
+  "review/ord0385-inbox-link/C_KEYSET.txt",
+  "review/ord0385-inbox-link/D_RULER.txt",
+  "review/ord0385-inbox-link/E_BUILD.txt"
+ ],
+ "files": [
+  {
+   "path": "frontend/src/i18n/LocaleContext.tsx",
+   "cand_blob": "1d9d0943dab5d1e69891b419da2e2b2593f920c9",
+   "merged_blob": "1d9d0943dab5d1e69891b419da2e2b2593f920c9",
+   "identical": true,
+   "cand_changed_the_file": true
+  },
+  {
+   "path": "review/ord0385-inbox-link/A_BEFORE_AFTER.txt",
+   "cand_blob": "7c7acfeb3f0da78b059091f10173446232ae3069",
+   "merged_blob": "7c7acfeb3f0da78b059091f10173446232ae3069",
+   "identical": true,
+   "cand_changed_the_file": true
+  },
+  {
+   "path": "review/ord0385-inbox-link/B_CREDENTIALLESS_READ.txt",
+   "cand_blob": "6523f2dcf406842cc1c029b4381b53dc564dcce3",
+   "merged_blob": "6523f2dcf406842cc1c029b4381b53dc564dcce3",
+   "identical": true,
+   "cand_changed_the_file": true
+  },
+  {
+   "path": "review/ord0385-inbox-link/C_KEYSET.txt",
+   "cand_blob": "7a705477340266d638ad73fdc6b1588e23d4ab99",
+   "merged_blob": "7a705477340266d638ad73fdc6b1588e23d4ab99",
+   "identical": true,
+   "cand_changed_the_file": true
+  },
+  {
+   "path": "review/ord0385-inbox-link/D_RULER.txt",
+   "cand_blob": "751ddf123ef28b2ed8f225b42b498d7f11e27950",
+   "merged_blob": "751ddf123ef28b2ed8f225b42b498d7f11e27950",
+   "identical": true,
+   "cand_changed_the_file": true
+  },
+  {
+   "path": "review/ord0385-inbox-link/E_BUILD.txt",
+   "cand_blob": "206a15b00d3c1af43fcf905e88e18fdb8ec16b5e",
+   "merged_blob": "206a15b00d3c1af43fcf905e88e18fdb8ec16b5e",
+   "identical": true,
+   "cand_changed_the_file": true
+  }
+ ],
+ "merged_tree": "e8c73663bca77659ed767a2f834db1c989b0d61e",
+ "auto_merged_files": [],
+ "recut_commit": "0813d3aae826b7b4bdf311e70ed48c40f5c515d3",
+ "readback_tree": "e8c73663bca77659ed767a2f834db1c989b0d61e",
+ "readback_tree_matches": true,
+ "readback_parents": [
+  "213750423d9bdc10672c0488f76f8b0963d88765",
+  "120a45cda1ce8643c127619eb854625562810860"
+ ],
+ "readback_parent_tip": true,
+ "verdict": "RECUT_OK",
+ "pushed_ref": "refs/heads/cmdr/land-ord0385-recut",
+ "push_rc": 0,
+ "push_stderr": "remote: \nremote: Create a pull request for 'cmdr/land-ord0385-recut' on GitHub by visiting:        \nremote:      https://github.com/Canshu-King/CityNexus/pull/new/cmdr/land-ord0385-recut        \nremote: \nTo github.com:Canshu-King/CityNexus.git\n * [new branch]        0813d3aae826b7b4bdf311e70ed48c40f5c515d3 -> cmdr/land-ord0385-recut",
+ "ls_remote": "0813d3aae826b7b4bdf311e70ed48c40f5c515d3\trefs/heads/cmdr/land-ord0385-recut",
+ "ls_remote_matches": true
+}
