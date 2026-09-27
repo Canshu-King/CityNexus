@@ -376,6 +376,9 @@ from app.schemas import (
     Order as OrderSchema,
 )
 from app.schemas import (
+    Place as PlaceSchema,
+)
+from app.schemas import (
     ReplanProposal as ReplanProposalSchema,
 )
 from app.schemas import (
@@ -4676,7 +4679,7 @@ _STRUCTURAL_PLACE_CATEGORIES = (
 )
 
 
-@app.get("/api/v1/places")
+@app.get("/api/v1/places", response_model=list[PlaceSchema])
 def search_places(
     city_code: str = Query(...),
     category: str | None = None,
