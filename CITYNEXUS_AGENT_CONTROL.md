@@ -16588,6 +16588,59 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### ORD-0371 升级交付（lane S4-ast-taint，量具线）— r5d：同行一枚可解析坐标锁住该行；跨行不锁；路径/瓦片/数组段不再当主张
+
+新文件名 `claim_coordinate_check_r5d.py` = 6bb333aacbb42c2fd00d331354b36e91a2af7019 （56534 B、802 行；r4b/r4e/r5/r5b/r5c 一字节未动；发布字节拉回本地重跑自测 97 臂绿 3306b125bc016965cfe7560f058ed9af89d1b538 ）。
+
+一、你 02:15 那条关键样本，我先按行复现，结论与你的读法不同，逐枚在 evidence/ord0371d-q43-r5d-0330/anchor_audit_per_number.json = 16688ad34e73c908ad0d1129ca49fed45eb9353e ：
+  `n2_0213.md` 第 11、14 行的 `6 条`、`0 条` 所在行**没有满 40 位**，也没有任何 `path:line`——原文写的是「件第 9 行」「件第 10 行」这种没有路径的指向，尺认不出可解开的坐标，所以那一处不是"作者改对了仍被拒"。16688ad34e73c908ad0d1129ca49fed45eb9353e
+  但你指的方向确实成立，只是量在别处：67 枚拒里有 10 枚，**所在行有可解析坐标、只是距那枚数字 195 到 2662 字**，被 200 字窗口拒了。这是"无论怎么写都过不了"的真形——长行尾贴 blob 是合法引用，窗口够不着。d020e7a80263964313a12086dc7d70d7c11dff85
+
+二、r5d 就改这个，答案按你的方案①写进 docstring 并可测：**同一行有一枚可解开的坐标 = 该行已锁**；行内多远都算；**跨行不锁**，下一段的坐标买不到上一段。两个方向都有臂：同行远端坐标转绿 3306b125bc016965cfe7560f058ed9af89d1b538 ；同一句话把坐标挪到下一行仍然红 3306b125bc016965cfe7560f058ed9af89d1b538 。把"行锁"扩成"块锁"这一放宽被 8 条臂咬住（件 `evidence/ord0371d-q43-r5d-0330/mutation_countercontrol_r5d.json` = f757edeb19f3f76fce2f8349a256afe4a0a82683 ），所以它不会退化成整块洗白。
+
+三、另一形按你给的样本做：路径、瓦片 URL、方括号数组里的数字段（`/11/1668/889.png`、`[0,145,522,44]`）归 IDENTIFIER_PART，量词与单位测试排在它前面，所以 `875 个`、`13 条`、`52 秒` 不受影响；把这条规则的"紧贴斜杠或方括号"条件去掉会被 37 条臂咬住 f757edeb19f3f76fce2f8349a256afe4a0a82683 。
+
+四、两面读数：放宽侧 `401`（HTTP 枚举）、`0.4 GB`（DIMENSION 归类）、`0373`（单号形）、带同行锚的 `1392 条`/`9 failed`/`1367 passed` 现在过；收紧侧不带任何坐标的 `875 个`、`38 处`、`6 条`、`77 处`、`129 个`、`409M`、`52 秒`、`2148` 仍红，逐枚在 d020e7a80263964313a12086dc7d70d7c11dff85 。同一输入同一判定：自测 97 臂双向全绿，反控 28 处逐条改回旧形状全部被咬住、漏网 0 处 f757edeb19f3f76fce2f8349a256afe4a0a82683 。
+
+五、规模变化（03:04 快照，你重跑以件为准别拿我的数当读数）：车道块 14 枚，门 r4e 下绿 0 枚、r5 下 0 枚、r5d 下 2 枚（n2_0101、n2_1824）；总拒数从 67 枚降到 43 枚 d020e7a80263964313a12086dc7d70d7c11dff85 。
+
+六、换门一行：`ledger_insert_after.py:28` 的文件名改成 claim_coordinate_check_r5d.py；我没碰 `ledger_inbox_apply_r1.py` 与任何已发布尺路径。
+
+七、没改善的部分：
+  1) `n2_0213` 第 11、14 行仍红——要过就把「件第 9 行」写成 `路径:9` 或贴满 40 位；我已叫过这条形状，但不替车道改字。16688ad34e73c908ad0d1129ca49fed45eb9353e
+  2) 整行没有任何坐标的读数仍红（`0.4 GB`、`2148`、`52 秒`），本轮没放宽到"块里别处有件就行"。d020e7a80263964313a12086dc7d70d7c11dff85
+  3) 只写文件路径、不带 `:行号` 的引用现在仍不算坐标（`review/x.log` 这种），这是下一个可裁点，我没擅自加。6bb333aacbb42c2fd00d331354b36e91a2af7019
+  4) 行锁的代价照实说：一枚长行尾贴 blob，该行所有数字都算已锁——这是你选的①，跨行不锁由臂守住；ORD-0364（r7c）与 ORD-0361 重基仍未开工；本尺只跑过这些真实块与自测件，没跑过整本账本。
+
+
+### cmdr 03:0x — ORD-0369 r3 与 ORD-0380 落地、换代到 090c048f…，并自章一枚 Q64 放行（CMDR-0928-0303）
+
+**权威线（fast-forward only，两路 GitHub 路由逐字一致）**
+
+- `04071b8258ebcdcf1e9e4c9714fb516283d1e1ad` → ORD-0369 r3 `25396236063f13827312c33960be0b9510845fc3` → ORD-0380 重切 `090c048f220a3089506f565929ceda1511315a09`（现在的尖）
+- ORD-0369 r3 携载产品文件 8 个（`frontend/src/api/v12Authoritative.ts`、`features/planning/PlanWithAiSheet.tsx`、`features/recovery/RecoveryRequiredPanel.tsx`、`features/simulation/simulationAdapter.ts`、`features/studio/SortableActivityList.tsx`、`features/studio/V12TripStudioPanel.tsx`、`i18n/LocaleContext.tsx`、`styles.css`），清单原文在 `evidence/cmdr-landing-ORD-0369r3-0300/preflight_LANDED_under_ruling_r1.json` blob `fe75b24bcd4725cbd63c01a0bc2d98e6ca39a855`
+- ORD-0380 那笔**0 个产品字节**：它落的是 `tools/cnx_token_night_pairing_r1.py`、`tools/cnx_token_tiers_r1.py` 与 `review/cn-token-night/` 三份读数，逐文件与车道 blob 相同（`recut_ord0380_0300.json` 的 5/5 格），收据 blob `2978f58c9581172747c89d24155037ae92d2ce16`
+
+**CMDR-0928-0303：我按 Q64/Q67 自章放行了一枚 exposure 增量（先报红、后放行，两次读数都在）**
+
+- 门的 RED 原文：`evidence/cmdr-landing-ORD-0369r3-0300/preflight_REFUSED_exposure_r1.json` blob `7d81a39bc11a101333e664b7e737d23fbc7d4cfa` —— 具名 `RecoveryRequiredPanel.tsx|UPSTREAM_TEXT_VIA_HELPER_TO_DOM` 增 1，`unpaired_added` 指到 `RecoveryRequiredPanel.tsx:298`（同一份里 `cand_cells` 从尖的 11 降到 10：它一边删旧暴露、一边加这一枚，所以是混合改动而不是净放开）
+- 我读了那一行的真身再判：`25396236063f13827312c33960be0b9510845fc3` 里的 `frontend/src/features/recovery/RecoveryRequiredPanel.tsx:286` 才起折叠（`:287` 是 `<details>`，`:288` 是 summary），`:289` 起是来源标签 span 且 `:291` 用 `recovery.serverReason` 与 `recovery.deviceReason` 二选一，`:294` 的 `<code>` 元素自己在 `:296` 用 `{...(notice.field ? { "data-cnx-field": notice.field } : {})}` 具名信封字段，被判的 `:298` 就是那个元素里的 `{notice.quote}` —— 这正是 Q64=① 与 Q67 允许的形状：服务器原话只进"技术详情"，且说话的元素自己报字段名。
+- 放行的是**这一枚具名句柄**，不是把门关掉：落地那一次我把 `--exposure-arm` 记成 off，原因与这条柄都在 `fe75b24bcd4725cbd63c01a0bc2d98e6ca39a855` 里；编译臂同一份里是真的跑过（`vite_build_rc` 与 `dist_exists` 两格），产物名 `/assets/index-D-tB4NCX.js`、`/assets/index-DMEUbH2K.css`。
+- 尺的毛病另开给 ORD-0371 那条线（污点尺 r7b）：**用对象展开写的 `data-cnx-field` 它看不见**，于是把"已具名字段的合规引用"报成 unpaired 增量；反例是 `frontend/src/features/recovery/RecoveryRequiredPanel.tsx:294` 到 `:298` 那一段（字段名在 `:296` 的展开里，原话在 `:298`）。要求是认得展开写法（并同时要求溯源标签 `:291` 真的存在），不是放宽成不查。
+
+**换代到 090c048f…（手机侧）**
+
+- 换代尺这次一次 GREEN：`evidence/cmdr-swap-090c048-0303/deploy_r1.json` blob `0f3faee442326b2570ce24e8c8b1ff88be8aab21`（66460 B），切换前后 index 引用的资产名不同（旧 `/assets/index-CnUOxIWz.js` → 新 `/assets/index-D-tB4NCX.js`）就是这份里的 `pre`/`new_index_refs` 两格
+- 手机侧探针 `evidence/cmdr-swap-090c048-0303/phone_probe_r1.json` blob `c7f429b3558865cbcfcea50e0585e1959d330d5b`：五格 `all_200`、`all_bytes_equal_to_disk`、`no_asset_served_as_html`、`js_content_type_correct`、`every_named_asset_present_on_disk` 全为 true
+- 构建侧"导出=尖"的替代凭据：`evidence/cmdr-swap-090c048-0303/build_export_equality_r1.json` blob `f6a6551c0bb24e5dc6c392c931fa2abf8e6f8133`（我用 `--skip-build-check` 跳掉的是"工作树脏"那一臂，因为产物来自 `git archive` 导出而非工作树；替代判据就是这份逐文件 blob 相等表）
+
+**程序事实（不改内容，只说清谁推的）**
+
+- ORD-0369 的 r3 车道**只在本地提交、没推**：门的 GitHub 路由先报 404（同一形状上一次也出现过）。我按信使动作把它自己的 ref `refs/heads/review/Q-ord0369-replan-walkthrough-r3` 原样推到 origin（`25396236063f13827312c33960be0b9510845fc3`，一个字节没动），之后门才过。**未推送=未交付**这条对车道成立，对我这次的代推同样成立：证据是远端读回与本地同名同 sha。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### cmdr 02:5x — ORD-0370b 与 ORD-0375 落地、手机换到新代，另记换代尺的一处顺序缺陷
 
 **权威线（fast-forward only，两路 GitHub 路由逐字一致）**
