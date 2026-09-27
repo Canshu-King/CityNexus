@@ -1,0 +1,364 @@
+{
+ "ruler": "Q43_r5f",
+ "control": {
+  "variant": "CONTROL (unmutated)",
+  "caught_by": [],
+  "selftest_exit": 0,
+  "arms": 125
+ },
+ "variants": [
+  {
+   "variant": "line_attribution_removed",
+   "caught_by": [
+    "exempt_DIMENSION_decimal_reading_beside_receipt",
+    "exempt_DIMENSION_receipt_beside",
+    "exempt_DISCIPLINE_ZERO_receipt_beside",
+    "exempt_r5f_COUNT_attributed_on_its_own_line",
+    "r5f_attribution_is_not_a_claim_count_inflation",
+    "r5f_line_attributed_silence"
+   ],
+   "selftest_exit": 6,
+   "arms_total": 125
+  },
+  {
+   "variant": "line_attribution_spills_to_the_whole_block",
+   "caught_by": [
+    "claim_not_exempted_0 次",
+    "determinism_bare_count",
+    "fire_DIMENSION_receipt_out_of_range",
+    "fire_DISCIPLINE_ZERO_receipt_out_of_range",
+    "fire_NEXT_LINE_coordinate_does_not_lock",
+    "fire_NONZERO_after_a_discipline_noun",
+    "fire_READING_classified_but_receipt_far",
+    "fire_ZERO_on_a_product_noun",
+    "fire_r5f_COUNT_out_of_both_channels_is_not_attributed",
+    "r5e_laundering_by_unify_is_refused",
+    "r5f_coordinate_out_of_both_channels_buys_nothing",
+    "r5f_window_still_reaches_a_neighbouring_line"
+   ],
+   "selftest_exit": 6,
+   "arms_total": 125
+  },
+  {
+   "variant": "conditional_classes_made_unconditional",
+   "caught_by": [
+    "claim_not_exempted_0 次",
+    "claim_not_exempted_0.4 GB",
+    "claim_not_exempted_22s",
+    "determinism_bare_count",
+    "fire_DIMENSION_decimal_reading_alone",
+    "fire_DIMENSION_receipt_out_of_range",
+    "fire_DIMENSION_without_receipt",
+    "fire_DISCIPLINE_ZERO_receipt_out_of_range",
+    "fire_DISCIPLINE_ZERO_without_receipt",
+    "fire_NEXT_LINE_coordinate_does_not_lock",
+    "fire_NONZERO_after_a_discipline_noun",
+    "fire_QUOTED_measure_word_still_a_claim",
+    "fire_READING_classified_but_receipt_far",
+    "fire_ZERO_on_a_product_noun",
+    "fire_count_word_next_to_a_slashed_token",
+    "fire_english_result_words_are_counts",
+    "fire_hex_run_glued_to_letters_is_not_a_blob",
+    "fire_r5f_COUNT_out_of_both_channels_is_not_attributed",
+    "fire_r5f_bare_artifact_path_is_not_a_coordinate",
+    "fire_single_number_single_finding",
+    "fire_status_with_unit",
+    "fire_unit_after_a_space",
+    "r4e_does_not_excuse_an_unvouched_quantity",
+    "r5_one_number_is_one_claim_and_one_finding",
+    "r5e_laundering_by_unify_is_refused",
+    "r5e_remedy_for_a_reading_is_the_line_rule",
+    "r5e_remedy_names_the_write_for_a_count",
+    "r5e_repeats_collapse_to_one_finding",
+    "r5f_COUNT_named_not_hidden_4 个",
+    "r5f_COUNT_named_not_hidden_5 条",
+    "r5f_COUNT_named_not_hidden_62 passed",
+    "r5f_attribution_is_not_a_claim_count_inflation",
+    "r5f_bare_path_still_not_a_coordinate",
+    "r5f_coordinate_out_of_both_channels_buys_nothing",
+    "r5f_remedy_names_both_forms_and_the_line",
+    "r5f_window_still_reaches_a_neighbouring_line",
+    "r5f_wiping_the_line_coordinate_reddens_every_number_on_it"
+   ],
+   "selftest_exit": 6,
+   "arms_total": 125
+  },
+  {
+   "variant": "COUNT_class_reverted_to_no_class",
+   "caught_by": [
+    "class_a_measure_word_with_nothing_between_it_and_the_number_is_a_count",
+    "class_count_word_is_never_a_dimension",
+    "class_count_word_on_a_line_with_no_coordinate",
+    "class_english_result_word_is_a_claim",
+    "class_leading_zero_with_a_count_word_is_a_claim",
+    "class_nonzero_beside_a_discipline_noun",
+    "class_product_noun_zero_beside_a_receipt",
+    "class_quoted_count_word_is_still_a_claim",
+    "class_result_word_on_a_line_with_no_coordinate",
+    "determinism_bare_count",
+    "exempt_r5f_COUNT_attributed_on_its_own_line",
+    "r5f_COUNT_named_not_hidden_4 个",
+    "r5f_COUNT_named_not_hidden_5 条",
+    "r5f_COUNT_named_not_hidden_62 passed",
+    "r5f_line_attributed_silence",
+    "r5f_remedy_names_both_forms_and_the_line"
+   ],
+   "selftest_exit": 6,
+   "arms_total": 125
+  },
+  {
+   "variant": "COUNT_adjacency_widened_past_punctuation",
+   "caught_by": [
+    "class_segment_before_a_punctuated_measure_word_is_not_a_count"
+   ],
+   "selftest_exit": 6,
+   "arms_total": 125
+  },
+  {
+   "variant": "bare_artifact_path_accepted_as_a_coordinate",
+   "caught_by": [
+    "fire_count_word_next_to_a_slashed_token",
+    "fire_r5f_bare_artifact_path_is_not_a_coordinate",
+    "r5f_bare_path_still_not_a_coordinate"
+   ],
+   "selftest_exit": 6,
+   "arms_total": 125
+  },
+  {
+   "variant": "remedy_left_blank",
+   "caught_by": [
+    "r5e_remedy_for_a_reading_is_the_line_rule",
+    "r5e_remedy_names_the_write_for_a_count",
+    "r5f_bare_path_still_not_a_coordinate",
+    "r5f_remedy_names_both_forms_and_the_line"
+   ],
+   "selftest_exit": 6,
+   "arms_total": 125
+  },
+  {
+   "variant": "remedy_is_one_fixed_string",
+   "caught_by": [
+    "r5e_remedy_for_a_reading_is_the_line_rule",
+    "r5e_remedy_names_the_write_for_a_count",
+    "r5f_bare_path_still_not_a_coordinate",
+    "r5f_remedy_names_both_forms_and_the_line"
+   ],
+   "selftest_exit": 6,
+   "arms_total": 125
+  },
+  {
+   "variant": "line_lock_removed_from_the_window_lookup",
+   "caught_by": [
+    "exempt_r5f_line_lock_reaches_a_bare_number_past_the_window"
+   ],
+   "selftest_exit": 6,
+   "arms_total": 125
+  },
+  {
+   "variant": "window_fallback_removed",
+   "caught_by": [
+    "r5f_window_still_reaches_a_neighbouring_line"
+   ],
+   "selftest_exit": 6,
+   "arms_total": 125
+  },
+  {
+   "variant": "uniform_verdicts_removed",
+   "caught_by": [
+    "r5e_one_literal_one_verdict"
+   ],
+   "selftest_exit": 6,
+   "arms_total": 125
+  },
+  {
+   "variant": "repeat_dedupe_removed",
+   "caught_by": [
+    "r5e_repeats_collapse_to_one_finding"
+   ],
+   "selftest_exit": 6,
+   "arms_total": 125
+  },
+  {
+   "variant": "uniformity_extended_to_conditional_classes",
+   "caught_by": [],
+   "selftest_exit": 0,
+   "no_effect_proven": "measured over the live inbox in mutation_no_effect_proof_r1.json: identical verdict, claim count, refusal set AND exempt buckets on every block it ran"
+  },
+  {
+   "variant": "closed_status_set_dropped",
+   "caught_by": [
+    "class_closed_http_code_written_bare",
+    "class_curl_no_response_zero_written_bare",
+    "exempt_HTTP_STATUS_bare_code_from_the_set",
+    "exempt_HTTP_STATUS_quoted_code"
+   ],
+   "selftest_exit": 6,
+   "arms_total": 125
+  },
+  {
+   "variant": "status_set_widened_to_any_three_digits",
+   "caught_by": [
+    "class_digits_after_a_fullwidth_colon",
+    "class_domain_colon_is_a_port",
+    "class_line_number_after_a_path",
+    "class_source_colon_is_still_a_line",
+    "class_status_word_21_chars_away_is_not",
+    "class_three_digits_that_are_not_a_code",
+    "class_three_digits_without_a_status_word_is_a_claim",
+    "exempt_LINE_REF",
+    "exempt_LINE_REF_source_colon",
+    "exempt_MJS_path_line_coordinate",
+    "exempt_PORT_domain_colon",
+    "fire_HTTP_STATUS_word_not_adjacent",
+    "fire_number_after_fullwidth_colon",
+    "fire_three_digits_no_status_word",
+    "fire_three_digits_not_in_the_set"
+   ],
+   "selftest_exit": 6,
+   "arms_total": 125
+  },
+  {
+   "variant": "leading_zero_ticket_rule_removed",
+   "caught_by": [
+    "class_order_number_written_with_a_leading_zero",
+    "exempt_IDENTIFIER_order_number_leading_zero"
+   ],
+   "selftest_exit": 6,
+   "arms_total": 125
+  },
+  {
+   "variant": "segment_rule_removed",
+   "caught_by": [
+    "class_segment_before_a_punctuated_measure_word_is_not_a_count",
+    "exempt_TILE_segment_in_a_url",
+    "exempt_extent_array_in_brackets"
+   ],
+   "selftest_exit": 6,
+   "arms_total": 125
+  },
+  {
+   "variant": "segment_rule_drops_the_adjacency",
+   "caught_by": [
+    "class_closed_http_code_written_bare",
+    "class_curl_no_response_code_beside_the_word",
+    "class_curl_no_response_zero_written_bare",
+    "class_digits_after_a_fullwidth_colon",
+    "class_domain_colon_is_a_port",
+    "class_line_number_after_a_path",
+    "class_octet_of_a_dotted_address",
+    "class_port_after_a_host",
+    "class_port_word_after_an_unquoted_number",
+    "class_source_colon_is_still_a_line",
+    "class_status_word_21_chars_away_is_not",
+    "class_status_word_adjacent_is_a_status",
+    "class_status_word_after_a_number_that_is_not_a_code",
+    "class_status_word_before_a_number_that_is_not_a_code",
+    "class_three_digits_beside_a_status_word_is_a_code",
+    "class_three_digits_that_are_not_a_code",
+    "class_three_digits_without_a_status_word_is_a_claim",
+    "determinism_status_with_adjacent_word",
+    "exempt_ADDRESS_PART_octet",
+    "exempt_HTTP_STATUS",
+    "exempt_HTTP_STATUS_bare_code_from_the_set",
+    "exempt_HTTP_STATUS_curl_no_response",
+    "exempt_HTTP_STATUS_quoted_code",
+    "exempt_LINE_REF",
+    "exempt_LINE_REF_source_colon",
+    "exempt_MJS_path_line_coordinate",
+    "exempt_PORT",
+    "exempt_PORT_domain_colon",
+    "exempt_PORT_host_port",
+    "exempt_PORT_with_filename_nearby",
+    "exempt_PORT_word_after_unquoted_number",
+    "fire_HTTP_STATUS_word_not_adjacent",
+    "fire_bare_number_with_no_slash_shape",
+    "fire_number_after_fullwidth_colon",
+    "fire_quantity_ms",
+    "fire_run_id_without_coordinate",
+    "fire_three_digits_no_status_word",
+    "fire_three_digits_not_in_the_set",
+    "r5e_one_literal_one_verdict",
+    "r5f_wiping_the_line_coordinate_reddens_every_number_on_it"
+   ],
+   "selftest_exit": 6,
+   "arms_total": 125
+  },
+  {
+   "variant": "identifier_boundary_rule_removed",
+   "caught_by": [
+    "class_digits_glued_inside_a_name",
+    "exempt_IDENTIFIER_bundled_in_a_name"
+   ],
+   "selftest_exit": 6,
+   "arms_total": 125
+  },
+  {
+   "variant": "dimension_unit_rule_removed",
+   "caught_by": [
+    "claim_not_exempted_0.4 GB",
+    "claim_not_exempted_22s",
+    "class_decimal_reading_beside_a_receipt",
+    "class_decimal_reading_without_a_receipt",
+    "class_dimension_beside_a_receipt_is_a_reading",
+    "class_dimension_far_from_the_receipt_is_a_claim",
+    "class_the_same_tail_after_a_space_is_a_reading",
+    "exempt_DIMENSION_decimal_reading_beside_receipt",
+    "exempt_DIMENSION_receipt_beside",
+    "fire_READING_classified_but_receipt_far",
+    "r5e_remedy_for_a_reading_is_the_line_rule",
+    "r5f_bare_path_still_not_a_coordinate",
+    "r5f_line_attributed_silence"
+   ],
+   "selftest_exit": 6,
+   "arms_total": 125
+  },
+  {
+   "variant": "address_octet_rule_removed",
+   "caught_by": [
+    "class_octet_of_a_dotted_address",
+    "exempt_ADDRESS_PART_octet"
+   ],
+   "selftest_exit": 6,
+   "arms_total": 125
+  },
+  {
+   "variant": "occurrence_dedupe_removed",
+   "caught_by": [
+    "class_one_number_is_one_occurrence",
+    "r5_one_number_is_one_claim_and_one_finding",
+    "r5f_bare_path_still_not_a_coordinate",
+    "r5f_coordinate_out_of_both_channels_buys_nothing",
+    "r5f_wiping_the_line_coordinate_reddens_every_number_on_it"
+   ],
+   "selftest_exit": 6,
+   "arms_total": 125
+  }
+ ],
+ "checks": {
+  "control_passes": true,
+  "caught_line_attribution_removed": true,
+  "caught_line_attribution_spills_to_the_whole_block": true,
+  "caught_conditional_classes_made_unconditional": true,
+  "caught_COUNT_class_reverted_to_no_class": true,
+  "caught_COUNT_adjacency_widened_past_punctuation": true,
+  "caught_bare_artifact_path_accepted_as_a_coordinate": true,
+  "caught_remedy_left_blank": true,
+  "caught_remedy_is_one_fixed_string": true,
+  "caught_line_lock_removed_from_the_window_lookup": true,
+  "caught_window_fallback_removed": true,
+  "caught_uniform_verdicts_removed": true,
+  "caught_repeat_dedupe_removed": true,
+  "documented_no_effect_uniformity_extended_to_conditional_classes": true,
+  "caught_closed_status_set_dropped": true,
+  "caught_status_set_widened_to_any_three_digits": true,
+  "caught_leading_zero_ticket_rule_removed": true,
+  "caught_segment_rule_removed": true,
+  "caught_segment_rule_drops_the_adjacency": true,
+  "caught_identifier_boundary_rule_removed": true,
+  "caught_dimension_unit_rule_removed": true,
+  "caught_address_octet_rule_removed": true,
+  "caught_occurrence_dedupe_removed": true
+ },
+ "uncaught_mutations": [],
+ "overall_pass": true
+}
