@@ -1,0 +1,53 @@
+{
+ "note": "r1 recorded r4e findings as null because I passed a non-existent --file flag; this run uses --text for both rulers",
+ "files": {
+  "n2_0213.md": {
+   "r4e": {
+    "exit": 3,
+    "findings": 15,
+    "exempt": "\"PORT\": 2"
+   },
+   "r5e": {
+    "exit": 3,
+    "findings": 3,
+    "exempt": "\"HTTP_STATUS\": 1, \"IDENTIFIER_PART\": 12, \"PORT\": 2"
+   }
+  },
+  "n2_0228.md": {
+   "r4e": {
+    "exit": 3,
+    "findings": 7,
+    "exempt": "\"PORT\": 1"
+   },
+   "r5e": {
+    "exit": 3,
+    "findings": 4,
+    "exempt": "\"PORT\": 1, \"IDENTIFIER_PART\": 3"
+   }
+  },
+  "qoder-0370_0148.md": {
+   "r4e": {
+    "exit": 3,
+    "findings": 8,
+    "exempt": "\"YEAR\": 5, \"LINE_REF\": 4, \"DISCIPLINE_ZERO\": 1"
+   },
+   "r5e": {
+    "exit": 3,
+    "findings": 6,
+    "exempt": "\"YEAR\": 5, \"IDENTIFIER_PART\": 3, \"DISCIPLINE_ZERO\": 1, \"LINE_REF\": 14, \"HTTP_STATUS\": 1"
+   }
+  },
+  "rel_0338.md": {
+   "r4e": {
+    "exit": 3,
+    "findings": 24,
+    "exempt": "\"YEAR\": 1, \"HTTP_STATUS\": 5, \"PORT\": 5, \"LINE_REF\": 6, \"DIMENSION\": 17"
+   },
+   "r5e": {
+    "exit": 3,
+    "findings": 27,
+    "exempt": "\"YEAR\": 1, \"IDENTIFIER_PART\": 10, \"HTTP_STATUS\": 6, \"PORT\": 6, \"LINE_REF\": 21"
+   }
+  }
+ }
+}
