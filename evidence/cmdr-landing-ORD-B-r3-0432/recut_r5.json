@@ -1,0 +1,70 @@
+{
+ "order": "ORD-B-r3",
+ "line": "origin/mirror/integration-frontend-apple-pass1",
+ "tip": "3e75ab2bbbac19c47ab042fce9ea90be0f04829b",
+ "cand": "666075f6774c194bb1de62378a7c964b1509ebf2",
+ "merge_base": "213750423d9bdc10672c0488f76f8b0963d88765",
+ "commits_tip_ahead_of_base": 7,
+ "commits_cand_ahead_of_base": 2,
+ "merge_tree_rc": 0,
+ "changed_files": [
+  "backend/app/main.py",
+  "backend/app/schemas.py",
+  "contracts/openapi.yaml",
+  "frontend/src/components/PlaceProvenance.tsx",
+  "frontend/src/i18n/placeProvenanceCopy.ts"
+ ],
+ "files": [
+  {
+   "path": "backend/app/main.py",
+   "cand_blob": "a5e820007f3772578d3431343fa7159fa14d4bd2",
+   "merged_blob": "a5e820007f3772578d3431343fa7159fa14d4bd2",
+   "identical": true,
+   "cand_changed_the_file": true
+  },
+  {
+   "path": "backend/app/schemas.py",
+   "cand_blob": "5b484409e98933bf609a5416d9b759bf8daa028c",
+   "merged_blob": "5b484409e98933bf609a5416d9b759bf8daa028c",
+   "identical": true,
+   "cand_changed_the_file": true
+  },
+  {
+   "path": "contracts/openapi.yaml",
+   "cand_blob": "139cd23330c194fd2748c83e0d0e9cba1f2842b3",
+   "merged_blob": "139cd23330c194fd2748c83e0d0e9cba1f2842b3",
+   "identical": true,
+   "cand_changed_the_file": true
+  },
+  {
+   "path": "frontend/src/components/PlaceProvenance.tsx",
+   "cand_blob": "c6efa999202c0a126065d8c4ffadc8f8f65e9af1",
+   "merged_blob": "c6efa999202c0a126065d8c4ffadc8f8f65e9af1",
+   "identical": true,
+   "cand_changed_the_file": true
+  },
+  {
+   "path": "frontend/src/i18n/placeProvenanceCopy.ts",
+   "cand_blob": "aad71e31640262387456840051de66a770752b8f",
+   "merged_blob": "aad71e31640262387456840051de66a770752b8f",
+   "identical": true,
+   "cand_changed_the_file": true
+  }
+ ],
+ "merged_tree": "d3468f86eb00e8b3e6debc552189cb7c68618c52",
+ "auto_merged_files": [],
+ "recut_commit": "e022093dcc198367d779fc92692c6ccfc6824a2a",
+ "readback_tree": "d3468f86eb00e8b3e6debc552189cb7c68618c52",
+ "readback_tree_matches": true,
+ "readback_parents": [
+  "3e75ab2bbbac19c47ab042fce9ea90be0f04829b",
+  "666075f6774c194bb1de62378a7c964b1509ebf2"
+ ],
+ "readback_parent_tip": true,
+ "verdict": "RECUT_OK",
+ "pushed_ref": "refs/heads/cmdr/land-ordBr3-recut",
+ "push_rc": 0,
+ "push_stderr": "remote: \nremote: Create a pull request for 'cmdr/land-ordBr3-recut' on GitHub by visiting:        \nremote:      https://github.com/Canshu-King/CityNexus/pull/new/cmdr/land-ordBr3-recut        \nremote: \nTo github.com:Canshu-King/CityNexus.git\n * [new branch]        e022093dcc198367d779fc92692c6ccfc6824a2a -> cmdr/land-ordBr3-recut",
+ "ls_remote": "e022093dcc198367d779fc92692c6ccfc6824a2a\trefs/heads/cmdr/land-ordBr3-recut",
+ "ls_remote_matches": true
+}
