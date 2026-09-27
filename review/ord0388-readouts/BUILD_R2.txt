@@ -1,0 +1,33 @@
+ORD-0388 FRONTSRC_BUILD_PREREQ readout, R2 -- taken after the Q72 rebase onto
+0813d3aae826b7b4bdf311e70ed48c40f5c515d3 (ORD-0385 landed the same dictionary).
+R1 was taken against 895ec1a11aca730041b42f2358b9607c9bb5a67e and stays as that base's record.
+
+Host: non-git export D:/moodle/_qoder_lane_0388r2_wk, made by `git archive HEAD | tar -x`
+of the rebased candidate, node_modules brought in with `cp -al` (not a junction).
+
+tsc_typecheck_noemit_exit   = 0        # npx tsc -p tsconfig.typecheck.json --noEmit
+tsc_files_in_program        = 878      # --listFilesOnly line count
+tsc_files_under_src         = 84       # same list, rows under the export's frontend/src
+node_modules_link_nlink     = 6        # typescript/package.json, >1 proves a hardlink not a copy
+export_proof_call_sites     = 1        # grep -c 'legacy.noActiveC4' export frontend/src/main.tsx
+export_proof_dictionary     = 2        # rows for "legacy.noActiveC4" in the export's dictionary (en + zh)
+export_proof_from_0385      = 1        # grep -c 'Anyone with this link can open' -- the landed side is in the same file
+vite_build_exit             = 0
+vite_built_in_seconds       = 9.82
+vite_bundle_asset           = index-CgmH-HIt.js
+vite_bundle_size_kB         = 1,295.60
+vite_precache_entries       = 8        # 2489.78 KiB
+bundle_zh_no_active_c4      = 1        # "没有进行中的 C4", read out of dist/assets/index-CgmH-HIt.js
+bundle_zh_not_asked         = 1        # "未询问", same file
+bundle_zh_not_evaluated     = 1        # "未评估"
+bundle_zh_preference        = 1        # "偏好项"
+bundle_zh_guardian_idle     = 1        # "启动一次常驻任务后 (prefix of the seeded sentence)"
+bundle_en_still_counted     = 1        # "not evaluated" / "No active C4" / "not-asked" each 1: these are now the
+                                        # dictionary's ENGLISH values, byte-identical to the literals they replaced,
+                                        # so a bundle grep cannot separate them -- the screen reading below does.
+shared_node_modules_top     = 399      # D:/moodle/CityNexus/frontend/node_modules, counted after everything
+                                        # (R1 read 394 on its base; the difference is not mine: this lane never
+                                        # wrote into the shared tree, and the count is an observation, not a proof)
+vite_bound_address_note     = 127.0.0.1:4812 and :4813 refuse while [::1]:4812 / [::1]:4813 answer 200
+preview_process_cleaned_up  = pid 42860 (:4812) and pid 20284 (:4813) terminated by this lane;
+                              netstat shows no LISTENING row for either and both curl to 000 afterwards

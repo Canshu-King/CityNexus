@@ -1,0 +1,51 @@
+ORD-0388 screen readings, R2 -- re-taken on the rebased candidate (base 0813d3aae826b7b4bdf311e70ed48c40f5c515d3).
+Evidence is document.body.innerText, the painted text, read by Playwright in a zh-CN context
+(documentElement.lang confirmed per page). data-* attributes are not used as evidence here.
+Run finished 2026-09-28T04:41:50 (+08).
+
+deployed-line(:4781)   route=http://127.0.0.1:4781/legacy status=200 lang=zh-CN innerText_chars=4123  bundle index-Bl6bFjw6.js
+   english_fallbacks_present=['not evaluated', 'Activate a standing mission once']
+   chinese_replacements_present=none
+my-build(:4813)        route=http://[::1]:4813/legacy      status=200 lang=zh-CN innerText_chars=4039  bundle index-CgmH-HIt.js
+   english_fallbacks_present=none
+   chinese_replacements_present=['未评估', '启动一次常驻任务后']
+
+Same-route, same-locale, two bundles: the line's own bundle still paints English on a Chinese
+device; this candidate's bundle paints the Chinese values. The char count moved 4123 -> 4039,
+which is the two sentences getting shorter, not a different screen.
+
+!! THIS RUN ALSO WROTE TO THE SHARED STAGE, AND THAT IS AN INCIDENT, NOT EVIDENCE !!
+The read-only intent was real, but the page itself does not need a click to write. Recording the
+outbound traffic (page.on("request"), every /api/v1 call whose method is not GET) caught 18 writes:
+9 against http://127.0.0.1:4781 and 9 against the chained [::1]:4813 preview (its proxy target is the
+same backend), including two POST /api/v1/demo/reset.
+
+  POST /api/v1/demo/reset
+  POST /api/v1/journeys/22222222-2222-4222-8222-222222222222/plans/generate
+  POST /api/v1/journeys/22222222-2222-4222-8222-222222222222/plans/55523d40-cafe-5bd2-b30a-de057ec7a839/select
+  POST /api/v1/journeys/22222222-2222-4222-8222-222222222222/bookings
+  POST /api/v1/journeys/22222222-2222-4222-8222-222222222222/transactions
+  POST /api/v1/journeys/22222222-2222-4222-8222-222222222222/start
+  POST /api/v1/journeys/.../activities/3a58c470-524c-5854-aa39-6c37a350eb80/complete
+  POST /api/v1/journeys/.../activities/abe4e842-249e-516f-ac43-b41695083792/complete
+  POST /api/v1/journeys/.../activities/61e3096d-89bc-5702-ab7d-21ad8289c1ee/complete
+  (the same nine again, once per origin)
+
+The chain, read out of the tree:
+  frontend/src/main.tsx:220            loadJourney() with no stored journey id calls bootstrapGoldenScenario()
+  frontend/src/demo/goldenScenario.ts:33   ... which is `cityNexusApi.resetDemo()`
+  frontend/src/api/citynexus.ts:754        ... which is `POST /demo/reset`
+`/legacy` mounts LegacyApp (frontend/src/main.tsx:1728), but the bootstrap above runs at boot for
+EVERY route, so loading a clean-profile page re-seeds the stage whether the visitor meant to or not.
+A fresh Playwright context has empty localStorage, which is exactly the branch at main.tsx:220.
+This is the mechanism that could also account for the 03:55 wipe the commander reported; I did not
+prove that it was the one used then, only that loading a page is enough.
+
+State after my run, read back GET-only (no writes since, my preview servers are terminated):
+  demo_mode=True  journey_id=22222222-2222-4222-8222-222222222222  journey_status=ACTIVE
+  plan_version_id=55523d40-cafe-5bd2-b30a-de057ec7a839  current_activity_id=98af0be5-966b-5f49-b699-5dfdceea8ab6
+  scene_start_at=2026-10-10T09:00:00+08:00  scene_end_at=2026-10-10T19:00:00+08:00
+  evidence_state=FROZEN_WITHOUT_TTL  mobility_legs_total=5  mobility_legs_hard_eligible=5
+Those are the same identifiers the pre-run read returned, i.e. the seed put the named scenario back.
+What I cannot claim: that nothing else was on the stage before 04:41. A demo/reset deletes rows, so
+anything another lane added between 03:55 and 04:41 would have gone with it, and I have no before-image.
