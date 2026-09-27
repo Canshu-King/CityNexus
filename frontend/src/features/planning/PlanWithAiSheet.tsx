@@ -603,6 +603,15 @@ export function PlanWithAiSheet({
     if (leaveChoice) leaveRef.current?.scrollIntoView({ block: "nearest" });
   }, [leaveChoice]);
 
+  /* Measured on the live chain at 390x844: with the example chips and the pre-flight line stacked
+     above it, the closing card's last sentence fell below the sheet's own scroll fold -- so the one
+     line that answers 「行程有没有被改」 was the line a traveller could not see without thinking to
+     scroll.  Same treatment as the leave prompt above. */
+  const resultRef = useRef<HTMLDivElement | null>(null);
+  useEffect(() => {
+    if (result) resultRef.current?.scrollIntoView({ block: "nearest" });
+  }, [result, run.runId]);
+
   const copy = result ? statusCopy(result.status, zh, result.planCount ?? 0) : null;
   /* Q70, one-way by construction: an anchor may only name a code the traveller can actually read on the
      line it sits on.  Derived from `result.status` -- the very string `statusCopy` was handed -- so the
@@ -859,6 +868,7 @@ export function PlanWithAiSheet({
         {copy && (
           <div
             className={`plan-ai-result ${copy.tone}`}
+            ref={resultRef}
             data-testid="plan-ai-result"
             data-result-status={result?.status ?? ""}
             data-result-tone={copy.tone}
