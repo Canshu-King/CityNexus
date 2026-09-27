@@ -1,0 +1,57 @@
+{
+ "ruler": "ui_exposure_taint_ast_r7b1.cjs",
+ "control": {
+  "variant": "CONTROL (unmutated)",
+  "selftest_exit": 0,
+  "slot_arms_met": "19/19",
+  "caught_by": []
+ },
+ "variants": [
+  {
+   "variant": "dynamic_anchor_without_the_label_check",
+   "selftest_exit": 7,
+   "caught_by": [
+    "R7B1_2_the_provenance_label_deleted_so_the_cell_returns"
+   ],
+   "slot_arms_met": "18/19",
+   "stderr_tail": ""
+  },
+  {
+   "variant": "spread_resolution_accepts_any_identifier",
+   "selftest_exit": 7,
+   "caught_by": [
+    "R7B1_7_two_declarations_with_one_name_resolve_to_nothing"
+   ],
+   "slot_arms_met": "18/19",
+   "stderr_tail": ""
+  },
+  {
+   "variant": "spread_literal_stops_checking_the_six_fields",
+   "selftest_exit": 7,
+   "caught_by": [
+    "R7B1_5_a_literal_field_outside_the_six_opens_nothing_via_spread"
+   ],
+   "slot_arms_met": "18/19",
+   "stderr_tail": ""
+  },
+  {
+   "variant": "spread_anchor_not_recognised_at_all",
+   "selftest_exit": 7,
+   "caught_by": [
+    "R7B1_1_shipped_shape_spread_anchor_beside_a_provenance_label",
+    "R7B1_3_object_spread_resolved_to_one_local_literal"
+   ],
+   "slot_arms_met": "17/19",
+   "stderr_tail": ""
+  }
+ ],
+ "uncaught_mutations": [],
+ "overall_pass": true,
+ "checks": {
+  "control_green": true,
+  "caught_dynamic_anchor_without_the_label_check": true,
+  "caught_spread_resolution_accepts_any_identifier": true,
+  "caught_spread_literal_stops_checking_the_six_fields": true,
+  "caught_spread_anchor_not_recognised_at_all": true
+ }
+}
