@@ -16588,6 +16588,117 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### ORD-0388 勘误补件 · 车道 qoder-0388 · 已入帐两块的坐标补齐 · 2026-09-28 0427+08
+
+分支 `refs/heads/review/Q-ord0388-tier1-clearance` 一枚字节都没动：本地 HEAD 与 `git ls-remote origin` 都是 d2246c71663ac53cbdb83a911409e6ae5d87df6e，`git status --porcelain` 空。
+本件只补坐标，产品码、尺、工件都不重发；被补的两块是 D:/moodle/CITYNEXUS_AGENT_CONTROL.md 里的 `0403+08` 与 `0420+08`（账本行号会漂，只作定位）。
+
+## 八处清单（前七处已在 `0420+08` 那块改正，第八处那块本身也带着，请以本件为准）
+
+旧块抬头把这件事写成 `三个错行号`，实际是八处：本件逐条给全。
+1–3 行号指错：`vite_build_exit` 写成 :14，实为 review/ord0388-readouts/BUILD_R1.txt:13；两条 bundle grep 写成 :17/:18，实为 review/ord0388-readouts/BUILD_R1.txt:18、review/ord0388-readouts/BUILD_R1.txt:19（review/ord0388-readouts/BUILD_R1.txt:17 是 precache 行数）。
+4 旧块「`body.innerText` 共 4123 字」那一行没有任何坐标（4123 只在正文里）；字数与路由同记于 review/ord0388-readouts/SCREEN_R1.txt:12。
+5 旧块把「英文两句在场」写成 BUILD_R1.txt:13——那是 vite 退出码行；英文两句实记于 review/ord0388-readouts/SCREEN_R1.txt:13。
+6 旧块把「路由行」写成 BUILD_R1.txt:12——那是 node_modules 链接 nlink 行；路由与状态码实记于 review/ord0388-readouts/SCREEN_R1.txt:12。
+7 旧块「那两句英文不在屏上文本里（15 行）」指错了行：SCREEN 的 :15 是本候选产物与 innerText 字数（review/ord0388-readouts/SCREEN_R1.txt:15），英文缺席记在 review/ord0388-readouts/SCREEN_R1.txt:16；
+   同一句的「（17）」连文件都没具名，中文两句在场实为 review/ord0388-readouts/SCREEN_R1.txt:17。
+8 树指错：两块抬头都把 ae15891d2a1d38c6d0358505ee1744fcb8c73048 说成 tip 的树。`git rev-parse d2246c71663ac53cbdb83a911409e6ae5d87df6e^{tree}` 现读 = 2fd9fd4d085a784be4f846f200e7f3efc11ace75（这才是 tip 的树）；
+   ae15891d2a1d38c6d0358505ee1744fcb8c73048 实为第二笔 1f6b7285c43a6868ef4e9e59805713cbd3961440 的树（`git rev-parse 1f6b7285c43a6868ef4e9e59805713cbd3961440^{tree}` 现读）。两个十六进制都能 `cat-file`，所以 Q43 与我自己的校验器都抓不到——它 Resolve，但不指对东西。
+
+## 一块自己造成的漂移（给 ORD-0371 的实测）
+
+`0420+08` 那块写「现帐 :16635」指旧块；它自己入帐后，旧块已被推到 D:/moodle/CITYNEXUS_AGENT_CONTROL.md:16764，本件此刻读到 `0420+08` 在 :16628。
+⇒ 账本行号不是耐久坐标。r4b 的 `coordinate_in_window` 本来就把 `\.md:\d+` 命名为 UNSTABLE_COORDINATE_markdown_line_number_in_a_rewritten_file，
+   但 DURABLE 先匹配成功就直接放行，那条 note 永远走不到——这是尺的归类缺口，不是车道该藏的数。
+
+## 读数一字未动（同 blob 复核）
+
+`RENDER_TIERS` tier-1 = 0（review/ord0388-readouts/RULER_R2.txt:14）、tier B = 65（review/ord0388-readouts/RULER_R2.txt:13）、反控 arms_total=30 / met=30 / red=0（review/ord0388-readouts/RULER_R2.txt:48）、尺退出码行（review/ord0388-readouts/RULER_R2.txt:46）。
+
+## 没改善的部分
+
+1. 账本里现在有三块 ORD-0388（`0403+08`、`0420+08`、本件），前两块的错行号按「已入帐不改」原样留着；有效交付块请认本件与 `0420+08`。
+2. 抬头那枚 tip 树（d2246c71663ac53cbdb83a911409e6ae5d87df6e）在本件之前的两块里都是 ae15891d2a1d38c6d0358505ee1744fcb8c73048，我不能再改它们；落地门若按「tip+tree」配对校验，请以 2fd9fd4d085a784be4f846f200e7f3efc11ace75 为准。
+3. 我这轮的坐标错法是同一类犯了三遍（行号、文件、树），说明「坐标可解开」不等于「坐标指对」；除本件外我没有新增防呆，防呆要长在尺里才算数。
+
+
+### ORD-0382 合并块（重切到现尖后的一次性交付）· qoder 前端车道 · 取代 qoder-0382_0345.md 与 qoder-0382_0412.md
+候选　　refs/heads/review/Q-ord0382-ai-three-stage-r2 头 3638a603630d0bb1167854a94e0741c640c02a10，基座现尖 0813d3aae826b7b4bdf311e70ed48c40f5c515d3；只读重切预测 `git merge-tree --write-tree` 退出 0、CONFLICT 0 条，所以本块交出的字节就是我编译并跑过的那一份。旧头 2ea76e6786ab5ba8816440413d6363eccd872bec 仍在原 ref 上可解析，没有被覆盖
+改动面　对现尖动 19 条路径，全在 frontend/ 下：产品 4 枚（3a85fc897d3bb15456546d180eb35e096a1b5366 运行态、7ccbc4a90b7f16038d039bbc8c16cac433fbc7c0 面板、83cab24604b0347af10801150500407c76949355 横幅、847ce0bc0093e881e2bbff90286369e0ea006ab4 字典），另 2 枚是 V8Experience 挂载点与 styles.css
+字典落点　847ce0bc0093e881e2bbff90286369e0ea006ab4 与命令者预测的自动合并件逐字节相同（847ce0bc0093e881e2bbff90286369e0ea006ab4），双语各 692 枚键、重名 0 枚、本单新增 27 枚 agent.aiRun* 两侧齐；ORD-0381 与 ORD-0385 改过的既有值原样保留，我没有替谁重解三方合并
+①可离开　运行态搬出弹窗：3a85fc897d3bb15456546d180eb35e096a1b5366 持有 AbortController 与 phase，唯一中止入口是 stopWaiting；83cab24604b0347af10801150500407c76949355 是离开后仍活着的横幅，两个出口按参考产品的划分命名（去看会话 / 继续生成）。逐帧秒数 2 秒 取自 ef3e2562e2cc5a37e18c6be79847a6a2835fd55d 这份 readings，屏上文字与 data 属性同帧
+离开不补发　同一件 ef3e2562e2cc5a37e18c6be79847a6a2835fd55d 的 sent 字段：进入等待那一步 POST agent/commands 1 次，离开到会话页、再换一页、回来看结果三步各 0 次；横幅两具场景各出 17 帧，另一件是 4bdbe74a5a797349348bbba215b9d19b745154e8
+②进度粒度　只报本机量得到的单位：等待面屏上「你现在生效的方案：2 天、5 个安排。」来自 f6081eeb7ffda671d469ebbb8a94d759a488f175 里那行 ACTIVE（9 行 plans、5 个安排、跨 2 个日历日），现网那具则是 2658a7134a018168e6702882f6452f98b57a235f 的 1 行 ACTIVE、6 个安排、1 个日历日；两具都零新增请求
+本块撤回的一格　mobility_evidence.facts 不是腿数：2658a7134a018168e6702882f6452f98b57a235f 那行 6 个安排的方案带 56 条 fact，origin 键 8 个 × destination 键 8 个 = 64 个有序对，是一张完整 OD 矩阵；f6081eeb7ffda671d469ebbb8a94d759a488f175 那行 4 条恰好等于真实腿数，是巧合。按行数报会让一日行程说「56 段交通」，所以 legs 单位已从两屏删除，字典两句同步变短（zh 侧不增长）
+needs_backend_field　具名两格：按天进度要 agent-feed 事件上的 facts.day_index 与 facts.day_total（实测 95 条事件的 facts 键里含 day 或 progress 的 0 个，件与指纹在 c972a4eae3fc6aa647254e1b4724281a7475bec9）；段交通要 plan 行直接给 leg_count（现网唯一真值在 v9.plan.materialized 的 facts.leg_count，可按 entity_id 归属但要多读一发 feed，本单不为一个数字加请求）
+③中断收尾　中止后另起一发回读（自带 controller，上限见 3a85fc897d3bb15456546d180eb35e096a1b5366 的 CONFIRM_READ_MS），三问逐条从实测行来：「停在：发出请求，等待模型返回。」「回读确认没有新增方案。」「当前生效的还是第 9 版，行程没有换。」，现网那具读到的是第 1 版；回读没答时只说没能答上来，不落「行程没有被改动」。归因走 lib/failureAttribution.classifyReadFailure，机内词只进 data 属性不上屏
+关闭态　线上实测 ai_state=DISABLED_BY_OPS（63d66235c89dcd3209d66c7665eb9c97d24a51a2 这份捕获，408 字节），四态全在这条关闭态下走过；本车道对共享存储零写，两条写腿留在 4bb3b933f1cb8f295ec5744d67a6f0f0e70a2343
+编译门　refs/heads/review/Q-ord0382-ai-three-stage-r2 上重跑，不是引用旧数：`tsc -p tsconfig.check.json --noEmit` 退出 0、`tsc -p tsconfig.typecheck.json --noEmit` 退出 0、`vite build` 退出 0（日志 c972a4eae3fc6aa647254e1b4724281a7475bec9 记录的同一批件）；文案尺在现尖字典上 REGISTER_PARITY ?、NO_GROWTH ?、RENDERED 的 gated offenders ?
+证据已入库　c972a4eae3fc6aa647254e1b4724281a7475bec9 这份清单列出 12 枚已提交件与 7 枚留在磁盘的只读捕获（各带 sha256 与字节），复现两条命令：node review/evidence/ord0382/harness_r1.mjs <snap 的 dist> 4789 cnx-demo，再 ORD0382_OUT=<输出目录> node drive_r1.mjs；两条都不需要后端活着，也不指 :8693 与 :4781
+事故自报与复原　本车道 03:2x 为重启自己的 harness 执行过 taskkill /IM node.exe，误伤本机全部 node 进程：预览链 static 口 4781 与 codex-shim 口 7864 一起被打掉，已用链上自带启动件复原；判前 44bcc1938a462caa7c987fa750d19d4452a18b36、判后 ba31671b3b964e4d4de0af3ef669d45272768d1c、收尾再验 342205e7931f0ad9031165c4288c667d43c3cb65 三份探测器输出都随件提交，里面 hops 数组逐条写着 backend 8693、static 4781、auth_proxy 4782 各回 200 与 db_guard_ok=true。这是操作失误不是产品缺陷，写在这里供追责；teardown 之后只按 pid 杀自己的进程
+没改善的部分（逐条对得上 afdc44b2acbc6c9d19494e45c1962b717788276b 这份驱动与 c972a4eae3fc6aa647254e1b4724281a7475bec9 这份清单）　① 真实进度流 NOT_MEASURED：两具场景下线上 POST /agent/commands 都是 0 次，「服务器真在按天推进」这格没有线上读数；②「已经生成的部分还在：新增了 N 个方案」与「回读时才有了生效方案」两支只有夹具证据（两侧行集由真实捕获行裁出，见 harness_r1.mjs 的 twoSided 注释）；③ 既有引用 plan-ai 的 e2e 臂没跑：它们要 webServer 复用 8000 口，本单明令不动，只做了 testid 机械回验：那些臂点名的 plan-ai* testid 在本候选字节里 0 枚缺失（组件件 7ccbc4a90b7f16038d039bbc8c16cac433fbc7c0）；④ 页面刷新后的运行态不在本单，跨刷新仍归 api/journeyContinuation 的 marker；⑤ 抹除后链上已无 2 天行程，任何要在线上重取「2 天」读数的验收得先由命令者重建那具场景
+
+
+### CMDR 0928-0433 · N3 · ORD-0384 勘误：已插入块里的 live 读数指向被 03:55 reset 抹掉的行程；换成两半可复取的读数
+
+**勘误对象**：`D:/moodle/_qoder_ledger_inbox/_processed/n3_0401.md.inserted_040443` 那一段（04:04:43 插入）。已插入的块我不改、不删，本段是它的新版本。
+
+**was**：那一段的「:4781 的真实读数」写的是 journey_id `9c6c3d73-8b8e-4f71-beaf-32bc87aba035`（广州两日），fired 3 条。该行程已被 03:55 那发 `POST /api/v1/demo/reset` 从 `_preview.db` 删掉，链上现在只剩一枚行程，所以「这就是 :4781 的答案」这句已经不成立。仍然成立的是关于那两份已保存字节的判断：`review/evidence/ord0384/live_experience.json:1` 347287 字节、sha256 0432c06323ef3d7db8de5070d4b67c8d8e6a7f275536009edd6d6fe5e1642a67，`review/evidence/ord0384/live_wallet.json:1` 109 字节、sha256 cc62d7d439a0fde34007e9232c515629d5622715f1ad68d9221a952ac401dae4，两个值分别记在 `review/evidence/ord0384/live_derivation_r2.json:6` 与 `review/evidence/ord0384/live_derivation_r2.json:8`。我没有为「恢复」再跑过 reset。
+
+**不受影响的部分**：门与编译臂与那三枚反件都不依赖 `_preview.db`。runner 每次自己新建一枚丢弃库，语句在 `D:/moodle/_qoder_cmdr_ref_20260921/live_checks/cmdr_e2e_r1.py:113`（`db = os.path.join(ev_dir, "_%s.db" % run_id)`），所以 run_id `cmdr040404n3` 的 exit 0 / GREEN / passed 6（`D:/moodle/_qoder_cmdr_ref_20260921/live_checks/e2e_logs/n3_3ce048fb_040404.json:23`、`:24`、`:26`）照旧有效。分支头已从 3ce048fb72194f12ef199de2be9bfe08197a5a87 前进到 b4753423f76a4a980ce9cbf9d61219629c245a70，只加了 `review/` 下五枚仪表；两枚头的 `frontend` 树哈希同为 0f26196713d9f6b65895b9ea4d16e5404b459136，也就是说被测的产品码与门逐字节未变，我没有为此重跑门。推送是 fast-forward（`3ce048fb..b4753423`，未用 force），远端回读 `b4753423f76a4a980ce9cbf9d61219629c245a70 refs/heads/review/N3-ord0384-pretrip-checklist` 逐字符相等，原文 `review/evidence/ord0384/lsremote_readback_r2.txt:1`。
+
+**now（两半都可复取，命令都入库）**
+
+第一半＝链上真实存在的具名可用态，不是造出来的空：`GET http://127.0.0.1:4781/api/v1/demo/scene` 答 journey_id `22222222-2222-4222-8222-222222222222`、journey_status ACTIVE、basis CURSOR（04:31 复读过一次，仍是同一枚）。它的 `GET .../experience` 状态码记在 `review/evidence/ord0384/chain_cnxdemo_r1.json:12`、4955 字节记在 `review/evidence/ord0384/chain_cnxdemo_r1.json:14`、sha256 1e5da78539a2d5e2b668bccdd08f237be24077e9dd52770fb18ff7b328e5e31a 记在 `review/evidence/ord0384/chain_cnxdemo_r1.json:15`；`GET .../wallet` 状态码记在 `review/evidence/ord0384/chain_cnxdemo_r1.json:20`、1198 字节记在 `review/evidence/ord0384/chain_cnxdemo_r1.json:22`、sha256 3cadf9051b195ea5e6b49fe2847f6520f970cff48f55959a26c33134287d8176 记在 `review/evidence/ord0384/chain_cnxdemo_r1.json:23`，journey_id 那枚读数在 `review/evidence/ord0384/chain_cnxdemo_r1.json:7`。行程身份 `One Day in Nexus City` / `city_code CNX-DEMO` / `status ACTIVE` 记在 `review/evidence/ord0384/derive_cnxdemo_r1.json:12`。候选 9 条见 `review/evidence/ord0384/derive_cnxdemo_r1.json:18`，fired 2 条见 `review/evidence/ord0384/derive_cnxdemo_r1.json:92`，逐条判据与字节偏移从 `review/evidence/ord0384/derive_cnxdemo_r1.json:19` 起：`stay_budget_undeclared` 看 chain_cnxdemo_experience.json@1089（`declared` 为 null），`stay_not_chosen` 看 chain_cnxdemo_experience.json@1259（`selected_option_id` 为 null）。这半覆盖到了旧读数从没打到的 `stay_not_chosen`；`stay_chosen_but_unconfirmed` 在这里**不**成立，因为 wallet 的 commitments 非空（chain_cnxdemo_wallet.json@53 那条读数是 commitments_n 1）。
+
+第二半＝我自己命名、自己建的行程：标题 `N3-ORD0384 自建具名行程（有数据那一半）`，journey_id `ffc69f42-ef6b-4a50-bfb3-8b43a013c3c3`，落在 `D:/moodle/_qoder_n3_ord0384_live/n3_ord0384_named.db`（主文件 4096 字节、`-wal` 2228952 字节，`journeys` 表 rowid 2 就是这一枚（`review/evidence/ord0384/named_store_r1.json:25`），rowid 1 是种子的 `One Day in Nexus City`（`review/evidence/ord0384/named_store_r1.json:19`）；主文件 4096 字节在 `review/evidence/ord0384/named_store_r1.json:5`、`-wal` 2228952 字节在 `review/evidence/ord0384/named_store_r1.json:13`。fired 3 条见 `review/evidence/ord0384/derive_named3_r1.json:93`：`stay_not_chosen`、`no_active_plan`、`offline_pack_not_ready`（判据与偏移从 `review/evidence/ord0384/derive_named3_r1.json:19` 起，其中 `offline_pack_not_ready` 看 named3_wallet.json@88 读数为 false）。两半合起来，9 条规则里现在有 5 条拿到真实见证，另外 4 条（`plan_feasibility_open`、`stay_chosen_but_unconfirmed`、`recovery_needs_decision`、`arrival/departure_anchor_missing`）**没有任何 live 见证**，只由门里那些自己造条件的格（X2 起于 `frontend/e2e/qoder-ord0384-pretrip-checklist.spec.ts:231`）覆盖。
+
+**建场命令（逐条，跑在我自己的库上，绝不指 :8693/:4781）**：仪表 `review/n3_0384_named_journey_r1.py:1`，收据 `review/evidence/ord0384/named_journey_r1.json:1`。
+
+1. `git -C D:/moodle/CityNexus archive 213750423d9bdc10672c0488f76f8b0963d88765 backend data contracts tools scripts agent-mcp | tar -x -C D:/moodle/_qoder_n3_ord0384_live`（与链同一枚 commit，`review/evidence/ord0384/named_journey_r1.json:4` 的 backend_sha；链头是我基线的后代，`git rev-list --count 04071b82..213750423d` 为 26，命令与读数在 `review/evidence/ord0384/revlist_26.txt:3`，祖先判定退出码 0 在 `review/evidence/ord0384/revlist_26.txt:5`）
+2. `D:/moodle/CityNexus/.venv/Scripts/python.exe -m uvicorn app.main:app --host 127.0.0.1 --port 5475`，cwd 为该导出的 `backend/`，env 只加 `CITYNEXUS_DEMO_MODE=true`、`CITYNEXUS_AI_ENABLED=false`、`CITYNEXUS_DATABASE_URL=sqlite:///D:/moodle/_qoder_n3_ord0384_live/n3_ord0384_named.db`、`PYTHONPATH=导出根`；按名丢掉的 key 是 DEEPSEEK_API_KEY、OPENAI_API_KEY、WB2API_KEY，清单在 `review/evidence/ord0384/named_journey_r1.json:76`，凭据值全程未出现
+3. `POST /api/v1/demo/reset` 200 —— 只作用在上面那个文件；`POST /api/v1/journeys` 201 建出 `ffc69f42-…`；`POST /api/v1/demo/prepare-scenario` 200
+4. 归属证明：我 spawn 的 pid 与 netstat 报的监听 pid 不同（第一次 12484 对 45020，直接 ABORT；第二次 popen_pid 9928 见 `review/evidence/ord0384/named_journey_r1.json:7`、netstat_pid 25948 见 `review/evidence/ord0384/named_journey_r1.json:86`），改用父链判据 `proc.pid in parent_chain(netstat_pid)` 才放行，父链数组在 `review/evidence/ord0384/named_journey_r1.json:87`；再加一道决定性证据：`journeys` 里那一行的 title 与 city_code 是从**我自己的文件**里读出来的（该步的 `title_in_file` 读数在 `review/evidence/ord0384/named_journey_r1.json:138`）
+5. 安全回读：`_preview.db` 只在脚本里做 `os.stat`，跑前跑后同为 bytes 7213056、mtime_ns 1790538900750461800，`preview_db_untouched` 为 true，见 `review/evidence/ord0384/named_journey_r1.json:10` 与 `review/evidence/ord0384/named_journey_r3.json:9`
+
+**有数据那一半没能建成，卡在哪个字段（这是后端的事实，不是我少写了代码）**：仪表 `review/n3_0384_named_journey_r3.py:1`，收据 `review/evidence/ord0384/named_journey_r3.json:1`。
+
+- `POST /api/v1/journeys/ffc69f42-…/stay-options/generate` 回 200 但 `top_k` 为空，`generation.outcome` 为 `NO_OFFERS_FROM_PROVIDER`、`offers_from_provider` 0、`options_ranked` 0，provider 尝试记录是 `target osm-overpass / outcome empty / detail "fixture=no drafts=0"`，geocode 那步 `outcome no_city_label`，原文 `review/evidence/ord0384/named_journey_r3.json:26`
+- 因此没有 `option_id` 可选，`selected_option_id` 不可能诚实变非空；`POST .../plans/generate` 回 422 `VALIDATION_ERROR`「No feasible plan candidates satisfy the journey constraints」，details 里 `places_in_catalog` 8、`city_services_in_catalog` 5、`day_sequences_available` 3、`requested_candidates` 3、`candidate_rejections` 的 reason_codes 以 `CANDIDATE_REJECTED_BY_FEASIBIL` 开头，原文 `review/evidence/ord0384/named_journey_r3.json:45`
+- 另有一条我认为是真缺陷、交给你定单：`POST /api/v1/demo/prepare-scenario` 答的是种子行程 `22222222-…` 而不是我这趟。选择语句在 `backend/app/main.py:2096`（`status == "DRAFT"` 按 `created_at desc`），reset 后两趟都是 DRAFT，而种子的 `created_at` 是 `2026-10-01T00:00:00+00:00`（未来时刻）、我这趟是 `2026-09-27T20:22:34.221580+00:00`，字符串序上种子在后，所以「最新 DRAFT」永远命中种子。后果：**在跑过 reset 的舞台上，今天真建的行程永远 prepare 不出来**。我 0 后端字节，只把两枚 created_at 与那行语句交出来。
+
+**没有改善的部分（照实）**：`stay_chosen_but_unconfirmed` 这一条正是 Today 上唯一真实显示过的那条，它现在没有任何 live 行程能触发——旧的见证随广州行程被删，新的建不出来（原因见上）。屏上代码与门没退步（X1–X5 仍 GREEN、三枚反件仍特异），但「live 上看得见这条」这件事从 03:55 起是缺的。要补只有一条诚实路径：先修 `prepare-scenario` 的种子时间戳排序，或者把 CNX-DEMO 的 stay 供给 fixture 补上 offer；两者都不该我在本单里顺手做。
+
+
+### cmdr 04:3x — ORD-0382 三段式与 ORD-B r3 契约可见性落地；我把"契约里看不看得见"做成了可复跑的对照
+
+**落地（fast-forward only，两路 GitHub 路由逐字一致）**
+
+- `0813d3aa…` → `3e75ab2bbbac19c47ab042fce9ea90be0f04829b`（**ORD-0382 AI 三段式**，携载 `frontend/src/features/planning/PlanAiRunStrip.tsx`、`frontend/src/features/planning/aiGenerationRun.ts`、`frontend/src/features/planning/PlanWithAiSheet.tsx`、`frontend/src/app/V8Experience.tsx`、`frontend/src/i18n/LocaleContext.tsx`、`frontend/src/styles.css`），收据 `evidence/cmdr-landing-ORD-0382r2-0426/preflight_r5.json` blob `5b4a417f1f336db8aae3dbb57eee516fdb06230e`
+- → `e022093dcc198367d779fc92692c6ccfc6824a2a`（**ORD-B r3 契约可见性**，携载 `backend/app/main.py`、`backend/app/schemas.py`、`frontend/src/components/PlaceProvenance.tsx`、`frontend/src/i18n/placeProvenanceCopy.ts`），收据 `evidence/cmdr-landing-ORD-B-r3-0432/preflight_r5.json` blob `ecd2f4dfd9b389c5f3a370088a9632cd247e5255`，重切件 blob `24997eebd1014ea8e1621b35f327dbb2b836b0e8`
+- 两次换代：`evidence/cmdr-swap-3e75ab2b-0427/deploy_r1.json` blob `df0ceeb014f03ee29e63089111203a160a436a74` 与 `evidence/cmdr-swap-e022093d-0433/deploy_r1.json` blob `dfe5537f1abfe43a757025fe6d64252a8528e296`，两份都是 F 臂真探测 + `OVERALL GREEN`；探针 blob `783db330eac2486c6fbcdda4e045c2f2fd8ab48a` 与 `6b8197c88915216de0cb4580dd2b589e65f9b34f` 五格全 true
+
+**我把"契约里看不看得见"做成了同仪表的跨代对照（不是听车道说）**
+
+仪表 `live_checks/cmdr_hop1_swap_r1.py` 换 hop1 时顺手读运行中的 `/openapi.json`，两代各存一份收据：
+
+- 上一代 hop1（导出树 `D:/moodle/_qoder_cmdr_backend_live_0350`，pid 于 03:59:29 创建）收据 `evidence/cmdr-hop1-swap-0359/hop1_swap_receipt.json` blob `5bab8a375aa9c0922d1e7f4f7dc37af169bdeb48`：`provider_key_in_live_spec` 为真、`coordinate_system_in_live_spec` 为假
+- 这一代 hop1（导出树 `D:/moodle/_qoder_cmdr_backend_live_0433`，pid 49096，04:33:52）收据 `evidence/cmdr-hop1-swap-0433/hop1_swap_receipt.json` blob `6961387a51b3cf8dd98c2779d0a7f4f71c7d1188`：**两格都为真**
+⇒ ORD-B 我定 **CLOSED**，但带上车道自己声明的两枚具名残留：候选对象内键顺序变了；"逐字节相同"在这条路上不是有效判据（时间戳每次重打都变）。这两条是他们的原话，不是我淡化后的版本。
+⇒ 顺带把我 03:56 那条疑点彻底关掉：响应体两格一直都在（`evidence/cmdr-ordB-read-0421/api_v1_places_read_r1.json` blob `7d96a612c909380fb6084e32dd025204496415d0`），缺的只是契约可见性。
+
+**我自己看屏看到的好话与缺陷（截图存档）**
+
+- 好话：AI 开关关着时弹窗写"这台服务的 AI 开关处于关闭状态，这是运营侧的设置，不是你的操作结果。开关本身不代表某次失败的原因。"——不署用户的名、不把开关当失败原因。截图 blob `00e83f57b2718b688ee7aa9f53c6ca4fb35f2000`，读数 blob `570d95d3a1869ccea418fa0eaf86aa000792638a`（:4781 真代次、390x844、console 空数组）
+- 缺陷（同一张图，已开回 ORD-0382 车道）：标题文本被挤成三行、两枚建议 chip 截断成"我想去Central Food Ha…"与"Central Food Hall排…"（用户点之前不知道提交什么）、主/次按钮同色阶。要求按命中测试口径修 + 四形各一张截图，并写明"截断的判据按渲染文字量，tooltip 不算"
+
+**账本尺**：我把 ORD-0371 的 r5e 直接跑了，它没解开积压反而把最大那块拒更多（对照存档 blob `5097ec48ea67b1121a8756165558307f989a74f6`，逐块 apply 拒因存档 blob `7f917f14f555b651d48f07ffee50d5ad0606c3b3`）。同时我自己那块连红两轮后绿了，把有效的三条写法固化成指南发给各车道：`evidence/cmdr-q43-backlog-0421/Q43_HOW_TO_PASS_r1.md` blob `996284eed6a817fe3cec58e31817343cfa2cd1ea`。**绕过尺这件事我没做，也不打算做。**
+
+**在跑**：ORD-0383 / ORD-0384 / ORD-0386 / ORD-0387 / ORD-0388（第三次打回 rebase，这次是 ORD-0382 落地把字典又动了）/ ORD-0389 / ORD-0390；ORD-B 已 CLOSED。尖 `e022093dcc198367d779fc92692c6ccfc6824a2a`，手机与 hop1 都是这一代。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### cmdr 04:2x — 我自己把 ORD-B 的疑点量掉了、ORD-0385 的文案改动逐字核对、以及 Q43 积压的可存档对照读数
 
 **我把 03:56 那条疑点自己量掉了（不是让车道替我确认）**
