@@ -1,0 +1,13 @@
+== cnx_token_tiers_r1  tokens=cand/design-tokens.css baseline=base/design-tokens.css styles=none
+  [MET] PARITY             69 (token,scope) baseline readings re-resolved
+          detail: none moved
+  [MET] TIERS              inline rgba() remaining inside :root theme blocks: 0
+          detail: none
+  [MET] LADDER_USED        tint tiers defined 10, unreferenced 0
+          detail: every tier has at least one consumer
+  [MET] CONSTANT_DUP       tokens re-declared identically in the dark block: 0
+          detail: none
+  [MET] CONSTANT_IN_DARK   --cn-always-* present inside :root[data-theme=dark]: 0
+          detail: none
+exit=0
+t1=0
