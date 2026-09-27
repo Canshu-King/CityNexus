@@ -1,0 +1,60 @@
+{
+ "schema": "CNX_CMDR_PHONE_SIDE_PROBE_V1",
+ "probed_at_local": "2026-09-28 02:52:30 +0800",
+ "serve_root": "D:/moodle/_qoder_preview_20260920/dist",
+ "tunnel_host": "calendar-engineering-surveys-london.trycloudflare.com",
+ "generation_under_test": "04071b8258ebcdcf1e9e4c9714fb516283d1e1ad",
+ "credential_handling": "auth read from the file by path; value never printed nor stored in this artifact",
+ "index_named_refs": [
+  "/assets/index-CnUOxIWz.js",
+  "/assets/index-CuNe7Fij.css"
+ ],
+ "assets_probed": 3,
+ "rows": [
+  {
+   "path": "/assets/index-CnUOxIWz.js",
+   "http_status": 200,
+   "content_type": "text/javascript",
+   "served_bytes": 1279223,
+   "disk_bytes": 1279223,
+   "served_sha256": "15a52f7e0780cf7afaf0e1d27bcc2256dac6ca38e020724802314e2e6164656f",
+   "disk_sha256": "15a52f7e0780cf7afaf0e1d27bcc2256dac6ca38e020724802314e2e6164656f",
+   "bytes_equal": true,
+   "is_html_fallback": false,
+   "js_mime_is_script": true
+  },
+  {
+   "path": "/assets/index-CuNe7Fij.css",
+   "http_status": 200,
+   "content_type": "text/css",
+   "served_bytes": 185472,
+   "disk_bytes": 185472,
+   "served_sha256": "11e23f804b3939d9c10d536c80f963e502a28e60e8be9fb8947a9e07a815c155",
+   "disk_sha256": "11e23f804b3939d9c10d536c80f963e502a28e60e8be9fb8947a9e07a815c155",
+   "bytes_equal": true,
+   "is_html_fallback": false,
+   "js_mime_is_script": true
+  },
+  {
+   "path": "/v10-sw.js",
+   "http_status": 200,
+   "content_type": "text/javascript",
+   "served_bytes": 2055,
+   "disk_bytes": 2055,
+   "served_sha256": "860a6fdd6515f205ddcb6cee5a7259363e4aa0879b6777ec07ae28a653641fdf",
+   "disk_sha256": "860a6fdd6515f205ddcb6cee5a7259363e4aa0879b6777ec07ae28a653641fdf",
+   "bytes_equal": true,
+   "is_html_fallback": false,
+   "js_mime_is_script": true
+  }
+ ],
+ "decisions": {
+  "every_named_asset_present_on_disk": true,
+  "all_200": true,
+  "all_bytes_equal_to_disk": true,
+  "no_asset_served_as_html": true,
+  "js_content_type_correct": true
+ },
+ "overall": "DEPLOYED_AND_BYTE_IDENTICAL_ON_PHONE_SIDE",
+ "scope": "Transport-level identity only (status, content type, bytes). It does not prove the app renders or that a traveller can finish a plan - that is the walkthrough gate."
+}
