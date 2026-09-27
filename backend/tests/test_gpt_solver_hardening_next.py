@@ -14,6 +14,7 @@ from app.db.models import Activity
 from app.db.session import SessionLocal
 from app.planning.solver_contract import SolverCandidate, solver_problem_fingerprint
 from app.planning.solver_runtime import SolverAttempt
+from demo_stage import demo_reset_headers  # noqa: E402  (ORD-0389)
 
 
 def _empty_attempt(problem, *, terminal_status: str = "INFEASIBLE") -> SolverAttempt:
@@ -148,7 +149,7 @@ def test_srh03_solver_v1_fails_closed_when_intervening_mutable_activities_are_no
     monkeypatch,
 ):
     monkeypatch.setenv("CITYNEXUS_SOLVER", "ortools")
-    ids = client.post("/api/v1/demo/reset").json()
+    ids = client.post("/api/v1/demo/reset", headers=demo_reset_headers()).json()
     journey_id = ids["journey_id"]
     generated = client.post(
         f"/api/v1/journeys/{journey_id}/plans/generate", json={"candidate_count": 1}

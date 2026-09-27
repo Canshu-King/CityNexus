@@ -35,6 +35,7 @@ import app.catalog_hydration_operations as hydration_module
 from app.db.models import CatalogHydrationOperation, Place
 from app.db.session import SessionLocal, engine
 from app.main import app
+from demo_stage import demo_reset_headers  # noqa: E402  (ORD-0389)
 
 client = TestClient(app)
 TZ = timezone(timedelta(hours=8))
@@ -78,7 +79,7 @@ REQUIRED_PROJECTION = (
 @pytest.fixture()
 def seeded(monkeypatch) -> str:
     monkeypatch.setattr("app.main.demo_mode_enabled", lambda: True)
-    reset = client.post("/api/v1/demo/reset")
+    reset = client.post("/api/v1/demo/reset", headers=demo_reset_headers())
     assert reset.status_code == 200, reset.text
     with SessionLocal() as session:
         session.execute(CatalogHydrationOperation.__table__.delete())

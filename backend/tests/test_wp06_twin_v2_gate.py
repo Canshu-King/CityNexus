@@ -8,12 +8,13 @@ from sqlalchemy import select
 from app.db.models import Activity, Event, ReplanProposal
 from app.db.session import SessionLocal
 from app.main import app
+from demo_stage import demo_reset_headers  # noqa: E402  (ORD-0389)
 
 client = TestClient(app)
 
 
 def _active_with_c4() -> tuple[str, dict, dict]:
-    journey_id = client.post("/api/v1/demo/reset").json()["journey_id"]
+    journey_id = client.post("/api/v1/demo/reset", headers=demo_reset_headers()).json()["journey_id"]
     plan = client.post(
         f"/api/v1/journeys/{journey_id}/plans/generate", json={"candidate_count": 1}
     ).json()[0]

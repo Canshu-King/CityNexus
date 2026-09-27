@@ -12,6 +12,7 @@ import app.main as main_module
 from app.db.models import Activity, Journey, JourneyLeg, JourneyTwin, PlanVersion
 from app.db.session import SessionLocal
 from app.integrations.china.amap import gcj02_to_wgs84, provider_for_region, wgs84_to_gcj02
+from demo_stage import demo_reset_headers  # noqa: E402  (ORD-0389)
 
 _SIMULATOR_SPEC = importlib.util.spec_from_file_location(
     "edge_companion_simulator",
@@ -27,7 +28,7 @@ client = TestClient(main_module.app)
 
 
 def _create_trip(city_code: str = "CN-TIANJIN") -> tuple[dict[str, str], str]:
-    ids = client.post("/api/v1/demo/reset").json()
+    ids = client.post("/api/v1/demo/reset", headers=demo_reset_headers()).json()
     city = "Tianjin" if city_code == "CN-TIANJIN" else "Beijing"
     response = client.post(
         "/api/v1/journeys",

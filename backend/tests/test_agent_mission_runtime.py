@@ -12,12 +12,13 @@ from app.agent.runtime import DeepSeekJourneyAgent
 from app.core.config import settings as runtime_settings
 from app.db.models import AgentRun, Event, JourneyMission
 from app.db.session import SessionLocal
+from demo_stage import demo_reset_headers  # noqa: E402  (ORD-0389)
 
 client = TestClient(main_module.app)
 
 
 def _selected_journey() -> str:
-    ids = client.post("/api/v1/demo/reset").json()
+    ids = client.post("/api/v1/demo/reset", headers=demo_reset_headers()).json()
     journey_id = ids["journey_id"]
     generated = client.post(
         f"/api/v1/journeys/{journey_id}/plans/generate", json={"candidate_count": 1}

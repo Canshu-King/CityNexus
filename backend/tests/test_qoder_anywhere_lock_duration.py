@@ -35,6 +35,7 @@ from sqlalchemy import event
 
 from app.db.session import engine
 from app.main import app
+from demo_stage import demo_reset_headers  # noqa: E402  (ORD-0389)
 
 client = TestClient(app)
 
@@ -185,7 +186,7 @@ def _summary(response) -> str:
 
 
 def _reset_seed() -> str:
-    reset = client.post("/api/v1/demo/reset")
+    reset = client.post("/api/v1/demo/reset", headers=demo_reset_headers())
     assert reset.status_code == 200, f"SETUP 失败：/demo/reset 实际 {_summary(reset)}"
     scene = client.get("/api/v1/demo/scene").json()
     journey_id = scene.get("journey_id")

@@ -23,6 +23,10 @@ import tempfile
 from pathlib import Path
 from typing import Any
 
+# Imported before the sys.path work below: `demo_stage` reads only `os.environ`, so it cannot
+# drag `app.main` in at a moment when this harness has not finished declaring the environment.
+from demo_stage import demo_reset_headers  # noqa: E402  (ORD-0389)
+
 HERE = Path(__file__).resolve()
 BACKEND = HERE.parents[1]          # <repo>/backend
 REPO = HERE.parents[2]             # <repo>
@@ -132,7 +136,9 @@ def capability(code: str, severity: str = "HARD", **extra: Any) -> dict[str, Any
 # HTTP helpers
 # ---------------------------------------------------------------------------
 def reset_demo() -> dict[str, Any]:
-    r = client().post("/api/v1/demo/reset")
+    # ORD-0389: the whole-library reset needs the operator's token; this harness declares one
+    # through conftest and hands it here, so the gate is exercised rather than worked around.
+    r = client().post("/api/v1/demo/reset", headers=demo_reset_headers())
     assert r.status_code == 200, r.text
     return r.json()
 

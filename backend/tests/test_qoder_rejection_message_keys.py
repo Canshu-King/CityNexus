@@ -38,6 +38,7 @@ from app.main import (
     temporal_rejection,
     validation_message_key,
 )
+from demo_stage import demo_reset_headers  # noqa: E402  (ORD-0389)
 
 client = TestClient(app)
 TZ = timezone(timedelta(hours=8))
@@ -45,7 +46,7 @@ KEY_SHAPE = re.compile(r"^[a-z][a-z0-9_]*(\.[a-z][a-z0-9_]*)+$")
 
 
 def _traveler() -> str:
-    return client.post("/api/v1/demo/reset").json()["traveler_id"]
+    return client.post("/api/v1/demo/reset", headers=demo_reset_headers()).json()["traveler_id"]
 
 
 def _at(day: int, hour: int = 8) -> datetime:

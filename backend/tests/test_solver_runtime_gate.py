@@ -33,6 +33,7 @@ from _qoder_explicit_demo_mobility import (  # noqa: E402
     SOLVER_RUNTIME_MOBILITY as _MODULE_MOBILITY,
     seed_module_mobility as _seed,
 )
+from demo_stage import demo_reset_headers  # noqa: E402  (ORD-0389)
 
 
 @pytest.fixture(autouse=True)
@@ -41,7 +42,7 @@ def _explicit_demo_mobility(monkeypatch):
 
 
 def _prepare_disruption() -> tuple[str, dict[str, object], dict[str, object]]:
-    ids = client.post("/api/v1/demo/reset").json()
+    ids = client.post("/api/v1/demo/reset", headers=demo_reset_headers()).json()
     journey_id = ids["journey_id"]
     generated = client.post(
         f"/api/v1/journeys/{journey_id}/plans/generate",

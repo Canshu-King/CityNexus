@@ -49,13 +49,14 @@ from app.db.session import SessionLocal
 from app.main import app
 from app.services import journey_schema
 from app.stay_mobility import journey_projection_window, journey_temporal_shape
+from demo_stage import demo_reset_headers  # noqa: E402  (ORD-0389)
 
 client = TestClient(app)
 TZ = timezone(timedelta(hours=8))
 
 
 def _traveler() -> str:
-    return client.post("/api/v1/demo/reset").json()["traveler_id"]
+    return client.post("/api/v1/demo/reset", headers=demo_reset_headers()).json()["traveler_id"]
 
 
 def _at(day: int, hour: int = 8) -> datetime:

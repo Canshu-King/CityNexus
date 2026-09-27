@@ -8,6 +8,7 @@ from fastapi.testclient import TestClient
 
 import app.main as main_module
 from app.integrations.ai.responses import DeepSeekResponsesClient, ResponsesResult
+from demo_stage import demo_reset_headers  # noqa: E402  (ORD-0389)
 
 
 def test_responses_client_can_request_json_schema_output() -> None:
@@ -114,7 +115,7 @@ class _MismatchDeepSeek:
 def test_high_confidence_journey_mismatch_cannot_auto_apply(monkeypatch) -> None:
     client = TestClient(main_module.app)
     monkeypatch.setattr(main_module, "_deepseek_client", lambda **_kwargs: _MismatchDeepSeek())
-    journey_id = client.post("/api/v1/demo/reset").json()["journey_id"]
+    journey_id = client.post("/api/v1/demo/reset", headers=demo_reset_headers()).json()["journey_id"]
 
     extracted = client.post(
         f"/api/v1/journeys/{journey_id}/inbox/text-extract",

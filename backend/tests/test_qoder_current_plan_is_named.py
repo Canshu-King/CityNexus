@@ -24,6 +24,7 @@ from sqlalchemy import select
 from app.db.models import Activity, Journey, PlanVersion
 from app.db.session import SessionLocal
 from app.main import app
+from demo_stage import demo_reset_headers  # noqa: E402  (ORD-0389)
 
 client = TestClient(app)
 
@@ -33,7 +34,7 @@ def _stage(monkeypatch) -> str:
     """reset -> prepare -> a second generate, so one journey holds several versions."""
 
     monkeypatch.setattr("app.main.demo_mode_enabled", lambda: True)
-    assert client.post("/api/v1/demo/reset").status_code == 200
+    assert client.post("/api/v1/demo/reset", headers=demo_reset_headers()).status_code == 200
     assert client.post("/api/v1/demo/prepare-scenario").status_code == 200
     journey_id = client.get("/api/v1/demo/scene").json()["journey_id"]
     generated = client.post(f"/api/v1/journeys/{journey_id}/plans/generate", json={})

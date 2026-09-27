@@ -39,6 +39,7 @@ from app.db.models import Activity, Commitment, Journey
 from app.db.session import SessionLocal
 from app.main import app
 from app.planning.anchors import structural_place_id
+from demo_stage import demo_reset_headers  # noqa: E402  (ORD-0389)
 
 CRUISE_PLACE = "place-river-cruise"
 ARRIVAL_REF = "RX4-ARRIVAL-C4-GATE"
@@ -91,7 +92,7 @@ def _paid_cruise_journey(client: TestClient) -> tuple[str, dict[str, Any]]:
     refused afterwards; ordering the flow any other way leaves the gate with an
     uncaptured booking and nothing to protect.
     """
-    journey_id = client.post("/api/v1/demo/reset").json()["journey_id"]
+    journey_id = client.post("/api/v1/demo/reset", headers=demo_reset_headers()).json()["journey_id"]
     plan = _candidate_plans(client, journey_id, count=1)[0]
     assert client.post(
         f"/api/v1/journeys/{journey_id}/plans/{plan['id']}/select"
@@ -135,7 +136,7 @@ def _confirmed_arrival_journey(client: TestClient, *, confirm: bool) -> tuple[st
     Un-confirmed yields the same artefact without the commitment, which is the
     control that stops the confirmed case from passing by construction.
     """
-    journey_id = client.post("/api/v1/demo/reset").json()["journey_id"]
+    journey_id = client.post("/api/v1/demo/reset", headers=demo_reset_headers()).json()["journey_id"]
     plan = _candidate_plans(client, journey_id, count=1)[0]
     assert client.post(
         f"/api/v1/journeys/{journey_id}/plans/{plan['id']}/select"
@@ -199,7 +200,7 @@ def _unresolvable_paid_anchor_journey(client: TestClient) -> tuple[str, dict, st
     C4 commitments is the only thing left standing between the traveller and a
     candidate list that quietly leaves the commitment out.
     """
-    journey_id = client.post("/api/v1/demo/reset").json()["journey_id"]
+    journey_id = client.post("/api/v1/demo/reset", headers=demo_reset_headers()).json()["journey_id"]
     plan = _candidate_plans(client, journey_id, count=1)[0]
     assert client.post(
         f"/api/v1/journeys/{journey_id}/plans/{plan['id']}/select"
@@ -426,7 +427,7 @@ def test_cruise_protection_is_not_discriminating() -> None:
     be green.  Measured, not assumed - see RX4_GATE.md.
     """
     client = TestClient(app)
-    journey_id = client.post("/api/v1/demo/reset").json()["journey_id"]
+    journey_id = client.post("/api/v1/demo/reset", headers=demo_reset_headers()).json()["journey_id"]
     assert _active_c4_commitments(journey_id) == [], "a fresh demo journey must hold no commitment"
 
     for plan in _candidate_plans(client, journey_id, count=3):
@@ -508,7 +509,7 @@ def test_nothing_outside_the_commitment_pins_the_unreachable_anchor() -> None:
     and is not repeated here.
     """
     client = TestClient(app)
-    journey_id = client.post("/api/v1/demo/reset").json()["journey_id"]
+    journey_id = client.post("/api/v1/demo/reset", headers=demo_reset_headers()).json()["journey_id"]
 
     _import_unresolvable_reservation(
         client, journey_id, ref="RX4-PREMISE-UNCONFIRMED", confirm=False

@@ -95,7 +95,7 @@ def _require_endpoint(operation: str, response) -> None:
 
 
 def _seeded_journey_id() -> str:
-    reset = client.post("/api/v1/demo/reset")
+    reset = client.post("/api/v1/demo/reset", headers=demo_reset_headers())
     assert reset.status_code == 200, (
         f"SETUP 失败：/api/v1/demo/reset 期望 200，实际 {_summary(reset)}。"
         "conftest 会把测试进程声明成模拟舞台；若这条红，先查环境，不要改产品语义"
@@ -235,6 +235,7 @@ import threading
 from app.db.models import CatalogHydrationOperation
 from app.db.session import SessionLocal
 from sqlalchemy import delete, select, text
+from demo_stage import demo_reset_headers  # noqa: E402  (ORD-0389)
 
 
 def _own_question(tag: str) -> str:

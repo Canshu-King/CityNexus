@@ -19,7 +19,7 @@ client = TestClient(app)
 
 
 def _active_with_c4() -> tuple[dict, dict, dict]:
-    ids = client.post("/api/v1/demo/reset").json()
+    ids = client.post("/api/v1/demo/reset", headers=demo_reset_headers()).json()
     jid = ids["journey_id"]
     plan = client.post(
         f"/api/v1/journeys/{jid}/plans/generate", json={"candidate_count": 1}
@@ -222,6 +222,7 @@ def test_traffic_delay_honors_explicit_extra_minutes_semantics():
 # exercise trustworthy legs (see tests/_qoder_explicit_demo_mobility.py).
 import pytest as _pytest  # noqa: E402
 from _qoder_explicit_demo_mobility import POST_GOAL_MOBILITY as _MODULE_MOBILITY, seed_module_mobility as _seed  # noqa: E402
+from demo_stage import demo_reset_headers  # noqa: E402  (ORD-0389)
 
 
 @_pytest.fixture(autouse=True)

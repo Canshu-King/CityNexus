@@ -34,6 +34,7 @@ from fastapi.testclient import TestClient
 from app.core.config import settings
 from app.integrations.discovery import real_city
 from app.main import app
+from demo_stage import demo_reset_headers  # noqa: E402  (ORD-0389)
 
 client = TestClient(app)
 TZ = timezone(timedelta(hours=8))
@@ -139,8 +140,8 @@ def _providers(monkeypatch) -> dict:
 
 
 def _journey(city_code: str) -> str:
-    assert client.post("/api/v1/demo/reset").status_code == 200
-    traveler = client.post("/api/v1/demo/reset").json()["traveler_id"]
+    assert client.post("/api/v1/demo/reset", headers=demo_reset_headers()).status_code == 200
+    traveler = client.post("/api/v1/demo/reset", headers=demo_reset_headers()).json()["traveler_id"]
     start = datetime(2026, 10, 12, 9, 0, tzinfo=TZ)
     created = client.post(
         "/api/v1/journeys",

@@ -28,6 +28,7 @@ from __future__ import annotations
 from fastapi.testclient import TestClient
 
 from app.main import app
+from demo_stage import demo_reset_headers  # noqa: E402  (ORD-0389)
 
 client = TestClient(app)
 
@@ -41,7 +42,7 @@ def _by_place(activities: list[dict]) -> dict[str, str]:
 
 
 def test_experience_and_canonical_plan_agree_on_activity_identity() -> None:
-    journey_id = client.post("/api/v1/demo/reset").json()["journey_id"]
+    journey_id = client.post("/api/v1/demo/reset", headers=demo_reset_headers()).json()["journey_id"]
 
     plans = client.post(
         f"/api/v1/journeys/{journey_id}/plans/generate", json={"candidate_count": 1}
@@ -142,7 +143,7 @@ def test_replacement_activity_is_not_left_anonymous() -> None:
     """The point of a recovery is a *different* place, so the new row must carry a
     real identity too — otherwise the surface can only say "something was
     substituted here"."""
-    journey_id = client.post("/api/v1/demo/reset").json()["journey_id"]
+    journey_id = client.post("/api/v1/demo/reset", headers=demo_reset_headers()).json()["journey_id"]
     plans = client.post(
         f"/api/v1/journeys/{journey_id}/plans/generate", json={"candidate_count": 1}
     ).json()

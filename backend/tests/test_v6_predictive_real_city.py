@@ -9,6 +9,7 @@ from _qoder_explicit_demo_mobility import seed_explicit_mobility
 from app.agent.autorun import ensure_enrollment, run_once, stop_autorun
 from app.db.models import Journey, PlanVersion
 from app.db.session import SessionLocal
+from demo_stage import demo_reset_headers  # noqa: E402  (ORD-0389)
 
 client = TestClient(main_module.app)
 
@@ -53,7 +54,7 @@ def test_v6_predictive_real_city_twin_prevents_failure_before_hard_break(monkeyp
             ("real-place-b0557d41934f83a861634fe2", "place-river-cruise"): 18,
         },
     )
-    ids = client.post("/api/v1/demo/reset").json()
+    ids = client.post("/api/v1/demo/reset", headers=demo_reset_headers()).json()
     journey_id = ids["journey_id"]
     generated = client.post(
         f"/api/v1/journeys/{journey_id}/plans/generate",

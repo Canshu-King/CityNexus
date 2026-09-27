@@ -43,6 +43,7 @@ from app.replanning.feasibility import (
     _CAPABILITY_GATE_CODES,
     constraint_write_refusal,
 )
+from demo_stage import demo_reset_headers  # noqa: E402  (ORD-0389)
 
 client = TestClient(app)
 JOURNEY_ID = "22222222-2222-4222-8222-222222222222"
@@ -50,7 +51,7 @@ DEMO_FIXTURE = Path(__file__).resolve().parents[2] / "data" / "mock" / "demo_jou
 
 
 def _reset() -> None:
-    response = client.post("/api/v1/demo/reset")
+    response = client.post("/api/v1/demo/reset", headers=demo_reset_headers())
     assert response.status_code == 200, f"期望：演示夹具复位成功；实际 {response.status_code}"
 
 

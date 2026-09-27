@@ -28,6 +28,7 @@ from sqlalchemy import select
 from app.db.models import Activity, CityService, Place
 from app.db.session import SessionLocal
 from app.main import app
+from demo_stage import demo_reset_headers  # noqa: E402  (ORD-0389)
 
 client = TestClient(app)
 TZ = timezone(timedelta(hours=8))
@@ -60,11 +61,11 @@ def _minutes(value: str) -> int:
 @pytest.fixture()
 def _seeded(monkeypatch) -> None:
     monkeypatch.setattr("app.main.demo_mode_enabled", lambda: True)
-    assert client.post("/api/v1/demo/reset").status_code == 200
+    assert client.post("/api/v1/demo/reset", headers=demo_reset_headers()).status_code == 200
 
 
 def _journey(city_code: str, *, days: int = 2, budget_minor: int = 150_000) -> str:
-    traveler = client.post("/api/v1/demo/reset").json()["traveler_id"]
+    traveler = client.post("/api/v1/demo/reset", headers=demo_reset_headers()).json()["traveler_id"]
     start = datetime(2026, 9, 22, 9, 0, tzinfo=TZ)
     created = client.post(
         "/api/v1/journeys",

@@ -33,6 +33,7 @@ from app.db.models import TravelerCapability
 from app.db.session import SessionLocal
 from app.main import app
 from app.replanning.feasibility import _CAPABILITY_GATE_CODES
+from demo_stage import demo_reset_headers  # noqa: E402  (ORD-0389)
 
 client = TestClient(app)
 JOURNEY_ID = "22222222-2222-4222-8222-222222222222"
@@ -48,7 +49,7 @@ SOFT_ONLY = sorted(SOFT_CODES)[0]
 
 
 def _reset() -> None:
-    response = client.post("/api/v1/demo/reset")
+    response = client.post("/api/v1/demo/reset", headers=demo_reset_headers())
     assert response.status_code == 200, f"期望：夹具复位成功；实际 {response.status_code}"
 
 

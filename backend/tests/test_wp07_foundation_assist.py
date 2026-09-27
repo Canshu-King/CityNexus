@@ -20,6 +20,7 @@ from app.replanning.opportunity_window_family import (
     WindowReplacementInput,
     evaluate_window_replacement,
 )
+from demo_stage import demo_reset_headers  # noqa: E402  (ORD-0389)
 
 
 def test_real_f3_window_evidence_uses_inbound_outbound_and_safety_once():
@@ -102,7 +103,7 @@ def test_weather_ingestion_persists_provider_verified_event_server_side():
     from fastapi.testclient import TestClient
 
     client = TestClient(app)
-    ids = client.post("/api/v1/demo/reset").json()
+    ids = client.post("/api/v1/demo/reset", headers=demo_reset_headers()).json()
     snapshot = freeze_weather_risks(
         [
             WeatherRisk(
@@ -127,7 +128,7 @@ def test_provider_recovery_resolves_outage_and_restores_twin_ready_projection():
     from fastapi.testclient import TestClient
 
     client = TestClient(app)
-    ids = client.post("/api/v1/demo/reset").json()
+    ids = client.post("/api/v1/demo/reset", headers=demo_reset_headers()).json()
     jid = ids["journey_id"]
     with SessionLocal() as session:
         record_provider_degradation(

@@ -4,6 +4,7 @@ from fastapi.testclient import TestClient
 
 import app.main as main_module
 from app.integrations.ai.responses import ResponsesResult
+from demo_stage import demo_reset_headers  # noqa: E402  (ORD-0389)
 
 client = TestClient(main_module.app)
 
@@ -44,7 +45,7 @@ class _FlagshipDeepSeek:
 
 def test_v10_flagship_inbox_to_compose_web_evidence_and_execution_clock(monkeypatch):
     monkeypatch.setattr(main_module, "_deepseek_client", lambda: _FlagshipDeepSeek())
-    ids = client.post("/api/v1/demo/reset").json()
+    ids = client.post("/api/v1/demo/reset", headers=demo_reset_headers()).json()
     journey_id = ids["journey_id"]
 
     text_draft = client.post(

@@ -42,6 +42,7 @@ if str(BACKEND) not in sys.path:
 from fastapi.testclient import TestClient  # noqa: E402
 
 import app.main as main_module  # noqa: E402
+from demo_stage import demo_reset_headers  # noqa: E402  (ORD-0389)
 
 client = TestClient(main_module.app)
 
@@ -73,7 +74,7 @@ def jdump(value: Any) -> str:
 # lifecycle
 # ---------------------------------------------------------------------------
 def reset_demo() -> dict[str, Any]:
-    r = client.post("/api/v1/demo/reset")
+    r = client.post("/api/v1/demo/reset", headers=demo_reset_headers())
     assert r.status_code == 200, r.text
     return r.json()
 

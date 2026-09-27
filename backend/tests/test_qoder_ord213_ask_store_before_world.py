@@ -26,6 +26,7 @@ import app.catalog_hydration_operations as operations
 from app.db.models import CatalogHydrationOperation
 from app.db.session import SessionLocal
 from app.main import app
+from demo_stage import demo_reset_headers  # noqa: E402  (ORD-0389)
 
 client = TestClient(app)
 UNRESOLVED = "贡山独龙族怒族自治县"
@@ -34,7 +35,7 @@ OTHER_UNRESOLVED = "一个从没听说过的地方XYZ"
 
 @pytest.fixture(autouse=True)
 def _empty_operation_store():
-    response = client.post("/api/v1/demo/reset")
+    response = client.post("/api/v1/demo/reset", headers=demo_reset_headers())
     assert response.status_code == 200, f"夹具复位失败：{response.status_code}"
     # Measured, not assumed: `demo/reset` runs `services.reset_all`, which deletes 52 tables, and
     # `catalog_hydration_operations` is **not** one of them (the name has 0 hits in

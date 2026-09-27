@@ -58,6 +58,7 @@ from app.replanning.provider_snapshots import (
     SYNTHETIC_DEFAULT,
     MobilitySnapshot,
 )
+from demo_stage import demo_reset_headers  # noqa: E402  (ORD-0389)
 
 client = TestClient(app)
 
@@ -779,7 +780,7 @@ def test_g15d_the_scene_read_reports_the_same_two_counts():
 
 
 def _seeded_active_journey_id() -> str:
-    reset = client.post("/api/v1/demo/reset")
+    reset = client.post("/api/v1/demo/reset", headers=demo_reset_headers())
     assert reset.status_code == 200, f"SETUP 失败：/api/v1/demo/reset 实际 {reset.status_code}"
     scene = client.get("/api/v1/demo/scene")
     assert scene.status_code == 200, f"SETUP 失败：/api/v1/demo/scene 实际 {scene.status_code}"

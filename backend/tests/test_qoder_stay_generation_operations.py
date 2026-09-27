@@ -131,6 +131,7 @@ def _use(monkeypatch, http: _SlowHttp) -> None:
 
 
 import pytest  # noqa: E402
+from demo_stage import demo_reset_headers  # noqa: E402  (ORD-0389)
 
 
 @pytest.fixture(autouse=True)
@@ -197,7 +198,7 @@ def _journey(
     which ORD-0355 needs for the cases that must be read as a money constraint."""
 
     if traveler is None:
-        traveler = client.post("/api/v1/demo/reset").json()["traveler_id"]
+        traveler = client.post("/api/v1/demo/reset", headers=demo_reset_headers()).json()["traveler_id"]
     start = datetime(2026, 11, 3, 9, 0, tzinfo=TZ)
     created = client.post(
         "/api/v1/journeys",

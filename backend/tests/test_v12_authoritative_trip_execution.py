@@ -14,7 +14,7 @@ from app.main import app
 
 def _journey_with_inputs() -> tuple[str, list[str], str]:
     client = TestClient(app)
-    assert client.post("/api/v1/demo/reset").status_code == 200
+    assert client.post("/api/v1/demo/reset", headers=demo_reset_headers()).status_code == 200
     session = SessionLocal()
     traveler = session.scalar(select(Traveler))
     journey_id = str(uuid4())
@@ -312,3 +312,4 @@ import pytest as _pytest  # noqa: E402,F401
 from _qoder_explicit_demo_mobility import (  # noqa: E402
     seed_authoritative_recovery_mobility,
 )
+from demo_stage import demo_reset_headers  # noqa: E402  (ORD-0389)

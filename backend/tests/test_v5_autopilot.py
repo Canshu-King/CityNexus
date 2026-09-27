@@ -9,12 +9,13 @@ import app.main as main_module
 from app.agent.autorun import run_once, stop_autorun
 from app.db.models import Event, GuardianRun, PlanVersion
 from app.db.session import SessionLocal
+from demo_stage import demo_reset_headers  # noqa: E402  (ORD-0389)
 
 client = TestClient(main_module.app)
 
 
 def _ready_journey() -> tuple[str, dict]:
-    ids = client.post("/api/v1/demo/reset").json()
+    ids = client.post("/api/v1/demo/reset", headers=demo_reset_headers()).json()
     journey_id = ids["journey_id"]
     generated = client.post(
         f"/api/v1/journeys/{journey_id}/plans/generate",

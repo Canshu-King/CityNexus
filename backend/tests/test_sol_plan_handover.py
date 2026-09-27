@@ -20,12 +20,13 @@ from sqlalchemy import select
 import app.main as main_module
 from app.db.models import Activity, Journey, PlanVersion
 from app.db.session import SessionLocal
+from demo_stage import demo_reset_headers  # noqa: E402  (ORD-0389)
 
 client = TestClient(main_module.app)
 
 
 def test_selecting_a_replacement_retires_the_plan_being_executed() -> None:
-    journey_id = client.post("/api/v1/demo/reset").json()["journey_id"]
+    journey_id = client.post("/api/v1/demo/reset", headers=demo_reset_headers()).json()["journey_id"]
     first = client.post(
         f"/api/v1/journeys/{journey_id}/plans/generate", json={"candidate_count": 1}
     ).json()[0]

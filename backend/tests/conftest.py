@@ -45,8 +45,21 @@ from __future__ import annotations
 import os
 import pathlib
 import tempfile
+import uuid
 
 os.environ.setdefault("CITYNEXUS_DEMO_MODE", "true")
+
+# ORD-0389: demo mode says the deployment may be a stage; it does not say who may empty it.  The
+# reset route additionally requires a token that is read from the environment at call time, and
+# the product default is "not configured", which makes the route refuse every caller.  The suite
+# is a caller that can claim the door, so it declares one here -- once, before `app.main` is
+# imported -- instead of letting ~90 modules grow a secret each.  Modules that want to test the
+# refusal simply do not import `demo_stage.demo_reset_headers`.
+# Generated, never written into the tree: a literal here would be a credential-shaped string under
+# version control, which is exactly what `test_qoder_ord0307_credential_gate.py` C07 scans for.
+# An externally declared value is respected, as with the database target below.
+if "CITYNEXUS_DEMO_RESET_TOKEN" not in os.environ:
+    os.environ["CITYNEXUS_DEMO_RESET_TOKEN"] = uuid.uuid4().hex
 
 # --- ORD-0211: which database does this pytest process actually open? -----------------------
 # `app.core.config` reads `CITYNEXUS_DATABASE_URL` (NOT the unprefixed `DATABASE_URL`, which the

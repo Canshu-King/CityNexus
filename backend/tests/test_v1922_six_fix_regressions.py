@@ -49,6 +49,7 @@ from app.stay_mobility import (
     build_candidate_nodes,
     generate_stay_options,
 )
+from demo_stage import demo_reset_headers  # noqa: E402  (ORD-0389)
 
 client = TestClient(app)
 TZ = "+08:00"
@@ -63,7 +64,7 @@ def _dt(value: str) -> datetime:
 
 
 def _reset() -> dict[str, str]:
-    response = client.post("/api/v1/demo/reset")
+    response = client.post("/api/v1/demo/reset", headers=demo_reset_headers())
     assert response.status_code == 200, response.text
     return response.json()
 

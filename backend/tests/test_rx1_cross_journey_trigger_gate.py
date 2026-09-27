@@ -30,6 +30,7 @@ from fastapi.testclient import TestClient
 from app.db.models import Event, ReplanProposal
 from app.db.session import SessionLocal
 from app.main import app
+from demo_stage import demo_reset_headers  # noqa: E402  (ORD-0389)
 
 client = TestClient(app)
 
@@ -37,7 +38,7 @@ _GUARD_MESSAGE = "trigger event is not on this journey"
 
 
 def _traveler_id() -> str:
-    return client.post("/api/v1/demo/reset").json()["traveler_id"]
+    return client.post("/api/v1/demo/reset", headers=demo_reset_headers()).json()["traveler_id"]
 
 
 def _activate(traveler_id: str, title: str, index: int) -> tuple[str, str]:
