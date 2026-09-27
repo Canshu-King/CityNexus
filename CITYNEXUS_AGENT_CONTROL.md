@@ -16588,6 +16588,144 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### ORD-0371 追加单交付（lane S4-ast-taint，污点尺）— r7b1：属性位的展开写法认得，但只在同一折叠里有溯源标签时认
+
+新文件名 `ui_exposure_taint_ast_r7b1.cjs` = b6716d9a3c67dafc72fef501bfaff101c84e918a （139058 B；已发布两代在本机逐字节复测未动：r7 = 3272a4336f60ddd183875000c11e5b5ead6be2be 、r7b = d3f66ce9fecd0790981a4fcdeb5e36b1c0fd10f2；发布字节拉回本地跑自测，槽臂 19/19 全绿 cf09a9b85d576c639836f61bfa12b24f40efa5ec ）。范围就你点的那一条：`{...(cond ? { "data-cnx-field": expr } : {})}` 与 `{...obj}`（后者仅当能静态解析到唯一、未被重新赋值的局部字面对象）现在算锚；双触发保留——同一个 `<details>` 内必须有溯源标签，否则照旧不配对 9487239c9c7d74fb0a6def6d7419d40b189c86ce 。
+
+门同口径复算（不是我自定的分母）：我把 `preflight_and_land_r3.py:85-151`+`:320-357` 的算式逐行复刻（`git archive` 只读取 frontend/src、键 (basename,line,rule)、按 (file,rule) 计增长、`pair_added`），先用 r7b 跑一遍与门自己那份 REFUSED 收据 `evidence/cmdr-landing-ORD-0369r3-0300/preflight_REFUSED_exposure_r1.json` （blob 7d81a39bc11a101333e664b7e737d23fbc7d4cfa ，已用 `git cat-file -e` 证可解析）逐字段比：tip、cand、removed_count、growth、unpaired_added、ruler_blob 六项全等，所以下面的 r7b1 读数与门原读数可比 f1fe774dfc3a140d3cdc8c2cf78cb537e8ef0865 ：
+- r7b：tip 11 格、候选 10 格、growth 1 、unpaired 就是 `RecoveryRequiredPanel.tsx:298|UPSTREAM_TEXT_VIA_HELPER_TO_DOM` 这一枚，门判 REFUSE f1fe774dfc3a140d3cdc8c2cf78cb537e8ef0865 。
+- r7b1：tip 11 格（一字未动）、候选 9 格、growth 空、unpaired 空，门判 PASS f1fe774dfc3a140d3cdc8c2cf78cb537e8ef0865 。你写的"cand_cells 仍 ≤ 10"按这个口径达成 f1fe774dfc3a140d3cdc8c2cf78cb537e8ef0865 。
+- 你已落地的那枚产品代次 `090c048f220a3089506f565929ceda1511315a09`：r7b 下 10 格、r7b1 下 9 格，被点名的那柄同样消失 f1fe774dfc3a140d3cdc8c2cf78cb537e8ef0865 。
+
+没有"放宽成不查"（按格集比、不只按计数）：tip 面两代格集逐枚相同；候选面 r7b1 相对 r7b 多 0 枚、少 1 枚，少的那枚就是 `RecoveryRequiredPanel.tsx:298|UPSTREAM_TEXT_VIA_HELPER_TO_DOM` ，其余判定一字未变 f1fe774dfc3a140d3cdc8c2cf78cb537e8ef0865 。候选里另外 3 枚 `PlanWithAiSheet.tsx` 的新增格在 r7b1 下仍逐枚报出（9 与 10 的差只有被豁免的那一枚）；`fold_without_anchor` 在候选面从 2 降到 1 ，只关掉这一枚合法折叠 f1fe774dfc3a140d3cdc8c2cf78cb537e8ef0865 。全树面（`frontend/src` 工作树，HEAD `a9c2504274dd3284b1a98b6707f7c4c9f7071cc3` 而工作树带未提交改动，所以这是工作树读数不是 rev 读数）两代各 19 格，双向差集皆空 487f04b2eb480acc07ee88fd979602983967ac99 2a3abb9a424c02f2e39d1d6b2b7f83e60ce5d9f6 。
+
+双向反例（你点名的那个）：两枚输入只差 :289-293 那 5 行溯源标签（`recovery.serverReason` / `recovery.deviceReason` 那句）——带标签的 counterexample_input_shipped_289_293_present.tsx = 96e0089dd2942e4904a2d3a409068282e021dae5 与删标签的 counterexample_input_label_289_293_deleted.tsx = 03b5bc2f26438f45f92df5c146485a73690e0789 ，差异是纯删除：把带标签那枚的这几行删掉逐字节等于第二枚 3f2c7f8c3f2c14d8741de4091a19de62ebedfa2c 。r7b 在带标签那枚报 1 枚，r7b1 报 0 枚并记一次 `attributed_in_fold`；删掉标签、只留展开写法后，两代都报红：r7b1 在 :293 报 1 枚且记 `fold_without_anchor` 1 ，两代在这枚反例上判定一致 3f2c7f8c3f2c14d8741de4091a19de62ebedfa2c 。反控 4 支逐条改回旧形状（去掉标签检查／让展开认任意标识符／让展开不再核对六字段／完全不认展开锚），全部被抓、漏网 0 ，控制臂 19/19 c9d39d3316fd56627294f5944bcae2357377543c 。静态解析的边界各有专臂：props 展开不开豁免、六字段之外的字面键不开、`let` 被重新赋值不开、同名多处声明解析为空 c9d39d3316fd56627294f5944bcae2357377543c 。
+
+没改善的部分：1) `data-cnx-fold` 若写成展开形式仍不认——这轮只补了锚（属性位）那一侧，折叠标记本身还是只读字面属性，要不要一起补归你裁。2) `{...obj}` 只认唯一未改写的局部字面对象：对象从别的文件 import 进来、或由函数返回时解析不到，那一形仍是盲区；跨文件污点走的是 `--tree`，锚解析没接模块图。3) 三枚代次的 `resolution_truncated_total` 都是 52 ——有深度截断在，"0 格"永远不等于"证明无格"，这条我按 Q64 的原话写在件里 f1fe774dfc3a140d3cdc8c2cf78cb537e8ef0865 。4) 门我没动：`preflight_and_land_r3.py:42` 的 EXPOSURE_RULER 仍指 r7b，换名一行归你下；产品码、账本本体、已发布尺路径一字节未改 f1fe774dfc3a140d3cdc8c2cf78cb537e8ef0865 。5) Q43 r5e 那条线我按你 02:53 的六组样本已交付，仍等你在 `ledger_insert_after.py:28` 换名；ORD-0364（r7c）与 ORD-0361 重基未开工。6) 本会话派子代理全部失败（qmodel_latest is not available），活全部单线完成 b6716d9a3c67dafc72fef501bfaff101c84e918a 。
+
+
+### ORD-0388 · 车道 qoder-0388 · tier-1 九处清零 · 2026-09-28 0403+08
+
+分支 `review/Q-ord0388-tier1-clearance`，base 现尖 `895ec1a11aca730041b42f2358b9607c9bb5a67e`，tip `d2246c71663ac53cbdb83a911409e6ae5d87df6e`（树 `ae15891d2a1d38c6d0358505ee1744fcb8c73048`）。
+三笔：尺+组件 `fe364f42cf78acb21f93c46f45af7f44cba96745`；字典+读数 `1f6b7285c43a6868ef4e9e59805713cbd3961440`；读数修正件 `d2246c71663ac53cbdb83a911409e6ae5d87df6e`（tip）。字典按您的减摩建议放在需要它的那一笔。
+只读预验：`git merge-tree --write-tree 895ec1a11aca730041b42f2358b9607c9bb5a67e HEAD` 退出码 **0** ⇒ 当前可 ff。`git ls-remote` 现读等于本地 HEAD。
+
+## 分母用我自己重跑的读数，不用转述
+
+您在 `7c9edf9f` 上那份证据 blob `9b722f11828576fe9be98a7884a4ca4fc4f5bfe5` 点名 9 处 tier-1；我在本候选基线 `895ec1a11aca730041b42f2358b9607c9bb5a67e` 上重跑同一把尺也是 9 处，
+逐处具名（这些就是本单的范围，共 9 行）：
+  frontend/src/features/planning/PlanWithAiSheet.tsx:1230
+  frontend/src/features/setup/JourneyTrialSetup.tsx:996
+  frontend/src/main.tsx:1132
+  frontend/src/main.tsx:1393
+  frontend/src/main.tsx:1398
+  frontend/src/main.tsx:1441
+  frontend/src/main.tsx:1452
+  frontend/src/main.tsx:1465
+  frontend/src/main.tsx:1529
+
+## 九处的处置：8 处进字典，1 处证明它印不出来
+
+8 处改写取用点（`t("…")`），英文值与被替换的字面量**逐字相同**，所以英文屏一动不动、英文断言不会失靶；
+中文是同 key 的新写值，语域跟 ORD-0367（直陈，不用「失败/无法」）：
+  frontend/src/features/setup/JourneyTrialSetup.tsx:996 → `trial.notAsked` 未询问
+  frontend/src/main.tsx:1132 → `legacy.guardianIdle`；:1393 → `legacy.notEvaluated` 未评估；
+  :1398 → `legacy.unknown` 未知；:1441、:1452、:1465 → `legacy.preference` 偏好项；:1529 → `legacy.noActiveC4`。
+main.tsx 从未 import 过 `useT`，这一单才补上（LegacyApp 在 frontend/src/main.tsx:1728 由 /legacy 路径挂载，
+所以它那 7 处**确实能到屏**，不能用可达性排除）。
+
+第 9 处选「证明到不了屏」，并把证明做进尺而不是停在嘴上：
+  frontend/src/features/planning/PlanWithAiSheet.tsx:1230 的 `(result?.summaryOrigin ?? "not_stated") === "no_model"`
+  —— 值合上一个括号就被相等运算符读走，两边都被消费、都不印；印出来的是它挑中的四个 `zh ? … : …` 标签之一。
+  同一枚哨兵是**故意**镜像在上一行 frontend/src/features/planning/PlanWithAiSheet.tsx:1228 的 `data-summary-origin`（技术事实通道）。
+  尺因此新增 `COMPARISON_OPERAND` → tier 3，反控臂 K7k。**这条规则第一次是错的**：放在花括号回溯之后永不触发（该位最内层未闭合括号其实是 JSX 子表达式），
+  是 K7k 立刻报红才逼出「比较优先于槽位」的顺序修正——不是我把红解释过去。
+
+## 验收读数（尺与屏）
+
+`RENDER_TIERS` tier-1 = **0**（review/ord0388-readouts/RULER_R2.txt:14），tier B 存量 73 → **65**（review/ord0388-readouts/RULER_R2.txt:13），tier A 仍 0。
+三格保护项无新红：`REGISTER_PARITY` 659 对 0 冲突（review/ord0388-readouts/RULER_R2.txt:6）、`NO_GROWTH` 0 值变动（review/ord0388-readouts/RULER_R2.txt:7，本次只新增）、
+`ASSERTIONS_STILL_HIT` 0 个 key 被编辑，对照 216 条 e2e 文本断言（review/ord0388-readouts/RULER_R2.txt:8）。反控 **30 臂全 MET、0 红**（review/ord0388-readouts/RULER_R2.txt:48）；尺退出码 1（review/ord0388-readouts/RULER_R2.txt:46）——红的仍是存量。
+`RENDERED` 面顺带证明这 6 枚新 key 全有人读（不是死行）；`LADDER_TIER⑥` 7 读 0 缺（review/ord0388-readouts/RULER_R2.txt:12）。
+
+## 屏上文字（您要的 body.innerText，不是 data 属性）
+
+前：`http://127.0.0.1:4781/legacy`，zh-CN 上下文（`documentElement.lang` 逐页确认），`body.innerText` 共 4123 字，
+里面**出现** `not evaluated` 与 `Activate a standing mission once…`（review/ord0388-readouts/BUILD_R1.txt:13 行；路由行 review/ord0388-readouts/BUILD_R1.txt:12）。
+后：`http://[::1]:4811/legacy`，**本候选自己的 vite 产物** `index-DaGdhbKQ.js`，同一路由同 locale：
+那两句英文**不在**屏上文本里（15 行），改为出现 `未评估` 与 `启动一次常驻任务后…`（17）。
+一个环境事实值得记：vite 把端口绑在 IPv6 回环，`127.0.0.1:4811` 连不上而 `[::1]:4811` 应答正常（记于 review/ord0388-readouts/BUILD_R1.txt:29）；
+读数里写清取的地址，不含糊写「localhost」。用完的 preview 进程已自收（pid 见 review/ord0388-readouts/BUILD_R1.txt:31）。
+
+## 构建前置与一次差点交出去的错测
+
+宿主 = 非 git 导出目录（`git archive 基线` 解出后**先删再覆盖 src**，把我工作树的改动带进去）+ `cp -al` 硬链接依赖；教训来自上一单 ORD-0381 r2（落地尖 895ec1a11aca730041b42f2358b9607c9bb5a67e）：
+`typescript/package.json` nlink=4 证是链接不是拷贝。这次**先证明导出带上我的改动再构建**（吸取 0381 那次的教训）：
+`grep -c 'legacy.noActiveC4' 导出/src/main.tsx` 命中 1、字典里 `"legacy.noActiveC4"` 命中 2。
+`tsc --noEmit` 退出码 0、程序含 875 个文件、src 内 81 个（非空转）（review/ord0388-readouts/BUILD_R1.txt:7、:8、:9）；`vite build` 退出码 0（:14）、
+9.66s 构建完成、产物 index-DaGdhbKQ.js（:15、:16），新中文值 `没有进行中的 C4` 与 `未询问` 各命中 1（:17、:18）；导出先证带上我的改动再编译：调用点 1（:10）、字典行 2（:11）、硬链接 nlink=4（:12）；共享依赖全程只读、收尾回验 394 项（:30）。
+
+## 没改善的部分
+
+1. `HARDCODED_FALLBACK` 仍红：tier B 还剩 **65** 处（review/ord0388-readouts/RULER_R2.txt:13）。本单只做您点名的 tier-1，tier 2 那 61 处一行未动。
+2. 本单**新引入**一个档④缺口，说清楚而不是埋掉：`legacy.noActiveC4` 的值以 `No ` 开头，被档④认成「空态且无动作」，`LADDER_TIER④` 由 26/17 变 **27/18**（review/ord0388-readouts/RULER_R2.txt:11）。屏上字节与改前完全一致，只是这句话现在进了字典、被档④看见了。要消它得给动作（中文变长）或改组件，两者都超本单范围。
+3. main.tsx 里同一行的**另一半**没动：例如 frontend/src/main.tsx:1441 的 `item.explanation ?? "user-provided"` 与 frontend/src/main.tsx:1465 的 `: "conflict"`
+   —— 尺把它们归 tier 2（不是 `??` 兜底位或不可判定），所以本单一处未碰。那 7 行现在读起来是半本地化的。
+4. LegacyApp 整屏其余英文（25 行裸 JSX 文本一类）仍未动；本单只消 `??` 兜底位上的 7 处。
+5. 屏上证据只覆盖 `:4781` 与 `/legacy` 这一屏；`trial.notAsked` 那条我**没有**在屏上读到——
+   首页 innerText 只有 168 字（未进入试用面板），要做到它得点进通用城市试用并让某行 answered=false，本单未做。
+6. 工件 R1（`review/ord0388-readouts/RULER_R1.txt` blob 51041b4d4323e7563f78f693c099fcfc756ec432）是**残缺证据**：它的行过滤只留了不带补位的 `[MET]` 臂线，
+   把带补位的 `[MET      ]` 四格线丢掉了 —— 恰是账本要引的那四条。已另发 R2（blob 49cd7900c6d1bfb233beba1a71242cc440b876e8）并在抬头写明；R1 原地不动。
+7. 与 ORD-0385 若撞同一本字典（`inbox.journeyLinkCopied` 一带）：按 Q72 我自己 rebase，字典在最后一笔，重跑一次即可。
+
+## 给 ORD-0371 的一条实测（不重改块迎合尺）
+
+本块每个数字都同行带了 path:line 或满 40 位 blob；如果仍被判裸数，那是尺的归类问题，我按您的话不动读数。
+已知一类：`ORD-0385`/`ORD-0388` 这种 4 位单号会被当裸数字主张（DURABLE 里的 run-id 形状只豁免 6–8 位），
+每辆车都会在这里撞一次；我这轮的过法是把同行换成**真所指的 path:line/blob**，不是把单号藏掉。
+
+
+### CMDR 0928-0401 · N3 · ORD-0384 交付：行前清单第一版，只从服务端已有事实推导
+
+分支 `review/N3-ord0384-pretrip-checklist`，起自现尖 04071b8258ebcdcf1e9e4c9714fb516283d1e1ad，头 2a8d75f93ce84a4e0821c9529cb19262e7eb13e4。
+
+**批次**（逐枚都是 commit，`git cat-file -t` 全部回 commit）：
+
+- 7966351cb94b13cfef39736a748facb133a44a81 推导模块，入口 `frontend/src/lib/pretripChecklist.ts:49`，blob c17dedfc9d3b063e8f6839bef56233af23814e5e
+- 8cfffd2bb2965ea05be5907f609c588acb8a8fb2 面板 `frontend/src/features/checklist/PretripChecklistPanel.tsx:28`（blob ce4df205ec10fea5a5c1701032c7117b4d9b3562）与 `frontend/src/features/checklist/pretripChecklist.css:1`
+- 1811a00626404289a9b3ca8855d5e398ccb074f2 挂载：prop 传递 `frontend/src/app/V8Experience.tsx:1698`、prop 类型 `frontend/src/app/V8Experience.tsx:2278`、面板 `frontend/src/app/V8Experience.tsx:3039`
+- 407b7240a709ea6854484cad18c0c37f341fb02b 门 `frontend/e2e/qoder-ord0384-pretrip-checklist.spec.ts:183`（blob 229c99e1a686c1880062f6f1b262d7eaf34c4f3e）
+- c62d2ac7cf41c07dfc5b2dd181716a2db0956b5e 挂载换位 + 新增 X5 + 依据行遮挡复测
+- 2a8d75f93ce84a4e0821c9529cb19262e7eb13e4 仪表入库 `review/n3_0384_snap_build_r1.py:1`、`review/n3_0384_mutations_r2.py:1`、`review/n3_0384_live_derivation_r2.py:1`、`review/n3_0384_basis_coverage_r1.py:1`、`review/n3_e2e_r1.py:1`
+
+**0 新表、0 新写端点**：`git diff --name-only 04071b82..2a8d75f9 -- backend/ agent-mcp/ contracts/` 回 0 行，收据 `review/evidence/ord0384/diff_scope.txt:20`；同一收据 `review/evidence/ord0384/diff_scope.txt:17` 是 `git diff --shortstat` 原文：10 files changed, 1253 insertions(+), 0 deletions —— 全部十个文件的 numstat 逐行在 `review/evidence/ord0384/diff_scope.txt:4` 起，删 0 行意味着这版只往 Today 上加了一屏，没有改写或删除任何既有行。
+
+**门（authoritative，跑在提交后的头上）**：run_id `cmdr035328n3`，exit 0，verdict GREEN，`counts.passed` 为 6，原文 `D:/moodle/_qoder_cmdr_ref_20260921/live_checks/e2e_logs/n3_2a8d75f9_035328.json:1`，日志 `D:/moodle/_qoder_cmdr_ref_20260921/live_checks/e2e_logs/n3_2a8d75f9_035328.log`。端口 5470 前端、6470 后端，`CITYNEXUS_AI_ENABLED=false`，按名丢掉的 key 见 `D:/moodle/_qoder_cmdr_ref_20260921/live_checks/e2e_logs/n3_2a8d75f9_035328.json:1` 的 `env_keys_dropped_names_only`。
+
+**编译臂（FRONTSRC_BUILD_PREREQ）**：在 `git archive 2a8d75f93ce84a4e0821c9529cb19262e7eb13e4 frontend` 的导出里、对权威 `D:/moodle/CityNexus/frontend/node_modules` 建 junction 跑；`tsc -p tsconfig.check.json --noEmit` rc 0、`tsc -p tsconfig.typecheck.json --noEmit` rc 0、`vite build` rc 0，读数 built in 9.27s 与 1946 modules transformed 与产物 index-_TXnt_5z.js，全部在 `review/evidence/ord0384/snap_build_r1.json:1`。拆 junction 用普通 `rmdir`，`junction_gone` 与 `export_gone` 都为 true，权威树 `node_modules` 回 399 项、`package-lock.json` sha256 前 16 位 c40a51e52061d5a5，同 `review/evidence/ord0384/snap_build_r1.json:1`。
+
+**反件（三枚，每枚跑完整门后按字节还原）**：收据 `review/evidence/ord0384/mutations_r2.json:1`。
+
+- M1 `if (stayBudget && stayBudget.declared === null)` 改成 `if (stayBudget)`：runner exit 3，红，日志 `D:/moodle/_qoder_cmdr_ref_20260921/live_checks/e2e_logs/n31__2a8d75f9_035643.log:1` 具名打死 X1、X2、X3、X4，X5 存活（换位与条目真假无关，正是它该有的表现）
+- M2 `{items.length === 0 ? (` 改成 `{items.length < 0 ? (`：exit 3，红，`D:/moodle/_qoder_cmdr_ref_20260921/live_checks/e2e_logs/n32__2a8d75f9_035741.log:1` 具名只打死 X3，其余 5 格全绿
+- M3 把面板挪回避让带上方：exit 3，红，`D:/moodle/_qoder_cmdr_ref_20260921/live_checks/e2e_logs/n33__2a8d75f9_035816.log:1` 具名只打死 X5，其余 5 格全绿
+- 三枚的 `sha256_before` 与 `sha256_after_restore` 两两相等，`restored_byte_identical` 为 true，见 `review/evidence/ord0384/mutations_r2.json:1`
+
+**:4781 的真实读数**：收据 `review/evidence/ord0384/live_derivation_r2.json:1`（输入是两份原文 `review/evidence/ord0384/live_experience.json:1` 共 347287 字节、`review/evidence/ord0384/live_wallet.json:1` 共 109 字节，journey_id 9c6c3d73-8b8e-4f71-beaf-32bc87aba035 记在 `review/evidence/ord0384/live_derivation_r2.json:1`）。模块能产出的候选项共 9 条，live 上 fired 的是 3 条，逐条判据与**字节偏移**坐标在 `review/evidence/ord0384/live_derivation_r2.json:1`：`stay_budget_undeclared` 看 live_experience.json@1121（`declared` 为 null）、`plan_feasibility_open` 看 live_experience.json@347145（服务端原话 `STALE_RECOMPOSE_REQUIRED: PlanVersion frozen mobility evidence expired`）、`stay_chosen_but_unconfirmed` 看 live_wallet.json@53（reservations 与 commitments 同时为空）。两份原文都是单行压缩 JSON，行号在这里不携带信息，所以坐标一律给字节偏移。
+
+**每条依据落在哪一层（这是我认为你最先要看的一格）**：收据 `review/evidence/ord0384/basis_coverage_r1.json:1`。9 条里只有 2 条的字段被契约具名声明 —— `experience_flags.feasibility_failures` 在 `contracts/openapi.yaml:1351`、`recovery.requires_user_decision` 在 `contracts/openapi.yaml:1873`；其余 7 条只在**响应字节**里成立，因为 experience 路由把 `trip` 直接写成裸对象 `contracts/openapi.yaml:1343`，wallet 路由的 200 写成无 properties 的裸对象 `contracts/openapi.yaml:1680`。契约全文 sha256 c36bf631a97b58a74b91bc0b4478b97f1d7604d5c30b2d16dc4e0671e088c93f 记在 `review/evidence/ord0384/basis_coverage_r1.json:1`。也就是说：这 7 条的重命名不会被契约门拦住，屏上写的端点+字段目前只有响应能背书。
+
+**没有改善的部分（照实列）**：
+
+1. 证件、签证、保险、打包类条目一条都没有。契约全文里那一族关键词（passport / visa / insurance / vaccine / packing / document）命中 0 次，唯一的 `health` 出现在 `contracts/openapi.yaml:10`，那是 `/health` 路由名不是旅行健康事实。后端没有这个粒度的事实，按「宁缺勿造」我没编，所以第一版屏上 live 只有 3 条。
+2. 完成状态仍然不能上报：0 新写端点意味着条目只能随字段变化自己消失，用户无法手动打勾。这是本单的约束，不是我能在这版里修的东西。
+3. 「一切正常」那句话仍然不自带主语。正解是在 clear 态显示避让带的 kicker，规则在 `frontend/src/design-tokens.css:446`，那是 ORD-0380 正在改的文件，我没碰。本轮只把清单挪到它下面（M3 反件证明这个顺序是被测出来的，不是我自己说的）。
+4. 全局 Copilot 胶囊仍浮在 Today 右下角。X4 现在在自然阅读位（元素居中）沿依据行宽度采 5 个点做 `elementsFromPoint`，通过；但把面板滚到最小滚动位时它仍会压住端点名的尾部，那张图我留着：`review/evidence/ord0384/cmdr034630n3__X5_pair.png`。要根治得动 `frontend/src/features/agent/CopilotDock.tsx:747`，不在本单范围。
+5. 上面第 7 条依据无契约锚点的问题，需要 ORD-0384 之外的补契约单，我只把清单交出来。
+
+**下一手建议**：要么开一单把 wallet 与 trip 的响应形状写进契约（让 7 条依据有契约背书），要么开一单让 clear 态保留 kicker（第 3 条就闭）。两者都不该由我在这一版里顺手做。
+
+
 ### cmdr 03:5x — 两张"仿照 App"的产品单落地：底图署名上屏（合规）与地理来源两格；另有一处我没解开的疑点已回问车道
 
 **落地（fast-forward only，两路 GitHub 路由逐字一致）**
