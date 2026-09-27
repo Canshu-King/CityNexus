@@ -1,0 +1,78 @@
+{
+ "order": "ORD-0370",
+ "line": "origin/mirror/integration-frontend-apple-pass1",
+ "tip": "16bb15c2f0c9bbf863872c545762102e7a4dba1b",
+ "cand": "d033f83e064448a8ab0f3ed4cd01e3616b596181",
+ "merge_base": "4ef864cfa49b805e3d41b7f079f5fb4184ccec3d",
+ "commits_tip_ahead_of_base": 15,
+ "commits_cand_ahead_of_base": 4,
+ "merge_tree_rc": 0,
+ "changed_files": [
+  "frontend/src/features/agent/CopilotDock.tsx",
+  "frontend/src/features/execution/LiveRecovery.tsx",
+  "frontend/src/features/inbox/JourneyInboxWorkbench.tsx",
+  "frontend/src/features/studio/V12TripStudioPanel.tsx",
+  "frontend/src/i18n/LocaleContext.tsx",
+  "tools/cnx_copy_tiers_r1.py"
+ ],
+ "files": [
+  {
+   "path": "frontend/src/features/agent/CopilotDock.tsx",
+   "cand_blob": "7bc9b17e74e18fb94dd0b91deb104555653f7eaa",
+   "merged_blob": "7bc9b17e74e18fb94dd0b91deb104555653f7eaa",
+   "identical": true,
+   "cand_changed_the_file": true
+  },
+  {
+   "path": "frontend/src/features/execution/LiveRecovery.tsx",
+   "cand_blob": "b2a720668a6aea4920fc44732027b4f136e2e4a4",
+   "merged_blob": "b2a720668a6aea4920fc44732027b4f136e2e4a4",
+   "identical": true,
+   "cand_changed_the_file": true
+  },
+  {
+   "path": "frontend/src/features/inbox/JourneyInboxWorkbench.tsx",
+   "cand_blob": "95c56920f871faccbe766651d37ee59dfc0b4e3a",
+   "merged_blob": "95c56920f871faccbe766651d37ee59dfc0b4e3a",
+   "identical": true,
+   "cand_changed_the_file": true
+  },
+  {
+   "path": "frontend/src/features/studio/V12TripStudioPanel.tsx",
+   "cand_blob": "96bac4ed4b8edf593fb58c8cda1514e8d4908bb1",
+   "merged_blob": "96bac4ed4b8edf593fb58c8cda1514e8d4908bb1",
+   "identical": true,
+   "cand_changed_the_file": true
+  },
+  {
+   "path": "frontend/src/i18n/LocaleContext.tsx",
+   "cand_blob": "96cbc481f401a32daf2ced3c613402e813ee52a9",
+   "merged_blob": "96cbc481f401a32daf2ced3c613402e813ee52a9",
+   "identical": true,
+   "cand_changed_the_file": true
+  },
+  {
+   "path": "tools/cnx_copy_tiers_r1.py",
+   "cand_blob": "ae9342d6551ca9a446d3c41d42e18737bae03b1a",
+   "merged_blob": "ae9342d6551ca9a446d3c41d42e18737bae03b1a",
+   "identical": true,
+   "cand_changed_the_file": true
+  }
+ ],
+ "merged_tree": "d4285f7e5765415460e51b9e770762e860a3d3db",
+ "auto_merged_files": [],
+ "recut_commit": "961836390c5325863acdc1834d4a4cd16fd97081",
+ "readback_tree": "d4285f7e5765415460e51b9e770762e860a3d3db",
+ "readback_tree_matches": true,
+ "readback_parents": [
+  "16bb15c2f0c9bbf863872c545762102e7a4dba1b",
+  "d033f83e064448a8ab0f3ed4cd01e3616b596181"
+ ],
+ "readback_parent_tip": true,
+ "verdict": "RECUT_OK",
+ "pushed_ref": "refs/heads/cmdr/land-ord0370-recut",
+ "push_rc": 0,
+ "push_stderr": "remote: \nremote: Create a pull request for 'cmdr/land-ord0370-recut' on GitHub by visiting:        \nremote:      https://github.com/Canshu-King/CityNexus/pull/new/cmdr/land-ord0370-recut        \nremote: \nTo github.com:Canshu-King/CityNexus.git\n * [new branch]        961836390c5325863acdc1834d4a4cd16fd97081 -> cmdr/land-ord0370-recut",
+ "ls_remote": "961836390c5325863acdc1834d4a4cd16fd97081\trefs/heads/cmdr/land-ord0370-recut",
+ "ls_remote_matches": true
+}
