@@ -204,10 +204,12 @@ def audit(text, base_text, styles_text, path_label, consume_texts=None):
         fam_txt = "; ".join(f"{f}x{len(v)}" for f, v in sorted(neutral_by_family.items()))
         detail_bits.append("every colour token explained; neutrality claimed by "
                            + (fam_txt or "no family"))
+    STATUS_TAG = {"PAIRED_IN_DARK": "own_dark", "PAIRED_INHERITED": "by_chain",
+                  "NEUTRAL_BY_NAME": "by_name"}
     findings.append((
         "NIGHT_PAIRING",
         f"{pm['n_total_colour_tokens']} colour tokens in root theme scopes: "
-        + " ".join(f"{k.lower()[:8]}={len(st.get(k, []))}" for k in green_states)
+        + " ".join(f"{STATUS_TAG[k]}={len(st.get(k, []))}" for k in green_states)
         + f" unexplained={sum(len(v) for v in offenders.values())}",
         not offenders,
         " | ".join(detail_bits),
