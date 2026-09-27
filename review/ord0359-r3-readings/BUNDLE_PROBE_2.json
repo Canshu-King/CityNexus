@@ -1,0 +1,11 @@
+{
+ "base_generation_asset": "assets/index-DW17CV9l.js",
+ "asset_bytes": 1278278,
+ "asset_sha256_12": "c2cd7cc78c66",
+ "hit": {
+  "not_configured": true,
+  "disabled_by_ops": true,
+  "provider_refused": true,
+  "configured_unverified": true
+ }
+}
