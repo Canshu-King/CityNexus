@@ -1,0 +1,2281 @@
+{
+ "pending_blocks": 16,
+ "blocks": [
+  {
+   "block": "n2_0101.md",
+   "r4e": {
+    "verdict": "Q43_GATE_RED",
+    "exit": 3,
+    "claims": 17,
+    "exempt": {
+     "PORT": 5,
+     "LINE_REF": 1,
+     "DIMENSION": 1
+    },
+    "refused": [
+     {
+      "token": "1392",
+      "line": 28
+     },
+     {
+      "token": "1367",
+      "line": 28
+     },
+     {
+      "token": "1392 条",
+      "line": 28
+     }
+    ]
+   },
+   "r5": {
+    "verdict": "Q43_GATE_RED",
+    "exit": 3,
+    "claims": 11,
+    "exempt": {
+     "ADDRESS_PART": 1,
+     "PORT": 5,
+     "LINE_REF": 6
+    },
+    "refused": [
+     {
+      "token": "1392 条",
+      "line": 28
+     },
+     {
+      "token": "1367",
+      "line": 28
+     }
+    ]
+   },
+   "third": {
+    "verdict": "Q43_GATE_RED",
+    "exit": 3,
+    "claims": 14,
+    "exempt": {
+     "ADDRESS_PART": 1,
+     "PORT": 5,
+     "LINE_REF": 6,
+     "HTTP_STATUS": 1
+    },
+    "refused": [
+     {
+      "token": "1392 条",
+      "line": 28
+     },
+     {
+      "token": "9 failed",
+      "line": 28
+     },
+     {
+      "token": "1367 passed",
+      "line": 28
+     }
+    ]
+   }
+  },
+  {
+   "block": "n2_0105.md",
+   "r4e": {
+    "verdict": "Q43_GATE_RED",
+    "exit": 3,
+    "claims": 8,
+    "exempt": {
+     "PORT": 1
+    },
+    "refused": [
+     {
+      "token": "7897",
+      "line": 11
+     },
+     {
+      "token": "138",
+      "line": 11
+     },
+     {
+      "token": "35752",
+      "line": 12
+     },
+     {
+      "token": "7892",
+      "line": 14
+     },
+     {
+      "token": "7897",
+      "line": 14
+     },
+     {
+      "token": "000",
+      "line": 18
+     }
+    ]
+   },
+   "r5": {
+    "verdict": "Q43_GATE_RED",
+    "exit": 3,
+    "claims": 8,
+    "exempt": {
+     "PORT": 1
+    },
+    "refused": [
+     {
+      "token": "7897",
+      "line": 11
+     },
+     {
+      "token": "138",
+      "line": 11
+     },
+     {
+      "token": "35752",
+      "line": 12
+     },
+     {
+      "token": "7892",
+      "line": 14
+     },
+     {
+      "token": "7897",
+      "line": 14
+     },
+     {
+      "token": "000",
+      "line": 18
+     }
+    ]
+   },
+   "third": {
+    "verdict": "Q43_GATE_RED",
+    "exit": 3,
+    "claims": 2,
+    "exempt": {
+     "IDENTIFIER_PART": 7
+    },
+    "refused": [
+     {
+      "token": "138",
+      "line": 11
+     }
+    ]
+   }
+  },
+  {
+   "block": "n2_0144.md",
+   "r4e": {
+    "verdict": "Q43_GATE_RED",
+    "exit": 3,
+    "claims": 5,
+    "exempt": {
+     "HTTP_STATUS": 1
+    },
+    "refused": [
+     {
+      "token": "401",
+      "line": 14
+     },
+     {
+      "token": "401",
+      "line": 15
+     },
+     {
+      "token": "0.4 GB",
+      "line": 15
+     }
+    ]
+   },
+   "r5": {
+    "verdict": "Q43_GATE_RED",
+    "exit": 3,
+    "claims": 6,
+    "exempt": {},
+    "refused": [
+     {
+      "token": "401",
+      "line": 14
+     },
+     {
+      "token": "0.4 GB",
+      "line": 15
+     },
+     {
+      "token": "401",
+      "line": 15
+     }
+    ]
+   },
+   "third": {
+    "verdict": "Q43_GATE_RED",
+    "exit": 3,
+    "claims": 2,
+    "exempt": {
+     "HTTP_STATUS": 3,
+     "IDENTIFIER_PART": 1
+    },
+    "refused": [
+     {
+      "token": "0.4 GB",
+      "line": 15
+     }
+    ]
+   }
+  },
+  {
+   "block": "n2_0152.md",
+   "r4e": {
+    "verdict": "Q43_GATE_RED",
+    "exit": 3,
+    "claims": 5,
+    "exempt": {
+     "PORT": 5
+    },
+    "refused": [
+     {
+      "token": "401",
+      "line": 3
+     },
+     {
+      "token": "0.4 GB",
+      "line": 15
+     },
+     {
+      "token": "6 条",
+      "line": 16
+     }
+    ]
+   },
+   "r5": {
+    "verdict": "Q43_GATE_RED",
+    "exit": 3,
+    "claims": 4,
+    "exempt": {
+     "PORT": 5,
+     "LINE_REF": 1
+    },
+    "refused": [
+     {
+      "token": "401",
+      "line": 3
+     },
+     {
+      "token": "0.4 GB",
+      "line": 15
+     },
+     {
+      "token": "6 条",
+      "line": 16
+     }
+    ]
+   },
+   "third": {
+    "verdict": "Q43_GATE_RED",
+    "exit": 3,
+    "claims": 3,
+    "exempt": {
+     "PORT": 5,
+     "HTTP_STATUS": 1,
+     "LINE_REF": 1
+    },
+    "refused": [
+     {
+      "token": "0.4 GB",
+      "line": 15
+     },
+     {
+      "token": "6 条",
+      "line": 16
+     }
+    ]
+   }
+  },
+  {
+   "block": "n2_0156.md",
+   "r4e": {
+    "verdict": "Q43_GATE_RED",
+    "exit": 3,
+    "claims": 18,
+    "exempt": {
+     "PORT": 1,
+     "HTTP_STATUS": 1
+    },
+    "refused": [
+     {
+      "token": "4781",
+      "line": 3
+     },
+     {
+      "token": "6 条",
+      "line": 1
+     },
+     {
+      "token": "6 条",
+      "line": 8
+     },
+     {
+      "token": "6 条",
+      "line": 10
+     },
+     {
+      "token": "6 条",
+      "line": 21
+     }
+    ]
+   },
+   "r5": {
+    "verdict": "Q43_GATE_RED",
+    "exit": 3,
+    "claims": 17,
+    "exempt": {
+     "PORT": 2,
+     "ADDRESS_PART": 1
+    },
+    "refused": [
+     {
+      "token": "6 条",
+      "line": 1
+     },
+     {
+      "token": "6 条",
+      "line": 8
+     },
+     {
+      "token": "6 条",
+      "line": 10
+     },
+     {
+      "token": "6 条",
+      "line": 21
+     }
+    ]
+   },
+   "third": {
+    "verdict": "Q43_GATE_RED",
+    "exit": 3,
+    "claims": 17,
+    "exempt": {
+     "PORT": 2,
+     "ADDRESS_PART": 1
+    },
+    "refused": [
+     {
+      "token": "6 条",
+      "line": 1
+     },
+     {
+      "token": "6 条",
+      "line": 8
+     },
+     {
+      "token": "6 条",
+      "line": 10
+     },
+     {
+      "token": "6 条",
+      "line": 21
+     }
+    ]
+   }
+  },
+  {
+   "block": "n2_0200.md",
+   "r4e": {
+    "verdict": "Q43_GATE_RED",
+    "exit": 3,
+    "claims": 5,
+    "exempt": {
+     "PORT": 2
+    },
+    "refused": [
+     {
+      "token": "0373",
+      "line": 21
+     },
+     {
+      "token": "0 处",
+      "line": 12
+     }
+    ]
+   },
+   "r5": {
+    "verdict": "Q43_GATE_RED",
+    "exit": 3,
+    "claims": 5,
+    "exempt": {
+     "PORT": 2
+    },
+    "refused": [
+     {
+      "token": "0 处",
+      "line": 12
+     },
+     {
+      "token": "0373",
+      "line": 21
+     }
+    ]
+   },
+   "third": {
+    "verdict": "Q43_GATE_RED",
+    "exit": 3,
+    "claims": 4,
+    "exempt": {
+     "PORT": 2,
+     "IDENTIFIER_PART": 1
+    },
+    "refused": [
+     {
+      "token": "0 处",
+      "line": 12
+     }
+    ]
+   }
+  },
+  {
+   "block": "n2_0213.md",
+   "r4e": {
+    "verdict": "Q43_GATE_RED",
+    "exit": 3,
+    "claims": 23,
+    "exempt": {
+     "PORT": 2
+    },
+    "refused": [
+     {
+      "token": "1668",
+      "line": 15
+     },
+     {
+      "token": "888",
+      "line": 15
+     },
+     {
+      "token": "1668",
+      "line": 15
+     },
+     {
+      "token": "889",
+      "line": 15
+     },
+     {
+      "token": "1669",
+      "line": 15
+     },
+     {
+      "token": "888",
+      "line": 15
+     },
+     {
+      "token": "1667",
+      "line": 15
+     },
+     {
+      "token": "888",
+      "line": 15
+     },
+     {
+      "token": "1669",
+      "line": 15
+     },
+     {
+      "token": "889",
+      "line": 15
+     },
+     {
+      "token": "1667",
+      "line": 15
+     },
+     {
+      "token": "889",
+      "line": 15
+     },
+     {
+      "token": "6 条",
+      "line": 11
+     },
+     {
+      "token": "0 条",
+      "line": 14
+     },
+     {
+      "token": "6 条",
+      "line": 14
+     }
+    ]
+   },
+   "r5": {
+    "verdict": "Q43_GATE_RED",
+    "exit": 3,
+    "claims": 23,
+    "exempt": {
+     "PORT": 2
+    },
+    "refused": [
+     {
+      "token": "6 条",
+      "line": 11
+     },
+     {
+      "token": "0 条",
+      "line": 14
+     },
+     {
+      "token": "6 条",
+      "line": 14
+     },
+     {
+      "token": "1668",
+      "line": 15
+     },
+     {
+      "token": "888",
+      "line": 15
+     },
+     {
+      "token": "1668",
+      "line": 15
+     },
+     {
+      "token": "889",
+      "line": 15
+     },
+     {
+      "token": "1669",
+      "line": 15
+     },
+     {
+      "token": "888",
+      "line": 15
+     },
+     {
+      "token": "1667",
+      "line": 15
+     },
+     {
+      "token": "888",
+      "line": 15
+     },
+     {
+      "token": "1669",
+      "line": 15
+     },
+     {
+      "token": "889",
+      "line": 15
+     },
+     {
+      "token": "1667",
+      "line": 15
+     },
+     {
+      "token": "889",
+      "line": 15
+     }
+    ]
+   },
+   "third": {
+    "verdict": "Q43_GATE_RED",
+    "exit": 3,
+    "claims": 22,
+    "exempt": {
+     "IDENTIFIER_PART": 1,
+     "PORT": 2
+    },
+    "refused": [
+     {
+      "token": "6 条",
+      "line": 11
+     },
+     {
+      "token": "0 条",
+      "line": 14
+     },
+     {
+      "token": "6 条",
+      "line": 14
+     },
+     {
+      "token": "1668",
+      "line": 15
+     },
+     {
+      "token": "888",
+      "line": 15
+     },
+     {
+      "token": "1668",
+      "line": 15
+     },
+     {
+      "token": "889",
+      "line": 15
+     },
+     {
+      "token": "1669",
+      "line": 15
+     },
+     {
+      "token": "888",
+      "line": 15
+     },
+     {
+      "token": "1667",
+      "line": 15
+     },
+     {
+      "token": "888",
+      "line": 15
+     },
+     {
+      "token": "1669",
+      "line": 15
+     },
+     {
+      "token": "889",
+      "line": 15
+     },
+     {
+      "token": "1667",
+      "line": 15
+     },
+     {
+      "token": "889",
+      "line": 15
+     }
+    ]
+   }
+  },
+  {
+   "block": "n2_0219.md",
+   "r4e": {
+    "verdict": "Q43_GATE_RED",
+    "exit": 3,
+    "claims": 3,
+    "exempt": {
+     "PORT": 3
+    },
+    "refused": [
+     {
+      "token": "6 条",
+      "line": 8
+     },
+     {
+      "token": "6 条",
+      "line": 8
+     },
+     {
+      "token": "6 条",
+      "line": 8
+     }
+    ]
+   },
+   "r5": {
+    "verdict": "Q43_GATE_RED",
+    "exit": 3,
+    "claims": 3,
+    "exempt": {
+     "PORT": 3
+    },
+    "refused": [
+     {
+      "token": "6 条",
+      "line": 8
+     },
+     {
+      "token": "6 条",
+      "line": 8
+     },
+     {
+      "token": "6 条",
+      "line": 8
+     }
+    ]
+   },
+   "third": {
+    "verdict": "Q43_GATE_RED",
+    "exit": 3,
+    "claims": 3,
+    "exempt": {
+     "PORT": 3
+    },
+    "refused": [
+     {
+      "token": "6 条",
+      "line": 8
+     },
+     {
+      "token": "6 条",
+      "line": 8
+     },
+     {
+      "token": "6 条",
+      "line": 8
+     }
+    ]
+   }
+  },
+  {
+   "block": "n2_0224.md",
+   "r4e": {
+    "verdict": "Q43_GATE_RED",
+    "exit": 3,
+    "claims": 5,
+    "exempt": {
+     "PORT": 1,
+     "HTTP_STATUS": 1
+    },
+    "refused": [
+     {
+      "token": "4781",
+      "line": 8
+     },
+     {
+      "token": "0376",
+      "line": 9
+     },
+     {
+      "token": "0376",
+      "line": 12
+     },
+     {
+      "token": "0374",
+      "line": 16
+     },
+     {
+      "token": "3 条",
+      "line": 16
+     }
+    ]
+   },
+   "r5": {
+    "verdict": "Q43_GATE_RED",
+    "exit": 3,
+    "claims": 4,
+    "exempt": {
+     "PORT": 2,
+     "ADDRESS_PART": 1
+    },
+    "refused": [
+     {
+      "token": "0376",
+      "line": 9
+     },
+     {
+      "token": "0376",
+      "line": 12
+     },
+     {
+      "token": "3 条",
+      "line": 16
+     },
+     {
+      "token": "0374",
+      "line": 16
+     }
+    ]
+   },
+   "third": {
+    "verdict": "Q43_GATE_RED",
+    "exit": 3,
+    "claims": 1,
+    "exempt": {
+     "PORT": 2,
+     "ADDRESS_PART": 1,
+     "IDENTIFIER_PART": 3
+    },
+    "refused": [
+     {
+      "token": "3 条",
+      "line": 16
+     }
+    ]
+   }
+  },
+  {
+   "block": "n2_0228.md",
+   "r4e": {
+    "verdict": "Q43_GATE_RED",
+    "exit": 3,
+    "claims": 7,
+    "exempt": {
+     "PORT": 1
+    },
+    "refused": [
+     {
+      "token": "0,145,522,44",
+      "line": 7
+     },
+     {
+      "token": "206",
+      "line": 7
+     },
+     {
+      "token": "0,75,522,43",
+      "line": 8
+     },
+     {
+      "token": "0,258,522,44",
+      "line": 9
+     },
+     {
+      "token": "1 个",
+      "line": 7
+     },
+     {
+      "token": "2 个",
+      "line": 8
+     },
+     {
+      "token": "0 个",
+      "line": 8
+     }
+    ]
+   },
+   "r5": {
+    "verdict": "Q43_GATE_RED",
+    "exit": 3,
+    "claims": 7,
+    "exempt": {
+     "PORT": 1
+    },
+    "refused": [
+     {
+      "token": "1 个",
+      "line": 7
+     },
+     {
+      "token": "0,145,522,44",
+      "line": 7
+     },
+     {
+      "token": "206",
+      "line": 7
+     },
+     {
+      "token": "2 个",
+      "line": 8
+     },
+     {
+      "token": "0 个",
+      "line": 8
+     },
+     {
+      "token": "0,75,522,43",
+      "line": 8
+     },
+     {
+      "token": "0,258,522,44",
+      "line": 9
+     }
+    ]
+   },
+   "third": {
+    "verdict": "Q43_GATE_RED",
+    "exit": 3,
+    "claims": 7,
+    "exempt": {
+     "PORT": 1
+    },
+    "refused": [
+     {
+      "token": "1 个",
+      "line": 7
+     },
+     {
+      "token": "0,145,522,44",
+      "line": 7
+     },
+     {
+      "token": "206",
+      "line": 7
+     },
+     {
+      "token": "2 个",
+      "line": 8
+     },
+     {
+      "token": "0 个",
+      "line": 8
+     },
+     {
+      "token": "0,75,522,43",
+      "line": 8
+     },
+     {
+      "token": "0,258,522,44",
+      "line": 9
+     }
+    ]
+   }
+  },
+  {
+   "block": "n2_1759.md",
+   "r4e": {
+    "verdict": "Q43_GATE_RED",
+    "exit": 3,
+    "claims": 14,
+    "exempt": {
+     "DIMENSION": 3,
+     "HTTP_STATUS": 1,
+     "DISCIPLINE_ZERO": 1
+    },
+    "refused": [
+     {
+      "token": "7892",
+      "line": 21
+     },
+     {
+      "token": "127",
+      "line": 21
+     },
+     {
+      "token": "7897",
+      "line": 21
+     },
+     {
+      "token": "35752",
+      "line": 21
+     },
+     {
+      "token": "443",
+      "line": 21
+     },
+     {
+      "token": "7892",
+      "line": 21
+     },
+     {
+      "token": "7897",
+      "line": 21
+     }
+    ]
+   },
+   "r5": {
+    "verdict": "Q43_GATE_RED",
+    "exit": 3,
+    "claims": 13,
+    "exempt": {
+     "DIMENSION": 1,
+     "DISCIPLINE_ZERO": 1,
+     "ADDRESS_PART": 2,
+     "PORT": 2
+    },
+    "refused": [
+     {
+      "token": "52 秒",
+      "line": 8
+     },
+     {
+      "token": "2148",
+      "line": 9
+     },
+     {
+      "token": "35752",
+      "line": 21
+     },
+     {
+      "token": "443",
+      "line": 21
+     },
+     {
+      "token": "7892",
+      "line": 21
+     },
+     {
+      "token": "7897",
+      "line": 21
+     }
+    ]
+   },
+   "third": {
+    "verdict": "Q43_GATE_RED",
+    "exit": 3,
+    "claims": 20,
+    "exempt": {
+     "DIMENSION": 1,
+     "DISCIPLINE_ZERO": 1,
+     "ADDRESS_PART": 2,
+     "PORT": 3,
+     "IDENTIFIER_PART": 1
+    },
+    "refused": [
+     {
+      "token": "52 秒",
+      "line": 8
+     },
+     {
+      "token": "2148",
+      "line": 9
+     },
+     {
+      "token": "8 passed",
+      "line": 18
+     },
+     {
+      "token": "2 failed",
+      "line": 18
+     },
+     {
+      "token": "6 passed",
+      "line": 18
+     },
+     {
+      "token": "3 failed",
+      "line": 18
+     },
+     {
+      "token": "5 passed",
+      "line": 18
+     },
+     {
+      "token": "8 passed",
+      "line": 18
+     },
+     {
+      "token": "7892",
+      "line": 21
+     },
+     {
+      "token": "7897",
+      "line": 21
+     }
+    ]
+   }
+  },
+  {
+   "block": "n2_1824.md",
+   "r4e": {
+    "verdict": "Q43_GATE_RED",
+    "exit": 3,
+    "claims": 21,
+    "exempt": {
+     "HTTP_STATUS": 3,
+     "PORT": 3,
+     "DIMENSION": 2
+    },
+    "refused": [
+     {
+      "token": "401",
+      "line": 1
+     },
+     {
+      "token": "401",
+      "line": 8
+     },
+     {
+      "token": "401",
+      "line": 13
+     }
+    ]
+   },
+   "r5": {
+    "verdict": "Q43_GATE_RED",
+    "exit": 3,
+    "claims": 19,
+    "exempt": {
+     "HTTP_STATUS": 2,
+     "PORT": 5,
+     "ADDRESS_PART": 1
+    },
+    "refused": [
+     {
+      "token": "401",
+      "line": 1
+     },
+     {
+      "token": "401",
+      "line": 8
+     },
+     {
+      "token": "401",
+      "line": 13
+     }
+    ]
+   },
+   "third": {
+    "verdict": "Q43_GATE_GREEN",
+    "exit": 0,
+    "claims": 14,
+    "exempt": {
+     "HTTP_STATUS": 9,
+     "PORT": 4,
+     "ADDRESS_PART": 1
+    },
+    "refused": []
+   }
+  },
+  {
+   "block": "n3_0240.md",
+   "r4e": {
+    "verdict": "Q43_GATE_RED",
+    "exit": 3,
+    "claims": 31,
+    "exempt": {
+     "PORT": 13,
+     "LINE_REF": 6,
+     "YEAR": 1,
+     "DIMENSION": 1
+    },
+    "refused": [
+     {
+      "token": "320",
+      "line": 7
+     },
+     {
+      "token": "0373",
+      "line": 11
+     },
+     {
+      "token": "0366",
+      "line": 11
+     },
+     {
+      "token": "320",
+      "line": 12
+     },
+     {
+      "token": "360",
+      "line": 12
+     },
+     {
+      "token": "390",
+      "line": 12
+     },
+     {
+      "token": "320",
+      "line": 12
+     },
+     {
+      "token": "11.10 秒",
+      "line": 10
+     },
+     {
+      "token": "0 次",
+      "line": 12
+     }
+    ]
+   },
+   "r5": {
+    "verdict": "Q43_GATE_RED",
+    "exit": 3,
+    "claims": 31,
+    "exempt": {
+     "PORT": 13,
+     "LINE_REF": 6,
+     "YEAR": 1
+    },
+    "refused": [
+     {
+      "token": "320",
+      "line": 7
+     },
+     {
+      "token": "11.10 秒",
+      "line": 10
+     },
+     {
+      "token": "0373",
+      "line": 11
+     },
+     {
+      "token": "0366",
+      "line": 11
+     },
+     {
+      "token": "320",
+      "line": 12
+     },
+     {
+      "token": "360",
+      "line": 12
+     },
+     {
+      "token": "390",
+      "line": 12
+     },
+     {
+      "token": "0 次",
+      "line": 12
+     },
+     {
+      "token": "320",
+      "line": 12
+     }
+    ]
+   },
+   "third": {
+    "verdict": "Q43_GATE_RED",
+    "exit": 3,
+    "claims": 27,
+    "exempt": {
+     "IDENTIFIER_PART": 4,
+     "PORT": 13,
+     "LINE_REF": 6,
+     "YEAR": 1
+    },
+    "refused": [
+     {
+      "token": "320",
+      "line": 7
+     },
+     {
+      "token": "11.10 秒",
+      "line": 10
+     },
+     {
+      "token": "320",
+      "line": 12
+     },
+     {
+      "token": "360",
+      "line": 12
+     },
+     {
+      "token": "390",
+      "line": 12
+     },
+     {
+      "token": "0 次",
+      "line": 12
+     },
+     {
+      "token": "320",
+      "line": 12
+     }
+    ]
+   }
+  },
+  {
+   "block": "qoder-0369_0250.md",
+   "r4e": {
+    "verdict": "Q43_GATE_RED",
+    "exit": 3,
+    "claims": 22,
+    "exempt": {
+     "DIMENSION": 2,
+     "HTTP_STATUS": 1
+    },
+    "refused": [
+     {
+      "token": "390",
+      "line": 29
+     },
+     {
+      "token": "844",
+      "line": 29
+     },
+     {
+      "token": "13 条",
+      "line": 21
+     }
+    ]
+   },
+   "r5": {
+    "verdict": "Q43_GATE_RED",
+    "exit": 3,
+    "claims": 14,
+    "exempt": {
+     "LINE_REF": 6,
+     "IDENTIFIER_PART": 1,
+     "ADDRESS_PART": 2,
+     "HTTP_STATUS": 1
+    },
+    "refused": [
+     {
+      "token": "351517",
+      "line": 18
+     },
+     {
+      "token": "13 条",
+      "line": 21
+     },
+     {
+      "token": "390",
+      "line": 29
+     },
+     {
+      "token": "844",
+      "line": 29
+     }
+    ]
+   },
+   "third": {
+    "verdict": "Q43_GATE_RED",
+    "exit": 3,
+    "claims": 10,
+    "exempt": {
+     "IDENTIFIER_PART": 4,
+     "HTTP_STATUS": 2,
+     "LINE_REF": 6,
+     "ADDRESS_PART": 2
+    },
+    "refused": [
+     {
+      "token": "351517",
+      "line": 18
+     },
+     {
+      "token": "13 条",
+      "line": 21
+     },
+     {
+      "token": "390",
+      "line": 29
+     },
+     {
+      "token": "844",
+      "line": 29
+     }
+    ]
+   }
+  },
+  {
+   "block": "qoder-0370_0130.md",
+   "r4e": {
+    "verdict": "Q43_GATE_RED",
+    "exit": 3,
+    "claims": 126,
+    "exempt": {
+     "YEAR": 1,
+     "LINE_REF": 21,
+     "PORT": 10,
+     "DIMENSION": 2
+    },
+    "refused": [
+     {
+      "token": "875",
+      "line": 119
+     },
+     {
+      "token": "409",
+      "line": 149
+     },
+     {
+      "token": "875",
+      "line": 152
+     },
+     {
+      "token": "617",
+      "line": 160
+     },
+     {
+      "token": "629",
+      "line": 160
+     },
+     {
+      "token": "4 处",
+      "line": 70
+     },
+     {
+      "token": "3 处",
+      "line": 71
+     },
+     {
+      "token": "3 处",
+      "line": 72
+     },
+     {
+      "token": "3 处",
+      "line": 73
+     },
+     {
+      "token": "875 个",
+      "line": 119
+     },
+     {
+      "token": "81 个",
+      "line": 120
+     },
+     {
+      "token": "875 个",
+      "line": 152
+     },
+     {
+      "token": "38 处",
+      "line": 159
+     }
+    ]
+   },
+   "r5": {
+    "verdict": "Q43_GATE_RED",
+    "exit": 3,
+    "claims": 85,
+    "exempt": {
+     "YEAR": 1,
+     "IDENTIFIER_PART": 2,
+     "LINE_REF": 56,
+     "PORT": 10
+    },
+    "refused": [
+     {
+      "token": "4 处",
+      "line": 70
+     },
+     {
+      "token": "3 处",
+      "line": 71
+     },
+     {
+      "token": "3 处",
+      "line": 72
+     },
+     {
+      "token": "3 处",
+      "line": 73
+     },
+     {
+      "token": "875 个",
+      "line": 119
+     },
+     {
+      "token": "81 个",
+      "line": 120
+     },
+     {
+      "token": "409",
+      "line": 149
+     },
+     {
+      "token": "875 个",
+      "line": 152
+     },
+     {
+      "token": "38 处",
+      "line": 159
+     },
+     {
+      "token": "617",
+      "line": 160
+     },
+     {
+      "token": "629",
+      "line": 160
+     }
+    ]
+   },
+   "third": {
+    "verdict": "Q43_GATE_RED",
+    "exit": 3,
+    "claims": 86,
+    "exempt": {
+     "YEAR": 1,
+     "IDENTIFIER_PART": 3,
+     "LINE_REF": 53,
+     "PORT": 10,
+     "HTTP_STATUS": 3
+    },
+    "refused": [
+     {
+      "token": "4 处",
+      "line": 70
+     },
+     {
+      "token": "3 处",
+      "line": 71
+     },
+     {
+      "token": "3 处",
+      "line": 72
+     },
+     {
+      "token": "3 处",
+      "line": 73
+     },
+     {
+      "token": "875 个",
+      "line": 119
+     },
+     {
+      "token": "81 个",
+      "line": 120
+     },
+     {
+      "token": "409M",
+      "line": 149
+     },
+     {
+      "token": "27G",
+      "line": 151
+     },
+     {
+      "token": "28G",
+      "line": 151
+     },
+     {
+      "token": "875 个",
+      "line": 152
+     },
+     {
+      "token": "38 处",
+      "line": 159
+     },
+     {
+      "token": "617",
+      "line": 160
+     },
+     {
+      "token": "629",
+      "line": 160
+     }
+    ]
+   }
+  },
+  {
+   "block": "qoder-0370_0148.md",
+   "r4e": {
+    "verdict": "Q43_GATE_RED",
+    "exit": 3,
+    "claims": 32,
+    "exempt": {
+     "YEAR": 5,
+     "LINE_REF": 4,
+     "DISCIPLINE_ZERO": 1
+    },
+    "refused": [
+     {
+      "token": "0148",
+      "line": 1
+     },
+     {
+      "token": "129",
+      "line": 34
+     },
+     {
+      "token": "174",
+      "line": 49
+     },
+     {
+      "token": "129 个",
+      "line": 34
+     },
+     {
+      "token": "4 个",
+      "line": 36
+     },
+     {
+      "token": "0 处",
+      "line": 81
+     },
+     {
+      "token": "77 处",
+      "line": 81
+     },
+     {
+      "token": "77 处",
+      "line": 82
+     }
+    ]
+   },
+   "r5": {
+    "verdict": "Q43_GATE_RED",
+    "exit": 3,
+    "claims": 20,
+    "exempt": {
+     "YEAR": 5,
+     "DISCIPLINE_ZERO": 1,
+     "LINE_REF": 15
+    },
+    "refused": [
+     {
+      "token": "0148",
+      "line": 1
+     },
+     {
+      "token": "129 个",
+      "line": 34
+     },
+     {
+      "token": "4 个",
+      "line": 36
+     },
+     {
+      "token": "174",
+      "line": 49
+     },
+     {
+      "token": "0 处",
+      "line": 81
+     },
+     {
+      "token": "77 处",
+      "line": 81
+     },
+     {
+      "token": "77 处",
+      "line": 82
+     }
+    ]
+   },
+   "third": {
+    "verdict": "Q43_GATE_RED",
+    "exit": 3,
+    "claims": 19,
+    "exempt": {
+     "YEAR": 5,
+     "IDENTIFIER_PART": 1,
+     "DISCIPLINE_ZERO": 1,
+     "LINE_REF": 14,
+     "HTTP_STATUS": 1
+    },
+    "refused": [
+     {
+      "token": "129 个",
+      "line": 34
+     },
+     {
+      "token": "4 个",
+      "line": 36
+     },
+     {
+      "token": "174",
+      "line": 49
+     },
+     {
+      "token": "0 处",
+      "line": 81
+     },
+     {
+      "token": "77 处",
+      "line": 81
+     },
+     {
+      "token": "77 处",
+      "line": 82
+     }
+    ]
+   }
+  }
+ ],
+ "moved": {
+  "n2_0101.md": {
+   "15s": [
+    null,
+    "DIMENSION"
+   ],
+   "401": [
+    null,
+    "HTTP_STATUS"
+   ]
+  },
+  "n2_0105.md": {
+   "7892": [
+    null,
+    "IDENTIFIER_PART"
+   ],
+   "7897": [
+    null,
+    "IDENTIFIER_PART"
+   ],
+   "35752": [
+    null,
+    "IDENTIFIER_PART"
+   ],
+   "443": [
+    "PORT",
+    "IDENTIFIER_PART"
+   ],
+   "000": [
+    null,
+    "IDENTIFIER_PART"
+   ]
+  },
+  "n2_0144.md": {
+   "200": [
+    null,
+    "HTTP_STATUS"
+   ],
+   "401": [
+    null,
+    "HTTP_STATUS"
+   ],
+   "0.4GB": [
+    null,
+    "DIMENSION"
+   ]
+  },
+  "n2_0152.md": {
+   "401": [
+    null,
+    "HTTP_STATUS"
+   ],
+   "0.4GB": [
+    null,
+    "DIMENSION"
+   ]
+  },
+  "n2_0200.md": {
+   "0373": [
+    null,
+    "IDENTIFIER_PART"
+   ]
+  },
+  "n2_0213.md": {
+   "401": [
+    null,
+    "IDENTIFIER_PART"
+   ],
+   "0.4GB": [
+    null,
+    "DIMENSION"
+   ]
+  },
+  "n2_0224.md": {
+   "0376": [
+    null,
+    "IDENTIFIER_PART"
+   ],
+   "0374": [
+    null,
+    "IDENTIFIER_PART"
+   ]
+  },
+  "n2_1759.md": {
+   "52秒": [
+    null,
+    "DIMENSION"
+   ],
+   "2148": [
+    null,
+    "DIMENSION"
+   ],
+   "35752": [
+    null,
+    "IDENTIFIER_PART"
+   ],
+   "443": [
+    null,
+    "PORT"
+   ]
+  },
+  "n2_1824.md": {
+   "401": [
+    null,
+    "HTTP_STATUS"
+   ],
+   "0B": [
+    null,
+    "DIMENSION"
+   ],
+   "15s": [
+    null,
+    "DIMENSION"
+   ],
+   "236.13秒": [
+    null,
+    "DIMENSION"
+   ]
+  },
+  "n3_0240.md": {
+   "0373": [
+    null,
+    "IDENTIFIER_PART"
+   ],
+   "0373s": [
+    null,
+    "DIMENSION"
+   ],
+   "11.10秒": [
+    null,
+    "DIMENSION"
+   ],
+   "0366": [
+    null,
+    "IDENTIFIER_PART"
+   ]
+  },
+  "qoder-0369_0250.md": {
+   "0370": [
+    null,
+    "IDENTIFIER_PART"
+   ],
+   "0359": [
+    null,
+    "IDENTIFIER_PART"
+   ],
+   "10.36秒": [
+    null,
+    "DIMENSION"
+   ],
+   "351517": [
+    null,
+    "DIMENSION"
+   ]
+  },
+  "qoder-0370_0130.md": {
+   "0130": [
+    null,
+    "IDENTIFIER_PART"
+   ],
+   "425": [
+    "LINE_REF",
+    "HTTP_STATUS"
+   ],
+   "200": [
+    "LINE_REF",
+    "HTTP_STATUS"
+   ],
+   "500": [
+    "LINE_REF",
+    "HTTP_STATUS"
+   ]
+  },
+  "qoder-0370_0148.md": {
+   "0148": [
+    null,
+    "IDENTIFIER_PART"
+   ],
+   "301": [
+    "LINE_REF",
+    "HTTP_STATUS"
+   ]
+  }
+ },
+ "count_word_still_red": {
+  "n2_0101.md": {
+   "1392 条": {
+    "class": null,
+    "refused": true,
+    "line": 28
+   },
+   "9 格": {
+    "class": null,
+    "refused": false,
+    "line": 28
+   },
+   "3 次": {
+    "class": null,
+    "refused": false,
+    "line": 28
+   }
+  },
+  "n2_0105.md": {},
+  "n2_0144.md": {
+   "0.4 GB": {
+    "class": "DIMENSION",
+    "refused": false,
+    "line": 15
+   },
+   "0 格": {
+    "class": null,
+    "refused": false,
+    "line": 21
+   }
+  },
+  "n2_0152.md": {
+   "0.4 GB": {
+    "class": "DIMENSION",
+    "refused": false,
+    "line": 15
+   },
+   "6 条": {
+    "class": null,
+    "refused": false,
+    "line": 16
+   }
+  },
+  "n2_0156.md": {
+   "6 条": {
+    "class": null,
+    "refused": true,
+    "line": 21
+   }
+  },
+  "n2_0200.md": {
+   "6 条": {
+    "class": null,
+    "refused": false,
+    "line": 8
+   },
+   "9 个": {
+    "class": null,
+    "refused": false,
+    "line": 11
+   },
+   "0 处": {
+    "class": null,
+    "refused": true,
+    "line": 12
+   }
+  },
+  "n2_0213.md": {
+   "6 条": {
+    "class": null,
+    "refused": true,
+    "line": 14
+   },
+   "0.4 GB": {
+    "class": "DIMENSION",
+    "refused": false,
+    "line": 3
+   },
+   "0 条": {
+    "class": null,
+    "refused": true,
+    "line": 14
+   }
+  },
+  "n2_0219.md": {
+   "6 条": {
+    "class": null,
+    "refused": true,
+    "line": 8
+   }
+  },
+  "n2_0224.md": {
+   "3 条": {
+    "class": null,
+    "refused": true,
+    "line": 16
+   }
+  },
+  "n2_0228.md": {
+   "1 个": {
+    "class": null,
+    "refused": true,
+    "line": 7
+   },
+   "2 个": {
+    "class": null,
+    "refused": true,
+    "line": 8
+   },
+   "0 个": {
+    "class": null,
+    "refused": true,
+    "line": 8
+   }
+  },
+  "n2_1759.md": {
+   "1 条": {
+    "class": null,
+    "refused": false,
+    "line": 1
+   },
+   "52 秒": {
+    "class": "DIMENSION",
+    "refused": false,
+    "line": 8
+   },
+   "11 条": {
+    "class": null,
+    "refused": false,
+    "line": 14
+   },
+   "0 处": {
+    "class": "DISCIPLINE_ZERO",
+    "refused": false,
+    "line": 15
+   }
+  },
+  "n2_1824.md": {
+   "0B": {
+    "class": "DIMENSION",
+    "refused": false,
+    "line": 7
+   },
+   "4 次": {
+    "class": null,
+    "refused": false,
+    "line": 12
+   },
+   "1377 条": {
+    "class": null,
+    "refused": false,
+    "line": 17
+   },
+   "236.13 秒": {
+    "class": "DIMENSION",
+    "refused": false,
+    "line": 18
+   },
+   "8 条": {
+    "class": null,
+    "refused": false,
+    "line": 19
+   }
+  },
+  "n3_0240.md": {
+   "3 个": {
+    "class": null,
+    "refused": false,
+    "line": 4
+   },
+   "16 格": {
+    "class": null,
+    "refused": false,
+    "line": 7
+   },
+   "0 个": {
+    "class": null,
+    "refused": false,
+    "line": 9
+   },
+   "11.10 秒": {
+    "class": "DIMENSION",
+    "refused": false,
+    "line": 10
+   },
+   "0 次": {
+    "class": null,
+    "refused": true,
+    "line": 12
+   }
+  },
+  "qoder-0369_0250.md": {
+   "875 个": {
+    "class": null,
+    "refused": false,
+    "line": 12
+   },
+   "10.36 秒": {
+    "class": "DIMENSION",
+    "refused": false,
+    "line": 13
+   },
+   "8 条": {
+    "class": null,
+    "refused": false,
+    "line": 13
+   },
+   "13 条": {
+    "class": null,
+    "refused": false,
+    "line": 21
+   },
+   "3 条": {
+    "class": null,
+    "refused": false,
+    "line": 22
+   },
+   "5 个": {
+    "class": null,
+    "refused": false,
+    "line": 26
+   }
+  },
+  "qoder-0370_0130.md": {
+   "5 处": {
+    "class": null,
+    "refused": false,
+    "line": 61
+   },
+   "0 处": {
+    "class": null,
+    "refused": false,
+    "line": 121
+   },
+   "3 处": {
+    "class": null,
+    "refused": false,
+    "line": 134
+   },
+   "8 条": {
+    "class": null,
+    "refused": false,
+    "line": 42
+   },
+   "11 处": {
+    "class": null,
+    "refused": false,
+    "line": 42
+   },
+   "11 个": {
+    "class": null,
+    "refused": false,
+    "line": 44
+   },
+   "2 处": {
+    "class": null,
+    "refused": false,
+    "line": 64
+   },
+   "78 处": {
+    "class": null,
+    "refused": false,
+    "line": 89
+   },
+   "1 处": {
+    "class": null,
+    "refused": false,
+    "line": 82
+   },
+   "77 处": {
+    "class": null,
+    "refused": false,
+    "line": 137
+   },
+   "72 个": {
+    "class": null,
+    "refused": false,
+    "line": 54
+   },
+   "16 个": {
+    "class": null,
+    "refused": false,
+    "line": 54
+   },
+   "22 处": {
+    "class": null,
+    "refused": false,
+    "line": 60
+   },
+   "14 处": {
+    "class": null,
+    "refused": false,
+    "line": 61
+   },
+   "38 处": {
+    "class": null,
+    "refused": true,
+    "line": 159
+   },
+   "15 处": {
+    "class": null,
+    "refused": false,
+    "line": 139
+   },
+   "9 处": {
+    "class": null,
+    "refused": false,
+    "line": 139
+   },
+   "4 处": {
+    "class": null,
+    "refused": true,
+    "line": 70
+   },
+   "155 处": {
+    "class": null,
+    "refused": false,
+    "line": 96
+   },
+   "6 个": {
+    "class": null,
+    "refused": false,
+    "line": 111
+   },
+   "3 个": {
+    "class": null,
+    "refused": false,
+    "line": 106
+   },
+   "0 条": {
+    "class": null,
+    "refused": false,
+    "line": 105
+   },
+   "213 条": {
+    "class": null,
+    "refused": false,
+    "line": 105
+   },
+   "13 个": {
+    "class": null,
+    "refused": false,
+    "line": 118
+   },
+   "0 个": {
+    "class": null,
+    "refused": false,
+    "line": 122
+   },
+   "875 个": {
+    "class": null,
+    "refused": true,
+    "line": 152
+   },
+   "81 个": {
+    "class": null,
+    "refused": true,
+    "line": 120
+   },
+   "100 个": {
+    "class": null,
+    "refused": false,
+    "line": 120
+   },
+   "10 个": {
+    "class": null,
+    "refused": false,
+    "line": 121
+   }
+  },
+  "qoder-0370_0148.md": {
+   "0 处": {
+    "class": null,
+    "refused": true,
+    "line": 81
+   },
+   "80 个": {
+    "class": null,
+    "refused": false,
+    "line": 61
+   },
+   "1 个": {
+    "class": null,
+    "refused": false,
+    "line": 24
+   },
+   "4 个": {
+    "class": null,
+    "refused": true,
+    "line": 36
+   },
+   "2 个": {
+    "class": null,
+    "refused": false,
+    "line": 27
+   },
+   "129 个": {
+    "class": null,
+    "refused": true,
+    "line": 34
+   },
+   "1 处": {
+    "class": null,
+    "refused": false,
+    "line": 59
+   },
+   "16 个": {
+    "class": null,
+    "refused": false,
+    "line": 72
+   },
+   "0 个": {
+    "class": null,
+    "refused": false,
+    "line": 72
+   },
+   "77 处": {
+    "class": null,
+    "refused": true,
+    "line": 82
+   },
+   "2 处": {
+    "class": null,
+    "refused": false,
+    "line": 89
+   }
+  }
+ },
+ "bare_number_control": {
+  "r4e": {
+   "claims": 1,
+   "findings": [
+    "1392"
+   ],
+   "verdict": "Q43_GATE_RED"
+  },
+  "r5": {
+   "claims": 1,
+   "findings": [
+    "1392"
+   ],
+   "verdict": "Q43_GATE_RED"
+  },
+  "third": {
+   "claims": 1,
+   "findings": [
+    "1392"
+   ],
+   "verdict": "Q43_GATE_RED"
+  }
+ }
+}
