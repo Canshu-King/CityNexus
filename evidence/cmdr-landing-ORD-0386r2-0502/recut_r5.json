@@ -1,0 +1,222 @@
+{
+ "order": "ORD-0386r2",
+ "line": "origin/mirror/integration-frontend-apple-pass1",
+ "tip": "ac195f865f21ebeb9e1f8cb38ce85780a8b3d48e",
+ "cand": "244fa3851ab5cf8fc9d3b02330516153634d46ec",
+ "merge_base": "e022093dcc198367d779fc92692c6ccfc6824a2a",
+ "commits_tip_ahead_of_base": 2,
+ "commits_cand_ahead_of_base": 5,
+ "merge_tree_rc": 0,
+ "changed_files": [
+  "backend/app/schemas.py",
+  "backend/app/services.py",
+  "backend/tests/test_qoder_ord0386_plan_version_history.py",
+  "contracts/openapi.yaml",
+  "frontend/e2e/qoder-ord0386-plan-version-history.spec.ts",
+  "frontend/playwright.ord0386-Q.config.ts",
+  "frontend/src/app/V8Experience.tsx",
+  "frontend/src/features/studio/PlanVersionHistoryPanel.tsx",
+  "frontend/src/features/studio/planVersionHistoryCopy.ts",
+  "frontend/src/styles.css",
+  "review/ord0386-plan-version-history/READINGS.md",
+  "review/ord0386-plan-version-history/api_ts_drift.txt",
+  "review/ord0386-plan-version-history/collect_candidate.txt",
+  "review/ord0386-plan-version-history/collect_control_head.txt",
+  "review/ord0386-plan-version-history/gate-report-final.json",
+  "review/ord0386-plan-version-history/mutant_M6_no_list_padding.json",
+  "review/ord0386-plan-version-history/mutant_kill_table.json",
+  "review/ord0386-plan-version-history/probe21_last_row_clear.png",
+  "review/ord0386-plan-version-history/probe21_rows.png",
+  "review/ord0386-plan-version-history/reachability.json",
+  "review/ord0386-plan-version-history/render_final.json",
+  "review/ord0386-plan-version-history/scene9_rows.png",
+  "review/ord0386-plan-version-history/scene9_viewport.png",
+  "review/ord0386-plan-version-history/studio_footer.json"
+ ],
+ "files": [
+  {
+   "path": "backend/app/schemas.py",
+   "cand_blob": "4c20ba9ec7a4d8970c99e22c20180db1ea1ae971",
+   "merged_blob": "4c20ba9ec7a4d8970c99e22c20180db1ea1ae971",
+   "identical": true,
+   "cand_changed_the_file": true
+  },
+  {
+   "path": "backend/app/services.py",
+   "cand_blob": "3a31edab9198a17ab0215d64cb426c9c0dc746aa",
+   "merged_blob": "3a31edab9198a17ab0215d64cb426c9c0dc746aa",
+   "identical": true,
+   "cand_changed_the_file": true
+  },
+  {
+   "path": "backend/tests/test_qoder_ord0386_plan_version_history.py",
+   "cand_blob": "2405a7ca953882b1908a09791390bd43d00658d9",
+   "merged_blob": "2405a7ca953882b1908a09791390bd43d00658d9",
+   "identical": true,
+   "cand_changed_the_file": true
+  },
+  {
+   "path": "contracts/openapi.yaml",
+   "cand_blob": "28590a13efd85d6c52f5214d7ef94ab3e25ec83c",
+   "merged_blob": "28590a13efd85d6c52f5214d7ef94ab3e25ec83c",
+   "identical": true,
+   "cand_changed_the_file": true
+  },
+  {
+   "path": "frontend/e2e/qoder-ord0386-plan-version-history.spec.ts",
+   "cand_blob": "c713e9fd9f607eb88b8288248135c851d70231b0",
+   "merged_blob": "c713e9fd9f607eb88b8288248135c851d70231b0",
+   "identical": true,
+   "cand_changed_the_file": true
+  },
+  {
+   "path": "frontend/playwright.ord0386-Q.config.ts",
+   "cand_blob": "5ab27749d31740cd15c2c2eb54aa9e03b1ad7221",
+   "merged_blob": "5ab27749d31740cd15c2c2eb54aa9e03b1ad7221",
+   "identical": true,
+   "cand_changed_the_file": true
+  },
+  {
+   "path": "frontend/src/app/V8Experience.tsx",
+   "cand_blob": "1e6cc16a714e71b0045105a285db53a91b4022c9",
+   "merged_blob": "1e6cc16a714e71b0045105a285db53a91b4022c9",
+   "identical": true,
+   "cand_changed_the_file": true
+  },
+  {
+   "path": "frontend/src/features/studio/PlanVersionHistoryPanel.tsx",
+   "cand_blob": "c43a128a445a1a71dc84f307c8f4b9d74b0083f7",
+   "merged_blob": "c43a128a445a1a71dc84f307c8f4b9d74b0083f7",
+   "identical": true,
+   "cand_changed_the_file": true
+  },
+  {
+   "path": "frontend/src/features/studio/planVersionHistoryCopy.ts",
+   "cand_blob": "77bf442d192102c9965853f58e8c3a1a8768c2c5",
+   "merged_blob": "77bf442d192102c9965853f58e8c3a1a8768c2c5",
+   "identical": true,
+   "cand_changed_the_file": true
+  },
+  {
+   "path": "frontend/src/styles.css",
+   "cand_blob": "9cf7b2e69e1317b9e09fb499835ce055024ad601",
+   "merged_blob": "9cf7b2e69e1317b9e09fb499835ce055024ad601",
+   "identical": true,
+   "cand_changed_the_file": true
+  },
+  {
+   "path": "review/ord0386-plan-version-history/READINGS.md",
+   "cand_blob": "3c0609333b85758f936df7632955ee87f60e22bf",
+   "merged_blob": "3c0609333b85758f936df7632955ee87f60e22bf",
+   "identical": true,
+   "cand_changed_the_file": true
+  },
+  {
+   "path": "review/ord0386-plan-version-history/api_ts_drift.txt",
+   "cand_blob": "003b041c0e801716a5e210c1a17962550981bf67",
+   "merged_blob": "003b041c0e801716a5e210c1a17962550981bf67",
+   "identical": true,
+   "cand_changed_the_file": true
+  },
+  {
+   "path": "review/ord0386-plan-version-history/collect_candidate.txt",
+   "cand_blob": "c4a19b34c5cf82e8a506293bf5d696c682d99e43",
+   "merged_blob": "c4a19b34c5cf82e8a506293bf5d696c682d99e43",
+   "identical": true,
+   "cand_changed_the_file": true
+  },
+  {
+   "path": "review/ord0386-plan-version-history/collect_control_head.txt",
+   "cand_blob": "e0e91caea93b29bcd3595c5343f000c3354ee333",
+   "merged_blob": "e0e91caea93b29bcd3595c5343f000c3354ee333",
+   "identical": true,
+   "cand_changed_the_file": true
+  },
+  {
+   "path": "review/ord0386-plan-version-history/gate-report-final.json",
+   "cand_blob": "4bc272b01df726705be5969b9192f21aadeab517",
+   "merged_blob": "4bc272b01df726705be5969b9192f21aadeab517",
+   "identical": true,
+   "cand_changed_the_file": true
+  },
+  {
+   "path": "review/ord0386-plan-version-history/mutant_M6_no_list_padding.json",
+   "cand_blob": "022475b9ea08d49fa0dedcf11c7d3942fcf78a62",
+   "merged_blob": "022475b9ea08d49fa0dedcf11c7d3942fcf78a62",
+   "identical": true,
+   "cand_changed_the_file": true
+  },
+  {
+   "path": "review/ord0386-plan-version-history/mutant_kill_table.json",
+   "cand_blob": "032b207952faa2439281006fc8daafcd4e74cdc7",
+   "merged_blob": "032b207952faa2439281006fc8daafcd4e74cdc7",
+   "identical": true,
+   "cand_changed_the_file": true
+  },
+  {
+   "path": "review/ord0386-plan-version-history/probe21_last_row_clear.png",
+   "cand_blob": "384fec56fef85ac252e2a2d90d258493494a95a8",
+   "merged_blob": "384fec56fef85ac252e2a2d90d258493494a95a8",
+   "identical": true,
+   "cand_changed_the_file": true
+  },
+  {
+   "path": "review/ord0386-plan-version-history/probe21_rows.png",
+   "cand_blob": "3399ccbf9a9252777bf59d1e3f6c63f9f279c986",
+   "merged_blob": "3399ccbf9a9252777bf59d1e3f6c63f9f279c986",
+   "identical": true,
+   "cand_changed_the_file": true
+  },
+  {
+   "path": "review/ord0386-plan-version-history/reachability.json",
+   "cand_blob": "a274adc2dbea20d284a5e705c93bae37812da8b2",
+   "merged_blob": "a274adc2dbea20d284a5e705c93bae37812da8b2",
+   "identical": true,
+   "cand_changed_the_file": true
+  },
+  {
+   "path": "review/ord0386-plan-version-history/render_final.json",
+   "cand_blob": "0930aa3102e17aea37c88c0469a98909868e6177",
+   "merged_blob": "0930aa3102e17aea37c88c0469a98909868e6177",
+   "identical": true,
+   "cand_changed_the_file": true
+  },
+  {
+   "path": "review/ord0386-plan-version-history/scene9_rows.png",
+   "cand_blob": "ee5e0aafd1ba90bddb341f91daa50ba25f3c1753",
+   "merged_blob": "ee5e0aafd1ba90bddb341f91daa50ba25f3c1753",
+   "identical": true,
+   "cand_changed_the_file": true
+  },
+  {
+   "path": "review/ord0386-plan-version-history/scene9_viewport.png",
+   "cand_blob": "f44b23f0fce93d0c7cd67117665c27031f426bf6",
+   "merged_blob": "f44b23f0fce93d0c7cd67117665c27031f426bf6",
+   "identical": true,
+   "cand_changed_the_file": true
+  },
+  {
+   "path": "review/ord0386-plan-version-history/studio_footer.json",
+   "cand_blob": "fb286b48d7fb94275c9a8f11a10b464dbaf9781f",
+   "merged_blob": "fb286b48d7fb94275c9a8f11a10b464dbaf9781f",
+   "identical": true,
+   "cand_changed_the_file": true
+  }
+ ],
+ "merged_tree": "3160d4d8b0a56ab0f3c5315afa7c02204d8f6f4f",
+ "auto_merged_files": [],
+ "recut_commit": "cf0ed0b531681181642a30120a1b41f2bf681a40",
+ "readback_tree": "3160d4d8b0a56ab0f3c5315afa7c02204d8f6f4f",
+ "readback_tree_matches": true,
+ "readback_parents": [
+  "ac195f865f21ebeb9e1f8cb38ce85780a8b3d48e",
+  "244fa3851ab5cf8fc9d3b02330516153634d46ec"
+ ],
+ "readback_parent_tip": true,
+ "verdict": "RECUT_OK",
+ "pushed_ref": "refs/heads/cmdr/land-ord0386r2-recut",
+ "push_rc": 0,
+ "push_stderr": "remote: \nremote: Create a pull request for 'cmdr/land-ord0386r2-recut' on GitHub by visiting:        \nremote:      https://github.com/Canshu-King/CityNexus/pull/new/cmdr/land-ord0386r2-recut        \nremote: \nTo github.com:Canshu-King/CityNexus.git\n * [new branch]        cf0ed0b531681181642a30120a1b41f2bf681a40 -> cmdr/land-ord0386r2-recut",
+ "ls_remote": "cf0ed0b531681181642a30120a1b41f2bf681a40\trefs/heads/cmdr/land-ord0386r2-recut",
+ "ls_remote_matches": true
+}
