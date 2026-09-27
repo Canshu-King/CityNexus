@@ -329,8 +329,19 @@ test("Y4_every_item_prints_endpoint_field_and_anchor_and_the_anchor_resolves —
       const overflowing: string[] = [];
       for (const sel of [".cn-pretrip-title", ".cn-pretrip-why", ".cn-pretrip-basis", ".cn-pretrip-anchor"]) {
         for (const el of Array.from(it.querySelectorAll(sel))) {
-          const over = el.scrollWidth - el.clientWidth;
-          if (over > 1) overflowing.push(`${sel}:+${over}px`);
+          /* `scrollWidth - clientWidth` is not enough: on an `overflow: visible` block the engine can
+             report the two as equal while the glyphs still sit outside the card. Measure the rendered
+             text range against the element's own box, and against the card, and take the worst. */
+          const range = document.createRange();
+          range.selectNodeContents(el);
+          const textRight = range.getBoundingClientRect().right;
+          const box = el.getBoundingClientRect();
+          /* Compare against the *section*, not the item: with `overflow-wrap: normal` the grid item
+             widens to fit the token, so text-right equals its own box-right and the comparison is blind.
+             The thing a traveller sees escape is the card border, i.e. the section's box. */
+          const card = (el.closest(".cn-pretrip") ?? el).getBoundingClientRect();
+          const over = Math.max(el.scrollWidth - el.clientWidth, textRight - box.right, textRight - card.right);
+          if (over > 1) overflowing.push(`${sel}:+${Math.round(over)}px`);
         }
       }
       const covered: string[] = [];
