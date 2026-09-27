@@ -988,8 +988,18 @@ export function PlanWithAiSheet({
                         static table would be claimed as "already translated", which is the hole this
                         order closes.  Unlabelled in the main flow, a Chinese traveller read it as our
                         promise. */}
-                    <span className="plan-ai-detail-label" data-testid="plan-ai-model-label">
-                      {zh ? "模型原始输出（未翻译，不代表本界面的结论）" : "Model's own words (not translated, not this screen's conclusion)"}
+                    <span
+                      className="plan-ai-detail-label"
+                      data-testid="plan-ai-model-label"
+                      data-summary-origin={result?.summaryOrigin ?? "not_stated"}
+                    >
+                      {(result?.summaryOrigin ?? "not_stated") === "no_model"
+                        ? zh
+                          ? "服务器给这句总结（这台部署的 AI 开关是关的，所以它不是模型写的）"
+                          : "The server's own summary (the AI switch on this deployment is off, so no model wrote this)"
+                        : zh
+                          ? "模型原始输出（未翻译，不代表本界面的结论）"
+                          : "Model's own words (not translated, not this screen's conclusion)"}
                     </span>
                     <code data-testid="plan-ai-model-output">{result.summary}</code>
                   </>

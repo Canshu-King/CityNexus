@@ -53,6 +53,34 @@ bytes rather than asserted:
                    transcript; it can make ASSERTIONS_STILL_HIT redder, never
                    quieter.
 
+  RENDER_TIERS   (ORD-0370b, needs --src) splits the hits above by where the value
+                   actually goes, and gates on one thing only: no tier-1 hit may
+                   remain. The vocabulary, and what each slot is licensed to claim:
+                     JSX_CHILD      element text. The enclosing `{` opens straight
+                                    after a `>`. PROVEN render slot.
+                     ATTR_VISIBLE   `title=` / `placeholder=` / `alt=` / `label=`.
+                                    The browser paints it. PROVEN render slot.
+                     ATTR_ANNOUNCED `aria-*=`. Reaches a screen reader, not the eye:
+                                    undetermined for this order's purpose.
+                     DATA_ATTR      `data-*=`. UNDETERMINED, deliberately never
+                                    excluded: a stylesheet can print it with
+                                    attr(), a reviewer reads it in devtools, and a
+                                    text ruler that called it dead would be
+                                    asserting something it has not measured.
+                     REACT_KEY      `key={`. The one slot this face may state cannot
+                                    render: React consumes key to reconcile and
+                                    never emits it into the DOM.
+                     STATE_WRITE / TELEMETRY_STRING / JS_VALUE / OTHER / ATTR_OTHER
+                                    undetermined -- reaching a screen depends on who
+                                    reads the field, which text cannot settle.
+                   A tier-1 hit additionally requires that no language branch guards
+                   it: `{zh ? (x ?? "甲") : (x ?? "乙")}` sits in element text but a
+                   Chinese screen takes the Chinese arm, so it is tier 2. A nested
+                   template interpolation is also tier 2: collecting it means
+                   rewriting the sentence around it, which is a different order.
+                   Tiers 2 and 3 can never turn this cell green-by-laundering: the
+                   gate reads tier 1 alone, and the counts of all three are printed.
+
 A face that did not run prints NOT_RUN, never MET: an absent --src or --e2e is
 not evidence of anything.
 
@@ -196,52 +224,180 @@ def _is_copy(lit):
     return True, "copy"
 
 
+LANG_ARM = re.compile(r"\b(?:zh|isZh|isChinese|zhCN|locale|language|lang)\b[^{};]{0,60}\?", re.I)
+ATTR_NAME = re.compile(r'([A-Za-z_][\w-]*)\s*=\s*\{?\s*$')
+
+
+def render_pos(text, abs_off):
+    """Where the value of this expression actually goes, as far as text can show.
+
+    Returns (slot, in_lang_arm). The slot vocabulary and what each one licenses is
+    in this file's docstring; the short version of the rule that matters:
+
+      JSX_CHILD      the enclosing `{` opens right after a `>` -> the value is
+                     element text. A render slot.
+      ATTR_VISIBLE   `title=` / `placeholder=` / `alt=` -> shown by the browser.
+      ATTR_ANNOUNCED `aria-*=` -> reaches an assistive reader, not the eye.
+      DATA_ATTR      `data-*=` -> NOT licensed as "cannot render". A stylesheet
+                     can print it with attr(), and a reviewer can. It is
+                     undetermined, never excluded.
+      REACT_KEY      `key={` -> the only slot this face may assert cannot render:
+                     React consumes key to reconcile and never emits it to the DOM.
+      everything else: undetermined (state writes, telemetry strings, object
+                     fields, and anything the text does not settle).
+    """
+    head = text[:abs_off]
+    line_start = head.rfind("\n") + 1
+    line_head = text[line_start:abs_off]
+    in_lang = bool(LANG_ARM.search(line_head)) or bool(
+        LANG_ARM.search(text[max(0, abs_off - 700):abs_off][-700:]))
+    # innermost unmatched `{` before the hit
+    depth = 0
+    open_at = -1
+    for i in range(len(head) - 1, -1, -1):
+        ch = head[i]
+        if ch == "}":
+            depth += 1
+        elif ch == "{":
+            if depth == 0:
+                open_at = i
+                break
+            depth -= 1
+    if open_at >= 0:
+        before = head[:open_at].rstrip()
+        m = ATTR_NAME.search(head[:open_at].rstrip() + " ")
+        attr = m.group(1).lower() if m else ""
+        last = before[-1] if before else ""
+        # `>` closes a JSX open tag, so a `{` right after it is element text -- but
+        # `=>` also ends in `>`, and that one opens a function body, not a screen.
+        arrow = before.endswith("=>")
+        if last == ">" and not arrow:
+            return ("JSX_CHILD", in_lang)
+        # `{` preceded by plain text is also element text: `<small>→ {x ?? "…"}</small>`.
+        # The guard is that nothing code-like sits between the nearest `>` and this
+        # `{`, and `$` is excluded on purpose (`${` opens a template interpolation,
+        # which is a string being assembled, not a place a value is painted).
+        # Without the `>`-to-`{` gap rule this branch claimed an `if (...) {` block
+        # was element text -- measured on frontend/src/features/recovery/
+        # RecoveryRequiredPanel.tsx:71, where the enclosing brace is a control block.
+        gt = before.rfind(">")
+        gap = before[gt + 1:] if gt >= 0 else ""
+        if (last and last not in "=(,)[]:;{}<>+-*/%&|^!~?\"$%" and not attr
+                and gt >= 0 and not re.search(r"[(){};=,?]|=>", gap)):
+            return ("JSX_CHILD", in_lang)
+        if attr.startswith("data-"):
+            return ("DATA_ATTR", in_lang)
+        if attr.startswith("aria-"):
+            return ("ATTR_ANNOUNCED", in_lang)
+        if attr in ("title", "placeholder", "alt", "label"):
+            return ("ATTR_VISIBLE", in_lang)
+        if attr == "key":
+            return ("REACT_KEY", in_lang)
+        if attr:
+            return ("ATTR_OTHER", in_lang)
+    low = line_head
+    if re.search(r"\bkey\s*=\s*\{", low):
+        return ("REACT_KEY", in_lang)
+    if re.search(r"\bdata-[A-Za-z-]+\s*=\s*\{", low):
+        return ("DATA_ATTR", in_lang)
+    if re.search(r"\baria-[A-Za-z-]+\s*=\s*\{", low):
+        return ("ATTR_ANNOUNCED", in_lang)
+    if re.search(r"\b(aria-[A-Za-z-]+|title|placeholder|alt|label)\s*=\s*\{", low):
+        return ("ATTR_VISIBLE", in_lang)
+    if re.search(r"\bset[A-Z]\w*\s*\(\s*", low):
+        return ("STATE_WRITE", in_lang)
+    if "`" in low and re.search(r"\w+\s*=\s*\$\{", low):
+        return ("TELEMETRY_STRING", in_lang)
+    if re.search(r"\w+\s*:\s*[^=]*$", low) and not re.search(r"[<>{}]", low[-40:]):
+        return ("JS_VALUE", in_lang)
+    return ("OTHER", in_lang)
+
+
+TIER1_SLOTS = {"JSX_CHILD", "ATTR_VISIBLE"}
+CANNOT_RENDER = {"REACT_KEY"}
+# A literal only has something to localise if it carries a letter. `—` sitting in
+# element text is a render slot and no language branch guards it, but no dictionary
+# key can make an em dash read better in Chinese, and calling it tier 1 would keep
+# this cell red forever and teach people to mute it. A dotted identifier
+# (`agent.intentUnknown`) or a bare key prefix (`nav.`) is a name handed to t(),
+# not copy, so it is not tier 1 either.
+LETTER = re.compile(r"[A-Za-z一-鿿]")
+KEYISH = re.compile(r"^[A-Za-z][A-Za-z0-9_-]*(\.[A-Za-z0-9_-]+)*\.?$")
+KEYISH_DOTTED = re.compile(r"^[a-z][A-Za-z0-9_-]*(\.[A-Za-z0-9_-]+)+\.?$|^[a-z]+\.$")
+
+
+def localisable(lit):
+    """Does this literal carry anything a language could change?"""
+    if not LETTER.search(lit):
+        return False, "no letter: locale-neutral symbol"
+    if KEYISH_DOTTED.match(lit.strip()):
+        return False, "dotted identifier / key prefix, not copy"
+    return True, "carries language"
+
+
+def render_tier(slot, in_lang, lit=""):
+    """1 = the value lands in a render slot, no language branch guards it, and the
+    text carries a language to mistranslate. A Chinese screen is being handed this.
+    3 = text proves it cannot reach a screen. 2 = everything this face cannot settle.
+    """
+    if slot in CANNOT_RENDER:
+        return 3
+    ok_localisable, _why = localisable(lit)
+    if slot in TIER1_SLOTS and not in_lang and ok_localisable:
+        return 1
+    return 2
+
+
 def slot_shape(line, upto):
     """What construct the `??` sits in, read from the text before it on the line.
 
-    This is a SHAPE hint and is reported as one: it never removes a hit from the
-    count, because "this cannot render" is exactly the kind of claim a text
-    ruler is not entitled to make. It exists so a reader can triage the stock
-    without re-opening 78 files.
+    Kept for the older reporting; `render_pos` is the version that reasons about
+    braces and a wider context, and the tiers come from it.
     """
     head = line[:upto]
-    if re.search(r"\bdata-[A-Za-z-]+\s*=\s*\{", head):
-        return "data-attr"
-    if re.search(r"\b(aria-[A-Za-z-]+|title|placeholder|alt|label)\s*=\s*\{", head):
-        return "a11y-or-tooltip"
-    if re.search(r"\bkey\s*=\s*\{", head):
-        return "react-key"
-    if re.search(r"\b(set[A-Z]\w*|useState|useState<[^>]*>)\s*\(\s*", head):
-        return "state-write"
-    if "`" in head and re.search(r"\w+\s*=\s*\$\{", head):
-        return "telemetry-string"
-    if re.search(r"\w+\s*:\s*[^=]*$", head) and not re.search(r"[<>{}]", head[-40:]):
-        return "js-value"
-    if re.search(r"[<>]\s*[^<>]*$", head) or re.search(r"\{\s*[A-Za-z_.$\[\]?'\"()]*\s*$", head):
-        return "jsx-or-expr"
-    return "other"
+    p, _lang = render_pos(head, len(head))
+    return {"JSX_CHILD": "jsx-or-expr", "DATA_ATTR": "data-attr",
+            "ATTR_ANNOUNCED": "a11y-or-tooltip", "ATTR_VISIBLE": "a11y-or-tooltip",
+            "REACT_KEY": "react-key", "ATTR_OTHER": "other",
+            "STATE_WRITE": "state-write", "TELEMETRY_STRING": "telemetry-string",
+            "JS_VALUE": "js-value", "OTHER": "other"}[p]
+
 
 
 def fallback_hits(text, name):
-    """[(tier, file, line, literal, why)] for one file's text.
+    """[(tier, file, line, literal, why, slot, render tier)] for one file's text.
 
     A `??` that ends a line and a fallback that opens the next line are one
     expression, not two, so the pair is read as a joined window; the hit is
-    still attributed to the line carrying the literal.
+    still attributed to the line carrying the literal. The render tier is
+    computed from an absolute offset into the file, because deciding whether a
+    value lands in element text needs the braces around it, not the line.
     """
     lines = text.split("\n")
+    starts = []
+    off = 0
+    for ln in lines:
+        starts.append(off)
+        off += len(ln) + 1
     hits = []
     seen = set()
     for i, line in enumerate(lines):
         if line.strip().startswith(("//", "*")):
             continue
         prev = lines[i - 1].rstrip() if i > 0 else ""
-        windows = [(line, i + 1)]
-        if prev.endswith("??"):
-            windows.append((prev + " " + line, i + 1))
-        for window, at in windows:
+        windows = [(line, i + 1, starts[i])]
+        if prev.endswith("??") and i > 0:
+            windows.append((prev + " " + line, i + 1, starts[i - 1]))
+        for window, at, base in windows:
             for rx, tier in ((A_RE, "A"), (B_RE, "B")):
                 for m in rx.finditer(window):
+                    # map the match back to an absolute offset in the file
+                    if window is line or len(window) == len(line):
+                        abs_off = starts[i] + m.start()
+                    else:
+                        abs_off = (starts[i - 1] + m.start() if m.start() <= len(prev)
+                                   else starts[i] + m.start() - len(prev) - 1)
+                    slot, in_lang = render_pos(text, abs_off)
                     shape = slot_shape(window, m.start())
                     if tier == "A":
                         cond = m.group(1) or ""
@@ -251,21 +407,21 @@ def fallback_hits(text, name):
                                 if lit is not None:
                                     _tally(hits, seen, "A", name, at, lit,
                                            (False, "not a language branch: condition %r names no locale" % cond.strip()[:40]),
-                                           shape)
+                                           shape, slot, in_lang)
                             continue
                         for lit in lits:
                             if lit is None:
                                 continue
-                            _tally(hits, seen, "A", name, at, lit, _is_copy(lit), shape)
+                            _tally(hits, seen, "A", name, at, lit, _is_copy(lit), shape, slot, in_lang)
                     else:
                         lit = _pick(m.groups(), 1, 2)
                         if lit is None:
                             continue
-                        _tally(hits, seen, "B", name, at, lit, _is_copy(lit), shape)
+                        _tally(hits, seen, "B", name, at, lit, _is_copy(lit), shape, slot, in_lang)
     return hits
 
 
-def _tally(hits, seen, tier, name, at, lit, verdict, shape="other"):
+def _tally(hits, seen, tier, name, at, lit, verdict, shape="other", slot="OTHER", in_lang=False):
     key = (name, at, lit)
     if key in seen:
         return
@@ -274,7 +430,7 @@ def _tally(hits, seen, tier, name, at, lit, verdict, shape="other"):
     hits.append((tier if found else tier + "-skipped", name, at, lit,
                  "language branch in a ?? slot" if tier == "A" and found else
                  ("bare literal in a ?? slot" if tier == "B" and found else why),
-                 shape))
+                 shape, render_tier(slot, in_lang, lit), slot))
 
 
 def scan_tree(src_dir):
@@ -297,7 +453,7 @@ def component_fallback(src_dir):
     tier_b = [h for h in hits if h[0] == "B"]
     skipped = [h for h in hits if h[0].endswith("-skipped")]
     bad = tier_a + tier_b
-    detail = " || ".join("%s %s:%d %r" % (t, f, ln, lit) for t, f, ln, lit, _, _s in bad[:3]) \
+    detail = " || ".join("%s %s:%d %r" % (t, f, ln, lit) for t, f, ln, lit, _, _s, _r, _sl in bad[:3]) \
         or "no hardcoded fallback copy left in a ?? slot"
     # The breakdown counts every hit, so no bucket can hide stock from the claim.
     shapes = Counter(h[5] for h in bad)
@@ -312,6 +468,81 @@ def component_fallback(src_dir):
             "shape of the %d hit(s) by slot: %s. This breakdown removes nothing -- it is a triage "
             "hint, and 'data-attr' here means the ?? sits inside a data-* attribute on this line, "
             "which a text ruler cannot prove never renders. Detail: " % (len(bad), shape_txt) + detail)
+
+
+def render_tiers_finding(src_dir):
+    """RENDER_TIERS: of the hits, how many can be proven to reach a screen.
+
+    Gated on one thing only: no tier-1 hit may remain uncollected. Tiers 2 and 3
+    never move this cell, because "undetermined" is not "harmless" and the face
+    must not be allowed to launder a hit into tier 2 to go green.
+    """
+    hits, _pairs, files = scan_tree(src_dir)
+    live = [h for h in hits if h[0] in ("A", "B")]
+    by = {1: [], 2: [], 3: []}
+    for h in live:
+        by[h[6]].append(h)
+    t1 = by[1]
+    return ("RENDER_TIERS",
+            "%d hits over %d files by render tier: tier 1 (proven render slot, no language branch "
+            "guarding it) %d, tier 2 (this face cannot settle it) %d, tier 3 (text proves it cannot "
+            "reach a screen -- key={}) %d"
+            % (len(live), files, len(by[1]), len(by[2]), len(by[3])),
+            not t1,
+            "tier 1 is the actionable set and is gated; tier 2 stays listed because calling it "
+            "safe would be the lie -- data-* in particular is never asserted unable to render. "
+            "Tier 1: %s" % ([("%s:%d %r" % (h[1], h[2], h[3])) for h in t1[:6]] or "empty"))
+
+
+def render_tier_mutants():
+    """Teeth for the tiering: one arm per claim the tiering makes."""
+    cases = [
+        ("K7a_jsx_child_is_tier1",
+         '  return <p className="x">{row.title ?? "not reported"}</p>;\n', 1, "JSX_CHILD"),
+        ("K7c_data_attr_is_undetermined",
+         '  return <div data-outcome={row.kind ?? "unknown"} />;\n', 2, "DATA_ATTR"),
+        ("K7d_react_key_cannot_render",
+         '  return <li key={row.id ?? "unknown"}>x</li>;\n', 3, "REACT_KEY"),
+        ("K7e_placeholder_is_visible",
+         '  return <input placeholder={hint ?? "type here"} />;\n', 1, "ATTR_VISIBLE"),
+        # the rule that keeps a bilingual sentence out of tier 1: the value is in
+        # element text, but a `zh` guard means a Chinese screen takes the other arm
+        ("K7f_jsx_child_behind_lang_guard",
+         '  return <p>{zh ? (row.title ?? "未知") : (row.title ?? "unknown")}</p>;\n', 2, "JSX_CHILD"),
+        # a nested template interpolation is element text but not a whole copy
+        # slot: collecting it means rewriting the sentence around it, so tier 2
+        ("K7g_template_interpolation_undetermined",
+         '  return <p>{zh ? `标题 ${x ?? "未知"}` : `title ${x ?? "unknown"}`}</p>;\n', 2, "OTHER"),
+        # an em dash in element text has no language to mistranslate; treating it as
+        # actionable would keep the cell red forever and invite people to mute it
+        ("K7h_symbol_in_jsx_child_not_actionable",
+         '  return <p>{row.value ?? "—"}</p>;\n', 2, "JSX_CHILD"),
+        # a dotted name is an argument to t(), not copy
+        ("K7i_dotted_key_not_copy",
+         '  return <p>{label ?? "agent.intentUnknown"}</p>;\n', 2, "JSX_CHILD"),
+        # the shape that bit this ruler once: a control block's `{` is not element
+        # text, and a state setter's argument only reaches a screen if some JSX
+        # later reads that state -- which text cannot settle
+        ("K7j_control_block_is_not_jsx_child",
+         '  async function go(): Promise<void> {\n'
+         '    if (!r.ok) {\n'
+         '      setMessage(\n        body?.detail ??\n'
+         '          "No alternative plan could be generated.",\n      );\n    }\n  }\n',
+         2, "OTHER"),
+    ]
+    out = []
+    for label, source, want_tier, want_slot in cases:
+        hits = [h for h in fallback_hits(source, label) if not h[0].endswith("-skipped")]
+        if not hits:
+            out.append((label, "no hit at all from %r" % source.strip()[:60], False))
+            continue
+        got = hits[0][6]
+        slot = hits[0][7]
+        if got != want_tier or slot != want_slot:
+            out.append((label, "tier=%d slot=%s, wanted tier=%d slot=%s" % (got, slot, want_tier, want_slot), False))
+        else:
+            out.append((label, "tier %d via %s as expected" % (got, slot), True))
+    return out
 
 
 def fallback_mutants():
@@ -443,6 +674,7 @@ def audit(after_path, base_path, e2e_dir, src_dir=None):
     findings.append(coverage_finding(after_path))
     if src_dir:
         findings.append(component_fallback(src_dir))
+        findings.append(render_tiers_finding(src_dir))
         findings.append(rendered_finding(after_path, base_path, src_dir))
     else:
         findings.append(("HARDCODED_FALLBACK_NOT_RUN",
@@ -763,8 +995,8 @@ def main():
         for tier in ("A", "B"):
             rows = [h for h in hits if h[0] == tier]
             print(f"  -- tier {tier}: {len(rows)} hit(s) --")
-            for t, f, ln, lit, why, shape in sorted(rows, key=lambda r: (r[1], r[2])):
-                print(f"     {t} [{shape:16s}] {f}:{ln} {lit!r}  <- {why}")
+            for t, f, ln, lit, why, shape, rtier, slot in sorted(rows, key=lambda r: (r[1], r[2])):
+                print(f"     {t} T{rtier} [{slot:17s}] {f}:{ln} {lit!r}  <- {why}")
     if a.src and a.list_rendered:
         d = rendered_data(a.i18n, a.baseline, a.src)
         print("  -- RENDERED per-key listing (denominator = %d non-dictionary files, %d dictionary "
@@ -793,6 +1025,10 @@ def main():
             rc |= 0 if ok else 1
         print("  -- HARDCODED_FALLBACK self-test: injected copy must be caught, machine tokens must stay quiet --")
         for label, detail, ok in fallback_mutants():
+            print(f"  [{'MET' if ok else 'VIOLATION'}] {label:24s} {detail}")
+            rc |= 0 if ok else 1
+        print("  -- render-tier self-test: each tier claim needs its own arm --")
+        for label, detail, ok in render_tier_mutants():
             print(f"  [{'MET' if ok else 'VIOLATION'}] {label:24s} {detail}")
             rc |= 0 if ok else 1
         print("  -- e2e corpus gate self-test: a non-directory must be refused, a real one must pass --")

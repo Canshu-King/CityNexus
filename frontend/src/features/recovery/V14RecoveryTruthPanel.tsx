@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useLocale } from "../../i18n/LocaleContext";
+import { useLocale, useT } from "../../i18n/LocaleContext";
 import { formatMinorMoney } from "../../lib/money";
 import { type RawFacts } from "../../lib/rawFacts";
 import { rejectionWithFacts, RejectionWithFacts } from "../../lib/rejectionFacts";
@@ -62,6 +62,7 @@ export function V14RecoveryTruthPanel({ journeyId, policy, currency = "CNY", onA
   const [failureFacts, setFailureFacts] = useState<RawFacts | null>(null);
   const [failureEnvelope, setFailureEnvelope] = useState<unknown>(null);
   const { locale } = useLocale();
+  const t = useT();
   const zh = locale.startsWith("zh");
 
   const refresh = async () => {
@@ -135,9 +136,9 @@ export function V14RecoveryTruthPanel({ journeyId, policy, currency = "CNY", onA
             <article className="v12-state-card now">
               <span className="v12-state-kicker">CHANGED</span>
               <strong data-testid="v14-recovery-changed">
-                {proposal.diff.removed?.[0] ?? "Current activity"}
+                {proposal.diff.removed?.[0] ?? t("recovery.changedFromActivity")}
               </strong>
-              <small>→ {proposal.diff.added?.[0] ?? "recovered activity"}</small>
+              <small>→ {proposal.diff.added?.[0] ?? t("recovery.changedToActivity")}</small>
             </article>
             <article className="v12-state-card next">
               <span className="v12-state-kicker">PROTECTED</span>

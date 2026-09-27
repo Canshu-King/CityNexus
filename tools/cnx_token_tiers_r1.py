@@ -11,15 +11,33 @@ to lose:
   CONSTANT a token that resolves identically in light and dark must be named
            --cn-always-*, and an --cn-always-* must never be re-declared in
            the dark block. Either direction of the mistake reads as red.
+  NIGHT_PAIRING  (ORD-0380) the pairing must be readable from the *name*, not
+           only from a diff of the two theme blocks. Every colour token in a
+           root theme scope has to land in one of three explained states:
+           re-written in dark, moved through its var() chain, or declared
+           theme-neutral by belonging to --cn-always-* / --cn-tint-*.
+           UNACCOUNTED / DEAD_PAIR / DARK_ORPHAN are red.
+  CONSTANT_CLAIM_USED  an --cn-always-* name is a claim about what consumers
+           receive; a token nobody var()s is a claim with no subject.
+
+PARITY, TIERS, LADDER_USED, CONSTANT_DUP and CONSTANT_IN_DARK keep the parser
+and the denominator they shipped with -- cnx_token_night_pairing_r1.py sees
+strictly more (the `:root, .v8-product-shell` block, and var() chains), so the
+older cells stay frozen-comparable and a change in either is visible as a
+change in this file's own output. The two new cells use the wider model.
 
 Every verdict is derived from measured lines; nothing here prints a literal
-"PASS". --mutant proves the ruler can see: it injects four defects and each
-one must be caught, or the ruler itself is the defect.
+"PASS". --mutant proves the ruler can see: it injects defects and each one
+must be caught by the cell that owns it, or the ruler itself is the defect.
 """
 import argparse
 import re
 import sys
 from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from cnx_token_night_pairing_r1 import (INVARIANT_FAMILIES, VAR_RE as PAIR_VAR_RE,  # noqa: E402
+                                        measure as pairing_measure)
 
 BLOCK_RE = re.compile(r"^[ \t]*:root([^\{]*)\{", re.M)
 DECL_RE = re.compile(r"^\s*(--[A-Za-z0-9-]+)\s*:\s*([^;]+);")
@@ -83,7 +101,7 @@ def norm(v):
     return re.sub(r"^(#[0-9a-f]{3})\1$", r"\1\1", v)
 
 
-def audit(text, base_text, styles_text, path_label):
+def audit(text, base_text, styles_text, path_label, consume_texts=None):
     maps = theme_blocks(text, path_label)
     findings = []
 
@@ -163,25 +181,110 @@ def audit(text, base_text, styles_text, path_label):
         not always_in_dark,
         " ".join(always_in_dark[:5]) or "none",
     ))
+
+    # ---- NIGHT_PAIRING: the pairing must be readable from the name -----
+    # Three explained states are green; three others are red. The point is not
+    # to force every base colour to have a dark twin -- it is that "this one
+    # does not flip" has to be a claim a reader can check, made either by the
+    # token's own re-write, by its var() chain, or by its family name.
+    pm = pairing_measure(text, path_label)
+    st = pm["pairing_status_lists"]
+    green_states = ("PAIRED_IN_DARK", "PAIRED_INHERITED", "NEUTRAL_BY_NAME")
+    red_states = ("UNACCOUNTED", "DEAD_PAIR", "DARK_ORPHAN")
+    offenders = {k: st.get(k, []) for k in red_states if st.get(k)}
+    neutral_by_family = {}
+    for fam in INVARIANT_FAMILIES:
+        got = [t for t in st.get("NEUTRAL_BY_NAME", []) if t.startswith(fam)]
+        if got:
+            neutral_by_family[fam] = got
+    detail_bits = []
+    for k, v in sorted(offenders.items()):
+        detail_bits.append(f"{k}({len(v)}): " + " ".join(v[:6]))
+    if not detail_bits:
+        fam_txt = "; ".join(f"{f}x{len(v)}" for f, v in sorted(neutral_by_family.items()))
+        detail_bits.append("every colour token explained; neutrality claimed by "
+                           + (fam_txt or "no family"))
+    STATUS_TAG = {"PAIRED_IN_DARK": "own_dark", "PAIRED_INHERITED": "by_chain",
+                  "NEUTRAL_BY_NAME": "by_name"}
+    findings.append((
+        "NIGHT_PAIRING",
+        f"{pm['n_total_colour_tokens']} colour tokens in root theme scopes: "
+        + " ".join(f"{STATUS_TAG[k]}={len(st.get(k, []))}" for k in green_states)
+        + f" unexplained={sum(len(v) for v in offenders.values())}",
+        not offenders,
+        " | ".join(detail_bits),
+    ))
+
+    # ---- CONSTANT_CLAIM_USED: an `always` name must reach a consumer ----
+    # Counted as real var() references across every CSS the app loads, not as
+    # substring hits: this file discusses tokens in prose, and a prose mention
+    # must not be able to make a dead claim look consumed.
+    refs = text + ("\n" + styles_text if styles_text else "")
+    for extra in (consume_texts or []):
+        refs += "\n" + extra
+    always_declared = sorted({r["token"] for r in pm["rows"]
+                              if r["named_always"] and r["light_declared"]})
+    unclaimed = [t for t in always_declared
+                 if not re.search(r"var\(\s*" + re.escape(t) + r"\s*[,)]", refs)]
+    findings.append((
+        "CONSTANT_CLAIM_USED",
+        f"--cn-always-* declared {len(always_declared)}, with no var() consumer: "
+        f"{len(unclaimed)}",
+        not unclaimed,
+        " ".join(unclaimed[:5]) or " ".join(always_declared) or "none declared",
+    ))
     return findings
 
 
-def mutants(workdir: Path, src: str, base: str, styles: str):
-    """Inject defects; each must be caught by a named check."""
+def mutants(workdir: Path, src: str, base: str, styles: str, consumes=None):
+    """Inject defects; each names the cell that must catch it.
+
+    Two of them also name a cell that must stay GREEN. That is the part that
+    carries the weight: it shows the new arm reaches a defect the old arm
+    cannot see (M7) and that the two new arms are independent of each other
+    (M8), rather than one wide cell flagging everything.
+    """
     cases = {
-        "M1_value_moved": lambda s: s.replace("--cn-canvas: #f5f5f7;", "--cn-canvas: #f5f5f6;", 1),
-        "M2_inline_alpha": lambda s: s.replace(
-            "--cn-hairline: var(--cn-tint-black-08);",
-            "--cn-hairline: rgba(0, 0, 0, 0.08);", 1),
-        "M3_always_in_dark": lambda s: s.replace(
-            '  :root[data-theme="dark"] {',
-            '  :root[data-theme="dark"] {\n    --cn-always-accent-solid: #0a66ff;', 1),
-        "M4_identical_not_always": lambda s: s.replace(
-            '  :root[data-theme="dark"] {',
-            '  :root[data-theme="dark"] {\n    --cn-danger: #d70015;', 1),
+        "M1_value_moved": (
+            lambda s: s.replace("--cn-canvas: #f5f5f7;", "--cn-canvas: #f5f5f6;", 1),
+            "PARITY", ()),
+        "M2_inline_alpha": (
+            lambda s: s.replace("--cn-hairline: var(--cn-tint-black-08);",
+                                "--cn-hairline: rgba(0, 0, 0, 0.08);", 1),
+            "TIERS", ()),
+        "M3_always_in_dark": (
+            lambda s: s.replace('  :root[data-theme="dark"] {',
+                                '  :root[data-theme="dark"] {\n    --cn-always-accent-solid: #0a66ff;', 1),
+            "CONSTANT_IN_DARK", ()),
+        "M4_identical_not_always": (
+            lambda s: s.replace('  :root[data-theme="dark"] {',
+                                '  :root[data-theme="dark"] {\n    --cn-danger: #d70015;', 1),
+            "CONSTANT_DUP", ()),
+        "M5_dark_pairing_deleted": (
+            lambda s: s.replace("\n    --cn-canvas: #000000;", "", 1),
+            "NIGHT_PAIRING", ()),
+        # The defect is a base that does flip being given a never-flips name,
+        # which leaves the dark block writing a token light no longer declares.
+        # CONSTANT_CLAIM_USED firing here is correct, not noise, so the controls
+        # are the two older CONSTANT cells: neither of them can see this.
+        "M6_flipping_base_named_always": (
+            lambda s: s.replace("  --cn-danger: #d70015;", "  --cn-always-danger: #d70015;", 1),
+            "NIGHT_PAIRING", ("CONSTANT_DUP", "CONSTANT_IN_DARK")),
+        # #b06000 and #b06000ff are one colour; the strings differ, so the old
+        # raw compare calls this a pairing and only a colour comparison can see
+        # that the dark rewrite paints nothing new.
+        "M7_pairing_changes_no_colour": (
+            lambda s: s.replace("    --cn-warning: #ff9f0a;",
+                                "    --cn-warning: #b06000ff;", 1),
+            "NIGHT_PAIRING", ("CONSTANT_DUP", "TIERS")),
+        "M8_always_claim_unconsumed": (
+            lambda s: s.replace("  --cn-always-accent-solid: #0a66ff;",
+                                "  --cn-always-accent-solid: #0a66ff;\n"
+                                "  --cn-always-unused-claim: #123456;", 1),
+            "CONSTANT_CLAIM_USED", ("NIGHT_PAIRING",)),
     }
     out = []
-    for label, fn in cases.items():
+    for label, (fn, owner, green) in cases.items():
         mutated = fn(src)
         if mutated == src:
             out.append((label, "mutation did not apply", False))
@@ -189,11 +292,19 @@ def mutants(workdir: Path, src: str, base: str, styles: str):
         p = workdir / f"{label}.css"
         p.write_text(mutated, encoding="utf-8", newline="\n")
         try:
-            res = audit(mutated, base, styles, str(p))
-            caught = sorted(n for n, _, ok, _ in res if not ok)
+            res = audit(mutated, base, styles, str(p), consumes)
+            red = sorted(n for n, _, ok, _ in res if not ok)
         finally:
             p.unlink(missing_ok=True)
-        out.append((label, "caught by " + ",".join(caught) if caught else "NOT CAUGHT", bool(caught)))
+        bit = owner in red
+        control_fired = [g for g in green if g in red]
+        ok = bit and not control_fired
+        why = (f"{owner} bit it" if bit else f"NOT CAUGHT by {owner}")
+        if control_fired:
+            why += f" but control {','.join(control_fired)} also fired"
+        elif green and bit:
+            why += f", control {','.join(green)} stayed green"
+        out.append((label, f"{why}  [red: {','.join(red) or 'none'}]", ok))
     return out
 
 
@@ -202,26 +313,31 @@ def main():
     ap.add_argument("--tokens", required=True)
     ap.add_argument("--baseline")
     ap.add_argument("--styles")
+    ap.add_argument("--consume", action="append", default=[],
+                    help="extra CSS that consumes tokens (repeatable); only the "
+                         "CONSTANT_CLAIM_USED reference count reads it")
     ap.add_argument("--mutant", action="store_true")
     a = ap.parse_args()
 
     src = Path(a.tokens).read_text(encoding="utf-8")
     base = Path(a.baseline).read_text(encoding="utf-8") if a.baseline else None
     styles = Path(a.styles).read_text(encoding="utf-8") if a.styles else None
+    consumes = [Path(p).read_text(encoding="utf-8") for p in a.consume]
     label = Path(a.tokens).name
 
     rc = 0
     print(f"== cnx_token_tiers_r1  tokens={a.tokens}"
-          f" baseline={a.baseline or 'none'} styles={'yes' if styles else 'none'}")
-    for name, measure, ok, detail in audit(src, base, styles, label):
+          f" baseline={a.baseline or 'none'} styles={'yes' if styles else 'none'}"
+          f" consume={len(consumes)}")
+    for name, measure, ok, detail in audit(src, base, styles, label, consumes):
         print(f"  [{'MET' if ok else 'VIOLATION'}] {name:18s} {measure}")
         print(f"          detail: {detail}")
         rc |= 0 if ok else 1
 
     if a.mutant:
-        print("  -- ruler self-test: injected defects must all be caught --")
+        print("  -- ruler self-test: each injected defect must be caught by its owner --")
         workdir = Path(a.tokens).parent
-        for label_m, detail, ok in mutants(workdir, src, base, styles):
+        for label_m, detail, ok in mutants(workdir, src, base, styles, consumes):
             print(f"  [{'MET' if ok else 'VIOLATION'}] {label_m:26s} {detail}")
             rc |= 0 if ok else 1
 
