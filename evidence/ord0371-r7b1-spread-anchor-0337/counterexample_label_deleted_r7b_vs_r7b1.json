@@ -1,0 +1,108 @@
+{
+ "subject": "counter-example for r7b1's spread anchor: recognition without the provenance label must NOT clear the cell",
+ "differ_only_by": "frontend/src/features/recovery/RecoveryRequiredPanel.tsx lines 289-293 (the span holding t(\"recovery.serverReason\") / t(\"recovery.deviceReason\"))",
+ "runs": [
+  {
+   "generation": "r7b",
+   "ruler_blob": "d3f66ce9fecd0790981a4fcdeb5e36b1c0fd10f2",
+   "case": "shipped_label_present",
+   "source": "r7b1_acc/Shipped.tsx",
+   "source_blob": "96e0089dd2942e4904a2d3a409068282e021dae5",
+   "source_bytes": 13006,
+   "exit": 0,
+   "verdict": "EXPOSURE_SHAPE_FOUND",
+   "hits": [
+    {
+     "rule": "UPSTREAM_TEXT_VIA_HELPER_TO_DOM",
+     "line": 298,
+     "sink": "jsx-text"
+    }
+   ],
+   "hits_n": 1,
+   "attributed_in_fold_count": 0,
+   "fold_without_anchor_count": 1,
+   "fold_without_anchor": [
+    {
+     "line": null,
+     "rule": "UPSTREAM_TEXT_VIA_HELPER_TO_DOM"
+    }
+   ]
+  },
+  {
+   "generation": "r7b1",
+   "ruler_blob": "b6716d9a3c67dafc72fef501bfaff101c84e918a",
+   "case": "shipped_label_present",
+   "source": "r7b1_acc/Shipped.tsx",
+   "source_blob": "96e0089dd2942e4904a2d3a409068282e021dae5",
+   "source_bytes": 13006,
+   "exit": 0,
+   "verdict": "NO_EXPOSURE_SHAPE_FOUND",
+   "hits": [],
+   "hits_n": 0,
+   "attributed_in_fold_count": 1,
+   "fold_without_anchor_count": 0,
+   "fold_without_anchor": []
+  },
+  {
+   "generation": "r7b",
+   "ruler_blob": "d3f66ce9fecd0790981a4fcdeb5e36b1c0fd10f2",
+   "case": "label_deleted_289_293",
+   "source": "r7b1_acc/NoProvenanceLabel.tsx",
+   "source_blob": "03b5bc2f26438f45f92df5c146485a73690e0789",
+   "source_bytes": 12747,
+   "exit": 0,
+   "verdict": "EXPOSURE_SHAPE_FOUND",
+   "hits": [
+    {
+     "rule": "UPSTREAM_TEXT_VIA_HELPER_TO_DOM",
+     "line": 293,
+     "sink": "jsx-text"
+    }
+   ],
+   "hits_n": 1,
+   "attributed_in_fold_count": 0,
+   "fold_without_anchor_count": 1,
+   "fold_without_anchor": [
+    {
+     "line": null,
+     "rule": "UPSTREAM_TEXT_VIA_HELPER_TO_DOM"
+    }
+   ]
+  },
+  {
+   "generation": "r7b1",
+   "ruler_blob": "b6716d9a3c67dafc72fef501bfaff101c84e918a",
+   "case": "label_deleted_289_293",
+   "source": "r7b1_acc/NoProvenanceLabel.tsx",
+   "source_blob": "03b5bc2f26438f45f92df5c146485a73690e0789",
+   "source_bytes": 12747,
+   "exit": 0,
+   "verdict": "EXPOSURE_SHAPE_FOUND",
+   "hits": [
+    {
+     "rule": "UPSTREAM_TEXT_VIA_HELPER_TO_DOM",
+     "line": 293,
+     "sink": "jsx-text"
+    }
+   ],
+   "hits_n": 1,
+   "attributed_in_fold_count": 0,
+   "fold_without_anchor_count": 1,
+   "fold_without_anchor": [
+    {
+     "line": null,
+     "rule": "UPSTREAM_TEXT_VIA_HELPER_TO_DOM"
+    }
+   ]
+  }
+ ],
+ "checks": {
+  "r7b_flags_the_shipped_file": true,
+  "r7b1_clears_the_shipped_file": true,
+  "r7b1_still_red_without_the_label": true,
+  "r7b_also_red_without_the_label": true,
+  "both_generations_agree_on_the_label_deleted_case": true,
+  "double_trigger_survives": true
+ },
+ "overall_pass": true
+}
