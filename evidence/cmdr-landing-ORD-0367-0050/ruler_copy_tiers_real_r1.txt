@@ -1,0 +1,11 @@
+== cnx_copy_tiers_r1  i18n=cand/LocaleContext.tsx  baseline=base/LocaleContext.tsx  e2e=frontend/e2e
+  [MET] REGISTER_PARITY   611 bilingual keys: 611 agree, 0 clash
+          detail: none
+  [MET] NO_GROWTH         15 values changed; zh gained chars: 0, en over +8: 0
+          detail: every Chinese rewrite is the same length or shorter
+  [MET] ASSERTIONS_STILL_HIT 11 keys edited against 213 e2e text assertions; 0 would lose their target
+          detail: every assertion that hit these values still hits the new ones
+  [MET] REMAINDER_REPORT  en hard words 5->1 | zh hard words 6->2 (not gated)
+          detail: left visible on purpose: green here does not mean the file is finished
+exit=0
+c1=0
