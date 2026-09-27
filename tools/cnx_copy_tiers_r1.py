@@ -19,21 +19,46 @@ bytes rather than asserted:
                    assertion, so anything an e2e still pins must be skipped.
   REMAINDER        counts what is left unfixed. Reported, never gated, so a
                    green run is not mistaken for "finished".
-  COMPONENT_FALLBACK  (ORD-0370, needs --src) the three claims above read only
-                   LocaleContext, so a component that invents its own sentence
-                   in a `??` slot walks past every one of them. This face reads
-                   the components: tier A is a language branch sitting in that
-                   slot (`?? (zh ? "…" : "…")`), tier B is a bare literal there,
-                   which a Chinese device is shown as English. Shape only: this
-                   face never claims the bytes reached a screen.
+  HARDCODED_FALLBACK  (ORD-0370, needs --src; dispatched under this name, an
+                   earlier cut of this file called it COMPONENT_FALLBACK) the
+                   three claims above read only LocaleContext, so a component
+                   that invents its own sentence in a `??` slot walks past every
+                   one of them. This face reads the components: tier A is a
+                   language branch sitting in that slot (`?? (zh ? "…" : "…")`),
+                   tier B is a bare literal there, which a Chinese device is
+                   shown as English. Shape only: this face never claims the
+                   bytes reached a screen.
+  RENDERED         (ORD-0370, needs --src) a key can match register, grow nothing,
+                   be quoted by no assertion and still never reach a traveller,
+                   because no component ever asks for it. Measured, not assumed:
+                   every key is looked up as a quoted string across the
+                   non-dictionary sources, and the denominator -- how many files
+                   that scan actually read -- travels with the count, as does the
+                   number of dictionary files skipped, so a copy of the
+                   dictionary elsewhere cannot quietly double every site.
+                   THE GATE IS ASYMMETRIC ON PURPOSE. A stock row nothing reads
+                   is an unharmless-bytes-only problem: it is dead copy, not a
+                   runtime defect, so it is listed and never gated -- gating it
+                   would hold this batch hostage to ORD-0323's decision to route
+                   the inbox failures through copyFor(). A key *this run*
+                   introduced or reworded that nothing asks for is churn: the
+                   ruler could not previously tell polish-progress from
+                   polish-nothing, and now it can.
+                   Keys under a concatenated prefix (`t("nav." + item.key)`) are
+                   covered dynamically and are excluded from the zero-use claim;
+                   without that rule one prefix would report 28 false deaths.
   CORPUS_GATE      (ORD-0370) a named --e2e path that is not a directory used
                    to read 0 assertions and still print MET. Refusing that is
                    the only way the first four claims can be trusted from a
                    transcript; it can make ASSERTIONS_STILL_HIT redder, never
                    quieter.
 
+A face that did not run prints NOT_RUN, never MET: an absent --src or --e2e is
+not evidence of anything.
+
 --mutant injects one defect per gated claim; each must be caught or the ruler
-itself is the defect.
+itself is the defect. Several arms are the other kind: they require the ruler
+to stay quiet, because a ruler that flags everything passes as one that works.
 """
 import argparse
 import re
@@ -125,7 +150,7 @@ def diff_keys(bas, aft):
 
 
 # --------------------------------------------------------------------------
-# COMPONENT_FALLBACK face (ORD-0370)
+# HARDCODED_FALLBACK face (ORD-0370)
 # --------------------------------------------------------------------------
 DQ = r'"((?:[^"\\\n]|\\.)*)"'
 SQ = r"'((?:[^'\\\n]|\\.)*)'"
@@ -281,7 +306,7 @@ def component_fallback(src_dir):
                "excluded as machine tokens %d; inline bilingual pairs anywhere = %d "
                "(denominator only -- most are legitimate inline pairs, NOT a defect count)"
                % (files, len(tier_a), len(tier_b), len(skipped), pairs))
-    return ("COMPONENT_FALLBACK",
+    return ("HARDCODED_FALLBACK",
             measure,
             not bad,
             "shape of the %d hit(s) by slot: %s. This breakdown removes nothing -- it is a triage "
@@ -418,10 +443,15 @@ def audit(after_path, base_path, e2e_dir, src_dir=None):
     findings.append(coverage_finding(after_path))
     if src_dir:
         findings.append(component_fallback(src_dir))
+        findings.append(rendered_finding(after_path, base_path, src_dir))
     else:
-        findings.append(("COMPONENT_FALLBACK_NOT_RUN",
+        findings.append(("HARDCODED_FALLBACK_NOT_RUN",
                          "no component was read (pass --src frontend/src to enable this face)",
                          True, "NOT_RUN is not a pass: hardcoded fallback copy was never measured"))
+        findings.append(("RENDERED_NOT_RUN",
+                         "no component was read (pass --src frontend/src to enable this face)",
+                         True, "NOT_RUN is not a pass: whether any component asks for these keys "
+                         "was never measured, so no key here has a proven use site"))
     return findings
 
 
@@ -549,14 +579,172 @@ def coverage_mutant(i18n_path):
             "counted=%s parity_blind=%s (before=%d after=%d)" % (counted, parity_blind, wrapped_before, wrapped_after), False)
 
 
+def rendered_uses(src_dir, dict_names):
+    """{key: [sites]} for every quoted reference outside the dictionary.
+
+    Dictionary is `frontend/src/i18n/LocaleContext.tsx`, excluded by name
+    because every key appears there once per language block. A copy of the
+    dictionary anywhere else would inflate every count, so the number of files
+    skipped is returned alongside and a reader can see it.
+    """
+    uses = {k: [] for k in dict_names}
+    scanned = 0
+    skipped = 0
+    for p in sorted(Path(src_dir).rglob("*")):
+        if p.suffix not in {".ts", ".tsx"} or "node_modules" in p.parts:
+            continue
+        if p.name == "LocaleContext.tsx":
+            skipped += 1
+            continue
+        scanned += 1
+        rel = str(p)
+        for n, line in enumerate(p.read_text(encoding="utf-8", errors="replace").split("\n"), 1):
+            for q in ('"', "'"):
+                for m in re.finditer(re.escape(q) + r"([A-Za-z0-9._-]+)" + re.escape(q), line):
+                    k = m.group(1)
+                    if k in uses:
+                        uses[k].append("%s:%d" % (rel, n))
+    return uses, scanned, skipped
+
+
+DYN_RE = re.compile(r'"([A-Za-z0-9_-]+\.)"\s*\+')
+
+
+def dynamic_prefixes(src_dir):
+    """{prefix: [sites]} for keys built by concatenation, e.g. `t("nav." + item.key)`.
+
+    Without this, every key under a concatenated prefix reads as zero-use and
+    the face cries wolf: in this tree one prefix covers 28 dictionary keys that
+    are in fact asked for at runtime.
+    """
+    out = {}
+    for p in sorted(Path(src_dir).rglob("*")):
+        if p.suffix not in {".ts", ".tsx"} or "node_modules" in p.parts or p.name == "LocaleContext.tsx":
+            continue
+        for n, line in enumerate(p.read_text(encoding="utf-8", errors="replace").split("\n"), 1):
+            for m in DYN_RE.finditer(line):
+                # the group already carries the trailing dot; appending one made
+                # every prefix match fail and turned 28 live keys into false deaths
+                out.setdefault(m.group(1), []).append("%s:%d" % (p, n))
+    return out
+
+
+def rendered_data(after_path, base_path, src_dir):
+    """Everything the RENDERED cell reports, computed once so the face and the
+    per-key listing can never disagree about a count."""
+    aft = dicts(after_path)
+    bas = dicts(base_path) if base_path else aft
+    parsed = set(aft["en"]) | set(aft["zhCN"])
+    names = sorted(parsed)
+    wrapped = wrapped_value_keys(after_path)
+    wrapped_names = sorted({k for lang in ("en", "zhCN") for k, _ in wrapped.get(lang, [])})
+    names = sorted(set(names) | set(wrapped_names))
+    uses, scanned, skipped = rendered_uses(src_dir, names)
+    dyn = dynamic_prefixes(src_dir)
+
+    def is_dynamic(k):
+        return any(k.startswith(p) for p in dyn)
+
+    zero = [k for k in names if not uses.get(k)]
+    # The baseline's key set has to be assembled the same way as this run's, or a
+    # row that merely wraps its value onto the next line looks brand-new. Caught
+    # by control arm K6b, which was green-by-design and went red: `push.`
+    # capDependencyMissingHelp is wrapped in both blocks at the baseline and was
+    # being counted as introduced, inflating the touched-key count by one.
+    base_keys = set()
+    for lang in ("en", "zhCN"):
+        base_keys |= set(bas.get(lang, {}))
+        if base_path:
+            base_keys |= {k for k, _ in wrapped_value_keys(base_path).get(lang, [])}
+    added = [k for k in names if k not in base_keys]
+    changed = sorted({k for k, _ in diff_keys(bas, aft)})
+    introduced = sorted(set(added) | set(changed))
+    return dict(names=names, parsed=len(parsed), wrapped=wrapped_names,
+                only_wrapped=[k for k in wrapped_names if k not in parsed],
+                uses=uses,
+                scanned=scanned, skipped=skipped, dyn=dyn, is_dynamic=is_dynamic,
+                zero=zero, zero_static=[k for k in zero if not is_dynamic(k)],
+                zero_dynamic=[k for k in zero if is_dynamic(k)],
+                added=added, changed=changed, introduced=introduced)
+
+
+def rendered_finding(after_path, base_path, src_dir):
+    """The RENDERED cell: does any component ever ask for this key?
+
+    Gated for keys this run introduced or reworded; reported-only for stock.
+    """
+    d = rendered_data(after_path, base_path, src_dir)
+    churn = [k for k in d["introduced"] if k in d["zero_static"]]
+    sites_txt = "; ".join("%s=%d %s" % (k, len(d["uses"][k]), d["uses"][k][0])
+                          for k in d["introduced"] if d["uses"][k])
+    stock = d["zero_static"]
+    return ("RENDERED",
+            "%d distinct key names (%d readable by the single-line parser; %d rows carry their value "
+            "on the next line and %d of those keys are reachable only through the wrapped scan) "
+            "against %d non-dictionary files (%d dictionary files skipped); zero-use %d, of which %d "
+            "sit under a concatenated prefix %s and are covered dynamically; keys introduced or "
+            "reworded by this run: %d, gated offenders: %d"
+            % (len(d["names"]), d["parsed"], len(d["wrapped"]), len(d["only_wrapped"]),
+               d["scanned"], d["skipped"],
+               len(d["zero"]), len(d["zero_dynamic"]), sorted(d["dyn"]) or "none",
+               len(d["introduced"]), len(churn)),
+            not churn,
+            "stock zero-use rows are harmless bytes, not a runtime defect, so they are listed and "
+            "not gated; a key THIS run touched that nothing asks for is churn, so it is gated. "
+            "Gated: %s. Stock, not gated (first 8 of %d): %s. Use sites of touched keys: %s"
+            % (churn or "none", len(stock), stock[:8] or "none", sites_txt or "none"))
+
+
+def rendered_mutants(after_path, base_path, src_dir):
+    """Three arms: unread new key caught, read new key quiet, stock zeros never gated."""
+    out = []
+    text = Path(after_path).read_text(encoding="utf-8")
+    en_anchor = '  "agent.sendError": "Copilot could not reach CityNexus.",\n'
+    zh_anchor = '  "agent.sendError": "Copilot 暂时没能连上 CityNexus。",\n'
+    if en_anchor not in text or zh_anchor not in text:
+        return [("K6_rendered_arms", "anchors absent from %s -- nothing was injected" % after_path, False)]
+    with tempfile.TemporaryDirectory() as td:
+        dict_path = Path(td) / "LocaleContext.tsx"
+        dict_path.write_text(
+            text.replace(en_anchor, en_anchor + '  "zz.renderProbe": "Probe sentence.",\n')
+                .replace(zh_anchor, zh_anchor + '  "zz.renderProbe": "探针句。",\n'),
+            encoding="utf-8", newline="\n")
+        probe_keys = "zz.renderProbe"
+        # A: introduced this run, asked for by nobody
+        src_a = Path(td) / "a"
+        src_a.mkdir()
+        (src_a / "LocaleContext.tsx").write_text("export const x = 1;\n", encoding="utf-8", newline="\n")
+        (src_a / "Widget.tsx").write_text('  return <p>{t("agent.sendError")}</p>;\n',
+                                          encoding="utf-8", newline="\n")
+        fa = rendered_finding(str(dict_path), after_path, str(src_a))
+        out.append(("K6a_new_key_unread",
+                    "verdict %s on %s" % ("MET" if fa[2] else "VIOLATION", probe_keys), not fa[2]))
+        # B: same key, one component asks for it -> must stay quiet
+        (src_a / "Widget.tsx").write_text('  return <p>{t("zz.renderProbe")}</p>;\n',
+                                          encoding="utf-8", newline="\n")
+        fb = rendered_finding(str(dict_path), after_path, str(src_a))
+        out.append(("K6b_new_key_read_quiet",
+                    "verdict %s with one use site" % ("MET" if fb[2] else "VIOLATION"), fb[2]))
+    # C: stock zeros must be listed, never gated -- the real tree at the real baseline
+    fc = rendered_finding(base_path or after_path, base_path or after_path, src_dir)
+    listed = "Stock (not gated): none" not in fc[3]
+    out.append(("K6c_stock_zeros_not_gated",
+                "verdict %s while listing stock zeros: %s" % ("MET" if fc[2] else "VIOLATION",
+                                                              "yes" if listed else "no"),
+                fc[2] and listed))
+    return out
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--i18n", required=True)
     ap.add_argument("--baseline")
     ap.add_argument("--e2e")
-    ap.add_argument("--src", help="frontend/src, for the COMPONENT_FALLBACK face")
+    ap.add_argument("--src", help="frontend/src, for the HARDCODED_FALLBACK face")
     ap.add_argument("--list-fallbacks", action="store_true",
-                    help="print every COMPONENT_FALLBACK hit as path:line, not just three")
+                    help="print every HARDCODED_FALLBACK hit as path:line, not just three")
+    ap.add_argument("--list-rendered", action="store_true",
+                    help="print every key's non-dictionary use count and site, and the zero-use list")
     ap.add_argument("--mutant", action="store_true")
     a = ap.parse_args()
 
@@ -577,6 +765,23 @@ def main():
             print(f"  -- tier {tier}: {len(rows)} hit(s) --")
             for t, f, ln, lit, why, shape in sorted(rows, key=lambda r: (r[1], r[2])):
                 print(f"     {t} [{shape:16s}] {f}:{ln} {lit!r}  <- {why}")
+    if a.src and a.list_rendered:
+        d = rendered_data(a.i18n, a.baseline, a.src)
+        print("  -- RENDERED per-key listing (denominator = %d non-dictionary files, %d dictionary "
+              "files skipped) --" % (d["scanned"], d["skipped"]))
+        print("     keys this run introduced or reworded: %d" % len(d["introduced"]))
+        for k in d["introduced"]:
+            print("       %-34s uses=%-3d %s" % (k, len(d["uses"][k]),
+                                                 ", ".join(d["uses"][k][:3]) or "NO USE SITE"))
+        print("     zero-use keys not covered by a dynamic prefix: %d" % len(d["zero_static"]))
+        for k in d["zero_static"]:
+            print("       %s" % k)
+        print("     zero-use keys under a concatenated prefix (dynamic, so not a defect): %d"
+              % len(d["zero_dynamic"]))
+        for pfx, sites in sorted(d["dyn"].items()):
+            n = len([k for k in d["zero_dynamic"] if k.startswith(pfx)])
+            print("       prefix %-10s covers %-3d key(s), built at %s"
+                  % (pfx, n, ", ".join(sites[:4])))
     if a.mutant:
         if not (a.baseline and a.e2e):
             print("  --mutant needs --baseline and --e2e; skipping instead of reporting a clean self-test")
@@ -586,7 +791,7 @@ def main():
                                          Path(a.i18n).parent, a.baseline, a.e2e):
             print(f"  [{'MET' if ok else 'VIOLATION'}] {label:24s} {detail}")
             rc |= 0 if ok else 1
-        print("  -- COMPONENT_FALLBACK self-test: injected copy must be caught, machine tokens must stay quiet --")
+        print("  -- HARDCODED_FALLBACK self-test: injected copy must be caught, machine tokens must stay quiet --")
         for label, detail, ok in fallback_mutants():
             print(f"  [{'MET' if ok else 'VIOLATION'}] {label:24s} {detail}")
             rc |= 0 if ok else 1
@@ -598,6 +803,16 @@ def main():
         label, detail, ok = coverage_mutant(a.i18n)
         print(f"  [{'MET' if ok else 'VIOLATION'}] {label:24s} {detail}")
         rc |= 0 if ok else 1
+        if a.src:
+            print("  -- RENDERED self-test: an unread new key must be caught, a read one and "
+                  "the stock zeros must stay quiet --")
+            for label, detail, ok in rendered_mutants(a.i18n, a.baseline, a.src):
+                print(f"  [{'MET' if ok else 'VIOLATION'}] {label:24s} {detail}")
+                rc |= 0 if ok else 1
+        else:
+            print("  [VIOLATION] K6_rendered_arms       --mutant without --src cannot test RENDERED; "
+                  "refusing to report a self-test that never ran")
+            rc |= 1
     print(f"exit={rc}")
     return rc
 
