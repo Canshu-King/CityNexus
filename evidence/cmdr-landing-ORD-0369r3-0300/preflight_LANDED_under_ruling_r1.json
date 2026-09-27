@@ -1,0 +1,237 @@
+{
+ "schema": "CNX_CMDR_LANDING_PREFLIGHT_V1",
+ "lane": "commander 494abfd7",
+ "at_local": "2026-09-28T03:00:51+0800",
+ "mode": "LAND",
+ "authoritative_line": "mirror/integration-frontend-apple-pass1",
+ "tip_re_read_from_github_before": "04071b8258ebcdcf1e9e4c9714fb516283d1e1ad",
+ "candidate_ref": "refs/heads/review/Q-ord0369-replan-walkthrough-r3",
+ "candidate_tip": "25396236063f13827312c33960be0b9510845fc3",
+ "genealogy": {
+  "ff_possible_rc": 0,
+  "ff_possible": true,
+  "merge_base": "04071b8258ebcdcf1e9e4c9714fb516283d1e1ad",
+  "line_only_commits": 0,
+  "candidate_only_commits": 7
+ },
+ "file_sets": {
+  "line_side_since_base": [],
+  "candidate_side_since_base": [
+   "frontend/e2e/qoder-ord0369-replan-walkthrough.spec.ts",
+   "frontend/playwright.ord0369-Q.config.ts",
+   "frontend/src/api/v12Authoritative.ts",
+   "frontend/src/features/planning/PlanWithAiSheet.tsx",
+   "frontend/src/features/recovery/RecoveryRequiredPanel.tsx",
+   "frontend/src/features/simulation/simulationAdapter.ts",
+   "frontend/src/features/studio/SortableActivityList.tsx",
+   "frontend/src/features/studio/V12TripStudioPanel.tsx",
+   "frontend/src/i18n/LocaleContext.tsx",
+   "frontend/src/styles.css",
+   "review/ord0369-phone-replan/READINGS.md",
+   "review/ord0369-phone-replan/canary_proof_r2.json",
+   "review/ord0369-phone-replan/face_lane_canary_same_generation.png",
+   "review/ord0369-phone-replan/face_user_4782_deployed-generation.png",
+   "review/ord0369-phone-replan/gate-report-r2-with-ord0240.json",
+   "review/ord0369-phone-replan/gate-report-r2.json",
+   "review/ord0369-phone-replan/r2_candidate_stage_refusal.png",
+   "review/ord0369-phone-replan/r2_candidate_studio_trial.png"
+  ],
+  "intersection": [],
+  "product_introduced_by_candidate": [
+   "frontend/src/api/v12Authoritative.ts",
+   "frontend/src/features/planning/PlanWithAiSheet.tsx",
+   "frontend/src/features/recovery/RecoveryRequiredPanel.tsx",
+   "frontend/src/features/simulation/simulationAdapter.ts",
+   "frontend/src/features/studio/SortableActivityList.tsx",
+   "frontend/src/features/studio/V12TripStudioPanel.tsx",
+   "frontend/src/i18n/LocaleContext.tsx",
+   "frontend/src/styles.css"
+  ]
+ },
+ "merge_tree": {
+  "exit": 0,
+  "first_line": "d403878adbd9a503e361fa569acd6d35a404c6cf",
+  "conflict_reported": false,
+  "stderr_head": ""
+ },
+ "gate_run": {
+  "requested": [],
+  "collect_exit": null,
+  "collected": null,
+  "test_exit": null,
+  "summary": null,
+  "export": "D:/moodle/_qoder_cmdr_ref_20260921/snap_preflight_030002",
+  "blob_equality": [
+   {
+    "path": "frontend/e2e/qoder-ord0369-replan-walkthrough.spec.ts",
+    "candidate_blob": "da8fa643bb869c5ec374afb7d5e24cac3112e4af",
+    "export_blob": "da8fa643bb869c5ec374afb7d5e24cac3112e4af",
+    "equal": true
+   },
+   {
+    "path": "frontend/playwright.ord0369-Q.config.ts",
+    "candidate_blob": "1dbe428ec9e70955b4661c61f7bcaee122336510",
+    "export_blob": "1dbe428ec9e70955b4661c61f7bcaee122336510",
+    "equal": true
+   },
+   {
+    "path": "frontend/src/api/v12Authoritative.ts",
+    "candidate_blob": "c68aa3082db3c81db03d605a586cf2296344594d",
+    "export_blob": "c68aa3082db3c81db03d605a586cf2296344594d",
+    "equal": true
+   },
+   {
+    "path": "frontend/src/features/planning/PlanWithAiSheet.tsx",
+    "candidate_blob": "aee2983b5ceee004e7279893518858dccc073ee4",
+    "export_blob": "aee2983b5ceee004e7279893518858dccc073ee4",
+    "equal": true
+   },
+   {
+    "path": "frontend/src/features/recovery/RecoveryRequiredPanel.tsx",
+    "candidate_blob": "96e0089dd2942e4904a2d3a409068282e021dae5",
+    "export_blob": "96e0089dd2942e4904a2d3a409068282e021dae5",
+    "equal": true
+   },
+   {
+    "path": "frontend/src/features/simulation/simulationAdapter.ts",
+    "candidate_blob": "aaa5cd4e9e9d62102a8538e5bb3cc141df71b02b",
+    "export_blob": "aaa5cd4e9e9d62102a8538e5bb3cc141df71b02b",
+    "equal": true
+   },
+   {
+    "path": "frontend/src/features/studio/SortableActivityList.tsx",
+    "candidate_blob": "9a8de7055ae34dd111bbfc0af502b9da120e1ea1",
+    "export_blob": "9a8de7055ae34dd111bbfc0af502b9da120e1ea1",
+    "equal": true
+   },
+   {
+    "path": "frontend/src/features/studio/V12TripStudioPanel.tsx",
+    "candidate_blob": "35f74572e0b45825cb87686eadbc39dc2f773953",
+    "export_blob": "35f74572e0b45825cb87686eadbc39dc2f773953",
+    "equal": true
+   },
+   {
+    "path": "frontend/src/i18n/LocaleContext.tsx",
+    "candidate_blob": "d0bd51f2a597c39ca360ef2908f10b111c146d31",
+    "export_blob": "d0bd51f2a597c39ca360ef2908f10b111c146d31",
+    "equal": true
+   },
+   {
+    "path": "frontend/src/styles.css",
+    "candidate_blob": "4f7f1f5e4457b42c64bf19a4c5f2ec4f59908bed",
+    "export_blob": "4f7f1f5e4457b42c64bf19a4c5f2ec4f59908bed",
+    "equal": true
+   },
+   {
+    "path": "review/ord0369-phone-replan/READINGS.md",
+    "candidate_blob": "b44b062eeb9a09098ed0ebac1a74cad34119d5d0",
+    "export_blob": "b44b062eeb9a09098ed0ebac1a74cad34119d5d0",
+    "equal": true
+   },
+   {
+    "path": "review/ord0369-phone-replan/canary_proof_r2.json",
+    "candidate_blob": "5b05582161c10bd31dafa90b13471b26590bca83",
+    "export_blob": "5b05582161c10bd31dafa90b13471b26590bca83",
+    "equal": true
+   },
+   {
+    "path": "review/ord0369-phone-replan/face_lane_canary_same_generation.png",
+    "candidate_blob": "07b43f505992489b6dd287b8c4722002dfe85473",
+    "export_blob": "07b43f505992489b6dd287b8c4722002dfe85473",
+    "equal": true
+   },
+   {
+    "path": "review/ord0369-phone-replan/face_user_4782_deployed-generation.png",
+    "candidate_blob": "07b43f505992489b6dd287b8c4722002dfe85473",
+    "export_blob": "07b43f505992489b6dd287b8c4722002dfe85473",
+    "equal": true
+   },
+   {
+    "path": "review/ord0369-phone-replan/gate-report-r2-with-ord0240.json",
+    "candidate_blob": "5e0c48263db2ca42d119b782b002d27e8a505eed",
+    "export_blob": "5e0c48263db2ca42d119b782b002d27e8a505eed",
+    "equal": true
+   },
+   {
+    "path": "review/ord0369-phone-replan/gate-report-r2.json",
+    "candidate_blob": "963e58975a755340e73025fb7cf8d56a3b18279a",
+    "export_blob": "963e58975a755340e73025fb7cf8d56a3b18279a",
+    "equal": true
+   },
+   {
+    "path": "review/ord0369-phone-replan/r2_candidate_stage_refusal.png",
+    "candidate_blob": "5d7590fdc71dff28915a5b1809cf94fd2aeef1a7",
+    "export_blob": "5d7590fdc71dff28915a5b1809cf94fd2aeef1a7",
+    "equal": true
+   },
+   {
+    "path": "review/ord0369-phone-replan/r2_candidate_studio_trial.png",
+    "candidate_blob": "3ffb730a3f2ba00f32a97ba7cd30370d69b7b506",
+    "export_blob": "3ffb730a3f2ba00f32a97ba7cd30370d69b7b506",
+    "equal": true
+   }
+  ],
+  "whole_suite": {
+   "collect_exit": 0,
+   "collected": 1393,
+   "interrupted": false,
+   "error_lines": [
+    "tests/test_qoder_ord0332_error_receipt.py::test_R7_the_envelope_keeps_every_field_it_already_had",
+    "tests/test_qoder_ord0332_error_receipt.py::test_R8_the_seed_is_read_off_the_real_request_not_just_the_dataclass",
+    "tests/test_solver_runtime_policy.py::test_unexpected_solver_programming_error_is_not_silently_hidden"
+   ],
+   "tail": [
+    "    _PortalFactoryType = Callable[[], AbstractContextManager[anyio.abc.BlockingPortal]]",
+    "-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html",
+    "1393 tests collected in 13.09s"
+   ],
+   "cmd": "D:/moodle/CityNexus/.venv/Scripts/python.exe -m pytest --collect-only -q tests  (cwd=<export>/backend, PYTHONPATH=<export>)"
+  },
+  "interpreter": "Python 3.12.14 (main, Aug 25 2026, 14:01:42) [MSC v.1944 64 bit (AMD64)]",
+  "exposure": {
+   "skipped": "arm off"
+  },
+  "frontend_build": {
+   "builder_rc": 0,
+   "vite_build_rc": 0,
+   "dist_exists": true,
+   "index_exists": true,
+   "asset_refs": [
+    "/assets/index-D-tB4NCX.js",
+    "/assets/index-DMEUbH2K.css"
+   ],
+   "live_tree": "d403878adbd9a503e361fa569acd6d35a404c6cf",
+   "info_file": "D:\\moodle\\_qoder_cmdr_ref_20260921\\live_checks\\_build_2539623_info.json",
+   "build_tail": [
+    "files generated",
+    "  dist/v10-sw.js",
+    "  dist/workbox-6923124b.js",
+    "\u001b[33m",
+    "(!) Some chunks are larger than 500 kB after minification. Consider:",
+    "- Using dynamic import() to code-split the application",
+    "- Use build.rollupOptions.output.manualChunks to improve chunking: https://rollupjs.org/configuration-options/#output-manualchunks",
+    "- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.\u001b[39m"
+   ]
+  }
+ },
+ "problems": [],
+ "verdict": "READY_TO_LAND",
+ "landing": {
+  "http": 200,
+  "response_head": "{'ref': 'refs/heads/mirror/integration-frontend-apple-pass1', 'node_id': 'REF_kwDOUhlJJ9oAMnJlZnMvaGVhZHMvbWlycm9yL2ludGVncmF0aW9uLWZyb250ZW5kLWFwcGxlLXBhc3Mx', 'url': 'https://api.github.com/repos/Ca",
+  "tip_after": "25396236063f13827312c33960be0b9510845fc3",
+  "branches_route": "25396236063f13827312c33960be0b9510845fc3",
+  "both_routes_agree": true,
+  "landed": true
+ },
+ "discipline": {
+  "evidence_paths_overwritten": 0,
+  "databases_opened": 0,
+  "surfaces_started_or_stopped": 0,
+  "credential_values_printed": 0,
+  "candidate_refs_pushed_by_commander": 0
+ },
+ "claim_kind": "git_and_pytest_determined",
+ "claimed_result": null,
+ "derived_result": null
+}
