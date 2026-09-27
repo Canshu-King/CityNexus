@@ -1,0 +1,21 @@
+ORD-0381 FRONTSRC_BUILD_PREREQ readout.
+
+Method: snap = `git archive HEAD frontend` of the committed tree; node_modules reached through a
+junction (mklink /J) into D:/moodle/CityNexus/frontend/node_modules. Teardown order is the part
+that could have destroyed shared state, so it is written here rather than trusted to memory:
+`rmdir` the junction FIRST, confirm it is gone, only then `rm -rf` the snap.
+Run twice. The bundle name came back identical both times; the wall clock did not, so the
+duration below is a reading of one run and not a property of the tree.
+
+tsc_typecheck_noemit_exit   = 0                     # both runs, snap/frontend
+vite_build_exit             = 0                     # both runs, snap/frontend
+vite_bundle_asset           = index-CykjwNkQ.js          # identical across both runs
+vite_asset_line             = index-CykjwNkQ.js 1,279.26 kB │ gzip: 389.16 kB   # vite's own sizing line
+vite_timing_line            = built in 12.61s          # this run; the first run read 14.23s
+vite_pwa_line               = precache  8 entries (2471.56 KiB)     # same run
+bundle_grep_zh_exec_min     = 约{n}分钟              # read back out of dist/assets/index-CykjwNkQ.js
+bundle_grep_en_exec_min     = Est. {n} min          # same file
+bundle_grep_zh_walking      = 约{minutes}分钟         # same file
+bundle_grep_zh_route_dur    = 约{duration}分钟        # same file
+shared_node_modules_before  = 394                   # D:/moodle/CityNexus/frontend/node_modules entries
+shared_node_modules_after   = 394                   # after rmdir of the junction, then rm -rf
