@@ -1336,3 +1336,5 @@ dd.trial-city-warning {
   font-size: var(--cn-fs-caption);
   line-height: 1.4;
 }
+
+/* ORD-0372 compile-arm control: a comment only, so the bundler must still accept this. */
