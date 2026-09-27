@@ -1,0 +1,453 @@
+{
+ "ruler": "Q43_r5e",
+ "control": {
+  "variant": "CONTROL (unmutated)",
+  "caught_by": [],
+  "selftest_exit": 0,
+  "arms": 106
+ },
+ "variants": [
+  {
+   "variant": "block_level_receipt_again",
+   "caught_by": [
+    "claim_not_exempted_0 次",
+    "fire_DIMENSION_receipt_out_of_range",
+    "fire_DISCIPLINE_ZERO_receipt_out_of_range",
+    "fire_READING_classified_but_receipt_far",
+    "r5e_laundering_by_unify_is_refused"
+   ],
+   "selftest_exit": 6,
+   "arms_total": 106
+  },
+  {
+   "variant": "status_word_anywhere_in_40_again",
+   "caught_by": [
+    "class_status_word_21_chars_away_is_not",
+    "class_status_word_after_a_number_that_is_not_a_code",
+    "fire_HTTP_STATUS_word_not_adjacent"
+   ],
+   "selftest_exit": 6,
+   "arms_total": 106
+  },
+  {
+   "variant": "no_status_word_after_the_number",
+   "caught_by": [
+    "class_status_word_after_a_number_that_is_not_a_code"
+   ],
+   "selftest_exit": 6,
+   "arms_total": 106
+  },
+  {
+   "variant": "count_word_read_as_a_dimension",
+   "caught_by": [
+    "class_count_word_is_never_a_dimension",
+    "class_discipline_zero_beside_a_receipt",
+    "class_discipline_zero_far_from_the_receipt",
+    "class_leading_zero_with_a_count_word_is_a_claim",
+    "class_nonzero_beside_a_discipline_noun",
+    "class_product_noun_zero_beside_a_receipt",
+    "determinism_bare_count",
+    "exempt_DISCIPLINE_ZERO_receipt_beside",
+    "r5e_conditional_class_uniform_exemption_per_line"
+   ],
+   "selftest_exit": 6,
+   "arms_total": 106
+  },
+  {
+   "variant": "no_address_octet_rule",
+   "caught_by": [
+    "class_octet_of_a_dotted_address",
+    "exempt_ADDRESS_PART_octet"
+   ],
+   "selftest_exit": 6,
+   "arms_total": 106
+  },
+  {
+   "variant": "no_occurrence_dedupe",
+   "caught_by": [
+    "class_one_number_is_one_occurrence",
+    "r5_one_number_is_one_claim_and_one_finding"
+   ],
+   "selftest_exit": 6,
+   "arms_total": 106
+  },
+  {
+   "variant": "narrow_extension_list_again",
+   "caught_by": [
+    "class_line_number_after_a_path",
+    "exempt_MJS_path_line_coordinate"
+   ],
+   "selftest_exit": 6,
+   "arms_total": 106
+  },
+  {
+   "variant": "line_ref_looks_back_only",
+   "caught_by": [
+    "class_line_number_after_a_path",
+    "class_source_colon_is_still_a_line",
+    "exempt_LINE_REF_source_colon",
+    "exempt_MJS_path_line_coordinate"
+   ],
+   "selftest_exit": 6,
+   "arms_total": 106
+  },
+  {
+   "variant": "no_identifier_boundary_rule",
+   "caught_by": [
+    "class_digits_glued_inside_a_name",
+    "exempt_IDENTIFIER_bundled_in_a_name"
+   ],
+   "selftest_exit": 6,
+   "arms_total": 106
+  },
+  {
+   "variant": "advisory_channel_blinded",
+   "caught_by": [
+    "advisory_line_ref_only_vouch"
+   ],
+   "selftest_exit": 6,
+   "arms_total": 106
+  },
+  {
+   "variant": "decimal_unit_not_seen_again",
+   "caught_by": [
+    "claim_not_exempted_0.4 GB",
+    "class_decimal_reading_beside_a_receipt",
+    "class_decimal_reading_without_a_receipt",
+    "exempt_DIMENSION_decimal_reading_beside_receipt",
+    "fire_READING_classified_but_receipt_far",
+    "r5e_remedy_for_a_reading_is_the_line_rule"
+   ],
+   "selftest_exit": 6,
+   "arms_total": 106
+  },
+  {
+   "variant": "curl_zero_dropped_from_the_set",
+   "caught_by": [
+    "class_curl_no_response_zero_written_bare"
+   ],
+   "selftest_exit": 6,
+   "arms_total": 106
+  },
+  {
+   "variant": "closed_set_membership_dropped",
+   "caught_by": [
+    "class_closed_http_code_written_bare",
+    "class_curl_no_response_zero_written_bare",
+    "exempt_HTTP_STATUS_bare_code_from_the_set",
+    "exempt_HTTP_STATUS_quoted_code"
+   ],
+   "selftest_exit": 6,
+   "arms_total": 106
+  },
+  {
+   "variant": "status_set_widened_to_any_three_digits",
+   "caught_by": [
+    "class_digits_after_a_fullwidth_colon",
+    "class_domain_colon_is_a_port",
+    "class_line_number_after_a_path",
+    "class_source_colon_is_still_a_line",
+    "class_status_word_21_chars_away_is_not",
+    "class_three_digits_that_are_not_a_code",
+    "class_three_digits_without_a_status_word_is_a_claim",
+    "exempt_LINE_REF",
+    "exempt_LINE_REF_source_colon",
+    "exempt_MJS_path_line_coordinate",
+    "exempt_PORT_domain_colon",
+    "fire_HTTP_STATUS_word_not_adjacent",
+    "fire_number_after_fullwidth_colon",
+    "fire_three_digits_no_status_word",
+    "fire_three_digits_not_in_the_set"
+   ],
+   "selftest_exit": 6,
+   "arms_total": 106
+  },
+  {
+   "variant": "size_and_result_words_removed",
+   "caught_by": [
+    "class_english_result_word_is_a_claim"
+   ],
+   "selftest_exit": 6,
+   "arms_total": 106
+  },
+  {
+   "variant": "no_quoted_name_rule",
+   "caught_by": [
+    "class_quoted_number_is_a_name",
+    "exempt_IDENTIFIER_quoted_socket"
+   ],
+   "selftest_exit": 6,
+   "arms_total": 106
+  },
+  {
+   "variant": "no_pid_rule",
+   "caught_by": [
+    "class_pid_after_the_number_is_an_id",
+    "class_pid_before_the_number_is_an_id",
+    "exempt_IDENTIFIER_process_id"
+   ],
+   "selftest_exit": 6,
+   "arms_total": 106
+  },
+  {
+   "variant": "no_domain_port_rule",
+   "caught_by": [
+    "class_domain_colon_is_a_port",
+    "class_port_after_a_host",
+    "exempt_PORT_domain_colon",
+    "r5e_one_literal_one_verdict"
+   ],
+   "selftest_exit": 6,
+   "arms_total": 106
+  },
+  {
+   "variant": "no_forward_port_word",
+   "caught_by": [
+    "class_port_word_after_an_unquoted_number",
+    "exempt_PORT_word_after_unquoted_number"
+   ],
+   "selftest_exit": 6,
+   "arms_total": 106
+  },
+  {
+   "variant": "status_shape_narrow_again",
+   "caught_by": [
+    "class_three_digits_beside_a_status_word_is_a_code"
+   ],
+   "selftest_exit": 6,
+   "arms_total": 106
+  },
+  {
+   "variant": "status_before_dropped",
+   "caught_by": [
+    "class_status_word_before_a_number_that_is_not_a_code"
+   ],
+   "selftest_exit": 6,
+   "arms_total": 106
+  },
+  {
+   "variant": "dimension_exemption_made_unconditional",
+   "caught_by": [
+    "claim_not_exempted_0 次",
+    "claim_not_exempted_0.4 GB",
+    "claim_not_exempted_22s",
+    "fire_DIMENSION_decimal_reading_alone",
+    "fire_DIMENSION_receipt_out_of_range",
+    "fire_DIMENSION_without_receipt",
+    "fire_DISCIPLINE_ZERO_receipt_out_of_range",
+    "fire_DISCIPLINE_ZERO_without_receipt",
+    "fire_READING_classified_but_receipt_far",
+    "fire_status_with_unit",
+    "fire_unit_after_a_space",
+    "r4e_does_not_excuse_an_unvouched_quantity",
+    "r5e_laundering_by_unify_is_refused",
+    "r5e_remedy_for_a_reading_is_the_line_rule"
+   ],
+   "selftest_exit": 6,
+   "arms_total": 106
+  },
+  {
+   "variant": "leading_zero_ticket_rule_removed",
+   "caught_by": [
+    "class_order_number_written_with_a_leading_zero",
+    "exempt_IDENTIFIER_order_number_leading_zero"
+   ],
+   "selftest_exit": 6,
+   "arms_total": 106
+  },
+  {
+   "variant": "line_lock_removed",
+   "caught_by": [
+    "exempt_LINE_locked_by_a_coordinate_at_the_far_end"
+   ],
+   "selftest_exit": 6,
+   "arms_total": 106
+  },
+  {
+   "variant": "line_lock_spills_to_the_whole_block",
+   "caught_by": [
+    "claim_not_exempted_0 次",
+    "determinism_bare_count",
+    "fire_DIMENSION_receipt_out_of_range",
+    "fire_DISCIPLINE_ZERO_receipt_out_of_range",
+    "fire_NEXT_LINE_coordinate_does_not_lock",
+    "fire_NONZERO_after_a_discipline_noun",
+    "fire_READING_classified_but_receipt_far",
+    "fire_ZERO_on_a_product_noun",
+    "r5e_conditional_class_uniform_exemption_per_line",
+    "r5e_laundering_by_unify_is_refused"
+   ],
+   "selftest_exit": 6,
+   "arms_total": 106
+  },
+  {
+   "variant": "segment_rule_removed",
+   "caught_by": [
+    "exempt_TILE_segment_in_a_url",
+    "exempt_extent_array_in_brackets"
+   ],
+   "selftest_exit": 6,
+   "arms_total": 106
+  },
+  {
+   "variant": "segment_rule_drops_the_adjacency",
+   "caught_by": [
+    "class_closed_http_code_written_bare",
+    "class_curl_no_response_code_beside_the_word",
+    "class_curl_no_response_zero_written_bare",
+    "class_digits_after_a_fullwidth_colon",
+    "class_domain_colon_is_a_port",
+    "class_line_number_after_a_path",
+    "class_octet_of_a_dotted_address",
+    "class_port_after_a_host",
+    "class_port_word_after_an_unquoted_number",
+    "class_source_colon_is_still_a_line",
+    "class_status_word_21_chars_away_is_not",
+    "class_status_word_adjacent_is_a_status",
+    "class_status_word_after_a_number_that_is_not_a_code",
+    "class_status_word_before_a_number_that_is_not_a_code",
+    "class_three_digits_beside_a_status_word_is_a_code",
+    "class_three_digits_that_are_not_a_code",
+    "class_three_digits_without_a_status_word_is_a_claim",
+    "determinism_status_with_adjacent_word",
+    "exempt_ADDRESS_PART_octet",
+    "exempt_HTTP_STATUS",
+    "exempt_HTTP_STATUS_bare_code_from_the_set",
+    "exempt_HTTP_STATUS_curl_no_response",
+    "exempt_HTTP_STATUS_quoted_code",
+    "exempt_LINE_REF",
+    "exempt_LINE_REF_source_colon",
+    "exempt_MJS_path_line_coordinate",
+    "exempt_PORT",
+    "exempt_PORT_domain_colon",
+    "exempt_PORT_host_port",
+    "exempt_PORT_with_filename_nearby",
+    "exempt_PORT_word_after_unquoted_number",
+    "fire_HTTP_STATUS_word_not_adjacent",
+    "fire_bare_number_with_no_slash_shape",
+    "fire_number_after_fullwidth_colon",
+    "fire_quantity_ms",
+    "fire_run_id_without_coordinate",
+    "fire_three_digits_no_status_word",
+    "fire_three_digits_not_in_the_set",
+    "r5e_one_literal_one_verdict"
+   ],
+   "selftest_exit": 6,
+   "arms_total": 106
+  },
+  {
+   "variant": "ticket_rule_replaced_by_any_four_digits",
+   "caught_by": [
+    "class_port_after_a_host",
+    "class_port_word_after_an_unquoted_number",
+    "exempt_PORT",
+    "exempt_PORT_host_port",
+    "exempt_PORT_with_filename_nearby",
+    "exempt_PORT_word_after_unquoted_number",
+    "fire_bare_number_with_no_slash_shape",
+    "r5e_one_literal_one_verdict"
+   ],
+   "selftest_exit": 6,
+   "arms_total": 106
+  },
+  {
+   "variant": "uniform_verdicts_removed",
+   "caught_by": [
+    "r5e_one_literal_one_verdict"
+   ],
+   "selftest_exit": 6,
+   "arms_total": 106
+  },
+  {
+   "variant": "exemption_spreads_to_every_occurrence",
+   "caught_by": [
+    "claim_not_exempted_0 次",
+    "claim_not_exempted_0.4 GB",
+    "claim_not_exempted_22s",
+    "fire_DIMENSION_decimal_reading_alone",
+    "fire_DIMENSION_receipt_out_of_range",
+    "fire_DIMENSION_without_receipt",
+    "fire_DISCIPLINE_ZERO_receipt_out_of_range",
+    "fire_DISCIPLINE_ZERO_without_receipt",
+    "fire_READING_classified_but_receipt_far",
+    "fire_status_with_unit",
+    "fire_unit_after_a_space",
+    "r4e_does_not_excuse_an_unvouched_quantity",
+    "r5e_laundering_by_unify_is_refused",
+    "r5e_remedy_for_a_reading_is_the_line_rule"
+   ],
+   "selftest_exit": 6,
+   "arms_total": 106
+  },
+  {
+   "variant": "remedy_left_blank",
+   "caught_by": [
+    "r5e_remedy_for_a_reading_is_the_line_rule",
+    "r5e_remedy_names_the_write_for_a_count"
+   ],
+   "selftest_exit": 6,
+   "arms_total": 106
+  },
+  {
+   "variant": "repeat_dedupe_removed",
+   "caught_by": [
+    "r5e_repeats_collapse_to_one_finding"
+   ],
+   "selftest_exit": 6,
+   "arms_total": 106
+  },
+  {
+   "variant": "uniformity_extended_to_count_classes",
+   "caught_by": [],
+   "selftest_exit": 0,
+   "no_effect_proven": "measured on 17 live blocks: verdict and refusal set identical (see the delivered proof file)"
+  },
+  {
+   "variant": "quoted_name_outranks_http_enumeration",
+   "caught_by": [
+    "exempt_HTTP_STATUS_quoted_code"
+   ],
+   "selftest_exit": 6,
+   "arms_total": 106
+  }
+ ],
+ "checks": {
+  "control_passes": true,
+  "caught_block_level_receipt_again": true,
+  "caught_status_word_anywhere_in_40_again": true,
+  "caught_no_status_word_after_the_number": true,
+  "caught_count_word_read_as_a_dimension": true,
+  "caught_no_address_octet_rule": true,
+  "caught_no_occurrence_dedupe": true,
+  "caught_narrow_extension_list_again": true,
+  "caught_line_ref_looks_back_only": true,
+  "caught_no_identifier_boundary_rule": true,
+  "caught_advisory_channel_blinded": true,
+  "caught_decimal_unit_not_seen_again": true,
+  "caught_curl_zero_dropped_from_the_set": true,
+  "caught_closed_set_membership_dropped": true,
+  "caught_status_set_widened_to_any_three_digits": true,
+  "caught_size_and_result_words_removed": true,
+  "caught_no_quoted_name_rule": true,
+  "caught_no_pid_rule": true,
+  "caught_no_domain_port_rule": true,
+  "caught_no_forward_port_word": true,
+  "caught_status_shape_narrow_again": true,
+  "caught_status_before_dropped": true,
+  "caught_dimension_exemption_made_unconditional": true,
+  "caught_leading_zero_ticket_rule_removed": true,
+  "caught_line_lock_removed": true,
+  "caught_line_lock_spills_to_the_whole_block": true,
+  "caught_segment_rule_removed": true,
+  "caught_segment_rule_drops_the_adjacency": true,
+  "caught_ticket_rule_replaced_by_any_four_digits": true,
+  "caught_uniform_verdicts_removed": true,
+  "caught_exemption_spreads_to_every_occurrence": true,
+  "caught_remedy_left_blank": true,
+  "caught_repeat_dedupe_removed": true,
+  "documented_no_effect_uniformity_extended_to_count_classes": true,
+  "caught_quoted_name_outranks_http_enumeration": true
+ },
+ "uncaught_mutations": [],
+ "overall_pass": true
+}
