@@ -1,0 +1,33 @@
+{
+ "order": "ORD-0376",
+ "read_at": "2026-09-28T02:11:29+08:00",
+ "target": "http://127.0.0.1:4781/v8/<journey_id> (id from /api/v1/demo/scene, not restated: hyphens get cut as short shas)",
+ "auth_used": false,
+ "served_asset_from_page_fetch": "assets/index-DW17CV9l.js",
+ "cmdr_stated_asset": "index-B800Wnn2.js",
+ "asset_discrepancy": "preview leg serves an older bundle than the commander reported",
+ "map_region_rendered_text": "1 2 3 4 5 路线上下文 4 段路程 供应商支持的路线 · WGS84 单指拖动地图 · 双指缩放 · 想翻这一页就拖地图以外的地方",
+ "map_status_node_exists": true,
+ "basemap_words_absent_from_page": [
+  "底图",
+  "瓦片",
+  "basemap",
+  "tile",
+  "地图未能",
+  "地图不可",
+  "加载失败",
+  "网络不可用",
+  "离线"
+ ],
+ "basemap_word_hits": 0,
+ "basemap_words_probed": 9,
+ "map_is_canvas": {
+  "canvas_count": 1,
+  "dom_tile_img_count": 0,
+  "note": "WebGL canvas map: tiles are not DOM <img>, so an img probe is structurally blind; the basemap failure is evidenced by the 6 ERR_CONNECTION_TIMED_OUT rows in the ORD-0374 file"
+ },
+ "plan_info_still_readable": true,
+ "grading": "PRODUCT DEFECT - a status line exists but never states basemap state; with tiles failing the screen stays silent, i.e. blank is presented as normal",
+ "fix_status": "NOT STARTED and NOT DELIVERABLE here: no frontend/node_modules in this worktree, so FRONTSRC_BUILD_PREREQ (tsc --noEmit + vite build) cannot be satisfied; shipping an uncompiled frontend candidate is exactly what that rule forbids",
+ "reuse_target_for_the_fix": "the existing status line in v8-map-panel, not a new sentence"
+}
