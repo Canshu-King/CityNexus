@@ -193,7 +193,7 @@ const en: Dict = {
   "studio.dailyMovement": "Daily movement",
   "studio.walkingExposure": "Walking exposure",
   "studio.planHealth": "Plan health",
-  "studio.protected": "Protected · {n} min slack",
+  "studio.protected": "Protected · Est. {n} min slack",
   "studio.feasibilityPassed": "Trip constraint checks passed",
   "studio.feasibilityPassedPartial": "Constraint checks passed, cost evidence incomplete",
   "studio.feasibilitySub": "Arrival, departure, and protected commitments verified. Activity costs are complete for every stop; the total trip budget (including stay and transport) is not verified here.",
@@ -245,9 +245,9 @@ const en: Dict = {
   "live.arriveBy": "Arrive by {date}",
   "live.selectPlan": "Select a plan to calculate your route",
   "live.eta": "ETA · {mode}",
-  "live.routeDuration": "{duration} min · {walking} min walk",
-  "live.slack": "{minutes} min slack",
-  "studio.walkingMinutes": "{minutes} min",
+  "live.routeDuration": "Est. {duration} min · {walking} min walk",
+  "live.slack": "Est. {minutes} min slack",
+  "studio.walkingMinutes": "Est. {minutes} min",
   "live.navigate": "NAVIGATE →",
   "live.risk": "RISK",
   "live.guardianMonitoring": "{severity} · Guardian monitoring",
@@ -492,7 +492,7 @@ const en: Dict = {
   "exec.complete": "Complete",
 
   // ── Execution: V12 State Primitives ──
-  "exec.min": "{n} min",
+  "exec.min": "Est. {n} min",
   "exec.protectedSuffix": "· protected",
   "exec.impactPassed": "Impact preview passed",
   "exec.impactBlocked": "Impact preview blocked",
@@ -718,8 +718,8 @@ const en: Dict = {
   "studio.gate.unknown": "{n} further refusal(s) this screen cannot name — the server's own words are in the technical detail",
   "studio.technicalDetail": "Technical detail",
   "studio.requestRefused": "The server refused this request (HTTP {status}). The draft on this screen is unchanged.",
-  "studio.costDelta": "cost Δ {v}",
-  "studio.timeDelta": "time Δ {n} min",
+  "studio.costDelta": "Est. cost Δ {v}",
+  "studio.timeDelta": "Est. time Δ {n} min",
 
   // ── Traveler Twin ──
   "twin.kicker": "Traveler Twin · soft context",
@@ -967,7 +967,7 @@ const zhCN: Dict = {
   "studio.dailyMovement": "日均出行",
   "studio.walkingExposure": "步行暴露",
   "studio.planHealth": "方案健康度",
-  "studio.protected": "受保护 · {n} 分钟余量",
+  "studio.protected": "受保护 · 约{n}分钟余量",
   "studio.feasibilityPassed": "行程约束检查已通过",
   "studio.feasibilityPassedPartial": "行程约束检查通过，费用证据不完整",
   "studio.feasibilitySub": "到达、出发和受保护承诺已验证。所有站点的活动费用已完整；整趟行程预算（含住宿与交通）未在此处验证。",
@@ -1011,9 +1011,9 @@ const zhCN: Dict = {
   "live.arriveBy": "{date} 前到达",
   "live.selectPlan": "选择方案以计算路线",
   "live.eta": "预计到达 · {mode}",
-  "live.routeDuration": "{duration} 分钟 · 步行 {walking} 分钟",
-  "live.slack": "余量 {minutes} 分钟",
-  "studio.walkingMinutes": "{minutes} 分钟",
+  "live.routeDuration": "约{duration}分钟 · 步行 {walking} 分钟",
+  "live.slack": "余量约{minutes}分钟",
+  "studio.walkingMinutes": "约{minutes}分钟",
   "live.navigate": "开始导航 →",
   "live.risk": "风险",
   "live.guardianMonitoring": "{severity} · Guardian 监控中",
@@ -1256,7 +1256,7 @@ const zhCN: Dict = {
   "exec.complete": "完成",
 
   // ── 执行：V12 状态原语 ──
-  "exec.min": "{n} 分钟",
+  "exec.min": "约{n}分钟",
   "exec.protectedSuffix": "· 受保护",
   "exec.impactPassed": "影响预览通过",
   "exec.impactBlocked": "影响预览阻断",
@@ -1472,8 +1472,8 @@ const zhCN: Dict = {
   "studio.gate.unknown": "还有 {n} 条这个界面叫不出名字的拒绝，原文在技术详情里",
   "studio.technicalDetail": "技术详情",
   "studio.requestRefused": "服务器拒绝了这次请求（HTTP {status}）。这个屏幕上的草稿没有变化。",
-  "studio.costDelta": "成本变化 {v}",
-  "studio.timeDelta": "时间变化 {n} 分钟",
+  "studio.costDelta": "成本变化约{v}",
+  "studio.timeDelta": "时间变化约{n}分钟",
 
   // ── 旅行者画像 ──
   "twin.kicker": "旅行者画像 · 软上下文",
