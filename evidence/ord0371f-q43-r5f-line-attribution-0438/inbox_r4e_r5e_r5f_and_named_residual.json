@@ -1,0 +1,1098 @@
+{
+ "generations": {
+  "r4e": {
+   "file": "claim_coordinate_check_r4e.py",
+   "blob": "acd256f11f3fcfd611441b76af36776e46cf24c7"
+  },
+  "r5e": {
+   "file": "claim_coordinate_check_r5e.py",
+   "blob": "b157d3f773a859f792bfb1346b1d8255da735fa7"
+  },
+  "r5f": {
+   "file": "claim_coordinate_check_r5f.py",
+   "blob": "0efaa7dd7c23cbda574e42b33a723cf7df5fd7cd"
+  }
+ },
+ "named_by_commander": [
+  "n2_0213.md",
+  "n2_0228.md",
+  "qoder-0370_0148.md",
+  "rel_0338.md"
+ ],
+ "summary": {
+  "inbox_blocks": 22,
+  "green": {
+   "r4e": 0,
+   "r5e": 2,
+   "r5f": 2
+  },
+  "red": {
+   "r4e": 22,
+   "r5e": 20,
+   "r5f": 20
+  },
+  "other_exit": {
+   "r4e": [],
+   "r5e": [],
+   "r5f": []
+  },
+  "total_findings": {
+   "r4e": 165,
+   "r5e": 107,
+   "r5f": 107
+  },
+  "r5f_stricter_than_r5e_on": [],
+  "r5f_looser_than_r5e_on": []
+ },
+ "blocks": [
+  {
+   "file": "map_0343.md",
+   "named_by_commander": false,
+   "bytes": 9791,
+   "r4e": {
+    "exit": 3,
+    "verdict": "Q43_GATE_RED",
+    "claims": 35,
+    "total": 10,
+    "exempt": {
+     "YEAR": 1,
+     "HTTP_STATUS": 3,
+     "PORT": 5,
+     "LINE_REF": 1
+    }
+   },
+   "r5e": {
+    "exit": 3,
+    "verdict": "Q43_GATE_RED",
+    "claims": 10,
+    "total": 4,
+    "exempt": {
+     "YEAR": 1,
+     "IDENTIFIER_PART": 11,
+     "PORT": 6,
+     "LINE_REF": 14,
+     "HTTP_STATUS": 2,
+     "ADDRESS_PART": 1
+    }
+   },
+   "r5f": {
+    "exit": 3,
+    "verdict": "Q43_GATE_RED",
+    "claims": 7,
+    "total": 4,
+    "exempt": {
+     "YEAR": 1,
+     "IDENTIFIER_PART": 11,
+     "COUNT": 3,
+     "PORT": 6,
+     "LINE_REF": 14,
+     "HTTP_STATUS": 2,
+     "ADDRESS_PART": 1
+    }
+   }
+  },
+  {
+   "file": "map_0404.md",
+   "named_by_commander": false,
+   "bytes": 6999,
+   "r4e": {
+    "exit": 3,
+    "verdict": "Q43_GATE_RED",
+    "claims": 29,
+    "total": 6,
+    "exempt": {
+     "YEAR": 1,
+     "PORT": 5
+    }
+   },
+   "r5e": {
+    "exit": 3,
+    "verdict": "Q43_GATE_RED",
+    "claims": 9,
+    "total": 2,
+    "exempt": {
+     "YEAR": 1,
+     "IDENTIFIER_PART": 15,
+     "LINE_REF": 5,
+     "PORT": 5
+    }
+   },
+   "r5f": {
+    "exit": 3,
+    "verdict": "Q43_GATE_RED",
+    "claims": 8,
+    "total": 2,
+    "exempt": {
+     "YEAR": 1,
+     "IDENTIFIER_PART": 15,
+     "COUNT": 1,
+     "LINE_REF": 5,
+     "PORT": 5
+    }
+   }
+  },
+  {
+   "file": "n2_0101.md",
+   "named_by_commander": false,
+   "bytes": 6720,
+   "r4e": {
+    "exit": 3,
+    "verdict": "Q43_GATE_RED",
+    "claims": 17,
+    "total": 3,
+    "exempt": {
+     "PORT": 5,
+     "LINE_REF": 1,
+     "DIMENSION": 1
+    }
+   },
+   "r5e": {
+    "exit": 0,
+    "verdict": "Q43_GATE_GREEN",
+    "claims": 13,
+    "total": 0,
+    "exempt": {
+     "PORT": 6,
+     "ADDRESS_PART": 1,
+     "LINE_REF": 6,
+     "HTTP_STATUS": 1
+    }
+   },
+   "r5f": {
+    "exit": 0,
+    "verdict": "Q43_GATE_GREEN",
+    "claims": 4,
+    "total": 0,
+    "exempt": {
+     "PORT": 6,
+     "ADDRESS_PART": 1,
+     "LINE_REF": 6,
+     "COUNT": 8,
+     "DIMENSION": 1,
+     "HTTP_STATUS": 1
+    }
+   }
+  },
+  {
+   "file": "n2_0105.md",
+   "named_by_commander": false,
+   "bytes": 4627,
+   "r4e": {
+    "exit": 3,
+    "verdict": "Q43_GATE_RED",
+    "claims": 8,
+    "total": 6,
+    "exempt": {
+     "PORT": 1
+    }
+   },
+   "r5e": {
+    "exit": 3,
+    "verdict": "Q43_GATE_RED",
+    "claims": 2,
+    "total": 1,
+    "exempt": {
+     "IDENTIFIER_PART": 6,
+     "HTTP_STATUS": 1
+    }
+   },
+   "r5f": {
+    "exit": 3,
+    "verdict": "Q43_GATE_RED",
+    "claims": 2,
+    "total": 1,
+    "exempt": {
+     "IDENTIFIER_PART": 6,
+     "HTTP_STATUS": 1
+    }
+   }
+  },
+  {
+   "file": "n2_0144.md",
+   "named_by_commander": false,
+   "bytes": 4253,
+   "r4e": {
+    "exit": 3,
+    "verdict": "Q43_GATE_RED",
+    "claims": 5,
+    "total": 3,
+    "exempt": {
+     "HTTP_STATUS": 1
+    }
+   },
+   "r5e": {
+    "exit": 3,
+    "verdict": "Q43_GATE_RED",
+    "claims": 2,
+    "total": 1,
+    "exempt": {
+     "HTTP_STATUS": 4
+    }
+   },
+   "r5f": {
+    "exit": 3,
+    "verdict": "Q43_GATE_RED",
+    "claims": 1,
+    "total": 1,
+    "exempt": {
+     "HTTP_STATUS": 4,
+     "COUNT": 1
+    }
+   }
+  },
+  {
+   "file": "n2_0152.md",
+   "named_by_commander": false,
+   "bytes": 3181,
+   "r4e": {
+    "exit": 3,
+    "verdict": "Q43_GATE_RED",
+    "claims": 5,
+    "total": 3,
+    "exempt": {
+     "PORT": 5
+    }
+   },
+   "r5e": {
+    "exit": 3,
+    "verdict": "Q43_GATE_RED",
+    "claims": 3,
+    "total": 2,
+    "exempt": {
+     "PORT": 5,
+     "HTTP_STATUS": 1,
+     "LINE_REF": 1
+    }
+   },
+   "r5f": {
+    "exit": 3,
+    "verdict": "Q43_GATE_RED",
+    "claims": 3,
+    "total": 2,
+    "exempt": {
+     "PORT": 5,
+     "HTTP_STATUS": 1,
+     "LINE_REF": 1
+    }
+   }
+  },
+  {
+   "file": "n2_0156.md",
+   "named_by_commander": false,
+   "bytes": 3300,
+   "r4e": {
+    "exit": 3,
+    "verdict": "Q43_GATE_RED",
+    "claims": 18,
+    "total": 5,
+    "exempt": {
+     "PORT": 1,
+     "HTTP_STATUS": 1
+    }
+   },
+   "r5e": {
+    "exit": 3,
+    "verdict": "Q43_GATE_RED",
+    "claims": 5,
+    "total": 4,
+    "exempt": {
+     "PORT": 2,
+     "IDENTIFIER_PART": 13
+    }
+   },
+   "r5f": {
+    "exit": 3,
+    "verdict": "Q43_GATE_RED",
+    "claims": 5,
+    "total": 4,
+    "exempt": {
+     "PORT": 2,
+     "IDENTIFIER_PART": 13
+    }
+   }
+  },
+  {
+   "file": "n2_0200.md",
+   "named_by_commander": false,
+   "bytes": 3935,
+   "r4e": {
+    "exit": 3,
+    "verdict": "Q43_GATE_RED",
+    "claims": 5,
+    "total": 2,
+    "exempt": {
+     "PORT": 2
+    }
+   },
+   "r5e": {
+    "exit": 3,
+    "verdict": "Q43_GATE_RED",
+    "claims": 4,
+    "total": 1,
+    "exempt": {
+     "PORT": 2,
+     "IDENTIFIER_PART": 1
+    }
+   },
+   "r5f": {
+    "exit": 3,
+    "verdict": "Q43_GATE_RED",
+    "claims": 3,
+    "total": 1,
+    "exempt": {
+     "PORT": 2,
+     "COUNT": 1,
+     "IDENTIFIER_PART": 1
+    }
+   }
+  },
+  {
+   "file": "n2_0213.md",
+   "named_by_commander": true,
+   "bytes": 3475,
+   "r4e": {
+    "exit": 3,
+    "verdict": "Q43_GATE_RED",
+    "claims": 23,
+    "total": 15,
+    "exempt": {
+     "PORT": 2
+    }
+   },
+   "r5e": {
+    "exit": 3,
+    "verdict": "Q43_GATE_RED",
+    "claims": 10,
+    "total": 3,
+    "exempt": {
+     "HTTP_STATUS": 1,
+     "IDENTIFIER_PART": 12,
+     "PORT": 2
+    }
+   },
+   "r5f": {
+    "exit": 3,
+    "verdict": "Q43_GATE_RED",
+    "claims": 8,
+    "total": 3,
+    "exempt": {
+     "COUNT": 2,
+     "HTTP_STATUS": 1,
+     "IDENTIFIER_PART": 12,
+     "PORT": 2
+    }
+   }
+  },
+  {
+   "file": "n2_0219.md",
+   "named_by_commander": false,
+   "bytes": 3333,
+   "r4e": {
+    "exit": 3,
+    "verdict": "Q43_GATE_RED",
+    "claims": 3,
+    "total": 3,
+    "exempt": {
+     "PORT": 3
+    }
+   },
+   "r5e": {
+    "exit": 3,
+    "verdict": "Q43_GATE_RED",
+    "claims": 3,
+    "total": 1,
+    "exempt": {
+     "PORT": 3
+    }
+   },
+   "r5f": {
+    "exit": 3,
+    "verdict": "Q43_GATE_RED",
+    "claims": 3,
+    "total": 1,
+    "exempt": {
+     "PORT": 3
+    }
+   }
+  },
+  {
+   "file": "n2_0224.md",
+   "named_by_commander": false,
+   "bytes": 2882,
+   "r4e": {
+    "exit": 3,
+    "verdict": "Q43_GATE_RED",
+    "claims": 5,
+    "total": 5,
+    "exempt": {
+     "PORT": 1,
+     "HTTP_STATUS": 1
+    }
+   },
+   "r5e": {
+    "exit": 3,
+    "verdict": "Q43_GATE_RED",
+    "claims": 1,
+    "total": 1,
+    "exempt": {
+     "PORT": 1,
+     "IDENTIFIER_PART": 5
+    }
+   },
+   "r5f": {
+    "exit": 3,
+    "verdict": "Q43_GATE_RED",
+    "claims": 1,
+    "total": 1,
+    "exempt": {
+     "PORT": 1,
+     "IDENTIFIER_PART": 5
+    }
+   }
+  },
+  {
+   "file": "n2_0228.md",
+   "named_by_commander": true,
+   "bytes": 3059,
+   "r4e": {
+    "exit": 3,
+    "verdict": "Q43_GATE_RED",
+    "claims": 7,
+    "total": 7,
+    "exempt": {
+     "PORT": 1
+    }
+   },
+   "r5e": {
+    "exit": 3,
+    "verdict": "Q43_GATE_RED",
+    "claims": 4,
+    "total": 4,
+    "exempt": {
+     "PORT": 1,
+     "IDENTIFIER_PART": 3
+    }
+   },
+   "r5f": {
+    "exit": 3,
+    "verdict": "Q43_GATE_RED",
+    "claims": 4,
+    "total": 4,
+    "exempt": {
+     "PORT": 1,
+     "IDENTIFIER_PART": 3
+    }
+   }
+  },
+  {
+   "file": "n2_0430.md",
+   "named_by_commander": false,
+   "bytes": 4519,
+   "r4e": {
+    "exit": 3,
+    "verdict": "Q43_GATE_RED",
+    "claims": 10,
+    "total": 1,
+    "exempt": {
+     "YEAR": 1,
+     "PORT": 1,
+     "LINE_REF": 1,
+     "HTTP_STATUS": 1
+    }
+   },
+   "r5e": {
+    "exit": 3,
+    "verdict": "Q43_GATE_RED",
+    "claims": 1,
+    "total": 1,
+    "exempt": {
+     "YEAR": 1,
+     "PORT": 1,
+     "LINE_REF": 7,
+     "IDENTIFIER_PART": 4
+    }
+   },
+   "r5f": {
+    "exit": 3,
+    "verdict": "Q43_GATE_RED",
+    "claims": 1,
+    "total": 1,
+    "exempt": {
+     "YEAR": 1,
+     "PORT": 1,
+     "LINE_REF": 7,
+     "IDENTIFIER_PART": 4
+    }
+   }
+  },
+  {
+   "file": "n2_1759.md",
+   "named_by_commander": false,
+   "bytes": 5550,
+   "r4e": {
+    "exit": 3,
+    "verdict": "Q43_GATE_RED",
+    "claims": 14,
+    "total": 7,
+    "exempt": {
+     "DIMENSION": 3,
+     "HTTP_STATUS": 1,
+     "DISCIPLINE_ZERO": 1
+    }
+   },
+   "r5e": {
+    "exit": 3,
+    "verdict": "Q43_GATE_RED",
+    "claims": 18,
+    "total": 2,
+    "exempt": {
+     "DIMENSION": 1,
+     "DISCIPLINE_ZERO": 1,
+     "ADDRESS_PART": 2,
+     "PORT": 5,
+     "IDENTIFIER_PART": 1
+    }
+   },
+   "r5f": {
+    "exit": 3,
+    "verdict": "Q43_GATE_RED",
+    "claims": 8,
+    "total": 2,
+    "exempt": {
+     "DIMENSION": 1,
+     "COUNT": 10,
+     "DISCIPLINE_ZERO": 1,
+     "ADDRESS_PART": 2,
+     "PORT": 5,
+     "IDENTIFIER_PART": 1
+    }
+   }
+  },
+  {
+   "file": "n2_1824.md",
+   "named_by_commander": false,
+   "bytes": 4650,
+   "r4e": {
+    "exit": 3,
+    "verdict": "Q43_GATE_RED",
+    "claims": 21,
+    "total": 3,
+    "exempt": {
+     "HTTP_STATUS": 3,
+     "PORT": 3,
+     "DIMENSION": 2
+    }
+   },
+   "r5e": {
+    "exit": 0,
+    "verdict": "Q43_GATE_GREEN",
+    "claims": 13,
+    "total": 0,
+    "exempt": {
+     "HTTP_STATUS": 9,
+     "IDENTIFIER_PART": 3,
+     "ADDRESS_PART": 1,
+     "PORT": 2
+    }
+   },
+   "r5f": {
+    "exit": 0,
+    "verdict": "Q43_GATE_GREEN",
+    "claims": 9,
+    "total": 0,
+    "exempt": {
+     "HTTP_STATUS": 9,
+     "DIMENSION": 1,
+     "IDENTIFIER_PART": 3,
+     "COUNT": 3,
+     "ADDRESS_PART": 1,
+     "PORT": 2
+    }
+   }
+  },
+  {
+   "file": "qoder-0370_0130.md",
+   "named_by_commander": false,
+   "bytes": 13921,
+   "r4e": {
+    "exit": 3,
+    "verdict": "Q43_GATE_RED",
+    "claims": 126,
+    "total": 13,
+    "exempt": {
+     "YEAR": 1,
+     "LINE_REF": 21,
+     "PORT": 10,
+     "DIMENSION": 2
+    }
+   },
+   "r5e": {
+    "exit": 3,
+    "verdict": "Q43_GATE_RED",
+    "claims": 81,
+    "total": 13,
+    "exempt": {
+     "YEAR": 1,
+     "IDENTIFIER_PART": 3,
+     "LINE_REF": 56,
+     "PORT": 12,
+     "HTTP_STATUS": 3
+    }
+   },
+   "r5f": {
+    "exit": 3,
+    "verdict": "Q43_GATE_RED",
+    "claims": 63,
+    "total": 13,
+    "exempt": {
+     "YEAR": 1,
+     "IDENTIFIER_PART": 3,
+     "LINE_REF": 56,
+     "PORT": 12,
+     "COUNT": 18,
+     "HTTP_STATUS": 3
+    }
+   }
+  },
+  {
+   "file": "qoder-0370_0148.md",
+   "named_by_commander": true,
+   "bytes": 8630,
+   "r4e": {
+    "exit": 3,
+    "verdict": "Q43_GATE_RED",
+    "claims": 32,
+    "total": 8,
+    "exempt": {
+     "YEAR": 5,
+     "LINE_REF": 4,
+     "DISCIPLINE_ZERO": 1
+    }
+   },
+   "r5e": {
+    "exit": 3,
+    "verdict": "Q43_GATE_RED",
+    "claims": 17,
+    "total": 6,
+    "exempt": {
+     "YEAR": 5,
+     "IDENTIFIER_PART": 3,
+     "DISCIPLINE_ZERO": 1,
+     "LINE_REF": 14,
+     "HTTP_STATUS": 1
+    }
+   },
+   "r5f": {
+    "exit": 3,
+    "verdict": "Q43_GATE_RED",
+    "claims": 16,
+    "total": 6,
+    "exempt": {
+     "YEAR": 5,
+     "IDENTIFIER_PART": 3,
+     "DISCIPLINE_ZERO": 1,
+     "LINE_REF": 14,
+     "HTTP_STATUS": 1,
+     "COUNT": 1
+    }
+   }
+  },
+  {
+   "file": "qoder-0380_0314.md",
+   "named_by_commander": false,
+   "bytes": 8179,
+   "r4e": {
+    "exit": 3,
+    "verdict": "Q43_GATE_RED",
+    "claims": 20,
+    "total": 2,
+    "exempt": {
+     "YEAR": 5
+    }
+   },
+   "r5e": {
+    "exit": 3,
+    "verdict": "Q43_GATE_RED",
+    "claims": 7,
+    "total": 1,
+    "exempt": {
+     "LINE_REF": 13,
+     "YEAR": 5
+    }
+   },
+   "r5f": {
+    "exit": 3,
+    "verdict": "Q43_GATE_RED",
+    "claims": 4,
+    "total": 1,
+    "exempt": {
+     "LINE_REF": 13,
+     "YEAR": 5,
+     "COUNT": 3
+    }
+   }
+  },
+  {
+   "file": "qoder-0385_0356.md",
+   "named_by_commander": false,
+   "bytes": 10017,
+   "r4e": {
+    "exit": 3,
+    "verdict": "Q43_GATE_RED",
+    "claims": 35,
+    "total": 8,
+    "exempt": {
+     "LINE_REF": 1,
+     "PORT": 2,
+     "HTTP_STATUS": 5,
+     "DIMENSION": 4
+    }
+   },
+   "r5e": {
+    "exit": 3,
+    "verdict": "Q43_GATE_RED",
+    "claims": 25,
+    "total": 5,
+    "exempt": {
+     "LINE_REF": 3,
+     "PORT": 2,
+     "HTTP_STATUS": 4,
+     "IDENTIFIER_PART": 8,
+     "DIMENSION": 2
+    }
+   },
+   "r5f": {
+    "exit": 3,
+    "verdict": "Q43_GATE_RED",
+    "claims": 23,
+    "total": 5,
+    "exempt": {
+     "LINE_REF": 3,
+     "PORT": 2,
+     "HTTP_STATUS": 4,
+     "IDENTIFIER_PART": 8,
+     "COUNT": 2,
+     "DIMENSION": 2
+    }
+   }
+  },
+  {
+   "file": "rel_0338.md",
+   "named_by_commander": true,
+   "bytes": 13470,
+   "r4e": {
+    "exit": 3,
+    "verdict": "Q43_GATE_RED",
+    "claims": 59,
+    "total": 24,
+    "exempt": {
+     "YEAR": 1,
+     "HTTP_STATUS": 5,
+     "PORT": 5,
+     "LINE_REF": 6,
+     "DIMENSION": 17
+    }
+   },
+   "r5e": {
+    "exit": 3,
+    "verdict": "Q43_GATE_RED",
+    "claims": 44,
+    "total": 27,
+    "exempt": {
+     "YEAR": 1,
+     "IDENTIFIER_PART": 10,
+     "HTTP_STATUS": 6,
+     "PORT": 6,
+     "LINE_REF": 21
+    }
+   },
+   "r5f": {
+    "exit": 3,
+    "verdict": "Q43_GATE_RED",
+    "claims": 43,
+    "total": 27,
+    "exempt": {
+     "YEAR": 1,
+     "IDENTIFIER_PART": 10,
+     "COUNT": 1,
+     "HTTP_STATUS": 6,
+     "PORT": 6,
+     "LINE_REF": 21
+    }
+   }
+  },
+  {
+   "file": "rel_0408.md",
+   "named_by_commander": false,
+   "bytes": 10219,
+   "r4e": {
+    "exit": 3,
+    "verdict": "Q43_GATE_RED",
+    "claims": 49,
+    "total": 11,
+    "exempt": {
+     "YEAR": 1,
+     "PORT": 3,
+     "HTTP_STATUS": 5,
+     "DIMENSION": 15,
+     "LINE_REF": 1
+    }
+   },
+   "r5e": {
+    "exit": 3,
+    "verdict": "Q43_GATE_RED",
+    "claims": 32,
+    "total": 11,
+    "exempt": {
+     "YEAR": 1,
+     "IDENTIFIER_PART": 11,
+     "PORT": 5,
+     "ADDRESS_PART": 2,
+     "HTTP_STATUS": 7,
+     "LINE_REF": 11
+    }
+   },
+   "r5f": {
+    "exit": 3,
+    "verdict": "Q43_GATE_RED",
+    "claims": 19,
+    "total": 11,
+    "exempt": {
+     "YEAR": 1,
+     "IDENTIFIER_PART": 11,
+     "COUNT": 9,
+     "PORT": 5,
+     "ADDRESS_PART": 2,
+     "HTTP_STATUS": 7,
+     "DIMENSION": 4,
+     "LINE_REF": 11
+    }
+   }
+  },
+  {
+   "file": "rel_0437.md",
+   "named_by_commander": false,
+   "bytes": 9285,
+   "r4e": {
+    "exit": 3,
+    "verdict": "Q43_GATE_RED",
+    "claims": 52,
+    "total": 20,
+    "exempt": {
+     "YEAR": 1,
+     "LINE_REF": 7,
+     "DIMENSION": 6,
+     "PORT": 7,
+     "HTTP_STATUS": 3
+    }
+   },
+   "r5e": {
+    "exit": 3,
+    "verdict": "Q43_GATE_RED",
+    "claims": 30,
+    "total": 17,
+    "exempt": {
+     "IDENTIFIER_PART": 6,
+     "YEAR": 1,
+     "LINE_REF": 20,
+     "HTTP_STATUS": 11,
+     "PORT": 7
+    }
+   },
+   "r5f": {
+    "exit": 3,
+    "verdict": "Q43_GATE_RED",
+    "claims": 23,
+    "total": 17,
+    "exempt": {
+     "IDENTIFIER_PART": 6,
+     "YEAR": 1,
+     "COUNT": 6,
+     "LINE_REF": 20,
+     "HTTP_STATUS": 11,
+     "DIMENSION": 1,
+     "PORT": 7
+    }
+   }
+  }
+ ],
+ "rel_0338_named_residual": [
+  {
+   "line": 26,
+   "tokens": [
+    "745472 B"
+   ],
+   "classes": [
+    "DIMENSION"
+   ],
+   "predicates": [
+    "P8_unit_beside_the_number_needs_a_coordinate_on_its_line"
+   ],
+   "line_carries_resolvable_coordinate": false,
+   "line_text_head": "自起后端三证同批：`netstat -ano -t` 显示 `127.0.0.1:8137 LISTENING` 的 pid 8516，`G",
+   "why_it_burns": "no `path:line` and no full 40-hex on this line"
+  },
+  {
+   "line": 27,
+   "tokens": [
+    "2423 B"
+   ],
+   "classes": [
+    "DIMENSION"
+   ],
+   "predicates": [
+    "P8_unit_beside_the_number_needs_a_coordinate_on_its_line"
+   ],
+   "line_carries_resolvable_coordinate": false,
+   "line_text_head": "`GET /api/v1/places?city_code=CNX-DEMO` → HTTP 200、2423 B、9 行；两侧比对结果：真",
+   "why_it_burns": "no `path:line` and no full 40-hex on this line"
+  },
+  {
+   "line": 28,
+   "tokens": [
+    "2423 B",
+    "56660 B"
+   ],
+   "classes": [
+    "DIMENSION"
+   ],
+   "predicates": [
+    "P8_unit_beside_the_number_needs_a_coordinate_on_its_line"
+   ],
+   "line_carries_resolvable_coordinate": false,
+   "line_text_head": "读数件：`D:/moodle/_qoder_rel_ordb_wk/places_response.json` 2423 B、`discov",
+   "why_it_burns": "no `path:line` and no full 40-hex on this line"
+  },
+  {
+   "line": 32,
+   "tokens": [
+    "5 条",
+    "56660 B"
+   ],
+   "classes": [
+    "COUNT",
+    "DIMENSION"
+   ],
+   "predicates": [
+    "P11_count_or_result_word_needs_a_coordinate_on_its_line",
+    "P8_unit_beside_the_number_needs_a_coordinate_on_its_line"
+   ],
+   "line_carries_resolvable_coordinate": false,
+   "line_text_head": "数据侧：`POST /api/v1/journeys/<CNX-DEMO 那一行>/real-city/discover` → HTTP 2",
+   "why_it_burns": "no `path:line` and no full 40-hex on this line"
+  },
+  {
+   "line": 39,
+   "tokens": [
+    "1393",
+    "5.56s",
+    "5.77s"
+   ],
+   "classes": [
+    "DIMENSION",
+    "None"
+   ],
+   "predicates": [
+    "P0_no_class_matched_it_is_a_quantity",
+    "P8_unit_beside_the_number_needs_a_coordinate_on_its_line"
+   ],
+   "line_carries_resolvable_coordinate": false,
+   "line_text_head": "后端收集：`cd backend && PYTHONPATH=<树根> python -m pytest --collect-only -q",
+   "why_it_burns": "no `path:line` and no full 40-hex on this line"
+  },
+  {
+   "line": 40,
+   "tokens": [
+    "11.97s",
+    "4 个",
+    "62 passed"
+   ],
+   "classes": [
+    "COUNT",
+    "DIMENSION"
+   ],
+   "predicates": [
+    "P11_count_or_result_word_needs_a_coordinate_on_its_line",
+    "P8_unit_beside_the_number_needs_a_coordinate_on_its_line"
+   ],
+   "line_carries_resolvable_coordinate": false,
+   "line_text_head": "定向执行：`tests/test_contract.py tests/test_qoder_catalog_hydration.py tes",
+   "why_it_burns": "no `path:line` and no full 40-hex on this line"
+  },
+  {
+   "line": 41,
+   "tokens": [
+    "0 条",
+    "1 passed",
+    "10 failed",
+    "1367 passed",
+    "15 s",
+    "235.93s",
+    "9 failed"
+   ],
+   "classes": [
+    "COUNT",
+    "DIMENSION"
+   ],
+   "predicates": [
+    "P11_count_or_result_word_needs_a_coordinate_on_its_line",
+    "P8_unit_beside_the_number_needs_a_coordinate_on_its_line"
+   ],
+   "line_carries_resolvable_coordinate": false,
+   "line_text_head": "整套执行：`python -m pytest -q` → **10 failed, 1367 passed, 15 skipped, 1 x",
+   "why_it_burns": "no `path:line` and no full 40-hex on this line"
+  },
+  {
+   "line": 44,
+   "tokens": [
+    "120 个",
+    "4 个",
+    "71 个",
+    "876",
+    "877"
+   ],
+   "classes": [
+    "COUNT",
+    "None"
+   ],
+   "predicates": [
+    "P0_no_class_matched_it_is_a_quantity",
+    "P11_count_or_result_word_needs_a_coordinate_on_its_line"
+   ],
+   "line_carries_resolvable_coordinate": false,
+   "line_text_head": "前端两门（在 `_qoder_rel_ordb_wk/build/frontend` 导出目录跑，`src`/`e2e`/`public` ",
+   "why_it_burns": "no `path:line` and no full 40-hex on this line"
+  },
+  {
+   "line": 63,
+   "tokens": [
+    "1 条",
+    "4 条"
+   ],
+   "classes": [
+    "COUNT"
+   ],
+   "predicates": [
+    "P11_count_or_result_word_needs_a_coordinate_on_its_line"
+   ],
+   "line_carries_resolvable_coordinate": false,
+   "line_text_head": "discovery 候选里 `opening_hours.source_urls` 有值的条数：对 `D:/moodle/_qoder_re",
+   "why_it_burns": "no `path:line` and no full 40-hex on this line"
+  },
+  {
+   "line": 65,
+   "tokens": [
+    "4 处"
+   ],
+   "classes": [
+    "COUNT"
+   ],
+   "predicates": [
+    "P11_count_or_result_word_needs_a_coordinate_on_its_line"
+   ],
+   "line_carries_resolvable_coordinate": false,
+   "line_text_head": "**这块交块没跑过正式的 Q43 尺**：我在四个车道树的 `tools/` 里找不到那把尺（`ls | grep -iE \"q43|coo",
+   "why_it_burns": "no `path:line` and no full 40-hex on this line"
+  }
+ ]
+}
