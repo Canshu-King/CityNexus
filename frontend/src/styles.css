@@ -1761,3 +1761,73 @@ button { display: block; width: 100%; margin-top: 12px; border: 0; border-radius
 }
 
 .v12-studio-reasons-head { margin: 10px 0 2px; color: var(--v8-ink); font-size: var(--cn-fs-caption); font-weight: 700; }
+
+
+/* ORD-0382 · 三处 390px 下量出来的版式缺陷（读数在 review/evidence/ord0382/measurements_*.json）
+ *
+ * 根因不是本弹窗自己的规则，是两条全局泄漏：
+ *  - `styles.css:47` 的裸 `button { display: block; width: 100%; margin-top: 12px; ... }` 把右上角的
+ *    × 撑成 184px 宽的一列（390 视口下标题文字列只剩 162px，被挤成三行）；同一个 margin-top 让页脚
+ *    两枚按钮在一条 flex 行里量到 56 与 44 两种高度。
+ *  - `styles.css:131` 的 `.v8-product-shell button { font: inherit }` 特异性高于 `.v8-primary-button`
+ *    自己的 `font-weight: 600`，于是主按钮实测 font-weight=400、与次按钮同字重同色阶。
+ * 修法一律限定在 `.plan-ai-*` 之内：不动那条全局规则，也不给别的车道换脸。
+ */
+.plan-ai-head > div {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+.plan-ai-close {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: auto;
+  min-width: 44px;
+  height: 44px;
+  margin-top: 0;
+  padding: 0;
+  border: 0;
+  border-radius: var(--cn-r-control);
+  background: transparent;
+  color: var(--v8-muted);
+  font-size: 22px;
+  line-height: 1;
+  cursor: pointer;
+}
+/* 建议 chip 现在说的是它要提交的那句话本身：整行、可换行、不截断。 */
+.plan-ai-examples {
+  display: grid;
+  gap: var(--cn-s-8);
+}
+.plan-ai-examples button {
+  display: block;
+  width: 100%;
+  margin-top: 0;
+  padding: var(--cn-s-8) var(--cn-s-12);
+  border-radius: var(--cn-r-control);
+  text-align: left;
+  white-space: normal;
+  line-height: 1.45;
+}
+.plan-ai-actions {
+  gap: var(--cn-s-8);
+}
+.plan-ai-actions button {
+  margin-top: 0;
+}
+/* 主次分档：主按钮回到它自己声明的重量，次按钮不再借用主按钮的强调色。 */
+.plan-ai-actions .v8-primary-button {
+  font-size: var(--cn-fs-body);
+  font-weight: 750;
+}
+.plan-ai-actions .v8-outline-button {
+  color: var(--v8-ink);
+  font-size: var(--cn-fs-body);
+  font-weight: 600;
+}
+@media (max-width: 680px) {
+  .plan-ai-actions button {
+    min-height: var(--cn-touch-min);
+  }
+}
