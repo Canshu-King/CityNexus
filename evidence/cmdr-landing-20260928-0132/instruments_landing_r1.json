@@ -1,0 +1,104 @@
+{
+ "schema": "CNX_CMDR_LANDING_PREFLIGHT_V1",
+ "lane": "commander 494abfd7",
+ "at_local": "2026-09-28T01:52:37+0800",
+ "mode": "LAND",
+ "authoritative_line": "mirror/integration-frontend-apple-pass1",
+ "tip_re_read_from_github_before": "53a00d5e6552006ebfb7cc03d109cf4b675450dc",
+ "candidate_ref": "refs/heads/review/cmdr-instruments-r4-line",
+ "candidate_tip": "16bb15c2f0c9bbf863872c545762102e7a4dba1b",
+ "genealogy": {
+  "ff_possible_rc": 0,
+  "ff_possible": true,
+  "merge_base": "53a00d5e6552006ebfb7cc03d109cf4b675450dc",
+  "line_only_commits": 0,
+  "candidate_only_commits": 1
+ },
+ "file_sets": {
+  "line_side_since_base": [],
+  "candidate_side_since_base": [
+   "tools/cmdr_tunnel_read_r1.py",
+   "tools/make_preflight_r4.py",
+   "tools/preflight_and_land_r4.py"
+  ],
+  "intersection": [],
+  "product_introduced_by_candidate": []
+ },
+ "merge_tree": {
+  "exit": 0,
+  "first_line": "0bc6501c5199a02dc60be8353cc3a80b72765cc1",
+  "conflict_reported": false,
+  "stderr_head": ""
+ },
+ "gate_run": {
+  "requested": [],
+  "collect_exit": null,
+  "collected": null,
+  "test_exit": null,
+  "summary": null,
+  "export": "D:/moodle/_qoder_cmdr_ref_20260921/snap_preflight_015204",
+  "blob_equality": [
+   {
+    "path": "tools/cmdr_tunnel_read_r1.py",
+    "candidate_blob": "e3d4d591e82259f37ff6f13fbf63acc6bd04fd53",
+    "export_blob": "e3d4d591e82259f37ff6f13fbf63acc6bd04fd53",
+    "equal": true
+   },
+   {
+    "path": "tools/make_preflight_r4.py",
+    "candidate_blob": "c257d1ac2286a981fb477cb98e5367dfc1b8f544",
+    "export_blob": "c257d1ac2286a981fb477cb98e5367dfc1b8f544",
+    "equal": true
+   },
+   {
+    "path": "tools/preflight_and_land_r4.py",
+    "candidate_blob": "9a0ee82f4f13aa278ff1e562b6c133581e852235",
+    "export_blob": "9a0ee82f4f13aa278ff1e562b6c133581e852235",
+    "equal": true
+   }
+  ],
+  "whole_suite": {
+   "collect_exit": 0,
+   "collected": 1393,
+   "interrupted": false,
+   "error_lines": [
+    "tests/test_qoder_ord0332_error_receipt.py::test_R7_the_envelope_keeps_every_field_it_already_had",
+    "tests/test_qoder_ord0332_error_receipt.py::test_R8_the_seed_is_read_off_the_real_request_not_just_the_dataclass",
+    "tests/test_solver_runtime_policy.py::test_unexpected_solver_programming_error_is_not_silently_hidden"
+   ],
+   "tail": [
+    "    _PortalFactoryType = Callable[[], AbstractContextManager[anyio.abc.BlockingPortal]]",
+    "-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html",
+    "1393 tests collected in 18.44s"
+   ],
+   "cmd": "D:/moodle/CityNexus/.venv/Scripts/python.exe -m pytest --collect-only -q tests  (cwd=<export>/backend, PYTHONPATH=<export>)"
+  },
+  "interpreter": "Python 3.12.14 (main, Aug 25 2026, 14:01:42) [MSC v.1944 64 bit (AMD64)]",
+  "exposure": {
+   "skipped": "no frontend/src file changed"
+  },
+  "frontend_build": {
+   "skipped": "no frontend/src file in this candidate"
+  }
+ },
+ "problems": [],
+ "verdict": "READY_TO_LAND",
+ "landing": {
+  "http": 200,
+  "response_head": "{'ref': 'refs/heads/mirror/integration-frontend-apple-pass1', 'node_id': 'REF_kwDOUhlJJ9oAMnJlZnMvaGVhZHMvbWlycm9yL2ludGVncmF0aW9uLWZyb250ZW5kLWFwcGxlLXBhc3Mx', 'url': 'https://api.github.com/repos/Ca",
+  "tip_after": "16bb15c2f0c9bbf863872c545762102e7a4dba1b",
+  "branches_route": "16bb15c2f0c9bbf863872c545762102e7a4dba1b",
+  "both_routes_agree": true,
+  "landed": true
+ },
+ "discipline": {
+  "evidence_paths_overwritten": 0,
+  "databases_opened": 0,
+  "surfaces_started_or_stopped": 0,
+  "credential_values_printed": 0,
+  "candidate_refs_pushed_by_commander": 0
+ },
+ "claim_kind": "git_and_pytest_determined",
+ "claimed_result": null,
+ "derived_result": null
+}
