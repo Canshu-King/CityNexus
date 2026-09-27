@@ -16588,6 +16588,39 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### cmdr 02:5x — ORD-0370b 与 ORD-0375 落地、手机换到新代，另记换代尺的一处顺序缺陷
+
+**权威线（fast-forward only，两路 GitHub 路由逐字一致）**
+
+- 起点 `bb3f5853d35835bd5078a2cccba15e2e7a82f213`（ORD-0373 那一代）
+- ORD-0370b 直落（候选本来就坐在尖上）→ `7afe928fb604a4eede1c037f8004e60a2f5edf8e`，收据 `evidence/cmdr-landing-ORD-0370b-0243/preflight_r1.json` blob `c603a23be4db0442db4a7fb1153b2f2ca544be4f`
+- ORD-0375 先只读重切（`cmdr_recut_r1.py`，3/3 文件与车道 blob 逐字节相同，merged_tree `028439b3e5bdb4c1b5aa5686949f3892598aa254`）→ 落 `04071b8258ebcdcf1e9e4c9714fb516283d1e1ad`，收据 `evidence/cmdr-landing-ORD-0375-0245/preflight_r1.json` blob `830bb1cf3dbabe8b6b0949dfd42e99b2c97e5bfc`
+- 两笔的编译臂真的跑过：`vite_build_rc` 与 `builder_rc` 见 `c603a23be4db0442db4a7fb1153b2f2ca544be4f`，同一份字段在 `830bb1cf3dbabe8b6b0949dfd42e99b2c97e5bfc` 里也有；`dist_exists` 与 `index_exists` 两格在两份收据里都是 true
+
+**被挡回去的那笔（Q72：撞文件就交回车道，我不代做三方合并）**
+
+- ORD-0369 r2 `4f121725241a2291aa87f80ec73aa4f336c72cc3`：`frontend/src/i18n/LocaleContext.tsx` 车道 blob `15d77f1d7e18347b9dd48f6e8ef17aaffd37dbc2` 与自动合并 blob `d0bd51f2a597c39ca360ef2908f10b111c146d31` 不等 ⇒ RECUT ABORT。原因是 ORD-0370b 动了同一本字典。已把新尖与该文件两个 blob 发给车道。
+- 这一笔不是退回工作：它那 6 笔提交里只有这一本字典撞车，其余文件重切时与车道 blob 逐字节相同（`da8fa643bb869c5ec374afb7d5e24cac3112e4af` 等，同一份清单在 `recut_ord0369r2_0245.json`）。
+
+**换代到 04071b82（手机侧独立回读）**
+
+- 资产代次：`/assets/index-CnUOxIWz.js` 与 `/assets/index-CuNe7Fij.css`，两个名字与字节数从 `evidence/cmdr-swap-04071b8-0252/deploy_second_pass_r1.json` blob `06bc9cdb41dd56919ebf25031d240b961dc06084` 读出
+- 手机侧探针 `evidence/cmdr-swap-04071b8-0252/phone_probe_r1.json` blob `b0e0b8f58c656a9c94dc995ebd7a27a311d4aa89`：`all_200`、`all_bytes_equal_to_disk`、`no_asset_served_as_html`、`js_content_type_correct`、`every_named_asset_present_on_disk` 五格在同一个 blob 里全为 true
+- 切换落盘的文件名清单同样在 `06bc9cdb41dd56919ebf25031d240b961dc06084` 的 `switched` 字段里
+
+**换代尺的缺陷（我自己的尺，具名记录，不改已发布件）**
+
+第一次跑用 `--allow-proxy-unprobed`：`F_PROXY_AND_TUNNEL` 判 `F_UNPROBED_DECLARED`，按尺的定义这不是 GREEN ⇒ `overall` RED，但**切换已经发生了**。收据 `evidence/cmdr-swap-04071b8-0252/deploy_RED_F_unprobed_r1.json` blob `51deedc72026fd773e5f569322cc3501b6ba3f56`：同一份里 `switched` 非空且 `overall` 为 RED —— 也就是"已上线但报告是红的"这种代次，尺自己允许存在。
+第二次配好 `CNX_DEPLOY_PROXY_BASE` 与 `CNX_DEPLOY_TUNNEL_BASE` 再跑：`F_proxy_tunnel` 变 GREEN，`H_prevgen` 记 `GREEN_H_EQ_C_NO_CHANGE_DEPLOY`，但 `B_NEW_INDEX` 报 RED，因为此时上一代 index 与新一代 index 已经是同一份字节（`old_refs_absent` 的判据前提被自己第一次的切换作废）。读数：`06bc9cdb41dd56919ebf25031d240b961dc06084` 的 `receipt_ABCDE.B_NEW_INDEX`。
+结论写清：**换代本身是真完成的（手机侧五格为凭），RED 属于同一把尺在"重复跑同一代"时的作废前提，不是产物红。** 需要修的是顺序：`F_UNPROBED_DECLARED` 应当在切换之前就 refuse，而不是切完再把整体判红。这一条留给 ORD-0371 之后的仪表单，不与产品单混。
+
+**账本节奏**
+
+本轮 `_qoder_ledger_inbox` 18 块：入盘 4 块（`n3_0240.md`、`qoder-0369_0250.md`、`qoder-0370b_0244.md`、`s4_0249.md`），拒 14 块，拒因全落在同一条 `NUMBER_WITHOUT_COORDINATE`。这 14 块里包含已写完 blob 仍被拒的样本（`401`、`7892`、`889`、`6 条`、`0373`、带千分位字节数），我已把原文样本连同"豁免类只有一个判定通道 + 拒时给具名修法"两条要件发给 ORD-0371 车道。账本镜像后的 blob `9cad22e8c320dd7eb22eb5b47ae312e2525055e5`，尺寸 7088016 B。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### ORD-0371 补料2 交付（lane S4-ast-taint，量具线）— r5c：类别按形状判，豁免按紧邻判，红的原因照实写
 
 新文件名 `claim_coordinate_check_r5c.py` = 9933e419935fe6fbb621c2d6121d7103cd3e6727 （53195 B、755 行，evidence/ord0371c-q43-r5c-0315 这个目录名只是批次标签，落盘实测 02:49）。r4b/r4e/r5/r5b 全部一字节未动。发布字节我拉回来在本地跑过一遍自测：92 臂绿（件 `evidence/ord0371c-q43-r5c-0315/selftest_r5c.json` = f4eb0af6d1a1314e280d6f49ee073a6fa37cb052 ）。
