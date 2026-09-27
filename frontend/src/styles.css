@@ -1690,6 +1690,18 @@ button { display: block; width: 100%; margin-top: 12px; border: 0; border-radius
   flex: none;
   gap: var(--cn-s-8);
 }
+/* Three CJK characters breaking as 「先离/开」 is not a wrap, it is a control that reads as broken, and
+   it happened to every short label in these two surfaces at 390px. */
+.plan-ai-actions button,
+.plan-ai-wait-exits button,
+.plan-ai-leave-actions button,
+.plan-ai-run-actions button {
+  white-space: nowrap;
+}
+.plan-ai-run-actions {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
 @media (max-width: 680px) {
   .plan-ai-run-strip {
     right: var(--cn-s-12);

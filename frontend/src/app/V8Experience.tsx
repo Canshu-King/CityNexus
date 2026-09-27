@@ -1879,7 +1879,9 @@ export function V8Experience() {
       <PlanAiRunStrip
         journeyId={data.journey.id}
         onOpenRun={() => setPlanAiOpen(true)}
-        onViewChat={() => navigate("agent")}
+        /* No chat door while the session page is the page on screen -- the strip would be offering to
+           walk someone to where they already are. */
+        onViewChat={route === "agent" ? undefined : () => navigate("agent")}
       />
       {planAiOpen && (
         <PlanWithAiSheet

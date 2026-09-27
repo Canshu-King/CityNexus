@@ -592,6 +592,14 @@ export function PlanWithAiSheet({
     onClose();
   };
 
+  /* The prompt is the answer to a press, so it has to be where the eyes already are.  Measured on the
+     first 390px run: the sheet's own scroll region grew past it, and the two doors sat below the fold
+     -- a confirmation nobody can see is the same dead end as a button that does nothing (ORD-0250). */
+  const leaveRef = useRef<HTMLDivElement | null>(null);
+  useEffect(() => {
+    if (leaveChoice) leaveRef.current?.scrollIntoView({ block: "nearest" });
+  }, [leaveChoice]);
+
   const copy = result ? statusCopy(result.status, zh, result.planCount ?? 0) : null;
   /* Q70, one-way by construction: an anchor may only name a code the traveller can actually read on the
      line it sits on.  Derived from `result.status` -- the very string `statusCopy` was handed -- so the
@@ -817,6 +825,7 @@ export function PlanWithAiSheet({
         {busy && leaveChoice && (
           <div
             className="plan-ai-leave-choice"
+            ref={leaveRef}
             data-testid="plan-ai-leave-choice"
             role="group"
             aria-label={t("agent.aiRunLeavePrompt")}
