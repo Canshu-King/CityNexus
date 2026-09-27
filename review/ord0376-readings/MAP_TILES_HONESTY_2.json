@@ -1,0 +1,21 @@
+{
+ "order": "ORD-0376 re-measure",
+ "read_at": "2026-09-28T02:17:23+08:00",
+ "asset_served_by_preview": [
+  "assets/index-B800Wnn2.js"
+ ],
+ "instrument_public_leg_asset": "index-B800Wnn2.js",
+ "instrument_public_leg_css": "index-240iHFm5.css",
+ "auth_used": false,
+ "target": "http://127.0.0.1:4781/v8/<journey_id> (id from /api/v1/demo/scene)",
+ "tiles_requested_while_panning": 6,
+ "tiles_with_responseStatus_0": 6,
+ "map_region_rendered_text": "1 2 3 4 5 底图未加载，显示的是路线示意。 路线上下文 4 段路程 供应商支持的路线 · WGS84 单指拖动地图 · 双指缩放 · 想翻这一页就拖地图以外的地方",
+ "basemap_sentence_present": true,
+ "separates_basemap_from_route_data": true,
+ "route_context_still_reported": "路线上下文 4 段路程 · 供应商支持的路线 · WGS84",
+ "map_controls": "no buttons inside the map region; copy states gesture-only interaction (单指拖动地图 · 双指缩放 · 想翻这一页就拖地图以外的地方)",
+ "plan_text_readable": true,
+ "retraction": "the previous grading (silent blank = product defect) does not hold on index-B800Wnn2.js; it was read on index-DW17CV9l.js and must not be carried across generations",
+ "previous_reading_asset": "index-DW17CV9l.js"
+}
