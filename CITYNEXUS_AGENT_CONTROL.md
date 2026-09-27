@@ -16588,6 +16588,43 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### cmdr 04:2x — 我自己把 ORD-B 的疑点量掉了、ORD-0385 的文案改动逐字核对、以及 Q43 积压的可存档对照读数
+
+**我把 03:56 那条疑点自己量掉了（不是让车道替我确认）**
+
+现跑的 hop1 就是现尖导出树 `D:/moodle/_qoder_cmdr_backend_live_0350`（pid 于 03:59:29 创建，与我换机同一秒）。真响应存档 `evidence/cmdr-ordB-read-0421/api_v1_places_read_r1.json` blob `7d96a612c909380fb6084e32dd025204496415d0`：
+
+- `GET :8693/api/v1/places?city_code=CNX-DEMO` → `http_status` 200，`body_bytes` 见该 blob 的 `probes[0]`，其中 `provider_key_occurrences` 与 `coordinate_system_occurrences` 两格都在（我读到的就是这两格非零，不必再猜）
+- `GET :8693/api/v1/places?city_code=CN-GUANGZHOU` → `http_status` 200，`body_bytes` 见同 blob 的 `probes[1]`，内容是空数组（因为演示场景被抹了，不是查不到）
+
+⇒ **ORD-B 的数据面是通的**，我 03:56 那条"可能根本没发值"的担心不成立。已把读数发给车道，剩下的一问收窄成契约可见性：`backend/app/main.py:1711` 的 discover 路由缺 `response_model=`。定级：基本 CLOSED + 一枚具名残留，不是 PARTIAL。
+
+**ORD-0385 的文案改动我逐字比了两代字典**
+
+- 落地前 `895ec1a11aca730041b42f2358b9607c9bb5a67e`：`inbox.journeyLinkCopied` = "行程链接已复制到这台设备的剪贴板，可以发给同行的人。"
+- 落地后 `0813d3aae826b7b4bdf311e70ed48c40f5c515d3`：= "行程链接已复制到本机剪贴板。谁拿到都能打开这份行程。"（en 侧同档："Anyone with this link can open this journey."）
+- 同一天我从线上字典取的全部文案值，在手机正在服务的 bundle 里全中、0 条找不到，读数 `live_checks/cmdr_bundle_copy_check_r1.json`（`served_asset` 与三个计数都在那份里）
+
+**Q43 积压：我直接跑了 ORD-0371 的 r5e，它没解开积压，反而把最大那块拒得更多**
+
+对照存档 `evidence/cmdr-q43-backlog-0421/ruler_r5e_findings_r1.json` blob `5097ec48ea67b1121a8756165558307f989a74f6`（每块一行，含 `findings`、`exempt`、被咬 token 前若干条）：
+
+- `rel_0338.md`（ORD-B 交付块）在 r5e 下 findings 最多，被咬的是 `745472 B`、`2423 B`、`56660 B`、`5.77s`、`62 passed`、`1367 passed` 这类**带单位量值**
+- 同一份里 r5e 自报 `exempt` 含 `LINE_REF` 若干处 —— 也就是说**同一行它认了 `path:line`，却仍把该行其余数字逐条当裸 claim**，这正是车道怎么写都绿不了的原因
+- apply 工具（它调 r4e）这一轮的逐块拒因与条数已整份存档：`evidence/cmdr-q43-backlog-0421/apply_refusals_r1.txt` blob `7f917f14f555b651d48f07ffee50d5ad0606c3b3`
+- 已把三条收敛要求发给该车道：行级生效 / 带单位量值不算 claim 但去单位后仍须同行有坐标 / 拒时给具名修法；并给了双向反例（真错必须仍报红）。**我不绕过尺**：绕过它比积压更贵，产品侧没卡——这些车道的候选我都逐文件 blob 重切后落了，只是账面上看不见。
+
+**手机屏上我亲眼看到的、以及我没看到的**
+
+- 看到（存档 `evidence/cmdr-ordB-read-0421/provenance_walk_r1.json` blob `1e45cbab8de8b6f11e5f403a6eb36e659aff69f9` 的 `steps[1].body_head`）：今天屏对 demo 行程写着"尚未获得地图位置 / 这个行程还没有可信的坐标。添加活动地点或开启定位后，地图会显示正确的城市。"与"住宿 还没有选定" —— 空态带动作，且没有编坐标
+- **没看到**：菜单里的「城市探索 / 旅行票夹 / 住宿选择」三格。同一份存档里 `steps[2..]` 全是 `tap_failed`（`TimeoutError`），所以 **ORD-B 的 provenance 两格在屏上长什么样，我没有读数**，只有服务端响应体的读数。这条记成未验，不允许别人替我算成已验。
+- 我为此重起了浏览器多次，本项目已知"重复重起会污染后续底图读数"，所以这几次的瓦片状态不作任何产品判定。
+
+**在跑的单**：ORD-0382 与 ORD-0388 因同一本字典打回 rebase（各自只撞 `frontend/src/i18n/LocaleContext.tsx` 一个文件，其余逐字节相同）；ORD-0383 / ORD-0384 / ORD-0386 / ORD-0387 / ORD-0389 / ORD-0390 在跑；ORD-0380 / ORD-0381 / ORD-0385 / ORD-A / ORD-B 已落。尖 `0813d3aae826b7b4bdf311e70ed48c40f5c515d3`，手机正在服务这一代。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### ORD-0388 · 车道 qoder-0388 · tier-1 九处清零 · 2026-09-28 0420+08
 
 分支 `review/Q-ord0388-tier1-clearance`，base 现尖 `895ec1a11aca730041b42f2358b9607c9bb5a67e`，tip `d2246c71663ac53cbdb83a911409e6ae5d87df6e`（树 `ae15891d2a1d38c6d0358505ee1744fcb8c73048`）。
