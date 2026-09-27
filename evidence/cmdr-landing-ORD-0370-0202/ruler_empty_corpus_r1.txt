@@ -1,0 +1,16 @@
+== cnx_copy_tiers_r1  i18n=../dict_cand.tsx  baseline=../base_LocaleContext.tsx  e2e=empty_e2e  src=frontend/src
+Traceback (most recent call last):
+  File "D:\moodle\_qoder_cmdr_ref_20260921\tonight_tiers\r0370\ruler_cand.py", line 821, in <module>
+    sys.exit(main())
+  File "D:\moodle\_qoder_cmdr_ref_20260921\tonight_tiers\r0370\ruler_cand.py", line 754, in main
+    for name, measure, ok, detail in audit(a.i18n, a.baseline, a.e2e, a.src):
+  File "D:\moodle\_qoder_cmdr_ref_20260921\tonight_tiers\r0370\ruler_cand.py", line 354, in audit
+    bas = dicts(base_path) if base_path else aft
+  File "D:\moodle\_qoder_cmdr_ref_20260921\tonight_tiers\r0370\ruler_cand.py", line 78, in dicts
+    lines = Path(path).read_text(encoding="utf-8").split("\n")
+  File "C:\Users\≤÷ ÛÕı\AppData\Local\Programs\Python\Python310\lib\pathlib.py", line 1134, in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+  File "C:\Users\≤÷ ÛÕı\AppData\Local\Programs\Python\Python310\lib\pathlib.py", line 1119, in open
+    return self._accessor.open(self, mode, buffering, encoding, errors,
+FileNotFoundError: [Errno 2] No such file or directory: '..\\base_LocaleContext.tsx'
+rc=1
