@@ -59,6 +59,14 @@
    "bytes": 128118,
    "frames": 17,
    "frame_dir": "D:/moodle/_qoder_q_ord0382_evidence/frames-cnx-r2"
+  },
+  "online_readings_r1.json": {
+   "sha256": "03cd6f9e35710eb1a9a1f2a26bf08694357fafa56c4b4bd421746840d7fbd96c",
+   "bytes": 2776
+  },
+  "drive_online_r1.mjs": {
+   "sha256": "2f4ff9573b0e4cdaa5b62776c801df3005d9dbdef71585ab9b185324a17b90c6",
+   "bytes": 7944
   }
  },
  "on_disk_only": {
@@ -97,5 +105,13 @@
    "bytes": 10831,
    "path": "D:/moodle/_qoder_q_ord0382_evidence/live2_agentfeed.json"
   }
+ },
+ "online_probe": {
+  "base": "http://127.0.0.1:4781 -- this order own generation on the wire",
+  "viewport": "390x844",
+  "frames": 5,
+  "frame_dir": "D:/moodle/_qoder_q_ord0382_evidence/online",
+  "withheld_legs": "POST agent/commands held 25s then answered locally with the empty object the repo gate arm plan-ai-cancel-aborts-request already uses; POST plans/generate answered 422 locally",
+  "proof_of_zero_write": "other_writes_forwarded=0 with every GET forwarded to the live server, per online_readings_r1.json step 9-traffic"
  }
 }
