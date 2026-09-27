@@ -20,6 +20,11 @@
   background: var(--v8-panel);
 }
 .cn-pretrip-title { color: var(--v8-ink); font-size: var(--cn-fs-body); }
+/* The server's own strings can be one unbroken token (`ORD0384_SYNTHETIC_FEASIBILITY_FAILURE`, or a real
+   code like `STALE_RECOMPOSE_REQUIRED`), and a long token inside the sentence that carries the finding is
+   the one thing this band must not clip. So the prose wraps anywhere as well, not just the basis line. */
+.cn-pretrip-title,
+.cn-pretrip-why { overflow-wrap: anywhere; }
 .cn-pretrip-why { margin: 0; color: var(--v8-muted); font-size: var(--cn-fs-body); line-height: 1.5; }
 .cn-pretrip-basis { margin: 0; color: var(--cn-ink-tertiary); font-size: var(--cn-fs-caption); overflow-wrap: anywhere; }
 .cn-pretrip-basis code { font-family: var(--cn-font-mono, ui-monospace, monospace); font-size: 11px; }
