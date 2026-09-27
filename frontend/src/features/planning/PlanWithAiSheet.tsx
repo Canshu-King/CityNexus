@@ -769,7 +769,6 @@ export function PlanWithAiSheet({
                   {t("agent.aiRunScope", {
                     days: run.current.days,
                     activities: run.current.activities,
-                    legs: run.current.legs,
                   })}
                 </p>
                 <p>{t("agent.aiRunNoDaySignal")}</p>
@@ -893,7 +892,6 @@ export function PlanWithAiSheet({
                 {t("agent.aiRunUnits", {
                   landed: result.units.landed,
                   activities: result.units.activities,
-                  legs: result.units.legs,
                   days: result.units.days,
                 })}
               </p>

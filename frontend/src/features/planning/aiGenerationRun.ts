@@ -112,18 +112,26 @@ export type RunResult = {
 
 /**
  * One plan row reduced to the quantities a traveller can check by eye: how many arrangements, over
- * how many calendar days, with how many transport legs.  Read off the row the server already sent.
+ * how many calendar days.  Read off the row the server already sent.
+ *
+ * Transport legs are deliberately absent.  `mobility_evidence.facts` is not a plan's leg list:
+ * measured on the two scenarios this lane holds bytes for, the CNX-DEMO plan (6 arrangements, 1 day)
+ * carries 56 fact rows whose keys are 8 origins x 8 destinations = 56 ordered pairs -- a complete OD
+ * matrix -- while the sealed Guangzhou plan (5 arrangements) carried 4, which is why counting rows
+ * there looked plausible and is wrong either way.  Printing that count told a traveller their one-day
+ * trip had 56 transport legs.  The only real per-plan leg figure is
+ * `v9.plan.materialized.facts.leg_count`, joinable by `entity_id` but costing an extra `agent-feed`
+ * read, so it is named as a `needs_backend_field` (a `leg_count` on the plan row) not approximated.
  */
 export type PlanStamp = {
   id: string;
   versionNo: number | null;
   activities: number;
   days: number;
-  legs: number;
 };
 
 /** The units this run produced, summed over the plans attributed to it. */
-export type RunUnits = { landed: number; activities: number; days: number; legs: number };
+export type RunUnits = { landed: number; activities: number; days: number };
 
 /**
  * What an interruption left behind, measured by a fresh read AFTER the abort.
@@ -375,11 +383,6 @@ function planStamp(row: unknown): PlanStamp | null {
   const id = (row as { id?: unknown } | null)?.id;
   if (typeof id !== "string" || id.length === 0) return null;
   const dates = activityDates(row);
-  const facts = (
-    (row as { mobility_evidence?: { facts?: unknown } } | null)?.mobility_evidence as
-      | { facts?: unknown }
-      | undefined
-  )?.facts;
   return {
     id,
     versionNo:
@@ -390,7 +393,6 @@ function planStamp(row: unknown): PlanStamp | null {
       ? (row as { activities: unknown[] }).activities.length
       : 0,
     days: dates.size,
-    legs: Array.isArray(facts) ? facts.length : 0,
   };
 }
 
@@ -463,7 +465,6 @@ function unitsFromRows(rows: unknown[] | null, landedIds: string[]): RunUnits | 
     landed: stamps.length,
     activities: stamps.reduce((sum, item) => sum + item.activities, 0),
     days: dates.size,
-    legs: stamps.reduce((sum, item) => sum + item.legs, 0),
   };
 }
 
