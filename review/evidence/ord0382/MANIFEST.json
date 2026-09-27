@@ -1,0 +1,101 @@
+{
+ "schema": "CNX_ORD0382_EVIDENCE_V1",
+ "capture_method": "read-only GET on 127.0.0.1:4781 (vite preview -> auth proxy -> backend :8693). This lane issued zero POST and zero demo/reset.",
+ "survival_note": "the guangzhou-frozen journey was wiped from _preview.db by a 03:55 POST /api/v1/demo/reset raised outside this lane; these bytes are where that scenario still exists, and no frame in this order depends on the shared store.",
+ "committed": {
+  "harness_r1.mjs": {
+   "sha256": "95788a28fa4f31bfce052d20c6a0093d1b1d8008ff3cdff6ab3f00ead59aad06",
+   "bytes": 7944
+  },
+  "drive_r1.mjs": {
+   "sha256": "1c6320624413a3dfd2b0cb617b5bcde5bb8d2a526a4b63b5e6651620d788d5a6",
+   "bytes": 13835
+  },
+  "chain_detect.json": {
+   "sha256": "8db9bb44489e9cf7f0d5b764bb8ff5196a7400ed03d38392885c4f4b631dc216",
+   "bytes": 1843
+  },
+  "chain_detect_after.json": {
+   "sha256": "c770de41fa2f87324232c5c2d45c8ff8befaa0ae4935bf750b2dcff922df2b4a",
+   "bytes": 2772
+  },
+  "chain_detect_final.json": {
+   "sha256": "6329fa07b58f0ce767c73d8409828ac4d1216c4a03fc01f203add15e5ebbc1e1",
+   "bytes": 2772
+  },
+  "live_plans.json": {
+   "sha256": "e121858cfe77dead673f37741d18b56ddadb3da44cf08ad63bbd690bfc51f0e3",
+   "bytes": 73981,
+   "path": "D:/moodle/_qoder_q_ord0382_evidence/live_plans.json"
+  },
+  "live2_plans.json": {
+   "sha256": "f6f8ec60a1c06d82fc8774e681591c8eee680cf36e1a67a36feab2911ff52924",
+   "bytes": 35053,
+   "path": "D:/moodle/_qoder_q_ord0382_evidence/live2_plans.json"
+  },
+  "live_scene.json": {
+   "sha256": "64b82c423af43a0f8212637b6b762a7868b65aac65d399f241e2aba2d9e31cf3",
+   "bytes": 610,
+   "path": "D:/moodle/_qoder_q_ord0382_evidence/live_scene.json"
+  },
+  "live2_scene.json": {
+   "sha256": "4b85e26c713eec9f87189608ab92293f4710a20f9f47e40c625167ba7cd3934d",
+   "bytes": 583,
+   "path": "D:/moodle/_qoder_q_ord0382_evidence/live2_scene.json"
+  },
+  "live_runtime-status.json": {
+   "sha256": "294924d81cbde03a7f789d67429cf4e355597113e51e142c7d4c339bb74e20e3",
+   "bytes": 408,
+   "path": "D:/moodle/_qoder_q_ord0382_evidence/live_runtime-status.json"
+  },
+  "readings_guangzhou_frozen.json": {
+   "sha256": "f412e776110f0a519b5cca712138edf1890e7e7fa296de0a41a8ff689c69075a",
+   "bytes": 118670,
+   "frames": 17,
+   "frame_dir": "D:/moodle/_qoder_q_ord0382_evidence/frames-gz-r2"
+  },
+  "readings_cnx_demo.json": {
+   "sha256": "23a70e61e6b0c5c5428bbb6128d6687093b26d31a47a174df648f2bc66e7015d",
+   "bytes": 128118,
+   "frames": 17,
+   "frame_dir": "D:/moodle/_qoder_q_ord0382_evidence/frames-cnx-r2"
+  }
+ },
+ "on_disk_only": {
+  "live_agentfeed.json": {
+   "sha256": "8756c4f4e9cb5a4099162132c452efd3be4fec1c866637039f94cb6d262bd7e7",
+   "bytes": 70817,
+   "path": "D:/moodle/_qoder_q_ord0382_evidence/live_agentfeed.json"
+  },
+  "live2_places.json": {
+   "sha256": "49372af2d0450c9818019d1e4b753905bcacd49b79ddb603c391d10e2c0d8ae1",
+   "bytes": 2155,
+   "path": "D:/moodle/_qoder_q_ord0382_evidence/live2_places.json"
+  },
+  "live_places.json": {
+   "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+   "bytes": 2,
+   "path": "D:/moodle/_qoder_q_ord0382_evidence/live_places.json"
+  },
+  "live2_experience.json": {
+   "sha256": "1e5da78539a2d5e2b668bccdd08f237be24077e9dd52770fb18ff7b328e5e31a",
+   "bytes": 4955,
+   "path": "D:/moodle/_qoder_q_ord0382_evidence/live2_experience.json"
+  },
+  "live_journeys_9c6c3d73-8b8e-4f71-beaf-32bc87aba035_experience.json": {
+   "sha256": "0432c06323ef3d7db8de5070d4b67c8d8e6a7f275536009edd6d6fe5e1642a67",
+   "bytes": 347287,
+   "path": "D:/moodle/_qoder_q_ord0382_evidence/live_journeys_9c6c3d73-8b8e-4f71-beaf-32bc87aba035_experience.json"
+  },
+  "live_journeys_9c6c3d73-8b8e-4f71-beaf-32bc87aba035.json": {
+   "sha256": "6cb57414e17a17b6ff0664848da50e7fd310fb89dbee9ffda7fb569ebe964cdd",
+   "bytes": 466,
+   "path": "D:/moodle/_qoder_q_ord0382_evidence/live_journeys_9c6c3d73-8b8e-4f71-beaf-32bc87aba035.json"
+  },
+  "live2_agentfeed.json": {
+   "sha256": "ba5740745366fb0048e7e4e630b246fd437395bfd4a9f03ddd4cb020939a59c3",
+   "bytes": 10831,
+   "path": "D:/moodle/_qoder_q_ord0382_evidence/live2_agentfeed.json"
+  }
+ }
+}
