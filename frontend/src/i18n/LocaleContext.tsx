@@ -227,6 +227,13 @@ const en: Dict = {
      `zh ? … : …` branch inside LiveRecovery -- which is what let a Chinese screen be handed
      English when the server returned no body. */
   "live.acceptFailed": "Couldn't accept this change.",
+  /* ORD-0370 tier 1: the recovery panels' own placeholder lines. Each English value
+     is the exact word the panel printed before the key existed, so an English screen
+     cannot move; only the Chinese screen stops reading English. */
+  "recovery.statusUnavailable": "unavailable",
+  "recovery.guardianEnvelope": "guardian envelope",
+  "recovery.changedFromActivity": "Current activity",
+  "recovery.changedToActivity": "recovered activity",
   "live.nothingDue": "Nothing is due right now",
   "live.nextLeg": "NEXT · {title} · {mode} · {duration}{unit}",
   "live.nextSelect": "NEXT · Select a plan to calculate the next leg",
@@ -404,6 +411,7 @@ const en: Dict = {
   "discovery.noGroundedCandidates": "No provider-grounded place set is available yet. Try a broader place request or a nearby arrival anchor; CityNexus kept the Journey unchanged.",
   "discovery.aiUnavailable": "The assistant could not finish this request. Your trip is unchanged; try again or use a plain provider search.",
   "discovery.groundedStop": "A grounded city stop was composed.",
+  "discovery.providerUnnamed": "provider",
   "discovery.anchor": "Anchor:",
   "discovery.query": "Query:",
   "discovery.radius": "{r} m · max {max}",
@@ -947,6 +955,10 @@ const zhCN: Dict = {
   "live.unresolvedStep": "执行位置无法确认",
   "live.unresolvedStepHint": "已保存的位置指向当前方案中不再存在的步骤，没能如实显示当前或下一步。",
   "live.acceptFailed": "没能接受这个调整。",
+  "recovery.statusUnavailable": "暂无状态",
+  "recovery.guardianEnvelope": "守护授权",
+  "recovery.changedFromActivity": "当前活动",
+  "recovery.changedToActivity": "恢复的活动",
   "live.nothingDue": "现在没有待进行的步骤",
   "live.nextLeg": "下一步 · {title} · {mode} · {duration}{unit}",
   "live.nextSelect": "下一步 · 选择方案以计算下一段路程",
@@ -1122,6 +1134,7 @@ const zhCN: Dict = {
   "discovery.noGroundedCandidates": "目前没有足够的供应商事实支撑地点组合。可以扩大地点描述或使用附近的到达锚点；CityNexus 没有修改行程。",
   "discovery.aiUnavailable": "DeepSeek 暂时无法完成语义解读。行程没有改变；可以重试，或使用确定性的供应商请求。",
   "discovery.groundedStop": "一个落地的城市停留已组合完成。",
+  "discovery.providerUnnamed": "服务方",
   "discovery.anchor": "锚点：",
   "discovery.query": "查询：",
   "discovery.radius": "{r} 米 · 最大 {max}",

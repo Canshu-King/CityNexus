@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
+import { useT } from "../../i18n/LocaleContext";
 
 /* V14 · PREVENTIVE owner (pass-16 D/E).
  *
@@ -85,6 +86,7 @@ async function readJson<T>(url: string): Promise<T | null> {
 }
 
 export function V14PreventivePanel({ journeyId, refreshKey }: Props) {
+  const t = useT();
   const [run, setRun] = useState<GuardianRun | null>(null);
   const [experience, setExperience] = useState<Experience | null>(null);
   const [available, setAvailable] = useState(false);
@@ -180,7 +182,7 @@ export function V14PreventivePanel({ journeyId, refreshKey }: Props) {
         <article className="v12-state-card next">
           <span className="v12-state-kicker">FORECAST</span>
           <strong data-testid="v14-preventive-resilience">
-            {prediction?.status ?? "unavailable"}
+            {prediction?.status ?? t("recovery.statusUnavailable")}
             {score != null ? ` · risk ${score}` : ""}
             {prediction?.components?.forecast_risk != null
               ? ` · forecast ${prediction.components.forecast_risk}`
@@ -229,7 +231,7 @@ export function V14PreventivePanel({ journeyId, refreshKey }: Props) {
         <div>
           <span>Authorization</span>
           <b data-testid="v14-preventive-policy">
-            {run.evidence?.policy?.decision ?? run.evidence?.inference?.controller ?? "guardian envelope"}
+            {run.evidence?.policy?.decision ?? run.evidence?.inference?.controller ?? t("recovery.guardianEnvelope")}
           </b>
         </div>
       </div>
