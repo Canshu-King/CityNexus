@@ -16588,6 +16588,31 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### ORD-0367 勘误补格 · 文案尺看不见的 RENDERED 格（commander @2026-09-28 01:0x+08，不改已插块）
+
+已插入的 `### ORD-0367` 块原文不动（已发布路径不重写，常设规则 Q57），本块只补一格并收窄一句过头主张。
+
+量到什么
+
+- 在权威导出的 `frontend/src` 下、排除字典自身之后的源文件里逐枚数取用点，方法与逐枚读数写在 `d9f61b8f0337f250718be41aba294acc448f62c3`，量具源码写在 `d0e3a89ca9c03e20e8bb479dddf90c1bd315400d`。
+- 本单改动的去重 key 枚数与该枚数的拆分，同见上一枚 blob 的表；其中零取用的六枚具名如下，每枚都指到"字典里有、源码里没人要"这一事实本身：`inbox.textFailed`、`inbox.imageFailed`、`inbox.smartApplyFailed`、`inbox.confirmFailed`、`inbox.correctionsFailed`、`inbox.readError`。
+- 有取用的那几枚也分两种可见性：直读的三枚在 `features/inbox/JourneyInboxWorkbench.tsx:356`、`app/V8Experience.tsx:3455`、`features/discovery/RealCityDiscoveryPanel.tsx:149`；另两枚只在兜底位上露出，兜底位本身在 `app/V8Experience.tsx:985`、`app/V8Experience.tsx:1114`（`refusalSentence` 的最后一个实参）与 `features/agent/AgentComposer.tsx:105`（nullish 右值）。
+
+为什么这格要紧
+
+- `tools/cnx_copy_tiers_r1.py`（blob `b9d2300773da37a098b8e8995d662face9063a9f`）的三格门禁全在字典内部自比：语域一致、中文零增长、e2e 字面量仍可命中。一枚 key 可以同时满足这三格而永远不显示在屏上，尺对它报绿。
+- 因此我收窄上一块的口径：上一块写了"手机已换代到同一枚尖"与逐字节回读为真，这两句仍然成立；但任何"这一批文案用户看得到"的说法只适用于上面具名的直读与兜底位那几枚，不适用于零取用的六枚。零取用不是运行时缺陷，是无人读取的字节。
+
+我同时补了一次真机面读数
+
+- 用手机视口与 zh-CN 语言在无头 Chromium 里渲染一个格式正确但不存在的行程号，取回的是 `failure-view` 一屏，含 `data-attribution-reason="JOURNEY_NOT_FOUND"` 与「选一」「重试」两个按钮和技术详情块；渲染后 DOM 原文存在 `7dc7b05d8cd786eca090127ab7207537fcbe18a0`。
+- 这一屏用的不是本单那十一枚 key，所以它证明的是"我读到的是渲染文字而非 data 属性"这条读数方式，不构成本单文案的用户可见证据。
+
+后续
+
+- 给尺新增一格，格名写作 `RENDERED`，要件与反控要求已并入 ORD-0370 的派单文字：对每个被改 key 打印非字典取用点数与其分母，并把零取用的 key 逐枚列出；新改的 key 若零取用则该格红。
+
+
 ### ORD-0367 · 收「APP解析与应用」车道的文案语域档与色阶档 · commander @2026-09-28 00:5x+08
 
 来源与形状
