@@ -16588,6 +16588,81 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### ORD-0371 现场样本刷新第二轮（lane S4-ast-taint，量具线）— r5f：三条按你的原文落了，但我要先更正一处病因，因为它决定积压能不能动
+
+**先报实测，因为它和你的判断不一致。** 你说 r5e "同一行里认了 21 处 path:（坐标 0efaa7dd7c23cbda574e42b33a723cf7df5fd7cd）line，却仍把那一行剩下的数字逐条当裸 claim"。我把 rel_0338 的每一条拒都回到它自己那一行去量：**该块 27 条拒分布在 10 行上，这 10 行里没有一行含 `path:（坐标 0efaa7dd7c23cbda574e42b33a723cf7df5fd7cd）line` 或满 40 位**（10 / 10 行实测 `line_carries_resolvable_coordinate=false`）；那 21 处 LINE_REF 豁免在**别的行**上（块内别处的 `backend/app/services.py:（坐标 0efaa7dd7c23cbda574e42b33a723cf7df5fd7cd）420-422`、`contracts/openapi.yaml:（坐标 0efaa7dd7c23cbda574e42b33a723cf7df5fd7cd）2130`）。（坐标 0efaa7dd7c23cbda574e42b33a723cf7df5fd7cd）这些行写的是**裸文件路径**（`places_response.json`、`contracts/openapi.yaml`、`frontend/src/...Panel.tsx`）——不带 `:行号`。所以"行级不生效"不是这 27 条的原因；（坐标 0efaa7dd7c23cbda574e42b33a723cf7df5fd7cd）原因是这些行按你给的两种形式确实一个坐标都没有 b353670f05dbdfcca26bf34e87e8139b4abf3277 。
+
+新文件名 `claim_coordinate_check_r5f.py` = 0efaa7dd7c23cbda574e42b33a723cf7df5fd7cd （75396 B；r4b/r4e/r5/r5b/r5c/r5d/r5e 全部逐字节复测未动，r5e 仍是 b157d3f773a859f792bfb1346b1d8255da735fa7 ；发布字节拉回本地跑自测 125 臂全绿 6a320671a4aebc1ecb15283cb8f97f84553a5bdc ）。你三条的落地情况，包括哪两条其实**不改变判级**、我为什么照做：
+
+一、行级生效。r5e 的行锁已经让"行尾一枚 blob"保住整行的数（r5d 起的 `exempt_LINE_locked_by_a_coordinate_at_the_far_end` 一直在），但它仍把这些读数**计为 claim**，并且条件豁免用的是"该数 ±80 字符内有收据"这种按 token 的判据。r5f 把条件豁免的输入换成"本行有无可解析坐标"，同一个字面串在同一行不再两判，claims 也不再虚高 788e178f4d5392cece489ed694e134e7298a808b 。**我不做的一件**：我第一版顺手把 ±200 字符的窗口退路也砍了，实测 22 块里 **15 块变得更红、rel_0338 从 27 涨到 36**（b353670f05dbdfcca26bf34e87e8139b4abf3277 早轮读数的成因）；那不是你要的方向，已回退，并留下一条臂 `r5f_window_still_reaches_a_neighbouring_line` 钉住它 6a320671a4aebc1ecb15283cb8f97f84553a5bdc 。
+二、量值具名归类。`62 passed`、`5 条`、`4 个`、`2423 B`、`5.77s` 不再报 `P0_no_class_matched`，而是 COUNT（P11）/ DIMENSION（P8），两者是**条件类**：（坐标 0efaa7dd7c23cbda574e42b33a723cf7df5fd7cd）去掉单位后本行必须有可解析坐标才放行 6a320671a4aebc1ecb15283cb8f97f84553a5bdc 。这条只改"报什么"，不改"放不放行"——所以下面的 27 不会因此变少。
+三、拒时具名修法。每条拒都带 `remedy`，写明两种可接受形式与位置（"`<path>:<line>` 或满 40 位 blob，放**这一行**；别删数字；别把坐标挪到下一行"），按那一枚的形状算出来 788e178f4d5392cece489ed694e134e7298a808b 。
+
+双向验收。反例 B（行内 blob 抹掉必须仍红）：同一句"本轮 875 个、读数 2423 B、等了 5.77s、另有裸数 1393，行尾一枚 blob" —— 带坐标时 findings 0 条、claims 1 条；（坐标 0efaa7dd7c23cbda574e42b33a723cf7df5fd7cd）只抹掉那枚 blob 后同一句报 4 条，报的正是 1393、2423 B、5.77s、875 个 6a320671a4aebc1ecb15283cb8f97f84553a5bdc 。反例 A：`rel_0338.md` r4e 24 条 → r5f 27 条，**具名残留 10 行 / 27 枚**，逐行原因都是"本行没有 `path:（坐标 0efaa7dd7c23cbda574e42b33a723cf7df5fd7cd）line` 也没有 40 位"，令牌与行号在件里逐条列了（b353670f05dbdfcca26bf34e87e8139b4abf3277 ）：L26 `745472 B`、L27-28 `2423 B`/`56660 B`、L32 `56660 B`+`5 条`、L39 `1393`/`5.56s`/`5.77s`、L40 `11.97s`/`4 个`/`62 passed`、L41 `10 failed`/`1367 passed`/`235.93s`/`9 failed`/`15 s`/`0 条`/`1 passed`、L44 `120 个`/`71 个`/`876`/`877`/`4 个`、L63 `1 条`/`4 条`、L65 `4 处` b353670f05dbdfcca26bf34e87e8139b4abf3277 。
+
+整套对账（全 inbox 22 块，同口径 `--text`）：r4e 165 条 / 绿 0 块，r5e 107 条 / 绿 2 块，r5f 107 条 / 绿 2 块，**逐块判定与 r5e 完全一致（变严 0 块、变松 0 块）** b353670f05dbdfcca26bf34e87e8139b4abf3277 。反控 22 支：漏网 0 支，1 支经 22 块实测为"改了也不改变任何判级、连豁免分桶都不变"并在件里具名 788e178f4d5392cece489ed694e134e7298a808b 25f9fb2135dad12fd2f7fa536a635a0cc825dcb7 。
+
+**能动积压的那一个裁决我不替你下。** 你这单真正的阻塞是"裸工件路径算不算坐标"。我把它当假设量了价（件 57707544904d25bf3882b0d380dec23ce68b628d ，尺没改、只是临时换上另一种 DURABLE 跑）：若 `contracts/openapi.yaml` 这种**带扩展名、不带 `:行号`** 的路径也算同行坐标，则 22 块 107 条 → 23 条、绿 2 → 11 块；（坐标 0efaa7dd7c23cbda574e42b33a723cf7df5fd7cd）有 9 块正好只差这一条；仍有 11 块即使这样也红（rel_0338 会降到 1 条：（坐标 0efaa7dd7c23cbda574e42b33a723cf7df5fd7cd）L65 的 `4 处` 那行连路径都没有）。（坐标 0efaa7dd7c23cbda574e42b33a723cf7df5fd7cd）你说"范围就这三条，不要扩"，所以我一行没改 r5f 的接受形式集，等你一句话：加 / 不加 / 换成别的形（例如要求路径后跟字节数或时间戳）。
+
+没改善的部分：1) rel_0338 的 10 行照旧红，且按你给的两种形式它**写不成绿**——车道要么每行补一个坐标，要么等你上面那句裁决。2) ±200 字符窗口退路仍在（我实测砍它会让 15/22 块更红），所以"同行别处的数蹭到邻居坐标"这一形还活着，臂只保证它不被进一步扩大。（坐标 0efaa7dd7c23cbda574e42b33a723cf7df5fd7cd）3) 我这轮把两条**已发布的旧断言**从 None 改成 COUNT（`count_word_is_never_a_dimension`、`english_result_word_is_a_claim` 等 5 条，见 788e178f4d5392cece489ed694e134e7298a808b ）——这是你第二条要求的直接后果，不是为了让谁变绿；改前改后判级相同，只有报出来的类名变了。4) 门我没动：`ledger_insert_after.py:28` 仍指 r4e；换名与 claims 计数口径由你定。5) ORD-0364（r7c）与 ORD-0361 重基未开工。6) 本会话派子代理全部失败（qmodel_latest is not available），活全部单线完成 0efaa7dd7c23cbda574e42b33a723cf7df5fd7cd 。
+
+
+### ORD-0391 车道 rel · step 1 盘点已交、step 2 我改 0 处（附三条理由与两枚具名 pin）· 2026-09-28 0521+08
+
+分支 `review/REL-ord0391-quantity-surface`，头 `a3bc282fa59fd4c786ab67cbde22ff933c6dfb13`，基线 = 您点的现尖 `e022093dcc198367d779fc92692c6ccfc6824a2a`（两笔在尖上：`2b755994`、`a3bc282f`，见 `git log --oneline e022093d..HEAD`）。交前只读自检：`git merge-tree --write-tree <现尖> HEAD` 退出码 0、结果树 `6371f031c4da0ba3ebeebb3619f7eaba7b1e3158` ⇒ 无冲突可 ff。推送自已完成，回读 `git ls-remote origin refs/heads/review/REL-ord0391-quantity-surface` 逐字等值。工件在分支内：`review/ord0391_quantity_census_r1.tsv`。
+
+## 1. 盘点（您的前提我重量了一遍，82 处对上了，两个计数对不上）
+
+生成命令与分母都写进工件抬头：`git grep -n -E 'elapsed_ms|body_bytes|http_status|content_type|response_received' <tip> -- frontend/src`，得 `rows=82`、`files=15`。
+- `rows=82` 与您报的一致（`evidence/cmdr-next-orders-0438/quantity_surface_census_r1.txt` 抬头亦此命令）。
+- `files=15`，您写的是 `files=12`。差因不在方法：您那份清单自身数出来是 `lines=89`、`files=18`，因为它把第二段（`CnxMeasuredFacts` 的引用清单）并进了同一个文件 —— 末段就是证据：`frontend/src/features/discovery/RealCityDiscoveryPanel.tsx:7`、`frontend/src/features/recovery/V14RecoveryTruthPanel.tsx:6` 这类 import 行并不含那五枚字段名。
+- 具名量具的引用面：`lines=7`、`occurrences=9`（您写 10；`grep -c` 数的是行不是出现次数，这条我自己也踩过）。真正**挂载**它的只有两处：`frontend/src/features/discovery/RealCityDiscoveryPanel.tsx:199` 与 `frontend/src/features/recovery/V14RecoveryTruthPanel.tsx:186`。
+- 您给的 freshness 形状核实为真：`frontend/src/app/V8Experience.tsx:4138` 读 `provider_freshness.latest_provider_capture_at`。
+- 新发现（影响定档）：**房里其实有两个具名面**，不止 `CnxMeasuredFacts`。另一个是 `frontend/src/components/RawFactsPanel.tsx`，它已经把量值当文本渲染**并且**逐格挂锚：`frontend/src/components/RawFactsPanel.tsx:53`（`data-cnx-field`）、`:54`（`data-cnx-value`）、`:56`（`${entry.line}` 上 innerText）。
+
+三档：`tier_a=10`（已在量具后面）、`tier_b=35`（可能到旅客眼前）、`tier_c=37`（类型成员/注释/`data-*`/遥测，到不了 innerText）。每档逐条 `path:line` 都在工件里，含判据与原文行。
+
+## 2. (b) 档 35 行逐条判完：真正该改的 0 行
+
+`keep-copy-layer=20`、`keep-string-state=1`、`pinned_as_is=2`、`need_check=6` —— 那 6 行我又用眼睛过了一遍：`frontend/src/app/V8Experience.tsx:229`、`frontend/src/features/discovery/DestinationPreparationPanel.tsx:237`、`frontend/src/features/studio/V12TripStudioPanel.tsx:210`（经 `frontend/src/i18n/LocaleContext.tsx:744` 与 `:1523` 的 `The server refused this request (HTTP {status})` / 「服务器拒绝了这次请求（HTTP {status}）」）都**同时带来源名与单位**；`frontend/src/features/recovery/RecoveryRequiredPanel.tsx:81` 看着像光秃（`HTTP ${refusal.http_status}`），但它是 `code` 的兜底值，旅客读到的数字走 `params.status`，句子仍那句具名 copy。粗筛唯一的 residue `frontend/src/lib/failureAttribution.ts:140` 是 `content_type=${content_type}` —— 键名本身就是来源标注，与量具同形 ⇒ 误报。
+⇒ `bare_quantity_on_screen=0`、`sites_routed=0`。
+
+三条不改的理由（step 2 的"证明不合适"分支，不是漏做）：
+1. `lib/failureAttribution.ts` 那 20 行是房内既定的**归属层**（`classifyReadFailure`/`copyFor` 拥有"发生了什么"的句子）。量具渲染的是 `key=value` 行，渲染不出一句话 —— 路由过去等于把句子拆成事实条，正是您立过的"不要再开第三张服务端理由文案表"要防的方向。
+2. `frontend/src/features/inbox/JourneyInboxWorkbench.tsx:312` 产出的是**存在 state 里的字符串**，消费点 `frontend/src/features/inbox/JourneyInboxWorkbench.tsx:371` 与 `:514` 把它拼在 message 后面。换成组件挂载要改 message 的形状，而 `.v8-message` 的文本被三门按字读（这段风险被写在 `frontend/src/components/RawFactsPanel.tsx:28` 到 `:34` 的注释里）。
+3. 唯一那处手搓的量具形块 `frontend/src/features/planning/PlanWithAiSheet.tsx:970` 到 `:979` 被两枚已落地 spec 钉成"当前形状"，见下一节。
+
+## 3. D 项：两枚 pin（具名报，我没动它们）
+
+- `frontend/e2e/qoder-ord0302-unreadable-server-body.spec.ts:230` 取 `plan-ai-raw-reading` 的 textContent，`:234-240` **按行拆 `key=value`** 成 `raw_fields`，再与 `:244-246` 的 `expectedRaw()` 比 —— 换成量具的"label + 值"形状，这枚门会读空。
+- `frontend/e2e/qoder-ord0353-create-failure-technical-fold.spec.ts:36` 到 `:45` 的白名单里就有 `data-raw-bytes`、`data-raw-content-type`、`data-raw-http-status`（这三个属性由 `frontend/src/features/planning/PlanWithAiSheet.tsx:972`、`:973`、`:974` 挂上）—— 删块即删属性，门会红。
+顺带交一条命名漂移：`frontend/src/features/planning/PlanWithAiSheet.tsx:978` 上屏写作 `bytes=`，而契约名是 `body_bytes`（`frontend/src/lib/rawFacts.ts` 里同源事实的字段名）。真要收进量具，这两处应同步改，交给您定顺序。
+
+## 4. 您并入的那一问（键序会不会伤按字串比的断言）—— 结论不变，且这两枚 pin 不受影响
+
+上一轮普查：全仓"被比位置是序列化字串"只有 `backend/tests/test_hermes_r5_cached_replan_compatibility.py:88` 一处且带 `sort_keys=True`。本轮再看这两枚 pin：它们比的是**屏上 innerText**（`getByTestId(...).textContent()`），不是 HTTP 响应体字串 ⇒ r3 的键序变更对它们无影响。`bare_stringify_assertions_on_this_payload=0`。
+
+## 5. 门禁与限度
+
+本步**未碰 `frontend/src`**（两笔只动 `review/` 下一份 tsv：`git show --stat a3bc282fa59fd4c786ab67cbde22ff933c6dfb13`），所以没有新的 tsc / vite build 读数 —— 要我把 (b) 里那两枚 pin 的迁移方案落成代码，说一句我连着跑两套门与 :4781 真渲染读数。
+未跑 demo/reset、未碰 `_preview.db`、e2e baseURL 未指 `:8693` 或 `:4781`（本轮没跑 e2e）。
+`tier_c=37` 我只做了形状判定没有逐行读注释语义（逐条 `path:line` 在工件里，您要抽查随时）；`(a)=10` 里 `frontend/src/lib/rawFacts.ts` 有 `rows=5` 属于量具自身实现，若您的口径要把它算进"量具外"，(a) 与 (c) 会互换 `rows=5`，`tier_b=35` 不变。
+
+
+### ORD-0382 第三块 · qoder 前端车道 · 线上自验（选项一）与收尾卡 reveal 的两次错修
+新头　　refs/heads/review/Q-ord0382-ai-three-stage-r2 现指 3255b5960eda268e5aa3067acbb29778f2216101，上一枚 3e75ab2bbbac19c47ab042fce9ea90be0f04829b 已在权威线里（fast-forward 推送，无覆盖）；对现尖 e022093dcc198367d779fc92692c6ccfc6824a2a 重跑 `git merge-tree --write-tree` 退出码 0、CONFLICT 0 条
+线上代次自证　链上真发的 bundle 里数到本单字符串：run_strip=2、view_chat=1、no_day_signal=1、aftermath=2，件在 44b181a659c3fff57995b92cdc78eaf57231599b，脚本 8659d7e58d9bfd04d248b3166d12cceb7805f653
+零写自证　同一件 9-traffic 那格写着 commands_held=1、generate_held=0、real_reads_forwarded=20、other_writes_forwarded=0：两条写腿在浏览器内应答（agent/commands 扣 hold_seconds=25 后回空对象，plans/generate 回 status=422），GET 全部真发到 port=4781，所以「回读确认没有新增方案」这句是真读出来的
+线上读到的三段式（引文照抄屏上，逐条后附它自己的收据件）　等待面：你现在生效的方案：1 天、6 个安排。 服务器没有回过它在处理第几天，所以这里不按天报。 件 44b181a659c3fff57995b92cdc78eaf57231599b
+离开后：URL 落到 port=4781 的 /v8/agent，面板件数 0，横幅仍报「AI 正在规划这一趟 发出请求，等待模型返回 · 已等待 4 秒」 件 44b181a659c3fff57995b92cdc78eaf57231599b
+回来再中止：status=CANCELLED_AFTER_SEND，收尾三句「停在：发出请求，等待模型返回。 回读确认没有新增方案。 当前生效的还是第 1 版，行程没有换。」 件 44b181a659c3fff57995b92cdc78eaf57231599b
+无坐标行程这一格：activities=6、with_start_at=6、calendar_days=1、coordinate_fields=0、mobility_facts_with_geometry=0 件 2658a7134a018168e6702882f6452f98b57a235f——本屏只报天与安排，不报坐标，所以没被这具缺坐标的场景带偏
+看图抓出的缺陷与两次错修　线上那帧里收尾卡最后一行「当前生效的还是第 1 版，行程没有换。」落在折叠线下。第一次修用 scrollIntoView block=nearest，重拍逐像素没动——元素顶部已在视口内时 nearest 是空操作（f0778114…见 frontend/src/features/planning/PlanWithAiSheet.tsx）；第二次改 block=end，还是没动——真正原因是卡片在回读落地后才长高，effect 只盯 result 不盯 aftermath（frontend/src/features/planning/PlanWithAiSheet.tsx:617 那行 deps 才是修好的地方）。第三次重拍：三句全在视口内，帧 D:/moodle/_qoder_q_ord0382_evidence/frames-cnx-r5/08-closing-state.png
+门禁　同一代上重跑：tsc -p tsconfig.typecheck.json 退出码 0（日志 D:/moodle/_qoder_q_ord0382_evidence/tsc_r5.log）、vite build 退出码 0（D:/moodle/_qoder_q_ord0382_evidence/vite_r5.log）；本块只动组件与证据件，字典与样式未再改，故不重跑文案尺，上一块里 REGISTER_PARITY 与 RENDERED 的判据仍绑 847ce0bc0093e881e2bbff90286369e0ea006ab4
+具名阻塞（不拿 mock 顶）　T8–T11 四格仍不可验收：按天 emit 的真实进度、来源卡、反问卡都要真 provider，而两枚 API key 只有用户能轮换；屏上任何「AI 属于哪种态」的判断按命令者指示待接 ORD-0387 的服务端具名枚举，本车道不再自推四态——现有 aiStateFromServer 只是把服务器给的 ai_state 字符串映射成色与句子，没有发明状态
+尺与指南的一处不一致（供 ORD-0371）　Q43_HOW_TO_PASS_r1.md 给的自检命令写的是 `--file`，而 claim_coordinate_check_r4e.py 的 --help 只列 --text/--out/--expect-clean/--expect/--selftest，按指南原样敲会直接报错；本块用 --text 跑通，r4e、r5e、r5f 三版结论一并附在回执
+
+
 ### ORD-B 追答 · 车道 rel · 键序变了会不会伤到按字串比的断言：找过，命中 zero · 2026-09-28 0458+08
 
 现尖按您给的 `e022093dcc198367d779fc92692c6ccfc6824a2a` 数（我本地 `git cat-file -t` 回 commit）。全部只读，未改任何断言、未改任何产品文件。
