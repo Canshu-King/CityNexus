@@ -3,6 +3,8 @@ import "maplibre-gl/dist/maplibre-gl.css";
 import type { FeatureCollection } from "geojson";
 import type { V8Data } from "../../app/v8Types";
 import { useT, useLocale } from "../../i18n/LocaleContext";
+import { mapCopy } from "../../i18n/mapPanelCopy";
+import "../../map-attribution.css";
 
 /**
  * ORD-0082 ④: the map's own "there is nothing to centre this on" condition, as a pure function of
@@ -321,18 +323,21 @@ export function MapPanel({
          uniform 42px padding let the last marker sit underneath it (pass-9
          blocker #1). The fix tells the camera how much of its own viewport the
          overlay occupies, rather than raising the marker's z-index so the two
-         elements take turns bullying each other. */
-      const caption = host.current?.parentElement?.querySelector(
-        ".v8-map-caption",
+         elements take turns bullying each other.
+         ORD-A: that overlay is now the whole stack (bubble + caption + notice), so the camera is
+         told about all of it — measuring only the caption would re-open the hole the comment above
+         describes, one element at a time. */
+      const overlay = host.current?.parentElement?.querySelector(
+        ".v8-map-overlay-stack, .v8-map-caption",
       ) as HTMLElement | null;
-      const captionHeight = caption?.getBoundingClientRect().height ?? 0;
+      const overlayHeight = overlay?.getBoundingClientRect().height ?? 0;
       const side = 42;
       const safetyGap = 16;
       mapInstance.fitBounds(bounds, {
         padding: {
           top: side,
           right: side,
-          bottom: side + captionHeight + safetyGap,
+          bottom: side + overlayHeight + safetyGap,
           left: side,
         },
         maxZoom: 13,
@@ -355,12 +360,8 @@ export function MapPanel({
         aria-live="polite"
       >
         <div className="v8-map-empty-body">
-          <b>{locale.startsWith("zh") ? "尚未获取地图位置" : "No map location yet"}</b>
-          <p>
-            {locale.startsWith("zh")
-              ? "这个行程还没有可信的坐标。添加活动地点或开启定位后，地图会显示正确的城市。"
-              : "This trip has no trustworthy coordinates yet. Add located activities or enable location, and the map will show the right city."}
-          </p>
+          <b>{mapCopy(locale, "noLocationTitle")}</b>
+          <p>{mapCopy(locale, "noLocationBody")}</p>
         </div>
       </div>
     );
@@ -380,21 +381,32 @@ export function MapPanel({
            right degradation, but saying nothing is what made the panel read as a
            picture someone had drawn rather than a map that failed to fetch one. */
           <p className="v8-map-tile-notice" data-testid="v8-map-tile-notice" role="status">
-            {locale.startsWith("zh")
-              ? "底图未加载，显示的是路线示意。"
-              : "Basemap did not load — showing the route diagram only."}
+            {mapCopy(locale, "tileNotice")}
           </p>
         )}
-      <div className="v8-map-caption">
-        <span className="status-dot" />
-        {t("mapComp.routeContext")} <b>{t("mapComp.legs", { n: route.length })}</b>
-        <span className="v8-sr-only">{t("mapComp.providerRoute")}</span>
+      {/* ORD-A: the caption and the gesture bubble used to be positioned independently
+          (`.v8-map-caption` bottom:12px, `.v8-map-gesture-hint` bottom:calc(40px + safe-area)), which
+          was fine while the caption was one line. Adding the basemap notice made it two, and the
+          bubble then painted over the notice at every width from 320 to 414 — measured, not guessed
+          (2,513–3,316 px² of overlap). One bottom-anchored stack removes the whole class of bug
+          instead of nudging one offset. */}
+      <div className="v8-map-overlay-stack">
+        <p className="v8-map-gesture-hint" data-testid="v8-map-gesture-hint">
+          {mapCopy(locale, "gestureHint")}
+        </p>
+        <div className="v8-map-caption">
+          <span className="status-dot" />
+          {t("mapComp.routeContext")} <b>{t("mapComp.legs", { n: route.length })}</b>
+          <span className="v8-sr-only">{t("mapComp.providerRoute")}</span>
+          {/* ORD-A: the basemap is fetched from tile.openstreetmap.org, so the notice belongs on the
+              glass. `attributionControl:false` above means maplibre will not draw it, and the
+              source's own `attribution` field only reaches the style document — invisible to a
+              traveller. It inherits the caption's colour, so light/dark needs no rule here. */}
+          <span className="v8-map-attribution" data-testid="v8-map-attribution">
+            {mapCopy(locale, "attributionRaster")}
+          </span>
+        </div>
       </div>
-      <p className="v8-map-gesture-hint" data-testid="v8-map-gesture-hint">
-        {locale.startsWith("zh")
-          ? "单指拖动地图 · 双指缩放 · 想翻这一页就拖地图以外的地方"
-          : "One finger drags the map · two fingers zoom · to move the page, drag outside the map"}
-      </p>
     </div>
   );
 }

@@ -4,7 +4,9 @@ import "maplibre-gl/dist/maplibre-gl.css";
 import type { Activity, PlaceRecord, PlanVersion, RouteEvidence } from "../api/citynexus";
 import type { JourneyTwin } from "../contracts/journeyTwin";
 import type { ReplanProposal } from "../contracts/replan";
-import { useT } from "../i18n/LocaleContext";
+import { useT, useLocale } from "../i18n/LocaleContext";
+import { mapCopy } from "../i18n/mapPanelCopy";
+import "../map-attribution.css";
 
 interface JourneyMapProps {
   plan: PlanVersion;
@@ -70,6 +72,7 @@ export function JourneyMap({
 }: JourneyMapProps) {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const t = useT();
+  const { locale } = useLocale();
   const proposal = proposals[0] ?? null;
 
   useEffect(() => {
@@ -281,14 +284,26 @@ export function JourneyMap({
   }, [eventActive, places, plan, proposal, routeEvidence, twin]);
 
   return (
-    <div
-      ref={containerRef}
-      className="maplibre-container"
-      aria-label={t("mapComp.maplibreLabel")}
-      data-route-source={routeEvidence?.source ?? "unavailable"}
-      data-route-provider={routeEvidence?.provider ?? "unavailable"}
-      data-route-fallback={String(routeEvidence?.fallback ?? true)}
-      data-basemap-provider="openfreemap"
-    />
+    <>
+      <div
+        ref={containerRef}
+        className="maplibre-container"
+        aria-label={t("mapComp.maplibreLabel")}
+        data-route-source={routeEvidence?.source ?? "unavailable"}
+        data-route-provider={routeEvidence?.provider ?? "unavailable"}
+        data-route-fallback={String(routeEvidence?.fallback ?? true)}
+        data-basemap-provider="openfreemap"
+      />
+      {/* ORD-A: this surface pulls tiles from tiles.openfreemap.org (OPENFREEMAP_STYLE_URL) with
+          `attributionControl:false`, so nothing named the provider on screen.
+
+          The notice is a SIBLING of the map container, not a child: maplibre empties the element it
+          is handed, so a React child of `.maplibre-container` is deleted on init — measured, the
+          container came back with 0 children. `.map-canvas` is `position:relative; overflow:hidden`
+          (styles.css:12), so the sibling anchors to the same box without adding a DOM level. */}
+      <span className="maplibre-attribution" data-testid="maplibre-attribution">
+        {mapCopy(locale, "attributionVector")}
+      </span>
+    </>
   );
 }
