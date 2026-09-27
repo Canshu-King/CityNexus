@@ -16588,6 +16588,105 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### ORD-0371 交付（lane S4-ast-taint，量具线）— Q43 坐标尺 r5：一枚数字的类别不再由它的邻居决定
+
+面：量具本体。零产品字节，未碰权威线，未动任何已发布路径（同字节或拒写那条规矩）。跑尺用系统 python 3.10.11（实测 3.10.11）。
+
+一、成因落在哪几行，用可复现的对偶句交（同一枚数字、同样的紧邻文本，只改块的其余部分；r4e 的判语跟着动，r5 不动）。
+  对偶句 8 组、断言 26 条，逐枚读数在 evidence/ord0371-q43-r5-0149/verify_cause_and_parity_r5.json = dc60f2c689822858d146b8dcc30dba24e06f0da4
+  根因按尺的现行行号交（尺体 = e17cf8ef3c4db9e7d5598ed2da17e0d9a11fa9ef ）：状态词搜索半径从 40 收到紧贴 `claim_coordinate_check_r5.py:76`；
+  "块里有没有收据"改成"这枚数字 ±80 字内有没有收据" `claim_coordinate_check_r5.py:283`；
+  状态码要邻接锚 `claim_coordinate_check_r5.py:205`；同一个数字只走一遍 `claim_coordinate_check_r5.py:279`；
+  地址段不再当数量 `claim_coordinate_check_r5.py:197`；host:port 不再当行号 `claim_coordinate_check_r5.py:224`；
+  `path:line` 的后缀表补全，`.mjs:` 那枚就落在这里 `claim_coordinate_check_r5.py:82`。
+
+二、改宽的地方，逐句点名（只有这两句变宽，其余一律变严；反例臂都在自测件 e77be5ab86d88cb17095e63511054088d0cc68c4 里）：
+  甲 `claim_coordinate_check_r5.py:173` 名字边界：`assets/index-BEEP22s_.js` 里的 `22s` 不再被读成秒。
+    这句是给我自己另一处放宽擦的屁股：先量到它把一枚已上架块判红，才加的规则。那份红没删，在
+    evidence/ord0371-q43-r5-0149/parity_r4e_vs_r5_before_namefix.json = e32e7d07019a5a007a0725a0ddb91059cf966ed2 （判级翻面的块：n2_0116 ）
+  乙 `claim_coordinate_check_r5.py:92` 坐标边界：`\b` 在汉字与满 40 位十六进制之间不存在，紧贴中文写的收据以前根本不被认成坐标。
+    反臂：字母粘上的十六进制串仍不算坐标；空格后面那个 `22s` 仍是数量（自测件 e77be5ab86d88cb17095e63511054088d0cc68c4 ）。
+
+三、双向自测 52 臂全过（退出码 0；exempt 臂不许出声，fire 臂不许沉默）：
+  evidence/ord0371-q43-r5-0149/selftest_r5.json = e77be5ab86d88cb17095e63511054088d0cc68c4 ；尺体 evidence/ord0371-q43-r5-0149/claim_coordinate_check_r5.py = e17cf8ef3c4db9e7d5598ed2da17e0d9a11fa9ef （39250 B，596 行）
+  反控另发一件：把 11 处收紧逐条改回 r4e 的形状，每一处都至少被一条臂咬住，漏网 0 处：
+  evidence/ord0371-q43-r5-0149/mutation_countercontrol_r5.json = a8992109790580d438481ffd03292554b7356069
+  这一轮还照出我自己的一个空臂：只把半径 16 改回 40 时全绿，因为 r4e 真正的规则是"±40 内任意位置、不带锚"，
+  mutation 已换成那条忠实形状（同件 a8992109790580d438481ffd03292554b7356069 ）。
+
+四、没有放宽门槛，用真实块说：4 块在 r4e 与 r5 下同为拒，判级翻面 0 枚，逐块判级 n2_1824 Q43_GATE_RED/Q43_GATE_RED、n2_0105 Q43_GATE_RED/Q43_GATE_RED、n2_0101 Q43_GATE_RED/Q43_GATE_RED、n2_1759 Q43_GATE_RED/Q43_GATE_RED、n2_0116 Q43_GATE_GREEN/Q43_GATE_GREEN
+  差分件 evidence/ord0371-q43-r5-0149/parity_r4e_vs_r5.json = 93750d48e765c7e30d35c2f1ff3bc6615ac86f3b ；块内逐枚移动（同一件 93750d48e765c7e30d35c2f1ff3bc6615ac86f3b ）：n2_0101 新拒 [] 新清 ['1392']；n2_1759 新拒 ['2148', '52 秒'] 新清 ['127']
+
+五、没改善的部分（不粉）：
+  1) 那四块仍然拒。我一个字的块文字都没替车道改，也没删判据；作者要自己把收据挪到数字 ±80 字内或补 `path:line`。
+  2) 写盘门仍跑 r4c：`ledger_inbox_apply_r1.py:123` 与 `post_note_r1.py:38`。换版是号令者的手，我只点名这两行，不动那两个文件（尺体 e17cf8ef3c4db9e7d5598ed2da17e0d9a11fa9ef ）。
+  3) r5 只跑过这五枚真实块与自测件，没跑过整本账本；已入账块按单写者规矩不可追认。
+  4) 本单原文把交付位写成 `s1_<HHMM>.md`，我是 S4，块按 `s4_0150.md` 落，不占 S1 的槽；若那句不是笔误请点名要我改。
+
+
+### ORD-0369 交付（lane Q）— 手机端 Replan 真链路走通到「试算被拒」那一格，途中 10 个断点里 9 个已落成产品码，1 个是外部条件
+
+分支 `refs/heads/review/Q-ord0369-replan-walkthrough`，起点是权威尖 `4ef864cfa49b805e3d41b7f079f5fb4184ccec3d`（`git merge-base --is-ancestor` 判为 FAST_FORWARD 可行，本车道没有碰权威线）。
+候选头 `9bd7a3012afbdbe82881f0aa4d02ba27500e5671`，push 后 `git ls-remote origin` 逐字符回读等于本地 HEAD。
+批次 sha：`f8e569a19c2a3f0a1850b799e2fe4f13c67d161c`、`007e5aff28143fb8a528e13312fa3b629c43dee1`、`958e4405315085a7ebe4f82be2b5efb7a4488e81`、`2961336a6c8f448ec3b8bdd7bf5a17a486c05a6e`、`9bd7a3012afbdbe82881f0aa4d02ba27500e5671`。
+
+走查面（每格读数具名到面）：用户可见面 `:4782` 只做只读；写入与修后复走跑在车道自己的 canary（私有端口、`Connection.backup()` 私有库副本）与候选面上。canary 与用户可见面那张证据过期卡**逐字节相同**（sha256 前 16 位 `f113ffb86520eedb`，件 `review/ord0369-phone-replan/before_user-surface_authoritative-4782.png`），所以替身是量出来的替身，不是假设的替身。视口 390×844 见 `frontend/playwright.ord0369-Q.config.ts:37`；**这是设备模拟，不是用户真机**。
+
+链路的实际终点（不是我没走完，是它被两处事实挡住，两处都有原文）
+- 教学舞台「请求重规划」→ `POST .../replans` 答 HTTP 422，`error.message` 是裸 token `MOBILITY_DATA_UNAVAILABLE`，`message_key` 停在泛用的 `request.invalid`，`details.gaps` 只有一条且 `evidence_state` 为 `FACT_PRESENT_BUT_NOT_HARD_ELIGIBLE`。发射器 `backend/app/main.py:5513`。⇒ 需要真实路线数据源，产品码改不了这个事实。
+- 工作室「预览影响」→ `POST .../trip-studio/preview` 答 HTTP 200 且 `can_accept` 为假，因为这一版全部活动都是受保护锚点（`frontend/src/features/studio/V12TripStudioPanel.tsx:54`、`frontend/src/features/studio/V12TripStudioPanel.tsx:59`）⇒ 草稿在任何顺序下都不可能通过。
+- 因此实时屏上没有 proposal，`live-accept` 不在屏上；接受腿的产品码由既有门 `frontend/e2e/golden.spec.ts:55` 在 fixture 后端上覆盖，本单没有把它算作自己新交的证。
+
+落成的产品码（逐条对着屏上原文改，没有动任何现有断言）
+1. 证据过期卡整张硬编码英文 + 把 `body.error.message` 当主句 + `catch` 一律怪网络 + 「Acknowledge warning」在只有 staleness 时必然 HTTP 404：`frontend/src/features/recovery/RecoveryRequiredPanel.tsx:118`、`frontend/src/features/recovery/RecoveryRequiredPanel.tsx:252`，blob `96e0089dd2942e4904a2d3a409068282e021dae5`。
+2. 工作室把 7 条 token 与 4 对段号 UUID 拼成一行当解释、成本写成最小单位、动手之前不说明没有可移动活动、键盘按 dnd-kit 自己的提示操作时无效、禁用的主按钮与能点的长得一样：`frontend/src/features/studio/V12TripStudioPanel.tsx:82`、`frontend/src/features/studio/SortableActivityList.tsx:39`，blob `62ed305bee30b4cc6ccc887aa398dc9484e7601a`。
+3. 舞台那条 422 从"只转述裸 token"变成"说清哪一段证据达不到可硬用标准 + 方案没有变化 + 要接什么才会通"：`frontend/src/features/simulation/simulationAdapter.ts:130`，blob `aaa5cd4e9e9d62102a8538e5bb3cc141df71b02b`。
+
+判据：`frontend/e2e/qoder-ord0369-replan-walkthrough.spec.ts`（blob `22f678c6c8d0ddca66ba2baed3873f21536fb621`），报告件 `review/ord0369-phone-replan/playwright-report-9-passed.json`（blob `21cbc7118f5578af78937ba4750a5ef5b1053bfb`），`stats` 里 expected 9 / unexpected 0 / skipped 0 / flaky 0，耗时 27962.727 毫秒（同件 `stats.duration`）。首轮曾报红 2 条：一条咬到真缺口（`.v8-primary` 缺 `:disabled` 规则，实测 opacity 为 1，已补进批次 `007e5aff28143fb8a528e13312fa3b629c43dee1`），另一条是我正则把负号放进了货币符号内侧——产品那侧是对的，改的是断言形状，没有放宽判据、没有 skip、没有 mock 产物。
+
+没改善的部分（照实在说）
+- 手机上「提出一次改动 → 接受」这一条链**今天仍然走不完**：两处拒绝都名正言顺（没有可硬用的路线证据、没有可移动的活动），我修的是屏上怎么说，不是让它们变成能过。要真走完需要接上路线数据源，或让封存的演示方案留出一个非受保护活动——后者是产品决定，不在本单授权范围内。
+- 演示方案的冻结证据在场景起点之前就已过期（`GET /api/v1/demo/scene` 的 `evidence_expires_at` 早于 `scene_start_at`），所以手机上这张卡是常驻的。种子数据的一格，本单没动。
+- 实时屏在手机上没有舞台浮球（实测 `sim-ball` 只在今天屏与向导屏挂载），也就是说"正在走的这一屏"里找不到发起改动的入口；入口本身在不在实时屏是设计判断，我没擅自加导航。
+- 恢复卡仍带一处内联 `style={{ flex: 1 }}` 与三处 `<details>` 折叠的排版依赖，深色对比那一格我只把卡片自身的颜色挪到 token 上，没有全量审这张卡的暗色读数。
+- 接受腿在演示部署上没有真链路可读，只有 fixture 门覆盖；`REPRODUCED(simulated)`，真机那一格等用户本人。
+
+
+### CMDR 02:0x · ORD-0370 落地并换代 · 门禁编译臂首战 · 我发布的三份坏件勘误 @2026-09-28 02:0x+08
+
+ORD-0370 落地与换代
+
+- 车道分支 `review/Q-ord0370-hardcoded-fallbacks` 交来的 tip 是 `d033f83e064448a8ab0f3ed4cd01e3616b596181`，它切的 base 落后三跳，重切为 `961836390c5325863acdc1834d4a4cd16fd97081`（合并树 `d4285f7e5765415460e51b9e770762e860a3d3db`），逐文件等于车道 blob 的证明在 `be006d749e302dfda1c5e17b2acbe91ad1c55349`，落地回执 `068ca93d0fe5c82923bccb62027215385aa100d9`。
+- 换代 OVERALL GREEN，手机侧探针 `dce01502f78d1e2f926f54c506e376aa4545fd16` 判 DEPLOYED_AND_BYTE_IDENTICAL_ON_PHONE_SIDE 且五面决策位全为真。
+
+commander 亲跑车道升级版文案尺（不采信自述）
+
+- 尺 `tools/cnx_copy_tiers_r1.py` 在落地代上的 blob 是 `ae9342d6551ca9a446d3c41d42e18737bae03b1a`。正向读数 `2b62816f1c772b9692afd1a2a53970e43c4f59f2`，反控臂 `cd9696eda54b41a03012501b9f77b68807b1e011`，空语料拒绝臂 `0d8b96112af41bbf31b0532f311927762e72dfbd`。
+- 两格新面我确认过形状：组件兜底那一格把语言分支形从有到零、裸字面量存量如实报红，并显式声明内联双语对那个更大的数只是分母不是缺陷计数；`RENDERED` 那一格把本轮六枚 key 的取用点逐枚落到 `frontend/src/features/agent/CopilotDock.tsx:365`、`frontend/src/features/agent/CopilotDock.tsx:385`、`frontend/src/features/agent/CopilotDock.tsx:416`、`frontend/src/features/inbox/JourneyInboxWorkbench.tsx:806`、`frontend/src/features/execution/LiveRecovery.tsx:239`、`frontend/src/features/studio/V12TripStudioPanel.tsx:91`。
+- 它还量出一格我自己在 ORD-0367 那轮完全没看见的盲区：有若干 key 的取值写在下一行，四格字典断言对它们不可见，具名首五枚见 `2b62816f1c772b9692afd1a2a53970e43c4f59f2`。我引用过的那把旧尺读不到这些行，所以我当时那句"双语 key 零档位错配"的分母比真实字典要小。这条不撤回结论，但撤回我以为分母是全量的那层含义。
+
+已部署包的我方回读
+
+- 从落地代字典取真值（不猜措辞），逐枚在服务包里计数，读数 `400b3a4b24be47d0bfa8f48e72e011556de23529`：六枚 key 的中英值全部命中，key 名本身也全部在包里；早先那处让我怀疑"硬编码没清干净"的英文字串，查上下文是字典自己那一行的取值，不是兜底位。
+- 同一份读数里必须标注两格没有判别力：一枚取值为极短通用词的，包内命中数上百，那是泛词撞出来的，不能当证据；我把它写在这里而不是悄悄删掉。
+
+我发布的三份坏件（勘误，不改已发布路径）
+
+- 我先用错误的相对路径跑尺，三次都是 `FileNotFoundError` 崩溃日志，却已经以 `_r1` 名字发布出去了：坏件 `0a67180b068482b39398656b080807a8aa4d14b6`，两份同尺寸同内容。
+- 处置：按 Q57 不覆盖不删除，修订以 `_r2` 三个新名字发布（坐标见上一节）。任何引用这批件的人请引 `_r2`。
+- 成因是我自己的：发布前没读文件内容，只看了发布器回的逐字节匹配——那只能证明"传上去了"，不能证明"里面是读数"。这与我今晚已经栽过一次的形相同。
+
+门禁编译臂首战与一条常设规则
+
+- 落地门 r4（blob `9a0ee82f4f13aa278ff1e562b6c133581e852235`）第一次真判车道候选：编译臂在 `frontend/src` 有改动时跑 `vite build` 并读 asset 名，本候选判绿；它此前已被双向验过（真坏候选 `fe5a8ef5f5a44eeca4d85fdb9c7757323d4af3fb` 拒、真能编译候选 `9b33a3e35d5c81724012b2e456ecdfaab6b123c8` 放行）。
+- 新增常设规则 **FRONTSRC_BUILD_PREREQ**：凡交含 `frontend/src` 的候选，若在其工作树里跑不了 tsc 与 build，该单状态是 NOT-DELIVERABLE，不得报"未 typecheck"当作已交并附注。这条由 N2 的自省升格而来——它当时明知树里没有 node_modules 却只报了未测量，那枚编译洞有一半出在这里；我承认另一半在门上（门当时没有编译臂）。
+- 手机在 `9618363…` 代。指挥线在 `16bb15c2f0c9bbf863872c545762102e7a4dba1b` 那一跳只动 `tools/`，`frontend`、`frontend/src`、`backend` 三棵子树与上一尖逐字节相同，携载判定 `NO_SWAP_REQUIRED` 记在 `evidence/cmdr-landing-20260928-0132/generation_carriage_16bb15c2_r1.json`。
+
+手机面我自己看过的一屏（补 ORD-0366 的渲染级验收）
+
+- 在无鉴权的 `:4781` 上用手机视口渲染 Today 屏，读到那一行并列的四个安静按钮，其中包含落地新增的那枚分享入口，且它带溯源字段；按钮清单与上下文见 `b26b961baa481e25f014784c6070b689102781c8`，原始 DOM 见 `31c93920c4aae53e8e79807f7fad69e4127cf735`。
+
+
 ### CMDR 01:3x 落地两笔并换代 · 权威线一度编译不过的如实记录 @2026-09-28 01:3x+08
 
 落地序列（全部 ff-only，每笔落地前后各重读一次线尖）
