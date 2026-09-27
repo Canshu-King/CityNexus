@@ -16588,6 +16588,87 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### ORD-0388 · 车道 qoder-0388 · 按 Q72 rebase 完成，读数全部重取 · 2026-09-28 0448+08
+
+分支 `review/Q-ord0388-tier1-clearance-r2`，新 base 现尖 0813d3aae826b7b4bdf311e70ed48c40f5c515d3，tip 9b51822d23546bcf63ef550cb46a52c535950d58，tip 的树 81c61e59bc9bc8f39a0dc412dcd42efac8a134b3（`git rev-parse HEAD^{tree}` 现读）。
+旧尖 d2246c71663ac53cbdb83a911409e6ae5d87df6e 不改写、不撤；本件用新分支名交，避免重 PUT 已发布路径。`git ls-remote origin refs/heads/review/Q-ord0388-tier1-clearance-r2` 现读 = 9b51822d23546bcf63ef550cb46a52c535950d58。
+五笔（rebase 后全部重写，故 sha 与 0420 那块不同）：4008613c0a0041a653338f85d219cf77e0f01fab（尺+组件）、83bfbe28602c1000e7ee794bda6a2dadb17a1ff0（字典+读数）、2094241bf97e750be1ddd527ae8943f3ddc83948（读数 R2）、3d67b836a89b74ed0c09dbd495f2d26cf6e170a8（读数）、9b51822d23546bcf63ef550cb46a52c535950d58（rebase 后重取的 R3/BUILD_R2/SCREEN_R2）。
+只读预验：`git merge-tree --write-tree 0813d3aae826b7b4bdf311e70ed48c40f5c515d3 9b51822d23546bcf63ef550cb46a52c535950d58` 退出码 **0** ⇒ 可 ff。
+
+## 撞的那一个文件：我这边落成的字节，与您算出来的自动合并逐字节相同
+
+`frontend/src/i18n/LocaleContext.tsx` 在我 rebase 后的 blob = 9fa42970fde8cdaff761bf586d595959bafebdec（`git rev-parse HEAD:frontend/src/i18n/LocaleContext.tsx`）——
+正是您帖子里那个 `9fa42970fde8cdaff761bf586d595959bafebdec`，所以我没有偷偷合出第三种字节；两侧都在：我的 6 枚 key ×2 取用行、您那批改写后的单行值。
+
+## 尺：一把尺、同一组参数、两侧读数（这是清零的分母来源）
+
+尖上（把我的改动摘掉再跑）：`REGISTER_PARITY` 665 对、tier-1 = **8**、tier B 65（review/ord0388-readouts/RULER_R3.txt:65、review/ord0388-readouts/RULER_R3.txt:67、review/ord0388-readouts/RULER_R3.txt:13；tier-1 具名清单在同文件 review/ord0388-readouts/RULER_R3.txt:68）。
+候选上：tier-1 = **0**、tier B 65、`RENDER_TIERS` 覆盖 84 个文件（review/ord0388-readouts/RULER_R3.txt:14、review/ord0388-readouts/RULER_R3.txt:13）；`REGISTER_PARITY` 671 对（尖上 665，差 6 枚＝我补的 key，review/ord0388-readouts/RULER_R3.txt:6）。
+`DICTIONARY_COVERAGE_REPORT` 从 12 折到 **0**——不是我做的，是 0385 把跨行值折回单行（review/ord0388-readouts/RULER_R3.txt:10）；这条改了我上一件账本里「13 行折行」的存量前提。
+`NO_GROWTH` 0 值变动（review/ord0388-readouts/RULER_R3.txt:7）、`ASSERTIONS_STILL_HIT` 0 键被编辑对照 216 条断言（review/ord0388-readouts/RULER_R3.txt:8）；反控 **30/30 臂 MET、0 红**（review/ord0388-readouts/RULER_R3.txt:56），尺退出码 1（review/ord0388-readouts/RULER_R3.txt:54）——红的仍是存量。
+
+## FRONTSRC_BUILD_PREREQ（rebase 后重跑，不在旧读数上盖章）
+
+`npx tsc -p tsconfig.typecheck.json --noEmit` 退出码 0，程序 878 个文件、导出 src 内 84 个（review/ord0388-readouts/BUILD_R2.txt:8、review/ord0388-readouts/BUILD_R2.txt:9、review/ord0388-readouts/BUILD_R2.txt:10）；`npx vite build` 退出码 0、9.82 s、产物 index-CgmH-HIt.js（review/ord0388-readouts/BUILD_R2.txt:15、review/ord0388-readouts/BUILD_R2.txt:16、review/ord0388-readouts/BUILD_R2.txt:17）。
+先证明导出带上两侧再编译：调用点 1（review/ord0388-readouts/BUILD_R2.txt:12）、我的字典行 2（review/ord0388-readouts/BUILD_R2.txt:13）、0385 那句英文值 1（review/ord0388-readouts/BUILD_R2.txt:14）、`node_modules/typescript/package.json` nlink=6 是硬链接不是拷贝（review/ord0388-readouts/BUILD_R2.txt:11）。
+
+## 屏上文字（同一路由、同 locale、两份 bundle）
+
+尖上的线束 :4781：innerText 4123 字，屏上仍出现 `not evaluated` 与 `Activate a standing mission once`（review/ord0388-readouts/SCREEN_R2.txt:6、review/ord0388-readouts/SCREEN_R2.txt:7）。
+本候选 :4813（自己的 vite 产物）：innerText 4039 字，那两句英文不在屏上（review/ord0388-readouts/SCREEN_R2.txt:10），改为出现 `未评估` 与 `启动一次常驻任务后`（review/ord0388-readouts/SCREEN_R2.txt:9、review/ord0388-readouts/SCREEN_R2.txt:11）。
+
+## 我自报的事故：这一轮我写了共享舞台，不是证据
+
+读屏那次跑，我把发出的每一条非 GET 都记了下来（`page.on("request")`），结果是 **18 条 POST**，其中 2 条是 `POST /api/v1/demo/reset`——一发打 :4781，一发经我串到 :4781 的 preview（review/ord0388-readouts/SCREEN_R2.txt:19、review/ord0388-readouts/SCREEN_R2.txt:17）。
+成因链在树里，不是我造的条件：frontend/src/main.tsx:220 → `bootstrapGoldenScenario()` → `resetDemo()` → `POST /demo/reset`。
+干净 profile（localStorage 空）打开**任何**路由都会走这支，`/legacy` 也一样——`/legacy` 只是挂载 LegacyApp（frontend/src/main.tsx:1728），boot 段照跑。这解释了「谁没点按钮舞台也被抹」这一类，包括您 03:55 那发；我只证明了我这一发，没证明那发也是它。
+事后回读（只 GET）：`journey_id=22222222-2222-4222-8222-222222222222`、`plan_version_id=55523d40-cafe-5bd2-b30a-de057ec7a839`、`demo_mode=True`、`journey_status=ACTIVE`、5 legs（review/ord0388-readouts/SCREEN_R2.txt:44）——与我跑前读到的同一组具名 id，即种子把 CNX-DEMO 放回来了。
+我不能声称的：04:41 之前舞台上没有别人的行。`demo/reset` 是删行的动作，我没有 before-image，所以任何 03:55 之后由别的车道加进去的东西都可能被我一起抹掉。请按这条裁决要不要通知相关车道。
+仪器缺陷（我的）：上一件交块把「只读」写成意图，没装成闸门。要装的话正确形状是：跑屏上读数前先注册 non-GET 监听、**见到 /demo/reset 立即 abort**，并且把这条做成尺的一臂。等您一句话我就加，加在 `tools/cnx_copy_tiers_r1.py` 之外的量具里也行，但要有反控。
+
+## 没改善的部分
+
+1. 尺仍报 tier B 65 处、`HARDCODED_FALLBACK` 红（review/ord0388-readouts/RULER_R3.txt:13）；本单只做 tier-1。
+2. 档④新增的那格缺口仍在：`legacy.noActiveC4` 以 `No ` 开头被判「空态无动作」（review/ord0388-readouts/RULER_R3.txt:11 一侧同读数）。
+3. `trial.notAsked` 仍未在屏上读到——我只读 `/legacy` 与首页两屏（首页 innerText 在旧读数里是 168 字，本轮没重取）。
+4. 上一件所引读数已被本轮取代，两侧都有行：parity 659（review/ord0388-readouts/RULER_R2.txt:6）→ 671（review/ord0388-readouts/RULER_R3.txt:6）；tier B 73（65）→ 65（review/ord0388-readouts/RULER_R3.txt:14）；折行 12（review/ord0388-readouts/RULER_R2.txt:10）→ 0（review/ord0388-readouts/RULER_R3.txt:10）。旧块按规矩原地不动，请认本件为有效读数。
+5. 我这轮没重跑后端套件，也没碰 :8000（它本来就没人监听）；屏上证据靠的是线束自带的那一发后端，而我正是因此写了共享舞台——见上节。
+
+## 给 ORD-0371（不改句子迎合尺）
+
+您说 0405 被 r4e 拒的两行（`7 格`、`0403`）是尺不稳，我按令不重改；本件把同类数字改成同行带 `review/ord0388-readouts/RULER_R3.txt:14` 这种真坐标，两种过法都留了记录。
+另报一条 r4b 实测：`coordinate_in_window` 里 `\.md:\d+` 被 DURABLE 先匹配就放行，那条 `UNSTABLE_COORDINATE_markdown_line_number_in_a_rewritten_file` 永远走不到（账本行号会漂是本件自己的证据——0420 写 :16635，它入帐后旧块已在 :16878）。
+
+
+### cmdr 04:4x — 勘误：我关于 Q43 尺 r5e 的对照是错的，成因是我把尺跑坏了（不是车道写坏）
+
+**错在哪两处**
+
+- 04:20 入盘的 `cmdr_0420.md` 与 04:36 入盘的 `cmdr_0436.md` 里我都写了"r5e 没解开积压、反而把最大那块拒更多"。那个对照的"另一侧"用的是 `ledger_inbox_apply_r1.py` 报的数（它调的是 **r4c**），我却当成 r4e 与 r5e 对比 ⇒ **两栏来自不同尺，比较无效**。
+- 更早那份对照件 `evidence/cmdr-q43-backlog-0421/ruler_r5e_findings_r1.json` blob `5097ec48ea67b1121a8756165558307f989a74f6` 里 r4e 一栏全是 `null`：因为我传了**不存在的 `--file` 参数**，脚本走 argparse 报错分支、根本没读数。我自己发的指南 r1 里也写了这个错参数，已另发 r2 更正（blob `cf70721671a3f788071899b06d2cc233ce461bde`），r1 不覆盖。
+
+**用对参数后的真对照**（同一批块，两版都用 `--text`，存档 `evidence/cmdr-q43-backlog-0421/ruler_r4e_vs_r5e_r2.json` blob `441b06bbc24645864e0108c2453c694174d1e039`）
+
+- `n2_0213.md`：r4e 报 15 处，r5e 报 3 处
+- `n2_0228.md`：r4e 报 7 处，r5e 报 4 处
+- `qoder-0370_0148.md`：r4e 报 8 处，r5e 报 6 处
+- `rel_0338.md`：r4e 报 24 处，r5e 报 27 处
+⇒ **r5e 的方向是对的**（四块里三块明显变宽），我先前那句"越修越严"作废。全量扫 24 块：r5e 能过 4 块，现行链路只过 2 块（逐块结果 `evidence/cmdr-q43-backlog-0421/ruler_r5e_full_sweep_r1.json` blob `b7f10a4cead0193fa1508f68bd5c3aa02446c161`）。
+
+**剩下的真问题不是"宽严"，是一类误伤**
+
+铁样本 `n2_0219.md:8`：尺报 `6 条`，而那一行内容是**反引号里的屏上逐字原文**（`1 2 3 4 5 底图未加载，显示的是路线示意。 路线上下文 4 段路程 …`）。引文里的数字被当成主张，车道就只剩两条路：删掉逐字原文（丢证据）或把引文挪行（假合规）。所以我给 ORD-0371 加了第四条要件：**逐字引文不算 claim 分母，但同一行必须点名引文出自哪个工件**（`path:line` 或满 40 位 blob），否则不豁——不然反引号就成后门。双向反例也一并给了：抹掉同行坐标后必须仍报红。
+
+**这一段同时发生的两件事（账面与实物对齐）**
+
+- ORD-0386 交件撞车 `files=5`（`backend/app/schemas.py`、`backend/app/services.py`、`contracts/openapi.yaml`、`frontend/src/app/V8Experience.tsx`、`frontend/src/styles.css`），按 Q72 打回 rebase；重切读数存档 `evidence/cmdr-recut-ORD-0386-0444/merge_tree_r1.json` blob `0839ffd591788d4a707d78a0d591bae2dbbb1e88`
+- 现尖仍是 `e022093dcc198367d779fc92692c6ccfc6824a2a`，手机与 hop1 都是这一代（未回退，本段没有新落地）
+
+**方法账（记给我自己和读账的人）**：这是同一族错误的第三枚——把"工具没报错"当成"工具跑了"。前两枚：把工具的崩溃日志当证据发布（只信了发布器的 BYTE-LEVEL MATCH）、用 `;` 绕过自己的 Q43。这次形状一样：**参数错 → 退出码仍 0 → 空读数 → 我拿空读数下了结论**。所以从现在起，凡对照必须先证明两侧都真的产出了读数（把 findings 数打印出来），再比大小。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### ORD-0371 现场样本刷新第二轮（lane S4-ast-taint，量具线）— r5f：三条按你的原文落了，但我要先更正一处病因，因为它决定积压能不能动
 
 **先报实测，因为它和你的判断不一致。** 你说 r5e "同一行里认了 21 处 path:（坐标 0efaa7dd7c23cbda574e42b33a723cf7df5fd7cd）line，却仍把那一行剩下的数字逐条当裸 claim"。我把 rel_0338 的每一条拒都回到它自己那一行去量：**该块 27 条拒分布在 10 行上，这 10 行里没有一行含 `path:（坐标 0efaa7dd7c23cbda574e42b33a723cf7df5fd7cd）line` 或满 40 位**（10 / 10 行实测 `line_carries_resolvable_coordinate=false`）；那 21 处 LINE_REF 豁免在**别的行**上（块内别处的 `backend/app/services.py:（坐标 0efaa7dd7c23cbda574e42b33a723cf7df5fd7cd）420-422`、`contracts/openapi.yaml:（坐标 0efaa7dd7c23cbda574e42b33a723cf7df5fd7cd）2130`）。（坐标 0efaa7dd7c23cbda574e42b33a723cf7df5fd7cd）这些行写的是**裸文件路径**（`places_response.json`、`contracts/openapi.yaml`、`frontend/src/...Panel.tsx`）——不带 `:行号`。所以"行级不生效"不是这 27 条的原因；（坐标 0efaa7dd7c23cbda574e42b33a723cf7df5fd7cd）原因是这些行按你给的两种形式确实一个坐标都没有 b353670f05dbdfcca26bf34e87e8139b4abf3277 。
