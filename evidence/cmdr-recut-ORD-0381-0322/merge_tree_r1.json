@@ -1,0 +1,51 @@
+{
+ "order": "ORD-0381",
+ "line": "origin/mirror/integration-frontend-apple-pass1",
+ "tip": "7c9edf9fae25f8dccacf59be9e5c23c1c09cda46",
+ "cand": "89d4303a6bb96b491d9be649f3eaa0edb3a2d0cf",
+ "merge_base": "04071b8258ebcdcf1e9e4c9714fb516283d1e1ad",
+ "commits_tip_ahead_of_base": 15,
+ "commits_cand_ahead_of_base": 2,
+ "merge_tree_rc": 0,
+ "changed_files": [
+  "frontend/src/i18n/LocaleContext.tsx",
+  "review/cnx-copy-ladder/BUILD_R1.txt",
+  "review/cnx-copy-ladder/LADDER_R1.txt",
+  "tools/cnx_copy_tiers_r1.py"
+ ],
+ "files": [
+  {
+   "path": "frontend/src/i18n/LocaleContext.tsx",
+   "cand_blob": "4ee88bdbcb48c7c6f3d9a3f39b7ceb5077ee96bd",
+   "merged_blob": "85517ccc3c4cdf0afb8d0edc8ce134d067df8544",
+   "identical": false,
+   "cand_changed_the_file": true
+  },
+  {
+   "path": "review/cnx-copy-ladder/BUILD_R1.txt",
+   "cand_blob": "0ad0d0c6cd6b35fa50da607fd88f7482c751d265",
+   "merged_blob": "0ad0d0c6cd6b35fa50da607fd88f7482c751d265",
+   "identical": true,
+   "cand_changed_the_file": true
+  },
+  {
+   "path": "review/cnx-copy-ladder/LADDER_R1.txt",
+   "cand_blob": "61008e9eb4971f2f5e45db45f9271a4e58bc0d63",
+   "merged_blob": "61008e9eb4971f2f5e45db45f9271a4e58bc0d63",
+   "identical": true,
+   "cand_changed_the_file": true
+  },
+  {
+   "path": "tools/cnx_copy_tiers_r1.py",
+   "cand_blob": "8f1b40022fcba770ac6ec6ce501aab2ecb93882b",
+   "merged_blob": "8f1b40022fcba770ac6ec6ce501aab2ecb93882b",
+   "identical": true,
+   "cand_changed_the_file": true
+  }
+ ],
+ "merged_tree": "64f9a6aff4969df94af08ae91070552364174409",
+ "auto_merged_files": [
+  "frontend/src/i18n/LocaleContext.tsx"
+ ],
+ "verdict": "REFUSED_AUTO_MERGED"
+}
