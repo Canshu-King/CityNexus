@@ -362,6 +362,16 @@ export interface AgentCommandResponse {
   run: AgentRun;
 }
 
+/* ORD-0387: the four words `backend/app/agent/ai_availability.py` produces and nowhere else.
+   `(string & {})` keeps them as the listed choices without claiming a fifth can never arrive --
+   an unlisted word must fall through to "the server said something we do not name", not be
+   silently typed as known. */
+export type AiStateWord =
+  | "CONFIGURED_UNVERIFIED"
+  | "NOT_CONFIGURED"
+  | "DISABLED_BY_OPS"
+  | "PROVIDER_REFUSED";
+
 export interface AgentRuntimeStatus {
   runtime_identity:
     | "HERMES_NATIVE_MCP"
@@ -374,6 +384,9 @@ export interface AgentRuntimeStatus {
   mcp_server: string;
   deepseek_configured: boolean;
   hermes_compat_configured: boolean;
+  /* ORD-0359 keeps this out of the contract's `required`, so absence is a real answer here:
+     an older server, or one that never learned the field, and this client must not invent one. */
+  ai_state?: AiStateWord | (string & {});
   hermes_native_gateway?: {
     configured: boolean;
     reachable: boolean;

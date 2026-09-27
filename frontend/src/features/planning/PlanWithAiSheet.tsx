@@ -24,6 +24,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { useLocale, useT } from "../../i18n/LocaleContext";
+import { type AgentRuntimeStatus } from "../../api/citynexus";
 import {
   beginAiRun,
   getRunSnapshot,
@@ -315,10 +316,12 @@ export function aiPreflightClass(state: AiPreflightState): string {
   return state === "configured_unverified" ? "ready" : state === "checking" ? "checking" : state === "unknown" ? "unknown" : "unconfigured";
 }
 
-export function aiStateFromServer(body: {
-  ai_state?: unknown;
-  deepseek_configured?: unknown;
-} | null): AiPreflightState {
+/* ORD-0387: the input is the contract type, not an ad-hoc shape.  Naming the field here as
+   `unknown` is what let this mapping drift from `contracts/openapi.yaml` unnoticed; now a
+   contract rename of `ai_state` is a compile error on this line's parameter, not a silent
+   fall-through to "unknown".  The runtime guards stay, because an older server really can
+   answer without the field. */
+export function aiStateFromServer(body: AgentRuntimeStatus | null): AiPreflightState {
   if (!body) return "unknown";
   switch (typeof body.ai_state === "string" ? body.ai_state : "") {
     case "CONFIGURED_UNVERIFIED":
