@@ -1,0 +1,15 @@
+{
+ "at": "2026-09-28T03:59:26+0800",
+ "port": "8693",
+ "new_tree": "D:/moodle/_qoder_cmdr_backend_live_0350",
+ "owners_before": [
+  "42096"
+ ],
+ "owner_cmdline_head": "\"C:\\Users\\\u4ed3\u9f20\u738b\\AppData\\Roaming\\uv\\python\\cpython-3.12.14-windows-x86_64-none\\python.exe\" -m uvicorn app.main:app --host 127.0.0.1 --port 8693",
+ "owners_after_kill": [],
+ "started_pid": 44300,
+ "openapi_paths": 139,
+ "provider_key_in_live_spec": true,
+ "coordinate_system_in_live_spec": false,
+ "decision": "SWAPPED_AND_SPEC_READ"
+}
