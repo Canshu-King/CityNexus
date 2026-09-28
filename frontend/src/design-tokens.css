@@ -1002,7 +1002,10 @@ button[data-testid^="mode-"],
   bottom: auto;
   left: var(--cn-yield-left, auto);
   top: var(--cn-yield-top, auto);
+  box-sizing: border-box;
   width: 44px;
+  height: 44px;
+  padding: 0;
   transition: left 140ms ease, top 140ms ease, width 140ms ease;
 }
 @media (prefers-reduced-motion: reduce) {
@@ -1011,8 +1014,11 @@ button[data-testid^="mode-"],
 /* The mark carries the state; the word and the status dot drop out because the cell
    is 44px, and the button keeps its accessible name either way. */
 .cn-copilot-dock.idle-compact.yield-at-rest .cn-copilot-edge {
+  box-sizing: border-box;
   width: 44px;
+  height: 44px;
   min-height: 44px;
+  margin: 0;
   padding: 0;
   gap: 0;
   justify-content: center;
