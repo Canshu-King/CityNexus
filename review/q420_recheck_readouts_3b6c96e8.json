@@ -1,0 +1,325 @@
+{
+ "pinned_tip": "3b6c96e8a9f986672ddaa764f5f2ae69534ceff1",
+ "live_tip_read_before_fetch": "3b6c96e8a9f986672ddaa764f5f2ae69534ceff1",
+ "live_tip_after_everything": "3b6c96e8a9f986672ddaa764f5f2ae69534ceff1",
+ "commits_since_my_head": 37,
+ "cell_run": {
+  "run_id": "cmdr030641q420p3b6c96e8",
+  "tree": "3b6c96e8a9f986672ddaa764f5f2ae69534ceff1",
+  "worktree": "D:/moodle/_qoder_lane_q0420r",
+  "target": "e2e/qoder-ord0420-drawer-group-headings.spec.ts",
+  "full": false,
+  "grep": null,
+  "ports": {
+   "frontend": 5570,
+   "backend": 6570
+  },
+  "python": "D:/moodle/CityNexus/.venv/Scripts/python.exe",
+  "db": "_cmdr030641q420p3b6c96e8.db",
+  "env_keys_dropped_names_only": [
+   "DEEPSEEK_API_KEY",
+   "OPENAI_API_KEY",
+   "WB2API_KEY"
+  ],
+  "node_modules": {
+   "mode": "present",
+   "path": "D:/moodle/_qoder_lane_q0420r/frontend/node_modules"
+  },
+  "exit_code": 0,
+  "verdict": "GREEN",
+  "counts": {
+   "passed": 5
+  },
+  "listed_case_count": 0,
+  "started_local": "2026-09-29T03:06:41",
+  "duration_s": 71.034428,
+  "log": "D:/moodle/_qoder_cmdr_ref_20260921/live_checks/e2e_logs/q420p3b6c96e8_3b6c96e8_030641.log",
+  "log_bytes": 14750
+ },
+ "cells_log": "q420p3b6c96e8_3b6c96e8_030641.log",
+ "reads": {
+  "A1-zh-drawer": "Q420 A1 zh surface=drawer viewport=390x844 headings=[\"今日\",\"规划\",\"出行\",\"系统\"] heading_count=4 latin_only=0 with_cjk=4 lang=zh-CN drawer_open=1 kicker=[\"全部路由\"] close=[\"关闭\"] row_count=14 seal=null",
+  "A2-en-drawer": "Q420 A2 en surface=drawer viewport=390x844 headings=[\"TODAY\",\"PLAN\",\"TRAVEL\",\"SYSTEM\"] heading_count=4 latin_only=4 with_cjk=0 lang=en drawer_open=1 kicker=[\"All routes\"] close=[\"Close\"] row_count=14 seal=null",
+  "A4-zh-desktop": "Q420 A4 zh desktop surface=desktop viewport=1280x800 headings=[\"今日\",\"规划\",\"出行\",\"系统\"] heading_count=4 latin_only=0 with_cjk=4 lang=zh-CN drawer_open=1 kicker=[] close=[] row_count=12 seal=null",
+  "A4-en-desktop": "Q420 A4 en desktop surface=desktop viewport=1280x800 headings=[\"TODAY\",\"PLAN\",\"TRAVEL\",\"SYSTEM\"] heading_count=4 latin_only=4 with_cjk=0 lang=en drawer_open=1 kicker=[] close=[] row_count=12 seal=null",
+  "A3-zh-drawer": "Q420 A3 zh surface=drawer viewport=390x844 headings=[\"今日\",\"规划\",\"出行\",\"系统\"] heading_count=4 latin_only=0 with_cjk=4 lang=zh-CN drawer_open=1 kicker=[\"全部路由\"] close=[\"关闭\"] row_count=14 seal=null",
+  "A3-en-drawer": "Q420 A3 en surface=drawer viewport=390x844 headings=[\"TODAY\",\"PLAN\",\"TRAVEL\",\"SYSTEM\"] heading_count=4 latin_only=4 with_cjk=0 lang=en drawer_open=1 kicker=[\"All routes\"] close=[\"Close\"] row_count=14 seal=null"
+ },
+ "tsc_rc": 0,
+ "vite_rc": 0,
+ "asset": "index-oR3PVCYW.js",
+ "asset_bytes": 1343017,
+ "asset_sha1_local_recomputed": "6a3232b089f81793df2c28bfaee64c0ed1948c99",
+ "ruler_rc": "not re-run: the ruler REFUSEs an existing target for this tip",
+ "ruler_preexisting_for_this_tip": true,
+ "ruler": {
+  "tip": "3b6c96e8a9f986672ddaa764f5f2ae69534ceff1",
+  "ruler": "cmdr_bundle_copy_check_r3.py",
+  "dictionary_files": {
+   "frontend/src/features/studio/planVersionHistoryCopy.ts": 23,
+   "frontend/src/features/trash/journeyTrashCopy.ts": 27,
+   "frontend/src/i18n/LocaleContext.tsx": 766,
+   "frontend/src/i18n/mapPanelCopy.ts": 0,
+   "frontend/src/i18n/placeProvenanceCopy.ts": 0,
+   "frontend/src/i18n/travelerLabels.ts": 0,
+   "frontend/src/i18n/tripOperations.ts": 0
+  },
+  "served_asset": "/assets/index-oR3PVCYW.js",
+  "bundle_chars": 1304284,
+  "bundle_raw_bytes": 1343017,
+  "dictionary_pairs": 816,
+  "distinct_keys": 595,
+  "pairs_skipped_by_shape": 700,
+  "values_found_in_served_bundle": 816,
+  "values_not_found": 0,
+  "match_forms": {
+   "plain": 816,
+   "json_escaped": 0
+  },
+  "misses": [],
+  "sample_hits": [
+   {
+    "key": "agent.advancedDetail",
+    "form": "plain",
+    "value_head": "Advanced details"
+   },
+   {
+    "key": "agent.aiInterpreted",
+    "form": "plain",
+    "value_head": "Understood by the AI assistant"
+   },
+   {
+    "key": "agent.aiRunAsked",
+    "form": "plain",
+    "value_head": "You asked: {asked}"
+   },
+   {
+    "key": "agent.aiRunAsked",
+    "form": "plain",
+    "value_head": "你说的是：{asked}"
+   },
+   {
+    "key": "agent.aiRunChecking",
+    "form": "plain",
+    "value_head": "Reading back what this run left behind."
+   },
+   {
+    "key": "agent.aiRunChecking",
+    "form": "plain",
+    "value_head": "正在回读这一轮留下了什么。"
+   },
+   {
+    "key": "agent.aiRunContinue",
+    "form": "plain",
+    "value_head": "Keep watching it"
+   },
+   {
+    "key": "agent.aiRunLanded",
+    "form": "plain",
+    "value_head": "What was produced is still there: {n} plans were added."
+   },
+   {
+    "key": "agent.aiRunLanded",
+    "form": "plain",
+    "value_head": "已经生成的部分还在：新增了 {n} 个方案。"
+   },
+   {
+    "key": "agent.aiRunLeaveNow",
+    "form": "plain",
+    "value_head": "Leave for now"
+   },
+   {
+    "key": "agent.aiRunLeavePrompt",
+    "form": "plain",
+    "value_head": "A run is still going. Leaving now does not stop it."
+   },
+   {
+    "key": "agent.aiRunLeavePrompt",
+    "form": "plain",
+    "value_head": "这一轮还在跑。现在离开不会停下它。"
+   }
+  ]
+ },
+ "pairs": [
+  {
+   "key": "nav.groupToday",
+   "value": "TODAY",
+   "chars": 5,
+   "cjk": false,
+   "form": "plain",
+   "collision": true,
+   "lines": [
+    29,
+    937
+   ]
+  },
+  {
+   "key": "nav.groupToday",
+   "value": "今日",
+   "chars": 2,
+   "cjk": true,
+   "form": "plain",
+   "collision": false,
+   "lines": [
+    29,
+    937
+   ]
+  },
+  {
+   "key": "nav.groupPlan",
+   "value": "PLAN",
+   "chars": 4,
+   "cjk": false,
+   "form": "plain",
+   "collision": true,
+   "lines": [
+    30,
+    938
+   ]
+  },
+  {
+   "key": "nav.groupPlan",
+   "value": "规划",
+   "chars": 2,
+   "cjk": true,
+   "form": "plain",
+   "collision": false,
+   "lines": [
+    30,
+    938
+   ]
+  },
+  {
+   "key": "nav.groupTravel",
+   "value": "TRAVEL",
+   "chars": 6,
+   "cjk": false,
+   "form": "plain",
+   "collision": true,
+   "lines": [
+    31,
+    939
+   ]
+  },
+  {
+   "key": "nav.groupTravel",
+   "value": "出行",
+   "chars": 2,
+   "cjk": true,
+   "form": "plain",
+   "collision": false,
+   "lines": [
+    31,
+    939
+   ]
+  },
+  {
+   "key": "nav.groupSystem",
+   "value": "SYSTEM",
+   "chars": 6,
+   "cjk": false,
+   "form": "plain",
+   "collision": true,
+   "lines": [
+    32,
+    940
+   ]
+  },
+  {
+   "key": "nav.groupSystem",
+   "value": "系统",
+   "chars": 2,
+   "cjk": true,
+   "form": "plain",
+   "collision": false,
+   "lines": [
+    32,
+    940
+   ]
+  },
+  {
+   "key": "nav.groupOther",
+   "value": "MORE",
+   "chars": 4,
+   "cjk": false,
+   "form": "plain",
+   "collision": false,
+   "lines": [
+    33,
+    941
+   ]
+  },
+  {
+   "key": "nav.groupOther",
+   "value": "更多",
+   "chars": 2,
+   "cjk": true,
+   "form": "plain",
+   "collision": false,
+   "lines": [
+    33,
+    941
+   ]
+  }
+ ],
+ "key_lines": {
+  "nav.groupToday": [
+   29,
+   937
+  ],
+  "nav.groupPlan": [
+   30,
+   938
+  ],
+  "nav.groupTravel": [
+   31,
+   939
+  ],
+  "nav.groupSystem": [
+   32,
+   940
+  ],
+  "nav.groupOther": [
+   33,
+   941
+  ]
+ },
+ "dictionary_blob": "7c2d1596dcfb511ff2067adcf066ed785599d331",
+ "my_head_dictionary_blob": "b9f27ec1c440431e10dfdeb0e2e80ffe7b7c7e27",
+ "dictionary_added_key_lines": 132,
+ "dictionary_removed_key_lines": 0,
+ "dictionary_movers": [
+  "ecbed520 ORD-0422: the discovery example intent was already in the dictionary -- look it up instead of adding a twin",
+  "1c5f4158 ORD-0422: the three panels stop writing their English onto a Chinese screen",
+  "93a3ff5c ORD-0417: a tap on a map pin now says, on the glass, which stop it was"
+ ],
+ "skew_at_0240": {
+  "file": "cmdr_bundle_copy_check_r3__2521aed7.json.my_skewed_generation_run",
+  "tip": "2521aed777a46e934f1a934a23eef5950a0c06cc",
+  "misses": [
+   [
+    "mapComp.selectedStopOnMap",
+    "Selected on the map · {name}"
+   ],
+   [
+    "mapComp.selectedStopOnMap",
+    "图上选中的这一站 · {name}"
+   ]
+  ],
+  "attribution": "93a3ff5c_in_pinned_tip=True_in_9930748a=False"
+ },
+ "tiers": {
+  "REGISTER_PARITY": [
+   "MET",
+   "766 bilingual keys: 766 agree, 0 clash"
+  ],
+  "RENDERED": [
+   "MET",
+   "766 distinct key names (766 readable by the single-line parser; 0 rows carry their value on the next line and 0 of those keys are reachable only through the wrapped scan) against 97 non-dictionary files (1 dictionary files skipped); zero-use 120, of which 14 sit under a concatenated prefix ['nav.'] and are covered dynamically; keys introduced or reworded by this run: 0, gated offenders: 0"
+  ],
+  "HARDCODED_FALLBACK": [
+   "VIOLATION",
+   "98 files scanned: tier A (language branch in the slot) 0, tier B (bare literal) 73, excluded as machine tokens 161; inline bilingual pairs anywhere = 641 (denominator only -- most are legitimate inline pairs, NOT a defect count)"
+  ]
+ }
+}
