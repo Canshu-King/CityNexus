@@ -1,0 +1,16 @@
+CMDR measures for ORD-0399 acceptance, run 2026-09-28 18:3x-18:4x +08 on export D:/moodle/_qoder_cmdr_snap_0399
+tip under test: 8d7652eadc6ee0727817d257dd6962eb5ce617ec (line refs/heads/mirror/integration-frontend-apple-pass1)
+interpreter: D:/moodle/CityNexus/.venv/Scripts/python.exe
+
+== A. whole-suite collect-only ==
+cmd: cd backend && PYTHONPATH=<export> python -m pytest -q --collect-only
+result: 1426 tests collected in 8.96s ; collect exit 0
+
+== B. targeted four files (undelete + soft delete + G6 boundary + reset token gate) ==
+cmd: python -m pytest -q -p no:randomly tests/test_qoder_ord0399_journey_undelete.py tests/test_qoder_ord0383_journey_soft_delete.py tests/test_qoder_ord0272_continuation.py tests/test_qoder_ord0389_reset_token_gate.py
+result: 30 passed, 2 warnings in 6.26s
+
+== C. first-hand HTTP walk verdicts (r3, after two of my own arm bugs) ==
+r1 refused replay_names because I matched against a 220-char head; r2 refused ownership because I compared the listener pid to the parent id instead of to my child pid
+r3 arms: deleted_at_cleared/listed_again/replay_refused_409/replay_names_JOURNEY_NOT_DELETED/unknown_refused_404/unknown_names_JOURNEY_NOT_FOUND/audit_row_written/listener_owned_by_my_child = all true, overall GREEN
+walk receipts: receipt_r1.json / receipt_r2.json kept as the refused versions, receipt_r3.json = blob bd6fdb36476ffcfe9352cac59bd67497a6a7ff35
