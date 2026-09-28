@@ -133,10 +133,11 @@ def transfer(ref):
 base_r, base_log = receipt("q420v2")
 READS = {}
 for l in q420lines(base_log):
-    m = re.match(r"Q420 (A\d) (\w\w) surface=(\w+)", l)
-    if m:
-        READS[m.group(1) + "-" + m.group(2)] = l
-for k in ("A1-zh", "A2-en", "A4-zh", "A4-en", "A3-zh", "A3-en"):
+    m = re.match(r"Q420 (A\d) (zh|en)", l)
+    s = re.search(r"surface=(\w+)", l)
+    if m and s:
+        READS[m.group(1) + "-" + m.group(2) + "-" + s.group(1)] = l
+for k in ("A1-zh-drawer", "A2-en-drawer", "A4-zh-desktop", "A4-en-desktop", "A3-zh-drawer", "A3-en-drawer"):
     if k not in READS:
         bad.append("the baseline receipt holds no %s reading" % k)
 if base_r.get("verdict") != "GREEN":
@@ -147,10 +148,10 @@ if not OK_BASE:
 CASES = case_names(base_log)
 SEED_CASE = [c for c in CASES if "Q420" not in c]
 
-ZH_DRAWER = json.loads(re.search(r"headings=(\[.*?\]) ", READS["A1-zh"]).group(1))
-ZH_DESK = json.loads(re.search(r"headings=(\[.*?\]) ", READS["A4-zh"]).group(1))
-EN_DRAWER = json.loads(re.search(r"headings=(\[.*?\]) ", READS["A2-en"]).group(1))
-EN_DESK = json.loads(re.search(r"headings=(\[.*?\]) ", READS["A4-en"]).group(1))
+ZH_DRAWER = json.loads(re.search(r"headings=(\[.*?\]) ", READS["A1-zh-drawer"]).group(1))
+ZH_DESK = json.loads(re.search(r"headings=(\[.*?\]) ", READS["A4-zh-desktop"]).group(1))
+EN_DRAWER = json.loads(re.search(r"headings=(\[.*?\]) ", READS["A2-en-drawer"]).group(1))
+EN_DESK = json.loads(re.search(r"headings=(\[.*?\]) ", READS["A4-en-desktop"]).group(1))
 CODES = ["TODAY", "PLAN", "TRAVEL", "SYSTEM"]
 if not all(re.search(r"[一-鿿]", s) for s in ZH_DRAWER + ZH_DESK):
     bad.append("a zh heading still carries no Han character")
@@ -189,10 +190,13 @@ RULER = json.load(open(os.path.join(LIVE, "cmdr_bundle_copy_check_r3.json"), enc
 if RULER["tip"] != BASE or RULER["values_not_found"] != 0:
     bad.append("the pairing ruler is not on my base or still has misses: %s/%s" % (
         RULER["tip"][:12], RULER["values_not_found"]))
-PAIRS = subprocess.run([VENV, "-X", "utf-8", os.path.join(RC, "q420_bundle_pairs_r1.py")],
-                       capture_output=True, text=True, encoding="utf-8",
-                       env={**os.environ, "CNX_BUNDLE_BASE": "http://127.0.0.1:4901"})
-PROW = re.findall(r"(nav\.group\w+)\s+value='([^']+)' value_chars=(\d+) has_cjk=(\w+) "
+PAIRS = subprocess.run([VENV, "-X", "utf8", os.path.join(RC, "q420_bundle_pairs_r1.py")],
+                       capture_output=True, text=True, encoding="utf-8", errors="replace",
+                       env={**os.environ, "CNX_BUNDLE_BASE": "http://127.0.0.1:4901",
+                            "PYTHONIOENCODING": "utf-8"})
+if not PAIRS.stdout:
+    bad.append("the bundle pair script produced no stdout: %s" % (PAIRS.stderr or "")[-200:])
+PROW = re.findall(r"(nav\.group\w+)\s+value='([^']+)'\s+value_chars=(\d+) has_cjk=(\w+) "
                   r"match_form=(\w+) registry_collision=(\w+)", PAIRS.stdout)
 BUNDLE_LINE = re.search(r"served_asset (\S+) bundle_raw_bytes (\d+) bundle_sha1 ([0-9a-f]{40})", PAIRS.stdout)
 SITE_LINE = re.search(r"heading_sites_reading_the_raw_code=(\d+) heading_sites_reading_the_dictionary=(\d+) "
@@ -243,10 +247,22 @@ MET = {
     "spec_a1": cite(SPEC, r"Q420 A1", "A1"),
     "spec_a4": cite(SPEC, r"Q420 A4", "A4"),
     "guard": cite("review/e4f_e2e_r1.py", r"LOW, HIGH = ", "band"),
-    "driver": cite("review/q420_mutant_arms_r1.py", r"Names sort by the tree", "driver note"),
+    "driver": cite("review/q420_mutant_arms_r1.py", r"Pair the run with the receipt it wrote", "driver note"),
     "pair_script": cite("review/q420_bundle_pairs_r1.py", r"registry_collision", "pair script"),
     "arms_file": cite("review/q420_mutant_arms.json", r'"K0"', "arms artifact"),
+    "tier_tool": cite("tools/cnx_copy_tiers_r1.py", r"^# HARDCODED_FALLBACK face", "tiers tool"),
+    "rp_face": cite("tools/cnx_copy_tiers_r1.py", r'\("REGISTER_PARITY",', "register parity face"),
+    "rendered_face": cite("tools/cnx_copy_tiers_r1.py", r'return \("RENDERED"', "rendered face"),
 }
+RP = re.search(r"(\d+) bilingual keys: (\d+) agree, (\d+) clash", TIERS["REGISTER_PARITY"][1])
+RD = re.search(r"(\d+) distinct key names.*?against (\d+) non-dictionary files.*?zero-use (\d+), "
+               r"of which (\d+) .*keys introduced or reworded by this run: (\d+), gated offenders: (\d+)",
+               TIERS["RENDERED"][1])
+HF = re.search(r"(\d+) files scanned: tier A .*?(\d+), tier B .*?(\d+), excluded as machine tokens (\d+)",
+               TIERS["HARDCODED_FALLBACK"][1])
+for nm, g in (("REGISTER_PARITY", RP), ("RENDERED", RD), ("HARDCODED_FALLBACK", HF)):
+    if not g:
+        bad.append("could not parse the %s face into field=value form: %r" % (nm, TIERS[nm][1][:90]))
 nomet = subprocess.run(["git", "-C", REPO, "grep", "-n", "-e", "item.group", HEAD_PUB, "--", "frontend/src"],
                        capture_output=True, text=True, encoding="utf-8").stdout.strip()
 N_GREP = len([l for l in nomet.split("\n") if l.strip()])
@@ -271,17 +287,16 @@ for sha, hh, subj in MY_COMMITS:
     A("      %s %s %s" % (sha, hh, subj[:70]))
 A("   相对基点动了 touched_file_count=%d 枚，其中产品源码 product_files_touched=%d 枚（逐枚 blob 在下面，" % (
     len(TOUCHED), len(PROD_TOUCHED)))
-A("   全部可 cat-file）：backend/ 计数=%d，所以后端字节一枚没动。" % (
-    len(TOUCHED), len(PROD_TOUCHED), len(BACKEND_TOUCHED)))
+A("   全部可 cat-file）：backend/ 计数=%d，所以后端字节一枚没动。" % len(BACKEND_TOUCHED))
 for t in TOUCHED:
     A("      %s blob %s" % (t, blob_of(HEAD_PUB, t)))
 A("")
 A("## 要件一 · 中文臂四枚标题渲染为中文（断的是屏上文字，不是 data 属性、也不是键存在）")
-A("   抽屉 viewport=390x844：zh %s" % READS["A1-zh"])
-A("   抽屉同一格英文臂：en %s" % READS["A2-en"])
+A("   抽屉 viewport=390x844：zh %s" % READS["A1-zh-drawer"])
+A("   抽屉同一格英文臂：en %s" % READS["A2-en-drawer"])
 A("   桌面导航 viewport=1280x800（号令者只点名抽屉；这第二处直出我一起修，所以一起读数）：")
-A("      zh %s" % READS["A4-zh"])
-A("      en %s" % READS["A4-en"])
+A("      zh %s" % READS["A4-zh-desktop"])
+A("      en %s" % READS["A4-en-desktop"])
 A("   中文臂那四枚逐枚是 %s（取上面 A1/A4 两行的原文，不是我另写的）；语域取自本屏既有词：" % "、".join(ZH_DRAWER))
 A("   「出行」已在 %s（discovery.mobility）用过、「规划」已在 %s（hub.planningReady）用过。" % (
     MET["zh_mobility"], MET["zh_plan"]))
@@ -326,10 +341,15 @@ A("   旧名反而排最后），当时报的 run_id 全是 cmdr0057xx/cmdr0058x
 A("   收据，并断言它的 tree 等于我这枚头」，修在 %s；上面三个 run_id 是修好后重跑的。" % MET["driver"])
 A("")
 A("## 要件三 · 两臂都进词典配对尺")
-A("   号令者那把 %s/live_checks/cmdr_bundle_copy_check_r3.py 跑在我这片的产物上（我运行的字节 sha1=%s，" % (
-    "D:/moodle/_qoder_cmdr_ref_20260921", raw_sha1))
-A("   本地字节重算；它是 git 对象的那份 = blob %s，`git cat-file -s` 得 byte_count=%d，两枚逐字节相同）：" % (
-    RULER_BLOB, len(ruler_bytes)))
+A("   号令者那把 %s/live_checks/cmdr_bundle_copy_check_r3.py 跑在我这片的产物上；我运行的那份尺按" % (
+    "D:/moodle/_qoder_cmdr_ref_20260921"))
+A("   本地字节重算得文件 sha1=%s（非 git 对象；它入库的那份字节 = blob %s，`git cat-file -s` 得" % (
+    raw_sha1, RULER_BLOB))
+A("   byte_count=%d，两枚逐字节相同）：" % len(ruler_bytes))
+A("   一句副作用要交代：这把尺每跑一次就重写它自己目录里的 `cmdr_bundle_copy_check_r3.json`（派生件，")
+A("   不是我造的档案）。我这一跑把号令者原先那份覆盖掉了，现在那枚的本地字节重算文件 sha1=%s（非 git" % sha_of(
+    os.path.join(LIVE, "cmdr_bundle_copy_check_r3.json")))
+A("   对象；同段可 cat-file 坐标：本枝头 %s）。要恢复原读数，在 :4781 那代产物上重跑一次同一把尺即可。")
 A("   tip=%s dictionary_pairs=%d values_found=%d values_not_found=%d served_asset=%s bundle_raw_bytes=%d。" % (
     RULER["tip"], RULER["dictionary_pairs"], RULER["values_found_in_served_bundle"],
     RULER["values_not_found"], RULER["served_asset"], RULER["bundle_raw_bytes"]))
@@ -337,23 +357,28 @@ A("   这与号令者 00:31 那块报的「763 对 0 缺」同分母，说明我
 A("   但那把尺的字典读的是权威尖，我这 5 枚新 key 进不了它的分母（枝没落地，我不能移动权威线）。补测在")
 A("   同一份产物字节上做，用尺自己的正则与双形式匹配（脚本 %s）：bundle_sha1=%s（本地字节重算，非 git" % (
     MET["pair_script"], BUNDLE_LINE.group(3)))
-A("   对象；同段可 cat-file 坐标：本枝头 %s、产物名 %s）：" % (BUNDLE_LINE.group(3), HEAD_PUB, BUNDLE_LINE.group(1)))
+A("   对象；同段可 cat-file 坐标：本枝头 %s、产物名 %s）：" % (HEAD_PUB, BUNDLE_LINE.group(1)))
 for k, v, vc, cjk, form, coll in PROW:
     A("      key=%s value=%s value_chars=%s has_cjk=%s match_form=%s registry_collision=%s" % (
         k, v, vc, cjk, form, coll))
 A("   registry_collision=true 的四枚（TODAY/PLAN/TRAVEL/SYSTEM）在路由表里也有同串，所以「产物里有这个词」")
 A("   对它们**没有**判别力；判别力在 K1/K2 两臂（哨兵不在路由表却能上屏）。nav.groupOther 的 MORE 不在")
 A("   路由表里，它那枚产物匹配是独立成立的。")
-A("   取用点用 ORD-0370 那把尺读（同一工具、同一判据，落在我这枚头上）：RENDERED verdict=%s，读数 %s" % (
-    TIERS["RENDERED"][0], TIERS["RENDERED"][1][:100]))
-A("   REGISTER_PARITY verdict=%s 读数 %s；HARDCODED_FALLBACK verdict=%s 读数 %s（tier B 那串存量与我一枚无关）。" % (
-    TIERS["REGISTER_PARITY"][0], TIERS["REGISTER_PARITY"][1][:86], TIERS["HARDCODED_FALLBACK"][0],
-    TIERS["HARDCODED_FALLBACK"][1][:86]))
+A("   取用点用 ORD-0370 那把尺读（同一工具、同一判据，落在我这枚头上）：RENDERED verdict=%s，" % TIERS["RENDERED"][0])
+A("   distinct_key_count=%s non_dictionary_file_count=%s zero_use_key_count=%s under_dynamic_prefix=%s " % (
+    RD.group(1), RD.group(2), RD.group(3), RD.group(4)) + "introduced_by_this_run=%s gated_offender_count=%s" % (
+    RD.group(5), RD.group(6)) + "（判据源 %s）" % MET["rendered_face"])
+A("   我这 5 枚都有取用点，所以 introduced/gated 这两格不是为我开的：它们数的是尺所在那一笔的改动。")
+A("   REGISTER_PARITY verdict=%s bilingual_key_count=%s agree=%s clash=%s（判据源 %s）；" % (
+    TIERS["REGISTER_PARITY"][0], RP.group(1), RP.group(2), RP.group(3), MET["rp_face"]))
+A("   HARDCODED_FALLBACK verdict=%s scanned_file_count=%s tier_a=%s tier_b=%s machine_token_excluded=%s" % (
+    TIERS["HARDCODED_FALLBACK"][0], HF.group(1), HF.group(2), HF.group(3), HF.group(4)))
+A("   —— tier B 那串是 ORD-0370 的存量（判据源 %s），与本单无关，本单也没有为了让它变绿去动判据。" % MET["tier_tool"])
 A("")
 A("## 编译臂与闸口")
 A("   `npx tsc -p tsconfig.check.json --noEmit` rc=%d、`npx tsc -p tsconfig.typecheck.json --noEmit` rc=%d；" % (
     TSC["tsconfig.check.json"], TSC["tsconfig.typecheck.json"]))
-A("   `npx vite build` rc=0（build 尾行 built_in=%ss），产物 served_asset=%s size_bytes=%d。" % (
+A("   `npx vite build` rc=0（build 尾行 built_in_s=%s），产物 served_asset=%s size_bytes=%d。" % (
     (BUILD_RC.group(1) if BUILD_RC else "?"), BUNDLE_LINE.group(1), int(BUNDLE_LINE.group(2))))
 A("   闸：run_id=%s verdict=%s counts=%s duration_s=%.1f，私有栈 frontend_port=%d / backend_port=%d，" % (
     base_r["run_id"], base_r["verdict"], json.dumps(base_r["counts"]).replace(",", ", "),
@@ -394,6 +419,40 @@ A("门尺自检（现行口径）：`%s/claim_coordinate_check_r7.py --text <本
 A("   `patrol/bolt_replica.py` 都在写盘前现跑，任一红则不投递。那把尺本地字节重算的文件 sha1=%s（40 位，" % raw_sha1)
 A("   非 git 对象；同段可 cat-file 坐标：号令者入库的同一份字节 = blob %s、本枝头 %s）。" % (RULER_BLOB, HEAD_PUB))
 
+def bolt_check(path):
+    """Replay ledger_insert_after_r2.py's second arm locally: r7 green is not enough.
+
+    A 40-hex that does not resolve in the object store is carried only when its OWN line declares it a
+    plain content hash AND its paragraph holds a value that does resolve. The first draft of this block
+    failed exactly that, on the ruler's own sha1, and the commander's replica caught it.
+    """
+    raw = io.open(path, encoding="utf-8", newline="").read()
+    ls = raw.split("\n")
+    hx = re.compile(r"\b[0-9a-f]{40}\b")
+    dec = re.compile(u"sha1\\s*[\\(（]?\\s*(over|of)\\s+bytes|文件\\s*sha1|本机\\s*sha1|内容\\s*sha1"
+                     u"|本地字节重算|字节重算的\\s*sha|从未入\\s*git|未入\\s*git|不在对象库"
+                     u"|非\\s*blob|不是\\s*blob|不可\\s*cat-file|故意不可取回", re.I)
+
+    def para(i):
+        lo = hi = i
+        while lo > 0 and ls[lo - 1].strip():
+            lo -= 1
+        while hi < len(ls) - 1 and ls[hi + 1].strip():
+            hi += 1
+        return "\n".join(ls[lo:hi + 1])
+    vals = sorted(set(hx.findall(raw)))
+    resolves = {v: git_ok("cat-file", "-t", v) for v in vals}
+    out = []
+    for n, t in enumerate(ls, 1):
+        for h in sorted(set(hx.findall(t))):
+            if resolves[h]:
+                continue
+            d, a = bool(dec.search(t)), any(resolves[o] for o in hx.findall(para(n - 1)) if o != h)
+            if not (d and a):
+                out.append((n, h, d, a))
+    return len(vals), sum(resolves.values()), out
+
+
 if bad:
     print("REFUSING -- %d:" % len(bad))
     for x in bad:
@@ -414,6 +473,13 @@ for l in fl:
 if r7.returncode:
     print("NOT PUBLISHED -- r7 red; the draft stays in review/")
     sys.exit(2)
+NTOK, NRES, ABORTS = bolt_check(DRAFT)
+print("BOLT tokens=%d resolvable=%d would_abort=%d" % (NTOK, NRES, len(ABORTS)))
+for n, h, d, a in ABORTS:
+    print("    L%-3d %s declared=%s anchored=%s" % (n, h[:12], d, a))
+if ABORTS:
+    print("NOT PUBLISHED -- the door's second arm would abort; the draft stays in review/")
+    sys.exit(4)
 LIVE_DRAFTS = glob.glob(os.path.join(INBOX, "qoder-0420_*.md"))
 if LIVE_DRAFTS:
     print("REFUSED PUBLISH -- a live 0420 .md already sits in the inbox: %s" % LIVE_DRAFTS)
