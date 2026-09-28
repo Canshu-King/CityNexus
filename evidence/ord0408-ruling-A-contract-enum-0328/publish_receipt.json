@@ -1,0 +1,239 @@
+{
+ "schema": "CNX_S4_ORD0408_PUBLISH_RECEIPT_R1",
+ "slug": "evidence/ord0408-ruling-A-contract-enum-0328",
+ "branch": "commander/control",
+ "branch_tip_before": "c6665bfcfc14b6d2cd54699be2527404d5d5eafb",
+ "branch_tip_after": "df7b9945901423352b561fd03b98fb12423f2a27",
+ "branch_tip_subject": null,
+ "files": [
+  {
+   "path": "evidence/ord0408-ruling-A-contract-enum-0328/ui_exposure_taint_ast_r7b4.cjs",
+   "local_bytes": 154410,
+   "local_blob": "cefcb38c8d01a5996f3f705531a127c85f16c0b3",
+   "exit": 0,
+   "receipt": {
+    "pushed_commit": "ab5184f97e805cf5656289197b8b6cecb094b4c1",
+    "tip_matches_push": true,
+    "readback_blob": "cefcb38c8d01a5996f3f705531a127c85f16c0b3",
+    "readback_size": 154410,
+    "byte_equal": true
+   },
+   "readback_blob": "cefcb38c8d01a5996f3f705531a127c85f16c0b3",
+   "byte_equal": true,
+   "commit": "ab5184f97e805cf5656289197b8b6cecb094b4c1",
+   "tip_matches_push": true,
+   "out_tail": "receipt -> patrol/git_mirror_20260929_032840.json",
+   "verified": true
+  },
+  {
+   "path": "evidence/ord0408-ruling-A-contract-enum-0328/cut_r7b4_jia_r2.py",
+   "local_bytes": 14779,
+   "local_blob": "311466d813ce7d5ebf45bcaafe54664664a1f75a",
+   "exit": 0,
+   "receipt": {
+    "pushed_commit": "7071610ab382fa843903923664d2878c4eb34c4e",
+    "tip_matches_push": true,
+    "readback_blob": "311466d813ce7d5ebf45bcaafe54664664a1f75a",
+    "readback_size": 14779,
+    "byte_equal": true
+   },
+   "readback_blob": "311466d813ce7d5ebf45bcaafe54664664a1f75a",
+   "byte_equal": true,
+   "commit": "7071610ab382fa843903923664d2878c4eb34c4e",
+   "tip_matches_push": true,
+   "out_tail": "receipt -> patrol/git_mirror_20260929_032903.json",
+   "verified": true
+  },
+  {
+   "path": "evidence/ord0408-ruling-A-contract-enum-0328/contract_arms_r2.py",
+   "local_bytes": 16833,
+   "local_blob": "6bc67c0e3875ef5f9f840dc386aa8cc280215db6",
+   "exit": 0,
+   "receipt": {
+    "pushed_commit": "92b9f21b632df057d2fdfae969fed616678ed2f4",
+    "tip_matches_push": true,
+    "readback_blob": "6bc67c0e3875ef5f9f840dc386aa8cc280215db6",
+    "readback_size": 16833,
+    "byte_equal": true
+   },
+   "readback_blob": "6bc67c0e3875ef5f9f840dc386aa8cc280215db6",
+   "byte_equal": true,
+   "commit": "92b9f21b632df057d2fdfae969fed616678ed2f4",
+   "tip_matches_push": true,
+   "out_tail": "receipt -> patrol/git_mirror_20260929_032925.json",
+   "verified": true
+  },
+  {
+   "path": "evidence/ord0408-ruling-A-contract-enum-0328/arms_r2.json",
+   "local_bytes": 53164,
+   "local_blob": "1c49b825aff4c308ba3e135c3d3781aad9e7f7f7",
+   "exit": 0,
+   "receipt": {
+    "pushed_commit": "2575be4ac202637d51fe1f7ad633e466fe40ffc4",
+    "tip_matches_push": true,
+    "readback_blob": "1c49b825aff4c308ba3e135c3d3781aad9e7f7f7",
+    "readback_size": 53164,
+    "byte_equal": true
+   },
+   "readback_blob": "1c49b825aff4c308ba3e135c3d3781aad9e7f7f7",
+   "byte_equal": true,
+   "commit": "2575be4ac202637d51fe1f7ad633e466fe40ffc4",
+   "tip_matches_push": true,
+   "out_tail": "receipt -> patrol/git_mirror_20260929_032946.json",
+   "verified": true
+  },
+  {
+   "path": "evidence/ord0408-ruling-A-contract-enum-0328/contract_parse_audit_r1.py",
+   "local_bytes": 5185,
+   "local_blob": "82245cbab7086632cc31b0b9a5ef3394e91ced28",
+   "exit": 0,
+   "receipt": {
+    "pushed_commit": "507292167b46d17427b01a7a60052e61a6741fda",
+    "tip_matches_push": true,
+    "readback_blob": "82245cbab7086632cc31b0b9a5ef3394e91ced28",
+    "readback_size": 5185,
+    "byte_equal": true
+   },
+   "readback_blob": "82245cbab7086632cc31b0b9a5ef3394e91ced28",
+   "byte_equal": true,
+   "commit": "507292167b46d17427b01a7a60052e61a6741fda",
+   "tip_matches_push": true,
+   "out_tail": "receipt -> patrol/git_mirror_20260929_033010.json",
+   "verified": true
+  },
+  {
+   "path": "evidence/ord0408-ruling-A-contract-enum-0328/contract_parse_audit.json",
+   "local_bytes": 10010,
+   "local_blob": "4482cfa2ee0d8abad29976442fb926a274b0f617",
+   "exit": 0,
+   "receipt": {
+    "pushed_commit": "30f93c70accf71fa3f3d33f55a167081c9593e5e",
+    "tip_matches_push": true,
+    "readback_blob": "4482cfa2ee0d8abad29976442fb926a274b0f617",
+    "readback_size": 10010,
+    "byte_equal": true
+   },
+   "readback_blob": "4482cfa2ee0d8abad29976442fb926a274b0f617",
+   "byte_equal": true,
+   "commit": "30f93c70accf71fa3f3d33f55a167081c9593e5e",
+   "tip_matches_push": true,
+   "out_tail": "receipt -> patrol/git_mirror_20260929_033035.json",
+   "verified": true
+  },
+  {
+   "path": "evidence/ord0408-ruling-A-contract-enum-0328/tree_tip_dccd13ad_with_r7b1.json",
+   "local_bytes": 87876,
+   "local_blob": "08a5578f154861ab815eb4dd87f5aca94e4650e9",
+   "exit": 0,
+   "receipt": {
+    "pushed_commit": "a8601d055a9e5f7dbdb7388bc6f2a4f5861f483e",
+    "tip_matches_push": true,
+    "readback_blob": "08a5578f154861ab815eb4dd87f5aca94e4650e9",
+    "readback_size": 87876,
+    "byte_equal": true
+   },
+   "readback_blob": "08a5578f154861ab815eb4dd87f5aca94e4650e9",
+   "byte_equal": true,
+   "commit": "a8601d055a9e5f7dbdb7388bc6f2a4f5861f483e",
+   "tip_matches_push": true,
+   "out_tail": "receipt -> patrol/git_mirror_20260929_033057.json",
+   "verified": true
+  },
+  {
+   "path": "evidence/ord0408-ruling-A-contract-enum-0328/tree_tip_dccd13ad_with_r7b4.json",
+   "local_bytes": 99858,
+   "local_blob": "65e34d65c20563a66cdd1d255f00364d654af437",
+   "exit": 0,
+   "receipt": {
+    "pushed_commit": "04893d5a1024a4edbf932e474519587abd570f89",
+    "tip_matches_push": true,
+    "readback_blob": "65e34d65c20563a66cdd1d255f00364d654af437",
+    "readback_size": 99858,
+    "byte_equal": true
+   },
+   "readback_blob": "65e34d65c20563a66cdd1d255f00364d654af437",
+   "byte_equal": true,
+   "commit": "04893d5a1024a4edbf932e474519587abd570f89",
+   "tip_matches_push": true,
+   "out_tail": "receipt -> patrol/git_mirror_20260929_033122.json",
+   "verified": true
+  },
+  {
+   "path": "evidence/ord0408-ruling-A-contract-enum-0328/contracts/openapi_inline_enum.yaml",
+   "local_bytes": 119872,
+   "local_blob": "910903a15ea70cbacdc9fa7b70f620ef7f2d8ad9",
+   "exit": 0,
+   "receipt": {
+    "pushed_commit": "228f7b00a3c80fae8b9bacbcb3b6df749f0b8265",
+    "tip_matches_push": true,
+    "readback_blob": "910903a15ea70cbacdc9fa7b70f620ef7f2d8ad9",
+    "readback_size": 119872,
+    "byte_equal": true
+   },
+   "readback_blob": "910903a15ea70cbacdc9fa7b70f620ef7f2d8ad9",
+   "byte_equal": true,
+   "commit": "228f7b00a3c80fae8b9bacbcb3b6df749f0b8265",
+   "tip_matches_push": true,
+   "out_tail": "receipt -> patrol/git_mirror_20260929_033144.json",
+   "verified": true
+  },
+  {
+   "path": "evidence/ord0408-ruling-A-contract-enum-0328/contracts/openapi_block_enum.yaml",
+   "local_bytes": 119965,
+   "local_blob": "4e5944d9d7eac3042d9b8942b2c8d91f1fcde910",
+   "exit": 0,
+   "receipt": {
+    "pushed_commit": "85d7d5ceedfde31e57ef9db76b699f87b0a79020",
+    "tip_matches_push": true,
+    "readback_blob": "4e5944d9d7eac3042d9b8942b2c8d91f1fcde910",
+    "readback_size": 119965,
+    "byte_equal": true
+   },
+   "readback_blob": "4e5944d9d7eac3042d9b8942b2c8d91f1fcde910",
+   "byte_equal": true,
+   "commit": "85d7d5ceedfde31e57ef9db76b699f87b0a79020",
+   "tip_matches_push": true,
+   "out_tail": "receipt -> patrol/git_mirror_20260929_033205.json",
+   "verified": true
+  },
+  {
+   "path": "evidence/ord0408-ruling-A-contract-enum-0328/fixtures/in_set__JourneyTrashPanel.tsx",
+   "local_bytes": 10460,
+   "local_blob": "a1beba8f0caee1d29b3b40c16691cf4f4462a92c",
+   "exit": 0,
+   "receipt": {
+    "pushed_commit": "e9cd96ea81f92ade59a8eabfdf9f4d539bc780cc",
+    "tip_matches_push": true,
+    "readback_blob": "a1beba8f0caee1d29b3b40c16691cf4f4462a92c",
+    "readback_size": 10460,
+    "byte_equal": true
+   },
+   "readback_blob": "a1beba8f0caee1d29b3b40c16691cf4f4462a92c",
+   "byte_equal": true,
+   "commit": "e9cd96ea81f92ade59a8eabfdf9f4d539bc780cc",
+   "tip_matches_push": true,
+   "out_tail": "receipt -> patrol/git_mirror_20260929_033226.json",
+   "verified": true
+  },
+  {
+   "path": "evidence/ord0408-ruling-A-contract-enum-0328/fixtures/invented__JourneyTrashPanel.tsx",
+   "local_bytes": 10456,
+   "local_blob": "f3c649914b855fd0c676891c2f5545c37cedbdb8",
+   "exit": 0,
+   "receipt": {
+    "pushed_commit": "df7b9945901423352b561fd03b98fb12423f2a27",
+    "tip_matches_push": true,
+    "readback_blob": "f3c649914b855fd0c676891c2f5545c37cedbdb8",
+    "readback_size": 10456,
+    "byte_equal": true
+   },
+   "readback_blob": "f3c649914b855fd0c676891c2f5545c37cedbdb8",
+   "byte_equal": true,
+   "commit": "df7b9945901423352b561fd03b98fb12423f2a27",
+   "tip_matches_push": true,
+   "out_tail": "receipt -> patrol/git_mirror_20260929_033249.json",
+   "verified": true
+  }
+ ],
+ "all_verified": true
+}
