@@ -1,0 +1,66 @@
+/*
+ * ORD-0390 — the map is a surface you can pick things on, so a marker has to look pickable and the
+ * selection has to be visible on both halves of the screen at once.
+ *
+ * Selectors are deliberately deeper than `styles.css:248` (`.v9-map-marker`) so they win on
+ * specificity rather than on import order, and colours come from the existing `--cn-*` / `--v8-*`
+ * tokens: the ring is the same accent the product already uses for "this one", so a selected pin
+ * does not introduce a fourth meaning for a colour.
+ */
+
+.v8-map-panel .v9-map-marker {
+  cursor: pointer;
+}
+
+/* Keyboard reachability: the markers are real buttons now, so focus has to be as visible as the
+   press state. `:focus-visible` keeps it off pointer clicks. */
+.v8-map-panel .v9-map-marker:focus-visible {
+  outline: 2px solid var(--v8-indigo);
+  outline-offset: 2px;
+}
+
+.v8-map-panel .v9-map-marker.selected {
+  box-shadow: 0 0 0 3px var(--cn-surface), 0 0 0 6px var(--v8-indigo);
+}
+
+/* The stop rows beside the map (the reverse half: row → camera). Name only — a duration or a price
+   here would put the two surfaces back into disagreement about what a "selected stop" shows. */
+.v8-map-page-grid .v8-map-stops {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--cn-s-8);
+  margin-top: var(--cn-s-12);
+}
+
+.v8-map-page-grid .v8-map-stops .v8-kicker {
+  flex-basis: 100%;
+}
+
+.v8-map-page-grid .v8-map-stop {
+  min-height: 32px;
+  padding: var(--cn-s-8) var(--cn-s-12);
+  border: 1px solid var(--cn-hairline);
+  border-radius: var(--cn-r-control);
+  background: var(--cn-surface);
+  color: var(--v8-ink);
+  font-size: var(--cn-fs-caption);
+  text-align: left;
+  cursor: pointer;
+}
+
+.v8-map-page-grid .v8-map-stop.selected {
+  border-color: var(--v8-indigo);
+  color: var(--v8-indigo);
+  font-weight: 750;
+}
+
+.v8-map-page-grid .v8-map-stop:focus-visible {
+  outline: 2px solid var(--v8-indigo);
+  outline-offset: 2px;
+}
+
+.v8-map-selected-type {
+  margin: var(--cn-s-8) 0 0;
+  color: var(--v8-ink);
+  font-size: var(--cn-fs-caption);
+}

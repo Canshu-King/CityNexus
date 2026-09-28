@@ -22,7 +22,10 @@ export type MapCopyKey =
   | "tileNotice"
   | "gestureHint"
   | "attributionRaster"
-  | "attributionVector";
+  | "attributionVector"
+  | "stopsKicker"
+  | "stopLocateAria"
+  | "stopSelectedLead";
 
 const COPY: Record<MapCopyKey, { zh: string; en: string }> = {
   noLocationTitle: { zh: "尚未获取地图位置",
@@ -37,6 +40,12 @@ const COPY: Record<MapCopyKey, { zh: string; en: string }> = {
             en: "Basemap data © OpenStreetMap contributors · tiles: tile.openstreetmap.org" },
   attributionVector: { zh: "底图数据 © OpenStreetMap 贡献者 · 瓦片服务 tiles.openfreemap.org",
             en: "Basemap data © OpenStreetMap contributors · tiles: tiles.openfreemap.org" },
+  /* ORD-0390. `stopsKicker` names the list, `stopLocateAria` says what pressing a row does (a
+     screen reader gets "定位" not just the stop name), and `stopSelectedLead` marks the card that
+     reflects the shared selection so it reads as a state, not as a second heading. */
+  stopsKicker: { zh: "这一天去的地点", en: "Stops on this day" },
+  stopLocateAria: { zh: "在地图上定位 %s", en: "Locate %s on the map" },
+  stopSelectedLead: { zh: "已选中", en: "Selected" },
 };
 
 /** Same locale rule the component used inline: anything starting with zh takes the Chinese arm. */
