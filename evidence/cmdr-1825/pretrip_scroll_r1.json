@@ -1,0 +1,31 @@
+{
+ "at": "2026-09-28T10:23:01.003Z",
+ "base": "http://127.0.0.1:4781/",
+ "before": {
+  "box": [
+   32,
+   1151,
+   119,
+   44
+  ],
+  "hit_now": false,
+  "viewport_h": 844,
+  "overflow_px": 351,
+  "scrollable_ancestors": []
+ },
+ "after": {
+  "box": [
+   32,
+   406,
+   119,
+   44
+  ],
+  "hit_after_scroll": true,
+  "occluder": "BUTTON.v8-quiet-button"
+ },
+ "tap": {
+  "tried": true,
+  "url_after": "http://127.0.0.1:4781/v8/studio",
+  "body_len": 266
+ }
+}
