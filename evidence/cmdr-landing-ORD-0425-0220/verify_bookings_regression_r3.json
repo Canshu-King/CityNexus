@@ -1,0 +1,437 @@
+{
+ "base": "http://127.0.0.1:4808",
+ "route": "bookings",
+ "generated_by": "_untranslated_scan_r3.js",
+ "expect_list_size": 8,
+ "zh": {
+  "locale": "zh",
+  "entry_used": "使用封存的演示行程",
+  "reached_route": "/v8/bookings",
+  "on_requested_route": true,
+  "path": "/v8/bookings",
+  "locale_read": "zh",
+  "scroll_steps": 10,
+  "scrollables": 2,
+  "scroll_reached": [
+   {
+    "tag": "HTML",
+    "cls": "",
+    "max": 1531,
+    "deepest_scrollTop_reached": 1531,
+    "bottom_reached": true
+   },
+   {
+    "tag": "HTML",
+    "cls": "",
+    "max": 1531,
+    "deepest_scrollTop_reached": 1531,
+    "bottom_reached": true
+   }
+  ],
+  "leaf_count": 54,
+  "ascii_prose_count": 2,
+  "ascii_prose": [
+   {
+    "text": "CityNexus Copilot",
+    "tag": "SPAN",
+    "cls": "",
+    "testid": null,
+    "y": 732
+   },
+   {
+    "text": "Copilot",
+    "tag": "SPAN",
+    "cls": "",
+    "testid": "nav-agent",
+    "y": 816
+   }
+  ],
+  "expect": [
+   {
+    "text": "NOT_CONFIGURED",
+    "on_screen": false
+   },
+   {
+    "text": "ADVISORY",
+    "on_screen": false
+   },
+   {
+    "text": "PLANNED",
+    "on_screen": false
+   },
+   {
+    "text": "Asia/Shanghai",
+    "on_screen": false
+   },
+   {
+    "text": "place-river-cruise",
+    "on_screen": true
+   },
+   {
+    "text": "C4_Anchored",
+    "on_screen": false
+   },
+   {
+    "text": "已保存的行程事实",
+    "on_screen": true
+   },
+   {
+    "text": "Capability needs",
+    "on_screen": false
+   }
+  ]
+ },
+ "en": {
+  "locale": "en",
+  "entry_used": "sealed demo",
+  "reached_route": "/v8/bookings",
+  "on_requested_route": true,
+  "path": "/v8/bookings",
+  "locale_read": "en",
+  "scroll_steps": 10,
+  "scrollables": 2,
+  "scroll_reached": [
+   {
+    "tag": "HTML",
+    "cls": "",
+    "max": 1638,
+    "deepest_scrollTop_reached": 1638,
+    "bottom_reached": true
+   },
+   {
+    "tag": "HTML",
+    "cls": "",
+    "max": 1638,
+    "deepest_scrollTop_reached": 1638,
+    "bottom_reached": true
+   }
+  ],
+  "leaf_count": 54,
+  "ascii_prose_count": 41,
+  "ascii_prose": [
+   {
+    "text": "Travel Wallet",
+    "tag": "STRONG",
+    "cls": "",
+    "testid": null,
+    "y": 25
+   },
+   {
+    "text": "System",
+    "tag": "BUTTON",
+    "cls": "v9-language",
+    "testid": "topbar-theme",
+    "y": 17
+   },
+   {
+    "text": "Journey Inbox · Travel Wallet",
+    "tag": "P",
+    "cls": "v8-kicker",
+    "testid": null,
+    "y": 93
+   },
+   {
+    "text": "Your real reservations, protected.",
+    "tag": "H1",
+    "cls": "",
+    "testid": null,
+    "y": 117
+   },
+   {
+    "text": "Paste structured reservation JSON, review it, then bind confirmed facts to the Journey as a durable commitment.",
+    "tag": "P",
+    "cls": "v8-lede",
+    "testid": null,
+    "y": 208
+   },
+   {
+    "text": "STAY EVIDENCE",
+    "tag": "SPAN",
+    "cls": "v8-selected-label",
+    "testid": null,
+    "y": 296
+   },
+   {
+    "text": "No stay selected",
+    "tag": "H2",
+    "cls": "",
+    "testid": null,
+    "y": 322
+   },
+   {
+    "text": "No stay option is available for this trip yet.",
+    "tag": "P",
+    "cls": "",
+    "testid": null,
+    "y": 359
+   },
+   {
+    "text": "Open Stay Explorer to look for one",
+    "tag": "BUTTON",
+    "cls": "v8-quiet-button",
+    "testid": "bookings-no-stay-action",
+    "y": 383
+   },
+   {
+    "text": "· simulated commitment",
+    "tag": "B",
+    "cls": "",
+    "testid": "wallet-commitment-simulated",
+    "y": 499
+   },
+   {
+    "text": "10 Oct, 15:30 → 10 Oct, 16:30",
+    "tag": "P",
+    "cls": "",
+    "testid": "wallet-commitment-window",
+    "y": 590
+   },
+   {
+    "text": "CN¥120.00",
+    "tag": "STRONG",
+    "cls": "",
+    "testid": "wallet-commitment-amount",
+    "y": 617
+   },
+   {
+    "text": "Schedule fixed",
+    "tag": "SPAN",
+    "cls": "v8-booking-state safe",
+    "testid": "wallet-commitment",
+    "y": 471
+   },
+   {
+    "text": "Import a booking",
+    "tag": "SPAN",
+    "cls": "v8-kicker",
+    "testid": null,
+    "y": 692
+   },
+   {
+    "text": "Advanced: structured data",
+    "tag": "SUMMARY",
+    "cls": "",
+    "testid": "bookings-advanced",
+    "y": 838
+   },
+   {
+    "text": "CityNexus Copilot",
+    "tag": "SPAN",
+    "cls": "",
+    "testid": null,
+    "y": 732
+   },
+   {
+    "text": "Copilot",
+    "tag": "SPAN",
+    "cls": "",
+    "testid": "nav-agent",
+    "y": 816
+   },
+   {
+    "text": "Reservation JSON",
+    "tag": "LABEL",
+    "cls": "",
+    "testid": "bookings-advanced",
+    "y": 624
+   },
+   {
+    "text": "Review and protect",
+    "tag": "BUTTON",
+    "cls": "v8-primary",
+    "testid": "bookings-advanced",
+    "y": 640
+   },
+   {
+    "text": "Critical origin, destination, time, provider and reference facts are never invented.",
+    "tag": "SMALL",
+    "cls": "",
+    "testid": "bookings-advanced",
+    "y": 658
+   },
+   {
+    "text": "Authority remains explicit",
+    "tag": "B",
+    "cls": "",
+    "testid": null,
+    "y": 517
+   },
+   {
+    "text": "Importing a confirmed reservation protects it. Any payment, cancellation or irreversible change still passes the Delegation Policy.",
+    "tag": "SPAN",
+    "cls": "",
+    "testid": null,
+    "y": 538
+   },
+   {
+    "text": "Scan ticket code",
+    "tag": "B",
+    "cls": "",
+    "testid": null,
+    "y": 619
+   },
+   {
+    "text": "Scanned on your device · you still confirm it",
+    "tag": "SMALL",
+    "cls": "",
+    "testid": null,
+    "y": 643
+   },
+   {
+    "text": "Open scanner",
+    "tag": "BUTTON",
+    "cls": "",
+    "testid": null,
+    "y": 680
+   },
+   {
+    "text": "MULTIMODAL INBOX",
+    "tag": "SPAN",
+    "cls": "v8-kicker",
+    "testid": null,
+    "y": 764
+   },
+   {
+    "text": "Bring a confirmation into the Journey",
+    "tag": "H2",
+    "cls": "",
+    "testid": null,
+    "y": 784
+   },
+   {
+    "text": "read · checked · remembered",
+    "tag": "SPAN",
+    "cls": "v10-truth-pill",
+    "testid": null,
+    "y": 436
+   },
+   {
+    "text": "Copy journey link",
+    "tag": "BUTTON",
+    "cls": "v8-primary-button",
+    "testid": "journey-link-copy",
+    "y": 493
+   },
+   {
+    "text": "Paste confirmation",
+    "tag": "BUTTON",
+    "cls": "active",
+    "testid": "inbox-tab-paste",
+    "y": 565
+   },
+   {
+    "text": "Enter manually",
+    "tag": "BUTTON",
+    "cls": "",
+    "testid": "inbox-tab-manual",
+    "y": 565
+   },
+   {
+    "text": "Extract text draft",
+    "tag": "BUTTON",
+    "cls": "",
+    "testid": null,
+    "y": 809
+   },
+   {
+    "text": "Image bytes are sent only for this extraction request.",
+    "tag": "SMALL",
+    "cls": "",
+    "testid": null,
+    "y": 543
+   },
+   {
+    "text": "Extract image draft",
+    "tag": "BUTTON",
+    "cls": "",
+    "testid": null,
+    "y": 596
+   },
+   {
+    "text": "AUTHORITATIVE MEMORY",
+    "tag": "SPAN",
+    "cls": "v8-kicker",
+    "testid": null,
+    "y": 662
+   },
+   {
+    "text": "Saved trip facts",
+    "tag": "H3",
+    "cls": "",
+    "testid": null,
+    "y": 696
+   },
+   {
+    "text": "1 protected facts",
+    "tag": "SMALL",
+    "cls": "",
+    "testid": null,
+    "y": 749
+   },
+   {
+    "text": "Nexus River Cruise Pier · 10 Oct, 15:30",
+    "tag": "SPAN",
+    "cls": "",
+    "testid": null,
+    "y": 803
+   },
+   {
+    "text": "Protected · confidence pending",
+    "tag": "SMALL",
+    "cls": "",
+    "testid": null,
+    "y": 827
+   },
+   {
+    "text": "Confirmations waiting on you",
+    "tag": "B",
+    "cls": "",
+    "testid": "inbox-pending-queue",
+    "y": 576
+   },
+   {
+    "text": "Nothing here is waiting for your review.",
+    "tag": "P",
+    "cls": "",
+    "testid": "inbox-pending-empty",
+    "y": 606
+   }
+  ],
+  "expect": [
+   {
+    "text": "NOT_CONFIGURED",
+    "on_screen": false
+   },
+   {
+    "text": "ADVISORY",
+    "on_screen": false
+   },
+   {
+    "text": "PLANNED",
+    "on_screen": false
+   },
+   {
+    "text": "Asia/Shanghai",
+    "on_screen": false
+   },
+   {
+    "text": "place-river-cruise",
+    "on_screen": true
+   },
+   {
+    "text": "C4_Anchored",
+    "on_screen": false
+   },
+   {
+    "text": "已保存的行程事实",
+    "on_screen": false
+   },
+   {
+    "text": "Capability needs",
+    "on_screen": false
+   }
+  ]
+ },
+ "arms_comparable": true,
+ "verdict": "ZH_SCREEN_CARRIES_ENGLISH_PROSE"
+}
