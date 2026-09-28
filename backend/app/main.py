@@ -2905,10 +2905,13 @@ def list_journeys(session: Session = Depends(get_session)):
 def delete_journey(journey_id: UUID, session: Session = Depends(get_session)):
     """Soft delete: record the moment in `journeys.deleted_at`, keep the row.
 
-    The two refusals carry their own names because a screen must not say one sentence for
-    both: `JOURNEY_NOT_FOUND` (404) - there is no such row; `JOURNEY_ALREADY_DELETED` (409) -
-    the row is already in the bin, and its original moment is left alone rather than
-    overwritten, so a second tap cannot make a trip look more recently deleted than it is.
+    The two refusals carry their own name in `error.reason_code` - `JOURNEY_NOT_FOUND` on the
+    404, `JOURNEY_ALREADY_DELETED` on the 409 - because a screen must not say one sentence for
+    both: there is no such row, versus that row is already in the bin.  They do not mint a new
+    `error.code`: `backend/tests/test_qoder_ord0272_continuation.py::test_G6...` keeps the
+    failure vocabulary to the one family this server already answers with, and ORD-0101 built
+    `reason_code` for exactly this case.  A second tap leaves the first moment alone rather
+    than overwriting it, so a trip cannot look more recently deleted than it is.
 
     `status` is not touched.  It answers what the trip was doing, and its closed CHECK
     (`backend/db/schema.sql:125`) has no word for "in the bin" - inventing one would rebuild
@@ -2917,21 +2920,15 @@ def delete_journey(journey_id: UUID, session: Session = Depends(get_session)):
 
     journey = session.get(Journey, str(journey_id))
     if journey is None:
-        return error(
-            "JOURNEY_NOT_FOUND",
-            f"Journey {journey_id} was not found",
-            status=404,
-            details={"journey_id": str(journey_id)},
-            message_key="journey.not_found",
-        )
+        refused = HTTPException(404, f"Journey {journey_id} was not found")
+        refused.reason_code = "JOURNEY_NOT_FOUND"
+        refused.error_details = {"journey_id": str(journey_id)}
+        raise refused
     if journey.deleted_at is not None:
-        return error(
-            "JOURNEY_ALREADY_DELETED",
-            f"Journey {journey_id} is already deleted",
-            status=409,
-            details={"journey_id": str(journey_id), "deleted_at": journey.deleted_at},
-            message_key="journey.already_deleted",
-        )
+        refused = HTTPException(409, f"Journey {journey_id} is already deleted")
+        refused.reason_code = "JOURNEY_ALREADY_DELETED"
+        refused.error_details = {"journey_id": str(journey_id), "deleted_at": journey.deleted_at}
+        raise refused
     before = journey_schema(journey).model_dump(mode="json")
     journey.deleted_at = datetime.now(timezone.utc).isoformat()
     session.commit()
