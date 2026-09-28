@@ -1,0 +1,295 @@
+{
+ "schema": "CNX_CMDR_LANDING_PREFLIGHT_V1",
+ "lane": "commander 494abfd7",
+ "at_local": "2026-09-29T00:10:04+0800",
+ "mode": "LAND",
+ "authoritative_line": "mirror/integration-frontend-apple-pass1",
+ "tip_re_read_from_github_before": "06d99e55178ce1fd6509867e8cd3178f8fd3415c",
+ "candidate_ref": "refs/heads/review/R-ord0410-recenter-active-r1",
+ "candidate_tip": "8a7665be2061a2f38aa2227f81c57003ca4caacb",
+ "genealogy": {
+  "ff_possible_rc": 0,
+  "ff_possible": true,
+  "merge_base": "06d99e55178ce1fd6509867e8cd3178f8fd3415c",
+  "line_only_commits": 0,
+  "candidate_only_commits": 2
+ },
+ "file_sets": {
+  "line_side_since_base": [],
+  "candidate_side_since_base": [
+   "frontend/e2e/qoder-map-ord0410-recenter-acts-on-the-journey-view.spec.ts",
+   "frontend/src/components/v8/MapPanel.tsx",
+   "review/ord0410/PORT_OWNERSHIP_r1.json",
+   "review/ord0410/READINGS_r1.txt",
+   "review/ord0410/assemble_pack_r1.py",
+   "review/ord0410/attribution_base_214ab0ff_r1.json",
+   "review/ord0410/attribution_fix_r1.json",
+   "review/ord0410/cause_attrib_r1.js",
+   "review/ord0410/copy_db_r1.py",
+   "review/ord0410/diag_stack_r1.js",
+   "review/ord0410/gate_0403_fix_only_trimmed.txt",
+   "review/ord0410/gate_fix_run1_trimmed.txt",
+   "review/ord0410/gate_mutant_rebased_trimmed.txt",
+   "review/ord0410/gate_mutant_run1_trimmed.txt",
+   "review/ord0410/gate_ord0410_fix_run2_trimmed.txt",
+   "review/ord0410/gate_rebased_regression_trimmed.txt",
+   "review/ord0410/lsremote_r1.txt",
+   "review/ord0410/recenter_receipt_214ab0ff_r1.json",
+   "review/ord0410/recenter_receipt_3552c56f_r1.json",
+   "review/ord0410/recenter_receipt_DISCARDED_false_green_r1.json",
+   "review/ord0410/recenter_receipt_c24e619b_r1.json",
+   "review/ord0410/run_gate_r1.sh",
+   "review/ord0410/screen_214ab0ff_RED.png",
+   "review/ord0410/screen_3552c56f_GREEN.png",
+   "review/ord0410/start_backend_r1.py"
+  ],
+  "intersection": [],
+  "product_introduced_by_candidate": [
+   "frontend/src/components/v8/MapPanel.tsx"
+  ]
+ },
+ "merge_tree": {
+  "exit": 0,
+  "first_line": "e92b3cf572a7fb594e4e72fbf1b4b18794024445",
+  "conflict_reported": false,
+  "stderr_head": ""
+ },
+ "gate_run": {
+  "requested": [],
+  "collect_exit": null,
+  "collected": null,
+  "test_exit": null,
+  "summary": null,
+  "export": "D:/moodle/_qoder_cmdr_ref_20260921/snap_preflight_000910",
+  "blob_equality": [
+   {
+    "path": "frontend/e2e/qoder-map-ord0410-recenter-acts-on-the-journey-view.spec.ts",
+    "candidate_blob": "ce37c28c935a4456950e63540219c49d04112e71",
+    "export_blob": "ce37c28c935a4456950e63540219c49d04112e71",
+    "equal": true
+   },
+   {
+    "path": "frontend/src/components/v8/MapPanel.tsx",
+    "candidate_blob": "90a291d8f0c5bf5720b1ca151ed37f845d60dc3f",
+    "export_blob": "90a291d8f0c5bf5720b1ca151ed37f845d60dc3f",
+    "equal": true
+   },
+   {
+    "path": "review/ord0410/PORT_OWNERSHIP_r1.json",
+    "candidate_blob": "24a8320c0fa07c51d7cf33d501e81116ace50bad",
+    "export_blob": "24a8320c0fa07c51d7cf33d501e81116ace50bad",
+    "equal": true
+   },
+   {
+    "path": "review/ord0410/READINGS_r1.txt",
+    "candidate_blob": "cf922cfbf7e52054445e3579be440e6a402168f8",
+    "export_blob": "cf922cfbf7e52054445e3579be440e6a402168f8",
+    "equal": true
+   },
+   {
+    "path": "review/ord0410/assemble_pack_r1.py",
+    "candidate_blob": "0b77d2787731dc17ab9beefb0d5d1f6c9877ba9a",
+    "export_blob": "0b77d2787731dc17ab9beefb0d5d1f6c9877ba9a",
+    "equal": true
+   },
+   {
+    "path": "review/ord0410/attribution_base_214ab0ff_r1.json",
+    "candidate_blob": "32c5565f43bffbad867f977bcaa37f361515f73b",
+    "export_blob": "32c5565f43bffbad867f977bcaa37f361515f73b",
+    "equal": true
+   },
+   {
+    "path": "review/ord0410/attribution_fix_r1.json",
+    "candidate_blob": "5895a0a364f80d45a49835cf9914cbf752bafc56",
+    "export_blob": "5895a0a364f80d45a49835cf9914cbf752bafc56",
+    "equal": true
+   },
+   {
+    "path": "review/ord0410/cause_attrib_r1.js",
+    "candidate_blob": "ce50cf9bb1e8e506db09b1ee112e5cfebc4d959c",
+    "export_blob": "ce50cf9bb1e8e506db09b1ee112e5cfebc4d959c",
+    "equal": true
+   },
+   {
+    "path": "review/ord0410/copy_db_r1.py",
+    "candidate_blob": "6a129d59906b20ec0608805ae7e5aed400ed4de2",
+    "export_blob": "6a129d59906b20ec0608805ae7e5aed400ed4de2",
+    "equal": true
+   },
+   {
+    "path": "review/ord0410/diag_stack_r1.js",
+    "candidate_blob": "265530d71f988a199d6cadcb1e4e1d29ac79c910",
+    "export_blob": "265530d71f988a199d6cadcb1e4e1d29ac79c910",
+    "equal": true
+   },
+   {
+    "path": "review/ord0410/gate_0403_fix_only_trimmed.txt",
+    "candidate_blob": "24276168f8f48b43aedf1e0e110eb4a3a308a636",
+    "export_blob": "24276168f8f48b43aedf1e0e110eb4a3a308a636",
+    "equal": true
+   },
+   {
+    "path": "review/ord0410/gate_fix_run1_trimmed.txt",
+    "candidate_blob": "3a606e341c3de881dca1b7b80554d591f95d9f1c",
+    "export_blob": "3a606e341c3de881dca1b7b80554d591f95d9f1c",
+    "equal": true
+   },
+   {
+    "path": "review/ord0410/gate_mutant_rebased_trimmed.txt",
+    "candidate_blob": "076435f7be91b20cbf2bac167f760353639f57e4",
+    "export_blob": "076435f7be91b20cbf2bac167f760353639f57e4",
+    "equal": true
+   },
+   {
+    "path": "review/ord0410/gate_mutant_run1_trimmed.txt",
+    "candidate_blob": "89a76a97442473babcacfa1b3b82fad5e9338c8e",
+    "export_blob": "89a76a97442473babcacfa1b3b82fad5e9338c8e",
+    "equal": true
+   },
+   {
+    "path": "review/ord0410/gate_ord0410_fix_run2_trimmed.txt",
+    "candidate_blob": "4d197080747a6adc721891e9edcf32f5b47e46a6",
+    "export_blob": "4d197080747a6adc721891e9edcf32f5b47e46a6",
+    "equal": true
+   },
+   {
+    "path": "review/ord0410/gate_rebased_regression_trimmed.txt",
+    "candidate_blob": "685d2c5d4bc1e0d095dc766d059d64137ddc0e80",
+    "export_blob": "685d2c5d4bc1e0d095dc766d059d64137ddc0e80",
+    "equal": true
+   },
+   {
+    "path": "review/ord0410/lsremote_r1.txt",
+    "candidate_blob": "39b08074611dfab1e995659fb94dba232897348f",
+    "export_blob": "39b08074611dfab1e995659fb94dba232897348f",
+    "equal": true
+   },
+   {
+    "path": "review/ord0410/recenter_receipt_214ab0ff_r1.json",
+    "candidate_blob": "057fe150ec9e9e2ffe50f86c9faf509d4788e0fa",
+    "export_blob": "057fe150ec9e9e2ffe50f86c9faf509d4788e0fa",
+    "equal": true
+   },
+   {
+    "path": "review/ord0410/recenter_receipt_3552c56f_r1.json",
+    "candidate_blob": "9d3b259e6a76b46c189d384cfbd43edce1cc7dd2",
+    "export_blob": "9d3b259e6a76b46c189d384cfbd43edce1cc7dd2",
+    "equal": true
+   },
+   {
+    "path": "review/ord0410/recenter_receipt_DISCARDED_false_green_r1.json",
+    "candidate_blob": "d288b520e0e22ff5b92e3d7f73115401aeeab62d",
+    "export_blob": "d288b520e0e22ff5b92e3d7f73115401aeeab62d",
+    "equal": true
+   },
+   {
+    "path": "review/ord0410/recenter_receipt_c24e619b_r1.json",
+    "candidate_blob": "b3681437bb33a37bc27bd1d849260b90e6820adb",
+    "export_blob": "b3681437bb33a37bc27bd1d849260b90e6820adb",
+    "equal": true
+   },
+   {
+    "path": "review/ord0410/run_gate_r1.sh",
+    "candidate_blob": "713fca94b223aeed0be2c02a2eddba07b4f7cf63",
+    "export_blob": "713fca94b223aeed0be2c02a2eddba07b4f7cf63",
+    "equal": true
+   },
+   {
+    "path": "review/ord0410/screen_214ab0ff_RED.png",
+    "candidate_blob": "c8a5ca26eb5a1c210caa6006b9d8ad5e6f9b81d2",
+    "export_blob": "c8a5ca26eb5a1c210caa6006b9d8ad5e6f9b81d2",
+    "equal": true
+   },
+   {
+    "path": "review/ord0410/screen_3552c56f_GREEN.png",
+    "candidate_blob": "9cdde364759ab33be81b4f4d83e90f4a52635c2d",
+    "export_blob": "9cdde364759ab33be81b4f4d83e90f4a52635c2d",
+    "equal": true
+   },
+   {
+    "path": "review/ord0410/start_backend_r1.py",
+    "candidate_blob": "347ad1f05256596e962d12d6d77d4fe1de28910a",
+    "export_blob": "347ad1f05256596e962d12d6d77d4fe1de28910a",
+    "equal": true
+   }
+  ],
+  "whole_suite": {
+   "collect_exit": 0,
+   "collected": 1434,
+   "interrupted": false,
+   "error_lines": [
+    "tests/test_qoder_ord0332_error_receipt.py::test_R7_the_envelope_keeps_every_field_it_already_had",
+    "tests/test_qoder_ord0332_error_receipt.py::test_R8_the_seed_is_read_off_the_real_request_not_just_the_dataclass",
+    "tests/test_solver_runtime_policy.py::test_unexpected_solver_programming_error_is_not_silently_hidden"
+   ],
+   "tail": [
+    "    _PortalFactoryType = Callable[[], AbstractContextManager[anyio.abc.BlockingPortal]]",
+    "-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html",
+    "1434 tests collected in 11.08s"
+   ],
+   "cmd": "D:/moodle/CityNexus/.venv/Scripts/python.exe -m pytest --collect-only -q tests  (cwd=<export>/backend, PYTHONPATH=<export>)"
+  },
+  "deletions": {
+   "deleted_by_candidate": [],
+   "still_present_in_export": []
+  },
+  "interpreter": "Python 3.12.14 (main, Aug 25 2026, 14:01:42) [MSC v.1944 64 bit (AMD64)]",
+  "exposure": {
+   "ruler_blob": "d3f66ce9fecd0790981a4fcdeb5e36b1c0fd10f2",
+   "ruler_blob_computed": null,
+   "ruler_file": "ui_exposure_taint_ast_r7b.cjs",
+   "candidate_files_in_view": 1,
+   "tip_cells": 12,
+   "cand_cells": 12,
+   "growth_by_file_and_rule": {},
+   "unpaired_added": [],
+   "added_line_exact": [],
+   "shifted_only": false,
+   "removed_count": 0,
+   "removed": [],
+   "disclosed_slip": "a same-file, same-rule relocation with equal counts reads as a shift; the AST ruler has no cell identity"
+  },
+  "frontend_build": {
+   "builder_rc": 0,
+   "vite_build_rc": 0,
+   "dist_exists": true,
+   "index_exists": true,
+   "asset_refs": [
+    "/assets/index-CGSMsxT2.js",
+    "/assets/index-D_Fr6K4L.css"
+   ],
+   "live_tree": "e92b3cf572a7fb594e4e72fbf1b4b18794024445",
+   "info_file": "D:\\moodle\\_qoder_cmdr_ref_20260921\\live_checks\\_build_8a7665b_info.json",
+   "build_tail": [
+    "files generated",
+    "  dist/v10-sw.js",
+    "  dist/workbox-6923124b.js",
+    "\u001b[33m",
+    "(!) Some chunks are larger than 500 kB after minification. Consider:",
+    "- Using dynamic import() to code-split the application",
+    "- Use build.rollupOptions.output.manualChunks to improve chunking: https://rollupjs.org/configuration-options/#output-manualchunks",
+    "- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.\u001b[39m"
+   ]
+  }
+ },
+ "problems": [],
+ "verdict": "READY_TO_LAND",
+ "landing": {
+  "http": 200,
+  "response_head": "{'ref': 'refs/heads/mirror/integration-frontend-apple-pass1', 'node_id': 'REF_kwDOUhlJJ9oAMnJlZnMvaGVhZHMvbWlycm9yL2ludGVncmF0aW9uLWZyb250ZW5kLWFwcGxlLXBhc3Mx', 'url': 'https://api.github.com/repos/Ca",
+  "tip_after": "8a7665be2061a2f38aa2227f81c57003ca4caacb",
+  "branches_route": "8a7665be2061a2f38aa2227f81c57003ca4caacb",
+  "both_routes_agree": true,
+  "landed": true
+ },
+ "discipline": {
+  "evidence_paths_overwritten": 0,
+  "databases_opened": 0,
+  "surfaces_started_or_stopped": 0,
+  "credential_values_printed": 0,
+  "candidate_refs_pushed_by_commander": 0
+ },
+ "claim_kind": "git_and_pytest_determined",
+ "claimed_result": null,
+ "derived_result": null
+}
