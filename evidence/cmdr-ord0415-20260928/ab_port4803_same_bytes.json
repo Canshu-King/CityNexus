@@ -1,0 +1,134 @@
+{
+ "base": "http://127.0.0.1:4803/",
+ "rows": [
+  {
+   "final_url": "/v8/hub",
+   "panels": {
+    "journey-trash-panel": {
+     "present": false
+    },
+    "prep-panel": {
+     "present": false
+    },
+    "pretrip-checklist": {
+     "present": false
+    },
+    "v8-maplibre-panel": {
+     "present": false
+    },
+    "hotels-panel": {
+     "present": false
+    },
+    "live-recovery": {
+     "present": false
+    }
+   },
+   "body_chars": 214,
+   "text_head": "用你自己的城市试用 CITYNEXUS\n\n新建行程\n\n三步完成。选择目的地、告诉我们怎么玩，剩下的交给 CityNexus。\n\nEN\n1\n目的地与时间\n2\n人数与偏好\n3\n确认创建\n目的地\n看支持的目的地\n抵达地点\n离开地点\n抵达时间\n离开时间\n高级设置\n高级设置\n\n还需要填写：目的地、抵达地点、离开地点\n\n服务器当前没有给出可用的封存演示行程，所以这里进不去。稍后再试，或新建自己的行程。\n\n重试\n使用封存的演示行程\n下一步",
+   "route_requested": "hub",
+   "pageerrors": [],
+   "stayed_on_route": true,
+   "screenshot": "D:/moodle/_qoder_cmdr_ref_20260921/live_checks/_walk_deeplink_a0c5fba_retry/deeplink_hub.png"
+  },
+  {
+   "final_url": "/v8/map",
+   "panels": {
+    "journey-trash-panel": {
+     "present": false
+    },
+    "prep-panel": {
+     "present": false
+    },
+    "pretrip-checklist": {
+     "present": false
+    },
+    "v8-maplibre-panel": {
+     "present": false
+    },
+    "hotels-panel": {
+     "present": false
+    },
+    "live-recovery": {
+     "present": false
+    }
+   },
+   "body_chars": 214,
+   "text_head": "用你自己的城市试用 CITYNEXUS\n\n新建行程\n\n三步完成。选择目的地、告诉我们怎么玩，剩下的交给 CityNexus。\n\nEN\n1\n目的地与时间\n2\n人数与偏好\n3\n确认创建\n目的地\n看支持的目的地\n抵达地点\n离开地点\n抵达时间\n离开时间\n高级设置\n高级设置\n\n还需要填写：目的地、抵达地点、离开地点\n\n服务器当前没有给出可用的封存演示行程，所以这里进不去。稍后再试，或新建自己的行程。\n\n重试\n使用封存的演示行程\n下一步",
+   "route_requested": "map",
+   "pageerrors": [],
+   "stayed_on_route": true,
+   "screenshot": "D:/moodle/_qoder_cmdr_ref_20260921/live_checks/_walk_deeplink_a0c5fba_retry/deeplink_map.png"
+  },
+  {
+   "final_url": "/v8/trash",
+   "panels": {
+    "journey-trash-panel": {
+     "present": true,
+     "box": [
+      356,
+      272
+     ],
+     "inside_viewport": true,
+     "centre": [
+      195,
+      251
+     ],
+     "hit": "SECTION#[journey-trash-panel]",
+     "inside_panel": true,
+     "text_chars": 78
+    },
+    "prep-panel": {
+     "present": false
+    },
+    "pretrip-checklist": {
+     "present": false
+    },
+    "v8-maplibre-panel": {
+     "present": false
+    },
+    "hotels-panel": {
+     "present": false
+    },
+    "live-recovery": {
+     "present": false
+    }
+   },
+   "body_chars": 137,
+   "text_head": "菜单\n/\n今天\n跟随系统\nEN\nDE\n回收站\n\n这台服务器说还在回收站里的行程。每一行只有一个动作：把它找回你的行程列表。\n\n回收站是空的：这台服务器没有报出任何在站里的行程。\n\n再读一次回收站\n✦\nCityNexus Copilot\n今天\n行程\n地图\nCopilot\n我的",
+   "route_requested": "trash",
+   "pageerrors": [],
+   "stayed_on_route": true,
+   "screenshot": "D:/moodle/_qoder_cmdr_ref_20260921/live_checks/_walk_deeplink_a0c5fba_retry/deeplink_trash.png"
+  },
+  {
+   "final_url": "/v8/bookings",
+   "panels": {
+    "journey-trash-panel": {
+     "present": false
+    },
+    "prep-panel": {
+     "present": false
+    },
+    "pretrip-checklist": {
+     "present": false
+    },
+    "v8-maplibre-panel": {
+     "present": false
+    },
+    "hotels-panel": {
+     "present": false
+    },
+    "live-recovery": {
+     "present": false
+    }
+   },
+   "body_chars": 446,
+   "text_head": "菜单\n/\n旅行票夹\n跟随系统\nEN\nDE\n\n行程收件箱 · 旅行票夹\n\n你的真实预订，受保护。\n\n粘贴结构化预订 JSON，审核后，将确认的事实绑定为行程的持久承诺。\n\n住宿证据\n未选择住宿\n\n这趟行程目前还没有可选的住宿。\n\n到「住宿选择」里找一间可订的房\n导入预订\n\n结构化导入在这里：展开下方「高级」粘贴 JSON 确认单。确认单文本与截图走行程收件箱。\n\n高级：结构化数据\n权限始终明确\n导入已确认的预订即受保护。任何支付、取消或不可逆变更仍需通过委托策略。\n扫描票据代码\nZXing 确定性解码 · 仍需确认\n",
+   "route_requested": "bookings",
+   "pageerrors": [],
+   "stayed_on_route": true,
+   "screenshot": "D:/moodle/_qoder_cmdr_ref_20260921/live_checks/_walk_deeplink_a0c5fba_retry/deeplink_bookings.png"
+  }
+ ],
+ "verdict": "ALL_ROUTES_HOLD"
+}
