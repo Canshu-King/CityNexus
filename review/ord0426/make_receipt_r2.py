@@ -14,6 +14,9 @@ WT = "D:/moodle/_qoder_r_ord0426r2/wt"
 OUT = os.path.join(WT, "review/ord0426")
 TIP = "dccd13ad66ea35e9a6d7ca7a3d91a1ae9a579808"
 PREV = "fb6131f359e85deb18a2194494dc9a96e328cdee"
+TIP3 = "3b6c96e8a9f986672ddaa764f5f2ae69534ceff1"
+
+cfm = json.load(io.open(os.path.join(RUN, "_confirm/orphan_repoint_r2.json"), encoding="utf-8"))
 
 new1 = json.load(io.open(os.path.join(RUN, "_full/orphan_repoint_r2.json"), encoding="utf-8"))
 new2 = json.load(io.open(os.path.join(RUN, "_pass2/orphan_repoint_pass2.json"), encoding="utf-8"))
@@ -54,6 +57,21 @@ A(f"- 分诊计数 orphan_repoint={len(orph)}，"
 A(f"- 与上一代逐条对照：per_rule_class_identical={same}/27，不同的选择器条数 {sum(1 for k in rn if rn[k] != ro[k])}。")
 A("- 所以「那 27 条里没有一条需要 repoint」这句话现在有两枚独立代次支撑，不是单点读数。")
 A("")
+rc = {r["selector"]: r["class"] for r in cfm["rows"]}
+rf = {r["selector"]: r["class"] for r in new1["rows"]}
+same3 = sum(1 for k in rc if rc[k] == rf.get(k))
+A(f"## 再往上一枚尖的确认跑（追尖不靠猜）：tip={TIP3}")
+A("")
+A(f"- 收据写完后权威线又前进 6 笔（含 RealCityDiscoveryPanel / TwinPanel / V14RecoveryTruthPanel / "
+  f"LocaleContext 四份 frontend 文件，都是我这轮走到的屏），所以我又在最新尖上跑了一遍同一仪表：")
+A(f"- 该代次页面实载 {json.dumps(cfm['css_assets_loaded'])}（JS 名字换了、CSS 名字未变，"
+  f"说明变的是组件不是样式表），heading_samples={cfm['heading_samples']}，"
+  f"class_counts={json.dumps(cfm['class_counts'], ensure_ascii=False)}，orphan_repoint={len([k for k,v in rc.items() if v=='ORPHAN_LAYOUT_RULE_WANTS_REPOINT'])}。")
+A(f"- 与全量那次逐条对照 per_rule_class_identical={same3}/27，不同的选择器条数 {len([k for k in rc if rc[k] != rf.get(k)])}；"
+  f"h1 不在档位的屏数 h1_off={cfm['h1_off_display_档位']}。")
+A("- 可复现形式记在这里供后续单参照：全量跑（2 语言 × 3 形状 × 14 屏 × 抽屉两态）钉一次代次即可，"
+  "线再往前时只跑单语言 3 形状 14 屏的确认趟（约 1/3 机器时间），两趟结论一致才算钉住。")
+A("")
 A("## 你原先担心的那两枚字号规则（现尖复述，值都是重测的）")
 A("")
 A(f"- `.v8-hero-title` 自身命中 own_hits_max={hero['own_hits_max']}，同组另一半 `.v8-page h1` 屏上命中 "
@@ -83,6 +101,11 @@ summary = {
     "class_counts": new1["class_counts"], "orphan_repoint_count": len(orph),
     "pass2_family_probe": new2["family_probe_counts"],
     "per_rule_class_identical_vs_previous": same,
+    "confirm_tip": TIP3, "confirm_assets": cfm['css_assets_loaded'],
+    "confirm_class_counts": cfm['class_counts'],
+    "confirm_heading_samples": cfm['heading_samples'],
+    "confirm_per_rule_class_identical": same3,
+    "confirm_h1_off_token_count": cfm['h1_off_display_档位'],
     "per_rule_class_differences": [k for k in rn if rn[k] != ro[k]],
     "h1_measured_by_width": new2["h1_font_size_by_width"],
     "h1_off_token_count": new1["h1_off_display_档位"],
@@ -94,7 +117,8 @@ summary = {
 io.open(os.path.join(OUT, "RECEIPT_DCCD13AD_r1.json"), "w", encoding="utf-8", newline="\n").write(
     json.dumps(summary, ensure_ascii=False, indent=1))
 for src, dst in [(os.path.join(RUN, "_full/orphan_repoint_r2.json"), "orphan_repoint_r2_on_dccd13ad.json"),
-                 (os.path.join(RUN, "_pass2/orphan_repoint_pass2.json"), "orphan_repoint_pass2_on_dccd13ad.json")]:
+                 (os.path.join(RUN, "_pass2/orphan_repoint_pass2.json"), "orphan_repoint_pass2_on_dccd13ad.json"),
+                 (os.path.join(RUN, "_confirm/orphan_repoint_r2.json"), "orphan_repoint_confirm_on_3b6c96e8.json")]:
     io.open(os.path.join(OUT, dst), "w", encoding="utf-8", newline="\n").write(io.open(src, encoding="utf-8").read())
 print("orphans", len(orph), "identical", same, "assets", json.dumps(new1["css_assets_loaded"]))
 print("md bytes", os.path.getsize(os.path.join(OUT, "RECEIPT_DCCD13AD_r1.md")))

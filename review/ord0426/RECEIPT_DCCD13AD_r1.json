@@ -42,6 +42,19 @@
   "DEAD_LEGACY_CONFIRMED_NO_CONTAINER": 15
  },
  "per_rule_class_identical_vs_previous": 27,
+ "confirm_tip": "3b6c96e8a9f986672ddaa764f5f2ae69534ceff1",
+ "confirm_assets": [
+  "index-oR3PVCYW.js",
+  "index-DeE4nurx.css"
+ ],
+ "confirm_class_counts": {
+  "INTENT_APPLIED_VIA_GROUP_SIBLING": 10,
+  "THIRD_PARTY_DOM_NOT_DEAD": 2,
+  "DEAD_LEGACY": 15
+ },
+ "confirm_heading_samples": 74,
+ "confirm_per_rule_class_identical": 27,
+ "confirm_h1_off_token_count": 0,
  "per_rule_class_differences": [],
  "h1_measured_by_width": {
   "320": [
