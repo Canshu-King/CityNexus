@@ -328,14 +328,19 @@ button { display: block; width: 100%; margin-top: 12px; border: 0; border-radius
 .v8-drawer-backdrop { position: fixed; inset: 0; z-index: 45; padding: 0; border: 0; background: #14233b55; cursor: pointer; }
 #v8-nav-drawer { position: fixed; top: 0; bottom: 0; left: 0; z-index: 46; display: grid; align-content: start; gap: 4px; width: min(300px, 84vw); box-sizing: border-box; padding: 18px 14px 24px; overflow-y: auto; border-right: 1px solid var(--v8-line); background: #fff; box-shadow: 24px 0 60px #14233b2e; }
 .v8-nav-drawer-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 10px; padding: 0 12px; }
-#v8-nav-drawer button { display: flex; align-items: center; gap: 12px; width: 100%; padding: 12px; border: 0; border-radius: 9px; color: #758196; background: transparent; text-align: left; cursor: pointer; font-size: 13px; }
+#v8-nav-drawer button:not(.v8-quiet-button) { display: flex; align-items: center; gap: 12px; width: 100%; padding: 12px; border: 0; border-radius: 9px; color: #758196; background: transparent; text-align: left; cursor: pointer; font-size: 13px; }
 /* Descendant, not child: the drawer wraps each button in a <div> that also carries the group heading
-   (`V8Experience.tsx:1974`), so `> button svg` matched none of the 14 rows and each icon grew to the
+   (`V8Experience.tsx:1976`), so `> button svg` matched none of the 14 rows and each icon grew to the
    full 243px width available in the flex row -- 292px per row, 4,512px of scroll, 3,668px of overflow.
-   Same 档位 as the sidebar above, now from one token. */
+   Same 档位 as the sidebar above, now from one token.
+   ORD-0427: the three row rules below carry `:not(.v8-quiet-button)` for the same reason. Widening
+   `> button` to ` button` (ORD-0419) also reached the head row's Close button, which already carries
+   that class (`V8Experience.tsx:1969`), so it inherited width:100% and the row padding: measured,
+   its box went 32px -> 199px at 390x844 and the kicker above it wrapped to a second client rect.
+   Excluding the class keeps the 14 rows styled and leaves the head control to its own rule. */
 #v8-nav-drawer button svg { width: var(--cn-nav-icon-size); height: var(--cn-nav-icon-size); }
-#v8-nav-drawer button:hover, #v8-nav-drawer button.active { color: var(--v8-ink); background: #f1f3ff; }
-#v8-nav-drawer button.active { color: var(--v8-indigo); font-weight: 750; }
+#v8-nav-drawer button:not(.v8-quiet-button):hover, #v8-nav-drawer button:not(.v8-quiet-button).active { color: var(--v8-ink); background: #f1f3ff; }
+#v8-nav-drawer button:not(.v8-quiet-button).active { color: var(--v8-indigo); font-weight: 750; }
 
 /* V18 traveler-first Copilot dock and state-driven motion. */
 :root {
