@@ -1635,6 +1635,7 @@ export function V8Experience() {
         wallet={wallet}
         onImport={importReservation}
         busy={busy}
+        onNavigate={navigate}
       />
     ),
     me: () => (
@@ -2080,6 +2081,7 @@ function TripsWorkspace({
         wallet={wallet}
         onImport={onImport}
         busy={busy}
+        onNavigate={onNavigate}
       />
     ),
     spend: () => (
@@ -3934,6 +3936,7 @@ function Bookings({
   wallet,
   onImport,
   busy,
+  onNavigate,
   showCommitments = true,
 }: {
   data: V8Data;
@@ -3942,6 +3945,9 @@ function Bookings({
   wallet: Wallet | null;
   onImport: (reservation: Record<string, unknown>) => Promise<void>;
   busy: boolean;
+  /* ORD-0407 ②: this screen's "no stay yet" row used to state the condition and stop. The screen that
+     owns stays exists (`/v8/stay`, named 住宿选择 / Stay Explorer), so the row opens it. */
+  onNavigate: (route: string) => void;
   /* False where the caller draws `WalletCommitments` itself, which is what the phone's Trips tab
      does -- the alternative was a confirmed promise reachable only under 高级 / 开发者. */
   showCommitments?: boolean;
@@ -4025,6 +4031,16 @@ function Bookings({
                 </span>
                 <h2>{t("bookings.noStay")}</h2>
                 <p>{t("bookings.noStaySub")}</p>
+                {/* The action names where it goes and promises nothing about what is there: the stay
+                    screen answers for itself, including when it has no offers to show. */}
+                <button
+                  type="button"
+                  className="v8-quiet-button"
+                  data-testid="bookings-no-stay-action"
+                  onClick={() => onNavigate("stay")}
+                >
+                  {t("bookings.noStayAction")}
+                </button>
               </div>
             </article>
           )}

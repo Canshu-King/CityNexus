@@ -1,0 +1,11 @@
+# Q43 family run against D:/moodle/_qoder_ledger_inbox/n3_2108.md (lane N3, ORD-0407 slice 1)
+# each version invoked as: python claim_coordinate_check_<v>.py --text <block> --expect-clean ; judged by exit code, not by whether it printed
+version=r4e exit=3 finding_lines=9 :: 
+version=r5 exit=3 finding_lines=12 :: 
+version=r5b exit=3 finding_lines=11 :: 
+version=r5c exit=3 finding_lines=11 :: 
+version=r5d exit=0 finding_lines=0 :: 
+version=r5e exit=0 finding_lines=0 :: 
+version=r5f exit=0 finding_lines=0 :: 
+version=r6 exit=0 finding_lines=0 :: 
+version=r7 exit=0 finding_lines=0 :: 

@@ -11,6 +11,12 @@
  * refactor, not a rewrite. `e2e/qoder-map-gesture-ownership.spec.ts` asserts the gesture hint by
  * substring, and `e2e/qoder-map-interaction.spec.ts` asserts it is visible.
  *
+ * One of those four has since been rewritten *on purpose*, by the order that asked for it: ORD-0407 ①
+ * changed `noLocationBody`'s second sentence because it promised a door this build does not have (the
+ * measurement is on the key below). The lift stays byte-identical for `noLocationTitle`, `tileNotice`
+ * and `gestureHint`; the rewrite is scoped to the one cell the order named, and
+ * `e2e/qoder-ord0407-empty-state-actions.spec.ts` pins both arms of the new sentence.
+ *
  * `attributionRaster` / `attributionVector` are new: the basemap obligation for
  * tile.openstreetmap.org (MapPanel) and tiles.openfreemap.org (JourneyMap), neither of which was
  * readable on screen before — both set `attributionControl:false`.
@@ -33,8 +39,33 @@ export type MapCopyKey =
 const COPY: Record<MapCopyKey, { zh: string; en: string }> = {
   noLocationTitle: { zh: "尚未获取地图位置",
             en: "No map location yet" },
-  noLocationBody: { zh: "这个行程还没有可信的坐标。添加活动地点或开启定位后，地图会显示正确的城市。",
-            en: "This trip has no trustworthy coordinates yet. Add located activities or enable location, and the map will show the right city." },
+  /* ORD-0407 ①. The second sentence used to name two remedies -- "添加活动地点" and "开启定位" -- and
+     neither has a door in this build, so the cell was a promise with no handle on it. Measured, not
+     assumed (review/n3_0407_write_door_inventory_r1.py, against this file's own tip):
+       - the contract declares 5 write paths whose own path contains `/activities`
+         (arrive/begin/complete/depart/skip); all five take an `{activity_id}` that must already exist,
+         and there is no collection-level POST/PUT to `/…/activities`;
+       - the backend inserts an Activity row at 6 points, none of which takes a traveller-named place:
+         plan composition (`services.py:1212` in `generate_plans`/`_generic_compose_plans`,
+         `services.py:1770`, `planning/authoritative_v12.py:1347` in `compose_authoritative_multiday`),
+         stay-option materialisation (`operations/v9.py:631` in `materialize_stay_option`), trip-studio
+         accept of ids that already exist (`main.py:5970` in `_trip_studio_accept_impl`) and replan
+         accept (`main.py:9978`) -- re-measure with
+         `review/n3_0407_write_door_inventory_r1.py`, which names the enclosing function with each line
+         so a moved line number is catchable rather than silently stale;
+       - `POST /journeys/{id}/location` does exist (`main.py:4534`, `post_foreground_location`) and the
+         shell does call it (`V8Experience.tsx`, the function named `shareForegroundLocation`), but
+         `tripHasNoCoordinates` (this component, :38) and `points` (:134) decide on the plan's located
+         activities and the stay offers' coordinates -- by ORD-0394 that is `activityCoordinate` at :20
+         reading `location`, joined off the place row -- so sharing a position cannot clear this state.
+         Line numbers here are re-measurable with `review/n3_0407_receipt_anchors_r1.py`; the names are
+         the anchor, because every landing shifts them (this one moved +55 within a day).
+     So the cell now says which tier it is in, in the ORD-0359 word (`NOT_AVAILABLE`), and says nothing
+     about a remedy the screen cannot offer. The opening clause is verbatim as before, because
+     `e2e/qoder-today-follows-the-stage.spec.ts` reads it to keep the attention band and the map from
+     contradicting each other; what was dropped is the promise, which is the part with no door. */
+  noLocationBody: { zh: "这个行程还没有可信的坐标。「添加活动地点」这扇门，这一版没有（NOT_AVAILABLE）。",
+            en: "This trip has no trustworthy coordinates yet. This build has no door to add an activity location (NOT_AVAILABLE)." },
   tileNotice: { zh: "底图未加载，显示的是路线示意。",
             en: "Basemap did not load — showing the route diagram only." },
   gestureHint: { zh: "单指拖动地图 · 双指缩放 · 想翻这一页就拖地图以外的地方",

@@ -278,6 +278,10 @@ const en: Dict = {
   "bookings.stayPreview": "STAY PREVIEW",
   "bookings.notChosen": "Not chosen",
   "bookings.noStaySub": "No stay option is available for this trip yet.",
+  /* ORD-0407 ②: the sentence above named a state with no handle on it. The action opens the screen
+     that owns stays (`nav.stay` = "Stay Explorer"), which is the only door this build has. It does not
+     promise a room: the stay screen answers for itself, including when it has no offers. */
+  "bookings.noStayAction": "Open Stay Explorer to look for one",
   "bookings.notBooked": "Not booked",
   "bookings.priceUnknown": "Price unknown",
   "bookings.protectedC4": "Protected C4",
@@ -1074,6 +1078,7 @@ const zhCN: Dict = {
   "bookings.stayPreview": "住宿预览",
   "bookings.notChosen": "尚未选择",
   "bookings.noStaySub": "这趟行程目前还没有可选的住宿。",
+  "bookings.noStayAction": "到「住宿选择」里找一间可订的房",
   "bookings.notBooked": "未预订",
   "bookings.priceUnknown": "价格未知",
   "bookings.protectedC4": "受保护 C4",
