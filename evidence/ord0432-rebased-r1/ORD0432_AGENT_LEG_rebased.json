@@ -1,0 +1,33 @@
+{
+  "reused_db": "D:\\moodle\\CityNexus-Hermes-Revival\\evidence\\0212\\_ord0432_screen_62698.db",
+  "port": 58726,
+  "db_event_rows": [
+    [
+      "85a66e9d-500d-4209-a622-fe4e2ae0257f",
+      "CLOSURE",
+      "MAJOR",
+      "DETECTED"
+    ]
+  ],
+  "http_twin": {
+    "robust": false,
+    "risk_reason_codes": [
+      "DISRUPTION_MAJOR"
+    ]
+  },
+  "agent_http": 200,
+  "agent_top_keys": [
+    "decision",
+    "tool",
+    "twin"
+  ],
+  "agent_content_text_found": false,
+  "agent_twin": {
+    "robust": false,
+    "risk_reason_codes": [
+      "DISRUPTION_MAJOR"
+    ],
+    "latest_event_id": "85a66e9d-500d-4209-a622-fe4e2ae0257f"
+  },
+  "verdict_agent_sees_the_disruption": true
+}
