@@ -16588,6 +16588,139 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### S4-ast-taint 2026-09-29 03:48 · 会话 1d64acf5 · ORD-0408 甲落地：`*_code` 那一格只由契约的具名闭集放行，绝不由字段名放行；契约没写 enum 就是一格具名红
+
+尺：`ui_exposure_taint_ast_r7b4.cjs` blob cefcb38c8d01a5996f3f705531a127c85f16c0b3，154410 B，`path=evidence/ord0408-ruling-A-contract-enum-0328/ui_exposure_taint_ast_r7b4.cjs`（本地字节 `git hash-object` 与远端回读逐字节等，回执 df7b9945901423352b561fd03b98fb12423f2a27）。
+它是从**已发布的 r7b1**（`live_checks/ui_exposure_taint_ast_r7b1.cjs` blob b6716d9a3c67dafc72fef501bfaff101c84e918a，139058 B）逐字节起底新开的代次；乙那版 `ui_exposure_taint_ast_r7b3.cjs`（blob 4828df1bc2acd3bb0a8951d83f47368af90ea67b，142036 B）没有继承进来，切尺脚本 `path=evidence/ord0408-ruling-A-contract-enum-0328/cut_r7b4_jia_r2.py` blob 311466d813ce7d5ebf45bcaafe54664664a1f75a 里 assert 只从 r7b1 读底本。现尖读数按 `git -c http.proxy= -c https.proxy= ls-remote origin refs/heads/mirror/integration-frontend-apple-pass1` = dccd13ad66ea35e9a6d7ca7a3d91a1ae9a579808（2026-09-29 02:43 那笔 ORD-0400 剩余臂）。
+
+**规则装成了什么**（不是话术，是可跑的三条）：
+1. 契约在**被扫的那棵树里**自己找（从扫描根向上找 `contracts/openapi.yaml`），`--contract` 只是显式覆盖；放行件里同时落契约路径、字节数与该字节的 git blob id，所以"哪一版契约替这格说话"是可回读的。现尖那份：`contracts/openapi.yaml` 119781 B，blob ee2dc30d0391ba13262e4c6f319b2619b97b5de4（`path=D:/moodle/_qoder_lane_S4_0926/work/ord0408/jia/tip/contracts/openapi.yaml`）。
+2. 只有元素自己写了 `data-cnx-field="<...>_code"` 的格子才去查表；字段名是**查表键，不是许可证**：查不到那一字段的 enum 就红，具名 `CONTRACT_MISSING_ENUM`，并把契约里真有 enum 的字段全列出来。乙那种"按字段名放行"没有复活。
+3. 被契约拒绝的 `*_code` 格子**不再转交给折叠面**（同一个 `data-cnx-field` 不能先当查表键、又当 disclosure 的担保人）；链上出现集外大写令牌也判红（宁可错红，件 1c49b825aff4c308ba3e135c3d3781aad9e7f7f7 里 B8 那臂具名 `INTERNAL_ERROR`）。
+
+**验收读数**（12 条断言全 PASS，判据写在 `path=evidence/ord0408-ruling-A-contract-enum-0328/contract_arms_r2.py` blob 6bc67c0e3875ef5f9f840dc386aa8cc280215db6，读数在 `path=evidence/ord0408-ruling-A-contract-enum-0328/arms_r2.json` blob 1c49b825aff4c308ba3e135c3d3781aad9e7f7f7，53164 B）：
+- B1 集内真码喂进去 → **绿**：那格从命中里退出，剩 1 格（`RAW_BODY_TO_DOM@224` 那格与码无关，照旧红）；放行依据 `basis=literal_on_the_chain_checked_against_the_named_set`，链上令牌 `JOURNEY_NOT_DELETED` 在集内，集大小 4，契约行 `contracts/openapi.yaml:2003`（fixture 版 910903a15ea70cbacdc9fa7b70f620ef7f2d8ad9）。
+- B2 集外假码 `NOT_A_REAL_CODE` 喂进去 → **红**：`why=value_not_in_the_contract_set`，`examples` 逐字点名那枚假码，命中 2 格不减。反例件 `path=` fixtures/invented__JourneyTrashPanel.tsx blob f3c649914b855fd0c676891c2f5545c37cedbdb8。
+- B3 现尖真契约（`reason_code: {type: string}`，契约 `contracts/openapi.yaml:2003` 那行逐字）→ **红**，具名 `CONTRACT_MISSING_ENUM`，并报出契约里声明了闭集的 21 个字段：`code`, `ai_state`, `state`, `source_class`, `event_status`, `actions`, `mode`, `decision`, `requested_autonomy`, `approval_method`, `status`, `bin_state`, `kind`, `source`, `failure_token`, `transaction_type`, `provenance`, `event_type`, `severity`, `projection_status`, `name`。这就是你要的"契约缺 enum 那一格给一个具名红"。
+- B4/B5 内联 `enum: [..]` 与块形 `enum:` + `- X` **都认**：内联那份契约 blob 910903a15ea70cbacdc9fa7b70f620ef7f2d8ad9（119872 B）放行时指到 `contracts/openapi.yaml:2003`；块形那份 blob 4e5944d9d7eac3042d9b8942b2c8d91f1fcde910（119965 B）指到 `:2005`。两形各一条臂钉住，件里 `reason_code_form` 字段写着 `inline_on_field_line` / `enum_key_block`。
+- B6 没有 `data-cnx-field` 锚 → 2 格红、契约一次都没被查（`blocked` 0 条）：形状、className、`cnx-measured-fact` 都点不出字段名。
+- B7 锚写 `error_code` 而契约只声明 `reason_code` → 红 `CONTRACT_MISSING_ENUM`，且 `fields_with_enum` 里明列 `reason_code`（证明不做并集；`path=` 契约 910903a15ea70cbacdc9fa7b70f620ef7f2d8ad9）。B9 反方向的同一件事：只为 `error_class` 声明集合的那份契约 → 仍红（blob 见件 `contract` 字段）。
+- B8 链上带无关大写令牌 → 红并具名 `INTERNAL_ERROR`，集大小 4。这一形是**错红方向**，我把它留成红并写进件里，不偷偷放宽成"只比对赋值位"。
+
+**独立对账（不是自证）**：同一份契约字节用 PyYAML 真解析一遍当 oracle，逐字段比"谁有闭集、成员是谁"：`fields_with_enum_per_ruler 21 / per_pyyaml 21 / agree 21 / members_differ 0 / PARSER_INVENTED 0 / parser_missed 0`，`reason_code` 两侧都是没声明（null）。件 `path=evidence/ord0408-ruling-A-contract-enum-0328/contract_parse_audit.json` blob 4482cfa2ee0d8abad29976442fb926a274b0f617，10010 B；跑在 `D:/moodle/CityNexus/.venv`（3.12.14，本机唯一带 PyYAML 的解释器，`import yaml` 版本 6.0.3）。尺的行式解析只在**读得懂**的形上放行，读不懂就是少认→具名红，不会多放行；这句是方向陈述，不是"绝对正确"的担保。
+
+**门前后差异（不许丢旧能力；这是你验收清单的第 3 项，两代读数在下面两条臂里各带一枚可取回 blob，起自件 1c49b825aff4c308ba3e135c3d3781aad9e7f7f7）**：同一棵现尖 `frontend/src` 两把尺各跑一次 `--tree`（都不带 `--contract`；r7b4 那跑扫 98 个 .ts/.tsx，目录内共 107 文件，`path=evidence/ord0408-ruling-A-contract-enum-0328/tree_tip_dccd13ad_with_r7b1.json`）：
+- r7b1：`cells_total 11`、fold 放行 2 条，件 `path=evidence/ord0408-ruling-A-contract-enum-0328/tree_tip_dccd13ad_with_r7b1.json` blob 08a5578f154861ab815eb4dd87f5aca94e4650e9。
+- r7b4：`cells_total 11`、fold 放行 2 条，件 `path=evidence/ord0408-ruling-A-contract-enum-0328/tree_tip_dccd13ad_with_r7b4.json` blob 65e34d65c20563a66cdd1d255f00364d654af437；按 `cell_id`（与行号无关的格身份）做集合差：`only_before 0 / only_after 0`，即**没有一格因换代而消失或多出来**。
+- r7b4 比 r7b1 多出来的只有 2 条 `contract_blocked` 记录（`why=CONTRACT_MISSING_ENUM`），它们仍在命中里，门该拦还拦。`--selftest` 两代同判 `SELFTEST_PASS` exit 0，`expectations_moved` 两边同为 2 条且同名为 `clean_tainted_but_attribute_only.tsx` / `e0319r3_E3_control_attribute_only.tsx`——那两条不是我引入的。
+
+**我不碰门，也请把这两行当决策看**：`live_checks/preflight_and_land_r7.py:49` 仍写 `EXPOSURE_RULER = "ui_exposure_taint_ast_r7b.cjs"`，`:50` pin blob d3f66ce9fecd0790981a4fcdeb5e36b1c0fd10f2（该文件本地字节 `git hash-object` = 同一枚，我核过），`:146` 起本地不符即 REFUSE。换句话说门上真跑的尺比 r7b1 还旧一代；把甲装上门要你把那两行改成 r7b4 的 154410 B / cefcb38c8d01a5996f3f705531a127c85f16c0b3，这不是我能替你动的（`ledger_insert_after_r2.py` 我也没动）。契约那侧的修法更短：给 `reason_code` 补一个 enum（一行），尺就会自己放行并指名是哪一行契约在说话。
+
+**追加单那条可见性，用 AST 与件说话，不假称走过屏**：现尖 `frontend/src/features/trash/JourneyTrashPanel.tsx:233` 的 `{outcome.code}` 是 `jsx-text` 落进 `<details>`（`:230` 那行的 details 壳），即**折叠展开后可见**；`:224` 的 `RAW_BODY_TO_DOM` 在同一 div 的可见文本位。这两格的污点链源行：`:97` 取 `refusalReasonCode(cause)` → `:98` 造 `code` → `:100` `setOutcome(...)` → `:233` 渲染（链逐字在件 1c49b825aff4c308ba3e135c3d3781aad9e7f7f7 的 `taint_chain`）。我这一轮 0 次浏览器动作；屏上的逐字读回我引号令者 20:15 那趟走查件 `evidence/cmdr-2015/trash_panel_walk_r3.json`，不自己重画一遍当真值。
+
+**具名一条冲突（不自己判方向）**：我 01:49 那块（`s4_0148`，已入账）按当时窗口里的"乙"交了 r7b3；账本随后裁**甲**。两版我都没往门上装，r7b3 现在只是 live_checks 里一个不再是交付代次的文件。以后窗口与账本不一致，我以账本为准并把不一致写在这里。本机还有第二个号令者实例（每小时 cron 的会话 6efab655），同一单号可能被两边各裁一次——这句也解释了我为什么不按窗口消息直接改门。
+
+**没改善 / NOT_DONE（具名，不说"差不多好了"）**：
+1. ORD-0424 只重取了基线：现尖 8d038b21f09477b933cff3b1c7b09845c542373b 上 `tools/cnx_copy_tiers_r1.py --list-fallbacks` 报「扫 98 文件、tier A 0、tier B 74、机器令牌排除 161」，逐字输出已入库为 `path=evidence/ord0408-ruling-A-contract-enum-0328/ord0424_baseline_fallbacks.txt` blob 29fddea527ebee1095fb9b12d211467469f34aff（13281 B）；三形扩展（JSX 文本位 / 裸三元字面量 / `useState` 默认值）没交，下一枝名 `review/qoder-0424-copy-tiers-r1`。
+2. ORD-0391 那 23 行的**屏上逐字读回**仍欠（我只交过尺的计数与 diff）。
+3. ORD-0361（地图点选）rebase 到现尖 8d038b21f09477b933cff3b1c7b09845c542373b 仍 pending；枝 `review/S4-ord0361-map-tap-selection` 按 `git ls-remote origin` 回读在 11eee48da2b117a2c0aafb2d71c50b0104b7d1fb（我 01:49 那块把手打的一位数写错过，这次逐字取回）。
+4. r7b4 的"链上任意大写令牌都参与比对"这条偏严：同一段里别的字段的枚举令牌会把格子拖红（B8 就是我为它建的件）。要收窄成"只比对赋给该字段的那一处"需要值级数据流，我没有顺手做。
+5. 我没建 `--contract` 的默认多文档支持：`components/schemas` 之外若同一字段名在别处再声明一次，现在按行序并集入库，同名不同集的那一形我还没量。
+
+交件规矩回执：`path=evidence/ord0408-ruling-A-contract-enum-0328/publish_receipt.json` blob 459333feb0fd3d125ddb4871b51b098c4e8f6546（8874 B）逐件列了 12 件，走 gated mirror 新路径、逐件 `byte_equal true` 且 `tip_matches_push true`；补推那两件的回执在 `path=evidence/ord0408-ruling-A-contract-enum-0328/publish_extra_receipt.json` blob 2de9c72abd77283598c1f08bbb0ad72b44d5c01c，含 1 件 ORD-0424 基线读数（blob 29fddea527ebee1095fb9b12d211467469f34aff）。commander/control 现尖 0ba3112994088038ddb2cbd4d788e68f67e03879，我这轮开始前是 c6665bfcfc14b6d2cd54699be2527404d5d5eafb。旧尺 r7b1/r7b3 未覆盖，账本本体我没写，`ledger_insert_after_r2.py` 没动。
+
+
+### N3 03:53+08 09-29 ORD-0407 只读数块：把五格的成绩单在现尖字节上重量了一遍（① 首屏可命中 ② 英文同档在产物里），另具名报一条仪器事实
+
+- 现尖与差集（我自己 `ls-remote` 取的，没沿用上一贴）：`git -c http.proxy= -c https.proxy= ls-remote origin refs/heads/mirror/integration-frontend-apple-pass1` 读到 `3543928ea1b7a0466871b6fbc3c3d24f64b14044`，`git log -1` 该笔时刻 `03:20`。它与我的交付头在 `frontend/src` 下差 `product_files_differing=8` 枚（`git diff --name-only 3543928e… HEAD -- frontend/src` 现读），名单里含 `frontend/src/styles.css`、`frontend/src/map-selection.css`、`frontend/src/components/v8/MapPanel.tsx`、`frontend/src/i18n/LocaleContext.tsx` ⇒ 源码级回读不够，① 必须在现尖字节上重量。做法：把那 8 枚按 blob 逐枚 checkout 到现尖内容（`git hash-object` 与 `git rev-parse <tip>:path` 对读相等才开跑），跑完 `git checkout HEAD -- <同批文件>`，事后 `git status --porcelain -- frontend contracts` 行数 `worktree_status_lines=0`、`frontend/src/styles.css` 回到我的 blob（`git hash-object` 与 `HEAD:frontend/src/styles.css` 同值）。
+- **① 五格动作仍在首屏可命中区**：用我这八格里管几何的四格（C2/C4/C6/C7）在现尖字节上跑，`verdict=GREEN`、`passed=5`（含 seed 那一格），`run_id=cmdr034334n3`，日志 `live_checks/e2e_logs/n3_10d45db9_034334.log`（名里那 8 位是运行时工作树短哈希，即现尖 checkout 后我那棵树的 `10d45db9`+现尖 8 枚文件＝读数取自现尖字节而非我的头）。逐字屏读与坐标：逐字屏读与坐标：
+  - 票夹那枚动作 zh 臂 label=到「住宿选择」里找一间可订的房、`box=[101, 386, 240, 44]`（件 `review/evidence/ord0407/cmdr034334n3__C4.json:7` 起）、`centre=[221, 408]`（同件 `:13` 起）、命中体 `hit_element=BUTTON.v8-quiet-button`（同件 `:17`），点击后落点屏自称 `landed_screen_kicker=住宿选择 · 已采集证据`（`:19`）；en 臂 `box=[101, 393, 244, 44]`、`centre=[223, 415]`、命中体同 `:33`、`landed_screen_kicker=STAY EXPLORER · CAPTURED EVIDENCE`（同件 `:23`、`:29`、`:35`）⇒ 动作下沿由 `height=44`、顶 `y=386` 算得 `button_bottom=430`，en 臂 `button_bottom=437`，都在 `hit_floor_px=768` 之下无虞（这条线冻在 `review/n3_0407_evidence_r1/controls_before_890b7cfc.json:6`）。
+  - 三屏那格的整块下沿：zh 读到 `hub_bottom=621`、`live_bottom=435`、`map_bottom=415`；en 读到 `hub_bottom=660`、`live_bottom=501`、`map_bottom=457`（逐格 y+height 出自 `review/evidence/ord0407/cmdr034334n3__C2.json`，与基座同名读数一致）。
+  - 代价仍是零：四屏逐格 `delta_px=0`（`review/evidence/ord0407/cmdr034334n3__C6.json`，逐枚 `:13`、`:20`、`:32`、`:39`、`:58`、`:65`），只有票夹卡因那枚按钮 `delta_px=44`（`:77`）、其下沿 `card_bottom_after=450`（`:79`）；`controls_no_longer_reachable` 四屏逐屏 0 枚（同件 `:8` 起）；C7 在 320/360/390/414 四档宽度两格逐枚 `overflow_px=0`（逐枚在 `review/evidence/ord0407/cmdr034334n3__C7.json:14`、`:24`、`:36`、`:46`、`:58`、`:68`、`:80`、`:90`）。
+  - 与我基座的差异确实存在但很小：票夹按钮顶从 `y=393` 移到 `y=386`（现尖 vs 我基座），幅度 `shift_px=7` 一类的位移 —— 这正是 `styles.css` 那笔动过的样子，768 余量仍在一半以上。
+- **② 中文加了字那几格，英文同档还在产物里**：用我车道那把尺（不是号令者的配对尺）在**现尖字节建出的产物**上跑：`npx vite build` 退码 `build_exit=0`，产物 `dist_asset=/assets/index-CFEbx_Go.js`（`review/evidence/n3_0407_pair_on_tip.json:3`）、`bundle_bytes=1304284`（同件 `:4`），配对分母 `dictionary_pairs=652`（`:6`）、`distinct_keys=534`（`:7`），判语 `values_not_found=0`（`:11`）。我三处改字的两臂逐枚读到在产物里：`bookings.noStaySub`、`bookings.noStayAction`、`noLocationBody` 都 `both_arms_present=true`（同件 touched_keys 段 `:21`、`:38`、`:56`）。按您提醒，号令者的 `cmdr_bundle_copy_check_r3.py` 我 0 次执行（它目标已存在会 REFUSE 退 `4`），也没写它的任何输出件。
+- **③ 一条仪器事实，具名报，不改读数**：您指的那把 `live_checks/cmdr_ord0407_walk_r2.js` 我这台跑不完，原因在它的等待策略而不是产品：`cmdr_ord0407_walk_r2.js:24` 用 `waitUntil:"networkidle"`，vite **dev** 伺服有 HMR 长连接、`/v8/live` 还有轮询，networkidle 永不满足 ⇒ map、hub 两屏过了，第 57 行那一跳超时，进程退码 `1`、**没有落任何读数件**。它需要先验的静态/preview 代次（号令者那台就是静态口）。窗口本身是活的：同一窗口里 `GET /api/v1/demo/scene` 现读到 `http 200` 且带 `journey_id=beb8d067-a10b-4081-9515-ff849211c322`。⇒ 这一格要么由您在preview那台上跑（您的 out-dir 尾斜杠我提醒过一次会写到目录外），要么授权我改跑 `vite preview` + 常驻后端；我不拿"没跑成"当"已验"，也不拿我这八格冒充您那把尺的判语。
+- 现场与边界：本块产品字节改动为 `product_bytes_changed=0`（本轮全部动作只有 checkout/restore、`vite build`、playwright 与 node 仪表，事后 `git status --porcelain -- frontend contracts` 行数 `worktree_status_lines=0`，我交付的头仍是 `refs/heads/review/N3-ord0407-empty-state-actions-r9` 那枚 `10d45db9b4c4590c86a74bcd41ba365160249850`）；权威线移动 `authoritative_line_moves=0` 次、`CITYNEXUS_AGENT_CONTROL.md` 写入 `ledger_writes=0` 次（本块只落在收件目录的 `D:/moodle/_qoder_ledger_inbox/n3_0353.md`（写账本由代插门唯一执行，规则见账本 `LEDGER_SINGLE_WRITER_V1`，锚在 `CITYNEXUS_AGENT_CONTROL.md:1`））、`POST /api/v1/demo/reset` 执行 `demo_reset_executions=0` 次（调用点扫描读数在 `review/n3_0407_evidence_r1/correction_numbers_r1.json:17`，逐枚分文件同件 `:18` 起）、`git push --force` 执行 `force_pushes=0` 次、没新开导出口、没 `git worktree add`、整套后端回归 0 次跑（本轮只跑本单那一件 spec）；端口归属三证同批：:5470 与 :6470 由 `run_id=cmdr034334n3` 那次自己起自己停，库文件 `review/evidence/_cmdr034334n3.db` 名字含同一 run id（同批日志 `live_checks/e2e_logs/n3_10d45db9_034334.log:1` 就把这条库路径打在第一行），跑完复测 5470..5599 段 `bindable_sockets=130`、`not_bindable_sockets=0`（`review/evidence/n3_0407_pair_on_tip.json:11` 那行是本块配对判语，与本条同批读）；手机链仍停在 `e5a571f89e5d210e3616bd6752b3c90746f9e588` 那一代 ⇒ 上面屏读全部标 `NOT-DEPLOYED-OBSERVED`，没有一条是手机上发生的。
+- 本块自检：首行 `### `，落 `D:\moodle\_qoder_ledger_inbox\n3_0353.md`；现行门尺 `claim_coordinate_check_r7.py --text <本块> --expect-clean` 读到 `ruler_exit=0`、`findings=0`（该尺本机文件 sha1 是本地字节重算、不是 git 对象、不可 cat-file：`2690a3f7eb0b817a882212854ad906bfc8703e2d`；它入库的那枚身份是 blob `cf1f047d53d4848fa16abcd03df34099ec87d90d`），`live_checks/patrol/bolt_replica.py` 对本块读到 `bolt=WOULD-LAND`。
+
+
+### ORD-0430 · 车道 ai（会话 bac10f40）三臂读数（r2 代）到手，候选**不合格**，卡在你要裁的那个岔口（03:20+08 开工 · 读数代次 `dccd13ad66ea35e9a6d7ca7a3d91a1ae9a579808` · 枝 `refs/heads/review/AI-ord0430-pill-yields-readable-r1` 产品提交 `c75c3d76bf13fe71732bbeabae5c003589a86ddb`、枝尖 `ca3cf24f6bbb06397a89d95e50c4b1e933155424`）
+
+【零、先报我自己这轮抓到的两处仪器缺陷，因为它们一度让读数不可归因】
+
+1. 我原来的三臂读数里**没有任何一项记录它自己加载的是哪一代包**，而两个静态口 `:4812`/`:4813` 的命令行都是 `--dist D:/moodle/_qoder_ai_ord0387_20260928/wt/frontend/dist`（`Get-CimInstance Win32_Process` 逐条读回，同一目录）⇒ 修后与反件的区分当时只靠我的构建顺序记忆。我把仪表改成每份读数自报 `served_bundle`，三臂各起**独立 dist**，并在新口 `:4816`（修后）、`:4815`（反件）、`:4811`（修前）重跑整套；三臂现在分别自报 `/assets/index-ChP6V0Vj.js`、`/assets/index-Ked9PoKI.js`、`/assets/index-BTVJqKHy.js`（三件分别是 blob a988e9ee47df3b450aa6617fddd1884f6003247d、8e4d7473de80e9bb2c265d37265b30754c59cd44、a41f51a13763752f2bd7656a462483acdfae87c3）。
+2. 我在上一版块写"药丸占掉视口底部约 76 px"，那是拿桌面内距 `frontend/src/styles.css:354` 算的；390 px 宽的手机上真正生效的是 `frontend/src/styles.css:741` 与 `frontend/src/design-tokens.css:981`。我补了几何仪表量渲染态：绘制矩形 top=706 与 bottom=760、内距 inset_right=10 px 与 inset_bottom=84 px、药丸自顶到视口底占 band_px=138（数在件 blob f102c3274d60785598c4f96f1122f0967e4b3287，视口 390 px × 844 px）。**这条直接改变了第四节那条路的代价**。
+
+现尖我自己 `env -u HTTP_PROXY -u HTTPS_PROXY git ls-remote` 读到 `8d038b21f09477b933cff3b1c7b09845c542373b`（比 02:47 那读又前进了）；三臂量在 `dccd13ad66ea35e9a6d7ca7a3d91a1ae9a579808` 这一代，`git merge-tree --write-tree` 对现尖 exit=0 且 CONFLICT 行计数 0。私有栈按你的配方：只读备份共享预览库（`file:…?mode=ro` + `src.backup(dst)`，源文件 `D:/moodle/_qoder_preview_20260920/_preview.db` 刚才再 stat 仍是 7,213,056 B 未被写）→ `cmdr_build_bundle_r1.py --sha` 出包 → `cmdr_static_api_proxy_r1.py`，后端我自己的口 `:8735`；每个口先探到真在答、并核对它服的包名才跑仪表（我第一次起的 `:4814` 与另一车道进程同口，`curl` 读回 `/assets/index-Ci41Xq9R.js` 不是我的代，遂弃用该口）。
+
+【一、修前读数（你点名那一格我复现了，intelligence 那格没有）】
+
+仪表 r2：`evidence/ai-ord0430-20260929/ord0430_pill_collision_r2.js` blob 7bc9edab4102af0c9ea630bef8b1206268d374b2（9,185 B）。每屏逐滚动停留位取"布局带"与"绘制矩形"两套重叠，并独立打一次命中测试。修前读数（数在件 blob a988e9ee47df3b450aa6617fddd1884f6003247d）：
+
+- twin/zh-CN：4 个停留位里 2 个盖字（两个都在 scrollTop=0），被压住 `H3` 渲染文字「Learned capability state」，painted_overlap_px=2256（数在件 blob a988e9ee47df3b450aa6617fddd1884f6003247d）
+- twin/en：6 个停留位里 2 个盖字（都在 scrollTop=0），被压住 `H2` 文字 "No learned signals"，painted_overlap_px=4234（数在件 blob a988e9ee47df3b450aa6617fddd1884f6003247d）
+- discover/zh-CN：6 个停留位里 2 个盖字（都在 scrollTop=0），被压住 `P` 文字「描述偏好、心情或约束。模型可选择语义方向，但只有服务端已知的地点才能到达权威方案。」，painted_overlap_px=4294（数在件 blob a988e9ee47df3b450aa6617fddd1884f6003247d）
+- discover/en：6 个停留位里 4 个盖字（scrollTop=0 与 422 各两次），被压住 `H2` 文字 "Shape the city stop" 与一枚 `LABEL`，painted_overlap_px=4393 也是本臂最大值（数在件 blob a988e9ee47df3b450aa6617fddd1884f6003247d）
+- **intelligence 两语 covering_arms=0**（max_painted_overlap_px=0，同一件）——你说"discover / intelligence 两屏也压住正文"，intelligence 这一屏我这轮仍**没复现**，可能入屏路径或停留位与你的尺不同，我不替你圆
+- 你点名要一并报的那格：每个停留位的 `documentElement.scrollWidth` 与 `clientWidth` 都是 390 px、overflow_gt=False（同一件）⇒ 这个形状下窄屏横向溢出**没有**
+
+【二、机制：检测器只管"可点击"，执行器是"藏起来"，两半各缺一块】
+
+- 检测在 `frontend/src/features/agent/CopilotDock.tsx:701`，原选择器只有 `button, a[href], input, select, textarea, [role="button"]` ⇒ `<h3>` 不在内，药丸按规则**不需要**让；类名确实挂上了（同文件 `:746` 的 `yield-at-rest`）
+- **执行样式不在 styles.css 而在 `frontend/src/design-tokens.css:993`**：`:998` translateX(calc(100% + 16px))、`:999` opacity 0、`:1000` visibility hidden、`:1001` pointer-events none ⇒ "避让"当前的实现是把药丸**移出视口并隐藏**，其自述理由在 `:985`-`:992`：靠底栏另一个 Copilot 入口再达
+
+【三、修后与反件：覆盖归零，但药丸点不到了（两件事都断）】
+
+汇总由三件计算生成、不是我抄的：`evidence/ai-ord0430-20260929/r2_readings_summary.json` blob 3cedb3664efe4400eb4893655c7e3951258b3450（1,508 B）。每臂覆盖 6 个 screen×locale 组合、读到 rests_read=34 个停留位：
+
+- before（件 blob a988e9ee47df3b450aa6617fddd1884f6003247d）：covering_arms=4 of 6、panel_opened=6 of 6
+- after （件 blob 8e4d7473de80e9bb2c265d37265b30754c59cd44）：covering_arms=0 of 6、**panel_opened=2 of 6**——四个开始让位的组合里，命中测试打在药丸自己绘制底边中点读到 `none`、pill_hit_inside=False，只有不触发让位的 intelligence 两臂仍 True ⇒ "文本不再被盖"这一条**成立**，"避让后仍可命中"这一条**不成立**
+- counter（件 blob a41f51a13763752f2bd7656a462483acdfae87c3，我把这一代单独构建并让它自报包名）：covering_arms=4 of 6、panel_opened=6 of 6、max_painted_overlap_px=4393 ⇒ **覆盖由那一行可读选择器引起，不是别处**
+
+⇒ 这个候选**满足"不再盖字"、违反"避让后仍可命中"**。我没有把它当修好交：枝推上去了，块里判它不合格，落不落由你定。门都在候选字节上跑过：`npm run typecheck` 与 `npm run typecheck:all` 的退出码都是 0（两条脚本定义在 `frontend/package.json:8` 与 `:9`，我刚在枝尖工作树上重跑，不是引用旧记录）；`npm run build` 退出码也是 0，数在件 blob 50bc12f34d2f66ba954e110a53c0ba87b32f8cae 的 `steps[2].rc` 字段。
+
+【四、你给的另一条路：量完了，但它比我上一版说的贵一倍】
+
+"先量药丸到底占多高"的答案是 band_px=138（绘制高 54 px + 底部内距 84 px，数在件 blob f102c3274d60785598c4f96f1122f0967e4b3287），不是我上一版写的 76 px。`frontend/src/design-tokens.css:987` 那段注释自己也写着 "Reserving that band properly would cost a phone ~138px of every screen"——与我的几何读数同量级，两条独立来源对上。
+内距路线仍然救不了 twin 那一格：该屏覆盖发生在 scrollTop=0，而 twin/zh-CN 的文档最大滚动只有 392 px、en 是 471 px（数在件 blob a988e9ee47df3b450aa6617fddd1884f6003247d）——在文末给内容列加一段下内距，抬不动停在第一屏底部的那行 `H3`。
+真正能同时满足两条的形态是让药丸**在视口内换位**（例如落到底栏已经占掉的那条带里，或缩到左上角），而不是藏起来。这要动 `frontend/src/design-tokens.css:998`-`:1001` 四条属性的语义，且与账本 `CITYNEXUS_AGENT_CONTROL.md` 里 ORD-0401 那一格记下的"可命中首屏止于 768 px"是同一笔预算。**这是产品取舍，我不替你裁**，所以停在这里报你，而不是先斩后奏。
+
+【五、构建与体量：三代各自的 precache（都是日志里的原文字段）】
+
+- 修前代 `dccd13ad66ea35e9a6d7ca7a3d91a1ae9a579808`：precache_entries=8、precache_kib=2538.47、包名 `/assets/index-ChP6V0Vj.js`（数在件 blob 4cf3382ae6af8ed8a96f463f7d54c650cd80553b）
+- 修后代 `c75c3d76bf13fe71732bbeabae5c003589a86ddb`：precache_entries=8、precache_kib=2538.57、包名 `/assets/index-Ked9PoKI.js`（数在件 blob 50bc12f34d2f66ba954e110a53c0ba87b32f8cae）
+- 反件代（候选减一行）：precache_entries=8、precache_kib=2538.50、包名 `/assets/index-BTVJqKHy.js`（数在件 blob 0713313125fa15295150d9d1621cbe846d38e828）
+- 三代之差在 0.10 KiB 以内（这是由上述三字段相减的算术，不是第四个读数）；反件重跑出的包名与我上一轮记忆里的那枚逐字相同，说明"减一行就回到修前形状"站得住
+
+【六、边界自查】
+
+没改 `styles.css`、没改 `V8Experience.tsx`、没改 `features/traveler-twin/`/`recovery/`/`discovery/`；`design-tokens.css` 我**读了但没改**（动它的理由在第四节，等你点头）。开工前按你的话查了 `*ord0416*`/`*token*` 枝：`review/Q-ord0416-drawer-icon-size`、`review/Q-pitravel-token-tiers`、`review/Q-pitravel-token-tiers-tip2`、`review/Q-cn-token-night-axis`、`review/cmdr-recut-ord0416-r1` 都在，但没有任何一枝带"领先现尖且改 design-tokens.css"的提交（逐枝 `git log <枝> --not <尖> -- frontend/src/design-tokens.css`，命中 0）——那文件确实没人动，我仍选择不抢。
+没跑 `demo/reset`、没写没 ALTER `_preview.db`（只读备份）、没重启 `:8000`/`:4781`/`:4782`/`:8693`、没读没打印 `preview_auth.txt` 的值。**没跑你那把 `publish_evidence_gated_r1.py`**：它默认消息是 "commander: gated evidence publish"、目标是我不能动的权威线，所以证据走我自己的 `review/*` 枝，`ls-remote` 回读 `ca3cf24f6bbb06397a89d95e50c4b1e933155424` 与本地 HEAD 逐字相等。写盘尺我按你说的自跑到退出码 0 才发（`claim_coordinate_check_r7.py --text … --expect-clean`），没跑配对尺。产品字节只有一处：`frontend/src/features/agent/CopilotDock.tsx` 那一行可读选择器（在提交 `c75c3d76bf13fe71732bbeabae5c003589a86ddb` 里），其后三枚提交相对它 files_changed=10、insertions=3038、deletions=0 且全部落在 `evidence/ai-ord0430-20260929/`（`git diff --stat` 对枝尖 `ca3cf24f6bbb06397a89d95e50c4b1e933155424` 现跑）。
+
+【七、连同上一轮两次错一起认（本块以读到的规则为准）】
+
+1. 我曾断言"没有任何 CSS 挂在这个状态上"，那是 grep 错了对象——搜的是属性名 `rest-overlap`，实际类名是 `yield-at-rest`，规矩在 `frontend/src/design-tokens.css:993`。当场上报并改口。
+2. 第一版仪表把药丸矩形在滚动前一次性捕获、逐停留位复用过期几何；跑前查出，整档重写为每个停留位重新取框。
+3. 本节零里的两条（无自报代次 + 共享 dist + 桌面内距当成手机内距）。r1 的三份读数我不删，留在枝上，让被取代的那一代看得见。本块是在 `ai_0320.md` 这个路径上**原位重写**（同一份交付的第二次成形，不是第二块），此刻 inbox 里属于我的 `.md` 只有这一份（`ls` 读回：`ai_0320.md` 与一枚无 .md 后缀的留痕 `ai_2049.md.superseded_by_ai_2200_and_ai_2241_cmdr`）。
+
+【八、我要的下一步】
+
+做完自报一句：**ORD-0430 三臂（r2，读数自带包名）与反件到手，候选判不合格——覆盖治好、命中丢了；要我继续就得先在"药丸视口内换位（代价带 138 px）"与"底栏带预留"之间裁一个。** 若你裁"视口内换位"，我下一步只动 `frontend/src/design-tokens.css:998`-`:1001` 的执行语义并复跑同一把 r2 仪表，不重新发明尺。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
+### 勘误（不改旧帖）· 车道 4033270f · ORD-0383 格三两块里前一块的重复性句不精确 · 枝 `e1b28d45cbb6aaae8b698954bcf9eac36ac95d4a` 见下行 · 2026-09-29 0349+08
+
+**哪一句**：`0383_0343.md`（`_processed/0383_0343.md.inserted_034612`）里那句「未修那一侧偶尔 11/12 而不是 12，是同一枚竞态的正常抖动」不精确：同一臂在基座树重复跑出来的 `double_success` 里有 10，不只是 11。
+
+**以哪句为准**：`0383_0346.md`（`_processed/0383_0346.md.inserted_034812`）里那句「未修那一侧在 10 到 12 之间抖（`rounds=12`）、候选树四次全为 0」为准，它带的是那四次的逐次读数。两句都不删，旧帖原样留着。
+
+**这块不改任何判定**：格三的交付内容、枝与提交都不变——枝 `refs/heads/review/qoder-0383-undelete-lock-r1` 头 `e1b28d45cbb6aaae8b698954bcf9eac36ac95d4a`（`git -c http.proxy= -c https.proxy= ls-remote origin refs/heads/review/qoder-0383-undelete-lock-r1` 现读回读同一枚 40 位），等号令者点甲′还是丙的那一笔也不变。我先把两块都投进收件口的经过记下：前一块在 03:46 我重投更正块时还在队列里，03:46:12 被代插收走，比我改名留痕的手速快，所以才有了这块。0 权威线、0 别人文件、0 删件。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### CMDR 03:45 · 用户下常设裁定：全盘吸收（红线只剩三条），关系层与 POI 两大模块全量开工，DSH 资源接入为并行线程池 · 新开 ORD-0436 至 ORD-0441 · 现尖 8d038b21f09477b933cff3b1c7b09845c542373b
 
 ## 0. 常设裁定 ABSORPTION_FULL_SCOPE_V1（覆盖我此前所有"只借形状不借数值"的说法）
