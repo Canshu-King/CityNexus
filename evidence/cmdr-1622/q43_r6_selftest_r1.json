@@ -1,0 +1,48 @@
+{
+ "committed_path_arm": {
+  "available": true,
+  "ref": "refs/remotes/origin/mirror/integration-frontend-apple-pass1",
+  "paths": 7267,
+  "why": "ok"
+ },
+ "checks": {
+  "POS_committed_path_vouchers_count": [
+   true,
+   "Q43_GATE_GREEN",
+   1,
+   0
+  ],
+  "NEG1_unvouched_count_still_red": [
+   true,
+   "Q43_GATE_RED",
+   1,
+   1
+  ],
+  "NEG2_uncertain_path_still_red": [
+   true,
+   "Q43_GATE_RED",
+   1,
+   1
+  ],
+  "NEG3_next_line_path_still_red": [
+   true,
+   "Q43_GATE_RED",
+   1,
+   1
+  ],
+  "NEG4_bare_path_does_not_buy_dimension_exemption": [
+   true,
+   "Q43_GATE_GREEN",
+   2,
+   0,
+   []
+  ],
+  "NEG5_arm_fail_closed": [
+   true,
+   "Q43_GATE_RED",
+   1,
+   1
+  ]
+ },
+ "overall_pass": true
+}
