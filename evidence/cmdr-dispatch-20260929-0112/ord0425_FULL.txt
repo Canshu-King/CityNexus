@@ -1,0 +1,52 @@
+[CMDR 派单 ORD-0425] 中文屏上直出机器词（枚举值 / 原始 id / 时区标识）。这一单的前半是**定位**，后半才是**修**。
+
+== 我已经证明的（只有这一件）==
+在现尖产物上按中文臂逐屏读渲染文字，以下这些字符串**确实在中文用户的屏上**（合订读数件 `evidence/cmdr-ord0419-20260929-0051/untranslated_r2_bundle.json`，外读 blob `bf772e96e171e7cc33b3b3b27b9b7ca7d6360950`；出处分类件 blob `a225e6a7f6770356577531211c58af44259ce86b`，文字版 blob `60b467d7c3ef92e54f3d51156764c4a62b9a27c2`）：
+- `intelligence` 那屏：`NOT_CONFIGURED`、`ADVISORY`
+- `authoritative` 那屏：`PLANNED`、`PlanVersion 1 · INITIAL`
+- `live` 那屏：`Asia/Shanghai`
+
+== 我**没有**证明的（所以这一单的前半是它）==
+我试过用静态形状扫描去定位"是谁把这段文字放上屏的"，失败了，具名记在这里，免得你也走一遍：我的正则用 `>` 后面跟文字来判 JSX 文本节点，而 **箭头函数 `=>` 里也有 `>`**，于是 `main.tsx:401`、`JourneyTrialSetup.tsx:110` 这类**根本不是 JSX 的**行被判成"上屏点"（那把尺的读数件 `D:/moodle/_qoder_cmdr_ref_20260921/live_checks/_render_sites_0425_r1.json`，我按"不可用的第一版"原名保留，不复用它的判定）。另外 `PlanVersion 1 · INITIAL` 在源码里**一次都搜不到**——它是运行时拼出来的，静态搜串本来就抓不到。
+
+⇒ 结论：**"屏上有这句英文"是可外读的事实；"它从哪一行来"我目前不知道。** 这一单先要你把后者做出来，再修。
+
+== 第一步：定位（每格都要给能复跑的证据）==
+对上面三屏每一格，给出**上屏点**：`文件:行` + 那一行原文 + 产生它的那个表达式名。做法不限，但反件必须是**运行时**的：把你怀疑的那个渲染点临时改掉（或把映射函数临时改成返回一个假值），复跑仪表看那格屏上文字**跟着变**——只有跟着变的才算定位成功。仪表用已发布那份，不要自写：blob `41a69ce5e9dc0c8c28c8c89d9105c6e6a7834c67`（用法 `node <仪表> <base> <route> <out-dir>`，它是滚动并集版，会把"真的滚到底了"写进读数）。
+**不许把"我在这枚文件里搜到了这个串"当定位证据。**
+
+== 第二步：修（只在定位成功且文件无主的前提下）==
+这个产品里已经有现成的映射层形状，照抄不要新造：`frontend/src/features/inbox/JourneyInboxWorkbench.tsx` 里用的是 `roleLabel(x, zh)`、`statusLabel(x, zh)`、`decisionLabel(x, zh)`、`artifactTypeLabel(x, zh)` 这一族"枚举 → 人话、按语言分支"的函数（行号自己读，别信我这段）。
+建议把共享映射放在**新文件**（例如 `frontend/src/lib/displayVocabulary.ts`），各屏引它，别在每枚组件里各写一份。
+
+== 撞车红线（碰到就停手报我，不要改）==
+以下文件**已经有主**，即使你定位到渲染点在这里面，也**只报不改**：
+- `frontend/src/app/V8Experience.tsx`、`frontend/src/styles.css` → 归 ORD-0419 / ORD-0420（另一位号令者实例）
+- `frontend/src/features/traveler-twin/TwinPanel.tsx`、`frontend/src/features/recovery/`、`frontend/src/features/discovery/`、`frontend/src/i18n/LocaleContext.tsx` → 归 ORD-0420 / ORD-0422
+- `frontend/src/features/inbox/JourneyInboxWorkbench.tsx` → 归 ORD-0423
+`frontend/src/features/intelligence/ControlTowerPanel.tsx` 目前无人认领，可以改。
+特别注意：`ADVISORY` 我扫到的候选上屏点里有一枚在 `frontend/src/app/V8Experience.tsx:4421`（**有主**），另一枚在 `frontend/src/features/intelligence/ControlTowerPanel.tsx:5`（无主，但那行是 `BRACE_EXPR` 判定，我的判定不可信）。**以你自己的运行时反件为准。**
+
+== 验收要件 ==
+1. 三屏逐格给"定位卡"：`文件:行` + 表达式名 + **反件读数**（改掉它，屏上那格跟着变；两次读数都要交）。定位不到的格子如实写 `NOT_LOCATED` 并说明你排除了哪些可能，**不许猜一个文件交差**。
+2. 修好的那几格：中文臂读到中文人话、英文臂读到英文人话，两臂都交渲染读数（断渲染文字，不断 class、不断 data 属性）。
+3. **枚举本身不许改**：`NOT_CONFIGURED` 这类是 ORD-0359 定过的产品词表（`CONFIGURED_UNVERIFIED` / `NOT_CONFIGURED` / `DISABLED_BY_OPS` / `PROVIDER_REFUSED`），契约、后端、测试都在用它。这一单只改**显示层**，0 契约字节、0 后端字节。
+4. 不许把"技术详情/原始值"那一档彻底删掉——有些屏是刻意给原始值的。哪些格子你判定"这里给原始枚举是对的"，具名列出来并给理由，我裁。
+5. 前端构建臂必须真过（vite 退出码为零），不许靠跳过。
+
+== 环境与纪律（每条都适用，请逐条照做）==
+- 你现在是 CityNexus 的一条实现车道，号令者会话是 494abfd7-5a79-4cc1-8487-e873818a2db3。用户不在电脑前：**不要请求任何人类点击或回答**，也不要向外仲裁汇报。
+- 仓库：`D:/moodle/CityNexus`（工作树是冻结的 a9c2504，**不要**在它上面改产品码）。权威线只在远端：`refs/heads/mirror/integration-frontend-apple-pass1`，仓库 `Canshu-King/CityNexus`。
+- 现尖读法（每次都现读，不要引用记忆里的尖）：
+  `env -u HTTP_PROXY -u HTTPS_PROXY git -C D:/moodle/CityNexus ls-remote origin refs/heads/mirror/integration-frontend-apple-pass1`
+- 本机代理 `127.0.0.1:7892` 常没人监听，会造出假的"不可达/连接被拒"。所有网络与 git 远端命令前面一律加 `env -u HTTP_PROXY -u HTTPS_PROXY`。
+- 造自己的工作树：`git -C D:/moodle/CityNexus -c core.autocrlf=false archive <现尖40位> backend data contracts tools scripts agent-mcp frontend/src frontend/e2e | tar -x -C <你的目录>`。**必须含 `data` 与 `contracts` 与 `scripts` 与 `agent-mcp`**，少一个会造出假红。
+- 交付方式：把候选推到 `refs/heads/review/<你的名字>-ord04xx-r1`，然后 `ls-remote` 回读核对两侧 40 位逐字相等。**不要自己合并、不要动权威 ref。**
+- 交完写一块账本块：`D:/moodle/_qoder_ledger_inbox/<你的名字>_<HHMM>.md`，首行以 `### ` 开头。**每个数字同一行给可取回坐标**（`path:line` 或能 `cat-file` 的 40 位 git blob；尺寸每个数字带单位；订单号一律写 ORD-04xx 带前缀形）。**坐标从命令输出里复制，不要手打**（手打过一位就会被写盘门拒，今晚已经拒过好几块）。证据先发布后引用：`env -u HTTP_PROXY -u HTTPS_PROXY python D:/moodle/_qoder_cmdr_ref_20260921/live_checks/publish_evidence_gated_r1.py --local <文件> --path evidence/<新路径>`，已发布路径不许重写，改版走新文件名。
+- 不许假绿：禁止 skip、mock、改断言凑绿。门绿不等于用户在屏上看得见的东西对了——判据要断**渲染后的文字或计算样式**，不要断 class、不要断 data 属性。
+- 私有验证栈（跑屏上用）：`git archive <尖> ... frontend/src frontend/e2e` 导出 → 造产物 `python D:/moodle/_qoder_cmdr_ref_20260921/live_checks/cmdr_build_bundle_r1.py --sha <尖>` → 只读备份共享库（`sqlite3.connect` 用 `file:...?mode=ro` 再 `src.backup(dst)`，参考 `live_checks/_launch_priv_backend_r1.py`）→ 起自己的后端（`CITYNEXUS_DATABASE_URL` 指到你自己的备份库、`CITYNEXUS_DEMO_MODE=true`、**不要**给 `DEEPSEEK_API_KEY`）→ `python cmdr_static_api_proxy_r1.py --dist <dist> --port <你自己的端口> --api <你后端端口>`。**先探到自己的端口真的在答再跑仪表。**
+- 绝对不许：写或 ALTER `D:/moodle/_qoder_preview_20260920/_preview.db`（只能 `mode=ro`）；跑 `demo/reset`；重启 :8000 / :4781 / :4782 / :8693；读或打印 `D:/moodle/_qoder_preview_20260920/run/preview_auth.txt` 里的口令值（只写路径）。
+- 本机三个 python 只有那一个 venv 解释器能跑后端套件；`python3` 在这台机器上没有。做较大改动前先 `ast.parse` 一遍你生成的脚本再跑。
+- 做完把交付块写好就停，等号令者复切落地；不要替号令者落地。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
