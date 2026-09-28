@@ -1,0 +1,581 @@
+{
+ "schema": "CNX_S4_ORD0408_MUTATION_R2",
+ "ruler": "ui_exposure_taint_ast_r7b4.cjs",
+ "reading_set": [
+  "live_contract_names_no_set",
+  "auto_discovered_from_tree",
+  "inline_enum_names_the_set",
+  "block_enum_names_the_set",
+  "invented_code_outside_the_set",
+  "unrelated_token_on_the_chain",
+  "anchor_field_the_contract_omits",
+  "set_declared_only_for_another_field",
+  "no_anchor_at_all"
+ ],
+ "baseline_readings": {
+  "live_contract_names_no_set": {
+   "exit": 0,
+   "cells": 2,
+   "exempted": 0,
+   "blocked": [
+    "CONTRACT_MISSING_ENUM"
+   ],
+   "folded": 0
+  },
+  "auto_discovered_from_tree": {
+   "exit": 0,
+   "cells": 2,
+   "exempted": 0,
+   "blocked": [
+    "CONTRACT_MISSING_ENUM"
+   ],
+   "folded": 0
+  },
+  "inline_enum_names_the_set": {
+   "exit": 0,
+   "cells": 1,
+   "exempted": 1,
+   "blocked": [],
+   "folded": 0
+  },
+  "block_enum_names_the_set": {
+   "exit": 0,
+   "cells": 1,
+   "exempted": 1,
+   "blocked": [],
+   "folded": 0
+  },
+  "invented_code_outside_the_set": {
+   "exit": 0,
+   "cells": 2,
+   "exempted": 0,
+   "blocked": [
+    "value_not_in_the_contract_set"
+   ],
+   "folded": 0
+  },
+  "unrelated_token_on_the_chain": {
+   "exit": 0,
+   "cells": 2,
+   "exempted": 0,
+   "blocked": [
+    "value_not_in_the_contract_set"
+   ],
+   "folded": 0
+  },
+  "anchor_field_the_contract_omits": {
+   "exit": 0,
+   "cells": 2,
+   "exempted": 0,
+   "blocked": [
+    "CONTRACT_MISSING_ENUM"
+   ],
+   "folded": 0
+  },
+  "set_declared_only_for_another_field": {
+   "exit": 0,
+   "cells": 2,
+   "exempted": 0,
+   "blocked": [
+    "CONTRACT_MISSING_ENUM"
+   ],
+   "folded": 0
+  },
+  "no_anchor_at_all": {
+   "exit": 0,
+   "cells": 2,
+   "exempted": 0,
+   "blocked": [],
+   "folded": 0
+  }
+ },
+ "baseline_says": {
+  "a *_code cell is exempted only when the contract names the set": true,
+  "a live contract with no set is a named red, not a pass": true,
+  "a code outside the named set is a named red": true,
+  "an anchor naming an undeclared field is a named red (no union)": true,
+  "no anchor means the contract is never consulted": true
+ },
+ "mutants": [
+  {
+   "mutant": "K1_union_fallback",
+   "ran": true,
+   "caught": true,
+   "flipped_arms": [
+    "anchor_field_the_contract_omits",
+    "auto_discovered_from_tree",
+    "live_contract_names_no_set",
+    "set_declared_only_for_another_field"
+   ],
+   "arms_that_should_flip": [
+    "anchor_field_the_contract_omits",
+    "auto_discovered_from_tree",
+    "live_contract_names_no_set",
+    "set_declared_only_for_another_field"
+   ],
+   "did_not_flip_those": [],
+   "detail": {
+    "anchor_field_the_contract_omits": {
+     "base": [
+      0,
+      [
+       "CONTRACT_MISSING_ENUM"
+      ]
+     ],
+     "mutant": [
+      1,
+      []
+     ]
+    },
+    "auto_discovered_from_tree": {
+     "base": [
+      0,
+      [
+       "CONTRACT_MISSING_ENUM"
+      ]
+     ],
+     "mutant": [
+      1,
+      []
+     ]
+    },
+    "live_contract_names_no_set": {
+     "base": [
+      0,
+      [
+       "CONTRACT_MISSING_ENUM"
+      ]
+     ],
+     "mutant": [
+      1,
+      []
+     ]
+    },
+    "set_declared_only_for_another_field": {
+     "base": [
+      0,
+      [
+       "CONTRACT_MISSING_ENUM"
+      ]
+     ],
+     "mutant": [
+      1,
+      []
+     ]
+    }
+   },
+   "cells_after": {
+    "anchor_field_the_contract_omits": 1,
+    "auto_discovered_from_tree": 1,
+    "live_contract_names_no_set": 1,
+    "set_declared_only_for_another_field": 1
+   }
+  },
+  {
+   "mutant": "K2_block_set_owned_by_the_enum_keyword",
+   "ran": true,
+   "caught": true,
+   "flipped_arms": [
+    "block_enum_names_the_set"
+   ],
+   "arms_that_should_flip": [
+    "block_enum_names_the_set"
+   ],
+   "did_not_flip_those": [],
+   "detail": {
+    "block_enum_names_the_set": {
+     "base": [
+      1,
+      []
+     ],
+     "mutant": [
+      0,
+      [
+       "CONTRACT_MISSING_ENUM"
+      ]
+     ]
+    }
+   },
+   "cells_after": {
+    "block_enum_names_the_set": 2
+   }
+  },
+  {
+   "mutant": "K3_silence_is_permission",
+   "ran": true,
+   "caught": true,
+   "flipped_arms": [
+    "anchor_field_the_contract_omits",
+    "auto_discovered_from_tree",
+    "live_contract_names_no_set",
+    "set_declared_only_for_another_field"
+   ],
+   "arms_that_should_flip": [
+    "anchor_field_the_contract_omits",
+    "auto_discovered_from_tree",
+    "live_contract_names_no_set",
+    "set_declared_only_for_another_field"
+   ],
+   "did_not_flip_those": [],
+   "detail": {
+    "anchor_field_the_contract_omits": {
+     "base": [
+      0,
+      [
+       "CONTRACT_MISSING_ENUM"
+      ]
+     ],
+     "mutant": [
+      1,
+      []
+     ]
+    },
+    "auto_discovered_from_tree": {
+     "base": [
+      0,
+      [
+       "CONTRACT_MISSING_ENUM"
+      ]
+     ],
+     "mutant": [
+      1,
+      []
+     ]
+    },
+    "live_contract_names_no_set": {
+     "base": [
+      0,
+      [
+       "CONTRACT_MISSING_ENUM"
+      ]
+     ],
+     "mutant": [
+      1,
+      []
+     ]
+    },
+    "set_declared_only_for_another_field": {
+     "base": [
+      0,
+      [
+       "CONTRACT_MISSING_ENUM"
+      ]
+     ],
+     "mutant": [
+      1,
+      []
+     ]
+    }
+   },
+   "cells_after": {
+    "anchor_field_the_contract_omits": 1,
+    "auto_discovered_from_tree": 1,
+    "live_contract_names_no_set": 1,
+    "set_declared_only_for_another_field": 1
+   }
+  },
+  {
+   "mutant": "K4_membership_never_checked",
+   "ran": true,
+   "caught": true,
+   "flipped_arms": [
+    "invented_code_outside_the_set",
+    "unrelated_token_on_the_chain"
+   ],
+   "arms_that_should_flip": [
+    "invented_code_outside_the_set",
+    "unrelated_token_on_the_chain"
+   ],
+   "did_not_flip_those": [],
+   "detail": {
+    "invented_code_outside_the_set": {
+     "base": [
+      0,
+      [
+       "value_not_in_the_contract_set"
+      ]
+     ],
+     "mutant": [
+      1,
+      []
+     ]
+    },
+    "unrelated_token_on_the_chain": {
+     "base": [
+      0,
+      [
+       "value_not_in_the_contract_set"
+      ]
+     ],
+     "mutant": [
+      1,
+      []
+     ]
+    }
+   },
+   "cells_after": {
+    "invented_code_outside_the_set": 1,
+    "unrelated_token_on_the_chain": 1
+   }
+  },
+  {
+   "mutant": "K5_ruling_B_restored",
+   "ran": true,
+   "caught": true,
+   "flipped_arms": [
+    "anchor_field_the_contract_omits",
+    "auto_discovered_from_tree",
+    "invented_code_outside_the_set",
+    "live_contract_names_no_set",
+    "set_declared_only_for_another_field",
+    "unrelated_token_on_the_chain"
+   ],
+   "arms_that_should_flip": [
+    "anchor_field_the_contract_omits",
+    "auto_discovered_from_tree",
+    "invented_code_outside_the_set",
+    "live_contract_names_no_set"
+   ],
+   "did_not_flip_those": [],
+   "detail": {
+    "anchor_field_the_contract_omits": {
+     "base": [
+      0,
+      [
+       "CONTRACT_MISSING_ENUM"
+      ]
+     ],
+     "mutant": [
+      1,
+      []
+     ]
+    },
+    "auto_discovered_from_tree": {
+     "base": [
+      0,
+      [
+       "CONTRACT_MISSING_ENUM"
+      ]
+     ],
+     "mutant": [
+      1,
+      []
+     ]
+    },
+    "invented_code_outside_the_set": {
+     "base": [
+      0,
+      [
+       "value_not_in_the_contract_set"
+      ]
+     ],
+     "mutant": [
+      1,
+      []
+     ]
+    },
+    "live_contract_names_no_set": {
+     "base": [
+      0,
+      [
+       "CONTRACT_MISSING_ENUM"
+      ]
+     ],
+     "mutant": [
+      1,
+      []
+     ]
+    },
+    "set_declared_only_for_another_field": {
+     "base": [
+      0,
+      [
+       "CONTRACT_MISSING_ENUM"
+      ]
+     ],
+     "mutant": [
+      1,
+      []
+     ]
+    },
+    "unrelated_token_on_the_chain": {
+     "base": [
+      0,
+      [
+       "value_not_in_the_contract_set"
+      ]
+     ],
+     "mutant": [
+      1,
+      []
+     ]
+    }
+   },
+   "cells_after": {
+    "anchor_field_the_contract_omits": 1,
+    "auto_discovered_from_tree": 1,
+    "invented_code_outside_the_set": 1,
+    "live_contract_names_no_set": 1,
+    "set_declared_only_for_another_field": 1,
+    "unrelated_token_on_the_chain": 1
+   }
+  },
+  {
+   "mutant": "K6_anchor_test_dropped",
+   "ran": true,
+   "caught": true,
+   "flipped_arms": [
+    "anchor_field_the_contract_omits",
+    "auto_discovered_from_tree",
+    "block_enum_names_the_set",
+    "inline_enum_names_the_set",
+    "invented_code_outside_the_set",
+    "live_contract_names_no_set",
+    "no_anchor_at_all",
+    "set_declared_only_for_another_field",
+    "unrelated_token_on_the_chain"
+   ],
+   "arms_that_should_flip": [
+    "live_contract_names_no_set",
+    "no_anchor_at_all"
+   ],
+   "did_not_flip_those": [],
+   "detail": {
+    "anchor_field_the_contract_omits": {
+     "base": [
+      0,
+      [
+       "CONTRACT_MISSING_ENUM"
+      ]
+     ],
+     "mutant": [
+      2,
+      []
+     ]
+    },
+    "auto_discovered_from_tree": {
+     "base": [
+      0,
+      [
+       "CONTRACT_MISSING_ENUM"
+      ]
+     ],
+     "mutant": [
+      0,
+      [
+       "CONTRACT_MISSING_ENUM",
+       "CONTRACT_MISSING_ENUM"
+      ]
+     ]
+    },
+    "block_enum_names_the_set": {
+     "base": [
+      1,
+      []
+     ],
+     "mutant": [
+      2,
+      []
+     ]
+    },
+    "inline_enum_names_the_set": {
+     "base": [
+      1,
+      []
+     ],
+     "mutant": [
+      2,
+      []
+     ]
+    },
+    "invented_code_outside_the_set": {
+     "base": [
+      0,
+      [
+       "value_not_in_the_contract_set"
+      ]
+     ],
+     "mutant": [
+      1,
+      [
+       "value_not_in_the_contract_set"
+      ]
+     ]
+    },
+    "live_contract_names_no_set": {
+     "base": [
+      0,
+      [
+       "CONTRACT_MISSING_ENUM"
+      ]
+     ],
+     "mutant": [
+      0,
+      [
+       "CONTRACT_MISSING_ENUM",
+       "CONTRACT_MISSING_ENUM"
+      ]
+     ]
+    },
+    "no_anchor_at_all": {
+     "base": [
+      0,
+      []
+     ],
+     "mutant": [
+      2,
+      []
+     ]
+    },
+    "set_declared_only_for_another_field": {
+     "base": [
+      0,
+      [
+       "CONTRACT_MISSING_ENUM"
+      ]
+     ],
+     "mutant": [
+      0,
+      [
+       "CONTRACT_MISSING_ENUM",
+       "CONTRACT_MISSING_ENUM"
+      ]
+     ]
+    },
+    "unrelated_token_on_the_chain": {
+     "base": [
+      0,
+      [
+       "value_not_in_the_contract_set"
+      ]
+     ],
+     "mutant": [
+      1,
+      [
+       "value_not_in_the_contract_set"
+      ]
+     ]
+    }
+   },
+   "cells_after": {
+    "anchor_field_the_contract_omits": 0,
+    "auto_discovered_from_tree": 2,
+    "block_enum_names_the_set": 0,
+    "inline_enum_names_the_set": 0,
+    "invented_code_outside_the_set": 1,
+    "live_contract_names_no_set": 2,
+    "no_anchor_at_all": 0,
+    "set_declared_only_for_another_field": 2,
+    "unrelated_token_on_the_chain": 1
+   }
+  }
+ ],
+ "uncaught": [],
+ "could_not_run": [],
+ "caught_but_not_by_the_named_arm": [],
+ "verdict": "MUTATION_ALL_CAUGHT",
+ "supersedes": {
+  "file": "arm_mutant_r7b4.json from arms_and_mutants_r1.py",
+  "why": "M2 edited the schema-key list, which the parse does not consult for the block form (the owner comes from the indent stack), so that mutant could not be caught; K4 had no reading that could fail, because every sample was the shipped panel whose chain carries no literal. Both are fixed in this cut."
+ }
+}
