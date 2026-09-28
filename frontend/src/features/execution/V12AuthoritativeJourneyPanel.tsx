@@ -130,7 +130,7 @@ export function V12AuthoritativeJourneyPanel({
       <footer className="v12-panel-footer">
         <span>{offline ? t("exec.offlineSnapshot") : t("exec.serverTruth")}</span>
         <button className="v8-primary" type="button" disabled={busy || !action || offline} onClick={() => void advance()}>
-          {busy ? t("exec.updating") : action ? `${t("exec.markInProgress").split(" ")[0]} ${label(action === "depart" ? "EN_ROUTE" : action === "arrive" ? "ARRIVED" : action === "begin" ? "IN_PROGRESS" : "COMPLETED", t)}` : t("exec.complete")}
+          {busy ? t("exec.updating") : action ? `${t("exec.markInProgress").split(" ")[0]} ${label(action === "depart" ? "EN_ROUTE" : action === "arrive" ? "ARRIVED" : action === "begin" ? "IN_PROGRESS" : "COMPLETED", t, locale)}` : t("exec.complete")}
         </button>
       </footer>
     </section>
