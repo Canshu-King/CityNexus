@@ -16588,6 +16588,15 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### CMDR 2026-09-28 20:57 · 号令者 · ORD-0402 的接线缝落地并在新尖上重走一遍；一件"产物名没变"的可疑处我用测量解释清了
+
+**两笔落地**：车道 4033270f 的跨道接线件 `a7d852d47487f4073d63197e388f7ccb7406b762`（ff-only，无产品字节，门件 blob `17cad50fadb9614b2d5903540c1060a9368d1cf5`，路径 `evidence/cmdr-landing-ORD-0402-r4/preflight_r1.json`）；车道 Q 的回收站复检四臂 `83395a9a5f26bdc8cc5c0660c165b2fb95660a9e`（recut 后 15 枚文件与车道字节全等，门件 blob `1dc9c5cfe8b717107148c4049eab294afc2a2682`，路径 `evidence/cmdr-landing-ORD-0402-r5/preflight_r1.json`）。**现尖 `83395a9a5f26bdc8cc5c0660c165b2fb95660a9e`**。
+**新尖上我又真走了一遍**（私有演示舞台 :4799 指向我自己的 :8725，抽屉「回收站」中心命中后打真指针）：行「One Day in Nexus City / 在回收站里 / 丢弃于 9月28日 20:56 / 找回」→ 点「找回」→「已找回：One Day in Nexus City。它回到你的行程列表里了。」，行数归 0、空态在位、列表回 1 条（同件计数格在件 `f91ce28219b1a9eb1ca3ce2fb8b4d8124383d141`，路径 `evidence/cmdr-2056/trash_panel_walk_reverified_on_newest_tip.json`）、0 页面报错。
+**可疑处量清了，不是猜**：这一代的产物名仍是 `/assets/index-C06ZwEPS.js`，与上一代同名——看着像"我建的导出没吃到改动"。我把两尖之间那枚产品文件的差逐行过了一遍：非注释改动只有一处类型（手写的 `DiscardedJourney` 换成 `components["schemas"]["RecycleBinJourney"]`），**类型在构建期擦除**，所以 bundle 字节相同、内容哈希同名是正确结果。构建信息里 `live_tree` 是 `46b4c6f47e316a91e7fe46295baba596833b7f8a`（与 recut 的 merged_tree 一致），所以也不是拿旧树建的新包。顺带这条正好是 ORD-0395/0359 那一族的正面样本：**面板改吃契约生成的类型，而不是自己手写一份形状**。
+**待收不变**：ORD-0394 切片 2（现尖已进到 `83395a9a…`，请以此 rebase，撞点仍是 `backend/app/main.py`、`contracts/openapi.yaml`、`frontend/src/components/v8/MapPanel.tsx`、`frontend/src/generated/api.ts` 那四枚）、ORD-0404、ORD-0406、ORD-0407、ORD-0408、ORD-0409。
+**手机链仍不换代的理由不变**：hop1 是 16:17 那份树、没有 `recycle-bin`/`undelete`，换代只会在手机上挂一个读失败的入口；那条"要不要给 `_preview.db` 加一列"的问话在桌面留言 20:22 那一格。今晚全部屏读仍标 `NOT-DEPLOYED-OBSERVED`。
+
+
 ### CMDR 2026-09-28 20:42 · 号令者 · 逐值尺的口径我加宽了（新分母见下），加宽后抓到一格两代都不在产物里的字典键 → ORD-0409
 
 **为什么改尺**：`cmdr_bundle_copy_check_r1.py` 只读 `frontend/src/i18n/LocaleContext.tsx` 一枚文件。ORD-A 把地图文案收进 `i18n/mapPanelCopy.ts`、ORD-0402 又新立 `features/trash/journeyTrashCopy.ts` 之后，我的分母还冻在旧值上——**一把看不见新文案的覆盖尺是反用的**。r2 改成枚举 `i18n/` 下所有 ts(x) 加全仓 `*Copy.ts(x)`，并逐文件报贡献数（件 blob `3e28fa9e937642346fb05f3908f399765b230795`，路径 `evidence/cmdr-2040/copy_check_r2_AB_two_generations.txt`）。
