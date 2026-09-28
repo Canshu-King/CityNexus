@@ -1,0 +1,93 @@
+{
+  "model": "global:glm-5.2",
+  "sentence": "The Nexus River Cruise venue is closed this afternoon, mark it as a major disruption and tell me what to do next.",
+  "key_length": 58,
+  "key_written_to_any_file": false,
+  "cases": [
+    {
+      "impact_timeout_seconds": "10",
+      "shim_port": 58663,
+      "lane_port": 49344,
+      "db": "D:\\moodle\\CityNexus-Hermes-Revival\\evidence\\0443\\_e2e_10.db",
+      "health": {
+        "status": "ok",
+        "database": "ok",
+        "ai": "enabled",
+        "ai_state": "CONFIGURED_UNVERIFIED",
+        "e2e_run_id": "",
+        "e2e_database_id": ""
+      },
+      "envelope_before": {
+        "robust": true,
+        "risk_reason_codes": []
+      },
+      "copilot": {
+        "http": 200,
+        "bytes": 7355,
+        "elapsed_s": 50.46,
+        "mission_status": "DEGRADED",
+        "failure_reason": "DeepSeek Agent completion failed",
+        "ai_state": "PROVIDER_REFUSED",
+        "assistant_text_head": "",
+        "steps": [
+          "inspect_journey",
+          "inspect_twin",
+          "inspect_journey",
+          "Evaluate candidates against constr",
+          "request_replan",
+          "list_replans",
+          "Wait for explicit CityNexus approv"
+        ]
+      },
+      "events_after": [],
+      "envelope_after": {
+        "robust": true,
+        "risk_reason_codes": []
+      },
+      "verdict_this_case": false
+    },
+    {
+      "impact_timeout_seconds": "180",
+      "shim_port": 49677,
+      "lane_port": 52206,
+      "db": "D:\\moodle\\CityNexus-Hermes-Revival\\evidence\\0443\\_e2e_180.db",
+      "health": {
+        "status": "ok",
+        "database": "ok",
+        "ai": "enabled",
+        "ai_state": "CONFIGURED_UNVERIFIED",
+        "e2e_run_id": "",
+        "e2e_database_id": ""
+      },
+      "envelope_before": {
+        "robust": true,
+        "risk_reason_codes": []
+      },
+      "copilot": {
+        "http": 200,
+        "bytes": 3979,
+        "elapsed_s": 70.24,
+        "mission_status": "COMPLETED",
+        "failure_reason": null,
+        "ai_state": "CONFIGURED_UNVERIFIED",
+        "assistant_text_head": "",
+        "steps": [
+          "inspect_journey",
+          "inspect_twin",
+          "inspect_journey",
+          "Evaluate candidates against constr",
+          "request_replan",
+          "list_replans",
+          "Wait for explicit CityNexus approv"
+        ]
+      },
+      "events_after": [],
+      "envelope_after": {
+        "robust": true,
+        "risk_reason_codes": []
+      },
+      "verdict_this_case": false
+    }
+  ],
+  "verdict_timeout_knob_is_the_blocker": false
+}
