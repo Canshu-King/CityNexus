@@ -16588,6 +16588,117 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### ORD-0398 第二步已交 · 车道 rel · 一具名产点收口，曝光面 growth=0 · 2026-09-28 1847+08
+
+不接 ORD-0401（已按令避开 `frontend/src/app/V8Experience.tsx` 与 today-strip 那区：本笔改动的文件清单只有 `git show --stat 663cfa3065fcd5677d85446d142d090a246aa780` 里那 files=3，V8Experience 不在其中）。
+
+## 交付与基线（我没 force-move 任何已发布 ref）
+
+您点的现尖 `e7286dfd47db2dd9a1420867dd534b906b2d032a` 已含我第一步的两笔（`bf8fb5f25a7832141fb8f74b584a22b394f9eb4f` 与它的重切 `5b0b825c`，读自 `git log --oneline -4`），所以第二步只补一笔；已发布的第一枝 `review/REL-ord0398-named-reading` 我不改，另起 **`review/REL-ord0398-named-reading-r2`**，头 `663cfa3065fcd5677d85446d142d090a246aa780`，其父 = 现尖（`git merge-base --is-ancestor <现尖> HEAD` 退出码 0；`git merge-tree --write-tree <现尖> HEAD` 退出码 0、`conflict_lines=0`）。自推 + 回读：`git ls-remote origin refs/heads/review/REL-ord0398-named-reading-r2` 逐字等值。
+
+## 改了什么（一个产点，两处调用）
+
+- 新产点：`frontend/src/lib/failureAttribution.ts:281` 的 `deviceReadout(fields, only)`；缺值词定义在同文件 `:258` 的 `NOT_MEASURED`；允许字段集是它自己的联合类型 `:263` `ReadoutField`，只有 `http_status`、`content_type`、`body_bytes`、`response_received`、`elapsed_ms`、`request_id`——**多一格都过不了这个类型**，曝光白名单因此在形状层就被钉住。
+- 调用点 A：`frontend/src/features/discovery/DestinationPreparationPanel.tsx:229` 取 `elapsedCell`，用在 `:239` 与 `:240` 两条渲染体里（原来是 `elapsed_ms=${Math.round(job.elapsed_ms)}` 手拼）。
+- 调用点 B：`frontend/src/features/recovery/RecoveryRequiredPanel.tsx:82`（原 `http_status=${refusal.http_status}` 手拼），import 在 `:29`。
+- 我没新建第二个时刻格式化器：`deviceReadout` 不格式化时刻，只吃已格式化的字符串。现成入口是 `frontend/src/app/V8Experience.tsx:410` 的 `date()`，消费点 `:4222` 与 `:4229`，句键在 `frontend/src/i18n/LocaleContext.tsx:292`、`:294`，缺值具名词在 `:293`。要件 3 的"同一入口"因此在**新增调用面**上成立、在**旧的两处**上仍指向那个私有 `date()`；把它抬成共享模块必须动 V8Experience，按您 18:32 那条我不动。要抬请给一句话。
+
+## 三处具名残留（都是"故意没做"，不是漏做）
+
+- `frontend/src/features/inbox/JourneyInboxWorkbench.tsx:312` 那行**不能改形**：`frontend/e2e/qoder-ord0323-two-exposure-cells.spec.ts:850` 拿整串逐字比（含 legacy 键名 `evidence=` 与三个 cell 的顺序）。收口它要么让 `deviceReadout` 吐 `evidence=` 这个与契约不符的名，要么改那条断言——改断言换绿是两边都不做的事，所以报给您裁。
+- `frontend/src/features/planning/PlanWithAiSheet.tsx:1000`、`:1001`：ORD-0382 的热文件，我没碰。
+- `frontend/src/app/V8Experience.tsx:229`、`:232`、`:1358`、`:2695`、`:410`：按令避开。
+
+## 一处可见行为差量（具名，不埋）
+
+`RecoveryRequiredPanel.tsx:82` 在 `http_status` 为 `null` 时，从渲染字面量 `null` 改为渲染 `NOT_MEASURED`。这是要件 5 要的形，不是等价改写。相关断言我核过容错：`frontend/e2e/qoder-ord0323-two-exposure-cells.spec.ts:742` 与 `:755` 用 `http_status=(\d+)` **或** `HTTP (\d+)` 双取，`elapsed_ms=` 在 `frontend/e2e` 里 hits=0。
+
+## 门禁（同一命令、基线尖与我的尖各一遍）
+
+- 曝光尺 r7b（不在权威线上，我只读取自 `dc75471d7e258267b119660769c74269c33d83e2` 那笔的 `evidence/ord0354-0348-attributed-fold-S4/ruler/ui_exposure_taint_ast_r7b.cjs`，bytes=129082，落到 `D:/moodle/_qoder_rel_ord0398_wk/` 后运行，未改它）：两遍各 `exit=0`。对照（`--tree` 全树口径，含 review/ 副本这一已知污染；两遍原始件 `D:/moodle/_qoder_rel_ord0398_wk/exp2_base.json:1` 与 `D:/moodle/_qoder_rel_ord0398_wk/exp2_mine.json:1`）：`files_found=356` 两侧同、`hits=32` 两侧同、`cells_total=32` 两侧同、`rules_fired=4` 两侧同、`fold_without_anchor=2` 两侧同、`attributed_in_fold=1` 两侧同、`parse_diagnostics_total=0` 两侧同，集合差 `new_hits=0`、`removed_hits=0` ⇒ **growth=0**。
+- 前端：`tsc -p tsconfig.check.json --noEmit` 退出码 0、`tsc -p tsconfig.typecheck.json --noEmit` 退出码 0、`vite build` 退出码 0（`seconds=11.51`、`precache entries=8`、`precache_kib=2523.87`）。非空转证：`--listFiles` 里相关名逐个读到 names=4（`frontend/src/lib/failureAttribution.ts:281`、`frontend/src/features/discovery/DestinationPreparationPanel.tsx:229`、`frontend/src/features/recovery/RecoveryRequiredPanel.tsx:82`、`frontend/src/app/v8PanelRegistry.tsx:1`）（含 ORD-0392 的 `frontend/src/app/v8PanelRegistry.tsx`，说明这是 rebase 后的树）。宿主是导出目录 `D:/moodle/_qoder_rel_ordb_wk/build/frontend`（`src` 先清空再同步，`cp -al` 的 node_modules 与现尖 lock `a35da4e97f6aeff219739b7ddaad12abf716a431` 同代）。
+- 后端：本笔 `backend_bytes=0`（未动 `backend/` 与 `contracts/`），所以没跑套件与 `--collect-only`。
+- 验收 B（`:4781` 真渲染两处读数）**我没有**：那是您的链；`DestinationPreparationPanel` 那处要有读数得真起一枚 catalog-hydration job，我这边只有自建的副本库，按您 18:26 定的口径这条属 `NOT-DEPLOYED-OBSERVED`，不是屏上证据。谁要屏上证据：起 job 后读 `body.innerText` 里 `elapsed_ms=` 那格，以及 recovery 卡 `http_status=` 那格（缺值时应读到 `NOT_MEASURED`）。
+
+## 顺带：我那两块卡在门上的旧件（等您或我等下一轮）
+
+`D:/moodle/_qoder_ledger_inbox/rel_0338.md` 与 `rel_0437.md` 至今没被插（inbox 里仍是裸 `.md`，同批的 `rel_0458.md.inserted_044159`、`rel_0521.md.inserted_044710`、`rel_1757.md.inserted_180051` 已入）。我用 `claim_coordinate_check_r6.py`、`claim_coordinate_check_r7.py` 复跑：`rel_0338.md` 在 r7 下 `findings=5`，行号 lines=32、39、63；`rel_0437.md` 在 r7 下 `findings=8`，行号 lines=17、22、34、37。我按 18:26 那条只在被判行把裸计数换成 `field=value`（不删数字、不改判定），已改了 r7 能匹配的一部分，其余因我凭记忆匹配原文而 MISS，需要按行重读再补——**这两块的内容（ORD-B 的 CLOSED 证据与"键序会不会伤按字串比的断言"那张普查）已在账本别处被您引用过，插不插只影响留痕完整。**
+另：您 17:53 让我照的 `live_checks/Q43_HOW_TO_PASS_r1.md` 那条自检命令写的是 `--file`，尺只接 `--text`（`claim_coordinate_check_r4e.py:1-53` 的 argparse），新版 r6/r7 也一样——我在 `rel_1757.md` 报过一次，这次再记一次，因为它会让下一个车道把自己的块误判成"尺坏了"。
+
+
+### ORD-0399 切片 2 · 车道 4033270f · 找回（undelete）那一扇门 · 2026-09-28 18:38+08 · 候选待验
+
+派单原文在 CITYNEXUS_AGENT_CONTROL.md:16617。门本身写在对现尖的读取上：我开工时现尖 = dc88df93a35e16dcee824168110d2cf48a592f20（17:37:53+0800），交之前它又前进 9 笔到 e7286dfd47db2dd9a1420867dd534b906b2d032a（ORD-0392 面板注册表 + ORD-0398 扫描器），我这棵已 rebase 到 e7286dfd，`git status --porcelain` 空。
+重叠是量出来的，不是我说的：`git diff --name-only dc88df93a35e16dcee824168110d2cf48a592f20 e7286dfd47db2dd9a1420867dd534b906b2d032a` 里属于本刀的五个文件命中=0，rebase 后门的行号一格没动（还是 backend/app/main.py:2999 与 backend/app/main.py:3043），过程记在 review/ord0399-readouts/ROUND2_REBASE_R1.txt:1。
+候选逐字回读（本地 `git rev-parse HEAD` 与远端字符串比较 match=YES、两位长各 40）：`c19db17b2a2ce9964ebb568d020094c3b1f4c08c	refs/heads/review/ORD-0399-journey-undelete-r2`。rebase 前那枚候选 `6fdaafef752e82d51b63fc9739ed502ed3fadd5a` 仍停在 refs/heads/review/ORD-0399-journey-undelete，我没有覆盖它，也没有 force-push 任何枝；切片 1 的两枚（c57bd95bf42c01dc84ed207d797a7fa75dda80aa 与 4f071643664c25b554c51b19ae08609b0d99c317）同样未动。
+
+## 1 · 落地的字节（全加法）
+
+`git diff --shortstat e7286dfd47db2dd9a1420867dd534b906b2d032a c19db17b2a2ce9964ebb568d020094c3b1f4c08c -- backend contracts` = files_changed=3，insertions=393，短统计里没有删除项（rebase 前对 dc88df93a35e16dcee824168110d2cf48a592f20 量是同一条 3 files / 393，见 ROUND2_REBASE_R1.txt:9）。
+
+- backend/app/main.py:2999 `@app.post("/api/v1/journeys/{journey_id}/undelete", response_model=JourneySchema)`；门的正文从 backend/app/main.py:3000 到 main.py:3051；唯一写入的行程事实是 main.py:3039 那句 `journey.deleted_at = None`；审计动作在 backend/app/main.py:3043，逐字 `action="journey.undeleted"`
+- contracts/openapi.yaml:457 新增 path，contracts/openapi.yaml:461 `operationId: undeleteJourney`，两枚拒绝的命名在 contracts/openapi.yaml:478 与 contracts/openapi.yaml:483
+- backend/tests/test_qoder_ord0399_journey_undelete.py 新件，def_test_count=7
+- 契约必须同笔这件事不变：backend/tests/test_contract.py:82 判 (path, method) 集合全等
+
+## 2 · 要件①的三格：真数据、私有副本、同一条命令跑两遍
+
+存储具名。源 = `D:\moodle\_qoder_preview_20260920\_preview.db`，只用 `mode=ro` URI 打开，脚本第一件事是记六张表行数、跑完再记一遍，`[source] untouched=True` 在 review/ord0399-readouts/PREVIEW_COPY_READINGS_R1.txt:18。写全部落在自己的副本 `D:\moodle\_qoder_lane_ord0399_restore\_scratch_probe\preview_copy.db`（SQLite backup API 从只读源取，`.gitignore:45` 的 `_*/` 规则把它挡在提交之外，含真用户数据的文件一份都没进 git）。副本内容：journeys=1、plan_versions=1、activities=6、commitments=1、travelers=1，见 PREVIEW_COPY_READINGS_R1.txt:7 —— 库里只有一趟行程，所以「库级行数」和「这趟的内容行数」在这一枚副本上是同一件事。
+
+| 格 | 删之前 | 在桶里 | 找回之后 |
+|---|---|---|---|
+| 列表长度回到原值 | list_len=1 | 0 | 1 |
+| journeys 行数不变 | 1 | 1 | 1 |
+| activities 行数不变 | 6 | 6 | 6 |
+
+三行逐字读数在 PREVIEW_COPY_READINGS_R1.txt:13、:14、:15（`in_list` 从 true → false → true，`journey_under_test_rowid` 三行都是 1，`binned_rows` 0→1→0）；HTTP 面在 PREVIEW_COPY_READINGS_R1.txt:12：`[http] DELETE_status=204 UNDELETE_status=200`。同一条命令第二遍与第一遍逐字相同，`identical=True` 记在 PREVIEW_COPY_READINGS_R1.txt:36。
+pytest 那一侧（另一枚存储，conftest 的临时库，路径打印在读数行里）：五张内容表的计数字典在 delete→找回 整轮之后与之前相等，读数在 review/ord0399-readouts/OWN_TESTS_R1.txt:1，四件门同跑 passed=19 / gates_exit=0 在 OWN_TESTS_R1.txt:21 与 OWN_TESTS_R1.txt:22。那里的 activities_rows=0，因为无 catalog 的库里没有任何门造得出第一条 activity（实测 `POST /api/v1/journeys/{id}/plans/generate` 回 http_status=422、activities=0、plan_versions=0）——所以「非零的 activities 格」只能由上面那枚真副本给，我不拿 0==0 冒充它。
+
+## 3 · 要件②词表：为什么是 找回 / undelete，以及我没碰那本共享字典
+
+盘点件 review/ord0399-readouts/VOCABULARY_AUDIT_R1.txt:12 那张表用两把尺分开写：`git grep -c` 数文件、`git show <tip>:<path> | grep -o | wc -l` 数命中。现尖上 `recover` = files=16 / matches=217，`recovery` = 15 / 206，`restore` = 2 / 4，`恢复` = 2 / 6；而 `找回`=0/0、`undelete`=0/0、`purge`=0、`hard_delete`=0。
+占用是读出来的：`recovery/acknowledge` 在 backend/app/main.py:2657、`autopilot/recover` 在 backend/app/main.py:3496；`还原` 是 plan-version 那屏自己写下的规矩（frontend/src/features/studio/planVersionHistoryCopy.ts:10，我只读，`frontend/src/features/studio/*` 整片没动）；`restore` 在 backend/app/main.py:3255 说的是「reload 把草稿带回来」。所以门的英文动词取零占用的 `undelete`，屏的词取「找回」，审计动作 `journey.undeleted`。
+「中英两档成对」这条：本件没落任何 i18n 键，两枚拒绝复用的就是现成的 message_key（`resource.not_found`、`request.conflict`），具体条件写在 `error.reason_code` 里。因此 frontend/src/i18n/LocaleContext.tsx 一个字节都没改，不存在只写中文的可能；等屏幕那单真落键时，成对的是「找回」↔ 这扇门的键，不是「恢复」。
+自己的一次仪器错也写进件：第一版盘点用了不带 `-I` 的 `grep -rni`，那时套件已经导入过 app，每个 `__pycache__/*.pyc` 都报一行 Binary file matches，把 `restore` 报成 140。那个数作废，错的过程记在 VOCABULARY_AUDIT_R1.txt:23。
+
+## 4 · 要件③：反例，以及 Idempotency 我用了哪条形
+
+- 找回一枚从未进过桶的行程：http_status=409，`error.code=CONFLICT`、`error.reason_code=JOURNEY_NOT_DELETED`，五张内容表计数字典与操作前相等，且这一趟的 `journey.undeleted` 审计行数=0（被拒的那一发不算事件，不能留痕）。逐字读数在 review/ord0399-readouts/OWN_TESTS_R1.txt:3
+- 不存在的 id：http_status=404，`reason_code=JOURNEY_NOT_FOUND`，与切片 1 同名复用（现尖的 main.py 里 `undelete` 命中=0，这两枚名字都不是本件新造的顶层码）。读数在 OWN_TESTS_R1.txt:4
+- 成功之后再点一次：走的就是上面那枚 409，而且行程仍留在列表里——被拒的第二发撤销不了第一发的找回
+- `Idempotency-Key`：这扇门不收这个头，形状与切片 1 的 DELETE 一致——写不写由持久态 `deleted_at` 决定，重发那一发撞在 `JOURNEY_NOT_DELETED` 上，所以「同一件事不重复生效」由状态保证而不是由键账本保证。收头的那两扇（plan claim、replan.accept）重放的是**一次计算**，需求不同。这一条按要件要求写清楚，不是漏做。
+- 顶层码没有新增：G6 那道词表尺（backend/tests/test_qoder_ord0272_continuation.py:350）在本件同跑里绿，见 OWN_TESTS_R1.txt:21
+
+## 5 · 套件（先 collect 再真跑，只用 CityNexus/.venv 的 3.12.14，Python_version=3.12.14）
+
+rebase 之后重跑了一遍，四个数都在下面这组；rebase 前那组（对 dc88df93a35e16dcee824168110d2cf48a592f20 量的）也留在件里，没有抹掉。
+- collect-only：collected=1426 / collect_exit=0，见 review/ord0399-readouts/GATES_AFTER_REBASE_R2.txt:1；rebase 前同值同退码，见 review/ord0399-readouts/COLLECT_ONLY_R1.txt:1438 与 :1439
+- 四件门同跑（本刀 7 格 + 切片 1 的 7 格 + test_contract 4 格 + G6 那格）：passed=19 / gates_exit=0，见 GATES_AFTER_REBASE_R2.txt:3，逐条读数在 review/ord0399-readouts/OWN_TESTS_R1.txt:1
+- 整套在候选（rebase 后）上：failed=9 / passed=1401 / skipped=15 / xfailed=1，用时 135.19s，见 review/ord0399-readouts/SUITE_CANDIDATE_R2.txt:346
+- 整套在**不含本刀的现尖** e7286dfd47db2dd9a1420867dd534b906b2d032a 上（私有对照树 D:/moodle/_qoder_lane_ord0383_slice1_base，同一条命令、串行不重叠）：failed=8 / passed=1395 / skipped=15 / xfailed=1，见 review/ord0399-readouts/SUITE_TIP_E7286_R1.txt:312
+- 红名并排：只在现尖上的 = 0 行；两边共有 8 枚；只在我这棵上多出 1 枚，就是 review/ord0399-readouts/ROUND2_REBASE_R1.txt:14 那行 `test_qoder_ord197_four_class_receipt.py::test_r4_a_failed_source_is_named_retryable_and_never_becomes_no_match`。把整个 ord197 模块单独跑，两棵树都是 passed=6 / xfailed=1（review/ord0399-readouts/ORD197_ISOLATION_R2.txt:4 与 :6），所以它是整跑时的模块间耦合，不归本刀、我也不替它宣布修好。
+- 这条与其它几枚（切片 1 记过的 g3_xproc、guardian_projection）在我现在累计五次整套、三枚不同现尖上各自至少翻转过一次；点名 flake 的那张单是 ORD-0396，不归我关，我只把翻与不翻的读数交出来。
+- 一处 ORD-0395 类的缺陷，我量在自己门上而不是只转述别人那扇：进程自生成的 spec 给 `undelete` 的码是 generated=["200","422"]，手维护契约给 hand=["200","404","409"]，原因是 `grep -c "responses=" backend/app/main.py = 0`，FastAPI 不知道我会回 404/409。我没有为它发明全仓第一处 `responses=` 声明（那是 ORD-0395 要选的机制，我撞它会打架），只把这个读数交出来；切片 1 的 DELETE 同形。
+
+## 6 · 没验的，为什么没验
+
+- 并发：两发同时打 undelete，本单没有租约也没有锁，两发都会看到非 NULL 而都写。要测它得先有另一枚具名门，我没顺手做。
+- 回收站列表（桶里有什么）、保留上限、彻底删除：切片 3，一律没碰；`GET /api/v1/journeys` 的语义仍是「未删的那些」。
+- 屏幕入口、以及「删日期 / 删行程」两个动词分账：切片 3。
+- 手机链与共享预览那一侧：不验，也不该由我验。但这一轮量到一个必须报的事实——**现存共享预览库还没有 `deleted_at` 这一列**（`[source] journeys_has_deleted_at_column=False`，PREVIEW_COPY_READINGS_R1.txt:8），因为 `:8693` 那台仍跑 1f8d7061 的树。等它换到含切片 1 的代，第一个导入 backend/app/main.py:454 那句 `ensure_schema()` 的进程就会补上。这一步归号令者：我没有对源库动 ALTER，没有重启别人的进程，源库全程 `mode=ro`。
+- operator 手工件那条路（0355 有 backend/db/apply_ord0355_stay_budget_declared.py 那种 dry-run/--apply 两相的）：本件沿用切片 1 的判断没有新增，要补我就另开一笔。
+- 非 UUID 的 journey_id（FastAPI 自身的 422 信封）：仍没测。
+- `demo/reset` 与本门的交互：没测也不测（边界写着不跑它，本件全程一次都没敲）。
+
+## 7 · 现场
+
+本刀工作树 D:/moodle/_qoder_lane_ord0399_restore（已推 refs/heads/review/ORD-0399-journey-undelete-r2 = c19db17b2a2ce9964ebb568d020094c3b1f4c08c）；对照树 D:/moodle/_qoder_lane_ord0383_slice1_base（现检出 e7286dfd47db2dd9a1420867dd534b906b2d032a，产品文件 0 改动，只多三份套件日志）；切片 1 的 D:/moodle/_qoder_lane_ord0383_slice1。远端一共四枚我的 ref，没有一枚被覆盖：c57bd95bf42c01dc84ed207d797a7fa75dda80aa、4f071643664c25b554c51b19ae08609b0d99c317、6fdaafef752e82d51b63fc9739ed502ed3fadd5a、c19db17b2a2ce9964ebb568d020094c3b1f4c08c。D 盘现读余 22G。要清临时树或删掉 rebase 前那枚旧候选 ref，请点名，我不自作主张删任何东西。
+
+一句读法上的坦白：第 2、4 节里那几行带 uuid 的逐字读数（OWN_TESTS_R1.txt:1 到 :4）是在 rebase 之前那笔提交上打的；rebase 之后我在交付树上重跑了同四件门，结果是 passed=19 / gates_exit=0（GATES_AFTER_REBASE_R2.txt:3），而且本刀五张文件在 9 笔外来提交里命中=0、门的两行行号一格没动，所以那批数字量的就是交付树上的同一段码。我没有把它们当成"交付树上现打"来写。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### CMDR 2026-09-28 18:26 · 号令者 · ORD-0392 已落地并完成换代；两条我亲测出来的数与一张新单 ORD-0401
 
 **落线与换代**：现尖 `e7286dfd47db2dd9a1420867dd534b906b2d032a`（车道 Q 的注册表 recut，逐文件比对 16 个合入文件与候选字节全等，件 `refs/heads/review/Q-ord0392-panel-registry-r2` 头 `dec70f25c0c16fbe124b862539f9116025457f3c`）。换代在 18:15 执行完：并集阶段新增资源 0 个、4 个逐字节已在位，切换前门 `READY_TO_SWITCH`，装入根文件 5 个（index.html / manifest.webmanifest / sw.js / v10-sw.js / workbox-6923124b.js），整份读数在件 blob `0fc98582965469716fcab6e643d0d1ed08aa56cf`（路径 `evidence/cmdr-1825/deploy_receipt_e7286dfd.json`）。
