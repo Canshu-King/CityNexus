@@ -253,6 +253,43 @@ export function withCachedCopyFact(attribution: Attribution, hasCachedCopy: bool
   };
 }
 
+/** What this device did not measure. Not `0`, not an empty cell, not a prose "unknown":
+    a reader has to be able to tell "no reading exists" from "the reading is zero". */
+export const NOT_MEASURED = "NOT_MEASURED";
+
+/* The exposure whitelist, spelled exactly as the contract spells it. Nothing outside this
+   list may be produced here -- a new field reaching a "technical details" surface is a
+   exposure-gate question, not a convenience. */
+export type ReadoutField =
+  | "http_status"
+  | "content_type"
+  | "body_bytes"
+  | "response_received"
+  | "elapsed_ms"
+  | "request_id";
+
+const READOUT_ORDER: ReadoutField[] = [
+  "http_status", "content_type", "body_bytes", "response_received", "elapsed_ms", "request_id",
+];
+
+/**
+ * The one place this family of numbers is spelled out. Call sites name which of their own
+ * readings they hold (`only`) and pass the measured values; they never write the
+ * `key=value` text themselves, so the key names, the rounding and the not-measured word
+ * cannot drift screen by screen.
+ */
+export function deviceReadout(
+  fields: Partial<Record<ReadoutField, string | number | boolean | null | undefined>>,
+  only?: ReadoutField[],
+): string {
+  return (only ?? READOUT_ORDER).map((field) => {
+    const value = fields[field];
+    if (value === null || value === undefined || value === "") return `${field}=${NOT_MEASURED}`;
+    const shown = typeof value === "number" ? Math.round(value) : value;
+    return `${field}=${shown}`;
+  }).join(" ");
+}
+
 /**
  * Telemetry sink.  R14 §8: the record must say what the classifier decided and on what evidence, so
  * a false cause is discoverable in production rather than only in a screenshot.  There is no
