@@ -1,0 +1,612 @@
+{
+ "case": "all_branch_states",
+ "route": "authoritative",
+ "journey": "22222222-2222-4222-8222-222222222222",
+ "ui": "http://127.0.0.1:4314",
+ "arms": [
+  {
+   "locale": "zh-CN",
+   "path": "/v8/authoritative",
+   "locale_read": "zh-CN",
+   "bottom_reached": true,
+   "leaf_count": 81,
+   "rows": [
+    {
+     "row": "Confirmed by traveler",
+     "key": "twin.confirmedByTraveler",
+     "keys": [
+      "twin.confirmedByTraveler"
+     ],
+     "interpolated": false,
+     "en_leaf": null,
+     "zh_leaf": false,
+     "en_texts": [
+      "Confirmed by traveler"
+     ],
+     "zh_texts": [
+      "已由旅行者确认"
+     ]
+    },
+    {
+     "row": "Stated; confirmation needed",
+     "key": "twin.statedNeedsConfirm",
+     "keys": [
+      "twin.statedNeedsConfirm"
+     ],
+     "interpolated": false,
+     "en_leaf": null,
+     "zh_leaf": false,
+     "en_texts": [
+      "Stated; confirmation needed"
+     ],
+     "zh_texts": [
+      "已声明，尚待确认"
+     ]
+    },
+    {
+     "row": "No explicit preferences",
+     "key": "twin.noExplicitPrefs",
+     "keys": [
+      "twin.noExplicitPrefs"
+     ],
+     "interpolated": false,
+     "en_leaf": null,
+     "zh_leaf": false,
+     "en_texts": [
+      "No explicit preferences"
+     ],
+     "zh_texts": [
+      "没有明确偏好"
+     ]
+    },
+    {
+     "row": "hard need(s) remain explicit and are never learned.",
+     "key": "twin.hardNeedsRemain",
+     "keys": [
+      "twin.hardNeedsRemain"
+     ],
+     "interpolated": true,
+     "en_leaf": null,
+     "zh_leaf": false,
+     "en_texts": [
+      "{n} hard need(s) remain explicit and are never learned."
+     ],
+     "zh_texts": [
+      "{n} 项硬性需求仍按明确声明保留，不会被习得。"
+     ]
+    },
+    {
+     "row": "policy unavailable · confirmation required",
+     "key": "v14.policyUnavailable",
+     "keys": [
+      "v14.policyUnavailable"
+     ],
+     "interpolated": false,
+     "en_leaf": null,
+     "zh_leaf": false,
+     "en_texts": [
+      "policy unavailable · confirmation required"
+     ],
+     "zh_texts": [
+      "策略不可读 · 需要你确认"
+     ]
+    },
+    {
+     "row": "CHANGED",
+     "key": "v14.kickerChanged",
+     "keys": [
+      "v14.kickerChanged"
+     ],
+     "interpolated": false,
+     "en_leaf": null,
+     "zh_leaf": true,
+     "en_texts": [
+      "CHANGED"
+     ],
+     "zh_texts": [
+      "已变化"
+     ]
+    },
+    {
+     "row": "PROTECTED",
+     "key": "v14.kickerProtected",
+     "keys": [
+      "v14.kickerProtected"
+     ],
+     "interpolated": false,
+     "en_leaf": null,
+     "zh_leaf": true,
+     "en_texts": [
+      "PROTECTED"
+     ],
+     "zh_texts": [
+      "受保护"
+     ]
+    },
+    {
+     "row": "Baseline evidence",
+     "key": "v14.baselineEvidence",
+     "keys": [
+      "v14.baselineEvidence"
+     ],
+     "interpolated": false,
+     "en_leaf": null,
+     "zh_leaf": true,
+     "en_texts": [
+      "Baseline evidence"
+     ],
+     "zh_texts": [
+      "基线证据"
+     ]
+    },
+    {
+     "row": "Incident evidence",
+     "key": "v14.incidentEvidence",
+     "keys": [
+      "v14.incidentEvidence"
+     ],
+     "interpolated": false,
+     "en_leaf": null,
+     "zh_leaf": true,
+     "en_texts": [
+      "Incident evidence"
+     ],
+     "zh_texts": [
+      "事发证据"
+     ]
+    },
+    {
+     "row": "Deterministic gate",
+     "key": "discovery.detGate,v14.deterministicGate",
+     "keys": [
+      "discovery.detGate",
+      "v14.deterministicGate"
+     ],
+     "interpolated": false,
+     "en_leaf": null,
+     "zh_leaf": true,
+     "en_texts": [
+      "Deterministic gate",
+      "Deterministic gate"
+     ],
+     "zh_texts": [
+      "确定性门控",
+      "确定性闸门"
+     ]
+    },
+    {
+     "row": "Delegation policy",
+     "key": "v14.delegationPolicy",
+     "keys": [
+      "v14.delegationPolicy"
+     ],
+     "interpolated": false,
+     "en_leaf": null,
+     "zh_leaf": true,
+     "en_texts": [
+      "Delegation policy"
+     ],
+     "zh_texts": [
+      "授权策略"
+     ]
+    }
+   ],
+   "leaves": [
+    "菜单",
+    "/",
+    "恢复与执行",
+    "跟随系统",
+    "EN",
+    "DE",
+    "V12 · 方案、移动端、Edge 与画像",
+    "权威行程执行。",
+    "你选定的方案是今天、地图、离线使用和所有建议变更的唯一事实来源。",
+    "刷新真相",
+    "这趟行程的方案版本",
+    "服务器上还留着的每一份版本，按写入先后排。这一屏只读。",
+    "共列出 2 份版本",
+    "这台服务器没有设保留上限：目前这趟共有 2 份版本，这里全部列出。写新版本不会丢掉旧的。",
+    "版本 1",
+    "首次生成",
+    "9月28日 04:41",
+    "没有父版本",
+    "行程正在跑这一份",
+    "版本 2",
+    "来自一次重规划",
+    "9月29日 11:40",
+    "源自版本 1",
+    "这里故意不做还原。回到旧版本会替换你正在执行的方案，所以它不是一张列表上的一下点击。",
+    "zh",
+    "权威行程",
+    "从方案到边缘的单一真相",
+    "Tech Art Center",
+    "活跃",
+    "✦",
+    "CityNexus Copilot",
+    "今天",
+    "行程",
+    "地图",
+    "Copilot",
+    "我的",
+    "Nexus River Cruise Pier",
+    "计划中",
+    "15:30",
+    "Old Town Gate",
+    "已完成",
+    "Riverside Museum",
+    "Central Food Hall",
+    "4",
+    "5",
+    "6",
+    "Skyline Dinner House",
+    "服务端执行真相 · 可审计",
+    "标记 出发中",
+    "行程工作台 · 起草后接受",
+    "调整权威行程",
+    "在相同的冻结出行矩阵上重排普通活动。受保护锚点保持不动。",
+    "6 个活动",
+    "1 个受保护锚点",
+    "无草稿变更",
+    "•",
+    "○",
+    "按住一项活动，拖到新的位置，就是一次草稿改动。",
+    "预览无状态；接受将重新检查活跃方案和证据",
+    "方案版本 1 · 首次生成",
+    "预览影响",
+    "接受编辑",
+    "V14 · 现实变了",
+    "有据可依的自适应恢复",
+    "重新读取恢复方案",
+    "已变化",
+    "09:30 Harbour Market walk",
+    "→ 11:10 Riverside Museum slot",
+    "受保护",
+    "C4 承诺未被改动",
+    "−CN¥12.00 · 路线时长变化 8 分钟",
+    "基线证据",
+    "snap-baseline-01",
+    "事发证据",
+    "citynexus-mobility · frozen_matrix",
+    "确定性闸门",
+    "已通过 · 提供方事实已冻结",
+    "授权策略",
+    "只给建议 · 需要你确认",
+    "a simulated delay moved the morning slot",
+    "接受这次有据可依的恢复"
+   ],
+   "cjk_leaves": [
+    "菜单",
+    "恢复与执行",
+    "跟随系统",
+    "V12 · 方案、移动端、Edge 与画像",
+    "权威行程执行。",
+    "你选定的方案是今天、地图、离线使用和所有建议变更的唯一事实来源。",
+    "刷新真相",
+    "这趟行程的方案版本",
+    "服务器上还留着的每一份版本，按写入先后排。这一屏只读。",
+    "共列出 2 份版本",
+    "这台服务器没有设保留上限：目前这趟共有 2 份版本，这里全部列出。写新版本不会丢掉旧的。",
+    "版本 1",
+    "首次生成",
+    "9月28日 04:41",
+    "没有父版本",
+    "行程正在跑这一份",
+    "版本 2",
+    "来自一次重规划",
+    "9月29日 11:40",
+    "源自版本 1",
+    "这里故意不做还原。回到旧版本会替换你正在执行的方案，所以它不是一张列表上的一下点击。",
+    "权威行程",
+    "从方案到边缘的单一真相",
+    "活跃",
+    "今天",
+    "行程",
+    "地图",
+    "我的",
+    "计划中",
+    "已完成",
+    "服务端执行真相 · 可审计",
+    "标记 出发中",
+    "行程工作台 · 起草后接受",
+    "调整权威行程",
+    "在相同的冻结出行矩阵上重排普通活动。受保护锚点保持不动。",
+    "6 个活动",
+    "1 个受保护锚点",
+    "无草稿变更",
+    "按住一项活动，拖到新的位置，就是一次草稿改动。",
+    "预览无状态；接受将重新检查活跃方案和证据",
+    "方案版本 1 · 首次生成",
+    "预览影响",
+    "接受编辑",
+    "V14 · 现实变了",
+    "有据可依的自适应恢复",
+    "重新读取恢复方案",
+    "已变化",
+    "受保护",
+    "C4 承诺未被改动",
+    "−CN¥12.00 · 路线时长变化 8 分钟",
+    "基线证据",
+    "事发证据",
+    "确定性闸门",
+    "已通过 · 提供方事实已冻结",
+    "授权策略",
+    "只给建议 · 需要你确认",
+    "接受这次有据可依的恢复"
+   ]
+  },
+  {
+   "locale": "en",
+   "path": "/v8/authoritative",
+   "locale_read": "en",
+   "bottom_reached": true,
+   "leaf_count": 81,
+   "rows": [
+    {
+     "row": "Confirmed by traveler",
+     "key": "twin.confirmedByTraveler",
+     "keys": [
+      "twin.confirmedByTraveler"
+     ],
+     "interpolated": false,
+     "en_leaf": false,
+     "zh_leaf": null,
+     "en_texts": [
+      "Confirmed by traveler"
+     ],
+     "zh_texts": [
+      "已由旅行者确认"
+     ]
+    },
+    {
+     "row": "Stated; confirmation needed",
+     "key": "twin.statedNeedsConfirm",
+     "keys": [
+      "twin.statedNeedsConfirm"
+     ],
+     "interpolated": false,
+     "en_leaf": false,
+     "zh_leaf": null,
+     "en_texts": [
+      "Stated; confirmation needed"
+     ],
+     "zh_texts": [
+      "已声明，尚待确认"
+     ]
+    },
+    {
+     "row": "No explicit preferences",
+     "key": "twin.noExplicitPrefs",
+     "keys": [
+      "twin.noExplicitPrefs"
+     ],
+     "interpolated": false,
+     "en_leaf": false,
+     "zh_leaf": null,
+     "en_texts": [
+      "No explicit preferences"
+     ],
+     "zh_texts": [
+      "没有明确偏好"
+     ]
+    },
+    {
+     "row": "hard need(s) remain explicit and are never learned.",
+     "key": "twin.hardNeedsRemain",
+     "keys": [
+      "twin.hardNeedsRemain"
+     ],
+     "interpolated": true,
+     "en_leaf": false,
+     "zh_leaf": null,
+     "en_texts": [
+      "{n} hard need(s) remain explicit and are never learned."
+     ],
+     "zh_texts": [
+      "{n} 项硬性需求仍按明确声明保留，不会被习得。"
+     ]
+    },
+    {
+     "row": "policy unavailable · confirmation required",
+     "key": "v14.policyUnavailable",
+     "keys": [
+      "v14.policyUnavailable"
+     ],
+     "interpolated": false,
+     "en_leaf": false,
+     "zh_leaf": null,
+     "en_texts": [
+      "policy unavailable · confirmation required"
+     ],
+     "zh_texts": [
+      "策略不可读 · 需要你确认"
+     ]
+    },
+    {
+     "row": "CHANGED",
+     "key": "v14.kickerChanged",
+     "keys": [
+      "v14.kickerChanged"
+     ],
+     "interpolated": false,
+     "en_leaf": true,
+     "zh_leaf": null,
+     "en_texts": [
+      "CHANGED"
+     ],
+     "zh_texts": [
+      "已变化"
+     ]
+    },
+    {
+     "row": "PROTECTED",
+     "key": "v14.kickerProtected",
+     "keys": [
+      "v14.kickerProtected"
+     ],
+     "interpolated": false,
+     "en_leaf": true,
+     "zh_leaf": null,
+     "en_texts": [
+      "PROTECTED"
+     ],
+     "zh_texts": [
+      "受保护"
+     ]
+    },
+    {
+     "row": "Baseline evidence",
+     "key": "v14.baselineEvidence",
+     "keys": [
+      "v14.baselineEvidence"
+     ],
+     "interpolated": false,
+     "en_leaf": true,
+     "zh_leaf": null,
+     "en_texts": [
+      "Baseline evidence"
+     ],
+     "zh_texts": [
+      "基线证据"
+     ]
+    },
+    {
+     "row": "Incident evidence",
+     "key": "v14.incidentEvidence",
+     "keys": [
+      "v14.incidentEvidence"
+     ],
+     "interpolated": false,
+     "en_leaf": true,
+     "zh_leaf": null,
+     "en_texts": [
+      "Incident evidence"
+     ],
+     "zh_texts": [
+      "事发证据"
+     ]
+    },
+    {
+     "row": "Deterministic gate",
+     "key": "discovery.detGate,v14.deterministicGate",
+     "keys": [
+      "discovery.detGate",
+      "v14.deterministicGate"
+     ],
+     "interpolated": false,
+     "en_leaf": true,
+     "zh_leaf": null,
+     "en_texts": [
+      "Deterministic gate",
+      "Deterministic gate"
+     ],
+     "zh_texts": [
+      "确定性门控",
+      "确定性闸门"
+     ]
+    },
+    {
+     "row": "Delegation policy",
+     "key": "v14.delegationPolicy",
+     "keys": [
+      "v14.delegationPolicy"
+     ],
+     "interpolated": false,
+     "en_leaf": true,
+     "zh_leaf": null,
+     "en_texts": [
+      "Delegation policy"
+     ],
+     "zh_texts": [
+      "授权策略"
+     ]
+    }
+   ],
+   "leaves": [
+    "Menu",
+    "/",
+    "Recovery",
+    "System",
+    "中文",
+    "DE",
+    "V12 · plan, mobile, Edge, and twin",
+    "Authoritative trip execution.",
+    "Your chosen plan is the single source of truth for today, the map, offline use, and every change we suggest.",
+    "Refresh truth",
+    "Plan versions on this trip",
+    "Every version the server still holds, newest last. This list is read-only.",
+    "2 versions listed",
+    "No retention limit is applied: this trip currently holds 2 versions and all of them are listed here. Nothing is dropped as newer versions are written.",
+    "Version 1",
+    "first generation",
+    "28 Sept, 04:41",
+    "no parent version",
+    "the trip runs this one",
+    "Version 2",
+    "from a replan",
+    "29 Sept, 11:40",
+    "from version 1",
+    "There is no revert here on purpose. Going back to an older version would replace the plan you are travelling on, so it is not offered as a tap on a list.",
+    "en",
+    "AUTHORITATIVE JOURNEY",
+    "One truth from plan to edge",
+    "✦",
+    "CityNexus Copilot",
+    "Today",
+    "Trips",
+    "Map",
+    "Copilot",
+    "Me",
+    "Tech Art Center",
+    "ACTIVE",
+    "Nexus River Cruise Pier",
+    "Planned",
+    "15:30",
+    "Old Town Gate",
+    "COMPLETED",
+    "Riverside Museum",
+    "Central Food Hall",
+    "4",
+    "5",
+    "6",
+    "Skyline Dinner House",
+    "Server execution truth · auditable",
+    "Mark EN ROUTE",
+    "TRIP STUDIO · DRAFT THEN ACCEPT",
+    "Adjust the authoritative journey",
+    "Reorder ordinary activities against the same frozen mobility matrix. Protected anchors stay in place.",
+    "6 activities",
+    "1 protected anchors",
+    "No draft changes",
+    "•",
+    "○",
+    "Hold an activity and drag it to a new position to draft a change.",
+    "Preview is stateless; accept rechecks the live plan and evidence",
+    "Plan version 1 · First generation",
+    "Preview impact",
+    "Accept edit",
+    "V14 · REALITY CHANGED",
+    "Grounded adaptive recovery",
+    "Refresh recovery",
+    "CHANGED",
+    "09:30 Harbour Market walk",
+    "→ 11:10 Riverside Museum slot",
+    "PROTECTED",
+    "C4 commitments preserved",
+    "−CN¥12.00 · 8 min route delta",
+    "Baseline evidence",
+    "snap-baseline-01",
+    "Incident evidence",
+    "citynexus-mobility · frozen_matrix",
+    "Deterministic gate",
+    "PASSED · provider facts frozen",
+    "Delegation policy",
+    "ADVISORY · confirmation required",
+    "a simulated delay moved the morning slot",
+    "Accept grounded recovery"
+   ],
+   "cjk_leaves": [
+    "中文"
+   ]
+  }
+ ]
+}
