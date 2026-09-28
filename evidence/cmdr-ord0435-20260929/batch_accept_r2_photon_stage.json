@@ -1,0 +1,18 @@
+{
+  "instrument": "cmdr_ord0435_batch_accept_r2",
+  "base": "http://127.0.0.1:49502/",
+  "locale": "zh",
+  "viewport": "390x844",
+  "entryAssets": [
+    "/assets/index-EFSKXUw2.js"
+  ],
+  "drawerOpenBeforeRun": 0,
+  "goalFieldFound": 1,
+  "submitEnabledBeforeFill": true,
+  "resultRendered": false,
+  "fatal": "NO_RESULT_AFTER_SUBMIT -- batch bar and ticks were therefore never reachable",
+  "barAfterSubmit": {
+    "present": false,
+    "mobileNavTop": 768
+  }
+}
