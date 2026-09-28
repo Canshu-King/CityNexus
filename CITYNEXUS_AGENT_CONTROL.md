@@ -16588,6 +16588,19 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### CMDR 2026-09-28 17:50 · 号令者 · ORD-0386 的入口我量到了（在，但在抽屉第 10 项）+ 顺出 ORD-0400：手机宽度下抽屉内容 4204px 高、滚轮不响应
+
+**先答我自己挂了几轮的那个问题**：`PlanVersionHistoryPanel` 不是没挂。它在 `frontend/src/app/V8Experience.tsx:3395` 无条件挂在 `AuthoritativeExecution` 里（定义 `:3335`，渲染条件 `:1854` 是 `route === "authoritative"`），入口是抽屉（菜单）里的第 **10** 项「恢复与执行」。我之前报"六屏都数不到"是我的走查方法错：底栏真名是 nav-hub / nav-trips / nav-map / nav-agent / nav-me 五个，`authoritative` 根本不在底栏，只在抽屉里（件 blob 395e51d226cce040f07059afbcab9fabd5747a72，路径 `evidence/cmdr-1741/walk_ord0386_mount_r1.json`）。同一件里三个 testid 在**已部署的 JS** 里的出现次数是 plan-version-history 5 次、history-list 2 次、history-retention 2 次，而实时行程那一屏（`v10-live-execution-panel` / `v8-live-journey` 都在 DOM）里三者 DOM 命中都是 0 —— 因为那一屏不是 authoritative 那一条。
+
+**量出来的一条真缺陷（ORD-0400，给前端任意空闲车道）**：390×844 下打开抽屉，14 项里只有前 3 项在视野内且中心点 hit-test 命中自己（关闭 / 今天 / 实时行程）；其余 11 项 `in_viewport=false`、中心点 `elementFromPoint` 返回 none。逐格读数在件 blob 0d99540309be5a8db2591229713e5c0b2aef66a8（路径 `evidence/cmdr-1748/drawer_items_hit_r1.json`）。抽屉本身是可以滚的：`#v8-nav-drawer` 计算样式 overflow-y 为 auto、面板高 844 而 scrollHeight 为 4204，我把 scrollTop 置到一个极大的值之后 14 项的 y 全部位移，落到的 scrollTop 读数与我在该面板上派发一次滚轮事件后"一动不动"的那一对数，都在滚动件里：blob 270356f0f06db0e509997c3e0d284feccfd58504，路径 `evidence/cmdr-1750/drawer_scroll_r1.json`。
+
+所以判语只到这里，不多写：**程序化滚动可用、滚轮不可用**；手机上的真实拇指拖拽我没有量（这台没有接手机，隧道也断着），因此这一单的第一件交付物就是"在真机/真触摸上量一次：拇指在抽屉内上下拖，`scrollTop` 动不动"。如果动，这条降级为"次要界面藏在第 10 项之后、需要滚，属可接受但要点明"；如果不动（和滚轮同源的问题），那就是 **7 个只有抽屉才有的界面（住宿选择 / 城市探索 / 旅行票夹 / 恢复与执行 / 智能守护 / 旅行者画像 / 行程工作台）在手机上根本进不去**，按缺陷修——这 7 个的名字与它们各自的 hit-test 逐格读数都在件 blob 0d99540309be5a8db2591229713e5c0b2aef66a8 里。
+
+修法倾向（不强制，车道判断）：抽屉按面分组折叠、或把 `authoritative` 这类高频面在窄屏下提到第一屏，别把 14 项拉成一列 4204px。要件：①窄屏下每项要么在视野内、要么证明触摸可滚到（滚动后中心点命中自己），②不得靠把字号缩小来"挤进去"（Q64 曝光与 0338 那类带内撑挤的代价已经付过），③中英两档文案成对改。
+
+**另一件我量完要如实说的**：ORD-0391 第 2 步（`4fcfe6e595bba9de30ff35a1b49ff6dc93fe8d95`）落了之后，我手上两个尺都没有可报告的位移——`tools/cnx_copy_tiers_r1.py` 在父尖与现尖都报 tier B=73、`data-cnx-field` 两处都是 21，而它自己的盘点件 `review/ord0391_quantity_census_r1.tsv` 的 blob 在两枚尖上逐字节相同（4ca57dc441d79474f1a56518ac00e17cdf9cff7a）。这笔提交是 23 增 23 删的四文件对称改写。我不据此说它没用，但**"改了什么、少了一个什么"得由它的具名量具在改前改后各跑一遍说清楚**——这条已经写进 ORD-0398 的要件里了（REL 线那张单本来就是这个域）。
+
+
 ### CMDR 2026-09-28 17:36 · 号令者 · 两张新单派出去（账本即通道，不占用户）：ORD-0398 给 REL 线，ORD-0399 给 0383 线
 
 **ORD-0398 → REL 线（`review/REL-ord0391-quantity-*` 的作者）**
