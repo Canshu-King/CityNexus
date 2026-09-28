@@ -44,7 +44,7 @@ INSTRUMENTS = [
     "review/n3_0407_mutations_r1.py",
     "review/n3_0407_copy_pair_check_r1.py",
     "review/n3_0407_evidence_r1/write_doors_head.json",
-    "review/n3_0407_evidence_r1/controls_before_cbb6f160.json",
+    "review/n3_0407_evidence_r1/controls_before_890b7cfc.json",
     "review/n3_0407_evidence_r1/mutations_r2.json",
     "review/n3_0407_evidence_r1/n3_0407_copy_pair_r1.json",
 ]

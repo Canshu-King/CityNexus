@@ -502,7 +502,7 @@ test.describe("ORD-0407 empty states carry the door they name", () => {
   test("C6 the change costed nothing: no cell grew past one line, no reachable control was pushed out", async ({
     page,
   }) => {
-    const baselineFile = resolve(HERE, "..", "..", "review", "n3_0407_evidence_r1", "controls_before_cbb6f160.json");
+    const baselineFile = resolve(HERE, "..", "..", "review", "n3_0407_evidence_r1", "controls_before_890b7cfc.json");
     const baseline = JSON.parse(readFileSync(baselineFile, "utf-8"));
     const built = await createUnlocatableJourney(page);
     const deltas: Record<string, unknown> = {};
