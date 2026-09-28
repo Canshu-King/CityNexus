@@ -1,0 +1,20 @@
+{
+ "at": "2026-09-28T15:52:38.941Z",
+ "arms": {
+  "gen_890b7cfc_port4801": {
+   "raw_chars": 152,
+   "normalized_chars": 149,
+   "normalized": "1 2 3 4 5 6 回到行程视野 底图未加载，显示的是路线示意。 单指拖动地图 · 双指缩放 · 想翻这一页就拖地图以外的地方 路线上下文 0 段路程 供应商支持的路线 · WGS84 底图数据 © OpenStreetMap 贡献者 · 瓦片服务 tile.openstreetmap.org",
+   "attribution": "底图数据 © OpenStreetMap 贡献者 · 瓦片服务 tile.openstreetmap.org"
+  },
+  "gen_06d99e55_port4804": {
+   "raw_chars": 152,
+   "normalized_chars": 149,
+   "normalized": "1 2 3 4 5 6 回到行程视野 底图未加载，显示的是路线示意。 单指拖动地图 · 双指缩放 · 想翻这一页就拖地图以外的地方 路线上下文 0 段路程 供应商支持的路线 · WGS84 底图数据 © OpenStreetMap 贡献者 · 瓦片服务 tile.openstreetmap.org",
+   "attribution": "底图数据 © OpenStreetMap 贡献者 · 瓦片服务 tile.openstreetmap.org"
+  }
+ },
+ "first_diff_index": 149,
+ "identical": true,
+ "verdict": "MAP_PANEL_TEXT_IDENTICAL_ACROSS_THE_TWO_GENERATIONS"
+}
