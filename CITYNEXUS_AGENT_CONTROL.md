@@ -16588,6 +16588,18 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### CMDR 2026-09-28 20:00 · 号令者 · ORD-0403 落地（产物里 `interactive:!1` 已不存在），但那一屏我进不去；顺带把 hop1 旧树挡住的东西量出来了
+
+**落地**：现尖 `742eb2b3e610ab360101709aee57a4d70a83f593`（车道 `50da1de0…` recut，逐文件比字节 6 枚全等；门件 blob `9602689b86ea1a5c002b74aab81410036b73117c`，路径 `evidence/cmdr-landing-ORD-0403-r1/preflight_r1.json`）。产品新增 `MapViewportControls.tsx`、`lib/mapLabels.ts`、`map-controls.css`，改 `MapPanel.tsx` 与 `i18n/mapPanelCopy.ts`。
+**我在这代的产物上验的两格（不是读源码，是读 serving 的 bundle）**：`interactive:` 只出现一次且是 `interactive:!0`，`interactive:!1` 出现 0 次（逐条计数在件 blob `7148a690847a8510dcd26c552b2ea8b04a984ed0`，路径 `evidence/cmdr-verify-ORD-0403/bundle_scan_r1.txt`）⇒ **两态不是靠把地图关掉蒙过门禁的**；控件确实打进去了——`map-viewport-controls` 两次、`map-viewport-reset` 一次、`aria-pressed` 与 `data-viewport-state` 都在，`aria-label` 取 `onTarget/offTarget` 两档，文案是「回到行程视野」/ `Fit to my journey`。
+**但屏上进不去**：今天 / 实时行程 / 地图 / 行程工作台四屏我都真点进去看了，`canvas_present` 全 false、`map-viewport-controls` 全没挂载（件 blob `8fb9393e509127504e7eaf4daa8b9b7cd4e55f32`，路径 `evidence/cmdr-1958/map_control_mount_probe_r1.json`）。**同一把尺、同一时刻在两代上各跑一遍**：`e5a571f8`（ORD-0403 之前）与 `742eb2b3`（之后）都是 `canvas_present:false`、markers 0、面板正文停在「尚未获取地图位置 / 这个行程还没有可信的坐标」——**所以 ORD-0403 没有把地图弄没**，地图本来就没有（读侧不发坐标，就是 ORD-0394 切片 2 那件事；件 blob `c79d505ff8a5cec85ee92d2bb4b0366c0e64006b`，路径 `evidence/cmdr-1958/map_hub_AB_before_after_0403.json`）。
+**一处我自己读数打架，我不糊**：19:27 我在同一枚 build、同一个端口上做首屏几何时，`elementFromPoint(195, 700)` 返回 `DIV.v9-map-marker`、`(195, 760)` 返回 `CANVAS.maplibregl-canvas`（那格读数在件 blob `82ab24af98a925fa75ceb86d69a495cdb920ec44`，路径 `evidence/cmdr-1932/first_screen_e5a571f_r1.json`）；19:58 同端口同 build 却没有任何 canvas。两读数之间我没改数据面（监听 :8693 的还是同一枚 pid）。**我给不出成因**，所以两边都算已发布读数、谁也不覆盖谁，等 ORD-0394 切片 2 落地后我用同一把尺在真坐标上复跑一次定谁对。
+**hop1 旧树现在挡的是可枚举性**：我在 :8693 上 `GET /api/v1/journeys` 得 status 405 —— 不是路由坏了，是那棵树早于列表门（ORD-0383 切片 1 之后才有这扇门），请求落到了 `/journeys/{id}` 那条贪婪路径上。含义写明白：**手机链上的新壳现在连"有哪些行程"都问不出来**，回收站那屏（ORD-0402 切片 2）就算做出来也接不上 hop1。换 hop1 要动库列，我照旧等用户点头，不动它。
+
+**待收**：ORD-0394 切片 2（请 rebase 到 `742eb2b3…`，它同时是 ORD-0390 与 ORD-0403 的上屏前置）、ORD-0402 切片 2（回收站那一屏，控件与字典已有先例可抄）、ORD-0404（深链接）、ORD-0406（底栏内距）、ORD-0407（空态带动作，五格）。
+**没改善的部分**：① ORD-0403 的验收（点标记改卡片选中）我没能真做——没有标记可点；② 手机链仍停在 `e5a571f8` 那一代（ORD-0402 与 ORD-0403 之后我又落了两笔，这两笔都改前端，但我打算等 ORD-0394 那笔一起换，免得为一个进不去的面板刷代次）；③ hop4 整晚不可解析 ⇒ 今晚全部屏读 `NOT-DEPLOYED-OBSERVED`。
+
+
 ### CMDR 2026-09-28 19:50 · 号令者 · 空态普查有了分母，派 ORD-0407（空态带动作，先做五格）
 
 **我先把盘点了**（11 屏全走一遍，抽屉里逐条瞄准、`elementFromPoint` 判可命中后用真指针打在那一格中心；件 blob `84d11e058a1fafcc284ab76fb202e2d22ad986a1`，路径 `evidence/cmdr-1949/empty_state_census_r1.json`）：读得出空的节点共 18 处，其中 13 处**没有任何可点控件**；已带动作的 5 处是 `pretrip-empty`（去看这一代方案）、`hub-glance-empty`（AI 帮我规划）、studio 的「尚未选择住宿 → 选择住宿」、live 的执行面板（更新位置）、me 的推送格（启用 Web Push）。
