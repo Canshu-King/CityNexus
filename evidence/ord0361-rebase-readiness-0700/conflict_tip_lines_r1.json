@@ -1,0 +1,363 @@
+{
+ "commands": {
+  "form": "git merge-file -p --diff3 -L current -L base -L other <tip file> <merge-base file> <lane file>",
+  "current_argument": "the tip at f26e2ff78c047579a7d710d3a469be6bdf9a0540",
+  "base_argument": "merge base b6a8ea5c625d7e3e82f7348fad57d595a8a403c0",
+  "other_argument": "this lane at 11eee48da2b117a2c0aafb2d71c50b0104b7d1fb",
+  "note": "diff3 prints <current> first, so section one is the TIP side and section three the LANE side; both are re-checked by content below, never by that order alone"
+ },
+ "files": {
+  "frontend/src/app/V8Experience.tsx": {
+   "diff3": {
+    "merge_file_rc": 1,
+    "blocks": 1,
+    "tip_side_total": 29,
+    "tip_side_total_nonblank": 29,
+    "lane_side_total": 41,
+    "lane_side_total_nonblank": 41,
+    "per_block_tip_start_lines": [
+     3406
+    ],
+    "per_block_tip_lines": [
+     29
+    ],
+    "per_block_lane_lines": [
+     41
+    ],
+    "blocks_attributed_by_content": 1,
+    "blocks_attributable_by_content": 1,
+    "blocks_with_empty_tip_side": 0,
+    "block_detail": [
+     {
+      "tip_side_start_line": 3406,
+      "tip_side_lines": 29,
+      "tip_side_lines_nonblank": 29,
+      "lane_side_lines": 41,
+      "lane_side_lines_nonblank": 41,
+      "merge_base_lines_shown": 39,
+      "tip_section_lives_in_tip_blob": true,
+      "tip_section_lives_in_lane_blob": false,
+      "lane_section_lives_in_lane_blob": true,
+      "lane_section_lives_in_tip_blob": false,
+      "tip_section_is_empty": false
+     }
+    ]
+   },
+   "2way": {
+    "merge_file_rc": 1,
+    "blocks": 1,
+    "tip_side_total": 29,
+    "tip_side_total_nonblank": 29,
+    "lane_side_total": 41,
+    "lane_side_total_nonblank": 41,
+    "per_block_tip_start_lines": [
+     3406
+    ],
+    "per_block_tip_lines": [
+     29
+    ],
+    "per_block_lane_lines": [
+     41
+    ],
+    "blocks_attributed_by_content": 1,
+    "blocks_attributable_by_content": 1,
+    "blocks_with_empty_tip_side": 0,
+    "block_detail": [
+     {
+      "tip_side_start_line": 3406,
+      "tip_side_lines": 29,
+      "tip_side_lines_nonblank": 29,
+      "lane_side_lines": 41,
+      "lane_side_lines_nonblank": 41,
+      "merge_base_lines_shown": 0,
+      "tip_section_lives_in_tip_blob": true,
+      "tip_section_lives_in_lane_blob": false,
+      "lane_section_lives_in_lane_blob": true,
+      "lane_section_lives_in_tip_blob": false,
+      "tip_section_is_empty": false
+     }
+    ]
+   }
+  },
+  "frontend/src/components/v8/MapPanel.tsx": {
+   "diff3": {
+    "merge_file_rc": 8,
+    "blocks": 8,
+    "tip_side_total": 62,
+    "tip_side_total_nonblank": 61,
+    "lane_side_total": 78,
+    "lane_side_total_nonblank": 77,
+    "per_block_tip_start_lines": [
+     4,
+     52,
+     59,
+     61,
+     139,
+     360,
+     477,
+     574
+    ],
+    "per_block_tip_lines": [
+     1,
+     2,
+     6,
+     11,
+     2,
+     17,
+     22,
+     0
+    ],
+    "per_block_lane_lines": [
+     2,
+     2,
+     5,
+     6,
+     5,
+     25,
+     9,
+     23
+    ],
+    "blocks_attributed_by_content": 7,
+    "blocks_attributable_by_content": 7,
+    "blocks_with_empty_tip_side": 1,
+    "block_detail": [
+     {
+      "tip_side_start_line": 4,
+      "tip_side_lines": 1,
+      "tip_side_lines_nonblank": 1,
+      "lane_side_lines": 2,
+      "lane_side_lines_nonblank": 2,
+      "merge_base_lines_shown": 1,
+      "tip_section_lives_in_tip_blob": true,
+      "tip_section_lives_in_lane_blob": false,
+      "lane_section_lives_in_lane_blob": true,
+      "lane_section_lives_in_tip_blob": false,
+      "tip_section_is_empty": false
+     },
+     {
+      "tip_side_start_line": 52,
+      "tip_side_lines": 2,
+      "tip_side_lines_nonblank": 2,
+      "lane_side_lines": 2,
+      "lane_side_lines_nonblank": 2,
+      "merge_base_lines_shown": 0,
+      "tip_section_lives_in_tip_blob": true,
+      "tip_section_lives_in_lane_blob": false,
+      "lane_section_lives_in_lane_blob": true,
+      "lane_section_lives_in_tip_blob": false,
+      "tip_section_is_empty": false
+     },
+     {
+      "tip_side_start_line": 59,
+      "tip_side_lines": 6,
+      "tip_side_lines_nonblank": 6,
+      "lane_side_lines": 5,
+      "lane_side_lines_nonblank": 5,
+      "merge_base_lines_shown": 0,
+      "tip_section_lives_in_tip_blob": true,
+      "tip_section_lives_in_lane_blob": false,
+      "lane_section_lives_in_lane_blob": true,
+      "lane_section_lives_in_tip_blob": false,
+      "tip_section_is_empty": false
+     },
+     {
+      "tip_side_start_line": 61,
+      "tip_side_lines": 11,
+      "tip_side_lines_nonblank": 11,
+      "lane_side_lines": 6,
+      "lane_side_lines_nonblank": 6,
+      "merge_base_lines_shown": 0,
+      "tip_section_lives_in_tip_blob": true,
+      "tip_section_lives_in_lane_blob": false,
+      "lane_section_lives_in_lane_blob": true,
+      "lane_section_lives_in_tip_blob": false,
+      "tip_section_is_empty": false
+     },
+     {
+      "tip_side_start_line": 139,
+      "tip_side_lines": 2,
+      "tip_side_lines_nonblank": 2,
+      "lane_side_lines": 5,
+      "lane_side_lines_nonblank": 5,
+      "merge_base_lines_shown": 2,
+      "tip_section_lives_in_tip_blob": true,
+      "tip_section_lives_in_lane_blob": false,
+      "lane_section_lives_in_lane_blob": true,
+      "lane_section_lives_in_tip_blob": false,
+      "tip_section_is_empty": false
+     },
+     {
+      "tip_side_start_line": 360,
+      "tip_side_lines": 17,
+      "tip_side_lines_nonblank": 17,
+      "lane_side_lines": 25,
+      "lane_side_lines_nonblank": 25,
+      "merge_base_lines_shown": 0,
+      "tip_section_lives_in_tip_blob": true,
+      "tip_section_lives_in_lane_blob": false,
+      "lane_section_lives_in_lane_blob": true,
+      "lane_section_lives_in_tip_blob": false,
+      "tip_section_is_empty": false
+     },
+     {
+      "tip_side_start_line": 477,
+      "tip_side_lines": 23,
+      "tip_side_lines_nonblank": 22,
+      "lane_side_lines": 10,
+      "lane_side_lines_nonblank": 9,
+      "merge_base_lines_shown": 0,
+      "tip_section_lives_in_tip_blob": true,
+      "tip_section_lives_in_lane_blob": false,
+      "lane_section_lives_in_lane_blob": true,
+      "lane_section_lives_in_tip_blob": false,
+      "tip_section_is_empty": false
+     },
+     {
+      "tip_side_start_line": 574,
+      "tip_side_lines": 0,
+      "tip_side_lines_nonblank": 0,
+      "lane_side_lines": 23,
+      "lane_side_lines_nonblank": 23,
+      "merge_base_lines_shown": 5,
+      "tip_section_lives_in_tip_blob": true,
+      "tip_section_lives_in_lane_blob": true,
+      "lane_section_lives_in_lane_blob": true,
+      "lane_section_lives_in_tip_blob": false,
+      "tip_section_is_empty": true
+     }
+    ]
+   },
+   "2way": {
+    "merge_file_rc": 7,
+    "blocks": 7,
+    "tip_side_total": 62,
+    "tip_side_total_nonblank": 62,
+    "lane_side_total": 78,
+    "lane_side_total_nonblank": 78,
+    "per_block_tip_start_lines": [
+     4,
+     52,
+     60,
+     138,
+     359,
+     477,
+     574
+    ],
+    "per_block_tip_lines": [
+     1,
+     1,
+     19,
+     2,
+     17,
+     22,
+     0
+    ],
+    "per_block_lane_lines": [
+     2,
+     1,
+     13,
+     5,
+     25,
+     9,
+     23
+    ],
+    "blocks_attributed_by_content": 6,
+    "blocks_attributable_by_content": 6,
+    "blocks_with_empty_tip_side": 1,
+    "block_detail": [
+     {
+      "tip_side_start_line": 4,
+      "tip_side_lines": 1,
+      "tip_side_lines_nonblank": 1,
+      "lane_side_lines": 2,
+      "lane_side_lines_nonblank": 2,
+      "merge_base_lines_shown": 0,
+      "tip_section_lives_in_tip_blob": true,
+      "tip_section_lives_in_lane_blob": false,
+      "lane_section_lives_in_lane_blob": true,
+      "lane_section_lives_in_tip_blob": false,
+      "tip_section_is_empty": false
+     },
+     {
+      "tip_side_start_line": 52,
+      "tip_side_lines": 1,
+      "tip_side_lines_nonblank": 1,
+      "lane_side_lines": 1,
+      "lane_side_lines_nonblank": 1,
+      "merge_base_lines_shown": 0,
+      "tip_section_lives_in_tip_blob": true,
+      "tip_section_lives_in_lane_blob": false,
+      "lane_section_lives_in_lane_blob": true,
+      "lane_section_lives_in_tip_blob": false,
+      "tip_section_is_empty": false
+     },
+     {
+      "tip_side_start_line": 60,
+      "tip_side_lines": 19,
+      "tip_side_lines_nonblank": 19,
+      "lane_side_lines": 13,
+      "lane_side_lines_nonblank": 13,
+      "merge_base_lines_shown": 0,
+      "tip_section_lives_in_tip_blob": true,
+      "tip_section_lives_in_lane_blob": false,
+      "lane_section_lives_in_lane_blob": true,
+      "lane_section_lives_in_tip_blob": false,
+      "tip_section_is_empty": false
+     },
+     {
+      "tip_side_start_line": 138,
+      "tip_side_lines": 2,
+      "tip_side_lines_nonblank": 2,
+      "lane_side_lines": 5,
+      "lane_side_lines_nonblank": 5,
+      "merge_base_lines_shown": 0,
+      "tip_section_lives_in_tip_blob": true,
+      "tip_section_lives_in_lane_blob": false,
+      "lane_section_lives_in_lane_blob": true,
+      "lane_section_lives_in_tip_blob": false,
+      "tip_section_is_empty": false
+     },
+     {
+      "tip_side_start_line": 359,
+      "tip_side_lines": 17,
+      "tip_side_lines_nonblank": 17,
+      "lane_side_lines": 25,
+      "lane_side_lines_nonblank": 25,
+      "merge_base_lines_shown": 0,
+      "tip_section_lives_in_tip_blob": true,
+      "tip_section_lives_in_lane_blob": false,
+      "lane_section_lives_in_lane_blob": true,
+      "lane_section_lives_in_tip_blob": false,
+      "tip_section_is_empty": false
+     },
+     {
+      "tip_side_start_line": 477,
+      "tip_side_lines": 22,
+      "tip_side_lines_nonblank": 22,
+      "lane_side_lines": 9,
+      "lane_side_lines_nonblank": 9,
+      "merge_base_lines_shown": 0,
+      "tip_section_lives_in_tip_blob": true,
+      "tip_section_lives_in_lane_blob": false,
+      "lane_section_lives_in_lane_blob": true,
+      "lane_section_lives_in_tip_blob": false,
+      "tip_section_is_empty": false
+     },
+     {
+      "tip_side_start_line": 574,
+      "tip_side_lines": 0,
+      "tip_side_lines_nonblank": 0,
+      "lane_side_lines": 23,
+      "lane_side_lines_nonblank": 23,
+      "merge_base_lines_shown": 0,
+      "tip_section_lives_in_tip_blob": true,
+      "tip_section_lives_in_lane_blob": true,
+      "lane_section_lives_in_lane_blob": true,
+      "lane_section_lives_in_tip_blob": false,
+      "tip_section_is_empty": true
+     }
+    ]
+   }
+  }
+ }
+}
