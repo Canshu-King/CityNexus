@@ -1,0 +1,178 @@
+{
+ "schema": "CNX_CMDR_LANDING_PREFLIGHT_V1_R7",
+ "lane": "commander 494abfd7",
+ "at_local": "2026-09-29T03:15:59+0800",
+ "mode": "LAND",
+ "authoritative_line": "mirror/integration-frontend-apple-pass1",
+ "tip_re_read_from_github_before": "3b6c96e8a9f986672ddaa764f5f2ae69534ceff1",
+ "candidate_ref": "refs/heads/review/cmdr-recut-ord0417-r2",
+ "candidate_tip": "5d946bf84a29b57c3a4f4cd2f238dbb0fe0f7f90",
+ "genealogy": {
+  "ff_possible_rc": 0,
+  "ff_possible": true,
+  "merge_base": "3b6c96e8a9f986672ddaa764f5f2ae69534ceff1",
+  "line_only_commits": 0,
+  "candidate_only_commits": 3
+ },
+ "file_sets": {
+  "line_side_since_base": [],
+  "candidate_side_since_base": [
+   "review/ord0417/COPY_PAIR_LINE_R2.json",
+   "review/ord0417/DOOR_SELFCHECK_R5_R1.txt",
+   "review/ord0417/DOOR_SELFCHECK_R5_R2.txt",
+   "review/ord0417/GATE_ORD0417R18NEWBASE_TRIMMED.txt",
+   "review/ord0417/GATE_ORD0417R19NEWBASETIP_TRIMMED.txt",
+   "review/ord0417/GATE_ORD0417R20ONTHELINE_TRIMMED.txt",
+   "review/ord0417/GATE_R20_READINGS.json",
+   "review/ord0417/LSREMOTE_R4_R1.txt",
+   "review/ord0417/MAP_TAP_BASE_214809685_R1.json",
+   "review/ord0417/MAP_TAP_LINE_DCCD13AD_R1.json",
+   "review/ord0417/RUNBOOK_r2.md",
+   "review/ord0417/UNTRANSLATED_R3_MAP_BASE_R2.json",
+   "review/ord0417/UNTRANSLATED_R3_MAP_LINE_R2.json"
+  ],
+  "intersection": [],
+  "product_introduced_by_candidate": []
+ },
+ "merge_tree": {
+  "exit": 0,
+  "first_line": "e62a6b1d6159e1175334bb103a501ca19920a1dd",
+  "conflict_reported": false,
+  "stderr_head": ""
+ },
+ "gate_run": {
+  "requested": [],
+  "collect_exit": null,
+  "collected": null,
+  "test_exit": null,
+  "summary": null,
+  "export": "D:/moodle/_qoder_cmdr_ref_20260921/snap_preflight_031526",
+  "blob_equality": [
+   {
+    "path": "review/ord0417/COPY_PAIR_LINE_R2.json",
+    "candidate_blob": "2cf0f55363858f55877da08663b9f136a28422bd",
+    "export_blob": "2cf0f55363858f55877da08663b9f136a28422bd",
+    "equal": true
+   },
+   {
+    "path": "review/ord0417/DOOR_SELFCHECK_R5_R1.txt",
+    "candidate_blob": "14f2fb8922a9c7b259de4023afddce7470c0a603",
+    "export_blob": "14f2fb8922a9c7b259de4023afddce7470c0a603",
+    "equal": true
+   },
+   {
+    "path": "review/ord0417/DOOR_SELFCHECK_R5_R2.txt",
+    "candidate_blob": "8a693539aafad4ce7e6fa66c7ae3ba91408b67f1",
+    "export_blob": "8a693539aafad4ce7e6fa66c7ae3ba91408b67f1",
+    "equal": true
+   },
+   {
+    "path": "review/ord0417/GATE_ORD0417R18NEWBASE_TRIMMED.txt",
+    "candidate_blob": "87aebe89b7ee7575daf5e2f98fcb168f916e1ba7",
+    "export_blob": "87aebe89b7ee7575daf5e2f98fcb168f916e1ba7",
+    "equal": true
+   },
+   {
+    "path": "review/ord0417/GATE_ORD0417R19NEWBASETIP_TRIMMED.txt",
+    "candidate_blob": "5e09c5ae70fd7e7d2eeab75490499bb7dc657a8b",
+    "export_blob": "5e09c5ae70fd7e7d2eeab75490499bb7dc657a8b",
+    "equal": true
+   },
+   {
+    "path": "review/ord0417/GATE_ORD0417R20ONTHELINE_TRIMMED.txt",
+    "candidate_blob": "668b01180f0a6c2f59feb3bee9ba9908c4e04496",
+    "export_blob": "668b01180f0a6c2f59feb3bee9ba9908c4e04496",
+    "equal": true
+   },
+   {
+    "path": "review/ord0417/GATE_R20_READINGS.json",
+    "candidate_blob": "72a920f6e31bde2ea61e393a16bea1662dac93b7",
+    "export_blob": "72a920f6e31bde2ea61e393a16bea1662dac93b7",
+    "equal": true
+   },
+   {
+    "path": "review/ord0417/LSREMOTE_R4_R1.txt",
+    "candidate_blob": "4522a1bf28c722bd3ee9e50e47863360bb069339",
+    "export_blob": "4522a1bf28c722bd3ee9e50e47863360bb069339",
+    "equal": true
+   },
+   {
+    "path": "review/ord0417/MAP_TAP_BASE_214809685_R1.json",
+    "candidate_blob": "190db8916660cfdd43e8dcb4a5e0729b7fc95819",
+    "export_blob": "190db8916660cfdd43e8dcb4a5e0729b7fc95819",
+    "equal": true
+   },
+   {
+    "path": "review/ord0417/MAP_TAP_LINE_DCCD13AD_R1.json",
+    "candidate_blob": "6211d083da0aa66ca7c264006df8d7bba203dfda",
+    "export_blob": "6211d083da0aa66ca7c264006df8d7bba203dfda",
+    "equal": true
+   },
+   {
+    "path": "review/ord0417/RUNBOOK_r2.md",
+    "candidate_blob": "b5cdef0bfdd25f475f8bc182fe20d11f402ca595",
+    "export_blob": "b5cdef0bfdd25f475f8bc182fe20d11f402ca595",
+    "equal": true
+   },
+   {
+    "path": "review/ord0417/UNTRANSLATED_R3_MAP_BASE_R2.json",
+    "candidate_blob": "891a2a842937ebcd0a7c4e4cbeb98119ccfc3c0c",
+    "export_blob": "891a2a842937ebcd0a7c4e4cbeb98119ccfc3c0c",
+    "equal": true
+   },
+   {
+    "path": "review/ord0417/UNTRANSLATED_R3_MAP_LINE_R2.json",
+    "candidate_blob": "118a02f85241f1a6a8c2b8058a248331c63415ae",
+    "export_blob": "118a02f85241f1a6a8c2b8058a248331c63415ae",
+    "equal": true
+   }
+  ],
+  "whole_suite": {
+   "collect_exit": 0,
+   "collected": 1436,
+   "interrupted": false,
+   "error_lines": [
+    "tests/test_qoder_ord0332_error_receipt.py::test_R7_the_envelope_keeps_every_field_it_already_had",
+    "tests/test_qoder_ord0332_error_receipt.py::test_R8_the_seed_is_read_off_the_real_request_not_just_the_dataclass",
+    "tests/test_solver_runtime_policy.py::test_unexpected_solver_programming_error_is_not_silently_hidden"
+   ],
+   "tail": [
+    "    _PortalFactoryType = Callable[[], AbstractContextManager[anyio.abc.BlockingPortal]]",
+    "-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html",
+    "1436 tests collected in 14.02s"
+   ],
+   "cmd": "D:/moodle/CityNexus/.venv/Scripts/python.exe -m pytest --collect-only -q tests  (cwd=<export>/backend, PYTHONPATH=<export>)"
+  },
+  "deletions": {
+   "deleted_by_candidate": [],
+   "still_present_in_export": []
+  },
+  "interpreter": "Python 3.12.14 (main, Aug 25 2026, 14:01:42) [MSC v.1944 64 bit (AMD64)]",
+  "exposure": {
+   "skipped": "no frontend/src file changed"
+  },
+  "frontend_build": {
+   "skipped": "no frontend/src file in this candidate"
+  }
+ },
+ "problems": [],
+ "verdict": "READY_TO_LAND",
+ "landing": {
+  "http": 200,
+  "response_head": "{'ref': 'refs/heads/mirror/integration-frontend-apple-pass1', 'node_id': 'REF_kwDOUhlJJ9oAMnJlZnMvaGVhZHMvbWlycm9yL2ludGVncmF0aW9uLWZyb250ZW5kLWFwcGxlLXBhc3Mx', 'url': 'https://api.github.com/repos/Ca",
+  "tip_after": "5d946bf84a29b57c3a4f4cd2f238dbb0fe0f7f90",
+  "branches_route": "5d946bf84a29b57c3a4f4cd2f238dbb0fe0f7f90",
+  "both_routes_agree": true,
+  "landed": true
+ },
+ "discipline": {
+  "evidence_paths_overwritten": 0,
+  "databases_opened": 0,
+  "surfaces_started_or_stopped": 0,
+  "credential_values_printed": 0,
+  "candidate_refs_pushed_by_commander": 0
+ },
+ "claim_kind": "git_and_pytest_determined",
+ "claimed_result": null,
+ "derived_result": null
+}
