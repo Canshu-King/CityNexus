@@ -296,7 +296,11 @@ def test_this_door_did_not_borrow_the_recovery_or_restore_words() -> None:
     door_end = source.index('@app.get("/api/v1/journeys/{journey_id}")', door_start)
     door = source[door_start:door_end]
     assert 'action="journey.undeleted"' in door, "the audit action this door writes changed name"
-    assert "deleted_at = None" in door, door[:400]
+    # The clearing itself, in whichever shape the product writes it: an ORM assignment up to
+    # ORD-0383 格三, and the predicate's `.values(deleted_at=None)` from that order on.  This arm is
+    # about words; the behaviour that the trip really comes back is the arm above it, which reads
+    # the column out of the store rather than reading the source.
+    assert "deleted_at=None" in door or "deleted_at = None" in door, door[:400]
     for borrowed in (
         'action="journey.restored"',
         'action="journey.recovered"',
