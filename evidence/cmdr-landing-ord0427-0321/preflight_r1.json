@@ -1,0 +1,603 @@
+{
+ "schema": "CNX_CMDR_LANDING_PREFLIGHT_V1",
+ "lane": "commander 494abfd7",
+ "at_local": "2026-09-29T03:22:26+0800",
+ "mode": "LAND",
+ "authoritative_line": "mirror/integration-frontend-apple-pass1",
+ "tip_re_read_from_github_before": "5d946bf84a29b57c3a4f4cd2f238dbb0fe0f7f90",
+ "candidate_ref": "refs/heads/review/cmdr-recut-ord0427-r1",
+ "candidate_tip": "3543928ea1b7a0466871b6fbc3c3d24f64b14044",
+ "genealogy": {
+  "ff_possible_rc": 0,
+  "ff_possible": true,
+  "merge_base": "5d946bf84a29b57c3a4f4cd2f238dbb0fe0f7f90",
+  "line_only_commits": 0,
+  "candidate_only_commits": 3
+ },
+ "file_sets": {
+  "line_side_since_base": [],
+  "candidate_side_since_base": [
+   "frontend/src/styles.css",
+   "review/ord0427/HEAD_ROW_R2.txt",
+   "review/ord0427/THREE_BASE_AGREEMENT_R1.txt",
+   "review/ord0427/cells_cand3/cand3_320x653_en.json",
+   "review/ord0427/cells_cand3/cand3_320x653_zh-CN.json",
+   "review/ord0427/cells_cand3/cand3_360x800_en.json",
+   "review/ord0427/cells_cand3/cand3_360x800_zh-CN.json",
+   "review/ord0427/cells_cand3/cand3_390x844_en.json",
+   "review/ord0427/cells_cand3/cand3_390x844_zh-CN.json",
+   "review/ord0427/cells_cand3/cand3_414x896_en.json",
+   "review/ord0427/cells_cand3/cand3_414x896_zh-CN.json",
+   "review/ord0427/cells_pre0419/pre0419_320x653_en.json",
+   "review/ord0427/cells_pre0419/pre0419_320x653_zh-CN.json",
+   "review/ord0427/cells_pre0419/pre0419_360x800_en.json",
+   "review/ord0427/cells_pre0419/pre0419_360x800_zh-CN.json",
+   "review/ord0427/cells_pre0419/pre0419_390x844_en.json",
+   "review/ord0427/cells_pre0419/pre0419_390x844_zh-CN.json",
+   "review/ord0427/cells_pre0419/pre0419_414x896_en.json",
+   "review/ord0427/cells_pre0419/pre0419_414x896_zh-CN.json",
+   "review/ord0427/cells_superseded_f662905e_cand/cand2_320x653_en.json",
+   "review/ord0427/cells_superseded_f662905e_cand/cand2_320x653_zh-CN.json",
+   "review/ord0427/cells_superseded_f662905e_cand/cand2_360x800_en.json",
+   "review/ord0427/cells_superseded_f662905e_cand/cand2_360x800_zh-CN.json",
+   "review/ord0427/cells_superseded_f662905e_cand/cand2_390x844_en.json",
+   "review/ord0427/cells_superseded_f662905e_cand/cand2_390x844_zh-CN.json",
+   "review/ord0427/cells_superseded_f662905e_cand/cand2_414x896_en.json",
+   "review/ord0427/cells_superseded_f662905e_cand/cand2_414x896_zh-CN.json",
+   "review/ord0427/cells_superseded_f662905e_tip/tip2_320x653_en.json",
+   "review/ord0427/cells_superseded_f662905e_tip/tip2_320x653_zh-CN.json",
+   "review/ord0427/cells_superseded_f662905e_tip/tip2_360x800_en.json",
+   "review/ord0427/cells_superseded_f662905e_tip/tip2_360x800_zh-CN.json",
+   "review/ord0427/cells_superseded_f662905e_tip/tip2_390x844_en.json",
+   "review/ord0427/cells_superseded_f662905e_tip/tip2_390x844_zh-CN.json",
+   "review/ord0427/cells_superseded_f662905e_tip/tip2_414x896_en.json",
+   "review/ord0427/cells_superseded_f662905e_tip/tip2_414x896_zh-CN.json",
+   "review/ord0427/cells_superseded_fb6131f3_cand/cand_320x653_en.json",
+   "review/ord0427/cells_superseded_fb6131f3_cand/cand_320x653_zh-CN.json",
+   "review/ord0427/cells_superseded_fb6131f3_cand/cand_360x800_en.json",
+   "review/ord0427/cells_superseded_fb6131f3_cand/cand_360x800_zh-CN.json",
+   "review/ord0427/cells_superseded_fb6131f3_cand/cand_390x844_en.json",
+   "review/ord0427/cells_superseded_fb6131f3_cand/cand_390x844_zh-CN.json",
+   "review/ord0427/cells_superseded_fb6131f3_cand/cand_414x896_en.json",
+   "review/ord0427/cells_superseded_fb6131f3_cand/cand_414x896_zh-CN.json",
+   "review/ord0427/cells_superseded_fb6131f3_tip/tip_320x653_en.json",
+   "review/ord0427/cells_superseded_fb6131f3_tip/tip_320x653_zh-CN.json",
+   "review/ord0427/cells_superseded_fb6131f3_tip/tip_360x800_en.json",
+   "review/ord0427/cells_superseded_fb6131f3_tip/tip_360x800_zh-CN.json",
+   "review/ord0427/cells_superseded_fb6131f3_tip/tip_390x844_en.json",
+   "review/ord0427/cells_superseded_fb6131f3_tip/tip_390x844_zh-CN.json",
+   "review/ord0427/cells_superseded_fb6131f3_tip/tip_414x896_en.json",
+   "review/ord0427/cells_superseded_fb6131f3_tip/tip_414x896_zh-CN.json",
+   "review/ord0427/cells_tip3/tip3_320x653_en.json",
+   "review/ord0427/cells_tip3/tip3_320x653_zh-CN.json",
+   "review/ord0427/cells_tip3/tip3_360x800_en.json",
+   "review/ord0427/cells_tip3/tip3_360x800_zh-CN.json",
+   "review/ord0427/cells_tip3/tip3_390x844_en.json",
+   "review/ord0427/cells_tip3/tip3_390x844_zh-CN.json",
+   "review/ord0427/cells_tip3/tip3_414x896_en.json",
+   "review/ord0427/cells_tip3/tip3_414x896_zh-CN.json",
+   "review/ord0427/cmdr_drawer_head_row_r1.js",
+   "review/ord0427/cmdr_pair_pre0419_vs_cand3.json",
+   "review/ord0427/cmdr_pair_tip3_vs_cand3.json",
+   "review/ord0427/cmdr_scope_cand3.json",
+   "review/ord0427/first_pass_fb6131f3_pair_pre0419_vs_cand.json",
+   "review/ord0427/first_pass_fb6131f3_pair_tip_vs_cand.json",
+   "review/ord0427/first_pass_fb6131f3_scope_cand.json",
+   "review/ord0427/second_pass_f662905e_pair_pre0419_vs_cand.json",
+   "review/ord0427/second_pass_f662905e_pair_tip_vs_cand.json",
+   "review/ord0427/second_pass_f662905e_scope_cand.json"
+  ],
+  "intersection": [],
+  "product_introduced_by_candidate": [
+   "frontend/src/styles.css"
+  ]
+ },
+ "merge_tree": {
+  "exit": 0,
+  "first_line": "65a5e3b112fc4b80f31df9e1c83c9eeec22c135a",
+  "conflict_reported": false,
+  "stderr_head": ""
+ },
+ "gate_run": {
+  "requested": [],
+  "collect_exit": null,
+  "collected": null,
+  "test_exit": null,
+  "summary": null,
+  "export": "D:/moodle/_qoder_cmdr_ref_20260921/snap_preflight_032114",
+  "blob_equality": [
+   {
+    "path": "frontend/src/styles.css",
+    "candidate_blob": "6c4efbc6d5454004ffaa993ea5432a094caf3319",
+    "export_blob": "6c4efbc6d5454004ffaa993ea5432a094caf3319",
+    "equal": true
+   },
+   {
+    "path": "review/ord0427/HEAD_ROW_R2.txt",
+    "candidate_blob": "f7b515ab5e27566dddf7d13d35d4c0889dd2f42a",
+    "export_blob": "f7b515ab5e27566dddf7d13d35d4c0889dd2f42a",
+    "equal": true
+   },
+   {
+    "path": "review/ord0427/THREE_BASE_AGREEMENT_R1.txt",
+    "candidate_blob": "fb3af513a3a982c10a14af2fc2d7f3d5f1baac86",
+    "export_blob": "fb3af513a3a982c10a14af2fc2d7f3d5f1baac86",
+    "equal": true
+   },
+   {
+    "path": "review/ord0427/cells_cand3/cand3_320x653_en.json",
+    "candidate_blob": "dbeacfabc03a41e7fc4c83f7de55fad896d37b97",
+    "export_blob": "dbeacfabc03a41e7fc4c83f7de55fad896d37b97",
+    "equal": true
+   },
+   {
+    "path": "review/ord0427/cells_cand3/cand3_320x653_zh-CN.json",
+    "candidate_blob": "bfdb922ff52e40de8c2cb4d90123dd2600cd18ba",
+    "export_blob": "bfdb922ff52e40de8c2cb4d90123dd2600cd18ba",
+    "equal": true
+   },
+   {
+    "path": "review/ord0427/cells_cand3/cand3_360x800_en.json",
+    "candidate_blob": "aced66a7063a950d8684040b740cc08eda2e1312",
+    "export_blob": "aced66a7063a950d8684040b740cc08eda2e1312",
+    "equal": true
+   },
+   {
+    "path": "review/ord0427/cells_cand3/cand3_360x800_zh-CN.json",
+    "candidate_blob": "10d62cbf1c3c437009f7a3ba368dca01f41a945b",
+    "export_blob": "10d62cbf1c3c437009f7a3ba368dca01f41a945b",
+    "equal": true
+   },
+   {
+    "path": "review/ord0427/cells_cand3/cand3_390x844_en.json",
+    "candidate_blob": "9a59ccd550b32a3c805c81da58f0fc53e5ecab8e",
+    "export_blob": "9a59ccd550b32a3c805c81da58f0fc53e5ecab8e",
+    "equal": true
+   },
+   {
+    "path": "review/ord0427/cells_cand3/cand3_390x844_zh-CN.json",
+    "candidate_blob": "89b33e6858e6da2ac46738057922d81392e81456",
+    "export_blob": "89b33e6858e6da2ac46738057922d81392e81456",
+    "equal": true
+   },
+   {
+    "path": "review/ord0427/cells_cand3/cand3_414x896_en.json",
+    "candidate_blob": "cc4a95ad2532adf8cfd56e10cdf49af4fd1b3a22",
+    "export_blob": "cc4a95ad2532adf8cfd56e10cdf49af4fd1b3a22",
+    "equal": true
+   },
+   {
+    "path": "review/ord0427/cells_cand3/cand3_414x896_zh-CN.json",
+    "candidate_blob": "01d3da628c21690321aebe322bd92014d0b6615a",
+    "export_blob": "01d3da628c21690321aebe322bd92014d0b6615a",
+    "equal": true
+   },
+   {
+    "path": "review/ord0427/cells_pre0419/pre0419_320x653_en.json",
+    "candidate_blob": "3b0b6d1e2e9bd5734d289828d1986d6d910779e4",
+    "export_blob": "3b0b6d1e2e9bd5734d289828d1986d6d910779e4",
+    "equal": true
+   },
+   {
+    "path": "review/ord0427/cells_pre0419/pre0419_320x653_zh-CN.json",
+    "candidate_blob": "002229bd3cb22f524e787c9b9d0e9f8f81d70f31",
+    "export_blob": "002229bd3cb22f524e787c9b9d0e9f8f81d70f31",
+    "equal": true
+   },
+   {
+    "path": "review/ord0427/cells_pre0419/pre0419_360x800_en.json",
+    "candidate_blob": "0d56add92a1bb4d08a82029a71e983ff9564d5e9",
+    "export_blob": "0d56add92a1bb4d08a82029a71e983ff9564d5e9",
+    "equal": true
+   },
+   {
+    "path": "review/ord0427/cells_pre0419/pre0419_360x800_zh-CN.json",
+    "candidate_blob": "b6dcf82691b9eabef16115711853c897175899b6",
+    "export_blob": "b6dcf82691b9eabef16115711853c897175899b6",
+    "equal": true
+   },
+   {
+    "path": "review/ord0427/cells_pre0419/pre0419_390x844_en.json",
+    "candidate_blob": "b214eae41756175721be5651fa4195c902c0cd15",
+    "export_blob": "b214eae41756175721be5651fa4195c902c0cd15",
+    "equal": true
+   },
+   {
+    "path": "review/ord0427/cells_pre0419/pre0419_390x844_zh-CN.json",
+    "candidate_blob": "36f610b701dce16ed894ef3d2ff70b287476d7a7",
+    "export_blob": "36f610b701dce16ed894ef3d2ff70b287476d7a7",
+    "equal": true
+   },
+   {
+    "path": "review/ord0427/cells_pre0419/pre0419_414x896_en.json",
+    "candidate_blob": "e22a06cf981a1875631f40ce9fc8546f915acb0d",
+    "export_blob": "e22a06cf981a1875631f40ce9fc8546f915acb0d",
+    "equal": true
+   },
+   {
+    "path": "review/ord0427/cells_pre0419/pre0419_414x896_zh-CN.json",
+    "candidate_blob": "7cd9f70b30607ebb97d2012960efa2690d70703c",
+    "export_blob": "7cd9f70b30607ebb97d2012960efa2690d70703c",
+    "equal": true
+   },
+   {
+    "path": "review/ord0427/cells_superseded_f662905e_cand/cand2_320x653_en.json",
+    "candidate_blob": "9ae3a71106dabd66ed2518e671f6f11a90d2ccf3",
+    "export_blob": "9ae3a71106dabd66ed2518e671f6f11a90d2ccf3",
+    "equal": true
+   },
+   {
+    "path": "review/ord0427/cells_superseded_f662905e_cand/cand2_320x653_zh-CN.json",
+    "candidate_blob": "18c26524ac2c95f9eea8b5a8337a5a38e11be0e1",
+    "export_blob": "18c26524ac2c95f9eea8b5a8337a5a38e11be0e1",
+    "equal": true
+   },
+   {
+    "path": "review/ord0427/cells_superseded_f662905e_cand/cand2_360x800_en.json",
+    "candidate_blob": "8452c7203f84b4904d28fcd65a1277b63cef24d4",
+    "export_blob": "8452c7203f84b4904d28fcd65a1277b63cef24d4",
+    "equal": true
+   },
+   {
+    "path": "review/ord0427/cells_superseded_f662905e_cand/cand2_360x800_zh-CN.json",
+    "candidate_blob": "7cab0b9334df0a7017880560308bd879d32874ee",
+    "export_blob": "7cab0b9334df0a7017880560308bd879d32874ee",
+    "equal": true
+   },
+   {
+    "path": "review/ord0427/cells_superseded_f662905e_cand/cand2_390x844_en.json",
+    "candidate_blob": "e6aa084fbd9008c59635bbcfa8045eeecfa51db5",
+    "export_blob": "e6aa084fbd9008c59635bbcfa8045eeecfa51db5",
+    "equal": true
+   },
+   {
+    "path": "review/ord0427/cells_superseded_f662905e_cand/cand2_390x844_zh-CN.json",
+    "candidate_blob": "c7a5bc0e0d13e256daf3ddc0aa5b479e30c437ee",
+    "export_blob": "c7a5bc0e0d13e256daf3ddc0aa5b479e30c437ee",
+    "equal": true
+   },
+   {
+    "path": "review/ord0427/cells_superseded_f662905e_cand/cand2_414x896_en.json",
+    "candidate_blob": "138f95e7872595ce81fcbcd988a573bdcc2e1d82",
+    "export_blob": "138f95e7872595ce81fcbcd988a573bdcc2e1d82",
+    "equal": true
+   },
+   {
+    "path": "review/ord0427/cells_superseded_f662905e_cand/cand2_414x896_zh-CN.json",
+    "candidate_blob": "798e6f4d339f7a91b30d512cc78a3b97a564aa36",
+    "export_blob": "798e6f4d339f7a91b30d512cc78a3b97a564aa36",
+    "equal": true
+   },
+   {
+    "path": "review/ord0427/cells_superseded_f662905e_tip/tip2_320x653_en.json",
+    "candidate_blob": "f0decc460181e66df6129f2fa64defd138396ab3",
+    "export_blob": "f0decc460181e66df6129f2fa64defd138396ab3",
+    "equal": true
+   },
+   {
+    "path": "review/ord0427/cells_superseded_f662905e_tip/tip2_320x653_zh-CN.json",
+    "candidate_blob": "8e0c7a491d9d393467038ade8b91cef41eaf2db1",
+    "export_blob": "8e0c7a491d9d393467038ade8b91cef41eaf2db1",
+    "equal": true
+   },
+   {
+    "path": "review/ord0427/cells_superseded_f662905e_tip/tip2_360x800_en.json",
+    "candidate_blob": "320c54e4500260f9926caacc43e56da7c302138a",
+    "export_blob": "320c54e4500260f9926caacc43e56da7c302138a",
+    "equal": true
+   },
+   {
+    "path": "review/ord0427/cells_superseded_f662905e_tip/tip2_360x800_zh-CN.json",
+    "candidate_blob": "bc2ea021546273d60b84f6e530d5b9435d8c4442",
+    "export_blob": "bc2ea021546273d60b84f6e530d5b9435d8c4442",
+    "equal": true
+   },
+   {
+    "path": "review/ord0427/cells_superseded_f662905e_tip/tip2_390x844_en.json",
+    "candidate_blob": "14309f99ffc2389e6222cd9d8ca552b6a1746794",
+    "export_blob": "14309f99ffc2389e6222cd9d8ca552b6a1746794",
+    "equal": true
+   },
+   {
+    "path": "review/ord0427/cells_superseded_f662905e_tip/tip2_390x844_zh-CN.json",
+    "candidate_blob": "07c57855711b141ad053765441d4988350ddd6d2",
+    "export_blob": "07c57855711b141ad053765441d4988350ddd6d2",
+    "equal": true
+   },
+   {
+    "path": "review/ord0427/cells_superseded_f662905e_tip/tip2_414x896_en.json",
+    "candidate_blob": "aef44e8899e98d7008049c7970f56c3d3991a870",
+    "export_blob": "aef44e8899e98d7008049c7970f56c3d3991a870",
+    "equal": true
+   },
+   {
+    "path": "review/ord0427/cells_superseded_f662905e_tip/tip2_414x896_zh-CN.json",
+    "candidate_blob": "c09d9162c9c7582bd95283b02eced219a324ecb5",
+    "export_blob": "c09d9162c9c7582bd95283b02eced219a324ecb5",
+    "equal": true
+   },
+   {
+    "path": "review/ord0427/cells_superseded_fb6131f3_cand/cand_320x653_en.json",
+    "candidate_blob": "88bdca022b92ec4485c1cfd4a9e19888c7a35371",
+    "export_blob": "88bdca022b92ec4485c1cfd4a9e19888c7a35371",
+    "equal": true
+   },
+   {
+    "path": "review/ord0427/cells_superseded_fb6131f3_cand/cand_320x653_zh-CN.json",
+    "candidate_blob": "7962037f6729441fb89184ca4b7726012b9ccdb6",
+    "export_blob": "7962037f6729441fb89184ca4b7726012b9ccdb6",
+    "equal": true
+   },
+   {
+    "path": "review/ord0427/cells_superseded_fb6131f3_cand/cand_360x800_en.json",
+    "candidate_blob": "8737f54db1b2272e87507c120b164e64c4a1aad9",
+    "export_blob": "8737f54db1b2272e87507c120b164e64c4a1aad9",
+    "equal": true
+   },
+   {
+    "path": "review/ord0427/cells_superseded_fb6131f3_cand/cand_360x800_zh-CN.json",
+    "candidate_blob": "1123fcf54c17b150b64f7e05c4a948aebf66315b",
+    "export_blob": "1123fcf54c17b150b64f7e05c4a948aebf66315b",
+    "equal": true
+   },
+   {
+    "path": "review/ord0427/cells_superseded_fb6131f3_cand/cand_390x844_en.json",
+    "candidate_blob": "416b59759712349cff8e326492de41acab992d3b",
+    "export_blob": "416b59759712349cff8e326492de41acab992d3b",
+    "equal": true
+   },
+   {
+    "path": "review/ord0427/cells_superseded_fb6131f3_cand/cand_390x844_zh-CN.json",
+    "candidate_blob": "a64be8d0a228e5b2fe27d4d0b02ebe40daf7f958",
+    "export_blob": "a64be8d0a228e5b2fe27d4d0b02ebe40daf7f958",
+    "equal": true
+   },
+   {
+    "path": "review/ord0427/cells_superseded_fb6131f3_cand/cand_414x896_en.json",
+    "candidate_blob": "7251a99b8cc542c78d882a371f1464da1fb3fba9",
+    "export_blob": "7251a99b8cc542c78d882a371f1464da1fb3fba9",
+    "equal": true
+   },
+   {
+    "path": "review/ord0427/cells_superseded_fb6131f3_cand/cand_414x896_zh-CN.json",
+    "candidate_blob": "43f23a1bb098b0293b1e18f0732eba445490b34e",
+    "export_blob": "43f23a1bb098b0293b1e18f0732eba445490b34e",
+    "equal": true
+   },
+   {
+    "path": "review/ord0427/cells_superseded_fb6131f3_tip/tip_320x653_en.json",
+    "candidate_blob": "a44b141525de757d7625ec77191c96786724be54",
+    "export_blob": "a44b141525de757d7625ec77191c96786724be54",
+    "equal": true
+   },
+   {
+    "path": "review/ord0427/cells_superseded_fb6131f3_tip/tip_320x653_zh-CN.json",
+    "candidate_blob": "c72d98d2373a3e5525923f9db78b03cd11ea13c0",
+    "export_blob": "c72d98d2373a3e5525923f9db78b03cd11ea13c0",
+    "equal": true
+   },
+   {
+    "path": "review/ord0427/cells_superseded_fb6131f3_tip/tip_360x800_en.json",
+    "candidate_blob": "14a7598b6756a42a646bd5496656c4019c339e33",
+    "export_blob": "14a7598b6756a42a646bd5496656c4019c339e33",
+    "equal": true
+   },
+   {
+    "path": "review/ord0427/cells_superseded_fb6131f3_tip/tip_360x800_zh-CN.json",
+    "candidate_blob": "6b280060d63e2f54b8b2eeea25cd3223dcb363a3",
+    "export_blob": "6b280060d63e2f54b8b2eeea25cd3223dcb363a3",
+    "equal": true
+   },
+   {
+    "path": "review/ord0427/cells_superseded_fb6131f3_tip/tip_390x844_en.json",
+    "candidate_blob": "f8da6c697207d4d1b397c5d8d3dd11aba2991c10",
+    "export_blob": "f8da6c697207d4d1b397c5d8d3dd11aba2991c10",
+    "equal": true
+   },
+   {
+    "path": "review/ord0427/cells_superseded_fb6131f3_tip/tip_390x844_zh-CN.json",
+    "candidate_blob": "caff49d99bf8311f71607035fec79321831080d4",
+    "export_blob": "caff49d99bf8311f71607035fec79321831080d4",
+    "equal": true
+   },
+   {
+    "path": "review/ord0427/cells_superseded_fb6131f3_tip/tip_414x896_en.json",
+    "candidate_blob": "1d9c27a5d9a480df2e14d722878093bb9e02cc63",
+    "export_blob": "1d9c27a5d9a480df2e14d722878093bb9e02cc63",
+    "equal": true
+   },
+   {
+    "path": "review/ord0427/cells_superseded_fb6131f3_tip/tip_414x896_zh-CN.json",
+    "candidate_blob": "c45588844df1e7b6ca19c2e167ac47fb8612f484",
+    "export_blob": "c45588844df1e7b6ca19c2e167ac47fb8612f484",
+    "equal": true
+   },
+   {
+    "path": "review/ord0427/cells_tip3/tip3_320x653_en.json",
+    "candidate_blob": "23566e9e5329056cf750df8d4d95d2c1d730a955",
+    "export_blob": "23566e9e5329056cf750df8d4d95d2c1d730a955",
+    "equal": true
+   },
+   {
+    "path": "review/ord0427/cells_tip3/tip3_320x653_zh-CN.json",
+    "candidate_blob": "0fa77ab5298d2005d56572297535dff7f1759a6e",
+    "export_blob": "0fa77ab5298d2005d56572297535dff7f1759a6e",
+    "equal": true
+   },
+   {
+    "path": "review/ord0427/cells_tip3/tip3_360x800_en.json",
+    "candidate_blob": "748441abeeaee96d2a7ea28d1355eba731b3a5dc",
+    "export_blob": "748441abeeaee96d2a7ea28d1355eba731b3a5dc",
+    "equal": true
+   },
+   {
+    "path": "review/ord0427/cells_tip3/tip3_360x800_zh-CN.json",
+    "candidate_blob": "f435f8bf256ceb7e880a61f8a14394062d2826a9",
+    "export_blob": "f435f8bf256ceb7e880a61f8a14394062d2826a9",
+    "equal": true
+   },
+   {
+    "path": "review/ord0427/cells_tip3/tip3_390x844_en.json",
+    "candidate_blob": "f1917ef2a9ae4e97de2dfb9389bbe85405d24bb0",
+    "export_blob": "f1917ef2a9ae4e97de2dfb9389bbe85405d24bb0",
+    "equal": true
+   },
+   {
+    "path": "review/ord0427/cells_tip3/tip3_390x844_zh-CN.json",
+    "candidate_blob": "f49505b32f5b7b219d8fe85009bf5f6b1aa3b792",
+    "export_blob": "f49505b32f5b7b219d8fe85009bf5f6b1aa3b792",
+    "equal": true
+   },
+   {
+    "path": "review/ord0427/cells_tip3/tip3_414x896_en.json",
+    "candidate_blob": "1796b33e3dfdf2419dc41746ed07c645cb5fb1e5",
+    "export_blob": "1796b33e3dfdf2419dc41746ed07c645cb5fb1e5",
+    "equal": true
+   },
+   {
+    "path": "review/ord0427/cells_tip3/tip3_414x896_zh-CN.json",
+    "candidate_blob": "224c9ef011359a3a2ee424feb821b75f430011f4",
+    "export_blob": "224c9ef011359a3a2ee424feb821b75f430011f4",
+    "equal": true
+   },
+   {
+    "path": "review/ord0427/cmdr_drawer_head_row_r1.js",
+    "candidate_blob": "dcfeda01cac6edd2c0dc223b6732a8e88e222e46",
+    "export_blob": "dcfeda01cac6edd2c0dc223b6732a8e88e222e46",
+    "equal": true
+   },
+   {
+    "path": "review/ord0427/cmdr_pair_pre0419_vs_cand3.json",
+    "candidate_blob": "0bcd4ab58f893fa64aced46913bc28298d124561",
+    "export_blob": "0bcd4ab58f893fa64aced46913bc28298d124561",
+    "equal": true
+   },
+   {
+    "path": "review/ord0427/cmdr_pair_tip3_vs_cand3.json",
+    "candidate_blob": "f2610b71bc9c0e601562b1e7aadcfe9439f99f3f",
+    "export_blob": "f2610b71bc9c0e601562b1e7aadcfe9439f99f3f",
+    "equal": true
+   },
+   {
+    "path": "review/ord0427/cmdr_scope_cand3.json",
+    "candidate_blob": "e61d04a23e79a758601a0adb071a5a6cb0df0593",
+    "export_blob": "e61d04a23e79a758601a0adb071a5a6cb0df0593",
+    "equal": true
+   },
+   {
+    "path": "review/ord0427/first_pass_fb6131f3_pair_pre0419_vs_cand.json",
+    "candidate_blob": "541350fe6b02e51674db58d6bce612525b64b40f",
+    "export_blob": "541350fe6b02e51674db58d6bce612525b64b40f",
+    "equal": true
+   },
+   {
+    "path": "review/ord0427/first_pass_fb6131f3_pair_tip_vs_cand.json",
+    "candidate_blob": "36394323e4c6c8f02fa038d25bd8aef07d0b1532",
+    "export_blob": "36394323e4c6c8f02fa038d25bd8aef07d0b1532",
+    "equal": true
+   },
+   {
+    "path": "review/ord0427/first_pass_fb6131f3_scope_cand.json",
+    "candidate_blob": "cfc0897d02523c7caae0088bb649c7afa75fd314",
+    "export_blob": "cfc0897d02523c7caae0088bb649c7afa75fd314",
+    "equal": true
+   },
+   {
+    "path": "review/ord0427/second_pass_f662905e_pair_pre0419_vs_cand.json",
+    "candidate_blob": "0f73b8758b6014936fd188a2930d4664f76963f7",
+    "export_blob": "0f73b8758b6014936fd188a2930d4664f76963f7",
+    "equal": true
+   },
+   {
+    "path": "review/ord0427/second_pass_f662905e_pair_tip_vs_cand.json",
+    "candidate_blob": "a2cf100f65a4cbc840f9494b29bf04eff9c0d57f",
+    "export_blob": "a2cf100f65a4cbc840f9494b29bf04eff9c0d57f",
+    "equal": true
+   },
+   {
+    "path": "review/ord0427/second_pass_f662905e_scope_cand.json",
+    "candidate_blob": "cf0f611cb4c1d7907401d60797353c1d8eeb571d",
+    "export_blob": "cf0f611cb4c1d7907401d60797353c1d8eeb571d",
+    "equal": true
+   }
+  ],
+  "whole_suite": {
+   "collect_exit": 0,
+   "collected": 1436,
+   "interrupted": false,
+   "error_lines": [
+    "tests/test_qoder_ord0332_error_receipt.py::test_R7_the_envelope_keeps_every_field_it_already_had",
+    "tests/test_qoder_ord0332_error_receipt.py::test_R8_the_seed_is_read_off_the_real_request_not_just_the_dataclass",
+    "tests/test_solver_runtime_policy.py::test_unexpected_solver_programming_error_is_not_silently_hidden"
+   ],
+   "tail": [
+    "    _PortalFactoryType = Callable[[], AbstractContextManager[anyio.abc.BlockingPortal]]",
+    "-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html",
+    "1436 tests collected in 15.51s"
+   ],
+   "cmd": "D:/moodle/CityNexus/.venv/Scripts/python.exe -m pytest --collect-only -q tests  (cwd=<export>/backend, PYTHONPATH=<export>)"
+  },
+  "deletions": {
+   "deleted_by_candidate": [],
+   "still_present_in_export": []
+  },
+  "interpreter": "Python 3.12.14 (main, Aug 25 2026, 14:01:42) [MSC v.1944 64 bit (AMD64)]",
+  "exposure": {
+   "ruler_blob": "d3f66ce9fecd0790981a4fcdeb5e36b1c0fd10f2",
+   "ruler_blob_computed": null,
+   "ruler_file": "ui_exposure_taint_ast_r7b.cjs",
+   "candidate_files_in_view": 1,
+   "tip_cells": 12,
+   "cand_cells": 12,
+   "growth_by_file_and_rule": {},
+   "unpaired_added": [],
+   "added_line_exact": [],
+   "shifted_only": false,
+   "removed_count": 0,
+   "removed": [],
+   "disclosed_slip": "a same-file, same-rule relocation with equal counts reads as a shift; the AST ruler has no cell identity"
+  },
+  "frontend_build": {
+   "builder_rc": 0,
+   "vite_build_rc": 0,
+   "dist_exists": true,
+   "index_exists": true,
+   "asset_refs": [
+    "/assets/index-CFEbx_Go.js",
+    "/assets/index-B70T0Sqi.css"
+   ],
+   "live_tree": "65a5e3b112fc4b80f31df9e1c83c9eeec22c135a",
+   "info_file": "D:\\moodle\\_qoder_cmdr_ref_20260921\\live_checks\\_build_3543928_info.json",
+   "build_tail": [
+    "files generated",
+    "  dist/v10-sw.js",
+    "  dist/workbox-6923124b.js",
+    "\u001b[33m",
+    "(!) Some chunks are larger than 500 kB after minification. Consider:",
+    "- Using dynamic import() to code-split the application",
+    "- Use build.rollupOptions.output.manualChunks to improve chunking: https://rollupjs.org/configuration-options/#output-manualchunks",
+    "- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.\u001b[39m"
+   ]
+  }
+ },
+ "problems": [],
+ "verdict": "READY_TO_LAND",
+ "landing": {
+  "http": 200,
+  "response_head": "{'ref': 'refs/heads/mirror/integration-frontend-apple-pass1', 'node_id': 'REF_kwDOUhlJJ9oAMnJlZnMvaGVhZHMvbWlycm9yL2ludGVncmF0aW9uLWZyb250ZW5kLWFwcGxlLXBhc3Mx', 'url': 'https://api.github.com/repos/Ca",
+  "tip_after": "3543928ea1b7a0466871b6fbc3c3d24f64b14044",
+  "branches_route": "3543928ea1b7a0466871b6fbc3c3d24f64b14044",
+  "both_routes_agree": true,
+  "landed": true
+ },
+ "discipline": {
+  "evidence_paths_overwritten": 0,
+  "databases_opened": 0,
+  "surfaces_started_or_stopped": 0,
+  "credential_values_printed": 0,
+  "candidate_refs_pushed_by_commander": 0
+ },
+ "claim_kind": "git_and_pytest_determined",
+ "claimed_result": null,
+ "derived_result": null
+}
