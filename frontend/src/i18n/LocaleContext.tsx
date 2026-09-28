@@ -26,6 +26,7 @@ const en: Dict = {
      because the nav strip looks labels up as t("nav." + key) with no fallback
      (app/V8Experience.tsx:1672). */
   "nav.trash": "Recycle bin",
+  "nav.access": "Members and access",
   // Drawer group headings; the en values are the words already on screen, so the English arm cannot move.
   "nav.groupToday": "TODAY",
   "nav.groupPlan": "PLAN",
@@ -959,6 +960,7 @@ const zhCN: Dict = {
   "nav.language": "EN",
   "nav.trips": "行程",
   "nav.trash": "回收站",
+  "nav.access": "成员与权限",
   "nav.groupToday": "今日",
   "nav.groupPlan": "规划",
   "nav.groupTravel": "出行",

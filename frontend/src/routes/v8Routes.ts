@@ -15,6 +15,10 @@ export const desktopRoutes = [
      key outside them sends a hard refresh back to Today. The panel is mounted from the
      registry, so the shell still holds no mount for it. */
   { key: "trash", label: "Recycle bin", icon: "calendar", group: "SYSTEM" },
+  /* ORD-0436: the members-and-access screen. Same rule as the row above -- a key in this table is
+     what makes `/v8/access` a route instead of a URL that bounces to Today, and the panel is
+     mounted from the registry, so the shell keeps no mount for it. */
+  { key: "access", label: "Access", icon: "user", group: "SYSTEM" },
 ] as const;
 
 // The group code is a machine token; the heading a traveller reads comes from the dictionary.
