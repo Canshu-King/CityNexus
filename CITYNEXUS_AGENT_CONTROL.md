@@ -16588,6 +16588,153 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### ORD-B r3 · 车道 rel · 回答"两条路各靠哪个 schema"+ 勘误我自己 0408 块一处归因 · 2026-09-28 0437+08
+
+分支 `review/REL-ordb-r2-contract-visible`，tip `666075f6774c194bb1de62378a7c964b1509ebf2`，父 = 我 r2 的 `d0cb102188c2c4350c1ab9c466f44c4b9f040908`（`merge-base --is-ancestor` 退出码 0），整条线祖先 = 您落的 `213750423d9bdc10672c0488f76f8b0963d88765`。已自推；回读**双通道一致**：`git ls-remote origin refs/heads/…` 与 `git ls-remote https://github.com/Canshu-King/CityNexus.git refs/heads/…` 都回 `666075f6774c194bb1de62378a7c964b1509ebf2`（第一次 https 回读被 `Recv failure: Connection was reset` 打断，退避一次即成——不是权限也不是通道问题）。3 个文件、106 行增、4 行删（`git show --stat 666075f6774c194bb1de62378a7c964b1509ebf2`）。屏、文案、`LocaleContext.tsx` 一处未动。
+
+## 问 1：两条路各靠哪个类，为什么一条看得见一条看不见
+
+**`/api/v1/places`**（`backend/app/main.py:4682`，handler `search_places` `:4683`）：序列化类是 `app.schemas.Place`，定义在 **`backend/app/schemas.py:375`**（我加的三格在 `:386-390`），产点是 `backend/app/services.py:412 place_schema`。它以前看不见的原因**不是没发值**——FastAPI 对返回的 pydantic 对象照样 json 编码，值一直在体里——而是**路由没声明 `response_model`**，所以 FastAPI 从没把 `Place` 放进 schema 表：您那枚 tip 上我实测 `/openapi.json`(136979 B) 里 `Place` 组件不存在、`coordinate_system` 0 命中、200 的 schema 是字面 `{}`。**一行 kwarg 就修好**，我 r2 就是补了这一行。
+
+**`…/real-city/discover`**（`backend/app/main.py:1714` 与 `:1715` 两条路共用 handler `discover_real_city_services` `:1716`）：它 `return capture_real_city_candidates(...)`（`:1734`），而那个函数返回的是**手拼 dict**，两个构造点 `backend/app/integrations/discovery/real_city.py:1346`（`mode="live-cache-hit"`）与 `:1550`（常规路），候选条目由**唯一一处** `real_city.py:1202 result.append(` 生成。这条路上**从来没有 pydantic 类**可挂（`schemas.py` 里只有请求侧 `RealCityDiscoveryRequest` `:187`；`RealPlaceCandidate` 是 `backend/app/db/models.py:415` 的一张表，`main.py:138` 只是它的导入名）。所以它不是"没声明"，是**没有可声明的东西**——差别是：前者一行改完，后者必须先写模型。
+
+⇒ 同一件事的两种成因。也解释了您的读数：`/openapi.json` 里 `provider_key` 有 15 处命中，但那 15 处属于 `AgentToolCall`/`Booking`/`BookingCreate`/`BookingSlot`/`Event`/`EventCreate`/`Order`/`OrderCreate`/`ScheduleChangeRequest`/`Transaction`/`TransactionCreate`，不是地点面。
+
+## 问 2：我判"契约里必须看得见"，已加，并给了不伤害载荷的设计
+
+新增 `RealCityDiscoveryCandidate`（15 格，`backend/app/schemas.py:393-421`）与 `RealCityDiscoveryResponse`（11 格，`:422-443`），形状**从两处构造点实测得来**（AST 数出两个 return 的键集合完全相同的 11 个；候选键集合 5/5 条只有 1 种），不是照着猜；`main.py:1714-1715` 两条装饰器各挂 `response_model=RealCityDiscoveryResponse`；手写契约同时补声明：`contracts/openapi.yaml:1261-1266`（provider-mesh 的 200）与 `:1275-1280`（real-city 的 200）从"只有 description"改成 `$ref` 该模型，两个组件定义在 `:2154-2175` 与 `:2176-2192`。
+
+**`extra="allow"` 是安全措施，不是松装饰**：FastAPI 会按响应模型**过滤**输出，所以一个严格模型会把"回放样本没有、真供应商会带"的键**静默不发**。实测（同一条真请求，改前存 `D:/moodle/_qoder_rel_ordb_wk/r2_discover.json:1`、改后存 `D:/moodle/_qoder_rel_ordb_wk/r3_discover.json:1`，同一份库副本、同一 journey、各 5 条候选——件侧读数：`D:/moodle/_qoder_rel_ordb_wk/ordbb_r3_readout_r1.txt:3` 记 `candidates_r2=5`、`:7` 记 `candidates_r3=5`，两份都是 56630 B）：
+- 递归逐键比对，差异 **diffs=4**，全部是本次运行自带的：`/captured_at`、`/expires_at` 每次重打时间戳，`/candidates[1]/metadata/evidence_completion/web_observation_ids[0..1]` 是这次抓取新写的两枚 id；**"某键在模型前存在、模型后消失"的出现次数 = 0**。
+- 长度都是 56630 B 但 **sha 不同**（前 `60ee15892c26ca8a`、后 `e8b17b2216ca6482`）⇒ 这条路上"逐字节相同"不是有效判据（我 r1 在 `/api/v1/places` 上用它有效，因为那条体里没有时钟字段），有效判据是上面那个逐键比对。两格的值前后完全一致：`provider_key`/`coordinate_system` 列表逐项相等、`source_coordinate_system` 5/5 为 null。
+- **一个必须交出来的可见变化**：pydantic 先序列化声明过的字段，所以候选对象内 **键顺序变了**（前 `provider_key, external_id, name, …`，后 `id, external_id, provider_key, …`；键集合不变、值不变）。任何对这条响应做**字节比对/换代判等**的车道会因此读出"不同代"（ORD-0369 用的就是"canary 字节相同才算替身"这类判据）。要么它们改用键集合+值比对，要么这条不加模型——我按"看得见优先"做了，风险在这里交出来。
+
+运行期实证：`/openapi.json` 136979 → **141104 B**（改前件 `D:/moodle/_qoder_rel_ordb_wk/tip_openapi.json:1`、改后件 `r3_openapi.json:1`，字节数读数件 `D:/moodle/_qoder_rel_ordb_wk/ordbb_r3_readout_r1.txt:10` 记 `openapi_before_bytes=136979`、`:12` 记 `openapi_after_bytes=141104`），`RealCityDiscoveryCandidate` 组件存在，`coordinate_system` 命中 **4**（地点面 2 + 候选面 2 —— 这一枚的分母我现在补清：它数的是手写契约里那四行属性声明 `contracts/openapi.yaml:2148`/`:2153`/`:2174`/`:2175`；同一子串在运行期文档全文是 8 命中，`Place` 4 + `RealCityDiscoveryCandidate` 4，见同件 `:15`/`:16`/`:17`，而改前的 tip 是 0 命中，见 `:14`），discover 的 200 从 `{}` 变成 `$ref: '#/components/schemas/RealCityDiscoveryResponse'`。
+
+**"TS 侧改成必填会怎么坏"——我实测了，答案是 0 处坏**：把屏读的 `frontend/src/features/discovery/RealCityDiscoveryPanel.tsx:14`（`provider_key?: string`，**落地前就有**）与我加的 `:17-18` 三格全去掉 `?`，在导出副本里跑两套配置：`tsconfig.check.json --noEmit` 退出码 0、`tsconfig.typecheck.json --noEmit` 退出码 0（各 0 行输出，产品树未动，跑完即还原）。原因是全树没有手工构造的 `Candidate` 字面量（`grep ": Candidate|as Candidate|Candidate[]"` 只命中 `api/candidateRejections.ts:61,63,87`，那是**另一个类型** `DroppedCandidate`）。顺带纠您转述：`frontend/src/api/citynexus.ts:63` 在您落的 tip 上是 `provider_key: string;`（无 `?`），我三棵树逐字节一致；带 `?` 的只有上面那个面板局部类型。所以现在把面板那三格改必填，是**让 TS 追上已经有模型背书的契约**，不是新增风险。
+
+**残余（我没做，因为超出这一小步）**：屏真正 POST 的是 `…/real-city/intelligence`（`main.py:1740`），它的响应把候选装在 `discovery_evidence` 里传下去：`orchestration.py:747 "candidates": discovery.get("candidates", [])` 原样带上我加的两格 → `main.py:1768` → `authoritative_v12.py:1052 "discovery": discovery_evidence or {}`。所以**值确实上屏**（这一条链我这次才逐行钉死），但那条路自己的响应仍无模型 ⇒ 按 `/openapi.json` 生成客户端的车道在屏这条腿上仍看不见这两格。补它是同一形状换个容器，引用已存在的 `RealCityDiscoveryCandidate` 即可，但那是 intelligence 路由的定级，不是我这一小步。
+
+## 勘误我自己（发新块，不改已交出去的 0408）
+
+0408 块里我写过"`contracts/openapi.yaml:972` 是屏读的那条腿、`candidates: {type: array, items: {type: object}}`"。**归因错了**：`awk 'NR<=972 && /^  \//'` 回 `:949 /journeys/{journey_id}/events/{event_id}/impact`，那枚 `candidates` 属于 impact 投影自己的字段。discover 在手写契约里其实是 `:1263`，其 200 **连 content schema 都没有**（`'200': {description: …}`）——问题比我当时写的更严重，方向一样。上面已按真实坐标改。
+
+## 门禁
+
+收集：`PYTHONPATH=<r3树> pytest --collect-only -q` → **1393 tests collected in 4.77s**（与基线、r1、r2 四次数一致；这一枚当时没落盘件，我刚在 r3 树 `666075f6774c194bb1de62378a7c964b1509ebf2` 重跑同一条命令，读数件 `D:/moodle/_qoder_rel_ordb_wk/r3_collect_rerun.txt:1405` 原文 `1393 tests collected in 5.66s` ⇒ 计数复现，4.77s 那枚是当时的时钟读数，保留不划）。
+受影响面定向：5 个引用 `real-city/discover`/`capture_real_city_candidates`/`provider-mesh/discover` 的文件 + 4 个引用 `/places`/`place_schema` 的 → **78 passed, 1 failed**。那 1 枚 `test_qoder_city_failure_reasons.py::test_a_live_failure_arrives_named_and_carries_the_stage_it_broke_at` 在您的基线 9 枚里，且我核了它**成因未被我改动**：断言原文 `assert real_city.live_failure_reason(_status_error(500)) == "PROVIDER_BAD_RESPONSE"` → 实际 `PROVIDER_SERVER_ERROR`，是 reason-code 词表之争，与响应模型无关。
+契约门：`tools/verify_openapi_parity.py` → `formal 149; runtime 149; missing 0; extra 0`。
+整套：`-q` → **9 failed, 1368 passed, 15 skipped, 1 xfailed in 204.69s**（读数件 `D:/moodle/_qoder_rel_ordb_wk/r3_pytest_full.txt:484` 原文同这一行）；红集合与您基线那 9 枚 `comm -13 base r3` 差 **0 行**，新红 **0**。
+前端：本笔**没碰 `frontend/src`**，所以按单条只跑了 tsc 的"必填实验"（见上，两套退出码 0）；没有新的 `vite build` 读数——要我等落地后补一次也行。
+探针服务 port=8140 与 port=8138/8139 均已停（三条 `curl /openapi.json` 各回 http=000；我先前一句写"已停"时 port=8140 其实还在，那句是错的，杀完才成立）；库副本仍是 `_qoder_rel_ordb_wk/r3.db`，未跑 demo/reset，`_preview.db` 未碰。广州数据没建具名行程——这条路的差异不在城市，在时钟字段，所以一次请求已够定判据。
+
+
+### ORD-B · 车道 rel · 契约补「来源 + 坐标系」两格 · 2026-09-28 0338+08
+
+候选分支 `review/REL-ordb-place-provenance-crs`，tip `8dd6905dec515b49b7713ea487806fe4f069d92a`，父 commit 逐字等于您点的现尖 `090c048f220a3089506f565929ceda1511315a09`（`git merge-base --is-ancestor <现尖> HEAD` 退出码 0，读自 `D:/moodle/_qoder_rel_ordb_20260928`）。未碰 `mirror/integration-frontend-apple-pass1`。
+`git show --stat 8dd6905dec515b49b7713ea487806fe4f069d92a` 报 8 个文件、201 行新增、3 行删除。0 新表、0 新写端点、0 新迁移。
+**已按令自己推送**：`git push -u origin review/REL-ordb-place-provenance-crs` 退出码 0；回读走显式 https 存储（不是本机镜像）：`git ls-remote https://github.com/Canshu-King/CityNexus.git refs/heads/review/REL-ordb-place-provenance-crs` → `8dd6905dec515b49b7713ea487806fe4f069d92a`。
+
+## 开工前的投递通道预验：您给的读法是假的不可达
+
+`_qoder_d_lane_20260923/review/lane_push_preflight_r1.py <tree> refs/heads/review/REL-ordb-place-provenance-crs` 报 `verdict: PUSH_PATH_UNPROVEN / channel_rc: 128`。成因不是 GitHub：`HTTPS_PROXY=http://127.0.0.1:7892` 又挂在本机环境里且无人监听，curl 实读到 `Failed to connect to 127.0.0.1 port 7892`。
+排掉代理后同一台机的对照组读到权限威尖本身：`git ls-remote https://github.com/Canshu-King/CityNexus.git refs/heads/mirror/integration-frontend-apple-pass1` → `090c048f220a3089506f565929ceda1511315a09`，与我基线逐字相同 ⇒ 您点的现尖就是 GitHub 上能看到的那枚。同 URL 下我枝名回 0 字节（空闲），`git push --dry-run` 回 `* [new branch]` ⇒ 推送鉴权同批证通。
+**这条量具毛病转给您**：`lane_push_preflight_r1.py` 不遮代理环境，在有死代理的机器上会把每条车道都判成 UNPROVEN。
+
+## 交付了什么（全部 path:line，本树 `D:/moodle/_qoder_rel_ordb_20260928`）
+
+两格先核后写，核到的是：**`provider_key` 比您说的位置更早**，在 `backend/app/db/models.py:459`；您指的 `backend/app/db/models.py:476-477` 是 `coordinate_system` 与 `source_coordinate_system` 两列。DDL 侧同名同义：`backend/db/schema.sql:183-184`（`coordinate_system TEXT NOT NULL DEFAULT 'WGS84'`），迁移在 `backend/app/db/session.py:749-750` ⇒ 本单确实 0 新迁移。
+- `backend/app/schemas.py:386-390` — 契约模型 `Place` 加三格，**故意不给默认值**：产点必须自己填，值只能从行上读。
+- `backend/app/services.py:420-422` — `place_schema` 三格取自 ORM 行；`source_coordinate_system` 未记录就交 `None`，不编 host。
+- `backend/app/integrations/discovery/real_city.py:1212-1213` — 屏上那张地点卡的候选载荷也补两格，取自刚写/刚读的那一行，不取自候选对象。
+- `contracts/openapi.yaml:2130` 与 `:2138-2145` — `required` 加 `provider_key`/`coordinate_system`（DDL 非空），`source_coordinate_system` 按同表 `CityService.place_id`（`contracts/openapi.yaml:2154`）的先例给 `[string,'null']` 且不进 `required`。
+- `frontend/src/api/citynexus.ts:63-67` — `PlaceRecord` 同步三格（您写的行号 55-62 实际是接口体 `:56-63`，一行偏移）。
+- `frontend/src/components/PlaceProvenance.tsx:1-100` 与 `frontend/src/i18n/placeProvenanceCopy.ts:1-58` —— 可折叠 `<details>`，五行**全部常驻**（名称/来源/存储坐标系/原始坐标系/来源主机），缺值给具名占位，不删字段、不写 0、不写空串。占位词自拟：`未记录来源`、`未记录坐标系`、`采集时未记录原始坐标系`、`不是从网址采来的`、`服务器未给地点名称`。
+- 挂载点 `frontend/src/features/discovery/RealCityDiscoveryPanel.tsx:235-242`（候选卡 `:233-242`），局部类型 `:17-18` 加两格。
+
+## 验收 A · 同一次请求两侧配对：完成，且两侧都对得上
+
+自起后端三证同批：`netstat -ano -t` 显示 `127.0.0.1:8137 LISTENING` 的 pid 8516，`Get-CimInstance Win32_Process -Filter 'ProcessId=8516'` 的 CommandLine 就是我那行 `uvicorn app.main:app --host 127.0.0.1 --port 8137`（3.12.14 解释器），第三证是数据——我先在**自己那份库副本**里插了一行 `place-relb-marker-ordb`（provider 写 `relb-marker-provider`），HTTP 回读把它取回来了。库副本 `D:/moodle/_qoder_rel_ordb_wk/relb.db`，745472 B 那个 parity 探针库是同目录另开的，不在产品线。
+`GET /api/v1/places?city_code=CNX-DEMO` → HTTP 200、2423 B、9 行；两侧比对结果：真响应键集合 = `contracts/openapi.yaml` 的 Place properties（9/9 相同），= `frontend/src/api/citynexus.ts` 的 `PlaceRecord` 键集合（9/9 相同），差集两侧都空。Marker 行实读：`provider_key="relb-marker-provider"`、`coordinate_system="WGS84"`、`source_coordinate_system=null`（键在、值为 null，不是 0 也不是空串）。
+读数件：`D:/moodle/_qoder_rel_ordb_wk/places_response.json` 2423 B、`discover.json` 56660 B。
+
+## 验收 B/C · 数据侧真读数完成，屏上读数我没拿到（具名阻塞，不糊）
+
+数据侧：`POST /api/v1/journeys/<CNX-DEMO 那一行>/real-city/discover` → HTTP 200、56660 B、`mode=captured_replay`、`provenance=SEALED_LIVE_CAPTURE`、5 条候选（读数件 `D:/moodle/_qoder_rel_ordb_wk/ordb_discover_readout_r1.txt:3` 记 `candidates=5`；那枚溯源字串在同件 `:7`/`:8` 分列两把键：`provenance_key=SEALED_LIVE_CAPTURE` 与 `runtime_provenance_key=SEALED_REAL_REPLAY`），全部 `provider_key=openstreetmap-replay`、`coordinate_system=WGS84`、`source_coordinate_system=null`，其中 1 条带 `opening_hours.source_urls`、4 条不带 ⇒ 一行真数据里同时有「有值」与「缺值具名占位」两臂。
+**屏上没读成，两个物理原因**：这块卡挂在 `frontend/src/app/V8Experience.tsx:1731`，它要 `POST .../real-city/intelligence`，我这台机该腿回 HTTP 502 `DeepSeek Responses request failed`（回执 `CNX-BC9TYMEM`）；唯一到这块面板的既有 e2e `frontend/e2e/v13-5-fully-grounded.spec.ts:51-65` 的第一步是 demo/reset，本单禁用。我没有伪造该路由响应来"演"一次屏上读数。
+下一步（谁接都行，约 20 分钟）：在有 DeepSeek 通道的车上跑 `page.goto("/v8/discover")` → 目标框 `v13-discovery-goal` → 按钮 `v13-discover-submit`，再展开 `details[data-testid=place-provenance]` 读 `place-provenance-source_coordinate_system` 那一行文字；断言读 innerText，不读 `data-*`。
+**因此本单的屏上形状是按代码构造保证（五行无一处条件渲染）+ 真响应值域保证，没有截图。要截图请把这一步接走。**
+
+## 门禁（每条都带分母与命令条件）
+
+后端收集：`cd backend && PYTHONPATH=<树根> python -m pytest --collect-only -q` → **collected=1393、seconds=5.77、exit=0**（读数件 `D:/moodle/_qoder_rel_ordb_wk/collect_after2.txt:1405` 原文 `1393 tests collected in 5.77s`）；反打我的补丁后同命令 → **collected=1393、seconds=5.56** ⇒ 收集数未变（这条是您的硬要求，先报数再跑）。补一枚同判据的复跑：基线树 `090c048f220a3089506f565929ceda1511315a09` 单独 checkout 后同一条命令 → 读数件 `D:/moodle/_qoder_rel_ordb_wk/base_collect_rerun.txt:1405` 原文 `1393 tests collected in 11.38s`，即计数与我的改动无关；反打那次的秒数我没有落盘件，所以只补计数这一半，那枚秒数留作限度（不划掉、也不冒充重跑结果）。
+定向执行：`tests/test_contract.py tests/test_qoder_catalog_hydration.py tests/test_v1922_six_fix_regressions.py tests/test_wp01_wp03.py`（`backend/tests` 里引用 `/places` 或 `place_schema` 的就这 4 个文件，用 `grep -rln "api/v1/places\|place_schema" backend/tests` 数的）→ **passed=62、seconds=11.97**。
+整套执行：`python -m pytest -q` → **10 failed, 1367 passed, 15 skipped, 1 xfailed in 235.93s**。**我引入 0 条**：把整套那 10 枚 node id 在基线（补丁反打）与改后（补丁正打）各定向跑一遍，两次都是 `9 failed, 1 passed`，红集合 `comm -13 base after` 输出 0 行。整套里多出的那一枚 `tests/test_sol_guardian_projection.py::test_guardian_status_lists_runs_newest_first` 在带我的补丁下定向跑是绿的 ⇒ 它依赖套件内他车状态；**基线的整套我没跑**，这条留作限度。
+契约门：`tools/verify_openapi_parity.py` → `formal 149; runtime 149; missing 0; extra 0`，退出码 0（该脚本比路由面，不比字段面 ⇒ 字段漂移它看不见，见下面第 4 条）。
+文案尺：`_qoder_q_pitravel_tiers_20260927/tools/cnx_copy_tiers_r1.py --i18n frontend/src/i18n/LocaleContext.tsx` → `REGISTER_PARITY 653 bilingual keys: 653 agree, 0 clash`，exit=0。分母怎么来的写在那把尺的解析器 `tools/cnx_copy_tiers_r1.py:38`（`dicts()` 只数 `en`/`zhCN` 两块里能匹配 `:31` 那行 KEY_RE 的键）；我这基线上是 653 枚双语键，0381 车道在 `7c9edf9fae25f8dccacf59be9e5c23c1c09cda46` 上数的是 665 枚 distinct key，两棵树不同，别互抄。
+前端两门（在 `_qoder_rel_ordb_wk/build/frontend` 导出目录跑，`src`/`e2e`/`public` 先清空再同步、`cp -al` 带 node_modules，409 MB 那份 robocopy 副本已删）：`tsc -p tsconfig.check.json --noEmit` 退出码 0；`tsc -p tsconfig.typecheck.json --noEmit` 退出码 0。非空转按房内配方证：两份配置各跑 `--listFiles` 落盘（`tsconfig.check.json` 508 行、其中 `src/` 71 个；`tsconfig.typecheck.json` 877 行、其中 `src/` 120 个），我改的 4 个文件在**两份**清单里逐个点名读到：`api/citynexus.ts`、`i18n/placeProvenanceCopy.ts`、`components/PlaceProvenance.tsx`、`features/discovery/RealCityDiscoveryPanel.tsx`。反面读数我也取了：把两个新文件临时移出后再数，总数只少 1（507 / 876）⇒ **不要用"总数差 = 新增文件数"当证**，要像上面那样逐个点名（`tsconfig.check.json` 的 include 是白名单式，不是我猜的 `src/**`）。`vite build` 退出码 0、`built in 11.51s`、`precache 8 entries (2487.26 KiB)`、产出 `dist/v10-sw.js`。
+
+## 四件要您裁的（我没顺手改）
+
+1. **坐标系现在有两个来源**：列 `backend/app/db/models.py:476` 之外，`backend/app/services.py:481` 有一句 `metadata.setdefault("crs", "WGS84")`（另 `:1226` 硬写），也就是活动 metadata 的 `crs` 不看 place 行。我把屏面那格改成从行上读，但那两处我没动 —— 动它要改活动投影的行为。**请另计一单。**
+2. **两枚 key 被我摘掉了最后一个读者**：`discovery.providerGrounded`（`frontend/src/i18n/LocaleContext.tsx:443` 与 `:1207`）与 `discovery.sourceCaptured`（`:448` 与 `:1212`）现在字典外引用数各为 0（对照组：我保留的 `discovery.hoursUnknown` = 1）。我不许写那个文件，所以**只报告不删**。
+3. **四枚锚在 Q64 六名表之外**：`provider_key`、`coordinate_system`、`source_coordinate_system`、`opening_hours.source_urls`。按 0342 的配方，有值才挂 `data-cnx-field`+`data-cnx-value`（值与屏上文字同一表达式，不可能漂移），占位那行不挂任何锚。D 那条"六名之外即脏"的谓词目前只看 `trial-sealed-unavailable`，所以没红；要扩面请先决定这四位。
+4. **`contracts/openapi.yaml:972` 把候选写成 `items: {type: object}`** ⇒ 屏上这张卡读的键完全不受契约约束。我这单把两格送上了屏，但那条腿在契约上是无形状的；把它声明出来比补第二个字段值钱。
+
+## 合规
+
+只借了字段形状与"缺值也要具名"的处理方式。三样资产级东西一概没进：色值/token 表、图形/字体/动画、对方任何一句原文 —— 我的占位词与标签全部自拟，`未记录来源`/`不是从网址采来的` 这类句子在本仓库里是新的。Pi Travel 的 `神秘的采集地`/`Unknown` 那一对只作为反例出现在剖析报告里。
+剖析侧另两份产物：`D:/moodle/_apk_analysis_pi_travel/RELATION/relation_and_copy_findings.md` 41768 B 与其 `work/` 读数（您 §5 的 share 那一行勘误已引用它）。
+
+## not_examined（别当成已查）
+
+`/places` 这两格今天**没有屏上消费者**：`PlaceRecord` 的两个真实消费者只把它当坐标用（`frontend/src/components/JourneyMap.tsx:22-24`、`main.tsx:160`），所以我没声称它上了屏。
+`coordinate_system` 在可回读的两个库里都是 `WGS84`：只读打开 `D:/moodle/CityNexus/citynexus.db`，`SELECT coordinate_system, COUNT(*) FROM places GROUP BY 1` 直接报 `no such column`（那 8 行 `places.provider_key='mock-city'` 的表**还没有**这两列）；只读打开 `D:/moodle/_qoder_integration_20260919/backend/citynexus.db`，同一条 SQL 回 `('WGS84', 16)` 且 `source_coordinate_system` 回 `(None, 16)` ⇒ 我拿不到"存储坐标系真的不是 WGS84"的真行，那臂未验。
+`places.provider_key` 是 NOT NULL（`backend/app/db/models.py:459`）⇒「一个真的无来源 place」在这条腿上不存在，我没为此改数据造一行，也没改 DDL。
+discovery 候选里 `opening_hours.source_urls` 有值者：对 `D:/moodle/_qoder_rel_ordb_wk/discover.json:1` 跑 `python -c "import json;d=json.load(open(...))['candidates'];print(sum(1 for x in d if (x.get('opening_hours') or {}).get('source_urls')))"` → 1，`len(d)` → 5 ⇒ 1 条有 host、4 条走占位臂（同一份体现在由 `D:/moodle/_qoder_rel_ord0398_wk/anchor_readouts_r2.py` 重算并落件：`D:/moodle/_qoder_rel_ordb_wk/ordb_discover_readout_r1.txt:4` 记 `with_source_urls=1`、`:5` 记 `without_source_urls=4`）；屏上折叠态的开合交互我没做过一遍（没屏可看）。
+真机 e2e、`npm run dev` 链、SW 换代、暗色对比门：本单一概未跑。
+**这块交块没跑过正式的 Q43 尺**：我在四个车道树的 `tools/` 里找不到那把尺（`ls | grep -iE "q43|coord|claim"` 回 0 行），所以自己做了一次等价扫描——规则是"带中文量词的数字必须同行有 `path:line`／40 位对象／HTTP 码／SQL 原文"，扫出 diffs=4 并已逐条钉上，重扫余 0（脚本条件写在上面这句里，别当成您的尺子过了）。块里 3 枚 40 位都 `git cat-file -t` 回 `commit`，0 枚带连字符 UUID。
+
+
+### ORD-0401 车道 Q（会话 904a042d）· 落了路①；两条路都到不了首屏，原因是量出来的（附 P1..P5 定价）
+
+**选路：①，并落进分支；②被实测判死，不是"更难"。** 本单唯一验收（空态那个带动作的句子在滚动前可命中）**未达成**，达成它需要一次不属于本单的版面裁决，我把五个位置的代价都量好了。
+
+**线况**　候选枝 `refs/heads/review/Q-ord0401-empty-row-above-fold` 头 `87b116e8a4fedbeb5fcac647be3d6caccb0fc72b`，`git ls-remote` 回读逐字等值。三笔：产品 `8b0ea597197dd3885525340bb408180026205b06`、证据 `2a54e6a67be11af8b993bbfc80dda55637159e99`、清单修订 `87b116e8a4fedbeb5fcac647be3d6caccb0fc72b`。基线 = 我 18:35 亲读的现尖 `e7286dfd47db2dd9a1420867dd534b906b2d032a`；推送时现尖已动到 `8f4ddfa9feffe4233b48cbf608caf8e1bbb76291`，交前只读预测 `git merge-tree --write-tree` 退出码 0、CONFLICT 0 条，且那尖改的文件里没有我一枚（`git diff --name-only e7286dfd 8f4ddfa9` 里 checklist/pretrip 命中 0 条）。**我没有 rebase**：证据文件名与清单把产品笔 `8b0ea597197dd3885525340bb408180026205b06` 钉住了，重写会让已发布的坐标失效。
+
+**为什么①拉不到首屏**　面板锚点顶边 y=885 px，视口 844 px（件 `review/evidence/ord0401/hub_reachability_tip-e7286dfd.json`，blob `48d23dee6bacde100e56fea172892f18a901d8a9`）——锚点自己已在首屏之下 41 px，①收的是面板高度，收不动顶边。
+
+**为什么②也不行，且不是差一点**　`today-strip` 顶边 771 px，而**可命中区在 768 px 结束**：`v8-mobile-nav` 是 position:fixed，在 320/360/390/414 四形上都覆盖 y=768..844 px，网格逐点 `elementFromPoint` 在 780 处回 nav、820 处回 nav 内 span、700 处回页面正文（件 `review/evidence/ord0401/first_screen_rect_r1.json`，blob `b40888ca3bb26ea5f6061ce73b43fc5eb943184e`）。44 px 触摸目标（Amendment F-2）在 771 之下没有落点。另：② 会把清单挪到 attention band 之上，条目非空时正是 ORD-0384 拒掉的那个读法。
+
+**落地的形状（①）**　空态不再铺 `.cn-pretrip-note` 整段说明，空态由两句收成一句，标题两行保留：`frontend/src/features/checklist/PretripChecklistPanel.tsx:49` 的条件 `items.length > 0`（blob `dcf7228fd69178971e2101c12b14c2aa25c828cc`）与 `frontend/src/lib/pretripChecklist.ts:110` 的「这一代都没有报出。」/ "Neither one is open on this generation."（blob `97db9ba81ef3430ba36a73b85c60d144592099a6`）。
+
+**两代读数**　同一把仪表、两个代次（现尖 served `index-Doj2alof.js` 对车道私有 :4301 上的 `index-DJhaPS9z.js`）、四形、zh/en，每臂滚动前后各一次中心 hit-test。zh@390：面板高 325 px → 143 px，动作顶 y 1151 px → 969 px，中心超首屏 329 px → 147 px，文档高 1589 px → 1407 px，滚动到位所需文档位移 745 px → 563 px。en@390：440 px → 207 px，中心超首屏 482 px → 249 px。四形全表在件 blob `4db7d7661bb660160d24bd34b5ca8b2ec94708be`（`review/evidence/ord0401/hub_reachability_candidate-8b0ea597.json`）。
+
+**硬约束 1（ORD-0384 位置论证）**　挂载点未动：band 与 panel 在同一容器里的 DOM 序号仍是 3 与 4，clear 态那条 `<strong data-testid="today-attention">` 仍在 y=843 px、屏上正文仍是「这个行程还没有可信的坐标」，其 kicker 仍 `display:none` —— 两代同值，件 blob `4db7d7661bb660160d24bd34b5ca8b2ec94708be`。条目非空时段落照旧渲染：zh 盒 78 px / 84 字、en 盒 117 px / 305 字，屏读文字与 basis/锚点 `contracts/openapi.yaml:1393` 一并记在件 blob `e142df52f6eec5f00c338e08c82e5cdaf2d52e22`（`review/evidence/ord0401/items_open_counterarm_r1.json`）——**这一臂是本地 fixture**：真 payload 上加注一枚 `experience_flags.feasibility_failures`，只用来验形状，不是服务器事实。
+
+**硬约束 2（中英成对同档）**　zh 由 62 字收成 9 字，en 由 219 字符收成 39 字符，同一句、同一档、同删一句范围说明。配对尺 `review/ord0401/copy_pair_check_r1.py`（blob `97efe0f1b87e9a7019ce708b8fc0fc24f7fd365b`）在两代各跑一遍：dictionary pairs 1384 条 / distinct keys 692 个 / values_not_found 0（件 blob `c6a3195afa91d3d295902091567cf420e20daa53`，控制臂 `review/evidence/ord0401/copy_pair_tip-e7286dfd.json`，blob `6185fbed2069113a6a293a63eba6aed27a2b2981`）；我改的两枚串只在候选代出现，被替换的两枚长串只在候选代消失。**号令者点名的 `cmdr_bundle_copy_check_r1.py` 不在任何可读 ref 上**（`git ls-tree -r --name-only origin/commander/control` 里匹配 `bundle_copy` 的只有 evidence/*.json 两枚，无 .py），所以我自建同形状仪表、先在**他们量过的那枚 bundle** 上跑控制臂，并写出自己的分母定义 —— 不冒充他们那 627 条的分母（他们的读数件 blob `c8625ceacfee827b23cbe691b345d473086fec7e`）。
+
+**硬约束 3（两帧 + 滚动种类）**　每臂滚动前、滚动后各一次中心 hit-test：滚动前返回 null（中心在视口之外），滚动后返回按钮自身；`scrollable_ancestors` 恒 0 且容器位移 0 条 ⇒ 到达它的滚动是**文档滚动**（`scroll_arm_verdict.scroll_kind` = "document"）。截图 32 张（四形 × 双语 × 两帧）随件在 `review/evidence/ord0401/`，清单含逐件 sha256 与字节数（blob `0ab4b7872de21254c3d6e35f230d25d3ba46feed`）。
+
+**五个位置的定价（都不擅自落）**　件 blob `9df32d01dfd9b989f7da55f7d4c9e73cbbc61683`（`review/evidence/ord0401/placement_options_r1.json`），zh@390：
+- P1 挂到页面 intro 之上 → 动作中心 231 px，`elementFromPoint` 回按钮自身，**唯一可命中的位置**；代价：hero 被推进底栏之下 43 px、地图整块 158 px 出首屏。en 在 390 px 宽中心 295 px ✓，代价 hero 126 px / map 260 px。
+- P2 hero 与地图之间 → 中心 792 px，不可命中，中心处是 `button:nav-agent`（底栏）。
+- P3 = 路②的原锚点（today-strip 之前）→ 中心 899 px，不可命中。
+- P4 = 现状锚点 → 中心 1001 px，不可命中。
+- P5 = 路② + 把地图空态收成一行（浏览器内假设，未落码）→ 面板顶 744 px 而中心仍 850 px，仍不可命中：那一行自己有 143 px 高。
+要 P1 只需注册表加一枚面/挪一次 anchor，但那是替 hero 与地图决定谁出首屏，归号令者裁。
+
+**门禁**　按 FRONTSRC_BUILD_PREREQ 在 `git archive` snap 里跑，node_modules 走 junction：`npx tsc -p tsconfig.typecheck.json --noEmit` 退出码 0（`--listFiles` 列出 src 文件 128 枚），`npx vite build` 退出码 0，产物 `index-DJhaPS9z.js` 1323401 B（对照现尖 served `index-Doj2alof.js` 1323758 B，两枚 sha256 记在件 blob `c6a3195afa91d3d295902091567cf420e20daa53`）。
+
+**没改善的部分**
+1. **本单验收未达**：滚动前仍不可命中（zh@390 中心 969 px，可命中界 768 px），①只把它拉近 182 px。
+2. 空态里两类检查的名字（可行性失败 / 等待你决定的恢复方案）不再上屏，只剩标题「服务端报出的两类待办」；条目非空时名字照旧在段落里。要保留名字的替代串我量过：G 形，比现在高 54 px（件 blob `28dcfc546bb42af532dc57f4a8b7d7e300c80913`，`review/evidence/ord0401/shape_budget_r2.json`）。
+3. 68 屏 × 8 项全矩阵、暗色/对比复扫本轮未跑，只跑了 hub 一屏的四形双语。
+4. 配对尺分母与号令者的 627 对不上（我 1384），且他们记的 bundle_bytes 1286750 B 与 :4781 现答的 1323758 B 差 37008 B —— 具名未解，我不猜成因（压缩头与部署文件不同源两种都可能，谁都没在我这边验过）。
+
+**纪律**　权威线 0 触碰；账本 0 写入（块交 `_qoder_ledger_inbox`）；`demo/reset` 0 次；`_preview.db` 0 打开；:8000 / :4781 / :8693 0 重启（:4781 只被读，代理链未动）；16 臂 `api_traffic.writes` 全 0 —— 非 GET 在浏览器内被 route 拒，车道私有 :4301 的代理只放 GET，两道门；凭据 0 读取 0 打印；junction 2 枚以普通 `rmdir` 卸下并回验卸掉后才递归删，未用 `rd /s /q` 穿 junction；新枝名一枚，未覆盖任何已交枝。
+
+
 ### CMDR 2026-09-28 19:18 · 号令者 · ORD-0398 与 ORD-0399 第二候选落地、19:16 又换了一代；这代我用真点击走了六个屏，量出 ORD-0404（深链接回不到那一屏）
 
 **落地**：ORD-0398 第二步 recut `97766b2dfd7a5a7668f6750e3bc13b698c416975`（3 个合入文件与车道 `663cfa3065fc` 逐字节全等，件 blob `23723bd60c63011d2baca6b29da0a19ac5b524e9`，路径 `evidence/cmdr-landing-ORD-0398-r2/preflight_r1.json`）；随后 ORD-0399 的证据候选 recut `8f4ddfa9feffe4233b48cbf608caf8e1bbb76291`（16 个文件全等，件 blob `0b5ef483fc78a40d17c631494d324dbcc03333a0`，路径 `evidence/cmdr-landing-ORD-0399-r2/preflight_r2.json`）。现尖就是后者。
