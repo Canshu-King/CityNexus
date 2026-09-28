@@ -16588,6 +16588,43 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### CMDR 0928-1624 · 号令者 · 五笔落地 + ORD-0371 尺修 + 手机链一处如实断链
+
+**落地（权威线只由我移动，ff-only，`AUTHORITATIVE_BRANCH_SINGLE_WRITER_V1`）**
+
+尖顺序逐字：db6a04cb1d734963b673351973329c08bb264ef3 → 8fddeb76a79968592a7a3e98d2f296dda450d4df → 4fcfe6e595bba9de30ff35a1b49ff6dc93fe8d95 → b241b81401b5611937ee5653d54777063c89d844 → ad492c444911bede734a46836c82dbb59d2b9b5f → 1f8d7061f9edd66652c198db983722cdd237f2b7
+
+| 单 | 内容 | 落地件（preflight 收据 blob） |
+|---|---|---|
+| ORD-0389 | `demo/reset` 现在要具名令牌；前端重置行在任何部署上都不可按（行留着、原因写屏上） | 0fb6917f4129b978b376a05ee5406ca9c6d5f2f3 |
+| ORD-0391 第 2 步 | tier-b 那批裸量值改成同行带坐标的形（只动 `frontend/src/lib/failureAttribution.ts` 等四个文件） | 60feea8acbcf4773cdb67ecd01b22eb1f9d1d3c6 |
+| ORD-0382 r4 | 三段式生成流水线的窄屏修 + `frontend/src/styles.css` rebase | 78dccd96adaf3f106b75a1f8b8caf9a39ae3286a |
+| ORD-0390 | 地图 ↔ 卡片双向选中（本批最大的一项用户可见能力） | a8f9ae24db1f7db3203327ee8880e08719abfc1e |
+| ORD-0382 guard | 冷启动时 run strip 必须沉默的那条 e2e | 973b580679ed9d89d08fe64657f05f0cf70e7f40 |
+
+**我亲测过的，不是门替我说的**
+
+`demo/reset` 的令牌门在**正在跑的那枚后端**上成立：无令牌 POST 回 403 且 `code=RESET_TOKEN_REQUIRED`，错令牌回 403 且 `code=RESET_TOKEN_INVALID`，两次都 `nothing was deleted`；同一进程读 `/api/v1/demo/scene` 前后逐字节等量（body_bytes=583、sha256 前缀 6836bf00cca76422、unchanged=true）——共享预览库从今天 03:55 那种「一发请求抹平」的状态里被拿出来了。收据 54e35d861f410183f0fa220df1219974fbdf602c 与 0fb6917f4129b978b376a05ee5406ca9c6d5f2f3。
+
+后端树已换到 tip 的 `git archive` 导出（`:8693` 监听者 = 我起的 pid，`decision=SWAPPED_AND_SPEC_READ`、openapi_paths=139、provider_key_in_live_spec=true、coordinate_system_in_live_spec=true），收据 54e35d861f410183f0fa220df1219974fbdf602c。
+
+**ORD-0371（Q43 尺）修到哪一步，以及我推翻了自己一个前提**
+
+我原本按「车道引用的是裸路径，尺不认」开方，实测只有 1/31 块因此转绿，于是去读真正被判红的那 130 行（诊断件 7c94f1d0de36c6dd76458cd9255b1210d4ab8b4a）：`127.0.0.1` 里的 127、`[0,145,522,44]` 这类方括号数组、`8138 的监听 pid 9984` 这类端口与进程号，全被当成量值声明；而 `73 处`（只写了尺的格名、没写 `tools/cnx_copy_tiers_r1.py`）、`（404）`（没写成 `http_status=404`）这类是真的缺证。
+
+所以我做了两件事，都是**收紧**而不是放水：r6 只承认「同一行、且能在权威树里 `git ls-tree` 出来的路径」为坐标（比 r4e 的 ±200 字符邻窗严，窗口差的两臂见收据 62331790e3a3fda2a468df0a5fa3a9efa0e6bc74），并且裸路径**不得**兑换 DIMENSION / DISCIPLINE_ZERO 那两档豁免；r7 把 IP／数组／pid／port 认成具名 class，打印在 exempt 桶里而不是静默跳过。双向自检 11 臂全过（含「真实计数与数组同行仍必须判红」那条守护），加上从 r4e 继承的 21 臂也全过：收据 62331790e3a3fda2a468df0a5fa3a9efa0e6bc74 与 1f8f137fbcdb16b1776db45d6d2deecb30e0bd07。
+
+效果量在 32 块待插交付上：findings_total 从 195 降到 112、转绿块数从 7 升到 9，测量件 blob 4ef57f1d28af20a18e976e88519e06d9666bdeb0（路径 `evidence/cmdr-1622/q43_r7_inbox_measurement_r1.json`）。写盘门已换到 r7（`ledger_inbox_apply_r2.py` + `ledger_insert_after_r2.py`），门的 selftest 在伪造坐标那一臂仍判拒。
+
+代插结果：本轮 inserted=7、refused=25、remaining_inbox=26，账本 blob de2a998d7040ef695014b66468bb8b54f77d4459。被拒的 25 块里多数是车道自己写的裸计数，修法是同行给 `path:line` 或 blob，或写成 `field=value`；我不会替车道改词，也不会绕门。
+
+**一处如实的断链（等用户回来）**
+
+手机面这一代换不上去：hop2/hop3/:8693 三枚监听都活着（`:4781` 与带鉴权的 `:4782` 都回 http_status=200 且正文 1200 B），但 hop4 那条 trycloudflare 隧道本机现在解析不了——`getaddrinfo failed`，而 7892 / 7897 / 9097 三个口全无人监听（Clash/mihomo 没起）。部署尺因此按设计拒绝切换，`served_generation` 还停在 cf0ed0b531681181642a30120a1b41f2bf681a40，新构建 `_build_1f8d706` 的 `index-BuFUA540.js` 只在私有导出里验过字节。所以今天落地的 5 张里，用户能在手机上看到的只有后端那半条（`:8693` 已换新树），前端一律标 `NOT-DEPLOYED-OBSERVED`。
+
+派单方面：ORD-0384 的 rebase 我错敲到了 e4f3490f 的窗口、已收回并要转给 n3（49fe0d7b），ORD-0392 面板挂载注册表的派单文本已写好但**没发出去**（用户不在电脑前，我不再推需要他点确认的动作）。地图 ↔ 卡片选中（ORD-0390）落地的 16:04 那一笔，我还没做真机点击验收，等前端换代后再走。
+
+
 ### CMDR 0928-1626 · N3 · ORD-0384 按 Q72 再 rebase：撞的只有 V8Experience.tsx，抹的是最小差 · 2026-09-28 1626+08
 
 分支 `review/N3-ord0384-pretrip-checklist`，交前 push 后 `git ls-remote origin refs/heads/review/N3-ord0384-pretrip-checklist` 回读 = 7d32def104ab91818b3171f4c8c44fc20d032e44（本地 HEAD 同值）。
