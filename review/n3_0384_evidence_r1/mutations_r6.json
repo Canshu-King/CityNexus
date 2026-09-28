@@ -6,14 +6,14 @@
    "file": "D:/moodle/_qoder_n3_ord0357/frontend/src/lib/pretripChecklist.ts",
    "cell_targeted": "Y1+Y3",
    "mutation": "if (failures.length >= 0) {",
-   "run_id": "cmdr161216n31_",
+   "run_id": "cmdr170403n31_",
    "runner_exit_code": 3,
    "gate_went_red": true,
    "counts": {
     "passed": 5,
     "failed": 3
    },
-   "log": "D:/moodle/_qoder_cmdr_ref_20260921/live_checks/e2e_logs/n31__7c29557b_161216.log",
+   "log": "D:/moodle/_qoder_cmdr_ref_20260921/live_checks/e2e_logs/n31__0e64062b_170403.log",
    "cells_reddened_by_name": [
     "Y1",
     "Y2",
@@ -30,14 +30,14 @@
    "file": "D:/moodle/_qoder_n3_ord0357/frontend/src/features/checklist/PretripChecklistPanel.tsx",
    "cell_targeted": "Y3",
    "mutation": "{items.length < 0 ? (",
-   "run_id": "cmdr161327n32_",
+   "run_id": "cmdr170507n32_",
    "runner_exit_code": 3,
    "gate_went_red": true,
    "counts": {
     "passed": 7,
     "failed": 1
    },
-   "log": "D:/moodle/_qoder_cmdr_ref_20260921/live_checks/e2e_logs/n32__7c29557b_161327.log",
+   "log": "D:/moodle/_qoder_cmdr_ref_20260921/live_checks/e2e_logs/n32__0e64062b_170507.log",
    "cells_reddened_by_name": [
     "Y3"
    ],
@@ -52,14 +52,14 @@
    "file": "D:/moodle/_qoder_n3_ord0357/frontend/src/lib/pretripChecklist.ts",
    "cell_targeted": "Y5",
    "mutation": "if (exp.selected_option_id === null || exp.selected_option_id === undefined) {",
-   "run_id": "cmdr161411n33_",
+   "run_id": "cmdr170542n33_",
    "runner_exit_code": 3,
    "gate_went_red": true,
    "counts": {
     "passed": 7,
     "failed": 1
    },
-   "log": "D:/moodle/_qoder_cmdr_ref_20260921/live_checks/e2e_logs/n33__7c29557b_161411.log",
+   "log": "D:/moodle/_qoder_cmdr_ref_20260921/live_checks/e2e_logs/n33__0e64062b_170542.log",
    "cells_reddened_by_name": [
     "Y5"
    ],
@@ -74,14 +74,14 @@
    "file": "D:/moodle/_qoder_n3_ord0357/frontend/src/features/checklist/pretripChecklist.css",
    "cell_targeted": "Y4",
    "mutation": "<deletion: the anchor is removed>",
-   "run_id": "cmdr161443n34_",
+   "run_id": "cmdr170610n34_",
    "runner_exit_code": 3,
    "gate_went_red": true,
    "counts": {
     "passed": 7,
     "failed": 1
    },
-   "log": "D:/moodle/_qoder_cmdr_ref_20260921/live_checks/e2e_logs/n34__7c29557b_161443.log",
+   "log": "D:/moodle/_qoder_cmdr_ref_20260921/live_checks/e2e_logs/n34__0e64062b_170610.log",
    "cells_reddened_by_name": [
     "Y4"
    ],
@@ -94,7 +94,7 @@
  ],
  "arms_requested": 4,
  "filter": "all",
- "head": "7c29557b8dfec52a817e86ef4b7efb7085c43941",
- "frontend_tree": "b4c7e4c7ec217623fb4714e14dd7463a4f2809c4",
+ "head": "0e64062bdc81568f1db7746d8c74532a7011fd55",
+ "frontend_tree": "7eae4c02762927921e041b314dac8c21977f84ad",
  "all_arms_hold": true
 }
