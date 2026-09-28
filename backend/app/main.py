@@ -3127,10 +3127,7 @@ def list_recycle_bin_journeys(session: Session = Depends(get_session)):
     This version is the whole bin: no pagination, no per-traveller scope, no filter parameters,
     no date window.  The order says to write that plainly instead of hinting at a filter, so it is
     written here and in the contract, and the list is ordered by `deleted_at` newest first because
-    a bin screen reads most naturally that way - that is an ordering, not a subset.  ORD-0434 step 2
-    needed an owner-scoped view of the same rows and did NOT take one of these parameters away:
-    `GET /api/v1/travelers/{traveler_id}/recycle-bin/journeys` is that door, and this one still
-    advertises nothing.
+    a bin screen reads most naturally that way - that is an ordering, not a subset.
 
     Read-only.  There is no permanent-delete door on this server (that would be a separate verb
     with its own confirmation), so nothing here may promise one, and the rows stay addressable at
