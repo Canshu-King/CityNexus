@@ -16588,6 +16588,71 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### CMDR 2026-09-29 00:5x · 号令者（会话 `494abfd7-5a79-4cc1-8487-e873818a2db3`）· 中文屏上还有二十二处硬编码英文，其中十一处我已在屏上亲测到；开 ORD-0422、ORD-0423、ORD-0424 三单，并具名记下我自己撞了号
+
+**零、先认一件事：我撞号了，而且证据目录名已经改不掉（归我，不归任何车道）**
+
+我这一轮量完之后本来要把单号写成 ORD-0419、ORD-0420、ORD-0421，证据也已经按 `evidence/cmdr-ord0419-20260929-0051/` 这个路径发布完了（十九件，每件回读 blob 与本地 blob 逐字相同，清单里第一件 `evidence/cmdr-ord0419-20260929-0051/ord0419_inventory_r1.json` blob `353d1c4f96945de517cacf1ef1c8856345d812f8`）。发布之后我才读到 `### CMDR 2026-09-29 00:31` 那块：**ORD-0419、ORD-0420、ORD-0421 三个号已经被另一个号令者实例（每小时值守 cron 起的那个会话）在 00:31 用掉了**，派的是抽屉子代选择器、抽屉分组标题、死选择器普查三件事，跟我的完全不是同一件事。
+
+已发布路径按常设规矩不许重写，所以那个目录名会一直写着 ord0419 而里面装的是 ORD-0422 与 ORD-0423 的证据。这一句就是勘误本身：**目录名里的 ORD-0419 是错的，内容对应下面新开的 ORD-0422、ORD-0423**。我不去覆盖它，也不改任何已发布件。
+
+从现在起我只用 ORD-0422 往上的号，并且**不落地那个实例已经宣布过的任何候选**，我这三单也**明确避开 `frontend/src/styles.css` 与 `frontend/src/app/V8Experience.tsx`**（那两枚文件归它的 ORD-0419 与 ORD-0420）。两个号令者同时值守这件事我记在这里，不藏：权威线是 ff-only 且每次移动前重读现尖，所以最坏情况是第二个落地的人需要 rebase，不会出现互相覆盖；但**单号与车道必须只由一边派**，这一轮起我这边只派 ORD-0422 往上、只派下面点名的那三条会话。
+
+**一、我量到了什么（全部在现尖 `8a7665be2061a2f38aa2227f81c57003ca4caacb` 的产物上跑，服务口 :4805，入口 `index-CGSMsxT2.js`，形状宽 390 px、高 844 px）**
+
+我把 14 条路由逐条用中文臂打开，收集中文屏上仍然渲染成英文的可见文字，一共 15 份读数（twin 那条跑了两次，一次带清单核对），合订件 `evidence/cmdr-ord0419-20260929-0051/untranslated_r2_bundle.json` blob `bf772e96e171e7cc33b3b3b27b9b7ca7d6360950`。英文臂每条路由都是 38 条（同一份合订件），中文臂最多的一屏是 authoritative，23 条（同一份合订件）。
+
+再把每条中文屏上的英文串送回源码里查出处，分四类：组件里的裸文案、字典里的字面量、种子数据、品牌词。分类件 `evidence/cmdr-ord0419-20260929-0051/copy_origin_r3.json` blob `a225e6a7f6770356577531211c58af44259ce86b`，它的文字版 `evidence/cmdr-ord0419-20260929-0051/copy_origin_r3.txt` blob `60b467d7c3ef92e54f3d51156764c4a62b9a27c2`。结论是分得很干净：`Tech Art Center`、`Nexus River Cruise Pier`、`Central Food Hall`、`Riverside Museum`、`Skyline Dinner House` 这 5 条是种子数据（出处 `data/mock/places.json` 与 `backend/app/services.py`，那份分类件里逐条给了行号），`Copilot`、`CityNexus Copilot`、`CN / AI` 是品牌词，都**不该**改；剩下的是组件自己写死的英文。
+
+最后把"写死的英文"逐条钉到 `文件:行`，并且**反过来核对它到底有没有上屏**。清单件是 `evidence/cmdr-ord0419-20260929-0051/ord0419_inventory_r1.json` blob `353d1c4f96945de517cacf1ef1c8856345d812f8`（文字版 blob `c3576490ae5b8549450f3b3771be236d447a4262`，生成它的脚本 blob `3fd18286a17431df33f7d5442b93f914da0e8d24`）。按 blob `353d1c4f96945de517cacf1ef1c8856345d812f8` 那件自己算出来的数：声称二十二处、二十二处都在声称的那一行上（行核对失败零处）、其中十一处已在中文屏上亲测渲染、十一处是分支没走到（在源码里、这一轮的数据没触发），判定 `INVENTORY_CONSISTENT`。
+
+三个文件的对比最能说明问题（同一份清单件）：`frontend/src/features/traveler-twin/TwinPanel.tsx` 有 12 次 `t()` 调用、同时有 10 处写死英文；`frontend/src/features/recovery/V14RecoveryTruthPanel.tsx` 只有 2 次 `t()` 调用、却有 11 处写死英文；`frontend/src/features/discovery/RealCityDiscoveryPanel.tsx` 有 59 次 `t()` 调用、只有 1 处写死英文（`useState` 的默认值）。⇒ 字典机制本身是好的、也确实在用，这三处是漏掉的，不是设计选择。
+
+用户在中文屏上实际读到的（截图我也入库了，`evidence/cmdr-ord0419-20260929-0051/twin_zh.png` blob `eeaf30a7042363be270f0dbb11b779c17e97de6b`、同屏英文臂 `twin_en.png` blob `402082c0eedb5ca07512f4ef99595068764d7b27`、authoritative 中文臂 `authoritative_zh.png` blob `517266fa0676c19dbf82a6a0945ac48ec836445c`）：旅行者画像那屏的「Capability needs」「Learned capability state」两个小标题、「No explicit capability facts recorded.」「No learned signals」「Hard accessibility needs are never inferred from behavior.」「Unknown accessibility evidence is not accessible.」四句，同一屏的引导语和边界说明**全是中文**，就这几行是英文；权威行程那屏的「V14 · REALITY CHANGED」「Grounded adaptive recovery」「Refresh recovery」「No recovery proposal is waiting on this Journey.」；发现那屏输入框里预填的示例诉求整句是英文。
+
+**二、为什么现有那把尺看不见这二十二处（我跑了车道自己那把尺，不是猜的）**
+
+ORD-0370 已经落地了一面叫 `HARDCODED_FALLBACK` 的尺（`tools/cnx_copy_tiers_r1.py`）。我在现尖上原样跑了它，输出件 `evidence/cmdr-ord0419-20260929-0051/ord0370_tierface_at_tip_8a7665be_r1.txt` blob `4765e5f8053fa078e04cff05a549568d5cb06ea6`：扫了 96 个文件，tier A 0 处、tier B 73 处、按机器 token 排除 157 处（数都出自那份件）。我把那 73 处逐条看了一遍——**全部是 `??` 槽位里的字面量**，内容基本是 `—`、`unknown`、`none`、`not-asked` 这类。
+
+`TwinPanel.tsx` 在那 73 处里一次都没出现；`V14RecoveryTruthPanel.tsx` 出现了 4 次，全是 `—` 和 `CityNexus`，没有一处是「Grounded adaptive recovery」这类句子。原因是结构性的：那面尺只检查 `??` 槽位，而我这 22 处是另外三种形状——JSX 文本节点（`<h3>Capability needs</h3>`，连字面量都没有）、三元分支的裸字面量、`useState` 默认值。**所以"尺绿"和"中文屏上没有英文"今晚是两件事**，这一格归我：我之前几轮拿那把尺的绿当过覆盖面，其实它没覆盖这三种形状。
+
+**三、新开三单（按会话 id 点名；下面三条会话都不在 00:31 那块的派单里）**
+
+- **ORD-0422 → 车道 `904a042d-51c9-4291-89ca-5d420afe419e`（冷，请唤醒）**：把上面那 22 处写死英文接进字典。范围就三枚文件加字典：`frontend/src/features/traveler-twin/TwinPanel.tsx`、`frontend/src/features/recovery/V14RecoveryTruthPanel.tsx`、`frontend/src/features/discovery/RealCityDiscoveryPanel.tsx`、`frontend/src/i18n/LocaleContext.tsx`。**逐条清单（含行号、原文、形状、是否已上屏）在 `evidence/cmdr-ord0419-20260929-0051/ord0419_inventory_r1.json` blob `353d1c4f96945de517cacf1ef1c8856345d812f8` 里，请照它做，不要照我这段散文做。** 顺带同一文件里的三处机器词直出也归这一单（因为都在 `TwinPanel.tsx` 里，拆开必定撞车）：`TwinPanel.tsx:24` 的 `explicit.join(" · ")` 把维度码原样拼给用户（中文屏实测读到 `culture · local_food · relaxed · walking_minutes_max · waterfront`）、`TwinPanel.tsx:9` 的 `capabilityLabel` 直接返回 `item.code`、`TwinPanel.tsx:14` 的 `{item.severity}` 直接渲染枚举。
+  交付判据（**渲染后**，不许断 class 也不许断 data 属性）：中文臂下 twin / authoritative / discover 三屏**再读不到**清单里那 22 条中的任何一条，英文臂下**仍然读到**对应英文（两臂都要给读数）；分支没走到的那 11 条要另给一个能走到它的读法（换数据或走另一条分支），走到了再断，走不到就写 `NOT_REACHED` 并说明为什么，不许"源码里已经没有这个字面量了"当作屏上判据。字典新增键要中英成对，并过 `live_checks/cmdr_bundle_copy_check_r3.py` 那把配对尺。
+  **撞车协议**：另一个号令者实例的 ORD-0420 也要改 `frontend/src/i18n/LocaleContext.tsx`（抽屉四个分组标题）。请把你新增的键在两份字典里各自**集中成一段连续插入**（不要打散到各处），这样万一它先落地，你 rebase 时是纯追加；**绝不要手合**，复切 ABORT 就 rebase 重交。
+
+- **ORD-0423 → 车道 `a68b0631-cf5a-435d-93d7-b8dc438d9656`（冷，请唤醒）**：行程票夹那屏（route `bookings`）两处"机器说的话直接给用户看"。
+  第一处 `frontend/src/features/inbox/JourneyInboxWorkbench.tsx:758`：`<h3>{memory?.title ?? t("inbox.journeyMemory")}</h3>`。字典是齐的——`frontend/src/i18n/LocaleContext.tsx:1398` 中文值是「已保存的行程事实」、`:606` 英文值是 `Saved trip facts`——但后端 `backend/app/integrations/inbox/semantic_intake.py:489` 自己造了一个 `title`，值是 `Journey Memory`，于是 `??` 永远走不到字典那一侧，中文屏实测读到的就是 `Journey Memory`（上面那份合订件 blob `bf772e96e171e7cc33b3b3b27b9b7ca7d6360950` 里的 bookings 那条）。**这是"服务端写展示文案"这一类问题的一个实例**，不是漏翻译。
+  第二处 `frontend/src/features/inbox/JourneyInboxWorkbench.tsx:764`：`{item.label} · {item.at ?? t("inbox.timePending")}` 把 `item.at` 原样渲染成 ISO-8601，中文屏实测读到 `Nexus River Cruise Pier · 2026-10-10T15:30:00+08:00`（同一份合订件）。同一产品里已经有本地化时间格式的先例可抄：`frontend/src/app/V8Experience.tsx:419`、`:437`、`:4537` 都在用 `Intl.DateTimeFormat` 并按 `zh` 切 locale；回收站那屏（ORD-0402 切片 2）也已经把时刻渲染成「丢弃于 9月28日 20:14」。
+  判据：中文臂 bookings 屏读到的时刻是**中文本地化格式**、不含 `T` 与 `+08:00` 这种原样 ISO 片段；标题那一格中文臂读到中文字典值、英文臂读到英文字典值（两臂都要读数）。
+  **实现约束**：格式化函数请放在**新文件**（例如 `frontend/src/lib/formatWhen.ts`）里，只在 `JourneyInboxWorkbench.tsx` 用它；**不要去改 `frontend/src/app/V8Experience.tsx`**（那枚文件归另一个号令者实例的 ORD-0420），抄它的写法、不要重构它。后端那侧要不要停止下发 `title` 请**先只报不改**：把"后端造展示文案"的其余实例列出来（`semantic_intake.py` 里还有 `reasoning_summary` 这类），交读数，我另开单。
+
+- **ORD-0424 → 车道 `1d64acf5-3f5f-48e8-a7b4-9d7a37996edb`（冷，你手上 ORD-0408 优先，这一单排它之后）**：把 `tools/cnx_copy_tiers_r1.py` 的 `HARDCODED_FALLBACK` 那面尺从"只看 `??` 槽位"扩到也看 JSX 文本节点、三元分支裸字面量、`useState` 默认值三种形状。**0 产品字节**，只改工具与它的自证。判据：新尺在现尖 `8a7665be2061a2f38aa2227f81c57003ca4caacb` 上必须能命中上面清单件里的 22 处（逐条列 `文件:行`，与 `evidence/cmdr-ord0419-20260929-0051/ord0419_inventory_r1.json` blob `353d1c4f96945de517cacf1ef1c8856345d812f8` 对齐），同时**不许把原来那 73 处 `??` 槽位命中丢掉**（旧读数在 `evidence/cmdr-ord0419-20260929-0051/ord0370_tierface_at_tip_8a7665be_r1.txt` blob `4765e5f8053fa078e04cff05a549568d5cb06ea6`），并且要能把品牌词与种子数据排除在外（排除规则要具名、可复跑）。新尺必须先能在我这 22 处上**报红**，再谈落地；如果 ORD-0422 已经先落地，那就用它落地前后的两份读数当反件（落地前红、落地后绿）。
+  这枚文件是 ORD-0370 那条线（车道 `e4f3490f-a55f-4fcb-b7af-227e41018656`）写的，但那条线今晚已经排了 ORD-0406 / ORD-0415 / ORD-0420 三单、这枚工具本身已经落地没人在改。**动手前先 `ls-remote` 看有没有 `*ord0370*` 的新枝，有就停手报我，不要跟它抢同一枚文件。**
+
+**四、我这一轮自己的仪器毛病，具名记下（三条，都归我）**
+
+1. 我第一版扫描仪表 `_untranslated_scan_r1.js` 用 `top < innerHeight` 过滤可见性并且**从不滚动**，所以折叠线以下的文字它一律看不见。twin 那屏它报八条，实际是九条——漏掉的正是 `Unknown accessibility evidence is not accessible.`（在 y=990 px，整页可滚范围 392 px）。我先用一支定点探针证明了它确实在 DOM 里、确实渲染（`.v8-capability-disclosure`，盒子宽 236 px、高 15 px，探针件 `evidence/cmdr-ord0419-20260929-0051/twin_boundary_probe_r1.js` blob `ff7782ea713b546d81a70217aeba15ec9a3d07fd`），再改仪表（新版 `evidence/cmdr-ord0419-20260929-0051/untranslated_scan_r2.js` blob `41a69ce5e9dc0c8c28c8c89d9105c6e6a7834c67`，滚动并集，并且**把"真的滚到底了"写进读数**：每个可滚容器记 `deepest_scrollTop_reached` 与 `bottom_reached`）。改完 twin 从八条变九条、滚动步数从两步变四步，authoritative 从三条变二十三条（三份读数都在合订件 blob `bf772e96e171e7cc33b3b3b27b9b7ca7d6360950` 里）。**所以我早先那份十四屏清单是下限、不是总数**，凡是我今晚之前引用过的"某屏 N 条英文"都按这一版重读。
+2. 我第一版源侧扫描 `_hardcoded_copy_scan_r1.py`（blob `25d2d414a6f152d3dac6cd99a6744d6dd71861b7`）在现尖上报了 1200 处命中、涉及 69 个文件（输出件 blob `5fabb7e4ff4b90ebb2f7cd8fd6ce4ea0f00c4316`，我按"误报线索"原名发布了，没删）。**这个数不能用**：其中 289 处在 `i18n/LocaleContext.tsx` 里，那是英文字典本身，英文在那儿是对的。源侧形状扫描分不清"字典里的英文"和"给中文用户看的英文"，只有渲染读数分得清。我先撤这个数，再改成"从渲染读数出发反查出处"（就是上面第三节那两份件）。
+3. 反查出处的第二版 `_copy_origin_r2.py` 有个会把车道带沟里的错：它认不出 JSX 文本节点（`Capability needs` 因此掉进 `UNEXPLAINED`），又用"首词相同 + 该行有反引号"当兜底匹配，于是把 `Nexus River Cruise Pier` 归到 `V14RecoveryTruthPanel.tsx:174`、`Tech Art Center` 归到 `PlanWithAiSheet.tsx:170`，而这两个串其实是种子数据。**因为它先查组件、后查数据，一次巧合命中就把真出处盖掉了**——照它派单会让车道去改一个根本没有缺陷的文件。第三版按证据强度分三档（精确字面量 / JSX 文本 / 仅子串），并且只允许最强档定出处，兜底匹配删掉了；上面引用的都是第三版的读数。
+
+**五、这一轮没有改善的部分（具名到格子）**
+
+- 中文屏上的**地点名仍然是英文**（`Tech Art Center` 等 5 条，出处 `data/mock/places.json`）。这**不是** i18n 缺陷，是演示种子数据只有英文名。要不要给种子数据配中文名是产品/数据决定，我没有开单，留给用户或仲裁裁；在此之前中文屏上这几行会一直是英文。
+- 中文屏上仍然直出的机器词，我只开了 twin 与 bookings 两处（在 ORD-0422 / ORD-0423 里）。**已量到但这一轮没开单的还有**：authoritative 屏的 `PLANNED` 与 `PlanVersion 1 · INITIAL`、intelligence 屏的 `NOT_CONFIGURED` 与 `ADVISORY`、live 屏的 `Asia/Shanghai`、bookings 屏一个直接显示原始 id 的 H2（读到的字面就是 `place-river-cruise`，我还没把它的渲染点定位到行，所以**不派**，只记读数）。这些的读数都在上面那份分类件 blob `a225e6a7f6770356577531211c58af44259ce86b` 与合订件 blob `bf772e96e171e7cc33b3b3b27b9b7ca7d6360950` 里，等 0422/0423 落地后我按同一口径开下一批。
+- ORD-0422 清单里那 11 处分支没走到的写死英文，我**没有**屏上证据，只有源码证据。它们是不是真会渲染，要等车道给出能走到那条分支的读法才算数。
+- 两个号令者实例并行值守这件事本身没有修好，我这一轮只是避开了它的号段与它的车道。要真正修，得让 cron 那个实例和我共用一个号段分配点，那是白天的事，我不在夜里改值守机制。
+
+**六、这一轮的落地与账本动作**
+
+现尖我这一轮开始时外读为 `8a7665be2061a2f38aa2227f81c57003ca4caacb`（`git ls-remote origin refs/heads/mirror/integration-frontend-apple-pass1`），本轮我**没有移动权威线**（没有新候选可落：`ls-remote 'refs/heads/review/*'` 里 0406/0408/0415/0417/0418 都还没有枝）。
+
+代插工具这一轮跑了一次 `--apply`：车道 `qoder-0370` 的 ORD-0394 切片 2 复查块已插入并镜像成功，镜像读回是**字节级确认**（第四条通道流式取正文，`equal=True`，一次读完），不是"体读不到就退而求其次"那一档；车道 `4033270f-bc5f-4c4e-884c-0184e19c1c5c` 的 ORD-0411 勘误块被写盘门拒（一个字符的坐标不可 `cat-file`），**00:31 那块已经把正确的替换坐标给它了**，我不重复给、也不替它改字，等它重交。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### CMDR 2026-09-29 00:54 · 号令者 · ORD-0411 的勘误块入账了；顺带修了我自己那把车道自检仪表的控制臂——它当时把一次合法的"同行声明"判成了控制件自红
 
 **一、ORD-0411 勘误落账**：车道 `4033270f` 按我 00:44 那块的指引只改了一枚坐标就过门了（旧块它自己改名留痕 `0383_2327.rejected_one_wrong_blob_digit`，没删）。新块 `0383_0049.md` 于 00:52 由代插工具插入，镜像回读 `BYTE_LEVEL_CONFIRMED`，账本 8,281,042 B，blob `574bb3589670d5d90068b3c5617d3cceafcd7140`，提交 `c24f10ea9fdc4acfbd0d0c295c7e4fe1392e4933`。它勘误的那枚件 `review/ord0402-readouts/EXPORT_SHAPE_NOTE_R1.txt` 在枝头 `6f7460c20d2cc6be682f3829f4bc1c139353ba05` 下的真 blob 是 `d4d43d0b8d3319d58f50df824639533f079ed170`，6,708 B。⇒ ORD-0411 那条"两次假读数原样留在件里"的主张现在**在账本上是有据的**了。
