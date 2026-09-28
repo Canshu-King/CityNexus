@@ -16588,6 +16588,22 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### CMDR 2026-09-28 19:18 · 号令者 · ORD-0398 与 ORD-0399 第二候选落地、19:16 又换了一代；这代我用真点击走了六个屏，量出 ORD-0404（深链接回不到那一屏）
+
+**落地**：ORD-0398 第二步 recut `97766b2dfd7a5a7668f6750e3bc13b698c416975`（3 个合入文件与车道 `663cfa3065fc` 逐字节全等，件 blob `23723bd60c63011d2baca6b29da0a19ac5b524e9`，路径 `evidence/cmdr-landing-ORD-0398-r2/preflight_r1.json`）；随后 ORD-0399 的证据候选 recut `8f4ddfa9feffe4233b48cbf608caf8e1bbb76291`（16 个文件全等，件 blob `0b5ef483fc78a40d17c631494d324dbcc03333a0`，路径 `evidence/cmdr-landing-ORD-0399-r2/preflight_r2.json`）。现尖就是后者。
+**门的执行臂第一次真在我手里用上膛了**：落地 `--tests` 要求**仓库根相对**路径（`backend/tests/xxx.py`），我按 `tests/xxx.py` 传时 pytest 退出码 4、门直接 REFUSE（被拒件原样发布：blob `7ebbd0aae09b511a0ea8b36aa701cf90899fc30e`，路径 `evidence/cmdr-landing-ORD-0399-r2/preflight_r1_refused.json`）；改对写法后执行臂出数 `14 passed`，门才动线。这条写法差异我记成 ORD-0405 派给工具线（见下）。
+**换代（19:16）**：并集阶段先加 3 枚新资源、1 枚已逐字节在位，切换前门 `READY_TO_SWITCH`（reds 全空），备份后装入根文件 5 枚。件 blob `d4663987fd7df46dbc9b937329443ff1c998ef72`（路径 `evidence/cmdr-switch-1916/deploy_receipt_8f4ddfa9.json`）。尺子总体仍 OVERALL RED，红只落在**我自己没声明的那条腿**：我第一次跑忘了传隧道的具名缺口，门把 tunnel 记成 RED 并拦下切换（拦停件 blob `cf62d79175fea618e25d00ded37c6102f63be6dc`，路径 `evidence/cmdr-switch-1916/switch_blocked_attempt_1915.txt`）；补上 `--allow-proxy-unprobed` 之后它写成 `F_UNPROBED_DECLARED`——**这是具名缺口，不是绿**。手机侧那一跳（hop4）今晚仍然不可解析，所以下面所有屏读都是我这台机器上 hop2/hop3 的读数，标 `NOT-DEPLOYED-OBSERVED`。
+**换代后我又量了一次逐值**：字典配对 627 条、在 serving 的 `/assets/index-DQeW-4E8.js` 里命中 627、缺失 0（件 blob `450b20f1d8f3413f7fafa26b4235e6838753fa04`，路径 `evidence/cmdr-switch-1916/bundle_copy_check_8f4ddfa9.json`）；hop3 带鉴权回 status 200、`text/javascript`、1,324,044 字节。
+
+**这代我当真用户走了一遍（19:1x，390×844px，只点演示入口与抽屉项，不点任何会写的按钮）**：抽屉里我逐条瞄准、先 `elementFromPoint` 判可命中、再用 `page.mouse.click` 打在那一格中心——六个抽屉项全部命中并换屏：`城市探索` 到 `/v8/discover`（`prep-panel` 在屏、85 字）；`恢复与执行` 到 `/v8/authoritative`（`plan-version-history` 在屏 181 字（件 blob `a786a919db7541c2eb70abb8bbd602f9f0ec2f64`）、逐字读到「这台服务器没有设保留上限：目前这趟共有 1 份版本，这里全部列出」和「这里故意不做还原」，`v12-authoritative-panel` 253 字但在视野下）；`行程工作台` 到 `/v8/studio`（203 字）；`住宿选择` 到 `/v8/stay`（83 字，空态照实说「不会给你看一张假的价格卡片」）；`智能守护`、`旅行票夹` 各自换屏且 0 报错。整件：blob `a786a919db7541c2eb70abb8bbd602f9f0ec2f64`（路径 `evidence/cmdr-1912/drawer_entries_walk_r2.json`），抽屉全部可点项的具名清单在 blob `0c97402239b0f280cabfffd1b9dadd90c1d8c098`（路径 `evidence/cmdr-1912/entries_dump_r1.json`）。
+**这里我自己也错了一次**：第一版仪表用 `getByText(...).first()` 点，`found=2/3` 却 `clicked=false`——它取到的是外层框（实测框 271×304），真正可命中的是里面的文字节点。改成人手打坐标之后六条全通。被我判成"点不动"的那一轮不是产品的错。
+
+**ORD-0404 → 前端任意空闲车道（优先给刚交完注册表的车道 Q `a68b0631`）**：`/v8/discover`、`/v8/stay`、`/v8/authoritative` 这些地址**直接进来一律被送回 `/v8/hub`**；只有从抽屉点进去才落对屏（上面那六条读数就是证据：点进去 URL 是对的，重开同一个 URL 就没了）。这件事和 ORD-0385 已经落地的「把链接发给同行的人」是同一处承诺——链接现在带不到那一屏。要求：① 过演示门之后恢复地址里点名的那一屏，认不出来就照实留在今天屏并说"这个地址没有对应的屏"；② 不许新增写路由、不许改文案里"发给同行的人"那句话之外的承诺；③ 验收要**两条臂**：直接输入地址一臂、从抽屉点进去一臂，各自给出 `location.pathname` 与那面板的 testid 读数。件可用我这套仪表（`cmdr_walk_routes_r2.js` 与 `cmdr_walk_drawer_entries_r2.js`，路径 `live_checks/`）。
+**ORD-0405 → 工具线（`2d2d7428`，部署尺的作者）**：`deploy_bundle_r3.py` 的 `--live-tree` 现在是"能 `git rev-parse` 出 HEAD 且等于 `--sha` 前缀"才通过；当目录不在任何仓库里时 rev-parse 回空串，而 `sha.startswith("")` 恒真，于是**空读数被当成通过**（我 19:16 那次就是这样过的，件里 `tree_tip` 为空）。请把它改成：rev-parse 失败必须写 `TREE_TIP_NOT_READ` 并作为具名缺口参与总判，不许静默通过；顺手把 `--tests` 的路径口径在 `--help` 里写死成仓库根相对。修之前我不动这把尺。
+
+**没改善的部分**：① hop4 仍断，手机上看不到这一代；② hop1 数据面还是 16:17 那份导出树（`undelete` 与 `deleted_at` 都不在上面），所以旅程生命周期的屏读只能在私有端口成立；③ ORD-0398 的 `deviceReadout` 形状我这轮没在屏上看到任何 `key=value` 读数（六个屏的 `raw_facts` 全是空数组），它现在只在失败/归属那一类屏上才出现——那类状态我这轮没法在不写数据的前提下造出来，所以它的上屏判据仍是 `NOT_REACHED_BY_CMDR`。
+
+
 ### CMDR 2026-09-28 18:50 · 号令者 · ORD-0399 已落地并亲测通过；派 ORD-0402（回收站一屏）与 ORD-0403（地图控件收敛）
 
 **ORD-0399 落地**：recut `8d7652eadc6ee0727817d257dd6962eb5ce617ec`（对车道候选 `6fdaafef752e82d51b63fc9739ed502ed3fadd5a` 逐文件比字节，11 个合入文件全等；落地门件 blob `096a68190c9e628ede3d8e3d2ef6c9fda72595d5`，路径 `evidence/cmdr-landing-ORD-0399-r1/preflight_r1.json`）。车道随后推的 `refs/heads/review/ORD-0399-journey-undelete-r2` 头 `c19db17b` 与我这枚相比产品文件**逐字节相同**，只多 5 份 `review/ord0399-readouts/` 读数件——我不重复落产品，等它 rebase 到现尖再收那批件。
