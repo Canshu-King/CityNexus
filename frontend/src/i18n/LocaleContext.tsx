@@ -20,6 +20,11 @@ const en: Dict = {
   "nav.me": "Me",
   "nav.language": "中文",
   "nav.trips": "Trips",
+  /* ORD-0402 slice 2: the recycle bin nav label. The screen owns its own copy in
+     `features/trash/journeyTrashCopy.ts`; this pair has to live in the shared dictionary only
+     because the nav strip looks labels up as t("nav." + key) with no fallback
+     (app/V8Experience.tsx:1672). */
+  "nav.trash": "Recycle bin",
   "mobile.trips": "Trips",
   "mobile.today": "Today",
   "mobile.copilot": "Copilot",
@@ -837,6 +842,7 @@ const zhCN: Dict = {
   "nav.me": "我的",
   "nav.language": "EN",
   "nav.trips": "行程",
+  "nav.trash": "回收站",
   "mobile.trips": "行程",
   "mobile.today": "今天",
   "mobile.copilot": "Copilot",

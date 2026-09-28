@@ -16,6 +16,7 @@ import { RecoveryRequiredPanel } from "../features/recovery/RecoveryRequiredPane
 import { StayExplorer } from "../features/stay/StayExplorer";
 import { TwinPanel } from "../features/traveler-twin/TwinPanel";
 import { TripItinerary } from "../features/trip/TripItinerary";
+import { JourneyTrashPanel } from "../features/trash/JourneyTrashPanel";
 import { V10LiveExecutionPanel } from "../features/execution/V10LiveExecutionPanel";
 import { V12AuthoritativeJourneyPanel } from "../features/execution/V12AuthoritativeJourneyPanel";
 import { V12TripStudioPanel } from "../features/studio/V12TripStudioPanel";
@@ -266,6 +267,16 @@ export const routePanels: V8PanelEntry<RouteScope>[] = [
     testId: "v8-me",
     when: (s) => s.route === "me",
     render: (s) => <>{s.slots.me()}</>,
+  },
+  {
+    /* ORD-0402 slice 2: the recycle bin, on the route surface -- the shell holds no mount for it, and
+       the screen owns its two server calls (see features/trash/journeyTrash.ts for which of them is
+       landed and which waits on slice 1). */
+    id: "trash",
+    surface: "route",
+    testId: "journey-trash-panel",
+    when: (s) => s.route === "trash",
+    render: () => <JourneyTrashPanel />,
   },
 ];
 
