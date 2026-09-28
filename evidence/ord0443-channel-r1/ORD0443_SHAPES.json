@@ -1,0 +1,29 @@
+{
+  "model": "global:glm-5.2",
+  "base_url": "http://127.0.0.1:7864/v1/responses",
+  "impact_timeout_seconds_default": 10.0,
+  "agent_client_timeout_source": "backend/app/agent/runtime.py:282",
+  "shapes": [
+    {
+      "shape": "plain",
+      "timeout_budget_s": 180.0,
+      "ok": false,
+      "elapsed_s": 10.53,
+      "error": "DeepSeekResponsesError: DeepSeek Responses request failed"
+    },
+    {
+      "shape": "json_mode",
+      "timeout_budget_s": 180.0,
+      "ok": false,
+      "elapsed_s": 1.16,
+      "error": "DeepSeekResponsesError: DeepSeek Responses request failed"
+    },
+    {
+      "shape": "with_tools",
+      "timeout_budget_s": 180.0,
+      "ok": false,
+      "elapsed_s": 2.02,
+      "error": "DeepSeekResponsesError: DeepSeek Responses request failed"
+    }
+  ]
+}
