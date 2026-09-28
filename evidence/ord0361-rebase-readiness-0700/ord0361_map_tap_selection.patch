@@ -1,0 +1,409 @@
+From 11eee48da2b117a2c0aafb2d71c50b0104b7d1fb Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?=E4=BB=93=E9=BC=A0=E7=8E=8B?= <yjianbin419@gmail.com>
+Date: Sat, 26 Sep 2026 18:02:45 +0800
+Subject: [PATCH] ORD-0361: a map marker becomes a control, and the pick is
+ remembered per journey
+
+Tapping a stop produced no observable consequence: the markers were plain divs with an aria-label
+and no handler anywhere in the panel, so the map was a picture you could drag. Markers now answer a
+tap, Enter and Space; an unpickable one says why in the traveller's words with the contract field
+that decided it named beside the sentence; and the picked stop is kept in a journey-scoped entry
+alongside the shell's other citynexus.v8.* keys, so re-entering the page restores it. The rail's
+rows became focusable cards that scroll into view and take focus for the picked stop.
+
+Not claimed: at this generation the map and the per-stop rail are on different tabs (MapPanel at
+V8Experience.tsx:2918/3497/3702, the rail inside AuthoritativeExecution), so the scroll-and-focus
+half has no screen where it can fire. That pairing is a product decision, not something to fake
+with a stand-in list.
+---
+ frontend/src/app/V8Experience.tsx             | 44 ++++++++++-
+ frontend/src/components/v8/MapPanel.tsx       | 79 +++++++++++++++++++
+ .../V12AuthoritativeJourneyPanel.tsx          | 43 +++++++++-
+ frontend/src/lib/mapFocus.ts                  | 65 +++++++++++++++
+ 4 files changed, 228 insertions(+), 3 deletions(-)
+ create mode 100644 frontend/src/lib/mapFocus.ts
+
+diff --git a/frontend/src/app/V8Experience.tsx b/frontend/src/app/V8Experience.tsx
+index ec36a58b..2ca4ac63 100644
+--- a/frontend/src/app/V8Experience.tsx
++++ b/frontend/src/app/V8Experience.tsx
+@@ -10,6 +10,7 @@ import { HotelsPanel } from "../features/stay/HotelsPanel";
+ import { PlanComparison } from "../features/planning/PlanComparison";
+ import { LiveRecovery } from "../features/execution/LiveRecovery";
+ import { liveActivityWindow } from "../lib/executionWindow";
++import { readMapFocus, writeMapFocus } from "../lib/mapFocus";
+ import { installVisualViewportVars } from "../lib/visualViewport";
+ import {
+   classifyHealthProbe,
+@@ -3327,6 +3328,23 @@ function AuthoritativeExecution({
+     twin?.context as
+       { execution?: { next_activity_id?: string | null } } | undefined
+   )?.execution;
++  /* ORD-0361: the stop the traveller picked on the map, kept per journey so it survives a reload.
++     The server owns where the trip *is*; nothing here claims that -- this is which card the
++     traveller asked to look at, and the store is named (`citynexus.v8.map_focus.<journeyId>`). */
++  const planActivityIds = useMemo(
++    () => ((plan?.activities ?? []) as Array<{ id: string }>).map((item) => item.id),
++    [plan],
++  );
++  const [focusedActivityId, setFocusedActivityId] = useState<string | null>(null);
++  useEffect(() => {
++    if (!plan || focusedActivityId) return;
++    const stored = readMapFocus(journeyId, planActivityIds);
++    if (stored) setFocusedActivityId(stored);
++  }, [plan, journeyId, planActivityIds, focusedActivityId]);
++  const pickActivity = (activityId: string) => {
++    setFocusedActivityId(activityId);
++    writeMapFocus(journeyId, activityId);
++  };
+   return (
+     <section className="v8-page" data-testid="v12-authoritative-page">
+       <div className="v8-page-intro compact">
+@@ -3364,6 +3382,8 @@ function AuthoritativeExecution({
+             plan={plan}
+             nowActivityId={twin?.current_activity_id}
+             nextActivityId={execution?.next_activity_id ?? null}
++            focusedActivityId={focusedActivityId}
++            onSelectActivity={pickActivity}
+             onTransition={onRefresh}
+           />
+           <V12TripStudioPanel
+@@ -3401,6 +3421,23 @@ function Live({
+ }) {
+   const t = useT();
+   const { locale } = useLocale();
++  /* ORD-0361: the Live tab owns a map but not the per-stop rail (the rail is on the
++     `authoritative` tab), so on this surface a pick is recorded and named, and the card-to-focus
++     half waits for the pairing to be decided rather than being faked with a stand-in list. */
++  const livePlanActivityIds = useMemo(
++    () => ((data.active_plan?.activities ?? []) as Array<{ id: string }>).map((item) => item.id),
++    [data.active_plan],
++  );
++  const [focusedActivityId, setFocusedActivityId] = useState<string | null>(null);
++  useEffect(() => {
++    if (focusedActivityId) return;
++    const stored = readMapFocus(data.journey.id, livePlanActivityIds);
++    if (stored) setFocusedActivityId(stored);
++  }, [data.journey.id, livePlanActivityIds, focusedActivityId]);
++  const pickActivity = (activityId: string) => {
++    setFocusedActivityId(activityId);
++    writeMapFocus(data.journey.id, activityId);
++  };
+   const {
+     now,
+     next,
+@@ -3475,7 +3512,12 @@ function Live({
+                 : t("live.awaitingPlanUpper")}
+           </strong>
+         </div>
+-        <MapPanel data={data} option={selected} />
++        <MapPanel
++          data={data}
++          option={selected}
++          focusedActivityId={focusedActivityId}
++          onSelectActivity={pickActivity}
++        />
+       </div>
+     </section>
+   );
+diff --git a/frontend/src/components/v8/MapPanel.tsx b/frontend/src/components/v8/MapPanel.tsx
+index 788e71b2..9de58553 100644
+--- a/frontend/src/components/v8/MapPanel.tsx
++++ b/frontend/src/components/v8/MapPanel.tsx
+@@ -2,6 +2,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
+ import "maplibre-gl/dist/maplibre-gl.css";
+ import type { FeatureCollection } from "geojson";
+ import type { V8Data } from "../../app/v8Types";
++import { unpickableCopy } from "../../lib/mapFocus";
+ import { useT, useLocale } from "../../i18n/LocaleContext";
+ 
+ /**
+@@ -25,6 +26,8 @@ export function MapPanel({
+   data,
+   option,
+   onNoLocationChange = null,
++  focusedActivityId = null,
++  onSelectActivity = null,
+ }: {
+   data: V8Data | null;
+   option: V8Data["options"][number] | null;
+@@ -32,8 +35,19 @@ export function MapPanel({
+       counts, and a trip with no located activity can still have a route.  Attention needs that
+       same answer or one screen can say "没有可信的坐标" and "一切正常" at once. */
+   onNoLocationChange?: ((value: boolean) => void) | null;
++  /** ORD-0361: the stop the traveller picked, so its marker can say it is the picked one. */
++  focusedActivityId?: string | null;
++  /** ORD-0361: a tap on a catalogued stop.  Without this the map was a picture: pressing a marker
++      produced no observable consequence anywhere on the screen. */
++  onSelectActivity?: ((activityId: string) => void) | null;
+ }) {
+   const host = useRef<HTMLDivElement | null>(null);
++  /* The markers keyed by the activity they stand for, so a selection can repaint them without
++     tearing the map down and rebuilding it (which would reset the camera under the finger). */
++  const markerRefs = useRef(new Map<string, HTMLElement>());
++  /* The named reason a marker could not be picked.  State, not a console line, because the
++     traveller has to be able to read the answer. */
++  const [unpickable, setUnpickable] = useState<{ title: string; role: string } | null>(null);
+   // Map truth: never centre on a hardcoded city.  If the Journey has no
+   // trustworthy coordinates we say so explicitly instead of silently showing
+   // an unrelated city (design corrections §10).
+@@ -86,6 +100,9 @@ export function MapPanel({
+           ? [
+               {
+                 title: item.title,
++                /* ORD-0361: the marker has to say *which* stop it is, or a tap cannot be answered.
++                   The plan's activity id is the only identity here that a card can be matched on. */
++                activityId: item.id,
+                 longitude: item.metadata.longitude,
+                 latitude: item.metadata.latitude,
+                 role: item.metadata.role,
+@@ -103,6 +120,9 @@ export function MapPanel({
+     if (!data) return [];
+     return data.offers.slice(0, 1).map((offer) => ({
+       title: offer.property_name,
++      // A stay offer is not a catalogued stop on the rail, and the panel says so instead of
++      // swallowing the tap.
++      activityId: null as string | null,
+       longitude: offer.location.longitude,
+       latitude: offer.location.latitude,
+       role: "STAY",
+@@ -286,7 +306,37 @@ export function MapPanel({
+       const marker = document.createElement("div");
+       marker.className = `v9-map-marker ${point.role === "STAY" ? "stay" : ""} ${point.protected ? "protected" : ""} ${point.current ? "current" : ""} ${point.disrupted ? "disrupted" : ""}`;
+       marker.textContent = String(index + 1);
++      /* ORD-0361: the marker becomes a control.  `role=button` plus a tabIndex is what makes the
++         tap answerable by a keyboard and by a screen reader as well as by a finger, and the
++         activity id rides along as the only thing a card can be matched on. */
++      marker.setAttribute("role", "button");
++      marker.setAttribute("tabindex", "0");
+       marker.setAttribute("aria-label", point.title);
++      marker.setAttribute("aria-pressed", String(point.activityId === focusedActivityId && point.activityId != null));
++      if (point.activityId) {
++        marker.setAttribute("data-activity-id", point.activityId);
++        markerRefs.current.set(point.activityId, marker);
++      } else {
++        marker.setAttribute("data-activity-id", "uncatalogued");
++      }
++      const pick = () => {
++        if (point.activityId) {
++          setUnpickable(null);
++          onSelectActivity?.(point.activityId);
++          return;
++        }
++        /* Not on the rail: say why, in the traveller's words, with the contract field that decided
++           it named beside the sentence (Q70). Silence here is the original defect. */
++        setUnpickable({ title: point.title, role: String(point.role ?? "unknown") });
++      };
++      marker.addEventListener("click", pick);
++      marker.addEventListener("keydown", (event) => {
++        const key = (event as KeyboardEvent).key;
++        if (key === "Enter" || key === " ") {
++          event.preventDefault();
++          pick();
++        }
++      });
+         new maplibregl.Marker({ element: marker })
+         .setLngLat([point.longitude, point.latitude])
+         .addTo(mapInstance);
+@@ -343,9 +393,20 @@ export function MapPanel({
+     return () => {
+       disposed = true;
+       resizeObserver?.disconnect();
++      markerRefs.current.clear();
+       map?.remove();
+     };
+   }, [data, points, route]);
++
++  /* The picked marker is repainted rather than rebuilt: tearing the map down to change one class
++     would move the camera the traveller is looking through. */
++  useEffect(() => {
++    for (const [activityId, element] of markerRefs.current) {
++      const picked = activityId === focusedActivityId;
++      element.classList.toggle("picked", picked);
++      element.setAttribute("aria-pressed", String(picked));
++    }
++  }, [focusedActivityId, points]);
+   if (noLocation) {
+     return (
+       <div
+@@ -395,6 +456,24 @@ export function MapPanel({
+           ? "单指拖动地图 · 双指缩放 · 想翻这一页就拖地图以外的地方"
+           : "One finger drags the map · two fingers zoom · to move the page, drag outside the map"}
+       </p>
++      {unpickable && (
++        /* ORD-0361: a marker that has no card answers out loud.  The role is quoted from the field
++           that decided it, under its contract name (Q70), so the sentence can be checked against the
++           payload instead of trusted. */
++        <p
++          className="v8-map-unpickable"
++          data-testid="v8-map-unpickable"
++          data-map-target="uncatalogued"
++          role="status"
++          aria-live="polite"
++        >
++          <b>{unpickable.title}</b>
++          <span>{unpickableCopy(unpickable.role, locale.startsWith("zh"))}</span>
++          <span className="v8-sr-only" data-cnx-field="role">
++            {unpickable.role}
++          </span>
++        </p>
++      )}
+     </div>
+   );
+ }
+diff --git a/frontend/src/features/execution/V12AuthoritativeJourneyPanel.tsx b/frontend/src/features/execution/V12AuthoritativeJourneyPanel.tsx
+index 1ac53215..f0423c4c 100644
+--- a/frontend/src/features/execution/V12AuthoritativeJourneyPanel.tsx
++++ b/frontend/src/features/execution/V12AuthoritativeJourneyPanel.tsx
+@@ -1,4 +1,4 @@
+-import { useMemo, useState } from "react";
++import { useEffect, useMemo, useRef, useState } from "react";
+ import { Check, ChevronRight, Circle, LockKeyhole, MapPin, ShieldCheck } from "lucide-react";
+ import { transitionActivity, type PlanVersion } from "../../api/v12Authoritative";
+ import { useT } from "../../i18n/LocaleContext";
+@@ -30,6 +30,11 @@ type Props = {
+   nextActivityId?: string | null;
+   offline?: boolean;
+   onTransition?: (activityId: string, state: ExecutionState) => void;
++  /** ORD-0361: the stop picked on the map.  Its card is brought into view and takes focus, which is
++      the observable consequence the map tap used to lack. */
++  focusedActivityId?: string | null;
++  /** Tapping a card picks the same stop the other way round, so one selection serves both surfaces. */
++  onSelectActivity?: (activityId: string) => void;
+ };
+ 
+ const transitions: Record<string, "depart" | "arrive" | "begin" | "complete"> = {
+@@ -63,9 +68,12 @@ export function V12AuthoritativeJourneyPanel({
+   nextActivityId,
+   offline = false,
+   onTransition,
++  focusedActivityId = null,
++  onSelectActivity = null,
+ }: Props) {
+   const t = useT();
+   const [busy, setBusy] = useState(false);
++  const rowRefs = useRef(new Map<string, HTMLDivElement>());
+   const activities = useMemo(
+     () => (plan?.activities ?? []) as ExecutionActivity[],
+     [plan],
+@@ -75,6 +83,18 @@ export function V12AuthoritativeJourneyPanel({
+   const next = activities.find((item) => item.id === nextActivityId) ??
+     activities.find((item) => item.id !== now?.id && !["COMPLETED", "SKIPPED"].includes(item.status ?? ""));
+   const action = now ? transitions[now.status ?? "NOT_STARTED"] : undefined;
++  /* ORD-0361: the consequence of a map tap.  The card is scrolled to and given focus, in that order
++     and without an animation -- `behavior:"smooth"` never advances in this project's mobile
++     emulation (measured in ORD-0220 ③), so a smooth scroll would make the reachable state depend on
++     the compositor.  Focus is legitimate on these rows because they are controls (role=button with a
++     tabIndex), not because a paragraph was made focusable to satisfy a gate. */
++  useEffect(() => {
++    if (!focusedActivityId) return;
++    const row = rowRefs.current.get(focusedActivityId);
++    if (!row) return;
++    row.scrollIntoView({ block: "center" });
++    row.focus({ preventScroll: true });
++  }, [focusedActivityId, activities]);
+   const advance = async () => {
+     if (!journeyId || !now || !action || offline) return;
+     setBusy(true);
+@@ -114,7 +134,26 @@ export function V12AuthoritativeJourneyPanel({
+       </div>
+       <div className="v12-activity-rail" aria-label={t("exec.railLabel")}>
+         {activities.map((item) => (
+-          <div className={`v12-activity-row ${item.id === now?.id ? "current" : ""}`} key={item.id}>
++          <div
++            className={`v12-activity-row ${item.id === now?.id ? "current" : ""} ${item.id === focusedActivityId ? "picked" : ""}`}
++            key={item.id}
++            ref={(node) => {
++              if (node) rowRefs.current.set(item.id, node);
++              else rowRefs.current.delete(item.id);
++            }}
++            data-activity-id={item.id}
++            data-testid={`v12-activity-row-${item.id}`}
++            role="button"
++            tabIndex={0}
++            aria-current={item.id === focusedActivityId ? "true" : undefined}
++            onClick={() => onSelectActivity?.(item.id)}
++            onKeyDown={(event) => {
++              if (event.key === "Enter" || event.key === " ") {
++                event.preventDefault();
++                onSelectActivity?.(item.id);
++              }
++            }}
++          >
+             <span className="v12-activity-index">{item.status === "COMPLETED" || item.status === "SKIPPED" ? <Check size={14} /> : item.sequence_no}</span>
+             <span className="v12-activity-title">{item.title}</span>
+             <span className={`v12-activity-status state-${(item.status ?? "NOT_STARTED").toLowerCase()}`}>{label(item.status, t)}</span>
+diff --git a/frontend/src/lib/mapFocus.ts b/frontend/src/lib/mapFocus.ts
+new file mode 100644
+index 00000000..9d043f35
+--- /dev/null
++++ b/frontend/src/lib/mapFocus.ts
+@@ -0,0 +1,65 @@
++/**
++ * ORD-0361: which stop the traveller last picked on the map, kept per journey.
++ *
++ * The map used to be a picture: tapping a marker produced no observable consequence, so nothing
++ * remembered a choice. This is the smallest thing that makes the pick survive a reload -- a
++ * journey-scoped entry in the same `citynexus.v8.*` family the shell already uses for
++ * `journey_id` and `continuation`. It is deliberately *not* a server field: no endpoint was ordered,
++ * and inventing a write for a view preference would put an unowned claim on the journey.
++ *
++ * The value is only ever an activity id this journey's plan contains. A stored id that is no longer
++ * in the plan is dropped on read rather than honoured -- keeping it alive is how a stale focus comes
++ * back to haunt a trip that has moved on.
++ */
++
++const PREFIX = "citynexus.v8.map_focus.";
++
++export function mapFocusKey(journeyId: string): string {
++  return PREFIX + journeyId;
++}
++
++export function readMapFocus(journeyId: string | null | undefined, validIds: string[]): string | null {
++  if (!journeyId) return null;
++  try {
++    const raw = localStorage.getItem(mapFocusKey(journeyId));
++    if (!raw) return null;
++    const parsed = JSON.parse(raw) as { activity_id?: unknown };
++    const id = typeof parsed.activity_id === "string" ? parsed.activity_id : null;
++    if (!id || validIds.length === 0) return null;
++    if (!validIds.includes(id)) {
++      // Stale by measurement, not by guess: the plan this journey has now does not contain it.
++      localStorage.removeItem(mapFocusKey(journeyId));
++      return null;
++    }
++    return id;
++  } catch {
++    // Blocked or private storage: the map still works, it just will not remember across a reload.
++    return null;
++  }
++}
++
++export function writeMapFocus(journeyId: string | null | undefined, activityId: string): void {
++  if (!journeyId) return;
++  try {
++    localStorage.setItem(mapFocusKey(journeyId), JSON.stringify({ activity_id: activityId }));
++  } catch {
++    /* Nothing to do. */
++  }
++}
++
++/**
++ * Why a marker cannot be picked. Named, because the defect being fixed is silence: a traveller
++ * pressed something and the screen said nothing back. `role` is the contract field the marker
++ * carries (Q70 anchors it by name on screen), so the sentence quotes a value rather than guessing.
++ */
++export type UnpickableReason = "not-a-catalogued-stop";
++
++export function unpickableReason(hasActivityId: boolean): UnpickableReason | null {
++  return hasActivityId ? null : "not-a-catalogued-stop";
++}
++
++export function unpickableCopy(role: string, zh: boolean): string {
++  return zh
++    ? `这个点不在这一趟的地点目录里（它的角色是 ${role}），所以没有卡片可以跳过去。`
++    : `This marker is not a catalogued stop on this trip (its role is ${role}), so there is no card to jump to.`;
++}
+-- 
+2.45.1.windows.1
+
