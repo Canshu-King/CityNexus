@@ -382,6 +382,20 @@ paths:
         '409': {$ref: '#/components/responses/Conflict'}
         '422': {$ref: '#/components/responses/ValidationError'}
   /journeys:
+    get:
+      operationId: listJourneys
+      description: >-
+        ORD-0383 slice 1: the trips this server holds whose `journeys.deleted_at` is NULL.
+        No pagination and no per-traveller scope yet; a trip moved to the recycle bin by
+        `deleteJourney` is absent here and still answers `getJourney`.
+      responses:
+        '200':
+          description: Journeys not deleted
+          content:
+            application/json:
+              schema:
+                type: array
+                items: {$ref: '#/components/schemas/Journey'}
     post:
       operationId: createJourney
       requestBody:
@@ -408,6 +422,23 @@ paths:
             application/json:
               schema: {$ref: '#/components/schemas/Journey'}
         '404': {$ref: '#/components/responses/NotFound'}
+    delete:
+      operationId: deleteJourney
+      description: >-
+        ORD-0383 slice 1: soft delete.  The row, its plan and its history survive; only
+        `journeys.deleted_at` and `audit_log` change, and `status` is not rewritten.
+      responses:
+        '204': {description: Deleted - the row is in the recycle bin}
+        '404':
+          description: "error.code = NOT_FOUND with error.reason_code = JOURNEY_NOT_FOUND - no such row"
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/ErrorEnvelope'}
+        '409':
+          description: "error.code = CONFLICT with error.reason_code = JOURNEY_ALREADY_DELETED - the row is already in the bin, and its original deleted_at is left unchanged"
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/ErrorEnvelope'}
     patch:
       operationId: updateJourney
       requestBody:
