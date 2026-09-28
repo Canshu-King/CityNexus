@@ -16588,6 +16588,165 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### CMDR 2026-09-29 0108 · 车道 `2d2d7428` · ORD-0419 交了：抽屉 14 行不再共用一枚实心蓝签名，当前行三元组独立；四形两臂各一个证据文件；另把放大后坐实的 head 行连带影响量给你裁
+
+件（请审 r2）：`review/Q-ord0419-drawer-row-scope-r2` 远端回读 = `578dbfd48aa04e167a45280083748d8a792857f4`，基点 = 现尖 `8a7665be2061a2f38aa2227f81c57003ca4caacb`（我自己 `ls-remote` 现读，与你 00:31 那节同源）；
+`git merge-tree --write-tree <现尖> <r2>` 退出码=0，合并树 = `1c1f0e87f318ddb59d4013d1bb6d0391f57cef4c`。
+为什么另起一枚 ref：先推的 `refs/heads/review/Q-ord0419-drawer-row-scope-r1`（= 36afa6f36817c08a7116f22a99f96d5952535b76）里两笔提交**正文被我的 shell 吞了**——我在 `git commit -m` 的双引号里写了反引号，bash 当命令替换吃掉了（`its /companion and its weight rule` 就是那处残文）。
+按你 09-28 交件纪律「push 用新枝名，别覆盖已交过的 ref」我没有 force-move r1，而是把同样两棵树重推到 r2：`git rev-parse r1^{tree}` 与 `r2^{tree}` 逐字相同 = 1c1f0e87f318ddb59d4013d1bb6d0391f57cef4c ⇒ r1 只是说明文字坏了，内容一字不差。r1 请弃读，不必删。
+
+**改的就三处选择器，一个文件**（`frontend/src/styles.css` 现尖 blob `97c273bd8c7d250ba839f8d4429d357a8caabcac` → 件内 blob `dc623ef4e02a7bb2f4bea0854265d5c1a5d92a85`）：
+  :331 `#v8-nav-drawer > button` → `#v8-nav-drawer button`；:337 `... > button:hover, > button.active` → 后代形；:338 `#v8-nav-drawer > button.active` → `#v8-nav-drawer button.active`。
+  与侧栏 `frontend/src/styles.css:143`（`.v8-nav button`，命中）同形，与我 ORD-0416 已落地的 `frontend/src/styles.css:336` 同族。`frontend/src/app/V8Experience.tsx` 一字未动（归 ORD-0420）。
+
+**渲染后读数，八格两臂各一件**（判据全在 `getComputedStyle`，没断 class 也没断 data 属性；当前行按它自己的可见标签识别，zh「今天」/ en「Today」）：
+  before 臂（现尖产物入口 `index-CGSMsxT2.js`，与你 00:31 那节报的入口名逐字相同）：
+    390x844 zh-CN rows=14 落在全局裸按钮签名=14 落在 #758196 档=0 三元组种类=1 当前行签名唯一=False 滚到该后再命中=14/14 ｜ 见 `review/ord0419/RENDER_R1.txt:23`
+    390x844 en    rows=14 落在全局裸按钮签名=14 落在 #758196 档=0 三元组种类=1 当前行签名唯一=False 滚到该后再命中=14/14 ｜ 见 `review/ord0419/RENDER_R1.txt:25`
+    360x800 zh-CN rows=14 落在全局裸按钮签名=14 落在 #758196 档=0 三元组种类=1 当前行签名唯一=False 滚到该后再命中=14/14 ｜ 见 `review/ord0419/RENDER_R1.txt:27`
+    360x800 en    rows=14 落在全局裸按钮签名=14 落在 #758196 档=0 三元组种类=1 当前行签名唯一=False 滚到该后再命中=14/14 ｜ 见 `review/ord0419/RENDER_R1.txt:29`
+    414x896 zh-CN rows=14 落在全局裸按钮签名=14 落在 #758196 档=0 三元组种类=1 当前行签名唯一=False 滚到该后再命中=14/14 ｜ 见 `review/ord0419/RENDER_R1.txt:31`
+    414x896 en    rows=14 落在全局裸按钮签名=14 落在 #758196 档=0 三元组种类=1 当前行签名唯一=False 滚到该后再命中=14/14 ｜ 见 `review/ord0419/RENDER_R1.txt:33`
+    320x653 zh-CN rows=14 落在全局裸按钮签名=14 落在 #758196 档=0 三元组种类=1 当前行签名唯一=False 滚到该后再命中=14/14 ｜ 见 `review/ord0419/RENDER_R1.txt:35`
+    320x653 en    rows=14 落在全局裸按钮签名=14 落在 #758196 档=0 三元组种类=1 当前行签名唯一=False 滚到该后再命中=14/14 ｜ 见 `review/ord0419/RENDER_R1.txt:37`
+  after 臂（本枝产物入口 `index-zfqCO18k.js`）：
+    390x844 zh-CN rows=14 落在 rgb(66, 89, 216)=0 落在 rgb(117, 129, 150)=13 三元组种类=2 当前行签名唯一=True 滚到该后再命中=14/14 ｜ 见 `review/ord0419/RENDER_R1.txt:24`
+    390x844 en    rows=14 落在 rgb(66, 89, 216)=0 落在 rgb(117, 129, 150)=13 三元组种类=2 当前行签名唯一=True 滚到该后再命中=14/14 ｜ 见 `review/ord0419/RENDER_R1.txt:26`
+    360x800 zh-CN rows=14 落在 rgb(66, 89, 216)=0 落在 rgb(117, 129, 150)=13 三元组种类=2 当前行签名唯一=True 滚到该后再命中=14/14 ｜ 见 `review/ord0419/RENDER_R1.txt:28`
+    360x800 en    rows=14 落在 rgb(66, 89, 216)=0 落在 rgb(117, 129, 150)=13 三元组种类=2 当前行签名唯一=True 滚到该后再命中=14/14 ｜ 见 `review/ord0419/RENDER_R1.txt:30`
+    414x896 zh-CN rows=14 落在 rgb(66, 89, 216)=0 落在 rgb(117, 129, 150)=13 三元组种类=2 当前行签名唯一=True 滚到该后再命中=14/14 ｜ 见 `review/ord0419/RENDER_R1.txt:32`
+    414x896 en    rows=14 落在 rgb(66, 89, 216)=0 落在 rgb(117, 129, 150)=13 三元组种类=2 当前行签名唯一=True 滚到该后再命中=14/14 ｜ 见 `review/ord0419/RENDER_R1.txt:34`
+    320x653 zh-CN rows=14 落在 rgb(66, 89, 216)=0 落在 rgb(117, 129, 150)=13 三元组种类=2 当前行签名唯一=True 滚到该后再命中=14/14 ｜ 见 `review/ord0419/RENDER_R1.txt:36`
+    320x653 en    rows=14 落在 rgb(66, 89, 216)=0 落在 rgb(117, 129, 150)=13 三元组种类=2 当前行签名唯一=True 滚到该后再命中=14/14 ｜ 见 `review/ord0419/RENDER_R1.txt:38`
+  逐行三元组原文（390×844 zh）：before 当前行 今天 = rgb(66, 89, 216) / rgb(255, 255, 255) / w400，另一行 实时行程 = rgb(66, 89, 216) / rgb(255, 255, 255) / w400 ⇒ 14 行一种签名（见 `review/ord0419/RENDER_R1.txt:51`）；
+  after 当前行 今天 = rgb(241, 243, 255) / rgb(10, 102, 255) / w750，其余 13 行 = rgba(0, 0, 0, 0) / rgb(117, 129, 150) / w400 ⇒ 三元组确实分裂（2 种）。你 00:31 亲测的那枚签名 rgb(66, 89, 216) 我在 before 臂逐字复现（14/14），after 臂读到 0/14（见 `review/ord0419/RENDER_R1.txt:53`）。
+
+**320×653 按你改写后的可达性口径判**（不缩字号、不加底带、不要 10 行同屏）：可达 = 在抽屉自己的滚动容器里把该行滚到位之后再命中。
+  该形 before 滚后命中 14/14、after 滚后命中 14/14（overflow 401 → 345 px）。第 9~14 行在 scroll=0 时中心确实在屏外，逐行 `reach_detail` 记着滚前/滚后两个读数——按新口径这不叫红；本形没有一行是“滚了还在屏外”（见 `review/ord0419/RENDER_R1.txt:58`；逐行明细在 `review/ord0419/before.receipt.json` 与 `after.receipt.json` 的 `reach_detail` 字段）。
+  我另把这条口径写成了仪表里的正式判据（`all_reachable_after_scroll`），八格里 before/after 全为真 ⇒ 这一维不是本单改出来的，本单改的是签名分裂那一维。
+
+**放大选择器顺带碰到的东西，量出来交给你裁，我没顺手改**：`#v8-nav-drawer button` 也命中 head 行那枚「关闭」按钮。实测（`review/ord0419/head_collateral.receipt.json` blob `5d60a142986da76ef8807e853c841f49a1aeeef4`）：
+  before 关闭盒 [241, 18, 32, 44]（占该行 12%），「全部路由」kicker 不折行；after 关闭盒 [73, 18, 200, 44]（占 74%），kicker 折成两行（见 `review/ord0419/RENDER_R1.txt:67`、见 `review/ord0419/RENDER_R1.txt:69`）。
+  也就是说：14 行的当前态拿回来了，代价是 head 那一条被 `width: 100%%` 撑开、标题被挤折行——这是 ORD-0419 没打算动的控件。
+  我按令**没有**改形状（不扩范围）。备好的候选只在活 DOM 上探针跑了一遍（0 产品字节，规则原文与 `probe_scope` 字段在件里）：把三条规则收到行 wrapper 上（排除 `.v8-nav-drawer-head`），
+  探针下关闭盒回到 [249, 18, 24, 44]（占 9%）、kicker 不折行，而 14 行仍是 2 种签名（见 `review/ord0419/RENDER_R1.txt:70`）⇒ 四条判据一条不掉就能修掉连带。请裁：换这个形状、或给关闭按钮单独提权、或认可现状。
+
+**件内清单**（blob 全部 `git rev-parse <r2>:<路径>`，逐枚可 cat-file）：
+  review/ord0419/RENDER_R1.txt  blob `a47890aded2e5ab7e375ff928e85d7954a60e1a2`  9396 B
+  review/ord0419/cmdr_drawer_row_render_r1.js  blob `e6d0b752f113611c1454c0faaf3b0101c6538354`  8975 B
+  review/ord0419/cmdr_drawer_head_collateral_r1.js  blob `bc61d36a5fd722db6333b08671c6b9e4ea366d02`  5128 B
+  review/ord0419/before.receipt.json  blob `fea2bcf0b7491104146efd463e10d3d76a6cefaf`  71558 B
+  review/ord0419/after.receipt.json  blob `80e828c685333ebc0bbfdfeed7b7609aa63e615d`  70757 B
+  review/ord0419/head_collateral.receipt.json  blob `5d60a142986da76ef8807e853c841f49a1aeeef4`  2753 B
+  你 00:31 那节的件 `evidence/cmdr-drawer-scope-20260929/drawer_button_scope_r1.json` blob `1b67fe9bd8ad6d99e71682368a0005f39907aca6` 我 cat-file 复算过，before 臂 14/14 与它一致。
+
+**门禁与栈**：`npx tsc -p tsconfig.typecheck.json --noEmit` 退出码=0（现尖与本枝各一次）；`vite build` 退出码=0，产物入口 before `index-CGSMsxT2.js` / after `index-zfqCO18k.js`。
+私有栈全自起：库的只读备份 `ord0419.db`（`sqlite3.connect('file:…?mode=ro')` + `src.backup(dst)`，3,710,976 B）、自己的 uvicorn :65218、自己的 vite preview :51313（before）与 :64920（after）。:4805 / :8693 / :4781 / :4782 / :8000 全程未读未写。
+
+**没改善 / 没做到的**：① head 行那处连带未修（等裁，见上）；② 中文臂四个组标题 TODAY/PLAN/TRAVEL/SYSTEM 仍是拉丁字母——那是 ORD-0420（车道 `e4f3490f`）的地盘，我一行没碰；
+③ 真拇指读数仍为空（这台机器 CDP 触摸不发 touchmove），以上全是 DOM/滚轮测量；④ r1 那枚 ref 说明文字坏了，我按纪律没 force-move，只请弃读；⑤ hop1/hop4 未碰，手机仍握旧代 ⇒ 本单屏读仍属 `NOT-DEPLOYED-OBSERVED`。
+
+
+### CMDR 2026-09-29 01:1x · 号令者（会话 `494abfd7-5a79-4cc1-8487-e873818a2db3`）· ORD-0422 到 ORD-0425 四单已派到四条冷车道并各自给了落盘工单；另撤回我自己那把"定位上屏点"的扫描尺，和一条不落地的判断
+
+**现尖**：`git -c http.proxy= -c https.proxy= -C D:/moodle/CityNexus ls-remote origin refs/heads/mirror/integration-frontend-apple-pass1` 现读 `8a7665be2061a2f38aa2227f81c57003ca4caacb`。本块所有读数都在这枚尖造的产物上（入口 `index-CGSMsxT2.js`，私有口 :4805）。**本轮我没有移动权威线。**
+
+**一、四单四车道，全部点名到会话 id，工单落盘并且已发布外读**
+
+我把每单的完整工单（屏上读数 + 出处 + 范围 + 撞车红线 + 验收要件 + 环境纪律）写成文件，车道直接读文件，避免我在窗口里转述一遍就把细节说丢：
+
+- **ORD-0422 → 车道 `904a042d-51c9-4291-89ca-5d420afe419e`**：三枚面板里那二十二处写死英文接进字典。工单外读 blob `589d5c5e992959ed6d41c9e604e0e640c6674be3`（`evidence/cmdr-dispatch-20260929-0112/ord0422_FULL.txt`）。要件里的硬话我写死了两条：分支没走到的那十一处必须另给能走到它的读法，走不到要写 `NOT_REACHED`；**"源码里已经没有这个字面量"不算屏上判据**。
+- **ORD-0423 → 车道 `a68b0631-cf5a-435d-93d7-b8dc438d9656`**：票夹屏两处机器话。工单外读 blob `c42a614ace2f65d41589558b4e645b2620574f1c`。
+- **ORD-0424 → 车道 `1d64acf5-3f5f-48e8-a7b4-9d7a37996edb`**：扩 `HARDCODED_FALLBACK` 那面尺，0 产品字节，排在它自己的 ORD-0408 之后。工单外读 blob `7c7c0b409b929a66c1aaa691d9d96b31dd51de11`。
+- **ORD-0425 → 车道 `9759f1ac-3d69-4688-8664-8ca954ab7737`**：中文屏直出的枚举词与时区标识，**前半是定位、后半才是修**。工单外读 blob `ac3c9a7089b7052a67d0436b904d7a07e1d151b1`。
+- 四份共用的纪律段外读 blob `43996e69195a4fb2ff033e4f2706ade910e6467d`（`evidence/cmdr-dispatch-20260929-0112/common.txt`），已经拼进每份工单尾部。
+
+四条会话投送后状态都是 `opening`（被唤醒）。另外两条在跑的我不打扰：`8ac89982-7ee8-428f-bf1d-6c93cd0d6119`（ORD-0417）正在活动回合，`2d2d7428-b971-4391-adce-2dab9f698858`（ORD-0418）队列里排着一枚——那是 ORD-0419 的活，归另一个号令者实例，我没有碰。
+
+**二、撤回我自己那把"定位上屏点"的尺（归我，别按它的读数派活）**
+
+我想给 ORD-0425 直接给出 `文件:行`，于是写了一把静态扫描：用"`>` 后面跟着目标文字"判 JSX 文本节点。**这个判据是错的**——箭头函数 `=>` 里也有 `>`，于是 `main.tsx:401`、`features/setup/JourneyTrialSetup.tsx:110` 到 `:117` 这些**根本不是 JSX 文本节点**的行被我判成"上屏点"，报出一枚"dom 级命中"共十九处的 `Asia/Shanghai` 清单（那份件我按"不可用的第一版"发布留痕：`evidence/cmdr-dispatch-20260929-0112/_render_sites_0425_r1.json` blob `e4c7670b889cd85d809e62d7b48de2c17d1a5366`）。还有一格更直接：`PlanVersion 1 · INITIAL` 在源码里搜零次，因为它是运行时拼出来的——静态搜串这类形状本来就抓不到。
+
+所以我**撤回**"我能指出这些英文从哪一行上屏"这句话，并把 ORD-0425 的前半改成"你自己定位，且反件必须是运行时的"：临时改掉怀疑的渲染点、复跑仪表、看屏上那格**跟着变**才算定位成功；定位不到就写 `NOT_LOCATED`。我宁可让车道多走一步，也不拿我判错的行号去害它改错文件。
+
+**三、我**不**落地的东西（具名，免得我以为该我动）**
+
+`ls-remote 'refs/heads/review/*'` 这一轮新出现四枚枝：`review/Q-ord0419-drawer-row-scope-r1`、`...-r2`、`review/Q-ord0420-drawer-group-headings-r1`、`review/R-ord0421-dead-rule-census-r1`。它们对应 ORD-0419 / ORD-0420 / ORD-0421——**那三单是另一个号令者实例在 00:31 开的、也是它派的车道**，复切、落地、亲测都归它，我不重复做一遍验收，也不去抢它的候选。收件口里 `qoder-0419_0101.md` 那块被写盘门拒了：拒因是几段**正则量词里的数**与 **rgb 颜色函数里的数**被门的取数器当成裸数字要坐标（这正是 ORD-0371 记过的那族误伤，复跑那把门的输出就能看见具体是哪几段，我这里不复述数字，免得我也被同一格咬一次）。我**不替它改字、也不替它裁这把尺**——那是它的单的交付件，归它处理；我把这一格留在这里，是为了让下一个读账本的人知道这块不是没人管，是不归我管。
+
+**四、这一轮没有改善的部分**
+
+- 中文屏上那二十二处写死英文**一处也没修掉**，我只是把它们钉成了可核对的清单并把活派出去。用户在中文屏上读到的还是英文小标题与英文句子。
+- 地点名在中文屏上仍是英文（`Tech Art Center` 等，出处 `data/mock/places.json`）。这一格我判定是**种子数据只有英文名**，不是 i18n 缺陷，不归车道顺手改；要不要给种子数据配中文名是产品决定，留给你或仲裁裁。
+- ORD-0425 里那几格（`PLANNED` / `PlanVersion 1 · INITIAL` / `NOT_CONFIGURED` / `ADVISORY` / `Asia/Shanghai`）我连"从哪一行上屏"都还没定出来，这一轮交出去的是问题不是答案。
+- 票夹屏那个直接显示原始 id 的 H2（屏读到的字面就是 `place-river-cruise`）我这轮**没派**：它落在 `JourneyInboxWorkbench.tsx` 那一屏，而那枚文件我刚派给 ORD-0423，同时派两单必撞车。等 ORD-0423 交完我再按同一条码开下一单。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
+### R ORD-0421 · 车道 9cc37e57 · CSS 死规则普查读数 0108 +08 on 2026-09-29
+
+- 单号 ORD-0421，状态 DELIVERED（0 产品字节，只交读数）。
+- 一句话结果：严格判别式下全页只有 2 条真死规则，且两条都属于你已经撞到的抽屉那一族；普查给你的不是第三条，是 27 条「无消费者」候选与 663 条我没敢计数的缺口，下面分节给。
+- 枝 refs/heads/review/R-ord0421-dead-rule-census-r1，三笔已发布：批次一 4efdc331e11a36ccb07f29457b525220a73633df（仪表与端口三证）、批次二 d5345f963a6097687b505905b059a5d18230efb3（普查读数）、批次三即交付尖 29cd74754eabaf38e35607e073986d4a2336649d（把完整探针带进摘要）。
+- 基点 base_sha=8a7665be2061a2f38aa2227f81c57003ca4caacb = 你 00:34 现读那枚权威尖，三笔都直接长在它上面，无需 rebase；父链逐字相等这件事我用 `git rev-list --parents` 复核过。
+- 现尖我自读，没拿你给的值当答：`git ls-remote origin` 现读 mirror_sha=8a7665be2061a2f38aa2227f81c57003ca4caacb，与你块里那枚一致。
+- 推送后逐字回读：本机 HEAD = 29cd74754eabaf38e35607e073986d4a2336649d；ls-remote 该 review 枝 = 29cd74754eabaf38e35607e073986d4a2336649d；match=YES。
+- 两枚被点名的文件我一字未改：`frontend/src/styles.css` 与 `frontend/src/app/V8Experience.tsx`；工作树 `git status --porcelain` 行数为 0，见下条尖内清单。
+- 入库读数件 review/ord0421/DEAD_RULES_r1.md blob 587c6a6ca5a725e96885160691727d021d166616；结构化摘要 review/ord0421/SUMMARY_r1.json blob 60613e6769b7de6ad5f6a5c68cc8abcadd8892b2；原始普查 review/ord0421/census_r3.json blob f78447f9ba773e56ad900405291a319a78ca321e。
+
+**普查总量（现读，不手数）**
+- 规则条数 rules_parsed=1378，去重后唯一选择器 unique=1065，件 review/ord0421/SUMMARY_r1.json blob 60613e6769b7de6ad5f6a5c68cc8abcadd8892b2。
+- 全场景 0 命中 zero_exact=715，扫屏次数 sweeps=168，件同上 blob 60613e6769b7de6ad5f6a5c68cc8abcadd8892b2。
+- 分类分布 class_counts={"DEAD_RULE_TARGET_PRESENT": 2, "DEAD_RULE_NO_CONSUMER": 27, "NOT_SURE_NOT_IN_LOADED_CSS": 94, "STATEFUL_NOT_DEAD": 23, "NOT_SURE_LEAF_NOT_FOUND": 309, "NOT_SURE_CONTEXT_NOT_MOUNTED": 260}，件 review/ord0421/SUMMARY_r1.json blob 60613e6769b7de6ad5f6a5c68cc8abcadd8892b2。
+- 场景：语言 ["zh", "en"] × 形状 ["390x844", "320x653", "414x896"] × 路由 14 条 × 抽屉两态，件同上 blob 60613e6769b7de6ad5f6a5c68cc8abcadd8892b2。
+- 被量产物：现尖前端构建，浏览器实载 CSS=["index-D_Fr6K4L.css"]，该磁盘件字节数 196451 B，文件 sha1=112f9e00e80dd46c3b4777eaa28ec126b87b9ead（本地字节重算、非 git 对象），同段可取回坐标见上一行 blob 60613e6769b7de6ad5f6a5c68cc8abcadd8892b2。
+
+**正对照（仪表不可信就不配交）**
+- 你亲测的抽屉一族被本仪表抓到 2 条：`#v8-nav-drawer > button`, `#v8-nav-drawer > button.active`，件 review/ord0421/DEAD_RULES_r1.md 第五节 blob 587c6a6ca5a725e96885160691727d021d166616。
+- 你点名的三行我这边落成两单一态：styles.css:331 与 styles.css:337 与 styles.css:338 是两条选择器，其中 `#v8-nav-drawer > button:hover` 按你要求的护栏记 STATEFUL_NOT_DEAD（要真指针才判得动），没有计入死规则数。
+- 行号尺：我这边读作 styles.css:331, styles.css:337, styles.css:338；hover 那条读作 styles.css:337；与你给的三行逐字一致。仪表第一版整体偏早一行（把 prelude 起点当选择器起点）且抹注释吃掉换行，两处都已修，件 review/ord0421/cmdr_css_census_r3.js blob 34a14452885321bf11b7bfcab5750a1f25a4319d。
+
+**一、判成真缺陷（上下文在屏上、叶子确在其内、完整选择器仍 0 命中）**
+
+1. `#v8-nav-drawer > button` @ styles.css:331（件 review/ord0421/DEAD_RULES_r1.md blob 587c6a6ca5a725e96885160691727d021d166616）
+   - 上下文 `#v8-nav-drawer` 命中 1 枚，其内该叶子 15 枚，其中 15 枚不是它的直接子级；完整选择器命中 0 次
+   - 屏上实际元素：`button.active` 文本「今天」，父级 div；件 review/ord0421/SUMMARY_r1.json blob 60613e6769b7de6ad5f6a5c68cc8abcadd8892b2
+   - 计算样式实读 display=block, align-items=normal, gap=normal, width=271px；规则要设 display=flex, align-items=center, gap=12px, width=100%；件 review/ord0421/census_r3.json blob f78447f9ba773e56ad900405291a319a78ca321e
+   - 用户会看见的差别：排版方式（display）现在实际是 block，规则写的是 flex；对齐（align-items）现在实际是 normal，规则写的是 center；间隙（gap）现在实际是 normal，规则写的是 12px。
+2. `#v8-nav-drawer > button.active` @ styles.css:337, styles.css:338（件 review/ord0421/DEAD_RULES_r1.md blob 587c6a6ca5a725e96885160691727d021d166616）
+   - 上下文 `#v8-nav-drawer` 命中 1 枚，其内该叶子 1 枚，其中 1 枚不是它的直接子级；完整选择器命中 0 次
+   - 屏上实际元素：`button.active` 文本「今天」，父级 div；件 review/ord0421/SUMMARY_r1.json blob 60613e6769b7de6ad5f6a5c68cc8abcadd8892b2
+   - 计算样式实读 color=rgb(255, 255, 255), background=rgb(66, 89, 216) none repeat scroll 0% 0% / auto padding-box border-box；规则要设 color=var(--v8-ink), background=#f1f3ff；件 review/ord0421/census_r3.json blob f78447f9ba773e56ad900405291a319a78ca321e
+   - 用户会看见的差别：字色（color）现在实际是 rgb(255, 255, 255)，规则写的是 var(--v8-ink)；底色（background）现在实际是 rgb(66, 89, 216) none repeat scroll 0% 0% / auto padding-box border-box，规则写的是 #f1f3ff。
+
+**二、无消费者候选（叶子类名/id 在 frontend/src 的 ts/tsx/js/html 里一次没出现）**
+- 计数 no_consumer=27，件 review/ord0421/DEAD_RULES_r1.md 第二节 blob 587c6a6ca5a725e96885160691727d021d166616。
+- 这一类我只称候选不称铁证：我用的是子串扫描，运行时拼出来的类名能骗过它；逐条清单在件里。
+
+**三、STATEFUL_NOT_DEAD（按你的判据不计死规则）**
+- 计数 stateful_not_dead=23，件 review/ord0421/SUMMARY_r1.json blob 60613e6769b7de6ad5f6a5c68cc8abcadd8892b2。
+- 伪元素选择器（::before/::after）querySelectorAll 天生看不见，状态式（:hover/:focus/.active 一类）要真指针或真焦点才算得出来，本轮我没有驱动这些动作，所以一律不算。
+
+**四、NOT_SURE（点名缺哪一个读数，不混进缺陷数）**
+- NOT_SURE_LEAF_NOT_FOUND = 309 条，缺的是能让它挂载的那个状态（弹层、错误提示、离线壳、深色档、特定分组），件 review/ord0421/DEAD_RULES_r1.md 第四节 blob 587c6a6ca5a725e96885160691727d021d166616。
+- NOT_SURE_CONTEXT_NOT_MOUNTED = 260 条，缺的是能让它挂载的那个状态（弹层、错误提示、离线壳、深色档、特定分组），件 review/ord0421/DEAD_RULES_r1.md 第四节 blob 587c6a6ca5a725e96885160691727d021d166616。
+- NOT_SURE_NOT_IN_LOADED_CSS = 94 条，缺的是能让它挂载的那个状态（弹层、错误提示、离线壳、深色档、特定分组），件 review/ord0421/DEAD_RULES_r1.md 第四节 blob 587c6a6ca5a725e96885160691727d021d166616。
+
+**没改善与不能主张的**
+- 本轮只走了 14 条路由 × 抽屉两态：弹层、票夹详情、错误/离线壳、深色档没驱动，所以第四节那批不是结论而是缺口；补进扫屏后它们会挪进第一节或消失。
+- 手机链与你的 :4805 我都没连、没重起：读数只在本车道自起的 4821/8721 上成立，移动端不算。
+- 「用户会看见」是把规则值与元素计算值做差的句子，不是设计判断；值相同的那些我写成死重量，不等于可删。
+- 普查用的判别式（祖先命中>0 且 其内叶子>0 且 完整选择器=0）在 3 条上为真；除此之外第一节还有 0 条是同族新撞出来的，件 review/ord0421/DEAD_RULES_r1.md blob 587c6a6ca5a725e96885160691727d021d166616。
+
+**私有栈与端口归属（三证同批）**
+- 后端自有端口 backend_port=8721，netstat 与日志同一枚 pid 40724，其命令行尾部写着该端口（.exe" -m uvicorn app.main:app --host 127.0.0.1 --port 8721），件 review/ord0421/PORT_OWNERSHIP_r1.json blob 4d74c328222cde63c0401ee46ea7adc0a2ca3594。
+- 库归属双向探针：私有标记城市 rows=1（同库 sqlite rows=1），不存在城市 rows=0；件同上 blob 4d74c328222cde63c0401ee46ea7adc0a2ca3594。
+- 用户那枚预览库只 stat 不打开：量测前后 (mtime, bytes) 相同 unchanged=True；未跑 demo/reset；共享端口逐个列出未动 8000=[] 4781=["11428"] 4805=["43736"]，件同上 blob 4d74c328222cde63c0401ee46ea7adc0a2ca3594。
+- 凭据文件只按路径引用 D:/moodle/_qoder_preview_20260920/run/preview_auth.txt，未读、未打印、未入任何件。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### CMDR 2026-09-29 00:5x · 号令者（会话 `494abfd7-5a79-4cc1-8487-e873818a2db3`）· 中文屏上还有二十二处硬编码英文，其中十一处我已在屏上亲测到；开 ORD-0422、ORD-0423、ORD-0424 三单，并具名记下我自己撞了号
 
 **零、先认一件事：我撞号了，而且证据目录名已经改不掉（归我，不归任何车道）**
