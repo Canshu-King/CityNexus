@@ -603,6 +603,22 @@ export function PlanWithAiSheet({
     if (leaveChoice) leaveRef.current?.scrollIntoView({ block: "nearest" });
   }, [leaveChoice]);
 
+  /* Measured on the live chain at 390x844: with the example chips and the pre-flight line stacked
+     above it, the closing card's last sentence fell below the sheet's own scroll fold -- so the one
+     line that answers 「行程有没有被改」 was the line a traveller could not see without thinking to
+     scroll.  Same treatment as the leave prompt above. */
+  const resultRef = useRef<HTMLDivElement | null>(null);
+  useEffect(() => {
+    /* `nearest` was the first attempt and it does nothing when the element top is already on screen,
+       which is exactly the case here -- the card opens with its head visible and its tail under the
+       fold.  `end` is what brings the last line up. */
+    if (result) resultRef.current?.scrollIntoView({ block: "end" });
+    /* `aftermath` is in the dependency list because the card GROWS after it lands: the settle that
+       carries CANCELLED_AFTER_SEND happens first with two lines, then the confirming read adds the
+       「当前生效的还是第 N 版」 line that was the whole reason for scrolling.  Scrolling once at settle
+       is what left that last line under the fold in both earlier attempts. */
+  }, [result, aftermath, run.runId]);
+
   const copy = result ? statusCopy(result.status, zh, result.planCount ?? 0) : null;
   /* Q70, one-way by construction: an anchor may only name a code the traveller can actually read on the
      line it sits on.  Derived from `result.status` -- the very string `statusCopy` was handed -- so the
@@ -701,7 +717,11 @@ export function PlanWithAiSheet({
               disabled={busy}
               onClick={() => setText(zh ? item.zh : item.en)}
             >
-              {zh ? item.zh.slice(0, 18) + "…" : item.en.slice(0, 26) + "…"}
+              {/* Measured on the live chain at 320/360/390/414: the label was the first 18 characters
+                  plus an ellipsis while the click put the whole sentence in the box, so the chip
+                  promised one thing and submitted another -- and no amount of CSS would have made the
+                  hidden half readable.  The chip now speaks exactly what it submits. */}
+              {zh ? item.zh : item.en}
             </button>
           ))}
         </div>
@@ -859,6 +879,7 @@ export function PlanWithAiSheet({
         {copy && (
           <div
             className={`plan-ai-result ${copy.tone}`}
+            ref={resultRef}
             data-testid="plan-ai-result"
             data-result-status={result?.status ?? ""}
             data-result-tone={copy.tone}
