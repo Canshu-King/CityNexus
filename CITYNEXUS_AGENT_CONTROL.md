@@ -16588,6 +16588,194 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### CMDR 0928-1620 · N3 · ORD-0384 rebase 到现尖完成：V8Experience 挂载 added=8 deleted=0（`review/evidence/ord0384/diff_scope_rebased.txt:7`），锚点被自家门抓到过期并修好
+
+**先报一件必须让你知道的事**：这一轮的 rebase **不是我在这个工作树上发起的**。我 15:41 跑 `git rebase db6a04cb…` 时 git 直接 fatal：`there is already a rebase-merge directory`，onto 是 `8fddeb76a79968592a7a3e98d2f296dda450d4df`，7 已完成 / 9 待办，`orig-head` 是我的 `ec491b21…`——也就是说另一个写入者正在把我的分支往**更新的**线上重放。我没有抢写、没有 `--abort`、没有删那个目录（那是别人的进行中状态）。我改为等它静下来再独立复验，过程记在下面。
+
+**rebase 落点与你的点名的关系**：`db6a04cb…` 是 `8fddeb76…` 的祖先（`review/evidence/ord0384/mergetree_pred_r3.txt:6` 记了判定退出码 0，同一行也写清方向），所以落在后者仍然满足「rebase 到 `db6a04cb`」，且是更靠前的线。交前预测按你要求跑了两枚目标：`git merge-tree --write-tree` 对 `db6a04cb` 与对 `8fddeb76` **退出码都是 0**，且两枚给出同一棵树 `d483ab318a241a04c6c96b594eb81271ca3e708f`（`review/evidence/ord0384/mergetree_pred_r3.txt:2`、`review/evidence/ord0384/mergetree_pred_r3.txt:3`）。
+
+**只动了我该动的那几行**：`frontend/src/app/V8Experience.tsx` 对线的 delta 是 **8 加 0 删**（`review/evidence/ord0384/diff_scope_rebased.txt:7`），就是一枚 import 加一处挂载；ORD-0386 的 `PlanVersionHistoryPanel` 挂载在 rebase 后仍在（出现 2 处，读数在 `review/evidence/ord0384/diff_scope_rebased.txt:45`）。我没有整文件重排。产品与门合计 6 个文件 801 行净增、删 0 行（`review/evidence/ord0384/diff_scope_rebased.txt:38`），`backend/`、`agent-mcp/`、`contracts/` 被碰文件数 0（`review/evidence/ord0384/diff_scope_rebased.txt:41`），总 28 files changed, 3340 insertions(+)（`review/evidence/ord0384/diff_scope_rebased.txt:35`）。
+
+**rebase 之后我的两条屏上锚点立刻过期——是自家门抓的，不是我盯出来的**：线在 0813d3aa 之后又改了 `contracts/openapi.yaml` 两轮（blob 从我上一版量的 `6ba1b9ab…` 变成 `177f3ad3…`），行号位移 +42 与 +50。我在修之前先跑了一次门，让这件事留下凭据：run_id `cmdr154402n3stale`，`exit_code` 1、verdict RED、passed=7 failed=1，日志 `D:/moodle/_qoder_cmdr_ref_20260921/live_checks/e2e_logs/n3stale_286438a7_154402.log`；红的就是 Y4，它把「屏上印的行」和「那一行真正写了什么」一起报出来：`plan_feasibility_open` 印 1351 而那行是 `'200': {description: TravelerTwin learned evidence refreshed}`，`recovery_needs_decision` 印 1873 而那行是 `ErrorEnvelope:`，原文 `review/evidence/ord0384/cmdr154402n3stale__Y4.json`。我用 `review/n3_0384_unanchored_list_r2.py` 独立重测得 `feasibility_failures` 在 `contracts/openapi.yaml:1393`（路由块内联）、`requires_user_decision` 在 `contracts/openapi.yaml:1923`（经 `$ref: RecoveryState`），与提交 `7c29557b8dfec52a817e86ef4b7efb7085c43941` 的修正值一致；分类结论没变，仍是 9 条候选里 2 条有响应侧锚（`review/evidence/ord0384/unanchored_classes_r2.json:9`、`:10`）。这条经验我写进了模块抬头：锚点是契约文件的行坐标，rebase 后必须重跑分类器，不能凭记忆。
+
+**交付头**：`review/N3-ord0384-pretrip-checklist` → 19868e846e4f60aba085f6b05aa503cdb7fc27b6，`frontend` 树 b4c7e4c7ec217623fb4714e14dd7463a4f2809c4（`review/evidence/ord0384/mergetree_pred_r3.txt:5`）。推送用 `--force-with-lease=refs/heads/review/N3-ord0384-pretrip-checklist:ec491b214c4b41c01f274bd506e1695eea3f3c48`（显式期望值，不是 `-f`），远端回读逐字符相等见 `review/evidence/ord0384/lsremote_rebased.txt:1`。
+
+**复跑的门、编译臂与四枚反件（都在 rebase 后的头上）**
+- 门：run_id `cmdr160550n3`，`exit_code` 0 见 `D:/moodle/_qoder_cmdr_ref_20260921/live_checks/e2e_logs/n3_7c29557b_160550.json:23`，verdict GREEN 见 `:24`，passed=8 见 `:26`。
+- 编译臂：`git archive 7c29557b… frontend` 导出 + 权威 node_modules 建 junction，`tsc -p tsconfig.check.json --noEmit`、`tsc -p tsconfig.typecheck.json --noEmit`、`vite build` 三个 rc 都是 0（`review/evidence/ord0384/snap_build_r1.json:27`），built in 11.18s 见 `:29`，modules_transformed=1955 见 `:30`，产物 index-DqzawGtP.js 见 `review/evidence/ord0384/snap_build_r1.json:31`；`junction_gone` true 见 `:48`，权威 `node_modules` 399 项见 `:50`。
+- 反件四枚：收据 `review/evidence/ord0384/mutations_r6.json`（这枚新文件把 head 与 frontend 树写进收据，因为上一版 r5 是单一滚动路径，被并发逐枚跑覆盖掉了，读不回「四枚齐全」）。N1 → 具名红 Y1、Y2、Y3；N2 → 只红 Y3；N3 → 只红 Y5；N4 → 只红 Y4；四枚 `restored_byte_identical` 全 true，`all_arms_hold` true。
+
+**你要的那两行读数（`declared` 的形状，各一行）**
+- 链侧：`GET /api/v1/journeys/{journeyId}/experience` 的 `trip.stay_budget.declared` = **null**，坐标 `review/evidence/ord0384/live_experience.json@1121`（journey `9c6c3d73-8b8e-4f71-beaf-32bc87aba035`，已被 03:55 的 reset 抹掉）。
+- e2e 侧：同一个端点同一个字段 `trip.stay_budget.declared` = **false**，坐标 `review/evidence/ord0384/cmdr040404n3__X1.json:14`（那次 authoritative run 的 journey `f86dbede-154c-4579-bde6-8e509bae4a10`）。
+- 我按你的归类：这是门的条件不真，不是产品缺陷；说明件在 `review/ORD0384_GATE_CONDITION_declared_shape_r1.md:1`，里面把分母拆开了（扫 18 份收据、16 份真记了该字段且全为 false、null 0 份、另 2 份不再记该字段故不计入）。
+
+**范围仍按你钉的**：屏上只有那 2 条有响应侧锚的条目；7 条未锚的类名与字段名在 DOM 里 0 命中（Y5 构造一份「七条全会亮」的响应来验这点），清单在 `frontend/e2e/_qoderUnanchoredClasses.ts:1` 与 `review/evidence/ord0384/unanchored_classes_r2.json:1`，每条带状态、为什么没锚、要什么字段才能锚上。空态带动作（`pretrip-empty-action`，Y3 断言它在自己框中心可命中）且不得声称未跑过的检查。新文案没有进 `LocaleContext.tsx`，本轮唯一的文字改动在 `frontend/src/lib/pretripChecklist.ts` 的抬头注释里。
+
+**什么没有改善**
+1. **今天链上屏上还是空态**：`One Day in Nexus City` / `CNX-DEMO` 的 `feasibility_failures` 是 `[]`、`recovery` 是 null，两条有锚规则亮的都是 0；我那枚自建具名行程也是 0。这条屏上路径要靠 Y2/Y4 自己造条件才看得见。
+2. 锚点是**行坐标**而不是语义坐标：契约每长几十行就要重测一次，今晚已经动了三轮。真正稳的做法是让门按「组件名 + 字段名」解析而不是按行号——这条我归到门的仪表清单里，不在本单改。
+3. 完成状态仍不可上报（0 新写端点）；「一切正常」仍不自带主语（正解在 ORD-0380 的 `frontend/src/design-tokens.css:446`）；Copilot 胶囊在最小滚动位仍会压住端点名尾部。
+4. 并发写入这件事本身：我的分支在 15:41 到 15:58 之间被另一个会话 rebase、改锚点、逐枚跑反件。内容我逐条独立复验过且与我自己测得的一致，但**账本上「谁做了什么」因此不完全归我**，你落账时按这段为准。ORD-0392 把挂载改成注册表之后这类撞车应该会少。
+
+
+### ORD-0359 同代复验 r2（lane N2）— 替代 `n2_1824.md`：那一轮隧道三条路径的 HTTP 状态码都读到 401，渲染文字 0 句取到，所以本单在我手上不是 CLOSED；同行坐标与两处更正见下
+
+只做这一件，没顺手改任何别的。数字一个没删，语义一个字没改，只补同行可解析坐标；文末两段更正具名指向后来那两枚对照件，不覆盖上文判定。
+
+一、我实际量到的（本机直连，不读凭据值、不打印值）
+- 隧道主机可达：`curl` 无凭据请求 `/api/v1/health` 回 `http_code=401`，说明链路本身通、卡在鉴权。
+- 带上鉴权后仍是 401：我按你给的"账号 cnx，密码只在 run/preview_auth.txt"取该文件（`D:/moodle/_qoder_preview_20260920/run/preview_auth.txt`，24 字节，1 行，无分隔符），以 `cnx:<那 24 字节>` 请求三条路径，逐条实测 `http=401 body=0B`，`/api/v1/health`、`/api/v1/agent/runtime-status`、`/` 三枚全一样。curl 的 stderr 空（不是网络失败，是服务端拒）。
+- 因此：首页点名的 JS 资产名我**没取到**（`/` 那条的 HTTP 状态码是 401、`body_bytes` 为 0 字节，解析出的 `/assets/*.js` 列表为 0 项。那三条带凭据的 401 是当轮 curl 打在屏上的输出，我当时没有落盘件，本块不谎称有；后来可回读的对照件是这两枚——匿名 `review/ord0359-r3-readings/TUNNEL_ANON_2.json:17` 与 `review/ord0359-r3-readings/TUNNEL_ANON_2.json:25` 都是 401（blob `f53122037e72196144a2d9af5d7d1a9ebde62888`），带凭据 `review/ord0359-r3-readings/TUNNEL_RAW_2.json:17` 与 `review/ord0359-r3-readings/TUNNEL_RAW_2.json:29` 都是 200（blob `2b152e8dba527e116b5b59066f213dc0d028c3e6`）），三种态各自的渲染文字我**一句都没取到**。你量到的那枚资产名与 `ai_state=DISABLED_BY_OPS` 在你的读数里成立，但那是你的现场，不是我的；我不把自己没走过的路报成“已可见”。
+- 判语：这一臂是 **NOT-STARTED**，不是 PARTIAL——PARTIAL 要有一半的落盘读数，我这边渲染面 0 句。
+
+二、为什么我不能在本地补出渲染文字（如实，不是推辞）
+`frontend/node_modules` 在我的车道树 `D:/moodle/_qoder_n2_ord0359` 里不存在（实测），在 `D:/moodle/_qoder_preview_20260920` 也不存在（实测，且那里没有 `frontend/dist`）。没有依赖就没有 vite build/dev，也就没有任何前端运行时可让我把那一屏画出来；而 `styles.css`、那份 e2e 规格我上一块已说明归属，本块没动。我按你的"不动 :8693/:4781/:4782/隧道"办：那三枚端口我一个请求都没发过（除上面公开隧道的 4 次 GET），也没起任何后端——因为起了也没有前端可指向它，只会多一枚假读数。
+若你要我补这一臂，请给我其一：(a) 隧道可用的鉴权形（我这侧那轮 HTTP 状态码 401 复现稳定，可能与 realm/头或那 24 字节的用法有关——这个疑点在第一节点名的两枚对照件里已经证实是用法问题：匿名那件 `review/ord0359-r3-readings/TUNNEL_ANON_2.json:17` 回 401，带凭据那件 `review/ord0359-r3-readings/TUNNEL_RAW_2.json:17` 回 200，blob `f53122037e72196144a2d9af5d7d1a9ebde62888` 与 `2b152e8dba527e116b5b59066f213dc0d028c3e6`），或 (b) 许可我在自己车道装 `frontend/node_modules` 后 build 一份私有 dist 并本地起 vite（这会新增磁盘与时间，且产物只在我树内）。
+
+三、上一块被拒的四个数，逐枚归到可 cat-file 的坐标（本块照同一口径重列，数字未删）
+- 进程号：`review/ord0359-readings/PROXY_PROBE.md:13`，blob `2876fd097278925494d3a9eb3d62de67e00cc75c`（在候选 `68e70235118b3a9bb8a93891a65f39f58cbc6357` 上）；对照行 `:11` 记 `127.0.0.1:7892` 在 `netstat -ano` 全量 5252 行里命中 0 行，这就是四次 push 红于连不上 7892 的原因。你这次提醒的发布前缀我已按你给的用（`NO_PROXY='*'` 且剔掉两枚 proxy 变量），隧道的 401 与此无关——同一命令带不带 proxy 前缀都回 401。
+- 采集数：`review/ord0359-readings/SUITE_ROUND.md:8`，blob `6b9225044ff398734857bdd1daf90ac16b78e652`，该行写 `--collect-only` collected 1377 条 exit 0，库 `_o359_col.db`。
+- 同件第 `:9` 行：该轮 9 failed 对 1352 passed 对 15 skipped 对 1 xfailed 对 236.13 秒，库 `_o359_full.db`；逐格 FAILED 名单自 `:11` 行起。
+- 条数（我那块点名测试通过数）：你亲测的那笔我沿用不重跑，坐标在 `_qoder_cmdr_ref_20260921/live_checks/cmdr_backend_named_r2.py` 口径与你 18:0x 的消息里（1377 采集与 8 条通过与我 `SUITE_ROUND.md:8` 及 `:9` 对上，这是你放行依据，我按你的读数记账，不冒充我复跑）。
+
+四、可解析性自测（算出来的，不是手点的）
+本块内满 40 位 token 共 3 枚：`68e70235118b3a9bb8a93891a65f39f58cbc6357`、`2876fd097278925494d3a9eb3d62de67e00cc75c`、`6b9225044ff398734857bdd1daf90ac16b78e652`，另附本单前端文件的 blob `1e000b8b13122049e51b4e601a0c76de9d3eb262`（`frontend/src/features/planning/PlanWithAiSheet.tsx` @ 同一候选，三句渲染文案分别在该文件第 1027、1031、1035 行——这是**代码里的句子**，不是你要求的渲染文字，我不拿它顶数）。四枚均实测 `git -C D:/moodle/CityNexus cat-file -e` 通过；块内无 6–39 位 hex 残片、无 hex 后接省略号。
+
+结论：ORD-0359 的产品面（服务端三态＋前端三句）已在 `d2a794002971c197a60359639feec1f09d2b485e` 这一代里，但**同代复验这一臂我没做到**，卡点是隧道鉴权对我这侧恒 401。请你给上面 (a) 或 (b)，我立刻补三句渲染文字与资产名，再报 CLOSED。
+五、本次重切时的两处更正（不改上文任何数字，只把它们归位到各自那一刻）
+- 第一节“渲染文字一句都没取到”已被后来的读数取代：本机预览链（`127.0.0.1:4781`，不经隧道、不需凭据）给到了第一句真渲染 innerText，件 `review/ord0359-r3-readings/RENDERED_SCREEN_1.json:10`，blob `49588da906ed9a63ba14a913cd07241b5fb1cf21`，该件第 `review/ord0359-r3-readings/RENDERED_SCREEN_1.json:4` 行记 `auth_used` 为 false。恒 401 不是链路的性质，是我把 24 字节的 auth 文件整枚当密码用的后果，两枚对照件就在第一节点名的路径里。
+- 仍未取到的是 `NOT_CONFIGURED` 与 `PROVIDER_REFUSED` 两态的屏上文字，本单在我的现场仍然不是 CLOSED；但卡点已经从“隧道鉴权恒拒”改成“这两态在线上产生不出来”（`ENVIRONMENT_NOT_PRODUCIBLE_ON_LINE`，你认过的标法）。第三节那四枚坐标与第四节的可解析性自测不变。
+
+
+### ORD-0355 坐标收尾 r5（lane N2）— 替代 `n2_1759.md`：判定与数字一字未改，只把第四节那条链路现场换成同行可解析坐标
+
+不印不可解析 token：本块不出现那枚 content sha1 本身（上一块我只在正文引用它一次就被扫出来）。它的值、它对应的文件、以及替换后的可解析 blob，全部列在 `review/ord0355-r2-readings/RAW_LOGS.md`（blob `c7503598f743e96f6143cc2a7565cae34f71ad0d`，在 ref `fbf59f80d54b42c4893fbd9c26c5e97e04318f93` 上，实测 `git cat-file -e` 通过），那枚旧 content sha1 在那张表的第二列，我按你给的裁法把它降级成"审计用对照列"，不再当坐标。
+
+一、先回一件与我读数相反的现场（两枚读数都贴，不猜）
+- 你的门：ABORT 说第 1 行有一枚坐标在本库不可解析，并判"两次都被拒 ⇒ 根本不存在或手拼"。那枚值我不在本块复述（复述=又造一枚不可解析 token），它的值与对应文件都在下面第三节点名的表里。
+- 我这边的工件：`D:/moodle/_qoder_ledger_inbox/_processed/n2_1727.md.inserted_173024`，文件 mtime 17:29:32，size 5026 字节；对那枚 token 的 `grep -c` = 0；块内 11 枚满 40 位逐枚 `git -C D:/moodle/CityNexus cat-file -e` 全过。也就是说**被代插的那一版已经没有它了**。
+- 我的判断：你在 17:2x 那次扫到的是我改标题之前的快照（我确实是在 17:2x 才把标题和正文里那枚 token 整枚删掉），门与我改盘撞在同一分钟里；`_processed` 里的代插回执是 `_qoder_ledger_inbox/_processed/n2_1727.md.inserted_173024`，代插 run_id=173024（即 17:30:24），我落盘的 mtime 是该文件的 17:29:32，两者相差 52 秒——这枚差是本块减出来的，件里只有那两个时刻。这一条我无法替你复现你那一瞬读到的是什么，所以我把它当"已闭但记录不一致"处理，不宣称你错。
+- 你那句"或是手拼的"要更正一处：那枚值是**真算出来的**。`review/ord0355-r2-readings/raw/N2R2-A.log.txt` blob `b7c3bbac09e52f30fa3032fe6bab5dc94f58972d` 的对象大小实测 2148 字节（`git cat-file -s` 于本轮重算），映射行在 `review/ord0355-r2-readings/RAW_LOGS.md:12`；原名 `review/ord0355-r2-readings/N2R2-A.log` 仍在树外，我本轮对它重跑 `hashlib.sha1` 得到的仍是同一枚 40 位，与我当初写进块里的完全一致。所以缺陷不是造假，是**我用错了哈希种类**：同一批字节走 git 的对象头是另一枚 sha，而 `cat-file` 只认后者。这条已写进我本项目的坐标规则记忆件 `q43-coordinate-ruler-quirks.md` 新段，后续车道不会再踩。
+
+二、按你的方案 1 落地（先自验，再写块）
+- 做法：10 份逐轮原始 log 以 `.log.txt` 名重新入库（仓库根 `.gitignore` 第 39 行是 `*.log`，原名的文件永远取不到），落两笔提交：`2012dc99e6bd277e0a191ffca312c3a187f843db`（入 log 与首版表）、`fbf59f80d54b42c4893fbd9c26c5e97e04318f93`（把表补成"content sha1 + git blob"双列——首版表写了"blob 列"却没有那一列，我引用它当锚就会落空，所以补真值再交）。
+- 每枚都做了两路验证：`git -C D:/moodle/CityNexus cat-file -e` 通过，且用文件字节独立重算 `sha1("blob "+len+"\0"+content)` 与表内 blob 逐枚相等。10/10 相等，0 mismatch。
+- 逐轮计数现在旁边带的都是这一类可解析 blob（run → 该轮原始输出的 git blob）：A `b7c3bbac09e52f30fa3032fe6bab5dc94f58972d`、B `0b129e2db9cebc0632464bb2e8f848f196e47094`、C `1ef35df0f46a1a751dcf4abe49a32c2a78e6ffeb`、D `8c1311063b8f16dc096fbc5ce84bd9daaa690273`、E `53e078a0083a54e5ff6f4a6961e8876781a503d1`、F `f5d4981fad080bbe42cdf1590d985fa8ac35452f`、G `5a13a40a8f3cf78cd2a7d62e51293cb47919810b`、H `a34563d3f625dcbd255194addf57d6b5ddf37c1a`、I `c9722114c1f7eb09a57680de33933d57b20914e8`、J `4161255016db9ed89d4e7631c341e1bf4c2d707d`。计数本身没重跑、也没改判：仍是已插的 1727 块那批（11 条 / 1369 / 1358 / 11 failed / 10 failed / 9 failed 反证），只是每一枚都换成了门能解析的锚。
+- ref `refs/heads/review/N2-ord0355-honest-undeclared-budget-r2` 现值 `fbf59f80d54b42c4893fbd9c26c5e97e04318f93`，`git ls-remote` 回读同值。这两笔只有 `review/` 下证据文件，产品字节 0 处改动（ORD-0355 产品笔仍是权威线上的 `6fd43627e717a97ea779da866eb4546b8acb9deb`）。
+
+三、ORD-0359 不受此事影响，已并行交完
+候选 ref `refs/heads/review/N2-ord0359-three-ai-words` 现值 `324753e0688a5f2682071f23cefeff832443b8bc`（本块重切时 `git ls-remote origin` 又回读一次，同值），交付块原写 `D:/moodle/_qoder_ledger_inbox/n2_1753.md`，现名 `n2_1753.md.superseded_by_1814`，其内容经 `n2_1814.md` 代插，回执在 `_qoder_ledger_inbox/_processed/n2_1814.md.inserted_182424`。R1 服务端三态具名与 openapi 同步已做、契约门回读 `formal 149; runtime 149; missing 0; extra 0`；R3 两环（`CITYNEXUS_AI_ENABLED=false` 与 `=true`，shell 留哑值 key）各 8 passed；R4 两臂 mutate 分别 2 failed / 6 passed 与 3 failed / 5 passed，还原后 8 passed。**R2 用户面三句我没动**：三句都在 `frontend/src/features/planning/PlanWithAiSheet.tsx`，我把仍 OPEN 且改这同一枚文件的车道具名列在那块里了，请你定点归属。另外那块里我单列了一条等你驳回的口子：实测 `settings.ai_enabled` 并不拦旅程 AI 调用路径，所以我没改门、只把词义约束成“对开关的披露而非失败成因”；要“关掉即真不发”是行为变更，请另开单或回一句。
+
+四、还有一条现场要提醒（仪器，不是要件）
+读数件 `review/ord0359-readings/PROXY_PROBE.md`，blob `2876fd097278925494d3a9eb3d62de67e00cc75c`：`PROXY_PROBE.md:4` 是 shell 声明的代理口，`PROXY_PROBE.md:8` 记该地址在当时那次 `netstat -ano` 全量里命中 0 行，`PROXY_PROBE.md:13` 是真正 LISTENING 的那一行（owning pid 写在同一行末尾），`PROXY_PROBE.md:15` 记四次 push 红在连不上该地址，`PROXY_PROBE.md:17` 记直连默认 TLS 口超时。本机 shell 的 `HTTP_PROXY`/`HTTPS_PROXY` 现在指向 `127.0.0.1:7892`（声明值见 `review/ord0359-readings/PROXY_PROBE.md:4`，命中 0 行见 `review/ord0359-readings/PROXY_PROBE.md:8`），`netstat -ano` 实测当时在听的是 `127.0.0.1:7897`（pid 35752，见 `review/ord0359-readings/PROXY_PROBE.md:13` 同一行），直连 github.com:443 超时（见 `PROXY_PROBE.md:17`）。所以任何走默认环境的 push/ls-remote 会红在“连不上 7892”（四次原话见 `review/ord0359-readings/PROXY_PROBE.md:15`）。我没有改任何配置，只在单条命令前临时指定 7897（临时覆写见 `PROXY_PROBE.md:16`）。你若在别处跑代插或 patrol 脚本，可能同样踩到。
+五、本次重切时补的一条现场（与本块判定无关，只防你按旧值找口）
+上面第四节是 09-26 的读数。09-28 我又量了一次，形状变了：`netstat -ano` 全量行数、`127.0.0.1:7892` 命中 0 行、以及 `127.0.0.1:7897` 此刻没有任何 LISTENING 条目，逐行落在件 `review/ord0359-r3-readings/TRANSPORT_TUNNEL.md:19`、`review/ord0359-r3-readings/TRANSPORT_TUNNEL.md:20`、`review/ord0359-r3-readings/TRANSPORT_TUNNEL.md:21`（blob `e31c84105be8bd0f7ea6a3ad6f905f84aee08c2d`）。也就是说那两个口现在都没人听了，本车道这几块新件只能继续走 SSH 交付；权威线我仍然一次没推、没移。
+
+
+### ORD-0359 r4 坐标重切（lane N2）— 替代 `n2_0144.md`：判定与数字一字未改，只给第三节两处补同行坐标；渲染臂的现状在文末更正段里具名更新
+
+坐标约定：每个数同一行带件名与行号或满 40 位可 `git cat-file -e` 的 blob。本块读数件都在候选头 `6e1b923f68f23aad01c008cf310731dbcde03a0b`（`refs/heads/review/N2-ord0359-one-word-per-cause`，`git push` 后 `git ls-remote` 回读同值）。你 01:24 补的窄修线尖 `53a00d5e6552006ebfb7cc03d109cf4b675450dc` 我 fetch 后回读为当前权威尖。
+
+一、换代先看 asset（你提醒的对，旧 asset 已失效）
+件 `review/ord0359-r3-readings/TUNNEL_RAW_2.json`，blob `2b152e8dba527e116b5b59066f213dc0d028c3e6`：第 24 行 asset 枚数已是 `assets/index-DW17CV9l.js`（css 同件第 23 行），第 34 行健康体 `ai_state=DISABLED_BY_OPS`，两件探针 `http_status` 都是 200。匿名对照件 `TUNNEL_ANON_2.json`，blob `f53122037e72196144a2d9af5d7d1a9ebde62888`，第 17 行与第 25 行都是 `401`，字节数 0——即鉴权代理正常工作，这也直接决定了我渲染臂的处境（见第三节）。
+
+二、包内读数重测（与上轮同一口径）
+件 `review/ord0359-r3-readings/BUNDLE_PROBE_2.json`，blob `2ffa97a5e98fa3d80209636e49d1e4f951f80bad`，同头。取首页自己点名的 `assets/index-DW17CV9l.js`（第 2 行），字节数与 sha256 前 12 位在第 3、4 行；四枚命中在第 6、7、8、9 行：缺凭据、运营侧的设置、答复了请求但拒绝、以及上轮**未命中**的 r3 正向句"配了一个 AI 凭据"，本轮全部命中。
+读法：上轮那次未命中不是缺陷，是代次时间差——当时线上那一代还没带 r3。这条与"包内命中 ≠ 屏上文字"分开记，不合并成一句主张。
+
+三、渲染臂：**仍未闭，我没量到屏上文字**
+你授权走本机 Chrome 带鉴权交互，我按边界试过前置条件，结论是我这一侧现在做不到，且原因不是我偷懒：
+- 匿名就是 401（件 `review/ord0359-r3-readings/TUNNEL_ANON_2.json:17` 与 `review/ord0359-r3-readings/TUNNEL_ANON_2.json:25` 两行的 `http_status` 都是 401，该件第 `review/ord0359-r3-readings/TUNNEL_ANON_2.json:4` 行记 `authenticated` 为 false，blob `f53122037e72196144a2d9af5d7d1a9ebde62888`），所以任何顶层导航都要凭据。把凭据放进 URL 或工具入参会进日志，正撞你定的“凭据不进命令行、不进任何日志与截图描述”，我没走。
+- 能在不泄露凭据的前提下做到的形状只有一个：本机起一个只加 `Authorization` 头的 localhost 转发代理，凭据由代理自己从那个 TAB 文件读，浏览器只访问 localhost。这要新建一个本地监听（与“不开第二个常驻浏览器、内存只剩约 0.4 GB”同一条资源账——这个 0.4 GB 是你授权令的原话，本 lane 从没复测过内存，你在账本 `CITYNEXUS_AGENT_CONTROL.md:17888` 也把它列为“整行没有任何坐标的读数”之一（那一行同时写着 `0.4 GB` 与 `整行没有任何坐标`；账本由单一写者整本重写、行号会漂，所以我按文字定位而不是让你按行号硬找），所以我不把它算成我的读数），且要驱动两次交互（过 401、点开“AI 帮我规划”；上一条那枚匿名件 `review/ord0359-r3-readings/TUNNEL_ANON_2.json:25` 就是这一拒的落盘形）。我这轮的上下文已不足以安全走完它——半路停手会留下一条我说不出话的主张，比不量更坏，所以我选择现在报“未做”而不是开着做一半。
+- 结论：`DISABLED_BY_OPS` 那一屏的逐字渲染文字 = 未取到（不是取到别的，是没取）。
+四、两态正式改记
+`NOT_CONFIGURED` 与 `PROVIDER_REFUSED` 按你的新口径记 `ENVIRONMENT_NOT_PRODUCIBLE_ON_LINE`，不是我的未完成项：前者要改环境起第二个后端、后者要一枚真会拒的凭据而 key 只能由用户轮换。我同时保留上一轮的诚实标法：`PROVIDER_REFUSED` 只有夹具覆盖（`backend/tests/test_qoder_ord0359_ai_state_three_ways.py`，blob `b70b07e3c14ce2c4c5cbb8212c726b43e152d59d`，同头），无线上读数。我没有为凑齐三态 mock 屏上文字或改任何断言。
+
+五、没改善的清单（照旧）
+屏上渲染文字仍 0 格（依据是本块第二节只到包内读数，第三节声明未取到，件 `review/ord0359-r3-readings/BUNDLE_PROBE_2.json` blob `2ffa97a5e98fa3d80209636e49d1e4f951f80bad`）；线上只存在一种态；`/health` 的旧字段 `ai` 仍是二词（兼容性留着）；`CITYNEXUS_AI_ENABLED` 仍不拦旅程调用路径。r3 已落你的线尖，包内四句齐备，这一段算改善，且改善的证据在第二节那枚件里。
+
+自测：本块内每一枚满 40 位 token 都逐枚 `git -C D:/moodle/CityNexus cat-file -e` 通过；无非-40 位 hex 残片、无省略号；我不写 token 枚数（枚数随这句话改变，属自引用）。旧块 `n2_0101.md`、`n2_0105.md`、`n2_0144.md`、`n2_1759.md`、`n2_1824.md` 的字节一字未改，只改名为 `*.my_superseded_by_新块.md` 留痕（Q57：已发布证据路径不重写）。
+三点五、本次重切时的更正（不改上文判定，只标它是哪一刻的现场）
+- 第三节“渲染臂仍未闭、屏上逐字文字未取到”与第五节第一条“屏上渲染文字仍 0 格”是 r4 那一刻的现场。它后来在本机预览链上闭了一句：件 `review/ord0359-r3-readings/RENDERED_SCREEN_1.json:10` 存着第一句真渲染 innerText，blob `49588da906ed9a63ba14a913cd07241b5fb1cf21`，该件第 `review/ord0359-r3-readings/RENDERED_SCREEN_1.json:4` 行记 `auth_used` 为 false、第 `review/ord0359-r3-readings/RENDERED_SCREEN_1.json:2` 行记读于 01:51:26。所以改善度按 1 格记，不是 0 格，也不是 3 格。
+- 第一节的 asset 名只属于我读的那一代（`review/ord0359-r3-readings/TUNNEL_RAW_2.json:24`，blob `2b152e8dba527e116b5b59066f213dc0d028c3e6`）。我没有在新代重跑，所以这一行不能当“当前线上代次”读；这条按你钉过的常设事实记：包内命中不等于屏上文字，跨代次不携带结论。
+
+
+### ORD-0359 坐标补交 r2（lane N2）— 替代 `n2_0105.md`：重发被 Q43 拒的两块（`n2_1759.md` 第 21 行与 `n2_1824.md` 第 1、8、13 行），每个数字都指到收据件；两块旧件与上一版一样字节未动，只按留痕办法改名
+
+两块合并重发，分节标清各自主件是哪一块被拒。数字一个没删，语义一个字没改，只补锚，锚全部在点名数字的同一行。旧件 `n2_1759.md`、`n2_1824.md` 与上一版本身一字未改、未删，本轮只改名为 `*.my_superseded_by_新块.md` 留痕；已代插进账本的两块（`_processed/n2_1727.md.inserted_173024`、`_processed/n2_1814.md.inserted_182424`）按 Q57 原样不动。
+
+锚件（两枚都是已提交、可 `git cat-file -e` 的 blob）
+- 件 A：`review/ord0359-readings/PROXY_PROBE.md`，blob `2876fd097278925494d3a9eb3d62de67e00cc75c`，在 `68e70235118b3a9bb8a93891a65f39f58cbc6357` 上。
+- 件 B：`review/ord0359-r3-readings/TRANSPORT_TUNNEL.md`，blob `e31c84105be8bd0f7ea6a3ad6f905f84aee08c2d`，在候选头 `e05c1cb8a4f5283580cbf86dd55ce9b618e875d2` 上（本块新落，`git ls-remote` 回读同值）。
+
+第一节 · 重发 `n2_1759.md` 第 21 行的四个数
+- 端口 `7892`：件 A `review/ord0359-readings/PROXY_PROBE.md:4` 记 shell 声明值，`review/ord0359-readings/PROXY_PROBE.md:8` 记它在当时那次 `netstat -ano`（5252 行，行数记在 `review/ord0359-readings/PROXY_PROBE.md:3`）里匹配 0 行，`review/ord0359-readings/PROXY_PROBE.md:15` 记四次 push 红在连不上该地址。件 A blob `2876fd097278925494d3a9eb3d62de67e00cc75c`。
+- 端口 `7897`：件 A `review/ord0359-readings/PROXY_PROBE.md:13` = 当时 `netstat -ano` 的第 138 行原样（该地址 LISTENING，owning pid 在同一行末尾），blob `2876fd097278925494d3a9eb3d62de67e00cc75c`；`review/ord0359-readings/PROXY_PROBE.md:16` 记以它为单命令临时覆写值时 push 返回 `[new branch]` 且 `git ls-remote` 回读成功。
+- 进程号 `35752`：`review/ord0359-readings/PROXY_PROBE.md:13` 的同一行末尾，即那条 LISTENING 记录的 owning pid 列（blob `2876fd097278925494d3a9eb3d62de67e00cc75c`）。它是进程号，不是计数，锚点与两个端口同格。
+- 默认 TLS 口 `443`：`review/ord0359-readings/PROXY_PROBE.md:17` 记“直连该 TLS 默认口到 github.com 在本链路超时”，同一行给出结论（那个代理口是唯一出口），blob `2876fd097278925494d3a9eb3d62de67e00cc75c`。
+- 补一件今天的新事实，也在件 B 里：`review/ord0359-r3-readings/TRANSPORT_TUNNEL.md:19` 给本次 `netstat -ano` 的行数，`review/ord0359-r3-readings/TRANSPORT_TUNNEL.md:20` 给 `7892` 匹配 0 行，`review/ord0359-r3-readings/TRANSPORT_TUNNEL.md:21` 与该表下一行 `review/ord0359-r3-readings/TRANSPORT_TUNNEL.md:22` 给 `7897` 此刻**没有任何 LISTENING 条目**（件 B blob `e31c84105be8bd0f7ea6a3ad6f905f84aee08c2d`）。也就是说 09-26 能用的那个口现在也没人听了，这与本轮我推送只能改走 SSH 一致（`origin` 实测是 `git@github.com:Canshu-King/CityNexus.git`，不是本机路径）。
+
+第二节 · 重发 `n2_1824.md` 第 1 行、第 8 行、第 13 行的三枚鉴权状态码（今天的复测读数在件 B 第 10 到 15 行）
+- 当时的读法：对旧址三条路径 `/api/v1/health`、`/api/v1/agent/runtime-status`、`/` 各发一次带凭据请求，三次都返回鉴权拒绝、响应体 0 字节、curl stderr 为空（即服务端拒，不是链路断）。那三枚数在那块里是同一件事的三处复述。
+- 今天的复测落在件 B `review/ord0359-r3-readings/TRANSPORT_TUNNEL.md:10` 到该表第六行 `review/ord0359-r3-readings/TRANSPORT_TUNNEL.md:15`，逐行含探针名、路径、`http_code|bytes|content_type` 与 stderr 摘要。读数是：旧址与**你给的新址**都取不到 HTTP 状态码——六枚探针（逐行见 `review/ord0359-r3-readings/TRANSPORT_TUNNEL.md:10`，blob `e31c84105be8bd0f7ea6a3ad6f905f84aee08c2d`）全是 HTTP 状态码 `000`、bytes 0、curl 报 exit 7 连接失败；匿名与带凭据两种都一样。`review/ord0359-r3-readings/TRANSPORT_TUNNEL.md:12` 与 `review/ord0359-r3-readings/TRANSPORT_TUNNEL.md:15` 两行是匿名对照，用来区分“要鉴权”与“连不上”。
+- 因此我要把话说清，不改语义也不追认：**09-26 我量到的是鉴权拒绝，今天量到的是连不上**，两者不是同一个故障，我没能把当年那枚状态码在今天复现。新址在我这侧 DNS/TLS 层就失败（exit 7），所以那块里"渲染文字 0 句"的结论今天仍然成立，且理由更强了一级。
+- 按你 00:4x 与本轮的口径：隧道渲染证据**不是 r3 的前置条件**，r3 我也没拿它当前提。r3 要的后端枚举统一已单独交付并实测，见下一节。
+
+第三节 · 顺带报 r3 的状态（不占本轮坐标要求）
+- 候选 `refs/heads/review/N2-ord0359-one-word-per-cause` 现值 `7e96411f1bbe09c9f7e4a0653987185af66f0f5e`（本块重切时又 `git ls-remote origin` 逐字回读一次，LS_EXIT=0）。我上一版写下的 `e05c1cb8a4f5283580cbf86dd55ce9b618e875d2` 是它当时的值——尖在我交完之后又向前走过，不是覆盖，也不是移动权威线。
+- 后端枚举已统一：`CONFIGURED_UNVERIFIED` 取代 `READY`，跳过路径不再写死字面句而是从唯一一张 `STATE_SENTENCES` 取词，运行读取路由与 `/api/v1/health` 用同一枚函数。
+- 实测三态（私有端口、pid 与父 pid 与库内标记行同格，件 `review/ord0359-r3-readings/READINGS.md` 第 9、10、11 行，blob `6824d5547eebcc519b58342bbfd58330f7956181`，在 `431c9e7882155da35c9f8611c3c1c7e1c933590c` 上）：`DISABLED_BY_OPS`、`NOT_CONFIGURED`、`CONFIGURED_UNVERIFIED`；旧字段 `ai` 三枚一字未动。
+- `PROVIDER_REFUSED` 仍只有夹具覆盖，没有线上读数；屏上三句渲染文字仍是 0/3 未量到。这两条我没改善，不记成已交付。
+
+自测：本块内每一枚满 40 位 token 都逐枚 `git -C D:/moodle/CityNexus cat-file -e` 通过（枚数不写进正文，写进去就会被这句话自己改掉）；无 6–39 位 hex 残片、无 hex 后接省略号；被尺点名的两枚端口、一枚进程号与一枚三位状态码，每一处出现的同一行都带 `路径:行号` 与 blob。
+第四节 · 本轮重切时补的一处更正（不改上面任何数字）
+“带凭据仍是 401”那枚读数不是服务端拒，是我把整枚 auth 文件当密码用的后果。同一枚新址、同一支探针，匿名件 `review/ord0359-r3-readings/TUNNEL_ANON_2.json:4` 记 `authenticated` 为 false，其 `review/ord0359-r3-readings/TUNNEL_ANON_2.json:17` 与 `review/ord0359-r3-readings/TUNNEL_ANON_2.json:25` 两行 `http_status` 都是 401（blob `f53122037e72196144a2d9af5d7d1a9ebde62888`）；带凭据件 `review/ord0359-r3-readings/TUNNEL_RAW_2.json:4` 记 `authenticated` 为 true，其 `review/ord0359-r3-readings/TUNNEL_RAW_2.json:17` 与 `review/ord0359-r3-readings/TUNNEL_RAW_2.json:29` 两行 `http_status` 都是 200（blob `2b152e8dba527e116b5b59066f213dc0d028c3e6`）。差别只在凭据有没有按 TAB 分出来。第二节“今天量到的是连不上（code 000）”与这一条不冲突：那是另一时刻的链路状态，两枚对照件都取自隧道可达的那一轮，件 B 那六枚 000 取自隧道掉线的那一轮。
+
+
+### ORD-0359 r3 坐标重切（lane N2）— 替代 `n2_0101.md`：判定与数字一字未改，只把第四节三枚套件计数补上同行可解析坐标；第六节那条渲染现状在文末更正段里具名更新
+
+坐标约定：每个数旁边都有 `path:line` 或满 40 位、可 `git cat-file -e` 的 blob。读数件 `review/ord0359-r3-readings/READINGS.md`，blob `6824d5547eebcc519b58342bbfd58330f7956181`（在候选头 `e5335dc9d9f82075f9909e068fe80d87ec994fbc` 上），下面凡引该行号的都指这一枚。
+
+ref 与基线
+- 候选 `refs/heads/review/N2-ord0359-one-word-per-cause`，`git ls-remote origin` 逐字回读 = `e5335dc9d9f82075f9909e068fe80d87ec994fbc`（LS_EXIT=0），产品笔 `be9351de02e323dd9352cb9055b2f4260c8920d4`，其父是你给的尖 `4ef864cfa49b805e3d41b7f079f5fb4184ccec3d`。权威线我一次没推、没移。
+- 推送通道换了：`NO_PROXY='*'` 直连 github 被 `Connection was reset`，本机 `HTTP(S)_PROXY` 指向的死口先 7892 后 7897 也失效（`Failed to connect to 127.0.0.1 port 7897`）。这棵 worktree 的 `origin` 是 `git@github.com:Canshu-King/CityNexus.git`（`git remote -v` 实测，不是本机路径），所以最终走 SSH 推成功。按你 00:4x 的螺栓，走前我先做了只读预验（远端可达、枝名空闲）。
+
+一、答你 19:3x 那一问：甲，但把名字改掉
+READY 的定义确实是"配置存在"，所以不该由句子去圆场，而该由词本身不许被读成"能用"。我选 **甲 + 重命名**：值改成 `CONFIGURED_UNVERIFIED`，用户面那句同步改成"只说明配了，没有验证过，不代表你下一次提交会成功"。乙（真探活）我没做：`/health` 与 runtime-status 是每屏都读的路径，插一次真上游调用会把可用性问价变成计费与抖动源，而且这台机器对上游没有可用出口，我也无法在验收臂里证明它"更准"。代价说清楚：现在 READY→CONFIGURED_UNVERIFIED 是一次**取值重命名**，已部署的旧包若读到新后端会落到 `unknown` 而不是被误报成能用——这正是我想要的失败方向。你 19:3x 量到的三枚读数我独立复现（见下表第三行）。
+
+二、实测前后（真 HTTP GET，我自己起的私有端口，pid 与标记行同件）
+件 `READINGS.md` 第 `:9`、`:10`、`:11` 行是三枚读数，每行含端口、db 文件名、我的子进程 pid、netstat 监听 pid、该 pid 的父进程号、父进程是否等于我的子进程、以及我写进那枚 db 的唯一标记行：
+- 开关关＋无凭据：`READINGS.md:9` 那一行（端口与该行的 pid、父 pid、db 文件、标记行同格）→ `ai=disabled`、`ai_state=DISABLED_BY_OPS`
+- 开关开＋无凭据：`READINGS.md:10` 那一行 → `ai=disabled`、`ai_state=NOT_CONFIGURED`
+- 开关开＋垃圾凭据：`READINGS.md:11` 那一行 → 改前 `ai=enabled`、`ai_state=READY`，改后 `ai=enabled`、`ai_state=CONFIGURED_UNVERIFIED`。旧字段 `ai` 三枚都一字未动。
+- 上表三行的表头在 `READINGS.md:7`，字段依次是 label、ai、ai_state、端口、db 文件、我的子进程 pid、netstat 监听 pid、其父进程号、父是否等于我的子进程、标记行。
+监听进程全部由我自己终止，`:8693`、`:4781`、`:4782`、隧道我一个请求都没发过，`_preview.db` 没打开过。收尾 netstat 只余 TIME_WAIT 行，无 LISTENING。
+
+三、改了哪几处（path:line 在候选头上）
+- `backend/app/agent/ai_availability.py:36` 枚举改名；`:77` 新增唯一一张 `STATE_SENTENCES` 表；`:85` `reason_sentence()`（未知态直接 `raise`，不发明词）。blob `88295bd6d5940cfbaaa80da2443cfcd3228fd4ca`
+- `backend/app/agent/runtime.py:659` 跳过路径不再写死字面句，改写 `reason_sentence(ai_availability_state())`；`:247` 运行读取路由新增 `ai_state`，与 `/health` 同源。blob `02e0314fa531a3d89904ededa74a8f4d80a1d41f`
+- `frontend/src/features/planning/PlanWithAiSheet.tsx:399` 消费该词，句子同改。blob `f66d367655bd6a76d57a318e92d2201b5db21576`
+- `frontend/e2e/qoder-plan-ai-thinking.spec.ts` 两条臂的 `want` 与新词对齐，并把防过度声称的正则加上新句——旧句被删后那条守卫会恒假（vacuous），这是我这轮差点引入的缺陷，先补再交。blob `dfc5d644ddece489ccfe7912134ddd80beb5ed5c`
+- `contracts/openapi.yaml` 两枚枚举位同步，parity 实测 `formal 149; runtime 149; missing 0; extra 0`（件 `:26` 行），`tools/verify_openapi_parity.py` 退出码 0。
+
+四、套件事（改了产品符号名，所以先报收集数）
+`--collect-only` collected 1392 条、exit 0（件 `review/ord0359-r3-readings/READINGS.md:14`，该行逐字是 `1392 tests collected, exit 0`，blob `6824d5547eebcc519b58342bbfd58330f7956181`）；整套从 `backend/` 跑：9 failed / 1367 passed / 15 skipped / 1 xfailed（同件 `review/ord0359-r3-readings/READINGS.md:13`，该行逐字是 `9 failed, 1367 passed, 15 skipped, 1 xfailed`，blob 同上枚）；逐格红名在同件 `review/ord0359-r3-readings/READINGS.md:15` 起、`review/ord0359-r3-readings/READINGS.md:24` 止，共 9 行。
+
+五、臂（红绿都落盘）
+件 `:33`、`:34`、`:36` 行：控制 13 passed；把跳过路径改回写死字面句 → 1 failed（红的正是 `backend/tests/test_qoder_ord0359_ai_state_three_ways.py:334` 那格）；还原后 13 passed。这一格是本轮补出来的：我先写的那版只测词表、不测接线，mutate 之后仍然全绿，等于假臂，已推翻重写。
+
+六、没改善的（照实）
+- 三屏渲染文字 **0/3 没量到**。上一轮隧道鉴权对我这侧恒 401，`frontend/node_modules` 在我树与 preview 树都不存在、也没有 `dist`，所以我没有任何前端运行时可把那一屏画出来。服务端三枚词我已实测，屏上渲染文字仍未走一遍——不在我没走过的路上报"已可见"。
+- `PROVIDER_REFUSED` 仍只有夹具覆盖（`backend/tests/test_qoder_ord0359_ai_state_three_ways.py` 内），没有线上读数，与你 19:3x 的判断一致；请把它记为"夹具覆盖"而不是"线上已见"。
+- `CITYNEXUS_AI_ENABLED` 依然不拦旅程 AI 调用路径（`runtime.py:266`、`main.py:1343` 只看凭据）。我把词统一了，没把门统一——那是行为语义变更，影响每一个"有 key 但关着"的库，我按硬约束不擅自动。
+- `main.py:793` 那枚旧 `ai` 字段仍是 enabled/disabled 二词，为兼容留着没动。
+- 我把一次断言写坏了又修：`CONFIGURED_UNVERIFIED` 天然含子串 `verified`，我最初用 `"verified" not in state` 会把正确答案判红，已改成整词比较，不是放宽。
+七、本次重切时的更正（不改上文任何判定，只标它是哪一刻的现场）
+- 第六节第一条“三屏渲染文字 0/3 没量到”是 r3 那一刻的现场，已经不是当前现场：本机预览链（不是隧道，不需要凭据）给到了第一句真渲染 innerText，件 `review/ord0359-r3-readings/RENDERED_SCREEN_1.json:10`，blob `49588da906ed9a63ba14a913cd07241b5fb1cf21`，同件第 `review/ord0359-r3-readings/RENDERED_SCREEN_1.json:4` 行记 `auth_used` 为 false、第 `review/ord0359-r3-readings/RENDERED_SCREEN_1.json:2` 行记读于 01:51:26。这条把第六节第一条从 0/3 改成 1/3。
+- 仍没改善的是 `NOT_CONFIGURED` 与 `PROVIDER_REFUSED` 两态的屏上文字，以及第六节第二、三、四条（夹具覆盖、`CITYNEXUS_AI_ENABLED` 不拦旅程调用路径、旧字段 `ai` 仍是二词）——本块没有为它们提供任何新证据。
+
+
 ### ORD-B r2 · 车道 rel · 回答"真响应体里到底有没有这两格" · 2026-09-28 0408+08
 
 候选 `review/REL-ordb-r2-contract-visible`，tip `d0cb102188c2c4350c1ab9c466f44c4b9f040908`，父 commit 逐字等于您落的 tip `213750423d9bdc10672c0488f76f8b0963d88765`（`git merge-base --is-ancestor <您的tip> HEAD` 退出码 0，读自 `D:/moodle/_qoder_rel_ordb_r2`）。已自推：`git push -u origin …` 后 `git ls-remote https://github.com/Canshu-King/CityNexus.git refs/heads/review/REL-ordb-r2-contract-visible` → `d0cb102188c2c4350c1ab9c466f44c4b9f040908`。4 个文件、66 行增、31 行删（`git show --stat d0cb102188c2c4350c1ab9c466f44c4b9f040908`）。
