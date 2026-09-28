@@ -1,0 +1,13 @@
+{
+ "base": "http://127.0.0.1:4804/",
+ "routes_with_oversized_svg": [
+  "drawer_open"
+ ],
+ "per_route": {
+  "drawer_open": {
+   "found": 0,
+   "items": [],
+   "path": "/v8/hub"
+  }
+ }
+}
