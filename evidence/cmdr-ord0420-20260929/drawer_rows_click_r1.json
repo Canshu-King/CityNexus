@@ -1,0 +1,286 @@
+{
+  "instrument": "cmdr_drawer_rows_click_r1",
+  "base": "http://127.0.0.1:49150/",
+  "locale": "zh",
+  "entryAssets": [
+    "/assets/index-DMJE_sMd.js"
+  ],
+  "rowCount": 14,
+  "rows": [
+    {
+      "index": 0,
+      "label": "今天",
+      "clickPoint": [
+        150,
+        135
+      ],
+      "hitTest": {
+        "landedOnTarget": true,
+        "topTag": "button"
+      },
+      "urlChanged": false,
+      "renderedTextChars": 516,
+      "heading": "Demo之旅",
+      "drawerClosedByItself": true,
+      "activeLabel": null,
+      "activeBg": null,
+      "pageErrorsSoFar": 0
+    },
+    {
+      "index": 1,
+      "label": "实时行程",
+      "clickPoint": [
+        150,
+        192
+      ],
+      "hitTest": {
+        "landedOnTarget": true,
+        "topTag": "button"
+      },
+      "urlChanged": true,
+      "renderedTextChars": 590,
+      "heading": "选择你的下一段路程。",
+      "drawerClosedByItself": true,
+      "activeLabel": null,
+      "activeBg": null,
+      "pageErrorsSoFar": 0
+    },
+    {
+      "index": 2,
+      "label": "地图",
+      "clickPoint": [
+        150,
+        249
+      ],
+      "hitTest": {
+        "landedOnTarget": true,
+        "topTag": "button"
+      },
+      "urlChanged": true,
+      "renderedTextChars": 389,
+      "heading": "整座城市，行程叠加其上。",
+      "drawerClosedByItself": true,
+      "activeLabel": null,
+      "activeBg": null,
+      "pageErrorsSoFar": 0
+    },
+    {
+      "index": 3,
+      "label": "行程工作台",
+      "clickPoint": [
+        150,
+        332
+      ],
+      "hitTest": {
+        "landedOnTarget": true,
+        "topTag": "button"
+      },
+      "urlChanged": true,
+      "renderedTextChars": 226,
+      "heading": "围绕重要的事塑造行程。",
+      "drawerClosedByItself": true,
+      "activeLabel": null,
+      "activeBg": null,
+      "pageErrorsSoFar": 0
+    },
+    {
+      "index": 4,
+      "label": "住宿选择",
+      "clickPoint": [
+        150,
+        389
+      ],
+      "hitTest": {
+        "landedOnTarget": true,
+        "topTag": "button"
+      },
+      "urlChanged": true,
+      "renderedTextChars": 105,
+      "heading": "选择锚点，看见行程。",
+      "drawerClosedByItself": true,
+      "activeLabel": null,
+      "activeBg": null,
+      "pageErrorsSoFar": 0
+    },
+    {
+      "index": 5,
+      "label": "城市探索",
+      "clickPoint": [
+        150,
+        446
+      ],
+      "hitTest": {
+        "landedOnTarget": true,
+        "topTag": "button"
+      },
+      "urlChanged": true,
+      "renderedTextChars": 316,
+      "heading": "先看这座城能不能规划",
+      "drawerClosedByItself": true,
+      "activeLabel": null,
+      "activeBg": null,
+      "pageErrorsSoFar": 0
+    },
+    {
+      "index": 6,
+      "label": "旅行票夹",
+      "clickPoint": [
+        150,
+        529
+      ],
+      "hitTest": {
+        "landedOnTarget": true,
+        "topTag": "button"
+      },
+      "urlChanged": true,
+      "renderedTextChars": 611,
+      "heading": "你的真实预订，受保护。",
+      "drawerClosedByItself": true,
+      "activeLabel": null,
+      "activeBg": null,
+      "pageErrorsSoFar": 0
+    },
+    {
+      "index": 7,
+      "label": "Copilot",
+      "clickPoint": [
+        150,
+        586
+      ],
+      "hitTest": {
+        "landedOnTarget": true,
+        "topTag": "button"
+      },
+      "urlChanged": true,
+      "renderedTextChars": 323,
+      "heading": "你想改什么？",
+      "drawerClosedByItself": true,
+      "activeLabel": null,
+      "activeBg": null,
+      "pageErrorsSoFar": 0
+    },
+    {
+      "index": 8,
+      "label": "恢复与执行",
+      "clickPoint": [
+        150,
+        669
+      ],
+      "hitTest": {
+        "landedOnTarget": true,
+        "topTag": "button"
+      },
+      "urlChanged": true,
+      "renderedTextChars": 939,
+      "heading": "权威行程执行。",
+      "drawerClosedByItself": true,
+      "activeLabel": null,
+      "activeBg": null,
+      "pageErrorsSoFar": 0
+    },
+    {
+      "index": 9,
+      "label": "智能守护",
+      "clickPoint": [
+        150,
+        726
+      ],
+      "hitTest": {
+        "landedOnTarget": true,
+        "topTag": "button"
+      },
+      "urlChanged": true,
+      "renderedTextChars": 352,
+      "heading": "判断前置。硬事实在关口。",
+      "drawerClosedByItself": true,
+      "activeLabel": null,
+      "activeBg": null,
+      "pageErrorsSoFar": 0
+    },
+    {
+      "index": 10,
+      "label": "旅行者画像",
+      "clickPoint": [
+        150,
+        783
+      ],
+      "hitTest": {
+        "landedOnTarget": true,
+        "topTag": "button"
+      },
+      "urlChanged": true,
+      "renderedTextChars": 488,
+      "heading": "有边界的个性化。",
+      "drawerClosedByItself": true,
+      "activeLabel": null,
+      "activeBg": null,
+      "pageErrorsSoFar": 0
+    },
+    {
+      "index": 11,
+      "label": "回收站",
+      "clickPoint": [
+        150,
+        824
+      ],
+      "hitTest": {
+        "landedOnTarget": true,
+        "topTag": "button"
+      },
+      "urlChanged": true,
+      "renderedTextChars": 97,
+      "heading": "",
+      "drawerClosedByItself": true,
+      "activeLabel": null,
+      "activeBg": null,
+      "pageErrorsSoFar": 0
+    },
+    {
+      "index": 12,
+      "label": "行程",
+      "clickPoint": [
+        150,
+        743
+      ],
+      "hitTest": {
+        "landedOnTarget": true,
+        "topTag": "button"
+      },
+      "urlChanged": true,
+      "renderedTextChars": 352,
+      "heading": "1 天行程",
+      "drawerClosedByItself": true,
+      "activeLabel": null,
+      "activeBg": null,
+      "pageErrorsSoFar": 0
+    },
+    {
+      "index": 13,
+      "label": "我的",
+      "clickPoint": [
+        150,
+        800
+      ],
+      "hitTest": {
+        "landedOnTarget": true,
+        "topTag": "button"
+      },
+      "urlChanged": true,
+      "renderedTextChars": 269,
+      "heading": "我的行程与偏好",
+      "drawerClosedByItself": true,
+      "activeLabel": null,
+      "activeBg": null,
+      "pageErrorsSoFar": 0
+    }
+  ],
+  "summary": {
+    "rowsNavigating": 13,
+    "rowsRenderingText": 14,
+    "rowsHitTestedOnTarget": 14,
+    "rowsWithEmptyScreen": 0,
+    "pageErrorsTotal": 0,
+    "verdict": "SOME_ROWS_DID_NOT"
+  },
+  "pageErrors": []
+}
