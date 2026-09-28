@@ -1,0 +1,19 @@
+{
+ "base": "http://127.0.0.1:4817",
+ "locale": "zh",
+ "entry_used": "使用封存的演示行程",
+ "page_errors": [],
+ "screen": {
+  "path": "/v8/bookings",
+  "locale_read": "zh",
+  "card_count": 1,
+  "cards": [
+   {
+    "title_h2": "place-river-cruise",
+    "badge_label": "BOOKING · C4_Anchored · ACTIVE · 模拟承诺",
+    "badge_only_slot": "BOOKING · C4_Anchored · ACTIVE",
+    "simulated_flag": "· 模拟承诺"
+   }
+  ]
+ }
+}
