@@ -1,0 +1,46 @@
+{
+ "base": "http://127.0.0.1:4785/",
+ "at": "2026-09-28T08:45:56.860Z",
+ "steps": [
+  {
+   "step": "entered_sealed_demo",
+   "ok": true
+  },
+  {
+   "step": "map_panel",
+   "panel_count": 0,
+   "markers_found": 0,
+   "card_before": {
+    "text": "Nexus River Cruise Pier",
+    "inViewport": true,
+    "hitSelf": true,
+    "topEl": "H2",
+    "box": [
+     40,
+     483,
+     310,
+     32
+    ]
+   }
+  },
+  {
+   "step": "forward_marker_to_card",
+   "ok": false
+  },
+  {
+   "step": "reverse_row_to_selection",
+   "ok": false,
+   "rows_found": 0
+  },
+  {
+   "step": "map_screen_text_bytes",
+   "bytes": 436
+  }
+ ],
+ "overall": {
+  "forward": false,
+  "reverse": false,
+  "markers": 0,
+  "rows": 0
+ }
+}
