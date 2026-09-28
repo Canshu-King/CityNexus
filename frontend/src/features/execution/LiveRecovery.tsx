@@ -420,6 +420,13 @@ export function LiveRecovery({
           );
         })
       ) : (
+        /* ORD-0407 ③: this cell deliberately carries no action, and that is a decision, not a leftover.
+           It says nothing is waiting for a decision, so any button here would offer work the server did
+           not report -- the exact overreach ORD-0384 was narrowed for refusing. The screen already
+           carries the one action that could change this reading (`live-update-location`, and
+           `live-report-rain` beside it), measured above the 768 px line, so "no action in this cell" is
+           not "no way forward on this screen". e2e/qoder-ord0407-empty-state-actions.spec.ts judges
+           both halves; if this sentence ever gains a button, that cell goes red on purpose. */
         <p className="v8-muted" data-testid="live-no-proposal">
           {zh ? "当前没有需要你决定的调整。" : "There is nothing for you to decide right now."}
         </p>
