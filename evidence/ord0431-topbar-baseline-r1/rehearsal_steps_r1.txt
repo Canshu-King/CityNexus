@@ -1,0 +1,45 @@
+ORD-0431 rehearsal record -- what was changed, where, and what was never touched.
+All edits were made inside this lane's scratch build export
+D:/moodle/_qoder_cmdr_ref_20260921/live_checks/_build_ord0431/frontend, which `git archive` wrote out
+from the live tip. The repository worktree D:/moodle/_qoder_q_ord0422/wt was never edited; the post-rehearsal
+check of that is the last paragraph of this file.
+
+STEP 0  baseline, untouched build of the tip
+  instrument: topbar_wrap_ruler_r1.mjs (Range.getClientRects per leaf inside .v8-topbar)
+  served at http://127.0.0.1:4314 /asset /assets/index-EFSKXUw2.js
+  widths 320 / 360 / 390 / 414, arms zh-CN and en
+  result: the Chinese theme chip wraps at all four widths (rects n = 2, two lines of 21 px inside a
+  44 px box); the English chip "System" never wraps (n = 1); the page title wraps only at 320 in
+  both arms; nothing beyond the right edge, nothing occluded, .v8-topbar overflow-x 0.
+
+STEP 1  rehearsal of the label-shortening road (what the ledger says will be done by hand)
+  scratch edit: src/app/V8Experience.tsx line 370
+    system: ["跟随系统", "System"]   ->   system: ["系统", "System"]
+  rebuild: npm run build, rc = 0
+  served at http://127.0.0.1:4316 with cmdr_static_api_proxy_r1.py --dist .../_build_ord0431/frontend/dist
+  instrument: topbar_wrap_ruler_r2.mjs (same probe, UI and out-dir as arguments)
+  result: the chip STILL wraps at all four widths -- rects n = 2, now one glyph per line at 16 px.
+  Why: CJK may break between characters, Latin may not, so the English chip only looks safe because
+  "System" cannot be split. Shortening the word does not remove the second line.
+
+STEP 2  rehearsal of the layout road
+  scratch edits: src/app/V8Experience.tsx restored to the pristine bytes first
+    (kept as V8Experience_pristine.tsx in this lane directory), then
+    src/styles.css line 257: .v9-language { min-width: 44px; ... }
+      -> .v9-language { white-space: nowrap; min-width: 44px; ... }
+  rebuild: npm run build, rc = 0
+  result on the same four widths and both arms: the Chinese theme chip wrap is gone (no wrapped leaf
+  at 360 / 390 / 414; at 320 the only wrapped leaf is the page title, which wraps in the English arm
+  too). The right-hand action group stays inside the viewport (right edge 303 / 343 / 373 / 397 at
+  the four widths), .v8-topbar overflow-x stays 0, nothing is occluded.
+
+What this means for file ownership
+  the label is not in the dictionary: searching the string across frontend/src at the tip finds one
+  site only, app/V8Experience.tsx:370 inside THEME_WORD -- and the chip that wraps is the THEME
+  button even though its class is v9-language (searched LocaleContext.tsx and the whole src tree, so
+  this is a read of the tree, not a name guess). So the "shorten the dictionary value" road cannot be
+  taken without editing that file, and the road that measures as working edits styles.css:257. Both
+  files are recorded in the ledger as belonging to instance A's line, so ORD-0431 needs an ownership
+  grant or should be worked by that line. Nothing here was pushed, committed, or landed: after both
+  rehearsals the repository worktree still reports 0 lines from `git status --short` and 0 tracked
+  modifications at its head 8e2bd025d58687b7cf45c7371d253cc6ecac6071.
