@@ -56,6 +56,7 @@ from app.schemas import Money, ScoreBreakdown
 from app.schemas import Place as PlaceSchema
 from app.schemas import PlanVersion as PlanSchema
 from app.schemas import Preference as PreferenceSchema
+from app.schemas import RecycleBinJourney
 from app.schemas import Traveler as TravelerSchema
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
@@ -394,6 +395,19 @@ def journey_schema(item: Journey) -> JourneySchema:
         active_plan_version_id=item.active_plan_version_id,
         current_activity_id=item.current_activity_id,
     )
+
+
+def recycle_bin_entry_schema(item: Journey) -> RecycleBinJourney:
+    """The bin's row: the accepted journey shape, then the two facts about the bin itself.
+
+    It goes through `journey_schema` rather than mapping the columns again, so the trip part of
+    the body cannot drift away from what `getJourney` already answers for the same row.
+    """
+
+    payload = journey_schema(item).model_dump()
+    payload["deleted_at"] = parse_dt(item.deleted_at)
+    payload["bin_state"] = "IN_RECYCLE_BIN"
+    return RecycleBinJourney(**payload)
 
 
 def constraint_schema(item: JourneyConstraint) -> ConstraintSchema:

@@ -363,7 +363,8 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        get?: never;
+        /** @description ORD-0383 slice 1: the trips this server holds whose `journeys.deleted_at` is NULL. No pagination and no per-traveller scope yet; a trip moved to the recycle bin by `deleteJourney` is absent here and still answers `getJourney`. */
+        get: operations["listJourneys"];
         put?: never;
         post: operations["createJourney"];
         delete?: never;
@@ -384,10 +385,47 @@ export interface paths {
         get: operations["getJourney"];
         put?: never;
         post?: never;
-        delete?: never;
+        /** @description ORD-0383 slice 1: soft delete.  The row, its plan and its history survive; only `journeys.deleted_at` and `audit_log` change, and `status` is not rewritten. */
+        delete: operations["deleteJourney"];
         options?: never;
         head?: never;
         patch: operations["updateJourney"];
+        trace?: never;
+    };
+    "/journeys/{journey_id}/undelete": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                journey_id: components["parameters"]["JourneyId"];
+            };
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** @description ORD-0399 找回 (undelete): writes NULL back to `journeys.deleted_at`, so the trip returns to `listJourneys`.  The row was never removed by `deleteJourney`, so its plan, activities and history are the same rows.  `status` and `updated_at` are not written, and no `Idempotency-Key` is taken: whether the write happens is decided by the durable `deleted_at`, and a replayed tap is refused rather than replayed as a success. The word pair is 找回 / undelete - 恢复 and `recover*` are autonomous recovery in this product, 还原 is the plan-version-history screen's word, and `restore` means a reload bringing back a draft. */
+        post: operations["undeleteJourney"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/recycle-bin/journeys": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description ORD-0402 slice 1: the trips the recycle bin holds.  This is a second door; `listJourneys` keeps answering with only the rows whose `journeys.deleted_at` is NULL, so nothing a client of that door sees changes.  Each row here carries `deleted_at` as stored plus `bin_state` = IN_RECYCLE_BIN, both read from the column - a screen does not have to infer a deletion from a trip being missing from the other list. This version is the whole bin: no pagination, no per-traveller scope and no filter parameters, ordered by `deleted_at` newest first.  Nothing here deletes permanently; this server has no such door, and no copy in the client may promise one. */
+        get: operations["listRecycleBinJourneys"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
         trace?: never;
     };
     "/journeys/{journey_id}/constraints": {
@@ -2729,6 +2767,13 @@ export interface components {
             /** Format: uuid */
             current_activity_id?: string | null;
         };
+        /** @description ORD-0402 slice 1: a journey as `getJourney` answers it, plus the two bin facts read from `journeys.deleted_at`.  `deleted_at` is never null in this shape - a row with no deletion moment belongs to `listJourneys`, not to the bin - and `bin_state` has one value so a screen never reconstructs "it was deleted" from absence in another list. */
+        RecycleBinJourney: components["schemas"]["Journey"] & {
+            /** Format: date-time */
+            deleted_at: string;
+            /** @enum {string} */
+            bin_state: "IN_RECYCLE_BIN";
+        };
         Money: {
             amount_minor: number;
             currency: string;
@@ -3929,6 +3974,26 @@ export interface operations {
             422: components["responses"]["ValidationError"];
         };
     };
+    listJourneys: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Journeys not deleted */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Journey"][];
+                };
+            };
+        };
+    };
     createJourney: {
         parameters: {
             query?: never;
@@ -3977,6 +4042,44 @@ export interface operations {
             404: components["responses"]["NotFound"];
         };
     };
+    deleteJourney: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                journey_id: components["parameters"]["JourneyId"];
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Deleted - the row is in the recycle bin */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description error.code = NOT_FOUND with error.reason_code = JOURNEY_NOT_FOUND - no such row */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+            /** @description error.code = CONFLICT with error.reason_code = JOURNEY_ALREADY_DELETED - the row is already in the bin, and its original deleted_at is left unchanged */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+        };
+    };
     updateJourney: {
         parameters: {
             query?: never;
@@ -4003,6 +4106,66 @@ export interface operations {
             };
             409: components["responses"]["Conflict"];
             422: components["responses"]["ValidationError"];
+        };
+    };
+    undeleteJourney: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                journey_id: components["parameters"]["JourneyId"];
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description The trip, back in the list */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Journey"];
+                };
+            };
+            /** @description error.code = NOT_FOUND with error.reason_code = JOURNEY_NOT_FOUND - no such row */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+            /** @description error.code = CONFLICT with error.reason_code = JOURNEY_NOT_DELETED - the row was never in the bin, so nothing was written */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+        };
+    };
+    listRecycleBinJourneys: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Trips in the recycle bin, newest deletion first */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RecycleBinJourney"][];
+                };
+            };
         };
     };
     listConstraints: {
