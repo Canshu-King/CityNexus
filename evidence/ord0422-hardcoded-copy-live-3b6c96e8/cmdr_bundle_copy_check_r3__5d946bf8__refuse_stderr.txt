@@ -1,0 +1,2 @@
+REFUSE: D:\moodle\_qoder_cmdr_ref_20260921\live_checks\cmdr_bundle_copy_check_r3__5d946bf8.json already holds a previous run; a run must not overwrite earlier evidence.
+      Read the old one first, or delete it deliberately.
