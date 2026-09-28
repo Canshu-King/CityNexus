@@ -16588,6 +16588,27 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### CMDR 2026-09-29 00:44 · 号令者 · 320×653 那格我替车道量完了：抽屉自己的滚动覆盖 14/14 行，四形两臂都是——所以"缩字号"和"凑 725px 可见栈"两个都不用做
+
+接 `### CMDR 2026-09-29 00:31` 那块（镜像件 `CITYNEXUS_AGENT_CONTROL.md` blob `6bf6e1d4926736990f88ce4f475ecec4894f6a05`，8,256,448 B）。那块里我给 ORD-0419 留了一条裁决：不缩字号、不加底带、判据改成"在抽屉自己的滚动容器里滚到位之后逐行命中测试"。**这条裁决当时是我推的，没有数**——现在有了。
+
+**量法**：新仪表 `evidence/cmdr-drawer-scope-20260929/cmdr_drawer_reach_sweep_r1.js`，blob `bb5dd7e14a5821f9b9432e36af2498009d9eb50d`，4,513 B。它把 `#v8-nav-drawer` 的 scrollTop 从 0 扫到 scrollHeight 顶（每形走 9 个滚动位），每个位对每一行取自身几何中心做 `elementFromPoint`，**只有命中点落在该行自己（或其后代）且整行框都在视口内才算可达**。现尖 `8a7665be2061a2f38aa2227f81c57003ca4caacb` 的产物上跑，入口 `index-CGSMsxT2.js`，基座是我自己的 :4805。
+
+**读数（两臂四形，全部 14 枚导航行）**：四形的并集都是 **14 枚全部可达**，判定串 `ALL_ROWS_REACHABLE_BY_DRAWER_SCROLL`；不滚时能命中的行数随形变化（见两臂件里各自的 `reachableAtTop`）。320×653 这一形最紧：`scrollHeight` 1054 px、`clientHeight` 653 px、`overflow-y` 计算值 `auto`。两臂件：zh `evidence/cmdr-drawer-scope-20260929/drawer_reach_sweep_r1_zh.json` blob `b8d1415d17edaa3cc30ab10e56935377e881e54a` 1,722 B；en `evidence/cmdr-drawer-scope-20260929/drawer_reach_sweep_r1_en.json` blob `2d474e4d07e0cc65ef3572a1ea7396e8773c78db` 1,710 B。
+
+**这条数把车道 2d2d7428 留在 ORD-0416 收尾的那个二选一直接作废**：它当时报"320×653 只能命中 8 行、要放 10 行需要 725 px 可见栈"。那句话**在它自己的量法下是真的**（它量的是不滚时），但它没滚。所以既不用缩字号、也不用加底带、更不用去凑 725 px——那两条都是拿"不滚"当产品边界。判据按 00:31 那块写的走，我另发了一条现场情报给车道（含这三枚 blob），它只需在 ORD-0419 落地后**重跑同一把仪表**证明四形两臂仍是 14/14：背景与内边距一改，行高会变，1054 px 这个数也会变，所以那一次的复跑是承重的、不是走过场。
+
+**顺带一条仪器自纠**：这把仪表第一版只认中文入口那句「使用封存的演示行程」，英文臂因此停在引导屏、抽屉根本没开，我一度把 `DRAWER_NOT_FOUND` 读成了产品缺陷。改成两臂各认自己的入口文本后（`node cmdr_drawer_reach_sweep_r1.js <基座> <输出件> <zh|en>`，第三参数选臂）英文臂正常开抽屉。⇒ 记进仪器毛病：**跨臂仪表的入口点击必须按臂取词，否则英文臂的"打不开"是仪器造的**。入库的那枚 blob 已是修好的版本。
+
+**派单现状（本轮我发出的三条，都按会话 id 点名）**：`2d2d7428` 领 ORD-0419（另 ORD-0418 仍在它手上，我提醒了顺序：先 ORD-0419 再 ORD-0418）；`e4f3490f` 领 ORD-0420，并给了它那块被拒件的同行声明改法；`9cc37e57` 领 ORD-0421（死规则普查，0 产品字节）。三条尾行均按 `CLOSING_LINE.txt` 逐字落，发后从各自流水回读确认为 user 记录且尾行逐字相同。
+
+**没改善的部分**
+1. ORD-0419、ORD-0420、ORD-0421 三单**此刻 0 产品字节落地**，现尖未动；:4805 上那 14 行仍是实心靛蓝块（截图见 00:31 那块引的 blob `b5556a1307c5f24a8c3f12b684315409b5893899`）。
+2. 这一格"14 枚全部可达"是**我私有舞台**的读数：手机链 hop4 仍未起，手机仍握 `e5a571f8…` ⇒ 手机上抽屉滚不滚得动本轮仍是 `NOT-DEPLOYED-OBSERVED`，我没有手机侧读数。
+3. 我只证明了"滚到位能命中"，**没有**证明用户在 320×653 上真会去滚、也没有测滚动条可见性——那属于可达性之外的可发现性，本轮没量，标 `NOT_REACHED_BY_CMDR`。
+4. ORD-0406、ORD-0415、ORD-0408、ORD-0417 本轮仍未回件；ORD-0407 判 CLOSED 但 r6 那枚重复仪表还在车道枝上没撤。
+
+
 ### 0370 · ORD-0394 切片 2 复查块（只报读数；产品字节、任何 ref、任何共享库一字未动）· 现读尖 214ab0ff9f1d · 2026-09-28 2314+08
 
 尖以我自己现读为准：`git -c http.proxy= -c https.proxy= -C D:/moodle/CityNexus ls-remote origin refs/heads/mirror/integration-frontend-apple-pass1` =
