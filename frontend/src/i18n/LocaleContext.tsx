@@ -812,6 +812,11 @@ const en: Dict = {
   "mapComp.providerRoute": "Provider-backed route · WGS84",
   "mapComp.disruptionScope": "Disruption scope",
   "mapComp.maplibreLabel": "MapLibre Journey map",
+  /* ORD-0417: a tap on a pin used to answer with a number and keep the stop's name in
+     `aria-label` only, which is nothing to an eye that is not reading a screen reader.  Name
+     only, per the ORD-0390 rule that keeps the two surfaces from disagreeing about what a
+     selected stop shows. */
+  "mapComp.selectedStopOnMap": "Selected on the map · {name}",
 
   // ── Recovery / stale-evidence card ──
   /* ORD-0369: this card is what a traveller hits first when a chosen plan can no longer be
@@ -1599,6 +1604,9 @@ const zhCN: Dict = {
   "mapComp.providerRoute": "供应商支持的路线 · WGS84",
   "mapComp.disruptionScope": "中断范围",
   "mapComp.maplibreLabel": "MapLibre 行程地图",
+  /* ORD-0417：与 en 同一条，站名之外什么都不加（时长、价钱会把两个面重新拉回互相矛盾）。
+     摆放的位置在 `.v8-map-caption` 里面，理由写在 `map-selection.css` 的那条规则上。 */
+  "mapComp.selectedStopOnMap": "图上选中的这一站 · {name}",
 
   // ── 恢复与证据过期卡片 ──
   "recovery.staleTitle": "这趟行程的出行证据需要重新同步",

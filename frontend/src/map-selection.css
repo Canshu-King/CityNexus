@@ -64,3 +64,33 @@
   color: var(--v8-ink);
   font-size: var(--cn-fs-caption);
 }
+
+/* ORD-0417 — the selected stop's own name, on the map glass.
+
+   Inline, inside `.v8-map-caption`, and that placement is the whole design decision.
+
+   The bottom band (`.v8-map-overlay-stack`, `map-attribution.css:28`) is the box `MapPanel` measures
+   its `fitBounds` bottom padding against -- once, when the map is built, with nothing selected -- and
+   it leaves `safetyGap` 16 px between the band's top edge and the framing.  So anything that raises
+   that top edge moves it into ground the camera was promised: measured on this lane's own gate, a
+   cell added as another block in the stack covered a pin at 390x844 that the untouched tip leaves
+   clear, and a permanently reserved two-line cell did the same at every shape because the reserve
+   itself is the height increase.  Laid out as text within the line box the caption already owns, the
+   band's height moves only when the sentence needs a line of its own, which the gate measures at all
+   four shapes instead of assuming.
+
+   `.v8-map-overlay-stack` is `pointer-events: none`, so the band swallows no drag (the ORD-0134
+   failure) and blocks no hit-test -- `elementFromPoint` at a pin's centre still returns the pin,
+   which `e2e/qoder-ord0417-tap-names-the-stop.spec.ts` measures rather than assumes.
+
+   Colour follows `styles.css:169`'s own `.v8-map-caption b`, which is already `var(--v8-indigo)`
+   inside this box: no new token, and the caption's existing dark binding
+   (`design-tokens.css:592`) keeps the surrounding text legible without a rule for this span.
+   `overflow-wrap: anywhere` is the ORD-0407 C7 lesson -- a long provider name must not widen the
+   panel at 320 px. */
+.v8-map-panel .v8-map-caption .v8-map-selected-stop {
+  margin-inline-end: var(--cn-s-8);
+  color: var(--v8-indigo);
+  font-weight: 750;
+  overflow-wrap: anywhere;
+}
