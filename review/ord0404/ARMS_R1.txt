@@ -1,0 +1,41 @@
+ORD-0404 -- deep-link arms, one cell per line, generated from the receipts (not retyped).
+Instrument: live_checks/cmdr_deeplink_arms_r1.js (local sha1 over bytes, not a git object).
+Stack: own copy of the library at probe/ord0404.db, own uvicorn on :54681, own vite preview serving
+the branch's dist. Nothing here reads or writes :8693, :4781 or _preview.db.
+
+Columns: cell | pathname read back | panels mounted | address verdict | body_chars | pageerror
+
+== AFTER (the delivered head, private preview :50991)
+   receipt=receipt.json at=2026-09-28T13:08:10.760Z base=http://127.0.0.1:50991 cells=12 failing=0
+  route_discover         pathname=/v8/discover                                   panels=prep-panel                               verdict=silent         body_chars=356   pageerror=0
+  route_stay             pathname=/v8/stay                                       panels=v8-stay-explorer                         verdict=silent         body_chars=146   pageerror=0
+  route_authoritative    pathname=/v8/authoritative                              panels=plan-version-history,v12-authoritative-panel verdict=silent         body_chars=1532  pageerror=0
+  drawer_discover        pathname=/v8/discover                                   panels=prep-panel                               verdict=silent         body_chars=356   pageerror=0
+  drawer_stay            pathname=/v8/stay                                       panels=v8-stay-explorer                         verdict=silent         body_chars=146   pageerror=0
+  drawer_authoritative   pathname=/v8/authoritative                              panels=plan-version-history,v12-authoritative-panel verdict=silent         body_chars=1532  pageerror=0
+  route_hub              pathname=/v8/hub                                        panels=pretrip-checklist,hub-glance-empty,today-strip verdict=silent         body_chars=445   pageerror=0
+  route_nosuchscreen     pathname=/v8/hub                                        panels=pretrip-checklist,hub-glance-empty,today-strip verdict=said:这个地址没有对应的屏（它点的是「nosuchscreen body_chars=485   pageerror=0
+  route_sealed_journey   pathname=/v8/22222222-2222-4222-8222-222222222222       panels=pretrip-checklist,hub-glance-empty,today-strip verdict=silent         body_chars=445   pageerror=0
+  route_nosuchscreen_en  pathname=/v8/hub                                        panels=pretrip-checklist,hub-glance-empty,today-strip verdict=said:This address names no screen body_chars=1025  pageerror=0
+  unknown_then_drawer    pathname=/v8/stay                                       panels=v8-stay-explorer                         verdict=silent         body_chars=146   pageerror=0
+  reload_stay            pathname=/v8/stay                                       panels=v8-stay-explorer                         verdict=silent         body_chars=146   pageerror=0
+
+== BEFORE (the same instrument on a rebuild of the line, private preview :51999)
+   receipt=receipt.json at=2026-09-28T12:54:52.030Z base=http://127.0.0.1:51999 cells=12 failing=6
+  route_discover         pathname=/v8/hub                                        panels=pretrip-checklist,hub-glance-empty,today-strip verdict=silent         body_chars=465   pageerror=0
+  route_stay             pathname=/v8/hub                                        panels=pretrip-checklist,hub-glance-empty,today-strip verdict=silent         body_chars=465   pageerror=0
+  route_authoritative    pathname=/v8/hub                                        panels=pretrip-checklist,hub-glance-empty,today-strip verdict=silent         body_chars=465   pageerror=0
+  drawer_discover        pathname=/v8/discover                                   panels=prep-panel                               verdict=silent         body_chars=356   pageerror=0
+  drawer_stay            pathname=/v8/stay                                       panels=v8-stay-explorer                         verdict=silent         body_chars=146   pageerror=0
+  drawer_authoritative   pathname=/v8/authoritative                              panels=plan-version-history,v12-authoritative-panel verdict=silent         body_chars=1532  pageerror=0
+  route_hub              pathname=/v8/hub                                        panels=pretrip-checklist,hub-glance-empty,today-strip verdict=silent         body_chars=445   pageerror=0
+  route_nosuchscreen     pathname=/v8/hub                                        panels=pretrip-checklist,hub-glance-empty,today-strip verdict=silent         body_chars=445   pageerror=0
+  route_sealed_journey   pathname=/v8/22222222-2222-4222-8222-222222222222       panels=pretrip-checklist,hub-glance-empty,today-strip verdict=silent         body_chars=445   pageerror=0
+  route_nosuchscreen_en  pathname=/v8/hub                                        panels=pretrip-checklist,hub-glance-empty,today-strip verdict=silent         body_chars=947   pageerror=0
+  unknown_then_drawer    pathname=/v8/stay                                       panels=v8-stay-explorer                         verdict=silent         body_chars=146   pageerror=0
+  reload_stay            pathname=/v8/hub                                        panels=pretrip-checklist,hub-glance-empty,today-strip verdict=silent         body_chars=445   pageerror=0
+
+The BEFORE block is the defect: three direct-address cells and the reload cell come back
+pathname=/v8/hub, and the three verdict cells read `silent`. The drawer cells are green on
+both sides, which is the shape the commander measured at 19:18 -- the address was never the
+problem, keeping it across the sealed-demo door was.

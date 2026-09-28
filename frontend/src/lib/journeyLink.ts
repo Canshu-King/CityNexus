@@ -13,6 +13,25 @@
 
 export type JourneyLinkFailure = "NO_JOURNEY" | "INSECURE_CONTEXT" | "CLIPBOARD_UNAVAILABLE";
 
+/**
+ * ORD-0404: one definition of "this address segment names a journey, not a screen".
+ *
+ * ORD-0351 made `/v8/<journey uuid>` a valid entry, and ORD-0404 needs to tell that apart from a
+ * segment that names no screen at all: answering "this address has no screen" to a real journey
+ * link would be a new lie built on top of the one being fixed. `main.tsx` used to carry its own
+ * copy of this pattern; two copies drift, and only one of them is read when a link is judged.
+ */
+export const JOURNEY_ID_SEGMENT =
+  /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+
+/**
+ * The first `/v8/` segment, exactly as written (a journey id is matched against a BINARY-collated
+ * SQLite TEXT column, so case is not this function's to normalize). "" means bare `/v8/`.
+ */
+export function v8FirstSegment(pathname: string): string {
+  return pathname.replace(/^\/v8\/+/, "").split("/")[0] ?? "";
+}
+
 export type JourneyLinkEnv = {
   journeyId: string;
   origin: string;
