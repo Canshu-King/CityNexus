@@ -1,0 +1,52 @@
+{
+ "arm": "BEFORE - the live contract at the tip names no closed set for `reason_code`",
+ "ruler": "ui_exposure_taint_ast_r7b4.cjs",
+ "ruler_blob": "cefcb38c8d01a5996f3f705531a127c85f16c0b3",
+ "target": "D:/moodle/_qoder_lane_S4_0926/work/ord0408/jia/tip/frontend/src/features/trash/JourneyTrashPanel.tsx",
+ "contract": {
+  "path": "D:/moodle/_qoder_lane_S4_0926/work/ord0408/jia/tip/contracts/openapi.yaml",
+  "line_2003_verbatim": "reason_code: {type: string}",
+  "blob": "ee2dc30d0391ba13262e4c6f319b2619b97b5de4"
+ },
+ "readings": {
+  "tip_file_with_live_contract": {
+   "exit": 0,
+   "cells": [
+    "RAW_BODY_TO_DOM@224",
+    "UPSTREAM_TEXT_VIA_HELPER_TO_DOM@233"
+   ],
+   "folded": [],
+   "exempted": [],
+   "blocked": [
+    {
+     "line": 233,
+     "rule": "UPSTREAM_TEXT_VIA_HELPER_TO_DOM",
+     "field": "reason_code",
+     "why": "CONTRACT_MISSING_ENUM",
+     "examples": [],
+     "contract": "openapi.yaml"
+    }
+   ]
+  },
+  "tip_file_with_no_contract_argument": {
+   "exit": 0,
+   "cells": [
+    "RAW_BODY_TO_DOM@224",
+    "UPSTREAM_TEXT_VIA_HELPER_TO_DOM@233"
+   ],
+   "folded": [],
+   "exempted": [],
+   "blocked": [
+    {
+     "line": 233,
+     "rule": "UPSTREAM_TEXT_VIA_HELPER_TO_DOM",
+     "field": "reason_code",
+     "why": "CONTRACT_MISSING_ENUM",
+     "examples": [],
+     "contract": "openapi.yaml"
+    }
+   ]
+  }
+ },
+ "expected": "red, and the red names CONTRACT_MISSING_ENUM (never a silent pass)"
+}

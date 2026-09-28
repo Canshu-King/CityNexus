@@ -1,0 +1,520 @@
+{
+ "contract": {
+  "path": "D:/moodle/_qoder_lane_S4_0926/work/ord0408/jia/tip/contracts/openapi.yaml",
+  "bytes": 119781,
+  "blob": "ee2dc30d0391ba13262e4c6f319b2619b97b5de4"
+ },
+ "counts": {
+  "fields_with_enum_per_ruler": 21,
+  "fields_with_enum_per_pyyaml": 21,
+  "agree": 21,
+  "members_differ": 0,
+  "parser_invented": 0,
+  "parser_missed": 0
+ },
+ "reason_code": {
+  "per_ruler": null,
+  "per_pyyaml": null,
+  "declared_anywhere": false
+ },
+ "rows": [
+  {
+   "field": "actions",
+   "state": "agree",
+   "parser_line": 2036,
+   "parser_form": "enum_key_with_bracket",
+   "parser_members": [
+    "ACKNOWLEDGE_NO_ALTERNATIVE",
+    "REPLAN"
+   ],
+   "yaml_members": [
+    "ACKNOWLEDGE_NO_ALTERNATIVE",
+    "REPLAN"
+   ],
+   "only_parser": [],
+   "only_yaml": []
+  },
+  {
+   "field": "ai_state",
+   "state": "agree",
+   "parser_line": 230,
+   "parser_form": "enum_key_with_bracket",
+   "parser_members": [
+    "CONFIGURED_UNVERIFIED",
+    "DISABLED_BY_OPS",
+    "NOT_CONFIGURED",
+    "PROVIDER_REFUSED"
+   ],
+   "yaml_members": [
+    "CONFIGURED_UNVERIFIED",
+    "DISABLED_BY_OPS",
+    "NOT_CONFIGURED",
+    "PROVIDER_REFUSED"
+   ],
+   "only_parser": [],
+   "only_yaml": []
+  },
+  {
+   "field": "approval_method",
+   "state": "agree",
+   "parser_line": 2204,
+   "parser_form": "enum_key_with_bracket",
+   "parser_members": [
+    "STEP_UP",
+    "USER_CONFIRMATION",
+    "WEBAUTHN"
+   ],
+   "yaml_members": [
+    "STEP_UP",
+    "USER_CONFIRMATION",
+    "WEBAUTHN"
+   ],
+   "only_parser": [],
+   "only_yaml": []
+  },
+  {
+   "field": "bin_state",
+   "state": "agree",
+   "parser_line": 2273,
+   "parser_form": "inline_on_field_line",
+   "parser_members": [
+    "IN_RECYCLE_BIN"
+   ],
+   "yaml_members": [
+    "IN_RECYCLE_BIN"
+   ],
+   "only_parser": [],
+   "only_yaml": []
+  },
+  {
+   "field": "code",
+   "state": "agree",
+   "parser_line": 59,
+   "parser_form": "inline_on_field_line",
+   "parser_members": [
+    "DEMO_MODE_REQUIRED",
+    "RESET_TOKEN_INVALID",
+    "RESET_TOKEN_REQUIRED"
+   ],
+   "yaml_members": [
+    "DEMO_MODE_REQUIRED",
+    "RESET_TOKEN_INVALID",
+    "RESET_TOKEN_REQUIRED"
+   ],
+   "only_parser": [],
+   "only_yaml": []
+  },
+  {
+   "field": "decision",
+   "state": "agree",
+   "parser_line": 2143,
+   "parser_form": "inline_on_field_line",
+   "parser_members": [
+    "ALLOW_AUTO",
+    "DENY",
+    "NO_ACTION",
+    "RECOVERY_REQUIRED",
+    "REQUIRE_CONFIRMATION",
+    "REQUIRE_STEP_UP",
+    "WATCH"
+   ],
+   "yaml_members": [
+    "ALLOW_AUTO",
+    "DENY",
+    "NO_ACTION",
+    "RECOVERY_REQUIRED",
+    "REQUIRE_CONFIRMATION",
+    "REQUIRE_STEP_UP",
+    "WATCH"
+   ],
+   "only_parser": [],
+   "only_yaml": []
+  },
+  {
+   "field": "event_status",
+   "state": "agree",
+   "parser_line": 2024,
+   "parser_form": "inline_on_field_line",
+   "parser_members": [
+    "ACKNOWLEDGED",
+    "DETECTED",
+    "RESOLVED"
+   ],
+   "yaml_members": [
+    "ACKNOWLEDGED",
+    "DETECTED",
+    "RESOLVED"
+   ],
+   "only_parser": [],
+   "only_yaml": []
+  },
+  {
+   "field": "event_type",
+   "state": "agree",
+   "parser_line": 2598,
+   "parser_form": "inline_on_field_line",
+   "parser_members": [
+    "CLOSURE",
+    "OTHER",
+    "SCHEDULE_DELAY",
+    "SERVICE_UNAVAILABLE",
+    "TRAFFIC_DELAY",
+    "USER_CHANGE",
+    "WEATHER"
+   ],
+   "yaml_members": [
+    "CLOSURE",
+    "OTHER",
+    "SCHEDULE_DELAY",
+    "SERVICE_UNAVAILABLE",
+    "TRAFFIC_DELAY",
+    "USER_CHANGE",
+    "WEATHER"
+   ],
+   "only_parser": [],
+   "only_yaml": []
+  },
+  {
+   "field": "failure_token",
+   "state": "agree",
+   "parser_line": 2510,
+   "parser_form": "inline_on_field_line",
+   "parser_members": [
+    "FORCE_BOOKING_FAIL",
+    "FORCE_PAYMENT_FAIL"
+   ],
+   "yaml_members": [
+    "FORCE_BOOKING_FAIL",
+    "FORCE_PAYMENT_FAIL"
+   ],
+   "only_parser": [],
+   "only_yaml": []
+  },
+  {
+   "field": "kind",
+   "state": "agree",
+   "parser_line": 2284,
+   "parser_form": "inline_on_field_line",
+   "parser_members": [
+    "APPOINTMENT",
+    "BOOKING",
+    "HARD",
+    "ORDER",
+    "OTHER",
+    "PAYMENT",
+    "SOFT"
+   ],
+   "yaml_members": [
+    "APPOINTMENT",
+    "BOOKING",
+    "HARD",
+    "ORDER",
+    "OTHER",
+    "PAYMENT",
+    "SOFT"
+   ],
+   "only_parser": [],
+   "only_yaml": []
+  },
+  {
+   "field": "mode",
+   "state": "agree",
+   "parser_line": 2076,
+   "parser_form": "inline_on_field_line",
+   "parser_members": [
+    "ADVISORY",
+    "ASSISTED",
+    "AUTONOMOUS",
+    "FALLBACK"
+   ],
+   "yaml_members": [
+    "ADVISORY",
+    "ASSISTED",
+    "AUTONOMOUS",
+    "FALLBACK"
+   ],
+   "only_parser": [],
+   "only_yaml": []
+  },
+  {
+   "field": "name",
+   "state": "agree",
+   "parser_line": 2786,
+   "parser_form": "inline_on_field_line",
+   "parser_members": [
+    "DISCOVER",
+    "DISRUPTION_REPORT",
+    "EXPLAIN_PLAN",
+    "PREFERENCE_CHANGE",
+    "REPLAN_REQUEST",
+    "UNKNOWN",
+    "WHAT_IF"
+   ],
+   "yaml_members": [
+    "DISCOVER",
+    "DISRUPTION_REPORT",
+    "EXPLAIN_PLAN",
+    "PREFERENCE_CHANGE",
+    "REPLAN_REQUEST",
+    "UNKNOWN",
+    "WHAT_IF"
+   ],
+   "only_parser": [],
+   "only_yaml": []
+  },
+  {
+   "field": "projection_status",
+   "state": "agree",
+   "parser_line": 2681,
+   "parser_form": "inline_on_field_line",
+   "parser_members": [
+    "DEGRADED",
+    "READY",
+    "STALE"
+   ],
+   "yaml_members": [
+    "DEGRADED",
+    "READY",
+    "STALE"
+   ],
+   "only_parser": [],
+   "only_yaml": []
+  },
+  {
+   "field": "provenance",
+   "state": "agree",
+   "parser_line": 2595,
+   "parser_form": "enum_key_with_bracket",
+   "parser_members": [
+    "PROVIDER_VERIFIED",
+    "SIMULATED",
+    "SYSTEM_DERIVED",
+    "USER_REPORTED"
+   ],
+   "yaml_members": [
+    "PROVIDER_VERIFIED",
+    "SIMULATED",
+    "SYSTEM_DERIVED",
+    "USER_REPORTED"
+   ],
+   "only_parser": [],
+   "only_yaml": []
+  },
+  {
+   "field": "requested_autonomy",
+   "state": "agree",
+   "parser_line": 2152,
+   "parser_form": "enum_key_with_bracket",
+   "parser_members": [
+    "EXECUTE_WITHIN_BOUNDS",
+    "PLAN_ONLY"
+   ],
+   "yaml_members": [
+    "EXECUTE_WITHIN_BOUNDS",
+    "PLAN_ONLY"
+   ],
+   "only_parser": [],
+   "only_yaml": []
+  },
+  {
+   "field": "severity",
+   "state": "agree",
+   "parser_line": 2599,
+   "parser_form": "inline_on_field_line",
+   "parser_members": [
+    "CRITICAL",
+    "INFO",
+    "MAJOR",
+    "MINOR"
+   ],
+   "yaml_members": [
+    "CRITICAL",
+    "INFO",
+    "MAJOR",
+    "MINOR"
+   ],
+   "only_parser": [],
+   "only_yaml": []
+  },
+  {
+   "field": "source",
+   "state": "agree",
+   "parser_line": 2480,
+   "parser_form": "inline_on_field_line",
+   "parser_members": [
+    "DETERMINISTIC",
+    "HYBRID",
+    "INITIAL",
+    "MANUAL",
+    "REPLAN"
+   ],
+   "yaml_members": [
+    "DETERMINISTIC",
+    "HYBRID",
+    "INITIAL",
+    "MANUAL",
+    "REPLAN"
+   ],
+   "only_parser": [],
+   "only_yaml": []
+  },
+  {
+   "field": "source_class",
+   "state": "agree",
+   "parser_line": 1795,
+   "parser_form": "inline_on_field_line",
+   "parser_members": [
+    "OFFICIAL_NOTICE",
+    "OPEN_WEB",
+    "OPERATOR_NOTICE"
+   ],
+   "yaml_members": [
+    "OFFICIAL_NOTICE",
+    "OPEN_WEB",
+    "OPERATOR_NOTICE"
+   ],
+   "only_parser": [],
+   "only_yaml": []
+  },
+  {
+   "field": "state",
+   "state": "agree",
+   "parser_line": 1487,
+   "parser_form": "enum_key_with_bracket",
+   "parser_members": [
+    "HYDRATABLE",
+    "NO_ACTIVE_PLAN",
+    "PLAN_FEASIBLE",
+    "READY",
+    "RECOVERY_REQUIRED",
+    "RECOVERY_REQUIRED_NO_ALTERNATIVE",
+    "REPLAN_REQUIRED",
+    "RESOLVED",
+    "UNAVAILABLE",
+    "UNKNOWN_RETRYABLE"
+   ],
+   "yaml_members": [
+    "HYDRATABLE",
+    "NO_ACTIVE_PLAN",
+    "PLAN_FEASIBLE",
+    "READY",
+    "RECOVERY_REQUIRED",
+    "RECOVERY_REQUIRED_NO_ALTERNATIVE",
+    "REPLAN_REQUIRED",
+    "RESOLVED",
+    "UNAVAILABLE",
+    "UNKNOWN_RETRYABLE"
+   ],
+   "only_parser": [],
+   "only_yaml": []
+  },
+  {
+   "field": "status",
+   "state": "agree",
+   "parser_line": 2220,
+   "parser_form": "inline_on_field_line",
+   "parser_members": [
+    "ACCEPTED",
+    "ACKNOWLEDGED",
+    "ACTIVE",
+    "APPROVED",
+    "ARRIVED",
+    "AUTHORIZED",
+    "BREACHED",
+    "CANCELLED",
+    "CANDIDATE",
+    "COMPLETED",
+    "CONFIRMED",
+    "CONSUMED",
+    "DETECTED",
+    "DRAFT",
+    "EN_ROUTE",
+    "EXPIRED",
+    "FAILED",
+    "FULFILLED",
+    "GENERATED",
+    "IGNORED",
+    "INITIATED",
+    "INVALIDATED",
+    "IN_PROGRESS",
+    "NOT_STARTED",
+    "PENDING",
+    "PLANNED",
+    "PRESENTED",
+    "PROPOSED",
+    "READY",
+    "REFUNDED",
+    "REJECTED",
+    "RESOLVED",
+    "REVOKED",
+    "SELECTED",
+    "SKIPPED",
+    "SUCCEEDED",
+    "SUPERSEDED",
+    "VOIDED"
+   ],
+   "yaml_members": [
+    "ACCEPTED",
+    "ACKNOWLEDGED",
+    "ACTIVE",
+    "APPROVED",
+    "ARRIVED",
+    "AUTHORIZED",
+    "BREACHED",
+    "CANCELLED",
+    "CANDIDATE",
+    "COMPLETED",
+    "CONFIRMED",
+    "CONSUMED",
+    "DETECTED",
+    "DRAFT",
+    "EN_ROUTE",
+    "EXPIRED",
+    "FAILED",
+    "FULFILLED",
+    "GENERATED",
+    "IGNORED",
+    "INITIATED",
+    "INVALIDATED",
+    "IN_PROGRESS",
+    "NOT_STARTED",
+    "PENDING",
+    "PLANNED",
+    "PRESENTED",
+    "PROPOSED",
+    "READY",
+    "REFUNDED",
+    "REJECTED",
+    "RESOLVED",
+    "REVOKED",
+    "SELECTED",
+    "SKIPPED",
+    "SUCCEEDED",
+    "SUPERSEDED",
+    "VOIDED"
+   ],
+   "only_parser": [],
+   "only_yaml": []
+  },
+  {
+   "field": "transaction_type",
+   "state": "agree",
+   "parser_line": 2568,
+   "parser_form": "inline_on_field_line",
+   "parser_members": [
+    "AUTHORIZE",
+    "CAPTURE",
+    "REFUND",
+    "VOID"
+   ],
+   "yaml_members": [
+    "AUTHORIZE",
+    "CAPTURE",
+    "REFUND",
+    "VOID"
+   ],
+   "only_parser": [],
+   "only_yaml": []
+  }
+ ]
+}
