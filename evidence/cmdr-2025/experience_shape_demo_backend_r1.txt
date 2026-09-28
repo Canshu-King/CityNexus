@@ -1,0 +1,11 @@
+top keys: ['active_plan', 'experience_flags', 'journey', 'mobility_facts', 'offers', 'options', 'provider_mesh', 'recovery', 'selected_option_id', 'traveler_twin', 'trip']
+active_plan type: dict keys: ['activities', 'current_activity_id', 'cursor_status', 'disruptions', 'id', 'legs', 'mobility_evidence', 'mobility_snapshot_id', 'source', 'status', 'user_location', 'version_no']
+activities: list len 6
+activity0 keys ['city_service_id', 'end_at', 'id', 'locked', 'metadata', 'place_id', 'protected', 'sequence_no', 'start_at', 'status', 'title', 'type']
+activity0 metadata {"completed_at_actual": "2026-09-27T20:41:47.214982+00:00", "legacy_execution_compatibility": "DIRECT_COMPLETION_PRE_V12_CONTRACT"}
+offers -> list 0
+places -> NoneType absent
+locations -> NoneType absent
+anchors -> NoneType absent
+journey -> dict 11
+coord fields found: [[".trip.arrival_anchor.latitude", null], [".trip.arrival_anchor.longitude", null], [".trip.departure_anchor.latitude", null], [".trip.departure_anchor.longitude", null]]
