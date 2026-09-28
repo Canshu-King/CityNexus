@@ -4,6 +4,7 @@ import type { FeatureCollection } from "geojson";
 import type { V8Data } from "../../app/v8Types";
 import { useT, useLocale } from "../../i18n/LocaleContext";
 import { mapCopy } from "../../i18n/mapPanelCopy";
+import { MapViewportControls, type ViewportState } from "./MapViewportControls";
 import "../../map-attribution.css";
 import "../../map-selection.css";
 
@@ -64,6 +65,14 @@ export function MapPanel({
      canvas underneath, which is exactly what reads as "the map is just a picture".
      The fallback stays, but it is now named. */
   const [tilesUnavailable, setTilesUnavailable] = useState(false);
+  /* ORD-0403: one control, and the control carries its own state. `targetRef` is the point the
+     camera was last asked to frame — the whole journey, or a single selected stop — and
+     `viewportState` says whether the camera is still on it. It is recomputed from the camera on
+     every move/zoom end, so what changes the label is the map actually moving, not a flag set at
+     click time that could drift away from what is on screen. */
+  const [viewportState, setViewportState] = useState<ViewportState>("on-target");
+  const targetRef = useRef<{ lng: number; lat: number } | null>(null);
+  const refitRef = useRef<(() => void) | null>(null);
   const t = useT();
   const { locale } = useLocale();
   const route = useMemo(() => {
@@ -376,17 +385,57 @@ export function MapPanel({
       const overlayHeight = overlay?.getBoundingClientRect().height ?? 0;
       const side = 42;
       const safetyGap = 16;
-      mapInstance.fitBounds(bounds, {
-        padding: {
-          top: side,
-          right: side,
-          bottom: side + overlayHeight + safetyGap,
-          left: side,
-        },
-        maxZoom: 13,
-        duration: reducedMotion ? 0 : 650,
-      });
+      /* The same call the reset button re-runs, kept as a closure so "back to the journey's view"
+         reframes exactly what the first fit framed — same padding, same maxZoom — instead of
+         inventing a second definition of the journey's view somewhere else. */
+      const fitToJourney = () =>
+        mapInstance.fitBounds(bounds, {
+          padding: {
+            top: side,
+            right: side,
+            bottom: side + overlayHeight + safetyGap,
+            left: side,
+          },
+          maxZoom: 13,
+          duration: reducedMotion ? 0 : 650,
+        });
+      refitRef.current = () => {
+        refitPending = true;
+        fitToJourney();
+      };
+      /* The initial framing is this same call — it was lost once when the direct `fitBounds` was
+         turned into a closure, which is how a map can come up centred on a midpoint nobody asked
+         for. Calling it here also seeds the target below on its first moveend. */
+      fitToJourney();
     }
+    /* Distance is measured in projected pixels, not degrees, so the tolerance means the same
+       physical thing at every zoom level and every latitude. */
+    /* Declared out here because both the framing block above and this listener need it: a fit we
+       asked for is what redefines the target, and the flag has to survive the block that ran it. */
+    let refitPending = true;
+    const TOLERANCE_PX = 24;
+    const syncViewportState = () => {
+      /* A fit we asked for defines what "on target" means, so the target is recorded from the
+         camera once that fit settles. `bounds.getCenter()` would be wrong here: the fit is given
+         extra bottom padding for the overlay stack, so the camera deliberately settles north of
+         the geometric centre, and a correctly framed journey would have been reported as lost. */
+      if (refitPending) {
+        refitPending = false;
+        const settled = mapInstance.getCenter();
+        targetRef.current = { lng: settled.lng, lat: settled.lat };
+        setViewportState("on-target");
+        return;
+      }
+      const target = targetRef.current;
+      if (!target) return;
+      const want = mapInstance.project([target.lng, target.lat]);
+      const have = mapInstance.project([mapInstance.getCenter().lng, mapInstance.getCenter().lat]);
+      const next: ViewportState =
+        Math.hypot(want.x - have.x, want.y - have.y) > TOLERANCE_PX ? "off-target" : "on-target";
+      setViewportState((prev) => (prev === next ? prev : next));
+    };
+    mapInstance.on("moveend", syncViewportState);
+    mapInstance.on("zoomend", syncViewportState);
     });
     return () => {
       disposed = true;
@@ -413,6 +462,7 @@ export function MapPanel({
     }
     if (!chosen) return;
     const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    targetRef.current = { lng: chosen.longitude, lat: chosen.latitude };
     map.easeTo({
       center: [chosen.longitude, chosen.latitude],
       duration: reducedMotion ? 0 : 450,
@@ -443,6 +493,15 @@ export function MapPanel({
       aria-label={t("mapComp.journeyMap")}
     >
       <div ref={host} className="v8-maplibre-canvas" data-testid="v8-maplibre-canvas" />
+      <MapViewportControls
+        state={viewportState}
+        onResetView={() => refitRef.current?.()}
+        labels={{
+          resetToJourney: mapCopy(locale, "viewportResetToJourney"),
+          onTarget: mapCopy(locale, "viewportOnTarget"),
+          offTarget: mapCopy(locale, "viewportOffTarget"),
+        }}
+      />
       {tilesUnavailable && (
         /* Requirement 3 of ORD-0037: the flat canvas behind the raster tiles is the
            right degradation, but saying nothing is what made the panel read as a
