@@ -1,12 +1,15 @@
 base_tip=35326e62fb3de9f0cda459c8426ac22c0c49c715
-branch_tip=e4a143147fc4b5a58b8a2a7bd869986fccb87970
-commits=6ce96146 step1, d0896a05 refusals, 28b9ab26 step2, e4a14314 baseline re-cut
-pushed=+ b190a265...e4a14314 (forced update after the rebase the commander asked for)
-ls-remote_origin=e4a143147fc4b5a58b8a2a7bd869986fccb87970
+branch_tip=77d909f366e4419cedefa2305a2169f7db159ca2
+diff_against_base_tip=12 files changed, 2016 insertions(+), 0 deletions(-)
+commits_on_tip=6
+error_code_set_in_main_py=8 (same set as the base tip, measured by the G6 regex)
+commits=6ce96146 step1, d0896a05 refusals, 28b9ab26 step2, e4a14314 baseline re-cut, 14a1aafa readings in-branch, 77d909f3 bin docstring verbatim
+pushed=+ b190a265...e4a14314 forced update on the rebase, then 14a1aafa and 77d909f3 fast-forwards
+ls-remote_origin=77d909f366e4419cedefa2305a2169f7db159ca2 equals local HEAD
 
 == suites ==
 five_door_suites=47 passed, 2 warnings in 21.35s
-full_suite=9 failed, 1432 passed, 15 skipped, 1 xfailed, 2 warnings in 429.95s (0:07:09)
+full_suite=9 failed, 1432 passed, 15 skipped, 1 xfailed, 2 warnings in 335.40s (0:05:35)
 full_suite_rc=1
 red_set_mine=9 red_set_base=9 new_in_mine=0
 openapi_parity=formal 162; runtime 162; missing 0; extra 0
