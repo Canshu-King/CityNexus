@@ -1,0 +1,213 @@
+{
+ "base": "http://127.0.0.1:4803/",
+ "journey_id": "3602a4ca-7713-4f68-beae-53b8383e3d85",
+ "wheel_proof": {
+  "before": 0,
+  "after": 154,
+  "delta": 154,
+  "moves_drawer": true
+ },
+ "items": [
+  {
+   "index": 0,
+   "label": "今天",
+   "scrollTop_after": 0,
+   "clientHeight": 844,
+   "scrollHeight": 998,
+   "centre": [
+    150,
+    135
+   ],
+   "fully_inside_client": true,
+   "self_hit": true,
+   "top_element": "BUTTON"
+  },
+  {
+   "index": 1,
+   "label": "实时行程",
+   "scrollTop_after": 0,
+   "clientHeight": 844,
+   "scrollHeight": 998,
+   "centre": [
+    150,
+    192
+   ],
+   "fully_inside_client": true,
+   "self_hit": true,
+   "top_element": "BUTTON"
+  },
+  {
+   "index": 2,
+   "label": "地图",
+   "scrollTop_after": 0,
+   "clientHeight": 844,
+   "scrollHeight": 998,
+   "centre": [
+    150,
+    249
+   ],
+   "fully_inside_client": true,
+   "self_hit": true,
+   "top_element": "BUTTON"
+  },
+  {
+   "index": 3,
+   "label": "行程工作台",
+   "scrollTop_after": 0,
+   "clientHeight": 844,
+   "scrollHeight": 998,
+   "centre": [
+    150,
+    332
+   ],
+   "fully_inside_client": true,
+   "self_hit": true,
+   "top_element": "BUTTON"
+  },
+  {
+   "index": 4,
+   "label": "住宿选择",
+   "scrollTop_after": 0,
+   "clientHeight": 844,
+   "scrollHeight": 998,
+   "centre": [
+    150,
+    389
+   ],
+   "fully_inside_client": true,
+   "self_hit": true,
+   "top_element": "BUTTON"
+  },
+  {
+   "index": 5,
+   "label": "城市探索",
+   "scrollTop_after": 24,
+   "clientHeight": 844,
+   "scrollHeight": 998,
+   "centre": [
+    150,
+    422
+   ],
+   "fully_inside_client": true,
+   "self_hit": true,
+   "top_element": "BUTTON"
+  },
+  {
+   "index": 6,
+   "label": "旅行票夹",
+   "scrollTop_after": 107,
+   "clientHeight": 844,
+   "scrollHeight": 998,
+   "centre": [
+    150,
+    422
+   ],
+   "fully_inside_client": true,
+   "self_hit": true,
+   "top_element": "BUTTON"
+  },
+  {
+   "index": 7,
+   "label": "Copilot",
+   "scrollTop_after": 154,
+   "clientHeight": 844,
+   "scrollHeight": 998,
+   "centre": [
+    150,
+    432
+   ],
+   "fully_inside_client": true,
+   "self_hit": true,
+   "top_element": "BUTTON"
+  },
+  {
+   "index": 8,
+   "label": "恢复与执行",
+   "scrollTop_after": 154,
+   "clientHeight": 844,
+   "scrollHeight": 998,
+   "centre": [
+    150,
+    515
+   ],
+   "fully_inside_client": true,
+   "self_hit": true,
+   "top_element": "BUTTON"
+  },
+  {
+   "index": 9,
+   "label": "智能守护",
+   "scrollTop_after": 154,
+   "clientHeight": 844,
+   "scrollHeight": 998,
+   "centre": [
+    150,
+    572
+   ],
+   "fully_inside_client": true,
+   "self_hit": true,
+   "top_element": "BUTTON"
+  },
+  {
+   "index": 10,
+   "label": "旅行者画像",
+   "scrollTop_after": 154,
+   "clientHeight": 844,
+   "scrollHeight": 998,
+   "centre": [
+    150,
+    629
+   ],
+   "fully_inside_client": true,
+   "self_hit": true,
+   "top_element": "BUTTON"
+  },
+  {
+   "index": 11,
+   "label": "回收站",
+   "scrollTop_after": 154,
+   "clientHeight": 844,
+   "scrollHeight": 998,
+   "centre": [
+    150,
+    686
+   ],
+   "fully_inside_client": true,
+   "self_hit": true,
+   "top_element": "BUTTON"
+  },
+  {
+   "index": 12,
+   "label": "行程",
+   "scrollTop_after": 154,
+   "clientHeight": 844,
+   "scrollHeight": 998,
+   "centre": [
+    150,
+    743
+   ],
+   "fully_inside_client": true,
+   "self_hit": true,
+   "top_element": "BUTTON"
+  },
+  {
+   "index": 13,
+   "label": "我的",
+   "scrollTop_after": 154,
+   "clientHeight": 844,
+   "scrollHeight": 998,
+   "centre": [
+    150,
+    800
+   ],
+   "fully_inside_client": true,
+   "self_hit": true,
+   "top_element": "BUTTON"
+  }
+ ],
+ "summary": {
+  "item_count": 14,
+  "reachable_by_centre_hit": 14,
+  "unreachable": []
+ }
+}
