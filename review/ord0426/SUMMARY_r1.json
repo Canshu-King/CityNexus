@@ -1,6 +1,7 @@
 {
- "served_tip": "3d28da7d221cfd2ca463991796f0a257df042972",
+ "served_tip": "fb6131f359e85deb18a2194494dc9a96e328cdee",
  "css_assets_loaded": [
+  "index-DMJE_sMd.js",
   "index-Dm2cFpiB.css"
  ],
  "rules_parsed_on_this_tip": 1378,
@@ -786,6 +787,15 @@
   ],
   "third_party": null,
   "class": "INTENT_APPLIED_VIA_GROUP_SIBLING"
+ },
+ "generations_measured": {
+  "current_tip": "fb6131f359e85deb18a2194494dc9a96e328cdee",
+  "previous_tip": "3d28da7d221cfd2ca463991796f0a257df042972",
+  "assets_on_current": [
+   "index-DMJE_sMd.js",
+   "index-Dm2cFpiB.css"
+  ],
+  "per_rule_class_identical_count": 27
  },
  "instrument_limitation_shipped_offset": "same selector text appears three times in the loaded CSS; indexOf returns the first, so byte-order claims were dropped",
  "pageerrors": []

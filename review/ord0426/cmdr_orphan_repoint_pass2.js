@@ -22,6 +22,8 @@ const OUT = process.argv[3];
 const SRC = process.argv[4];
 const DIST_CSS = process.argv[5];
 const PASS1 = process.argv[6];
+const TIP = process.argv[7];
+if (!/^[0-9a-f]{40}$/.test(TIP)) { console.log("ABORT: the 7th argument must be the 40-hex generation under test"); process.exit(2); }
 const WIDTHS = (process.env.PASS2_WIDTHS || "320,360,390,414,800,1280").split(",")
   .map((w) => ({ width: Number(w), height: w === 653 || Number(w) < 700 ? 850 : 900 }));
 const ROUTES = (process.env.PASS2_ROUTES || "hub,live,map,studio,stay,twin,intelligence,agent,trips,me").split(",");
@@ -186,7 +188,7 @@ function parse(file) {
   const byWidth = {};
   titleTable.forEach((t) => { (byWidth[t.width] = byWidth[t.width] || []).push(t.font_size); });
   const receipt = {
-    at: new Date().toISOString(), base: BASE, widths: WIDTHS.map((w) => w.width), routes: ROUTES,
+    at: new Date().toISOString(), base: BASE, served_tip: TIP, widths: WIDTHS.map((w) => w.width), routes: ROUTES,
     dead_from_pass1: deadSel.length, competing_h1_h2_rules_in_shipped_order: competing,
     token_values: { "--cn-fs-display": "-- see titles", },
     h1_font_size_by_width: Object.fromEntries(Object.entries(byWidth).map(([k, v]) => [k, Array.from(new Set(v))])),

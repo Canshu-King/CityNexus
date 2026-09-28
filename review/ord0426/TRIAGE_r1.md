@@ -1,10 +1,15 @@
 # ORD-0426 · 27 条「无消费者」选择器的屏上分诊（两趟，0 产品字节）
 
-- 生成 2026-09-29T02:00:50+0800；仪表 pass1 `cmdr_orphan_repoint_r2.js`、pass2 `cmdr_orphan_repoint_pass2.js`（同目录）。
-- 被量产物：现尖 `3d28da7d221cfd2ca463991796f0a257df042972` 的构建，实载 CSS ["index-Dm2cFpiB.css"]。
+- 生成 2026-09-29T02:15:12+0800；仪表 pass1 `cmdr_orphan_repoint_r2.js`、pass2 `cmdr_orphan_repoint_pass2.js`（同目录）。
+- 被量产物：现尖 `fb6131f359e85deb18a2194494dc9a96e328cdee` 的构建，实载 CSS ["index-DMJE_sMd.js", "index-Dm2cFpiB.css"]。
 - pass1 场景 {"locales": ["zh", "en"], "shapes": ["390x844", "320x653", "414x896"], "routes": ["hub", "live", "map", "studio", "stay", "discover", "bookings", "agent", "authoritative", "intelligence", "twin", "trash", "trips", "me"]}，标题样本 heading_samples=146；pass2 场景 widths=[320, 360, 390, 414, 800, 1280] × routes=["hub", "live", "map", "studio", "stay", "twin", "intelligence", "agent", "trips", "me"]。
 - 输入来自已落地的 ORD-0421：wanted=27，本尖重解析 rules=1378。
 - 结果 class_counts={"INTENT_APPLIED_VIA_GROUP_SIBLING": 10, "THIRD_PARTY_DOM_NOT_DEAD": 2, "DEAD_LEGACY": 15}；pass2 对 15 条 DEAD_LEGACY 再探容器：{"DEAD_LEGACY_CONFIRMED_NO_CONTAINER": 15}。
+
+## 跨代次对照（同一判据，两枚尖各跑一遍）
+
+- 上一代 `3d28da7d221cfd2ca463991796f0a257df042972`（ORD-0420 改 DOM 之前）与本轮 `fb6131f359e85deb18a2194494dc9a96e328cdee`：27 条里分类逐条相同的条数 same=27，两代 class_counts 分别为 {"INTENT_APPLIED_VIA_GROUP_SIBLING": 10, "THIRD_PARTY_DOM_NOT_DEAD": 2, "DEAD_LEGACY": 15} 与 {"INTENT_APPLIED_VIA_GROUP_SIBLING": 10, "THIRD_PARTY_DOM_NOT_DEAD": 2, "DEAD_LEGACY": 15}。
+- 结论不因代次翻面，这是量出来的。两轮之间我还重跑了一次代次标签修正：初版把被量尖写成字面量、且只记录 CSS 名字，而两枚尖的 CSS 字节同名（styles.css 与 design-tokens.css 的 blob 在两代上相同），等于钉不住代次；现在尖由参数传入、并记录页面实载的 js 与 css 名字。
 
 ## 直接回答你点的那两枚字号规则
 

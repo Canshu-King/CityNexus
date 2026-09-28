@@ -28,6 +28,8 @@ const OUT = process.argv[3];
 const SRC = process.argv[4];
 const DIST_CSS = process.argv[5];
 const CENSUS = process.argv[6];
+const TIP = process.argv[7];
+if (!/^[0-9a-f]{40}$/.test(TIP)) { console.log("ABORT: the 7th argument must be the 40-hex generation under test"); process.exit(2); }
 const LOCALES = (process.env.CENSUS_LOCALES || "zh,en").split(",");
 const SHAPES = (process.env.CENSUS_SHAPES || "390x844,320x653,414x896").split(",")
   .map((s) => ({ width: Number(s.split("x")[0]), height: Number(s.split("x")[1]) }));
@@ -290,9 +292,9 @@ const VISUAL = ["font-size", "font-weight", "line-height", "letter-spacing", "co
         });
         title.forEach((t) => sweeps.push({ locale, shape: `${shape.width}x${shape.height}`, route, tokens, heading: t }));
       }
-      const css = await page.evaluate(() => performance.getEntriesByType("resource")
-        .map((x) => x.name).filter((n) => n.endsWith(".css")).map((n) => n.split("/").pop()));
-      css.forEach((c) => loadedCss.add(c));
+      const assets = await page.evaluate(() => performance.getEntriesByType("resource")
+        .map((x) => x.name).filter((n) => /\.(css|js)$/.test(n)).map((n) => n.split("/").pop()));
+      assets.forEach((c) => loadedCss.add(c));
       await ctx.close();
     }
   }
@@ -327,7 +329,7 @@ const VISUAL = ["font-size", "font-weight", "line-height", "letter-spacing", "co
   const headingsOffToken = sweeps.filter((s) => s.heading.tag === "h1" && !s.heading.on_display_档位);
   const shippedSorted = (x) => x;
   const receipt = {
-    at: new Date().toISOString(), base: BASE, served_tip: "3d28da7d221cfd2ca463991796f0a257df042972",
+    at: new Date().toISOString(), base: BASE, served_tip: TIP,
     css_assets_loaded: Array.from(loadedCss), rules_parsed_on_this_tip: allRules.length,
     wanted_from_ord0421: wanted.length,
     scenarios: { locales: LOCALES, shapes: SHAPES.map((s) => `${s.width}x${s.height}`), routes: ROUTES },
