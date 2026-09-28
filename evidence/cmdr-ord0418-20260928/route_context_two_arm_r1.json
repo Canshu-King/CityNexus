@@ -1,0 +1,32 @@
+{
+ "at_local": "2026-09-28 23:41:06 +0800",
+ "journey_id": "22222222-2222-4222-8222-222222222222",
+ "arms": [
+  {
+   "arm": "private_copy_cmdr",
+   "base": "http://127.0.0.1:8725",
+   "http_status": 200,
+   "activities": 6,
+   "legs": 0,
+   "mobility_facts": 0,
+   "aggregate_provenance": null,
+   "source": "INITIAL",
+   "version_no": 1,
+   "status": "ACTIVE"
+  },
+  {
+   "arm": "shared_preview_tree_hop1",
+   "base": "http://127.0.0.1:8693",
+   "http_status": 200,
+   "activities": 6,
+   "legs": 0,
+   "mobility_facts": 0,
+   "aggregate_provenance": null,
+   "source": "INITIAL",
+   "version_no": 1,
+   "status": "ACTIVE"
+  }
+ ],
+ "both_arms_agree": true,
+ "note": "read-only GETs; the shared preview DB was not written by this measurement"
+}
