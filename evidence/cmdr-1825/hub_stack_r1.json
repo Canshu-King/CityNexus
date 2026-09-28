@@ -1,0 +1,119 @@
+{
+ "panel_path": [
+  "SECTION#pretrip-checklist.cn-pretrip",
+  "SECTION.v8-page",
+  "DIV.v8-content",
+  "MAIN.v8-main",
+  "DIV.v8-product-shell",
+  "DIV."
+ ],
+ "container": "SECTION.v8-page",
+ "document_scroll_height": 1589,
+ "inner_h": 844,
+ "children": [
+  {
+   "tag": "DIV",
+   "cls": "v8-page-intro",
+   "testid": null,
+   "box": [
+    17,
+    93,
+    356,
+    197
+   ],
+   "contains_panel": false,
+   "text_head": "晚上好\n\nDemo之旅\n\n10月10日 09:00 — "
+  },
+  {
+   "tag": "DIV",
+   "cls": "v8-hero-grid",
+   "testid": null,
+   "box": [
+    17,
+    314,
+    356,
+    447
+   ],
+   "contains_panel": false,
+   "text_head": "现在\nTech Art Center\n接下来\n15:30"
+  },
+  {
+   "tag": "DIV",
+   "cls": "cn-hero-strip",
+   "testid": "today-strip",
+   "box": [
+    17,
+    771,
+    356,
+    65
+   ],
+   "contains_panel": false,
+   "text_head": "住宿\n还没有选定\n到达\n10月10日 09:00\n出发\n"
+  },
+  {
+   "tag": "SECTION",
+   "cls": "cn-attention-band",
+   "testid": "today-attention-band",
+   "box": [
+    17,
+    840,
+    356,
+    23
+   ],
+   "contains_panel": false,
+   "text_head": "这个行程还没有可信的坐标"
+  },
+  {
+   "tag": "SECTION",
+   "cls": "cn-pretrip",
+   "testid": "pretrip-checklist",
+   "box": [
+    17,
+    885,
+    356,
+    325
+   ],
+   "contains_panel": true,
+   "text_head": "行前清单\n服务端报出的两类待办\n\n这里只列契约写明依据的"
+  },
+  {
+   "tag": "DIV",
+   "cls": "v8-section-heading",
+   "testid": null,
+   "box": [
+    17,
+    1240,
+    356,
+    56
+   ],
+   "contains_panel": false,
+   "text_head": "方案概览\n\n每一天，紧密相连。\n对比住宿 →"
+  },
+  {
+   "tag": "DIV",
+   "cls": "v8-empty-state",
+   "testid": "hub-glance-empty",
+   "box": [
+    17,
+    1311,
+    356,
+    58
+   ],
+   "contains_panel": false,
+   "text_head": "还没有可以预览的行程\n\n选定方案后，这里会显示每天的安排"
+  },
+  {
+   "tag": "DIV",
+   "cls": "v8-day-row",
+   "testid": null,
+   "box": [
+    17,
+    1385,
+    356,
+    0
+   ],
+   "contains_panel": false,
+   "text_head": ""
+  }
+ ]
+}
