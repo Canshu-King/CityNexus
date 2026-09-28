@@ -124,6 +124,22 @@ export function MapPanel({
       return fact?.geometry ? [tag(fact.geometry, leg.mode, index)] : [];
     });
   }, [data, option]);
+  /* ORD-0418: which sentence the caption is allowed to speak. `route.length` is the same predicate the
+     line layer above already uses, so the words and the drawn geometry cannot disagree -- a second
+     condition would be a second truth. The provider status is read from the payload's own
+     `provider_mesh.mobility`, and only from the two entries that can actually produce a leg geometry
+     (valhalla and amap): the mesh also carries transit_realtime and ride_hail, whose statuses are
+     UNKNOWN_REALTIME / UNKNOWN_COST on this deployment and say nothing about routing. Treating every
+     mobility entry as a routing provider would have kept the sharper sentence permanently unreachable
+     -- measured, not assumed. */
+  const noRoutingProvider = (() => {
+    const mobility = data?.provider_mesh?.mobility;
+    if (!mobility || typeof mobility !== "object") return false;
+    const routers = ["valhalla", "amap"]
+      .map((key) => (mobility as Record<string, { status?: unknown }>)[key])
+      .filter((entry) => entry);
+    return routers.length > 0 && routers.every((entry) => entry.status === "NOT_CONFIGURED");
+  })();
   const routeModes = useMemo(
     () =>
       Array.from(
@@ -588,7 +604,17 @@ export function MapPanel({
           )}
           <span className="status-dot" />
           {t("mapComp.routeContext")} <b>{t("mapComp.legs", { n: route.length })}</b>
-          <span className="v8-sr-only">{t("mapComp.providerRoute")}</span>
+          {/* ORD-0418: "供应商支持的路线" is a claim about where the geometry came from, so it may
+              only be spoken -- and read aloud, this span is `v8-sr-only` -- when there is geometry
+              at all. With zero legs the server holds no route, and saying "provider-backed" anyway
+              handed the traveller a promise no request had earned. */}
+          {route.length > 0 ? (
+            <span className="v8-sr-only">{t("mapComp.providerRoute")}</span>
+          ) : noRoutingProvider ? (
+            <span className="v8-sr-only">{t("mapComp.noRouteNoProvider")}</span>
+          ) : (
+            <span className="v8-sr-only">{t("mapComp.noRouteNotRouted")}</span>
+          )}
           {/* ORD-A: the basemap is fetched from tile.openstreetmap.org, so the notice belongs on the
               glass. `attributionControl:false` above means maplibre will not draw it, and the
               source's own `attribution` field only reaches the style document — invisible to a
