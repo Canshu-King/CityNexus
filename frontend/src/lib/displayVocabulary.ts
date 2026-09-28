@@ -80,16 +80,15 @@ export function planSourceLabel(value: unknown, zh?: boolean | string | null): s
   return pick(PLAN_SOURCE, value, zh);
 }
 
-/** The clock's zone is a fact the traveller may need to check against the server, so the IANA id
- *  stays visible next to the human words rather than being replaced by them. Zone ids carry a
- *  slash and mixed case (`Asia/Shanghai`), so they are looked up verbatim before the upper-cased
- *  enum normalisation -- normalising first is exactly how `Asia/Shanghai` fell through to the raw
- *  channel on the first candidate build. */
+/** ORD-0425 r3, on the commander's ruling: a zone this table knows is shown in traveller words only.
+ *  The IANA id keeps its exact value -- it is what the backend and contract use -- but it no longer
+ *  reaches the screen. A zone the table does NOT know still shows its own value, labelled as the
+ *  server's word, because naming an unlisted zone in human words would be an invention. */
 export function clockZoneLabel(value: unknown, zh?: boolean | string | null): string {
   const raw = String(value ?? "").trim();
   const entry = TIME_ZONE[raw] || TIME_ZONE[keyOf(raw)];
   if (!entry || !raw) return rawChannel(value, zh);
-  return wantsChinese(zh) ? `${entry.zh}（${raw}）` : `${entry.en} (${raw})`;
+  return wantsChinese(zh) ? entry.zh : entry.en;
 }
 
 export function planVersionNoun(zh?: boolean | string | null): string {
