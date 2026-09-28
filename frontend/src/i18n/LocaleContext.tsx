@@ -492,6 +492,28 @@ const en: Dict = {
   "discovery.openAuthoritative": "Open authoritative plan",
   "discovery.rejectedIds": "Rejected model IDs:",
   "discovery.defaultGoal": "I prefer quiet indoor culture, low walking, and rain-friendly places near my protected Journey moments.",
+  /* ORD-0435 -- the POI batch: tick several result cards, see how many are ticked, and write that
+     set into a day through the server's own compose route. One contiguous block, same keys in the
+     Chinese half below, because a key that exists in one language only is how this screen got its
+     English sentence in the first place. */
+  "discovery.pickedCount": "{n} picked",
+  "discovery.pick": "Pick",
+  "discovery.unpick": "Unpick",
+  "discovery.batchEmpty": "Nothing picked yet. Tick a card to start a batch.",
+  "discovery.batchCommitmentNote": "{n} protected commitment travels with this batch and is not counted as a pick.",
+  "discovery.batchNotPlaced": "Not written to a day yet.",
+  "discovery.batchLanded": "Read back from the server: {n} activities on {day}.",
+  "discovery.batchNothingLanded": "Read back empty: none of this batch landed on a day. Pick fewer places, or start a new batch.",
+  "discovery.batchReadbackTitle": "What the journey store now holds",
+  "discovery.batchRefusedSome": "{n} of the picked places is not in that plan; the server did not write it.",
+  "discovery.batchPlanVersion": "plan v{v}",
+  "discovery.batchPlanId": "plan_version_id {id}",
+  "discovery.newBatch": "New batch",
+  "discovery.finishBatch": "Done",
+  "discovery.batchBusy": "Writing…",
+  "discovery.batchOutsideDay": "That batch does not fit inside the day the journey already protects. Fewer picks, or another day.",
+  "discovery.batchMissingCommitment": "The batch could not travel with the commitment the planner requires.",
+  "discovery.batchNoPlan": "The planner returned no complete plan for this batch.",
 
   // ── Execution: V10 Live ──
   "exec.liveStatus": "LIVE STATUS",
@@ -1369,6 +1391,28 @@ const zhCN: Dict = {
   "discovery.openAuthoritative": "打开权威方案",
   "discovery.rejectedIds": "已拒绝的模型 ID：",
   "discovery.defaultGoal": "我偏好安静的室内文化场所，少步行，雨天友好的地方，靠近我受保护的行程时刻。",
+  /* ORD-0435 -- the POI batch: tick several result cards, see how many are ticked, and write that
+     set into a day through the server's own compose route. One contiguous block, same keys in the
+     Chinese half below, because a key that exists in one language only is how this screen got its
+     English sentence in the first place. */
+  "discovery.pickedCount": "已选 {n} 处",
+  "discovery.pick": "选它",
+  "discovery.unpick": "取消选择",
+  "discovery.batchEmpty": "还没有勾选地点。勾一下卡片就开始一批。",
+  "discovery.batchCommitmentNote": "{n} 处受保护承诺随这一批一起提交，不计入勾选数。",
+  "discovery.batchNotPlaced": "还没有落到某一天。",
+  "discovery.batchLanded": "服务端回读：{n} 条活动落在 {day}。",
+  "discovery.batchNothingLanded": "读回为空：这一批没有写进任何一天。少勾几处，或点“新建一批”重来。",
+  "discovery.batchReadbackTitle": "行程库里现在装着",
+  "discovery.batchRefusedSome": "勾选里有 {n} 处不在这份方案里，服务器没有写入。",
+  "discovery.batchPlanVersion": "方案 v{v}",
+  "discovery.batchPlanId": "方案编号 {id}",
+  "discovery.newBatch": "新建一批",
+  "discovery.finishBatch": "完成",
+  "discovery.batchBusy": "正在写入…",
+  "discovery.batchOutsideDay": "这一批装不进行程已保护的那一天：少勾几处，或换一天。",
+  "discovery.batchMissingCommitment": "这一批没能带上规划器要求的受保护承诺。",
+  "discovery.batchNoPlan": "规划器为这一批给不出完整方案。",
 
   // ── 执行：V10 实时 ──
   "exec.liveStatus": "实时状态",
