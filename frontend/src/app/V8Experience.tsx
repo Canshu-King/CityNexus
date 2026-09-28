@@ -45,7 +45,6 @@ import { V10LiveExecutionPanel } from "../features/execution/V10LiveExecutionPan
 import { BookingArtifactScanner } from "../features/inbox/BookingArtifactScanner";
 import { JourneyInboxWorkbench, fieldLabel } from "../features/inbox/JourneyInboxWorkbench";
 import { JourneyLinkAction } from "../features/inbox/JourneyLinkAction";
-import { PretripChecklistPanel } from "../features/checklist/PretripChecklistPanel";
 import { PushCapabilityCard } from "../features/notifications/PushCapabilityCard";
 import { TwinPanel } from "../features/traveler-twin/TwinPanel";
 import { SortableActivityList } from "../features/studio/SortableActivityList";
@@ -57,6 +56,13 @@ import { V14PreventivePanel } from "../features/recovery/V14PreventivePanel";
 import { RecoveryRequiredPanel } from "../features/recovery/RecoveryRequiredPanel";
 import { V12TripStudioPanel } from "../features/studio/V12TripStudioPanel";
 import { PlanVersionHistoryPanel } from "../features/studio/PlanVersionHistoryPanel";
+import {
+  authoritativePanels,
+  hubAnchorPanels,
+  renderPanels,
+  routePanels,
+  tripsTabPanels,
+} from "./v8PanelRegistry";
 import { RealCityDiscoveryPanel } from "../features/discovery/RealCityDiscoveryPanel";
 import { DestinationPreparationPanel } from "../features/discovery/DestinationPreparationPanel";
 import {
@@ -1480,6 +1486,163 @@ export function V8Experience() {
       </div>
     );
 
+  /* ORD-0392: the fourteen `{route === "x" && <Panel/>}` blocks that used to sit in the content
+     area are now one table in `app/v8PanelRegistry.tsx`. This file keeps only what it owns: the
+     page components defined here and the state they already read, handed to the table as `slots`.
+     Adding a panel to a screen is one entry in that table -- no edit in this file. The JSX below
+     is the same element tree, moved verbatim; `renderPanels` keys each entry by its id. */
+  const routeSlots = {
+    hub: () => (
+      <Hub
+        data={data}
+        twin={authoritativeTwin.data ?? null}
+        selected={selected}
+        hasChosenPlan={hasChosenPlan}
+        isHandledDisruption={isHandledDisruption}
+        onNavigate={navigate}
+        onNewJourney={() => setSetupOpen(true)}
+        onPlanWithAi={() => setPlanAiOpen(true)}
+        staySearch={staySearch}
+        stayOutcome={stayOutcome}
+        stayAttempts={stayAttempts}
+        waitStartedAt={createStartedAt}
+        onRetryStays={() => void retryStaySearch()}
+        onStageChanged={() => {
+          void load(data.journey.id);
+          void authoritativeTwin.refetch();
+        }}
+      />
+    ),
+    studio: () => (
+      <Studio
+        data={data}
+        selected={selected}
+        chosen={chosenOption}
+        plan={authoritativePlan}
+        onNavigate={navigate}
+        onRain={triggerRain}
+      />
+    ),
+    live: () => (
+      <Live
+        data={data}
+        selected={selected}
+        mode={mode}
+        onRain={triggerRain}
+        onLocation={shareForegroundLocation}
+        offline={offline}
+      />
+    ),
+    liveSecondary: () => (
+      <LiveSecondary
+        data={data}
+        selected={selected}
+        mode={mode}
+        comparison={comparison}
+        isHandledDisruption={isHandledDisruption}
+        onMode={changeMode}
+        onSheet={() => setSheetOpen(true)}
+        onRain={triggerRain}
+        onLocation={shareForegroundLocation}
+      />
+    ),
+    mapPage: () => (
+      <MapPage
+        data={data}
+        selected={selected}
+        comparison={comparison}
+        onSheet={() => setSheetOpen(true)}
+        selectedActivityId={detailActivityId}
+        onSelectActivity={setDetailActivityId}
+      />
+    ),
+    tripsWorkspace: () => (
+      <TripsWorkspace
+        data={data}
+        selected={selected}
+        chosen={chosenOption}
+        plan={authoritativePlan}
+        wallet={wallet}
+        onNavigate={navigate}
+        onRain={triggerRain}
+        onImport={importReservation}
+        busy={busy}
+        onOpenCopilot={() => setPlanAiOpen(true)}
+        onOpenActivity={setDetailActivityId}
+        onRefresh={() => void load(data.journey.id)}
+      />
+    ),
+    bookings: () => (
+      <Bookings
+        data={data}
+        selected={selected}
+        chosen={chosenOption}
+        wallet={wallet}
+        onImport={importReservation}
+        busy={busy}
+      />
+    ),
+    me: () => (
+      <Me data={data} policy={policy} onActivate={activateAutonomy} wallet={wallet} />
+    ),
+    authoritative: () => (
+      <AuthoritativeExecution
+        journeyId={data.journey.id}
+        plan={authoritativePlan}
+        twin={authoritativeTwin.data ?? null}
+        policy={policy}
+        loading={
+          authoritativePlans.isLoading || authoritativeTwin.isLoading
+        }
+        recovery={data.recovery}
+        flags={data.experience_flags}
+        currency={data.journey.budget.currency}
+        onRefresh={() => void refreshAuthoritativeTruth(data.journey.id)}
+      />
+    ),
+  };
+  const routeScope = {
+    route,
+    data,
+    selected,
+    hasChosenPlan,
+    authoritativePlans,
+    authoritativeTwin,
+    policy,
+    wallet,
+    busy,
+    mode,
+    comparison,
+    offline,
+    disruptions,
+    handledEventIds,
+    detailActivity,
+    nearbyActivities,
+    decodedArtifactText,
+    artifactImportedAt,
+    runtimeStatus,
+    staySearch,
+    stayOutcome,
+    stayAttempts,
+    createStartedAt,
+    navigate,
+    load,
+    refreshAuthoritativeTruth,
+    selectOption,
+    triggerRain,
+    shareForegroundLocation,
+    changeMode,
+    setSheetOpen,
+    setPlanAiOpen,
+    setSetupOpen,
+    setDetailActivityId,
+    setDecodedArtifactText,
+    importReservation,
+    retryStaySearch,
+    activateAutonomy,
+    slots: routeSlots,
+  };
+
   return (
     <div className="v8-product-shell">
       <aside className="v8-sidebar">
@@ -1667,217 +1830,7 @@ export function V8Experience() {
           </div>
         )}
         <div className="v8-content">
-          {route === "hub" && (
-            <>
-              {/* Only offer the chooser while no plan is chosen; once chosen,
-                  switching lives in Trips so Today stays task-focused. */}
-              {!hasChosenPlan && (
-                <PlanComparison
-                  journeyId={data.journey.id}
-                  plans={authoritativePlans.data ?? []}
-                  budgetMinor={data.journey.budget.amount_minor}
-                  currency={data.journey.budget.currency}
-                  onSelected={() => {
-                    void load(data.journey.id);
-                    void authoritativePlans.refetch();
-                    void authoritativeTwin.refetch();
-                  }}
-                />
-              )}
-              <Hub
-                data={data}
-                twin={authoritativeTwin.data ?? null}
-                selected={selected}
-                hasChosenPlan={hasChosenPlan}
-                isHandledDisruption={isHandledDisruption}
-                onNavigate={navigate}
-                onNewJourney={() => setSetupOpen(true)}
-                onPlanWithAi={() => setPlanAiOpen(true)}
-                staySearch={staySearch}
-                stayOutcome={stayOutcome}
-                stayAttempts={stayAttempts}
-                waitStartedAt={createStartedAt}
-                onRetryStays={() => void retryStaySearch()}
-                onStageChanged={() => {
-                  void load(data.journey.id);
-                  void authoritativeTwin.refetch();
-                }}
-              />
-            </>
-          )}
-          {route === "studio" && (
-            <Studio
-              data={data}
-              selected={selected}
-              chosen={chosenOption}
-              plan={authoritativePlan}
-              onNavigate={navigate}
-              onRain={triggerRain}
-            />
-          )}
-          {route === "stay" && (
-            <StayExplorer
-              data={data}
-              selected={selected}
-              onSelect={(id) => void selectOption(id)}
-            />
-          )}
-          {route === "discover" && (
-            <>
-              {/* ORD-0193: whether this destination can be planned, and what to do about it, in
-                  front of the discovery console -- both read the same server projections, and this
-                  one owns the "prepare / wait / go and plan" loop. */}
-              <DestinationPreparationPanel
-                journeyId={data.journey.id}
-                onOpenPlan={() => navigate("authoritative")}
-                initialQuery={data.journey.city_code ?? ""}
-              />
-              <RealCityDiscoveryPanel
-                journeyId={data.journey.id}
-                cityCode={data.journey.city_code}
-                onComplete={() => refreshAuthoritativeTruth(data.journey.id)}
-                onOpenPlan={() => navigate("authoritative")}
-              />
-            </>
-          )}
-          {route === "live" && (
-            <div
-              className="live-shell"
-              data-decision-active={disruptions.length > 0 ? "true" : "false"}
-            >
-              <Live
-                data={data}
-                selected={selected}
-                mode={mode}
-                onRain={triggerRain}
-                onLocation={shareForegroundLocation}
-                offline={offline}
-              />
-              <LiveRecovery
-                journeyId={data.journey.id}
-                handledEventIds={handledEventIds}
-                onAccepted={() => void load(data.journey.id)}
-              />
-              <LiveSecondary
-                data={data}
-                selected={selected}
-                mode={mode}
-                comparison={comparison}
-                isHandledDisruption={isHandledDisruption}
-                onMode={changeMode}
-                onSheet={() => setSheetOpen(true)}
-                onRain={triggerRain}
-                onLocation={shareForegroundLocation}
-              />
-              <V10LiveExecutionPanel
-                journeyId={data.journey.id}
-                plan={data.active_plan ?? null}
-              />
-            </div>
-          )}
-          {route === "map" && (
-            <MapPage
-              data={data}
-              selected={selected}
-              comparison={comparison}
-              onSheet={() => setSheetOpen(true)}
-              selectedActivityId={detailActivityId}
-              onSelectActivity={setDetailActivityId}
-            />
-          )}
-          {route === "trips" && detailActivity && (
-            <ActivityDetail
-              activity={detailActivity as never}
-              timeZone={data.journey.timezone || "UTC"}
-              onBack={() => setDetailActivityId(null)}
-              onShowOnMap={() => {
-                /* ORD-0390: this used to clear `detailActivityId` and then navigate to the map —
-                   it threw away the very id the map needs to centre on, so 「在地图上显示」
-                   could only ever land on a generic midpoint.  The selection is the payload of
-                   this action, so it now survives it. */
-                navigate("map");
-              }}
-              onAskCopilot={() => {
-                setDetailActivityId(null);
-                navigate("agent");
-              }}
-              nearby={nearbyActivities as never}
-              onOpenNearby={(id) => setDetailActivityId(id)}
-            />
-          )}
-          {route === "trips" && !detailActivity && (
-            <TripsWorkspace
-              data={data}
-              selected={selected}
-              chosen={chosenOption}
-              plan={authoritativePlan}
-              wallet={wallet}
-              onNavigate={navigate}
-              onRain={triggerRain}
-              onImport={importReservation}
-              busy={busy}
-              onOpenCopilot={() => setPlanAiOpen(true)}
-              onOpenActivity={setDetailActivityId}
-              onRefresh={() => void load(data.journey.id)}
-            />
-          )}
-          {route === "bookings" && (
-            <>
-              <Bookings
-                data={data}
-                selected={selected}
-                chosen={chosenOption}
-                wallet={wallet}
-                onImport={importReservation}
-                busy={busy}
-              />
-              <div className="v8-page">
-                <BookingArtifactScanner onDecoded={setDecodedArtifactText} />
-              </div>
-              <div className="v8-page">
-                <JourneyInboxWorkbench
-                  journeyId={data.journey.id}
-                  decodedText={decodedArtifactText}
-                  importedAt={artifactImportedAt}
-                  onConfirmed={() => load(data.journey.id)}
-                />
-              </div>
-            </>
-          )}
-          {route === "intelligence" && (
-            <ControlTowerPanel
-              policy={policy}
-              runtimeStatus={runtimeStatus}
-              onActivate={activateAutonomy}
-            />
-          )}
-          {route === "twin" && <TwinPanel data={data} />}
-          {route === "authoritative" && (
-            <AuthoritativeExecution
-              journeyId={data.journey.id}
-              plan={authoritativePlan}
-              twin={authoritativeTwin.data ?? null}
-              policy={policy}
-              loading={
-                authoritativePlans.isLoading || authoritativeTwin.isLoading
-              }
-              recovery={data.recovery}
-              flags={data.experience_flags}
-              currency={data.journey.budget.currency}
-              onRefresh={() => void refreshAuthoritativeTruth(data.journey.id)}
-            />
-          )}
-          {route === "agent" && (
-            <AgentComposer data={data} busy={busy} onNavigate={navigate} />
-          )}
-          {route === "me" && (
-            <Me
-              data={data}
-              policy={policy}
-              onActivate={activateAutonomy}
-              wallet={wallet}
-            />
-          )}
+          {renderPanels(routePanels, routeScope)}
         </div>
       </main>
       <CopilotDock data={data} onNavigate={navigate} />
@@ -2049,6 +2002,85 @@ function TripsWorkspace({
   const chosenStayTotalMinor = chosenStayPriceKnown
     ? chosenStayOption!.stay_total_minor
     : null;
+  /* ORD-0392: the tab bodies live in `app/v8PanelRegistry.tsx` now; this file keeps the local
+     markup the Spend tab is made of and the `Bookings` / `WalletCommitments` shells it defines.
+     A new panel on any of these four tabs is one entry in that table. */
+  const tripsSlots = {
+    walletCommitments: () => (
+      <WalletCommitments wallet={wallet} timezone={data.journey.timezone || undefined} />
+    ),
+    bookingsAdvanced: () => (
+      <Bookings
+        showCommitments={false}
+        data={data}
+        selected={selected}
+        chosen={chosen}
+        wallet={wallet}
+        onImport={onImport}
+        busy={busy}
+      />
+    ),
+    spend: () => (
+      <section className="v8-page" data-testid="trips-spend">
+        <div className="v8-page-intro compact">
+          <div>
+            <p className="v8-kicker">{zh ? "花费" : "Spend"}</p>
+            <h1>{zh ? "这趟旅行花多少" : "What this trip costs"}</h1>
+            <p className="v8-lede">
+              {zh
+                ? `预算 ${data.journey.budget.currency} ${Math.round(data.journey.budget.amount_minor / 100)}；当前方案 ${activityCount} 个活动。`
+                : `Budget ${data.journey.budget.currency} ${Math.round(data.journey.budget.amount_minor / 100)}; the active plan has ${activityCount} stops.`}
+            </p>
+          </div>
+        </div>
+        <dl className="trial-review">
+          <div>
+            <dt>{zh ? "总预算" : "Total budget"}</dt>
+            <dd>
+              {data.journey.budget.currency}{" "}
+              {Math.round(data.journey.budget.amount_minor / 100)}
+            </dd>
+          </div>
+          <div>
+            <dt>{zh ? "住宿合计（已选）" : "Stay total (selected)"}</dt>
+            <dd data-testid="spend-stay-total">
+              {!chosenStayOption
+                ? zh
+                  ? "还没有选定住宿"
+                  : "No stay chosen yet"
+                : chosenStayTotalMinor == null
+                  ? zh
+                    ? "价格未知（供应商未提供房价）"
+                    : "Price unknown (no provider rate)"
+                  : `${chosenStayOption.stay.currency} ${Math.round(chosenStayTotalMinor / 100)}`}
+            </dd>
+          </div>
+          <div>
+            <dt>{zh ? "活动数量" : "Stops"}</dt>
+            <dd>{activityCount}</dd>
+          </div>
+        </dl>
+        <Studio
+          data={data}
+          selected={selected}
+          chosen={chosen}
+          plan={plan}
+          onNavigate={onNavigate}
+          onRain={onRain}
+        />
+      </section>
+    ),
+  };
+  const tripsTabScope = {
+    tab,
+    data,
+    onOpenCopilot,
+    onOpenActivity,
+    onRefresh,
+    zh,
+    slots: tripsSlots,
+  };
+
   return (
     <>
       <nav
@@ -2069,94 +2101,7 @@ function TripsWorkspace({
         ))}
       </nav>
 
-      {tab === "itinerary" && (
-        <TripItinerary
-          data={data}
-          onOpenCopilot={onOpenCopilot}
-          onOpenActivity={onOpenActivity}
-        />
-      )}
-      {tab === "stay" && (
-        <HotelsPanel journeyId={data.journey.id} onSelected={onRefresh} />
-      )}
-      {tab === "bookings" && (
-        <>
-          {/* Consumer flow first: paste a confirmation or enter it manually,
-              review the parsed fields, then confirm.  The raw-JSON workbench is
-              kept for developers behind an Advanced disclosure. */}
-          <JourneyInboxWorkbench
-            journeyId={data.journey.id}
-            onConfirmed={async () => {
-              onRefresh();
-            }}
-          />
-          <div className="v8-booking-grid" data-testid="trips-commitments">
-            <WalletCommitments wallet={wallet} timezone={data.journey.timezone || undefined} />
-          </div>
-          <details className="trips-advanced">
-            <summary>{zh ? "高级 / 开发者" : "Advanced / developer"}</summary>
-            <Bookings
-              showCommitments={false}
-              data={data}
-              selected={selected}
-              chosen={chosen}
-              wallet={wallet}
-              onImport={onImport}
-              busy={busy}
-            />
-          </details>
-        </>
-      )}
-      {tab === "spend" && (
-        <section className="v8-page" data-testid="trips-spend">
-          <div className="v8-page-intro compact">
-            <div>
-              <p className="v8-kicker">{zh ? "花费" : "Spend"}</p>
-              <h1>{zh ? "这趟旅行花多少" : "What this trip costs"}</h1>
-              <p className="v8-lede">
-                {zh
-                  ? `预算 ${data.journey.budget.currency} ${Math.round(data.journey.budget.amount_minor / 100)}；当前方案 ${activityCount} 个活动。`
-                  : `Budget ${data.journey.budget.currency} ${Math.round(data.journey.budget.amount_minor / 100)}; the active plan has ${activityCount} stops.`}
-              </p>
-            </div>
-          </div>
-          <dl className="trial-review">
-            <div>
-              <dt>{zh ? "总预算" : "Total budget"}</dt>
-              <dd>
-                {data.journey.budget.currency}{" "}
-                {Math.round(data.journey.budget.amount_minor / 100)}
-              </dd>
-            </div>
-            <div>
-              <dt>{zh ? "住宿合计（已选）" : "Stay total (selected)"}</dt>
-              <dd data-testid="spend-stay-total">
-                {!chosenStayOption
-                  ? zh
-                    ? "还没有选定住宿"
-                    : "No stay chosen yet"
-                  : chosenStayTotalMinor == null
-                    ? zh
-                      ? "价格未知（供应商未提供房价）"
-                      : "Price unknown (no provider rate)"
-                    : `${chosenStayOption.stay.currency} ${Math.round(chosenStayTotalMinor / 100)}`}
-              </dd>
-            </div>
-            <div>
-              <dt>{zh ? "活动数量" : "Stops"}</dt>
-              <dd>{activityCount}</dd>
-            </div>
-          </dl>
-          <Studio
-            data={data}
-            selected={selected}
-            chosen={chosen}
-            plan={plan}
-            onNavigate={onNavigate}
-            onRain={onRain}
-          />
-        </section>
-      )}
+      {renderPanels(tripsTabPanels, tripsTabScope)}
     </>
   );
 }
@@ -3044,13 +2989,10 @@ function Hub({
           </button>
         )}
       </section>
-      {/* ORD-0384: the two outstanding things the contract can anchor, read from the payload this
-          screen already holds -- the panel issues no second read of its own. It sits *after* the
-          attention band on purpose: in the clear state the band hides its own kicker
-          (design-tokens.css `.cn-attention-band[data-attention="clear"] .v8-kicker{display:none}`), so a
-          bare "一切正常" rendered directly under a list of open items reads as a denial of the list above
-          it. Live status answers first; the pre-trip list follows. */}
-      <PretripChecklistPanel sources={{ experience: data }} onNavigate={onNavigate} />
+      {/* ORD-0392: this anchor is a table now (`hubAnchorPanels` in app/v8PanelRegistry.tsx), so a
+          lane that wants something under Today's attention band adds an entry there and never opens
+          this file. ORD-0384's own comment about *why* it sits here travelled with the entry. */}
+      {renderPanels(hubAnchorPanels, { data, onNavigate })}
       <div className="v8-section-heading">
         <div>
           <p className="v8-kicker">{t("hub.planGlance")}</p>
@@ -3379,50 +3321,35 @@ function AuthoritativeExecution({
         </button>
       </div>
       {loading && <p className="v8-muted">{t("auth.loading")}</p>}
-      {/* Durable mid-trip HARD recovery / stale-evidence condition.  Rendered
-          before the plan so an invalidated plan can never look healthy. */}
-      <RecoveryRequiredPanel
-        journeyId={journeyId}
-        recovery={recovery}
-        flags={flags}
-        onRefresh={onRefresh}
-      />
-      {!loading && !plan && (
-        <div className="v8-feasibility">
-          <span className="status-dot" />
-          <div>
-            <b>{t("auth.noPlan")}</b>
-            <small>{t("auth.noPlanSub")}</small>
-          </div>
-        </div>
-      )}
-      {/* ORD-0386: the version list is mounted here rather than inside V12TripStudioPanel, because
-          that panel only exists once a plan was read. Behind `plan &&` a failed list read left the
-          traveller with 「你还没有选定方案。」 -- a plan-shaped sentence about a read that never
-          answered. Listing versions is its own question and gets its own answer. */}
-      <PlanVersionHistoryPanel journeyId={journeyId} />
-      {plan && (
-        <>
-          <V12AuthoritativeJourneyPanel
-            journeyId={journeyId}
-            plan={plan}
-            nowActivityId={twin?.current_activity_id}
-            nextActivityId={execution?.next_activity_id ?? null}
-            onTransition={onRefresh}
-          />
-          <V12TripStudioPanel
-            journeyId={journeyId}
-            plan={plan}
-            onAccepted={onRefresh}
-          />
-          <V14PreventivePanel journeyId={journeyId} refreshKey={plan?.id} />
-          <V14RecoveryTruthPanel
-            journeyId={journeyId}
-            policy={policy}
-            currency={currency}
-            onAccepted={onRefresh}
-          />
-        </>
+      {/* ORD-0392: the children of this screen are the `authoritative` rows of
+          `app/v8PanelRegistry.tsx`, in table order. The comment that used to sit here -- why the
+          recovery notice comes before any plan panel, and why the version list is mounted outside
+          `plan &&` (ORD-0386) -- now lives on those entries. */}
+      {renderPanels(
+        authoritativePanels,
+        {
+          journeyId,
+          plan,
+          twin,
+          policy,
+          loading,
+          recovery,
+          flags,
+          currency,
+          onRefresh,
+          nextActivityId: execution?.next_activity_id ?? null,
+          slots: {
+            noPlanNotice: () => (
+              <div className="v8-feasibility">
+                <span className="status-dot" />
+                <div>
+                  <b>{t("auth.noPlan")}</b>
+                  <small>{t("auth.noPlanSub")}</small>
+                </div>
+              </div>
+            ),
+          },
+        },
       )}
     </section>
   );
