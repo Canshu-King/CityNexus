@@ -1,0 +1,106 @@
+{
+  "healthz": {
+    "status": "NO_RESPONSE",
+    "error": "TimeoutError: timed out",
+    "elapsed_s": 20.02
+  },
+  "status_http": {
+    "status": 200,
+    "bytes": 4587,
+    "elapsed_s": 18.04,
+    "x_service": null
+  },
+  "pool": {
+    "healthy": 5,
+    "total": 5,
+    "cooling": 0,
+    "disabled": 0,
+    "in_flight_full": 0,
+    "realm_totals": {
+      "cn": {
+        "cooling": 0,
+        "disabled": 0,
+        "healthy": 3,
+        "in_flight_full": 0,
+        "total": 3
+      },
+      "global": {
+        "cooling": 0,
+        "disabled": 0,
+        "healthy": 2,
+        "in_flight_full": 0,
+        "total": 2
+      }
+    }
+  },
+  "accounts": [
+    {
+      "realm": "cn",
+      "name_len": 36,
+      "credits": 4228,
+      "status": null,
+      "in_flight": 1,
+      "breaker": null
+    },
+    {
+      "realm": "cn",
+      "name_len": 36,
+      "credits": 5377,
+      "status": null,
+      "in_flight": 0,
+      "breaker": null
+    },
+    {
+      "realm": "global",
+      "name_len": 36,
+      "credits": 479,
+      "status": null,
+      "in_flight": 0,
+      "breaker": null
+    },
+    {
+      "realm": "global",
+      "name_len": 36,
+      "credits": 586,
+      "status": null,
+      "in_flight": 0,
+      "breaker": null
+    },
+    {
+      "realm": "cn",
+      "name_len": 36,
+      "credits": 4407,
+      "status": null,
+      "in_flight": 0,
+      "breaker": null
+    }
+  ],
+  "chats": [
+    {
+      "model": "global:glm-5.2",
+      "status": "NO_RESPONSE",
+      "budget_s": 45,
+      "error": "TimeoutError: timed out",
+      "elapsed_s": 45.0
+    },
+    {
+      "model": "cn:deepseek-v4-flash",
+      "status": "NO_RESPONSE",
+      "budget_s": 90,
+      "error": "TimeoutError: timed out",
+      "elapsed_s": 90.0
+    },
+    {
+      "model": "cn:glm-5.2",
+      "status": 200,
+      "bytes": 774,
+      "budget_s": 45,
+      "elapsed_s": 22.81,
+      "content_head": "ok",
+      "finish_reason": "stop",
+      "completion_tokens": 2,
+      "reasoning_tokens": 0
+    }
+  ],
+  "verdict_all_three_slots_answer": false
+}
