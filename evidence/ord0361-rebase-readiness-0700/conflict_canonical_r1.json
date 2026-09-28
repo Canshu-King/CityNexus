@@ -1,0 +1,124 @@
+{
+ "commands": {
+  "current_argument": "the tip file at f26e2ff78c047579a7d710d3a469be6bdf9a0540 (so the FIRST section of a block is the TIP side)",
+  "other_argument": "this lane's file at 11eee48da2b117a2c0aafb2d71c50b0104b7d1fb (so the SECOND section is the LANE side)",
+  "base_argument": "the merge base b6a8ea5c625d7e3e82f7348fad57d595a8a403c0"
+ },
+ "files": {
+  "frontend/src/app/V8Experience.tsx": {
+   "2way": {
+    "merge_file_rc": 1,
+    "blocks": 1,
+    "tip_side_total_all": 29,
+    "tip_side_total_nonblank": 29,
+    "lane_side_total_all": 41,
+    "lane_side_total_nonblank": 41,
+    "every_block_attributed_by_content": true,
+    "per_block_tip_lines_nonblank": [
+     29
+    ],
+    "per_block_lane_lines_nonblank": [
+     41
+    ],
+    "per_block_at_tip_line": [
+     3406
+    ]
+   },
+   "diff3": {
+    "merge_file_rc": 1,
+    "blocks": 1,
+    "tip_side_total_all": 29,
+    "tip_side_total_nonblank": 29,
+    "lane_side_total_all": 41,
+    "lane_side_total_nonblank": 41,
+    "every_block_attributed_by_content": true,
+    "per_block_tip_lines_nonblank": [
+     29
+    ],
+    "per_block_lane_lines_nonblank": [
+     41
+    ],
+    "per_block_at_tip_line": [
+     3406
+    ]
+   }
+  },
+  "frontend/src/components/v8/MapPanel.tsx": {
+   "2way": {
+    "merge_file_rc": 7,
+    "blocks": 7,
+    "tip_side_total_all": 62,
+    "tip_side_total_nonblank": 62,
+    "lane_side_total_all": 78,
+    "lane_side_total_nonblank": 78,
+    "every_block_attributed_by_content": false,
+    "per_block_tip_lines_nonblank": [
+     1,
+     1,
+     19,
+     2,
+     17,
+     22,
+     0
+    ],
+    "per_block_lane_lines_nonblank": [
+     2,
+     1,
+     13,
+     5,
+     25,
+     9,
+     23
+    ],
+    "per_block_at_tip_line": [
+     4,
+     58,
+     71,
+     184,
+     415,
+     578,
+     709
+    ]
+   },
+   "diff3": {
+    "merge_file_rc": 8,
+    "blocks": 8,
+    "tip_side_total_all": 62,
+    "tip_side_total_nonblank": 61,
+    "lane_side_total_all": 78,
+    "lane_side_total_nonblank": 77,
+    "every_block_attributed_by_content": false,
+    "per_block_tip_lines_nonblank": [
+     1,
+     2,
+     6,
+     11,
+     2,
+     17,
+     22,
+     0
+    ],
+    "per_block_lane_lines_nonblank": [
+     2,
+     2,
+     5,
+     6,
+     5,
+     25,
+     9,
+     23
+    ],
+    "per_block_at_tip_line": [
+     4,
+     60,
+     75,
+     92,
+     191,
+     425,
+     588,
+     722
+    ]
+   }
+  }
+ }
+}
