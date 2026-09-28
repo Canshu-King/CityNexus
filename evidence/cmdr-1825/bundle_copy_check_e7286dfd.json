@@ -1,0 +1,167 @@
+{
+ "tip": "e7286dfd47db2dd9a1420867dd534b906b2d032a",
+ "served_asset": "/assets/index-Doj2alof.js",
+ "hits": [
+  [
+   "agent.advancedDetail",
+   "Advanced details"
+  ],
+  [
+   "agent.aiInterpreted",
+   "Understood by the AI assistant"
+  ],
+  [
+   "agent.aiRunAsked",
+   "You asked: {asked}"
+  ],
+  [
+   "agent.aiRunAsked",
+   "你说的是：{asked}"
+  ],
+  [
+   "agent.aiRunChecking",
+   "Reading back what this run left behind."
+  ],
+  [
+   "agent.aiRunChecking",
+   "正在回读这一轮留下了什么。"
+  ],
+  [
+   "agent.aiRunContinue",
+   "Keep watching it"
+  ],
+  [
+   "agent.aiRunLanded",
+   "What was produced is still there: {n} plans were added."
+  ],
+  [
+   "agent.aiRunLanded",
+   "已经生成的部分还在：新增了 {n} 个方案。"
+  ],
+  [
+   "agent.aiRunLeaveNow",
+   "Leave for now"
+  ],
+  [
+   "agent.aiRunLeavePrompt",
+   "A run is still going. Leaving now does not stop it."
+  ],
+  [
+   "agent.aiRunLeavePrompt",
+   "这一轮还在跑。现在离开不会停下它。"
+  ],
+  [
+   "agent.aiRunNoCurrentPlan",
+   "The read-back found no plan in force at all."
+  ],
+  [
+   "agent.aiRunNoCurrentPlan",
+   "回读时没有任何生效方案。"
+  ],
+  [
+   "agent.aiRunNoDaySignal",
+   "服务器没有回过它在处理第几天，所以这里不按天报。"
+  ],
+  [
+   "agent.aiRunNothingLanded",
+   "The read-back says no plan was added."
+  ],
+  [
+   "agent.aiRunOpenOutcome",
+   "See what came of it"
+  ],
+  [
+   "agent.aiRunOtherPlan",
+   "The plan in force is a different one than before."
+  ],
+  [
+   "agent.aiRunOtherPlan",
+   "当前生效的方案已经换成另一个。"
+  ],
+  [
+   "agent.aiRunPlanAppeared",
+   "A plan is in force now (version {version}) that wasn't before."
+  ],
+  [
+   "agent.aiRunPlanAppeared",
+   "回读时才有了生效方案（第 {version} 版）。"
+  ],
+  [
+   "agent.aiRunSamePlan",
+   "The plan in force is the same one as before."
+  ],
+  [
+   "agent.aiRunSamePlan",
+   "当前生效的还是原来那个方案。"
+  ],
+  [
+   "agent.aiRunScope",
+   "Your trip right now: {days} days, {activities} arrangements."
+  ],
+  [
+   "agent.aiRunScope",
+   "你现在生效的方案：{days} 天、{activities} 个安排。"
+  ],
+  [
+   "agent.aiRunStop",
+   "Stop waiting"
+  ],
+  [
+   "agent.aiRunStoppedAt",
+   "Stopped at: {step}."
+  ],
+  [
+   "agent.aiRunStoppedBeforeSend",
+   "Nothing had been sent, so the server holds no part of this."
+  ],
+  [
+   "agent.aiRunStoppedBeforeSend",
+   "请求还没发出去，服务器那边没有这一笔。"
+  ],
+  [
+   "agent.aiRunStripBusy",
+   "AI is planning this trip"
+  ],
+  [
+   "agent.aiRunStripDone",
+   "This planning run has ended"
+  ],
+  [
+   "agent.aiRunStripWaited",
+   "waiting {seconds}s"
+  ],
+  [
+   "agent.aiRunStripWaited",
+   "已等待 {seconds} 秒"
+  ],
+  [
+   "agent.aiRunTripMoved",
+   "The plan in force changed from version {before} to version {after}."
+  ],
+  [
+   "agent.aiRunTripMoved",
+   "当前生效的方案已从第 {before} 版换成第 {after} 版。"
+  ],
+  [
+   "agent.aiRunTripUnmoved",
+   "The plan in force is still version {version}; your trip did not move."
+  ],
+  [
+   "agent.aiRunTripUnmoved",
+   "当前生效的还是第 {version} 版，行程没有换。"
+  ],
+  [
+   "agent.aiRunUnits",
+   "这次产出 {landed} 个方案：{activities} 个安排，跨 {days} 天。"
+  ],
+  [
+   "agent.aiRunUnreadable",
+   "That read-back didn't answer, so we won't guess what was produced."
+  ],
+  [
+   "agent.aiRunUnreadable",
+   "这次回读没能答上来，所以产出了多少我们不替你猜。"
+  ]
+ ],
+ "misses": []
+}
