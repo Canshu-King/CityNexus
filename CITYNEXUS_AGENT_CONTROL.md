@@ -16588,6 +16588,46 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### CMDR 0928-0540 · N3 · ORD-0384 重定范围交付：屏上只留 2 条有锚条目，未锚的 7 条成交接清单
+
+**rebase 与线**：现尖逐字 0813d3aae826b7b4bdf311e70ed48c40f5c515d3。我旧基线 04071b8258ebcdcf1e9e4c9714fb516283d1e1ad 到它 32 笔（`review/evidence/ord0384/rebase_r1.txt:5`），祖先判定退出码 0（`review/evidence/ord0384/rebase_r1.txt:6`）。动手前先只读预测：`git merge-tree --write-tree` 得 0cc6a98dcaa3e5bdb9dcb7139bc91f7d1070427a（`review/evidence/ord0384/rebase_r1.txt:7`），rebase 后落到的树同为 0cc6a98dcaa3e5bdb9dcb7139bc91f7d1070427a（`review/evidence/ord0384/rebase_r1.txt:8`，等式判定 `:9`）。现尖碰我那 4 个产品与门文件的文件数是 0（`review/evidence/ord0384/rebase_r1.txt:10`），所以"无冲突"是有依据的而不是运气。契约 blob 在现尖、测量点、交付头三处同为 6ba1b9ab666d914ed6fc910a0372cf85b0fe6e64（`review/evidence/ord0384/rebase_r1.txt:11`），所以下面所有 `contracts/openapi.yaml:行` 对交付头成立。
+
+**交付头**：`review/N3-ord0384-pretrip-checklist` → ec491b214c4b41c01f274bd506e1695eea3f3c48，远端回读逐字符相等见 `review/evidence/ord0384/lsremote_final.txt:1`。历史被 rebase 改写过，所以那一次推送用 `--force-with-lease=refs/heads/review/N3-ord0384-pretrip-checklist:b4753423f76a4a980ce9cbf9d61219629c245a70`（显式期望值，不是 `-f`）；之后两枚头（`261f7726..ee7dbb21..ec491b21`）都只动 `review/` 下的仪表，推送形为 fast-forward。跑门、编译臂与四枚反件的那一枚头是 9520f2d46e89804098b8f8860f05761f46f9f9c3，它与交付头的 `frontend` 树同为 ba04e5d2861f4ae9aca81856f4fe80ea9e85048d（`git rev-parse 9520f2d4:frontend ec491b21:frontend`），两枚头之间只动了 4 个 `review/` 文件（`review/evidence/ord0384/diff_scope_delivered.txt:44` 与 `review/evidence/ord0384/diff_scope_delivered.txt:45` 就是被测头与交付头的 `frontend` 树哈希，现尖在 `review/evidence/ord0384/diff_scope_delivered.txt:43`），所以那些读数对交付头的产品码逐字节成立。
+
+**范围按你的重定：屏上只留有锚的**
+
+9 条候选逐条量过：`ANCHORED_ON_RESPONSE` 2 条见 `review/evidence/ord0384/unanchored_classes_r2.json:9`，剩下 7 条见 `review/evidence/ord0384/unanchored_classes_r2.json:10`（候选总数 9 见 `:8`），其中 `DECLARED_ON_REQUEST_ONLY` 3 条、`ABSENT_IN_BOTH` 4 条。留下的两条：`plan_feasibility_open` ← `experience_flags.feasibility_failures` 在 `contracts/openapi.yaml:1351`（路由块内联），`recovery_needs_decision` ← `recovery.requires_user_decision` 在 `contracts/openapi.yaml:1873`（经 `$ref: RecoveryState` 落到响应上）。
+
+**这里我自己上一版错了一次，先认**：上一轮我只问了 `contracts/openapi.yaml` 一份文档。仓库里有两份互不知晓的 OpenAPI，所以我又从同一枚 commit 的导出里 in-process 调 `app.openapi()` 取了生成式那份（146503 字节见 `review/evidence/ord0384/two_contracts_r1.json:6`，139 条路径见 `review/evidence/ord0384/two_contracts_r1.json:9`）。结果没让条目变多，反而暴露一个更细的坑：`stay_budget`、`arrival_anchor`、`departure_anchor` 在生成式文档里各出现 1 次，位置全是 `/components/schemas/JourneyCreate/properties/…`，即 **POST /api/v1/journeys 的请求体那一侧**，而引用 `JourneyCreate` 的响应是 0 条（计数在 `review/evidence/ord0384/two_contracts_r2.json:8`，用它作请求体的路由是 1 处，见 `review/evidence/ord0384/two_contracts_r2.json:10`）。若把「契约里查得到」当锚，这三条会被我错误留在屏上。判据因此改成：**必须是该条目所读端点的响应侧声明**，请求体不算。另外生成式那份 `/experience` 的响应 schema 是空对象 `{}`（`review/evidence/ord0384/two_contracts_r2.json:14`），这才是更根上的问题（值在体里、契约看不见），值得单开一张单。
+
+**净变化**：`git diff --shortstat 0813d3aa..ec491b21`，实测 27 files changed, 3198 insertions(+) 见 `review/evidence/ord0384/diff_scope_delivered.txt:34`；按 0813d3aa..ee7dbb21 量到的是 是 26 files changed, 3139 insertions(+)（`review/evidence/ord0384/diff_scope_final.txt:33`）；只看产品与门 6 个文件是 799 行净增、删 0 行（`review/evidence/ord0384/diff_scope_delivered.txt:37`）；`backend/`、`agent-mcp/`、`contracts/` 被碰文件数 0（`review/evidence/ord0384/diff_scope_delivered.txt:40`）。V8Experience 从上一版的 +19 缩到 +8（`review/evidence/ord0384/diff_scope_delivered.txt:7`）。仍然 0 新表、0 新写端点、0 后端字节。：两条留下的规则都只读屏上已有的那一个 payload，wallet 透传与「还有一个来源没读到」那句对冲话一起删了。
+
+**门（authoritative，跑在交付头上）**：run_id `cmdr053132n3`，`exit_code` 0 见 `D:/moodle/_qoder_cmdr_ref_20260921/live_checks/e2e_logs/n3_9520f2d4_053132.json:23`，`verdict` GREEN 见 `:24`，`counts.passed` 8 见 `:26`，日志 `D:/moodle/_qoder_cmdr_ref_20260921/live_checks/e2e_logs/n3_9520f2d4_053132.log`。七格：Y1 `frontend/e2e/qoder-ord0384-pretrip-checklist.spec.ts:159`、Y2 `:203`、Y3 `:241`、Y4 `:289`、Y5 `:379`、Y6 `:429`、Y7 `:475`。三格值得单看：
+
+- **Y4 会打开契约文件回验屏上印的那一行**：要求条目打印的 `contracts/openapi.yaml:<行>` 那一行真把该字段声明成属性。实测两条分别读到 `feasibility_failures: {type: array, items: {type: string}}` 与 `requires_user_decision: {type: boolean}`，收据 `review/evidence/ord0384/cmdr053132n3__Y4.json`。写错或过期的行号在这里红，不会发出去。
+- **Y1 自报它这一轮只跑了反向**：今天链上那枚行程两个锚点条件都不成立，「每条真值都有条目」那半是在跟空集比，所以收据里 `positive_direction_vacuous` 为 true 并写明正向由 Y2 承担（判据在 `frontend/e2e/qoder-ord0384-pretrip-checklist.spec.ts:190`）。正向的真凭据是 Y2 三轮：造出来 → 撤掉 → 再造，逐轮记在 `review/evidence/ord0384/cmdr053132n3__Y2.json`。
+- **Y5 是收窄之后才存在的格**：它构造一份「七条未锚规则全会亮」的响应，断言这七个类名与字段名在 DOM 里 0 命中，实测 `unanchored_names_found_in_dom` 为空、`rendered_keys` 为空，见 `review/evidence/ord0384/cmdr053132n3__Y5.json`。
+
+**编译臂**：`git archive 9520f2d46e89804098b8f8860f05761f46f9f9c3 frontend` 的导出里、对权威 `D:/moodle/CityNexus/frontend/node_modules` 建 junction 跑；`tsc -p tsconfig.check.json --noEmit` 与 `tsc -p tsconfig.typecheck.json --noEmit` 与 `vite build` 三个 rc 都是 0（`review/evidence/ord0384/snap_build_r1.json:27`），built in 5.11s 见 `:29`，1951 modules transformed 见 `:30`，产物 index-DR3iUEq5.js 见 `:31`；junction 用普通 `rmdir` 卸掉且 `junction_gone` 为 true 见 `:48`，权威 `node_modules` 回 399 项见 `:50`。
+
+**反件（四枚，每枚跑完整门后按字节还原）**：收据 `review/evidence/ord0384/mutations_r5.json`，`all_arms_hold` 为 true 见 `review/evidence/ord0384/mutations_r5.json` 末行。N1 `failures.length > 0` 改成 `>= 0` → `runner_exit_code` 3、具名红 Y1、Y2、Y3；N2 让干净分支永不渲染 → 3、只红 Y3；N3 把一条没锚的类放回推导 → 3、只红 Y5；N4 删掉条目正文的 `overflow-wrap` → 3、只红 Y4。四枚的 `restored_byte_identical` 全为 true，各自 `counts` 记的是 `{"failed": 1}` 或 N1 的 `{"failed": 3}`。
+
+**N4 这一枚值得单说，因为它抓出了我自己的空断言**：我在准备引用一张截图时发现 `...最新一条是「ORD0384_SYNTHETIC_FEASIBILITY_FAILURE_` 冲出了卡片右缘——服务端原话可能就是一个不带空格的长 token，而 `overflow-wrap` 当时只加在依据行上。我加了断言并声称它守住了这点，然后 N4 第一次跑：**exit 0、八格全绿**，也就是断言抓不到它声称要抓的东西。原因是它拿条目自己的框比——正常换行下 grid 条目会跟着变宽，文字右缘等于自己框右缘，差值是 0。改成拿外层 `.cn-pretrip`（用户看见被越过的那条边框）比之后，N4 才真的只红 Y4。测量在 `frontend/e2e/qoder-ord0384-pretrip-checklist.spec.ts:343`，断言在 `frontend/e2e/qoder-ord0384-pretrip-checklist.spec.ts:370`，CSS 修在 `frontend/src/features/checklist/pretripChecklist.css:26`，修好后的渲染见 `review/evidence/ord0384/cmdr050513n3__Y4_anchors.png`。
+
+**未锚 7 条的交接清单（下一张单的输入，不是垃圾）**：`frontend/e2e/_qoderUnanchoredClasses.ts:1`（门 import 它来断言 0 命中）与 `review/evidence/ord0384/unanchored_classes_r2.json:1`。每条带类名、状态、为什么没锚、要什么字段才能锚上。逐类摘要：`stay_budget_undeclared`、`arrival_anchor_missing`、`departure_anchor_missing` 要的是「把这三个字段从 `JourneyCreate` 请求侧搬到 experience 响应侧」；`stay_chosen_but_unconfirmed`、`offline_pack_not_ready` 要的是「wallet 路由的响应给出 `reservations`、`commitments`、`offline_ready` 的属性，而不是 `contracts/openapi.yaml:1680` 那个 `{type: object}`」；`stay_not_chosen`、`no_active_plan` 要的是「在响应上声明 `selected_option_id` 与 `active_plan`」，这两枚在两份契约里连词面都没有。证件/签证/保险/打包那一族仍不提：契约全文 passport、visa、insurance、vaccine、packing、document 六词各 0 命中，读数 `review/evidence/ord0384/_negative_scan.txt:5` 到 `review/evidence/ord0384/_negative_scan.txt:10`（`grep -i -c` 数的是命中行数，对 0 而言与出现次数等价）。
+
+**declared 的 null vs false：按你说的单列，归门不归本单**。说明件 `review/ORD0384_GATE_CONDITION_declared_shape_r1.md:1`，数据 `review/evidence/ord0384/declared_shape_r1.json:1`。分母我拆开了：扫 18 份 X1/Y1 收据，其中 16 份真记了这个字段、16 份全是 `false`、`null` 0 份（`review/evidence/ord0384/declared_shape_r1.json:5`），另外 2 份是本单改写后的 Y1、它不再记这个字段，**不计入分母**——上一版我把这两种混着数了。链侧真读数 `declared` 为 `null`，坐标 `live_experience.json@1121` 见 `review/evidence/ord0384/declared_shape_r1.json:15`。补一条线索给门：三态出口的代码在本树里是有的（`backend/app/stay_mobility.py:1619` 会答 `STAY_BUDGET_NOT_DECLARED`），所以 `null` 不是缺能力，是 seed 与出口两条路没被同一格覆盖。
+
+**什么没有改善（照实）**
+
+1. **今天链上屏上是空态，不是条目。** 两枚可用真行程上留下的两条规则亮的都是 0 条：`One Day in Nexus City` / `CNX-DEMO` 的 `feasibility_failures` 为 `[]`、`recovery` 为 null（`review/evidence/ord0384/derive_cnxdemo_r1.json:19` 起），我那枚自建具名行程同样 0 亮（`review/evidence/ord0384/derive_named3_r1.json:19` 起）。唯一给过正向见证的是 03:55 被 `demo/reset` 抹掉的广州行程（它当时亮 `plan_feasibility_open`）。所以「条目在真机上看得见」现在是缺的；我没有为了凑出来去改响应。
+2. 屏上条目从 3 条缩到 0～2 条是收窄的直接后果，不是退步，但它意味着这一屏今天对用户的全部信息量就是那句空态加一个动作。
+3. 完成状态仍不可上报（0 新写端点的后果）。
+4. 「一切正常」仍不自带主语，正解在 `frontend/src/design-tokens.css:446`，那是 ORD-0380 在改的文件，我没碰；本轮只把清单放在它下面，Y6 测这个顺序。
+5. 全局 Copilot 胶囊仍浮在 Today 右下。Y4 在自然阅读位沿依据行宽度采 5 点做 `elementsFromPoint`，通过；但把面板滚到最小滚动位时它仍会压住端点名尾部，那张图我留着 `review/evidence/ord0384/cmdr045837n3__X5_pair.png`。根治要动 `frontend/src/features/agent/CopilotDock.tsx:747`，不在本单。
+6. 两条新加的判据只覆盖了我这一屏：`scrollWidth`/Range 那套溢出量具是这次为 N4 才写对的，别的屏上长 token 溢出仍然没人管；这属于门的仪表，不属本单产品。
+
+
 ### cmdr 05:1x — ORD-0387 / ORD-0386 / ORD-0391 三笔落地；换代前先判"要不要换"的仪表已上膛；ORD-0389 撞在生成物上，给了不手合的修法
 
 **落地（fast-forward only，两路 GitHub 路由逐字一致；本段三笔）**
