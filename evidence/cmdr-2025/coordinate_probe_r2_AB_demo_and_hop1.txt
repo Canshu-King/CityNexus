@@ -1,0 +1,163 @@
+== CMDR probe r2 (counts values, not words) ==
+A: private demo stage :8725, backend tree 1e3f9479 (has the bin door)
+{
+ "base": "http://127.0.0.1:8725",
+ "verdict": "COORDINATE_FIELDS_ALL_NULL",
+ "rows": [
+  {
+   "route": "/api/v1/demo/scene",
+   "status": 200,
+   "body_bytes": 583,
+   "coord_fields": 0,
+   "numeric_pairs": [],
+   "pairs_with_system": [],
+   "sample": [],
+   "active_plan_activities": "absent"
+  },
+  {
+   "route": "/api/v1/journeys/22222222-2222-4222-8222-222222222222",
+   "status": 200,
+   "body_bytes": 475,
+   "coord_fields": 0,
+   "numeric_pairs": [],
+   "pairs_with_system": [],
+   "sample": [],
+   "active_plan_activities": "absent"
+  },
+  {
+   "route": "/api/v1/journeys/22222222-2222-4222-8222-222222222222/twin",
+   "status": 200,
+   "body_bytes": 2658,
+   "coord_fields": 0,
+   "numeric_pairs": [],
+   "pairs_with_system": [],
+   "sample": [],
+   "active_plan_activities": "absent"
+  },
+  {
+   "route": "/api/v1/journeys/22222222-2222-4222-8222-222222222222/experience",
+   "status": 200,
+   "body_bytes": 4955,
+   "coord_fields": 2,
+   "numeric_pairs": [],
+   "pairs_with_system": [],
+   "sample": [
+    {
+     "path": ".trip.arrival_anchor",
+     "latitude": null,
+     "longitude": null,
+     "numeric_pair": false,
+     "coordinate_system": null,
+     "keys": [
+      "at",
+      "latitude",
+      "location",
+      "longitude",
+      "reservation_id"
+     ]
+    },
+    {
+     "path": ".trip.departure_anchor",
+     "latitude": null,
+     "longitude": null,
+     "numeric_pair": false,
+     "coordinate_system": null,
+     "keys": [
+      "at",
+      "latitude",
+      "location",
+      "longitude",
+      "reservation_id"
+     ]
+    }
+   ],
+   "active_plan_activities": 6,
+   "activities_with_numeric_metadata_coords": 0,
+   "activity0_metadata_keys": [
+    "completed_at_actual",
+    "legacy_execution_compatibility"
+   ]
+  }
+ ]
+}
+B: shared hop1 :8693, backend tree from 16:17
+{
+ "base": "http://127.0.0.1:8693",
+ "verdict": "COORDINATE_FIELDS_ALL_NULL",
+ "rows": [
+  {
+   "route": "/api/v1/demo/scene",
+   "status": 200,
+   "body_bytes": 583,
+   "coord_fields": 0,
+   "numeric_pairs": [],
+   "pairs_with_system": [],
+   "sample": [],
+   "active_plan_activities": "absent"
+  },
+  {
+   "route": "/api/v1/journeys/22222222-2222-4222-8222-222222222222",
+   "status": 200,
+   "body_bytes": 475,
+   "coord_fields": 0,
+   "numeric_pairs": [],
+   "pairs_with_system": [],
+   "sample": [],
+   "active_plan_activities": "absent"
+  },
+  {
+   "route": "/api/v1/journeys/22222222-2222-4222-8222-222222222222/twin",
+   "status": 200,
+   "body_bytes": 2658,
+   "coord_fields": 0,
+   "numeric_pairs": [],
+   "pairs_with_system": [],
+   "sample": [],
+   "active_plan_activities": "absent"
+  },
+  {
+   "route": "/api/v1/journeys/22222222-2222-4222-8222-222222222222/experience",
+   "status": 200,
+   "body_bytes": 4955,
+   "coord_fields": 2,
+   "numeric_pairs": [],
+   "pairs_with_system": [],
+   "sample": [
+    {
+     "path": ".trip.arrival_anchor",
+     "latitude": null,
+     "longitude": null,
+     "numeric_pair": false,
+     "coordinate_system": null,
+     "keys": [
+      "at",
+      "latitude",
+      "location",
+      "longitude",
+      "reservation_id"
+     ]
+    },
+    {
+     "path": ".trip.departure_anchor",
+     "latitude": null,
+     "longitude": null,
+     "numeric_pair": false,
+     "coordinate_system": null,
+     "keys": [
+      "at",
+      "latitude",
+      "location",
+      "longitude",
+      "reservation_id"
+     ]
+    }
+   ],
+   "active_plan_activities": 6,
+   "activities_with_numeric_metadata_coords": 0,
+   "activity0_metadata_keys": [
+    "completed_at_actual",
+    "legacy_execution_compatibility"
+   ]
+  }
+ ]
+}
