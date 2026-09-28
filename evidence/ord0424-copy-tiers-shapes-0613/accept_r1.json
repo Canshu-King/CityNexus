@@ -1,0 +1,998 @@
+{
+ "schema": "CNX_S4_ORD0424_ACCEPT_R1",
+ "trees": {
+  "before": "8a7665be2061a2f38aa2227f81c57003ca4caacb",
+  "after": "live tip after ORD-0422 landed",
+  "files_scanned_r1": 96,
+  "files_scanned_r2_before": 96,
+  "files_scanned_r2_after": 98
+ },
+ "H1_inventory_alignment": {
+  "rows": 22,
+  "matched_by_string": 22,
+  "missed": [],
+  "per_row": [
+   {
+    "file": "features/traveler-twin/TwinPanel.tsx",
+    "inventory_line": 13,
+    "string": "No explicit capability facts recorded.",
+    "origin_shape": "JSX_TEXT",
+    "seen_in_zh_receipt": true,
+    "hits_within_2_lines": [
+     {
+      "line": 13,
+      "tier": "C",
+      "literal": "No explicit capability facts recorded.",
+      "why": "JSX_TEXT_NODE: carries language",
+      "render_tier": 1,
+      "slot": "JSX_CHILD"
+     },
+     {
+      "line": 14,
+      "tier": "C",
+      "literal": "Confirmed by traveler",
+      "why": "TERNARY_BRANCH: carries language",
+      "render_tier": 1,
+      "slot": "JSX_CHILD"
+     },
+     {
+      "line": 14,
+      "tier": "C",
+      "literal": "Stated; confirmation needed",
+      "why": "TERNARY_BRANCH: carries language",
+      "render_tier": 1,
+      "slot": "JSX_CHILD"
+     }
+    ],
+    "matched_by_string": true,
+    "matched_line": 13,
+    "render_tier": 1,
+    "slot": "JSX_CHILD"
+   },
+   {
+    "file": "features/traveler-twin/TwinPanel.tsx",
+    "inventory_line": 14,
+    "string": "Confirmed by traveler",
+    "origin_shape": "TERNARY",
+    "seen_in_zh_receipt": null,
+    "hits_within_2_lines": [
+     {
+      "line": 13,
+      "tier": "C",
+      "literal": "No explicit capability facts recorded.",
+      "why": "JSX_TEXT_NODE: carries language",
+      "render_tier": 1,
+      "slot": "JSX_CHILD"
+     },
+     {
+      "line": 14,
+      "tier": "C",
+      "literal": "Confirmed by traveler",
+      "why": "TERNARY_BRANCH: carries language",
+      "render_tier": 1,
+      "slot": "JSX_CHILD"
+     },
+     {
+      "line": 14,
+      "tier": "C",
+      "literal": "Stated; confirmation needed",
+      "why": "TERNARY_BRANCH: carries language",
+      "render_tier": 1,
+      "slot": "JSX_CHILD"
+     }
+    ],
+    "matched_by_string": true,
+    "matched_line": 14,
+    "render_tier": 1,
+    "slot": "JSX_CHILD"
+   },
+   {
+    "file": "features/traveler-twin/TwinPanel.tsx",
+    "inventory_line": 14,
+    "string": "Stated; confirmation needed",
+    "origin_shape": "TERNARY",
+    "seen_in_zh_receipt": null,
+    "hits_within_2_lines": [
+     {
+      "line": 13,
+      "tier": "C",
+      "literal": "No explicit capability facts recorded.",
+      "why": "JSX_TEXT_NODE: carries language",
+      "render_tier": 1,
+      "slot": "JSX_CHILD"
+     },
+     {
+      "line": 14,
+      "tier": "C",
+      "literal": "Confirmed by traveler",
+      "why": "TERNARY_BRANCH: carries language",
+      "render_tier": 1,
+      "slot": "JSX_CHILD"
+     },
+     {
+      "line": 14,
+      "tier": "C",
+      "literal": "Stated; confirmation needed",
+      "why": "TERNARY_BRANCH: carries language",
+      "render_tier": 1,
+      "slot": "JSX_CHILD"
+     }
+    ],
+    "matched_by_string": true,
+    "matched_line": 14,
+    "render_tier": 1,
+    "slot": "JSX_CHILD"
+   },
+   {
+    "file": "features/traveler-twin/TwinPanel.tsx",
+    "inventory_line": 24,
+    "string": "No explicit preferences",
+    "origin_shape": "TERNARY",
+    "seen_in_zh_receipt": null,
+    "hits_within_2_lines": [
+     {
+      "line": 24,
+      "tier": "C",
+      "literal": "Capability needs",
+      "why": "JSX_TEXT_NODE: carries language",
+      "render_tier": 1,
+      "slot": "JSX_CHILD"
+     },
+     {
+      "line": 24,
+      "tier": "C",
+      "literal": "Learned capability state",
+      "why": "JSX_TEXT_NODE: carries language",
+      "render_tier": 1,
+      "slot": "JSX_CHILD"
+     },
+     {
+      "line": 24,
+      "tier": "C",
+      "literal": "Unknown accessibility evidence is not accessible.",
+      "why": "JSX_TEXT_NODE: carries language",
+      "render_tier": 1,
+      "slot": "JSX_CHILD"
+     },
+     {
+      "line": 24,
+      "tier": "C",
+      "literal": "hard need(s) remain explicit and are never learned.",
+      "why": "TERNARY_BRANCH: carries language",
+      "render_tier": 1,
+      "slot": "JSX_CHILD"
+     },
+     {
+      "line": 24,
+      "tier": "C",
+      "literal": "No explicit preferences",
+      "why": "TERNARY_BRANCH: carries language",
+      "render_tier": 1,
+      "slot": "JSX_CHILD"
+     },
+     {
+      "line": 24,
+      "tier": "C",
+      "literal": "No learned signals",
+      "why": "TERNARY_BRANCH: carries language",
+      "render_tier": 1,
+      "slot": "JSX_CHILD"
+     },
+     {
+      "line": 24,
+      "tier": "C",
+      "literal": "Hard accessibility needs are never inferred from behavior.",
+      "why": "TERNARY_BRANCH: carries language",
+      "render_tier": 1,
+      "slot": "JSX_CHILD"
+     }
+    ],
+    "matched_by_string": true,
+    "matched_line": 24,
+    "render_tier": 1,
+    "slot": "JSX_CHILD"
+   },
+   {
+    "file": "features/traveler-twin/TwinPanel.tsx",
+    "inventory_line": 24,
+    "string": "Capability needs",
+    "origin_shape": "JSX_TEXT",
+    "seen_in_zh_receipt": true,
+    "hits_within_2_lines": [
+     {
+      "line": 24,
+      "tier": "C",
+      "literal": "Capability needs",
+      "why": "JSX_TEXT_NODE: carries language",
+      "render_tier": 1,
+      "slot": "JSX_CHILD"
+     },
+     {
+      "line": 24,
+      "tier": "C",
+      "literal": "Learned capability state",
+      "why": "JSX_TEXT_NODE: carries language",
+      "render_tier": 1,
+      "slot": "JSX_CHILD"
+     },
+     {
+      "line": 24,
+      "tier": "C",
+      "literal": "Unknown accessibility evidence is not accessible.",
+      "why": "JSX_TEXT_NODE: carries language",
+      "render_tier": 1,
+      "slot": "JSX_CHILD"
+     },
+     {
+      "line": 24,
+      "tier": "C",
+      "literal": "hard need(s) remain explicit and are never learned.",
+      "why": "TERNARY_BRANCH: carries language",
+      "render_tier": 1,
+      "slot": "JSX_CHILD"
+     },
+     {
+      "line": 24,
+      "tier": "C",
+      "literal": "No explicit preferences",
+      "why": "TERNARY_BRANCH: carries language",
+      "render_tier": 1,
+      "slot": "JSX_CHILD"
+     },
+     {
+      "line": 24,
+      "tier": "C",
+      "literal": "No learned signals",
+      "why": "TERNARY_BRANCH: carries language",
+      "render_tier": 1,
+      "slot": "JSX_CHILD"
+     },
+     {
+      "line": 24,
+      "tier": "C",
+      "literal": "Hard accessibility needs are never inferred from behavior.",
+      "why": "TERNARY_BRANCH: carries language",
+      "render_tier": 1,
+      "slot": "JSX_CHILD"
+     }
+    ],
+    "matched_by_string": true,
+    "matched_line": 24,
+    "render_tier": 1,
+    "slot": "JSX_CHILD"
+   },
+   {
+    "file": "features/traveler-twin/TwinPanel.tsx",
+    "inventory_line": 24,
+    "string": "No learned signals",
+    "origin_shape": "TERNARY",
+    "seen_in_zh_receipt": true,
+    "hits_within_2_lines": [
+     {
+      "line": 24,
+      "tier": "C",
+      "literal": "Capability needs",
+      "why": "JSX_TEXT_NODE: carries language",
+      "render_tier": 1,
+      "slot": "JSX_CHILD"
+     },
+     {
+      "line": 24,
+      "tier": "C",
+      "literal": "Learned capability state",
+      "why": "JSX_TEXT_NODE: carries language",
+      "render_tier": 1,
+      "slot": "JSX_CHILD"
+     },
+     {
+      "line": 24,
+      "tier": "C",
+      "literal": "Unknown accessibility evidence is not accessible.",
+      "why": "JSX_TEXT_NODE: carries language",
+      "render_tier": 1,
+      "slot": "JSX_CHILD"
+     },
+     {
+      "line": 24,
+      "tier": "C",
+      "literal": "hard need(s) remain explicit and are never learned.",
+      "why": "TERNARY_BRANCH: carries language",
+      "render_tier": 1,
+      "slot": "JSX_CHILD"
+     },
+     {
+      "line": 24,
+      "tier": "C",
+      "literal": "No explicit preferences",
+      "why": "TERNARY_BRANCH: carries language",
+      "render_tier": 1,
+      "slot": "JSX_CHILD"
+     },
+     {
+      "line": 24,
+      "tier": "C",
+      "literal": "No learned signals",
+      "why": "TERNARY_BRANCH: carries language",
+      "render_tier": 1,
+      "slot": "JSX_CHILD"
+     },
+     {
+      "line": 24,
+      "tier": "C",
+      "literal": "Hard accessibility needs are never inferred from behavior.",
+      "why": "TERNARY_BRANCH: carries language",
+      "render_tier": 1,
+      "slot": "JSX_CHILD"
+     }
+    ],
+    "matched_by_string": true,
+    "matched_line": 24,
+    "render_tier": 1,
+    "slot": "JSX_CHILD"
+   },
+   {
+    "file": "features/traveler-twin/TwinPanel.tsx",
+    "inventory_line": 24,
+    "string": "Learned capability state",
+    "origin_shape": "JSX_TEXT",
+    "seen_in_zh_receipt": true,
+    "hits_within_2_lines": [
+     {
+      "line": 24,
+      "tier": "C",
+      "literal": "Capability needs",
+      "why": "JSX_TEXT_NODE: carries language",
+      "render_tier": 1,
+      "slot": "JSX_CHILD"
+     },
+     {
+      "line": 24,
+      "tier": "C",
+      "literal": "Learned capability state",
+      "why": "JSX_TEXT_NODE: carries language",
+      "render_tier": 1,
+      "slot": "JSX_CHILD"
+     },
+     {
+      "line": 24,
+      "tier": "C",
+      "literal": "Unknown accessibility evidence is not accessible.",
+      "why": "JSX_TEXT_NODE: carries language",
+      "render_tier": 1,
+      "slot": "JSX_CHILD"
+     },
+     {
+      "line": 24,
+      "tier": "C",
+      "literal": "hard need(s) remain explicit and are never learned.",
+      "why": "TERNARY_BRANCH: carries language",
+      "render_tier": 1,
+      "slot": "JSX_CHILD"
+     },
+     {
+      "line": 24,
+      "tier": "C",
+      "literal": "No explicit preferences",
+      "why": "TERNARY_BRANCH: carries language",
+      "render_tier": 1,
+      "slot": "JSX_CHILD"
+     },
+     {
+      "line": 24,
+      "tier": "C",
+      "literal": "No learned signals",
+      "why": "TERNARY_BRANCH: carries language",
+      "render_tier": 1,
+      "slot": "JSX_CHILD"
+     },
+     {
+      "line": 24,
+      "tier": "C",
+      "literal": "Hard accessibility needs are never inferred from behavior.",
+      "why": "TERNARY_BRANCH: carries language",
+      "render_tier": 1,
+      "slot": "JSX_CHILD"
+     }
+    ],
+    "matched_by_string": true,
+    "matched_line": 24,
+    "render_tier": 1,
+    "slot": "JSX_CHILD"
+   },
+   {
+    "file": "features/traveler-twin/TwinPanel.tsx",
+    "inventory_line": 24,
+    "string": "hard need(s) remain explicit and are never learned.",
+    "origin_shape": "TERNARY_TEMPLATE",
+    "seen_in_zh_receipt": null,
+    "hits_within_2_lines": [
+     {
+      "line": 24,
+      "tier": "C",
+      "literal": "Capability needs",
+      "why": "JSX_TEXT_NODE: carries language",
+      "render_tier": 1,
+      "slot": "JSX_CHILD"
+     },
+     {
+      "line": 24,
+      "tier": "C",
+      "literal": "Learned capability state",
+      "why": "JSX_TEXT_NODE: carries language",
+      "render_tier": 1,
+      "slot": "JSX_CHILD"
+     },
+     {
+      "line": 24,
+      "tier": "C",
+      "literal": "Unknown accessibility evidence is not accessible.",
+      "why": "JSX_TEXT_NODE: carries language",
+      "render_tier": 1,
+      "slot": "JSX_CHILD"
+     },
+     {
+      "line": 24,
+      "tier": "C",
+      "literal": "hard need(s) remain explicit and are never learned.",
+      "why": "TERNARY_BRANCH: carries language",
+      "render_tier": 1,
+      "slot": "JSX_CHILD"
+     },
+     {
+      "line": 24,
+      "tier": "C",
+      "literal": "No explicit preferences",
+      "why": "TERNARY_BRANCH: carries language",
+      "render_tier": 1,
+      "slot": "JSX_CHILD"
+     },
+     {
+      "line": 24,
+      "tier": "C",
+      "literal": "No learned signals",
+      "why": "TERNARY_BRANCH: carries language",
+      "render_tier": 1,
+      "slot": "JSX_CHILD"
+     },
+     {
+      "line": 24,
+      "tier": "C",
+      "literal": "Hard accessibility needs are never inferred from behavior.",
+      "why": "TERNARY_BRANCH: carries language",
+      "render_tier": 1,
+      "slot": "JSX_CHILD"
+     }
+    ],
+    "matched_by_string": true,
+    "matched_line": 24,
+    "render_tier": 1,
+    "slot": "JSX_CHILD"
+   },
+   {
+    "file": "features/traveler-twin/TwinPanel.tsx",
+    "inventory_line": 24,
+    "string": "Hard accessibility needs are never inferred from behavior.",
+    "origin_shape": "TERNARY",
+    "seen_in_zh_receipt": true,
+    "hits_within_2_lines": [
+     {
+      "line": 24,
+      "tier": "C",
+      "literal": "Capability needs",
+      "why": "JSX_TEXT_NODE: carries language",
+      "render_tier": 1,
+      "slot": "JSX_CHILD"
+     },
+     {
+      "line": 24,
+      "tier": "C",
+      "literal": "Learned capability state",
+      "why": "JSX_TEXT_NODE: carries language",
+      "render_tier": 1,
+      "slot": "JSX_CHILD"
+     },
+     {
+      "line": 24,
+      "tier": "C",
+      "literal": "Unknown accessibility evidence is not accessible.",
+      "why": "JSX_TEXT_NODE: carries language",
+      "render_tier": 1,
+      "slot": "JSX_CHILD"
+     },
+     {
+      "line": 24,
+      "tier": "C",
+      "literal": "hard need(s) remain explicit and are never learned.",
+      "why": "TERNARY_BRANCH: carries language",
+      "render_tier": 1,
+      "slot": "JSX_CHILD"
+     },
+     {
+      "line": 24,
+      "tier": "C",
+      "literal": "No explicit preferences",
+      "why": "TERNARY_BRANCH: carries language",
+      "render_tier": 1,
+      "slot": "JSX_CHILD"
+     },
+     {
+      "line": 24,
+      "tier": "C",
+      "literal": "No learned signals",
+      "why": "TERNARY_BRANCH: carries language",
+      "render_tier": 1,
+      "slot": "JSX_CHILD"
+     },
+     {
+      "line": 24,
+      "tier": "C",
+      "literal": "Hard accessibility needs are never inferred from behavior.",
+      "why": "TERNARY_BRANCH: carries language",
+      "render_tier": 1,
+      "slot": "JSX_CHILD"
+     }
+    ],
+    "matched_by_string": true,
+    "matched_line": 24,
+    "render_tier": 1,
+    "slot": "JSX_CHILD"
+   },
+   {
+    "file": "features/traveler-twin/TwinPanel.tsx",
+    "inventory_line": 24,
+    "string": "Unknown accessibility evidence is not accessible.",
+    "origin_shape": "JSX_TEXT",
+    "seen_in_zh_receipt": true,
+    "hits_within_2_lines": [
+     {
+      "line": 24,
+      "tier": "C",
+      "literal": "Capability needs",
+      "why": "JSX_TEXT_NODE: carries language",
+      "render_tier": 1,
+      "slot": "JSX_CHILD"
+     },
+     {
+      "line": 24,
+      "tier": "C",
+      "literal": "Learned capability state",
+      "why": "JSX_TEXT_NODE: carries language",
+      "render_tier": 1,
+      "slot": "JSX_CHILD"
+     },
+     {
+      "line": 24,
+      "tier": "C",
+      "literal": "Unknown accessibility evidence is not accessible.",
+      "why": "JSX_TEXT_NODE: carries language",
+      "render_tier": 1,
+      "slot": "JSX_CHILD"
+     },
+     {
+      "line": 24,
+      "tier": "C",
+      "literal": "hard need(s) remain explicit and are never learned.",
+      "why": "TERNARY_BRANCH: carries language",
+      "render_tier": 1,
+      "slot": "JSX_CHILD"
+     },
+     {
+      "line": 24,
+      "tier": "C",
+      "literal": "No explicit preferences",
+      "why": "TERNARY_BRANCH: carries language",
+      "render_tier": 1,
+      "slot": "JSX_CHILD"
+     },
+     {
+      "line": 24,
+      "tier": "C",
+      "literal": "No learned signals",
+      "why": "TERNARY_BRANCH: carries language",
+      "render_tier": 1,
+      "slot": "JSX_CHILD"
+     },
+     {
+      "line": 24,
+      "tier": "C",
+      "literal": "Hard accessibility needs are never inferred from behavior.",
+      "why": "TERNARY_BRANCH: carries language",
+      "render_tier": 1,
+      "slot": "JSX_CHILD"
+     }
+    ],
+    "matched_by_string": true,
+    "matched_line": 24,
+    "render_tier": 1,
+    "slot": "JSX_CHILD"
+   },
+   {
+    "file": "features/recovery/V14RecoveryTruthPanel.tsx",
+    "inventory_line": 120,
+    "string": "policy unavailable · confirmation required",
+    "origin_shape": "TERNARY",
+    "seen_in_zh_receipt": null,
+    "hits_within_2_lines": [
+     {
+      "line": 119,
+      "tier": "C",
+      "literal": "confirmation required",
+      "why": "TERNARY_BRANCH: carries language",
+      "render_tier": 2,
+      "slot": "OTHER"
+     }
+    ],
+    "matched_by_string": true,
+    "matched_line": 119,
+    "render_tier": 2,
+    "slot": "OTHER"
+   },
+   {
+    "file": "features/recovery/V14RecoveryTruthPanel.tsx",
+    "inventory_line": 125,
+    "string": "V14 · REALITY CHANGED",
+    "origin_shape": "JSX_TEXT",
+    "seen_in_zh_receipt": true,
+    "hits_within_2_lines": [
+     {
+      "line": 125,
+      "tier": "C",
+      "literal": "V14 · REALITY CHANGED",
+      "why": "JSX_TEXT_NODE: carries language",
+      "render_tier": 1,
+      "slot": "JSX_CHILD"
+     },
+     {
+      "line": 126,
+      "tier": "C",
+      "literal": "Grounded adaptive recovery",
+      "why": "JSX_TEXT_NODE: carries language",
+      "render_tier": 1,
+      "slot": "JSX_CHILD"
+     }
+    ],
+    "matched_by_string": true,
+    "matched_line": 125,
+    "render_tier": 1,
+    "slot": "JSX_CHILD"
+   },
+   {
+    "file": "features/recovery/V14RecoveryTruthPanel.tsx",
+    "inventory_line": 126,
+    "string": "Grounded adaptive recovery",
+    "origin_shape": "JSX_TEXT",
+    "seen_in_zh_receipt": true,
+    "hits_within_2_lines": [
+     {
+      "line": 125,
+      "tier": "C",
+      "literal": "V14 · REALITY CHANGED",
+      "why": "JSX_TEXT_NODE: carries language",
+      "render_tier": 1,
+      "slot": "JSX_CHILD"
+     },
+     {
+      "line": 126,
+      "tier": "C",
+      "literal": "Grounded adaptive recovery",
+      "why": "JSX_TEXT_NODE: carries language",
+      "render_tier": 1,
+      "slot": "JSX_CHILD"
+     },
+     {
+      "line": 128,
+      "tier": "C",
+      "literal": "Refresh recovery",
+      "why": "JSX_TEXT_NODE: carries language",
+      "render_tier": 1,
+      "slot": "JSX_CHILD"
+     }
+    ],
+    "matched_by_string": true,
+    "matched_line": 126,
+    "render_tier": 1,
+    "slot": "JSX_CHILD"
+   },
+   {
+    "file": "features/recovery/V14RecoveryTruthPanel.tsx",
+    "inventory_line": 129,
+    "string": "Refresh recovery",
+    "origin_shape": "JSX_TEXT",
+    "seen_in_zh_receipt": true,
+    "hits_within_2_lines": [
+     {
+      "line": 128,
+      "tier": "C",
+      "literal": "Refresh recovery",
+      "why": "JSX_TEXT_NODE: carries language",
+      "render_tier": 1,
+      "slot": "JSX_CHILD"
+     }
+    ],
+    "matched_by_string": true,
+    "matched_line": 128,
+    "render_tier": 1,
+    "slot": "JSX_CHILD"
+   },
+   {
+    "file": "features/recovery/V14RecoveryTruthPanel.tsx",
+    "inventory_line": 132,
+    "string": "No recovery proposal is waiting on this Journey.",
+    "origin_shape": "JSX_TEXT",
+    "seen_in_zh_receipt": true,
+    "hits_within_2_lines": [
+     {
+      "line": 132,
+      "tier": "C",
+      "literal": "No recovery proposal is waiting on this Journey.",
+      "why": "JSX_TEXT_NODE: carries language",
+      "render_tier": 1,
+      "slot": "JSX_CHILD"
+     }
+    ],
+    "matched_by_string": true,
+    "matched_line": 132,
+    "render_tier": 1,
+    "slot": "JSX_CHILD"
+   },
+   {
+    "file": "features/recovery/V14RecoveryTruthPanel.tsx",
+    "inventory_line": 137,
+    "string": "CHANGED",
+    "origin_shape": "JSX_TEXT",
+    "seen_in_zh_receipt": null,
+    "hits_within_2_lines": [
+     {
+      "line": 137,
+      "tier": "C",
+      "literal": "CHANGED",
+      "why": "JSX_TEXT_NODE: copy: element text is read as it is rendered (the machine-token veto belong",
+      "render_tier": 1,
+      "slot": "JSX_CHILD"
+     }
+    ],
+    "matched_by_string": true,
+    "matched_line": 137,
+    "render_tier": 1,
+    "slot": "JSX_CHILD"
+   },
+   {
+    "file": "features/recovery/V14RecoveryTruthPanel.tsx",
+    "inventory_line": 144,
+    "string": "PROTECTED",
+    "origin_shape": "JSX_TEXT",
+    "seen_in_zh_receipt": null,
+    "hits_within_2_lines": [
+     {
+      "line": 144,
+      "tier": "C",
+      "literal": "PROTECTED",
+      "why": "JSX_TEXT_NODE: copy: element text is read as it is rendered (the machine-token veto belong",
+      "render_tier": 1,
+      "slot": "JSX_CHILD"
+     },
+     {
+      "line": 146,
+      "tier": "C",
+      "literal": "C4 commitments preserved",
+      "why": "TERNARY_BRANCH: carries language",
+      "render_tier": 1,
+      "slot": "JSX_CHILD"
+     },
+     {
+      "line": 146,
+      "tier": "C",
+      "literal": "Review commitment impact",
+      "why": "TERNARY_BRANCH: carries language",
+      "render_tier": 1,
+      "slot": "JSX_CHILD"
+     }
+    ],
+    "matched_by_string": true,
+    "matched_line": 144,
+    "render_tier": 1,
+    "slot": "JSX_CHILD"
+   },
+   {
+    "file": "features/recovery/V14RecoveryTruthPanel.tsx",
+    "inventory_line": 153,
+    "string": "Baseline evidence",
+    "origin_shape": "JSX_TEXT",
+    "seen_in_zh_receipt": null,
+    "hits_within_2_lines": [
+     {
+      "line": 154,
+      "tier": "B",
+      "literal": "—",
+      "why": "bare literal in a ?? slot",
+      "render_tier": 2,
+      "slot": "JSX_CHILD"
+     },
+     {
+      "line": 153,
+      "tier": "C",
+      "literal": "Baseline evidence",
+      "why": "JSX_TEXT_NODE: carries language",
+      "render_tier": 1,
+      "slot": "JSX_CHILD"
+     }
+    ],
+    "matched_by_string": true,
+    "matched_line": 153,
+    "render_tier": 1,
+    "slot": "JSX_CHILD"
+   },
+   {
+    "file": "features/recovery/V14RecoveryTruthPanel.tsx",
+    "inventory_line": 157,
+    "string": "Incident evidence",
+    "origin_shape": "JSX_TEXT",
+    "seen_in_zh_receipt": null,
+    "hits_within_2_lines": [
+     {
+      "line": 159,
+      "tier": "B",
+      "literal": "—",
+      "why": "bare literal in a ?? slot",
+      "render_tier": 2,
+      "slot": "JSX_CHILD"
+     },
+     {
+      "line": 157,
+      "tier": "C",
+      "literal": "Incident evidence",
+      "why": "JSX_TEXT_NODE: carries language",
+      "render_tier": 1,
+      "slot": "JSX_CHILD"
+     }
+    ],
+    "matched_by_string": true,
+    "matched_line": 157,
+    "render_tier": 1,
+    "slot": "JSX_CHILD"
+   },
+   {
+    "file": "features/recovery/V14RecoveryTruthPanel.tsx",
+    "inventory_line": 163,
+    "string": "Deterministic gate",
+    "origin_shape": "JSX_TEXT",
+    "seen_in_zh_receipt": null,
+    "hits_within_2_lines": [
+     {
+      "line": 163,
+      "tier": "C",
+      "literal": "Deterministic gate",
+      "why": "JSX_TEXT_NODE: carries language",
+      "render_tier": 1,
+      "slot": "JSX_CHILD"
+     },
+     {
+      "line": 164,
+      "tier": "C",
+      "literal": "PASSED · provider facts frozen",
+      "why": "TERNARY_BRANCH: carries language",
+      "render_tier": 1,
+      "slot": "JSX_CHILD"
+     }
+    ],
+    "matched_by_string": true,
+    "matched_line": 163,
+    "render_tier": 1,
+    "slot": "JSX_CHILD"
+   },
+   {
+    "file": "features/recovery/V14RecoveryTruthPanel.tsx",
+    "inventory_line": 167,
+    "string": "Delegation policy",
+    "origin_shape": "JSX_TEXT",
+    "seen_in_zh_receipt": null,
+    "hits_within_2_lines": [
+     {
+      "line": 167,
+      "tier": "C",
+      "literal": "Delegation policy",
+      "why": "JSX_TEXT_NODE: carries language",
+      "render_tier": 1,
+      "slot": "JSX_CHILD"
+     }
+    ],
+    "matched_by_string": true,
+    "matched_line": 167,
+    "render_tier": 1,
+    "slot": "JSX_CHILD"
+   },
+   {
+    "file": "features/discovery/RealCityDiscoveryPanel.tsx",
+    "inventory_line": 110,
+    "string": "I prefer quiet indoor culture, low walking, and rain-friendly places near my protected Journey moments.",
+    "origin_shape": "DEFAULT",
+    "seen_in_zh_receipt": true,
+    "hits_within_2_lines": [
+     {
+      "line": 110,
+      "tier": "C",
+      "literal": "I prefer quiet indoor culture, low walking, and rain-friendly places n",
+      "why": "STATE_DEFAULT: carries language",
+      "render_tier": 2,
+      "slot": "OTHER"
+     }
+    ],
+    "matched_by_string": true,
+    "matched_line": 110,
+    "render_tier": 2,
+    "slot": "OTHER"
+   }
+  ],
+  "matched": 22,
+  "rows_total": 22
+ },
+ "H2_old_hits_preserved": {
+  "r1_ab_hits": 73,
+  "r2_ab_hits": 73,
+  "lost": [],
+  "gained_within_ab": [],
+  "identical": true
+ },
+ "H3_shape_hits_and_exclusions": {
+  "tier_C": 403,
+  "tier_C_skipped": 4,
+  "by_shape": {
+   "JSX_TEXT_NODE": 108,
+   "TERNARY_BRANCH": 294,
+   "STATE_DEFAULT": 1
+  },
+  "exclusions": [
+   {
+    "file": "D:/moodle/_qoder_lane_S4_0926/work/ord0424/tree_before/frontend/src/features/agent/CopilotDock.tsx",
+    "line": 375,
+    "literal": "缺少 CityNexus approval_id，需打开恢复中心审核",
+    "why": "TERNARY_BRANCH: CJK inside (tier-A shape, not a bare English fallback)"
+   },
+   {
+    "file": "D:/moodle/_qoder_lane_S4_0926/work/ord0424/tree_before/frontend/src/features/trip/ActivityDetail.tsx",
+    "line": 267,
+    "literal": "Ask Copilot",
+    "why": "TERNARY_BRANCH: brand vocabulary ('Copilot' in BRAND_WORDS, same on both arms)"
+   },
+   {
+    "file": "D:/moodle/_qoder_lane_S4_0926/work/ord0424/tree_before/frontend/src/main.tsx",
+    "line": 1271,
+    "literal": "建议模式 · always ask",
+    "why": "JSX_TEXT_NODE: CJK inside (tier-A shape, not a bare English fallback)"
+   },
+   {
+    "file": "D:/moodle/_qoder_lane_S4_0926/work/ord0424/tree_before/frontend/src/main.tsx",
+    "line": 1272,
+    "literal": "协助模式 · bounded auto-accept",
+    "why": "JSX_TEXT_NODE: CJK inside (tier-A shape, not a bare English fallback)"
+   }
+  ],
+  "seed_directory_used": true,
+  "tier_C_total": 403
+ },
+ "H4_before_after_same_command": {
+  "by_file_before": {
+   "features/traveler-twin/TwinPanel.tsx": 10,
+   "features/recovery/V14RecoveryTruthPanel.tsx": 17,
+   "features/discovery/RealCityDiscoveryPanel.tsx": 3
+  },
+  "by_file_after": {
+   "features/traveler-twin/TwinPanel.tsx": 0,
+   "features/recovery/V14RecoveryTruthPanel.tsx": 1,
+   "features/discovery/RealCityDiscoveryPanel.tsx": 2
+  },
+  "total_C_before": 403,
+  "total_C_after": 377
+ },
+ "H5_selftest": {
+  "exit": 1,
+  "tail": [
+   "== cnx_copy_tiers_r1  i18n=D:\\moodle\\_qoder_lane_S4_0926\\work\\ord0424\\tree_before\\frontend/src/i18n/LocaleContext.tsx  baseline=SELF  e2e=none  src=D:\\moodle\\_qoder_lane_S4_0926\\work\\ord0424\\tree_before\\frontend\\src"
+  ],
+  "stderr_tail": [
+   "  File \"C:\\Users\\仓鼠王\\AppData\\Local\\Programs\\Python\\Python310\\lib\\pathlib.py\", line 1119, in open",
+   "    return self._accessor.open(self, mode, buffering, encoding, errors,",
+   "FileNotFoundError: [Errno 2] No such file or directory: 'SELF'"
+  ]
+ }
+}
