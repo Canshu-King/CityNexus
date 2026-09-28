@@ -1,0 +1,9 @@
+ORD-0427 -- do the current-tip re-run and the fb6131f3 first pass agree?
+  comparison: rowsig(rows, plain, pill, pill label, icon box) + headsig(close width, colour, size,
+  background, kicker client rects, kicker text) per cell, over 16 cells (the tip arm and the cand arm,
+  4 shapes x 2 arms each). Only the JSON reading objects are compared; entry assets are reported apart.
+  tip arm  entry /assets/index-DMJE_sMd.js -> /assets/index-B6TcCRoD.js
+  cand arm entry /assets/index-BL_hdXQD.js -> /assets/index-Duayag5T.js
+  (they differ by design: ORD-0425 landed between the two bases, so the bundle changed while the
+   drawer's computed values did not.)
+  cells differing in the compared tuples: 0
