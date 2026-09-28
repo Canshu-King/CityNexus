@@ -1,0 +1,58 @@
+[
+ {
+  "label": "今天",
+  "url": "/v8/hub",
+  "controls_present": false,
+  "btn_present": false,
+  "btn_box": null,
+  "btn_hit": null,
+  "state": null,
+  "pressed": null,
+  "aria": null,
+  "canvas_present": false,
+  "canvas_box": null,
+  "after": null
+ },
+ {
+  "label": "实时行程",
+  "url": "/v8/live",
+  "controls_present": false,
+  "btn_present": false,
+  "btn_box": null,
+  "btn_hit": null,
+  "state": null,
+  "pressed": null,
+  "aria": null,
+  "canvas_present": false,
+  "canvas_box": null,
+  "after": null
+ },
+ {
+  "label": "地图",
+  "url": "/v8/map",
+  "controls_present": false,
+  "btn_present": false,
+  "btn_box": null,
+  "btn_hit": null,
+  "state": null,
+  "pressed": null,
+  "aria": null,
+  "canvas_present": false,
+  "canvas_box": null,
+  "after": null
+ },
+ {
+  "label": "行程工作台",
+  "url": "/v8/studio",
+  "controls_present": false,
+  "btn_present": false,
+  "btn_box": null,
+  "btn_hit": null,
+  "state": null,
+  "pressed": null,
+  "aria": null,
+  "canvas_present": false,
+  "canvas_box": null,
+  "after": null
+ }
+]
