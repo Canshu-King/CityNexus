@@ -16588,6 +16588,190 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### CMDR 0928-1626 · N3 · ORD-0384 按 Q72 再 rebase：撞的只有 V8Experience.tsx，抹的是最小差 · 2026-09-28 1626+08
+
+分支 `review/N3-ord0384-pretrip-checklist`，交前 push 后 `git ls-remote origin refs/heads/review/N3-ord0384-pretrip-checklist` 回读 = 7d32def104ab91818b3171f4c8c44fc20d032e44（本地 HEAD 同值）。
+被退回头 ec491b214c4b41c01f274bd506e1695eea3f3c48（base 0813d3aae826b7b4bdf311e70ed48c40f5c515d3，16 笔）→ 现头 7d32def104ab91818b3171f4c8c44fc20d032e44，树 8c88ec0ad1697c144a3533bdd470236d3979c4b5；权威尖 8fddeb76a79968592a7a3e98d2f296dda450d4df 是我头的祖先（`merge-base --is-ancestor` rc=0）⇒ 落地是 ff，不是三方猜。
+`git merge-tree --write-tree 8fddeb76a799 7d32def104ab` 退出码 **0**，合出的树 = 我的树 8c88ec0ad1697c144a3533bdd470236d3979c4b5。
+
+## 那一个撞文件：合出来的就是我的字节
+
+`frontend/src/app/V8Experience.tsx`：尖上 blob 与我的不同，但 merge-tree 的合结果 blob = 392277b1750960f75f40b967778bd36874376495 = 我的 blob（`git rev-parse HEAD:frontend/src/app/V8Experience.tsx`）⇒ 门落地得到的就是我测过的那份字节。
+我对尖的全部差量只有 1 行 import + 1 行挂载（含注释），**没有新造挂载约定**——ORD-0392 要把逐面板 if 换成注册表遍历，我这一层不该变成新先例。
+整支相对尖：41 files changed, 4384 insertions(+)（`git diff --shortstat 8fddeb76a799 7d32def104ab`），全部是本单自己的新文件与这一次的两处号。
+
+## rebase 逼出来的真缺陷（不是我重写上一轮的结论）
+
+尖上 `contracts/openapi.yaml` 比我的旧 base 多 99 行、少 7 行（blob 177f3ad34f41 ← 旧 6ba1b9ab666d），于是面板打印的两处契约行号**全体错位**：
+  feasibility_failures：我原来打印 1351 行 → 契约现读 1393 行（review/n3_0384_rebase_readouts_r1.txt:19）；requires_user_decision：1873 → 1923（review/n3_0384_rebase_readouts_r1.txt:20）。
+  模块现在打印 [1393, 1923]，与契约逐字对上（`git show HEAD:frontend/src/lib/pretripChecklist.ts` 的 `anchor: { file: CONTRACT, line: … }` 两处）。
+门自己抓到这一刻，不是我肉眼发现的：改前那次 gate `run_id=cmdr154639n3` verdict=RED，passed=7 failed=1，
+Y4 原文是「item plan_feasibility_open prints contracts/openapi.yaml:1351 but that line does not declare
+`feasibility_failures`; the line reads '200': {description: TravelerTwin learned evidence refreshed}」。
+**没改任何断言、没 skip、没 mock**：动的是产品里那两个号。改后 `run_id=cmdr161856n3r4` verdict=GREEN，passed=8 failed=0，
+收据 `live_checks/e2e_logs/n3r4_73292f7b_161856.log:1`（该次用私有库 `_cmdr161856n3r4.db`、端口段 5470-5499、AI disabled，不碰 :8000/:4781/:8693）。
+
+## 反控：四臂各自咬死自己点名的格（收据随件推上去了）
+
+N1_rule_always_fires：注入后 gate red=True，红掉的格 = ['Y1', 'Y2', 'Y3']，指定格确实红=True，还原逐字节相同=True，run_id=cmdr161216n31_（review/n3_0384_evidence_r1/mutations_r6.json:1）。
+N2_empty_state_action：注入后 gate red=True，红掉的格 = ['Y3']，指定格确实红=True，还原逐字节相同=True，run_id=cmdr161327n32_（review/n3_0384_evidence_r1/mutations_r6.json:1）。
+N3_unanchored_leaks_back：注入后 gate red=True，红掉的格 = ['Y5']，指定格确实红=True，还原逐字节相同=True，run_id=cmdr161411n33_（review/n3_0384_evidence_r1/mutations_r6.json:1）。
+N4_prose_can_overflow_its_box：注入后 gate red=True，红掉的格 = ['Y4']，指定格确实红=True，还原逐字节相同=True，run_id=cmdr161443n34_（review/n3_0384_evidence_r1/mutations_r6.json:1）。
+四臂合计 all_arms_hold=True，receipt 里记的 head = 7c29557b8dfe；该 head 与现头之间只有 `review/n3_0384_mutations_r6.py` 一笔不同，
+三个被注入的文件在两个头之间逐字节相同（`git rev-parse` 对比 7c29557b 与 7d32def1），所以这份收据覆盖现头的产品字节。
+
+## 编译臂（FRONTSRC_BUILD_PREREQ，跑在最终字节上）
+
+`npx tsc -p tsconfig.check.json --noEmit` 退出码 0；`-p tsconfig.typecheck.json` 退出码 0、程序 884 个文件（读数 review/n3_0384_rebase_readouts_r1.txt:55、review/n3_0384_rebase_readouts_r1.txt:56）
+`vite build` 退出码 0、? s、产物 `dist/assets/index-DqzawGtP.js` 1,316.80 kB（读数 review/n3_0384_rebase_readouts_r1.txt:57）
+宿主是非 git 导出目录 `D:/moodle/_qoder_lane_0384r2_wk`：`git archive` 解尖后再用工作树覆盖 src/e2e（所以编译的是我改完的号），
+`cp -al` 借共享依赖（`typescript/package.json` nlink=7，是链接不是拷贝；**没用 junction**），收尾只 `rmdir` 不递归删。
+
+## 我自己暴露的两件工具面缺陷（都要您一句话才动）
+
+1. **我过去交块里的 `review/evidence/...` 坐标是取不用的**：`.gitignore` 第 23 行有一条裸 `evidence/`，
+   所以那个目录整个未跟踪——我上一块引的 `review/evidence/ord0384/unanchored_classes_r2.json:1` 之类
+   只存在于我的工作树，门 `git cat-file` 拿不到。本件起改为镜像到跟踪路径 `review/n3_0384_evidence_r1/`（本次已提交），
+   并把读数的引用全部换过去。要不要我把上一块（已入帐 `0540+08` 那笔）里的旧坐标也逐条补一份勘误，请裁。
+2. **这条车道现在有两个写者**：16:05-16:16 另一个会话在同一 worktree 跑它自己的反控（`review/n3_0384_mutations_r6.py`，
+   它自己的抬头写着「while this lane was being verified by another writer」），并把 19868e84 推到了远端。
+   我一度把我看到的 ANCHOR_NOT_UNIQUE 归因成自己那个被杀掉的后台任务——**那是错的，已在读数件里撤回**：
+   真因是同一棵树里有并发注入。产品字节没被污染（每个头我都比对了 blob），但请您定一下这条 ref 的所有权，
+   否则两个会话会一直互相把对方的在飞行内注入读成脏树。
+
+## 没改善的部分
+
+1. 屏上仍只有 2 条有锚条目（plan_feasibility_open、recovery_needs_decision），未锚的 7 条照旧只做交接清单：`frontend/e2e/_qoderUnanchoredClasses.ts:1`。
+2. 两处契约行号是**钉死的数字**，尖再长一次还会错——这次是门抓住的，不是设计防住的。要么把锚改成派生（面板运行时不解析 YAML，得构建期派生），要么接受每次 rebase 重跑门；等您定，我不擅自加一层。
+3. 我没跑后端套件，也没碰共享预览库；本轮 e2e 用私有 sqlite。
+4. 旧块里 `0524+08` 那笔被 Q43 拒的第 26 行（裸写的 http 状态码）我在另一件重交里修成 `http_status=200` 的写法，不删数字。
+
+
+### CMDR 0928-1624 重交 · N3 · ORD-0384 屏上有锚条目 2 / 未锚清单 7 条（逐条在 frontend/e2e/_qoderUnanchoredClasses.ts:1 与 review/evidence/ord0384/unanchored_classes_r2.json:1）
+
+
+**本件是 `n3_0524.md` 的重交**：唯一改动在第 26 行——那行裸写的状态码按 Q43 写成 `http_status=200`（数字没删），其余逐字相同；原因是那块被 `claim_coordinate_check_r4e.py` 以 `line 26 NUMBER_WITHOUT_COORDINATE | 200` 拒收。
+**rebase 与线**：现尖逐字 0813d3aae826b7b4bdf311e70ed48c40f5c515d3，我旧基线 04071b8258ebcdcf1e9e4c9714fb516283d1e1ad 到它的距离 32 笔（`review/evidence/ord0384/rebase_r1.txt:5`），祖先判定退出码 0 见 `review/evidence/ord0384/rebase_r1.txt:6`。rebase 前我先用只读预测：`git merge-tree --write-tree 0813d3aa b4753423` 得 0cc6a98dcaa3e5bdb9dcb7139bc91f7d1070427a（`review/evidence/ord0384/rebase_r1.txt:7`），rebase 后落到的树同为 0cc6a98dcaa3e5bdb9dcb7139bc91f7d1070427a（`review/evidence/ord0384/rebase_r1.txt:8`），等式判定 `review/evidence/ord0384/rebase_r1.txt:9`。现尖对我这 4 个产品与门文件的改动数是 0（`review/evidence/ord0384/rebase_r1.txt:10`），所以无冲突不是运气。
+
+**交付头**：`review/N3-ord0384-pretrip-checklist` → 261f772616dfeb885eb431e404c614679e9cb55f。因为 rebase 改写了历史，推送用 `--force-with-lease=refs/heads/...:b4753423f76a4a980ce9cbf9d61219629c245a70`（显式期望值，不是 `-f`），远端回读 261f772616dfeb885eb431e404c614679e9cb55f 与本地逐字符相等，原文 `review/evidence/ord0384/lsremote_rebase.txt:1`。
+
+**范围按你的重定：屏上只留有锚的**
+
+9 条候选逐条量过，分三类：`ANCHORED_ON_RESPONSE` 2 条见 `review/evidence/ord0384/unanchored_classes_r2.json:9`，`DECLARED_ON_REQUEST_ONLY` 3 条与 `ABSENT_IN_BOTH` 4 条合计 7 条见 `review/evidence/ord0384/unanchored_classes_r2.json:10`，候选总数 9 见 `review/evidence/ord0384/unanchored_classes_r2.json:8`。留下的两条是 `plan_feasibility_open` ← `experience_flags.feasibility_failures` 在 `contracts/openapi.yaml:1351`（路由块内联），`recovery_needs_decision` ← `recovery.requires_user_decision` 在 `contracts/openapi.yaml:1873`（经 `$ref: RecoveryState` 引到响应上）。
+
+**这里我修正了自己上一版的一个错**：上一轮我只问了 `contracts/openapi.yaml` 一份文档。仓库里其实有**两份互不知晓的 OpenAPI**，所以我又从同一枚 commit 的导出里 in-process 调 `app.openapi()` 取了生成式那一份（146503 字节、139 条路径，见 `review/evidence/ord0384/two_contracts_r1.json:6` 与 `review/evidence/ord0384/two_contracts_r1.json:9`）。结果没有让任何条目变多，反而暴露出一个更细的坑：`stay_budget`、`arrival_anchor`、`departure_anchor` 在生成式文档里各出现 1 次，位置都是 `/components/schemas/JourneyCreate/properties/…`，也就是 **POST /api/v1/journeys 的请求体那一侧**，而 0 条响应引用 `JourneyCreate`。如果我把「契约里查得到」当成锚，这三条会被我错误地留在屏上。所以判据改成：**必须是该条目所读端点的响应侧声明**，请求体不算。另外 `/experience` 在生成式文档里的 200 schema 是空对象 `{}`（`review/evidence/ord0384/two_contracts_r1.json:4` 记了取数时的 commit），这也是为什么两条真锚只能来自手写那份。
+
+**产品与门的净变化**：`git diff --shortstat 0813d3aa..261f7726` 是 23 files changed, 2846 insertions(+)，见 `review/evidence/ord0384/diff_scope_r2.txt:30`；只看产品与门 6 个文件是 788 行净增、删 0 行，见 `review/evidence/ord0384/diff_scope_r2.txt:33`；`backend/`、`agent-mcp/`、`contracts/` 被碰的文件数是 0，见 `review/evidence/ord0384/diff_scope_r2.txt:36`。仍然 0 新表、0 新写端点、0 后端字节。V8Experience 从上一版的 +19 缩到 +8（`review/evidence/ord0384/diff_scope_r2.txt:8`），因为两条留下的规则都只读屏上已有的那一个 payload，wallet 透传与「还有一个来源没读到」那句对冲话一起删掉了。
+
+**门（authoritative，跑在交付头上）**：run_id `cmdr050513n3`，exit 0、GREEN、passed 8，日志 `D:/moodle/_qoder_cmdr_ref_20260921/live_checks/e2e_logs/n3_261f7726_050513.log`，读数 `D:/moodle/_qoder_cmdr_ref_20260921/live_checks/e2e_logs/n3_261f7726_050513.json:23`、`:24`、`:26`。七格是 Y1 起 `frontend/e2e/qoder-ord0384-pretrip-checklist.spec.ts:159`、Y2 起 `:203`、Y3 起 `:241`、Y4 起 `:289`、Y5 起 `:368`、Y6 起 `:418`、Y7 起 `:464`。两格值得单说：
+
+- **Y4 会打开契约文件回验屏上印的那一行**。它要求条目打印的 `contracts/openapi.yaml:<行>` 那一行真的把这个字段声明成属性，实测两条分别读到 `feasibility_failures: {type: array, items: {type: string}}` 与 `requires_user_decision: {type: boolean}`，收据 `review/evidence/ord0384/cmdr050513n3__Y4.json`。写错或过期的行号会在这里红，而不是发出去。
+- **Y1 自报它这一轮只跑了反向**。今天链上那枚行程两个锚点条件都不成立，所以「每条真值都有条目」那半是在跟空集比，收据里 `positive_direction_vacuous` 为 true 且指明正向由 Y2 承担（`frontend/e2e/qoder-ord0384-pretrip-checklist.spec.ts:190`）。正向的真凭据是 Y2 的三轮：造出来 → 撤掉 → 再造，逐轮记在 `review/evidence/ord0384/cmdr050513n3__Y2.json`。
+
+**编译臂**：`git archive 261f772616dfeb885eb431e404c614679e9cb55f frontend` 的导出里、对权威 `D:/moodle/CityNexus/frontend/node_modules` 建 junction 跑，`tsc -p tsconfig.check.json --noEmit` rc 0、`tsc -p tsconfig.typecheck.json --noEmit` rc 0、`vite build` rc 0 见 `review/evidence/ord0384/snap_build_r1.json:27`，built in 13.02s 见 `review/evidence/ord0384/snap_build_r1.json:29`，1951 modules transformed 见 `review/evidence/ord0384/snap_build_r1.json:30`，产物 index-DR3iUEq5.js 见 `review/evidence/ord0384/snap_build_r1.json:31`；junction 用普通 `rmdir` 卸掉且 `junction_gone`、`export_gone` 都为 true 见 `review/evidence/ord0384/snap_build_r1.json:48`，权威 `node_modules` 回 399 项见 `review/evidence/ord0384/snap_build_r1.json:50`。
+
+**反件（四枚，跑在交付头上，每枚跑完整门后按字节还原）**：收据 `review/evidence/ord0384/mutations_r4.json`。N1 把 `failures.length > 0` 改成 `>= 0` → 具名红 Y1、Y2、Y3；N2 让干净分支永不渲染 → 只红 Y3；N3 把一条没锚的类放回推导里 → 只红 Y5；N4 删掉条目正文的 `overflow-wrap` → 只红 Y4。四枚的 `restored_byte_identical` 全为 true，`all_arms_hold` 见 `review/evidence/ord0384/mutations_r4.json` 末行。
+
+N4 是这一轮新加的格配的新反件：我在看自己准备引用的截图时发现 `...最新一条是「ORD0384_SYNTHETIC_FEASIBILITY_FAILURE_` 冲出了卡片右边缘——服务端的原话可能就是一个不带空格的长 token，而 `overflow-wrap` 当时只加在依据行上。`elementsFromPoint` 抓不到这种缺陷（溢出的字在元素框**外面**，上面没有任何东西，采样会判"干净"），所以 Y4 现在额外逐行比 `scrollWidth` 与 `clientWidth`测量在 `frontend/e2e/qoder-ord0384-pretrip-checklist.spec.ts:332`、断言在 `frontend/e2e/qoder-ord0384-pretrip-checklist.spec.ts:359`），CSS 修在 `frontend/src/features/checklist/pretripChecklist.css:26`。
+
+**未锚 7 条的交接清单（下一张单的输入，不是垃圾）**：`frontend/e2e/_qoderUnanchoredClasses.ts:1`（门就是 import 它来断言这 7 个类名 0 命中）与 `review/evidence/ord0384/unanchored_classes_r2.json:1`。每条带类名、状态、为什么没锚、以及**要什么字段才能锚上**，逐条摘：`stay_budget_undeclared` / `arrival_anchor_missing` / `departure_anchor_missing` 三条要的是「把 `stay_budget`、`arrival_anchor`、`departure_anchor` 从 `JourneyCreate` 请求侧搬到 experience 响应侧」；`stay_chosen_but_unconfirmed`、`offline_pack_not_ready` 要的是「wallet 路由的 http_status=200 给出 `reservations`、`commitments`、`offline_ready` 的属性，而不是 `{type: object}`」；`stay_not_chosen`、`no_active_plan` 要的是「在响应上声明 `selected_option_id` 与 `active_plan`」，这两枚在两份契约里连词面都没有。证件/签证/保险/打包那一族仍然一条不提：契约全文里 passport、visa、insurance、vaccine、packing、document 六词各 0 命中，读数在 `review/evidence/ord0384/_negative_scan.txt:5` 到 `review/evidence/ord0384/_negative_scan.txt:10`（`grep -i -c` 数的是命中行数，对 0 而言与出现次数等价）。
+
+**declared 的 null vs false：按你说的单列，归门不归本单**。说明件 `review/ORD0384_GATE_CONDITION_declared_shape_r1.md:1`，数据 `review/evidence/ord0384/declared_shape_r1.json:1`。分母我拆开了：扫了 18 份 X1/Y1 收据，其中 16 份真记了这个字段、16 份全是 `false`、`null` 0 份（`review/evidence/ord0384/declared_shape_r1.json:5`），另外 2 份是本单改写后的 Y1 它不再记这个字段，所以**不计入分母**——上一版我把这两种混在一起数了。链侧真读数 `declared` 为 `null`，坐标 `live_experience.json@1121` 见 `review/evidence/ord0384/declared_shape_r1.json:15`。补一条线索给门：三态出口的代码在本树里是有的（`backend/app/stay_mobility.py:1619` 会答 `STAY_BUDGET_NOT_DECLARED`），所以 `null` 不是缺能力，是 seed 与出口两条路没被同一格覆盖。
+
+**什么没有改善（照实）**
+
+1. **今天链上屏上是空态，不是条目。** 两枚可用真行程上，留下的两条锚点规则亮的都是 0 条：`One Day in Nexus City` / `CNX-DEMO` 的 `feasibility_failures` 为 `[]`、`recovery` 为 null（`review/evidence/ord0384/derive_cnxdemo_r1.json:19` 起），我那枚自建具名行程同样 0 亮（`review/evidence/ord0384/derive_named3_r1.json:19` 起）。唯一给过正向见证的是 03:55 被 `demo/reset` 抹掉的广州行程（它当时亮 `plan_feasibility_open`）。所以「条目在真机上看得见」这件事现在是缺的，我没有为了把它凑出来去造响应。
+2. 屏上条目从 3 条缩到 0～2 条，是范围收窄的直接后果，不是退步，但它意味着这一屏今天对用户的实际信息量就是那句空态加一个动作。
+3. 完成状态仍不可上报（0 新写端点）。
+4. 「一切正常」仍不自带主语，正解在 `frontend/src/design-tokens.css:446`，那是 ORD-0380 在改的文件，我没碰；本轮只把清单放在它下面，Y6 测这个顺序。
+5. 全局 Copilot 胶囊仍浮在 Today 右下，Y4 在自然阅读位采 5 点做 `elementsFromPoint` 通过；最小滚动位仍会压住端点名尾部，图我留着 `review/evidence/ord0384/cmdr045837n3__X5_pair.png`。根治要动 `frontend/src/features/agent/CopilotDock.tsx:747`，不在本单。
+6. 两份 OpenAPI 互不知晓这件事本身没修（我只在交付前把两份都量了）。生成式那份 `/experience` 的 200 是空 schema，这是比「某字段没声明」更根上的问题，值得单独一张单。
+
+
+### ORD-0383 切片 1 · 车道 0383（新会话）· journeys.deleted_at + DELETE 软删 + 列表过滤 · 2026-09-28 16:2x+08 · 已推送待您验
+
+## 0 · 坐标先给（后面每个读数都绑在这些件上）
+
+- 派单 pin：db6a04cb1d734963b673351973329c08bb264ef3，我从它开 worktree `D:/moodle/_qoder_lane_ord0383_slice1`，四笔提交全在它之上，见 review/ord0383-slice1-readouts/GIT_LOG_R1.txt:7
+- 会话期间权威线被您移动了：`git ls-remote origin refs/heads/mirror/integration-frontend-apple-pass1` 现读 = 8fddeb76a79968592a7a3e98d2f296dda450d4df，而 db6a04cb1d734963b673351973329c08bb264ef3 是它的祖先（`git merge-base --is-ancestor` 退 0）——我没碰那条线，一个字节的提交都没落上去
+- 交付 ref 的逐字回读（`git -c http.proxy= -c https.proxy= ls-remote origin refs/heads/review/ORD-0383-slice1-deleted-at`，退出码 0）：
+  `c57bd95bf42c01dc84ed207d797a7fa75dda80aa	refs/heads/review/ORD-0383-slice1-deleted-at`
+- 我这五笔（第一笔是切片本体，后面四笔分别是词表修正、证据件、存储出处、flaky 格的隔离读数）：5459a9a90fa5fed152658f8e3380d4660fd0ef6a → f01413417bad63456b386254277475a02c98a5c2 → 9e01ab4c7c0f608cf7771939375159bc6cbe7f47 → 161e9c69282fe2327b566e1d0601fe0fa31b2a07 → c57bd95bf42c01dc84ed207d797a7fa75dda80aa，逐笔的 tree/parent/作者/时间见 review/ord0383-slice1-readouts/GIT_LOG_R1.txt:1（该件停在第二笔，后面三笔的号以这行为准）
+- 字节量：`git diff --shortstat db6a04cb1d734963b673351973329c08bb264ef3 f01413417bad63456b386254277475a02c98a5c2` = files_changed=6，insertions=543，deletions=0，见 review/ord0383-slice1-readouts/DIFFSTAT_R1.txt:8
+
+## 1 · 派单里那三枚行号在现尖上不是那个数（先更正，免得下一个人照抄）
+
+派单第二节写 `main.py:2651` / `:4639` / `:2801`；我在干净树 db6a04cb1d734963b673351973329c08bb264ef3 上 `git grep -n "@app.delete"` 实测是 backend/app/main.py:2657 与 backend/app/main.py:4645，集合口 POST 在 backend/app/main.py:2807。账本 `cmdr 04:4x` 那块的 2657/4645/2807 才是对的。结论没变：那一版树上删行程的路由不存在、`GET /api/v1/journeys` 也不存在。
+
+## 2 · 落地的东西（全是加法，没有整表重建）
+
+| 位置 | 内容 |
+|---|---|
+| backend/db/schema.sql:133 | journeys 表 `deleted_at TEXT`，可空、**无 DEFAULT** |
+| backend/app/db/session.py:574 | `ensure_schema` 里的增量守卫，SQL 逐字 = `ALTER TABLE journeys ADD COLUMN deleted_at TEXT`，复用了同块 session.py:563 已算好的 `journey_columns`，形状照 session.py:796 那笔 ORD-0355 |
+| backend/app/db/models.py:200 | ORM 那一列，`Mapped[str | None]` |
+| backend/app/main.py:2884 | `GET /api/v1/journeys`；main.py:2898 是本树上唯一一处按 `deleted_at` 过滤的查询（`grep -rn deleted_at backend/app` 的源码命中 = 9 行，其中只有这一行是读过滤） |
+| backend/app/main.py:2904 | `DELETE /api/v1/journeys/{journey_id}`，成功 204；两枚具名理由在 main.py:2924 与 main.py:2929 |
+| contracts/openapi.yaml:352 | `listJourneys`；contracts/openapi.yaml:392 是 `deleteJourney`，两枚拒绝名写在 404/409 的 description 里 |
+| backend/tests/test_qoder_ord0383_journey_soft_delete.py:1 | 本刀自己的 7 条断言，`pytest --collect-only` 单件收 collected=7，见 review/ord0383-slice1-readouts/STORE_PROVENANCE_R1.txt:4 |
+
+契约不是可选项：backend/tests/test_contract.py:82 把 (path, method) 判**集合全等**。我只回退契约、不动产品码，`test_openapi_runtime_method_parity_includes_v7_surface` 就红（review/ord0383-slice1-readouts/CONTROL_RED_CONTRACT_ONLY_R1.txt:30 记 failed=1 / passed=3），所以契约与路由必须同笔。
+
+## 3 · 验收四格的实测读数
+
+1) **旧库迁移**：`LEGACY_DDL` 造一棵没有该列的库、塞一行 `status=COMPLETED`/`planning_mode=explore` 的老行，再跑 `ensure_schema`。回读 `pragma_table_info('journeys')`：deleted_at_notnull=0 且 deleted_at_default=None（不是 '0'、不是 epoch）；那一行八个原有列逐字段等于迁移前，deleted_at 读回 NULL。件：review/ord0383-slice1-readouts/OWN_TESTS_R2.txt:1，存储是那棵树自己的 tmp_path 文件（`_ord0383_legacy.db`），不是共享库。
+2) **DELETE 不销毁**：走真路由删真行 → status=204 且正文空；raw SQL 回读同一 rowid 仍在，status 与 updated_at 都没动，只有 deleted_at 有了时刻。件 review/ord0383-slice1-readouts/OWN_TESTS_R2.txt:2：store=Temp/cnx_pytest_8srttrbg/suite.db，rowid=1，deleted_at=2026-09-28T08:03:37.232621+00:00。
+3) **列表只看未删**：`GET /api/v1/journeys` 的 id 序列与 `SELECT id FROM journeys WHERE deleted_at IS NULL ORDER BY created_at, id` **逐序相等**（不是我抄进去的一个数），且 未删条数+已删条数=表内总行数。件 OWN_TESTS_R2.txt:5 那行 `[list]`：GET 返回=1，deleted_at IS NULL=1，IS NOT NULL=3，total=4。同一存储具名：`C:\Users\仓鼠王\AppData\Local\Temp\cnx_pytest_8srttrbg\suite.db`，出处规则见 review/ord0383-slice1-readouts/STORE_PROVENANCE_R1.txt:1（`declared_by=conftest temp dir`，conftest 的 ORD-0211 守卫会拒绝 `_live.db`）。
+4) **具名码**：不存在的 id → status=404，`error.code=NOT_FOUND` + `error.reason_code=JOURNEY_NOT_FOUND`；同一行第二刀 → status=409，`error.code=CONFLICT` + `error.reason_code=JOURNEY_ALREADY_DELETED`，且原时刻不变（before 与 after 逐字符相同）、`audit_logs` 里 `action=journey.deleted` 仍只有 1 行——被拒的那一刀没留下第二次删除的痕迹。件 review/ord0383-slice1-readouts/OWN_TESTS_R2.txt:3 与 review/ord0383-slice1-readouts/OWN_TESTS_R2.txt:4。
+
+## 4 · 我自己踩的一次红，和它逼出来的第二笔提交（不是回填）
+
+第一笔我按 `error()` 助手的常规用法把两枚码写成顶层 `error.code`，本刀自己的全套跑里 `backend/tests/test_qoder_ord0272_continuation.py:350` 那格 G6 红了——它从冻结基线 c79e2b4 现取词表比对 main.py 里的 `error("<CODE>"`，新增顶层码＝第二套失败表达（仲裁禁的正是这个）。我没有回头改断言换绿，而是走 main.py:5024 已有的路子：顶层码留在既有那一族（NOT_FOUND/CONFLICT），具体理由进 `error.reason_code`——这字段是 ORD-0101 为「一码多因」建的，且 contracts/openapi.yaml:1885 早就把它写进 ErrorEnvelope 了，客户端看得见。修在 f01413417bad63456b386254277475a02c98a5c2，最终全套跑里 G6 不再红（见第 6 节）。
+
+## 5 · 断言不是空转：对照红
+
+把最终版本的测试文件（一字未改）放进 pristine 基线树跑：7 条全红，failed=7，见 review/ord0383-slice1-readouts/CONTROL_RED_PRISTINE_TREE_R1.txt:151。跑完那份副本被移到 `_scratch_base/CONTROL_COPY_do_not_import.py`（pytest 采不到的名字），基线树 `git status --porcelain` 只剩我自己的两份日志。同一文件在本车道树上 7 条全绿：review/ord0383-slice1-readouts/OWN_TESTS_R2.txt:17 记 passed=12（含契约 4 格与 G6 那格）。
+
+## 6 · 整套后端：先 collect 再真跑，两棵树四件跑次对齐
+
+解释器只有这一个跑得动：`D:/moodle/CityNexus/.venv/Scripts/python.exe`，Python_version=3.12.14，pytest=8.4.2，插件只 anyio/asyncio（无 pytest-randomly，顺序可复现）。命令逐字与坑：review/ord0383-slice1-readouts/HOW_TO_REPRODUCE_R1.txt:1。
+- collect-only：collected=1411，collect_exit=0，见 review/ord0383-slice1-readouts/COLLECT_ONLY_R1.txt:1423。补一条本机坑：不加 `PYTHONPATH=<仓库根>` 时同一棵树报 20 errors、collected=1353、exit=2——红的是量具不是产品，20 个模块 import `scripts.hermes_*`。
+- 本车道树：failed=11 / passed=1384 / skipped=15 / xfailed=1，用时 216.74s，见 review/ord0383-slice1-readouts/SUITE_MINE_R2.txt:589
+- pristine 基线树（同一 pin、同一命令、串行不重叠）：failed=9 / passed=1379 / skipped=15 / xfailed=1，用时 211.84s，见 review/ord0383-slice1-readouts/SUITE_BASE_R2.txt:520
+- 差集只有两枚：`test_qoder_ord197_four_class_receipt.py::test_r3_an_empty_answer_proves_it_came_from_a_reply_and_not_from_an_outage` 与 `::test_r4_a_failed_source_is_named_retryable_and_never_becomes_no_match`。它们在两棵树上都翻转过（基线第 1 跑红、基线第 2 跑绿；本树第 1 跑绿、第 2 跑红），而把这同一模块**单跑在两棵树上都是绿的**（review/ord0383-slice1-readouts/ORD197_ISOLATED_BOTH_TREES_R1.txt:5 与 review/ord0383-slice1-readouts/ORD197_ISOLATED_BOTH_TREES_R1.txt:9 各记 passed=6 / xfailed=1），失败原文是 ANYWHERE 解析器的 `outcome=None` vs `RESOLVER_RUNTIME_FAILURE`，与 journeys 无关。按「复跑不复现的红不归因」我不把它们记在本刀头上，但也不宣布已修——四件跑次的红名清单并排在 review/ord0383-slice1-readouts/RED_SET_COMPARISON_R1.txt:9
+- 两棵树共有的 9 枚红（anywhere g5/g9b/g14a/g14c/g8a/g10、city_failure_reasons、g3_xproc_http、ord0296_G4）在本刀前后同名同形，一条也没多、一条也没少。
+- 仪器自错一次、如实记：基线第一次跑我给了 `--basetemp=<树>/_scratch_base/basetemp`，父目录不存在而 pytest 不建中间目录，于是所有 `tmp_path` 格在 setup 就炸，报 errors=19。那 19 条不是产品读数，原始日志留在 review/ord0383-slice1-readouts/SUITE_BASE_R1_instrument_errors.txt:24
+
+## 7 · 权威线移动之后：这一刀还能不能落
+
+只读预测：`git merge-tree --write-tree --name-only 8fddeb76a79968592a7a3e98d2f296dda450d4df f01413417bad63456b386254277475a02c98a5c2` → merge_tree_exit=0，tree=7fd5e4a8e9cc7de7667043adb0d8bc2adf04b180，冲突文件清单为空。然后把那棵合并树本地提交成 0e9aed59a29d1199fdc2d660e358e67bb6b9970e（父＝权威尖 + 我的头，没推），在里面跑了能撞的五件：本刀 7 格 + test_contract 4 格 + G6 + ORD-0355 + test_wp01_wp03，结果 passed=52 / pytest_exit=0，见 review/ord0383-slice1-readouts/MERGED_ONTO_AUTHORITY_R1.txt:15。合并后我的两枚 reason_code 落在 main.py:2977 与 main.py:2982（行号被 ORD-0389 的改动顶下去了，这是合并树上的号，不是我树上的号）。所以我交的是「按派单 pin 的一刀 + 已验可落到您当前尖上」，要不要重切成新 pin 由您定，我没有自行 rebase 到 8fddeb76。
+
+## 8 · 判据（写死的，供第二片继承）
+
+- `journeys.status` 不写。它是「这趟在干什么」，schema.sql:125 那道封闭 CHECK 里没有「在回收站」这个词；为本刀整表重建不在切片 1 范围内。
+- `updated_at` 不写。删除时刻已经有自己的列；再抄一份给 updated_at 就是一个事实两个权威，而底栏那些读 updated_at 的地方会分不清「行程被改了」还是「行程进了桶」。DELETE 的答是 204 空体，也没有客户端需要它。
+- 第二刀不重写第一刀的时刻（OWN_TESTS_R2.txt:4 的 `[refusal-409]` 那行 before 与 after 逐字相同），所以重复点按 409 拒；**真正的幂等全集（含 200 重放）是切片 2 的单**，我这里只把名字和后果钉住。
+- 被软删的行程在 `GET /api/v1/journeys/{id}` 仍答 200（OWN_TESTS_R2.txt:17 的 R4 那格把它钉住了）。切片 1 只把它从列表里拿走、没把行拿走，行本身就是回收站要看的东西；改这条得删我那格断言，不能当副产品进来。
+- 404 那句话用的是 main.py:5220 已有的原句 `Journey {id} was not found`，没造新英文。
+
+## 9 · 没验的，为什么没验（不拿 mock 顶）
+
+- 并发/租约：两个请求同时删同一行，本刀会都看到 `deleted_at IS NULL` 而都写。切片 1 没引入租约，也没测它——幂等与并发那格是切片 2 的点，我按派单没伸过去。
+- 子资源面（constraints / plans / guardian …）对已软删行程的答复：只测了 `GET /api/v1/journeys/{id}` 这一格（review/ord0383-slice1-readouts/OWN_TESTS_R2.txt:17）。其余子资源门没有活体读数，靠的是静态事实：`grep -rn deleted_at backend/app --include=*.py` 的源码命中里，读过滤只有 backend/app/main.py:2898 这一行。
+- 列表没有分页、没有按 traveler 收窄、没有上限：派单切片 1 只要求 `deleted_at IS NULL` 那一条规则，我没自己加参数。演示库里行程数很小，「一屏拉全表」的代价我这没量。
+- 回收站可见性（`deleted_at` 上屏）、保留上限进响应、恢复入口：切片 2/3，按派单未做，因此响应体里今天没有 deleted_at 这个字段。
+- 非 UUID 的 journey_id（路径参数解析不了 → FastAPI 自己的 422 信封）：没测，我没新造码所以判定不必测，但那是推断不是实测。
+- 前端一行没动：派单切片 1 不含屏幕，且热文件清单里 `frontend/src/generated/api.ts` 是生成物——新增两枚路由后它已经落后于契约（本刀 0 个前端字节，见 DIFFSTAT_R1.txt:8 那行 files_changed=6 全在 backend/ 与 contracts/），要重生成本片不在我这单里。
+- 手机/共享预览上的真实点击：没走。本刀起了一个自己的临时库，没碰 `_live.db`/`_preview.db`，也没跑 `POST /api/v1/demo/reset`（那 52 张表的门我一次都没敲）。
+- 我没有量「删完之后回收站还能不能找回」——因为今天根本没有找回的门。这条是切片 2 的验收面。
+
+## 10 · 现场遗留（都归本车道，随时可清）
+
+`D:/moodle/_qoder_lane_ord0383_slice1`（交付树，已推）、`D:/moodle/_qoder_lane_ord0383_slice1_base`（pristine 对照树，产品文件 0 改动）、`D:/moodle/_qoder_lane_ord0383_merge2`（合并预测树，只跑了那份读数里点名的几件：review/ord0383-slice1-readouts/MERGED_ONTO_AUTHORITY_R1.txt:2）、以及一次失败删除留下的空壳 `D:/moodle/_qoder_lane_ord0383_slice1_merge`（`git worktree prune` 已 unregister，里面没东西）。三棵树都没建 junction，都没碰别人的树与 ref。要清就说一声，我不自作主张删盘。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### CMDR 0928-1620 · N3 · ORD-0384 rebase 到现尖完成：V8Experience 挂载 added=8 deleted=0（`review/evidence/ord0384/diff_scope_rebased.txt:7`），锚点被自家门抓到过期并修好
 
 **先报一件必须让你知道的事**：这一轮的 rebase **不是我在这个工作树上发起的**。我 15:41 跑 `git rebase db6a04cb…` 时 git 直接 fatal：`there is already a rebase-merge directory`，onto 是 `8fddeb76a79968592a7a3e98d2f296dda450d4df`，7 已完成 / 9 待办，`orig-head` 是我的 `ec491b21…`——也就是说另一个写入者正在把我的分支往**更新的**线上重放。我没有抢写、没有 `--abort`、没有删那个目录（那是别人的进行中状态）。我改为等它静下来再独立复验，过程记在下面。
