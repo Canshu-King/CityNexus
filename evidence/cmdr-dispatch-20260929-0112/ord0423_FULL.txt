@@ -1,0 +1,45 @@
+[CMDR 派单 ORD-0423] 行程票夹那屏（route `bookings`）两处"机器说的话直接给用户看"。
+
+== 缺陷一：服务端自己造展示文案，把中文字典值盖掉了 ==
+`frontend/src/features/inbox/JourneyInboxWorkbench.tsx:758` 写的是 `<h3>{memory?.title ?? t("inbox.journeyMemory")}</h3>`。
+字典本身是齐的：`frontend/src/i18n/LocaleContext.tsx:1398` 中文值是「已保存的行程事实」，`frontend/src/i18n/LocaleContext.tsx:606` 英文值是 `Saved trip facts`。
+但后端 `backend/app/integrations/inbox/semantic_intake.py:489` 自己写了 `"title": "Journey Memory"`，于是 `??` 永远走不到字典那一侧，中文屏实测读到的就是 `Journey Memory`。
+读数件（已发布可外读）：`evidence/cmdr-ord0419-20260929-0051/untranslated_r2_bundle.json` blob `bf772e96e171e7cc33b3b3b27b9b7ca7d6360950`（bookings 那一条）；出处分类件 blob `a225e6a7f6770356577531211c58af44259ce86b`，文字版 blob `60b467d7c3ef92e54f3d51156764c4a62b9a27c2`。
+这一格是"服务端写展示文案"这一类问题的一个实例，**不是漏翻译**。修法你自己判断（前端不再把 `memory.title` 当标题用，或后端不再下发 title 而是下发稳定键），但判据是屏上的：中文臂 bookings 读到中文字典值、英文臂读到英文字典值，两臂都要交渲染读数。
+**后端那侧请先只报不改**：把 `backend/app/integrations/inbox/semantic_intake.py` 里其余"服务端造人话"的实例逐条列出来（例如 `reasoning_summary` 那一类），每条给 `文件:行` 与实际值形状，交读数，我另开单。
+
+== 缺陷二：原始 ISO-8601 直接渲染给用户 ==
+`frontend/src/features/inbox/JourneyInboxWorkbench.tsx:764` 是 `{item.label} · {item.at ?? t("inbox.timePending")}`，把 `item.at` 原样输出。中文屏实测读到 `Nexus River Cruise Pier · 2026-10-10T15:30:00+08:00`（同一份合订件 blob `bf772e96e171e7cc33b3b3b27b9b7ca7d6360950`）。
+可抄的先例（只抄形状，不要重构它们）：`frontend/src/app/V8Experience.tsx:419`、`frontend/src/app/V8Experience.tsx:437`、`frontend/src/app/V8Experience.tsx:4537` 都在用 `Intl.DateTimeFormat` 并按 `zh` 切 locale；回收站那屏（已经落地的 ORD-0402 切片 2）已经把时刻渲染成「丢弃于 9月28日 20:14」这一档。
+判据：中文臂 bookings 屏那行的时刻是**中文本地化格式**，不含 `T` 分隔与 `+08:00` 这类原样 ISO 片段；时刻为空时仍然读到 `inbox.timePending` 那一侧的中文「时间待定」——这一格要给反件，别把它改没了。
+
+== 实现约束 ==
+- 格式化函数放**新文件**（例如 `frontend/src/lib/formatWhen.ts`），只在 `frontend/src/features/inbox/JourneyInboxWorkbench.tsx` 用它。**不要改 `frontend/src/app/V8Experience.tsx`**（归另一位号令者实例的 ORD-0420）。
+- 不要改 `frontend/src/styles.css`。
+- 不要动 `frontend/src/features/traveler-twin/TwinPanel.tsx` 与 `frontend/src/features/recovery/` 下面任何文件（归 ORD-0422）。
+
+== 读数仪表（用已发布这份，不要自写新的）==
+仪表 blob `41a69ce5e9dc0c8c28c8c89d9105c6e6a7834c67`，用法 `node <仪表> <base> bookings <out-dir>`。它是滚动并集版（会真的滚到底，并把每个可滚容器的 `deepest_scrollTop_reached` 与 `bottom_reached` 写进读数），所以折叠线以下的文字不会漏——我第一版仪表就是因为不滚动而漏过一条，别再犯同一个错。
+
+== 验收要件 ==
+1. 两臂 bookings 屏渲染读数各一份，标题那一行与时刻那一行逐字打出来（渲染文字本身，不是 class 也不是 data 属性）。
+2. 时刻为空那一格要有反件：把 `at` 置空的读法走一遍，证明仍读到「时间待定」/`time pending`。
+3. 后端"造人话"清单只报读数、0 后端字节。
+4. 前端构建臂必须真过（vite 退出码为零），不许靠跳过。
+
+== 环境与纪律（每条都适用，请逐条照做）==
+- 你现在是 CityNexus 的一条实现车道，号令者会话是 494abfd7-5a79-4cc1-8487-e873818a2db3。用户不在电脑前：**不要请求任何人类点击或回答**，也不要向外仲裁汇报。
+- 仓库：`D:/moodle/CityNexus`（工作树是冻结的 a9c2504，**不要**在它上面改产品码）。权威线只在远端：`refs/heads/mirror/integration-frontend-apple-pass1`，仓库 `Canshu-King/CityNexus`。
+- 现尖读法（每次都现读，不要引用记忆里的尖）：
+  `env -u HTTP_PROXY -u HTTPS_PROXY git -C D:/moodle/CityNexus ls-remote origin refs/heads/mirror/integration-frontend-apple-pass1`
+- 本机代理 `127.0.0.1:7892` 常没人监听，会造出假的"不可达/连接被拒"。所有网络与 git 远端命令前面一律加 `env -u HTTP_PROXY -u HTTPS_PROXY`。
+- 造自己的工作树：`git -C D:/moodle/CityNexus -c core.autocrlf=false archive <现尖40位> backend data contracts tools scripts agent-mcp frontend/src frontend/e2e | tar -x -C <你的目录>`。**必须含 `data` 与 `contracts` 与 `scripts` 与 `agent-mcp`**，少一个会造出假红。
+- 交付方式：把候选推到 `refs/heads/review/<你的名字>-ord04xx-r1`，然后 `ls-remote` 回读核对两侧 40 位逐字相等。**不要自己合并、不要动权威 ref。**
+- 交完写一块账本块：`D:/moodle/_qoder_ledger_inbox/<你的名字>_<HHMM>.md`，首行以 `### ` 开头。**每个数字同一行给可取回坐标**（`path:line` 或能 `cat-file` 的 40 位 git blob；尺寸每个数字带单位；订单号一律写 ORD-04xx 带前缀形）。**坐标从命令输出里复制，不要手打**（手打过一位就会被写盘门拒，今晚已经拒过好几块）。证据先发布后引用：`env -u HTTP_PROXY -u HTTPS_PROXY python D:/moodle/_qoder_cmdr_ref_20260921/live_checks/publish_evidence_gated_r1.py --local <文件> --path evidence/<新路径>`，已发布路径不许重写，改版走新文件名。
+- 不许假绿：禁止 skip、mock、改断言凑绿。门绿不等于用户在屏上看得见的东西对了——判据要断**渲染后的文字或计算样式**，不要断 class、不要断 data 属性。
+- 私有验证栈（跑屏上用）：`git archive <尖> ... frontend/src frontend/e2e` 导出 → 造产物 `python D:/moodle/_qoder_cmdr_ref_20260921/live_checks/cmdr_build_bundle_r1.py --sha <尖>` → 只读备份共享库（`sqlite3.connect` 用 `file:...?mode=ro` 再 `src.backup(dst)`，参考 `live_checks/_launch_priv_backend_r1.py`）→ 起自己的后端（`CITYNEXUS_DATABASE_URL` 指到你自己的备份库、`CITYNEXUS_DEMO_MODE=true`、**不要**给 `DEEPSEEK_API_KEY`）→ `python cmdr_static_api_proxy_r1.py --dist <dist> --port <你自己的端口> --api <你后端端口>`。**先探到自己的端口真的在答再跑仪表。**
+- 绝对不许：写或 ALTER `D:/moodle/_qoder_preview_20260920/_preview.db`（只能 `mode=ro`）；跑 `demo/reset`；重启 :8000 / :4781 / :4782 / :8693；读或打印 `D:/moodle/_qoder_preview_20260920/run/preview_auth.txt` 里的口令值（只写路径）。
+- 本机三个 python 只有那一个 venv 解释器能跑后端套件；`python3` 在这台机器上没有。做较大改动前先 `ast.parse` 一遍你生成的脚本再跑。
+- 做完把交付块写好就停，等号令者复切落地；不要替号令者落地。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
