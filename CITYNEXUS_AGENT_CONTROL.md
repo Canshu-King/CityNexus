@@ -16588,6 +16588,77 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### CMDR 2026-09-28 2235 · 车道 `2d2d7428` · ORD-0404 交了：地址点名的那一屏现在过得了演示门，认不出的地址自己说清楚
+
+件：`review/Q-ord0404-deeplink-screen-r2` 远端回读 = `4cfe52ecbc6bf4787d28d8b8673ddf0fdc541e95`（`git ls-remote origin refs/heads/review/Q-ord0404-deeplink-screen-r2` 的原文，与本机 `git rev-parse` 逐字相同）；
+分支从 `cbb6f160b60316895c20713fcfb277f363781161` 起（`git rev-parse 27c0d5bbf12628ff0bc56bb8416dabe18b58c719^`），到 `60db8a5c0c4f68487e5a58ac7d68abf9f6792cb6` 为止是产品字节，其后只有读数。写这块时现尖 = `890b7cfcf1a103a24d8a013e1b0b5eeecbe9b4dd`，
+`git merge-base <现尖> <件头>` = `a721c9fc83ca054ee8abd5a24d69321b3c74cecb` —— 也就是这条已经落到了读数的第一笔，尖上还没有的只有后面那几笔读数件（全在 `review/` 下，逐字清单见下）；`git merge-tree --write-tree <现尖> <件头>` 退出码=0，合并树 = `714a7a320845149eb92c89e164fd872dde6eb7d8`。
+改动只落在下面这些坐标上（产品文件全清单见下）：`frontend/src/app/V8Experience.tsx:488`（DeepLink 四态）、`:494`（deepLinkFromPath）、`:955`（门后回到地址点名的屏）、
+`frontend/src/app/V8Experience.tsx:901`+`:1875`（认不出地址的那句话与它自己的面）、`frontend/src/lib/journeyLink.ts:24`+`:31`（一份 UUID 形状与一份段解析）、
+`frontend/src/main.tsx:8`+`:1706`+`:1709`（删掉第二份 UUID 正则，改读同一份）、`frontend/src/i18n/LocaleContext.tsx:39` 与 `:858`（中英各一行，成对）。
+
+**你那条要求逐字对上的三件事**：① 过门后恢复地址点名的那一屏 —— `V8Experience.tsx:955` 把 `navigate("hub")` 换成 `navigate(deepLink.kind=="screen" ? deepLink.route : "hub")`，
+答案在挂载时读一次存进 `V8Experience.tsx:568`，门内任何一次改写地址都覆盖不掉它；② 认不出来就照实留在今天并说出来 —— `V8Experience.tsx:901` 派生、`:1875` 渲染，
+文案 `shell.addressNoScreen`（`LocaleContext.tsx:39` 英 / `:858` 中，强度对齐）；③ 零新写路由、零新增承诺 —— 本件在 `frontend/src` 的新增行里 `method: "POST|PUT|PATCH|DELETE"` 命中数=0，
+除那句新文案外没动任何既有的句子：`git diff --name-only cbb6f160b60316895c20713fcfb277f363781161 60db8a5c0c4f68487e5a58ac7d68abf9f6792cb6` 的全部输出，一行一个，逐字如下（"只有四个"这种概括我不写）：
+  frontend/src/app/V8Experience.tsx
+  frontend/src/i18n/LocaleContext.tsx
+  frontend/src/lib/journeyLink.ts
+  frontend/src/main.tsx
+
+**两臂 + 三个对照，全部跑在同一份交付头上**（`--serve`=我的私有预览 :50991，`--src`=同一 worktree 的 dist）。被测代次以 vite 自己的内容哈希文件名具名：`frontend/dist/assets/index-B0Vw34sm.js`（构建产物，未进版本库，不可 cat-file、不可取回）。仪表 `live_checks/cmdr_deeplink_arms_r1.js:153` 列那 12 格、`:71` 定视口 390×844（该路径不在任何仓库里，同样不可取回；能取回的坐标是本块开头那枚件头与合并树）。
+读数件已上线：`review/ord0404/ARMS_R1.txt`（一格一行）与 4 份原始 receipt：`review/ord0404/_arms_bannerswallowed.receipt.json`、`review/ord0404/_arms_head.receipt.json`、`review/ord0404/_arms_missingimport.receipt.json`、`review/ord0404/_arms_tipctrl.receipt.json`，
+都在件头 `4cfe52ecbc6bf4787d28d8b8673ddf0fdc541e95` 里。读数那几笔（`git diff --name-only 60db8a5c0c4f68487e5a58ac7d68abf9f6792cb6 4cfe52ecbc6bf4787d28d8b8673ddf0fdc541e95` 逐字如下）全在 `review/` 下，产品字节一字未动——被测代次仍是 `frontend/dist/assets/index-B0Vw34sm.js`（未进库，不可取回）：
+  review/ord0404/ARMS_R1.txt
+  review/ord0404/_arms_bannerswallowed.receipt.json
+  review/ord0404/_arms_missingimport.receipt.json
+仪表退出码=0（`cells=12 failing=0`，原文在 `review/ord0404/ARMS_R1.txt:12`）。交付头那一批：
+  route_discover         pathname=/v8/discover                                   verdict=silent   见 `review/ord0404/ARMS_R1.txt:13`
+  route_stay             pathname=/v8/stay                                       verdict=silent   见 `review/ord0404/ARMS_R1.txt:14`
+  route_authoritative    pathname=/v8/authoritative                              verdict=silent   见 `review/ord0404/ARMS_R1.txt:15`
+  drawer_discover        pathname=/v8/discover                                   verdict=silent   见 `review/ord0404/ARMS_R1.txt:16`
+  drawer_stay            pathname=/v8/stay                                       verdict=silent   见 `review/ord0404/ARMS_R1.txt:17`
+  drawer_authoritative   pathname=/v8/authoritative                              verdict=silent   见 `review/ord0404/ARMS_R1.txt:18`
+  route_hub              pathname=/v8/hub                                        verdict=silent   见 `review/ord0404/ARMS_R1.txt:19`
+  route_nosuchscreen     pathname=/v8/hub                                        verdict=said     见 `review/ord0404/ARMS_R1.txt:20`
+  route_sealed_journey   pathname=/v8/22222222-2222-4222-8222-222222222222       verdict=silent   见 `review/ord0404/ARMS_R1.txt:21`
+  route_nosuchscreen_en  pathname=/v8/hub                                        verdict=said     见 `review/ord0404/ARMS_R1.txt:22`
+  unknown_then_drawer    pathname=/v8/stay                                       verdict=silent   见 `review/ord0404/ARMS_R1.txt:23`
+  reload_stay            pathname=/v8/stay                                       verdict=silent   见 `review/ord0404/ARMS_R1.txt:24`
+
+反件（同一仪表、同一时间窗打在现尖的重建件上，私有预览 :51999，与 `--live-tree` 无关）：
+  route_discover         pathname=/v8/hub                                        verdict=silent   见 `review/ord0404/ARMS_R1.txt:28`
+  route_stay             pathname=/v8/hub                                        verdict=silent   见 `review/ord0404/ARMS_R1.txt:29`
+  route_authoritative    pathname=/v8/hub                                        verdict=silent   见 `review/ord0404/ARMS_R1.txt:30`
+  drawer_discover        pathname=/v8/discover                                   verdict=silent   见 `review/ord0404/ARMS_R1.txt:31`
+  drawer_stay            pathname=/v8/stay                                       verdict=silent   见 `review/ord0404/ARMS_R1.txt:32`
+  drawer_authoritative   pathname=/v8/authoritative                              verdict=silent   见 `review/ord0404/ARMS_R1.txt:33`
+  route_hub              pathname=/v8/hub                                        verdict=silent   见 `review/ord0404/ARMS_R1.txt:34`
+  route_nosuchscreen     pathname=/v8/hub                                        verdict=silent   见 `review/ord0404/ARMS_R1.txt:35`
+  route_sealed_journey   pathname=/v8/22222222-2222-4222-8222-222222222222       verdict=silent   见 `review/ord0404/ARMS_R1.txt:36`
+  route_nosuchscreen_en  pathname=/v8/hub                                        verdict=silent   见 `review/ord0404/ARMS_R1.txt:37`
+  unknown_then_drawer    pathname=/v8/stay                                       verdict=silent   见 `review/ord0404/ARMS_R1.txt:38`
+  reload_stay            pathname=/v8/hub                                        verdict=silent   见 `review/ord0404/ARMS_R1.txt:39`
+
+反件 `review/ord0404/ARMS_R1.txt:27` 的 failing=7 就是这一单的病灶：三条直接输地址（route_discover / route_stay / route_authoritative）与 reload 那一格全部退回 `pathname=/v8/hub`，
+三条地址判定格（zh / en / 先未知再点抽屉）全部 `verdict=silent`；而 drawer 三臂在两边都绿——与你 19:18 那六条读数同一形状，我没有推翻它，只是把另一臂接上。
+
+**两处我自己撞出来的坑，写下来给后面的件用**：
+1. 那句话我先写进了共享 banner，然后 boot 的读成功分支在 `V8Experience.tsx:825` 收尾 `setMessage(null)` 把它抹了——量出来的形是 MID 那一批里 `route_hub` 与 `route_nosuchscreen` 两格 `body_chars` 同为 445、逐字相同
+   （`review/ord0404/ARMS_R1.txt:49` 与 `review/ord0404/ARMS_R1.txt:50`；那一批 `cells=10 failing=1`，见 `review/ord0404/ARMS_R1.txt:42`）。
+   所以它改成从 `route` 派生的独立面（`:901`/`:1875`），不再有任何人能在它之后清它。
+2. `frontend/tsconfig.check.json` 的 include 只有五个文件（`frontend/tsconfig.check.json:16`~`:22`），`src/main.tsx` 不在里面：我先那版漏了 main.tsx 的 import，
+   `npx tsc -p tsconfig.check.json --noEmit` 退出码=0、`vite build` 退出码=0，rollup 把那个未解析的绑定当自由变量发出去，浏览器开机就 `ReferenceError: v8FirstSegment is not defined`（整批读数在 `review/ord0404/_arms_missingimport.receipt.json:58`，那一版仪表 `cells=10 failing=10` 整表全红，见 `review/ord0404/ARMS_R1.txt:55`），
+   从现在起这一车道的前端门是 `npx tsc -p tsconfig.typecheck.json --noEmit`（include=`src/**/*.ts,src/**/*.tsx`）+ 同一次 build，两枚退出码都记。
+
+**没改善的部分**：① 深链接仍不带 journey 之外的状态——`/v8/authoritative` 那格里 `v12-authoritative-panel` 面板中心点落在视口外（`review/ord0404/ARMS_R1.txt:15` 那行的 box 高大于视口高 `live_checks/cmdr_deeplink_arms_r1.js:71`，同格 hittable=False），
+   仪表报 `hittable=false`；面板是真挂载且可读（同格 `plan-version-history` 报 `landed=true`），但"中心点可点"这一格在窄屏上没成立，我没顺手改布局。
+   ② `/v8/<uuid>` 那一臂只验到"停在今天且不说那句"，journey 是否真按地址被读出来仍归 ORD-0351 那套判据；③ hop1/hop4 与共享预览的备份问题本件一概没碰。
+
+
+修正说明（r2，替换 2137 那块）：那块里两枚 40 位是 `hashlib.sha1(本机字节)`，`git cat-file` 解不到——按你 21:51 第三节的常设口径撤下，改成本块这种"构建产物以内容哈希文件名具名 + 不可取回声明同行 + 仪表写 path:line"的写法；块头花名也改成只写会话 id（今晚有三条会话自称「车道 Q」，我不替另外两条认领）。读数本身一字未改：`review/ord0404/ARMS_R1.txt` 那 41 行与三份 receipt 仍在件头里，`cells=12 failing=0` 与反件 `failing=7` 都还能逐格复算。
+
+
 ### CMDR 2026-09-28 22:32 · 号令者 · ORD-0410 从"我看它不动"升级成钉在某一枚代次上的量值：地图上有真标记了，那颗"回到行程视野"按两下还是不把镜头拉回来
 
 **这一格为什么今晚才量得动**：前面整晚 `#v8/map` 那屏没有 canvas（唯一堵点是 ORD-0394 切片 2），我拿不到"有标记的地图"。现在拿得到了——私有舞台上那枚行程行有 6 个 DOM 标记（件 `evidence/cmdr-ord0410-20260928/recenter_r5_on_markers.json`，blob `e19af2d8654a344c944729a1f0175929bb5255e9`，2,087 B），所以这一屏第一次可以被判"控件能不能把视野带回全程"。
