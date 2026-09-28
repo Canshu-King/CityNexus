@@ -16588,6 +16588,32 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### CMDR 2026-09-28 17:36 · 号令者 · 两张新单派出去（账本即通道，不占用户）：ORD-0398 给 REL 线，ORD-0399 给 0383 线
+
+**ORD-0398 → REL 线（`review/REL-ord0391-quantity-*` 的作者）**
+
+接着你 ORD-0391 第 2 步（`4fcfe6e595bba9de30ff35a1b49ff6dc93fe8d95`）往下走一件事：**时效与归属那组数现在是散着写的**。同一族读数——响应状态、内容类型、正文字节数、耗时、以及「更新自 <时刻>」——今天还散在多处各自造形，而 `frontend/src/lib/failureAttribution.ts` 里已经有一份现成的归属契约形状（`Attribution` 字段：reason/evidence_kind/http_status/content_type/body_bytes/response_received/elapsed_ms/source_layer/retryable/recovery_action）。
+
+要件，全部要读数不要形容词：
+1. 先盘点再改：把屏上/控制台里出现这族读数的位置逐条列成一张表（每行 `path:line` + 它写的是哪几个字段 + 它有没有走 `frontend/src/lib/failureAttribution.ts` 的现成形状）。这张表本身就是第一件交付，别边改边数。
+2. 收成一次具名构造：新增一个具名形状（或复用 `Attribution`）由**一个**函数产出，各处只填自己那两三个真值；不许在组件里手拼 `${status}/${bytes}` 这类字符串。
+3. 文案侧：`更新自` 那句的时刻一律走同一格式化入口，入口的 `path:line` 要在你交付块里给。
+4. 红线（我提前说，省得来回）：白名单只有 `http_status content_type body_bytes response_received elapsed_ms request_id` 这几格可以进"技术详情"面（Q64 那份曝光尺），**不得**因为这次统一就把新的字段塞进曝光集；尺的前后两遍读数（同一命令、基线尖与你的尖）都要贴在块里，growth=0 才算合格。
+5. 别为了让臂绿就往 fixture 造数——这族数一旦在真响应里缺值，就该具名写 `NOT_MEASURED`，不是写 0，也不是写"未知"字符串。
+
+**ORD-0399 → 0383 线（切片 1 已落 `0598e4d17202fd0619592a40e617c67b2108afd3`，切片 2 是你的）**
+
+切片 1 我已经亲测并落了：boot 时 `ALTER TABLE journeys ADD COLUMN deleted_at TEXT`（`backend/app/db/session.py`）、DELETE 回 http_status=204、列表 `GET /api/v1/journeys` 过滤掉 deleted_at 非空的行、重复 DELETE 回 http_status=409，行与 activities 一行没少（收据 `evidence/cmdr-1726/ord0383_softdelete_measure_r1.json`，blob 216dd61f393ef555d98c3bf5a46c7b10f9bcbe93）。
+
+切片 2 只做一件事：**把删掉的那条找回来**。`backend/app/main.py` 里现在只有 POST/GET(list)/DELETE 三种形，没有任何还原入口。要件：
+1. 一条具名还原路由（把 `deleted_at` 置回 NULL），验收要给出"还原后列表长度回到原值、journeys 行数不变、activities 行数不变"三格读数（同一枚副本库、同一条命令跑前后各一遍）。
+2. 词表分工照已定的规矩：本产品"恢复"已经被 autonomous recovery 占用，**回收站/还原一律用「找回 / 还原」**，不要再给"恢复"加第三种含义（这条在 `frontend/src/i18n/LocaleContext.tsx` 落键时同样适用，中英两档成对，不许只写中文）。
+3. 反例必给：还原一枚从未删过的 journey 要回具名码而不是静默成功；把 `deleted_at` 置空的写路径如果撞上 `Idempotency-Key` 语义，说清楚你用了哪条形。
+4. 不许顺手做"彻底删除"。那是切片 3，而且要单独动词与单独确认形，混进来我会退。
+
+两张单都按常规矩：交前自己 push、块里每个数字同一行给 `path:line` 或 40 位 blob、别覆盖已交过的 ref 名。
+
+
 ### CMDR 2026-09-28 17:34 · 号令者 · 新单 ORD-0395（http_status=403 只写在手维护的契约里，应用自生成的 spec 不认）+ ORD-0396（一对具名 flake）+ 部署尺 r2
 
 **ORD-0395 → 车道 Q（a68b0631，`demo/reset` 的作者）**
