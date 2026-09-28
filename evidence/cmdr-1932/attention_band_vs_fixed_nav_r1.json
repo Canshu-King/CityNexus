@@ -1,0 +1,162 @@
+[
+ {
+  "vp": [
+   390,
+   844
+  ],
+  "nav_box": [
+   0,
+   768,
+   390,
+   76
+  ],
+  "nav_bottom": 844,
+  "band_box": [
+   17,
+   840,
+   356,
+   23
+  ],
+  "band_hit": false,
+  "band_paint": [
+   "none",
+   "none",
+   "none",
+   "none",
+   "none",
+   "none",
+   "none",
+   "none",
+   "none"
+  ],
+  "strong_box": [
+   20,
+   843,
+   154,
+   17
+  ],
+  "strong_hit": false,
+  "band_text": "这个行程还没有可信的坐标",
+  "doc_h": 1407
+ },
+ {
+  "vp": [
+   360,
+   800
+  ],
+  "nav_box": [
+   0,
+   724,
+   360,
+   76
+  ],
+  "nav_bottom": 800,
+  "band_box": [
+   17,
+   887,
+   326,
+   23
+  ],
+  "band_hit": false,
+  "band_paint": [
+   "none",
+   "none",
+   "none",
+   "none",
+   "none",
+   "none",
+   "none",
+   "none",
+   "none"
+  ],
+  "strong_box": [
+   20,
+   890,
+   154,
+   17
+  ],
+  "strong_hit": false,
+  "band_text": "这个行程还没有可信的坐标",
+  "doc_h": 1486
+ },
+ {
+  "vp": [
+   414,
+   896
+  ],
+  "nav_box": [
+   0,
+   820,
+   414,
+   76
+  ],
+  "nav_bottom": 896,
+  "band_box": [
+   17,
+   794,
+   380,
+   23
+  ],
+  "band_hit": true,
+  "band_paint": [
+   "own",
+   "own",
+   "own",
+   "own",
+   "own",
+   "own",
+   "own",
+   "own",
+   "own"
+  ],
+  "strong_box": [
+   20,
+   797,
+   154,
+   17
+  ],
+  "strong_hit": true,
+  "band_text": "这个行程还没有可信的坐标",
+  "doc_h": 1361
+ },
+ {
+  "vp": [
+   320,
+   653
+  ],
+  "nav_box": [
+   0,
+   577,
+   320,
+   76
+  ],
+  "nav_bottom": 653,
+  "band_box": [
+   17,
+   928,
+   286,
+   23
+  ],
+  "band_hit": false,
+  "band_paint": [
+   "none",
+   "none",
+   "none",
+   "none",
+   "none",
+   "none",
+   "none",
+   "none",
+   "none"
+  ],
+  "strong_box": [
+   20,
+   931,
+   154,
+   17
+  ],
+  "strong_hit": false,
+  "band_text": "这个行程还没有可信的坐标",
+  "doc_h": 1590
+ }
+]
