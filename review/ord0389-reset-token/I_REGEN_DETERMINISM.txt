@@ -1,0 +1,39 @@
+ORD-0389 -- the generated file is a product of a command, proved by re-running it
+
+The generation command, in the form a reviewer can replay from a clean checkout (run in
+`frontend/`, proxies unset, offline so npx cannot reach a registry):
+
+  npx openapi-typescript ../contracts/openapi.yaml -o src/generated/api.ts
+
+This run was pointed at throwaway copies so the working tree stayed clean:
+  npx openapi-typescript \
+      D:/moodle/_qoder_q_ord0389_20260928/probe/det/line_openapi.yaml \
+      -o D:/moodle/_qoder_q_ord0389_20260928/probe/det/regen_api.ts
+
+  openapi-typescript 7.13.0 (the version pinned in frontend/package.json devDependencies)
+  input : probe/det/line_openapi.yaml, which is `git show 8fddeb76a799:contracts/openapi.yaml`
+          blob 177f3ad34f4198e87f9d8353b10d9724a816c55d, 113466 bytes
+  output: 206652 bytes, sha256 07e2cf146049a00220d9ae56c650040cc405aa855e60b7704d1537331032c859
+
+== the reading that matters ==
+  committed frontend/src/generated/api.ts on the line: blob c3810367191db548e2a82c109605aefd7ba52f3b
+      sha256 07e2cf146049a00220d9ae56c650040cc405aa855e60b7704d1537331032c859, 206652 bytes
+  regenerating from the line's own yaml reproduces it BYTE FOR BYTE: True
+
+A hand-merged generated file cannot survive that test -- it would carry a body no command
+emits. So `api.ts` on the line is a product of `contracts/openapi.yaml`, not a third state.
+
+== and the merge the order was about ==
+  merge-tree(cf0ed0b5, f53f7fb8bac5) rc=1   <- what you reviewed: CONFLICT in generated/api.ts
+  merge-tree(8fddeb76a799, 39fb27d4fbf3) rc=0   <- my current head: clean
+
+  line's contracts/openapi.yaml   177f3ad34f4198e87f9d8353b10d9724a816c55d
+  my  HEAD's contracts/openapi.yaml 177f3ad34f4198e87f9d8353b10d9724a816c55d   equal=True
+  line's frontend/src/generated/api.ts   c3810367191db548e2a82c109605aefd7ba52f3b
+  my  HEAD's frontend/src/generated/api.ts c3810367191db548e2a82c109605aefd7ba52f3b   equal=True
+
+So the bytes that landed are the bytes this branch was tested on: the contract gate run, both
+tsc configs and `vite build` were all re-run on the merged tree at head 39fb27d4, and the
+backend suite on that same tree gave 1354 collected / 1329 passed / 9 failed with zero new
+reds against the baseline's named 10.
+
