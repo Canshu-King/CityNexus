@@ -1,0 +1,303 @@
+{
+ "blocks": 32,
+ "tally": {
+  "Q43_GATE_GREEN -> Q43_GATE_GREEN": 7,
+  "Q43_GATE_RED -> Q43_GATE_RED": 23,
+  "NO_CLAIM_FOUND -> Q43_GATE_GREEN_CITED": 1,
+  "Q43_GATE_RED -> Q43_GATE_GREEN": 1
+ },
+ "findings_old_total": 195,
+ "findings_new_total": 112,
+ "green_new": 9,
+ "red_new": 23,
+ "rows": [
+  {
+   "block": "Q_0557.md",
+   "old": "Q43_GATE_GREEN",
+   "old_findings": 0,
+   "new": "Q43_GATE_GREEN",
+   "new_findings": 0,
+   "claims_old": 6,
+   "claims_new": 6
+  },
+  {
+   "block": "ai_1551.md",
+   "old": "Q43_GATE_GREEN",
+   "old_findings": 0,
+   "new": "Q43_GATE_GREEN",
+   "new_findings": 0,
+   "claims_old": 37,
+   "claims_new": 33
+  },
+  {
+   "block": "map_0343.md",
+   "old": "Q43_GATE_RED",
+   "old_findings": 10,
+   "new": "Q43_GATE_RED",
+   "new_findings": 6,
+   "claims_old": 35,
+   "claims_new": 34
+  },
+  {
+   "block": "map_0404.md",
+   "old": "Q43_GATE_RED",
+   "old_findings": 6,
+   "new": "Q43_GATE_RED",
+   "new_findings": 4,
+   "claims_old": 29,
+   "claims_new": 28
+  },
+  {
+   "block": "map_0447.md",
+   "old": "Q43_GATE_GREEN",
+   "old_findings": 0,
+   "new": "Q43_GATE_GREEN",
+   "new_findings": 0,
+   "claims_old": 72,
+   "claims_new": 71
+  },
+  {
+   "block": "n2_0101.md",
+   "old": "Q43_GATE_RED",
+   "old_findings": 3,
+   "new": "Q43_GATE_RED",
+   "new_findings": 3,
+   "claims_old": 18,
+   "claims_new": 16
+  },
+  {
+   "block": "n2_0105.md",
+   "old": "Q43_GATE_RED",
+   "old_findings": 6,
+   "new": "Q43_GATE_RED",
+   "new_findings": 3,
+   "claims_old": 8,
+   "claims_new": 5
+  },
+  {
+   "block": "n2_0144.md",
+   "old": "Q43_GATE_RED",
+   "old_findings": 3,
+   "new": "Q43_GATE_RED",
+   "new_findings": 3,
+   "claims_old": 5,
+   "claims_new": 5
+  },
+  {
+   "block": "n2_0152.md.my_superseded_by_n2_1540.md",
+   "old": "Q43_GATE_RED",
+   "old_findings": 3,
+   "new": "Q43_GATE_RED",
+   "new_findings": 3,
+   "claims_old": 5,
+   "claims_new": 5
+  },
+  {
+   "block": "n2_0156.md.my_superseded_by_n2_1540.md",
+   "old": "Q43_GATE_RED",
+   "old_findings": 5,
+   "new": "Q43_GATE_RED",
+   "new_findings": 4,
+   "claims_old": 18,
+   "claims_new": 17
+  },
+  {
+   "block": "n2_0200.md.my_superseded_by_n2_1540.md",
+   "old": "Q43_GATE_RED",
+   "old_findings": 2,
+   "new": "Q43_GATE_RED",
+   "new_findings": 2,
+   "claims_old": 5,
+   "claims_new": 5
+  },
+  {
+   "block": "n2_0213.md.my_superseded_by_n2_1540.md",
+   "old": "Q43_GATE_RED",
+   "old_findings": 15,
+   "new": "Q43_GATE_RED",
+   "new_findings": 15,
+   "claims_old": 23,
+   "claims_new": 23
+  },
+  {
+   "block": "n2_0219.md.my_superseded_by_n2_1540.md",
+   "old": "Q43_GATE_RED",
+   "old_findings": 3,
+   "new": "Q43_GATE_RED",
+   "new_findings": 3,
+   "claims_old": 3,
+   "claims_new": 3
+  },
+  {
+   "block": "n2_0224.md.my_superseded_by_n2_1540.md",
+   "old": "Q43_GATE_RED",
+   "old_findings": 5,
+   "new": "Q43_GATE_RED",
+   "new_findings": 4,
+   "claims_old": 5,
+   "claims_new": 4
+  },
+  {
+   "block": "n2_0228.md.my_superseded_by_n2_1540.md",
+   "old": "Q43_GATE_RED",
+   "old_findings": 7,
+   "new": "Q43_GATE_RED",
+   "new_findings": 4,
+   "claims_old": 7,
+   "claims_new": 4
+  },
+  {
+   "block": "n2_0430.md.my_superseded_by_n2_1539.md",
+   "old": "Q43_GATE_RED",
+   "old_findings": 1,
+   "new": "Q43_GATE_RED",
+   "new_findings": 1,
+   "claims_old": 10,
+   "claims_new": 10
+  },
+  {
+   "block": "n2_1539.md",
+   "old": "Q43_GATE_GREEN",
+   "old_findings": 0,
+   "new": "Q43_GATE_GREEN",
+   "new_findings": 0,
+   "claims_old": 10,
+   "claims_new": 10
+  },
+  {
+   "block": "n2_1540.md",
+   "old": "NO_CLAIM_FOUND",
+   "old_findings": 0,
+   "new": "Q43_GATE_GREEN_CITED",
+   "new_findings": 0,
+   "claims_old": 0,
+   "claims_new": 0
+  },
+  {
+   "block": "n2_1759.md",
+   "old": "Q43_GATE_RED",
+   "old_findings": 9,
+   "new": "Q43_GATE_RED",
+   "new_findings": 2,
+   "claims_old": 18,
+   "claims_new": 9
+  },
+  {
+   "block": "n2_1824.md",
+   "old": "Q43_GATE_RED",
+   "old_findings": 3,
+   "new": "Q43_GATE_RED",
+   "new_findings": 3,
+   "claims_old": 23,
+   "claims_new": 19
+  },
+  {
+   "block": "n3_0524.md",
+   "old": "Q43_GATE_RED",
+   "old_findings": 1,
+   "new": "Q43_GATE_RED",
+   "new_findings": 1,
+   "claims_old": 38,
+   "claims_new": 36
+  },
+  {
+   "block": "qoder-0370_0130.md",
+   "old": "Q43_GATE_RED",
+   "old_findings": 13,
+   "new": "Q43_GATE_RED",
+   "new_findings": 7,
+   "claims_old": 126,
+   "claims_new": 126
+  },
+  {
+   "block": "qoder-0370_0148.md",
+   "old": "Q43_GATE_RED",
+   "old_findings": 8,
+   "new": "Q43_GATE_RED",
+   "new_findings": 7,
+   "claims_old": 33,
+   "claims_new": 32
+  },
+  {
+   "block": "qoder-0380_0314.md",
+   "old": "Q43_GATE_RED",
+   "old_findings": 2,
+   "new": "Q43_GATE_RED",
+   "new_findings": 2,
+   "claims_old": 20,
+   "claims_new": 20
+  },
+  {
+   "block": "qoder-0382_1510.md",
+   "old": "Q43_GATE_GREEN",
+   "old_findings": 0,
+   "new": "Q43_GATE_GREEN",
+   "new_findings": 0,
+   "claims_old": 10,
+   "claims_new": 10
+  },
+  {
+   "block": "qoder-0385_0356.md",
+   "old": "Q43_GATE_RED",
+   "old_findings": 8,
+   "new": "Q43_GATE_RED",
+   "new_findings": 8,
+   "claims_old": 39,
+   "claims_new": 35
+  },
+  {
+   "block": "qoder-0389_0524.md",
+   "old": "Q43_GATE_RED",
+   "old_findings": 6,
+   "new": "Q43_GATE_RED",
+   "new_findings": 5,
+   "claims_old": 43,
+   "claims_new": 40
+  },
+  {
+   "block": "qoder-0389r2_1545.md",
+   "old": "Q43_GATE_GREEN",
+   "old_findings": 0,
+   "new": "Q43_GATE_GREEN",
+   "new_findings": 0,
+   "claims_old": 10,
+   "claims_new": 8
+  },
+  {
+   "block": "rel_0338.md",
+   "old": "Q43_GATE_RED",
+   "old_findings": 35,
+   "new": "Q43_GATE_RED",
+   "new_findings": 8,
+   "claims_old": 75,
+   "claims_new": 52
+  },
+  {
+   "block": "rel_0408.md",
+   "old": "Q43_GATE_RED",
+   "old_findings": 17,
+   "new": "Q43_GATE_GREEN",
+   "new_findings": 0,
+   "claims_old": 62,
+   "claims_new": 44
+  },
+  {
+   "block": "rel_0437.md",
+   "old": "Q43_GATE_RED",
+   "old_findings": 24,
+   "new": "Q43_GATE_RED",
+   "new_findings": 14,
+   "claims_old": 58,
+   "claims_new": 52
+  },
+  {
+   "block": "s4_1600.md",
+   "old": "Q43_GATE_GREEN",
+   "old_findings": 0,
+   "new": "Q43_GATE_GREEN",
+   "new_findings": 0,
+   "claims_old": 9,
+   "claims_new": 8
+  }
+ ]
+}
