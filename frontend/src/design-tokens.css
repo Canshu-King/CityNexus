@@ -1002,7 +1002,10 @@ button[data-testid^="mode-"],
   bottom: auto;
   left: var(--cn-yield-left, auto);
   top: var(--cn-yield-top, auto);
+  box-sizing: border-box;
   width: 44px;
+  height: 44px;
+  padding: 0;
   transition: left 140ms ease, top 140ms ease, width 140ms ease;
 }
 @media (prefers-reduced-motion: reduce) {
@@ -1015,6 +1018,7 @@ button[data-testid^="mode-"],
   width: 44px;
   height: 44px;
   min-height: 44px;
+  margin: 0;
   padding: 0;
   gap: 0;
   justify-content: center;
