@@ -16588,6 +16588,24 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### CMDR 2026-09-28 18:50 · 号令者 · ORD-0399 已落地并亲测通过；派 ORD-0402（回收站一屏）与 ORD-0403（地图控件收敛）
+
+**ORD-0399 落地**：recut `8d7652eadc6ee0727817d257dd6962eb5ce617ec`（对车道候选 `6fdaafef752e82d51b63fc9739ed502ed3fadd5a` 逐文件比字节，11 个合入文件全等；落地门件 blob `096a68190c9e628ede3d8e3d2ef6c9fda72595d5`，路径 `evidence/cmdr-landing-ORD-0399-r1/preflight_r1.json`）。车道随后推的 `refs/heads/review/ORD-0399-journey-undelete-r2` 头 `c19db17b` 与我这枚相比产品文件**逐字节相同**，只多 5 份 `review/ord0399-readouts/` 读数件——我不重复落产品，等它 rebase 到现尖再收那批件。
+**我亲测的那一遍（真 HTTP，不是测试套件的复述）**：私有库副本 + 私有 uvicorn（我自己的端口，netstat 监听 pid 的 ParentProcessId 就是我起的进程号，命令行就是我那行 uvicorn），八格判据全真：删除那腿 status 204、列表少 1、`POST /api/v1/journeys/{id}/undelete` 回 200 并带回那枚行程、列表恢复、重复点第二次 409 且 `reason_code=JOURNEY_NOT_DELETED`、不存在的 id 404 且 `reason_code=JOURNEY_NOT_FOUND`、审计表落 `journey.undeleted` 且 before/after 都写的是 `deleted_at` 真值。件 blob `bd6fdb36476ffcfe9352cac59bd67497a6a7ff35`（路径 `evidence/cmdr-verify-ORD-0399/walk_http_r3.json`），命令与原始读数在 `evidence/cmdr-verify-ORD-0399/cmdr_measures_r1.txt`（blob `b69f2eca835beea6a7f64437cb3b66aff587f129`）。
+**我自己的仪表错过两次，如实报**：r1 我拿被截到 220 字符的正文头去判 `reason_code`（它在正文靠后），r2 我把"监听 pid"与"父 pid"当成同一个数比——两格都是尺的错，不是产品的错；r3 才是上面那组数。
+**回归判定用对照臂做的，不是靠感觉**：我第一份导出没带 `frontend/`，整套跑出 16 红，看着像我把线弄坏了；把同一批 nodeid 在**父尖 e7286dfd47db2dd9a1420867dd534b906b2d032a 的同款导出**上再跑，多出来的几格逐格同样红（`frontend/src/generated/api.ts`、`PACKAGE-MANIFEST.json`、`CL.SCAN_ROOTS` 都在这几格的读取清单里，件 blob `8b11c4b627a0ec3c34de563b39ca61cb14f59c29`，路径 `evidence/cmdr-verify-ORD-0399/control_parent_tip_3suspects_r1.log`）。补齐整树导出后重跑：9 红、1401 通过、15 跳过、1 xfailed（件 blob `52661b1787214f3debcde2b966b04c2978e47cf5`，路径 `evidence/cmdr-verify-ORD-0399/suite_full_export_r2.log`）；与具名基线（5b0b825c 那一跑的 10 红）逐 nodeid 比：**少 2 格、多 1 格**，多的那格 `test_qoder_g3_xproc_http.py::test_g3_xproc_two_uvicorn_workers_over_http_share_one_operation` 单跑通过（件 blob `fdd59f06b3f4148c3b36bfcd74e70d683f998762`，路径 `evidence/cmdr-verify-ORD-0399/g3xproc_alone_r1.log`），所以它是顺序敏感那一族的，已归到 ORD-0396，不记在本笔落地头上。本笔落地的回归数我按 `0` 记。
+**给自己的一条规矩**：落地门的 `--tests` 我这轮没传，门只做了 collect（1426 条，件 blob `096a68190c9e628ede3d8e3d2ef6c9fda72595d5`）与字节等值，执行臂是空。以后凡候选改 `backend/app/**`，落地命令必须带 `--tests`，把车道自己的测试文件在门的导出里跑一遍再移动线。
+
+**ORD-0402 → 分两切片**（切片 1 = 0383/0399 那条线；切片 2 = 车道 Q `a68b0631`，用 ORD-0392 刚交付的注册表，别再开外壳）
+- 切片 1（后端，只读）：给回收站一条**列已丢弃行程**的门。硬约束：① 现有 `GET /api/v1/journeys` 的语义一个字都不许改（它的 docstring 已把"只过滤 `deleted_at IS NULL`"写成承诺）；② 每条必须带回 `deleted_at` 的原值和一个具名的"它在回收站里"状态，不要让前端用"列表里没有"去反推；③ `contracts/openapi.yaml` 同笔改，并且**同时**重生成 `frontend/src/generated/api.ts`（上面那三格 contract-sync 测试就是为这件事红的，别让车道 Q 撞第二遍）；④ 不带分页、不带按人作用域就照实写"这一版只有全量"，别在文案里承诺筛选。
+- 切片 2（前端，注册表面板）：一屏「回收站」，每行给「找回」按钮。措辞纪律：动词只能是「找回」，"恢复"在这个产品里已被 autonomous recovery 占了；`JOURNEY_NOT_DELETED` 那条 status 409 要在屏上说人话（"这条已经在你的行程列表里了"），不许只念码；**不许出现"彻底删除"**——那条路由不存在，文案承诺不得超过机制能力（ORD-0385 定的）。
+- 我的验收方式（写下来免得白做）：私有库副本 + 私有 uvicorn 上真点两臂（找回成功一次、重复点一次），390×844px 视口下每一枚按钮的 hit-test，加一次字典↔产物逐值核对（同一判据已用过的件 blob `bd6fdb36476ffcfe9352cac59bd67497a6a7ff35`）。
+
+**ORD-0403 → 地图线 `3b65af59`**：ORD-0390 的双向选中在真场景里还吃不到坐标（那是 ORD-0394 切片 2 的事，别等它），先把**地图控件收敛**做完：抽一个具名控件组件，含"回到当前行程视野"一键，图标要能表达视口当前是否正落在目标；图上标注白名单只放"名称 + 类别 + 起/终/日"，`text-field` 取值集合内不得出现时间/价格/来源。验收必须留那句：**两态不得靠 `interactive:false` 蒙过门禁**——我要看的是点击地图上的标记真的改变卡片选中态。
+
+**没改善的部分**：① 回收站现在只有服务端那半，手机上还看不到任何"找回"入口（ORD-0402 切片 2 才补上）；② hop1 数据面仍是 16:17 那份导出树，`deleted_at` 列与 `undelete` 门都不在上面，所以今晚所有 journey 生命周期类结论都只能在私有端口成立，手机链是 `NOT-DEPLOYED-OBSERVED`；③ 换 hop1 要动库列，仍等用户点头。
+
+
 ### ORD-0398 第二步已交 · 车道 rel · 一具名产点收口，曝光面 growth=0 · 2026-09-28 1847+08
 
 不接 ORD-0401（已按令避开 `frontend/src/app/V8Experience.tsx` 与 today-strip 那区：本笔改动的文件清单只有 `git show --stat 663cfa3065fcd5677d85446d142d090a246aa780` 里那 files=3，V8Experience 不在其中）。
