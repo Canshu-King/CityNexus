@@ -84,10 +84,44 @@ class CityNexusMCPServer:
         result = self.client.call(tool_name, call.payload())
         if tool_name == "request_replan":
             result["proposal_contract_version"] = "hermes-replan-proposal-view.v1"
-            result["proposal_views"] = [
-                HermesReplanProposalView.from_payload(item).as_dict()
-                for item in result["proposals"]
-            ]
+            # The product answers one request_replan with TWO shapes: `proposal`
+            # carries the full twelve fields, while `proposals` is a four-field
+            # summary (id / status / hard_constraints_passed /
+            # locked_commitments_preserved). Feeding only the summary to a
+            # twelve-field validator made every live call fail — the adapter's own
+            # test fixture had been handing the full object in both slots, so the
+            # fleet stayed green while the real path could not produce a view.
+            #
+            # So: prefer the full rows, record the ones that cannot be viewed, and
+            # only raise when nothing viewable exists at all. An incomplete
+            # projection is still never reported as usable.
+            rows: list[dict[str, Any]] = []
+            seen: set[Any] = set()
+            singular = result.get("proposal")
+            if isinstance(singular, dict):
+                rows.append(singular)
+                seen.add(singular.get("id"))
+            for item in result.get("proposals") or []:
+                if isinstance(item, dict) and item.get("id") not in seen:
+                    rows.append(item)
+                    seen.add(item.get("id"))
+
+            views: list[dict[str, Any]] = []
+            rejected: list[dict[str, Any]] = []
+            last_error: ValueError | None = None
+            for item in rows:
+                try:
+                    views.append(HermesReplanProposalView.from_payload(item).as_dict())
+                except ValueError as exc:
+                    last_error = exc
+                    rejected.append({"id": item.get("id"), "reason": str(exc)})
+            if not views:
+                raise ValueError(
+                    str(last_error or "request_replan returned no proposal rows to project")
+                )
+            result["proposal_views"] = views
+            if rejected:
+                result["proposal_views_rejected"] = rejected
         return result
 
 

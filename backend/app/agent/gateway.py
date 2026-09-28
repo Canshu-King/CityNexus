@@ -438,6 +438,20 @@ class AgentToolGateway:
             "twin": twin,
         }
 
+    # The agent surface used to hand back *every* persisted proposal with its full
+    # diff / explanation / score breakdown. Measured on the Hermes lane DB (22
+    # proposals) one `list_replans` call returned 2,922,724 bytes — a single tool
+    # read larger than any model's usable context, so the first thing an agent does
+    # after a replan blew the window it was trying to reason about.
+    #
+    # The bound below degrades the OLDEST rows' heavy fields first (the newest
+    # proposal is the one an agent actually acts on) and always says so in the
+    # envelope. A small read — which is what every existing witness uses — still
+    # gets the untouched 12-field shape, so this is not a contract loosening.
+    LIST_REPLANS_MAX_ITEMS = 20
+    LIST_REPLANS_BYTE_BUDGET = 200_000
+    LIST_REPLANS_HEAVY_FIELDS = ("diff", "explanation", "score_breakdown")
+
     def list_replans(self, request: AgentToolCall) -> dict[str, Any]:
         journey = _require_journey(self.session, request.journey_id)
         from app.main import _replan_payload
@@ -445,12 +459,34 @@ class AgentToolGateway:
         proposals = self.session.scalars(
             select(ReplanProposal)
             .where(ReplanProposal.journey_id == journey.id)
-            .order_by(ReplanProposal.created_at, ReplanProposal.id)
+            .order_by(ReplanProposal.created_at.desc(), ReplanProposal.id.desc())
         ).all()
+        total = len(proposals)
+        items = [_replan_payload(item) for item in proposals[: self.LIST_REPLANS_MAX_ITEMS]]
+
+        omitted: list[str] = []
+
+        def payload_bytes() -> int:
+            return len(json.dumps(items, ensure_ascii=False, default=str).encode("utf-8"))
+
+        for item in reversed(items):
+            if payload_bytes() <= self.LIST_REPLANS_BYTE_BUDGET:
+                break
+            for field in self.LIST_REPLANS_HEAVY_FIELDS:
+                if field in item:
+                    item.pop(field)
+                    omitted.append(f"{item['id']}:{field}")
+
         return {
             "tool": "list_replans",
             "decision": AuthorizationDecision.ALLOW_AUTO.value,
-            "proposals": [_replan_payload(item) for item in proposals],
+            "proposals": items,
+            "order": "newest_first",
+            "total": total,
+            "returned": len(items),
+            "truncated": total > len(items),
+            "byte_budget": self.LIST_REPLANS_BYTE_BUDGET,
+            "detail_fields_omitted": omitted,
         }
 
     def search_city_services(self, request: AgentToolCall) -> dict[str, Any]:
