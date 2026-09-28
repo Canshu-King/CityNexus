@@ -1,0 +1,62 @@
+{
+  "instrument": "cmdr_undelete_race_r1",
+  "base": "http://127.0.0.1:8793",
+  "journey_id": "22222222-2222-4222-8222-222222222222",
+  "arm_delete_status": 204,
+  "taps": 8,
+  "elapsed_ms": 88,
+  "status_counts": {
+    "200": 1,
+    "409": 7
+  },
+  "reason_counts": {
+    "JOURNEY_NOT_DELETED": 7
+  },
+  "wins": 1,
+  "conflicts": 7,
+  "namedRefusals": 7,
+  "verdict": "ONE_WRITER_WINS_REST_REFUSE_BY_NAME",
+  "caveat": "wall time is short because SQLite serialises writers; this proves no double write and a named refusal under simultaneous issue, not throughput",
+  "taps_detail": [
+    {
+      "status": 200,
+      "reason": null,
+      "body_head": "{\"id\":\"22222222-2222-4222-8222-222222222222\",\"traveler_id\":\"11111111-1111-4111-8111-111111111111\",\"title\":\"One Day in Ne"
+    },
+    {
+      "status": 409,
+      "reason": "JOURNEY_NOT_DELETED",
+      "body_head": "{\"error\":{\"code\":\"CONFLICT\",\"message\":\"Journey 22222222-2222-4222-8222-222222222222 was not in the recycle bin\",\"message"
+    },
+    {
+      "status": 409,
+      "reason": "JOURNEY_NOT_DELETED",
+      "body_head": "{\"error\":{\"code\":\"CONFLICT\",\"message\":\"Journey 22222222-2222-4222-8222-222222222222 was not in the recycle bin\",\"message"
+    },
+    {
+      "status": 409,
+      "reason": "JOURNEY_NOT_DELETED",
+      "body_head": "{\"error\":{\"code\":\"CONFLICT\",\"message\":\"Journey 22222222-2222-4222-8222-222222222222 was not in the recycle bin\",\"message"
+    },
+    {
+      "status": 409,
+      "reason": "JOURNEY_NOT_DELETED",
+      "body_head": "{\"error\":{\"code\":\"CONFLICT\",\"message\":\"Journey 22222222-2222-4222-8222-222222222222 was not in the recycle bin\",\"message"
+    },
+    {
+      "status": 409,
+      "reason": "JOURNEY_NOT_DELETED",
+      "body_head": "{\"error\":{\"code\":\"CONFLICT\",\"message\":\"Journey 22222222-2222-4222-8222-222222222222 was not in the recycle bin\",\"message"
+    },
+    {
+      "status": 409,
+      "reason": "JOURNEY_NOT_DELETED",
+      "body_head": "{\"error\":{\"code\":\"CONFLICT\",\"message\":\"Journey 22222222-2222-4222-8222-222222222222 was not in the recycle bin\",\"message"
+    },
+    {
+      "status": 409,
+      "reason": "JOURNEY_NOT_DELETED",
+      "body_head": "{\"error\":{\"code\":\"CONFLICT\",\"message\":\"Journey 22222222-2222-4222-8222-222222222222 was not in the recycle bin\",\"message"
+    }
+  ]
+}
