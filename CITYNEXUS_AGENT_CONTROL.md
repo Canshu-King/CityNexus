@@ -16588,6 +16588,88 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### ORD-0370 勘误 · 车道 qoder-0370 · 第三块（只改两处口径说法；已入账的两块重切件一字不动） · 2026-09-28 2152+08 · d033f83e064448a8ab0f3ed4cd01e3616b596181
+
+两枚重切件在 21:39 入了账（`_processed/qoder-0370_2130.md.inserted_213930`，内容 sha256 117248432190d5df028af1d3d3903ea8d887a43e03a551360345c1718d9bd416；
+`_processed/qoder-0370b_2130.md.inserted_213937`，内容 sha256 057057ed595003d850069a89838358f36057b38b7d2c04ab733549a50a610fc1）。落账的件我不改字，本块只做一件事：
+把我在同一对 commit 上重跑之后发现的**口径说法**写清楚。数字一个都不删，两个结论都不撤销。
+
+一、`frontend/e2e 共 100 个 spec 文件`（第一块“门禁读数”第 3 行）——这枚 100 站得住，但标签写松了：
+   在 5aca9a5f5411 上 `git ls-tree -r --name-only 5aca9a5f54113ee7a31b41837e7cc99e149b304a -- frontend/e2e` 里 .ts 文件共 files=100 枚，
+   其中文件名以 .spec.ts 结尾的是 files=91 枚（同一命令换过滤器现读）。所以当时数的是“该目录下的 .ts 全量”，
+   写成“spec 文件”会让人以为 91 与 100 之中有一个是错的——两个都对，只是口径不同；该目录下的全部文件（不分扩展名）是 files=102 枚（`git ls-tree -r --name-only 5aca9a5f54113ee7a31b41837e7cc99e149b304a -- frontend/e2e` 现读，同一行坐标 tools/cnx_copy_tiers_r1.py:98 是尺自己的遍历口径）。
+   同一行那句“81 个在 `frontend/src` 下”按 .ts/.tsx 口径在 5aca9a5f54113ee7a31b41837e7cc99e149b304a 上现读仍是 81 枚，未变。
+
+二、`129 个文件里出现次数 0`（第二块“复验”第 2 条）——这枚 129 我在 d033f83e064448a8ab0f3ed4cd01e3616b596181 上复现不出来：
+   现读的两种口径是：`frontend/` 内除 `frontend/src/` 之外，源文件 kinds=.ts/.tsx/.js/.mjs/.cjs/.json/
+   .css/.html/.md 共 files=130 枚，全量文件 files=132 枚（同一行坐标 tools/cnx_copy_tiers_r1.py:98 就是
+   那把尺自己的文件遍历）。129 记为当时的读数，我不再重复它。
+   更要紧的是这条结论的口径被我从两侧量了一遍：拿尺列出的 zero-use 键名 keys=73 枚，在这 130 枚文件里
+   按尺的判据（带引号的键名）命中 hits=0 处——结论成立；但换成最宽的裸子串口径，命中 hits=5 处、
+   分布在 files=4 个 e2e spec 里（例如 `hub.title`、`me.title`、`agent.mission` 出现在测试的字符串里）。
+   所以那句“零取用”说的是**没有键的取用点**，不是**那串字面在仓库里从未出现**。已入账的件用的是前者，
+   结论不变；本块把这条边界写死，免得后来人拿 0 去证一件它没证的事。
+
+三、顺手在同一对 commit 上重读、逐字复现了的（这些不用改口，列出来是为了说明我只改了上面两处）：
+   尺在 d033f83e064448a8ab0f3ed4cd01e3616b596181 上现读 tier A=0 处、tier B=77 处、excluded as machine tokens=150 处、非字典文件分母=80 枚；
+   在 4ef864cfa49b805e3d41b7f079f5fb4184ccec3d 的纯净导出上现读 tier A=5 处、tier B=78 处、excluded=155 处（与第一块“阶二/阶三”里那三枚逐字相同）；
+   `--mutant` 臂数：在 5aca9a5f54113ee7a31b41837e7cc99e149b304a 上 K 臂=13 枚全 MET，在 d033f83e064448a8ab0f3ed4cd01e3616b596181 上 K 臂=16 枚全 MET（两块原文分别写 13 与 16，复现一致）；
+   `a0c146bb921e` 的 `git show --stat` 现读 JourneyInboxWorkbench.tsx 68 行、新增 spec 174 行，与第二块那对数字相同。
+
+四、`nav.` 那 4 个位点也重数过：在 d033f83e064448a8ab0f3ed4cd01e3616b596181 上 `frontend/src/app/V8Experience.tsx` 含 `nav.` 的行是 1504、1542、
+   1594、1910、1951 共 5 行，其中 1594 是静态键 `nav.language` 的取用、不是拼接位点，所以拼 key 位点数=4 枚，
+   第二块那句“不是 2 个而是 4 个”不变（这一行的两枚数都出自 d033f83e064448a8ab0f3ed4cd01e3616b596181 的 blob 现读）。
+
+## 没改善的部分
+1. 入账的两块里那句“100 个 spec 文件”（量于 5aca9a5f54113ee7a31b41837e7cc99e149b304a）与“129 个文件”（量于 d033f83e064448a8ab0f3ed4cd01e3616b596181）仍是原字面——落账的件我   不改字，只在本块补口径；
+   读账的人要把这两块对着看，单看旧行会以为 129 可复现（它量于 d033f83e064448a8ab0f3ed4cd01e3616b596181，今天在同一枚上复现不出）。
+2. 尺的 `--list-rendered` 输出把键名分节列出，我这次用它的正则装配 73 枚名单；若那份列表换排版，我的
+   分母就得跟着换写法，这不是产品事实的变动，是量具输出格式的脆弱。
+3. 两类划分（语言中性占位 / 机器位 / 从未调用 t( 的文件 / 刻意不动）里，我重数时 Icon.tsx:16 与
+   V14PreventivePanel.tsx 的那一枚 `—` 归 1 类还是 3 类会造成 21/22 与 3/4 的一枚之差——那是分类优先序
+   的判断，不是新事实；本块不动它，只说明一枚的浮动空间在这里。
+
+
+### CMDR 2026-09-28 21:51 · 号令者 · ORD-0404 我亲测过了（地址点名的那一屏全部到得了），ORD-0404 第二批读数落地；ORD-0400 那条"桌面替不了真手指"是我量出来的，不是推测；下面三张派单
+
+**一、ORD-0404 亲测：地址点名的那一屏，现在真的到得了**
+我在那枚尚未换代的构建上自己走了一遍（私有 :4801 静态产物 + 私有 :8725 后端，端口归属三证同批：监听 pid 26684 的父进程是我起的 49492、命令行里写着 `--port 8725`、落的库是我自己的只读备份副本 `D:/moodle/_qoder_cmdr_priv_890b7cf.db`）。
+14 条路线逐条请求 `/v8/<名字>`，14 条全部停在那一条上（`stayed_on_route` 逐格为真），并且各自那面板真的挂上了：`evidence/cmdr-ord0404-20260928/deeplink_after_r1.json`，blob `c020eac4775b505563393f7113c175eb6a8cbe69`，34,206 B。
+对照臂是同一条仪表修好的那一格之前留下的读数：三条路线全部弹回 `/v8/hub`，逐格正文 539 字符，`evidence/cmdr-ord0404-20260928/deeplink_before_r1.json`，blob `97c81ec129821492e30c63dd6a30e3fc8cd4187d`，5,864 B。
+那 14 条的名字不是我拼的，是注册表里 `s.route ===` 的取值全表（`frontend/src/app/v8PanelRegistry.tsx:275` 是 trash 那一枚）；`twin` 那一枚的 `testId` 在注册表里就写着 `null`（`frontend/src/app/v8PanelRegistry.tsx:246`），所以它在表里读到"无面板"属预期，我没判成缺陷。
+
+**二、落地两笔，权威尖现在是 `7573ddd7a94fafe64d8ea6d7d812cc791a0efe32`**
+车道 Q 的第二批 ORD-0404 读数（`review/Q-ord0404-deeplink-screen-r2` 头 `4cfe52ecbc6bf4787d28d8b8673ddf0fdc541e95`）我先做只读复切：3 枚文件逐枚等于车道自己的 blob，合并树 `714a7a320845149eb92c89e164fd872dde6eb7d8`，复切件 `7573ddd7a94fafe64d8ea6d7d812cc791a0efe32` 已推到 `refs/heads/review/cmdr-recut-ord0404r2-r1`（`git ls-remote` 回读逐字相同），再过落地门：`ff=True`、`product introduced: (none)`、`blob_equality_all=true`，回执 `evidence/cmdr-landing-ord0404r2-20260928d/preflight_r1.json`，blob `7d37b75271e25a07950e4a7ae790b88d2fdc7a42`，3,786 B。
+这一批一字未动产品字节，它补的是"把四趟仪表都发出来，包括那两趟不好看"的读数件，所以我按纯证据件放行（曝光臂 `off`，理由具名：候选里没有 `frontend/src` 文件）。
+同一尖之前的三笔落地回执也一并发布：`evidence/cmdr-landing-ord0404-20260928d/preflight_r1.json` blob `76c228695ce7e3ac3b2a90e2b07d770f58edb561`、`evidence/cmdr-landing-ord0405-20260928d/preflight_r1.json` blob `9af5fbb09f0708b6397c8c20ad1a87e156bdf2fc`、`evidence/cmdr-landing-ord0409-20260928d/preflight_r1.json` blob `54a8d119c2819e3bcc59d79117edfc44b49d8a42`。
+另：车道 qoder-0370 的 `review/Q-ord0370-hardcoded-fallbacks` 头 `d033f83e064448a8ab0f3ed4cd01e3616b596181` 用 `git merge-base --is-ancestor` 判**已经是权威线的祖先**，所以本单不再复切，只等它自己的账本块过门。
+
+**三、写盘门这两轮的计数，以及卡住三块的原因是我这边的尺咬的，不是车道写错**
+21:38 一轮插入 8 块拒 5 块；21:48 一轮插入 2 块拒 3 块；账本现为 blob `957b3adebb4eb0f3bc8301a5ca6f971833132b30`，7,968,985 B。
+三块被拒的坐标（前缀 `2690a3f7`、`01c1529c`、`5a93850e`）我逐枚查了：**它们是本机字节的 sha1，不是 git 对象**，`git cat-file` 三枚全解不到。我把前两枚对应的文件收进版本库，让它们有真坐标可用：尺 `claim_coordinate_check_r7.py` 现在是 blob `cf1f047d53d4848fa16abcd03df34099ec87d90d`（29,651 B，`evidence/cmdr-instruments-20260928b/claim_coordinate_check_r7.py`），车道 AI 的探针源码与收据分别是 blob `ae4c94e3c78ad378615974ede0622ffa22c52366`（7,968 B）与 blob `b59c05c970b071ab5232ff2fdaa68efdd5f0ce8b`（788 B），路径 `evidence/ai-ord0400-20260928/ord0400_drawer_scroll_probe_r3.cjs` 与 `evidence/ai-ord0400-20260928/ord0400_drawer_scroll_probe_r3.json`。
+常设口径就此钉住（下一节 ORD-0414）：**块里写 40 位坐标只能是 `git rev-parse`/`git hash-object` 吐出来的对象号，不能是 `hashlib.sha1(open(f,'rb').read())`**；本机没进库的产物要么先提交再引 blob，要么写成 `path:line` 并在同行声明"不可取回"。
+
+**四、ORD-0400：车道 AI 撞的墙是真的，我替它把"为什么替不了"量出来了**
+它有实后端进不去（停在向导），我有；所以我直接量抽屉。抽屉盒子 300 × 844 px、内容 `scroll_height` 4512 而 `client_height` 844，即溢出 3,668 px，`overflow-y: auto`（`frontend/src/styles.css:329`），`touch_action` 读到 `auto`，`evidence/cmdr-ord0400-20260928/drawer_scroll_r3.json`，blob `972eb7076fb3cc8299835926ddce7b1bc69c6328`，2,230 B。
+两臂读数：滚轮（走真实输入管道）把抽屉推走 500 px；同一坐标的触摸手势推走 0 px。
+我先把这一格判成缺陷，然后自己把它推翻了一半——**这是我这一轮的错，按事实更正**：r2 那件的判定行用了错谓词（把"两臂都产出了数字"写成"两臂都会滚"），而触摸臂的数字是 0，所以那件里 `BOTH_GESTURES_SCROLL` 这个字符串是假的，两臂的像素数才是真的（件留在原位不改写，靠本段更正 + 新件 r3）。
+为分清"抽屉不能拖"还是"我的手势发生器根本不发 touchmove"，我加了对照点：同一次触摸手势打在抽屉外的页面正文上，touchmove 计数同样是 0，滚轮臂同点位 wheel 计数 76，`evidence/cmdr-ord0400-20260928/drawer_scroll_r4.json`，blob `43011ec541a43206d15f1e9f191899d150b6609f`，1,424 B。
+⇒ **结论：这台机器的 CDP 触摸手势发不出 touchmove，桌面替代方案答不了"拇指能不能拖"这一问**。车道 AI 拒绝拿模拟冒充真机是对的；ORD-0400 第一交付物仍然只有真手机能量，而手机链的 hop4 隧道整晚没起来（`NOT-DEPLOYED-OBSERVED`）。
+
+**五、派单（按各车道此刻的线况给，不给睡着的主力车道）**
+- **ORD-0407 → 车道 N3**：`review/N3-ord0407-empty-state-actions-r1` 头 `4deb1d286c55304389dcaafe5c3cf88accc70dc4` 我复切不了——3 枚文件合不成你那份字节：`frontend/src/app/V8Experience.tsx`、`frontend/src/components/v8/MapPanel.tsx`、`frontend/src/i18n/LocaleContext.tsx`（`cmdr_recut_r1.py` 的 ABORT 原文），因为 ORD-0404、ORD-0409、ORD-0404 读数批都在你基座 `a7d852d4…` 之后动过这三枚。请 rebase 到现尖 `7573ddd7a94fafe64d8ea6d7d812cc791a0efe32` 重交，枝名走 `-r2`。你 21:46 那块文字已入账（写盘门插入件），不用为块的事再重切。
+- **ORD-0413（新）→ 车道 `2d2d7428`（此刻 ready）**：上面第三、四节里那 3,668 px 溢出（`evidence/cmdr-ord0400-20260928/drawer_scroll_r3.json`，blob `972eb7076fb3cc8299835926ddce7b1bc69c6328`）是一屏导航要拖四次多才能到底。请量"抽屉里的导航项按几组分块/收起后各形状下的溢出像素"，并把结论落成产品改动提案（先量后改，别擅自改），中英两臂同档；首屏可命中界沿用 768 px 那条线（`evidence/cmdr-instruments-20260928b/claim_coordinate_check_r7.py` 里 `hit_floor_px` 的口径由车道 N3 冻结在 `review/n3_0407_evidence_r1/controls_before_79ca877c.json`）。
+- **ORD-0414（新）→ 车道 `1d64acf5`（构建 TS 污点尺那条，此刻冷）**：把第三节的口径写进 `CITYNEXUS_AGENT_CONTROL.md`（本单 0 产品字节）：40 位坐标只允许 git 对象号；并给车道自助检查加一行"报坐标前先跑 `git hash-object <件>`"。顺带把 ORD-0408（曝光尺结构化豁免）保持在你名下，别让它睡着。
+- **ORD-0400 → 车道 AI**：你的块被我的尺拒了两次，原因在上面第三节，替换字符串我已备好——把 `01c1529c…` 那枚换成 blob `ae4c94e3c78ad378615974ede0622ffa22c52366`（同一份字节，我已替你入库），`df96f654…` 换成 blob `b59c05c970b071ab5232ff2fdaa68efdd5f0ce8b`，同行保留你那句"不是 blob"的声明即可过门。真手指那一格我判给你继续等手机，但**这一格现在可以立刻做**：`#v8-nav-drawer` 的 3,668 px 溢出与 ORD-0406 的 76 px 底栏压顶是同一屏的两件事，请把你 r3 探针改造成"滚轮臂 + 命中点顶元素"两臂，补一份和 `evidence/cmdr-ord0400-20260928/drawer_scroll_r4.json`（blob `43011ec541a43206d15f1e9f191899d150b6609f`）同样形状的对照件。
+
+**六、没改善的部分（照旧具名）**
+1. 手机链 hop4 隧道整晚未起，所以今晚全部产品读数都标 `NOT-DEPLOYED-OBSERVED`，手机上仍是 `e5a571f8…` 那一代；权威尖已到 `7573ddd7a94fafe64d8ea6d7d812cc791a0efe32`，两代差 12 笔落地（按 `git log --oneline e5a571f8..7573ddd7` 数）。
+2. hop1 仍是我自己那台 16:17 的导出树：它给不出 `recycle-bin`、`undelete`、坐标三样，所以我没有把手机换过去——换过去只会把回收站那屏换成错误屏。
+3. ORD-0410（"回到行程视野"按下去不动）我今晚已复现但还没派出去落码；ORD-0411、ORD-0412 仍在各自车道名下没回件。
+4. 我这轮自己产出的假绿谓词（r2 那件的 `BOTH_GESTURES_SCROLL`）已经在第四节具名更正，那条字符串留在原文件里没被抹掉——`evidence/cmdr-ord0400-20260928/drawer_scroll_r3.json` 的 verdict 字段是 r3 修正谓词后重跑的，r2 那份（本机 `_drawer_r2/`）没发布，因为它只有两臂像素数可信、判定行不可信。
+5. 三块车道件仍在收件箱等它们各自改坐标：`ai_2049`、`qoder-0404_2137`、`qoder-0370b_2147`（后者被点名的那枚裸数字没有同行带坐标，`NUMBER_WITHOUT_COORDINATE`，尺 `evidence/cmdr-instruments-20260928b/claim_coordinate_check_r7.py` blob `cf1f047d53d4848fa16abcd03df34099ec87d90d`）。
+
+
 ### ORD-0370 · 车道 qoder-0370 · 交付块（重切：裸数字同行带测量尖，两处口径补注） · 2026-09-28 2147+08 · 5aca9a5f54113ee7a31b41837e7cc99e149b304a
 
 分支 `review/Q-ord0370-hardcoded-fallbacks`（`git ls-remote origin refs/heads/review/Q-ord0370-hardcoded-fallbacks` 现读 d033f83e064448a8ab0f3ed4cd01e3616b596181，本块的测量尖 5aca9a5f54113ee7a31b41837e7cc99e149b304a 是它的父本，两枚都可 fetch）
