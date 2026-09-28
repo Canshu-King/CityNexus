@@ -1,0 +1,122 @@
+{
+ "base": "http://127.0.0.1:4802/",
+ "routes_with_oversized_svg": [
+  "drawer_open"
+ ],
+ "per_route": {
+  "drawer_open": {
+   "found": 14,
+   "items": [
+    {
+     "tag_parent": "BUTTON",
+     "cls": "active",
+     "h": 243,
+     "w": 243,
+     "vb": "0 0 24 24",
+     "has_wh": false,
+     "testid": null
+    },
+    {
+     "tag_parent": "BUTTON",
+     "cls": null,
+     "h": 243,
+     "w": 243,
+     "vb": "0 0 24 24",
+     "has_wh": false,
+     "testid": null
+    },
+    {
+     "tag_parent": "BUTTON",
+     "cls": null,
+     "h": 243,
+     "w": 243,
+     "vb": "0 0 24 24",
+     "has_wh": false,
+     "testid": null
+    },
+    {
+     "tag_parent": "BUTTON",
+     "cls": null,
+     "h": 243,
+     "w": 243,
+     "vb": "0 0 24 24",
+     "has_wh": false,
+     "testid": null
+    },
+    {
+     "tag_parent": "BUTTON",
+     "cls": null,
+     "h": 243,
+     "w": 243,
+     "vb": "0 0 24 24",
+     "has_wh": false,
+     "testid": null
+    },
+    {
+     "tag_parent": "BUTTON",
+     "cls": null,
+     "h": 243,
+     "w": 243,
+     "vb": "0 0 24 24",
+     "has_wh": false,
+     "testid": null
+    },
+    {
+     "tag_parent": "BUTTON",
+     "cls": null,
+     "h": 243,
+     "w": 243,
+     "vb": "0 0 24 24",
+     "has_wh": false,
+     "testid": null
+    },
+    {
+     "tag_parent": "BUTTON",
+     "cls": null,
+     "h": 243,
+     "w": 243,
+     "vb": "0 0 24 24",
+     "has_wh": false,
+     "testid": null
+    },
+    {
+     "tag_parent": "BUTTON",
+     "cls": null,
+     "h": 243,
+     "w": 243,
+     "vb": "0 0 24 24",
+     "has_wh": false,
+     "testid": null
+    },
+    {
+     "tag_parent": "BUTTON",
+     "cls": null,
+     "h": 243,
+     "w": 243,
+     "vb": "0 0 24 24",
+     "has_wh": false,
+     "testid": null
+    },
+    {
+     "tag_parent": "BUTTON",
+     "cls": null,
+     "h": 243,
+     "w": 243,
+     "vb": "0 0 24 24",
+     "has_wh": false,
+     "testid": null
+    },
+    {
+     "tag_parent": "BUTTON",
+     "cls": null,
+     "h": 243,
+     "w": 243,
+     "vb": "0 0 24 24",
+     "has_wh": false,
+     "testid": null
+    }
+   ],
+   "path": "/v8/hub"
+  }
+ }
+}
