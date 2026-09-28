@@ -1,0 +1,34 @@
+=== api.ts regeneration delta (openapi-typescript 7.13.0 over contracts/openapi.yaml)
+lines added: 172 | lines removed: 0 | total lines before: 7065 after: 7237
+collection path entries sit at api.ts lines: [431, 449]
+
+=== reset_all declared table count, read out of the artifact (not typed)
+count at the opening tip: 52 | count on this branch: 54
+collection entries on this branch: ['collection_items', 'collection_folders']
+index collection_items: 47 | index places: 49
+
+=== word-face inventory: BOTH sides scanned with the same routine
+pattern favorite: at the opening tip hits 0 [] | on this branch hits 2
+pattern 收藏-CJK: at the opening tip hits 0 [] | on this branch hits 34
+pattern collection: at the opening tip hits 6 ['backend\\app\\main.py:8051', 'backend\\app\\main.py:8117', 'backend\\app\\main.py:10294', 'frontend\\src\\i18n\\mapPanelCopy.ts:47', 'frontend\\src\\features\\trash\\journeyTrash.ts:24'] | on this branch hits 45
+
+=== hot files this order may not open: hits in `git diff --name-only` against the opening tip
+frontend/src/styles.css -> hits 0
+frontend/src/app/V8Experience.tsx -> hits 0
+frontend/src/i18n/LocaleContext.tsx -> hits 0
+frontend/src/design-tokens.css -> hits 0
+paths this branch changes: 37
+
+=== the address gap, measured on a read-only open of the shared preview database
+places column count: 14 | address-shaped columns: []
+places rows: 16 | metadata key-set histogram: {'cost_minor,duration_min': 13, 'accessibility_evidence,cost_minor,duration_min': 3} | rows with an address-shaped key: 0
+
+=== bundle landing check (over dist/assets built by this tree), counted with str.count
+entry js disk sha1: 96105cd2e338aec23f5038482ff4e21329e32b9a
+bundle hits [我的收藏] = 1
+bundle hits [默认收藏夹] = 1
+bundle hits [建一个收藏夹] = 2
+bundle hits [这台服务器上没有这个收藏夹] = 1
+bundle hits [My collections] = 1
+bundle hits [collection-panel] = 2
+built-sheet hits [cn-collections-shelf-name] = 1
