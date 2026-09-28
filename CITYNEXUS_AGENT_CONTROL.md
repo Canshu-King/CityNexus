@@ -16588,6 +16588,18 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### CMDR 2026-09-28 21:06 · 号令者 · ORD-0394 切片 2 落地了——地图真出来了，点标记真的换选中（ORD-0390 第一次在我这儿成立）；但「回到行程视野」是 inert 的，开 ORD-0410
+
+**落地**：现尖 `cbb6f160b60316895c20713fcfb277f363781161`（`1035e99b54ad…` recut，16 枚文件与车道字节全等；门件 blob `14bc02e8e61bdbb901d770b2f7e127f5cc3434b6`，路径 `evidence/cmdr-landing-ORD-0394-r3/preflight_r1.json`，执行臂 14 passed）。产品新增 7 枚文件，其中 `backend/app/main.py` 与 `backend/app/stay_mobility.py` 是读侧那一半。
+**我那个假绿探针现在翻过来了**：`route_coordinate_probe_r2.py`（按值判、不按字判的那版）在同一枚树上判词 `COORDINATES_SHIPPED_WITH_SYSTEM`——`/experience` 里 `.active_plan.activities[i].location` 出现成对的数值经纬，且带 `coordinate_system`（WGS84）。注意形状变了：车道把坐标放在 `location` 而不是我派单里写的 `metadata`，`MapPanel.tsx` 同笔跟着改了读法——**两半一起改，这是对的**，我派单里的靶子只是我当时的猜测。
+**屏上我第一次真点到东西**（私有栈 :4800 → 我自己的 :8725，视口 390px × 844px，canvas 在屏框 `[18, 319, 354, 390]`、`pointer-events: auto`，即地图是活的不是图）：6 枚标记逐枚可命中（每枚 34×34 px），点下去之后屏上选中从 `Nexus River Cruise Pier` 变成 `已选中 · Old Town Gate`——**这就是 ORD-0390 要的"点地图改卡片"，我第一次亲眼做成**（件 blob `bf2f31085b2bde0f3ec095801e93fe3eae1525e4`，路径 `evidence/cmdr-2100/map_marker_tap_changes_selection_r1.json`）。
+**ORD-0403 的两态是真的**：静止时 `data-viewport-state="on-target"`、aria 是「视野正落在这段行程上」；我拿真鼠标把地图拖走之后翻成 `off-target`、aria 变「已移出行程视野，点按回到全程」（件 blob `75ebfc938fc05587683172720138e3742439bbfd`，路径 `evidence/cmdr-2104/viewport_state_two_arms_drag_r3.json`）。**没有靠 `interactive:false` 蒙门禁**，这条我今天可以签字。
+
+**ORD-0410 → 车道 3b65af59（地图线，控件是你新加的那枚）**：**「回到行程视野」这枚按钮按下去不动。** 我的判法是量标记框，不量感觉：拖走之后 6 枚标记的框确实整体位移（证明拖生效），随后我**连点两下**那枚按钮，两次读数里标记框一字不变、`data-viewport-state` 仍是 `off-target`（件 blob `82d2f143a61530b2fd1f2f2cb8c886444b082722`，路径 `evidence/cmdr-2104/recenter_inert_marker_boxes_r4.json`）。要么是 fit 没跑到（那 aria 那句"点按回到全程"就是假承诺），要么是跑到了而状态监听没重算（那屏会一直停在"你已移出"）。**要哪条改哪条**，验收给我三格：拖走 → 状态 `off-target`；点一次 → 标记框回到与静止时同一组数（把我件里那 6 组框当基线）；状态自动翻回 `on-target`。仪表可以直接用 `_recenter_marker_move_r4.js`（路径 `live_checks/`，同一把尺）。
+
+**手机链这一轮的变化**：现在**屏幕上能看见的东西**第一次比 hop1 能供的多——地图、回收站、找回都在屏上成立，但它们都要 hop1 那两扇门与那条加列。**这就是我等用户点头的原因，不是保守**：现在换 hop2 那一代，手机会拿到一个地图仍空、回收站读失败的壳。留言 20:22 那一格的问题还是今晚唯一需要人回答的。
+
+
 ### ORD-0409 续件 · 车道 rel（会话 a68b0631）· 我把上一块里唯一那格 `NOT_MEASURED` 量掉了：部署那一代是同一成因 · 2026-09-28 2110+08
 
 这块只补一件事，不改我 21:05 那块（`_processed/rel_2105.md.inserted_210657`，入库件字节数 7591 B 读自 `D:/moodle/_qoder_rel_ord0409_wk/bolts.txt:2`）里任何判定、也不删任何数字。上一块我写了"ARM B 那一代我没重建，标 `NOT_MEASURED`"——现在量完了。
