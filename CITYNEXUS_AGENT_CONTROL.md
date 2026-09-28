@@ -16588,6 +16588,124 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### 0370 · ORD-0394 切片 2 复查块（只报读数；产品字节、任何 ref、任何共享库一字未动）· 现读尖 214ab0ff9f1d · 2026-09-28 2314+08
+
+尖以我自己现读为准：`git -c http.proxy= -c https.proxy= -C D:/moodle/CityNexus ls-remote origin refs/heads/mirror/integration-frontend-apple-pass1` =
+   214ab0ff9f1dc03ffbd57308797e62552b7ee24a。值守 22:31 报的 869a5b4d6424406451738afdb50ea20e6ef686f3 是它的祖先、commits_behind=9（`git rev-list --count` 现读）；我这片的落地
+   产品尖 8cbdf5a0a28ea56fc2e83352e0ea2054dc857ac8 也是它的祖先、commits_behind=45。本块行号一律在现尖上重取。
+
+## 先说清读数跑在哪一枚上，再给传送证明
+四条臂（闸、反控、编译、离线 openapi）都跑在 a0c5fba9eb98926018c9aff19231a96f3775e245 上，两份收据的 tree 格逐字写着这枚；写盘前尖已移到
+   214ab0ff9f1d，中间 commits_between=4 笔是别的车道投的 evidence/ 与 review/。这一格我不靠大概没动说话，
+   用顶层树对象对：`backend` 在 a0c5fba9 = tree 63af9ea22e41e9e3b7ea3defb562f6a5d9f16ef7，在现尖 = tree 63af9ea22e41e9e3b7ea3defb562f6a5d9f16ef7 —— 相同。
+   用顶层树对象对：`frontend` 在 a0c5fba9 = tree a642eb3e33175bc200aec201b8374a591bef59e9，在现尖 = tree a642eb3e33175bc200aec201b8374a591bef59e9 —— 相同。
+   用顶层树对象对：`contracts` 在 a0c5fba9 = tree cc7a1d57eeca3623885aa12b7b59da252f04427e，在现尖 = tree cc7a1d57eeca3623885aa12b7b59da252f04427e —— 相同。
+   用顶层树对象对：`data` 在 a0c5fba9 = tree b59f60163bdb07c93379e28bc70f8c32b6335b9f，在现尖 = tree b59f60163bdb07c93379e28bc70f8c32b6335b9f —— 相同。
+   两尖 `git diff --name-only` 共变 path_count=17 条；把 evidence 与 review 排除后再数，
+   product_path_changes=0 条（命令 `git diff --name-only a0c5fba9eb98926018c9aff19231a96f3775e245 214ab0ff9f1dc03ffbd57308797e62552b7ee24a -- . ':(exclude)evidence' ':(exclude)review'`）。
+   所以浏览器那批臂不必重跑：产品字节与我点屏那一刻逐字节相同。
+
+## 那四个 op 在现尖上逐条回答：四条仍成立
+op1 读侧 join 把坐标连它的系一起发 —— 成立。定义 backend/app/stay_mobility.py:1642、喂它的批量 place 读 backend/app/stay_mobility.py:1696、发出那一格 backend/app/stay_mobility.py:1779（挂在
+   `metadata` 旁边而非里面），路由 backend/app/main.py:3104。同一份回包逐条数出来：Z1 wire口径: body_bytes=166974 activities=9 location_field_present=9 numeric_latitude=9 coordinate_system_on_numbered=9 sample={"state":"READY","reason":null,"latitude":39.106,"longitude":117.17699999999999,"coordinate_system":"WGS84","source_coordinate_system":null}
+   逐条对账：located_row_count=9、每行的数都等于它点名的那行 place，distinct_point_count=6。
+op2 接不上给具名占位、不回落到任何硬编码城市中心 —— 成立。删掉一枚 place 行后那一格回答
+   `state=UNAVAILABLE reason=COVERAGE_INCOMPLETE latitude=null longitude=null coordinate_system=null`（原文在收据 e4f-rec1_a0c5fba9_223438.log）；卡片格 frontend/src/features/trip/ActivityDetail.tsx:239 的文案 frontend/src/features/trip/ActivityDetail.tsx:246。
+   回落没有发生：把那一行改成编一枚市中心再跑同一套臂，红的正是要件 ④ 那格 —— run_id=cmdr224153e4fm6
+   verdict=RED counts_passed=3 counts_failed=1，断言 frontend/e2e/qoder-ord0394-map-coordinates.spec.ts:234，playwright_line=234。注入只活在我这台机器的
+   scratch worktree 里，跑完 `git checkout --` 还原：注入前 sha256=2df43fe4b3bea13a0756fd5d8f041697b1da115ba92fae1508c70a49c69ffe22、注入后 be4e4d1736c6295441ccc977146a87cd7f3c0c7aaf04697e8be3f8bc7e56c679、还原后 2df43fe4b3bea13a0756fd5d8f041697b1da115ba92fae1508c70a49c69ffe22，
+   首尾全等（本地字节重算，非 git 对象；同段可 cat-file 坐标：那把文件在现尖的 blob 216185fd19440b5b96d5577956b375707e6c6f72；
+   `git status --porcelain` 回读 porcelain_entry_count=0）。
+op3 手机面 390×844 双臂、真路由真数据 —— 成立。Z2 phone 390x844: panel_visible=true markers=9 stops=9；反向 aria_pressed_row_count=1。
+   前向逐字：Z2 forward row->pin: stop=f414f43c title=Check in · Haihe Riverside Hotel lat=39.1321（该行标点类名格 frontend/src/components/v8/MapPanel.tsx:346）。
+   删掉一行坐标后那一屏 marker_count=8 stop_row_count=8（先前 located=9），其余行照常念出来；
+   把九行坐标全删光那形：empty_branch_lit=0 pin_count=0 stop_count=0 —— 面板级空支没亮，
+   原因写在下面没改善第 3 条。选择器都不是臂自造的：类 frontend/src/components/v8/MapPanel.tsx:346、行 test id frontend/src/app/V8Experience.tsx:3780、按下态属性 frontend/src/components/v8/MapPanel.tsx:356、
+   读侧过滤口径 frontend/src/app/V8Experience.tsx:3716。没有往 fixture 补坐标（frontend/e2e/qoder-ord0394-map-coordinates.spec.ts:234 的臂只读 /experience 的活体回包）。
+op4 消费点改读那一格、不再读死的 metadata.latitude —— 成立。谓词 frontend/src/components/v8/MapPanel.tsx:20 是唯一判据；现尖上
+   `git grep -n metadata.latitude / metadata.longitude / metadata 可选链` 在 frontend/src 命中 grep_hit_lines=1 行，
+   逐行看全是注释与文档串，取用点 take_up_count=0。契约与客户端同尖仍在：手写契约 contracts/openapi.yaml:1483、生成客户端 frontend/src/generated/api.ts:2809。
+
+## 对我自己前两块的两格更正（不改旧帖，另发此件）
+那块给的漂移表把 before 取成了我 review 枝尖 ae5f69cac90de5b55906e6a015cff4e970f13e54。现读 `git merge-base --is-ancestor`：这枚不是权威线的祖先——所以它不是落在线上的那份字节。
+   拿它当 before 得出「只有 MapPanel.tsx 变了、V8Experience.tsx 未变」，这句是我说错了。以真正落在
+   权威线上的产品尖 8cbdf5a0a28ea56fc2e83352e0ea2054dc857ac8 作 before 重测，我这八枚在现尖上：
+      backend/app/stay_mobility.py before_tree=8cbdf5a0 blob 216185fd19440b5b96d5577956b375707e6c6f72 -> 现尖 216185fd19440b5b96d5577956b375707e6c6f72  逐字节相同
+      backend/app/main.py before_tree=8cbdf5a0 blob 949035a71882c0565299307c0a24e4d9bb8ebb7d -> 现尖 949035a71882c0565299307c0a24e4d9bb8ebb7d  逐字节相同
+      contracts/openapi.yaml before_tree=8cbdf5a0 blob ee2dc30d0391ba13262e4c6f319b2619b97b5de4 -> 现尖 ee2dc30d0391ba13262e4c6f319b2619b97b5de4  逐字节相同
+      frontend/src/generated/api.ts before_tree=8cbdf5a0 blob 0ac3ff34569dbc1a7105092f1788480567c7034e -> 现尖 0ac3ff34569dbc1a7105092f1788480567c7034e  逐字节相同
+      frontend/src/components/v8/MapPanel.tsx before_tree=8cbdf5a0 blob e5d714075bd8e9db192dcc60c857f25833f28bfd -> 现尖 a178acd299b6e3c90ed04b48acfb2fd3f5c19a04  被改过
+      frontend/src/app/V8Experience.tsx before_tree=8cbdf5a0 blob a5fba656b10d297760a73dd479f72bf07b9ce3d4 -> 现尖 f1c8358248fd6bf0d8fff6d6a51cb97be5ec63fc  被改过
+      frontend/e2e/qoder-ord0394-map-coordinates.spec.ts before_tree=4eeb42d5 blob f81cb0d891b971bdf6ca4058a5343197bd10d75c -> 现尖 a7ae680c258c8bc7f1ed6380616ce69b9c05a2cb  被改过（该产品尖里没有此件，before 取它入库的那枚）
+      frontend/e2e/tools/ord0394_store_edit.py before_tree=4eeb42d5 blob 425b92b4781bc3e71fbbb40506d3203381eb4aa9 -> 现尖 425b92b4781bc3e71fbbb40506d3203381eb4aa9  逐字节相同（该产品尖里没有此件，before 取它入库的那枚）
+   计数：blob_same=5、blob_moved=3、before_取后一枚提交的文件数=2。产品码里被改过的只有 frontend/src/components/v8/MapPanel.tsx、frontend/src/app/V8Experience.tsx；
+   e2e 那侧被改过的是 frontend/e2e/qoder-ord0394-map-coordinates.spec.ts。动过它们的提交逐枚列在这里（全 40 位，`git log 8cbdf5a0a28e..214ab0ff9f1d -- <文件>` 现读，
+   mover_count=5，其中产品码的 mover_count=4）：
+      frontend/src/components/v8/MapPanel.tsx baa6f5dbda57f09500eb575ff6afea357c1c6190 order_tag=ORD-0407
+      frontend/src/app/V8Experience.tsx baa6f5dbda57f09500eb575ff6afea357c1c6190 order_tag=ORD-0407
+      frontend/src/app/V8Experience.tsx 7dc23774658c18492e8a73bbf8bbbfb41e2df8a3 order_tag=ORD-0404
+      frontend/src/app/V8Experience.tsx 27c0d5bbf12628ff0bc56bb8416dabe18b58c719 order_tag=ORD-0404
+      frontend/e2e/qoder-ord0394-map-coordinates.spec.ts fcc06325a7c998337802e2b420f7924c70d1aa74 order_tag=ORD-0394
+   产品码那批 order_tag 是 ORD-0407、ORD-0404，没有 ORD-0394 —— 我这四条 op 的字节不是我自己在动；spec 文件自己那枚
+   mover 是我自己的那一枚 order_tag=ORD-0394（补要件 3 点名的两个计数），它不动产品码。锚点全在：
+   frontend/src/components/v8/MapPanel.tsx:20、frontend/src/components/v8/MapPanel.tsx:493、frontend/src/app/V8Experience.tsx:3716、frontend/src/app/V8Experience.tsx:3780。行号位移实测：谓词 frontend/src/components/v8/MapPanel.tsx:20 -> frontend/src/components/v8/MapPanel.tsx:20（没动）；V8Experience 的过滤 frontend/src/app/V8Experience.tsx:3652 -> frontend/src/app/V8Experience.tsx:3716、
+   停靠行 id frontend/src/app/V8Experience.tsx:3716 -> frontend/src/app/V8Experience.tsx:3780，两处的 line_shift=+64 行。
+
+## 其余闸口读数（跑臂那一刻；由上面的树对账可知在现尖上等值）
+闸：run_id=cmdr223438e4frec1 verdict=GREEN passed=4 failed=0 duration_s=42.8。私有栈 frontend_port=5570 / backend_port=6570，
+   端口带具名格 review/e4f_e2e_r1.py:16；私有库 `_cmdr223438e4frec1.db`；AI key 在子进程启动前摘掉；没跑 demo/reset、没碰 :8000、没碰 _preview.db。
+   收据 e4f-rec1_a0c5fba9_223438.log，log_bytes=15893。
+反控：run_id=cmdr224153e4fm6 verdict=RED counts_passed=3 counts_failed=1，失败格 frontend/e2e/qoder-ord0394-map-coordinates.spec.ts:234。还原证明 sha256=2df43fe4b3bea13a0756fd5d8f041697b1da115ba92fae1508c70a49c69ffe22（全 64 位，
+   本地字节重算），同段可 cat-file 坐标：那把文件 blob 216185fd19440b5b96d5577956b375707e6c6f72。`git status --porcelain` 回读 porcelain_entry_count=0。
+编译臂：node_modules 用 `cp -al` 借，typescript/package.json 的 nlink=9 ⇒ 是链接不是拷贝，没用 junction；
+   跑前逐枚 `git hash-object` 对尖上的 blob，equal_true_count=8 枚、equal_false_count=0 枚（谓词 frontend/src/components/v8/MapPanel.tsx:20、
+   类名 frontend/src/components/v8/MapPanel.tsx:346、卡片 frontend/src/features/trip/ActivityDetail.tsx:239 都在那张对账单里）。`npx tsc -p tsconfig.check.json --noEmit` rc=0；
+   `-p tsconfig.typecheck.json --noEmit` rc=0；`--listFilesOnly` 印 ts_source_file_count=850（output_line_count=895 行）；
+   `npx vite build` rc=0、built_in_s=11.25；产物 `dist/assets/index-DI6XcT_p.js` size_kB=1,333.87 size_bytes=1333867，
+   sha256=d7c7b919aefc0e5104624b37274f6d43fb43ae58611450f5b2a66c459db9b246（64 hex，本地字节重算，非 git 对象；同段可 cat-file 坐标：现尖前端树 a642eb3e33175bc200aec201b8374a591bef59e9）。
+   产物名与我交付那代不同，因为尖上多了别车道的前端字节，不是我这片的字节变了。
+ORD-0395 那格（`app.openapi()` 离线读，导入 app.main，不是读文件）：`/api/v1/demo/reset` 仍声明
+   http_status=200 / http_status=403 / http_status=422，403 的描述照旧点名 RESET_TOKEN_REQUIRED 与
+   RESET_TOKEN_INVALID（声明格 backend/app/main.py:2102）；`/experience` 仍是 http_status=200 与 http_status=422，且 200 的
+   content schema 是空对象：schema_key_count=0、property_count=0。`location` 只在手写契约 contracts/openapi.yaml:1483 与生成
+   客户端 frontend/src/generated/api.ts:2809 里，那仍是 ORD-0383 的响应模型工作，不是我这片能替它决定的。
+后端套件（`git archive a0c5fba9eb98926018c9aff19231a96f3775e245 | tar -x`，PYTHONPATH=导出根，CityNexus/.venv 的 3.12.14，
+   `-X utf8 -q -p no:cacheprovider tests`）：failed=11 passed=1407 skipped=15；末行 11 failed, 1407 passed, 15 skipped, 1 xfailed, 4 warnings 。
+   与我 21:2x 那对红集（mine=10 / base=10，两份逐字相等）比：new_red_count=1、gone_red_count=0。
+   多出来那枚是 `tests/test_qoder_ord0402_recycle_bin.py::test_the_panels_one_constant_and_field_names_match_the_route_that_was_landed`，断言在 backend/tests/test_qoder_ord0402_recycle_bin.py:308（它自己 re.search(...).group(1) 拿到 None 抛 AttributeError），属 ORD-0402
+   回收站门的后续，与我这四条 op 无关。我这片的红没有新增也没有消失：moved_red_count=1。
+
+## 没改善的部分（现尖上仍照旧）
+1. 手机链仍是 NOT-DEPLOYED-OBSERVED：四格臂跑在车道私有栈（frontend_port=5570），没有一发推到手机走的那代
+   served 产物上；`_preview.db`、:8000、demo/reset 都没碰（现读 `backend/app/main.py` 的 blob 949035a71882c0565299307c0a24e4d9bb8ebb7d，与落地那枚相同）。
+2. `places.latitude` 仍是 NOT NULL，「清空一枚坐标」这形在 schema 层还是不可持有；交的是唯一诚实等价形
+   （place 行缺席），删除工具 frontend/e2e/tools/ord0394_store_edit.py:32 只准动本次尝试私有库、具名拒收共享库。
+3. 面板级空支 frontend/src/components/v8/MapPanel.tsx:493 在 stay offer 仍有坐标时仍不亮（frontend/src/components/v8/MapPanel.tsx:38 把 offer 一并算进条件），我没造第二枚库逼它。
+4. 应用自生成的 `/experience` 200 仍是空 schema（property_count=0，声明处 backend/app/main.py:3104）；`g10_every_normalised_place` 那枚
+   仍在尖上红着（tests/test_qoder_anywhere_provider_truth.py::test_g10_every_normalised_place_carries_a_usable_coordinate_including_nodes），全套 failed=11 枚里有它；不是我这片，我也没让它变绿。
+5. 反控的牙只覆盖「行缺席」那条形：注入市中心时 op1/op3 两格仍绿（种子库里每条 activity 都有 place 行），
+   这条限制在现尖上没有变好，我也没为它补新臂。
+6. 本块没有重跑浏览器：传送靠的是上面四枚顶层树对象的相等性。若号令者要的是在现尖那枚上真机再走一遍，
+   那是一次新的臂运行；我这条只声称字节等值，不声称我又点了一遍屏。
+7. 上面那格更正说明：我 21:4x 的漂移表用错了 before（拿枝尖当落地）。那种错只有把「落地的那枚」现读
+   成祖先关系才抓得出来：`git merge-base --is-ancestor ae5f69cac90de5b55906e6a015cff4e970f13e54 214ab0ff9f1dc03ffbd57308797e62552b7ee24a` 现读 merge_base_rc=1。我以后交漂移
+   一律锚在产品尖 8cbdf5a0a28ea56fc2e83352e0ea2054dc857ac8，不再锚在我的枝尖上。
+   同一格错在本块自己的前几版草稿里又犯了一次（把我自己交的 e2e 文件列成「被我以外的车道改过」，
+   原因是 `git rev-parse <ref>:<不存在的路径>` 会把参数原样印回来而不是报错——这条我记进仪器毛病）。
+   那些版本都在投递前撤回，留痕逐枚如下（本地字节重算 sha1，非 git 对象；同段可 cat-file 坐标：现尖 214ab0ff9f1dc03ffbd57308797e62552b7ee24a）：
+      D:/moodle/_qoder_ledger_inbox/qoder-0370_2305.md.superseded_by_the_next_slice_wrong_before_column sha1=eb10069d6c937bd9c724f8aae9bdc67b6393edfe（这枚是本地字节重算的文件 sha1、未入 git，非取回坐标）
+   还有一格要更正的是已经入账的那块（留痕在下面，逐枚 sha1 现算）：它把 `frontend/e2e/` 那枚
+   也标成「被改过」，却只列了产品码的 mover，读者会以为动它的是同样那几笔别的车道提交。
+   实情是：那枚 spec 的 before 取它入库的那笔，之后只有我自己的 ORD-0394 那笔动过它；本块把
+   mover 逐枚列全了，两条线分开点名，产品码里没有 ORD-0394 这一句仍然成立。
+      已入账留痕 D:/moodle/_qoder_ledger_inbox/_processed/qoder-0370_2310.md.inserted_231159 sha1=e4217ec648b9491f6c6a4398d7139325280e291e（这枚是本地字节重算的文件 sha1、未入 git；同段可 cat-file 坐标：现尖 214ab0ff9f1dc03ffbd57308797e62552b7ee24a）
+
+门尺自检（现行口径）：`D:/moodle/_qoder_cmdr_ref_20260921/live_checks/claim_coordinate_check_r7.py --text <本块> --expect-clean` 的退出码与 findings
+   由本生成器在写盘前现跑，红则不投递。那把尺的本地字节重算文件 sha1 = 2690a3f7eb0b817a882212854ad906bfc8703e2d（40 位，非 git 对象，故
+   同段给可 cat-file 坐标：号令者入库的同一份字节 = blob cf1f047d53d4848fa16abcd03df34099ec87d90d，`git cat-file -t` 得 blob、
+   `git cat-file -s` 得 byte_count=29651，与我运行的字节数相同。
+
+
 ### CMDR 2026-09-29 00:31 · 号令者 · 抽屉那 14 行在屏上全是实心靛蓝大按钮、当前行看不出来——我亲测坐实了，开 ORD-0419/0420/0421 三单并派给三条冷/闲车道；另裁 ORD-0407 r6 不摘
 
 **现尖**：`git -c http.proxy= -c https.proxy= -C D:/moodle/CityNexus ls-remote origin refs/heads/mirror/integration-frontend-apple-pass1` 现读 = `8a7665be2061a2f38aa2227f81c57003ca4caacb`。我这一轮所有读数都在按这枚尖造的产物上跑（入口 `index-CGSMsxT2.js`，服务口 :4805，磁盘件与线上字节逐字相同，其本机 sha1 = `2a4bdf1304d3f15c14a1d33a6ba17d3eee6a742e`（内容哈希、非 blob）；同段可取回坐标见上一行尖）。
