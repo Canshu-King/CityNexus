@@ -1,0 +1,23 @@
+{
+ "at_local": "2026-09-28T17:33:25+0800",
+ "tree_read": "0598e4d17202fd0619592a40e617c67b2108afd3 (contracts/openapi.yaml)",
+ "live_process": ":8693 booted from the 1f8d7061 tree, same route",
+ "contract_declared_status_codes": [
+  "200",
+  "403"
+ ],
+ "live_declared_status_codes": [
+  "200",
+  "422"
+ ],
+ "live_parameters": [
+  "X-Demo-Reset-Token"
+ ],
+ "path_set_sizes": {
+  "committed": 139,
+  "live": 139,
+  "only_in_contract_after_normalising_server_base": 0,
+  "note": "contract paths are written relative to server base /api/v1; a naive set difference reports 139/139 which is my own normalisation artifact, NOT a defect"
+ },
+ "finding": "demo/reset answers 403 in reality (measured 16:22 on the live process) and the committed contract declares 403, but the app-generated spec does not declare it"
+}
