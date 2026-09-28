@@ -1,0 +1,207 @@
+[
+ {
+  "file": "frontend/src/app/V8Experience.tsx",
+  "line": 229,
+  "fields": "content_type",
+  "interp_before": 2,
+  "why": "template literal carrying the number",
+  "held_reason": "ORD-0343 standing rule: V8Experience.tsx is reported-before-touched; the order named the row but did not lift the rule, so it is delivered HELD with the exact edit I would make"
+ },
+ {
+  "file": "frontend/src/app/V8Experience.tsx",
+  "line": 230,
+  "fields": "content_type",
+  "interp_before": 2,
+  "why": "template literal carrying the number",
+  "held_reason": "ORD-0343 standing rule: V8Experience.tsx is reported-before-touched; the order named the row but did not lift the rule, so it is delivered HELD with the exact edit I would make"
+ },
+ {
+  "file": "frontend/src/features/discovery/DestinationPreparationPanel.tsx",
+  "line": 237,
+  "fields": "elapsed_ms",
+  "interp_before": 2,
+  "why": "template literal carrying the number"
+ },
+ {
+  "file": "frontend/src/features/discovery/DestinationPreparationPanel.tsx",
+  "line": 238,
+  "fields": "elapsed_ms",
+  "interp_before": 2,
+  "why": "template literal carrying the number"
+ },
+ {
+  "file": "frontend/src/features/inbox/JourneyInboxWorkbench.tsx",
+  "line": 312,
+  "fields": "http_status,content_type",
+  "interp_before": 3,
+  "why": "template literal carrying the number"
+ },
+ {
+  "file": "frontend/src/features/planning/PlanWithAiSheet.tsx",
+  "line": 976,
+  "fields": "http_status",
+  "interp_before": 1,
+  "why": "template literal carrying the number"
+ },
+ {
+  "file": "frontend/src/features/planning/PlanWithAiSheet.tsx",
+  "line": 977,
+  "fields": "content_type",
+  "interp_before": 1,
+  "why": "template literal carrying the number"
+ },
+ {
+  "file": "frontend/src/features/recovery/RecoveryRequiredPanel.tsx",
+  "line": 81,
+  "fields": "http_status",
+  "interp_before": 1,
+  "why": "template literal carrying the number"
+ },
+ {
+  "file": "frontend/src/features/studio/V12TripStudioPanel.tsx",
+  "line": 210,
+  "fields": "http_status",
+  "interp_before": 0,
+  "why": "JSX text position"
+ },
+ {
+  "file": "frontend/src/lib/failureAttribution.ts",
+  "line": 133,
+  "fields": "http_status",
+  "interp_before": 1,
+  "why": "template literal carrying the number"
+ },
+ {
+  "file": "frontend/src/lib/failureAttribution.ts",
+  "line": 140,
+  "fields": "content_type",
+  "interp_before": 1,
+  "why": "template literal carrying the number"
+ },
+ {
+  "file": "frontend/src/lib/failureAttribution.ts",
+  "line": 337,
+  "fields": "http_status",
+  "interp_before": 2,
+  "why": "template literal carrying the number"
+ },
+ {
+  "file": "frontend/src/lib/failureAttribution.ts",
+  "line": 338,
+  "fields": "http_status",
+  "interp_before": 2,
+  "why": "template literal carrying the number"
+ },
+ {
+  "file": "frontend/src/lib/failureAttribution.ts",
+  "line": 358,
+  "fields": "http_status",
+  "interp_before": 1,
+  "why": "template literal carrying the number"
+ },
+ {
+  "file": "frontend/src/lib/failureAttribution.ts",
+  "line": 359,
+  "fields": "http_status",
+  "interp_before": 1,
+  "why": "template literal carrying the number"
+ },
+ {
+  "file": "frontend/src/lib/failureAttribution.ts",
+  "line": 365,
+  "fields": "http_status",
+  "interp_before": 1,
+  "why": "template literal carrying the number"
+ },
+ {
+  "file": "frontend/src/lib/failureAttribution.ts",
+  "line": 366,
+  "fields": "http_status",
+  "interp_before": 1,
+  "why": "template literal carrying the number"
+ },
+ {
+  "file": "frontend/src/lib/failureAttribution.ts",
+  "line": 375,
+  "fields": "http_status",
+  "interp_before": 1,
+  "why": "template literal carrying the number"
+ },
+ {
+  "file": "frontend/src/lib/failureAttribution.ts",
+  "line": 376,
+  "fields": "http_status",
+  "interp_before": 1,
+  "why": "template literal carrying the number"
+ },
+ {
+  "file": "frontend/src/lib/failureAttribution.ts",
+  "line": 378,
+  "fields": "http_status,content_type",
+  "interp_before": 2,
+  "why": "template literal carrying the number"
+ },
+ {
+  "file": "frontend/src/lib/failureAttribution.ts",
+  "line": 379,
+  "fields": "http_status,content_type",
+  "interp_before": 2,
+  "why": "template literal carrying the number"
+ },
+ {
+  "file": "frontend/src/lib/failureAttribution.ts",
+  "line": 384,
+  "fields": "http_status",
+  "interp_before": 1,
+  "why": "template literal carrying the number"
+ },
+ {
+  "file": "frontend/src/lib/failureAttribution.ts",
+  "line": 385,
+  "fields": "http_status",
+  "interp_before": 1,
+  "why": "template literal carrying the number"
+ },
+ {
+  "file": "frontend/src/lib/failureAttribution.ts",
+  "line": 387,
+  "fields": "http_status,content_type",
+  "interp_before": 2,
+  "why": "template literal carrying the number"
+ },
+ {
+  "file": "frontend/src/lib/failureAttribution.ts",
+  "line": 388,
+  "fields": "http_status,content_type",
+  "interp_before": 2,
+  "why": "template literal carrying the number"
+ },
+ {
+  "file": "frontend/src/lib/failureAttribution.ts",
+  "line": 414,
+  "fields": "http_status",
+  "interp_before": 1,
+  "why": "template literal carrying the number"
+ },
+ {
+  "file": "frontend/src/lib/failureAttribution.ts",
+  "line": 415,
+  "fields": "http_status",
+  "interp_before": 1,
+  "why": "template literal carrying the number"
+ },
+ {
+  "file": "frontend/src/lib/failureAttribution.ts",
+  "line": 422,
+  "fields": "http_status",
+  "interp_before": 3,
+  "why": "template literal carrying the number"
+ },
+ {
+  "file": "frontend/src/lib/failureAttribution.ts",
+  "line": 423,
+  "fields": "http_status",
+  "interp_before": 2,
+  "why": "template literal carrying the number"
+ }
+]
