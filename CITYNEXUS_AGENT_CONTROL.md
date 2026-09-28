@@ -16588,6 +16588,263 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### ORD-0391 第 2 步交付（lane S4-ast-taint）— 29 行 tier-b：23 行给数字配上字段名，4 行我不改并逐行给理由
+
+ref 已推并回验：`review/REL-ord0391-quantity-fix` = 4fcfe6e595bba9de30ff35a1b49ff6dc93fe8d95 （`git ls-remote` 回读同一枚），基尖 8fddeb76a79968592a7a3e98d2f296dda450d4df 。改动只落在产品文案的**同一行**里：`23 行改、23 行删`（增删等数，没有任何一行被缩短或删除——你禁止用删字把 b 档做成 c 档，我按这条做，尺子也按这条判）。
+
+① 前后两遍尺输出，同一条命令、同一个尖：`python ord0391_gauge_r1.py <tree>`，两棵树都指向 8fddeb76a79968592a7a3e98d2f296dda450d4df 。
+- 改前：fixed 4 / still_bare 21 / held 2 / census_row_wrong 2 （件 622b367b008009018d97e9cc94eaa88eddb2f874 ）
+- 改后：fixed 25 / still_bare 0 / held 2 / census_row_wrong 2 （件 8a6339766cca78baa0bc683be7ae038293780079 ）
+gauge 的判据是机械的：这一行显示的每一个量（`${...}` 里读到 http_status / content_type / bytes / elapsed_ms / response_received / request_id 的）都必须由**同一行的字段名**引入；同时要求句子里的插值数量不减少（防止"删掉就绿"）。行级按字段而非按插值：`已经跑了 6 秒（elapsed_ms=…）` 是同一个量的两种写法，算具名 8a6339766cca78baa0bc683be7ae038293780079 。
+
+- 证据件都在 `evidence/ord0391-step2-field-naming-2005/`，逐枚可 `git cat-file`：gauge 改前 `gauge_before_8fddeb76.json` = 622b367b008009018d97e9cc94eaa88eddb2f874、gauge 改后 `gauge_after_4fcfe6e5.json` = 8a6339766cca78baa0bc683be7ae038293780079、gauge 脚本 `ord0391_gauge_r1.py` = a1028231a72f5a821e3bde1d9ddae69019572cda、29 行清单 `tier_b_rows.json` = 5fa12601f722ca65cdd81edca9dbf55d83b24ca4、清单生成脚本 `make_tier_b_rows_r1.py` = eac0e2b36fd7aebbf17100a6f59351d11e50be24、替换脚本（含逐条计数断言） `apply_step2_r1.py` = 23225ab56175ea414fc863bc67e59f3e39a74da4、暴露尺前后对照 `exposure_before_after.json` = a2d8f5360772ace0d844c984a6c960dea3bb116c 。
+
+② 逐行的同行坐标（failureAttribution.ts 那 20 行 + RecoveryRequiredPanel.tsx:81 + DestinationPreparationPanel.tsx:237/238，共 23 行；（坐标 b6c31b19d14d33f61996500bff83ce8bfc633e00）完整 29 行清单与逐行判定在 5fa12601f722ca65cdd81edca9dbf55d83b24ca4 ）：DestinationPreparationPanel.tsx:237 → 同行现写 elapsed_ms=${Math.round(job.elapsed_ms；（坐标 b6c31b19d14d33f61996500bff83ce8bfc633e00）DestinationPreparationPanel.tsx:238 → 同行现写 elapsed_ms=$；（坐标 b6c31b19d14d33f61996500bff83ce8bfc633e00）RecoveryRequiredPanel.tsx:81 → 同行现写 http_status=${refusal.http_status}；failureAttribution.ts:133 → 同行现写 http_status=${http_status ?? "none"}；（坐标 b6c31b19d14d33f61996500bff83ce8bfc633e00）failureAttribution.ts:140 → 同行现写 content_type=${content_type}；（坐标 b6c31b19d14d33f61996500bff83ce8bfc633e00）failureAttribution.ts:337 → 同行现写 http_status=${attribution.http_status}；（坐标 b6c31b19d14d33f61996500bff83ce8bfc633e00）failureAttribution.ts:338 → 同行现写 http_status=${at；（坐标 b6c31b19d14d33f61996500bff83ce8bfc633e00）failureAttribution.ts:358 → 同行现写 http_status=${attribution.http_status}；（坐标 b6c31b19d14d33f61996500bff83ce8bfc633e00）failureAttribution.ts:359 → 同行现写 http_status=${attribution.http_status}；（坐标 b6c31b19d14d33f61996500bff83ce8bfc633e00）failureAttribution.ts:365 → 同行现写 http_status=${attribution.http_status}；（坐标 b6c31b19d14d33f61996500bff83ce8bfc633e00）failureAttribution.ts:366 → 同行现写 http_status=${attribution.http_status}；（坐标 b6c31b19d14d33f61996500bff83ce8bfc633e00）failureAttribution.ts:375 → 同行现写 http_status=${attribution.http_status  。（坐标 b6c31b19d14d33f61996500bff83ce8bfc633e00）另有 1 行的数不走模板字面量而是走 i18n 参数：V12TripStudioPanel.tsx:210 由 i18n/LocaleContext.tsx 的文案改到 `http_status={status}` ，所以在文案处具名，组件行一字未动。（坐标 b6c31b19d14d33f61996500bff83ce8bfc633e00）
+
+③ 我选择不改的 2 + 2 + 1 行，逐行给理由并归类：
+- **HOLD**：V8Experience.tsx:229；（坐标 b6c31b19d14d33f61996500bff83ce8bfc633e00）V8Experience.tsx:230 ——ORD-0343 的常设规则是"V8Experience.tsx 再动要先报"，你这一单点了行但没解除那条规则，所以我把它列成交待而不是顺手改。（坐标 b6c31b19d14d33f61996500bff83ce8bfc633e00）要我做的话就是同一处形状：`HTTP ${error.status}` → `http_status=${error.status}`、`Content-Type: ${…}` → `content_type=${…}`，一句话回我即可。
+- **CENSUS 更正**：PlanWithAiSheet.tsx:976 实为 data-raw-content-type={result.rawR；（坐标 b6c31b19d14d33f61996500bff83ce8bfc633e00）PlanWithAiSheet.tsx:977 实为 data-raw-bytes={result.rawReading. ——第 1 步的清单把这两行按 tier b 记了，理由栏写的是"template literal carrying the number"，但行内实际是 `data-*` 属性位；（坐标 b6c31b19d14d33f61996500bff83ce8bfc633e00）按我自己那份 tier 规则（data-* 不进 innerText = c 档）它们本来就是 c。这是清单转录错，不是产品缺陷，我没动代码，改口在这里 8a6339766cca78baa0bc683be7ae038293780079 。
+- **已经具名**：JourneyInboxWorkbench.tsx:312 一行本来就写 `http_status=… content_type=… evidence=…`，无需改动（也是这次采用的形状出处）。（坐标 b6c31b19d14d33f61996500bff83ce8bfc633e00）
+
+没改善的部分：1) 这 29 行只是"屏上的数具名"，量值本身能不能被追溯仍是另一件事——`http_status=0` 这种仍是裸数，gauge 只看具名不看语义。2) 两行 V8Experience 仍红在清单里，等你那句话。3) 类型门跑的是 `tsc --noEmit -p tsconfig.typecheck.json`（车道路径下用 `cp -al` 硬链 node_modules 才跑得起来，退出码 0）；Q64 暴露尺 r7b1 对四个文件前后逐档相同（DestinationPreparationPanel 那 3 枚格是改前就有的，不归属这次改动，件 a2d8f5360772ace0d844c984a6c960dea3bb116c ）。4) e2e / 真机屏上文字这一路我没走——这 23 行改的都是屏上原话，屏幕没读就不算验过，要屏读我下一轮自己起端口跑。5) 本会话子代理全部失败（qmodel_latest is not available），全部单线完成 4fcfe6e595bba9de30ff35a1b49ff6dc93fe8d95 。
+
+
+### ORD-0389 交付（lane Q）— `demo/reset` 现在要具名令牌；开箱即用的部署上这条路由谁也按不动，包括浏览器
+
+> **重投说明（车道 Q，会话 904a042d）**：本块是 `qoder-0389_0524.md` 的重投。只补同一行上的可取坐标，**没有删除或改写任何数值**；被补的读数全部来自现尖 `e5a571f89e5d210e3616bd6752b3c90746f9e588` 上 `git cat-file` 解得开的工件。旧块改名留痕（去掉 `.md` 尾巴）。
+
+
+分支 `refs/heads/review/Q-ord0389-reset-token-gate`，头 `39fb27d4fbf38d91c016b0629f0bafda39360931`；`git ls-remote origin` 回验 40 位与本地全等=True。
+现尖 `db6a04cb1d734963b673351973329c08bb264ef3`；本头含它=False。我已把 cf0ed0b5 合进来（当时唯一冲突是生成物 `frontend/src/generated/api.ts`，解法是按合并后的 yaml 重生，不手 merge）。
+尖在我干活时又走了 3 笔（cf0ed0b5→db6a04cb1d73）；那 3 笔与我输入面的交集=空。
+落地实证：`git merge-tree --write-tree db6a04cb1d73 39fb27d4fbf3` rc=0、树 `5dee65fc8035db4e31dbe22266bd39ec18e00fe7`；该树里 `backend/app/main.py` = `923cef1e08ea80658f168e132d3ad0ef0b80a9a3`，与本头 `923cef1e08ea80658f168e132d3ad0ef0b80a9a3` **逐字节相同**（尖上那枚是 `a5e820007f3772578d3431343fa7159fa14d4bd2`，不同）⇒ 合过去留的是带门的这份。
+本头自基线 0813d3aae826 起 19 笔：
+  `39fb27d4fbf38d91c016b0629f0bafda39360931`  ORD-0389 receipts: the merged-tree suite numbers, and the boot reading that corrects m
+  `733870e349677b04a13e34d9127029219e17c6d5`  Merge the authoritative line to cf0ed0b5, resolving the generated contract by regenera
+  `f53f7fb8bac528e07d0cf91c242533796cd4c698`  ORD-0389 receipts: the A/B/C read against a private copy, and the suite comparison
+  `cf0ed0b531681181642a30120a1b41f2bf681a40`  ORD-0386 r2: re-taken on the generation the line actually moved to, with every coordin
+  `c64190ad0fa8da78b925908d4bd601a19a0f145b`  ORD-0389 screen: the whole-library reset is no longer pressable from a browser
+  `09b5577718b46606e404462f143b3b943d3bcad4`  ORD-0389 contract: the header and the two new 403 codes are visible, and api.ts is re-
+  `e77570febcaed3f5752aecd2fcaf050704c4fa28`  ORD-0389 tests: 125 fixture doors now claim the token, and 8 new arms pin the gate
+  `9f5c0af97fdd31ad7a4ee38097216b8e2f3aedcd`  ORD-0389: demo/reset needs a named token; the demo flag alone authorized a whole-libra
+  `244fa3851ab5cf8fc9d3b02330516153634d46ec`  ORD-0386 r2: re-taken on the generation the line actually moved to, with every coordin
+  `ac195f865f21ebeb9e1f8cb38ce85780a8b3d48e`  ORD-0387 re-cut onto e022093d: regenerate against the contract that moved
+  `09f317681ad42f052ed13fd95e1c9fb70435a077`  ORD-0387: put ai_state's named enum in the same generation as the contract
+  `dae17b9fbd7075a76f6b42f3298d1eb52b5a2585`  ORD-0386: readings, the measured cap, the mutant kill table and the screens as deliver
+  `597b4d4ecacdd9beab6ab186066bc488851b8516`  ORD-0386: seven gates over the version list, each one aimed at a mutant that breaks it
+  `90f95cd6f791a34cee2c83dc73c5901d88199c08`  ORD-0386: the trip shows which versions it already has, says there is no cap, and offe
+  `744a1f0ce2e48be086bb833e069a26a88a0ab1b9`  ORD-0386: the version list answers when each version was written, and the cap is measu
+  `e022093dcc198367d779fc92692c6ccfc6824a2a`  ORD-B r3: name the shape the place card reads, so provenance is visible in the contrac
+  `666075f6774c194bb1de62378a7c964b1509ebf2`  ORD-B r3: name the shape the place card reads, so provenance is visible in the contrac
+  `3e75ab2bbbac19c47ab042fce9ea90be0f04829b`  ORD-0382 re-cut onto 0813d3aa: the dictionary lands as the automatic merge, byte for b
+  `d0cb102188c2c4350c1ab9c466f44c4b9f040908`  ORD-B r2: put the two provenance cells into the contract the runtime actually serves
+
+## 前提我核过（工单给的四处坐标，其中两处行号已漂）
+`backend/app/main.py:2046` 路由装饰器、`:2048` 注释自陈删 52 张表、`:2055` 唯一的门是 `demo_mode_enabled()` —— 三处逐字成立；
+`backend/app/main.py:2875-2877` 是 ORD-0385 那单的路由，与本单无关。日志证据也成立：`D:/moodle/_qoder_preview_20260920/run/cmdr_hop1_0018.log:411` 与 `:432` 两条 `"POST /api/v1/demo/reset HTTP/1.1" 200 OK`，文件 mtime 03:55。
+另核到一件工单没写的：全仓 `reset_all` 只有一个调用方（`backend/app/services.py:215` 的 `seed_demo`），而 `prepare-scenario` 在没有行程时回 `There is no seeded scenario to prepare; call demo/reset first` ⇒ **`demo/reset` 是演示场景唯一的播种口**。这一点决定了下面「没改善的部分」第一条。
+
+## 实现
+门：`CITYNEXUS_DEMO_RESET_TOKEN`（调用时读 env，不取冻结 Settings，沿 `backend/app/agent/approval.py:18` 的 `DEMO_STEP_UP_ENV` 先例）+ 请求头 `X-Demo-Reset-Token`，比较用 `hmac.compare_digest`。件 `review/ord0389-reset-token/F_BUILD.txt` blob `00ba47add06badd366d635b6e3e4eab600bab05c`：
+  · 默认未配置 ⇒ 这条路由对任何调用者都是拒绝（开箱即用不可用）；
+  · 未带 ⇒ `RESET_TOKEN_REQUIRED`，带而不匹配 ⇒ `RESET_TOKEN_INVALID`，两个都是具名 403，不复用通用码；
+  · 未配置的服务器拿 `""` 比，于是对所有呈来的令牌都答 `RESET_TOKEN_INVALID`——与真不匹配同形。**同形是有意的**：否则这枚路由就免费回答「这台盒子能不能被重置」。
+  · 两道门都在 `stop_autorun()` 之前，保持工单要求的顺序（停进程级 guardian 本身就是副作用）。
+
+## A/B/C 实测（件 `review/ord0389-reset-token/ABC_ACCEPTANCE.txt` blob `406bb9a1ac3c11f35e0a7fee216c0b175e0f5900`）
+全部跑在**我自己的私有副本 + 我自己的 uvicorn 私有端口**上；:8693、:4781 与 `_qoder_preview_20260920/_preview.db` 一次都没写过。副本只读导自 `_qoder_cmdr_gate_20260921/backend/_live.db`（:8693 真开的那本库），它**还留着 03:55 被抹掉的那两趟北京行程**，所以「没删」是关于真存在行的断言。
+  · A 不带令牌（正是 03:55 那发的形状）：HTTP 403、302 字节（`review/ord0389-reset-token/ABC_ACCEPTANCE.txt:19`）；前后计数逐表相同 `journeys=3 travelers=3 activities=134 plan_versions=19 audit_logs=236`，`journeys.rowid` 1/2/3 全在（`review/ord0389-reset-token/ABC_ACCEPTANCE.txt:21`）。
+  · C 带错令牌：HTTP 403、312 字节、`RESET_TOKEN_INVALID`（`review/ord0389-reset-token/ABC_ACCEPTANCE.txt:25`）；与 A 的信封键集与 details 全同（`same shape for A and C? True`，`review/ord0389-reset-token/ABC_ACCEPTANCE.txt:33`），码不同；库同样一字未动。
+  · B 带对令牌：HTTP 200，真删真重导——`journeys 3→1、travelers 3→1、activities 134→0、plan_versions 19→0、audit_logs 236→0`，被毁的 `journeys.rowid` 1/2/3 含两趟北京，随后回出一枚 DRAFT 演示行程（`review/ord0389-reset-token/ABC_ACCEPTANCE.txt:45`）。
+  · B2 配置好令牌后仍不带：HTTP 403 `RESET_TOKEN_REQUIRED` ⇒ 「配置了」不等于「不需要」。
+
+## D 套件（件 `review/ord0389-reset-token/D_SUITE.txt` blob `97c1cdc59a4eb5393c4ebb4ed8cf3b7e5f477e89`，解释器 D:/moodle/CityNexus/.venv CPython 3.12.14 + pytest 8.4.2）
+  收集：基线 1335 collected / 20 errors；合并树 1354 collected / 20 errors。
+  基线全量：`10 failed, 1309 passed, 15 skipped, 1 xfailed, 2 warnings in 213.06s (0:03:33)`
+  本分支（基线尖上）：`9 failed, 1318 passed, 15 skipped, 1 xfailed, 2 warnings in 245.06s (0:04:05)`；新红=0（`review/ord0389-reset-token/D_SUITE.txt:32`），红集合是基线真子集=True。
+  合并树上（当前头）：`9 failed, 1329 passed, 15 skipped, 1 xfailed, 2 warnings in 230.43s (0:03:50)`；相对基线新红=0，集合=subset。
+  一枚基线红转绿（`test_qoder_catalog_hydration.py::test_abandon_reports_a_request_not_a_death`）：**我不认领为修好**——本单不碰该模块及其 import，且它单独跑就过（同文件 23 passed），我按跑序/状态观察记它（`review/ord0389-reset-token/D_SUITE.txt:39`）。
+  改动的测试文件（要求 4 要的清单）：91 个 .py，126 处调用点带上令牌；判据是「该处断言 200 或读回种子 id ⇒ 是门」，故意断言 403 的那处（`backend/tests/test_qoder_simulation_mode.py:103`）保持不带令牌。清单在 `review/ord0389-reset-token/E_CHANGED_TESTS.txt:19`。
+  一条我自己踩的坑，写在这里而不是抹掉：第一遍机械改写只匹配 `client.post(...)`，漏了 `client().post(...)`，于是一跑全量多出 **29 枚新红**；定位到 `backend/tests/v192_harness.py:135` 补齐后重跑才归零（`review/ord0389-reset-token/E_CHANGED_TESTS.txt:10` 记的）。
+
+## 契约（要求 3）
+`contracts/openapi.yaml` 的 `/demo/reset` 原来只有 200；现在带上 `X-Demo-Reset-Token` 头参数与一个把三个码写进 enum 的 403，另有 `details.tables_protected` const true（`review/ord0389-reset-token/E_CHANGED_TESTS.txt:18`）。`frontend/src/generated/api.ts` 用 openapi-typescript 7.13.0 从**这份 yaml** 同代重生，类型里看得见头名与码（`review/ord0389-reset-token/F_BUILD.txt:15`）。
+口径要说清：yaml 与 FastAPI 自己生成的 `/openapi.json` 是两个互不知晓的件（现有 parity 门只比路径×方法），所以「同代」指的是 **yaml → api.ts** 这一对，也就是客户端真消费的那一对。
+
+## 构建前置门（件 `review/ord0389-reset-token/F_BUILD.txt`）
+`npx tsc -p tsconfig.typecheck.json` exit=0、`npx tsc -p tsconfig.check.json` exit=0、`npx vite build` exit=0，都在合并后的当前头重跑过。`frontend/` 无裸 `tsconfig.json`，故 `noEmit` 由这两枚 config 提供，两枚都跑。依赖走 `<JUNCTION>`，`cmd /c rmdir` 卸除 rc=0、目标条目 399→399、`.bin/tsc` 在位；无递归删除、未碰共享 node_modules。
+
+## 没改善的部分（要你裁的都在这一段）
+- 实测读数见 `review/ord0389-reset-token/H_BOOT_OBSERVED.txt` blob `1665b04982693457f238e2a3632ff1eec53670ca`（它同时勘误了 `c64190ad` 提交信息里「落错误屏」的说法）。门后的 `backend/app/main.py` blob `923cef1e08ea80658f168e132d3ad0ef0b80a9a3`。
+- **开机路径也走这枚路由，我没有改它。** `frontend/src/main.tsx:216` 与 `:219` → `frontend/src/demo/goldenScenario.ts:33` → `frontend/src/api/citynexus.ts:768` 的 `resetDemo()` 只发 `method: POST`，不带任何令牌。在没有配置令牌的部署上（也就是产品默认），这个请求现在就是 403，于是首次访客落进 `main.tsx` 的 catch → `setError(...)`（是诚实错误屏，不崩）。撤掉屏上按钮 ≠ 撤掉浏览器对破坏性路由的依赖。两条路我都没擅自选：
+  (甲) 让部署者配置令牌并把它交给自己人，浏览器开机改为「读现成场景」而非播种——需要一个新的非破坏性播种口；
+  (乙) 开机改用公开的非破坏路由自建行程（`POST /travelers` + `POST /journeys`），但 `goldenScenario` 依赖 `CNX-DEMO` 的固定 place id（如 `place-river-cruise`），换路径就等于换一套演示内容，牵动 14 个直调该路由的 e2e 规格与 `qoder-reset-from-wizard.spec.ts`、`qoder-simulation-scene.spec.ts`。
+  这两条都超出「小而硬」，我把事实与坐标交回来，不开修不完的大改。
+- 那 14 个直调 `/api/v1/demo/reset` 的 e2e 规格**一个都没改**：它们要跑就得让 e2e 后端也配置令牌并把头带上（在现尖 `e5a571f89e5d210e3616bd6752b3c90746f9e588` 上复测：`frontend/e2e/` 里直调 `/api/v1/demo/reset` 的 `.ts` 规格 14 枚、调用点 14 处，判据 `git ls-tree -r --name-only <tip> -- frontend/e2e` 后逐文件正则数；其中自带本地 `call`/`api` helper 的 9 枚（判据 `(async function|const)\s+(call|api)\b`，名单与两条判据在件 `review/ord0402/E2E_HELPER_COUNT_r1.txt:15`，blob `2d1f903410d122a312049d6886fe10fe041216e4`，在 `refs/heads/review/Q-ord0402-trash-panel` 上可取）。**本块 0525 版当时写的「10 个」没有任何工件可锚**（`review/ord0389-reset-token/` 六件里搜 `helper`/`10` 只命中 `D_SUITE.txt:9` 的 10 failed 与 `:31` 的 baseline reds 10，都不是这件事），所以按可复测口径改成 9，旧数留在这里说明它无锚。）。我没法在这里真跑 e2e（它要 dev 后端与 run-owned DB，且本单禁碰预览链），所以**不假装改好**。
+- `HARDCODED_FALLBACK`、`RENDER_TIERS`、`LADDER_TIER?_EMPTY_ACTION` 这些尖上本来就红的格，本单一条没碰。
+- 我没有给这枚门加**尺**：本单没有新尺格的要求，门的证明是 A/B/C 三条真 HTTP + 8 枚 pytest 臂，不是再多一格静态判据。静态判据也够不着这件事（它要看的是「有没有带令牌」，属运行时）。
+- `frontend/src/api/citynexus.ts:768` 的 `resetDemo()` 仍然导出且不再可能被浏览器成功调用；我留着它是因为 `goldenScenario.ts` 还引着它，删它属于上面 (甲)/(乙) 的一部分，不该拆一半做。
+
+## 只报了数、没下结论的
+- 「同形」我给了码与形状两个读数（A=REQUIRED、C=INVALID，键集与 details 相同），**没有**替你判它是否符合你的威胁模型；如果你更想让未配置与不匹配可分辨，改一行即可，但那条由你定。
+- `X-Demo-Reset-Token` 这个头名与 `RESET_TOKEN_*` 这两个码是我按仓里既有形状（`X-Edge-Token`、`DEMO_STEP_UP_ENV`）取的，没有独立评审；要换名请早换，落地后就贵了。
+- 合并树上 1354 collected 比基线尖多 19 条，多出来的不全是我的（另有两条车道在同一段时间落了测试），我没有逐笔归因。1354 的原始行在 `review/ord0389-reset-token/D_SUITE.txt:17`，基线 1335 在同件 `:10`，blob `97c1cdc59a4eb5393c4ebb4ed8cf3b7e5f477e89`；19 = 1354 − 1335，两数同行可取。
+
+
+### ORD-0385 交付（lane Q）— 受众那句说实话了；甲-4 的前提经量测不成立，改成了让四条字典判据真能看见那 13 行
+
+> **重投说明（车道 Q，会话 904a042d）**：本块是 `qoder-0385_0356.md` 的重投。只补同一行上的可取坐标，**没有删除或改写任何数值**；被补的读数全部来自现尖 `e5a571f89e5d210e3616bd6752b3c90746f9e588` 上 `git cat-file` 解得开的工件。旧块改名留痕（去掉 `.md` 尾巴）。
+
+
+分支 `refs/heads/review/Q-ord0385-inbox-link-honesty`，头 `120a45cda1ce8643c127619eb854625562810860`；`git ls-remote origin` 回验 40 位与本地全等。
+现尖 `213750423d9bdc10672c0488f76f8b0963d88765`；本头含它=False ⇒ 落地=需 merge（下面给出 merge-tree 实证）。线在本单期间走过 090c048f→895ec1a1→21375042；我已把 895ec1a1 合进来并按它重测。
+`git diff --name-only 895ec1a11aca730041b42f2358b9607c9bb5a67e 213750423d9bdc10672c0488f76f8b0963d88765 -- <本单四个输入路径>` 输出=空 ⇒ 其后 4 笔（ORD-A/B 地图与契约）未碰本单输入，读数仍成立。
+落地实证（不写「看着像」）：`git merge-tree --write-tree 213750423d9bdc10672c0488f76f8b0963d88765 120a45cda1ce8643c127619eb854625562810860` rc=0、树 `e8c73663bca77659ed767a2f834db1c989b0d61e`；该树里字典 blob=`1d9d0943dab5d1e69891b419da2e2b2593f920c9`，与本头 `1d9d0943dab5d1e69891b419da2e2b2593f920c9` **全等**，尖上是 `41370129864a64788026570e5fa5d3a2506b948b`（不同）⇒ 合过去留的是我这份，没有被静默取后值。
+两边文件集相交=空（我 6 个：字典 + 5 件收据；他们 12 个）
+本头自 895ec1a1 起 5 笔（`git log --format=%H %s 895ec1a11aca730041b42f2358b9607c9bb5a67e..HEAD` 原样）：
+  `120a45cda1ce8643c127619eb854625562810860`  ORD-0385: re-take every reading on 895ec1a1 with the ruler that actually gates there
+  `be4f00843e104d9480a62a443f8ad70cec27780c`  Merge the authoritative line to 895ec1a1 (Q72: the lane rebases onto the new tip)
+  `02dff4bdcafc5f3730196d39a1e664fb19fef98a`  ORD-0385 receipts: the credentialless read that settles the copy, and the ruler's own readin
+  `1d72e0cddc8bbcc58ffc628f79a78c1ab49bed4c`  ORD-0385 part A.4: the 11 rows were not missing in English -- they were unwritable-to
+  `27f7a3dcbda3c01d25b1961a3a3ae2a91b63ea54`  ORD-0385: the journey link is readable by anyone who has it, so say that
+甲-4 那笔 `1d72e0cddc8bbcc58ffc628f79a78c1ab49bed4c` **可单独摘掉**，它不动任何屏上文字（值逐字节不变的行合并）。
+
+## 甲-1/2/3 受众说实话（件 `A_BEFORE_AFTER.txt` blob `7c7acfeb3f0da78b059091f10173446232ae3069`）
+改前后逐字对照（英文行现居 `frontend/src/i18n/LocaleContext.tsx:533`，中文行 `:1293`）：
+  en  BEFORE(84 字符) `Journey link copied to this device's clipboard — send it to whoever is coming along.`
+      AFTER (92 字符) `Journey link copied to this device's clipboard. Anyone with this link can open this journey.`      锚 `review/ord0385-inbox-link/A_BEFORE_AFTER.txt:5`
+  zh  BEFORE(26 字符) `行程链接已复制到这台设备的剪贴板，可以发给同行的人。`
+      AFTER (26 字符) `行程链接已复制到本机剪贴板。谁拿到都能打开这份行程。`      锚 `review/ord0385-inbox-link/A_BEFORE_AFTER.txt:10`
+      ⇒ NO_GROWTH 预算：中文 26→26 未增一字，英文 84→92 在 +8 上界内（`review/ord0385-inbox-link/A_BEFORE_AFTER.txt:6`）
+禁写项按值算过而非声明：有效期/过期/expires/expiry/角色/role/只读/read-only/撤销/收回/revoke/revoked 在新值里全部 absent；
+整本字典匹配 撤销|收回|revoke 的行数 = 0（`review/ord0385-inbox-link/A_BEFORE_AFTER.txt:30`）
+
+## 甲-2 的机制证据（件 `B_CREDENTIALLESS_READ.txt` blob `6523f2dcf406842cc1c029b4381b53dc564dcce3`）
+无 cookie、无 Authorization、代理清掉，走无鉴权门 `:4781`：线上那枚行程 `GET /api/v1/journeys/{id}` = **HTTP 200 / application/json / 406 字节**（`review/ord0385-inbox-link/B_CREDENTIALLESS_READ.txt:12`）；
+同一请求形状对库里没有的 id 是 **404**，全程不出现 401/403/跳登录 ⇒ 路由按资源答话，不按调用者（`backend/app/main.py:2875-2877`）。
+浏览器半边：全新 `--user-data-dir` 的无头 Chrome，profile 里**没有 Cookies 文件**（`review/ord0385-inbox-link/B_CREDENTIALLESS_READ.txt:26`），仍渲染出行程标题/时间窗/旅行者数与「复制行程链接」按钮（`review/ord0385-inbox-link/B_CREDENTIALLESS_READ.txt:30`）。
+刻意没做的：`GET /api/v1/journeys/{id}/experience` 未调用——它读时写库，而 `:4781` 背后是共享预览链（本单要求不动它）。
+
+## 甲-4 的前提不成立，我按量到的事实改了另一件（件 `C_KEYSET.txt` blob `7a705477340266d638ad73fdc6b1588e23d4ab99`）
+工单说这 11 条「只有中文、英文缺键」。用尺自己的解析器量两侧：en 665 行、zhCN 665 行，两个方向的差集都为空 ⇒ **没有一侧缺键**（`review/ord0385-inbox-link/C_KEYSET.txt:5`），
+11 条英文值本就在，只是写在键的**下一行**（外加 1 条中文行同病：`push.capDependencyMissingHelp`）。尺自己就这么说：`DICTIONARY_COVERAGE_REPORT` 称这类行「invisible to the four dictionary claims」。
+所以「英文缺键」最可能是单行扫描的产物：`REGISTER_PARITY` 的分母是两侧**已解析键集的交集**，那 12 枚英文键从来不在它检查的 653 枚里。
+我做的：把 13 行合成单行。值零改动，两条证明——13 条值原样出现在改前文件里（`review/ord0385-inbox-link/C_KEYSET.txt:28`），改前后两侧可比 1317 枚值里唯一不同的是我有意重写的 `inbox.journeyLinkCopied`。
+读数：`REGISTER_PARITY` 653 → **665 bilingual keys, 665 agree, 0 clash**（`review/ord0385-inbox-link/C_KEYSET.txt:33`），`DICTIONARY_COVERAGE_REPORT` 13 → **0**（`review/ord0385-inbox-link/C_KEYSET.txt:8`）。
+
+## 尺（件 `D_RULER.txt` blob `751ddf123ef28b2ed8f225b42b498d7f11e27950`）
+工单引的尺 blob `ae9342d6551ca9a446d3c41d42e18737bae03b1a` 真实存在，但不是闸：它是 `d033f83e064448a8ab0f3ed4cd01e3616b596181` 上的 42,176 字节旧版；工单给的尖 `090c048f` 上已是 62caf460…（54,973 B），而线又走到现尖，尺是 `8f1b40022fcba770ac6ec6ce501aab2ecb93882b`（71,637 B，ORD-0381 加了 LADDER_TIER 一族）。全部读数以**现尖那把尺**为准。
+三格：`REGISTER_PARITY` 665/665/0（`review/ord0385-inbox-link/D_RULER.txt:18`）、`NO_GROWTH` 2 values changed 且 zh gained chars 0 / en over +8 0（`review/ord0385-inbox-link/D_RULER.txt:21`）、`ASSERTIONS_STILL_HIT` 1 key edited against 216 e2e text assertions, 0 lose target（`review/ord0385-inbox-link/D_RULER.txt:24`）。
+红集合：尖上未改动的字典自比对是本分支同一组三条红（`HARDCODED_FALLBACK`、`RENDER_TIERS`、`LADDER_TIER?_EMPTY_ACTION`），同红=True（`review/ord0385-inbox-link/D_RULER.txt:36`）。
+其中一条红的**文本**有差，差的只是它列出的 miss 的行号（1048→1036），因为把 13 条两行合成 13 条一行必然移动下面的行；population 与 verdict 计数两次跑完全相同。
+反件：`--mutant` 在现尖尺上 **29 枚 arm 全 MET、0 VIOLATION**（`review/ord0385-inbox-link/D_RULER.txt:49`），含 ORD-0381 新加的 4 枚 K8 ladder-shape。未跳过任何 arm（`--mutant` 缺 `--baseline`/`--e2e` 时会拒绝报干净自测）。
+
+## 构建前置门（件 `E_BUILD.txt` blob `206a15b00d3c1af43fcf905e88e18fdb8ec16b5e`）
+`npx tsc -p tsconfig.typecheck.json` exit=0、`npx tsc -p tsconfig.check.json` exit=0、`npx vite build` exit=0（`review/ord0385-inbox-link/E_BUILD.txt:12` 起三条）。
+`frontend/` 没有裸 `tsconfig.json`，字面 `npx tsc --noEmit` 无项目可读；`noEmit` 在上述两枚 config 内，两枚都跑。
+产物侧：新英文/新中文各 1 处命中，旧英文/旧中文各 **0** 处命中（在 `dist/assets/*.js` 里数出来的，不是从源码推的）。
+junction：`<JUNCTION>` 重解析点挂载，`cmd /c rmdir` 卸除 rc=0、链接消失、目标条目 399→399、`.bin/tsc` 在位；全程无递归删除、无 `rd /s /q`、未碰 `D:/moodle/CityNexus/frontend/node_modules` 本体。399→399 的原始两行在 `review/ord0385-inbox-link/E_BUILD.txt:33` 与 `:35`，blob `206a15b00d3c1af43fcf905e88e18fdb8ec16b5e`。
+
+## 没改善的部分
+- 那句文案仍只是「说真话」。服务端没有 grant/有效期/撤销，所以「收回一条已发出的链接」这件能力**依然不存在**——那是工单里被另开的乙。
+- `HARDCODED_FALLBACK`（tier B 裸字面量 73 处）、`RENDER_TIERS`（tier 1 可动集合 9 处）、`LADDER_TIER?_EMPTY_ACTION`（26 读键中 17 条不合形状）三条红**本单一处没碰**，它们在尖上就红着。三格的原始行在 `review/ord0385-inbox-link/D_RULER.txt:29`（73 处）、`:33`（9 处）、`:31`（26 读键 / 17 条不合形状），blob `751ddf123ef28b2ed8f225b42b498d7f11e27950`。
+- 尺没有任何一格能判断「这句话与机制是否相符」。K1 看中英语气档是否错位、K2 看长度、K3 看被钉的键有没有被改——ORD-0385 这类缺陷对全部 29 枚 arm 都是不可见的，所以 B 只能是一次真读，而不是再多一个门。
+- 没跑任何 e2e 套件：`ASSERTIONS_STILL_HIT` 是**模拟**断言匹配（它把 216 条文本断言跑在旧值/新值上），不是 Playwright 真跑。216 的原始行在 `review/ord0385-inbox-link/D_RULER.txt:24`，blob `751ddf123ef28b2ed8f225b42b498d7f11e27950`。
+- 无痕半边只用在一枚 ACTIVE 行程上；PLANNED/DRAFT 两枚 id 在该库中不存在（HTTP 404），所以「任何读者都看得到」是在一枚真行程 + 路由签名上成立的，不是在三枚上都测过。
+- `inbox.journeyLinkClipboardUnavailable` 那句里「这条链接依然有效」是既有文案，带一点有效期味道，本单没在它授权范围里，未动。
+
+## 只报了数、没下结论的
+- `REMAINDER_REPORT` en hard words 0→1：我只归因（那 1 个是 `hub.continuationResumeTransport` 里的 "connection failure"，一条原本读不到的行，不是本单写的字），没判它该怎么修。
+- `C_KEYSET.txt` 里 `readable at baseline = NO (wrapped)` 的 13 行（`review/ord0385-inbox-link/C_KEYSET.txt:13` 起）：只报「原本读不到/现在读得到」，没判跨行写法本身该禁止还是允许——那是尺的口径。
+- 工单把键名写成 `inbox.continuationUnconfirmable`，树里实有键是 `hub.continuationUnconfirmable`（两条 e2e 钉的是它的中文值，本单未动）。我只报这个名实差，没判断该改名还是改工单。
+
+
+### ORD-0380 交付（lane Q）— 暗色配对的三个数已在「合并后的权威尖」上重取；命名方案选 (b)，产品 CSS 零字节
+
+> **重投说明（车道 Q，会话 904a042d）**：本块是 `qoder-0380_0314.md` 的重投。只补同一行上的可取坐标，**没有删除或改写任何数值**；被补的读数全部来自现尖 `e5a571f89e5d210e3616bd6752b3c90746f9e588` 上 `git cat-file` 解得开的工件。旧块改名留痕（去掉 `.md` 尾巴）。
+
+
+分支 `refs/heads/review/Q-cn-token-night-axis`，头 `7c9edf9fae25f8dccacf59be9e5c23c1c09cda46`；`git ls-remote origin refs/heads/review/Q-cn-token-night-axis` 回验 40 位与本地全等。
+落地边界（实测）：权威尖 `090c048f220a3089506f565929ceda1511315a09` 已含 step1/step2 且是本头的祖先 ⇒ 本头剩余 5 笔（`f7ef936bed7c565b2cc567336809ee0d4fa06e58`、`b23f8cabade3b089d1ebe1fa837b0be5e79a381a`、`65e991f3fc48c4881340ccbdf93109fe96e43fcd`、`090174afb869f885bca371b827e1f00bb4728728`、`7c9edf9fae25f8dccacf59be9e5c23c1c09cda46`）**可直接快进**，`git rev-list --count 090c048f220a3089506f565929ceda1511315a09..7c9edf9fae25f8dccacf59be9e5c23c1c09cda46` = 5。
+净差文件（`git diff --name-only` 尖→本头，共 5 个）：`tools/cnx_token_tiers_r1.py` 与 `review/cn-token-night/` 下 `PAIRING.json`、`PAIRING.txt`、`GATE.txt`、`BUILD.txt` ⇒ 快进进来的实质内容是标签修正 + 在合并树上重取的读数件。
+合规：没有从 `D:/moodle/_apk_analysis_pi_travel/out/colors.json` 取过任何色值。`frontend/src/design-tokens.css` 在尖与本头是同一枚 blob `35280bccb425e503500b380f2a55473bb303a28f` ⇒ 本单产品侧改动 0 字节。
+
+## 第一步 三个数（件 `review/cn-token-night/PAIRING.json` blob `dd21e42d07e0e210714d0bcc4e16cbae8d87932b`；量具 `tools/cnx_token_night_pairing_r1.py` blob `64a5a32e74a9854200f8dc3b63132cd258ca6167`）
+
+块/级联模型写在量具文件头注释里（`:root` 与 `:root, .v8-product-shell` 两个浅色作用域 + 暗色作用域的具体性判据），三个数可从该件重导。
+
+1. 浅色作用域直接写面色值的 token = 24 枚（`review/cn-token-night/PAIRING.json:1304`）；其中在 `:root[data-theme="dark"]` 重定义的 = 13 枚（`review/cn-token-night/PAIRING.json:1477`）；未重定义的 = 11 枚（`review/cn-token-night/PAIRING.json:1317`）。
+   这 11 枚拆开是 `--cn-always-*` 显式恒定 1 枚（`review/cn-token-night/PAIRING.json:1318`）+ `--cn-tint-*` 阶梯 10 枚（`review/cn-token-night/PAIRING.json:1305`）⇒ 语义色没有一枚处于「说不清为什么不翻转」的状态。
+2. 靠 `var()` 间接受影响的 token = 16 枚（`review/cn-token-night/PAIRING.json:1968`）；沿链走到面色值的根基色 = 14 枚（`review/cn-token-night/PAIRING.json:1689`）；其中在暗色块被换掉的根基色 = 8 枚（`review/cn-token-night/PAIRING.json:1678`）；计算后色值真会随主题动的间接 token = 14 枚（`review/cn-token-night/PAIRING.json:1969`）。
+   一条要提醒的机制事实：链上「中间层」被重定义也能让一条链动起来——`--v8-line` → `--cn-hairline` → tier 就是这种，tier 本身从不被重主题。只数「面色值根基」会漏报这一类，所以量具另出 `var_chain_nodes_swapped_in_dark` 字段。
+3. 暗色块重定义但值与浅色完全相同 = 0 枚，两种比法都是 0：原样比 `review/cn-token-night/PAIRING.json:1970`、按色值元组比 `review/cn-token-night/PAIRING.json:1971`（`#ffffff` 与 `rgba(255,255,255,1)` 属同色异写，判等按元组不按字符串，否则第 3 问会漏判）。
+
+根主题作用域内色值 token 合计 = 40 枚（`review/cn-token-night/PAIRING.json:2005`）。
+附带量到的一件：浅色值写在非裸 `:root` 块（`frontend/src/design-tokens.css:172` 的 `:root, .v8-product-shell`）因而**现有尺的块切分看不见**的 token = 12 枚（`review/cn-token-night/PAIRING.json:5561`）。
+
+## 第二步 命名方案与尺
+
+选 **(b)**（保留两块结构 + 给尺加一格），不引入 `_night` 变体名。理由件 `review/cn-token-night/NAMING_DECISION.md` blob `b0dd1643025591f632f2512c92e2a91350d1bf59`：CSS 没有「按名解析」这一步，`--cn-canvas_night` 仍要有块在暗色写回基色才生效 ⇒ (a) 是把同一个事实写两处，并往公开仓的浅色作用域再添面色值字面量。
+因此 PARITY 不是「侥幸没破」而是根本没有可破的东西：`review/cn-token-night/GATE.txt:30` 那行 79 次 (token,scope) 基线重解析仍全绿（件 `review/cn-token-night/GATE.txt` blob `98186d94a7e14cd51f38abb358542712c11548e8`）。
+尺 `tools/cnx_token_tiers_r1.py` blob `ec448eff407083fd666881a112483afba9481fe1` 新增两格：
+- `NIGHT_PAIRING`：40 枚色值 token 必须落在 own_dark=17 / by_chain=10 / by_name=13 三态之一，unexplained=0（`review/cn-token-night/GATE.txt:40`）。
+- `CONSTANT_CLAIM_USED`：`--cn-always-*` 声明 1 枚、无 `var()` 消费者 0 枚（`review/cn-token-night/GATE.txt:42`）。引用按真 `var()` 计数不按子串——该 token 在 CSS 里子串出现 4 次而真引用只有 1 次，用子串会把死声明读成有消费者。
+反控由 4 枚增至 8 枚，且判据改成「必须由具名归属格咬中」，其中 3 枚另要求指定对照格保持绿（`review/cn-token-night/GATE.txt:45` 起）：M5 删一枚暗色配对、M6 把该翻转的基色改名归入 `always_`（这两枚是本单点名的）、M7 用 `#b06000` vs `#b06000ff` 证明新格看得见旧 `CONSTANT_DUP` 看不见的同色异写、M8 是无消费者的 `always_` 声明。全跑 exit=0。
+旧五格（PARITY/TIERS/LADDER_USED/CONSTANT_DUP/CONSTANT_IN_DARK）与改尺前逐字段全等，判据既未放宽也未偷偷加严：`review/cn-token-night/GATE.txt:20`。
+
+## 构建前置门（FRONTSRC_BUILD_PREREQ）
+
+件 `review/cn-token-night/BUILD.txt` blob `7c4195c2dbe1eff76e83e59c475950db78cb3dd3`。在含 `090c048f220a3089506f565929ceda1511315a09` 为祖先的合并树上跑（不是 bb3f5853 那棵树）：`npx tsc -p tsconfig.typecheck.json` exit=0、`npx tsc -p tsconfig.check.json` exit=0、`npx vite build` exit=0。
+口径说明一处：`frontend/` 里没有裸 `tsconfig.json`，字面的 `npx tsc --noEmit` 无项目可读；`noEmit` 已设在上面两枚 config 内，两枚都跑了。
+junction 收尾：`cmd /c rmdir` 卸除 rc=0、链接不复存在、目标条目 399→399、`.bin/tsc` 在位；全程无递归删除、无 `rd /s /q`、未触碰 `D:/moodle/CityNexus/frontend/node_modules` 本体。399→399 的原始两行在 `review/cn-token-night/BUILD.txt:32`（挂载后可见 399 条目）与 `:34`（卸除后仍 399），blob `7c4195c2dbe1eff76e83e59c475950db78cb3dd3`。
+
+## 没改善的部分
+
+- 旧五格仍用它们原来的窄解析器：40 枚色值 token 里的 12 枚（全部 `--v8-*` 加 `--cn-nav-bg`）依旧进不了它们的分母，只有新格看得见。把旧格接到宽模型等于重基线 PARITY，那是另一单。
+- `LADDER_USED` 仍按子串计数，只在注释里提到的 tier 会被当成「有消费者」。新格 `CONSTANT_CLAIM_USED` 没这毛病，但改它会动已交付的分母。
+- 暗色**规则**里写死的颜色（`frontend/src/design-tokens.css:655` 一类 `:root[data-theme="dark"] … { color: #7bd88f }`）是另一张配对面，本单只量 token，未覆盖。
+- 没有任何运行时观察：`data-theme` 确实由 `frontend/src/theme.ts:68` 写入，但我没截图、没读计算样式，屏幕上的暗色对不对没验。
+- 没跑 e2e、没跑前端任何测试套件（门只到 tsc + vite build）。
+- 尖上落的 `NIGHT_PAIRING` 是我修前的版本，状态标签 `paired_i=` 会撞名（两态截断成同一串）；修正在本头，读数件里的 `own_dark/by_chain/by_name` 才是修正后的拼写。
+
+## 只报了数、没下结论的格子
+
+- `n2_base_tokens_swapped_in_dark` = 8 枚（`review/cn-token-night/PAIRING.json:1678`）：只给「根基色在暗色被换掉几枚」。「中间层被换」那一类该不该并入同一分母，归你裁。
+- `visibility_count_derived_by_a_non_pure_root_block` = 12 枚（`review/cn-token-night/PAIRING.json:5561`）：只报「现有尺块切分看不见几枚」，没判这是缺陷还是既有约定。
+- `--cn-tint-*` 10 枚（`review/cn-token-night/PAIRING.json:1305`）归入「按名恒定」家族是我在 (b) 里做的裁定，依据是本文件里 `--cn-hairline` 浅色取 black-08、暗色取 white-10 而 tier 本身从不被重主题。若不认同这条裁定，正确做法是取消豁免让 `NIGHT_PAIRING` 红那 10 枚，不是改判据措辞。
+
+
+### ORD-0402 切片 2 已交 · 车道 Q（会话 904a042d）· 回收站一屏只走注册表；四臂真点在私有栈上、逐按钮 hit-test；读门仍等切片 1
+
+**顺位**：先交 ORD-0401（号令者 19:25 已落在 `e5a571f89e5d210e3616bd6752b3c90746f9e588`），再做本单。
+
+**线况**　枝 `refs/heads/review/Q-ord0402-trash-panel` 头 `dc7492365e897df9bdccd3bf9e4c07c09ab07b12`，`git ls-remote` 回读逐字等值。四笔：产品 `cfd980fd762eee1d94db764a3262ae2346951c45`、拒绝与再读 `4ba53c0196dabc9624ad4ca5d8d13110a44097e8`、结构与回执 `9ebe351ffc3f3998323cdee9634aa5d094318adb`、证据 `dc7492365e897df9bdccd3bf9e4c07c09ab07b12`。基线 = 我 19:3x 现读的 `e5a571f89e5d210e3616bd6752b3c90746f9e588`；交前只读预测 `git merge-tree --write-tree` 退出码 0、CONFLICT 0 条。
+
+**改了什么（外壳 0 字节）**　新面板三枚文件：`frontend/src/features/trash/JourneyTrashPanel.tsx`（blob `ec3b40c6f6dc8e8e14de07aef4e9d05c8320bc36`）、`journeyTrash.ts`（blob `2bb4d1c367eacff3674d276636d6f3556b8c6ddf`）、`journeyTrashCopy.ts`（blob `fb8421d836edc449e6d88d3849a24c27ae9091d4`）；挂载只经注册表：`frontend/src/app/v8PanelRegistry.tsx` blob `dbcde683094e4087c5aa82cf16e6f26536c306a3` 的 route 面多一条 `id: "trash"`。路由名进 `frontend/src/routes/v8Routes.ts`（blob `426dc562ac0c577d3f97d329d86a446e1f2fca5b`），因为 `KNOWN_ROUTES` 由这两张表生成（`frontend/src/app/V8Experience.tsx:467`）——臂 A 就是用一次全新 `page.goto("/v8/trash")` 进的屏，硬刷新不回落 Today。字典只加**成对两行** `nav.trash`（`frontend/src/i18n/LocaleContext.tsx` blob `382051438d56b014ca3674b3bbf8cf0246e23538`），因为导航标签写作 `t("nav." + key)` 且没有回退钩子（`frontend/src/app/V8Experience.tsx:1672`）。
+
+**措辞三条纪律**　动词只有「找回」/ "Bring it back"，「恢复」归 autonomous recovery、「还原」归版本屏（理由写在 blob `fb8421d836edc449e6d88d3849a24c27ae9091d4` 头注）。409 `JOURNEY_NOT_DELETED` 上屏是人话「这条已经在你的行程列表里了，没有需要找回的东西。」，token 只在折叠的「高级详情」里——臂 C 实测 `reason_token_mounted=["JOURNEY_NOT_DELETED"]`、`details_open=false`（件 blob `0656ca48fd549f0cc01f1df9e9470123e9abb7df`）。屏上不出现任何"永久/彻底删除"字样：面板每行只渲染一个动作按钮，服务器也没有那条门，未落码就不承诺（ORD-0385）。
+
+**验收四臂（私有栈：:8714 是我起的 uvicorn、:4302 是本车道静态服务、库文件由本车道新建）**
+- A　列出 2 行真已丢弃行程；面板内 3 枚按钮（找回 ×2 与 再读一次回收站）在 390×844 下全部 in-viewport 且 `elementFromPoint` 返回自身，`scrollable_ancestors` = 0 ⇒ 到达它的滚动是文档滚动（件 blob `0656ca48fd549f0cc01f1df9e9470123e9abb7df`）。
+- B　真点一次 → 屏上「已找回：厦门两日。它回到你的行程列表里了。」，随后**落地的** `GET /api/v1/journeys` 回 list 含该 id（`brought_back_id_visible_on_landed_door=true`）——服务端同意，不只是屏上说了。
+- C　先绕过界面、用同一枚产品门把这趟找回来（真 POST 返回 200），再点屏上那行陈旧记录 → 上面那句人话拒绝 + token 只在详情面。
+- D　主动「再读一次回收站」→ 旧回执退场、空态自报「回收站是空的：这台服务器没有报出任何在站里的行程。」
+- zh-CN 与 en 各跑一遍，10 张截图 + JSON 同一件 blob `0656ca48fd549f0cc01f1df9e9470123e9abb7df`。
+
+**配对核对（号令者对 ORD-0401 提的同一条判据，本车道自建的尺）**　逐值核 1422 条（字典 1386 + 车道自有 36）：候选代 `index-DpznOKkU.js` 缺 0（件 blob `e3556147f0b5241e9a9c797614233b7dbb6a515e`）；现尖代 `index-BDf7HG58.js` 缺 38（控制件 blob `cd866582eb946a89711e5172feae842b74ae1063`），而**这 38 条与本单新增的 38 枚键集合相等**（脚本算出来的相等，不是我口述），en 19 / zh 19 成对。
+
+**依赖与一条实测事实（给切片 1，`4033270f` 那半）**　现尖没有"列已丢弃"的门：`GET /api/v1/journeys` 过滤 `deleted_at IS NULL`（`backend/app/main.py:2951`），而 `journey_schema()` 根本不发 `deleted_at`（`backend/app/services.py:382`、`backend/app/schemas.py:239`）⇒ 今天这台服务器任何 payload 都说不出"这条在回收站里"。所以本臂的枚举来自**本车道装配里的同名路由**（`review/ord0402/trash_door_assembly_r1.py` blob `88614c7a97e0158cdf1e2d13d0c9943de71fc809`，产品分支不含它），面板指它只有一枚常量。实测：一段式的 `/api/v1/journeys/discarded` 会被既有的 `GET /api/v1/journeys/{journey_id}` 吞掉，答 422、`loc=["path","journey_id"]`、`type=uuid_parsing`、`message_key=validation.not_an_id`，服务器回执号 `CNX-TWXNJHE2`（读数在件 blob `7c1600c4232c77388160622b3c61c1d8c1b1c0c3` 的 `shadowed_collection_name`）⇒ 切片 1 若坚持用 `/journeys/` 下的名字，必须声明在那扇门之前；我选了不会被遮蔽的 `/recycle-bin/journeys`，名字不同就改那一枚常量。写门本身是**已落地的**：`POST /api/v1/journeys/{journey_id}/undelete`（`backend/app/main.py:2999`，无 Idempotency-Key，409 具名）。
+
+**没改善的部分（具名）**
+1. 抽屉入口在 390×844 上是第 12 块、单块高 292 px，实测该节点 y=3580 px、`candidates=2 / visible=1` ⇒ 要滚抽屉才够得到（件 blob `44dc16063a70eef5ced2db627e8ec23ecc21400a`）。这正是 ORD-0400 那一族毛病，而抽屉 tile 的形状不在本单文件里。
+2. `/v8/trash` 上面包屑仍写「今天」：那份 route 白名单是 `frontend/src/app/V8Experience.tsx:1711` 里的字面对象，加一枚 key 是一行的事——但那要开外壳，本单明写「别再开外壳」，所以我没动，报在这里等你裁。
+3. 读门不在权威线上 ⇒ 落地版今天上屏只会是「这台服务器没有答出这份列表」那条诚实态；找回两臂要等切片 1 才能在真线上复现（我这批证据的写臂是真门、读臂是装配门，已逐臂具名）。
+4. 没跑：e2e 套件、后端套件、暗色/对比复扫、68 屏矩阵。
+5. 并发双击仍无锁（服务器 docstring 原话 "Two taps at once are still unguarded"，`backend/app/main.py:3021`）；面板在请求在飞时禁用该行按钮，挡得住同一行的第二次点击，挡不住跨标签/跨设备。
+
+**门禁与纪律**　snap（`git archive` + junction node_modules）里 `npx tsc -p tsconfig.typecheck.json --noEmit` 退出码 0、`npx vite build` 退出码 0，产物 1331176 B。权威线 0 触碰；账本 0 写入（块交 `_qoder_ledger_inbox`）；`demo/reset` 0 次；`_preview.db` 0 打开；:8000 / :4781 / :8693 0 重启（:4781 只被读）；私有栈两个端口用后按 pid 各自关闭，`netstat` 复查 0 监听；junction 以 `rmdir` / `Directory::Delete` 卸下并回验路径不存在后才递归删，依赖库条目 394 前后一致；凭据 0 读取 0 打印；新枝名一枚，未覆盖任何已交枝。
+
+
 ### CMDR 2026-09-28 20:00 · 号令者 · ORD-0403 落地（产物里 `interactive:!1` 已不存在），但那一屏我进不去；顺带把 hop1 旧树挡住的东西量出来了
 
 **落地**：现尖 `742eb2b3e610ab360101709aee57a4d70a83f593`（车道 `50da1de0…` recut，逐文件比字节 6 枚全等；门件 blob `9602689b86ea1a5c002b74aab81410036b73117c`，路径 `evidence/cmdr-landing-ORD-0403-r1/preflight_r1.json`）。产品新增 `MapViewportControls.tsx`、`lib/mapLabels.ts`、`map-controls.css`，改 `MapPanel.tsx` 与 `i18n/mapPanelCopy.ts`。
