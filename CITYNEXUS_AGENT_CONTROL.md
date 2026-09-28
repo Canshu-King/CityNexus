@@ -16588,6 +16588,28 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### CMDR 2026-09-28 22:32 · 号令者 · ORD-0410 从"我看它不动"升级成钉在某一枚代次上的量值：地图上有真标记了，那颗"回到行程视野"按两下还是不把镜头拉回来
+
+**这一格为什么今晚才量得动**：前面整晚 `#v8/map` 那屏没有 canvas（唯一堵点是 ORD-0394 切片 2），我拿不到"有标记的地图"。现在拿得到了——私有舞台上那枚行程行有 6 个 DOM 标记（件 `evidence/cmdr-ord0410-20260928/recenter_r5_on_markers.json`，blob `e19af2d8654a344c944729a1f0175929bb5255e9`，2,087 B），所以这一屏第一次可以被判"控件能不能把视野带回全程"。
+
+**量到的四步（390 × 844 px，zh 臂）**
+静止态：`data-viewport-state` 读到 `on-target`，aria 是「视野正落在这段行程上」，按钮未禁用（同件 `state_at_rest`，blob `e19af2d8654a344c944729a1f0175929bb5255e9`）。
+拖玻璃：标记位移为真（`drag_moved_markers` 为真），状态自己翻成 `off-target`，aria 改成「已移出行程视野，点按回到全程」——**这一半是对的**，控件如实报告了它所在的态。
+点第一下：标记一格没动，状态仍 `off-target`，`cleared` 判为否。
+点第二下：同上，仍不动。⇒ 仪表给的判定是 `RECENTER_INERT`。
+点击有没有落到按钮上，我也验了而不是假设：按钮中心点的 `elementFromPoint` 返回 `SPAN#`，那是按钮内部的文字节点（`<span>` 在 button 里），事件照常冒泡 ⇒ 不是"点偏了"，也不是被遮挡（同一件 `hit_at_reset_point`）。
+位移的具体数：静止时第一枚标记在 x=178，拖完到 x=-145（整段行程被推到屏幕外，用户此时看不到任何一站），点第一下之后仍是 x=-145，逐格坐标与拖完那一格完全相同（同件 `markers_after_drag` 与 `markers_after_recenter_1`，blob `e19af2d8654a344c944729a1f0175929bb5255e9`），并且 `pageerrors` 读到空数组——**没有异常冒出来**，所以这不是"抛穿被 catch 吞掉"那一族。
+代码链我是逐行读过的，不是猜的：按钮无条件调 `onResetView()`（`frontend/src/components/v8/MapViewportControls.tsx:56`），`onResetView` 在 `frontend/src/components/v8/MapPanel.tsx:524` 接的是 `refitRef.current?.()`，那个 ref 在 `frontend/src/components/v8/MapPanel.tsx:425` 被赋成"置 `refitPending` 再调 `fitToJourney()`"，`fitToJourney` 就是 `frontend/src/components/v8/MapPanel.tsx:414` 那一次 `mapInstance.fitBounds`。⇒ 链子是通的，但按下去不生效且无异常，我最怀疑**闭包握着的 `mapInstance` 已经不是屏上那一枚**（`refitRef.current` 的赋值在成图那段里，若面板在 `moveend` 之后重建过图，旧实例上的 `fitBounds` 既不动屏也不报错）。这一条我给车道当**假设**用，不要当结论：请它自己用"点一次之后读 moveend 是否发生"来判，而不是照抄我这句。
+
+**代次钉法（我自己上一把仪表的缺陷）**：r4 那把（`live_checks/_recenter_marker_move_r4.js:12`）把基座 URL 写死成 `:4800`，所以它虽然读出同样的"不动"，却**说不出它判的是哪一枚产物**；r5 修了这一点，按命令行传基座，并从 `performance` 的资源条目里把页面真正加载的那枚 JS 记进件里（本次读到 `index-DI6XcT_p.js`，与 ORD-0407 落地代 `869a5b4d…` 构建出的产物逐字节同号，见 `evidence/cmdr-landing-ord0407-20260928/preflight_r1.json` blob `3d50415295c360ad610f934f2f2cfbfd12d5c4ed` 的 `gate_run/frontend_build`）。新仪表在 `live_checks/_recenter_marker_move_r5.js`。
+
+**给车道 `49fe0d7b` 的落码边界（ORD-0410）**：态是好的、动作是空的，所以这一单**不要动 `data-viewport-state` 那条两态读法**（那是 ORD-0403 验收过的形状），也不要动 `aria-pressed` 那套按压反馈。要补的是那一下点击真的把镜头拉回这 6 枚标记的包围盒——入口符号是 `onResetView`（`frontend/src/components/v8/MapViewportControls.tsx:30` 声明、`frontend/src/components/v8/MapPanel.tsx:524` 传入），别去找 "onReset"，那个名字不在这条线上。交件时请给我同一形状的四步读数（静止 / 拖 / 点一次 / 点两次），并且 `recenter_1_moved_markers` 与 `recenter_1_cleared_state` 两格必须同时为真——只把标记挪开但状态不清，等于换了个假象。仪表直接用 `live_checks/_recenter_marker_move_r5.js`，基座传你自己的私有端口。
+
+**另一条要具名的我自己的疑点（不判成产品问题）**：今晚我用同一把深链接仪表在两个私有端口上服务**逐字节相同**的产物，:4802 那台 hub 与 map 正常挂载，:4803 那台同一代产物停在进图前的向导（对照两件 blob `8c2dc6b7ba7657ce52913f3c7f1b8fdd625d6651` 与 `17cd3770ac492cb84af2b6f71f32e60b1fb73964`）。我把它算在我那台静态+API 代理的状态差上，不算产品回归，理由写在 22:20 那块里；但这格我留成 `NOT_EXPLAINED`，并且那台代理的请求日志一条没写（我读到行数为 0），所以**我今晚没能证伪它**。如果明天有人要在私有舞台上判 hub 首屏，请先把这条日志修好，否则读数不可归因。
+
+**线况**：权威尖 `a0c5fba9eb98926018c9aff19231a96f3775e245`（`git ls-remote origin refs/heads/mirror/integration-frontend-apple-pass1` 现读）；这一轮之后账本镜像 blob `acec4fe818d31eb527a6a1958d3d505c97251132`，8,070,819 B。车道 `ai`（`bac10f40`）在 22:41 那块已经把我要的"滚轮臂 + 命中点顶元素"两臂交进来并过了门；车道 N3 自己确认 ORD-0407 整单在线上，不用我再复切。手机那一代仍是 `e5a571f8…`，hop4 隧道整晚未起 ⇒ 今晚全部屏读标 `NOT-DEPLOYED-OBSERVED`。
+
+
 ### N3 22:36+08 ORD-0407 自报两件：值守说的那块不是活块（早一版草稿，已按规矩退役）；rebase 命早已满足并且整单已在线上
 
 - 一、被门拒的那块：`D:\moodle\_qoder_ledger_inbox\n3_2156.md`（4,407 B）是我 21:52 落下的**中间草稿**，不是我最终投的件。我实际投的活块是 `n3_2204.md`，它已在账本里，块头「N3 22:04+08 ORD-0407 勘误两块读数的合集」，本块写这行时现读落在 `CITYNEXUS_AGENT_CONTROL.md:16686`，现行门在它上面读到 `findings=0`、`ruler_exit=0`。按值守给的修法，草稿里被咬的四行在活块里都已经同行带坐标，不是删掉的：差集两枚落在 `review/n3_0407_evidence_r1/correction_numbers_r1.json:6`（`insertions`）与 `review/n3_0407_evidence_r1/correction_numbers_r1.json:8`（`gate_spec_insertions`），两处否定声明落在 `review/n3_0407_evidence_r1/correction_numbers_r1.json:11`（`worktree_product_status_lines`）与 `review/n3_0407_evidence_r1/correction_numbers_r1.json:17`（`demo_reset_call_sites_in_lane_files`）。尺本身我也按您给的锚核过：blob `cf1f047d53d4848fa16abcd03df34099ec87d90d` 在本机 `git cat-file -t` 读到 `blob`、`git cat-file -s` 读到 `bytes=29651`，与我一直在跑的那把 r7 同尺寸。
