@@ -16588,6 +16588,21 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### ORD-0409 续件 · 车道 rel（会话 a68b0631）· 我把上一块里唯一那格 `NOT_MEASURED` 量掉了：部署那一代是同一成因 · 2026-09-28 2110+08
+
+这块只补一件事，不改我 21:05 那块（`_processed/rel_2105.md.inserted_210657`，入库件字节数 7591 B 读自 `D:/moodle/_qoder_rel_ord0409_wk/bolts.txt:2`）里任何判定、也不删任何数字。上一块我写了"ARM B 那一代我没重建，标 `NOT_MEASURED`"——现在量完了。
+
+**同一枚尺的两种形态，在部署那一代上结果一样**：我从 `e5a571f89e5d210e3616bd6752b3c90746f9e588` 用 `git archive` 取 `frontend`、`cp -al` 挂 node_modules、`npx vite build` 退出码 0，产出 `dist/assets/index-BDf7HG58.js`——资产名与您 ARM B 的 `served_asset` 逐字相同（件 `D:/moodle/_qoder_rel_ord0409_wk/ord0409_armB_readout.txt:2` 记 `bundle_asset=index-BDf7HG58.js`、`:3` 记 `cmdr_armB_served_asset=/assets/index-BDf7HG58.js`）。我这份的字节数读自同件 `:4` 为 `bundle_bytes=1323687`，字符数读自 `:5` 为 `bundle_chars=1286803`。
+
+四条探针（全读自 `D:/moodle/_qoder_rel_ord0409_wk/ord0409_armB_readout.txt`，`probe_en_head_in_bundle` 在 `:6`、`probe_en_backslash_form_in_bundle` 在 `:7`、`probe_en_plain_quote_form_in_bundle` 在 `:8`、`probe_en_tail_plain_form_in_bundle` 在 `:9`、`probe_zh_head_in_bundle` 在 `:10`）：句子头在产物里、去掉转义的中段在产物里、句尾 `then press "Confirm and protect"` 也在产物里、中文侧在；而带 `\"` 的源码形态不在。⇒ 与我在最新代 `9b759cb3d7b5519a51decea244ee09723d36080d` 上量到的四条完全同形（那四条记在 `D:/moodle/_qoder_rel_ord0409_wk/ord0409_escaping_readout.txt:11` 到 `:14`）。
+
+**所以 ORD-0409 的定级现在是两边都齐的**：两代都缺的那一格，英文句子在两代产物里都在，缺的只是"源码写法"这一层比对。①「没接上」与 ②「死字典项」在两代上都不成立，引用点在 `frontend/src/app/V8Experience.tsx:1260`，键面在 `frontend/src/i18n/LocaleContext.tsx:634`（zh 侧 `:1422`）。
+
+**仍然等您那一裁**，我这边不动：要么您改尺（比较前对源码值做 JS 反转义，或两侧同法归一到产物形态），要么您点头我把这格做成尺上的具名豁免（键 `shell.reservationReviewFields`、理由码 `ESCAPED_INNER_QUOTE_IN_SOURCE`）。我不改产品去凑绿，也不碰您的量具代码。
+
+**本轮产品改动为零**：`D:/moodle/_qoder_rel_ord0398` 工作树 `git status --porcelain` 行数为 0，尖仍是 `663cfa3065fcd5677d85446d142d090a246aa780`。两次 build 都在我的导出目录（`D:/moodle/_qoder_rel_ord0409_wk/frontend` 与 `D:/moodle/_qoder_rel_ord0409_wk/old/frontend`，都不是 git 树），`LocaleContext.tsx` 一个字没写。复算命令：`D:/moodle/CityNexus/.venv/Scripts/python.exe D:/moodle/_qoder_rel_ord0409_wk/ord0409_armB_r1.py`（另两条在上一块里）。真机 e2e、`npm run dev`、换代、`demo/reset` 一概没跑，`_preview.db` 没碰。
+
+
 ### ORD-0409 · 车道 rel（会话 a68b0631）· 我领这一格 · 读数先报：您给的两个成因都被实测否掉，缺的那一格其实在产物里，是量具拿源码字串去比产物字串 · 2026-09-28 2105+08
 
 **领单**：ORD-0409（您 20:42 那块，"前端任意空闲车道，谁手空谁领"）。本轮产品字节我没动：`D:/moodle/_qoder_rel_ord0398` 工作树 `git status --porcelain` 输出行数为 0，尖仍是 `663cfa3065fcd5677d85446d142d090a246aa780`（ORD-0398 第 2 步那笔）。不是我该接的话直说，我立刻停手。
