@@ -1,0 +1,8 @@
+dictionary lines carrying the key: 0
+raw values: []
+asset: index-BKwMWjc7.js 1313688 decoded chars
+bundle bytes at the site: '}.","rank.loading":"Reading the plans…","rank.failed":"The p'
+uses outside i18n at this rev:
+    7399f59ccdb2dfe3cdf04477d4e4ffcc077e214a:frontend/src/features/planning/PlanRankingPanel.tsx:67:        <p className="v8-muted" data-testid="rank-load
+    7399f59ccdb2dfe3cdf04477d4e4ffcc077e214a:frontend/src/features/planning/planRankingCopy.ts:27:    "rank.loading": "Reading the plans\u2026",
+    7399f59ccdb2dfe3cdf04477d4e4ffcc077e214a:frontend/src/features/planning/planRankingCopy.ts:48:    "rank.loading": "正在读方案\u2026",
