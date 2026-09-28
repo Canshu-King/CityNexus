@@ -484,6 +484,26 @@ paths:
           content:
             application/json:
               schema: {$ref: '#/components/schemas/ErrorEnvelope'}
+  /recycle-bin/journeys:
+    get:
+      operationId: listRecycleBinJourneys
+      description: >-
+        ORD-0402 slice 1: the trips the recycle bin holds.  This is a second door; `listJourneys`
+        keeps answering with only the rows whose `journeys.deleted_at` is NULL, so nothing a
+        client of that door sees changes.  Each row here carries `deleted_at` as stored plus
+        `bin_state` = IN_RECYCLE_BIN, both read from the column - a screen does not have to infer
+        a deletion from a trip being missing from the other list.
+        This version is the whole bin: no pagination, no per-traveller scope and no filter
+        parameters, ordered by `deleted_at` newest first.  Nothing here deletes permanently; this
+        server has no such door, and no copy in the client may promise one.
+      responses:
+        '200':
+          description: Trips in the recycle bin, newest deletion first
+          content:
+            application/json:
+              schema:
+                type: array
+                items: {$ref: '#/components/schemas/RecycleBinJourney'}
   /journeys/{journey_id}/constraints:
     parameters:
       - {$ref: '#/components/parameters/JourneyId'}
@@ -2212,6 +2232,19 @@ components:
         status: {type: string, enum: [DRAFT, PLANNED, ACTIVE, COMPLETED, CANCELLED]}
         active_plan_version_id: {type: [string, 'null'], format: uuid}
         current_activity_id: {type: [string, 'null'], format: uuid}
+    RecycleBinJourney:
+      description: >-
+        ORD-0402 slice 1: a journey as `getJourney` answers it, plus the two bin facts read from
+        `journeys.deleted_at`.  `deleted_at` is never null in this shape - a row with no deletion
+        moment belongs to `listJourneys`, not to the bin - and `bin_state` has one value so a
+        screen never reconstructs "it was deleted" from absence in another list.
+      allOf:
+        - {$ref: '#/components/schemas/Journey'}
+        - type: object
+          required: [deleted_at, bin_state]
+          properties:
+            deleted_at: {type: string, format: date-time}
+            bin_state: {type: string, enum: [IN_RECYCLE_BIN]}
     Money:
       type: object
       required: [amount_minor, currency]

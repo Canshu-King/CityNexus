@@ -252,6 +252,18 @@ class Journey(BaseModel):
     current_activity_id: UUID | None = None
 
 
+class RecycleBinJourney(Journey):
+    """One trip the recycle bin holds, carrying the two facts a screen must not infer.
+
+    `deleted_at` is the stored value of `journeys.deleted_at`, and `bin_state` is the only word
+    this shape can hold: a row appears here because that column is not NULL, so no client has to
+    conclude "it was deleted" from its absence in `listJourneys`.
+    """
+
+    deleted_at: datetime
+    bin_state: Literal["IN_RECYCLE_BIN"]
+
+
 class MobilityModeRequest(BaseModel):
     mode: Literal["WALK", "BICYCLE", "TRANSIT", "AUTO", "RIDE_HAIL"]
 

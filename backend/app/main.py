@@ -383,6 +383,9 @@ from app.schemas import (
     Place as PlaceSchema,
 )
 from app.schemas import (
+    RecycleBinJourney,
+)
+from app.schemas import (
     RealCityDiscoveryResponse,
 )
 from app.schemas import (
@@ -399,6 +402,7 @@ from app.services import (
     place_schema,
     plan_schema,
     preference_schema,
+    recycle_bin_entry_schema,
     seed_demo,
     service_schema,
     traveler_schema,
@@ -3049,6 +3053,34 @@ def undelete_journey(journey_id: UUID, session: Session = Depends(get_session)):
     )
     session.commit()
     return journey_schema(journey)
+
+
+@app.get("/api/v1/recycle-bin/journeys", response_model=list[RecycleBinJourney])
+def list_recycle_bin_journeys(session: Session = Depends(get_session)):
+    """ORD-0402 slice 1: the trips that are in the recycle bin, each with its own deletion moment.
+
+    This is a second door. `GET /api/v1/journeys` (above) keeps its promise of answering only the
+    rows with `deleted_at IS NULL`, so nothing here changes what a client of that door sees, and a
+    screen does not have to notice an absence to know a trip was dropped - each row below carries
+    `deleted_at` as stored and `bin_state` = `IN_RECYCLE_BIN`, derived from that same column
+    rather than from the row's absence anywhere.
+
+    This version is the whole bin: no pagination, no per-traveller scope, no filter parameters,
+    no date window.  The order says to write that plainly instead of hinting at a filter, so it is
+    written here and in the contract, and the list is ordered by `deleted_at` newest first because
+    a bin screen reads most naturally that way - that is an ordering, not a subset.
+
+    Read-only.  There is no permanent-delete door on this server (that would be a separate verb
+    with its own confirmation), so nothing here may promise one, and the rows stay addressable at
+    `GET /api/v1/journeys/{journey_id}` until 找回 clears the column.
+    """
+
+    items = session.scalars(
+        select(Journey)
+        .where(Journey.deleted_at.is_not(None))
+        .order_by(Journey.deleted_at.desc(), Journey.id)
+    ).all()
+    return [recycle_bin_entry_schema(item) for item in items]
 
 
 @app.get("/api/v1/journeys/{journey_id}")
