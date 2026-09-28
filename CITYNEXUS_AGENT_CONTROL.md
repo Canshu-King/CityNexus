@@ -16588,6 +16588,23 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### CMDR 2026-09-28 23:47 · 号令者 · ORD-0416 那笔 CSS 落地后我自己重扫了一遍：深链接逐条仍停在本屏、票夹那颗按钮中英两臂仍点得通、页面报错为零——记成回归读数，不是新验收
+
+**为什么扫**：ORD-0416 改的是 `frontend/src/styles.css` 与 `frontend/src/design-tokens.css`，这两枚是全壳共用的样式面，所以我不拿"门绿了"当结论，用现成两把仪表在**现尖这一代**上重跑。
+代次钉法：现尖 `06d99e55178ce1fd6509867e8cd3178f8fd3415c` 与 ORD-0416 的复切片 `39f571bb50ffec4f5ec9633888efeb51cd3a5d19` 之间 `git diff --stat <两尖> -- frontend` 读到空（0 处前端差异），所以我服务的 `_build_39f571b` 那枚产物在字节上就代表现尖的前端；私有基座 :4804，后端仍是我的私有 :8725（只读备份副本）。
+
+**读数一（深链接，路由全表）**：`stayed_on_route` 逐条为真，条数 14（件 `evidence/cmdr-regression-20260928/deeplink_14_routes_at_06d99e55.json`，blob `b74247fc83b1edd5782935e27e46dd9ae4a1e1af`），各屏那面板都挂上了（trash 那格命中 `SECTION#journey-trash-panel` 自身、studio 命中 `v8-trip-studio`、discover 命中 `prep-panel`、trips 同时命中 `trip-itinerary` 与 `trips-tabs`），`pageerrors` 全 0——件 `evidence/cmdr-regression-20260928/deeplink_14_routes_at_06d99e55.json`，blob `b74247fc83b1edd5782935e27e46dd9ae4a1e1af`，27,411 B。对照是 ORD-0404 落地那晚同形状的一份（`evidence/cmdr-ord0404-20260928/deeplink_after_r1.json`，blob `c020eac4775b505563393f7113c175eb6a8cbe69`）。
+
+**读数二（ORD-0407 那颗动作按钮）**：zh 臂盒 240 px × 44 px、en 臂 244 px × 44 px，中心点 `elementFromPoint` 两臂都返回 `BUTTON.v8-quiet-button`，点下去两臂都落 `/v8/stay`，屏上标题读到「选择锚点，看见行程。」与 "Choose the anchor, see the journey."，kicker 读到「住宿选择 · 已采集证据」与 "STAY EXPLORER · CAPTURED EVIDENCE"——件 `evidence/cmdr-regression-20260928/ord0407_walk_at_06d99e55.json`，blob `d3dba100ba57e68e9976a61cb1cf72abdf03ffc5`，2,361 B。同件里实时行程那一格仍读到格内控件 0、同一行控件 11（按裁不带动作那一格没被 CSS 改动带跑）。
+
+**读数三里我注意到一处变化，报出来但不判缺陷**：hub 与 live 两屏上地图面板的可见文字量，从 ORD-0404 那晚的 135 字符（件 `evidence/cmdr-ord0404-20260928/deeplink_after_r1.json`，blob `c020eac4775b505563393f7113c175eb6a8cbe69`，`text_chars` 那一栏）变成 152 字符（件 `evidence/cmdr-regression-20260928/deeplink_14_routes_at_06d99e55.json`，blob `b74247fc83b1edd5782935e27e46dd9ae4a1e1af`，同栏）。差的这一段我没有逐字比，所以只报"变了"，不报"变对/变错"；下一轮我用逐字 diff 判它是不是 ORD-0407 那批文案的余量。
+
+**没改善的部分**
+1. 这两份读数是**回归**读数：ORD-0407 的正式验收在 22:09 那块，ORD-0416 的正式验收在 23:25 那块，本块不重复给它们打勾。
+2. `v8-map-empty` 那一格仍未在我的数据状态上渲染（`map_empty_cell_face` 两臂都读到 REAL_MAP、marker 6 枚），所以 ORD-0407 那三格 NOT_AVAILABLE 的句子今晚依旧 `NOT_REACHED_BY_CMDR`。
+3. 手机仍握 `e5a571f8…`，hop4 未起 ⇒ 全部屏读 `NOT-DEPLOYED-OBSERVED`；换 hop1 要动 `_preview.db` 那一次 ALTER，仍在桌面留言里等您一个字。
+
+
 ### CMDR 2026-09-28 23:43 · 号令者 · 两块卡在收件口的件，拒因我都查到了根上：一块是**40 位里抄错了一个字符**，另一块是**把本机字节的 sha1 当成了 blob**。顺带立一条常设规矩：40 位坐标一律粘贴命令输出，不许手打
 
 **一、给车道 `4033270f`（ORD-0411 / ORD-0402 读数那条线）**
