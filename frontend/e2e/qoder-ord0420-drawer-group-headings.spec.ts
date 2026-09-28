@@ -11,7 +11,9 @@
  *   A2 en arm: the four headings are still exactly the four words travellers read before this change,
  *      so the English screen cannot have moved;
  *   A3 both arms: the drawer's kicker and close button still read from the dictionary (the control
- *      that shows the bug was specific to the headings, not to the whole drawer).
+ *      that shows the bug was specific to the headings, not to the whole drawer);
+ *   A4 1280x800, both arms: the desktop rail is the second site that painted the same code, so it is
+ *      read the same way -- the order named the drawer, and the fix had to not stop at the named one.
  *
  * The readings are rendered text (`allTextContents`), never a data attribute or a dictionary key.
  */
@@ -26,15 +28,18 @@ type Arm = {
   kicker: string[];
   close: string[];
   rows: string[];
+  surface: string;
+  viewport: string;
 };
 
 const LATIN_ONLY = /^[\x20-\x7e]+$/;
 const CJK = /[一-鿿]/;
 
-async function readArm(browser: Browser, locale: string): Promise<Arm> {
+async function readArm(browser: Browser, locale: string, size = { width: 390, height: 844 },
+                       surface = "drawer"): Promise<Arm> {
   const ctx = await browser.newContext({
-    viewport: { width: 390, height: 844 },
-    hasTouch: true,
+    viewport: size,
+    hasTouch: size.width < 500,
     locale,
   });
   const page: Page = await ctx.newPage();
@@ -47,6 +52,8 @@ async function readArm(browser: Browser, locale: string): Promise<Arm> {
     kicker: [],
     close: [],
     rows: [],
+    surface,
+    viewport: size.width + "x" + size.height,
   };
   try {
     await page.goto("/", { waitUntil: "networkidle", timeout: 90000 });
@@ -61,18 +68,20 @@ async function readArm(browser: Browser, locale: string): Promise<Arm> {
       }
     }
     const ham = page.locator('[aria-controls="v8-nav-drawer"]');
-    if (await ham.count()) {
+    if (surface === "drawer" && await ham.count()) {
       await ham.first().click();
       await page.waitForTimeout(1200);
     }
-    const drawer = page.locator("#v8-nav-drawer");
-    out.drawerOpen = await drawer.count();
+    const root = page.locator(surface === "drawer" ? "#v8-nav-drawer" : "nav.v8-nav");
+    out.drawerOpen = await root.count();
     if (out.drawerOpen) {
-      out.headings = await drawer.locator(".v8-nav-group").allTextContents();
-      out.kicker = await drawer.locator(".v8-kicker").allTextContents();
-      out.close = await drawer.locator(".v8-quiet-button").allTextContents();
-      out.rows = (await drawer.locator("button span").allTextContents()).map((s) => s.trim());
+      out.headings = await root.locator(".v8-nav-group").allTextContents();
+      out.kicker = await root.locator(".v8-kicker").allTextContents();
+      out.close = await root.locator(".v8-quiet-button").allTextContents();
+      out.rows = (await root.locator("button span").allTextContents()).map((s) => s.trim());
     }
+    out.surface = surface;
+    out.viewport = size.width + "x" + size.height;
   } finally {
     await ctx.close();
   }
@@ -83,6 +92,8 @@ function report(arm: Arm): string {
   const latin = arm.headings.filter((s) => LATIN_ONLY.test(s.trim())).length;
   const cjk = arm.headings.filter((s) => CJK.test(s)).length;
   return [
+    "surface=" + arm.surface,
+    "viewport=" + arm.viewport,
     "headings=" + JSON.stringify(arm.headings),
     "heading_count=" + arm.headings.length,
     "latin_only=" + latin,
@@ -111,6 +122,18 @@ test("Q420 A2 the en arm still shows the four words it showed before", async ({ 
   console.log("Q420 A2 en " + report(arm));
   expect(arm.drawerOpen, "the drawer has to be open before any heading can be read").toBe(1);
   expect(arm.headings, "the English screen must not move: these are the words already shipped")
+    .toEqual(["TODAY", "PLAN", "TRAVEL", "SYSTEM"]);
+});
+
+test("Q420 A4 the desktop rail's headings come from the same dictionary on both arms", async ({ browser }) => {
+  const zh = await readArm(browser, "zh", { width: 1280, height: 800 }, "desktop");
+  const en = await readArm(browser, "en", { width: 1280, height: 800 }, "desktop");
+  console.log("Q420 A4 zh desktop " + report(zh));
+  console.log("Q420 A4 en desktop " + report(en));
+  expect(zh.headings.length, "the desktop rail heads the same four groups").toBe(4);
+  expect(zh.headings.filter((s) => LATIN_ONLY.test(s.trim())),
+    "the desktop rail may not keep painting machine codes on the zh arm").toEqual([]);
+  expect(en.headings, "the desktop rail's English screen must not move")
     .toEqual(["TODAY", "PLAN", "TRAVEL", "SYSTEM"]);
 });
 
