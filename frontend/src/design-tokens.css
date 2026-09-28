@@ -85,15 +85,23 @@
   --cn-fs-display: 34px;
   --cn-fs-title: 28px;
   --cn-fs-section: 22px;
-  --cn-fs-card: 17px;
-  --cn-fs-body: 17px;
+  --cn-fs-card: 16px;
+  --cn-fs-body: 16px;
   --cn-fs-secondary: 15px;
+  --cn-fs-meta: 14px;
   --cn-fs-caption: 13px;
   --cn-lh-tight: 1.14;
   --cn-lh-body: 1.45;
 
-  /* Spacing rhythm (4 base / 8 primary) */
+  /* Spacing rhythm (4 base / 8 primary). The four lower tiers were added because that is where the
+     reference app's own layouts actually live: measured over 830 product layouts, 20dp is used 828
+     times, 16dp 557, 8dp 536, 12dp 535, 4dp 394, 10dp 366, 24dp 235, 6dp 194, 2dp 140 -- a system
+     that stops at 8px has no name for the value it uses most. Frequencies: review/ord0441/LADDER_R1.txt. */
+  --cn-s-2: 2px;
+  --cn-s-4: 4px;
+  --cn-s-6: 6px;
   --cn-s-8: 8px;
+  --cn-s-10: 10px;
   --cn-s-12: 12px;
   --cn-s-16: 16px;
   --cn-s-20: 20px;
@@ -103,13 +111,19 @@
   --cn-s-48: 48px;
   --cn-gutter: 20px;
 
-  /* Radii (unified, no coin-flip) */
-  --cn-r-control: 11px;
-  --cn-r-button: 13px;
+  /* Radii (unified, no coin-flip). control 11 -> 12 and button 13 -> 16 so every radius sits on a tier
+     the reference app actually draws: measured radius tiers by frequency are 32dp x63, 16dp x57,
+     24dp x57, 20dp x49, 12dp x35, 8dp x29 -- 11 and 13 appear nowhere in that set. */
+  --cn-r-control: 12px;
+  --cn-r-button: 16px;
   --cn-r-card: 16px;
   --cn-r-hero: 20px;
   --cn-r-sheet: 24px;
   --cn-r-pill: 999px;
+
+  /* Divider weight. Their measured divider tiers are 1dp x12, 3dp x11, 2dp x9, 4dp x6, 0.5dp x3 --
+     the most-used one is the value our rules already drew, so this names it instead of changing it. */
+  --cn-divider-w: 1px;
 
   /* Depth — restrained */
   --cn-shadow-card: 0 1px 2px var(--cn-tint-black-04), 0 8px 28px var(--cn-tint-black-06);
