@@ -16588,6 +16588,80 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### qoder-0418 2026-09-29 03:42 · 车道 2d2d7428 · ORD-0418 与 ORD-0427 的补件：您那三条环境情报我当场复算了一遍，其中一条抓到我自己的错（端口归属第一版我配错了目录），并把七台臂服的归属重测
+
+先说结论，免得您再等： ORD-0418 已按您的复切 ABORT 重交为 refs/heads/review/Q-ord0418-map-route-claim-r2 = b86624faeac6ed46e767aa5afd61f33d9a44bb8b
+（块 qoder-0418_0327 已过 Q43 r7 与 bolt），三臂在新代次上全部重产物重读数； ORD-0427 已交并已在权威线上：
+  我这枝 frontend/src/styles.css 的 blob = 6c4efbc6d5454004ffaa993ea5432a094caf3319，现尖 8d038b21f09477b933cff3b1c7b09845c542373b 同一文件 blob = 6c4efbc6d5454004ffaa993ea5432a094caf3319，逐字相同；
+  那条排除 head 的规则在现尖上是第 331 行（git show 现尖:frontend/src/styles.css 现读，不是我记的行号）。
+
+**情报 1（端口共用不算归属）我用上了，并且它先抓到我自己**：我第一版归属自查把 :60082 与 dist_cand2 配对去取入口文件，
+  取回 http 200、正文 0 B，而磁盘那份是 1336462 B —— 我以为是撞了别人的台，实际是 SPA 回退在骗我：资产名不存在时
+  vite preview 仍回 http 200，正文换成那台机自己的 index.html。所以『curl 到了 http 200 且有字节』根本不能证明你在哪台机上；
+  只有入口名取自我自己那台的 index.html，且服务字节的 sha1 与磁盘件逐字相同，才算归属。:60082 真正服务的是 index-27A-LsuK.js（1336462 B），这台机从头到尾没被别人占过。
+  按这个尺重测，七台臂服同批读数（每台各自取自己 index.html 里的入口名，再与服务字节比磁盘字节的 sha1）：
+    :60071 ORD-0427 pass2 tip 监听者数=1 入口=index-B6TcCRoD.js 服务 1336165 B 磁盘 1336165 B sha1 相等=True 监听进程命令行点名该 dist=True
+    :60072 ORD-0427 pass2 cand 监听者数=1 入口=index-Duayag5T.js 服务 1336165 B 磁盘 1336165 B sha1 相等=True 监听进程命令行点名该 dist=True
+    :60081 ORD-0427 pass3 tip 监听者数=1 入口=index-ChP6V0Vj.js 服务 1336462 B 磁盘 1336462 B sha1 相等=True 监听进程命令行点名该 dist=True
+    :60082 ORD-0427 pass3 cand 监听者数=1 入口=index-27A-LsuK.js 服务 1336462 B 磁盘 1336462 B sha1 相等=True 监听进程命令行点名该 dist=True
+    :60091 ORD-0418 before  监听者数=1 入口=index-oR3PVCYW.js 服务 1343017 B 磁盘 1343017 B sha1 相等=True 监听进程命令行点名该 dist=True
+    :60092 ORD-0418 after   监听者数=1 入口=index-CJllJiWZ.js 服务 1343964 B 磁盘 1343964 B sha1 相等=True 监听进程命令行点名该 dist=True
+    :60093 ORD-0418 mutant  监听者数=1 入口=index-CZsHi6i4.js 服务 1343760 B 磁盘 1343760 B sha1 相等=True 监听进程命令行点名该 dist=True
+  三证里我拿不出第三条：vite preview 不写访问日志 —— 实测 http://127.0.0.1:60072/v8/hub 那次请求前后，预览日志都是 78 B 一字未动（78 → 78）。
+  所以我交的是两证 + 监听进程命令行里的 --outDir 指向我自己的 dist 目录，第三条具名报不可得，不假装凑满。
+  您要的那份带访问日志的归属我可以补：换一枚我自己起、自己写的静态口重跑三臂，一小时内交——但那只改仪器，不改任何读数，要不要做请裁。
+
+**情报 3（配对尺看不见新键）与我这轮的判断一致**： ORD-0418 与 ORD-0427 的断言全部建在渲染物上——
+  ORD-0418 读 sr-only 那段自己的 textContent 与它是否可读（before 臂 4 格红 2、after 臂红 0、mutant 臂红回 2，
+  见 qoder-0418_0327 的件 review/ord0418/CLAIM_R2.txt blob c663dbd08a0f58a9824a15c4905aceff66a32903），
+  ORD-0427 两维都读 getComputedStyle 与 Range.getClientRects().length（块 qoder-0427_0303）。
+  文案尺我只当「不许让既有句子变长」的护栏用，没拿它的绿当覆盖率的证据。
+  另外因为无冲突≠对，我另查了那两枚新键的静默失配（件内各两处、现尖上零处、两本字典键数相等且零重名；
+  这几个数在块生成时从 git 现读重算过，不是我从记忆里抄的，逐字读数在那块的 review/ord0418/CLAIM_R2.txt:25 与
+  frontend/src/i18n/LocaleContext.tsx:813 两行里）。
+
+**回报一条您工具链会咬到的坑（同一台共享库引起的）**：我在 D:/moodle/CityNexus 里跑 env -u HTTP_PROXY -u HTTPS_PROXY git fetch origin
+  mirror/integration-frontend-apple-pass1 之后紧接着 git rev-parse FETCH_HEAD:frontend/src/styles.css，得到
+  fatal: path frontend/src/styles.css exists on disk, but not in df7b9945901423352b561fd03b98fb12423f2a27 —— 那枚是另一条线（S4-ast-taint ORD-0408）的尖，
+  顶层树只有 backend/commander/evidence/live_checks，没有 frontend/。两条命令之间别的车道在同一库上做过 fetch，把 FETCH_HEAD 覆盖了。
+  我这轮起现尖只从 ls-remote 取（上面那枚 8d038b21f09477b933cff3b1c7b09845c542373b 就是这么读的），不再碰 FETCH_HEAD。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
+### ORD-0383 格三已交 · 车道 4033270f（后端·行程门）· 找回门的写现在由数据库裁决；格一我量过、**没执行**，请点一格 · 枝 `refs/heads/review/qoder-0383-undelete-lock-r1` · 2026-09-29 0343+08
+
+**我照的是账本原文，不是转述**：块头逐字「CMDR 2026-09-29 02:5x · 号令者（会话 `494abfd7-5a79-4cc1-8487-e873818a2db3`）· 两条裁定入账（ORD-0408 判甲、ORD-0383 三格分派），并具名记一件必须记的事：**同一条车道收到了两个号令者相反的话**」里那三条分派（格三优先开工 / 格一顺手带上判乙 / 格二记下不开单）与我窗口收到的那条一致，所以本轮没有冲突要报；我也照同一块里那条共同规矩——冲突时以账本为准并具名报。基座以我自己 `env -u HTTP_PROXY -u HTTPS_PROXY git -C D:/moodle/CityNexus ls-remote origin refs/heads/mirror/integration-frontend-apple-pass1` 现读的 `dccd13ad66ea35e9a6d7ca7a3d91a1ae9a579808` 为准；写这块时同一条命令读到的是 `8d038b21f09477b933cff3b1c7b09845c542373b`（现尖在我干活期间又往前走了，我没有回头追它，追的话会另起一笔）。
+
+**交付**：`git -c http.proxy= -c https.proxy= ls-remote origin refs/heads/review/qoder-0383-undelete-lock-r1` 回读 `e1b28d45cbb6aaae8b698954bcf9eac36ac95d4a`，与本地提交逐字相同。这是一枚**新枝**，远端此前没有同名枝，所以 0 覆盖、0 force-push。一笔提交里 6 枚文件：`backend/app/main.py` blob `f6f259bfccab959b0882622e116278a0124d7aa6`；`backend/tests/test_qoder_ord0383_undelete_write_lock.py`（新）blob `2cd2cb82c8dcd04a2a4d30c68653916a85977f1d`；`backend/tests/test_qoder_ord0399_journey_undelete.py` blob `69c2e3199fe696c76848e8d3cd4c8f540ed80eb4`；`review/ord0383-undelete-lock/` 三件 blob 依次 `e26e725062eb091ccfbd9efec4867ebfbc985d61`、`2480fc60a7cf861408df77a236c7692532e6b2e1`、`5cbb2efe9444ab483bb4dd2a0eff0ccd9f73a056`。**0 契约字节、0 生成物字节、0 新增路由、0 新 `error.code`、0 新 `reason_code`**（拒绝用的仍是 `JOURNEY_NOT_DELETED` 与 `JOURNEY_ALREADY_DELETED` 这一对已有名字）。
+
+**格三做了什么**：原来那句是 `session.get` 读完、检查非空、再 `journey.deleted_at = None` 赋值——一次「读后写 ORM 对象」，门的 docstring 自己承认无锁。你点名的同文件三枚 `.rowcount` 写法（`_take_over_lapsed_claims`、`select_plan`、`_trip_studio_accept_impl`）走的是另一条：谓词进 `UPDATE`、成败看 `rowcount`。现在找回门就是这条，且谓词带的是**这一路 tap 自己读到的那枚丢弃时刻**；抢不到就重读再试，最多 `_UNDELETE_WRITE_ATTEMPTS` 次，一路都没抢到就用已有的名字回绝，不静默成功。`_accept_replan_executing` 里那句现成的话我照抄进门的 docstring：Conditional writes, not object assignment。
+
+**验收口径逐条对表**（读数全在 `review/ord0383-undelete-lock/READINGS_r1.json`，由同目录 `readout_r1.py` 在两棵树各跑一遍生成；下面每条形如 `field=value` 的都对得上里面的键）：
+
+1. 并发反件：`test_two_taps_fired_together_keep_the_invariant_and_one_audit_row_per_success` 在未修基座上 `base_verdict=FAIL`、在本候选上 `fixed_verdict=PASS`；同一把尺的计数是基座 `base_rounds=12`、`base_overlapping_rounds=12`、`base_double_success=12`，候选 `cand_rounds=12`、`cand_overlapping_rounds=12`、`cand_double_success=0`、`cand_audit_row_mismatch=0`。同一把尺、同样真重叠：未修的门每一轮两路都写成 succeed_both，修完是 `cand_double_success=0`。
+2. 两路响应码与那一行终值：反件每轮直接从库里读那一行的 `deleted_at` 终值并断言「要么恰好一路写、要么谁都没写」；锤击臂 `hammer_codes=200/204/409`、`hammer_five_hundreds=0`、`hammer_undelete_taps=53`、`hammer_delete_taps=59`、`hammer_successes=47`、`hammer_audit_rows=47`（键在 `per_arm.fixed` 那条 hammer 的 `readings` 里）。`hammer_audit_rows=47` 与 `hammer_successes=47` 相等。
+3. 审计只有一条：`cand_audit_row_mismatch=0`，另有 `test_the_single_tap_path_is_unchanged_by_the_predicate` 单独断言单路成功只落一条。
+4. 重叠不是我主张来的：`test_the_two_taps_window_really_overlaps_instead_of_being_asserted` 在两棵树都通过，候选树读到 `window_rounds=12`、`window_overlapping_rounds=12`、`window_slowest_first_tap_ms=94`。它的作用是一旦哪天传输把两路串成先后，它**先红**，并发臂的绿才不许被当成证据。
+4. 重复性：并发臂单独再跑 `repeat_runs=4` 次，基座树的 `double_success` 依次是 `11/10/11/11`，候选树依次是 `0/0/0/0`（未修那一侧偶尔 11/12 而不是 12，是同一枚竞态的正常抖动，所以并发臂只把它当"必然出双写"的证据，不当精确计数）。
+5. 测试同笔交、且真跑过：`collect_base=1436` 对 `collect_candidate=1440`（多的四枚正是这四臂；两行原文在同一件的 `collect_only` 键里）；`my_modules_passed=26` 全绿、`contract_plus_G6_passed=5` 全绿。整套后端一把命令两棵树对照：`suite_base_failed=10`、`suite_base_passed=1410`、`suite_candidate_failed=9`、`suite_candidate_passed=1415`、`new_in_the_candidate=0`、`disappeared=1`，消失那格 `backend\tests\test_qoder_anywhere_gates.py::test_g3_xproc_loser_readback_five_processes_one_operation`。那格启五枚进程，我在两棵树各单跑两次、四次全绿（`flipper_single_runs=4`、`flipper_single_run_failures=0`），所以它属顺序/隔离敏感，**我不记成我修的**。
+
+**我动过自己的一处断言，按规矩具名**：`test_this_door_did_not_borrow_the_recovery_or_restore_words` 里有一行钉的是字面量 `deleted_at = None`——它当年是「这扇门确实清了这列」的哨兵。格三把赋值换成条件写之后这个字面量不在了，于是它红的是**形状**而不是词表。现在两种写法都收（`.values(deleted_at=None)` 或赋值），并用两枚变异体证明它还会咬：`mut_no_clear`（把谓词写成永不清列）→ 该臂红 **且** 并发臂红，那一轮两路都拿到成功响应（`mut_both_taps_succeeded=true`），而那一行终值 `mut_cleared=false`；`mut_borrowed_word`（审计动作改名 `journey.restored`）→ 该臂红并打印 the audit action this door writes changed name。两枚变异的原始读数在 `D:\moodle\_qoder_ord0383_lock_ctl` 下，不在件里；要我入库说一声。
+
+**格一（判乙）我量了、没执行，因为它和「不重制基线件」不能同时成立**：那两句假话在 `backend/app/main.py:2961` 与 `backend/app/main.py:2962`，而它们正落在字节臂冻住的那一段里——该臂比的区间是从 `@app.get("/api/v1/journeys", response_model=list[JourneySchema])` 到 `@app.delete("/api/v1/journeys/{journey_id}", status_code=204)` 的整段，文档字符串属于这一段；基线段就是 `review/ord0402-readouts/LIST_DOOR_BASELINE_r2.json` blob `a1678b50c2f9666d2f0d5acbee932eac6565197b` 钉的那一枚。我在基座尖的私有副本里量了两格：文件不动时那一臂 `geo_untouched=1 passed`；把那两句按乙搬出门、真话列在装饰器之上之后，同一臂报 `AssertionError: list_journeys moved - the order forbids changing this door`，即 `geo_moved=1 failed`。**所以「搬出去 + 不动受保护字节 + 不重制基线件」三条凑不齐**。我也没有只删不补地糊过去：那句假话现在仍在原处、仍然为假，这条我认，等我一字回复。可执行的两条：
+- 甲′：把那两句改成真话并列现存读点（`backend/app/main.py:2968` 把该列过滤为 NULL、`backend/app/main.py:3093` 过滤为 NOT NULL、`backend/app/services.py:408` 读进回收站行、`backend/app/db/models.py:200` 声明、`backend/app/db/session.py:573` 给旧库加列），同笔用 `review/ord0402-readouts/make_list_door_baseline_artifact_r1.py` 重制基线件（工具在两侧段不相等时拒绝落件）；
+- 丙：把字节臂冻的区间收成「签名+查询+返回」，文档字符串移出冻面，再补一臂断言「真话里列出的读点集合 == 全仓实际引用该列的位置集合」。这样措辞以后还能改，行为仍然一个词都动不了。
+我推荐丙，但它是缩小约束①的覆盖面，而「哪怕一个词」是你写的，所以我不自己缩。
+
+**格二未动**：排序、契约、基线件三者 0 字节改动。按你的判语它是潜伏面而不是用户能碰到的缺陷；一旦出现旁路写入（导入、脚本、固定测试库）请升单，量法现成（`contracts/openapi.yaml:497` 那句 newest first 对三种合法 ISO 写法的翻面读数在我 02:40 那块里）。
+
+**读数环境与纪律**：所有臂都跑在 pytest 进程自己声明的临时库里（`backend/tests/conftest.py` 的 `sqlite:///<temp>/suite.db`，它的 report header 会打印解析后的绝对路径），`_preview.db` 与 `_live.db` 0 打开、只读备份本轮用不到所以没做、`demo/reset` 0 次、别人 worktree 与枝与进程 0 触碰、权威线 0 字节、凭据 0 打印、端口 0 起（并发在一进程内完成）。盘：本车道为这格新增三棵树，`du -sm` 实读 `du_ctl=272`、`du_base=132`、`du_delivery=132`（单位 MB），`df -h D:` 写前写后都读到 `free_d_gib=15`。落地之后前两棵可直接删，件里的数字都在枝上。
+
+**等一个字**：甲′ 还是 丙。给了我把格一补成同一枝上的第二笔；不给我就停在这里，不自己选。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### qoder-0418 2026-09-29 03:27 · 车道 2d2d7428 · ORD-0418 重交（请用 r2，r1 请弃读）：以现尖重基、三臂全部重产物重读数；两枚新键每本字典一段连续插入，且我自查了「干净摘取」的两种静默失配
 
 按您的复切结论办：cmdr_recut_r1.py --order ORD-0418 对 r1（=c1296632567cd4b9e79695111c10836aa5a94767）在 frontend/src/i18n/LocaleContext.tsx 上报 ABORT，
