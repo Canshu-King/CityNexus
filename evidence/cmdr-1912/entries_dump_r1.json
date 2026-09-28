@@ -1,0 +1,929 @@
+{
+ "at": "2026-09-28T11:06:29.907Z",
+ "base": "http://127.0.0.1:4789/",
+ "seal_found": 1,
+ "afterSeal": {
+  "url": "/v8/hub",
+  "chars": 589
+ },
+ "openedBy": "[aria-label*='导航']",
+ "hub_rows": [
+  {
+   "tid": null,
+   "txt": "菜单",
+   "tag": "BUTTON",
+   "box": [
+    17,
+    19,
+    46,
+    27
+   ]
+  },
+  {
+   "tid": "topbar-theme",
+   "txt": "跟随系统",
+   "tag": "BUTTON",
+   "box": [
+    191,
+    17,
+    65,
+    44
+   ]
+  },
+  {
+   "tid": "topbar-language",
+   "txt": "EN",
+   "tag": "BUTTON",
+   "box": [
+    264,
+    17,
+    65,
+    44
+   ]
+  },
+  {
+   "tid": null,
+   "txt": "DE",
+   "tag": "BUTTON",
+   "box": [
+    345,
+    25,
+    28,
+    28
+   ]
+  },
+  {
+   "tid": "today-heading",
+   "txt": "Demo之旅",
+   "tag": "H1",
+   "box": [
+    17,
+    117,
+    356,
+    39
+   ]
+  },
+  {
+   "tid": "today-when",
+   "txt": "10月10日 09:00 — 10月10日 19:0",
+   "tag": "P",
+   "box": [
+    17,
+    169,
+    356,
+    21
+   ]
+  },
+  {
+   "tid": "hub-secondary-actions",
+   "txt": "AI 帮我规划 试用其他城市 打开行程工作台 复制行",
+   "tag": "DIV",
+   "box": [
+    17,
+    200,
+    356,
+    90
+   ]
+  },
+  {
+   "tid": "hub-plan-with-ai",
+   "txt": "AI 帮我规划",
+   "tag": "BUTTON",
+   "box": [
+    17,
+    200,
+    68,
+    44
+   ]
+  },
+  {
+   "tid": null,
+   "txt": "试用其他城市",
+   "tag": "BUTTON",
+   "box": [
+    101,
+    200,
+    78,
+    44
+   ]
+  },
+  {
+   "tid": null,
+   "txt": "打开行程工作台",
+   "tag": "BUTTON",
+   "box": [
+    195,
+    200,
+    91,
+    44
+   ]
+  },
+  {
+   "tid": "journey-link-copy",
+   "txt": "复制行程链接",
+   "tag": "BUTTON",
+   "box": [
+    17,
+    246,
+    78,
+    44
+   ]
+  },
+  {
+   "tid": "today-hero",
+   "txt": "现在 Tech Art Center 接下来 15:",
+   "tag": "ARTICLE",
+   "box": [
+    17,
+    314,
+    356,
+    332
+   ]
+  },
+  {
+   "tid": "today-now",
+   "txt": "现在 Tech Art Center",
+   "tag": "DIV",
+   "box": [
+    42,
+    339,
+    306,
+    52
+   ]
+  },
+  {
+   "tid": "today-next",
+   "txt": "接下来 15:30 Nexus River Crui",
+   "tag": "DIV",
+   "box": [
+    42,
+    399,
+    306,
+    109
+   ]
+  },
+  {
+   "tid": "today-hero-cta",
+   "txt": "查看实时行程",
+   "tag": "BUTTON",
+   "box": [
+    42,
+    524,
+    130,
+    44
+   ]
+  },
+  {
+   "tid": "today-clock-source",
+   "txt": "“现在”取自服务器场景（执行游标）：10月10日 1",
+   "tag": "SMALL",
+   "box": [
+    42,
+    584,
+    306,
+    38
+   ]
+  },
+  {
+   "tid": "v8-map-empty",
+   "txt": "尚未获取地图位置 这个行程还没有可信的坐标。添加活动",
+   "tag": "DIV",
+   "box": [
+    17,
+    664,
+    356,
+    97
+   ]
+  },
+  {
+   "tid": "today-strip",
+   "txt": "住宿 还没有选定 到达 10月10日 09:00 出",
+   "tag": "DIV",
+   "box": [
+    17,
+    771,
+    356,
+    65
+   ]
+  },
+  {
+   "tid": "today-stay",
+   "txt": "还没有选定",
+   "tag": "STRONG",
+   "box": [
+    34,
+    803,
+    75,
+    20
+   ]
+  },
+  {
+   "tid": "today-attention-band",
+   "txt": "这个行程还没有可信的坐标",
+   "tag": "SECTION",
+   "box": [
+    17,
+    840,
+    356,
+    23
+   ]
+  },
+  {
+   "tid": "today-attention",
+   "txt": "这个行程还没有可信的坐标",
+   "tag": "STRONG",
+   "box": [
+    20,
+    843,
+    154,
+    17
+   ]
+  },
+  {
+   "tid": "pretrip-checklist",
+   "txt": "行前清单 服务端报出的两类待办 这里只列契约写明依据",
+   "tag": "SECTION",
+   "box": [
+    17,
+    885,
+    356,
+    325
+   ]
+  },
+  {
+   "tid": "pretrip-empty",
+   "txt": "服务端这一代没有报出可行性失败，也没有等待你决定的恢",
+   "tag": "DIV",
+   "box": [
+    32,
+    1053,
+    326,
+    142
+   ]
+  },
+  {
+   "tid": "pretrip-empty-action",
+   "txt": "去看这一代方案",
+   "tag": "BUTTON",
+   "box": [
+    32,
+    1151,
+    119,
+    44
+   ]
+  },
+  {
+   "tid": null,
+   "txt": "对比住宿 →",
+   "tag": "BUTTON",
+   "box": [
+    291,
+    1252,
+    82,
+    44
+   ]
+  },
+  {
+   "tid": "hub-glance-empty",
+   "txt": "还没有可以预览的行程 选定方案后，这里会显示每天的安",
+   "tag": "DIV",
+   "box": [
+    17,
+    1311,
+    356,
+    58
+   ]
+  },
+  {
+   "tid": "v18-copilot-dock",
+   "txt": "",
+   "tag": "ASIDE",
+   "box": [
+    396,
+    706,
+    165,
+    54
+   ]
+  },
+  {
+   "tid": null,
+   "txt": "CityNexus Copilot",
+   "tag": "BUTTON",
+   "box": [
+    396,
+    718,
+    165,
+    42
+   ]
+  },
+  {
+   "tid": "nav-hub",
+   "txt": "今天",
+   "tag": "BUTTON",
+   "box": [
+    5,
+    789,
+    76,
+    48
+   ]
+  },
+  {
+   "tid": "nav-trips",
+   "txt": "行程",
+   "tag": "BUTTON",
+   "box": [
+    81,
+    789,
+    76,
+    48
+   ]
+  },
+  {
+   "tid": "nav-map",
+   "txt": "地图",
+   "tag": "BUTTON",
+   "box": [
+    157,
+    789,
+    76,
+    48
+   ]
+  },
+  {
+   "tid": "nav-agent",
+   "txt": "Copilot",
+   "tag": "BUTTON",
+   "box": [
+    233,
+    789,
+    76,
+    48
+   ]
+  },
+  {
+   "tid": "nav-me",
+   "txt": "我的",
+   "tag": "BUTTON",
+   "box": [
+    309,
+    789,
+    76,
+    48
+   ]
+  },
+  {
+   "tid": "sim-float",
+   "txt": "",
+   "tag": "DIV",
+   "box": [
+    330,
+    634,
+    48,
+    60
+   ]
+  },
+  {
+   "tid": "sim-ball",
+   "txt": "模拟舞台（舞台上有场景）：教学模拟舞台 · 屏幕上的",
+   "tag": "BUTTON",
+   "box": [
+    330,
+    646,
+    48,
+    48
+   ]
+  },
+  {
+   "tid": "sim-ball-dot",
+   "txt": "",
+   "tag": "SPAN",
+   "box": [
+    348,
+    664,
+    12,
+    12
+   ]
+  }
+ ],
+ "drawer_rows": [
+  {
+   "tid": null,
+   "txt": "菜单",
+   "tag": "BUTTON",
+   "box": [
+    17,
+    19,
+    46,
+    27
+   ]
+  },
+  {
+   "tid": "topbar-theme",
+   "txt": "跟随系统",
+   "tag": "BUTTON",
+   "box": [
+    191,
+    17,
+    65,
+    44
+   ]
+  },
+  {
+   "tid": "topbar-language",
+   "txt": "EN",
+   "tag": "BUTTON",
+   "box": [
+    264,
+    17,
+    65,
+    44
+   ]
+  },
+  {
+   "tid": null,
+   "txt": "DE",
+   "tag": "BUTTON",
+   "box": [
+    345,
+    25,
+    28,
+    28
+   ]
+  },
+  {
+   "tid": "today-heading",
+   "txt": "Demo之旅",
+   "tag": "H1",
+   "box": [
+    17,
+    117,
+    356,
+    39
+   ]
+  },
+  {
+   "tid": "today-when",
+   "txt": "10月10日 09:00 — 10月10日 19:0",
+   "tag": "P",
+   "box": [
+    17,
+    169,
+    356,
+    21
+   ]
+  },
+  {
+   "tid": "hub-secondary-actions",
+   "txt": "AI 帮我规划 试用其他城市 打开行程工作台 复制行",
+   "tag": "DIV",
+   "box": [
+    17,
+    200,
+    356,
+    90
+   ]
+  },
+  {
+   "tid": "hub-plan-with-ai",
+   "txt": "AI 帮我规划",
+   "tag": "BUTTON",
+   "box": [
+    17,
+    200,
+    68,
+    44
+   ]
+  },
+  {
+   "tid": null,
+   "txt": "试用其他城市",
+   "tag": "BUTTON",
+   "box": [
+    101,
+    200,
+    78,
+    44
+   ]
+  },
+  {
+   "tid": null,
+   "txt": "打开行程工作台",
+   "tag": "BUTTON",
+   "box": [
+    195,
+    200,
+    91,
+    44
+   ]
+  },
+  {
+   "tid": "journey-link-copy",
+   "txt": "复制行程链接",
+   "tag": "BUTTON",
+   "box": [
+    17,
+    246,
+    78,
+    44
+   ]
+  },
+  {
+   "tid": "today-hero",
+   "txt": "现在 Tech Art Center 接下来 15:",
+   "tag": "ARTICLE",
+   "box": [
+    17,
+    314,
+    356,
+    332
+   ]
+  },
+  {
+   "tid": "today-now",
+   "txt": "现在 Tech Art Center",
+   "tag": "DIV",
+   "box": [
+    42,
+    339,
+    306,
+    52
+   ]
+  },
+  {
+   "tid": "today-next",
+   "txt": "接下来 15:30 Nexus River Crui",
+   "tag": "DIV",
+   "box": [
+    42,
+    399,
+    306,
+    109
+   ]
+  },
+  {
+   "tid": "today-hero-cta",
+   "txt": "查看实时行程",
+   "tag": "BUTTON",
+   "box": [
+    42,
+    524,
+    130,
+    44
+   ]
+  },
+  {
+   "tid": "today-clock-source",
+   "txt": "“现在”取自服务器场景（执行游标）：10月10日 1",
+   "tag": "SMALL",
+   "box": [
+    42,
+    584,
+    306,
+    38
+   ]
+  },
+  {
+   "tid": "v8-map-empty",
+   "txt": "尚未获取地图位置 这个行程还没有可信的坐标。添加活动",
+   "tag": "DIV",
+   "box": [
+    17,
+    664,
+    356,
+    97
+   ]
+  },
+  {
+   "tid": "today-strip",
+   "txt": "住宿 还没有选定 到达 10月10日 09:00 出",
+   "tag": "DIV",
+   "box": [
+    17,
+    771,
+    356,
+    65
+   ]
+  },
+  {
+   "tid": "today-stay",
+   "txt": "还没有选定",
+   "tag": "STRONG",
+   "box": [
+    34,
+    803,
+    75,
+    20
+   ]
+  },
+  {
+   "tid": "today-attention-band",
+   "txt": "这个行程还没有可信的坐标",
+   "tag": "SECTION",
+   "box": [
+    17,
+    840,
+    356,
+    23
+   ]
+  },
+  {
+   "tid": "today-attention",
+   "txt": "这个行程还没有可信的坐标",
+   "tag": "STRONG",
+   "box": [
+    20,
+    843,
+    154,
+    17
+   ]
+  },
+  {
+   "tid": "pretrip-checklist",
+   "txt": "行前清单 服务端报出的两类待办 这里只列契约写明依据",
+   "tag": "SECTION",
+   "box": [
+    17,
+    885,
+    356,
+    325
+   ]
+  },
+  {
+   "tid": "pretrip-empty",
+   "txt": "服务端这一代没有报出可行性失败，也没有等待你决定的恢",
+   "tag": "DIV",
+   "box": [
+    32,
+    1053,
+    326,
+    142
+   ]
+  },
+  {
+   "tid": "pretrip-empty-action",
+   "txt": "去看这一代方案",
+   "tag": "BUTTON",
+   "box": [
+    32,
+    1151,
+    119,
+    44
+   ]
+  },
+  {
+   "tid": null,
+   "txt": "对比住宿 →",
+   "tag": "BUTTON",
+   "box": [
+    291,
+    1252,
+    82,
+    44
+   ]
+  },
+  {
+   "tid": "hub-glance-empty",
+   "txt": "还没有可以预览的行程 选定方案后，这里会显示每天的安",
+   "tag": "DIV",
+   "box": [
+    17,
+    1311,
+    356,
+    58
+   ]
+  },
+  {
+   "tid": "v18-copilot-dock",
+   "txt": "✦ CityNexus Copilot",
+   "tag": "ASIDE",
+   "box": [
+    215,
+    706,
+    165,
+    54
+   ]
+  },
+  {
+   "tid": null,
+   "txt": "✦ CityNexus Copilot",
+   "tag": "BUTTON",
+   "box": [
+    215,
+    718,
+    165,
+    42
+   ]
+  },
+  {
+   "tid": "nav-hub",
+   "txt": "今天",
+   "tag": "BUTTON",
+   "box": [
+    5,
+    789,
+    76,
+    48
+   ]
+  },
+  {
+   "tid": "nav-trips",
+   "txt": "行程",
+   "tag": "BUTTON",
+   "box": [
+    81,
+    789,
+    76,
+    48
+   ]
+  },
+  {
+   "tid": "nav-map",
+   "txt": "地图",
+   "tag": "BUTTON",
+   "box": [
+    157,
+    789,
+    76,
+    48
+   ]
+  },
+  {
+   "tid": "nav-agent",
+   "txt": "Copilot",
+   "tag": "BUTTON",
+   "box": [
+    233,
+    789,
+    76,
+    48
+   ]
+  },
+  {
+   "tid": "nav-me",
+   "txt": "我的",
+   "tag": "BUTTON",
+   "box": [
+    309,
+    789,
+    76,
+    48
+   ]
+  },
+  {
+   "tid": null,
+   "txt": "关闭导航",
+   "tag": "BUTTON",
+   "box": [
+    0,
+    12,
+    390,
+    832
+   ]
+  },
+  {
+   "tid": null,
+   "txt": "关闭",
+   "tag": "BUTTON",
+   "box": [
+    241,
+    18,
+    32,
+    44
+   ]
+  },
+  {
+   "tid": null,
+   "txt": "行程",
+   "tag": "BUTTON",
+   "box": [
+    14,
+    3580,
+    271,
+    292
+   ]
+  },
+  {
+   "tid": null,
+   "txt": "我的",
+   "tag": "BUTTON",
+   "box": [
+    14,
+    3888,
+    271,
+    292
+   ]
+  },
+  {
+   "tid": "sim-float",
+   "txt": "",
+   "tag": "DIV",
+   "box": [
+    330,
+    634,
+    48,
+    60
+   ]
+  },
+  {
+   "tid": "sim-ball",
+   "txt": "模拟舞台（舞台上有场景）：教学模拟舞台 · 屏幕上的",
+   "tag": "BUTTON",
+   "box": [
+    330,
+    646,
+    48,
+    48
+   ]
+  },
+  {
+   "tid": "sim-ball-dot",
+   "txt": "",
+   "tag": "SPAN",
+   "box": [
+    348,
+    664,
+    12,
+    12
+   ]
+  }
+ ],
+ "drawer_node": {
+  "present": true,
+  "overflow_y": "auto",
+  "client_h": 844,
+  "scroll_h": 4204,
+  "items": [
+   {
+    "tid": null,
+    "txt": "关闭",
+    "y": 18
+   },
+   {
+    "tid": null,
+    "txt": "今天",
+    "y": 114
+   },
+   {
+    "tid": null,
+    "txt": "实时行程",
+    "y": 422
+   },
+   {
+    "tid": null,
+    "txt": "地图",
+    "y": 730
+   },
+   {
+    "tid": null,
+    "txt": "行程工作台",
+    "y": 1064
+   },
+   {
+    "tid": null,
+    "txt": "住宿选择",
+    "y": 1372
+   },
+   {
+    "tid": null,
+    "txt": "城市探索",
+    "y": 1680
+   },
+   {
+    "tid": null,
+    "txt": "旅行票夹",
+    "y": 2014
+   },
+   {
+    "tid": null,
+    "txt": "Copilot",
+    "y": 2322
+   },
+   {
+    "tid": null,
+    "txt": "恢复与执行",
+    "y": 2656
+   },
+   {
+    "tid": null,
+    "txt": "智能守护",
+    "y": 2964
+   },
+   {
+    "tid": null,
+    "txt": "旅行者画像",
+    "y": 3272
+   },
+   {
+    "tid": null,
+    "txt": "行程",
+    "y": 3580
+   },
+   {
+    "tid": null,
+    "txt": "我的",
+    "y": 3888
+   }
+  ]
+ },
+ "entry_text": "用你自己的城市试用 CITYNEXUS\n\n新建行程\n\n三步完成。选择目的地、告诉我们怎么玩，剩下的交给 CityNexus。\n\nEN\n1\n目的地与时间\n2\n人数与偏好\n3\n确认创建\n目的地\n看支持的目的地\n抵达地点\n离开地点\n抵达时间\n离开时间\n高级设置\n高级设置\n\n还需要填写：目的地、抵达地点、离开地点\n\n使用封存的演示行程\n下一步"
+}
