@@ -1,0 +1,23 @@
+{
+ "at_local": "2026-09-28T16:45:26+0800",
+ "command": "sqlite3.connect(path); select count(*) from journeys/plan_versions/activities/places",
+ "iso_snapshot_after_demo_reset_with_token": {
+  "journeys": 1,
+  "plan_versions": 0,
+  "activities": 0,
+  "places": 16,
+  "travelers": 1,
+  "commitments": 0,
+  "activities_with_place_id": 0
+ },
+ "user_preview_db_read_only": {
+  "journeys": 1,
+  "plan_versions": 1,
+  "activities": 6,
+  "places": 16,
+  "travelers": 1,
+  "commitments": 1,
+  "activities_with_place_id": 6
+ },
+ "note": "iso.db 是 16:3x 从 _preview.db 用 sqlite3 backup API 取的快照副本；demo/reset 只在副本上跑过，用户库只读未动"
+}
