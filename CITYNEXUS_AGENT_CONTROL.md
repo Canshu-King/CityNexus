@@ -16588,6 +16588,78 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### CMDR 2026-09-29 01:20 · 车道 `2d2d7428` · ORD-0419 交了：抽屉 14 行不再共用一枚实心蓝签名，当前行三元组独立；四形两臂各一个证据文件；复跑了你的 reach 仪表；另把放大后坐实的 head 行连带影响量给你裁
+
+件（请审 r2，三笔：改码头 + 读数 + 复跑你的仪表）：`review/Q-ord0419-drawer-row-scope-r2` 远端回读 = `fea90c9c070bc55fd4f0a69190395c11b224fdc1`，基点 = 现尖 `29cd74754eabaf38e35607e073986d4a2336649d`（我自己 `ls-remote` 现读，与你 00:31 那节同源）；
+`git merge-tree --write-tree <现尖> <r2>` 退出码=0，合并树 = `c24b593a1fb8af6198bcb8d755f279582953a3d0`。
+为什么另起一枚 ref：先推的 `refs/heads/review/Q-ord0419-drawer-row-scope-r1`（= 36afa6f36817c08a7116f22a99f96d5952535b76）里两笔提交**正文被我的 shell 吞了**——我在 `git commit -m` 的双引号里写了反引号，bash 当命令替换吃掉了（`its /companion and its weight rule` 就是那处残文）。
+按你 09-28 交件纪律「push 用新枝名，别覆盖已交过的 ref」我没有 force-move r1，而是把同样两棵树重推到 r2 的头两笔：`git rev-parse 36afa6f3^{tree}` 与 `git rev-parse 578dbfd4^{tree}` 逐字相同 = `1c1f0e87f318ddb59d4013d1bb6d0391f57cef4c`
+  ⇒ r1 只是说明文字坏了，那两笔内容一字不差；r2 之后又追加一笔复跑你仪表的读数（`git diff --name-only 578dbfd4 fea90c9c070bc55fd4f0a69190395c11b224fdc1 -- frontend` 输出 0 行 ⇒ 产品字节零变化，树因此变成 `ea9625f10eac5724e707816b5ece846abc0fca59`）。r1 请弃读，不必删。
+
+**改的就三处选择器，一个文件**（`frontend/src/styles.css` 现尖 blob `97c273bd8c7d250ba839f8d4429d357a8caabcac` → 件内 blob `dc623ef4e02a7bb2f4bea0854265d5c1a5d92a85`）：
+  :331 `#v8-nav-drawer > button` → `#v8-nav-drawer button`；:337 `... > button:hover, > button.active` → 后代形；:338 `#v8-nav-drawer > button.active` → `#v8-nav-drawer button.active`。
+  与侧栏 `frontend/src/styles.css:143`（`.v8-nav button`，命中）同形，与我 ORD-0416 已落地的 `frontend/src/styles.css:336` 同族。`frontend/src/app/V8Experience.tsx` 一字未动（归 ORD-0420）。
+
+**渲染后读数，八格两臂各一件**（判据全在 `getComputedStyle`，没断 class 也没断 data 属性；当前行按它自己的可见标签识别，zh「今天」/ en「Today」）：
+  before 臂（现尖产物入口 `index-CGSMsxT2.js`，与你 00:31 那节报的入口名逐字相同）：
+    390x844 zh-CN rows=14 落在全局裸按钮签名=14 落在 #758196 档=0 三元组种类=1 当前行签名唯一=False 滚到该后再命中=14/14 ｜ 见 `review/ord0419/RENDER_R1.txt:23`
+    390x844 en    rows=14 落在全局裸按钮签名=14 落在 #758196 档=0 三元组种类=1 当前行签名唯一=False 滚到该后再命中=14/14 ｜ 见 `review/ord0419/RENDER_R1.txt:25`
+    360x800 zh-CN rows=14 落在全局裸按钮签名=14 落在 #758196 档=0 三元组种类=1 当前行签名唯一=False 滚到该后再命中=14/14 ｜ 见 `review/ord0419/RENDER_R1.txt:27`
+    360x800 en    rows=14 落在全局裸按钮签名=14 落在 #758196 档=0 三元组种类=1 当前行签名唯一=False 滚到该后再命中=14/14 ｜ 见 `review/ord0419/RENDER_R1.txt:29`
+    414x896 zh-CN rows=14 落在全局裸按钮签名=14 落在 #758196 档=0 三元组种类=1 当前行签名唯一=False 滚到该后再命中=14/14 ｜ 见 `review/ord0419/RENDER_R1.txt:31`
+    414x896 en    rows=14 落在全局裸按钮签名=14 落在 #758196 档=0 三元组种类=1 当前行签名唯一=False 滚到该后再命中=14/14 ｜ 见 `review/ord0419/RENDER_R1.txt:33`
+    320x653 zh-CN rows=14 落在全局裸按钮签名=14 落在 #758196 档=0 三元组种类=1 当前行签名唯一=False 滚到该后再命中=14/14 ｜ 见 `review/ord0419/RENDER_R1.txt:35`
+    320x653 en    rows=14 落在全局裸按钮签名=14 落在 #758196 档=0 三元组种类=1 当前行签名唯一=False 滚到该后再命中=14/14 ｜ 见 `review/ord0419/RENDER_R1.txt:37`
+  after 臂（本枝产物入口 `index-zfqCO18k.js`）：
+    390x844 zh-CN rows=14 落在 rgb(66, 89, 216)=0 落在 rgb(117, 129, 150)=13 三元组种类=2 当前行签名唯一=True 滚到该后再命中=14/14 ｜ 见 `review/ord0419/RENDER_R1.txt:24`
+    390x844 en    rows=14 落在 rgb(66, 89, 216)=0 落在 rgb(117, 129, 150)=13 三元组种类=2 当前行签名唯一=True 滚到该后再命中=14/14 ｜ 见 `review/ord0419/RENDER_R1.txt:26`
+    360x800 zh-CN rows=14 落在 rgb(66, 89, 216)=0 落在 rgb(117, 129, 150)=13 三元组种类=2 当前行签名唯一=True 滚到该后再命中=14/14 ｜ 见 `review/ord0419/RENDER_R1.txt:28`
+    360x800 en    rows=14 落在 rgb(66, 89, 216)=0 落在 rgb(117, 129, 150)=13 三元组种类=2 当前行签名唯一=True 滚到该后再命中=14/14 ｜ 见 `review/ord0419/RENDER_R1.txt:30`
+    414x896 zh-CN rows=14 落在 rgb(66, 89, 216)=0 落在 rgb(117, 129, 150)=13 三元组种类=2 当前行签名唯一=True 滚到该后再命中=14/14 ｜ 见 `review/ord0419/RENDER_R1.txt:32`
+    414x896 en    rows=14 落在 rgb(66, 89, 216)=0 落在 rgb(117, 129, 150)=13 三元组种类=2 当前行签名唯一=True 滚到该后再命中=14/14 ｜ 见 `review/ord0419/RENDER_R1.txt:34`
+    320x653 zh-CN rows=14 落在 rgb(66, 89, 216)=0 落在 rgb(117, 129, 150)=13 三元组种类=2 当前行签名唯一=True 滚到该后再命中=14/14 ｜ 见 `review/ord0419/RENDER_R1.txt:36`
+    320x653 en    rows=14 落在 rgb(66, 89, 216)=0 落在 rgb(117, 129, 150)=13 三元组种类=2 当前行签名唯一=True 滚到该后再命中=14/14 ｜ 见 `review/ord0419/RENDER_R1.txt:38`
+  逐行三元组原文（390×844 zh）：before 当前行 今天 = rgb(66, 89, 216) / rgb(255, 255, 255) / w400，另一行 实时行程 = rgb(66, 89, 216) / rgb(255, 255, 255) / w400 ⇒ 14 行一种签名（见 `review/ord0419/RENDER_R1.txt:51`）；
+  after 当前行 今天 = rgb(241, 243, 255) / rgb(10, 102, 255) / w750，其余 13 行 = rgba(0, 0, 0, 0) / rgb(117, 129, 150) / w400 ⇒ 三元组确实分裂（2 种）。你 00:31 亲测的那枚签名 rgb(66, 89, 216) 我在 before 臂逐字复现（14/14），after 臂读到 0/14（见 `review/ord0419/RENDER_R1.txt:53`）。
+
+**320×653 按你改写后的可达性口径判**（不缩字号、不加底带、不要 10 行同屏）：可达 = 在抽屉自己的滚动容器里把该行滚到位之后再命中。
+  该形 before 滚后命中 14/14、after 滚后命中 14/14（overflow 401 → 345 px）。第 9~14 行在 scroll=0 时中心确实在屏外，逐行 `reach_detail` 记着滚前/滚后两个读数——按新口径这不叫红；本形没有一行是“滚了还在屏外”（见 `review/ord0419/RENDER_R1.txt:58`；逐行明细在 `review/ord0419/before.receipt.json` 与 `after.receipt.json` 的 `reach_detail` 字段）。
+  我另把这条口径写成了仪表里的正式判据（`all_reachable_after_scroll`），八格里 before/after 全为真 ⇒ 这一维不是本单改出来的，本单改的是签名分裂那一维。
+
+**放大选择器顺带碰到的东西，量出来交给你裁，我没顺手改**：`#v8-nav-drawer button` 也命中 head 行那枚「关闭」按钮。实测（`review/ord0419/head_collateral.receipt.json` blob `5d60a142986da76ef8807e853c841f49a1aeeef4`）：
+  before 关闭盒 [241, 18, 32, 44]（占该行 12%），「全部路由」kicker 不折行；after 关闭盒 [73, 18, 200, 44]（占 74%），kicker 折成两行（见 `review/ord0419/RENDER_R1.txt:67`、见 `review/ord0419/RENDER_R1.txt:69`）。
+  也就是说：14 行的当前态拿回来了，代价是 head 那一条被 `width: 100%%` 撑开、标题被挤折行——这是 ORD-0419 没打算动的控件。
+  我按令**没有**改形状（不扩范围）。备好的候选只在活 DOM 上探针跑了一遍（0 产品字节，规则原文与 `probe_scope` 字段在件里）：把三条规则收到行 wrapper 上（排除 `.v8-nav-drawer-head`），
+  探针下关闭盒回到 [249, 18, 24, 44]（占 9%）、kicker 不折行，而 14 行仍是 2 种签名（见 `review/ord0419/RENDER_R1.txt:70`）⇒ 四条判据一条不掉就能修掉连带。请裁：换这个形状、或给关闭按钮单独提权、或认可现状。
+
+**你 01:1x 那格我照令复跑了你的仪表，没有重造**：`cmdr_drawer_reach_sweep_r1.js` 用 `git cat-file -p` 从对象库取出（blob `bb5dd7e14a5821f9b9432e36af2498009d9eb50d`，4,513 B）原样执行，
+你的判据比我那条更严（中心命中且整盒在视口内才算），所以这一列按你的数报。before 臂逐字复现你 01:1x 报的读数：
+  320x653 scrollHeight=1054 atTop=8 atBottom=9 somewhere=14；360x800 scrollHeight=1054 atTop=10 atBottom=11 somewhere=14；390x844 scrollHeight=1054 atTop=10 atBottom=12 somewhere=14；414x896 scrollHeight=1054 atTop=11 atBottom=13 somewhere=14（见 `review/ord0419/REACH_SWEEP_R1.txt:29`）
+  after 臂四形两臂仍全部 ALL_ROWS_REACHABLE_BY_DRAWER_SCROLL，且 atTop/atBottom 只升不降：320×653 同形 scrollHeight 1054 → 998 px、atBottom 9 → 10；414×896 atBottom 13 → 14（见 `review/ord0419/REACH_SWEEP_R1.txt:19`）。
+  你那个二选一我一个都不选，按你说的走：不缩字号、不加底带、不去凑 725 px 可见栈——我 0108 那块里那句「第 9 行起中心在屏外」现在具名降级为「不滚时看不全」，滚得到这件事由你的仪表判（八件读数在 `review/ord0419/reach_{before,after}_{zh,en}.json`）。
+  仍然没做到的一格：这套读数是用 `scrollTop` 扫出来的，不是手指拖出来的；这台机器 CDP 触摸仍发不出 touchmove ⇒ 真拇指那一问还在 ORD-0400 等手机。
+
+**件内清单**（blob 全部 `git rev-parse <r2>:<路径>`，逐枚可 cat-file）：
+  review/ord0419/RENDER_R1.txt  blob `a47890aded2e5ab7e375ff928e85d7954a60e1a2`  9396 B
+  review/ord0419/REACH_SWEEP_R1.txt  blob `152e83607ca7d4d721b636d33fa6e0638e9b5713`  4455 B
+  review/ord0419/cmdr_drawer_row_render_r1.js  blob `e6d0b752f113611c1454c0faaf3b0101c6538354`  8975 B
+  review/ord0419/cmdr_drawer_head_collateral_r1.js  blob `bc61d36a5fd722db6333b08671c6b9e4ea366d02`  5128 B
+  review/ord0419/before.receipt.json  blob `fea2bcf0b7491104146efd463e10d3d76a6cefaf`  71558 B
+  review/ord0419/after.receipt.json  blob `80e828c685333ebc0bbfdfeed7b7609aa63e615d`  70757 B
+  review/ord0419/head_collateral.receipt.json  blob `5d60a142986da76ef8807e853c841f49a1aeeef4`  2753 B
+  review/ord0419/reach_before_zh.json  blob `daafbd62f6cd4b48fd04fb88806394ea8c87c0f2`  1723 B
+  review/ord0419/reach_before_en.json  blob `18a7713b2dac3eb2974d2f16f7f70c593c8beaf4`  1711 B
+  review/ord0419/reach_after_zh.json  blob `b182cd4ec3d82f6e5bfda35650af50a39fa76c32`  1720 B
+  review/ord0419/reach_after_en.json  blob `5fe1d93226c57099a7e49f93ee99704cf52f2d90`  1708 B
+  你 00:31 那节的件 `evidence/cmdr-drawer-scope-20260929/drawer_button_scope_r1.json` blob `1b67fe9bd8ad6d99e71682368a0005f39907aca6` 我 cat-file 复算过，before 臂 14/14 与它一致。
+
+**门禁与栈**：`npx tsc -p tsconfig.typecheck.json --noEmit` 退出码=0（现尖与本枝各一次）；`vite build` 退出码=0，产物入口 before `index-CGSMsxT2.js` / after `index-zfqCO18k.js`。
+私有栈全自起：库的只读备份 `ord0419.db`（`sqlite3.connect('file:…?mode=ro')` + `src.backup(dst)`，3,710,976 B）、自己的 uvicorn :65218、自己的 vite preview :51313（before）与 :64920（after）。:4805 / :8693 / :4781 / :4782 / :8000 全程未读未写。
+
+**没改善 / 没做到的**：① head 行那处连带未修（等裁，见上）；② 中文臂四个组标题 TODAY/PLAN/TRAVEL/SYSTEM 仍是拉丁字母——那是 ORD-0420（车道 `e4f3490f`）的地盘，我一行没碰；
+③ 真拇指读数仍为空（这台机器 CDP 触摸不发 touchmove），以上全是 DOM/滚轮测量；④ r1 那枚 ref 说明文字坏了，我按纪律没 force-move，只请弃读；⑤ hop1/hop4 未碰，手机仍握旧代 ⇒ 本单屏读仍属 `NOT-DEPLOYED-OBSERVED`。
+
+
 ### ORD-0408 中途读数（lane S4-ast-taint，`1d64acf5`）— 那条"只认形状"的前提我实测不成立，先报数不改尺
 
 我没把这单做成"账面绿"：按你说的形状去实现，撞到一个结构性事实，交给你裁定，尺停在未绿状态没上架。
