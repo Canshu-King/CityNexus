@@ -1,0 +1,226 @@
+{
+ "at": "2026-09-28T08:54:29.476Z",
+ "base": "http://127.0.0.1:4785/",
+ "rows": [
+  {
+   "width": 320,
+   "trigger_found": true,
+   "sheet_found": true,
+   "clipped_count": 1,
+   "clipped": [
+    {
+     "text": "旅行需求",
+     "scrollWidth": 64,
+     "clientWidth": 1
+    }
+   ],
+   "buttons": [
+    {
+     "label": "×",
+     "h": 44,
+     "w": 44,
+     "reachable": true,
+     "disabled": false
+    },
+    {
+     "label": "我想去Central Food Hall和Des",
+     "h": 92,
+     "w": 288,
+     "reachable": true,
+     "disabled": false
+    },
+    {
+     "label": "Central Food Hall排在下午，De",
+     "h": 92,
+     "w": 288,
+     "reachable": true,
+     "disabled": false
+    },
+    {
+     "label": "稍后",
+     "h": 44,
+     "w": 64,
+     "reachable": true,
+     "disabled": false
+    },
+    {
+     "label": "开始规划",
+     "h": 44,
+     "w": 216,
+     "reachable": true,
+     "disabled": true
+    }
+   ],
+   "title_lines": null,
+   "title_text": null,
+   "sheet_height": 844,
+   "viewport_h": 844,
+   "honest_ai_sentence_on_screen": true
+  },
+  {
+   "width": 360,
+   "trigger_found": true,
+   "sheet_found": true,
+   "clipped_count": 1,
+   "clipped": [
+    {
+     "text": "旅行需求",
+     "scrollWidth": 64,
+     "clientWidth": 1
+    }
+   ],
+   "buttons": [
+    {
+     "label": "×",
+     "h": 44,
+     "w": 44,
+     "reachable": true,
+     "disabled": false
+    },
+    {
+     "label": "我想去Central Food Hall和Des",
+     "h": 92,
+     "w": 328,
+     "reachable": true,
+     "disabled": false
+    },
+    {
+     "label": "Central Food Hall排在下午，De",
+     "h": 67,
+     "w": 328,
+     "reachable": true,
+     "disabled": false
+    },
+    {
+     "label": "稍后",
+     "h": 44,
+     "w": 64,
+     "reachable": true,
+     "disabled": false
+    },
+    {
+     "label": "开始规划",
+     "h": 44,
+     "w": 256,
+     "reachable": true,
+     "disabled": true
+    }
+   ],
+   "title_lines": null,
+   "title_text": null,
+   "sheet_height": 844,
+   "viewport_h": 844,
+   "honest_ai_sentence_on_screen": true
+  },
+  {
+   "width": 390,
+   "trigger_found": true,
+   "sheet_found": true,
+   "clipped_count": 1,
+   "clipped": [
+    {
+     "text": "旅行需求",
+     "scrollWidth": 64,
+     "clientWidth": 1
+    }
+   ],
+   "buttons": [
+    {
+     "label": "×",
+     "h": 44,
+     "w": 44,
+     "reachable": true,
+     "disabled": false
+    },
+    {
+     "label": "我想去Central Food Hall和Des",
+     "h": 67,
+     "w": 358,
+     "reachable": true,
+     "disabled": false
+    },
+    {
+     "label": "Central Food Hall排在下午，De",
+     "h": 67,
+     "w": 358,
+     "reachable": true,
+     "disabled": false
+    },
+    {
+     "label": "稍后",
+     "h": 44,
+     "w": 64,
+     "reachable": true,
+     "disabled": false
+    },
+    {
+     "label": "开始规划",
+     "h": 44,
+     "w": 286,
+     "reachable": true,
+     "disabled": true
+    }
+   ],
+   "title_lines": null,
+   "title_text": null,
+   "sheet_height": 844,
+   "viewport_h": 844,
+   "honest_ai_sentence_on_screen": true
+  },
+  {
+   "width": 414,
+   "trigger_found": true,
+   "sheet_found": true,
+   "clipped_count": 1,
+   "clipped": [
+    {
+     "text": "旅行需求",
+     "scrollWidth": 64,
+     "clientWidth": 1
+    }
+   ],
+   "buttons": [
+    {
+     "label": "×",
+     "h": 44,
+     "w": 44,
+     "reachable": true,
+     "disabled": false
+    },
+    {
+     "label": "我想去Central Food Hall和Des",
+     "h": 67,
+     "w": 382,
+     "reachable": true,
+     "disabled": false
+    },
+    {
+     "label": "Central Food Hall排在下午，De",
+     "h": 67,
+     "w": 382,
+     "reachable": true,
+     "disabled": false
+    },
+    {
+     "label": "稍后",
+     "h": 44,
+     "w": 64,
+     "reachable": true,
+     "disabled": false
+    },
+    {
+     "label": "开始规划",
+     "h": 44,
+     "w": 310,
+     "reachable": true,
+     "disabled": true
+    }
+   ],
+   "title_lines": null,
+   "title_text": null,
+   "sheet_height": 844,
+   "viewport_h": 844,
+   "honest_ai_sentence_on_screen": true
+  }
+ ]
+}
