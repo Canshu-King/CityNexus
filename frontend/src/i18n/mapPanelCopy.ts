@@ -25,7 +25,10 @@ export type MapCopyKey =
   | "attributionVector"
   | "stopsKicker"
   | "stopLocateAria"
-  | "stopSelectedLead";
+  | "stopSelectedLead"
+  | "viewportResetToJourney"
+  | "viewportOnTarget"
+  | "viewportOffTarget";
 
 const COPY: Record<MapCopyKey, { zh: string; en: string }> = {
   noLocationTitle: { zh: "尚未获取地图位置",
@@ -45,6 +48,11 @@ const COPY: Record<MapCopyKey, { zh: string; en: string }> = {
      reflects the shared selection so it reads as a state, not as a second heading. */
   stopsKicker: { zh: "这一天去的地点", en: "Stops on this day" },
   stopLocateAria: { zh: "在地图上定位 %s", en: "Locate %s on the map" },
+  /* ORD-0403. The state arms name what the traveller would lose by pressing, so the label is a
+     different sentence in each state rather than the same word with a different colour. */
+  viewportResetToJourney: { zh: "回到行程视野", en: "Fit to my journey" },
+  viewportOnTarget: { zh: "视野正落在这段行程上", en: "The view is on your journey" },
+  viewportOffTarget: { zh: "已移出行程视野，点按回到全程", en: "Moved off the journey — tap to fit it all" },
   stopSelectedLead: { zh: "已选中", en: "Selected" },
 };
 
