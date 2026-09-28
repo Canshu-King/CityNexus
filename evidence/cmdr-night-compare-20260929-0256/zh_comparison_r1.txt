@@ -1,0 +1,60 @@
+ZH ENGLISH-LEAF COUNT PER SCREEN - before (tip 8a7665be) vs after (tip 2521aed7)
+zh arm only; r2's en arm was broken so no en comparison is made.
+
+  agent            4 -> 4   (0)
+        still: 'CN / AI'
+        still: 'CityNexus Copilot'
+        still: 'Copilot'
+  authoritative    23 -> 20   (-3)
+        still: 'Central Food Hall'
+        still: 'CityNexus Copilot'
+        still: 'Copilot'
+        still: 'Grounded adaptive recovery'
+  bookings         5 -> 2   (-3)
+        still: 'CityNexus Copilot'
+        still: 'Copilot'
+  discover         3 -> 2   (-1)
+        still: 'CityNexus Copilot'
+        still: 'Copilot'
+  hub              4 -> 4   (0)
+        still: '15:30 Nexus River Cruise Pier'
+        still: 'CityNexus Copilot'
+        still: 'Copilot'
+        still: 'Tech Art Center'
+  intelligence     4 -> 2   (-2)
+        still: 'CityNexus Copilot'
+        still: 'Copilot'
+  live             5 -> 4   (-1)
+        still: 'CityNexus Copilot'
+        still: 'Copilot'
+        still: 'Nexus River Cruise Pier'
+        still: 'Tech Art Center'
+  map              9 -> 9   (0)
+        still: 'Central Food Hall'
+        still: 'CityNexus Copilot'
+        still: 'Copilot'
+        still: 'Nexus River Cruise Pier'
+  me               2 -> 2   (0)
+        still: 'CityNexus Copilot'
+        still: 'Copilot'
+  stay             2 -> 2   (0)
+        still: 'CityNexus Copilot'
+        still: 'Copilot'
+  studio           2 -> 2   (0)
+        still: 'CityNexus Copilot'
+        still: 'Copilot'
+  trash            2 -> 2   (0)
+        still: 'CityNexus Copilot'
+        still: 'Copilot'
+  trips            8 -> 8   (0)
+        still: 'Central Food Hall'
+        still: 'CityNexus Copilot'
+        still: 'Copilot'
+        still: 'Nexus River Cruise Pier'
+  twin             9 -> 9   (0)
+        still: 'Capability needs'
+        still: 'CityNexus Copilot'
+        still: 'Copilot'
+        still: 'Hard accessibility needs are never inferred from behavior.'
+
+TOTAL 82 -> 72  (delta -10)  VERDICT IMPROVED
