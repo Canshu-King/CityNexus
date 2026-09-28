@@ -1,0 +1,190 @@
+{
+  "instrument": "cmdr_machine_speech_sweep_r1",
+  "base": "http://127.0.0.1:49400/",
+  "locale": "zh",
+  "entryAssets": [
+    "/assets/index-CkeYfY1U.js"
+  ],
+  "routesWalked": 14,
+  "viewport": "390x844",
+  "allowListForAllCaps": [
+    "UTC",
+    "GMT",
+    "PDF",
+    "ID",
+    "URL",
+    "API",
+    "AI",
+    "GPS",
+    "OSM",
+    "OK",
+    "FAQ",
+    "COPILOT",
+    "COPILOT"
+  ],
+  "routesWithPaintedMachineText": 2,
+  "routes_with_hits": [
+    "/v8/bookings",
+    "/v8/me"
+  ],
+  "totalPaintedHits": 6,
+  "distinctTokens": 5,
+  "topTokens": [
+    [
+      "JSON",
+      2
+    ],
+    [
+      "BOOKING",
+      1
+    ],
+    [
+      "ACTIVE",
+      1
+    ],
+    [
+      "reasoning_summary",
+      1
+    ],
+    [
+      "DEMO",
+      1
+    ]
+  ],
+  "perRoute": {
+    "/v8/hub": {
+      "totalTextNodesScanned": 0,
+      "items": [],
+      "documentChars": 570,
+      "kinds": {}
+    },
+    "/v8/live": {
+      "totalTextNodesScanned": 0,
+      "items": [],
+      "documentChars": 641,
+      "kinds": {}
+    },
+    "/v8/map": {
+      "totalTextNodesScanned": 0,
+      "items": [],
+      "documentChars": 449,
+      "kinds": {}
+    },
+    "/v8/studio": {
+      "totalTextNodesScanned": 0,
+      "items": [],
+      "documentChars": 266,
+      "kinds": {}
+    },
+    "/v8/stay": {
+      "totalTextNodesScanned": 0,
+      "items": [],
+      "documentChars": 146,
+      "kinds": {}
+    },
+    "/v8/discover": {
+      "totalTextNodesScanned": 0,
+      "items": [],
+      "documentChars": 338,
+      "kinds": {}
+    },
+    "/v8/bookings": {
+      "totalTextNodesScanned": 5,
+      "items": [
+        {
+          "kind": "ALLCAPS_WORD",
+          "token": "JSON",
+          "text_head": "粘贴结构化预订 JSON，审核后，将确认的事实绑定为行程的持久承诺。",
+          "tag": "p",
+          "cls": "v8-lede"
+        },
+        {
+          "kind": "ALLCAPS_WORD",
+          "token": "BOOKING",
+          "text_head": "BOOKING",
+          "tag": "span",
+          "cls": "v8-selected-label"
+        },
+        {
+          "kind": "ALLCAPS_WORD",
+          "token": "ACTIVE",
+          "text_head": "ACTIVE",
+          "tag": "span",
+          "cls": "v8-selected-label"
+        },
+        {
+          "kind": "ALLCAPS_WORD",
+          "token": "JSON",
+          "text_head": "结构化导入在这里：展开下方「高级」粘贴 JSON 确认单。确认单文本与截图走行程收件箱。",
+          "tag": "p",
+          "cls": "v8-lede"
+        },
+        {
+          "kind": "LOWER_SNAKE_KEY",
+          "token": "reasoning_summary",
+          "text_head": "reasoning_summary=held 原文不在这一屏",
+          "tag": "small",
+          "cls": ""
+        }
+      ],
+      "documentChars": 634,
+      "kinds": {
+        "ALLCAPS_WORD": 4,
+        "LOWER_SNAKE_KEY": 1
+      }
+    },
+    "/v8/agent": {
+      "totalTextNodesScanned": 0,
+      "items": [],
+      "documentChars": 363,
+      "kinds": {}
+    },
+    "/v8/authoritative": {
+      "totalTextNodesScanned": 0,
+      "items": [],
+      "documentChars": 892,
+      "kinds": {}
+    },
+    "/v8/intelligence": {
+      "totalTextNodesScanned": 0,
+      "items": [],
+      "documentChars": 375,
+      "kinds": {}
+    },
+    "/v8/twin": {
+      "totalTextNodesScanned": 0,
+      "items": [],
+      "documentChars": 340,
+      "kinds": {}
+    },
+    "/v8/trash": {
+      "totalTextNodesScanned": 0,
+      "items": [],
+      "documentChars": 137,
+      "kinds": {}
+    },
+    "/v8/trips": {
+      "totalTextNodesScanned": 0,
+      "items": [],
+      "documentChars": 374,
+      "kinds": {}
+    },
+    "/v8/me": {
+      "totalTextNodesScanned": 1,
+      "items": [
+        {
+          "kind": "ALLCAPS_WORD",
+          "token": "DEMO",
+          "text_head": "DEMO",
+          "tag": "strong",
+          "cls": ""
+        }
+      ],
+      "documentChars": 309,
+      "kinds": {
+        "ALLCAPS_WORD": 1
+      }
+    }
+  },
+  "pageErrors": []
+}
