@@ -1,0 +1,98 @@
+{
+ "at": "2026-09-28T18:39:01+0800",
+ "line": "refs/heads/mirror/integration-frontend-apple-pass1",
+ "src_db_read_only": "D:\\moodle\\_qoder_preview_20260920\\_preview.db",
+ "private_db": "D:\\moodle\\_qoder_cmdr_0399_walk\\private_0399.db",
+ "journeys_rows_in_copy": 1,
+ "child_pid": 18488,
+ "listener_lines": [
+  "TCP    127.0.0.1:8721         0.0.0.0:0              LISTENING       26404"
+ ],
+ "listener_pid": "26404",
+ "listener_owner_probe": {
+  "pid": "26404",
+  "raw": "{\"ProcessId\":26404,\"ParentProcessId\":18488,\"CommandLine\":\"\\\"C:\\\\Users\\\\仓鼠王\\\\AppData\\\\Roaming\\\\uv\\\\python\\\\cpython-3.12.14-windows-x86_64-none\\\\python.exe\\\" -m uvicorn app.main:app --host 127.0.0.1 --port 8721\"}",
+  "stderr": ""
+ },
+ "ready": true,
+ "L0": {
+  "status": 200,
+  "count": 1
+ },
+ "D1_delete": {
+  "journey_id": "22222222-2222-4222-8222-222222222222",
+  "status": 204,
+  "head": ""
+ },
+ "L1_after_delete": {
+  "status": 200,
+  "count": 0,
+  "chosen_still_listed": false
+ },
+ "U1_undelete": {
+  "status": 200,
+  "head": "{\"id\":\"22222222-2222-4222-8222-222222222222\",\"traveler_id\":\"11111111-1111-4111-8111-111111111111\",\"title\":\"One Day in Nexus City\",\"city_code\":\"CNX-DEMO\",\"timezone\":\"Asia/Shanghai\",\"start_at\":\"2026-10-10T09:00:00+08:00\",\""
+ },
+ "L2_after_undelete": {
+  "status": 200,
+  "count": 1,
+  "chosen_back": true
+ },
+ "U2_replay": {
+  "status": 409,
+  "head": "{\"error\":{\"code\":\"CONFLICT\",\"message\":\"Journey 22222222-2222-4222-8222-222222222222 was not in the recycle bin\",\"message_key\":\"request.conflict\",\"trace_id\":\"e3c98b8d-e2c9-4c65-88a6-dec29cd62fe6\",\"details\":{\"journey_id\":\"",
+  "reason_code": "JOURNEY_NOT_DELETED",
+  "error": {
+   "code": "CONFLICT",
+   "message": "Journey 22222222-2222-4222-8222-222222222222 was not in the recycle bin",
+   "message_key": "request.conflict",
+   "trace_id": "e3c98b8d-e2c9-4c65-88a6-dec29cd62fe6",
+   "details": {
+    "journey_id": "22222222-2222-4222-8222-222222222222",
+    "deleted_at": null
+   },
+   "reason_code": "JOURNEY_NOT_DELETED",
+   "error_receipt_id": "CNX-8ART77QG"
+  }
+ },
+ "U3_unknown": {
+  "status": 404,
+  "head": "{\"error\":{\"code\":\"NOT_FOUND\",\"message\":\"Journey 11b94ef8-637e-4564-891e-b8dd874343e7 was not found\",\"message_key\":\"resource.not_found\",\"trace_id\":\"1cc84733-1e94-436b-905b-373e541bb5aa\",\"details\":{\"journey_id\":\"11b94ef8-6",
+  "reason_code": "JOURNEY_NOT_FOUND",
+  "error": {
+   "code": "NOT_FOUND",
+   "message": "Journey 11b94ef8-637e-4564-891e-b8dd874343e7 was not found",
+   "message_key": "resource.not_found",
+   "trace_id": "1cc84733-1e94-436b-905b-373e541bb5aa",
+   "details": {
+    "journey_id": "11b94ef8-637e-4564-891e-b8dd874343e7"
+   },
+   "reason_code": "JOURNEY_NOT_FOUND",
+   "error_receipt_id": "CNX-5RFPHVEY"
+  }
+ },
+ "S1_journey_row": {
+  "id": "22222222-2222-4222-8222-222222222222",
+  "status": "ACTIVE",
+  "deleted_at": null
+ },
+ "A1_audit_row": {
+  "action": "journey.undeleted",
+  "entity_type": "Journey",
+  "before_json": "{\"deleted_at\": \"2026-09-28T10:39:01.815650+00:00\"}",
+  "after_json": "{\"deleted_at\": null}"
+ },
+ "listener_parent_pid": 18488,
+ "verdicts": {
+  "deleted_at_cleared": true,
+  "listed_again": true,
+  "replay_refused_409": true,
+  "replay_names_JOURNEY_NOT_DELETED": true,
+  "unknown_refused_404": true,
+  "unknown_names_JOURNEY_NOT_FOUND": true,
+  "audit_row_written": true,
+  "listener_owned_by_my_child": true
+ },
+ "overall": "GREEN",
+ "child_exit": 1
+}
