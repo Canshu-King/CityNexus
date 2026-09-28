@@ -1,0 +1,178 @@
+{
+ "base": "http://127.0.0.1:4802/",
+ "arms": [
+  {
+   "locale": "zh",
+   "rows": [
+    {
+     "present": false,
+     "cell": "map_empty",
+     "route": "map"
+    },
+    {
+     "present": true,
+     "box": [
+      20,
+      993,
+      51,
+      17
+     ],
+     "text": "一切正常",
+     "controls_inside": 0,
+     "entry_flag": null,
+     "cell": "today_strip",
+     "route": "hub"
+    },
+    {
+     "present": false,
+     "cell": "bookings_no_stay",
+     "route": "bookings"
+    },
+    {
+     "present": true,
+     "box": [
+      17,
+      609,
+      356,
+      21
+     ],
+     "text": "当前没有需要你决定的调整。",
+     "controls_inside": 0,
+     "entry_flag": null,
+     "cell": "live_no_adjustment",
+     "route": "live"
+    }
+   ],
+   "action": {
+    "buttons_matched": 2,
+    "matched": [
+     {
+      "text": "住宿选择",
+      "cls": "",
+      "box": [
+       0,
+       0,
+       0,
+       0
+      ],
+      "centre": [
+       0,
+       0
+      ]
+     },
+     {
+      "text": "到「住宿选择」里找一间可订的房",
+      "cls": "v8-quiet-button",
+      "box": [
+       101,
+       383,
+       240,
+       44
+      ],
+      "centre": [
+       221,
+       405
+      ]
+     }
+    ],
+    "hit": "HEADER.v8-topbar",
+    "after_click": {
+     "path": "/v8/bookings",
+     "kicker": null,
+     "heading": "你的真实预订，受保护。"
+    }
+   },
+   "pageerrors": []
+  },
+  {
+   "locale": "en",
+   "rows": [
+    {
+     "present": false,
+     "cell": "map_empty",
+     "route": "map"
+    },
+    {
+     "present": true,
+     "box": [
+      20,
+      1012,
+      46,
+      17
+     ],
+     "text": "All clear",
+     "controls_inside": 0,
+     "entry_flag": null,
+     "cell": "today_strip",
+     "route": "hub"
+    },
+    {
+     "present": false,
+     "cell": "bookings_no_stay",
+     "route": "bookings"
+    },
+    {
+     "present": true,
+     "box": [
+      17,
+      609,
+      356,
+      21
+     ],
+     "text": "There is nothing for you to decide right now.",
+     "controls_inside": 0,
+     "entry_flag": null,
+     "cell": "live_no_adjustment",
+     "route": "live"
+    }
+   ],
+   "action": {
+    "buttons_matched": 2,
+    "matched": [
+     {
+      "text": "Stay Explorer",
+      "cls": "",
+      "box": [
+       0,
+       0,
+       0,
+       0
+      ],
+      "centre": [
+       0,
+       0
+      ]
+     },
+     {
+      "text": "Open Stay Explorer to look for one",
+      "cls": "v8-quiet-button",
+      "box": [
+       101,
+       383,
+       244,
+       44
+      ],
+      "centre": [
+       223,
+       405
+      ]
+     }
+    ],
+    "hit": "HEADER.v8-topbar",
+    "after_click": {
+     "path": "/v8/bookings",
+     "kicker": null,
+     "heading": "Your real reservations, protected."
+    }
+   },
+   "pageerrors": []
+  }
+ ],
+ "verdict": {
+  "map_cell_says_door_missing": false,
+  "map_cell_has_no_control": true,
+  "bookings_action_button_found": true,
+  "bookings_action_lands_on_stay": false,
+  "pageerrors_zero": true
+ }
+}
