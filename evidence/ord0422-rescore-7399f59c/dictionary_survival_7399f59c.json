@@ -1,0 +1,29 @@
+{
+ "delivered_rev": "8e2bd025d58687b7cf45c7371d253cc6ecac6071",
+ "live_rev": "7399f59ccdb2dfe3cdf04477d4e4ffcc077e214a",
+ "keys_delivered_en": 766,
+ "keys_live_en": 768,
+ "delivered_keys_absent_at_live": 0,
+ "absent_list": [],
+ "delivered_keys_whose_value_changed_at_live": [
+  "agent.aiRunLanded",
+  "agent.aiRunScope",
+  "agent.aiRunUnits",
+  "agent.protectedCount",
+  "discovery.results",
+  "exec.evidenceTrail",
+  "fmt.activities",
+  "fmt.protectedAnchors",
+  "inbox.protectedFacts",
+  "mapComp.legs",
+  "shell.travelers",
+  "studio.allProtected"
+ ],
+ "keys_live_has_that_delivered_did_not": 2,
+ "live_only_key_examples": [
+  "mapComp.noRouteNoProvider",
+  "mapComp.noRouteNotRouted"
+ ],
+ "zh_side_missing": [],
+ "zh_side_changed": []
+}
