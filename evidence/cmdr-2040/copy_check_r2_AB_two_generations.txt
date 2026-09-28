@@ -1,0 +1,63 @@
+== CMDR copy check r2: dictionary widened to every *Copy.ts + i18n file ==
+ARM A: newest built generation served privately on :4798 (tip 9b759cb3)
+{
+ "tip": "9b759cb3d7b5519a51decea244ee09723d36080d",
+ "dictionary_files": {
+  "frontend/src/features/studio/planVersionHistoryCopy.ts": 21,
+  "frontend/src/features/trash/journeyTrashCopy.ts": 27,
+  "frontend/src/i18n/LocaleContext.tsx": 686,
+  "frontend/src/i18n/mapPanelCopy.ts": 0,
+  "frontend/src/i18n/placeProvenanceCopy.ts": 0,
+  "frontend/src/i18n/travelerLabels.ts": 0,
+  "frontend/src/i18n/tripOperations.ts": 0
+ },
+ "served_asset": "/assets/index-C06ZwEPS.js",
+ "bundle_chars": 1295427,
+ "bundle_raw_bytes": 1332969,
+ "dictionary_pairs": 734,
+ "distinct_keys": 556,
+ "values_found_in_served_bundle": 733,
+ "values_not_found": 1
+}
+MISS shell.reservationReviewFields | This cannot become a commitment yet - the server is still mi
+
+ARM B: generation currently deployed on hop2 :4781 (tip e5a571f8, predates ORD-0402 slice 2)
+{
+ "tip": "9b759cb3d7b5519a51decea244ee09723d36080d",
+ "dictionary_files": {
+  "frontend/src/features/studio/planVersionHistoryCopy.ts": 21,
+  "frontend/src/features/trash/journeyTrashCopy.ts": 27,
+  "frontend/src/i18n/LocaleContext.tsx": 686,
+  "frontend/src/i18n/mapPanelCopy.ts": 0,
+  "frontend/src/i18n/placeProvenanceCopy.ts": 0,
+  "frontend/src/i18n/travelerLabels.ts": 0,
+  "frontend/src/i18n/tripOperations.ts": 0
+ },
+ "served_asset": "/assets/index-BDf7HG58.js",
+ "bundle_chars": 1286803,
+ "bundle_raw_bytes": 1323687,
+ "dictionary_pairs": 734,
+ "distinct_keys": 556,
+ "values_found_in_served_bundle": 706,
+ "values_not_found": 28
+}
+MISS shell.reservationReviewFields | This cannot become a commitment yet - the server is still mi
+MISS trash.action | Bring it back
+MISS trash.already | This trip is already in your trip list -- there was nothing 
+MISS trash.already | 这条已经在你的行程列表里了，没有需要找回的东西。
+MISS trash.busy | Bringing it back…
+MISS trash.count | {n} trips in the bin
+MISS trash.count | 回收站里有 {n} 条行程
+MISS trash.deletedAt | put in the bin at {when}
+MISS trash.deletedAtMissing | this server gave no discard time for this trip
+MISS trash.deletedAtMissing | 这台服务器没有给出这条行程的丢弃时间
+MISS trash.doorAbsent | This server did not answer the list of binned trips, so no r
+MISS trash.doorAbsent | 这台服务器没有答出「在回收站里的行程」这份列表，所以现在一行都显示不出来。你的行程没有因此变化。
+MISS trash.empty | The bin is empty: this server named no trip in it.
+MISS trash.empty | 回收站是空的：这台服务器没有报出任何在站里的行程。
+MISS trash.found | Brought back: {title}. It is in your trip list again.
+MISS trash.found | 已找回：{title}。它回到你的行程列表里了。
+MISS trash.gone | This trip is no longer on this server, so it cannot be broug
+MISS trash.gone | 这条已经不在这台服务器上了，找不回来。
+MISS trash.loading | Reading the bin…
+MISS trash.refresh | Read the bin again
