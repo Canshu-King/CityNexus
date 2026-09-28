@@ -1,0 +1,46 @@
+ORD-0422 scorecard, re-measured at tip 7399f59ccdb2dfe3cdf04477d4e4ffcc077e214a
+generation facts: bundle /assets/index-BKwMWjc7.js, 1353023 raw bytes
+
+== 1. dictionary and panel files still mine ==
+keys my build carried: 766 ; absent at this tip: 0 ; values re-written by someone else: 0
+keys this tip has that my build did not: 2 (['mapComp.noRouteNoProvider', 'mapComp.noRouteNotRouted'])
+keys re-worded by ORD-0433's plural rule, none of them mine: ["agent.aiRunLanded", "agent.aiRunScope", "agent.aiRunUnits", "agent.protectedCount", "discovery.results", "exec.evidenceTrail", "fmt.activities", "fmt.protectedAnchors", "inbox.protectedFacts", "mapComp.legs", "shell.travelers", "studio.allProtected"]
+
+== 2. the 22 inventory rows, both arms, two instruments ==
+r3 anchors: [{"route": "twin", "zh_entry": "\u4f7f\u7528\u5c01\u5b58\u7684\u6f14\u793a\u884c\u7a0b", "en_entry": "sealed demo", "zh_path": "/v8/twin", "en_path": "/v8/twin", "comparable": true}, {"route": "authoritative", "zh_entry": "\u4f7f\u7528\u5c01\u5b58\u7684\u6f14\u793a\u884c\u7a0b", "en_entry": "sealed demo", "zh_path": "/v8/authoritative", "en_path": "/v8/authoritative", "comparable": true}, {"route": "discover", "zh_entry": "\u4f7f\u7528\u5c01\u5b58\u7684\u6f14\u793a\u884c\u7a0b", "en_entry": "sealed demo", "zh_path": "/v8/discover", "en_path": "/v8/discover", "comparable": true}]
+lane readings: 8 readings, all on their requested route and scrolled to bottom: True
+ZH leaks: lane whole-leaf 0 / lane substring 0 / r3 substring 0
+EN reached: r3 substring 12, lane whole-leaf 14, merged after dropping 1 inflated hit(s): 14
+reached rows whose Chinese counterpart is on the Chinese screen: 14
+NOT_REACHED by both instruments: 8 ; verdict PASS
+per-row: [{"row": "No explicit capability facts recorded.", "en_r3": true, "en_lane": true, "zh_leak": false, "zh_pair": true}, {"row": "Confirmed by traveler", "en_r3": false, "en_lane": true, "zh_leak": false, "zh_pair": true}, {"row": "Stated; confirmation needed", "en_r3": false, "en_lane": false, "zh_leak": false, "zh_pair": false}, {"row": "No explicit preferences", "en_r3": false, "en_lane": true, "zh_leak": false, "zh_pair": true}, {"row": "Capability needs", "en_r3": true, "en_lane": true, "zh_leak": false, "zh_pair": true}, {"row": "No learned signals", "en_r3": true, "en_lane": true, "zh_leak": false, "zh_pair": true}, {"row": "Learned capability state", "en_r3": true, "en_lane": true, "zh_leak": false, "zh_pair": true}, {"row": "hard need(s) remain explicit and are nev", "en_r3": false, "en_lane": true, "zh_leak": false, "zh_pair": true}, {"row": "Hard accessibility needs are never infer", "en_r3": true, "en_lane": true, "zh_leak": false, "zh_pair": true}, {"row": "Unknown accessibility evidence is not ac", "en_r3": true, "en_lane": true, "zh_leak": false, "zh_pair": true}, {"row": "policy unavailable · confirmation requir", "en_r3": false, "en_lane": false, "zh_leak": false, "zh_pair": false}, {"row": "V14 · REALITY CHANGED", "en_r3": true, "en_lane": true, "zh_leak": false, "zh_pair": true}, {"row": "Grounded adaptive recovery", "en_r3": true, "en_lane": true, "zh_leak": false, "zh_pair": true}, {"row": "Refresh recovery", "en_r3": true, "en_lane": true, "zh_leak": false, "zh_pair": true}, {"row": "No recovery proposal is waiting on this ", "en_r3": true, "en_lane": true, "zh_leak": false, "zh_pair": true}, {"row": "CHANGED", "en_r3": true, "en_lane": false, "zh_leak": false, "zh_pair": false}, {"row": "PROTECTED", "en_r3": false, "en_lane": false, "zh_leak": false, "zh_pair": false}, {"row": "Baseline evidence", "en_r3": false, "en_lane": false, "zh_leak": false, "zh_pair": false}, {"row": "Incident evidence", "en_r3": false, "en_lane": false, "zh_leak": false, "zh_pair": false}, {"row": "Deterministic gate", "en_r3": false, "en_lane": false, "zh_leak": false, "zh_pair": false}, {"row": "Delegation policy", "en_r3": false, "en_lane": false, "zh_leak": false, "zh_pair": false}, {"row": "I prefer quiet indoor culture, low walki", "en_r3": true, "en_lane": true, "zh_leak": false, "zh_pair": true}]
+
+== 3. the eleven branch rows, re-run on this generation ==
+authoritative(with proposal) | zh leaves 81 bottom True ; en leaves 81 bottom True
+   en reached: ["CHANGED", "PROTECTED", "Baseline evidence", "Incident evidence", "Deterministic gate", "Delegation policy"]
+   zh reached: ["CHANGED", "PROTECTED", "Baseline evidence", "Incident evidence", "Deterministic gate", "Delegation policy"]
+twin(unconfirmed capability) | zh leaves 36 bottom True ; en leaves 36 bottom True
+   en reached: ["Confirmed by traveler", "Stated; confirmation needed", "hard need(s) remain explicit and are never learned."]
+   zh reached: ["Confirmed by traveler", "Stated; confirmation needed", "hard need(s) remain explicit and are never learned."]
+policy-unavailable attempt on this tip: en_leaf=False zh_leaf=False (still NOT_REACHED)
+deep-state leak re-check on this tip: zh arm leaves 81, inventory rows readable on it: []
+
+== 4. the copy rulers ==
+shipped cmdr_bundle_copy_check_r3.py: tip 35326e62fb3de9f0cda459c8426ac22c0c49c715, dictionary_pairs 842, values_not_found 1
+pinned companion at the build's own tip 7399f59ccdb2dfe3cdf04477d4e4ffcc077e214a: pairs 842 found 841 not_found 1, miss is [["rank.loading", "Reading the plansu2026"]]
+
+== 5. ORD-0424's extended fallback ruler, on this generation ==
+ruler line: [VIOLATION] HARDCODED_FALLBACK       102 files scanned: tier A (language branch in the slot) 0, tier B (bare literal) 75, excluded as machine tokens 162; inline bilingual pairs anywhere = 643 (denominator only -- most ar
+hits inside this order's three panels: ["B T2 [JSX_CHILD        ] snap\\frontend\\src\\features\\recovery\\V14RecoveryTruthPanel.tsx:159 '—'  <- bare literal in a ?? slot", "B T2 [JSX_CHILD        ] snap\\frontend\\src\\features\\recovery\\V14RecoveryTruthPanel.tsx:164 '—'  <- bare literal in a ?? slot", "B T2 [JS_VALUE         ] snap\\frontend\\src\\features\\recovery\\V14RecoveryTruthPanel.tsx:180 'CityNexus'  <- bare literal in a ?? slot"]
+
+== 6. ORD-0401 under the replaced criterion, one screen, both arms ==
+zh-CN | empty state present True, action '去看这一代方案'
+   before any scroll: action top=829 centre={"x": 255, "y": 851} -> elementFromPoint=None is_action=False
+   after ONE scroll (scrollTop 504 of max 504): action top=325 -> owner=BUTTON.v8-quiet-button is_action=True
+   fixed elements then on screen: [{"tag": "ASIDE", "cls": "cn-copilot-dock collapsed idle-compact", "top": 706, "bottom": 760}, {"tag": "NAV", "cls": "v8-mobile-nav", "top": 768, "bottom": 844}, {"tag": "DIV", "cls": "cn-sim-float", "top": 634, "bottom": 694}]
+   sentence pointing at the scroll: []
+en | empty state present True, action 'Review this plan generation'
+   before any scroll: action top=931 centre={"x": 135, "y": 953} -> elementFromPoint=None is_action=False
+   after ONE scroll (scrollTop 659 of max 659): action top=272 -> owner=BUTTON.v8-quiet-button is_action=True
+   fixed elements then on screen: [{"tag": "ASIDE", "cls": "cn-copilot-dock collapsed idle-compact", "top": 706, "bottom": 760}, {"tag": "NAV", "cls": "v8-mobile-nav", "top": 768, "bottom": 844}, {"tag": "DIV", "cls": "cn-sim-float", "top": 634, "bottom": 694}]
+   sentence pointing at the scroll: []
