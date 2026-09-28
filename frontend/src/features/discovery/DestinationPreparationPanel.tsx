@@ -22,6 +22,7 @@
  */
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useLocale, useT } from "../../i18n/LocaleContext";
+import { deviceReadout } from "../../lib/failureAttribution";
 import {
   cityNexusApi,
   type CatalogHydrationOperation,
@@ -225,6 +226,7 @@ export function DestinationPreparationPanel({ journeyId, onOpenPlan, initialQuer
   const jobCopy = (): { title: string; body: string } => {
     if (!job) return { title: "", body: "" };
     if (!job.terminal) {
+      const elapsedCell = deviceReadout({ elapsed_ms: job.elapsed_ms }, ["elapsed_ms"]);
       return {
         title: job.reused
           ? zh
@@ -234,8 +236,8 @@ export function DestinationPreparationPanel({ journeyId, onOpenPlan, initialQuer
             ? "正在准备这个目的地"
             : "Preparing this destination",
         body: zh
-          ? `服务器说现在在「${job.phase}」这一步，已经跑了 ${Math.round(job.elapsed_ms / 1000)} 秒（elapsed_ms=${Math.round(job.elapsed_ms)}）。进度不按百分比报——服务器不给这个数，因为队列它自己看不到。`
-          : `The server reports it is inside "${job.phase}", running ${Math.round(job.elapsed_ms / 1000)}s (elapsed_ms=${Math.round(job.elapsed_ms)}). No percentage is shown because the server does not publish one -- it cannot see the queue.`,
+          ? `服务器说现在在「${job.phase}」这一步，已经跑了 ${Math.round(job.elapsed_ms / 1000)} 秒（${elapsedCell}）。进度不按百分比报——服务器不给这个数，因为队列它自己看不到。`
+          : `The server reports it is inside "${job.phase}", running ${Math.round(job.elapsed_ms / 1000)}s (${elapsedCell}). No percentage is shown because the server does not publish one -- it cannot see the queue.`,
       };
     }
     switch (String(job.outcome ?? "")) {

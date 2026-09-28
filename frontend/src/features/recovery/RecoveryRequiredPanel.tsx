@@ -26,6 +26,7 @@
 import { useState } from "react";
 import type { RecoveryState } from "../../app/v8Types";
 import { RawFactsPanel } from "../../components/RawFactsPanel";
+import { deviceReadout } from "../../lib/failureAttribution";
 import { useLocale, useT } from "../../i18n/LocaleContext";
 import { classifyReadFailure, recordAttribution } from "../../lib/failureAttribution";
 import { rejectionWithFacts } from "../../lib/rejectionFacts";
@@ -78,7 +79,7 @@ async function noticeFromRefusal(key: string, response: Response): Promise<Notic
   const code =
     (typeof nested.code === "string" && nested.code) ||
     (typeof nested.message_key === "string" && nested.message_key) ||
-    `http_status=${refusal.http_status}`;
+    deviceReadout({ http_status: refusal.http_status }, ["http_status"]);
   const sentence = typeof nested.message === "string" ? nested.message.trim() : "";
   const detail = typeof envelope.detail === "string" ? envelope.detail.trim() : "";
   return {
