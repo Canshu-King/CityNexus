@@ -16588,6 +16588,35 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### CMDR 2026-09-28 23:25 · 号令者 · ORD-0416 落地并我自己量过了（抽屉溢出 3668 px 降到 210 px，超大图标 14 枚降到 0 枚）；那条 320 宽 × 653 高的报红我判它是**对的**，界改口径；顺带把"门读陈旧 ref"这条说法查了一遍，pre-flight 那侧不成立
+
+**一、ORD-0416 已落地，现尖 `39f571bb50ffec4f5ec9633888efeb51cd3a5d19`**
+件 `review/Q-ord0416-drawer-icon-size` 头 `97331aa500c11ca7b1dda33c24f839b9cbfd06af`，只读复切 6/6 文件逐枚等于车道 blob、合并树 `dff7e583c139cc5ab6d188e16b5ff1a3384fe121`（与车道自己 23:18 那块预测的那枚逐字相同），复切件推 `refs/heads/review/cmdr-recut-ord0416-r1`（`git ls-remote` 回读相同）后过门：`ff=True`、`ahead=3`、`behind=0`、`problems=[]`，落地回执 `evidence/cmdr-landing-ord0416-20260928/preflight_r1.json`，blob `8ede8ce43e1e7dc09658fcca1a8c6c6888be54dc`，5,750 B。
+产品字节两枚，都按我要的形状落：`frontend/src/design-tokens.css`（新档位，不是 `17px` 那种魔法数）与 `frontend/src/styles.css`（`frontend/src/styles.css:329` 那条 `#v8-nav-drawer` 就在这一枚里）。
+
+**二、我自己重量的两格（不采信车道那把尺，另起我的）**
+抽屉溢出：`overflow_px` 读到 210、`scroll_height` 读到 1054、`client_height` 读到 844，行结构变成组头 83 px + 条目 57 px（改前那把同位置同形状的尺读到 overflow 3668、scroll 4512、条目 304/330 px）——件 `evidence/cmdr-ord0416-20260928/drawer_tall_items_after_landing.json`，blob `0f5fb684cd4d05c3965206ac16a303328503a5dd`，1,796 B。改前那件是 `evidence/cmdr-ord0413-20260928/cmdr_counter_reading_tall_items.json`，blob `5099218a3404319c78f33bee4b264f71fd7cf77f`。
+无尺寸图标普查：同一把 `_oversized_svg_sweep_r1.js` 在 13 条路由 + 抽屉那一屏重跑，`drawer_open` 命中数从 14 读到 0，件 `evidence/cmdr-ord0416-20260928/oversized_svg_sweep_after_landing.json`，blob `b4d983879d1834749dda143da64217dc8e4956c4`，184 B；改前那件是 `evidence/cmdr-ord0416-20260928/oversized_svg_sweep_r1.json`，blob `6d1812e0d2f3e2b5dc553020ea5553dc2d1ca362`。
+⇒ 我 22:44 那条"范围只在抽屉"的判断被反向验通了：车道按界锚在同一层，没有去动全局 `svg`，其余各屏仍然一处没有。
+
+**三、320 宽 × 653 高那一格的报红：我判车道做得对，界是我写错了口径**
+车道读数：该形下首屏内可见行从 2 变 8，`overflow` 归 0，但**没达到我写的"不低于 10"**，于是它按令报红而没有调规则（逐格在它件的 `review/ord0416/READINGS_r1.txt` 第 26 行起，blob `719c019500e1c3ddbea1da86d90a874bac0d4793`）。
+我核对了几何：那条界本来的来源是视口高 844 px 减固定底栏高 76 px 得 768 px（原式记在，`evidence/cmdr-instruments-20260928b/claim_coordinate_check_r7.py` 的 blob `cf1f047d53d4848fa16abcd03df34099ec87d90d` 不参与这条，界冻在 `review/n3_0407_evidence_r1/controls_before_79ca877c.json:4`，blob `5bd1fe669a1a7f9fbcae4c9d63852969983650ae`）。把 768 当成绝对数搬到 653 px 高的视口上，等于要求 8 行 57 px 挤进 577 px 的可命中带再叠 4 枚 83 px 组头——物理上放不下。
+**新口径（今晚起按这条判，覆盖我 22:38 那块里写的"不低于 10"）**：界 = 该形视口高 px 数减固定底栏 76 px（口径来源与逐格读数见件 `review/ord0416/READINGS_r1.txt`，blob `719c019500e1c3ddbea1da86d90a874bac0d4793`）；验收改成两条同时成立——① 最大那形（宽 390 px、高 844 px，同件 `review/ord0416/READINGS_r1.txt` 第 26 行起，blob `719c019500e1c3ddbea1da86d90a874bac0d4793`）下 `overflow_px` 不大于 250 px，② 任何一形的 `overflow_px` 都不许比改前变大；行内可见数按"报改善、不设绝对数"处理。ORD-0406 把底栏内距真正修掉之后，这条界会自己回到最大那形的档位。⇒ 车道 `2d2d7428` 这一单我收 **ACCEPTED**，那一格的红不是产品缺陷，是号令者给的判据越界。
+
+**四、"门读陈旧 ref"那条说法，我查了，不在 pre-flight 这一侧**
+车道在早前一块里说"门默认 `--ref` 解析的是本地 remote-tracking ref，不是 origin 现值"。我读了我这侧的落地门：`preflight_and_land_r5.py:64` 的 `ref_sha` 走的是 GitHub 的 ref 路由（`/repos/.../git/ref/heads/...`，同一文件 `:66`），也就是**现读 origin**，不取本地跟踪 ref。
+但同一族的陈旧风险在我自己的复切器上是真的：`cmdr_recut_r1.py` 读的是 `refs/remotes/origin/mirror/integration-frontend-apple-pass1` 这个本地视图——今晚 22:12 我确实遇到过本地视图比 origin 落后一枚（本地读到 `a1bb9497ee59afb52fcb8fe10b2cdbf0c5e6553a`、origin 已是 `a0c5fba9eb98926018c9aff19231a96f3775e245`）。
+⇒ 我自己给自己加的规矩（不用派单， instrument 归我）：**复切前先 `git fetch` 权威线，复切后再看落地门报的 `tip_re_read_from_github_before` 是否等于复切时那枚 `tip=`**。今晚这几笔我逐笔核过：`869a5b4d…`、`a1bb9497…`、`a0c5fba9…`、`b9ba6336…`、`214ab0ff…`、`39f571bb…` 每一笔复切报的 `tip=` 与随后门里外读的现尖逐字相同、且都 `ff=True`，所以**没有一笔是在陈旧基座上合的**。
+
+**五、没改善的部分**
+1. 手机链 hop4 整晚未起，今晚全部屏读 `NOT-DEPLOYED-OBSERVED`；手机仍握 `e5a571f8…`，与现尖 `39f571bb50ffec4f5ec9633888efeb51cd3a5d19` 之间 `git rev-list --count` 读到 64 个提交（提交数≠落地单数）。
+2. 抽屉里"是否还要分组/折叠"这一半我没让车道急着做：按 ORD-0413 的收尾要求，要用改后的 210 px 去判，而不是被撑爆的那个数——现在看是不需要折叠，但这一格要它自己交读数。
+3. ORD-0410（新会话 `9cc37e57-0ae4-4346-9a75-23989350df83`）与 ORD-0417（新会话 `8ac89982-7ee8-428f-bf1d-6c93cd0d6119`）此刻在跑，还没回件；ORD-0415 与 ORD-0406 在车道 `e4f3490f` 手上；ORD-0408 未回、ORD-0409 未回、ORD-0411 未回。
+4. 车道 `e4f3490f` 的 ORD-0370 那块仍被写盘门拒（同一族：把本机字节的 sha1 当 40 位坐标），我已在 23:17 那块给了它三条可替换写法，等它换。
+5. 我这边夜里挂了一小时一轮的值守任务（`571681e1-29a2-433b-97ff-047e93170003`，到明早 11:00 自动到期），用的是继承的 `qfmodel`——那是账单大头，节奏我已从 45 分钟压到 60 分钟；要停就在 Automations 里关掉，车道交付不会丢。
+
+
 ### CMDR 2026-09-28 2321 · 车道 `2d2d7428` · ORD-0416 交了：抽屉图标按导航档位定了尺寸，四形两臂前后都量了；320×653 那一格具名报红（界与形状本身冲突，我没调规则）
 
 件：`review/Q-ord0416-drawer-icon-size` 远端回读 = `97331aa500c11ca7b1dda33c24f839b9cbfd06af`；基点 = `git merge-base <现尖> <件头>` = `b9ba6336a299119c8607da48bb4aa54a64322679`，现尖 = `214ab0ff9f1dc03ffbd57308797e62552b7ee24a`；
