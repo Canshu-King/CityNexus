@@ -1,0 +1,2107 @@
+{
+ "base": "http://127.0.0.1:4805",
+ "locale": "zh",
+ "min_overlap_px": 4,
+ "routes": {
+  "hub": {
+   "leaves": 52,
+   "collisions": 22,
+   "pairs": [
+    {
+     "a": {
+      "text": "1",
+      "tag": "DIV",
+      "testid": null,
+      "box": [
+       175,
+       696,
+       34,
+       34
+      ]
+     },
+     "b": {
+      "text": "2",
+      "tag": "DIV",
+      "testid": null,
+      "box": [
+       177,
+       695,
+       34,
+       34
+      ]
+     },
+     "overlap_px": [
+      32,
+      33
+     ]
+    },
+    {
+     "a": {
+      "text": "1",
+      "tag": "DIV",
+      "testid": null,
+      "box": [
+       175,
+       696,
+       34,
+       34
+      ]
+     },
+     "b": {
+      "text": "3",
+      "tag": "DIV",
+      "testid": null,
+      "box": [
+       178,
+       694,
+       34,
+       34
+      ]
+     },
+     "overlap_px": [
+      31,
+      32
+     ]
+    },
+    {
+     "a": {
+      "text": "1",
+      "tag": "DIV",
+      "testid": null,
+      "box": [
+       175,
+       696,
+       34,
+       34
+      ]
+     },
+     "b": {
+      "text": "4",
+      "tag": "DIV",
+      "testid": null,
+      "box": [
+       179,
+       693,
+       34,
+       34
+      ]
+     },
+     "overlap_px": [
+      30,
+      31
+     ]
+    },
+    {
+     "a": {
+      "text": "1",
+      "tag": "DIV",
+      "testid": null,
+      "box": [
+       175,
+       696,
+       34,
+       34
+      ]
+     },
+     "b": {
+      "text": "5",
+      "tag": "DIV",
+      "testid": null,
+      "box": [
+       180,
+       692,
+       34,
+       34
+      ]
+     },
+     "overlap_px": [
+      29,
+      30
+     ]
+    },
+    {
+     "a": {
+      "text": "1",
+      "tag": "DIV",
+      "testid": null,
+      "box": [
+       175,
+       696,
+       34,
+       34
+      ]
+     },
+     "b": {
+      "text": "6",
+      "tag": "DIV",
+      "testid": null,
+      "box": [
+       181,
+       690,
+       34,
+       34
+      ]
+     },
+     "overlap_px": [
+      28,
+      28
+     ]
+    },
+    {
+     "a": {
+      "text": "1",
+      "tag": "DIV",
+      "testid": null,
+      "box": [
+       175,
+       696,
+       34,
+       34
+      ]
+     },
+     "b": {
+      "text": "底图未加载，显示的是路线示意。",
+      "tag": "P",
+      "testid": "v8-map-tile-notice",
+      "box": [
+       26,
+       673,
+       338,
+       34
+      ]
+     },
+     "overlap_px": [
+      34,
+      11
+     ]
+    },
+    {
+     "a": {
+      "text": "2",
+      "tag": "DIV",
+      "testid": null,
+      "box": [
+       177,
+       695,
+       34,
+       34
+      ]
+     },
+     "b": {
+      "text": "3",
+      "tag": "DIV",
+      "testid": null,
+      "box": [
+       178,
+       694,
+       34,
+       34
+      ]
+     },
+     "overlap_px": [
+      33,
+      33
+     ]
+    },
+    {
+     "a": {
+      "text": "2",
+      "tag": "DIV",
+      "testid": null,
+      "box": [
+       177,
+       695,
+       34,
+       34
+      ]
+     },
+     "b": {
+      "text": "4",
+      "tag": "DIV",
+      "testid": null,
+      "box": [
+       179,
+       693,
+       34,
+       34
+      ]
+     },
+     "overlap_px": [
+      32,
+      32
+     ]
+    },
+    {
+     "a": {
+      "text": "2",
+      "tag": "DIV",
+      "testid": null,
+      "box": [
+       177,
+       695,
+       34,
+       34
+      ]
+     },
+     "b": {
+      "text": "5",
+      "tag": "DIV",
+      "testid": null,
+      "box": [
+       180,
+       692,
+       34,
+       34
+      ]
+     },
+     "overlap_px": [
+      31,
+      31
+     ]
+    },
+    {
+     "a": {
+      "text": "2",
+      "tag": "DIV",
+      "testid": null,
+      "box": [
+       177,
+       695,
+       34,
+       34
+      ]
+     },
+     "b": {
+      "text": "6",
+      "tag": "DIV",
+      "testid": null,
+      "box": [
+       181,
+       690,
+       34,
+       34
+      ]
+     },
+     "overlap_px": [
+      30,
+      29
+     ]
+    },
+    {
+     "a": {
+      "text": "2",
+      "tag": "DIV",
+      "testid": null,
+      "box": [
+       177,
+       695,
+       34,
+       34
+      ]
+     },
+     "b": {
+      "text": "底图未加载，显示的是路线示意。",
+      "tag": "P",
+      "testid": "v8-map-tile-notice",
+      "box": [
+       26,
+       673,
+       338,
+       34
+      ]
+     },
+     "overlap_px": [
+      34,
+      12
+     ]
+    },
+    {
+     "a": {
+      "text": "3",
+      "tag": "DIV",
+      "testid": null,
+      "box": [
+       178,
+       694,
+       34,
+       34
+      ]
+     },
+     "b": {
+      "text": "4",
+      "tag": "DIV",
+      "testid": null,
+      "box": [
+       179,
+       693,
+       34,
+       34
+      ]
+     },
+     "overlap_px": [
+      33,
+      33
+     ]
+    },
+    {
+     "a": {
+      "text": "3",
+      "tag": "DIV",
+      "testid": null,
+      "box": [
+       178,
+       694,
+       34,
+       34
+      ]
+     },
+     "b": {
+      "text": "5",
+      "tag": "DIV",
+      "testid": null,
+      "box": [
+       180,
+       692,
+       34,
+       34
+      ]
+     },
+     "overlap_px": [
+      32,
+      32
+     ]
+    },
+    {
+     "a": {
+      "text": "3",
+      "tag": "DIV",
+      "testid": null,
+      "box": [
+       178,
+       694,
+       34,
+       34
+      ]
+     },
+     "b": {
+      "text": "6",
+      "tag": "DIV",
+      "testid": null,
+      "box": [
+       181,
+       690,
+       34,
+       34
+      ]
+     },
+     "overlap_px": [
+      31,
+      30
+     ]
+    },
+    {
+     "a": {
+      "text": "3",
+      "tag": "DIV",
+      "testid": null,
+      "box": [
+       178,
+       694,
+       34,
+       34
+      ]
+     },
+     "b": {
+      "text": "底图未加载，显示的是路线示意。",
+      "tag": "P",
+      "testid": "v8-map-tile-notice",
+      "box": [
+       26,
+       673,
+       338,
+       34
+      ]
+     },
+     "overlap_px": [
+      34,
+      13
+     ]
+    },
+    {
+     "a": {
+      "text": "4",
+      "tag": "DIV",
+      "testid": null,
+      "box": [
+       179,
+       693,
+       34,
+       34
+      ]
+     },
+     "b": {
+      "text": "5",
+      "tag": "DIV",
+      "testid": null,
+      "box": [
+       180,
+       692,
+       34,
+       34
+      ]
+     },
+     "overlap_px": [
+      33,
+      33
+     ]
+    },
+    {
+     "a": {
+      "text": "4",
+      "tag": "DIV",
+      "testid": null,
+      "box": [
+       179,
+       693,
+       34,
+       34
+      ]
+     },
+     "b": {
+      "text": "6",
+      "tag": "DIV",
+      "testid": null,
+      "box": [
+       181,
+       690,
+       34,
+       34
+      ]
+     },
+     "overlap_px": [
+      32,
+      31
+     ]
+    },
+    {
+     "a": {
+      "text": "4",
+      "tag": "DIV",
+      "testid": null,
+      "box": [
+       179,
+       693,
+       34,
+       34
+      ]
+     },
+     "b": {
+      "text": "底图未加载，显示的是路线示意。",
+      "tag": "P",
+      "testid": "v8-map-tile-notice",
+      "box": [
+       26,
+       673,
+       338,
+       34
+      ]
+     },
+     "overlap_px": [
+      34,
+      14
+     ]
+    },
+    {
+     "a": {
+      "text": "5",
+      "tag": "DIV",
+      "testid": null,
+      "box": [
+       180,
+       692,
+       34,
+       34
+      ]
+     },
+     "b": {
+      "text": "6",
+      "tag": "DIV",
+      "testid": null,
+      "box": [
+       181,
+       690,
+       34,
+       34
+      ]
+     },
+     "overlap_px": [
+      33,
+      32
+     ]
+    },
+    {
+     "a": {
+      "text": "5",
+      "tag": "DIV",
+      "testid": null,
+      "box": [
+       180,
+       692,
+       34,
+       34
+      ]
+     },
+     "b": {
+      "text": "底图未加载，显示的是路线示意。",
+      "tag": "P",
+      "testid": "v8-map-tile-notice",
+      "box": [
+       26,
+       673,
+       338,
+       34
+      ]
+     },
+     "overlap_px": [
+      34,
+      15
+     ]
+    }
+   ]
+  },
+  "live": {
+   "leaves": 67,
+   "collisions": 25,
+   "pairs": [
+    {
+     "a": {
+      "text": "1",
+      "tag": "DIV",
+      "testid": null,
+      "box": [
+       178,
+       456,
+       34,
+       34
+      ]
+     },
+     "b": {
+      "text": "2",
+      "tag": "DIV",
+      "testid": null,
+      "box": [
+       207,
+       437,
+       34,
+       34
+      ]
+     },
+     "overlap_px": [
+      5,
+      15
+     ]
+    },
+    {
+     "a": {
+      "text": "1",
+      "tag": "DIV",
+      "testid": null,
+      "box": [
+       178,
+       456,
+       34,
+       34
+      ]
+     },
+     "b": {
+      "text": "单指拖动地图 · 双指缩放 · 想翻这一页就拖地图以外的地方",
+      "tag": "P",
+      "testid": "v8-map-gesture-hint",
+      "box": [
+       17,
+       440,
+       356,
+       54
+      ]
+     },
+     "overlap_px": [
+      34,
+      34
+     ]
+    },
+    {
+     "a": {
+      "text": "2",
+      "tag": "DIV",
+      "testid": null,
+      "box": [
+       207,
+       437,
+       34,
+       34
+      ]
+     },
+     "b": {
+      "text": "3",
+      "tag": "DIV",
+      "testid": null,
+      "box": [
+       222,
+       418,
+       34,
+       34
+      ]
+     },
+     "overlap_px": [
+      19,
+      15
+     ]
+    },
+    {
+     "a": {
+      "text": "2",
+      "tag": "DIV",
+      "testid": null,
+      "box": [
+       207,
+       437,
+       34,
+       34
+      ]
+     },
+     "b": {
+      "text": "单指拖动地图 · 双指缩放 · 想翻这一页就拖地图以外的地方",
+      "tag": "P",
+      "testid": "v8-map-gesture-hint",
+      "box": [
+       17,
+       440,
+       356,
+       54
+      ]
+     },
+     "overlap_px": [
+      34,
+      31
+     ]
+    },
+    {
+     "a": {
+      "text": "3",
+      "tag": "DIV",
+      "testid": null,
+      "box": [
+       222,
+       418,
+       34,
+       34
+      ]
+     },
+     "b": {
+      "text": "4",
+      "tag": "DIV",
+      "testid": null,
+      "box": [
+       251,
+       399,
+       34,
+       34
+      ]
+     },
+     "overlap_px": [
+      5,
+      15
+     ]
+    },
+    {
+     "a": {
+      "text": "3",
+      "tag": "DIV",
+      "testid": null,
+      "box": [
+       222,
+       418,
+       34,
+       34
+      ]
+     },
+     "b": {
+      "text": "单指拖动地图 · 双指缩放 · 想翻这一页就拖地图以外的地方",
+      "tag": "P",
+      "testid": "v8-map-gesture-hint",
+      "box": [
+       17,
+       440,
+       356,
+       54
+      ]
+     },
+     "overlap_px": [
+      34,
+      12
+     ]
+    },
+    {
+     "a": {
+      "text": "4",
+      "tag": "DIV",
+      "testid": null,
+      "box": [
+       251,
+       399,
+       34,
+       34
+      ]
+     },
+     "b": {
+      "text": "5",
+      "tag": "DIV",
+      "testid": null,
+      "box": [
+       265,
+       380,
+       34,
+       34
+      ]
+     },
+     "overlap_px": [
+      20,
+      15
+     ]
+    },
+    {
+     "a": {
+      "text": "4",
+      "tag": "DIV",
+      "testid": null,
+      "box": [
+       251,
+       399,
+       34,
+       34
+      ]
+     },
+     "b": {
+      "text": "回到行程视野",
+      "tag": "SPAN",
+      "testid": null,
+      "box": [
+       269,
+       388,
+       78,
+       16
+      ]
+     },
+     "overlap_px": [
+      16,
+      5
+     ]
+    },
+    {
+     "a": {
+      "text": "5",
+      "tag": "DIV",
+      "testid": null,
+      "box": [
+       265,
+       380,
+       34,
+       34
+      ]
+     },
+     "b": {
+      "text": "6",
+      "tag": "DIV",
+      "testid": null,
+      "box": [
+       280,
+       362,
+       34,
+       34
+      ]
+     },
+     "overlap_px": [
+      19,
+      16
+     ]
+    },
+    {
+     "a": {
+      "text": "5",
+      "tag": "DIV",
+      "testid": null,
+      "box": [
+       265,
+       380,
+       34,
+       34
+      ]
+     },
+     "b": {
+      "text": "回到行程视野",
+      "tag": "SPAN",
+      "testid": null,
+      "box": [
+       269,
+       388,
+       78,
+       16
+      ]
+     },
+     "overlap_px": [
+      30,
+      16
+     ]
+    },
+    {
+     "a": {
+      "text": "5",
+      "tag": "DIV",
+      "testid": null,
+      "box": [
+       265,
+       380,
+       34,
+       34
+      ]
+     },
+     "b": {
+      "text": "底图未加载，显示的是路线示意。",
+      "tag": "P",
+      "testid": "v8-map-tile-notice",
+      "box": [
+       26,
+       362,
+       338,
+       34
+      ]
+     },
+     "overlap_px": [
+      34,
+      16
+     ]
+    },
+    {
+     "a": {
+      "text": "6",
+      "tag": "DIV",
+      "testid": null,
+      "box": [
+       280,
+       362,
+       34,
+       34
+      ]
+     },
+     "b": {
+      "text": "回到行程视野",
+      "tag": "SPAN",
+      "testid": null,
+      "box": [
+       269,
+       388,
+       78,
+       16
+      ]
+     },
+     "overlap_px": [
+      34,
+      8
+     ]
+    },
+    {
+     "a": {
+      "text": "6",
+      "tag": "DIV",
+      "testid": null,
+      "box": [
+       280,
+       362,
+       34,
+       34
+      ]
+     },
+     "b": {
+      "text": "底图未加载，显示的是路线示意。",
+      "tag": "P",
+      "testid": "v8-map-tile-notice",
+      "box": [
+       26,
+       362,
+       338,
+       34
+      ]
+     },
+     "overlap_px": [
+      34,
+      34
+     ]
+    },
+    {
+     "a": {
+      "text": "回到行程视野",
+      "tag": "SPAN",
+      "testid": null,
+      "box": [
+       269,
+       388,
+       78,
+       16
+      ]
+     },
+     "b": {
+      "text": "底图未加载，显示的是路线示意。",
+      "tag": "P",
+      "testid": "v8-map-tile-notice",
+      "box": [
+       26,
+       362,
+       338,
+       34
+      ]
+     },
+     "overlap_px": [
+      78,
+      8
+     ]
+    },
+    {
+     "a": {
+      "text": "下一段路程方式",
+      "tag": "SPAN",
+      "testid": null,
+      "box": [
+       36,
+       731,
+       318,
+       14
+      ]
+     },
+     "b": {
+      "text": "✦",
+      "tag": "SPAN",
+      "testid": null,
+      "box": [
+       228,
+       727,
+       25,
+       25
+      ]
+     },
+     "overlap_px": [
+      25,
+      14
+     ]
+    },
+    {
+     "a": {
+      "text": "下一段路程方式",
+      "tag": "SPAN",
+      "testid": null,
+      "box": [
+       36,
+       731,
+       318,
+       14
+      ]
+     },
+     "b": {
+      "text": "CityNexus Copilot",
+      "tag": "SPAN",
+      "testid": null,
+      "box": [
+       263,
+       732,
+       87,
+       15
+      ]
+     },
+     "overlap_px": [
+      87,
+      13
+     ]
+    },
+    {
+     "a": {
+      "text": "步行",
+      "tag": "BUTTON",
+      "testid": "mode-walk",
+      "box": [
+       36,
+       791,
+       318,
+       44
+      ]
+     },
+     "b": {
+      "text": "今天",
+      "tag": "SPAN",
+      "testid": null,
+      "box": [
+       30,
+       816,
+       26,
+       17
+      ]
+     },
+     "overlap_px": [
+      20,
+      17
+     ]
+    },
+    {
+     "a": {
+      "text": "步行",
+      "tag": "BUTTON",
+      "testid": "mode-walk",
+      "box": [
+       36,
+       791,
+       318,
+       44
+      ]
+     },
+     "b": {
+      "text": "行程",
+      "tag": "SPAN",
+      "testid": null,
+      "box": [
+       106,
+       816,
+       26,
+       17
+      ]
+     },
+     "overlap_px": [
+      26,
+      17
+     ]
+    },
+    {
+     "a": {
+      "text": "步行",
+      "tag": "BUTTON",
+      "testid": "mode-walk",
+      "box": [
+       36,
+       791,
+       318,
+       44
+      ]
+     },
+     "b": {
+      "text": "地图",
+      "tag": "SPAN",
+      "testid": null,
+      "box": [
+       182,
+       816,
+       26,
+       17
+      ]
+     },
+     "overlap_px": [
+      26,
+      17
+     ]
+    },
+    {
+     "a": {
+      "text": "步行",
+      "tag": "BUTTON",
+      "testid": "mode-walk",
+      "box": [
+       36,
+       791,
+       318,
+       44
+      ]
+     },
+     "b": {
+      "text": "Copilot",
+      "tag": "SPAN",
+      "testid": null,
+      "box": [
+       250,
+       816,
+       42,
+       17
+      ]
+     },
+     "overlap_px": [
+      42,
+      17
+     ]
+    }
+   ]
+  },
+  "map": {
+   "leaves": 38,
+   "collisions": 6,
+   "pairs": [
+    {
+     "a": {
+      "text": "2",
+      "tag": "DIV",
+      "testid": null,
+      "box": [
+       143,
+       464,
+       34,
+       34
+      ]
+     },
+     "b": {
+      "text": "3",
+      "tag": "DIV",
+      "testid": null,
+      "box": [
+       166,
+       434,
+       34,
+       34
+      ]
+     },
+     "overlap_px": [
+      11,
+      4
+     ]
+    },
+    {
+     "a": {
+      "text": "4",
+      "tag": "DIV",
+      "testid": null,
+      "box": [
+       213,
+       404,
+       34,
+       34
+      ]
+     },
+     "b": {
+      "text": "5",
+      "tag": "DIV",
+      "testid": null,
+      "box": [
+       236,
+       374,
+       34,
+       34
+      ]
+     },
+     "overlap_px": [
+      11,
+      4
+     ]
+    },
+    {
+     "a": {
+      "text": "5",
+      "tag": "DIV",
+      "testid": null,
+      "box": [
+       236,
+       374,
+       34,
+       34
+      ]
+     },
+     "b": {
+      "text": "6",
+      "tag": "DIV",
+      "testid": null,
+      "box": [
+       260,
+       344,
+       34,
+       34
+      ]
+     },
+     "overlap_px": [
+      10,
+      4
+     ]
+    },
+    {
+     "a": {
+      "text": "6",
+      "tag": "DIV",
+      "testid": null,
+      "box": [
+       260,
+       344,
+       34,
+       34
+      ]
+     },
+     "b": {
+      "text": "回到行程视野",
+      "tag": "SPAN",
+      "testid": null,
+      "box": [
+       269,
+       353,
+       78,
+       16
+      ]
+     },
+     "overlap_px": [
+      25,
+      16
+     ]
+    },
+    {
+     "a": {
+      "text": "6",
+      "tag": "DIV",
+      "testid": null,
+      "box": [
+       260,
+       344,
+       34,
+       34
+      ]
+     },
+     "b": {
+      "text": "底图未加载，显示的是路线示意。",
+      "tag": "P",
+      "testid": "v8-map-tile-notice",
+      "box": [
+       26,
+       327,
+       338,
+       34
+      ]
+     },
+     "overlap_px": [
+      34,
+      17
+     ]
+    },
+    {
+     "a": {
+      "text": "回到行程视野",
+      "tag": "SPAN",
+      "testid": null,
+      "box": [
+       269,
+       353,
+       78,
+       16
+      ]
+     },
+     "b": {
+      "text": "底图未加载，显示的是路线示意。",
+      "tag": "P",
+      "testid": "v8-map-tile-notice",
+      "box": [
+       26,
+       327,
+       338,
+       34
+      ]
+     },
+     "overlap_px": [
+      78,
+      8
+     ]
+    }
+   ]
+  },
+  "studio": {
+   "leaves": 29,
+   "collisions": 0,
+   "pairs": []
+  },
+  "stay": {
+   "leaves": 17,
+   "collisions": 0,
+   "pairs": []
+  },
+  "discover": {
+   "leaves": 29,
+   "collisions": 7,
+   "pairs": [
+    {
+     "a": {
+      "text": "描述偏好、心情或约束。模型可选择语义方向，但只有服务端已知的地点才能到达权威方案。",
+      "tag": "P",
+      "testid": null,
+      "box": [
+       37,
+       697,
+       316,
+       40
+      ]
+     },
+     "b": {
+      "text": "✦",
+      "tag": "SPAN",
+      "testid": null,
+      "box": [
+       228,
+       727,
+       25,
+       25
+      ]
+     },
+     "overlap_px": [
+      25,
+      10
+     ]
+    },
+    {
+     "a": {
+      "text": "描述偏好、心情或约束。模型可选择语义方向，但只有服务端已知的地点才能到达权威方案。",
+      "tag": "P",
+      "testid": null,
+      "box": [
+       37,
+       697,
+       316,
+       40
+      ]
+     },
+     "b": {
+      "text": "CityNexus Copilot",
+      "tag": "SPAN",
+      "testid": null,
+      "box": [
+       263,
+       732,
+       87,
+       15
+      ]
+     },
+     "overlap_px": [
+      87,
+      5
+     ]
+    },
+    {
+     "a": {
+      "text": "供应商坐标、营业时间、费用、出行和受保护承诺保持为确定性事实。",
+      "tag": "SPAN",
+      "testid": null,
+      "box": [
+       52,
+       799,
+       289,
+       33
+      ]
+     },
+     "b": {
+      "text": "今天",
+      "tag": "SPAN",
+      "testid": null,
+      "box": [
+       30,
+       816,
+       26,
+       17
+      ]
+     },
+     "overlap_px": [
+      4,
+      16
+     ]
+    },
+    {
+     "a": {
+      "text": "供应商坐标、营业时间、费用、出行和受保护承诺保持为确定性事实。",
+      "tag": "SPAN",
+      "testid": null,
+      "box": [
+       52,
+       799,
+       289,
+       33
+      ]
+     },
+     "b": {
+      "text": "行程",
+      "tag": "SPAN",
+      "testid": null,
+      "box": [
+       106,
+       816,
+       26,
+       17
+      ]
+     },
+     "overlap_px": [
+      26,
+      16
+     ]
+    },
+    {
+     "a": {
+      "text": "供应商坐标、营业时间、费用、出行和受保护承诺保持为确定性事实。",
+      "tag": "SPAN",
+      "testid": null,
+      "box": [
+       52,
+       799,
+       289,
+       33
+      ]
+     },
+     "b": {
+      "text": "地图",
+      "tag": "SPAN",
+      "testid": null,
+      "box": [
+       182,
+       816,
+       26,
+       17
+      ]
+     },
+     "overlap_px": [
+      26,
+      16
+     ]
+    },
+    {
+     "a": {
+      "text": "供应商坐标、营业时间、费用、出行和受保护承诺保持为确定性事实。",
+      "tag": "SPAN",
+      "testid": null,
+      "box": [
+       52,
+       799,
+       289,
+       33
+      ]
+     },
+     "b": {
+      "text": "Copilot",
+      "tag": "SPAN",
+      "testid": null,
+      "box": [
+       250,
+       816,
+       42,
+       17
+      ]
+     },
+     "overlap_px": [
+      42,
+      16
+     ]
+    },
+    {
+     "a": {
+      "text": "供应商坐标、营业时间、费用、出行和受保护承诺保持为确定性事实。",
+      "tag": "SPAN",
+      "testid": null,
+      "box": [
+       52,
+       799,
+       289,
+       33
+      ]
+     },
+     "b": {
+      "text": "我的",
+      "tag": "SPAN",
+      "testid": null,
+      "box": [
+       334,
+       816,
+       26,
+       17
+      ]
+     },
+     "overlap_px": [
+      7,
+      16
+     ]
+    }
+   ]
+  },
+  "bookings": {
+   "leaves": 49,
+   "collisions": 7,
+   "pairs": [
+    {
+     "a": {
+      "text": "高级：结构化数据",
+      "tag": "SUMMARY",
+      "testid": null,
+      "box": [
+       40,
+       817,
+       310,
+       44
+      ]
+     },
+     "b": {
+      "text": "今天",
+      "tag": "SPAN",
+      "testid": null,
+      "box": [
+       30,
+       816,
+       26,
+       17
+      ]
+     },
+     "overlap_px": [
+      16,
+      16
+     ]
+    },
+    {
+     "a": {
+      "text": "高级：结构化数据",
+      "tag": "SUMMARY",
+      "testid": null,
+      "box": [
+       40,
+       817,
+       310,
+       44
+      ]
+     },
+     "b": {
+      "text": "行程",
+      "tag": "SPAN",
+      "testid": null,
+      "box": [
+       106,
+       816,
+       26,
+       17
+      ]
+     },
+     "overlap_px": [
+      26,
+      16
+     ]
+    },
+    {
+     "a": {
+      "text": "高级：结构化数据",
+      "tag": "SUMMARY",
+      "testid": null,
+      "box": [
+       40,
+       817,
+       310,
+       44
+      ]
+     },
+     "b": {
+      "text": "地图",
+      "tag": "SPAN",
+      "testid": null,
+      "box": [
+       182,
+       816,
+       26,
+       17
+      ]
+     },
+     "overlap_px": [
+      26,
+      16
+     ]
+    },
+    {
+     "a": {
+      "text": "高级：结构化数据",
+      "tag": "SUMMARY",
+      "testid": null,
+      "box": [
+       40,
+       817,
+       310,
+       44
+      ]
+     },
+     "b": {
+      "text": "Copilot",
+      "tag": "SPAN",
+      "testid": null,
+      "box": [
+       250,
+       816,
+       42,
+       17
+      ]
+     },
+     "overlap_px": [
+      42,
+      16
+     ]
+    },
+    {
+     "a": {
+      "text": "高级：结构化数据",
+      "tag": "SUMMARY",
+      "testid": null,
+      "box": [
+       40,
+       817,
+       310,
+       44
+      ]
+     },
+     "b": {
+      "text": "我的",
+      "tag": "SPAN",
+      "testid": null,
+      "box": [
+       334,
+       816,
+       26,
+       17
+      ]
+     },
+     "overlap_px": [
+      16,
+      16
+     ]
+    },
+    {
+     "a": {
+      "text": "预订 JSON",
+      "tag": "LABEL",
+      "testid": null,
+      "box": [
+       40,
+       1025,
+       53,
+       15
+      ]
+     },
+     "b": {
+      "text": "ZXing 确定性解码 · 仍需确认",
+      "tag": "SMALL",
+      "testid": null,
+      "box": [
+       34,
+       1028,
+       322,
+       17
+      ]
+     },
+     "overlap_px": [
+      53,
+      12
+     ]
+    },
+    {
+     "a": {
+      "text": "关键的出发地、目的地、时间、供应商和参考事实绝不会被编造。",
+      "tag": "SMALL",
+      "testid": null,
+      "box": [
+       40,
+       1058,
+       304,
+       47
+      ]
+     },
+     "b": {
+      "text": "打开扫描器",
+      "tag": "BUTTON",
+      "testid": null,
+      "box": [
+       34,
+       1065,
+       104,
+       44
+      ]
+     },
+     "overlap_px": [
+      98,
+      40
+     ]
+    }
+   ]
+  },
+  "agent": {
+   "leaves": 31,
+   "collisions": 2,
+   "pairs": [
+    {
+     "a": {
+      "text": "找附近的室内地点",
+      "tag": "BUTTON",
+      "testid": null,
+      "box": [
+       37,
+       805,
+       102,
+       32
+      ]
+     },
+     "b": {
+      "text": "今天",
+      "tag": "SPAN",
+      "testid": null,
+      "box": [
+       30,
+       816,
+       26,
+       17
+      ]
+     },
+     "overlap_px": [
+      19,
+      17
+     ]
+    },
+    {
+     "a": {
+      "text": "找附近的室内地点",
+      "tag": "BUTTON",
+      "testid": null,
+      "box": [
+       37,
+       805,
+       102,
+       32
+      ]
+     },
+     "b": {
+      "text": "行程",
+      "tag": "SPAN",
+      "testid": null,
+      "box": [
+       106,
+       816,
+       26,
+       17
+      ]
+     },
+     "overlap_px": [
+      26,
+      17
+     ]
+    }
+   ]
+  },
+  "authoritative": {
+   "leaves": 76,
+   "collisions": 0,
+   "pairs": []
+  },
+  "intelligence": {
+   "leaves": 34,
+   "collisions": 3,
+   "pairs": [
+    {
+     "a": {
+      "text": "未完成可验证证明，因此不宣称原生 Hermes MCP",
+      "tag": "SMALL",
+      "testid": null,
+      "box": [
+       60,
+       702,
+       270,
+       39
+      ]
+     },
+     "b": {
+      "text": "✦",
+      "tag": "SPAN",
+      "testid": null,
+      "box": [
+       228,
+       727,
+       25,
+       25
+      ]
+     },
+     "overlap_px": [
+      25,
+      14
+     ]
+    },
+    {
+     "a": {
+      "text": "未完成可验证证明，因此不宣称原生 Hermes MCP",
+      "tag": "SMALL",
+      "testid": null,
+      "box": [
+       60,
+       702,
+       270,
+       39
+      ]
+     },
+     "b": {
+      "text": "CityNexus Copilot",
+      "tag": "SPAN",
+      "testid": null,
+      "box": [
+       263,
+       732,
+       87,
+       15
+      ]
+     },
+     "overlap_px": [
+      67,
+      9
+     ]
+    },
+    {
+     "a": {
+      "text": "策略",
+      "tag": "SPAN",
+      "testid": null,
+      "box": [
+       37,
+       826,
+       20,
+       12
+      ]
+     },
+     "b": {
+      "text": "今天",
+      "tag": "SPAN",
+      "testid": null,
+      "box": [
+       30,
+       816,
+       26,
+       17
+      ]
+     },
+     "overlap_px": [
+      19,
+      7
+     ]
+    }
+   ]
+  },
+  "twin": {
+   "leaves": 32,
+   "collisions": 2,
+   "pairs": [
+    {
+     "a": {
+      "text": "Learned capability state",
+      "tag": "H3",
+      "testid": null,
+      "box": [
+       42,
+       743,
+       306,
+       17
+      ]
+     },
+     "b": {
+      "text": "✦",
+      "tag": "SPAN",
+      "testid": null,
+      "box": [
+       228,
+       727,
+       25,
+       25
+      ]
+     },
+     "overlap_px": [
+      25,
+      9
+     ]
+    },
+    {
+     "a": {
+      "text": "Learned capability state",
+      "tag": "H3",
+      "testid": null,
+      "box": [
+       42,
+       743,
+       306,
+       17
+      ]
+     },
+     "b": {
+      "text": "CityNexus Copilot",
+      "tag": "SPAN",
+      "testid": null,
+      "box": [
+       263,
+       732,
+       87,
+       15
+      ]
+     },
+     "overlap_px": [
+      85,
+      4
+     ]
+    }
+   ]
+  },
+  "trips": {
+   "leaves": 36,
+   "collisions": 0,
+   "pairs": []
+  },
+  "me": {
+   "leaves": 47,
+   "collisions": 5,
+   "pairs": [
+    {
+     "a": {
+      "text": "仅提供建议",
+      "tag": "STRONG",
+      "testid": null,
+      "box": [
+       40,
+       807,
+       310,
+       34
+      ]
+     },
+     "b": {
+      "text": "今天",
+      "tag": "SPAN",
+      "testid": null,
+      "box": [
+       30,
+       816,
+       26,
+       17
+      ]
+     },
+     "overlap_px": [
+      16,
+      17
+     ]
+    },
+    {
+     "a": {
+      "text": "仅提供建议",
+      "tag": "STRONG",
+      "testid": null,
+      "box": [
+       40,
+       807,
+       310,
+       34
+      ]
+     },
+     "b": {
+      "text": "行程",
+      "tag": "SPAN",
+      "testid": null,
+      "box": [
+       106,
+       816,
+       26,
+       17
+      ]
+     },
+     "overlap_px": [
+      26,
+      17
+     ]
+    },
+    {
+     "a": {
+      "text": "仅提供建议",
+      "tag": "STRONG",
+      "testid": null,
+      "box": [
+       40,
+       807,
+       310,
+       34
+      ]
+     },
+     "b": {
+      "text": "地图",
+      "tag": "SPAN",
+      "testid": null,
+      "box": [
+       182,
+       816,
+       26,
+       17
+      ]
+     },
+     "overlap_px": [
+      26,
+      17
+     ]
+    },
+    {
+     "a": {
+      "text": "仅提供建议",
+      "tag": "STRONG",
+      "testid": null,
+      "box": [
+       40,
+       807,
+       310,
+       34
+      ]
+     },
+     "b": {
+      "text": "Copilot",
+      "tag": "SPAN",
+      "testid": null,
+      "box": [
+       250,
+       816,
+       42,
+       17
+      ]
+     },
+     "overlap_px": [
+      42,
+      17
+     ]
+    },
+    {
+     "a": {
+      "text": "仅提供建议",
+      "tag": "STRONG",
+      "testid": null,
+      "box": [
+       40,
+       807,
+       310,
+       34
+      ]
+     },
+     "b": {
+      "text": "我的",
+      "tag": "SPAN",
+      "testid": null,
+      "box": [
+       334,
+       816,
+       26,
+       17
+      ]
+     },
+     "overlap_px": [
+      16,
+      17
+     ]
+    }
+   ]
+  },
+  "trash": {
+   "leaves": 17,
+   "collisions": 0,
+   "pairs": []
+  }
+ },
+ "summary": {
+  "routes": 14,
+  "total_collisions": 79,
+  "verdict": "TEXT_OVERLAPS_TEXT"
+ }
+}
