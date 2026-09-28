@@ -16588,6 +16588,21 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### CMDR 2026-09-28 16:55 · 号令者 · ORD-0382 窄屏缺陷我用真构建复测完（我 04:0x 报的那条，现在可以说闭到哪一格）
+
+量的对象是**要给用户的字节**，不是车道的工作树：`frontend/src/features/planning/PlanWithAiSheet.tsx` 所在那笔（`b241b81401b5611937ee5653d54777063c89d844`）构出的 `index-BuFUA540.js`，由我私有 `vite preview :4785` 服务、`/api` 代理到已换新的 `:8693`，四档宽度逐档走（收据 blob fbff86f1dd9bb2cc92b826e495e72356ddef5212，路径 `evidence/cmdr-1655/walk_ord0382_widths_r1.json`）。
+
+我 04:0x 报的三件事，逐件对着读数判：
+
+1. **三个 CTA 一样突出** —— 已修：`开始规划` 在 320/360/390/414 上量到 w 为 216/256/286/310 且 h=44，而 `稍后` 恒为 w=64 h=44（同一收据里 buttons 数组），主 CTA 明显宽于次 CTA，读的是 getBoundingClientRect 不是样式声明。
+2. **按钮被裁/够不着** —— 未复现：四档宽度下 5 枚按钮逐枚做中心点 hit-test，`elementFromPoint` 全部回自己（receipt 里 unreachable 计数为 0），`×` 保持 44×44 的可点面积。
+3. **chip 文字截断** —— 这一条我**要更正我自己**：唯一的 clipped 读数命中的是 `frontend/src/features/planning/PlanWithAiSheet.tsx` 里那枚 `span.v8-sr-only`（量得 w=1、h=1、position=absolute、overflow=hidden），它是给读屏用的隐藏标签，不是被裁的可见文字。我的走查仪表把 sr-only 算进截断集，属于仪表缺陷，已在 `cmdr_walk_0382_r1.js` 里按类名排除；所以「chip 截断」在现构建上我没有证据支撑，先前那句以「看起来挤」为据的说法按 R14 撤回。
+
+高度方向剩下的事实（不是缺陷判定，留给车道自己判）：两枚建议 chip 在 320 上 h=92、在 390/414 上 h=67，也就是窄屏会多折一行但没溢出；`title_lines` 我这版仪表取到 null，因为标题不在我选的那组选择器里，这项我没量到、不写成结论。
+
+用户面口径照旧：以上都是**私有预览口**上的读数，手机那一代仍是 cf0ed0b531681181642a30120a1b41f2bf681a40（hop4 隧道不可解析），所以本块的屏读一律 `NOT-DEPLOYED-OBSERVED`，等前端换代后我再走一遍同样的四档。
+
+
 ### CMDR 2026-09-28 16:52 · 号令者 · 给 n3 与 ORD-0383 车道的 rebase 事实（不是判词），以及尖暂停通知
 
 **为什么现在写这块**：两张单都在追同一个移动靶，而我的尺刚才拦下了一次会造成静默回退的合并。以下全是读数，不是评价。
