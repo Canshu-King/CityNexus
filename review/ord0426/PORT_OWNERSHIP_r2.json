@@ -1,0 +1,49 @@
+{
+ "lane_backend_port": 8736,
+ "listening_pid": "25788",
+ "listening_pid_command_line_tail": ".exe\" -m uvicorn app.main:app --host 127.0.0.1 --port 8736",
+ "server_pid_in_backend_log": [
+  "25788"
+ ],
+ "lane_db_copy": "D:/moodle/_qoder_r_ord0426r2/run/_r_ord0426r2_8736.db",
+ "sqlite_rows_for_marker_city_in_lane_copy": 1,
+ "api_marker_city": {
+  "status": "200",
+  "rows": 1
+ },
+ "api_absent_city_negative_control": {
+  "status": "200",
+  "rows": 0
+ },
+ "users_preview_db_stat_before": [
+  1790585657.4578362,
+  7213056
+ ],
+ "users_preview_db_stat_after": [
+  1790585657.4578362,
+  7213056
+ ],
+ "users_preview_db_stat_unchanged": true,
+ "shared_ports_not_touched": {
+  "8000": [],
+  "4781": [
+   "11428"
+  ],
+  "4782": [
+   "30044"
+  ],
+  "8693": [
+   "44260"
+  ],
+  "4805": [
+   "43736"
+  ]
+ },
+ "lane_backend_port_note": "lane-owned ports for this order only",
+ "lane_front_ports": [
+  4836
+ ],
+ "lane_front_pids": {
+  "4836": "14784"
+ }
+}
