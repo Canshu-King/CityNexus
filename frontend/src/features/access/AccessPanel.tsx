@@ -20,6 +20,7 @@ import {
   type AccessCopyKey,
 } from "./accessCopy";
 import {
+  actionNamesAMember,
   invitationTtlPresent,
   memberActionKey,
   ROLE_COLLABORATOR,
@@ -238,11 +239,19 @@ export function AccessPanel() {
             <ul className="cn-access-activity" data-testid="access-activity-list">
               {activities.map((event) => {
                 const key = memberActionKey(event.event_type);
+                // `{name}` is only ever filled by a person this door actually named. Today the feed
+                // carries `actor_id` (who tapped), not whose row changed, and the two are different
+                // people -- guessing the second from the first would put a name on a sentence the
+                // server did not say. So an unnamed member reads as unnamed, not as a template.
+                const named = event.member_name;
+                const params = actionNamesAMember(event.event_type)
+                  ? { name: named ? named : say("access.memberUnnamed") }
+                  : {};
                 return (
                   <li key={event.id} className="cn-access-activity-row" data-event-type={event.event_type}>
                     <span className="cn-access-when">{formatV8Date(event.timestamp, locale)}</span>
                     <span className="cn-access-what">
-                      {key ? say(key) : say("access.actionUnknown", { token: event.event_type })}
+                      {key ? say(key, params) : say("access.actionUnknown", { token: event.event_type })}
                     </span>
                   </li>
                 );

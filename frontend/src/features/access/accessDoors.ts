@@ -33,6 +33,9 @@ export type ActivityEvent = {
   summary: string;
   actor_type?: string | null;
   actor_id?: string | null;
+  /** Whose row an action touched. The feed does not send this today, and the panel says so out loud
+   *  rather than filling it from `actor_id` -- who tapped is not who changed. */
+  member_name?: string | null;
 };
 
 async function request<T>(path: string, init?: RequestInit): Promise<T> {

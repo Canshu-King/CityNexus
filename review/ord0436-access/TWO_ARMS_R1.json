@@ -1,7 +1,7 @@
 {
-  "started_at": "2026-09-29T05:57:50+08:00",
+  "started_at": "2026-09-29T06:19:48+08:00",
   "backend_identity": {
-    "listener_pid": 20276,
+    "listener_pid": 39956,
     "listener_is_spawned_or_its_child": true,
     "listener_command": "\"C:\\Users\\������\\AppData\\Roaming\\uv\\python\\cpython-3.12.14-windows-x86_64-none\\python.exe\" -X utf8 -m uvicorn app.main:app --host 127.0.0.1 --port 4731 --log-level warning",
     "command_names_this_app_and_port": true,
@@ -10,7 +10,7 @@
     "shared_stores_named_by_this_run": []
   },
   "seed": {
-    "journey_id": "dc5cee90-76bd-4bc1-b26d-7a29558bffe2",
+    "journey_id": "d347c232-46fd-485f-baa5-ff2de4d5e2df",
     "delete_door_status": 204,
     "undelete_door_status": 200,
     "actions_in_this_lane_database": [
@@ -110,7 +110,7 @@
         "新建了这条行程",
         "把这条行程丢进了回收站",
         "把这条行程从回收站找回",
-        "把 {name} 加进了这条行程",
+        "把 这台服务器没有点名的人 加进了这条行程",
         "这台服务器报了一个本屏说不出人话的动作：journey.unlisted_share_change。"
       ],
       "activityAttributes": [
@@ -133,9 +133,10 @@
         "testId": "access-journey-picker"
       },
       "rawKeyLeak": false,
-      "cjkChars": 596,
-      "latinWords": 12,
-      "wholePageCjkChars": 612,
+      "unfilledPlaceholders": [],
+      "cjkChars": 607,
+      "latinWords": 11,
+      "wholePageCjkChars": 623,
       "doorStillLoading": false,
       "overflowX": 0,
       "pageErrors": []
@@ -216,7 +217,7 @@
         "created this trip",
         "put this trip in the recycle bin",
         "brought this trip back from the recycle bin",
-        "added {name} to this trip",
+        "added a member this server did not name to this trip",
         "This server reported an action this screen has no sentence for: journey.unlisted_share_change."
       ],
       "activityAttributes": [
@@ -239,8 +240,9 @@
         "testId": "access-journey-picker"
       },
       "rawKeyLeak": false,
+      "unfilledPlaceholders": [],
       "cjkChars": 0,
-      "latinWords": 394,
+      "latinWords": 399,
       "wholePageCjkChars": 2,
       "doorStillLoading": false,
       "overflowX": 0,
@@ -300,7 +302,7 @@
       {
         "name": "activity rows the screen has words for read as sentences, not as the server's token",
         "verdict": "PASS",
-        "detail": "[{\"line\":\"新建了这条行程\",\"token\":\"journey.created\"},{\"line\":\"把这条行程丢进了回收站\",\"token\":\"journey.deleted\"},{\"line\":\"把这条行程从回收站找回\",\"token\":\"journey.undeleted\"},{\"line\":\"把 {name} 加进了这条行程\",\"token\":\"journey.member_added\"}]"
+        "detail": "[{\"line\":\"新建了这条行程\",\"token\":\"journey.created\"},{\"line\":\"把这条行程丢进了回收站\",\"token\":\"journey.deleted\"},{\"line\":\"把这条行程从回收站找回\",\"token\":\"journey.undeleted\"},{\"line\":\"把 这台服务器没有点名的人 加进了这条行程\",\"token\":\"journey.member_added\"}]"
       },
       {
         "name": "an action this screen cannot name says so and quotes the token it was given",
@@ -318,14 +320,19 @@
         "detail": "zh=false en=false"
       },
       {
+        "name": "no template placeholder reached either arm's screen",
+        "verdict": "PASS",
+        "detail": "{\"zh\":[],\"en\":[]}"
+      },
+      {
         "name": "the Chinese arm reads Chinese",
         "verdict": "PASS",
-        "detail": "cjk=596"
+        "detail": "cjk=607"
       },
       {
         "name": "the English arm reads English",
         "verdict": "PASS",
-        "detail": "panelCjk=0 latin=394"
+        "detail": "panelCjk=0 latin=399"
       },
       {
         "name": "the one control is under the finger at 390x844",
