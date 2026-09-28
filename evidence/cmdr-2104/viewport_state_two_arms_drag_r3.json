@@ -1,0 +1,46 @@
+{
+ "at": "2026-09-28T13:03:55.738Z",
+ "before_drag": {
+  "btn": true,
+  "btn_box": [
+   230,
+   343,
+   130,
+   36
+  ],
+  "state": "on-target",
+  "pressed": "false",
+  "aria": "视野正落在这段行程上",
+  "label": "回到行程视野"
+ },
+ "after_drag": {
+  "btn": true,
+  "btn_box": [
+   230,
+   343,
+   130,
+   36
+  ],
+  "state": "off-target",
+  "pressed": "false",
+  "aria": "已移出行程视野，点按回到全程",
+  "label": "回到行程视野"
+ },
+ "after_recenter": {
+  "btn": true,
+  "btn_box": [
+   230,
+   343,
+   130,
+   36
+  ],
+  "state": "off-target",
+  "pressed": "false",
+  "aria": "已移出行程视野，点按回到全程",
+  "label": "回到行程视野"
+ },
+ "canvas_centre": [
+  195,
+  514
+ ]
+}
