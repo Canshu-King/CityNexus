@@ -1,16 +1,36 @@
-ORD-0402 recheck -- the dependency store this lane borrowed, counted before and after the junction dance.
+ORD-0402 recheck -- the dependency store this lane borrows via junctions, counted at its own
+mount/unmount boundaries, under both definitions.
 
-Why this file exists: the delivery block says the junctions were unlinked without touching the store.
-That is a number, so it gets an artifact rather than a sentence. Counted with the same call the block
-names, on the directory the junctions pointed at:
+definitions (both run against the same directory the junctions pointed at):
+  non_hidden = `ls -1 <dir> | wc -l`   -- what this lane used at every earlier boundary
+  all_entries = `ls -A <dir> | wc -l`  -- adds the five dot-prefixed entries
 
-  command: len(list(Path('D:/moodle/CityNexus/frontend/node_modules').iterdir()))
-  entries_after_removal = 399
-  entries_before_mount  = 399   (recorded at mount time by the same call; see the run logs)
+now: non_hidden=394  all_entries=399  difference=5
+the 5 entries only one definition counts: .bin, .cache, .package-lock.json, .vite, .vite-temp
 
-What was mounted: three junctions into this store -- the lane worktree root, the worktree frontend/,
-and each snap's frontend/node_modules. Each was removed with rmdir / [System.IO.Directory]::Delete
-and re-checked as absent before any recursive delete of the snap ran. No `rd /s /q` was used on a
-path containing a junction.
+what this lane observed, by definition:
+  18:5x  non_hidden=394  before mounting the ORD-0401 worktree junction
+  19:0x  non_hidden=394  after unlinking it -- same value, so the unlink took nothing
+  19:2x  non_hidden=394  both ends of the ORD-0401 snap junction
+  20:0x  non_hidden=394  both ends of the ORD-0402 worktree and snap junctions
+  now    non_hidden=394  after the ORD-0402 recheck junctions were removed and their snaps deleted
 
-counted_at_utc: 2026-09-28T12:55:50+00:00
+Claim, stated narrowly so it is checkable: at every boundary this lane measured, `non_hidden` was
+the same on both sides (394), so no junction removal took entries with it. This file
+does NOT claim the store never changed hands tonight -- only that this lane's own mounts and
+unmounts did not change it, which is what the delivery block asserts.
+
+junctions this lane made into the store, in two categories -- saying all of them were removed
+would be false while a worktree they serve is still open:
+  removed (rmdir / [System.IO.Directory]::Delete, re-checked absent, and only then the containing
+  snap deleted recursively; no `rd /s /q` on a path containing a junction):
+    D:/moodle/_qoder_q_ord0401/snap/frontend/node_modules
+    D:/moodle/_qoder_q_ord0402/snap/frontend/node_modules
+    D:/moodle/_qoder_q_ord0402b/snapA/frontend/node_modules
+    D:/moodle/_qoder_q_ord0402b/snapB/frontend/node_modules
+  still mounted, because the lane worktrees they serve are still open:
+    D:/moodle/_qoder_q_ord0401/wt/node_modules and .../wt/frontend/node_modules
+    D:/moodle/_qoder_q_ord0402/wt/node_modules and .../wt/frontend/node_modules
+    D:/moodle/_qoder_q_ord0402b/wt/node_modules and .../wt/frontend/node_modules
+
+counted_at_utc: 2026-09-28T12:58:51+00:00
