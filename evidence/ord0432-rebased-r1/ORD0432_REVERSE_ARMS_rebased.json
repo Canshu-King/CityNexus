@@ -1,0 +1,54 @@
+{
+  "export": "D:\\moodle\\_qoder_ai_ord0432_20260929\\mut",
+  "targets": [
+    "tests/test_dsh_twin_disruption_risk.py",
+    "tests/test_wp06_twin_v2_gate.py"
+  ],
+  "arms": {
+    "A_twin_drops_the_disruption_codes": {
+      "exit": 1,
+      "collected": "8",
+      "red": [
+        "tests/test_dsh_twin_disruption_risk.py::test_major_closure_makes_the_summary_risky_and_names_the_severity"
+      ],
+      "tail": "1 failed, 8 passed, 2 warnings in 7.95s",
+      "traceback": "F........                                                                [100%]\n================================== FAILURES ===================================\n______ test_major_closure_makes_the_summary_risky_and_names_the_severity ______\n\n    def test_major_closure_makes_the_summary_risky_and_names_the_severity():\n        journey_id, activity_id = _active_journey()\n        before = _envelope(journey_id)\n        _post_event(journey_id, activity_id, \"MAJOR\")\n        after = _envelope(journey_id)\n    \n>       assert after[\"robust\"] is False\nE       assert True is False\n\ntests\\test_dsh_twin_disruption_risk.py:69: AssertionError\n============================== warnings summary ===============================\n..\\..\\..\\CityNexus\\.venv\\Lib\\site-packages\\fastapi\\testclient.py:1\n  D:\\moodle\\CityNexus\\.venv\\Lib\\site-packages\\fastapi\\testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.\n    from starlette.testclient import TestClient as TestClient  # noqa\n\n..\\..\\..\\CityNexus\\.venv\\Lib\\site-packages\\starlette\\testclient.py:53\n  D:\\moodle\\CityNexus\\.venv\\Lib\\site-packages\\starlette\\testclient.py:53: DeprecationWarning: The anyio.abc.BlockingPortal alias is deprecated, use anyio.from_thread.BlockingPortal instead.\n    _PortalFactoryType = Callable[[], AbstractContextManager[anyio.abc.BlockingPortal]]\n\n-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html\n=========================== short test summary info ===========================\nFAILED tests/test_dsh_twin_disruption_risk.py::test_major_closure_makes_the_summary_risky_and_names_the_severity\n1 failed, 8 passed, 2 warnings in 7.95s"
+    },
+    "B_minor_counts_as_a_disruption": {
+      "exit": 1,
+      "collected": "7",
+      "red": [
+        "tests/test_dsh_twin_disruption_risk.py::test_minor_note_does_not_make_the_summary_risky",
+        "tests/test_dsh_twin_disruption_risk.py::test_only_the_named_severities_become_a_risk"
+      ],
+      "tail": "2 failed, 7 passed, 2 warnings in 9.67s",
+      "traceback": "                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nE       ValueError: tuple.index(x): x not in tuple\n\napp\\intelligence\\feasibility_envelope.py:20: ValueError\n________________ test_only_the_named_severities_become_a_risk _________________\n\n    def test_only_the_named_severities_become_a_risk():\n        named = UNRESOLVED_DISRUPTION_SEVERITIES\n        assert disruption_risk_codes([\"MAJOR\"]) == (named[\"MAJOR\"].value,)\n        assert disruption_risk_codes([\"CRITICAL\"]) == (named[\"CRITICAL\"].value,)\n>       assert disruption_risk_codes([\"INFO\", \"MINOR\", \"WEATHER\"]) == ()\n               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n\ntests\\test_dsh_twin_disruption_risk.py:92: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _\n\nseverities = ['INFO', 'MINOR', 'WEATHER']\n\n    def disruption_risk_codes(severities: Iterable[str]) -> tuple[str, ...]:\n        \"\"\"Unresolved event severities -> risk reason codes, worst first.\"\"\"\n        named = {item for item in severities if item in UNRESOLVED_DISRUPTION_SEVERITIES}\n>       ordered = sorted(named, key=(\"CRITICAL\", \"MAJOR\").index)\n                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nE       ValueError: tuple.index(x): x not in tuple\n\napp\\intelligence\\feasibility_envelope.py:20: ValueError\n============================== warnings summary ===============================\n..\\..\\..\\CityNexus\\.venv\\Lib\\site-packages\\fastapi\\testclient.py:1\n  D:\\moodle\\CityNexus\\.venv\\Lib\\site-packages\\fastapi\\testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.\n    from starlette.testclient import TestClient as TestClient  # noqa\n\n..\\..\\..\\CityNexus\\.venv\\Lib\\site-packages\\starlette\\testclient.py:53\n  D:\\moodle\\CityNexus\\.venv\\Lib\\site-packages\\starlette\\testclient.py:53: DeprecationWarning: The anyio.abc.BlockingPortal alias is deprecated, use anyio.from_thread.BlockingPortal instead.\n    _PortalFactoryType = Callable[[], AbstractContextManager[anyio.abc.BlockingPortal]]\n\n-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html\n=========================== short test summary info ===========================\nFAILED tests/test_dsh_twin_disruption_risk.py::test_minor_note_does_not_make_the_summary_risky\nFAILED tests/test_dsh_twin_disruption_risk.py::test_only_the_named_severities_become_a_risk\n2 failed, 7 passed, 2 warnings in 9.67s"
+    },
+    "C_ordering_dropped": {
+      "exit": 1,
+      "collected": "8",
+      "red": [
+        "tests/test_dsh_twin_disruption_risk.py::test_the_worst_open_severity_is_the_one_a_reader_sees_first"
+      ],
+      "tail": "1 failed, 8 passed, 2 warnings in 8.33s",
+      "traceback": "...F.....                                                                [100%]\n================================== FAILURES ===================================\n_________ test_the_worst_open_severity_is_the_one_a_reader_sees_first _________\n\n    def test_the_worst_open_severity_is_the_one_a_reader_sees_first():\n        named = UNRESOLVED_DISRUPTION_SEVERITIES\n        worst_first = (named[\"CRITICAL\"].value, named[\"MAJOR\"].value)\n>       assert disruption_risk_codes([\"MAJOR\", \"CRITICAL\"]) == worst_first\nE       AssertionError: assert ('DISRUPTION_...ION_CRITICAL') == ('DISRUPTION_...UPTION_MAJOR')\nE         \nE         At index 0 diff: 'DISRUPTION_MAJOR' != 'DISRUPTION_CRITICAL'\nE         Use -v to get more diff\n\ntests\\test_dsh_twin_disruption_risk.py:99: AssertionError\n============================== warnings summary ===============================\n..\\..\\..\\CityNexus\\.venv\\Lib\\site-packages\\fastapi\\testclient.py:1\n  D:\\moodle\\CityNexus\\.venv\\Lib\\site-packages\\fastapi\\testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.\n    from starlette.testclient import TestClient as TestClient  # noqa\n\n..\\..\\..\\CityNexus\\.venv\\Lib\\site-packages\\starlette\\testclient.py:53\n  D:\\moodle\\CityNexus\\.venv\\Lib\\site-packages\\starlette\\testclient.py:53: DeprecationWarning: The anyio.abc.BlockingPortal alias is deprecated, use anyio.from_thread.BlockingPortal instead.\n    _PortalFactoryType = Callable[[], AbstractContextManager[anyio.abc.BlockingPortal]]\n\n-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html\n=========================== short test summary info ===========================\nFAILED tests/test_dsh_twin_disruption_risk.py::test_the_worst_open_severity_is_the_one_a_reader_sees_first\n1 failed, 8 passed, 2 warnings in 8.33s"
+    }
+  },
+  "round0_unmutated": {
+    "exit": 0,
+    "collected": "9",
+    "red": [],
+    "tail": "9 passed, 2 warnings in 9.29s",
+    "traceback": ".........                                                                [100%]\n============================== warnings summary ===============================\n..\\..\\..\\CityNexus\\.venv\\Lib\\site-packages\\fastapi\\testclient.py:1\n  D:\\moodle\\CityNexus\\.venv\\Lib\\site-packages\\fastapi\\testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.\n    from starlette.testclient import TestClient as TestClient  # noqa\n\n..\\..\\..\\CityNexus\\.venv\\Lib\\site-packages\\starlette\\testclient.py:53\n  D:\\moodle\\CityNexus\\.venv\\Lib\\site-packages\\starlette\\testclient.py:53: DeprecationWarning: The anyio.abc.BlockingPortal alias is deprecated, use anyio.from_thread.BlockingPortal instead.\n    _PortalFactoryType = Callable[[], AbstractContextManager[anyio.abc.BlockingPortal]]\n\n-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html\n9 passed, 2 warnings in 9.29s"
+  },
+  "red_lists_disjoint_pairs": {
+    "A_twin_drops_the_disruption_codes|B_minor_counts_as_a_disruption": [],
+    "A_twin_drops_the_disruption_codes|C_ordering_dropped": [],
+    "B_minor_counts_as_a_disruption|C_ordering_dropped": []
+  },
+  "each_arm_reddens_at_least_one": {
+    "A_twin_drops_the_disruption_codes": 1,
+    "B_minor_counts_as_a_disruption": 2,
+    "C_ordering_dropped": 1
+  }
+}
