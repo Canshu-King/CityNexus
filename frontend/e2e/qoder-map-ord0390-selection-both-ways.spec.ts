@@ -213,8 +213,10 @@ for (const arm of [
     await page.getByTestId(/^map-stop-/).first().click();
     await page.waitForTimeout(900);
     const c = await readCopy(page);
+    /* per-arm evidence: a full-page shot of this state is byte-identical to the forward arm's,
+       which would let one arm borrow another's witness. Capture the panel this arm actually reads. */
     const shot = evidencePath("ord0390-selection", `copy_${arm.locale}.png`);
-    await page.screenshot({ path: shot });
+    await page.locator(".v8-map-facts").screenshot({ path: shot });
     push(`copy-${arm.locale}`, { ...c, expectLead: arm.lead, expectKicker: arm.kicker, shot });
     expect(c.selectedLead, `zh/en lead-in must render "${arm.lead}", got ${c.selectedLead}`).toContain(
       arm.lead,
