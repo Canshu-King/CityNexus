@@ -16588,6 +16588,156 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### qoder-0441 2026-09-29 04:43 · 车道 2d2d7428 · 档位数值照搬交了：先量再改——竞品在资源表里根本没有字号档（font_size 0 格），档位是从 830 份产品布局里量出来的；对齐了 6 处、色 arm 复跑逐格未动、旧验收一格没花
+
+件（请审）：refs/heads/review/Q-ord0441-token-ladder-r1 远端回读 = 582f3eb4ef2df2ce0c7bec7e1363fac3a3766974（env -u HTTP_PROXY -u HTTPS_PROXY git ls-remote origin 现读）
+枝的基点 = 我开工时现读的尖 123fabb637fefe9e1be442b67f2da4be7e95ac74；推送后再读现尖已是 ae69f63a7604191654a2a8a51b85939f7bd00c43，我自己跑了只读复切 git merge-tree --write-tree <现尖> <件尖>
+退出码=0，合并树 = f11880021b8cd84673117edb10960ffef8b1ba6a。这一级里 frontend/src/design-tokens.css 被 ORD-0430 动过（现尖 blob a6c63e08c2d1332533d622c1a256590896675dc6，与我基点的 3c0551a4cca92b35a8b91a6b1dbc0dc067433b4c 不同），
+我把两笔改动都读了才敢报 0：他（f21817528701c58088005a2aac65f8026105e780）改在 .cn-copilot-dock 的 yield 那一段，我改在第 23 节的 fs/r/s/divider 档位——两处区域不相交、
+也没有同名 token 撞车（他新加的是 --cn-yield-left / --cn-yield-top）。所以这个 0 是量出来的，不是 merge-tree 说 0 就当真。
+两笔逐批提交，正文走 git commit -F 文件，两个正文文件反引号各 0 处：产品 2092f8136db69b22ab60f4013fbd5ae61ebb878e 树 fed2790e5598e9f047b2ca69e7896a5d78fa42a3；证据 582f3eb4ef2df2ce0c7bec7e1363fac3a3766974 树 d541fc86f2582bc71bb9ba343bc51c8f4eb7a85b
+远端独立回读（GitHub contents 原字节喂 git hash-object）与件内 blob 逐字相同：frontend/src/design-tokens.css blob dcee02d1a92573fbe103b3cf2ad907dd9c7938ae、
+frontend/src/styles.css blob a8be124ccf8afbae9c199e933f5056e048a6fada、review/ord0441/LADDER_R1.txt blob af691cddda753d06e9c55c61fdd9f20c409f2cc5。
+
+**先量：那份底料里没有尺寸档**（这一条与工单的假设不同，我按实测交，不照假设改）。资源表 1030 格 dimen，过掉库名前缀剩 291 格、246 格能解析成 dp，
+  而 font_size 那一桶是 0 格——尺寸根本不在 resources.arsc 里。于是我改从写下的地方量：用 aapt2 xmltree 走了 830 份产品自己的布局。
+  结果是一张频次直方图而不是阶梯：间距有 127 个不同值（含 0.55dp、3.37997dp），半径 38 个，字号 38 个，阴影 31 个，分隔线 7 个。
+  逐值频次在 review/ord0441/reference_layout_tiers.json blob db5027cb40d877069574e189f7e0be718bcf4553；所以「全套照搬」我没有整把噪音搬进来，对齐的是每一桶用量最高的档，
+  每档背后那个次数都写在件里第 7 节，可以直接拿去争，不用信我。
+
+**后改：动了 6 处，都是我们自己前缀的 token**（frontend/src/design-tokens.css blob 3c0551a4cca92b35a8b91a6b1dbc0dc067433b4c -> dcee02d1a92573fbe103b3cf2ad907dd9c7938ae，frontend/src/styles.css blob 6c4efbc6d5454004ffaa993ea5432a094caf3319 -> a8be124ccf8afbae9c199e933f5056e048a6fada）：
+  --cn-fs-card 与 --cn-fs-body 17px -> 16px（竞品 16sp 被画 200 次，17 不在高用档）；新增 --cn-fs-meta: 14px（14sp x305，他们最常用的一档，我们此前没有名字）；
+  --cn-r-control 11px -> 12px、--cn-r-button 13px -> 16px（半径档里 12dp x35、16dp x57，而 11 与 13 在实测集合里一次都没出现）；
+  新增 --cn-s-2 / -4 / -6 / -10 四档（2dp x140、4dp x394、6dp x194、10dp x366）；新增 --cn-divider-w: 1px——分隔线最常用就是 1dp x12，
+  我们本来就画 1px，这一档只是把值取成他们的档并把名字立起来。件内第 23 节逐条列了改前/改后/消费者数。
+  没动的也写了理由：阴影的 2/8/28/40 与 --cn-gutter 20px 本来就在实测集合上（20dp x828 是他们最常用的一档）；
+  --cn-nav-icon-size 仍 17px（ORD-0416 验收读数）、--cn-touch-min 仍 44px（Amendment F 的点击底）——这两枚一动就要花掉已交付的验收来换档位对齐，归您裁不归我。
+  新档位不是纸上的：分隔线 12 处、14px 字号 11 处、2/4/6/10 这档间距 170 处现在都读 token（数值不变，只是有了名字）——
+  计数是对 a8be124ccf8afbae9c199e933f5056e048a6fada 这份 blob 现 grep 出来的，逐条带消费者数的表在件第 23 节。
+
+**暗色 arm 复跑，判据一字未改**（tools/cnx_token_night_pairing_r1.py --tokens，改前改后各一次，见件第 37 节）：改后 colour tokens in root theme scopes : 40。
+  分类逐格与改前相同：NEUTRAL_BY_NAME 13、PAIRED_INHERITED 10、PAIRED_IN_DARK 17，UNACCOUNTED 在该输出里出现 0 次；
+  N3 三格 raw/resolved/写法不同但等值 各 0；变的两格是声明数 100 -> 106、非色 token 43 -> 49，正是我新增的 6 档，不是颜色配对动了。
+
+**读数落到屏上**（自写仪表 cmdr_ladder_reach_r1.js blob fe7700215481f9c76ee396fc61e7a50d87b645d7，两臂各 16 格：4 屏 x 2 形 x zh/en，全部 getComputedStyle）：
+  before = 线上自己的构建（入口 index-27A-LsuK.js，:60082），after = 本枝构建（入口 index-cfWo-DIr.js，:49151）。hub 390x844 zh 现读：
+  --cn-fs-body 解析值 17px -> 16px；画面上 17px 的元素 7 -> 0，16px 的 14 -> 21（原文 review/ord0441/LADDER_R1.txt:48）；
+  半径一侧 11px -> 12px、13px -> 16px 同步搬到位，逐值分布原文在 review/ord0441/LADDER_R1.txt:49。
+  本臂 clean=16/16 格（0 page error 且无 fatal），原文 review/ord0441/LADDER_R1.txt:50，节标题在第 44 节。
+
+**旧验收一格没花**（件第 52 节）：
+  ORD-0427 的两维在本构建上重读 cells=8（4 形 x 2 臂）：rows 仍是 13 透底 + 1 胶囊、head 32 px zh / 38 px en 于 rgb(10, 92, 214) 16px、
+  kicker 的 client rect 仍 1、图标仍 17px —— 逐格原文在 review/ord0441/LADDER_R1.txt:53 与件内 cells_0427_reread/ 那批读数；
+  ORD-0416 那条 768 px 首屏尺（lane N3 冻结口径，cmdr_drawer_grouping_r1.js 一字未改）改前改后四格逐字相同：14 项里首屏可命中 10 -> 10、
+  忽略底栏 12 -> 12、抽屉溢出 154 -> 154 px。没有把已交付的读数花掉换档位。
+
+**门禁**：npx tsc -p tsconfig.typecheck.json --noEmit 退出码 0；npx vite build 退出码 0（入口 index-cfWo-DIr.js）；
+  暗色配对尺退出码 0（见上）；文案尺本轮未跑，因为我没动任何词条。私有栈：两臂都是我自己起的 vite preview（:60082 是 ORD-0427 留下的那台，:49151 是本轮新起，落在您点的 49150+ 空段），
+  经 frontend/vite.config.ts:140 的 preview 代理指向我自己的 uvicorn :65218，读 D:/moodle/_qoder_q_ord0419_20260929/ord0419.db
+  3710976 B，sha1 over bytes feb7c737c923f0cf3987565b88126f2875379e5a（本地字节重算，非 git 对象，不可 cat-file；同段可 cat-file 的 git 对象坐标是件本体 blob af691cddda753d06e9c55c61fdd9f20c409f2cc5）。
+  归属仍按两证交（入口名取自我自己 dist 的 index.html、服务字节 sha1 与磁盘件逐字相同）+ 监听进程命令行里的 --outDir；第三条访问日志这一证在 vite preview 上不存在，不假装凑满。
+  您的 :4805 :4806 :8693 :4781 :4782 :8000 我一格都没连、没写。
+
+**红线我照守的三条，具名**：反编译只在本地读，APK、resources.txt、我抽出的频次表原始件都在 D:/moodle/_apk_analysis_pi_travel/ 下未 git add；
+  进仓的只有我这份仪表算出来的**数字频次**与件文本（review/ord0441/reference_layout_tiers.json blob db5027cb40d877069574e189f7e0be718bcf4553，可 cat-file 自查里面没有任何路径、资源名或二进制）；
+  没有取任何付费鉴权密钥或加密校验算法；没有把逆向产物上传任何地方——推到 GitHub 的是我们自己的 token 数值与读数。
+  字体一条：REDNumber 未装、无字体文件进仓（本轮 0 二进制文件）。
+
+**下一片（等您裁，我不动手）**：色那一层我没碰。竞品 alpha 轴是 0/10/15/25/50，我们 tint 是 4/6/8/10/40/50/60，
+  七档里四档不在他们轴上；把 4/6/8 抬到 10/15 会同时改分隔线与阴影强度，那是对比度的决定不是命名的决定——
+  要动请先裁三档暗色对比那条尺走哪一版，我一件就能把色轴对齐 + 暗色臂复跑交回来。另两件同族的存量：
+  Compose 那侧的尺寸我没抽（要反汇编，本轮只量了 View 层）；styles.css 里现在仍有 424 处 padding/margin/gap 带 px 字面，
+  其中 170 处已在读 -2/4/6/10 这四档（对 a8be124ccf8afbae9c199e933f5056e048a6fada 现 grep 计出），剩下的会动几何，得单独一单、带前后读数，我不在这一单里顺手改。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
+### 读数块（新一代次）· 车道 map · 顶部提示条与具名控件的重叠在 03:36 尖上重测，并新增一条"触发是逐臂随机"的量值 · 2026-09-29 0450+08
+
+只读数、0 产品字节、没重启任何共享预览，也没新建 node_modules 导出口。值守 04:21 要求把 03:2x 那一格升到新一代次（尖变了旧件不沿用，Q72 同口径），照做。
+
+## 我这一代钉在哪一枚尖上（用的是内容证明，不是 ref）
+
+`evidence/ord0403-topband/pin_0442.txt:2` 记 worktree HEAD = `8d038b21f09477b933cff3b1c7b09845c542373b`（同一文件连读给出同样 40 字节，其 sha256 记在 `pin_0442.txt:3`），块题在 `pin_0442.txt:4`（03:36:22 ORD-0418 r2 readouts），`pin_0442.txt:5` 是 `git cat-file -t` 回的 commit；同一瞬间的远端尖是 `ae69f63a7604191654a2a8a51b85939f7bd00c43`（`pin_0442.txt:6`），`pin_0442.txt:8` 记 `merge-base --is-ancestor` 退出码 0 ⇒ 我量测那一枚确实在现线上。**为什么要内容证明**：本轮有两次回显给出互不相干的 HEAD 值，还有一次把一枚真能解析的尖报成 "no such object"，所以我改成逐文件比哈希——`pin_0442.txt:9` 记 content_proof_files_matched=6 of 6（逐文件 disk/head blob 相同，脚本内 assert 不等就抛）（含 `frontend/src/components/v8/MapPanel.tsx`、`map-controls.css`、`design-tokens.css`、`src/styles.css`、`lib/mapLabels.ts` 与那把 0403 门的规格），这样"我跑的是哪一代"不依赖任何一句回显。
+
+顺带替我 03:25 那块做一次复核（那块已在账本）：它引的两枚 40 位 `3b6c96e8a9f986672ddaa764f5f2ae69534ceff1` 与 `f662905ec4cafe05687d33a05dcbc7ca8031de43` 我都重跑 `git cat-file -t`，均回 commit；它写的 `changed_files_since_measurement=67` 我重算也是 67。⇒ 那块不需要勘误（我一度以为自己写了枚解析不了的尖，那是回显的事，不是件的事）。
+
+## 量到什么（一次跑里同时拿到两态，而且触发是逐臂随机的）
+
+链：`frontend/playwright.prod-gate.config.ts` 自起 uvicorn + 自建自预览，一次性库 `sqlite:///./_topband0432a1.db`，AI 关，自有端口 frontend_port=4791 / backend_port=8191，reuseExistingServer=false、workers=1 记在链自己的 `evidence/e2e-provenance/authoritative.json`；未借 `:8693`/`:4781`，`demo/reset` 0 次，`_preview.db` 未碰。同一次调用里跑了我的三态仪表 + 已入账的那把 0403 门，合计 5 failed、15 passed（转录 `evidence/ord0403-topband/gen0432_readings.txt:14` 与 `:15`），子进程退出码 1。
+
+- **降级态的几何与上一代一字不差**：拦掉瓦片之后 overlap_with_notice_px2=5371 出现在 width=320/360/390（`evidence/ord0403-topband/reading_topband-blocked-390.json:26`），2713 出现在 width=414（同件 `reading_topband-blocked-414.json:26`）。控件盒仍是 149×36（`reading_topband-blocked-390.json:7` 与 `:8`，面积 5,364 px²），提示条盒在 width=390 为 338×52、起点 x=26、y=348（同件 `:12` 起四行）⇒ 整枚按钮落在那一横带里。`hitSelf=true` 在 `reading_topband-blocked-390.json:28`，`data-viewport-state` 在 `:10` 仍是 `on-target`。
+- **这一代 natural 四形全无提示条**：`evidence/ord0403-topband/reading_topband-natural-390.json:12` 记 notice=null、同件 `:21` 记 overlap=0，四形同形（例如 natural-320 与 natural-414 的同一字段）。也就是说我这台盒子这一轮瓦片是通的。
+- **但同一轮里那把已入账的门红了一臂**：`reach — the control is hittable and does not collide @390` 失败，报 `Error: must not sit under the tile notice`、Received: 5371（转录 `evidence/ord0403-topband/gen0432_readings.txt:12` 与 `:13`，四形 push 原文在 `:4` 至 `:7`，其中 @390 那条在 `:6`）。⇒ 新读数：这枚重叠**不是宽度决定的，是逐臂随机的**——同一次跑、同一构建，我的 natural 臂四形都没提示条，而门的 @390 臂撞上了提示条。谁的瓦片请求先掉，谁就进降级态。
+- **负控制仍然被打脸，第二次**：4 枚 stubbed 臂（用 1×1 PNG 应答所有瓦片请求）全红在 `expect(notice).toBeNull()`，臂名与行号转录在 `evidence/ord0403-topband/gen0432_readings.txt:8` 至 `:11`；它们的几何与 blocked 完全一致（`evidence/ord0403-topband/reading_topband-stubbed-414.json:26` 也是 2713）⇒ "答了瓦片就不算降级"这个假设连续两代次不成立，`tilesUnavailable` 的置真条件比"网络断"更宽，这一格归产品侧判。
+- 仪表这次**终于证明了自己改变了状态**：12 张截图现有 8 张互不相同（上一代只有 4 张），因为 natural 与 blocked 真的不一样了；仍相同的只有 stubbed 与 blocked 那几对，正好对应上一条。
+
+## 结论（对我领的那一格）
+
+重叠值本身跨两代次一字未变（5,371 与 2,713），说明这一格不被别人的落地顺带修掉；新增的"逐臂随机"事实把验收口径逼得更硬：任何修法必须在**同一臂内**做出两态读数（我这轮的三态仪表就是那个形状：拦=必现、答=必不现才算手臂落地），否则一把门会因为网络时序今天绿明天红。修法四条不变（顶部收成一条带、相机上边量真实带高而非 `frontend/src/components/v8/MapPanel.tsx:445` 的写死值 `const side = 42;`、两态各量一次且臂自证、修我规格里那个 `afterAll` 汇总被后写覆盖的仪器缺陷——本轮该件仍只剩一行，`evidence/ord0403-control/readings.json:11` 只有 reach-414，而日志里 reach 四臂都有 push，见 `gen0432_readings.txt:4` 至 `:7`）。**这一代次的 MapPanel 锚全部要按 +16 换算**（与 03:25 那块比）：相机让位选择器 `frontend/src/components/v8/MapPanel.tsx:442`、写死留白 `:445`、消费处 `top: side` `:453`、控件挂载 `:559`、提示条条件 `:568`、提示条本体 `:572`、置真两条路 `:349` 与 `:356`；两枚 CSS 锚未动：控件层序 `frontend/src/map-controls.css:20`、提示条层序 `frontend/src/design-tokens.css:1298`（同条规则从 `frontend/src/design-tokens.css:1293` 起）。等号令者给号，我给的建议名是"地图顶部带 + 瓦片降级态双态门"。
+
+## 口径与资源
+
+尺按现行门自检：`claim_coordinate_check_r7.py --text 本件 --expect-clean` 退出码 0、findings=0；写盘门第二道闸在本车道复算器（判据直接从 `ledger_insert_after_r2.py:66` 抽出，不手抄）里 aborts=0。本件出现的 40 位值全是可 `git cat-file` 的提交（`8d038b21f09477b933cff3b1c7b09845c542373b`、`ae69f63a7604191654a2a8a51b85939f7bd00c43`、`3b6c96e8a9f986672ddaa764f5f2ae69534ceff1`、`f662905ec4cafe05687d33a05dcbc7ca8031de43`），没有需要声明的非对象哈希。仪表 `frontend/e2e/qoder-map-ord0403-topband-two-states.local.spec.ts` 仍只在 worktree、`git status --porcelain` 对它回 `??`（1 行），未提交、未进任何 review ref、不算交付。盘：`evidence/ord0403-topband/pin_0442.txt` 未记 df，df 现读在 `D:/moodle/_qoder_map_gatecheck_20260929/df_r2.txt:1` 起 —— D: avail=13G、C: avail=12G、E: avail=129G，本轮没有新增导出口。
+
+
+### CMDR 04:56 · ORD-0430 已落地并亲测（避让改成视口内收形，命中恢复；残一格未清）· ORD-0439 新的一屏已落地 · 现尖 034cf2b24a5d4d4ec2a212425e5aed1e7c117de0
+
+## 1. ORD-0430 = LANDED，判 PARTIAL（我按自己那条裁定量的两向）
+
+我 03:31 判车道上一版候选 DO NOT PORT，理由是"治好盖字、丢了命中"。车道重做为视口内收形，枝 `review/AI-ord0430-pill-relocates-in-view-r1` 头 `f21817528701c58088005a2aac65f8026105e780`，我复切十九枚文件逐枚等车道字节，落地门编译臂与构建臂都退零，落地件外读 blob `f559130d4cea43d17387311934c8825f16acea24`，权威尖因此移到 `ae69f63a7604191654a2a8a51b85939f7bd00c43`。
+
+我自己起私有栈量了对照两臂（同一枚后端、同一份只读备份库、同一把仪表，只有产物代次不同；仪表外读 blob 8805d93ee3b5edf22ce87b9164170cb2fa0a38eb）：
+
+- 修前那代（入口 `index-oR3PVCYW.js`，读数件 blob 35974269a6d10ad57303b5d5685cee9dbac796d9）：hub 屏那枚药丸盒子在 x 三百九十六、视口宽三百九十，也就是**整个被推出屏外**，且 opacity 零、visibility hidden、pointer-events none——这正是我判错的那套"藏起来"。
+- 修后那代（入口 `index-BvJw3mnZ.js`，读数件 blob 6010d8e8f8b52da5b98c9c8597f3b02d8309e178）：三屏（twin、discover、hub）药丸都收成四十四乘五十六的形，落在视口内、中心命中测试打回它自己，我点下去之后页面正文从五百五十七字涨到六百四十三字并出现输入框——**面板真的开了**。命中这一向恢复。
+
+**没清掉的那一格**：收形之后仍与正文行有交叠。逐屏交叠条数在件 blob 6010d8e8f8b52da5b98c9c8597f3b02d8309e178 里，twin 与 hub 各两、discover 三，被压到的句子逐字可读（例如 twin 上那条"无障碍硬性需求不会从行为里推断出来。"）。面积从一百六十五乘五十四缩到四十四乘五十六，我量到的是**减轻**，不是归零，所以本单判 PARTIAL 不判 CLOSED。车道 `bac10f40` 继续：收形后的停靠位要落在不与正文行交叠的地方（右侧留一条具名空槽，或停在底栏已预留的那条带里），命中与可见两格保持现在的读数。
+
+## 2. ORD-0439 新的一屏已落地（多方案排序）
+
+车道 `8e5245f0` 交付、我复切五枚文件逐枚等字节后落地，权威尖现 `034cf2b24a5d4d4ec2a212425e5aed1e7c117de0`。这一屏是**新的产品能力**：新模块 `frontend/src/features/planning/planRanking.ts` 与新面板 `frontend/src/features/planning/PlanRankingPanel.tsx`，走注册表挂载（`frontend/src/app/v8PanelRegistry.tsx`），标题逐字「把这趟能选的方案摆在一屏上比」。
+
+车道交来的屏读我核过形状：真生成出二十一枚候选的那趟，行数为二十一枚、面板内可交互元素为零（只读屏）；四维度里只有预算真分得开，所以排序依据那句逐字是「按这些维度排：预算。」，其余三列照实列出但标为不可比；没有数据的两列写「没量到」「没标受保护项」而不是零；零可比的那趟只有一句「现在没有可比的方案。」。这正是我派单时要求的形状——**不许借对方的维度名，也不许为了有对比而造数据**。
+
+我这一格仍记 `NOT_REACHED_BY_CMDR`：我自己的私有库里只有封存演示那一趟（全版都是 SUPERSEDED/ACTIVE），走不到"二十一枚候选"那一屏，所以那组数字是车道的读数，不是我量过的。车道自己认下两处未做：雨天替代这一维全仓算不出来（词面零命中），受保护锚点这一维载荷里为 null 所以不参与排序。
+
+## 3. 线况与待办（对表用）
+
+今晚落地的笔数继续累：ORD-0418 与 ORD-0422 与 ORD-0427 与 ORD-0430 与 ORD-0439 与 ORD-0401 路①那笔都已在线上；现尖 `034cf2b24a5d4d4ec2a212425e5aed1e7c117de0`。
+
+仍卡在我这门外的一块车道件：`s4_0338`（车道 `1d64acf5`）第 34 行引的那枚 40 位在仓库里 cat-file 取不到，我已把改法回给车道（换成真正取回的那枚，或同行给 path:line），我不替它改词也不绕门。另一实例 04:38 那块也被同一道门拦下（它第 29 行那枚耗时秒数没有坐标），同样由它自己补。
+
+顶栏中文标签折行仍未修（我 03:31 之后一直没拿到那两枚文件的所有权）：我 04:55 那张 twin 屏截图上「跟随系统」还是两行，出处件 blob 8805d93ee3b5edf22ce87b9164170cb2fa0a38eb 同批截图。ORD-0431 我继续留着，天亮前若还没人接，我走字典缩短那条路自己做。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
+### CMDR 2026-09-29 04:52 · 号令者（实例 A，会话 `6efab655`）· 清盘前扫重解析点扫出一枚地雷：live_checks 下 64 枚 junction 全部指向产品库自己的 `frontend/node_modules`，盲删一次就毁掉前端依赖树——所以我一个字节都没删
+
+**现尖**：`env -u HTTP_PROXY -u HTTPS_PROXY git -C D:/moodle/CityNexus ls-remote origin refs/heads/mirror/integration-frontend-apple-pass1` 我 04:36 现读 = `123fabb637fefe9e1be442b67f2da4be7e95ac74`（本轮我落的那枚 ORD-0383，判语与并发实测在 04:38 那块，本块不重复）。
+
+**一、为什么会有这块**：`df -h /d` 本轮开头现读 14 GiB 可用（已用率 96%），照固定动作我该清自己名下未在被服务的 `_build_*` 派生件——**并且动作前必须先扫重解析点**。扫完就不删了。
+
+**二、量到的事实（只读仪表，不删不写被扫树）**
+`live_checks` 下 `_build_*` 目录共 **65** 枚，其中带重解析点的 **64** 枚，且这 64 枚的链接目标**去重后只有一个**：`D:/moodle/CityNexus/frontend/node_modules`（`cmdr_junction_audit_r1.py` 用 `os.lstat` 判 `FILE_ATTRIBUTE_REPARSE_POINT`、`os.readlink` 取目标，逐枚列在件里）。
+⇒ **任何一次 `rm -rf _build_*` 都会跟着 junction 走进产品库真的 node_modules 并删掉它**——不是"删了副本"，是删了 `D:/moodle/CityNexus` 自己的前端依赖树，而那份依赖是 `npm run build`、e2e、以及所有车道造产物共同依赖的东西。删一次就毁一次，且 64 枚链会让"看起来只删了一个目录"变成 64 次同向删除。
+清单 `evidence/cmdr-hygiene-20260929/junction_audit_r1.json`，blob `f286fe07a36fc5f8673075c3effb12ad7c8131cb`，11,989 B；仪表 `evidence/cmdr-hygiene-20260929/cmdr_junction_audit_r1.py`，blob `4d400400a0cb43e3d7d3265d73daf0dbc2e9900c`，2,968 B（只读，用法 `python cmdr_junction_audit_r1.py [root]`）。
+
+**三、立一条给所有车道与下一位的规矩（写在这里，不在窗口里转述）**：清自己名下派生件之前，**先跑那把审计尺**；要删一棵带链的树，只能**先对链本身做普通 `rmdir`**（卸下链接、不进入目标），确认 `os.lstat` 不再报重解析点之后，才删那棵树。**绝不**对含 `frontend/node_modules` 的目录做递归删除，也绝不用 `git worktree remove --force` 之类的"顺手清理"去碰它们。
+
+**四、本轮我没有删任何东西**（含自己的 `_build_*`、`_exp_0383` 导出、库副本），盘从 14 GiB 掉到 13 GiB 不是我删的、也不是我新增的（我新增只有几枚件与两份小脚本）。真需要腾地方时，正确做法是**先卸链再删树**，而不是绕开这条规则去删别人的工作树或缓存。
+
+**五、一处我自己叫停的动作**：我原打算跑一轮"中文屏上还剩多少机器话"的全站扫描，动手前按代次核了基座——`git rev-parse <尖>:frontend/src` 在 `3543928ea1b7a0466871b6fbc3c3d24f64b14044` 上是 tree `28cda507a2864dd1957afd744b78e779cca1c163`，在现尖 `123fabb637fefe9e1be442b67f2da4be7e95ac74` 上是 tree `a6285c9b7aee2cc21cfe11c66a22c93bf1b09d76`，两枚**不相等** ⇒ 我 :49300 上那台基座已经是旧代，拿它扫出来的"还剩多少机器话"会全部钉在旧产物上。所以我**停手没扫**，没有把这格写成已完成。
+
+**没改善的部分**
+1. **全站"机器话上中文屏"这一格本轮没做**（第五节：基座过期，我主动停下）。它现在是 ORD-0422 与 ORD-0425 落地之后**唯一没人量过的屏面**，下一轮要么重建基座再扫，要么派给一条有自己基座的车道。
+2. 盘 13 GiB（已用率 96%），**我没有把它降下来**：能安全腾出的量（我自己的 `_build_*` 副本，去掉链之后每枚只有 MiB 量级）不值得冒 64 枚链的风险，而真正占地的东西按硬规矩我不动（别人的工作树、gradle/浏览器缓存、回收站）。照每小时约 2 GiB 的速率，天亮前会到个位数，届时若出现磁盘写满（`ENOSPC`）这类失败，**先想到这一条**：正确解法是卸链删自己副本，不是清别人的东西。
+3. ORD-0383 我只验了自己那格；同枝里 `backend/tests/test_qoder_ord0399_journey_undelete.py` 被改过的 6 行我没逐行读过断言（04:38 那块已标 `NOT_REACHED_BY_CMDR`，本块不撤销该标记）。
+4. `s4_0338.md` 仍卡在写盘门（`declared=True` 而 `anchored=False`），修法在 04:38 那块第四节；车道 `1d64acf5` 此刻 running，我没打扰它、也没替它改一个字。
+5. 手机链 hop4 仍未起，手机仍握 `e5a571f8…` ⇒ 本轮全部读数仍是私有舞台的，手机上 `NOT-DEPLOYED-OBSERVED`。
+
+
 ### CMDR 2026-09-29 04:38 · 号令者（实例 A，会话 `6efab655`）· ORD-0383 落地并**真跑了测试**（今晚第一笔：11 passed），我又自己打了 8 路并发找回：1 个 200、7 个具名 409、审计只 +1 行
 
 **现尖**：`env -u HTTP_PROXY -u HTTPS_PROXY git -C D:/moodle/CityNexus ls-remote origin refs/heads/mirror/integration-frontend-apple-pass1` 我 04:36 现读 = `123fabb637fefe9e1be442b67f2da4be7e95ac74`（就是我本轮落的这枚）。
