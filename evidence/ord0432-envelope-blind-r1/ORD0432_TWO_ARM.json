@@ -1,0 +1,88 @@
+{
+  "backend_port": 62698,
+  "preview_port": 62700,
+  "db": "D:\\moodle\\CityNexus-Hermes-Revival\\evidence\\0212\\_ord0432_screen_62698.db",
+  "P0_backend_listener": {
+    "healthy": true,
+    "netstat_pids": [
+      "20688"
+    ],
+    "my_pid": "17504"
+  },
+  "event": {
+    "http": 201,
+    "id": "85a66e9d-500d-4209-a622-fe4e2ae0257f"
+  },
+  "server_truth_via_backend": {
+    "robust": false,
+    "risk_reason_codes": [
+      "DISRUPTION_MAJOR"
+    ],
+    "latest_event_id": "85a66e9d-500d-4209-a622-fe4e2ae0257f"
+  },
+  "P0b_marker_row_is_in_my_file": {
+    "posted_id": "85a66e9d-500d-4209-a622-fe4e2ae0257f",
+    "maJOR_rows_in_my_db": [
+      "85a66e9d-500d-4209-a622-fe4e2ae0257f"
+    ],
+    "in_my_file": true
+  },
+  "P4_preview_listener": {
+    "answered": true,
+    "netstat_pids": [
+      "51460"
+    ],
+    "my_pid": "51460"
+  },
+  "P2_preview_serves_my_bytes": {
+    "asset": "index-1FQmF-ch.js",
+    "asset_exists_in_my_dist": true,
+    "served_sha1": "a6abfef14fa97171baf198e7608120552fd2140c",
+    "disk_sha1": "a6abfef14fa97171baf198e7608120552fd2140c"
+  },
+  "P1_event_readable_through_preview": true,
+  "P3_scene_names_my_journey": {
+    "scene_journey_id": "22222222-2222-4222-8222-222222222222",
+    "demo_mode": true,
+    "is_lane_journey": true
+  },
+  "scan_stdout": "route live | zh entry: \"使用封存的演示行程\" path /v8/live | en entry: \"sealed demo\" path /v8/live\nzh ascii_prose 4 | en ascii_prose 44 | arms_comparable true\n  ZH-EN \"Old Town Gate\" H2 \n  ZH-EN \"CityNexus Copilot\" SPAN \n  ZH-EN \"Copilot\" SPAN \n  ZH-EN \"Riverside Museum\" H3 \n  EXPECT ON_SCREEN  \"有重大变动没处理\"\n  EXPECT NOT_ON_SCREEN \"Major disruption open\"\n  EXPECT ON_SCREEN  \"服务器摘要：需要复核\"\n  EXPECT NOT_ON_SCREEN \"Server summary: review needed\"\n  EXPECT NOT_ON_SCREEN \"服务器摘要：这台设备还没读到\"\n  EXPECT NOT_ON_SCREEN \"Server summary: not read by this device yet\"\nVERDICT ZH_SCREEN_CARRIES_ENGLISH_PROSE\n",
+  "scan_stderr": "",
+  "scan_exit": 0,
+  "arms": {
+    "zh": {
+      "entry_used": "使用封存的演示行程",
+      "reached_route": "/v8/live",
+      "on_requested_route": true,
+      "locale_read": "zh",
+      "leaf_count": 70,
+      "ascii_prose_count": 4,
+      "expect": {
+        "有重大变动没处理": true,
+        "Major disruption open": false,
+        "服务器摘要：需要复核": true,
+        "Server summary: review needed": false,
+        "服务器摘要：这台设备还没读到": false,
+        "Server summary: not read by this device yet": false
+      }
+    },
+    "en": {
+      "entry_used": "sealed demo",
+      "reached_route": "/v8/live",
+      "on_requested_route": true,
+      "locale_read": "en",
+      "leaf_count": 70,
+      "ascii_prose_count": 44,
+      "expect": {
+        "有重大变动没处理": false,
+        "Major disruption open": true,
+        "服务器摘要：需要复核": false,
+        "Server summary: review needed": true,
+        "服务器摘要：这台设备还没读到": false,
+        "Server summary: not read by this device yet": false
+      }
+    }
+  },
+  "verdict_two_arm_rendered_reading": true,
+  "instrument_verdict": "ZH_SCREEN_CARRIES_ENGLISH_PROSE"
+}
