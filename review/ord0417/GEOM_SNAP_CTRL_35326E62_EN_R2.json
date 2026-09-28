@@ -1,0 +1,2879 @@
+{
+ "base": "http://127.0.0.1:4863",
+ "label": "SNAP_CTRL",
+ "arm": "en",
+ "locale_stored": "en",
+ "hit_floor_px": 768,
+ "shapes_wh_px": [
+  [
+   390,
+   844
+  ],
+  [
+   360,
+   800
+  ],
+  [
+   320,
+   653
+  ],
+  [
+   414,
+   896
+  ]
+ ],
+ "results": [
+  {
+   "label": "SNAP_CTRL",
+   "arm": "en",
+   "locale_stored": "en",
+   "shape": "390x844",
+   "shape_wh_px": [
+    390,
+    844
+   ],
+   "hit_floor_px": 768,
+   "base": "http://127.0.0.1:4863",
+   "errors": [],
+   "idle": {
+    "lang": "en",
+    "scroll_y": 0,
+    "inner": [
+     390,
+     844
+    ],
+    "controls": [
+     {
+      "key": "Menu#1",
+      "centre": [
+       44,
+       33
+      ],
+      "in_viewport": true,
+      "above_floor": true,
+      "hit_test": true
+     },
+     {
+      "key": "topbar-theme",
+      "centre": [
+       226,
+       39
+      ],
+      "in_viewport": true,
+      "above_floor": true,
+      "hit_test": true
+     },
+     {
+      "key": "topbar-language",
+      "centre": [
+       297,
+       39
+      ],
+      "in_viewport": true,
+      "above_floor": true,
+      "hit_test": true
+     },
+     {
+      "key": "DE#1",
+      "centre": [
+       359,
+       39
+      ],
+      "in_viewport": true,
+      "above_floor": true,
+      "hit_test": true
+     },
+     {
+      "key": "Compare modes#1",
+      "centre": [
+       92,
+       290
+      ],
+      "in_viewport": true,
+      "above_floor": true,
+      "hit_test": true
+     },
+     {
+      "key": "1#1",
+      "centre": [
+       113,
+       533
+      ],
+      "in_viewport": true,
+      "above_floor": true,
+      "hit_test": true
+     },
+     {
+      "key": "2#1",
+      "centre": [
+       160,
+       503
+      ],
+      "in_viewport": true,
+      "above_floor": true,
+      "hit_test": true
+     },
+     {
+      "key": "3#1",
+      "centre": [
+       183,
+       473
+      ],
+      "in_viewport": true,
+      "above_floor": true,
+      "hit_test": true
+     },
+     {
+      "key": "4#1",
+      "centre": [
+       230,
+       443
+      ],
+      "in_viewport": true,
+      "above_floor": true,
+      "hit_test": true
+     },
+     {
+      "key": "5#1",
+      "centre": [
+       253,
+       412
+      ],
+      "in_viewport": true,
+      "above_floor": true,
+      "hit_test": true
+     },
+     {
+      "key": "6#1",
+      "centre": [
+       277,
+       382
+      ],
+      "in_viewport": true,
+      "above_floor": true,
+      "hit_test": false
+     },
+     {
+      "key": "map-viewport-reset",
+      "centre": [
+       285,
+       382
+      ],
+      "in_viewport": true,
+      "above_floor": true,
+      "hit_test": true
+     },
+     {
+      "key": "map-stop-3a58c470-524c-5854-aa39-6c37a350eb80",
+      "centre": [
+       195,
+       913
+      ],
+      "in_viewport": false,
+      "above_floor": false,
+      "hit_test": false
+     },
+     {
+      "key": "map-stop-abe4e842-249e-516f-ac43-b41695083792",
+      "centre": [
+       195,
+       968
+      ],
+      "in_viewport": false,
+      "above_floor": false,
+      "hit_test": false
+     },
+     {
+      "key": "map-stop-61e3096d-89bc-5702-ab7d-21ad8289c1ee",
+      "centre": [
+       195,
+       1023
+      ],
+      "in_viewport": false,
+      "above_floor": false,
+      "hit_test": false
+     },
+     {
+      "key": "map-stop-98af0be5-966b-5f49-b699-5dfdceea8ab6",
+      "centre": [
+       195,
+       1078
+      ],
+      "in_viewport": false,
+      "above_floor": false,
+      "hit_test": false
+     },
+     {
+      "key": "map-stop-74f10240-fc4d-500e-b6ac-e520bcab1036",
+      "centre": [
+       195,
+       1133
+      ],
+      "in_viewport": false,
+      "above_floor": false,
+      "hit_test": false
+     },
+     {
+      "key": "map-stop-2cbb2a5d-fe92-5400-b91b-7a6f69e41837",
+      "centre": [
+       195,
+       1188
+      ],
+      "in_viewport": false,
+      "above_floor": false,
+      "hit_test": false
+     },
+     {
+      "key": "✦CityNexus Copilot#1",
+      "centre": [
+       298,
+       739
+      ],
+      "in_viewport": true,
+      "above_floor": true,
+      "hit_test": true
+     },
+     {
+      "key": "nav-hub",
+      "centre": [
+       43,
+       813
+      ],
+      "in_viewport": true,
+      "above_floor": false,
+      "hit_test": true
+     },
+     {
+      "key": "nav-trips",
+      "centre": [
+       119,
+       813
+      ],
+      "in_viewport": true,
+      "above_floor": false,
+      "hit_test": true
+     },
+     {
+      "key": "nav-map",
+      "centre": [
+       195,
+       813
+      ],
+      "in_viewport": true,
+      "above_floor": false,
+      "hit_test": true
+     },
+     {
+      "key": "nav-agent",
+      "centre": [
+       271,
+       813
+      ],
+      "in_viewport": true,
+      "above_floor": false,
+      "hit_test": true
+     },
+     {
+      "key": "nav-me",
+      "centre": [
+       347,
+       813
+      ],
+      "in_viewport": true,
+      "above_floor": false,
+      "hit_test": true
+     }
+    ],
+    "pins": [
+     {
+      "painted": "1",
+      "aria": "Old Town Gate",
+      "title_attr": null,
+      "centre": [
+       113,
+       533
+      ],
+      "lands": true,
+      "covered_px2": 0
+     },
+     {
+      "painted": "2",
+      "aria": "Riverside Museum",
+      "title_attr": null,
+      "centre": [
+       160,
+       503
+      ],
+      "lands": true,
+      "covered_px2": 0
+     },
+     {
+      "painted": "3",
+      "aria": "Central Food Hall",
+      "title_attr": null,
+      "centre": [
+       183,
+       473
+      ],
+      "lands": true,
+      "covered_px2": 0
+     },
+     {
+      "painted": "4",
+      "aria": "Tech Art Center",
+      "title_attr": null,
+      "centre": [
+       230,
+       443
+      ],
+      "lands": true,
+      "covered_px2": 0
+     },
+     {
+      "painted": "5",
+      "aria": "Nexus River Cruise Pier",
+      "title_attr": null,
+      "centre": [
+       253,
+       412
+      ],
+      "lands": true,
+      "covered_px2": 0
+     },
+     {
+      "painted": "6",
+      "aria": "Skyline Dinner House",
+      "title_attr": null,
+      "centre": [
+       277,
+       382
+      ],
+      "lands": false,
+      "covered_px2": 0
+     }
+    ],
+    "band_box": [
+     30,
+     579,
+     330,
+     139
+    ],
+    "caption_box": [
+     18,
+     641,
+     354,
+     77
+    ],
+    "cell": null
+   },
+   "entry": {
+    "reached_path": "/v8/map",
+    "lang_read": "en",
+    "pins": 6
+   },
+   "pins_individually_hittable": 5,
+   "tapped": {
+    "painted": "2",
+    "aria": "Riverside Museum",
+    "centre": [
+     160,
+     503
+    ]
+   },
+   "live": {
+    "lang": "en",
+    "scroll_y": 0,
+    "inner": [
+     390,
+     844
+    ],
+    "controls": [
+     {
+      "key": "Menu#1",
+      "centre": [
+       44,
+       33
+      ],
+      "in_viewport": true,
+      "above_floor": true,
+      "hit_test": true
+     },
+     {
+      "key": "topbar-theme",
+      "centre": [
+       226,
+       39
+      ],
+      "in_viewport": true,
+      "above_floor": true,
+      "hit_test": true
+     },
+     {
+      "key": "topbar-language",
+      "centre": [
+       297,
+       39
+      ],
+      "in_viewport": true,
+      "above_floor": true,
+      "hit_test": true
+     },
+     {
+      "key": "DE#1",
+      "centre": [
+       359,
+       39
+      ],
+      "in_viewport": true,
+      "above_floor": true,
+      "hit_test": true
+     },
+     {
+      "key": "Compare modes#1",
+      "centre": [
+       92,
+       290
+      ],
+      "in_viewport": true,
+      "above_floor": true,
+      "hit_test": true
+     },
+     {
+      "key": "1#1",
+      "centre": [
+       148,
+       565
+      ],
+      "in_viewport": true,
+      "above_floor": true,
+      "hit_test": true
+     },
+     {
+      "key": "2#1",
+      "centre": [
+       195,
+       535
+      ],
+      "in_viewport": true,
+      "above_floor": true,
+      "hit_test": true
+     },
+     {
+      "key": "3#1",
+      "centre": [
+       218,
+       505
+      ],
+      "in_viewport": true,
+      "above_floor": true,
+      "hit_test": true
+     },
+     {
+      "key": "4#1",
+      "centre": [
+       265,
+       475
+      ],
+      "in_viewport": true,
+      "above_floor": true,
+      "hit_test": true
+     },
+     {
+      "key": "5#1",
+      "centre": [
+       288,
+       445
+      ],
+      "in_viewport": true,
+      "above_floor": true,
+      "hit_test": true
+     },
+     {
+      "key": "6#1",
+      "centre": [
+       312,
+       415
+      ],
+      "in_viewport": true,
+      "above_floor": true,
+      "hit_test": true
+     },
+     {
+      "key": "map-viewport-reset",
+      "centre": [
+       285,
+       382
+      ],
+      "in_viewport": true,
+      "above_floor": true,
+      "hit_test": true
+     },
+     {
+      "key": "map-stop-3a58c470-524c-5854-aa39-6c37a350eb80",
+      "centre": [
+       195,
+       974
+      ],
+      "in_viewport": false,
+      "above_floor": false,
+      "hit_test": false
+     },
+     {
+      "key": "map-stop-abe4e842-249e-516f-ac43-b41695083792",
+      "centre": [
+       195,
+       1029
+      ],
+      "in_viewport": false,
+      "above_floor": false,
+      "hit_test": false
+     },
+     {
+      "key": "map-stop-61e3096d-89bc-5702-ab7d-21ad8289c1ee",
+      "centre": [
+       195,
+       1084
+      ],
+      "in_viewport": false,
+      "above_floor": false,
+      "hit_test": false
+     },
+     {
+      "key": "map-stop-98af0be5-966b-5f49-b699-5dfdceea8ab6",
+      "centre": [
+       195,
+       1139
+      ],
+      "in_viewport": false,
+      "above_floor": false,
+      "hit_test": false
+     },
+     {
+      "key": "map-stop-74f10240-fc4d-500e-b6ac-e520bcab1036",
+      "centre": [
+       195,
+       1194
+      ],
+      "in_viewport": false,
+      "above_floor": false,
+      "hit_test": false
+     },
+     {
+      "key": "map-stop-2cbb2a5d-fe92-5400-b91b-7a6f69e41837",
+      "centre": [
+       195,
+       1249
+      ],
+      "in_viewport": false,
+      "above_floor": false,
+      "hit_test": false
+     },
+     {
+      "key": "✦CityNexus Copilot#1",
+      "centre": [
+       298,
+       739
+      ],
+      "in_viewport": true,
+      "above_floor": true,
+      "hit_test": true
+     },
+     {
+      "key": "nav-hub",
+      "centre": [
+       43,
+       813
+      ],
+      "in_viewport": true,
+      "above_floor": false,
+      "hit_test": true
+     },
+     {
+      "key": "nav-trips",
+      "centre": [
+       119,
+       813
+      ],
+      "in_viewport": true,
+      "above_floor": false,
+      "hit_test": true
+     },
+     {
+      "key": "nav-map",
+      "centre": [
+       195,
+       813
+      ],
+      "in_viewport": true,
+      "above_floor": false,
+      "hit_test": true
+     },
+     {
+      "key": "nav-agent",
+      "centre": [
+       271,
+       813
+      ],
+      "in_viewport": true,
+      "above_floor": false,
+      "hit_test": true
+     },
+     {
+      "key": "nav-me",
+      "centre": [
+       347,
+       813
+      ],
+      "in_viewport": true,
+      "above_floor": false,
+      "hit_test": true
+     }
+    ],
+    "pins": [
+     {
+      "painted": "1",
+      "aria": "Old Town Gate",
+      "title_attr": null,
+      "centre": [
+       148,
+       565
+      ],
+      "lands": true,
+      "covered_px2": 118
+     },
+     {
+      "painted": "2",
+      "aria": "Riverside Museum",
+      "title_attr": null,
+      "centre": [
+       195,
+       535
+      ],
+      "lands": true,
+      "covered_px2": 0
+     },
+     {
+      "painted": "3",
+      "aria": "Central Food Hall",
+      "title_attr": null,
+      "centre": [
+       218,
+       505
+      ],
+      "lands": true,
+      "covered_px2": 0
+     },
+     {
+      "painted": "4",
+      "aria": "Tech Art Center",
+      "title_attr": null,
+      "centre": [
+       265,
+       475
+      ],
+      "lands": true,
+      "covered_px2": 0
+     },
+     {
+      "painted": "5",
+      "aria": "Nexus River Cruise Pier",
+      "title_attr": null,
+      "centre": [
+       288,
+       445
+      ],
+      "lands": true,
+      "covered_px2": 0
+     },
+     {
+      "painted": "6",
+      "aria": "Skyline Dinner House",
+      "title_attr": null,
+      "centre": [
+       312,
+       415
+      ],
+      "lands": true,
+      "covered_px2": 0
+     }
+    ],
+    "band_box": [
+     30,
+     579,
+     330,
+     139
+    ],
+    "caption_box": [
+     18,
+     641,
+     354,
+     77
+    ],
+    "cell": null
+   },
+   "reachable_idle": 12,
+   "reachable_with_selection": 13,
+   "lost_reachable": [],
+   "controls_idle": 24,
+   "controls_with_selection": 24,
+   "band_height_idle_px": 139,
+   "band_height_with_selection_px": 139,
+   "band_growth_px": 0,
+   "cell_box_px": null,
+   "cell_client_rects": null,
+   "cell_line_count": null,
+   "caption_height_idle_px": 77,
+   "caption_height_with_selection_px": 77,
+   "cell_text": null,
+   "name_painted_on_glass": false,
+   "newly_covered_pins": [
+    {
+     "painted": "1",
+     "aria": "Old Town Gate",
+     "px2": 118
+    }
+   ],
+   "newly_unhittable_pins": [],
+   "pins_below_floor": []
+  },
+  {
+   "label": "SNAP_CTRL",
+   "arm": "en",
+   "locale_stored": "en",
+   "shape": "360x800",
+   "shape_wh_px": [
+    360,
+    800
+   ],
+   "hit_floor_px": 768,
+   "base": "http://127.0.0.1:4863",
+   "errors": [],
+   "idle": {
+    "lang": "en",
+    "scroll_y": 0,
+    "inner": [
+     360,
+     800
+    ],
+    "controls": [
+     {
+      "key": "Menu#1",
+      "centre": [
+       44,
+       33
+      ],
+      "in_viewport": true,
+      "above_floor": true,
+      "hit_test": true
+     },
+     {
+      "key": "topbar-theme",
+      "centre": [
+       196,
+       39
+      ],
+      "in_viewport": true,
+      "above_floor": true,
+      "hit_test": true
+     },
+     {
+      "key": "topbar-language",
+      "centre": [
+       267,
+       39
+      ],
+      "in_viewport": true,
+      "above_floor": true,
+      "hit_test": true
+     },
+     {
+      "key": "DE#1",
+      "centre": [
+       329,
+       39
+      ],
+      "in_viewport": true,
+      "above_floor": true,
+      "hit_test": true
+     },
+     {
+      "key": "Compare modes#1",
+      "centre": [
+       92,
+       290
+      ],
+      "in_viewport": true,
+      "above_floor": true,
+      "hit_test": true
+     },
+     {
+      "key": "1#1",
+      "centre": [
+       98,
+       533
+      ],
+      "in_viewport": true,
+      "above_floor": true,
+      "hit_test": true
+     },
+     {
+      "key": "2#1",
+      "centre": [
+       145,
+       503
+      ],
+      "in_viewport": true,
+      "above_floor": true,
+      "hit_test": true
+     },
+     {
+      "key": "3#1",
+      "centre": [
+       168,
+       473
+      ],
+      "in_viewport": true,
+      "above_floor": true,
+      "hit_test": true
+     },
+     {
+      "key": "4#1",
+      "centre": [
+       215,
+       443
+      ],
+      "in_viewport": true,
+      "above_floor": true,
+      "hit_test": true
+     },
+     {
+      "key": "5#1",
+      "centre": [
+       238,
+       412
+      ],
+      "in_viewport": true,
+      "above_floor": true,
+      "hit_test": true
+     },
+     {
+      "key": "6#1",
+      "centre": [
+       262,
+       382
+      ],
+      "in_viewport": true,
+      "above_floor": true,
+      "hit_test": false
+     },
+     {
+      "key": "map-viewport-reset",
+      "centre": [
+       255,
+       382
+      ],
+      "in_viewport": true,
+      "above_floor": true,
+      "hit_test": true
+     },
+     {
+      "key": "map-stop-3a58c470-524c-5854-aa39-6c37a350eb80",
+      "centre": [
+       180,
+       945
+      ],
+      "in_viewport": false,
+      "above_floor": false,
+      "hit_test": false
+     },
+     {
+      "key": "map-stop-abe4e842-249e-516f-ac43-b41695083792",
+      "centre": [
+       180,
+       1000
+      ],
+      "in_viewport": false,
+      "above_floor": false,
+      "hit_test": false
+     },
+     {
+      "key": "map-stop-61e3096d-89bc-5702-ab7d-21ad8289c1ee",
+      "centre": [
+       180,
+       1055
+      ],
+      "in_viewport": false,
+      "above_floor": false,
+      "hit_test": false
+     },
+     {
+      "key": "map-stop-98af0be5-966b-5f49-b699-5dfdceea8ab6",
+      "centre": [
+       180,
+       1110
+      ],
+      "in_viewport": false,
+      "above_floor": false,
+      "hit_test": false
+     },
+     {
+      "key": "map-stop-74f10240-fc4d-500e-b6ac-e520bcab1036",
+      "centre": [
+       180,
+       1165
+      ],
+      "in_viewport": false,
+      "above_floor": false,
+      "hit_test": false
+     },
+     {
+      "key": "map-stop-2cbb2a5d-fe92-5400-b91b-7a6f69e41837",
+      "centre": [
+       180,
+       1220
+      ],
+      "in_viewport": false,
+      "above_floor": false,
+      "hit_test": false
+     },
+     {
+      "key": "✦CityNexus Copilot#1",
+      "centre": [
+       268,
+       695
+      ],
+      "in_viewport": true,
+      "above_floor": true,
+      "hit_test": true
+     },
+     {
+      "key": "nav-hub",
+      "centre": [
+       40,
+       769
+      ],
+      "in_viewport": true,
+      "above_floor": false,
+      "hit_test": true
+     },
+     {
+      "key": "nav-trips",
+      "centre": [
+       110,
+       769
+      ],
+      "in_viewport": true,
+      "above_floor": false,
+      "hit_test": true
+     },
+     {
+      "key": "nav-map",
+      "centre": [
+       180,
+       769
+      ],
+      "in_viewport": true,
+      "above_floor": false,
+      "hit_test": true
+     },
+     {
+      "key": "nav-agent",
+      "centre": [
+       250,
+       769
+      ],
+      "in_viewport": true,
+      "above_floor": false,
+      "hit_test": true
+     },
+     {
+      "key": "nav-me",
+      "centre": [
+       320,
+       769
+      ],
+      "in_viewport": true,
+      "above_floor": false,
+      "hit_test": true
+     }
+    ],
+    "pins": [
+     {
+      "painted": "1",
+      "aria": "Old Town Gate",
+      "title_attr": null,
+      "centre": [
+       98,
+       533
+      ],
+      "lands": true,
+      "covered_px2": 0
+     },
+     {
+      "painted": "2",
+      "aria": "Riverside Museum",
+      "title_attr": null,
+      "centre": [
+       145,
+       503
+      ],
+      "lands": true,
+      "covered_px2": 0
+     },
+     {
+      "painted": "3",
+      "aria": "Central Food Hall",
+      "title_attr": null,
+      "centre": [
+       168,
+       473
+      ],
+      "lands": true,
+      "covered_px2": 0
+     },
+     {
+      "painted": "4",
+      "aria": "Tech Art Center",
+      "title_attr": null,
+      "centre": [
+       215,
+       443
+      ],
+      "lands": true,
+      "covered_px2": 0
+     },
+     {
+      "painted": "5",
+      "aria": "Nexus River Cruise Pier",
+      "title_attr": null,
+      "centre": [
+       238,
+       412
+      ],
+      "lands": true,
+      "covered_px2": 0
+     },
+     {
+      "painted": "6",
+      "aria": "Skyline Dinner House",
+      "title_attr": null,
+      "centre": [
+       262,
+       382
+      ],
+      "lands": false,
+      "covered_px2": 0
+     }
+    ],
+    "band_box": [
+     30,
+     579,
+     300,
+     139
+    ],
+    "caption_box": [
+     18,
+     641,
+     324,
+     77
+    ],
+    "cell": null
+   },
+   "entry": {
+    "reached_path": "/v8/map",
+    "lang_read": "en",
+    "pins": 6
+   },
+   "pins_individually_hittable": 5,
+   "tapped": {
+    "painted": "2",
+    "aria": "Riverside Museum",
+    "centre": [
+     145,
+     503
+    ]
+   },
+   "live": {
+    "lang": "en",
+    "scroll_y": 0,
+    "inner": [
+     360,
+     800
+    ],
+    "controls": [
+     {
+      "key": "Menu#1",
+      "centre": [
+       44,
+       33
+      ],
+      "in_viewport": true,
+      "above_floor": true,
+      "hit_test": true
+     },
+     {
+      "key": "topbar-theme",
+      "centre": [
+       196,
+       39
+      ],
+      "in_viewport": true,
+      "above_floor": true,
+      "hit_test": true
+     },
+     {
+      "key": "topbar-language",
+      "centre": [
+       267,
+       39
+      ],
+      "in_viewport": true,
+      "above_floor": true,
+      "hit_test": true
+     },
+     {
+      "key": "DE#1",
+      "centre": [
+       329,
+       39
+      ],
+      "in_viewport": true,
+      "above_floor": true,
+      "hit_test": true
+     },
+     {
+      "key": "Compare modes#1",
+      "centre": [
+       92,
+       290
+      ],
+      "in_viewport": true,
+      "above_floor": true,
+      "hit_test": true
+     },
+     {
+      "key": "1#1",
+      "centre": [
+       133,
+       565
+      ],
+      "in_viewport": true,
+      "above_floor": true,
+      "hit_test": true
+     },
+     {
+      "key": "2#1",
+      "centre": [
+       180,
+       535
+      ],
+      "in_viewport": true,
+      "above_floor": true,
+      "hit_test": true
+     },
+     {
+      "key": "3#1",
+      "centre": [
+       203,
+       505
+      ],
+      "in_viewport": true,
+      "above_floor": true,
+      "hit_test": true
+     },
+     {
+      "key": "4#1",
+      "centre": [
+       250,
+       475
+      ],
+      "in_viewport": true,
+      "above_floor": true,
+      "hit_test": true
+     },
+     {
+      "key": "5#1",
+      "centre": [
+       273,
+       445
+      ],
+      "in_viewport": true,
+      "above_floor": true,
+      "hit_test": true
+     },
+     {
+      "key": "6#1",
+      "centre": [
+       297,
+       415
+      ],
+      "in_viewport": true,
+      "above_floor": true,
+      "hit_test": true
+     },
+     {
+      "key": "map-viewport-reset",
+      "centre": [
+       255,
+       382
+      ],
+      "in_viewport": true,
+      "above_floor": true,
+      "hit_test": true
+     },
+     {
+      "key": "map-stop-3a58c470-524c-5854-aa39-6c37a350eb80",
+      "centre": [
+       180,
+       974
+      ],
+      "in_viewport": false,
+      "above_floor": false,
+      "hit_test": false
+     },
+     {
+      "key": "map-stop-abe4e842-249e-516f-ac43-b41695083792",
+      "centre": [
+       180,
+       1029
+      ],
+      "in_viewport": false,
+      "above_floor": false,
+      "hit_test": false
+     },
+     {
+      "key": "map-stop-61e3096d-89bc-5702-ab7d-21ad8289c1ee",
+      "centre": [
+       180,
+       1084
+      ],
+      "in_viewport": false,
+      "above_floor": false,
+      "hit_test": false
+     },
+     {
+      "key": "map-stop-98af0be5-966b-5f49-b699-5dfdceea8ab6",
+      "centre": [
+       180,
+       1139
+      ],
+      "in_viewport": false,
+      "above_floor": false,
+      "hit_test": false
+     },
+     {
+      "key": "map-stop-74f10240-fc4d-500e-b6ac-e520bcab1036",
+      "centre": [
+       180,
+       1194
+      ],
+      "in_viewport": false,
+      "above_floor": false,
+      "hit_test": false
+     },
+     {
+      "key": "map-stop-2cbb2a5d-fe92-5400-b91b-7a6f69e41837",
+      "centre": [
+       180,
+       1249
+      ],
+      "in_viewport": false,
+      "above_floor": false,
+      "hit_test": false
+     },
+     {
+      "key": "✦CityNexus Copilot#1",
+      "centre": [
+       268,
+       695
+      ],
+      "in_viewport": true,
+      "above_floor": true,
+      "hit_test": true
+     },
+     {
+      "key": "nav-hub",
+      "centre": [
+       40,
+       769
+      ],
+      "in_viewport": true,
+      "above_floor": false,
+      "hit_test": true
+     },
+     {
+      "key": "nav-trips",
+      "centre": [
+       110,
+       769
+      ],
+      "in_viewport": true,
+      "above_floor": false,
+      "hit_test": true
+     },
+     {
+      "key": "nav-map",
+      "centre": [
+       180,
+       769
+      ],
+      "in_viewport": true,
+      "above_floor": false,
+      "hit_test": true
+     },
+     {
+      "key": "nav-agent",
+      "centre": [
+       250,
+       769
+      ],
+      "in_viewport": true,
+      "above_floor": false,
+      "hit_test": true
+     },
+     {
+      "key": "nav-me",
+      "centre": [
+       320,
+       769
+      ],
+      "in_viewport": true,
+      "above_floor": false,
+      "hit_test": true
+     }
+    ],
+    "pins": [
+     {
+      "painted": "1",
+      "aria": "Old Town Gate",
+      "title_attr": null,
+      "centre": [
+       133,
+       565
+      ],
+      "lands": true,
+      "covered_px2": 118
+     },
+     {
+      "painted": "2",
+      "aria": "Riverside Museum",
+      "title_attr": null,
+      "centre": [
+       180,
+       535
+      ],
+      "lands": true,
+      "covered_px2": 0
+     },
+     {
+      "painted": "3",
+      "aria": "Central Food Hall",
+      "title_attr": null,
+      "centre": [
+       203,
+       505
+      ],
+      "lands": true,
+      "covered_px2": 0
+     },
+     {
+      "painted": "4",
+      "aria": "Tech Art Center",
+      "title_attr": null,
+      "centre": [
+       250,
+       475
+      ],
+      "lands": true,
+      "covered_px2": 0
+     },
+     {
+      "painted": "5",
+      "aria": "Nexus River Cruise Pier",
+      "title_attr": null,
+      "centre": [
+       273,
+       445
+      ],
+      "lands": true,
+      "covered_px2": 0
+     },
+     {
+      "painted": "6",
+      "aria": "Skyline Dinner House",
+      "title_attr": null,
+      "centre": [
+       297,
+       415
+      ],
+      "lands": true,
+      "covered_px2": 0
+     }
+    ],
+    "band_box": [
+     30,
+     579,
+     300,
+     139
+    ],
+    "caption_box": [
+     18,
+     641,
+     324,
+     77
+    ],
+    "cell": null
+   },
+   "reachable_idle": 12,
+   "reachable_with_selection": 13,
+   "lost_reachable": [],
+   "controls_idle": 24,
+   "controls_with_selection": 24,
+   "band_height_idle_px": 139,
+   "band_height_with_selection_px": 139,
+   "band_growth_px": 0,
+   "cell_box_px": null,
+   "cell_client_rects": null,
+   "cell_line_count": null,
+   "caption_height_idle_px": 77,
+   "caption_height_with_selection_px": 77,
+   "cell_text": null,
+   "name_painted_on_glass": false,
+   "newly_covered_pins": [
+    {
+     "painted": "1",
+     "aria": "Old Town Gate",
+     "px2": 118
+    }
+   ],
+   "newly_unhittable_pins": [],
+   "pins_below_floor": []
+  },
+  {
+   "label": "SNAP_CTRL",
+   "arm": "en",
+   "locale_stored": "en",
+   "shape": "320x653",
+   "shape_wh_px": [
+    320,
+    653
+   ],
+   "hit_floor_px": 768,
+   "base": "http://127.0.0.1:4863",
+   "errors": [],
+   "idle": {
+    "lang": "en",
+    "scroll_y": 0,
+    "inner": [
+     320,
+     653
+    ],
+    "controls": [
+     {
+      "key": "Menu#1",
+      "centre": [
+       44,
+       33
+      ],
+      "in_viewport": true,
+      "above_floor": true,
+      "hit_test": true
+     },
+     {
+      "key": "topbar-theme",
+      "centre": [
+       156,
+       39
+      ],
+      "in_viewport": true,
+      "above_floor": true,
+      "hit_test": true
+     },
+     {
+      "key": "topbar-language",
+      "centre": [
+       227,
+       39
+      ],
+      "in_viewport": true,
+      "above_floor": true,
+      "hit_test": true
+     },
+     {
+      "key": "DE#1",
+      "centre": [
+       289,
+       39
+      ],
+      "in_viewport": true,
+      "above_floor": true,
+      "hit_test": true
+     },
+     {
+      "key": "Compare modes#1",
+      "centre": [
+       92,
+       290
+      ],
+      "in_viewport": true,
+      "above_floor": true,
+      "hit_test": true
+     },
+     {
+      "key": "1#1",
+      "centre": [
+       78,
+       533
+      ],
+      "in_viewport": true,
+      "above_floor": true,
+      "hit_test": true
+     },
+     {
+      "key": "2#1",
+      "centre": [
+       125,
+       503
+      ],
+      "in_viewport": true,
+      "above_floor": true,
+      "hit_test": true
+     },
+     {
+      "key": "3#1",
+      "centre": [
+       148,
+       473
+      ],
+      "in_viewport": true,
+      "above_floor": true,
+      "hit_test": true
+     },
+     {
+      "key": "4#1",
+      "centre": [
+       195,
+       443
+      ],
+      "in_viewport": true,
+      "above_floor": true,
+      "hit_test": true
+     },
+     {
+      "key": "5#1",
+      "centre": [
+       218,
+       412
+      ],
+      "in_viewport": true,
+      "above_floor": true,
+      "hit_test": true
+     },
+     {
+      "key": "6#1",
+      "centre": [
+       242,
+       382
+      ],
+      "in_viewport": true,
+      "above_floor": true,
+      "hit_test": false
+     },
+     {
+      "key": "map-viewport-reset",
+      "centre": [
+       215,
+       382
+      ],
+      "in_viewport": true,
+      "above_floor": true,
+      "hit_test": true
+     },
+     {
+      "key": "map-stop-3a58c470-524c-5854-aa39-6c37a350eb80",
+      "centre": [
+       160,
+       945
+      ],
+      "in_viewport": false,
+      "above_floor": false,
+      "hit_test": false
+     },
+     {
+      "key": "map-stop-abe4e842-249e-516f-ac43-b41695083792",
+      "centre": [
+       160,
+       1000
+      ],
+      "in_viewport": false,
+      "above_floor": false,
+      "hit_test": false
+     },
+     {
+      "key": "map-stop-61e3096d-89bc-5702-ab7d-21ad8289c1ee",
+      "centre": [
+       160,
+       1055
+      ],
+      "in_viewport": false,
+      "above_floor": false,
+      "hit_test": false
+     },
+     {
+      "key": "map-stop-98af0be5-966b-5f49-b699-5dfdceea8ab6",
+      "centre": [
+       160,
+       1110
+      ],
+      "in_viewport": false,
+      "above_floor": false,
+      "hit_test": false
+     },
+     {
+      "key": "map-stop-74f10240-fc4d-500e-b6ac-e520bcab1036",
+      "centre": [
+       160,
+       1165
+      ],
+      "in_viewport": false,
+      "above_floor": false,
+      "hit_test": false
+     },
+     {
+      "key": "map-stop-2cbb2a5d-fe92-5400-b91b-7a6f69e41837",
+      "centre": [
+       160,
+       1220
+      ],
+      "in_viewport": false,
+      "above_floor": false,
+      "hit_test": false
+     },
+     {
+      "key": "✦CityNexus Copilot#1",
+      "centre": [
+       228,
+       548
+      ],
+      "in_viewport": true,
+      "above_floor": true,
+      "hit_test": true
+     },
+     {
+      "key": "nav-hub",
+      "centre": [
+       36,
+       622
+      ],
+      "in_viewport": true,
+      "above_floor": true,
+      "hit_test": true
+     },
+     {
+      "key": "nav-trips",
+      "centre": [
+       98,
+       622
+      ],
+      "in_viewport": true,
+      "above_floor": true,
+      "hit_test": true
+     },
+     {
+      "key": "nav-map",
+      "centre": [
+       160,
+       622
+      ],
+      "in_viewport": true,
+      "above_floor": true,
+      "hit_test": true
+     },
+     {
+      "key": "nav-agent",
+      "centre": [
+       222,
+       622
+      ],
+      "in_viewport": true,
+      "above_floor": true,
+      "hit_test": true
+     },
+     {
+      "key": "nav-me",
+      "centre": [
+       284,
+       622
+      ],
+      "in_viewport": true,
+      "above_floor": true,
+      "hit_test": true
+     }
+    ],
+    "pins": [
+     {
+      "painted": "1",
+      "aria": "Old Town Gate",
+      "title_attr": null,
+      "centre": [
+       78,
+       533
+      ],
+      "lands": true,
+      "covered_px2": 0
+     },
+     {
+      "painted": "2",
+      "aria": "Riverside Museum",
+      "title_attr": null,
+      "centre": [
+       125,
+       503
+      ],
+      "lands": true,
+      "covered_px2": 0
+     },
+     {
+      "painted": "3",
+      "aria": "Central Food Hall",
+      "title_attr": null,
+      "centre": [
+       148,
+       473
+      ],
+      "lands": true,
+      "covered_px2": 0
+     },
+     {
+      "painted": "4",
+      "aria": "Tech Art Center",
+      "title_attr": null,
+      "centre": [
+       195,
+       443
+      ],
+      "lands": true,
+      "covered_px2": 0
+     },
+     {
+      "painted": "5",
+      "aria": "Nexus River Cruise Pier",
+      "title_attr": null,
+      "centre": [
+       218,
+       412
+      ],
+      "lands": true,
+      "covered_px2": 0
+     },
+     {
+      "painted": "6",
+      "aria": "Skyline Dinner House",
+      "title_attr": null,
+      "centre": [
+       242,
+       382
+      ],
+      "lands": false,
+      "covered_px2": 0
+     }
+    ],
+    "band_box": [
+     30,
+     579,
+     260,
+     139
+    ],
+    "caption_box": [
+     18,
+     641,
+     284,
+     77
+    ],
+    "cell": null
+   },
+   "entry": {
+    "reached_path": "/v8/map",
+    "lang_read": "en",
+    "pins": 6
+   },
+   "pins_individually_hittable": 5,
+   "tapped": {
+    "painted": "2",
+    "aria": "Riverside Museum",
+    "centre": [
+     125,
+     503
+    ]
+   },
+   "live": {
+    "lang": "en",
+    "scroll_y": 0,
+    "inner": [
+     320,
+     653
+    ],
+    "controls": [
+     {
+      "key": "Menu#1",
+      "centre": [
+       44,
+       33
+      ],
+      "in_viewport": true,
+      "above_floor": true,
+      "hit_test": true
+     },
+     {
+      "key": "topbar-theme",
+      "centre": [
+       156,
+       39
+      ],
+      "in_viewport": true,
+      "above_floor": true,
+      "hit_test": true
+     },
+     {
+      "key": "topbar-language",
+      "centre": [
+       227,
+       39
+      ],
+      "in_viewport": true,
+      "above_floor": true,
+      "hit_test": true
+     },
+     {
+      "key": "DE#1",
+      "centre": [
+       289,
+       39
+      ],
+      "in_viewport": true,
+      "above_floor": true,
+      "hit_test": true
+     },
+     {
+      "key": "Compare modes#1",
+      "centre": [
+       92,
+       290
+      ],
+      "in_viewport": true,
+      "above_floor": true,
+      "hit_test": true
+     },
+     {
+      "key": "1#1",
+      "centre": [
+       113,
+       565
+      ],
+      "in_viewport": true,
+      "above_floor": true,
+      "hit_test": true
+     },
+     {
+      "key": "2#1",
+      "centre": [
+       160,
+       535
+      ],
+      "in_viewport": true,
+      "above_floor": true,
+      "hit_test": true
+     },
+     {
+      "key": "3#1",
+      "centre": [
+       183,
+       505
+      ],
+      "in_viewport": true,
+      "above_floor": true,
+      "hit_test": true
+     },
+     {
+      "key": "4#1",
+      "centre": [
+       230,
+       475
+      ],
+      "in_viewport": true,
+      "above_floor": true,
+      "hit_test": true
+     },
+     {
+      "key": "5#1",
+      "centre": [
+       253,
+       445
+      ],
+      "in_viewport": true,
+      "above_floor": true,
+      "hit_test": true
+     },
+     {
+      "key": "6#1",
+      "centre": [
+       277,
+       415
+      ],
+      "in_viewport": true,
+      "above_floor": true,
+      "hit_test": true
+     },
+     {
+      "key": "map-viewport-reset",
+      "centre": [
+       215,
+       382
+      ],
+      "in_viewport": true,
+      "above_floor": true,
+      "hit_test": true
+     },
+     {
+      "key": "map-stop-3a58c470-524c-5854-aa39-6c37a350eb80",
+      "centre": [
+       160,
+       974
+      ],
+      "in_viewport": false,
+      "above_floor": false,
+      "hit_test": false
+     },
+     {
+      "key": "map-stop-abe4e842-249e-516f-ac43-b41695083792",
+      "centre": [
+       160,
+       1029
+      ],
+      "in_viewport": false,
+      "above_floor": false,
+      "hit_test": false
+     },
+     {
+      "key": "map-stop-61e3096d-89bc-5702-ab7d-21ad8289c1ee",
+      "centre": [
+       160,
+       1084
+      ],
+      "in_viewport": false,
+      "above_floor": false,
+      "hit_test": false
+     },
+     {
+      "key": "map-stop-98af0be5-966b-5f49-b699-5dfdceea8ab6",
+      "centre": [
+       160,
+       1139
+      ],
+      "in_viewport": false,
+      "above_floor": false,
+      "hit_test": false
+     },
+     {
+      "key": "map-stop-74f10240-fc4d-500e-b6ac-e520bcab1036",
+      "centre": [
+       160,
+       1194
+      ],
+      "in_viewport": false,
+      "above_floor": false,
+      "hit_test": false
+     },
+     {
+      "key": "map-stop-2cbb2a5d-fe92-5400-b91b-7a6f69e41837",
+      "centre": [
+       160,
+       1249
+      ],
+      "in_viewport": false,
+      "above_floor": false,
+      "hit_test": false
+     },
+     {
+      "key": "✦CityNexus Copilot#1",
+      "centre": [
+       288,
+       545
+      ],
+      "in_viewport": true,
+      "above_floor": true,
+      "hit_test": true
+     },
+     {
+      "key": "nav-hub",
+      "centre": [
+       36,
+       622
+      ],
+      "in_viewport": true,
+      "above_floor": true,
+      "hit_test": true
+     },
+     {
+      "key": "nav-trips",
+      "centre": [
+       98,
+       622
+      ],
+      "in_viewport": true,
+      "above_floor": true,
+      "hit_test": true
+     },
+     {
+      "key": "nav-map",
+      "centre": [
+       160,
+       622
+      ],
+      "in_viewport": true,
+      "above_floor": true,
+      "hit_test": true
+     },
+     {
+      "key": "nav-agent",
+      "centre": [
+       222,
+       622
+      ],
+      "in_viewport": true,
+      "above_floor": true,
+      "hit_test": true
+     },
+     {
+      "key": "nav-me",
+      "centre": [
+       284,
+       622
+      ],
+      "in_viewport": true,
+      "above_floor": true,
+      "hit_test": true
+     }
+    ],
+    "pins": [
+     {
+      "painted": "1",
+      "aria": "Old Town Gate",
+      "title_attr": null,
+      "centre": [
+       113,
+       565
+      ],
+      "lands": true,
+      "covered_px2": 118
+     },
+     {
+      "painted": "2",
+      "aria": "Riverside Museum",
+      "title_attr": null,
+      "centre": [
+       160,
+       535
+      ],
+      "lands": true,
+      "covered_px2": 0
+     },
+     {
+      "painted": "3",
+      "aria": "Central Food Hall",
+      "title_attr": null,
+      "centre": [
+       183,
+       505
+      ],
+      "lands": true,
+      "covered_px2": 0
+     },
+     {
+      "painted": "4",
+      "aria": "Tech Art Center",
+      "title_attr": null,
+      "centre": [
+       230,
+       475
+      ],
+      "lands": true,
+      "covered_px2": 0
+     },
+     {
+      "painted": "5",
+      "aria": "Nexus River Cruise Pier",
+      "title_attr": null,
+      "centre": [
+       253,
+       445
+      ],
+      "lands": true,
+      "covered_px2": 0
+     },
+     {
+      "painted": "6",
+      "aria": "Skyline Dinner House",
+      "title_attr": null,
+      "centre": [
+       277,
+       415
+      ],
+      "lands": true,
+      "covered_px2": 0
+     }
+    ],
+    "band_box": [
+     30,
+     579,
+     260,
+     139
+    ],
+    "caption_box": [
+     18,
+     641,
+     284,
+     77
+    ],
+    "cell": null
+   },
+   "reachable_idle": 17,
+   "reachable_with_selection": 18,
+   "lost_reachable": [],
+   "controls_idle": 24,
+   "controls_with_selection": 24,
+   "band_height_idle_px": 139,
+   "band_height_with_selection_px": 139,
+   "band_growth_px": 0,
+   "cell_box_px": null,
+   "cell_client_rects": null,
+   "cell_line_count": null,
+   "caption_height_idle_px": 77,
+   "caption_height_with_selection_px": 77,
+   "cell_text": null,
+   "name_painted_on_glass": false,
+   "newly_covered_pins": [
+    {
+     "painted": "1",
+     "aria": "Old Town Gate",
+     "px2": 118
+    }
+   ],
+   "newly_unhittable_pins": [],
+   "pins_below_floor": []
+  },
+  {
+   "label": "SNAP_CTRL",
+   "arm": "en",
+   "locale_stored": "en",
+   "shape": "414x896",
+   "shape_wh_px": [
+    414,
+    896
+   ],
+   "hit_floor_px": 768,
+   "base": "http://127.0.0.1:4863",
+   "errors": [],
+   "idle": {
+    "lang": "en",
+    "scroll_y": 0,
+    "inner": [
+     414,
+     896
+    ],
+    "controls": [
+     {
+      "key": "Menu#1",
+      "centre": [
+       44,
+       33
+      ],
+      "in_viewport": true,
+      "above_floor": true,
+      "hit_test": true
+     },
+     {
+      "key": "topbar-theme",
+      "centre": [
+       250,
+       39
+      ],
+      "in_viewport": true,
+      "above_floor": true,
+      "hit_test": true
+     },
+     {
+      "key": "topbar-language",
+      "centre": [
+       321,
+       39
+      ],
+      "in_viewport": true,
+      "above_floor": true,
+      "hit_test": true
+     },
+     {
+      "key": "DE#1",
+      "centre": [
+       383,
+       39
+      ],
+      "in_viewport": true,
+      "above_floor": true,
+      "hit_test": true
+     },
+     {
+      "key": "Compare modes#1",
+      "centre": [
+       92,
+       290
+      ],
+      "in_viewport": true,
+      "above_floor": true,
+      "hit_test": true
+     },
+     {
+      "key": "1#1",
+      "centre": [
+       125,
+       533
+      ],
+      "in_viewport": true,
+      "above_floor": true,
+      "hit_test": true
+     },
+     {
+      "key": "2#1",
+      "centre": [
+       172,
+       503
+      ],
+      "in_viewport": true,
+      "above_floor": true,
+      "hit_test": true
+     },
+     {
+      "key": "3#1",
+      "centre": [
+       195,
+       473
+      ],
+      "in_viewport": true,
+      "above_floor": true,
+      "hit_test": true
+     },
+     {
+      "key": "4#1",
+      "centre": [
+       242,
+       443
+      ],
+      "in_viewport": true,
+      "above_floor": true,
+      "hit_test": true
+     },
+     {
+      "key": "5#1",
+      "centre": [
+       265,
+       412
+      ],
+      "in_viewport": true,
+      "above_floor": true,
+      "hit_test": true
+     },
+     {
+      "key": "6#1",
+      "centre": [
+       289,
+       382
+      ],
+      "in_viewport": true,
+      "above_floor": true,
+      "hit_test": false
+     },
+     {
+      "key": "map-viewport-reset",
+      "centre": [
+       309,
+       382
+      ],
+      "in_viewport": true,
+      "above_floor": true,
+      "hit_test": true
+     },
+     {
+      "key": "map-stop-3a58c470-524c-5854-aa39-6c37a350eb80",
+      "centre": [
+       207,
+       913
+      ],
+      "in_viewport": false,
+      "above_floor": false,
+      "hit_test": false
+     },
+     {
+      "key": "map-stop-abe4e842-249e-516f-ac43-b41695083792",
+      "centre": [
+       207,
+       968
+      ],
+      "in_viewport": false,
+      "above_floor": false,
+      "hit_test": false
+     },
+     {
+      "key": "map-stop-61e3096d-89bc-5702-ab7d-21ad8289c1ee",
+      "centre": [
+       207,
+       1023
+      ],
+      "in_viewport": false,
+      "above_floor": false,
+      "hit_test": false
+     },
+     {
+      "key": "map-stop-98af0be5-966b-5f49-b699-5dfdceea8ab6",
+      "centre": [
+       207,
+       1078
+      ],
+      "in_viewport": false,
+      "above_floor": false,
+      "hit_test": false
+     },
+     {
+      "key": "map-stop-74f10240-fc4d-500e-b6ac-e520bcab1036",
+      "centre": [
+       207,
+       1133
+      ],
+      "in_viewport": false,
+      "above_floor": false,
+      "hit_test": false
+     },
+     {
+      "key": "map-stop-2cbb2a5d-fe92-5400-b91b-7a6f69e41837",
+      "centre": [
+       207,
+       1188
+      ],
+      "in_viewport": false,
+      "above_floor": false,
+      "hit_test": false
+     },
+     {
+      "key": "✦CityNexus Copilot#1",
+      "centre": [
+       382,
+       788
+      ],
+      "in_viewport": true,
+      "above_floor": false,
+      "hit_test": true
+     },
+     {
+      "key": "nav-hub",
+      "centre": [
+       45,
+       865
+      ],
+      "in_viewport": true,
+      "above_floor": false,
+      "hit_test": true
+     },
+     {
+      "key": "nav-trips",
+      "centre": [
+       126,
+       865
+      ],
+      "in_viewport": true,
+      "above_floor": false,
+      "hit_test": true
+     },
+     {
+      "key": "nav-map",
+      "centre": [
+       207,
+       865
+      ],
+      "in_viewport": true,
+      "above_floor": false,
+      "hit_test": true
+     },
+     {
+      "key": "nav-agent",
+      "centre": [
+       288,
+       865
+      ],
+      "in_viewport": true,
+      "above_floor": false,
+      "hit_test": true
+     },
+     {
+      "key": "nav-me",
+      "centre": [
+       369,
+       865
+      ],
+      "in_viewport": true,
+      "above_floor": false,
+      "hit_test": true
+     }
+    ],
+    "pins": [
+     {
+      "painted": "1",
+      "aria": "Old Town Gate",
+      "title_attr": null,
+      "centre": [
+       125,
+       533
+      ],
+      "lands": true,
+      "covered_px2": 0
+     },
+     {
+      "painted": "2",
+      "aria": "Riverside Museum",
+      "title_attr": null,
+      "centre": [
+       172,
+       503
+      ],
+      "lands": true,
+      "covered_px2": 0
+     },
+     {
+      "painted": "3",
+      "aria": "Central Food Hall",
+      "title_attr": null,
+      "centre": [
+       195,
+       473
+      ],
+      "lands": true,
+      "covered_px2": 0
+     },
+     {
+      "painted": "4",
+      "aria": "Tech Art Center",
+      "title_attr": null,
+      "centre": [
+       242,
+       443
+      ],
+      "lands": true,
+      "covered_px2": 0
+     },
+     {
+      "painted": "5",
+      "aria": "Nexus River Cruise Pier",
+      "title_attr": null,
+      "centre": [
+       265,
+       412
+      ],
+      "lands": true,
+      "covered_px2": 0
+     },
+     {
+      "painted": "6",
+      "aria": "Skyline Dinner House",
+      "title_attr": null,
+      "centre": [
+       289,
+       382
+      ],
+      "lands": false,
+      "covered_px2": 0
+     }
+    ],
+    "band_box": [
+     30,
+     579,
+     354,
+     139
+    ],
+    "caption_box": [
+     18,
+     641,
+     378,
+     77
+    ],
+    "cell": null
+   },
+   "entry": {
+    "reached_path": "/v8/map",
+    "lang_read": "en",
+    "pins": 6
+   },
+   "pins_individually_hittable": 5,
+   "tapped": {
+    "painted": "2",
+    "aria": "Riverside Museum",
+    "centre": [
+     172,
+     503
+    ]
+   },
+   "live": {
+    "lang": "en",
+    "scroll_y": 0,
+    "inner": [
+     414,
+     896
+    ],
+    "controls": [
+     {
+      "key": "Menu#1",
+      "centre": [
+       44,
+       33
+      ],
+      "in_viewport": true,
+      "above_floor": true,
+      "hit_test": true
+     },
+     {
+      "key": "topbar-theme",
+      "centre": [
+       250,
+       39
+      ],
+      "in_viewport": true,
+      "above_floor": true,
+      "hit_test": true
+     },
+     {
+      "key": "topbar-language",
+      "centre": [
+       321,
+       39
+      ],
+      "in_viewport": true,
+      "above_floor": true,
+      "hit_test": true
+     },
+     {
+      "key": "DE#1",
+      "centre": [
+       383,
+       39
+      ],
+      "in_viewport": true,
+      "above_floor": true,
+      "hit_test": true
+     },
+     {
+      "key": "Compare modes#1",
+      "centre": [
+       92,
+       290
+      ],
+      "in_viewport": true,
+      "above_floor": true,
+      "hit_test": true
+     },
+     {
+      "key": "1#1",
+      "centre": [
+       160,
+       565
+      ],
+      "in_viewport": true,
+      "above_floor": true,
+      "hit_test": true
+     },
+     {
+      "key": "2#1",
+      "centre": [
+       207,
+       535
+      ],
+      "in_viewport": true,
+      "above_floor": true,
+      "hit_test": true
+     },
+     {
+      "key": "3#1",
+      "centre": [
+       230,
+       505
+      ],
+      "in_viewport": true,
+      "above_floor": true,
+      "hit_test": true
+     },
+     {
+      "key": "4#1",
+      "centre": [
+       277,
+       475
+      ],
+      "in_viewport": true,
+      "above_floor": true,
+      "hit_test": true
+     },
+     {
+      "key": "5#1",
+      "centre": [
+       300,
+       445
+      ],
+      "in_viewport": true,
+      "above_floor": true,
+      "hit_test": true
+     },
+     {
+      "key": "6#1",
+      "centre": [
+       324,
+       415
+      ],
+      "in_viewport": true,
+      "above_floor": true,
+      "hit_test": true
+     },
+     {
+      "key": "map-viewport-reset",
+      "centre": [
+       309,
+       382
+      ],
+      "in_viewport": true,
+      "above_floor": true,
+      "hit_test": true
+     },
+     {
+      "key": "map-stop-3a58c470-524c-5854-aa39-6c37a350eb80",
+      "centre": [
+       207,
+       974
+      ],
+      "in_viewport": false,
+      "above_floor": false,
+      "hit_test": false
+     },
+     {
+      "key": "map-stop-abe4e842-249e-516f-ac43-b41695083792",
+      "centre": [
+       207,
+       1029
+      ],
+      "in_viewport": false,
+      "above_floor": false,
+      "hit_test": false
+     },
+     {
+      "key": "map-stop-61e3096d-89bc-5702-ab7d-21ad8289c1ee",
+      "centre": [
+       207,
+       1084
+      ],
+      "in_viewport": false,
+      "above_floor": false,
+      "hit_test": false
+     },
+     {
+      "key": "map-stop-98af0be5-966b-5f49-b699-5dfdceea8ab6",
+      "centre": [
+       207,
+       1139
+      ],
+      "in_viewport": false,
+      "above_floor": false,
+      "hit_test": false
+     },
+     {
+      "key": "map-stop-74f10240-fc4d-500e-b6ac-e520bcab1036",
+      "centre": [
+       207,
+       1194
+      ],
+      "in_viewport": false,
+      "above_floor": false,
+      "hit_test": false
+     },
+     {
+      "key": "map-stop-2cbb2a5d-fe92-5400-b91b-7a6f69e41837",
+      "centre": [
+       207,
+       1249
+      ],
+      "in_viewport": false,
+      "above_floor": false,
+      "hit_test": false
+     },
+     {
+      "key": "✦CityNexus Copilot#1",
+      "centre": [
+       382,
+       788
+      ],
+      "in_viewport": true,
+      "above_floor": false,
+      "hit_test": true
+     },
+     {
+      "key": "nav-hub",
+      "centre": [
+       45,
+       865
+      ],
+      "in_viewport": true,
+      "above_floor": false,
+      "hit_test": true
+     },
+     {
+      "key": "nav-trips",
+      "centre": [
+       126,
+       865
+      ],
+      "in_viewport": true,
+      "above_floor": false,
+      "hit_test": true
+     },
+     {
+      "key": "nav-map",
+      "centre": [
+       207,
+       865
+      ],
+      "in_viewport": true,
+      "above_floor": false,
+      "hit_test": true
+     },
+     {
+      "key": "nav-agent",
+      "centre": [
+       288,
+       865
+      ],
+      "in_viewport": true,
+      "above_floor": false,
+      "hit_test": true
+     },
+     {
+      "key": "nav-me",
+      "centre": [
+       369,
+       865
+      ],
+      "in_viewport": true,
+      "above_floor": false,
+      "hit_test": true
+     }
+    ],
+    "pins": [
+     {
+      "painted": "1",
+      "aria": "Old Town Gate",
+      "title_attr": null,
+      "centre": [
+       160,
+       565
+      ],
+      "lands": true,
+      "covered_px2": 118
+     },
+     {
+      "painted": "2",
+      "aria": "Riverside Museum",
+      "title_attr": null,
+      "centre": [
+       207,
+       535
+      ],
+      "lands": true,
+      "covered_px2": 0
+     },
+     {
+      "painted": "3",
+      "aria": "Central Food Hall",
+      "title_attr": null,
+      "centre": [
+       230,
+       505
+      ],
+      "lands": true,
+      "covered_px2": 0
+     },
+     {
+      "painted": "4",
+      "aria": "Tech Art Center",
+      "title_attr": null,
+      "centre": [
+       277,
+       475
+      ],
+      "lands": true,
+      "covered_px2": 0
+     },
+     {
+      "painted": "5",
+      "aria": "Nexus River Cruise Pier",
+      "title_attr": null,
+      "centre": [
+       300,
+       445
+      ],
+      "lands": true,
+      "covered_px2": 0
+     },
+     {
+      "painted": "6",
+      "aria": "Skyline Dinner House",
+      "title_attr": null,
+      "centre": [
+       324,
+       415
+      ],
+      "lands": true,
+      "covered_px2": 0
+     }
+    ],
+    "band_box": [
+     30,
+     579,
+     354,
+     139
+    ],
+    "caption_box": [
+     18,
+     641,
+     378,
+     77
+    ],
+    "cell": null
+   },
+   "reachable_idle": 11,
+   "reachable_with_selection": 12,
+   "lost_reachable": [],
+   "controls_idle": 24,
+   "controls_with_selection": 24,
+   "band_height_idle_px": 139,
+   "band_height_with_selection_px": 139,
+   "band_growth_px": 0,
+   "cell_box_px": null,
+   "cell_client_rects": null,
+   "cell_line_count": null,
+   "caption_height_idle_px": 77,
+   "caption_height_with_selection_px": 77,
+   "cell_text": null,
+   "name_painted_on_glass": false,
+   "newly_covered_pins": [
+    {
+     "painted": "1",
+     "aria": "Old Town Gate",
+     "px2": 118
+    }
+   ],
+   "newly_unhittable_pins": [],
+   "pins_below_floor": []
+  }
+ ]
+}

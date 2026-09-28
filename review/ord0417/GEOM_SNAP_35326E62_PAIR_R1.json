@@ -1,0 +1,412 @@
+{
+ "generated_from": [
+  "D:/moodle/_qoder_b_ord0417_20260928/evidence/geom_snap_tip35326e62/SNAP_TIP_zh.census.json",
+  "D:/moodle/_qoder_b_ord0417_20260928/evidence/geom_snap_tip35326e62/SNAP_TIP_en.census.json",
+  "D:/moodle/_qoder_b_ord0417_20260928/evidence/geom_snap_tip35326e62/SNAP_CTRL_zh.census.json",
+  "D:/moodle/_qoder_b_ord0417_20260928/evidence/geom_snap_tip35326e62/SNAP_CTRL_en.census.json"
+ ],
+ "pair": [
+  {
+   "shape": "320x653",
+   "arm": "zh",
+   "tip_cell_present": true,
+   "ctrl_cell_present": false,
+   "tip_name_painted_on_glass": true,
+   "ctrl_name_painted_on_glass": false,
+   "tip_cell_text": "图上选中的这一站 · Riverside Museum",
+   "ctrl_cell_text": null,
+   "tip_cell_box_px": [
+    30,
+    651,
+    175,
+    14
+   ],
+   "tip_cell_client_rect_count": 1,
+   "tip_cell_client_rects": [
+    [
+     30,
+     651,
+     175,
+     14
+    ]
+   ],
+   "caption_height_idle_px_both": [
+    77,
+    77
+   ],
+   "band_height_idle_px_both": [
+    139,
+    139
+   ],
+   "tip_band_growth_px": 0,
+   "ctrl_band_growth_px": 0,
+   "tip_controls": [
+    24,
+    24
+   ],
+   "ctrl_controls": [
+    24,
+    24
+   ],
+   "tip_lost_reachable": [],
+   "ctrl_lost_reachable": [],
+   "tip_covered_px2": 118,
+   "ctrl_covered_px2": 118
+  },
+  {
+   "shape": "320x653",
+   "arm": "en",
+   "tip_cell_present": true,
+   "ctrl_cell_present": false,
+   "tip_name_painted_on_glass": true,
+   "ctrl_name_painted_on_glass": false,
+   "tip_cell_text": "Selected on the map · Riverside Museum",
+   "ctrl_cell_text": null,
+   "tip_cell_box_px": [
+    30,
+    637,
+    191,
+    14
+   ],
+   "tip_cell_client_rect_count": 1,
+   "tip_cell_client_rects": [
+    [
+     30,
+     637,
+     191,
+     14
+    ]
+   ],
+   "caption_height_idle_px_both": [
+    77,
+    77
+   ],
+   "band_height_idle_px_both": [
+    139,
+    139
+   ],
+   "tip_band_growth_px": 14,
+   "ctrl_band_growth_px": 0,
+   "tip_controls": [
+    24,
+    24
+   ],
+   "ctrl_controls": [
+    24,
+    24
+   ],
+   "tip_lost_reachable": [],
+   "ctrl_lost_reachable": [],
+   "tip_covered_px2": 594,
+   "ctrl_covered_px2": 118
+  },
+  {
+   "shape": "360x800",
+   "arm": "zh",
+   "tip_cell_present": true,
+   "ctrl_cell_present": false,
+   "tip_name_painted_on_glass": true,
+   "ctrl_name_painted_on_glass": false,
+   "tip_cell_text": "图上选中的这一站 · Riverside Museum",
+   "ctrl_cell_text": null,
+   "tip_cell_box_px": [
+    30,
+    630,
+    175,
+    14
+   ],
+   "tip_cell_client_rect_count": 1,
+   "tip_cell_client_rects": [
+    [
+     30,
+     630,
+     175,
+     14
+    ]
+   ],
+   "caption_height_idle_px_both": [
+    77,
+    77
+   ],
+   "band_height_idle_px_both": [
+    139,
+    139
+   ],
+   "tip_band_growth_px": 0,
+   "ctrl_band_growth_px": 0,
+   "tip_controls": [
+    24,
+    24
+   ],
+   "ctrl_controls": [
+    24,
+    24
+   ],
+   "tip_lost_reachable": [],
+   "ctrl_lost_reachable": [],
+   "tip_covered_px2": 118,
+   "ctrl_covered_px2": 118
+  },
+  {
+   "shape": "360x800",
+   "arm": "en",
+   "tip_cell_present": true,
+   "ctrl_cell_present": false,
+   "tip_name_painted_on_glass": true,
+   "ctrl_name_painted_on_glass": false,
+   "tip_cell_text": "Selected on the map · Riverside Museum",
+   "ctrl_cell_text": null,
+   "tip_cell_box_px": [
+    30,
+    651,
+    191,
+    14
+   ],
+   "tip_cell_client_rect_count": 1,
+   "tip_cell_client_rects": [
+    [
+     30,
+     651,
+     191,
+     14
+    ]
+   ],
+   "caption_height_idle_px_both": [
+    77,
+    77
+   ],
+   "band_height_idle_px_both": [
+    139,
+    139
+   ],
+   "tip_band_growth_px": 0,
+   "ctrl_band_growth_px": 0,
+   "tip_controls": [
+    24,
+    24
+   ],
+   "ctrl_controls": [
+    24,
+    24
+   ],
+   "tip_lost_reachable": [],
+   "ctrl_lost_reachable": [],
+   "tip_covered_px2": 118,
+   "ctrl_covered_px2": 118
+  },
+  {
+   "shape": "390x844",
+   "arm": "zh",
+   "tip_cell_present": true,
+   "ctrl_cell_present": false,
+   "tip_name_painted_on_glass": true,
+   "ctrl_name_painted_on_glass": false,
+   "tip_cell_text": "图上选中的这一站 · Riverside Museum",
+   "ctrl_cell_text": null,
+   "tip_cell_box_px": [
+    30,
+    630,
+    175,
+    14
+   ],
+   "tip_cell_client_rect_count": 1,
+   "tip_cell_client_rects": [
+    [
+     30,
+     630,
+     175,
+     14
+    ]
+   ],
+   "caption_height_idle_px_both": [
+    77,
+    77
+   ],
+   "band_height_idle_px_both": [
+    139,
+    139
+   ],
+   "tip_band_growth_px": 0,
+   "ctrl_band_growth_px": 0,
+   "tip_controls": [
+    24,
+    24
+   ],
+   "ctrl_controls": [
+    24,
+    24
+   ],
+   "tip_lost_reachable": [],
+   "ctrl_lost_reachable": [],
+   "tip_covered_px2": 118,
+   "ctrl_covered_px2": 118
+  },
+  {
+   "shape": "390x844",
+   "arm": "en",
+   "tip_cell_present": true,
+   "ctrl_cell_present": false,
+   "tip_name_painted_on_glass": true,
+   "ctrl_name_painted_on_glass": false,
+   "tip_cell_text": "Selected on the map · Riverside Museum",
+   "ctrl_cell_text": null,
+   "tip_cell_box_px": [
+    30,
+    651,
+    191,
+    14
+   ],
+   "tip_cell_client_rect_count": 1,
+   "tip_cell_client_rects": [
+    [
+     30,
+     651,
+     191,
+     14
+    ]
+   ],
+   "caption_height_idle_px_both": [
+    77,
+    77
+   ],
+   "band_height_idle_px_both": [
+    139,
+    139
+   ],
+   "tip_band_growth_px": 0,
+   "ctrl_band_growth_px": 0,
+   "tip_controls": [
+    24,
+    24
+   ],
+   "ctrl_controls": [
+    24,
+    24
+   ],
+   "tip_lost_reachable": [],
+   "ctrl_lost_reachable": [],
+   "tip_covered_px2": 118,
+   "ctrl_covered_px2": 118
+  },
+  {
+   "shape": "414x896",
+   "arm": "zh",
+   "tip_cell_present": true,
+   "ctrl_cell_present": false,
+   "tip_name_painted_on_glass": true,
+   "ctrl_name_painted_on_glass": false,
+   "tip_cell_text": "图上选中的这一站 · Riverside Museum",
+   "ctrl_cell_text": null,
+   "tip_cell_box_px": [
+    30,
+    630,
+    175,
+    14
+   ],
+   "tip_cell_client_rect_count": 1,
+   "tip_cell_client_rects": [
+    [
+     30,
+     630,
+     175,
+     14
+    ]
+   ],
+   "caption_height_idle_px_both": [
+    77,
+    77
+   ],
+   "band_height_idle_px_both": [
+    121,
+    121
+   ],
+   "tip_band_growth_px": 0,
+   "ctrl_band_growth_px": 0,
+   "tip_controls": [
+    24,
+    24
+   ],
+   "ctrl_controls": [
+    24,
+    24
+   ],
+   "tip_lost_reachable": [],
+   "ctrl_lost_reachable": [],
+   "tip_covered_px2": 0,
+   "ctrl_covered_px2": 0
+  },
+  {
+   "shape": "414x896",
+   "arm": "en",
+   "tip_cell_present": true,
+   "ctrl_cell_present": false,
+   "tip_name_painted_on_glass": true,
+   "ctrl_name_painted_on_glass": false,
+   "tip_cell_text": "Selected on the map · Riverside Museum",
+   "ctrl_cell_text": null,
+   "tip_cell_box_px": [
+    30,
+    651,
+    191,
+    14
+   ],
+   "tip_cell_client_rect_count": 1,
+   "tip_cell_client_rects": [
+    [
+     30,
+     651,
+     191,
+     14
+    ]
+   ],
+   "caption_height_idle_px_both": [
+    77,
+    77
+   ],
+   "band_height_idle_px_both": [
+    139,
+    139
+   ],
+   "tip_band_growth_px": 0,
+   "ctrl_band_growth_px": 0,
+   "tip_controls": [
+    24,
+    24
+   ],
+   "ctrl_controls": [
+    24,
+    24
+   ],
+   "tip_lost_reachable": [],
+   "ctrl_lost_reachable": [],
+   "tip_covered_px2": 118,
+   "ctrl_covered_px2": 118
+  }
+ ],
+ "derived": {
+  "shape_arm_runs": 8,
+  "tip_cell_present": "8/8",
+  "ctrl_cell_present": "0/8",
+  "tip_name_painted": "8/8",
+  "ctrl_name_painted": "0/8",
+  "idle_geometry_identical_between_generations": true,
+  "caption_idle_identical": true,
+  "arms_where_tip_grew_band": [
+   "en 320x653 14 px"
+  ],
+  "arms_where_control_grew_band": [],
+  "reachable_lost_any_generation": 0,
+  "control_added_no_control": true,
+  "max_tip_cell_client_rect_count": 1,
+  "coverage_delta_px2": {
+   "zh 320x653": 0,
+   "en 320x653": 476,
+   "zh 360x800": 0,
+   "en 360x800": 0,
+   "zh 390x844": 0,
+   "en 390x844": 0,
+   "zh 414x896": 0,
+   "en 414x896": 0
+  }
+ }
+}

@@ -1,0 +1,14 @@
+{
+ "ports": {
+  "ctrl_front": 4863,
+  "backend": 4861
+ },
+ "P1_pid_4863": [
+  "46484"
+ ],
+ "P2_cmd_names_dist_ctrl": true,
+ "P2_cmd_names_api_4861": true,
+ "P3_served_index_sha1": "7cedcf0098c88f71a73036fe8d04234d7c7a6530",
+ "P3_disk_index_sha1": "7cedcf0098c88f71a73036fe8d04234d7c7a6530",
+ "P3_bytes_equal": true
+}

@@ -1,0 +1,96 @@
+| label | arm | shape | name | band_px | grew_px | caption_px | cell_box_px | cell_rects | cell_lines | ctl | reach | lost | unhitt | below | covered_px2_total |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| SNAP_TIP | zh | 390x844 | True | 139->139 | 0 | 77->77 | [30, 630, 175, 14] | 1 | 1 | 24->24 | 12->13 | 0 | 0 | 0 | 118 |
+| SNAP_TIP | zh | 360x800 | True | 139->139 | 0 | 77->77 | [30, 630, 175, 14] | 1 | 1 | 24->24 | 12->13 | 0 | 0 | 0 | 118 |
+| SNAP_TIP | zh | 320x653 | True | 139->139 | 0 | 77->77 | [30, 651, 175, 14] | 1 | 1 | 24->24 | 17->18 | 0 | 0 | 0 | 118 |
+| SNAP_TIP | zh | 414x896 | True | 121->121 | 0 | 77->77 | [30, 630, 175, 14] | 1 | 1 | 24->24 | 11->12 | 0 | 0 | 0 | 0 |
+| SNAP_TIP | en | 390x844 | True | 139->139 | 0 | 77->77 | [30, 651, 191, 14] | 1 | 1 | 24->24 | 12->13 | 0 | 0 | 0 | 118 |
+| SNAP_TIP | en | 360x800 | True | 139->139 | 0 | 77->77 | [30, 651, 191, 14] | 1 | 1 | 24->24 | 12->13 | 0 | 0 | 0 | 118 |
+| SNAP_TIP | en | 320x653 | True | 139->153 | 14 | 77->91 | [30, 637, 191, 14] | 1 | 1 | 24->24 | 17->18 | 0 | 0 | 0 | 594 |
+| SNAP_TIP | en | 414x896 | True | 139->139 | 0 | 77->77 | [30, 651, 191, 14] | 1 | 1 | 24->24 | 11->12 | 0 | 0 | 0 | 118 |
+| SNAP_CTRL | zh | 390x844 | False | 139->139 | 0 | 77->77 | None | 0 | None | 24->24 | 12->13 | 0 | 0 | 0 | 118 |
+| SNAP_CTRL | zh | 360x800 | False | 139->139 | 0 | 77->77 | None | 0 | None | 24->24 | 12->13 | 0 | 0 | 0 | 118 |
+| SNAP_CTRL | zh | 320x653 | False | 139->139 | 0 | 77->77 | None | 0 | None | 24->24 | 17->18 | 0 | 0 | 0 | 118 |
+| SNAP_CTRL | zh | 414x896 | False | 121->121 | 0 | 77->77 | None | 0 | None | 24->24 | 11->12 | 0 | 0 | 0 | 0 |
+| SNAP_CTRL | en | 390x844 | False | 139->139 | 0 | 77->77 | None | 0 | None | 24->24 | 12->13 | 0 | 0 | 0 | 118 |
+| SNAP_CTRL | en | 360x800 | False | 139->139 | 0 | 77->77 | None | 0 | None | 24->24 | 12->13 | 0 | 0 | 0 | 118 |
+| SNAP_CTRL | en | 320x653 | False | 139->139 | 0 | 77->77 | None | 0 | None | 24->24 | 17->18 | 0 | 0 | 0 | 118 |
+| SNAP_CTRL | en | 414x896 | False | 139->139 | 0 | 77->77 | None | 0 | None | 24->24 | 11->12 | 0 | 0 | 0 | 118 |
+{
+ "rows_read": 16,
+ "fatal_rows": [],
+ "tip_name_painted": "8/8",
+ "ctrl_name_painted": "0/8",
+ "tip_grew_over_gap": [],
+ "tip_grew_within_gap": [
+  "en 320x653 14 px"
+ ],
+ "tip_grew_zero": 7,
+ "ctrl_grew_zero": 8,
+ "tip_lost_any": 0,
+ "ctrl_lost_any": 0,
+ "tip_unhittable_any": 0,
+ "tip_below_floor_any": 0,
+ "tip_cell_lines_max": 1,
+ "tip_cell_rects_gt_1": [],
+ "caption_grew_only_where_cell_present": true,
+ "coverage_delta_px2": {
+  "zh 390x844": 0,
+  "zh 360x800": 0,
+  "zh 320x653": 0,
+  "zh 414x896": 0,
+  "en 390x844": 0,
+  "en 360x800": 0,
+  "en 320x653": 476,
+  "en 414x896": 0
+ },
+ "per_row_covered_pins_tip": {
+  "zh 390x844": [
+   "1:118 px2"
+  ],
+  "zh 360x800": [
+   "1:118 px2"
+  ],
+  "zh 320x653": [
+   "1:118 px2"
+  ],
+  "zh 414x896": [],
+  "en 390x844": [
+   "1:118 px2"
+  ],
+  "en 360x800": [
+   "1:118 px2"
+  ],
+  "en 320x653": [
+   "1:594 px2"
+  ],
+  "en 414x896": [
+   "1:118 px2"
+  ]
+ },
+ "per_row_covered_pins_control": {
+  "zh 390x844": [
+   "1:118 px2"
+  ],
+  "zh 360x800": [
+   "1:118 px2"
+  ],
+  "zh 320x653": [
+   "1:118 px2"
+  ],
+  "zh 414x896": [],
+  "en 390x844": [
+   "1:118 px2"
+  ],
+  "en 360x800": [
+   "1:118 px2"
+  ],
+  "en 320x653": [
+   "1:118 px2"
+  ],
+  "en 414x896": [
+   "1:118 px2"
+  ]
+ },
+ "control_band_and_caption_identical_to_tip_idle": true
+}

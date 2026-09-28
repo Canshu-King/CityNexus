@@ -1,0 +1,33 @@
+{
+ "P1_listener_pids": {
+  "backend": "23724",
+  "front": "20400"
+ },
+ "P2_cmdlines": {
+  "backend_port_named": true,
+  "backend_reexec_parent_seen": false,
+  "front_dist_named": true,
+  "front_api_named": true
+ },
+ "when": "before",
+ "P4_write_isolation": {
+  "my_copy_rows": {
+   "journeys": 1,
+   "activities": 6,
+   "places": 16
+  },
+  "preview_db_mtime_epoch_s": 1790585657,
+  "preview_db_size_B": 7213056
+ },
+ "P3_content": {
+  "my_sqlite_journeys": 1,
+  "backend_http": 200,
+  "backend_journeys": 1,
+  "ids_equal": true,
+  "front_http": 200,
+  "served_index_sha1": "5cf8e510a46e5adc8c01a0dca48373878405cf22",
+  "disk_index_sha1": "5cf8e510a46e5adc8c01a0dca48373878405cf22",
+  "bytes_equal": true,
+  "bundle_entry_in_served_index": true
+ }
+}
