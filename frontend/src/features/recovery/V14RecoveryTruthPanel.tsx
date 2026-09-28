@@ -50,8 +50,8 @@ type Props = {
   onAccepted?: () => void;
 };
 
-function moneyDelta(value: number | undefined, currency = "CNY"): string {
-  if (value == null || value === 0) return "No cost change";
+function moneyDelta(value: number | undefined, noChange: string, currency = "CNY"): string {
+  if (value == null || value === 0) return noChange;
   return `${value > 0 ? "+" : "−"}${formatMinorMoney(Math.abs(value), currency, "en-US")}`;
 }
 
@@ -89,7 +89,7 @@ export function V14RecoveryTruthPanel({ journeyId, policy, currency = "CNY", onA
       });
       if (!response.ok) throw await rejectionWithFacts(response);
       await response.json();
-      setMessage("Recovery accepted · the child PlanVersion is now authoritative.");
+      setMessage(t("v14.acceptedMessage"));
       await refresh();
       onAccepted?.();
     } catch (error) {
@@ -115,63 +115,71 @@ export function V14RecoveryTruthPanel({ journeyId, policy, currency = "CNY", onA
   const verified = proposal?.diff.verified_evidence;
   const incident = verified?.incident_recovery_evidence;
   const snapshot = incident?.mobility_snapshot ?? verified?.mobility?.snapshot;
+  const modeLabel = (mode: string) => {
+    const key = `v14.mode.${mode}`;
+    const value = t(key);
+    return value === key ? t("v14.modeUnknown", { code: mode }) : value;
+  };
   const authorization = policy
-    ? `${policy.mode} · ${policy.auto_accept_replan ? "envelope auto-accept enabled" : "confirmation required"}`
-    : "policy unavailable · confirmation required";
+    ? `${modeLabel(policy.mode)} · ${policy.auto_accept_replan ? t("v14.autoAcceptOn") : t("v14.confirmationRequired")}`
+    : t("v14.policyUnavailable");
   return (
     <section className="v12-authoritative-panel" data-testid="v14-recovery-truth">
       <header className="v12-panel-header">
         <div>
-          <span className="v8-kicker">V14 · REALITY CHANGED</span>
-          <h2>Grounded adaptive recovery</h2>
+          <span className="v8-kicker">{t("v14.kicker")}</span>
+          <h2>{t("v14.title")}</h2>
         </div>
         <button className="v8-outline-button" type="button" onClick={() => void refresh()}>
-          Refresh recovery
+          {t("v14.refresh")}
         </button>
       </header>
-      {!proposal && <p className="v8-muted">No recovery proposal is waiting on this Journey.</p>}
+      {!proposal && <p className="v8-muted">{t("v14.noProposal")}</p>}
       {proposal && (
         <>
           <div className="v12-now-next">
             <article className="v12-state-card now">
-              <span className="v12-state-kicker">CHANGED</span>
+              <span className="v12-state-kicker">{t("v14.kickerChanged")}</span>
               <strong data-testid="v14-recovery-changed">
                 {proposal.diff.removed?.[0] ?? t("recovery.changedFromActivity")}
               </strong>
               <small>→ {proposal.diff.added?.[0] ?? t("recovery.changedToActivity")}</small>
             </article>
             <article className="v12-state-card next">
-              <span className="v12-state-kicker">PROTECTED</span>
+              <span className="v12-state-kicker">{t("v14.kickerProtected")}</span>
               <strong data-testid="v14-recovery-protected">
-                {proposal.locked_commitments_preserved ? "C4 commitments preserved" : "Review commitment impact"}
+                {proposal.locked_commitments_preserved ? t("v14.c4Preserved") : t("v14.reviewCommitmentImpact")}
               </strong>
-              <small>{moneyDelta(proposal.diff.cost_delta_minor, currency)} · {proposal.diff.travel_delta_min ?? 0} min route delta</small>
+              <small>{moneyDelta(proposal.diff.cost_delta_minor, t("v14.noCostChange"), currency)} · {t("v14.routeDelta", { n: proposal.diff.travel_delta_min ?? 0 })}</small>
             </article>
           </div>
           <div className="v8-cost-lines">
             <div>
-              <span>Baseline evidence</span>
+              <span>{t("v14.baselineEvidence")}</span>
               <b>{verified?.baseline_plan_evidence?.snapshot_id ?? "—"}</b>
             </div>
             <div>
-              <span>Incident evidence</span>
+              <span>{t("v14.incidentEvidence")}</span>
               <b data-testid="v14-recovery-provider">
                 {incident?.source_provider ?? snapshot?.source_provider ?? "—"} · {incident?.route_provenance ?? "—"}
               </b>
             </div>
             <div>
-              <span>Deterministic gate</span>
-              <b>{snapshot?.degraded ? "DEGRADED · confirmation" : "PASSED · provider facts frozen"}</b>
+              <span>{t("v14.deterministicGate")}</span>
+              <b>{snapshot?.degraded ? t("v14.gateDegraded") : t("v14.gatePassed")}</b>
             </div>
             <div>
-              <span>Delegation policy</span>
+              <span>{t("v14.delegationPolicy")}</span>
               <b data-testid="v14-recovery-authorization">{authorization}</b>
             </div>
           </div>
           <p className="v8-muted">
             {verified?.impact_resolution?.semantic_explanation ??
               verified?.impact_resolution?.semantic_reason ??
-              `Impact interpreted by ${proposal.explanation?.impact_provider ?? "CityNexus"} · ${proposal.explanation?.impact_model ?? "deterministic gate"}.`}
+              t("v14.impactFallback", {
+                provider: proposal.explanation?.impact_provider ?? "CityNexus",
+                model: proposal.explanation?.impact_model ?? t("v14.impactModelDeterministic"),
+              })}
           </p>
           {message && (
             <>
@@ -201,12 +209,12 @@ export function V14RecoveryTruthPanel({ journeyId, policy, currency = "CNY", onA
               disabled={busy}
               onClick={() => void accept()}
             >
-              {busy ? "Applying…" : "Accept grounded recovery"}
+              {busy ? t("v14.applying") : t("v14.accept")}
             </button>
           )}
           {proposal.status === "ACCEPTED" && (
             <span className="v8-status-pill" data-testid="v14-recovery-accepted">
-              Accepted child PlanVersion · {proposal.proposed_plan_version_id}
+              {t("v14.acceptedChild", { id: proposal.proposed_plan_version_id })}
             </span>
           )}
         </>
