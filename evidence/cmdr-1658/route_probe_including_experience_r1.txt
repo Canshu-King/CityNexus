@@ -1,0 +1,54 @@
+{
+ "base": "http://127.0.0.1:8693",
+ "rows": [
+  {
+   "route": "/api/v1/demo/scene",
+   "status": 200,
+   "body_bytes": 583,
+   "hits": {
+    "latitude": 0,
+    "longitude": 0,
+    "coordinate_system": 0,
+    "geometry": 0
+   },
+   "activities": "absent"
+  },
+  {
+   "route": "/api/v1/journeys/22222222-2222-4222-8222-222222222222",
+   "status": 200,
+   "body_bytes": 475,
+   "hits": {
+    "latitude": 0,
+    "longitude": 0,
+    "coordinate_system": 0,
+    "geometry": 0
+   },
+   "activities": "absent"
+  },
+  {
+   "route": "/api/v1/journeys/22222222-2222-4222-8222-222222222222/twin",
+   "status": 200,
+   "body_bytes": 2658,
+   "hits": {
+    "latitude": 0,
+    "longitude": 0,
+    "coordinate_system": 0,
+    "geometry": 0
+   },
+   "activities": "absent"
+  },
+  {
+   "route": "/api/v1/journeys/22222222-2222-4222-8222-222222222222/experience",
+   "status": 200,
+   "body_bytes": 4955,
+   "hits": {
+    "latitude": 2,
+    "longitude": 2,
+    "coordinate_system": 0,
+    "geometry": 0
+   },
+   "activities": "absent"
+  }
+ ],
+ "verdict": "COORDINATES_SHIPPED"
+}
