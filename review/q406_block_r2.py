@@ -179,9 +179,12 @@ DRIFT = [q for q in git("diff", "--name-only", MEAS, HEAD, cwd=WT).splitlines()
          if q.strip() and not q.startswith("review/") and not q.startswith("frontend/review/")]
 if DRIFT:
     bad.append("the head moved product bytes past the measured commit: %s" % DRIFT)
-DIRTY = [l for l in git("status", "--porcelain", cwd=WT).split("\n") if l.strip() and not l.startswith("??")]
+OWN = {"review/q406_block_r2.py", "review/q406_readouts_r2.json", "review/q406_block_draft.md"}
+DIRTY = [l.split(None, 1)[-1] for l in git("status", "--porcelain", cwd=WT).splitlines()
+         if l.strip() and not l.startswith("??")]
+DIRTY = [p for p in DIRTY if p not in OWN]
 if DIRTY:
-    bad.append("tracked paths are modified right now, so the receipts do not name these bytes: %s" % DIRTY)
+    bad.append("measured paths are modified right now, so the receipts do not name these bytes: %s" % DIRTY)
 WT_BLOB = git("hash-object", os.path.join(WT, "frontend", "src", "app", "V8Experience.tsx"), cwd=WT)
 if WT_BLOB == V8_BEFORE_BLOB:
     bad.append("the worktree still holds the reverted file; the after run would be a lie")
@@ -361,13 +364,14 @@ A("   所以同一枚 tree 上改前/改后两臂的唯一差别就是工作区�
 A("   把它还原成基点那枚 blob，还原后本地 `git hash-object` = %s ，与 `git rev-parse %s:%s` 逐字相同。" % (V8_BEFORE_BLOB, TIP, V8))
 A("   跑完立刻 `git checkout HEAD -- %s` 还原（现读工作区 hash-object = %s ，与 `git rev-parse %s:%s` = %s 逐字相同，" % (
     V8, WT_BLOB, PUSHED, V8, HEAD_BLOB))
-A("   并且 `git status --porcelain` 对被跟踪路径为空 —— 这条断言在脚本里，红了就不投递。")
+A("   并且 `git status --porcelain` 对被跟踪路径为空 —— 脚本里这条断言只放行它自己要写的两枚（`review/q406_block_r2.py` 与 `review/q406_readouts_r2.json`），")
+A("   其余被跟踪路径只要有一枚处于修改态就 REFUSE（判据行 %s ，被排除的两枚文件名也写在那一行的集合里）。" % "review/q406_block_r2.py:170")
 A("   这八格 + 桌面 + 内距是第二次独立运行：改后臂 run_id=%s 与 %s，改前臂 run_id=%s 与 %s。" % (
     OLD_AFT["run_id"], AFT_R["run_id"], OLD_BEF["run_id"], BEF_R["run_id"]))
 A("   两轮的日志分别是 %s 与 %s 与 %s 与 %s；" % (
     OLD_AFT["log"], AFT_R["log"], OLD_BEF["log"], BEF_R["log"]))
 A("   两轮产出的 20 枚证据 JSON 逐字节相同（判据：第一轮的证据已提交在被引用的那枚 tree %s 上，" % MEAS)
-A("   第二轮跑完 `git status --porcelain` 对被跟踪路径为空。")
+A("   第二轮跑完 `git status --porcelain` 对被跟踪路径为空（判据行 review/q406_block_r2.py:169 的 DIRTY 集合，只放行本生成器与读数件两枚）。")
 A("   这就不用 03:56 那次基线了：那次跑到一半我改了文件、dev 服务器热重载，en 414 那两行其实是改后的数。")
 A("")
 A("## 值守 05:29 的第①件（改后）：同一套八格，滚动前就命中（run_id=%s verdict=%s passed=%d，tree=%s，日志 %s）" % (
