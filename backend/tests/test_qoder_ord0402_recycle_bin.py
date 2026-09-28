@@ -8,7 +8,9 @@ A screen would have had to conclude "that trip was deleted" from it being missin
 What the four hard constraints became in code, and which arm proves each:
 
 1. `GET /api/v1/journeys` is untouched.  One arm compares that function's bytes against the same
-   function in the tip's blob, so "not one word changed" is a diff, not a promise;
+   function as recorded at the baseline tip in `review/ord0402-readouts/LIST_DOOR_BASELINE_r2.json`,
+   so "not one word changed" is a diff, not a promise.  The record is a committed file rather than
+   a `git show` because the suite is also run on `git archive` exports, which have no `.git`;
 2. every bin row carries `deleted_at` as stored and `bin_state` = IN_RECYCLE_BIN, both read from
    the column rather than inferred - the arms check the value equals what the DELETE wrote and
    that the state word has exactly one possible value;
@@ -24,9 +26,10 @@ reading that makes "it is in the bin" and "it is in the list" one fact instead o
 
 from __future__ import annotations
 
+import hashlib
+import json
 import re
 import sqlite3
-import subprocess
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from uuid import uuid4
@@ -43,6 +46,7 @@ ROOT = Path(__file__).resolve().parents[2]
 CONTRACT = ROOT / "contracts" / "openapi.yaml"
 GENERATED = ROOT / "frontend/src/generated/api.ts"
 BASELINE_TIP = "8f4ddfa9feffe4233b48cbf608caf8e1bbb76291"
+BASELINE_ARTIFACT = ROOT / "review/ord0402-readouts/LIST_DOOR_BASELINE_r2.json"
 TZ = timezone(timedelta(hours=8))
 START = datetime(2026, 11, 3, 9, 0, tzinfo=TZ)
 
@@ -126,23 +130,30 @@ def _journey_function(text: str) -> str:
 
 
 def test_the_existing_list_door_was_not_touched_down_to_its_bytes() -> None:
-    """The order said not one word; this compares the function text against the tip's blob."""
+    """The order said not one word, so this is a byte diff against the recorded baseline.
 
-    def git_blob(rev: str) -> str:
-        out = subprocess.run(
-            ["git", "-c", "http.proxy=", "-c", "https.proxy=", "show", f"{rev}:backend/app/main.py"],
-            capture_output=True,
-            text=True,
-            encoding="utf-8",
-            check=False,
-            cwd=str(ROOT),
-        )
-        assert out.returncode == 0, out.stderr[:200]
-        return out.stdout
+    The baseline is a committed artifact, not a `git show` (ORD-0402 tail): the suite is also run
+    on whole-tree `git archive` exports, and a git call there dies with rc 128 - `fatal: not a git
+    repository` - which reports the environment and says nothing about the door.  The artifact
+    pins the tip and the `main.py` blob it was cut from, so it cannot be quietly re-pointed at a
+    later tree, and its own bytes are checked against the hash recorded inside it.
+    """
 
-    tip = _journey_function(git_blob(BASELINE_TIP))
+    assert BASELINE_ARTIFACT.is_file(), (
+        f"baseline record missing from this tree: {BASELINE_ARTIFACT} - it ships with the arm, so "
+        "a partial export that drops review/ cannot judge this door"
+    )
+    baseline = json.loads(BASELINE_ARTIFACT.read_text(encoding="utf-8"))
+    assert baseline["baseline_tip"] == BASELINE_TIP, baseline["baseline_tip"]
+    recorded = baseline["segment_lf"]
+    assert hashlib.sha256(recorded.encode("utf-8")).hexdigest() == baseline["segment_sha256"], (
+        "the baseline record no longer matches the hash inside it: regenerate it, do not hand-patch it"
+    )
+
+    # Newline convention is the store's business; the words are the order's.
     mine = _journey_function((ROOT / "backend/app/main.py").read_text(encoding="utf-8"))
-    assert tip == mine, "list_journeys moved - the order forbids changing this door"
+    mine = mine.replace("\r\n", "\n")
+    assert recorded == mine, "list_journeys moved - the order forbids changing this door"
     # And it still answers only the not-deleted rows, with the binned trip absent.
     journey_id = _journey()
     assert client.delete(f"/api/v1/journeys/{journey_id}").status_code == 204
