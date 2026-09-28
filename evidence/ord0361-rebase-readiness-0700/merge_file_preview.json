@@ -1,0 +1,24 @@
+{
+ "V8Experience.tsx": {
+  "merge_file_rc": 1,
+  "conflict_blocks": 1,
+  "conflict_lines_in_the_tip_file": [
+   3406
+  ],
+  "lane_lines_involved": 1
+ },
+ "MapPanel.tsx": {
+  "merge_file_rc": 7,
+  "conflict_blocks": 7,
+  "conflict_lines_in_the_tip_file": [
+   4,
+   58,
+   71,
+   184,
+   415,
+   578,
+   709
+  ],
+  "lane_lines_involved": 7
+ }
+}
