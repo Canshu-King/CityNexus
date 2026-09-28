@@ -258,7 +258,10 @@ def main() -> None:
         # reader has to sit next to the tree that has `node_modules`; running it out of the repo's
         # `live_checks/` gave `Cannot find package 'playwright'` with nothing else wrong.
         reader_copy = WORK / "frontend" / READER.name
-        shutil.copyfile(READER, reader_copy)
+        # The reader imports one sibling module (the contract-domain parser), and a missing import
+        # would kill the reading with a node error rather than a product red -- so both files travel.
+        for helper in sorted((REPO / "live_checks").glob("ord0436_*.mjs")):
+            shutil.copyfile(helper, WORK / "frontend" / helper.name)
         reading = subprocess.run(
             ["node", str(reader_copy)],
             cwd=str(WORK / "frontend"),
@@ -266,6 +269,9 @@ def main() -> None:
                 CNX_BASE=f"http://127.0.0.1:{FRONTEND_PORT}",
                 CNX_JOURNEY=seeded["journey_id"],
                 CNX_OUT=str(OUT),
+                # The seam arm reads the contract from the lane tree: the bundle this reading runs
+                # against lives in a separate export directory that holds no `contracts/`.
+                CNX_REPO=str(REPO),
             ),
             capture_output=True, text=True, encoding="utf-8", errors="replace", check=False, timeout=420,
         )

@@ -45,14 +45,12 @@ export const accessCopy = {
     "access.roleDetailsBody":
       "A role is what this server lets that person do on this trip, not what a screen shows them. Removing the last owner is refused by the server rather than left for a traveller to discover.",
     "access.visibilityHeading": "Each visibility level, with its consequence said in the same breath",
-    "access.visPrivateOnly": "Only me",
-    "access.visPrivateOnlyConsequence": "No one else can open it, not even holding the link.",
+    "access.visPrivate": "Only me",
+    "access.visPrivateConsequence": "No one else can open it, not even holding the link.",
     "access.visLinkRead": "Anyone with the link",
     "access.visLinkReadConsequence": "Anyone holding the link can read it without being a member first.",
-    "access.visMemberOnly": "Members only",
-    "access.visMemberOnlyConsequence": "Members read and edit it; outside the member list the link does not open.",
-    "access.visInvitees": "Invited people only",
-    "access.visInviteesConsequence": "Only invitations still in date can open it; an expired one cannot.",
+    "access.visInviteesOnly": "Invited people only",
+    "access.visInviteesOnlyConsequence": "Only invitations still in date can open it; an expired one cannot.",
     "access.visPublic": "Public",
     "access.visPublicConsequence": "Visible to everyone on this network.",
     "access.confirmHeading": "What the screen will ask before it changes a permission",
@@ -72,9 +70,10 @@ export const accessCopy = {
       "After this, the people who followed it lose access -- they will not be able to open it any more.",
     "access.switchUnanswered": "This move has no gain-or-loss sentence on this tree, so none is shown.",
     "access.inviteHeading": "Invitations",
-    "access.inviteTtl": "An invitation stays open for {ttl}, then it stops working.",
+    "access.inviteExpires": "An invitation carries an expiry: {expires}. After that moment it does not open.",
     "access.inviteTtlMissing": "This server gave no expiry for an invitation, so none is claimed here.",
-    "access.inviteQuota": "Members so far: {used} of {cap}",
+    "access.inviteQuotaNoCap":
+      "This server gave a member count ({used}) and no limit, so nothing here says whether the trip is full.",
     "access.inviteQuotaMissing":
       "This server gave no member count or limit for this trip, so nothing is counted here.",
     "access.inviteLimitReached": "This trip has reached its member limit, so a new invitation cannot be sent.",
@@ -94,7 +93,9 @@ export const accessCopy = {
     "access.actionUnknown": "This server reported an action this screen has no sentence for: {token}.",
     "access.doorLoading": "Asking this server who else can reach this trip…",
     "access.doorAbsent":
-      "This server did not answer {path}, so nothing on this screen can be changed today. The ladders say what each level will mean once that door answers -- they are not a claim about this trip.",
+      "This server answered none of {paths}, so nothing on this screen can be changed today. The ladders say what each level will mean once those doors answer -- they are not a claim about this trip.",
+    "access.doorPartial":
+      "This server answered some but not all of the sharing doors; the ones still silent are {paths}. Read the ladders as what each level will mean, not as this trip's state.",
     "access.doorPresent": "This server answered who can reach this trip; the rows below are its answer.",
   },
   "zh-CN": {
@@ -116,14 +117,12 @@ export const accessCopy = {
     "access.roleDetailsBody":
       "角色说的是服务器允许这个人在这条行程上做什么，不是屏上显示成什么样。最后一个所有者不能被移除，这条由服务器拒绝，而不是让旅行者自己撞上才知道。",
     "access.visibilityHeading": "可见性每一档，后果就在同一句里",
-    "access.visPrivateOnly": "仅个人",
-    "access.visPrivateOnlyConsequence": "别人打不开，拿到链接也打不开。",
+    "access.visPrivate": "仅个人",
+    "access.visPrivateConsequence": "别人打不开，拿到链接也打不开。",
     "access.visLinkRead": "获得链接者可见",
     "access.visLinkReadConsequence": "有链接的人不用先进成员名单就能读。",
-    "access.visMemberOnly": "仅成员可见",
-    "access.visMemberOnlyConsequence": "成员能读能改，名单外的人拿链接也打不开。",
-    "access.visInvitees": "受邀者可见",
-    "access.visInviteesConsequence": "只有邀请还在有效期内的人打得开，过期就打不开了。",
+    "access.visInviteesOnly": "受邀者可见",
+    "access.visInviteesOnlyConsequence": "只有邀请还在有效期内的人打得开，过期就打不开了。",
     "access.visPublic": "公开",
     "access.visPublicConsequence": "全网公开可见。",
     "access.confirmHeading": "改权限之前，屏会先这样问",
@@ -140,9 +139,10 @@ export const accessCopy = {
     "access.switchPublicToPrivate": "转换后，已经在跟踪这条行程的人会失去访问权限。",
     "access.switchUnanswered": "这一步在这棵树上没有谁得失的句子，所以这里也不写一句。",
     "access.inviteHeading": "邀请",
-    "access.inviteTtl": "邀请有效期 {ttl}，过期就失效。",
+    "access.inviteExpires": "邀请带着一个到期时刻：{expires}。过了那个时间就打不开了。",
     "access.inviteTtlMissing": "这台服务器没有给出邀请的有效期，所以这里不声称有一个。",
-    "access.inviteQuota": "已有成员 {used}/{cap}",
+    "access.inviteQuotaNoCap":
+      "这台服务器给了成员数（{used}），没给上限，所以这里不说这条行程满没满。",
     "access.inviteQuotaMissing": "这台服务器没有给出这条行程的成员数与上限，所以这里不计数。",
     "access.inviteLimitReached": "这条行程的成员已到上限，发不出新邀请。",
     "access.activityHeading": "这条行程上发生过什么",
@@ -161,7 +161,9 @@ export const accessCopy = {
     "access.actionUnknown": "这台服务器报了一个本屏说不出人话的动作：{token}。",
     "access.doorLoading": "正在问这台服务器还有谁能到达这条行程…",
     "access.doorAbsent":
-      "这台服务器没有答 {path}，所以这一屏今天没有任何一项能真改。下面写的是那扇门答话之后每一档意味着什么，不是对这条行程下的结论。",
+      "这台服务器 {paths} 一扇都没答，所以这一屏今天没有任何一项能真改。下面写的是那几扇门答话之后每一档意味着什么，不是对这条行程下的结论。",
+    "access.doorPartial":
+      "这台服务器只答了共享那几扇门里的一部分，还没答的是 {paths}。下面写的是每档将要意味着什么，不是这条行程现在的状态。",
     "access.doorPresent": "这台服务器答了谁能到达这条行程；下面几行就是它的答案。",
   },
 } as const;
