@@ -172,10 +172,10 @@ BUILT = subprocess.run([NODE, TSC, "-p", "tsconfig.check.json", "--noEmit"],
                        cwd=os.path.join(WT, "frontend"), capture_output=True).returncode
 
 LIVE_TIP = head_of(TIP_REF)
-if not git_ok("merge-base", "--is-ancestor", LIVE_TIP, HEAD_RUN) and not git_ok(
-        "merge-base", "--is-ancestor", HEAD_RUN, LIVE_TIP):
-    bad.append("my head and the live tip are unrelated histories")
 BASE_TIP = git("merge-base", LIVE_TIP, HEAD_RUN)
+if not re.fullmatch(r"[0-9a-f]{40}", BASE_TIP or ""):
+    bad.append("my head and the live tip share no merge base")
+N_TIP_AHEAD = int(git("rev-list", "--count", "%s..%s" % (BASE_TIP, LIVE_TIP)) or 0)
 MY_DIFF = [l for l in git("diff", "--name-only", BASE_TIP, HEAD_RUN).split("\n") if l.strip()]
 PRODUCT_TOUCHED = [l for l in MY_DIFF if l.startswith("frontend/src/") or l.startswith("backend/")]
 CSS_TOUCHED = [l for l in MY_DIFF if l.endswith(".css")]
@@ -204,8 +204,6 @@ json.dump({"head_readings_ran_on": HEAD_RUN, "live_tip": LIVE_TIP, "merge_base":
            "asset": ASSET, "asset_bytes": ASSET_BYTES, "asset_sha1_local_recomputed": ASSET_SHA1,
            "diff_from_merge_base": MY_DIFF},
           open(os.path.join(WT, ART_REL), "w", encoding="utf-8", newline="\n"), ensure_ascii=False, indent=1)
-if git_ok("rev-parse", "--verify", BRANCH, cwd=WT) and git("rev-parse", BRANCH, cwd=WT) != HEAD_RUN:
-    bad.append("the branch moved under me")
 git("checkout", "-q", BRANCH, cwd=WT)
 git("add", "-f", ART_REL, "review/q406_block_r1.py", cwd=WT)
 rc, cout = run(["git", "-C", WT, "commit", "-q", "-m",
@@ -217,6 +215,8 @@ git("-c", "http.proxy=", "-c", "https.proxy=", "push", "-q", "origin", "refs/hea
 PUSHED = head_of("refs/heads/" + BRANCH)
 if not PUSHED or git("cat-file", "-t", PUSHED) != "commit":
     bad.append("the pushed head does not resolve: %r" % PUSHED)
+elif PUSHED != HEAD_RUN and git("rev-parse", "%s^" % PUSHED) != HEAD_RUN:
+    bad.append("the pushed head %s neither is nor sits on the measured head %s" % (PUSHED[:8], HEAD_RUN[:8]))
 NEW_FILES = [l for l in git("diff", "--name-only", HEAD_RUN, PUSHED).split("\n") if l.strip()]
 if [f for f in NEW_FILES if not f.startswith("review/")]:
     bad.append("the follow-up commit touched non-review paths: %s" % NEW_FILES)
@@ -251,6 +251,8 @@ A("枝 `refs/heads/%s`，push 后 ls-remote 现读头 = %s（不是本地 rev-pa
     BRANCH, PUSHED, HEAD_RUN))
 A("两枚之间只多 review/ 读数件：added_path_count=%d，逐枚 %s；被我量的两枚文件在两头上 blob 逐字相同（%s、%s）。" % (
     len(NEW_FILES), "、".join(NEW_FILES) if NEW_FILES else "无", V8, SPEC))
+A("   现尖比我这枝的基点 %s 又多了 %d 笔（`git rev-list --count` 现读），所以我是挂在旧尖上的候选，不是最新尖本身。" % (
+    BASE_TIP[:12], N_TIP_AHEAD))
 A("现尖我现读 = %s；我的改动相对共同祖先 %s 动了 touched_path_count=%d 枚，其中产品码 %d 枚、css 枚数=%d、" % (
     LIVE_TIP, BASE_TIP, len(MY_DIFF), len(PRODUCT_TOUCHED), len(CSS_TOUCHED)))
 A("字典 i18n 枚数=%d —— 号令者要我别动 styles.css 与别的实例占的文件，我没动（css 为 0、i18n 为 0，所以 NO_GROWTH 天然成立）。" % (
