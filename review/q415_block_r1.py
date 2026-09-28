@@ -205,10 +205,10 @@ A("## 交付坐标")
 A("   新枝 `refs/heads/%s`，push 后 `git -c http.proxy= -c https.proxy= -C D:/moodle/CityNexus ls-remote origin refs/heads/%s`" % (BRANCH, BRANCH))
 A("   现读头 = %s （`git cat-file -t` = commit），它的父逐字等于我量的现尖 %s （`git rev-parse %s^` 现读）。" % (PUSHED, TIP, PUSHED))
 A("   写这块之前我又读了一次现尖 = %s ，与基点逐字相同 ⇒ 这块是挂在最新一代上的候选枝，权威线我没动。" % TIP)
-A("   枝上在基点之上 commit_count=%d 笔（第一笔落仪表与读数件，第二笔把我这具生成器也收进来：")
-A("   `review/q415_block_r1.py` blob %s ，`git rev-list --count %s..%s` 现读）。" % (
-    int(git("rev-list", "--count", "%s..%s" % (TIP, PUSHED)) or 0),
-    blob_at(PUSHED, "review/q415_block_r1.py"), TIP[:12], PUSHED[:12]))
+A("   枝上在基点之上 commit_count=%d 笔：第一笔落仪表与读数件，第二笔把我这具生成器也收进来。" % int(
+    git("rev-list", "--count", "%s..%s" % (TIP, PUSHED)) or 0))
+A("   生成器在枝上的坐标：`review/q415_block_r1.py` blob %s ，计数命令 `git rev-list --count %s..%s` 现读。" % (
+    blob_at(PUSHED, "review/q415_block_r1.py"), TIP, PUSHED))
 A("   相对现尖动了 touched_file_count=%d 枚，全在本单的仪表与读数件里：逐枚 %s 。" % (
     len(TOUCHED), " ".join("%s blob %s" % (t, blob_at(PUSHED, t)) for t in TOUCHED)))
 A("   产品字节：同一集合按前缀现数，backend/ 命中=%d 枚、frontend/src/ 命中=%d 枚（逐枚清单在上面那行，全部在 frontend/e2e/ 与 review/ 之下）。" % (
