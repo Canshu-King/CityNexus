@@ -1,0 +1,142 @@
+{
+ "schema": "CNX_CMDR_LANDING_PREFLIGHT_V1",
+ "lane": "commander 494abfd7",
+ "at_local": "2026-09-28T18:59:42+0800",
+ "mode": "LAND",
+ "authoritative_line": "mirror/integration-frontend-apple-pass1",
+ "tip_re_read_from_github_before": "97766b2dfd7a5a7668f6750e3bc13b698c416975",
+ "candidate_ref": "refs/heads/review/cmdr-recut-ord0399-r2",
+ "candidate_tip": "8f4ddfa9feffe4233b48cbf608caf8e1bbb76291",
+ "genealogy": {
+  "ff_possible_rc": 0,
+  "ff_possible": true,
+  "merge_base": "97766b2dfd7a5a7668f6750e3bc13b698c416975",
+  "line_only_commits": 0,
+  "candidate_only_commits": 4
+ },
+ "file_sets": {
+  "line_side_since_base": [],
+  "candidate_side_since_base": [
+   "review/ord0399-readouts/GATES_AFTER_REBASE_R2.txt",
+   "review/ord0399-readouts/ORD197_ISOLATION_R2.txt",
+   "review/ord0399-readouts/ROUND2_REBASE_R1.txt",
+   "review/ord0399-readouts/SUITE_CANDIDATE_R2.txt",
+   "review/ord0399-readouts/SUITE_TIP_E7286_R1.txt"
+  ],
+  "intersection": [],
+  "product_introduced_by_candidate": []
+ },
+ "merge_tree": {
+  "exit": 0,
+  "first_line": "b8b49cad01672b9766bacbe8caaaf83dd34bd626",
+  "conflict_reported": false,
+  "stderr_head": ""
+ },
+ "gate_run": {
+  "requested": [
+   "backend/tests/test_qoder_ord0399_journey_undelete.py",
+   "backend/tests/test_qoder_ord0383_journey_soft_delete.py"
+  ],
+  "collect_exit": 0,
+  "collected": null,
+  "test_exit": 0,
+  "summary": [
+   "14 passed, 2 warnings in 2.04s"
+  ],
+  "export": "D:/moodle/_qoder_cmdr_ref_20260921/snap_preflight_185920",
+  "blob_equality": [
+   {
+    "path": "review/ord0399-readouts/GATES_AFTER_REBASE_R2.txt",
+    "candidate_blob": "a8ab019cfc60d9f1272d0c554b9f0cf543d0504e",
+    "export_blob": "a8ab019cfc60d9f1272d0c554b9f0cf543d0504e",
+    "equal": true
+   },
+   {
+    "path": "review/ord0399-readouts/ORD197_ISOLATION_R2.txt",
+    "candidate_blob": "17af1d4cc4f7cce7aabec9f5439330f9cb6b2aaa",
+    "export_blob": "17af1d4cc4f7cce7aabec9f5439330f9cb6b2aaa",
+    "equal": true
+   },
+   {
+    "path": "review/ord0399-readouts/ROUND2_REBASE_R1.txt",
+    "candidate_blob": "1cbc58223c1e7343592c6c925070c36eec5fab1a",
+    "export_blob": "1cbc58223c1e7343592c6c925070c36eec5fab1a",
+    "equal": true
+   },
+   {
+    "path": "review/ord0399-readouts/SUITE_CANDIDATE_R2.txt",
+    "candidate_blob": "31545f37389837c6a109a2a6da58e1c50fa1e942",
+    "export_blob": "31545f37389837c6a109a2a6da58e1c50fa1e942",
+    "equal": true
+   },
+   {
+    "path": "review/ord0399-readouts/SUITE_TIP_E7286_R1.txt",
+    "candidate_blob": "d16c298094c0b2964be66b3e842f8f66515e3eff",
+    "export_blob": "d16c298094c0b2964be66b3e842f8f66515e3eff",
+    "equal": true
+   }
+  ],
+  "whole_suite": {
+   "collect_exit": 0,
+   "collected": 1426,
+   "interrupted": false,
+   "error_lines": [
+    "tests/test_qoder_ord0332_error_receipt.py::test_R7_the_envelope_keeps_every_field_it_already_had",
+    "tests/test_qoder_ord0332_error_receipt.py::test_R8_the_seed_is_read_off_the_real_request_not_just_the_dataclass",
+    "tests/test_solver_runtime_policy.py::test_unexpected_solver_programming_error_is_not_silently_hidden"
+   ],
+   "tail": [
+    "    _PortalFactoryType = Callable[[], AbstractContextManager[anyio.abc.BlockingPortal]]",
+    "-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html",
+    "1426 tests collected in 4.87s"
+   ],
+   "cmd": "D:/moodle/CityNexus/.venv/Scripts/python.exe -m pytest --collect-only -q tests  (cwd=<export>/backend, PYTHONPATH=<export>)"
+  },
+  "deletions": {
+   "deleted_by_candidate": [],
+   "still_present_in_export": []
+  },
+  "collect_stdout_tail": [
+   "",
+   "-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html",
+   "14 tests collected in 1.87s"
+  ],
+  "rooted_tests": {
+   "paths": [
+    "backend/tests/test_qoder_ord0399_journey_undelete.py",
+    "backend/tests/test_qoder_ord0383_journey_soft_delete.py"
+   ],
+   "exit": 0,
+   "summary": [
+    "14 passed, 2 warnings in 2.08s"
+   ]
+  },
+  "interpreter": "Python 3.12.14 (main, Aug 25 2026, 14:01:42) [MSC v.1944 64 bit (AMD64)]",
+  "exposure": {
+   "skipped": "no frontend/src file changed"
+  },
+  "frontend_build": {
+   "skipped": "no frontend/src file in this candidate"
+  }
+ },
+ "problems": [],
+ "verdict": "READY_TO_LAND",
+ "landing": {
+  "http": 200,
+  "response_head": "{'ref': 'refs/heads/mirror/integration-frontend-apple-pass1', 'node_id': 'REF_kwDOUhlJJ9oAMnJlZnMvaGVhZHMvbWlycm9yL2ludGVncmF0aW9uLWZyb250ZW5kLWFwcGxlLXBhc3Mx', 'url': 'https://api.github.com/repos/Ca",
+  "tip_after": "8f4ddfa9feffe4233b48cbf608caf8e1bbb76291",
+  "branches_route": "8f4ddfa9feffe4233b48cbf608caf8e1bbb76291",
+  "both_routes_agree": true,
+  "landed": true
+ },
+ "discipline": {
+  "evidence_paths_overwritten": 0,
+  "databases_opened": 0,
+  "surfaces_started_or_stopped": 0,
+  "credential_values_printed": 0,
+  "candidate_refs_pushed_by_commander": 0
+ },
+ "claim_kind": "git_and_pytest_determined",
+ "claimed_result": null,
+ "derived_result": null
+}
