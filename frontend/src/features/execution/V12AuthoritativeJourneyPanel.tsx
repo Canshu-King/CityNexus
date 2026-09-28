@@ -1,7 +1,8 @@
 import { useMemo, useState } from "react";
 import { Check, ChevronRight, Circle, LockKeyhole, MapPin, ShieldCheck } from "lucide-react";
 import { transitionActivity, type PlanVersion } from "../../api/v12Authoritative";
-import { useT } from "../../i18n/LocaleContext";
+import { useLocale, useT } from "../../i18n/LocaleContext";
+import { executionStateLabel } from "../../lib/displayVocabulary";
 
 export type ExecutionState =
   | "NOT_STARTED"
@@ -50,10 +51,14 @@ const stateKeyMap: Record<string, string> = {
   SKIPPED: "exec.state.skipped",
 };
 
-function label(state: string | undefined, t: (key: string) => string): string {
+function label(
+  state: string | undefined,
+  t: (key: string) => string,
+  locale: string,
+): string {
   if (!state) return t("exec.state.notStarted");
   const key = stateKeyMap[state];
-  return key ? t(key) : state.replaceAll("_", " ");
+  return key ? t(key) : executionStateLabel(state, locale);
 }
 
 export function V12AuthoritativeJourneyPanel({
@@ -65,6 +70,7 @@ export function V12AuthoritativeJourneyPanel({
   onTransition,
 }: Props) {
   const t = useT();
+  const { locale } = useLocale();
   const [busy, setBusy] = useState(false);
   const activities = useMemo(
     () => (plan?.activities ?? []) as ExecutionActivity[],
@@ -101,14 +107,14 @@ export function V12AuthoritativeJourneyPanel({
         <article className="v12-state-card now">
           <span className="v12-state-kicker"><Circle size={12} /> {t("exec.now")}</span>
           <strong>{now?.title ?? t("exec.journeyComplete")}</strong>
-          <span className="v12-state-value">{label(now?.status, t)}</span>
+          <span className="v12-state-value">{label(now?.status, t, locale)}</span>
           {now?.locked && <small><LockKeyhole size={13} /> {t("exec.protectedAnchor")}</small>}
         </article>
         <ChevronRight className="v12-state-arrow" aria-hidden="true" />
         <article className="v12-state-card next">
           <span className="v12-state-kicker"><MapPin size={12} /> {t("exec.next")}</span>
           <strong>{next?.title ?? t("exec.noNextStep")}</strong>
-          <span className="v12-state-value">{label(next?.status, t)}</span>
+          <span className="v12-state-value">{label(next?.status, t, locale)}</span>
           {next?.start_at && <small>{new Date(next.start_at).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}</small>}
         </article>
       </div>
@@ -117,7 +123,7 @@ export function V12AuthoritativeJourneyPanel({
           <div className={`v12-activity-row ${item.id === now?.id ? "current" : ""}`} key={item.id}>
             <span className="v12-activity-index">{item.status === "COMPLETED" || item.status === "SKIPPED" ? <Check size={14} /> : item.sequence_no}</span>
             <span className="v12-activity-title">{item.title}</span>
-            <span className={`v12-activity-status state-${(item.status ?? "NOT_STARTED").toLowerCase()}`}>{label(item.status, t)}</span>
+            <span className={`v12-activity-status state-${(item.status ?? "NOT_STARTED").toLowerCase()}`}>{label(item.status, t, locale)}</span>
           </div>
         ))}
       </div>

@@ -10,6 +10,7 @@ import { ImpactPreview } from "../execution/V12StatePrimitives";
 import { SortableActivityList } from "./SortableActivityList";
 import { RawFactsPanel } from "../../components/RawFactsPanel";
 import { useLocale, useT } from "../../i18n/LocaleContext";
+import { planSourceLabel, planVersionNoun } from "../../lib/displayVocabulary";
 import { RejectionWithFacts } from "../../lib/rejectionFacts";
 import { formatV8Money } from "../../lib/v8Formatting";
 
@@ -192,7 +193,7 @@ export function V12TripStudioPanel({ journeyId, plan, onAccepted }: Props) {
         </div>
       )}
       <footer className="v12-panel-footer">
-        <span>PlanVersion {plan.version_no} · {plan.source}</span>
+        <span>{`${planVersionNoun(locale)} ${plan.version_no} · ${planSourceLabel(plan.source, locale)}`}</span>
         <div className="v12-studio-actions">
           <button className="v8-outline-button" type="button" data-testid="v12-preview-impact" disabled={!changed || previewMutation.isPending} onClick={() => void previewDraft()}>
             {previewMutation.isPending ? t("studio.checking") : t("studio.previewImpact")}

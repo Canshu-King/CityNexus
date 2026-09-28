@@ -9,7 +9,8 @@ import {
   useExecutionClock,
   useWebObservations,
 } from "../../api/v10Execution";
-import { useT } from "../../i18n/LocaleContext";
+import { useLocale, useT } from "../../i18n/LocaleContext";
+import { clockZoneLabel } from "../../lib/displayVocabulary";
 import { liveActivityWindow } from "../../lib/executionWindow";
 import type { V8Data } from "../../app/v8Types";
 
@@ -25,6 +26,7 @@ type Props = {
 
 export function V10LiveExecutionPanel({ journeyId, plan }: Props) {
   const t = useT();
+  const { locale } = useLocale();
   const clock = useExecutionClock(journeyId);
   const web = useWebObservations(journeyId);
   const now = clock.data ? new Date(clock.data.now) : null;
@@ -65,7 +67,7 @@ export function V10LiveExecutionPanel({ journeyId, plan }: Props) {
                 })
               : "—"}
           </strong>
-          <small>{clock.data?.timezone ?? t("exec.execClock")}</small>
+          <small>{clock.data ? clockZoneLabel(clock.data.timezone, locale) : t("exec.execClock")}</small>
         </div>
         <div className="v10-metric">
           <Activity size={17} aria-hidden="true" />
