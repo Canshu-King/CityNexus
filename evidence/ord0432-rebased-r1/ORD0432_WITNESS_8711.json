@@ -1,0 +1,63 @@
+{
+  "tree": "D:\\moodle\\_qoder_ai_ord0432_20260929\\base_tip",
+  "port": 8711,
+  "db": "D:\\moodle\\CityNexus-Hermes-Revival\\evidence\\0212\\_ord0432_8711.db",
+  "1_baseline": {
+    "robust": true,
+    "risk_reason_codes": [],
+    "degraded_providers": [],
+    "budget_remaining_minor": 13000,
+    "journey_end_slack_min": 30,
+    "projection_status": "READY",
+    "latest_event_id": null
+  },
+  "2A_event_http": 201,
+  "2A_event_id": "b9a7b689-1eee-43bf-82af-c41c1e6e58cf",
+  "2A_after_major_closure": {
+    "robust": true,
+    "risk_reason_codes": [],
+    "degraded_providers": [],
+    "budget_remaining_minor": 13000,
+    "journey_end_slack_min": 30,
+    "projection_status": "READY",
+    "latest_event_id": "b9a7b689-1eee-43bf-82af-c41c1e6e58cf"
+  },
+  "W1_major_event_visible_in_twin": true,
+  "W2_robust_still_true": true,
+  "W3_risk_codes_still_empty": true,
+  "W3b_projection_status_still_READY": true,
+  "2B_control_event_http": 201,
+  "2B_control_event_id": "3e620c59-6328-4bb7-88bb-3768ad981e0f",
+  "2B_after_control_event": {
+    "robust": false,
+    "risk_reason_codes": [
+      "PROVIDER_DEGRADED"
+    ],
+    "degraded_providers": [
+      "ord0432-positive-control"
+    ],
+    "budget_remaining_minor": 13000,
+    "journey_end_slack_min": 30,
+    "projection_status": "DEGRADED",
+    "latest_event_id": "3e620c59-6328-4bb7-88bb-3768ad981e0f"
+  },
+  "W4_control_robust_flipped_false": true,
+  "W5_control_risk_codes_named": true,
+  "3_event_rows_unresolved": [
+    [
+      "b9a7b689-1eee-43bf-82af-c41c1e6e58cf",
+      "CLOSURE",
+      "MAJOR",
+      "DETECTED"
+    ],
+    [
+      "3e620c59-6328-4bb7-88bb-3768ad981e0f",
+      "OTHER",
+      "INFO",
+      "DETECTED"
+    ]
+  ],
+  "4_budget_patch_http": 422,
+  "4_budget_patch_body": "{\"error\":{\"code\":\"VALIDATION_ERROR\",\"message\":\"Journey update would make the selected plan infeasible: BUDGET_EXCEEDED\",\"message_key\":\"request.invalid\",\"trace_id\":\"3d38fa5f-51e0-4ea6-a54f-fa8e61bdb45c\",\"details\":null,\"error_receipt_id\":\"CNX-H8FCF5MR\"}}",
+  "VERDICT_envelope_blind_to_events": true
+}
