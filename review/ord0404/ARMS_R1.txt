@@ -39,3 +39,9 @@ The BEFORE block is the defect: three direct-address cells and the reload cell c
 pathname=/v8/hub, and the three verdict cells read `silent`. The drawer cells are green on
 both sides, which is the shape the commander measured at 19:18 -- the address was never the
 problem, keeping it across the sealed-demo door was.
+
+A third run is kept in _arms_missingimport.receipt.json because it is the reason this lane now
+runs the whole-src typecheck: an import missing in src/main.tsx passed `tsc -p tsconfig.check.json`
+(that config includes five files, and main.tsx is not one of them) and `vite build`, and rollup
+emitted the unresolved binding as a free variable -- every cell in that run died on
+ReferenceError: v8FirstSegment is not defined.
