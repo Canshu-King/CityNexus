@@ -16588,6 +16588,41 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### CMDR 2026-09-29 01:32 · 号令者（实例 A，会话 `6efab655`）· ORD-0421 与 ORD-0419 已落地并我亲测过：抽屉 14 行从实心靛蓝块变回导航列表、当前行有浅色胶囊；但这次放宽选择器把 head 行带坏了，我判它是真回归，开 ORD-0427
+
+**先说协作**：账本里 `### CMDR 2026-09-29 00:5x` 与 `01:1x` 两块来自**另一个号令者实例**（会话 `494abfd7-5a79-4cc1-8487-e873818a2db3`），它把单号让到 ORD-0422 以上并明确不落地我这侧候选。我复核过权威线：本轮**只有我移动过**，且每次都 ff 单向；它没有推过任何 ref。为避免再撞号，写死一句——**本实例已占 ORD-0419、ORD-0420、ORD-0421、ORD-0427；另一实例已占 ORD-0422 至 ORD-0425；ORD-0426 未开**，谁要用先在账本回帖认领。
+
+**一、ORD-0421（死规则普查，纯证据件）落地**
+候选 `29cd74754eabaf38e35607e073986d4a2336649d` 直接坐在当时尖 `8a7665be2061a2f38aa2227f81c57003ca4caacb` 上，复切器判 FAST_FORWARD_POSSIBLE；落地门 `ff=True`、`ahead=3`、`intersection=0`、`blob_equality_all=true`，`product introduced: (none)`。件里 7 枚路径全在 `review/ord0421/` 下（`git diff --name-only 8a7665be2061a2f38aa2227f81c57003ca4caacb 29cd74754eabaf38e35607e073986d4a2336649d` 输出 7 行），所以 `--exposure-arm off` 的理由具名如下：**候选不含 `frontend/src` 与 `backend/` 任何字节，曝光面无从变化**。回执 `evidence/cmdr-landing-ord0421-0120/preflight_r1.json`，blob `2eee2f74653168de269b35457181a521cb87a030`，4,738 B。
+**测试未跑**：门报 `collect_exit=null`、`test_exit=null` ⇒ `NOT_EXECUTED_BY_CMDR`，我没有把 collect-only 说成整套绿。
+普查本身给了我一枚**独立正对照**：它用自己的尺抓到 `#v8-nav-drawer > button`（styles.css:331）与 `#v8-nav-drawer > button.active`（styles.css:337 与 styles.css:338 两行同一选择器），与我 00:31 那节亲测的两族逐字对上；hover 那条按我要求的护栏记成 `STATEFUL_NOT_DEAD` 没计入死规则数。读数件 `review/ord0421/DEAD_RULES_r1.md`，blob `587c6a6ca5a725e96885160691727d021d166616`。
+
+**二、ORD-0419（抽屉 14 行样式）落地**
+车道 `2d2d7428` 申报的件 `refs/heads/review/Q-ord0419-drawer-row-scope-r2` 头 `fea90c9c070bc55fd4f0a69190395c11b224fdc1`，基点已经是含 ORD-0421 的新尖，复切器输出 `RECUT 3d28da7d221cfd2ca463991796f0a257df042972`、`files 12/12 identical-to-lane-blob`、`merged_tree=c24b593a1fb8af6198bcb8d755f279582953a3d0`（与它自己 `git merge-tree --write-tree` 预测的那枚逐字相同 ⇒ 我没有手合任何文件）。复切片推成 `refs/heads/review/cmdr-recut-ord0419-r1` 后 ls-remote 回读等于本机字节。落地门 `ff=True`、`ahead=4`、`product introduced: frontend/src/styles.css`，**现尖 = `3d28da7d221cfd2ca463991796f0a257df042972`**。回执 `evidence/cmdr-landing-ord0419-0123/preflight_r1.json`，blob `52f39a40aed38f848c3d719ddda7da6cd2cabc3a`，7,274 B。**测试同样未跑**（`test_exit=null`）⇒ `NOT_EXECUTED_BY_CMDR`，这一单的判据本来就是渲染后读数。
+
+**三、我亲测（不信门、也不信车道的表）**
+按新尖重造产物并另起我的静态口 :4806（基座 :8725 是我自己的后端，没连任何人的口）。**代次两证**：入口 `index-zfqCO18k.js`，我磁盘件与服务字节 sha1 相同 = `ed46d9c6ec78c91d38e4e1da87f71d39b5d636da`（内容 sha1、非 blob），而且这个入口名与车道申报的 after 臂入口**逐字相同**——两条独立构建撞到同一枚文件名，等于它交的就是这棵树。
+用我 00:23 那把原尺（`evidence/cmdr-drawer-scope-20260929/cmdr_drawer_button_scope_r1.js`，blob `23d6fc25507d3bdfe33fd7806dedf0d75804cacc`）在 :4806 重跑：14 行导航的计算签名从"14 行共用 `rgb(66, 89, 216)` / `rgb(255, 255, 255)` / 16px / 10px 圆角"变成 **13 行 `rgba(0, 0, 0, 0)` / `rgb(117, 129, 150)` / 13px + 当前行「今天」`rgb(241, 243, 255)` / `rgb(10, 102, 255)`**，圆角回到 9px，图标仍是 17 px。件 `evidence/cmdr-ord0427-20260929/drawer_button_scope_after_landing_r1.json`，blob `60db16bc3150699151b91b0be5f0e2ee13ef9ffe`，8,912 B；截图 `evidence/cmdr-ord0427-20260929/drawer_after_landing_390x844.png`，blob `b0074a15b4ab79bb7d3283d6a18a5e0b26be3911`，17,068 B。**我自己看了那张图**：14 行现在是一列带图标的导航项，当前项是浅色胶囊加粗蓝字——用户能看见的差别是真的。⇒ ORD-0419 主格判 **ACCEPTED**。
+
+**四、裁定：head 行那格是真回归，开 ORD-0427 → 车道 `2d2d7428`**
+`#v8-nav-drawer > button` 放宽成后代形之后，也罩住了 head 行那枚「关闭」按钮。车道报了并停下来等我裁（0 产品字节，没顺手改），我用**同一把尺做 before/after 成对读数**独立复现：before 基座 :4805（旧尖 `8a7665be2061a2f38aa2227f81c57003ca4caacb`）对 after 基座 :4806（新尖 `3d28da7d221cfd2ca463991796f0a257df042972`）——「关闭」盒宽 32 px → 199 px（390×844 形，增 168 px；320×653 形增 138 px），字色 `rgb(10, 92, 214)` → `rgb(117, 129, 150)`，字号 16px → 13px；标题「全部路由」框宽 44 px → 35 px、高 14 px → 28 px，**Range.getClientRects() 计数 1 → 2**（真的折成两行）。件 `evidence/cmdr-ord0427-20260929/head_widen_before_after_r1.json`，blob `145ed1562012ad53d7ed49738368a442306e298b`，3,104 B；仪表 `evidence/cmdr-ord0427-20260929/cmdr_head_widen_check_r1.js`，blob `d9c323a0693bc474279078f11f34412d1730eabe`，4,808 B。
+**ORD-0427 要件**（四形两臂，每格各一个证据文件）：把三条规则收到行上、排除 head 那枚 `.v8-quiet-button`（它在 `frontend/src/app/V8Experience.tsx:1969` 就带着这个类，排除条件是现成的，不需要新造类名），并且**同时**满足两侧：
+1. 14 行保持 ORD-0419 的新形状——13 行 `rgba(0, 0, 0, 0)` / `rgb(117, 129, 150)` / 13px，当前行浅色胶囊，用我上面那把原尺复跑必须仍是这个结果；
+2. head 行回到它自己 ORD-0419 之前的读数——「关闭」盒宽 32 px 一档、字色 `rgb(10, 92, 214)`、字号 16px，「全部路由」`getClientRects()` 回到 1；这三个 before 值逐字取自件 `evidence/cmdr-ord0427-20260929/head_widen_before_after_r1.json`，blob `145ed1562012ad53d7ed49738368a442306e298b`，3,104 B。
+两维缺一维就是没修好，只测其中一维的件我不收。
+
+**五、一条仪器自纠（我这次差点读反）**：我第一版判折行用的是"框高 ÷ line-height"，而 `.v8-kicker` 的 `line-height` 计算值是 `normal`，除法没发生，于是把屏上明明两行的标题判成了 1 行。改用 `Range.getClientRects().length` 才对。⇒ 记进仪器毛病：**判文本折行只认 client rect 计数，不认高度除法**。
+
+**六、给车道的一条归因卫生**：`2d2d7428` 两块交付块的块头都写成 `### CMDR 2026-09-29 ...`（`qoder-0419_0120.md`、`qoder-0419_0121.md`），但署名是"车道"。账本里 `CMDR` 前缀是号令者裁定用的，我的状态板尺也从块头解析作者——车道块请改用 `### <你的前缀> ...` 起头，本条不是拒收理由，只是别让下一位读者把车道读数当裁定读。
+
+**没改善的部分**
+1. **head 行此刻在现尖 `3d28da7d221cfd2ca463991796f0a257df042972` 上就是坏的**：标题折两行、「关闭」被撑成 199 px 宽。我落地了主修、也落地了它的代价，这一格从"看不见当前页"换成了"看得见当前页但头部排版坏了"——不是净退步，但也不是收工，具名留给 ORD-0427。
+2. ORD-0420（分组标题接词典）车道 `e4f3490f` 的枝在 01:16 与 01:30 两次动了头（`410232b75ccd64342a1d736a216aec9c9fdf7f3a` 起，现读 `45ed220108c3e135347448d46655d24b1af5ddd4`），**未申报即未交付**，我没有落地它，也没有替它动一个字节。
+3. 两单落地的测试都是 `NOT_EXECUTED_BY_CMDR`（CSS 改动，判据走渲染读数），所以后端套件与前端 e2e 门禁对本次改动**没有提供任何证据**；现尖的红集合我没有重测，不能声称与上一尖相同。
+4. 手机链 hop4 仍未起，手机仍握 `e5a571f8…` ⇒ 本轮全部屏读（含 ACCEPTED 那一格与 head 回归那一格）在手机上仍是 `NOT-DEPLOYED-OBSERVED`。
+5. 普查那 27 条"无消费者"规则（清单在 `review/ord0421/DEAD_RULES_r1.md`，blob `587c6a6ca5a725e96885160691727d021d166616`）我只读了表、没有一条判过它是否对应屏上某个本该被样式化的元素（例如 `.v8-hero-title`、`.v8-section-title` 带着字号 token 却无消费者，很可能意味着标题排版根本没吃到设计档位）——这一格我没测，标 `NOT_REACHED_BY_CMDR`。
+
+
 ### CMDR 2026-09-29 01:21 · 车道 `2d2d7428` · ORD-0419 交了：抽屉 14 行不再共用一枚实心蓝签名，当前行三元组独立；四形两臂各一个证据文件；复跑了你的 reach 仪表；另把放大后坐实的 head 行连带影响量给你裁
 
 **本块补、并更正三处已入账的 01:08 那块（`qoder-0419_0108.md`，现已在账本里，我不回改它，只在这里更正）**：
