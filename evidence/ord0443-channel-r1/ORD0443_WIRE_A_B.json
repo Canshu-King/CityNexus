@@ -1,0 +1,161 @@
+{
+  "shim_url": "http://127.0.0.1:7864/v1/responses",
+  "key_field_name": "api_key",
+  "key_length": 58,
+  "key_written_to_any_file": false,
+  "gateway_models_count": 39,
+  "gateway_has_deepseek": [
+    "cn:deepseek-v4-flash",
+    "cn:deepseek-v4-pro",
+    "cn:deepseek-v4.1-flash"
+  ],
+  "gateway_has_glm": [
+    "cn:glm-5.1",
+    "cn:glm-5.2",
+    "cn:glm-5.3",
+    "cn:glm-5.3-flash",
+    "cn:glm-5v-turbo",
+    "global:glm-5.2",
+    "global:glm-5.3"
+  ],
+  "off": {
+    "port": 61261,
+    "setup": {
+      "generate_http": 201,
+      "active_activities": 6
+    },
+    "ai": {
+      "health": {
+        "http": 200,
+        "bytes": 113,
+        "elapsed_s": 0.01,
+        "ai_words_found": [
+          "DISABLED_BY_OPS"
+        ],
+        "body": {
+          "status": "ok",
+          "database": "ok",
+          "ai": "disabled",
+          "ai_state": "DISABLED_BY_OPS",
+          "e2e_run_id": "",
+          "e2e_database_id": ""
+        }
+      },
+      "runtime_status": {
+        "http": 200,
+        "bytes": 408,
+        "elapsed_s": 0.03,
+        "ai_words_found": [
+          "DISABLED_BY_OPS"
+        ],
+        "body": {
+          "runtime_identity": "NATIVE_DEEPSEEK_TOOL_LOOP",
+          "native_binary_detected": false,
+          "native_mcp_proven": false,
+          "mcp_server": "citynexus-v2",
+          "deepseek_configured": true,
+          "hermes_compat_configured": false,
+          "ai_state": "DISABLED_BY_OPS",
+          "hermes_native_gateway": {
+            "configured": false,
+            "reachable": false,
+            "runs": false,
+            "events": false,
+            "approval": false,
+            "stop": false,
+            "ready": false,
+            "profile": "citynexus",
+            "provider": null,
+            "model": null
+          }
+        }
+      }
+    },
+    "copilot": {
+      "http": 200,
+      "bytes": 32937,
+      "elapsed_s": 28.58,
+      "response_sha1": "5e5c376ddef12eb3",
+      "intent": null,
+      "reply_head": "",
+      "top_keys": [
+        "event_id",
+        "mission",
+        "run"
+      ]
+    }
+  },
+  "on": {
+    "port": 63176,
+    "model": "global:glm-5.2",
+    "ai": {
+      "health": {
+        "http": 200,
+        "bytes": 118,
+        "elapsed_s": 0.01,
+        "ai_words_found": [
+          "CONFIGURED_UNVERIFIED"
+        ],
+        "body": {
+          "status": "ok",
+          "database": "ok",
+          "ai": "enabled",
+          "ai_state": "CONFIGURED_UNVERIFIED",
+          "e2e_run_id": "",
+          "e2e_database_id": ""
+        }
+      },
+      "runtime_status": {
+        "http": 200,
+        "bytes": 414,
+        "elapsed_s": 0.04,
+        "ai_words_found": [
+          "CONFIGURED_UNVERIFIED"
+        ],
+        "body": {
+          "runtime_identity": "NATIVE_DEEPSEEK_TOOL_LOOP",
+          "native_binary_detected": false,
+          "native_mcp_proven": false,
+          "mcp_server": "citynexus-v2",
+          "deepseek_configured": true,
+          "hermes_compat_configured": false,
+          "ai_state": "CONFIGURED_UNVERIFIED",
+          "hermes_native_gateway": {
+            "configured": false,
+            "reachable": false,
+            "runs": false,
+            "events": false,
+            "approval": false,
+            "stop": false,
+            "ready": false,
+            "profile": "citynexus",
+            "provider": null,
+            "model": null
+          }
+        }
+      }
+    },
+    "copilot": {
+      "http": 200,
+      "bytes": 7277,
+      "elapsed_s": 50.46,
+      "response_sha1": "2918934e63a81fae",
+      "intent": null,
+      "reply_head": "",
+      "top_keys": [
+        "event_id",
+        "mission",
+        "run"
+      ]
+    }
+  },
+  "verdict_channel_reaches_product_state": true,
+  "difference": {
+    "off_intent": null,
+    "on_intent": null,
+    "off_reply_head": "",
+    "on_reply_head": "",
+    "off_elapsed_s": 28.58,
+    "on_elapsed_s": 50.46
+  }
+}
