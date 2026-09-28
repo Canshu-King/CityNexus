@@ -1,0 +1,90 @@
+{
+ "rel_0408.md": [
+  {
+   "line": 8,
+   "matched": "8138",
+   "text": "跑的是**您落的那枚 tip 本身**（另开一份 worktree `_qoder_rel_ordb_tip_21375` detached 在 `21375042…`，我自己的库副本 `_qoder_rel_ordb_wk/tip.db`），三证：8138 的监听 pid 9984 ← 父 23992 的 CommandLine 就是我那行 `uvicorn app.main:app --host 127.0.0.1 --port 8138`，数据证是下"
+  },
+  {
+   "line": 8,
+   "matched": "23992",
+   "text": "跑的是**您落的那枚 tip 本身**（另开一份 worktree `_qoder_rel_ordb_tip_21375` detached 在 `21375042…`，我自己的库副本 `_qoder_rel_ordb_wk/tip.db`），三证：8138 的监听 pid 9984 ← 父 23992 的 CommandLine 就是我那行 `uvicorn app.main:app --host 127.0.0.1 --port 8138`，数据证是下"
+  },
+  {
+   "line": 8,
+   "matched": "127",
+   "text": "跑的是**您落的那枚 tip 本身**（另开一份 worktree `_qoder_rel_ordb_tip_21375` detached 在 `21375042…`，我自己的库副本 `_qoder_rel_ordb_wk/tip.db`），三证：8138 的监听 pid 9984 ← 父 23992 的 CommandLine 就是我那行 `uvicorn app.main:app --host 127.0.0.1 --port 8138`，数据证是下"
+  }
+ ],
+ "qoder-0385_0356.md": [
+  {
+   "line": 50,
+   "matched": "399",
+   "text": "junction：`<JUNCTION>` 重解析点挂载，`cmd /c rmdir` 卸除 rc=0、链接消失、目标条目 399→399、`.bin/tsc` 在位；全程无递归删除、无 `rd /s /q`、未碰 `D:/moodle/CityNexus/frontend/node_modules` 本体。"
+  },
+  {
+   "line": 50,
+   "matched": "399",
+   "text": "junction：`<JUNCTION>` 重解析点挂载，`cmd /c rmdir` 卸除 rc=0、链接消失、目标条目 399→399、`.bin/tsc` 在位；全程无递归删除、无 `rd /s /q`、未碰 `D:/moodle/CityNexus/frontend/node_modules` 本体。"
+  },
+  {
+   "line": 56,
+   "matched": "216",
+   "text": "- 没跑任何 e2e 套件：`ASSERTIONS_STILL_HIT` 是**模拟**断言匹配（它把 216 条文本断言跑在旧值/新值上），不是 Playwright 真跑。"
+  },
+  {
+   "line": 57,
+   "matched": "404",
+   "text": "- 无痕半边只用在一枚 ACTIVE 行程上；PLANNED/DRAFT 两枚 id 在该库中不存在（404），所以「任何读者都看得到」是在一枚真行程 + 路由签名上成立的，不是在三枚上都测过。"
+  },
+  {
+   "line": 54,
+   "matched": "73 处",
+   "text": "- `HARDCODED_FALLBACK`（tier B 裸字面量 73 处）、`RENDER_TIERS`（tier 1 可动集合 9 处）、`LADDER_TIER?_EMPTY_ACTION`（26 读键中 17 条不合形状）三条红**本单一处没碰**，它们在尖上就红着。"
+  },
+  {
+   "line": 54,
+   "matched": "9 处",
+   "text": "- `HARDCODED_FALLBACK`（tier B 裸字面量 73 处）、`RENDER_TIERS`（tier 1 可动集合 9 处）、`LADDER_TIER?_EMPTY_ACTION`（26 读键中 17 条不合形状）三条红**本单一处没碰**，它们在尖上就红着。"
+  }
+ ],
+ "n2_0228.md.my_superseded_by_n2_1540.md": [
+  {
+   "line": 7,
+   "matched": "0,145,522,44",
+   "text": "- 「看已保存的只读副本」：命中 1 个节点、可命中、框 `[0,145,522,44]`、URL 不变。点完屏上从 88 字变成 206 字，逐字含「CN 离线 · 只读」「现在 · 活跃 广州南站 下一步 · PLANNED」「供应商数据最后刷新于 9月20日 19:54。离线状态下财务操作已禁用。这台设备保存这份副本的时间：9月20日 20:05。」⇒ 已保存行程在、下一步仍可读、离线只读与财务禁用分开说明，都写屏上。"
+  },
+  {
+   "line": 7,
+   "matched": "206",
+   "text": "- 「看已保存的只读副本」：命中 1 个节点、可命中、框 `[0,145,522,44]`、URL 不变。点完屏上从 88 字变成 206 字，逐字含「CN 离线 · 只读」「现在 · 活跃 广州南站 下一步 · PLANNED」「供应商数据最后刷新于 9月20日 19:54。离线状态下财务操作已禁用。这台设备保存这份副本的时间：9月20日 20:05。」⇒ 已保存行程在、下一步仍可读、离线只读与财务禁用分开说明，都写屏上。"
+  },
+  {
+   "line": 8,
+   "matched": "0,75,522,43",
+   "text": "- 「重试」：命中 2 个同名节点（件里 `name_nodes=2`），取到第 0 个可命中者，框 `[0,75,522,43]`，URL 不变。点完屏上仍是同样 88 字、逐字未变：没有「已重试成功」，也没变坏。"
+  },
+  {
+   "line": 9,
+   "matched": "0,258,522,44",
+   "text": "- 「归因详情」：可命中，框 `[0,258,522,44]`，URL 不变，屏上多出一段**渲染文字**（不是 data 属性）：`attribution_reason=NETWORK_UNAVAILABLE evidence_kind=HEALTH_PROBE http_status=none source_layer=TRANSPORT retryable=true recovery_action=read`。其中 `http_status=none"
+  },
+  {
+   "line": 7,
+   "matched": "1 个",
+   "text": "- 「看已保存的只读副本」：命中 1 个节点、可命中、框 `[0,145,522,44]`、URL 不变。点完屏上从 88 字变成 206 字，逐字含「CN 离线 · 只读」「现在 · 活跃 广州南站 下一步 · PLANNED」「供应商数据最后刷新于 9月20日 19:54。离线状态下财务操作已禁用。这台设备保存这份副本的时间：9月20日 20:05。」⇒ 已保存行程在、下一步仍可读、离线只读与财务禁用分开说明，都写屏上。"
+  },
+  {
+   "line": 8,
+   "matched": "2 个",
+   "text": "- 「重试」：命中 2 个同名节点（件里 `name_nodes=2`），取到第 0 个可命中者，框 `[0,75,522,43]`，URL 不变。点完屏上仍是同样 88 字、逐字未变：没有「已重试成功」，也没变坏。"
+  }
+ ],
+ "n2_0430.md.my_superseded_by_n2_1539.md": [
+  {
+   "line": 22,
+   "matched": "16623",
+   "text": "交接状态：账本里 ORD-0383 仍挂\"在跑\"（你 04:2x 记账本第 16623 行）。**本块就是我这轮对它的全部产出**，把它从\"在跑\"改成\"待接\"或另派都行，我不占着它。"
+  }
+ ]
+}
