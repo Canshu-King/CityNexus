@@ -1,0 +1,71 @@
+ORD-0419 INVENTORY (computed from the bytes of 8a7665be2061a2f38aa2227f81c57003ca4caacb)
+
+hardcoded English prose strings claimed: 22
+  present at the claimed file:line:      22
+  failed the line check:                 0
+  proven rendered on a zh screen:        11
+  branch-gated (in source, not reached):  11
+  expected on screen but NOT seen:       0
+machine-vocabulary renders (different fix): 4
+
+t() calls per file, against the hardcoded count in the same file:
+  features/recovery/V14RecoveryTruthPanel.tsx          t()=2   hardcoded=11
+  features/traveler-twin/TwinPanel.tsx                 t()=12  hardcoded=10
+  features/discovery/RealCityDiscoveryPanel.tsx        t()=59  hardcoded=1
+
+  [ON_SCREEN ] JSX_TEXT           features/traveler-twin/TwinPanel.tsx:13
+        'No explicit capability facts recorded.'
+  [branch-gated] TERNARY            features/traveler-twin/TwinPanel.tsx:14
+        'Confirmed by traveler'
+  [branch-gated] TERNARY            features/traveler-twin/TwinPanel.tsx:14
+        'Stated; confirmation needed'
+  [branch-gated] TERNARY            features/traveler-twin/TwinPanel.tsx:24
+        'No explicit preferences'
+  [ON_SCREEN ] JSX_TEXT           features/traveler-twin/TwinPanel.tsx:24
+        'Capability needs'
+  [ON_SCREEN ] TERNARY            features/traveler-twin/TwinPanel.tsx:24
+        'No learned signals'
+  [ON_SCREEN ] JSX_TEXT           features/traveler-twin/TwinPanel.tsx:24
+        'Learned capability state'
+  [branch-gated] TERNARY_TEMPLATE   features/traveler-twin/TwinPanel.tsx:24
+        'hard need(s) remain explicit and are never learned.'
+  [ON_SCREEN ] TERNARY            features/traveler-twin/TwinPanel.tsx:24
+        'Hard accessibility needs are never inferred from behavior.'
+  [ON_SCREEN ] JSX_TEXT           features/traveler-twin/TwinPanel.tsx:24
+        'Unknown accessibility evidence is not accessible.'
+  [branch-gated] TERNARY            features/recovery/V14RecoveryTruthPanel.tsx:120
+        'policy unavailable · confirmation required'
+  [ON_SCREEN ] JSX_TEXT           features/recovery/V14RecoveryTruthPanel.tsx:125
+        'V14 · REALITY CHANGED'
+  [ON_SCREEN ] JSX_TEXT           features/recovery/V14RecoveryTruthPanel.tsx:126
+        'Grounded adaptive recovery'
+  [ON_SCREEN ] JSX_TEXT           features/recovery/V14RecoveryTruthPanel.tsx:129
+        'Refresh recovery'
+  [ON_SCREEN ] JSX_TEXT           features/recovery/V14RecoveryTruthPanel.tsx:132
+        'No recovery proposal is waiting on this Journey.'
+  [branch-gated] JSX_TEXT           features/recovery/V14RecoveryTruthPanel.tsx:137
+        'CHANGED'
+  [branch-gated] JSX_TEXT           features/recovery/V14RecoveryTruthPanel.tsx:144
+        'PROTECTED'
+  [branch-gated] JSX_TEXT           features/recovery/V14RecoveryTruthPanel.tsx:153
+        'Baseline evidence'
+  [branch-gated] JSX_TEXT           features/recovery/V14RecoveryTruthPanel.tsx:157
+        'Incident evidence'
+  [branch-gated] JSX_TEXT           features/recovery/V14RecoveryTruthPanel.tsx:163
+        'Deterministic gate'
+  [branch-gated] JSX_TEXT           features/recovery/V14RecoveryTruthPanel.tsx:167
+        'Delegation policy'
+  [ON_SCREEN ] DEFAULT            features/discovery/RealCityDiscoveryPanel.tsx:110
+        'I prefer quiet indoor culture, low walking, and rain-friendly places near my protected Journey moments.'
+
+machine vocabulary:
+  features/traveler-twin/TwinPanel.tsx:24  explicit.join(" · ") renders raw dimension codes
+        rendered example: 'culture · local_food · relaxed · walking_minutes_max · waterfront'  (in zh receipt: True)
+  features/traveler-twin/TwinPanel.tsx:9  capabilityLabel returns item.code verbatim
+        rendered example: 'walking_minutes_max'  (in zh receipt: True)
+  features/traveler-twin/TwinPanel.tsx:14  {item.severity} rendered verbatim
+        rendered example: 'HARD'  (in zh receipt: None)
+  features/inbox/JourneyInboxWorkbench.tsx:764  {item.at} rendered as a raw ISO-8601 string
+        rendered example: 'Nexus River Cruise Pier · 2026-10-10T15:30:00+08:00'  (in zh receipt: True)
+
+VERDICT INVENTORY_CONSISTENT
