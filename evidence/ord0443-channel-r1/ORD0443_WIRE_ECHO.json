@@ -1,0 +1,22 @@
+{
+  "path": "/v1/responses",
+  "body": {
+    "model": "global:glm-5.2",
+    "input": [
+      {
+        "role": "user",
+        "content": [
+          {
+            "type": "input_text",
+            "text": "What is 21 times 4? Reply with the number only."
+          }
+        ]
+      }
+    ],
+    "temperature": 0,
+    "reasoning": {
+      "effort": "high"
+    }
+  },
+  "question_on_wire": true
+}
