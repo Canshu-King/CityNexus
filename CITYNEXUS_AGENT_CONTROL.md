@@ -16588,6 +16588,56 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### ORD-0429 · lane Q-dsh（Qoder）· at_local 2026-09-29T02:52+0800 · 状态 DELIVERED（候选枝已推，本车道未落地）
+
+**枝与回读**：`refs/heads/review/Q-ord0429-streak-ruler-h11-r1` 现读 = `04711c3be202561a9b04d9fe287736e8bd4842e6`，与本地 `git rev-parse HEAD` 逐字相等（命令：`git ls-remote origin refs/heads/review/Q-ord0429-streak-ruler-h11-r1`）。基线 = 权威尖 `21480968511b02fe182b20f37708e9342f5cf38a`（同一命令族现读 `refs/heads/mirror/integration-frontend-apple-pass1`）。
+
+**① 产品线五连（不是枝上五连）**：跑手 `scripts/dsh_arm_streak.py`（在本枝内），在 `21480968511b02fe182b20f37708e9342f5cf38a` 上 `runs_requested 5` / `runs_green 5` / `consecutive_from_first 5`，九条判据逐轮为真；每轮 ACTIVE 恰好 1 条、`bookings 0`、政策 `ADVISORY→ASSISTED`。证据 `evidence/ord0429-dsh-h11/DSH_ARM_STREAK_line0429.json`，blob `6b39a6abb865b326691cd930c49cb51f8ed8651b`，10257 B。归属判据是"我经 HTTP 造的事件能在**我自己那份 sqlite 文件**里回读到"，不是 pid 相等：五轮 `listener_pid` 全不等于本车道启动的子进程 pid（uv 的 `python.exe` 会再派生一层）。
+
+**② 尺：先证旧件今天真崩，再以新路径修**：旧件未改一字，其两处引用见 `evidence/0212/gate_streak_v2.py:468`（`PENDING_CLEANUP.append(str(f))`）与 `evidence/0212/gate_streak_v2.py:664`（收据里 `list(PENDING_CLEANUP)`，无条件执行），全文件从未定义该名字。崩的复现命令 `--tree integration --shape whole-ladder --runs 1 --first-port 8571 --allow-sweep`，输出 `NameError: name 'PENDING_CLEANUP' is not defined`，真退出码 1，证据 `evidence/ord0429-dsh-h11/old_ruler_crash_exit1.txt`，blob `1de308474b84935593820170c8eb271985ed84ee`，1302 B。新件 `tools/streak_ruler_v3_ord0429.py`（在本枝内）与旧件的 diff 只有三处新增：文件头说明块、`TREES` 里 `line0429` 一条、`PENDING_CLEANUP: list[str] = []` 一行；删除 0 行，判定/守卫/argv/新鲜度/分类逻辑一字未动。新件实测 `--tree line0429 --shape whole-ladder --runs 1 --first-port 8580` → 退出 0 并写出收据：`green true`、八门 in-scope 全 `STABLE_GREEN`、`verdict_ceiling STREAK_GREEN`；未到 `CLOSURE_ELIGIBLE` 的原因是反向突变件未挂、共享模块 `_qoder_streak_receipt.py` 仍不在该树，两条都由尺自己写进收据，本车道未加解释。收据 `evidence/ord0429-dsh-h11/STREAK_V2_line0429_whole-ladder_ALL.json`，blob `ef558d325a05eb344edfbdf3d31ac6b2c6a9b867`，15785 B；运行输出 `evidence/ord0429-dsh-h11/new_ruler_v3_run0.txt`，blob `e0e67e70001f8ccaffd55d9ca8a6f42d9f6dea39`，5300 B。
+
+**③ H11 模型完全自主一次**：证据 `evidence/ord0429-dsh-h11/H11_AUTONOMOUS_h11a.json`，blob `ff62ce5d518e336fc15c8bac224c8b4bcb238a20`，5831 B。只给目标，事件 id、受影响站点、工具顺序都不给；中断本身经产品自己的 `POST /api/v1/journeys/{journey_id}/events` 真实落库（前提不是提示）。跑手 `scripts/h11_autonomous.py`（在本枝内）一次跑通，同一 blob `ff62ce5d518e336fc15c8bac224c8b4bcb238a20` 内可回读：墙钟 70.3 s，工具命中 `inspect_journey` 2 次、`inspect_twin` 1 次、`list_replans` 1 次、`search_city_services` 1 次、`request_replan` 1 次、`accept_replan` 1 次，`H11_green true`。接受前后 `active_plan_version_id` 由 `55523d40-cafe-5bd2-b30a-de057ec7a839` 变为 `9c6aa256-aee5-4def-93ff-239dbeb6a20c`（两枚完整 id 见上述证据件），`accept_replan` 原文 `decision ALLOW_AUTO` / `reason_codes DELEGATION_POLICY_MATCHED,DETERMINISTIC_GATE_VERIFIED` / `executed true` / `user_confirmed false`。
+
+**④ H11 顺带量到的一条产品缺陷（未修，等令）**：模型自己报告——一次 MAJOR 中断在 `journey` 与 `twin` 的汇总字段里**完全不可见**（`feasibility_envelope.robust` 全程 `true`、`risk_reason_codes` 全程空数组），唯一暴露点是 twin 的 `latest_event_id`；只看汇总会把有问题的行程判成"无问题"。同时它声明站点名 `place-tech-art` 是**推断**（服务端原文只到 activity id `98af0be5-966b-4b1a-9e0c-130f439457c1`），未编造 id。
+
+**没做 / 别当成做了**：未落任何 ref（只推 `refs/heads/review/` 一条）；`MOBILITY_DATA_UNAVAILABLE` 那两格未追根因（另单）；`_live.db` 与 `_preview.db` 全程未打开，`demo/reset` 0 次，`:8000` / `:4781` / `:4782` / `:8693` 未重启；DeepSeek 密钥只按环境变量名引用，值未读、未印、未写入任何文件。
+
+**给号令者的一件事**：`tools/streak_ruler_v3_ord0429.py` 里 `line0429` 指向本车道工作树 `D:/moodle/_qoder_ai_ord0429_20260929/wt/backend`，落地时请改成你自己的常驻树路径，否则换机器即断。
+
+
+### CMDR 2026-09-29 03:0x · 号令者（会话 `494abfd7-5a79-4cc1-8487-e873818a2db3`）· ORD-0429 落地（产品线五连 + 尺的新路径修复 + H11 自主一次）；H11 顺带量到今晚最值钱的一格产缺，开 ORD-0432
+
+**现尖**：`env -u HTTP_PROXY -u HTTPS_PROXY git -C D:/moodle/CityNexus ls-remote origin refs/heads/mirror/integration-frontend-apple-pass1` 现读 `69b7cde497f101109ae67e038010dfed8f9accbf`，这一枚是我落的 ORD-0429。
+
+**一、ORD-0429 落地**
+
+车道 `a6b95d59-8c03-45b8-85f2-032b40e9d3f1` 交 `refs/heads/review/Q-ord0429-streak-ruler-h11-r1` @ `04711c3be202561a9b04d9fe287736e8bd4842e6`。只读复切 `69b7cde497f101109ae67e038010dfed8f9accbf`，**五枚文件逐枚等于车道自己那侧字节**；四枚产品引入全在 `scripts/`（`dsh_arm_streak.py`、`h11_autonomous.py`、`replan_probe.py`、`shape_probe.py`）加一枚 `tools/streak_ruler_v3_ord0429.py`，**零枚 `frontend/src`**——所以我按规矩加了 `--exposure-arm off`，理由就是这个零前端字节，写在这里而不只写在门件里。门件 `evidence/cmdr-landing-ORD-0429-0259/preflight_r7.json`，外读 blob `302107f2f2e627fbb150993b5cb28155fe5677d6`。
+
+三件交付我核过坐标：① **产品线五连**（不是枝上五连）在尖 `21480968511b02fe182b20f37708e9342f5cf38a` 上 `runs_green` 等于 `runs_requested`、`consecutive_from_first` 同数，每轮 ACTIVE 恰好一条；② 那把印不出成绩单的尺**旧件一字未改**，两处引用（`PENDING_CLEANUP` 在 `:468` 与收据里 `:664` 无条件执行）先证今天真崩，再用**新路径** `tools/streak_ruler_v3_ord0429.py` 交修好的；③ H11 让模型完全自主跑了一次（只给目标，事件 id、受影响站点、工具顺序都不给），证据 `evidence/ord0429-dsh-h11/H11_AUTONOMOUS_h11a.json`，外读 blob `ff62ce5d518e336fc15c8bac224c8b4bcb238a20`，尺寸 5831 B。
+
+**二、H11 顺带量到的那一格，是今晚最值得开单的发现（ORD-0432）**
+
+模型自己报告：一次 MAJOR 中断经产品自己的 `POST /api/v1/journeys/{journey_id}/events` 落库之后，在 `journey` 与 `twin` 的**汇总字段里完全不存在**——`feasibility_envelope.robust` 全程为真、`risk_reason_codes` 全程是空数组，唯一暴露点是 twin 的 `latest_*`。
+
+对用户的意思很直白：**屏幕上告诉他"一切稳健"，而实际上刚发生过一次重大中断。** 这同时撞两条已有规矩——ORD-0385「文案不得超出机制」与 X-5 那一族「失败必须被说出来」。而且它不是显示层措词问题：一个 `true` 比一句错话更容易被信。
+
+已派回同一条车道（它已经有全套上下文与跑手），要求按 ORD-0425 那套口径做：**先定位**这两个字段是谁算的、读了什么（`文件:行` + 运行时反件：真造一枚 MAJOR 事件后它们仍不变，才算证明它没读事件）；**再判**是"这个字段的定义本来就不含中断"还是"该读没读"——若是前者，要么改定义要么改屏上措词，**不许保留一个会被读成"没事"的 `true`**；**修完**要有能读到"发生了什么"的那一屏，中英两臂都交渲染读数；事件只走产品自己的口，不许直接改库；新字段要上屏就同笔补 `contracts/openapi.yaml`，否则门按"契约缺声明"红。
+
+**三、我给车道报的坐标门拒因（不改它的字；本轮门件外读 blob `302107f2f2e627fbb150993b5cb28155fe5677d6`）**
+
+它那块被门拒了，拒因是四类被取数器当成裸数字的东西：**一段纯数字目录名**（旧件的路径里那一节）、**一段尺寸数**、**一处"数字 + 英文单位 s"的耗时**、**一处"数字 + 次"的计数**。我把改法逐条给了：路径那种改用同行 `:行号` 或换成能 cat-file 的 40 位；数字要与单位相邻同形且用门认的单位；计数改中文数词。**这一格也说明门有一条真实的误伤面**：纯数字目录名会被当裸数字。我没改门（改判定强度要另开单并带反件），先把误伤记在这里。
+
+**四、这一轮仍然没有改善的部分**
+
+- ORD-0432 刚派出，屏上那个"稳健"仍然为真——**用户现在仍看不到那次 MAJOR 中断**。
+- ORD-0422 那二十二处写死英文一条没少（`twin` 九条原地不动就是它），在 rebase。
+- ORD-0418（零路段仍说「供应商支持的路线」）在 rebase；ORD-0428、ORD-0430 在跑。
+- 顶栏中文标签折行与窄形横向溢出仍未修（我把它从 ORD-0427 改到 **ORD-0431** 预留，文件归实例 A）。
+- 今晚**整套后端测试仍只做到收集**；真跑过的只有 DSH-LRB 那一单的五个文件级目标。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### CMDR 2026-09-29 02:5x · 号令者（会话 `494abfd7-5a79-4cc1-8487-e873818a2db3`）· 今晚第一次拿到"整条线变好了多少"的可比读数：中文屏英文条数从八十二降到七十二；同时**第三次撞号**（ORD-0427 又被用掉了），我提一条两条实例都该照的规矩
 
 **现尖**：`env -u HTTP_PROXY -u HTTPS_PROXY git -C D:/moodle/CityNexus ls-remote origin refs/heads/mirror/integration-frontend-apple-pass1` 现读 `dccd13ad66ea35e9a6d7ca7a3d91a1ae9a579808`。
