@@ -1,0 +1,329 @@
+{
+  "port": 62439,
+  "db": "D:\\moodle\\CityNexus-Hermes-Revival\\evidence\\0443\\_e2e.db",
+  "sentence": "The Nexus River Cruise venue is closed this afternoon, what should I do next?",
+  "health_ai": {
+    "status": "ok",
+    "database": "ok",
+    "ai": "enabled",
+    "ai_state": "CONFIGURED_UNVERIFIED",
+    "e2e_run_id": "",
+    "e2e_database_id": ""
+  },
+  "envelope_before": {
+    "robust": true,
+    "risk_reason_codes": []
+  },
+  "copilot": {
+    "http": 200,
+    "bytes": 7283,
+    "elapsed_s": 10.34,
+    "body_sha1": "4f0d1ed5ca4a2499",
+    "body": {
+      "mission": {
+        "id": "c8349f96-f3b3-4d3b-9bac-1d68139b83e0",
+        "journey_id": "22222222-2222-4222-8222-222222222222",
+        "trigger_event_id": null,
+        "user_text": "The Nexus River Cruise venue is closed this afternoon, what should I do next?",
+        "objective_codes": [],
+        "protected_activity_ids": [],
+        "mutable_activity_ids": [],
+        "intent": {
+          "capabilities": [],
+          "max_cost_delta_minor": 0,
+          "max_loss_minor": 0,
+          "max_schedule_drift_min": 0,
+          "mutable_activity_ids": [],
+          "objective_codes": [],
+          "preferences": {},
+          "protected_activity_ids": [],
+          "requested_autonomy": "EXECUTE_WITHIN_BOUNDS"
+        },
+        "resolved_intent": {
+          "authority_intersection": "MISSION_AND_TRAVELER_POLICY",
+          "capabilities": [],
+          "max_cost_delta_minor": 0,
+          "max_loss_minor": 0,
+          "max_schedule_drift_min": 0,
+          "mutable_activity_ids": [],
+          "objective_codes": [],
+          "policy_mode": "ADVISORY",
+          "policy_version": 1,
+          "preferences": {},
+          "protected_activity_ids": [],
+          "requested_autonomy": "EXECUTE_WITHIN_BOUNDS"
+        },
+        "allowed_action_classes": [
+          "REQUEST_REPLAN",
+          "ACCEPT_REPLAN"
+        ],
+        "unresolved_references": [],
+        "compiler": {
+          "provider_key": "MASKED(len=13)",
+          "model_key": "MASKED(len=28)",
+          "confidence": 1.0
+        },
+        "reasoning_summary": "Resolved named activities against the active plan, then intersected the mission envelope with the persisted traveler policy.",
+        "is_standing": false,
+        "parent_mission_id": null,
+        "max_cost_delta_minor": 0,
+        "max_loss_minor": 0,
+        "max_schedule_drift_min": 0,
+        "preferences": {},
+        "requested_autonomy": "EXECUTE_WITHIN_BOUNDS",
+        "status": "DEGRADED",
+        "created_at": "2026-09-28T22:14:48.921297+00:00",
+        "started_at": "2026-09-28T22:14:48.976179+00:00",
+        "completed_at": "2026-09-28T22:14:50.822551+00:00",
+        "failure_reason": "DeepSeek Agent completion failed",
+        "ai_state": "PROVIDER_REFUSED",
+        "mission_plan": {
+          "version": "citynexus.mission-plan.v1",
+          "autonomy": "EXECUTE_WITHIN_BOUNDS",
+          "steps": [
+            {
+              "id": "inspect_journey",
+              "operation": "Inspect current Journey",
+              "tool_name": "inspect_journey",
+              "status": "PENDING",
+              "requires_authority": false
+            },
+            {
+              "id": "inspect_twin",
+              "operation": "Inspect JourneyTwin",
+              "tool_name": "inspect_twin",
+              "status": "PENDING",
+              "requires_authority": false
+            },
+            {
+              "id": "inspect_commitments",
+              "operation": "Inspect protected commitments",
+              "tool_name": "inspect_journey",
+              "status": "PENDING",
+              "requires_authority": false
+            },
+            {
+              "id": "evaluate_candidates",
+              "operation": "Evaluate candidates against constraints",
+              "tool_name": null,
+              "status": "PENDING",
+              "requires_authority": false
+            },
+            {
+              "id": "request_replan",
+              "operation": "Request a deterministic replan proposal",
+              "tool_name": "request_replan",
+              "status": "PENDING",
+              "requires_authority": true
+            },
+            {
+              "id": "inspect_proposal",
+              "operation": "Inspect proposal trade-offs",
+              "tool_name": "list_replans",
+              "status": "PENDING",
+              "requires_authority": false
+            },
+            {
+              "id": "approval_boundary",
+              "operation": "Wait for explicit CityNexus approval before mutation",
+              "tool_name": null,
+              "status": "PENDING",
+              "requires_authority": true
+            }
+          ],
+          "protected_activity_ids": [],
+          "allowed_tools": [
+            "inspect_journey",
+            "inspect_twin",
+            "list_replans",
+            "search_city_services",
+            "request_replan",
+            "accept_replan",
+            "replace_activity",
+            "reschedule_activity"
+          ],
+          "read_only_tools": [
+            "inspect_journey",
+            "inspect_twin",
+            "list_replans",
+            "search_city_services"
+          ],
+          "approval_required_tools": [
+            "accept_replan",
+            "replace_activity",
+            "reschedule_activity",
+            "create_booking",
+            "cancel_refundable_booking",
+            "request_commitment_change"
+          ],
+          "authority": "CityNexus AgentToolGateway and deterministic domain services"
+        }
+      },
+      "event_id": null,
+      "run": {
+        "run_id": "9280553e-2094-42a9-bcd9-92e96b15fd74",
+        "mission_id": "c8349f96-f3b3-4d3b-9bac-1d68139b83e0",
+        "journey_id": "22222222-2222-4222-8222-222222222222",
+        "provider_key": "MASKED(len=8)",
+        "runtime_identity": "NATIVE_DEEPSEEK_TOOL_LOOP",
+        "model_key": "MASKED(len=14)",
+        "status": "FAILED_EXTERNAL",
+        "outcome": null,
+        "failure_reason": "DeepSeek Agent completion failed",
+        "ai_state": "PROVIDER_REFUSED",
+        "created_at": "2026-09-28T22:14:48.976179+00:00",
+        "started_at": "2026-09-28T22:14:48.976179+00:00",
+        "completed_at": "2026-09-28T22:14:50.822551+00:00",
+        "mission_status": "DEGRADED",
+        "mission": {
+          "id": "c8349f96-f3b3-4d3b-9bac-1d68139b83e0",
+          "journey_id": "22222222-2222-4222-8222-222222222222",
+          "trigger_event_id": null,
+          "user_text": "The Nexus River Cruise venue is closed this afternoon, what should I do next?",
+          "objective_codes": [],
+          "protected_activity_ids": [],
+          "mutable_activity_ids": [],
+          "intent": {
+            "capabilities": [],
+            "max_cost_delta_minor": 0,
+            "max_loss_minor": 0,
+            "max_schedule_drift_min": 0,
+            "mutable_activity_ids": [],
+            "objective_codes": [],
+            "preferences": {},
+            "protected_activity_ids": [],
+            "requested_autonomy": "EXECUTE_WITHIN_BOUNDS"
+          },
+          "resolved_intent": {
+            "authority_intersection": "MISSION_AND_TRAVELER_POLICY",
+            "capabilities": [],
+            "max_cost_delta_minor": 0,
+            "max_loss_minor": 0,
+            "max_schedule_drift_min": 0,
+            "mutable_activity_ids": [],
+            "objective_codes": [],
+            "policy_mode": "ADVISORY",
+            "policy_version": 1,
+            "preferences": {},
+            "protected_activity_ids": [],
+            "requested_autonomy": "EXECUTE_WITHIN_BOUNDS"
+          },
+          "allowed_action_classes": [
+            "REQUEST_REPLAN",
+            "ACCEPT_REPLAN"
+          ],
+          "unresolved_references": [],
+          "compiler": {
+            "provider_key": "MASKED(len=13)",
+            "model_key": "MASKED(len=28)",
+            "confidence": 1.0
+          },
+          "reasoning_summary": "Resolved named activities against the active plan, then intersected the mission envelope with the persisted traveler policy.",
+          "is_standing": false,
+          "parent_mission_id": null,
+          "max_cost_delta_minor": 0,
+          "max_loss_minor": 0,
+          "max_schedule_drift_min": 0,
+          "preferences": {},
+          "requested_autonomy": "EXECUTE_WITHIN_BOUNDS",
+          "status": "DEGRADED",
+          "created_at": "2026-09-28T22:14:48.921297+00:00",
+          "started_at": "2026-09-28T22:14:48.976179+00:00",
+          "completed_at": "2026-09-28T22:14:50.822551+00:00",
+          "failure_reason": "DeepSeek Agent completion failed",
+          "ai_state": "PROVIDER_REFUSED",
+          "mission_plan": {
+            "version": "citynexus.mission-plan.v1",
+            "autonomy": "EXECUTE_WITHIN_BOUNDS",
+            "steps": [
+              {
+                "id": "inspect_journey",
+                "operation": "Inspect current Journey",
+                "tool_name": "inspect_journey",
+                "status": "PENDING",
+                "requires_authority": false
+              },
+              {
+                "id": "inspect_twin",
+                "operation": "Inspect JourneyTwin",
+                "tool_name": "inspect_twin",
+                "status": "PENDING",
+                "requires_authority": false
+              },
+              {
+                "id": "inspect_commitments",
+                "operation": "Inspect protected commitments",
+                "tool_name": "inspect_journey",
+                "status": "PENDING",
+                "requires_authority": false
+              },
+              {
+                "id": "evaluate_candidates",
+                "operation": "Evaluate candidates against constraints",
+                "tool_name": null,
+                "status": "PENDING",
+                "requires_authority": false
+              },
+              {
+                "id": "request_replan",
+                "operation": "Request a deterministic replan proposal",
+                "tool_name": "request_replan",
+                "status": "PENDING",
+                "requires_authority": true
+              },
+              {
+                "id": "inspect_proposal",
+                "operation": "Inspect proposal trade-offs",
+                "tool_name": "list_replans",
+                "status": "PENDING",
+                "requires_authority": false
+              },
+              {
+                "id": "approval_boundary",
+                "operation": "Wait for explicit CityNexus approval before mutation",
+                "tool_name": null,
+                "status": "PENDING",
+                "requires_authority": true
+              }
+            ],
+            "protected_activity_ids": [],
+            "allowed_tools": [
+              "inspect_journey",
+              "inspect_twin",
+              "list_replans",
+              "search_city_services",
+              "request_replan",
+              "accept_replan",
+              "replace_activity",
+              "reschedule_activity"
+            ],
+            "read_only_tools": [
+              "inspect_journey",
+              "inspect_twin",
+              "list_replans",
+              "search_city_services"
+            ],
+            "approval_required_tools": [
+              "accept_replan",
+              "replace_activity",
+              "reschedule_activity",
+              "create_booking",
+              "cancel_refundable_booking",
+              "request_commitment_change"
+            ],
+            "authority": "CityNexus AgentToolGateway and deterministic domain services"
+          }
+        },
+        "tool_steps": []
+      }
+    }
+  },
+  "events_after": [],
+  "envelope_after": {
+    "robust": true,
+    "risk_reason_codes": [],
+    "budget_remaining_minor": 13000,
+    "journey_end_slack_min": 30
+  },
+  "verdict_model_to_summary": false
+}
