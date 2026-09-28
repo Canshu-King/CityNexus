@@ -1,0 +1,344 @@
+{
+  "started_at": "2026-09-29T05:57:50+08:00",
+  "backend_identity": {
+    "listener_pid": 20276,
+    "listener_is_spawned_or_its_child": true,
+    "listener_command": "\"C:\\Users\\������\\AppData\\Roaming\\uv\\python\\cpython-3.12.14-windows-x86_64-none\\python.exe\" -X utf8 -m uvicorn app.main:app --host 127.0.0.1 --port 4731 --log-level warning",
+    "command_names_this_app_and_port": true,
+    "database_file": "D:\\moodle\\_qoder_ord0436_stack\\cnx.db",
+    "database_exists": true,
+    "shared_stores_named_by_this_run": []
+  },
+  "seed": {
+    "journey_id": "dc5cee90-76bd-4bc1-b26d-7a29558bffe2",
+    "delete_door_status": 204,
+    "undelete_door_status": 200,
+    "actions_in_this_lane_database": [
+      "journey.created",
+      "journey.deleted",
+      "journey.undeleted",
+      "journey.member_added",
+      "journey.unlisted_share_change"
+    ],
+    "fixture_rows_written_by": "app.core.audit.record_audit (the product's own writer)",
+    "fixture_rows": [
+      {
+        "action": "journey.member_added",
+        "why": "ORD-0434 has no writer for it yet; the screen's sentence for it is what is being read"
+      },
+      {
+        "action": "journey.unlisted_share_change",
+        "why": "an action no sentence exists for, to prove the screen says so instead of inventing one"
+      }
+    ]
+  },
+  "reader_exit_code": 0,
+  "reading": {
+    "zh": {
+      "locale": "zh-CN",
+      "title": "成员与权限",
+      "pickerPresent": true,
+      "doorState": "这台服务器没有答 /access，所以这一屏今天没有任何一项能真改。下面写的是那扇门答话之后每一档意味着什么，不是对这条行程下的结论。",
+      "roleRows": 3,
+      "roleText": [
+        "所有者 全部权限：改可见性、请人、移除成员、删除行程。",
+        "管理员 管理协作者、编辑地点。",
+        "协作者 编辑地点。"
+      ],
+      "roleAttributes": [
+        "OWNER",
+        "ADMIN",
+        "COLLABORATOR"
+      ],
+      "visibilityRows": [
+        "仅个人 别人打不开，拿到链接也打不开。",
+        "获得链接者可见 有链接的人不用先进成员名单就能读。",
+        "仅成员可见 成员能读能改，名单外的人拿链接也打不开。",
+        "受邀者可见 只有邀请还在有效期内的人打得开，过期就打不开了。",
+        "公开 全网公开可见。"
+      ],
+      "visibilityAttributes": [
+        "PRIVATE_ONLY",
+        "LINK_READ",
+        "MEMBER_ONLY",
+        "INVITEES",
+        "PUBLIC"
+      ],
+      "confirmCases": [
+        {
+          "when": "access.whenOtherGainsOnly",
+          "said": [
+            "只动对方的档位，你的不变",
+            "对方将获得对应权限。"
+          ]
+        },
+        {
+          "when": "access.whenActorLosesStanding",
+          "said": [
+            "你把这条行程交到别人手上",
+            "对方将获得对应权限，你的权限也会随之变化。"
+          ]
+        },
+        {
+          "when": "access.whenRoleUnread",
+          "said": [
+            "这台设备没读到你自己的档位",
+            "对方将获得对应权限，你的权限也会随之变化。"
+          ]
+        },
+        {
+          "when": "removal",
+          "said": [
+            "你撤销某个人的访问权限",
+            "对方将失去这条行程的权限。"
+          ]
+        }
+      ],
+      "switchLines": [
+        {
+          "move": "PRIVATE_ONLY->PUBLIC",
+          "said": "转换后这条行程全网可见——原先看不见的人会开始能看见。"
+        },
+        {
+          "move": "PUBLIC->PRIVATE_ONLY",
+          "said": "转换后，已经在跟踪这条行程的人会失去访问权限。"
+        }
+      ],
+      "inviteTtl": "这台服务器没有给出邀请的有效期，所以这里不声称有一个。",
+      "inviteQuota": "这台服务器没有给出这条行程的成员数与上限，所以这里不计数。",
+      "activityLines": [
+        "新建了这条行程",
+        "把这条行程丢进了回收站",
+        "把这条行程从回收站找回",
+        "把 {name} 加进了这条行程",
+        "这台服务器报了一个本屏说不出人话的动作：journey.unlisted_share_change。"
+      ],
+      "activityAttributes": [
+        "journey.created",
+        "journey.deleted",
+        "journey.undeleted",
+        "journey.member_added",
+        "journey.unlisted_share_change"
+      ],
+      "activityEmpty": false,
+      "activityFailed": false,
+      "pickerHit": {
+        "box": {
+          "x": 17,
+          "y": 237,
+          "width": 356,
+          "height": 45
+        },
+        "tag": "select",
+        "testId": "access-journey-picker"
+      },
+      "rawKeyLeak": false,
+      "cjkChars": 596,
+      "latinWords": 12,
+      "wholePageCjkChars": 612,
+      "doorStillLoading": false,
+      "overflowX": 0,
+      "pageErrors": []
+    },
+    "en": {
+      "locale": "en",
+      "title": "MEMBERS AND ACCESS",
+      "pickerPresent": true,
+      "doorState": "This server did not answer /access, so nothing on this screen can be changed today. The ladders say what each level will mean once that door answers -- they are not a claim about this trip.",
+      "roleRows": 3,
+      "roleText": [
+        "Owner Everything: change visibility, invite people, remove members, delete the trip.",
+        "Admin Manage collaborators and edit places.",
+        "Collaborator Edit places."
+      ],
+      "roleAttributes": [
+        "OWNER",
+        "ADMIN",
+        "COLLABORATOR"
+      ],
+      "visibilityRows": [
+        "Only me No one else can open it, not even holding the link.",
+        "Anyone with the link Anyone holding the link can read it without being a member first.",
+        "Members only Members read and edit it; outside the member list the link does not open.",
+        "Invited people only Only invitations still in date can open it; an expired one cannot.",
+        "Public Visible to everyone on this network."
+      ],
+      "visibilityAttributes": [
+        "PRIVATE_ONLY",
+        "LINK_READ",
+        "MEMBER_ONLY",
+        "INVITEES",
+        "PUBLIC"
+      ],
+      "confirmCases": [
+        {
+          "when": "access.whenOtherGainsOnly",
+          "said": [
+            "Someone else's role changes, yours stays",
+            "That person will get the matching permission."
+          ]
+        },
+        {
+          "when": "access.whenActorLosesStanding",
+          "said": [
+            "You hand the trip to someone else",
+            "That person will get the matching permission, and your own permission changes with it."
+          ]
+        },
+        {
+          "when": "access.whenRoleUnread",
+          "said": [
+            "This device could not read your own role",
+            "That person will get the matching permission, and your own permission changes with it."
+          ]
+        },
+        {
+          "when": "removal",
+          "said": [
+            "You take someone's access away",
+            "That person will lose access to this trip."
+          ]
+        }
+      ],
+      "switchLines": [
+        {
+          "move": "PRIVATE_ONLY->PUBLIC",
+          "said": "After this the trip is visible to everyone -- people who could not see it before will be able to."
+        },
+        {
+          "move": "PUBLIC->PRIVATE_ONLY",
+          "said": "After this, the people who followed it lose access -- they will not be able to open it any more."
+        }
+      ],
+      "inviteTtl": "This server gave no expiry for an invitation, so none is claimed here.",
+      "inviteQuota": "This server gave no member count or limit for this trip, so nothing is counted here.",
+      "activityLines": [
+        "created this trip",
+        "put this trip in the recycle bin",
+        "brought this trip back from the recycle bin",
+        "added {name} to this trip",
+        "This server reported an action this screen has no sentence for: journey.unlisted_share_change."
+      ],
+      "activityAttributes": [
+        "journey.created",
+        "journey.deleted",
+        "journey.undeleted",
+        "journey.member_added",
+        "journey.unlisted_share_change"
+      ],
+      "activityEmpty": false,
+      "activityFailed": false,
+      "pickerHit": {
+        "box": {
+          "x": 17,
+          "y": 258,
+          "width": 356,
+          "height": 45
+        },
+        "tag": "select",
+        "testId": "access-journey-picker"
+      },
+      "rawKeyLeak": false,
+      "cjkChars": 0,
+      "latinWords": 394,
+      "wholePageCjkChars": 2,
+      "doorStillLoading": false,
+      "overflowX": 0,
+      "pageErrors": []
+    },
+    "checks": [
+      {
+        "name": "both arms rendered the panel",
+        "verdict": "PASS",
+        "detail": "成员与权限 / MEMBERS AND ACCESS"
+      },
+      {
+        "name": "the trip list came from the server",
+        "verdict": "PASS",
+        "detail": "picker=true"
+      },
+      {
+        "name": "three roles, each with one scope sentence",
+        "verdict": "PASS",
+        "detail": "OWNER,ADMIN,COLLABORATOR :: 所有者 全部权限：改可见性、请人、移除成员、删除行程。 | 管理员 管理协作者、编辑地点。 | 协作者 编辑地点。"
+      },
+      {
+        "name": "every visibility level carries its consequence",
+        "verdict": "PASS",
+        "detail": "PRIVATE_ONLY,LINK_READ,MEMBER_ONLY,INVITEES,PUBLIC :: 仅个人 别人打不开，拿到链接也打不开。 | 获得链接者可见 有链接的人不用先进成员名单就能读。 | 仅成员可见 成员能读能改，名单外的人拿链接也打不开。 | 受邀者可见 只有邀请还在有效期内的人打得开，过期就打不开了。 | 公开 全网公开可见。"
+      },
+      {
+        "name": "the confirmation split is two different sentences",
+        "verdict": "PASS",
+        "detail": "{\"access.whenOtherGainsOnly\":[\"只动对方的档位，你的不变\",\"对方将获得对应权限。\"],\"access.whenActorLosesStanding\":[\"你把这条行程交到别人手上\",\"对方将获得对应权限，你的权限也会随之变化。\"],\"access.whenRoleUnread\":[\"这台设备没读到你自己的档位\",\"对方将获得对应权限，你的权限也会随之变化。\"],\"removal\":[\"你撤销某个人的访问权限\",\"对方将失去这条行程的权限。\"]}"
+      },
+      {
+        "name": "an unread role gets the warning, not a clean pass",
+        "verdict": "PASS",
+        "detail": "[\"这台设备没读到你自己的档位\",\"对方将获得对应权限，你的权限也会随之变化。\"]"
+      },
+      {
+        "name": "removal says what the other person loses, in both arms",
+        "verdict": "PASS",
+        "detail": "{\"zh\":[\"你撤销某个人的访问权限\",\"对方将失去这条行程的权限。\"],\"en\":[\"You take someone's access away\",\"That person will lose access to this trip.\"]}"
+      },
+      {
+        "name": "private->public and public->private each name the other side",
+        "verdict": "PASS",
+        "detail": "[{\"move\":\"PRIVATE_ONLY->PUBLIC\",\"said\":\"转换后这条行程全网可见——原先看不见的人会开始能看见。\"},{\"move\":\"PUBLIC->PRIVATE_ONLY\",\"said\":\"转换后，已经在跟踪这条行程的人会失去访问权限。\"}]"
+      },
+      {
+        "name": "the invitation states an expiry",
+        "verdict": "PASS",
+        "detail": "这台服务器没有给出邀请的有效期，所以这里不声称有一个。 || This server gave no expiry for an invitation, so none is claimed here."
+      },
+      {
+        "name": "the invitation counts, or says it was given no numbers",
+        "verdict": "PASS",
+        "detail": "这台服务器没有给出这条行程的成员数与上限，所以这里不计数。 || This server gave no member count or limit for this trip, so nothing is counted here."
+      },
+      {
+        "name": "activity rows the screen has words for read as sentences, not as the server's token",
+        "verdict": "PASS",
+        "detail": "[{\"line\":\"新建了这条行程\",\"token\":\"journey.created\"},{\"line\":\"把这条行程丢进了回收站\",\"token\":\"journey.deleted\"},{\"line\":\"把这条行程从回收站找回\",\"token\":\"journey.undeleted\"},{\"line\":\"把 {name} 加进了这条行程\",\"token\":\"journey.member_added\"}]"
+      },
+      {
+        "name": "an action this screen cannot name says so and quotes the token it was given",
+        "verdict": "PASS",
+        "detail": "[{\"line\":\"这台服务器报了一个本屏说不出人话的动作：journey.unlisted_share_change。\",\"token\":\"journey.unlisted_share_change\"}]"
+      },
+      {
+        "name": "the sharing door's absence is named on screen, after the server answered",
+        "verdict": "PASS",
+        "detail": "这台服务器没有答 /access，所以这一屏今天没有任何一项能真改。下面写的是那扇门答话之后每一档意味着什么，不是对这条行程下的结论。 || This server did not answer /access, so nothing on this screen can be changed today. The ladders say what each level will mean once that door answers -- they are not a claim about this trip."
+      },
+      {
+        "name": "no raw copy key reached either arm",
+        "verdict": "PASS",
+        "detail": "zh=false en=false"
+      },
+      {
+        "name": "the Chinese arm reads Chinese",
+        "verdict": "PASS",
+        "detail": "cjk=596"
+      },
+      {
+        "name": "the English arm reads English",
+        "verdict": "PASS",
+        "detail": "panelCjk=0 latin=394"
+      },
+      {
+        "name": "the one control is under the finger at 390x844",
+        "verdict": "PASS",
+        "detail": "{\"tag\":\"select\",\"h\":45,\"overflowX\":0}"
+      },
+      {
+        "name": "neither arm threw a page error",
+        "verdict": "PASS",
+        "detail": "[[],[]]"
+      }
+    ],
+    "all_pass": true,
+    "failed": []
+  }
+}
