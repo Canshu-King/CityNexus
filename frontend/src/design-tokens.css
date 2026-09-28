@@ -985,24 +985,40 @@ button[data-testid^="mode-"],
 /* Pass-13.1: a position:fixed accessory sits wherever the page happens to come
    to rest, and pass-13 measured this one resting on top of the DAY 1 card
    (158x54 of tappable surface).  Reserving that band properly would cost a phone
-   ~138px of every screen, so the pill yields instead: when something actionable
-   is under it at rest, it steps off the content column and comes back when the
-   band clears.  The bottom navigation keeps its own Copilot entry, so the
-   assistant is never further away than one tab.  The decision is made against
-   the pill's layout box, so this transform cannot make it oscillate. */
+   ~138px of every screen, so the pill yields instead -- the problem statement is
+   theirs, the shape of the answer is in pass-13.2 below. */
+/* Pass-13.2 (ORD-0430): yielding relocates, it does not vanish.  The pass-13.1 rule
+   translated the pill out of the viewport with opacity 0, visibility hidden and
+   pointer-events none; measured at 390x844 that cleared the text but the hit test at
+   the pill's own painted bottom edge came back "none" in four of six screen x locale
+   combinations, so the assistant was no longer one tap away.  Clearing an overlap by
+   deleting the control is not yielding.  Now the same named control collapses to a
+   44px corner cell and moves to the first edge slot the runtime found free of text ink
+   and free of other controls -- one control, two shapes, like the viewport button
+   group's centered/off_center pair.  The decision is still taken against the resting
+   layout box, so this cannot oscillate. */
 .cn-copilot-dock.idle-compact.yield-at-rest {
-  /* visibility, not just opacity: an invisible-but-focusable pill is a ghost
-     button — a keyboard traveller can land on a control nobody can see, and the
-     accessibility tree keeps advertising it as an available action.  Hidden
-     visibility takes it out of both, and returns it when the band clears. */
-  transform: translateX(calc(100% + 16px));
-  opacity: 0;
-  visibility: hidden;
-  pointer-events: none;
-  transition: transform 140ms ease, opacity 140ms ease, visibility 140ms linear;
+  right: auto;
+  bottom: auto;
+  left: var(--cn-yield-left, auto);
+  top: var(--cn-yield-top, auto);
+  width: 44px;
+  transition: left 140ms ease, top 140ms ease, width 140ms ease;
 }
 @media (prefers-reduced-motion: reduce) {
   .cn-copilot-dock.idle-compact.yield-at-rest { transition: none; }
+}
+/* The mark carries the state; the word and the status dot drop out because the cell
+   is 44px, and the button keeps its accessible name either way. */
+.cn-copilot-dock.idle-compact.yield-at-rest .cn-copilot-edge {
+  width: 44px;
+  min-height: 44px;
+  padding: 0;
+  gap: 0;
+  justify-content: center;
+}
+.cn-copilot-dock.idle-compact.yield-at-rest .cn-copilot-edge > span:not(.cn-copilot-edge-mark) {
+  display: none;
 }
 .cn-copilot-dock.idle-compact .cn-copilot-edge {
   width: auto;

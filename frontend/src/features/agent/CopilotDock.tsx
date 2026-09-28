@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import type { ReactNode } from "react";
+import type { CSSProperties, ReactNode } from "react";
 import type { V8Data } from "../../app/v8Types";
 import {
   cityNexusApi,
@@ -672,44 +672,91 @@ export function CopilotDock({
      the pill floats in the middle of the content column, and pass-13 measured it
      resting over the DAY 1 card (158x54 of a tappable surface) at a settled
      scroll position.  Reserving that band properly would cost a phone user
-     ~138px of every screen, so instead the pill yields: once scrolling settles,
-     if an actionable element is under it, it steps off the content column and
-     comes back when the band is clear.  Nothing is lost — the bottom navigation
-     still carries a Copilot entry — and the traveller's content is never
-     covered by an invitation they did not ask for. */
+     ~138px of every screen, so instead the pill yields: once scrolling settles, if
+     text the traveller is reading or a control they can use lies under it, it
+     collapses to a corner cell in the nearest free slot and stays tappable there.
+     Nothing is lost — the bottom navigation still carries a Copilot entry, and the
+     pill itself never leaves the viewport. */
   const dockRef = useRef<HTMLElement | null>(null);
   const [restOverlap, setRestOverlap] = useState(false);
+  const [yieldSlot, setYieldSlot] = useState<{ left: number; top: number } | null>(null);
 
   useEffect(() => {
     if (!idleCompact) {
       setRestOverlap(false);
+      setYieldSlot(null);
       return;
     }
+    type Band = { left: number; top: number; right: number; bottom: number };
+    const READABLE = "h1,h2,h3,h4,h5,p,li,dt,dd,th,td,label,figcaption,summary";
+    const ACTIONABLE = 'button, a[href], input, select, textarea, [role="button"]';
+    const SLOT = 44;
+    const INSET = 10;
+    const band = (r: DOMRect): Band => ({ left: r.left, top: r.top, right: r.right, bottom: r.bottom });
+    const overlaps = (a: Band, b: Band) =>
+      Math.min(a.right, b.right) - Math.max(a.left, b.left) > 1 &&
+      Math.min(a.bottom, b.bottom) - Math.max(a.top, b.top) > 1;
     const measure = () => {
       const node = dockRef.current;
       if (!node) return;
+      const vh = window.innerHeight;
+      const vw = window.innerWidth;
       /* The resting band, not the current painted rectangle: once the pill has
          stepped aside, getBoundingClientRect() would report it as clear, the
          state would flip back, and the pill would slide in and out forever.  For
          a position:fixed element the layout box is where it rests. */
-      const d = {
+      const rest: Band = {
         left: node.offsetLeft,
         top: node.offsetTop,
         right: node.offsetLeft + node.offsetWidth,
         bottom: node.offsetTop + node.offsetHeight,
       };
-      const actionable =
-        'button, a[href], input, select, textarea, [role="button"]';
-      const hit = Array.from(document.querySelectorAll(actionable)).some((el) => {
-        if (node.contains(el) || el.contains(node)) return false;
-        const r = el.getBoundingClientRect();
-        if (r.width === 0 || r.height === 0) return false;
-        if (r.bottom < 0 || r.top > window.innerHeight) return false;
-        const overlapW = Math.min(r.right, d.right) - Math.max(r.left, d.left);
-        const overlapH = Math.min(r.bottom, d.bottom) - Math.max(r.top, d.top);
-        return overlapW > 1 && overlapH > 1;
+      /* Text is measured where its glyphs are painted, not across the element's
+         border box: a block-level heading spans the whole content column, so a
+         box test would call the empty stretch at the end of a line "covered" and
+         leave no in-viewport cell that a visible control could occupy. */
+      const ink: Band[] = [];
+      document.querySelectorAll(READABLE).forEach((el) => {
+        if (node.contains(el) || el.contains(node)) return;
+        const range = document.createRange();
+        range.selectNodeContents(el);
+        Array.from(range.getClientRects()).forEach((r) => {
+          if (r.width > 0 && r.height > 0 && r.bottom > 0 && r.top < vh) ink.push(band(r));
+        });
       });
-      setRestOverlap(hit);
+      const controls: Band[] = [];
+      document.querySelectorAll(ACTIONABLE).forEach((el) => {
+        if (node.contains(el) || el.contains(node)) return;
+        const r = el.getBoundingClientRect();
+        if (r.width === 0 || r.height === 0 || r.bottom < 0 || r.top > vh) return;
+        controls.push(band(r));
+      });
+      const bar = document.querySelector(".v8-mobile-nav");
+      const barTop = bar ? Math.max(INSET, bar.getBoundingClientRect().top) : vh;
+      const covered =
+        ink.some((b) => overlaps(b, rest)) || controls.some((b) => overlaps(b, rest));
+      setRestOverlap(covered);
+      if (!covered) {
+        setYieldSlot(null);
+        return;
+      }
+      /* Yielding relocates: walk both edges upward from just above the reserved
+         bar and take the first cell that sits on no text ink and on no other
+         control.  If every cell is occupied the pill stays where it is and keeps
+         answering taps — a hidden control is not a yielded one. */
+      const ceiling = Math.max(INSET, Math.min(barTop - INSET - SLOT, vh - INSET - SLOT));
+      const candidates: Band[] = [];
+      for (let top = ceiling; top >= INSET; top -= SLOT + 8) {
+        candidates.push({ left: vw - INSET - SLOT, top, right: vw - INSET, bottom: top + SLOT });
+      }
+      for (let top = ceiling; top >= INSET; top -= SLOT + 8) {
+        candidates.push({ left: INSET, top, right: INSET + SLOT, bottom: top + SLOT });
+      }
+      const free = candidates.find(
+        (c) => !ink.some((b) => overlaps(b, c)) && !controls.some((b) => overlaps(b, c)),
+      );
+      const cell = free || candidates[0] || rest;
+      setYieldSlot({ left: Math.round(cell.left), top: Math.round(cell.top) });
     };
     /* Measure once the scroll has settled, not during it: while the page is
        moving, content passing under a floating accessory is not the defect. */
@@ -738,6 +785,17 @@ export function CopilotDock({
       data-yield-to-surface={yieldToSurface ? "true" : "false"}
       data-idle-compact={idleCompact ? "true" : "false"}
       data-rest-overlap={yieldsAtRest ? "true" : "false"}
+      data-yield-slot={
+        yieldsAtRest && yieldSlot ? `${yieldSlot.left},${yieldSlot.top},44` : "none"
+      }
+      style={
+        yieldsAtRest && yieldSlot
+          ? ({
+              "--cn-yield-left": `${yieldSlot.left}px`,
+              "--cn-yield-top": `${yieldSlot.top}px`,
+            } as CSSProperties)
+          : undefined
+      }
     >
       {!expanded ? (
         <button
