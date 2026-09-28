@@ -60,6 +60,7 @@ export function PoiCandidateCard({
       data-testid="poi-candidate-card"
       data-poi-status={status}
       data-poi-addable={addable ? "yes" : "no"}
+      data-picked={selected ? "true" : "false"}
     >
       <div className="v8-stay-card-body">
         <div className="v8-stay-card-title">
@@ -95,11 +96,21 @@ export function PoiCandidateCard({
               type="button"
               role="checkbox"
               aria-checked={selected}
+              className={selected ? "v8-pick-box checked" : "v8-pick-box"}
               disabled={!addable}
               data-testid="poi-card-select"
+              data-picked={selected ? "true" : "false"}
               onClick={onToggle}
             >
-              {selected ? t("poiImport.cardDeselect") : t("poiImport.cardSelect")}
+              {/* Same control shape ORD-0435 settled on (its card is inline in the discovery panel at
+                  blob 8ef92f699b5e18942a554376ac48242aa4d54a36, so nothing here is importable): the tick
+                  is its own control, `aria-checked` twins the state, and `[data-picked]` is the paint
+                  hook a shared sheet can address. The word stays painted -- a glyph alone would be a
+                  state only a screen reader could read. */}
+              <span aria-hidden="true">{selected ? "✓" : ""}</span>
+              <span className="v8-pick-box-text">
+                {selected ? t("poiImport.cardDeselect") : t("poiImport.cardSelect")}
+              </span>
             </button>
           ) : null}
         </div>

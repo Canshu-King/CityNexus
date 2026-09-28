@@ -256,11 +256,13 @@ test("day-before — the automatic landing is said before anything is pressed", 
   mark("after_ensure_active_plan");
   const disclosure = await painted(page, "poi-import-day-disclosure");
   mark("after_reading_disclosure");
+  const scopeHint = await painted(page, "poi-import-scope-hint");
   const phase = await phaseOf(page);
   mark("after_reading_phase");
-  push("day-before", { disclosure, cardPhaseBeforeAnyPress: phase, planState, steps: { ...stepTimes } });
+  push("day-before", { disclosure, scopeHint, cardPhaseBeforeAnyPress: phase, planState, steps: { ...stepTimes } });
   expect(disclosure, "the day the import would land on has to be on screen before the press").not.toBeNull();
   expect(disclosure!.length).toBeGreaterThan(0);
+  expect(scopeHint, "what this door can read is said before the paste, not after a refusal").toBeTruthy();
   // the card region only exists once the traveller has asked for something
   expect(phase, "no result card before a press").toBeNull();
 });
@@ -306,11 +308,19 @@ test("link-named and states — a link is named while the text next to it is sti
   const statuses = await page.getByTestId("poi-candidate-card").evaluateAll((els) =>
     els.map((el) => el.getAttribute("data-poi-status")),
   );
+  /* The hook the shared card contract is written on: ORD-0435's card addresses state through
+     `[data-picked]` on the article and a `.v8-pick-box` control, so this counts what this screen
+     actually carries rather than trusting that the class was typed. */
+  const pickedHook = await page.getByTestId("poi-candidate-card").evaluateAll((els) => ({
+    with_data_picked: els.filter((el) => el.getAttribute("data-picked") !== null).length,
+    total: els.length,
+  }));
+  const pickBoxes = await page.locator(".v8-pick-box").count();
   const selectedCount = await painted(page, "poi-import-selection-count");
   await page.screenshot({ path: evidencePath("ord0437", "success_arm.png") });
   push("link-named-and-states", {
     planState, slack: slack.seen, catalogue: built.why, phaseSeen: seen, finalPhase: phase, counts, unsupported, verifyWarning: warning,
-    retryWords: retry, cards, statuses, selectedCount,
+    retryWords: retry, cards, statuses, selectedCount, pickedHook, pickBoxes,
   });
   expect(phase).toBe("success");
   expect(unsupported, "the link must come back named with its host, not swallowed").toContain("mp.weixin.qq.com");
@@ -323,6 +333,21 @@ test("link-named and states — a link is named while the text next to it is sti
   expect(warning, "the verification warning sits above the matched list while it is on screen").toBeTruthy();
   expect(retry, "重试 stays mounted in the success arm").toBeTruthy();
   expect(selectedCount).toMatch(/\d/);
+  /* Measured first, then pinned: four cards came out of one paste and only two carried a pick control,
+     because the two lines we could not match are not places. So the invariant is one control per
+     pickable card and none anywhere else -- not one per card. A card you cannot pick has to say why in
+     words instead of just being inert. */
+  const pickable = statuses.filter((s) => s === "RESOLVED").length;
+  expect(pickBoxes, "the shared .v8-pick-box control appears once per pickable card").toBe(pickable);
+  expect(pickedHook.with_data_picked, "每张卡都带共享的 [data-picked] 钩子").toBe(pickedHook.total);
+  const inertWithoutReason = await page.getByTestId("poi-candidate-card").evaluateAll((els) =>
+    els.filter(
+      (el) =>
+        el.getAttribute("data-poi-status") !== "RESOLVED" &&
+        !el.querySelector("[data-testid='poi-candidate-reason']"),
+    ).length,
+  );
+  expect(inertWithoutReason, "a card with no pick control has to name why").toBe(0);
 });
 
 test("error-state — the same region carries the failure and keeps 重试", async ({ page }) => {
@@ -426,15 +451,17 @@ test("chinese-arm — the sentences this order adds are Chinese on the Chinese a
   const warning = await painted(page, "poi-import-verify-warning");
   const disclosure = await painted(page, "poi-import-day-disclosure");
   const unsupported = await painted(page, "poi-import-unsupported");
+  const scopeHint = await painted(page, "poi-import-scope-hint");
   const title = await painted(page, "poi-import");
   await page.screenshot({ path: evidencePath("ord0437", "zh_arm.png") });
   push("chinese-arm", {
-    planState, slack: slack.seen, names: built.names, warning, disclosure, unsupported,
+    planState, slack: slack.seen, names: built.names, warning, disclosure, unsupported, scopeHint,
     titleHead: title?.slice(0, 60),
   });
   expect(warning).toMatch(/[一-龥]/);
   expect(disclosure).toMatch(/[一-龥]/);
   expect(unsupported).toMatch(/[一-龥]/);
+  expect(scopeHint, "支持范围那句在中文屏也得是中文").toMatch(/[一-龥]/);
 });
 
 test.afterAll(() => {
