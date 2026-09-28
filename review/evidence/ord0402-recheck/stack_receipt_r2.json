@@ -1,0 +1,89 @@
+{
+  "server_module": "app.main:app (the product's own app object; no route added by this lane)",
+  "started_by_pid": 3656,
+  "netstat_pid_on_port": "41640",
+  "listener_equals_started_pid": false,
+  "parent_of_listener": "3656",
+  "parent_of_listener_equals_started_pid": true,
+  "listener_command_line": "\"C:\\Users\\������\\AppData\\Roaming\\uv\\python\\cpython-3.12.14-windows-x86_64-none\\python.exe\" -m uvicorn app.main:app --host 127.0.0.1 --port 8724 --log-level info",
+  "db_file": "D:\\moodle\\_qoder_q_ord0402b\\run\\q0402b_product.db",
+  "db_file_bytes": 4096,
+  "database_url_env": "sqlite:///./q0402b_product.db",
+  "journey_ids": [
+    "954ee717-7ff3-4074-9b09-f55bd1666fa5",
+    "d5ff40cb-89df-4e06-b211-8503459b2907"
+  ],
+  "delete_legs": [
+    [
+      "954ee717-7ff3-4074-9b09-f55bd1666fa5",
+      204
+    ],
+    [
+      "d5ff40cb-89df-4e06-b211-8503459b2907",
+      204
+    ]
+  ],
+  "read_door": {
+    "path": "/api/v1/recycle-bin/journeys",
+    "status": 200,
+    "rows": 2,
+    "row_fields": [
+      "active_plan_version_id",
+      "bin_state",
+      "budget",
+      "city_code",
+      "current_activity_id",
+      "deleted_at",
+      "end_at",
+      "id",
+      "planning_mode",
+      "start_at",
+      "status",
+      "timezone",
+      "title",
+      "traveler_id"
+    ]
+  },
+  "read_door_rows": [
+    {
+      "id": "d5ff40cb-89df-4e06-b211-8503459b2907",
+      "traveler_id": "632e70e7-93c0-4fa2-8eb6-c184b6e48b07",
+      "title": "Xiamen two days",
+      "city_code": "CN-350200",
+      "timezone": "Asia/Shanghai",
+      "start_at": "2026-10-10T01:00:00Z",
+      "end_at": "2026-10-11T01:00:00Z",
+      "budget": {
+        "amount_minor": 120000,
+        "currency": "CNY"
+      },
+      "planning_mode": "balanced",
+      "status": "DRAFT",
+      "active_plan_version_id": null,
+      "current_activity_id": null,
+      "deleted_at": "2026-09-28T12:49:15.137164Z",
+      "bin_state": "IN_RECYCLE_BIN"
+    },
+    {
+      "id": "954ee717-7ff3-4074-9b09-f55bd1666fa5",
+      "traveler_id": "632e70e7-93c0-4fa2-8eb6-c184b6e48b07",
+      "title": "厦门两日",
+      "city_code": "CN-350200",
+      "timezone": "Asia/Shanghai",
+      "start_at": "2026-10-10T01:00:00Z",
+      "end_at": "2026-10-11T01:00:00Z",
+      "budget": {
+        "amount_minor": 120000,
+        "currency": "CNY"
+      },
+      "planning_mode": "balanced",
+      "status": "DRAFT",
+      "active_plan_version_id": null,
+      "current_activity_id": null,
+      "deleted_at": "2026-09-28T12:49:15.131455Z",
+      "bin_state": "IN_RECYCLE_BIN"
+    }
+  ],
+  "landed_list_after_binning": 0,
+  "assembly_used": false
+}

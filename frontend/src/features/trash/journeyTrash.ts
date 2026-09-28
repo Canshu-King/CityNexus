@@ -6,15 +6,15 @@ import { rejectionWithFacts, RejectionWithFacts } from "../../lib/rejectionFacts
  * renders and cannot hide what it asked the server for.
  *
  * BOTH DOORS ARE ON THE LINE NOW. The write door landed with ORD-0399:
- * `POST /api/v1/journeys/{journey_id}/undelete` (`backend/app/main.py:2999`), no `Idempotency-Key` --
+ * `POST /api/v1/journeys/{journey_id}/undelete` (`backend/app/main.py:3003`), no `Idempotency-Key` --
  * the durable column decides whether the write happens -- answering `409 JOURNEY_NOT_DELETED` rather
- * than reporting a success that did not occur (`backend/app/main.py:3033`). The read door landed
+ * than reporting a success that did not occur (`backend/app/main.py:3039`). The read door landed
  * with ORD-0402 slice 1 at `backend/app/main.py:3058`: `GET /api/v1/recycle-bin/journeys`, declared in
  * `contracts/openapi.yaml:487` and generated at `frontend/src/generated/api.ts:414`, each row
  * carrying the stored `deleted_at` and `bin_state` = `IN_RECYCLE_BIN`
  * (`backend/app/schemas.py:263` and `:264`) -- so this screen never has to conclude "it was deleted"
  * from the trip being missing from `GET /api/v1/journeys`, which keeps its own `deleted_at IS NULL`
- * promise (`backend/app/main.py:2951`).
+ * promise (`backend/app/main.py:2955`).
  *
  * The name this file chose is the name slice 1 shipped, so the constant below needed no edit when the
  * door arrived; that is the point of keeping the URL in one place. The reason for not using
@@ -26,8 +26,13 @@ import { rejectionWithFacts, RejectionWithFacts } from "../../lib/rejectionFacts
  * server's own receipt for that answer was `CNX-TWXNJHE2`).
  *
  * One thing the screen inherits rather than decides: slice 1 orders the list newest-deletion first
- * (`backend/app/main.py:3081`), and the panel renders the array as answered, so the order a traveller
- * sees is the server's order, not a client-side re-sort.
+ * (`.order_by(Journey.deleted_at.desc(), Journey.id)`, `backend/app/main.py:3081`), and the panel
+ * renders the array as answered, so the order a traveller sees is the server's order, not a
+ * client-side re-sort.
+ *
+ * Line numbers here were re-taken on 9b759cb3d7b5519a51decea244ee09723d36080d after slice 1 landed --
+ * the door this file points at moved them by four, which is the reason they are quoted with their
+ * file and not from memory.
  */
 export const TRASH_LIST_PATH = "/recycle-bin/journeys";
 

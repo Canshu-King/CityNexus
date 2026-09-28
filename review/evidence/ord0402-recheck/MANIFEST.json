@@ -24,6 +24,12 @@
   },
   "files": [
     {
+      "path": "review/evidence/ord0402-recheck/stack_receipt_r2.json",
+      "bytes": 2624,
+      "sha256": "66e623d16baa922996c4315de706d270884518c9a9aee97abab7e569163ea6f7",
+      "produced_by": "review/ord0402/private_stack_r2.py up -- product-server ownership proof, seeded ids, the read door's field list"
+    },
+    {
       "path": "review/evidence/ord0402-recheck/trash-en-A2_after_scroll.png",
       "bytes": 29237,
       "sha256": "b2999acd2221c4b5420f1593bbf8d94adf02adba5a4cc8a5749d0a1b0fe5d9d4"
@@ -80,6 +86,6 @@
       "produced_by": "review/ord0402/drive_trash_r1.mjs against :4303 (snapB dist) over :8724 (app.main:app)"
     }
   ],
-  "file_count": 11,
-  "total_bytes": 326338
+  "file_count": 12,
+  "total_bytes": 328962
 }
