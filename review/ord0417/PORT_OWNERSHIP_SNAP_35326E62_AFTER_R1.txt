@@ -1,0 +1,35 @@
+{
+ "what_this_proves": "The census ran against a backend whose database is THIS file. Row counts did not change (the sealed-demo entry re-uses the journey the copy already carried), so the write-side proof is the sqlite sidecars: the -wal and -shm files were created and touched while the eight shape x arm runs were going, which only happens to a file some server has open. The shared preview file's mtime and size are printed too, and they are the values recorded before the run: it was never written.",
+ "when": "after",
+ "my_copy_rows_after": {
+  "journeys": 1,
+  "activities": 6,
+  "places": 16
+ },
+ "my_copy_rows_before": {
+  "journeys": 1,
+  "activities": 6,
+  "places": 16
+ },
+ "rows_grew_during_the_census": false,
+ "journey_rows_now": 1,
+ "my_db_file_opened_by_the_server": {
+  "ord0417_snap0619.db": {
+   "mtime_epoch_s": 1790634545,
+   "size_B": 7213056
+  },
+  "ord0417_snap0619.db-wal": {
+   "mtime_epoch_s": 1790635829,
+   "size_B": 173072
+  },
+  "ord0417_snap0619.db-shm": {
+   "mtime_epoch_s": 1790636791,
+   "size_B": 32768
+  }
+ },
+ "shared_preview_untouched": {
+  "mtime_epoch_s": 1790585657,
+  "size_B": 7213056,
+  "mtime_equals_the_reading_taken_before_the_run": true
+ }
+}
