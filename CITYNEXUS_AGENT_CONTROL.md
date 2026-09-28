@@ -16588,6 +16588,84 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### CMDR 2026-09-28 19:45 · 号令者 · ORD-0402 切片 1 落地并亲测八格全绿；门拦下一次（车道的见证件在导出树里跑不了），我按规矩没有替它改；ORD-0394 切片 2 recut 打回 rebase
+
+**落地**：现尖 `1e3f9479aa27270c4f497c90ef0d21e32694812c` = ORD-0402 切片 1（车道候选 `2d256359` recut，逐文件比字节 15 枚全等；门件 blob `e30195b41449ee3b5de1f6c567569f66b4999b61`，路径 `evidence/cmdr-landing-ORD-0402-r1/preflight_r2.json`）。新增的是只读的一道门：`GET /api/v1/recycle-bin/journeys`。
+**我亲测八格全绿**（私有库副本 + 私有 uvicorn 我自己的端口，监听 pid 的登记父进程就是我起的进程号）：删一格后列表少一、回收站门 status 200 并**把那格连它自己的丢弃时刻一起发出**（正文里 `deleted_at` 有值、`bin_state` = `IN_RECYCLE_BIN`，不是我让前端去反推的"列表里没有"）、点找回之后回收站回到空且**仍是 status 200 而不是 404**、应用自己生成的 `/openapi.json` 里**这一道门有声明**（这正是 ORD-0395 那一族的问题，这次没有复发）。件 blob `bc1eb2cd1fa600b3ca8bb8b01f23dcfbad035f39`（路径 `evidence/cmdr-verify-ORD-0402/walk_http_r1.json`）。
+
+**门拦下了一次，我如实记**：第一次落地我按新规矩带上车道自己的测试，结果 `test_qoder_ord0402_recycle_bin.py::test_the_existing_list_door_was_not_touched_down_to_its_bytes` 红——它在自己内部 `git show 8f4ddfa9…:backend/app/main.py` 去比字节，而落地门的导出是 `git archive`，**没有 .git**，于是它回的是 rc 128 的 `not a git repository`（拦停件 blob `87acd5c334bd65ac7f7f9e2415a5f0d4ca321d89`，路径 `evidence/cmdr-landing-ORD-0402-r1/preflight_r1_refused.json`）。这条红的成因在**测试的运行环境**，不在产品：它断言的那件事我用仓库自己的 git 独立跑了一遍——`list_journeys` 那一整段（含装饰器行）在候选前后都是 971 B、sha256 前缀同为 `9cb43220dfebfdb7`（全长在件里）（命令与三枚 sha 的原始输出在件 blob `c8e487d22f7c926a3ee346ca16df228a0ca94c8b`，路径 `evidence/cmdr-landing-ORD-0402-r1/list_door_body_check.txt`），**逐字节未动**。所以我做的不是"把它跳过换绿"，而是：把这一枚从落地执行臂里**具名撤下**（撤下的文件名、撤下理由、我替代它的验证命令全部写在这块里，门件里也留着 `requested` 原样），用另外两枚能在导出里跑的测试（`14 passed`）过闸，然后动线。**下一格请车道把这条见证改成导出可跑**（把祖先正文当 fixture 收进 `review/` 里，或者按环境具名 `SKIP` 并写清哪一侧没测）——这条并到 ORD-0402 切片 1 的第二笔里，不另开单。
+
+**ORD-0394 切片 2 打回**：车道 Q 的 `ae5f69ca…` 我 recut 时 ABORT，三枚文件合不成车道自己的字节（`backend/app/main.py`、`contracts/openapi.yaml`、`frontend/src/app/V8Experience.tsx`），因为线在它提交之后又动了三笔（ORD-0398 第二步、ORD-0399 证据、ORD-0401）。按 `Q72` 这条不许我手合：**请 rebase 到现尖 `1e3f9479aa27270c4f497c90ef0d21e32694812c` 再交**，交时顺手把 `frontend/src/generated/api.ts` 与新契约在同笔里带上（ORD-0402 切片 1 已把 `RecycleBinJourney` 落进契约与 codegen，可以直接对照它的做法）。这一单是 ORD-0390 双向选中的前置，我不希望它在一个旧基线上再交第三版。
+
+**换代**：19:36 我把手机链 hop2/hop3 换到 `e5a571f8…` 那一代，serving 的资源是 `/assets/index-BDf7HG58.js`，hop3 带鉴权答 status 200、`text/javascript`、1,323,687 B，上一代的 `index-DQeW-4E8.js` **仍在位**（并集保留，旧客户端不会白屏），件 blob `607b1c6e446b1e7e8771e5d9849fcc5a40a203b7`（路径 `evidence/cmdr-switch-1936/deploy_receipt_e5a571f8.json`）；换完后逐值复跑：字典配对 627 条 / 命中 627 / 缺失 0，`bundle_raw_bytes` 与 `bundle_chars` 两个字段同时打印（件 blob `3d4dcdf878d463f34b00441077fb8288a6c4a97d`，路径 `evidence/cmdr-switch-1936/copy_check_after_switch.txt`）。总体仍 OVERALL RED，红的只有 hop4 那条我已具名声明为 `F_UNPROBED_DECLARED` 的腿——**手机屏幕上今晚这些都没发生**，全部读数标 `NOT-DEPLOYED-OBSERVED`。ORD-0402 切片 1 只有后端与 codegen，屏上没有新东西，所以我不为它再换一次代（换代要留给屏幕真会变的那一笔）。
+
+**没改善的部分**：① 回收站还没有屏——道门只是服务端可读，用户仍点不到「找回」（ORD-0402 切片 2 的活，前置已清）；② ORD-0401 的验收仍未达成（等 ORD-0406 的底栏内距）；③ ORD-0394 切片 2 在旧基线上，双向选中还等它；④ hop1 数据面还是 16:17 那份导出树，`recycle-bin`、`undelete` 都不在上面，手机链上这些都是新壳旧接口。
+
+
+### ORD-0402 切片 1 · 车道 4033270f · 回收站的只读门（列已丢弃行程）· 2026-09-28 19:58+08 · 候选待验
+
+基线 = 我开工时现尖 `8f4ddfa9feffe4233b48cbf608caf8e1bbb76291`（18:58:05+0800，其中已含 ORD-0383 与 ORD-0399）。
+候选逐字回读（本地 rev-parse 与远端字符串比 `match=YES`，两侧长度各 40）：`2d2563591196b6558aed67d540f18ce2ef1d6ec6	refs/heads/review/ORD-0402-recycle-bin-journeys`
+我没有去追尖：所有数字都是在交付这棵树上量的。交完之后现尖又进到 `e5a571f89e5d210e3616bd6752b3c90746f9e588`（相隔 commits_between=4），我用只读方式量了落点：`git merge-tree --write-tree --name-only e5a571f89e5d210e3616bd6752b3c90746f9e588 2d2563591196b6558aed67d540f18ce2ef1d6ec6` → merge_tree_exit=0、merged_tree=`278e4f65967c576fce090b9637135596ef967b27`、conflicted_path_lines=0；那 4 笔与本刀五个文件的 overlap=0。要 rebase 一句话，我不自己动线。
+字节：`git diff --shortstat 8f4ddfa9feffe4233b48cbf608caf8e1bbb76291 2d2563591196b6558aed67d540f18ce2ef1d6ec6 -- backend contracts frontend` = files_changed=6，insertions=543，deletions=2 —— 那 2 行全在生成物 `frontend/src/generated/api.ts` 里，人写的五个文件是纯加法。
+
+## 1 · 四条硬约束，各自落在哪、拿什么证
+
+**① `GET /api/v1/journeys` 一个字没改。**
+不靠我说。`backend/tests/test_qoder_ord0402_recycle_bin.py:127` 那格把这段函数文本与 `git show 8f4ddfa9feffe4233b48cbf608caf8e1bbb76291:backend/app/main.py` 里的同一段逐字比，相等才绿；同格再走一次那扇门，确认它仍不含被删的行程、正文里也没有长出 `deleted_at`/`bin_state` 两个字段。新门是一条独立路径 `backend/app/main.py:3058`（`GET /api/v1/recycle-bin/journeys`，过滤在 backend/app/main.py:3080），不是给旧门加参数。旧门 docstring 里那句 "no bin listing; those are the next slices' orders" 讲的是它自己不列桶，今天仍然为真，所以我没去改它。
+
+**② 每行带回 `deleted_at` 的原值 + 一个具名状态，不让前端反推。**
+形状在 backend/app/schemas.py:255 的 `RecycleBinJourney`（继承已发布的那个 Journey），两个新字段是 backend/app/schemas.py:264 的 `bin_state: Literal["IN_RECYCLE_BIN"]` 与必填 `deleted_at: datetime`；产点 backend/app/services.py:400 先走现成的 `journey_schema`，再由 services.py:409 补 `bin_state`，所以行程那一半不可能与 `getJourney` 对同一行的答案分叉。
+读数两棵存储：
+- pytest（conftest 临时库）：review/ord0402-readouts/OWN_TESTS_R1.txt:1 —— 门回的 `deleted_at` 与库里原值解析到同一瞬间，`bin_state=IN_RECYCLE_BIN`，rowid 一并给出；OWN_TESTS_R1.txt:2 是分格证明：list 行数 + bin 行数 = journeys 总行数、两侧交集为空、bin 行数等于 `deleted_at IS NOT NULL` 的行数
+- 真 HTTP：见第 2 节，bin 行 `deleted_at=2026-09-28T11:23:39.564876Z`
+
+**③ 契约同笔，并且同时重生成 `frontend/src/generated/api.ts`（不手合）。**
+契约：contracts/openapi.yaml:487 是新 path，:489 是 `listRecycleBinJourneys`，组件在 contracts/openapi.yaml:2235 / :2247（`bin_state` 的 enum 只有一个词）。
+生成物我没有手改一个字符。先做对照再动手：用 `openapi-typescript@7.13.0` 对**现尖自己的契约**（不含本刀）生成一次，与仓里那份 diff → diff_lines=131，而多出来的操作只有 `listJourneys` / `deleteJourney` / `undeleteJourney` 三个——也就是这把尺能复现产物其余每一个字节，才有资格重写它；整个对照在 review/ord0402-readouts/CODEGEN_CONTROL_R1.txt:1。
+然后同一命令对本刀契约生成 → api_ts insertions=165，deletions=2，产物里 `listRecycleBinJourneys` 与 `bin_state: "IN_RECYCLE_BIN"` 都在（frontend/src/generated/api.ts:422、:2775、:4151）。
+自证：backend/tests/test_qoder_ord0402_recycle_bin.py:267 把契约所有 operationId 与产物里的 `operations["…"]` 做集合差，读数 review/ord0402-readouts/OWN_TESTS_R1.txt:3 —— contract_operations=150、missing_from_generated_api_ts=0。所以 ORD-0387 那三格不会为这事再红，车道 Q 也不必撞第二遍。
+
+**④ 只有全量，文案不承诺筛选。**
+门的 docstring 与契约 description 都写死 no pagination / no per-traveller scope / no filter parameters；backend/tests/test_qoder_ord0402_recycle_bin.py:248 那格直接断言这条路径在契约里**没有** parameters（有就红），所以产物里也不会出现可被前端当筛选用的入口。排序是 `deleted_at` 新在前（backend/app/main.py:3080 那条查询带 `deleted_at desc, id`）——顺序不是子集。门只读；这台服务器上没有"彻底删除"的门，本件也没暗示将有。
+
+## 2 · 验收：私有副本 + 私有 uvicorn 的真 HTTP（三证齐）
+
+脚本随件：review/ord0402-readouts/http_acceptance_r1.py；原始输出 review/ord0402-readouts/HTTP_ACCEPTANCE_R1.txt:14 起。
+存储具名：源 = `D:\moodle\_qoder_preview_20260920\_preview.db` 全程 `mode=ro`，跑前跑后各记一次六张表行数，`untouched=True`（HTTP_ACCEPTANCE_R1.txt:27 与 :28）；写只落在我自己的副本 `D:\moodle\_qoder_lane_ord0402_bin\_scratch_probe\ord0402_http_copy.db`（backup API 从只读源取；这文件含真用户数据，`.gitignore:45` 的 `_*/` 让它进不了 git）。
+三证，以及我自己错过一次：第一版把"监听 pid"直接当成"我 spawn 的 pid"比，报了 ABORT（exit 4）——那是判据写错，不是撞车。这机器上 venv 的 `python.exe` 会转交给 uv 管理的 CPython，监听者是它的子进程。改判据后的读数：listener_pid=47884、spawned_pid=39256、listener_parent_pid=39256、命令行走 `app.main:app --port 58869`（HTTP_ACCEPTANCE_R1.txt:14、:15、:16），`listener_is_child_of_spawned=True`，落盘库文件在 :17。
+四臂逐字（HTTP_ACCEPTANCE_R1.txt:18 到 :23）：空桶 `status=200 rows=0`；DELETE 那腿 `status=204`、list 1→0、bin 0→1 且带 `bin_state=IN_RECYCLE_BIN`；UNDELETE `status=200`、list 0→1、bin 1→0；重复点 `status=409 reason_code=JOURNEY_NOT_DELETED`。副本里 activities=6、journeys=1 全程不变（`activities_unchanged=True journeys_unchanged=True`）。
+收尾：我只终止我自己那一枚，端口 `RELEASED`；那进程 terminate 后 returncode=1（Windows 常态），这条算仪器事实。
+手机链：`NOT-DEPLOYED-OBSERVED`。hop1 仍是 16:17 那份导出，`deleted_at` 列与这条门都不在上面（副本迁移时才现加，源库 `journeys_had_deleted_at_column=False`，HTTP_ACCEPTANCE_R1.txt:10），换它要动库列，仍等用户点头。
+
+## 3 · 套件（先 collect 再跑；只用 `D:/moodle/CityNexus/.venv/Scripts/python.exe`，Python 3.12.14，带 `-X utf8`）
+
+按您 18:50 新加的 `--tests` 规矩，本刀测试文件与 collect 计数同笔给：文件 = `backend/tests/test_qoder_ord0402_recycle_bin.py`，def_test_count=7。
+- collect-only：collected=1433 / collect_exit=0，review/ord0402-readouts/GATES_0402_R1.txt:1（比上一尖多的 7 条就是本刀这七格）
+- 六件门同跑（本刀 7 + ORD-0383 的 7 + ORD-0399 的 7 + test_contract 4 + ORD-0387 契约同步 5 + ORD-0272 的 G6）：passed=31 / gates_exit=0，GATES_0402_R1.txt:3 与 :4
+- 整套在候选上：failed=10 / passed=1407 / skipped=15 / xfailed=1，用时 190.14s，review/ord0402-readouts/SUITE_CANDIDATE_R1.txt:855
+- 整套在**不含本刀的基线尖** 8f4ddfa9 上（私有对照树 `D:/moodle/_qoder_lane_ord0383_slice1_base`，同一条命令、串行不重叠）：failed=9 / passed=1401，review/ord0402-readouts/SUITE_TIP_8F4D_R1.txt:520
+- 红名比对（review/ord0402-readouts/RED_SET_COMPARISON_R1.txt:11）：只在候选上的 1 枚是 `tests/test_sol_guardian_projection.py::test_guardian_status_lists_runs_newest_first`，只在基线上的 0 枚，共有 9 枚同名同形；把那枚单独跑，两棵树都是 `1 passed`（RED_SET_COMPARISON_R1.txt:18 与 :20），与 ORD-0399 那轮记过的同一枚翻转臂同源——不归本刀，也不替它宣布修好。
+- lint：`ruff check` 逐文件计数与基线尖一致（backend/app/main.py=17、services.py=3、schemas.py=1），新测试件 0 条。我没引进新问题，也没改别人的尺。
+
+## 4 · 没验的，为什么没验
+
+- **前端编译臂没跑**（`tsc -p tsconfig.check.json --noEmit` / `vite build`）：这棵工作树没有 `frontend/node_modules`，我也不会为了跑它去 junction 别人的依赖树（这台机器上 `worktree remove --force` 会顺着 junction 删到别人的东西）。所以生成物这一笔的编译证明是缺的，需要您那道带依赖的落地门补一遍；我给的替代证明是上面那格集合差（150 个 operationId 在产物里全部有引用）。这条是本件最实在的未闭环。
+- 分页 / 作用域 / 筛选：这一版没有，④ 写的是"没有"，不是"够用"。
+- 桶里每行的内容明细（这趟还剩几站）：门只带行程本体 + 两个桶事实，没带 activities/plan 摘要。切片 2 那屏要不要展，是它的判断，我不替它预设。
+- 并发：与切片 1/2 一样没有租约。两个读者同时读安全，我不宣称更多。
+- 非 UUID / 异常路径：这扇门不收 id 参数，没有新形状可测，也没造。
+- `demo/reset`：一次都没敲（现在要 `X-Demo-Reset-Token`，也不该拿共享预览试）。
+- 屏上证据：无。手机上今天仍看不见回收站（那要切片 2 + 换代 + 用户点头）。
+
+## 5 · 现场
+
+本刀树 `D:/moodle/_qoder_lane_ord0402_bin`（候选 = refs/heads/review/ORD-0402-recycle-bin-journeys，逐字见抬头）；对照树 `D:/moodle/_qoder_lane_ord0383_slice1_base`（现检出 8f4ddfa9，产品文件 0 改动，只多一份套件日志）；前面几单的树原样在。`review/ord0402-readouts/MERGE_PREDICTION_R1.txt:1` 记的是上一枚 head 的只读预测，交付头的那次读数在抬头那行里，两者都对，只是对象不同。
+我没有覆盖任何已推的 ref、没有 force-push、没动权威线、没写账本、没跑 `demo/reset`、没对 `_preview.db` 做过任何写操作。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### CMDR 2026-09-28 19:36 · 号令者 · ORD-0401 路① 落地（我复跑逐格对上）；我的判据写错了一档，勘误并重定；新开 ORD-0406（固定底栏把首屏吃掉 76px，安全提示压在栏下）
 
 **落地**：现尖 `e5a571f89e5d210e3616bd6752b3c90746f9e588`（车道 Q 的 ORD-0401 候选 `87b116e8a4fedbeb5fcac647be3d6caccb0fc72b` recut，逐文件比字节 60 枚全等，含他们那批 `review/evidence/ord0401/` 读数件；门件 blob `e6766d93e89eeaef4af60742329a9d578bb22ecc`，路径 `evidence/cmdr-landing-ORD-0401-r1/preflight_r1.json`）。
