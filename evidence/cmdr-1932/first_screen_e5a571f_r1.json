@@ -1,0 +1,159 @@
+{
+ "at": "2026-09-28T11:29:39.373Z",
+ "base": "http://127.0.0.1:4795/",
+ "rows": [
+  {
+   "shape": "390x844",
+   "viewport": [
+    390,
+    844
+   ],
+   "nav_tag": "NAV",
+   "nav_pos": "fixed",
+   "nav_box": [
+    0,
+    768,
+    390,
+    76
+   ],
+   "nav_top": 768,
+   "element_at": {
+    "600": "SMALL.cn-clock-source",
+    "700": "B.",
+    "760": "DIV.v8-map-panel",
+    "768": "NAV.v8-mobile-nav",
+    "770": "NAV.v8-mobile-nav",
+    "780": "NAV.v8-mobile-nav",
+    "820": "SPAN.",
+    "830": "SPAN."
+   },
+   "panel_box": [
+    17,
+    885,
+    356,
+    143
+   ],
+   "panel_chars": 33,
+   "action_box": [
+    195,
+    969,
+    119,
+    44
+   ],
+   "action_hit_before_scroll": false,
+   "doc_height": 1407,
+   "after": {
+    "action_box": [
+     195,
+     406,
+     119,
+     44
+    ],
+    "hit_after_scroll": true,
+    "scrollY": 563
+   }
+  },
+  {
+   "shape": "360x800",
+   "viewport": [
+    360,
+    800
+   ],
+   "nav_tag": "NAV",
+   "nav_pos": "fixed",
+   "nav_box": [
+    0,
+    724,
+    360,
+    76
+   ],
+   "nav_top": 724,
+   "element_at": {
+    "600": "SMALL.cn-clock-source",
+    "700": "B.",
+    "760": "svg.[object",
+    "768": "BUTTON.",
+    "770": "BUTTON.",
+    "780": "SPAN.",
+    "820": null,
+    "830": null
+   },
+   "panel_box": [
+    17,
+    932,
+    326,
+    143
+   ],
+   "panel_chars": 33,
+   "action_box": [
+    195,
+    1016,
+    119,
+    44
+   ],
+   "action_hit_before_scroll": false,
+   "doc_height": 1486,
+   "after": {
+    "action_box": [
+     195,
+     378,
+     119,
+     44
+    ],
+    "hit_after_scroll": true,
+    "scrollY": 638
+   }
+  },
+  {
+   "shape": "414x896",
+   "viewport": [
+    414,
+    896
+   ],
+   "nav_tag": "NAV",
+   "nav_pos": "fixed",
+   "nav_box": [
+    0,
+    820,
+    414,
+    76
+   ],
+   "nav_top": 820,
+   "element_at": {
+    "600": "ARTICLE.v8-trip-hero",
+    "700": "P.",
+    "760": "B.",
+    "768": "B.",
+    "770": "B.",
+    "780": "DIV.cn-hero-strip",
+    "820": "NAV.v8-mobile-nav",
+    "830": "NAV.v8-mobile-nav"
+   },
+   "panel_box": [
+    17,
+    839,
+    380,
+    143
+   ],
+   "panel_chars": 33,
+   "action_box": [
+    195,
+    923,
+    119,
+    44
+   ],
+   "action_hit_before_scroll": false,
+   "doc_height": 1361,
+   "after": {
+    "action_box": [
+     195,
+     458,
+     119,
+     44
+    ],
+    "hit_after_scroll": true,
+    "scrollY": 465
+   }
+  }
+ ]
+}
