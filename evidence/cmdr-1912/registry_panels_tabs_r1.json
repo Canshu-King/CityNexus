@@ -1,0 +1,261 @@
+{
+ "at": "2026-09-28T11:03:22.561Z",
+ "base": "http://127.0.0.1:4789/",
+ "assets_fetched": [
+  "/assets/index-DQeW-4E8.js",
+  "/assets/index-tCROZ2r8.css"
+ ],
+ "tabs": [
+  "nav-hub",
+  "nav-trips",
+  "nav-map",
+  "nav-agent",
+  "nav-me"
+ ],
+ "screens": {
+  "nav-hub": {
+   "prep-panel": {
+    "present": false
+   },
+   "recovery-required-panel": {
+    "present": false
+   },
+   "pretrip-checklist": {
+    "present": true,
+    "text_head": "行前清单\n服务端报出的两类待办\n\n这里只列契约写明依据的两类检查：这一代方案的可行性失败、以及等待你决定的恢复方案。完成状态由服务端事实自己消失，不需要你打勾；没跑过的检查不会被打勾，也不会出现在这里。\n\n服务端这一代没有报出可行性失败，也没有等待你决定的恢复方案。这里只列契约已经写明依据的两类检查，其余没跑过的检查不",
+    "chars": 182,
+    "box": [
+     17,
+     885,
+     356,
+     325
+    ],
+    "in_viewport": false,
+    "hittable": false
+   },
+   "plan-version-history": {
+    "present": false
+   },
+   "hotels-panel": {
+    "present": false
+   },
+   "v12-authoritative-panel": {
+    "present": false
+   },
+   "v8-maplibre-panel": {
+    "present": false
+   },
+   "trips-commitments": {
+    "present": false
+   },
+   "hub-glance-empty": {
+    "present": true,
+    "text_head": "还没有可以预览的行程\n\n选定方案后，这里会显示每天的安排。",
+    "chars": 29,
+    "box": [
+     17,
+     1311,
+     356,
+     58
+    ],
+    "in_viewport": false,
+    "hittable": false
+   },
+   "today-strip": {
+    "present": true,
+    "text_head": "住宿\n还没有选定\n到达\n10月10日 09:00\n出发\n10月10日 19:00",
+    "chars": 40,
+    "box": [
+     17,
+     771,
+     356,
+     65
+    ],
+    "in_viewport": true,
+    "hittable": false
+   }
+  },
+  "nav-trips": {
+   "prep-panel": {
+    "present": false
+   },
+   "recovery-required-panel": {
+    "present": false
+   },
+   "pretrip-checklist": {
+    "present": false
+   },
+   "plan-version-history": {
+    "present": false
+   },
+   "hotels-panel": {
+    "present": false
+   },
+   "v12-authoritative-panel": {
+    "present": false
+   },
+   "v8-maplibre-panel": {
+    "present": false
+   },
+   "trips-commitments": {
+    "present": false
+   },
+   "hub-glance-empty": {
+    "present": false
+   },
+   "today-strip": {
+    "present": false
+   }
+  },
+  "nav-map": {
+   "prep-panel": {
+    "present": false
+   },
+   "recovery-required-panel": {
+    "present": false
+   },
+   "pretrip-checklist": {
+    "present": false
+   },
+   "plan-version-history": {
+    "present": false
+   },
+   "hotels-panel": {
+    "present": false
+   },
+   "v12-authoritative-panel": {
+    "present": false
+   },
+   "v8-maplibre-panel": {
+    "present": false
+   },
+   "trips-commitments": {
+    "present": false
+   },
+   "hub-glance-empty": {
+    "present": false
+   },
+   "today-strip": {
+    "present": false
+   }
+  },
+  "nav-agent": {
+   "prep-panel": {
+    "present": false
+   },
+   "recovery-required-panel": {
+    "present": false
+   },
+   "pretrip-checklist": {
+    "present": false
+   },
+   "plan-version-history": {
+    "present": false
+   },
+   "hotels-panel": {
+    "present": false
+   },
+   "v12-authoritative-panel": {
+    "present": false
+   },
+   "v8-maplibre-panel": {
+    "present": false
+   },
+   "trips-commitments": {
+    "present": false
+   },
+   "hub-glance-empty": {
+    "present": false
+   },
+   "today-strip": {
+    "present": false
+   }
+  },
+  "nav-me": {
+   "prep-panel": {
+    "present": false
+   },
+   "recovery-required-panel": {
+    "present": false
+   },
+   "pretrip-checklist": {
+    "present": false
+   },
+   "plan-version-history": {
+    "present": false
+   },
+   "hotels-panel": {
+    "present": false
+   },
+   "v12-authoritative-panel": {
+    "present": false
+   },
+   "v8-maplibre-panel": {
+    "present": false
+   },
+   "trips-commitments": {
+    "present": false
+   },
+   "hub-glance-empty": {
+    "present": false
+   },
+   "today-strip": {
+    "present": false
+   }
+  }
+ },
+ "drawer": {
+  "opened": true,
+  "items": [
+   "nav-hub",
+   "nav-trips",
+   "nav-map",
+   "nav-agent",
+   "nav-me"
+  ],
+  "panels": {
+   "prep-panel": {
+    "present": false
+   },
+   "recovery-required-panel": {
+    "present": false
+   },
+   "pretrip-checklist": {
+    "present": false
+   },
+   "plan-version-history": {
+    "present": false
+   },
+   "hotels-panel": {
+    "present": false
+   },
+   "v12-authoritative-panel": {
+    "present": false
+   },
+   "v8-maplibre-panel": {
+    "present": false
+   },
+   "trips-commitments": {
+    "present": false
+   },
+   "hub-glance-empty": {
+    "present": false
+   },
+   "today-strip": {
+    "present": false
+   }
+  }
+ },
+ "bundle": {
+  "bytes": 1287037,
+  "marks": {
+   "http_status": 72,
+   "content_type": 28,
+   "body_bytes": 3,
+   "elapsed_ms": 8,
+   "NOT_MEASURED": 1,
+   "更新自": 0
+  }
+ },
+ "page_errors": []
+}
