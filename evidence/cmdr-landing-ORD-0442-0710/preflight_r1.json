@@ -1,0 +1,255 @@
+{
+ "schema": "CNX_CMDR_LANDING_PREFLIGHT_V1_R7",
+ "lane": "commander 494abfd7",
+ "at_local": "2026-09-29T05:10:55+0800",
+ "mode": "LAND",
+ "authoritative_line": "mirror/integration-frontend-apple-pass1",
+ "tip_re_read_from_github_before": "edcc2e2bc2c74203da346a89b24d87ae26866b01",
+ "candidate_ref": "review/cmdr-recut-ORD-0442-r2",
+ "candidate_tip": "7399f59ccdb2dfe3cdf04477d4e4ffcc077e214a",
+ "genealogy": {
+  "ff_possible_rc": 0,
+  "ff_possible": true,
+  "merge_base": "edcc2e2bc2c74203da346a89b24d87ae26866b01",
+  "line_only_commits": 0,
+  "candidate_only_commits": 2
+ },
+ "file_sets": {
+  "line_side_since_base": [],
+  "candidate_side_since_base": [
+   "review/n3_0442_evidence_r1/attribution_probe_r1.json",
+   "review/n3_0442_evidence_r1/attribution_probe_r2.json",
+   "review/n3_0442_evidence_r1/collect_r1.txt",
+   "review/n3_0442_evidence_r1/g3_child_repro_r3.json",
+   "review/n3_0442_evidence_r1/g9_family_seam_photon_r1.txt",
+   "review/n3_0442_evidence_r1/g9b_g10_seam_photon_proxy_off_r1.txt",
+   "review/n3_0442_evidence_r1/probe_r2_run.txt",
+   "review/n3_0442_evidence_r1/probe_r4_run.txt",
+   "review/n3_0442_evidence_r1/probe_run_r1.txt",
+   "review/n3_0442_evidence_r1/sibling_doors_r1.txt",
+   "review/n3_0442_evidence_r1/sqlite_lock_probe_r4.json",
+   "review/n3_0442_evidence_r1/twelve_r1.txt",
+   "review/n3_0442_evidence_r1/twelve_run_before_r1.txt",
+   "review/n3_0442_evidence_r1/twelve_run_fulltree_r1.txt",
+   "review/n3_0442_evidence_r1/twelve_run_present_tip_r1.txt",
+   "review/n3_0442_evidence_r1/twelve_verdicts_r1.json",
+   "review/n3_0442_evidence_r1/twelve_verdicts_r1.md",
+   "review/ord0442/RUNBOOK_r1.md",
+   "review/ord0442/extract_reds_r1.py",
+   "review/ord0442/g3_child_repro_r3.py",
+   "review/ord0442/test_ord0442_attribution_probe_r1.py",
+   "review/ord0442/test_ord0442_attribution_probe_r2.py",
+   "review/ord0442/test_ord0442_sqlite_lock_probe_r4.py",
+   "review/ord0442/twelve_verdicts_r1.py"
+  ],
+  "intersection": [],
+  "product_introduced_by_candidate": []
+ },
+ "merge_tree": {
+  "exit": 0,
+  "first_line": "3fbd2f093c889d6b234ba5c51cb25cd7f2b3bb58",
+  "conflict_reported": false,
+  "stderr_head": ""
+ },
+ "gate_run": {
+  "requested": [],
+  "collect_exit": null,
+  "collected": null,
+  "test_exit": null,
+  "summary": null,
+  "export": "D:/moodle/_qoder_cmdr_ref_20260921/snap_preflight_051023",
+  "blob_equality": [
+   {
+    "path": "review/n3_0442_evidence_r1/attribution_probe_r1.json",
+    "candidate_blob": "7e0a4cacff4cf833fc866ebb0c42f197282c9b45",
+    "export_blob": "7e0a4cacff4cf833fc866ebb0c42f197282c9b45",
+    "equal": true
+   },
+   {
+    "path": "review/n3_0442_evidence_r1/attribution_probe_r2.json",
+    "candidate_blob": "1a55459164a464a92e7467431d93dc43f2ecafb0",
+    "export_blob": "1a55459164a464a92e7467431d93dc43f2ecafb0",
+    "equal": true
+   },
+   {
+    "path": "review/n3_0442_evidence_r1/collect_r1.txt",
+    "candidate_blob": "6ea13681f000306172dfeea4da593a0e24bec32d",
+    "export_blob": "6ea13681f000306172dfeea4da593a0e24bec32d",
+    "equal": true
+   },
+   {
+    "path": "review/n3_0442_evidence_r1/g3_child_repro_r3.json",
+    "candidate_blob": "ba5aab16584a65ab24a9bd569a6be7c03dfaa5f1",
+    "export_blob": "ba5aab16584a65ab24a9bd569a6be7c03dfaa5f1",
+    "equal": true
+   },
+   {
+    "path": "review/n3_0442_evidence_r1/g9_family_seam_photon_r1.txt",
+    "candidate_blob": "521998ca66f23b907cb068a3104f55f5b17653fd",
+    "export_blob": "521998ca66f23b907cb068a3104f55f5b17653fd",
+    "equal": true
+   },
+   {
+    "path": "review/n3_0442_evidence_r1/g9b_g10_seam_photon_proxy_off_r1.txt",
+    "candidate_blob": "2fab421c9c18ddb0f596652aebe5c6c107cce681",
+    "export_blob": "2fab421c9c18ddb0f596652aebe5c6c107cce681",
+    "equal": true
+   },
+   {
+    "path": "review/n3_0442_evidence_r1/probe_r2_run.txt",
+    "candidate_blob": "f965ed903ce88e3ef88500d7236ac75f70d80963",
+    "export_blob": "f965ed903ce88e3ef88500d7236ac75f70d80963",
+    "equal": true
+   },
+   {
+    "path": "review/n3_0442_evidence_r1/probe_r4_run.txt",
+    "candidate_blob": "50de78b8a98d4084c4aeed83a804db0c08c60f60",
+    "export_blob": "50de78b8a98d4084c4aeed83a804db0c08c60f60",
+    "equal": true
+   },
+   {
+    "path": "review/n3_0442_evidence_r1/probe_run_r1.txt",
+    "candidate_blob": "4a3d3b486a27e6c180267a598a036c5c2d86e2a3",
+    "export_blob": "4a3d3b486a27e6c180267a598a036c5c2d86e2a3",
+    "equal": true
+   },
+   {
+    "path": "review/n3_0442_evidence_r1/sibling_doors_r1.txt",
+    "candidate_blob": "255fc64066d84bbdb1af804d675de3ee0ff72ba1",
+    "export_blob": "255fc64066d84bbdb1af804d675de3ee0ff72ba1",
+    "equal": true
+   },
+   {
+    "path": "review/n3_0442_evidence_r1/sqlite_lock_probe_r4.json",
+    "candidate_blob": "325efb77d04f7b5946fef7be483b4bf257c98b30",
+    "export_blob": "325efb77d04f7b5946fef7be483b4bf257c98b30",
+    "equal": true
+   },
+   {
+    "path": "review/n3_0442_evidence_r1/twelve_r1.txt",
+    "candidate_blob": "7ac9dbd30a8ecbbbbedaf59631bda085ce5ef0fd",
+    "export_blob": "7ac9dbd30a8ecbbbbedaf59631bda085ce5ef0fd",
+    "equal": true
+   },
+   {
+    "path": "review/n3_0442_evidence_r1/twelve_run_before_r1.txt",
+    "candidate_blob": "46d22f6911d8e2199926b339f4f1a250769e8c7c",
+    "export_blob": "46d22f6911d8e2199926b339f4f1a250769e8c7c",
+    "equal": true
+   },
+   {
+    "path": "review/n3_0442_evidence_r1/twelve_run_fulltree_r1.txt",
+    "candidate_blob": "3e5d44ec0ac583c9ded8c8cca05bd638c300f5a7",
+    "export_blob": "3e5d44ec0ac583c9ded8c8cca05bd638c300f5a7",
+    "equal": true
+   },
+   {
+    "path": "review/n3_0442_evidence_r1/twelve_run_present_tip_r1.txt",
+    "candidate_blob": "86cf04dbd315deb0cccf9286cca48b2359fce28b",
+    "export_blob": "86cf04dbd315deb0cccf9286cca48b2359fce28b",
+    "equal": true
+   },
+   {
+    "path": "review/n3_0442_evidence_r1/twelve_verdicts_r1.json",
+    "candidate_blob": "dd71233ab86d73903caa310f3528dd5b82141f6f",
+    "export_blob": "dd71233ab86d73903caa310f3528dd5b82141f6f",
+    "equal": true
+   },
+   {
+    "path": "review/n3_0442_evidence_r1/twelve_verdicts_r1.md",
+    "candidate_blob": "65abe2e519f028b63ac7ccfeb0e7a48a032926f4",
+    "export_blob": "65abe2e519f028b63ac7ccfeb0e7a48a032926f4",
+    "equal": true
+   },
+   {
+    "path": "review/ord0442/RUNBOOK_r1.md",
+    "candidate_blob": "32d553627380b6a32688f8d66e3c6ffba8ee57fd",
+    "export_blob": "32d553627380b6a32688f8d66e3c6ffba8ee57fd",
+    "equal": true
+   },
+   {
+    "path": "review/ord0442/extract_reds_r1.py",
+    "candidate_blob": "026cd3c536167eb223dee8ee22f6637256d27aa5",
+    "export_blob": "026cd3c536167eb223dee8ee22f6637256d27aa5",
+    "equal": true
+   },
+   {
+    "path": "review/ord0442/g3_child_repro_r3.py",
+    "candidate_blob": "a0b8f6d2a0277d3ee8da7f583375e8c7d59937de",
+    "export_blob": "a0b8f6d2a0277d3ee8da7f583375e8c7d59937de",
+    "equal": true
+   },
+   {
+    "path": "review/ord0442/test_ord0442_attribution_probe_r1.py",
+    "candidate_blob": "21a93445a0266964100da8a9827145b7cd9a3473",
+    "export_blob": "21a93445a0266964100da8a9827145b7cd9a3473",
+    "equal": true
+   },
+   {
+    "path": "review/ord0442/test_ord0442_attribution_probe_r2.py",
+    "candidate_blob": "fe17f32dfe9581895ba31e25862c5270a7bb80bc",
+    "export_blob": "fe17f32dfe9581895ba31e25862c5270a7bb80bc",
+    "equal": true
+   },
+   {
+    "path": "review/ord0442/test_ord0442_sqlite_lock_probe_r4.py",
+    "candidate_blob": "52b4ec3d12388f38c5064a0b0f79ec55dc76e0b2",
+    "export_blob": "52b4ec3d12388f38c5064a0b0f79ec55dc76e0b2",
+    "equal": true
+   },
+   {
+    "path": "review/ord0442/twelve_verdicts_r1.py",
+    "candidate_blob": "fb35072bc2de9ac3783b3e34d46f5532e2ffe09c",
+    "export_blob": "fb35072bc2de9ac3783b3e34d46f5532e2ffe09c",
+    "equal": true
+   }
+  ],
+  "whole_suite": {
+   "collect_exit": 0,
+   "collected": 1440,
+   "interrupted": false,
+   "error_lines": [
+    "tests/test_qoder_ord0332_error_receipt.py::test_R7_the_envelope_keeps_every_field_it_already_had",
+    "tests/test_qoder_ord0332_error_receipt.py::test_R8_the_seed_is_read_off_the_real_request_not_just_the_dataclass",
+    "tests/test_solver_runtime_policy.py::test_unexpected_solver_programming_error_is_not_silently_hidden"
+   ],
+   "tail": [
+    "    _PortalFactoryType = Callable[[], AbstractContextManager[anyio.abc.BlockingPortal]]",
+    "-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html",
+    "1440 tests collected in 15.43s"
+   ],
+   "cmd": "D:/moodle/CityNexus/.venv/Scripts/python.exe -m pytest --collect-only -q tests  (cwd=<export>/backend, PYTHONPATH=<export>)"
+  },
+  "deletions": {
+   "deleted_by_candidate": [],
+   "still_present_in_export": []
+  },
+  "interpreter": "Python 3.12.14 (main, Aug 25 2026, 14:01:42) [MSC v.1944 64 bit (AMD64)]",
+  "exposure": {
+   "skipped": "no frontend/src file changed"
+  },
+  "frontend_build": {
+   "skipped": "no frontend/src file in this candidate"
+  }
+ },
+ "problems": [],
+ "verdict": "READY_TO_LAND",
+ "landing": {
+  "http": 200,
+  "response_head": "{'ref': 'refs/heads/mirror/integration-frontend-apple-pass1', 'node_id': 'REF_kwDOUhlJJ9oAMnJlZnMvaGVhZHMvbWlycm9yL2ludGVncmF0aW9uLWZyb250ZW5kLWFwcGxlLXBhc3Mx', 'url': 'https://api.github.com/repos/Ca",
+  "tip_after": "7399f59ccdb2dfe3cdf04477d4e4ffcc077e214a",
+  "branches_route": "7399f59ccdb2dfe3cdf04477d4e4ffcc077e214a",
+  "both_routes_agree": true,
+  "landed": true
+ },
+ "discipline": {
+  "evidence_paths_overwritten": 0,
+  "databases_opened": 0,
+  "surfaces_started_or_stopped": 0,
+  "credential_values_printed": 0,
+  "candidate_refs_pushed_by_commander": 0
+ },
+ "claim_kind": "git_and_pytest_determined",
+ "claimed_result": null,
+ "derived_result": null
+}
