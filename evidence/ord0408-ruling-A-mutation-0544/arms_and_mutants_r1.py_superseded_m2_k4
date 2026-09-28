@@ -1,0 +1,240 @@
+"""ORD-0408 ruling A, part two: the three arms as three files, and the mutants that prove they bite.
+
+What was missing from the 03:4x delivery was not the readings - it was the 反控. Twelve arms that all
+pass say nothing about whether any of them could fail, so this run mutates the ruler at the six
+decision points ruling A actually rests on and requires that a NAMED arm flips for each mutation. A
+mutant nobody catches is reported and the script exits non-zero: that is the difference between a
+ruler with teeth and a ruler that agrees with itself.
+
+Mutants, each one a defect this lineage has actually had today:
+  M1 union_fallback           `contractSetFor` falls back to every enum in the document
+                              (the draft I removed after B7/B9 measured it)
+  M2 enum_key_owns_the_set    the `enum:` key line becomes the property name
+                              (the first parse, which reported CONTRACT_MISSING_ENUM on a contract
+                              that did declare the set)
+  M3 silent_contract_is_pass  a contract naming no set exonerates anyway
+  M4 ignore_the_chain         set membership is never checked against the value's own literals
+  M5 refused_cell_may_fold    a cell the contract refused is handed to the disclosure fold
+  M6 exempt_by_field_name     ruling B restored: naming a `*_code` field is permission enough
+
+Arm files, one per arm as the order asks:
+  arm_before_tip_contract.json  the LIVE contract at the tip, which names no set for `reason_code`
+  arm_after_contract_with_enum.json the same cell with a contract that does name one, inline and block
+  arm_mutant_r7b4.json          the six mutants above, with the arm each one flips
+"""
+import hashlib
+import io
+import json
+import os
+import re
+import subprocess
+import sys
+
+ROOT = r"D:\moodle\_qoder_cmdr_ref_20260921\live_checks"
+WORK = r"D:\moodle\_qoder_lane_S4_0926\work\ord0408"
+JIA = os.path.join(WORK, "jia")
+R7B4 = os.path.join(ROOT, "ui_exposure_taint_ast_r7b4.cjs")
+TIP_PANEL = os.path.join(JIA, "tip", "frontend", "src", "features", "trash",
+                         "JourneyTrashPanel.tsx")
+REAL_CONTRACT = os.path.join(JIA, "tip", "contracts", "openapi.yaml")
+INLINE = os.path.join(JIA, "openapi_inline_enum.yaml")
+BLOCK = os.path.join(JIA, "openapi_block_enum.yaml")
+ABSENT = os.path.join(JIA, "no_such_contract_at_all.yaml")
+
+
+def run(ruler, target, contract, out_name):
+    js = os.path.join(JIA, "split_%s.json" % out_name)
+    cmd = ["node", ruler, "--file", target, "--out", js]
+    if contract:
+        cmd += ["--contract", contract]
+    p = subprocess.run(cmd, capture_output=True, text=True, encoding="utf-8", errors="replace",
+                       timeout=900, env=dict(os.environ, HTTPS_PROXY="", HTTP_PROXY=""))
+    d = json.load(io.open(js, encoding="utf-8"))
+    return {"exit": p.returncode,
+            "cells": sorted(h["rule"] + "@" + str(h["line"]) for h in d.get("hits", [])),
+            "folded": sorted(e.get("file_line") for e in d.get("attributed_in_fold", [])),
+            "exempted": [{"line": e["file_line"], "rule": e["rule"], "field": e.get("field"),
+                          "basis": e.get("basis"), "tokens": e.get("tokens_seen"),
+                          "contract": os.path.basename(e.get("contract") or ""),
+                          "contract_line": e.get("contract_enum_line"),
+                          "contract_form": (d.get("contract", {}).get("enum_forms") or {}).get(
+                              e.get("field")),
+                          "contract_blob": e.get("contract_blob")}
+                         for e in d.get("contract_exempted", [])],
+            "blocked": [{"line": b["file_line"], "rule": b["rule"], "field": b.get("field"),
+                         "why": b.get("why"), "examples": b.get("examples"),
+                         "contract": os.path.basename(b.get("contract") or "")}
+                        for b in d.get("contract_blocked", [])]}
+
+
+# --------------------------------------------------------------------------- arm 1 and 2
+def arms_files():
+    before = {
+        "arm": "BEFORE - the live contract at the tip names no closed set for `reason_code`",
+        "ruler": os.path.basename(R7B4),
+        "ruler_blob": blob(R7B4),
+        "target": TIP_PANEL.replace("\\", "/"),
+        "contract": {"path": REAL_CONTRACT.replace("\\", "/"),
+                     "line_2003_verbatim": io.open(REAL_CONTRACT, encoding="utf-8").read().split(
+                         "\n")[2002].strip(),
+                     "blob": blob(REAL_CONTRACT)},
+        "readings": {"tip_file_with_live_contract": run(R7B4, TIP_PANEL, REAL_CONTRACT, "before"),
+                     "tip_file_with_no_contract_argument": run(R7B4, TIP_PANEL, None, "before_auto")},
+        "expected": "red, and the red names CONTRACT_MISSING_ENUM (never a silent pass)",
+    }
+    after = {
+        "arm": "AFTER - the same cell against a contract that does name the set, inline and block",
+        "ruler": os.path.basename(R7B4), "ruler_blob": blob(R7B4),
+        "target": TIP_PANEL.replace("\\", "/"),
+        "readings": {"inline_form": run(R7B4, TIP_PANEL, INLINE, "after_inline"),
+                     "block_form": run(R7B4, TIP_PANEL, BLOCK, "after_block"),
+                     "absent_contract_file": run(R7B4, TIP_PANEL, ABSENT, "after_absent")},
+        "contracts": {"inline": {"path": INLINE.replace("\\", "/"), "blob": blob(INLINE),
+                                 "bytes": os.path.getsize(INLINE)},
+                      "block": {"path": BLOCK.replace("\\", "/"), "blob": blob(BLOCK),
+                                "bytes": os.path.getsize(BLOCK)}},
+        "expected": "green with the contract path, its blob and the line the set is written on; "
+                    "an unreadable contract file is its own named red",
+    }
+    io.open(os.path.join(JIA, "arm_before_tip_contract.json"), "w", encoding="utf-8",
+            newline="\n").write(json.dumps(before, ensure_ascii=False, indent=1))
+    io.open(os.path.join(JIA, "arm_after_contract_with_enum.json"), "w", encoding="utf-8",
+            newline="\n").write(json.dumps(after, ensure_ascii=False, indent=1))
+    checks = [
+        ("before names CONTRACT_MISSING_ENUM",
+         [b["why"] for b in before["readings"]["tip_file_with_live_contract"]["blocked"]]
+         == ["CONTRACT_MISSING_ENUM"]),
+        ("before keeps the cell red (still a hit)",
+         "UPSTREAM_TEXT_VIA_HELPER_TO_DOM@233" in before["readings"]["tip_file_with_live_contract"]["cells"]),
+        ("before with no --contract discovers the same tree's contract",
+         (before["readings"]["tip_file_with_no_contract_argument"]["blocked"] or [{}])[0].get("why")
+         == "CONTRACT_MISSING_ENUM"),
+        ("inline form goes green",
+         bool(after["readings"]["inline_form"]["exempted"])),
+        ("block form goes green",
+         bool(after["readings"]["block_form"]["exempted"])),
+        ("the two forms name different lines in the contract",
+         after["readings"]["inline_form"]["exempted"][0]["contract_line"]
+         != after["readings"]["block_form"]["exempted"][0]["contract_line"]),
+        ("each green names its contract blob",
+         all(r["exempted"][0]["contract_blob"] == b
+             for r, b in ((after["readings"]["inline_form"], blob(INLINE)),
+                          (after["readings"]["block_form"], blob(BLOCK))))),
+        ("an absent contract file is its own named red",
+         [b["why"] for b in after["readings"]["absent_contract_file"]["blocked"]]
+         == ["CONTRACT_FILE_ABSENT"]),
+    ]
+    return before, after, checks
+
+
+# --------------------------------------------------------------------------- arm 3: mutants
+def blob(path):
+    r = subprocess.run(["git", "-C", "D:/moodle/CityNexus", "hash-object", "-w",
+                        path.replace("\\", "/")], capture_output=True, text=True,
+                       encoding="utf-8", errors="replace", timeout=120)
+    sha = (r.stdout or "").strip()
+    assert re.fullmatch(r"[0-9a-f]{40}", sha), (path, r.stdout, r.stderr)
+    return sha
+
+
+MUTANTS = [
+    ("M1_union_fallback",
+     "  const s = CONTRACT.enums[field];\n  return (s && s.length) ? s : null;",
+     "  const s = CONTRACT.enums[field];\n  if (s && s.length) return s;\n"
+     "  const all = [];\n  for (const k of Object.keys(CONTRACT.enums)) all.push.apply(all, "
+     "CONTRACT.enums[k]);\n  return all.length ? all : null;",
+     "B7_anchor_names_error_code_and_B9_set_for_another_field",
+     "an unrelated enum vouches for a field the contract never declared: a false green"),
+    ("M2_enum_key_owns_the_set",
+     "    if (m) {\n      const ind = m[1].length, key = m[2], rest = m[3];",
+     "    if (m) {\n      const ind = m[1].length, key = m[2] === 'enum' ? 'enum_owner' : m[2], "
+     "rest = m[3];",
+     "block_form_goes_green",
+     "the first parse of this lineage: a block-form set attributed to the wrong name"),
+    ("M3_silent_contract_is_pass",
+     "  const set = contractSetFor(field);\n  if (!set) {",
+     "  const set = contractSetFor(field) || ['NOT_A_REAL_CODE', 'INTERNAL_ERROR'];\n  if (!set) {",
+     "before_tip_contract_is_red",
+     "a contract that names nothing becomes permission by silence"),
+    ("M4_ignore_the_chain",
+     "  const bad = seen.filter(function (v) { return set.indexOf(v) < 0; });",
+     "  const bad = [];",
+     "B2_invented_code_stays_red",
+     "the client's own invented token is never compared against the set"),
+    ("M5_refused_cell_may_fold",
+     "      const context = (!contractBlocked && h.sink === 'jsx-text') ? foldContext(h._node) : null;",
+     "      const context = h.sink === 'jsx-text' ? foldContext(h._node) : null;",
+     "B2_or_B3_refused_cell_not_folded",
+     "the same data-cnx-field that performs the lookup then vouches for the disclosure around it"),
+    ("M6_exempt_by_field_name",
+     "      const codeField = cnxFieldNamedOnCell(h._node);",
+     "      const codeField = null;",
+     "B1_in_set_goes_green",
+     "ruling B's shape: naming a *_code field is enough, no contract consulted"),
+]
+
+
+def mutant_table():
+    src = io.open(R7B4, encoding="utf-8").read()
+    base = run(R7B4, TIP_PANEL, INLINE, "mut_base")
+    base_block = run(R7B4, TIP_PANEL, REAL_CONTRACT, "mut_base_block")
+    base_b7 = None
+    rows = []
+    for name, old, new, expect, why in MUTANTS:
+        assert src.count(old) == 1, (name, src.count(old))
+        tmp = os.path.join(JIA, "mutant_%s.cjs" % name.lower())
+        io.open(tmp, "w", encoding="utf-8", newline="\n").write(src.replace(old, new, 1))
+        got_inline = run(tmp, TIP_PANEL, INLINE, "mut_%s_inline" % name)
+        got_block = run(tmp, TIP_PANEL, BLOCK, "mut_%s_block" % name)
+        got_real = run(tmp, TIP_PANEL, REAL_CONTRACT, "mut_%s_real" % name)
+        flips = []
+        if got_inline["exempted"] != base["exempted"] or got_inline["cells"] != base["cells"]:
+            flips.append("inline_arm_changed")
+        if got_block["exempted"] or got_block["cells"] != base_block["cells"] \
+                or [b["why"] for b in got_block["blocked"]] != [b["why"] for b in base_block["blocked"]]:
+            flips.append("block_form_arm_changed" if got_block["exempted"] else "block_red_changed")
+        if [b["why"] for b in got_real["blocked"]] != ["CONTRACT_MISSING_ENUM"] \
+                or got_real["cells"] != base_block["cells"]:
+            flips.append("missing_enum_red_changed")
+        rows.append({"mutant": name, "edit": old.strip()[:70], "why_it_matters": why,
+                     "expected_to_be_caught_by": expect, "flips": flips,
+                     "caught": bool(flips),
+                     "cells": {"inline": got_inline["cells"], "block": got_block["cells"],
+                               "real": got_real["cells"]},
+                     "exempted": {"inline": len(got_inline["exempted"]),
+                                  "block": len(got_block["exempted"]),
+                                  "real": len(got_real["exempted"])},
+                     "blocked_why": {"inline": [b["why"] for b in got_inline["blocked"]],
+                                     "block": [b["why"] for b in got_block["blocked"]],
+                                     "real": [b["why"] for b in got_real["blocked"]]}})
+        os.remove(tmp)
+    uncaught = [r["mutant"] for r in rows if not r["caught"]]
+    return rows, uncaught
+
+
+def main():
+    before, after, checks = arms_files()
+    rows, uncaught = mutant_table()
+    out = {"schema": "CNX_S4_ORD0408_ARMS_AND_MUTANTS_R1",
+           "ruler": {"file": os.path.basename(R7B4), "blob": blob(R7B4),
+                     "bytes": os.path.getsize(R7B4)},
+           "arm_checks": [{"check": c, "pass": bool(ok)} for c, ok in checks],
+           "all_arm_checks_pass": all(bool(ok) for _c, ok in checks),
+           "mutants": rows, "uncaught_mutants": uncaught,
+           "note": "each mutant is a defect this lineage actually had today; a mutant no arm flips "
+                   "means the arm is decoration"}
+    io.open(os.path.join(JIA, "arm_mutant_r7b4.json"), "w", encoding="utf-8", newline="\n").write(
+        json.dumps(out, ensure_ascii=False, indent=1))
+    print("arm checks:", sum(1 for c, ok in checks if ok), "/", len(checks))
+    for c, ok in checks:
+        if not ok:
+            print("  FAILED", c)
+    for r in rows:
+        print("%-26s caught=%s flips=%s cells=%s" % (r["mutant"], r["caught"], r["flips"],
+                                                     json.dumps(r["cells"], ensure_ascii=False)[:90]))
+    print("uncaught:", uncaught)
+    return 0 if (out["all_arm_checks_pass"] and not uncaught) else 1
+
+
+if __name__ == "__main__":
+    sys.exit(main())
