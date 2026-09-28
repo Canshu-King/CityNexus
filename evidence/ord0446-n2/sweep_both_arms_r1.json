@@ -1,0 +1,801 @@
+{
+ "order": "ORD-0446",
+ "lane": "N2",
+ "at_local": "",
+ "rev": {
+  "candidate": "8451df87fa09a7280eeaeffef79b4da3d05331fe",
+  "candidate_parent": "35326e62fb3de9f0cda459c8426ac22c0c49c715",
+  "base_read_by_lane": "35326e62fb3de9f0cda459c8426ac22c0c49c715",
+  "live_tip_at_push": "f26e2ff78c047579a7d710d3a469be6bdf9a0540",
+  "parent_is_ancestor_of_live_tip": true,
+  "merge_tree_prediction_rc": 0,
+  "merge_tree": "ec4b1b3d95ebdc4b006dd91195b357a886755d37",
+  "ref": "refs/heads/review/Q-ord0446-machine-speech-residue-r1",
+  "ref_readback": "8451df87fa09a7280eeaeffef79b4da3d05331fe",
+  "files_touched_by_live_tip_since_base": [
+   "_measure_batch_bar.js",
+   "_probe_multiselect_after_p1.js",
+   "_probe_multiselect_before_p3.js",
+   "_readback_after_r2.js",
+   "frontend/e2e/qoder-ord0435-poi-batch-multiselect.spec.ts",
+   "frontend/src/features/discovery/RealCityDiscoveryPanel.tsx",
+   "frontend/src/features/discovery/discovery-batch.css",
+   "frontend/src/i18n/LocaleContext.tsx"
+  ],
+  "my_files_touched_by_tip": []
+ },
+ "ruler": {
+  "blob_local_copy": "e18d65e19fa001762f318dcaf0a6d53a43391952",
+  "blob_published": "e18d65e19fa001762f318dcaf0a6d53a43391952",
+  "identical": true,
+  "usage": "node cmdr_machine_speech_sweep_r1.js <base> <out> <locale>",
+  "baseline_published_blob": "8be887766f1a67d917d8f1cef242d12e01a6187d"
+ },
+ "sweeps": {
+  "baseline_commander": {
+   "totalPaintedHits": 6,
+   "tokens": [
+    "ACTIVE",
+    "BOOKING",
+    "DEMO",
+    "JSON",
+    "reasoning_summary"
+   ],
+   "viewport": "390x844",
+   "routesWalked": 14,
+   "entryAsset": [
+    "/assets/index-CkeYfY1U.js"
+   ]
+  },
+  "before_lane_replay": {
+   "totalPaintedHits": 6,
+   "tokens": [
+    "ACTIVE",
+    "BOOKING",
+    "DEMO",
+    "JSON",
+    "JSON",
+    "reasoning_summary"
+   ],
+   "kinds": {
+    "ALLCAPS_WORD": 5,
+    "LOWER_SNAKE_KEY": 1
+   },
+   "entryAsset": [
+    "/assets/index-CkeYfY1U.js"
+   ],
+   "routes_with_hits": [
+    "/v8/bookings",
+    "/v8/me"
+   ],
+   "thin_routes": [
+    "/v8/agent",
+    "/v8/authoritative",
+    "/v8/bookings",
+    "/v8/discover",
+    "/v8/hub",
+    "/v8/intelligence",
+    "/v8/live",
+    "/v8/map",
+    "/v8/me",
+    "/v8/stay",
+    "/v8/studio",
+    "/v8/trash",
+    "/v8/trips",
+    "/v8/twin"
+   ]
+  },
+  "after_zh": {
+   "totalPaintedHits": 2,
+   "tokens": [
+    "JSON",
+    "JSON"
+   ],
+   "kinds": {
+    "ALLCAPS_WORD": 2
+   },
+   "hits": [
+    {
+     "route": "/v8/bookings",
+     "kind": "ALLCAPS_WORD",
+     "token": "JSON",
+     "tag": "p",
+     "cls": "v8-lede",
+     "text_head": "粘贴结构化预订 JSON，审核后，将确认的事实绑定为行程的持久承诺。"
+    },
+    {
+     "route": "/v8/bookings",
+     "kind": "ALLCAPS_WORD",
+     "token": "JSON",
+     "tag": "p",
+     "cls": "v8-lede",
+     "text_head": "结构化导入在这里：展开下方「高级」粘贴 JSON 确认单。确认单文本与截图走行程收件箱。"
+    }
+   ],
+   "entryAsset": [
+    "/assets/index-DJLjKKC7.js"
+   ],
+   "pageErrors": [],
+   "thin_routes": [
+    "/v8/agent",
+    "/v8/authoritative",
+    "/v8/bookings",
+    "/v8/discover",
+    "/v8/hub",
+    "/v8/intelligence",
+    "/v8/live",
+    "/v8/map",
+    "/v8/me",
+    "/v8/stay",
+    "/v8/studio",
+    "/v8/trash",
+    "/v8/trips",
+    "/v8/twin"
+   ]
+  },
+  "after_en": {
+   "totalPaintedHits": 22,
+   "tokens": [
+    "ADVISORY",
+    "ARRIVAL",
+    "AUTHORITATIVE",
+    "CLOCK",
+    "COMMITMENT",
+    "CURRENT",
+    "DEPARTURE",
+    "DISCOVERY",
+    "JSON",
+    "LIVE",
+    "MULTIMODAL",
+    "NAVIGATE",
+    "NEXT",
+    "NOTIFICATIONS",
+    "OFFLINE",
+    "POLICY",
+    "POST",
+    "RISK",
+    "STAY"
+   ],
+   "kinds": {
+    "ALLCAPS_WORD": 22
+   },
+   "by_route": {
+    "/v8/hub": 2,
+    "/v8/live": 8,
+    "/v8/studio": 1,
+    "/v8/discover": 1,
+    "/v8/bookings": 5,
+    "/v8/intelligence": 4,
+    "/v8/me": 1
+   },
+   "hits": [
+    {
+     "route": "/v8/hub",
+     "kind": "ALLCAPS_WORD",
+     "token": "ARRIVAL",
+     "tag": "span",
+     "cls": "",
+     "text_head": "ARRIVAL"
+    },
+    {
+     "route": "/v8/hub",
+     "kind": "ALLCAPS_WORD",
+     "token": "DEPARTURE",
+     "tag": "span",
+     "cls": "",
+     "text_head": "DEPARTURE"
+    },
+    {
+     "route": "/v8/live",
+     "kind": "ALLCAPS_WORD",
+     "token": "NEXT",
+     "tag": "p",
+     "cls": "",
+     "text_head": "NEXT · Nexus River Cruise Pier · Transit · duration pending"
+    },
+    {
+     "route": "/v8/live",
+     "kind": "ALLCAPS_WORD",
+     "token": "NEXT",
+     "tag": "span",
+     "cls": "",
+     "text_head": "NEXT · LEAVE BY"
+    },
+    {
+     "route": "/v8/live",
+     "kind": "ALLCAPS_WORD",
+     "token": "NAVIGATE",
+     "tag": "a",
+     "cls": "v9-navigate",
+     "text_head": "NAVIGATE →"
+    },
+    {
+     "route": "/v8/live",
+     "kind": "ALLCAPS_WORD",
+     "token": "RISK",
+     "tag": "b",
+     "cls": "",
+     "text_head": "RISK"
+    },
+    {
+     "route": "/v8/live",
+     "kind": "ALLCAPS_WORD",
+     "token": "LIVE",
+     "tag": "span",
+     "cls": "v8-kicker",
+     "text_head": "LIVE STATUS"
+    },
+    {
+     "route": "/v8/live",
+     "kind": "ALLCAPS_WORD",
+     "token": "CLOCK",
+     "tag": "span",
+     "cls": "",
+     "text_head": "CLOCK"
+    },
+    {
+     "route": "/v8/live",
+     "kind": "ALLCAPS_WORD",
+     "token": "CURRENT",
+     "tag": "span",
+     "cls": "",
+     "text_head": "CURRENT STEP"
+    },
+    {
+     "route": "/v8/live",
+     "kind": "ALLCAPS_WORD",
+     "token": "OFFLINE",
+     "tag": "span",
+     "cls": "",
+     "text_head": "OFFLINE"
+    },
+    {
+     "route": "/v8/studio",
+     "kind": "ALLCAPS_WORD",
+     "token": "STAY",
+     "tag": "span",
+     "cls": "",
+     "text_head": "NO STAY SELECTED"
+    },
+    {
+     "route": "/v8/discover",
+     "kind": "ALLCAPS_WORD",
+     "token": "DISCOVERY",
+     "tag": "span",
+     "cls": "v8-agent-mark",
+     "text_head": "CN / DISCOVERY"
+    },
+    {
+     "route": "/v8/bookings",
+     "kind": "ALLCAPS_WORD",
+     "token": "JSON",
+     "tag": "p",
+     "cls": "v8-lede",
+     "text_head": "Paste structured reservation JSON, review it, then bind conf"
+    },
+    {
+     "route": "/v8/bookings",
+     "kind": "ALLCAPS_WORD",
+     "token": "STAY",
+     "tag": "span",
+     "cls": "v8-selected-label",
+     "text_head": "STAY EVIDENCE"
+    },
+    {
+     "route": "/v8/bookings",
+     "kind": "ALLCAPS_WORD",
+     "token": "JSON",
+     "tag": "p",
+     "cls": "v8-lede",
+     "text_head": "Structured import lives here - expand Advanced below to past"
+    },
+    {
+     "route": "/v8/bookings",
+     "kind": "ALLCAPS_WORD",
+     "token": "MULTIMODAL",
+     "tag": "span",
+     "cls": "v8-kicker",
+     "text_head": "MULTIMODAL INBOX"
+    },
+    {
+     "route": "/v8/bookings",
+     "kind": "ALLCAPS_WORD",
+     "token": "AUTHORITATIVE",
+     "tag": "span",
+     "cls": "v8-kicker",
+     "text_head": "AUTHORITATIVE MEMORY"
+    },
+    {
+     "route": "/v8/intelligence",
+     "kind": "ALLCAPS_WORD",
+     "token": "POLICY",
+     "tag": "span",
+     "cls": "",
+     "text_head": "POLICY"
+    },
+    {
+     "route": "/v8/intelligence",
+     "kind": "ALLCAPS_WORD",
+     "token": "ADVISORY",
+     "tag": "b",
+     "cls": "",
+     "text_head": "ADVISORY"
+    },
+    {
+     "route": "/v8/intelligence",
+     "kind": "ALLCAPS_WORD",
+     "token": "POST",
+     "tag": "span",
+     "cls": "",
+     "text_head": "POST-ACTION GATE"
+    },
+    {
+     "route": "/v8/intelligence",
+     "kind": "ALLCAPS_WORD",
+     "token": "COMMITMENT",
+     "tag": "span",
+     "cls": "",
+     "text_head": "COMMITMENT"
+    },
+    {
+     "route": "/v8/me",
+     "kind": "ALLCAPS_WORD",
+     "token": "NOTIFICATIONS",
+     "tag": "span",
+     "cls": "v8-kicker",
+     "text_head": "NOTIFICATIONS"
+    }
+   ],
+   "entryAsset": [
+    "/assets/index-DJLjKKC7.js"
+   ],
+   "thin_routes": [
+    "/v8/agent",
+    "/v8/authoritative",
+    "/v8/discover",
+    "/v8/intelligence",
+    "/v8/map",
+    "/v8/me",
+    "/v8/stay",
+    "/v8/studio",
+    "/v8/trash",
+    "/v8/trips",
+    "/v8/twin"
+   ],
+   "pageErrors": []
+  },
+  "criterion_6_to_2": true,
+  "survivors_are_only_the_two_json_ledes": true,
+  "before_reproduces_the_four": true
+ },
+ "located": {
+  "frontend/src/app/V8Experience.tsx:3894": {
+   "needle_seen": "v8-selected-label",
+   "line_contains_it": true,
+   "line": "<span className=\"v8-selected-label\">"
+  },
+  "frontend/src/app/V8Experience.tsx:3895": {
+   "needle_seen": "commitmentKindLabel(item.kind, zh)",
+   "line_contains_it": true,
+   "line": "{commitmentKindLabel(item.kind, zh)} · {commitmentLevelLabel(item.level, zh)} ·{\" \"}"
+  },
+  "frontend/src/app/V8Experience.tsx:4281": {
+   "needle_seen": "cityCodeLabel(data.journey.city_code, zh)",
+   "line_contains_it": true,
+   "line": "CITY_NAME_BY_SLUG[citySlug]?.[zh ? \"zh\" : \"en\"] ?? cityCodeLabel(data.journey.city_code, zh);"
+  },
+  "frontend/src/app/V8Experience.tsx:4305": {
+   "needle_seen": "<strong>{cityLabel}</strong>",
+   "line_contains_it": true,
+   "line": "<strong>{cityLabel}</strong>"
+  },
+  "frontend/src/app/V8Experience.tsx:2374": {
+   "needle_seen": "const cityLabel = (() => {",
+   "line_contains_it": true,
+   "line": "const cityLabel = (() => {"
+  },
+  "frontend/src/app/V8Experience.tsx:4547": {
+   "needle_seen": "const CITY_NAME_BY_SLUG",
+   "line_contains_it": true,
+   "line": "const CITY_NAME_BY_SLUG: Record<string, { zh: string; en: string }> = {"
+  },
+  "frontend/src/app/V8Experience.tsx:2525": {
+   "needle_seen": "${cityLabel}",
+   "line_contains_it": true,
+   "line": "? `${cityLabel}之旅`"
+  },
+  "frontend/src/features/inbox/JourneyInboxWorkbench.tsx:773": {
+   "needle_seen": "summaryHeldLabel(zh)",
+   "line_contains_it": true,
+   "line": "{item.reasoning_summary ? <small data-testid=\"v13-2-memory-summary-held\">{summaryHeldLabel(zh)}</small> : null}"
+  },
+  "frontend/src/features/inbox/JourneyInboxWorkbench.tsx:857": {
+   "needle_seen": "summaryHeldLabel(zh)",
+   "line_contains_it": true,
+   "line": "? <small data-testid=\"v13-2-draft-summary-held\">{summaryHeldLabel(zh)}</small>"
+  },
+  "frontend/src/lib/displayVocabulary.ts:52": {
+   "needle_seen": "COMMITMENT_KIND",
+   "line_contains_it": true,
+   "line": "const COMMITMENT_KIND: Record<string, Label> = {"
+  },
+  "frontend/src/lib/displayVocabulary.ts:60": {
+   "needle_seen": "COMMITMENT_LEVEL",
+   "line_contains_it": true,
+   "line": "const COMMITMENT_LEVEL: Record<string, Label> = {"
+  },
+  "frontend/src/lib/displayVocabulary.ts:68": {
+   "needle_seen": "COMMITMENT_STATUS",
+   "line_contains_it": true,
+   "line": "const COMMITMENT_STATUS: Record<string, Label> = {"
+  },
+  "frontend/src/lib/displayVocabulary.ts:78": {
+   "needle_seen": "CITY_CODE",
+   "line_contains_it": true,
+   "line": "const CITY_CODE: Record<string, Label> = {"
+  },
+  "frontend/src/lib/displayVocabulary.ts:82": {
+   "needle_seen": "SUMMARY_HELD",
+   "line_contains_it": true,
+   "line": "const SUMMARY_HELD: Label = {"
+  }
+ },
+ "diff": {
+  "numstat": [
+   "13 11 frontend/src/app/V8Experience.tsx",
+   "3 2 frontend/src/features/inbox/JourneyInboxWorkbench.tsx",
+   "71 0 frontend/src/lib/displayVocabulary.ts"
+  ],
+  "per_file": {
+   "frontend/src/app/V8Experience.tsx": {
+    "added": 13,
+    "removed": 11,
+    "added_with_cjk": 0
+   },
+   "frontend/src/features/inbox/JourneyInboxWorkbench.tsx": {
+    "added": 3,
+    "removed": 2,
+    "added_with_cjk": 0
+   },
+   "frontend/src/lib/displayVocabulary.ts": {
+    "added": 71,
+    "removed": 0,
+    "added_with_cjk": 16
+   }
+  },
+  "files": [
+   "frontend/src/app/V8Experience.tsx",
+   "frontend/src/features/inbox/JourneyInboxWorkbench.tsx",
+   "frontend/src/lib/displayVocabulary.ts"
+  ]
+ },
+ "gates": {
+  "vite_build_rc_candidate": 0,
+  "vite_build_rc_base": 0,
+  "build_sha_candidate": "8451df87fa09a7280eeaeffef79b4da3d05331fe",
+  "build_sha_base": "35326e62fb3de9f0cda459c8426ac22c0c49c715",
+  "typecheck_rc": 0,
+  "typecheck_log": "D:/moodle/_qoder_n2_scratch/_tsc_0446.log",
+  "asset_identity": {
+   "candidate_dist": {
+    "asset": "assets/index-DJLjKKC7.js",
+    "disk_sha1": "9aa642f7ce7ef9a68a70e42053b97c217fd38970"
+   },
+   "base_dist": {
+    "asset": "assets/index-CkeYfY1U.js",
+    "disk_sha1": "ae7cc8982eb69622683b62c228ec95cedc7f2f8a"
+   },
+   "after_zh_entryAssets": [
+    "/assets/index-DJLjKKC7.js"
+   ],
+   "after_en_entryAssets": [
+    "/assets/index-DJLjKKC7.js"
+   ],
+   "before_zh_entryAssets": [
+    "/assets/index-CkeYfY1U.js"
+   ],
+   "after_matches_candidate_dist": true,
+   "before_matches_base_dist": true
+  }
+ },
+ "words_walk": {
+  "sides": {
+   "after": [
+    {
+     "selector": ".v8-me-card strong",
+     "text": "演示城市",
+     "first_nav": "nav-me",
+     "first_path": "/v8/me",
+     "doc_chars": 291,
+     "count": 2
+    },
+    {
+     "selector": ".v8-me-card strong",
+     "text": "还没有选定",
+     "first_nav": "nav-me",
+     "first_path": "/v8/me",
+     "doc_chars": 291,
+     "count": 2
+    },
+    {
+     "selector": ".v8-me-card strong",
+     "text": "还没有",
+     "first_nav": "nav-me",
+     "first_path": "/v8/me",
+     "doc_chars": 291,
+     "count": 2
+    },
+    {
+     "selector": ".v8-me-card strong",
+     "text": "仅提供建议",
+     "first_nav": "nav-me",
+     "first_path": "/v8/me",
+     "doc_chars": 291,
+     "count": 2
+    },
+    {
+     "selector": ".v8-me-card strong",
+     "text": "只记录，不发推送",
+     "first_nav": "nav-me",
+     "first_path": "/v8/me",
+     "doc_chars": 291,
+     "count": 2
+    },
+    {
+     "selector": "span.v8-selected-label",
+     "text": "住宿证据",
+     "first_nav": "goto",
+     "first_path": "/v8/bookings",
+     "doc_chars": 604,
+     "count": 1
+    },
+    {
+     "selector": "span.v8-selected-label",
+     "text": "预订 · 受保护锚点 · 生效中 · 模拟承诺",
+     "first_nav": "goto",
+     "first_path": "/v8/bookings",
+     "doc_chars": 604,
+     "count": 1
+    },
+    {
+     "selector": "small[data-testid='v13-2-memory-summary-held']",
+     "text": "上游那句摘要的原文不在这一屏",
+     "first_nav": "goto",
+     "first_path": "/v8/bookings",
+     "doc_chars": 604,
+     "count": 1
+    }
+   ],
+   "before": [
+    {
+     "selector": ".v8-me-card strong",
+     "text": "DEMO",
+     "first_nav": "nav-me",
+     "first_path": "/v8/me",
+     "doc_chars": 291,
+     "count": 2
+    },
+    {
+     "selector": ".v8-me-card strong",
+     "text": "还没有选定",
+     "first_nav": "nav-me",
+     "first_path": "/v8/me",
+     "doc_chars": 291,
+     "count": 2
+    },
+    {
+     "selector": ".v8-me-card strong",
+     "text": "还没有",
+     "first_nav": "nav-me",
+     "first_path": "/v8/me",
+     "doc_chars": 291,
+     "count": 2
+    },
+    {
+     "selector": ".v8-me-card strong",
+     "text": "仅提供建议",
+     "first_nav": "nav-me",
+     "first_path": "/v8/me",
+     "doc_chars": 291,
+     "count": 2
+    },
+    {
+     "selector": ".v8-me-card strong",
+     "text": "只记录，不发推送",
+     "first_nav": "nav-me",
+     "first_path": "/v8/me",
+     "doc_chars": 291,
+     "count": 2
+    },
+    {
+     "selector": "span.v8-selected-label",
+     "text": "住宿证据",
+     "first_nav": "goto",
+     "first_path": "/v8/bookings",
+     "doc_chars": 634,
+     "count": 1
+    },
+    {
+     "selector": "span.v8-selected-label",
+     "text": "BOOKING · C4_Anchored · ACTIVE · 模拟承诺",
+     "first_nav": "goto",
+     "first_path": "/v8/bookings",
+     "doc_chars": 634,
+     "count": 1
+    },
+    {
+     "selector": "small[data-testid='v13-2-memory-summary-held']",
+     "text": "reasoning_summary=held 原文不在这一屏",
+     "first_nav": "goto",
+     "first_path": "/v8/bookings",
+     "doc_chars": 634,
+     "count": 1
+    }
+   ]
+  },
+  "port_proofs": {
+   "after": {
+    "port": 4843,
+    "dist": "D:/moodle/_qoder_cmdr_ref_20260921/live_checks/_build_n2-0446-cand/frontend/dist",
+    "asset": "assets/index-DJLjKKC7.js",
+    "disk_sha1": "9aa642f7ce7ef9a68a70e42053b97c217fd38970",
+    "served_sha1": "9aa642f7ce7ef9a68a70e42053b97c217fd38970",
+    "equal": true
+   },
+   "before": {
+    "port": 4842,
+    "dist": "D:/moodle/_qoder_cmdr_ref_20260921/live_checks/_build_n2-0433-tip/frontend/dist",
+    "asset": "assets/index-CkeYfY1U.js",
+    "disk_sha1": "ae7cc8982eb69622683b62c228ec95cedc7f2f8a",
+    "served_sha1": "ae7cc8982eb69622683b62c228ec95cedc7f2f8a",
+    "equal": true
+   }
+  },
+  "nav_inventory": {
+   "after": [
+    "nav-hub",
+    "nav-trips",
+    "nav-map",
+    "nav-agent",
+    "nav-me"
+   ],
+   "before": [
+    "nav-hub",
+    "nav-trips",
+    "nav-map",
+    "nav-agent",
+    "nav-me"
+   ]
+  },
+  "entry_after": {
+   "step": "entry",
+   "nav_ids": [
+    "nav-hub",
+    "nav-trips",
+    "nav-map",
+    "nav-agent",
+    "nav-me"
+   ],
+   "pathname": "/v8/hub",
+   "doc_chars": 570
+  },
+  "entry_before": {
+   "step": "entry",
+   "nav_ids": [
+    "nav-hub",
+    "nav-trips",
+    "nav-map",
+    "nav-agent",
+    "nav-me"
+   ],
+   "pathname": "/v8/hub",
+   "doc_chars": 570
+  }
+ },
+ "words": {
+  "sides": {
+   "after": [
+    {
+     "route": "/v8/bookings",
+     "selector": "span.v8-selected-label",
+     "cell": "kind · level · status",
+     "reading": {
+      "selector": "span.v8-selected-label",
+      "found": 0,
+      "painted": [],
+      "waited_ms": 0,
+      "doc_chars": 588
+     }
+    },
+    {
+     "route": "/v8/bookings",
+     "selector": "small[data-testid='v13-2-memory-summary-held']",
+     "cell": "held-summary notice",
+     "reading": {
+      "selector": "small[data-testid='v13-2-memory-summary-held']",
+      "found": 0,
+      "painted": [],
+      "waited_ms": 0,
+      "doc_chars": 588
+     }
+    },
+    {
+     "route": "/v8/me",
+     "selector": "div.v8-me-card strong",
+     "cell": "profile city",
+     "reading": {
+      "selector": "div.v8-me-card strong",
+      "found": 0,
+      "painted": [],
+      "waited_ms": 0,
+      "doc_chars": 588
+     }
+    }
+   ],
+   "before": [
+    {
+     "route": "/v8/bookings",
+     "selector": "span.v8-selected-label",
+     "cell": "kind · level · status",
+     "reading": {
+      "selector": "span.v8-selected-label",
+      "found": 0,
+      "painted": [],
+      "waited_ms": 0,
+      "doc_chars": 588
+     }
+    },
+    {
+     "route": "/v8/bookings",
+     "selector": "small[data-testid='v13-2-memory-summary-held']",
+     "cell": "held-summary notice",
+     "reading": {
+      "selector": "small[data-testid='v13-2-memory-summary-held']",
+      "found": 0,
+      "painted": [],
+      "waited_ms": 0,
+      "doc_chars": 588
+     }
+    },
+    {
+     "route": "/v8/me",
+     "selector": "div.v8-me-card strong",
+     "cell": "profile city",
+     "reading": {
+      "selector": "div.v8-me-card strong",
+      "found": 0,
+      "painted": [],
+      "waited_ms": 0,
+      "doc_chars": 588
+     }
+    }
+   ]
+  },
+  "port_proofs": {
+   "after": {
+    "port": 4843,
+    "asset": "assets/index-DJLjKKC7.js",
+    "disk_sha1": "9aa642f7ce7ef9a68a70e42053b97c217fd38970",
+    "served_sha1": "9aa642f7ce7ef9a68a70e42053b97c217fd38970",
+    "equal": true
+   },
+   "before": {
+    "port": 4842,
+    "asset": "assets/index-CkeYfY1U.js",
+    "disk_sha1": "ae7cc8982eb69622683b62c228ec95cedc7f2f8a",
+    "served_sha1": "ae7cc8982eb69622683b62c228ec95cedc7f2f8a",
+    "equal": true
+   }
+  },
+  "sources": [
+   "n2_0446_words_after_r1.json",
+   "n2_0446_words_before_r1.json"
+  ],
+  "missing_sides": []
+ },
+ "not_measured": {
+  "small_screen": "the published ruler fixes its own viewport at 390x844 (cmdr_machine_speech_sweep_r1.js:31) and takes no shape argument, so a second shape cannot be measured without editing the ruler; NOT_MEASURED",
+  "allcaps_allow_list": "every hit in both arms is kind ALLCAPS_WORD except one LOWER_SNAKE_KEY; the English arm's 22 are dictionary-authored all-caps labels (bookings.stayEvidence LocaleContext.tsx:280, exec.authoritativeJourney:515, inbox.multimodal:586), which the allow-list cannot tell from an identifier",
+  "other_two_labels": "V8Experience.tsx:4010 and :4036 render dictionary keys, already human words; no change made"
+ }
+}
