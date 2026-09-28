@@ -1,0 +1,113 @@
+{
+ "order": "ORD-0433",
+ "lane": "N2",
+ "question": "did the candidate land, and does the landed generation still read the fixed forms",
+ "refs": {
+  "candidate_head": "402f805dab16a7ea0c971c3c967d70927e4bbe1e",
+  "authoritative_tip_now": "35326e62fb3de9f0cda459c8426ac22c0c49c715",
+  "candidate_is_ancestor_of_tip": true,
+  "landing_block": "edcc2e2bc2c74203da346a89b24d87ae26866b01 2026-09-29T05:03 ORD-0433: one English plural rule, applied where the dictionary counts a noun"
+ },
+ "byte_equality": {
+  "frontend/src/i18n/LocaleContext.tsx": {
+   "candidate_blob": "863e73422006a2d736d6c50a18b8dbda7d733dcc",
+   "tip_blob": "863e73422006a2d736d6c50a18b8dbda7d733dcc"
+  },
+  "frontend/src/lib/plural.ts": {
+   "candidate_blob": "0dff8a06adaa85e815efcd7ec6cc21dbf6a68e98",
+   "tip_blob": "0dff8a06adaa85e815efcd7ec6cc21dbf6a68e98"
+  }
+ },
+ "bundle_built_from_tip": {
+  "step": "port_proof",
+  "port": 4833,
+  "asset": "assets/index-CkeYfY1U.js",
+  "index_disk_sha1": "5cf8e510a46e5adc8c01a0dca48373878405cf22",
+  "index_served_sha1": "5cf8e510a46e5adc8c01a0dca48373878405cf22",
+  "asset_disk_sha1": "ae7cc8982eb69622683b62c228ec95cedc7f2f8a",
+  "asset_served_sha1": "ae7cc8982eb69622683b62c228ec95cedc7f2f8a",
+  "match": true
+ },
+ "readings_on_landed_generation": [
+  {
+   "step": "scan",
+   "route": "hub",
+   "rc": 0,
+   "reached_route": {
+    "en": "/v8/hub",
+    "zh": "/v8/hub"
+   },
+   "arms_comparable": true,
+   "en_counted": [
+    "10 Oct, 09:00 — 10 Oct, 19:00 · 1 traveler · 1 days",
+    "0 legs"
+   ],
+   "zh_counted": [],
+   "expect": {
+    "1 traveler": true,
+    "1 travelers": false,
+    "2 travelers": false,
+    "1 protected anchor": false,
+    "1 protected anchors": false,
+    "2 protected anchors": false,
+    "1 activities": false,
+    "6 activities": false,
+    "0 legs": true,
+    "1 or more": false,
+    "1 versions listed": false
+   }
+  },
+  {
+   "step": "scan",
+   "route": "authoritative",
+   "rc": 0,
+   "reached_route": {
+    "en": "/v8/authoritative",
+    "zh": "/v8/authoritative"
+   },
+   "arms_comparable": true,
+   "en_counted": [
+    "1 versions listed",
+    "No retention limit is applied: this trip currently holds 1 versions and all of them are listed here.",
+    "6 activities",
+    "1 protected anchor"
+   ],
+   "zh_counted": [],
+   "expect": {
+    "1 traveler": false,
+    "1 travelers": false,
+    "2 travelers": false,
+    "1 protected anchor": true,
+    "1 protected anchors": false,
+    "2 protected anchors": false,
+    "1 activities": false,
+    "6 activities": true,
+    "0 legs": false,
+    "1 or more": false,
+    "1 versions listed": true
+   }
+  }
+ ],
+ "still_unfixed_on_the_line": {
+  "cell": "authoritative english arm, planVersion pair",
+  "leaf": "1 versions listed",
+  "source_lines": [
+   "frontend/src/features/studio/planVersionHistoryCopy.ts:35",
+   "frontend/src/features/studio/planVersionHistoryCopy.ts:34"
+  ],
+  "note": "the retention sentence on the same screen reads `holds 1 versions`; both live in the file this order's allowed surface does not cover",
+  "retention_leaf": "No retention limit is applied: this trip currently holds 1 versions and all of them are listed here. Nothing is dropped as newer versions are written."
+ },
+ "byte_equality_ok": true,
+ "served_bundle_carries_the_landed_dictionary": {
+  "port": 4834,
+  "asset": "assets/index-CkeYfY1U.js",
+  "served_sha1": "ae7cc8982eb69622683b62c228ec95cedc7f2f8a",
+  "disk_sha1": "ae7cc8982eb69622683b62c228ec95cedc7f2f8a",
+  "equal": true,
+  "served_bytes": 1353352,
+  "plural_markers_in_served_bundle": 17,
+  "traveler_singular_in_served": 1,
+  "expand_fn_name_present": true
+ }
+}
