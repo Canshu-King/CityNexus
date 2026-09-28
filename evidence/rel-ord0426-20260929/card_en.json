@@ -1,0 +1,19 @@
+{
+ "base": "http://127.0.0.1:4817",
+ "locale": "en",
+ "entry_used": "sealed demo",
+ "page_errors": [],
+ "screen": {
+  "path": "/v8/bookings",
+  "locale_read": "en",
+  "card_count": 1,
+  "cards": [
+   {
+    "title_h2": "place-river-cruise",
+    "badge_label": "BOOKING · C4_Anchored · ACTIVE · simulated commitment",
+    "badge_only_slot": "BOOKING · C4_Anchored · ACTIVE",
+    "simulated_flag": "· simulated commitment"
+   }
+  ]
+ }
+}
