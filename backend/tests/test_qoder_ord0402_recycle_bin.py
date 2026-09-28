@@ -24,6 +24,7 @@ reading that makes "it is in the bin" and "it is in the list" one fact instead o
 
 from __future__ import annotations
 
+import re
 import sqlite3
 import subprocess
 from datetime import datetime, timedelta, timezone
@@ -284,4 +285,49 @@ def test_the_generated_client_carries_every_operation_the_contract_declares() ->
         f"missing_from_generated_api_ts={len(missing)} "
         f"api_ts_bytes={len(generated.encode('utf-8'))} "
         f"recycle_bin_reference_present={'listRecycleBinJourneys' in generated}"
+    )
+
+
+# ------------------------------------------------------ the cross-lane seam, pinned both ways
+
+PANEL = ROOT / "frontend/src/features/trash/journeyTrash.ts"
+
+
+def test_the_panels_one_constant_and_field_names_match_the_route_that_was_landed() -> None:
+    """Slice 2 reaches this door through one TS literal, and nothing checked the two agree.
+
+    The panel was written against a door that was not on the line when it was cut, and it names
+    the path and the row fields itself in `frontend/src/features/trash/journeyTrash.ts`.  This arm
+    reads those literals out of that file and holds them against the live route table and a real
+    answer, so a rename on either side goes red here rather than surfacing as a silently empty bin
+    on a phone.  It is a seam, not a copy: it asserts only what the two files already promise.
+    """
+
+    source = PANEL.read_text(encoding="utf-8")
+    declared_path = re.search(r'TRASH_LIST_PATH = "([^"]+)"', source).group(1)
+    block = re.search(r"export type DiscardedJourney = \{(.*?)\n\};", source, re.DOTALL).group(1)
+    declared_fields = re.findall(r"^\s*(\w+)\??:", block, re.MULTILINE)
+    expected_word = re.search(r"`(IN_[A-Z_]+)` is what this file expects", source).group(1)
+
+    paths = {getattr(route, "path", "") for route in app.routes}
+    assert "/api/v1" + declared_path in paths, sorted(path for path in paths if "journey" in path)
+    assert {"/api/v1" + declared_path, "/api/v1/journeys"} <= paths, sorted(paths)
+
+    journey_id = _journey()
+    assert client.delete(f"/api/v1/journeys/{journey_id}").status_code == 204
+    row = next(item for item in _bin_rows() if str(item["id"]) == journey_id)
+    absent = [name for name in declared_fields if name not in row]
+    assert absent == [], f"the panel declares fields this door does not send: {absent}"
+    assert str(row["bin_state"]) == expected_word, (row["bin_state"], expected_word)
+    # The raw column value, because the panel treats a null there as "the server did not answer".
+    stored, _rowid = _stored_deleted_at(journey_id)
+    assert datetime.fromisoformat(str(row["deleted_at"])) == datetime.fromisoformat(stored), (
+        row["deleted_at"],
+        stored,
+    )
+    print(
+        f"[ord0402][seam] panel=frontend/src/features/trash/journeyTrash.ts "
+        f"declared_path={declared_path} declared_field_count={len(declared_fields)} "
+        f"missing_from_the_row={len(absent)} expected_bin_state={expected_word} "
+        f"route_table_contains_the_path=True"
     )
