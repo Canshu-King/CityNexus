@@ -1,0 +1,177 @@
+{
+ "at": "2026-09-28T09:48:29.675Z",
+ "viewport": [
+  390,
+  844
+ ],
+ "rows": [
+  {
+   "text": "关闭",
+   "box": [
+    241,
+    18,
+    32,
+    44
+   ],
+   "in_viewport": true,
+   "hit_centre": "self",
+   "hit_left": "self"
+  },
+  {
+   "text": "今天",
+   "box": [
+    14,
+    114,
+    271,
+    292
+   ],
+   "in_viewport": true,
+   "hit_centre": "self",
+   "hit_left": "self"
+  },
+  {
+   "text": "实时行程",
+   "box": [
+    14,
+    422,
+    271,
+    292
+   ],
+   "in_viewport": true,
+   "hit_centre": "self",
+   "hit_left": "self"
+  },
+  {
+   "text": "地图",
+   "box": [
+    14,
+    730,
+    271,
+    292
+   ],
+   "in_viewport": false,
+   "hit_centre": "none",
+   "hit_left": "none"
+  },
+  {
+   "text": "行程工作台",
+   "box": [
+    14,
+    1064,
+    271,
+    292
+   ],
+   "in_viewport": false,
+   "hit_centre": "none",
+   "hit_left": "none"
+  },
+  {
+   "text": "住宿选择",
+   "box": [
+    14,
+    1372,
+    271,
+    292
+   ],
+   "in_viewport": false,
+   "hit_centre": "none",
+   "hit_left": "none"
+  },
+  {
+   "text": "城市探索",
+   "box": [
+    14,
+    1680,
+    271,
+    292
+   ],
+   "in_viewport": false,
+   "hit_centre": "none",
+   "hit_left": "none"
+  },
+  {
+   "text": "旅行票夹",
+   "box": [
+    14,
+    2014,
+    271,
+    292
+   ],
+   "in_viewport": false,
+   "hit_centre": "none",
+   "hit_left": "none"
+  },
+  {
+   "text": "Copilot",
+   "box": [
+    14,
+    2322,
+    271,
+    292
+   ],
+   "in_viewport": false,
+   "hit_centre": "none",
+   "hit_left": "none"
+  },
+  {
+   "text": "恢复与执行",
+   "box": [
+    14,
+    2656,
+    271,
+    292
+   ],
+   "in_viewport": false,
+   "hit_centre": "none",
+   "hit_left": "none"
+  },
+  {
+   "text": "智能守护",
+   "box": [
+    14,
+    2964,
+    271,
+    292
+   ],
+   "in_viewport": false,
+   "hit_centre": "none",
+   "hit_left": "none"
+  },
+  {
+   "text": "旅行者画像",
+   "box": [
+    14,
+    3272,
+    271,
+    292
+   ],
+   "in_viewport": false,
+   "hit_centre": "none",
+   "hit_left": "none"
+  },
+  {
+   "text": "行程",
+   "box": [
+    14,
+    3580,
+    271,
+    292
+   ],
+   "in_viewport": false,
+   "hit_centre": "none",
+   "hit_left": "none"
+  },
+  {
+   "text": "我的",
+   "box": [
+    14,
+    3888,
+    271,
+    292
+   ],
+   "in_viewport": false,
+   "hit_centre": "none",
+   "hit_left": "none"
+  }
+ ]
+}
