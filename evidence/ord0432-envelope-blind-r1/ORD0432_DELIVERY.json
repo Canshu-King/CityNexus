@@ -1,0 +1,134 @@
+{
+  "interpreter": "D:\\moodle\\CityNexus\\.venv\\Scripts\\python.exe",
+  "interpreter_version": "Python 3.12.14",
+  "ref_readback": {
+    "ref": "refs/heads/review/Q-ord0432-robust-blind-to-major-1",
+    "sha": "5dc2670b58f6d7bb8052df72533f6bbf7177def1"
+  },
+  "candidate_commits": [
+    "5dc2670b58f6d7bb8052df72533f6bbf7177def1 2026-09-29 04:33:03 +0800 ORD-0432: say what the summary decided, in the traveller's own language",
+    "2008447e970f156a0930c2dc618b5650841d4c88 2026-09-29 04:32:41 +0800 ORD-0432: an open MAJOR disruption has to reach the feasibility summary"
+  ],
+  "suite": {
+    "candidate_complete": {
+      "source_log": "C:\\Users\\仓鼠王\\AppData\\Local\\Temp\\qoder-cli\\D--moodle\\804cc791-0ba0-493a-90cd-6dea5b2d380f\\tasks\\b6et7zz0t.output",
+      "parsed": true,
+      "failed": 10,
+      "passed": 1415,
+      "skipped": 15,
+      "xfailed": 1,
+      "seconds": 434.06,
+      "total_from_counts": 1441,
+      "red_nodeids": [
+        "tests/test_qoder_anywhere_gates.py::test_g5_an_ai_run_that_changed_must_say_which_it_was",
+        "tests/test_qoder_anywhere_lock_duration.py::test_g9b_provider_http_never_runs_inside_an_open_write_transaction",
+        "tests/test_qoder_anywhere_matrix_truth.py::test_g14a_an_oversized_matrix_fails_closed_and_invents_no_facts",
+        "tests/test_qoder_anywhere_matrix_truth.py::test_g14c_the_verdict_must_not_depend_on_the_providers_wording",
+        "tests/test_qoder_anywhere_provider_independence.py::test_g8a_default_suite_contains_no_live_provider_calls",
+        "tests/test_qoder_anywhere_provider_truth.py::test_g10_every_normalised_place_carries_a_usable_coordinate_including_nodes",
+        "tests/test_qoder_city_failure_reasons.py::test_a_live_failure_arrives_named_and_carries_the_stage_it_broke_at",
+        "tests/test_qoder_g3_xproc_http.py::test_g3_xproc_two_uvicorn_workers_over_http_share_one_operation",
+        "tests/test_qoder_ord0296_write_deadline.py::test_G4_the_lock_wait_is_written_in_exactly_one_place",
+        "tests/test_sol_guardian_projection.py::test_a_preventive_run_carries_the_fields_the_panel_selects_on"
+      ]
+    },
+    "candidate_my_file_ignored": {
+      "source_log": "C:\\Users\\仓鼠王\\AppData\\Local\\Temp\\qoder-cli\\D--moodle\\804cc791-0ba0-493a-90cd-6dea5b2d380f\\tasks\\b6xmlqpab.output",
+      "parsed": true,
+      "failed": 10,
+      "passed": 1410,
+      "skipped": 15,
+      "xfailed": 1,
+      "seconds": 360.49,
+      "total_from_counts": 1436,
+      "red_nodeids": [
+        "tests/test_qoder_anywhere_gates.py::test_g5_an_ai_run_that_changed_must_say_which_it_was",
+        "tests/test_qoder_anywhere_lock_duration.py::test_g9b_provider_http_never_runs_inside_an_open_write_transaction",
+        "tests/test_qoder_anywhere_matrix_truth.py::test_g14a_an_oversized_matrix_fails_closed_and_invents_no_facts",
+        "tests/test_qoder_anywhere_matrix_truth.py::test_g14c_the_verdict_must_not_depend_on_the_providers_wording",
+        "tests/test_qoder_anywhere_provider_independence.py::test_g8a_default_suite_contains_no_live_provider_calls",
+        "tests/test_qoder_anywhere_provider_truth.py::test_g10_every_normalised_place_carries_a_usable_coordinate_including_nodes",
+        "tests/test_qoder_city_failure_reasons.py::test_a_live_failure_arrives_named_and_carries_the_stage_it_broke_at",
+        "tests/test_qoder_g3_xproc_http.py::test_g3_xproc_two_uvicorn_workers_over_http_share_one_operation",
+        "tests/test_qoder_ord0296_write_deadline.py::test_G4_the_lock_wait_is_written_in_exactly_one_place",
+        "tests/test_sol_guardian_projection.py::test_guardian_status_lists_runs_newest_first"
+      ]
+    },
+    "baseline_snap_complete": {
+      "source_log": "C:\\Users\\仓鼠王\\AppData\\Local\\Temp\\qoder-cli\\D--moodle\\804cc791-0ba0-493a-90cd-6dea5b2d380f\\tasks\\b2pysq7wv.output",
+      "parsed": true,
+      "failed": 9,
+      "passed": 1411,
+      "skipped": 15,
+      "xfailed": 1,
+      "seconds": 386.56,
+      "total_from_counts": 1436,
+      "red_nodeids": [
+        "tests/test_qoder_anywhere_gates.py::test_g5_an_ai_run_that_changed_must_say_which_it_was",
+        "tests/test_qoder_anywhere_lock_duration.py::test_g9b_provider_http_never_runs_inside_an_open_write_transaction",
+        "tests/test_qoder_anywhere_matrix_truth.py::test_g14a_an_oversized_matrix_fails_closed_and_invents_no_facts",
+        "tests/test_qoder_anywhere_matrix_truth.py::test_g14c_the_verdict_must_not_depend_on_the_providers_wording",
+        "tests/test_qoder_anywhere_provider_independence.py::test_g8a_default_suite_contains_no_live_provider_calls",
+        "tests/test_qoder_anywhere_provider_truth.py::test_g10_every_normalised_place_carries_a_usable_coordinate_including_nodes",
+        "tests/test_qoder_city_failure_reasons.py::test_a_live_failure_arrives_named_and_carries_the_stage_it_broke_at",
+        "tests/test_qoder_g3_xproc_http.py::test_g3_xproc_two_uvicorn_workers_over_http_share_one_operation",
+        "tests/test_qoder_ord0296_write_deadline.py::test_G4_the_lock_wait_is_written_in_exactly_one_place"
+      ]
+    },
+    "baseline_snap_rerun": {
+      "source_log": "C:\\Users\\仓鼠王\\AppData\\Local\\Temp\\qoder-cli\\D--moodle\\25f8a9c7-4549-43ad-835e-b04e92c7411f\\tasks\\b2fhms9d9.output",
+      "parsed": false,
+      "failed": null,
+      "passed": null,
+      "skipped": null,
+      "xfailed": null,
+      "seconds": null,
+      "total_from_counts": null,
+      "red_nodeids": []
+    }
+  },
+  "regression_check": {
+    "candidate_only_nodeids": [
+      "tests/test_sol_guardian_projection.py::test_a_preventive_run_carries_the_fields_the_panel_selects_on"
+    ],
+    "baseline_only_nodeids": [],
+    "candidate_is_subset_of_baseline": false,
+    "my_new_file_nodeids": []
+  },
+  "frontend_typecheck": {
+    "exit": 0,
+    "listFiles_lines": 522,
+    "changed_files_seen": [
+      "LiveRecovery.tsx",
+      "displayVocabulary.ts"
+    ]
+  },
+  "bundle_contains_new_words": {
+    "需要复核": [
+      "index-1FQmF-ch.js"
+    ],
+    "Major disruption open": [
+      "index-1FQmF-ch.js"
+    ],
+    "有重大变动没处理": [
+      "index-1FQmF-ch.js"
+    ],
+    "Server summary: review needed": []
+  },
+  "product_files_in_candidate": [
+    "backend/app/intelligence/feasibility_envelope.py",
+    "backend/app/intelligence/reason_codes.py",
+    "backend/app/main.py",
+    "backend/tests/test_dsh_twin_disruption_risk.py",
+    "contracts/openapi.yaml",
+    "frontend/src/features/execution/LiveRecovery.tsx",
+    "frontend/src/lib/displayVocabulary.ts"
+  ],
+  "scripts_parse": {
+    "ord0432_agent_leg.py": true,
+    "ord0432_delivery_receipt.py": true,
+    "ord0432_reverse_arms.py": true,
+    "ord0432_two_arm.py": true,
+    "ord0432_witness.py": true
+  }
+}
