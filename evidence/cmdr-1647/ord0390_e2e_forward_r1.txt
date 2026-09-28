@@ -1,0 +1,195 @@
+
+Running 1 test using 1 worker
+
+  x  1 [cmdr-390] › e2e\qoder-map-ord0390-selection-both-ways.spec.ts:84:1 › forward — tapping a marker changes the card text on the same screen (29.7s)
+
+
+  1) [cmdr-390] › e2e\qoder-map-ord0390-selection-both-ways.spec.ts:84:1 › forward — tapping a marker changes the card text on the same screen 
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: getByTestId('v8-maplibre-panel').first()
+    Expected: visible
+    Timeout: 25000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" getByTestId('v8-maplibre-panel').first() with timeout 25000ms
+      - waiting for getByTestId('v8-maplibre-panel').first()
+
+
+      32 |   await openScreen(page, "/v8/hub", ["today-heading", "today-attention"]);
+      33 |   await page.getByTestId("nav-map").click();
+    > 34 |   await expect(page.getByTestId("v8-maplibre-panel").first()).toBeVisible({ timeout: 25_000 });
+         |                                                               ^
+      35 |   await page.waitForTimeout(1_500);
+      36 | }
+      37 |
+        at enterMap (D:\moodle\_qoder_cmdr_ref_20260921\live_checks\_build_1f8d706\frontend\e2e\qoder-map-ord0390-selection-both-ways.spec.ts:34:63)
+        at D:\moodle\_qoder_cmdr_ref_20260921\live_checks\_build_1f8d706\frontend\e2e\qoder-map-ord0390-selection-both-ways.spec.ts:86:3
+
+    Error Context: test-results\qoder-map-ord0390-selectio-3ac08-ard-text-on-the-same-screen-cmdr-390\error-context.md
+
+    Error Context: test-results\qoder-map-ord0390-selectio-3ac08-ard-text-on-the-same-screen-cmdr-390\error-context.md
+
+  1 failed
+    [cmdr-390] › e2e\qoder-map-ord0390-selection-both-ways.spec.ts:84:1 › forward — tapping a marker changes the card text on the same screen 
+{
+  "config": {
+    "argv": [
+      "C:\\Program Files\\nodejs\\node.exe",
+      "D:\\moodle\\_qoder_cmdr_ref_20260921\\live_checks\\_build_1f8d706\\frontend\\node_modules\\@playwright\\test\\cli.js",
+      "test",
+      "--config",
+      "playwright.cmdr.config.ts",
+      "e2e/qoder-map-ord0390-selection-both-ways.spec.ts",
+      "--grep",
+      "forward"
+    ],
+    "configFile": "D:\\moodle\\_qoder_cmdr_ref_20260921\\live_checks\\_build_1f8d706\\frontend\\playwright.cmdr.config.ts",
+    "rootDir": "D:/moodle/_qoder_cmdr_ref_20260921/live_checks/_build_1f8d706/frontend/e2e",
+    "failOnFlakyTests": false,
+    "forbidOnly": false,
+    "fullyParallel": false,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "actualWorkers": 1
+    },
+    "preserveOutput": "always",
+    "projects": [
+      {
+        "outputDir": "D:/moodle/_qoder_cmdr_ref_20260921/live_checks/_build_1f8d706/frontend/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "cmdr-390",
+        "name": "cmdr-390",
+        "testDir": "D:/moodle/_qoder_cmdr_ref_20260921/live_checks/_build_1f8d706/frontend/e2e",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 180000
+      }
+    ],
+    "quiet": false,
+    "reporter": [
+      [
+        "list",
+        null
+      ],
+      [
+        "json",
+        {
+          "outputfile": "e2e/qoder-cmdr-ord0390-r1.json"
+        }
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "shard": null,
+    "tags": [],
+    "updateSnapshots": "missing",
+    "updateSourceMethod": "patch",
+    "version": "1.63.0",
+    "workers": 16,
+    "webServer": null
+  },
+  "suites": [
+    {
+      "title": "qoder-map-ord0390-selection-both-ways.spec.ts",
+      "file": "qoder-map-ord0390-selection-both-ways.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "forward — tapping a marker changes the card text on the same screen",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 180000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "cmdr-390",
+              "projectName": "cmdr-390",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "failed",
+                  "duration": 29690,
+                  "error": {
+                    "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: getByTestId('v8-maplibre-panel').first()\nExpected: visible\nTimeout: 25000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" getByTestId('v8-maplibre-panel').first() with timeout 25000ms\u001b[22m\n\u001b[2m  - waiting for getByTestId('v8-maplibre-panel').first()\u001b[22m\n",
+                    "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: getByTestId('v8-maplibre-panel').first()\nExpected: visible\nTimeout: 25000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" getByTestId('v8-maplibre-panel').first() with timeout 25000ms\u001b[22m\n\u001b[2m  - waiting for getByTestId('v8-maplibre-panel').first()\u001b[22m\n\n    at enterMap (D:\\moodle\\_qoder_cmdr_ref_20260921\\live_checks\\_build_1f8d706\\frontend\\e2e\\qoder-map-ord0390-selection-both-ways.spec.ts:34:63)\n    at D:\\moodle\\_qoder_cmdr_ref_20260921\\live_checks\\_build_1f8d706\\frontend\\e2e\\qoder-map-ord0390-selection-both-ways.spec.ts:86:3",
+                    "location": {
+                      "file": "D:\\moodle\\_qoder_cmdr_ref_20260921\\live_checks\\_build_1f8d706\\frontend\\e2e\\qoder-map-ord0390-selection-both-ways.spec.ts",
+                      "column": 63,
+                      "line": 34
+                    },
+                    "snippet": "\u001b[0m \u001b[90m 32 |\u001b[39m   \u001b[36mawait\u001b[39m openScreen(page\u001b[33m,\u001b[39m \u001b[32m\"/v8/hub\"\u001b[39m\u001b[33m,\u001b[39m [\u001b[32m\"today-heading\"\u001b[39m\u001b[33m,\u001b[39m \u001b[32m\"today-attention\"\u001b[39m])\u001b[33m;\u001b[39m\n \u001b[90m 33 |\u001b[39m   \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mgetByTestId(\u001b[32m\"nav-map\"\u001b[39m)\u001b[33m.\u001b[39mclick()\u001b[33m;\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 34 |\u001b[39m   \u001b[36mawait\u001b[39m expect(page\u001b[33m.\u001b[39mgetByTestId(\u001b[32m\"v8-maplibre-panel\"\u001b[39m)\u001b[33m.\u001b[39mfirst())\u001b[33m.\u001b[39mtoBeVisible({ timeout\u001b[33m:\u001b[39m \u001b[35m25\u001b[39m_000 })\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                                                               \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 35 |\u001b[39m   \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mwaitForTimeout(\u001b[35m1\u001b[39m_500)\u001b[33m;\u001b[39m\n \u001b[90m 36 |\u001b[39m }\n \u001b[90m 37 |\u001b[39m\u001b[0m"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "D:\\moodle\\_qoder_cmdr_ref_20260921\\live_checks\\_build_1f8d706\\frontend\\e2e\\qoder-map-ord0390-selection-both-ways.spec.ts",
+                        "column": 63,
+                        "line": 34
+                      },
+                      "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: getByTestId('v8-maplibre-panel').first()\nExpected: visible\nTimeout: 25000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" getByTestId('v8-maplibre-panel').first() with timeout 25000ms\u001b[22m\n\u001b[2m  - waiting for getByTestId('v8-maplibre-panel').first()\u001b[22m\n\n\n  32 |   await openScreen(page, \"/v8/hub\", [\"today-heading\", \"today-attention\"]);\n  33 |   await page.getByTestId(\"nav-map\").click();\n> 34 |   await expect(page.getByTestId(\"v8-maplibre-panel\").first()).toBeVisible({ timeout: 25_000 });\n     |                                                               ^\n  35 |   await page.waitForTimeout(1_500);\n  36 | }\n  37 |\n    at enterMap (D:\\moodle\\_qoder_cmdr_ref_20260921\\live_checks\\_build_1f8d706\\frontend\\e2e\\qoder-map-ord0390-selection-both-ways.spec.ts:34:63)\n    at D:\\moodle\\_qoder_cmdr_ref_20260921\\live_checks\\_build_1f8d706\\frontend\\e2e\\qoder-map-ord0390-selection-both-ways.spec.ts:86:3"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-09-28T08:44:41.218Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "D:\\moodle\\_qoder_cmdr_ref_20260921\\live_checks\\_build_1f8d706\\frontend\\test-results\\qoder-map-ord0390-selectio-3ac08-ard-text-on-the-same-screen-cmdr-390\\error-context.md"
+                    },
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "D:\\moodle\\_qoder_cmdr_ref_20260921\\live_checks\\_build_1f8d706\\frontend\\test-results\\qoder-map-ord0390-selectio-3ac08-ard-text-on-the-same-screen-cmdr-390\\error-context.md"
+                    }
+                  ],
+                  "errorLocation": {
+                    "file": "D:\\moodle\\_qoder_cmdr_ref_20260921\\live_checks\\_build_1f8d706\\frontend\\e2e\\qoder-map-ord0390-selection-both-ways.spec.ts",
+                    "column": 63,
+                    "line": 34
+                  }
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "1816b2daf67c00d10269-d37131910b7836fac84b",
+          "file": "qoder-map-ord0390-selection-both-ways.spec.ts",
+          "line": 84,
+          "column": 1
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2026-09-28T08:44:40.734Z",
+    "duration": 30710.377,
+    "expected": 0,
+    "skipped": 0,
+    "unexpected": 1,
+    "flaky": 0
+  }
+}
