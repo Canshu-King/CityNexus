@@ -1,0 +1,1154 @@
+{
+ "generated_by": "_copy_origin_r3.py",
+ "authoritative_sha": "8a7665be2061a2f38aa2227f81c57003ca4caacb",
+ "input_aggregate": "_untranslated_aggregate_r3.json",
+ "source_tree": "D:/moodle/_qoder_cmdr_scan_8a7665be/frontend/src",
+ "distinct_zh_visible_strings": 30,
+ "counts": {
+  "BARE_COPY_IN_COMPONENT": 16,
+  "SUBSTRING_ONLY_IN_COMPONENT": 2,
+  "DATA_OR_API": 5,
+  "BRAND_WORD": 3,
+  "UNEXPLAINED": 4
+ },
+ "defect_by_file": {
+  "frontend/src/features/setup/JourneyTrialSetup.tsx": [
+   {
+    "text": "Asia/Shanghai",
+    "line": 110,
+    "strength": "strong"
+   },
+   {
+    "text": "Asia/Shanghai",
+    "line": 111,
+    "strength": "strong"
+   },
+   {
+    "text": "Asia/Shanghai",
+    "line": 112,
+    "strength": "strong"
+   },
+   {
+    "text": "Asia/Shanghai",
+    "line": 113,
+    "strength": "strong"
+   },
+   {
+    "text": "Asia/Shanghai",
+    "line": 114,
+    "strength": "strong"
+   },
+   {
+    "text": "Asia/Shanghai",
+    "line": 115,
+    "strength": "strong"
+   }
+  ],
+  "frontend/src/features/traveler-twin/TwinPanel.tsx": [
+   {
+    "text": "Capability needs",
+    "line": 24,
+    "strength": "strong"
+   },
+   {
+    "text": "Hard accessibility needs are never inferred from behavior.",
+    "line": 24,
+    "strength": "strong"
+   },
+   {
+    "text": "Learned capability state",
+    "line": 24,
+    "strength": "strong"
+   },
+   {
+    "text": "No explicit capability facts recorded.",
+    "line": 13,
+    "strength": "strong"
+   },
+   {
+    "text": "No learned signals",
+    "line": 24,
+    "strength": "strong"
+   },
+   {
+    "text": "Unknown accessibility evidence is not accessible.",
+    "line": 24,
+    "strength": "strong"
+   }
+  ],
+  "frontend/src/features/recovery/V14RecoveryTruthPanel.tsx": [
+   {
+    "text": "ADVISORY",
+    "line": 48,
+    "strength": "strong"
+   },
+   {
+    "text": "Grounded adaptive recovery",
+    "line": 126,
+    "strength": "strong"
+   },
+   {
+    "text": "No recovery proposal is waiting on this Journey.",
+    "line": 132,
+    "strength": "strong"
+   },
+   {
+    "text": "V14 · REALITY CHANGED",
+    "line": 125,
+    "strength": "strong"
+   },
+   {
+    "text": "Refresh recovery",
+    "line": 129,
+    "strength": "substring"
+   }
+  ],
+  "frontend/src/generated/api.ts": [
+   {
+    "text": "ADVISORY",
+    "line": 2551,
+    "strength": "strong"
+   },
+   {
+    "text": "NOT_CONFIGURED",
+    "line": 2473,
+    "strength": "strong"
+   },
+   {
+    "text": "PLANNED",
+    "line": 2764,
+    "strength": "strong"
+   },
+   {
+    "text": "PLANNED",
+    "line": 2867,
+    "strength": "strong"
+   },
+   {
+    "text": "Journey Memory",
+    "line": 6608,
+    "strength": "substring"
+   }
+  ],
+  "frontend/src/api/citynexus.ts": [
+   {
+    "text": "ADVISORY",
+    "line": 72,
+    "strength": "strong"
+   },
+   {
+    "text": "NOT_CONFIGURED",
+    "line": 371,
+    "strength": "strong"
+   },
+   {
+    "text": "NOT_CONFIGURED",
+    "line": 380,
+    "strength": "strong"
+   }
+  ],
+  "frontend/src/features/simulation/SimulationPanel.tsx": [
+   {
+    "text": "Old Town Gate",
+    "line": 273,
+    "strength": "strong"
+   },
+   {
+    "text": "PLANNED",
+    "line": 336,
+    "strength": "strong"
+   }
+  ],
+  "frontend/src/app/V8Experience.tsx": [
+   {
+    "text": "ADVISORY",
+    "line": 114,
+    "strength": "strong"
+   },
+   {
+    "text": "ADVISORY",
+    "line": 4421,
+    "strength": "strong"
+   }
+  ],
+  "frontend/src/main.tsx": [
+   {
+    "text": "place-river-cruise",
+    "line": 401,
+    "strength": "strong"
+   },
+   {
+    "text": "place-river-cruise",
+    "line": 769,
+    "strength": "strong"
+   }
+  ],
+  "frontend/src/features/intelligence/ControlTowerPanel.tsx": [
+   {
+    "text": "ADVISORY",
+    "line": 5,
+    "strength": "strong"
+   }
+  ],
+  "frontend/src/features/discovery/RealCityDiscoveryPanel.tsx": [
+   {
+    "text": "I prefer quiet indoor culture, low walking, and rain-friendly places near my protected Journey moments.",
+    "line": 110,
+    "strength": "strong"
+   }
+  ],
+  "frontend/src/features/inbox/JourneyInboxWorkbench.tsx": [
+   {
+    "text": "NOT_CONFIGURED",
+    "line": 420,
+    "strength": "strong"
+   }
+  ],
+  "frontend/src/features/planning/PlanWithAiSheet.tsx": [
+   {
+    "text": "NOT_CONFIGURED",
+    "line": 329,
+    "strength": "strong"
+   }
+  ],
+  "frontend/src/features/planning/aiGenerationRun.ts": [
+   {
+    "text": "NOT_CONFIGURED",
+    "line": 61,
+    "strength": "strong"
+   }
+  ],
+  "frontend/src/demo/goldenScenario.ts": [
+   {
+    "text": "place-river-cruise",
+    "line": 24,
+    "strength": "strong"
+   }
+  ]
+ },
+ "rows": [
+  {
+   "text": "Old Town Gate",
+   "bucket": "BARE_COPY_IN_COMPONENT",
+   "r1_shape_bucket": "UNCLEAR",
+   "zh_screens": [
+    "authoritative",
+    "map",
+    "trips"
+   ],
+   "evidence_strength_used": "EXACT_QUOTED",
+   "component_strong": [
+    {
+     "file": "frontend/src/features/simulation/SimulationPanel.tsx",
+     "line": 273
+    }
+   ],
+   "component_strong_count": 1,
+   "dictionary_strong": [],
+   "data": [
+    {
+     "file": "data/mock/places.json",
+     "line": 7
+    },
+    {
+     "file": "backend/app/services.py",
+     "line": 704
+    },
+    {
+     "file": "backend/app/services.py",
+     "line": 712
+    },
+    {
+     "file": "backend/app/services.py",
+     "line": 720
+    }
+   ],
+   "data_count": 4,
+   "component_substring_only": [
+    {
+     "file": "frontend/src/app/V8Experience.tsx",
+     "line": 2411
+    }
+   ]
+  },
+  {
+   "text": "ADVISORY",
+   "bucket": "BARE_COPY_IN_COMPONENT",
+   "r1_shape_bucket": "SHORT_LABEL_OR_DATA",
+   "zh_screens": [
+    "intelligence"
+   ],
+   "evidence_strength_used": "EXACT_QUOTED",
+   "component_strong": [
+    {
+     "file": "frontend/src/api/citynexus.ts",
+     "line": 72
+    },
+    {
+     "file": "frontend/src/app/V8Experience.tsx",
+     "line": 114
+    },
+    {
+     "file": "frontend/src/app/V8Experience.tsx",
+     "line": 4421
+    },
+    {
+     "file": "frontend/src/features/intelligence/ControlTowerPanel.tsx",
+     "line": 5
+    },
+    {
+     "file": "frontend/src/features/recovery/V14RecoveryTruthPanel.tsx",
+     "line": 48
+    },
+    {
+     "file": "frontend/src/generated/api.ts",
+     "line": 2551
+    }
+   ],
+   "component_strong_count": 9,
+   "dictionary_strong": [
+    {
+     "file": "frontend/src/i18n/LocaleContext.tsx",
+     "line": 672
+    }
+   ],
+   "data": [],
+   "data_count": 0,
+   "component_substring_only": [
+    {
+     "file": "frontend/src/generated/api.ts",
+     "line": 2548
+    }
+   ]
+  },
+  {
+   "text": "Asia/Shanghai",
+   "bucket": "BARE_COPY_IN_COMPONENT",
+   "r1_shape_bucket": "SHORT_LABEL_OR_DATA",
+   "zh_screens": [
+    "live"
+   ],
+   "evidence_strength_used": "EXACT_QUOTED",
+   "component_strong": [
+    {
+     "file": "frontend/src/features/setup/JourneyTrialSetup.tsx",
+     "line": 110
+    },
+    {
+     "file": "frontend/src/features/setup/JourneyTrialSetup.tsx",
+     "line": 111
+    },
+    {
+     "file": "frontend/src/features/setup/JourneyTrialSetup.tsx",
+     "line": 112
+    },
+    {
+     "file": "frontend/src/features/setup/JourneyTrialSetup.tsx",
+     "line": 113
+    },
+    {
+     "file": "frontend/src/features/setup/JourneyTrialSetup.tsx",
+     "line": 114
+    },
+    {
+     "file": "frontend/src/features/setup/JourneyTrialSetup.tsx",
+     "line": 115
+    }
+   ],
+   "component_strong_count": 20,
+   "dictionary_strong": [],
+   "data": [
+    {
+     "file": "data/mock/demo_journey.json",
+     "line": 7
+    },
+    {
+     "file": "data/mock/traveler_demo.json",
+     "line": 6
+    },
+    {
+     "file": "data/replay/tianjin_v135_journey_snapshot.json",
+     "line": 277
+    },
+    {
+     "file": "data/v9/city_operations.json",
+     "line": 3
+    },
+    {
+     "file": "data/v9/city_operations.json",
+     "line": 20
+    }
+   ],
+   "data_count": 5,
+   "component_substring_only": [
+    {
+     "file": "frontend/src/features/setup/JourneyTrialSetup.tsx",
+     "line": 164
+    }
+   ]
+  },
+  {
+   "text": "Capability needs",
+   "bucket": "BARE_COPY_IN_COMPONENT",
+   "r1_shape_bucket": "PROSE",
+   "zh_screens": [
+    "twin"
+   ],
+   "evidence_strength_used": "JSX_TEXT",
+   "component_strong": [
+    {
+     "file": "frontend/src/features/traveler-twin/TwinPanel.tsx",
+     "line": 24
+    }
+   ],
+   "component_strong_count": 1,
+   "dictionary_strong": [],
+   "data": [],
+   "data_count": 0,
+   "component_substring_only": []
+  },
+  {
+   "text": "Grounded adaptive recovery",
+   "bucket": "BARE_COPY_IN_COMPONENT",
+   "r1_shape_bucket": "UNCLEAR",
+   "zh_screens": [
+    "authoritative"
+   ],
+   "evidence_strength_used": "JSX_TEXT",
+   "component_strong": [
+    {
+     "file": "frontend/src/features/recovery/V14RecoveryTruthPanel.tsx",
+     "line": 126
+    }
+   ],
+   "component_strong_count": 1,
+   "dictionary_strong": [],
+   "data": [],
+   "data_count": 0,
+   "component_substring_only": []
+  },
+  {
+   "text": "Hard accessibility needs are never inferred from behavior.",
+   "bucket": "BARE_COPY_IN_COMPONENT",
+   "r1_shape_bucket": "PROSE",
+   "zh_screens": [
+    "twin"
+   ],
+   "evidence_strength_used": "EXACT_QUOTED",
+   "component_strong": [
+    {
+     "file": "frontend/src/features/traveler-twin/TwinPanel.tsx",
+     "line": 24
+    }
+   ],
+   "component_strong_count": 1,
+   "dictionary_strong": [],
+   "data": [],
+   "data_count": 0,
+   "component_substring_only": []
+  },
+  {
+   "text": "I prefer quiet indoor culture, low walking, and rain-friendly places near my protected Journey moments.",
+   "bucket": "BARE_COPY_IN_COMPONENT",
+   "r1_shape_bucket": "PROSE",
+   "zh_screens": [
+    "discover"
+   ],
+   "evidence_strength_used": "EXACT_QUOTED",
+   "component_strong": [
+    {
+     "file": "frontend/src/features/discovery/RealCityDiscoveryPanel.tsx",
+     "line": 110
+    }
+   ],
+   "component_strong_count": 1,
+   "dictionary_strong": [
+    {
+     "file": "frontend/src/i18n/LocaleContext.tsx",
+     "line": 488
+    }
+   ],
+   "data": [],
+   "data_count": 0,
+   "component_substring_only": []
+  },
+  {
+   "text": "Learned capability state",
+   "bucket": "BARE_COPY_IN_COMPONENT",
+   "r1_shape_bucket": "UNCLEAR",
+   "zh_screens": [
+    "twin"
+   ],
+   "evidence_strength_used": "JSX_TEXT",
+   "component_strong": [
+    {
+     "file": "frontend/src/features/traveler-twin/TwinPanel.tsx",
+     "line": 24
+    }
+   ],
+   "component_strong_count": 1,
+   "dictionary_strong": [],
+   "data": [],
+   "data_count": 0,
+   "component_substring_only": []
+  },
+  {
+   "text": "NOT_CONFIGURED",
+   "bucket": "BARE_COPY_IN_COMPONENT",
+   "r1_shape_bucket": "SHORT_LABEL_OR_DATA",
+   "zh_screens": [
+    "intelligence"
+   ],
+   "evidence_strength_used": "EXACT_QUOTED",
+   "component_strong": [
+    {
+     "file": "frontend/src/api/citynexus.ts",
+     "line": 371
+    },
+    {
+     "file": "frontend/src/api/citynexus.ts",
+     "line": 380
+    },
+    {
+     "file": "frontend/src/features/inbox/JourneyInboxWorkbench.tsx",
+     "line": 420
+    },
+    {
+     "file": "frontend/src/features/planning/PlanWithAiSheet.tsx",
+     "line": 329
+    },
+    {
+     "file": "frontend/src/features/planning/aiGenerationRun.ts",
+     "line": 61
+    },
+    {
+     "file": "frontend/src/generated/api.ts",
+     "line": 2473
+    }
+   ],
+   "component_strong_count": 7,
+   "dictionary_strong": [],
+   "data": [],
+   "data_count": 0,
+   "component_substring_only": [
+    {
+     "file": "frontend/src/features/agent/CopilotDock.tsx",
+     "line": 517
+    }
+   ]
+  },
+  {
+   "text": "No explicit capability facts recorded.",
+   "bucket": "BARE_COPY_IN_COMPONENT",
+   "r1_shape_bucket": "PROSE",
+   "zh_screens": [
+    "twin"
+   ],
+   "evidence_strength_used": "JSX_TEXT",
+   "component_strong": [
+    {
+     "file": "frontend/src/features/traveler-twin/TwinPanel.tsx",
+     "line": 13
+    }
+   ],
+   "component_strong_count": 1,
+   "dictionary_strong": [],
+   "data": [],
+   "data_count": 0,
+   "component_substring_only": []
+  },
+  {
+   "text": "No learned signals",
+   "bucket": "BARE_COPY_IN_COMPONENT",
+   "r1_shape_bucket": "PROSE",
+   "zh_screens": [
+    "twin"
+   ],
+   "evidence_strength_used": "EXACT_QUOTED",
+   "component_strong": [
+    {
+     "file": "frontend/src/features/traveler-twin/TwinPanel.tsx",
+     "line": 24
+    }
+   ],
+   "component_strong_count": 1,
+   "dictionary_strong": [],
+   "data": [],
+   "data_count": 0,
+   "component_substring_only": []
+  },
+  {
+   "text": "No recovery proposal is waiting on this Journey.",
+   "bucket": "BARE_COPY_IN_COMPONENT",
+   "r1_shape_bucket": "PROSE",
+   "zh_screens": [
+    "authoritative"
+   ],
+   "evidence_strength_used": "JSX_TEXT",
+   "component_strong": [
+    {
+     "file": "frontend/src/features/recovery/V14RecoveryTruthPanel.tsx",
+     "line": 132
+    }
+   ],
+   "component_strong_count": 1,
+   "dictionary_strong": [],
+   "data": [],
+   "data_count": 0,
+   "component_substring_only": []
+  },
+  {
+   "text": "PLANNED",
+   "bucket": "BARE_COPY_IN_COMPONENT",
+   "r1_shape_bucket": "SHORT_LABEL_OR_DATA",
+   "zh_screens": [
+    "authoritative"
+   ],
+   "evidence_strength_used": "EXACT_QUOTED",
+   "component_strong": [
+    {
+     "file": "frontend/src/features/simulation/SimulationPanel.tsx",
+     "line": 336
+    },
+    {
+     "file": "frontend/src/generated/api.ts",
+     "line": 2764
+    },
+    {
+     "file": "frontend/src/generated/api.ts",
+     "line": 2867
+    }
+   ],
+   "component_strong_count": 3,
+   "dictionary_strong": [],
+   "data": [
+    {
+     "file": "backend/app/services.py",
+     "line": 1225
+    },
+    {
+     "file": "backend/app/services.py",
+     "line": 1506
+    },
+    {
+     "file": "backend/app/services.py",
+     "line": 1510
+    },
+    {
+     "file": "backend/app/services.py",
+     "line": 1789
+    }
+   ],
+   "data_count": 4,
+   "component_substring_only": [
+    {
+     "file": "frontend/src/features/simulation/SimulationPanel.tsx",
+     "line": 329
+    },
+    {
+     "file": "frontend/src/features/simulation/SimulationPanel.tsx",
+     "line": 331
+    },
+    {
+     "file": "frontend/src/features/simulation/SimulationPanel.tsx",
+     "line": 338
+    },
+    {
+     "file": "frontend/src/features/simulation/SimulationPanel.tsx",
+     "line": 339
+    }
+   ]
+  },
+  {
+   "text": "Unknown accessibility evidence is not accessible.",
+   "bucket": "BARE_COPY_IN_COMPONENT",
+   "r1_shape_bucket": "PROSE",
+   "zh_screens": [
+    "twin"
+   ],
+   "evidence_strength_used": "JSX_TEXT",
+   "component_strong": [
+    {
+     "file": "frontend/src/features/traveler-twin/TwinPanel.tsx",
+     "line": 24
+    }
+   ],
+   "component_strong_count": 1,
+   "dictionary_strong": [],
+   "data": [],
+   "data_count": 0,
+   "component_substring_only": []
+  },
+  {
+   "text": "V14 · REALITY CHANGED",
+   "bucket": "BARE_COPY_IN_COMPONENT",
+   "r1_shape_bucket": "DATA_TAGS",
+   "zh_screens": [
+    "authoritative"
+   ],
+   "evidence_strength_used": "JSX_TEXT",
+   "component_strong": [
+    {
+     "file": "frontend/src/features/recovery/V14RecoveryTruthPanel.tsx",
+     "line": 125
+    }
+   ],
+   "component_strong_count": 1,
+   "dictionary_strong": [],
+   "data": [],
+   "data_count": 0,
+   "component_substring_only": []
+  },
+  {
+   "text": "place-river-cruise",
+   "bucket": "BARE_COPY_IN_COMPONENT",
+   "r1_shape_bucket": "ID_LIKE",
+   "zh_screens": [
+    "bookings"
+   ],
+   "evidence_strength_used": "EXACT_QUOTED",
+   "component_strong": [
+    {
+     "file": "frontend/src/demo/goldenScenario.ts",
+     "line": 24
+    },
+    {
+     "file": "frontend/src/main.tsx",
+     "line": 401
+    },
+    {
+     "file": "frontend/src/main.tsx",
+     "line": 769
+    }
+   ],
+   "component_strong_count": 3,
+   "dictionary_strong": [],
+   "data": [
+    {
+     "file": "data/mock/demo_journey.json",
+     "line": 41
+    },
+    {
+     "file": "data/mock/demo_journey.json",
+     "line": 45
+    },
+    {
+     "file": "data/mock/places.json",
+     "line": 60
+    },
+    {
+     "file": "data/mock/wp04_city_services_overlay.json",
+     "line": 9
+    },
+    {
+     "file": "data/mock/wp04_commerce_catalog.json",
+     "line": 5
+    },
+    {
+     "file": "data/replay/tianjin_v135_journey_snapshot.json",
+     "line": 295
+    }
+   ],
+   "data_count": 46,
+   "component_substring_only": []
+  },
+  {
+   "text": "Journey Memory",
+   "bucket": "SUBSTRING_ONLY_IN_COMPONENT",
+   "r1_shape_bucket": "SHORT_LABEL_OR_DATA",
+   "zh_screens": [
+    "bookings"
+   ],
+   "evidence_strength_used": "NONE",
+   "component_strong": [],
+   "component_strong_count": 0,
+   "dictionary_strong": [],
+   "data": [],
+   "data_count": 0,
+   "component_substring_only": [
+    {
+     "file": "frontend/src/generated/api.ts",
+     "line": 6608
+    }
+   ]
+  },
+  {
+   "text": "Refresh recovery",
+   "bucket": "SUBSTRING_ONLY_IN_COMPONENT",
+   "r1_shape_bucket": "SHORT_LABEL_OR_DATA",
+   "zh_screens": [
+    "authoritative"
+   ],
+   "evidence_strength_used": "NONE",
+   "component_strong": [],
+   "component_strong_count": 0,
+   "dictionary_strong": [],
+   "data": [],
+   "data_count": 0,
+   "component_substring_only": [
+    {
+     "file": "frontend/src/features/recovery/V14RecoveryTruthPanel.tsx",
+     "line": 129
+    }
+   ]
+  },
+  {
+   "text": "Tech Art Center",
+   "bucket": "DATA_OR_API",
+   "r1_shape_bucket": "UNCLEAR",
+   "zh_screens": [
+    "authoritative",
+    "hub",
+    "live",
+    "map",
+    "trips"
+   ],
+   "evidence_strength_used": "EXACT_QUOTED",
+   "component_strong": [],
+   "component_strong_count": 0,
+   "dictionary_strong": [],
+   "data": [
+    {
+     "file": "data/mock/places.json",
+     "line": 49
+    },
+    {
+     "file": "backend/app/services.py",
+     "line": 707
+    }
+   ],
+   "data_count": 2,
+   "component_substring_only": []
+  },
+  {
+   "text": "Nexus River Cruise Pier",
+   "bucket": "DATA_OR_API",
+   "r1_shape_bucket": "UNCLEAR",
+   "zh_screens": [
+    "authoritative",
+    "live",
+    "map",
+    "trips"
+   ],
+   "evidence_strength_used": "EXACT_QUOTED",
+   "component_strong": [],
+   "component_strong_count": 0,
+   "dictionary_strong": [],
+   "data": [
+    {
+     "file": "data/mock/places.json",
+     "line": 64
+    },
+    {
+     "file": "backend/app/services.py",
+     "line": 708
+    },
+    {
+     "file": "backend/app/services.py",
+     "line": 716
+    },
+    {
+     "file": "backend/app/services.py",
+     "line": 724
+    }
+   ],
+   "data_count": 4,
+   "component_substring_only": []
+  },
+  {
+   "text": "Central Food Hall",
+   "bucket": "DATA_OR_API",
+   "r1_shape_bucket": "UNCLEAR",
+   "zh_screens": [
+    "authoritative",
+    "map",
+    "trips"
+   ],
+   "evidence_strength_used": "EXACT_QUOTED",
+   "component_strong": [],
+   "component_strong_count": 0,
+   "dictionary_strong": [],
+   "data": [
+    {
+     "file": "data/mock/places.json",
+     "line": 35
+    },
+    {
+     "file": "backend/app/services.py",
+     "line": 706
+    },
+    {
+     "file": "backend/app/services.py",
+     "line": 714
+    },
+    {
+     "file": "backend/app/services.py",
+     "line": 722
+    }
+   ],
+   "data_count": 4,
+   "component_substring_only": []
+  },
+  {
+   "text": "Riverside Museum",
+   "bucket": "DATA_OR_API",
+   "r1_shape_bucket": "SHORT_LABEL_OR_DATA",
+   "zh_screens": [
+    "authoritative",
+    "map",
+    "trips"
+   ],
+   "evidence_strength_used": "EXACT_QUOTED",
+   "component_strong": [],
+   "component_strong_count": 0,
+   "dictionary_strong": [],
+   "data": [
+    {
+     "file": "data/mock/places.json",
+     "line": 21
+    },
+    {
+     "file": "backend/app/services.py",
+     "line": 705
+    },
+    {
+     "file": "backend/app/services.py",
+     "line": 713
+    },
+    {
+     "file": "backend/app/services.py",
+     "line": 721
+    }
+   ],
+   "data_count": 4,
+   "component_substring_only": []
+  },
+  {
+   "text": "Skyline Dinner House",
+   "bucket": "DATA_OR_API",
+   "r1_shape_bucket": "UNCLEAR",
+   "zh_screens": [
+    "authoritative",
+    "map",
+    "trips"
+   ],
+   "evidence_strength_used": "EXACT_QUOTED",
+   "component_strong": [],
+   "component_strong_count": 0,
+   "dictionary_strong": [],
+   "data": [
+    {
+     "file": "data/mock/places.json",
+     "line": 78
+    },
+    {
+     "file": "backend/app/services.py",
+     "line": 709
+    },
+    {
+     "file": "backend/app/services.py",
+     "line": 717
+    },
+    {
+     "file": "backend/app/services.py",
+     "line": 725
+    }
+   ],
+   "data_count": 4,
+   "component_substring_only": []
+  },
+  {
+   "text": "CityNexus Copilot",
+   "bucket": "BRAND_WORD",
+   "r1_shape_bucket": "BRAND",
+   "zh_screens": [
+    "twin",
+    "agent",
+    "authoritative",
+    "bookings",
+    "discover",
+    "hub",
+    "intelligence",
+    "live",
+    "map",
+    "me",
+    "stay",
+    "studio",
+    "trash",
+    "trips"
+   ],
+   "evidence_strength_used": "EXACT_QUOTED",
+   "component_strong": [],
+   "component_strong_count": 0,
+   "dictionary_strong": [
+    {
+     "file": "frontend/src/i18n/LocaleContext.tsx",
+     "line": 354
+    },
+    {
+     "file": "frontend/src/i18n/LocaleContext.tsx",
+     "line": 1151
+    }
+   ],
+   "data": [],
+   "data_count": 0,
+   "component_substring_only": []
+  },
+  {
+   "text": "Copilot",
+   "bucket": "BRAND_WORD",
+   "r1_shape_bucket": "BRAND",
+   "zh_screens": [
+    "twin",
+    "agent",
+    "authoritative",
+    "bookings",
+    "discover",
+    "hub",
+    "intelligence",
+    "live",
+    "map",
+    "me",
+    "stay",
+    "studio",
+    "trash",
+    "trips"
+   ],
+   "evidence_strength_used": "EXACT_QUOTED",
+   "component_strong": [
+    {
+     "file": "frontend/src/routes/v8Routes.ts",
+     "line": 9
+    },
+    {
+     "file": "frontend/src/routes/v8Routes.ts",
+     "line": 27
+    }
+   ],
+   "component_strong_count": 2,
+   "dictionary_strong": [
+    {
+     "file": "frontend/src/i18n/LocaleContext.tsx",
+     "line": 17
+    },
+    {
+     "file": "frontend/src/i18n/LocaleContext.tsx",
+     "line": 30
+    },
+    {
+     "file": "frontend/src/i18n/LocaleContext.tsx",
+     "line": 844
+    },
+    {
+     "file": "frontend/src/i18n/LocaleContext.tsx",
+     "line": 853
+    }
+   ],
+   "data": [],
+   "data_count": 0,
+   "component_substring_only": [
+    {
+     "file": "frontend/src/api/citynexus.ts",
+     "line": 401
+    },
+    {
+     "file": "frontend/src/api/citynexus.ts",
+     "line": 921
+    },
+    {
+     "file": "frontend/src/api/citynexus.ts",
+     "line": 925
+    },
+    {
+     "file": "frontend/src/api/citynexus.ts",
+     "line": 926
+    }
+   ]
+  },
+  {
+   "text": "CN / AI",
+   "bucket": "BRAND_WORD",
+   "r1_shape_bucket": "BRAND",
+   "zh_screens": [
+    "agent"
+   ],
+   "evidence_strength_used": "EXACT_QUOTED",
+   "component_strong": [],
+   "component_strong_count": 0,
+   "dictionary_strong": [
+    {
+     "file": "frontend/src/i18n/LocaleContext.tsx",
+     "line": 331
+    },
+    {
+     "file": "frontend/src/i18n/LocaleContext.tsx",
+     "line": 1128
+    }
+   ],
+   "data": [],
+   "data_count": 0,
+   "component_substring_only": []
+  },
+  {
+   "text": "15:30 Nexus River Cruise Pier",
+   "bucket": "UNEXPLAINED",
+   "r1_shape_bucket": "UNCLEAR",
+   "zh_screens": [
+    "hub"
+   ],
+   "evidence_strength_used": "NONE",
+   "component_strong": [],
+   "component_strong_count": 0,
+   "dictionary_strong": [],
+   "data": [],
+   "data_count": 0,
+   "component_substring_only": []
+  },
+  {
+   "text": "Nexus River Cruise Pier · 2026-10-10T15:30:00+08:00",
+   "bucket": "UNEXPLAINED",
+   "r1_shape_bucket": "DATA_TAGS",
+   "zh_screens": [
+    "bookings"
+   ],
+   "evidence_strength_used": "NONE",
+   "component_strong": [],
+   "component_strong_count": 0,
+   "dictionary_strong": [],
+   "data": [],
+   "data_count": 0,
+   "component_substring_only": []
+  },
+  {
+   "text": "PlanVersion 1 · INITIAL",
+   "bucket": "UNEXPLAINED",
+   "r1_shape_bucket": "DATA_TAGS",
+   "zh_screens": [
+    "authoritative"
+   ],
+   "evidence_strength_used": "NONE",
+   "component_strong": [],
+   "component_strong_count": 0,
+   "dictionary_strong": [],
+   "data": [],
+   "data_count": 0,
+   "component_substring_only": []
+  },
+  {
+   "text": "culture · local_food · relaxed · walking_minutes_max · waterfront",
+   "bucket": "UNEXPLAINED",
+   "r1_shape_bucket": "DATA_TAGS",
+   "zh_screens": [
+    "twin"
+   ],
+   "evidence_strength_used": "NONE",
+   "component_strong": [],
+   "component_strong_count": 0,
+   "dictionary_strong": [],
+   "data": [],
+   "data_count": 0,
+   "component_substring_only": []
+  }
+ ],
+ "verdict": "HARDCODED_COPY_ON_ZH_SCREENS"
+}
