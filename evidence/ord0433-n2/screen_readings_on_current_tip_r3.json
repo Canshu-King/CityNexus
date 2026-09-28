@@ -1,0 +1,776 @@
+{
+ "order": "ORD-0433",
+ "lane": "N2",
+ "rev": {
+  "authoritative_tip_at_measurement": "8d038b21f09477b933cff3b1c7b09845c542373b",
+  "candidate_head": "402f805dab16a7ea0c971c3c967d70927e4bbe1e",
+  "candidate_parent": "8d038b21f09477b933cff3b1c7b09845c542373b",
+  "blob_plural_ts": "0dff8a06adaa85e815efcd7ec6cc21dbf6a68e98",
+  "blob_locale_before": "28a7e1228ee148fcfd0cc3a9e1fe6bb6e5a2c172",
+  "blob_locale_after": "863e73422006a2d736d6c50a18b8dbda7d733dcc"
+ },
+ "diff": {
+  "numstat": [
+   "16\t14\tfrontend/src/i18n/LocaleContext.tsx",
+   "51\t0\tfrontend/src/lib/plural.ts"
+  ],
+  "added_lines": 67,
+  "removed_lines": 14,
+  "added_lines_with_cjk": 0,
+  "removed_lines_with_cjk": 0,
+  "added_lines_with_marker": 17,
+  "per_file": {
+   "frontend/src/i18n/LocaleContext.tsx": {
+    "added": 16,
+    "removed": 15,
+    "added_with_cjk": 0,
+    "added_with_marker": 12
+   },
+   "frontend/src/lib/plural.ts": {
+    "added": 51,
+    "removed": 0,
+    "added_with_cjk": 0,
+    "added_with_marker": 5
+   }
+  }
+ },
+ "chinese_arm_bytes": {
+  "8d038b21f09477b933cff3b1c7b09845c542373b": {
+   "bytes": 47918,
+   "sha256": "723c11830e05d480b67c1a87fd53dfea85056aad8c8512d19cfeaf1cd2ab89d9",
+   "markers": 0
+  },
+  "402f805dab16a7ea0c971c3c967d70927e4bbe1e": {
+   "bytes": 47918,
+   "sha256": "723c11830e05d480b67c1a87fd53dfea85056aad8c8512d19cfeaf1cd2ab89d9",
+   "markers": 0
+  }
+ },
+ "builds": {
+  "n2-0433-base2": {
+   "sha": "8d038b21f09477b933cff3b1c7b09845c542373b",
+   "tree": "e68381b0935d6db983ee96d101ae3707154b4bb2",
+   "steps": {
+    "archive": 0,
+    "junction_node_modules": 0,
+    "vite_build": 0
+   }
+  },
+  "n2-0433-cand2": {
+   "sha": "402f805dab16a7ea0c971c3c967d70927e4bbe1e",
+   "tree": "44fc75f58475875700430c8310d2842c7cee401e",
+   "steps": {
+    "archive": 0,
+    "junction_node_modules": 0,
+    "vite_build": 0
+   }
+  }
+ },
+ "typecheck": {
+  "command": "npm run typecheck (tsc -p tsconfig.check.json --noEmit)",
+  "run_in": "D:/moodle/_qoder_cmdr_ref_20260921/live_checks/_build_n2-0433-cand2/frontend",
+  "rc": 0,
+  "log": "D:/moodle/_qoder_n2_scratch/_tsc_0433_rebase.log"
+ },
+ "instrument": {
+  "blob": "3dad6f0e70c2a0dcce936499f277313618d6b807",
+  "local_copy": "D:/moodle/_qoder_cmdr_ref_20260921/live_checks/_untranslated_scan_r3.js"
+ },
+ "run_log": [
+  {
+   "step": "port_proofs",
+   "base": {
+    "port": 4824,
+    "dist": "D:/moodle/_qoder_cmdr_ref_20260921/live_checks/_build_n2-0433-base2/frontend/dist",
+    "asset": "assets/index-ChWUjpBx.js",
+    "index_disk_sha1": "9a986942d14ae328c556f277720bbbc912f6046f",
+    "index_served_sha1": "9a986942d14ae328c556f277720bbbc912f6046f",
+    "asset_disk_sha1": "0eeb542dc3b0ac45ff815f09d81ee8d514f97a57",
+    "asset_served_sha1": "0eeb542dc3b0ac45ff815f09d81ee8d514f97a57"
+   },
+   "cand": {
+    "port": 4825,
+    "dist": "D:/moodle/_qoder_cmdr_ref_20260921/live_checks/_build_n2-0433-cand2/frontend/dist",
+    "asset": "assets/index-BXgYQ8IM.js",
+    "index_disk_sha1": "09542d449faf0e673285d5755afa6c910319b364",
+    "index_served_sha1": "09542d449faf0e673285d5755afa6c910319b364",
+    "asset_disk_sha1": "688e5c64d3bb285c339b885f9d27105bddf7244a",
+    "asset_served_sha1": "688e5c64d3bb285c339b885f9d27105bddf7244a"
+   }
+  },
+  {
+   "step": "state_before",
+   "protected_from_api": 1,
+   "activities": 6
+  },
+  {
+   "step": "scan_n1",
+   "side": "base",
+   "route": "live",
+   "rc": 0,
+   "tail": [
+    "VERDICT ZH_SCREEN_CARRIES_ENGLISH_PROSE"
+   ]
+  },
+  {
+   "step": "scan_n1",
+   "side": "base",
+   "route": "studio",
+   "rc": 0,
+   "tail": [
+    "VERDICT ZH_SCREEN_CARRIES_ENGLISH_PROSE"
+   ]
+  },
+  {
+   "step": "scan_n1",
+   "side": "base",
+   "route": "agent",
+   "rc": 0,
+   "tail": [
+    "VERDICT ZH_SCREEN_CARRIES_ENGLISH_PROSE"
+   ]
+  },
+  {
+   "step": "scan_n1",
+   "side": "base",
+   "route": "trips",
+   "rc": 0,
+   "tail": [
+    "VERDICT ZH_SCREEN_CARRIES_ENGLISH_PROSE"
+   ]
+  },
+  {
+   "step": "scan_n1",
+   "side": "cand",
+   "route": "live",
+   "rc": 0,
+   "tail": [
+    "VERDICT ZH_SCREEN_CARRIES_ENGLISH_PROSE"
+   ]
+  },
+  {
+   "step": "scan_n1",
+   "side": "cand",
+   "route": "studio",
+   "rc": 0,
+   "tail": [
+    "VERDICT ZH_SCREEN_CARRIES_ENGLISH_PROSE"
+   ]
+  },
+  {
+   "step": "scan_n1",
+   "side": "cand",
+   "route": "agent",
+   "rc": 0,
+   "tail": [
+    "VERDICT ZH_SCREEN_CARRIES_ENGLISH_PROSE"
+   ]
+  },
+  {
+   "step": "scan_n1",
+   "side": "cand",
+   "route": "trips",
+   "rc": 0,
+   "tail": [
+    "VERDICT ZH_SCREEN_CARRIES_ENGLISH_PROSE"
+   ]
+  },
+  {
+   "step": "port_proofs",
+   "base": {
+    "port": 4824,
+    "dist": "D:/moodle/_qoder_cmdr_ref_20260921/live_checks/_build_n2-0433-base2/frontend/dist",
+    "asset": "assets/index-ChWUjpBx.js",
+    "index_disk_sha1": "9a986942d14ae328c556f277720bbbc912f6046f",
+    "index_served_sha1": "9a986942d14ae328c556f277720bbbc912f6046f",
+    "asset_disk_sha1": "0eeb542dc3b0ac45ff815f09d81ee8d514f97a57",
+    "asset_served_sha1": "0eeb542dc3b0ac45ff815f09d81ee8d514f97a57"
+   },
+   "cand": {
+    "port": 4825,
+    "dist": "D:/moodle/_qoder_cmdr_ref_20260921/live_checks/_build_n2-0433-cand2/frontend/dist",
+    "asset": "assets/index-BXgYQ8IM.js",
+    "index_disk_sha1": "09542d449faf0e673285d5755afa6c910319b364",
+    "index_served_sha1": "09542d449faf0e673285d5755afa6c910319b364",
+    "asset_disk_sha1": "688e5c64d3bb285c339b885f9d27105bddf7244a",
+    "asset_served_sha1": "688e5c64d3bb285c339b885f9d27105bddf7244a"
+   }
+  },
+  {
+   "step": "state_before",
+   "protected_from_api": 1,
+   "activities": 6
+  },
+  {
+   "step": "scan_n1",
+   "side": "base",
+   "route": "hub",
+   "rc": 0,
+   "tail": [
+    "VERDICT ZH_SCREEN_CARRIES_ENGLISH_PROSE"
+   ]
+  },
+  {
+   "step": "scan_n1",
+   "side": "base",
+   "route": "authoritative",
+   "rc": 0,
+   "tail": [
+    "VERDICT ZH_SCREEN_CARRIES_ENGLISH_PROSE"
+   ]
+  },
+  {
+   "step": "scan_n1",
+   "side": "base",
+   "route": "map",
+   "rc": 0,
+   "tail": [
+    "VERDICT ZH_SCREEN_CARRIES_ENGLISH_PROSE"
+   ]
+  },
+  {
+   "step": "scan_n1",
+   "side": "cand",
+   "route": "hub",
+   "rc": 0,
+   "tail": [
+    "VERDICT ZH_SCREEN_CARRIES_ENGLISH_PROSE"
+   ]
+  },
+  {
+   "step": "scan_n1",
+   "side": "cand",
+   "route": "authoritative",
+   "rc": 0,
+   "tail": [
+    "VERDICT ZH_SCREEN_CARRIES_ENGLISH_PROSE"
+   ]
+  },
+  {
+   "step": "scan_n1",
+   "side": "cand",
+   "route": "map",
+   "rc": 0,
+   "tail": [
+    "VERDICT ZH_SCREEN_CARRIES_ENGLISH_PROSE"
+   ]
+  },
+  {
+   "step": "flip_to_2",
+   "protected_from_api": 2
+  },
+  {
+   "step": "scan_n2",
+   "side": "base",
+   "rc": 0,
+   "tail": [
+    "VERDICT ZH_SCREEN_CARRIES_ENGLISH_PROSE"
+   ]
+  },
+  {
+   "step": "scan_n2",
+   "side": "cand",
+   "rc": 0,
+   "tail": [
+    "VERDICT ZH_SCREEN_CARRIES_ENGLISH_PROSE"
+   ]
+  },
+  {
+   "step": "restored",
+   "protected_from_api": 1
+  }
+ ],
+ "per_key": [
+  {
+   "key": "shell.travelers",
+   "dict_line_before": "frontend/src/i18n/LocaleContext.tsx:95",
+   "text_before": "\"shell.travelers\": \"{n} travelers\",",
+   "dict_line_after": "frontend/src/i18n/LocaleContext.tsx:96",
+   "text_after": "\"shell.travelers\": \"{n} {plural:traveler}\",",
+   "screen": "hub",
+   "en_before": "10 Oct, 09:00 — 10 Oct, 19:00 · 1 travelers · 1 days",
+   "en_after": "10 Oct, 09:00 — 10 Oct, 19:00 · 1 traveler · 1 days",
+   "zh_before": "NOT_REACHED",
+   "zh_after": "NOT_REACHED",
+   "call_sites": [
+    "frontend/src/app/V8Experience.tsx:1744:              <small>{t(\"shell.travelers\", { n: data.trip.party_size })}</small>",
+    "frontend/src/app/V8Experience.tsx:2780:            {t(\"shell.travelers\", { n: data.trip.party_size })}",
+    "frontend/src/app/V8Experience.tsx:4305:            {t(\"shell.travelers\", { n: data.trip.party_size })} ·{\" \"}"
+   ]
+  },
+  {
+   "key": "fmt.protectedAnchors",
+   "dict_line_before": "frontend/src/i18n/LocaleContext.tsx:804",
+   "text_before": "\"fmt.protectedAnchors\": \"{n} protected anchors\",",
+   "dict_line_after": "frontend/src/i18n/LocaleContext.tsx:805",
+   "text_after": "\"fmt.protectedAnchors\": \"{n} {plural:protected anchor}\",",
+   "screen": "authoritative",
+   "en_before": "1 protected anchors",
+   "en_after": "1 protected anchor",
+   "zh_before": "NOT_REACHED",
+   "zh_after": "NOT_REACHED",
+   "call_sites": [
+    "frontend/src/features/studio/V12TripStudioPanel.tsx:120:        <span>{t(\"fmt.protectedAnchors\", { n: protectedCount })}</span>"
+   ]
+  },
+  {
+   "key": "fmt.activities",
+   "dict_line_before": "frontend/src/i18n/LocaleContext.tsx:803",
+   "text_before": "\"fmt.activities\": \"{n} activities\",",
+   "dict_line_after": "frontend/src/i18n/LocaleContext.tsx:804",
+   "text_after": "\"fmt.activities\": \"{n} {plural:activity}\",",
+   "screen": "authoritative",
+   "en_before": "6 activities",
+   "en_after": "6 activities",
+   "zh_before": "NOT_REACHED",
+   "zh_after": "NOT_REACHED",
+   "call_sites": [
+    "frontend/src/features/studio/V12TripStudioPanel.tsx:119:        <span>{t(\"fmt.activities\", { n: plan.activities.length })}</span>"
+   ]
+  },
+  {
+   "key": "mapComp.legs",
+   "dict_line_before": "frontend/src/i18n/LocaleContext.tsx:811",
+   "text_before": "\"mapComp.legs\": \"{n} legs\",",
+   "dict_line_after": "frontend/src/i18n/LocaleContext.tsx:812",
+   "text_after": "\"mapComp.legs\": \"{n} {plural:leg}\",",
+   "screen": "map",
+   "en_before": "0 legs",
+   "en_after": "0 legs",
+   "zh_before": "NOT_REACHED",
+   "zh_after": "NOT_REACHED",
+   "call_sites": [
+    "frontend/src/components/v8/MapPanel.tsx:606:          {t(\"mapComp.routeContext\")} <b>{t(\"mapComp.legs\", { n: route.length })}</b>"
+   ]
+  },
+  {
+   "key": "exec.evidenceTrail",
+   "dict_line_before": "frontend/src/i18n/LocaleContext.tsx:509",
+   "text_before": "\"exec.evidenceTrail\": \"{n} sources\",",
+   "dict_line_after": "frontend/src/i18n/LocaleContext.tsx:510",
+   "text_after": "\"exec.evidenceTrail\": \"{n} {plural:source}\",",
+   "screen": "live",
+   "en_before": "NOT_REACHED",
+   "en_after": "NOT_REACHED",
+   "zh_before": "NOT_REACHED",
+   "zh_after": "NOT_REACHED",
+   "call_sites": [
+    "frontend/src/features/execution/V10LiveExecutionPanel.tsx:89:          {t(\"exec.evidenceTrail\", { n: web.data?.observations.length ?? 0 })}{\" \"}",
+    "frontend/src/features/execution/V10LiveExecutionPanel.tsx:92:              ? t(\"exec.evidenceTrail\", { n: web.data.observations.length })"
+   ]
+  },
+  {
+   "key": "studio.allProtected",
+   "dict_line_before": "frontend/src/i18n/LocaleContext.tsx:749",
+   "text_before": "\"studio.allProtected\": \"All {n} activities on this plan are protected anchors, so no reorder here can be accepted. Nothing has been changed.\",",
+   "dict_line_after": "frontend/src/i18n/LocaleContext.tsx:750",
+   "text_after": "\"studio.allProtected\": \"All {n} {plural:activity} on this plan are protected anchors, so no reorder here can be accepted. Nothing has been changed.\",",
+   "screen": "authoritative",
+   "en_before": "NOT_REACHED",
+   "en_after": "NOT_REACHED",
+   "zh_before": "NOT_REACHED",
+   "zh_after": "NOT_REACHED",
+   "call_sites": [
+    "frontend/src/features/studio/V12TripStudioPanel.tsx:140:          {t(\"studio.allProtected\", { n: protectedCount })}"
+   ]
+  },
+  {
+   "key": "agent.protectedCount",
+   "dict_line_before": "frontend/src/i18n/LocaleContext.tsx:378",
+   "text_before": "\"agent.protectedCount\": \"{n} protected commitments\",",
+   "dict_line_after": "frontend/src/i18n/LocaleContext.tsx:379",
+   "text_after": "\"agent.protectedCount\": \"{n} {plural:protected commitment}\",",
+   "screen": "agent",
+   "en_before": "NOT_REACHED",
+   "en_after": "NOT_REACHED",
+   "zh_before": "NOT_REACHED",
+   "zh_after": "NOT_REACHED",
+   "call_sites": [
+    "frontend/src/features/agent/AgentComposer.tsx:239:                      {t(\"agent.protectedCount\", {"
+   ]
+  },
+  {
+   "key": "agent.aiRunLanded",
+   "dict_line_before": "frontend/src/i18n/LocaleContext.tsx:421",
+   "text_before": "\"agent.aiRunLanded\": \"What was produced is still there: {n} plans were added.\",",
+   "dict_line_after": "frontend/src/i18n/LocaleContext.tsx:422",
+   "text_after": "\"agent.aiRunLanded\": \"What was produced is still there: {n} {plural:plan} were added.\",",
+   "screen": "agent",
+   "en_before": "NOT_REACHED",
+   "en_after": "NOT_REACHED",
+   "zh_before": "NOT_REACHED",
+   "zh_after": "NOT_REACHED",
+   "call_sites": [
+    "frontend/src/features/planning/PlanWithAiSheet.tsx:374:      ? { key: \"agent.aiRunLanded\", params: { n: aftermath.landedNewPlanIds.length } }"
+   ]
+  },
+  {
+   "key": "agent.aiRunScope",
+   "dict_line_before": "frontend/src/i18n/LocaleContext.tsx:414",
+   "text_before": "\"agent.aiRunScope\": \"Your trip right now: {days} days, {activities} arrangements.\",",
+   "dict_line_after": "frontend/src/i18n/LocaleContext.tsx:415",
+   "text_after": "\"agent.aiRunScope\": \"Your trip right now: {days} {plural:day:days}, {activities} {plural:arrangement:activities}.\",",
+   "screen": "agent",
+   "en_before": "NOT_REACHED",
+   "en_after": "NOT_REACHED",
+   "zh_before": "NOT_REACHED",
+   "zh_after": "NOT_REACHED",
+   "call_sites": [
+    "frontend/src/features/planning/PlanWithAiSheet.tsx:792:                  {t(\"agent.aiRunScope\", {"
+   ]
+  },
+  {
+   "key": "agent.aiRunUnits",
+   "dict_line_before": "frontend/src/i18n/LocaleContext.tsx:416",
+   "text_before": "\"agent.aiRunUnits\": \"This run produced {landed} plans: {activities} arrangements over {days} days.\",",
+   "dict_line_after": "frontend/src/i18n/LocaleContext.tsx:417",
+   "text_after": "\"agent.aiRunUnits\": \"This run produced {landed} {plural:plan:landed}: {activities} {plural:arrangement:activities} over {days} {plural:day:days}.\",",
+   "screen": "agent",
+   "en_before": "NOT_REACHED",
+   "en_after": "NOT_REACHED",
+   "zh_before": "NOT_REACHED",
+   "zh_after": "NOT_REACHED",
+   "call_sites": [
+    "frontend/src/features/planning/PlanWithAiSheet.tsx:916:                {t(\"agent.aiRunUnits\", {"
+   ]
+  },
+  {
+   "key": "discovery.results",
+   "dict_line_before": "frontend/src/i18n/LocaleContext.tsx:458",
+   "text_before": "\"discovery.results\": \"{n} results\",",
+   "dict_line_after": "frontend/src/i18n/LocaleContext.tsx:459",
+   "text_after": "\"discovery.results\": \"{n} {plural:result}\",",
+   "screen": "agent",
+   "en_before": "NOT_REACHED",
+   "en_after": "NOT_REACHED",
+   "zh_before": "NOT_REACHED",
+   "zh_after": "NOT_REACHED",
+   "call_sites": []
+  },
+  {
+   "key": "inbox.protectedFacts",
+   "dict_line_before": "frontend/src/i18n/LocaleContext.tsx:613",
+   "text_before": "\"inbox.protectedFacts\": \"{n} protected facts\",",
+   "dict_line_after": "frontend/src/i18n/LocaleContext.tsx:614",
+   "text_after": "\"inbox.protectedFacts\": \"{n} {plural:protected fact}\",",
+   "screen": "studio",
+   "en_before": "NOT_REACHED",
+   "en_after": "NOT_REACHED",
+   "zh_before": "NOT_REACHED",
+   "zh_after": "NOT_REACHED",
+   "call_sites": [
+    "frontend/src/features/inbox/JourneyInboxWorkbench.tsx:761:          <small>{t(\"inbox.protectedFacts\", { n: memory?.items.length ?? 0 })}</small>"
+   ]
+  }
+ ],
+ "screen_meta": {
+  "before_hub": {
+   "reached_route": "/v8/hub",
+   "on_requested_route": true,
+   "entry_used": "sealed demo",
+   "arms_comparable": true,
+   "en_leaves": 54,
+   "en_ascii": 34,
+   "zh_ascii": 4,
+   "expect": {
+    "1 traveler": true,
+    "1 travelers": true,
+    "2 travelers": false,
+    "1 protected anchor": false,
+    "1 protected anchors": false,
+    "2 protected anchors": false,
+    "1 activities": false,
+    "6 activities": false,
+    "0 legs": true,
+    "1 legs": false,
+    "1 leg": false,
+    "1 refusal(s)": false,
+    "1 or more": false
+   }
+  },
+  "before_authoritative": {
+   "reached_route": "/v8/authoritative",
+   "on_requested_route": true,
+   "entry_used": "sealed demo",
+   "arms_comparable": true,
+   "en_leaves": 72,
+   "en_ascii": 55,
+   "zh_ascii": 16,
+   "expect": {
+    "1 traveler": false,
+    "1 travelers": false,
+    "2 travelers": false,
+    "1 protected anchor": true,
+    "1 protected anchors": true,
+    "2 protected anchors": false,
+    "1 activities": false,
+    "6 activities": true,
+    "0 legs": false,
+    "1 legs": false,
+    "1 leg": false,
+    "1 refusal(s)": false,
+    "1 or more": false
+   }
+  },
+  "before_map": {
+   "reached_route": "/v8/map",
+   "on_requested_route": true,
+   "entry_used": "sealed demo",
+   "arms_comparable": true,
+   "en_leaves": 38,
+   "en_ascii": 22,
+   "zh_ascii": 9,
+   "expect": {
+    "1 traveler": false,
+    "1 travelers": false,
+    "2 travelers": false,
+    "1 protected anchor": false,
+    "1 protected anchors": false,
+    "2 protected anchors": false,
+    "1 activities": false,
+    "6 activities": false,
+    "0 legs": true,
+    "1 legs": false,
+    "1 leg": false,
+    "1 refusal(s)": false,
+    "1 or more": false
+   }
+  },
+  "before_live": {
+   "reached_route": "/v8/live",
+   "on_requested_route": true,
+   "entry_used": "sealed demo",
+   "arms_comparable": true,
+   "en_leaves": 67,
+   "en_ascii": 42,
+   "zh_ascii": 4,
+   "expect": {
+    "1 traveler": false,
+    "1 travelers": false,
+    "2 travelers": false,
+    "1 protected anchor": false,
+    "1 protected anchors": false,
+    "2 protected anchors": false,
+    "1 activities": false,
+    "6 activities": false,
+    "0 legs": true,
+    "1 legs": false,
+    "1 leg": false,
+    "1 refusal(s)": false,
+    "1 or more": false
+   }
+  },
+  "after_hub": {
+   "reached_route": "/v8/hub",
+   "on_requested_route": true,
+   "entry_used": "sealed demo",
+   "arms_comparable": true,
+   "en_leaves": 54,
+   "en_ascii": 34,
+   "zh_ascii": 4,
+   "expect": {
+    "1 traveler": true,
+    "1 travelers": false,
+    "2 travelers": false,
+    "1 protected anchor": false,
+    "1 protected anchors": false,
+    "2 protected anchors": false,
+    "1 activities": false,
+    "6 activities": false,
+    "0 legs": true,
+    "1 legs": false,
+    "1 leg": false,
+    "1 refusal(s)": false,
+    "1 or more": false
+   }
+  },
+  "after_authoritative": {
+   "reached_route": "/v8/authoritative",
+   "on_requested_route": true,
+   "entry_used": "sealed demo",
+   "arms_comparable": true,
+   "en_leaves": 72,
+   "en_ascii": 55,
+   "zh_ascii": 16,
+   "expect": {
+    "1 traveler": false,
+    "1 travelers": false,
+    "2 travelers": false,
+    "1 protected anchor": true,
+    "1 protected anchors": false,
+    "2 protected anchors": false,
+    "1 activities": false,
+    "6 activities": true,
+    "0 legs": false,
+    "1 legs": false,
+    "1 leg": false,
+    "1 refusal(s)": false,
+    "1 or more": false
+   }
+  },
+  "after_map": {
+   "reached_route": "/v8/map",
+   "on_requested_route": true,
+   "entry_used": "sealed demo",
+   "arms_comparable": true,
+   "en_leaves": 38,
+   "en_ascii": 22,
+   "zh_ascii": 9,
+   "expect": {
+    "1 traveler": false,
+    "1 travelers": false,
+    "2 travelers": false,
+    "1 protected anchor": false,
+    "1 protected anchors": false,
+    "2 protected anchors": false,
+    "1 activities": false,
+    "6 activities": false,
+    "0 legs": true,
+    "1 legs": false,
+    "1 leg": false,
+    "1 refusal(s)": false,
+    "1 or more": false
+   }
+  },
+  "after_live": {
+   "reached_route": "/v8/live",
+   "on_requested_route": true,
+   "entry_used": "sealed demo",
+   "arms_comparable": true,
+   "en_leaves": 67,
+   "en_ascii": 42,
+   "zh_ascii": 4,
+   "expect": {
+    "1 traveler": false,
+    "1 travelers": false,
+    "2 travelers": false,
+    "1 protected anchor": false,
+    "1 protected anchors": false,
+    "2 protected anchors": false,
+    "1 activities": false,
+    "6 activities": false,
+    "0 legs": true,
+    "1 legs": false,
+    "1 leg": false,
+    "1 refusal(s)": false,
+    "1 or more": false
+   }
+  }
+ },
+ "counterexample": {
+  "before": {
+   "protected_leaves": [
+    "6 activities",
+    "2 protected anchors"
+   ],
+   "meta": {
+    "reached_route": "/v8/authoritative",
+    "on_requested_route": true,
+    "entry_used": "sealed demo",
+    "arms_comparable": true,
+    "en_leaves": 72,
+    "en_ascii": 55,
+    "zh_ascii": 16,
+    "expect": {
+     "1 traveler": false,
+     "1 travelers": false,
+     "2 travelers": false,
+     "1 protected anchor": false,
+     "1 protected anchors": false,
+     "2 protected anchors": true,
+     "1 activities": false,
+     "6 activities": true,
+     "0 legs": false,
+     "1 legs": false,
+     "1 leg": false,
+     "1 refusal(s)": false,
+     "1 or more": false
+    }
+   }
+  },
+  "after": {
+   "protected_leaves": [
+    "6 activities",
+    "2 protected anchors"
+   ],
+   "meta": {
+    "reached_route": "/v8/authoritative",
+    "on_requested_route": true,
+    "entry_used": "sealed demo",
+    "arms_comparable": true,
+    "en_leaves": 72,
+    "en_ascii": 55,
+    "zh_ascii": 16,
+    "expect": {
+     "1 traveler": false,
+     "1 travelers": false,
+     "2 travelers": false,
+     "1 protected anchor": false,
+     "1 protected anchors": false,
+     "2 protected anchors": true,
+     "1 activities": false,
+     "6 activities": true,
+     "0 legs": false,
+     "1 legs": false,
+     "1 leg": false,
+     "1 refusal(s)": false,
+     "1 or more": false
+    }
+   }
+  }
+ },
+ "chinese_arm_at_runtime": {
+  "before": {
+   "hub": "87a9f3a759b6d69dd2285e9ca282de4c40de9e6b",
+   "authoritative": "295908e07079f4abfe462f601efee722b87ec51c",
+   "map": "d8b59f22c5b78e5bba45ea9850cefda6c52f27c9",
+   "live": "2b41d4c4cfdd3f778ca3e92fec007dda47a31289",
+   "studio": "2ad8b0c4b33e4cf43c8f798e5b0ddd6c21527e0d",
+   "agent": "e0279336f71c6b6059f1e787908ae784d189ba3f",
+   "trips": "0667bd65ac692b1803468053188adca79e179c82"
+  },
+  "after": {
+   "hub": "87a9f3a759b6d69dd2285e9ca282de4c40de9e6b",
+   "authoritative": "295908e07079f4abfe462f601efee722b87ec51c",
+   "map": "d8b59f22c5b78e5bba45ea9850cefda6c52f27c9",
+   "live": "2b41d4c4cfdd3f778ca3e92fec007dda47a31289",
+   "studio": "2ad8b0c4b33e4cf43c8f798e5b0ddd6c21527e0d",
+   "agent": "e0279336f71c6b6059f1e787908ae784d189ba3f",
+   "trips": "0667bd65ac692b1803468053188adca79e179c82"
+  }
+ },
+ "refusal_provenance": {
+  "recovery.failureCount": {
+   "dict_line": "frontend/src/i18n/LocaleContext.tsx:841",
+   "count_source": "RecoveryRequiredPanel.tsx:113 `recovery?.failures ?? flags?.feasibility_failures ?? []` - a server array's length",
+   "on_screen": "NOT_REACHED in every probed route and both arms"
+  },
+  "studio.gate.unknown": {
+   "dict_line": "frontend/src/i18n/LocaleContext.tsx:758",
+   "count_source": "V12TripStudioPanel.tsx:96-102 - `unnamed` counts failure strings this screen cannot map onto a declared GATE_CODE",
+   "on_screen": "NOT_REACHED in every probed route and both arms"
+  }
+ },
+ "not_landed": {
+  "planVersion pair": {
+   "lines": [
+    "frontend/src/features/studio/planVersionHistoryCopy.ts:35",
+    "frontend/src/features/studio/planVersionHistoryCopy.ts:34"
+   ],
+   "why": "the file is outside this order's allowed surface (LocaleContext.tsx + the new tool)"
+  },
+  "inline template strings": {
+   "lines": [
+    "frontend/src/app/V8Experience.tsx:2248",
+    "frontend/src/app/V8Experience.tsx:2788"
+   ],
+   "why": "V8Experience.tsx is red-lined; the screen reads `1 days` from there, not from the dictionary"
+  },
+  "StayExplorer literal": {
+   "lines": [
+    "frontend/src/features/stay/StayExplorer.tsx:38"
+   ],
+   "why": "a hand-written `travelers` outside the dictionary, in a file this order does not open"
+  }
+ }
+}
