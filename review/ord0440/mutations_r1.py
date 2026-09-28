@@ -43,8 +43,10 @@ def build() -> dict:
     return {"rc": proc.returncode, "tail": (proc.stdout or "")[-160:] + (proc.stderr or "")[-160:]}
 
 
-def walk() -> dict:
-    proc = run(["node", str(WALK), BASE, TOKEN, str(ROOT / "review/n3_0440_evidence_r1/walk"), "zh-CN"])
+def walk(arm_name: str = "clean") -> dict:
+    slot = hashlib.sha1(arm_name.encode("utf-8")).hexdigest()[:6]
+    proc = run(["node", str(WALK), BASE, TOKEN,
+                str(ROOT / "review/n3_0440_evidence_r1/walk"), "zh-CN", f"mut_{slot}"])
     out = proc.stdout or ""
     red = re.findall(r"^  RED (.+?) \{", out, re.M)
     crash = "WALK_CRASH" in out
@@ -100,7 +102,7 @@ def main() -> int:
             continue
         path.write_bytes(text.replace(arm["find"], arm["replace"], 1).encode("utf-8"))
         built = build()
-        reading = walk() if built["rc"] == 0 else {"rc": None, "skipped": "build failed"}
+        reading = walk(arm["name"]) if built["rc"] == 0 else {"rc": None, "skipped": "build failed"}
         path.write_bytes(raw)
         results.append({
             "name": arm["name"], "expect": arm["expect"], "applied": True,

@@ -16,7 +16,10 @@ const OUT = process.argv[4] || "D:/moodle/_qoder_n3_ord0440/review/n3_0440_evide
 const LOCALE = process.argv[5] === "en" ? "en" : "zh-CN";
 const FLOOR = 768;
 const CITY = "云和县";
-const TAG = LOCALE === "en" ? "en" : "zh";
+const SUFFIX = process.argv[6] ? `_${process.argv[6]}` : "";
+/* The mutation campaign re-runs this walk per arm. Without a per-arm suffix the last mutant
+   overwrites the clean reading, which is how a mutant's red ended up filed as the shipped one. */
+const TAG = (LOCALE === "en" ? "en" : "zh") + SUFFIX;
 
 const COPY = {
   "zh-CN": {

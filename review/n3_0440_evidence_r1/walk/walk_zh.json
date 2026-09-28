@@ -13,9 +13,9 @@
     },
     {
       "step": "job state read at sheet open",
-      "operation_id": "39a4d5de-1fb8-493d-991c-bb201938ba36",
-      "status": "RUNNING",
-      "terminal": false
+      "operation_id": "f0b129fc-38c2-4397-9e20-35cb4db750d2",
+      "status": "UNAVAILABLE",
+      "terminal": true
     },
     {
       "step": "sheet hit census",
@@ -383,8 +383,8 @@
       "step": "survey log",
       "entries": 1,
       "last": {
-        "at": "2026-09-28T22:57:16.406Z",
-        "operation_id": "39a4d5de-1fb8-493d-991c-bb201938ba36",
+        "at": "2026-09-28T23:04:18.138Z",
+        "operation_id": "f0b129fc-38c2-4397-9e20-35cb4db750d2",
         "reasons": [
           "TOO_SLOW",
           "WE_WERE_UNCLEAR"
@@ -432,9 +432,9 @@
     },
     {
       "name": "G4 the exit is already usable with nothing chosen",
-      "pass": false,
+      "pass": true,
       "detail": {
-        "exit_enabled_with_zero_reasons": false
+        "exit_enabled_with_zero_reasons": true
       }
     },
     {
@@ -503,8 +503,8 @@
       "pass": true,
       "detail": {
         "record": {
-          "at": "2026-09-28T22:57:16.406Z",
-          "operation_id": "39a4d5de-1fb8-493d-991c-bb201938ba36",
+          "at": "2026-09-28T23:04:18.138Z",
+          "operation_id": "f0b129fc-38c2-4397-9e20-35cb4db750d2",
           "reasons": [
             "TOO_SLOW",
             "WE_WERE_UNCLEAR"
@@ -523,6 +523,6 @@
     "zh_final.png"
   ],
   "abandon_request_count": 1,
-  "pass_count": 13,
-  "fail_count": 1
+  "pass_count": 14,
+  "fail_count": 0
 }
