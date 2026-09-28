@@ -8,6 +8,8 @@
 
 import { useLocale } from "../../i18n/LocaleContext";
 import { categoryLabel, roleLabel } from "../../i18n/travelerLabels";
+import { activityCoordinate } from "../../components/v8/MapPanel";
+import type { ActivityCoordinate } from "../../app/v8Types";
 
 type ActivityLike = {
   id: string;
@@ -18,6 +20,8 @@ type ActivityLike = {
   start_at: string;
   end_at: string;
   place_id?: string | null;
+  /** ORD-0394: the place coordinate joined at read; distances are only claimed with it. */
+  location?: ActivityCoordinate | null;
   protected?: boolean;
   travel_from_prev_min?: number | null;
   estimated_cost?: { amount_minor?: number; currency?: string } | null;
@@ -95,16 +99,15 @@ export function ActivityDetail({
   // spatially close.  Otherwise say plainly that they are other stops on the
   // same trip.  Distance is straight-line metres from the real coordinates.
   const nearbyRadiusM = 1500;
-  const originLat = meta.latitude;
-  const originLon = meta.longitude;
+  const origin = activityCoordinate(activity);
   const distanceM = (item: ActivityLike): number | null => {
-    const lat = item.metadata?.latitude;
-    const lon = item.metadata?.longitude;
-    if (originLat == null || originLon == null || lat == null || lon == null) return null;
+    const at = activityCoordinate(item);
+    if (!origin || !at) return null;
     const scale = 111_320;
-    const dy = (Number(lat) - Number(originLat)) * scale;
+    const dy = (Number(at.latitude) - Number(origin.latitude)) * scale;
     const dx =
-      (Number(lon) - Number(originLon)) * scale * Math.cos((Number(originLat) * Math.PI) / 180);
+      (Number(at.longitude) - Number(origin.longitude)) * scale *
+      Math.cos((Number(origin.latitude) * Math.PI) / 180);
     return Math.hypot(dx, dy);
   };
   const withDistance = nearby
@@ -112,15 +115,14 @@ export function ActivityDetail({
     .filter((entry): entry is { item: ActivityLike; m: number } => entry.m != null)
     .sort((a, b) => a.m - b.m);
   const nearbyAreClose =
-    originLat != null &&
-    originLon != null &&
+    origin != null &&
     withDistance.length > 0 &&
     withDistance.some((entry) => entry.m <= nearbyRadiusM);
   const nearbyOrdered = nearbyAreClose
     ? withDistance.filter((entry) => entry.m <= nearbyRadiusM).map((entry) => entry.item)
     : nearby;
   const duration = minutesBetween(activity.start_at, activity.end_at);
-  const hasCoords = meta.latitude != null && meta.longitude != null;
+  const hasCoords = origin != null;
   const opening = meta.opening_hours ?? null;
   const openingKnown = opening?.status && opening.status !== "UNKNOWN";
   const cost = activity.estimated_cost;
@@ -236,7 +238,9 @@ export function ActivityDetail({
           <dt>{zh ? "位置" : "Location"}</dt>
           <dd data-testid="activity-location">
             {hasCoords
-              ? `${Number(meta.latitude).toFixed(4)}, ${Number(meta.longitude).toFixed(4)}`
+              ? `${origin.latitude.toFixed(4)}, ${origin.longitude.toFixed(4)}${
+                  origin.coordinate_system ? ` ${origin.coordinate_system}` : ""
+                }`
               : zh
                 ? "暂无坐标"
                 : "No coordinates"}
