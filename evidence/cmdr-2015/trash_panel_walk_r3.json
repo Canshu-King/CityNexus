@@ -1,0 +1,74 @@
+{
+ "at": "2026-09-28T12:14:11.780Z",
+ "sealFound": 1,
+ "seed": 204,
+ "labels": [
+  "全部路由",
+  "关闭",
+  "TODAY",
+  "今天",
+  "实时行程",
+  "地图",
+  "PLAN",
+  "行程工作台",
+  "住宿选择",
+  "城市探索",
+  "TRAVEL",
+  "旅行票夹",
+  "Copilot",
+  "SYSTEM",
+  "恢复与执行",
+  "智能守护",
+  "旅行者画像",
+  "回收站",
+  "行程",
+  "我的"
+ ],
+ "aim": {
+  "found": 1,
+  "centre": [
+   150,
+   422
+  ],
+  "hittable": true,
+  "box": [
+   126,
+   411,
+   48,
+   21
+  ]
+ },
+ "read": {
+  "url": "/v8/trash",
+  "panel": true,
+  "panel_box": [
+   17,
+   115,
+   356,
+   405
+  ],
+  "count": "回收站里有 1 条行程",
+  "rows": 1,
+  "row0": "One Day in Nexus City\n在回收站里\n丢弃于 9月28日 20:14\n找回",
+  "back_box": [
+   45,
+   394,
+   300,
+   44
+  ],
+  "back_hit": true,
+  "empty": false,
+  "read_failed": false,
+  "panel_text": "回收站\n\n这台服务器说还在回收站里的行程。每一行只有一个动作：把它找回你的行程列表。\n\n回收站里有 1 条行程\n\nOne Day in Nexus City\n在回收站里\n丢弃于 9月28日 20:14\n找回\n再读一次回收站"
+ },
+ "outcome": {
+  "outcome": true,
+  "text": "已找回：One Day in Nexus City。它回到你的行程列表里了。",
+  "details": "",
+  "rows_after": 0,
+  "count_after": "",
+  "empty_after": true
+ },
+ "journeys_back_count": 1,
+ "errors": []
+}
