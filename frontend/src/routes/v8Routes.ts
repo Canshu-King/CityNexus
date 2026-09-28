@@ -17,6 +17,18 @@ export const desktopRoutes = [
   { key: "trash", label: "Recycle bin", icon: "calendar", group: "SYSTEM" },
 ] as const;
 
+// The group code is a machine token; the heading a traveller reads comes from the dictionary.
+export const navGroupKeys: Record<string, string> = {
+  TODAY: "nav.groupToday",
+  PLAN: "nav.groupPlan",
+  TRAVEL: "nav.groupTravel",
+  SYSTEM: "nav.groupSystem",
+};
+
+export function navGroupKey(group: string): string {
+  return navGroupKeys[group] ?? "nav.groupOther";
+}
+
 // Official primary navigation (see docs/DESIGN_CORRECTIONS_REQUIRED.md §1).
 // Wallet/bookings deliberately left the golden path; they now live under
 // Trips ("预订与凭证") and Me ("钱包").

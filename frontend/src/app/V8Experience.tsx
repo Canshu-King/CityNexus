@@ -81,7 +81,7 @@ import {
 import { useCandidateRejections } from "../api/candidateRejections";
 import { useContinuationState } from "../api/useContinuationState";
 import { syncStatedInterests } from "../api/travelerPreferences";
-import { desktopRoutes, mobileRoutes } from "../routes/v8Routes";
+import { desktopRoutes, mobileRoutes, navGroupKey } from "../routes/v8Routes";
 import {
   readOfflineJourney,
   saveOfflineJourneyVerified,
@@ -1717,7 +1717,7 @@ export function V8Experience() {
             <div key={item.key}>
               {(index === 0 ||
                 desktopRoutes[index - 1].group !== item.group) && (
-                <span className="v8-nav-group">{item.group}</span>
+                <span className="v8-nav-group">{t(navGroupKey(item.group))}</span>
               )}
               <button
                 className={route === item.key ? "active" : ""}
@@ -1980,7 +1980,7 @@ export function V8Experience() {
                     (drawerRoutes[index - 1] as { group?: string }).group !==
                       item.group) && (
                     <span className="v8-nav-group">
-                      {"group" in item ? item.group : "MORE"}
+                      {"group" in item ? t(navGroupKey(item.group)) : t("nav.groupOther")}
                     </span>
                   )}
                 <button
