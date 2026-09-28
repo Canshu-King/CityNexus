@@ -1,0 +1,409 @@
+{
+ "schema": "CNX_CMDR_LANDING_PREFLIGHT_V1_R7",
+ "lane": "commander 494abfd7",
+ "at_local": "2026-09-29T02:36:44+0800",
+ "mode": "LAND",
+ "authoritative_line": "mirror/integration-frontend-apple-pass1",
+ "tip_re_read_from_github_before": "9930748a366ea7d1195cf439bb97f8cbd6c59759",
+ "candidate_ref": "refs/heads/review/cmdr-recut-ord0417-r1",
+ "candidate_tip": "2521aed777a46e934f1a934a23eef5950a0c06cc",
+ "genealogy": {
+  "ff_possible_rc": 0,
+  "ff_possible": true,
+  "merge_base": "9930748a366ea7d1195cf439bb97f8cbd6c59759",
+  "line_only_commits": 0,
+  "candidate_only_commits": 5
+ },
+ "file_sets": {
+  "line_side_since_base": [],
+  "candidate_side_since_base": [
+   "frontend/e2e/qoder-ord0417-tap-names-the-stop.spec.ts",
+   "frontend/src/components/v8/MapPanel.tsx",
+   "frontend/src/i18n/LocaleContext.tsx",
+   "frontend/src/map-selection.css",
+   "review/ord0417/COPY_PAIR_DELIVERED_R1.json",
+   "review/ord0417/COPY_PAIR_FIX_R1.json",
+   "review/ord0417/COPY_PAIR_TIP_R1.json",
+   "review/ord0417/GATE_ORD0417R10MUTANTM1_TRIMMED.txt",
+   "review/ord0417/GATE_ORD0417R11GATEFINAL_TRIMMED.txt",
+   "review/ord0417/GATE_ORD0417R12MUTANTFINAL_TRIMMED.txt",
+   "review/ord0417/GATE_ORD0417R13GATEATHEAD_TRIMMED.txt",
+   "review/ord0417/GATE_ORD0417R14TIPATHEAD_TRIMMED.txt",
+   "review/ord0417/GATE_ORD0417R15REBASE2_TRIMMED.txt",
+   "review/ord0417/GATE_ORD0417R16TIPATBASE3_TRIMMED.txt",
+   "review/ord0417/GATE_ORD0417R17REATFINAL_TRIMMED.txt",
+   "review/ord0417/GATE_ORD0417R7REBASE_TRIMMED.txt",
+   "review/ord0417/GATE_ORD0417R9TIPREACH_TRIMMED.txt",
+   "review/ord0417/GATE_R11_READINGS.json",
+   "review/ord0417/GATE_R13_READINGS.json",
+   "review/ord0417/GATE_R15_READINGS.json",
+   "review/ord0417/GATE_R17_READINGS.json",
+   "review/ord0417/GEOMETRY_CENSUS_FIX_R1.json",
+   "review/ord0417/GEOMETRY_CENSUS_TIP_R1.json",
+   "review/ord0417/LSREMOTE_R2_R1.txt",
+   "review/ord0417/LSREMOTE_R3_LINE_NOTE_R1.txt",
+   "review/ord0417/LSREMOTE_R3_R1.txt",
+   "review/ord0417/MAP_TAP_BASE_FB6131F3_R1.json",
+   "review/ord0417/MAP_TAP_DELIVERED_93A3FF5C_R1.json",
+   "review/ord0417/MAP_TAP_FIX_R1.json",
+   "review/ord0417/MAP_TAP_R2FIX_7f7265d6_R1.json",
+   "review/ord0417/MAP_TAP_TIP_R1.json",
+   "review/ord0417/MERGE_TREE_CHECK_R1.txt",
+   "review/ord0417/REPRO_ON_214ab0ff_INSTRUMENT_R1.json",
+   "review/ord0417/REPRO_ON_214ab0ff_PROBE_R1.json",
+   "review/ord0417/RUNBOOK_r1.md",
+   "review/ord0417/ord0417_bundle_copy_check_r1.py",
+   "review/ord0417/ord0417_commit_r1.py",
+   "review/ord0417/ord0417_geometry_census_r1.js",
+   "review/ord0417/ord0417_pack_evidence_r1.py",
+   "review/ord0417/ord0417_probe_r1.js",
+   "review/ord0417/ord0417_run_gate_r1.py"
+  ],
+  "intersection": [],
+  "product_introduced_by_candidate": [
+   "frontend/src/components/v8/MapPanel.tsx",
+   "frontend/src/i18n/LocaleContext.tsx",
+   "frontend/src/map-selection.css"
+  ]
+ },
+ "merge_tree": {
+  "exit": 0,
+  "first_line": "ac42b12cf9df1934b24358c692ae5df2d30e5746",
+  "conflict_reported": false,
+  "stderr_head": ""
+ },
+ "gate_run": {
+  "requested": [],
+  "collect_exit": null,
+  "collected": null,
+  "test_exit": null,
+  "summary": null,
+  "export": "D:/moodle/_qoder_cmdr_ref_20260921/snap_preflight_023544",
+  "blob_equality": [
+   {
+    "path": "frontend/e2e/qoder-ord0417-tap-names-the-stop.spec.ts",
+    "candidate_blob": "715fc4e0ffc873b2d56b5d41310548af29d8bc45",
+    "export_blob": "715fc4e0ffc873b2d56b5d41310548af29d8bc45",
+    "equal": true
+   },
+   {
+    "path": "frontend/src/components/v8/MapPanel.tsx",
+    "candidate_blob": "1766b8da0185cff90b6582dcdaca6c63809198e1",
+    "export_blob": "1766b8da0185cff90b6582dcdaca6c63809198e1",
+    "equal": true
+   },
+   {
+    "path": "frontend/src/i18n/LocaleContext.tsx",
+    "candidate_blob": "5c01ef2468cd4512ab9b90d7c5f7617b1cad115e",
+    "export_blob": "5c01ef2468cd4512ab9b90d7c5f7617b1cad115e",
+    "equal": true
+   },
+   {
+    "path": "frontend/src/map-selection.css",
+    "candidate_blob": "7d7fdc35f0fa1d400146ab79d83678df05cfb70b",
+    "export_blob": "7d7fdc35f0fa1d400146ab79d83678df05cfb70b",
+    "equal": true
+   },
+   {
+    "path": "review/ord0417/COPY_PAIR_DELIVERED_R1.json",
+    "candidate_blob": "58e6ef635f60aae5f49659a03d57b1e8c7655c10",
+    "export_blob": "58e6ef635f60aae5f49659a03d57b1e8c7655c10",
+    "equal": true
+   },
+   {
+    "path": "review/ord0417/COPY_PAIR_FIX_R1.json",
+    "candidate_blob": "fed132be25d6920070ce2e73ce9975a696b22575",
+    "export_blob": "fed132be25d6920070ce2e73ce9975a696b22575",
+    "equal": true
+   },
+   {
+    "path": "review/ord0417/COPY_PAIR_TIP_R1.json",
+    "candidate_blob": "4a1e8f86cebaa6076c662ca317d3761c9c8d75b5",
+    "export_blob": "4a1e8f86cebaa6076c662ca317d3761c9c8d75b5",
+    "equal": true
+   },
+   {
+    "path": "review/ord0417/GATE_ORD0417R10MUTANTM1_TRIMMED.txt",
+    "candidate_blob": "a82aec61fa3a7e7b701ae368b374bae470d64b6f",
+    "export_blob": "a82aec61fa3a7e7b701ae368b374bae470d64b6f",
+    "equal": true
+   },
+   {
+    "path": "review/ord0417/GATE_ORD0417R11GATEFINAL_TRIMMED.txt",
+    "candidate_blob": "0a3f0fbbe661cc48f2f91e8e003ccdf91da56d59",
+    "export_blob": "0a3f0fbbe661cc48f2f91e8e003ccdf91da56d59",
+    "equal": true
+   },
+   {
+    "path": "review/ord0417/GATE_ORD0417R12MUTANTFINAL_TRIMMED.txt",
+    "candidate_blob": "2d3276df4a1254b4fbb998b36d9bf94bdc39768a",
+    "export_blob": "2d3276df4a1254b4fbb998b36d9bf94bdc39768a",
+    "equal": true
+   },
+   {
+    "path": "review/ord0417/GATE_ORD0417R13GATEATHEAD_TRIMMED.txt",
+    "candidate_blob": "7fa1f7bc2e111b7a3dc7f325b1bd4033205859dc",
+    "export_blob": "7fa1f7bc2e111b7a3dc7f325b1bd4033205859dc",
+    "equal": true
+   },
+   {
+    "path": "review/ord0417/GATE_ORD0417R14TIPATHEAD_TRIMMED.txt",
+    "candidate_blob": "761c4375ba31d31e9f1289cb47cfa116d4eba1f2",
+    "export_blob": "761c4375ba31d31e9f1289cb47cfa116d4eba1f2",
+    "equal": true
+   },
+   {
+    "path": "review/ord0417/GATE_ORD0417R15REBASE2_TRIMMED.txt",
+    "candidate_blob": "d0daea87da1dd8ce69a9f9ad9ac8af6a2a9edb3d",
+    "export_blob": "d0daea87da1dd8ce69a9f9ad9ac8af6a2a9edb3d",
+    "equal": true
+   },
+   {
+    "path": "review/ord0417/GATE_ORD0417R16TIPATBASE3_TRIMMED.txt",
+    "candidate_blob": "f6ccc80f8c85538b062f219ca773c0f39329585e",
+    "export_blob": "f6ccc80f8c85538b062f219ca773c0f39329585e",
+    "equal": true
+   },
+   {
+    "path": "review/ord0417/GATE_ORD0417R17REATFINAL_TRIMMED.txt",
+    "candidate_blob": "610046aea6385b26921f605d5889bc2382377d31",
+    "export_blob": "610046aea6385b26921f605d5889bc2382377d31",
+    "equal": true
+   },
+   {
+    "path": "review/ord0417/GATE_ORD0417R7REBASE_TRIMMED.txt",
+    "candidate_blob": "b7f16730014a26d36822863913d94e8145f6bb17",
+    "export_blob": "b7f16730014a26d36822863913d94e8145f6bb17",
+    "equal": true
+   },
+   {
+    "path": "review/ord0417/GATE_ORD0417R9TIPREACH_TRIMMED.txt",
+    "candidate_blob": "470976114bd5cac161ef5c124042d8c308492aab",
+    "export_blob": "470976114bd5cac161ef5c124042d8c308492aab",
+    "equal": true
+   },
+   {
+    "path": "review/ord0417/GATE_R11_READINGS.json",
+    "candidate_blob": "6a358429608a61b35769a797463d3b6f97c20368",
+    "export_blob": "6a358429608a61b35769a797463d3b6f97c20368",
+    "equal": true
+   },
+   {
+    "path": "review/ord0417/GATE_R13_READINGS.json",
+    "candidate_blob": "5222562fd725d0823bb7c203a6c5d17426154d0e",
+    "export_blob": "5222562fd725d0823bb7c203a6c5d17426154d0e",
+    "equal": true
+   },
+   {
+    "path": "review/ord0417/GATE_R15_READINGS.json",
+    "candidate_blob": "30849df8045ffc0fa9ee98121c3d8e9e39a56904",
+    "export_blob": "30849df8045ffc0fa9ee98121c3d8e9e39a56904",
+    "equal": true
+   },
+   {
+    "path": "review/ord0417/GATE_R17_READINGS.json",
+    "candidate_blob": "80ee9e60ae5813c649d26d3645587b2057b44e9e",
+    "export_blob": "80ee9e60ae5813c649d26d3645587b2057b44e9e",
+    "equal": true
+   },
+   {
+    "path": "review/ord0417/GEOMETRY_CENSUS_FIX_R1.json",
+    "candidate_blob": "a4e875ed43a34d84b9da482ae753426db799787c",
+    "export_blob": "a4e875ed43a34d84b9da482ae753426db799787c",
+    "equal": true
+   },
+   {
+    "path": "review/ord0417/GEOMETRY_CENSUS_TIP_R1.json",
+    "candidate_blob": "fdd324613edf17e0eafad3a199d576c8d322f096",
+    "export_blob": "fdd324613edf17e0eafad3a199d576c8d322f096",
+    "equal": true
+   },
+   {
+    "path": "review/ord0417/LSREMOTE_R2_R1.txt",
+    "candidate_blob": "3a0e9d1dbc9fceb413781a4f41cbd04a0c2cfc1d",
+    "export_blob": "3a0e9d1dbc9fceb413781a4f41cbd04a0c2cfc1d",
+    "equal": true
+   },
+   {
+    "path": "review/ord0417/LSREMOTE_R3_LINE_NOTE_R1.txt",
+    "candidate_blob": "3de4d43025f35c7526a6b38e4eb41e7d9fe0b060",
+    "export_blob": "3de4d43025f35c7526a6b38e4eb41e7d9fe0b060",
+    "equal": true
+   },
+   {
+    "path": "review/ord0417/LSREMOTE_R3_R1.txt",
+    "candidate_blob": "035e059d724f506538c45b15ff572e2b034e5035",
+    "export_blob": "035e059d724f506538c45b15ff572e2b034e5035",
+    "equal": true
+   },
+   {
+    "path": "review/ord0417/MAP_TAP_BASE_FB6131F3_R1.json",
+    "candidate_blob": "e4fe3bf89d8b84c1365b68b193552bbd371f6d6b",
+    "export_blob": "e4fe3bf89d8b84c1365b68b193552bbd371f6d6b",
+    "equal": true
+   },
+   {
+    "path": "review/ord0417/MAP_TAP_DELIVERED_93A3FF5C_R1.json",
+    "candidate_blob": "b35619027f7ea27efa11e1c0a199d25a7c483f51",
+    "export_blob": "b35619027f7ea27efa11e1c0a199d25a7c483f51",
+    "equal": true
+   },
+   {
+    "path": "review/ord0417/MAP_TAP_FIX_R1.json",
+    "candidate_blob": "7dc92a7e7abacda9a7c966c8c94c08b46de1f01d",
+    "export_blob": "7dc92a7e7abacda9a7c966c8c94c08b46de1f01d",
+    "equal": true
+   },
+   {
+    "path": "review/ord0417/MAP_TAP_R2FIX_7f7265d6_R1.json",
+    "candidate_blob": "621088dc2cfb68dec741786f8797a5c01df5ab91",
+    "export_blob": "621088dc2cfb68dec741786f8797a5c01df5ab91",
+    "equal": true
+   },
+   {
+    "path": "review/ord0417/MAP_TAP_TIP_R1.json",
+    "candidate_blob": "94584bf4c16bdf6d6c16b907370ff065971b8ddc",
+    "export_blob": "94584bf4c16bdf6d6c16b907370ff065971b8ddc",
+    "equal": true
+   },
+   {
+    "path": "review/ord0417/MERGE_TREE_CHECK_R1.txt",
+    "candidate_blob": "8f83eb44de8921130b4970726e1e4b0b325544a6",
+    "export_blob": "8f83eb44de8921130b4970726e1e4b0b325544a6",
+    "equal": true
+   },
+   {
+    "path": "review/ord0417/REPRO_ON_214ab0ff_INSTRUMENT_R1.json",
+    "candidate_blob": "33cc71978bafe5a236fdfa7c7cf5e2dcee8de331",
+    "export_blob": "33cc71978bafe5a236fdfa7c7cf5e2dcee8de331",
+    "equal": true
+   },
+   {
+    "path": "review/ord0417/REPRO_ON_214ab0ff_PROBE_R1.json",
+    "candidate_blob": "da24f00a95a8f84310e1df997d4c3c2a9588991e",
+    "export_blob": "da24f00a95a8f84310e1df997d4c3c2a9588991e",
+    "equal": true
+   },
+   {
+    "path": "review/ord0417/RUNBOOK_r1.md",
+    "candidate_blob": "1807fc416b47a18756f6338ae8d9f6c204e28259",
+    "export_blob": "1807fc416b47a18756f6338ae8d9f6c204e28259",
+    "equal": true
+   },
+   {
+    "path": "review/ord0417/ord0417_bundle_copy_check_r1.py",
+    "candidate_blob": "26b1ceba157f754883c22806a484339e3f92e829",
+    "export_blob": "26b1ceba157f754883c22806a484339e3f92e829",
+    "equal": true
+   },
+   {
+    "path": "review/ord0417/ord0417_commit_r1.py",
+    "candidate_blob": "56be15f385679895bbeb9cb8ef7ebd913290c63c",
+    "export_blob": "56be15f385679895bbeb9cb8ef7ebd913290c63c",
+    "equal": true
+   },
+   {
+    "path": "review/ord0417/ord0417_geometry_census_r1.js",
+    "candidate_blob": "c5610cfe0a62b15c45448a23bacc891e30ce67ef",
+    "export_blob": "c5610cfe0a62b15c45448a23bacc891e30ce67ef",
+    "equal": true
+   },
+   {
+    "path": "review/ord0417/ord0417_pack_evidence_r1.py",
+    "candidate_blob": "2d0549b418250de60266bc0d8f13e0fbaf26b81d",
+    "export_blob": "2d0549b418250de60266bc0d8f13e0fbaf26b81d",
+    "equal": true
+   },
+   {
+    "path": "review/ord0417/ord0417_probe_r1.js",
+    "candidate_blob": "9df2dc5ecb12cdabdb8cc7daf8ef280db19d002b",
+    "export_blob": "9df2dc5ecb12cdabdb8cc7daf8ef280db19d002b",
+    "equal": true
+   },
+   {
+    "path": "review/ord0417/ord0417_run_gate_r1.py",
+    "candidate_blob": "fb5405e7970497361b9f79b8d0747d9780de5326",
+    "export_blob": "fb5405e7970497361b9f79b8d0747d9780de5326",
+    "equal": true
+   }
+  ],
+  "whole_suite": {
+   "collect_exit": 0,
+   "collected": 1436,
+   "interrupted": false,
+   "error_lines": [
+    "tests/test_qoder_ord0332_error_receipt.py::test_R7_the_envelope_keeps_every_field_it_already_had",
+    "tests/test_qoder_ord0332_error_receipt.py::test_R8_the_seed_is_read_off_the_real_request_not_just_the_dataclass",
+    "tests/test_solver_runtime_policy.py::test_unexpected_solver_programming_error_is_not_silently_hidden"
+   ],
+   "tail": [
+    "    _PortalFactoryType = Callable[[], AbstractContextManager[anyio.abc.BlockingPortal]]",
+    "-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html",
+    "1436 tests collected in 12.03s"
+   ],
+   "cmd": "D:/moodle/CityNexus/.venv/Scripts/python.exe -m pytest --collect-only -q tests  (cwd=<export>/backend, PYTHONPATH=<export>)"
+  },
+  "deletions": {
+   "deleted_by_candidate": [],
+   "still_present_in_export": []
+  },
+  "interpreter": "Python 3.12.14 (main, Aug 25 2026, 14:01:42) [MSC v.1944 64 bit (AMD64)]",
+  "exposure": {
+   "ruler_blob": "d3f66ce9fecd0790981a4fcdeb5e36b1c0fd10f2",
+   "ruler_blob_computed": null,
+   "ruler_file": "ui_exposure_taint_ast_r7b.cjs",
+   "candidate_files_in_view": 3,
+   "tip_cells": 12,
+   "cand_cells": 12,
+   "growth_by_file_and_rule": {},
+   "unpaired_added": [],
+   "added_line_exact": [],
+   "shifted_only": false,
+   "removed_count": 0,
+   "removed": [],
+   "disclosed_slip": "a same-file, same-rule relocation with equal counts reads as a shift; the AST ruler has no cell identity"
+  },
+  "frontend_build": {
+   "builder_rc": 0,
+   "vite_build_rc": 0,
+   "dist_exists": true,
+   "index_exists": true,
+   "asset_refs": [
+    "/assets/index-ChP6V0Vj.js",
+    "/assets/index-DeE4nurx.css"
+   ],
+   "live_tree": "ac42b12cf9df1934b24358c692ae5df2d30e5746",
+   "info_file": "D:\\moodle\\_qoder_cmdr_ref_20260921\\live_checks\\_build_2521aed_info.json",
+   "build_tail": [
+    "files generated",
+    "  dist/v10-sw.js",
+    "  dist/workbox-6923124b.js",
+    "\u001b[33m",
+    "(!) Some chunks are larger than 500 kB after minification. Consider:",
+    "- Using dynamic import() to code-split the application",
+    "- Use build.rollupOptions.output.manualChunks to improve chunking: https://rollupjs.org/configuration-options/#output-manualchunks",
+    "- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.\u001b[39m"
+   ]
+  }
+ },
+ "problems": [],
+ "verdict": "READY_TO_LAND",
+ "landing": {
+  "http": 200,
+  "response_head": "{'ref': 'refs/heads/mirror/integration-frontend-apple-pass1', 'node_id': 'REF_kwDOUhlJJ9oAMnJlZnMvaGVhZHMvbWlycm9yL2ludGVncmF0aW9uLWZyb250ZW5kLWFwcGxlLXBhc3Mx', 'url': 'https://api.github.com/repos/Ca",
+  "tip_after": "2521aed777a46e934f1a934a23eef5950a0c06cc",
+  "branches_route": "2521aed777a46e934f1a934a23eef5950a0c06cc",
+  "both_routes_agree": true,
+  "landed": true
+ },
+ "discipline": {
+  "evidence_paths_overwritten": 0,
+  "databases_opened": 0,
+  "surfaces_started_or_stopped": 0,
+  "credential_values_printed": 0,
+  "candidate_refs_pushed_by_commander": 0
+ },
+ "claim_kind": "git_and_pytest_determined",
+ "claimed_result": null,
+ "derived_result": null
+}
