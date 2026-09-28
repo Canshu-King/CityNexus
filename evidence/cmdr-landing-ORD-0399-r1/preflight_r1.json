@@ -1,0 +1,166 @@
+{
+ "schema": "CNX_CMDR_LANDING_PREFLIGHT_V1",
+ "lane": "commander 494abfd7",
+ "at_local": "2026-09-28T18:33:07+0800",
+ "mode": "LAND",
+ "authoritative_line": "mirror/integration-frontend-apple-pass1",
+ "tip_re_read_from_github_before": "e7286dfd47db2dd9a1420867dd534b906b2d032a",
+ "candidate_ref": "refs/heads/review/cmdr-recut-ord0399-r1",
+ "candidate_tip": "8d7652eadc6ee0727817d257dd6962eb5ce617ec",
+ "genealogy": {
+  "ff_possible_rc": 0,
+  "ff_possible": true,
+  "merge_base": "e7286dfd47db2dd9a1420867dd534b906b2d032a",
+  "line_only_commits": 0,
+  "candidate_only_commits": 3
+ },
+ "file_sets": {
+  "line_side_since_base": [],
+  "candidate_side_since_base": [
+   "backend/app/main.py",
+   "backend/tests/test_qoder_ord0399_journey_undelete.py",
+   "contracts/openapi.yaml",
+   "review/ord0399-readouts/COLLECT_ONLY_R1.txt",
+   "review/ord0399-readouts/OWN_TESTS_R1.txt",
+   "review/ord0399-readouts/PREVIEW_COPY_READINGS_R1.txt",
+   "review/ord0399-readouts/RED_SET_COMPARISON_R1.txt",
+   "review/ord0399-readouts/SUITE_SLICE2_R1.txt",
+   "review/ord0399-readouts/SUITE_TIPDC_BASE_R1.txt",
+   "review/ord0399-readouts/VOCABULARY_AUDIT_R1.txt",
+   "review/ord0399-readouts/preview_copy_readings_r1.py"
+  ],
+  "intersection": [],
+  "product_introduced_by_candidate": [
+   "backend/app/main.py"
+  ]
+ },
+ "merge_tree": {
+  "exit": 0,
+  "first_line": "4ddb1da2f805b3505a0b45959fa9c7d1262d8310",
+  "conflict_reported": false,
+  "stderr_head": ""
+ },
+ "gate_run": {
+  "requested": [],
+  "collect_exit": null,
+  "collected": null,
+  "test_exit": null,
+  "summary": null,
+  "export": "D:/moodle/_qoder_cmdr_ref_20260921/snap_preflight_183241",
+  "blob_equality": [
+   {
+    "path": "backend/app/main.py",
+    "candidate_blob": "35c0fe9c62974fc04846d6748bfa533e3fa846aa",
+    "export_blob": "35c0fe9c62974fc04846d6748bfa533e3fa846aa",
+    "equal": true
+   },
+   {
+    "path": "backend/tests/test_qoder_ord0399_journey_undelete.py",
+    "candidate_blob": "4884b3351b714ac8edc21f1b68be7ca1e507c3ec",
+    "export_blob": "4884b3351b714ac8edc21f1b68be7ca1e507c3ec",
+    "equal": true
+   },
+   {
+    "path": "contracts/openapi.yaml",
+    "candidate_blob": "a64916be5c100f6f34aa2a189be0cdebf38cc240",
+    "export_blob": "a64916be5c100f6f34aa2a189be0cdebf38cc240",
+    "equal": true
+   },
+   {
+    "path": "review/ord0399-readouts/COLLECT_ONLY_R1.txt",
+    "candidate_blob": "a86a4bd446ed18a3e41b84c65b5b8c65733bd2c0",
+    "export_blob": "a86a4bd446ed18a3e41b84c65b5b8c65733bd2c0",
+    "equal": true
+   },
+   {
+    "path": "review/ord0399-readouts/OWN_TESTS_R1.txt",
+    "candidate_blob": "23dc43856c488ba4a4c58b9154526dd5311bd380",
+    "export_blob": "23dc43856c488ba4a4c58b9154526dd5311bd380",
+    "equal": true
+   },
+   {
+    "path": "review/ord0399-readouts/PREVIEW_COPY_READINGS_R1.txt",
+    "candidate_blob": "ff78851ab51035173512248d274b916f83453d34",
+    "export_blob": "ff78851ab51035173512248d274b916f83453d34",
+    "equal": true
+   },
+   {
+    "path": "review/ord0399-readouts/RED_SET_COMPARISON_R1.txt",
+    "candidate_blob": "f237210c96e1db034399350deef023cc4147a7d9",
+    "export_blob": "f237210c96e1db034399350deef023cc4147a7d9",
+    "equal": true
+   },
+   {
+    "path": "review/ord0399-readouts/SUITE_SLICE2_R1.txt",
+    "candidate_blob": "79676c9113620761d86a6bda73e1b27ed4416664",
+    "export_blob": "79676c9113620761d86a6bda73e1b27ed4416664",
+    "equal": true
+   },
+   {
+    "path": "review/ord0399-readouts/SUITE_TIPDC_BASE_R1.txt",
+    "candidate_blob": "e1d6285408cce3671516d521ffcfd0d61215a724",
+    "export_blob": "e1d6285408cce3671516d521ffcfd0d61215a724",
+    "equal": true
+   },
+   {
+    "path": "review/ord0399-readouts/VOCABULARY_AUDIT_R1.txt",
+    "candidate_blob": "df88e1878df2d0998e93ead4da6b0aaba97bfdf6",
+    "export_blob": "df88e1878df2d0998e93ead4da6b0aaba97bfdf6",
+    "equal": true
+   },
+   {
+    "path": "review/ord0399-readouts/preview_copy_readings_r1.py",
+    "candidate_blob": "c1515c40e4c52d48e1d6a9dfd501d07fe1a24f3b",
+    "export_blob": "c1515c40e4c52d48e1d6a9dfd501d07fe1a24f3b",
+    "equal": true
+   }
+  ],
+  "whole_suite": {
+   "collect_exit": 0,
+   "collected": 1426,
+   "interrupted": false,
+   "error_lines": [
+    "tests/test_qoder_ord0332_error_receipt.py::test_R7_the_envelope_keeps_every_field_it_already_had",
+    "tests/test_qoder_ord0332_error_receipt.py::test_R8_the_seed_is_read_off_the_real_request_not_just_the_dataclass",
+    "tests/test_solver_runtime_policy.py::test_unexpected_solver_programming_error_is_not_silently_hidden"
+   ],
+   "tail": [
+    "    _PortalFactoryType = Callable[[], AbstractContextManager[anyio.abc.BlockingPortal]]",
+    "-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html",
+    "1426 tests collected in 11.94s"
+   ],
+   "cmd": "D:/moodle/CityNexus/.venv/Scripts/python.exe -m pytest --collect-only -q tests  (cwd=<export>/backend, PYTHONPATH=<export>)"
+  },
+  "deletions": {
+   "deleted_by_candidate": [],
+   "still_present_in_export": []
+  },
+  "interpreter": "Python 3.12.14 (main, Aug 25 2026, 14:01:42) [MSC v.1944 64 bit (AMD64)]",
+  "exposure": {
+   "skipped": "no frontend/src file changed"
+  },
+  "frontend_build": {
+   "skipped": "no frontend/src file in this candidate"
+  }
+ },
+ "problems": [],
+ "verdict": "READY_TO_LAND",
+ "landing": {
+  "http": 200,
+  "response_head": "{'ref': 'refs/heads/mirror/integration-frontend-apple-pass1', 'node_id': 'REF_kwDOUhlJJ9oAMnJlZnMvaGVhZHMvbWlycm9yL2ludGVncmF0aW9uLWZyb250ZW5kLWFwcGxlLXBhc3Mx', 'url': 'https://api.github.com/repos/Ca",
+  "tip_after": "8d7652eadc6ee0727817d257dd6962eb5ce617ec",
+  "branches_route": "8d7652eadc6ee0727817d257dd6962eb5ce617ec",
+  "both_routes_agree": true,
+  "landed": true
+ },
+ "discipline": {
+  "evidence_paths_overwritten": 0,
+  "databases_opened": 0,
+  "surfaces_started_or_stopped": 0,
+  "credential_values_printed": 0,
+  "candidate_refs_pushed_by_commander": 0
+ },
+ "claim_kind": "git_and_pytest_determined",
+ "claimed_result": null,
+ "derived_result": null
+}
