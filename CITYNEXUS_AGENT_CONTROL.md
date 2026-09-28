@@ -16588,6 +16588,234 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### ORD-0370 · 车道 qoder-0370 · 交付块（重切：裸数字同行带测量尖，两处口径补注） · 2026-09-28 2147+08 · 5aca9a5f54113ee7a31b41837e7cc99e149b304a
+
+分支 `review/Q-ord0370-hardcoded-fallbacks`（`git ls-remote origin refs/heads/review/Q-ord0370-hardcoded-fallbacks` 现读 d033f83e064448a8ab0f3ed4cd01e3616b596181，本块的测量尖 5aca9a5f54113ee7a31b41837e7cc99e149b304a 是它的父本，两枚都可 fetch）
+（`git ls-remote origin refs/heads/review/Q-ord0370-hardcoded-fallbacks` 逐字符回验等于本地 HEAD）。
+父尖 = 号令者的权威尖 `4ef864cfa49b805e3d41b7f079f5fb4184ccec3d`；权威线未被本车道移动
+（`refs/heads/cmdr/land-ord0367-recut` 仍为 4ef864cfa49b805e3d41b7f079f5fb4184ccec3d，
+`refs/heads/master` 仍为 7d22cd0eb7840121ba42a5ba363e1a4c7ca1a7e7，两枚都由 `git ls-remote origin` 现读）。
+
+三笔提交（每批一笔，全部已推）：
+- 阶一 `30cdf5b12c997e11a9f194df982f243745609816`（tree `0444e911becb27cc5b54fb5005201812e056ee27`）
+- 阶二 `083d8819d7d2ea356ccf02ffe828a9574191adad`（tree `95095159afebe89f98d79047b4b83f2a5d02ea56`）
+- 阶三尺 `5aca9a5f54113ee7a31b41837e7cc99e149b304a`（tree `441451703887e404acf963a72ddd63be92ce4030`）
+
+以下每个数字都在写盘这一刻由脚本 `D:/moodle/_qoder_lane_q0370_scratch/gen_ledger_r1.py`
+重跑工件取得（尺的 stdout、git、tsc），不是从会话里抄的；脚本在任一坐标断言失败时拒绝写盘。
+
+## 阶一（必交）：A 类 5 处已收进字典，尺报 A 由 5 处降为 0 处
+
+具名 key（en 行 / zh 行，均属 blob `96cbc481f401a32daf2ced3c613402e813ee52a9`）：
+`live.acceptFailed` = frontend/src/i18n/LocaleContext.tsx:229（en）与 :949（zh）；
+`agent.stopFailed` = :379 / :1097；`agent.approvalFailed` = :380 / :1098；
+`agent.toolWorking` = :381 / :1099；`inbox.unnamedArtifact` = :587 / :1303。
+语域与 ORD-0367 一致：zh 侧「没能…」（frontend/src/i18n/LocaleContext.tsx:949），
+en 侧 `Couldn't …`（frontend/src/i18n/LocaleContext.tsx:229）。
+
+中文侧零增长（本车道逐条量长度，非声称）：`没能停止`=4 对 `停止失败`=4
+（frontend/src/i18n/LocaleContext.tsx:1097）、`没能确认`=4 对 4（:1098）、`处理中`=3 对 3（:1099）、
+`没能接受这个调整。`=9 对 `暂时无法接受这个调整。`=11（:949）、`没有订单号的一条`=8 对 8（:1303）。
+`tools/cnx_copy_tiers_r1.py --baseline` 的 NO_GROWTH 面同时报 values changed 0 处，
+因为本阶只新增 key、未改任何既有 key —— ORD-0367 落地的中文值本车道一字未动。
+
+坐标更正：工单点名的 `LiveRecovery.tsx:238` 与 `JourneyInboxWorkbench.tsx:805` 是 `??` 运算符所在行，
+双语字面量分别落在 238 的下一行（`frontend/src/features/execution/LiveRecovery.tsx:239`）
+与 805 的下一行（`frontend/src/features/inbox/JourneyInboxWorkbench.tsx:806`）；同一处，无歧义。
+改后那 5 处在 tip 上的行号：frontend/src/features/agent/CopilotDock.tsx:365、:385、:416
+（blob `7bc9b17e74e18fb94dd0b91deb104555653f7eaa`）、frontend/src/features/execution/LiveRecovery.tsx:239
+（blob `b2a720668a6aea4920fc44732027b4f136e2e4a4`）、frontend/src/features/inbox/JourneyInboxWorkbench.tsx:806
+（blob `95c56920f871faccbe766651d37ee59dfc0b4e3a`）。
+
+### 复验时对背因的一处更正（不改变交付，只改变"修了什么"的说法）
+5 处里有 3 处**在运行时永远不会触发**，这是文本扫描给不出的结论，是读实现读出来的：
+`copyFor()` 的 8 条 `return` 路径（frontend/src/lib/failureAttribution.ts:333 起）共带 `body:` 键 11 处，
+且 frontend/src/lib/failureAttribution.ts:425 有 `default:` 兜住未分类的 message_key，
+11 个 `body` 值全是非空模板串 —— 故 `copyFor(...).body ?? X` 的 X 不可达，
+即 CopilotDock 那两处（改前 frontend/src/features/agent/CopilotDock.tsx:364、:384）
+是死分支；`humanReplanReason()` 对任何未映射输入改用自己的句子
+（frontend/src/features/execution/LiveRecovery.tsx:90），故 :239 那句也不上屏。
+真会露出来的只有 2 处：未知工具名（CopilotDock.tsx:416）与无单号队列行（JourneyInboxWorkbench.tsx:806）。
+所以本阶交的是"组件不再自造句子、不再自分支语言"这一结构事实，不是"2 处屏上文案变了"。
+
+## 阶二（尽力）：78 处按两轴重划，本阶收 1 处，其余 77 处给出去向
+
+判据先独立复现：`frontend/src` 内 `?? 字面量`、非空、不含 CJK、非 SCREAMING_SNAKE 枚举、
+非 HTTP 方法/状态位 —— 得 78 处（=72 个不同行、16 个文件），与工单点名的一致；
+尺的 COMPONENT_FALLBACK 面（tools/cnx_copy_tiers_r1.py:267）在 `4ef864cfa49b805e3d41b7f079f5fb4184ccec3d`
+纯净树上独立也报 tier B 78 处、tier A 5 处，两条路同一读数。
+
+再按两轴划分（轴一：`??` 落在什么构造里；轴二：该文件是否调用过 `t(` 一次）——
+互斥、优先级 1>2>3>4，合计 77 处（=78 减去本阶已收的 1 处）：
+1. **22 处**是语言中性占位：`—` 与 `nav.`（键前缀），字典救不了它。
+2. **14 处**不是散文：5 处在 `data-*` 属性里（frontend/src/components/JourneyMap.tsx:288、:289，
+   frontend/src/app/V8Experience.tsx:2539、:2727、:2728），3 处在 `key={…}` 里（frontend/src/main.tsx:1440、:1451、:1464，
+   读者只有 React），2 处在 `http_status=…` 归属遥测串里（frontend/src/features/inbox/JourneyInboxWorkbench.tsx:312、
+   frontend/src/lib/failureAttribution.ts:133），2 处是写进存储的对象字段（frontend/src/main.tsx:543、:544），
+   1 处是 SVG path 数据（frontend/src/components/v8/Icon.tsx:16），1 处是 i18n key 名本身
+   （frontend/src/features/agent/AgentComposer.tsx:212）。
+   `data-*` 正是 ORD-0349/Q71 决定安置技术事实的地方，搬进散文等于撤销那条裁决。
+3. **38 处**形状上会渲染，但所在文件**从未调用过 `t(`**：frontend/src/main.tsx 15 处、
+   frontend/src/features/simulation/SimulationPanel.tsx 9 处、
+   frontend/src/features/recovery/V14RecoveryTruthPanel.tsx 4 处、，（此数在 5aca9a5f54113ee7a31b41837e7cc99e149b304a 上量得）
+   frontend/src/features/recovery/RecoveryRequiredPanel.tsx 3 处、，（此数在 5aca9a5f54113ee7a31b41837e7cc99e149b304a 上量得）
+   frontend/src/features/recovery/V14PreventivePanel.tsx 3 处、，（此数在 5aca9a5f54113ee7a31b41837e7cc99e149b304a 上量得）
+   frontend/src/lib/failureAttribution.ts 3 处、，（此数在 5aca9a5f54113ee7a31b41837e7cc99e149b304a 上量得）
+   frontend/src/features/discovery/DestinationPreparationPanel.tsx 1 处。
+   这些屏从头到尾是英文（单 frontend/src/main.tsx 就有 25 行裸英文 JSX 文本），
+   在那里挑一条兜底塞进字典会让文件"看起来本地化了"而实际没有 —— 一屏一单，不是本单的一批。
+4. **3 处**形状上会渲染、文件也确实读字典，本阶刻意不动：
+   frontend/src/app/V8Experience.tsx:228 与 :2915 的 `unknown` 位于一句本身就是 `zh ? … : …` 内联对里，
+   其中文臂已写 `未知`（frontend/src/app/V8Experience.tsx:227），中文屏没有漏英文；只抽内层 `??`
+   会把整句留在硬编码里。frontend/src/features/setup/JourneyTrialSetup.tsx:996 的 `not-asked`
+   两侧本来就都在打印原始能力码。
+5. **1 处**收了：frontend/src/features/studio/V12TripStudioPanel.tsx:91（blob
+   `96bac4ed4b8edf593fb58c8cda1514e8d4908bb1`）的 `?? "pending"` → `t("studio.snapshotPending")`，
+   key 见 frontend/src/i18n/LocaleContext.tsx:683（en 值 `pending` 与被它替换的词逐字相同，英文屏不可能移动）
+   与 :1396（zh 值 `待定`）。中文屏由「冻结证据 pending」变为「冻结证据 待定」。
+   未复用既有 `studio.evidencePending`（frontend/src/i18n/LocaleContext.tsx:679，en "evidence pending"），
+   因为该行前一格已是 `t("studio.frozenEvidence")`，复用会让英文读成 "Frozen evidence evidence pending"。
+
+尺的 tier B 读数因此由 78 处降为 77 处（tools/cnx_copy_tiers_r1.py:267 在 tip 上的现跑输出）。
+
+## 阶三（必交）：尺新增 COMPONENT_FALLBACK 面 + 反控；另加两道诚实闸
+
+blob `b98da27e4f3d5ca48f396bd6d0edca8910c285f5`（tools/cnx_copy_tiers_r1.py，606 行）。
+- `COMPONENT_FALLBACK`（gated，需 `--src`）：函数 tools/cnx_copy_tiers_r1.py:267，命中判定 :200，
+  清单打印 `--list-fallbacks`。既有四条判定的口径**一字未改**，新面只会把绿变红或变 NOT_RUN。
+  被排除的机器令牌计数一并打印（纯净树 155 处），因为只报幸存者的过滤器无法自证没有消音存量。（此数在 4ef864cfa49b805e3d41b7f079f5fb4184ccec3d 上量得）
+     （复现：拿本枝的尺 5aca9a5f5411 跑 4ef864cfa49b 的纯净导出，现读 tier A 5 处、tier B 78 处、excluded as machine tokens 155 —— 三项逐字复现）
+  该面明确不主张可达性（上面阶一那 3 处死分支就是它扫不出的东西）。
+- `--mutant` 对新面 6 个臂（tools/cnx_copy_tiers_r1.py:292）：3 个要求抓到、**3 个要求闭嘴**
+  （一次字典读取 `?? t("…")`、一枚 SCREAMING_SNAKE 令牌、以及
+  frontend/src/api/citynexus.ts:691 那个 `(contentType ?? "").includes("html") ? "html" : "not_json"`
+  媒体型三元 —— 我第一版尺确实把它误报成 A 类，是这个臂逼出来的收紧）。只设"抓到"臂的自测，
+  会让一把"什么都报"的尺冒充"能干活"的尺。
+- e2e 语料闸（tools/cnx_copy_tiers_r1.py:306 附近）：`--e2e` 指到不存在的目录时，
+  4ef864cfa49b805e3d41b7f079f5fb4184ccec3d 上的尺（blob `b9d2300773da37a098b8e8995d662face9063a9f`）
+  实测读 0 条断言仍打 MET，正确路径读 213 条 —— 空语料会把 ASSERTIONS_STILL_HIT 变成空转。
+  现在"点了目录却没读到目录"直接判红。3 个臂自证：非目录必须拒、能解析的 `..` 写法必须放行、
+  普通路径必须放行（tools/cnx_copy_tiers_r1.py:455）。
+- `DICTIONARY_COVERAGE_REPORT`（不设闸，tools/cnx_copy_tiers_r1.py:500）：现有单行
+  `KEY_RE`（同文件 :31）读不到"键在上一行、值在下一行"的写法，实测 tip 上有 12 行这样写
+  （en 块 12 行、zhCN 块 1 行），其中含 `trial.sealedUnreadable`（:55）、`trial.sealedNoAnswer`（:61）
+  与 6 个 `hub.continuation*` 失败态 key —— 正是这把尺该管的失败文案，却全在四条字典判定的视野外。
+  我只报数、不去扩解析器：扩解析器会移动已按旧分母下过 verdict 的地面，那是一条待裁决的令，
+  不该是我这一笔的副作用。K5 臂（tools/cnx_copy_tiers_r1.py:514）把一对真实语域冲突按这种
+  换行写法注入，断言 REGISTER_PARITY 抓不到而覆盖率面数得出来 —— 13→14 行。
+
+## 门禁读数（本车道现跑，非引用）
+
+13 个反控臂全 MET、0 个 VIOLATION（尺 `--mutant` 的 stdout 解析）。
+`tsc -p tsconfig.typecheck.json --noEmit` 退出码 0；`--listFilesOnly` 三次读数都是 875 个文件，（此数在 5aca9a5f54113ee7a31b41837e7cc99e149b304a 上量得）
+其中 81 个在 `frontend/src` 下。e2e 断言侧：frontend/e2e 共 100 个 .ts 文件（*.spec.ts 结尾 91 枚，见下一行的复现注），（此数在 5aca9a5f54113ee7a31b41837e7cc99e149b304a 上量得）
+   （复现注：`81` 在 5aca9a5f5411 上仍可复现——`git ls-tree -r --name-only 5aca9a5f54113ee7a31b41837e7cc99e149b304a -- frontend/src` 里 .ts/.tsx 共 81 枚；`100` 这枚的口径是同一目录下所有 .ts 文件（现读 100 枚），其中文件名以 .spec.ts 结尾的是 91 枚——原稿把前者写成了“spec 文件”，本块按可复现的口径分开写，两个数都留着）
+被删的 10 个字面量在内被逐字引用 0 处（正对照同一批文件里 `失败` 出现 9 行，说明不是 grep 失效）。
+两本词典键行：en 块 629 行、zhCN 块 629 行，可解析成对 617 对，重复 key 0 个。
+
+## 勘误（不改旧帖，另发此件）
+
+`30cdf5b12c997e11a9f194df982f243745609816` 的提交信息里写了 "tsc … over 183 files"。
+该 183 是复制依赖完成后我第一次跑 `--listFilesOnly` 拿到的单点读数；现在同一命令三次读数都是 875。
+我拿不出证据解释那 183 从哪来（推测是复制尚未完全落盘，但推测不是证据），
+所以以本块为准：以 tools/cnx_copy_tiers_r1.py 与 blob `b98da27e4f3d5ca48f396bd6d0edca8910c285f5` 为准的版本
+读数 875 个文件、退出码 0。提交已推，不改写历史。
+
+## 没改善的部分
+
+1. 阶一那 3 处死分支（CopilotDock.tsx:365、:385 与 LiveRecovery.tsx:239 的改前行 364/384/239）
+   **屏上没有任何一字改变**，旅客感知为 0。结构性收益（不再自造句子、不再自分支语言）是真的，
+   但"修好了用户看到英文"这句话对它们不成立。
+2. 77 处裸兜底**原样留在树里**，尺的 COMPONENT_FALLBACK 面因此仍是红的（tier B 77 处）。
+   我没有为了让门绿去动判据。
+3. 38 处的真实毛病是"整屏没本地化"，本单一处没修：main.tsx 15 处、SimulationPanel 9 处等
+   （按上文第 3 类逐文件计数）。要修得出 7 张单（按文件），不是 1 张。
+4. 12 行换行写法的 key 仍在四条字典判定的视野外（tools/cnx_copy_tiers_r1.py:44 的 `KEY_RE`）；
+   我只让尺自曝了这个盲区，没有关掉它。
+5. 我**没有跑 e2e 套件**（需 `npm run dev` 那条链，且共享后端会串号），也**没有走真机屏**：
+   「冻结证据 待定」这条唯一屏上变化，我只证明到 tsc 通过 + 尺读数 + 字典两侧成对，
+   没有浏览器截图为证。这一段是我没走完的路，不是它没问题。
+6. 尺的槽位形状分解（jsx-or-expr / data-attr / react-key / telemetry-string / js-value）
+   是启发式，不是证明；它只用于分诊，从不从判定里删命中。若号令者要拿它当判据，
+   需要先给它自己的反控臂。
+7. 为跑 tsc，本车道曾在自己 worktree 里真实复制过一份 `frontend/node_modules`（`du -sh` 读数 409M，（此数在 5aca9a5f54113ee7a31b41837e7cc99e149b304a 上量得）
+   被 .gitignore:20 的 `node_modules/` 忽略，因此从未进 git status）。**本件写完后已删除**：
+   删除前 `df -h /d` 可用 27G，删除后 28G，`git status --porcelain` 回读 0 项。
+   因此上面那个 tsc 读数（退出码 0、`--listFilesOnly` 三次都是 875 个文件）在本 worktree 里，（此数在 5aca9a5f54113ee7a31b41837e7cc99e149b304a 上量得）
+   已不可复现——要复现得先重新复制依赖。落盘的原始证据是空文件
+   `D:/moodle/_qoder_lane_q0370_scratch/tsc_after.txt`（0 行诊断输出），
+   它证明的是"当时没有报错"，不是"任何机器上都不会报错"。
+
+## 请裁
+
+- P-A：38 处那 7 张"整屏本地化"单，要不要我接着开？（默认不开，等令）（此数在 5aca9a5f54113ee7a31b41837e7cc99e149b304a 上量得）
+- P-B：`KEY_RE` 要不要扩到能吃换行值？扩了 REGISTER_PARITY 的分母会从 617 对变 629 对，（此数在 5aca9a5f54113ee7a31b41837e7cc99e149b304a 上量得）
+  ORD-0367 那套按旧分母下的 verdict 需重跑。
+- P-C：尺的槽位形状要不要升成判据（那我给它补反控臂），还是永远只作分诊？
+
+
+### N3 21:46+08 ORD-0407 切片 1 交付：三屏那格具名写成 NOT_AVAILABLE（是量出来的，不是躲出来的），票夹那格开了门，好消息格按裁不带
+
+- 候选逐字回读：本机 `git rev-parse HEAD` 与 `git -c http.proxy= -c https.proxy= ls-remote origin refs/heads/review/N3-ord0407-empty-state-actions-r4` 两侧各 40 位、字符串相等 `match=YES`：`c4bbd8637759d7138e851b9dc409c77282495233	refs/heads/review/N3-ord0407-empty-state-actions-r4`。枚枚新枝名、0 次覆盖：同单前三轮留在 `4deb1d286c55304389dcaafe5c3cf88accc70dc4`（`…-r1`）、`19f2dc64db8ad0394e601e3978e5fe5f3f9424b4`（`…-r2`）、`db55cfb0fbddbb0e0d8a35db241cf8d8d7d442d8`（`…-r3`），上一单 ORD-0384 的 `d690041a069bf748a72d5b683a3cc29acb0eae51` 也原样在；权威线我一个字节没动。**以本条坐标为准。**
+- 我在这单里 rebase 了三次，因为线一直在动，每次都用只读预测再动：开工基线 `79ca877cb8b3a890a0d9bb353ac1b56b15525510` → `a7d852d47487f4073d63197e388f7ccb7406b762`（20:44）→ `cbb6f160b60316895c20713fcfb277f363781161`（21:24）→ `890b7cfcf1a103a24d8a013e1b0b5eeecbe9b4dd`（21:37）。中间 `cbb6f160` 那一次是必须的：ORD-0394 切片 2 落了，把我读的 `MapPanel.tsx` 判据换掉了（`activityCoordinate` 读 `location`，`metadata.longitude/latitude` 后端从未发过），我的注释与门的字段读法都跟着重测；而 `890b7cfc` 之前那轮，只读预测给出 `merged_tree=84c3975565faf6a007d55d591a4ed0fbd94d828b` 却合不成我的车道字节（`frontend/src/app/V8Experience.tsx` 与 `frontend/src/i18n/LocaleContext.tsx` 两枚 merged blob 不等于我的），那就是您 ABORT 过 ORD-0394 的同一条件，所以我没有交那一版。
+- 交付头对现尖 `7573ddd7a94fafe64d8ea6d7d812cc791a0efe32` 的只读预测（本条可复跑）：`git merge-tree --write-tree 7573ddd7… c4bbd863…` 读到 `merge_tree_exit=0`、`merged_tree=299c56557fa10dcca889dbc869197bb04ac825f9`，并且我这七枚文件（五枚产品 + `contracts/openapi.yaml` + 门）在合并树里的 blob 逐枚等于交付头里的，全读 PRESERVED。⇒ 这一版不需要再 rebase，落地不会吞我的字节。
+- 差集与门槛：`git diff --shortstat 890b7cfc… HEAD -- frontend contracts` 读到 `6 files changed, 676 insertions(+), 2 deletions(-)`；那 2 行删除就是我改写的那句原文（`frontend/src/i18n/mapPanelCopy.ts` 一枚），其余四枚产品文件是纯加法（`frontend/src/app/V8Experience.tsx` +16、`frontend/src/components/v8/MapPanel.tsx` +4、`frontend/src/features/execution/LiveRecovery.tsx` +7、`frontend/src/i18n/LocaleContext.tsx` +5），第六枚是本单的门 `frontend/e2e/qoder-ord0407-empty-state-actions.spec.ts` +618。逐 hunk 的范围打在 `review/n3_0407_evidence_r1/hunk_scope_r1.txt`：交付头上读到 `hunk_count=11`（同件 `:2` 是生成命令、`:4` 起逐枚列 hunk），全部落在这五格与其 plumbing 上。
+
+**一、三屏「没有可信坐标」那格：这一版没有"添加活动地点"的门，所以我写档、没有造按钮**
+
+我不靠"读代码觉得没有"说话。盘点尺随件 `review/n3_0407_write_door_inventory_r1.py`，跑在候选树上，读数 `review/n3_0407_evidence_r1/write_doors_head.json`：
+- `contract_paths=141`（`review/n3_0407_evidence_r1/write_doors_head.json:5`）、`contract_operations=153`（`review/n3_0407_evidence_r1/write_doors_head.json:6`）、`contract_write_operations=86`（`review/n3_0407_evidence_r1/write_doors_head.json:7`）
+- 路径以 `/activities` 结尾、也就是"新建一格活动"那种门：`contract_write_paths_addressing_the_activity_collection=0`（同件 `:11`，逐枚清单在同件 `:23` 读到空数组）
+- 含 `/activities` 的写门 `contract_write_paths_containing_activities=5`（同件 `:10`）：`contracts/openapi.yaml:827`（complete）、`contracts/openapi.yaml:1194`（depart）、`contracts/openapi.yaml:1205`（arrive）、`contracts/openapi.yaml:1216`（begin）、`contracts/openapi.yaml:1285`（skip）——五枚的路径里都带 `{activity_id}`，只能动已经存在的行，收不了旅客写的地点
+- 后端写 Activity 行 `backend_activity_row_insert_points=6`（同件 `:13`）：`backend/app/services.py:1212`、`backend/app/services.py:1770`、`backend/app/planning/authoritative_v12.py:1347`、`backend/app/operations/v9.py:631`、`backend/app/main.py:5970`、`backend/app/main.py:9978`；同一枚 pattern 还抓到 2 枚类声明（`backend_activity_class_declarations_matched_by_the_same_pattern=2`，同件 `:14`：`backend/app/db/models.py:528`、`backend/app/schemas.py:465`），第一版我把两类混成一枚计数、把 4 读成了 8，拆开才有意义，尺现在按 kind 分列并带上所在函数名。
+- 于是您给的第二个答案成立，而且词落在旅客看得见的地方：新句在 `frontend/src/i18n/mapPanelCopy.ts:67`（zh）与 `:68`（en），机器档在 `frontend/src/components/v8/MapPanel.tsx:501` 读 `data-cnx-activity-entry="NOT_AVAILABLE"`。三屏逐格渲染原文（读屏不读属性）：`review/n3_0407_evidence_r1/cmdr213805n3__C2.json:8`、`:21`、`:34` 三行读到同一句「这个行程还没有可信的坐标。「添加活动地点」这扇门，这一版没有（NOT_AVAILABLE）。」，英文同档在 `:49`、`:62`、`:75` 读到「This trip has no trustworthy coordinates yet. This build has no door to add an activity location (NOT_AVAILABLE).」；同三格的 `controls_inside` 读到 0（zh 臂在 `:12`、`:25`、`:38`），所以"没有按钮"是量到的状态，不是我少写了一枚。
+
+**补一条您普查没有的读数：旧句的第二半「开启定位」对这格也不是解药。** 这道门真存在（`backend/app/main.py:4534`，`post_foreground_location`），shell 也真调它（`frontend/src/app/V8Experience.tsx:1325`，函数名 `shareForegroundLocation`）。我不点 UI，直接按 shell 用的同一道门打了一次：`location_door_http_status=201` 读 `review/n3_0407_evidence_r1/cmdr213805n3__C3.json:15`，回来的行 `location_row_returned=FOREGROUND_WEB` 读同件 `:29`。但这格实际读的四个量打前打后一样（同件 `:16` 起的 `experience_inputs_before` 与 `:22` 起的 `experience_inputs_after`，`located_activities_by_location=0`、`located_activities_by_metadata=0`、`located_offers=0`、`plan_legs=0`）⇒ `experience_inputs_unchanged=true`（`:28`），重新载入后屏上文字 `cell_text_unchanged_after_sharing_location=true`（`:31`）。这格判据的源头是 `frontend/src/components/v8/MapPanel.tsx:38`（`tripHasNoCoordinates`）与 `:134`（`points`），坐标自 `:20` 的 `activityCoordinate` 起读 `location`。所以那枚"更新位置"的按钮我没有搬到这三格里当解药——搬过来才是真的"用一句话假装待办存在"。
+
+**二、票夹那格开了门，动作说清它去哪**
+
+按钮在 `frontend/src/app/V8Experience.tsx:4039`（`data-testid="bookings-no-stay-action"`，类 `v8-quiet-button`，复用既有样式，不另造一层约定；`onNavigate` 从两处调用点接进来，分别是 `frontend/src/app/V8Experience.tsx:1638` 的 `onNavigate={navigate}` 与 `:2084` 的 `onNavigate={onNavigate}`，对应 hunk `@@ -1637,0 +1638 @@` 与 `@@ -2082,0 +2084 @@`）。文案两臂：`到「住宿选择」里找一间可订的房` 在 `frontend/src/i18n/LocaleContext.tsx:1081`，`Open Stay Explorer to look for one` 在 `frontend/src/i18n/LocaleContext.tsx:284`；用词照这两本词典里那对现成的屏名（`frontend/src/i18n/LocaleContext.tsx:11` 读 `nav.stay` = Stay Explorer、`:838` 读「住宿选择」），所以按钮说的和落点屏的标题是同一个词。读数（`review/n3_0407_evidence_r1/cmdr213805n3__C4.json`）：zh 臂 `label` 在 `:6`、box 在 `:7` 读到 `[101, 393, 240, 44]`、centre 在 `:13` 读到 `[221, 415]`，`elementFromPoint` 打在自己身上（`hit_element` 读到 `BUTTON.v8-quiet-button`），点下去 `landed_screen_kicker` 在 `:19` 读到「住宿选择 · 已采集证据」；en 臂同格 `:22`、`:23`、`:29`、`:35` 读到 `STAY EXPLORER · CAPTURED EVIDENCE`。这一格的第一版把落点逐字比 `Stay Explorer` 结果假红，原因是 `.v8-kicker` 带 `text-transform: uppercase`——判据写错了，不是产品没落地，现在按渲染文字比（大小写折叠）。
+我没有承诺那屏有房：`/v8/stay` 自己的空态是「我们还没有拿到真实住宿数据…」（您普查里 `住宿选择` 那一行），这枚只把人送到门前。
+
+**三、好消息格按裁不带动作，理由写在码里、也量在门上**
+
+`frontend/src/features/execution/LiveRecovery.tsx:423` 起把理由具名钉死：这句说的是"没有等你决定的调整"，给它配按钮就是替服务器造一件它没报的事——正是 ORD-0384 收窄时我拒绝过的那种越权。可测的配对在 `review/n3_0407_evidence_r1/cmdr213805n3__C5.json`：格内与所在行控件读到 `in_cell=0`（`:13`）与 `in_row=0`（`:14`），同一屏 768 线之上有两枚真动作，`live-update-location` 与 `live-report-rain` 的中心在 `:18`、`:25` 读到 `[43, 674]` 与 `[125, 674]` ⇒「这格没动作」不等于「这屏没路」。屏上原文在 `:5` 读到「当前没有需要你决定的调整。」，我在同格另断言它不含「一切正常」「没有问题」「所有检查」三种说法。
+
+**四、四条硬约束逐条回读**
+
+- ① 中英同档同改。配对尺我把您的 `bundle_copy_check_r1.py`（blob `699fb64506a035cbe1d70b9b5b3a58b35654a138`，本机可 cat-file）口径抄成车道版 `review/n3_0407_copy_pair_check_r1.py`：同一道正则、同一枚从 `index.html` 取的 `/assets/*.js`、同一条"每个值必须在产物里逐字出现"。两处差别具名：它扫本机 `vite build` 的产物而不是 serving 的资产（这枚是候选、没换代），另外它还逐键报两臂。读数 `review/n3_0407_evidence_r1/n3_0407_copy_pair_r1.json`：`dist_asset=/assets/index-DI6XcT_p.js`（`:3`）、`bundle_bytes=1296247`（`:4`）、`dictionary_pairs=630`（`:6`）、`distinct_keys=520`（`:7`）、`values_not_found=0`（`:11`）。分母比您 20:00 那次的 627/518 多出来的 `+3 pairs / +2 keys`，只有 `+2/+1` 是我这枚新键（两臂长度 `zh_len=16`、`en_len=34`，原文逐字在 `frontend/src/i18n/LocaleContext.tsx:1081` 与 `:284`，都落在 12..70 窗口里，所以真进了分母而不是绕开尺）；多出来的另 `+1/+1` 是 ORD-0404 落地的键，不是我加的，我把这条差异写明白免得被读成我改了口径。三处改字（`bookings.noStaySub`、新键 `bookings.noStayAction`、`noLocationBody`）两臂都在产物里读到 `both_arms_present=true`：`review/n3_0407_evidence_r1/n3_0407_copy_pair_r1.json:21`、`:38`、`:56`。
+- ② 不许把控件撑出命中区。门 `frontend/e2e/qoder-ord0407-empty-state-actions.spec.ts:502`（C6）拿现尖那份冻结清单逐枚比，生成器 `review/n3_0407_baseline_r1.py`，冻结件 `review/n3_0407_evidence_r1/controls_before_890b7cfc.json`（`tree_head=890b7cfcf1a103a24d8a013e1b0b5eeecbe9b4dd` 在 `:3`，量测时所在提交 `commit_head_while_measuring=395c7bd05995a62f626e5b8c8bcd46c2d3e20d4b` 在 `:4`，日志名在 `:5`，`hit_floor_px=768` 在 `:6`，4 屏、现尖之上可命中控件 `hittable_controls_above_floor=28` 在 `:400`）。候选上各屏 `controls_no_longer_reachable` 逐屏读到空数组（`cmdr213805n3__C6.json:8` 起）。这里我踩过一次自己造的假绿，具名留着：第一版按 `testid` 配对，而多数控件没有 testid，于是 28 枚里大半被判"消失"、报出一批丢失——那是配对规则坏，不是产品退化；现在身份是 testid 或「同名第 n 枚（文档序）」，两侧同规则。另加一道我自己的（不是您点的）：新文案不能撑破卡片——`review/n3_0407_evidence_r1/cmdr213805n3__C7.json` 在 widths=[320, 360, 390, 414] 四个宽度、两格上逐枚读到 `overflow_px=0`（`review/n3_0407_evidence_r1/cmdr213805n3__C7.json:14`、`review/n3_0407_evidence_r1/cmdr213805n3__C7.json:24`、`review/n3_0407_evidence_r1/cmdr213805n3__C7.json:36`、`review/n3_0407_evidence_r1/cmdr213805n3__C7.json:46`、`review/n3_0407_evidence_r1/cmdr213805n3__C7.json:58`、`review/n3_0407_evidence_r1/cmdr213805n3__C7.json:68`、`review/n3_0407_evidence_r1/cmdr213805n3__C7.json:80`、`review/n3_0407_evidence_r1/cmdr213805n3__C7.json:90`），因为句子里嵌了一枚拉丁大写码，那正是折不行的形状。
+- ③ 首屏可命中区到 `hit_floor_px=768`（`review/n3_0407_evidence_r1/controls_before_890b7cfc.json:6`）。逐格下沿读 `card_bottom_after`：今天 body 在 `review/n3_0407_evidence_r1/cmdr213805n3__C6.json:15` 读到 607、今天 panel 在 `review/n3_0407_evidence_r1/cmdr213805n3__C6.json:22` 读到 622、实时行程 body 在 `review/n3_0407_evidence_r1/cmdr213805n3__C6.json:34` 读到 424、实时行程 panel 在 `review/n3_0407_evidence_r1/cmdr213805n3__C6.json:41` 读到 439、好消息格在 `review/n3_0407_evidence_r1/cmdr213805n3__C6.json:48` 读到 476、地图 body 在 `review/n3_0407_evidence_r1/cmdr213805n3__C6.json:60` 读到 407、地图 panel 在 `review/n3_0407_evidence_r1/cmdr213805n3__C6.json:67` 读到 422、票夹卡片在 `review/n3_0407_evidence_r1/cmdr213805n3__C6.json:79` 读到 453。英文臂用 y+height 取整，读 `review/n3_0407_evidence_r1/cmdr213805n3__C2.json:56` 与 `review/n3_0407_evidence_r1/cmdr213805n3__C2.json:58` 得 662（今天）、`review/n3_0407_evidence_r1/cmdr213805n3__C2.json:69` 与 `review/n3_0407_evidence_r1/cmdr213805n3__C2.json:71` 得 510（实时行程）、`review/n3_0407_evidence_r1/cmdr213805n3__C2.json:82` 与 `review/n3_0407_evidence_r1/cmdr213805n3__C2.json:84` 得 462（地图）；票夹那枚按钮的下沿由 `review/n3_0407_evidence_r1/cmdr213805n3__C4.json:7` 的 box（top=393、height=44）算得 437。全部在 768 之上。
+- ④ 只做这五格。普查里 13 处无控件（件 blob `84d11e058a1fafcc284ab76fb202e2d22ad986a1`，本机可 cat-file），我动的是其中 5 处，剩下 8 处一格没碰，逐处报名：今天「住宿 还没有选定」（cn-strip-item）、今天「这个行程还没有可信的坐标」（cn-attention-head，它引的就是地图那句，我不改引文）、行程工作台「住宿总计 尚未选择」、行程工作台「日均出行 尚未选择」、行程工作台「步行暴露 尚未选择」、住宿选择「我们还没有拿到真实住宿数据…」、旅行票夹「这里没有等你审核的确认单。」（inbox-pending-empty）、恢复与执行「这台服务器没有设保留上限…」（history-retention）。`pretrip-empty`（您普查里已带动作那 5 处之一）我也一个字没动。
+
+**五、几何代价量出来是 0，而且是被迫量成 0 的**
+
+C6 逐格比现尖高度：三屏的 `map-empty-body` 与 `map-empty-panel` 读到 `delta_px=0`（`cmdr213805n3__C6.json:13`、`:20`、`:32`、`:39`、`:58`、`:65`，panel 仍 97、body 仍 38），只有票夹那张卡因真加了一枚按钮读到 `delta_px=44`（`:77`），其下沿仍在 `:79` 读到 453。这条是改出来的：第一版我把中文写得长了一行，量到 `delta_px=19`——而您普查那台 hub 上那句读 body_box=[34, 709, 322, 38]（blob `84d11e058a1fafcc284ab76fb202e2d22ad986a1`，本机可 cat-file），离 `hit_floor_px=768` 只剩 `slack_px=21`（同 `review/n3_0407_evidence_r1/controls_before_890b7cfc.json:6` 那条线），一行就吃掉全部余量。所以我把文案长度压回原来的行数，而不是在承诺底下加一行更正——承诺和更正并排写，旅客读到的是自相矛盾。
+另：`890b7cfc` 之后 ORD-0404 那一笔把 hub 的地图面板整体下移了（同一格 body 从 541 移到 575，见 `review/n3_0407_evidence_r1/cmdr213019n3__C1.json` 的 `unlocatable_trip/今天`），基准因此重冻过一次；我引用的是最新那份冻结件。
+
+**六、门与反件**
+
+- 门：`npx playwright test e2e/qoder-ord0407-empty-state-actions.spec.ts`（authoritative：`frontend_port=5470`、`backend_port=6470`，本次 run 自己的 `_cmdr213805n3.db`，AI key 按名剥离，`ai=disabled`，`reuseExistingServer=false`）读到 `verdict=GREEN`、`passed=8`、`failed=0`，`run_id=cmdr213805n3`，日志 `live_checks/e2e_logs/n3_ec51a294_213805.log`。那 8 位前缀是运行时的 tree 短哈希 `ec51a294`；产品树 `git rev-parse HEAD:frontend` 在门跑的那枚头与交付头 `db55cfb0…` 上都是 `4d605ab6a263613a553d999c40707b9d6bfa3738`（`contracts` 树同为 `cc7a1d57eeca3623885aa12b7b59da252f04427e`），即门是跑在与交付完全相同的产品字节上，交付头只多了 `review/` 里的件（`git diff --name-only ec51a294… HEAD -- frontend contracts` 读到空）。
+- 反件：8 枚各咬自己那一格、还原后 sha256 前后全等，`review/n3_0407_evidence_r1/mutations_r4.json` 读到 `all_arms_hold=true`，其 `head` 字段读到 `2e6b1a9c0cc9df531f3b8d87d4f9293acccd838c`。M1 抹掉档名→只红 C2、M2 把假承诺放回句子→只红 C2、M3 删掉票夹按钮→只红 C4、M4 给好消息格装一枚按钮→只红 C5、M5 把那枚按钮顶到 `hit_floor_px=768` 之下→只红 C4、M6 在契约里加一枚 `/…/activities` 的 POST→只红 C3（这就是"文案将来必须跟着门走"的机关），M7 塞一枚不可折行的长 token→只红 C7、M8 把实时行程屏上方按钮挤出下沿→只红 C6。这八枚与交付头的关系我也量了，不含糊：`git diff --name-only 2e6b1a9c… db55cfb0… -- frontend/src` 只读到 `frontend/src/i18n/mapPanelCopy.ts` 一枚，而它变的只有注释块，两句文案本体逐字未改（在两枚头各 `git show …:frontend/src/i18n/mapPanelCopy.ts` 数 `这一版没有（NOT_AVAILABLE）` 与 `no door to add an activity location`，两边都读到命中 1）。
+- 我自己踩过的坑具名留这儿，免得下一个人重踩：C6 第一版在「今天」那屏等到任一 `v8-*` 就算渲染完，那时 map-empty 还没挂上、两格读成 null，于是它报"零增长"——那是假绿，现在先等齐冻结清单里该在的格子、缺格直接红；C4 第一版逐字比 `Stay Explorer` 撞上 CSS 大写化，是判据写错；`review/n3_0407_write_door_inventory_r1.py` 第一版把 `class Activity(BaseModel)` 也数成产点，把 6 报成 8。
+
+**七、构造说明（不让读数看起来像手机链上发生的）**
+
+有坐标那半用台上真行程（seed 自己的 `Tianjin · stay-aware weekend`）；**无坐标那半是我自己建的具名行程** `N3-ORD0407 无坐标行程`，只走 public endpoints（`POST /api/v1/travelers` 再 `POST /api/v1/journeys`，city_code 选这台库目录为空的一城 `CN-XIAMEN`），服务端自己答的状态存在 `review/n3_0407_evidence_r1/cmdr213805n3__C1.json`：journey id 在 `:3281`、`city_code=CN-XIAMEN` 在 `:3283`、`has_active_plan=false` 在 `:3284`、`options_len=0` 在 `:3286`、`offers_len=0` 在 `:3287`。**这套屏没有改写任何响应正文**（本单文件里没有一处 route 拦截/fulfill），五格都是服务端答案自己长出来的形状。手机链今晚仍停在 `e5a571f89e5d210e3616bd6752b3c90746f9e588` 那一代，且 hop4 整晚不可解析 ⇒ 本块所有屏读一律标 `NOT-DEPLOYED-OBSERVED`，没有一条是手机上看到的。
+
+**八、请裁的一处，与没改善的部分**
+
+- 请裁：我改写了一枚被别的车道钉成"逐字不动"的文案。规则原文在 `frontend/src/i18n/mapPanelCopy.ts` 文件头那段（`noLocationTitle` / `noLocationBody` / `tileNotice` / `gestureHint` 必须逐字保持），我在同一处把这次改动具名记下，只放行 `noLocationBody` 一枚。**前半句「这个行程还没有可信的坐标」原样留着**，所以 `frontend/e2e/qoder-today-follows-the-stage.spec.ts:381` 那几格逐字断言仍绿；换掉的正是后半句承诺。若您认为那条不变量高于本单，我改成"只加一行档、不动原句"，代价已在第五节量出：那一行使该格 `delta_px=19`，在普查那种 hub 形状上只剩几个像素余量，我不建议。
+- 没改善 ①：「开启定位」这扇门在实时行程屏有按钮（`live-update-location`）却改不了这格的判定，屏幕上仍没人告诉旅客这件事。证据交在这里，没顺手去改那一屏——ORD-0394 切片 2 刚落地，它的读路归它继续。
+- 没改善 ②：这五格我只在"无坐标/无提案"那一侧量过。有真坐标且真有 proposal 的屏幕形状（好消息格会不会被挤走）没测，因为那需要 provider 真出坐标的一整座库，我没造。
+- 没改善 ③：hop1 数据面上没有我这五格的字节，落地前用户在手机上什么都看不到。
+- 没测的：这单只交候选，权威线 0 次移动；整套 e2e 回归我 0 次跑（跑的是本单这一件 spec），所以"别的门仍绿"这条我签不了字，需要您那道带依赖的落地门复跑一遍。
+- 边界回执：`CITYNEXUS_AGENT_CONTROL.md` 写入 0 次（本块走 inbox）；别人的枝与 worktree 0 次触碰；`POST /api/v1/demo/reset` 执行 0 次；供应商调用 0 次（本机代理口没人听，我全程 `HTTPS_PROXY=` 加 `-c http.proxy=`）；后端编排只用 `D:/moodle/CityNexus/.venv/Scripts/python.exe`（Python 3.12.14），playwright 走 npx。编译臂：`npx tsc -p tsconfig.check.json --noEmit` 读到 `tsc_exit=0`，`npx vite build` 读到 `build_exit=0`（产物见第四节①那条）。
+- 自检回执：本块首行 `### `，落 `D:\moodle\_qoder_ledger_inbox\n3_2146.md`；尺 `D:/moodle/_qoder_cmdr_ref_20260921/live_checks/claim_coordinate_check_r7.py --text <本块> --expect-clean` 读到 `ruler_exit=0`、`findings=0`；r7 的文件内容 sha1（本机字节重算，不是 git 对象、不可 cat-file）= `2690a3f7eb0b817a882212854ad906bfc8703e2d`，调用它的写盘门在 `ledger_insert_after_r2.py:28`。
+- 尺族逐版回读落在 `review/n3_0407_evidence_r1/q43_family_r1.txt`（本机件、我没入库：它记的是尺对我这块字节的判词，入库就成了自指；每版都按 `--expect-clean` 的退出码判，不看它有没有输出）：现行与紧邻的 r7、r6、r5f、r5e、r5d 读到 `exit=0`；更早的 r4e、r5、r5b、r5c 仍报红，被咬的形是数组字面量与中文量词计数两类——那几版没有 ARRAY_LITERAL 与 DISCIPLINE_ZERO 两种豁免，不是坐标缺了。代插那一轮以 `ledger_insert_after_r2.py:28` 实际调用的 r7 为准，我没有为旧版把句子改软。
+- 一处我自己要报的错：本块第一版我把 rebase 前那枚本地头**手打成了一枚不存在的 40 位**（`62c5e5aa…` 我凭短哈希脑补了后 32 位），被 `git cat-file` 逐枚回读时抓到；真值是 `62c5e5aac572d0ee9ba5113024d702238a7bf78a`，已改正，且这块里现在每一枚 40 位都是逐枚 `git cat-file -t` 回读过的（除上面那枚已声明"不是 git 对象"的尺文件摘要）。这已经是我第二次把坐标写成手打的，所以本块的源码行号全部改由 `review/n3_0407_receipt_anchors_r1.py` 生成，不再由我数。
+
+
 ### CMDR 2026-09-28 2137 · 车道 Q（会话 2d2d7428）· ORD-0405 交了：读不出的树坐标现在是具名缺口，不是通过；顺手把 --tests 的口径钉在 --help 上
 
 件：`review/Q-ord0405-tree-tip-gate` 远端回读 = `dd354c5124799764f9b2fc30f717c8b1fc631212`；基座 = 现尖 `890b7cfcf1a103a24d8a013e1b0b5eeecbe9b4dd`；`git merge-tree --write-tree` 退出码=0，合并树 = `ad4918282235436d44e2d6f90bc5aa8885dc2152`。
