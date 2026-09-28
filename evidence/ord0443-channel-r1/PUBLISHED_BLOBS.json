@@ -1,0 +1,40 @@
+{
+  "blobs": {
+    "evidence/ord0432-rebased-r1/ORD0432_DELIVERY_r3.json": "0db5b0dcf57eaa6152610d612522ffd8cb83389c",
+    "evidence/ord0432-rebased-r1/ord0432_delivery_receipt_r3.py": "99a74e6d7480f9040354eae7bc3d8d7628fc2404",
+    "evidence/ord0432-rebased-r1/ORD0432_WITNESS_8711.json": "cfa20b1a29ccd0f16f234ddd768af38e193cb626",
+    "evidence/ord0432-rebased-r1/ORD0432_WITNESS_8712.json": "6a1688e457a55afdeaf3f2621450fd7786a2c0fc",
+    "evidence/ord0432-rebased-r1/ORD0432_REVERSE_ARMS_rebased.json": "7a4231483753810e6479e72f599ceaab5bbdefca",
+    "evidence/ord0432-rebased-r1/ORD0432_AGENT_LEG_rebased.json": "4f45f763d5221f1ed69534b132d1077be3ece13b",
+    "evidence/ord0443-channel-r1/ORD0443_RECEIPT.md": "9c3d323850a040d78c9767ee84bd5af6c7558fe6",
+    "evidence/ord0443-channel-r1/WB2API_READOUT.json": "753241b9a0cfad76d76c7a30b4378ce46b04680d",
+    "evidence/ord0443-channel-r1/WB2API_COMPLETION.json": "bf1e8c04e4ee46c891d5f9c10fab57074faf2fe5",
+    "evidence/ord0443-channel-r1/ORD0443_SHAPES.json": "2c69a17490b8f73cd6ef29fff6ed87cc8249170b",
+    "evidence/ord0443-channel-r1/ORD0443_WIRE_A_B.json": "693d63b92be0401b76c22dc0c631647ebaafed53",
+    "evidence/ord0443-channel-r1/ORD0443_WIRE_ECHO.json": "cfaa0deb92e2937a5d945db451d9e7c8755126f9",
+    "evidence/ord0443-channel-r1/ORD0443_PRIVATE_STACK.json": "bc430a05e6854a2d32407676d4178763b3cb2479",
+    "evidence/ord0443-channel-r1/ORD0443_MESSAGE_TRAVELS.json": "a0ce26fcbd291430a5bf85ccc08068dbaa6d1a0c",
+    "evidence/ord0443-channel-r1/ORD0443_E2E_MODEL_TO_SUMMARY.json": "f62a5dbfd2ca3ebbbb6900c601e8eed2ceb39d41",
+    "evidence/ord0443-channel-r1/ORD0443_E2E_PATCHED.json": "af9e48778c6f7eaeec970c176921b669abd1e780",
+    "evidence/ord0443-channel-r1/wb2api_readout.py": "afb16388c800b19252fe70278168587d863a22a5",
+    "evidence/ord0443-channel-r1/wb2api_completion.py": "e64908967642b872c7ed3bd1cb9d49a114b35043",
+    "evidence/ord0443-channel-r1/ord0443_wire_ab.py": "9e036e4ae7584581c983dfb795def6f8017a7003",
+    "evidence/ord0443-channel-r1/ord0443_shapes.py": "9fa49364e205c51ba42963ce8087a02c0bd76347",
+    "evidence/ord0443-channel-r1/ord0443_private_stack.py": "e4610bd46afe40ad6dde5262abe15b2406fc273b",
+    "evidence/ord0443-channel-r1/ord0443_message_travels.py": "90117ac772cd69464ac9e57eabf902b75943573e",
+    "evidence/ord0443-channel-r1/ord0443_e2e_patched.py": "dcd43d357b21174aef26c83ce313d1b641837148",
+    "evidence/ord0443-channel-r1/ord0443_e2e_model_to_summary.py": "20f9a57c0e24ad9b66f89e5d5ea474d0c4e5a08b"
+  },
+  "fails": [
+    [
+      "ord0443-channel-r1",
+      "WB2API_DEEPSEEK_16TOK.json",
+      "missing locally"
+    ],
+    [
+      "ord0443-channel-r1",
+      "shim_r2_patch.diff",
+      "missing locally"
+    ]
+  ]
+}
