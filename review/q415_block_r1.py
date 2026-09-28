@@ -95,8 +95,14 @@ TIP = head_of("refs/heads/mirror/integration-frontend-apple-pass1")
 if not TIP or not git_ok("cat-file", "-e", TIP):
     bad.append("the live tip is not retrievable: %r" % TIP)
 HEAD = git("rev-parse", "HEAD", cwd=WT)
-if HEAD != TIP:
-    bad.append("the checkout is not at the tip the readings claim")
+if not git_ok("merge-base", "--is-ancestor", TIP, HEAD):
+    bad.append("the checkout does not contain the tip the readings claim")
+PRE = [t for t in git("diff", "--name-only", TIP, HEAD, cwd=WT).splitlines()
+       if t.strip() and not (t.startswith("review/") or t.startswith("frontend/e2e/"))]
+if PRE:
+    bad.append("product paths sit between the tip and my checkout: %s" % PRE)
+if not os.path.exists(os.path.join(WT, SPEC)):
+    bad.append("the instrument is missing from the checkout")
 R_LOGS = sorted(glob.glob(os.path.join(LIVE, "e2e_logs", "q415p3_*.json")), key=os.path.getmtime)
 if not R_LOGS:
     bad.append("no tip receipt")
@@ -210,6 +216,8 @@ A("   产品字节：同一集合按前缀现数，backend/ 命中=%d 枚、fron
 A("   仪表 `%s`（blob %s），" % (SPEC, SPEC_BLOB))
 A("   读数件 `%s`（枝上 blob %s，可 cat-file）。本车道端口 :%d / :%d，具名格 %s 。" % (
     ART, ART_BLOB, RJ["ports"]["frontend"], RJ["ports"]["backend"], PORT_LINE))
+A("   取读数那一刻，仪表与读数件还是未跟踪文件，收据的 tree 格逐字等于基点 %s（脚本按 %s 断言）⇒ 屏幕上的产品字节就是现尖那一代；" % (TIP, "RJ[\"tree\"] != TIP"))
+A("   枝上后来那两笔只往 review/ 与 frontend/e2e/ 里加文件，一枚产品文件也没碰。")
 A("")
 A("## 答案（先给结论，再给两臂的数）")
 A("   画在玻璃上的那串字来自 `%s`（`properties.title = activity.title`，未过任何规则），" % J_TITLE)
