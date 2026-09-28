@@ -1,0 +1,66 @@
+{
+  "tree": "D:\\moodle\\_qoder_ai_ord0432_20260929\\wt",
+  "port": 8712,
+  "db": "D:\\moodle\\CityNexus-Hermes-Revival\\evidence\\0212\\_ord0432_8712.db",
+  "1_baseline": {
+    "robust": true,
+    "risk_reason_codes": [],
+    "degraded_providers": [],
+    "budget_remaining_minor": 13000,
+    "journey_end_slack_min": 30,
+    "projection_status": "READY",
+    "latest_event_id": null
+  },
+  "2A_event_http": 201,
+  "2A_event_id": "dd7c5bf6-94ff-4623-9498-af97e6636e55",
+  "2A_after_major_closure": {
+    "robust": false,
+    "risk_reason_codes": [
+      "DISRUPTION_MAJOR"
+    ],
+    "degraded_providers": [],
+    "budget_remaining_minor": 13000,
+    "journey_end_slack_min": 30,
+    "projection_status": "READY",
+    "latest_event_id": "dd7c5bf6-94ff-4623-9498-af97e6636e55"
+  },
+  "W1_major_event_visible_in_twin": true,
+  "W2_robust_still_true": false,
+  "W3_risk_codes_still_empty": false,
+  "W3b_projection_status_still_READY": true,
+  "2B_control_event_http": 201,
+  "2B_control_event_id": "5ae58cd1-dace-4335-97b9-a7484f91770b",
+  "2B_after_control_event": {
+    "robust": false,
+    "risk_reason_codes": [
+      "PROVIDER_DEGRADED",
+      "DISRUPTION_MAJOR"
+    ],
+    "degraded_providers": [
+      "ord0432-positive-control"
+    ],
+    "budget_remaining_minor": 13000,
+    "journey_end_slack_min": 30,
+    "projection_status": "DEGRADED",
+    "latest_event_id": "5ae58cd1-dace-4335-97b9-a7484f91770b"
+  },
+  "W4_control_robust_flipped_false": true,
+  "W5_control_risk_codes_named": false,
+  "3_event_rows_unresolved": [
+    [
+      "dd7c5bf6-94ff-4623-9498-af97e6636e55",
+      "CLOSURE",
+      "MAJOR",
+      "DETECTED"
+    ],
+    [
+      "5ae58cd1-dace-4335-97b9-a7484f91770b",
+      "OTHER",
+      "INFO",
+      "DETECTED"
+    ]
+  ],
+  "4_budget_patch_http": 422,
+  "4_budget_patch_body": "{\"error\":{\"code\":\"VALIDATION_ERROR\",\"message\":\"Journey update would make the selected plan infeasible: BUDGET_EXCEEDED\",\"message_key\":\"request.invalid\",\"trace_id\":\"3a66401c-1a19-4646-b316-1eb443a57d96\",\"details\":null,\"error_receipt_id\":\"CNX-H8FCF5MR\"}}",
+  "VERDICT_envelope_blind_to_events": false
+}
