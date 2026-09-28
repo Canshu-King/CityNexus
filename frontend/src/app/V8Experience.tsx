@@ -2832,6 +2832,79 @@ function Hub({
         viewingJourneyId={data.journey.id}
         onStageChanged={onStageChanged}
       />
+      {/* ORD-0406: this band used to sit below the map, which on a phone puts it at y=1037
+          while the fixed bar starts at 724 -- measured on 360x800, so the row a traveller
+          has to hit was under the bar before any scrolling. Moved above the hero grid, which
+          keeps the hero/map order intact and costs everything below one band height. */}
+      {/* Attention is its own band, not a tile squeezed beside "Next"/"Stay", and an all-clear is a
+          quiet line, not a card. The `today-attention` element is always rendered (same logic and
+          strings as before); only its presentation escalates via data-attention.
+          The "loudest thing after Now/Next" placement this file used to argue for is superseded by
+          the ORD-0406 measurement above: below the map it is not reachable at all on a phone. */}
+      <section
+        className="cn-attention-band"
+        data-testid="today-attention-band"
+        data-attention={
+          disruptions.length
+            ? "open"
+            : handledDisruptions.length
+              ? "handled"
+              : "clear"
+        }
+        aria-label={zh ? "需要关注" : "Needs attention"}
+      >
+        <div className="cn-attention-head">
+          <span className="v8-kicker">{zh ? "需要关注" : "Attention"}</span>
+          <strong
+            className={disruptions.length || tripUnlocatable ? "warn" : "green"}
+            data-testid="today-attention"
+            data-no-coordinates={tripUnlocatable ? "true" : "false"}
+          >
+            {disruptions.length
+              ? zh
+                ? `${disruptions.length} 项变化`
+                : `${disruptions.length} change(s)`
+              : handledDisruptions.length
+                ? zh
+                  ? "已处理"
+                  : "Handled"
+                : tripUnlocatable
+                  ? /* Not a new word: the map panel owns this condition's sentence
+                       (MapPanel.tsx, "这个行程还没有可信的坐标…"), and the attention line quotes its
+                       own opening clause so the two surfaces on one screen cannot disagree. */
+                    zh
+                    ? "这个行程还没有可信的坐标"
+                    : "This trip has no trustworthy coordinates yet"
+                  : zh
+                    ? "一切正常"
+                    : "All clear"}
+          </strong>
+        </div>
+        {disruptions.length > 0 || handledDisruptions.length > 0 ? (
+          <p className="cn-attention-hint">
+            {disruptions.length
+              ? zh
+                ? "打开「实时行程」查看并处理这些变化。"
+                : "Open Live to review these changes."
+              : zh
+                ? "刚才的变化已经处理好。"
+                : "The earlier change has been handled."}
+          </p>
+        ) : null}
+        {disruptions.length > 0 && (
+          /* Pass-8 ruling #2, second instance: this pointed at exactly the same
+             destination as the hero's "Open Live", so a screen with a real
+             disruption showed two primary buttons side by side. The hero owns
+             the primary; the attention band keeps its own quiet link. */
+          <button
+            type="button"
+            className="v8-quiet-button cn-attention-cta"
+            onClick={() => onNavigate("live")}
+          >
+            {zh ? "查看实时行程" : "Review in Live"}
+          </button>
+        )}
+      </section>
       <div className="v8-hero-grid">
         <article
           className="v8-trip-hero cn-now-next-hero"
@@ -2984,75 +3057,6 @@ function Hub({
           <b>{dateInZone(data.trip.departure_anchor.at, locale, journeyTz)}</b>
         </div>
       </div>
-      {/* Attention is its own band, not a tile squeezed beside "Next"/"Stay":
-          Apple hierarchy says a change that needs the traveller is the loudest
-          thing after Now/Next, and an all-clear is a quiet line, not a card.
-          The `today-attention` element is always rendered (same logic and
-          strings as before); only its presentation escalates via data-attention. */}
-      <section
-        className="cn-attention-band"
-        data-testid="today-attention-band"
-        data-attention={
-          disruptions.length
-            ? "open"
-            : handledDisruptions.length
-              ? "handled"
-              : "clear"
-        }
-        aria-label={zh ? "需要关注" : "Needs attention"}
-      >
-        <div className="cn-attention-head">
-          <span className="v8-kicker">{zh ? "需要关注" : "Attention"}</span>
-          <strong
-            className={disruptions.length || tripUnlocatable ? "warn" : "green"}
-            data-testid="today-attention"
-            data-no-coordinates={tripUnlocatable ? "true" : "false"}
-          >
-            {disruptions.length
-              ? zh
-                ? `${disruptions.length} 项变化`
-                : `${disruptions.length} change(s)`
-              : handledDisruptions.length
-                ? zh
-                  ? "已处理"
-                  : "Handled"
-                : tripUnlocatable
-                  ? /* Not a new word: the map panel owns this condition's sentence
-                       (MapPanel.tsx, "这个行程还没有可信的坐标…"), and the attention line quotes its
-                       own opening clause so the two surfaces on one screen cannot disagree. */
-                    zh
-                    ? "这个行程还没有可信的坐标"
-                    : "This trip has no trustworthy coordinates yet"
-                  : zh
-                    ? "一切正常"
-                    : "All clear"}
-          </strong>
-        </div>
-        {disruptions.length > 0 || handledDisruptions.length > 0 ? (
-          <p className="cn-attention-hint">
-            {disruptions.length
-              ? zh
-                ? "打开「实时行程」查看并处理这些变化。"
-                : "Open Live to review these changes."
-              : zh
-                ? "刚才的变化已经处理好。"
-                : "The earlier change has been handled."}
-          </p>
-        ) : null}
-        {disruptions.length > 0 && (
-          /* Pass-8 ruling #2, second instance: this pointed at exactly the same
-             destination as the hero's "Open Live", so a screen with a real
-             disruption showed two primary buttons side by side. The hero owns
-             the primary; the attention band keeps its own quiet link. */
-          <button
-            type="button"
-            className="v8-quiet-button cn-attention-cta"
-            onClick={() => onNavigate("live")}
-          >
-            {zh ? "查看实时行程" : "Review in Live"}
-          </button>
-        )}
-      </section>
       {/* ORD-0392: this anchor is a table now (`hubAnchorPanels` in app/v8PanelRegistry.tsx), so a
           lane that wants something under Today's attention band adds an entry there and never opens
           this file. ORD-0384's own comment about *why* it sits here travelled with the entry. */}
