@@ -16588,6 +16588,21 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### 勘误 + 接单声明 · 车道 map · 我块里那枚账本行号锚已漂，改引块头；ORD-0410 我不重投，我领的是它落地之后仍活着的残余缺陷 · 2026-09-29 0246+08
+
+本件改我 0232 那块里**一处引用方式**，并把"我接哪一格"说明白。0 产品字节、0 读数改动。
+
+**勘误（只此一处）**：那块写"账本 `CITYNEXUS_AGENT_CONTROL.md:17681` 那块（号令者 00:12）"。账本会被整体重写，行号不是我该依赖的锚——我 02:4x 现读，号令者那块已在 `:18142`，我那枚已入账的块头自己也已经不在我提交时的位置。正确的逐字锚是块头：`### CMDR 2026-09-29 00:12 · 号令者 · ORD-0410 落地并亲测修好了：拖开之后按一下，镜头真的回到全程、状态也真的清了。真因不是我猜的那个——我猜错了，具名记下`。除这处引用方式外，那块内其余锚我逐枚回查过语义（24 枚里 1 枚指错已在提交前改掉，`.log:` 类锚因现行尺不认该后缀已全部改指转录件）。
+
+**ORD-0410 的派单形状（值守 02:15 的更正成立，我自己回读了）**：同号两行、收件人不同。点我名的那行逐字是 `**ORD-0410 → 车道 3b65af59（地图线，控件是你新加的那枚）**：**「回到行程视野」这枚按钮按下去不动。**`；另一行是 `ORD-0410 → 车道 49fe0d7b（复制链接那条，正在跑）` 打头的那条派单行（完整原文含"地图上「回到行程视野」按下去不动，我今晚已复现过两次…请按现尖 869a5b4d6424406451738afdb50ea20e6ef686f3 重测一次再"，我把它按原样存在 `D:/moodle/_qoder_ledger_inbox/quote_ord0410_49fe0d7b_dispatch.txt:1`，本行不复述是为了避开行内反引号被转义后不再是逐字件的老坑）。**我不重投这一格**，两条理由都是量出来的：① 它已落地——上面那枚 00:12 块头就是号令者亲测记录，件头 `8a7665be2061a2f38aa2227f81c57003ca4caacb`，我核过 `git merge-base --is-ancestor 8a7665be2061a2f38aa2227f81c57003ca4caacb f662905ec4cafe05687d33a05dcbc7ca8031de43` 退出码 0；② 我这次跑的门**没有再报"按不动"**：`control-state` 臂是绿的（静止 `on-target` → 真拖拽 `off-target` → 按一下回 `on-target` 且相机逐字回原中心，读数 `evidence/gatecheck-ord0410-line/run_arm_readings.json:9`）。也就是说"inert"那一半确实被修好了。
+
+**我领的格（请另给号，不要挂到 0410 上）**：同一枚控件在**瓦片降级态**下与 ORD-0037 的顶部提示条抢同一块右上角，实测重叠 with_notice_overlap_px2=5371（width=320 `evidence/gatecheck-ord0410-line/run_arm_readings.json:66`；width=360 `:91`；width=390 `:116`）与 2713（width=414 `:141`），四形全红、报的都是同一句 `must not sit under the tile notice`。成因是结构：提示条规则在 `frontend/src/design-tokens.css:1293`（`top/right/left` 各一个 8 档内边距的整幅带），我的控件容器在 `frontend/src/map-controls.css:16`（`top/right` 各一个 12 档内边距），而相机让位只量底部那条带（选择器 `frontend/src/components/v8/MapPanel.tsx:417`），上边写死 `const side = 42;` 在 `frontend/src/components/v8/MapPanel.tsx:420`、消费处 `frontend/src/components/v8/MapPanel.tsx:428`。修法四条已写在 0232 那块（顶部收成一条带 / 上边量真实带高 / reach 臂两态各量一次、只在一态绿的臂不再交 / 顺手修我规格里 `afterAll` 汇总被 worker 后写覆盖的仪器缺陷）。等号令者盖章我就动码；不盖章我不动。
+
+**锚的时效**：上面所有 `frontend/...:NN` 行号是我在尖 `077002399665743d52568f53f6cd380650cad3f7`（02:26 ORD-0426 batch 3，我自己 `git ls-remote` 读、本地 `git cat-file -t` 回 commit）上重查过的：该尖与我 0232 那块量测所用的 `f662905ec4cafe05687d33a05dcbc7ca8031de43` 之间共 changed_files=15，其中落在我这格表面（`v8/MapPanel.tsx`、`map-controls.css`、`design-tokens.css`、`src/styles.css`、`lib/mapLabels.ts`）上的命中数 drift_on_my_surface=0，清单 15 行在 `D:/moodle/_qoder_map_gatecheck_20260929/drift_files.txt:1` 起（`wc -l` 对该件回 15）。⇒ 块里的数与行号对新尖仍成立。
+
+**盘（值守提醒已照做）**：本轮我没新建 `cp -al` 的 node_modules 导出口，复用了 0412 车道那份 `build/frontend`，只多一枚 detached worktree。df 我自己现读了一遍（不是转述值守的数）：D: avail=14G（use 96%）、C: avail=13G（96%）、E: avail=127G（59%），逐行输出在 `D:/moodle/_qoder_map_gatecheck_20260929/df_r1.txt:3` 起（命令与 rc 在 `D:/moodle/_qoder_map_gatecheck_20260929/df_r1.txt:1` 与 `:2`）。值守那块报的是 15.0/12.6/126.7 GB，量级一致但小数不同——那是它自己一刻的读数，我不把自己的数写成它的。E 盘确有余量：下一次需要新导出口时我把 `BUILD` 指到 E，不再往 D 压（本轮无需搬迁，故未动任何已有目录）。
+
+
 ### ORD-0425 r3 补 live 那一格（lane N2）— 发射点仍是我定位的那一行，标识上屏是因为我自己把它写进了括号；按你的判语改成人话，两臂都复测过
 
 一、先回答你问的第 1 点：定位的行没被替掉，仍上屏的原因在我自己的兜底文案
