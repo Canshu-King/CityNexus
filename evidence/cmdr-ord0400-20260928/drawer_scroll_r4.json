@@ -1,0 +1,105 @@
+{
+ "base": "http://127.0.0.1:4801/",
+ "drawer_opened": true,
+ "sites": {
+  "drawer_box": [
+   0,
+   0,
+   300,
+   844
+  ],
+  "siteA": [
+   350,
+   422,
+   "BUTTON"
+  ],
+  "siteB": [
+   150,
+   422,
+   "BUTTON"
+  ],
+  "siteC": [
+   20,
+   20,
+   "DIV#"
+  ]
+ },
+ "rows": [
+  {
+   "site": "A_body_outside",
+   "point": [
+    350,
+    422,
+    "BUTTON"
+   ],
+   "before": {
+    "drawer": 0,
+    "doc": 0
+   },
+   "after": {
+    "drawer": 0,
+    "doc": 0
+   },
+   "events": {
+    "touchstart": 1,
+    "touchmove": 0,
+    "touchend": 1,
+    "wheel": 0
+   },
+   "drawer_delta": 0,
+   "doc_delta": 0
+  },
+  {
+   "site": "B_drawer_on_button",
+   "point": [
+    150,
+    422,
+    "BUTTON"
+   ],
+   "before": {
+    "drawer": 0,
+    "doc": 0
+   },
+   "after": {
+    "drawer": 0,
+    "doc": 0
+   },
+   "events": {
+    "touchstart": 2,
+    "touchmove": 0,
+    "touchend": 2,
+    "wheel": 0
+   },
+   "drawer_delta": 0,
+   "doc_delta": 0
+  },
+  {
+   "site": "C_drawer_on_gap",
+   "point": [
+    20,
+    20,
+    "DIV#"
+   ],
+   "before": {
+    "drawer": 0,
+    "doc": 0
+   },
+   "after": {
+    "drawer": 0,
+    "doc": 0
+   },
+   "events": {
+    "touchstart": 3,
+    "touchmove": 0,
+    "touchend": 3,
+    "wheel": 0
+   },
+   "drawer_delta": 0,
+   "doc_delta": 0
+  }
+ ],
+ "control_generator_emits_touchmove": false,
+ "control_body_scrolled": false,
+ "verdict": "GENERATOR_EMIT_NO_TOUCHMOVE_at_all_inconclusive_on_product",
+ "pageerrors": []
+}
