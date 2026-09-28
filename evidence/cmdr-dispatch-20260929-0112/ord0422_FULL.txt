@@ -1,0 +1,47 @@
+[CMDR 派单 ORD-0422] 中文屏上还有硬编码英文句子（三枚面板），把它们接进 i18n 字典。
+
+== 缺陷与读数（全部在现尖产物上亲测，不是我推的）==
+我把 14 条路由逐条用中文臂打开，收集"中文屏上仍然渲染成英文"的可见文字，再反查每条的出处，最后把写死的英文逐条钉到 `文件:行` 并回核它到底有没有上屏。读数件（已发布，可外读）：
+- 逐条清单（含行号、原文、形状、是否已上屏）：`evidence/cmdr-ord0419-20260929-0051/ord0419_inventory_r1.json` blob `353d1c4f96945de517cacf1ef1c8856345d812f8`；文字版 blob `c3576490ae5b8549450f3b3771be236d447a4262`；生成它的脚本 blob `3fd18286a17431df33f7d5442b93f914da0e8d24`（脚本可直接复跑，第一个参数是源码树路径）。
+- 出处分类（裸文案 / 字典字面量 / 种子数据 / 品牌词）：`evidence/cmdr-ord0419-20260929-0051/copy_origin_r3.json` blob `a225e6a7f6770356577531211c58af44259ce86b`，文字版 blob `60b467d7c3ef92e54f3d51156764c4a62b9a27c2`，仪表 blob `e5efa4a3c438464303cfcdfd32b096206cb934d1`。
+- 十四屏逐屏原始读数合订：`evidence/cmdr-ord0419-20260929-0051/untranslated_r2_bundle.json` blob `bf772e96e171e7cc33b3b3b27b9b7ca7d6360950`；仪表（滚动并集版）blob `41a69ce5e9dc0c8c28c8c89d9105c6e6a7834c67`。
+- 中文臂截图：twin blob `eeaf30a7042363be270f0dbb11b779c17e97de6b`、authoritative blob `517266fa0676c19dbf82a6a0945ac48ec836445c`；英文臂 twin blob `402082c0eedb5ca07512f4ef99595068764d7b27`。
+
+一句话形状：清单声称二十二处，二十二处都在声称的那一行上（行核对失败零处），其中十一处已在中文屏上亲测渲染、十一处是分支没走到。三个面板的对比最能说明这是漏的、不是设计选择：`TwinPanel.tsx` 有 12 次 `t()` 调用同时有 10 处写死英文；`V14RecoveryTruthPanel.tsx` 只有 2 次 `t()` 却有 11 处写死英文；`RealCityDiscoveryPanel.tsx` 有 59 次 `t()` 只有 1 处（`useState` 默认值）。
+
+用户在中文屏上实际读到的（那两屏截图我已入库，见上面两条 blob）：旅行者画像屏上「Capability needs」「Learned capability state」两个小标题，以及「No explicit capability facts recorded.」「No learned signals」「Hard accessibility needs are never inferred from behavior.」「Unknown accessibility evidence is not accessible.」四句——同一屏的引导语和权限边界说明全是中文，就这几行是英文；权威行程屏上「V14 · REALITY CHANGED」「Grounded adaptive recovery」「Refresh recovery」「No recovery proposal is waiting on this Journey.」；发现屏输入框里预填的示例诉求整句是英文。
+
+== 范围（只这四枚文件）==
+`frontend/src/features/traveler-twin/TwinPanel.tsx`、`frontend/src/features/recovery/V14RecoveryTruthPanel.tsx`、`frontend/src/features/discovery/RealCityDiscoveryPanel.tsx`、`frontend/src/i18n/LocaleContext.tsx`。
+
+另外，同在这三枚文件里的三处"机器码直出给用户"也归你（同文件，拆开必撞车）：`TwinPanel.tsx:24` 的 `explicit.join(" · ")`（中文屏实测读到 `culture · local_food · relaxed · walking_minutes_max · waterfront`）、`TwinPanel.tsx:9` 的 `capabilityLabel` 直接返回 `item.code`、`TwinPanel.tsx:14` 的 `{item.severity}` 直接渲染枚举。
+
+== 明确不要做 ==
+- 不要改 `frontend/src/styles.css`，不要改 `frontend/src/app/V8Experience.tsx`——那两枚归另一位号令者实例的 ORD-0419 与 ORD-0420，改了撞车。
+- 不要改 `data/mock/places.json` 里的地点名。中文屏上出现 `Tech Art Center` 是**种子数据只有英文名**，不是 i18n 缺陷，这一格归用户裁，不许你顺手"翻译"掉。
+- 不要把 `Copilot` / `CityNexus Copilot` / `CN / AI` 翻掉，那是品牌词与语言切换器标签。
+- 字典冲突协议：ORD-0420 也要改 `frontend/src/i18n/LocaleContext.tsx`。请把你新增的键在两份字典里各自**集中成一段连续插入**（不要打散到各处），这样谁后落地都是纯追加；复切 ABORT 就 rebase 到现尖、用 -r2 枝名重交，**绝不手合**。
+
+== 验收要件（我落地后会在现尖产物上亲测这两臂，不达标我打回）==
+1. 中文臂下 twin / authoritative / discover 三屏**读不到**清单里那二十二条中的任何一条；英文臂下**仍然读到**对应英文。两臂都要交渲染读数（用上面那份仪表 blob `41a69ce5e9dc0c8c28c8c89d9105c6e6a7834c67` 复跑即可，它已经把"真的滚到底了"写进读数）。
+2. 分支没走到的那十一处：要另给一个能走到它的读法（换数据或走另一条分支），走到了再断；走不到就写 `NOT_REACHED` 并说明为什么。**"源码里已经没有这个字面量了"不算屏上判据。**
+3. 字典新增键中英成对，并过配对尺：`python D:/moodle/_qoder_cmdr_ref_20260921/live_checks/cmdr_bundle_copy_check_r3.py`（它报 `values_not_found` 必须为零）。
+4. 前端构建臂必须真过（vite 退出码为零），不许靠跳过。
+5. 交付块里把"改完之后中文屏读到什么"逐句打出来（渲染文字本身），不要只报计数。
+
+== 环境与纪律（每条都适用，请逐条照做）==
+- 你现在是 CityNexus 的一条实现车道，号令者会话是 494abfd7-5a79-4cc1-8487-e873818a2db3。用户不在电脑前：**不要请求任何人类点击或回答**，也不要向外仲裁汇报。
+- 仓库：`D:/moodle/CityNexus`（工作树是冻结的 a9c2504，**不要**在它上面改产品码）。权威线只在远端：`refs/heads/mirror/integration-frontend-apple-pass1`，仓库 `Canshu-King/CityNexus`。
+- 现尖读法（每次都现读，不要引用记忆里的尖）：
+  `env -u HTTP_PROXY -u HTTPS_PROXY git -C D:/moodle/CityNexus ls-remote origin refs/heads/mirror/integration-frontend-apple-pass1`
+- 本机代理 `127.0.0.1:7892` 常没人监听，会造出假的"不可达/连接被拒"。所有网络与 git 远端命令前面一律加 `env -u HTTP_PROXY -u HTTPS_PROXY`。
+- 造自己的工作树：`git -C D:/moodle/CityNexus -c core.autocrlf=false archive <现尖40位> backend data contracts tools scripts agent-mcp frontend/src frontend/e2e | tar -x -C <你的目录>`。**必须含 `data` 与 `contracts` 与 `scripts` 与 `agent-mcp`**，少一个会造出假红。
+- 交付方式：把候选推到 `refs/heads/review/<你的名字>-ord04xx-r1`，然后 `ls-remote` 回读核对两侧 40 位逐字相等。**不要自己合并、不要动权威 ref。**
+- 交完写一块账本块：`D:/moodle/_qoder_ledger_inbox/<你的名字>_<HHMM>.md`，首行以 `### ` 开头。**每个数字同一行给可取回坐标**（`path:line` 或能 `cat-file` 的 40 位 git blob；尺寸每个数字带单位；订单号一律写 ORD-04xx 带前缀形）。**坐标从命令输出里复制，不要手打**（手打过一位就会被写盘门拒，今晚已经拒过好几块）。证据先发布后引用：`env -u HTTP_PROXY -u HTTPS_PROXY python D:/moodle/_qoder_cmdr_ref_20260921/live_checks/publish_evidence_gated_r1.py --local <文件> --path evidence/<新路径>`，已发布路径不许重写，改版走新文件名。
+- 不许假绿：禁止 skip、mock、改断言凑绿。门绿不等于用户在屏上看得见的东西对了——判据要断**渲染后的文字或计算样式**，不要断 class、不要断 data 属性。
+- 私有验证栈（跑屏上用）：`git archive <尖> ... frontend/src frontend/e2e` 导出 → 造产物 `python D:/moodle/_qoder_cmdr_ref_20260921/live_checks/cmdr_build_bundle_r1.py --sha <尖>` → 只读备份共享库（`sqlite3.connect` 用 `file:...?mode=ro` 再 `src.backup(dst)`，参考 `live_checks/_launch_priv_backend_r1.py`）→ 起自己的后端（`CITYNEXUS_DATABASE_URL` 指到你自己的备份库、`CITYNEXUS_DEMO_MODE=true`、**不要**给 `DEEPSEEK_API_KEY`）→ `python cmdr_static_api_proxy_r1.py --dist <dist> --port <你自己的端口> --api <你后端端口>`。**先探到自己的端口真的在答再跑仪表。**
+- 绝对不许：写或 ALTER `D:/moodle/_qoder_preview_20260920/_preview.db`（只能 `mode=ro`）；跑 `demo/reset`；重启 :8000 / :4781 / :4782 / :8693；读或打印 `D:/moodle/_qoder_preview_20260920/run/preview_auth.txt` 里的口令值（只写路径）。
+- 本机三个 python 只有那一个 venv 解释器能跑后端套件；`python3` 在这台机器上没有。做较大改动前先 `ast.parse` 一遍你生成的脚本再跑。
+- 做完把交付块写好就停，等号令者复切落地；不要替号令者落地。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
