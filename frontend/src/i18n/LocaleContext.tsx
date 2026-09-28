@@ -1,4 +1,5 @@
 import { createContext, useContext, useState, useCallback, useEffect, type ReactNode } from "react";
+import { expandPluralMarkers } from "../lib/plural";
 
 export type TripLocale = "en" | "zh-CN";
 
@@ -92,7 +93,7 @@ const en: Dict = {
   "shell.workspaceSub": "Trip operations",
   "shell.factsSynced": "Journey facts synced",
   "shell.plansModes": "{plans} plans · 5 modes",
-  "shell.travelers": "{n} travelers",
+  "shell.travelers": "{n} {plural:traveler}",
 
   // ── Shell: topbar ──
   "shell.journeys": "Journeys",
@@ -375,7 +376,7 @@ const en: Dict = {
   "agent.after": "After",
   "agent.cost": "Cost",
   "agent.feasibility": "Feasibility",
-  "agent.protectedCount": "{n} protected commitments",
+  "agent.protectedCount": "{n} {plural:protected commitment}",
   "agent.preserved": "preserved",
   "agent.notPreserved": "would be violated",
   "agent.aiInterpreted": "Understood by the AI assistant",
@@ -411,14 +412,14 @@ const en: Dict = {
   "agent.aiRunLeaveNow": "Leave for now",
   "agent.aiRunLater": "Later",
   "agent.aiRunLeavePrompt": "A run is still going. Leaving now does not stop it.",
-  "agent.aiRunScope": "Your trip right now: {days} days, {activities} arrangements.",
+  "agent.aiRunScope": "Your trip right now: {days} {plural:day:days}, {activities} {plural:arrangement:activities}.",
   "agent.aiRunNoDaySignal": "The server never reports which day it is working on, so nothing here counts by day.",
-  "agent.aiRunUnits": "This run produced {landed} plans: {activities} arrangements over {days} days.",
+  "agent.aiRunUnits": "This run produced {landed} {plural:plan:landed}: {activities} {plural:arrangement:activities} over {days} {plural:day:days}.",
   "agent.aiRunStoppedAt": "Stopped at: {step}.",
   "agent.aiRunStoppedBeforeSend": "Nothing had been sent, so the server holds no part of this.",
   "agent.aiRunChecking": "Reading back what this run left behind.",
   "agent.aiRunUnreadable": "That read-back didn't answer, so we won't guess what was produced.",
-  "agent.aiRunLanded": "What was produced is still there: {n} plans were added.",
+  "agent.aiRunLanded": "What was produced is still there: {n} {plural:plan} were added.",
   "agent.aiRunNothingLanded": "The read-back says no plan was added.",
   "agent.aiRunTripUnmoved": "The plan in force is still version {version}; your trip did not move.",
   "agent.aiRunSamePlan": "The plan in force is the same one as before.",
@@ -455,7 +456,7 @@ const en: Dict = {
   "discovery.anchor": "Anchor:",
   "discovery.query": "Query:",
   "discovery.radius": "{r} m · max {max}",
-  "discovery.results": "{n} results",
+  "discovery.results": "{n} {plural:result}",
   "discovery.memory": "Memory",
   "discovery.deepseek": "DeepSeek",
   "discovery.providers": "Providers",
@@ -506,7 +507,7 @@ const en: Dict = {
   "exec.offline": "OFFLINE",
   "exec.readOnlyReady": "available offline",
   "exec.next24hSaved": "next 24 hours saved",
-  "exec.evidenceTrail": "{n} sources",
+  "exec.evidenceTrail": "{n} {plural:source}",
   "exec.noEvidence": "none recorded yet",
   "exec.noWebObs": "No web observation is authoritative. Search evidence appears here only after server capture.",
 
@@ -610,7 +611,7 @@ const en: Dict = {
   "inbox.extractImage": "Extract image draft",
   "inbox.authoritativeMemory": "AUTHORITATIVE MEMORY",
   "inbox.journeyMemory": "Saved trip facts",
-  "inbox.protectedFacts": "{n} protected facts",
+  "inbox.protectedFacts": "{n} {plural:protected fact}",
   "inbox.timePending": "time pending",
   "inbox.protected": "Protected",
   "inbox.candidate": "Candidate",
@@ -746,7 +747,7 @@ const en: Dict = {
      MOBILITY_DATA_UNAVAILABLE:<uuid>|<uuid> ×4` pasted straight into the traveller's line. The codes
      are contract vocabulary, so they are now translated one by one; anything outside the declared
      set is counted and left in the technical fold rather than printed as if it were an explanation. */
-  "studio.allProtected": "All {n} activities on this plan are protected anchors, so no reorder here can be accepted. Nothing has been changed.",
+  "studio.allProtected": "All {n} {plural:activity} on this plan are protected anchors, so no reorder here can be accepted. Nothing has been changed.",
   "studio.dragHint": "Hold an activity and drag it to a new position to draft a change.",
   "studio.blockedReasons": "Why this change cannot be accepted:",
   "studio.gate.PROTECTED_ACTIVITY_REORDER": "the new order moves a protected commitment",
@@ -800,15 +801,15 @@ const en: Dict = {
   "fmt.priceUnavailable": "Price not available",
   "fmt.minWalk": "{n} min walk",
   "fmt.minSlack": "{n} min slack",
-  "fmt.activities": "{n} activities",
-  "fmt.protectedAnchors": "{n} protected anchors",
+  "fmt.activities": "{n} {plural:activity}",
+  "fmt.protectedAnchors": "{n} {plural:protected anchor}",
 
   // ── Map components ──
   "mapComp.attribution": "© OpenStreetMap contributors",
   "mapComp.yourLocation": "Your location · {n} m accuracy",
   "mapComp.journeyMap": "Journey map",
   "mapComp.routeContext": "Route context",
-  "mapComp.legs": "{n} legs",
+  "mapComp.legs": "{n} {plural:leg}",
   "mapComp.providerRoute": "Provider-backed route · WGS84",
   "mapComp.noRouteNoProvider": "No route is drawn: this deployment has no routing provider configured, so this plan holds no legs at all.",
   "mapComp.noRouteNotRouted": "No route is drawn: this plan holds no legs, so nothing on the map came from a routing provider.",
@@ -1824,8 +1825,9 @@ export function LocaleProvider({ children }: { children: ReactNode }) {
       if (!value) {
         value = dictionaries.en[key] ?? key;
       }
-      if (!params) return value;
-      return value.replace(/\{(\w+)\}/g, (_, k: string) =>
+      const counted = expandPluralMarkers(value, params);
+      if (!params) return counted;
+      return counted.replace(/\{(\w+)\}/g, (_, k: string) =>
         String(params[k] ?? `{${k}}`),
       );
     },
