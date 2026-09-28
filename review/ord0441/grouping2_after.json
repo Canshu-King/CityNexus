@@ -1,0 +1,1548 @@
+{
+ "at": "2026-09-28T21:19:58.503Z",
+ "base": "http://127.0.0.1:49153",
+ "hit_floor_px": 768,
+ "floor_source": "review/n3_0407_baseline_r1.py:20 blob 825e7850043d3393b6fbc3b347b1c15455a73d8f",
+ "results": [
+  {
+   "arm": "zh-CN@390x844",
+   "viewport": [
+    390,
+    844
+   ],
+   "hit_floor_px": 768,
+   "errors": [],
+   "locale_offered_before": "EN",
+   "locale_offered_after": "EN",
+   "reading": {
+    "present": true,
+    "box": [
+     0,
+     0,
+     300,
+     844
+    ],
+    "scroll_height": 998,
+    "client_height": 844,
+    "scroll_top": 0,
+    "overflow_y": "auto",
+    "touch_action": "auto",
+    "children": [
+     {
+      "i": 0,
+      "kind": "head",
+      "opens_group": null,
+      "heading_h": 0,
+      "label": "关闭",
+      "group": null,
+      "height": 44,
+      "advance": 58,
+      "top_in_drawer": 18,
+      "centre": [
+       257,
+       40
+      ],
+      "hittable": true,
+      "above_floor": true
+     },
+     {
+      "i": 1,
+      "kind": "item",
+      "opens_group": "今日",
+      "heading_h": 12,
+      "label": "今天",
+      "group": "今日",
+      "height": 79,
+      "advance": 83,
+      "top_in_drawer": 76,
+      "centre": [
+       150,
+       135
+      ],
+      "hittable": true,
+      "above_floor": true
+     },
+     {
+      "i": 2,
+      "kind": "item",
+      "opens_group": null,
+      "heading_h": 0,
+      "label": "实时行程",
+      "group": null,
+      "height": 53,
+      "advance": 57,
+      "top_in_drawer": 159,
+      "centre": [
+       150,
+       192
+      ],
+      "hittable": true,
+      "above_floor": true
+     },
+     {
+      "i": 3,
+      "kind": "item",
+      "opens_group": null,
+      "heading_h": 0,
+      "label": "地图",
+      "group": null,
+      "height": 53,
+      "advance": 57,
+      "top_in_drawer": 216,
+      "centre": [
+       150,
+       249
+      ],
+      "hittable": true,
+      "above_floor": true
+     },
+     {
+      "i": 4,
+      "kind": "item",
+      "opens_group": "规划",
+      "heading_h": 12,
+      "label": "行程工作台",
+      "group": "规划",
+      "height": 79,
+      "advance": 83,
+      "top_in_drawer": 273,
+      "centre": [
+       150,
+       332
+      ],
+      "hittable": true,
+      "above_floor": true
+     },
+     {
+      "i": 5,
+      "kind": "item",
+      "opens_group": null,
+      "heading_h": 0,
+      "label": "住宿选择",
+      "group": null,
+      "height": 53,
+      "advance": 57,
+      "top_in_drawer": 356,
+      "centre": [
+       150,
+       389
+      ],
+      "hittable": true,
+      "above_floor": true
+     },
+     {
+      "i": 6,
+      "kind": "item",
+      "opens_group": null,
+      "heading_h": 0,
+      "label": "城市探索",
+      "group": null,
+      "height": 53,
+      "advance": 57,
+      "top_in_drawer": 413,
+      "centre": [
+       150,
+       446
+      ],
+      "hittable": true,
+      "above_floor": true
+     },
+     {
+      "i": 7,
+      "kind": "item",
+      "opens_group": "出行",
+      "heading_h": 12,
+      "label": "旅行票夹",
+      "group": "出行",
+      "height": 79,
+      "advance": 83,
+      "top_in_drawer": 470,
+      "centre": [
+       150,
+       529
+      ],
+      "hittable": true,
+      "above_floor": true
+     },
+     {
+      "i": 8,
+      "kind": "item",
+      "opens_group": null,
+      "heading_h": 0,
+      "label": "Copilot",
+      "group": null,
+      "height": 53,
+      "advance": 57,
+      "top_in_drawer": 553,
+      "centre": [
+       150,
+       586
+      ],
+      "hittable": true,
+      "above_floor": true
+     },
+     {
+      "i": 9,
+      "kind": "item",
+      "opens_group": "系统",
+      "heading_h": 12,
+      "label": "恢复与执行",
+      "group": "系统",
+      "height": 79,
+      "advance": 83,
+      "top_in_drawer": 610,
+      "centre": [
+       150,
+       669
+      ],
+      "hittable": true,
+      "above_floor": true
+     },
+     {
+      "i": 10,
+      "kind": "item",
+      "opens_group": null,
+      "heading_h": 0,
+      "label": "智能守护",
+      "group": null,
+      "height": 53,
+      "advance": 57,
+      "top_in_drawer": 693,
+      "centre": [
+       150,
+       726
+      ],
+      "hittable": true,
+      "above_floor": true
+     },
+     {
+      "i": 11,
+      "kind": "item",
+      "opens_group": null,
+      "heading_h": 0,
+      "label": "旅行者画像",
+      "group": null,
+      "height": 53,
+      "advance": 57,
+      "top_in_drawer": 750,
+      "centre": [
+       150,
+       783
+      ],
+      "hittable": true,
+      "above_floor": false
+     },
+     {
+      "i": 12,
+      "kind": "item",
+      "opens_group": null,
+      "heading_h": 0,
+      "label": "回收站",
+      "group": null,
+      "height": 53,
+      "advance": 57,
+      "top_in_drawer": 807,
+      "centre": [
+       150,
+       840
+      ],
+      "hittable": true,
+      "above_floor": false
+     },
+     {
+      "i": 13,
+      "kind": "item",
+      "opens_group": null,
+      "heading_h": 0,
+      "label": "行程",
+      "group": null,
+      "height": 53,
+      "advance": 57,
+      "top_in_drawer": 864,
+      "centre": [
+       150,
+       897
+      ],
+      "hittable": false,
+      "above_floor": false
+     },
+     {
+      "i": 14,
+      "kind": "item",
+      "opens_group": null,
+      "heading_h": 0,
+      "label": "我的",
+      "group": null,
+      "height": 53,
+      "advance": 53,
+      "top_in_drawer": 921,
+      "centre": [
+       150,
+       954
+      ],
+      "hittable": false,
+      "above_floor": false
+     }
+    ],
+    "overflow_px": 154,
+    "drags_to_bottom": 1
+   },
+   "groups": [
+    {
+     "name": "今日",
+     "items": 3,
+     "block_px": 197,
+     "hidden_if_collapsed_px": 185,
+     "labels": [
+      "今天",
+      "实时行程",
+      "地图"
+     ]
+    },
+    {
+     "name": "规划",
+     "items": 3,
+     "block_px": 197,
+     "hidden_if_collapsed_px": 185,
+     "labels": [
+      "行程工作台",
+      "住宿选择",
+      "城市探索"
+     ]
+    },
+    {
+     "name": "出行",
+     "items": 2,
+     "block_px": 140,
+     "hidden_if_collapsed_px": 128,
+     "labels": [
+      "旅行票夹",
+      "Copilot"
+     ]
+    },
+    {
+     "name": "系统",
+     "items": 6,
+     "block_px": 364,
+     "hidden_if_collapsed_px": 352,
+     "labels": [
+      "恢复与执行",
+      "智能守护",
+      "旅行者画像",
+      "回收站",
+      "行程",
+      "我的"
+     ]
+    }
+   ],
+   "collapse_shapes": [
+    {
+     "shape": "collapse_今日",
+     "removed_px": 185,
+     "scroll_height": 813,
+     "overflow_px": -31,
+     "items_left": 11,
+     "how": "computed_from_measured"
+    },
+    {
+     "shape": "collapse_规划",
+     "removed_px": 185,
+     "scroll_height": 813,
+     "overflow_px": -31,
+     "items_left": 11,
+     "how": "computed_from_measured"
+    },
+    {
+     "shape": "collapse_出行",
+     "removed_px": 128,
+     "scroll_height": 870,
+     "overflow_px": 26,
+     "items_left": 12,
+     "how": "computed_from_measured"
+    },
+    {
+     "shape": "collapse_系统",
+     "removed_px": 352,
+     "scroll_height": 646,
+     "overflow_px": -198,
+     "items_left": 8,
+     "how": "computed_from_measured"
+    },
+    {
+     "shape": "only_first_group_open",
+     "removed_px": 665,
+     "scroll_height": 333,
+     "overflow_px": -511,
+     "items_left": 3,
+     "how": "computed_from_measured"
+    },
+    {
+     "shape": "all_collapsed_headings_only",
+     "removed_px": 850,
+     "scroll_height": 148,
+     "overflow_px": -696,
+     "items_left": 0,
+     "how": "computed_from_measured"
+    }
+   ],
+   "items_total": 14,
+   "items_hittable_at_top": 10,
+   "items_hittable_ignoring_floor": 12
+  },
+  {
+   "arm": "zh-CN@320x844",
+   "viewport": [
+    320,
+    844
+   ],
+   "hit_floor_px": 768,
+   "errors": [],
+   "locale_offered_before": "EN",
+   "locale_offered_after": "EN",
+   "reading": {
+    "present": true,
+    "box": [
+     0,
+     0,
+     269,
+     844
+    ],
+    "scroll_height": 998,
+    "client_height": 844,
+    "scroll_top": 0,
+    "overflow_y": "auto",
+    "touch_action": "auto",
+    "children": [
+     {
+      "i": 0,
+      "kind": "head",
+      "opens_group": null,
+      "heading_h": 0,
+      "label": "关闭",
+      "group": null,
+      "height": 44,
+      "advance": 58,
+      "top_in_drawer": 18,
+      "centre": [
+       226,
+       40
+      ],
+      "hittable": true,
+      "above_floor": true
+     },
+     {
+      "i": 1,
+      "kind": "item",
+      "opens_group": "今日",
+      "heading_h": 12,
+      "label": "今天",
+      "group": "今日",
+      "height": 79,
+      "advance": 83,
+      "top_in_drawer": 76,
+      "centre": [
+       134,
+       135
+      ],
+      "hittable": true,
+      "above_floor": true
+     },
+     {
+      "i": 2,
+      "kind": "item",
+      "opens_group": null,
+      "heading_h": 0,
+      "label": "实时行程",
+      "group": null,
+      "height": 53,
+      "advance": 57,
+      "top_in_drawer": 159,
+      "centre": [
+       134,
+       192
+      ],
+      "hittable": true,
+      "above_floor": true
+     },
+     {
+      "i": 3,
+      "kind": "item",
+      "opens_group": null,
+      "heading_h": 0,
+      "label": "地图",
+      "group": null,
+      "height": 53,
+      "advance": 57,
+      "top_in_drawer": 216,
+      "centre": [
+       134,
+       249
+      ],
+      "hittable": true,
+      "above_floor": true
+     },
+     {
+      "i": 4,
+      "kind": "item",
+      "opens_group": "规划",
+      "heading_h": 12,
+      "label": "行程工作台",
+      "group": "规划",
+      "height": 79,
+      "advance": 83,
+      "top_in_drawer": 273,
+      "centre": [
+       134,
+       332
+      ],
+      "hittable": true,
+      "above_floor": true
+     },
+     {
+      "i": 5,
+      "kind": "item",
+      "opens_group": null,
+      "heading_h": 0,
+      "label": "住宿选择",
+      "group": null,
+      "height": 53,
+      "advance": 57,
+      "top_in_drawer": 356,
+      "centre": [
+       134,
+       389
+      ],
+      "hittable": true,
+      "above_floor": true
+     },
+     {
+      "i": 6,
+      "kind": "item",
+      "opens_group": null,
+      "heading_h": 0,
+      "label": "城市探索",
+      "group": null,
+      "height": 53,
+      "advance": 57,
+      "top_in_drawer": 413,
+      "centre": [
+       134,
+       446
+      ],
+      "hittable": true,
+      "above_floor": true
+     },
+     {
+      "i": 7,
+      "kind": "item",
+      "opens_group": "出行",
+      "heading_h": 12,
+      "label": "旅行票夹",
+      "group": "出行",
+      "height": 79,
+      "advance": 83,
+      "top_in_drawer": 470,
+      "centre": [
+       134,
+       529
+      ],
+      "hittable": true,
+      "above_floor": true
+     },
+     {
+      "i": 8,
+      "kind": "item",
+      "opens_group": null,
+      "heading_h": 0,
+      "label": "Copilot",
+      "group": null,
+      "height": 53,
+      "advance": 57,
+      "top_in_drawer": 553,
+      "centre": [
+       134,
+       586
+      ],
+      "hittable": true,
+      "above_floor": true
+     },
+     {
+      "i": 9,
+      "kind": "item",
+      "opens_group": "系统",
+      "heading_h": 12,
+      "label": "恢复与执行",
+      "group": "系统",
+      "height": 79,
+      "advance": 83,
+      "top_in_drawer": 610,
+      "centre": [
+       134,
+       669
+      ],
+      "hittable": true,
+      "above_floor": true
+     },
+     {
+      "i": 10,
+      "kind": "item",
+      "opens_group": null,
+      "heading_h": 0,
+      "label": "智能守护",
+      "group": null,
+      "height": 53,
+      "advance": 57,
+      "top_in_drawer": 693,
+      "centre": [
+       134,
+       726
+      ],
+      "hittable": true,
+      "above_floor": true
+     },
+     {
+      "i": 11,
+      "kind": "item",
+      "opens_group": null,
+      "heading_h": 0,
+      "label": "旅行者画像",
+      "group": null,
+      "height": 53,
+      "advance": 57,
+      "top_in_drawer": 750,
+      "centre": [
+       134,
+       783
+      ],
+      "hittable": true,
+      "above_floor": false
+     },
+     {
+      "i": 12,
+      "kind": "item",
+      "opens_group": null,
+      "heading_h": 0,
+      "label": "回收站",
+      "group": null,
+      "height": 53,
+      "advance": 57,
+      "top_in_drawer": 807,
+      "centre": [
+       134,
+       840
+      ],
+      "hittable": true,
+      "above_floor": false
+     },
+     {
+      "i": 13,
+      "kind": "item",
+      "opens_group": null,
+      "heading_h": 0,
+      "label": "行程",
+      "group": null,
+      "height": 53,
+      "advance": 57,
+      "top_in_drawer": 864,
+      "centre": [
+       134,
+       897
+      ],
+      "hittable": false,
+      "above_floor": false
+     },
+     {
+      "i": 14,
+      "kind": "item",
+      "opens_group": null,
+      "heading_h": 0,
+      "label": "我的",
+      "group": null,
+      "height": 53,
+      "advance": 53,
+      "top_in_drawer": 921,
+      "centre": [
+       134,
+       954
+      ],
+      "hittable": false,
+      "above_floor": false
+     }
+    ],
+    "overflow_px": 154,
+    "drags_to_bottom": 1
+   },
+   "groups": [
+    {
+     "name": "今日",
+     "items": 3,
+     "block_px": 197,
+     "hidden_if_collapsed_px": 185,
+     "labels": [
+      "今天",
+      "实时行程",
+      "地图"
+     ]
+    },
+    {
+     "name": "规划",
+     "items": 3,
+     "block_px": 197,
+     "hidden_if_collapsed_px": 185,
+     "labels": [
+      "行程工作台",
+      "住宿选择",
+      "城市探索"
+     ]
+    },
+    {
+     "name": "出行",
+     "items": 2,
+     "block_px": 140,
+     "hidden_if_collapsed_px": 128,
+     "labels": [
+      "旅行票夹",
+      "Copilot"
+     ]
+    },
+    {
+     "name": "系统",
+     "items": 6,
+     "block_px": 364,
+     "hidden_if_collapsed_px": 352,
+     "labels": [
+      "恢复与执行",
+      "智能守护",
+      "旅行者画像",
+      "回收站",
+      "行程",
+      "我的"
+     ]
+    }
+   ],
+   "collapse_shapes": [
+    {
+     "shape": "collapse_今日",
+     "removed_px": 185,
+     "scroll_height": 813,
+     "overflow_px": -31,
+     "items_left": 11,
+     "how": "computed_from_measured"
+    },
+    {
+     "shape": "collapse_规划",
+     "removed_px": 185,
+     "scroll_height": 813,
+     "overflow_px": -31,
+     "items_left": 11,
+     "how": "computed_from_measured"
+    },
+    {
+     "shape": "collapse_出行",
+     "removed_px": 128,
+     "scroll_height": 870,
+     "overflow_px": 26,
+     "items_left": 12,
+     "how": "computed_from_measured"
+    },
+    {
+     "shape": "collapse_系统",
+     "removed_px": 352,
+     "scroll_height": 646,
+     "overflow_px": -198,
+     "items_left": 8,
+     "how": "computed_from_measured"
+    },
+    {
+     "shape": "only_first_group_open",
+     "removed_px": 665,
+     "scroll_height": 333,
+     "overflow_px": -511,
+     "items_left": 3,
+     "how": "computed_from_measured"
+    },
+    {
+     "shape": "all_collapsed_headings_only",
+     "removed_px": 850,
+     "scroll_height": 148,
+     "overflow_px": -696,
+     "items_left": 0,
+     "how": "computed_from_measured"
+    }
+   ],
+   "items_total": 14,
+   "items_hittable_at_top": 10,
+   "items_hittable_ignoring_floor": 12
+  },
+  {
+   "arm": "en@390x844",
+   "viewport": [
+    390,
+    844
+   ],
+   "hit_floor_px": 768,
+   "errors": [],
+   "locale_offered_before": "EN",
+   "locale_offered_after": "中文",
+   "reading": {
+    "present": true,
+    "box": [
+     0,
+     0,
+     300,
+     844
+    ],
+    "scroll_height": 998,
+    "client_height": 844,
+    "scroll_top": 0,
+    "overflow_y": "auto",
+    "touch_action": "auto",
+    "children": [
+     {
+      "i": 0,
+      "kind": "head",
+      "opens_group": null,
+      "heading_h": 0,
+      "label": "Close",
+      "group": null,
+      "height": 44,
+      "advance": 58,
+      "top_in_drawer": 18,
+      "centre": [
+       254,
+       40
+      ],
+      "hittable": true,
+      "above_floor": true
+     },
+     {
+      "i": 1,
+      "kind": "item",
+      "opens_group": "TODAY",
+      "heading_h": 12,
+      "label": "Today",
+      "group": "TODAY",
+      "height": 79,
+      "advance": 83,
+      "top_in_drawer": 76,
+      "centre": [
+       150,
+       135
+      ],
+      "hittable": true,
+      "above_floor": true
+     },
+     {
+      "i": 2,
+      "kind": "item",
+      "opens_group": null,
+      "heading_h": 0,
+      "label": "Live Journey",
+      "group": null,
+      "height": 53,
+      "advance": 57,
+      "top_in_drawer": 159,
+      "centre": [
+       150,
+       192
+      ],
+      "hittable": true,
+      "above_floor": true
+     },
+     {
+      "i": 3,
+      "kind": "item",
+      "opens_group": null,
+      "heading_h": 0,
+      "label": "Map",
+      "group": null,
+      "height": 53,
+      "advance": 57,
+      "top_in_drawer": 216,
+      "centre": [
+       150,
+       249
+      ],
+      "hittable": true,
+      "above_floor": true
+     },
+     {
+      "i": 4,
+      "kind": "item",
+      "opens_group": "PLAN",
+      "heading_h": 12,
+      "label": "Trip Studio",
+      "group": "PLAN",
+      "height": 79,
+      "advance": 83,
+      "top_in_drawer": 273,
+      "centre": [
+       150,
+       332
+      ],
+      "hittable": true,
+      "above_floor": true
+     },
+     {
+      "i": 5,
+      "kind": "item",
+      "opens_group": null,
+      "heading_h": 0,
+      "label": "Stay Explorer",
+      "group": null,
+      "height": 53,
+      "advance": 57,
+      "top_in_drawer": 356,
+      "centre": [
+       150,
+       389
+      ],
+      "hittable": true,
+      "above_floor": true
+     },
+     {
+      "i": 6,
+      "kind": "item",
+      "opens_group": null,
+      "heading_h": 0,
+      "label": "City Discovery",
+      "group": null,
+      "height": 53,
+      "advance": 57,
+      "top_in_drawer": 413,
+      "centre": [
+       150,
+       446
+      ],
+      "hittable": true,
+      "above_floor": true
+     },
+     {
+      "i": 7,
+      "kind": "item",
+      "opens_group": "TRAVEL",
+      "heading_h": 12,
+      "label": "Travel Wallet",
+      "group": "TRAVEL",
+      "height": 79,
+      "advance": 83,
+      "top_in_drawer": 470,
+      "centre": [
+       150,
+       529
+      ],
+      "hittable": true,
+      "above_floor": true
+     },
+     {
+      "i": 8,
+      "kind": "item",
+      "opens_group": null,
+      "heading_h": 0,
+      "label": "Copilot",
+      "group": null,
+      "height": 53,
+      "advance": 57,
+      "top_in_drawer": 553,
+      "centre": [
+       150,
+       586
+      ],
+      "hittable": true,
+      "above_floor": true
+     },
+     {
+      "i": 9,
+      "kind": "item",
+      "opens_group": "SYSTEM",
+      "heading_h": 12,
+      "label": "Recovery",
+      "group": "SYSTEM",
+      "height": 79,
+      "advance": 83,
+      "top_in_drawer": 610,
+      "centre": [
+       150,
+       669
+      ],
+      "hittable": true,
+      "above_floor": true
+     },
+     {
+      "i": 10,
+      "kind": "item",
+      "opens_group": null,
+      "heading_h": 0,
+      "label": "Intelligence",
+      "group": null,
+      "height": 53,
+      "advance": 57,
+      "top_in_drawer": 693,
+      "centre": [
+       150,
+       726
+      ],
+      "hittable": true,
+      "above_floor": true
+     },
+     {
+      "i": 11,
+      "kind": "item",
+      "opens_group": null,
+      "heading_h": 0,
+      "label": "Traveler Twin",
+      "group": null,
+      "height": 53,
+      "advance": 57,
+      "top_in_drawer": 750,
+      "centre": [
+       150,
+       783
+      ],
+      "hittable": true,
+      "above_floor": false
+     },
+     {
+      "i": 12,
+      "kind": "item",
+      "opens_group": null,
+      "heading_h": 0,
+      "label": "Recycle bin",
+      "group": null,
+      "height": 53,
+      "advance": 57,
+      "top_in_drawer": 807,
+      "centre": [
+       150,
+       840
+      ],
+      "hittable": true,
+      "above_floor": false
+     },
+     {
+      "i": 13,
+      "kind": "item",
+      "opens_group": null,
+      "heading_h": 0,
+      "label": "Trips",
+      "group": null,
+      "height": 53,
+      "advance": 57,
+      "top_in_drawer": 864,
+      "centre": [
+       150,
+       897
+      ],
+      "hittable": false,
+      "above_floor": false
+     },
+     {
+      "i": 14,
+      "kind": "item",
+      "opens_group": null,
+      "heading_h": 0,
+      "label": "Me",
+      "group": null,
+      "height": 53,
+      "advance": 53,
+      "top_in_drawer": 921,
+      "centre": [
+       150,
+       954
+      ],
+      "hittable": false,
+      "above_floor": false
+     }
+    ],
+    "overflow_px": 154,
+    "drags_to_bottom": 1
+   },
+   "groups": [
+    {
+     "name": "TODAY",
+     "items": 3,
+     "block_px": 197,
+     "hidden_if_collapsed_px": 185,
+     "labels": [
+      "Today",
+      "Live Journey",
+      "Map"
+     ]
+    },
+    {
+     "name": "PLAN",
+     "items": 3,
+     "block_px": 197,
+     "hidden_if_collapsed_px": 185,
+     "labels": [
+      "Trip Studio",
+      "Stay Explorer",
+      "City Discovery"
+     ]
+    },
+    {
+     "name": "TRAVEL",
+     "items": 2,
+     "block_px": 140,
+     "hidden_if_collapsed_px": 128,
+     "labels": [
+      "Travel Wallet",
+      "Copilot"
+     ]
+    },
+    {
+     "name": "SYSTEM",
+     "items": 6,
+     "block_px": 364,
+     "hidden_if_collapsed_px": 352,
+     "labels": [
+      "Recovery",
+      "Intelligence",
+      "Traveler Twin",
+      "Recycle bin",
+      "Trips",
+      "Me"
+     ]
+    }
+   ],
+   "collapse_shapes": [
+    {
+     "shape": "collapse_TODAY",
+     "removed_px": 185,
+     "scroll_height": 813,
+     "overflow_px": -31,
+     "items_left": 11,
+     "how": "computed_from_measured"
+    },
+    {
+     "shape": "collapse_PLAN",
+     "removed_px": 185,
+     "scroll_height": 813,
+     "overflow_px": -31,
+     "items_left": 11,
+     "how": "computed_from_measured"
+    },
+    {
+     "shape": "collapse_TRAVEL",
+     "removed_px": 128,
+     "scroll_height": 870,
+     "overflow_px": 26,
+     "items_left": 12,
+     "how": "computed_from_measured"
+    },
+    {
+     "shape": "collapse_SYSTEM",
+     "removed_px": 352,
+     "scroll_height": 646,
+     "overflow_px": -198,
+     "items_left": 8,
+     "how": "computed_from_measured"
+    },
+    {
+     "shape": "only_first_group_open",
+     "removed_px": 665,
+     "scroll_height": 333,
+     "overflow_px": -511,
+     "items_left": 3,
+     "how": "computed_from_measured"
+    },
+    {
+     "shape": "all_collapsed_headings_only",
+     "removed_px": 850,
+     "scroll_height": 148,
+     "overflow_px": -696,
+     "items_left": 0,
+     "how": "computed_from_measured"
+    }
+   ],
+   "items_total": 14,
+   "items_hittable_at_top": 10,
+   "items_hittable_ignoring_floor": 12
+  },
+  {
+   "arm": "en@320x844",
+   "viewport": [
+    320,
+    844
+   ],
+   "hit_floor_px": 768,
+   "errors": [],
+   "locale_offered_before": "EN",
+   "locale_offered_after": "中文",
+   "reading": {
+    "present": true,
+    "box": [
+     0,
+     0,
+     269,
+     844
+    ],
+    "scroll_height": 998,
+    "client_height": 844,
+    "scroll_top": 0,
+    "overflow_y": "auto",
+    "touch_action": "auto",
+    "children": [
+     {
+      "i": 0,
+      "kind": "head",
+      "opens_group": null,
+      "heading_h": 0,
+      "label": "Close",
+      "group": null,
+      "height": 44,
+      "advance": 58,
+      "top_in_drawer": 18,
+      "centre": [
+       223,
+       40
+      ],
+      "hittable": true,
+      "above_floor": true
+     },
+     {
+      "i": 1,
+      "kind": "item",
+      "opens_group": "TODAY",
+      "heading_h": 12,
+      "label": "Today",
+      "group": "TODAY",
+      "height": 79,
+      "advance": 83,
+      "top_in_drawer": 76,
+      "centre": [
+       134,
+       135
+      ],
+      "hittable": true,
+      "above_floor": true
+     },
+     {
+      "i": 2,
+      "kind": "item",
+      "opens_group": null,
+      "heading_h": 0,
+      "label": "Live Journey",
+      "group": null,
+      "height": 53,
+      "advance": 57,
+      "top_in_drawer": 159,
+      "centre": [
+       134,
+       192
+      ],
+      "hittable": true,
+      "above_floor": true
+     },
+     {
+      "i": 3,
+      "kind": "item",
+      "opens_group": null,
+      "heading_h": 0,
+      "label": "Map",
+      "group": null,
+      "height": 53,
+      "advance": 57,
+      "top_in_drawer": 216,
+      "centre": [
+       134,
+       249
+      ],
+      "hittable": true,
+      "above_floor": true
+     },
+     {
+      "i": 4,
+      "kind": "item",
+      "opens_group": "PLAN",
+      "heading_h": 12,
+      "label": "Trip Studio",
+      "group": "PLAN",
+      "height": 79,
+      "advance": 83,
+      "top_in_drawer": 273,
+      "centre": [
+       134,
+       332
+      ],
+      "hittable": true,
+      "above_floor": true
+     },
+     {
+      "i": 5,
+      "kind": "item",
+      "opens_group": null,
+      "heading_h": 0,
+      "label": "Stay Explorer",
+      "group": null,
+      "height": 53,
+      "advance": 57,
+      "top_in_drawer": 356,
+      "centre": [
+       134,
+       389
+      ],
+      "hittable": true,
+      "above_floor": true
+     },
+     {
+      "i": 6,
+      "kind": "item",
+      "opens_group": null,
+      "heading_h": 0,
+      "label": "City Discovery",
+      "group": null,
+      "height": 53,
+      "advance": 57,
+      "top_in_drawer": 413,
+      "centre": [
+       134,
+       446
+      ],
+      "hittable": true,
+      "above_floor": true
+     },
+     {
+      "i": 7,
+      "kind": "item",
+      "opens_group": "TRAVEL",
+      "heading_h": 12,
+      "label": "Travel Wallet",
+      "group": "TRAVEL",
+      "height": 79,
+      "advance": 83,
+      "top_in_drawer": 470,
+      "centre": [
+       134,
+       529
+      ],
+      "hittable": true,
+      "above_floor": true
+     },
+     {
+      "i": 8,
+      "kind": "item",
+      "opens_group": null,
+      "heading_h": 0,
+      "label": "Copilot",
+      "group": null,
+      "height": 53,
+      "advance": 57,
+      "top_in_drawer": 553,
+      "centre": [
+       134,
+       586
+      ],
+      "hittable": true,
+      "above_floor": true
+     },
+     {
+      "i": 9,
+      "kind": "item",
+      "opens_group": "SYSTEM",
+      "heading_h": 12,
+      "label": "Recovery",
+      "group": "SYSTEM",
+      "height": 79,
+      "advance": 83,
+      "top_in_drawer": 610,
+      "centre": [
+       134,
+       669
+      ],
+      "hittable": true,
+      "above_floor": true
+     },
+     {
+      "i": 10,
+      "kind": "item",
+      "opens_group": null,
+      "heading_h": 0,
+      "label": "Intelligence",
+      "group": null,
+      "height": 53,
+      "advance": 57,
+      "top_in_drawer": 693,
+      "centre": [
+       134,
+       726
+      ],
+      "hittable": true,
+      "above_floor": true
+     },
+     {
+      "i": 11,
+      "kind": "item",
+      "opens_group": null,
+      "heading_h": 0,
+      "label": "Traveler Twin",
+      "group": null,
+      "height": 53,
+      "advance": 57,
+      "top_in_drawer": 750,
+      "centre": [
+       134,
+       783
+      ],
+      "hittable": true,
+      "above_floor": false
+     },
+     {
+      "i": 12,
+      "kind": "item",
+      "opens_group": null,
+      "heading_h": 0,
+      "label": "Recycle bin",
+      "group": null,
+      "height": 53,
+      "advance": 57,
+      "top_in_drawer": 807,
+      "centre": [
+       134,
+       840
+      ],
+      "hittable": true,
+      "above_floor": false
+     },
+     {
+      "i": 13,
+      "kind": "item",
+      "opens_group": null,
+      "heading_h": 0,
+      "label": "Trips",
+      "group": null,
+      "height": 53,
+      "advance": 57,
+      "top_in_drawer": 864,
+      "centre": [
+       134,
+       897
+      ],
+      "hittable": false,
+      "above_floor": false
+     },
+     {
+      "i": 14,
+      "kind": "item",
+      "opens_group": null,
+      "heading_h": 0,
+      "label": "Me",
+      "group": null,
+      "height": 53,
+      "advance": 53,
+      "top_in_drawer": 921,
+      "centre": [
+       134,
+       954
+      ],
+      "hittable": false,
+      "above_floor": false
+     }
+    ],
+    "overflow_px": 154,
+    "drags_to_bottom": 1
+   },
+   "groups": [
+    {
+     "name": "TODAY",
+     "items": 3,
+     "block_px": 197,
+     "hidden_if_collapsed_px": 185,
+     "labels": [
+      "Today",
+      "Live Journey",
+      "Map"
+     ]
+    },
+    {
+     "name": "PLAN",
+     "items": 3,
+     "block_px": 197,
+     "hidden_if_collapsed_px": 185,
+     "labels": [
+      "Trip Studio",
+      "Stay Explorer",
+      "City Discovery"
+     ]
+    },
+    {
+     "name": "TRAVEL",
+     "items": 2,
+     "block_px": 140,
+     "hidden_if_collapsed_px": 128,
+     "labels": [
+      "Travel Wallet",
+      "Copilot"
+     ]
+    },
+    {
+     "name": "SYSTEM",
+     "items": 6,
+     "block_px": 364,
+     "hidden_if_collapsed_px": 352,
+     "labels": [
+      "Recovery",
+      "Intelligence",
+      "Traveler Twin",
+      "Recycle bin",
+      "Trips",
+      "Me"
+     ]
+    }
+   ],
+   "collapse_shapes": [
+    {
+     "shape": "collapse_TODAY",
+     "removed_px": 185,
+     "scroll_height": 813,
+     "overflow_px": -31,
+     "items_left": 11,
+     "how": "computed_from_measured"
+    },
+    {
+     "shape": "collapse_PLAN",
+     "removed_px": 185,
+     "scroll_height": 813,
+     "overflow_px": -31,
+     "items_left": 11,
+     "how": "computed_from_measured"
+    },
+    {
+     "shape": "collapse_TRAVEL",
+     "removed_px": 128,
+     "scroll_height": 870,
+     "overflow_px": 26,
+     "items_left": 12,
+     "how": "computed_from_measured"
+    },
+    {
+     "shape": "collapse_SYSTEM",
+     "removed_px": 352,
+     "scroll_height": 646,
+     "overflow_px": -198,
+     "items_left": 8,
+     "how": "computed_from_measured"
+    },
+    {
+     "shape": "only_first_group_open",
+     "removed_px": 665,
+     "scroll_height": 333,
+     "overflow_px": -511,
+     "items_left": 3,
+     "how": "computed_from_measured"
+    },
+    {
+     "shape": "all_collapsed_headings_only",
+     "removed_px": 850,
+     "scroll_height": 148,
+     "overflow_px": -696,
+     "items_left": 0,
+     "how": "computed_from_measured"
+    }
+   ],
+   "items_total": 14,
+   "items_hittable_at_top": 10,
+   "items_hittable_ignoring_floor": 12
+  }
+ ]
+}

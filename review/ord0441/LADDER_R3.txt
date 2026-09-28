@@ -1,0 +1,95 @@
+ORD-0441 r2 -- the same tier alignment, rebased onto the live tip and re-measured on that generation
+
+Lane 2d2d7428, 2026-09-29 ~05:1x +08. Why a second delivery: the commander's read-only recut
+aborted on review/Q-ord0441-token-ladder-r1 = 582f3eb4ef2df2ce0c7bec7e1363fac3a3766974, whose base was 123fabb637fefe9e1be442b67f2da4be7e95ac74, because after that cut
+he landed ORD-0430 (the copilot pill's yield semantics, in this very file) and ORD-0439 (a new screen).
+Per Q72 he did not hand-merge; per the standing rule this lane does not ask him to. The branch was
+rebased onto the tip read live. The first hop went to 7399f59ccdb2dfe3cdf04477d4e4ffcc077e214a; while the readings were being taken two more
+  ORD-0430 commits landed (a8eed152 and 8ffba432, both in this same file), so the branch hopped once more to
+  35326e62fb3de9f0cda459c8426ac22c0c49c715, read live with git ls-remote, and every reading below was taken AGAIN on that generation:
+  git rebase --onto 35326e62fb3de9f0cda459c8426ac22c0c49c715 7399f59ccdb2dfe3cdf04477d4e4ffcc077e214a review/Q-ord0441-token-ladder-r2 -> exit 0, no conflict, twice
+Product commits: 35326e62fb3de9f0cda459c8426ac22c0c49c715 (tiers) and e1f0dd349f4676321c0ce618303a2d8ba5002659 (evidence); vs the first delivery the content is the same alignment,
+the base is not, so every reading below was taken again on this generation.
+
+THE ONE THING THE ORDER WARNED ABOUT, CHECKED AS TEXT NOT AS HOPE
+  ORD-0430 rewrote four properties of the yield rule: the pill now collapses inside the viewport and
+  stays hittable, instead of translating out of it with opacity 0 / visibility hidden. This lane
+  extracted that rule's full text from both trees and compared it:
+    35326e62 frontend/src/design-tokens.css, rule starting .cn-copilot-dock.idle-compact.yield-at-rest {
+      .cn-copilot-dock.idle-compact.yield-at-rest {
+      right: auto;
+      bottom: auto;
+      left: var(--cn-yield-left, auto);
+      top: var(--cn-yield-top, auto);
+      box-sizing: border-box;
+      width: 44px;
+      height: 44px;
+      padding: 0;
+      transition: left 140ms ease, top 140ms ease, width 140ms ease;
+      }
+  The same rule on this branch is byte-identical (11 lines, 284 chars, equal=true), and so is the companion
+  rule .cn-copilot-dock.idle-compact.yield-at-rest .cn-copilot-edge (equal=true). The whole diff of this
+  branch against 35326e62 is 20 lines, all of them in the fs / radius / spacing / divider block:
+    26 changed lines, and the word yield appears in 0 of them -- i.e. the alignment does not touch the
+    pill's behaviour at all.
+
+THE ALIGNMENT ON THIS BASE (design-tokens.css efe751527bb69a2e7e65431420e4dd76655b4c13 -> 2094a6a1db2089bc1a79e2e1f2fe6c3776ac9982 ; styles.css 6c4efbc6d5454004ffaa993ea5432a094caf3319 -> a8be124ccf8afbae9c199e933f5056e048a6fada)
+  --cn-fs-card / --cn-fs-body    17px         -> 16px           consumers now reading it: 47   reference says: font_size 16sp x200
+  --cn-fs-meta (new)             -            -> 14px           consumers now reading it: 11   reference says: font_size 14sp x305, the most-used tier and one we had no name for
+  --cn-r-control                 11px         -> 12px           consumers now reading it: 38   reference says: radius 12dp x35
+  --cn-r-button                  13px         -> 16px           consumers now reading it: 4   reference says: radius 16dp x57
+  --cn-s-2 / -4 / -6 / -10 (new) -            -> 2 / 4 / 6 / 10 px consumers now reading it: 170   reference says: spacing 2dp x140, 4dp x394, 6dp x194, 10dp x366
+  --cn-divider-w (new)           literal 1px  -> 1px token      consumers now reading it: 12   reference says: divider 1dp x12 is their most-used value
+  Not changed, with the measured reason: the shadow blurs (2/8/28/40) and --cn-gutter 20px are already
+  on the reference's own top tiers (20dp x828 is its most-used spacing); --cn-nav-icon-size stays 17px and
+  --cn-touch-min stays 44px because those are accepted readings (ORD-0416, Amendment F), and spending
+  them for a tier alignment is the commander's call. Colours untouched: the reference's alpha axis is
+  0/10/15/25/50 while our tints are 4/6/8/10/40/50/60 -- that is a contrast decision, see NOT MEASURED.
+
+WHERE THE NUMBERS CAME FROM (unchanged method, restated so r2 stands on its own)
+  resources.arsc: 1030 dimen entries, 291 survive the library-name filter, 246 parse to dp, and the font-size
+  bucket holds 0 -- the sizes are not in the resource table. Measured instead from 830 product layout XMLs
+  walked with aapt2 xmltree on this machine; that is a frequency histogram (127 distinct spacing values,
+  including 0.55dp and 3.37997dp), not an enforced scale, so the top of each distribution was aligned and
+  every count is shipped in review/ord0441/reference_layout_tiers.json rather than summarised away.
+
+THE DARK ARM, RUN AGAINST THE NEW BASELINE (tools/cnx_token_night_pairing_r1.py, predicate untouched)
+  tip    colour tokens in scope=40  NEUTRAL_BY_NAME=13  PAIRED_INHERITED=10  PAIRED_IN_DARK=17  UNACCOUNTED=0  declarations=100  non-colour=43  N3=0/0/0
+  branch  colour tokens in scope=40  NEUTRAL_BY_NAME=13  PAIRED_INHERITED=10  PAIRED_IN_DARK=17  UNACCOUNTED=0  declarations=106  non-colour=49  N3=0/0/0
+  Identical classification on both runs; only the declaration count and the non-colour count rise, by the
+  new tiers. The tip's own baseline is what the before run reads now -- ORD-0430 added rules (181 seen,
+  against 179 before the rebase), so an old pair file would not have been a valid comparison.
+
+PAINTED PROOF, RE-TAKEN ON THIS GENERATION (cmdr_ladder_reach_r1.js, 16 cells per arm)
+  arms: tip build index-CkeYfY1U.js on :49152, this branch index-DJv7MobT.js on :49153; screens /v8/hub /v8/live /v8/stay /v8/discover
+  x 390x844 and 414x896 x zh and en, every value from getComputedStyle.
+  hub 390x844 zh: --cn-fs-body resolves 17px -> 16px ; painted at 17px 7 -> 0 ; painted at 16px 14 -> 21
+  hub radius: 11px 9 -> 0 ; 12px 0 -> 9 ; 13px 0 -> 0 ; 16px 1 -> 1
+  cells on this arm with no page error and no fatal: 16 of 16
+
+ACCEPTED READINGS, RE-READ ON THIS GENERATION (nothing spent)
+  ORD-0427's two dimensions on the new build, 8 cells (4 shapes x 2 arms): rows 13 plain + 1 pill, head
+  rgb(10, 92, 214) 16px, kicker client rects 1, icon 17px -- holding in 8 of 8 cells
+  ORD-0416 floor, zh-CN@390x844: items 14 -> 14, hittable at 768 px 10 -> 10, overflow 154 -> 154 px
+  ORD-0416 floor, zh-CN@320x844: items 14 -> 14, hittable at 768 px 10 -> 10, overflow 154 -> 154 px
+  ORD-0416 floor, en@390x844: items 14 -> 14, hittable at 768 px 10 -> 10, overflow 154 -> 154 px
+  ORD-0416 floor, en@320x844: items 14 -> 14, hittable at 768 px 10 -> 10, overflow 154 -> 154 px
+
+GATES ON THIS BASE
+  tip arm    npx tsc -p tsconfig.typecheck.json --noEmit exit 0 ; vite build exit 0 (entry index-CkeYfY1U.js)
+  branch arm npx tsc -p tsconfig.typecheck.json --noEmit exit 0 ; vite build exit 0 (entry index-DJv7MobT.js)
+  pairing ruler exit 0 on both files; the copy ruler was not run because no dictionary key was touched.
+  private stack: both arms are this lane's own vite preview (:49152, :49153, single listener each,
+  served bytes equal the disk bytes of the entry asset), started from this worktree's frontend/ with
+  CITYNEXUS_BACKEND_PORT=65218 pointing at this lane's own uvicorn over the read-only library copy.
+  :4805 :4806 :8693 :4781 :4782 :8000 were neither read nor written.
+
+NOT MEASURED, NAMED RATHER THAN CLAIMED
+  * The colour axis was not aligned (4/6/8/10/40/50/60 against their 0/10/15/25/50). Moving it changes
+    hairline and shadow strength, so it needs the contrast ruling first; NOT_MEASURED is the state here.
+  * Compose-side sizes were not extracted; only the View layer's 830 layouts were walked.
+  * 424 padding/margin/gap declarations in frontend/src/styles.css still carry px literals (170 of them now
+    read the four new tiers); migrating the rest changes geometry and is its own order with its own
+    before/after readings -- it is not silently folded into this one.
+  * No screenshot: a resolved token is not a picture, and the reading above is computed style.
+

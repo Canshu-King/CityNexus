@@ -1,0 +1,2973 @@
+{
+ "at": "2026-09-28T21:17:19.344Z",
+ "base": "http://127.0.0.1:49152",
+ "label": "before",
+ "screens": [
+  "/v8/hub",
+  "/v8/live",
+  "/v8/stay",
+  "/v8/discover"
+ ],
+ "cells": [
+  {
+   "label": "before",
+   "base": "http://127.0.0.1:49152",
+   "viewport": "390x844",
+   "arm": "zh-CN",
+   "path": "/v8/hub",
+   "errors": [],
+   "tokens": {
+    "--cn-fs-card": "17px",
+    "--cn-fs-body": "17px",
+    "--cn-fs-meta": null,
+    "--cn-fs-caption": "13px",
+    "--cn-r-control": "11px",
+    "--cn-r-button": "13px",
+    "--cn-r-card": "16px",
+    "--cn-divider-w": null,
+    "--cn-s-2": null,
+    "--cn-s-4": null,
+    "--cn-s-6": null,
+    "--cn-s-10": null,
+    "--cn-s-16": "16px",
+    "--cn-gutter": "20px",
+    "--cn-nav-icon-size": "17px",
+    "--cn-touch-min": "44px"
+   },
+   "distribution": {
+    "tokens": {
+     "--cn-fs-card": "17px",
+     "--cn-fs-body": "17px",
+     "--cn-fs-meta": null,
+     "--cn-fs-caption": "13px",
+     "--cn-r-control": "11px",
+     "--cn-r-button": "13px",
+     "--cn-r-card": "16px",
+     "--cn-divider-w": null,
+     "--cn-s-2": null,
+     "--cn-s-4": null,
+     "--cn-s-6": null,
+     "--cn-s-10": null,
+     "--cn-s-16": "16px",
+     "--cn-gutter": "20px",
+     "--cn-nav-icon-size": "17px",
+     "--cn-touch-min": "44px"
+    },
+    "painted": 133,
+    "fontSize": [
+     [
+      "13px",
+      67
+     ],
+     [
+      "12px",
+      28
+     ],
+     [
+      "16px",
+      14
+     ],
+     [
+      "11px",
+      9
+     ],
+     [
+      "17px",
+      7
+     ],
+     [
+      "15px",
+      3
+     ],
+     [
+      "13.3333px",
+      2
+     ],
+     [
+      "10px",
+      1
+     ],
+     [
+      "14px",
+      1
+     ],
+     [
+      "34px",
+      1
+     ]
+    ],
+    "radius": [
+     [
+      "11px",
+      9
+     ],
+     [
+      "10px",
+      6
+     ],
+     [
+      "50%",
+      5
+     ],
+     [
+      "16px",
+      1
+     ],
+     [
+      "8px",
+      1
+     ]
+    ],
+    "borderTop": [
+     [
+      "0px",
+      118
+     ],
+     [
+      "1px",
+      15
+     ]
+    ],
+    "columnGap": [
+     [
+      "8px",
+      15
+     ],
+     [
+      "4px",
+      8
+     ],
+     [
+      "10px",
+      3
+     ],
+     [
+      "6px",
+      3
+     ],
+     [
+      "12px",
+      1
+     ],
+     [
+      "16px",
+      1
+     ],
+     [
+      "30px",
+      1
+     ]
+    ],
+    "rowGap": [
+     [
+      "2px",
+      11
+     ],
+     [
+      "4px",
+      8
+     ],
+     [
+      "8px",
+      4
+     ],
+     [
+      "10px",
+      3
+     ],
+     [
+      "6px",
+      3
+     ],
+     [
+      "12px",
+      1
+     ],
+     [
+      "16px",
+      1
+     ],
+     [
+      "30px",
+      1
+     ]
+    ]
+   }
+  },
+  {
+   "label": "before",
+   "base": "http://127.0.0.1:49152",
+   "viewport": "390x844",
+   "arm": "zh-CN",
+   "path": "/v8/live",
+   "errors": [],
+   "tokens": {
+    "--cn-fs-card": "17px",
+    "--cn-fs-body": "17px",
+    "--cn-fs-meta": null,
+    "--cn-fs-caption": "13px",
+    "--cn-r-control": "11px",
+    "--cn-r-button": "13px",
+    "--cn-r-card": "16px",
+    "--cn-divider-w": null,
+    "--cn-s-2": null,
+    "--cn-s-4": null,
+    "--cn-s-6": null,
+    "--cn-s-10": null,
+    "--cn-s-16": "16px",
+    "--cn-gutter": "20px",
+    "--cn-nav-icon-size": "17px",
+    "--cn-touch-min": "44px"
+   },
+   "distribution": {
+    "tokens": {
+     "--cn-fs-card": "17px",
+     "--cn-fs-body": "17px",
+     "--cn-fs-meta": null,
+     "--cn-fs-caption": "13px",
+     "--cn-r-control": "11px",
+     "--cn-r-button": "13px",
+     "--cn-r-card": "16px",
+     "--cn-divider-w": null,
+     "--cn-s-2": null,
+     "--cn-s-4": null,
+     "--cn-s-6": null,
+     "--cn-s-10": null,
+     "--cn-s-16": "16px",
+     "--cn-gutter": "20px",
+     "--cn-nav-icon-size": "17px",
+     "--cn-touch-min": "44px"
+    },
+    "painted": 133,
+    "fontSize": [
+     [
+      "13px",
+      67
+     ],
+     [
+      "12px",
+      28
+     ],
+     [
+      "16px",
+      14
+     ],
+     [
+      "11px",
+      9
+     ],
+     [
+      "17px",
+      7
+     ],
+     [
+      "15px",
+      3
+     ],
+     [
+      "13.3333px",
+      2
+     ],
+     [
+      "10px",
+      1
+     ],
+     [
+      "14px",
+      1
+     ],
+     [
+      "34px",
+      1
+     ]
+    ],
+    "radius": [
+     [
+      "11px",
+      9
+     ],
+     [
+      "10px",
+      6
+     ],
+     [
+      "50%",
+      5
+     ],
+     [
+      "16px",
+      1
+     ],
+     [
+      "8px",
+      1
+     ]
+    ],
+    "borderTop": [
+     [
+      "0px",
+      118
+     ],
+     [
+      "1px",
+      15
+     ]
+    ],
+    "columnGap": [
+     [
+      "8px",
+      15
+     ],
+     [
+      "4px",
+      8
+     ],
+     [
+      "10px",
+      3
+     ],
+     [
+      "6px",
+      3
+     ],
+     [
+      "12px",
+      1
+     ],
+     [
+      "16px",
+      1
+     ],
+     [
+      "30px",
+      1
+     ]
+    ],
+    "rowGap": [
+     [
+      "2px",
+      11
+     ],
+     [
+      "4px",
+      8
+     ],
+     [
+      "8px",
+      4
+     ],
+     [
+      "10px",
+      3
+     ],
+     [
+      "6px",
+      3
+     ],
+     [
+      "12px",
+      1
+     ],
+     [
+      "16px",
+      1
+     ],
+     [
+      "30px",
+      1
+     ]
+    ]
+   }
+  },
+  {
+   "label": "before",
+   "base": "http://127.0.0.1:49152",
+   "viewport": "390x844",
+   "arm": "zh-CN",
+   "path": "/v8/stay",
+   "errors": [],
+   "tokens": {
+    "--cn-fs-card": "17px",
+    "--cn-fs-body": "17px",
+    "--cn-fs-meta": null,
+    "--cn-fs-caption": "13px",
+    "--cn-r-control": "11px",
+    "--cn-r-button": "13px",
+    "--cn-r-card": "16px",
+    "--cn-divider-w": null,
+    "--cn-s-2": null,
+    "--cn-s-4": null,
+    "--cn-s-6": null,
+    "--cn-s-10": null,
+    "--cn-s-16": "16px",
+    "--cn-gutter": "20px",
+    "--cn-nav-icon-size": "17px",
+    "--cn-touch-min": "44px"
+   },
+   "distribution": {
+    "tokens": {
+     "--cn-fs-card": "17px",
+     "--cn-fs-body": "17px",
+     "--cn-fs-meta": null,
+     "--cn-fs-caption": "13px",
+     "--cn-r-control": "11px",
+     "--cn-r-button": "13px",
+     "--cn-r-card": "16px",
+     "--cn-divider-w": null,
+     "--cn-s-2": null,
+     "--cn-s-4": null,
+     "--cn-s-6": null,
+     "--cn-s-10": null,
+     "--cn-s-16": "16px",
+     "--cn-gutter": "20px",
+     "--cn-nav-icon-size": "17px",
+     "--cn-touch-min": "44px"
+    },
+    "painted": 133,
+    "fontSize": [
+     [
+      "13px",
+      67
+     ],
+     [
+      "12px",
+      28
+     ],
+     [
+      "16px",
+      14
+     ],
+     [
+      "11px",
+      9
+     ],
+     [
+      "17px",
+      7
+     ],
+     [
+      "15px",
+      3
+     ],
+     [
+      "13.3333px",
+      2
+     ],
+     [
+      "10px",
+      1
+     ],
+     [
+      "14px",
+      1
+     ],
+     [
+      "34px",
+      1
+     ]
+    ],
+    "radius": [
+     [
+      "11px",
+      9
+     ],
+     [
+      "10px",
+      6
+     ],
+     [
+      "50%",
+      5
+     ],
+     [
+      "16px",
+      1
+     ],
+     [
+      "8px",
+      1
+     ]
+    ],
+    "borderTop": [
+     [
+      "0px",
+      118
+     ],
+     [
+      "1px",
+      15
+     ]
+    ],
+    "columnGap": [
+     [
+      "8px",
+      15
+     ],
+     [
+      "4px",
+      8
+     ],
+     [
+      "10px",
+      3
+     ],
+     [
+      "6px",
+      3
+     ],
+     [
+      "12px",
+      1
+     ],
+     [
+      "16px",
+      1
+     ],
+     [
+      "30px",
+      1
+     ]
+    ],
+    "rowGap": [
+     [
+      "2px",
+      11
+     ],
+     [
+      "4px",
+      8
+     ],
+     [
+      "8px",
+      4
+     ],
+     [
+      "10px",
+      3
+     ],
+     [
+      "6px",
+      3
+     ],
+     [
+      "12px",
+      1
+     ],
+     [
+      "16px",
+      1
+     ],
+     [
+      "30px",
+      1
+     ]
+    ]
+   }
+  },
+  {
+   "label": "before",
+   "base": "http://127.0.0.1:49152",
+   "viewport": "390x844",
+   "arm": "zh-CN",
+   "path": "/v8/discover",
+   "errors": [],
+   "tokens": {
+    "--cn-fs-card": "17px",
+    "--cn-fs-body": "17px",
+    "--cn-fs-meta": null,
+    "--cn-fs-caption": "13px",
+    "--cn-r-control": "11px",
+    "--cn-r-button": "13px",
+    "--cn-r-card": "16px",
+    "--cn-divider-w": null,
+    "--cn-s-2": null,
+    "--cn-s-4": null,
+    "--cn-s-6": null,
+    "--cn-s-10": null,
+    "--cn-s-16": "16px",
+    "--cn-gutter": "20px",
+    "--cn-nav-icon-size": "17px",
+    "--cn-touch-min": "44px"
+   },
+   "distribution": {
+    "tokens": {
+     "--cn-fs-card": "17px",
+     "--cn-fs-body": "17px",
+     "--cn-fs-meta": null,
+     "--cn-fs-caption": "13px",
+     "--cn-r-control": "11px",
+     "--cn-r-button": "13px",
+     "--cn-r-card": "16px",
+     "--cn-divider-w": null,
+     "--cn-s-2": null,
+     "--cn-s-4": null,
+     "--cn-s-6": null,
+     "--cn-s-10": null,
+     "--cn-s-16": "16px",
+     "--cn-gutter": "20px",
+     "--cn-nav-icon-size": "17px",
+     "--cn-touch-min": "44px"
+    },
+    "painted": 133,
+    "fontSize": [
+     [
+      "13px",
+      67
+     ],
+     [
+      "12px",
+      28
+     ],
+     [
+      "16px",
+      14
+     ],
+     [
+      "11px",
+      9
+     ],
+     [
+      "17px",
+      7
+     ],
+     [
+      "15px",
+      3
+     ],
+     [
+      "13.3333px",
+      2
+     ],
+     [
+      "10px",
+      1
+     ],
+     [
+      "14px",
+      1
+     ],
+     [
+      "34px",
+      1
+     ]
+    ],
+    "radius": [
+     [
+      "11px",
+      9
+     ],
+     [
+      "10px",
+      6
+     ],
+     [
+      "50%",
+      5
+     ],
+     [
+      "16px",
+      1
+     ],
+     [
+      "8px",
+      1
+     ]
+    ],
+    "borderTop": [
+     [
+      "0px",
+      118
+     ],
+     [
+      "1px",
+      15
+     ]
+    ],
+    "columnGap": [
+     [
+      "8px",
+      15
+     ],
+     [
+      "4px",
+      8
+     ],
+     [
+      "10px",
+      3
+     ],
+     [
+      "6px",
+      3
+     ],
+     [
+      "12px",
+      1
+     ],
+     [
+      "16px",
+      1
+     ],
+     [
+      "30px",
+      1
+     ]
+    ],
+    "rowGap": [
+     [
+      "2px",
+      11
+     ],
+     [
+      "4px",
+      8
+     ],
+     [
+      "8px",
+      4
+     ],
+     [
+      "10px",
+      3
+     ],
+     [
+      "6px",
+      3
+     ],
+     [
+      "12px",
+      1
+     ],
+     [
+      "16px",
+      1
+     ],
+     [
+      "30px",
+      1
+     ]
+    ]
+   }
+  },
+  {
+   "label": "before",
+   "base": "http://127.0.0.1:49152",
+   "viewport": "390x844",
+   "arm": "en",
+   "path": "/v8/hub",
+   "errors": [],
+   "tokens": {
+    "--cn-fs-card": "17px",
+    "--cn-fs-body": "17px",
+    "--cn-fs-meta": null,
+    "--cn-fs-caption": "13px",
+    "--cn-r-control": "11px",
+    "--cn-r-button": "13px",
+    "--cn-r-card": "16px",
+    "--cn-divider-w": null,
+    "--cn-s-2": null,
+    "--cn-s-4": null,
+    "--cn-s-6": null,
+    "--cn-s-10": null,
+    "--cn-s-16": "16px",
+    "--cn-gutter": "20px",
+    "--cn-nav-icon-size": "17px",
+    "--cn-touch-min": "44px"
+   },
+   "distribution": {
+    "tokens": {
+     "--cn-fs-card": "17px",
+     "--cn-fs-body": "17px",
+     "--cn-fs-meta": null,
+     "--cn-fs-caption": "13px",
+     "--cn-r-control": "11px",
+     "--cn-r-button": "13px",
+     "--cn-r-card": "16px",
+     "--cn-divider-w": null,
+     "--cn-s-2": null,
+     "--cn-s-4": null,
+     "--cn-s-6": null,
+     "--cn-s-10": null,
+     "--cn-s-16": "16px",
+     "--cn-gutter": "20px",
+     "--cn-nav-icon-size": "17px",
+     "--cn-touch-min": "44px"
+    },
+    "painted": 133,
+    "fontSize": [
+     [
+      "13px",
+      67
+     ],
+     [
+      "12px",
+      28
+     ],
+     [
+      "16px",
+      14
+     ],
+     [
+      "11px",
+      9
+     ],
+     [
+      "17px",
+      7
+     ],
+     [
+      "15px",
+      3
+     ],
+     [
+      "13.3333px",
+      2
+     ],
+     [
+      "10px",
+      1
+     ],
+     [
+      "14px",
+      1
+     ],
+     [
+      "34px",
+      1
+     ]
+    ],
+    "radius": [
+     [
+      "11px",
+      9
+     ],
+     [
+      "10px",
+      6
+     ],
+     [
+      "50%",
+      5
+     ],
+     [
+      "16px",
+      1
+     ],
+     [
+      "8px",
+      1
+     ]
+    ],
+    "borderTop": [
+     [
+      "0px",
+      118
+     ],
+     [
+      "1px",
+      15
+     ]
+    ],
+    "columnGap": [
+     [
+      "8px",
+      15
+     ],
+     [
+      "4px",
+      8
+     ],
+     [
+      "10px",
+      3
+     ],
+     [
+      "6px",
+      3
+     ],
+     [
+      "12px",
+      1
+     ],
+     [
+      "16px",
+      1
+     ],
+     [
+      "30px",
+      1
+     ]
+    ],
+    "rowGap": [
+     [
+      "2px",
+      11
+     ],
+     [
+      "4px",
+      8
+     ],
+     [
+      "8px",
+      4
+     ],
+     [
+      "10px",
+      3
+     ],
+     [
+      "6px",
+      3
+     ],
+     [
+      "12px",
+      1
+     ],
+     [
+      "16px",
+      1
+     ],
+     [
+      "30px",
+      1
+     ]
+    ]
+   }
+  },
+  {
+   "label": "before",
+   "base": "http://127.0.0.1:49152",
+   "viewport": "390x844",
+   "arm": "en",
+   "path": "/v8/live",
+   "errors": [],
+   "tokens": {
+    "--cn-fs-card": "17px",
+    "--cn-fs-body": "17px",
+    "--cn-fs-meta": null,
+    "--cn-fs-caption": "13px",
+    "--cn-r-control": "11px",
+    "--cn-r-button": "13px",
+    "--cn-r-card": "16px",
+    "--cn-divider-w": null,
+    "--cn-s-2": null,
+    "--cn-s-4": null,
+    "--cn-s-6": null,
+    "--cn-s-10": null,
+    "--cn-s-16": "16px",
+    "--cn-gutter": "20px",
+    "--cn-nav-icon-size": "17px",
+    "--cn-touch-min": "44px"
+   },
+   "distribution": {
+    "tokens": {
+     "--cn-fs-card": "17px",
+     "--cn-fs-body": "17px",
+     "--cn-fs-meta": null,
+     "--cn-fs-caption": "13px",
+     "--cn-r-control": "11px",
+     "--cn-r-button": "13px",
+     "--cn-r-card": "16px",
+     "--cn-divider-w": null,
+     "--cn-s-2": null,
+     "--cn-s-4": null,
+     "--cn-s-6": null,
+     "--cn-s-10": null,
+     "--cn-s-16": "16px",
+     "--cn-gutter": "20px",
+     "--cn-nav-icon-size": "17px",
+     "--cn-touch-min": "44px"
+    },
+    "painted": 133,
+    "fontSize": [
+     [
+      "13px",
+      67
+     ],
+     [
+      "12px",
+      28
+     ],
+     [
+      "16px",
+      14
+     ],
+     [
+      "11px",
+      9
+     ],
+     [
+      "17px",
+      7
+     ],
+     [
+      "15px",
+      3
+     ],
+     [
+      "13.3333px",
+      2
+     ],
+     [
+      "10px",
+      1
+     ],
+     [
+      "14px",
+      1
+     ],
+     [
+      "34px",
+      1
+     ]
+    ],
+    "radius": [
+     [
+      "11px",
+      9
+     ],
+     [
+      "10px",
+      6
+     ],
+     [
+      "50%",
+      5
+     ],
+     [
+      "16px",
+      1
+     ],
+     [
+      "8px",
+      1
+     ]
+    ],
+    "borderTop": [
+     [
+      "0px",
+      118
+     ],
+     [
+      "1px",
+      15
+     ]
+    ],
+    "columnGap": [
+     [
+      "8px",
+      15
+     ],
+     [
+      "4px",
+      8
+     ],
+     [
+      "10px",
+      3
+     ],
+     [
+      "6px",
+      3
+     ],
+     [
+      "12px",
+      1
+     ],
+     [
+      "16px",
+      1
+     ],
+     [
+      "30px",
+      1
+     ]
+    ],
+    "rowGap": [
+     [
+      "2px",
+      11
+     ],
+     [
+      "4px",
+      8
+     ],
+     [
+      "8px",
+      4
+     ],
+     [
+      "10px",
+      3
+     ],
+     [
+      "6px",
+      3
+     ],
+     [
+      "12px",
+      1
+     ],
+     [
+      "16px",
+      1
+     ],
+     [
+      "30px",
+      1
+     ]
+    ]
+   }
+  },
+  {
+   "label": "before",
+   "base": "http://127.0.0.1:49152",
+   "viewport": "390x844",
+   "arm": "en",
+   "path": "/v8/stay",
+   "errors": [],
+   "tokens": {
+    "--cn-fs-card": "17px",
+    "--cn-fs-body": "17px",
+    "--cn-fs-meta": null,
+    "--cn-fs-caption": "13px",
+    "--cn-r-control": "11px",
+    "--cn-r-button": "13px",
+    "--cn-r-card": "16px",
+    "--cn-divider-w": null,
+    "--cn-s-2": null,
+    "--cn-s-4": null,
+    "--cn-s-6": null,
+    "--cn-s-10": null,
+    "--cn-s-16": "16px",
+    "--cn-gutter": "20px",
+    "--cn-nav-icon-size": "17px",
+    "--cn-touch-min": "44px"
+   },
+   "distribution": {
+    "tokens": {
+     "--cn-fs-card": "17px",
+     "--cn-fs-body": "17px",
+     "--cn-fs-meta": null,
+     "--cn-fs-caption": "13px",
+     "--cn-r-control": "11px",
+     "--cn-r-button": "13px",
+     "--cn-r-card": "16px",
+     "--cn-divider-w": null,
+     "--cn-s-2": null,
+     "--cn-s-4": null,
+     "--cn-s-6": null,
+     "--cn-s-10": null,
+     "--cn-s-16": "16px",
+     "--cn-gutter": "20px",
+     "--cn-nav-icon-size": "17px",
+     "--cn-touch-min": "44px"
+    },
+    "painted": 133,
+    "fontSize": [
+     [
+      "13px",
+      67
+     ],
+     [
+      "12px",
+      28
+     ],
+     [
+      "16px",
+      14
+     ],
+     [
+      "11px",
+      9
+     ],
+     [
+      "17px",
+      7
+     ],
+     [
+      "15px",
+      3
+     ],
+     [
+      "13.3333px",
+      2
+     ],
+     [
+      "10px",
+      1
+     ],
+     [
+      "14px",
+      1
+     ],
+     [
+      "34px",
+      1
+     ]
+    ],
+    "radius": [
+     [
+      "11px",
+      9
+     ],
+     [
+      "10px",
+      6
+     ],
+     [
+      "50%",
+      5
+     ],
+     [
+      "16px",
+      1
+     ],
+     [
+      "8px",
+      1
+     ]
+    ],
+    "borderTop": [
+     [
+      "0px",
+      118
+     ],
+     [
+      "1px",
+      15
+     ]
+    ],
+    "columnGap": [
+     [
+      "8px",
+      15
+     ],
+     [
+      "4px",
+      8
+     ],
+     [
+      "10px",
+      3
+     ],
+     [
+      "6px",
+      3
+     ],
+     [
+      "12px",
+      1
+     ],
+     [
+      "16px",
+      1
+     ],
+     [
+      "30px",
+      1
+     ]
+    ],
+    "rowGap": [
+     [
+      "2px",
+      11
+     ],
+     [
+      "4px",
+      8
+     ],
+     [
+      "8px",
+      4
+     ],
+     [
+      "10px",
+      3
+     ],
+     [
+      "6px",
+      3
+     ],
+     [
+      "12px",
+      1
+     ],
+     [
+      "16px",
+      1
+     ],
+     [
+      "30px",
+      1
+     ]
+    ]
+   }
+  },
+  {
+   "label": "before",
+   "base": "http://127.0.0.1:49152",
+   "viewport": "390x844",
+   "arm": "en",
+   "path": "/v8/discover",
+   "errors": [],
+   "tokens": {
+    "--cn-fs-card": "17px",
+    "--cn-fs-body": "17px",
+    "--cn-fs-meta": null,
+    "--cn-fs-caption": "13px",
+    "--cn-r-control": "11px",
+    "--cn-r-button": "13px",
+    "--cn-r-card": "16px",
+    "--cn-divider-w": null,
+    "--cn-s-2": null,
+    "--cn-s-4": null,
+    "--cn-s-6": null,
+    "--cn-s-10": null,
+    "--cn-s-16": "16px",
+    "--cn-gutter": "20px",
+    "--cn-nav-icon-size": "17px",
+    "--cn-touch-min": "44px"
+   },
+   "distribution": {
+    "tokens": {
+     "--cn-fs-card": "17px",
+     "--cn-fs-body": "17px",
+     "--cn-fs-meta": null,
+     "--cn-fs-caption": "13px",
+     "--cn-r-control": "11px",
+     "--cn-r-button": "13px",
+     "--cn-r-card": "16px",
+     "--cn-divider-w": null,
+     "--cn-s-2": null,
+     "--cn-s-4": null,
+     "--cn-s-6": null,
+     "--cn-s-10": null,
+     "--cn-s-16": "16px",
+     "--cn-gutter": "20px",
+     "--cn-nav-icon-size": "17px",
+     "--cn-touch-min": "44px"
+    },
+    "painted": 133,
+    "fontSize": [
+     [
+      "13px",
+      67
+     ],
+     [
+      "12px",
+      28
+     ],
+     [
+      "16px",
+      14
+     ],
+     [
+      "11px",
+      9
+     ],
+     [
+      "17px",
+      7
+     ],
+     [
+      "15px",
+      3
+     ],
+     [
+      "13.3333px",
+      2
+     ],
+     [
+      "10px",
+      1
+     ],
+     [
+      "14px",
+      1
+     ],
+     [
+      "34px",
+      1
+     ]
+    ],
+    "radius": [
+     [
+      "11px",
+      9
+     ],
+     [
+      "10px",
+      6
+     ],
+     [
+      "50%",
+      5
+     ],
+     [
+      "16px",
+      1
+     ],
+     [
+      "8px",
+      1
+     ]
+    ],
+    "borderTop": [
+     [
+      "0px",
+      118
+     ],
+     [
+      "1px",
+      15
+     ]
+    ],
+    "columnGap": [
+     [
+      "8px",
+      15
+     ],
+     [
+      "4px",
+      8
+     ],
+     [
+      "10px",
+      3
+     ],
+     [
+      "6px",
+      3
+     ],
+     [
+      "12px",
+      1
+     ],
+     [
+      "16px",
+      1
+     ],
+     [
+      "30px",
+      1
+     ]
+    ],
+    "rowGap": [
+     [
+      "2px",
+      11
+     ],
+     [
+      "4px",
+      8
+     ],
+     [
+      "8px",
+      4
+     ],
+     [
+      "10px",
+      3
+     ],
+     [
+      "6px",
+      3
+     ],
+     [
+      "12px",
+      1
+     ],
+     [
+      "16px",
+      1
+     ],
+     [
+      "30px",
+      1
+     ]
+    ]
+   }
+  },
+  {
+   "label": "before",
+   "base": "http://127.0.0.1:49152",
+   "viewport": "414x896",
+   "arm": "zh-CN",
+   "path": "/v8/hub",
+   "errors": [],
+   "tokens": {
+    "--cn-fs-card": "17px",
+    "--cn-fs-body": "17px",
+    "--cn-fs-meta": null,
+    "--cn-fs-caption": "13px",
+    "--cn-r-control": "11px",
+    "--cn-r-button": "13px",
+    "--cn-r-card": "16px",
+    "--cn-divider-w": null,
+    "--cn-s-2": null,
+    "--cn-s-4": null,
+    "--cn-s-6": null,
+    "--cn-s-10": null,
+    "--cn-s-16": "16px",
+    "--cn-gutter": "20px",
+    "--cn-nav-icon-size": "17px",
+    "--cn-touch-min": "44px"
+   },
+   "distribution": {
+    "tokens": {
+     "--cn-fs-card": "17px",
+     "--cn-fs-body": "17px",
+     "--cn-fs-meta": null,
+     "--cn-fs-caption": "13px",
+     "--cn-r-control": "11px",
+     "--cn-r-button": "13px",
+     "--cn-r-card": "16px",
+     "--cn-divider-w": null,
+     "--cn-s-2": null,
+     "--cn-s-4": null,
+     "--cn-s-6": null,
+     "--cn-s-10": null,
+     "--cn-s-16": "16px",
+     "--cn-gutter": "20px",
+     "--cn-nav-icon-size": "17px",
+     "--cn-touch-min": "44px"
+    },
+    "painted": 133,
+    "fontSize": [
+     [
+      "13px",
+      67
+     ],
+     [
+      "12px",
+      28
+     ],
+     [
+      "16px",
+      14
+     ],
+     [
+      "11px",
+      9
+     ],
+     [
+      "17px",
+      7
+     ],
+     [
+      "15px",
+      3
+     ],
+     [
+      "13.3333px",
+      2
+     ],
+     [
+      "10px",
+      1
+     ],
+     [
+      "14px",
+      1
+     ],
+     [
+      "34px",
+      1
+     ]
+    ],
+    "radius": [
+     [
+      "11px",
+      9
+     ],
+     [
+      "10px",
+      6
+     ],
+     [
+      "50%",
+      5
+     ],
+     [
+      "16px",
+      1
+     ],
+     [
+      "8px",
+      1
+     ]
+    ],
+    "borderTop": [
+     [
+      "0px",
+      118
+     ],
+     [
+      "1px",
+      15
+     ]
+    ],
+    "columnGap": [
+     [
+      "8px",
+      15
+     ],
+     [
+      "4px",
+      8
+     ],
+     [
+      "10px",
+      3
+     ],
+     [
+      "6px",
+      3
+     ],
+     [
+      "12px",
+      1
+     ],
+     [
+      "16px",
+      1
+     ],
+     [
+      "30px",
+      1
+     ]
+    ],
+    "rowGap": [
+     [
+      "2px",
+      11
+     ],
+     [
+      "4px",
+      8
+     ],
+     [
+      "8px",
+      4
+     ],
+     [
+      "10px",
+      3
+     ],
+     [
+      "6px",
+      3
+     ],
+     [
+      "12px",
+      1
+     ],
+     [
+      "16px",
+      1
+     ],
+     [
+      "30px",
+      1
+     ]
+    ]
+   }
+  },
+  {
+   "label": "before",
+   "base": "http://127.0.0.1:49152",
+   "viewport": "414x896",
+   "arm": "zh-CN",
+   "path": "/v8/live",
+   "errors": [],
+   "tokens": {
+    "--cn-fs-card": "17px",
+    "--cn-fs-body": "17px",
+    "--cn-fs-meta": null,
+    "--cn-fs-caption": "13px",
+    "--cn-r-control": "11px",
+    "--cn-r-button": "13px",
+    "--cn-r-card": "16px",
+    "--cn-divider-w": null,
+    "--cn-s-2": null,
+    "--cn-s-4": null,
+    "--cn-s-6": null,
+    "--cn-s-10": null,
+    "--cn-s-16": "16px",
+    "--cn-gutter": "20px",
+    "--cn-nav-icon-size": "17px",
+    "--cn-touch-min": "44px"
+   },
+   "distribution": {
+    "tokens": {
+     "--cn-fs-card": "17px",
+     "--cn-fs-body": "17px",
+     "--cn-fs-meta": null,
+     "--cn-fs-caption": "13px",
+     "--cn-r-control": "11px",
+     "--cn-r-button": "13px",
+     "--cn-r-card": "16px",
+     "--cn-divider-w": null,
+     "--cn-s-2": null,
+     "--cn-s-4": null,
+     "--cn-s-6": null,
+     "--cn-s-10": null,
+     "--cn-s-16": "16px",
+     "--cn-gutter": "20px",
+     "--cn-nav-icon-size": "17px",
+     "--cn-touch-min": "44px"
+    },
+    "painted": 133,
+    "fontSize": [
+     [
+      "13px",
+      67
+     ],
+     [
+      "12px",
+      28
+     ],
+     [
+      "16px",
+      14
+     ],
+     [
+      "11px",
+      9
+     ],
+     [
+      "17px",
+      7
+     ],
+     [
+      "15px",
+      3
+     ],
+     [
+      "13.3333px",
+      2
+     ],
+     [
+      "10px",
+      1
+     ],
+     [
+      "14px",
+      1
+     ],
+     [
+      "34px",
+      1
+     ]
+    ],
+    "radius": [
+     [
+      "11px",
+      9
+     ],
+     [
+      "10px",
+      6
+     ],
+     [
+      "50%",
+      5
+     ],
+     [
+      "16px",
+      1
+     ],
+     [
+      "8px",
+      1
+     ]
+    ],
+    "borderTop": [
+     [
+      "0px",
+      118
+     ],
+     [
+      "1px",
+      15
+     ]
+    ],
+    "columnGap": [
+     [
+      "8px",
+      15
+     ],
+     [
+      "4px",
+      8
+     ],
+     [
+      "10px",
+      3
+     ],
+     [
+      "6px",
+      3
+     ],
+     [
+      "12px",
+      1
+     ],
+     [
+      "16px",
+      1
+     ],
+     [
+      "30px",
+      1
+     ]
+    ],
+    "rowGap": [
+     [
+      "2px",
+      11
+     ],
+     [
+      "4px",
+      8
+     ],
+     [
+      "8px",
+      4
+     ],
+     [
+      "10px",
+      3
+     ],
+     [
+      "6px",
+      3
+     ],
+     [
+      "12px",
+      1
+     ],
+     [
+      "16px",
+      1
+     ],
+     [
+      "30px",
+      1
+     ]
+    ]
+   }
+  },
+  {
+   "label": "before",
+   "base": "http://127.0.0.1:49152",
+   "viewport": "414x896",
+   "arm": "zh-CN",
+   "path": "/v8/stay",
+   "errors": [],
+   "tokens": {
+    "--cn-fs-card": "17px",
+    "--cn-fs-body": "17px",
+    "--cn-fs-meta": null,
+    "--cn-fs-caption": "13px",
+    "--cn-r-control": "11px",
+    "--cn-r-button": "13px",
+    "--cn-r-card": "16px",
+    "--cn-divider-w": null,
+    "--cn-s-2": null,
+    "--cn-s-4": null,
+    "--cn-s-6": null,
+    "--cn-s-10": null,
+    "--cn-s-16": "16px",
+    "--cn-gutter": "20px",
+    "--cn-nav-icon-size": "17px",
+    "--cn-touch-min": "44px"
+   },
+   "distribution": {
+    "tokens": {
+     "--cn-fs-card": "17px",
+     "--cn-fs-body": "17px",
+     "--cn-fs-meta": null,
+     "--cn-fs-caption": "13px",
+     "--cn-r-control": "11px",
+     "--cn-r-button": "13px",
+     "--cn-r-card": "16px",
+     "--cn-divider-w": null,
+     "--cn-s-2": null,
+     "--cn-s-4": null,
+     "--cn-s-6": null,
+     "--cn-s-10": null,
+     "--cn-s-16": "16px",
+     "--cn-gutter": "20px",
+     "--cn-nav-icon-size": "17px",
+     "--cn-touch-min": "44px"
+    },
+    "painted": 133,
+    "fontSize": [
+     [
+      "13px",
+      67
+     ],
+     [
+      "12px",
+      28
+     ],
+     [
+      "16px",
+      14
+     ],
+     [
+      "11px",
+      9
+     ],
+     [
+      "17px",
+      7
+     ],
+     [
+      "15px",
+      3
+     ],
+     [
+      "13.3333px",
+      2
+     ],
+     [
+      "10px",
+      1
+     ],
+     [
+      "14px",
+      1
+     ],
+     [
+      "34px",
+      1
+     ]
+    ],
+    "radius": [
+     [
+      "11px",
+      9
+     ],
+     [
+      "10px",
+      6
+     ],
+     [
+      "50%",
+      5
+     ],
+     [
+      "16px",
+      1
+     ],
+     [
+      "8px",
+      1
+     ]
+    ],
+    "borderTop": [
+     [
+      "0px",
+      118
+     ],
+     [
+      "1px",
+      15
+     ]
+    ],
+    "columnGap": [
+     [
+      "8px",
+      15
+     ],
+     [
+      "4px",
+      8
+     ],
+     [
+      "10px",
+      3
+     ],
+     [
+      "6px",
+      3
+     ],
+     [
+      "12px",
+      1
+     ],
+     [
+      "16px",
+      1
+     ],
+     [
+      "30px",
+      1
+     ]
+    ],
+    "rowGap": [
+     [
+      "2px",
+      11
+     ],
+     [
+      "4px",
+      8
+     ],
+     [
+      "8px",
+      4
+     ],
+     [
+      "10px",
+      3
+     ],
+     [
+      "6px",
+      3
+     ],
+     [
+      "12px",
+      1
+     ],
+     [
+      "16px",
+      1
+     ],
+     [
+      "30px",
+      1
+     ]
+    ]
+   }
+  },
+  {
+   "label": "before",
+   "base": "http://127.0.0.1:49152",
+   "viewport": "414x896",
+   "arm": "zh-CN",
+   "path": "/v8/discover",
+   "errors": [],
+   "tokens": {
+    "--cn-fs-card": "17px",
+    "--cn-fs-body": "17px",
+    "--cn-fs-meta": null,
+    "--cn-fs-caption": "13px",
+    "--cn-r-control": "11px",
+    "--cn-r-button": "13px",
+    "--cn-r-card": "16px",
+    "--cn-divider-w": null,
+    "--cn-s-2": null,
+    "--cn-s-4": null,
+    "--cn-s-6": null,
+    "--cn-s-10": null,
+    "--cn-s-16": "16px",
+    "--cn-gutter": "20px",
+    "--cn-nav-icon-size": "17px",
+    "--cn-touch-min": "44px"
+   },
+   "distribution": {
+    "tokens": {
+     "--cn-fs-card": "17px",
+     "--cn-fs-body": "17px",
+     "--cn-fs-meta": null,
+     "--cn-fs-caption": "13px",
+     "--cn-r-control": "11px",
+     "--cn-r-button": "13px",
+     "--cn-r-card": "16px",
+     "--cn-divider-w": null,
+     "--cn-s-2": null,
+     "--cn-s-4": null,
+     "--cn-s-6": null,
+     "--cn-s-10": null,
+     "--cn-s-16": "16px",
+     "--cn-gutter": "20px",
+     "--cn-nav-icon-size": "17px",
+     "--cn-touch-min": "44px"
+    },
+    "painted": 133,
+    "fontSize": [
+     [
+      "13px",
+      67
+     ],
+     [
+      "12px",
+      28
+     ],
+     [
+      "16px",
+      14
+     ],
+     [
+      "11px",
+      9
+     ],
+     [
+      "17px",
+      7
+     ],
+     [
+      "15px",
+      3
+     ],
+     [
+      "13.3333px",
+      2
+     ],
+     [
+      "10px",
+      1
+     ],
+     [
+      "14px",
+      1
+     ],
+     [
+      "34px",
+      1
+     ]
+    ],
+    "radius": [
+     [
+      "11px",
+      9
+     ],
+     [
+      "10px",
+      6
+     ],
+     [
+      "50%",
+      5
+     ],
+     [
+      "16px",
+      1
+     ],
+     [
+      "8px",
+      1
+     ]
+    ],
+    "borderTop": [
+     [
+      "0px",
+      118
+     ],
+     [
+      "1px",
+      15
+     ]
+    ],
+    "columnGap": [
+     [
+      "8px",
+      15
+     ],
+     [
+      "4px",
+      8
+     ],
+     [
+      "10px",
+      3
+     ],
+     [
+      "6px",
+      3
+     ],
+     [
+      "12px",
+      1
+     ],
+     [
+      "16px",
+      1
+     ],
+     [
+      "30px",
+      1
+     ]
+    ],
+    "rowGap": [
+     [
+      "2px",
+      11
+     ],
+     [
+      "4px",
+      8
+     ],
+     [
+      "8px",
+      4
+     ],
+     [
+      "10px",
+      3
+     ],
+     [
+      "6px",
+      3
+     ],
+     [
+      "12px",
+      1
+     ],
+     [
+      "16px",
+      1
+     ],
+     [
+      "30px",
+      1
+     ]
+    ]
+   }
+  },
+  {
+   "label": "before",
+   "base": "http://127.0.0.1:49152",
+   "viewport": "414x896",
+   "arm": "en",
+   "path": "/v8/hub",
+   "errors": [],
+   "tokens": {
+    "--cn-fs-card": "17px",
+    "--cn-fs-body": "17px",
+    "--cn-fs-meta": null,
+    "--cn-fs-caption": "13px",
+    "--cn-r-control": "11px",
+    "--cn-r-button": "13px",
+    "--cn-r-card": "16px",
+    "--cn-divider-w": null,
+    "--cn-s-2": null,
+    "--cn-s-4": null,
+    "--cn-s-6": null,
+    "--cn-s-10": null,
+    "--cn-s-16": "16px",
+    "--cn-gutter": "20px",
+    "--cn-nav-icon-size": "17px",
+    "--cn-touch-min": "44px"
+   },
+   "distribution": {
+    "tokens": {
+     "--cn-fs-card": "17px",
+     "--cn-fs-body": "17px",
+     "--cn-fs-meta": null,
+     "--cn-fs-caption": "13px",
+     "--cn-r-control": "11px",
+     "--cn-r-button": "13px",
+     "--cn-r-card": "16px",
+     "--cn-divider-w": null,
+     "--cn-s-2": null,
+     "--cn-s-4": null,
+     "--cn-s-6": null,
+     "--cn-s-10": null,
+     "--cn-s-16": "16px",
+     "--cn-gutter": "20px",
+     "--cn-nav-icon-size": "17px",
+     "--cn-touch-min": "44px"
+    },
+    "painted": 133,
+    "fontSize": [
+     [
+      "13px",
+      67
+     ],
+     [
+      "12px",
+      28
+     ],
+     [
+      "16px",
+      14
+     ],
+     [
+      "11px",
+      9
+     ],
+     [
+      "17px",
+      7
+     ],
+     [
+      "15px",
+      3
+     ],
+     [
+      "13.3333px",
+      2
+     ],
+     [
+      "10px",
+      1
+     ],
+     [
+      "14px",
+      1
+     ],
+     [
+      "34px",
+      1
+     ]
+    ],
+    "radius": [
+     [
+      "11px",
+      9
+     ],
+     [
+      "10px",
+      6
+     ],
+     [
+      "50%",
+      5
+     ],
+     [
+      "16px",
+      1
+     ],
+     [
+      "8px",
+      1
+     ]
+    ],
+    "borderTop": [
+     [
+      "0px",
+      118
+     ],
+     [
+      "1px",
+      15
+     ]
+    ],
+    "columnGap": [
+     [
+      "8px",
+      15
+     ],
+     [
+      "4px",
+      8
+     ],
+     [
+      "10px",
+      3
+     ],
+     [
+      "6px",
+      3
+     ],
+     [
+      "12px",
+      1
+     ],
+     [
+      "16px",
+      1
+     ],
+     [
+      "30px",
+      1
+     ]
+    ],
+    "rowGap": [
+     [
+      "2px",
+      11
+     ],
+     [
+      "4px",
+      8
+     ],
+     [
+      "8px",
+      4
+     ],
+     [
+      "10px",
+      3
+     ],
+     [
+      "6px",
+      3
+     ],
+     [
+      "12px",
+      1
+     ],
+     [
+      "16px",
+      1
+     ],
+     [
+      "30px",
+      1
+     ]
+    ]
+   }
+  },
+  {
+   "label": "before",
+   "base": "http://127.0.0.1:49152",
+   "viewport": "414x896",
+   "arm": "en",
+   "path": "/v8/live",
+   "errors": [],
+   "tokens": {
+    "--cn-fs-card": "17px",
+    "--cn-fs-body": "17px",
+    "--cn-fs-meta": null,
+    "--cn-fs-caption": "13px",
+    "--cn-r-control": "11px",
+    "--cn-r-button": "13px",
+    "--cn-r-card": "16px",
+    "--cn-divider-w": null,
+    "--cn-s-2": null,
+    "--cn-s-4": null,
+    "--cn-s-6": null,
+    "--cn-s-10": null,
+    "--cn-s-16": "16px",
+    "--cn-gutter": "20px",
+    "--cn-nav-icon-size": "17px",
+    "--cn-touch-min": "44px"
+   },
+   "distribution": {
+    "tokens": {
+     "--cn-fs-card": "17px",
+     "--cn-fs-body": "17px",
+     "--cn-fs-meta": null,
+     "--cn-fs-caption": "13px",
+     "--cn-r-control": "11px",
+     "--cn-r-button": "13px",
+     "--cn-r-card": "16px",
+     "--cn-divider-w": null,
+     "--cn-s-2": null,
+     "--cn-s-4": null,
+     "--cn-s-6": null,
+     "--cn-s-10": null,
+     "--cn-s-16": "16px",
+     "--cn-gutter": "20px",
+     "--cn-nav-icon-size": "17px",
+     "--cn-touch-min": "44px"
+    },
+    "painted": 133,
+    "fontSize": [
+     [
+      "13px",
+      67
+     ],
+     [
+      "12px",
+      28
+     ],
+     [
+      "16px",
+      14
+     ],
+     [
+      "11px",
+      9
+     ],
+     [
+      "17px",
+      7
+     ],
+     [
+      "15px",
+      3
+     ],
+     [
+      "13.3333px",
+      2
+     ],
+     [
+      "10px",
+      1
+     ],
+     [
+      "14px",
+      1
+     ],
+     [
+      "34px",
+      1
+     ]
+    ],
+    "radius": [
+     [
+      "11px",
+      9
+     ],
+     [
+      "10px",
+      6
+     ],
+     [
+      "50%",
+      5
+     ],
+     [
+      "16px",
+      1
+     ],
+     [
+      "8px",
+      1
+     ]
+    ],
+    "borderTop": [
+     [
+      "0px",
+      118
+     ],
+     [
+      "1px",
+      15
+     ]
+    ],
+    "columnGap": [
+     [
+      "8px",
+      15
+     ],
+     [
+      "4px",
+      8
+     ],
+     [
+      "10px",
+      3
+     ],
+     [
+      "6px",
+      3
+     ],
+     [
+      "12px",
+      1
+     ],
+     [
+      "16px",
+      1
+     ],
+     [
+      "30px",
+      1
+     ]
+    ],
+    "rowGap": [
+     [
+      "2px",
+      11
+     ],
+     [
+      "4px",
+      8
+     ],
+     [
+      "8px",
+      4
+     ],
+     [
+      "10px",
+      3
+     ],
+     [
+      "6px",
+      3
+     ],
+     [
+      "12px",
+      1
+     ],
+     [
+      "16px",
+      1
+     ],
+     [
+      "30px",
+      1
+     ]
+    ]
+   }
+  },
+  {
+   "label": "before",
+   "base": "http://127.0.0.1:49152",
+   "viewport": "414x896",
+   "arm": "en",
+   "path": "/v8/stay",
+   "errors": [],
+   "tokens": {
+    "--cn-fs-card": "17px",
+    "--cn-fs-body": "17px",
+    "--cn-fs-meta": null,
+    "--cn-fs-caption": "13px",
+    "--cn-r-control": "11px",
+    "--cn-r-button": "13px",
+    "--cn-r-card": "16px",
+    "--cn-divider-w": null,
+    "--cn-s-2": null,
+    "--cn-s-4": null,
+    "--cn-s-6": null,
+    "--cn-s-10": null,
+    "--cn-s-16": "16px",
+    "--cn-gutter": "20px",
+    "--cn-nav-icon-size": "17px",
+    "--cn-touch-min": "44px"
+   },
+   "distribution": {
+    "tokens": {
+     "--cn-fs-card": "17px",
+     "--cn-fs-body": "17px",
+     "--cn-fs-meta": null,
+     "--cn-fs-caption": "13px",
+     "--cn-r-control": "11px",
+     "--cn-r-button": "13px",
+     "--cn-r-card": "16px",
+     "--cn-divider-w": null,
+     "--cn-s-2": null,
+     "--cn-s-4": null,
+     "--cn-s-6": null,
+     "--cn-s-10": null,
+     "--cn-s-16": "16px",
+     "--cn-gutter": "20px",
+     "--cn-nav-icon-size": "17px",
+     "--cn-touch-min": "44px"
+    },
+    "painted": 133,
+    "fontSize": [
+     [
+      "13px",
+      67
+     ],
+     [
+      "12px",
+      28
+     ],
+     [
+      "16px",
+      14
+     ],
+     [
+      "11px",
+      9
+     ],
+     [
+      "17px",
+      7
+     ],
+     [
+      "15px",
+      3
+     ],
+     [
+      "13.3333px",
+      2
+     ],
+     [
+      "10px",
+      1
+     ],
+     [
+      "14px",
+      1
+     ],
+     [
+      "34px",
+      1
+     ]
+    ],
+    "radius": [
+     [
+      "11px",
+      9
+     ],
+     [
+      "10px",
+      6
+     ],
+     [
+      "50%",
+      5
+     ],
+     [
+      "16px",
+      1
+     ],
+     [
+      "8px",
+      1
+     ]
+    ],
+    "borderTop": [
+     [
+      "0px",
+      118
+     ],
+     [
+      "1px",
+      15
+     ]
+    ],
+    "columnGap": [
+     [
+      "8px",
+      15
+     ],
+     [
+      "4px",
+      8
+     ],
+     [
+      "10px",
+      3
+     ],
+     [
+      "6px",
+      3
+     ],
+     [
+      "12px",
+      1
+     ],
+     [
+      "16px",
+      1
+     ],
+     [
+      "30px",
+      1
+     ]
+    ],
+    "rowGap": [
+     [
+      "2px",
+      11
+     ],
+     [
+      "4px",
+      8
+     ],
+     [
+      "8px",
+      4
+     ],
+     [
+      "10px",
+      3
+     ],
+     [
+      "6px",
+      3
+     ],
+     [
+      "12px",
+      1
+     ],
+     [
+      "16px",
+      1
+     ],
+     [
+      "30px",
+      1
+     ]
+    ]
+   }
+  },
+  {
+   "label": "before",
+   "base": "http://127.0.0.1:49152",
+   "viewport": "414x896",
+   "arm": "en",
+   "path": "/v8/discover",
+   "errors": [],
+   "tokens": {
+    "--cn-fs-card": "17px",
+    "--cn-fs-body": "17px",
+    "--cn-fs-meta": null,
+    "--cn-fs-caption": "13px",
+    "--cn-r-control": "11px",
+    "--cn-r-button": "13px",
+    "--cn-r-card": "16px",
+    "--cn-divider-w": null,
+    "--cn-s-2": null,
+    "--cn-s-4": null,
+    "--cn-s-6": null,
+    "--cn-s-10": null,
+    "--cn-s-16": "16px",
+    "--cn-gutter": "20px",
+    "--cn-nav-icon-size": "17px",
+    "--cn-touch-min": "44px"
+   },
+   "distribution": {
+    "tokens": {
+     "--cn-fs-card": "17px",
+     "--cn-fs-body": "17px",
+     "--cn-fs-meta": null,
+     "--cn-fs-caption": "13px",
+     "--cn-r-control": "11px",
+     "--cn-r-button": "13px",
+     "--cn-r-card": "16px",
+     "--cn-divider-w": null,
+     "--cn-s-2": null,
+     "--cn-s-4": null,
+     "--cn-s-6": null,
+     "--cn-s-10": null,
+     "--cn-s-16": "16px",
+     "--cn-gutter": "20px",
+     "--cn-nav-icon-size": "17px",
+     "--cn-touch-min": "44px"
+    },
+    "painted": 133,
+    "fontSize": [
+     [
+      "13px",
+      67
+     ],
+     [
+      "12px",
+      28
+     ],
+     [
+      "16px",
+      14
+     ],
+     [
+      "11px",
+      9
+     ],
+     [
+      "17px",
+      7
+     ],
+     [
+      "15px",
+      3
+     ],
+     [
+      "13.3333px",
+      2
+     ],
+     [
+      "10px",
+      1
+     ],
+     [
+      "14px",
+      1
+     ],
+     [
+      "34px",
+      1
+     ]
+    ],
+    "radius": [
+     [
+      "11px",
+      9
+     ],
+     [
+      "10px",
+      6
+     ],
+     [
+      "50%",
+      5
+     ],
+     [
+      "16px",
+      1
+     ],
+     [
+      "8px",
+      1
+     ]
+    ],
+    "borderTop": [
+     [
+      "0px",
+      118
+     ],
+     [
+      "1px",
+      15
+     ]
+    ],
+    "columnGap": [
+     [
+      "8px",
+      15
+     ],
+     [
+      "4px",
+      8
+     ],
+     [
+      "10px",
+      3
+     ],
+     [
+      "6px",
+      3
+     ],
+     [
+      "12px",
+      1
+     ],
+     [
+      "16px",
+      1
+     ],
+     [
+      "30px",
+      1
+     ]
+    ],
+    "rowGap": [
+     [
+      "2px",
+      11
+     ],
+     [
+      "4px",
+      8
+     ],
+     [
+      "8px",
+      4
+     ],
+     [
+      "10px",
+      3
+     ],
+     [
+      "6px",
+      3
+     ],
+     [
+      "12px",
+      1
+     ],
+     [
+      "16px",
+      1
+     ],
+     [
+      "30px",
+      1
+     ]
+    ]
+   }
+  }
+ ]
+}
