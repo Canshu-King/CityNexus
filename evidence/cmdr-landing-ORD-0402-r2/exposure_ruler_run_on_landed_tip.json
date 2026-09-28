@@ -1,0 +1,170 @@
+{
+ "schema": "CNX_CMDR_UI_EVIDENCE_EXPOSURE_GATE_V1_R7",
+ "ruler": {
+  "name": "ui_exposure_taint_ast_r7b.cjs",
+  "supersedes": "ui_exposure_taint_ast_r7.cjs (blob 3272a4336f60ddd183875000c11e5b5ead6be2be), which superseded r6 = ui_exposure_taint_ast_r3.cjs (blob 6a251d3a6bea70329e06581384a81d5ef54c96a6)",
+  "supersedes_blob": "3272a4336f60ddd183875000c11e5b5ead6be2be",
+  "also_supersedes_r4": {
+   "file": "ui_exposure_taint_ast_r1.cjs",
+   "blob": "eb262f59e54d5142ad0e8041704e751eac473ace"
+  },
+  "rule_lineage": "r1 regex -> r2 regex -> r3 regex -> r4 AST per-file -> r5 module graph -> r6 scope+prose/structure -> r7 attribute slot (Q71) + attributed-fold exoneration (Q67=1 / Q75) -> r7b a cell identity that does not move when the file's lines move",
+  "order": "ORD-0354 (attribute slot + line-independent cell identity) + ORD-0348 (fold exoneration)",
+  "also_supersedes": {
+   "r3": "ui_exposure_field_check_r3.py",
+   "r3_blob": "44e062e6ce9c7b5d97d78e09e432072da102292c"
+  },
+  "generation": "r7b / AST taint, module graph, both DOM surfaces, one auditable exception, stable cell ids",
+  "naming": "local file name == published generation name from r7 onward"
+ },
+ "typescript": "5.9.3",
+ "scope": "per-file: no module graph is built here (--file / --ref --path)",
+ "scope_note": "a per-file count is neither an upper nor a lower bound on --tree: a call into an imported helper is opaque, so a value the helper actually returns as device wording is still reported here (over-report); and poison that arrives through an import has no edge to follow, so the screen reads clean here (under-report). Both directions are pinned by selftest arms F and G, and the split measured on generation 821a0eb54cca1b305a4aa75c1ca8d46a95d51bba is 1 cell only per-file, 3 cells only in --tree.",
+ "upper_bound_claim": "REFUTED on the live generation: 1 cell here does not exist under --tree and 3 cells under --tree do not exist here; see selftest arms F and G",
+ "method": "per-file AST taint through the TypeScript compiler API: poison source, spread along assignment / object-property value / destructure / template hole / call argument by position / return / useState setter, property-path sensitive, fixpoint over the call graph. No regular expression decides anything.",
+ "standing_rule": "Q64=1 (arbiter): data reaching UI / screenshot / evidence artifacts must pass source classification -> allowed fields -> render. mask is a helper, never the first gate.",
+ "allowed_fields": [
+  "http_status",
+  "content_type",
+  "body_bytes",
+  "response_received",
+  "elapsed_ms",
+  "request_id"
+ ],
+ "forbidden": [
+  "raw body",
+  "raw detail",
+  "raw exception",
+  "the answer's own words reaching the DOM by any route, including a forwarding helper"
+ ],
+ "rules_fired": [
+  "RAW_BODY_TO_DOM",
+  "UPSTREAM_TEXT_VIA_HELPER_TO_DOM"
+ ],
+ "per_rule": {
+  "RAW_BODY_TO_DOM": 1,
+  "UPSTREAM_TEXT_VIA_HELPER_TO_DOM": 1
+ },
+ "files_scanned": 1,
+ "files_failed": 0,
+ "parse_diagnostics_total": 0,
+ "per_file": [
+  {
+   "file": "D:/moodle/_qoder_cmdr_builds/_build_79ca877/frontend/src/features/trash/JourneyTrashPanel.tsx",
+   "hits": 2,
+   "parse_diagnostics": 0,
+   "attributed_in_fold": 0,
+   "depth_cut_lookups": 0,
+   "graph": {
+    "bindings": 46,
+    "functions": 9,
+    "call_sites": 54,
+    "state_pairs": [
+     "read/setRead",
+     "read/setRead",
+     "outcome/setOutcome",
+     "outcome/setOutcome",
+     "busyId/setBusyId",
+     "busyId/setBusyId"
+    ],
+    "sinks": 31
+   }
+  }
+ ],
+ "cells_by_slot": {
+  "text_position": 2,
+  "attribute_position": 0,
+  "markup": 0,
+  "dom_write": 0
+ },
+ "cells_total": 2,
+ "attributed_in_fold": [],
+ "attributed_in_fold_count": 0,
+ "fold_without_anchor": [
+  {
+   "file_line": 233,
+   "rule": "UPSTREAM_TEXT_VIA_HELPER_TO_DOM",
+   "why": "fold_without_attribution_anchor",
+   "fold_container": "details",
+   "fold_container_line": 226,
+   "file": "D:/moodle/_qoder_cmdr_builds/_build_79ca877/frontend/src/features/trash/JourneyTrashPanel.tsx"
+  }
+ ],
+ "fold_without_anchor_count": 1,
+ "resolution_depth_cap": 150,
+ "resolution_truncated_total": 0,
+ "truncated_meaning": "how many times a lookup ran out of depth and had to answer \"unknown\" - a clean verdict with a nonzero value here is NOT a proven clean verdict",
+ "targets_scanned": [
+  "D:/moodle/_qoder_cmdr_builds/_build_79ca877/frontend/src/features/trash/JourneyTrashPanel.tsx"
+ ],
+ "hits": [
+  {
+   "rule": "RAW_BODY_TO_DOM",
+   "line": 224,
+   "sink": "jsx-text",
+   "origin_kind": "raw-body",
+   "structural": {
+    "sink_shape": "text-in:span testid=span:trash-outcome-text",
+    "origin_kind": "raw-body",
+    "member": null,
+    "helpers": [
+     "copyFor"
+    ],
+    "hops": [
+     "upstream read copyFor(outcome.attribution, zh).body off copyFor(outcome.attribution, zh)",
+     "`outcomeText` = outcome ? outcome.kind === \"unknown\" ? copyFor(outcome.attribution, zh).body :..."
+    ]
+   },
+   "function_boundaries": 0,
+   "snippet": "<span data-testid=\"trash-outcome-text\">{outcomeText}</span>",
+   "taint_trace": [
+    ":113 upstream read copyFor(outcome.attribution, zh).body off copyFor(outcome.attribution, zh)",
+    ":111 `outcomeText` = outcome ? outcome.kind === \"unknown\" ? copyFor(outcome.attribution, zh).body :...",
+    ":224 rendered here"
+   ],
+   "taint_chain": ":113 upstream read copyFor(outcome.attribution, zh).body off copyFor(outcome.attribution, zh) -> :111 `outcomeText` = outcome ? outcome.kind === \"unknown\" ? copyFor(outcome.attribution, zh).body :... -> :224 rendered here",
+   "file": "D:/moodle/_qoder_cmdr_builds/_build_79ca877/frontend/src/features/trash/JourneyTrashPanel.tsx",
+   "cell_identity": "RAW_BODY_TO_DOM :: frontend/src/features/trash/JourneyTrashPanel.tsx :: text-in:span testid=span:trash-outcome-text :: raw-body :: - :: copyFor :: upstream read copyFor(outcome.attribution, zh).body off copyFor(outcome.attribution, zh) | `outcomeText` = outcome ? outcome.kind === \"unknown\" ? copyFor(outcome.attribution, zh).body :...",
+   "cell_id": "5be221114ce83394"
+  },
+  {
+   "rule": "UPSTREAM_TEXT_VIA_HELPER_TO_DOM",
+   "line": 233,
+   "sink": "jsx-text",
+   "origin_kind": "exception",
+   "structural": {
+    "sink_shape": "text-in:span testid=div:trash-outcome",
+    "origin_kind": "exception",
+    "member": "code",
+    "helpers": [
+     "refusalReasonCode",
+     "setOutcome"
+    ],
+    "hops": [
+     "the caught value `cause` reached the DOM",
+     "passed through refusalReasonCode()",
+     "`code` = refusalReasonCode(cause)",
+     "state `outcome` written by setOutcome(...)"
+    ]
+   },
+   "function_boundaries": 1,
+   "snippet": "{outcome.code}",
+   "taint_trace": [
+    ":97 the caught value `cause` reached the DOM",
+    ":98 passed through refusalReasonCode()",
+    ":98 `code` = refusalReasonCode(cause)",
+    ":100 state `outcome` written by setOutcome(...)",
+    ":233 rendered here"
+   ],
+   "taint_chain": ":97 the caught value `cause` reached the DOM -> :98 passed through refusalReasonCode() -> :98 `code` = refusalReasonCode(cause) -> :100 state `outcome` written by setOutcome(...) -> :233 rendered here",
+   "file": "D:/moodle/_qoder_cmdr_builds/_build_79ca877/frontend/src/features/trash/JourneyTrashPanel.tsx",
+   "cell_identity": "UPSTREAM_TEXT_VIA_HELPER_TO_DOM :: frontend/src/features/trash/JourneyTrashPanel.tsx :: text-in:span testid=div:trash-outcome :: exception :: code :: refusalReasonCode>setOutcome :: the caught value `cause` reached the DOM | passed through refusalReasonCode() | `code` = refusalReasonCode(cause) | state `outcome` written by setOutcome(...)",
+   "cell_id": "30998f1cc7cf1749"
+  }
+ ],
+ "verdict": "EXPOSURE_SHAPE_FOUND",
+ "interpretation_limit": "a hit names a shape to justify, not a defect verdict",
+ "claim_kind": "pattern_determined",
+ "claimed_result": "EXPOSURE_SHAPE_FOUND across 1 scanned file(s): 2 hit(s) [\"RAW_BODY_TO_DOM@JourneyTrashPanel.tsx:224\",\"UPSTREAM_TEXT_VIA_HELPER_TO_DOM@JourneyTrashPanel.tsx:233\"]",
+ "derived_result": null
+}
