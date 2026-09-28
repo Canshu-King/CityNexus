@@ -1,0 +1,50 @@
+{
+ "tip": "8d038b21f09477b933cff3b1c7b09845c542373b",
+ "served_asset": "/assets/index-ChWUjpBx.js",
+ "bundle_bytes": 1343964,
+ "totals": {
+  "zh": 0,
+  "en": 12
+ },
+ "routes": [
+  {
+   "route": "twin",
+   "arms_comparable": true,
+   "zh_hits": 0,
+   "en_hits": 6,
+   "zh_ascii": 2,
+   "en_ascii": 23,
+   "zh_entry": "使用封存的演示行程",
+   "en_entry": "sealed demo",
+   "zh_path": "/v8/twin",
+   "en_path": "/v8/twin",
+   "verdict": "ZH_SCREEN_CARRIES_ENGLISH_PROSE"
+  },
+  {
+   "route": "authoritative",
+   "arms_comparable": true,
+   "zh_hits": 0,
+   "en_hits": 5,
+   "zh_ascii": 16,
+   "en_ascii": 55,
+   "zh_entry": "使用封存的演示行程",
+   "en_entry": "sealed demo",
+   "zh_path": "/v8/authoritative",
+   "en_path": "/v8/authoritative",
+   "verdict": "ZH_SCREEN_CARRIES_ENGLISH_PROSE"
+  },
+  {
+   "route": "discover",
+   "arms_comparable": true,
+   "zh_hits": 0,
+   "en_hits": 1,
+   "zh_ascii": 2,
+   "en_ascii": 18,
+   "zh_entry": "使用封存的演示行程",
+   "en_entry": "sealed demo",
+   "zh_path": "/v8/discover",
+   "en_path": "/v8/discover",
+   "verdict": "ZH_SCREEN_CARRIES_ENGLISH_PROSE"
+  }
+ ]
+}
