@@ -1,0 +1,13 @@
+{
+ "at_local": "2026-09-29 00:00:28 +0800",
+ "tool": "mirror_with_guard_r2.py --dry",
+ "stdout_lines": [
+  "remote blob sha (contents route) 86ea445a1a5794ea659527fa7d210e43597ec545 | size route 8183926",
+  "raw fetched 8183926 B in 1 attempt(s) | git-blob sha1(raw) 86ea445a1a5794ea659527fa7d210e43597ec545 | complete=True",
+  "local 8183926 B | local blob sha1 86ea445a1a5794ea659527fa7d210e43597ec545",
+  "remote-only lines: 0 | local-only lines: 0",
+  "DRY: guard passed, remote read complete, no mirror performed"
+ ],
+ "tool_bytes": 5281,
+ "tool_sha1_local_bytes": "cf4b087ba1f0b1c8b78366b7e49a8f195ffdde5f"
+}
