@@ -698,9 +698,16 @@ export function CopilotDock({
         right: node.offsetLeft + node.offsetWidth,
         bottom: node.offsetTop + node.offsetHeight,
       };
-      const actionable =
-        'button, a[href], input, select, textarea, [role="button"]';
-      const hit = Array.from(document.querySelectorAll(actionable)).some((el) => {
+      /* Pass-13.1 yielded to the actionable half and missed the readable one. An `<h3>` is not a
+         button, so a pill resting on a heading obeyed the rule exactly and still made that line
+         unreadable -- measured at 390x844 on tip dccd13ad: `Learned capability state` carried
+         painted_overlap_px=2256 while `data-rest-overlap` stayed "false". Yield to text the
+         traveller is reading, not only to text they can click. */
+      const yieldsTo = [
+        'button, a[href], input, select, textarea, [role="button"]',
+        "h1, h2, h3, h4, h5, p, li, dt, dd, th, td, label, figcaption, summary",
+      ];
+      const covers = (el: Element) => {
         if (node.contains(el) || el.contains(node)) return false;
         const r = el.getBoundingClientRect();
         if (r.width === 0 || r.height === 0) return false;
@@ -708,7 +715,10 @@ export function CopilotDock({
         const overlapW = Math.min(r.right, d.right) - Math.max(r.left, d.left);
         const overlapH = Math.min(r.bottom, d.bottom) - Math.max(r.top, d.top);
         return overlapW > 1 && overlapH > 1;
-      });
+      };
+      const hit = yieldsTo.some((sel) =>
+        Array.from(document.querySelectorAll(sel)).some(covers),
+      );
       setRestOverlap(hit);
     };
     /* Measure once the scroll has settled, not during it: while the page is
