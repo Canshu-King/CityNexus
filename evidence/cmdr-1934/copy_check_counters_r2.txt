@@ -1,0 +1,7 @@
+{"tip": "e5a571f89e5d210e3616bd6752b3c90746f9e588", "served_asset": "/assets/index-DQeW-4E8.js", "bundle_chars": 1287036, "bundle_raw_bytes": 1324044, "dictionary_pairs": 627, "distinct_keys": 518, "values_found_in_served_bundle": 627, "values_not_found": 0}
+HIT agent.advancedDetail Advanced details
+HIT agent.aiInterpreted Understood by the AI assistant
+HIT agent.aiRunAsked You asked: {asked}
+HIT agent.aiRunAsked ?????{asked}
+HIT agent.aiRunChecking Reading back what this run left behind.
+HIT agent.aiRunChecking ?????????????
