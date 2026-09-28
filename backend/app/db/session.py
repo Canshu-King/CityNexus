@@ -233,6 +233,37 @@ def _backfill_legacy_hydration_rows(connection) -> None:
 
 
 
+
+# ORD-0434 step 2: the ACL table's one home.  A role is a set of capabilities plus the message key
+# that states its scope in one sentence (RELATION/relation_and_copy_findings.md:94); the sentence
+# itself is not stored here, so no server-authored prose can ever reach a screen from this table.
+JOURNEY_ROLE_CAPABILITIES = (
+    ("OWNER", "JOURNEY_READ", "member.scope.owner"),
+    ("OWNER", "JOURNEY_UPDATE", "member.scope.owner"),
+    ("OWNER", "PLACE_EDIT", "member.scope.owner"),
+    ("OWNER", "MEMBER_MANAGE", "member.scope.owner"),
+    ("OWNER", "SHARE_GRANT_MANAGE", "member.scope.owner"),
+    ("ADMIN", "JOURNEY_READ", "member.scope.admin"),
+    ("ADMIN", "PLACE_EDIT", "member.scope.admin"),
+    ("ADMIN", "MEMBER_MANAGE", "member.scope.admin"),
+    ("COLLABORATOR", "JOURNEY_READ", "member.scope.collaborator"),
+    ("COLLABORATOR", "PLACE_EDIT", "member.scope.collaborator"),
+)
+
+
+def _seed_journey_acl(connection) -> int:
+    """Insert the role/capability rows when the table is still empty.  Returns rows added."""
+    if connection.exec_driver_sql("SELECT COUNT(*) FROM journey_role_capabilities").scalar():
+        return 0
+    for role, capability, message_key in JOURNEY_ROLE_CAPABILITIES:
+        connection.exec_driver_sql(
+            "INSERT INTO journey_role_capabilities"
+            " (role, capability, scope_message_key, created_at) VALUES (?, ?, ?, datetime('now'))",
+            (role, capability, message_key),
+        )
+    return len(JOURNEY_ROLE_CAPABILITIES)
+
+
 def _table_exists(connection, name: str) -> bool:
     row = connection.exec_driver_sql(
         "SELECT name FROM sqlite_master WHERE type='table' AND name=?", (name,)
@@ -573,6 +604,9 @@ def ensure_schema(target_engine: Engine = engine) -> None:
             if "deleted_at" not in journey_columns:
                 connection.exec_driver_sql("ALTER TABLE journeys ADD COLUMN deleted_at TEXT")
             _migrate_reservation_identity(connection)
+            # ORD-0434: the ACL table ships seeded, so a client can read the product's own answer
+            # to what a role may do instead of inventing one per screen.
+            _seed_journey_acl(connection)
             event_columns = {
                 row[1] for row in connection.exec_driver_sql("PRAGMA table_info(events)")
             }

@@ -192,14 +192,25 @@ def test_expired_and_never_existed_are_different_named_codes() -> None:
     assert _reason(absent.json()) != _reason(expired.json())
 
 
-def test_visibility_without_a_member_store_fails_closed() -> None:
+def test_private_stays_closed_and_invitees_are_asked_for_a_name() -> None:
+    """Step 1 refused both; step 2 has a member set, so the two档 now answer differently."""
     journey_id = _journey()
-    for visibility in ("PRIVATE", "INVITEES_ONLY"):
-        grant = _create(journey_id, visibility)
-        response = client.get(TOKEN_PATH.format(token=grant["token"]))
-        assert response.status_code == 409, f"{visibility} must not read as open: {response.text}"
-        assert _reason(response.json()) == "SHARE_GRANT_NOT_LINK_READABLE"
-        assert response.json()["error"]["details"]["visibility"] == visibility
+    private = _create(journey_id, "PRIVATE")
+    refused = client.get(TOKEN_PATH.format(token=private["token"]))
+    assert refused.status_code == 409, refused.text
+    assert _reason(refused.json()) == "SHARE_GRANT_NOT_LINK_READABLE"
+
+    invitees = _create(journey_id, "INVITEES_ONLY")
+    unnamed = client.get(TOKEN_PATH.format(token=invitees["token"]))
+    assert unnamed.status_code == 409, unnamed.text
+    assert _reason(unnamed.json()) == "SHARE_GRANT_MEMBERSHIP_REQUIRED"
+
+    stranger = _traveler()
+    wrong = client.get(TOKEN_PATH.format(token=invitees["token"]), params={"member": stranger})
+    assert _reason(wrong.json()) == "SHARE_GRANT_NOT_A_MEMBER", wrong.text
+    assert _reason(wrong.json()) != _reason(unnamed.json()), (
+        "nobody named and a name that does not hold are two different facts"
+    )
 
 
 def test_a_public_grant_reads_the_journey() -> None:
@@ -273,3 +284,138 @@ def test_contract_and_generated_client_carry_the_same_four_doors() -> None:
 
     visibility = spec["components"]["schemas"]["ShareVisibility"]["enum"]
     assert visibility == ["PRIVATE", "LINK_READ", "INVITEES_ONLY", "PUBLIC"]
+
+
+# ------------------------------------------------------------ step 2: members, ACL, scoped bin
+
+MEMBER_PATH = "/api/v1/journeys/{journey_id}/members"
+WITHDRAW_PATH = "/api/v1/journeys/{journey_id}/members/{member_id}/withdraw"
+ACL_PATH = "/api/v1/journeys/{journey_id}/acl/roles"
+BIN_PATH = "/api/v1/recycle-bin/journeys"
+OWNER_BIN_PATH = "/api/v1/travelers/{traveler_id}/recycle-bin/journeys"
+
+
+def _add_member(journey_id: str, traveler_id: str, role: str = "COLLABORATOR",
+                expires_at: str | None = None) -> dict:
+    response = client.post(
+        MEMBER_PATH.format(journey_id=journey_id),
+        json={"traveler_id": traveler_id, "role": role, "invited_by": "lane-rel",
+              "expires_at": expires_at},
+    )
+    assert response.status_code == 201, response.text
+    return response.json()
+
+
+def test_the_member_set_is_one_row_per_traveller_and_says_so_by_name() -> None:
+    journey_id = _journey()
+    member = _add_member(journey_id, _traveler())
+    assert member["member_state"] == "MEMBER_IN_FORCE"
+    assert member["expires_at"] is None, "no deadline was given, so none is stored"
+
+    again = client.post(
+        MEMBER_PATH.format(journey_id=journey_id),
+        json={"traveler_id": member["traveler_id"], "role": "ADMIN", "invited_by": "lane-rel"},
+    )
+    assert again.status_code == 409, again.text
+    assert _reason(again.json()) == "MEMBER_ALREADY_PRESENT"
+    listed = client.get(MEMBER_PATH.format(journey_id=journey_id)).json()
+    assert len(listed) == 1, "a refused second invitation must not add a second row"
+
+
+def test_withdrawal_is_immediate_and_not_repeatable() -> None:
+    journey_id = _journey()
+    traveler_id = _traveler()
+    member = _add_member(journey_id, traveler_id)
+    grant = _create(journey_id, "INVITEES_ONLY")
+    token_url = TOKEN_PATH.format(token=grant["token"])
+
+    before = client.get(token_url, params={"member": traveler_id})
+    assert before.status_code == 200, before.text
+    assert before.json()["id"] == journey_id
+
+    first = client.post(WITHDRAW_PATH.format(journey_id=journey_id, member_id=member["id"]))
+    assert first.status_code == 200, first.text
+    assert first.json()["member_state"] == "MEMBER_WITHDRAWN"
+    after = client.get(token_url, params={"member": traveler_id})
+    assert after.status_code == 409 and _reason(after.json()) == "SHARE_GRANT_NOT_A_MEMBER", (
+        "the withdrawal has to bite on the next read, not on the next restart"
+    )
+
+    twice = client.post(WITHDRAW_PATH.format(journey_id=journey_id, member_id=member["id"]))
+    assert twice.status_code != first.status_code, "the same withdrawal twice is not the same answer twice"
+    assert _reason(twice.json()) == "MEMBER_ALREADY_WITHDRAWN"
+    listed = client.get(MEMBER_PATH.format(journey_id=journey_id)).json()
+    assert [row["id"] for row in listed] == [member["id"]], "the withdrawn row stays in the set, marked"
+    assert listed[0]["removed_at"], listed[0]
+
+
+def test_an_in_force_member_reads_an_invitees_only_grant() -> None:
+    journey_id = _journey()
+    traveler_id = _traveler()
+    _add_member(journey_id, traveler_id)
+    grant = _create(journey_id, "INVITEES_ONLY")
+    ok = client.get(TOKEN_PATH.format(token=grant["token"]), params={"member": traveler_id})
+    assert ok.status_code == 200, ok.text
+    assert ok.json()["id"] == journey_id
+
+    lapsed = _add_member(journey_id, _traveler(), "COLLABORATOR",
+                         expires_at=(datetime.now(timezone.utc) - timedelta(minutes=5)).isoformat())
+    assert lapsed["member_state"] == "MEMBER_LAPSED"
+    assert _reason(client.get(TOKEN_PATH.format(token=grant["token"]),
+                              params={"member": lapsed["traveler_id"]}).json()) == (
+        "SHARE_GRANT_NOT_A_MEMBER"
+    ), "a lapsed membership must not read"
+
+
+def test_the_acl_table_answers_the_product_own_question_about_a_role() -> None:
+    journey_id = _journey()
+    rows = client.get(ACL_PATH.format(journey_id=journey_id)).json()
+    by_role = {row["role"]: row for row in rows}
+    assert sorted(by_role) == ["ADMIN", "COLLABORATOR", "OWNER"], by_role
+    assert "MEMBER_MANAGE" in by_role["ADMIN"]["capabilities"]
+    assert "MEMBER_MANAGE" not in by_role["COLLABORATOR"]["capabilities"]
+    assert set(by_role["OWNER"]["capabilities"]) == {
+        "JOURNEY_READ", "JOURNEY_UPDATE", "PLACE_EDIT", "MEMBER_MANAGE", "SHARE_GRANT_MANAGE",
+    }
+    for row in rows:
+        assert row["scope_message_key"].startswith("member.scope."), (
+            "the table holds a key, not a sentence a screen would have to translate back"
+        )
+
+
+def test_the_bin_scopes_to_an_owner_and_answers_the_same_without_one() -> None:
+    owner = _traveler()
+    other = _traveler()
+    mine = client.post("/api/v1/journeys", json={
+        "traveler_id": owner, "title": "ORD-0434 mine", "city_code": "CN-XIAMEN",
+        "timezone": "Asia/Shanghai", "start_at": START.isoformat(),
+        "end_at": (START + timedelta(days=1)).isoformat(),
+        "budget": {"amount_minor": 1000, "currency": "CNY"}, "planning_mode": "balanced"}).json()["id"]
+    theirs = client.post("/api/v1/journeys", json={
+        "traveler_id": other, "title": "ORD-0434 theirs", "city_code": "CN-XIAMEN",
+        "timezone": "Asia/Shanghai", "start_at": START.isoformat(),
+        "end_at": (START + timedelta(days=1)).isoformat(),
+        "budget": {"amount_minor": 1000, "currency": "CNY"}, "planning_mode": "balanced"}).json()["id"]
+    for journey_id in (mine, theirs):
+        assert client.delete(f"/api/v1/journeys/{journey_id}").status_code == 204
+
+    whole = {row["id"] for row in client.get(BIN_PATH).json()}
+    assert {mine, theirs} <= whole, "the whole-bin door still answers the whole bin"
+    scoped = {row["id"] for row in client.get(OWNER_BIN_PATH.format(traveler_id=owner)).json()}
+    assert scoped == {mine}, scoped
+    assert client.get(OWNER_BIN_PATH.format(traveler_id=uuid4())).json() == []
+    for row in client.get(OWNER_BIN_PATH.format(traveler_id=owner)).json():
+        assert row["bin_state"] == "IN_RECYCLE_BIN" and row["deleted_at"], row
+
+
+def test_the_whole_bin_door_still_advertises_no_filter() -> None:
+    """ORD-0434 tried to add a query parameter here and an ORD-0402 arm said no; that promise holds.
+
+    The scoped view is a door of its own, so this one keeps the constraint it was cut with: no
+    pagination, no scope, no filter parameter in the contract or at runtime.
+    """
+    spec = yaml.safe_load(CONTRACT.read_text(encoding="utf-8"))
+    door = spec["paths"]["/recycle-bin/journeys"]
+    assert "parameters" not in door and "parameters" not in door["get"]
+    runtime = client.get("/openapi.json").json()["paths"]["/api/v1/recycle-bin/journeys"]["get"]
+    assert runtime.get("parameters", []) == [], runtime.get("parameters")

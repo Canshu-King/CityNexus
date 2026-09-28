@@ -1069,3 +1069,41 @@ CREATE UNIQUE INDEX IF NOT EXISTS uq_journey_share_grants_token
 
 CREATE INDEX IF NOT EXISTS idx_journey_share_grants_journey
     ON journey_share_grants(journey_id, created_at);
+
+-- ORD-0434 step 2: one member set per journey, and a role-to-capability table the server holds.
+-- Borrowed shape: RELATION/relation_and_copy_findings.md:94 (each role carries one sentence of
+-- scope) and :133 (an invitation has a lifetime, and a withdrawal has a moment).
+--
+-- `journey_members` is the single set the product speaks of: the unique index below is what makes
+-- "one row per traveller per journey" a store fact rather than a convention a caller must respect.
+-- `expires_at` is NULL for a membership that was given no end - not a far-future date.
+CREATE TABLE IF NOT EXISTS journey_members (
+    id TEXT PRIMARY KEY,
+    journey_id TEXT NOT NULL REFERENCES journeys(id) ON DELETE CASCADE,
+    traveler_id TEXT NOT NULL REFERENCES travelers(id) ON DELETE CASCADE,
+    role TEXT NOT NULL CHECK (role IN ('OWNER','ADMIN','COLLABORATOR')),
+    invited_by TEXT NOT NULL,
+    expires_at TEXT,
+    joined_at TEXT,
+    removed_at TEXT,
+    created_at TEXT NOT NULL,
+    updated_at TEXT NOT NULL
+);
+
+CREATE UNIQUE INDEX IF NOT EXISTS uq_journey_members_journey_traveler
+    ON journey_members(journey_id, traveler_id);
+
+CREATE INDEX IF NOT EXISTS idx_journey_members_journey
+    ON journey_members(journey_id, created_at);
+
+-- The ACL table.  A row says which capability a role has and which message key states its scope in
+-- one sentence - the words themselves stay in the client's dictionary, because a server sentence
+-- reaching a screen is the defect this project keeps having to fix (RELATION:94's shape is a table,
+-- not a string).  Seeded once by `db/session.py`, so it is readable without being editable per trip.
+CREATE TABLE IF NOT EXISTS journey_role_capabilities (
+    role TEXT NOT NULL CHECK (role IN ('OWNER','ADMIN','COLLABORATOR')),
+    capability TEXT NOT NULL CHECK (capability IN ('JOURNEY_READ','JOURNEY_UPDATE','PLACE_EDIT','MEMBER_MANAGE','SHARE_GRANT_MANAGE')),
+    scope_message_key TEXT NOT NULL,
+    created_at TEXT NOT NULL,
+    PRIMARY KEY (role, capability)
+);
