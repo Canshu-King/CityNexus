@@ -1,0 +1,366 @@
+{
+ "schema": "CNX_CMDR_LANDING_PREFLIGHT_V1",
+ "lane": "commander 494abfd7",
+ "at_local": "2026-09-28T20:08:02+0800",
+ "mode": "LAND",
+ "authoritative_line": "mirror/integration-frontend-apple-pass1",
+ "tip_re_read_from_github_before": "742eb2b3e610ab360101709aee57a4d70a83f593",
+ "candidate_ref": "refs/heads/review/cmdr-recut-ord0402-r2",
+ "candidate_tip": "79ca877cb8b3a890a0d9bb353ac1b56b15525510",
+ "genealogy": {
+  "ff_possible_rc": 0,
+  "ff_possible": true,
+  "merge_base": "742eb2b3e610ab360101709aee57a4d70a83f593",
+  "line_only_commits": 0,
+  "candidate_only_commits": 5
+ },
+ "file_sets": {
+  "line_side_since_base": [],
+  "candidate_side_since_base": [
+   "frontend/src/app/v8PanelRegistry.tsx",
+   "frontend/src/features/trash/JourneyTrashPanel.tsx",
+   "frontend/src/features/trash/journeyTrash.css",
+   "frontend/src/features/trash/journeyTrash.ts",
+   "frontend/src/features/trash/journeyTrashCopy.ts",
+   "frontend/src/i18n/LocaleContext.tsx",
+   "frontend/src/routes/v8Routes.ts",
+   "review/evidence/ord0402/MANIFEST.json",
+   "review/evidence/ord0402/copy_pair_candidate-9ebe351f.json",
+   "review/evidence/ord0402/copy_pair_tip-e5a571f8.json",
+   "review/evidence/ord0402/nav-drawer-en.png",
+   "review/evidence/ord0402/nav-drawer-zh-CN.png",
+   "review/evidence/ord0402/nav_entry_r1.json",
+   "review/evidence/ord0402/stack_receipt_r1.json",
+   "review/evidence/ord0402/trash-en-A2_after_scroll.png",
+   "review/evidence/ord0402/trash-en-A_bin_listed.png",
+   "review/evidence/ord0402/trash-en-B_after_one_tap.png",
+   "review/evidence/ord0402/trash-en-C_second_tap_on_stale_row.png",
+   "review/evidence/ord0402/trash-en-D_after_reading_again.png",
+   "review/evidence/ord0402/trash-via-nav-en.png",
+   "review/evidence/ord0402/trash-via-nav-zh-CN.png",
+   "review/evidence/ord0402/trash-zh-CN-A2_after_scroll.png",
+   "review/evidence/ord0402/trash-zh-CN-A_bin_listed.png",
+   "review/evidence/ord0402/trash-zh-CN-B_after_one_tap.png",
+   "review/evidence/ord0402/trash-zh-CN-C_second_tap_on_stale_row.png",
+   "review/evidence/ord0402/trash-zh-CN-D_after_reading_again.png",
+   "review/evidence/ord0402/trash_two_arms_r1.json",
+   "review/ord0402/copy_pair_trash_r1.py",
+   "review/ord0402/drive_trash_r1.mjs",
+   "review/ord0402/make_manifest_r1.py",
+   "review/ord0402/nav_entry_r1.mjs",
+   "review/ord0402/private_stack_r1.py",
+   "review/ord0402/prove_ownership_r1.py",
+   "review/ord0402/serve_trash_r1.mjs",
+   "review/ord0402/trash_door_assembly_r1.py",
+   "review/ord0402/wire_trash_r1.py"
+  ],
+  "intersection": [],
+  "product_introduced_by_candidate": [
+   "frontend/src/app/v8PanelRegistry.tsx",
+   "frontend/src/features/trash/JourneyTrashPanel.tsx",
+   "frontend/src/features/trash/journeyTrash.css",
+   "frontend/src/features/trash/journeyTrash.ts",
+   "frontend/src/features/trash/journeyTrashCopy.ts",
+   "frontend/src/i18n/LocaleContext.tsx",
+   "frontend/src/routes/v8Routes.ts"
+  ]
+ },
+ "merge_tree": {
+  "exit": 0,
+  "first_line": "2243abac86486faf3f4755ac7e8225cc46778d62",
+  "conflict_reported": false,
+  "stderr_head": ""
+ },
+ "gate_run": {
+  "requested": [],
+  "collect_exit": null,
+  "collected": null,
+  "test_exit": null,
+  "summary": null,
+  "export": "D:/moodle/_qoder_cmdr_ref_20260921/snap_preflight_200733",
+  "blob_equality": [
+   {
+    "path": "frontend/src/app/v8PanelRegistry.tsx",
+    "candidate_blob": "dbcde683094e4087c5aa82cf16e6f26536c306a3",
+    "export_blob": "dbcde683094e4087c5aa82cf16e6f26536c306a3",
+    "equal": true
+   },
+   {
+    "path": "frontend/src/features/trash/JourneyTrashPanel.tsx",
+    "candidate_blob": "ec3b40c6f6dc8e8e14de07aef4e9d05c8320bc36",
+    "export_blob": "ec3b40c6f6dc8e8e14de07aef4e9d05c8320bc36",
+    "equal": true
+   },
+   {
+    "path": "frontend/src/features/trash/journeyTrash.css",
+    "candidate_blob": "821391308ff752eeca7dbe65a6292cfbcc97bb3b",
+    "export_blob": "821391308ff752eeca7dbe65a6292cfbcc97bb3b",
+    "equal": true
+   },
+   {
+    "path": "frontend/src/features/trash/journeyTrash.ts",
+    "candidate_blob": "2bb4d1c367eacff3674d276636d6f3556b8c6ddf",
+    "export_blob": "2bb4d1c367eacff3674d276636d6f3556b8c6ddf",
+    "equal": true
+   },
+   {
+    "path": "frontend/src/features/trash/journeyTrashCopy.ts",
+    "candidate_blob": "fb8421d836edc449e6d88d3849a24c27ae9091d4",
+    "export_blob": "fb8421d836edc449e6d88d3849a24c27ae9091d4",
+    "equal": true
+   },
+   {
+    "path": "frontend/src/i18n/LocaleContext.tsx",
+    "candidate_blob": "382051438d56b014ca3674b3bbf8cf0246e23538",
+    "export_blob": "382051438d56b014ca3674b3bbf8cf0246e23538",
+    "equal": true
+   },
+   {
+    "path": "frontend/src/routes/v8Routes.ts",
+    "candidate_blob": "426dc562ac0c577d3f97d329d86a446e1f2fca5b",
+    "export_blob": "426dc562ac0c577d3f97d329d86a446e1f2fca5b",
+    "equal": true
+   },
+   {
+    "path": "review/evidence/ord0402/MANIFEST.json",
+    "candidate_blob": "0260de8100985573228e657266350428dc74bbec",
+    "export_blob": "0260de8100985573228e657266350428dc74bbec",
+    "equal": true
+   },
+   {
+    "path": "review/evidence/ord0402/copy_pair_candidate-9ebe351f.json",
+    "candidate_blob": "e3556147f0b5241e9a9c797614233b7dbb6a515e",
+    "export_blob": "e3556147f0b5241e9a9c797614233b7dbb6a515e",
+    "equal": true
+   },
+   {
+    "path": "review/evidence/ord0402/copy_pair_tip-e5a571f8.json",
+    "candidate_blob": "cd866582eb946a89711e5172feae842b74ae1063",
+    "export_blob": "cd866582eb946a89711e5172feae842b74ae1063",
+    "equal": true
+   },
+   {
+    "path": "review/evidence/ord0402/nav-drawer-en.png",
+    "candidate_blob": "8e32224dbb157de7c5057e2e5d6ca53e126c0931",
+    "export_blob": "8e32224dbb157de7c5057e2e5d6ca53e126c0931",
+    "equal": true
+   },
+   {
+    "path": "review/evidence/ord0402/nav-drawer-zh-CN.png",
+    "candidate_blob": "2ba81f1d85b09afaca87d44a9bbbd37af9605c2d",
+    "export_blob": "2ba81f1d85b09afaca87d44a9bbbd37af9605c2d",
+    "equal": true
+   },
+   {
+    "path": "review/evidence/ord0402/nav_entry_r1.json",
+    "candidate_blob": "44dc16063a70eef5ced2db627e8ec23ecc21400a",
+    "export_blob": "44dc16063a70eef5ced2db627e8ec23ecc21400a",
+    "equal": true
+   },
+   {
+    "path": "review/evidence/ord0402/stack_receipt_r1.json",
+    "candidate_blob": "7c1600c4232c77388160622b3c61c1d8c1b1c0c3",
+    "export_blob": "7c1600c4232c77388160622b3c61c1d8c1b1c0c3",
+    "equal": true
+   },
+   {
+    "path": "review/evidence/ord0402/trash-en-A2_after_scroll.png",
+    "candidate_blob": "43447c29ce9f4428663f101a05f6154ccfe425f1",
+    "export_blob": "43447c29ce9f4428663f101a05f6154ccfe425f1",
+    "equal": true
+   },
+   {
+    "path": "review/evidence/ord0402/trash-en-A_bin_listed.png",
+    "candidate_blob": "7470591b4aa23caf0cd56e1c6153341fe5783dcb",
+    "export_blob": "7470591b4aa23caf0cd56e1c6153341fe5783dcb",
+    "equal": true
+   },
+   {
+    "path": "review/evidence/ord0402/trash-en-B_after_one_tap.png",
+    "candidate_blob": "56963ffad796b257a5a0741b85f94707107a1c25",
+    "export_blob": "56963ffad796b257a5a0741b85f94707107a1c25",
+    "equal": true
+   },
+   {
+    "path": "review/evidence/ord0402/trash-en-C_second_tap_on_stale_row.png",
+    "candidate_blob": "9a95ab9d418d97fb6fd3447df1b85dfe32bbb515",
+    "export_blob": "9a95ab9d418d97fb6fd3447df1b85dfe32bbb515",
+    "equal": true
+   },
+   {
+    "path": "review/evidence/ord0402/trash-en-D_after_reading_again.png",
+    "candidate_blob": "c2967c3b0dcabc89d34a0c368f3e57397ebc83d8",
+    "export_blob": "c2967c3b0dcabc89d34a0c368f3e57397ebc83d8",
+    "equal": true
+   },
+   {
+    "path": "review/evidence/ord0402/trash-via-nav-en.png",
+    "candidate_blob": "63e7f93c58d2aa60ba8d4688346ce0147ffa584b",
+    "export_blob": "63e7f93c58d2aa60ba8d4688346ce0147ffa584b",
+    "equal": true
+   },
+   {
+    "path": "review/evidence/ord0402/trash-via-nav-zh-CN.png",
+    "candidate_blob": "3eaa47c9467de1ca7bb49af4753e6cf91cd3e9db",
+    "export_blob": "3eaa47c9467de1ca7bb49af4753e6cf91cd3e9db",
+    "equal": true
+   },
+   {
+    "path": "review/evidence/ord0402/trash-zh-CN-A2_after_scroll.png",
+    "candidate_blob": "d92a2caa3785671d0dcc9b30cbb2fac7af3ccd7c",
+    "export_blob": "d92a2caa3785671d0dcc9b30cbb2fac7af3ccd7c",
+    "equal": true
+   },
+   {
+    "path": "review/evidence/ord0402/trash-zh-CN-A_bin_listed.png",
+    "candidate_blob": "d92a2caa3785671d0dcc9b30cbb2fac7af3ccd7c",
+    "export_blob": "d92a2caa3785671d0dcc9b30cbb2fac7af3ccd7c",
+    "equal": true
+   },
+   {
+    "path": "review/evidence/ord0402/trash-zh-CN-B_after_one_tap.png",
+    "candidate_blob": "ab8e3c1ae7490215d17d91660c2d7d31a8bdd1c9",
+    "export_blob": "ab8e3c1ae7490215d17d91660c2d7d31a8bdd1c9",
+    "equal": true
+   },
+   {
+    "path": "review/evidence/ord0402/trash-zh-CN-C_second_tap_on_stale_row.png",
+    "candidate_blob": "898a25d6d105907c6534d15bde6ded46408dc54f",
+    "export_blob": "898a25d6d105907c6534d15bde6ded46408dc54f",
+    "equal": true
+   },
+   {
+    "path": "review/evidence/ord0402/trash-zh-CN-D_after_reading_again.png",
+    "candidate_blob": "3eaa47c9467de1ca7bb49af4753e6cf91cd3e9db",
+    "export_blob": "3eaa47c9467de1ca7bb49af4753e6cf91cd3e9db",
+    "equal": true
+   },
+   {
+    "path": "review/evidence/ord0402/trash_two_arms_r1.json",
+    "candidate_blob": "0656ca48fd549f0cc01f1df9e9470123e9abb7df",
+    "export_blob": "0656ca48fd549f0cc01f1df9e9470123e9abb7df",
+    "equal": true
+   },
+   {
+    "path": "review/ord0402/copy_pair_trash_r1.py",
+    "candidate_blob": "5c94996fb37cf51523aa78005ca0ea0affeef051",
+    "export_blob": "5c94996fb37cf51523aa78005ca0ea0affeef051",
+    "equal": true
+   },
+   {
+    "path": "review/ord0402/drive_trash_r1.mjs",
+    "candidate_blob": "8d4a7ccde4eeb6747fdbbdac76cbaeee96a6f4a3",
+    "export_blob": "8d4a7ccde4eeb6747fdbbdac76cbaeee96a6f4a3",
+    "equal": true
+   },
+   {
+    "path": "review/ord0402/make_manifest_r1.py",
+    "candidate_blob": "f3d92db5f481cd93b4d0d4c9748af2a9cd7a286b",
+    "export_blob": "f3d92db5f481cd93b4d0d4c9748af2a9cd7a286b",
+    "equal": true
+   },
+   {
+    "path": "review/ord0402/nav_entry_r1.mjs",
+    "candidate_blob": "f45adb6e66ecb477d8d9bad412d10d47209cb72f",
+    "export_blob": "f45adb6e66ecb477d8d9bad412d10d47209cb72f",
+    "equal": true
+   },
+   {
+    "path": "review/ord0402/private_stack_r1.py",
+    "candidate_blob": "f9e6b8715c37696634e767caa1d2d1892c5a2d52",
+    "export_blob": "f9e6b8715c37696634e767caa1d2d1892c5a2d52",
+    "equal": true
+   },
+   {
+    "path": "review/ord0402/prove_ownership_r1.py",
+    "candidate_blob": "2f2e928db38d1d21ee6aac645a8050c95807ab0f",
+    "export_blob": "2f2e928db38d1d21ee6aac645a8050c95807ab0f",
+    "equal": true
+   },
+   {
+    "path": "review/ord0402/serve_trash_r1.mjs",
+    "candidate_blob": "7f777e5edeea07f604a2f25d7a7ddff172703e42",
+    "export_blob": "7f777e5edeea07f604a2f25d7a7ddff172703e42",
+    "equal": true
+   },
+   {
+    "path": "review/ord0402/trash_door_assembly_r1.py",
+    "candidate_blob": "88614c7a97e0158cdf1e2d13d0c9943de71fc809",
+    "export_blob": "88614c7a97e0158cdf1e2d13d0c9943de71fc809",
+    "equal": true
+   },
+   {
+    "path": "review/ord0402/wire_trash_r1.py",
+    "candidate_blob": "6213ad849e2dee93fd56a22778e39d127f0d1a94",
+    "export_blob": "6213ad849e2dee93fd56a22778e39d127f0d1a94",
+    "equal": true
+   }
+  ],
+  "whole_suite": {
+   "collect_exit": 0,
+   "collected": 1433,
+   "interrupted": false,
+   "error_lines": [
+    "tests/test_qoder_ord0332_error_receipt.py::test_R7_the_envelope_keeps_every_field_it_already_had",
+    "tests/test_qoder_ord0332_error_receipt.py::test_R8_the_seed_is_read_off_the_real_request_not_just_the_dataclass",
+    "tests/test_solver_runtime_policy.py::test_unexpected_solver_programming_error_is_not_silently_hidden"
+   ],
+   "tail": [
+    "    _PortalFactoryType = Callable[[], AbstractContextManager[anyio.abc.BlockingPortal]]",
+    "-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html",
+    "1433 tests collected in 7.50s"
+   ],
+   "cmd": "D:/moodle/CityNexus/.venv/Scripts/python.exe -m pytest --collect-only -q tests  (cwd=<export>/backend, PYTHONPATH=<export>)"
+  },
+  "deletions": {
+   "deleted_by_candidate": [],
+   "still_present_in_export": []
+  },
+  "interpreter": "Python 3.12.14 (main, Aug 25 2026, 14:01:42) [MSC v.1944 64 bit (AMD64)]",
+  "exposure": {
+   "skipped": "arm off"
+  },
+  "frontend_build": {
+   "builder_rc": 0,
+   "vite_build_rc": 0,
+   "dist_exists": true,
+   "index_exists": true,
+   "asset_refs": [
+    "/assets/index-C06ZwEPS.js",
+    "/assets/index-BFTMjFS_.css"
+   ],
+   "live_tree": "2243abac86486faf3f4755ac7e8225cc46778d62",
+   "info_file": "D:\\moodle\\_qoder_cmdr_ref_20260921\\live_checks\\_build_79ca877_info.json",
+   "build_tail": [
+    "files generated",
+    "  dist/v10-sw.js",
+    "  dist/workbox-6923124b.js",
+    "\u001b[33m",
+    "(!) Some chunks are larger than 500 kB after minification. Consider:",
+    "- Using dynamic import() to code-split the application",
+    "- Use build.rollupOptions.output.manualChunks to improve chunking: https://rollupjs.org/configuration-options/#output-manualchunks",
+    "- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.\u001b[39m"
+   ]
+  }
+ },
+ "problems": [],
+ "verdict": "READY_TO_LAND",
+ "landing": {
+  "http": 200,
+  "response_head": "{'ref': 'refs/heads/mirror/integration-frontend-apple-pass1', 'node_id': 'REF_kwDOUhlJJ9oAMnJlZnMvaGVhZHMvbWlycm9yL2ludGVncmF0aW9uLWZyb250ZW5kLWFwcGxlLXBhc3Mx', 'url': 'https://api.github.com/repos/Ca",
+  "tip_after": "79ca877cb8b3a890a0d9bb353ac1b56b15525510",
+  "branches_route": "79ca877cb8b3a890a0d9bb353ac1b56b15525510",
+  "both_routes_agree": true,
+  "landed": true
+ },
+ "discipline": {
+  "evidence_paths_overwritten": 0,
+  "databases_opened": 0,
+  "surfaces_started_or_stopped": 0,
+  "credential_values_printed": 0,
+  "candidate_refs_pushed_by_commander": 0
+ },
+ "claim_kind": "git_and_pytest_determined",
+ "claimed_result": null,
+ "derived_result": null
+}
