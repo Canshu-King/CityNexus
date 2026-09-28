@@ -37,9 +37,7 @@ import "./journeyTrash.css";
 
 type Outcome =
   | { kind: "found"; title: string }
-  | { kind: "already" }
-  | { kind: "gone" }
-  | { kind: "refused"; code: string | null; facts: RawFacts | null }
+  | { kind: "already" | "gone" | "refused"; code: string | null; facts: RawFacts | null }
   | { kind: "unknown"; attribution: Attribution };
 
 type ReadState =
@@ -99,8 +97,8 @@ export function JourneyTrashPanel() {
     } catch (cause) {
       const code = refusalReasonCode(cause);
       const facts = cause instanceof RejectionWithFacts ? cause.facts : null;
-      if (code === "JOURNEY_NOT_DELETED") setOutcome({ kind: "already" });
-      else if (code === "JOURNEY_NOT_FOUND") setOutcome({ kind: "gone" });
+      if (code === "JOURNEY_NOT_DELETED") setOutcome({ kind: "already", code, facts });
+      else if (code === "JOURNEY_NOT_FOUND") setOutcome({ kind: "gone", code, facts });
       else if (cause instanceof RejectionWithFacts) setOutcome({ kind: "refused", code, facts });
       else setOutcome({ kind: "unknown", attribution: classifyReadFailure(cause) });
     } finally {
@@ -200,14 +198,25 @@ export function JourneyTrashPanel() {
         </>
       )}
 
+      {/* A list can go stale under a traveller's finger -- arm C of the acceptance run is exactly that
+          -- so reading it again has to be something they can do from this screen, not something that
+          only appears when the read failed. */}
+      {read.phase === "ready" && (
+        <button type="button" className="v8-quiet-button" data-testid="trash-refresh" onClick={() => void load()}>
+          {say("trash.refresh")}
+        </button>
+      )}
+
       {outcomeText && (
         <p className="cn-trash-outcome" role="status" data-testid="trash-outcome" data-cnx-outcome={outcome?.kind}>
           {outcomeText}
-          {outcome?.kind === "refused" && outcome.code ? (
+          {outcome && "code" in outcome && outcome.code ? (
             <details className="cn-trash-details">
               <summary>{t("agent.advancedDetail")}</summary>
               {/* The server's own token, on the details face only: the traveller already has the
-                  sentence above, and a code is not a diagnosis without its number. */}
+                  sentence above, and a code is not a diagnosis without its number. Named refusals
+                  carry it too -- a screen that explains a condition it cannot quote leaves the next
+                  person reading the log with nothing to grep. */}
               <span className="cnx-measured-fact" data-cnx-field="reason_code" data-cnx-value={outcome.code}>
                 {outcome.code}
               </span>
