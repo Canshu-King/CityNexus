@@ -36,8 +36,7 @@ const en: Dict = {
   "shell.noJourney": "No journey available",
   "shell.offlineMsg": "Network unavailable · showing your read-only saved journey.",
   "shell.loadError": "Unable to load the journey",
-  "shell.addressNoScreen":
-    "This address names no screen (it asks for “{segment}”), so this is Today.",
+  "shell.addressNoScreen": "This address names no screen (it asks for “{segment}”), so this is Today.",
 
   // ── Shell: sidebar ──
   "shell.brand": "CityNexus",
