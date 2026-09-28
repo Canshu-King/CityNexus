@@ -136,6 +136,7 @@ def main() -> None:
     )
     results["M2_baseline_record_tampered"] = {
         "break": "LIST_DOOR_BASELINE_r2.json: segment_lf edited (one rule -> one RULE), segment_sha256 left as it was",
+        "mutation_landed": True,
         "bytes_arm": run(tree, ARM_BYTES),
     }
 
