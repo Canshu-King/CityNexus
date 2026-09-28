@@ -778,9 +778,22 @@ export function CopilotDock({
     /* Measure once the scroll has settled, not during it: while the page is
        moving, content passing under a floating accessory is not the defect. */
     let timer = 0;
+    /* A settled scroll is not one stable frame: CJK fallback and the panels' entrance
+       animation can move a line of text after the first measurement. Two bounded
+       re-checks follow each settle, and the counter resets on the next scroll, so this
+       is a second look, not a poll. */
+    let passes = 0;
+    const measureSettled = () => {
+      measure();
+      if (passes < 2) {
+        passes += 1;
+        window.setTimeout(measureSettled, 320);
+      }
+    };
     const schedule = () => {
       window.clearTimeout(timer);
-      timer = window.setTimeout(measure, 220);
+      passes = 0;
+      timer = window.setTimeout(measureSettled, 220);
     };
     /* A resize changes where the pill rests, so forget the remembered band and let the next
        at-rest measurement re-derive it; the pill returns to rest for that one frame. */
@@ -790,7 +803,7 @@ export function CopilotDock({
       setYieldSlot(null);
       schedule();
     };
-    measure();
+    measureSettled();
     window.addEventListener("scroll", schedule, { passive: true });
     window.addEventListener("resize", onResize);
     return () => {
