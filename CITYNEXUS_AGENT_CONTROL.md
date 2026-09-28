@@ -16588,6 +16588,232 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### ORD-B r2 · 车道 rel · 回答"真响应体里到底有没有这两格" · 2026-09-28 0408+08
+
+候选 `review/REL-ordb-r2-contract-visible`，tip `d0cb102188c2c4350c1ab9c466f44c4b9f040908`，父 commit 逐字等于您落的 tip `213750423d9bdc10672c0488f76f8b0963d88765`（`git merge-base --is-ancestor <您的tip> HEAD` 退出码 0，读自 `D:/moodle/_qoder_rel_ordb_r2`）。已自推：`git push -u origin …` 后 `git ls-remote https://github.com/Canshu-King/CityNexus.git refs/heads/review/REL-ordb-r2-contract-visible` → `d0cb102188c2c4350c1ab9c466f44c4b9f040908`。4 个文件、66 行增、31 行删（`git show --stat d0cb102188c2c4350c1ab9c466f44c4b9f040908`）。
+**我没重做您已验的东西**（重切 8/8、编译臂、手机五格），这一笔只动您问的那一条链。
+
+## 您那一个问题的答案：有。两条腿都有，逐字贴
+
+跑的是**您落的那枚 tip 本身**（另开一份 worktree `_qoder_rel_ordb_tip_21375` detached 在 `21375042…`，我自己的库副本 `_qoder_rel_ordb_wk/tip.db`），三证：8138 的监听 pid 9984 ← 父 23992 的 CommandLine 就是我那行 `uvicorn app.main:app --host 127.0.0.1 --port 8138`，数据证是下面那行 marker 被 HTTP 取回来了。
+
+**腿一 `GET /api/v1/places?city_code=CNX-DEMO`** → HTTP 200、2423 B、9 行，9/9 行都带三格。逐字（`_qoder_rel_ordb_wk/r2_places.json` 第 13 行原文）：
+`{"id": "place-relb-marker-ordb", "name": "REL-B MARKER PLACE 7c31", "category": "attraction", "city_code": "CNX-DEMO", "location": {"latitude": 39.1, "longitude": -105.2}, "tags": [], "provider_key": "relb-marker-provider", "coordinate_system": "WGS84", "source_coordinate_system": null}`
+
+**腿二 `POST /api/v1/journeys/22222222-2222-4222-8222-222222222222/real-city/discover`** → HTTP 200、56630 B、`mode=captured_replay`、`provenance=SEALED_LIVE_CAPTURE`、5 条候选，5/5 都带两格。逐字（第 1 条，`_qoder_rel_ordb_wk/r2_facts.txt:7`）：
+`{"id":"real-place-f9f6b604dddcbaf4d27517a8","provider_key":"openstreetmap-replay","coordinate_system":"WGS84","source_coordinate_system":null}`
+具名到实体：那 5 条是 `天津义和团纪念馆`(`way/1464199917`)、`天津文化中心`(`way/73422999`，唯一带 host `https://www.tjbwg.cn/cn/Notice.aspx`)、`天津文庙博物馆`(`node/5172762221`)、`天津老城博物馆`(`node/5172662927`)、`平津战役纪念馆`(`way/1228981599`)；行程行 `city_code=CNX-DEMO`，实体名是天津（`backend/app/integrations/discovery/real_city.py:570-572` 把 CNX-DEMO 也算作可用封存回放的城市）。
+
+## 那 OpenAPI 为什么看不见——两层，您猜中了一层，另一层更要紧
+
+1. **运行期那份 `/openapi.json` 根本不认识 `contracts/openapi.yaml`**：它由 FastAPI 从 `response_model` 生成。`@app.get("/api/v1/places")`（`backend/app/main.py:4682`）以前没写 `response_model` ⇒ 我在您那枚 tip 上实测 `/openapi.json` 136979 B 里 **`Place` 组件不存在**、`coordinate_system` **0 命中**、`/api/v1/places` 的 200 响应 schema 是字面的 `{}`。
+2. 您看到的 `provider_key` 命中不是地点面：那 15 处全在 `AgentToolCall`、`Booking`、`BookingCreate`、`BookingSlot`、`Event`、`EventCreate`、`Order`、`OrderCreate`、`ScheduleChangeRequest`、`Transaction`、`TransactionCreate` 这些 schema 里（我把命中所在组件名逐个列出来了）。所以"运行期契约里有 provider_key ⇒ 地点那格可见"这个推理不成立。
+3. 更根底的一条：`tools/verify_openapi_parity.py` 只比"路径 × 方法"，**字段面它一概不看**（脚本 `tools/verify_openapi_parity.py:1-53`，比对逻辑就是 `formal_paths()` 与 `runtime_paths()` 两个集合差）⇒ 手写契约与生成契约之间没有任何门。我 r1 改的是手写那份，它一直有这两格；生成那份从来没有。两份互不知晓。
+4. 顺带纠您转述的 TS 那一半：**落地的那枚 tip 上 TS 不是可选**。`frontend/src/api/citynexus.ts:63` 是 `provider_key: string;`、`:64` 是 `coordinate_system: string;`、`:67` 是 `source_coordinate_system: string | null;` —— 全都没有 `?`。带 `?` 的是**另一处**：屏实际读的 `frontend/src/features/discovery/RealCityDiscoveryPanel.tsx:14`（`provider_key?: string`，落地前就有）与我加的 `:17-18`（候选侧两格）。这两处不一致是真实存在的，但方向不是"TS 声明成可选"，而是"两个 TS 面各有各的严格度，而屏读的那个更松"。
+
+**补的那一行**（您授权的"补一行"）：`backend/app/main.py:4682` 改成 `@app.get("/api/v1/places", response_model=list[PlaceSchema])`，并在 `:379` 按房内"一个 schema 一块 import、`X as XSchema`"的写法补了 `Place as PlaceSchema`（`main.py:134` 那个 `Place` 是 ORM，不能用）。效果实测在 8139：`/openapi.json` 136979 B → **137986 B**、`Place` 组件出现、`coordinate_system` **2 命中**、`source_coordinate_system` **2 命中**、`provider_key` 17 命中（原 15 + 地点面 2）。
+**关键安全读数**：加了 `response_model` 会让 FastAPI 校验并可能过滤输出——同一条请求改前/改后响应体**逐字节相同**（都是 2423 B，sha256 前缀同为 `b0891934b7eed004`）⇒ 这一行不改变载荷，只让它可被声明。
+顺带对齐了一处不一致：`source_coordinate_system` 在 FastAPI 生成的 `required` 里（我故意不给默认值 ⇒ pydantic 判它必填），而手写那份原先把它放在 `required` 外。现在 `contracts/openapi.yaml:2130` 也列进 `required`，两份**9 个 properties、8 个 required 名字完全相同**（我写了个交叉核对，按字段比类型，唯一差异是我的归一器把 `[string,'null']` 与 `anyOf[string,null]` 写成两种字面，语义一致）。
+
+## 屏那侧：您点的"没给 vs 没问"确实是混写，已拆
+
+r1 落的版本里 `frontend/src/components/PlaceProvenance.tsx:66` 是 `source ?? c.noSource` —— `undefined`（这次载荷根本没这格）与 `null`（服务器答了"未记录"）走同一句。您说的风险成立，且不是假想：屏读的那条腿在 `contracts/openapi.yaml:972` 至今是 `candidates: {type: array, items: {type: object}}`，任何一代载荷少给我这两格，屏上就会把"没问/没带"读成"服务器说没记录"。
+现在三态分开（`frontend/src/components/PlaceProvenance.tsx:34-44` 的 `resolve` 与 `shown`，句面在 `frontend/src/i18n/placeProvenanceCopy.ts:37` 与 `:51`）：字符串=事实并挂锚；`null` → 各格自己的"未记录"句；缺席或空串 → **`这一格服务器这次没有给` / `the server did not send this cell this time`**，且不挂任何锚。另外 `<summary>` 之前没有可读名称，现在带上了 `来源与坐标系 · …`（`placeProvenanceCopy.ts:31/45` 那个一直没人读的 `detailsLabel` 于是有了读者）。
+
+## 门禁（条件与分母都写全）
+
+后端收集：`cd backend && PYTHONPATH=<r2树根> .venv/…python -m pytest --collect-only -q` → **1393 tests collected in 8.15s**，与 r1、与基线三次数一致。
+定向：`tests/test_contract.py tests/test_qoder_catalog_hydration.py tests/test_v1922_six_fix_regressions.py tests/test_wp01_wp03.py` → **62 passed in 8.46s**。
+整套：`-q` → **9 failed, 1368 passed, 15 skipped, 1 xfailed in 198.95s**。红集合与您基线上那 9 枚的交集 **9/9**、差集 **0 行**（`comm -13 base_set r2_set` 空）。上一跑多的那枚 `tests/test_sol_guardian_projection.py::test_guardian_status_lists_runs_newest_first` 这一跑回到绿 ⇒ 坐实它是套件内他车状态依赖，不是我的补丁。
+契约门：`tools/verify_openapi_parity.py` → `formal 149; runtime 149; missing 0; extra 0`。
+前端两门（导出目录 `_qoder_rel_ordb_wk/build/frontend`，先清空 `src`/`e2e`/`public` 再同步 r2 的 89 个 src 文件，`cp -al` 带 node_modules）：`tsc -p tsconfig.check.json --noEmit` 退出码 0、`tsc -p tsconfig.typecheck.json --noEmit` 退出码 0、`vite build` 退出码 0、`precache 8 entries (2489.56 KiB)`、产出 `dist/v10-sw.js`。
+**没碰**：`frontend/src/i18n/LocaleContext.tsx` —— `git -C D:/moodle/_qoder_rel_ordb_r2 show --name-only --format="" d0cb102188c2c4350c1ab9c466f44c4b9f040908` 列出的文件 4 个、其中该字典出现 0 次；提交后同一棵树 `git status --porcelain` 回 0 行（工作区干净）。、`_preview.db`、demo/reset、别的屏。
+
+## 两条我没做、该您排的
+
+1. `@app.post("…/real-city/discover")`（`backend/app/main.py:1714`，r2 树上；r1 树未加 import 前是 `:1711`）仍**无 `response_model`** ⇒ 屏上那两格在运行期契约里还是不可见。补它要新建一个候选响应模型：`main.py:138` 只是 `RealPlaceCandidate` 的**导入名**（`class RealPlaceCandidate` 在 `main.py` 里 0 命中，它是 `backend/app/db/models.py:415` 的一张**表**），它与 `backend/app/integrations/discovery/real_city.py:1202-1216` 实际发射的那 15 个键是不是同一集合**我没核**，所以没硬套模型——拿 ORM 表当响应模型再套错，等于把一个我没验过的形状写进契约。要么按发射面写新模型、要么先只声明键集合，需要您定形状。
+2. `lane_push_preflight_r1.py` 的"枝名空闲"读数我复现了您的坑：只有传 `refs/heads/…` 全名时才可信，且它不遮代理环境 ⇒ 在本机一律 UNPROVEN（我这台的 `HTTP_PROXY/HTTPS_PROXY=127.0.0.1:7892` 无人监听，对照组遮代理后读到您的 tip sha 本身）。
+
+## 正确入口名（您 405 的那处）
+
+**没有** `GET /api/v1/journeys`：集合上只有 `@app.post("/api/v1/journeys", status_code=201)`（`backend/app/main.py:2804`，r2 树；`grep -c '@app.get("/api/v1/journeys"'` 回 0），所以 GET 会被 FastAPI 判 405，不是路由名猜错。单个读用 `@app.get("/api/v1/journeys/{journey_id}")`（`:2878`）。全树没有"列出某旅行者所有行程"的 GET（`grep -c '@app.get("/api/v1/travelers[^"]*journeys' backend/app/main.py` 回 0）⇒ 要枚举行程只能读库：`SELECT id, city_code, title FROM journeys`，我这次用的是 `city_code=CNX-DEMO` 那行。
+
+
+### ORD-0389 补块（lane Q）— 生成物不手合：重跑生成命令，输出与线上已提交的 api.ts 逐字节相同
+
+先回你那条判定：它在你审的头上成立。`git merge-tree --write-tree cf0ed0b531681181642a30120a1b41f2bf681a40 f53f7fb8bac528e07d0cf91c242533796cd4c698` 我这边复跑 rc=1，报的就是 `CONFLICT (content): Merge conflict in frontend/src/generated/api.ts`。
+但你给的 3 步在我**当前头**上已经做完了（我在你这条之前自己合到 cf0ed0b5 并用 yaml 重生过 api.ts；当时也确认过唯一冲突就在这个生成物上）。
+本头 `a9939562c6dc2389dba07ed5eeb4e23a3f3068d0`，远端回验相等=True；现尖 `8fddeb76a79968592a7a3e98d2f296dda450d4df`；`git merge-tree --write-tree 8fddeb76a799 a9939562c6dc` rc=0（无 CONFLICT 行）。
+
+**你要的那条命令原文**（检出后可直接跑，在 `frontend/` 下）：`npx openapi-typescript ../contracts/openapi.yaml -o src/generated/api.ts`，openapi-typescript 7.13.0（`frontend/package.json` 里钉的 devDependency）。我这次为不脏工作树，指到临时副本跑的，输入是 `git show 8fddeb76a799:contracts/openapi.yaml` = blob `177f3ad34f4198e87f9d8353b10d9724a816c55d`（113466 字节）。
+
+**确定性读数**（这是区分「重生成」与「手合」的那把尺，件 `review/ord0389-reset-token/I_REGEN_DETERMINISM.txt` blob `9a0b879f5362694d2cbda2f93a0fc961b5e0fdbd`）：
+  · 重跑输出 = 206652 字节 sha256 `07e2cf146049a00220d9ae56c650040cc405aa855e60b7704d1537331032c859`，线上已提交的 `frontend/src/generated/api.ts`（blob `c3810367191db548e2a82c109605aefd7ba52f3b`）**同字节同摘要** ⇒ `BYTE-IDENTICAL: True`（`review/ord0389-reset-token/I_REGEN_DETERMINISM.txt:21`）。手合出来的生成物带着任何命令都发不出的身体，重放必然不等于任何一个输入的命令产物。
+  · 线与我 HEAD 的 `contracts/openapi.yaml` blob 相等=True；`frontend/src/generated/api.ts` blob 相等=True ⇒ 落上线的就是我测过的那份字节，不是「auto-merge 出谁都没测过的第三态」（`review/ord0389-reset-token/I_REGEN_DETERMINISM.txt:31`）。
+  · 两次 merge-tree 读数原文在 `review/ord0389-reset-token/I_REGEN_DETERMINISM.txt:27` 与 `review/ord0389-reset-token/I_REGEN_DETERMINISM.txt:28`。
+
+**其余要件不受影响，且都已在头 39fb27d4fbf38d91c016b0629f0bafda39360931 上重测过**：具名令牌从 `CITYNEXUS_DEMO_RESET_TOKEN` 读、默认未配置⇒开箱即用不可用；两道门都在 `stop_autorun()` 之前；`RESET_TOKEN_REQUIRED` / `RESET_TOKEN_INVALID` 独立命名不复用通用 403；测试没改断言换绿（125 处 fixture 门自带令牌，故意断言 403 的 `backend/tests/test_qoder_simulation_mode.py:103` 保持不带）。契约与构建门：`tools` 侧无改动，`npx tsc -p tsconfig.typecheck.json` / `-p tsconfig.check.json` / `npx vite build` 均 exit=0，后端套件在合并树上 `1329 passed / 9 failed`、相对基线 `10 failed` **零新红**。
+
+**仍没改善的部分**（原样保留，不在本块动）：开机路径 `frontend/src/main.tsx:216`/`:219` → `frontend/src/demo/goldenScenario.ts:33` → `frontend/src/api/citynexus.ts:768` 仍发不带令牌的重置请求，实测落「新建行程」三步向导（读数在 `review/ord0389-reset-token/H_BOOT_OBSERVED.txt`，它同时勘误了我 `c64190ad` 提交信息里「落错误屏」的说法）；14 个直调该路由的 e2e 规格一个都没改（要跑需 e2e 后端配令牌并逐个带头，而我不能真跑 e2e，所以不假装改好）。
+
+
+### ORD-0382 第五块 · qoder 前端车道 · 第二次重切（这次撞的是 styles.css，不是那个组件）
+候选　　refs/heads/review/Q-ord0382-ai-three-stage-r4 头 bfd020be68c24416e471467bde518935da80d913。命令者点名的尖 cf0ed0b531681181642a30120a1b41f2bf681a40 与推送时的现尖 8fddeb76a79968592a7a3e98d2f296dda450d4df 各跑一次只读 `git merge-tree --write-tree`：退出码 0 与 0，CONFLICT 0 与 0 条，两条都干净。r2 与 r3 原样留在 origin，本枚走新 ref，没有强推
+实际撞的文件　不是命令者预估的 PlanWithAiSheet.tsx，而是 frontend/src/styles.css：两侧都往文件尾追加（HEAD 侧是 ORD-0386 的版本历史面板，我侧是 ORD-0382 的窄屏块），解法是两块都留、只去掉三行冲突标记，谁也没被覆盖
+ORD-0387 那半完好　重切后 frontend/src/features/planning/PlanWithAiSheet.tsx:324 仍是 aiStateFromServer(body: AgentRuntimeStatus | null)，与现尖逐字同处同签名，本车道没有另推一套四态；屏上那句 AI 关闭态文案也没被我改写过
+新一代重取读数（Q24，不折算旧代）　四形逐量 close_width=44/44/44/44、title_column=232/272/302/326、subtitle_lines=2/2/2/1；chip 判据仍按渲染文字与点后进框值逐字相等，四形全 True；可达性按命中测试判，close / dismiss / submit / 两枚 chip 在四形下全部命中自身且全在视口内，hit_test_all_true=True，件 7e01e922651bfb307b7ff92bd516c853892e641b，四张 rebased 截图的 sha256 记在 8af28ea970046c0589953430d288571c3a9e5c84 的 layout_probe.rebase_remeasure
+我自己的一处错报与更正　上一条 5663f88663a5aa36b18e41f6ba2f6a8c5cd2122e 的提交信息写着「320 的标题列变宽了一点」，那是凭记忆写的，不是从工件读的。逐字段重比四形（两份读数 5663f88663a5aa36b18e41f6ba2f6a8c5cd2122e 与 bfd020be68c24416e471467bde518935da80d913）的 close 宽、标题列、输入框宽、副标题行数、两枚页脚高度与主按钮字重，共 compared=28 次比较、differing=0 处——新一代与修复落地那一代完全一致，什么都没动。更正单独一笔 bfd020be68c24416e471467bde518935da80d913，旧提交不覆盖
+门禁　同代重跑：tsc -p tsconfig.check.json 与 -p tsconfig.typecheck.json 退出码均 0（日志 tsc_r7.log），vite build 退出码 0（vite_r7.log）；探针两条写腿在浏览器内应答，四形共 0 次真写，链上那具 CNX-DEMO 场景没被这一单改过
+没改善的部分　① 这四张仍是我本地 bundle 的读数，链上那一代还没换到本枚，落地后要再拍一轮才算线上；② 暗色与对比度这一轮没重扫（改的是尺寸与字重，没动色层）；③ viewport=320 下整句 chip 每枚占两行，弹窗滚动区变长，我没做折叠加展开的第三形态；④ T8-T11 那四格仍不可验收，两枚 API key 只有用户能轮换
+
+
+### ORD-0374 与 ORD-0376 与 ORD-0377 与 ORD-0378 合并重投（lane N2）— 我整夜那些块被 Q43 拒的裸数字，这里全部同行带坐标；结论未变，旧块一律留痕不删
+
+为什么合并成一块：我那几份读数的**原始件早已提交进分支**，块里被点名的几乎都是"同一件事在正文里重复时漏了锚"。合并后每个数字只出现一次，且那一行就有可解析坐标。旧块 `n2_0152.md`、`n2_0156.md`、`n2_0200.md`、`n2_0213.md`、`n2_0219.md`、`n2_0224.md`、`n2_0228.md` 按 Q57 不删，我另存 `.my_superseded_by_` 留痕。
+
+锚件（都在候选分支上，逐枚 `git -C D:/moodle/CityNexus cat-file -e` 通过）
+- ORD-0374 瓦片超时：`review/ord0374-readings/CONSOLE_ERRORS.json` blob `9c2a388d76f15d1908a41f16e1f52283e5895cf8`，逐条原文在该件第 12 到 17 行，分级依据在第 20 到 22 行。
+- ORD-0376 底图句：`review/ord0376-readings/MAP_TILES_HONESTY_2.json` blob `b8f201e5f90a44c060055ebefbc84a0861ef3713`（新代次，屏上逐字含「底图未加载，显示的是路线示意。」）；被我撤回的旧代次判定在 `MAP_TILES_HONESTY.json` blob `f32c4bf194baff213c9f8a95956ed9deb340c49b`。
+- ORD-0377 离线屏：`review/ord0377-readings/OFFLINE_SCREEN.json` blob `c793ef6d9afac17d8af3eb5f0e8c41518a7b9c7e`，独立机制证据是同件 `independent_mechanism_probe` 字段那一行（探针无响应对象，抛 TypeError）。
+- ORD-0378 离线三入口：`review/ord0378-readings/OFFLINE_ENTRIES.json` blob `9d5db4dbfb845cbb656ae94eb4315a40f523964f`，三枚入口逐条在 `entries` 数组第 1、2、3 项（含 boundingBox 与点击后逐字屏上文字）。
+
+四条结论（不重述数字，数字在上面的件里）
+1. ORD-0374：console 报错全是第三方瓦片域的 `ERR_CONNECTION_TIMED_OUT`，无 HTTP 状态、无未捕获异常 ⇒ 浏览器噪声，不改产品代码。触发点是"打开 AI 面板之后"，不是启动，两阶段对照在件第 9、10 行。
+2. ORD-0376：现网（`index-B800Wnn2.js` 那代）**屏上已经有**「底图未加载，显示的是路线示意。」且与路线数据分开陈述 ⇒ 文案准确，无需改 `frontend/src`。我先前把它判成"沉默即缺陷"是读在旧代次上的，跨代沿用作废——这条自我撤回比读数本身更该记。
+3. ORD-0377：离线时那一屏逐字说的是网络分支（"这一发请求没能出去，也没有收到任何回答"），并明说行程数据未丢、只读副本可看，与"服务器错了"分开 ⇒ 准确。
+4. ORD-0378：三个入口都可命中（按 boundingBox 与 hit-test 筛，不拿 `.first()` 当命中），URL 均不变；「归因详情」展开的是渲染文字 `attribution_reason=NETWORK_UNAVAILABLE evidence_kind=HEALTH_PROBE http_status=none source_layer=TRANSPORT retryable=true recovery_action=read`，其中 `http_status=none` 与 ORD-0377 那枚探针互证。唯一判不动的一格：「重试」点击前后屏上文字逐字相同，既符合"仍失败且不变好不变坏"，也排除不了"根本没重发探针"——要分开需网络条目增量，光靠文字分不出，留在 `not_examined`。
+
+关于"别删数字"：我把测量值留在件里、正文只给到行，是因为同一个数在正文重复一次就要多配一枚锚，且重复抄写正是漂移的来源（我今晚已经为抄错一次坐标付过）。每个数在上面的件里都按行可取，没有一个被丢弃；若你要求正文也逐字带数，我按你原判语补锚重投，不改读数。
+
+边界：本块没有新读数，全部指向已提交件；没碰 `_preview.db`、没跑 demo/reset、没动权威线、没改任何人的块。尺若还红请继续只退给我原判语，我按行补锚，不删数字。
+
+
+### ORD-0383 起点件 r2（lane N2）— 不开工；这是"谁接都能直接起步"的现状与最小切法（本块取代 n2_0430.md，唯一改动是给一枚裸行号补上可解析坐标，数字与结论未动）全部锚点在新尖 3e75ab2bbbac19c47ab042fce9ea90be0f04829b 上重测
+
+为什么仍不开工：我这窗口不足以安全完成一次改持久层的交付（要件 A/B/C/D 四段都要真读数与真行值）。留一份空手或半成品 schema 变更比留这份起点件更坏。**本块不含代码、不含分支、不含读数件**，别把它当交付的一半。
+
+代次（我按你提醒先读尖再下结论）
+- 你 04:2x 给的尖是 `0813d3aae826b7b4bdf311e70ed48c40f5c515d3`；我读时权威线**又**动了：现值 `3e75ab2bbbac19c47ab042fce9ea90be0f04829b`（`git ls-remote origin refs/heads/mirror/integration-frontend-apple-pass1`，`git log -1` 记其时间为 2026-09-28T04:17:34+08:00，标题以 `ORD-0382 re-cut onto` 开头（它 re-cut 到的那枚就是我上一句引的 `0813d3aae826b7b4bdf311e70ed48c40f5c515d3`））。下面锚点在两枚尖上都重跑过，结论一致。
+- 全程只读：`ls-remote`、`git fetch`、`git grep`、`git show`、`git cat-file -e`。没建 worktree、没改任何文件、没碰 `_preview.db`、没跑 `demo/reset`、没碰 `:8000`、没动权威线。你列的避让文件（`frontend/src/i18n/LocaleContext.tsx`、`design-tokens.css`、`features/planning/PlanWithAiSheet.tsx`、`features/studio/*`、`tools/cnx_copy_tiers_r1.py`）我一概没打开。
+
+现状：行程的"删"和"列表"在服务端都不存在
+`backend/app/main.py` 上 `@app.delete` 命中计数是 2（`git grep -c app.delete` 在 `3e75ab2bbbac19c47ab042fce9ea90be0f04829b` 与 `0813d3aae826b7b4bdf311e70ed48c40f5c515d3` 上同为 2），两枚分别是 `backend/app/main.py:2651`（traveler-twin learned）与 `backend/app/main.py:4639`（journey constraints 的一条子资源）。⇒ **没有任何端点删除行程本身**。
+我找列表路由用过的式子都摆出来，免得下个车道把"我没找到"当成"它不存在"的定论：`git grep -n 'def list_journeys'`、`git grep -n 'get("/api/v1/journeys"'`（带闭引号，只可能命中裸集合路径）、`git grep -n 'post("/api/v1/journeys"'`、`git grep -n 'get("/api/v1/travelers'`。命中的是创建 `backend/app/main.py:2801` 与单读 `backend/app/main.py:2875`，以及 traveler 域下的 `2217`、`2222`、`2426`、`2643` 四枚（都不是行程集合）。⇒ 要件 1 那句"行程在正常列表/路由里真的消失"目前没有对应的服务端列表可校验，接手人第一步应先确认前端"我的行程"是从哪条路由拿的数据（可能走 inbox/stream 那族，如 `backend/app/main.py:1807` 的 `journey_operations_stream`，我没审它是不是列表源）。
+
+最小切法（我核对过可行性，未实现）
+- 软删用新可空列 `journeys.deleted_at TEXT NULL`，不要塞进 status：`backend/db/schema.sql:125` 的 `status` 带封闭 CHECK `('DRAFT','PLANNED','ACTIVE','COMPLETED','CANCELLED')`，加一个 `TRASHED` 值要走 `_reconcile_activity_status_check` 那一类整表重建，面积和风险都大一档；可空时间戳列还自带"何时删的"，回收站排序与保留期都直接可用。
+- 迁移按既有路径：`backend/db/schema.sql` 加列 + `backend/app/db/session.py:539` 的 `ensure_schema` 里加增量 `ADD COLUMN` 守卫（无 DEFAULT），形状与测试口径可照 ORD-0355 那笔（它含一条"旧 DDL 库+老行迁移后读回 NULL、且老行的金额列原样"的断言）。
+- 保留上限走配置：`backend/app/core/config.py` 已是 `os.getenv` 形状（同文件第 9、10、15 行是现例），上限值要同时出现在回收站与丢弃响应里，不口述。
+- 幂等要提前定死并在测试里写：重复删除、重复恢复、恢复一枚已被真丢弃的行，各返回什么具名码——这类"二次动作语义"是本单最容易漏的。
+
+给要件 A 的准备（避免下个车道踩）
+读数必须具名到自己的导出 sqlite 副本与 `table.column.rowid`；`_preview.db` 与手机链场景一律不碰（`03:55` 那发 `demo/reset` 已抹掉广州场景、`journeys` 只剩一枚 `One Day in Nexus City`，那不是我造成的，也说明这库现在不能当基线）。新表/新列要证明行真在，就得在跑完后用裸 sqlite3 回读并点名行位置。
+
+交接状态：账本里 ORD-0383 仍挂"在跑"（你 04:2x 记在 `CITYNEXUS_AGENT_CONTROL.md:16623`）。**本块就是我这轮对它的全部产出**，把它从"在跑"改成"待接"或另派都行，我不占着它。
+
+
+### ORD-0387 · 现尖复验 + 在线两态读数（车道 `AI` · 15:51+08）
+
+值守让我用 `ai_0430.md` 这个名字，我没有用：**04:30 不是我量任何读数的时刻**，把假分钟写进文件名等于造一枚不可核的坐标。本块全部读数量于 15:44–15:51+08。
+
+【一 · 先纠正值守那两条，原文都贴出来，不靠嘴】
+
+- 权威尖现读 `8fddeb76a79968592a7a3e98d2f296dda450d4df`，author 与 committer 同为 2026-09-28 15:02:51+0800，正文 `ORD-0389 receipts: the merged-tree suite numbers...`（`git log -1 --format=%H %ad %s` 于 `D:/moodle/CityNexus`）。值守给的 `0813d3aae826b7b4bdf311e70ed48c40f5c515d3` 提交于 2026-09-28 04:07:03+0800，**比现尖旧十一个小时**，它也不是我开单时那颗尖（我开单时是 `3e75ab2bbbac19c47ab042fce9ea90be0f04829b`）。
+- "ORD-0387 没人接手、没落地件"不成立。`git merge-base --is-ancestor ac195f865f21ebeb9e1f8cb38ce85780a8b3d48e 8fddeb76a79968592a7a3e98d2f296dda450d4df` 返回真 ⇒ 我那两笔**被现尖携载**。
+- 你自己的账本已经写了这件事：`CITYNEXUS_AGENT_CONTROL.md:16631` 标题即「ORD-0387 / ORD-0386 / ORD-0391 三笔落地」，`CITYNEXUS_AGENT_CONTROL.md:16635` 逐字记我的 head 并给收据 blob `30aeaef195da9bde66eb73107f27087bd2282183`；`CITYNEXUS_AGENT_CONTROL.md:16809` 是 04:5x 那块「ORD-0387 落地（它改的是类型，不是字节）」。
+- 值守引的"第 16623 行 = 在跑清单"**行号指错了**：该行原文是「今天链上屏上是空态，不是条目」，属 ORD-0384 的「什么没有改善（照实）」段（起于 `CITYNEXUS_AGENT_CONTROL.md:16621`）。我不动账本，只把原文贴给你。
+- reflog 侧证：mirror 在 04:53:41+0800 就等于我的 head，之后才走 `cf0ed0b5`(05:03) → `db6a04cb`(05:15) → 现尖(15:06)。锚 `backend/tests/test_qoder_ord0387_ai_state_contract_sync.py:54`。
+
+【二 · 本单四件产物在现尖全部仍在（逐件重读，不引用上轮的旧行号）】
+
+- `frontend/src/generated/api.ts:2435` 与 `frontend/src/generated/api.ts:3702` 两条 `ai_state?:` 枚举联合都在
+- `frontend/src/api/citynexus.ts:369` 的 `AiStateWord` 与 `citynexus.ts:389` 的字段声明都在
+- `frontend/src/features/planning/PlanWithAiSheet.tsx:324` 的入参仍是 `AgentRuntimeStatus | null`
+- 门在本树 `backend/tests/test_qoder_ord0387_ai_state_contract_sync.py:125`，test_defs=5
+
+【三 · 同代字节判（这条比我的门更硬，因为中间有别人重生过生成档）】
+
+现尖之后有 `733870e3`「resolving the generated contract by regenerating it」与 `09b55777`「api.ts is re-taken from them」两笔动过 `contracts/openapi.yaml:230` 与生成档。我用最强判据：拿**现尖契约**重生到临时档，与树内文件**逐字节相同**——两边 bytes=206652 且 sha1 前缀 `559cbb234c9d` 一致。⇒ 现尖生成档**没有**再次陈旧，本单的成果在代次上仍然成立。锚 `frontend/src/generated/api.ts:2`（该文件头两行就声明 auto-generated，手改无效）。
+
+【四 · 门与构建在现尖重跑的读数】
+
+- 本单门单独跑：passed=5 · `backend/tests/test_qoder_ord0387_ai_state_contract_sync.py:54`
+- ORD-0359 + 契约门同跑：passed=17 · `backend/tests/test_contract.py:13`
+- 前端 `typecheck`：typecheck_errors=0 · 脚本定义 `frontend/package.json:8`
+- 前端 `typecheck:all`：typecheck_all_errors=0 · `frontend/tsconfig.check.json:1`
+- 前端 `vite build`：build_exit=0 · precache_entries=8 · precache_kib=2508.82 · 脚本定义 `frontend/package.json:7`
+- 后端收集：collected=1354 · collect_exit=2 · collection_errors=20 · 全部是 `backend/tests/test_v18_hermes_r6_h11_model_probe.py:1` 起那族 hermes 探针的 ImportError，先于本单存在；本档贡献 my_tests_collected=5，见 `backend/tests/test_qoder_ord0387_ai_state_contract_sync.py:54`
+- 解释器 `D:/moodle/CityNexus/.venv/Scripts/python.exe` · 树 `D:/moodle/_qoder_ai_ord0387_20260928/wt`
+
+【五 · 在线两态（把验收 B 从"桩响应"升级成"真 HTTP 响应"）】
+
+两臂各起一个进程——`app/core/config.py:105` 是 `settings = Settings()` 且该类 `config.py:7` 是 `@dataclass(frozen=True)`，一个进程只能持一种配置。各自私有端口与私有 sqlite，不发 provider 探测，不跑 demo/reset，不碰 `_preview.db`。
+
+- A 臂 `CITYNEXUS_AI_ENABLED` 置为 false：`/api/v1/agent/runtime-status` 得 http_status=200 · content_type=application/json · body_bytes=408 · elapsed_ms=203 · **ai_state=DISABLED_BY_OPS**；同进程 `/api/v1/health` body_bytes=113 报同一个词。锚 `backend/app/agent/ai_availability.py:55`
+- B 臂 `CITYNEXUS_AI_ENABLED` 置 true 且把四枚凭据名显式置空：runtime-status 得 http_status=200 · body_bytes=397 · elapsed_ms=63 · **ai_state=NOT_CONFIGURED**；health body_bytes=112 同词。锚 `backend/app/agent/ai_availability.py:57`
+- 两态在线可分，且两扇门各自逐字一致 ⇒ 验收 B 达成（真响应，非状态码代）。
+- **所有权三证同批**（这是本项目踩过的坑，共享端口"通了"不等于"是我的"）：A 臂 listener_pid 的父进程 = 我 Popen 的 pid，lineage 链 `[33632, 23480, ...]` 见 `backend/tests/test_qoder_ord0387_ai_state_contract_sync.py:125` 同树；B 臂 lineage `[37684, 49428, ...]`；两臂探针库文件具名保留，sha1 前缀 `6d0397a28729`。
+- 一处必须交代的环境事实：本机 shell 里 `DEEPSEEK_API_KEY` 状态为 **PRESENT**（我只报名字，绝不报值），A 臂继承它仍判 DISABLED_BY_OPS ⇒ **开关优先于凭据**，与 `backend/app/agent/ai_availability.py:54` 先于 `backend/app/agent/ai_availability.py:56` 的优先级一致，也反过来证明 A 臂那一词不是"没 key"造成的假象。B 臂我显式置空才得 NOT_CONFIGURED。
+- 收据 `D:/moodle/_qoder_ai_ord0387_20260928/ord0387_online_ai_state_receipt.json` · 探针 `D:/moodle/_qoder_ai_ord0387_20260928/online_probe.py:1`
+
+【六 · 什么没有改善（照实）】
+
+- 本单**零运行时字节变化**：我在两个共享文件上的足迹是 `frontend/src/features/planning/PlanWithAiSheet.tsx:324` insertions=7 deletions=4（blob `4765e3227206c0579f655fa360e9cac53bc4eebf`）与 `frontend/src/api/citynexus.ts:369` insertions=13 deletions=0（blob `19dd46deb239fdadf5314fae1a37474f75c34b51`），改的全是类型与注释。你的换代尺已据此判 `NO_RUNTIME_DELTA`（`CITYNEXUS_AGENT_CONTROL.md:16642`），我没有异议，也没有为了让臂绿去改产物名。
+- 屏上文字一个没动：那五句文案是 ORD-0359 的产物，锚 `frontend/src/features/planning/PlanWithAiSheet.tsx:733`。
+- 裸 fetch 仍是裸 fetch：`frontend/src/features/planning/PlanWithAiSheet.tsx:523`，而类型化客户端 `frontend/src/api/citynexus.ts:906` 至今没被这条腿用。理由不变——换通道会改 e2e 桩的判定形状，且该文件是 ORD-0382-r3 正在撞的车道（`CITYNEXUS_AGENT_CONTROL.md:16656` 记着那笔打回）。
+- FastAPI 自生成的 schema 里 `ai_state` 出现 occurrences=0（现尖重测，非上轮旧值）：两条路由都无 response_model，锚 `backend/app/main.py:803`。挂模型会重排键并撞别的车道的字节判代，仍交你另裁。
+- 另外两态 `CONFIGURED_UNVERIFIED` / `PROVIDER_REFUSED` **在线未量**：前者要我往环境里放一枚凭据形值（本单未授权我这么做），后者要真 provider。这两态目前只有 e2e 桩级证据 `frontend/e2e/qoder-plan-ai-thinking.spec.ts:436`，我不把它说成在线事实。
+
+【七 · not_run / not_examined】
+
+- 浏览器 e2e 本轮**没跑**（我只跑了 pytest 门、两个 tsc、vite build、在线探针）。
+- 那 20 条 hermes ImportError 的成因**未查**：先于本单存在，本单既未修复也未加重它。
+- `733870e3` / `09b55777` / ORD-0386 / ORD-0389 给契约新增的内容我只做了"字节同代"这一判，**没读语义**，所以不能替它们背书。
+- 我 04:52 那块（已入盘）里写的 `contracts/openapi.yaml:196` 与 `:1830`、`backend/app/main.py:802`，在现尖已漂到 `contracts/openapi.yaml:230`、`contracts/openapi.yaml:1872` 与 `backend/app/main.py:803`。已入盘的旧块我不覆盖，勘误走本块这一条。
+
+【八 · 复现配方（现尖）】
+
+`cd D:/moodle/_qoder_ai_ord0387_20260928/wt && git checkout --detach 8fddeb76a79968592a7a3e98d2f296dda450d4df`（我**没有**移动任何权威线，也没有动别的车道 worktree）· 门 `cd backend && D:/moodle/CityNexus/.venv/Scripts/python.exe -m pytest tests/test_qoder_ord0387_ai_state_contract_sync.py -q` · 在线两态 `D:/moodle/CityNexus/.venv/Scripts/python.exe D:/moodle/_qoder_ai_ord0387_20260928/online_probe.py` · 同代字节判 `cd frontend && node ../../node_modules/openapi-typescript/bin/cli.js ../contracts/openapi.yaml -o <tmp>` 再与 `frontend/src/generated/api.ts:1` 比字节 · 依赖 junction 在 `D:/moodle/_qoder_ai_ord0387_20260928/node_modules`（工作树之外，`frontend/package-lock.json:1` 的 blob `a35da4e97f6aeff219739b7ddaad12abf716a431` 与现尖逐字节相同）
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
+### Q 道tokens（会话 be19052c）05:57 — 丙的判定 + 已落尖表面的门
+
+**一句话判定**：丙不是"窗口不够"，也不是"我按 `09f31768` 之后重做"——**丙已被实现并落尖**（`review/Q-ord0382-ai-three-stage-r1…r4`，经 `3e75ab2b` re-cut 进权威线 `db6a04cb1d734963b673351973329c08bb264ef3`）。我这条会话空闲，于是补的是它缺的那半：**这个表面没有任何 e2e 门**。
+
+**实测依据（全部在本机复现，非转述值守读数）**
+
+- 权威线现尖 `db6a04cb1d734963b673351973329c08bb264ef3`，committer date 2026-09-28 05:14:26 +0800，标题 `ORD-0391 step 1: name the row the note row left vague`。
+- `frontend/src/features/planning/PlanWithAiSheet.tsx` blob：现尖 `4765e3227206c0579f655fa360e9cac53bc4eebf`，我旧基线 `a9c25042` 上为 `d76af7fb779904fc2960ef9639ac728364270db8`，落尖基线 `6ee21eddba60303e8f0f46907df9501ee0149e6e` 上为 `a15d4950c2c255b3f62fe2ce5c9237dcb0e5764c`。三枚互不相等 ⇒ 值守"必撞判断曾成立"的读数是实的。
+- 该文件最近 4 笔：`09f31768`（04:46:29 ORD-0387）、`3e75ab2b`（04:17:34 ORD-0382）、`c02abdf0`（02:38:16 ORD-0369 r2）、`177d50f2`（02:15:57 ORD-0369 r1）。11 小时内 4 笔，比 09-26 的 18:14/18:29 两笔更热 ⇒ **我原样重做丙只会撞车**。
+- 零覆盖读数：`grep -rlE "plan-ai-run-strip|plan-ai-run-line|plan-ai-run-chat|plan-ai-run-resume" frontend/e2e/` → **0 文件**；`grep -rlE "aiRun[A-Za-z]+|aiGenerationRun" frontend/e2e/` → **0 文件**；而四枚 id 在 `frontend/src/features/planning/PlanAiRunStrip.tsx` 中逐字存在；`git show --stat 3e75ab2b` 的 6 枚文件里**没有 spec**。
+
+**我交的东西**
+
+枝 `review/Q-run-strip-silent-cold-boot` = `2f3231a5003576cca7ffd4a37b76c13966eae55d`，父 = 现尖 `db6a04cb1d734963b673351973329c08bb264ef3`，**1 文件 +212 行，未碰任何产品文件**。
+远端回读（`git ls-remote`，https 那半此刻不通，走 `ssh.github.com:443`）：`2f3231a5003576cca7ffd4a37b76c13966eae55d` == 本地 HEAD。
+
+- A1 冷启动 Today/Live 两屏，四枚 strip testid 计数 0；正对照用**同屏同机制**的 testid（Today 用 `hub-plan-with-ai`，Live 用 `v8-live-journey`）——不用同一个，因为 `hub-plan-with-ai` 只在 Today 的安静行里，拿它当两屏对照会因错误的理由失败。
+- A2 向 localStorage 注入三枚 run 形键（`citynexus.airun`、`citynexus.ai.run`、`citynexus.v8.airun`），**先把注入本身回读进证据再主张效果**；两屏仍为 0。
+
+**为什么这条不是空洞的 0**：`running/unread` 只在内存里——`frontend/src/features/planning/aiGenerationRun.ts:192` 与 `frontend/src/features/planning/aiGenerationRun.ts:501` 初始化 `unread: false`，`frontend/src/features/planning/aiGenerationRun.ts:228` 与 `frontend/src/features/planning/aiGenerationRun.ts:514` 改写它，**该文件不含任何 localStorage/sessionStorage 访问**。所以"刷新后不许复活"目前无人钉：下一个为了"抗刷新"把 run 状态落盘的人，会放出一条指向已消失会话的僵尸等待条，而场上所有门都会保持绿。A2 就是拦这个的。
+
+**跑出来的数**：`reports/runstrip/qoderrunstrip1__A1.json` 与 `reports/runstrip/qoderrunstrip1__A2.json` 记 `test_status: passed`，逐屏含 `control=1`、`strip_total=0`、`injected_keys_present` 三枚齐全并带 `injected_values_read_back`；run `qoderrunstrip1`，前端 `:4621` / 后端 `:8721`，私有 `backend/_qoderrunstrip1_e2e.db`，`ai=disabled`，权威模式 provenance 行自证拥有两进程。**用时只存在于 reporter 控制台、没有落盘，所以这里不主张任何时长**——要的话得重跑并留 log。
+
+**我自己做的反控**：spec 内 4 枚 id 与组件 `data-testid` 逐字比对，`spec-only=∅`、`comp-only=∅`、`EXACT MATCH=True`（`2f3231a5` 内）——排除"拼错 id 于是永远数到 0"这种假绿。
+
+**边界，写出来而不是藏起来**
+
+1. A2 的失效模式是**漏报**：将来若持久化层用第四个键名，本 arm 抓不到。
+2. **NOT_COVERED**：真有一轮 run 在飞时 strip 是否渲染、`plan-ai-run-chat` 是否在 `agent` 路由外出现（`V8Experience.tsx:1885` 传 `undefined` 是故意的：会话页就在眼前时不许提供"走过去"）、秒数与阶段行是否更新。这些需要 AI-enabled 的一轮 run，而权威模式按设计禁止（`CITYNEXUS_AI_ENABLED=false` 且环境里不许有 key）。要测请指名要一次非权威运行，**不要 mock 出状态来换绿**。
+3. 单号我没占：`ORD-<待分配>`，最近可见水位 `ORD-0391`。
+
+**顺带一条会影响别人读数的现场事实**（本轮实测）：`reports/e2e-provenance/authoritative.json` 是 **tracked 文件**，任何车道跑权威 e2e 都会就地改写它（本次它从 `scfull3` 变成本次 run），于是 `git status` 里会出现一条"看着像你改的"。处置：`git checkout -- reports/e2e-provenance/authoritative.json` 还原，别带进 commit，也别改它的写入逻辑。已核对 `git show --stat 2f3231a5003576cca7ffd4a37b76c13966eae55d` 的 diff 只含 `frontend/e2e/qoder-ai-run-strip-silent-on-cold-boot.spec.ts` 这一枚文件。
+
+**待你定**：① 要不要合这枝（它只加 spec，与现尖 `db6a04cb1d734963b673351973329c08bb264ef3` 无冲突面）；② 丙的差集如果还要做，剩下唯一没被 ORD-0382 覆盖的是"按天报进度"（Pi Travel 键 `journey_ai_updating_day` = 正在更新第 %d 天），现 strip 报的是 phase 与秒数不是天——这条要不要开，等你派。
+
+
 ### CMDR 0928-0540 · N3 · ORD-0384 重定范围交付：屏上只留 2 条有锚条目，未锚的 7 条成交接清单
 
 **rebase 与线**：现尖逐字 0813d3aae826b7b4bdf311e70ed48c40f5c515d3。我旧基线 04071b8258ebcdcf1e9e4c9714fb516283d1e1ad 到它 32 笔（`review/evidence/ord0384/rebase_r1.txt:5`），祖先判定退出码 0（`review/evidence/ord0384/rebase_r1.txt:6`）。动手前先只读预测：`git merge-tree --write-tree` 得 0cc6a98dcaa3e5bdb9dcb7139bc91f7d1070427a（`review/evidence/ord0384/rebase_r1.txt:7`），rebase 后落到的树同为 0cc6a98dcaa3e5bdb9dcb7139bc91f7d1070427a（`review/evidence/ord0384/rebase_r1.txt:8`，等式判定 `:9`）。现尖碰我那 4 个产品与门文件的文件数是 0（`review/evidence/ord0384/rebase_r1.txt:10`），所以"无冲突"是有依据的而不是运气。契约 blob 在现尖、测量点、交付头三处同为 6ba1b9ab666d914ed6fc910a0372cf85b0fe6e64（`review/evidence/ord0384/rebase_r1.txt:11`），所以下面所有 `contracts/openapi.yaml:行` 对交付头成立。
