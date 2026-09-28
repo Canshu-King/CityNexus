@@ -1,0 +1,1400 @@
+{
+ "generated_by": "_untranslated_aggregate_r3.py",
+ "instrument": "_untranslated_scan_r2.js (scroll-union; r1 under-counted below-the-fold leaves)",
+ "receipt_files": [
+  "_untranslated_r2\\untranslated_twin_r2.json",
+  "_untranslated_r2_all\\untranslated_agent_r2.json",
+  "_untranslated_r2_all\\untranslated_authoritative_r2.json",
+  "_untranslated_r2_all\\untranslated_bookings_r2.json",
+  "_untranslated_r2_all\\untranslated_discover_r2.json",
+  "_untranslated_r2_all\\untranslated_hub_r2.json",
+  "_untranslated_r2_all\\untranslated_intelligence_r2.json",
+  "_untranslated_r2_all\\untranslated_live_r2.json",
+  "_untranslated_r2_all\\untranslated_map_r2.json",
+  "_untranslated_r2_all\\untranslated_me_r2.json",
+  "_untranslated_r2_all\\untranslated_stay_r2.json",
+  "_untranslated_r2_all\\untranslated_studio_r2.json",
+  "_untranslated_r2_all\\untranslated_trash_r2.json",
+  "_untranslated_r2_all\\untranslated_trips_r2.json",
+  "_untranslated_r2_all\\untranslated_twin_r2.json"
+ ],
+ "screens_covered": [
+  "agent",
+  "authoritative",
+  "bookings",
+  "discover",
+  "hub",
+  "intelligence",
+  "live",
+  "map",
+  "me",
+  "stay",
+  "studio",
+  "trash",
+  "trips",
+  "twin"
+ ],
+ "raw_leaf_rows": 661,
+ "distinct_strings": 67,
+ "defect_strings_zh_prose": 15,
+ "non_defect_strings": 52,
+ "defect": [
+  {
+   "text": "Tech Art Center",
+   "bucket": "UNCLEAR",
+   "rule": "no rule matched",
+   "zh_screens": [
+    "authoritative",
+    "hub",
+    "live",
+    "map",
+    "trips"
+   ],
+   "en_screens": [],
+   "tags": [
+    "B",
+    "BUTTON",
+    "H2",
+    "SPAN",
+    "STRONG"
+   ]
+  },
+  {
+   "text": "Nexus River Cruise Pier",
+   "bucket": "UNCLEAR",
+   "rule": "no rule matched",
+   "zh_screens": [
+    "authoritative",
+    "live",
+    "map",
+    "trips"
+   ],
+   "en_screens": [],
+   "tags": [
+    "B",
+    "BUTTON",
+    "H2",
+    "H3",
+    "SPAN",
+    "STRONG"
+   ]
+  },
+  {
+   "text": "Central Food Hall",
+   "bucket": "UNCLEAR",
+   "rule": "no rule matched",
+   "zh_screens": [
+    "authoritative",
+    "map",
+    "trips"
+   ],
+   "en_screens": [],
+   "tags": [
+    "B",
+    "BUTTON",
+    "SPAN"
+   ]
+  },
+  {
+   "text": "Old Town Gate",
+   "bucket": "UNCLEAR",
+   "rule": "no rule matched",
+   "zh_screens": [
+    "authoritative",
+    "map",
+    "trips"
+   ],
+   "en_screens": [],
+   "tags": [
+    "B",
+    "BUTTON",
+    "SPAN"
+   ]
+  },
+  {
+   "text": "Skyline Dinner House",
+   "bucket": "UNCLEAR",
+   "rule": "no rule matched",
+   "zh_screens": [
+    "authoritative",
+    "map",
+    "trips"
+   ],
+   "en_screens": [],
+   "tags": [
+    "B",
+    "BUTTON",
+    "SPAN"
+   ]
+  },
+  {
+   "text": "15:30 Nexus River Cruise Pier",
+   "bucket": "UNCLEAR",
+   "rule": "no rule matched",
+   "zh_screens": [
+    "hub"
+   ],
+   "en_screens": [],
+   "tags": [
+    "STRONG"
+   ]
+  },
+  {
+   "text": "Capability needs",
+   "bucket": "PROSE",
+   "rule": "sentence shape (verb/article/terminal period)",
+   "zh_screens": [
+    "twin"
+   ],
+   "en_screens": [],
+   "tags": [
+    "H3"
+   ]
+  },
+  {
+   "text": "Grounded adaptive recovery",
+   "bucket": "UNCLEAR",
+   "rule": "no rule matched",
+   "zh_screens": [
+    "authoritative"
+   ],
+   "en_screens": [],
+   "tags": [
+    "H2"
+   ]
+  },
+  {
+   "text": "Hard accessibility needs are never inferred from behavior.",
+   "bucket": "PROSE",
+   "rule": "sentence shape (verb/article/terminal period)",
+   "zh_screens": [
+    "twin"
+   ],
+   "en_screens": [],
+   "tags": [
+    "P"
+   ]
+  },
+  {
+   "text": "I prefer quiet indoor culture, low walking, and rain-friendly places near my protected Journey moments.",
+   "bucket": "PROSE",
+   "rule": "sentence shape (verb/article/terminal period)",
+   "zh_screens": [
+    "discover"
+   ],
+   "en_screens": [],
+   "tags": [
+    "TEXTAREA"
+   ]
+  },
+  {
+   "text": "Learned capability state",
+   "bucket": "UNCLEAR",
+   "rule": "no rule matched",
+   "zh_screens": [
+    "twin"
+   ],
+   "en_screens": [],
+   "tags": [
+    "H3"
+   ]
+  },
+  {
+   "text": "No explicit capability facts recorded.",
+   "bucket": "PROSE",
+   "rule": "sentence shape (verb/article/terminal period)",
+   "zh_screens": [
+    "twin"
+   ],
+   "en_screens": [],
+   "tags": [
+    "P"
+   ]
+  },
+  {
+   "text": "No learned signals",
+   "bucket": "PROSE",
+   "rule": "sentence shape (verb/article/terminal period)",
+   "zh_screens": [
+    "twin"
+   ],
+   "en_screens": [],
+   "tags": [
+    "H2"
+   ]
+  },
+  {
+   "text": "No recovery proposal is waiting on this Journey.",
+   "bucket": "PROSE",
+   "rule": "sentence shape (verb/article/terminal period)",
+   "zh_screens": [
+    "authoritative"
+   ],
+   "en_screens": [],
+   "tags": [
+    "P"
+   ]
+  },
+  {
+   "text": "Unknown accessibility evidence is not accessible.",
+   "bucket": "PROSE",
+   "rule": "sentence shape (verb/article/terminal period)",
+   "zh_screens": [
+    "twin"
+   ],
+   "en_screens": [],
+   "tags": [
+    "SMALL"
+   ]
+  }
+ ],
+ "non_defect": [
+  {
+   "text": "CityNexus Copilot",
+   "bucket": "BRAND",
+   "rule": "exact brand word",
+   "zh_screens": [
+    "twin",
+    "agent",
+    "authoritative",
+    "bookings",
+    "discover",
+    "hub",
+    "intelligence",
+    "live",
+    "map",
+    "me",
+    "stay",
+    "studio",
+    "trash",
+    "trips"
+   ],
+   "en_screens": [],
+   "tags": [
+    "SPAN"
+   ]
+  },
+  {
+   "text": "Copilot",
+   "bucket": "BRAND",
+   "rule": "exact brand word",
+   "zh_screens": [
+    "twin",
+    "agent",
+    "authoritative",
+    "bookings",
+    "discover",
+    "hub",
+    "intelligence",
+    "live",
+    "map",
+    "me",
+    "stay",
+    "studio",
+    "trash",
+    "trips"
+   ],
+   "en_screens": [],
+   "tags": [
+    "SPAN",
+    "STRONG"
+   ]
+  },
+  {
+   "text": "CN / AI",
+   "bucket": "BRAND",
+   "rule": "exact brand word",
+   "zh_screens": [
+    "agent"
+   ],
+   "en_screens": [],
+   "tags": [
+    "SPAN"
+   ]
+  },
+  {
+   "text": "culture · local_food · relaxed · walking_minutes_max · waterfront",
+   "bucket": "DATA_TAGS",
+   "rule": "middle-dot separated tag list",
+   "zh_screens": [
+    "twin"
+   ],
+   "en_screens": [],
+   "tags": [
+    "H2"
+   ]
+  },
+  {
+   "text": "PlanVersion 1 · INITIAL",
+   "bucket": "DATA_TAGS",
+   "rule": "middle-dot separated tag list",
+   "zh_screens": [
+    "authoritative"
+   ],
+   "en_screens": [],
+   "tags": [
+    "SPAN"
+   ]
+  },
+  {
+   "text": "V14 · REALITY CHANGED",
+   "bucket": "DATA_TAGS",
+   "rule": "middle-dot separated tag list",
+   "zh_screens": [
+    "authoritative"
+   ],
+   "en_screens": [],
+   "tags": [
+    "SPAN"
+   ]
+  },
+  {
+   "text": "Nexus River Cruise Pier · 2026-10-10T15:30:00+08:00",
+   "bucket": "DATA_TAGS",
+   "rule": "middle-dot separated tag list",
+   "zh_screens": [
+    "bookings"
+   ],
+   "en_screens": [],
+   "tags": [
+    "SPAN"
+   ]
+  },
+  {
+   "text": "place-river-cruise",
+   "bucket": "ID_LIKE",
+   "rule": "kebab-case token",
+   "zh_screens": [
+    "bookings"
+   ],
+   "en_screens": [],
+   "tags": [
+    "H2"
+   ]
+  },
+  {
+   "text": "not-asked",
+   "bucket": "ID_LIKE",
+   "rule": "kebab-case token",
+   "zh_screens": [],
+   "en_screens": [
+    "twin",
+    "agent",
+    "authoritative",
+    "bookings",
+    "discover",
+    "hub",
+    "intelligence",
+    "live",
+    "map",
+    "me",
+    "stay",
+    "studio",
+    "trash",
+    "trips"
+   ],
+   "tags": [
+    "SPAN"
+   ]
+  },
+  {
+   "text": "Three steps. Pick a destination, tell us how you like to travel, and let CityNexus handle the rest.",
+   "bucket": "PROSE",
+   "rule": "sentence shape (verb/article/terminal period)",
+   "zh_screens": [],
+   "en_screens": [
+    "twin",
+    "agent",
+    "authoritative",
+    "bookings",
+    "discover",
+    "hub",
+    "intelligence",
+    "live",
+    "map",
+    "me",
+    "stay",
+    "studio",
+    "trash",
+    "trips"
+   ],
+   "tags": [
+    "P"
+   ]
+  },
+  {
+   "text": "Supported: the server names it and holds material",
+   "bucket": "PROSE",
+   "rule": "sentence shape (verb/article/terminal period)",
+   "zh_screens": [],
+   "en_screens": [
+    "twin",
+    "agent",
+    "authoritative",
+    "bookings",
+    "discover",
+    "hub",
+    "intelligence",
+    "live",
+    "map",
+    "me",
+    "stay",
+    "studio",
+    "trash",
+    "trips"
+   ],
+   "tags": [
+    "H4"
+   ]
+  },
+  {
+   "text": "No name landed in this group this round.",
+   "bucket": "PROSE",
+   "rule": "sentence shape (verb/article/terminal period)",
+   "zh_screens": [],
+   "en_screens": [
+    "twin",
+    "agent",
+    "authoritative",
+    "bookings",
+    "discover",
+    "hub",
+    "intelligence",
+    "live",
+    "map",
+    "me",
+    "stay",
+    "studio",
+    "trash",
+    "trips"
+   ],
+   "tags": [
+    "P"
+   ]
+  },
+  {
+   "text": "Needs a network lookup: nothing the server consults names it",
+   "bucket": "PROSE",
+   "rule": "sentence shape (verb/article/terminal period)",
+   "zh_screens": [],
+   "en_screens": [
+    "twin",
+    "agent",
+    "authoritative",
+    "bookings",
+    "discover",
+    "hub",
+    "intelligence",
+    "live",
+    "map",
+    "me",
+    "stay",
+    "studio",
+    "trash",
+    "trips"
+   ],
+   "tags": [
+    "H4"
+   ]
+  },
+  {
+   "text": "Unknown or empty: no plannable verdict came back this round",
+   "bucket": "PROSE",
+   "rule": "sentence shape (verb/article/terminal period)",
+   "zh_screens": [],
+   "en_screens": [
+    "twin",
+    "agent",
+    "authoritative",
+    "bookings",
+    "discover",
+    "hub",
+    "intelligence",
+    "live",
+    "map",
+    "me",
+    "stay",
+    "studio",
+    "trash",
+    "trips"
+   ],
+   "tags": [
+    "H4"
+   ]
+  },
+  {
+   "text": "identity not read yet",
+   "bucket": "PROSE",
+   "rule": "sentence shape (verb/article/terminal period)",
+   "zh_screens": [],
+   "en_screens": [
+    "twin",
+    "agent",
+    "authoritative",
+    "bookings",
+    "discover",
+    "hub",
+    "intelligence",
+    "live",
+    "map",
+    "me",
+    "stay",
+    "studio",
+    "trash",
+    "trips"
+   ],
+   "tags": [
+    "SPAN"
+   ]
+  },
+  {
+   "text": "the server has not been asked yet",
+   "bucket": "PROSE",
+   "rule": "sentence shape (verb/article/terminal period)",
+   "zh_screens": [],
+   "en_screens": [
+    "twin",
+    "agent",
+    "authoritative",
+    "bookings",
+    "discover",
+    "hub",
+    "intelligence",
+    "live",
+    "map",
+    "me",
+    "stay",
+    "studio",
+    "trash",
+    "trips"
+   ],
+   "tags": [
+    "SPAN"
+   ]
+  },
+  {
+   "text": "Depart from",
+   "bucket": "PROSE",
+   "rule": "sentence shape (verb/article/terminal period)",
+   "zh_screens": [],
+   "en_screens": [
+    "twin",
+    "agent",
+    "authoritative",
+    "bookings",
+    "discover",
+    "hub",
+    "intelligence",
+    "live",
+    "map",
+    "me",
+    "stay",
+    "studio",
+    "trash",
+    "trips"
+   ],
+   "tags": [
+    "SPAN"
+   ]
+  },
+  {
+   "text": "Use the sealed demo trip",
+   "bucket": "PROSE",
+   "rule": "sentence shape (verb/article/terminal period)",
+   "zh_screens": [],
+   "en_screens": [
+    "twin",
+    "agent",
+    "authoritative",
+    "bookings",
+    "discover",
+    "hub",
+    "intelligence",
+    "live",
+    "map",
+    "me",
+    "stay",
+    "studio",
+    "trash",
+    "trips"
+   ],
+   "tags": [
+    "BUTTON"
+   ]
+  },
+  {
+   "text": "Riverside Museum",
+   "bucket": "SHORT_LABEL_OR_DATA",
+   "rule": "1-2 words, no sentence verb",
+   "zh_screens": [
+    "authoritative",
+    "map",
+    "trips"
+   ],
+   "en_screens": [],
+   "tags": [
+    "B",
+    "BUTTON",
+    "SPAN"
+   ]
+  },
+  {
+   "text": "PLANNED",
+   "bucket": "SHORT_LABEL_OR_DATA",
+   "rule": "1-2 words, no sentence verb",
+   "zh_screens": [
+    "authoritative"
+   ],
+   "en_screens": [],
+   "tags": [
+    "SPAN"
+   ]
+  },
+  {
+   "text": "Refresh recovery",
+   "bucket": "SHORT_LABEL_OR_DATA",
+   "rule": "1-2 words, no sentence verb",
+   "zh_screens": [
+    "authoritative"
+   ],
+   "en_screens": [],
+   "tags": [
+    "BUTTON"
+   ]
+  },
+  {
+   "text": "Journey Memory",
+   "bucket": "SHORT_LABEL_OR_DATA",
+   "rule": "1-2 words, no sentence verb",
+   "zh_screens": [
+    "bookings"
+   ],
+   "en_screens": [],
+   "tags": [
+    "H3"
+   ]
+  },
+  {
+   "text": "NOT_CONFIGURED",
+   "bucket": "SHORT_LABEL_OR_DATA",
+   "rule": "1-2 words, no sentence verb",
+   "zh_screens": [
+    "intelligence"
+   ],
+   "en_screens": [],
+   "tags": [
+    "B"
+   ]
+  },
+  {
+   "text": "ADVISORY",
+   "bucket": "SHORT_LABEL_OR_DATA",
+   "rule": "1-2 words, no sentence verb",
+   "zh_screens": [
+    "intelligence"
+   ],
+   "en_screens": [],
+   "tags": [
+    "B"
+   ]
+  },
+  {
+   "text": "Asia/Shanghai",
+   "bucket": "SHORT_LABEL_OR_DATA",
+   "rule": "1-2 words, no sentence verb",
+   "zh_screens": [
+    "live"
+   ],
+   "en_screens": [],
+   "tags": [
+    "SMALL"
+   ]
+  },
+  {
+   "text": "Destination",
+   "bucket": "SHORT_LABEL_OR_DATA",
+   "rule": "1-2 words, no sentence verb",
+   "zh_screens": [],
+   "en_screens": [
+    "twin",
+    "agent",
+    "authoritative",
+    "bookings",
+    "discover",
+    "hub",
+    "intelligence",
+    "live",
+    "map",
+    "me",
+    "stay",
+    "studio",
+    "trash",
+    "trips"
+   ],
+   "tags": [
+    "SPAN"
+   ]
+  },
+  {
+   "text": "NO_CANONICAL_IDENTITY",
+   "bucket": "SHORT_LABEL_OR_DATA",
+   "rule": "1-2 words, no sentence verb",
+   "zh_screens": [],
+   "en_screens": [
+    "twin",
+    "agent",
+    "authoritative",
+    "bookings",
+    "discover",
+    "hub",
+    "intelligence",
+    "live",
+    "map",
+    "me",
+    "stay",
+    "studio",
+    "trash",
+    "trips"
+   ],
+   "tags": [
+    "P"
+   ]
+  },
+  {
+   "text": "Xiamen",
+   "bucket": "SHORT_LABEL_OR_DATA",
+   "rule": "1-2 words, no sentence verb",
+   "zh_screens": [],
+   "en_screens": [
+    "twin",
+    "agent",
+    "authoritative",
+    "bookings",
+    "discover",
+    "hub",
+    "intelligence",
+    "live",
+    "map",
+    "me",
+    "stay",
+    "studio",
+    "trash",
+    "trips"
+   ],
+   "tags": [
+    "SPAN"
+   ]
+  },
+  {
+   "text": "Beijing",
+   "bucket": "SHORT_LABEL_OR_DATA",
+   "rule": "1-2 words, no sentence verb",
+   "zh_screens": [],
+   "en_screens": [
+    "twin",
+    "agent",
+    "authoritative",
+    "bookings",
+    "discover",
+    "hub",
+    "intelligence",
+    "live",
+    "map",
+    "me",
+    "stay",
+    "studio",
+    "trash",
+    "trips"
+   ],
+   "tags": [
+    "SPAN"
+   ]
+  },
+  {
+   "text": "Shanghai",
+   "bucket": "SHORT_LABEL_OR_DATA",
+   "rule": "1-2 words, no sentence verb",
+   "zh_screens": [],
+   "en_screens": [
+    "twin",
+    "agent",
+    "authoritative",
+    "bookings",
+    "discover",
+    "hub",
+    "intelligence",
+    "live",
+    "map",
+    "me",
+    "stay",
+    "studio",
+    "trash",
+    "trips"
+   ],
+   "tags": [
+    "SPAN"
+   ]
+  },
+  {
+   "text": "Tianjin",
+   "bucket": "SHORT_LABEL_OR_DATA",
+   "rule": "1-2 words, no sentence verb",
+   "zh_screens": [],
+   "en_screens": [
+    "twin",
+    "agent",
+    "authoritative",
+    "bookings",
+    "discover",
+    "hub",
+    "intelligence",
+    "live",
+    "map",
+    "me",
+    "stay",
+    "studio",
+    "trash",
+    "trips"
+   ],
+   "tags": [
+    "SPAN"
+   ]
+  },
+  {
+   "text": "Arrive at",
+   "bucket": "SHORT_LABEL_OR_DATA",
+   "rule": "1-2 words, no sentence verb",
+   "zh_screens": [],
+   "en_screens": [
+    "twin",
+    "agent",
+    "authoritative",
+    "bookings",
+    "discover",
+    "hub",
+    "intelligence",
+    "live",
+    "map",
+    "me",
+    "stay",
+    "studio",
+    "trash",
+    "trips"
+   ],
+   "tags": [
+    "SPAN"
+   ]
+  },
+  {
+   "text": "Arrival time",
+   "bucket": "SHORT_LABEL_OR_DATA",
+   "rule": "1-2 words, no sentence verb",
+   "zh_screens": [],
+   "en_screens": [
+    "twin",
+    "agent",
+    "authoritative",
+    "bookings",
+    "discover",
+    "hub",
+    "intelligence",
+    "live",
+    "map",
+    "me",
+    "stay",
+    "studio",
+    "trash",
+    "trips"
+   ],
+   "tags": [
+    "SPAN"
+   ]
+  },
+  {
+   "text": "Departure time",
+   "bucket": "SHORT_LABEL_OR_DATA",
+   "rule": "1-2 words, no sentence verb",
+   "zh_screens": [],
+   "en_screens": [
+    "twin",
+    "agent",
+    "authoritative",
+    "bookings",
+    "discover",
+    "hub",
+    "intelligence",
+    "live",
+    "map",
+    "me",
+    "stay",
+    "studio",
+    "trash",
+    "trips"
+   ],
+   "tags": [
+    "SPAN"
+   ]
+  },
+  {
+   "text": "Advanced settings",
+   "bucket": "SHORT_LABEL_OR_DATA",
+   "rule": "1-2 words, no sentence verb",
+   "zh_screens": [],
+   "en_screens": [
+    "twin",
+    "agent",
+    "authoritative",
+    "bookings",
+    "discover",
+    "hub",
+    "intelligence",
+    "live",
+    "map",
+    "me",
+    "stay",
+    "studio",
+    "trash",
+    "trips"
+   ],
+   "tags": [
+    "BUTTON",
+    "SUMMARY"
+   ]
+  },
+  {
+   "text": "Country/region code",
+   "bucket": "SHORT_LABEL_OR_DATA",
+   "rule": "1-2 words, no sentence verb",
+   "zh_screens": [],
+   "en_screens": [
+    "twin",
+    "agent",
+    "authoritative",
+    "bookings",
+    "discover",
+    "hub",
+    "intelligence",
+    "live",
+    "map",
+    "me",
+    "stay",
+    "studio",
+    "trash",
+    "trips"
+   ],
+   "tags": [
+    "SPAN"
+   ]
+  },
+  {
+   "text": "Time zone",
+   "bucket": "SHORT_LABEL_OR_DATA",
+   "rule": "1-2 words, no sentence verb",
+   "zh_screens": [],
+   "en_screens": [
+    "twin",
+    "agent",
+    "authoritative",
+    "bookings",
+    "discover",
+    "hub",
+    "intelligence",
+    "live",
+    "map",
+    "me",
+    "stay",
+    "studio",
+    "trash",
+    "trips"
+   ],
+   "tags": [
+    "SPAN"
+   ]
+  },
+  {
+   "text": "Currency",
+   "bucket": "SHORT_LABEL_OR_DATA",
+   "rule": "1-2 words, no sentence verb",
+   "zh_screens": [],
+   "en_screens": [
+    "twin",
+    "agent",
+    "authoritative",
+    "bookings",
+    "discover",
+    "hub",
+    "intelligence",
+    "live",
+    "map",
+    "me",
+    "stay",
+    "studio",
+    "trash",
+    "trips"
+   ],
+   "tags": [
+    "SPAN"
+   ]
+  },
+  {
+   "text": "the destination",
+   "bucket": "SHORT_LABEL_OR_DATA",
+   "rule": "1-2 words, no sentence verb",
+   "zh_screens": [],
+   "en_screens": [
+    "twin",
+    "agent",
+    "authoritative",
+    "bookings",
+    "discover",
+    "hub",
+    "intelligence",
+    "live",
+    "map",
+    "me",
+    "stay",
+    "studio",
+    "trash",
+    "trips"
+   ],
+   "tags": [
+    "BUTTON"
+   ]
+  },
+  {
+   "text": "Fuzhou",
+   "bucket": "SHORT_LABEL_OR_DATA",
+   "rule": "1-2 words, no sentence verb",
+   "zh_screens": [],
+   "en_screens": [
+    "twin",
+    "agent",
+    "authoritative",
+    "bookings",
+    "discover",
+    "hub",
+    "intelligence",
+    "live",
+    "map",
+    "me",
+    "stay",
+    "studio",
+    "trash",
+    "trips"
+   ],
+   "tags": [
+    "SPAN"
+   ]
+  },
+  {
+   "text": "Guangzhou",
+   "bucket": "SHORT_LABEL_OR_DATA",
+   "rule": "1-2 words, no sentence verb",
+   "zh_screens": [],
+   "en_screens": [
+    "twin",
+    "agent",
+    "authoritative",
+    "bookings",
+    "discover",
+    "hub",
+    "intelligence",
+    "live",
+    "map",
+    "me",
+    "stay",
+    "studio",
+    "trash",
+    "trips"
+   ],
+   "tags": [
+    "SPAN"
+   ]
+  },
+  {
+   "text": "Shenzhen",
+   "bucket": "SHORT_LABEL_OR_DATA",
+   "rule": "1-2 words, no sentence verb",
+   "zh_screens": [],
+   "en_screens": [
+    "twin",
+    "agent",
+    "authoritative",
+    "bookings",
+    "discover",
+    "hub",
+    "intelligence",
+    "live",
+    "map",
+    "me",
+    "stay",
+    "studio",
+    "trash",
+    "trips"
+   ],
+   "tags": [
+    "SPAN"
+   ]
+  },
+  {
+   "text": "Chengdu",
+   "bucket": "SHORT_LABEL_OR_DATA",
+   "rule": "1-2 words, no sentence verb",
+   "zh_screens": [],
+   "en_screens": [
+    "twin",
+    "agent",
+    "authoritative",
+    "bookings",
+    "discover",
+    "hub",
+    "intelligence",
+    "live",
+    "map",
+    "me",
+    "stay",
+    "studio",
+    "trash",
+    "trips"
+   ],
+   "tags": [
+    "SPAN"
+   ]
+  },
+  {
+   "text": "Hangzhou",
+   "bucket": "SHORT_LABEL_OR_DATA",
+   "rule": "1-2 words, no sentence verb",
+   "zh_screens": [],
+   "en_screens": [
+    "twin",
+    "agent",
+    "authoritative",
+    "bookings",
+    "discover",
+    "hub",
+    "intelligence",
+    "live",
+    "map",
+    "me",
+    "stay",
+    "studio",
+    "trash",
+    "trips"
+   ],
+   "tags": [
+    "SPAN"
+   ]
+  },
+  {
+   "text": "Try CityNexus with your own city",
+   "bucket": "UNCLEAR",
+   "rule": "no rule matched",
+   "zh_screens": [],
+   "en_screens": [
+    "twin",
+    "agent",
+    "authoritative",
+    "bookings",
+    "discover",
+    "hub",
+    "intelligence",
+    "live",
+    "map",
+    "me",
+    "stay",
+    "studio",
+    "trash",
+    "trips"
+   ],
+   "tags": [
+    "P"
+   ]
+  },
+  {
+   "text": "Create a trip",
+   "bucket": "UNCLEAR",
+   "rule": "no rule matched",
+   "zh_screens": [],
+   "en_screens": [
+    "twin",
+    "agent",
+    "authoritative",
+    "bookings",
+    "discover",
+    "hub",
+    "intelligence",
+    "live",
+    "map",
+    "me",
+    "stay",
+    "studio",
+    "trash",
+    "trips"
+   ],
+   "tags": [
+    "H1"
+   ]
+  },
+  {
+   "text": "Destination & dates",
+   "bucket": "UNCLEAR",
+   "rule": "no rule matched",
+   "zh_screens": [],
+   "en_screens": [
+    "twin",
+    "agent",
+    "authoritative",
+    "bookings",
+    "discover",
+    "hub",
+    "intelligence",
+    "live",
+    "map",
+    "me",
+    "stay",
+    "studio",
+    "trash",
+    "trips"
+   ],
+   "tags": [
+    "SPAN"
+   ]
+  },
+  {
+   "text": "Travellers & preferences",
+   "bucket": "UNCLEAR",
+   "rule": "no rule matched",
+   "zh_screens": [],
+   "en_screens": [
+    "twin",
+    "agent",
+    "authoritative",
+    "bookings",
+    "discover",
+    "hub",
+    "intelligence",
+    "live",
+    "map",
+    "me",
+    "stay",
+    "studio",
+    "trash",
+    "trips"
+   ],
+   "tags": [
+    "SPAN"
+   ]
+  },
+  {
+   "text": "Review & create",
+   "bucket": "UNCLEAR",
+   "rule": "no rule matched",
+   "zh_screens": [],
+   "en_screens": [
+    "twin",
+    "agent",
+    "authoritative",
+    "bookings",
+    "discover",
+    "hub",
+    "intelligence",
+    "live",
+    "map",
+    "me",
+    "stay",
+    "studio",
+    "trash",
+    "trips"
+   ],
+   "tags": [
+    "SPAN"
+   ]
+  },
+  {
+   "text": "See supported destinations",
+   "bucket": "UNCLEAR",
+   "rule": "no rule matched",
+   "zh_screens": [],
+   "en_screens": [
+    "twin",
+    "agent",
+    "authoritative",
+    "bookings",
+    "discover",
+    "hub",
+    "intelligence",
+    "live",
+    "map",
+    "me",
+    "stay",
+    "studio",
+    "trash",
+    "trips"
+   ],
+   "tags": [
+    "SUMMARY"
+   ]
+  },
+  {
+   "text": "where you arrive",
+   "bucket": "UNCLEAR",
+   "rule": "no rule matched",
+   "zh_screens": [],
+   "en_screens": [
+    "twin",
+    "agent",
+    "authoritative",
+    "bookings",
+    "discover",
+    "hub",
+    "intelligence",
+    "live",
+    "map",
+    "me",
+    "stay",
+    "studio",
+    "trash",
+    "trips"
+   ],
+   "tags": [
+    "BUTTON"
+   ]
+  },
+  {
+   "text": "where you leave",
+   "bucket": "UNCLEAR",
+   "rule": "no rule matched",
+   "zh_screens": [],
+   "en_screens": [
+    "twin",
+    "agent",
+    "authoritative",
+    "bookings",
+    "discover",
+    "hub",
+    "intelligence",
+    "live",
+    "map",
+    "me",
+    "stay",
+    "studio",
+    "trash",
+    "trips"
+   ],
+   "tags": [
+    "BUTTON"
+   ]
+  }
+ ],
+ "zh_prose_leaves_per_screen": {
+  "twin": 12,
+  "authoritative": 14,
+  "discover": 1,
+  "hub": 2,
+  "live": 2,
+  "map": 6,
+  "trips": 5
+ },
+ "verdict": "ZH_SCREENS_CARRY_ENGLISH_PROSE"
+}
