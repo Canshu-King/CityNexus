@@ -2093,7 +2093,20 @@ def demo_reset_token_denied(presented: str | None) -> tuple[str, str] | None:
     return None
 
 
-@app.post("/api/v1/demo/reset")
+@app.post(
+    "/api/v1/demo/reset",
+    # ORD-0395: the refusal is the behaviour this route exists to have, so the application's own
+    # spec has to say it. The hand contract declared the 403 and the generated one did not, which
+    # left every consumer of `/openapi.json` unable to see that a missing token is an answer.
+    responses={
+        403: {
+            "description": (
+                "Reset refused, with a named code in the body: RESET_TOKEN_REQUIRED when no token was"
+                " presented, RESET_TOKEN_INVALID when the presented token is not the operator's."
+            )
+        }
+    },
+)
 def demo_reset(
     session: Session = Depends(get_session),
     demo_reset_token: str | None = Header(default=None, alias=DEMO_RESET_HEADER),

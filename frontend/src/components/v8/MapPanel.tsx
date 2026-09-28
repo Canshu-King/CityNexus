@@ -1,12 +1,33 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import "maplibre-gl/dist/maplibre-gl.css";
 import type { FeatureCollection } from "geojson";
-import type { V8Data } from "../../app/v8Types";
+import type { ActivityCoordinate, V8Data } from "../../app/v8Types";
 import { useT, useLocale } from "../../i18n/LocaleContext";
 import { mapCopy } from "../../i18n/mapPanelCopy";
 import { MapViewportControls, type ViewportState } from "./MapViewportControls";
 import "../../map-attribution.css";
 import "../../map-selection.css";
+
+/**
+ * ORD-0394: the one rule for "does this activity have a place on the map".
+ *
+ * It reads `location`, which the server joins off the place row the activity names, and it returns
+ * the system the number is written in alongside it.  Six call sites used to test
+ * `metadata.longitude/latitude` -- a pair the backend has never once sent (0 of 140 activity rows),
+ * so every one of those branches had only ever taken the "no coordinate" path on real data.  One
+ * exported predicate instead, because a rule with six copies is six chances to drift.
+ */
+export function activityCoordinate(item: {
+  location?: ActivityCoordinate | null;
+}): { latitude: number; longitude: number; coordinate_system: string | null } | null {
+  const location = item.location;
+  if (!location || location.latitude == null || location.longitude == null) return null;
+  return {
+    latitude: location.latitude,
+    longitude: location.longitude,
+    coordinate_system: location.coordinate_system,
+  };
+}
 
 /**
  * ORD-0082 ④: the map's own "there is nothing to centre this on" condition, as a pure function of
@@ -17,7 +38,7 @@ import "../../map-selection.css";
 export function tripHasNoCoordinates(data: V8Data | null): boolean {
   if (!data) return true;
   const locatedActivity = (data.active_plan?.activities ?? []).some(
-    (item) => item.metadata.longitude != null && item.metadata.latitude != null,
+    (item) => activityCoordinate(item) != null,
   );
   if (locatedActivity) return false;
   return (data.offers ?? []).some(
@@ -112,14 +133,15 @@ export function MapPanel({
   );
   const points = useMemo(() => {
     const active =
-      data?.active_plan?.activities.flatMap((item) =>
-        item.metadata.longitude != null && item.metadata.latitude != null
+      data?.active_plan?.activities.flatMap((item) => {
+        const at = activityCoordinate(item);
+        return at
           ? [
               {
                 id: item.id as string | null,
                 title: item.title,
-                longitude: item.metadata.longitude,
-                latitude: item.metadata.latitude,
+                longitude: at.longitude,
+                latitude: at.latitude,
                 role: item.metadata.role,
                 protected: item.protected,
                 current: item.id === data?.active_plan?.current_activity_id,
@@ -129,8 +151,8 @@ export function MapPanel({
                   ) ?? false,
               },
             ]
-          : [],
-      ) ?? [];
+          : [];
+      }) ?? [];
     if (active.length) return active;
     if (!data) return [];
     return data.offers.slice(0, 1).map((offer) => ({

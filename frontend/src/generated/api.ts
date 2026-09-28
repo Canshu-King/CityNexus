@@ -5849,6 +5849,20 @@ export interface operations {
                     "application/json": {
                         journey?: Record<string, never>;
                         trip?: Record<string, never>;
+                        active_plan?: {
+                            activities?: {
+                                place_id?: string | null;
+                                location?: {
+                                    /** @enum {string} */
+                                    state: "READY" | "HYDRATABLE" | "UNKNOWN_RETRYABLE" | "UNAVAILABLE";
+                                    reason?: string | null;
+                                    latitude: number | null;
+                                    longitude: number | null;
+                                    coordinate_system: string | null;
+                                    source_coordinate_system?: string | null;
+                                };
+                            }[];
+                        } | null;
                         recovery?: components["schemas"]["RecoveryState"];
                         experience_flags?: {
                             needs_review?: boolean;
