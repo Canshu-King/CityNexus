@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Icon } from "../components/v8/Icon";
 import { MapPanel, tripHasNoCoordinates } from "../components/v8/MapPanel";
+import { mapCopy } from "../i18n/mapPanelCopy";
 import { AgentComposer } from "../features/agent/AgentComposer";
 import { CopilotDock } from "../features/agent/CopilotDock";
 import { PlanWithAiSheet } from "../features/planning/PlanWithAiSheet";
@@ -1779,6 +1780,8 @@ export function V8Experience() {
               selected={selected}
               comparison={comparison}
               onSheet={() => setSheetOpen(true)}
+              selectedActivityId={detailActivityId}
+              onSelectActivity={setDetailActivityId}
             />
           )}
           {route === "trips" && detailActivity && (
@@ -1787,7 +1790,10 @@ export function V8Experience() {
               timeZone={data.journey.timezone || "UTC"}
               onBack={() => setDetailActivityId(null)}
               onShowOnMap={() => {
-                setDetailActivityId(null);
+                /* ORD-0390: this used to clear `detailActivityId` and then navigate to the map —
+                   it threw away the very id the map needs to centre on, so 「在地图上显示」
+                   could only ever land on a generic midpoint.  The selection is the payload of
+                   this action, so it now survives it. */
                 navigate("map");
               }}
               onAskCopilot={() => {
@@ -3689,14 +3695,39 @@ function MapPage({
   selected,
   comparison,
   onSheet,
+  selectedActivityId,
+  onSelectActivity,
 }: {
   data: V8Data;
   selected: V8Data["options"][number] | null;
   comparison: V8Data["mobility_facts"];
   onSheet: () => void;
+  /** ORD-0390: the shell's one and only selection variable, threaded through rather than
+      duplicated — a second "selected stop" state here is how two surfaces start disagreeing. */
+  selectedActivityId: string | null;
+  onSelectActivity: (id: string | null) => void;
 }) {
   const t = useT();
   const { locale } = useLocale();
+  /* Only stops the map can actually stand on are offered as rows — the same coordinate test
+     `MapPanel` uses to build its markers, so a row can never name a stop with no pin. */
+  const planStops = (data.active_plan?.activities ?? []).filter(
+    (item) => item.metadata?.longitude != null && item.metadata?.latitude != null,
+  );
+  const selectedActivity =
+    planStops.find((item) => item.id === selectedActivityId) ?? null;
+  /* ORD-0390 ①: selection has to be readable on both halves of the screen, and on a phone the card
+     sits below the map.  Selecting a pin therefore brings its own card into view — `block:"nearest"`
+     so an already-visible card does not jump.  This is the other half of "reachable by hit-test":
+     a card that exists but is off-screen cannot be hit, and the gate measures hits, not presence. */
+  const selectedHeadingRef = useRef<HTMLElement | null>(null);
+  useEffect(() => {
+    if (!selectedActivityId) return;
+    /* `center`, not `nearest`: the floating Copilot pill is anchored bottom-right and covers the
+       bottom of this screen on a phone, so a card that merely "fits" at the bottom edge is still
+       unhittable there — measured, a hit-test at the card's centre returned the pill. */
+    selectedHeadingRef.current?.scrollIntoView({ block: "center", behavior: "smooth" });
+  }, [selectedActivityId]);
   return (
     <section className="v8-page">
       <div className="v8-page-intro compact">
@@ -3710,12 +3741,51 @@ function MapPage({
         </button>
       </div>
       <div className="v8-map-page-grid">
-        <MapPanel data={data} option={selected} />
+        <MapPanel
+          data={data}
+          option={selected}
+          selectedActivityId={selectedActivityId}
+          onSelectActivity={onSelectActivity}
+        />
         <div className="v8-map-facts">
           <span className="v8-kicker">{t("map.nextLeg")}</span>
-          <h2>
-            {nextActivityOf(data.active_plan)?.title ?? t("map.awaitingPlan")}
+          {/* ORD-0390: the heading used to name the next leg no matter what the traveller had just
+              tapped, so selecting a stop on the map changed the pin and nothing else — the screen
+              could not show that a selection had happened.  It now reads the same
+              `detailActivityId` the trips list writes, and falls back to the next leg when
+              nothing is selected. */}
+          <h2 data-testid="map-selected-stop" ref={selectedHeadingRef as never}>
+            {selectedActivity
+              ? `${mapCopy(locale, "stopSelectedLead")} · ${selectedActivity.title}`
+              : nextActivityOf(data.active_plan)?.title ?? t("map.awaitingPlan")}
           </h2>
+          {/* `type` is what this payload calls the category — `Activity.activity_type` in
+              `api/citynexus.ts:16` is a different shape, and the typechecker caught the guess. */}
+          {selectedActivity?.type ? (
+            <p className="v8-map-selected-type" data-testid="map-selected-type">
+              {selectedActivity.type}
+            </p>
+          ) : null}
+          {/* The reverse half: a row here selects the stop, which pans the map and presses its
+              marker.  Name only — times and money stay off the map affordance. */}
+          {planStops.length > 0 && (
+            <div className="v8-map-stops" data-testid="map-stops">
+              <span className="v8-kicker">{mapCopy(locale, "stopsKicker")}</span>
+              {planStops.map((stop) => (
+                <button
+                  className={stop.id === selectedActivityId ? "v8-map-stop selected" : "v8-map-stop"}
+                  key={stop.id}
+                  type="button"
+                  data-testid={`map-stop-${stop.id}`}
+                  aria-label={mapCopy(locale, "stopLocateAria").replace("%s", stop.title)}
+                  aria-pressed={stop.id === selectedActivityId}
+                  onClick={() => onSelectActivity(stop.id)}
+                >
+                  {stop.title}
+                </button>
+              ))}
+            </div>
+          )}
           {comparison.slice(0, 3).map((fact) => (
             <div className="v8-route-row" key={fact.mode}>
               {/* ORD-0222 1/②: same row, same two leaks, on the map surface. */}

@@ -5,6 +5,7 @@ import type { V8Data } from "../../app/v8Types";
 import { useT, useLocale } from "../../i18n/LocaleContext";
 import { mapCopy } from "../../i18n/mapPanelCopy";
 import "../../map-attribution.css";
+import "../../map-selection.css";
 
 /**
  * ORD-0082 ④: the map's own "there is nothing to centre this on" condition, as a pure function of
@@ -27,6 +28,8 @@ export function MapPanel({
   data,
   option,
   onNoLocationChange = null,
+  selectedActivityId = null,
+  onSelectActivity = null,
 }: {
   data: V8Data | null;
   option: V8Data["options"][number] | null;
@@ -34,8 +37,25 @@ export function MapPanel({
       counts, and a trip with no located activity can still have a route.  Attention needs that
       same answer or one screen can say "没有可信的坐标" and "一切正常" at once. */
   onNoLocationChange?: ((value: boolean) => void) | null;
+  /** ORD-0390: the map does not own a selection.  This is the same `detailActivityId` the trips
+      list and `ActivityDetail` already read, so one stop can be selected in exactly one place. */
+  selectedActivityId?: string | null;
+  /** ORD-0390: called with the activity id a marker stands for, or null to clear.  A stay offer
+      that has no plan activity reports null rather than inventing an id. */
+  onSelectActivity?: ((id: string | null) => void) | null;
 }) {
   const host = useRef<HTMLDivElement | null>(null);
+  /* ORD-0390: the marker elements and the map instance are kept in refs so a selection change can
+     restyle a marker and move the camera without tearing the map down and rebuilding it — the
+     rebuild path is `useEffect([data, points, route])` below, and panning through it would reset
+     the zoom the traveller just chose. */
+  const mapRef = useRef<import("maplibre-gl").Map | null>(null);
+  const markerEls = useRef<{ el: HTMLElement; id: string | null }[]>([]);
+  /* The click handlers are attached inside the map-building effect, which deliberately does not
+     depend on `onSelectActivity` (rebuilding the map to rebind a callback would reset the camera).
+     A ref keeps the handler current without making the camera its hostage. */
+  const selectRef = useRef(onSelectActivity);
+  selectRef.current = onSelectActivity;
   // Map truth: never centre on a hardcoded city.  If the Journey has no
   // trustworthy coordinates we say so explicitly instead of silently showing
   // an unrelated city (design corrections §10).
@@ -87,6 +107,7 @@ export function MapPanel({
         item.metadata.longitude != null && item.metadata.latitude != null
           ? [
               {
+                id: item.id as string | null,
                 title: item.title,
                 longitude: item.metadata.longitude,
                 latitude: item.metadata.latitude,
@@ -104,6 +125,9 @@ export function MapPanel({
     if (active.length) return active;
     if (!data) return [];
     return data.offers.slice(0, 1).map((offer) => ({
+      // A stay offer is not a plan activity, so it has no id to select.  Inventing one would let a
+      // marker claim a selection the trips list cannot show.
+      id: null as string | null,
       title: offer.property_name,
       longitude: offer.location.longitude,
       latitude: offer.location.latitude,
@@ -276,6 +300,7 @@ export function MapPanel({
         if (loaded === false) setTilesUnavailable(true);
       });
       map = mapInstance;
+      mapRef.current = mapInstance;
       /* Test seam.  maplibre keeps its instance off the DOM, but the acceptance
          gate has to read the camera to prove a gesture actually moved it — a
          rendered-frame diff alone cannot say *why* nothing changed.  Exposing the
@@ -284,11 +309,29 @@ export function MapPanel({
       (host.current as (HTMLElement & { citynexusMap?: unknown })).citynexusMap = mapInstance;
       resizeObserver = new ResizeObserver(() => map?.resize());
       resizeObserver.observe(host.current);
+    markerEls.current = [];
     points.forEach((point, index) => {
       const marker = document.createElement("div");
       marker.className = `v9-map-marker ${point.role === "STAY" ? "stay" : ""} ${point.protected ? "protected" : ""} ${point.current ? "current" : ""} ${point.disrupted ? "disrupted" : ""}`;
       marker.textContent = String(index + 1);
       marker.setAttribute("aria-label", point.title);
+      /* ORD-0390: a marker used to be a painted dot — `aria-label` for a screen reader and nothing
+         else.  It is now a real button that selects the stop it stands for, and `aria-pressed`
+         carries the shared selection so the state is readable without a class-name convention.
+         Keyboard is wired alongside pointer because a map-only affordance is unreachable on a
+         keyboard; the hit area is the marker box itself, which the narrow-width gate measures. */
+      marker.setAttribute("role", "button");
+      marker.tabIndex = 0;
+      marker.setAttribute("aria-pressed", String(!!point.id && point.id === selectedActivityId));
+      const choose = () => selectRef.current?.(point.id ?? null);
+      marker.addEventListener("click", choose);
+      marker.addEventListener("keydown", (event) => {
+        if (event.key === "Enter" || event.key === " ") {
+          event.preventDefault();
+          choose();
+        }
+      });
+      markerEls.current.push({ el: marker, id: point.id });
         new maplibregl.Marker({ element: marker })
         .setLngLat([point.longitude, point.latitude])
         .addTo(mapInstance);
@@ -349,8 +392,32 @@ export function MapPanel({
       disposed = true;
       resizeObserver?.disconnect();
       map?.remove();
+      mapRef.current = null;
+      markerEls.current = [];
     };
   }, [data, points, route]);
+
+  /* ORD-0390, the reverse half of the link: a selection made anywhere else (the trips card's
+     「在地图上显示」, or a sibling stop in the detail sheet) has to move this camera.  It is a
+     separate effect on purpose — the map-building effect above keys on data/points/route, and
+     rebuilding to pan would throw away the zoom the traveller just set.  `easeTo` rather than
+     `fitBounds` because the question is "where is this stop", not "reframe the whole plan". */
+  useEffect(() => {
+    const map = mapRef.current;
+    if (!map) return;
+    const chosen = points.find((point) => point.id && point.id === selectedActivityId) ?? null;
+    for (const marker of markerEls.current) {
+      const on = !!chosen && marker.id === chosen.id;
+      marker.el.classList.toggle("selected", on);
+      marker.el.setAttribute("aria-pressed", String(on));
+    }
+    if (!chosen) return;
+    const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    map.easeTo({
+      center: [chosen.longitude, chosen.latitude],
+      duration: reducedMotion ? 0 : 450,
+    });
+  }, [selectedActivityId, points]);
   if (noLocation) {
     return (
       <div
