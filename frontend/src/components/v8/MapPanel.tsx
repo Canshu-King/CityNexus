@@ -473,6 +473,10 @@ export function MapPanel({
       <div
         className="v8-map-panel v8-map-empty"
         data-testid="v8-map-empty"
+        /* ORD-0407 ①: the tier this cell is in, named the way ORD-0359 names a tier -- the sentence
+           carries the words, the attribute carries the code. NOT_AVAILABLE is measured, not asserted:
+           see the note on `noLocationBody` in i18n/mapPanelCopy.ts. */
+        data-cnx-activity-entry="NOT_AVAILABLE"
         role="status"
         aria-live="polite"
       >
