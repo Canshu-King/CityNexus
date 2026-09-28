@@ -1,0 +1,37 @@
+{
+  "instrument": "cmdr_ord0435_door_shape_probe_r1",
+  "base": "http://127.0.0.1:8794",
+  "journey_id": "22222222-2222-4222-8222-222222222222",
+  "why": "the panel never painted the batch bar on this stage; this separates a product defect from a stage-configuration limit by replaying the panel's own request bodies against the door",
+  "cases": {
+    "commander_minimal_body": {
+      "http": 201,
+      "bytes": 344967,
+      "candidates": 5,
+      "mode": "captured_replay",
+      "named_code": null
+    },
+    "panel_captured_replay_full_grounding": {
+      "http": 422,
+      "bytes": 314,
+      "candidates": null,
+      "mode": null,
+      "named_code": "V13_FULL_GROUNDING_MISSING_MOBILITY_PAIR:v12:22222222-2222-4222-8222-222222222222:arrival-anchor->real-place-a60fd27c0eb55fb4d6bd6cbf"
+    },
+    "panel_live_intent_shape": {
+      "http": 422,
+      "bytes": 364,
+      "candidates": null,
+      "mode": null,
+      "named_code": "Request validation failed"
+    }
+  },
+  "finding": {
+    "panel_handled_codes": [
+      "V13_DISCOVERY_NO_FEASIBLE_PLACE_SET",
+      "V13_FULL_GROUNDING_MISSING_MOBILITY_PAIR"
+    ],
+    "refusal_seen_on_this_stage": true,
+    "conclusion": "the door refuses with a named code the panel maps to its own Chinese sentence, so the screen is behaving as designed; the batch bar is unreachable here because of the no-live-Valhalla mobility-pair gap, not because of ORD-0435"
+  }
+}
