@@ -16588,6 +16588,31 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### CMDR 05:00 · 两条新并行会话开工（ORD-0444 收藏容器、ORD-0445 待规划独立态）· ORD-0441 与 ORD-0434 复切 ABORT，按 Q72 退回车道自己 rebase · 现尖 034cf2b24a5d4d4ec2a212425e5aed1e7c117de0
+
+## 1. 两枝复切都 ABORT，我不动别人的文件
+
+用户裁定要并发拉满，所以线上动得快：我 04:50 前后落了 ORD-0430 与 ORD-0439 两笔，之后两枝再来复切就合不成了。逐枝只读复切的结论：
+
+- ORD-0441（视觉档位数值照搬，车道 `2d2d7428`，枝 `review/Q-ord0441-token-ladder-r1`）：唯一合不成的一枚文件是 `frontend/src/design-tokens.css:1`。原因具名——ORD-0430 刚改了同一文件里药丸让位那四条属性的语义（从"平移出视口加隐藏"改成"视口内收形且仍可命中"），车道切枝在那之前。已回话：rebase 到现尖重交，且不得把那四条改回去，否则我判回退。
+- ORD-0434（共享授权，车道 `a68b0631`，枝 `review/qoder-0434-share-grants-r1`）：唯一合不成的一枚文件是 `backend/app/main.py:1`。已回话：rebase 到现尖重交，契约与 `frontend/src/generated/api.ts` 同笔带上，两向反件在新代重跑。
+
+按 `Q72` 我不手合任何一枚——手合出来的字节不是车道测过的那份。
+
+## 2. 新开的两条并行会话（用户第 3、6 条裁定：并发拉满，多开会话）
+
+- **ORD-0444 收藏容器**：新会话 `1ba48dbf-4cc2-4add-8dc1-5f73b372b61c`。POI 三出口里"收藏"这一档我们产品根本没有（collection/favorite 词面零命中），这一单做收藏夹容器表加条目表与三条路由，加一屏只读列表，空态必须带动作。
+- **ORD-0445 待规划独立态与筛选面板**：新会话 `6a150e1e-eede-4f29-bbd9-364e7ec69082`。把"有地点但没排到某一天"做成一个可筛可数的集合，不新建表、不新增写路由；删一天时那批地点的去处要屏上说得出来，词表沿用「找回 / 还原」。
+
+两条会话的开工约束我写进它们的指令里了：不得移动权威分支、不得写这本账（只把交付块丢 `_qoder_ledger_inbox/`，由我过门代插）、不得改那四枚热文件（`frontend/src/styles.css`、`frontend/src/app/V8Experience.tsx`、`frontend/src/i18n/LocaleContext.tsx`、`frontend/src/design-tokens.css`）、只用只读备份库起私有栈、不许假绿。它们的工单号在本块登记，别的实例与车道不要重复开。
+
+## 3. 我这边仍在等的（对表）
+
+ORD-0430 判 PARTIAL（避让与命中两格我亲测过，收形后与正文行的交叠仍存，件 blob 6010d8e8f8b52da5b98c9c8597f3b02d8309e178）；ORD-0433、ORD-0435、ORD-0436、ORD-0437、ORD-0438、ORD-0440、ORD-0442、ORD-0443 在车道手上；ORD-0431（顶栏中文标签折行）仍挂着——我 04:55 那张 twin 屏截图上「跟随系统」还是两行，天亮前没人接我就走字典缩短那条路自己做。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### qoder-0441 2026-09-29 04:43 · 车道 2d2d7428 · 档位数值照搬交了：先量再改——竞品在资源表里根本没有字号档（font_size 0 格），档位是从 830 份产品布局里量出来的；对齐了 6 处、色 arm 复跑逐格未动、旧验收一格没花
 
 件（请审）：refs/heads/review/Q-ord0441-token-ladder-r1 远端回读 = 582f3eb4ef2df2ce0c7bec7e1363fac3a3766974（env -u HTTP_PROXY -u HTTPS_PROXY git ls-remote origin 现读）
