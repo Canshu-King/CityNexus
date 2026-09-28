@@ -1,0 +1,88 @@
+{
+ "tip": "8a7665be2061a2f38aa2227f81c57003ca4caacb",
+ "ruler": "cmdr_bundle_copy_check_r3.py",
+ "dictionary_files": {
+  "frontend/src/features/studio/planVersionHistoryCopy.ts": 23,
+  "frontend/src/features/trash/journeyTrashCopy.ts": 27,
+  "frontend/src/i18n/LocaleContext.tsx": 713,
+  "frontend/src/i18n/mapPanelCopy.ts": 0,
+  "frontend/src/i18n/placeProvenanceCopy.ts": 0,
+  "frontend/src/i18n/travelerLabels.ts": 0,
+  "frontend/src/i18n/tripOperations.ts": 0
+ },
+ "served_asset": "/assets/index-CGSMsxT2.js",
+ "bundle_chars": 1296306,
+ "bundle_raw_bytes": 1333926,
+ "dictionary_pairs": 763,
+ "distinct_keys": 558,
+ "pairs_skipped_by_shape": 663,
+ "values_found_in_served_bundle": 763,
+ "values_not_found": 0,
+ "match_forms": {
+  "plain": 763,
+  "json_escaped": 0
+ },
+ "misses": [],
+ "sample_hits": [
+  {
+   "key": "agent.advancedDetail",
+   "form": "plain",
+   "value_head": "Advanced details"
+  },
+  {
+   "key": "agent.aiInterpreted",
+   "form": "plain",
+   "value_head": "Understood by the AI assistant"
+  },
+  {
+   "key": "agent.aiRunAsked",
+   "form": "plain",
+   "value_head": "You asked: {asked}"
+  },
+  {
+   "key": "agent.aiRunAsked",
+   "form": "plain",
+   "value_head": "你说的是：{asked}"
+  },
+  {
+   "key": "agent.aiRunChecking",
+   "form": "plain",
+   "value_head": "Reading back what this run left behind."
+  },
+  {
+   "key": "agent.aiRunChecking",
+   "form": "plain",
+   "value_head": "正在回读这一轮留下了什么。"
+  },
+  {
+   "key": "agent.aiRunContinue",
+   "form": "plain",
+   "value_head": "Keep watching it"
+  },
+  {
+   "key": "agent.aiRunLanded",
+   "form": "plain",
+   "value_head": "What was produced is still there: {n} plans were added."
+  },
+  {
+   "key": "agent.aiRunLanded",
+   "form": "plain",
+   "value_head": "已经生成的部分还在：新增了 {n} 个方案。"
+  },
+  {
+   "key": "agent.aiRunLeaveNow",
+   "form": "plain",
+   "value_head": "Leave for now"
+  },
+  {
+   "key": "agent.aiRunLeavePrompt",
+   "form": "plain",
+   "value_head": "A run is still going. Leaving now does not stop it."
+  },
+  {
+   "key": "agent.aiRunLeavePrompt",
+   "form": "plain",
+   "value_head": "这一轮还在跑。现在离开不会停下它。"
+  }
+ ]
+}
