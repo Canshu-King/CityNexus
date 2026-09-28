@@ -1,0 +1,651 @@
+{
+ "generated_by": "lane N2 ORD-0425 r3 readings aggregate r2 (adds the SP19 exclusion pass)",
+ "supersedes_for_this_lane": "evidence/ord0425-n2/r3_readings_new_tip_r1.json blob 9ab27811b3e637b7efecea79d4228adbedbf729f (left untouched)",
+ "instrument": "evidence/cmdr-ord0419-20260929-0051/untranslated_scan_r3.js blob 3dad6f0e70c2a0dcce936499f277313618d6b807",
+ "stages": {
+  "tip_3d28da7d_base": {
+   "intelligence": {
+    "built_from_sha": "3d28da7d221cfd2ca463991796f0a257df042972",
+    "base": "http://127.0.0.1:4796",
+    "arms_comparable": true,
+    "verdict": "ZH_SCREEN_CARRIES_ENGLISH_PROSE",
+    "arms": {
+     "zh": {
+      "entry_used": "使用封存的演示行程",
+      "reached_route": "/v8/intelligence",
+      "on_requested_route": true,
+      "leaf_count": 33,
+      "ascii_prose_count": 4,
+      "expect": {
+       "NOT_CONFIGURED": true,
+       "ADVISORY": true,
+       "PLANNED": false,
+       "PlanVersion 1 · INITIAL": false,
+       "Asia/Shanghai": false,
+       "未配置": false,
+       "建议": false,
+       "计划中": false,
+       "首次生成": false,
+       "上海时间": false,
+       "方案版本": false,
+       "Not configured": false,
+       "Advisory": false,
+       "Planned": false,
+       "First generation": false,
+       "Shanghai time": false,
+       "Plan version": false
+      }
+     },
+     "en": {
+      "entry_used": "sealed demo",
+      "reached_route": "/v8/intelligence",
+      "on_requested_route": true,
+      "leaf_count": 33,
+      "ascii_prose_count": 21,
+      "expect": {
+       "NOT_CONFIGURED": true,
+       "ADVISORY": true,
+       "PLANNED": false,
+       "PlanVersion 1 · INITIAL": false,
+       "Asia/Shanghai": false,
+       "未配置": false,
+       "建议": false,
+       "计划中": false,
+       "首次生成": false,
+       "上海时间": false,
+       "方案版本": false,
+       "Not configured": false,
+       "Advisory": false,
+       "Planned": false,
+       "First generation": false,
+       "Shanghai time": false,
+       "Plan version": false
+      }
+     }
+    }
+   },
+   "authoritative": {
+    "built_from_sha": "3d28da7d221cfd2ca463991796f0a257df042972",
+    "base": "http://127.0.0.1:4796",
+    "arms_comparable": true,
+    "verdict": "ZH_SCREEN_CARRIES_ENGLISH_PROSE",
+    "arms": {
+     "zh": {
+      "entry_used": "使用封存的演示行程",
+      "reached_route": "/v8/authoritative",
+      "on_requested_route": true,
+      "leaf_count": 72,
+      "ascii_prose_count": 23,
+      "expect": {
+       "NOT_CONFIGURED": false,
+       "ADVISORY": false,
+       "PLANNED": true,
+       "PlanVersion 1 · INITIAL": true,
+       "Asia/Shanghai": false,
+       "未配置": false,
+       "建议": true,
+       "计划中": false,
+       "首次生成": true,
+       "上海时间": false,
+       "方案版本": true,
+       "Not configured": false,
+       "Advisory": false,
+       "Planned": false,
+       "First generation": false,
+       "Shanghai time": false,
+       "Plan version": false
+      }
+     },
+     "en": {
+      "entry_used": "sealed demo",
+      "reached_route": "/v8/authoritative",
+      "on_requested_route": true,
+      "leaf_count": 72,
+      "ascii_prose_count": 55,
+      "expect": {
+       "NOT_CONFIGURED": false,
+       "ADVISORY": false,
+       "PLANNED": true,
+       "PlanVersion 1 · INITIAL": true,
+       "Asia/Shanghai": false,
+       "未配置": false,
+       "建议": false,
+       "计划中": false,
+       "首次生成": false,
+       "上海时间": false,
+       "方案版本": false,
+       "Not configured": false,
+       "Advisory": false,
+       "Planned": false,
+       "First generation": false,
+       "Shanghai time": false,
+       "Plan version": true
+      }
+     }
+    }
+   },
+   "live": {
+    "built_from_sha": "3d28da7d221cfd2ca463991796f0a257df042972",
+    "base": "http://127.0.0.1:4796",
+    "arms_comparable": true,
+    "verdict": "ZH_SCREEN_CARRIES_ENGLISH_PROSE",
+    "arms": {
+     "zh": {
+      "entry_used": "使用封存的演示行程",
+      "reached_route": "/v8/live",
+      "on_requested_route": true,
+      "leaf_count": 68,
+      "ascii_prose_count": 5,
+      "expect": {
+       "NOT_CONFIGURED": false,
+       "ADVISORY": false,
+       "PLANNED": false,
+       "PlanVersion 1 · INITIAL": false,
+       "Asia/Shanghai": true,
+       "未配置": false,
+       "建议": false,
+       "计划中": false,
+       "首次生成": false,
+       "上海时间": false,
+       "方案版本": false,
+       "Not configured": false,
+       "Advisory": false,
+       "Planned": false,
+       "First generation": false,
+       "Shanghai time": false,
+       "Plan version": false
+      }
+     },
+     "en": {
+      "entry_used": "sealed demo",
+      "reached_route": "/v8/live",
+      "on_requested_route": true,
+      "leaf_count": 68,
+      "ascii_prose_count": 42,
+      "expect": {
+       "NOT_CONFIGURED": false,
+       "ADVISORY": false,
+       "PLANNED": false,
+       "PlanVersion 1 · INITIAL": false,
+       "Asia/Shanghai": true,
+       "未配置": false,
+       "建议": false,
+       "计划中": false,
+       "首次生成": false,
+       "上海时间": false,
+       "方案版本": false,
+       "Not configured": false,
+       "Advisory": false,
+       "Planned": false,
+       "First generation": false,
+       "Shanghai time": false,
+       "Plan version": false
+      }
+     }
+    }
+   }
+  },
+  "probe_sentinels_on_new_tip": {
+   "intelligence": {
+    "built_from_sha": "00a5aeb308e0943394e0bf729fb1923d5e64759c",
+    "base": "http://127.0.0.1:4796",
+    "arms_comparable": true,
+    "verdict": "ZH_SCREEN_CARRIES_ENGLISH_PROSE",
+    "arms": {
+     "zh": {
+      "entry_used": "使用封存的演示行程",
+      "reached_route": "/v8/intelligence",
+      "on_requested_route": true,
+      "leaf_count": 33,
+      "ascii_prose_count": 2,
+      "expect": {
+       "N2PROBE-CT49/": true,
+       "N2PROBE-CT60/": true,
+       "N2PROBE-JP56/": false,
+       "N2PROBE-STUDIO195": false,
+       "N2PROBE-LV68/": false,
+       "NOT_CONFIGURED": true,
+       "ADVISORY": true,
+       "PLANNED": false,
+       "Asia/Shanghai": false,
+       "未配置": false,
+       "建议": false,
+       "计划中": false,
+       "方案版本": false,
+       "上海时间": false
+      }
+     },
+     "en": {
+      "entry_used": "sealed demo",
+      "reached_route": "/v8/intelligence",
+      "on_requested_route": true,
+      "leaf_count": 33,
+      "ascii_prose_count": 19,
+      "expect": {
+       "N2PROBE-CT49/": true,
+       "N2PROBE-CT60/": true,
+       "N2PROBE-JP56/": false,
+       "N2PROBE-STUDIO195": false,
+       "N2PROBE-LV68/": false,
+       "NOT_CONFIGURED": true,
+       "ADVISORY": true,
+       "PLANNED": false,
+       "Asia/Shanghai": false,
+       "未配置": false,
+       "建议": false,
+       "计划中": false,
+       "方案版本": false,
+       "上海时间": false
+      }
+     }
+    }
+   },
+   "authoritative": {
+    "built_from_sha": "00a5aeb308e0943394e0bf729fb1923d5e64759c",
+    "base": "http://127.0.0.1:4796",
+    "arms_comparable": true,
+    "verdict": "ZH_SCREEN_CARRIES_ENGLISH_PROSE",
+    "arms": {
+     "zh": {
+      "entry_used": "使用封存的演示行程",
+      "reached_route": "/v8/authoritative",
+      "on_requested_route": true,
+      "leaf_count": 72,
+      "ascii_prose_count": 20,
+      "expect": {
+       "N2PROBE-CT49/": false,
+       "N2PROBE-CT60/": false,
+       "N2PROBE-JP56/": true,
+       "N2PROBE-STUDIO195": true,
+       "N2PROBE-LV68/": false,
+       "NOT_CONFIGURED": false,
+       "ADVISORY": false,
+       "PLANNED": true,
+       "Asia/Shanghai": false,
+       "未配置": false,
+       "建议": true,
+       "计划中": false,
+       "方案版本": true,
+       "上海时间": false
+      }
+     },
+     "en": {
+      "entry_used": "sealed demo",
+      "reached_route": "/v8/authoritative",
+      "on_requested_route": true,
+      "leaf_count": 72,
+      "ascii_prose_count": 52,
+      "expect": {
+       "N2PROBE-CT49/": false,
+       "N2PROBE-CT60/": false,
+       "N2PROBE-JP56/": true,
+       "N2PROBE-STUDIO195": true,
+       "N2PROBE-LV68/": false,
+       "NOT_CONFIGURED": false,
+       "ADVISORY": false,
+       "PLANNED": true,
+       "Asia/Shanghai": false,
+       "未配置": false,
+       "建议": false,
+       "计划中": false,
+       "方案版本": false,
+       "上海时间": false
+      }
+     }
+    }
+   },
+   "live": {
+    "built_from_sha": "00a5aeb308e0943394e0bf729fb1923d5e64759c",
+    "base": "http://127.0.0.1:4796",
+    "arms_comparable": true,
+    "verdict": "ZH_SCREEN_CARRIES_ENGLISH_PROSE",
+    "arms": {
+     "zh": {
+      "entry_used": "使用封存的演示行程",
+      "reached_route": "/v8/live",
+      "on_requested_route": true,
+      "leaf_count": 68,
+      "ascii_prose_count": 4,
+      "expect": {
+       "N2PROBE-CT49/": false,
+       "N2PROBE-CT60/": false,
+       "N2PROBE-JP56/": false,
+       "N2PROBE-STUDIO195": false,
+       "N2PROBE-LV68/": true,
+       "NOT_CONFIGURED": false,
+       "ADVISORY": false,
+       "PLANNED": false,
+       "Asia/Shanghai": true,
+       "未配置": false,
+       "建议": false,
+       "计划中": false,
+       "方案版本": false,
+       "上海时间": false
+      }
+     },
+     "en": {
+      "entry_used": "sealed demo",
+      "reached_route": "/v8/live",
+      "on_requested_route": true,
+      "leaf_count": 68,
+      "ascii_prose_count": 41,
+      "expect": {
+       "N2PROBE-CT49/": false,
+       "N2PROBE-CT60/": false,
+       "N2PROBE-JP56/": false,
+       "N2PROBE-STUDIO195": false,
+       "N2PROBE-LV68/": true,
+       "NOT_CONFIGURED": false,
+       "ADVISORY": false,
+       "PLANNED": false,
+       "Asia/Shanghai": true,
+       "未配置": false,
+       "建议": false,
+       "计划中": false,
+       "方案版本": false,
+       "上海时间": false
+      }
+     }
+    }
+   }
+  },
+  "probe_sp19_exclusion_on_new_tip": {
+   "intelligence": {
+    "built_from_sha": "00a5aeb308e0943394e0bf729fb1923d5e64759c",
+    "base": "http://127.0.0.1:4796",
+    "arms_comparable": true,
+    "verdict": "ZH_SCREEN_CARRIES_ENGLISH_PROSE",
+    "arms": {
+     "zh": {
+      "entry_used": "使用封存的演示行程",
+      "reached_route": "/v8/intelligence",
+      "on_requested_route": true,
+      "leaf_count": 33,
+      "ascii_prose_count": 2,
+      "expect": {
+       "N2PROBE-SP19": false,
+       "N2PROBE-JP56/": false,
+       "N2PROBE-CT49/": true,
+       "N2PROBE-LV68/": false,
+       "PLANNED": false,
+       "ADVISORY": true
+      }
+     },
+     "en": {
+      "entry_used": "sealed demo",
+      "reached_route": "/v8/intelligence",
+      "on_requested_route": true,
+      "leaf_count": 33,
+      "ascii_prose_count": 19,
+      "expect": {
+       "N2PROBE-SP19": false,
+       "N2PROBE-JP56/": false,
+       "N2PROBE-CT49/": true,
+       "N2PROBE-LV68/": false,
+       "PLANNED": false,
+       "ADVISORY": true
+      }
+     }
+    }
+   },
+   "authoritative": {
+    "built_from_sha": "00a5aeb308e0943394e0bf729fb1923d5e64759c",
+    "base": "http://127.0.0.1:4796",
+    "arms_comparable": true,
+    "verdict": "ZH_SCREEN_CARRIES_ENGLISH_PROSE",
+    "arms": {
+     "zh": {
+      "entry_used": "使用封存的演示行程",
+      "reached_route": "/v8/authoritative",
+      "on_requested_route": true,
+      "leaf_count": 72,
+      "ascii_prose_count": 20,
+      "expect": {
+       "N2PROBE-SP19": false,
+       "N2PROBE-JP56/": true,
+       "N2PROBE-CT49/": false,
+       "N2PROBE-LV68/": false,
+       "PLANNED": true,
+       "ADVISORY": false
+      }
+     },
+     "en": {
+      "entry_used": "sealed demo",
+      "reached_route": "/v8/authoritative",
+      "on_requested_route": true,
+      "leaf_count": 72,
+      "ascii_prose_count": 52,
+      "expect": {
+       "N2PROBE-SP19": false,
+       "N2PROBE-JP56/": true,
+       "N2PROBE-CT49/": false,
+       "N2PROBE-LV68/": false,
+       "PLANNED": true,
+       "ADVISORY": false
+      }
+     }
+    }
+   },
+   "live": {
+    "built_from_sha": "00a5aeb308e0943394e0bf729fb1923d5e64759c",
+    "base": "http://127.0.0.1:4796",
+    "arms_comparable": true,
+    "verdict": "ZH_SCREEN_CARRIES_ENGLISH_PROSE",
+    "arms": {
+     "zh": {
+      "entry_used": "使用封存的演示行程",
+      "reached_route": "/v8/live",
+      "on_requested_route": true,
+      "leaf_count": 68,
+      "ascii_prose_count": 4,
+      "expect": {
+       "N2PROBE-SP19": false,
+       "N2PROBE-JP56/": false,
+       "N2PROBE-CT49/": false,
+       "N2PROBE-LV68/": true,
+       "PLANNED": false,
+       "ADVISORY": false
+      }
+     },
+     "en": {
+      "entry_used": "sealed demo",
+      "reached_route": "/v8/live",
+      "on_requested_route": true,
+      "leaf_count": 68,
+      "ascii_prose_count": 41,
+      "expect": {
+       "N2PROBE-SP19": false,
+       "N2PROBE-JP56/": false,
+       "N2PROBE-CT49/": false,
+       "N2PROBE-LV68/": true,
+       "PLANNED": false,
+       "ADVISORY": false
+      }
+     }
+    }
+   }
+  },
+  "candidate_rebased_on_new_tip": {
+   "intelligence": {
+    "built_from_sha": "973086b6dd09bb4ef1876ef4508c902d25de96e5",
+    "base": "http://127.0.0.1:4796",
+    "arms_comparable": true,
+    "verdict": "ZH_SCREEN_CARRIES_ENGLISH_PROSE",
+    "arms": {
+     "zh": {
+      "entry_used": "使用封存的演示行程",
+      "reached_route": "/v8/intelligence",
+      "on_requested_route": true,
+      "leaf_count": 33,
+      "ascii_prose_count": 2,
+      "expect": {
+       "NOT_CONFIGURED": false,
+       "ADVISORY": false,
+       "PLANNED": false,
+       "PlanVersion 1 · INITIAL": false,
+       "Asia/Shanghai": false,
+       "Not configured": false,
+       "Advisory": false,
+       "Planned": false,
+       "First generation": false,
+       "Shanghai time": false,
+       "Plan version 1": false,
+       "未配置": true,
+       "建议": true,
+       "计划中": false,
+       "首次生成": false,
+       "上海时间": false,
+       "方案版本": false
+      }
+     },
+     "en": {
+      "entry_used": "sealed demo",
+      "reached_route": "/v8/intelligence",
+      "on_requested_route": true,
+      "leaf_count": 33,
+      "ascii_prose_count": 21,
+      "expect": {
+       "NOT_CONFIGURED": false,
+       "ADVISORY": false,
+       "PLANNED": false,
+       "PlanVersion 1 · INITIAL": false,
+       "Asia/Shanghai": false,
+       "Not configured": true,
+       "Advisory": true,
+       "Planned": false,
+       "First generation": false,
+       "Shanghai time": false,
+       "Plan version 1": false,
+       "未配置": false,
+       "建议": false,
+       "计划中": false,
+       "首次生成": false,
+       "上海时间": false,
+       "方案版本": false
+      }
+     }
+    }
+   },
+   "authoritative": {
+    "built_from_sha": "973086b6dd09bb4ef1876ef4508c902d25de96e5",
+    "base": "http://127.0.0.1:4796",
+    "arms_comparable": true,
+    "verdict": "ZH_SCREEN_CARRIES_ENGLISH_PROSE",
+    "arms": {
+     "zh": {
+      "entry_used": "使用封存的演示行程",
+      "reached_route": "/v8/authoritative",
+      "on_requested_route": true,
+      "leaf_count": 72,
+      "ascii_prose_count": 20,
+      "expect": {
+       "NOT_CONFIGURED": false,
+       "ADVISORY": false,
+       "PLANNED": false,
+       "PlanVersion 1 · INITIAL": false,
+       "Asia/Shanghai": false,
+       "Not configured": false,
+       "Advisory": false,
+       "Planned": false,
+       "First generation": false,
+       "Shanghai time": false,
+       "Plan version 1": false,
+       "未配置": false,
+       "建议": true,
+       "计划中": true,
+       "首次生成": true,
+       "上海时间": false,
+       "方案版本": true
+      }
+     },
+     "en": {
+      "entry_used": "sealed demo",
+      "reached_route": "/v8/authoritative",
+      "on_requested_route": true,
+      "leaf_count": 72,
+      "ascii_prose_count": 55,
+      "expect": {
+       "NOT_CONFIGURED": false,
+       "ADVISORY": false,
+       "PLANNED": false,
+       "PlanVersion 1 · INITIAL": false,
+       "Asia/Shanghai": false,
+       "Not configured": false,
+       "Advisory": false,
+       "Planned": true,
+       "First generation": true,
+       "Shanghai time": false,
+       "Plan version 1": true,
+       "未配置": false,
+       "建议": false,
+       "计划中": false,
+       "首次生成": false,
+       "上海时间": false,
+       "方案版本": false
+      }
+     }
+    }
+   },
+   "live": {
+    "built_from_sha": "973086b6dd09bb4ef1876ef4508c902d25de96e5",
+    "base": "http://127.0.0.1:4796",
+    "arms_comparable": true,
+    "verdict": "ZH_SCREEN_CARRIES_ENGLISH_PROSE",
+    "arms": {
+     "zh": {
+      "entry_used": "使用封存的演示行程",
+      "reached_route": "/v8/live",
+      "on_requested_route": true,
+      "leaf_count": 68,
+      "ascii_prose_count": 4,
+      "expect": {
+       "NOT_CONFIGURED": false,
+       "ADVISORY": false,
+       "PLANNED": false,
+       "PlanVersion 1 · INITIAL": false,
+       "Asia/Shanghai": true,
+       "Not configured": false,
+       "Advisory": false,
+       "Planned": false,
+       "First generation": false,
+       "Shanghai time": false,
+       "Plan version 1": false,
+       "未配置": false,
+       "建议": false,
+       "计划中": false,
+       "首次生成": false,
+       "上海时间": true,
+       "方案版本": false
+      }
+     },
+     "en": {
+      "entry_used": "sealed demo",
+      "reached_route": "/v8/live",
+      "on_requested_route": true,
+      "leaf_count": 68,
+      "ascii_prose_count": 42,
+      "expect": {
+       "NOT_CONFIGURED": false,
+       "ADVISORY": false,
+       "PLANNED": false,
+       "PlanVersion 1 · INITIAL": false,
+       "Asia/Shanghai": true,
+       "Not configured": false,
+       "Advisory": false,
+       "Planned": false,
+       "First generation": false,
+       "Shanghai time": true,
+       "Plan version 1": false,
+       "未配置": false,
+       "建议": false,
+       "计划中": false,
+       "首次生成": false,
+       "上海时间": false,
+       "方案版本": false
+      }
+     }
+    }
+   }
+  }
+ }
+}
