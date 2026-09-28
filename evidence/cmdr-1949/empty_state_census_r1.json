@@ -1,0 +1,420 @@
+{
+ "at": "2026-09-28T11:48:55.696Z",
+ "base": "http://127.0.0.1:4795/",
+ "screens": [
+  {
+   "label": "今天",
+   "aim": {
+    "found": 2,
+    "centre": [
+     150,
+     384
+    ],
+    "hittable": true
+   },
+   "url": "/v8/hub",
+   "body_chars": 460,
+   "rows": [
+    {
+     "testid": null,
+     "cls": "",
+     "text": "这个行程还没有可信的坐标。添加活动地点或开启定位后，地图会显示正确的城市。",
+     "box": [
+      34,
+      709,
+      322,
+      38
+     ],
+     "has_control_in_or_next_to_it": false,
+     "control_label": null,
+     "in_viewport": true
+    },
+    {
+     "testid": null,
+     "cls": "cn-strip-item",
+     "text": "住宿 还没有选定",
+     "box": [
+      34,
+      784,
+      75,
+      39
+     ],
+     "has_control_in_or_next_to_it": false,
+     "control_label": null,
+     "in_viewport": true
+    },
+    {
+     "testid": null,
+     "cls": "cn-attention-head",
+     "text": "这个行程还没有可信的坐标",
+     "box": [
+      20,
+      843,
+      350,
+      17
+     ],
+     "has_control_in_or_next_to_it": false,
+     "control_label": null,
+     "in_viewport": false
+    },
+    {
+     "testid": "pretrip-empty",
+     "cls": "cn-pretrip-empty",
+     "text": "这一代都没有报出。 去看这一代方案",
+     "box": [
+      32,
+      969,
+      326,
+      44
+     ],
+     "has_control_in_or_next_to_it": true,
+     "control_label": "去看这一代方案",
+     "in_viewport": false
+    },
+    {
+     "testid": "hub-glance-empty",
+     "cls": "v8-empty-state",
+     "text": "还没有可以预览的行程 选定方案后，这里会显示每天的安排。",
+     "box": [
+      17,
+      1129,
+      356,
+      58
+     ],
+     "has_control_in_or_next_to_it": true,
+     "control_label": "AI 帮我规划",
+     "in_viewport": false
+    }
+   ]
+  },
+  {
+   "label": "实时行程",
+   "aim": {
+    "found": 3,
+    "centre": [
+     150,
+     422
+    ],
+    "hittable": true
+   },
+   "url": "/v8/live",
+   "body_chars": 518,
+   "rows": [
+    {
+     "testid": null,
+     "cls": "",
+     "text": "这个行程还没有可信的坐标。添加活动地点或开启定位后，地图会显示正确的城市。",
+     "box": [
+      34,
+      397,
+      322,
+      38
+     ],
+     "has_control_in_or_next_to_it": false,
+     "control_label": null,
+     "in_viewport": true
+    },
+    {
+     "testid": "live-no-proposal",
+     "cls": "v8-muted",
+     "text": "当前没有需要你决定的调整。",
+     "box": [
+      17,
+      465,
+      356,
+      21
+     ],
+     "has_control_in_or_next_to_it": false,
+     "control_label": null,
+     "in_viewport": true
+    },
+    {
+     "testid": "v10-live-execution-panel",
+     "cls": "v10-execution-panel",
+     "text": "实时状态 当前正在发生什么 刚刚更新 时钟 19:47 Asia/Shanghai 当前步骤 进行中 行程状态 离线 只读就绪 未来 24 小时已保存 0 个来源 暂无记录",
+     "box": [
+      34,
+      1346,
+      322,
+      517
+     ],
+     "has_control_in_or_next_to_it": true,
+     "control_label": "更新位置",
+     "in_viewport": false
+    }
+   ]
+  },
+  {
+   "label": "地图",
+   "aim": {
+    "found": 3,
+    "centre": [
+     150,
+     422
+    ],
+    "hittable": true
+   },
+   "url": "/v8/map",
+   "body_chars": 207,
+   "rows": [
+    {
+     "testid": null,
+     "cls": "",
+     "text": "这个行程还没有可信的坐标。添加活动地点或开启定位后，地图会显示正确的城市。",
+     "box": [
+      34,
+      362,
+      322,
+      38
+     ],
+     "has_control_in_or_next_to_it": false,
+     "control_label": null,
+     "in_viewport": true
+    }
+   ]
+  },
+  {
+   "label": "行程工作台",
+   "aim": {
+    "found": 2,
+    "centre": [
+     150,
+     422
+    ],
+    "hittable": true
+   },
+   "url": "/v8/studio",
+   "body_chars": 266,
+   "rows": [
+    {
+     "testid": null,
+     "cls": "v8-aside-heading",
+     "text": "尚未选择住宿 选择住宿",
+     "box": [
+      38,
+      373,
+      314,
+      56
+     ],
+     "has_control_in_or_next_to_it": true,
+     "control_label": "选择住宿",
+     "in_viewport": true
+    },
+    {
+     "testid": null,
+     "cls": "",
+     "text": "住宿总计 尚未选择",
+     "box": [
+      38,
+      462,
+      314,
+      15
+     ],
+     "has_control_in_or_next_to_it": false,
+     "control_label": null,
+     "in_viewport": true
+    },
+    {
+     "testid": null,
+     "cls": "",
+     "text": "日均出行 尚未选择",
+     "box": [
+      38,
+      488,
+      314,
+      15
+     ],
+     "has_control_in_or_next_to_it": false,
+     "control_label": null,
+     "in_viewport": true
+    },
+    {
+     "testid": null,
+     "cls": "",
+     "text": "步行暴露 尚未选择",
+     "box": [
+      38,
+      514,
+      314,
+      15
+     ],
+     "has_control_in_or_next_to_it": false,
+     "control_label": null,
+     "in_viewport": true
+    }
+   ]
+  },
+  {
+   "label": "住宿选择",
+   "aim": {
+    "found": 3,
+    "centre": [
+     150,
+     422
+    ],
+    "hittable": true
+   },
+   "url": "/v8/stay",
+   "body_chars": 146,
+   "rows": [
+    {
+     "testid": null,
+     "cls": "",
+     "text": "我们还没有拿到真实住宿数据，所以不会给你看一张假的价格卡片。可以先选好行程，再回来搜索住宿。",
+     "box": [
+      17,
+      220,
+      356,
+      63
+     ],
+     "has_control_in_or_next_to_it": false,
+     "control_label": null,
+     "in_viewport": true
+    }
+   ]
+  },
+  {
+   "label": "城市探索",
+   "aim": {
+    "found": 3,
+    "centre": [
+     150,
+     422
+    ],
+    "hittable": true
+   },
+   "url": "/v8/discover",
+   "body_chars": 356,
+   "rows": []
+  },
+  {
+   "label": "旅行票夹",
+   "aim": {
+    "found": 2,
+    "centre": [
+     150,
+     422
+    ],
+    "hittable": true
+   },
+   "url": "/v8/bookings",
+   "body_chars": 655,
+   "rows": [
+    {
+     "testid": null,
+     "cls": "",
+     "text": "这趟行程目前还没有可选的住宿。",
+     "box": [
+      101,
+      359,
+      165,
+      15
+     ],
+     "has_control_in_or_next_to_it": false,
+     "control_label": null,
+     "in_viewport": true
+    },
+    {
+     "testid": "inbox-pending-empty",
+     "cls": "",
+     "text": "这里没有等你审核的确认单。",
+     "box": [
+      34,
+      2093,
+      322,
+      17
+     ],
+     "has_control_in_or_next_to_it": false,
+     "control_label": null,
+     "in_viewport": false
+    }
+   ]
+  },
+  {
+   "label": "恢复与执行",
+   "aim": {
+    "found": 2,
+    "centre": [
+     150,
+     422
+    ],
+    "hittable": true
+   },
+   "url": "/v8/authoritative",
+   "body_chars": 980,
+   "rows": [
+    {
+     "testid": "history-retention",
+     "cls": "plan-version-history-retention",
+     "text": "这台服务器没有设保留上限：目前这趟共有 1 份版本，这里全部列出。写新版本不会丢掉旧的。",
+     "box": [
+      38,
+      438,
+      314,
+      38
+     ],
+     "has_control_in_or_next_to_it": false,
+     "control_label": null,
+     "in_viewport": true
+    }
+   ]
+  },
+  {
+   "label": "智能守护",
+   "aim": {
+    "found": 3,
+    "centre": [
+     150,
+     422
+    ],
+    "hittable": true
+   },
+   "url": "/v8/intelligence",
+   "body_chars": 393,
+   "rows": []
+  },
+  {
+   "label": "旅行者画像",
+   "aim": {
+    "found": 3,
+    "centre": [
+     150,
+     422
+    ],
+    "hittable": true
+   },
+   "url": "/v8/twin",
+   "body_chars": 528,
+   "rows": []
+  },
+  {
+   "label": "我的",
+   "aim": {
+    "found": 3,
+    "centre": [
+     150,
+     798
+    ],
+    "hittable": true
+   },
+   "url": "/v8/me",
+   "body_chars": 309,
+   "rows": [
+    {
+     "testid": null,
+     "cls": "",
+     "text": "服务器没有配置推送密钥，所以通知只会记在行程里，不会弹到这台设备上。",
+     "box": [
+      40,
+      1064,
+      310,
+      37
+     ],
+     "has_control_in_or_next_to_it": true,
+     "control_label": "启用 Web Push",
+     "in_viewport": false
+    }
+   ]
+  }
+ ]
+}
