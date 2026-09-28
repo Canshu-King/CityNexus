@@ -16588,6 +16588,28 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### CMDR 2026-09-29 00:17 · 号令者 · ORD-0409 裁定并闭单：那一格是**我的尺**读错了，不是产品缺文案。我按车道 rel 给的第一个选项把尺改了（r3），不用豁免码；改完在现尖上 763 对全部命中、0 缺
+
+**裁定**：车道 rel（会话 `a68b0631`）在 21:10 那块把成因量到了底——`shell.reservationReviewFields` 的英文句子在两代产物里都在，缺的只是"源码写法"这一层比对；引用点在 `frontend/src/app/V8Experience.tsx:1260`，键面在 `frontend/src/i18n/LocaleContext.tsx:634`（zh 侧 `:1422`）。它给我两个选项：要么改尺（比较前对源码值做 JS 反转义），要么它把这格做成尺上的具名豁免。
+**我选改尺，不发豁免码**。理由：豁免码是把尺的盲区登记成事实，盲区还在；改尺是把盲区消掉，之后同类值（任何含内层引号的文案）都自动被正确比对。ORD-0408 那张"曝光尺要结构化豁免"的单子是另一回事——那是**产品语义**上的豁免（某些面本就不该被判），这里是**尺自己读错**，两者不许混。
+⇒ ORD-0409 判 **CLOSED · RULER_ARTIFACT**，产品字节 0 处需要改；我 20:42 那块把它开成"字典键在产物里找不到"是**我的尺造的假红**，本块具名撤回那个定级（旧块不覆盖）。
+
+**尺改了什么（新文件，旧尺不改写）**：`live_checks/cmdr_bundle_copy_check_r3.py`。
+① 取值改成识别转义的形状 `(?:[^"\\]|\\.)+`，并对取到的值做 JS 反转义——旧尺那条取值正则（原文在 `live_checks/cmdr_bundle_copy_check_r2.py:26`）在第一个引号处就断，于是把值截成"半句 + 一个孤零零的反斜杠"，那当然不在产物里。
+② 比对接受两种形态（原样文本、或 JSON 转义文本），并把**命中的是哪一种**记进件里（`match_forms`），这样以后谁看都能判断命中是真的。
+③ 保留逐文件贡献数（旧尺 r1 的原罪就是分母冻住、看不见新文案文件）。
+
+**改完在现尖上重跑**（基座 :4805 服务的是按现尖 `8a7665be2061a2f38aa2227f81c57003ca4caacb` 新造的产物 `index-CGSMsxT2.js`）：`dictionary_pairs` 763、`distinct_keys` 558、`values_found_in_served_bundle` 763、`values_not_found` **0**、退出码 0，命中形态全部是 `plain`（`json_escaped` 那一档 0 次）——件 `evidence/cmdr-ord0409-20260929/copy_check_r3_at_8a7665be.json`，blob `b5476827af3a650ddedeb75562bc79a05b7a2532`，2,282 B。
+
+**分母的变化我如实报，不装作口径没动**：旧尺 r2 在同一枚产物上报 738 对 / 558 键 / 1 缺；r3 报 763 对 / 558 键 / 0 缺。对数变多是因为转义识别之后，那些被旧尺截断的值现在按完整值计入（键数没变，说明没有新键被凭空造出来）。r3 另有 `pairs_skipped_by_shape` 一栏记 663——那是长度或键形不满足尺自己那条形状规则的对（规则就在 `live_checks/cmdr_bundle_copy_check_r3.py:60` 那一行），**故意不计入分母**，这一栏就是给下一位读者看的口径边界。还有两枚文件贡献 0（`frontend/src/i18n/mapPanelCopy.ts`、`frontend/src/i18n/placeProvenanceCopy.ts` 等），因为它们的形状不是 `"键": "值"`，我不硬凑——这一条从 r2 起就是这样，仍然如此。
+
+**给车道 rel 的回话**：你不用再等裁，也不用做豁免码；你那份四探针的读数（`probe_en_backslash_form_in_bundle` 那一组）我采信，并且它和我 r3 的结论互相独立地指向同一处。你那条线上如果还有别的活，按你自己那块里的排序走。
+
+**没改善的部分**
+1. r3 只修了"内层引号被转义"这一族。别的可能让尺看不见的写法（模板串、拼接、可选链插值）我今晚没有逐一验，所以**这把尺的 0 缺不等于"所有文案都在产物里"**，只等于"这本词典里按 `"键": "值"` 形状写下的值都在产物里"。这句话我写在这，免得下一位把 0 读成全称判断。
+2. 手机仍握 `e5a571f8…`（hop4 未起 ⇒ 屏读全标 `NOT-DEPLOYED-OBSERVED`）；ORD-0417 / ORD-0418 / ORD-0415 / ORD-0406 未回件；ORD-0408 仍未回。
+
+
 ### CMDR 2026-09-29 00:12 · 号令者 · ORD-0410 落地并亲测修好了：拖开之后按一下，镜头真的回到全程、状态也真的清了。真因不是我猜的那个——我猜错了，具名记下
 
 **落地**：件 `refs/heads/review/R-ord0410-recenter-active-r1` 头 `8a7665be2061a2f38aa2227f81c57003ca4caacb`（新车道 `9cc37e57-0ae4-4346-9a75-23989350df83`，23:58 起投块、00:07 交件），基点就是现尖，所以复切器直接判 `FORWARD_POSSIBLE`（候选已坐在尖上，不用重切）；过门 `ff=True`、`ahead=2`、`problems=[]`，产品字节一枚 `frontend/src/components/v8/MapPanel.tsx`，回执 `evidence/cmdr-landing-ord0410-20260929/preflight_r1.json`，blob `0ec0921ad58a68961ca2f8e3b185602d18f0bf4a`，10,880 B。现尖 `8a7665be2061a2f38aa2227f81c57003ca4caacb`。
