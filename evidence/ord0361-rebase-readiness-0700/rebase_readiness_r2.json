@@ -1,0 +1,145 @@
+{
+ "schema": "CNX_S4_ORD0361_REBASE_READINESS_R1",
+ "tip": "f26e2ff78c047579a7d710d3a469be6bdf9a0540",
+ "branch": "11eee48da2b117a2c0aafb2d71c50b0104b7d1fb",
+ "merge_base": "b6a8ea5c625d7e3e82f7348fad57d595a8a403c0",
+ "merge_tree_object": "68090db32d1fca54e31ea8d6082b37983a135ca7",
+ "commits_between": 321,
+ "files_changed_by_this_lane": [
+  "frontend/src/app/V8Experience.tsx",
+  "frontend/src/components/v8/MapPanel.tsx",
+  "frontend/src/features/execution/V12AuthoritativeJourneyPanel.tsx",
+  "frontend/src/lib/mapFocus.ts"
+ ],
+ "merge_tree_rc": 1,
+ "conflicted_files": [
+  "frontend/src/app/V8Experience.tsx",
+  "frontend/src/components/v8/MapPanel.tsx"
+ ],
+ "conflict_messages": [
+  "frontend/src/app/V8Experience.tsx",
+  "frontend/src/components/v8/MapPanel.tsx"
+ ],
+ "hunks": {
+  "frontend/src/app/V8Experience.tsx": {
+   "lane_added": 5,
+   "line_added": 36,
+   "lane_insertions": 43,
+   "line_insertions": 470
+  },
+  "frontend/src/components/v8/MapPanel.tsx": {
+   "lane_added": 11,
+   "line_added": 31,
+   "lane_insertions": 79,
+   "line_insertions": 273
+  },
+  "frontend/src/features/execution/V12AuthoritativeJourneyPanel.tsx": {
+   "lane_added": 6,
+   "line_added": 8,
+   "lane_insertions": 41,
+   "line_insertions": 13
+  },
+  "frontend/src/lib/mapFocus.ts": {
+   "lane_added": 1,
+   "line_added": 0,
+   "lane_insertions": 65,
+   "line_insertions": 0
+  }
+ },
+ "mapFocus_consumers_on_tip": [],
+ "mapFocus_consumers_on_lane_branch": [
+  "11eee48da2b117a2c0aafb2d71c50b0104b7d1fb:frontend/src/app/V8Experience.tsx:13:import { readMapFocus, writeMapFocus } from \"../lib/mapFocus\";",
+  "11eee48da2b117a2c0aafb2d71c50b0104b7d1fb:frontend/src/components/v8/MapPanel.tsx:5:import { unpickableCopy } from \"../../lib/mapFocus\";",
+  "11eee48da2b117a2c0aafb2d71c50b0104b7d1fb:frontend/src/lib/mapFocus.ts:17:export function mapFocusKey(journeyId: string): string {",
+  "11eee48da2b117a2c0aafb2d71c50b0104b7d1fb:frontend/src/lib/mapFocus.ts:24:    const raw = localStorage.getItem(mapFocusKey(journeyId));",
+  "11eee48da2b117a2c0aafb2d71c50b0104b7d1fb:frontend/src/lib/mapFocus.ts:31:      localStorage.removeItem(mapFocusKey(journeyId));",
+  "11eee48da2b117a2c0aafb2d71c50b0104b7d1fb:frontend/src/lib/mapFocus.ts:44:    localStorage.setItem(mapFocusKey(journeyId), JSON.stringify({ activity_id: activityId }));"
+ ],
+ "v12_new_props_supplied_on_tip": [],
+ "registry_call_site_on_tip": [
+  "    testId: \"v12-authoritative-panel\",",
+  "    when: (s) => Boolean(s.plan),",
+  "    render: (s) => (",
+  "      <V12AuthoritativeJourneyPanel",
+  "        journeyId={s.journeyId}",
+  "        plan={s.plan}",
+  "        nowActivityId={s.twin?.current_activity_id}",
+  "        nextActivityId={s.nextActivityId ?? null}",
+  "        onTransition={s.onRefresh}",
+  "      />",
+  "    ),",
+  "  },"
+ ],
+ "conflict_hunks": {
+  "frontend/src/app/V8Experience.tsx": {
+   "hunk_count": 1,
+   "ours_lines": 29,
+   "theirs_lines": 41,
+   "first_hunk_lines_here": [
+    [
+     3406,
+     "<<<<<<< f26e2ff78c047579a7d710d3a469be6bdf9a0540"
+    ]
+   ]
+  },
+  "frontend/src/components/v8/MapPanel.tsx": {
+   "hunk_count": 7,
+   "ours_lines": 62,
+   "theirs_lines": 78,
+   "first_hunk_lines_here": [
+    [
+     4,
+     "<<<<<<< f26e2ff78c047579a7d710d3a469be6bdf9a0540"
+    ],
+    [
+     58,
+     "<<<<<<< f26e2ff78c047579a7d710d3a469be6bdf9a0540"
+    ],
+    [
+     71,
+     "<<<<<<< f26e2ff78c047579a7d710d3a469be6bdf9a0540"
+    ],
+    [
+     184,
+     "<<<<<<< f26e2ff78c047579a7d710d3a469be6bdf9a0540"
+    ],
+    [
+     415,
+     "<<<<<<< f26e2ff78c047579a7d710d3a469be6bdf9a0540"
+    ],
+    [
+     578,
+     "<<<<<<< f26e2ff78c047579a7d710d3a469be6bdf9a0540"
+    ]
+   ]
+  }
+ },
+ "merged_clean_files": {
+  "frontend/src/lib/mapFocus.ts": {
+   "bytes": 2817,
+   "mentions_mapFocus": 4,
+   "mentions_V8Experience_or_MapPanel": 0,
+   "new_props_declared": 0,
+   "line_count": 65
+  },
+  "frontend/src/features/execution/V12AuthoritativeJourneyPanel.tsx": {
+   "bytes": 7506,
+   "mentions_mapFocus": 0,
+   "mentions_V8Experience_or_MapPanel": 0,
+   "new_props_declared": 11,
+   "line_count": 177
+  }
+ },
+ "lane_commits_between": 1,
+ "merge_tree_stage_lines": 6,
+ "registry_props_at_render_site": [
+  "journeyId",
+  "plan",
+  "nowActivityId",
+  "nextActivityId",
+  "onTransition"
+ ],
+ "registry_render_line": 399,
+ "tip_row_markup_line": 123,
+ "mapfocus_first_export_line": 17
+}
