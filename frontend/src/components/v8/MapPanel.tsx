@@ -169,6 +169,15 @@ export function MapPanel({
     }));
   }, [data]);
 
+  /* ORD-0417: the stop the shared selection currently names, so the glass can say which one a finger
+     just landed on.  Read off the same two values the selection effect below reads (`points` and
+     `selectedActivityId`), because the map does not own a selection -- ORD-0390.  A stay offer has no
+     activity id, so it selects nothing and this stays null rather than inventing a name to paint. */
+  const selectedPoint = useMemo(
+    () => points.find((point) => point.id && point.id === selectedActivityId) ?? null,
+    [points, selectedActivityId],
+  );
+
   useEffect(() => {
     let disposed = false;
     let map: import("maplibre-gl").Map | null = null;
@@ -559,6 +568,24 @@ export function MapPanel({
           {mapCopy(locale, "gestureHint")}
         </p>
         <div className="v8-map-caption">
+          {/* ORD-0417: the answer to a tap on a pin, painted on the glass the tap happened on.  The
+              name used to live only in the pin's `aria-label`, so a traveller whose eyes work got a
+              number and no name; the card that does name the stop is below the panel, and reaching it
+              means the page scrolling away from the surface the finger is on.
+              It goes inside the caption rather than as another block in the stack, and that placement
+              is the load-bearing part of this change.  The stack is the box `fitBounds` measures its
+              bottom padding against -- once, with nothing selected, paying `side + overlayHeight +
+              safetyGap`.  A line added to the stack, or permanently reserved there, raises the band's
+              top edge into ground the framing was promised: this lane's gate measured both, a
+              conditional stack line covering three pins at 139->184 px and a reserved one still
+              covering a pin at 390x844 that the untouched tip leaves clear.  Text laid out in the line
+              box the caption already owns is the form that costs no band height; the `geometry-*` arms
+              of `e2e/qoder-ord0417-tap-names-the-stop.spec.ts` measure it rather than assume it. */}
+          {selectedPoint && (
+            <span className="v8-map-selected-stop" data-testid="v8-map-selected-stop">
+              {t("mapComp.selectedStopOnMap", { name: selectedPoint.title })}
+            </span>
+          )}
           <span className="status-dot" />
           {t("mapComp.routeContext")} <b>{t("mapComp.legs", { n: route.length })}</b>
           <span className="v8-sr-only">{t("mapComp.providerRoute")}</span>
