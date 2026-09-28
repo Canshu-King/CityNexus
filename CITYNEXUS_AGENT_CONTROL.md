@@ -16588,6 +16588,41 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### CMDR 2026-09-29 04:38 · 号令者（实例 A，会话 `6efab655`）· ORD-0383 落地并**真跑了测试**（今晚第一笔：11 passed），我又自己打了 8 路并发找回：1 个 200、7 个具名 409、审计只 +1 行
+
+**现尖**：`env -u HTTP_PROXY -u HTTPS_PROXY git -C D:/moodle/CityNexus ls-remote origin refs/heads/mirror/integration-frontend-apple-pass1` 我 04:36 现读 = `123fabb637fefe9e1be442b67f2da4be7e95ac74`（就是我本轮落的这枚）。
+
+**一、ORD-0383 格三落地（车道 `4033270f`，后端产品码）**
+枝 `refs/heads/review/qoder-0383-undelete-lock-r1` 头 `e1b28d45cbb6aaae8b698954bcf9eac36ac95d4a`（它 03:23 那块申报，03:49 又发一块只改措辞、交付不变，我按后一块读）。只读复切 `RECUT 123fabb637fefe9e1be442b67f2da4be7e95ac74`、`files 6/6 identical-to-lane-blob`；推 `refs/heads/review/cmdr-recut-ord0383-r1` 后 ls-remote 回读逐字相等；落地门 `ff=True`、`ahead=2`、`intersection=0`、`product introduced: backend/app/main.py`。
+**测试这次是真跑了**：我按门要求的仓库根相对路径传了两枚（`backend/tests/test_qoder_ord0383_undelete_write_lock.py` 与 `backend/tests/test_qoder_ord0399_journey_undelete.py`），门报 `collect_exit=0`、`test_exit=0`、`summary=["11 passed, 2 warnings in 9.43s"]`。⇒ 本单**不是** `NOT_EXECUTED_BY_CMDR`；我也没说整套绿——跑的只是这两枚文件里的 11 条。回执 `evidence/cmdr-landing-ord0383-0424/preflight_r1.json`，blob `14552ebb7f6d66c5c72f4340baa23d9f69dedbc5`，5,166 B。
+
+**二、我亲测（自己起后端、自己的库副本、8 路同时并发）**
+按只读备份起私有栈：`_launch_priv_backend_r2.py` 把共享预览库以 `mode=ro` 打开、用 backup API 复制成 `D:/moodle/_qoder_cmdr_priv_0383.db`（7,213,056 B，sha256 前缀 `ab783517da69dd02`），uvicorn 跑在 :8793，导出树 512 枚文件（启动器与这条打印口径见 `evidence/cmdr-ord0383-20260929/_launch_priv_backend_r2.py`，blob `5d5c918eadd5dc244e3da6ea9700005a91a564d4`，3,448 B）。共享库一字未写。
+量法：先把那枚行程 DELETE 进回收站（`http 204`），再用 `threading.Barrier` 让 **8 路 `POST /api/v1/journeys/<id>/undelete` 同时发出**，然后同时读 HTTP 面与库面：
+- HTTP：`200` 恰 **1** 次，`409` 为 **7** 次，且这 7 次全部带具名 `reason_code = JOURNEY_NOT_DELETED`（不是 500、不是裸冲突消息）；两个计数逐字取自 `evidence/cmdr-ord0383-20260929/undelete_race_db_pair_r1.json` 的 `status_counts` 与 `reason_counts`，blob `a0073ac36346d955d64c0aaebe182706cf9153b7`。
+- 库：`journeys.deleted_at` 从非空变成 **null 一次**；`audit_logs` 里 `action='journey.undeleted'` 的行数**只 +1**（8 次点击 → 1 行审计）。
+- 判定串 `SINGLE_WRITER_ONE_AUDIT_ROW`。件 `evidence/cmdr-ord0383-20260929/undelete_race_db_pair_r1.json`，blob `a0073ac36346d955d64c0aaebe182706cf9153b7`，527 B；HTTP 面单件 `evidence/cmdr-ord0383-20260929/undelete_race_http_r1.json`，blob `b8ec65a9995ecc94dbd523d4091364f93bbc406a`，2,380 B；仪表 `evidence/cmdr-ord0383-20260929/cmdr_undelete_race_r1.js`，blob `7b570d3dfb9a8340ea86a241180bad1a81bc302e`，3,538 B；启动器 `evidence/cmdr-ord0383-20260929/_launch_priv_backend_r2.py`，blob `5d5c918eadd5dc244e3da6ea9700005a91a564d4`，3,448 B。
+**我把这条判据的边界也写清**：8 路的总耗时我不在这里复述数字，读 `wall_s` 字段即可（件 `evidence/cmdr-ord0383-20260929/undelete_race_db_pair_r1.json`，blob `a0073ac36346d955d64c0aaebe182706cf9153b7`）——它短到几乎看不见，是因为 SQLite 本来就串行化写者。所以这一跑证的是"**同时发出时不会双写、败者按名拒绝、审计不重复**"，**不是**吞吐或高并发正确性；真并发多进程下会不会变，我没测。⇒ ORD-0383 判 **ACCEPTED**（就它自己声明的那一格而言）。
+
+**三、两处仪器/环境的坑，都记下来给下一位省时间**
+1. **复切器会被账本镜像分支的并发推送卡住**：我第一次跑 `cmdr_recut_r1.py` 直接 ABORT，报 `cannot lock ref 'refs/remotes/origin/commander/control': is at 81dba66a… but expected cb18546c…`——不是我操作错，是两个号令者都在推 `commander/control`，本地跟踪 ref 陈旧了。修法：`git fetch origin '+refs/heads/*:refs/remotes/origin/*' --force --prune` 之后重跑即干净（第二次就 `6/6 identical-to-lane-blob`）。**遇到这种 ABORT 先刷 ref 再判定，别急着退回车道。**
+2. **`pid_owns_port` 这个布尔值是错的**：我的启动器打印 `child_pid=50140`、`netstat_owners` 里是 `42744`，于是判 `pid_owns_port=false`（那三个值出自同一台打印的那行 JSON，口径见 `evidence/cmdr-ord0383-20260929/_launch_priv_backend_r2.py`，blob `5d5c918eadd5dc244e3da6ea9700005a91a564d4`）。真查下来监听那个进程的父进程正是我 Popen 的那个，命令行就是我那条 uvicorn——**监听进程是我的，只是 Popen 的 pid 不是最终监听的那个**。归属要按"ppid 链 + 命令行"两证取，不能只比 pid。这一格我**没有**去改启动器的那段判断（只把结论按真证据写在这里），下一位要么修它要么别再打印那个假 `false`。
+
+**四、给车道 `1d64acf5` 的具名指引（块 `s4_0338.md` 被拒，我没替它改字）**
+门 04:21 拒因：`coordinate 5b8ba3a3ec3a4a5a1a1381ca0e5d551bca5b0c26 (line 34) does not resolve`，并且这次两个臂是 **`declared=True` 而 `anchored=False`**——与昨晚那两类都不同：它**已经**在同一行声明了不可取回，但**同段没有一枚能 `cat-file` 的坐标**。我这边 `git cat-file -t 5b8ba3a3ec3a4a5a1a1381ca0e5d551bca5b0c26` 也解不到——那枚是它自己算的**本机 sha1、非 blob**，不可 cat-file 属正常，不是我抄错。改法只有一句：**在那一段里补一枚可 cat-file 的坐标**（例如现尖 `123fabb637fefe9e1be442b67f2da4be7e95ac74`，或它自己件里的 blob），声明保持原位不动。补完提交前先跑 `env -u HTTP_PROXY -u HTTPS_PROXY python D:/moodle/_qoder_cmdr_ref_20260921/live_checks/patrol/bolt_replica.py`，它会连 Q43 一起提前逐行报。
+
+**五、协作（按新立的规矩：裁定只写账本，窗口消息只催办）**
+**ORD-0418 我不落**——现尖在我动手前就已经是它的 `cmdr-recut-ORD-0418-r1` = `8d038b21f09477b933cff3b1c7b09845c542373b`（实例 B 03:36 落的），我若再落就是重落对方已收的单。本轮我只落了我自己名下的 ORD-0383。另有三枚枝我没动、也**没有判定它们不合格**，只是它们不含产品字节、我不往线上堆证据件：`Q-ord0420-drawer-group-headings-r5` 与 `-r6`、`R-ord0426-orphan-rule-repoint-r2`（三枚对自己那两单的现读复验，产品字节计数都是 0，逐枚可 `git diff --name-only <merge-base> <头>` 复现）；`AI-ord0430-pill-yields-readable-r1` 含 `frontend/src/features/agent/CopilotDock.tsx` 产品码，属实例 B 名下 ORD-0430，我不抢。
+
+**没改善的部分**
+1. **我只验了 ORD-0383 那一格**，同枝里 `backend/tests/test_qoder_ord0399_journey_undelete.py` 那 6 行改动是**被车道改过的既有测试**——它现在 11 条一起过，但我没读过那 6 行改的是不是断言本身（改断言凑绿的风险这一格没排除），标 `NOT_REACHED_BY_CMDR`。
+2. **8 路并发是单进程内的 8 线程**，SQLite 串行化写者让总耗时短到看不见（数值读 `wall_s`，件 `evidence/cmdr-ord0383-20260929/undelete_race_db_pair_r1.json`，blob `a0073ac36346d955d64c0aaebe182706cf9153b7`）；多进程真并发、以及 `WAL`/超时另一侧的行为我没测。
+3. 本轮**没有新的浏览器屏读**：ORD-0427 之后的抽屉现状我在 03:2x 那轮已亲测过（截图与两维读数在 `evidence/cmdr-acc-ord0427-20260929/`），本轮落的是后端，屏上无新增可见变化。
+4. 账本里 `AI-ord0430`、`Q-ord0420-r5/r6`、`R-ord0426-r2` 四枚枝的读数我**没有逐格复核**就写了"不含产品字节"，那一句我只对 `frontend/src` 与 `backend/` 的计数负责，不代表我认可它们屏上的结论。
+5. 手机链 hop4 仍未起，手机仍握 `e5a571f8…` ⇒ 本轮全部读数仍是私有舞台的，手机上 `NOT-DEPLOYED-OBSERVED`。
+6. 盘 14 GiB 可用（`df -h /d` 现读，已用率 96%），一小时里又掉了 2 GiB；本轮我新增一份导出（枚数见第三节那条启动器口径，blob `5d5c918eadd5dc244e3da6ea9700005a91a564d4`）与一枚库副本（`db_bytes` 为 7,213,056 B，同一台打印，同一枚 blob），**没有删任何东西**（可回收项多是别人的工作树）。照这个速率天亮前会到个位数，下一轮我打算先清自己名下的旧 `_build_*`（未在被服务的那些），但要先扫重解析点。
+
+
 ### CMDR 04:40 · ORD-0401 的判据是我写错的，现在改判据而不是让车道继续定价 · 那枚候选已在现尖历史里，无待落字节
 
 我 09-28 22:09 给 ORD-0401 写的唯一验收是"空态那个带动作的句子必须在滚动前可命中"。车道 `904a042d` 在 04:01 那块用两代产物、四形、中英两臂量出来：可命中区止于那枚 fixed 底栏之上，而面板锚点顶边在视口之下——两条路都到不了，并且它给出 P1 至 P5 五种定价等我裁。界与遮挡那两枚数我早有记录：可命中界 768 px、fixed 底栏占 76 px，出处 `D:/moodle/_apk_analysis_pi_travel/BORROW_ROADMAP_20260928.md:52`。
