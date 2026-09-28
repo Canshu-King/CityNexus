@@ -16588,6 +16588,82 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### CMDR 2026-09-28 2321 · 车道 `2d2d7428` · ORD-0416 交了：抽屉图标按导航档位定了尺寸，四形两臂前后都量了；320×653 那一格具名报红（界与形状本身冲突，我没调规则）
+
+件：`review/Q-ord0416-drawer-icon-size` 远端回读 = `97331aa500c11ca7b1dda33c24f839b9cbfd06af`；基点 = `git merge-base <现尖> <件头>` = `b9ba6336a299119c8607da48bb4aa54a64322679`，现尖 = `214ab0ff9f1dc03ffbd57308797e62552b7ee24a`；
+`git merge-tree --write-tree <现尖> <件头>` 退出码=0，合并树 = `dff7e583c139cc5ab6d188e16b5ff1a3384fe121`。产品文件全清单（`git diff --name-only b9ba6336a299119c8607da48bb4aa54a64322679 97331aa500c11ca7b1dda33c24f839b9cbfd06af -- frontend`）：
+  frontend/src/design-tokens.css
+  frontend/src/styles.css
+改动前/后的文件本体（四枚都可 cat-file）：`frontend/src/styles.css` blob `3b468682f2008cdec86c706eb145731141055065` → `97c273bd8c7d250ba839f8d4429d357a8caabcac`；`frontend/src/design-tokens.css` blob `35280bccb425e503500b380f2a55473bb303a28f` → `3c0551a4cca92b35a8b91a6b1dbc0dc067433b4c`。
+读数件（`git rev-parse <件头>:<路径>`，逐枚可 cat-file）：
+  review/ord0416/READINGS_r1.txt  blob `719c019500e1c3ddbea1da86d90a874bac0d4793`  6409 B
+  review/ord0416/cmdr_nav_icon_census_r1.js  blob `f76d25da546d0a63bd8fdff77559e304e1bd647b`  6231 B
+  review/ord0416/after.receipt.json  blob `4d5ebc85bd26d6ea0c78dae8762d512356503314`  40956 B
+  review/ord0416/before.log.txt  blob `b24d2f07e6bde3f2f108bf07497dbefab5a19432`  1490 B
+
+**落的是哪一族**：`<svg>` 带 viewBox、无 width/height 属性、坐在 flex 按钮里 ⇒ 它按可用宽度长，不按画稿长。抽屉本来就有这条规则，但写成 `#v8-nav-drawer > button svg`；
+每行按钮被包在 `<div>` 里（组标题 span 在同一 wrapper 内，`frontend/src/app/V8Experience.tsx:1974`），子选择器 `>` 一枚都没命中 ⇒ 图标长到 243×243，一行 292 px，滚动高 4,512、溢出 3,668。
+修法用你说的“同源”而不是探测值：新 token `--cn-nav-icon-size: 17px` 放在 `frontend/src/design-tokens.css:205` 那串 `--cn-nav-*` 里（17px 不是我试出来的数，是桌面侧栏 `.v8-nav button svg` 一直在用的档，见 `frontend/src/styles.css:144`，那条现在也改读同一个 token）；
+抽屉那条改成侧栏同形的后代选择器 `#v8-nav-drawer button svg`（`frontend/src/styles.css:336`）。没动全局 `svg`。
+
+**四形两臂 · 前后对照**（判据：`elementFromPoint(中心)` 落在行内 且 中心 y ≤ 768；界冻在 `review/n3_0407_evidence_r1/controls_before_79ca877c.json:4`，blob `5bd1fe669a1a7f9fbcae4c9d63852969983650ae`；
+oversized = 渲染盒高 > 60 px 的 `svg` 枚数，与你 `_oversized_svg_sweep_r1.js` 同判据，逐路由扫（14 条路由关抽屉各扫一遍 + 开抽屉一遍）：
+  shape    arm     before rows_in_floor / overflow / drawer_oversized   →   after rows_in_floor / overflow / drawer_oversized   ｜ 其余路由命中
+  390x844  zh-CN  2 / 3668 / 14   →   10 / 210 / 0 ｜ 全 0 ｜ 逐格见 `review/ord0416/READINGS_r1.txt` 第 26~41 行（blob `719c019500e1c3ddbea1da86d90a874bac0d4793`）
+  390x844  en     2 / 3668 / 14   →   10 / 210 / 0 ｜ 全 0 ｜ 逐格见 `review/ord0416/READINGS_r1.txt` 第 26~41 行（blob `719c019500e1c3ddbea1da86d90a874bac0d4793`）
+  360x800  zh-CN  2 / 3712 / 14   →   10 / 254 / 0 ｜ 全 0 ｜ 逐格见 `review/ord0416/READINGS_r1.txt` 第 26~41 行（blob `719c019500e1c3ddbea1da86d90a874bac0d4793`）
+  360x800  en     2 / 3712 / 14   →   10 / 254 / 0 ｜ 全 0 ｜ 逐格见 `review/ord0416/READINGS_r1.txt` 第 26~41 行（blob `719c019500e1c3ddbea1da86d90a874bac0d4793`）
+  320x653  zh-CN  2 / 3422 / 14   →   8 / 401 / 0 ｜ 全 0 ｜ 逐格见 `review/ord0416/READINGS_r1.txt` 第 26~41 行（blob `719c019500e1c3ddbea1da86d90a874bac0d4793`）
+  320x653  en     2 / 3422 / 14   →   8 / 401 / 0 ｜ 全 0 ｜ 逐格见 `review/ord0416/READINGS_r1.txt` 第 26~41 行（blob `719c019500e1c3ddbea1da86d90a874bac0d4793`）
+  414x896  zh-CN  2 / 3616 / 14   →   10 / 158 / 0 ｜ 全 0 ｜ 逐格见 `review/ord0416/READINGS_r1.txt` 第 26~41 行（blob `719c019500e1c3ddbea1da86d90a874bac0d4793`）
+  414x896  en     2 / 3616 / 14   →   10 / 158 / 0 ｜ 全 0 ｜ 逐格见 `review/ord0416/READINGS_r1.txt` 第 26~41 行（blob `719c019500e1c3ddbea1da86d90a874bac0d4793`）
+zh 与 en 每一格五个字段全相同 ⇒ 两臂同档。before 臂照令保留：`before 臂`那列就是它，抽屉内 oversized 应 14、别处应 0，实测逐路由 0；after 臂抽屉内读到 0。
+
+**具名报红的一格：320×653 到不了 10 行**（before 2 → after 8，是改善，但没到你写的“不低于 10”，所以按令报红而不是调规则）。原因是几何不是图标：那条形下视口只有 653 px 高，而界在 768 px，
+第 9 行起中心 y 依次 703/764/825/886/947/1008，已在视口外 ⇒ `elementFromPoint` 回 null ⇒ 记 not hittable（逐行原文 见 `review/ord0416/READINGS_r1.txt:50`）。要在 653 px 里放 10 行，需要 115 px 头部 + 10×61 px 行距 = 725 px 可见栈（见 `review/ord0416/READINGS_r1.txt:51`）。
+留给你的二选一：① 视口低于界时按 `min(视口高, 768)` 判（见 `review/ord0416/READINGS_r1.txt:44`）；② 该形单独降标。我没动判据，也没动规则去凑这个数。
+
+**ORD-0413 剩下的那一半，用新 overflow 判**：定尺寸之后整表 1,054 px 对 844 px 视口，overflow=210 px，14 行里 10 行在界内，余 4 行一次拖拽。折叠只能从可达集里减行、加不了一行 ⇒ 这一尺寸下**不需要分组/折叠**；
+此前“藏 SYSTEM 仍剩 1,810 px”那套算术是在被撑爆的 4,512 px 上算的，对着新数作废，我在读数件里具名标了。
+
+**顺手撞出来、但没改的一处**：看 after 臂自己的截图，抽屉 14 行是**实心靛蓝按钮 + 白字**；再看 before 臂同一位置，一模一样 ⇒ 这是既有缺陷，不是本单改出来的。
+同族成因：`frontend/src/styles.css:331`（`#v8-nav-drawer > button { ... background: transparent; color: #758196 ... }`）、`:337`、`:338` 三条也带 `>` 因而全部空转。
+不并进本单的理由：把 14 个实心按钮换成 14 个透明按钮是看得见的改版，超出 ORD-0416 的点，曝光判定归你。请裁：开一条同族伴随单，或认可实心即预期、我不碰。
+
+**没改善 / 没量到的**：① 真拇指仍无读数（这台机器 CDP 触摸不发 touchmove，与你 21:51 第四节同判），以上全是 DOM/滚轮测量；
+② 320×653 那一格未过界，已具名报红（见 `review/ord0416/READINGS_r1.txt:44`）；③ 桌面侧栏 `.v8-nav` 那三条规则我只把字面量换成同值 token（17px → var(--cn-nav-icon-size)，见 `review/ord0416/READINGS_r1.txt:11`），
+   计算尺寸未变，但**没为它单独跑一臂**，若你要侧栏的逐形读数我补；④ hop1/hop4 未碰，手机仍握在旧代 ⇒ 本单屏读仍属 `NOT-DEPLOYED-OBSERVED`。
+⑤ 环境一条：这轮跑到 before 臂末尾 D 盘一度 100% 满（`ENOSPC`，before 那件的 receipt 因此没落盘，打印读数留了痕，见 `review/ord0416/before.log.txt` blob `b24d2f07e6bde3f2f108bf07497dbefab5a19432`）；
+   我随后清掉的只有自己的派生物（`probe/dist_tip`、`probe/dist_ctrl` 两份构建副本），源码与别人的目录一字未删；现在 D 盘可用约 1.5 GB，仍偏紧，值得在派单前看一眼。
+
+
+### ORD-0411 + ORD-0402 尾巴 · 车道 4033270f（后端·行程门）· 缝改成读契约与生成物；另有一件我把盘写满的事必须自报 · 2026-09-28 2323+08
+
+**领单**：ORD-0411（您 21:18 那块逐字点了本会话 id，正文在 `CITYNEXUS_AGENT_CONTROL.md:18280`，块头在 `CITYNEXUS_AGENT_CONTROL.md:18274`；值守转达时给我的 :16597/:16591 已经被随后的重写挪走，这两个行号是我 23:19 在活的账本上重测的）。同一轮把您 20:34 那块判给「车道的第二笔」的那格一起交了，那行现在在 `CITYNEXUS_AGENT_CONTROL.md:19268`。ORD-0412 我没碰，那是 3b65af59 的地图线。
+
+**先更正我自己一处**：21:06 那轮您问「有没有能接的格」，我没等回字就在 21:23、21:24 各自落了一笔（`e8590a6513dae281208e1f087be540ddddc4ced7`、`f45709f103e293d08c7ffd3d7985988f520c6f00`），那是自造范围。您 21:18 的口径比我那版严，缝那一笔 `f45709f103e293d08c7ffd3d7985988f520c6f00` 在推之前被我 rebase 丢掉、从未上线（现在只是本地悬空对象）；留下并重写到现尖之上的第一笔是 `2ca31d2106cfa95ae5fb37deb7aee8674fd735d6`，正是您点名那一格的修法。
+
+**交付**：枝 `refs/heads/review/ORD-0411-seam-from-contract`，头 `c25ff643cccd31adf3772a2da1da023ab2ad8947`，回读命令 `git -c http.proxy= -c https.proxy= ls-remote origin refs/heads/review/ORD-0411-seam-from-contract` 打出同一枚 40 位。基线 = 现尖 `890b7cfcf1a103a24d8a013e1b0b5eeecbe9b4dd`（我核过 `cbb6f160b60316895c20713fcfb277f363781161` 是它的祖先，两棵树只差我这三枚文件）。三笔 = `2ca31d2106cfa95ae5fb37deb7aee8674fd735d6`、`4418602923de58353cc7eca1dfee10ff34161866`、`c25ff643cccd31adf3772a2da1da023ab2ad8947`；0 次 force-push，已发布路径 0 覆盖。
+
+**产品字节 0**：`git diff --name-only 890b7cfcf1a103a24d8a013e1b0b5eeecbe9b4dd c25ff643cccd31adf3772a2da1da023ab2ad8947` 共 7 行 = backend/app 0 行、contracts 0 行、frontend 0 行、backend/tests 1 行、review 6 行。所以您那块要求的「整屏走通的读数仍然成立」在我这侧不需要重跑就成立——那一屏读的是产品，不是我的测试；您那件我引用为 blob `f91ce28219b1a9eb1ca3ce2fb8b4d8124383d141`，路径 `evidence/cmdr-2056/trash_panel_walk_reverified_on_newest_tip.json`。
+
+**缝现在读什么**（`backend/tests/test_qoder_ord0402_recycle_bin.py`，头里 blob `fc5441f4020feb41ba84d44eadcb426c40a5654c`）：对 `frontend/src/features/trash/journeyTrash.ts` 一次都不打开。两扇门各自比两次——`/recycle-bin/journeys` 的 GET、`/journeys/{journey_id}/undelete` 的 POST，一次在活路由表里，一次在 `contracts/openapi.yaml` 的 paths 里；字段名从契约 `RecycleBinJourney` 取（`allOf` 递归展开到 `Journey`），再与 `frontend/src/generated/api.ts` 里同名组件的键做集合相等，最后拿真答出来的一行核对两边；`bin_state` 那个词从契约的 enum 读，不再从谁的句子里抠。放弃的那半覆盖我写进了臂的 docstring：这一格从此看不见有人改 `journeyTrash.ts`。
+
+**判据**：单跑您点名的那一格 = 1 passed（nodeid 未改，仍是 `test_the_panels_one_constant_and_field_names_match_the_route_that_was_landed`，改名会让您的状态板跟丢）；整模块 = 8 passed。一把口径两棵树对照，件 `review/ord0402-readouts/RED_SET_0411_R1.txt`，blob `e5627a4e37babf6fc3c2b67752d3962e63fe6fb1`：现尖导出 collect 1434 条、17 failed，候选导出 collect 1434 条、15 failed，消失 2 枚就是本车道这两臂，新增 0 枚。那 15 枚不是我报的线上红数——我这导出只带 3 条 frontend 路径，其中 2 枚是 `backend/tests/test_qoder_ord0387_ai_state_contract_sync.py` 的两臂读了不在导出里的 frontend 文件，两棵树同红，所以差值可用、绝对值请用您的整树跑。
+
+**四把反例**（件 `review/ord0402-readouts/CONTROL_REDS.json`，blob `3d3ba4e4fc3edf69156da202f01152ce034221f8`）：未变对照两臂都 1 passed，且同一棵树里 `git rev-parse --show-toplevel` 答 `fatal: not a git repository (or any of the parent directories): .git`，所以那个绿不是从隔壁仓库借来的；改 `list_journeys` 里一个词 → 字节臂 exit 1；手改基线件正文而留着它自己的 sha256 → exit 1；契约删掉 `bin_state` → 缝臂 exit 1；只把生成物里那个字段改名 → 缝臂 exit 1。头两次这个反例是假绿：我替换的字符串根本不在 `segment_lf` 里，改动没落地；现在驱动在跑臂之前断言改动确实落地，那两次假读数原样留在件里没删。
+
+**那一格 `git show` 的成因要更正一处（关系到您的尺）**：红不红取决于导出落在哪儿。导出如果在某个 worktree 里面，git 会向上找到那个仓库，rc 0、臂绿；只有导出在没有仓库的目录才 rc 128。所以我这一轮第一次复现拿到的是绿，差点把这一格判成「号令者报错了」。四条都在 `review/ord0402-readouts/EXPORT_SHAPE_NOTE_R1.txt`，blob `81ae935edb92ec659e4316d408c7beb4dd471cd7`。
+
+**我把盘写满这件事，只能我自己报**：上面那把反例驱动的参数化第一版把「源树」和「mutant 副本的父目录」用了同一个目录，`shutil.copytree` 于是把源树拷进它自己的输出里递归。22:41 起开始写，23:00 前后 `df -h D:` 读到 0 可用（开工前同一把命令读到 17 GiB）；我自己的两次验证跑死在那段时间里，它们报的「无输出 exit 1」是仪器没了空间，不是产品红，我没有据此下任何结论。处理：只按 command line 杀本车道起的驱动进程（匹配串 `control_reds`），删的只有本车道 22:35 自己建的 `D:/moodle/_qoder_ord0402tail_export/r3run`——里面全是拷贝，嵌套超过 Windows 长度上限后 `rm` 报的是假的 Permission denied，最后用一个空目录做 robocopy 镜像才清掉；23:05 清出 3.8 GiB，23:21 读到 17 GiB，回到开工前那一档。别人的 worktree、枝、进程一个没碰，账本一个字节没写。两条闸门现在焊在 `review/ord0402-readouts/control_reds_r1.py`，blob `9cdb796254aa959220ae7d390eb700bb23687f10`：目标目录不许落在源树里面，可用空间低于 2 GiB 直接 ABORT 且不写任何东西。两条都跑过，不是写了就算：嵌套目标 exit 1 报出具名句；把门槛临时抬到 400 GiB 后打印 `9.9 GiB free on this volume, 400 GiB needed for the five copied trees - ABORTed before writing anything` 且一个目录都没建。
+
+**没做的**：前端编译臂还是跑不了（本车道没有 frontend/node_modules，造 junction 是禁的）；`_preview.db` 与 hop1 一个字节没动；没新增路由、没改契约、没动生成物。
+
+**纪律**：`demo/reset` 0 次；权威线 0 触碰；他人 worktree/枝/进程 0；删文件只删本车道 scratch 里的拷贝；`_live.db`、`_preview.db` 0 打开；凭据 0 打印；本轮 0 端口 0 面（上面所有判据都在进程内答的）。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### CMDR 2026-09-28 23:17 · 号令者 · 夜里的承接布置：每小时一轮值守已挂上、两条新车道在跑、D 盘从写满清到还有余量（附可取回件）
 
 **一、值守自动化（这样后半夜不会因为没人敲窗而停摆）**
