@@ -16588,6 +16588,191 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### ORD-0443 · lane Q-dsh（Qoder，会话 a6b95d59）· at_local 2026-09-29 06:52（本机时区）· 状态 读数交齐、通道尚未接成可用（附两处 shim 缺陷与一处被借用的时限），密钥零落地
+
+**一、网关是活的；你那三枚"不答"是测量语境**
+
+跑手 blob `afb16388c800b19252fe70278168587d863a22a5`，读数 blob `753241b9a0cfad76d76c7a30b4378ce46b04680d`。
+`GET /healthz`（无鉴权）答 http 200、正文九十二字节、耗时零点四八秒，带 `X-Service: workbuddy2api`
+—— 这个身份头把"这口上有人答"和"是本网关答"分开了（我在这台机器上刚被 :4821 上过一课）。
+带 Bearer 的 `GET /v1/models` 答 http 200、十九千零八十字节、二点一四秒，模型三十九枚；
+`GET /status` 答 http 200、四千一百二十二字节，池子自报 `healthy 5 / total 5 / cooling 0 / disabled 0`
+（`realm_totals`：cn 三/三、global 二/二，同读数键 `probes.status`）。
+你那三枚十五秒不答的路由，是在 `HTTP(S)_PROXY=127.0.0.1:7892` 下量的，本机现在没人听这口；
+我这轮全部用 `ProxyHandler({})` 直连，读数立刻就有。`/panel/` 我复到你那个字节数（同读数键
+`probes.panel`，五十一千五百零一字节）。
+
+**二、真实路由与逐枚模型 id（含对你原话的一处更正）**
+
+补全门是 `POST /v1/chat/completions`（OpenAI 形状，`api_key` 非空时吃 Bearer）；
+另有一层本地翻译 `codex-shim/shim.mjs:311` 把 `POST /v1/responses` 转成上面那扇门（默认口 :7864）。
+更正：你说"国际版 deepseek、国内版 GLM"。**读到的是反的** —— deepseek 三枚全在 `cn:` 域
+（`cn:deepseek-v4-flash`、`cn:deepseek-v4-pro`、`cn:deepseek-v4.1-flash`），
+GLM 两边都有（`cn:glm-5.1/5.2/5.3/5.3-flash/5v-turbo` 与 `global:glm-5.2/5.3`），
+`global:` 域另有 `gpt-5.3-codex`、`gpt-5.4/5.5/5.6-luna|sol|terra`、`gemini-3.5-flash`、`kimi-k3`。
+全清单在同一读数键 `probes.models_fast.model_ids`。
+
+**三、最小补全（状态码/字节/耗时），没有 429**
+
+跑手 blob `e64908967642b872c7ed3bd1cb9d49a114b35043`，读数 blob `bf1e8c04e4ee46c891d5f9c10fab57074faf2fe5`，
+`max_tokens: 1` 同一句话三枚槽位：`cn:deepseek-v4-flash` http 200、八百零五字节、二点零二秒但正文空串
+（同读数键 usage：`completion_tokens 1` 而 `reasoning_tokens 1`，那一枚 token 全花在思考上 ⇒ 空正文是预算
+形状，不是没答）；`global:glm-5.2` http 200、七百七十一字节、零点九六秒、正文 `ok`；
+`cn:glm-5.2` http 200、七百七十三字节、一点八二秒、正文 `ok`。状态集合 `summary.statuses` 三枚都是 200、
+`any_429: false` ⇒ **你那条"429 就切主通道"没触发**，我不编一个 429 出来。
+
+**四、接进产品：零产品字节做不到，两处卡口都在 shim，不在 CityNexus**
+
+产品侧的门（你让我自己 grep 的三个变量名，实测只有两个存在）：`CITYNEXUS_AI_ENABLED`
+（`backend/app/core/config.py:16`）、密钥 `CITYNEXUS_AI_API_KEY` 或 `DEEPSEEK_API_KEY`
+（`backend/app/core/config.py:23`）、**URL 那枚变量名是 `CITYNEXUS_DEEPSEEK_API_URL`，
+词面上没有 `DEEPSEEK_API_URL`**（`backend/app/core/config.py:26`），模型名 `CITYNEXUS_AI_MODEL`
+（`backend/app/core/config.py:18`）。只给这些变量、不改产品字节时，产品自己的
+`DeepSeekResponsesClient`（`backend/app/integrations/ai/responses.py:264`）三种形状全失败：
+plain 十点五三秒、json_mode 一点一六秒、with_tools 二点零二秒都 FAIL
+（blob `2c69a17490b8f73cd6ef29fff6ed87cc8249170b`）。为了不再靠猜，我用一只本地回声服务钉住
+**产品实际发出的字节**（blob `cfaa0deb92e2937a5d945db451d9e7c8755126f9`）：问题原文确实在网上，
+`input` 形如 `[{"role":"user","content":[{"type":"input_text",…}]}]`。两个失败原因都在 shim：
+
+1. `shim.mjs:302` 把出站固定成 `stream: true`，而分派只看 `body.stream === false`
+   ⇒ 产品不带 `stream` 字段，于是收到 `text/event-stream`，客户端按 JSON 解就炸。
+2. `shim.mjs:42` 的 `responsesToChat` 只吃带 `type` 的条目 ⇒ 产品那种 `{role, content}` 条目被整条丢掉，
+   上游只看到空会话，**却答 http 200 加一句客套问候**。最坏的一类假绿：通道"成功"、内容空的。
+   证据是两句话的 `input_tokens` 恒等（三十一）、正文都是 "Understood. How can I help you today?"
+   （`ORD0443_MESSAGE_TRAVELS.json` 第一次跑，blob `a0ce26fcbd291430a5bf85ccc08068dbaa6d1a0c`）。
+
+补丁我做在一次性导出里（`evidence/ord0443-channel-r1/shim_r2_patch.diff`，blob `d2c518326ff0c4c6b2f579166c9c40238832891e`，
+三枚 hunk、`node --check` 过），**没动你正在跑的 :7864 那份** —— 它也服务 Codex，属于共享状态，
+动它要点头。改完之后产品自己的客户端能拿到真内容：问 "21 times 4" 答 `84`（六点五六秒→第二次跑六十六点五秒），
+关门那句答 "Move the Nexus River Cruise to tomorrow morning."（一点七一秒），两问 `input_tokens` 四十六/四十九
+不同（`ORD0443_PRIVATE_STACK.json` blob `bc430a05e6854a2d32407676d4178763b3cb2479` 与上面同一枚
+MESSAGE_TRAVELS 的第二跑）。
+
+**五、你因环境收不了的格子，重取到什么样**
+
+- `ai_state` 对偶：关 → `DISABLED_BY_OPS`（`/api/v1/health` http 200、一百一十三字节；
+  `/api/v1/agent/runtime-status` http 200、四百零八字节）；接通 → `CONFIGURED_UNVERIFIED`
+  （一百一十八、四百一十四）。读数 blob `693d63b92be0401b76c22dc0c631647ebaafed53`。
+- `PROVIDER_REFUSED` 这格现在量得到了：通道接通但只给十秒时，产品自己的 mission 落
+  `status: DEGRADED`、`failure_reason: "DeepSeek Agent completion failed"`、
+  `ai_state: PROVIDER_REFUSED`（同上 blob 键 `on.copilot`；shim 侧 `codex-shim/shim.log`
+  对应有三条 `AbortError`）。
+- **READY 这格收不了，因为词表里没这个词**：`backend/app/integrations/ai_availability.py:36`
+  到 `:39` 只有 CONFIGURED_UNVERIFIED / NOT_CONFIGURED / DISABLED_BY_OPS / PROVIDER_REFUSED 四枚，
+  没有任何"已配置且已验证通过"的状态 ⇒ 通道再顺，`ai_state` 也只停在 CONFIGURED_UNVERIFIED。
+  要那一格得先裁一枚新状态，那是词表决定不是测量决定。
+
+**六、还差两级，都不需要新功能**
+
+1. 产品侧一枚被借用的时限：`backend/app/agent/runtime.py:282` 给 agent 的模型客户端用的
+   `timeout_seconds = settings.impact_timeout_seconds`，默认十秒（`backend/app/core/config.py:36`，
+   本是 impact provider 的旋钮）。判别实验：只把这枚旋钮放到一百八十秒、其它一字不改，
+   同一条命令的 mission 从 `DEGRADED/PROVIDER_REFUSED` 变 `COMPLETED/CONFIGURED_UNVERIFIED`
+   （blob `af9e48778c6f7eaeec970c176921b669abd1e780` 键 `cases`）⇒ 拦路的是时限旋钮，不是通道。
+   我建议给 AI 客户端自己一枚变量，而不是把 impact 的旋钮拧大。
+2. shim 不吃 `text.format`（产品 `json_mode` / `response_schema` 走 `body.text.format`，
+   `shim.mjs` 里没有 `json_schema`/`response_format` 的翻译）⇒ 结构化意图丢。后果实测到了：mission
+   虽 COMPLETED 但**没有产生任何中断事件**，于是 ORD-0432 那格仍 `robust: true`、
+   `risk_reason_codes: []`（同一 blob 键 `events_after` 是空表）。也就是说"模型说话 → 产品建事件 →
+   摘要点名"这条链现在断在 shim 丢 schema，不断在摘要字段。
+
+**七、复测：这条通道的失败形是"挂住"，延迟没有上界**
+
+跑手 blob `585e399c6f97565a38d41a8687d786ba0cb4c1a3`，读数 blob `503033f4dce4de7cee08535399d9f1f5ba7c8807`。
+二十五分钟后同一批槽位：`/healthz` 二十秒不答（先前零点四八秒答 200）；`cn:glm-5.2` http 200、
+七百七十四字节、**二十二点八一秒**、正文 `ok`；`global:glm-5.2` 四十五秒不答；
+`cn:deepseek-v4-flash` 九十秒不答。池子那时仍自报 `healthy 5 / total 5 / cooling 0`。
+所以 ORD-0443 我只能报"读数交齐、通道未接成可用"：可用要包含延迟有界，而我量到的是
+零点九六 / 一点七二 / 五点八 / 二十二点八一 秒与四十五/九十/二十秒的不答混在一起。
+
+**八、红线执行与一处你该知道的暴露面**
+
+密钥只从 `C:/Users/仓鼠王/WorkBuddy/2026-09-15-15-47-27/wb2api/config.json` 的字段 `api_key`
+在运行时读进子进程环境；发布前对我这两单的二十九个文件做过逐字节匹配与密钥形状扫描，命中零
+（扫描脚本 blob `b216d5694724e0ce5a271e39e4716159897f5cbb` 同批读的索引在 `PUBLISHED_BLOBS.json`）。
+顺带一条不属于本单、但我在读 shim 时撞见的：`codex-shim/shim.mjs:16` 把网关那枚 key 的**完整值**
+写成默认量硬编码在明文脚本里（值我不在任何地方复述）。它不在产品仓，归你这台机器；
+要不要挪进环境变量，你裁。
+
+**九、NOT_DONE（具名）**
+
+- 通道接成产品可用：等你裁第四节那两处 shim 补丁归谁维护 + 第五、六节那两枚产品旋钮。
+- 模型驱动的一次"中断上报 → 事件 → 摘要点名"整链复取：等上面裁下来再取，否则量到的还是假绿。
+- H8b（模型支撑的提示注入）与 H11 模型驱动整跑：同样依赖通道先可用。
+- 本单零产品字节：`backend/`、`contracts/`、`frontend/` 都没动（`git status` 在
+  `refs/heads/review/Q-ord0432-robust-blind-to-major-2` 的树上干净）。
+
+
+### ORD-0432 · lane Q-dsh（Qoder，会话 a6b95d59）· at_local 2026-09-29 06:47（本机时区）· 状态 重交完成（按 Q72 rebase 到现尖，旧基线那版作废请删）
+
+**一、重交坐标（三件同批）**
+
+新枝 `refs/heads/review/Q-ord0432-robust-blind-to-major-2`，`git ls-remote` 现读 =
+`e5cf45c805e0d6c5dbcd0035d2105374046fadc6`；基座 = 你说的现尖
+`35326e62fb3de9f0cda459c8426ac22c0c49c715`。旧枝
+`refs/heads/review/Q-ord0432-robust-blind-to-major-1`（`5dc2670b58f6d7bb8052df72533f6bbf7177def1`）
+我没有 force-move 它，**请当已作废删掉**，两枝并存会让人误落旧基线。
+两笔提交 = `c23fe34b3a9a5e57ef186fcd9233cc2e388f1a98`（backend + contracts）、
+`e5cf45c805e0d6c5dbcd0035d2105374046fadc6`；产品改动就是七枚文件（清单在
+blob `0db5b0dcf57eaa6152610d612522ffd8cb83389c` 的键 `product_files_changed`）。
+
+**二、唯一合不成的那枚文件我是怎么处理的**
+
+`backend/app/main.py`：先只读预测 `git merge-tree --write-tree` 退出码 0（说明三方合并能过），
+再按你要的线性形状做两笔 `git cherry-pick`，第二笔自动合并 `backend/app/main.py` 后**逐条复查我自己的
+行还在不在**，因为无冲突不等于对：`backend/app/main.py:6244` 新形参、
+`backend/app/main.py:6259` 风险码合并、`backend/app/main.py:6605` 与
+`backend/app/main.py:6613` 读 severity、`backend/app/main.py:6632` twin 口喂入，六枚锚全在；
+线上落的新笔只动了 `backend/app/main.py:3013` 附近（软删/恢复），离我改的 6244/6605 段很远。
+块里所有 `path:line` 都在重基后的树上现读核过（三十五枚锚逐条读该行正文，空行或越界数为零）。
+
+**三、判据在重基后重新签了一遍，而且是"改前 / 改后"一对**
+
+同一把尺（跑手 blob `96d9db8728a5353293f0d57c8e34d00cd0d3788b`）在**未改动的现尖**与**我的候选**上各跑一次，
+两份读数分别是 blob `cfa20b1a29ccd0f16f234ddd768af38e193cb626`（现尖）与
+blob `6a1688e457a55afdeaf3f2621450fd7786a2c0fc`（候选），汇总在 blob
+`0db5b0dcf57eaa6152610d612522ffd8cb83389c` 的键 `witness_pair`：
+
+- 现尖（未改）：`VERDICT_envelope_blind_to_events = true` —— 投一枚 MAJOR CLOSURE 之后
+  `latest_event_id` 动了、`robust` 仍 true、`risk_reason_codes` 仍空；同门投一枚带
+  `degraded_providers` 的事件则 `robust` 立刻 false。也就是说这格盲区在你现在的线上是活的。
+- 候选（已改）：同一把尺的判据变 false，原因是 `2A_after_major_closure` 那行读到
+  `robust=false`、`risk_reason_codes=["DISRUPTION_MAJOR"]`。false 是**修好了**的表现，不是尺坏了。
+- 一处工具自己的旧账要具名：尺的 W5 断言的是"恰好一枚 PROVIDER_DEGRADED"，改后那枚控制事件旁边
+  还留着未解决的 MAJOR，所以列表合法地有两枚 ⇒ W5 现在 false。这是尺的字面断言过期，不是产品回归；
+  我没去改断言凑绿，只把这条写进收据（同 blob 的键 `witness_pair.*.blob_side_note_W5`）。
+
+**四、套件（重基后的两跑，计数全从日志解析）**
+
+跑手 blob `99a74e6d7480f9040354eae7bc3d8d7628fc2404`，读数 blob
+`0db5b0dcf57eaa6152610d612522ffd8cb83389c`，键 `suite`：
+
+- 现尖 `35326e62…` 完整 snap：`suite.tip_baseline_35326e62.failed`／`.passed`／`.red_nodeids`。
+- 候选 `e5cf45c8…` 完整树：`suite.candidate_rebased_e5cf45c8.failed`／`.passed`。
+- 判据 `regression_check.candidate_is_subset_of_baseline` = **true**，
+  `candidate_only_nodeids` = 空集；反倒是基线那跑多一枚
+  `tests/test_sol_guardian_projection.py::test_guardian_status_lists_runs_newest_first`。
+  上一轮我按你的要求没把那枚红叫 flaky，这轮它对两棵树都各现形一次，正好补上那一格的判别证据。
+- 反件照旧三枚、在一次性导出里做突变（`backend/` 提交里零枚突变字节），
+  重基后重跑的红集合仍然两两不相交（键 `reverse_arms`，读数 blob
+  `4ad4e1432e5b22736cdef8c261f6b1ede18e9407` 同形状的新跑 `7a4231483753810e6479e72f599ceaab5bbdefca`）。
+- 模型侧那一格在重基后也重取：`POST /api/v1/agent/tools/inspect_twin` 回读
+  `robust=false` + `DISRUPTION_MAJOR`（blob `61d267f6bc14688c6a7dbc943174345d50cf2889` 的重跑
+  `4f45f763d5221f1ed69534b132d1077be3ece13b`）。
+
+**五、上一块里那三件"具名没做"仍然没做，等你裁**
+
+`projection_status` 仍不跟事件翻（发射处 `backend/app/main.py:6608`）；`POST /events`
+那扇门没有配对的 resolve 门（`backend/app/main.py:7190` 只写 DETECTED；置 RESOLVED 的只有
+`backend/app/agent/signal_pipeline.py:858` 与 `backend/app/integrations/context/weather_ingestion.py:240`）；
+`/v8/twin` 那一屏不读摘要（`frontend/src/features/traveler-twin/TwinPanel.tsx:17`），
+摘要只在 `/v8/live`（`frontend/src/features/execution/LiveRecovery.tsx:298`），
+legacy 那行硬编码英文仍在 `frontend/src/main.tsx:1558`。
+
+另：本单的产品字节与上一版逐字相同，只是基座换了；如果你更想直接落 `-1`，
+`35326e62…` 与 `e5cf45c8…` 的差别只有线上那几笔软删/恢复，不含摘要字段。
+
+
 ### S4-ast-taint 2026-09-29 06:24 · 会话 1d64acf5 · ORD-0424 三形扩展已交（22/22 钉到、旧 73 条 `??` 命中一条没丢），ORD-0408 甲补上反控臂；两单各开一枝，产品字节 0
 
 **一、ORD-0424：`HARDCODED_FALLBACK` 那面尺从 `??` 槽位扩到三形**
