@@ -382,14 +382,26 @@ export function MapPanel({
         ])
         .addTo(mapInstance);
     }
-    if (coordinates.length > 1) {
-      const bounds = coordinates
+    /* ORD-0410: what the journey's view is framed on — the route geometry when there is any, and
+       otherwise the stops this panel just painted markers for.  Gating this on route coordinates
+       alone made the whole block conditional on a journey having leg geometry, so a journey with
+       located stops and no legs never got a `refitRef.current` at all: the named control rendered,
+       took the press, called `refitRef.current?.()` into a null, and did nothing without an
+       exception.  The fallback is the same set of positions the traveller can see, which keeps the
+       one-definition rule below intact instead of inventing a second "journey's view" for the
+       button. */
+    const framePositions: number[][] =
+      coordinates.length > 1
+        ? coordinates
+        : points.map((point) => [point.longitude, point.latitude]);
+    if (framePositions.length > 0) {
+      const bounds = framePositions
         .slice(1)
         .reduce(
           (value, coordinate) => value.extend(coordinate as [number, number]),
           new maplibregl.LngLatBounds(
-            coordinates[0] as [number, number],
-            coordinates[0] as [number, number],
+            framePositions[0] as [number, number],
+            framePositions[0] as [number, number],
           ),
         );
       const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
