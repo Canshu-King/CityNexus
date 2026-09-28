@@ -804,6 +804,8 @@ const en: Dict = {
   "mapComp.routeContext": "Route context",
   "mapComp.legs": "{n} legs",
   "mapComp.providerRoute": "Provider-backed route · WGS84",
+  "mapComp.noRouteNoProvider": "No route is drawn: this deployment has no routing provider configured, so this plan holds no legs at all.",
+  "mapComp.noRouteNotRouted": "No route is drawn: this plan holds no legs, so nothing on the map came from a routing provider.",
   "mapComp.disruptionScope": "Disruption scope",
   "mapComp.maplibreLabel": "MapLibre Journey map",
 
@@ -1586,6 +1588,8 @@ const zhCN: Dict = {
   "mapComp.routeContext": "路线上下文",
   "mapComp.legs": "{n} 段路程",
   "mapComp.providerRoute": "供应商支持的路线 · WGS84",
+  "mapComp.noRouteNoProvider": "这里没有画路线：这台部署没有配置算路服务，所以这一版计划一条路段都没有。",
+  "mapComp.noRouteNotRouted": "这里没有画路线：这一版计划一条路段都没有，图上不存在来自算路服务的路线。",
   "mapComp.disruptionScope": "中断范围",
   "mapComp.maplibreLabel": "MapLibre 行程地图",
 
