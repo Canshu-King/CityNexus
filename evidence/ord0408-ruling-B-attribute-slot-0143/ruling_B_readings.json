@@ -1,0 +1,71 @@
+{
+ "tree": {
+  "r7b1": {
+   "cells_total": 11,
+   "trash_cells": [
+    "UPSTREAM_PROSE_TO_ATTRIBUTE_SLOT@232",
+    "UPSTREAM_TEXT_VIA_HELPER_TO_DOM@233"
+   ],
+   "exonerated_by_anchor": [],
+   "attributed_in_fold_count": 2,
+   "fold_without_anchor_count": 2
+  },
+  "r7b3": {
+   "cells_total": 10,
+   "trash_cells": [
+    "UPSTREAM_TEXT_VIA_HELPER_TO_DOM@233"
+   ],
+   "exonerated_by_anchor": [
+    {
+     "line": 232,
+     "field": "reason_code",
+     "writes": "data-cnx-value",
+     "at_line": 232
+    }
+   ],
+   "attributed_in_fold_count": 2,
+   "fold_without_anchor_count": 2
+  }
+ },
+ "file": {
+  "r7b1": {
+   "cells_total": 2,
+   "trash_cells": [
+    "RAW_BODY_TO_DOM@224",
+    "UPSTREAM_TEXT_VIA_HELPER_TO_DOM@233"
+   ],
+   "exonerated_by_anchor": [],
+   "attributed_in_fold_count": 0,
+   "fold_without_anchor_count": 1
+  },
+  "r7b3": {
+   "cells_total": 2,
+   "trash_cells": [
+    "RAW_BODY_TO_DOM@224",
+    "UPSTREAM_TEXT_VIA_HELPER_TO_DOM@233"
+   ],
+   "exonerated_by_anchor": [],
+   "attributed_in_fold_count": 0,
+   "fold_without_anchor_count": 1
+  }
+ },
+ "selftest": {
+  "verdict": "SELFTEST_PASS",
+  "slot_arms_met": 19,
+  "slot_arms": 19,
+  "expectations_moved": [
+   {
+    "fixture": "clean_tainted_but_attribute_only.tsx",
+    "was": 0,
+    "now": 1,
+    "why": "ORD-0354: the same member in a text position already fired (probe: `out.failureReason.from` as a child gives UPSTREAM_TEXT_VIA_HELPER_TO_DOM); the attribute slot is now read the same way, so the control is no longer clean by invisibility"
+   },
+   {
+    "fixture": "e0319r3_E3_control_attribute_only.tsx",
+    "was": 0,
+    "now": 1,
+    "why": "same shape, lane E blob b5fda05334fd0b5088571cb7cd6394ea088be8c5"
+   }
+  ]
+ }
+}
