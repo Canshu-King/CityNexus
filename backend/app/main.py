@@ -3,6 +3,7 @@ from __future__ import annotations
 import asyncio
 import json
 import hashlib
+import hmac
 import logging
 import os
 import time
@@ -2049,8 +2050,47 @@ def demo_mode_enabled() -> bool:
     return bool(settings.demo_mode)
 
 
+# ORD-0389: the second half of the door.  `demo_mode` alone meant any caller who reached a
+# deployment running with CITYNEXUS_DEMO_MODE=true -- which is exactly how the shared preview is
+# started (D:/moodle/_qoder_preview_20260920/run/cmdr_hop1_backend.bat) -- so the switch that
+# *enables* the destruction route also *was* the authorization for it.  Measured in the preview
+# log: two `POST /api/v1/demo/reset HTTP/1.1 200 OK` at 03:55, no caller identity anywhere.
+#
+# The token is read from the environment at call time, not from the frozen `Settings`, for the
+# same reason `agent.approval` reads CITYNEXUS_DEMO_STEP_UP_CODE at call time: both states have
+# to be exercisable inside one process.
+DEMO_RESET_ENV = "CITYNEXUS_DEMO_RESET_TOKEN"
+DEMO_RESET_HEADER = "X-Demo-Reset-Token"
+
+
+def demo_reset_token_denied(presented: str | None) -> tuple[str, str] | None:
+    """None means allowed.  Otherwise the (code, message) that refuses this request.
+
+    Two named codes, and deliberately nothing that tells the caller whether this deployment
+    ever configured a token: an unconfigured server compares against "" and therefore refuses
+    every presented token with RESET_TOKEN_INVALID, which is the same body a real mismatch
+    produces.  Otherwise the route would double as a probe for "is this box resettable", which
+    is the one fact an attacker of a data-destruction endpoint most wants.
+    """
+    if not presented:
+        return (
+            "RESET_TOKEN_REQUIRED",
+            "No demo reset token was presented; nothing was deleted.",
+        )
+    expected = os.getenv(DEMO_RESET_ENV) or ""
+    if not hmac.compare_digest(presented, expected):
+        return (
+            "RESET_TOKEN_INVALID",
+            "The demo reset token presented does not match; nothing was deleted.",
+        )
+    return None
+
+
 @app.post("/api/v1/demo/reset")
-def demo_reset(session: Session = Depends(get_session)) -> dict[str, str]:
+def demo_reset(
+    session: Session = Depends(get_session),
+    demo_reset_token: str | None = Header(default=None, alias=DEMO_RESET_HEADER),
+) -> dict[str, str]:
     # ORD-0058 item 2: this endpoint deletes 52 tables (`services.reset_all`) - every
     # traveler, every audit row, every commitment - with no env, flag or auth in front of it.
     # On a reachable deployment that is not a demo convenience, it is a data-destruction
@@ -2065,6 +2105,19 @@ def demo_reset(session: Session = Depends(get_session)) -> dict[str, str]:
             status=403,
             details={"flag": "CITYNEXUS_DEMO_MODE", "tables_protected": True},
             message_key="demo.reset_disabled",
+        )
+    # ORD-0389: the flag being on is not permission.  Demo mode is a property of the deployment,
+    # so on its own it authorized whoever happened to be able to reach it.  This second guard
+    # stays ahead of `stop_autorun()` for the same reason the first one does: a refused request
+    # must not have already stopped the guardian or touched a row.
+    denied = demo_reset_token_denied(demo_reset_token)
+    if denied is not None:
+        code, message = denied
+        return error(
+            code,
+            message,
+            status=403,
+            details={"header": DEMO_RESET_HEADER, "tables_protected": True},
         )
     # The demo endpoint is also the E2E/runtime reset boundary.  The Guardian
     # worker is process-global while enrollments are Journey-scoped; leaving

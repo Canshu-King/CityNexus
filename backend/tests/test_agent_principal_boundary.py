@@ -9,6 +9,7 @@ import app.main as main_module
 from app.core.config import settings
 from app.db.models import AuditLog
 from app.db.session import SessionLocal
+from demo_stage import demo_reset_headers  # noqa: E402  (ORD-0389)
 
 client = TestClient(main_module.app)
 
@@ -17,7 +18,7 @@ def test_configured_agent_token_is_required_and_body_agent_id_is_not_trusted():
     previous = settings.agent_token
     object.__setattr__(settings, "agent_token", "server-test-token")
     try:
-        ids = client.post("/api/v1/demo/reset").json()
+        ids = client.post("/api/v1/demo/reset", headers=demo_reset_headers()).json()
         journey_id = ids["journey_id"]
         body = {
             "request_id": f"principal-{uuid4()}",
@@ -47,7 +48,7 @@ def test_agent_audit_actor_is_server_principal_not_request_agent_id():
     previous = settings.agent_token
     object.__setattr__(settings, "agent_token", "server-test-token")
     try:
-        ids = client.post("/api/v1/demo/reset").json()
+        ids = client.post("/api/v1/demo/reset", headers=demo_reset_headers()).json()
         plans = client.post(
             f"/api/v1/journeys/{ids['journey_id']}/plans/generate", json={"candidate_count": 1}
         ).json()

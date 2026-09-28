@@ -2912,6 +2912,8 @@ export interface components {
             mobility_evidence?: {
                 [key: string]: unknown;
             };
+            /** Format: date-time */
+            created_at?: string | null;
             /** @description True only on the row named by journey.active_plan_version_id; false on all rows when the journey has no pointer */
             is_current?: boolean;
             activities: components["schemas"]["Activity"][];
@@ -3335,6 +3337,7 @@ export interface components {
         };
     };
     parameters: {
+        DemoResetToken: string;
         TravelerId: string;
         JourneyId: string;
         ActivityId: string;
@@ -3373,7 +3376,9 @@ export interface operations {
     resetDemo: {
         parameters: {
             query?: never;
-            header?: never;
+            header?: {
+                "X-Demo-Reset-Token"?: components["parameters"]["DemoResetToken"];
+            };
             path?: never;
             cookie?: never;
         };
@@ -3388,6 +3393,28 @@ export interface operations {
                     "application/json": {
                         /** @constant */
                         status: "reset";
+                    };
+                };
+            };
+            /** @description Refused, and nothing was deleted: either no token was presented (RESET_TOKEN_REQUIRED) or the one presented does not match, including the case where this deployment never configured one (RESET_TOKEN_INVALID).  Both are answered before the guardian worker is stopped, so a refusal has no side effect at all.  The two codes carry identical `details`, deliberately: a difference would be a free probe for "is this box resettable". */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"] & {
+                        error?: {
+                            /** @enum {string} */
+                            code?: "RESET_TOKEN_REQUIRED" | "RESET_TOKEN_INVALID" | "DEMO_MODE_REQUIRED";
+                            details?: {
+                                /** @constant */
+                                tables_protected: true;
+                                /** @constant */
+                                header?: "X-Demo-Reset-Token";
+                                /** @constant */
+                                flag?: "CITYNEXUS_DEMO_MODE";
+                            };
+                        };
                     };
                 };
             };

@@ -13,6 +13,7 @@ from app.replanning.provider_snapshots import (
     MobilitySnapshot,
     TravelEstimateFact,
 )
+from demo_stage import demo_reset_headers  # noqa: E402  (ORD-0389)
 
 client = TestClient(main_module.app)
 
@@ -42,7 +43,7 @@ class _Provider:
 
 
 def _prepare_disruption() -> tuple[str, dict]:
-    ids = client.post("/api/v1/demo/reset").json()
+    ids = client.post("/api/v1/demo/reset", headers=demo_reset_headers()).json()
     jid = ids["journey_id"]
     generated = client.post(f"/api/v1/journeys/{jid}/plans/generate", json={"candidate_count": 1})
     assert generated.status_code == 201, generated.text

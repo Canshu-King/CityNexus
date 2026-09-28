@@ -15,6 +15,7 @@ from app.capabilities import (
 from app.main import app
 from app.replanning.feasibility import activity_from_record, build_context, evaluate_feasibility
 from app.replanning.provider_snapshots import MobilitySnapshot, TravelEstimateFact
+from demo_stage import demo_reset_headers  # noqa: E402  (ORD-0389)
 
 
 client = TestClient(app)
@@ -57,7 +58,7 @@ def test_feasibility_blocks_unknown_and_conflicting_step_free_evidence():
 
 
 def test_capability_confirmation_endpoint_materializes_twin_evidence():
-    ids = client.post("/api/v1/demo/reset").json()
+    ids = client.post("/api/v1/demo/reset", headers=demo_reset_headers()).json()
     capability = [{"code": "STEP_FREE_REQUIRED", "class": "HARD_ACCESSIBILITY_NEED", "severity": "HARD", "params": {}}]
     assert client.put(f"/api/v1/travelers/{ids['traveler_id']}/capabilities", json=capability).status_code == 409
     response = client.post(f"/api/v1/travelers/{ids['traveler_id']}/capabilities/confirm", json=capability)
@@ -68,7 +69,7 @@ def test_capability_confirmation_endpoint_materializes_twin_evidence():
 
 
 def test_confirmation_is_upsert_and_put_is_replace():
-    ids = client.post("/api/v1/demo/reset").json()
+    ids = client.post("/api/v1/demo/reset", headers=demo_reset_headers()).json()
     base = f"/api/v1/travelers/{ids['traveler_id']}/capabilities"
     a = {"code": "STROLLER", "severity": "STRONG", "params": {"present": True}}
     b = {"code": "INDOOR_PREFERRED", "severity": "SOFT", "params": {"preferred": True}}

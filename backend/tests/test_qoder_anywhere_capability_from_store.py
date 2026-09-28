@@ -27,6 +27,7 @@ from app.anywhere_capability import LEGACY_PENDING_PREFIX
 from app.db.models import Place
 from app.db.session import SessionLocal
 from app.main import _CITY_DISPLAY_NAMES, app
+from demo_stage import demo_reset_headers  # noqa: E402  (ORD-0389)
 
 client = TestClient(app)
 
@@ -36,7 +37,7 @@ SUFFIXES = ("市", "市 ", " 市")
 
 
 def _stage() -> None:
-    reset = client.post("/api/v1/demo/reset")
+    reset = client.post("/api/v1/demo/reset", headers=demo_reset_headers())
     assert reset.status_code == 200, f"SETUP 失败：/api/v1/demo/reset 实际 {reset.status_code}"
 
 

@@ -8,6 +8,7 @@ from app.db.models import Journey
 from app.db.session import SessionLocal
 from app.execution.traveler_twin import planning_preference_items
 from app.replanning.candidate_evidence import verified_interest_preference_fit
+from demo_stage import demo_reset_headers  # noqa: E402  (ORD-0389)
 
 client = TestClient(main_module.app)
 
@@ -53,7 +54,7 @@ def test_v7_flagship_journey_a_to_b_to_c_traveler_twin_loop() -> None:
     """Prove learning, predictive recovery, and an explicit mission override."""
 
     stop_autorun()
-    ids = client.post("/api/v1/demo/reset").json()
+    ids = client.post("/api/v1/demo/reset", headers=demo_reset_headers()).json()
     traveler_id = ids["traveler_id"]
 
     # Journey A supplies actual outcome evidence: skip the outdoor opening and
@@ -222,7 +223,7 @@ def test_v7_second_cross_journey_dimension_learns_low_walking_soft_evidence() ->
     """A separate behavioral dimension changes later planning utility without authority growth."""
 
     stop_autorun()
-    ids = client.post("/api/v1/demo/reset").json()
+    ids = client.post("/api/v1/demo/reset", headers=demo_reset_headers()).json()
     traveler_id = ids["traveler_id"]
     generated = client.post(
         f"/api/v1/journeys/{ids['journey_id']}/plans/generate",

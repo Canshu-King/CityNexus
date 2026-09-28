@@ -11,7 +11,7 @@ client = TestClient(app)
 
 
 def test_backend_connected_golden_scenario_contract():
-    ids = client.post("/api/v1/demo/reset").json()
+    ids = client.post("/api/v1/demo/reset", headers=demo_reset_headers()).json()
     jid = ids["journey_id"]
 
     generated = client.post(f"/api/v1/journeys/{jid}/plans/generate", json={"candidate_count": 1})
@@ -139,6 +139,7 @@ def test_backend_connected_golden_scenario_contract():
 # replan now refuses.
 import pytest as _pytest  # noqa: E402
 from _qoder_explicit_demo_mobility import GOLDEN_CONTRACT_MOBILITY as _MODULE_MOBILITY, seed_module_mobility as _seed  # noqa: E402
+from demo_stage import demo_reset_headers  # noqa: E402  (ORD-0389)
 
 
 @_pytest.fixture(autouse=True)

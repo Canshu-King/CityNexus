@@ -19,6 +19,7 @@ from app.integrations.ai.copilot_contract import (
 )
 from app.planning.day_rhythm import DayRhythm, apply_day_rhythm, extract_day_rhythm
 from app.stay_mobility import GraphNode, _mode_fact
+from demo_stage import demo_reset_headers  # noqa: E402  (ORD-0389)
 
 
 client = TestClient(main_module.app)
@@ -110,7 +111,7 @@ def test_v16_current_boundary_separates_real_and_non_real_statements() -> None:
 
 @pytest.mark.skipif(settings.ai_api_key, reason="legacy command would invoke the configured live agent")
 def test_v16_legacy_command_uses_the_same_boundary() -> None:
-    journey_id = client.post("/api/v1/demo/reset").json()["journey_id"]
+    journey_id = client.post("/api/v1/demo/reset", headers=demo_reset_headers()).json()["journey_id"]
     safe = client.post(
         f"/api/v1/journeys/{journey_id}/agent/commands",
         json={"command": "我护照丢了，请告诉我怎么办。", "requested_autonomy": "PLAN_ONLY"},
@@ -277,7 +278,7 @@ def test_v16_creation_suggests_rooms_but_respects_an_explicit_override() -> None
 
 
 def test_v16_twin_cache_lock_does_not_break_the_read_projection(monkeypatch: pytest.MonkeyPatch) -> None:
-    journey_id = client.post("/api/v1/demo/reset").json()["journey_id"]
+    journey_id = client.post("/api/v1/demo/reset", headers=demo_reset_headers()).json()["journey_id"]
     with SessionLocal() as session:
         journey = session.get(Journey, journey_id)
         assert journey is not None

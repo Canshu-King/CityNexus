@@ -34,6 +34,7 @@ import app.main as main_module
 from app.db.models import Activity, Journey, JourneyLeg
 from app.db.session import SessionLocal
 from app.operations.v9 import refresh_offline_snapshot
+from demo_stage import demo_reset_headers  # noqa: E402  (ORD-0389)
 
 client = TestClient(main_module.app)
 
@@ -44,7 +45,7 @@ TERMINAL = {"COMPLETED", "SKIPPED", "CANCELLED"}
 # fixture helpers, all through the product's own endpoints
 # --------------------------------------------------------------------------
 def _started_journey() -> tuple[str, list[dict[str, Any]]]:
-    journey_id = client.post("/api/v1/demo/reset").json()["journey_id"]
+    journey_id = client.post("/api/v1/demo/reset", headers=demo_reset_headers()).json()["journey_id"]
     plan = client.post(
         f"/api/v1/journeys/{journey_id}/plans/generate", json={"candidate_count": 1}
     ).json()[0]

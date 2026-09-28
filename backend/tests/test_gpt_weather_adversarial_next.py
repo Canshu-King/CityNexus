@@ -18,12 +18,13 @@ from app.integrations.context.open_meteo import (
 )
 from app.integrations.context.weather_runtime import refresh_weather_runtime
 from app.main import app
+from demo_stage import demo_reset_headers  # noqa: E402  (ORD-0389)
 
 client = TestClient(app)
 
 
 def _started_journey_id() -> str:
-    jid = client.post("/api/v1/demo/reset").json()["journey_id"]
+    jid = client.post("/api/v1/demo/reset", headers=demo_reset_headers()).json()["journey_id"]
     generated = client.post(
         f"/api/v1/journeys/{jid}/plans/generate",
         json={"candidate_count": 1},

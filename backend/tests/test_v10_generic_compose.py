@@ -1,12 +1,13 @@
 from fastapi.testclient import TestClient
 
 import app.main as main_module
+from demo_stage import demo_reset_headers  # noqa: E402  (ORD-0389)
 
 client = TestClient(main_module.app)
 
 
 def test_v10_generic_compose_uses_explicit_pois_and_gate() -> None:
-    ids = client.post("/api/v1/demo/reset").json()
+    ids = client.post("/api/v1/demo/reset", headers=demo_reset_headers()).json()
     journey = client.post(
         "/api/v1/journeys",
         json={

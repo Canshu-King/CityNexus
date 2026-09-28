@@ -6,6 +6,7 @@ from fastapi.testclient import TestClient
 
 import app.main as main_module
 from app.integrations.ai.responses import ResponsesResult
+from demo_stage import demo_reset_headers  # noqa: E402  (ORD-0389)
 
 
 class _SemanticDeepSeek:
@@ -115,7 +116,7 @@ def test_v132_interpreter_carries_role_confidence_and_server_context(monkeypatch
     client = TestClient(main_module.app)
     fake = _SemanticDeepSeek()
     monkeypatch.setattr(main_module, "_deepseek_client", lambda: fake)
-    journey_id = client.post("/api/v1/demo/reset").json()["journey_id"]
+    journey_id = client.post("/api/v1/demo/reset", headers=demo_reset_headers()).json()["journey_id"]
 
     response = client.post(
         f"/api/v1/journeys/{journey_id}/inbox/text-extract",
@@ -137,7 +138,7 @@ def test_v132_unknown_role_requires_review_then_user_patch_can_apply(monkeypatch
     client = TestClient(main_module.app)
     fake = _SemanticDeepSeek()
     monkeypatch.setattr(main_module, "_deepseek_client", lambda: fake)
-    journey_id = client.post("/api/v1/demo/reset").json()["journey_id"]
+    journey_id = client.post("/api/v1/demo/reset", headers=demo_reset_headers()).json()["journey_id"]
     extracted = client.post(
         f"/api/v1/journeys/{journey_id}/inbox/text-extract",
         json={"text": "ambiguous rail artifact"},
@@ -162,7 +163,7 @@ def test_v132_golden_three_artifact_memory_to_authoritative_compose(monkeypatch)
     client = TestClient(main_module.app)
     fake = _SemanticDeepSeek()
     monkeypatch.setattr(main_module, "_deepseek_client", lambda: fake)
-    journey_id = client.post("/api/v1/demo/reset").json()["journey_id"]
+    journey_id = client.post("/api/v1/demo/reset", headers=demo_reset_headers()).json()["journey_id"]
     drafts = []
     for text in (
         "Inbound rail ticket into Tianjin",

@@ -7,12 +7,13 @@ from app.db.models import Place
 from app.db.session import SessionLocal
 from app.main import app
 from app.replanning.mock_replan_engine import choose_closure_replacement
+from demo_stage import demo_reset_headers  # noqa: E402  (ORD-0389)
 
 client = TestClient(app)
 
 
 def test_canonical_tech_art_closure_prefers_design_library():
-    client.post("/api/v1/demo/reset")
+    client.post("/api/v1/demo/reset", headers=demo_reset_headers())
     with SessionLocal() as session:
         places = session.scalars(select(Place).order_by(Place.id)).all()
         affected = session.get(Place, "place-tech-art")

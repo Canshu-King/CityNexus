@@ -10,6 +10,7 @@ from app.db.session import SessionLocal
 from app.main import app
 from app.replanning.feasibility import FeasibilityActivity, build_context, evaluate_feasibility
 from app.replanning.reference_replanner import Activity, Candidate, Commitment, validate_candidate
+from demo_stage import demo_reset_headers  # noqa: E402  (ORD-0389)
 
 client = TestClient(app)
 
@@ -88,7 +89,7 @@ def test_feasibility_rejects_selected_activity_currency_mismatch_without_budget_
 
 
 def test_planned_journey_currency_change_is_rejected_without_hard_budget_constraint():
-    reset = client.post("/api/v1/demo/reset")
+    reset = client.post("/api/v1/demo/reset", headers=demo_reset_headers())
     journey_id = reset.json()["journey_id"]
     plans = client.post(
         f"/api/v1/journeys/{journey_id}/plans/generate", json={"candidate_count": 1}
@@ -116,7 +117,7 @@ def test_planned_journey_currency_change_is_rejected_without_hard_budget_constra
 
 
 def test_selecting_current_plan_is_idempotent_and_does_not_add_audit():
-    reset = client.post("/api/v1/demo/reset")
+    reset = client.post("/api/v1/demo/reset", headers=demo_reset_headers())
     journey_id = reset.json()["journey_id"]
     plans = client.post(
         f"/api/v1/journeys/{journey_id}/plans/generate", json={"candidate_count": 1}

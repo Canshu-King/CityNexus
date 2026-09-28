@@ -46,6 +46,7 @@ from app.db.models import (
 )
 from app.db.session import SessionLocal
 from app.main import app
+from demo_stage import demo_reset_headers  # noqa: E402  (ORD-0389)
 
 client = TestClient(app)
 
@@ -328,7 +329,7 @@ def test_journey_truth_invariants_survive_random_operation_orders(case: int) -> 
     shared_key = f"stateful-shared-key-{seed}"
 
     try:
-        journey_id = client.post("/api/v1/demo/reset").json()["journey_id"]
+        journey_id = client.post("/api/v1/demo/reset", headers=demo_reset_headers()).json()["journey_id"]
         history.append(f"reset({journey_id[:8]})")
         ledger: list[dict[str, Any]] = []
         operations = [

@@ -9,12 +9,13 @@ from sqlalchemy.exc import IntegrityError
 
 from app.db.session import ensure_schema, make_engine
 from app.main import app
+from demo_stage import demo_reset_headers  # noqa: E402  (ORD-0389)
 
 client = TestClient(app)
 
 
 def _selected() -> tuple[str, dict]:
-    journey_id = client.post("/api/v1/demo/reset").json()["journey_id"]
+    journey_id = client.post("/api/v1/demo/reset", headers=demo_reset_headers()).json()["journey_id"]
     plans = client.post(
         f"/api/v1/journeys/{journey_id}/plans/generate", json={"candidate_count": 1}
     ).json()

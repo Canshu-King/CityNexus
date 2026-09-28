@@ -13,7 +13,7 @@ client = TestClient(app)
 
 
 def _active_journey():
-    ids = client.post("/api/v1/demo/reset").json()
+    ids = client.post("/api/v1/demo/reset", headers=demo_reset_headers()).json()
     journey_id = ids["journey_id"]
     plan = client.post(
         f"/api/v1/journeys/{journey_id}/plans/generate", json={"candidate_count": 1}
@@ -112,6 +112,7 @@ def test_public_event_provenance_is_server_assigned_and_demo_time_is_determinist
 # exercise trustworthy legs (see tests/_qoder_explicit_demo_mobility.py).
 import pytest as _pytest  # noqa: E402
 from _qoder_explicit_demo_mobility import WP06_POSTGATE_MOBILITY as _MODULE_MOBILITY, seed_module_mobility as _seed  # noqa: E402
+from demo_stage import demo_reset_headers  # noqa: E402  (ORD-0389)
 
 
 @_pytest.fixture(autouse=True)

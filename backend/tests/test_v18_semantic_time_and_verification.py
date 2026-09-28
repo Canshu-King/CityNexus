@@ -11,6 +11,7 @@ import app.main as main_module
 from app.db.models import Activity, Event, Journey, WebObservation
 from app.db.session import SessionLocal
 from app.integrations.ai.copilot_contract import CopilotInterpretation
+from demo_stage import demo_reset_headers  # noqa: E402  (ORD-0389)
 
 
 client = TestClient(main_module.app)
@@ -36,7 +37,7 @@ def _future_interpretation(subject: str = "flight cancellation") -> CopilotInter
 
 
 def test_future_event_uses_authoritative_activity_start(monkeypatch):
-    journey_id = client.post("/api/v1/demo/reset").json()["journey_id"]
+    journey_id = client.post("/api/v1/demo/reset", headers=demo_reset_headers()).json()["journey_id"]
     target_time = "2026-10-11T19:00:00+08:00"
     with SessionLocal() as session:
         journey = session.get(Journey, journey_id)
@@ -55,7 +56,7 @@ def test_future_event_uses_authoritative_activity_start(monkeypatch):
 
 
 def test_ambiguous_future_event_requires_review_and_does_not_bind_current(monkeypatch):
-    journey_id = client.post("/api/v1/demo/reset").json()["journey_id"]
+    journey_id = client.post("/api/v1/demo/reset", headers=demo_reset_headers()).json()["journey_id"]
     future = datetime.now(timezone.utc) + timedelta(days=1)
     with SessionLocal() as session:
         journey = session.get(Journey, journey_id)
@@ -78,7 +79,7 @@ def test_ambiguous_future_event_requires_review_and_does_not_bind_current(monkey
 
 
 def test_verify_fact_runs_bounded_source_capture_without_event(monkeypatch):
-    journey_id = client.post("/api/v1/demo/reset").json()["journey_id"]
+    journey_id = client.post("/api/v1/demo/reset", headers=demo_reset_headers()).json()["journey_id"]
     interpretation = CopilotInterpretation(
         "VERIFY_FACT", 0.9, "unverified", {"subject_text": "museum closure"}, "deepseek", False,
         {

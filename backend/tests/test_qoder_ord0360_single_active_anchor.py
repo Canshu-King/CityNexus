@@ -32,6 +32,7 @@ from app.db.models import AuditLog, Booking, Event, Journey
 from app.db.session import SessionLocal, engine, ensure_schema
 from app.main import app
 from app.planning.anchors import anchor_claim_identity, structural_place_id
+from demo_stage import demo_reset_headers  # noqa: E402  (ORD-0389)
 
 FIRST_REF = "ORD0360-ARRIVAL-FIRST"
 SECOND_REF = "ORD0360-ARRIVAL-REISSUED"
@@ -69,7 +70,7 @@ def _arrival(ref: str, arrives: str = "2026-10-10T09:15:00+08:00") -> dict:
 
 
 def _journey_with_a_selected_plan(client: TestClient) -> str:
-    journey_id = client.post("/api/v1/demo/reset").json()["journey_id"]
+    journey_id = client.post("/api/v1/demo/reset", headers=demo_reset_headers()).json()["journey_id"]
     plans = client.post(
         f"/api/v1/journeys/{journey_id}/plans/generate", json={"candidate_count": 1}
     )

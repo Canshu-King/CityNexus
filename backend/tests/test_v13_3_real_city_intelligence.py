@@ -7,6 +7,7 @@ from fastapi.testclient import TestClient
 import app.main as main_module
 from app.integrations.discovery.orchestration import curate_candidates, deterministic_candidate_gate
 from app.integrations.ai.responses import ResponsesResult
+from demo_stage import demo_reset_headers  # noqa: E402  (ORD-0389)
 
 
 client = TestClient(main_module.app)
@@ -151,7 +152,7 @@ def test_candidate_curator_drops_fabricated_ids_and_deterministic_gate_is_hard()
 
 def test_v133_golden_real_city_intelligence_replay_preserves_cruise(monkeypatch) -> None:
     monkeypatch.setattr(main_module, "_deepseek_client", lambda **_kwargs: _DiscoveryDeepSeek())
-    journey_id = client.post("/api/v1/demo/reset").json()["journey_id"]
+    journey_id = client.post("/api/v1/demo/reset", headers=demo_reset_headers()).json()["journey_id"]
     _confirm_structured(client, journey_id, _reservation("ARRIVAL"))
     _confirm_structured(client, journey_id, _reservation("MID_TRIP"))
     _confirm_structured(client, journey_id, _reservation("DEPARTURE"))

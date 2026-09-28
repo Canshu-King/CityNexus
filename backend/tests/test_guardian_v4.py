@@ -8,6 +8,7 @@ from test_solver_runtime_gate import _prepare_disruption
 import app.main as main_module
 from app.db.models import Activity, Event, Journey, Place
 from app.db.session import SessionLocal
+from demo_stage import demo_reset_headers  # noqa: E402  (ORD-0389)
 
 client = TestClient(main_module.app)
 
@@ -49,7 +50,7 @@ def _mission(journey_id: str) -> dict:
 
 
 def test_guardian_no_action_is_quiet_and_deduplicated():
-    ids = client.post("/api/v1/demo/reset").json()
+    ids = client.post("/api/v1/demo/reset", headers=demo_reset_headers()).json()
     journey_id = ids["journey_id"]
     first = client.post(f"/api/v1/journeys/{journey_id}/guardian/scan")
     second = client.post(f"/api/v1/journeys/{journey_id}/guardian/scan")

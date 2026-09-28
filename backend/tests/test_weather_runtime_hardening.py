@@ -15,6 +15,7 @@ from app.integrations.context.weather_snapshot import (
     freeze_weather_risks,
 )
 from app.main import app
+from demo_stage import demo_reset_headers  # noqa: E402  (ORD-0389)
 
 client = TestClient(app)
 
@@ -39,7 +40,7 @@ def test_weather_freeze_normalizes_provider_and_capture_instants_to_utc():
 
 
 def test_weather_attribution_requires_exact_scope_coordinates():
-    journey_id = client.post("/api/v1/demo/reset").json()["journey_id"]
+    journey_id = client.post("/api/v1/demo/reset", headers=demo_reset_headers()).json()["journey_id"]
     generated = client.post(
         f"/api/v1/journeys/{journey_id}/plans/generate", json={"candidate_count": 1}
     ).json()[0]
@@ -73,7 +74,7 @@ def test_weather_attribution_requires_exact_scope_coordinates():
 
 
 def test_weather_event_identity_includes_scope_coordinates():
-    journey_id = client.post("/api/v1/demo/reset").json()["journey_id"]
+    journey_id = client.post("/api/v1/demo/reset", headers=demo_reset_headers()).json()["journey_id"]
     common = {
         "code": "HEAVY_RAIN_RISK",
         "severity": "HIGH",

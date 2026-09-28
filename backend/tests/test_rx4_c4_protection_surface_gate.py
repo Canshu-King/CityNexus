@@ -48,6 +48,7 @@ from fastapi.testclient import TestClient
 from app.db.models import Commitment
 from app.db.session import SessionLocal
 from app.main import app
+from demo_stage import demo_reset_headers  # noqa: E402  (ORD-0389)
 
 CRUISE_PLACE = "place-river-cruise"
 DISPLACED_PLACE = "place-tech-art"
@@ -85,7 +86,7 @@ def _journey(client: TestClient, *, capture: bool) -> tuple[str, dict, dict, dic
     commitment level.  Capture happens before ``/start`` because booking a
     travelling activity is refused once the journey is under way.
     """
-    journey_id = client.post("/api/v1/demo/reset").json()["journey_id"]
+    journey_id = client.post("/api/v1/demo/reset", headers=demo_reset_headers()).json()["journey_id"]
     response = client.post(
         f"/api/v1/journeys/{journey_id}/plans/generate", json={"candidate_count": 1}
     )

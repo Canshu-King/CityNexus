@@ -10,6 +10,7 @@ from app.db.models import TravelerPreferenceEvidence
 from app.db.session import SessionLocal
 from app.execution.traveler_twin import refresh_snapshot
 from app.integrations.discovery.real_city import cost_evidence_from_tags, normalize_opening_hours
+from demo_stage import demo_reset_headers  # noqa: E402  (ORD-0389)
 
 client = TestClient(main_module.app)
 
@@ -20,7 +21,7 @@ def test_v7_1_trust_fixes_are_explicit() -> None:
     assert hours["weekday_intervals"][0]["days"] == ["Mo", "Tu", "We", "Th", "Fr"]
     assert hours["weekday_intervals"][1]["days"] == ["Sa"]
 
-    ids = client.post("/api/v1/demo/reset").json()
+    ids = client.post("/api/v1/demo/reset", headers=demo_reset_headers()).json()
     with SessionLocal() as session:
         session.add(
             TravelerPreferenceEvidence(
@@ -50,7 +51,7 @@ def test_v7_1_trust_fixes_are_explicit() -> None:
 
 
 def test_v8_flagship_stay_aware_multimodal_lifecycle() -> None:
-    ids = client.post("/api/v1/demo/reset").json()
+    ids = client.post("/api/v1/demo/reset", headers=demo_reset_headers()).json()
     create = client.post(
         "/api/v1/journeys",
         json={
@@ -134,7 +135,7 @@ def test_v8_flagship_stay_aware_multimodal_lifecycle() -> None:
 
 
 def test_v8_autopilot_recovery_respects_autonomy_envelope() -> None:
-    ids = client.post("/api/v1/demo/reset").json()
+    ids = client.post("/api/v1/demo/reset", headers=demo_reset_headers()).json()
     create = client.post(
         "/api/v1/journeys",
         json={
@@ -192,7 +193,7 @@ def test_v8_autopilot_recovery_respects_autonomy_envelope() -> None:
     assert body["protected_commitments_preserved"] is True
     assert body["post_action_gate"] == "PASSED"
 
-    advisory = client.post("/api/v1/demo/reset").json()
+    advisory = client.post("/api/v1/demo/reset", headers=demo_reset_headers()).json()
     create_advisory = client.post(
         "/api/v1/journeys",
         json={
@@ -228,7 +229,7 @@ def test_v8_autopilot_recovery_respects_autonomy_envelope() -> None:
 
 
 def test_v8_natural_language_mission_compiles_stay_and_mobility_intent() -> None:
-    ids = client.post("/api/v1/demo/reset").json()
+    ids = client.post("/api/v1/demo/reset", headers=demo_reset_headers()).json()
     command = (
         "I arrive in Tianjin on Friday evening and leave Sunday afternoon. Two people. "
         "Keep the hotel under 700 for two nights and avoid long walks. "

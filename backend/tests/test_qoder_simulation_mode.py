@@ -30,6 +30,7 @@ from sqlalchemy import func, select
 from app.db.models import Activity, Journey, PlanVersion, Traveler
 from app.db.session import SessionLocal
 from app.main import app, demo_mode_enabled
+from demo_stage import demo_reset_headers  # noqa: E402  (ORD-0389)
 
 client = TestClient(app)
 TABLES = ("travelers", "journeys", "plan_versions", "activities")
@@ -48,7 +49,7 @@ def _counts() -> dict[str, int]:
 @pytest.fixture()
 def _stage_on(monkeypatch) -> None:
     monkeypatch.setattr("app.main.demo_mode_enabled", lambda: True)
-    assert client.post("/api/v1/demo/reset").status_code == 200
+    assert client.post("/api/v1/demo/reset", headers=demo_reset_headers()).status_code == 200
 
 
 def _scene() -> dict:
@@ -119,7 +120,7 @@ def test_the_reset_route_is_closed_without_the_switch_and_deletes_nothing(monkey
 def test_the_same_call_is_allowed_once_the_process_claims_the_stage(_stage_on) -> None:
     """The guard discriminates on the flag and on nothing else."""
 
-    response = client.post("/api/v1/demo/reset")
+    response = client.post("/api/v1/demo/reset", headers=demo_reset_headers())
     assert response.status_code == 200, response.text
     payload = response.json()
     assert payload["status"] == "reset"
@@ -163,7 +164,7 @@ def test_reset_leaves_a_bookable_stage_and_start_scenario_makes_it_executable(_s
     panel needs only appears after it.
     """
 
-    assert client.post("/api/v1/demo/reset").status_code == 200
+    assert client.post("/api/v1/demo/reset", headers=demo_reset_headers()).status_code == 200
     assert client.post("/api/v1/demo/prepare-scenario").status_code == 200
     scene = _scene()
     journey_id = scene["journey_id"]
@@ -273,7 +274,7 @@ def test_the_seeded_stage_is_executable_and_both_branches_share_one_key_set(_sta
         honest empty stage as an outage (the ORD-0070 family, from the server side).
     """
 
-    response = client.post("/api/v1/demo/reset")
+    response = client.post("/api/v1/demo/reset", headers=demo_reset_headers())
     assert response.status_code == 200, response.text
     payload = response.json()
     assert "simulation_advance" not in payload, "reset must not run the pipeline any more"
@@ -324,7 +325,7 @@ def test_the_seeded_stage_is_executable_and_both_branches_share_one_key_set(_sta
         assert set(empty) == populated, (sorted(populated - set(empty)), sorted(set(empty) - populated))
         assert empty["plan_version_id"] is None, empty
     finally:
-        assert client.post("/api/v1/demo/reset").status_code == 200
+        assert client.post("/api/v1/demo/reset", headers=demo_reset_headers()).status_code == 200
 
 
 def _cursor_id(scene: dict) -> str | None:

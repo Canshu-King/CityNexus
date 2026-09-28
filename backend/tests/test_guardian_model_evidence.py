@@ -32,7 +32,7 @@ def _now() -> str:
 
 
 def _ready_journey() -> tuple[str, str, dict]:
-    ids = client.post("/api/v1/demo/reset").json()
+    ids = client.post("/api/v1/demo/reset", headers=demo_reset_headers()).json()
     journey_id = ids["journey_id"]
     traveler_id = ids["traveler_id"]
     generated = client.post(
@@ -241,6 +241,7 @@ def test_model_path_evidence_names_the_accepted_proposal(monkeypatch):
 # exercise trustworthy legs (see tests/_qoder_explicit_demo_mobility.py).
 import pytest as _pytest  # noqa: E402
 from _qoder_explicit_demo_mobility import GUARDIAN_MODEL_MOBILITY as _MODULE_MOBILITY, seed_module_mobility as _seed  # noqa: E402
+from demo_stage import demo_reset_headers  # noqa: E402  (ORD-0389)
 
 
 @_pytest.fixture(autouse=True)

@@ -16,6 +16,7 @@ from app.integrations.mobility.valhalla_http import ValhallaHTTPMobilityProvider
 from app.integrations.mock.providers import MockMobilityProvider
 from app.replanning.provider_snapshots import LIVE_PROVIDER_CAPTURE
 from app.replanning.feasibility import FeasibilityActivity, build_context, evaluate_feasibility
+from demo_stage import demo_reset_headers  # noqa: E402  (ORD-0389)
 
 client = TestClient(main_module.app)
 
@@ -47,7 +48,7 @@ class _Provider:
 
 
 def _prepare_disruption() -> tuple[str, dict, dict]:
-    ids = client.post("/api/v1/demo/reset").json()
+    ids = client.post("/api/v1/demo/reset", headers=demo_reset_headers()).json()
     jid = ids["journey_id"]
     generated = client.post(f"/api/v1/journeys/{jid}/plans/generate", json={"candidate_count": 1})
     assert generated.status_code == 201, generated.text

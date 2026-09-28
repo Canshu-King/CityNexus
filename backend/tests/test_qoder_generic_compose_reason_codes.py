@@ -41,6 +41,7 @@ import app.services as services
 from app.db.models import Journey, Place
 from app.db.session import SessionLocal
 from app.main import app
+from demo_stage import demo_reset_headers  # noqa: E402  (ORD-0389)
 
 client = TestClient(app)
 TZ = timezone(timedelta(hours=8))
@@ -59,7 +60,7 @@ def traveler(monkeypatch) -> str:
     """Simulated stage, one reset, and no rows at all for the city these gates author."""
 
     monkeypatch.setattr("app.main.demo_mode_enabled", lambda: True)
-    reset = client.post("/api/v1/demo/reset")
+    reset = client.post("/api/v1/demo/reset", headers=demo_reset_headers())
     assert reset.status_code == 200, reset.text
     with SessionLocal() as session:
         session.execute(delete(Place).where(Place.city_code == STAGE))

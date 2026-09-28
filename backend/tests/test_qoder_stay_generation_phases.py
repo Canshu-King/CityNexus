@@ -28,6 +28,7 @@ from app.core import phase_timing
 from app.integrations import stay_osm
 from app.main import app
 from app import stay_mobility
+from demo_stage import demo_reset_headers  # noqa: E402  (ORD-0389)
 
 client = TestClient(app)
 TZ = timezone(timedelta(hours=8))
@@ -110,7 +111,7 @@ def _use_http(monkeypatch, http: _FakeHttp) -> None:
 def _cold_journey(
     city_code: str = "CN-XIAMEN", days: int = 3, stay_budget: dict | None = None
 ) -> str:
-    traveler = client.post("/api/v1/demo/reset").json()["traveler_id"]
+    traveler = client.post("/api/v1/demo/reset", headers=demo_reset_headers()).json()["traveler_id"]
     start = datetime(2026, 11, 3, 9, 0, tzinfo=TZ)
     created = client.post(
         "/api/v1/journeys",

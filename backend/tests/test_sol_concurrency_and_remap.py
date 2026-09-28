@@ -46,6 +46,7 @@ from app.replanning.commitment_remap import (
     commitment_identity,
     resolve_commitment_target,
 )
+from demo_stage import demo_reset_headers  # noqa: E402  (ORD-0389)
 
 client = TestClient(main_module.app)
 
@@ -61,7 +62,7 @@ def _journey_with_captured_commitment() -> tuple[str, str, str]:
     activity is refused.  Without this the race tests would be protecting
     nothing, and `locked_commitments_preserved` would be vacuously true.
     """
-    journey_id = client.post("/api/v1/demo/reset").json()["journey_id"]
+    journey_id = client.post("/api/v1/demo/reset", headers=demo_reset_headers()).json()["journey_id"]
     plan = client.post(
         f"/api/v1/journeys/{journey_id}/plans/generate", json={"candidate_count": 1}
     ).json()[0]
@@ -95,7 +96,7 @@ def _journey_with_uncaptured_booking() -> tuple[str, str, str]:
     C4 rows, so an un-captured booking is invisible to it, and the capture that
     arrives afterwards promotes a pointer into the plan that no longer exists.
     """
-    journey_id = client.post("/api/v1/demo/reset").json()["journey_id"]
+    journey_id = client.post("/api/v1/demo/reset", headers=demo_reset_headers()).json()["journey_id"]
     plan = client.post(
         f"/api/v1/journeys/{journey_id}/plans/generate", json={"candidate_count": 1}
     ).json()[0]
@@ -434,7 +435,7 @@ def test_capture_after_an_accept_does_not_promote_a_stale_pointer() -> None:
     """The schedule that used to strand a C4: book, replan away the plan under the
     booking, then capture.  The promotion must follow the commitment onto the
     active plan or refuse outright."""
-    journey_id = client.post("/api/v1/demo/reset").json()["journey_id"]
+    journey_id = client.post("/api/v1/demo/reset", headers=demo_reset_headers()).json()["journey_id"]
     plan = client.post(
         f"/api/v1/journeys/{journey_id}/plans/generate", json={"candidate_count": 1}
     ).json()[0]

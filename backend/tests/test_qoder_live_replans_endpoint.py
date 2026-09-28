@@ -25,6 +25,7 @@ from fastapi.testclient import TestClient
 
 import app.integrations.mobility.runtime as runtime
 from app.main import app
+from demo_stage import demo_reset_headers  # noqa: E402  (ORD-0389)
 
 client = TestClient(app)
 
@@ -74,7 +75,7 @@ def _degrade(*legs, all_legs=False):
 
 
 def _drive_to_closure():
-    ids = client.post("/api/v1/demo/reset").json()
+    ids = client.post("/api/v1/demo/reset", headers=demo_reset_headers()).json()
     jid = ids["journey_id"]
     generated = client.post(f"/api/v1/journeys/{jid}/plans/generate", json={"candidate_count": 1})
     assert generated.status_code == 201, generated.text

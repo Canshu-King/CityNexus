@@ -17,6 +17,7 @@ from app.integrations.ai.semantic_compiler import (
     apply_semantic_policy,
     compile_semantic_envelope,
 )
+from demo_stage import demo_reset_headers  # noqa: E402  (ORD-0389)
 
 
 client = TestClient(main_module.app)
@@ -128,7 +129,7 @@ def test_asserted_future_envelope_routes_to_existing_event_path(monkeypatch):
         )
     )
     monkeypatch.setattr(main_module, "_deepseek_client", lambda: fake)
-    journey_id = client.post("/api/v1/demo/reset").json()["journey_id"]
+    journey_id = client.post("/api/v1/demo/reset", headers=demo_reset_headers()).json()["journey_id"]
 
     response = client.post(
         f"/api/v1/journeys/{journey_id}/copilot/messages",
@@ -165,7 +166,7 @@ def test_unverified_model_envelope_never_creates_city_event(monkeypatch):
         )
     )
     monkeypatch.setattr(main_module, "_deepseek_client", lambda: fake)
-    journey_id = client.post("/api/v1/demo/reset").json()["journey_id"]
+    journey_id = client.post("/api/v1/demo/reset", headers=demo_reset_headers()).json()["journey_id"]
 
     response = client.post(
         f"/api/v1/journeys/{journey_id}/copilot/messages",

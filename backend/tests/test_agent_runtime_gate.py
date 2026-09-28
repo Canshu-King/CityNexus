@@ -18,6 +18,7 @@ from app.agent.contracts import (
 from app.agent.delegation_policy import evaluate_action
 from app.db.models import Activity, AuditLog, Event, Journey, PlanVersion, ReplanProposal
 from app.db.session import SessionLocal
+from demo_stage import demo_reset_headers  # noqa: E402  (ORD-0389)
 
 client = TestClient(main_module.app)
 
@@ -67,7 +68,7 @@ def _make_proposal() -> tuple[str, str, str]:
 
 
 def test_agt01_advisory_inspect_journey_and_twin_are_read_tools():
-    ids = client.post("/api/v1/demo/reset").json()
+    ids = client.post("/api/v1/demo/reset", headers=demo_reset_headers()).json()
     journey_id = ids["journey_id"]
     journey = _agent_call("inspect_journey", journey_id=journey_id)
     twin = _agent_call("inspect_twin", journey_id=journey_id)
@@ -237,7 +238,7 @@ def test_agt10_19_catalog_contains_only_v1_allowlist():
 
 
 def test_agt11_policy_is_user_api_and_agent_cannot_self_upgrade():
-    ids = client.post("/api/v1/demo/reset").json()
+    ids = client.post("/api/v1/demo/reset", headers=demo_reset_headers()).json()
     journey_id = ids["journey_id"]
     traveler_id = _traveler_id(journey_id)
     initial = client.get(f"/api/v1/travelers/{traveler_id}/agent-policy")
@@ -257,7 +258,7 @@ def test_agt11_policy_is_user_api_and_agent_cannot_self_upgrade():
 
 
 def test_agt11_policy_round_trips_autonomy_envelope_as_user_owned_state():
-    ids = client.post("/api/v1/demo/reset").json()
+    ids = client.post("/api/v1/demo/reset", headers=demo_reset_headers()).json()
     traveler_id = ids["traveler_id"]
     payload = {
         "mode": "AUTONOMOUS",
@@ -294,7 +295,7 @@ def test_agt10_protected_actions_have_step_up_semantics_even_outside_mcp():
 
 
 def test_agt12_21_22_unknown_or_forged_gate_facts_fail_closed():
-    ids = client.post("/api/v1/demo/reset").json()
+    ids = client.post("/api/v1/demo/reset", headers=demo_reset_headers()).json()
     journey_id = ids["journey_id"]
     forged = client.post(
         "/api/v1/agent/tools/inspect_journey",
@@ -311,7 +312,7 @@ def test_agt12_21_22_unknown_or_forged_gate_facts_fail_closed():
 
 
 def test_agt21_prompt_injection_text_cannot_change_gateway_authority():
-    ids = client.post("/api/v1/demo/reset").json()
+    ids = client.post("/api/v1/demo/reset", headers=demo_reset_headers()).json()
     response = client.post(
         "/api/v1/agent/tools/inspect_journey",
         json={
@@ -326,7 +327,7 @@ def test_agt21_prompt_injection_text_cannot_change_gateway_authority():
 
 def test_agt13_cross_journey_proposal_is_rejected():
     _journey_id, _event_id, proposal_id = _make_proposal()
-    other = client.post("/api/v1/demo/reset").json()["journey_id"]
+    other = client.post("/api/v1/demo/reset", headers=demo_reset_headers()).json()["journey_id"]
     response = _agent_call("accept_replan", journey_id=other, proposal_id=proposal_id)
     assert response.status_code in {403, 404}
 

@@ -12,6 +12,7 @@ from app.db.models import Activity, Commitment, Event, Journey, PlanVersion, Pro
 from app.db.session import SessionLocal
 from app.integrations.context.open_meteo import WeatherObservation, WeatherRisk
 from app.integrations.context.weather_runtime import refresh_weather_runtime
+from demo_stage import demo_reset_headers  # noqa: E402  (ORD-0389)
 
 
 client = TestClient(main_module.app)
@@ -73,7 +74,7 @@ def _reservation(role: str) -> dict:
 
 
 def _grounded_journey() -> tuple[str, dict, str]:
-    journey_id = client.post("/api/v1/demo/reset").json()["journey_id"]
+    journey_id = client.post("/api/v1/demo/reset", headers=demo_reset_headers()).json()["journey_id"]
     for role in ("ARRIVAL", "MID_TRIP", "DEPARTURE"):
         imported = client.post(
             f"/api/v1/journeys/{journey_id}/inbox/import",

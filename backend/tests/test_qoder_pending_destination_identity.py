@@ -45,6 +45,7 @@ import app.anywhere_capability as capability_module
 from app.db.models import CatalogHydrationOperation, Place
 from app.db.session import SessionLocal, ensure_schema, make_engine
 from app.main import app
+from demo_stage import demo_reset_headers  # noqa: E402  (ORD-0389)
 
 client = TestClient(app)
 CAPABILITY = "/api/v1/destinations/capability"
@@ -88,7 +89,7 @@ CREATE TABLE catalog_hydration_operations (
 @pytest.fixture()
 def seeded(monkeypatch) -> str:
     monkeypatch.setattr("app.main.demo_mode_enabled", lambda: True)
-    reset = client.post("/api/v1/demo/reset")
+    reset = client.post("/api/v1/demo/reset", headers=demo_reset_headers())
     assert reset.status_code == 200, reset.text
     # Jobs are per-stage state, not demo seed: `/demo/reset` does not clear this table, and an
     # unfinished row is *reused by fingerprint* by whoever asks for the same words next - so an

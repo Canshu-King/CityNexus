@@ -53,6 +53,7 @@ from test_qoder_provider_identity_leg import (
     _enable,
     _feature,
 )
+from demo_stage import demo_reset_headers  # noqa: E402  (ORD-0389)
 
 client = TestClient(app)
 CAPABILITY = "/api/v1/destinations/capability"
@@ -63,7 +64,7 @@ OTHER_COUNTY = "云和县"  # same words, different shape: two areas claiming on
 @pytest.fixture()
 def seeded(monkeypatch) -> str:
     monkeypatch.setattr("app.main.demo_mode_enabled", lambda: True)
-    reset = client.post("/api/v1/demo/reset")
+    reset = client.post("/api/v1/demo/reset", headers=demo_reset_headers())
     assert reset.status_code == 200, reset.text
     with SessionLocal() as session:
         session.execute(CatalogHydrationOperation.__table__.delete())

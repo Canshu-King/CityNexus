@@ -22,6 +22,7 @@ from fastapi.testclient import TestClient
 
 from app.integrations.mock import providers as providers_mod
 from app.main import app
+from demo_stage import demo_reset_headers  # noqa: E402  (ORD-0389)
 
 client = TestClient(app)
 
@@ -64,7 +65,7 @@ def _strip_explicit_legs(monkeypatch):
 
 
 def _drive_to_closure() -> tuple[str, str]:
-    ids = client.post("/api/v1/demo/reset").json()
+    ids = client.post("/api/v1/demo/reset", headers=demo_reset_headers()).json()
     jid = ids["journey_id"]
     generated = client.post(
         f"/api/v1/journeys/{jid}/plans/generate", json={"candidate_count": 1}

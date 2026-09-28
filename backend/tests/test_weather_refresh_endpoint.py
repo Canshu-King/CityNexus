@@ -7,6 +7,7 @@ from fastapi.testclient import TestClient
 import app.main as main_module
 from app.integrations.context.open_meteo import WeatherObservation, WeatherRisk
 from app.main import app
+from demo_stage import demo_reset_headers  # noqa: E402  (ORD-0389)
 
 client = TestClient(app)
 
@@ -43,7 +44,7 @@ class _EndpointWeatherProvider:
 
 
 def _started_journey_id() -> str:
-    journey_id = client.post("/api/v1/demo/reset").json()["journey_id"]
+    journey_id = client.post("/api/v1/demo/reset", headers=demo_reset_headers()).json()["journey_id"]
     generated = client.post(
         f"/api/v1/journeys/{journey_id}/plans/generate", json={"candidate_count": 1}
     )

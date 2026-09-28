@@ -28,6 +28,7 @@ from sqlalchemy import delete
 from app.db.models import Place
 from app.db.session import SessionLocal
 from app.main import app
+from demo_stage import demo_reset_headers  # noqa: E402  (ORD-0389)
 
 client = TestClient(app)
 TZ = timezone(timedelta(hours=8))
@@ -41,11 +42,11 @@ def _clean_cities(monkeypatch):
     """No rows for either city, and a demo traveler to own the journeys."""
 
     monkeypatch.setattr("app.main.demo_mode_enabled", lambda: True)
-    assert client.post("/api/v1/demo/reset").status_code == 200
+    assert client.post("/api/v1/demo/reset", headers=demo_reset_headers()).status_code == 200
     with SessionLocal() as session:
         session.execute(delete(Place).where(Place.city_code.in_([EMPTY_CITY, ONE_STOP_CITY])))
         session.commit()
-    return client.post("/api/v1/demo/reset").json()["traveler_id"]
+    return client.post("/api/v1/demo/reset", headers=demo_reset_headers()).json()["traveler_id"]
 
 
 def _journey(traveler: str, city_code: str, *, days: int = 2, budget: int = 300_000) -> str:

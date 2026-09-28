@@ -13,7 +13,7 @@ client = TestClient(app)
 
 
 def _active_journey() -> tuple[dict, dict]:
-    ids = client.post("/api/v1/demo/reset").json()
+    ids = client.post("/api/v1/demo/reset", headers=demo_reset_headers()).json()
     jid = ids["journey_id"]
     plan = client.post(
         f"/api/v1/journeys/{jid}/plans/generate", json={"candidate_count": 1}
@@ -134,7 +134,7 @@ def test_replan_generation_optional_idempotency_key_replays_without_new_candidat
 
 
 def test_completed_c4_is_not_projected_as_upcoming():
-    ids = client.post("/api/v1/demo/reset").json()
+    ids = client.post("/api/v1/demo/reset", headers=demo_reset_headers()).json()
     jid = ids["journey_id"]
     plan = client.post(
         f"/api/v1/journeys/{jid}/plans/generate", json={"candidate_count": 1}
@@ -177,7 +177,7 @@ def test_opportunity_value_is_neutral_until_window_evidence_is_wired():
 
 
 def test_f3_family_is_backed_by_next_c4_window_evidence():
-    ids = client.post("/api/v1/demo/reset").json()
+    ids = client.post("/api/v1/demo/reset", headers=demo_reset_headers()).json()
     jid = ids["journey_id"]
     plan = client.post(
         f"/api/v1/journeys/{jid}/plans/generate", json={"candidate_count": 1}
@@ -229,6 +229,7 @@ def test_f3_family_is_backed_by_next_c4_window_evidence():
 # exercise trustworthy legs (see tests/_qoder_explicit_demo_mobility.py).
 import pytest as _pytest  # noqa: E402
 from _qoder_explicit_demo_mobility import WP06_FOLLOWUP_MOBILITY as _MODULE_MOBILITY, seed_module_mobility as _seed  # noqa: E402
+from demo_stage import demo_reset_headers  # noqa: E402  (ORD-0389)
 
 
 @_pytest.fixture(autouse=True)

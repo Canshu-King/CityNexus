@@ -7,12 +7,13 @@ from app.commerce.strengths_generated import SOURCE_COMMITMENT_STRENGTHS
 from app.db.models import Activity, AuditLog, Commitment, Journey, PaymentTransaction, ProviderCall
 from app.db.session import SessionLocal
 from app.main import app
+from demo_stage import demo_reset_headers  # noqa: E402  (ORD-0389)
 
 client = TestClient(app)
 
 
 def selected_fixture() -> tuple[str, dict, dict, dict, list[dict]]:
-    journey_id = client.post("/api/v1/demo/reset").json()["journey_id"]
+    journey_id = client.post("/api/v1/demo/reset", headers=demo_reset_headers()).json()["journey_id"]
     response = client.post(
         f"/api/v1/journeys/{journey_id}/plans/generate", json={"candidate_count": 3}
     )

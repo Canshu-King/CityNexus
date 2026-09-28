@@ -34,6 +34,7 @@ from app.db.models import Journey, JourneyTripContext, Traveler
 from app.db.session import SessionLocal
 from app.main import TEMPORAL_REJECTIONS, app, temporal_rejection
 from app.stay_mobility import _anchor, journey_boundaries
+from demo_stage import demo_reset_headers  # noqa: E402  (ORD-0389)
 
 client = TestClient(app)
 TZ = timezone(timedelta(hours=8))
@@ -41,7 +42,7 @@ OVER_WINDOW = MAX_JOURNEY_DAYS + 2  # 9 - the window the user actually typed
 
 
 def _traveler() -> str:
-    return client.post("/api/v1/demo/reset").json()["traveler_id"]
+    return client.post("/api/v1/demo/reset", headers=demo_reset_headers()).json()["traveler_id"]
 
 
 def _at(day: int, hour: int = 9) -> datetime:

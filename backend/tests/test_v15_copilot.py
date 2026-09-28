@@ -10,6 +10,7 @@ from app.integrations.ai.copilot_contract import (
     classify_copilot_message,
     simulate_what_if,
 )
+from demo_stage import demo_reset_headers  # noqa: E402  (ORD-0389)
 
 
 client = TestClient(main_module.app)
@@ -108,7 +109,7 @@ def test_v15_what_if_skips_locked_current_anchor_for_flexible_activity():
 
 
 def test_v15_copilot_what_if_does_not_create_twin_or_event():
-    journey_id = client.post("/api/v1/demo/reset").json()["journey_id"]
+    journey_id = client.post("/api/v1/demo/reset", headers=demo_reset_headers()).json()["journey_id"]
     with SessionLocal() as session:
         before_events = session.scalar(
             select(func.count()).select_from(Event).where(Event.journey_id == journey_id)
@@ -136,7 +137,7 @@ def test_v15_copilot_what_if_does_not_create_twin_or_event():
 
 
 def test_v15_what_if_explains_that_authoritative_selection_is_required():
-    journey_id = client.post("/api/v1/demo/reset").json()["journey_id"]
+    journey_id = client.post("/api/v1/demo/reset", headers=demo_reset_headers()).json()["journey_id"]
     response = client.post(
         f"/api/v1/journeys/{journey_id}/copilot/messages",
         json={"message": "如果我多待 60 分钟会怎样？", "locale": "zh"},
@@ -148,7 +149,7 @@ def test_v15_what_if_explains_that_authoritative_selection_is_required():
 
 
 def test_v15_only_current_disruption_creates_event():
-    journey_id = client.post("/api/v1/demo/reset").json()["journey_id"]
+    journey_id = client.post("/api/v1/demo/reset", headers=demo_reset_headers()).json()["journey_id"]
     hypothetical = client.post(
         f"/api/v1/journeys/{journey_id}/copilot/messages",
         json={"message": "如果下雨会怎样？", "locale": "zh"},
@@ -175,7 +176,7 @@ def test_v15_only_current_disruption_creates_event():
 
 
 def test_v15_copilot_reports_fallback_mode_without_deepseek_configuration():
-    journey_id = client.post("/api/v1/demo/reset").json()["journey_id"]
+    journey_id = client.post("/api/v1/demo/reset", headers=demo_reset_headers()).json()["journey_id"]
     response = client.post(
         f"/api/v1/journeys/{journey_id}/copilot/messages",
         json={"message": "为什么这样安排？", "locale": "en"},

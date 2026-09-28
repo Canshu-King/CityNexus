@@ -35,6 +35,7 @@ from sqlalchemy import select
 from app.db.models import Activity, PlanVersion
 from app.db.session import SessionLocal
 from app.main import app
+from demo_stage import demo_reset_headers  # noqa: E402  (ORD-0389)
 
 client = TestClient(app)
 HARD_QUALITIES = {"EXPLICIT_FROZEN_FIXTURE", "LIVE_PROVIDER_CAPTURE"}
@@ -51,7 +52,7 @@ def _executed_stage(monkeypatch) -> dict:
     """reset -> prepare -> start, i.e. the stage exactly as the panel puts it on screen."""
 
     monkeypatch.setattr("app.main.demo_mode_enabled", lambda: True)
-    assert client.post("/api/v1/demo/reset").status_code == 200
+    assert client.post("/api/v1/demo/reset", headers=demo_reset_headers()).status_code == 200
     assert client.post("/api/v1/demo/prepare-scenario").status_code == 200
     started = client.post("/api/v1/demo/start-scenario")
     assert started.status_code == 200, started.text
