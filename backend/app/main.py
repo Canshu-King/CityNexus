@@ -3013,6 +3013,12 @@ def delete_journey(journey_id: UUID, session: Session = Depends(get_session)):
     session.commit()
 
 
+#: How often the 找回 door re-reads before it admits another writer keeps winning this row.  It is
+#: not a wait budget and sets no clock: the lock wait itself has exactly one home,
+#: `app/db/write_deadline.py`.  A retry costs one SELECT and one failed UPDATE.
+_UNDELETE_WRITE_ATTEMPTS = 3
+
+
 @app.post("/api/v1/journeys/{journey_id}/undelete", response_model=JourneySchema)
 def undelete_journey(journey_id: UUID, session: Session = Depends(get_session)):
     """ORD-0399 找回: clear `journeys.deleted_at`, and the trip is back in the list.
@@ -3035,25 +3041,55 @@ def undelete_journey(journey_id: UUID, session: Session = Depends(get_session)):
     write happens is decided by durable state (`deleted_at` NULL or not), and a replayed tap lands
     on `JOURNEY_NOT_DELETED` instead of pretending to be a second success.  The doors that do take
     the header replay a *computation* (plan claim, replan accept), which is a different need.
-    Two taps at once are still unguarded, as in slice 1.
+
+    Two taps at once is the case that was unguarded when this door was cut, and it is guarded now,
+    by the rule the replan accept already states (`_accept_replan_executing`): conditional write,
+    not object assignment.  The `UPDATE` carries the deletion moment this tap read, so the database
+    decides who cleared the row; a tap that finds a different value loses on `rowcount`, re-reads,
+    and refuses with a name instead of writing the same row twice or dropping a second audit row.
 
     `status` and `updated_at` are not written, for the same reason slice 1 left them alone: the bin
     has one column, and duplicating the fact into `updated_at` would give a reader two authorities.
     """
 
-    journey = session.get(Journey, str(journey_id))
-    if journey is None:
-        refused = HTTPException(404, f"Journey {journey_id} was not found")
-        refused.reason_code = "JOURNEY_NOT_FOUND"
-        refused.error_details = {"journey_id": str(journey_id)}
+    for _ in range(_UNDELETE_WRITE_ATTEMPTS):
+        journey = session.get(Journey, str(journey_id))
+        if journey is None:
+            refused = HTTPException(404, f"Journey {journey_id} was not found")
+            refused.reason_code = "JOURNEY_NOT_FOUND"
+            refused.error_details = {"journey_id": str(journey_id)}
+            raise refused
+        seen = journey.deleted_at
+        if seen is None:
+            refused = HTTPException(409, f"Journey {journey_id} was not in the recycle bin")
+            refused.reason_code = "JOURNEY_NOT_DELETED"
+            refused.error_details = {"journey_id": str(journey_id), "deleted_at": None}
+            raise refused
+        # 抢不到就不写: the predicate carries the moment this tap read, so the database - not this
+        # process's view of an ORM object - decides who cleared the row.  Same shape as
+        # `_take_over_lapsed_claims`, `select_plan` and `_accept_replan_executing`; nothing new.
+        cleared = session.execute(
+            update(Journey)
+            .where(Journey.id == str(journey_id), Journey.deleted_at == seen)
+            .values(deleted_at=None)
+            .execution_options(synchronize_session=False)
+        ).rowcount
+        if cleared == 1:
+            break
+        session.rollback()
+    else:
+        # Every attempt was overtaken.  The truthful words for that are not "it was not in the bin"
+        # (it is) and not a silent success (nothing was written here), so the refusal names the
+        # state the row is in, reusing the name slice 1 already answers with.
+        current = session.get(Journey, str(journey_id))
+        refused = HTTPException(409, f"Journey {journey_id} is still in the recycle bin")
+        refused.reason_code = "JOURNEY_ALREADY_DELETED"
+        refused.error_details = {
+            "journey_id": str(journey_id),
+            "deleted_at": current.deleted_at if current is not None else None,
+        }
         raise refused
-    if journey.deleted_at is None:
-        refused = HTTPException(409, f"Journey {journey_id} was not in the recycle bin")
-        refused.reason_code = "JOURNEY_NOT_DELETED"
-        refused.error_details = {"journey_id": str(journey_id), "deleted_at": None}
-        raise refused
-    before = {"deleted_at": journey.deleted_at}
-    journey.deleted_at = None
+    before = {"deleted_at": seen}
     session.commit()
     record_audit(
         session,
@@ -3065,7 +3101,7 @@ def undelete_journey(journey_id: UUID, session: Session = Depends(get_session)):
         after={"deleted_at": None},
     )
     session.commit()
-    return journey_schema(journey)
+    return journey_schema(session.get(Journey, str(journey_id)))
 
 
 @app.get("/api/v1/recycle-bin/journeys", response_model=list[RecycleBinJourney])
