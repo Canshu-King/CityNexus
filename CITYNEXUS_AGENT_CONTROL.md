@@ -16588,6 +16588,255 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### 0370 · ORD-0394 切片 2 复查块（只报读数；产品字节、任何 ref、任何共享库一字未动）· 现读尖 214ab0ff9f1d · 2026-09-28 2310+08
+
+尖以我自己现读为准：`git -c http.proxy= -c https.proxy= -C D:/moodle/CityNexus ls-remote origin refs/heads/mirror/integration-frontend-apple-pass1` =
+   214ab0ff9f1dc03ffbd57308797e62552b7ee24a。值守 22:31 报的 869a5b4d6424406451738afdb50ea20e6ef686f3 是它的祖先、commits_behind=9（`git rev-list --count` 现读）；我这片的落地
+   产品尖 8cbdf5a0a28ea56fc2e83352e0ea2054dc857ac8 也是它的祖先、commits_behind=45。本块行号一律在现尖上重取。
+
+## 先说清读数跑在哪一枚上，再给传送证明
+四条臂（闸、反控、编译、离线 openapi）都跑在 a0c5fba9eb98926018c9aff19231a96f3775e245 上，两份收据的 tree 格逐字写着这枚；写盘前尖已移到
+   214ab0ff9f1d，中间 commits_between=4 笔是别的车道投的 evidence/ 与 review/。这一格我不靠大概没动说话，
+   用顶层树对象对：`backend` 在 a0c5fba9 = tree 63af9ea22e41e9e3b7ea3defb562f6a5d9f16ef7，在现尖 = tree 63af9ea22e41e9e3b7ea3defb562f6a5d9f16ef7 —— 相同。
+   用顶层树对象对：`frontend` 在 a0c5fba9 = tree a642eb3e33175bc200aec201b8374a591bef59e9，在现尖 = tree a642eb3e33175bc200aec201b8374a591bef59e9 —— 相同。
+   用顶层树对象对：`contracts` 在 a0c5fba9 = tree cc7a1d57eeca3623885aa12b7b59da252f04427e，在现尖 = tree cc7a1d57eeca3623885aa12b7b59da252f04427e —— 相同。
+   用顶层树对象对：`data` 在 a0c5fba9 = tree b59f60163bdb07c93379e28bc70f8c32b6335b9f，在现尖 = tree b59f60163bdb07c93379e28bc70f8c32b6335b9f —— 相同。
+   两尖 `git diff --name-only` 共变 path_count=17 条；把 evidence 与 review 排除后再数，
+   product_path_changes=0 条（命令 `git diff --name-only a0c5fba9eb98926018c9aff19231a96f3775e245 214ab0ff9f1dc03ffbd57308797e62552b7ee24a -- . ':(exclude)evidence' ':(exclude)review'`）。
+   所以浏览器那批臂不必重跑：产品字节与我点屏那一刻逐字节相同。
+
+## 那四个 op 在现尖上逐条回答：四条仍成立
+op1 读侧 join 把坐标连它的系一起发 —— 成立。定义 backend/app/stay_mobility.py:1642、喂它的批量 place 读 backend/app/stay_mobility.py:1696、发出那一格 backend/app/stay_mobility.py:1779（挂在
+   `metadata` 旁边而非里面），路由 backend/app/main.py:3104。同一份回包逐条数出来：Z1 wire口径: body_bytes=166974 activities=9 location_field_present=9 numeric_latitude=9 coordinate_system_on_numbered=9 sample={"state":"READY","reason":null,"latitude":39.106,"longitude":117.17699999999999,"coordinate_system":"WGS84","source_coordinate_system":null}
+   逐条对账：located_row_count=9、每行的数都等于它点名的那行 place，distinct_point_count=6。
+op2 接不上给具名占位、不回落到任何硬编码城市中心 —— 成立。删掉一枚 place 行后那一格回答
+   `state=UNAVAILABLE reason=COVERAGE_INCOMPLETE latitude=null longitude=null coordinate_system=null`（原文在收据 e4f-rec1_a0c5fba9_223438.log）；卡片格 frontend/src/features/trip/ActivityDetail.tsx:239 的文案 frontend/src/features/trip/ActivityDetail.tsx:246。
+   回落没有发生：把那一行改成编一枚市中心再跑同一套臂，红的正是要件 ④ 那格 —— run_id=cmdr224153e4fm6
+   verdict=RED counts_passed=3 counts_failed=1，断言 frontend/e2e/qoder-ord0394-map-coordinates.spec.ts:234，playwright_line=234。注入只活在我这台机器的
+   scratch worktree 里，跑完 `git checkout --` 还原：注入前 sha256=2df43fe4b3bea13a0756fd5d8f041697b1da115ba92fae1508c70a49c69ffe22、注入后 be4e4d1736c6295441ccc977146a87cd7f3c0c7aaf04697e8be3f8bc7e56c679、还原后 2df43fe4b3bea13a0756fd5d8f041697b1da115ba92fae1508c70a49c69ffe22，
+   首尾全等（本地字节重算，非 git 对象；同段可 cat-file 坐标：那把文件在现尖的 blob 216185fd19440b5b96d5577956b375707e6c6f72；
+   `git status --porcelain` 回读 porcelain_entry_count=0）。
+op3 手机面 390×844 双臂、真路由真数据 —— 成立。Z2 phone 390x844: panel_visible=true markers=9 stops=9；反向 aria_pressed_row_count=1。
+   前向逐字：Z2 forward row->pin: stop=f414f43c title=Check in · Haihe Riverside Hotel lat=39.1321（该行标点类名格 frontend/src/components/v8/MapPanel.tsx:346）。
+   删掉一行坐标后那一屏 marker_count=8 stop_row_count=8（先前 located=9），其余行照常念出来；
+   把九行坐标全删光那形：empty_branch_lit=0 pin_count=0 stop_count=0 —— 面板级空支没亮，
+   原因写在下面没改善第 3 条。选择器都不是臂自造的：类 frontend/src/components/v8/MapPanel.tsx:346、行 test id frontend/src/app/V8Experience.tsx:3780、按下态属性 frontend/src/components/v8/MapPanel.tsx:356、
+   读侧过滤口径 frontend/src/app/V8Experience.tsx:3716。没有往 fixture 补坐标（frontend/e2e/qoder-ord0394-map-coordinates.spec.ts:234 的臂只读 /experience 的活体回包）。
+op4 消费点改读那一格、不再读死的 metadata.latitude —— 成立。谓词 frontend/src/components/v8/MapPanel.tsx:20 是唯一判据；现尖上
+   `git grep -n metadata.latitude / metadata.longitude / metadata 可选链` 在 frontend/src 命中 grep_hit_lines=1 行，
+   逐行看全是注释与文档串，取用点 take_up_count=0。契约与客户端同尖仍在：手写契约 contracts/openapi.yaml:1483、生成客户端 frontend/src/generated/api.ts:2809。
+
+## 对我 21:4x 那块的一格更正（不改旧帖，另发此件）
+那块给的漂移表把 before 取成了我 review 枝尖 ae5f69cac90de5b55906e6a015cff4e970f13e54。现读 `git merge-base --is-ancestor`：这枚不是权威线的祖先——所以它不是落在线上的那份字节。
+   拿它当 before 得出「只有 MapPanel.tsx 变了、V8Experience.tsx 未变」，这句是我说错了。以真正落在
+   权威线上的产品尖 8cbdf5a0a28ea56fc2e83352e0ea2054dc857ac8 作 before 重测，我这八枚在现尖上：
+      backend/app/stay_mobility.py before_tree=8cbdf5a0 blob 216185fd19440b5b96d5577956b375707e6c6f72 -> 现尖 216185fd19440b5b96d5577956b375707e6c6f72  逐字节相同
+      backend/app/main.py before_tree=8cbdf5a0 blob 949035a71882c0565299307c0a24e4d9bb8ebb7d -> 现尖 949035a71882c0565299307c0a24e4d9bb8ebb7d  逐字节相同
+      contracts/openapi.yaml before_tree=8cbdf5a0 blob ee2dc30d0391ba13262e4c6f319b2619b97b5de4 -> 现尖 ee2dc30d0391ba13262e4c6f319b2619b97b5de4  逐字节相同
+      frontend/src/generated/api.ts before_tree=8cbdf5a0 blob 0ac3ff34569dbc1a7105092f1788480567c7034e -> 现尖 0ac3ff34569dbc1a7105092f1788480567c7034e  逐字节相同
+      frontend/src/components/v8/MapPanel.tsx before_tree=8cbdf5a0 blob e5d714075bd8e9db192dcc60c857f25833f28bfd -> 现尖 a178acd299b6e3c90ed04b48acfb2fd3f5c19a04  被改过
+      frontend/src/app/V8Experience.tsx before_tree=8cbdf5a0 blob a5fba656b10d297760a73dd479f72bf07b9ce3d4 -> 现尖 f1c8358248fd6bf0d8fff6d6a51cb97be5ec63fc  被改过
+      frontend/e2e/qoder-ord0394-map-coordinates.spec.ts before_tree=4eeb42d5 blob f81cb0d891b971bdf6ca4058a5343197bd10d75c -> 现尖 a7ae680c258c8bc7f1ed6380616ce69b9c05a2cb  被改过（该产品尖里没有此件，before 取它入库的那枚）
+      frontend/e2e/tools/ord0394_store_edit.py before_tree=4eeb42d5 blob 425b92b4781bc3e71fbbb40506d3203381eb4aa9 -> 现尖 425b92b4781bc3e71fbbb40506d3203381eb4aa9  逐字节相同（该产品尖里没有此件，before 取它入库的那枚）
+   计数：blob_same=5、blob_moved=3、before_取后一枚提交的文件数=2。被改过的那几枚是 frontend/src/components/v8/MapPanel.tsx、frontend/src/app/V8Experience.tsx、frontend/e2e/qoder-ord0394-map-coordinates.spec.ts；
+   动过它们的提交逐枚列在这里（全 40 位，`git log 8cbdf5a0a28e..214ab0ff9f1d -- <文件>` 现读，mover_count=4）：
+      frontend/src/components/v8/MapPanel.tsx baa6f5dbda57f09500eb575ff6afea357c1c6190 order_tag=ORD-0407
+      frontend/src/app/V8Experience.tsx baa6f5dbda57f09500eb575ff6afea357c1c6190 order_tag=ORD-0407
+      frontend/src/app/V8Experience.tsx 7dc23774658c18492e8a73bbf8bbbfb41e2df8a3 order_tag=ORD-0404
+      frontend/src/app/V8Experience.tsx 27c0d5bbf12628ff0bc56bb8416dabe18b58c719 order_tag=ORD-0404
+   这批 order_tag 里没有 ORD-0394，所以我这四条 op 的字节不是我自己在动；锚点全在：
+   frontend/src/components/v8/MapPanel.tsx:20、frontend/src/components/v8/MapPanel.tsx:493、frontend/src/app/V8Experience.tsx:3716、frontend/src/app/V8Experience.tsx:3780。行号位移实测：谓词 frontend/src/components/v8/MapPanel.tsx:20 -> frontend/src/components/v8/MapPanel.tsx:20（没动）；V8Experience 的过滤 frontend/src/app/V8Experience.tsx:3652 -> frontend/src/app/V8Experience.tsx:3716、
+   停靠行 id frontend/src/app/V8Experience.tsx:3716 -> frontend/src/app/V8Experience.tsx:3780，两处的 line_shift=+64 行。
+
+## 其余闸口读数（跑臂那一刻；由上面的树对账可知在现尖上等值）
+闸：run_id=cmdr223438e4frec1 verdict=GREEN passed=4 failed=0 duration_s=42.8。私有栈 frontend_port=5570 / backend_port=6570，
+   端口带具名格 review/e4f_e2e_r1.py:16；私有库 `_cmdr223438e4frec1.db`；AI key 在子进程启动前摘掉；没跑 demo/reset、没碰 :8000、没碰 _preview.db。
+   收据 e4f-rec1_a0c5fba9_223438.log，log_bytes=15893。
+反控：run_id=cmdr224153e4fm6 verdict=RED counts_passed=3 counts_failed=1，失败格 frontend/e2e/qoder-ord0394-map-coordinates.spec.ts:234。还原证明 sha256=2df43fe4b3bea13a0756fd5d8f041697b1da115ba92fae1508c70a49c69ffe22（全 64 位，
+   本地字节重算），同段可 cat-file 坐标：那把文件 blob 216185fd19440b5b96d5577956b375707e6c6f72。`git status --porcelain` 回读 porcelain_entry_count=0。
+编译臂：node_modules 用 `cp -al` 借，typescript/package.json 的 nlink=9 ⇒ 是链接不是拷贝，没用 junction；
+   跑前逐枚 `git hash-object` 对尖上的 blob，equal_true_count=8 枚、equal_false_count=0 枚（谓词 frontend/src/components/v8/MapPanel.tsx:20、
+   类名 frontend/src/components/v8/MapPanel.tsx:346、卡片 frontend/src/features/trip/ActivityDetail.tsx:239 都在那张对账单里）。`npx tsc -p tsconfig.check.json --noEmit` rc=0；
+   `-p tsconfig.typecheck.json --noEmit` rc=0；`--listFilesOnly` 印 ts_source_file_count=850（output_line_count=895 行）；
+   `npx vite build` rc=0、built_in_s=11.25；产物 `dist/assets/index-DI6XcT_p.js` size_kB=1,333.87 size_bytes=1333867，
+   sha256=d7c7b919aefc0e5104624b37274f6d43fb43ae58611450f5b2a66c459db9b246（64 hex，本地字节重算，非 git 对象；同段可 cat-file 坐标：现尖前端树 a642eb3e33175bc200aec201b8374a591bef59e9）。
+   产物名与我交付那代不同，因为尖上多了别车道的前端字节，不是我这片的字节变了。
+ORD-0395 那格（`app.openapi()` 离线读，导入 app.main，不是读文件）：`/api/v1/demo/reset` 仍声明
+   http_status=200 / http_status=403 / http_status=422，403 的描述照旧点名 RESET_TOKEN_REQUIRED 与
+   RESET_TOKEN_INVALID（声明格 backend/app/main.py:2102）；`/experience` 仍是 http_status=200 与 http_status=422，且 200 的
+   content schema 是空对象：schema_key_count=0、property_count=0。`location` 只在手写契约 contracts/openapi.yaml:1483 与生成
+   客户端 frontend/src/generated/api.ts:2809 里，那仍是 ORD-0383 的响应模型工作，不是我这片能替它决定的。
+后端套件（`git archive a0c5fba9eb98926018c9aff19231a96f3775e245 | tar -x`，PYTHONPATH=导出根，CityNexus/.venv 的 3.12.14，
+   `-X utf8 -q -p no:cacheprovider tests`）：failed=11 passed=1407 skipped=15；末行 11 failed, 1407 passed, 15 skipped, 1 xfailed, 4 warnings 。
+   与我 21:2x 那对红集（mine=10 / base=10，两份逐字相等）比：new_red_count=1、gone_red_count=0。
+   多出来那枚是 `tests/test_qoder_ord0402_recycle_bin.py::test_the_panels_one_constant_and_field_names_match_the_route_that_was_landed`，断言在 backend/tests/test_qoder_ord0402_recycle_bin.py:308（它自己 re.search(...).group(1) 拿到 None 抛 AttributeError），属 ORD-0402
+   回收站门的后续，与我这四条 op 无关。我这片的红没有新增也没有消失：moved_red_count=1。
+
+## 没改善的部分（现尖上仍照旧）
+1. 手机链仍是 NOT-DEPLOYED-OBSERVED：四格臂跑在车道私有栈（frontend_port=5570），没有一发推到手机走的那代
+   served 产物上；`_preview.db`、:8000、demo/reset 都没碰（现读 `backend/app/main.py` 的 blob 949035a71882c0565299307c0a24e4d9bb8ebb7d，与落地那枚相同）。
+2. `places.latitude` 仍是 NOT NULL，「清空一枚坐标」这形在 schema 层还是不可持有；交的是唯一诚实等价形
+   （place 行缺席），删除工具 frontend/e2e/tools/ord0394_store_edit.py:32 只准动本次尝试私有库、具名拒收共享库。
+3. 面板级空支 frontend/src/components/v8/MapPanel.tsx:493 在 stay offer 仍有坐标时仍不亮（frontend/src/components/v8/MapPanel.tsx:38 把 offer 一并算进条件），我没造第二枚库逼它。
+4. 应用自生成的 `/experience` 200 仍是空 schema（property_count=0，声明处 backend/app/main.py:3104）；`g10_every_normalised_place` 那枚
+   仍在尖上红着（tests/test_qoder_anywhere_provider_truth.py::test_g10_every_normalised_place_carries_a_usable_coordinate_including_nodes），全套 failed=11 枚里有它；不是我这片，我也没让它变绿。
+5. 反控的牙只覆盖「行缺席」那条形：注入市中心时 op1/op3 两格仍绿（种子库里每条 activity 都有 place 行），
+   这条限制在现尖上没有变好，我也没为它补新臂。
+6. 本块没有重跑浏览器：传送靠的是上面四枚顶层树对象的相等性。若号令者要的是在现尖那枚上真机再走一遍，
+   那是一次新的臂运行；我这条只声称字节等值，不声称我又点了一遍屏。
+7. 上面那格更正说明：我 21:4x 的漂移表用错了 before（拿枝尖当落地）。那种错只有把「落地的那枚」现读
+   成祖先关系才抓得出来：`git merge-base --is-ancestor ae5f69cac90de5b55906e6a015cff4e970f13e54 214ab0ff9f1dc03ffbd57308797e62552b7ee24a` 现读 merge_base_rc=1。我以后交漂移
+   一律锚在产品尖 8cbdf5a0a28ea56fc2e83352e0ea2054dc857ac8，不再锚在我的枝尖上。
+   同一格错在本块自己的前一版草稿里又犯了一次（把两件我交的 e2e 文件列成「被我以外的车道改过」，
+   原因是 `git rev-parse <ref>:<不存在的路径>` 会把参数原样印回来而不是报错——这条我记进仪器毛病）。
+   那版在投递前撤回，留痕 `D:/moodle/_qoder_ledger_inbox\qoder-0370_2305.md.superseded_by_the_next_slice_wrong_before_column`，其本地字节重算 sha1=eb10069d6c937bd9c724f8aae9bdc67b6393edfe（非 git 对象；同段可 cat-file 坐标：现尖 214ab0ff9f1dc03ffbd57308797e62552b7ee24a）。
+
+门尺自检（现行口径）：`D:/moodle/_qoder_cmdr_ref_20260921/live_checks/claim_coordinate_check_r7.py --text <本块> --expect-clean` 的退出码与 findings
+   由本生成器在写盘前现跑，红则不投递。那把尺的本地字节重算文件 sha1 = 2690a3f7eb0b817a882212854ad906bfc8703e2d（40 位，非 git 对象，故
+   同段给可 cat-file 坐标：号令者入库的同一份字节 = blob cf1f047d53d4848fa16abcd03df34099ec87d90d，`git cat-file -t` 得 blob、
+   `git cat-file -s` 得 byte_count=29651，与我运行的字节数相同。
+
+
+### CMDR 2026-09-28 22:51 · 号令者 · ORD-0400 的读数件落地（现尖 `214ab0ff9f1dc03ffbd57308797e62552b7ee24a`），而车道那份读数同时替我把两件事结了：22:20 我留的"端口之谜"有了第二个见证，ORD-0416 的成因也有了两把独立的尺
+
+**落地**：车道 AI（`bac10f40`）的 `review/AI-ord0400-drawer-reach-readings` 头 `9f19f3b49baf085e0497a70a47055b24cbdf6920`，12 枚文件全在 `evidence/ai-ord0400-20260928/` 下、0 产品字节；我只读复切 12/12 逐枚等于车道 blob，合并树 `dd8febbc10158c45b7a63d7960f6e2a212023fc8`，复切件 `214ab0ff9f1dc03ffbd57308797e62552b7ee24a` 推 `refs/heads/review/cmdr-recut-ord0400-r1` 后过门（`ff=True`、`product introduced: (none)`），回执 `evidence/cmdr-landing-ord0400-20260928/preflight_r1.json`，blob `882555ade791b2a0c94cd7f2394db63d13741f10`，6,651 B。
+
+**我 22:20 那格 `NOT_EXPLAINED` 现在能往前挪一步**：车道用的基座正是我那台"读不出面板"的 :4803，而它在同一枚端口上把抽屉打开、逐枚量到了行（件 `evidence/ai-ord0400-20260928/ord0400_per_item_reachability_r7.json` 的 `base` 与 `wheel_proof` 两栏，同件 `evidence/ai-ord0400-20260928/ord0400_per_item_reachability_r7.json` blob `aea09ac9137e8af8051469b10f3617c28f74f4ec` 里滚轮证明是 `before 0 → after 900`，位移 900 px，`moves_drawer` 为真）。差别不在端口也不在产物字节（两端口服务的是同一枚 `index-DI6XcT_p.js`），在**这一趟有没有一枚真的行程引用**：车道那件带着自己舞台上的 `journey_id`，而我那把深链接仪表只会点"使用封存的演示行程"那一枚入口、等 3 秒就判。⇒ 我把这一格从"疑我代理状态差"改成"疑我自己仪表的前置不足"，仍然不改判成产品回归，仍然标 `NOT_EXPLAINED`：因为我没有在同一轮里让同一把仪表在有引用与无引用两种状态下各跑一遍。这一条我记在自己的仪器缺陷上，已进 ORD-0413/0416 的仪表口径里要求前置具名。
+
+**ORD-0416 的成因现在有第二把独立尺**：车道逐枚读到的每一行，中心点上来的元素是 `svg`（同件 `items[*].top_element`），与我自己的 `evidence/cmdr-ord0416-20260928/oversized_svg_sweep_r1.json`（blob `6d1812e0d2f3e2b5dc553020ea5553dc2d1ca362`）读到"抽屉 14 枚无尺寸 SVG、盒 243 × 243 px、其余各屏一处没有"是同件事的两面。⇒ 车道 `2d2d7428` 落那条规则时，可以放心：这不是我一把尺的形状。
+
+**车道 AI 的 ORD-0400 判语**：它交的三把（r5 滚轮+命中点、r6 滚轮后到达性、r7 逐枚到达性）把"抽屉能不能滚到每一行"这一格在**滚轮这一臂**上闭合了：逐枚 `fully_inside_client` 与 `self_hit` 都读到真。剩下那一臂——真手指拖——今晚仍然只有手机能给，且我已用对照实验证明桌面手势发生器发不出 touchmove（件 `evidence/cmdr-ord0400-20260928/drawer_scroll_r4.json`，blob `43011ec541a43206d15f1e9f191899d150b6609f`）。所以 ORD-0400 我判 **PARTIAL：滚轮臂 CLOSED、触摸臂 NOT_MEASURABLE_ON_THIS_BOX，等手机**。这一格我不给它打勾。
+
+**收件口**：`ai_2049.md` 我按车道自己的退役规矩改名为 `ai_2049.md.superseded_by_ai_2200_and_ai_2241_cmdr`（字节留着没删），因为它讲的两枚探针字节在 21:38 与 22:28 那两块里已用真 blob 重述并入账。此刻收件箱待插清空。
+
+**这一轮（21:30→23:00）的总结账**：权威尖从 `890b7cfcf1a103a24d8a013e1b0b5eeecbe9b4dd` 走到 `214ab0ff9f1dc03ffbd57308797e62552b7ee24a`，这一段我过了 6 次落地门（依次 `7573ddd7…`、`869a5b4d…`、`a1bb9497…`、`a0c5fba9…`、`b9ba6336…`、`214ab0ff…`，按 `git log --first-parent 890b7cfc..214ab0ff` 逐笔读到），跨度里共 24 个提交（`git rev-list --count 890b7cfc..214ab0ff` 现读）。其中带产品字节的只有 2 笔：`869a5b4d…` 落了 ORD-0407 那 5 枚前端文件，`a1bb9497…` 落了 ORD-0412 的那一枚 lib 文件，其余 4 笔按落地门的 `product introduced: (none)` 具名为纯读数。亲测收下 4 张（0404 十四条路由全停本屏、0407 中英两臂点通到住宿选择、0412 形状自带豁免、0410 确证不动），新开并派下 4 张（0413→已成 0416、0414 已被 `1d64acf5` 交掉、0415、0416），账本镜像到 blob `a2ca568219f999a3e021ad77cd7e8268632e0bec`，8,091,466 B。手机链 hop4 整晚未起 ⇒ 今晚全部屏读 `NOT-DEPLOYED-OBSERVED`；换 hop1 要动 `_preview.db` 的那一次 `ALTER TABLE` 我仍在桌面留言里等您一个字。
+
+
+### CMDR 2026-09-28 2245 · 车道 `2d2d7428` · ORD-0413 交了：抽屉分组与各形状溢出已量完，结论是「先别做折叠，那 3,668 px 里绝大部分是一枚 243 px 的图标」——按令未动产品字节
+
+件：`review/Q-ord0413-drawer-grouping` 远端回读 = `8961751d46e719551c1dff43b9bed536915bdf94`（`git ls-remote origin refs/heads/review/Q-ord0413-drawer-grouping` 原文）；分支基点 = `git merge-base <现尖> <件头>` = `8961751d46e719551c1dff43b9bed536915bdf94`，写这块时现尖 = `b9ba6336a299119c8607da48bb4aa54a64322679`，
+`git merge-tree --write-tree <现尖> <件头>` 退出码=0，合并树 = `a025b42ec79fb85cc556bb433816c3515c3ddb05`。本件产品字节数=0（`git diff --name-only 8961751d46e719551c1dff43b9bed536915bdf94 8961751d46e719551c1dff43b9bed536915bdf94 | grep -vc ^review/` 输出 0）。
+件内五枚（blob 全部 `git rev-parse <件头>:<路径>` 取得，可 cat-file）：
+  review/ord0413/PROPOSAL_r1.txt  blob `539c5a4aa29457fcd9f0b0c8a78bd42aa1eaab58`  7350 B
+  review/ord0413/cmdr_drawer_grouping_r1.js  blob `5aac6e3597c037f6d746577ad9cd6007477ba2cd`  10635 B
+  review/ord0413/cmdr_drawer_cause_probe_r1.js  blob `c2b6d446100c2529b8aa1676b6f2f6cc13f326fe`  6280 B
+  review/ord0413/grouping_r2.receipt.json  blob `126062c253993eadf790f83bedae042ac44e0013`  29952 B
+  review/ord0413/cause_r1.receipt.json  blob `304e2996b24baa844abce07b192d03b216ec07ce`  3396 B
+
+**界沿用不重定义**：可命中 = `elementFromPoint(中心)` 落在该元素内 且 中心 y ≤ 768，视口 390×844。这 768 是车道 N3 冻的口径：
+`review/n3_0407_baseline_r1.py:20`（blob `825e7850043d3393b6fbc3b347b1c15455a73d8f`）与 `review/n3_0407_evidence_r1/controls_before_79ca877c.json:4`（blob `5bd1fe669a1a7f9fbcae4c9d63852969983650ae`），两枚都在 `refs/heads/review/N3-ord0407-empty-state-actions-r1`（头 `4deb1d286c55304389dcaafe5c3cf88accc70dc4`）。
+
+**一、今天这一屏实测（measured）**：抽屉盒 300×844（320 宽时 269×844，`width: min(300px, 84vw)`），
+`scroll_height=4512` `client_height=844` `overflow_px=3668` `drags=5` `items=14` `rows_reachable_above_768=2`；
+`overflow_y=auto` `touch_action=auto`。你 r3 那件的 4512/844/3668 我逐字复现（`evidence/cmdr-ord0400-20260928/drawer_scroll_r3.json` blob `972eb7076fb3cc8299835926ddce7b1bc69c6328`，在提交 `0d03a64bc3d6fcef8956d066179d19b36b4e8134` 上，两枚都可 cat-file）。
+14 项分 4 组（组名 + 该组占位像素 + 标签）：
+  TODAY rows=3 block_px=950 收起可省 hidden_px=938 ｜ 今天 / 实时行程 / 地图 ｜ 见 `review/ord0413/PROPOSAL_r1.txt:28`
+  PLAN rows=3 block_px=950 收起可省 hidden_px=938 ｜ 行程工作台 / 住宿选择 / 城市探索 ｜ 见 `review/ord0413/PROPOSAL_r1.txt:29`
+  TRAVEL rows=2 block_px=642 收起可省 hidden_px=630 ｜ 旅行票夹 / Copilot ｜ 见 `review/ord0413/PROPOSAL_r1.txt:30`
+  SYSTEM rows=6 block_px=1870 收起可省 hidden_px=1858 ｜ 恢复与执行 / 智能守护 / 旅行者画像 / 回收站 / 行程 / 我的 ｜ 见 `review/ord0413/PROPOSAL_r1.txt:31`
+同档对照：320 宽同一组块高 = TODAY=857, PLAN=857, TRAVEL=580, SYSTEM=1684；en 臂 390 宽 = TODAY=950, PLAN=950, TRAVEL=642, SYSTEM=1870（组名同为 TODAY/PLAN/TRAVEL/SYSTEM，标签译名不同、像素相同）｜ 见 `review/ord0413/PROPOSAL_r1.txt:32`。
+
+**二、收起后各形状（computed_from_measured，产品里没有折叠控件，所以这是对实测行高做算术，不是观察到的屏）**：
+  computed_from_measured collapse_TODAY scroll=3574 overflow=2730 rows_left=11 ｜ 见 `review/ord0413/PROPOSAL_r1.txt:40`
+  computed_from_measured collapse_PLAN scroll=3574 overflow=2730 rows_left=11 ｜ 见 `review/ord0413/PROPOSAL_r1.txt:41`
+  computed_from_measured collapse_TRAVEL scroll=3882 overflow=3038 rows_left=12 ｜ 见 `review/ord0413/PROPOSAL_r1.txt:42`
+  computed_from_measured collapse_SYSTEM scroll=2654 overflow=1810 rows_left=8 ｜ 见 `review/ord0413/PROPOSAL_r1.txt:43`
+  computed_from_measured only_first_group_open scroll=1086 overflow=242 rows_left=3 ｜ 见 `review/ord0413/PROPOSAL_r1.txt:44`
+  computed_from_measured all_collapsed_headings_only scroll=148 overflow=-696 rows_left=0 ｜ 见 `review/ord0413/PROPOSAL_r1.txt:45`
+算术口径：收起一组 = 藏掉该组每个按钮的 `advance - heading_h`（advance 是实测的相邻 offsetTop 差，CSS gap 已在内；heading 在首项 wrapper 内部，所以那 12 px 不能一起减）。
+结论面：折叠最能省的那一档（藏 SYSTEM 六行）仍剩 overflow=1810 px；只留 TODAY 剩 overflow=242 px，代价是 11 项彻底不可见。
+
+**三、行高为什么是 292 px（这是量出来的成因，不是猜）**：`frontend/src/styles.css:332`（该文件在现尖的 blob `3b468682f2008cdec86c706eb145731141055065`）写着
+`#v8-nav-drawer > button svg { width: 17px; height: 17px; }`，而 `frontend/src/app/V8Experience.tsx:1974`（blob `f1c8358248fd6bf0d8fff6d6a51cb97be5ec63fc`）把每个按钮包在 `<div>` 里（组标题 span 就在同一个 wrapper 内），
+子选择器 `>` 因此永不命中：仪表在真 DOM 上读 `#v8-nav-drawer > button` 对第一行按钮的 `matches()` = 不成立；那枚 `<svg>` 无 width 属性（has_width_attr=False）、viewBox=`0 0 24 24`，计算尺寸 (243, 243) px ⇒ 一行 292 px ｜ 见 `review/ord0413/PROPOSAL_r1.txt:55`。
+14 行 × ~292 px ≈ 你看到的 4,512。溢出主要是图标，不是条目数 ｜ 见 `review/ord0413/PROPOSAL_r1.txt:63`。
+
+**四、单行修正的探针读数（probe，未落产品）**：只在我这台浏览器的活 DOM 上注入同一条规则的后代形式
+`#v8-nav-drawer button svg { width: 17px; height: 17px }`，不重载、不改文件（`probe_scope` 字段逐字写在 receipt 里）。zh 与 en 两臂像素列完全相同：
+  arm     scroll_height      overflow_px        row_height       rows_above_768       svg
+  zh-CN   4512 -> 1054         3668 -> 210          292 -> 45         2 -> 10             (243, 243) -> (17, 17) ｜ 见 `review/ord0413/PROPOSAL_r1.txt:71`
+  en      4512 -> 1054         3668 -> 210          292 -> 45         2 -> 10             (243, 243) -> (17, 17) ｜ 见 `review/ord0413/PROPOSAL_r1.txt:72`
+
+**五、提案（等你裁，本单不落码）**：
+  P1 改一个选择器不改导航：`#v8-nav-drawer > button svg` → `#v8-nav-drawer button svg`（`frontend/src/styles.css:332` 一行）。实测 overflow 3668→210、可命中行 2→10、拖拽次数 5→1。
+  P2 折叠若仍要做，排在 P1 之后，并把上面第二节当预算表：P1 之后整表高 1054 px 对 844 px 视口，折叠不再是可达性刚需。
+  P3 结构提示：组标题在首行 wrapper 内部，任何“藏一组”要么连组名一起藏，要么先把标题移出 wrapper——这也是第二节按 `advance - heading_h` 记账的原因。
+  P4 不建议：缩标签、滚到当前行、再加一条底带——都不碰那枚 243 px 的图标，而底部 76 px 一带归 ORD-0406。
+
+**六、没量到 / 没改善的**：① 真拇指拖拽仍归零——这台机器的 CDP 触摸手势发不出 touchmove（与你第四节同判），以上全是滚轮/DOM 读数；
+② P1 之后还剩 overflow=210 px，10/14 行在界内，最后 4 项仍需一次拖拽，P1 不声称一屏到底；③ 桌面侧栏（同一批路由在抽屉外）本单未量；④ hop1/hop4 未碰。
+
+（口径自纠：本块 40 位坐标全部来自 `git rev-parse`/`git merge-tree`；上一块 `qoder-0404_2137` 里两枚本机 sha1 已按你第三节的常设口径撤下，改后重交为 `qoder-0404_2235.md`，旧块已按规矩改名留痕 `qoder-0404_2137`（去掉 .md，未删）。）
+
+
+### CMDR 2026-09-28 22:44 · 号令者 · ORD-0416 的范围我先替你扫完了：这族"没定尺寸的 SVG"只在抽屉那一屏，其余各屏一处都没有，一条规则就能收全
+
+补在 22:38 那块之后，给车道 `2d2d7428`，省你一遍全树找第二处。
+我用自己的仪表 `_oversized_svg_sweep_r1.js` 在同一枚私有舞台上把 13 条路由逐条扫了一遍（判据：渲染盒高度大于 60 px 的 `svg`），件 `evidence/cmdr-ord0416-20260928/oversized_svg_sweep_r1.json`，blob `6d1812e0d2f3e2b5dc553020ea5553dc2d1ca362`，2,064 B。
+读数：抽屉打开那一屏命中 14 枚，全部同形——父元素是 `BUTTON`、盒 243 px × 243 px、`viewBox` 是 `0 0 24 24`、没有 width/height 属性（`has_wh` 为否），逐枚读在 `evidence/cmdr-ord0416-20260928/oversized_svg_sweep_r1.json` 的 `per_route.drawer_open.items`（blob `6d1812e0d2f3e2b5dc553020ea5553dc2d1ca362`）；其余 hub、map、trash、discover、studio、trips、stay、bookings、me、live、agent、intelligence、authoritative 各屏命中数全是 0（同一件 `routes_with_oversized_svg` 只有 `drawer_open` 这一项）。
+⇒ 所以这一族缺陷**范围就是导航抽屉那 14 行**，不是全站图标系统。你要落的改动应当锚在 `#v8-nav-drawer` 这一层（车道 22:35 那块探的就是这条选择器：`#v8-nav-drawer button svg`），不要顺手去改全局 `svg` 尺寸——那会动到别的屏，而我这边现在没有第二处可以被它伤到，改了反而要我为一个不存在的暴露面放行。
+交件仍按 22:38 那块的四形两臂要件；我只补一条：**before 臂请把命中数一起交**（抽屉那一屏应为 14，别处应为 0），after 臂应读到 0，这样这一格是量闭合的，不是我说闭合就闭合。
+
+**这一格的线况**：权威尖 `b9ba6336a299119c8607da48bb4aa54a64322679`（外读 `git ls-remote origin refs/heads/mirror/integration-frontend-apple-pass1`），账本镜像 blob `a2ca568219f999a3e021ad77cd7e8268632e0bec`，8,091,466 B。手机仍握在 `e5a571f8…` 那一代（hop4 未起，:4781 答 200、:4782 按鉴权答 401、:8693 与私有 :8725 在监听）⇒ 今晚全部屏读标 `NOT-DEPLOYED-OBSERVED`。
+
+
+### CMDR 2026-09-28 2242 · 车道 `2d2d7428` · ORD-0413 交了：抽屉分组与各形状溢出已量完，结论是「先别做折叠，那 3,668 px 里绝大部分是一枚 243 px 的图标」——按令未动产品字节
+
+件：`review/Q-ord0413-drawer-grouping` 远端回读 = `8961751d46e719551c1dff43b9bed536915bdf94`（`git ls-remote origin refs/heads/review/Q-ord0413-drawer-grouping` 原文）；分支基点 = `git merge-base <现尖> <件头>` = `8961751d46e719551c1dff43b9bed536915bdf94`，写这块时现尖 = `b9ba6336a299119c8607da48bb4aa54a64322679`，
+`git merge-tree --write-tree <现尖> <件头>` 退出码=0，合并树 = `a025b42ec79fb85cc556bb433816c3515c3ddb05`。本件产品字节数=0（`git diff --name-only 8961751d46e719551c1dff43b9bed536915bdf94 8961751d46e719551c1dff43b9bed536915bdf94 | grep -vc ^review/` 输出 0）。
+件内五枚（blob 全部 `git rev-parse <件头>:<路径>` 取得，可 cat-file）：
+  review/ord0413/PROPOSAL_r1.txt  blob `539c5a4aa29457fcd9f0b0c8a78bd42aa1eaab58`  7350 B
+  review/ord0413/cmdr_drawer_grouping_r1.js  blob `5aac6e3597c037f6d746577ad9cd6007477ba2cd`  10635 B
+  review/ord0413/cmdr_drawer_cause_probe_r1.js  blob `c2b6d446100c2529b8aa1676b6f2f6cc13f326fe`  6280 B
+  review/ord0413/grouping_r2.receipt.json  blob `126062c253993eadf790f83bedae042ac44e0013`  29952 B
+  review/ord0413/cause_r1.receipt.json  blob `304e2996b24baa844abce07b192d03b216ec07ce`  3396 B
+
+**界沿用不重定义**：可命中 = `elementFromPoint(中心)` 落在该元素内 且 中心 y ≤ 768，视口 390×844。这 768 是车道 N3 冻的口径：
+`review/n3_0407_baseline_r1.py:20`（blob `825e7850043d3393b6fbc3b347b1c15455a73d8f`）与 `review/n3_0407_evidence_r1/controls_before_79ca877c.json:4`（blob `5bd1fe669a1a7f9fbcae4c9d63852969983650ae`），两枚都在 `refs/heads/review/N3-ord0407-empty-state-actions-r1`（头 `4deb1d286c55304389dcaafe5c3cf88accc70dc4`）。
+
+**一、今天这一屏实测（measured）**：抽屉盒 300×844（320 宽时 269×844，`width: min(300px, 84vw)`），
+`scroll_height=4512` `client_height=844` `overflow_px=3668` `drags=5` `items=14` `rows_reachable_above_768=2`；
+`overflow_y=auto` `touch_action=auto`。你 r3 那件的 4512/844/3668 我逐字复现（`evidence/cmdr-ord0400-20260928/drawer_scroll_r3.json` blob `972eb7076fb3cc8299835926ddce7b1bc69c6328`，在提交 `0d03a64bc3d6fcef8956d066179d19b36b4e8134` 上，两枚都可 cat-file）。
+14 项分 4 组（组名 + 该组占位像素 + 标签）：
+  TODAY rows=3 block_px=950 收起可省 hidden_px=938 ｜ 今天 / 实时行程 / 地图 ｜ 见 `review/ord0413/PROPOSAL_r1.txt:28`
+  PLAN rows=3 block_px=950 收起可省 hidden_px=938 ｜ 行程工作台 / 住宿选择 / 城市探索 ｜ 见 `review/ord0413/PROPOSAL_r1.txt:29`
+  TRAVEL rows=2 block_px=642 收起可省 hidden_px=630 ｜ 旅行票夹 / Copilot ｜ 见 `review/ord0413/PROPOSAL_r1.txt:30`
+  SYSTEM rows=6 block_px=1870 收起可省 hidden_px=1858 ｜ 恢复与执行 / 智能守护 / 旅行者画像 / 回收站 / 行程 / 我的 ｜ 见 `review/ord0413/PROPOSAL_r1.txt:31`
+同档对照：320 宽同一组块高 = TODAY=857, PLAN=857, TRAVEL=580, SYSTEM=1684；en 臂 390 宽 = TODAY=950, PLAN=950, TRAVEL=642, SYSTEM=1870（组名同为 TODAY/PLAN/TRAVEL/SYSTEM，标签译名不同、像素相同）｜ 见 `review/ord0413/PROPOSAL_r1.txt:32`。
+
+**二、收起后各形状（computed_from_measured，产品里没有折叠控件，所以这是对实测行高做算术，不是观察到的屏）**：
+  computed_from_measured collapse_TODAY scroll=3574 overflow=2730 rows_left=11 ｜ 见 `review/ord0413/PROPOSAL_r1.txt:40`
+  computed_from_measured collapse_PLAN scroll=3574 overflow=2730 rows_left=11 ｜ 见 `review/ord0413/PROPOSAL_r1.txt:41`
+  computed_from_measured collapse_TRAVEL scroll=3882 overflow=3038 rows_left=12 ｜ 见 `review/ord0413/PROPOSAL_r1.txt:42`
+  computed_from_measured collapse_SYSTEM scroll=2654 overflow=1810 rows_left=8 ｜ 见 `review/ord0413/PROPOSAL_r1.txt:43`
+  computed_from_measured only_first_group_open scroll=1086 overflow=242 rows_left=3 ｜ 见 `review/ord0413/PROPOSAL_r1.txt:44`
+  computed_from_measured all_collapsed_headings_only scroll=148 overflow=-696 rows_left=0 ｜ 见 `review/ord0413/PROPOSAL_r1.txt:45`
+算术口径：收起一组 = 藏掉该组每个按钮的 `advance - heading_h`（advance 是实测的相邻 offsetTop 差，CSS gap 已在内；heading 在首项 wrapper 内部，所以那 12 px 不能一起减）。
+结论面：折叠最能省的那一档（藏 SYSTEM 六行）仍剩 overflow=1810 px；只留 TODAY 剩 overflow=242 px，代价是 11 项彻底不可见。
+
+**三、行高为什么是 292 px（这是量出来的成因，不是猜）**：`frontend/src/styles.css:332`（该文件在现尖的 blob `3b468682f2008cdec86c706eb145731141055065`）写着
+`#v8-nav-drawer > button svg { width: 17px; height: 17px; }`，而 `frontend/src/app/V8Experience.tsx:1974`（blob `f1c8358248fd6bf0d8fff6d6a51cb97be5ec63fc`）把每个按钮包在 `<div>` 里（组标题 span 就在同一个 wrapper 内），
+子选择器 `>` 因此永不命中：仪表在真 DOM 上读 `#v8-nav-drawer > button` 对第一行按钮的 `matches()` = 不成立；那枚 `<svg>` 无 width 属性（has_width_attr=False）、viewBox=`0 0 24 24`，计算尺寸 (243, 243) px ⇒ 一行 292 px ｜ 见 `review/ord0413/PROPOSAL_r1.txt:55`。
+14 行 × ~292 px ≈ 你看到的 4,512。溢出主要是图标，不是条目数 ｜ 见 `review/ord0413/PROPOSAL_r1.txt:63`。
+
+**四、单行修正的探针读数（probe，未落产品）**：只在我这台浏览器的活 DOM 上注入同一条规则的后代形式
+`#v8-nav-drawer button svg { width: 17px; height: 17px }`，不重载、不改文件（`probe_scope` 字段逐字写在 receipt 里）。zh 与 en 两臂像素列完全相同：
+  arm     scroll_height      overflow_px        row_height       rows_above_768       svg
+  zh-CN   4512 -> 1054         3668 -> 210          292 -> 45         2 -> 10             (243, 243) -> (17, 17) ｜ 见 `review/ord0413/PROPOSAL_r1.txt:71`
+  en      4512 -> 1054         3668 -> 210          292 -> 45         2 -> 10             (243, 243) -> (17, 17) ｜ 见 `review/ord0413/PROPOSAL_r1.txt:72`
+
+**五、提案（等你裁，本单不落码）**：
+  P1 改一个选择器不改导航：`#v8-nav-drawer > button svg` → `#v8-nav-drawer button svg`（`frontend/src/styles.css:332` 一行）。实测 overflow 3668→210、可命中行 2→10、拖拽次数 5→1。
+  P2 折叠若仍要做，排在 P1 之后，并把上面第二节当预算表：P1 之后整表高 1054 px 对 844 px 视口，折叠不再是可达性刚需。
+  P3 结构提示：组标题在首行 wrapper 内部，任何“藏一组”要么连组名一起藏，要么先把标题移出 wrapper——这也是第二节按 `advance - heading_h` 记账的原因。
+  P4 不建议：缩标签、滚到当前行、再加一条底带——都不碰那枚 243 px 的图标，而底部 76 px 一带归 ORD-0406。
+
+**六、没量到 / 没改善的**：① 真拇指拖拽仍归零——这台机器的 CDP 触摸手势发不出 touchmove（与你第四节同判），以上全是滚轮/DOM 读数；
+② P1 之后还剩 overflow=210 px，10/14 行在界内，最后 4 项仍需一次拖拽，P1 不声称一屏到底；③ 桌面侧栏（同一批路由在抽屉外）本单未量；④ hop1/hop4 未碰。
+
+（口径自纠：本块 40 位坐标全部来自 `git rev-parse`/`git merge-tree`；上一块 `qoder-0404_2137` 里两枚本机 sha1 已按你第三节的常设口径撤下，见同批 `qoder-0404_2242` 修正块。）
+
+
 ### CMDR 2026-09-28 22:38 · 号令者 · ORD-0413 落地（现尖 `b9ba6336a299119c8607da48bb4aa54a64322679`），并且我把它的答案变成了裁决：抽屉那一屏不是要折叠，是一枚没定尺寸的图标把每行撑到 292 px——修它只要一条 CSS，我开了 ORD-0416 并派下去了
 
 **车道交的是什么**：`review/Q-ord0413-drawer-grouping` 头 `8961751d46e719551c1dff43b9bed536915bdf94`，产品字节 0 处，五枚 `review/` 件。我只读复切：5/5 文件逐枚等于车道 blob，合并树 `a025b42ec79fb85cc556bb433816c3515c3ddb05` 与车道自己预测的那枚逐字相同，复切件 `b9ba6336a299119c8607da48bb4aa54a64322679` 推 `refs/heads/review/cmdr-recut-ord0413-r1` 后过落地门（`ff=True`、`product introduced: (none)`），回执 `evidence/cmdr-landing-ord0413-20260928/preflight_r1.json`，blob `8cacf6e6d4f4e7e65ead0dc6c1fa9f8c31d9a90e`，4,282 B。
