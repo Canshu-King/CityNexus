@@ -1,0 +1,73 @@
+{
+  "instrument": "cmdr_drawer_active_follows_nav_r1",
+  "base": "http://127.0.0.1:49150/",
+  "locale": "zh",
+  "entryAssets": [
+    "/assets/index-DMJE_sMd.js"
+  ],
+  "cases": [
+    {
+      "target": "地图",
+      "rowFound": 1,
+      "hitTest": true,
+      "urlBefore": "/v8/hub",
+      "urlAfter": "/v8/map",
+      "urlChanged": true,
+      "activeRowCount": 1,
+      "activeLabel": "地图",
+      "activeSignature": "rgb(241, 243, 255) / rgb(10, 102, 255) / 750",
+      "distinctSignatures": 2,
+      "drawerClosedByNavigation": true,
+      "markerFollowedRoute": true
+    },
+    {
+      "target": "旅行票夹",
+      "rowFound": 1,
+      "hitTest": true,
+      "urlBefore": "/v8/map",
+      "urlAfter": "/v8/bookings",
+      "urlChanged": true,
+      "activeRowCount": 1,
+      "activeLabel": "旅行票夹",
+      "activeSignature": "rgb(241, 243, 255) / rgb(10, 102, 255) / 750",
+      "distinctSignatures": 2,
+      "drawerClosedByNavigation": true,
+      "markerFollowedRoute": true
+    },
+    {
+      "target": "回收站",
+      "rowFound": 1,
+      "hitTest": true,
+      "urlBefore": "/v8/bookings",
+      "urlAfter": "/v8/trash",
+      "urlChanged": true,
+      "activeRowCount": 1,
+      "activeLabel": "回收站",
+      "activeSignature": "rgb(241, 243, 255) / rgb(10, 102, 255) / 750",
+      "distinctSignatures": 2,
+      "drawerClosedByNavigation": true,
+      "markerFollowedRoute": true
+    },
+    {
+      "target": "我的",
+      "rowFound": 1,
+      "hitTest": true,
+      "urlBefore": "/v8/trash",
+      "urlAfter": "/v8/me",
+      "urlChanged": true,
+      "activeRowCount": 1,
+      "activeLabel": "我的",
+      "activeSignature": "rgb(241, 243, 255) / rgb(10, 102, 255) / 750",
+      "distinctSignatures": 2,
+      "drawerClosedByNavigation": true,
+      "markerFollowedRoute": true
+    }
+  ],
+  "summary": {
+    "targets": 4,
+    "markersFollowed": 4,
+    "pageErrors": 0,
+    "verdict": "ACTIVE_MARKER_FOLLOWS_EVERY_NAVIGATION_TESTED"
+  },
+  "pageErrors": []
+}
