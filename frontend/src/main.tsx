@@ -5,7 +5,7 @@ import { createActor } from "xstate";
 import { citynexusQueryClient } from "./lib/queryClient";
 import { formatMinorMoney } from "./lib/money";
 import { hasNonIdempotentRequestInFlight, onNonIdempotentRequestsQuiet } from "./lib/inFlightWrites";
-import { JOURNEY_ID_SEGMENT } from "./lib/journeyLink";
+import { JOURNEY_ID_SEGMENT, v8FirstSegment } from "./lib/journeyLink";
 import "./v10.css";
 import {
   CityNexusApiError,

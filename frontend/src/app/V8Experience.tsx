@@ -892,12 +892,14 @@ export function V8Experience() {
      `/v8/nosuchscreen` coming out byte-identical to `/v8/hub` -- 445 chars both -- the sentence set
      and then wiped in the same boot. A verdict about an address belongs to the address, not to
      whichever step last wrote the banner.
-     Declared before `navigate` because a chosen screen retires it: leaving "this address has no
-     screen" on screen after the traveller picked a real one would trade one stale sentence for
-     another (R14: what is on screen must belong to what just happened). */
-  const [addressNoScreen, setAddressNoScreen] = useState<string | null>(() =>
-    deepLink.kind === "unknown" ? deepLink.segment : null,
-  );
+     Derived from `route`, not from state written beside it: `navigate` runs its writes inside
+     `startViewTransition`, which defers them, so a clear-then-reassert pair written in the demo
+     door's own handler came out of React in the other order. Measured on the door path: the
+     sentence still did not mount (10 cells, `route_nosuchscreen` the only failing one, verdict
+     absent at body=445). Deriving it means the only writer is the navigation that is already
+     happening, and the sentence retires exactly when the traveller goes somewhere else. */
+  const addressNoScreen =
+    deepLink.kind === "unknown" && route === "hub" ? deepLink.segment : null;
   const navigate = (next: string) => {
     const value = next || "hub";
     withViewTransition(() => {
@@ -905,7 +907,6 @@ export function V8Experience() {
       setRoute(value);
       setNavOpen(false);
       setAlertsOpen(false);
-      if (addressNoScreen !== null) setAddressNoScreen(null);
     });
   };
   /* ORD-0209 (arbitration `5772122180`): the demo entry addresses the sealed demo journey; it does
@@ -952,11 +953,6 @@ export function V8Experience() {
          sealed-demo door has to put them where they asked, not back on Today. A journey address
          (`/v8/<uuid>`, ORD-0351) names no screen and still belongs on Today, unchanged. */
       navigate(deepLink.kind === "screen" ? deepLink.route : "hub");
-      /* The door puts us on Today for an address that names no screen, and `navigate` retired the
-         verdict on the way -- that navigation was the product detouring, not the traveller choosing.
-         Re-asserting it here is what makes the sentence readable: while the door was up the shell
-         did not render at all, so the verdict had no surface to be said from. */
-      if (deepLink.kind === "unknown") setAddressNoScreen(deepLink.segment);
     } catch (error) {
       /* ORD-0273-TEXT: the user sentence comes from an i18n key -- the raw error.message (with its
          MIME/content-type and error shapes) must not reach the main copy.
