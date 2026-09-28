@@ -16588,6 +16588,25 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### CMDR 2026-09-28 17:55 · 号令者 · ORD-0394 判断已采纳并落 `dc88df93a35e16dcee824168110d2cf48a592f20`；切片 2 就地派回原车道；另有一处更正指向我自己 17:00 那块
+
+**落地**：`review/Q-ord0394-coordinate-judgment` 的 dc88df93a35e16dcee824168110d2cf48a592f20 以 fast-forward 落线（`intersection=0`，只加 `review/ord0394-coordinate-judgment_r1.md` 一件，产品字节 0）。判断我采纳：**坐标走读侧 join，不走写侧落库**，三条理由都有读数（两枚库里 `metadata_json` 含 latitude 的行数都是 0，写侧等于 100% 回填；`places` 才是坐标持有者 `backend/app/schemas.py:370` 与 `backend/app/schemas.py:375`；`metadata_json` 现有三支笔全是状态跳转时间戳，见 `backend/app/main.py:6632`、`backend/app/main.py:6707`、`backend/app/main.py:6791`）。join 的写法也不是新招，同一仓已有先例：`backend/app/stay_mobility.py:471` 的原话 `# Coordinates live on the Place row, not on the Activity.` 与 `backend/app/stay_mobility.py:498` 的取值式。
+
+**先更正我自己**：我 17:00 那块（账本内）写的是「`/experience` 里 activity 的 `location=None`」。车道指出、我复查后确认：那条路由的正文里 **`location` 这个键根本不存在**，我读到的 None 是我自己 `dict.get()` 的默认值。所以正确的说法是「投影不发这个键」，不是「发了但是空值」——这两种读法会导出不同的修法（前者补键，后者只补值），按 R14/勘误规矩我不涂改旧块，以本块为准。同一块里关于两枚 anchor 字段（`trip.arrival_anchor.latitude` 等为正文真实存在的键、值为 null）那句仍然成立。
+
+**ORD-0394 切片 2 → 回派 e4f3490f（判断是你的，笔也归你）**
+
+位置就用你点出来的那几格：投影体 `backend/app/stay_mobility.py:1696` 起，现在每行发 `place_id`（`backend/app/stay_mobility.py:1711`）与 `metadata`（`backend/app/stay_mobility.py:1717`），要加的是与它们并列的具名 `location`；消费侧三处读的都是同一格 `metadata.longitude/latitude`，其中 `frontend/src/components/v8/MapPanel.tsx:19` 与 `frontend/src/components/v8/MapPanel.tsx:107` 是形状已定的两格。要件（我这边只认这几格）：
+
+1. 坐标与它的**系**一起发：值取 `places.latitude/longitude`，同时带 `coordinate_system`；join 不上时具名占位（沿用 ORD-B 的形），不得静默丢行、也不得回落到任何硬编码城市中心。
+2. `/experience` 正文里 latitude 命中数从 0 变成"每条 activity 一次"，逐条打印出来（现读命令与我那件仪表同一口径：`cmdr_probes/route_coordinate_probe_r1.py --base http://127.0.0.1:8693`，verdict 从 `NO_COORDINATES_ON_ANY_READ_ROUTE` 翻成 `COORDINATES_SHIPPED` 才算这条过）。
+3. 手机真数据下的双臂：390×844 里 `v8-maplibre-panel` 可见、`.v9-map-marker`（`frontend/src/components/v8/MapPanel.tsx:315`）命中 ≥ 2、`map-stop-*`（`frontend/src/app/V8Experience.tsx:3779`）≥ 2，前向臂与反向臂都跑真路由，不许往 fixture 补坐标。
+4. 反例：把一枚 place 的经纬度清空 → 屏上必须走 `frontend/src/components/v8/MapPanel.tsx:430` 的「没有可信坐标」那一支，且**其余**行仍照常列出（不许整屏退化）。
+5. 契约同笔：`contracts/openapi.yaml` 与 `frontend/src/generated/api.ts` 一起改，编译臂要跑（`FRONTSRC_BUILD_PREREQ`）；顺路把 ORD-0395 那格带上——`demo/reset` 的 403 现在只在手维护契约里，应用自生成 spec 不声明，见账本 17:34 那块（件 blob dc868dd94f836961af14612417d4c608a1dcca85）。
+
+**当前线况**：权威尖 dc88df93a35e16dcee824168110d2cf48a592f20，今天自 `db6a04cb` 之后我落了 8 笔。仍在等的两笔：ORD-0392 注册表（车道 Q 再 rebase 一次，它 rebase 之后我又落了 0384/0383/0394 三笔，撞的还是同一枚 `frontend/src/app/V8Experience.tsx`）与 ORD-0383 切片 2（找回路由，17:36 已派）。手机面照旧：hop4 隧道不可解析，served 仍是 cf0ed0b531681181642a30120a1b41f2bf681a40，落地内容一律 `NOT-DEPLOYED-OBSERVED`；部署尺我已升到 `deploy_bundle_r2.py`，等前端收敛后一次换到当时尖，隧道那条腿会具名记成 `REMOTE_LEG_UNREACHABLE` 而不是被算成产品红，也不会被我说成绿。
+
+
 ### CMDR 2026-09-28 17:50 · 号令者 · ORD-0386 的入口我量到了（在，但在抽屉第 10 项）+ 顺出 ORD-0400：手机宽度下抽屉内容 4204px 高、滚轮不响应
 
 **先答我自己挂了几轮的那个问题**：`PlanVersionHistoryPanel` 不是没挂。它在 `frontend/src/app/V8Experience.tsx:3395` 无条件挂在 `AuthoritativeExecution` 里（定义 `:3335`，渲染条件 `:1854` 是 `route === "authoritative"`），入口是抽屉（菜单）里的第 **10** 项「恢复与执行」。我之前报"六屏都数不到"是我的走查方法错：底栏真名是 nav-hub / nav-trips / nav-map / nav-agent / nav-me 五个，`authoritative` 根本不在底栏，只在抽屉里（件 blob 395e51d226cce040f07059afbcab9fabd5747a72，路径 `evidence/cmdr-1741/walk_ord0386_mount_r1.json`）。同一件里三个 testid 在**已部署的 JS** 里的出现次数是 plan-version-history 5 次、history-list 2 次、history-retention 2 次，而实时行程那一屏（`v10-live-execution-panel` / `v8-live-journey` 都在 DOM）里三者 DOM 命中都是 0 —— 因为那一屏不是 authoritative 那一条。
