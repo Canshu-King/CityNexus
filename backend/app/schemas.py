@@ -863,3 +863,66 @@ class JourneyRoleRule(BaseModel):
     role: MemberRole
     capabilities: list[JourneyCapability]
     scope_message_key: str
+# --- ORD-0437: the POI text/link import channel ---------------------------------------------
+# The parse side carries no provider field on purpose: extraction is local, so a response that
+# claimed a provider would be a lie waiting to be written.  `unsupported_forms` is the named list the
+# screen reads to say what it cannot do, which is what stops a link-only paste from failing quietly.
+
+
+class PoiImportParseRequest(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    text: str = Field(default="", max_length=20000)
+
+
+class PoiImportItem(BaseModel):
+    title: str
+    note: str | None = None
+    char_count: int
+    status: Literal["RESOLVED", "AMBIGUOUS", "UNRESOLVED"]
+    place_id: str | None = None
+    place_name: str | None = None
+    latitude: float | None = None
+    longitude: float | None = None
+    coordinate_system: str | None = None
+    matches: list[str] = Field(default_factory=list)
+    addable: bool = False
+
+
+class PoiImportParseResponse(BaseModel):
+    source_channel: Literal["LOCAL_TEXT_PARSER"]
+    forms: list[str]
+    unsupported_forms: list[str]
+    link_hosts: list[str]
+    counts: dict[str, int]
+    items: list[PoiImportItem]
+    char_count: int
+
+
+class PoiImportAddRequest(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    place_ids: list[str] = Field(min_length=1, max_length=30)
+    # A day the traveller did not choose still has to be explained, so the source of the day is a
+    # field of the write rather than a detail the panel happens to render.
+    day: str | None = Field(default=None, pattern=r"^\d{4}-\d{2}-\d{2}$")
+
+
+class PoiImportAddedActivity(BaseModel):
+    id: str
+    title: str
+    place_id: str
+    sequence_no: int
+    start_at: str
+    end_at: str
+
+
+class PoiImportAddResponse(BaseModel):
+    journey_id: str
+    plan_version_id: str
+    day: str
+    day_source: Literal["TRAVELLER_CHOSEN", "JOURNEY_FIRST_DAY"]
+    added: list[PoiImportAddedActivity]
+    # A replay of the same tap is not a second success: the places that were already on that day
+    # come back here by name, so the panel can say 已在计划里 instead of counting them again.
+    already_present: list[str] = Field(default_factory=list)
+    # Where the client must read back from before anything may say 已加入.
+    readback_path: str
