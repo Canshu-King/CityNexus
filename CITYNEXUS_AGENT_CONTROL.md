@@ -16588,6 +16588,19 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### ORD-0392 第二候选（车道 Q）· 面板挂载注册表 re-cut 到 0598e4d1，并把 ORD-0384 那条挂载收进表
+候选　　refs/heads/review/Q-ord0392-panel-registry-r2 头 dec70f25c0c16fbe124b862539f9116025457f3c；上一枚 dc8a60c17f45198b884345be3964fdec495a1d8f 原样留在原 ref，没有覆盖也没有强推。交前只读预测：对号令者点名的 0598e4d17202fd0619592a40e617c67b2108afd3 退出码 0、CONFLICT 0 条；对推送时的现尖 5b0b825ccc5951afeda5f3938744da52bbb7704f 退出码 0、CONFLICT 0 条
+撞点与号令者的预估不同　re-cut 会 ABORT 的判断成立，但真撞的不是组件而是外壳：62e1f0f3f19c1cdfb4102b06d251fb4ac503636b 这枚里 ORD-0384 的挂载被我这一枝吃进表；ORD-0387 那半（aiStateFromServer 收契约类型）在我这边逐字自动合上，签名与现尖同处同形，我没有另推一套四态
+收进来的第一条外来挂载　它不是 route 兄弟：ORD-0384 那条挂在 Today 内部、attention band 之后、分节标题之前，位置是它自己注释里写明有承重的（clear 态 band 会藏 kicker，裸「一切正常」排在待办清单下面会被读成对上面清单的否认）。塞进 routePanels 会改 DOM 位置、破掉本单唯一验收「屏不变」。所以注册表加了第四个面 hub-anchor：外壳在该锚点只留一次遍历（frontend/src/app/V8Experience.tsx:2995），条目在 frontend/src/app/v8PanelRegistry.tsx:428，那条解释位置的注释跟着条目一起搬，没留在 4 500 行文件里
+第一格·表里条目数（同一命令 count_registry_r1.py，读 git show，不碰工作树）　线 0598e4d1 上 entries=0；上一候选 dc8a60c1 上 entries=25（routePanels=14、tripsTabPanels=4、authoritativePanels=7、hubAnchorPanels=0）；本枚 entries=26（hubAnchorPanels=1），件 66481b94de4b8290b9f97405e7dfb52d7c03195b
+第二格·外壳还剩几次遍历　traversals：线 0 次、上一候选 3 次、本枚 4 次；外壳自己剩的 route 条件挂载 shell_route_ifs：14 → 0；仍直接挂载 shell_direct_panel_mounts=3 且三处全是 <MapPanel>（页壳内的局部地图markup，按本单口径不入表）；行数 shell_lines 4573 → 4495 → 4500，件 66481b94de4b8290b9f97405e7dfb52d7c03195b
+尺自己先错了一次　count_registry_r1.py 初版把一条注释里的短语和一个 route === "agent" 三元实参当成两处遗留挂载，报了 shell_route_ifs=2；改成逐行判并丢注释行后，本枚实测 shell_route_ifs=0。修的是尺，没动读数
+逐 tab 命中数（390x844，五枚真名取自 nav-${item.key} 的生成式，不是猜的）　有序非零盒 testid 数 before/after：nav-hub=32/32、nav-trips=21/21、nav-map=19/19、nav-agent=11/11、nav-me=12/12；其中 pretrip 计数：nav-hub=3/3、nav-trips=0/0、nav-map=0/0、nav-agent=0/0、nav-me=0/0（Today 上两代都是 3，说明收进表的那条照样在屏上）；视口内命中：五枚 nav 各自中心 elementFromPoint 全命中自身，nav_centre_hit_all=True；两代有序列表差 0 项，件 807a371c0abc8aa11b19d4570c7306f87e7fbc23 与 c7c00f54602a11677c574dad7eb58efd30f44ffe，仪表 3618503bedd26d09b846826181de5a64030a34af
+口径写清免得被误读　上面 testids_visible 数的是「有非零盒」的元素，不是「在视口内」的元素；视口判据只用在 nav 的中心命中那一格。两代用的是同一台车道私有后端 :8713 与同一份私有 sqlite 副本，_preview.db 从未打开、demo/reset 从未发起、:8693 与 :4781 没被指向
+门禁　本树上 tsc -p tsconfig.typecheck.json 退出码 0、vite build 退出码 0；两代各出一枚构建产物（线 index-CitejLpj.js / 本枚 index-Doj2alof.js）才做上面的对照，不是拿同一份产物自比
+没改善的部分　① 上一代的 68 屏 × 8 项仪表（screens_0392.mjs）本轮没重跑，我只重跑了五 tab × 有序 testid × 正文长度这一层，所以「13 路由 × 4 宽度」全矩阵在新代是 NOT_MEASURED；② hub 锚点目前只有一条真条目，第四个面是不是对的形状，要等第二个外来样本才知道；③ 页壳仍在自己文件里（本单验收是屏不变），所以「加面板不开外壳」只对表覆盖的四面成立
+
+
 ### CMDR 2026-09-28 18:04 · 号令者 · 两件我复跑出来的数与一条防走偏的护栏（给 ORD-0398 与 ORD-0394 的下一步）
 
 **ORD-0398**：你在 `review/ord0398_census_r1.py`（随 blob 5b0b825ccc5951afeda5f3938744da52bbb7704f 落线）里交的盘点器，我在现尖的干净导出上自己跑了一遍（`ORD0398_TREE=. python review/ord0398_census_r1.py`，原始输出 blob 3a7928b8a37b157882208d085471e83582d88e09）：rows_total=112、hand_built=28、code_not_through=24、moments=22、fmt_entries=2。分母我认。切片 2 的判据我按这个口径来：**hand_built 与 code_not_through 这两个数要下降**，同时 `reaches_text` 那批句子仍在屏上读得到——**下降不许靠删句**（把一条读数从屏上撤掉会让两个数一起变好看，而用户什么都没多得到，那我会退回）。改完请把同一条命令在新尖再跑一遍，两枚 blob 各贴一次原始输出。
