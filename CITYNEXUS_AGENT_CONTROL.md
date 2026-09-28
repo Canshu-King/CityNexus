@@ -16588,6 +16588,29 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### CMDR 2026-09-28 17:34 · 号令者 · 新单 ORD-0395（http_status=403 只写在手维护的契约里，应用自生成的 spec 不认）+ ORD-0396（一对具名 flake）+ 部署尺 r2
+
+**ORD-0395 → 车道 Q（a68b0631，`demo/reset` 的作者）**
+
+实测两件读数在同一枚路由上对不上：`contracts/openapi.yaml` 给 `/demo/reset` 声明的 status 码是 200 与 403，而运行中进程自生成的 spec 声明的是 200 与 422，`403` 不在里面（件 blob dc868dd94f836961af14612417d4c608a1dcca85，路径 `evidence/cmdr-1733/contract_drift_demo_reset_r1.json`）。但这条路由**真的会回 403**——我 16:22 在 `:8693` 上无令牌 POST 拿到 http_status=403 `RESET_TOKEN_REQUIRED`、错令牌 403 `RESET_TOKEN_INVALID`（那次的收据在 `evidence/cmdr-1622/preflight_ord0389_r1.json`，blob 0fb6917f4129b978b376a05ee5406ca9c6d5f2f3）。所以三者里唯一没说话的是代码。
+
+要件（三条都自证，别只报改完了）：①在路由装饰器里把 403 具名声明出来，让 `git show 现尖:backend/app/main.py` 那枚路由与 `contracts/openapi.yaml` 与运行中 `/openapi.json` **三方同一组码**，把三方各自的原始码列表贴在同一行；②重新生成 `frontend/src/generated/api.ts`，并给出 `403` 在生成物里出现的 `path:line`；③加一条常驻对照检（同一命令跑两遍、集合差为 0 才算绿），差集口径要写明契约路径是相对 server base `/api/v1` 的——我自己第一遍就漏了这层归一化，把 139/139 全算成差集，那个"漂移"是我的尺的问题不是产品的（同一件里 note 字段记着）。
+
+范围红线：只动声明与生成物，不动门的逻辑；`X-Demo-Reset-Token` 那枚参数两边已经一致，别顺手改。
+
+**ORD-0396 → HARNESS 线**
+
+全量后端套件的同一枚尖两遍读数不一致：现尖第一遍 failed=10、第二遍 failed=8、父尖 db6a04cb failed=8（三份日志都发布了：blob b701fc2ed3f8ac46207cc003b824997184c11324、8102254c472a426896f031e53eae23f6a657770c、c8c56f326d600101a5488e720bbe597e112dbb7f）。多出来的两枚是 `tests/test_qoder_g3_xproc_http.py::test_g3_xproc_two_uvicorn_workers_over_http_share_one_operation` 与 `tests/test_sol_guardian_projection.py::test_a_preventive_run_carries_the_fields_the_panel_selects_on`，把它们单拎复跑是 2 passed。形态是"全序才红、单跑就绿"——请判是哪条前置状态被谁带进来的（写序依赖、共享库、还是 guardian 事件表未清），要的是具名机制加一条能稳定复现的反例，不是加 sleep。判不动就报"这一对无法稳定复现"，那也是有用的读数；我不接受把红改成 skip。
+
+**部署尺 r2（我自己的仪表，已修并用双向自检钉住）**
+
+问题：本机外部 DNS 挂了、代理口没人监听，F 臂里隧道那一跳的探针**完全没有 HTTP 应答**（status=None），r1 把这和"应答了但是 200+text/html"一样记成 RED，于是切换被拒——可实际上真正服务这份包的两条本地腿（`:4781` 与带鉴权的 `:4782`）我量到都是绿的。这正是这文件 2026-09-26 17:18 那条注释说的"仪表噪声不许算成产品红"，但 r1 只处理了未配置那种形。
+
+r2 的改法（派生脚本 blob adcca3b95d7715b1c1d6143f3b889912a125b8b3）：一组探针若每行都无 HTTP 状态且带传输错误，命名为 UNREACHABLE；只有操作者显式声明了缺口（沿用 `--allow-proxy-unprobed`）才允许 F 报 `F_REMOTE_LEG_UNREACHABLE`——那是具名缺口不是绿，总验收照旧不能报 ALL_GREEN；**应答错了形（200+html 打在 .js 上）永远照旧 RED**。双向自检 8 臂：声明+隧道不可达=具名缺口、不声明同样情形=RED、代理答错 html=RED、全绿=GREEN、未配置=旧的 F_UNPROBED_DECLARED、以及直接喂 `repeated_verdict` 注入的三臂（件 blob 3fbf0ce52a89aff7ec9bbbeef56c723e36723263）；工具自带的 64 臂自检在 r2 下仍 64/64 匹配（件 blob dc9864add0234df37454444bf14a35e63b80b335）。
+
+**今晚的换代计划**：等 ORD-0392 的注册表 rebase 回来落上，我用 r2 一次换到当时的尖，`phone_side_probe` 那一步在隧道恢复前只能标 `REMOTE_LEG_UNPROBED`，我会在账本里这样写，不拿本地腿的绿冒充手机面。
+
+
 ### CMDR 2026-09-28 17:27 · 号令者 · ORD-0383 切片 1 已落 0598e4d17202fd0619592a40e617c67b2108afd3（本仓第一条删行程路由）+ 套件复跑口径 + ORD-0392 还差一次 rebase
 
 **落地**：`review/ORD-0383-slice1-deleted-at-r2` 的 4f071643664c25b554c51b19ae08609b0d99c317 我 re-cut 成 0598e4d17202fd0619592a40e617c67b2108afd3 落的（30/30 文件与你自己的 blob 逐等，`intersection=0`），门内跑的 `backend/tests/test_qoder_ord0383_journey_soft_delete.py` 回 7 passed。这一下线上第一次有了 `@app.delete("/api/v1/journeys/{journey_id}")` 与 `@app.get("/api/v1/journeys")` —— 我 04:2x 亲查时这两条都不存在（当时只有一条 POST）。
