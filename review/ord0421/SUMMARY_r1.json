@@ -56,10 +56,35 @@
    ],
    "context": "#v8-nav-drawer",
    "context_hits_max": 1,
+   "leaf": "button",
    "leaf_under_context_max": 15,
-   "leaves_not_direct_child": 15,
-   "target": "button",
-   "target_text": "今天",
+   "screens_where_context_mounted_but_rule_matched_nothing": [
+    "zh/390x844/hub+drawer",
+    "zh/390x844/live+drawer",
+    "zh/390x844/map+drawer",
+    "zh/390x844/studio+drawer",
+    "zh/390x844/stay+drawer",
+    "zh/390x844/discover+drawer",
+    "zh/390x844/bookings+drawer",
+    "zh/390x844/agent+drawer"
+   ],
+   "target_probe": {
+    "tag": "button",
+    "classes": "active",
+    "text": "今天",
+    "rect": [
+     14,
+     114,
+     271,
+     45
+    ],
+    "in_viewport": true,
+    "parent_tag": "div",
+    "parent_is_the_context": false,
+    "leaves_found": 15,
+    "leaves_not_direct_child": 15,
+    "distinct_computed_signatures": 2
+   },
    "rule_sets": {
     "display": "flex",
     "align-items": "center",
@@ -86,6 +111,20 @@
     "background": "rgb(66, 89, 216) none repeat scroll 0% 0% / auto padding-box border-box",
     "text-align": "center"
    },
+   "visual_props": [
+    "display",
+    "align-items",
+    "gap",
+    "width",
+    "padding",
+    "border",
+    "border-radius",
+    "color",
+    "background",
+    "text-align",
+    "cursor",
+    "font-size"
+   ],
    "why": "上下文在屏上（1 枚）、叶子在其内确实存在（探到 15 枚，其中 15 枚并不是它的直接子级），完整选择器仍 0 命中",
    "plain_difference": "用户会看见的差别：排版方式（display）现在实际是 block，规则写的是 flex；对齐（align-items）现在实际是 normal，规则写的是 center；间隙（gap）现在实际是 normal，规则写的是 12px。"
   },
@@ -97,10 +136,35 @@
    ],
    "context": "#v8-nav-drawer",
    "context_hits_max": 1,
+   "leaf": "button.active",
    "leaf_under_context_max": 1,
-   "leaves_not_direct_child": 1,
-   "target": "button",
-   "target_text": "今天",
+   "screens_where_context_mounted_but_rule_matched_nothing": [
+    "zh/390x844/hub+drawer",
+    "zh/390x844/live+drawer",
+    "zh/390x844/map+drawer",
+    "zh/390x844/studio+drawer",
+    "zh/390x844/stay+drawer",
+    "zh/390x844/discover+drawer",
+    "zh/390x844/bookings+drawer",
+    "zh/390x844/agent+drawer"
+   ],
+   "target_probe": {
+    "tag": "button",
+    "classes": "active",
+    "text": "今天",
+    "rect": [
+     14,
+     114,
+     271,
+     45
+    ],
+    "in_viewport": true,
+    "parent_tag": "div",
+    "parent_is_the_context": false,
+    "leaves_found": 1,
+    "leaves_not_direct_child": 1,
+    "distinct_computed_signatures": 1
+   },
    "rule_sets": {
     "color": "var(--v8-ink)",
     "background": "#f1f3ff"
@@ -109,6 +173,10 @@
     "color": "rgb(255, 255, 255)",
     "background": "rgb(66, 89, 216) none repeat scroll 0% 0% / auto padding-box border-box"
    },
+   "visual_props": [
+    "color",
+    "background"
+   ],
    "why": "上下文在屏上（1 枚）、叶子在其内确实存在（探到 1 枚，其中 1 枚并不是它的直接子级），完整选择器仍 0 命中",
    "plain_difference": "用户会看见的差别：字色（color）现在实际是 rgb(255, 255, 255)，规则写的是 var(--v8-ink)；底色（background）现在实际是 rgb(66, 89, 216) none repeat scroll 0% 0% / auto padding-box border-box，规则写的是 #f1f3ff。"
   }

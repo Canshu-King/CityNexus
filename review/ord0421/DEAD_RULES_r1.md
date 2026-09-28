@@ -1,6 +1,6 @@
 # ORD-0421 CSS 死规则普查 · 读数（0 产品字节）
 
-- 生成时间 2026-09-29T01:02:12+0800，仪表 `cmdr_css_census_r3.js`（本目录）。
+- 生成时间 2026-09-29T01:05:30+0800，仪表 `cmdr_css_census_r3.js`（本目录）。
 - 被量产物：现尖 `8a7665be2061a2f38aa2227f81c57003ca4caacb` 的 frontend 构建，浏览器实载 CSS = ["index-D_Fr6K4L.css"]。
 - 场景：{"locales": ["zh", "en"], "shapes": ["390x844", "320x653", "414x896"], "routes": ["hub", "live", "map", "studio", "stay", "discover", "bookings", "agent", "authoritative", "intelligence", "twin", "trash", "trips", "me"], "drawer_open_swept": true}，扫过 sweep 次数 = 168。
 - 规则总数 rules_parsed = 1378，去重后唯一选择器 unique_selectors = 1065。
