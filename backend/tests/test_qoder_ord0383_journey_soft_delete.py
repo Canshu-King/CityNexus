@@ -16,9 +16,13 @@ What is pinned here, and what is deliberately *not*:
 * every read is raw SQLite against the file this process actually opened (named by
   `conftest.RESOLVED_TEST_DATABASE`), with table, column and `rowid` in the assertion, because
   a value that only survived inside the request object says nothing about what was stored;
-* the two refusals are named, and they are different names: `JOURNEY_NOT_FOUND` (404) for a row
-  that does not exist, `JOURNEY_ALREADY_DELETED` (409) for the second tap on a row that does.
-  The second tap must not rewrite the first deletion moment;
+* the two refusals are named, and they are different names: `JOURNEY_NOT_FOUND` on the 404 for
+  a row that does not exist, `JOURNEY_ALREADY_DELETED` on the 409 for the second tap on a row
+  that does.  Both ride in `error.reason_code` next to the existing `error.code` family
+  (`NOT_FOUND` / `CONFLICT`), because `test_qoder_ord0272_continuation.py::test_G6...` keeps
+  this server to one failure vocabulary and mints no new `error.code` here - measured: with
+  `error("JOURNEY_NOT_FOUND", ...)` written the way the helper is usually called, that gate
+  went red on this very commit.  The second tap must not rewrite the first deletion moment;
 * `GET /api/v1/journeys` is judged by set equality against the store, not by a count I typed
   in - the suite shares one database across modules, so a hand-written total would be a number
   about whatever ran before this file, not about the filter.
@@ -287,8 +291,11 @@ def test_an_unknown_id_is_refused_by_name_and_writes_nothing() -> None:
     answer = client.delete(f"/api/v1/journeys/{missing}")
     assert answer.status_code == 404, answer.text
     body = answer.json()
-    assert body["error"]["code"] == "JOURNEY_NOT_FOUND", body
-    assert body["error"]["message_key"] == "journey.not_found", body
+    # One failure vocabulary (G6): the code is the family this server already answers with,
+    # and the specific name rides beside it in `reason_code` - ORD-0101's field for this.
+    assert body["error"]["code"] == "NOT_FOUND", body
+    assert body["error"]["reason_code"] == "JOURNEY_NOT_FOUND", body
+    assert body["error"]["message_key"] == "resource.not_found", body
     assert body["error"]["details"]["journey_id"] == missing, body
     with sqlite3.connect(_store_path()) as connection:
         rows = connection.execute(
@@ -297,7 +304,8 @@ def test_an_unknown_id_is_refused_by_name_and_writes_nothing() -> None:
     assert int(rows) == 0, rows
     print(
         f"[ord0383][refusal-404] store={_store_path()} journey_id={missing} "
-        f"status={answer.status_code} code={body['error']['code']} journeys_rows_for_id={rows}"
+        f"status={answer.status_code} code={body['error']['code']} "
+        f"reason_code={body['error']['reason_code']} journeys_rows_for_id={rows}"
     )
 
 
@@ -311,8 +319,9 @@ def test_a_second_tap_is_refused_by_another_name_and_keeps_the_first_moment() ->
     again = client.delete(f"/api/v1/journeys/{journey_id}")
     assert again.status_code == 409, again.text
     body = again.json()
-    assert body["error"]["code"] == "JOURNEY_ALREADY_DELETED", body
-    assert body["error"]["message_key"] == "journey.already_deleted", body
+    assert body["error"]["code"] == "CONFLICT", body
+    assert body["error"]["reason_code"] == "JOURNEY_ALREADY_DELETED", body
+    assert body["error"]["message_key"] == "request.conflict", body
     assert body["error"]["details"]["deleted_at"] == original, body
 
     after = _journey_row(journey_id)
@@ -330,6 +339,7 @@ def test_a_second_tap_is_refused_by_another_name_and_keeps_the_first_moment() ->
     print(
         f"[ord0383][refusal-409] store={_store_path()} journeys.id={journey_id} "
         f"rowid={after['rowid']} status={again.status_code} code={body['error']['code']} "
+        f"reason_code={body['error']['reason_code']} "
         f"deleted_at_before={original} deleted_at_after={after['deleted_at']} "
         f"audit_logs_journey_deleted_rows={audits}"
     )
