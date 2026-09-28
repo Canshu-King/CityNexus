@@ -2670,6 +2670,28 @@ components:
         attributions: {type: array, items: {type: object, additionalProperties: true}}
         event_ids: {type: array, items: {type: string, format: uuid}}
         created_event_ids: {type: array, items: {type: string, format: uuid}}
+    FeasibilityEnvelope:
+      type: object
+      description: >-
+        What this journey can still honour, recomputed on every twin read. ORD-0432: an event whose
+        severity is MAJOR or CRITICAL and whose status is still DETECTED or ACKNOWLEDGED has to
+        appear in `risk_reason_codes`, and `robust` is false while any risk code is present -- an
+        open disruption must never read as nothing-to-see. `next_commitment_buffer_min` is null when
+        no later commitment is scheduled, so the field simply does not gate that trip.
+      required: [journey_end_slack_min, budget_remaining_minor, preserved_commitment_count,
+                 degraded_providers, risk_reason_codes, robust]
+      properties:
+        next_commitment_buffer_min: {type: [integer, 'null']}
+        journey_end_slack_min: {type: integer}
+        budget_remaining_minor: {type: integer}
+        preserved_commitment_count: {type: integer}
+        degraded_providers: {type: array, items: {type: string}}
+        risk_reason_codes:
+          type: array
+          items:
+            type: string
+            enum: [PROVIDER_DEGRADED, DISRUPTION_MAJOR, DISRUPTION_CRITICAL]
+        robust: {type: boolean}
     JourneyTwin:
       type: object
       required: [journey_id, projection_status, snapshot_at]
@@ -2683,7 +2705,11 @@ components:
         upcoming_commitments:
           type: array
           items: {$ref: '#/components/schemas/Commitment'}
-        context: {type: object, additionalProperties: true}
+        context:
+          type: object
+          additionalProperties: true
+          properties:
+            feasibility_envelope: {$ref: '#/components/schemas/FeasibilityEnvelope'}
     ReplanAcceptance:
       type: object
       required: [journey, proposal, twin]
