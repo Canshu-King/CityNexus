@@ -56,9 +56,14 @@ const readSurfaces = (page: Page) =>
     };
   }, HOST);
 
-const rows: Record<string, unknown>[] = [];
 const push = (arm: string, v: Record<string, unknown>) => {
-  rows.push({ arm, ...v });
+  /* one artefact per arm, written at the moment the arm reads: Playwright spreads a file's tests
+     over workers, and a single afterAll aggregate only ever holds whichever worker wrote last --
+     it silently dropped this file's `scope-declared` arm. */
+  writeFileSync(
+    evidencePath("ord0412-scope", `reading_${arm}.json`),
+    JSON.stringify({ file: FILE, arm, scope: MAP_LABEL_SCOPE, ...v }, null, 1),
+  );
   console.log(`${FILE} :: ${arm} — ${JSON.stringify(v)}`);
 };
 
@@ -160,8 +165,6 @@ test("readable-320 — the obligation still reads at the narrowest shape", async
 });
 
 test.afterAll(() => {
-  writeFileSync(
-    evidencePath("ord0412-scope", "readings.json"),
-    JSON.stringify({ file: FILE, host: HOST, scope: MAP_LABEL_SCOPE, rows }, null, 1),
-  );
+  /* deliberately no aggregate file: each arm already wrote its own reading, and a combined one
+     would only ever carry the rows of whichever worker finished last. */
 });
