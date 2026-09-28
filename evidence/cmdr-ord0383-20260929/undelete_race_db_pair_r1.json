@@ -1,0 +1,21 @@
+{
+  "instrument": "cmdr_undelete_race_db_pair_r1",
+  "base": "http://127.0.0.1:8793",
+  "taps": 8,
+  "issued_simultaneously_via_barrier": true,
+  "wall_s": 0.066,
+  "status_counts": {
+    "409": 7,
+    "200": 1
+  },
+  "reason_counts": {
+    "JOURNEY_NOT_DELETED": 7,
+    "NONE": 1
+  },
+  "audit_rows_journey_undeleted_before": 4,
+  "audit_rows_journey_undeleted_after": 5,
+  "audit_rows_added": 1,
+  "deleted_at_before_nonnull": true,
+  "deleted_at_after": null,
+  "verdict": "SINGLE_WRITER_ONE_AUDIT_ROW"
+}
