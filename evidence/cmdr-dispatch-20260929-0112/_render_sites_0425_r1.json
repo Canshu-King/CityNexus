@@ -1,0 +1,218 @@
+{
+ "generated_by": "_render_sites_0425_r1.py",
+ "source_tree": "D:\\moodle\\_qoder_cmdr_scan_8a7665be\\frontend\\src",
+ "authoritative_sha": "8a7665be2061a2f38aa2227f81c57003ca4caacb",
+ "claimed_files": {
+  "app/V8Experience.tsx": "ORD-0419 / ORD-0420 (parallel commander)",
+  "styles.css": "ORD-0419 (parallel commander)",
+  "features/traveler-twin/TwinPanel.tsx": "ORD-0422",
+  "features/recovery/V14RecoveryTruthPanel.tsx": "ORD-0422",
+  "features/discovery/RealCityDiscoveryPanel.tsx": "ORD-0422",
+  "i18n/LocaleContext.tsx": "ORD-0420 / ORD-0422 (shared dictionary)",
+  "features/inbox/JourneyInboxWorkbench.tsx": "ORD-0423"
+ },
+ "rows": [
+  {
+   "shown": "PLANNED",
+   "screen": "authoritative",
+   "total_hits": 10,
+   "dom_putting_hits": 0,
+   "render_candidates": [],
+   "definition_hits": [],
+   "generated_hits": 3,
+   "all_files": [
+    "features/simulation/SimulationPanel.tsx",
+    "features/simulation/simulationAdapter.ts",
+    "generated/api.ts",
+    "i18n/travelerLabels.ts"
+   ]
+  },
+  {
+   "shown": "PlanVersion 1 · INITIAL",
+   "screen": "authoritative",
+   "total_hits": 0,
+   "dom_putting_hits": 0,
+   "render_candidates": [],
+   "definition_hits": [],
+   "generated_hits": 0,
+   "all_files": []
+  },
+  {
+   "shown": "NOT_CONFIGURED",
+   "screen": "intelligence",
+   "total_hits": 8,
+   "dom_putting_hits": 0,
+   "render_candidates": [],
+   "definition_hits": [],
+   "generated_hits": 2,
+   "all_files": [
+    "api/citynexus.ts",
+    "features/agent/CopilotDock.tsx",
+    "features/inbox/JourneyInboxWorkbench.tsx",
+    "features/planning/PlanWithAiSheet.tsx",
+    "features/planning/aiGenerationRun.ts",
+    "generated/api.ts"
+   ]
+  },
+  {
+   "shown": "ADVISORY",
+   "screen": "intelligence",
+   "total_hits": 11,
+   "dom_putting_hits": 3,
+   "render_candidates": [
+    {
+     "file": "app/V8Experience.tsx",
+     "line": 4421,
+     "kind": "JSX_TEXT",
+     "claimed_by": "ORD-0419 / ORD-0420 (parallel commander)",
+     "text": "<b>mode</b> <code>{policy?.mode ?? \"ADVISORY\"}</code>"
+    },
+    {
+     "file": "features/intelligence/ControlTowerPanel.tsx",
+     "line": 5,
+     "kind": "BRACE_EXPR",
+     "claimed_by": "unclaimed",
+     "text": "type Policy = { mode: \"ADVISORY\" | \"ASSISTED\" | \"AUTONOMOUS\"; version: number } | null;"
+    },
+    {
+     "file": "features/recovery/V14RecoveryTruthPanel.tsx",
+     "line": 48,
+     "kind": "BRACE_EXPR",
+     "claimed_by": "ORD-0422",
+     "text": "policy?: { mode: \"ADVISORY\" | \"ASSISTED\" | \"AUTONOMOUS\"; auto_accept_replan: boolean } | null;"
+    }
+   ],
+   "definition_hits": [
+    {
+     "file": "i18n/LocaleContext.tsx",
+     "line": 672,
+     "kind": "DEFINITION_OR_MAP",
+     "claimed_by": "ORD-0420 / ORD-0422 (shared dictionary)",
+     "text": "\"intel.advisory\": \"ADVISORY\","
+    }
+   ],
+   "generated_hits": 2,
+   "all_files": [
+    "api/citynexus.ts",
+    "app/V8Experience.tsx",
+    "features/intelligence/ControlTowerPanel.tsx",
+    "features/recovery/V14RecoveryTruthPanel.tsx",
+    "generated/api.ts",
+    "i18n/LocaleContext.tsx",
+    "main.tsx"
+   ]
+  },
+  {
+   "shown": "Asia/Shanghai",
+   "screen": "live",
+   "total_hits": 21,
+   "dom_putting_hits": 19,
+   "render_candidates": [
+    {
+     "file": "features/setup/JourneyTrialSetup.tsx",
+     "line": 110,
+     "kind": "BRACE_EXPR",
+     "claimed_by": "unclaimed",
+     "text": "\"厦门\": { country: \"CN\", timezone: \"Asia/Shanghai\", currency: \"CNY\", labelZh: \"中国\", labelEn: \"China\" },"
+    },
+    {
+     "file": "features/setup/JourneyTrialSetup.tsx",
+     "line": 111,
+     "kind": "BRACE_EXPR",
+     "claimed_by": "unclaimed",
+     "text": "xiamen: { country: \"CN\", timezone: \"Asia/Shanghai\", currency: \"CNY\", labelZh: \"中国\", labelEn: \"China\" },"
+    },
+    {
+     "file": "features/setup/JourneyTrialSetup.tsx",
+     "line": 112,
+     "kind": "BRACE_EXPR",
+     "claimed_by": "unclaimed",
+     "text": "\"北京\": { country: \"CN\", timezone: \"Asia/Shanghai\", currency: \"CNY\", labelZh: \"中国\", labelEn: \"China\" },"
+    },
+    {
+     "file": "features/setup/JourneyTrialSetup.tsx",
+     "line": 113,
+     "kind": "BRACE_EXPR",
+     "claimed_by": "unclaimed",
+     "text": "beijing: { country: \"CN\", timezone: \"Asia/Shanghai\", currency: \"CNY\", labelZh: \"中国\", labelEn: \"China\" },"
+    },
+    {
+     "file": "features/setup/JourneyTrialSetup.tsx",
+     "line": 114,
+     "kind": "BRACE_EXPR",
+     "claimed_by": "unclaimed",
+     "text": "\"上海\": { country: \"CN\", timezone: \"Asia/Shanghai\", currency: \"CNY\", labelZh: \"中国\", labelEn: \"China\" },"
+    },
+    {
+     "file": "features/setup/JourneyTrialSetup.tsx",
+     "line": 115,
+     "kind": "BRACE_EXPR",
+     "claimed_by": "unclaimed",
+     "text": "shanghai: { country: \"CN\", timezone: \"Asia/Shanghai\", currency: \"CNY\", labelZh: \"中国\", labelEn: \"China\" },"
+    },
+    {
+     "file": "features/setup/JourneyTrialSetup.tsx",
+     "line": 116,
+     "kind": "BRACE_EXPR",
+     "claimed_by": "unclaimed",
+     "text": "\"天津\": { country: \"CN\", timezone: \"Asia/Shanghai\", currency: \"CNY\", labelZh: \"中国\", labelEn: \"China\" },"
+    },
+    {
+     "file": "features/setup/JourneyTrialSetup.tsx",
+     "line": 117,
+     "kind": "BRACE_EXPR",
+     "claimed_by": "unclaimed",
+     "text": "tianjin: { country: \"CN\", timezone: \"Asia/Shanghai\", currency: \"CNY\", labelZh: \"中国\", labelEn: \"China\" },"
+    }
+   ],
+   "definition_hits": [
+    {
+     "file": "features/setup/JourneyTrialSetup.tsx",
+     "line": 321,
+     "kind": "DEFINITION_OR_MAP",
+     "claimed_by": "unclaimed",
+     "text": "\"Asia/Shanghai\": [\"中国标准时间\", \"China Standard Time\"],"
+    }
+   ],
+   "generated_hits": 0,
+   "all_files": [
+    "features/setup/JourneyTrialSetup.tsx"
+   ]
+  },
+  {
+   "shown": "place-river-cruise",
+   "screen": "bookings",
+   "total_hits": 3,
+   "dom_putting_hits": 3,
+   "render_candidates": [
+    {
+     "file": "main.tsx",
+     "line": 401,
+     "kind": "JSX_TEXT",
+     "claimed_by": "unclaimed",
+     "text": "(item) => item.place_id === \"place-river-cruise\","
+    },
+    {
+     "file": "main.tsx",
+     "line": 769,
+     "kind": "JSX_TEXT",
+     "claimed_by": "unclaimed",
+     "text": "(item) => item.place_id === \"place-river-cruise\","
+    },
+    {
+     "file": "demo/goldenScenario.ts",
+     "line": 24,
+     "kind": "JSX_TEXT",
+     "claimed_by": "unclaimed",
+     "text": "const riverCruise = plan.activities.find((item) => item.place_id === \"place-river-cruise\");"
+    }
+   ],
+   "definition_hits": [],
+   "generated_hits": 0,
+   "all_files": [
+    "demo/goldenScenario.ts",
+    "main.tsx"
+   ]
+  }
+ ]
+}
