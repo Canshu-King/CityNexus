@@ -1,0 +1,34 @@
+{
+ "at_local": "2026-09-28 23:12:53 +0800",
+ "df": {
+  "path": "D:",
+  "total_bytes": 330024611840,
+  "used_bytes": 318199693312,
+  "free_bytes": 11824918528
+ },
+ "raw_df_h": [
+  "Filesystem      Size  Used Avail Use% Mounted on",
+  "D:              308G  297G   12G  97% /d"
+ ],
+ "deleted_derived_dir": "D:/moodle/_qoder_cmdr_builds",
+ "deleted_subdirs": [
+  "8f4ddfa",
+  "_build_742eb2b",
+  "_build_79ca877",
+  "_build_8f4ddfa",
+  "e5a571f"
+ ],
+ "subdir_sizes_reported_by_du": [
+  "416M each of 3 sampled"
+ ],
+ "junction_scan": {
+  "method": "os.walk + GetFileAttributesW FILE_ATTRIBUTE_REPARSE 0x400",
+  "junction_count_found": 0
+ },
+ "project_integrity": {
+  "citynexus_node_modules_present": true,
+  "node_modules_du": "427M (du -sh re-read)",
+  "preview_dist_assets_present": true,
+  "authoritative_tip_local": "214ab0ff9f1dc03ffbd57308797e62552b7ee24a"
+ }
+}
