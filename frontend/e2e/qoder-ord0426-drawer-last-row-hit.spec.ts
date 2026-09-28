@@ -23,19 +23,21 @@ async function openDrawer(page: Page) {
   await page.waitForTimeout(1200);
 }
 
-const LAST_ROW = (document: Document) => {
-  const drawer = document.querySelector("#v8-nav-drawer");
-  const nav = document.querySelector(".v8-mobile-nav");
+const LAST_ROW = () => {
+  const doc = document;
+  const drawer = doc.querySelector("#v8-nav-drawer");
+  const nav = doc.querySelector(".v8-mobile-nav");
   const scroller = (drawer && (drawer.querySelector(".cn-onboarding__scroll")
     || drawer.querySelector("[class*=scroll]"))) || drawer;
-  const rows = Array.from((drawer || document).querySelectorAll("#v8-nav-drawer button"))
+  const rows = Array.from((drawer || doc).querySelectorAll("#v8-nav-drawer button"))
     .filter((b) => (b.textContent || "").trim());
   const last = rows[rows.length - 1] as HTMLElement | undefined;
   if (!last || !nav || !scroller) return null;
   const lb = last.getBoundingClientRect(), nb = nav.getBoundingClientRect(), sb = scroller.getBoundingClientRect();
   const mid = { x: Math.round(lb.x + lb.width / 2), y: Math.round(lb.y + lb.height / 2) };
-  const hit = document.elementFromPoint(mid.x, mid.y);
-  const cs = getComputedStyle(scroller);
+  const hit = doc.elementFromPoint(mid.x, mid.y);
+  const cs = doc.defaultView ? doc.defaultView.getComputedStyle(scroller) : null;
+  const se = scroller as HTMLElement;
   return {
     rows: rows.length,
     last_row_text: (last.textContent || "").trim().slice(0, 18),
@@ -43,11 +45,10 @@ const LAST_ROW = (document: Document) => {
     hit_line: Math.round(nb.top),
     nav_height: Math.round(nb.height),
     scroller_client_width: Math.round(sb.width),
-    client_width: document.documentElement.clientWidth,
-    scroller_padding_bottom: cs.paddingBottom,
-    scrolled: Math.round((scroller as HTMLElement).scrollTop),
-    at_end: Math.round((scroller as HTMLElement).scrollHeight - (scroller as HTMLElement).scrollTop
-      - (scroller as HTMLElement).clientHeight),
+    client_width: doc.documentElement.clientWidth,
+    scroller_padding_bottom: cs ? cs.paddingBottom : null,
+    scrolled: Math.round(se.scrollTop),
+    at_end: Math.round(se.scrollHeight - se.scrollTop - se.clientHeight),
     hit_inside: !!(hit && (hit === last || last.contains(hit))),
     hit_tag: hit ? hit.tagName.toLowerCase() : "none",
   };
