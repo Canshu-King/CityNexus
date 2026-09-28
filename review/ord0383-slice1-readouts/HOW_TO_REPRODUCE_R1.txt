@@ -90,3 +90,12 @@ a red that looks like the product and is actually the runner.
 
 Nothing in this slice opened a shared database, called `POST /api/v1/demo/reset`,
 touched the authoritative branch, or added a file under `frontend/`.
+
+== round 2 (rebase onto 1f8d7061f9edd66652c198db983722cdd237f2b7, 16:52 order) ==
+same three commands, only the tree changed:
+  collect-only:      -> REBASED_GATES_R1.txt line 2 (collected=1419, collect_exit=0)
+  the four gate files: -> REBASED_GATES_R1.txt:6 (20 passed, gates_exit=0)
+  full suite:        -> SUITE_REBASED_R1.txt:520, red names in REBASED_RED_LIST_R1.txt:1
+  the 16:52 three readings: -> old_store_probe_r1.py run twice, output in OLD_STORE_PROBE_R1.txt
+Nothing in round 2 opened a shared store or called POST /api/v1/demo/reset; the probe's own
+store is D:/moodle/_qoder_lane_ord0383_slice1/_scratch_probe/ord0383_old_store.db (printed by the run).
