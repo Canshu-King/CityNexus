@@ -1,0 +1,31 @@
+{
+ "at": "2026-09-28T12:04:07.160Z",
+ "base": "http://127.0.0.1:4796/",
+ "failure_text": "连接\n\n网络不可用\n\n这一发请求没能出去，也没有收到任何回答，所以这是网络问题。你的行程数据没有丢失，已保存的只读副本还能看。请检查网络后重试。\n\n看已保存的只读副本\n重试\n归因详情",
+ "attribution_tap": {
+  "found": 0
+ },
+ "after_attribution": {
+  "text": "连接\n\n网络不可用\n\n这一发请求没能出去，也没有收到任何回答，所以这是网络问题。你的行程数据没有丢失，已保存的只读副本还能看。请检查网络后重试。\n\n看已保存的只读副本\n重试\n归因详情",
+  "kv": []
+ },
+ "saved_copy_tap": {
+  "found": 1,
+  "box": [
+   0,
+   167,
+   390,
+   44
+  ],
+  "centre": [
+   195,
+   189
+  ],
+  "hittable": true,
+  "occluder": "BUTTON.v8-primary-button"
+ },
+ "after_saved_copy": {
+  "text": "CN\n离线 · 只读\n你未来 24 小时已保存。\n\n重试\n现在 · 活跃\nTech Art Center\n下一步 · PLANNED\nNexus River Cruise Pier\nTech Art Center\n10月10日 13:20 → 10月10日 14:40\n供应商数据最后刷新于 此快照之前。离线状态下财务操作已禁用。这台设备保存这份副本的时间：9月28日 04:41。",
+  "chars": 191
+ }
+}
