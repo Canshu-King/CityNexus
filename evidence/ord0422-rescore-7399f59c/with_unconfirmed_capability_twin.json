@@ -1,0 +1,496 @@
+{
+ "case": "with_unconfirmed_capability",
+ "route": "twin",
+ "journey": "22222222-2222-4222-8222-222222222222",
+ "ui": "http://127.0.0.1:4314",
+ "arms": [
+  {
+   "locale": "zh-CN",
+   "path": "/v8/twin",
+   "locale_read": "zh-CN",
+   "bottom_reached": true,
+   "leaf_count": 36,
+   "rows": [
+    {
+     "row": "Confirmed by traveler",
+     "key": "twin.confirmedByTraveler",
+     "keys": [
+      "twin.confirmedByTraveler"
+     ],
+     "interpolated": false,
+     "en_leaf": null,
+     "zh_leaf": true,
+     "en_texts": [
+      "Confirmed by traveler"
+     ],
+     "zh_texts": [
+      "已由旅行者确认"
+     ]
+    },
+    {
+     "row": "Stated; confirmation needed",
+     "key": "twin.statedNeedsConfirm",
+     "keys": [
+      "twin.statedNeedsConfirm"
+     ],
+     "interpolated": false,
+     "en_leaf": null,
+     "zh_leaf": true,
+     "en_texts": [
+      "Stated; confirmation needed"
+     ],
+     "zh_texts": [
+      "已声明，尚待确认"
+     ]
+    },
+    {
+     "row": "No explicit preferences",
+     "key": "twin.noExplicitPrefs",
+     "keys": [
+      "twin.noExplicitPrefs"
+     ],
+     "interpolated": false,
+     "en_leaf": null,
+     "zh_leaf": false,
+     "en_texts": [
+      "No explicit preferences"
+     ],
+     "zh_texts": [
+      "没有明确偏好"
+     ]
+    },
+    {
+     "row": "hard need(s) remain explicit and are never learned.",
+     "key": "twin.hardNeedsRemain",
+     "keys": [
+      "twin.hardNeedsRemain"
+     ],
+     "interpolated": true,
+     "en_leaf": null,
+     "zh_leaf": true,
+     "en_texts": [
+      "{n} hard need(s) remain explicit and are never learned."
+     ],
+     "zh_texts": [
+      "{n} 项硬性需求仍按明确声明保留，不会被习得。"
+     ]
+    },
+    {
+     "row": "policy unavailable · confirmation required",
+     "key": "v14.policyUnavailable",
+     "keys": [
+      "v14.policyUnavailable"
+     ],
+     "interpolated": false,
+     "en_leaf": null,
+     "zh_leaf": false,
+     "en_texts": [
+      "policy unavailable · confirmation required"
+     ],
+     "zh_texts": [
+      "策略不可读 · 需要你确认"
+     ]
+    },
+    {
+     "row": "CHANGED",
+     "key": "v14.kickerChanged",
+     "keys": [
+      "v14.kickerChanged"
+     ],
+     "interpolated": false,
+     "en_leaf": null,
+     "zh_leaf": false,
+     "en_texts": [
+      "CHANGED"
+     ],
+     "zh_texts": [
+      "已变化"
+     ]
+    },
+    {
+     "row": "PROTECTED",
+     "key": "v14.kickerProtected",
+     "keys": [
+      "v14.kickerProtected"
+     ],
+     "interpolated": false,
+     "en_leaf": null,
+     "zh_leaf": false,
+     "en_texts": [
+      "PROTECTED"
+     ],
+     "zh_texts": [
+      "受保护"
+     ]
+    },
+    {
+     "row": "Baseline evidence",
+     "key": "v14.baselineEvidence",
+     "keys": [
+      "v14.baselineEvidence"
+     ],
+     "interpolated": false,
+     "en_leaf": null,
+     "zh_leaf": false,
+     "en_texts": [
+      "Baseline evidence"
+     ],
+     "zh_texts": [
+      "基线证据"
+     ]
+    },
+    {
+     "row": "Incident evidence",
+     "key": "v14.incidentEvidence",
+     "keys": [
+      "v14.incidentEvidence"
+     ],
+     "interpolated": false,
+     "en_leaf": null,
+     "zh_leaf": false,
+     "en_texts": [
+      "Incident evidence"
+     ],
+     "zh_texts": [
+      "事发证据"
+     ]
+    },
+    {
+     "row": "Deterministic gate",
+     "key": "discovery.detGate,v14.deterministicGate",
+     "keys": [
+      "discovery.detGate",
+      "v14.deterministicGate"
+     ],
+     "interpolated": false,
+     "en_leaf": null,
+     "zh_leaf": false,
+     "en_texts": [
+      "Deterministic gate",
+      "Deterministic gate"
+     ],
+     "zh_texts": [
+      "确定性门控",
+      "确定性闸门"
+     ]
+    },
+    {
+     "row": "Delegation policy",
+     "key": "v14.delegationPolicy",
+     "keys": [
+      "v14.delegationPolicy"
+     ],
+     "interpolated": false,
+     "en_leaf": null,
+     "zh_leaf": false,
+     "en_texts": [
+      "Delegation policy"
+     ],
+     "zh_texts": [
+      "授权策略"
+     ]
+    }
+   ],
+   "leaves": [
+    "菜单",
+    "/",
+    "旅行者画像",
+    "跟随系统",
+    "EN",
+    "DE",
+    "旅行者画像 · 软上下文",
+    "有边界的个性化。",
+    "显式意图优先。学习到的证据帮助排序方案，但永远不会扩展预算、支付、承诺或自主权限。",
+    "显式",
+    "安静环境 · 全程免台阶 · 文化 · 当地饮食 · 放松节奏 · 步行时长上限 · 滨水",
+    "来自此次行程请求",
+    "直接应用于当前方案目标。",
+    "能力需求",
+    "安静环境",
+    "一般偏好",
+    "已由旅行者确认",
+    "已声明，尚待确认",
+    "全程免台阶",
+    "硬性需求",
+    "学习到的软信号",
+    "没有习得信号",
+    "✦",
+    "今天",
+    "行程",
+    "地图",
+    "Copilot",
+    "我的",
+    "来自已完成的行程结果",
+    "仅用于排序 · 随证据新鲜度过期。",
+    "习得的能力状态",
+    "2 项硬性需求仍按明确声明保留，不会被习得。",
+    "权限边界",
+    "你的偏好可改善路线或酒店排名，但不会创建预订、花费金钱或削弱已确认的预订。",
+    "可检查的溯源可用",
+    "来源不明的无障碍证据，不作为无障碍依据。"
+   ],
+   "cjk_leaves": [
+    "菜单",
+    "旅行者画像",
+    "跟随系统",
+    "旅行者画像 · 软上下文",
+    "有边界的个性化。",
+    "显式意图优先。学习到的证据帮助排序方案，但永远不会扩展预算、支付、承诺或自主权限。",
+    "显式",
+    "安静环境 · 全程免台阶 · 文化 · 当地饮食 · 放松节奏 · 步行时长上限 · 滨水",
+    "来自此次行程请求",
+    "直接应用于当前方案目标。",
+    "能力需求",
+    "安静环境",
+    "一般偏好",
+    "已由旅行者确认",
+    "已声明，尚待确认",
+    "全程免台阶",
+    "硬性需求",
+    "学习到的软信号",
+    "没有习得信号",
+    "今天",
+    "行程",
+    "地图",
+    "我的",
+    "来自已完成的行程结果",
+    "仅用于排序 · 随证据新鲜度过期。",
+    "习得的能力状态",
+    "2 项硬性需求仍按明确声明保留，不会被习得。",
+    "权限边界",
+    "你的偏好可改善路线或酒店排名，但不会创建预订、花费金钱或削弱已确认的预订。",
+    "可检查的溯源可用",
+    "来源不明的无障碍证据，不作为无障碍依据。"
+   ]
+  },
+  {
+   "locale": "en",
+   "path": "/v8/twin",
+   "locale_read": "en",
+   "bottom_reached": true,
+   "leaf_count": 36,
+   "rows": [
+    {
+     "row": "Confirmed by traveler",
+     "key": "twin.confirmedByTraveler",
+     "keys": [
+      "twin.confirmedByTraveler"
+     ],
+     "interpolated": false,
+     "en_leaf": true,
+     "zh_leaf": null,
+     "en_texts": [
+      "Confirmed by traveler"
+     ],
+     "zh_texts": [
+      "已由旅行者确认"
+     ]
+    },
+    {
+     "row": "Stated; confirmation needed",
+     "key": "twin.statedNeedsConfirm",
+     "keys": [
+      "twin.statedNeedsConfirm"
+     ],
+     "interpolated": false,
+     "en_leaf": true,
+     "zh_leaf": null,
+     "en_texts": [
+      "Stated; confirmation needed"
+     ],
+     "zh_texts": [
+      "已声明，尚待确认"
+     ]
+    },
+    {
+     "row": "No explicit preferences",
+     "key": "twin.noExplicitPrefs",
+     "keys": [
+      "twin.noExplicitPrefs"
+     ],
+     "interpolated": false,
+     "en_leaf": false,
+     "zh_leaf": null,
+     "en_texts": [
+      "No explicit preferences"
+     ],
+     "zh_texts": [
+      "没有明确偏好"
+     ]
+    },
+    {
+     "row": "hard need(s) remain explicit and are never learned.",
+     "key": "twin.hardNeedsRemain",
+     "keys": [
+      "twin.hardNeedsRemain"
+     ],
+     "interpolated": true,
+     "en_leaf": true,
+     "zh_leaf": null,
+     "en_texts": [
+      "{n} hard need(s) remain explicit and are never learned."
+     ],
+     "zh_texts": [
+      "{n} 项硬性需求仍按明确声明保留，不会被习得。"
+     ]
+    },
+    {
+     "row": "policy unavailable · confirmation required",
+     "key": "v14.policyUnavailable",
+     "keys": [
+      "v14.policyUnavailable"
+     ],
+     "interpolated": false,
+     "en_leaf": false,
+     "zh_leaf": null,
+     "en_texts": [
+      "policy unavailable · confirmation required"
+     ],
+     "zh_texts": [
+      "策略不可读 · 需要你确认"
+     ]
+    },
+    {
+     "row": "CHANGED",
+     "key": "v14.kickerChanged",
+     "keys": [
+      "v14.kickerChanged"
+     ],
+     "interpolated": false,
+     "en_leaf": false,
+     "zh_leaf": null,
+     "en_texts": [
+      "CHANGED"
+     ],
+     "zh_texts": [
+      "已变化"
+     ]
+    },
+    {
+     "row": "PROTECTED",
+     "key": "v14.kickerProtected",
+     "keys": [
+      "v14.kickerProtected"
+     ],
+     "interpolated": false,
+     "en_leaf": false,
+     "zh_leaf": null,
+     "en_texts": [
+      "PROTECTED"
+     ],
+     "zh_texts": [
+      "受保护"
+     ]
+    },
+    {
+     "row": "Baseline evidence",
+     "key": "v14.baselineEvidence",
+     "keys": [
+      "v14.baselineEvidence"
+     ],
+     "interpolated": false,
+     "en_leaf": false,
+     "zh_leaf": null,
+     "en_texts": [
+      "Baseline evidence"
+     ],
+     "zh_texts": [
+      "基线证据"
+     ]
+    },
+    {
+     "row": "Incident evidence",
+     "key": "v14.incidentEvidence",
+     "keys": [
+      "v14.incidentEvidence"
+     ],
+     "interpolated": false,
+     "en_leaf": false,
+     "zh_leaf": null,
+     "en_texts": [
+      "Incident evidence"
+     ],
+     "zh_texts": [
+      "事发证据"
+     ]
+    },
+    {
+     "row": "Deterministic gate",
+     "key": "discovery.detGate,v14.deterministicGate",
+     "keys": [
+      "discovery.detGate",
+      "v14.deterministicGate"
+     ],
+     "interpolated": false,
+     "en_leaf": false,
+     "zh_leaf": null,
+     "en_texts": [
+      "Deterministic gate",
+      "Deterministic gate"
+     ],
+     "zh_texts": [
+      "确定性门控",
+      "确定性闸门"
+     ]
+    },
+    {
+     "row": "Delegation policy",
+     "key": "v14.delegationPolicy",
+     "keys": [
+      "v14.delegationPolicy"
+     ],
+     "interpolated": false,
+     "en_leaf": false,
+     "zh_leaf": null,
+     "en_texts": [
+      "Delegation policy"
+     ],
+     "zh_texts": [
+      "授权策略"
+     ]
+    }
+   ],
+   "leaves": [
+    "Menu",
+    "/",
+    "Traveler Twin",
+    "System",
+    "中文",
+    "DE",
+    "Traveler Twin · soft context",
+    "Personalization with a boundary.",
+    "Explicit intent wins. Learned evidence helps rank a plan, but never expands budget, payment, commitment, or autonomy authority.",
+    "EXPLICIT",
+    "Quiet environment · Step-free required · culture · local food · relaxed pace · walking minutes cap · waterfront",
+    "From this Journey request",
+    "Applied directly to the current plan objective.",
+    "Capability needs",
+    "Quiet environment",
+    "Soft preference",
+    "Confirmed by traveler",
+    "Stated; confirmation needed",
+    "Step-free required",
+    "Hard need",
+    "✦",
+    "Today",
+    "Trips",
+    "Map",
+    "Copilot",
+    "Me",
+    "LEARNED_SOFT",
+    "No learned signals",
+    "From completed Journey outcomes",
+    "Ranking input only · expires with evidence freshness.",
+    "Learned capability state",
+    "2 hard need(s) remain explicit and are never learned.",
+    "Authority boundary",
+    "Your preferences can improve a route or hotel ranking. They cannot create a booking, spend money, or weaken a confirmed reservation.",
+    "Inspectable provenance available",
+    "Unknown accessibility evidence is not accessible."
+   ],
+   "cjk_leaves": [
+    "中文"
+   ]
+  }
+ ]
+}
