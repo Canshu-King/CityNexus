@@ -1,0 +1,28 @@
+{
+ "sha": "3b6c96e8a9f986672ddaa764f5f2ae69534ceff1",
+ "keys_total_en_zh": [
+  766,
+  766
+ ],
+ "en_values_with_a_V1x_token": 2,
+ "zh_values_with_a_V1x_token": 2,
+ "keys_where_both_sides_keep_the_token": 2,
+ "keys_where_en_has_it_and_zh_dropped_it": 0,
+ "kept_examples": [
+  {
+   "key": "auth.kicker",
+   "en": "V12 · plan, mobile, Edge, and twin",
+   "zh": "V12 · 方案、移动端、Edge 与画像"
+  },
+  {
+   "key": "v14.kicker",
+   "en": "V14 · REALITY CHANGED",
+   "zh": "V14 · 现实变了"
+  }
+ ],
+ "dropped_examples": [],
+ "zh_values_still_carrying_Edge": [
+  "auth.kicker",
+  "exec.picEdge"
+ ]
+}
