@@ -1,0 +1,409 @@
+{
+ "base": "http://127.0.0.1:4314",
+ "route": "twin",
+ "generated_by": "_untranslated_scan_r3.js",
+ "expect_list_size": 22,
+ "zh": {
+  "locale": "zh",
+  "entry_used": "使用封存的演示行程",
+  "reached_route": "/v8/twin",
+  "on_requested_route": true,
+  "path": "/v8/twin",
+  "locale_read": "zh",
+  "scroll_steps": 4,
+  "scrollables": 2,
+  "scroll_reached": [
+   {
+    "tag": "HTML",
+    "cls": "",
+    "max": 328,
+    "deepest_scrollTop_reached": 328,
+    "bottom_reached": true
+   },
+   {
+    "tag": "HTML",
+    "cls": "",
+    "max": 328,
+    "deepest_scrollTop_reached": 328,
+    "bottom_reached": true
+   }
+  ],
+  "leaf_count": 31,
+  "ascii_prose_count": 1,
+  "ascii_prose": [
+   {
+    "text": "Copilot",
+    "tag": "SPAN",
+    "cls": "",
+    "testid": "nav-agent",
+    "y": 816
+   }
+  ],
+  "expect": [
+   {
+    "text": "Baseline evidence",
+    "on_screen": false
+   },
+   {
+    "text": "CHANGED",
+    "on_screen": false
+   },
+   {
+    "text": "Capability needs",
+    "on_screen": false
+   },
+   {
+    "text": "Confirmed by traveler",
+    "on_screen": false
+   },
+   {
+    "text": "Delegation policy",
+    "on_screen": false
+   },
+   {
+    "text": "Deterministic gate",
+    "on_screen": false
+   },
+   {
+    "text": "Grounded adaptive recovery",
+    "on_screen": false
+   },
+   {
+    "text": "Hard accessibility needs are never inferred from behavior.",
+    "on_screen": false
+   },
+   {
+    "text": "I prefer quiet indoor culture, low walking, and rain-friendly places near my protected Journey moments.",
+    "on_screen": false
+   },
+   {
+    "text": "Incident evidence",
+    "on_screen": false
+   },
+   {
+    "text": "Learned capability state",
+    "on_screen": false
+   },
+   {
+    "text": "No explicit capability facts recorded.",
+    "on_screen": false
+   },
+   {
+    "text": "No explicit preferences",
+    "on_screen": false
+   },
+   {
+    "text": "No learned signals",
+    "on_screen": false
+   },
+   {
+    "text": "No recovery proposal is waiting on this Journey.",
+    "on_screen": false
+   },
+   {
+    "text": "PROTECTED",
+    "on_screen": false
+   },
+   {
+    "text": "Refresh recovery",
+    "on_screen": false
+   },
+   {
+    "text": "Stated; confirmation needed",
+    "on_screen": false
+   },
+   {
+    "text": "Unknown accessibility evidence is not accessible.",
+    "on_screen": false
+   },
+   {
+    "text": "V14 · REALITY CHANGED",
+    "on_screen": false
+   },
+   {
+    "text": "hard need(s) remain explicit and are never learned.",
+    "on_screen": false
+   },
+   {
+    "text": "policy unavailable · confirmation required",
+    "on_screen": false
+   }
+  ]
+ },
+ "en": {
+  "locale": "en",
+  "entry_used": "sealed demo",
+  "reached_route": "/v8/twin",
+  "on_requested_route": true,
+  "path": "/v8/twin",
+  "locale_read": "en",
+  "scroll_steps": 6,
+  "scrollables": 2,
+  "scroll_reached": [
+   {
+    "tag": "HTML",
+    "cls": "",
+    "max": 471,
+    "deepest_scrollTop_reached": 471,
+    "bottom_reached": true
+   },
+   {
+    "tag": "HTML",
+    "cls": "",
+    "max": 471,
+    "deepest_scrollTop_reached": 471,
+    "bottom_reached": true
+   }
+  ],
+  "leaf_count": 31,
+  "ascii_prose_count": 22,
+  "ascii_prose": [
+   {
+    "text": "Traveler Twin",
+    "tag": "STRONG",
+    "cls": "",
+    "testid": null,
+    "y": 25
+   },
+   {
+    "text": "System",
+    "tag": "BUTTON",
+    "cls": "v9-language",
+    "testid": "topbar-theme",
+    "y": 17
+   },
+   {
+    "text": "Traveler Twin · soft context",
+    "tag": "P",
+    "cls": "v8-kicker",
+    "testid": null,
+    "y": 93
+   },
+   {
+    "text": "Personalization with a boundary.",
+    "tag": "H1",
+    "cls": "",
+    "testid": null,
+    "y": 117
+   },
+   {
+    "text": "Explicit intent wins. Learned evidence helps rank a plan, but never expands budget, payment, commitment, or autonomy authority.",
+    "tag": "P",
+    "cls": "v8-lede",
+    "testid": null,
+    "y": 208
+   },
+   {
+    "text": "EXPLICIT",
+    "tag": "SPAN",
+    "cls": "v8-twin-label explicit",
+    "testid": null,
+    "y": 331
+   },
+   {
+    "text": "culture · local food · relaxed pace · walking minutes cap · waterfront",
+    "tag": "H2",
+    "cls": "",
+    "testid": null,
+    "y": 368
+   },
+   {
+    "text": "From this Journey request",
+    "tag": "P",
+    "cls": "",
+    "testid": null,
+    "y": 502
+   },
+   {
+    "text": "Applied directly to the current plan objective.",
+    "tag": "SMALL",
+    "cls": "",
+    "testid": null,
+    "y": 523
+   },
+   {
+    "text": "Capability needs",
+    "tag": "H3",
+    "cls": "v8-capability-heading",
+    "testid": null,
+    "y": 558
+   },
+   {
+    "text": "No explicit capability facts recorded.",
+    "tag": "P",
+    "cls": "v8-empty-note",
+    "testid": null,
+    "y": 583
+   },
+   {
+    "text": "LEARNED_SOFT",
+    "tag": "SPAN",
+    "cls": "v8-twin-label learned",
+    "testid": null,
+    "y": 671
+   },
+   {
+    "text": "No learned signals",
+    "tag": "H2",
+    "cls": "",
+    "testid": null,
+    "y": 708
+   },
+   {
+    "text": "From completed Journey outcomes",
+    "tag": "P",
+    "cls": "",
+    "testid": null,
+    "y": 747
+   },
+   {
+    "text": "Ranking input only · expires with evidence freshness.",
+    "tag": "SMALL",
+    "cls": "",
+    "testid": null,
+    "y": 768
+   },
+   {
+    "text": "Learned capability state",
+    "tag": "H3",
+    "cls": "v8-capability-heading",
+    "testid": null,
+    "y": 803
+   },
+   {
+    "text": "Hard accessibility needs are never inferred from behavior.",
+    "tag": "P",
+    "cls": "",
+    "testid": null,
+    "y": 828
+   },
+   {
+    "text": "Copilot",
+    "tag": "SPAN",
+    "cls": "",
+    "testid": "nav-agent",
+    "y": 816
+   },
+   {
+    "text": "Authority boundary",
+    "tag": "B",
+    "cls": "",
+    "testid": null,
+    "y": 528
+   },
+   {
+    "text": "Your preferences can improve a route or hotel ranking. They cannot create a booking, spend money, or weaken a confirmed reservation.",
+    "tag": "P",
+    "cls": "",
+    "testid": null,
+    "y": 559
+   },
+   {
+    "text": "Inspectable provenance available",
+    "tag": "SPAN",
+    "cls": "",
+    "testid": null,
+    "y": 628
+   },
+   {
+    "text": "Unknown accessibility evidence is not accessible.",
+    "tag": "SMALL",
+    "cls": "v8-capability-disclosure",
+    "testid": null,
+    "y": 647
+   }
+  ],
+  "expect": [
+   {
+    "text": "Baseline evidence",
+    "on_screen": false
+   },
+   {
+    "text": "CHANGED",
+    "on_screen": false
+   },
+   {
+    "text": "Capability needs",
+    "on_screen": true
+   },
+   {
+    "text": "Confirmed by traveler",
+    "on_screen": false
+   },
+   {
+    "text": "Delegation policy",
+    "on_screen": false
+   },
+   {
+    "text": "Deterministic gate",
+    "on_screen": false
+   },
+   {
+    "text": "Grounded adaptive recovery",
+    "on_screen": false
+   },
+   {
+    "text": "Hard accessibility needs are never inferred from behavior.",
+    "on_screen": true
+   },
+   {
+    "text": "I prefer quiet indoor culture, low walking, and rain-friendly places near my protected Journey moments.",
+    "on_screen": false
+   },
+   {
+    "text": "Incident evidence",
+    "on_screen": false
+   },
+   {
+    "text": "Learned capability state",
+    "on_screen": true
+   },
+   {
+    "text": "No explicit capability facts recorded.",
+    "on_screen": true
+   },
+   {
+    "text": "No explicit preferences",
+    "on_screen": false
+   },
+   {
+    "text": "No learned signals",
+    "on_screen": true
+   },
+   {
+    "text": "No recovery proposal is waiting on this Journey.",
+    "on_screen": false
+   },
+   {
+    "text": "PROTECTED",
+    "on_screen": false
+   },
+   {
+    "text": "Refresh recovery",
+    "on_screen": false
+   },
+   {
+    "text": "Stated; confirmation needed",
+    "on_screen": false
+   },
+   {
+    "text": "Unknown accessibility evidence is not accessible.",
+    "on_screen": true
+   },
+   {
+    "text": "V14 · REALITY CHANGED",
+    "on_screen": false
+   },
+   {
+    "text": "hard need(s) remain explicit and are never learned.",
+    "on_screen": false
+   },
+   {
+    "text": "policy unavailable · confirmation required",
+    "on_screen": false
+   }
+  ]
+ },
+ "arms_comparable": true,
+ "verdict": "ZH_SCREEN_CARRIES_ENGLISH_PROSE"
+}
