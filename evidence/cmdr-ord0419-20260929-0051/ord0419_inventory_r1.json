@@ -1,0 +1,302 @@
+{
+ "generated_by": "_ord0419_inventory_r1.py",
+ "authoritative_sha": "8a7665be2061a2f38aa2227f81c57003ca4caacb",
+ "source_tree": "D:\\moodle\\_qoder_cmdr_scan_8a7665be\\frontend\\src",
+ "hardcoded_prose_strings_claimed": 22,
+ "hardcoded_prose_present_at_claimed_line": 22,
+ "claims_that_failed_the_line_check": 0,
+ "failed_line_checks": [],
+ "proven_on_screen_in_zh": 11,
+ "branch_gated_not_observed": 11,
+ "expected_on_screen_but_not_seen": 0,
+ "expected_on_screen_but_not_seen_rows": [],
+ "machine_vocabulary_renders": 4,
+ "t_calls_per_file": {
+  "features/discovery/RealCityDiscoveryPanel.tsx": 59,
+  "features/recovery/V14RecoveryTruthPanel.tsx": 2,
+  "features/traveler-twin/TwinPanel.tsx": 12
+ },
+ "rows": [
+  {
+   "file": "features/traveler-twin/TwinPanel.tsx",
+   "line": 13,
+   "string": "No explicit capability facts recorded.",
+   "origin_shape": "JSX_TEXT",
+   "present_at_that_line": true,
+   "expected_route": "twin",
+   "seen_in_zh_receipt": true,
+   "receipt": "untranslated_twin_r2.json",
+   "branch_gated": false
+  },
+  {
+   "file": "features/traveler-twin/TwinPanel.tsx",
+   "line": 14,
+   "string": "Confirmed by traveler",
+   "origin_shape": "TERNARY",
+   "present_at_that_line": true,
+   "expected_route": null,
+   "seen_in_zh_receipt": null,
+   "receipt": null,
+   "branch_gated": true
+  },
+  {
+   "file": "features/traveler-twin/TwinPanel.tsx",
+   "line": 14,
+   "string": "Stated; confirmation needed",
+   "origin_shape": "TERNARY",
+   "present_at_that_line": true,
+   "expected_route": null,
+   "seen_in_zh_receipt": null,
+   "receipt": null,
+   "branch_gated": true
+  },
+  {
+   "file": "features/traveler-twin/TwinPanel.tsx",
+   "line": 24,
+   "string": "No explicit preferences",
+   "origin_shape": "TERNARY",
+   "present_at_that_line": true,
+   "expected_route": null,
+   "seen_in_zh_receipt": null,
+   "receipt": null,
+   "branch_gated": true
+  },
+  {
+   "file": "features/traveler-twin/TwinPanel.tsx",
+   "line": 24,
+   "string": "Capability needs",
+   "origin_shape": "JSX_TEXT",
+   "present_at_that_line": true,
+   "expected_route": "twin",
+   "seen_in_zh_receipt": true,
+   "receipt": "untranslated_twin_r2.json",
+   "branch_gated": false
+  },
+  {
+   "file": "features/traveler-twin/TwinPanel.tsx",
+   "line": 24,
+   "string": "No learned signals",
+   "origin_shape": "TERNARY",
+   "present_at_that_line": true,
+   "expected_route": "twin",
+   "seen_in_zh_receipt": true,
+   "receipt": "untranslated_twin_r2.json",
+   "branch_gated": false
+  },
+  {
+   "file": "features/traveler-twin/TwinPanel.tsx",
+   "line": 24,
+   "string": "Learned capability state",
+   "origin_shape": "JSX_TEXT",
+   "present_at_that_line": true,
+   "expected_route": "twin",
+   "seen_in_zh_receipt": true,
+   "receipt": "untranslated_twin_r2.json",
+   "branch_gated": false
+  },
+  {
+   "file": "features/traveler-twin/TwinPanel.tsx",
+   "line": 24,
+   "string": "hard need(s) remain explicit and are never learned.",
+   "origin_shape": "TERNARY_TEMPLATE",
+   "present_at_that_line": true,
+   "expected_route": null,
+   "seen_in_zh_receipt": null,
+   "receipt": null,
+   "branch_gated": true
+  },
+  {
+   "file": "features/traveler-twin/TwinPanel.tsx",
+   "line": 24,
+   "string": "Hard accessibility needs are never inferred from behavior.",
+   "origin_shape": "TERNARY",
+   "present_at_that_line": true,
+   "expected_route": "twin",
+   "seen_in_zh_receipt": true,
+   "receipt": "untranslated_twin_r2.json",
+   "branch_gated": false
+  },
+  {
+   "file": "features/traveler-twin/TwinPanel.tsx",
+   "line": 24,
+   "string": "Unknown accessibility evidence is not accessible.",
+   "origin_shape": "JSX_TEXT",
+   "present_at_that_line": true,
+   "expected_route": "twin",
+   "seen_in_zh_receipt": true,
+   "receipt": "untranslated_twin_r2.json",
+   "branch_gated": false
+  },
+  {
+   "file": "features/recovery/V14RecoveryTruthPanel.tsx",
+   "line": 120,
+   "string": "policy unavailable · confirmation required",
+   "origin_shape": "TERNARY",
+   "present_at_that_line": true,
+   "expected_route": null,
+   "seen_in_zh_receipt": null,
+   "receipt": null,
+   "branch_gated": true
+  },
+  {
+   "file": "features/recovery/V14RecoveryTruthPanel.tsx",
+   "line": 125,
+   "string": "V14 · REALITY CHANGED",
+   "origin_shape": "JSX_TEXT",
+   "present_at_that_line": true,
+   "expected_route": "authoritative",
+   "seen_in_zh_receipt": true,
+   "receipt": "untranslated_authoritative_r2.json",
+   "branch_gated": false
+  },
+  {
+   "file": "features/recovery/V14RecoveryTruthPanel.tsx",
+   "line": 126,
+   "string": "Grounded adaptive recovery",
+   "origin_shape": "JSX_TEXT",
+   "present_at_that_line": true,
+   "expected_route": "authoritative",
+   "seen_in_zh_receipt": true,
+   "receipt": "untranslated_authoritative_r2.json",
+   "branch_gated": false
+  },
+  {
+   "file": "features/recovery/V14RecoveryTruthPanel.tsx",
+   "line": 129,
+   "string": "Refresh recovery",
+   "origin_shape": "JSX_TEXT",
+   "present_at_that_line": true,
+   "expected_route": "authoritative",
+   "seen_in_zh_receipt": true,
+   "receipt": "untranslated_authoritative_r2.json",
+   "branch_gated": false
+  },
+  {
+   "file": "features/recovery/V14RecoveryTruthPanel.tsx",
+   "line": 132,
+   "string": "No recovery proposal is waiting on this Journey.",
+   "origin_shape": "JSX_TEXT",
+   "present_at_that_line": true,
+   "expected_route": "authoritative",
+   "seen_in_zh_receipt": true,
+   "receipt": "untranslated_authoritative_r2.json",
+   "branch_gated": false
+  },
+  {
+   "file": "features/recovery/V14RecoveryTruthPanel.tsx",
+   "line": 137,
+   "string": "CHANGED",
+   "origin_shape": "JSX_TEXT",
+   "present_at_that_line": true,
+   "expected_route": null,
+   "seen_in_zh_receipt": null,
+   "receipt": null,
+   "branch_gated": true
+  },
+  {
+   "file": "features/recovery/V14RecoveryTruthPanel.tsx",
+   "line": 144,
+   "string": "PROTECTED",
+   "origin_shape": "JSX_TEXT",
+   "present_at_that_line": true,
+   "expected_route": null,
+   "seen_in_zh_receipt": null,
+   "receipt": null,
+   "branch_gated": true
+  },
+  {
+   "file": "features/recovery/V14RecoveryTruthPanel.tsx",
+   "line": 153,
+   "string": "Baseline evidence",
+   "origin_shape": "JSX_TEXT",
+   "present_at_that_line": true,
+   "expected_route": null,
+   "seen_in_zh_receipt": null,
+   "receipt": null,
+   "branch_gated": true
+  },
+  {
+   "file": "features/recovery/V14RecoveryTruthPanel.tsx",
+   "line": 157,
+   "string": "Incident evidence",
+   "origin_shape": "JSX_TEXT",
+   "present_at_that_line": true,
+   "expected_route": null,
+   "seen_in_zh_receipt": null,
+   "receipt": null,
+   "branch_gated": true
+  },
+  {
+   "file": "features/recovery/V14RecoveryTruthPanel.tsx",
+   "line": 163,
+   "string": "Deterministic gate",
+   "origin_shape": "JSX_TEXT",
+   "present_at_that_line": true,
+   "expected_route": null,
+   "seen_in_zh_receipt": null,
+   "receipt": null,
+   "branch_gated": true
+  },
+  {
+   "file": "features/recovery/V14RecoveryTruthPanel.tsx",
+   "line": 167,
+   "string": "Delegation policy",
+   "origin_shape": "JSX_TEXT",
+   "present_at_that_line": true,
+   "expected_route": null,
+   "seen_in_zh_receipt": null,
+   "receipt": null,
+   "branch_gated": true
+  },
+  {
+   "file": "features/discovery/RealCityDiscoveryPanel.tsx",
+   "line": 110,
+   "string": "I prefer quiet indoor culture, low walking, and rain-friendly places near my protected Journey moments.",
+   "origin_shape": "DEFAULT",
+   "present_at_that_line": true,
+   "expected_route": "discover",
+   "seen_in_zh_receipt": true,
+   "receipt": "untranslated_discover_r2.json",
+   "branch_gated": false
+  }
+ ],
+ "machine_rows": [
+  {
+   "file": "features/traveler-twin/TwinPanel.tsx",
+   "line": 24,
+   "mechanism": "explicit.join(\" · \") renders raw dimension codes",
+   "example_rendered": "culture · local_food · relaxed · walking_minutes_max · waterfront",
+   "line_contains_example_fragment": true,
+   "seen_in_zh_receipt": true,
+   "receipt": "untranslated_twin_r2.json"
+  },
+  {
+   "file": "features/traveler-twin/TwinPanel.tsx",
+   "line": 9,
+   "mechanism": "capabilityLabel returns item.code verbatim",
+   "example_rendered": "walking_minutes_max",
+   "line_contains_example_fragment": true,
+   "seen_in_zh_receipt": true,
+   "receipt": "untranslated_twin_r2.json"
+  },
+  {
+   "file": "features/traveler-twin/TwinPanel.tsx",
+   "line": 14,
+   "mechanism": "{item.severity} rendered verbatim",
+   "example_rendered": "HARD",
+   "line_contains_example_fragment": true,
+   "seen_in_zh_receipt": null,
+   "receipt": null
+  },
+  {
+   "file": "features/inbox/JourneyInboxWorkbench.tsx",
+   "line": 764,
+   "mechanism": "{item.at} rendered as a raw ISO-8601 string",
+   "example_rendered": "Nexus River Cruise Pier · 2026-10-10T15:30:00+08:00",
+   "line_contains_example_fragment": true,
+   "seen_in_zh_receipt": true,
+   "receipt": "untranslated_bookings_r2.json"
+  }
+ ],
+ "verdict": "INVENTORY_CONSISTENT"
+}
