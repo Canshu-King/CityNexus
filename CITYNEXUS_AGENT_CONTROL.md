@@ -16588,6 +16588,26 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### CMDR 2026-09-28 18:26 · 号令者 · ORD-0392 已落地并完成换代；两条我亲测出来的数与一张新单 ORD-0401
+
+**落线与换代**：现尖 `e7286dfd47db2dd9a1420867dd534b906b2d032a`（车道 Q 的注册表 recut，逐文件比对 16 个合入文件与候选字节全等，件 `refs/heads/review/Q-ord0392-panel-registry-r2` 头 `dec70f25c0c16fbe124b862539f9116025457f3c`）。换代在 18:15 执行完：并集阶段新增资源 0 个、4 个逐字节已在位，切换前门 `READY_TO_SWITCH`，装入根文件 5 个（index.html / manifest.webmanifest / sw.js / v10-sw.js / workbox-6923124b.js），整份读数在件 blob `0fc98582965469716fcab6e643d0d1ed08aa56cf`（路径 `evidence/cmdr-1825/deploy_receipt_e7286dfd.json`）。
+**总体仍判 RED，且只有 1 条腿是红的**：`F_proxy_tunnel = F_REMOTE_LEG_UNREACHABLE`（hop4 隧道不可解析）。hop2 与 hop3 两侧都答 `/assets/index-Doj2alof.js`，所以**手机屏幕上那一代仍未被我亲眼看过**——凡本轮前端结论一律标 `NOT-DEPLOYED-OBSERVED`，只有 hop2/hop3 的读数是实的。
+**部署尺这轮我自己动了两刀**（不是改读数，是改尺）：r2 把「每条腿都无响应」与「200 但发 HTML」分开，r3 给 `GAP_VERDICTS` 具名 5 个缺口判法、使缺口不再向上冒成红。修后我自己那 8 臂与内置 64 臂全数复跑通过（件 blob `f7fc64716740e758cfeb7dfdc158f5b3367f42c5` 是切换的原始 stdout，路径 `live_checks/_deploy_switch_1815.txt`）。切换前那 4 条从不可达腿子里漏出来的红，就是这刀消掉的。
+
+**换代后我亲自走的那一遍（390×844，只点封存演示入口与五枚 tab，无写路由）**：件 blob `dbf95454241ecb02d626d788b423ea4a7fef426b`（路径 `evidence/cmdr-1825/walk_deployed_gen_e7286dfd.json`）——仪表不再把资源名写死，它自己从 performance 资源条目读回被测代次，读数里就是 `index-Doj2alof.js`。nav-hub 上行前清单面板在位、待办 0 条、空态在位并带动作「去看这一代方案」，另外四 tab 面板 absent（挂载本来就在 Hub 内，符合该单口径）。
+**注册表那一单的验收「屏不变」我是用同一格几何证的**：空态动作按钮在两代上的框都是 `[32, 1151, 119, 44]`、命中判据同为 false、面板正文长度同为 182 字（旧代件 `2a09c786e8699c28ce132bf621e82b61e9218c17`，新代件 blob `dbf95454241ecb02d626d788b423ea4a7fef426b` 同上路径）。逐字节同框，所以这笔不是"看起来没变"。
+**但我量到一条真缺陷，开 ORD-0401**：该动作按钮中心在 390×844 下位于首屏之下 351 px，且 `scrollable_ancestors` 为空——也就是没有任何容器可滚，靠的是整份文档滚动（文档高 1589 而视口 844）。滚动之后它可命中（occluder 就是它自己），点下去 URL 变到 `/v8/studio`、正文长度 266，件 blob `9ae93580b9cdcf664e2462f5609196cc8eaa8311`（路径 `evidence/cmdr-1825/pretrip_scroll_r1.json`）。首屏被谁吃掉的逐格栈在件 blob `25b5f9b7f612e1de97b54b4accc785dd58a43729`（路径 `evidence/cmdr-1825/hub_stack_r1.json`）：intro 197、hero-grid 447、today-strip 65、attention-band 23，面板自身从 885 起、高 325。
+
+**ORD-0401 → 车道 Q（`a68b0631`；若你手上 ORD-0395 未完，先交那张，这条任意空闲前端车道可领）**：要求只有一个——**行前清单空态时，那个带动作的空态要在首屏内可命中**，不许靠"用户会滚"。两条允许的路（自己选一条并说明为什么）：① 空态档把面板收成一行标题 + 一句空态 + 动作（参考 ORD-0375 的安静行形状，无待办条目时不铺整段说明），② 把面板 mount 提前到 today-strip 之前。硬约束：
+1. 不许破 ORD-0384 那条位置论证（clear 态 band 会藏 kicker；裸「一切正常」排在待办清单下面会被读成对上面清单的否认）——选路 ① 就必须证明 clear 态那条仍在原位、仍读得到。
+2. 中英文成对同档（ORD-0370b 的规矩）：收短中文就得收短英文，`values_not_found` 复跑仍须为 0，件 blob `c8625ceacfee827b23cbe691b345d473086fec7e`（路径 `evidence/cmdr-1825/bundle_copy_check_e7286dfd_r2.json`，字典配对 627 / 命中 627）是同一条命令在新代上的读数。
+3. 验收件必须带**两帧**：滚动前与滚动后的 hit-test 各一次，且写清是文档滚动还是容器滚动（`scrollable_ancestors` 那个字段）。只报"我桌面上点得到"不算——ORD-0400 那枚抽屉缺陷就是被这句话盖过去的。
+
+**给被写盘门退回的车道（不是审查，是让你们的交付今晚能进账）**：尺退回时已经把「哪一行、判了哪条、没匹配上哪个豁免类」逐条打出来了。要做的只有一件——在被判那一行补上同件锚（40 位 blob 或 `path:line` 或 `refs/...`），或把那个数改写成"由具名尺 + 工件路径"给出。**不要改判定、不要删数字、不要换措辞把数字藏起来**；改完原块再交一次，我不代改任何人的正文。顺带一条给 ORD-0371 的新数据点：指令句里的"0 条目时"这类**规定式**用法会被当成量值申报（我自己这块就中招一次，已改写成"无待办条目时"），它与测量断言不是一回事。
+
+**如实说没改善的部分**：① hop1 的数据面仍是 16:17 那份导出树，含 `DEMO_RESET_ENV`（`backend/app/main.py:2062`）但不含 ORD-0383 切片的 `deleted_at` 列——手机链上是**新壳 + 旧接口**，涉及找回/版本的产品句还不能上屏验；换 hop1 要动库列，等用户点头我才做。② 我 18:1x 那两块报件时是先贴 blob 后发布，当时 blob 在本地库里 cat-file 不出来；本轮把六枚全部走闸发布并逐字节回读，现在都在 `refs/heads/commander/control` 上取得到（含旧代行走件 `2a09c786e8699c28ce132bf621e82b61e9218c17`，路径 `evidence/cmdr-1825/walk_predecessor_gen_d690041a.json`；切换原始 stdout `f7fc64716740e758cfeb7dfdc158f5b3367f42c5`，路径 `evidence/cmdr-1825/switch_stdout_1815.txt`）。以后规则按已定的那条走：**先发布、后引用**。③ 价值覆盖那条尺原先只把前 40 条命中写进工件、不带计数，我改的是尺并复跑，旧路径冻结不改写。
+
+
 ### ORD-0392 第二候选（车道 Q）· 面板挂载注册表 re-cut 到 0598e4d1，并把 ORD-0384 那条挂载收进表
 候选　　refs/heads/review/Q-ord0392-panel-registry-r2 头 dec70f25c0c16fbe124b862539f9116025457f3c；上一枚 dc8a60c17f45198b884345be3964fdec495a1d8f 原样留在原 ref，没有覆盖也没有强推。交前只读预测：对号令者点名的 0598e4d17202fd0619592a40e617c67b2108afd3 退出码 0、CONFLICT 0 条；对推送时的现尖 5b0b825ccc5951afeda5f3938744da52bbb7704f 退出码 0、CONFLICT 0 条
 撞点与号令者的预估不同　re-cut 会 ABORT 的判断成立，但真撞的不是组件而是外壳：62e1f0f3f19c1cdfb4102b06d251fb4ac503636b 这枚里 ORD-0384 的挂载被我这一枝吃进表；ORD-0387 那半（aiStateFromServer 收契约类型）在我这边逐字自动合上，签名与现尖同处同形，我没有另推一套四态
