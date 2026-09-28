@@ -1,0 +1,100 @@
+UNTRANSLATED-COPY AGGREGATE  (r2, UTF-8 file output)
+screens covered (14): agent, authoritative, bookings, discover, hub, intelligence, live, map, me, stay, studio, trash, trips, twin
+raw leaf rows 661 | distinct strings 67
+
+== DEFECT CANDIDATES: English PROSE still rendered in the zh arm (15 distinct) ==
+  [UNCLEAR] tag=B,BUTTON,H2,SPAN,STRONG zh_screens=authoritative,hub,live,map,trips
+      'Tech Art Center'   (rule: no rule matched)
+  [UNCLEAR] tag=B,BUTTON,H2,H3,SPAN,STRONG zh_screens=authoritative,live,map,trips
+      'Nexus River Cruise Pier'   (rule: no rule matched)
+  [UNCLEAR] tag=B,BUTTON,SPAN zh_screens=authoritative,map,trips
+      'Central Food Hall'   (rule: no rule matched)
+  [UNCLEAR] tag=B,BUTTON,SPAN zh_screens=authoritative,map,trips
+      'Old Town Gate'   (rule: no rule matched)
+  [UNCLEAR] tag=B,BUTTON,SPAN zh_screens=authoritative,map,trips
+      'Skyline Dinner House'   (rule: no rule matched)
+  [UNCLEAR] tag=STRONG zh_screens=hub
+      '15:30 Nexus River Cruise Pier'   (rule: no rule matched)
+  [PROSE] tag=H3 zh_screens=twin
+      'Capability needs'   (rule: sentence shape (verb/article/terminal period))
+  [UNCLEAR] tag=H2 zh_screens=authoritative
+      'Grounded adaptive recovery'   (rule: no rule matched)
+  [PROSE] tag=P zh_screens=twin
+      'Hard accessibility needs are never inferred from behavior.'   (rule: sentence shape (verb/article/terminal period))
+  [PROSE] tag=TEXTAREA zh_screens=discover
+      'I prefer quiet indoor culture, low walking, and rain-friendly places near my protected Journey moments.'   (rule: sentence shape (verb/article/terminal period))
+  [UNCLEAR] tag=H3 zh_screens=twin
+      'Learned capability state'   (rule: no rule matched)
+  [PROSE] tag=P zh_screens=twin
+      'No explicit capability facts recorded.'   (rule: sentence shape (verb/article/terminal period))
+  [PROSE] tag=H2 zh_screens=twin
+      'No learned signals'   (rule: sentence shape (verb/article/terminal period))
+  [PROSE] tag=P zh_screens=authoritative
+      'No recovery proposal is waiting on this Journey.'   (rule: sentence shape (verb/article/terminal period))
+  [PROSE] tag=SMALL zh_screens=twin
+      'Unknown accessibility evidence is not accessible.'   (rule: sentence shape (verb/article/terminal period))
+
+== NOT A DEFECT (brand / data / id / locale switcher) ==
+  [BRAND] zh=14 en=0  'CityNexus Copilot'  (rule: exact brand word)
+  [BRAND] zh=14 en=0  'Copilot'  (rule: exact brand word)
+  [BRAND] zh=1 en=0  'CN / AI'  (rule: exact brand word)
+  [DATA_TAGS] zh=1 en=0  'culture · local_food · relaxed · walking_minutes_max · waterfront'  (rule: middle-dot separated tag list)
+  [DATA_TAGS] zh=1 en=0  'PlanVersion 1 · INITIAL'  (rule: middle-dot separated tag list)
+  [DATA_TAGS] zh=1 en=0  'V14 · REALITY CHANGED'  (rule: middle-dot separated tag list)
+  [DATA_TAGS] zh=1 en=0  'Nexus River Cruise Pier · 2026-10-10T15:30:00+08:00'  (rule: middle-dot separated tag list)
+  [ID_LIKE] zh=1 en=0  'place-river-cruise'  (rule: kebab-case token)
+  [ID_LIKE] zh=0 en=14  'not-asked'  (rule: kebab-case token)
+  [PROSE] zh=0 en=14  'Three steps. Pick a destination, tell us how you like to travel, and let CityNexus handle the rest.'  (rule: sentence shape (verb/article/terminal period))
+  [PROSE] zh=0 en=14  'Supported: the server names it and holds material'  (rule: sentence shape (verb/article/terminal period))
+  [PROSE] zh=0 en=14  'No name landed in this group this round.'  (rule: sentence shape (verb/article/terminal period))
+  [PROSE] zh=0 en=14  'Needs a network lookup: nothing the server consults names it'  (rule: sentence shape (verb/article/terminal period))
+  [PROSE] zh=0 en=14  'Unknown or empty: no plannable verdict came back this round'  (rule: sentence shape (verb/article/terminal period))
+  [PROSE] zh=0 en=14  'identity not read yet'  (rule: sentence shape (verb/article/terminal period))
+  [PROSE] zh=0 en=14  'the server has not been asked yet'  (rule: sentence shape (verb/article/terminal period))
+  [PROSE] zh=0 en=14  'Depart from'  (rule: sentence shape (verb/article/terminal period))
+  [PROSE] zh=0 en=14  'Use the sealed demo trip'  (rule: sentence shape (verb/article/terminal period))
+  [SHORT_LABEL_OR_DATA] zh=3 en=0  'Riverside Museum'  (rule: 1-2 words, no sentence verb)
+  [SHORT_LABEL_OR_DATA] zh=1 en=0  'PLANNED'  (rule: 1-2 words, no sentence verb)
+  [SHORT_LABEL_OR_DATA] zh=1 en=0  'Refresh recovery'  (rule: 1-2 words, no sentence verb)
+  [SHORT_LABEL_OR_DATA] zh=1 en=0  'Journey Memory'  (rule: 1-2 words, no sentence verb)
+  [SHORT_LABEL_OR_DATA] zh=1 en=0  'NOT_CONFIGURED'  (rule: 1-2 words, no sentence verb)
+  [SHORT_LABEL_OR_DATA] zh=1 en=0  'ADVISORY'  (rule: 1-2 words, no sentence verb)
+  [SHORT_LABEL_OR_DATA] zh=1 en=0  'Asia/Shanghai'  (rule: 1-2 words, no sentence verb)
+  [SHORT_LABEL_OR_DATA] zh=0 en=14  'Destination'  (rule: 1-2 words, no sentence verb)
+  [SHORT_LABEL_OR_DATA] zh=0 en=14  'NO_CANONICAL_IDENTITY'  (rule: 1-2 words, no sentence verb)
+  [SHORT_LABEL_OR_DATA] zh=0 en=14  'Xiamen'  (rule: 1-2 words, no sentence verb)
+  [SHORT_LABEL_OR_DATA] zh=0 en=14  'Beijing'  (rule: 1-2 words, no sentence verb)
+  [SHORT_LABEL_OR_DATA] zh=0 en=14  'Shanghai'  (rule: 1-2 words, no sentence verb)
+  [SHORT_LABEL_OR_DATA] zh=0 en=14  'Tianjin'  (rule: 1-2 words, no sentence verb)
+  [SHORT_LABEL_OR_DATA] zh=0 en=14  'Arrive at'  (rule: 1-2 words, no sentence verb)
+  [SHORT_LABEL_OR_DATA] zh=0 en=14  'Arrival time'  (rule: 1-2 words, no sentence verb)
+  [SHORT_LABEL_OR_DATA] zh=0 en=14  'Departure time'  (rule: 1-2 words, no sentence verb)
+  [SHORT_LABEL_OR_DATA] zh=0 en=14  'Advanced settings'  (rule: 1-2 words, no sentence verb)
+  [SHORT_LABEL_OR_DATA] zh=0 en=14  'Country/region code'  (rule: 1-2 words, no sentence verb)
+  [SHORT_LABEL_OR_DATA] zh=0 en=14  'Time zone'  (rule: 1-2 words, no sentence verb)
+  [SHORT_LABEL_OR_DATA] zh=0 en=14  'Currency'  (rule: 1-2 words, no sentence verb)
+  [SHORT_LABEL_OR_DATA] zh=0 en=14  'the destination'  (rule: 1-2 words, no sentence verb)
+  [SHORT_LABEL_OR_DATA] zh=0 en=14  'Fuzhou'  (rule: 1-2 words, no sentence verb)
+  [SHORT_LABEL_OR_DATA] zh=0 en=14  'Guangzhou'  (rule: 1-2 words, no sentence verb)
+  [SHORT_LABEL_OR_DATA] zh=0 en=14  'Shenzhen'  (rule: 1-2 words, no sentence verb)
+  [SHORT_LABEL_OR_DATA] zh=0 en=14  'Chengdu'  (rule: 1-2 words, no sentence verb)
+  [SHORT_LABEL_OR_DATA] zh=0 en=14  'Hangzhou'  (rule: 1-2 words, no sentence verb)
+  [UNCLEAR] zh=0 en=14  'Try CityNexus with your own city'  (rule: no rule matched)
+  [UNCLEAR] zh=0 en=14  'Create a trip'  (rule: no rule matched)
+  [UNCLEAR] zh=0 en=14  'Destination & dates'  (rule: no rule matched)
+  [UNCLEAR] zh=0 en=14  'Travellers & preferences'  (rule: no rule matched)
+  [UNCLEAR] zh=0 en=14  'Review & create'  (rule: no rule matched)
+  [UNCLEAR] zh=0 en=14  'See supported destinations'  (rule: no rule matched)
+  [UNCLEAR] zh=0 en=14  'where you arrive'  (rule: no rule matched)
+  [UNCLEAR] zh=0 en=14  'where you leave'  (rule: no rule matched)
+
+== zh prose-leaf counts per screen ==
+  authoritative    14
+  twin             12
+  map              6
+  trips            5
+  hub              2
+  live             2
+  discover         1
+
+VERDICT ZH_SCREENS_CARRY_ENGLISH_PROSE
