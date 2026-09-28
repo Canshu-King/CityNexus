@@ -1,0 +1,1004 @@
+{
+ "ui": "http://127.0.0.1:4314",
+ "api_origin": "http://127.0.0.1:8734",
+ "demo_journey": "22222222-2222-4222-8222-222222222222",
+ "api_attempts": [
+  {
+   "door": "POST /api/v1/travelers/{id}/capabilities/confirm",
+   "status": 200,
+   "severities_sent": [
+    "HARD confirmed=true",
+    "SOFT confirmed=false"
+   ],
+   "confirmed_flags_returned": [
+    {
+     "code": "QUIET_ENVIRONMENT",
+     "severity": "SOFT",
+     "confirmed": true
+    },
+    {
+     "code": "STEP_FREE_REQUIRED",
+     "severity": "HARD",
+     "confirmed": true
+    }
+   ],
+   "conclusion": "both capability doors are /confirm, so no public door leaves a capability unconfirmed -- the `Stated; confirmation needed` half of TwinPanel.tsx:14 has no reachable state on this server"
+  },
+  {
+   "door": "POST /api/v1/journeys/{id}/replans",
+   "event_status": 201,
+   "status": 422,
+   "server_answer": {
+    "error": {
+     "code": "VALIDATION_ERROR",
+     "message": "MOBILITY_DATA_UNAVAILABLE",
+     "message_key": "request.invalid",
+     "trace_id": "23d78a66-fd6b-485f-90db-83e776c14f35",
+     "details": {
+      "gaps": [
+       {
+        "from_place_id": "place-food-hall",
+        "to_place_id": "place-river-cruise",
+        "reason_code": "MOBILITY_EVIDENCE_NOT_HARD_ELIGIBLE",
+        "evidence_state": "FACT_PRESENT_BUT_NOT_HARD_ELIGIBLE",
+        "fact_quality": "SYNTHETIC_DEFAULT"
+       }
+      ],
+      "gaps_total": 1,
+      "legs_required": 1,
+      "reason_codes": [
+       "MOBILITY_EVIDENCE_NOT_HARD_ELIGIBLE"
+      ]
+     },
+     "reason_code": "MOBILITY_EVIDENCE_NOT_HARD_ELIGIBLE",
+     "error_receipt_id": "CNX-X9E5K4KD"
+    }
+   },
+   "conclusion": "the deterministic replan refuses with its own named gap, so no PRESENTED proposal can be produced for this journey on this data -- the six proposal-gated V14 rows stay NOT_REACHED"
+  }
+ ],
+ "readings": [
+  {
+   "label": "twin_demo",
+   "route": "twin",
+   "locale": "zh-CN",
+   "journey": "22222222-2222-4222-8222-222222222222",
+   "path": "/v8/twin",
+   "bottom_reached": true,
+   "leaf_count": 36,
+   "checks": [
+    {
+     "text": "No explicit capability facts recorded.",
+     "exact": false,
+     "substring": false
+    },
+    {
+     "text": "没有记录到明确的能力事实。",
+     "exact": false,
+     "substring": false
+    },
+    {
+     "text": "Confirmed by traveler",
+     "exact": false,
+     "substring": false
+    },
+    {
+     "text": "已由旅行者确认",
+     "exact": true,
+     "substring": true
+    },
+    {
+     "text": "Stated; confirmation needed",
+     "exact": false,
+     "substring": false
+    },
+    {
+     "text": "已声明，尚待确认",
+     "exact": false,
+     "substring": false
+    },
+    {
+     "text": "No explicit preferences",
+     "exact": false,
+     "substring": false
+    },
+    {
+     "text": "没有明确偏好",
+     "exact": false,
+     "substring": false
+    },
+    {
+     "text": "Capability needs",
+     "exact": false,
+     "substring": false
+    },
+    {
+     "text": "能力需求",
+     "exact": true,
+     "substring": true
+    },
+    {
+     "text": "No learned signals",
+     "exact": false,
+     "substring": false
+    },
+    {
+     "text": "没有习得信号",
+     "exact": true,
+     "substring": true
+    },
+    {
+     "text": "Learned capability state",
+     "exact": false,
+     "substring": false
+    },
+    {
+     "text": "习得的能力状态",
+     "exact": true,
+     "substring": true
+    },
+    {
+     "text": "hard need(s) remain explicit and are never learned.",
+     "exact": false,
+     "substring": false
+    },
+    {
+     "text": "Hard accessibility needs are never inferred from behavior.",
+     "exact": false,
+     "substring": false
+    },
+    {
+     "text": "无障碍硬性需求不会从行为里推断出来。",
+     "exact": false,
+     "substring": false
+    },
+    {
+     "text": "Unknown accessibility evidence is not accessible.",
+     "exact": false,
+     "substring": false
+    },
+    {
+     "text": "来源不明的无障碍证据，不作为无障碍依据。",
+     "exact": true,
+     "substring": true
+    },
+    {
+     "text": "已由旅行者确认",
+     "exact": true,
+     "substring": true
+    },
+    {
+     "text": "全程免台阶",
+     "exact": true,
+     "substring": true
+    },
+    {
+     "text": "安静环境",
+     "exact": true,
+     "substring": true
+    },
+    {
+     "text": "Step-free required",
+     "exact": false,
+     "substring": false
+    },
+    {
+     "text": "Quiet environment",
+     "exact": false,
+     "substring": false
+    },
+    {
+     "text": "1 项硬性需求仍按明确声明保留，不会被习得。",
+     "exact": true,
+     "substring": true
+    },
+    {
+     "text": "1 hard need(s) remain explicit and are never learned.",
+     "exact": false,
+     "substring": false
+    }
+   ],
+   "leaves": [
+    "菜单",
+    "/",
+    "旅行者画像",
+    "跟随系统",
+    "EN",
+    "DE",
+    "旅行者画像 · 软上下文",
+    "有边界的个性化。",
+    "显式意图优先。学习到的证据帮助排序方案，但永远不会扩展预算、支付、承诺或自主权限。",
+    "显式",
+    "安静环境 · 全程免台阶 · 文化 · 当地饮食 · 放松节奏 · 步行时长上限 · 滨水",
+    "来自此次行程请求",
+    "直接应用于当前方案目标。",
+    "能力需求",
+    "安静环境",
+    "一般偏好",
+    "已由旅行者确认",
+    "全程免台阶",
+    "硬性需求",
+    "学习到的软信号",
+    "没有习得信号",
+    "来自已完成的行程结果",
+    "仅用于排序 · 随证据新鲜度过期。",
+    "习得的能力状态",
+    "1 项硬性需求仍按明确声明保留，不会被习得。",
+    "✦",
+    "CityNexus Copilot",
+    "今天",
+    "行程",
+    "地图",
+    "Copilot",
+    "我的",
+    "权限边界",
+    "你的偏好可改善路线或酒店排名，但不会创建预订、花费金钱或削弱已确认的预订。",
+    "可检查的溯源可用",
+    "来源不明的无障碍证据，不作为无障碍依据。"
+   ]
+  },
+  {
+   "label": "twin_demo",
+   "route": "twin",
+   "locale": "en",
+   "journey": "22222222-2222-4222-8222-222222222222",
+   "path": "/v8/twin",
+   "bottom_reached": true,
+   "leaf_count": 35,
+   "checks": [
+    {
+     "text": "No explicit capability facts recorded.",
+     "exact": false,
+     "substring": false
+    },
+    {
+     "text": "没有记录到明确的能力事实。",
+     "exact": false,
+     "substring": false
+    },
+    {
+     "text": "Confirmed by traveler",
+     "exact": true,
+     "substring": true
+    },
+    {
+     "text": "已由旅行者确认",
+     "exact": false,
+     "substring": false
+    },
+    {
+     "text": "Stated; confirmation needed",
+     "exact": false,
+     "substring": false
+    },
+    {
+     "text": "已声明，尚待确认",
+     "exact": false,
+     "substring": false
+    },
+    {
+     "text": "No explicit preferences",
+     "exact": false,
+     "substring": false
+    },
+    {
+     "text": "没有明确偏好",
+     "exact": false,
+     "substring": false
+    },
+    {
+     "text": "Capability needs",
+     "exact": true,
+     "substring": true
+    },
+    {
+     "text": "能力需求",
+     "exact": false,
+     "substring": false
+    },
+    {
+     "text": "No learned signals",
+     "exact": true,
+     "substring": true
+    },
+    {
+     "text": "没有习得信号",
+     "exact": false,
+     "substring": false
+    },
+    {
+     "text": "Learned capability state",
+     "exact": true,
+     "substring": true
+    },
+    {
+     "text": "习得的能力状态",
+     "exact": false,
+     "substring": false
+    },
+    {
+     "text": "hard need(s) remain explicit and are never learned.",
+     "exact": false,
+     "substring": true
+    },
+    {
+     "text": "Hard accessibility needs are never inferred from behavior.",
+     "exact": false,
+     "substring": false
+    },
+    {
+     "text": "无障碍硬性需求不会从行为里推断出来。",
+     "exact": false,
+     "substring": false
+    },
+    {
+     "text": "Unknown accessibility evidence is not accessible.",
+     "exact": true,
+     "substring": true
+    },
+    {
+     "text": "来源不明的无障碍证据，不作为无障碍依据。",
+     "exact": false,
+     "substring": false
+    },
+    {
+     "text": "已由旅行者确认",
+     "exact": false,
+     "substring": false
+    },
+    {
+     "text": "全程免台阶",
+     "exact": false,
+     "substring": false
+    },
+    {
+     "text": "安静环境",
+     "exact": false,
+     "substring": false
+    },
+    {
+     "text": "Step-free required",
+     "exact": true,
+     "substring": true
+    },
+    {
+     "text": "Quiet environment",
+     "exact": true,
+     "substring": true
+    },
+    {
+     "text": "1 项硬性需求仍按明确声明保留，不会被习得。",
+     "exact": false,
+     "substring": false
+    },
+    {
+     "text": "1 hard need(s) remain explicit and are never learned.",
+     "exact": true,
+     "substring": true
+    }
+   ],
+   "leaves": [
+    "Menu",
+    "/",
+    "Traveler Twin",
+    "System",
+    "中文",
+    "DE",
+    "Traveler Twin · soft context",
+    "Personalization with a boundary.",
+    "Explicit intent wins. Learned evidence helps rank a plan, but never expands budget, payment, commitment, or autonomy authority.",
+    "EXPLICIT",
+    "Quiet environment · Step-free required · culture · local food · relaxed pace · walking minutes cap · waterfront",
+    "From this Journey request",
+    "Applied directly to the current plan objective.",
+    "Capability needs",
+    "Quiet environment",
+    "Soft preference",
+    "Confirmed by traveler",
+    "Step-free required",
+    "Hard need",
+    "LEARNED_SOFT",
+    "✦",
+    "Today",
+    "Trips",
+    "Map",
+    "Copilot",
+    "Me",
+    "No learned signals",
+    "From completed Journey outcomes",
+    "Ranking input only · expires with evidence freshness.",
+    "Learned capability state",
+    "1 hard need(s) remain explicit and are never learned.",
+    "Authority boundary",
+    "Your preferences can improve a route or hotel ranking. They cannot create a booking, spend money, or weaken a confirmed reservation.",
+    "Inspectable provenance available",
+    "Unknown accessibility evidence is not accessible."
+   ]
+  },
+  {
+   "label": "authoritative_demo",
+   "route": "authoritative",
+   "locale": "zh-CN",
+   "journey": "22222222-2222-4222-8222-222222222222",
+   "path": "/v8/authoritative",
+   "bottom_reached": true,
+   "leaf_count": 62,
+   "checks": [
+    {
+     "text": "policy unavailable · confirmation required",
+     "exact": false,
+     "substring": false
+    },
+    {
+     "text": "策略不可读 · 需要你确认",
+     "exact": false,
+     "substring": false
+    },
+    {
+     "text": "V14 · REALITY CHANGED",
+     "exact": false,
+     "substring": false
+    },
+    {
+     "text": "V14 · 现实变了",
+     "exact": true,
+     "substring": true
+    },
+    {
+     "text": "Grounded adaptive recovery",
+     "exact": false,
+     "substring": false
+    },
+    {
+     "text": "有据可依的自适应恢复",
+     "exact": true,
+     "substring": true
+    },
+    {
+     "text": "Refresh recovery",
+     "exact": false,
+     "substring": false
+    },
+    {
+     "text": "重新读取恢复方案",
+     "exact": true,
+     "substring": true
+    },
+    {
+     "text": "No recovery proposal is waiting on this Journey.",
+     "exact": false,
+     "substring": false
+    },
+    {
+     "text": "这趟行程没有等待你决定的恢复方案。",
+     "exact": true,
+     "substring": true
+    },
+    {
+     "text": "CHANGED",
+     "exact": false,
+     "substring": false
+    },
+    {
+     "text": "已变化",
+     "exact": false,
+     "substring": false
+    },
+    {
+     "text": "PROTECTED",
+     "exact": false,
+     "substring": false
+    },
+    {
+     "text": "受保护",
+     "exact": false,
+     "substring": true
+    },
+    {
+     "text": "Baseline evidence",
+     "exact": false,
+     "substring": false
+    },
+    {
+     "text": "基线证据",
+     "exact": false,
+     "substring": false
+    },
+    {
+     "text": "Incident evidence",
+     "exact": false,
+     "substring": false
+    },
+    {
+     "text": "事发证据",
+     "exact": false,
+     "substring": false
+    },
+    {
+     "text": "Deterministic gate",
+     "exact": false,
+     "substring": false
+    },
+    {
+     "text": "确定性闸门",
+     "exact": false,
+     "substring": false
+    },
+    {
+     "text": "Delegation policy",
+     "exact": false,
+     "substring": false
+    },
+    {
+     "text": "授权策略",
+     "exact": false,
+     "substring": false
+    }
+   ],
+   "leaves": [
+    "菜单",
+    "/",
+    "恢复与执行",
+    "跟随系统",
+    "EN",
+    "DE",
+    "V12 · 方案、移动端、Edge 与画像",
+    "权威行程执行。",
+    "你选定的方案是今天、地图、离线使用和所有建议变更的唯一事实来源。",
+    "刷新真相",
+    "这趟行程的方案版本",
+    "服务器上还留着的每一份版本，按写入先后排。这一屏只读。",
+    "共列出 1 份版本",
+    "这台服务器没有设保留上限：目前这趟共有 1 份版本，这里全部列出。写新版本不会丢掉旧的。",
+    "版本 1",
+    "首次生成",
+    "9月28日 04:41",
+    "没有父版本",
+    "行程正在跑这一份",
+    "这里故意不做还原。回到旧版本会替换你正在执行的方案，所以它不是一张列表上的一下点击。",
+    "zh",
+    "权威行程",
+    "从方案到边缘的单一真相",
+    "Tech Art Center",
+    "活跃",
+    "✦",
+    "CityNexus Copilot",
+    "今天",
+    "行程",
+    "地图",
+    "Copilot",
+    "我的",
+    "Nexus River Cruise Pier",
+    "计划中",
+    "15:30",
+    "Old Town Gate",
+    "已完成",
+    "Riverside Museum",
+    "Central Food Hall",
+    "4",
+    "5",
+    "6",
+    "Skyline Dinner House",
+    "服务端执行真相 · 可审计",
+    "标记 出发中",
+    "行程工作台 · 起草后接受",
+    "调整权威行程",
+    "在相同的冻结出行矩阵上重排普通活动。受保护锚点保持不动。",
+    "6 个活动",
+    "1 个受保护锚点",
+    "无草稿变更",
+    "•",
+    "○",
+    "按住一项活动，拖到新的位置，就是一次草稿改动。",
+    "预览无状态；接受将重新检查活跃方案和证据",
+    "方案版本 1 · 首次生成",
+    "预览影响",
+    "接受编辑",
+    "V14 · 现实变了",
+    "有据可依的自适应恢复",
+    "重新读取恢复方案",
+    "这趟行程没有等待你决定的恢复方案。"
+   ]
+  },
+  {
+   "label": "authoritative_demo",
+   "route": "authoritative",
+   "locale": "en",
+   "journey": "22222222-2222-4222-8222-222222222222",
+   "path": "/v8/authoritative",
+   "bottom_reached": true,
+   "leaf_count": 62,
+   "checks": [
+    {
+     "text": "policy unavailable · confirmation required",
+     "exact": false,
+     "substring": false
+    },
+    {
+     "text": "策略不可读 · 需要你确认",
+     "exact": false,
+     "substring": false
+    },
+    {
+     "text": "V14 · REALITY CHANGED",
+     "exact": true,
+     "substring": true
+    },
+    {
+     "text": "V14 · 现实变了",
+     "exact": false,
+     "substring": false
+    },
+    {
+     "text": "Grounded adaptive recovery",
+     "exact": true,
+     "substring": true
+    },
+    {
+     "text": "有据可依的自适应恢复",
+     "exact": false,
+     "substring": false
+    },
+    {
+     "text": "Refresh recovery",
+     "exact": true,
+     "substring": true
+    },
+    {
+     "text": "重新读取恢复方案",
+     "exact": false,
+     "substring": false
+    },
+    {
+     "text": "No recovery proposal is waiting on this Journey.",
+     "exact": true,
+     "substring": true
+    },
+    {
+     "text": "这趟行程没有等待你决定的恢复方案。",
+     "exact": false,
+     "substring": false
+    },
+    {
+     "text": "CHANGED",
+     "exact": false,
+     "substring": true
+    },
+    {
+     "text": "已变化",
+     "exact": false,
+     "substring": false
+    },
+    {
+     "text": "PROTECTED",
+     "exact": false,
+     "substring": false
+    },
+    {
+     "text": "受保护",
+     "exact": false,
+     "substring": false
+    },
+    {
+     "text": "Baseline evidence",
+     "exact": false,
+     "substring": false
+    },
+    {
+     "text": "基线证据",
+     "exact": false,
+     "substring": false
+    },
+    {
+     "text": "Incident evidence",
+     "exact": false,
+     "substring": false
+    },
+    {
+     "text": "事发证据",
+     "exact": false,
+     "substring": false
+    },
+    {
+     "text": "Deterministic gate",
+     "exact": false,
+     "substring": false
+    },
+    {
+     "text": "确定性闸门",
+     "exact": false,
+     "substring": false
+    },
+    {
+     "text": "Delegation policy",
+     "exact": false,
+     "substring": false
+    },
+    {
+     "text": "授权策略",
+     "exact": false,
+     "substring": false
+    }
+   ],
+   "leaves": [
+    "Menu",
+    "/",
+    "Recovery",
+    "System",
+    "中文",
+    "DE",
+    "V12 · plan, mobile, Edge, and twin",
+    "Authoritative trip execution.",
+    "Your chosen plan is the single source of truth for today, the map, offline use, and every change we suggest.",
+    "Refresh truth",
+    "Plan versions on this trip",
+    "Every version the server still holds, newest last. This list is read-only.",
+    "1 versions listed",
+    "No retention limit is applied: this trip currently holds 1 versions and all of them are listed here. Nothing is dropped as newer versions are written.",
+    "Version 1",
+    "first generation",
+    "28 Sept, 04:41",
+    "no parent version",
+    "the trip runs this one",
+    "There is no revert here on purpose. Going back to an older version would replace the plan you are travelling on, so it is not offered as a tap on a list.",
+    "en",
+    "AUTHORITATIVE JOURNEY",
+    "One truth from plan to edge",
+    "✦",
+    "CityNexus Copilot",
+    "Today",
+    "Trips",
+    "Map",
+    "Copilot",
+    "Me",
+    "Tech Art Center",
+    "ACTIVE",
+    "Nexus River Cruise Pier",
+    "Planned",
+    "15:30",
+    "Old Town Gate",
+    "COMPLETED",
+    "Riverside Museum",
+    "Central Food Hall",
+    "4",
+    "5",
+    "6",
+    "Skyline Dinner House",
+    "Server execution truth · auditable",
+    "Mark EN ROUTE",
+    "TRIP STUDIO · DRAFT THEN ACCEPT",
+    "Adjust the authoritative journey",
+    "Reorder ordinary activities against the same frozen mobility matrix. Protected anchors stay in place.",
+    "6 activities",
+    "1 protected anchor",
+    "No draft changes",
+    "•",
+    "○",
+    "Hold an activity and drag it to a new position to draft a change.",
+    "Preview is stateless; accept rechecks the live plan and evidence",
+    "Plan version 1 · First generation",
+    "Preview impact",
+    "Accept edit",
+    "V14 · REALITY CHANGED",
+    "Grounded adaptive recovery",
+    "Refresh recovery",
+    "No recovery proposal is waiting on this Journey."
+   ]
+  },
+  {
+   "label": "discover_demo",
+   "route": "discover",
+   "locale": "zh-CN",
+   "journey": "22222222-2222-4222-8222-222222222222",
+   "path": "/v8/discover",
+   "bottom_reached": true,
+   "leaf_count": 28,
+   "checks": [
+    {
+     "text": "I prefer quiet indoor culture, low walking, and rain-friendly places near my protected Journey moments.",
+     "exact": false,
+     "substring": false
+    },
+    {
+     "text": "我偏好安静的室内文化场所，少步行，雨天友好的地方，靠近我受保护的行程时刻。",
+     "exact": true,
+     "substring": true
+    }
+   ],
+   "leaves": [
+    "菜单",
+    "/",
+    "城市探索",
+    "跟随系统",
+    "EN",
+    "DE",
+    "准备目的地",
+    "先看这座城能不能规划",
+    "输入一个目的地，服务器会告诉我们它现在能规划到什么程度；不能的话，缺什么、下一步是什么，都由服务器说了算。",
+    "目的地",
+    "看看能不能规划",
+    "真实依据城市探索",
+    "说出你真正想要的城市一天。",
+    "直接告诉 CityNexus 你想做什么。它会找出符合你行程和已确认预订的真实地点。",
+    "CN / 探索",
+    "塑造城市停留",
+    "描述偏好、心情或约束。模型可选择语义方向，但只有服务端已知的地点才能到达权威方案。",
+    "边界",
+    "供应商坐标、营业时间、费用、出行和受保护承诺保持为确定性事实。",
+    "✦",
+    "今天",
+    "行程",
+    "地图",
+    "Copilot",
+    "我的",
+    "旅行者意图",
+    "我偏好安静的室内文化场所，少步行，雨天友好的地方，靠近我受保护的行程时刻。",
+    "探索并组合",
+    "我偏好安静的室内文化场所，少步行，雨天友好的地方，靠近我受保护的行程时刻。",
+    "CNX-DEMO"
+   ]
+  },
+  {
+   "label": "discover_demo",
+   "route": "discover",
+   "locale": "en",
+   "journey": "22222222-2222-4222-8222-222222222222",
+   "path": "/v8/discover",
+   "bottom_reached": true,
+   "leaf_count": 28,
+   "checks": [
+    {
+     "text": "I prefer quiet indoor culture, low walking, and rain-friendly places near my protected Journey moments.",
+     "exact": true,
+     "substring": true
+    },
+    {
+     "text": "我偏好安静的室内文化场所，少步行，雨天友好的地方，靠近我受保护的行程时刻。",
+     "exact": false,
+     "substring": false
+    }
+   ],
+   "leaves": [
+    "Menu",
+    "/",
+    "City Discovery",
+    "System",
+    "中文",
+    "DE",
+    "Prepare a destination",
+    "First, whether this city can be planned",
+    "Type a destination and the server says how far it can plan it right now; if it cannot, what is missing and what to do next come from the server.",
+    "Destination",
+    "Check this destination",
+    "Grounded city discovery",
+    "Ask for the kind of city day you actually want.",
+    "Tell CityNexus what you feel like doing. It finds real places that fit your trip and your confirmed bookings.",
+    "CN / DISCOVERY",
+    "Shape the city stop",
+    "Describe a preference, mood, or constraint. The model can choose the semantic direction, but only a server-known place can reach the authoritative plan.",
+    "✦",
+    "Today",
+    "Trips",
+    "Map",
+    "Copilot",
+    "Me",
+    "Boundary",
+    "Provider coordinates, opening hours, cost, travel time and your protected plans are verified facts.",
+    "Traveler intent",
+    "I prefer quiet indoor culture, low walking, and rain-friendly places near my protected Journey moments.",
+    "Discover and compose",
+    "I prefer quiet indoor culture, low walking, and rain-friendly places near my protected Journey moments.",
+    "CNX-DEMO"
+   ]
+  },
+  {
+   "label": "twin_no_preferences",
+   "route": "twin",
+   "locale": "zh-CN",
+   "journey": "36553414-8c43-4c2b-b120-bb8d478bcdf9",
+   "path": "/v8/twin",
+   "bottom_reached": true,
+   "leaf_count": 32,
+   "checks": [
+    {
+     "text": "没有明确偏好",
+     "exact": true,
+     "substring": true
+    },
+    {
+     "text": "No explicit preferences",
+     "exact": false,
+     "substring": false
+    }
+   ],
+   "leaves": [
+    "菜单",
+    "/",
+    "旅行者画像",
+    "跟随系统",
+    "EN",
+    "CN",
+    "旅行者画像 · 软上下文",
+    "有边界的个性化。",
+    "显式意图优先。学习到的证据帮助排序方案，但永远不会扩展预算、支付、承诺或自主权限。",
+    "显式",
+    "没有明确偏好",
+    "来自此次行程请求",
+    "直接应用于当前方案目标。",
+    "能力需求",
+    "没有记录到明确的能力事实。",
+    "学习到的软信号",
+    "没有习得信号",
+    "来自已完成的行程结果",
+    "仅用于排序 · 随证据新鲜度过期。",
+    "习得的能力状态",
+    "无障碍硬性需求不会从行为里推断出来。",
+    "权限边界",
+    "你的偏好可改善路线或酒店排名，但不会创建预订、花费金钱或削弱已确认的预订。",
+    "✦",
+    "CityNexus Copilot",
+    "今天",
+    "行程",
+    "地图",
+    "Copilot",
+    "我的",
+    "可检查的溯源可用",
+    "来源不明的无障碍证据，不作为无障碍依据。"
+   ]
+  },
+  {
+   "label": "twin_no_preferences",
+   "route": "twin",
+   "locale": "en",
+   "journey": "36553414-8c43-4c2b-b120-bb8d478bcdf9",
+   "path": "/v8/twin",
+   "bottom_reached": true,
+   "leaf_count": 31,
+   "checks": [
+    {
+     "text": "没有明确偏好",
+     "exact": false,
+     "substring": false
+    },
+    {
+     "text": "No explicit preferences",
+     "exact": true,
+     "substring": true
+    }
+   ],
+   "leaves": [
+    "Menu",
+    "/",
+    "Traveler Twin",
+    "System",
+    "中文",
+    "CN",
+    "Traveler Twin · soft context",
+    "Personalization with a boundary.",
+    "Explicit intent wins. Learned evidence helps rank a plan, but never expands budget, payment, commitment, or autonomy authority.",
+    "EXPLICIT",
+    "No explicit preferences",
+    "From this Journey request",
+    "Applied directly to the current plan objective.",
+    "Capability needs",
+    "No explicit capability facts recorded.",
+    "LEARNED_SOFT",
+    "No learned signals",
+    "From completed Journey outcomes",
+    "Ranking input only · expires with evidence freshness.",
+    "Learned capability state",
+    "Hard accessibility needs are never inferred from behavior.",
+    "✦",
+    "Today",
+    "Trips",
+    "Map",
+    "Copilot",
+    "Me",
+    "Authority boundary",
+    "Your preferences can improve a route or hotel ranking. They cannot create a booking, spend money, or weaken a confirmed reservation.",
+    "Inspectable provenance available",
+    "Unknown accessibility evidence is not accessible."
+   ]
+  }
+ ]
+}
