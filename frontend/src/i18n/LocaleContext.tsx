@@ -904,7 +904,6 @@ const en: Dict = {
   "v14.applying": "Applying…",
   "v14.accept": "Accept grounded recovery",
   "v14.acceptedChild": "Accepted child PlanVersion · {id}",
-  "discovery.exampleIntent": "I prefer quiet indoor culture, low walking, and rain-friendly places near my protected Journey moments.",
 };
 
 const zhCN: Dict = {
@@ -1759,7 +1758,6 @@ const zhCN: Dict = {
   "v14.applying": "正在应用…",
   "v14.accept": "接受这次有据可依的恢复",
   "v14.acceptedChild": "已接受的子方案版本 · {id}",
-  "discovery.exampleIntent": "我偏好安静的室内文化、少走路，以及雨天也能去、离我已锁定的行程时刻近的地方。",
 };
 
 const dictionaries: Record<TripLocale, Dict> = { en, "zh-CN": zhCN };
