@@ -1,0 +1,180 @@
+COPY ORIGIN r3 - where each English string on a zh screen comes from (evidence-strength aware)
+authoritative sha: 8a7665be2061a2f38aa2227f81c57003ca4caacb
+source tree: D:/moodle/_qoder_cmdr_scan_8a7665be/frontend/src
+distinct strings visible in the zh arm: 30
+counts: {"BARE_COPY_IN_COMPONENT": 16, "SUBSTRING_ONLY_IN_COMPONENT": 2, "DATA_OR_API": 5, "BRAND_WORD": 3, "UNEXPLAINED": 4}
+
+== BARE_COPY_IN_COMPONENT: 16 ==
+  'Old Town Gate'
+      zh screens (3): authoritative,map,trips
+      at frontend/src/features/simulation/SimulationPanel.tsx:273
+  'ADVISORY'
+      zh screens (1): intelligence
+      at frontend/src/api/citynexus.ts:72
+      at frontend/src/app/V8Experience.tsx:114
+      at frontend/src/app/V8Experience.tsx:4421
+  'Asia/Shanghai'
+      zh screens (1): live
+      at frontend/src/features/setup/JourneyTrialSetup.tsx:110
+      at frontend/src/features/setup/JourneyTrialSetup.tsx:111
+      at frontend/src/features/setup/JourneyTrialSetup.tsx:112
+  'Capability needs'
+      zh screens (1): twin
+      at frontend/src/features/traveler-twin/TwinPanel.tsx:24
+  'Grounded adaptive recovery'
+      zh screens (1): authoritative
+      at frontend/src/features/recovery/V14RecoveryTruthPanel.tsx:126
+  'Hard accessibility needs are never inferred from behavior.'
+      zh screens (1): twin
+      at frontend/src/features/traveler-twin/TwinPanel.tsx:24
+  'I prefer quiet indoor culture, low walking, and rain-friendly places near my protected Journey moments.'
+      zh screens (1): discover
+      at frontend/src/features/discovery/RealCityDiscoveryPanel.tsx:110
+  'Learned capability state'
+      zh screens (1): twin
+      at frontend/src/features/traveler-twin/TwinPanel.tsx:24
+  'NOT_CONFIGURED'
+      zh screens (1): intelligence
+      at frontend/src/api/citynexus.ts:371
+      at frontend/src/api/citynexus.ts:380
+      at frontend/src/features/inbox/JourneyInboxWorkbench.tsx:420
+  'No explicit capability facts recorded.'
+      zh screens (1): twin
+      at frontend/src/features/traveler-twin/TwinPanel.tsx:13
+  'No learned signals'
+      zh screens (1): twin
+      at frontend/src/features/traveler-twin/TwinPanel.tsx:24
+  'No recovery proposal is waiting on this Journey.'
+      zh screens (1): authoritative
+      at frontend/src/features/recovery/V14RecoveryTruthPanel.tsx:132
+  'PLANNED'
+      zh screens (1): authoritative
+      at frontend/src/features/simulation/SimulationPanel.tsx:336
+      at frontend/src/generated/api.ts:2764
+      at frontend/src/generated/api.ts:2867
+  'Unknown accessibility evidence is not accessible.'
+      zh screens (1): twin
+      at frontend/src/features/traveler-twin/TwinPanel.tsx:24
+  'V14 · REALITY CHANGED'
+      zh screens (1): authoritative
+      at frontend/src/features/recovery/V14RecoveryTruthPanel.tsx:125
+  'place-river-cruise'
+      zh screens (1): bookings
+      at frontend/src/demo/goldenScenario.ts:24
+      at frontend/src/main.tsx:401
+      at frontend/src/main.tsx:769
+
+== SUBSTRING_ONLY_IN_COMPONENT: 2 ==
+  'Journey Memory'
+      zh screens (1): bookings
+      at frontend/src/generated/api.ts:6608
+  'Refresh recovery'
+      zh screens (1): authoritative
+      at frontend/src/features/recovery/V14RecoveryTruthPanel.tsx:129
+
+== DICTIONARY_LITERAL: 0 ==
+
+== DATA_OR_API: 5 ==
+  'Tech Art Center'
+      zh screens (5): authoritative,hub,live,map,trips
+      at data/mock/places.json:49
+      at backend/app/services.py:707
+  'Nexus River Cruise Pier'
+      zh screens (4): authoritative,live,map,trips
+      at data/mock/places.json:64
+      at backend/app/services.py:708
+      at backend/app/services.py:716
+  'Central Food Hall'
+      zh screens (3): authoritative,map,trips
+      at data/mock/places.json:35
+      at backend/app/services.py:706
+      at backend/app/services.py:714
+  'Riverside Museum'
+      zh screens (3): authoritative,map,trips
+      at data/mock/places.json:21
+      at backend/app/services.py:705
+      at backend/app/services.py:713
+  'Skyline Dinner House'
+      zh screens (3): authoritative,map,trips
+      at data/mock/places.json:78
+      at backend/app/services.py:709
+      at backend/app/services.py:717
+
+== BRAND_WORD: 3 ==
+  'CityNexus Copilot'
+      zh screens (14): twin,agent,authoritative,bookings,discover,hub,intelligence,live,map,me,stay,studio,trash,trips
+      at frontend/src/i18n/LocaleContext.tsx:354
+      at frontend/src/i18n/LocaleContext.tsx:1151
+  'Copilot'
+      zh screens (14): twin,agent,authoritative,bookings,discover,hub,intelligence,live,map,me,stay,studio,trash,trips
+      at frontend/src/routes/v8Routes.ts:9
+      at frontend/src/routes/v8Routes.ts:27
+  'CN / AI'
+      zh screens (1): agent
+      at frontend/src/i18n/LocaleContext.tsx:331
+      at frontend/src/i18n/LocaleContext.tsx:1128
+
+== UNEXPLAINED: 4 ==
+  '15:30 Nexus River Cruise Pier'
+      zh screens (1): hub
+  'Nexus River Cruise Pier · 2026-10-10T15:30:00+08:00'
+      zh screens (1): bookings
+  'PlanVersion 1 · INITIAL'
+      zh screens (1): authoritative
+  'culture · local_food · relaxed · walking_minutes_max · waterfront'
+      zh screens (1): twin
+
+== defect grouped by file (what a lane must touch) ==
+  frontend/src/features/setup/JourneyTrialSetup.tsx  (6 strings)
+      line 110 [strong] 'Asia/Shanghai'
+      line 111 [strong] 'Asia/Shanghai'
+      line 112 [strong] 'Asia/Shanghai'
+      line 113 [strong] 'Asia/Shanghai'
+      line 114 [strong] 'Asia/Shanghai'
+      line 115 [strong] 'Asia/Shanghai'
+  frontend/src/features/traveler-twin/TwinPanel.tsx  (6 strings)
+      line 24 [strong] 'Capability needs'
+      line 24 [strong] 'Hard accessibility needs are never inferred from behavior.'
+      line 24 [strong] 'Learned capability state'
+      line 13 [strong] 'No explicit capability facts recorded.'
+      line 24 [strong] 'No learned signals'
+      line 24 [strong] 'Unknown accessibility evidence is not accessible.'
+  frontend/src/features/recovery/V14RecoveryTruthPanel.tsx  (5 strings)
+      line 48 [strong] 'ADVISORY'
+      line 126 [strong] 'Grounded adaptive recovery'
+      line 132 [strong] 'No recovery proposal is waiting on this Journey.'
+      line 125 [strong] 'V14 · REALITY CHANGED'
+      line 129 [substring] 'Refresh recovery'
+  frontend/src/generated/api.ts  (5 strings)
+      line 2551 [strong] 'ADVISORY'
+      line 2473 [strong] 'NOT_CONFIGURED'
+      line 2764 [strong] 'PLANNED'
+      line 2867 [strong] 'PLANNED'
+      line 6608 [substring] 'Journey Memory'
+  frontend/src/api/citynexus.ts  (3 strings)
+      line 72 [strong] 'ADVISORY'
+      line 371 [strong] 'NOT_CONFIGURED'
+      line 380 [strong] 'NOT_CONFIGURED'
+  frontend/src/features/simulation/SimulationPanel.tsx  (2 strings)
+      line 273 [strong] 'Old Town Gate'
+      line 336 [strong] 'PLANNED'
+  frontend/src/app/V8Experience.tsx  (2 strings)
+      line 114 [strong] 'ADVISORY'
+      line 4421 [strong] 'ADVISORY'
+  frontend/src/main.tsx  (2 strings)
+      line 401 [strong] 'place-river-cruise'
+      line 769 [strong] 'place-river-cruise'
+  frontend/src/features/intelligence/ControlTowerPanel.tsx  (1 strings)
+      line 5 [strong] 'ADVISORY'
+  frontend/src/features/discovery/RealCityDiscoveryPanel.tsx  (1 strings)
+      line 110 [strong] 'I prefer quiet indoor culture, low walking, and rain-friendly places near my protected Journey moments.'
+  frontend/src/features/inbox/JourneyInboxWorkbench.tsx  (1 strings)
+      line 420 [strong] 'NOT_CONFIGURED'
+  frontend/src/features/planning/PlanWithAiSheet.tsx  (1 strings)
+      line 329 [strong] 'NOT_CONFIGURED'
+  frontend/src/features/planning/aiGenerationRun.ts  (1 strings)
+      line 61 [strong] 'NOT_CONFIGURED'
+  frontend/src/demo/goldenScenario.ts  (1 strings)
+      line 24 [strong] 'place-river-cruise'
+
+VERDICT HARDCODED_COPY_ON_ZH_SCREENS
