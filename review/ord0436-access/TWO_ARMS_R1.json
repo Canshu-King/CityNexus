@@ -1,7 +1,7 @@
 {
-  "started_at": "2026-09-29T06:59:08+08:00",
+  "started_at": "2026-09-29T07:08:35+08:00",
   "backend_identity": {
-    "listener_pid": 12584,
+    "listener_pid": 17800,
     "listener_is_spawned_or_its_child": true,
     "listener_command": "\"C:\\Users\\������\\AppData\\Roaming\\uv\\python\\cpython-3.12.14-windows-x86_64-none\\python.exe\" -X utf8 -m uvicorn app.main:app --host 127.0.0.1 --port 4731 --log-level warning",
     "command_names_this_app_and_port": true,
@@ -10,7 +10,7 @@
     "shared_stores_named_by_this_run": []
   },
   "seed": {
-    "journey_id": "807adae5-7e72-4108-997e-2dd46feebf67",
+    "journey_id": "9407dca9-1595-4b98-9571-d06e4fd67e27",
     "delete_door_status": 204,
     "undelete_door_status": 200,
     "actions_in_this_lane_database": [
@@ -108,7 +108,7 @@
         "新建了这条行程",
         "把这条行程丢进了回收站",
         "把这条行程从回收站找回",
-        "把 这台服务器没有点名的人 加进了这条行程",
+        "把这台服务器没有点名的人加进了这条行程",
         "这台服务器报了一个本屏说不出人话的动作：journey.unlisted_share_change。"
       ],
       "activityAttributes": [
@@ -137,7 +137,8 @@
       "wholePageCjkChars": 603,
       "doorStillLoading": false,
       "overflowX": 0,
-      "pageErrors": []
+      "pageErrors": [],
+      "coveredRows": []
     },
     "en": {
       "locale": "en",
@@ -242,7 +243,8 @@
       "wholePageCjkChars": 2,
       "doorStillLoading": false,
       "overflowX": 0,
-      "pageErrors": []
+      "pageErrors": [],
+      "coveredRows": []
     },
     "checks": [
       {
@@ -303,7 +305,7 @@
       {
         "name": "activity rows the screen has words for read as sentences, not as the server's token",
         "verdict": "PASS",
-        "detail": "[{\"line\":\"新建了这条行程\",\"token\":\"journey.created\"},{\"line\":\"把这条行程丢进了回收站\",\"token\":\"journey.deleted\"},{\"line\":\"把这条行程从回收站找回\",\"token\":\"journey.undeleted\"},{\"line\":\"把 这台服务器没有点名的人 加进了这条行程\",\"token\":\"journey.member_added\"}]"
+        "detail": "[{\"line\":\"新建了这条行程\",\"token\":\"journey.created\"},{\"line\":\"把这条行程丢进了回收站\",\"token\":\"journey.deleted\"},{\"line\":\"把这条行程从回收站找回\",\"token\":\"journey.undeleted\"},{\"line\":\"把这台服务器没有点名的人加进了这条行程\",\"token\":\"journey.member_added\"}]"
       },
       {
         "name": "an action this screen cannot name says so and quotes the token it was given",
@@ -339,6 +341,11 @@
         "name": "the one control is under the finger at 390x844",
         "verdict": "PASS",
         "detail": "{\"tag\":\"select\",\"h\":45,\"overflowX\":0}"
+      },
+      {
+        "name": "no ladder row is covered by something outside this panel",
+        "verdict": "PASS",
+        "detail": "{\"zh\":[],\"en\":[]}"
       },
       {
         "name": "neither arm threw a page error",
