@@ -16588,6 +16588,17 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### CMDR 2026-09-28 23:52 · 号令者 · 撤回 23:47 那块里"地图面板文字量从 135 变 152"这条观察：直接对读两代，文字逐字相同，那 135 是我自己那一次读数的状态差
+
+**我说了什么**：23:47 那块第三节报"hub 与 live 两屏上地图面板的可见文字量从 135 字符（件 `evidence/cmdr-ord0404-20260928/deeplink_after_r1.json`，blob `c020eac4775b505563393f7113c175eb6a8cbe69`）变成 152 字符（件 `evidence/cmdr-regression-20260928/deeplink_14_routes_at_06d99e55.json`，blob `b74247fc83b1edd5782935e27e46dd9ae4a1e1af`）"，并且我留了口子说"只报变了、不报变对变错"。
+**我量了什么**：把两代同时打开、同一枚选择器、同一枚视口各读一次——旧代（:4801 服务的 `_build_890b7cf` 那枚产物）与新代（:4804 服务的现尖前端）都读到原始 152 字符、折叠空白后 149 字符（同件 `evidence/cmdr-regression-20260928/map_panel_text_diff_r1.json`，blob `ce992ee0e99fb0dbcf18df0131127e5dd3bf2b00`，`raw_chars` 与 `normalized_chars` 两栏），逐字比对第一个不同位置落在字符串末尾之外，判定 `MAP_PANEL_TEXT_IDENTICAL_ACROSS_THE_TWO_GENERATIONS`；两代的 `v8-map-attribution` 也都读到同一句「底图数据 © OpenStreetMap 贡献者 · 瓦片服务 tile.openstreetmap.org」。件 `evidence/cmdr-regression-20260928/map_panel_text_diff_r1.json`，blob `ce992ee0e99fb0dbcf18df0131127e5dd3bf2b00`，1,166 B。
+**⇒ 结论**：那条"变了"的观察**不成立，撤回**。同一枚旧代产物今晚再读就是 152，所以 21:33 那次读到的 135 不是代次差，是我那一次读数的状态差（那一趟是紧接在"点封存演示入口"之后的第一次读，行程数据还没完全到位）；我 23:47 把两个不同时刻的读数当成了两代的对照，这是**把测量时刻的差当成产品的差**，正是我自己给别人立的那条规矩（对照两侧必须先证都真产出了读数）没守住。
+**留痕**：23:47 那块不覆盖、不改写，按规矩用本块撤回；那两块里其余读数（深链接逐条停本屏、票夹按钮两臂点通、0 页面报错）不受影响，因为它们与本条无关，且都在各自的件里可对读（`evidence/cmdr-regression-20260928/deeplink_14_routes_at_06d99e55.json` blob `b74247fc83b1edd5782935e27e46dd9ae4a1e1af`、`evidence/cmdr-regression-20260928/ord0407_walk_at_06d99e55.json` blob `d3dba100ba57e68e9976a61cb1cf72abdf03ffc5`）。
+**给自己加的规矩（今晚第三次自纠，写下来才不算白犯）**：跨代对照必须**在同一轮里**把两代各读一次；不许拿"上一轮留下的数"当对照臂。我 22:20 那格 `NOT_EXPLAINED`（两个端口读到不同挂载结果）现在也按这条重判：那一格的两臂也不是同轮读的，所以它同样不足以支撑任何产品主张——留 `NOT_EXPLAINED`，但降级为"我的仪器前置不足"，不再挂在代理状态差上。
+
+**没改善的部分**：手机仍握 `e5a571f8…`（hop4 未起，全部屏读 `NOT-DEPLOYED-OBSERVED`）；ORD-0410 / ORD-0417 / ORD-0418 三张单刚派出去还没回件；ORD-0406 / ORD-0415 在车道 `e4f3490f` 手上；两块车道件仍卡在收件口等改坐标（指引在 23:43 那块）。
+
+
 ### CMDR 2026-09-28 23:47 · 号令者 · ORD-0416 那笔 CSS 落地后我自己重扫了一遍：深链接逐条仍停在本屏、票夹那颗按钮中英两臂仍点得通、页面报错为零——记成回归读数，不是新验收
 
 **为什么扫**：ORD-0416 改的是 `frontend/src/styles.css` 与 `frontend/src/design-tokens.css`，这两枚是全壳共用的样式面，所以我不拿"门绿了"当结论，用现成两把仪表在**现尖这一代**上重跑。
