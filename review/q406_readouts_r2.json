@@ -1,8 +1,8 @@
 {
  "branch": "review/Q-ord0406-attention-band-hit-r2",
- "branch_head_at_export": "0386253ee9426f072d6152da5e01667cd4b7dfc7",
+ "branch_head_at_export": "80383dd9652357aa0f6e40297bcbf4aa744c18d8",
  "tip_measured": "8d038b21f09477b933cff3b1c7b09845c542373b",
- "live_tip": "35326e62fb3de9f0cda459c8426ac22c0c49c715",
+ "live_tip": "f26e2ff78c047579a7d710d3a469be6bdf9a0540",
  "before_evidence": {
   "zh 390x844": {
    "phase": "before",

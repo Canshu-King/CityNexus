@@ -170,8 +170,15 @@ if BEF_R.get("verdict") != "RED":
 if GATE_R.get("verdict") != "RED" or REGB_R.get("verdict") != "RED" or REG_R.get("verdict") != "RED":
     bad.append("a reporting-only run lost its expected verdict")
 TREES = sorted({str(r.get("tree")) for r in (AFT_R, BEF_R, GATE_R, REG_R, REGB_R)})
-if TREES != [HEAD]:
-    bad.append("the runs I quote are not all on the head I publish: %s vs %s" % (TREES, HEAD))
+if len(TREES) != 1 or not re.fullmatch(r"[0-9a-f]{40}", TREES[0]):
+    bad.append("the five runs do not all name one 40-hex tree: %s" % TREES)
+MEAS = TREES[0]
+if MEAS != HEAD and not git_ok("merge-base", "--is-ancestor", MEAS, HEAD, cwd=WT):
+    bad.append("the measured commit is not an ancestor of the head I publish")
+DRIFT = [q for q in git("diff", "--name-only", MEAS, HEAD, cwd=WT).splitlines()
+         if q.strip() and not q.startswith("review/") and not q.startswith("frontend/review/")]
+if DRIFT:
+    bad.append("the head moved product bytes past the measured commit: %s" % DRIFT)
 DIRTY = [l for l in git("status", "--porcelain", cwd=WT).split("\n") if l.strip() and not l.startswith("??")]
 if DIRTY:
     bad.append("tracked paths are modified right now, so the receipts do not name these bytes: %s" % DIRTY)
@@ -302,6 +309,7 @@ TOKEN_LINE = line_of(PUSHED, TOK, "--cn-nav-h: 80px")
 SHELL_PAD_LINE = line_of(PUSHED, STY, "padding-bottom: var(--cn-nav-clearance")
 DRAWER_PAD = line_of(PUSHED, STY, "#v8-nav-drawer {")
 GATE_ASSERT = line_of(PUSHED, SPEC2, "the row must end above the fixed bar")
+OV_CRIT = line_of(PUSHED, "frontend/e2e/qoder-mobile-overflow.spec.ts", "const escapes = rect.right")
 PORT_LINE = line_of(PUSHED, PORTSPEC, "LOW, HIGH = ")
 NAV_H_COUNT = len([l for l in git("grep", "-n", "-e", "cn-nav-h", PUSHED, "--", STY, check=False).split("\n")
                    if l.strip()])
@@ -348,15 +356,17 @@ for arm in ("zh", "en"):
 A("   八格 band_hit=%s、hit_line 四形分别 %s、band 最后一条绘制行底边落在 %d..%d（元素框底边是 %d..%d，比绘制行更晚暴露问题）。" % (
     "、".join(str(BEFORE[k]["hit"]) for k in BEFORE), "、".join(str(x) for x in HITLINES),
     min(BEFORE_BOT), max(BEFORE_BOT), min(BAND_BOX_BOT), max(BAND_BOX_BOT)))
-A("   两臂的收据 tree 格是同一枚 %s（= 我要发的产品提交），唯一差别是工作区里 %s 这一枚文件：" % (TREES[0], V8))
-A("   改前那轮跑之前我把它 `git checkout %s -- %s` 还原成基点那枚 blob，还原后本地 `git hash-object` = %s ，" % (TIP[:8], V8, V8_BEFORE_BLOB))
-A("   与 `git rev-parse %s:%s` 逐字相同；跑完立刻 `git checkout HEAD -- %s` 还原（现读工作区 hash-object = %s ，" % (TIP, V8, V8, WT_BLOB))
-A("   与 `git rev-parse %s:%s` = %s 逐字相同，`git status --porcelain` 对被跟踪路径为空）。" % (PUSHED, V8, HEAD_BLOB))
+A("   ①②两臂与两跑对照的五张收据，tree 格同一枚 %s ；它是交付头的父提交，两者之间被跟踪路径的差异只在 review/ 之下（脚本对 DRIFT 断言为空）。" % MEAS)
+A("   所以同一枚 tree 上改前/改后两臂的唯一差别就是工作区里 %s 这一枚文件：改前那轮跑之前我 `git checkout %s -- %s` " % (V8, TIP, V8))
+A("   把它还原成基点那枚 blob，还原后本地 `git hash-object` = %s ，与 `git rev-parse %s:%s` 逐字相同。" % (V8_BEFORE_BLOB, TIP, V8))
+A("   跑完立刻 `git checkout HEAD -- %s` 还原（现读工作区 hash-object = %s ，与 `git rev-parse %s:%s` = %s 逐字相同，" % (
+    V8, WT_BLOB, PUSHED, V8, HEAD_BLOB))
+A("   并且 `git status --porcelain` 对被跟踪路径为空 —— 这条断言在脚本里，红了就不投递。")
 A("   这八格 + 桌面 + 内距是第二次独立运行：改后臂 run_id=%s 与 %s，改前臂 run_id=%s 与 %s。" % (
     OLD_AFT["run_id"], AFT_R["run_id"], OLD_BEF["run_id"], BEF_R["run_id"]))
 A("   两轮的日志分别是 %s 与 %s 与 %s 与 %s；" % (
     OLD_AFT["log"], AFT_R["log"], OLD_BEF["log"], BEF_R["log"]))
-A("   两轮产出的 20 枚证据 JSON 逐字节相同（判据：第一轮的证据已提交在被引用的那枚 tree %s 上，" % TREES[0])
+A("   两轮产出的 20 枚证据 JSON 逐字节相同（判据：第一轮的证据已提交在被引用的那枚 tree %s 上，" % MEAS)
 A("   第二轮跑完 `git status --porcelain` 对被跟踪路径为空。")
 A("   这就不用 03:56 那次基线了：那次跑到一半我改了文件、dev 服务器热重载，en 414 那两行其实是改后的数。")
 A("")
@@ -393,11 +403,14 @@ A("   hero_shift=%s px、map_shift=%s px（八格同一数：那一条 band 的�
 A("   次序逐格现读：改前与改后都是 hero_y < map_y（八格×两阶段全部成立，脚本对它做了断言），我没有把地图提到 hero 之前。")
 A("   代价要说实话：320×653 那一形地图改前就在折叠外（zh map_y=%d > innerHeight=%d），改后 map_y=%d —— 不是我挤出去的，" % (
     BEFORE[("zh", 320, 653)]["map"]["y"], BEFORE[("zh", 320, 653)]["innerHeight"], AFTER[("zh", 320, 653)]["map"]["y"]))
-A("   但我把它又推远 %s px，且改后 map_y 仍 > hit_line=%d。集合没变大：map_out_shapes_before=%s map_out_shapes_after=%s。" % (
-    "、".join(str(x) for x in MAP_SHIFT), AFTER[("zh", 320, 653)]["hitLine"],
-    "、".join(MAP_OUT_BEFORE) or "无", "、".join(MAP_OUT) or "无"))
-A("   地图顶边落在底栏带下的形：after_map_under_bar=%s（两形本来就整块在折叠外，要救得缩 hero/intro 高度，不在本单授权里）。" % (
+A("   这两枚数是那两枚证据文件里的 map.y：%s/before/zh_320x653.json 与 %s/after/zh_320x653.json ，同一格里判据行是 %s 。" % (EV, EV, JUDGE_RANGE))
+A("   但我把它又推远 %s px，且改后 map_y 仍 > hit_line=%d（同一对证据文件，hitLine 也在里面，判据行 %s ）。" % (
+    "、".join(str(x) for x in MAP_SHIFT), AFTER[("zh", 320, 653)]["hitLine"], JUDGE_HIT))
+A("   集合没变大：map_out_shapes_before=%s map_out_shapes_after=%s（这两串的分子就是上表八格各自的 map.y 对 innerHeight，判据行 %s ）。" % (
+    "、".join(MAP_OUT_BEFORE) or "无", "、".join(MAP_OUT) or "无", JUDGE_RANGE))
+A("   地图顶边落在底栏带下的形：after_map_under_bar=%s（两形本来就整块在折叠外，要救得缩 hero/intro 高度，不在本单授权里；" % (
     "、".join(MAP_UNDER_BAR)))
+A("   hit_line 与 map.y 同一枚证据文件里就有，例如 %s/after/zh_320x653.json ，判据行 %s 。)" % (EV, JUDGE_HIT))
 A("   桌面无回归（zh 1280×800，%s）：band 从 y=%d 移到 y=%d，最后一条绘制行底边 %d -> %d，hero_y=%d 紧随其后；" % (
     line_of(PUSHED, SPEC, "all three surfaces still render"), DESK_B["band"]["y"], DESK_A["band"]["y"],
     DESK_B["rangeBottom"], DESK_A["rangeBottom"], DESK_A["hero"]["y"]))
@@ -428,6 +441,7 @@ A("   把 %s 单独还原成基点 blob 后重跑 run_id=%s verdict=%s tree=%s �
 A("   唯一差别就是我这一步的有无（还原后 hash-object = %s ，与 `git rev-parse %s:%s` 逐字相同）。" % (V8_BEFORE_BLOB, TIP, V8))
 A("   两跑失败集合逐枚相同（failure_shape_count=%d：%s），right 最大 %d —— 红在 Live 屏的 maplibre 标记上，" % (
     len(OV_MINE), "、".join(OV_MINE), OV_MAX))
+A("   那条闸的逃逸判据行是 %s （`rect.right > innerWidth + 1`），两跑各自的完整日志名在上面两行里，right 值就是从那里正则取的。" % OV_CRIT)
 A("   不是 Today、也不是我这 %s px 挤的（两跑唯一差别就是那 %s px 的有无）。" % (
     "、".join(str(x) for x in MAP_SHIFT), "、".join(str(x) for x in MAP_SHIFT)))
 A("")
