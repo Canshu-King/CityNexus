@@ -363,7 +363,8 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        get?: never;
+        /** @description ORD-0383 slice 1: the trips this server holds whose `journeys.deleted_at` is NULL. No pagination and no per-traveller scope yet; a trip moved to the recycle bin by `deleteJourney` is absent here and still answers `getJourney`. */
+        get: operations["listJourneys"];
         put?: never;
         post: operations["createJourney"];
         delete?: never;
@@ -384,7 +385,8 @@ export interface paths {
         get: operations["getJourney"];
         put?: never;
         post?: never;
-        delete?: never;
+        /** @description ORD-0383 slice 1: soft delete.  The row, its plan and its history survive; only `journeys.deleted_at` and `audit_log` change, and `status` is not rewritten. */
+        delete: operations["deleteJourney"];
         options?: never;
         head?: never;
         patch: operations["updateJourney"];
@@ -3929,6 +3931,26 @@ export interface operations {
             422: components["responses"]["ValidationError"];
         };
     };
+    listJourneys: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Journeys not deleted */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Journey"][];
+                };
+            };
+        };
+    };
     createJourney: {
         parameters: {
             query?: never;
@@ -3975,6 +3997,44 @@ export interface operations {
                 };
             };
             404: components["responses"]["NotFound"];
+        };
+    };
+    deleteJourney: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                journey_id: components["parameters"]["JourneyId"];
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Deleted - the row is in the recycle bin */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description error.code = NOT_FOUND with error.reason_code = JOURNEY_NOT_FOUND - no such row */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+            /** @description error.code = CONFLICT with error.reason_code = JOURNEY_ALREADY_DELETED - the row is already in the bin, and its original deleted_at is left unchanged */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
         };
     };
     updateJourney: {
@@ -5686,6 +5746,20 @@ export interface operations {
                     "application/json": {
                         journey?: Record<string, never>;
                         trip?: Record<string, never>;
+                        active_plan?: {
+                            activities?: {
+                                place_id?: string | null;
+                                location?: {
+                                    /** @enum {string} */
+                                    state: "READY" | "HYDRATABLE" | "UNKNOWN_RETRYABLE" | "UNAVAILABLE";
+                                    reason?: string | null;
+                                    latitude: number | null;
+                                    longitude: number | null;
+                                    coordinate_system: string | null;
+                                    source_coordinate_system?: string | null;
+                                };
+                            }[];
+                        } | null;
                         recovery?: components["schemas"]["RecoveryState"];
                         experience_flags?: {
                             needs_review?: boolean;

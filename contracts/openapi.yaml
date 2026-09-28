@@ -1414,6 +1414,32 @@ paths:
                 properties:
                   journey: {type: object}
                   trip: {type: object}
+                  # ORD-0394: where an activity happens is a property of the place it names, so the
+                  # read joins the place row and ships the coordinate with the system it is written
+                  # in.  `state`/`reason` are the frozen capability tokens, not new coinages, and an
+                  # unjoinable activity still appears in the list -- it answers with nulls and a name.
+                  active_plan:
+                    type: object
+                    nullable: true
+                    properties:
+                      activities:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            place_id: {type: string, nullable: true}
+                            location:
+                              type: object
+                              required: [state, latitude, longitude, coordinate_system]
+                              properties:
+                                state:
+                                  type: string
+                                  enum: [READY, HYDRATABLE, UNKNOWN_RETRYABLE, UNAVAILABLE]
+                                reason: {type: string, nullable: true}
+                                latitude: {type: number, nullable: true}
+                                longitude: {type: number, nullable: true}
+                                coordinate_system: {type: string, nullable: true}
+                                source_coordinate_system: {type: string, nullable: true}
                   recovery: {$ref: '#/components/schemas/RecoveryState'}
                   experience_flags:
                     type: object

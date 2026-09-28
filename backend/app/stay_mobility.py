@@ -16,6 +16,12 @@ from sqlalchemy.orm import Session
 
 from app.core.money import major_to_minor
 from app.core.phase_timing import phase
+from app.anywhere_capability import (
+    CAPABILITY_STATES,
+    REASON_COVERAGE_INCOMPLETE,
+    REASON_NO_CANONICAL_IDENTITY,
+    READY,
+)
 from app.core.temporal import (
     MAX_JOURNEY_DAYS,
     MIN_JOURNEY_DAYS,
@@ -1633,6 +1639,48 @@ def generate_stay_options(
     return ranked
 
 
+def activity_coordinate(place_id: str | None, places: dict[str, Place]) -> dict[str, Any]:
+    """ORD-0394: where an activity happens, read off the place row that names it.
+
+    A coordinate is a property of the place, so the projection joins the place the activity
+    already points at instead of copying a number onto the activity.  When there is nothing to
+    join, it says which of the two "nothing" cases this is with tokens the destination-capability
+    axis already froze (`CAPABILITY_STATES`, `REASON_*`) -- it does not coin a fourth word, and it
+    never falls back to a city centre: a position we invented is not a position.
+    """
+
+    def shaped(state: str, reason: str | None) -> dict[str, Any]:
+        assert state in CAPABILITY_STATES, state
+        return {
+            "state": state,
+            "reason": reason,
+            "latitude": None,
+            "longitude": None,
+            "coordinate_system": None,
+            "source_coordinate_system": None,
+        }
+
+    if not place_id:
+        return shaped("UNAVAILABLE", REASON_NO_CANONICAL_IDENTITY)
+    place = places.get(str(place_id))
+    if place is None:
+        # An identity the store does not have is missing coverage, not a missing identity; the two
+        # read differently on a traveller's screen.
+        return shaped("UNAVAILABLE", REASON_COVERAGE_INCOMPLETE)
+    if place.latitude is None or place.longitude is None:
+        return shaped("UNAVAILABLE", REASON_COVERAGE_INCOMPLETE)
+    return {
+        "state": READY,
+        "reason": None,
+        "latitude": place.latitude,
+        "longitude": place.longitude,
+        # Read off the row, not off the candidate: the stored system and the system a provider handed
+        # us are different claims, and only the row knows both (same rule as real_city.py).
+        "coordinate_system": place.coordinate_system,
+        "source_coordinate_system": place.source_coordinate_system,
+    }
+
+
 def _active_plan_payload(session: Session, journey: Journey) -> dict[str, Any] | None:
     if not journey.active_plan_version_id:
         return None
@@ -1642,6 +1690,16 @@ def _active_plan_payload(session: Session, journey: Journey) -> dict[str, Any] |
     activities = session.scalars(
         select(Activity).where(Activity.plan_version_id == plan.id).order_by(Activity.sequence_no)
     ).all()
+    # One batched read of the places these activities name. Coordinates live on the Place row (see
+    # the graph projection above), so asking per row would make this projection's cost depend on
+    # how many stops the plan has.
+    activity_place_ids = sorted({str(item.place_id) for item in activities if item.place_id})
+    activity_places: dict[str, Place] = {}
+    if activity_place_ids:
+        activity_places = {
+            place.id: place
+            for place in session.scalars(select(Place).where(Place.id.in_(activity_place_ids))).all()
+        }
     legs = session.scalars(
         select(JourneyLeg)
         .where(JourneyLeg.plan_version_id == plan.id)
@@ -1715,6 +1773,10 @@ def _active_plan_payload(session: Session, journey: Journey) -> dict[str, Any] |
                 "locked": bool(item.locked),
                 "protected": item.id in protected_activity_ids,
                 "metadata": _load(item.metadata_json, {}),
+                # Beside `metadata`, not inside it: `metadata_json` is the store's own record of what
+                # a transition wrote, and folding a read-side join into it would leave a consumer
+                # unable to tell the two apart.
+                "location": activity_coordinate(item.place_id, activity_places),
             }
             for item in activities
         ],
