@@ -71,6 +71,11 @@ def sha1(p):
     return hashlib.sha1(open(p, "rb").read()).hexdigest()
 
 
+def blob_at_ref(ref, rel):
+    out = git("rev-parse", "%s:%s" % (ref, rel), check=False)
+    return out if re.fullmatch(r"[0-9a-f]{40}", out) else ""
+
+
 def newest(tag):
     fs = sorted(glob.glob(os.path.join(LIVE, "e2e_logs", "%s_*.json" % tag)), key=os.path.getmtime)
     if not fs:
@@ -204,19 +209,28 @@ json.dump({"head_readings_ran_on": HEAD_RUN, "live_tip": LIVE_TIP, "merge_base":
            "asset": ASSET, "asset_bytes": ASSET_BYTES, "asset_sha1_local_recomputed": ASSET_SHA1,
            "diff_from_merge_base": MY_DIFF},
           open(os.path.join(WT, ART_REL), "w", encoding="utf-8", newline="\n"), ensure_ascii=False, indent=1)
+ART = os.path.join(WT, ART_REL)
 git("checkout", "-q", BRANCH, cwd=WT)
-git("add", "-f", ART_REL, "review/q406_block_r1.py", cwd=WT)
-rc, cout = run(["git", "-C", WT, "commit", "-q", "-m",
-                "ORD-0406 readouts: the before/after geometry table, the contaminated baseline I replaced, "
-                "and the overflow run compared with and without my change"])
-if rc and "nothing to commit" not in cout:
-    bad.append("commit failed: %s" % cout[-160:])
-git("-c", "http.proxy=", "-c", "https.proxy=", "push", "-q", "origin", "refs/heads/" + BRANCH, cwd=WT)
+TIP_NOW = git("rev-parse", BRANCH, cwd=WT)
+ALREADY = blob_at_ref(TIP_NOW, ART_REL) == git("hash-object", ART, cwd=WT) and     not git("status", "--porcelain", "-uno", cwd=WT).splitlines()
+if not ALREADY:
+    git("add", "-f", ART_REL, "review/q406_block_r1.py", cwd=WT)
+    rc, cout = run(["git", "-C", WT, "commit", "-q", "-m",
+                    "ORD-0406 readouts: the before/after geometry table, the contaminated baseline I "
+                    "replaced, and the overflow run compared with and without my change"])
+    if rc and "nothing to commit" not in cout:
+        bad.append("commit failed: %s" % cout[-160:])
+    rc, pout = run(["git", "-C", WT, "-c", "http.proxy=", "-c", "https.proxy=", "push", "-q",
+                    "origin", "refs/heads/" + BRANCH])
+    if rc:
+        bad.append("push failed: %s" % pout[-160:])
+else:
+    print("readouts already on the branch; no new commit")
 PUSHED = head_of("refs/heads/" + BRANCH)
 if not PUSHED or git("cat-file", "-t", PUSHED) != "commit":
     bad.append("the pushed head does not resolve: %r" % PUSHED)
-elif PUSHED != HEAD_RUN and git("rev-parse", "%s^" % PUSHED) != HEAD_RUN:
-    bad.append("the pushed head %s neither is nor sits on the measured head %s" % (PUSHED[:8], HEAD_RUN[:8]))
+elif not git_ok("merge-base", "--is-ancestor", HEAD_RUN, PUSHED):
+    bad.append("the pushed head %s does not descend from the measured head %s" % (PUSHED[:8], HEAD_RUN[:8]))
 NEW_FILES = [l for l in git("diff", "--name-only", HEAD_RUN, PUSHED).split("\n") if l.strip()]
 if [f for f in NEW_FILES if not f.startswith("review/")]:
     bad.append("the follow-up commit touched non-review paths: %s" % NEW_FILES)
