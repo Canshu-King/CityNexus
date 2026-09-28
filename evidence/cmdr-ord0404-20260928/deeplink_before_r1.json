@@ -1,0 +1,263 @@
+{
+ "at": "2026-09-28T13:19:19.685Z",
+ "base": "http://127.0.0.1:4800/",
+ "routes": [
+  "map",
+  "trash",
+  "discover"
+ ],
+ "results": [
+  {
+   "route": "map",
+   "url": "/v8/hub",
+   "found": {
+    "prep-panel": {
+     "present": false
+    },
+    "recovery-required-panel": {
+     "present": false
+    },
+    "pretrip-checklist": {
+     "present": true,
+     "chars": 33,
+     "text_head": "行前清单\n服务端报出的两类待办\n这一代都没有报出。\n去看这一代方案",
+     "box": [
+      17,
+      1035,
+      356,
+      143
+     ],
+     "hittable": false,
+     "raw_fact_line": []
+    },
+    "plan-version-history": {
+     "present": false
+    },
+    "hotels-panel": {
+     "present": false
+    },
+    "v12-authoritative-panel": {
+     "present": false
+    },
+    "v8-maplibre-panel": {
+     "present": true,
+     "chars": 135,
+     "text_head": "1\n2\n3\n4\n5\n6\n回到行程视野\n\n单指拖动地图 · 双指缩放 · 想翻这一页就拖地图以外的地方\n\n路线上下文\n0 段路程\n供应商支持的路线 · WGS84\n底图数据 © OpenStreetMap 贡献者 · 瓦片服务 tile.openstreetmap.org",
+     "box": [
+      17,
+      664,
+      356,
+      247
+     ],
+     "hittable": false,
+     "raw_fact_line": []
+    },
+    "trips-commitments": {
+     "present": false
+    },
+    "v8-trip-studio": {
+     "present": false
+    },
+    "v8-stay-explorer": {
+     "present": false
+    },
+    "hub-glance-empty": {
+     "present": true,
+     "chars": 29,
+     "text_head": "还没有可以预览的行程\n\n选定方案后，这里会显示每天的安排。",
+     "box": [
+      17,
+      1279,
+      356,
+      58
+     ],
+     "hittable": false,
+     "raw_fact_line": []
+    },
+    "today-strip": {
+     "present": true,
+     "chars": 40,
+     "text_head": "住宿\n还没有选定\n到达\n10月10日 09:00\n出发\n10月10日 19:00",
+     "box": [
+      17,
+      921,
+      356,
+      65
+     ],
+     "hittable": false,
+     "raw_fact_line": []
+    }
+   },
+   "body_chars": 539,
+   "errors": []
+  },
+  {
+   "route": "trash",
+   "url": "/v8/hub",
+   "found": {
+    "prep-panel": {
+     "present": false
+    },
+    "recovery-required-panel": {
+     "present": false
+    },
+    "pretrip-checklist": {
+     "present": true,
+     "chars": 33,
+     "text_head": "行前清单\n服务端报出的两类待办\n这一代都没有报出。\n去看这一代方案",
+     "box": [
+      17,
+      1035,
+      356,
+      143
+     ],
+     "hittable": false,
+     "raw_fact_line": []
+    },
+    "plan-version-history": {
+     "present": false
+    },
+    "hotels-panel": {
+     "present": false
+    },
+    "v12-authoritative-panel": {
+     "present": false
+    },
+    "v8-maplibre-panel": {
+     "present": true,
+     "chars": 135,
+     "text_head": "1\n2\n3\n4\n5\n6\n回到行程视野\n\n单指拖动地图 · 双指缩放 · 想翻这一页就拖地图以外的地方\n\n路线上下文\n0 段路程\n供应商支持的路线 · WGS84\n底图数据 © OpenStreetMap 贡献者 · 瓦片服务 tile.openstreetmap.org",
+     "box": [
+      17,
+      664,
+      356,
+      247
+     ],
+     "hittable": false,
+     "raw_fact_line": []
+    },
+    "trips-commitments": {
+     "present": false
+    },
+    "v8-trip-studio": {
+     "present": false
+    },
+    "v8-stay-explorer": {
+     "present": false
+    },
+    "hub-glance-empty": {
+     "present": true,
+     "chars": 29,
+     "text_head": "还没有可以预览的行程\n\n选定方案后，这里会显示每天的安排。",
+     "box": [
+      17,
+      1279,
+      356,
+      58
+     ],
+     "hittable": false,
+     "raw_fact_line": []
+    },
+    "today-strip": {
+     "present": true,
+     "chars": 40,
+     "text_head": "住宿\n还没有选定\n到达\n10月10日 09:00\n出发\n10月10日 19:00",
+     "box": [
+      17,
+      921,
+      356,
+      65
+     ],
+     "hittable": false,
+     "raw_fact_line": []
+    }
+   },
+   "body_chars": 539,
+   "errors": []
+  },
+  {
+   "route": "discover",
+   "url": "/v8/hub",
+   "found": {
+    "prep-panel": {
+     "present": false
+    },
+    "recovery-required-panel": {
+     "present": false
+    },
+    "pretrip-checklist": {
+     "present": true,
+     "chars": 33,
+     "text_head": "行前清单\n服务端报出的两类待办\n这一代都没有报出。\n去看这一代方案",
+     "box": [
+      17,
+      1035,
+      356,
+      143
+     ],
+     "hittable": false,
+     "raw_fact_line": []
+    },
+    "plan-version-history": {
+     "present": false
+    },
+    "hotels-panel": {
+     "present": false
+    },
+    "v12-authoritative-panel": {
+     "present": false
+    },
+    "v8-maplibre-panel": {
+     "present": true,
+     "chars": 135,
+     "text_head": "1\n2\n3\n4\n5\n6\n回到行程视野\n\n单指拖动地图 · 双指缩放 · 想翻这一页就拖地图以外的地方\n\n路线上下文\n0 段路程\n供应商支持的路线 · WGS84\n底图数据 © OpenStreetMap 贡献者 · 瓦片服务 tile.openstreetmap.org",
+     "box": [
+      17,
+      664,
+      356,
+      247
+     ],
+     "hittable": false,
+     "raw_fact_line": []
+    },
+    "trips-commitments": {
+     "present": false
+    },
+    "v8-trip-studio": {
+     "present": false
+    },
+    "v8-stay-explorer": {
+     "present": false
+    },
+    "hub-glance-empty": {
+     "present": true,
+     "chars": 29,
+     "text_head": "还没有可以预览的行程\n\n选定方案后，这里会显示每天的安排。",
+     "box": [
+      17,
+      1279,
+      356,
+      58
+     ],
+     "hittable": false,
+     "raw_fact_line": []
+    },
+    "today-strip": {
+     "present": true,
+     "chars": 40,
+     "text_head": "住宿\n还没有选定\n到达\n10月10日 09:00\n出发\n10月10日 19:00",
+     "box": [
+      17,
+      921,
+      356,
+      65
+     ],
+     "hittable": false,
+     "raw_fact_line": []
+    }
+   },
+   "body_chars": 539,
+   "errors": []
+  }
+ ]
+}
