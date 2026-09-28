@@ -6,6 +6,7 @@ import {
   copyFor,
   OriginResponseUnusableError,
 } from "../../lib/failureAttribution";
+import { formatWhen } from "../../lib/formatWhen";
 import {
   artifactTypeLabel as artifactTypeLabelShared,
   bookingStatusLabel,
@@ -752,7 +753,10 @@ export function JourneyInboxWorkbench({ journeyId, decodedText, onConfirmed, imp
         <div className="v10-inbox-heading">
           <div>
             <span className="v8-kicker">{t("inbox.authoritativeMemory")}</span>
-            <h3>{memory?.title ?? t("inbox.journeyMemory")}</h3>
+            {/* ORD-0423 defect one: `memory.title` is prose the server writes for itself
+                (semantic_intake.py:489 = "Journey Memory"), so `??` never reached the dictionary and a zh
+                screen read English.  The heading is this panel's own label, so it comes from the dictionary. */}
+            <h3>{t("inbox.journeyMemory")}</h3>
           </div>
           <small>{t("inbox.protectedFacts", { n: memory?.items.length ?? 0 })}</small>
         </div>
@@ -761,7 +765,7 @@ export function JourneyInboxWorkbench({ journeyId, decodedText, onConfirmed, imp
             {memory.items.map((item) => (
               <li key={item.id}>
                 <strong>{item.title} · {roleLabel(item.role, zh)}</strong>
-                <span>{item.label} · {item.at ?? t("inbox.timePending")}</span>
+                <span>{item.label} · {formatWhen(item.at, { zh, pending: t("inbox.timePending") })}</span>
                 <small>{item.protected ? t("inbox.protected") : t("inbox.candidate")} · {confidence(item.confidence)}</small>
                 {/* ORD-0323 forms F3/F4 (CMDR 04:53): the summary is the upstream's sentence, and printed
                     here it read as this panel's own claim.  The row keeps stating what it measured. */}
