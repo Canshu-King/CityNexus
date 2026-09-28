@@ -1,0 +1,19 @@
+cmdr_net_env_guard_r2 self-test, 2026-09-29 02:05 +08, box 127.0.0.1:7892 listener accepts then kills TLS
+
+=== arm A: proxy env present (the case r1 got wrong) ===
+{"guard": "cmdr_net_env_guard_r2", "proxy_env_before": {"HTTPS_PROXY": "http://127.0.0.1:7892", "HTTP_PROXY": "http://127.0.0.1:7892"}, "proxy_endpoints": ["127.0.0.1:7892", "127.0.0.1:7892"], "proxy_ok": false, "direct_ok": true, "refused": ["proxy transacting failed while direct succeeded"], "action": "PROXY_UNUSABLE_CLEARED_AND_DIRECT", "detail": {"direct": "200 160181 B", "proxy": "URLError: <urlopen error [Errno 2] No such file or directory>"}}
+exit=3
+
+=== arm B: no proxy env ===
+{"guard": "cmdr_net_env_guard_r2", "proxy_env_before": {}, "proxy_endpoints": [], "proxy_ok": null, "direct_ok": true, "refused": [], "action": "NO_PROXY_CONFIGURED", "detail": {"direct": "200 160181 B"}}
+exit=0
+
+=== what r1 answers to the SAME arm A (the hole, reproduced) ===
+{"proxy_env_before": {"HTTPS_PROXY": "http://127.0.0.1:7892", "HTTP_PROXY": "http://127.0.0.1:7892"}, "refused": [], "action": "KEEP_PROXY"}
+
+=== wired into ===
+merge_ledger_then_mirror_r2.py:28:from cmdr_net_env_guard_r2 import ensure_proxy_usable
+ledger_inbox_apply_r2.py:25:from cmdr_net_env_guard_r2 import ensure_proxy_usable
+=== left on r1 on purpose (published instruments; code paths must not be rewritten) ===
+publish_evidence_gated_r1.py
+preflight_and_land_r5.py
