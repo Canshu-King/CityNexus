@@ -86,8 +86,9 @@ receipt = {
     "users_preview_db_stat_after": p_after,
     "users_preview_db_stat_unchanged": p_before == p_after,
     "shared_ports_not_touched": {p: listeners(p) for p in (8000, 4781, 4782, 8693, 4805)},
-    "lane_front_port": 4826,
-    "lane_front_pid": (listeners(4826) or [None])[0],
+    "lane_backend_port_note": "lane-owned ports for this order only",
+    "lane_front_ports": [4826, 4827],
+    "lane_front_pids": {str(p): (listeners(p) or [None])[0] for p in (4826, 4827)},
 }
 os.makedirs(os.path.dirname(OUT), exist_ok=True)
 with io.open(OUT, "w", encoding="utf-8", newline="\n") as fh:

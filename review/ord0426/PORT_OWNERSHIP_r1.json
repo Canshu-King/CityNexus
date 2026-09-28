@@ -39,6 +39,13 @@
    "43736"
   ]
  },
- "lane_front_port": 4826,
- "lane_front_pid": "35512"
+ "lane_backend_port_note": "lane-owned ports for this order only",
+ "lane_front_ports": [
+  4826,
+  4827
+ ],
+ "lane_front_pids": {
+  "4826": "35512",
+  "4827": "2948"
+ }
 }
