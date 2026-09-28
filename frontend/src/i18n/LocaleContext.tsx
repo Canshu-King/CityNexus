@@ -36,6 +36,8 @@ const en: Dict = {
   "shell.noJourney": "No journey available",
   "shell.offlineMsg": "Network unavailable · showing your read-only saved journey.",
   "shell.loadError": "Unable to load the journey",
+  "shell.addressNoScreen":
+    "This address names no screen (it asks for “{segment}”), so this is Today.",
 
   // ── Shell: sidebar ──
   "shell.brand": "CityNexus",
@@ -854,6 +856,7 @@ const zhCN: Dict = {
   "shell.noJourney": "暂无行程",
   "shell.offlineMsg": "网络不可用 · 正在显示只读的已保存行程。",
   "shell.loadError": "没能加载行程",
+  "shell.addressNoScreen": "这个地址没有对应的屏（它点的是「{segment}」），所以留在今天。",
 
   // ── 外壳：侧边栏 ──
   "shell.brand": "CityNexus",

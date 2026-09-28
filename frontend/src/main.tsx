@@ -5,6 +5,7 @@ import { createActor } from "xstate";
 import { citynexusQueryClient } from "./lib/queryClient";
 import { formatMinorMoney } from "./lib/money";
 import { hasNonIdempotentRequestInFlight, onNonIdempotentRequestsQuiet } from "./lib/inFlightWrites";
+import { JOURNEY_ID_SEGMENT } from "./lib/journeyLink";
 import "./v10.css";
 import {
   CityNexusApiError,
@@ -1699,11 +1700,13 @@ function LegacyApp() {
    This file adds no state vocabulary and no second failure surface on purpose -- duplicating that
    surface is how two screens start disagreeing about one answer. */
 const v8JourneyReferenceKey = "citynexus.v8.journey_id";
-/** A canonical server-issued UUID, and nothing else: no route key or alias in routes/v8Routes.ts is. */
-const journeyIdSegmentPattern = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+/** A canonical server-issued UUID, and nothing else: no route key or alias in routes/v8Routes.ts is.
+    The shape is shared with ORD-0404's deep-link reading (`lib/journeyLink.ts`), because a segment
+    that names a journey must not be called a segment that names no screen. */
+const journeyIdSegmentPattern = JOURNEY_ID_SEGMENT;
 
 function journeyReferenceFromPath(pathname: string): string | null {
-  const first = pathname.replace(/^\/v8\/+/, "").split("/")[0] ?? "";
+  const first = v8FirstSegment(pathname);
   return journeyIdSegmentPattern.test(first) ? first : null;
 }
 

@@ -96,6 +96,7 @@ import {
 } from "../lib/money";
 import { withViewTransition } from "../lib/viewTransition";
 import { isDisruptionOpen } from "../lib/disruptionState";
+import { JOURNEY_ID_SEGMENT, v8FirstSegment } from "../lib/journeyLink";
 import { measureRawFacts, type RawFacts } from "../lib/rawFacts";
 import { RawFactsPanel } from "../components/RawFactsPanel";
 import {
@@ -469,18 +470,45 @@ const KNOWN_ROUTES = new Set<string>([
   ...mobileRoutes.map((r) => r.key),
 ]);
 
-function routeFromPath() {
-  const raw = window.location.pathname
-    .replace(/^\/v8\/?/, "")
-    .replace(/\/$/, "");
-  if (!raw) return "hub";
-  const key = raw.split("/")[0].toLowerCase();
+/**
+ * ORD-0404: what the address asks for, and which of four things it was.
+ *
+ * `routeFromPath` could already name the screen -- the drawer proves that, because clicking into
+ * 城市探索 puts `/v8/discover` in the address and a walking instrument reads it back. What was
+ * missing was the other half: nothing *kept* that answer across the demo gate, which ended by
+ * navigating to Today, and an unrecognised path fell through to Today without ever saying so.
+ * Those two need three distinguishable outcomes, not one string:
+ *   screen   -- the address named a screen, and this session must go there once it can;
+ *   journey  -- `/v8/<uuid>`: ORD-0351's address, which names a journey and *no* screen, so it
+ *              must land on Today silently. Calling it "no screen" would be a new lie built on
+ *              top of the one being fixed;
+ *   unknown  -- a path that names neither, and has to be answered honestly;
+ *   bare     -- `/v8/` itself, which is Today and nothing was asked.
+ */
+type DeepLink =
+  | { kind: "screen"; route: string }
+  | { kind: "journey" }
+  | { kind: "unknown"; segment: string }
+  | { kind: "bare" };
+
+function deepLinkFromPath(): DeepLink {
+  // Route keys and aliases are lower-case; the raw case is kept for the unknown-segment reading,
+  // because what the traveller has to recognise is the address they were given, not its normalised form.
+  const segment = v8FirstSegment(window.location.pathname);
+  if (!segment) return { kind: "bare" };
+  const key = segment.toLowerCase();
   // A real route wins over an alias, otherwise refresh changes the screen.
-  if (KNOWN_ROUTES.has(key)) return key;
+  if (KNOWN_ROUTES.has(key)) return { kind: "screen", route: key };
   const alias = ROUTE_ALIASES[key];
-  if (alias) return alias;
-  // Never render an empty shell: an unknown path is Today.
-  return "hub";
+  if (alias) return { kind: "screen", route: alias };
+  if (JOURNEY_ID_SEGMENT.test(key)) return { kind: "journey" };
+  return { kind: "unknown", segment };
+}
+
+function routeFromPath() {
+  const link = deepLinkFromPath();
+  // Never render an empty shell: anything that names no screen is Today.
+  return link.kind === "screen" ? link.route : "hub";
 }
 
 const drawerRoutes = [
@@ -533,6 +561,11 @@ function nextActivityOf(plan: V8Data["active_plan"]) {
 
 export function V8Experience() {
   const [route, setRoute] = useState(routeFromPath);
+  /* ORD-0404: what the address asked for, read once at mount -- before anything this session does
+     to the address. Both the sealed-demo gate and the create-trip flow navigate, and navigating to
+     Today is precisely what erased the screen the traveller had asked for, so the answer has to be
+     held somewhere a later navigate cannot overwrite. */
+  const [deepLink] = useState(deepLinkFromPath);
   const [data, setData] = useState<V8Data | null>(null);
   const [mode, setMode] = useState<V8Mode>("TRANSIT");
   const [comparison, setComparison] = useState<V8Data["mobility_facts"]>([]);
@@ -849,6 +882,22 @@ export function V8Experience() {
     setThemeChoice(next);
     setThemeChoiceState(next);
   };
+  /* ORD-0404: an address that names no screen used to be answered by silently showing Today, which
+     reads to the traveller as "the link I was given is broken" with nothing saying which side
+     failed. Today is still the right surface to land on -- nothing here invents a screen -- but the
+     reason has to be said. A `/v8/<uuid>` journey address is deliberately not covered: it names a
+     journey, and ORD-0351 already brings that traveller to Today on purpose.
+     It is its own surface rather than the shared banner because the banner is cleared by the boot
+     read that follows (`load` ends with `setMessage(null)` on success): the measured reading was
+     `/v8/nosuchscreen` coming out byte-identical to `/v8/hub` -- 445 chars both -- the sentence set
+     and then wiped in the same boot. A verdict about an address belongs to the address, not to
+     whichever step last wrote the banner.
+     Declared before `navigate` because a chosen screen retires it: leaving "this address has no
+     screen" on screen after the traveller picked a real one would trade one stale sentence for
+     another (R14: what is on screen must belong to what just happened). */
+  const [addressNoScreen, setAddressNoScreen] = useState<string | null>(() =>
+    deepLink.kind === "unknown" ? deepLink.segment : null,
+  );
   const navigate = (next: string) => {
     const value = next || "hub";
     withViewTransition(() => {
@@ -856,6 +905,7 @@ export function V8Experience() {
       setRoute(value);
       setNavOpen(false);
       setAlertsOpen(false);
+      if (addressNoScreen !== null) setAddressNoScreen(null);
     });
   };
   /* ORD-0209 (arbitration `5772122180`): the demo entry addresses the sealed demo journey; it does
@@ -897,7 +947,16 @@ export function V8Experience() {
       localStorage.setItem("citynexus.v8.journey_id", sealedId);
       await load(sealedId);
       setSetupOpen(false);
-      navigate("hub");
+      /* ORD-0404: the gate is a detour, not a destination. Someone who opened `/v8/stay` from a
+         chat, or reloaded the page while on 恢复与执行, asked for that screen; passing through the
+         sealed-demo door has to put them where they asked, not back on Today. A journey address
+         (`/v8/<uuid>`, ORD-0351) names no screen and still belongs on Today, unchanged. */
+      navigate(deepLink.kind === "screen" ? deepLink.route : "hub");
+      /* The door puts us on Today for an address that names no screen, and `navigate` retired the
+         verdict on the way -- that navigation was the product detouring, not the traveller choosing.
+         Re-asserting it here is what makes the sentence readable: while the door was up the shell
+         did not render at all, so the verdict had no surface to be said from. */
+      if (deepLink.kind === "unknown") setAddressNoScreen(deepLink.segment);
     } catch (error) {
       /* ORD-0273-TEXT: the user sentence comes from an i18n key -- the raw error.message (with its
          MIME/content-type and error shapes) must not reach the main copy.
@@ -1814,6 +1873,13 @@ export function V8Experience() {
             </button>
           </div>
         </header>
+        {/* ORD-0404: the address verdict. Its own element, not the shared banner, and no dismiss
+            button: a sentence about an address is retired by going somewhere, not by hiding it. */}
+        {addressNoScreen !== null && (
+          <p className="v8-message" role="status" data-testid="address-no-screen">
+            {t("shell.addressNoScreen", { segment: addressNoScreen })}
+          </p>
+        )}
         {message && (
           <div className="v8-message" role="status">
             {message}
