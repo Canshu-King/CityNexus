@@ -1,0 +1,297 @@
+{
+ "base": "http://127.0.0.1:4808",
+ "route": "intelligence",
+ "generated_by": "_untranslated_scan_r3.js",
+ "expect_list_size": 8,
+ "zh": {
+  "locale": "zh",
+  "entry_used": "使用封存的演示行程",
+  "reached_route": "/v8/intelligence",
+  "on_requested_route": true,
+  "path": "/v8/intelligence",
+  "locale_read": "zh",
+  "scroll_steps": 6,
+  "scrollables": 2,
+  "scroll_reached": [
+   {
+    "tag": "HTML",
+    "cls": "",
+    "max": 527,
+    "deepest_scrollTop_reached": 527,
+    "bottom_reached": true
+   },
+   {
+    "tag": "HTML",
+    "cls": "",
+    "max": 527,
+    "deepest_scrollTop_reached": 527,
+    "bottom_reached": true
+   }
+  ],
+  "leaf_count": 33,
+  "ascii_prose_count": 2,
+  "ascii_prose": [
+   {
+    "text": "CityNexus Copilot",
+    "tag": "SPAN",
+    "cls": "",
+    "testid": null,
+    "y": 732
+   },
+   {
+    "text": "Copilot",
+    "tag": "SPAN",
+    "cls": "",
+    "testid": "nav-agent",
+    "y": 816
+   }
+  ],
+  "expect": [
+   {
+    "text": "NOT_CONFIGURED",
+    "on_screen": false
+   },
+   {
+    "text": "ADVISORY",
+    "on_screen": false
+   },
+   {
+    "text": "PLANNED",
+    "on_screen": false
+   },
+   {
+    "text": "Asia/Shanghai",
+    "on_screen": false
+   },
+   {
+    "text": "place-river-cruise",
+    "on_screen": false
+   },
+   {
+    "text": "C4_Anchored",
+    "on_screen": false
+   },
+   {
+    "text": "已保存的行程事实",
+    "on_screen": false
+   },
+   {
+    "text": "Capability needs",
+    "on_screen": false
+   }
+  ]
+ },
+ "en": {
+  "locale": "en",
+  "entry_used": "sealed demo",
+  "reached_route": "/v8/intelligence",
+  "on_requested_route": true,
+  "path": "/v8/intelligence",
+  "locale_read": "en",
+  "scroll_steps": 6,
+  "scrollables": 2,
+  "scroll_reached": [
+   {
+    "tag": "HTML",
+    "cls": "",
+    "max": 613,
+    "deepest_scrollTop_reached": 613,
+    "bottom_reached": true
+   },
+   {
+    "tag": "HTML",
+    "cls": "",
+    "max": 613,
+    "deepest_scrollTop_reached": 613,
+    "bottom_reached": true
+   }
+  ],
+  "leaf_count": 33,
+  "ascii_prose_count": 21,
+  "ascii_prose": [
+   {
+    "text": "Intelligence",
+    "tag": "STRONG",
+    "cls": "",
+    "testid": null,
+    "y": 25
+   },
+   {
+    "text": "System",
+    "tag": "BUTTON",
+    "cls": "v9-language",
+    "testid": "topbar-theme",
+    "y": 17
+   },
+   {
+    "text": "Intelligence · Control Tower",
+    "tag": "P",
+    "cls": "v8-kicker",
+    "testid": null,
+    "y": 93
+   },
+   {
+    "text": "Judgement up front. Hard facts at the gate.",
+    "tag": "H1",
+    "cls": "",
+    "testid": null,
+    "y": 117
+   },
+   {
+    "text": "DeepSeek can interpret a fuzzy city signal. CityNexus verifies the resulting action against the journey, provider state, budget, and commitment envelope.",
+    "tag": "P",
+    "cls": "v8-lede",
+    "testid": null,
+    "y": 208
+   },
+   {
+    "text": "Enable reversible recovery",
+    "tag": "BUTTON",
+    "cls": "v8-primary",
+    "testid": null,
+    "y": 290
+   },
+   {
+    "text": "Autonomous recovery stays inside the envelope.",
+    "tag": "H2",
+    "cls": "",
+    "testid": null,
+    "y": 466
+   },
+   {
+    "text": "Rain is a semantic signal. The gate checks the action after it is chosen: stay total, route facts, arrival/departure anchors, schedule slack, and protected comm",
+    "tag": "P",
+    "cls": "",
+    "testid": null,
+    "y": 574
+   },
+   {
+    "text": "Gateway",
+    "tag": "SPAN",
+    "cls": "",
+    "testid": null,
+    "y": 688
+   },
+   {
+    "text": "Agent runtime source",
+    "tag": "SPAN",
+    "cls": "",
+    "testid": "v17-runtime-status",
+    "y": 739
+   },
+   {
+    "text": "Not configured",
+    "tag": "B",
+    "cls": "",
+    "testid": "v17-runtime-status",
+    "y": 766
+   },
+   {
+    "text": "Native Hermes MCP is not claimed without a verified proof run",
+    "tag": "SMALL",
+    "cls": "",
+    "testid": "v17-runtime-status",
+    "y": 788
+   },
+   {
+    "text": "CityNexus Copilot",
+    "tag": "SPAN",
+    "cls": "",
+    "testid": null,
+    "y": 732
+   },
+   {
+    "text": "Copilot",
+    "tag": "SPAN",
+    "cls": "",
+    "testid": "nav-agent",
+    "y": 816
+   },
+   {
+    "text": "POLICY",
+    "tag": "SPAN",
+    "cls": "",
+    "testid": null,
+    "y": 491
+   },
+   {
+    "text": "Advisory",
+    "tag": "B",
+    "cls": "",
+    "testid": null,
+    "y": 515
+   },
+   {
+    "text": "Feasible",
+    "tag": "B",
+    "cls": "",
+    "testid": null,
+    "y": 641
+   },
+   {
+    "text": "Hard constraints verified after mode change",
+    "tag": "SMALL",
+    "cls": "",
+    "testid": null,
+    "y": 670
+   },
+   {
+    "text": "COMMITMENT",
+    "tag": "SPAN",
+    "cls": "",
+    "testid": null,
+    "y": 744
+   },
+   {
+    "text": "Protected",
+    "tag": "B",
+    "cls": "",
+    "testid": null,
+    "y": 768
+   },
+   {
+    "text": "Durable moments are not silently broken",
+    "tag": "SMALL",
+    "cls": "",
+    "testid": null,
+    "y": 797
+   }
+  ],
+  "expect": [
+   {
+    "text": "NOT_CONFIGURED",
+    "on_screen": false
+   },
+   {
+    "text": "ADVISORY",
+    "on_screen": false
+   },
+   {
+    "text": "PLANNED",
+    "on_screen": false
+   },
+   {
+    "text": "Asia/Shanghai",
+    "on_screen": false
+   },
+   {
+    "text": "place-river-cruise",
+    "on_screen": false
+   },
+   {
+    "text": "C4_Anchored",
+    "on_screen": false
+   },
+   {
+    "text": "已保存的行程事实",
+    "on_screen": false
+   },
+   {
+    "text": "Capability needs",
+    "on_screen": false
+   }
+  ]
+ },
+ "arms_comparable": true,
+ "verdict": "ZH_SCREEN_CARRIES_ENGLISH_PROSE"
+}
