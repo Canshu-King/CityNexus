@@ -16588,6 +16588,106 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### qoder-0418 2026-09-29 03:27 · 车道 2d2d7428 · ORD-0418 重交（请用 r2，r1 请弃读）：以现尖重基、三臂全部重产物重读数；两枚新键每本字典一段连续插入，且我自查了「干净摘取」的两种静默失配
+
+按您的复切结论办：cmdr_recut_r1.py --order ORD-0418 对 r1（=c1296632567cd4b9e79695111c10836aa5a94767）在 frontend/src/i18n/LocaleContext.tsx 上报 ABORT，
+起因是我那笔的基点 3d28da7d221cfd2ca463991796f0a257df042972 之后同一本字典又被四笔动过（ORD-0420 的 303d3ae8751e60529ef8a62d130b2cdfe354113d、
+ORD-0422 的 1c5f415858e0567d2c8d9e4ebf65c6c2d05af437 与 ecbed520d66ed32563ec970c3b0850cceb97d190、ORD-0417 的 93a3ff5c79edf51bdb1307b219468ff632b0cb58），
+而 93a3ff5c79edf51bdb1307b219468ff632b0cb58 同时把 frontend/src/components/v8/MapPanel.tsx 也动了——它往我改的那条 caption 里加了一枚 span。
+我没手合、没请您代合：以现尖重基，两处改动作为**一笔** cherry-pick 落上去（git cherry-pick -x 86a6346ff75166b51c931327d5e52b11503df758），git 无冲突。
+
+件（请审）：refs/heads/review/Q-ord0418-map-route-claim-r2 远端回读 = b86624faeac6ed46e767aa5afd61f33d9a44bb8b（env -u HTTP_PROXY -u HTTPS_PROXY git ls-remote origin 现读）
+枝的基点 = 我产物时现读的尖 3b6c96e8a9f986672ddaa764f5f2ae69534ceff1；发布时再读现尖已是 3543928ea1b7a0466871b6fbc3c3d24f64b14044，我自己先跑了只读复切：
+git merge-tree --write-tree 3543928ea1b7a0466871b6fbc3c3d24f64b14044 b86624faeac6ed46e767aa5afd61f33d9a44bb8b 退出码=0，合并树 = e68381b0935d6db983ee96d101ae3707154b4bb2——这一级只动 frontend/src/styles.css 与 review/ord0417/，
+我这两个文件在 3b6c96e8a9f986672ddaa764f5f2ae69534ceff1..3543928ea1b7a0466871b6fbc3c3d24f64b14044 区间内 0 处改动（git diff --name-only 输出为空），所以读数不必再追一级。
+两笔逐批提交，正文走 git commit -F 文件、两个正文文件反引号各 0 处（grep -c 反引号 = 0 0）：
+产品 432fc7c9010a2b6fc6032758dc56757693e24da4 树 261a7d343b3e8893b4832380dd17f564d3d1bde3；证据 b86624faeac6ed46e767aa5afd61f33d9a44bb8b 树 2646bcffaee2b9af630540a1c3e93ad95cc7bad1
+远端独立回读（GitHub contents 原字节喂 git hash-object）与件内 blob 逐字相同：frontend/src/components/v8/MapPanel.tsx blob 53828f1299c05832b6b22a83025fe573ff6ee21d、
+frontend/src/i18n/LocaleContext.tsx blob 28a7e1228ee148fcfd0cc3a9e1fe6bb6e5a2c172、review/ord0418/CLAIM_R2.txt blob c663dbd08a0f58a9824a15c4905aceff66a32903。
+
+**改的两处，键集中一段连续插入**（现尖 blob → 件内 blob：MapPanel 1766b8da0185cff90b6582dcdaca6c63809198e1 → 53828f1299c05832b6b22a83025fe573ff6ee21d，LocaleContext 7c2d1596dcfb511ff2067adcf066ed785599d331 → 28a7e1228ee148fcfd0cc3a9e1fe6bb6e5a2c172）：
+  frontend/src/components/v8/MapPanel.tsx:611 的判据是 route.length > 0，与 frontend/src/components/v8/MapPanel.tsx:114 那条线层用的判据同一枚，不另起真相；
+  frontend/src/components/v8/MapPanel.tsx:135 从正文自己的 provider_mesh.mobility 取 valhalla 与 amap 两格状态——只有这两格能产生路段几何，
+  transit_realtime 与 ride_hail 在这台部署是 UNKNOWN_REALTIME / UNKNOWN_COST，与算路无关，把它们当算路供应商会让那句更准的话永远走不到（实测，不是推）。
+  两枚新键 en 在 frontend/src/i18n/LocaleContext.tsx:813 与 :814、zh 在 :1682 与 :1683，各自紧贴既有的 mapComp.providerRoute（:812 与 :1681），没打散。
+  我按「干净摘取本身是危险的」这条自查了两类静默失配（下面两个数都在本块生成时从 git 现读重算，不是我记的）：
+  一 两枚新键在件内各出现 2 次（en 与 zh 各一次），在现尖上各出现 0 次——所以不是我覆盖了别人的同名键；
+  二 两本字典各 768 个键、两侧集合相等=true、字典内重名 0 个（尺的 REGISTER_PARITY 那格报同一数）——所以不存在后值悄悄吃掉前值；
+      那句尺的读数在件里：review/ord0418/CLAIM_R2.txt:25
+
+**三臂全部在新代上重产物重读数**（旧读数绑在旧代，Q24 不许拿过来当新尖证据）：
+  before = 现尖产物 3b6c96e8，入口 index-oR3PVCYW.js：4 格红 2 —— 红在 legs-zero 的 zh 与 en 两格，判据名 claim_only_when_route_exists、
+      zero_case_names_the_reason、zero_case_names_the_cause 三枚一起倒；表格见 review/ord0418/CLAIM_R2.txt:44
+  after = 本枝产物，入口 index-CJllJiWZ.js：4 格红 0；legs-zero 两臂都改口说原因，legs-seven 仍说原来那句（真有 7 段可画的腿），
+      所以这不是「把话删了」；三臂四格同一张表，逐格 verdict 在上面 review/ord0418/CLAIM_R2.txt:44 起
+  mutant = 把 frontend/src/components/v8/MapPanel.tsx:611 的判据换成恒真的一次性构建，入口 index-CZsHi6i4.js，从未入库：红回到 2/4，
+      红的判据名与 before 逐字相同——门确实咬得住。
+  服务器侧字段（我这份只读库副本、我自己的 uvicorn 直答）写在 review/ord0418/CLAIM_R2.txt:33 与 review/ord0418/server_fields_r2.json blob 1aa05f85a5737bb2ba67817ecbf113adf5a3facd：
+      legs-zero 那程 active_plan.legs=0、mobility_facts=0、options=0，mobility 的 valhalla 与 amap 都是 NOT_CONFIGURED；
+      legs-seven 那程 active_plan.legs 仍是 0，但 35 条 mobility_facts 全带几何、第一个 option 的 leg_mode_map 有 7 段落进几何集合——
+      所以那 7 段是本地既有事实匹配出来的，没配供应商、也没写任何数据。
+  您点名要重取的那句屏读，中文臂与英文臂逐字在 review/ord0418/CLAIM_R2.txt:69（after 臂 zh 与 en 两行是从 JSON 抄的，不是我手打）
+
+**门禁**：npx tsc -p tsconfig.typecheck.json --noEmit 退出码 0；三臂各 npx vite build 退出码 0；
+  文案尺 cnx_copy_tiers_r1 退出码 0，NO_GROWTH 那格 0 values changed，ASSERTIONS_STILL_HIT 那格 0 keys edited。
+
+**私有栈归属（三证同批）**：三臂各自是我自己的 vite preview，:60091 现尖、:60092 本枝、:60093 反件，
+  起自本 worktree 的 frontend/（只有这棵的配置带 preview 代理），CITYNEXUS_BACKEND_PORT=65218 指向我自己的 uvicorn，
+  读 D:\moodle\_qoder_q_ord0419_20260929\ord0419.db（3710976 B，sha1 over bytes feb7c737c923f0cf3987565b88126f2875379e5a，本地字节重算，非 git 对象，不可 cat-file）。
+  同段的 git 对象坐标 = 那份读数码表 blob c663dbd08a0f58a9824a15c4905aceff66a32903，可 cat-file。您的 :4805 :4806 :8693 :4781 :4782 :8000 我一格都没连、没写。
+  一处仪器自报：legs-seven 那格是靠把行程号写进浏览器自己的 localStorage 选中的，没有任何 POST、没有写路由。
+
+**没扩范围**：ORD-0412 的 MAP_LABEL_FORBIDDEN 范围没动、ORD-A 的署名那段没动（它现在与我同一条 caption 里，
+  件内 diff 只碰我自己那三行 span）；frontend/src/app/V8Experience.tsx 一字未动（归 ORD-0420）。
+  r1 那枝 c1296632567cd4b9e79695111c10836aa5a94767 我没 force-move，请弃读。两枝的改动逐字相同（新增行 27 条与 4 条，两边一一对上），
+      件内 blob 不同只是因为 ORD-0417 也在这条 caption 里加了 span，差的是基点与读数代次；判据行号从 r1 的 :584 移到本枝的 :611，就是这个原因。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
+### CMDR 03:31 · 用户放宽借鉴边界：数值与范式全放开、最贵的两档正式开工（ORD-0434 关系层、ORD-0435 POI 批量录入）· ORD-0430 裁定已下 · 现尖 5d946bf84a29b57c3a4f4cd2f238dbb0fe0f7f90
+
+## 0. 新裁定（用户 09-29 凌晨原话：这是课程作业不是商业用途，把所有能吸收的都吸收过来，剩下最贵的两档也可以试着开工，DSH 那边能用上的用上）
+
+解除的是"数值与范式"这一层的禁令：档位数值（间距、圆角、字号阶梯、时长节奏）、键名命名规律、状态划分、文案处理句式，以及短功能语句的等价改写，都不再以"不许抄"为由拦。此后任何车道不必在件里逐条声明"这句是我们自拟的"。
+
+保留的只有三样，理由换成工程理由而不是授权理由：二进制资产文件本身（图、字体、动画）不入库；dex 反编译代码不入库——对方是 Kotlin 加高德闭源 SDK，我们是 React 加 maplibre，搬进来既不能构建也不能维护（栈差异记在 `MAP/map_findings.md:262`）；`REDNumber` 是商用授权字体而本项目没有字体加载链。图标一律自己重绘同名状态位，文件名也不取对方的。
+
+底料坐标沿用三份剖析件：地图与数据面 `D:/moodle/_apk_analysis_pi_travel/MAP/map_findings.md`、AI 链路 `D:/moodle/_apk_analysis_pi_travel/AI/ai_findings.md`、关系层与可反悔层 `D:/moodle/_apk_analysis_pi_travel/RELATION/relation_and_copy_findings.md`。
+
+## 1. ORD-0434 关系层第一步（派给车道 a68b0631）：先让"分享"成为服务端事实，再谈成员
+
+现状三格实测，不是推测：分享出口是纯客户端拼字符串 `frontend/src/lib/journeyLink.ts:34`；读行程的路由不接受调用者身份 `backend/app/main.py:2875`；成员、权限、有效期在数据层全缺（缺口清单 `RELATION/relation_and_copy_findings.md:346`）。竞品给的形状是"角色到一句作用域"的权限表加"邀请有有效期、且有效期写进话术"（同一件 `:94`）。
+
+本步范围：新增共享授权持久层，一枚行程可发多枚授权；每枚必须带可见性具名枚举（拟用 PRIVATE、LINK_READ、INVITEES_ONLY、PUBLIC 四档，动笔前先与你自己的既有词表比对，撞名就报名别硬并）、有效期、撤销位、创建者；端点为创建、列表、撤销。契约与 `frontend/src/generated/api.ts` 同笔带上。
+
+硬约束：**现有匿名读路径的行为一字不改**——手机演示链与既有 e2e 全走它，收紧默认值属于第二步，要等白天与用户对齐。撤销必须立即生效：同一枚 token 撤销之后再读，要落到具名码而不是静默放行。
+
+反件要求两向读数：过期与"从未存在"必须给出不同的具名码；撤销前后同一请求必须给出不同结果。本轮不要求上屏判据（本步没有 UI）。
+
+## 2. ORD-0435 POI 批量录入链路第一步（派给车道 be19052c）：借的是四条校验点，不是那屏的皮
+
+借的形状逐条出自 `MAP/map_findings.md:150`：选择集必须有计数；必须有目标容器（计划或收藏夹）；空集合走空态；"完成"永远与"新建"并列，防止无路可走。同件 `:150` 还给了成对态规律——每枚选中态必须有对应的未选中态。
+
+落点：把 `frontend/src/features/discovery/RealCityDiscoveryPanel.tsx` 的结果卡加多选态，选中集落到某一天。**用哪条写路由要先报名**：能走 `backend/app/main.py:4490` 的 patch 就走它；走不通就具名新开一条并同笔进契约。红线：不许用客户端本地状态假装"已加入"，我要看到写完之后从服务端读回来那条 activity。
+
+交付第一件必须是"修前屏读"：证明多选与计数现在确实不在屏上（用号令者指定的 r3 仪表，外读 blob 3dad6f0e70c2a0dcce936499f277313618d6b807，那把尺的判据要求两臂都落在被请求路由上）。中文臂过 `NO_GROWTH`。
+
+## 3. ORD-0430 裁定（已发车道 bac10f40）
+
+候选判 **DO NOT PORT**：它治好了盖字，代价是让位态点不到（车道自己的读数：覆盖归零之后 panel_opened 只剩两臂为真）。让位的实现必须是**视口内换位且换位后仍可命中**，禁止用隐藏达成让位——`frontend/src/design-tokens.css:998` 那四条属性（平移出视口、透明度归零、visibility hidden、pointer-events none）正是当前"藏起来"的做法，本单判它语义错。
+
+判据两向都要读数：covering_arms 归零，且让位后可见矩形的中心命中测试必须打回药丸自身。车道已经证明"给内容列加下内距"救不了那一格（覆盖发生在文档顶部，同件第四节），所以内距路线我判死；剩下走"让到底栏已预留的那条带里"或"缩到视口边角的常驻小形"，形态由车道选，但选完要写它借的是哪一条。
+
+另：我上一块点名 discover 与 intelligence 两屏都压住面板正文，其中 intelligence 那一格车道未复现，**该格撤回**，只留 twin 与 discover 两格为已证。
+
+## 4. DSH 那边用上的部分（号令者自己的活，不占车道）
+
+恢复出来的 lab runner 是自定位、进程内 TestClient、临时库，不开端口、不碰 junction、不建前端软链（配方与代价记在 `D:/moodle/_qoder_harness_revival_20260921/HARNESS_REVIVAL_REPORT.md`）。今晚我落了二十笔左右，整套后端一直只到 collect-only 就记 `NOT_EXECUTED_BY_CMDR`——这笔账该换成真执行读数。我把它指到现尖导出树跑一趟，导出按具名配方 `git archive <尖> backend data contracts tools | tar -x`，红集合按既有具名基线的子集判，数字与红条目另块报，不在这块猜。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### ORD-0422 复切回报 · 车道 Q（会话 904a042d）· 你报的 ABORT 在 HEAD 已不复现（我的 r2 被你原样落地），两臂读数已在新代重取 · 未再落地、无新候选
 
 **先复现你那条反例，再报数**：03:17 我用只读方式 `git merge-tree --write-tree` 与 blob 逐枚对照，
