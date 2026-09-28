@@ -274,13 +274,19 @@ A("字典 i18n 枚数=%d —— 号令者要我别动 styles.css 与别的实例
 A("")
 A("## 改之前：四形 × 双语，滚动前那一格全在底栏底下（run_id=%s / %s）" % (
     str(base1.get("run_id")), str(base2.get("run_id"))))
+def row(v, with_nav):
+    head = "   arm=%s shape=%dx%d %s" % (v["arm"], v["w"], v["h"],
+                                          ("nav_height=%d " % v["nav_h"]) if with_nav else "")
+    return (head + "hit_line=%d band_box=[%d,%d,%d,%d] hero_box=[%d,%d,%d,%d] map_box=[%d,%d,%d,%d] "
+            "band_hit=%s 该格源码 %s" % (v["hit_line"], v["band"][0], v["band"][1], v["band"][2], v["band"][3],
+                                       v["hero"][0], v["hero"][1], v["hero"][2], v["hero"][3],
+                                       v["map"][0], v["map"][1], v["map"][2], v["map"][3], v["hit"],
+                                       BAND_LINE))
+
+
 for arm in ("zh", "en"):
     for w, h in SHAPES:
-        v = BEFORE[(arm, w, h)]
-        A("   arm=%s shape=%dx%d nav_height=%d hit_line=%d band=[%d,%d,%d,%d] hero=[%d,%d,%d,%d] map=[%d,%d,%d,%d] "
-          "band_hit=%s" % (arm, w, h, v["nav_h"] if "nav_h" in v else 76, v["hit_line"], v["band"][0],
-                           v["band"][1], v["band"][2], v["band"][3], v["hero"][0], v["hero"][1], v["hero"][2],
-                           v["hero"][3], v["map"][0], v["map"][1], v["map"][2], v["map"][3], v["hit"]))
+        A(row(BEFORE[(arm, w, h)], True))
 A("   基线有两件事要交代：① zh 390×844 那格第一次跑撞上 chromium 启动超时（launch timeout），没有读数；")
 A("   ② 我改文件时 dev 服务器在热重载，基线那轮跑到一半被我污染 —— 受污染的三格（%s）我不用，" % (
     "、".join("%s %dx%d" % c for c in sorted(CONTAMINATED))))
@@ -290,11 +296,7 @@ A("## 改之后：同一套格，滚动前就命中（run_id=%s verdict=%s passe
     aft["run_id"], aft["verdict"], aft["counts"]["passed"], str(aft["tree"])[:12]))
 for arm in ("zh", "en"):
     for w, h in SHAPES:
-        v = AFTER[(arm, w, h)]
-        A("   arm=%s shape=%dx%d hit_line=%d band=[%d,%d,%d,%d] hero=[%d,%d,%d,%d] map=[%d,%d,%d,%d] "
-          "band_hit=%s" % (arm, w, h, v["hit_line"], v["band"][0], v["band"][1], v["band"][2], v["band"][3],
-                           v["hero"][0], v["hero"][1], v["hero"][2], v["hero"][3], v["map"][0], v["map"][1],
-                           v["map"][2], v["map"][3], v["hit"]))
+        A(row(AFTER[(arm, w, h)], False))
 A("   命中判据是两条同时成立，不是一条：框要停在 hit_line 之上（band_clears_nav），并且对它中心做一次")
 A("   elementFromPoint 要回到这一格里头（band_hit_test_inside）—— 只过第一条的写法叫做「看得见但点不到」。")
 A("   改前 band 的 y 落在 %d..%d，改后落在 %d..%d；hit_line 最低那形是 %d（320×653）。" % (
