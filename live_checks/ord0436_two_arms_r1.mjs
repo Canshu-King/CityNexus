@@ -145,6 +145,54 @@ async function arm(browser, locale) {
     () => document.documentElement.scrollWidth - document.documentElement.clientWidth,
   );
   read.pageErrors = errors;
+  // Reachability, measured the way a finger measures it: every ladder row's own centre point has to
+  // resolve back to something inside this panel. A floating control from another feature that sits on
+  // top of a row makes the row unreadable, and a text-only arm cannot see that.
+  // Reachability, measured the way a finger measures it. Each ladder row is scrolled to the middle
+  // of the viewport first -- `elementFromPoint` answers `null` for anything below the fold, and
+  // "off-screen in a scrollable page" is not the defect being looked for. Then the row's own centre
+  // point has to resolve back to something inside this panel: a floating control from another
+  // feature sitting on top of a row makes that row unreadable, and a text-only arm cannot see it.
+  read.coveredRows = [];
+  const ladderRows = await page.locator(
+    '[data-testid="access-role-ladder"] li, [data-testid="access-visibility-ladder"] li',
+  );
+  for (let index = 0; index < (await ladderRows.count()); index += 1) {
+    const row = ladderRows.nth(index);
+    // `scrollIntoViewIfNeeded` leaves a row wherever it was, which for the first ladder row means
+    // its centre can still sit under the fixed bottom nav (measured: the 地图 label at y=816 of 844
+    // answered the hit-test). Centre it in the reachable band first, or the arm reports its own
+    // scrolling as a product defect.
+    await row.evaluate((element) => {
+      const nav = document.querySelector("[data-testid='v8-mobile-nav']") ?? null;
+      const usable = nav ? nav.getBoundingClientRect().top : window.innerHeight;
+      window.scrollTo(0, window.scrollY + element.getBoundingClientRect().top - usable / 2);
+    });
+    await page.evaluate(() => new Promise((done) => requestAnimationFrame(done)));
+    const probe = await row.evaluate((element) => {
+      const box = element.getBoundingClientRect();
+      const panel = document.querySelector('[data-testid="access-panel"]');
+      const hit = document.elementFromPoint(box.x + box.width / 2, box.y + box.height / 2);
+      return {
+        label: (element.textContent ?? "").replace(/\s+/g, " ").trim().slice(0, 24),
+        in_viewport: box.y >= 0 && box.bottom <= window.innerHeight,
+        hit_inside_panel: hit ? Boolean(panel?.contains(hit)) : false,
+        hit_testid: hit?.getAttribute?.("data-testid") ?? hit?.tagName?.toLowerCase() ?? null,
+        hit_where: hit
+          ? {
+              tag: hit.tagName.toLowerCase(),
+              cls: (hit.className ?? "").toString().slice(0, 60),
+              text: (hit.textContent ?? "").replace(/\s+/g, " ").trim().slice(0, 24),
+              rect: (({ x, y, width, height }) => ({ x: Math.round(x), y: Math.round(y), w: Math.round(width), h: Math.round(height) }))(
+                hit.getBoundingClientRect(),
+              ),
+              position: getComputedStyle(hit.closest("[class]") ?? hit).position,
+            }
+          : null,
+      };
+    });
+    if (!probe.in_viewport || !probe.hit_inside_panel) read.coveredRows.push(probe);
+  }
   await page.screenshot({ path: `${OUT}/access_${locale.replace("-", "_")}_r1.png`, fullPage: true });
   await context.close();
   return read;
@@ -261,6 +309,11 @@ add(
   "the one control is under the finger at 390x844",
   !!zh.pickerHit && zh.pickerHit.tag === "select" && zh.pickerHit.box.height >= 40 && zh.overflowX === 0,
   JSON.stringify({ tag: zh.pickerHit?.tag, h: zh.pickerHit?.box?.height, overflowX: zh.overflowX }),
+);
+add(
+  "no ladder row is covered by something outside this panel",
+  zh.coveredRows.length === 0 && en.coveredRows.length === 0,
+  JSON.stringify({ zh: zh.coveredRows, en: en.coveredRows }).slice(0, 300),
 );
 add(
   "neither arm threw a page error",
