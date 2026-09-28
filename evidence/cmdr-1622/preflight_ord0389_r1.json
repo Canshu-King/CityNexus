@@ -1,0 +1,839 @@
+{
+ "schema": "CNX_CMDR_LANDING_PREFLIGHT_V1",
+ "lane": "commander 494abfd7",
+ "at_local": "2026-09-28T15:06:31+0800",
+ "mode": "LAND",
+ "authoritative_line": "mirror/integration-frontend-apple-pass1",
+ "tip_re_read_from_github_before": "db6a04cb1d734963b673351973329c08bb264ef3",
+ "candidate_ref": "refs/heads/review/cmdr-recut-ord0389-r1",
+ "candidate_tip": "8fddeb76a79968592a7a3e98d2f296dda450d4df",
+ "genealogy": {
+  "ff_possible_rc": 0,
+  "ff_possible": true,
+  "merge_base": "db6a04cb1d734963b673351973329c08bb264ef3",
+  "line_only_commits": 0,
+  "candidate_only_commits": 8
+ },
+ "file_sets": {
+  "line_side_since_base": [],
+  "candidate_side_since_base": [
+   "backend/app/main.py",
+   "backend/tests/conftest.py",
+   "backend/tests/demo_stage.py",
+   "backend/tests/stateful/test_journey_truth_state_machine.py",
+   "backend/tests/test_agent_alternatives_v3.py",
+   "backend/tests/test_agent_authority_v2_actions.py",
+   "backend/tests/test_agent_mission_runtime.py",
+   "backend/tests/test_agent_principal_boundary.py",
+   "backend/tests/test_agent_runtime_gate.py",
+   "backend/tests/test_backend_connected_golden_contract.py",
+   "backend/tests/test_gpt_adversarial_provider_hardening.py",
+   "backend/tests/test_gpt_solver_hardening_next.py",
+   "backend/tests/test_gpt_weather_adversarial_next.py",
+   "backend/tests/test_guardian_model_evidence.py",
+   "backend/tests/test_guardian_v4.py",
+   "backend/tests/test_mock_replan_engine_next.py",
+   "backend/tests/test_post_goal_five_defects.py",
+   "backend/tests/test_provider_runtime_gate.py",
+   "backend/tests/test_qoder_activity_identity_contract.py",
+   "backend/tests/test_qoder_anywhere_capability_from_store.py",
+   "backend/tests/test_qoder_anywhere_discovery_truth.py",
+   "backend/tests/test_qoder_anywhere_gates.py",
+   "backend/tests/test_qoder_anywhere_lock_duration.py",
+   "backend/tests/test_qoder_anywhere_matrix_truth.py",
+   "backend/tests/test_qoder_beijing_catalogue.py",
+   "backend/tests/test_qoder_catalog_hydration.py",
+   "backend/tests/test_qoder_catalog_reason_code.py",
+   "backend/tests/test_qoder_city_failure_reasons.py",
+   "backend/tests/test_qoder_current_plan_is_named.py",
+   "backend/tests/test_qoder_generic_compose_reason_codes.py",
+   "backend/tests/test_qoder_journey_window_boundary.py",
+   "backend/tests/test_qoder_live_replans_endpoint.py",
+   "backend/tests/test_qoder_mobility_evidence_sources.py",
+   "backend/tests/test_qoder_mobility_hard_gap.py",
+   "backend/tests/test_qoder_mobility_replan_endpoint.py",
+   "backend/tests/test_qoder_ord0219_capability_write_vocabulary.py",
+   "backend/tests/test_qoder_ord0219_write_side_rule_guard.py",
+   "backend/tests/test_qoder_ord0360_single_active_anchor.py",
+   "backend/tests/test_qoder_ord0389_reset_token_gate.py",
+   "backend/tests/test_qoder_ord197_four_class_receipt.py",
+   "backend/tests/test_qoder_ord213_ask_store_before_world.py",
+   "backend/tests/test_qoder_pending_destination_identity.py",
+   "backend/tests/test_qoder_provider_identity_leg.py",
+   "backend/tests/test_qoder_rejection_message_keys.py",
+   "backend/tests/test_qoder_simulation_mode.py",
+   "backend/tests/test_qoder_stay_generation_operations.py",
+   "backend/tests/test_qoder_stay_generation_phases.py",
+   "backend/tests/test_qoder_trip_shape_and_budget_reference.py",
+   "backend/tests/test_rx1_cross_journey_trigger_gate.py",
+   "backend/tests/test_rx4_c4_generate_gate.py",
+   "backend/tests/test_rx4_c4_protection_surface_gate.py",
+   "backend/tests/test_sol_concurrency_and_remap.py",
+   "backend/tests/test_sol_execution_cursor.py",
+   "backend/tests/test_sol_guardian_projection.py",
+   "backend/tests/test_sol_plan_handover.py",
+   "backend/tests/test_solver_runtime_gate.py",
+   "backend/tests/test_v10_flagship_e2e.py",
+   "backend/tests/test_v10_generic_compose.py",
+   "backend/tests/test_v12_authoritative_trip_execution.py",
+   "backend/tests/test_v13_2_intelligent_journey_memory.py",
+   "backend/tests/test_v13_3_prep_deepseek_contract.py",
+   "backend/tests/test_v13_3_real_city_intelligence.py",
+   "backend/tests/test_v14_grounded_adaptive_recovery.py",
+   "backend/tests/test_v15_copilot.py",
+   "backend/tests/test_v16_integration.py",
+   "backend/tests/test_v17_semantic_compiler.py",
+   "backend/tests/test_v18_semantic_time_and_verification.py",
+   "backend/tests/test_v1922_six_fix_regressions.py",
+   "backend/tests/test_v19_traveler_capability.py",
+   "backend/tests/test_v5_autopilot.py",
+   "backend/tests/test_v6_predictive_real_city.py",
+   "backend/tests/test_v7_traveler_twin.py",
+   "backend/tests/test_v8_stay_mobility.py",
+   "backend/tests/test_v9_real_trip_operations.py",
+   "backend/tests/test_vertical_slice_hardening_next.py",
+   "backend/tests/test_weather_refresh_endpoint.py",
+   "backend/tests/test_weather_runtime_gate_gpt.py",
+   "backend/tests/test_weather_runtime_hardening.py",
+   "backend/tests/test_wp01_wp03.py",
+   "backend/tests/test_wp04_endpoints.py",
+   "backend/tests/test_wp04_hardening_wp05.py",
+   "backend/tests/test_wp04a0_bridge.py",
+   "backend/tests/test_wp05_integrity_next.py",
+   "backend/tests/test_wp06_followup_assist.py",
+   "backend/tests/test_wp06_postgate_candidate_provenance.py",
+   "backend/tests/test_wp06_postgate_hardening_next.py",
+   "backend/tests/test_wp06_twin_v2_gate.py",
+   "backend/tests/test_wp07_foundation_assist.py",
+   "backend/tests/v191_harness.py",
+   "backend/tests/v192_harness.py",
+   "contracts/openapi.yaml",
+   "frontend/src/features/simulation/SimulationPanel.tsx",
+   "frontend/src/generated/api.ts",
+   "review/ord0389-reset-token/ABC_ACCEPTANCE.txt",
+   "review/ord0389-reset-token/D_SUITE.txt",
+   "review/ord0389-reset-token/E_CHANGED_TESTS.txt",
+   "review/ord0389-reset-token/F_BUILD.txt",
+   "review/ord0389-reset-token/G_HERMES_COLLECTION_ERRORS.txt",
+   "review/ord0389-reset-token/H_BOOT_OBSERVED.txt"
+  ],
+  "intersection": [],
+  "product_introduced_by_candidate": [
+   "backend/app/main.py",
+   "frontend/src/features/simulation/SimulationPanel.tsx",
+   "frontend/src/generated/api.ts"
+  ]
+ },
+ "merge_tree": {
+  "exit": 0,
+  "first_line": "5dee65fc8035db4e31dbe22266bd39ec18e00fe7",
+  "conflict_reported": false,
+  "stderr_head": ""
+ },
+ "gate_run": {
+  "requested": [
+   "backend/tests/test_qoder_ord0389_reset_token_gate.py",
+   "backend/tests/test_guardian_v4.py"
+  ],
+  "collect_exit": 0,
+  "collected": null,
+  "test_exit": 0,
+  "summary": [
+   "12 passed, 2 warnings in 2.78s"
+  ],
+  "export": "D:/moodle/_qoder_cmdr_ref_20260921/snap_preflight_150549",
+  "blob_equality": [
+   {
+    "path": "backend/app/main.py",
+    "candidate_blob": "923cef1e08ea80658f168e132d3ad0ef0b80a9a3",
+    "export_blob": "923cef1e08ea80658f168e132d3ad0ef0b80a9a3",
+    "equal": true
+   },
+   {
+    "path": "backend/tests/conftest.py",
+    "candidate_blob": "789890ab402162f541d3b85c0e4bb0cd6f14c14a",
+    "export_blob": "789890ab402162f541d3b85c0e4bb0cd6f14c14a",
+    "equal": true
+   },
+   {
+    "path": "backend/tests/demo_stage.py",
+    "candidate_blob": "87758b4265e1d3d29a4589cf4a2cc0d978d2c0e5",
+    "export_blob": "87758b4265e1d3d29a4589cf4a2cc0d978d2c0e5",
+    "equal": true
+   },
+   {
+    "path": "backend/tests/stateful/test_journey_truth_state_machine.py",
+    "candidate_blob": "edd1fa185bbddf20726ec065de4f9351d4e29245",
+    "export_blob": "edd1fa185bbddf20726ec065de4f9351d4e29245",
+    "equal": true
+   },
+   {
+    "path": "backend/tests/test_agent_alternatives_v3.py",
+    "candidate_blob": "783299cbe3aaeca8ab8a8eabbfc1bd50b9270288",
+    "export_blob": "783299cbe3aaeca8ab8a8eabbfc1bd50b9270288",
+    "equal": true
+   },
+   {
+    "path": "backend/tests/test_agent_authority_v2_actions.py",
+    "candidate_blob": "0c619ba6aeff1d576180c6ce16860ebd04c816c0",
+    "export_blob": "0c619ba6aeff1d576180c6ce16860ebd04c816c0",
+    "equal": true
+   },
+   {
+    "path": "backend/tests/test_agent_mission_runtime.py",
+    "candidate_blob": "b2ae5ad46e2dbb6efe2e3a978fb08f723b8a838c",
+    "export_blob": "b2ae5ad46e2dbb6efe2e3a978fb08f723b8a838c",
+    "equal": true
+   },
+   {
+    "path": "backend/tests/test_agent_principal_boundary.py",
+    "candidate_blob": "d0829e63c9849ff6f7c9dc7dc2bf921b7418d692",
+    "export_blob": "d0829e63c9849ff6f7c9dc7dc2bf921b7418d692",
+    "equal": true
+   },
+   {
+    "path": "backend/tests/test_agent_runtime_gate.py",
+    "candidate_blob": "ea6beccd0342d2ef0cb6c65d09d439da34d73a17",
+    "export_blob": "ea6beccd0342d2ef0cb6c65d09d439da34d73a17",
+    "equal": true
+   },
+   {
+    "path": "backend/tests/test_backend_connected_golden_contract.py",
+    "candidate_blob": "011dfcef17f1bbd7224751cd2bcdf8574f0a8aeb",
+    "export_blob": "011dfcef17f1bbd7224751cd2bcdf8574f0a8aeb",
+    "equal": true
+   },
+   {
+    "path": "backend/tests/test_gpt_adversarial_provider_hardening.py",
+    "candidate_blob": "512af632d9aa24043f3fe02a429b91c3ac580dfb",
+    "export_blob": "512af632d9aa24043f3fe02a429b91c3ac580dfb",
+    "equal": true
+   },
+   {
+    "path": "backend/tests/test_gpt_solver_hardening_next.py",
+    "candidate_blob": "35084d1bfcb0a2f39be192ad433d4e43c4f07d1a",
+    "export_blob": "35084d1bfcb0a2f39be192ad433d4e43c4f07d1a",
+    "equal": true
+   },
+   {
+    "path": "backend/tests/test_gpt_weather_adversarial_next.py",
+    "candidate_blob": "b0767e7fdd7296a9651e95592fa83e4be9f642fa",
+    "export_blob": "b0767e7fdd7296a9651e95592fa83e4be9f642fa",
+    "equal": true
+   },
+   {
+    "path": "backend/tests/test_guardian_model_evidence.py",
+    "candidate_blob": "ba883c9033784ecbf6887be2c3b78aa44a39a99c",
+    "export_blob": "ba883c9033784ecbf6887be2c3b78aa44a39a99c",
+    "equal": true
+   },
+   {
+    "path": "backend/tests/test_guardian_v4.py",
+    "candidate_blob": "bee00567208191ab985c1e92c27fd3bff8c1068c",
+    "export_blob": "bee00567208191ab985c1e92c27fd3bff8c1068c",
+    "equal": true
+   },
+   {
+    "path": "backend/tests/test_mock_replan_engine_next.py",
+    "candidate_blob": "39999a2ebe2c9bcc284ebd28432897d26222cc71",
+    "export_blob": "39999a2ebe2c9bcc284ebd28432897d26222cc71",
+    "equal": true
+   },
+   {
+    "path": "backend/tests/test_post_goal_five_defects.py",
+    "candidate_blob": "66be082dfacc67bc4f53154bbfb86a721bb4806f",
+    "export_blob": "66be082dfacc67bc4f53154bbfb86a721bb4806f",
+    "equal": true
+   },
+   {
+    "path": "backend/tests/test_provider_runtime_gate.py",
+    "candidate_blob": "ccf7f8eeb699e8b241926ab6c47e85ad7aa9c2d4",
+    "export_blob": "ccf7f8eeb699e8b241926ab6c47e85ad7aa9c2d4",
+    "equal": true
+   },
+   {
+    "path": "backend/tests/test_qoder_activity_identity_contract.py",
+    "candidate_blob": "5cf075c47420bfad5b6a753c53b93a9bfbf50f5f",
+    "export_blob": "5cf075c47420bfad5b6a753c53b93a9bfbf50f5f",
+    "equal": true
+   },
+   {
+    "path": "backend/tests/test_qoder_anywhere_capability_from_store.py",
+    "candidate_blob": "6180f94254cb2cb13539694dd3a91a9d54b13e0e",
+    "export_blob": "6180f94254cb2cb13539694dd3a91a9d54b13e0e",
+    "equal": true
+   },
+   {
+    "path": "backend/tests/test_qoder_anywhere_discovery_truth.py",
+    "candidate_blob": "19e2e56741f69e8544f81c1a2d3b90a0a22ce385",
+    "export_blob": "19e2e56741f69e8544f81c1a2d3b90a0a22ce385",
+    "equal": true
+   },
+   {
+    "path": "backend/tests/test_qoder_anywhere_gates.py",
+    "candidate_blob": "fbdff5d636fccd3f2b6934eb519f75c2121bd1ce",
+    "export_blob": "fbdff5d636fccd3f2b6934eb519f75c2121bd1ce",
+    "equal": true
+   },
+   {
+    "path": "backend/tests/test_qoder_anywhere_lock_duration.py",
+    "candidate_blob": "44081e39631d94000d667ae1b0cae6d822844ae7",
+    "export_blob": "44081e39631d94000d667ae1b0cae6d822844ae7",
+    "equal": true
+   },
+   {
+    "path": "backend/tests/test_qoder_anywhere_matrix_truth.py",
+    "candidate_blob": "48260c9dd80a2bc0ecfd8a0898432c05d599f78d",
+    "export_blob": "48260c9dd80a2bc0ecfd8a0898432c05d599f78d",
+    "equal": true
+   },
+   {
+    "path": "backend/tests/test_qoder_beijing_catalogue.py",
+    "candidate_blob": "3ac8373992c1ef634eedb9f0b3db75594e2cc6cd",
+    "export_blob": "3ac8373992c1ef634eedb9f0b3db75594e2cc6cd",
+    "equal": true
+   },
+   {
+    "path": "backend/tests/test_qoder_catalog_hydration.py",
+    "candidate_blob": "ea1e8ed5cd7f80b2b456dc0bd602877c9224bbe3",
+    "export_blob": "ea1e8ed5cd7f80b2b456dc0bd602877c9224bbe3",
+    "equal": true
+   },
+   {
+    "path": "backend/tests/test_qoder_catalog_reason_code.py",
+    "candidate_blob": "78e81d2d2d010aebc6a280665368f2c74e2abb0e",
+    "export_blob": "78e81d2d2d010aebc6a280665368f2c74e2abb0e",
+    "equal": true
+   },
+   {
+    "path": "backend/tests/test_qoder_city_failure_reasons.py",
+    "candidate_blob": "d899c8a510b9b60cef98d01b4a33f01163c409bd",
+    "export_blob": "d899c8a510b9b60cef98d01b4a33f01163c409bd",
+    "equal": true
+   },
+   {
+    "path": "backend/tests/test_qoder_current_plan_is_named.py",
+    "candidate_blob": "1b49e8bce4c022831c1e7f765f690859ec60765c",
+    "export_blob": "1b49e8bce4c022831c1e7f765f690859ec60765c",
+    "equal": true
+   },
+   {
+    "path": "backend/tests/test_qoder_generic_compose_reason_codes.py",
+    "candidate_blob": "d316dfaa1ba496c02679bf84147126e3588fd77e",
+    "export_blob": "d316dfaa1ba496c02679bf84147126e3588fd77e",
+    "equal": true
+   },
+   {
+    "path": "backend/tests/test_qoder_journey_window_boundary.py",
+    "candidate_blob": "d639f448454974b01c99a59d3920489bf0cf3b9a",
+    "export_blob": "d639f448454974b01c99a59d3920489bf0cf3b9a",
+    "equal": true
+   },
+   {
+    "path": "backend/tests/test_qoder_live_replans_endpoint.py",
+    "candidate_blob": "5a80f23b0c95f581086384ed41ea38a8166bfa95",
+    "export_blob": "5a80f23b0c95f581086384ed41ea38a8166bfa95",
+    "equal": true
+   },
+   {
+    "path": "backend/tests/test_qoder_mobility_evidence_sources.py",
+    "candidate_blob": "ee35c2d59dbe01f44dcc158574b0be240ca1eebb",
+    "export_blob": "ee35c2d59dbe01f44dcc158574b0be240ca1eebb",
+    "equal": true
+   },
+   {
+    "path": "backend/tests/test_qoder_mobility_hard_gap.py",
+    "candidate_blob": "95729362b3b200366855e79346dd83a07163da40",
+    "export_blob": "95729362b3b200366855e79346dd83a07163da40",
+    "equal": true
+   },
+   {
+    "path": "backend/tests/test_qoder_mobility_replan_endpoint.py",
+    "candidate_blob": "0c37d887886148315af8e84c7f6ef8aadfa887b7",
+    "export_blob": "0c37d887886148315af8e84c7f6ef8aadfa887b7",
+    "equal": true
+   },
+   {
+    "path": "backend/tests/test_qoder_ord0219_capability_write_vocabulary.py",
+    "candidate_blob": "d1de6ca65368712ad650cdd797484bde00e84e60",
+    "export_blob": "d1de6ca65368712ad650cdd797484bde00e84e60",
+    "equal": true
+   },
+   {
+    "path": "backend/tests/test_qoder_ord0219_write_side_rule_guard.py",
+    "candidate_blob": "10404207c47d399c78cd04dff90fad4eb5e9a9a3",
+    "export_blob": "10404207c47d399c78cd04dff90fad4eb5e9a9a3",
+    "equal": true
+   },
+   {
+    "path": "backend/tests/test_qoder_ord0360_single_active_anchor.py",
+    "candidate_blob": "4ca574645ed8e7b4ee8cf432108f7ee9b0395d39",
+    "export_blob": "4ca574645ed8e7b4ee8cf432108f7ee9b0395d39",
+    "equal": true
+   },
+   {
+    "path": "backend/tests/test_qoder_ord0389_reset_token_gate.py",
+    "candidate_blob": "04cc01885a8e0c6f2100f785cf8ac363b76acce5",
+    "export_blob": "04cc01885a8e0c6f2100f785cf8ac363b76acce5",
+    "equal": true
+   },
+   {
+    "path": "backend/tests/test_qoder_ord197_four_class_receipt.py",
+    "candidate_blob": "bed80a5b0f0cb680e904aecf1c9b9d33796cd217",
+    "export_blob": "bed80a5b0f0cb680e904aecf1c9b9d33796cd217",
+    "equal": true
+   },
+   {
+    "path": "backend/tests/test_qoder_ord213_ask_store_before_world.py",
+    "candidate_blob": "0660b030770fa9ae40278607df19d5c6959d4f55",
+    "export_blob": "0660b030770fa9ae40278607df19d5c6959d4f55",
+    "equal": true
+   },
+   {
+    "path": "backend/tests/test_qoder_pending_destination_identity.py",
+    "candidate_blob": "725db426ee1bc80fdf01e7719fa494924b050776",
+    "export_blob": "725db426ee1bc80fdf01e7719fa494924b050776",
+    "equal": true
+   },
+   {
+    "path": "backend/tests/test_qoder_provider_identity_leg.py",
+    "candidate_blob": "2e79969efe05d6b27fbb3a7ad30c05a380a7ae26",
+    "export_blob": "2e79969efe05d6b27fbb3a7ad30c05a380a7ae26",
+    "equal": true
+   },
+   {
+    "path": "backend/tests/test_qoder_rejection_message_keys.py",
+    "candidate_blob": "319e412d692074f5263ae269f52a06316083cf48",
+    "export_blob": "319e412d692074f5263ae269f52a06316083cf48",
+    "equal": true
+   },
+   {
+    "path": "backend/tests/test_qoder_simulation_mode.py",
+    "candidate_blob": "b92a85419389d597f79c6a289fdcfd947de36ae5",
+    "export_blob": "b92a85419389d597f79c6a289fdcfd947de36ae5",
+    "equal": true
+   },
+   {
+    "path": "backend/tests/test_qoder_stay_generation_operations.py",
+    "candidate_blob": "e56a9ff885630e8c9f3542d0f348483402f9b6bc",
+    "export_blob": "e56a9ff885630e8c9f3542d0f348483402f9b6bc",
+    "equal": true
+   },
+   {
+    "path": "backend/tests/test_qoder_stay_generation_phases.py",
+    "candidate_blob": "e837e025b6c6e44e3dc1ef0dd14bd5cad3728c7e",
+    "export_blob": "e837e025b6c6e44e3dc1ef0dd14bd5cad3728c7e",
+    "equal": true
+   },
+   {
+    "path": "backend/tests/test_qoder_trip_shape_and_budget_reference.py",
+    "candidate_blob": "2bf3e5f5996b53211358c9a0cfcf742ff25ac359",
+    "export_blob": "2bf3e5f5996b53211358c9a0cfcf742ff25ac359",
+    "equal": true
+   },
+   {
+    "path": "backend/tests/test_rx1_cross_journey_trigger_gate.py",
+    "candidate_blob": "ccb7d1ec0b1baa30196fbf9afadd144c3300b983",
+    "export_blob": "ccb7d1ec0b1baa30196fbf9afadd144c3300b983",
+    "equal": true
+   },
+   {
+    "path": "backend/tests/test_rx4_c4_generate_gate.py",
+    "candidate_blob": "4b8c6d3e1a8bec37c27d95ff8af1f3fff09651e3",
+    "export_blob": "4b8c6d3e1a8bec37c27d95ff8af1f3fff09651e3",
+    "equal": true
+   },
+   {
+    "path": "backend/tests/test_rx4_c4_protection_surface_gate.py",
+    "candidate_blob": "6feab0e327e2595a81ade2622090bb13d9282674",
+    "export_blob": "6feab0e327e2595a81ade2622090bb13d9282674",
+    "equal": true
+   },
+   {
+    "path": "backend/tests/test_sol_concurrency_and_remap.py",
+    "candidate_blob": "a1f664a60157af6acd439f1391f67fc60540a0c6",
+    "export_blob": "a1f664a60157af6acd439f1391f67fc60540a0c6",
+    "equal": true
+   },
+   {
+    "path": "backend/tests/test_sol_execution_cursor.py",
+    "candidate_blob": "a8032548a72d5a247859b51b41a55f4cced86834",
+    "export_blob": "a8032548a72d5a247859b51b41a55f4cced86834",
+    "equal": true
+   },
+   {
+    "path": "backend/tests/test_sol_guardian_projection.py",
+    "candidate_blob": "e7bf65a4e5adc83ec8ddaa736b4b1e1511bb679d",
+    "export_blob": "e7bf65a4e5adc83ec8ddaa736b4b1e1511bb679d",
+    "equal": true
+   },
+   {
+    "path": "backend/tests/test_sol_plan_handover.py",
+    "candidate_blob": "efc3f8746b366d152aafc86bc9edc897488ffd55",
+    "export_blob": "efc3f8746b366d152aafc86bc9edc897488ffd55",
+    "equal": true
+   },
+   {
+    "path": "backend/tests/test_solver_runtime_gate.py",
+    "candidate_blob": "131bc5b122e7456097c9beb9075879b5fb06a984",
+    "export_blob": "131bc5b122e7456097c9beb9075879b5fb06a984",
+    "equal": true
+   },
+   {
+    "path": "backend/tests/test_v10_flagship_e2e.py",
+    "candidate_blob": "a285f5bd253a0f2ad9141b295b7e59d2bab286d6",
+    "export_blob": "a285f5bd253a0f2ad9141b295b7e59d2bab286d6",
+    "equal": true
+   },
+   {
+    "path": "backend/tests/test_v10_generic_compose.py",
+    "candidate_blob": "562a2535ce76dabcf3b2a5d3b3b3f6c088f79b69",
+    "export_blob": "562a2535ce76dabcf3b2a5d3b3b3f6c088f79b69",
+    "equal": true
+   },
+   {
+    "path": "backend/tests/test_v12_authoritative_trip_execution.py",
+    "candidate_blob": "bd2a3850b40b5dc9214674809e19bc982187f24b",
+    "export_blob": "bd2a3850b40b5dc9214674809e19bc982187f24b",
+    "equal": true
+   },
+   {
+    "path": "backend/tests/test_v13_2_intelligent_journey_memory.py",
+    "candidate_blob": "f86c6a730738e7a0689b7829b189c63792d939f9",
+    "export_blob": "f86c6a730738e7a0689b7829b189c63792d939f9",
+    "equal": true
+   },
+   {
+    "path": "backend/tests/test_v13_3_prep_deepseek_contract.py",
+    "candidate_blob": "925deaf8a4dba28b632765e70879b27f58a60513",
+    "export_blob": "925deaf8a4dba28b632765e70879b27f58a60513",
+    "equal": true
+   },
+   {
+    "path": "backend/tests/test_v13_3_real_city_intelligence.py",
+    "candidate_blob": "e9ce219956f9d161d0abd53aa8f7852a840947e1",
+    "export_blob": "e9ce219956f9d161d0abd53aa8f7852a840947e1",
+    "equal": true
+   },
+   {
+    "path": "backend/tests/test_v14_grounded_adaptive_recovery.py",
+    "candidate_blob": "66f4033ee2245b974a5fc8694b7f01246600e0d0",
+    "export_blob": "66f4033ee2245b974a5fc8694b7f01246600e0d0",
+    "equal": true
+   },
+   {
+    "path": "backend/tests/test_v15_copilot.py",
+    "candidate_blob": "1830e7ab55fd2a96ba59eea4f727a0ca3e7df861",
+    "export_blob": "1830e7ab55fd2a96ba59eea4f727a0ca3e7df861",
+    "equal": true
+   },
+   {
+    "path": "backend/tests/test_v16_integration.py",
+    "candidate_blob": "1ba32bfa6d3bcbd1515fa005721201bf2d73021c",
+    "export_blob": "1ba32bfa6d3bcbd1515fa005721201bf2d73021c",
+    "equal": true
+   },
+   {
+    "path": "backend/tests/test_v17_semantic_compiler.py",
+    "candidate_blob": "cb64cf434bea7f4546dd4a4a26b489b53f6803d6",
+    "export_blob": "cb64cf434bea7f4546dd4a4a26b489b53f6803d6",
+    "equal": true
+   },
+   {
+    "path": "backend/tests/test_v18_semantic_time_and_verification.py",
+    "candidate_blob": "8ba9a3ba93c2c3e97b4491d93fb8f472ece16331",
+    "export_blob": "8ba9a3ba93c2c3e97b4491d93fb8f472ece16331",
+    "equal": true
+   },
+   {
+    "path": "backend/tests/test_v1922_six_fix_regressions.py",
+    "candidate_blob": "02773336ff52d4f6b18a77b83ee78c775b4be4d6",
+    "export_blob": "02773336ff52d4f6b18a77b83ee78c775b4be4d6",
+    "equal": true
+   },
+   {
+    "path": "backend/tests/test_v19_traveler_capability.py",
+    "candidate_blob": "315c3195c961f7d8abb98cbecb07919870eb3843",
+    "export_blob": "315c3195c961f7d8abb98cbecb07919870eb3843",
+    "equal": true
+   },
+   {
+    "path": "backend/tests/test_v5_autopilot.py",
+    "candidate_blob": "ceb4f07b64a1856c0423ba26e13762c71e813019",
+    "export_blob": "ceb4f07b64a1856c0423ba26e13762c71e813019",
+    "equal": true
+   },
+   {
+    "path": "backend/tests/test_v6_predictive_real_city.py",
+    "candidate_blob": "0a90318e9aaef83dfd014d2027c990fe2a34e467",
+    "export_blob": "0a90318e9aaef83dfd014d2027c990fe2a34e467",
+    "equal": true
+   },
+   {
+    "path": "backend/tests/test_v7_traveler_twin.py",
+    "candidate_blob": "5ed8b49900cb415de33e4435ab00a163d3c7e151",
+    "export_blob": "5ed8b49900cb415de33e4435ab00a163d3c7e151",
+    "equal": true
+   },
+   {
+    "path": "backend/tests/test_v8_stay_mobility.py",
+    "candidate_blob": "dd63c680eb8dd149c6c62fd0133bbbe6f5508e95",
+    "export_blob": "dd63c680eb8dd149c6c62fd0133bbbe6f5508e95",
+    "equal": true
+   },
+   {
+    "path": "backend/tests/test_v9_real_trip_operations.py",
+    "candidate_blob": "17d2870758d6128fcdf6f16b945e01308df66966",
+    "export_blob": "17d2870758d6128fcdf6f16b945e01308df66966",
+    "equal": true
+   },
+   {
+    "path": "backend/tests/test_vertical_slice_hardening_next.py",
+    "candidate_blob": "8d4179f17d9412c6f8b6a4ea53035561992cacf0",
+    "export_blob": "8d4179f17d9412c6f8b6a4ea53035561992cacf0",
+    "equal": true
+   },
+   {
+    "path": "backend/tests/test_weather_refresh_endpoint.py",
+    "candidate_blob": "0d491edddcf25bfb3f7e1ff883c96014932e662d",
+    "export_blob": "0d491edddcf25bfb3f7e1ff883c96014932e662d",
+    "equal": true
+   },
+   {
+    "path": "backend/tests/test_weather_runtime_gate_gpt.py",
+    "candidate_blob": "d8ffa0d8f2d1c6760467464af7df993402841f7e",
+    "export_blob": "d8ffa0d8f2d1c6760467464af7df993402841f7e",
+    "equal": true
+   },
+   {
+    "path": "backend/tests/test_weather_runtime_hardening.py",
+    "candidate_blob": "c429cfd33158d395d3a88361f0feb10df5a8a4b0",
+    "export_blob": "c429cfd33158d395d3a88361f0feb10df5a8a4b0",
+    "equal": true
+   },
+   {
+    "path": "backend/tests/test_wp01_wp03.py",
+    "candidate_blob": "3d8c3c9a040e60a8d5c5e755f9d048abbba3f83a",
+    "export_blob": "3d8c3c9a040e60a8d5c5e755f9d048abbba3f83a",
+    "equal": true
+   },
+   {
+    "path": "backend/tests/test_wp04_endpoints.py",
+    "candidate_blob": "7b2a92a5f130ad6dfa5b47634e573b9cb2521097",
+    "export_blob": "7b2a92a5f130ad6dfa5b47634e573b9cb2521097",
+    "equal": true
+   },
+   {
+    "path": "backend/tests/test_wp04_hardening_wp05.py",
+    "candidate_blob": "407159c89b88b280b20183751fc6f12a54653de6",
+    "export_blob": "407159c89b88b280b20183751fc6f12a54653de6",
+    "equal": true
+   },
+   {
+    "path": "backend/tests/test_wp04a0_bridge.py",
+    "candidate_blob": "15f6891d88f3acec1a1835880b215931b7b9ecb4",
+    "export_blob": "15f6891d88f3acec1a1835880b215931b7b9ecb4",
+    "equal": true
+   },
+   {
+    "path": "backend/tests/test_wp05_integrity_next.py",
+    "candidate_blob": "732b1300c3f1f97d26efe8d876a04209ae3194c1",
+    "export_blob": "732b1300c3f1f97d26efe8d876a04209ae3194c1",
+    "equal": true
+   },
+   {
+    "path": "backend/tests/test_wp06_followup_assist.py",
+    "candidate_blob": "87f8feb49099f1e78a26ef8b5201dd9d820ccb8d",
+    "export_blob": "87f8feb49099f1e78a26ef8b5201dd9d820ccb8d",
+    "equal": true
+   },
+   {
+    "path": "backend/tests/test_wp06_postgate_candidate_provenance.py",
+    "candidate_blob": "44df921319d6632a6432b2abf56e54a7eb332137",
+    "export_blob": "44df921319d6632a6432b2abf56e54a7eb332137",
+    "equal": true
+   },
+   {
+    "path": "backend/tests/test_wp06_postgate_hardening_next.py",
+    "candidate_blob": "fe3349724ca35889909d6ab99bac4b5ea9dd1ad9",
+    "export_blob": "fe3349724ca35889909d6ab99bac4b5ea9dd1ad9",
+    "equal": true
+   },
+   {
+    "path": "backend/tests/test_wp06_twin_v2_gate.py",
+    "candidate_blob": "98dec7764455cb2144ef4fd54d493e693f1bf9b5",
+    "export_blob": "98dec7764455cb2144ef4fd54d493e693f1bf9b5",
+    "equal": true
+   },
+   {
+    "path": "backend/tests/test_wp07_foundation_assist.py",
+    "candidate_blob": "9aed271cac36031d19bef9d46b08788d886d901c",
+    "export_blob": "9aed271cac36031d19bef9d46b08788d886d901c",
+    "equal": true
+   },
+   {
+    "path": "backend/tests/v191_harness.py",
+    "candidate_blob": "3aecf54a6f88d4cf08fbff183fd213abb4e5b991",
+    "export_blob": "3aecf54a6f88d4cf08fbff183fd213abb4e5b991",
+    "equal": true
+   },
+   {
+    "path": "backend/tests/v192_harness.py",
+    "candidate_blob": "68629dbbdcb2e1bf4ed90518802b2115a9cc1b42",
+    "export_blob": "68629dbbdcb2e1bf4ed90518802b2115a9cc1b42",
+    "equal": true
+   },
+   {
+    "path": "contracts/openapi.yaml",
+    "candidate_blob": "177f3ad34f4198e87f9d8353b10d9724a816c55d",
+    "export_blob": "177f3ad34f4198e87f9d8353b10d9724a816c55d",
+    "equal": true
+   },
+   {
+    "path": "frontend/src/features/simulation/SimulationPanel.tsx",
+    "candidate_blob": "2789582bf8c8c368f2980d949223c6d0b96d4743",
+    "export_blob": "2789582bf8c8c368f2980d949223c6d0b96d4743",
+    "equal": true
+   },
+   {
+    "path": "frontend/src/generated/api.ts",
+    "candidate_blob": "c3810367191db548e2a82c109605aefd7ba52f3b",
+    "export_blob": "c3810367191db548e2a82c109605aefd7ba52f3b",
+    "equal": true
+   },
+   {
+    "path": "review/ord0389-reset-token/ABC_ACCEPTANCE.txt",
+    "candidate_blob": "406bb9a1ac3c11f35e0a7fee216c0b175e0f5900",
+    "export_blob": "406bb9a1ac3c11f35e0a7fee216c0b175e0f5900",
+    "equal": true
+   },
+   {
+    "path": "review/ord0389-reset-token/D_SUITE.txt",
+    "candidate_blob": "97c1cdc59a4eb5393c4ebb4ed8cf3b7e5f477e89",
+    "export_blob": "97c1cdc59a4eb5393c4ebb4ed8cf3b7e5f477e89",
+    "equal": true
+   },
+   {
+    "path": "review/ord0389-reset-token/E_CHANGED_TESTS.txt",
+    "candidate_blob": "fbbeea43910db4e8cfc2d27a9835abc82e0aaf5b",
+    "export_blob": "fbbeea43910db4e8cfc2d27a9835abc82e0aaf5b",
+    "equal": true
+   },
+   {
+    "path": "review/ord0389-reset-token/F_BUILD.txt",
+    "candidate_blob": "00ba47add06badd366d635b6e3e4eab600bab05c",
+    "export_blob": "00ba47add06badd366d635b6e3e4eab600bab05c",
+    "equal": true
+   },
+   {
+    "path": "review/ord0389-reset-token/G_HERMES_COLLECTION_ERRORS.txt",
+    "candidate_blob": "3a38caf7f69d525d6a828acb25b41745ccfe7cbe",
+    "export_blob": "3a38caf7f69d525d6a828acb25b41745ccfe7cbe",
+    "equal": true
+   },
+   {
+    "path": "review/ord0389-reset-token/H_BOOT_OBSERVED.txt",
+    "candidate_blob": "1665b04982693457f238e2a3632ff1eec53670ca",
+    "export_blob": "1665b04982693457f238e2a3632ff1eec53670ca",
+    "equal": true
+   }
+  ],
+  "whole_suite": {
+   "collect_exit": 0,
+   "collected": 1412,
+   "interrupted": false,
+   "error_lines": [
+    "tests/test_qoder_ord0332_error_receipt.py::test_R7_the_envelope_keeps_every_field_it_already_had",
+    "tests/test_qoder_ord0332_error_receipt.py::test_R8_the_seed_is_read_off_the_real_request_not_just_the_dataclass",
+    "tests/test_solver_runtime_policy.py::test_unexpected_solver_programming_error_is_not_silently_hidden"
+   ],
+   "tail": [
+    "    _PortalFactoryType = Callable[[], AbstractContextManager[anyio.abc.BlockingPortal]]",
+    "-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html",
+    "1412 tests collected in 4.51s"
+   ],
+   "cmd": "D:/moodle/CityNexus/.venv/Scripts/python.exe -m pytest --collect-only -q tests  (cwd=<export>/backend, PYTHONPATH=<export>)"
+  },
+  "deletions": {
+   "deleted_by_candidate": [],
+   "still_present_in_export": []
+  },
+  "collect_stdout_tail": [
+   "",
+   "-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html",
+   "12 tests collected in 2.08s"
+  ],
+  "rooted_tests": {
+   "paths": [
+    "backend/tests/test_qoder_ord0389_reset_token_gate.py",
+    "backend/tests/test_guardian_v4.py"
+   ],
+   "exit": 0,
+   "summary": [
+    "12 passed, 2 warnings in 2.58s"
+   ]
+  },
+  "interpreter": "Python 3.12.14 (main, Aug 25 2026, 14:01:42) [MSC v.1944 64 bit (AMD64)]",
+  "exposure": {
+   "ruler_blob": "d3f66ce9fecd0790981a4fcdeb5e36b1c0fd10f2",
+   "ruler_blob_computed": null,
+   "ruler_file": "ui_exposure_taint_ast_r7b.cjs",
+   "candidate_files_in_view": 2,
+   "tip_cells": 10,
+   "cand_cells": 10,
+   "growth_by_file_and_rule": {},
+   "unpaired_added": [],
+   "added_line_exact": [
+    "SimulationPanel.tsx:937|UPSTREAM_TEXT_VIA_HELPER_TO_DOM"
+   ],
+   "shifted_only": true,
+   "removed_count": 1,
+   "removed": [
+    "SimulationPanel.tsx:934|UPSTREAM_TEXT_VIA_HELPER_TO_DOM"
+   ],
+   "disclosed_slip": "a same-file, same-rule relocation with equal counts reads as a shift; the AST ruler has no cell identity"
+  },
+  "frontend_build": {
+   "builder_rc": 0,
+   "vite_build_rc": 0,
+   "dist_exists": true,
+   "index_exists": true,
+   "asset_refs": [
+    "/assets/index-CIWOf9xc.js",
+    "/assets/index-DJ0wwAnl.css"
+   ],
+   "live_tree": "5dee65fc8035db4e31dbe22266bd39ec18e00fe7",
+   "info_file": "D:\\moodle\\_qoder_cmdr_ref_20260921\\live_checks\\_build_8fddeb7_info.json",
+   "build_tail": [
+    "files generated",
+    "  dist/v10-sw.js",
+    "  dist/workbox-6923124b.js",
+    "\u001b[33m",
+    "(!) Some chunks are larger than 500 kB after minification. Consider:",
+    "- Using dynamic import() to code-split the application",
+    "- Use build.rollupOptions.output.manualChunks to improve chunking: https://rollupjs.org/configuration-options/#output-manualchunks",
+    "- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.\u001b[39m"
+   ]
+  }
+ },
+ "problems": [],
+ "verdict": "READY_TO_LAND",
+ "landing": {
+  "http": 200,
+  "response_head": "{'ref': 'refs/heads/mirror/integration-frontend-apple-pass1', 'node_id': 'REF_kwDOUhlJJ9oAMnJlZnMvaGVhZHMvbWlycm9yL2ludGVncmF0aW9uLWZyb250ZW5kLWFwcGxlLXBhc3Mx', 'url': 'https://api.github.com/repos/Ca",
+  "tip_after": "8fddeb76a79968592a7a3e98d2f296dda450d4df",
+  "branches_route": "8fddeb76a79968592a7a3e98d2f296dda450d4df",
+  "both_routes_agree": true,
+  "landed": true
+ },
+ "discipline": {
+  "evidence_paths_overwritten": 0,
+  "databases_opened": 0,
+  "surfaces_started_or_stopped": 0,
+  "credential_values_printed": 0,
+  "candidate_refs_pushed_by_commander": 0
+ },
+ "claim_kind": "git_and_pytest_determined",
+ "claimed_result": null,
+ "derived_result": null
+}
