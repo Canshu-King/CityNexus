@@ -1,0 +1,333 @@
+{
+  "instrument": "cmdr_junction_audit_r1",
+  "root": "D:/moodle/_qoder_cmdr_ref_20260921/live_checks",
+  "build_dirs_scanned": 65,
+  "reparse_points_found": 64,
+  "distinct_targets": [
+    "//?/D:/moodle/CityNexus/frontend/node_modules"
+  ],
+  "links_pointing_at_the_product_repo_node_modules": 64,
+  "rule": "a recursive delete of any of these build dirs follows the link and destroys the target; detach each junction with a plain rmdir on the LINK itself before deleting the tree",
+  "findings": [
+    {
+      "build_dir": "_build_034cf2b",
+      "link": "_build_034cf2b/frontend/node_modules",
+      "target": "//?/D:/moodle/CityNexus/frontend/node_modules"
+    },
+    {
+      "build_dir": "_build_2521aed",
+      "link": "_build_2521aed/frontend/node_modules",
+      "target": "//?/D:/moodle/CityNexus/frontend/node_modules"
+    },
+    {
+      "build_dir": "_build_3543928",
+      "link": "_build_3543928/frontend/node_modules",
+      "target": "//?/D:/moodle/CityNexus/frontend/node_modules"
+    },
+    {
+      "build_dir": "_build_39f571b",
+      "link": "_build_39f571b/frontend/node_modules",
+      "target": "//?/D:/moodle/CityNexus/frontend/node_modules"
+    },
+    {
+      "build_dir": "_build_3b6c96e",
+      "link": "_build_3b6c96e/frontend/node_modules",
+      "target": "//?/D:/moodle/CityNexus/frontend/node_modules"
+    },
+    {
+      "build_dir": "_build_3d28da7",
+      "link": "_build_3d28da7/frontend/node_modules",
+      "target": "//?/D:/moodle/CityNexus/frontend/node_modules"
+    },
+    {
+      "build_dir": "_build_83395a9",
+      "link": "_build_83395a9/frontend/node_modules",
+      "target": "//?/D:/moodle/CityNexus/frontend/node_modules"
+    },
+    {
+      "build_dir": "_build_869a5b4",
+      "link": "_build_869a5b4/frontend/node_modules",
+      "target": "//?/D:/moodle/CityNexus/frontend/node_modules"
+    },
+    {
+      "build_dir": "_build_890b7cf",
+      "link": "_build_890b7cf/frontend/node_modules",
+      "target": "//?/D:/moodle/CityNexus/frontend/node_modules"
+    },
+    {
+      "build_dir": "_build_8a7665b",
+      "link": "_build_8a7665b/frontend/node_modules",
+      "target": "//?/D:/moodle/CityNexus/frontend/node_modules"
+    },
+    {
+      "build_dir": "_build_8d038b2",
+      "link": "_build_8d038b2/frontend/node_modules",
+      "target": "//?/D:/moodle/CityNexus/frontend/node_modules"
+    },
+    {
+      "build_dir": "_build_8ffba43",
+      "link": "_build_8ffba43/frontend/node_modules",
+      "target": "//?/D:/moodle/CityNexus/frontend/node_modules"
+    },
+    {
+      "build_dir": "_build_9930748",
+      "link": "_build_9930748/frontend/node_modules",
+      "target": "//?/D:/moodle/CityNexus/frontend/node_modules"
+    },
+    {
+      "build_dir": "_build_a0c5fba",
+      "link": "_build_a0c5fba/frontend/node_modules",
+      "target": "//?/D:/moodle/CityNexus/frontend/node_modules"
+    },
+    {
+      "build_dir": "_build_a8eed15",
+      "link": "_build_a8eed15/frontend/node_modules",
+      "target": "//?/D:/moodle/CityNexus/frontend/node_modules"
+    },
+    {
+      "build_dir": "_build_ae69f63",
+      "link": "_build_ae69f63/frontend/node_modules",
+      "target": "//?/D:/moodle/CityNexus/frontend/node_modules"
+    },
+    {
+      "build_dir": "_build_c75c3d7",
+      "link": "_build_c75c3d7/frontend/node_modules",
+      "target": "//?/D:/moodle/CityNexus/frontend/node_modules"
+    },
+    {
+      "build_dir": "_build_cb929e0",
+      "link": "_build_cb929e0/frontend/node_modules",
+      "target": "//?/D:/moodle/CityNexus/frontend/node_modules"
+    },
+    {
+      "build_dir": "_build_cbb6f16",
+      "link": "_build_cbb6f16/frontend/node_modules",
+      "target": "//?/D:/moodle/CityNexus/frontend/node_modules"
+    },
+    {
+      "build_dir": "_build_dccd13a",
+      "link": "_build_dccd13a/frontend/node_modules",
+      "target": "//?/D:/moodle/CityNexus/frontend/node_modules"
+    },
+    {
+      "build_dir": "_build_f218175",
+      "link": "_build_f218175/frontend/node_modules",
+      "target": "//?/D:/moodle/CityNexus/frontend/node_modules"
+    },
+    {
+      "build_dir": "_build_f662905",
+      "link": "_build_f662905/frontend/node_modules",
+      "target": "//?/D:/moodle/CityNexus/frontend/node_modules"
+    },
+    {
+      "build_dir": "_build_fb6131f",
+      "link": "_build_fb6131f/frontend/node_modules",
+      "target": "//?/D:/moodle/CityNexus/frontend/node_modules"
+    },
+    {
+      "build_dir": "_build_n2-0359-dccd13ad",
+      "link": "_build_n2-0359-dccd13ad/frontend/node_modules",
+      "target": "//?/D:/moodle/CityNexus/frontend/node_modules"
+    },
+    {
+      "build_dir": "_build_n2-0433-base",
+      "link": "_build_n2-0433-base/frontend/node_modules",
+      "target": "//?/D:/moodle/CityNexus/frontend/node_modules"
+    },
+    {
+      "build_dir": "_build_n2-0433-base2",
+      "link": "_build_n2-0433-base2/frontend/node_modules",
+      "target": "//?/D:/moodle/CityNexus/frontend/node_modules"
+    },
+    {
+      "build_dir": "_build_n2-0433-cand",
+      "link": "_build_n2-0433-cand/frontend/node_modules",
+      "target": "//?/D:/moodle/CityNexus/frontend/node_modules"
+    },
+    {
+      "build_dir": "_build_n2-0433-cand2",
+      "link": "_build_n2-0433-cand2/frontend/node_modules",
+      "target": "//?/D:/moodle/CityNexus/frontend/node_modules"
+    },
+    {
+      "build_dir": "_build_n2-ord0425-base",
+      "link": "_build_n2-ord0425-base/frontend/node_modules",
+      "target": "//?/D:/moodle/CityNexus/frontend/node_modules"
+    },
+    {
+      "build_dir": "_build_n2-ord0425-cand2",
+      "link": "_build_n2-ord0425-cand2/frontend/node_modules",
+      "target": "//?/D:/moodle/CityNexus/frontend/node_modules"
+    },
+    {
+      "build_dir": "_build_n2-ord0425-fix",
+      "link": "_build_n2-ord0425-fix/frontend/node_modules",
+      "target": "//?/D:/moodle/CityNexus/frontend/node_modules"
+    },
+    {
+      "build_dir": "_build_n2-ord0425-fix2",
+      "link": "_build_n2-ord0425-fix2/frontend/node_modules",
+      "target": "//?/D:/moodle/CityNexus/frontend/node_modules"
+    },
+    {
+      "build_dir": "_build_n2-ord0425-fix3",
+      "link": "_build_n2-ord0425-fix3/frontend/node_modules",
+      "target": "//?/D:/moodle/CityNexus/frontend/node_modules"
+    },
+    {
+      "build_dir": "_build_n2-ord0425-probe",
+      "link": "_build_n2-ord0425-probe/frontend/node_modules",
+      "target": "//?/D:/moodle/CityNexus/frontend/node_modules"
+    },
+    {
+      "build_dir": "_build_n2-ord0425-probe2",
+      "link": "_build_n2-ord0425-probe2/frontend/node_modules",
+      "target": "//?/D:/moodle/CityNexus/frontend/node_modules"
+    },
+    {
+      "build_dir": "_build_n2-ord0425-probe3",
+      "link": "_build_n2-ord0425-probe3/frontend/node_modules",
+      "target": "//?/D:/moodle/CityNexus/frontend/node_modules"
+    },
+    {
+      "build_dir": "_build_n2-ord0425-tip2",
+      "link": "_build_n2-ord0425-tip2/frontend/node_modules",
+      "target": "//?/D:/moodle/CityNexus/frontend/node_modules"
+    },
+    {
+      "build_dir": "_build_n2-ord0425-tip3",
+      "link": "_build_n2-ord0425-tip3/frontend/node_modules",
+      "target": "//?/D:/moodle/CityNexus/frontend/node_modules"
+    },
+    {
+      "build_dir": "_build_ord0410base",
+      "link": "_build_ord0410base/frontend/node_modules",
+      "target": "//?/D:/moodle/CityNexus/frontend/node_modules"
+    },
+    {
+      "build_dir": "_build_ord0410fix",
+      "link": "_build_ord0410fix/frontend/node_modules",
+      "target": "//?/D:/moodle/CityNexus/frontend/node_modules"
+    },
+    {
+      "build_dir": "_build_ord0410rebased",
+      "link": "_build_ord0410rebased/frontend/node_modules",
+      "target": "//?/D:/moodle/CityNexus/frontend/node_modules"
+    },
+    {
+      "build_dir": "_build_ord0417base",
+      "link": "_build_ord0417base/frontend/node_modules",
+      "target": "//?/D:/moodle/CityNexus/frontend/node_modules"
+    },
+    {
+      "build_dir": "_build_ord0417fbtip",
+      "link": "_build_ord0417fbtip/frontend/node_modules",
+      "target": "//?/D:/moodle/CityNexus/frontend/node_modules"
+    },
+    {
+      "build_dir": "_build_ord0417fix",
+      "link": "_build_ord0417fix/frontend/node_modules",
+      "target": "//?/D:/moodle/CityNexus/frontend/node_modules"
+    },
+    {
+      "build_dir": "_build_ord0417line",
+      "link": "_build_ord0417line/frontend/node_modules",
+      "target": "//?/D:/moodle/CityNexus/frontend/node_modules"
+    },
+    {
+      "build_dir": "_build_ord0417newtip",
+      "link": "_build_ord0417newtip/frontend/node_modules",
+      "target": "//?/D:/moodle/CityNexus/frontend/node_modules"
+    },
+    {
+      "build_dir": "_build_ord0417r2fix",
+      "link": "_build_ord0417r2fix/frontend/node_modules",
+      "target": "//?/D:/moodle/CityNexus/frontend/node_modules"
+    },
+    {
+      "build_dir": "_build_ord0417r3fix",
+      "link": "_build_ord0417r3fix/frontend/node_modules",
+      "target": "//?/D:/moodle/CityNexus/frontend/node_modules"
+    },
+    {
+      "build_dir": "_build_ord0417r3tip",
+      "link": "_build_ord0417r3tip/frontend/node_modules",
+      "target": "//?/D:/moodle/CityNexus/frontend/node_modules"
+    },
+    {
+      "build_dir": "_build_ord0417r4fix",
+      "link": "_build_ord0417r4fix/frontend/node_modules",
+      "target": "//?/D:/moodle/CityNexus/frontend/node_modules"
+    },
+    {
+      "build_dir": "_build_ord0417tip",
+      "link": "_build_ord0417tip/frontend/node_modules",
+      "target": "//?/D:/moodle/CityNexus/frontend/node_modules"
+    },
+    {
+      "build_dir": "_build_ord0417tiptoday",
+      "link": "_build_ord0417tiptoday/frontend/node_modules",
+      "target": "//?/D:/moodle/CityNexus/frontend/node_modules"
+    },
+    {
+      "build_dir": "_build_ord0421tip",
+      "link": "_build_ord0421tip/frontend/node_modules",
+      "target": "//?/D:/moodle/CityNexus/frontend/node_modules"
+    },
+    {
+      "build_dir": "_build_ord0426r2",
+      "link": "_build_ord0426r2/frontend/node_modules",
+      "target": "//?/D:/moodle/CityNexus/frontend/node_modules"
+    },
+    {
+      "build_dir": "_build_ord0426r3",
+      "link": "_build_ord0426r3/frontend/node_modules",
+      "target": "//?/D:/moodle/CityNexus/frontend/node_modules"
+    },
+    {
+      "build_dir": "_build_ord0426tip",
+      "link": "_build_ord0426tip/frontend/node_modules",
+      "target": "//?/D:/moodle/CityNexus/frontend/node_modules"
+    },
+    {
+      "build_dir": "_build_ord0426tip2",
+      "link": "_build_ord0426tip2/frontend/node_modules",
+      "target": "//?/D:/moodle/CityNexus/frontend/node_modules"
+    },
+    {
+      "build_dir": "_build_q0422",
+      "link": "_build_q0422/frontend/node_modules",
+      "target": "//?/D:/moodle/CityNexus/frontend/node_modules"
+    },
+    {
+      "build_dir": "_build_q0422base",
+      "link": "_build_q0422base/frontend/node_modules",
+      "target": "//?/D:/moodle/CityNexus/frontend/node_modules"
+    },
+    {
+      "build_dir": "_build_q0422live",
+      "link": "_build_q0422live/frontend/node_modules",
+      "target": "//?/D:/moodle/CityNexus/frontend/node_modules"
+    },
+    {
+      "build_dir": "_build_q0422r2",
+      "link": "_build_q0422r2/frontend/node_modules",
+      "target": "//?/D:/moodle/CityNexus/frontend/node_modules"
+    },
+    {
+      "build_dir": "_build_q0422tip",
+      "link": "_build_q0422tip/frontend/node_modules",
+      "target": "//?/D:/moodle/CityNexus/frontend/node_modules"
+    },
+    {
+      "build_dir": "_build_rel0423",
+      "link": "_build_rel0423/frontend/node_modules",
+      "target": "//?/D:/moodle/CityNexus/frontend/node_modules"
+    },
+    {
+      "build_dir": "_build_rel0426",
+      "link": "_build_rel0426/frontend/node_modules",
+      "target": "//?/D:/moodle/CityNexus/frontend/node_modules"
+    }
+  ]
+}
