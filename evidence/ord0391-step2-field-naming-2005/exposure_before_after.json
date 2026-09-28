@@ -1,0 +1,74 @@
+{
+ "failureAttribution.ts": {
+  "before": {
+   "exit": 0,
+   "hits": "NO_EXPOSURE_SHAPE_FOUND across 1 scanned file(s): 0 hit(s) []",
+   "cells": 0,
+   "aif": 0,
+   "foa": 0,
+   "verdict": "NO_EXPOSURE_SHAPE_FOUND"
+  },
+  "after": {
+   "exit": 0,
+   "hits": "NO_EXPOSURE_SHAPE_FOUND across 1 scanned file(s): 0 hit(s) []",
+   "cells": 0,
+   "aif": 0,
+   "foa": 0,
+   "verdict": "NO_EXPOSURE_SHAPE_FOUND"
+  }
+ },
+ "RecoveryRequiredPanel.tsx": {
+  "before": {
+   "exit": 0,
+   "hits": "NO_EXPOSURE_SHAPE_FOUND across 1 scanned file(s): 0 hit(s) []",
+   "cells": 0,
+   "aif": 1,
+   "foa": 0,
+   "verdict": "NO_EXPOSURE_SHAPE_FOUND"
+  },
+  "after": {
+   "exit": 0,
+   "hits": "NO_EXPOSURE_SHAPE_FOUND across 1 scanned file(s): 0 hit(s) []",
+   "cells": 0,
+   "aif": 1,
+   "foa": 0,
+   "verdict": "NO_EXPOSURE_SHAPE_FOUND"
+  }
+ },
+ "DestinationPreparationPanel.tsx": {
+  "before": {
+   "exit": 0,
+   "hits": "EXPOSURE_SHAPE_FOUND across 1 scanned file(s): 3 hit(s) [\"UPSTREAM_EXCEPTION_TO_DOM@DestinationPreparationPanel.tsx:346\"",
+   "cells": 3,
+   "aif": 0,
+   "foa": 0,
+   "verdict": "EXPOSURE_SHAPE_FOUND"
+  },
+  "after": {
+   "exit": 0,
+   "hits": "EXPOSURE_SHAPE_FOUND across 1 scanned file(s): 3 hit(s) [\"UPSTREAM_EXCEPTION_TO_DOM@DestinationPreparationPanel.tsx:346\"",
+   "cells": 3,
+   "aif": 0,
+   "foa": 0,
+   "verdict": "EXPOSURE_SHAPE_FOUND"
+  }
+ },
+ "LocaleContext.tsx": {
+  "before": {
+   "exit": 0,
+   "hits": "NO_EXPOSURE_SHAPE_FOUND across 1 scanned file(s): 0 hit(s) []",
+   "cells": 0,
+   "aif": 0,
+   "foa": 0,
+   "verdict": "NO_EXPOSURE_SHAPE_FOUND"
+  },
+  "after": {
+   "exit": 0,
+   "hits": "NO_EXPOSURE_SHAPE_FOUND across 1 scanned file(s): 0 hit(s) []",
+   "cells": 0,
+   "aif": 0,
+   "foa": 0,
+   "verdict": "NO_EXPOSURE_SHAPE_FOUND"
+  }
+ }
+}
