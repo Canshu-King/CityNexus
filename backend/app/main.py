@@ -237,7 +237,7 @@ from app.integrations.mobility.snapshot_capture import (
 )
 from app.integrations.mock.commerce_providers import MockBookingProvider, MockPaymentProvider
 from app.integrations.push import push_capability
-from app.intelligence.feasibility_envelope import FeasibilityEnvelope
+from app.intelligence.feasibility_envelope import FeasibilityEnvelope, disruption_risk_codes
 from app.intelligence.impact_resolver import (
     impact_payload,
     persist_impact_assessment,
@@ -6205,6 +6205,7 @@ def _envelope_payload(
     preserved_commitment_count: int,
     next_commitment_buffer_min: int | None = None,
     degraded_providers: tuple[str, ...] = (),
+    extra_risk_reason_codes: tuple[str, ...] = (),
 ) -> dict[str, Any]:
     last_end = max(
         (datetime.fromisoformat(item.end_at) for item in activities),
@@ -6219,7 +6220,14 @@ def _envelope_payload(
         - sum(item.estimated_cost_minor for item in activities),
         preserved_commitment_count=preserved_commitment_count,
         degraded_providers=degraded_providers,
-        risk_reason_codes=(ReasonCode.PROVIDER_DEGRADED.value,) if degraded_providers else (),
+        risk_reason_codes=tuple(
+            dict.fromkeys(
+                (
+                    *((ReasonCode.PROVIDER_DEGRADED.value,) if degraded_providers else ()),
+                    *extra_risk_reason_codes,
+                )
+            )
+        ),
     )
     return {
         "next_commitment_buffer_min": envelope.next_commitment_buffer_min,
@@ -6558,6 +6566,7 @@ def _twin_snapshot(
                 "next_commitment_start": window.next_commitment_start.isoformat(),
             }
     degraded_items: set[str] = set()
+    unresolved_severities: list[str] = []
     unresolved_events = session.scalars(
         select(EventModel).where(
             EventModel.journey_id == journey.id,
@@ -6565,6 +6574,7 @@ def _twin_snapshot(
         )
     ).all()
     for event_row in unresolved_events:
+        unresolved_severities.append(event_row.severity)
         try:
             event_payload = json.loads(event_row.payload_json or "{}")
         except json.JSONDecodeError:
@@ -6583,6 +6593,7 @@ def _twin_snapshot(
         preserved_commitment_count=len(active_c4),
         next_commitment_buffer_min=next_buffer,
         degraded_providers=degraded,
+        extra_risk_reason_codes=disruption_risk_codes(unresolved_severities),
     )
     context = {
         "journey_status": journey.status,

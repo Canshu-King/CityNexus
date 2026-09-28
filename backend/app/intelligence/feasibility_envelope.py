@@ -1,6 +1,23 @@
 from __future__ import annotations
 
+from collections.abc import Iterable
 from dataclasses import dataclass
+
+from app.intelligence.reason_codes import ReasonCode
+
+#: Which severities of an unresolved event make a trip's summary risky.  An INFO or MINOR note is
+#: deliberately absent: marking it as a risk would read "review" over a trip that is fine.
+UNRESOLVED_DISRUPTION_SEVERITIES: dict[str, ReasonCode] = {
+    "MAJOR": ReasonCode.DISRUPTION_MAJOR,
+    "CRITICAL": ReasonCode.DISRUPTION_CRITICAL,
+}
+
+
+def disruption_risk_codes(severities: Iterable[str]) -> tuple[str, ...]:
+    """Unresolved event severities -> risk reason codes, worst first."""
+    named = {item for item in severities if item in UNRESOLVED_DISRUPTION_SEVERITIES}
+    ordered = sorted(named, key=("CRITICAL", "MAJOR").index)
+    return tuple(UNRESOLVED_DISRUPTION_SEVERITIES[item].value for item in ordered)
 
 
 @dataclass(frozen=True)
