@@ -1,0 +1,2366 @@
+{
+ "fixtures": {
+  "control": {
+   "path": "D:\\moodle\\_qoder_lane_S4_0926\\work\\ord0408\\jia\\fx2\\control__JourneyTrashPanel.tsx",
+   "bytes": 10435
+  },
+  "in_set": {
+   "path": "D:\\moodle\\_qoder_lane_S4_0926\\work\\ord0408\\jia\\fx2\\in_set__JourneyTrashPanel.tsx",
+   "bytes": 10460
+  },
+  "invented": {
+   "path": "D:\\moodle\\_qoder_lane_S4_0926\\work\\ord0408\\jia\\fx2\\invented__JourneyTrashPanel.tsx",
+   "bytes": 10456
+  },
+  "unrelated_token": {
+   "path": "D:\\moodle\\_qoder_lane_S4_0926\\work\\ord0408\\jia\\fx2\\unrelated_token__JourneyTrashPanel.tsx",
+   "bytes": 10455
+  },
+  "no_anchor": {
+   "path": "D:\\moodle\\_qoder_lane_S4_0926\\work\\ord0408\\jia\\fx2\\no_anchor__JourneyTrashPanel.tsx",
+   "bytes": 10406
+  },
+  "undeclared_field": {
+   "path": "D:\\moodle\\_qoder_lane_S4_0926\\work\\ord0408\\jia\\fx2\\undeclared_field__JourneyTrashPanel.tsx",
+   "bytes": 10434
+  },
+  "verbatim_copy": {
+   "path": "D:\\moodle\\_qoder_lane_S4_0926\\work\\ord0408\\jia\\fx2\\verbatim__JourneyTrashPanel.tsx",
+   "bytes": 10435
+  }
+ },
+ "contracts": {
+  "real": {
+   "path": "D:\\moodle\\_qoder_lane_S4_0926\\work\\ord0408\\jia\\tip\\contracts\\openapi.yaml",
+   "bytes": 119781,
+   "local_sha1_over_bytes": "8edcac07603267c413001aa3e5f842fff5bfbe60"
+  },
+  "inline": {
+   "path": "D:\\moodle\\_qoder_lane_S4_0926\\work\\ord0408\\jia\\openapi_inline_enum.yaml",
+   "bytes": 119872,
+   "local_sha1_over_bytes": "7ae88bd4e789117e89aab40eda4e9210c4e81886"
+  },
+  "block": {
+   "path": "D:\\moodle\\_qoder_lane_S4_0926\\work\\ord0408\\jia\\openapi_block_enum.yaml",
+   "bytes": 119965,
+   "local_sha1_over_bytes": "959a8e568e836bfdea0d726d011eec9d0d47093a"
+  },
+  "other_field": {
+   "path": "D:\\moodle\\_qoder_lane_S4_0926\\work\\ord0408\\jia\\openapi_enum_other_field_only.yaml",
+   "bytes": 119912,
+   "local_sha1_over_bytes": "d49181f62697eeadb28b2862baab779741b81f02"
+  }
+ },
+ "step0_live_under_r7b1": {
+  "control": [
+   "RAW_BODY_TO_DOM@224",
+   "UPSTREAM_TEXT_VIA_HELPER_TO_DOM@233"
+  ],
+  "in_set": [
+   "RAW_BODY_TO_DOM@224",
+   "UPSTREAM_TEXT_VIA_HELPER_TO_DOM@233"
+  ],
+  "invented": [
+   "RAW_BODY_TO_DOM@224",
+   "UPSTREAM_TEXT_VIA_HELPER_TO_DOM@233"
+  ],
+  "no_anchor": [
+   "RAW_BODY_TO_DOM@224",
+   "UPSTREAM_TEXT_VIA_HELPER_TO_DOM@233"
+  ],
+  "undeclared_field": [
+   "RAW_BODY_TO_DOM@224",
+   "UPSTREAM_TEXT_VIA_HELPER_TO_DOM@233"
+  ],
+  "unrelated_token": [
+   "RAW_BODY_TO_DOM@224",
+   "UPSTREAM_TEXT_VIA_HELPER_TO_DOM@233"
+  ],
+  "verbatim_copy": [
+   "RAW_BODY_TO_DOM@224",
+   "UPSTREAM_TEXT_VIA_HELPER_TO_DOM@233"
+  ]
+ },
+ "step0_all_live": true,
+ "arms": {
+  "B1_in_set_code_contract_names_it": {
+   "exit": 0,
+   "cells": [
+    "RAW_BODY_TO_DOM@224"
+   ],
+   "cell_ids": [
+    "023e570fdfbd486d"
+   ],
+   "folded": [],
+   "exempted": [
+    {
+     "line": 233,
+     "rule": "UPSTREAM_TEXT_VIA_HELPER_TO_DOM",
+     "field": "reason_code",
+     "basis": "literal_on_the_chain_checked_against_the_named_set",
+     "tokens": [
+      "JOURNEY_NOT_DELETED"
+     ],
+     "enum_size": 4,
+     "contract": "openapi_inline_enum.yaml",
+     "contract_line": 2003,
+     "contract_blob": "910903a15ea70cbacdc9fa7b70f620ef7f2d8ad9"
+    }
+   ],
+   "blocked": [],
+   "contract": {
+    "path": "D:\\moodle\\_qoder_lane_S4_0926\\work\\ord0408\\jia\\openapi_inline_enum.yaml",
+    "readable": true,
+    "bytes": 119872,
+    "blob": "910903a15ea70cbacdc9fa7b70f620ef7f2d8ad9",
+    "fields_with_enum": [
+     "code",
+     "ai_state",
+     "state",
+     "source_class",
+     "reason_code",
+     "event_status",
+     "actions",
+     "mode",
+     "decision",
+     "requested_autonomy",
+     "approval_method",
+     "status",
+     "bin_state",
+     "kind",
+     "source",
+     "failure_token",
+     "transaction_type",
+     "provenance",
+     "event_type",
+     "severity",
+     "projection_status",
+     "name"
+    ],
+    "reason_code_members": [
+     "JOURNEY_NOT_FOUND",
+     "JOURNEY_ALREADY_DELETED",
+     "JOURNEY_NOT_DELETED",
+     "PROVIDER_REFUSED"
+    ],
+    "reason_code_form": "inline_on_field_line",
+    "forms_counted": null,
+    "reason_code_line": 2003,
+    "auto": false,
+    "note": "22 contract field(s) carry a named closed set, reason_code among them (inline_on_field_line 39, enum_key_with_bracket 10, enum_key_block 0)"
+   },
+   "stderr_head": ""
+  },
+  "B2_invented_code_outside_the_set": {
+   "exit": 0,
+   "cells": [
+    "RAW_BODY_TO_DOM@224",
+    "UPSTREAM_TEXT_VIA_HELPER_TO_DOM@233"
+   ],
+   "cell_ids": [
+    "05381c20ea073183",
+    "1311777abc736821"
+   ],
+   "folded": [],
+   "exempted": [],
+   "blocked": [
+    {
+     "line": 233,
+     "rule": "UPSTREAM_TEXT_VIA_HELPER_TO_DOM",
+     "field": "reason_code",
+     "why": "value_not_in_the_contract_set",
+     "examples": [
+      "NOT_A_REAL_CODE"
+     ],
+     "contract": "openapi_inline_enum.yaml",
+     "fields_with_enum": [],
+     "enum_size": 4
+    }
+   ],
+   "contract": {
+    "path": "D:\\moodle\\_qoder_lane_S4_0926\\work\\ord0408\\jia\\openapi_inline_enum.yaml",
+    "readable": true,
+    "bytes": 119872,
+    "blob": "910903a15ea70cbacdc9fa7b70f620ef7f2d8ad9",
+    "fields_with_enum": [
+     "code",
+     "ai_state",
+     "state",
+     "source_class",
+     "reason_code",
+     "event_status",
+     "actions",
+     "mode",
+     "decision",
+     "requested_autonomy",
+     "approval_method",
+     "status",
+     "bin_state",
+     "kind",
+     "source",
+     "failure_token",
+     "transaction_type",
+     "provenance",
+     "event_type",
+     "severity",
+     "projection_status",
+     "name"
+    ],
+    "reason_code_members": [
+     "JOURNEY_NOT_FOUND",
+     "JOURNEY_ALREADY_DELETED",
+     "JOURNEY_NOT_DELETED",
+     "PROVIDER_REFUSED"
+    ],
+    "reason_code_form": "inline_on_field_line",
+    "forms_counted": null,
+    "reason_code_line": 2003,
+    "auto": false,
+    "note": "22 contract field(s) carry a named closed set, reason_code among them (inline_on_field_line 39, enum_key_with_bracket 10, enum_key_block 0)"
+   },
+   "stderr_head": ""
+  },
+  "B3_real_contract_declares_nothing": {
+   "exit": 0,
+   "cells": [
+    "RAW_BODY_TO_DOM@224",
+    "UPSTREAM_TEXT_VIA_HELPER_TO_DOM@233"
+   ],
+   "cell_ids": [
+    "673dbeffe308b0f7",
+    "a4cc3b883f985aec"
+   ],
+   "folded": [],
+   "exempted": [],
+   "blocked": [
+    {
+     "line": 233,
+     "rule": "UPSTREAM_TEXT_VIA_HELPER_TO_DOM",
+     "field": "reason_code",
+     "why": "CONTRACT_MISSING_ENUM",
+     "examples": [],
+     "contract": "openapi.yaml",
+     "fields_with_enum": [
+      "code",
+      "ai_state",
+      "state",
+      "source_class",
+      "event_status",
+      "actions",
+      "mode",
+      "decision",
+      "requested_autonomy",
+      "approval_method",
+      "status",
+      "bin_state",
+      "kind",
+      "source",
+      "failure_token",
+      "transaction_type",
+      "provenance",
+      "event_type",
+      "severity",
+      "projection_status",
+      "name"
+     ],
+     "enum_size": 0
+    }
+   ],
+   "contract": {
+    "path": "D:\\moodle\\_qoder_lane_S4_0926\\work\\ord0408\\jia\\tip\\contracts\\openapi.yaml",
+    "readable": true,
+    "bytes": 119781,
+    "blob": "ee2dc30d0391ba13262e4c6f319b2619b97b5de4",
+    "fields_with_enum": [
+     "code",
+     "ai_state",
+     "state",
+     "source_class",
+     "event_status",
+     "actions",
+     "mode",
+     "decision",
+     "requested_autonomy",
+     "approval_method",
+     "status",
+     "bin_state",
+     "kind",
+     "source",
+     "failure_token",
+     "transaction_type",
+     "provenance",
+     "event_type",
+     "severity",
+     "projection_status",
+     "name"
+    ],
+    "reason_code_members": null,
+    "reason_code_form": null,
+    "forms_counted": null,
+    "reason_code_line": null,
+    "auto": false,
+    "note": "21 contract field(s) carry a named closed set, reason_code not among them (inline_on_field_line 38, enum_key_with_bracket 10, enum_key_block 0)"
+   },
+   "stderr_head": ""
+  },
+  "B4_inline_enum_form": {
+   "exit": 0,
+   "cells": [
+    "RAW_BODY_TO_DOM@224"
+   ],
+   "cell_ids": [
+    "a4cc3b883f985aec"
+   ],
+   "folded": [],
+   "exempted": [
+    {
+     "line": 233,
+     "rule": "UPSTREAM_TEXT_VIA_HELPER_TO_DOM",
+     "field": "reason_code",
+     "basis": "no_literal_on_the_chain_and_the_contract_names_the_closed_set",
+     "tokens": [],
+     "enum_size": 4,
+     "contract": "openapi_inline_enum.yaml",
+     "contract_line": 2003,
+     "contract_blob": "910903a15ea70cbacdc9fa7b70f620ef7f2d8ad9"
+    }
+   ],
+   "blocked": [],
+   "contract": {
+    "path": "D:\\moodle\\_qoder_lane_S4_0926\\work\\ord0408\\jia\\openapi_inline_enum.yaml",
+    "readable": true,
+    "bytes": 119872,
+    "blob": "910903a15ea70cbacdc9fa7b70f620ef7f2d8ad9",
+    "fields_with_enum": [
+     "code",
+     "ai_state",
+     "state",
+     "source_class",
+     "reason_code",
+     "event_status",
+     "actions",
+     "mode",
+     "decision",
+     "requested_autonomy",
+     "approval_method",
+     "status",
+     "bin_state",
+     "kind",
+     "source",
+     "failure_token",
+     "transaction_type",
+     "provenance",
+     "event_type",
+     "severity",
+     "projection_status",
+     "name"
+    ],
+    "reason_code_members": [
+     "JOURNEY_NOT_FOUND",
+     "JOURNEY_ALREADY_DELETED",
+     "JOURNEY_NOT_DELETED",
+     "PROVIDER_REFUSED"
+    ],
+    "reason_code_form": "inline_on_field_line",
+    "forms_counted": null,
+    "reason_code_line": 2003,
+    "auto": false,
+    "note": "22 contract field(s) carry a named closed set, reason_code among them (inline_on_field_line 39, enum_key_with_bracket 10, enum_key_block 0)"
+   },
+   "stderr_head": ""
+  },
+  "B5_block_enum_form": {
+   "exit": 0,
+   "cells": [
+    "RAW_BODY_TO_DOM@224"
+   ],
+   "cell_ids": [
+    "a4cc3b883f985aec"
+   ],
+   "folded": [],
+   "exempted": [
+    {
+     "line": 233,
+     "rule": "UPSTREAM_TEXT_VIA_HELPER_TO_DOM",
+     "field": "reason_code",
+     "basis": "no_literal_on_the_chain_and_the_contract_names_the_closed_set",
+     "tokens": [],
+     "enum_size": 4,
+     "contract": "openapi_block_enum.yaml",
+     "contract_line": 2005,
+     "contract_blob": "4e5944d9d7eac3042d9b8942b2c8d91f1fcde910"
+    }
+   ],
+   "blocked": [],
+   "contract": {
+    "path": "D:\\moodle\\_qoder_lane_S4_0926\\work\\ord0408\\jia\\openapi_block_enum.yaml",
+    "readable": true,
+    "bytes": 119965,
+    "blob": "4e5944d9d7eac3042d9b8942b2c8d91f1fcde910",
+    "fields_with_enum": [
+     "code",
+     "ai_state",
+     "state",
+     "source_class",
+     "reason_code",
+     "event_status",
+     "actions",
+     "mode",
+     "decision",
+     "requested_autonomy",
+     "approval_method",
+     "status",
+     "bin_state",
+     "kind",
+     "source",
+     "failure_token",
+     "transaction_type",
+     "provenance",
+     "event_type",
+     "severity",
+     "projection_status",
+     "name"
+    ],
+    "reason_code_members": [
+     "JOURNEY_NOT_FOUND",
+     "JOURNEY_ALREADY_DELETED",
+     "JOURNEY_NOT_DELETED",
+     "PROVIDER_REFUSED"
+    ],
+    "reason_code_form": "enum_key_block",
+    "forms_counted": null,
+    "reason_code_line": 2005,
+    "auto": false,
+    "note": "22 contract field(s) carry a named closed set, reason_code among them (inline_on_field_line 38, enum_key_with_bracket 10, enum_key_block 1)"
+   },
+   "stderr_head": ""
+  },
+  "B6_no_anchor_at_all": {
+   "exit": 0,
+   "cells": [
+    "RAW_BODY_TO_DOM@224",
+    "UPSTREAM_TEXT_VIA_HELPER_TO_DOM@233"
+   ],
+   "cell_ids": [
+    "684c5dfcdc313c2f",
+    "a525bc4d1ba9bfdb"
+   ],
+   "folded": [],
+   "exempted": [],
+   "blocked": [],
+   "contract": {
+    "path": "D:\\moodle\\_qoder_lane_S4_0926\\work\\ord0408\\jia\\openapi_inline_enum.yaml",
+    "readable": true,
+    "bytes": 119872,
+    "blob": "910903a15ea70cbacdc9fa7b70f620ef7f2d8ad9",
+    "fields_with_enum": [
+     "code",
+     "ai_state",
+     "state",
+     "source_class",
+     "reason_code",
+     "event_status",
+     "actions",
+     "mode",
+     "decision",
+     "requested_autonomy",
+     "approval_method",
+     "status",
+     "bin_state",
+     "kind",
+     "source",
+     "failure_token",
+     "transaction_type",
+     "provenance",
+     "event_type",
+     "severity",
+     "projection_status",
+     "name"
+    ],
+    "reason_code_members": [
+     "JOURNEY_NOT_FOUND",
+     "JOURNEY_ALREADY_DELETED",
+     "JOURNEY_NOT_DELETED",
+     "PROVIDER_REFUSED"
+    ],
+    "reason_code_form": "inline_on_field_line",
+    "forms_counted": null,
+    "reason_code_line": 2003,
+    "auto": false,
+    "note": "22 contract field(s) carry a named closed set, reason_code among them (inline_on_field_line 39, enum_key_with_bracket 10, enum_key_block 0)"
+   },
+   "stderr_head": ""
+  },
+  "B7_anchor_names_a_field_the_contract_omits": {
+   "exit": 0,
+   "cells": [
+    "RAW_BODY_TO_DOM@224",
+    "UPSTREAM_TEXT_VIA_HELPER_TO_DOM@233"
+   ],
+   "cell_ids": [
+    "3f79fba04de3ca6c",
+    "a8300c46a727f324"
+   ],
+   "folded": [],
+   "exempted": [],
+   "blocked": [
+    {
+     "line": 233,
+     "rule": "UPSTREAM_TEXT_VIA_HELPER_TO_DOM",
+     "field": "error_code",
+     "why": "CONTRACT_MISSING_ENUM",
+     "examples": [],
+     "contract": "openapi_inline_enum.yaml",
+     "fields_with_enum": [
+      "code",
+      "ai_state",
+      "state",
+      "source_class",
+      "reason_code",
+      "event_status",
+      "actions",
+      "mode",
+      "decision",
+      "requested_autonomy",
+      "approval_method",
+      "status",
+      "bin_state",
+      "kind",
+      "source",
+      "failure_token",
+      "transaction_type",
+      "provenance",
+      "event_type",
+      "severity",
+      "projection_status",
+      "name"
+     ],
+     "enum_size": 0
+    }
+   ],
+   "contract": {
+    "path": "D:\\moodle\\_qoder_lane_S4_0926\\work\\ord0408\\jia\\openapi_inline_enum.yaml",
+    "readable": true,
+    "bytes": 119872,
+    "blob": "910903a15ea70cbacdc9fa7b70f620ef7f2d8ad9",
+    "fields_with_enum": [
+     "code",
+     "ai_state",
+     "state",
+     "source_class",
+     "reason_code",
+     "event_status",
+     "actions",
+     "mode",
+     "decision",
+     "requested_autonomy",
+     "approval_method",
+     "status",
+     "bin_state",
+     "kind",
+     "source",
+     "failure_token",
+     "transaction_type",
+     "provenance",
+     "event_type",
+     "severity",
+     "projection_status",
+     "name"
+    ],
+    "reason_code_members": [
+     "JOURNEY_NOT_FOUND",
+     "JOURNEY_ALREADY_DELETED",
+     "JOURNEY_NOT_DELETED",
+     "PROVIDER_REFUSED"
+    ],
+    "reason_code_form": "inline_on_field_line",
+    "forms_counted": null,
+    "reason_code_line": 2003,
+    "auto": false,
+    "note": "22 contract field(s) carry a named closed set, reason_code among them (inline_on_field_line 39, enum_key_with_bracket 10, enum_key_block 0)"
+   },
+   "stderr_head": ""
+  },
+  "B8_unrelated_uppercase_token": {
+   "exit": 0,
+   "cells": [
+    "RAW_BODY_TO_DOM@224",
+    "UPSTREAM_TEXT_VIA_HELPER_TO_DOM@233"
+   ],
+   "cell_ids": [
+    "b4f39f969105a0d3",
+    "b66cfca48e7b275f"
+   ],
+   "folded": [],
+   "exempted": [],
+   "blocked": [
+    {
+     "line": 233,
+     "rule": "UPSTREAM_TEXT_VIA_HELPER_TO_DOM",
+     "field": "reason_code",
+     "why": "value_not_in_the_contract_set",
+     "examples": [
+      "INTERNAL_ERROR"
+     ],
+     "contract": "openapi_inline_enum.yaml",
+     "fields_with_enum": [],
+     "enum_size": 4
+    }
+   ],
+   "contract": {
+    "path": "D:\\moodle\\_qoder_lane_S4_0926\\work\\ord0408\\jia\\openapi_inline_enum.yaml",
+    "readable": true,
+    "bytes": 119872,
+    "blob": "910903a15ea70cbacdc9fa7b70f620ef7f2d8ad9",
+    "fields_with_enum": [
+     "code",
+     "ai_state",
+     "state",
+     "source_class",
+     "reason_code",
+     "event_status",
+     "actions",
+     "mode",
+     "decision",
+     "requested_autonomy",
+     "approval_method",
+     "status",
+     "bin_state",
+     "kind",
+     "source",
+     "failure_token",
+     "transaction_type",
+     "provenance",
+     "event_type",
+     "severity",
+     "projection_status",
+     "name"
+    ],
+    "reason_code_members": [
+     "JOURNEY_NOT_FOUND",
+     "JOURNEY_ALREADY_DELETED",
+     "JOURNEY_NOT_DELETED",
+     "PROVIDER_REFUSED"
+    ],
+    "reason_code_form": "inline_on_field_line",
+    "forms_counted": null,
+    "reason_code_line": 2003,
+    "auto": false,
+    "note": "22 contract field(s) carry a named closed set, reason_code among them (inline_on_field_line 39, enum_key_with_bracket 10, enum_key_block 0)"
+   },
+   "stderr_head": ""
+  },
+  "B9_set_declared_only_for_another_field": {
+   "exit": 0,
+   "cells": [
+    "RAW_BODY_TO_DOM@224",
+    "UPSTREAM_TEXT_VIA_HELPER_TO_DOM@233"
+   ],
+   "cell_ids": [
+    "673dbeffe308b0f7",
+    "a4cc3b883f985aec"
+   ],
+   "folded": [],
+   "exempted": [],
+   "blocked": [
+    {
+     "line": 233,
+     "rule": "UPSTREAM_TEXT_VIA_HELPER_TO_DOM",
+     "field": "reason_code",
+     "why": "CONTRACT_MISSING_ENUM",
+     "examples": [],
+     "contract": "openapi_enum_other_field_only.yaml",
+     "fields_with_enum": [
+      "code",
+      "ai_state",
+      "state",
+      "source_class",
+      "error_class",
+      "event_status",
+      "actions",
+      "mode",
+      "decision",
+      "requested_autonomy",
+      "approval_method",
+      "status",
+      "bin_state",
+      "kind",
+      "source",
+      "failure_token",
+      "transaction_type",
+      "provenance",
+      "event_type",
+      "severity",
+      "projection_status",
+      "name"
+     ],
+     "enum_size": 0
+    }
+   ],
+   "contract": {
+    "path": "D:\\moodle\\_qoder_lane_S4_0926\\work\\ord0408\\jia\\openapi_enum_other_field_only.yaml",
+    "readable": true,
+    "bytes": 119912,
+    "blob": "85f8ef6abc620a7b1d9b414a1a3df3d8ed744282",
+    "fields_with_enum": [
+     "code",
+     "ai_state",
+     "state",
+     "source_class",
+     "error_class",
+     "event_status",
+     "actions",
+     "mode",
+     "decision",
+     "requested_autonomy",
+     "approval_method",
+     "status",
+     "bin_state",
+     "kind",
+     "source",
+     "failure_token",
+     "transaction_type",
+     "provenance",
+     "event_type",
+     "severity",
+     "projection_status",
+     "name"
+    ],
+    "reason_code_members": null,
+    "reason_code_form": null,
+    "forms_counted": null,
+    "reason_code_line": null,
+    "auto": false,
+    "note": "22 contract field(s) carry a named closed set, reason_code not among them (inline_on_field_line 39, enum_key_with_bracket 10, enum_key_block 0)"
+   },
+   "stderr_head": ""
+  }
+ },
+ "step0_detail": {
+  "control": {
+   "exit": 0,
+   "cells": [
+    "RAW_BODY_TO_DOM@224",
+    "UPSTREAM_TEXT_VIA_HELPER_TO_DOM@233"
+   ],
+   "cell_ids": [
+    "673dbeffe308b0f7",
+    "a4cc3b883f985aec"
+   ],
+   "folded": [],
+   "exempted": [],
+   "blocked": [],
+   "contract": null,
+   "stderr_head": ""
+  },
+  "in_set": {
+   "exit": 0,
+   "cells": [
+    "RAW_BODY_TO_DOM@224",
+    "UPSTREAM_TEXT_VIA_HELPER_TO_DOM@233"
+   ],
+   "cell_ids": [
+    "00100efc607a9e0f",
+    "023e570fdfbd486d"
+   ],
+   "folded": [],
+   "exempted": [],
+   "blocked": [],
+   "contract": null,
+   "stderr_head": ""
+  },
+  "invented": {
+   "exit": 0,
+   "cells": [
+    "RAW_BODY_TO_DOM@224",
+    "UPSTREAM_TEXT_VIA_HELPER_TO_DOM@233"
+   ],
+   "cell_ids": [
+    "05381c20ea073183",
+    "1311777abc736821"
+   ],
+   "folded": [],
+   "exempted": [],
+   "blocked": [],
+   "contract": null,
+   "stderr_head": ""
+  },
+  "no_anchor": {
+   "exit": 0,
+   "cells": [
+    "RAW_BODY_TO_DOM@224",
+    "UPSTREAM_TEXT_VIA_HELPER_TO_DOM@233"
+   ],
+   "cell_ids": [
+    "684c5dfcdc313c2f",
+    "a525bc4d1ba9bfdb"
+   ],
+   "folded": [],
+   "exempted": [],
+   "blocked": [],
+   "contract": null,
+   "stderr_head": ""
+  },
+  "undeclared_field": {
+   "exit": 0,
+   "cells": [
+    "RAW_BODY_TO_DOM@224",
+    "UPSTREAM_TEXT_VIA_HELPER_TO_DOM@233"
+   ],
+   "cell_ids": [
+    "3f79fba04de3ca6c",
+    "a8300c46a727f324"
+   ],
+   "folded": [],
+   "exempted": [],
+   "blocked": [],
+   "contract": null,
+   "stderr_head": ""
+  },
+  "unrelated_token": {
+   "exit": 0,
+   "cells": [
+    "RAW_BODY_TO_DOM@224",
+    "UPSTREAM_TEXT_VIA_HELPER_TO_DOM@233"
+   ],
+   "cell_ids": [
+    "b4f39f969105a0d3",
+    "b66cfca48e7b275f"
+   ],
+   "folded": [],
+   "exempted": [],
+   "blocked": [],
+   "contract": null,
+   "stderr_head": ""
+  },
+  "verbatim_copy": {
+   "exit": 0,
+   "cells": [
+    "RAW_BODY_TO_DOM@224",
+    "UPSTREAM_TEXT_VIA_HELPER_TO_DOM@233"
+   ],
+   "cell_ids": [
+    "66da8acfa91c5c38",
+    "9be064553a5e559a"
+   ],
+   "folded": [],
+   "exempted": [],
+   "blocked": [],
+   "contract": null,
+   "stderr_head": ""
+  }
+ },
+ "B10_tree_contract_travels_with_the_tree": {
+  "exit": 0,
+  "hits_total": 11,
+  "contract": {
+   "path": "D:/moodle/_qoder_lane_S4_0926/work/ord0408/jia/tip/contracts/openapi.yaml",
+   "readable": true,
+   "bytes": 119781,
+   "blob": "ee2dc30d0391ba13262e4c6f319b2619b97b5de4",
+   "fields_with_enum": [
+    "code",
+    "ai_state",
+    "state",
+    "source_class",
+    "event_status",
+    "actions",
+    "mode",
+    "decision",
+    "requested_autonomy",
+    "approval_method",
+    "status",
+    "bin_state",
+    "kind",
+    "source",
+    "failure_token",
+    "transaction_type",
+    "provenance",
+    "event_type",
+    "severity",
+    "projection_status",
+    "name"
+   ],
+   "enums": {
+    "code": [
+     "RESET_TOKEN_REQUIRED",
+     "RESET_TOKEN_INVALID",
+     "DEMO_MODE_REQUIRED"
+    ],
+    "ai_state": [
+     "CONFIGURED_UNVERIFIED",
+     "NOT_CONFIGURED",
+     "DISABLED_BY_OPS",
+     "PROVIDER_REFUSED"
+    ],
+    "state": [
+     "READY",
+     "HYDRATABLE",
+     "UNKNOWN_RETRYABLE",
+     "UNAVAILABLE",
+     "PLAN_FEASIBLE",
+     "REPLAN_REQUIRED",
+     "NO_ACTIVE_PLAN",
+     "RECOVERY_REQUIRED",
+     "RECOVERY_REQUIRED_NO_ALTERNATIVE",
+     "RESOLVED"
+    ],
+    "source_class": [
+     "OFFICIAL_NOTICE",
+     "OPERATOR_NOTICE",
+     "OPEN_WEB"
+    ],
+    "event_status": [
+     "DETECTED",
+     "ACKNOWLEDGED",
+     "RESOLVED"
+    ],
+    "actions": [
+     "REPLAN",
+     "ACKNOWLEDGE_NO_ALTERNATIVE"
+    ],
+    "mode": [
+     "ADVISORY",
+     "ASSISTED",
+     "AUTONOMOUS",
+     "FALLBACK"
+    ],
+    "decision": [
+     "ALLOW_AUTO",
+     "REQUIRE_CONFIRMATION",
+     "REQUIRE_STEP_UP",
+     "DENY",
+     "NO_ACTION",
+     "WATCH",
+     "RECOVERY_REQUIRED"
+    ],
+    "requested_autonomy": [
+     "PLAN_ONLY",
+     "EXECUTE_WITHIN_BOUNDS"
+    ],
+    "approval_method": [
+     "USER_CONFIRMATION",
+     "STEP_UP",
+     "WEBAUTHN"
+    ],
+    "status": [
+     "PENDING",
+     "APPROVED",
+     "CONSUMED",
+     "EXPIRED",
+     "REVOKED",
+     "DRAFT",
+     "PLANNED",
+     "ACTIVE",
+     "COMPLETED",
+     "CANCELLED",
+     "READY",
+     "NOT_STARTED",
+     "EN_ROUTE",
+     "ARRIVED",
+     "IN_PROGRESS",
+     "SKIPPED",
+     "CANDIDATE",
+     "SELECTED",
+     "SUPERSEDED",
+     "REJECTED",
+     "CONFIRMED",
+     "FAILED",
+     "FULFILLED",
+     "INITIATED",
+     "AUTHORIZED",
+     "SUCCEEDED",
+     "REFUNDED",
+     "VOIDED",
+     "DETECTED",
+     "ACKNOWLEDGED",
+     "RESOLVED",
+     "IGNORED",
+     "PROPOSED",
+     "BREACHED",
+     "GENERATED",
+     "PRESENTED",
+     "ACCEPTED",
+     "INVALIDATED"
+    ],
+    "bin_state": [
+     "IN_RECYCLE_BIN"
+    ],
+    "kind": [
+     "HARD",
+     "SOFT",
+     "BOOKING",
+     "ORDER",
+     "PAYMENT",
+     "APPOINTMENT",
+     "OTHER"
+    ],
+    "source": [
+     "INITIAL",
+     "REPLAN",
+     "MANUAL",
+     "DETERMINISTIC",
+     "HYBRID"
+    ],
+    "failure_token": [
+     "FORCE_BOOKING_FAIL",
+     "FORCE_PAYMENT_FAIL"
+    ],
+    "transaction_type": [
+     "AUTHORIZE",
+     "CAPTURE",
+     "REFUND",
+     "VOID"
+    ],
+    "provenance": [
+     "SIMULATED",
+     "PROVIDER_VERIFIED",
+     "USER_REPORTED",
+     "SYSTEM_DERIVED"
+    ],
+    "event_type": [
+     "TRAFFIC_DELAY",
+     "CLOSURE",
+     "WEATHER",
+     "SCHEDULE_DELAY",
+     "SERVICE_UNAVAILABLE",
+     "USER_CHANGE",
+     "OTHER"
+    ],
+    "severity": [
+     "INFO",
+     "MINOR",
+     "MAJOR",
+     "CRITICAL"
+    ],
+    "projection_status": [
+     "READY",
+     "STALE",
+     "DEGRADED"
+    ],
+    "name": [
+     "EXPLAIN_PLAN",
+     "WHAT_IF",
+     "DISCOVER",
+     "PREFERENCE_CHANGE",
+     "DISRUPTION_REPORT",
+     "REPLAN_REQUEST",
+     "UNKNOWN"
+    ]
+   },
+   "enum_lines": {
+    "code": 59,
+    "ai_state": 230,
+    "state": 1487,
+    "source_class": 1795,
+    "event_status": 2024,
+    "actions": 2036,
+    "mode": 2076,
+    "decision": 2143,
+    "requested_autonomy": 2152,
+    "approval_method": 2204,
+    "status": 2220,
+    "bin_state": 2273,
+    "kind": 2284,
+    "source": 2480,
+    "failure_token": 2510,
+    "transaction_type": 2568,
+    "provenance": 2595,
+    "event_type": 2598,
+    "severity": 2599,
+    "projection_status": 2681,
+    "name": 2786
+   },
+   "enum_forms": {
+    "code": "inline_on_field_line",
+    "ai_state": "enum_key_with_bracket",
+    "state": "enum_key_with_bracket",
+    "source_class": "inline_on_field_line",
+    "event_status": "inline_on_field_line",
+    "actions": "enum_key_with_bracket",
+    "mode": "inline_on_field_line",
+    "decision": "inline_on_field_line",
+    "requested_autonomy": "enum_key_with_bracket",
+    "approval_method": "enum_key_with_bracket",
+    "status": "inline_on_field_line",
+    "bin_state": "inline_on_field_line",
+    "kind": "inline_on_field_line",
+    "source": "inline_on_field_line",
+    "failure_token": "inline_on_field_line",
+    "transaction_type": "inline_on_field_line",
+    "provenance": "enum_key_with_bracket",
+    "event_type": "inline_on_field_line",
+    "severity": "inline_on_field_line",
+    "projection_status": "inline_on_field_line",
+    "name": "inline_on_field_line"
+   },
+   "auto_discovered": true,
+   "note": "21 contract field(s) carry a named closed set, reason_code not among them (inline_on_field_line 38, enum_key_with_bracket 10, enum_key_block 0)"
+  },
+  "contract_exempted": [],
+  "contract_blocked": [
+   {
+    "file_line": 232,
+    "rule": "UPSTREAM_PROSE_TO_ATTRIBUTE_SLOT",
+    "sink": "dom-attribute",
+    "snippet": "<span className=\"cnx-measured-fact\" data-cnx-field=\"reason_code\" data-cnx-value={outcome.code}>",
+    "field": "reason_code",
+    "why": "CONTRACT_MISSING_ENUM",
+    "examples": [],
+    "enum_size": 0,
+    "contract": "D:/moodle/_qoder_lane_S4_0926/work/ord0408/jia/tip/contracts/openapi.yaml",
+    "contract_blob": "ee2dc30d0391ba13262e4c6f319b2619b97b5de4",
+    "fields_with_enum": [
+     "code",
+     "ai_state",
+     "state",
+     "source_class",
+     "event_status",
+     "actions",
+     "mode",
+     "decision",
+     "requested_autonomy",
+     "approval_method",
+     "status",
+     "bin_state",
+     "kind",
+     "source",
+     "failure_token",
+     "transaction_type",
+     "provenance",
+     "event_type",
+     "severity",
+     "projection_status",
+     "name"
+    ],
+    "file": "features/trash/JourneyTrashPanel.tsx"
+   },
+   {
+    "file_line": 233,
+    "rule": "UPSTREAM_TEXT_VIA_HELPER_TO_DOM",
+    "sink": "jsx-text",
+    "snippet": "{outcome.code}",
+    "field": "reason_code",
+    "why": "CONTRACT_MISSING_ENUM",
+    "examples": [],
+    "enum_size": 0,
+    "contract": "D:/moodle/_qoder_lane_S4_0926/work/ord0408/jia/tip/contracts/openapi.yaml",
+    "contract_blob": "ee2dc30d0391ba13262e4c6f319b2619b97b5de4",
+    "fields_with_enum": [
+     "code",
+     "ai_state",
+     "state",
+     "source_class",
+     "event_status",
+     "actions",
+     "mode",
+     "decision",
+     "requested_autonomy",
+     "approval_method",
+     "status",
+     "bin_state",
+     "kind",
+     "source",
+     "failure_token",
+     "transaction_type",
+     "provenance",
+     "event_type",
+     "severity",
+     "projection_status",
+     "name"
+    ],
+    "file": "features/trash/JourneyTrashPanel.tsx"
+   }
+  ],
+  "attributed_in_fold_count": 2
+ },
+ "B11_before_after_tree": {
+  "r7b1_cells": 11,
+  "r7b4_cells_no_contract": 11,
+  "only_before": [],
+  "only_after": [],
+  "r7b1_folded": 2,
+  "r7b4_folded": 2,
+  "r7b4_contract_blocked": 2,
+  "r7b4_contract": {
+   "path": "D:/moodle/_qoder_lane_S4_0926/work/ord0408/jia/tip/contracts/openapi.yaml",
+   "readable": true,
+   "bytes": 119781,
+   "blob": "ee2dc30d0391ba13262e4c6f319b2619b97b5de4",
+   "fields_with_enum": [
+    "code",
+    "ai_state",
+    "state",
+    "source_class",
+    "event_status",
+    "actions",
+    "mode",
+    "decision",
+    "requested_autonomy",
+    "approval_method",
+    "status",
+    "bin_state",
+    "kind",
+    "source",
+    "failure_token",
+    "transaction_type",
+    "provenance",
+    "event_type",
+    "severity",
+    "projection_status",
+    "name"
+   ],
+   "enums": {
+    "code": [
+     "RESET_TOKEN_REQUIRED",
+     "RESET_TOKEN_INVALID",
+     "DEMO_MODE_REQUIRED"
+    ],
+    "ai_state": [
+     "CONFIGURED_UNVERIFIED",
+     "NOT_CONFIGURED",
+     "DISABLED_BY_OPS",
+     "PROVIDER_REFUSED"
+    ],
+    "state": [
+     "READY",
+     "HYDRATABLE",
+     "UNKNOWN_RETRYABLE",
+     "UNAVAILABLE",
+     "PLAN_FEASIBLE",
+     "REPLAN_REQUIRED",
+     "NO_ACTIVE_PLAN",
+     "RECOVERY_REQUIRED",
+     "RECOVERY_REQUIRED_NO_ALTERNATIVE",
+     "RESOLVED"
+    ],
+    "source_class": [
+     "OFFICIAL_NOTICE",
+     "OPERATOR_NOTICE",
+     "OPEN_WEB"
+    ],
+    "event_status": [
+     "DETECTED",
+     "ACKNOWLEDGED",
+     "RESOLVED"
+    ],
+    "actions": [
+     "REPLAN",
+     "ACKNOWLEDGE_NO_ALTERNATIVE"
+    ],
+    "mode": [
+     "ADVISORY",
+     "ASSISTED",
+     "AUTONOMOUS",
+     "FALLBACK"
+    ],
+    "decision": [
+     "ALLOW_AUTO",
+     "REQUIRE_CONFIRMATION",
+     "REQUIRE_STEP_UP",
+     "DENY",
+     "NO_ACTION",
+     "WATCH",
+     "RECOVERY_REQUIRED"
+    ],
+    "requested_autonomy": [
+     "PLAN_ONLY",
+     "EXECUTE_WITHIN_BOUNDS"
+    ],
+    "approval_method": [
+     "USER_CONFIRMATION",
+     "STEP_UP",
+     "WEBAUTHN"
+    ],
+    "status": [
+     "PENDING",
+     "APPROVED",
+     "CONSUMED",
+     "EXPIRED",
+     "REVOKED",
+     "DRAFT",
+     "PLANNED",
+     "ACTIVE",
+     "COMPLETED",
+     "CANCELLED",
+     "READY",
+     "NOT_STARTED",
+     "EN_ROUTE",
+     "ARRIVED",
+     "IN_PROGRESS",
+     "SKIPPED",
+     "CANDIDATE",
+     "SELECTED",
+     "SUPERSEDED",
+     "REJECTED",
+     "CONFIRMED",
+     "FAILED",
+     "FULFILLED",
+     "INITIATED",
+     "AUTHORIZED",
+     "SUCCEEDED",
+     "REFUNDED",
+     "VOIDED",
+     "DETECTED",
+     "ACKNOWLEDGED",
+     "RESOLVED",
+     "IGNORED",
+     "PROPOSED",
+     "BREACHED",
+     "GENERATED",
+     "PRESENTED",
+     "ACCEPTED",
+     "INVALIDATED"
+    ],
+    "bin_state": [
+     "IN_RECYCLE_BIN"
+    ],
+    "kind": [
+     "HARD",
+     "SOFT",
+     "BOOKING",
+     "ORDER",
+     "PAYMENT",
+     "APPOINTMENT",
+     "OTHER"
+    ],
+    "source": [
+     "INITIAL",
+     "REPLAN",
+     "MANUAL",
+     "DETERMINISTIC",
+     "HYBRID"
+    ],
+    "failure_token": [
+     "FORCE_BOOKING_FAIL",
+     "FORCE_PAYMENT_FAIL"
+    ],
+    "transaction_type": [
+     "AUTHORIZE",
+     "CAPTURE",
+     "REFUND",
+     "VOID"
+    ],
+    "provenance": [
+     "SIMULATED",
+     "PROVIDER_VERIFIED",
+     "USER_REPORTED",
+     "SYSTEM_DERIVED"
+    ],
+    "event_type": [
+     "TRAFFIC_DELAY",
+     "CLOSURE",
+     "WEATHER",
+     "SCHEDULE_DELAY",
+     "SERVICE_UNAVAILABLE",
+     "USER_CHANGE",
+     "OTHER"
+    ],
+    "severity": [
+     "INFO",
+     "MINOR",
+     "MAJOR",
+     "CRITICAL"
+    ],
+    "projection_status": [
+     "READY",
+     "STALE",
+     "DEGRADED"
+    ],
+    "name": [
+     "EXPLAIN_PLAN",
+     "WHAT_IF",
+     "DISCOVER",
+     "PREFERENCE_CHANGE",
+     "DISRUPTION_REPORT",
+     "REPLAN_REQUEST",
+     "UNKNOWN"
+    ]
+   },
+   "enum_lines": {
+    "code": 59,
+    "ai_state": 230,
+    "state": 1487,
+    "source_class": 1795,
+    "event_status": 2024,
+    "actions": 2036,
+    "mode": 2076,
+    "decision": 2143,
+    "requested_autonomy": 2152,
+    "approval_method": 2204,
+    "status": 2220,
+    "bin_state": 2273,
+    "kind": 2284,
+    "source": 2480,
+    "failure_token": 2510,
+    "transaction_type": 2568,
+    "provenance": 2595,
+    "event_type": 2598,
+    "severity": 2599,
+    "projection_status": 2681,
+    "name": 2786
+   },
+   "enum_forms": {
+    "code": "inline_on_field_line",
+    "ai_state": "enum_key_with_bracket",
+    "state": "enum_key_with_bracket",
+    "source_class": "inline_on_field_line",
+    "event_status": "inline_on_field_line",
+    "actions": "enum_key_with_bracket",
+    "mode": "inline_on_field_line",
+    "decision": "inline_on_field_line",
+    "requested_autonomy": "enum_key_with_bracket",
+    "approval_method": "enum_key_with_bracket",
+    "status": "inline_on_field_line",
+    "bin_state": "inline_on_field_line",
+    "kind": "inline_on_field_line",
+    "source": "inline_on_field_line",
+    "failure_token": "inline_on_field_line",
+    "transaction_type": "inline_on_field_line",
+    "provenance": "enum_key_with_bracket",
+    "event_type": "inline_on_field_line",
+    "severity": "inline_on_field_line",
+    "projection_status": "inline_on_field_line",
+    "name": "inline_on_field_line"
+   },
+   "auto_discovered": true,
+   "note": "21 contract field(s) carry a named closed set, reason_code not among them (inline_on_field_line 38, enum_key_with_bracket 10, enum_key_block 0)"
+  },
+  "r7b1_per_rule": {
+   "UPSTREAM_TEXT_VIA_HELPER_TO_DOM": 5,
+   "UPSTREAM_EXCEPTION_TO_DOM": 3,
+   "UPSTREAM_PROSE_TO_ATTRIBUTE_SLOT": 2,
+   "RAW_BODY_TO_DOM": 1
+  },
+  "r7b4_per_rule": {
+   "UPSTREAM_TEXT_VIA_HELPER_TO_DOM": 5,
+   "UPSTREAM_EXCEPTION_TO_DOM": 3,
+   "UPSTREAM_PROSE_TO_ATTRIBUTE_SLOT": 2,
+   "RAW_BODY_TO_DOM": 1
+  }
+ },
+ "B12_selftest": {
+  "r7b1": {
+   "exit": 0,
+   "verdict": "SELFTEST_PASS",
+   "passed": null,
+   "total": null,
+   "expectations_moved": [
+    "clean_tainted_but_attribute_only.tsx",
+    "e0319r3_E3_control_attribute_only.tsx"
+   ],
+   "keys": [
+    "cell_identity_arms",
+    "cross_file_arms",
+    "expectations_moved",
+    "mode_arms",
+    "n_bad_expected",
+    "n_clean_expected",
+    "n_cross_file_arms",
+    "n_cross_file_arms_met",
+    "n_expectations_moved",
+    "n_fixtures",
+    "n_mode_arms",
+    "n_mode_arms_met",
+    "n_single_file_assertions_met",
+    "n_slot_arms",
+    "n_slot_arms_met",
+    "ruler",
+    "schema",
+    "slot_arms",
+    "typescript",
+    "verdict"
+   ]
+  },
+  "r7b4": {
+   "exit": 0,
+   "verdict": "SELFTEST_PASS",
+   "passed": null,
+   "total": null,
+   "expectations_moved": [
+    "clean_tainted_but_attribute_only.tsx",
+    "e0319r3_E3_control_attribute_only.tsx"
+   ],
+   "keys": [
+    "cell_identity_arms",
+    "cross_file_arms",
+    "expectations_moved",
+    "mode_arms",
+    "n_bad_expected",
+    "n_clean_expected",
+    "n_cross_file_arms",
+    "n_cross_file_arms_met",
+    "n_expectations_moved",
+    "n_fixtures",
+    "n_mode_arms",
+    "n_mode_arms_met",
+    "n_single_file_assertions_met",
+    "n_slot_arms",
+    "n_slot_arms_met",
+    "ruler",
+    "schema",
+    "slot_arms",
+    "typescript",
+    "verdict"
+   ]
+  }
+ },
+ "checks": [
+  {
+   "arm": "B1_in_set_code_contract_names_it",
+   "want": {
+    "cells": 1,
+    "exempt": 1,
+    "blocked": 0,
+    "basis": "literal_on_the_chain_checked_against_the_named_set"
+   },
+   "now": {
+    "cells": [
+     "RAW_BODY_TO_DOM@224"
+    ],
+    "exempt": [
+     {
+      "line": 233,
+      "rule": "UPSTREAM_TEXT_VIA_HELPER_TO_DOM",
+      "field": "reason_code",
+      "basis": "literal_on_the_chain_checked_against_the_named_set",
+      "tokens": [
+       "JOURNEY_NOT_DELETED"
+      ],
+      "enum_size": 4,
+      "contract": "openapi_inline_enum.yaml",
+      "contract_line": 2003,
+      "contract_blob": "910903a15ea70cbacdc9fa7b70f620ef7f2d8ad9"
+     }
+    ],
+    "blocked": []
+   },
+   "pass": true
+  },
+  {
+   "arm": "B2_invented_code_outside_the_set",
+   "want": {
+    "cells": 2,
+    "exempt": 0,
+    "blocked": 1,
+    "why": "value_not_in_the_contract_set"
+   },
+   "now": {
+    "cells": [
+     "RAW_BODY_TO_DOM@224",
+     "UPSTREAM_TEXT_VIA_HELPER_TO_DOM@233"
+    ],
+    "exempt": [],
+    "blocked": [
+     {
+      "line": 233,
+      "rule": "UPSTREAM_TEXT_VIA_HELPER_TO_DOM",
+      "field": "reason_code",
+      "why": "value_not_in_the_contract_set",
+      "examples": [
+       "NOT_A_REAL_CODE"
+      ],
+      "contract": "openapi_inline_enum.yaml",
+      "fields_with_enum": [],
+      "enum_size": 4
+     }
+    ]
+   },
+   "pass": true
+  },
+  {
+   "arm": "B3_real_contract_declares_nothing",
+   "want": {
+    "cells": 2,
+    "exempt": 0,
+    "blocked": 1,
+    "why": "CONTRACT_MISSING_ENUM"
+   },
+   "now": {
+    "cells": [
+     "RAW_BODY_TO_DOM@224",
+     "UPSTREAM_TEXT_VIA_HELPER_TO_DOM@233"
+    ],
+    "exempt": [],
+    "blocked": [
+     {
+      "line": 233,
+      "rule": "UPSTREAM_TEXT_VIA_HELPER_TO_DOM",
+      "field": "reason_code",
+      "why": "CONTRACT_MISSING_ENUM",
+      "examples": [],
+      "contract": "openapi.yaml",
+      "fields_with_enum": [
+       "code",
+       "ai_state",
+       "state",
+       "source_class",
+       "event_status",
+       "actions",
+       "mode",
+       "decision",
+       "requested_autonomy",
+       "approval_method",
+       "status",
+       "bin_state",
+       "kind",
+       "source",
+       "failure_token",
+       "transaction_type",
+       "provenance",
+       "event_type",
+       "severity",
+       "projection_status",
+       "name"
+      ],
+      "enum_size": 0
+     }
+    ]
+   },
+   "pass": true
+  },
+  {
+   "arm": "B4_inline_enum_form",
+   "want": {
+    "cells": 1,
+    "exempt": 1,
+    "blocked": 0,
+    "form": "inline_on_field_line"
+   },
+   "now": {
+    "cells": [
+     "RAW_BODY_TO_DOM@224"
+    ],
+    "exempt": [
+     {
+      "line": 233,
+      "rule": "UPSTREAM_TEXT_VIA_HELPER_TO_DOM",
+      "field": "reason_code",
+      "basis": "no_literal_on_the_chain_and_the_contract_names_the_closed_set",
+      "tokens": [],
+      "enum_size": 4,
+      "contract": "openapi_inline_enum.yaml",
+      "contract_line": 2003,
+      "contract_blob": "910903a15ea70cbacdc9fa7b70f620ef7f2d8ad9"
+     }
+    ],
+    "blocked": []
+   },
+   "pass": true
+  },
+  {
+   "arm": "B5_block_enum_form",
+   "want": {
+    "cells": 1,
+    "exempt": 1,
+    "blocked": 0,
+    "form": "enum_key_block"
+   },
+   "now": {
+    "cells": [
+     "RAW_BODY_TO_DOM@224"
+    ],
+    "exempt": [
+     {
+      "line": 233,
+      "rule": "UPSTREAM_TEXT_VIA_HELPER_TO_DOM",
+      "field": "reason_code",
+      "basis": "no_literal_on_the_chain_and_the_contract_names_the_closed_set",
+      "tokens": [],
+      "enum_size": 4,
+      "contract": "openapi_block_enum.yaml",
+      "contract_line": 2005,
+      "contract_blob": "4e5944d9d7eac3042d9b8942b2c8d91f1fcde910"
+     }
+    ],
+    "blocked": []
+   },
+   "pass": true
+  },
+  {
+   "arm": "B6_no_anchor_at_all",
+   "want": {
+    "cells": 2,
+    "exempt": 0,
+    "blocked": 0
+   },
+   "now": {
+    "cells": [
+     "RAW_BODY_TO_DOM@224",
+     "UPSTREAM_TEXT_VIA_HELPER_TO_DOM@233"
+    ],
+    "exempt": [],
+    "blocked": []
+   },
+   "pass": true
+  },
+  {
+   "arm": "B7_anchor_names_a_field_the_contract_omits",
+   "want": {
+    "cells": 2,
+    "exempt": 0,
+    "blocked": 1,
+    "why": "CONTRACT_MISSING_ENUM"
+   },
+   "now": {
+    "cells": [
+     "RAW_BODY_TO_DOM@224",
+     "UPSTREAM_TEXT_VIA_HELPER_TO_DOM@233"
+    ],
+    "exempt": [],
+    "blocked": [
+     {
+      "line": 233,
+      "rule": "UPSTREAM_TEXT_VIA_HELPER_TO_DOM",
+      "field": "error_code",
+      "why": "CONTRACT_MISSING_ENUM",
+      "examples": [],
+      "contract": "openapi_inline_enum.yaml",
+      "fields_with_enum": [
+       "code",
+       "ai_state",
+       "state",
+       "source_class",
+       "reason_code",
+       "event_status",
+       "actions",
+       "mode",
+       "decision",
+       "requested_autonomy",
+       "approval_method",
+       "status",
+       "bin_state",
+       "kind",
+       "source",
+       "failure_token",
+       "transaction_type",
+       "provenance",
+       "event_type",
+       "severity",
+       "projection_status",
+       "name"
+      ],
+      "enum_size": 0
+     }
+    ]
+   },
+   "pass": true
+  },
+  {
+   "arm": "B8_unrelated_uppercase_token",
+   "want": {
+    "cells": 2,
+    "exempt": 0,
+    "blocked": 1,
+    "why": "value_not_in_the_contract_set"
+   },
+   "now": {
+    "cells": [
+     "RAW_BODY_TO_DOM@224",
+     "UPSTREAM_TEXT_VIA_HELPER_TO_DOM@233"
+    ],
+    "exempt": [],
+    "blocked": [
+     {
+      "line": 233,
+      "rule": "UPSTREAM_TEXT_VIA_HELPER_TO_DOM",
+      "field": "reason_code",
+      "why": "value_not_in_the_contract_set",
+      "examples": [
+       "INTERNAL_ERROR"
+      ],
+      "contract": "openapi_inline_enum.yaml",
+      "fields_with_enum": [],
+      "enum_size": 4
+     }
+    ]
+   },
+   "pass": true
+  },
+  {
+   "arm": "B9_set_declared_only_for_another_field",
+   "want": {
+    "cells": 2,
+    "exempt": 0,
+    "blocked": 1,
+    "why": "CONTRACT_MISSING_ENUM"
+   },
+   "now": {
+    "cells": [
+     "RAW_BODY_TO_DOM@224",
+     "UPSTREAM_TEXT_VIA_HELPER_TO_DOM@233"
+    ],
+    "exempt": [],
+    "blocked": [
+     {
+      "line": 233,
+      "rule": "UPSTREAM_TEXT_VIA_HELPER_TO_DOM",
+      "field": "reason_code",
+      "why": "CONTRACT_MISSING_ENUM",
+      "examples": [],
+      "contract": "openapi_enum_other_field_only.yaml",
+      "fields_with_enum": [
+       "code",
+       "ai_state",
+       "state",
+       "source_class",
+       "error_class",
+       "event_status",
+       "actions",
+       "mode",
+       "decision",
+       "requested_autonomy",
+       "approval_method",
+       "status",
+       "bin_state",
+       "kind",
+       "source",
+       "failure_token",
+       "transaction_type",
+       "provenance",
+       "event_type",
+       "severity",
+       "projection_status",
+       "name"
+      ],
+      "enum_size": 0
+     }
+    ]
+   },
+   "pass": true
+  },
+  {
+   "arm": "B10_tree_contract_from_the_same_tree",
+   "pass": true,
+   "now": {
+    "path": "D:/moodle/_qoder_lane_S4_0926/work/ord0408/jia/tip/contracts/openapi.yaml",
+    "readable": true,
+    "bytes": 119781,
+    "blob": "ee2dc30d0391ba13262e4c6f319b2619b97b5de4",
+    "fields_with_enum": [
+     "code",
+     "ai_state",
+     "state",
+     "source_class",
+     "event_status",
+     "actions",
+     "mode",
+     "decision",
+     "requested_autonomy",
+     "approval_method",
+     "status",
+     "bin_state",
+     "kind",
+     "source",
+     "failure_token",
+     "transaction_type",
+     "provenance",
+     "event_type",
+     "severity",
+     "projection_status",
+     "name"
+    ],
+    "enums": {
+     "code": [
+      "RESET_TOKEN_REQUIRED",
+      "RESET_TOKEN_INVALID",
+      "DEMO_MODE_REQUIRED"
+     ],
+     "ai_state": [
+      "CONFIGURED_UNVERIFIED",
+      "NOT_CONFIGURED",
+      "DISABLED_BY_OPS",
+      "PROVIDER_REFUSED"
+     ],
+     "state": [
+      "READY",
+      "HYDRATABLE",
+      "UNKNOWN_RETRYABLE",
+      "UNAVAILABLE",
+      "PLAN_FEASIBLE",
+      "REPLAN_REQUIRED",
+      "NO_ACTIVE_PLAN",
+      "RECOVERY_REQUIRED",
+      "RECOVERY_REQUIRED_NO_ALTERNATIVE",
+      "RESOLVED"
+     ],
+     "source_class": [
+      "OFFICIAL_NOTICE",
+      "OPERATOR_NOTICE",
+      "OPEN_WEB"
+     ],
+     "event_status": [
+      "DETECTED",
+      "ACKNOWLEDGED",
+      "RESOLVED"
+     ],
+     "actions": [
+      "REPLAN",
+      "ACKNOWLEDGE_NO_ALTERNATIVE"
+     ],
+     "mode": [
+      "ADVISORY",
+      "ASSISTED",
+      "AUTONOMOUS",
+      "FALLBACK"
+     ],
+     "decision": [
+      "ALLOW_AUTO",
+      "REQUIRE_CONFIRMATION",
+      "REQUIRE_STEP_UP",
+      "DENY",
+      "NO_ACTION",
+      "WATCH",
+      "RECOVERY_REQUIRED"
+     ],
+     "requested_autonomy": [
+      "PLAN_ONLY",
+      "EXECUTE_WITHIN_BOUNDS"
+     ],
+     "approval_method": [
+      "USER_CONFIRMATION",
+      "STEP_UP",
+      "WEBAUTHN"
+     ],
+     "status": [
+      "PENDING",
+      "APPROVED",
+      "CONSUMED",
+      "EXPIRED",
+      "REVOKED",
+      "DRAFT",
+      "PLANNED",
+      "ACTIVE",
+      "COMPLETED",
+      "CANCELLED",
+      "READY",
+      "NOT_STARTED",
+      "EN_ROUTE",
+      "ARRIVED",
+      "IN_PROGRESS",
+      "SKIPPED",
+      "CANDIDATE",
+      "SELECTED",
+      "SUPERSEDED",
+      "REJECTED",
+      "CONFIRMED",
+      "FAILED",
+      "FULFILLED",
+      "INITIATED",
+      "AUTHORIZED",
+      "SUCCEEDED",
+      "REFUNDED",
+      "VOIDED",
+      "DETECTED",
+      "ACKNOWLEDGED",
+      "RESOLVED",
+      "IGNORED",
+      "PROPOSED",
+      "BREACHED",
+      "GENERATED",
+      "PRESENTED",
+      "ACCEPTED",
+      "INVALIDATED"
+     ],
+     "bin_state": [
+      "IN_RECYCLE_BIN"
+     ],
+     "kind": [
+      "HARD",
+      "SOFT",
+      "BOOKING",
+      "ORDER",
+      "PAYMENT",
+      "APPOINTMENT",
+      "OTHER"
+     ],
+     "source": [
+      "INITIAL",
+      "REPLAN",
+      "MANUAL",
+      "DETERMINISTIC",
+      "HYBRID"
+     ],
+     "failure_token": [
+      "FORCE_BOOKING_FAIL",
+      "FORCE_PAYMENT_FAIL"
+     ],
+     "transaction_type": [
+      "AUTHORIZE",
+      "CAPTURE",
+      "REFUND",
+      "VOID"
+     ],
+     "provenance": [
+      "SIMULATED",
+      "PROVIDER_VERIFIED",
+      "USER_REPORTED",
+      "SYSTEM_DERIVED"
+     ],
+     "event_type": [
+      "TRAFFIC_DELAY",
+      "CLOSURE",
+      "WEATHER",
+      "SCHEDULE_DELAY",
+      "SERVICE_UNAVAILABLE",
+      "USER_CHANGE",
+      "OTHER"
+     ],
+     "severity": [
+      "INFO",
+      "MINOR",
+      "MAJOR",
+      "CRITICAL"
+     ],
+     "projection_status": [
+      "READY",
+      "STALE",
+      "DEGRADED"
+     ],
+     "name": [
+      "EXPLAIN_PLAN",
+      "WHAT_IF",
+      "DISCOVER",
+      "PREFERENCE_CHANGE",
+      "DISRUPTION_REPORT",
+      "REPLAN_REQUEST",
+      "UNKNOWN"
+     ]
+    },
+    "enum_lines": {
+     "code": 59,
+     "ai_state": 230,
+     "state": 1487,
+     "source_class": 1795,
+     "event_status": 2024,
+     "actions": 2036,
+     "mode": 2076,
+     "decision": 2143,
+     "requested_autonomy": 2152,
+     "approval_method": 2204,
+     "status": 2220,
+     "bin_state": 2273,
+     "kind": 2284,
+     "source": 2480,
+     "failure_token": 2510,
+     "transaction_type": 2568,
+     "provenance": 2595,
+     "event_type": 2598,
+     "severity": 2599,
+     "projection_status": 2681,
+     "name": 2786
+    },
+    "enum_forms": {
+     "code": "inline_on_field_line",
+     "ai_state": "enum_key_with_bracket",
+     "state": "enum_key_with_bracket",
+     "source_class": "inline_on_field_line",
+     "event_status": "inline_on_field_line",
+     "actions": "enum_key_with_bracket",
+     "mode": "inline_on_field_line",
+     "decision": "inline_on_field_line",
+     "requested_autonomy": "enum_key_with_bracket",
+     "approval_method": "enum_key_with_bracket",
+     "status": "inline_on_field_line",
+     "bin_state": "inline_on_field_line",
+     "kind": "inline_on_field_line",
+     "source": "inline_on_field_line",
+     "failure_token": "inline_on_field_line",
+     "transaction_type": "inline_on_field_line",
+     "provenance": "enum_key_with_bracket",
+     "event_type": "inline_on_field_line",
+     "severity": "inline_on_field_line",
+     "projection_status": "inline_on_field_line",
+     "name": "inline_on_field_line"
+    },
+    "auto_discovered": true,
+    "note": "21 contract field(s) carry a named closed set, reason_code not among them (inline_on_field_line 38, enum_key_with_bracket 10, enum_key_block 0)"
+   }
+  },
+  {
+   "arm": "B11_no_cell_lost_or_gained_between_rulers",
+   "pass": true,
+   "now": {
+    "r7b1_cells": 11,
+    "r7b4_cells_no_contract": 11,
+    "only_before": [],
+    "only_after": [],
+    "r7b1_folded": 2,
+    "r7b4_folded": 2,
+    "r7b4_contract_blocked": 2,
+    "r7b4_contract": {
+     "path": "D:/moodle/_qoder_lane_S4_0926/work/ord0408/jia/tip/contracts/openapi.yaml",
+     "readable": true,
+     "bytes": 119781,
+     "blob": "ee2dc30d0391ba13262e4c6f319b2619b97b5de4",
+     "fields_with_enum": [
+      "code",
+      "ai_state",
+      "state",
+      "source_class",
+      "event_status",
+      "actions",
+      "mode",
+      "decision",
+      "requested_autonomy",
+      "approval_method",
+      "status",
+      "bin_state",
+      "kind",
+      "source",
+      "failure_token",
+      "transaction_type",
+      "provenance",
+      "event_type",
+      "severity",
+      "projection_status",
+      "name"
+     ],
+     "enums": {
+      "code": [
+       "RESET_TOKEN_REQUIRED",
+       "RESET_TOKEN_INVALID",
+       "DEMO_MODE_REQUIRED"
+      ],
+      "ai_state": [
+       "CONFIGURED_UNVERIFIED",
+       "NOT_CONFIGURED",
+       "DISABLED_BY_OPS",
+       "PROVIDER_REFUSED"
+      ],
+      "state": [
+       "READY",
+       "HYDRATABLE",
+       "UNKNOWN_RETRYABLE",
+       "UNAVAILABLE",
+       "PLAN_FEASIBLE",
+       "REPLAN_REQUIRED",
+       "NO_ACTIVE_PLAN",
+       "RECOVERY_REQUIRED",
+       "RECOVERY_REQUIRED_NO_ALTERNATIVE",
+       "RESOLVED"
+      ],
+      "source_class": [
+       "OFFICIAL_NOTICE",
+       "OPERATOR_NOTICE",
+       "OPEN_WEB"
+      ],
+      "event_status": [
+       "DETECTED",
+       "ACKNOWLEDGED",
+       "RESOLVED"
+      ],
+      "actions": [
+       "REPLAN",
+       "ACKNOWLEDGE_NO_ALTERNATIVE"
+      ],
+      "mode": [
+       "ADVISORY",
+       "ASSISTED",
+       "AUTONOMOUS",
+       "FALLBACK"
+      ],
+      "decision": [
+       "ALLOW_AUTO",
+       "REQUIRE_CONFIRMATION",
+       "REQUIRE_STEP_UP",
+       "DENY",
+       "NO_ACTION",
+       "WATCH",
+       "RECOVERY_REQUIRED"
+      ],
+      "requested_autonomy": [
+       "PLAN_ONLY",
+       "EXECUTE_WITHIN_BOUNDS"
+      ],
+      "approval_method": [
+       "USER_CONFIRMATION",
+       "STEP_UP",
+       "WEBAUTHN"
+      ],
+      "status": [
+       "PENDING",
+       "APPROVED",
+       "CONSUMED",
+       "EXPIRED",
+       "REVOKED",
+       "DRAFT",
+       "PLANNED",
+       "ACTIVE",
+       "COMPLETED",
+       "CANCELLED",
+       "READY",
+       "NOT_STARTED",
+       "EN_ROUTE",
+       "ARRIVED",
+       "IN_PROGRESS",
+       "SKIPPED",
+       "CANDIDATE",
+       "SELECTED",
+       "SUPERSEDED",
+       "REJECTED",
+       "CONFIRMED",
+       "FAILED",
+       "FULFILLED",
+       "INITIATED",
+       "AUTHORIZED",
+       "SUCCEEDED",
+       "REFUNDED",
+       "VOIDED",
+       "DETECTED",
+       "ACKNOWLEDGED",
+       "RESOLVED",
+       "IGNORED",
+       "PROPOSED",
+       "BREACHED",
+       "GENERATED",
+       "PRESENTED",
+       "ACCEPTED",
+       "INVALIDATED"
+      ],
+      "bin_state": [
+       "IN_RECYCLE_BIN"
+      ],
+      "kind": [
+       "HARD",
+       "SOFT",
+       "BOOKING",
+       "ORDER",
+       "PAYMENT",
+       "APPOINTMENT",
+       "OTHER"
+      ],
+      "source": [
+       "INITIAL",
+       "REPLAN",
+       "MANUAL",
+       "DETERMINISTIC",
+       "HYBRID"
+      ],
+      "failure_token": [
+       "FORCE_BOOKING_FAIL",
+       "FORCE_PAYMENT_FAIL"
+      ],
+      "transaction_type": [
+       "AUTHORIZE",
+       "CAPTURE",
+       "REFUND",
+       "VOID"
+      ],
+      "provenance": [
+       "SIMULATED",
+       "PROVIDER_VERIFIED",
+       "USER_REPORTED",
+       "SYSTEM_DERIVED"
+      ],
+      "event_type": [
+       "TRAFFIC_DELAY",
+       "CLOSURE",
+       "WEATHER",
+       "SCHEDULE_DELAY",
+       "SERVICE_UNAVAILABLE",
+       "USER_CHANGE",
+       "OTHER"
+      ],
+      "severity": [
+       "INFO",
+       "MINOR",
+       "MAJOR",
+       "CRITICAL"
+      ],
+      "projection_status": [
+       "READY",
+       "STALE",
+       "DEGRADED"
+      ],
+      "name": [
+       "EXPLAIN_PLAN",
+       "WHAT_IF",
+       "DISCOVER",
+       "PREFERENCE_CHANGE",
+       "DISRUPTION_REPORT",
+       "REPLAN_REQUEST",
+       "UNKNOWN"
+      ]
+     },
+     "enum_lines": {
+      "code": 59,
+      "ai_state": 230,
+      "state": 1487,
+      "source_class": 1795,
+      "event_status": 2024,
+      "actions": 2036,
+      "mode": 2076,
+      "decision": 2143,
+      "requested_autonomy": 2152,
+      "approval_method": 2204,
+      "status": 2220,
+      "bin_state": 2273,
+      "kind": 2284,
+      "source": 2480,
+      "failure_token": 2510,
+      "transaction_type": 2568,
+      "provenance": 2595,
+      "event_type": 2598,
+      "severity": 2599,
+      "projection_status": 2681,
+      "name": 2786
+     },
+     "enum_forms": {
+      "code": "inline_on_field_line",
+      "ai_state": "enum_key_with_bracket",
+      "state": "enum_key_with_bracket",
+      "source_class": "inline_on_field_line",
+      "event_status": "inline_on_field_line",
+      "actions": "enum_key_with_bracket",
+      "mode": "inline_on_field_line",
+      "decision": "inline_on_field_line",
+      "requested_autonomy": "enum_key_with_bracket",
+      "approval_method": "enum_key_with_bracket",
+      "status": "inline_on_field_line",
+      "bin_state": "inline_on_field_line",
+      "kind": "inline_on_field_line",
+      "source": "inline_on_field_line",
+      "failure_token": "inline_on_field_line",
+      "transaction_type": "inline_on_field_line",
+      "provenance": "enum_key_with_bracket",
+      "event_type": "inline_on_field_line",
+      "severity": "inline_on_field_line",
+      "projection_status": "inline_on_field_line",
+      "name": "inline_on_field_line"
+     },
+     "auto_discovered": true,
+     "note": "21 contract field(s) carry a named closed set, reason_code not among them (inline_on_field_line 38, enum_key_with_bracket 10, enum_key_block 0)"
+    },
+    "r7b1_per_rule": {
+     "UPSTREAM_TEXT_VIA_HELPER_TO_DOM": 5,
+     "UPSTREAM_EXCEPTION_TO_DOM": 3,
+     "UPSTREAM_PROSE_TO_ATTRIBUTE_SLOT": 2,
+     "RAW_BODY_TO_DOM": 1
+    },
+    "r7b4_per_rule": {
+     "UPSTREAM_TEXT_VIA_HELPER_TO_DOM": 5,
+     "UPSTREAM_EXCEPTION_TO_DOM": 3,
+     "UPSTREAM_PROSE_TO_ATTRIBUTE_SLOT": 2,
+     "RAW_BODY_TO_DOM": 1
+    }
+   }
+  },
+  {
+   "arm": "B12_selftest_still_green_and_moves_nothing_new",
+   "pass": true,
+   "now": {
+    "r7b1": [
+     "clean_tainted_but_attribute_only.tsx",
+     "e0319r3_E3_control_attribute_only.tsx"
+    ],
+    "r7b4": [
+     "clean_tainted_but_attribute_only.tsx",
+     "e0319r3_E3_control_attribute_only.tsx"
+    ],
+    "r7b4_verdict": "SELFTEST_PASS"
+   }
+  }
+ ],
+ "all_checks_pass": true
+}
