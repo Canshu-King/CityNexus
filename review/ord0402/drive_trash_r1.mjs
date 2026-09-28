@@ -109,7 +109,14 @@ const READ_SCREEN = () => {
 };
 
 const browser = await chromium.launch();
-const run = { ui: UI, api_origin: API, viewport: { WIDTH, HEIGHT }, journeys: JOURNEYS, arms: [] };
+const run = {
+  ui: UI,
+  api_origin: API,
+  read_door: "/api/v1/recycle-bin/journeys -- the product door landed with ORD-0402 slice 1 (backend/app/main.py:3058); this run adds no route of its own",
+  viewport: { WIDTH, HEIGHT },
+  journeys: JOURNEYS,
+  arms: [],
+};
 
 for (const locale of ["zh-CN", "en"]) {
   const ctx = await browser.newContext({ viewport: { width: WIDTH, height: HEIGHT } });
@@ -162,7 +169,7 @@ for (const locale of ["zh-CN", "en"]) {
       name: "B_server_truth",
       landed_list_count: Array.isArray(serverList.body) ? serverList.body.length : null,
       landed_list_ids: (serverList.body || []).map((j) => j.id),
-      assembly_bin_count: Array.isArray(serverBin.body) ? serverBin.body.length : null,
+      bin_door_count: Array.isArray(serverBin.body) ? serverBin.body.length : null,
       brought_back_id_visible_on_landed_door: (serverList.body || []).some((j) => j.id === target),
     });
 

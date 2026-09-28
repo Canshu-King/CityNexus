@@ -1,56 +1,41 @@
+import type { components } from "../../generated/api";
 import { rejectionWithFacts, RejectionWithFacts } from "../../lib/rejectionFacts";
 
 /**
  * ORD-0402 slice 2 -- the two doors the recycle-bin screen uses, in one file, so the screen itself
  * renders and cannot hide what it asked the server for.
  *
- * THE WRITE DOOR IS REAL AND LANDED. `POST /api/v1/journeys/{journey_id}/undelete` is on the
- * authority line (`backend/app/main.py:2999` at 97766b2dfd7a5a7668f6750e3bc13b698c416975), takes no
- * `Idempotency-Key` -- the durable column decides whether the write happens -- and answers
- * `409 JOURNEY_NOT_DELETED` rather than reporting a success that did not occur
- * (`backend/app/main.py:3033`).
+ * BOTH DOORS ARE ON THE LINE NOW. The write door landed with ORD-0399:
+ * `POST /api/v1/journeys/{journey_id}/undelete` (`backend/app/main.py:2999`), no `Idempotency-Key` --
+ * the durable column decides whether the write happens -- answering `409 JOURNEY_NOT_DELETED` rather
+ * than reporting a success that did not occur (`backend/app/main.py:3033`). The read door landed
+ * with ORD-0402 slice 1 at `backend/app/main.py:3058`: `GET /api/v1/recycle-bin/journeys`, declared in
+ * `contracts/openapi.yaml:487` and generated at `frontend/src/generated/api.ts:414`, each row
+ * carrying the stored `deleted_at` and `bin_state` = `IN_RECYCLE_BIN`
+ * (`backend/app/schemas.py:263` and `:264`) -- so this screen never has to conclude "it was deleted"
+ * from the trip being missing from `GET /api/v1/journeys`, which keeps its own `deleted_at IS NULL`
+ * promise (`backend/app/main.py:2951`).
  *
- * THE READ DOOR IS NOT BUILT YET, and this is the one line in this feature that depends on
- * ORD-0402 slice 1. Nothing on the authority line can enumerate binned trips today:
- * `GET /api/v1/journeys` filters `deleted_at IS NULL` (`backend/app/main.py:2951`) and its docstring
- * makes that a promise, and `journey_schema()` does not emit `deleted_at` at all
- * (`backend/app/services.py:382`, `backend/app/schemas.py:239`), so no payload on this tree says
- * "this trip is in the bin". The panel therefore has to have a name for the door, and the name has
- * to be one place. When slice 1 lands, change `TRASH_LIST_PATH` and the two field names below --
- * nothing else in this feature reads a URL.
- *
- * What slice 1 was told to provide, restated here so the shapes can be compared rather than
- * guessed at review time: every row carries `deleted_at` with its raw value, and a named state that
- * says the row is in the bin -- so this screen never infers "it was deleted" from "it is missing
- * from the other list".
- *
- * Why this name rather than `/journeys/discarded`, measured on this lane's private stack (see
+ * The name this file chose is the name slice 1 shipped, so the constant below needed no edit when the
+ * door arrived; that is the point of keeping the URL in one place. The reason for not using
+ * `/journeys/discarded` still stands and was measured, not guessed (see
  * `review/ord0402/stack_receipt_r1.json`, key `shadowed_collection_name`): the landed
  * `GET /api/v1/journeys/{journey_id}` door is declared earlier in `app.main`, so a one-segment
  * collection name under `/journeys/` is swallowed by it and answers 422 with
  * `loc: ["path","journey_id"]`, `type: "uuid_parsing"`, `message_key: "validation.not_an_id"` (the
- * server's own receipt for that answer was `CNX-TWXNJHE2`). Such a name is reachable only if it is
- * declared before that door; `/recycle-bin/journeys` cannot be shadowed by it.
+ * server's own receipt for that answer was `CNX-TWXNJHE2`).
+ *
+ * One thing the screen inherits rather than decides: slice 1 orders the list newest-deletion first
+ * (`backend/app/main.py:3081`), and the panel renders the array as answered, so the order a traveller
+ * sees is the server's order, not a client-side re-sort.
  */
 export const TRASH_LIST_PATH = "/recycle-bin/journeys";
 
-/** A binned trip, as this screen needs it. Declared here rather than taken from
- *  `frontend/src/generated/api.ts` for the reason `PlanVersionHistoryPanel.tsx:20` documents: the
- *  committed generated file has no such path yet, and regenerating it here would fold other orders'
- *  drift into this diff. */
-export type DiscardedJourney = {
-  id: string;
-  title: string;
-  city_code?: string | null;
-  start_at?: string | null;
-  end_at?: string | null;
-  status?: string | null;
-  /** slice 1's raw value, not a re-derived one. `null` here means the server did not answer. */
-  deleted_at?: string | null;
-  /** the server's own word for "in the bin" (`IN_RECYCLE_BIN` is what this file expects until told
-   *  otherwise); absent means the row cannot be shown as binned. */
-  bin_state?: string | null;
-};
+/** A binned trip, typed from the contract rather than re-declared here: slice 1 shipped
+ *  `RecycleBinJourney` into the generated client (`frontend/src/generated/api.ts:2771`), so the
+ *  screen's rows and the server's schema cannot drift apart silently. The guards in the panel stay
+ *  anyway -- a model says what the server intends to send, not what this response did send. */
+export type DiscardedJourney = components["schemas"]["RecycleBinJourney"];
 
 async function request<T>(path: string, init?: RequestInit): Promise<T> {
   const response = await fetch(`/api/v1${path}`, {
