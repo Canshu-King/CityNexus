@@ -1,7 +1,7 @@
 {
-  "started_at": "2026-09-29T06:26:57+08:00",
+  "started_at": "2026-09-29T06:59:08+08:00",
   "backend_identity": {
-    "listener_pid": 29428,
+    "listener_pid": 12584,
     "listener_is_spawned_or_its_child": true,
     "listener_command": "\"C:\\Users\\������\\AppData\\Roaming\\uv\\python\\cpython-3.12.14-windows-x86_64-none\\python.exe\" -X utf8 -m uvicorn app.main:app --host 127.0.0.1 --port 4731 --log-level warning",
     "command_names_this_app_and_port": true,
@@ -10,7 +10,7 @@
     "shared_stores_named_by_this_run": []
   },
   "seed": {
-    "journey_id": "0da28756-27b7-4d5c-b8c0-5974022ece68",
+    "journey_id": "807adae5-7e72-4108-997e-2dd46feebf67",
     "delete_door_status": 204,
     "undelete_door_status": 200,
     "actions_in_this_lane_database": [
@@ -38,7 +38,7 @@
       "locale": "zh-CN",
       "title": "成员与权限",
       "pickerPresent": true,
-      "doorState": "这台服务器没有答 /access，所以这一屏今天没有任何一项能真改。下面写的是那扇门答话之后每一档意味着什么，不是对这条行程下的结论。",
+      "doorState": "这台服务器 /members、/share-grants、/acl/roles 一扇都没答，所以这一屏今天没有任何一项能真改。下面写的是那几扇门答话之后每一档意味着什么，不是对这条行程下的结论。",
       "roleRows": 3,
       "roleText": [
         "所有者 全部权限：改可见性、请人、移除成员、删除行程。",
@@ -53,15 +53,13 @@
       "visibilityRows": [
         "仅个人 别人打不开，拿到链接也打不开。",
         "获得链接者可见 有链接的人不用先进成员名单就能读。",
-        "仅成员可见 成员能读能改，名单外的人拿链接也打不开。",
         "受邀者可见 只有邀请还在有效期内的人打得开，过期就打不开了。",
         "公开 全网公开可见。"
       ],
       "visibilityAttributes": [
-        "PRIVATE_ONLY",
+        "PRIVATE",
         "LINK_READ",
-        "MEMBER_ONLY",
-        "INVITEES",
+        "INVITEES_ONLY",
         "PUBLIC"
       ],
       "confirmCases": [
@@ -96,11 +94,11 @@
       ],
       "switchLines": [
         {
-          "move": "PRIVATE_ONLY->PUBLIC",
+          "move": "PRIVATE->PUBLIC",
           "said": "转换后这条行程全网可见——原先看不见的人会开始能看见。"
         },
         {
-          "move": "PUBLIC->PRIVATE_ONLY",
+          "move": "PUBLIC->PRIVATE",
           "said": "转换后，已经在跟踪这条行程的人会失去访问权限。"
         }
       ],
@@ -134,9 +132,9 @@
       },
       "rawKeyLeak": false,
       "unfilledPlaceholders": [],
-      "cjkChars": 607,
-      "latinWords": 11,
-      "wholePageCjkChars": 623,
+      "cjkChars": 587,
+      "latinWords": 15,
+      "wholePageCjkChars": 603,
       "doorStillLoading": false,
       "overflowX": 0,
       "pageErrors": []
@@ -145,7 +143,7 @@
       "locale": "en",
       "title": "MEMBERS AND ACCESS",
       "pickerPresent": true,
-      "doorState": "This server did not answer /access, so nothing on this screen can be changed today. The ladders say what each level will mean once that door answers -- they are not a claim about this trip.",
+      "doorState": "This server answered none of /members, /share-grants, /acl/roles, so nothing on this screen can be changed today. The ladders say what each level will mean once those doors answer -- they are not a claim about this trip.",
       "roleRows": 3,
       "roleText": [
         "Owner Everything: change visibility, invite people, remove members, delete the trip.",
@@ -160,15 +158,13 @@
       "visibilityRows": [
         "Only me No one else can open it, not even holding the link.",
         "Anyone with the link Anyone holding the link can read it without being a member first.",
-        "Members only Members read and edit it; outside the member list the link does not open.",
         "Invited people only Only invitations still in date can open it; an expired one cannot.",
         "Public Visible to everyone on this network."
       ],
       "visibilityAttributes": [
-        "PRIVATE_ONLY",
+        "PRIVATE",
         "LINK_READ",
-        "MEMBER_ONLY",
-        "INVITEES",
+        "INVITEES_ONLY",
         "PUBLIC"
       ],
       "confirmCases": [
@@ -203,11 +199,11 @@
       ],
       "switchLines": [
         {
-          "move": "PRIVATE_ONLY->PUBLIC",
+          "move": "PRIVATE->PUBLIC",
           "said": "After this the trip is visible to everyone -- people who could not see it before will be able to."
         },
         {
-          "move": "PUBLIC->PRIVATE_ONLY",
+          "move": "PUBLIC->PRIVATE",
           "said": "After this, the people who followed it lose access -- they will not be able to open it any more."
         }
       ],
@@ -242,7 +238,7 @@
       "rawKeyLeak": false,
       "unfilledPlaceholders": [],
       "cjkChars": 0,
-      "latinWords": 399,
+      "latinWords": 387,
       "wholePageCjkChars": 2,
       "doorStillLoading": false,
       "overflowX": 0,
@@ -267,7 +263,12 @@
       {
         "name": "every visibility level carries its consequence",
         "verdict": "PASS",
-        "detail": "PRIVATE_ONLY,LINK_READ,MEMBER_ONLY,INVITEES,PUBLIC :: 仅个人 别人打不开，拿到链接也打不开。 | 获得链接者可见 有链接的人不用先进成员名单就能读。 | 仅成员可见 成员能读能改，名单外的人拿链接也打不开。 | 受邀者可见 只有邀请还在有效期内的人打得开，过期就打不开了。 | 公开 全网公开可见。"
+        "detail": "PRIVATE,LINK_READ,INVITEES_ONLY,PUBLIC :: 仅个人 别人打不开，拿到链接也打不开。 | 获得链接者可见 有链接的人不用先进成员名单就能读。 | 受邀者可见 只有邀请还在有效期内的人打得开，过期就打不开了。 | 公开 全网公开可见。"
+      },
+      {
+        "name": "the ladder offers exactly the levels the server's own domain has",
+        "verdict": "PASS",
+        "detail": "{\"seam_state\":\"NOT_YET_CHECKABLE_no_ShareVisibility_in_contract_or_client\",\"read_from\":null,\"domain_levels\":[],\"screen_levels\":[\"PRIVATE\",\"LINK_READ\",\"INVITEES_ONLY\",\"PUBLIC\"]}"
       },
       {
         "name": "the confirmation split is two different sentences",
@@ -287,7 +288,7 @@
       {
         "name": "private->public and public->private each name the other side",
         "verdict": "PASS",
-        "detail": "[{\"move\":\"PRIVATE_ONLY->PUBLIC\",\"said\":\"转换后这条行程全网可见——原先看不见的人会开始能看见。\"},{\"move\":\"PUBLIC->PRIVATE_ONLY\",\"said\":\"转换后，已经在跟踪这条行程的人会失去访问权限。\"}]"
+        "detail": "[{\"move\":\"PRIVATE->PUBLIC\",\"said\":\"转换后这条行程全网可见——原先看不见的人会开始能看见。\"},{\"move\":\"PUBLIC->PRIVATE\",\"said\":\"转换后，已经在跟踪这条行程的人会失去访问权限。\"}]"
       },
       {
         "name": "the invitation states an expiry",
@@ -312,7 +313,7 @@
       {
         "name": "the sharing door's absence is named on screen, after the server answered",
         "verdict": "PASS",
-        "detail": "这台服务器没有答 /access，所以这一屏今天没有任何一项能真改。下面写的是那扇门答话之后每一档意味着什么，不是对这条行程下的结论。 || This server did not answer /access, so nothing on this screen can be changed today. The ladders say what each level will mean once that door answers -- they are not a claim about this trip."
+        "detail": "这台服务器 /members、/share-grants、/acl/roles 一扇都没答，所以这一屏今天没有任何一项能真改。下面写的是那几扇门答话之后每一档意味着什么，不是对这条行程下的结论。 || This server answered none of /members, /share-grants, /acl/roles, so nothing on this screen can be changed today. The ladders say what each level will mean onc"
       },
       {
         "name": "no raw copy key reached either arm",
@@ -327,12 +328,12 @@
       {
         "name": "the Chinese arm reads Chinese",
         "verdict": "PASS",
-        "detail": "cjk=607"
+        "detail": "cjk=587"
       },
       {
         "name": "the English arm reads English",
         "verdict": "PASS",
-        "detail": "panelCjk=0 latin=399"
+        "detail": "panelCjk=0 latin=387"
       },
       {
         "name": "the one control is under the finger at 390x844",

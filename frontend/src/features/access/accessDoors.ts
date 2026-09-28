@@ -2,22 +2,26 @@
  * ORD-0436 -- the doors this screen reads, in one file, so what it claims and what it asked the
  * server are separable.
  *
- * Two of the three are on the line today and are named by their server-side position:
+ * Two of them are on the line today and are named by their server-side position:
  *  - `GET /api/v1/journeys` -- `backend/app/main.py:2955`, the list door ORD-0383 slice 1 kept.
  *  - `GET /api/v1/journeys/{id}/agent-feed` -- `backend/app/main.py:7407`, the activity stream that
  *    reads `audit_logs` for one trip.
- * The third is not on the line: the member, visibility and invitation state belongs to ORD-0434's
- * sharing layer, and it has no path to call yet. This module does not guess one. The panel asks it
- * the same question the other two get, gets `null` back, and says "this server has no such door"
- * instead of showing an empty roster that would read as "nobody shares this trip" -- a missing
- * answer and an empty answer are different facts, and the second one is a claim this tree has no
- * source for.
+ * The sharing state belongs to ORD-0434 and is asked as three doors (`SHARING_DOOR_SUFFIXES` below).
+ * None of them answers at this tip. A missing answer and an empty answer are different facts, so the
+ * screen reports the doors it asked and their status rather than showing an empty roster, which would
+ * read as "nobody shares this trip" -- a claim this tree has no source for.
  */
 import { rejectionWithFacts, RejectionWithFacts } from "../../lib/rejectionFacts";
 
 export const JOURNEY_LIST_PATH = "/journeys";
 export const ACTIVITY_FEED_SUFFIX = "/agent-feed";
-export const ACCESS_DOOR_PATH = "/access";
+/**
+ * The sharing state lives behind three doors, and their names are read off ORD-0434's route set
+ * (`review/qoder-0434-share-grants-r1`: `/members`, `/share-grants`, `/acl/roles`), not invented
+ * here. None of the three answers at this tip, which is the fact the screen says out loud; an
+ * invented `/access` was worse than none, because it named a door nobody is building.
+ */
+export const SHARING_DOOR_SUFFIXES = ["/members", "/share-grants", "/acl/roles"] as const;
 
 export type JourneySummary = {
   id: string;
@@ -61,45 +65,55 @@ export function readActivity(journeyId: string): Promise<ActivityEvent[]> {
   ).then((answer) => answer.events);
 }
 
-/** `null` means "this device did not get an answer to ask with" -- the door is absent, not empty. */
-export type AccessState = {
-  door: "present";
-  roles: Record<string, unknown> | null;
-  visibility: string | null;
-  members: unknown[] | null;
-  invitations: { used: number | null; cap: number | null; ttl_hours: number | null } | null;
+/** One door this screen asked, with the status it actually answered. `answered: false` is reserved
+ *  for the shapes that mean "this server has no such door" (404 / 405 / 501); anything else throws,
+ *  so a network failure is never reported as absence. */
+export type DoorProbe = { path: string; http_status: number | null; answered: boolean };
+
+export type SharingRead = {
+  probes: DoorProbe[];
+  /** How many member rows `/members` answered, or `null` when that door did not answer. A count of
+   *  rows the server sent, not a quota: this product has no member-limit field to compare it with. */
+  rosterSize: number | null;
+  /** The `expires_at` values the doors did send. Their contract carries the field on both
+   *  `ShareGrant` and `JourneyMember` as `str | None`, so an expiry on screen comes from one of
+   *  these rows and never from a duration this file could make up. */
+  expiries: string[];
 };
 
-export async function readAccessState(journeyId: string): Promise<AccessState | null> {
-  try {
-    const answer = await request<Record<string, unknown>>(
-      `/journeys/${encodeURIComponent(journeyId)}${ACCESS_DOOR_PATH}`,
-    );
-    const invitations = answer.invitations;
-    const quota =
-      invitations && typeof invitations === "object"
-        ? (invitations as Record<string, unknown>)
-        : null;
-    const numberOrNull = (value: unknown): number | null =>
-      typeof value === "number" && Number.isFinite(value) ? value : null;
-    return {
-      door: "present",
-      roles: (answer.roles as Record<string, unknown>) ?? null,
-      visibility: typeof answer.visibility === "string" ? answer.visibility : null,
-      members: Array.isArray(answer.members) ? answer.members : null,
-      invitations: quota
-        ? {
-            used: numberOrNull(quota.used ?? quota.member_count),
-            cap: numberOrNull(quota.cap ?? quota.limit),
-            ttl_hours: numberOrNull(quota.ttl_hours ?? quota.valid_hours),
-          }
-        : null,
-    };
-  } catch (cause) {
-    const status = cause instanceof RejectionWithFacts ? cause.http_status : null;
-    if (status === 404 || status === 405 || status === 501) return null;
-    throw cause;
+const ABSENT_STATUSES = new Set([404, 405, 501]);
+
+async function ask(path: string): Promise<{ status: number; rows: unknown } | null> {
+  const response = await fetch(`/api/v1${path}`, { headers: { "Content-Type": "application/json" } });
+  if (ABSENT_STATUSES.has(response.status)) return null;
+  if (!response.ok) throw await rejectionWithFacts(response);
+  return { status: response.status, rows: await response.json() };
+}
+
+function expiriesIn(rows: unknown): string[] {
+  if (!Array.isArray(rows)) return [];
+  return rows
+    .map((row) =>
+      row && typeof row === "object" ? (row as Record<string, unknown>).expires_at : null,
+    )
+    .filter((value): value is string => typeof value === "string" && value.length > 0);
+}
+
+export async function readSharingDoors(journeyId: string): Promise<SharingRead> {
+  const probes: DoorProbe[] = [];
+  const expiries: string[] = [];
+  let rosterSize: number | null = null;
+  for (const suffix of SHARING_DOOR_SUFFIXES) {
+    const answer = await ask(`/journeys/${encodeURIComponent(journeyId)}${suffix}`);
+    if (answer === null) {
+      probes.push({ path: suffix, http_status: null, answered: false });
+      continue;
+    }
+    probes.push({ path: suffix, http_status: answer.status, answered: true });
+    expiries.push(...expiriesIn(answer.rows));
+    if (suffix === "/members" && Array.isArray(answer.rows)) rosterSize = answer.rows.length;
   }
+  return { probes, expiries, rosterSize };
 }
 
 export { RejectionWithFacts };

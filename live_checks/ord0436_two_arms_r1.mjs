@@ -12,10 +12,14 @@
  * too, but only as identity (which row is which), and nothing passes on them.
  */
 import { chromium } from "playwright";
+// The ladder's domain is read from the artifacts the server publishes, not from a remembered
+// list: `contracts/openapi.yaml` and the generated client, through `ord0436_contract_domain.mjs`.
+import { contractDomain } from "./ord0436_contract_domain.mjs";
 
 const BASE = process.env.CNX_BASE || "http://127.0.0.1:4802";
 const JOURNEY = process.env.CNX_JOURNEY || "";
 const OUT = process.env.CNX_OUT || ".";
+const REPO = process.env.CNX_REPO || ".";
 const VIEWPORT = { width: 390, height: 844 };
 
 const squeeze = (value) => (value ?? "").replace(/\s+/g, " ").trim();
@@ -167,8 +171,27 @@ add(
 );
 add(
   "every visibility level carries its consequence",
-  zh.visibilityRows.length === 5 && zh.visibilityRows.every((line) => line.length > 8),
+  zh.visibilityRows.length === 4 && zh.visibilityRows.every((line) => line.length > 8),
   `${zh.visibilityAttributes} :: ${zh.visibilityRows.join(" | ")}`.slice(0, 280),
+);
+
+// The seam arm compares the server's domain with what the screen offers. While no artifact names
+// `ShareVisibility` it must not pass quietly: it asserts the screen says the doors are silent, and
+// carries `seam_state` so a reader can see the comparison never happened.
+const domain = contractDomain(REPO);
+const offeredLevels = zh.visibilityAttributes ?? [];
+add(
+  "the ladder offers exactly the levels the server's own domain has",
+  domain === null
+    ? offeredLevels.length === 4 &&
+        /一扇都没答|answered none of/.test(`${zh.doorState} ${en.doorState}`)
+    : domain.levels.slice().sort().join(",") === offeredLevels.slice().sort().join(","),
+  JSON.stringify({
+    seam_state: domain === null ? "NOT_YET_CHECKABLE_no_ShareVisibility_in_contract_or_client" : "CHECKED",
+    read_from: domain?.where ?? null,
+    domain_levels: domain?.levels ?? [],
+    screen_levels: offeredLevels,
+  }).slice(0, 300),
 );
 add(
   "the confirmation split is two different sentences",
