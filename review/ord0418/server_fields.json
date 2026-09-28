@@ -1,0 +1,35 @@
+{
+ "backend_port": 65218,
+ "journeys": {
+  "legs-zero": {
+   "journey_id": "22222222-2222-4222-8222-222222222222",
+   "active_plan_legs": 0,
+   "mobility_facts_total": 0,
+   "mobility_facts_with_geometry": 0,
+   "options": 0,
+   "option0_routable_legs": 0,
+   "mobility_provider_status": {
+    "amap": "NOT_CONFIGURED",
+    "valhalla": "NOT_CONFIGURED",
+    "transit_realtime": "UNKNOWN_REALTIME",
+    "ride_hail": "UNKNOWN_COST"
+   },
+   "mobility_evidence_aggregate_provenance": "RUNTIME_CAPTURE"
+  },
+  "legs-seven": {
+   "journey_id": "6cbdbc65-904a-40c7-a778-f981690f25d0",
+   "active_plan_legs": 0,
+   "mobility_facts_total": 35,
+   "mobility_facts_with_geometry": 35,
+   "options": 1,
+   "option0_routable_legs": 7,
+   "mobility_provider_status": {
+    "amap": "NOT_CONFIGURED",
+    "valhalla": "NOT_CONFIGURED",
+    "transit_realtime": "UNKNOWN_REALTIME",
+    "ride_hail": "UNKNOWN_COST"
+   },
+   "mobility_evidence_aggregate_provenance": null
+  }
+ }
+}

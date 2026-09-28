@@ -1,0 +1,96 @@
+ORD-0418 -- the map caption's "provider-backed route" claim, made conditional, and read back off the
+      spoken text rather than off an attribute
+
+Lane 2d2d7428, 2026-09-29 ~01:5x +08. Order (CMDR 23:38, upgraded 23:41): the sentence at
+`frontend/src/i18n/LocaleContext.tsx:1588` (`mapComp.providerRoute`) is rendered unconditionally at
+`frontend/src/components/v8/MapPanel.tsx:564` inside a `v8-sr-only` span, so a screen reader speaks a
+claim about where the geometry came from even when the plan holds no legs. Make it conditional on
+`route.length > 0` (the same predicate MapPanel.tsx:114 already uses), name the reason when it is 0,
+change both language arms, gate on rendered text, ship at least one counter-arm, and do not touch
+the ORD-0412 label scope or the ORD-A attribution.
+
+WHAT WAS READ ON THE SERVER SIDE (this lane's own private read-only copy of the library, uvicorn on
+:65218; the two fields the sentence is built from are marked *)
+  legs-zero  journey 22222222-2222-4222-8222-222222222222
+     * active_plan.legs = 0 ; * mobility_facts = 0 (0 of them carrying geometry) ; options = 0 ; the first option's leg_mode_map resolves 0 legs to a fact geometry
+     mobility provider statuses: {"amap": "NOT_CONFIGURED", "valhalla": "NOT_CONFIGURED", "transit_realtime": "UNKNOWN_REALTIME", "ride_hail": "UNKNOWN_COST"}
+     active_plan.mobility_evidence.aggregate_provenance = 'RUNTIME_CAPTURE'
+  legs-seven  journey 6cbdbc65-904a-40c7-a778-f981690f25d0
+     * active_plan.legs = 0 ; * mobility_facts = 35 (35 of them carrying geometry) ; options = 1 ; the first option's leg_mode_map resolves 7 legs to a fact geometry
+     mobility provider statuses: {"amap": "NOT_CONFIGURED", "valhalla": "NOT_CONFIGURED", "transit_realtime": "UNKNOWN_REALTIME", "ride_hail": "UNKNOWN_COST"}
+     active_plan.mobility_evidence.aggregate_provenance = None
+
+WHERE THIS DISAGREES WITH THE 23:41 READING, NAMED RATHER THAN PAPERED OVER: that block says
+`aggregate_provenance` reads null. On this copy the plan-level object has no such key, and the field
+that does exist -- inside `active_plan.mobility_evidence` -- reads 'RUNTIME_CAPTURE', not null. So the replacement
+sentence was deliberately NOT built on provenance; it is built on the two fields that agree in both
+readings: `active_plan.legs` is empty and no routing provider is configured
+(`provider_mesh.mobility.valhalla` and `.amap` both NOT_CONFIGURED). `transit_realtime` and
+`ride_hail` are excluded from that test on purpose -- they are realtime/cost feeds, not routers, and
+counting them would have kept the informative sentence permanently unreachable.
+
+THE CHANGE
+  frontend/src/components/v8/MapPanel.tsx  -- the sr-only span becomes a three-way choice on
+      `route.length > 0` (unchanged claim when a route exists), then `mapComp.noRouteNoProvider`
+      when the routing providers are all NOT_CONFIGURED, else `mapComp.noRouteNotRouted`.
+      `noRoutingProvider` is derived from `data.provider_mesh.mobility` in the same component, and
+      `route` is the memo at MapPanel.tsx:99 that the drawn line already uses -- so the words cannot
+      disagree with the geometry.
+  frontend/src/i18n/LocaleContext.tsx      -- two new keys, en and zh-CN, both single-line so the
+      copy ruler's parser can see them.
+  Not touched: the attribution span at MapPanel.tsx:568+ (ORD-A), the `MAP_LABEL_FORBIDDEN` scope
+  from ORD-0412, and the caption's `mapComp.legs` count.
+
+THE THREE ARMS -- same instrument, same expectations, three builds
+  cells: journey x language; `claim` = the spoken caption contains the provider-backed sentence;
+  `which` = which zero-legs sentence was spoken. Predicate that decides: claim_only_when_route_exists.
+  before  base=http://127.0.0.1:51313 entry=index-CGSMsxT2.js failing=2 of 4
+      legs-zero   zh-CN legs_said=0  claim=True   which=none               FAIL
+      legs-zero   en    legs_said=0  claim=True   which=none               FAIL
+      legs-seven  zh-CN legs_said=7  claim=True   which=none               PASS
+      legs-seven  en    legs_said=7  claim=True   which=none               PASS
+  after   base=http://127.0.0.1:60292 entry=index-cUznrZNi.js failing=0 of 4
+      legs-zero   zh-CN legs_said=0  claim=False  which=noRouteNoProvider  PASS
+      legs-zero   en    legs_said=0  claim=False  which=noRouteNoProvider  PASS
+      legs-seven  zh-CN legs_said=7  claim=True   which=none               PASS
+      legs-seven  en    legs_said=7  claim=True   which=none               PASS
+  mutant  base=http://127.0.0.1:51556 entry=index-Bd12PHlb.js failing=2 of 4
+      legs-zero   zh-CN legs_said=0  claim=True   which=none               FAIL
+      legs-zero   en    legs_said=0  claim=True   which=none               FAIL
+      legs-seven  zh-CN legs_said=7  claim=True   which=none               PASS
+      legs-seven  en    legs_said=7  claim=True   which=none               PASS
+
+READING THE THREE
+  before (the tip build): the two legs-zero cells are RED -- with 0 legs the
+      caption still speaks '供应商支持的路线 · WGS84' / 'Provider-backed route · WGS84'. That is the defect, reproduced on the shipped bundle.
+  after  (this branch): all four cells green. legs-zero now speaks the
+      cause-naming sentence in both languages; legs-seven still speaks the original claim, because
+      there really are 7 routed legs -- the fix did not just delete the words.
+  mutant (a throwaway build of this branch with the condition deleted again,
+      never committed): back to 2 of 4 RED at the same named assertion. The gate bites.
+
+VERBATIM SPOKEN TEXT, so the claim can be checked without running anything
+  before  zh-CN:  供应商支持的路线 · WGS84 底图数据 © OpenStreetMap 贡献者 · 瓦片服务 tile.openstreetmap.org
+  before  en:  Provider-backed route · WGS84 Basemap data © OpenStreetMap contributors · tiles: tile.openstreetmap.org
+  after   zh-CN:  这里没有画路线：这台部署没有配置算路服务，所以这一版计划一条路段都没有。 底图数据 © OpenStreetMap 贡献者 · 瓦片服务 tile.openstreetmap.org
+  after   en:  No route is drawn: this deployment has no routing provider configured, so this plan holds no legs at all. Basemap data © OpenStreetMap contributors · tiles: tile.openstreetmap.org
+
+HOW TO RE-RUN
+  node cmdr_map_route_claim_r1.js <base> <out.json> <label>
+  bases used here: tip build, this branch's build, and the mutant build -- all served by this lane's
+  own vite preview processes on free ports, against this lane's own uvicorn on :65218 over a read-only
+  backup of the library (sqlite3 mode=ro + the backup API). :4805 / :8693 / :4781 / :4782 / :8000
+  were neither read nor written.
+  NOTE the legs-seven arm selects journey 6cbdbc65-... by writing `citynexus.v8.journey_id` into the
+  browser's own localStorage before load. It is the only stage on this copy where a route can be
+  drawn, and it needs no POST: the option's 7 legs resolve against mobility_facts that already
+  carry geometry.
+
+NOT CLAIMED
+  * The gate asserts the text a screen reader would be handed (the sr-only span's own textContent,
+    plus proof the element is not display:none/visibility:hidden). It does not run a real reader.
+  * `route.length > 0` on the legs-seven arm is 7 because the option's legs matched fact geometries;
+    no provider was configured and no data was written to produce that.
+  * Whether the upstream reason (live routing off by default, no Valhalla) should change is a data
+    plane question the 23:41 block explicitly kept out of this order.
+
