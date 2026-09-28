@@ -394,6 +394,23 @@ from app.schemas import (
 from app.schemas import (
     Transaction as TransactionSchema,
 )
+from app.schemas import (
+    PoiImportAddRequest,
+    PoiImportAddResponse,
+    PoiImportAddedActivity,
+    PoiImportItem,
+    PoiImportParseRequest,
+    PoiImportParseResponse,
+)
+from app.poi_import import (
+    FORM_PASTED_TEXT as poi_import_FORM_PASTED_TEXT,
+    STATUS_RESOLVED as poi_import_STATUS_RESOLVED,
+    counts as poi_import_counts,
+    detect_forms as poi_import_detect_forms,
+    extract as poi_import_extract,
+    link_hosts as poi_import_link_hosts,
+    resolve as poi_import_resolve,
+)
 from app.services import (
     _journey_constraints_with_capabilities,
     constraint_schema,
@@ -5900,6 +5917,231 @@ def _trip_studio_preview_payload(
 
 
 @app.post("/api/v1/journeys/{journey_id}/trip-studio/preview")
+# --- ORD-0437: POI text/link import -------------------------------------------------------------
+
+
+@app.post("/api/v1/journeys/{journey_id}/poi-import/parse", response_model=PoiImportParseResponse)
+def poi_import_parse(
+    journey_id: UUID,
+    payload: PoiImportParseRequest,
+    session: Session = Depends(get_session),
+):
+    """Extract the places a traveller pasted, with nothing but this process and our own rows.
+
+    The reference chain reads a 小红书 / 公众号 / 飞书 link by fetching it. This door does not
+    fetch: a link is answered by naming the form that is not supported and the hosts it saw, while
+    any text sitting next to it is still parsed. That keeps the extraction channel local by
+    construction rather than by a flag somebody could flip.
+    """
+    journey = session.get(Journey, str(journey_id))
+    if journey is None:
+        refused = HTTPException(404, f"Journey {journey_id} was not found")
+        refused.reason_code = "JOURNEY_NOT_FOUND"
+        refused.error_details = {"journey_id": str(journey_id)}
+        raise refused
+    text = payload.text or ""
+    forms = list(poi_import_detect_forms(text))
+    unsupported = [f for f in forms if f != poi_import_FORM_PASTED_TEXT]
+    # The city's schedule nodes (arrival / check-in / stay / departure rows) are places in the table
+    # but not places a traveller can choose to visit -- that is the rule
+    # `_STRUCTURAL_PLACE_CATEGORIES` states for itself above, written after a previous journey's node
+    # got into a candidate pool and the recovery leg lost its identity.  This door is a new way into
+    # the same plan, so it reads from the same filtered set: a pasted word that only matches a
+    # schedule node answers UNRESOLVED, which is the truth, instead of becoming a visit on a hotel
+    # check-in.
+    # The provider filter `GET /api/v1/places` also applies is deliberately NOT copied here: on this
+    # build every CN-TIANJIN row carries provider_key 'citynexus-v9-domain' (9 of 9 measured), so
+    # applying it would empty the catalogue and the screen would say "nothing matched" about real
+    # sightseeing places.
+    rows = session.scalars(
+        select(Place)
+        .where(Place.city_code == journey.city_code)
+        .where(func.lower(Place.category).notin_(_STRUCTURAL_PLACE_CATEGORIES))
+        .order_by(Place.name)
+    ).all()
+    catalogue = [
+        {
+            "id": row.id,
+            "name": row.name,
+            "latitude": row.latitude,
+            "longitude": row.longitude,
+            "coordinate_system": getattr(row, "coordinate_system", None),
+            "aliases": getattr(row, "tags_json", None),
+        }
+        for row in rows
+    ]
+    resolved = poi_import_resolve(poi_import_extract(text), catalogue)
+    return PoiImportParseResponse(
+        source_channel="LOCAL_TEXT_PARSER",
+        forms=forms,
+        unsupported_forms=unsupported,
+        link_hosts=list(poi_import_link_hosts(text)),
+        counts=poi_import_counts(resolved),
+        items=[
+            PoiImportItem(
+                title=item.title,
+                note=item.note,
+                char_count=item.char_count,
+                status=item.status,
+                place_id=item.place_id,
+                place_name=item.place_name,
+                latitude=item.latitude,
+                longitude=item.longitude,
+                coordinate_system=item.coordinate_system,
+                matches=list(item.matches),
+                addable=item.status == poi_import_STATUS_RESOLVED,
+            )
+            for item in resolved
+        ],
+        char_count=len(text),
+    )
+
+
+@app.post(
+    "/api/v1/journeys/{journey_id}/poi-import/add",
+    response_model=PoiImportAddResponse,
+    status_code=201,
+)
+def poi_import_add(
+    journey_id: UUID,
+    payload: PoiImportAddRequest,
+    session: Session = Depends(get_session),
+):
+    """Append the chosen places to the journey's active plan, and say where to read them back.
+
+    No Idempotency-Key header: whether a place is already on that day is durable state, so a second
+    tap reports it under already_present instead of minting a second success -- the rule the
+    recycle-bin door states for itself. Replaying this write cannot double-insert.
+
+    The day is part of the answer together with the reason it is that day. A day nobody chose still
+    moves the traveller's itinerary, so the panel has to say so before it offers the button.
+    """
+    journey = session.get(Journey, str(journey_id))
+    if journey is None:
+        refused = HTTPException(404, f"Journey {journey_id} was not found")
+        refused.reason_code = "JOURNEY_NOT_FOUND"
+        refused.error_details = {"journey_id": str(journey_id)}
+        raise refused
+    plan_version_id = journey.active_plan_version_id
+    plan = session.get(PlanVersion, plan_version_id) if plan_version_id else None
+    if plan is None:
+        refused = HTTPException(409, "This journey has no active plan to add places to yet")
+        refused.reason_code = "NO_ACTIVE_PLAN"
+        refused.error_details = {"journey_id": str(journey_id)}
+        raise refused
+
+    existing = list(
+        session.scalars(
+            select(Activity).where(Activity.plan_version_id == plan.id).order_by(Activity.sequence_no)
+        ).all()
+    )
+    existing_dates = sorted({row.start_at[:10] for row in existing if row.start_at})
+    if payload.day:
+        day, day_source = payload.day, "TRAVELLER_CHOSEN"
+    elif existing_dates:
+        day, day_source = existing_dates[0], "JOURNEY_FIRST_DAY"
+    else:
+        refused = HTTPException(422, "The plan has no day to land on; choose one")
+        refused.reason_code = "IMPORT_DAY_REQUIRED"
+        refused.error_details = {"journey_id": str(journey_id)}
+        raise refused
+
+    try:
+        zone = ZoneInfo(journey.timezone or "UTC")
+    except (ZoneInfoNotFoundError, ValueError):
+        zone = ZoneInfo("UTC")
+    now = datetime.now(timezone.utc)
+    places = {row.id: row for row in session.scalars(select(Place)).all()}
+    sequence = max([row.sequence_no for row in existing], default=0)
+    added: list[PoiImportAddedActivity] = []
+    already_present: list[str] = []
+    for place_id in payload.place_ids:
+        place = places.get(place_id)
+        if place is None:
+            refused = HTTPException(422, f"Unknown place {place_id}")
+            refused.reason_code = "IMPORT_PLACE_UNKNOWN"
+            refused.error_details = {"place_id": place_id}
+            raise refused
+        # The read door cannot offer a schedule node or another city's row, but this write is the
+        # authority: a caller holding an id must not be able to land a check-in node on the plan or
+        # pull a foreign city's place into this journey's itinerary.
+        if place.city_code != journey.city_code or (place.category or "").lower() in _STRUCTURAL_PLACE_CATEGORIES:
+            refused = HTTPException(
+                422, f"Place {place_id} is not a place this journey can visit"
+            )
+            refused.reason_code = "IMPORT_PLACE_NOT_VISITABLE"
+            refused.error_details = {
+                "place_id": place_id,
+                "place_city_code": place.city_code,
+                "journey_city_code": journey.city_code,
+                "category": place.category,
+            }
+            raise refused
+        if any(
+            row.place_id == place_id and (row.start_at or "")[:10] == day for row in existing
+        ):
+            already_present.append(place_id)
+            continue
+        sequence += 1
+        start = datetime.fromisoformat(f"{day}T09:00:00").replace(tzinfo=zone)
+        end = start + timedelta(minutes=75)
+        row = Activity(
+            id=str(uuid4()),
+            plan_version_id=plan.id,
+            sequence_no=sequence,
+            activity_type="visit",
+            title=place.name,
+            place_id=place.id,
+            city_service_id=None,
+            start_at=start.isoformat(),
+            end_at=end.isoformat(),
+            travel_from_prev_min=0,
+            estimated_cost_minor=0,
+            currency=journey.budget_currency or "CNY",
+            status="PLANNED",
+            locked=0,
+            metadata_json=json.dumps(
+                {"source": "poi_import", "source_channel": "LOCAL_TEXT_PARSER"},
+                ensure_ascii=False,
+                sort_keys=True,
+            ),
+            created_at=now,
+            updated_at=now,
+        )
+        session.add(row)
+        session.flush()
+        existing.append(row)
+        added.append(
+            PoiImportAddedActivity(
+                id=row.id,
+                title=row.title,
+                place_id=row.place_id or "",
+                sequence_no=row.sequence_no,
+                start_at=row.start_at,
+                end_at=row.end_at,
+            )
+        )
+    record_audit(
+        session,
+        action="poi_import.add",
+        entity_type="PlanVersion",
+        entity_id=plan.id,
+        journey_id=journey.id,
+        after={"added": [a.id for a in added], "already_present": already_present, "day": day},
+    )
+    refresh_offline_snapshot(session, journey)
+    session.commit()
+    return PoiImportAddResponse(
+        journey_id=journey.id,
+        plan_version_id=plan.id,
+        day=day,
+        day_source=day_source,
+        added=added,
+        already_present=already_present,
+        readback_path=f"/api/v1/journeys/{journey.id}/experience",
+    )
+
+
 @app.post("/api/v1/journeys/{journey_id}/plans/preview-reorder")
 def trip_studio_preview(
     journey_id: UUID,
