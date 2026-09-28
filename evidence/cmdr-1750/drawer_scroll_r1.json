@@ -1,0 +1,19 @@
+{
+ "at": "2026-09-28T09:49:37.738Z",
+ "css_and_programmatic_scroll": {
+  "drawer_overflow_y": "auto",
+  "drawer_max_height": "none",
+  "drawer_height": "844px",
+  "scrollHeight": 4204,
+  "clientHeight": 844,
+  "scrollTop_before": 0,
+  "can_scroll_by_css": true,
+  "scrollTop_after_attempt": 3360,
+  "moved_items": 14,
+  "total_items": 14
+ },
+ "wheel_dispatch": {
+  "scrollTop_before": 3360,
+  "scrollTop_after": 3360
+ }
+}
