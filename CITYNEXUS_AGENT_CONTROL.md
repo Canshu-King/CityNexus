@@ -16588,6 +16588,38 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### ORD-0425 r3 补 live 那一格（lane N2）— 发射点仍是我定位的那一行，标识上屏是因为我自己把它写进了括号；按你的判语改成人话，两臂都复测过
+
+一、先回答你问的第 1 点：定位的行没被替掉，仍上屏的原因在我自己的兜底文案
+- 发射点：`frontend/src/features/execution/V10LiveExecutionPanel.tsx:70`，原文 `<small>{clock.data ? clockZoneLabel(clock.data.timezone, locale) : t("exec.execClock")}</small>`。该文件在我基座与候选上是同一枚 blob `6c4ed75236b665514ccaf08a59a42e9f896a7ec4`（`git rev-parse <sha>:<path>` 两侧同值），所以不是我换了渲染点，是那行调的函数还在输出标识。
+- 运行时反件（新尖上重跑，不沿用上轮）：本地探针头 `f1f22780871363f96566b8509d285c283300be8b` 在那一行前加前缀 `N2PROBE-R3-LV68`→写作 `N2PROBE-R3-LV70/`，结果 `live` 中文臂与英文臂都 ON_SCREEN 该前缀，而 `intelligence`、`authoritative` 两屏都 NOT_ON_SCREEN（证据件 `evidence/ord0425-n2/live_zone_r3_readings_r1.json` blob `8ba4faf8c870b033a6e2a9f73f6df497388f23a9` 的 `probe_sentinel` 段，33932 字节、发布笔 `9bd93a856cb45f523a9650675f392f6590c4c4c7`、`proof` 字段 BYTE-LEVEL MATCH）。
+- 真正的元凶是我上一轮自己写的判断：`frontend/src/lib/displayVocabulary.ts:92` 在基座上返回 `` `${entry.zh}（${raw}）` ``——把人话和 IANA 标识放进了同一条叶子。你说 PARTIAL 我接受：我当时在块里把这一格列成"该给原值"并给了理由，你把这条理由否了，按你的裁改。
+- 一处读数口径要写清（不是反驳，是判据差别）：基座 `landed_base` 段里 `live` 中文臂 `ascii_prose_count=4`，那四条是 `Tech Art Center`、`CityNexus Copilot`、`Copilot`、`Nexus River Cruise Pier`，**不含** `Asia/Shanghai`；而同一格 expect 记 `Asia/Shanghai` 为 true——因为 expect 是对全部叶子文本做子串匹配，那条叶子含中文所以被"明文"过滤器挡在名单外，标识却确实还写在屏上。两句话都成立，你判"仍在屏上"的结论不受影响。
+
+二、修法（沿用我自己那枚映射，没另开第二份）
+- 改动只在 `frontend/src/lib/displayVocabulary.ts`：`1 file changed, 5 insertions(+), 6 deletions(-)`，取自 `git diff --numstat 21480968511b02fe182b20f37708e9342f5cf38a 5a1fe1ae4bd73d1fc4d5de871f2373f8591db87c`。现在已知时区只回人话（`上海时间` / `Shanghai time`），表里没有的时区仍回 `这台服务器写的：<原值>` ——理由：我不认识的地名我用人话写就是编，宁可留具名缺口。
+- 时区标识本身 0 改：`git grep -c "Asia/Shanghai" 21480968511b02fe182b20f37708e9342f5cf38a -- backend contracts` 现读 68 处、跨 39 个文件；同一条命令换我的候选头 `5a1fe1ae4bd73d1fc4d5de871f2373f8591db87c` 仍是 68 处、跨 39 个文件。后端与契约在用的那个值一个字没动。
+
+三、两臂验收读数（同一枚证据件，`entry_used` 与 `reached_route` 逐格存着）
+- 基座 `landed_base`：`live` 中文臂 expect `Asia/Shanghai` true、英文臂也 true；人话 `上海时间`/`Shanghai time` 已 ON（上一轮的功劳），但标识同格还在 ⇒ 你判的那格没过。
+- 候选 `candidate`：`live` 中文臂与英文臂的 `Asia/Shanghai` 全部翻成 NOT_ON_SCREEN，人话仍 ON（中文臂 `上海时间`、英文臂 `Shanghai time`）；`arms_comparable` 为 true，两臂 `reached_route` 都是被请求的 `/v8/live`，入口 `entry_used` 中文臂是「使用封存的演示行程」、英文臂是 `sealed demo`。
+- 回归（同一件、同一次跑动，不是我另找的数）：`intelligence` 中文臂 `ascii_prose_count=2`、`authoritative` 中文臂 `ascii_prose_count=20`，在 `landed_base`、`probe_sentinel`、`candidate` 三段里逐段同值；`NOT_CONFIGURED`、`ADVISORY`、`PLANNED`、`PlanVersion 1 · INITIAL` 四枚在三段的两臂 expect 全部保持 NOT_ON_SCREEN ⇒ 这一格没被我为改时区而弄坏别的格子。
+
+四、构建臂（在新基座重跑）
+- vite：候选的 `npm run build` 退出码 0。三代产物按字节可分，逐枚取自 `_build_n2-ord0425-<tag>_info.json` 的 `build.asset_refs`，同件 `sha` 字段就是那代的头：基座 `21480968511b02fe182b20f37708e9342f5cf38a` → `/assets/index-B6TcCRoD.js`，探针 `f1f22780871363f96566b8509d285c283300be8b` → `/assets/index-wlvJgskC.js`，候选 `5a1fe1ae4bd73d1fc4d5de871f2373f8591db87c` → `/assets/index-CfFMQeUh.js`（三代 CSS 同名 `/assets/index-Dm2cFpiB.css`，因为我这轮只改了 JS 里的文案拼装）。
+- tsc：`npm run typecheck`（`tsc -p tsconfig.check.json --noEmit`，脚本名在 `frontend/package.json:8`）在同一枚候选导出里退出码 0，日志 `D:/moodle/_qoder_n2_scratch/_tsc_fix3b.log`。
+- 后端套件仍 NOT_EXECUTED：本格 0 后端字节，我没跑整套。
+
+五、枝名与基座（自己现读，没用你给的尖）
+- 基座现读：`env -u HTTP_PROXY -u HTTPS_PROXY git -C D:/moodle/CityNexus ls-remote origin refs/heads/mirror/integration-frontend-apple-pass1` → 开工时 `21480968511b02fe182b20f37708e9342f5cf38a`（`git log -1` 现读为 02:14 的 agent-mcp 修正），推完之后同一命令读到 `077002399665743d52568f53f6cd380650cad3f7`。两尖之间 `git diff --name-only` 现读 11 枚文件、其中 `frontend/src` 前缀下 0 枚 ⇒ 我这枚补丁不需要 rebase 就能落在最新尖上，这条我量了才写。
+- 交付：`refs/heads/review/qoder-0425-display-vocabulary-r3` = `5a1fe1ae4bd73d1fc4d5de871f2373f8591db87c`，`git ls-remote` 回读逐字相等（回读原文 `D:/moodle/_qoder_n2_scratch/_readback_r3.txt`）。已发布的 `-r1`、`-r2` 两枚我 0 次改写、0 次 force。权威线我 0 次移动，等你的复切。
+
+六、边界与收尾（本轮实测）
+- 私有栈：后端 `127.0.0.1:8744`（我起的子进程 pid 38452，launcher 现读 `ready: true`、`last` 是 HTTP 状态码 200 与正文 583 字节），前端 `127.0.0.1:4796`（我起的 `cmdr_static_api_proxy_r1.py`），导出 `D:/moodle/_qoder_n2_ord0425_be3`（新尖 `git archive` 六枚顶层路径，7.1 MB，路径常量 `D:/moodle/_qoder_n2_scratch/n2_priv_backend_0425_r3.py:17`）。库仍是 `mode=ro` 复制成的 `D:/moodle/_qoder_n2_ord0425_priv3.db`（源与副本同 7213056 字节，副本 sha256 `ec9baaf684eba656d027c2e7dbae73405d6bb27ea5b8937301332447f77c2a1c`）。读数跑完我已把这两个监听关掉，现在 netstat 里 0 条。
+- 红线：`frontend/src/app/V8Experience.tsx`、`frontend/src/styles.css`、`frontend/src/features/traveler-twin/`、`frontend/src/features/recovery/`、`frontend/src/features/discovery/`、`frontend/src/i18n/LocaleContext.tsx`、`frontend/src/features/inbox/JourneyInboxWorkbench.tsx` 本轮 0 字节改动（第二节的 numstat 只有一枚文件）。凭据 0 次读取、`demo/reset` 0 次、`:8000`/`:4781`/`:4782`/`:8693` 0 请求（见证是我两份访问日志：`D:/moodle/_qoder_n2_scratch/_proxy_fix3.log:1` 起每行只记我这一对端口；`grep -c` 逐枚现读端口 :8000、:4781、:4782、:8693 各 0 行）。
+- 仍等你裁的两条我 0 处自行动手：`PLANNED` 人话与 `frontend/src/i18n/travelerLabels.ts:83` 那份表的重复；`frontend/src/features/simulation/SimulationPanel.tsx:831` 那枚被 `frontend/e2e/qoder-today-follows-the-stage.spec.ts:1773` 钉住的直出。本单我没新增测试。
+
+
 ### 读数块 · 车道 map · 我自己在现线跑红的门：瓦片降级态下顶部提示条压住了具名控件 · 2026-09-29 0232+08
 
 状态先报：我名下没有在建件（0412 那块与它的勘误都已入账，勘误件落账记录是 `_processed/map_2231.md.inserted_222112`）。本轮我不接 ORD-0410——账本 `CITYNEXUS_AGENT_CONTROL.md:17681` 那块（号令者 00:12）已经写了它落地并亲测修好，件是车道 `9cc37e57` 的 `review/R-ord0410-recenter-active-r1` 头 `8a7665be2061a2f38aa2227f81c57003ca4caacb`，我核过 `git merge-base --is-ancestor 8a7665be2061a2f38aa2227f81c57003ca4caacb f662905ec4cafe05687d33a05dcbc7ca8031de43` 退出码 0，确实已在尖上。值守 02:10 转给我的"还没派出去"是 21:51 那块的旧状态。
