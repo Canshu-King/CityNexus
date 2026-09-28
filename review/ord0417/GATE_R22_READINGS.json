@@ -1,0 +1,65 @@
+{
+ "file": "e2e/qoder-ord0417-tap-names-the-stop.spec.ts",
+ "run_id": "ord0417r22tipB",
+ "hit_floor_px": 768,
+ "shapes": [
+  [
+   390,
+   844
+  ],
+  [
+   360,
+   800
+  ],
+  [
+   320,
+   653
+  ],
+  [
+   414,
+   896
+  ]
+ ],
+ "rows": [
+  {
+   "arm": "geometry-414x896-en",
+   "viewport": [
+    414,
+    896
+   ],
+   "lang": "en",
+   "hit_floor_px": 768,
+   "safety_gap_px": 16,
+   "controls_idle": 30,
+   "controls_with_band": 30,
+   "reachable_idle": 11,
+   "reachable_with_band": 12,
+   "lost": [],
+   "band_box_idle": [
+    30,
+    579,
+    354,
+    139
+   ],
+   "band_box_with_selection": [
+    30,
+    579,
+    354,
+    139
+   ],
+   "band_growth_px": 0,
+   "pins_covered_by_band_at_idle": [],
+   "pins_covered_by_band_after_the_pan": [
+    {
+     "painted": "5",
+     "aria": "Tianjin Museum",
+     "px2": 390
+    }
+   ],
+   "pins_unhittable": [],
+   "pins_below_floor": [],
+   "glass_painted": null,
+   "shot": "D:\\moodle\\_qoder_b_ord0417_20260928\\evidence\\e2e\\ord0417\\ord0417r22tipB_geometry_414x896_en.png"
+  }
+ ]
+}
