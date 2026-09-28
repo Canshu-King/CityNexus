@@ -5,13 +5,13 @@ import { classifyReadFailure, copyFor, type Attribution } from "../../lib/failur
 import type { RawFacts } from "../../lib/rawFacts";
 import { formatV8Date } from "../../lib/v8Formatting";
 import {
-  ACCESS_DOOR_PATH,
-  readAccessState,
   readActivity,
   readJourneys,
+  readSharingDoors,
   RejectionWithFacts,
-  type AccessState,
+  SHARING_DOOR_SUFFIXES,
   type ActivityEvent,
+  type DoorProbe,
   type JourneySummary,
 } from "./accessDoors";
 import {
@@ -21,11 +21,10 @@ import {
 } from "./accessCopy";
 import {
   actionNamesAMember,
-  invitationTtlPresent,
   memberActionKey,
   ROLE_COLLABORATOR,
   ROLE_OWNER,
-  VISIBILITY_PRIVATE_ONLY,
+  VISIBILITY_PRIVATE,
   VISIBILITY_PUBLIC,
   permissionConfirmationKey,
   removalConfirmationKey,
@@ -69,14 +68,17 @@ type ActivityState =
 type AccessRead =
   | { phase: "loading" }
   | { phase: "absent" }
-  | { phase: "present"; state: AccessState }
+  | { phase: "partial"; probes: DoorProbe[]; expiries: string[]; rosterSize: number | null }
+  | { phase: "present"; probes: DoorProbe[]; expiries: string[]; rosterSize: number | null }
   | { phase: "failed"; facts: RawFacts | null; attribution: Attribution };
+
+const joinPaths = (paths: readonly string[], zh: boolean) => paths.join(zh ? "、" : ", ");
 
 /** The two moves this screen has a gain-or-loss sentence for. Each row is an input to
  *  `visibilitySwitchKey`, so the line below is that function's answer, not a second sentence. */
 const SWITCH_CASES: readonly { from: string | null; to: string | null }[] = [
-  { from: VISIBILITY_PRIVATE_ONLY, to: VISIBILITY_PUBLIC },
-  { from: VISIBILITY_PUBLIC, to: VISIBILITY_PRIVATE_ONLY },
+  { from: VISIBILITY_PRIVATE, to: VISIBILITY_PUBLIC },
+  { from: VISIBILITY_PUBLIC, to: VISIBILITY_PRIVATE },
 ];
 
 /** The confirmation table's cases. Each row is an input to `permissionConfirmationKey`, so what a
@@ -141,8 +143,10 @@ export function AccessPanel() {
       });
     }
     try {
-      const state = await readAccessState(journeyId);
-      setAccess(state ? { phase: "present", state } : { phase: "absent" });
+      const read = await readSharingDoors(journeyId);
+      const answered = read.probes.filter((probe) => probe.answered).length;
+      const phase = answered === 0 ? "absent" : answered === read.probes.length ? "present" : "partial";
+      setAccess({ ...read, phase });
     } catch (cause) {
       setAccess({
         phase: "failed",
@@ -156,11 +160,11 @@ export function AccessPanel() {
   const chosenTitle =
     trips.phase === "ready" ? rows.find((row) => row.id === chosen)?.title ?? null : null;
   const activities = activity.phase === "ready" ? activity.rows : [];
-  const quota = access.phase === "present" ? access.state.invitations : null;
-  const quotaKey = invitationQuotaKey({
-    used: quota?.used ?? null,
-    cap: quota?.cap ?? null,
-  });
+  const sharing = access.phase === "present" || access.phase === "partial" ? access : null;
+  const expiry = sharing && sharing.expiries.length > 0 ? sharing.expiries[0] : null;
+  // No door in this product carries a member limit, so `cap` stays null and the quota line says so
+  // instead of dividing the roster by a number nobody sent.
+  const quotaKey = invitationQuotaKey({ used: sharing?.rosterSize ?? null, cap: null });
 
   return (
     <section
@@ -264,12 +268,16 @@ export function AccessPanel() {
       {/* --------------------------------------------- the door ORD-0434 has not built yet */}
       <p className="cn-access-absent" data-testid="access-door-state">
         {access.phase === "loading"
-          ? say("access.doorLoading", { path: ACCESS_DOOR_PATH })
+          ? say("access.doorLoading", { paths: joinPaths(SHARING_DOOR_SUFFIXES, zh) })
           : access.phase === "absent"
-            ? say("access.doorAbsent", { path: ACCESS_DOOR_PATH })
+            ? say("access.doorAbsent", { paths: joinPaths(SHARING_DOOR_SUFFIXES, zh) })
             : access.phase === "failed"
               ? copyFor(access.attribution, zh).body
-              : say("access.doorPresent")}
+              : access.phase === "partial"
+                ? say("access.doorPartial", {
+                    paths: joinPaths(access.probes.filter((p) => !p.answered).map((p) => p.path), zh),
+                  })
+                : say("access.doorPresent")}
       </p>
 
       <section className="cn-access-block" aria-label={say("access.ladderHeading")}>
@@ -332,16 +340,16 @@ export function AccessPanel() {
       <section className="cn-access-block" aria-label={say("access.inviteHeading")}>
         <h3 className="cn-access-h">{say("access.inviteHeading")}</h3>
         <p className="cn-access-scope" data-testid="access-invite-ttl">
-          {invitationTtlPresent(quota?.ttl_hours)
-            ? say("access.inviteTtl", { ttl: `${quota?.ttl_hours}h` })
+          {expiry
+            ? say("access.inviteExpires", { expires: formatV8Date(expiry, locale) })
             : say("access.inviteTtlMissing")}
         </p>
         <p className="cn-access-scope" data-testid="access-invite-quota">
           {quotaKey
             ? say(quotaKey)
-            : quota?.used === null || quota?.cap === null || quota === null
-              ? say("access.inviteQuotaMissing")
-              : say("access.inviteQuota", { used: quota.used, cap: quota.cap })}
+            : sharing && sharing.rosterSize !== null
+              ? say("access.inviteQuotaNoCap", { used: sharing.rosterSize })
+              : say("access.inviteQuotaMissing")}
         </p>
       </section>
     </section>

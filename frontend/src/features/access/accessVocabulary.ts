@@ -43,10 +43,14 @@ const RANK: Record<string, number> = {
   [ROLE_COLLABORATOR]: 1,
 };
 
-export const VISIBILITY_PRIVATE_ONLY = "PRIVATE_ONLY" as const;
+/** The four levels are the server's, not this screen's: ORD-0434's sharing layer writes its domain
+ *  as `ShareVisibility = Literal["PRIVATE", "LINK_READ", "INVITEES_ONLY", "PUBLIC"]`, and a fifth
+ *  level this product has no name for ("仅成员可见") is what the first cut of this ladder offered.
+ *  A ladder row the write door cannot be set to is a control that does nothing, so the row is gone
+ *  rather than kept and hedged. */
+export const VISIBILITY_PRIVATE = "PRIVATE" as const;
 export const VISIBILITY_LINK_READ = "LINK_READ" as const;
-export const VISIBILITY_MEMBER_ONLY = "MEMBER_ONLY" as const;
-export const VISIBILITY_INVITEES = "INVITEES" as const;
+export const VISIBILITY_INVITEES_ONLY = "INVITEES_ONLY" as const;
 export const VISIBILITY_PUBLIC = "PUBLIC" as const;
 
 /** Audiences from alone-in-the-world to everyone. Each level owns exactly one consequence sentence
@@ -55,12 +59,12 @@ export const VISIBILITY_LADDER: readonly {
   level: string;
   labelKey: AccessCopyKey;
   consequenceKey: AccessCopyKey;
-  audience: "self" | "holders" | "members" | "invitees" | "everyone";
+  audience: "self" | "holders" | "invitees" | "everyone";
 }[] = [
   {
-    level: VISIBILITY_PRIVATE_ONLY,
-    labelKey: "access.visPrivateOnly",
-    consequenceKey: "access.visPrivateOnlyConsequence",
+    level: VISIBILITY_PRIVATE,
+    labelKey: "access.visPrivate",
+    consequenceKey: "access.visPrivateConsequence",
     audience: "self",
   },
   {
@@ -70,15 +74,9 @@ export const VISIBILITY_LADDER: readonly {
     audience: "holders",
   },
   {
-    level: VISIBILITY_MEMBER_ONLY,
-    labelKey: "access.visMemberOnly",
-    consequenceKey: "access.visMemberOnlyConsequence",
-    audience: "members",
-  },
-  {
-    level: VISIBILITY_INVITEES,
-    labelKey: "access.visInvitees",
-    consequenceKey: "access.visInviteesConsequence",
+    level: VISIBILITY_INVITEES_ONLY,
+    labelKey: "access.visInviteesOnly",
+    consequenceKey: "access.visInviteesOnlyConsequence",
     audience: "invitees",
   },
   {
@@ -149,10 +147,10 @@ export function visibilitySwitchKey(switchValue: VisibilitySwitch): AccessCopyKe
   if (from === null || to === null || from === undefined || to === undefined) {
     return "access.switchUnanswered";
   }
-  if (from === VISIBILITY_PRIVATE_ONLY && to === VISIBILITY_PUBLIC) {
+  if (from === VISIBILITY_PRIVATE && to === VISIBILITY_PUBLIC) {
     return "access.switchPrivateToPublic";
   }
-  if (from === VISIBILITY_PUBLIC && to === VISIBILITY_PRIVATE_ONLY) {
+  if (from === VISIBILITY_PUBLIC && to === VISIBILITY_PRIVATE) {
     return "access.switchPublicToPrivate";
   }
   return "access.switchUnanswered";
