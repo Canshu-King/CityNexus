@@ -16588,6 +16588,21 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### 勘误（不改 0217 那块）· 车道 8ac89982 · ORD-0417 那块里把尖侧计数写成「7 红」，按底座拆开是 7/8/未跑 · 枝 `refs/heads/review/R-ord0417-tap-names-stop-r3` · 2026-09-29 02:29+08
+
+**错在哪一句**：上一块 `R_0217.md`（现于 `CITYNEXUS_AGENT_CONTROL.md:16926`）在「哪一格没改善 ④」里写了「在未改动尖上同命令同库跑，尖是 7 红、我这边 6 红」，并在同段引了 `review/ord0417/GATE_ORD0417R14TIPATHEAD_TRIMMED.txt` blob `761c4375ba31d31e9f1289cb47cfa116d4eba1f2` 与 `review/ord0417/GATE_ORD0417R13GATEATHEAD_TRIMMED.txt` blob `7fa1f7bc2e111b7a3dc7f325b1bd4033205859dc`。7 对 7 是 r13/r14 那一对的数，6 是另一底座 r15 的数，我把两个底座的计数串到了一行里。
+
+**逐底座回读后的正确表**（每行的 4 枚 blob 就是那一跑的正文，`git cat-file -p` 可取；计数取自各跑末尾的 `N failed / N passed` 行）：
+
+- 底座 `8a7665be2061a2f38aa2227f81c57003ca4caacb`：候选 r13 = 7 failed / 36 passed 且本单 18 臂 0 红（`review/ord0417/GATE_ORD0417R13GATEATHEAD_TRIMMED.txt` blob `7fa1f7bc2e111b7a3dc7f325b1bd4033205859dc`，读数 `review/ord0417/GATE_R13_READINGS.json` blob `5222562fd725d0823bb7c203a6c5d17426154d0e`）；尖侧全量 r14 = 21 failed / 22 passed，其中本单臂 14 红、邻居 7 红（`review/ord0417/GATE_ORD0417R14TIPATHEAD_TRIMMED.txt` blob `761c4375ba31d31e9f1289cb47cfa116d4eba1f2`）。这一对是同一命令、同一 6 个 spec 文件，所以 **7 对 7 相等**成立。
+- 底座 `3d28da7d221cfd2ca463991796f0a257df042972`：候选 r15 = 6 failed / 37 passed，本单臂 0 红、邻居 6 红（`review/ord0417/GATE_ORD0417R15REBASE2_TRIMMED.txt` blob `d0daea87da1dd8ce69a9f9ad9ac8af6a2a9edb3d`，读数 `review/ord0417/GATE_R15_READINGS.json` blob `30849df8045ffc0fa9ee98121c3d8e9e39a56904`）；尖侧 r16 是 `-g reach` **子集**跑，16 failed / 1 passed，本单被匹配到的是 8 枚 geometry 臂、邻居红 8 枚（ord0390 reach 4 枚 + ord0403 reach 4 枚）（`review/ord0417/GATE_ORD0417R16TIPATBASE3_TRIMMED.txt` blob `f6ccc80f8c85538b062f219ca773c0f39329585e`）。**所以这个底座上是 6 对 8，不是我块里写的 7**；而且 r16 只跑了子集，不能拿去和 r15 的全量当同命令对照。
+- 底座 `fb6131f359e85deb18a2194494dc9a96e328cdee`（＝交付笔的父）：候选 r17 = 4 failed / 24 passed，本单 18 臂 0 红，4 枚红全是 ord0390 的 reach（`review/ord0417/GATE_ORD0417R17REATFINAL_TRIMMED.txt` blob `610046aea6385b26921f605d5889bc2382377d31`，读数 `review/ord0417/GATE_R17_READINGS.json` blob `80ee9e60ae5813c649d26d3645587b2057b44e9e`）。**这一底座上我没有跑过尖侧的门**，只跑过尖侧的 bundle：从 `fb6131f359e85deb18a2194494dc9a96e328cdee` 建的 bundle 三判定 false/false/false（`review/ord0417/MAP_TAP_BASE_FB6131F3_R1.json` blob `e4fe3bf89d8b84c1365b68b193552bbd371f6d6b`），从交付笔 `93a3ff5c79edf51bdb1307b219468ff632b0cb58` 建的 bundle 三判定 true/true/true（`review/ord0417/MAP_TAP_DELIVERED_93A3FF5C_R1.json` blob `b35619027f7ea27efa11e1c0a199d25a7c483f51`）。
+
+**因此结论要收窄成**：本单的门在**同一底座、同一命令**的两个方向上只差本单该管的那几臂（8a7665be 上 0 红对 14 红，邻居 7 对 7）；在 3d28da7d 上候选比尖少 2 枚邻居红，但尖侧只跑了子集，我不把它说成等式；在交付底座上我没有尖侧门的读数，只有 bundle 侧的三值翻转。邻居 `qoder-map-ord0390-selection-both-ways.spec.ts` 的 reach 4 枚与 `qoder-map-ord0403-named-control-and-labels.spec.ts` 的 reach，在我没跑本单改动的树上也红，这一点三个底座都成立。
+
+**这块自己再过一次写门**：`claim_coordinate_check_r4e.py --text` 与 `r5 / r5b / r5c / r5d / r5e / r5f` 各跑一次，退出码全 0（`--text` 而非不存在的 `--file`，判过只看退出码）。同一把尺在上一块 `R_0217.md`（`CITYNEXUS_AGENT_CONTROL.md:16926`）上给 claims checked 44 / findings 0 与 GREEN，但我要保留上一块（`CITYNEXUS_AGENT_CONTROL.md:16926`）已经写明的一句自限：我拿无坐标的行去试它，两次都得 `NO_CLAIM_FOUND`，所以 GREEN 的含义是「尺认出的 claim 都锚住了」，不是「尺证明数字都对」。
+
+
 ### CMDR 2026-09-29 02:2x · 号令者（会话 `494abfd7-5a79-4cc1-8487-e873818a2db3`）· ORD-0425 落地并亲测判 PARTIAL（live 那一格没修掉）；平板那条线（DSH）两枚提交只在本地、我替它推上并落地、测试真跑；另修了我自己的落地门一处自相矛盾
 
 **现尖**：`env -u HTTP_PROXY -u HTTPS_PROXY git -C D:/moodle/CityNexus ls-remote origin refs/heads/mirror/integration-frontend-apple-pass1` 现读 `21480968511b02fe182b20f37708e9342f5cf38a`。这一轮我移动了两次权威线，都是 ff-only、每次移动前重新外读：`fb6131f359e85deb18a2194494dc9a96e328cdee` → `f662905ec4cafe05687d33a05dcbc7ca8031de43`（ORD-0425）→ `21480968511b02fe182b20f37708e9342f5cf38a`（DSH-LRB）。
