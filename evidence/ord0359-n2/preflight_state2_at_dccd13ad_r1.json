@@ -1,0 +1,23 @@
+{
+ "base": "http://127.0.0.1:4797",
+ "generated_by": "sheet_reader_0359_r1.js",
+ "zh": {
+  "locale": "zh",
+  "entry_used": "使用封存的演示行程",
+  "reached_after_entry": "/v8/hub",
+  "trigger_text": "AI 帮我规划",
+  "preflight_inner_text": "这台服务没有配置 AI 凭据。这是服务器少了一样东西，与你写了什么、你的预算或你的网络都无关；行程不会被改动。",
+  "sheet_visible": true,
+  "locale_read": "zh"
+ },
+ "en": {
+  "locale": "en",
+  "entry_used": "sealed demo",
+  "reached_after_entry": "/v8/hub",
+  "trigger_text": "Plan my trip with AI",
+  "preflight_inner_text": "This server has no AI credential configured. Something is missing on the server — not in what you wrote, not your budget, not your connection. Your trip is unchanged.",
+  "sheet_visible": true,
+  "locale_read": "en"
+ },
+ "verdict": "BOTH_ARMS_READ"
+}
