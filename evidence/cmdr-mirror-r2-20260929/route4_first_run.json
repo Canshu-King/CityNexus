@@ -1,0 +1,22 @@
+{
+ "tool": "merge_ledger_then_mirror_r2.py -> mirror_with_guard_r2.py -> mirror_ledger_r2.py",
+ "stdout_lines": [
+  "PUT -> 200",
+  "commit bf60f324ed9d",
+  "route1 contents meta: sha=fd2db406eb0f8998f428c8d6dcb1dd5dfbf7d5f8 size=8199053 body_bytes=0",
+  "route2 blob body vs local: NOT COMPARED (body empty/size 0)",
+  "route3 local git hash-object: fd2db406eb0f8998f428c8d6dcb1dd5dfbf7d5f8",
+  "computed local blob sha1:     fd2db406eb0f8998f428c8d6dcb1dd5dfbf7d5f8 (size 8199053)",
+  "route4 streamed blob body: 8199053 B, equal=True, attempts=1",
+  "READBACK STATE: BYTE_LEVEL_CONFIRMED",
+  "PROVEN at BYTE_LEVEL_CONFIRMED",
+  "guard+mirror rc 0"
+ ],
+ "readback_state": "BYTE_LEVEL_CONFIRMED",
+ "blob": "fd2db406eb0f8998f428c8d6dcb1dd5dfbf7d5f8",
+ "ledger_bytes": 8199053,
+ "route4_bytes": 8199053,
+ "route4_equal": true,
+ "route4_attempts": 1,
+ "mirror_commit": "bf60f324ed9d"
+}
