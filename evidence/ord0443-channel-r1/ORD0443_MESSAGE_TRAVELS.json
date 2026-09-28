@@ -1,0 +1,24 @@
+{
+  "rows": [
+    {
+      "asked": "What is 21 times 4? Reply with the number only.",
+      "expected_substring": "84",
+      "answer_head": "84",
+      "contains_expected": true,
+      "elapsed_s": 66.56,
+      "input_tokens": 46,
+      "output_tokens": 2
+    },
+    {
+      "asked": "Name the single activity I should move: the Nexus River Crui",
+      "expected_substring": "cruise",
+      "answer_head": "Move the Nexus River Cruise to tomorrow morning.",
+      "contains_expected": true,
+      "elapsed_s": 1.71,
+      "input_tokens": 49,
+      "output_tokens": 10
+    }
+  ],
+  "input_tokens_distinct": true,
+  "verdict_message_travels": true
+}
