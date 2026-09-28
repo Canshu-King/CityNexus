@@ -2996,6 +2996,61 @@ def delete_journey(journey_id: UUID, session: Session = Depends(get_session)):
     session.commit()
 
 
+@app.post("/api/v1/journeys/{journey_id}/undelete", response_model=JourneySchema)
+def undelete_journey(journey_id: UUID, session: Session = Depends(get_session)):
+    """ORD-0399 找回: clear `journeys.deleted_at`, and the trip is back in the list.
+
+    The word is 找回 / undelete, chosen by measurement rather than taste.  恢复 and `recover*`
+    are autonomous recovery in this product (`POST /api/v1/journeys/{journey_id}/recovery/acknowledge`
+    above, and `recovery.*` copy keys); 还原 is already the plan-version screen's word for reverting
+    to an older plan (`frontend/src/features/studio/planVersionHistoryCopy.ts:10` states that rule);
+    `restore` in this tree means "a reload brings the same draft/panel back" (`main.py:3200`).  An
+    audit action of `journey.restored` would have handed 恢复 a fourth meaning.
+
+    `JOURNEY_NOT_DELETED` (409) is the refusal that makes this door honest: bringing back a trip
+    that was never in the bin is not a silent success, because a screen reporting "found it again"
+    would be reporting something that did not happen.  `JOURNEY_NOT_FOUND` (404) is the same name
+    slice 1 uses.  Neither mints an `error.code` - the G6 boundary that
+    `backend/tests/test_qoder_ord0272_continuation.py::test_G6...` keeps - both ride in
+    `error.reason_code`.
+
+    No `Idempotency-Key`.  Slice 1's DELETE took none and this door does not either: whether the
+    write happens is decided by durable state (`deleted_at` NULL or not), and a replayed tap lands
+    on `JOURNEY_NOT_DELETED` instead of pretending to be a second success.  The doors that do take
+    the header replay a *computation* (plan claim, replan accept), which is a different need.
+    Two taps at once are still unguarded, as in slice 1.
+
+    `status` and `updated_at` are not written, for the same reason slice 1 left them alone: the bin
+    has one column, and duplicating the fact into `updated_at` would give a reader two authorities.
+    """
+
+    journey = session.get(Journey, str(journey_id))
+    if journey is None:
+        refused = HTTPException(404, f"Journey {journey_id} was not found")
+        refused.reason_code = "JOURNEY_NOT_FOUND"
+        refused.error_details = {"journey_id": str(journey_id)}
+        raise refused
+    if journey.deleted_at is None:
+        refused = HTTPException(409, f"Journey {journey_id} was not in the recycle bin")
+        refused.reason_code = "JOURNEY_NOT_DELETED"
+        refused.error_details = {"journey_id": str(journey_id), "deleted_at": None}
+        raise refused
+    before = {"deleted_at": journey.deleted_at}
+    journey.deleted_at = None
+    session.commit()
+    record_audit(
+        session,
+        action="journey.undeleted",
+        entity_type="Journey",
+        entity_id=journey.id,
+        journey_id=journey.id,
+        before=before,
+        after={"deleted_at": None},
+    )
+    session.commit()
+    return journey_schema(journey)
+
+
 @app.get("/api/v1/journeys/{journey_id}")
 def get_journey(journey_id: UUID, session: Session = Depends(get_session)):
     return journey_schema(require(session, Journey, str(journey_id), "Journey"))
