@@ -16588,6 +16588,42 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### CMDR 2026-09-29 00:31 · 号令者 · 抽屉那 14 行在屏上全是实心靛蓝大按钮、当前行看不出来——我亲测坐实了，开 ORD-0419/0420/0421 三单并派给三条冷/闲车道；另裁 ORD-0407 r6 不摘
+
+**现尖**：`git -c http.proxy= -c https.proxy= -C D:/moodle/CityNexus ls-remote origin refs/heads/mirror/integration-frontend-apple-pass1` 现读 = `8a7665be2061a2f38aa2227f81c57003ca4caacb`。我这一轮所有读数都在按这枚尖造的产物上跑（入口 `index-CGSMsxT2.js`，服务口 :4805，磁盘件与线上字节逐字相同，其本机 sha1 = `2a4bdf1304d3f15c14a1d33a6ba17d3eee6a742e`（内容哈希、非 blob）；同段可取回坐标见上一行尖）。
+
+**一、我裁了什么（2d2d7428 在 ORD-0416 收尾时报给我、明写"等你裁"的那三条空转规则）**
+
+它报的是真的，而且比"图标没尺寸"更疼。我在现尖产物上按 390×844 打开抽屉逐行量渲染后的计算样式：抽屉内按钮共 15 枚，其中**直接挂在 `#v8-nav-drawer` 下面的 0 枚**，父级标签只有 `div` 一种——因为 `frontend/src/app/V8Experience.tsx:1976` 把每一行包进了 `<div key=...>`。所以 `frontend/src/styles.css:331`、`frontend/src/styles.css:337`、`frontend/src/styles.css:338` 这三条用子代组合符写的规则**结构上永不命中**，14 行导航于是落到全局裸元素规则 `frontend/src/styles.css:47` 上：实心靛蓝、白字。件 `evidence/cmdr-drawer-scope-20260929/drawer_button_scope_r1.json`，blob `1b67fe9bd8ad6d99e71682368a0005f39907aca6`，8,880 B。
+
+同一枚件里 14 行的计算签名**只有 1 种**：背景 `rgb(66, 89, 216)`、字色 `rgb(255, 255, 255)`、字重 400、字号 16px、内边距 12px 14px、圆角 10px。而带 `active` 类的那一行确实存在（标签「今天」，14 枚里 1 枚）。⇒ **用户在导航抽屉里看不出自己当前在哪一页**，这一格不是"不够好看"，是导航的当前态丢了。截图我一起入库：`evidence/cmdr-drawer-scope-20260929/drawer_390x844.png`，blob `b5556a1307c5f24a8c3f12b684315409b5893899`，20,524 B（我自己看过：14 个等宽实心蓝块竖排，图标和文字挤在一起，当前项与其余项无差别）。仪表也入库，别的车道可直接复跑：`evidence/cmdr-drawer-scope-20260929/cmdr_drawer_button_scope_r1.js`，blob `23d6fc25507d3bdfe33fd7806dedf0d75804cacc`，8,265 B。
+
+**修法有现成范例、不新造规则**：同文件 `frontend/src/styles.css:143` 的侧栏 `.v8-nav button` 用的正是后代写法并且命中；ORD-0416 已落地的 `frontend/src/styles.css:336` 那条（`#v8-nav-drawer button svg`）就是同一族从子代改后代的先例，图标实测已经是 17px（`--cn-nav-icon-size`），说明这条改动真的落了地。⇒ 三处把 `> button` 改成 ` button` 即可，语义与已落地的 0416 完全同形。
+
+**二、新开三单（点名到会话 id，今晚多条会话自称"车道 Q"，只按 id 派）**
+
+- **ORD-0419 → 车道 `2d2d7428-b971-4391-adce-2dab9f698858`（冷）**：把 `frontend/src/styles.css:331`、`:337`、`:338` 三条子代规则改成后代规则，交付判据是**渲染后**：14 行背景不再是 `rgb(66, 89, 216)` 而是透明、字色回到 `#758196` 一档、`active` 那一行的计算签名与其余 13 行**不同**（断 `getComputedStyle` 三元组：背景/字色/字重，不许断 class 也不许断 data 属性）。形状档沿用你 0416 那四形两臂：390×844 / 360×800 / 414×896 / 320×653，中英各一。你 0416 报的 **320×653 那一格我裁**：**不缩字号、不加底带、不要求 10 行同屏**。判据改成 ORD-0338 甲那条同一口径——可达性 = **在抽屉自己的滚动容器里滚到位之后逐行命中测试**，每一形每一行都要能滚到并可命中；"第 9 行中心在屏外"不是红，"滚了还在屏外"才是红。请按这个新形状写断言。
+- **ORD-0420 → 车道 `e4f3490f-a55f-4fcb-b7af-227e41018656`（冷，你手上已有 ORD-0406 与 ORD-0415，这单排在它们之后）**：抽屉的四个分组标题在中文臂上是**唯一没翻译的文字**。实测渲染文本 = `TODAY` / `PLAN` / `TRAVEL` / `SYSTEM`，4 枚全为拉丁字母；同一屏的头部引导语是「全部路由」、关闭按钮是「关闭」、14 行标签里 13 行含汉字（唯一拉丁那行是 `Copilot`）。英文臂这 4 枚恰好正确，所以这是**只咬中文臂**的缺陷。根因就在 `frontend/src/app/V8Experience.tsx:1983`：那行把 `item.group` 直出，没有走 `t()`。件 `evidence/cmdr-drawer-scope-20260929/drawer_group_headings_r1.json`，blob `f286afb1de9ae9fbab3f66f85ec4e294b987d1a9`，2,484 B；仪表 `evidence/cmdr-drawer-scope-20260929/cmdr_drawer_group_headings_r1.js`，blob `55f4ab0d8501bb5fc58e9d8dd37b22d2f51f3ef5`，4,413 B。判据：中文臂四枚标题渲染为中文、英文臂仍为英文，两臂都要进词典配对尺（`live_checks/cmdr_bundle_copy_check_r3.py`，现尖 763 对 0 缺那把）。
+- **ORD-0421 → 车道 `9cc37e57-0ae4-4346-9a75-23989350df83`（ready，你刚交完 ORD-0410）**：这一轮我一次亲测就撞出**两条**"规则写了但结构上永不命中"的缺陷，我不信这是仅有的两条。请做一次性普查，**0 产品字节、只交读数**：在现尖产物上逐条路由（含抽屉、底栏、各面板）把 `frontend/src/styles.css` 与 `frontend/src/design-tokens.css` 里每条选择器拿去 `document.querySelectorAll` 计数，报出**命中 0 次**的选择器清单，每条给：选择器原文、`path:line`、它本意要样式化的那个元素在屏上的实际计算样式、以及"如果它生效用户会看见什么差别"的一句话。判据里请写清哪些是**故意**的（媒体查询内、`:hover`/`:focus` 这类状态式、JS 动态挂载前），别把状态式选择器算成死规则——那类一律标 `STATEFUL_NOT_DEAD`。**不要顺手改 `frontend/src/styles.css` 或 `V8Experience.tsx`**，那两枚文件归 ORD-0419 / ORD-0420，改了会撞车。
+
+**三、裁 ORD-0407 的 r6：不摘（DO NOT PORT）**
+
+车道 N3 在 21:59 往 `refs/heads/review/N3-ord0407-empty-state-actions-r6` 追加了一笔，头 `2cde272f8128f1abb51e95254128cf2148ffb86e`，内容是一枚新文件 `review/n3_0407_coordinate_bolt_precheck_r1.py`——它自己说这是"账本门坐标闸的一份复切品，提交前先跑一遍"。我判**不入库**：这条能力在我这套仪表里**已经存在**，就是 `D:/moodle/_qoder_cmdr_ref_20260921/live_checks/patrol/bolt_replica.py`，它只读、不 fetch、不写账本，并且逐字复现门的两个臂（同行声明 + 同段可取回坐标）。刚才现跑一轮就把我这一轮撞到的两块被拒件**逐行报准**了：`0383_2327.md` 第 10 行、`qoder-0370_2314.md` 第 106 与 111 行，报的 `declared=False anchored=True` 与门的 ABORT 完全一致。把门的正则抄一份进版本库会造出第二把尺，它会和门漂移——漂移之后车道信的是那份副本，不是真门。⇒ ORD-0407 主体（r5 那批，`b8d7a9b6d9baa56d3c529549ba692e5aa92c726f`）**已在权威线内**，本单判 **CLOSED**；r6 那枚文件请撤下，改用上面那条命令自检。
+
+**四、给两块被写盘门拒掉的车的具名指引（我没替任何一方改字）**
+
+- **车道 `4033270f-bc5f-4c4e-884c-0184e19c1c5c`（ORD-0411 勘误块 `0383_2327.md`）**：门拒的是**一个字符**。你写的那枚 `d4d43d0b8d3319d58f50df824d39533f079ed170` 不可 cat-file（打错的值，对象库里本就没有它），而 `git ls-tree 6f7460c20d2cc6be682f3829f4bc1c139353ba05 -- review/ord0402-readouts/` 现读 `EXPORT_SHAPE_NOTE_R1.txt` 的真 blob 是 `d4d43d0b8d3319d58f50df824639533f079ed170`（第 22 位是 `6` 不是 `d`），大小 6,708 B。同段另外三枚（`0e3e5c45a2c7460f36ff2e1dc8bd307b39481e27`、`86581a280ceaa96231d1fca32175f560ff64f471`、`9f2ff11785af300037c918feac39b23da4f7824d`）我都 `cat-file` 到了，只有这一枚差一位。换这枚重交即可，正文其余一字不动。
+- **车道 `e4f3490f-a55f-4fcb-b7af-227e41018656`（ORD-0394 复查块 `qoder-0370_2314.md`）**：你那两枚 40 位是**本机字节 sha1、不是 git 对象**，值本身没错（我 `sha1sum` 复算过其中前一枚，字节数也对得上），门拒的只是**声明没落在同一行**——门要求"不可取回"那句话必须和被判的那个值**同行**，你写在上一行了。改法：在门报出的那两行里、各自行内补一个门认的词（`本地字节重算`、`文件 sha1`、`内容 sha1`、`sha1 over bytes` 任一），同段保留一枚能 `cat-file` 的坐标即可放行；规则原文在 `ledger_insert_after_r2.py:66` 那条正则。以后提交前先跑第三节那条 `patrol/bolt_replica.py`，它会提前逐行报给你。
+
+**五、盘**：`df -h /d` 本轮开头现读 18 GiB 可用（308 GiB 总、291 GiB 已用、95%）。我没有删任何人的工作树；本轮新增只有两枚仪表与三枚件（合计约 44 KB 量级，单位 KB）。
+
+**没改善的部分**
+1. 这三条判语全部来自**我私有舞台**（:4805 服务现尖产物 + 我自己的后端），手机链 hop4 仍未起，手机仍握 `e5a571f8…` ⇒ 抽屉这两格在手机上是否同样可见，本轮仍是 `NOT-DEPLOYED-OBSERVED`，我没有手机侧读数。
+2. 英文臂那四枚分组标题我只证明了"渲染为英文"，**没有**证明它们走的是词典键而不是字面量——英文臂恰好正确这一点不足以区分两条路径，ORD-0420 的判据里我按"两臂都进配对尺"要，不按"英文臂看着对"收。
+3. ORD-0419、ORD-0420、ORD-0421 三单**尚未有任何产品字节落地**，现尖没动；`:4805` 上那 14 行实心蓝块此刻仍然如截图所示。
+4. ORD-0406 / ORD-0415 / ORD-0408 / ORD-0417 / ORD-0418 本轮仍未回件；ORD-0407 判 CLOSED 但 r6 那枚文件还在车道枝上没撤。
+
+
 ### CMDR 2026-09-29 00:17 · 号令者 · ORD-0409 裁定并闭单：那一格是**我的尺**读错了，不是产品缺文案。我按车道 rel 给的第一个选项把尺改了（r3），不用豁免码；改完在现尖上 763 对全部命中、0 缺
 
 **裁定**：车道 rel（会话 `a68b0631`）在 21:10 那块把成因量到了底——`shell.reservationReviewFields` 的英文句子在两代产物里都在，缺的只是"源码写法"这一层比对；引用点在 `frontend/src/app/V8Experience.tsx:1260`，键面在 `frontend/src/i18n/LocaleContext.tsx:634`（zh 侧 `:1422`）。它给我两个选项：要么改尺（比较前对源码值做 JS 反转义），要么它把这格做成尺上的具名豁免。
