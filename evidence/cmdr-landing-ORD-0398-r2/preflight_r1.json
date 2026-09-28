@@ -1,0 +1,153 @@
+{
+ "schema": "CNX_CMDR_LANDING_PREFLIGHT_V1",
+ "lane": "commander 494abfd7",
+ "at_local": "2026-09-28T18:57:24+0800",
+ "mode": "LAND",
+ "authoritative_line": "mirror/integration-frontend-apple-pass1",
+ "tip_re_read_from_github_before": "8d7652eadc6ee0727817d257dd6962eb5ce617ec",
+ "candidate_ref": "refs/heads/review/cmdr-recut-ord0398-r2",
+ "candidate_tip": "97766b2dfd7a5a7668f6750e3bc13b698c416975",
+ "genealogy": {
+  "ff_possible_rc": 0,
+  "ff_possible": true,
+  "merge_base": "8d7652eadc6ee0727817d257dd6962eb5ce617ec",
+  "line_only_commits": 0,
+  "candidate_only_commits": 2
+ },
+ "file_sets": {
+  "line_side_since_base": [],
+  "candidate_side_since_base": [
+   "frontend/src/features/discovery/DestinationPreparationPanel.tsx",
+   "frontend/src/features/recovery/RecoveryRequiredPanel.tsx",
+   "frontend/src/lib/failureAttribution.ts"
+  ],
+  "intersection": [],
+  "product_introduced_by_candidate": [
+   "frontend/src/features/discovery/DestinationPreparationPanel.tsx",
+   "frontend/src/features/recovery/RecoveryRequiredPanel.tsx",
+   "frontend/src/lib/failureAttribution.ts"
+  ]
+ },
+ "merge_tree": {
+  "exit": 0,
+  "first_line": "359199c9cc86de38d86d1c4ddbeffbe8ee7a991e",
+  "conflict_reported": false,
+  "stderr_head": ""
+ },
+ "gate_run": {
+  "requested": [],
+  "collect_exit": null,
+  "collected": null,
+  "test_exit": null,
+  "summary": null,
+  "export": "D:/moodle/_qoder_cmdr_ref_20260921/snap_preflight_185651",
+  "blob_equality": [
+   {
+    "path": "frontend/src/features/discovery/DestinationPreparationPanel.tsx",
+    "candidate_blob": "d3033bd83a8e8b61bb7d253287f41ae83b84c939",
+    "export_blob": "d3033bd83a8e8b61bb7d253287f41ae83b84c939",
+    "equal": true
+   },
+   {
+    "path": "frontend/src/features/recovery/RecoveryRequiredPanel.tsx",
+    "candidate_blob": "a861bfc8fdd18302164d4da136e8d0d4581efb42",
+    "export_blob": "a861bfc8fdd18302164d4da136e8d0d4581efb42",
+    "equal": true
+   },
+   {
+    "path": "frontend/src/lib/failureAttribution.ts",
+    "candidate_blob": "a9f7659e0434d538f5897d302008f0f07bde63aa",
+    "export_blob": "a9f7659e0434d538f5897d302008f0f07bde63aa",
+    "equal": true
+   }
+  ],
+  "whole_suite": {
+   "collect_exit": 0,
+   "collected": 1426,
+   "interrupted": false,
+   "error_lines": [
+    "tests/test_qoder_ord0332_error_receipt.py::test_R7_the_envelope_keeps_every_field_it_already_had",
+    "tests/test_qoder_ord0332_error_receipt.py::test_R8_the_seed_is_read_off_the_real_request_not_just_the_dataclass",
+    "tests/test_solver_runtime_policy.py::test_unexpected_solver_programming_error_is_not_silently_hidden"
+   ],
+   "tail": [
+    "    _PortalFactoryType = Callable[[], AbstractContextManager[anyio.abc.BlockingPortal]]",
+    "-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html",
+    "1426 tests collected in 5.57s"
+   ],
+   "cmd": "D:/moodle/CityNexus/.venv/Scripts/python.exe -m pytest --collect-only -q tests  (cwd=<export>/backend, PYTHONPATH=<export>)"
+  },
+  "deletions": {
+   "deleted_by_candidate": [],
+   "still_present_in_export": []
+  },
+  "interpreter": "Python 3.12.14 (main, Aug 25 2026, 14:01:42) [MSC v.1944 64 bit (AMD64)]",
+  "exposure": {
+   "ruler_blob": "d3f66ce9fecd0790981a4fcdeb5e36b1c0fd10f2",
+   "ruler_blob_computed": null,
+   "ruler_file": "ui_exposure_taint_ast_r7b.cjs",
+   "candidate_files_in_view": 3,
+   "tip_cells": 10,
+   "cand_cells": 10,
+   "growth_by_file_and_rule": {},
+   "unpaired_added": [],
+   "added_line_exact": [
+    "DestinationPreparationPanel.tsx:348|UPSTREAM_EXCEPTION_TO_DOM",
+    "DestinationPreparationPanel.tsx:471|UPSTREAM_EXCEPTION_TO_DOM",
+    "DestinationPreparationPanel.tsx:524|UPSTREAM_EXCEPTION_TO_DOM",
+    "RecoveryRequiredPanel.tsx:299|UPSTREAM_TEXT_VIA_HELPER_TO_DOM"
+   ],
+   "shifted_only": true,
+   "removed_count": 4,
+   "removed": [
+    "DestinationPreparationPanel.tsx:346|UPSTREAM_EXCEPTION_TO_DOM",
+    "DestinationPreparationPanel.tsx:469|UPSTREAM_EXCEPTION_TO_DOM",
+    "DestinationPreparationPanel.tsx:522|UPSTREAM_EXCEPTION_TO_DOM",
+    "RecoveryRequiredPanel.tsx:298|UPSTREAM_TEXT_VIA_HELPER_TO_DOM"
+   ],
+   "disclosed_slip": "a same-file, same-rule relocation with equal counts reads as a shift; the AST ruler has no cell identity"
+  },
+  "frontend_build": {
+   "builder_rc": 0,
+   "vite_build_rc": 0,
+   "dist_exists": true,
+   "index_exists": true,
+   "asset_refs": [
+    "/assets/index-DQeW-4E8.js",
+    "/assets/index-tCROZ2r8.css"
+   ],
+   "live_tree": "359199c9cc86de38d86d1c4ddbeffbe8ee7a991e",
+   "info_file": "D:\\moodle\\_qoder_cmdr_ref_20260921\\live_checks\\_build_97766b2_info.json",
+   "build_tail": [
+    "files generated",
+    "  dist/v10-sw.js",
+    "  dist/workbox-6923124b.js",
+    "\u001b[33m",
+    "(!) Some chunks are larger than 500 kB after minification. Consider:",
+    "- Using dynamic import() to code-split the application",
+    "- Use build.rollupOptions.output.manualChunks to improve chunking: https://rollupjs.org/configuration-options/#output-manualchunks",
+    "- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.\u001b[39m"
+   ]
+  }
+ },
+ "problems": [],
+ "verdict": "READY_TO_LAND",
+ "landing": {
+  "http": 200,
+  "response_head": "{'ref': 'refs/heads/mirror/integration-frontend-apple-pass1', 'node_id': 'REF_kwDOUhlJJ9oAMnJlZnMvaGVhZHMvbWlycm9yL2ludGVncmF0aW9uLWZyb250ZW5kLWFwcGxlLXBhc3Mx', 'url': 'https://api.github.com/repos/Ca",
+  "tip_after": "97766b2dfd7a5a7668f6750e3bc13b698c416975",
+  "branches_route": "97766b2dfd7a5a7668f6750e3bc13b698c416975",
+  "both_routes_agree": true,
+  "landed": true
+ },
+ "discipline": {
+  "evidence_paths_overwritten": 0,
+  "databases_opened": 0,
+  "surfaces_started_or_stopped": 0,
+  "credential_values_printed": 0,
+  "candidate_refs_pushed_by_commander": 0
+ },
+ "claim_kind": "git_and_pytest_determined",
+ "claimed_result": null,
+ "derived_result": null
+}
