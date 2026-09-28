@@ -405,13 +405,14 @@ A("## 号令者的要件「不改 hero 与地图的先后次序」与这一改�
 A("   hero_shift=%s px、map_shift=%s px（八格同一数：那一条 band 的行高 + 它的下边距）。" % (
     "、".join(str(x) for x in HERO_SHIFT), "、".join(str(x) for x in MAP_SHIFT)))
 A("   次序逐格现读：改前与改后都是 hero_y < map_y（八格×两阶段全部成立，脚本对它做了断言），我没有把地图提到 hero 之前。")
-A("   代价要说实话：320×653 那一形地图改前就在折叠外（zh map_y=%d > innerHeight=%d），改后 map_y=%d —— 不是我挤出去的，" % (
+A("   代价要说实话，判据行 %s 、证据 %s/before/zh_320x653.json ：" % (JUDGE_RANGE, EV))
+A("   形 320x653 的地图改前就在折叠外（map_y %d px > innerHeight %d px），改后 map_y %d px —— 不是我挤出去的，" % (
     BEFORE[("zh", 320, 653)]["map"]["y"], BEFORE[("zh", 320, 653)]["innerHeight"], AFTER[("zh", 320, 653)]["map"]["y"]))
-A("   这两枚数是那两枚证据文件里的 map.y：%s/before/zh_320x653.json 与 %s/after/zh_320x653.json ，同一格里判据行是 %s 。" % (EV, EV, JUDGE_RANGE))
-A("   但我把它又推远 %s px，且改后 map_y 仍 > hit_line=%d（同一对证据文件，hitLine 也在里面，判据行 %s ）。" % (
-    "、".join(str(x) for x in MAP_SHIFT), AFTER[("zh", 320, 653)]["hitLine"], JUDGE_HIT))
-A("   集合没变大：map_out_shapes_before=%s map_out_shapes_after=%s（这两串的分子就是上表八格各自的 map.y 对 innerHeight，判据行 %s ）。" % (
-    "、".join(MAP_OUT_BEFORE) or "无", "、".join(MAP_OUT) or "无", JUDGE_RANGE))
+A("   但我把它又推远 %s px（判据行 %s ，同一对证据文件的 after 侧）：" % (
+    "、".join(str(x) for x in MAP_SHIFT), JUDGE_HIT))
+A("   改后 map_y 仍 > hit_line %d px。集合没变大：map_out_shapes_before=%s ，" % (
+    AFTER[("zh", 320, 653)]["hitLine"], "、".join(MAP_OUT_BEFORE) or "无"))
+A("   map_out_shapes_after=%s（八格逐格的 map.y 与 hitLine 在上面点名的证据文件里）。" % ("、".join(MAP_OUT) or "无",))
 A("   地图顶边落在底栏带下的形：after_map_under_bar=%s（两形本来就整块在折叠外，要救得缩 hero/intro 高度，不在本单授权里；" % (
     "、".join(MAP_UNDER_BAR)))
 A("   hit_line 与 map.y 同一枚证据文件里就有，例如 %s/after/zh_320x653.json ，判据行 %s 。)" % (EV, JUDGE_HIT))
