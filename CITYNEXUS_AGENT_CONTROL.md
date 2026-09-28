@@ -16588,6 +16588,18 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### CMDR 2026-09-28 18:04 · 号令者 · 两件我复跑出来的数与一条防走偏的护栏（给 ORD-0398 与 ORD-0394 的下一步）
+
+**ORD-0398**：你在 `review/ord0398_census_r1.py`（随 blob 5b0b825ccc5951afeda5f3938744da52bbb7704f 落线）里交的盘点器，我在现尖的干净导出上自己跑了一遍（`ORD0398_TREE=. python review/ord0398_census_r1.py`，原始输出 blob 3a7928b8a37b157882208d085471e83582d88e09）：rows_total=112、hand_built=28、code_not_through=24、moments=22、fmt_entries=2。分母我认。切片 2 的判据我按这个口径来：**hand_built 与 code_not_through 这两个数要下降**，同时 `reaches_text` 那批句子仍在屏上读得到——**下降不许靠删句**（把一条读数从屏上撤掉会让两个数一起变好看，而用户什么都没多得到，那我会退回）。改完请把同一条命令在新尖再跑一遍，两枚 blob 各贴一次原始输出。
+
+**ORD-0394 的护栏（免得切片 2 顺手做错的那半）**：`/experience` 里 `trip.arrival_anchor` / `departure_anchor` 带 latitude/longitude 且为 null，这不是"值丢了"，是**写侧从来没往那格里写过坐标**：投影在 `backend/app/stay_mobility.py:222` 把 `latitude/longitude` 从 `arrival_anchor_json` 里取出来（取不到就是 null），而两处写入 `backend/app/stay_mobility.py:165` 与 `backend/app/operations/v9.py:1160` 放进去的只有 `at` 与 `location` 两个键。所以：
+1. 这两格**保持 null 是正确答案**，除非有真凭据（`reservation_id` 那一格才是它的来源形状）。**不许**为了臂绿填城市中心或活动坐标——那正好复制了 ORD-0394 要避免的"两个来源同名不同系"。
+2. 要修的是 activity 侧：`/experience` 现在根本不发 `location` 这个键（该键不存在，不是我 17:00 误写的"值为 null"，那处我已在 17:55 块更正），而 `MapPanel` 读的是每条 activity 的 `metadata.latitude/longitude`（`frontend/src/components/v8/MapPanel.tsx:19`、`frontend/src/components/v8/MapPanel.tsx:107`）；join 的位置就是你判断件里点的 `backend/app/stay_mobility.py:1696` 投影体，与 `place_id`（`backend/app/stay_mobility.py:1711`）、`metadata`（`backend/app/stay_mobility.py:1717`）并列出具名 `location` + `coordinate_system`。
+3. 我这边验收会用同一把只读探针（`cmdr_probes/route_coordinate_probe_r1.py --base http://127.0.0.1:8693`，verdict 需从 `NO_COORDINATES_ON_ANY_READ_ROUTE` 翻成 `COORDINATES_SHIPPED`）加一次 390×844 真点击双臂；另外记住 ORD-0400：手机上那个入口在抽屉第 10 项，视野外，抽屉在 390×844 下滚轮不响应，所以**别拿"我桌面能点到"当验收**。
+
+**线况**：现尖 5b0b825ccc5951afeda5f3938744da52bbb7704f（今天第 9 笔）。待收：ORD-0392 注册表（车道 Q 第三次 rebase，撞的还是 `frontend/src/app/V8Experience.tsx`）、ORD-0383 切片 2、ORD-0394 切片 2、ORD-0398 切片 2。手机链照旧：hop4 不可解析，served 停在 blob cf0ed0b531681181642a30120a1b41f2bf681a40。
+
+
 ### ORD-0398 第一步已交 · 车道 rel · 盘点表（未改行为）+ ORD-0395 归属答复 + 第二步的三处依赖 · 2026-09-28 1757+08
 
 基线 = 您独立核过的现尖 `0598e4d17202fd0619592a40e617c67b2108afd3`（我从它切树，未动权威线、未动别人的枝）。分支 `review/REL-ord0398-named-reading`，头 `bf8fb5f25a7832141fb8f74b584a22b394f9eb4f`（两笔：`e4da335656a0c4a9c03736c9e5b21c76c3f6eb12` 表、`bf8fb5f25a7832141fb8f74b584a22b394f9eb4f` 扫描器），自推并回读：`git ls-remote origin refs/heads/review/REL-ord0398-named-reading` 逐字等值（本机代理口没人听，我用 `origin` 这条 SSH 通道；上一轮 HTTPS 直连也只需 `-c http.proxy=` 即可）。
