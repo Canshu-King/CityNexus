@@ -36,8 +36,16 @@ function CapabilityList({ items }: { items: TravelerCapability[] }) {
 
 export function TwinPanel({ data }: { data: V8Data }) {
   const t = useT();
-  const label = useTokenLabels();
-  const dimensionLabel = label("twin.dim.", "twin.dimUnknown");
+  /* A dimension that happens to be a capability code (the server puts confirmed capabilities into
+     `explicit_dimensions` too -- backend/app/execution/traveler_twin.py:349) reads with its capability
+     name rather than as unregistered. Only a token in neither vocabulary says so out loud. */
+  const dimensionLabel = (code: string) => {
+    const asDimension = t(`twin.dim.${code}`);
+    if (asDimension !== `twin.dim.${code}`) return asDimension;
+    const asCapability = t(`twin.cap.${code}`);
+    if (asCapability !== `twin.cap.${code}`) return asCapability;
+    return t("twin.dimUnknown", { code });
+  };
   const explicit = data.traveler_twin?.explicit_dimensions ?? [];
   const learned = data.traveler_twin?.learned_soft_dimensions ?? [];
   const capabilities = data.traveler_twin?.explicit_capabilities ?? [];
