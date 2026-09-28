@@ -1,0 +1,71 @@
+{
+ "live_tip": "3b6c96e8a9f986672ddaa764f5f2ae69534ceff1",
+ "parent_of_my_landed_commit": "dccd13ad66ea35e9a6d7ca7a3d91a1ae9a579808",
+ "served_asset": "/assets/index-oR3PVCYW.js",
+ "bundle_bytes": 1343017,
+ "routes": [
+  {
+   "route": "twin",
+   "arms_comparable": true,
+   "zh_inventory_hits_live": 0,
+   "en_inventory_hits_live": 6,
+   "zh_inventory_hits_before": 6,
+   "zh_ascii_live": 2,
+   "en_ascii_live": 23,
+   "zh_leaked_rows_before": [
+    "Capability needs",
+    "Confirmed by traveler",
+    "Learned capability state",
+    "No learned signals",
+    "Unknown accessibility evidence is not accessible.",
+    "hard need(s) remain explicit and are never learned."
+   ],
+   "en_rows_read_live": [
+    "Capability needs",
+    "Hard accessibility needs are never inferred from behavior.",
+    "Learned capability state",
+    "No explicit capability facts recorded.",
+    "No learned signals",
+    "Unknown accessibility evidence is not accessible."
+   ]
+  },
+  {
+   "route": "authoritative",
+   "arms_comparable": true,
+   "zh_inventory_hits_live": 0,
+   "en_inventory_hits_live": 5,
+   "zh_inventory_hits_before": 5,
+   "zh_ascii_live": 16,
+   "en_ascii_live": 55,
+   "zh_leaked_rows_before": [
+    "CHANGED",
+    "Grounded adaptive recovery",
+    "No recovery proposal is waiting on this Journey.",
+    "Refresh recovery",
+    "V14 · REALITY CHANGED"
+   ],
+   "en_rows_read_live": [
+    "CHANGED",
+    "Grounded adaptive recovery",
+    "No recovery proposal is waiting on this Journey.",
+    "Refresh recovery",
+    "V14 · REALITY CHANGED"
+   ]
+  },
+  {
+   "route": "discover",
+   "arms_comparable": true,
+   "zh_inventory_hits_live": 0,
+   "en_inventory_hits_live": 1,
+   "zh_inventory_hits_before": 1,
+   "zh_ascii_live": 2,
+   "en_ascii_live": 18,
+   "zh_leaked_rows_before": [
+    "I prefer quiet indoor culture, low walking, and rain-friendly places near my protected Journey moments."
+   ],
+   "en_rows_read_live": [
+    "I prefer quiet indoor culture, low walking, and rain-friendly places near my protected Journey moments."
+   ]
+  }
+ ]
+}
