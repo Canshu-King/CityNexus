@@ -202,6 +202,13 @@
   --cn-touch-min: 44px;
   --cn-nav-bg: var(--cn-tint-white-95);
   --cn-nav-item-h: max(48px, var(--cn-touch-min));
+  /* One 档位 for the icon in a nav row, shared by the desktop sidebar (`.v8-nav button svg`) and the
+     mobile drawer (`#v8-nav-drawer button svg`). 17px is the value the sidebar has always used; it is
+     named here because an <svg> that carries a viewBox and no width/height attribute is sized by its
+     flex container, not by its artwork -- so every surface that puts one in a button has to state a
+     size, and two surfaces stating it separately is how one of them (the drawer, whose rows sit inside
+     a wrapper <div>) stopped matching its own selector and rendered 243px icons at 292px per row. */
+  --cn-nav-icon-size: 17px;
   --cn-nav-pad-top: 8px;
   --cn-nav-pad-bottom: 7px;
   /* Measured, not derived. The old value was arithmetic -- item floor 48 + 8 + 7 = 63px -- while the

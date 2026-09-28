@@ -141,7 +141,7 @@ button { display: block; width: 100%; margin-top: 12px; border: 0; border-radius
 .v8-nav > div:first-child .v8-nav-group { margin-top: 0; }
 .v8-nav-drawer-head + div .v8-nav-group, #v8-nav-drawer > div .v8-nav-group { display: block; margin: 14px 12px 5px; color: #9aa4b3; font-size: 9px; font-weight: 800; letter-spacing: .14em; }
 .v8-nav button { position: relative; display: flex; align-items: center; gap: 12px; width: 100%; padding: 11px 12px; border: 0; border-radius: 9px; color: #758196; background: transparent; text-align: left; cursor: pointer; font-size: 13px; }
-.v8-nav button svg { width: 17px; height: 17px; }
+.v8-nav button svg { width: var(--cn-nav-icon-size); height: var(--cn-nav-icon-size); }
 .v8-nav button:hover, .v8-nav button.active { color: var(--v8-ink); background: #f1f3ff; }
 .v8-nav button.active { color: var(--v8-indigo); font-weight: 750; }
 .v8-nav button.active:before { position: absolute; left: -16px; top: 8px; bottom: 8px; width: 3px; border-radius: 0 3px 3px 0; background: var(--v8-indigo); content: ""; }
@@ -329,7 +329,11 @@ button { display: block; width: 100%; margin-top: 12px; border: 0; border-radius
 #v8-nav-drawer { position: fixed; top: 0; bottom: 0; left: 0; z-index: 46; display: grid; align-content: start; gap: 4px; width: min(300px, 84vw); box-sizing: border-box; padding: 18px 14px 24px; overflow-y: auto; border-right: 1px solid var(--v8-line); background: #fff; box-shadow: 24px 0 60px #14233b2e; }
 .v8-nav-drawer-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 10px; padding: 0 12px; }
 #v8-nav-drawer > button { display: flex; align-items: center; gap: 12px; width: 100%; padding: 12px; border: 0; border-radius: 9px; color: #758196; background: transparent; text-align: left; cursor: pointer; font-size: 13px; }
-#v8-nav-drawer > button svg { width: 17px; height: 17px; }
+/* Descendant, not child: the drawer wraps each button in a <div> that also carries the group heading
+   (`V8Experience.tsx:1974`), so `> button svg` matched none of the 14 rows and each icon grew to the
+   full 243px width available in the flex row -- 292px per row, 4,512px of scroll, 3,668px of overflow.
+   Same 档位 as the sidebar above, now from one token. */
+#v8-nav-drawer button svg { width: var(--cn-nav-icon-size); height: var(--cn-nav-icon-size); }
 #v8-nav-drawer > button:hover, #v8-nav-drawer > button.active { color: var(--v8-ink); background: #f1f3ff; }
 #v8-nav-drawer > button.active { color: var(--v8-indigo); font-weight: 750; }
 
