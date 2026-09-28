@@ -82,21 +82,31 @@ const push = (arm: string, v: Record<string, unknown>) => {
 test("control-state — the button follows the camera, and pressing it reframes", async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
   await enterMap(page);
+  /* one artefact per moment, and the artefact is the control itself: a full-page shot at rest was
+     byte-identical to the reach@390 arm's, which lets one arm borrow another's witness. These three
+     also carry the glyph, so the state is visible in the evidence and not only in the attribute. */
+  const shots: string[] = [];
+  const shootControl = async (tag: string) => {
+    const f = evidencePath("ord0403-control", `control_${tag}.png`);
+    await page.getByTestId("map-viewport-reset").screenshot({ path: f });
+    shots.push(f);
+  };
   const atRest = await readControl(page);
   const camAtRest = await readCamera(page);
+  await shootControl("rest");
   expect(atRest, "the named control must be on the map screen").not.toBeNull();
   expect(atRest!.state, `control should start on-target, got ${atRest!.state}`).toBe("on-target");
 
   await dragCanvas(page, -80, -50);
   const afterDrag = await readControl(page);
   const camAfterDrag = await readCamera(page);
+  await shootControl("after_drag");
 
   await page.getByTestId("map-viewport-reset").click();
   await page.waitForTimeout(1_200);
   const afterReset = await readControl(page);
   const camAfterReset = await readCamera(page);
-  const shot = evidencePath("ord0403-control", "state_cycle.png");
-  await page.screenshot({ path: shot });
+  await shootControl("after_reset");
   push("control-state", {
     atRest: atRest!.state, afterDrag: afterDrag?.state, afterReset: afterReset?.state,
     labels: [atRest!.label, afterDrag?.label, afterReset?.label],
@@ -105,7 +115,7 @@ test("control-state — the button follows the camera, and pressing it reframes"
     camAtRest, camAfterDrag, camAfterReset,
     dragMovedCamera: camAtRest!.lng !== camAfterDrag!.lng || camAtRest!.lat !== camAfterDrag!.lat,
     resetReturned: camAfterReset!.lng === camAtRest!.lng && camAfterReset!.lat === camAtRest!.lat,
-    shot,
+    shots,
   });
   /* This is the arm that answers "两态不得靠 interactive:false 蒙过门禁" with a measurement:
      if the map is not interactive the drag cannot move the camera, so `afterDrag` stays on-target
