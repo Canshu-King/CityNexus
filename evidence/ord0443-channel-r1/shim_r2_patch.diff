@@ -1,0 +1,39 @@
+--- codex-shim/shim.mjs
++++ shim_r2_patched.mjs
+@@ -50,6 +50,15 @@
+   } else if (Array.isArray(input)) {
+     for (const item of input) {
+       if (!item || typeof item !== 'object') continue;
++      if (!item.type && item.role) {
++        // ORD-0443: the product sends {role, content} items without a `type`; the switch
++        // below only matches typed items, so such a turn was dropped and the upstream saw
++        // an empty conversation. Fold it like the 'message' case does.
++        const role0 = item.role === 'assistant' ? 'assistant'
++          : (item.role === 'system' || item.role === 'developer') ? 'system' : 'user';
++        messages.push({ role: role0, content: flattenContent(item.content) });
++        continue;
++      }
+       switch (item.type) {
+         case 'message': {
+           const role = item.role === 'assistant' ? 'assistant'
+@@ -267,7 +276,8 @@
+ 
+ async function handleResponses(req, res, body) {
+   const reqId = 'resp_' + crypto.randomBytes(12).toString('hex');
+-  const chatBody = { model: body.model, messages: responsesToChat(body), stream: true };
++  const wantsStream = body.stream === true;
++  const chatBody = { model: body.model, messages: responsesToChat(body), stream: wantsStream };
+   const tools = chatTools(body);
+   if (tools) chatBody.tools = tools;
+ 
+@@ -298,8 +308,8 @@
+     }
+   }
+ 
+-  if (body.stream === false) await plainTranslate(up, res, reqId, body.model);
+-  else await streamTranslate(up, res, reqId, body.model);
++  if (wantsStream) await streamTranslate(up, res, reqId, body.model);
++  else await plainTranslate(up, res, reqId, body.model);
+ }
+ 
+ const server = http.createServer((req, res) => {
