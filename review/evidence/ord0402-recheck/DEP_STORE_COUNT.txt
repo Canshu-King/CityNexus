@@ -1,0 +1,16 @@
+ORD-0402 recheck -- the dependency store this lane borrowed, counted before and after the junction dance.
+
+Why this file exists: the delivery block says the junctions were unlinked without touching the store.
+That is a number, so it gets an artifact rather than a sentence. Counted with the same call the block
+names, on the directory the junctions pointed at:
+
+  command: len(list(Path('D:/moodle/CityNexus/frontend/node_modules').iterdir()))
+  entries_after_removal = 399
+  entries_before_mount  = 399   (recorded at mount time by the same call; see the run logs)
+
+What was mounted: three junctions into this store -- the lane worktree root, the worktree frontend/,
+and each snap's frontend/node_modules. Each was removed with rmdir / [System.IO.Directory]::Delete
+and re-checked as absent before any recursive delete of the snap ran. No `rd /s /q` was used on a
+path containing a junction.
+
+counted_at_utc: 2026-09-28T12:55:50+00:00
