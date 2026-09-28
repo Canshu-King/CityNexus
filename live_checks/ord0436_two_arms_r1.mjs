@@ -127,6 +127,9 @@ async function arm(browser, locale) {
   const bodyText = squeeze(await page.locator("body").innerText());
   const panelText = squeeze(await page.locator('[data-testid="access-panel"]').innerText());
   read.rawKeyLeak = bodyText.includes("access.");
+  // A key is not the only way a template escapes: `{name}` with no value behind it is the same
+  // failure wearing braces, and the arm below is what the first cut of this instrument missed.
+  read.unfilledPlaceholders = (panelText.match(/\{[A-Za-z_]+\}/g) ?? []).slice(0, 6);
   // The language claim is about this screen, so it is counted on this screen's own text. The whole
   // page count travels beside it rather than replacing it: whatever Chinese the shell still renders
   // in an English device is a different order's finding, and hiding it here would lose it.
@@ -224,6 +227,11 @@ add(
   `${zh.doorState} || ${en.doorState}`.slice(0, 260),
 );
 add("no raw copy key reached either arm", !zh.rawKeyLeak && !en.rawKeyLeak, `zh=${zh.rawKeyLeak} en=${en.rawKeyLeak}`);
+add(
+  "no template placeholder reached either arm's screen",
+  zh.unfilledPlaceholders.length === 0 && en.unfilledPlaceholders.length === 0,
+  JSON.stringify({ zh: zh.unfilledPlaceholders, en: en.unfilledPlaceholders }),
+);
 add("the Chinese arm reads Chinese", zh.cjkChars > 80, `cjk=${zh.cjkChars}`);
 add("the English arm reads English", en.cjkChars === 0 && en.latinWords > 40, `panelCjk=${en.cjkChars} latin=${en.latinWords}`);
 add(
