@@ -1,0 +1,16 @@
+{
+ "form": "loose",
+ "arm": "control_has_pointer_events_none",
+ "predicate_source": "frontend/e2e/qoder-ord0407-empty-state-actions.spec.ts:184",
+ "definition": "the strict set plus the case where the point resolves to an ANCESTOR of the control",
+ "verbatim_screen_text": "到「住宿选择」里找一间可订的房",
+ "point_resolved_to": "DIV.",
+ "is_own_ancestor": true,
+ "centre": [
+  221,
+  419
+ ],
+ "centre_above_floor": true,
+ "strict_form": false,
+ "loose_form": true
+}

@@ -27,6 +27,8 @@
  *   C6  nothing that was reachable on the tip stopped being reachable, and no cell grew more than a
  *       line except the one the order asked to gain a button;
  *   C7  the new copy cannot escape the card it is written in, at 320/360/390/414.
+ *   C8  the two reachability forms are written apart, counted apart, and shown to disagree under a
+ *       covering sheet -- the hand-off the 抽屉 lane asked for, one evidence file per form.
  *
  * Assertions read rendered text, never a data attribute, because a traveller reads the sentence
  * (Q64=①/Q70/Q71).
@@ -174,7 +176,15 @@ async function controlCensus(page: Page) {
           box: [Math.round(r.left), Math.round(r.top), Math.round(r.width), Math.round(r.height)],
           centre: [cx, cy],
           centre_above_floor: cy <= floor,
-          hit_test: hit ? hit === el || el.contains(hit) || hit.contains(el) : false,
+          /* Two forms, both recorded, because the hand-off to the 抽屉 lane needs the difference and
+             not a single word: `hit_strict` is the form an order can be judged on -- the point at the
+             control's own centre lands on the control or on something inside it.  `hit_loose` adds the
+             third disjunct (the point resolved to an *ancestor*), which a covering overlay also
+             satisfies, so it cannot mean "the traveller can press this".  C6 judges on strict; the
+             loose form is kept only so the two can be counted apart in one receipt. */
+          hit_strict: hit ? hit === el || el.contains(hit) : false,
+          hit_loose: hit ? hit === el || el.contains(hit) || hit.contains(el) : false,
+          hit_test: hit ? hit === el || el.contains(hit) : false,
           hit_element: hit ? `${hit.tagName}.${hit.className}`.slice(0, 60) : null,
         };
       })
@@ -620,5 +630,120 @@ test.describe("ORD-0407 empty states carry the door they name", () => {
       await page.screenshot({ path: evidencePath(`ord0407/${RUN}__C7_${w}.png`) });
     }
     readings.C7 = { widths, by_width: byWidth };
+  });
+
+  test("C8 the two reachability forms disagree, and only one may be used to judge a control", async ({
+    page,
+  }) => {
+    /* Hand-off for the 抽屉 lane, which quoted my 768 line and a strict definition: "elementFromPoint
+       inside the element, centre y <= 768".  My own census line used to carry a third disjunct, so this
+       cell exists to show what that disjunct costs.  Both fixtures are applied by the test -- it sets
+       `pointer-events:none` on the control, and separately lays a sheet over it -- because the thing
+       under judgement is the measuring rule, not the product.  The middle arm is where the two forms
+       disagree: the point lands on the control's own parent, which the strict set rejects and the loose
+       set accepts. */
+    const built = await createUnlocatableJourney(page);
+    const per: Record<string, unknown> = {};
+    for (const arm of [
+      "control_as_shipped",
+      "control_has_pointer_events_none",
+      "a_sheet_is_laid_over_the_control",
+    ] as const) {
+      await boot(page, built.journey_id, "zh-CN");
+      await page.goto("/v8/bookings", { waitUntil: "load" });
+      const action = page.getByTestId("bookings-no-stay-action");
+      await expect(action).toHaveCount(1);
+      await page.evaluate((mode: string) => {
+        const el = document.querySelector('[data-testid="bookings-no-stay-action"]') as HTMLElement;
+        if (mode === "control_has_pointer_events_none") {
+          el.style.pointerEvents = "none";
+          return;
+        }
+        if (mode === "a_sheet_is_laid_over_the_control") {
+          const r = el.getBoundingClientRect();
+          const sheet = document.createElement("div");
+          sheet.setAttribute("data-testid", "fixture-covering-sheet");
+          sheet.style.cssText =
+            `position:fixed;left:${Math.round(r.left)}px;top:${Math.round(r.top)}px;` +
+            `width:${Math.round(r.width)}px;height:${Math.round(r.height)}px;` +
+            "background:rgba(0,0,0,0.01);z-index:99999";
+          document.body.appendChild(sheet);
+        }
+      }, arm as never);
+      const read = await page.evaluate(() => {
+        const el = document.querySelector('[data-testid="bookings-no-stay-action"]') as HTMLElement;
+        const r = el.getBoundingClientRect();
+        const cx = Math.round(r.left + r.width / 2);
+        const cy = Math.round(r.top + r.height / 2);
+        const hit = document.elementFromPoint(cx, cy);
+        return {
+          verbatim_screen_text: (el.textContent ?? "").replace(/\s+/g, " ").trim(),
+          point_resolved_to: hit ? `${hit.tagName}.${hit.className}`.slice(0, 60) : null,
+          is_own_ancestor: hit ? hit.contains(el) : false,
+          centre: [cx, cy],
+          centre_above_floor: cy <= 768,
+          strict_form: hit ? hit === el || el.contains(hit) : false,
+          loose_form: hit ? hit === el || el.contains(hit) || hit.contains(el) : false,
+        };
+      });
+      per[arm] = read;
+      /* One evidence file per form, as the hand-off asked. */
+      for (const [form, line] of [["strict", 183], ["loose", 184]] as const) {
+        writeFileSync(
+          evidencePath(`ord0407/${RUN}__C8_form_${form}_${arm}.json`),
+          JSON.stringify(
+            {
+              form,
+              arm,
+              predicate_source: `frontend/e2e/qoder-ord0407-empty-state-actions.spec.ts:${line}`,
+              definition:
+                form === "strict"
+                  ? "elementFromPoint(centre) is the control or one of its descendants"
+                  : "the strict set plus the case where the point resolves to an ANCESTOR of the control",
+              ...read,
+            },
+            null,
+            1,
+          ),
+          "utf-8",
+        );
+      }
+      await page.screenshot({ path: evidencePath(`ord0407/${RUN}__C8_${arm}.png`) });
+    }
+    const shipped = per.control_as_shipped as any;
+    const inert = per.control_has_pointer_events_none as any;
+    const covered = per.a_sheet_is_laid_over_the_control as any;
+    expect(shipped.strict_form, node("C8", "the shipped control is not reachable even strictly -- premise broken")).toBe(true);
+    expect(inert.strict_form, node("C8", "the strict form did not reject a control the browser will not hit")).toBe(false);
+    expect(inert.loose_form, node("C8", "the loose form agreed with the strict one here, so the counter-example is vacuous")).toBe(true);
+    expect(inert.is_own_ancestor, node("C8", "the point did not resolve to an ancestor, so this is not the disagreeing case")).toBe(true);
+    expect(covered.strict_form, node("C8", "a covering sheet did not block the strict form")).toBe(false);
+    expect(covered.loose_form, node("C8", "the sheet case should agree with strict (an unrelated element is neither descendant nor ancestor)")).toBe(false);
+    expect(
+      inert.verbatim_screen_text,
+      node("C8", "the covered control's own words changed -- that would be a product move, not a fixture one"),
+    ).toBe(shipped.verbatim_screen_text);
+    /* And the count that matters for my own C6: how many above-floor controls on these screens depend on
+       the loose disjunct.  Zero is the reason tightening C6 cannot quietly change a past verdict. */
+    const counts: Record<string, unknown> = {};
+    for (const { route } of READ_ROUTES) {
+      await boot(page, built.journey_id, "zh-CN");
+      await page.goto(`/v8/${route}`, { waitUntil: "load" });
+      await page.waitForSelector('[data-testid^="v8-"]', { timeout: 20_000 });
+      await expect
+        .poll(async () => (await controlCensus(page)).filter((c: any) => c.centre_above_floor).length, {
+          timeout: 15_000,
+        })
+        .toBeGreaterThan(0);
+      const census = await controlCensus(page);
+      const above = census.filter((c: any) => c.centre_above_floor);
+      counts[route] = {
+        above_floor: above.length,
+        strict_reachable: above.filter((c: any) => c.hit_strict).length,
+        loose_reachable: above.filter((c: any) => c.hit_loose).length,
+        rescued_only_by_the_ancestor_disjunct: above.filter((c: any) => c.hit_loose && !c.hit_strict).length,
+      };
+    }
+    readings.C8 = { forms: per, counts };
   });
 });

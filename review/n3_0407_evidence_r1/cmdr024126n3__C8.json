@@ -1,0 +1,71 @@
+{
+ "run_id": "cmdr024126n3",
+ "arm": "C8",
+ "spec": "e2e/qoder-ord0407-empty-state-actions.spec.ts",
+ "forms": {
+  "control_as_shipped": {
+   "verbatim_screen_text": "到「住宿选择」里找一间可订的房",
+   "point_resolved_to": "BUTTON.v8-quiet-button",
+   "is_own_ancestor": true,
+   "centre": [
+    221,
+    412
+   ],
+   "centre_above_floor": true,
+   "strict_form": true,
+   "loose_form": true
+  },
+  "control_has_pointer_events_none": {
+   "verbatim_screen_text": "到「住宿选择」里找一间可订的房",
+   "point_resolved_to": "DIV.",
+   "is_own_ancestor": true,
+   "centre": [
+    221,
+    419
+   ],
+   "centre_above_floor": true,
+   "strict_form": false,
+   "loose_form": true
+  },
+  "a_sheet_is_laid_over_the_control": {
+   "verbatim_screen_text": "到「住宿选择」里找一间可订的房",
+   "point_resolved_to": "DIV.",
+   "is_own_ancestor": false,
+   "centre": [
+    221,
+    425
+   ],
+   "centre_above_floor": true,
+   "strict_form": false,
+   "loose_form": false
+  }
+ },
+ "counts": {
+  "hub": {
+   "above_floor": 11,
+   "strict_reachable": 10,
+   "loose_reachable": 10,
+   "rescued_only_by_the_ancestor_disjunct": 0
+  },
+  "live": {
+   "above_floor": 9,
+   "strict_reachable": 9,
+   "loose_reachable": 9,
+   "rescued_only_by_the_ancestor_disjunct": 0
+  },
+  "map": {
+   "above_floor": 6,
+   "strict_reachable": 6,
+   "loose_reachable": 6,
+   "rescued_only_by_the_ancestor_disjunct": 0
+  },
+  "bookings": {
+   "above_floor": 7,
+   "strict_reachable": 5,
+   "loose_reachable": 5,
+   "rescued_only_by_the_ancestor_disjunct": 0
+  }
+ },
+ "nodeid": "D:\\moodle\\_qoder_n3_ord0357\\frontend\\e2e\\qoder-ord0407-empty-state-actions.spec.ts:635 > C8 the two reachability forms disagree, and only one may be used to judge a control",
+ "test_status": "passed"
+}

@@ -1,0 +1,3647 @@
+{
+ "run_id": "cmdr024126n3",
+ "arm": "C1",
+ "spec": "e2e/qoder-ord0407-empty-state-actions.spec.ts",
+ "screens": {
+  "located_trip/今天": {
+   "url": "http://127.0.0.1:5470/v8/hub",
+   "cells": {
+    "map-empty-body": null,
+    "map-empty-panel": null,
+    "bookings-no-stay": null,
+    "bookings-no-stay-sub": null,
+    "live-no-proposal": null,
+    "scroll_y": 0,
+    "document_height": 2121
+   },
+   "controls": [
+    {
+     "key": "菜单#1",
+     "testid": null,
+     "name": "菜单",
+     "box": [
+      17,
+      19,
+      46,
+      27
+     ],
+     "centre": [
+      40,
+      33
+     ],
+     "centre_above_floor": true,
+     "hit_strict": true,
+     "hit_loose": true,
+     "hit_test": true,
+     "hit_element": "BUTTON.v8-mobile-menu"
+    },
+    {
+     "key": "topbar-theme",
+     "testid": "topbar-theme",
+     "name": "跟随系统",
+     "box": [
+      191,
+      17,
+      65,
+      44
+     ],
+     "centre": [
+      224,
+      39
+     ],
+     "centre_above_floor": true,
+     "hit_strict": true,
+     "hit_loose": true,
+     "hit_test": true,
+     "hit_element": "BUTTON.v9-language"
+    },
+    {
+     "key": "topbar-language",
+     "testid": "topbar-language",
+     "name": "EN",
+     "box": [
+      264,
+      17,
+      65,
+      44
+     ],
+     "centre": [
+      297,
+      39
+     ],
+     "centre_above_floor": true,
+     "hit_strict": true,
+     "hit_loose": true,
+     "hit_test": true,
+     "hit_element": "BUTTON.v9-language"
+    },
+    {
+     "key": "TI#1",
+     "testid": null,
+     "name": "TI",
+     "box": [
+      345,
+      25,
+      28,
+      28
+     ],
+     "centre": [
+      359,
+      39
+     ],
+     "centre_above_floor": true,
+     "hit_strict": true,
+     "hit_loose": true,
+     "hit_test": true,
+     "hit_element": "BUTTON.v8-avatar"
+    },
+    {
+     "key": "hub-plan-with-ai",
+     "testid": "hub-plan-with-ai",
+     "name": "AI 帮我规划",
+     "box": [
+      17,
+      201,
+      68,
+      44
+     ],
+     "centre": [
+      51,
+      223
+     ],
+     "centre_above_floor": true,
+     "hit_strict": true,
+     "hit_loose": true,
+     "hit_test": true,
+     "hit_element": "BUTTON.v8-quiet-button"
+    },
+    {
+     "key": "试用其他城市#1",
+     "testid": null,
+     "name": "试用其他城市",
+     "box": [
+      101,
+      201,
+      78,
+      44
+     ],
+     "centre": [
+      140,
+      223
+     ],
+     "centre_above_floor": true,
+     "hit_strict": true,
+     "hit_loose": true,
+     "hit_test": true,
+     "hit_element": "BUTTON.v8-quiet-button"
+    },
+    {
+     "key": "打开行程工作台#1",
+     "testid": null,
+     "name": "打开行程工作台",
+     "box": [
+      195,
+      201,
+      91,
+      44
+     ],
+     "centre": [
+      241,
+      223
+     ],
+     "centre_above_floor": true,
+     "hit_strict": true,
+     "hit_loose": true,
+     "hit_test": true,
+     "hit_element": "BUTTON.v8-quiet-button"
+    },
+    {
+     "key": "journey-link-copy",
+     "testid": "journey-link-copy",
+     "name": "复制行程链接",
+     "box": [
+      17,
+      247,
+      78,
+      44
+     ],
+     "centre": [
+      56,
+      269
+     ],
+     "centre_above_floor": true,
+     "hit_strict": true,
+     "hit_loose": true,
+     "hit_test": true,
+     "hit_element": "BUTTON.v8-quiet-button"
+    },
+    {
+     "key": "today-hero-cta",
+     "testid": "today-hero-cta",
+     "name": "查看实时行程",
+     "box": [
+      42,
+      525,
+      130,
+      44
+     ],
+     "centre": [
+      107,
+      547
+     ],
+     "centre_above_floor": true,
+     "hit_strict": true,
+     "hit_loose": true,
+     "hit_test": true,
+     "hit_element": "BUTTON.v8-primary cn-hero-cta"
+    },
+    {
+     "key": "map-viewport-reset",
+     "testid": "map-viewport-reset",
+     "name": "回到行程视野",
+     "box": [
+      230,
+      690,
+      130,
+      36
+     ],
+     "centre": [
+      295,
+      708
+     ],
+     "centre_above_floor": true,
+     "hit_strict": true,
+     "hit_loose": true,
+     "hit_test": true,
+     "hit_element": "SPAN.v8-map-viewport-control-label"
+    },
+    {
+     "key": "pretrip-empty-action",
+     "testid": "pretrip-empty-action",
+     "name": "去看这一代方案",
+     "box": [
+      195,
+      1169,
+      119,
+      44
+     ],
+     "centre": [
+      255,
+      1191
+     ],
+     "centre_above_floor": false,
+     "hit_strict": false,
+     "hit_loose": false,
+     "hit_test": false,
+     "hit_element": null
+    },
+    {
+     "key": "对比住宿 →#1",
+     "testid": null,
+     "name": "对比住宿 →",
+     "box": [
+      291,
+      1270,
+      82,
+      44
+     ],
+     "centre": [
+      332,
+      1292
+     ],
+     "centre_above_floor": false,
+     "hit_strict": false,
+     "hit_loose": false,
+     "hit_test": false,
+     "hit_element": null
+    },
+    {
+     "key": "第 1 天星期五Arrival · Check in · Haihe Riverside Hotel · Overnig#1",
+     "testid": null,
+     "name": "第 1 天星期五Arrival · Check in · Haihe Riverside Hotel · Overnig",
+     "box": [
+      17,
+      1400,
+      356,
+      156
+     ],
+     "centre": [
+      195,
+      1478
+     ],
+     "centre_above_floor": false,
+     "hit_strict": false,
+     "hit_loose": false,
+     "hit_test": false,
+     "hit_element": null
+    },
+    {
+     "key": "第 2 天星期六Five Great Avenues · Tianjin Museum · Tianjin Eye · #1",
+     "testid": null,
+     "name": "第 2 天星期六Five Great Avenues · Tianjin Museum · Tianjin Eye · ",
+     "box": [
+      17,
+      1582,
+      356,
+      156
+     ],
+     "centre": [
+      195,
+      1660
+     ],
+     "centre_above_floor": false,
+     "hit_strict": false,
+     "hit_loose": false,
+     "hit_test": false,
+     "hit_element": null
+    },
+    {
+     "key": "第 3 天星期日Check out · Haihe Riverside Hotel · Departure驾车 离开锚点#1",
+     "testid": null,
+     "name": "第 3 天星期日Check out · Haihe Riverside Hotel · Departure驾车 离开锚点",
+     "box": [
+      17,
+      1764,
+      356,
+      156
+     ],
+     "centre": [
+      195,
+      1842
+     ],
+     "centre_above_floor": false,
+     "hit_strict": false,
+     "hit_loose": false,
+     "hit_test": false,
+     "hit_element": null
+    },
+    {
+     "key": "✦CityNexus Copilot#1",
+     "testid": null,
+     "name": "✦CityNexus Copilot",
+     "box": [
+      393,
+      718,
+      165,
+      42
+     ],
+     "centre": [
+      475,
+      739
+     ],
+     "centre_above_floor": true,
+     "hit_strict": false,
+     "hit_loose": false,
+     "hit_test": false,
+     "hit_element": null
+    },
+    {
+     "key": "nav-hub",
+     "testid": "nav-hub",
+     "name": "今天",
+     "box": [
+      5,
+      789,
+      76,
+      48
+     ],
+     "centre": [
+      43,
+      813
+     ],
+     "centre_above_floor": false,
+     "hit_strict": true,
+     "hit_loose": true,
+     "hit_test": true,
+     "hit_element": "BUTTON.active"
+    },
+    {
+     "key": "nav-trips",
+     "testid": "nav-trips",
+     "name": "行程",
+     "box": [
+      81,
+      789,
+      76,
+      48
+     ],
+     "centre": [
+      119,
+      813
+     ],
+     "centre_above_floor": false,
+     "hit_strict": true,
+     "hit_loose": true,
+     "hit_test": true,
+     "hit_element": "BUTTON."
+    },
+    {
+     "key": "nav-map",
+     "testid": "nav-map",
+     "name": "地图",
+     "box": [
+      157,
+      789,
+      76,
+      48
+     ],
+     "centre": [
+      195,
+      813
+     ],
+     "centre_above_floor": false,
+     "hit_strict": true,
+     "hit_loose": true,
+     "hit_test": true,
+     "hit_element": "BUTTON."
+    },
+    {
+     "key": "nav-agent",
+     "testid": "nav-agent",
+     "name": "Copilot",
+     "box": [
+      233,
+      789,
+      76,
+      48
+     ],
+     "centre": [
+      271,
+      813
+     ],
+     "centre_above_floor": false,
+     "hit_strict": true,
+     "hit_loose": true,
+     "hit_test": true,
+     "hit_element": "BUTTON."
+    },
+    {
+     "key": "nav-me",
+     "testid": "nav-me",
+     "name": "我的",
+     "box": [
+      309,
+      789,
+      76,
+      48
+     ],
+     "centre": [
+      347,
+      813
+     ],
+     "centre_above_floor": false,
+     "hit_strict": true,
+     "hit_loose": true,
+     "hit_test": true,
+     "hit_element": "BUTTON."
+    },
+    {
+     "key": "sim-ball",
+     "testid": "sim-ball",
+     "name": "模拟舞台（舞台上有场景）：教学模拟舞台 · 屏幕上的“现在”由服务器给定：2026-10-09 18:00 +08:00",
+     "box": [
+      330,
+      646,
+      48,
+      48
+     ],
+     "centre": [
+      354,
+      670
+     ],
+     "centre_above_floor": true,
+     "hit_strict": true,
+     "hit_loose": true,
+     "hit_test": true,
+     "hit_element": "SPAN.cn-sim-ball-dot"
+    }
+   ]
+  },
+  "located_trip/实时行程": {
+   "url": "http://127.0.0.1:5470/v8/live",
+   "cells": {
+    "map-empty-body": null,
+    "map-empty-panel": null,
+    "bookings-no-stay": null,
+    "bookings-no-stay-sub": null,
+    "live-no-proposal": {
+     "box": [
+      17,
+      609,
+      356,
+      21
+     ],
+     "bottom": 630,
+     "text": "当前没有需要你决定的调整。",
+     "controls_inside": 0
+    },
+    "scroll_y": 0,
+    "document_height": 2291
+   },
+   "controls": [
+    {
+     "key": "菜单#1",
+     "testid": null,
+     "name": "菜单",
+     "box": [
+      17,
+      19,
+      46,
+      27
+     ],
+     "centre": [
+      40,
+      33
+     ],
+     "centre_above_floor": true,
+     "hit_strict": true,
+     "hit_loose": true,
+     "hit_test": true,
+     "hit_element": "BUTTON.v8-mobile-menu"
+    },
+    {
+     "key": "topbar-theme",
+     "testid": "topbar-theme",
+     "name": "跟随系统",
+     "box": [
+      191,
+      17,
+      65,
+      44
+     ],
+     "centre": [
+      224,
+      39
+     ],
+     "centre_above_floor": true,
+     "hit_strict": true,
+     "hit_loose": true,
+     "hit_test": true,
+     "hit_element": "BUTTON.v9-language"
+    },
+    {
+     "key": "topbar-language",
+     "testid": "topbar-language",
+     "name": "EN",
+     "box": [
+      264,
+      17,
+      65,
+      44
+     ],
+     "centre": [
+      297,
+      39
+     ],
+     "centre_above_floor": true,
+     "hit_strict": true,
+     "hit_loose": true,
+     "hit_test": true,
+     "hit_element": "BUTTON.v9-language"
+    },
+    {
+     "key": "TI#1",
+     "testid": null,
+     "name": "TI",
+     "box": [
+      345,
+      25,
+      28,
+      28
+     ],
+     "centre": [
+      359,
+      39
+     ],
+     "centre_above_floor": true,
+     "hit_strict": true,
+     "hit_loose": true,
+     "hit_test": true,
+     "hit_element": "BUTTON.v8-avatar"
+    },
+    {
+     "key": "1#1",
+     "testid": null,
+     "name": "1",
+     "box": [
+      57,
+      370,
+      34,
+      34
+     ],
+     "centre": [
+      74,
+      387
+     ],
+     "centre_above_floor": true,
+     "hit_strict": true,
+     "hit_loose": true,
+     "hit_test": true,
+     "hit_element": "DIV.v9-map-marker current maplibregl-marker maplibregl-marke"
+    },
+    {
+     "key": "2#1",
+     "testid": null,
+     "name": "2",
+     "box": [
+      141,
+      272,
+      34,
+      34
+     ],
+     "centre": [
+      158,
+      289
+     ],
+     "centre_above_floor": true,
+     "hit_strict": false,
+     "hit_loose": false,
+     "hit_test": false,
+     "hit_element": "H2."
+    },
+    {
+     "key": "3#1",
+     "testid": null,
+     "name": "3",
+     "box": [
+      141,
+      272,
+      34,
+      34
+     ],
+     "centre": [
+      158,
+      289
+     ],
+     "centre_above_floor": true,
+     "hit_strict": false,
+     "hit_loose": false,
+     "hit_test": false,
+     "hit_element": "H2."
+    },
+    {
+     "key": "4#1",
+     "testid": null,
+     "name": "4",
+     "box": [
+      117,
+      349,
+      34,
+      34
+     ],
+     "centre": [
+      134,
+      366
+     ],
+     "centre_above_floor": true,
+     "hit_strict": true,
+     "hit_loose": true,
+     "hit_test": true,
+     "hit_element": "DIV.v9-map-marker maplibregl-marker maplibregl-marker-anchor"
+    },
+    {
+     "key": "5#1",
+     "testid": null,
+     "name": "5",
+     "box": [
+      178,
+      456,
+      34,
+      34
+     ],
+     "centre": [
+      195,
+      473
+     ],
+     "centre_above_floor": true,
+     "hit_strict": true,
+     "hit_loose": true,
+     "hit_test": true,
+     "hit_element": "DIV.v9-map-marker maplibregl-marker maplibregl-marker-anchor"
+    },
+    {
+     "key": "6#1",
+     "testid": null,
+     "name": "6",
+     "box": [
+      109,
+      192,
+      34,
+      34
+     ],
+     "centre": [
+      126,
+      209
+     ],
+     "centre_above_floor": true,
+     "hit_strict": false,
+     "hit_loose": false,
+     "hit_test": false,
+     "hit_element": "P.v8-lede"
+    },
+    {
+     "key": "7#1",
+     "testid": null,
+     "name": "7",
+     "box": [
+      141,
+      272,
+      34,
+      34
+     ],
+     "centre": [
+      158,
+      289
+     ],
+     "centre_above_floor": true,
+     "hit_strict": false,
+     "hit_loose": false,
+     "hit_test": false,
+     "hit_element": "H2."
+    },
+    {
+     "key": "8#1",
+     "testid": null,
+     "name": "8",
+     "box": [
+      141,
+      272,
+      34,
+      34
+     ],
+     "centre": [
+      158,
+      289
+     ],
+     "centre_above_floor": true,
+     "hit_strict": false,
+     "hit_loose": false,
+     "hit_test": false,
+     "hit_element": "H2."
+    },
+    {
+     "key": "9#1",
+     "testid": null,
+     "name": "9",
+     "box": [
+      416,
+      32,
+      34,
+      34
+     ],
+     "centre": [
+      433,
+      49
+     ],
+     "centre_above_floor": true,
+     "hit_strict": false,
+     "hit_loose": false,
+     "hit_test": false,
+     "hit_element": null
+    },
+    {
+     "key": "map-viewport-reset",
+     "testid": "map-viewport-reset",
+     "name": "回到行程视野",
+     "box": [
+      230,
+      378,
+      130,
+      36
+     ],
+     "centre": [
+      295,
+      396
+     ],
+     "centre_above_floor": true,
+     "hit_strict": true,
+     "hit_loose": true,
+     "hit_test": true,
+     "hit_element": "SPAN.v8-map-viewport-control-label"
+    },
+    {
+     "key": "live-update-location",
+     "testid": "live-update-location",
+     "name": "更新位置",
+     "box": [
+      17,
+      646,
+      52,
+      44
+     ],
+     "centre": [
+      43,
+      668
+     ],
+     "centre_above_floor": true,
+     "hit_strict": true,
+     "hit_loose": true,
+     "hit_test": true,
+     "hit_element": "BUTTON.v8-quiet-button"
+    },
+    {
+     "key": "live-report-rain",
+     "testid": "live-report-rain",
+     "name": "报告降雨",
+     "box": [
+      85,
+      646,
+      79,
+      44
+     ],
+     "centre": [
+      125,
+      668
+     ],
+     "centre_above_floor": true,
+     "hit_strict": true,
+     "hit_loose": true,
+     "hit_test": true,
+     "hit_element": "BUTTON.v8-quiet-button"
+    },
+    {
+     "key": "mode-walk",
+     "testid": "mode-walk",
+     "name": "步行",
+     "box": [
+      36,
+      791,
+      318,
+      44
+     ],
+     "centre": [
+      195,
+      813
+     ],
+     "centre_above_floor": false,
+     "hit_strict": false,
+     "hit_loose": false,
+     "hit_test": false,
+     "hit_element": "BUTTON.active"
+    },
+    {
+     "key": "mode-bicycle",
+     "testid": "mode-bicycle",
+     "name": "骑行",
+     "box": [
+      36,
+      852,
+      318,
+      44
+     ],
+     "centre": [
+      195,
+      874
+     ],
+     "centre_above_floor": false,
+     "hit_strict": false,
+     "hit_loose": false,
+     "hit_test": false,
+     "hit_element": null
+    },
+    {
+     "key": "mode-transit",
+     "testid": "mode-transit",
+     "name": "公交地铁",
+     "box": [
+      36,
+      913,
+      318,
+      44
+     ],
+     "centre": [
+      195,
+      935
+     ],
+     "centre_above_floor": false,
+     "hit_strict": false,
+     "hit_loose": false,
+     "hit_test": false,
+     "hit_element": null
+    },
+    {
+     "key": "mode-auto",
+     "testid": "mode-auto",
+     "name": "驾车",
+     "box": [
+      36,
+      974,
+      318,
+      44
+     ],
+     "centre": [
+      195,
+      996
+     ],
+     "centre_above_floor": false,
+     "hit_strict": false,
+     "hit_loose": false,
+     "hit_test": false,
+     "hit_element": null
+    },
+    {
+     "key": "mode-ride_hail",
+     "testid": "mode-ride_hail",
+     "name": "网约车",
+     "box": [
+      36,
+      1035,
+      318,
+      44
+     ],
+     "centre": [
+      195,
+      1057
+     ],
+     "centre_above_floor": false,
+     "hit_strict": false,
+     "hit_loose": false,
+     "hit_test": false,
+     "hit_element": null
+    },
+    {
+     "key": "对比所有方式#1",
+     "testid": null,
+     "name": "对比所有方式",
+     "box": [
+      36,
+      1093,
+      120,
+      44
+     ],
+     "centre": [
+      96,
+      1115
+     ],
+     "centre_above_floor": false,
+     "hit_strict": false,
+     "hit_loose": false,
+     "hit_test": false,
+     "hit_element": null
+    },
+    {
+     "key": "开始导航 →#1",
+     "testid": null,
+     "name": "开始导航 →",
+     "box": [
+      38,
+      1346,
+      84,
+      44
+     ],
+     "centre": [
+      80,
+      1368
+     ],
+     "centre_above_floor": false,
+     "hit_strict": false,
+     "hit_loose": false,
+     "hit_test": false,
+     "hit_element": null
+    },
+    {
+     "key": "对比#1",
+     "testid": null,
+     "name": "对比",
+     "box": [
+      73,
+      1563,
+      279,
+      44
+     ],
+     "centre": [
+      213,
+      1585
+     ],
+     "centre_above_floor": false,
+     "hit_strict": false,
+     "hit_loose": false,
+     "hit_test": false,
+     "hit_element": null
+    },
+    {
+     "key": "✦CityNexus Copilot#1",
+     "testid": null,
+     "name": "✦CityNexus Copilot",
+     "box": [
+      215,
+      718,
+      165,
+      42
+     ],
+     "centre": [
+      298,
+      739
+     ],
+     "centre_above_floor": true,
+     "hit_strict": true,
+     "hit_loose": true,
+     "hit_test": true,
+     "hit_element": "SPAN."
+    },
+    {
+     "key": "nav-hub",
+     "testid": "nav-hub",
+     "name": "今天",
+     "box": [
+      5,
+      789,
+      76,
+      48
+     ],
+     "centre": [
+      43,
+      813
+     ],
+     "centre_above_floor": false,
+     "hit_strict": true,
+     "hit_loose": true,
+     "hit_test": true,
+     "hit_element": "BUTTON."
+    },
+    {
+     "key": "nav-trips",
+     "testid": "nav-trips",
+     "name": "行程",
+     "box": [
+      81,
+      789,
+      76,
+      48
+     ],
+     "centre": [
+      119,
+      813
+     ],
+     "centre_above_floor": false,
+     "hit_strict": true,
+     "hit_loose": true,
+     "hit_test": true,
+     "hit_element": "BUTTON."
+    },
+    {
+     "key": "nav-map",
+     "testid": "nav-map",
+     "name": "地图",
+     "box": [
+      157,
+      789,
+      76,
+      48
+     ],
+     "centre": [
+      195,
+      813
+     ],
+     "centre_above_floor": false,
+     "hit_strict": true,
+     "hit_loose": true,
+     "hit_test": true,
+     "hit_element": "BUTTON.active"
+    },
+    {
+     "key": "nav-agent",
+     "testid": "nav-agent",
+     "name": "Copilot",
+     "box": [
+      233,
+      789,
+      76,
+      48
+     ],
+     "centre": [
+      271,
+      813
+     ],
+     "centre_above_floor": false,
+     "hit_strict": true,
+     "hit_loose": true,
+     "hit_test": true,
+     "hit_element": "BUTTON."
+    },
+    {
+     "key": "nav-me",
+     "testid": "nav-me",
+     "name": "我的",
+     "box": [
+      309,
+      789,
+      76,
+      48
+     ],
+     "centre": [
+      347,
+      813
+     ],
+     "centre_above_floor": false,
+     "hit_strict": true,
+     "hit_loose": true,
+     "hit_test": true,
+     "hit_element": "BUTTON."
+    }
+   ]
+  },
+  "located_trip/地图": {
+   "url": "http://127.0.0.1:5470/v8/map",
+   "cells": {
+    "map-empty-body": null,
+    "map-empty-panel": null,
+    "bookings-no-stay": null,
+    "bookings-no-stay-sub": null,
+    "live-no-proposal": null,
+    "scroll_y": 0,
+    "document_height": 1756
+   },
+   "controls": [
+    {
+     "key": "菜单#1",
+     "testid": null,
+     "name": "菜单",
+     "box": [
+      17,
+      19,
+      46,
+      27
+     ],
+     "centre": [
+      40,
+      33
+     ],
+     "centre_above_floor": true,
+     "hit_strict": true,
+     "hit_loose": true,
+     "hit_test": true,
+     "hit_element": "BUTTON.v8-mobile-menu"
+    },
+    {
+     "key": "topbar-theme",
+     "testid": "topbar-theme",
+     "name": "跟随系统",
+     "box": [
+      191,
+      17,
+      65,
+      44
+     ],
+     "centre": [
+      224,
+      39
+     ],
+     "centre_above_floor": true,
+     "hit_strict": true,
+     "hit_loose": true,
+     "hit_test": true,
+     "hit_element": "BUTTON.v9-language"
+    },
+    {
+     "key": "topbar-language",
+     "testid": "topbar-language",
+     "name": "EN",
+     "box": [
+      264,
+      17,
+      65,
+      44
+     ],
+     "centre": [
+      297,
+      39
+     ],
+     "centre_above_floor": true,
+     "hit_strict": true,
+     "hit_loose": true,
+     "hit_test": true,
+     "hit_element": "BUTTON.v9-language"
+    },
+    {
+     "key": "TI#1",
+     "testid": null,
+     "name": "TI",
+     "box": [
+      345,
+      25,
+      28,
+      28
+     ],
+     "centre": [
+      359,
+      39
+     ],
+     "centre_above_floor": true,
+     "hit_strict": true,
+     "hit_loose": true,
+     "hit_test": true,
+     "hit_element": "BUTTON.v8-avatar"
+    },
+    {
+     "key": "对比出行方式#1",
+     "testid": null,
+     "name": "对比出行方式",
+     "box": [
+      17,
+      247,
+      130,
+      44
+     ],
+     "centre": [
+      82,
+      269
+     ],
+     "centre_above_floor": true,
+     "hit_strict": true,
+     "hit_loose": true,
+     "hit_test": true,
+     "hit_element": "BUTTON.v8-primary"
+    },
+    {
+     "key": "1#1",
+     "testid": null,
+     "name": "1",
+     "box": [
+      96,
+      444,
+      34,
+      34
+     ],
+     "centre": [
+      113,
+      461
+     ],
+     "centre_above_floor": true,
+     "hit_strict": true,
+     "hit_loose": true,
+     "hit_test": true,
+     "hit_element": "DIV.v9-map-marker current maplibregl-marker maplibregl-marke"
+    },
+    {
+     "key": "2#1",
+     "testid": null,
+     "name": "2",
+     "box": [
+      147,
+      384,
+      34,
+      34
+     ],
+     "centre": [
+      164,
+      401
+     ],
+     "centre_above_floor": true,
+     "hit_strict": false,
+     "hit_loose": false,
+     "hit_test": false,
+     "hit_element": "DIV.v9-map-marker maplibregl-marker maplibregl-marker-anchor"
+    },
+    {
+     "key": "3#1",
+     "testid": null,
+     "name": "3",
+     "box": [
+      147,
+      384,
+      34,
+      34
+     ],
+     "centre": [
+      164,
+      401
+     ],
+     "centre_above_floor": true,
+     "hit_strict": false,
+     "hit_loose": false,
+     "hit_test": false,
+     "hit_element": "DIV.v9-map-marker maplibregl-marker maplibregl-marker-anchor"
+    },
+    {
+     "key": "4#1",
+     "testid": null,
+     "name": "4",
+     "box": [
+      132,
+      431,
+      34,
+      34
+     ],
+     "centre": [
+      149,
+      448
+     ],
+     "centre_above_floor": true,
+     "hit_strict": true,
+     "hit_loose": true,
+     "hit_test": true,
+     "hit_element": "DIV.v9-map-marker maplibregl-marker maplibregl-marker-anchor"
+    },
+    {
+     "key": "5#1",
+     "testid": null,
+     "name": "5",
+     "box": [
+      169,
+      496,
+      34,
+      34
+     ],
+     "centre": [
+      186,
+      513
+     ],
+     "centre_above_floor": true,
+     "hit_strict": true,
+     "hit_loose": true,
+     "hit_test": true,
+     "hit_element": "DIV.v9-map-marker maplibregl-marker maplibregl-marker-anchor"
+    },
+    {
+     "key": "6#1",
+     "testid": null,
+     "name": "6",
+     "box": [
+      127,
+      335,
+      34,
+      34
+     ],
+     "centre": [
+      144,
+      352
+     ],
+     "centre_above_floor": true,
+     "hit_strict": true,
+     "hit_loose": true,
+     "hit_test": true,
+     "hit_element": "DIV.v9-map-marker maplibregl-marker maplibregl-marker-anchor"
+    },
+    {
+     "key": "7#1",
+     "testid": null,
+     "name": "7",
+     "box": [
+      147,
+      384,
+      34,
+      34
+     ],
+     "centre": [
+      164,
+      401
+     ],
+     "centre_above_floor": true,
+     "hit_strict": false,
+     "hit_loose": false,
+     "hit_test": false,
+     "hit_element": "DIV.v9-map-marker maplibregl-marker maplibregl-marker-anchor"
+    },
+    {
+     "key": "8#1",
+     "testid": null,
+     "name": "8",
+     "box": [
+      147,
+      384,
+      34,
+      34
+     ],
+     "centre": [
+      164,
+      401
+     ],
+     "centre_above_floor": true,
+     "hit_strict": true,
+     "hit_loose": true,
+     "hit_test": true,
+     "hit_element": "DIV.v9-map-marker maplibregl-marker maplibregl-marker-anchor"
+    },
+    {
+     "key": "9#1",
+     "testid": null,
+     "name": "9",
+     "box": [
+      315,
+      237,
+      34,
+      34
+     ],
+     "centre": [
+      332,
+      254
+     ],
+     "centre_above_floor": true,
+     "hit_strict": false,
+     "hit_loose": false,
+     "hit_test": false,
+     "hit_element": "DIV.v8-page-intro compact"
+    },
+    {
+     "key": "map-viewport-reset",
+     "testid": "map-viewport-reset",
+     "name": "回到行程视野",
+     "box": [
+      230,
+      343,
+      130,
+      36
+     ],
+     "centre": [
+      295,
+      361
+     ],
+     "centre_above_floor": true,
+     "hit_strict": true,
+     "hit_loose": true,
+     "hit_test": true,
+     "hit_element": "SPAN.v8-map-viewport-control-label"
+    },
+    {
+     "key": "map-stop-a9fe450f-4a90-4d12-adc6-9896024d20a4",
+     "testid": "map-stop-a9fe450f-4a90-4d12-adc6-9896024d20a4",
+     "name": "Arrival",
+     "box": [
+      40,
+      906,
+      310,
+      35
+     ],
+     "centre": [
+      195,
+      923
+     ],
+     "centre_above_floor": false,
+     "hit_strict": false,
+     "hit_loose": false,
+     "hit_test": false,
+     "hit_element": null
+    },
+    {
+     "key": "map-stop-d372ff11-5fba-4b02-9c76-3d83d0ec3c7b",
+     "testid": "map-stop-d372ff11-5fba-4b02-9c76-3d83d0ec3c7b",
+     "name": "Check in · Haihe Riverside Hotel",
+     "box": [
+      40,
+      961,
+      310,
+      35
+     ],
+     "centre": [
+      195,
+      978
+     ],
+     "centre_above_floor": false,
+     "hit_strict": false,
+     "hit_loose": false,
+     "hit_test": false,
+     "hit_element": null
+    },
+    {
+     "key": "map-stop-0c1a3b38-86f5-4cc1-9220-3082456364e4",
+     "testid": "map-stop-0c1a3b38-86f5-4cc1-9220-3082456364e4",
+     "name": "Overnight · Haihe Riverside Hotel",
+     "box": [
+      40,
+      1016,
+      310,
+      35
+     ],
+     "centre": [
+      195,
+      1033
+     ],
+     "centre_above_floor": false,
+     "hit_strict": false,
+     "hit_loose": false,
+     "hit_test": false,
+     "hit_element": null
+    },
+    {
+     "key": "map-stop-0ea07333-964d-4e58-bb04-15dc4c1c4614",
+     "testid": "map-stop-0ea07333-964d-4e58-bb04-15dc4c1c4614",
+     "name": "Five Great Avenues",
+     "box": [
+      40,
+      1071,
+      310,
+      35
+     ],
+     "centre": [
+      195,
+      1088
+     ],
+     "centre_above_floor": false,
+     "hit_strict": false,
+     "hit_loose": false,
+     "hit_test": false,
+     "hit_element": null
+    },
+    {
+     "key": "map-stop-d3e52d2d-d9f1-4e7f-b62f-e7ddc6c8effb",
+     "testid": "map-stop-d3e52d2d-d9f1-4e7f-b62f-e7ddc6c8effb",
+     "name": "Tianjin Museum",
+     "box": [
+      40,
+      1126,
+      310,
+      35
+     ],
+     "centre": [
+      195,
+      1143
+     ],
+     "centre_above_floor": false,
+     "hit_strict": false,
+     "hit_loose": false,
+     "hit_test": false,
+     "hit_element": null
+    },
+    {
+     "key": "map-stop-d0570350-c17a-40f1-8975-ecff1f12a26d",
+     "testid": "map-stop-d0570350-c17a-40f1-8975-ecff1f12a26d",
+     "name": "Tianjin Eye",
+     "box": [
+      40,
+      1181,
+      310,
+      35
+     ],
+     "centre": [
+      195,
+      1198
+     ],
+     "centre_above_floor": false,
+     "hit_strict": false,
+     "hit_loose": false,
+     "hit_test": false,
+     "hit_element": null
+    },
+    {
+     "key": "map-stop-f0bf6968-9304-4a56-a149-541d1fc18f38",
+     "testid": "map-stop-f0bf6968-9304-4a56-a149-541d1fc18f38",
+     "name": "Overnight · Haihe Riverside Hotel",
+     "box": [
+      40,
+      1236,
+      310,
+      35
+     ],
+     "centre": [
+      195,
+      1253
+     ],
+     "centre_above_floor": false,
+     "hit_strict": false,
+     "hit_loose": false,
+     "hit_test": false,
+     "hit_element": null
+    },
+    {
+     "key": "map-stop-2ceea480-03a4-4b7e-9ba9-4eaa03c4af68",
+     "testid": "map-stop-2ceea480-03a4-4b7e-9ba9-4eaa03c4af68",
+     "name": "Check out · Haihe Riverside Hotel",
+     "box": [
+      40,
+      1291,
+      310,
+      35
+     ],
+     "centre": [
+      195,
+      1308
+     ],
+     "centre_above_floor": false,
+     "hit_strict": false,
+     "hit_loose": false,
+     "hit_test": false,
+     "hit_element": null
+    },
+    {
+     "key": "map-stop-b4060f70-20b7-485d-a168-0d72dc9a47c7",
+     "testid": "map-stop-b4060f70-20b7-485d-a168-0d72dc9a47c7",
+     "name": "Departure",
+     "box": [
+      40,
+      1346,
+      310,
+      35
+     ],
+     "centre": [
+      195,
+      1363
+     ],
+     "centre_above_floor": false,
+     "hit_strict": false,
+     "hit_loose": false,
+     "hit_test": false,
+     "hit_element": null
+    },
+    {
+     "key": "✦CityNexus Copilot#1",
+     "testid": null,
+     "name": "✦CityNexus Copilot",
+     "box": [
+      215,
+      718,
+      165,
+      42
+     ],
+     "centre": [
+      298,
+      739
+     ],
+     "centre_above_floor": true,
+     "hit_strict": true,
+     "hit_loose": true,
+     "hit_test": true,
+     "hit_element": "SPAN."
+    },
+    {
+     "key": "nav-hub",
+     "testid": "nav-hub",
+     "name": "今天",
+     "box": [
+      5,
+      789,
+      76,
+      48
+     ],
+     "centre": [
+      43,
+      813
+     ],
+     "centre_above_floor": false,
+     "hit_strict": true,
+     "hit_loose": true,
+     "hit_test": true,
+     "hit_element": "BUTTON."
+    },
+    {
+     "key": "nav-trips",
+     "testid": "nav-trips",
+     "name": "行程",
+     "box": [
+      81,
+      789,
+      76,
+      48
+     ],
+     "centre": [
+      119,
+      813
+     ],
+     "centre_above_floor": false,
+     "hit_strict": true,
+     "hit_loose": true,
+     "hit_test": true,
+     "hit_element": "BUTTON."
+    },
+    {
+     "key": "nav-map",
+     "testid": "nav-map",
+     "name": "地图",
+     "box": [
+      157,
+      789,
+      76,
+      48
+     ],
+     "centre": [
+      195,
+      813
+     ],
+     "centre_above_floor": false,
+     "hit_strict": true,
+     "hit_loose": true,
+     "hit_test": true,
+     "hit_element": "BUTTON.active"
+    },
+    {
+     "key": "nav-agent",
+     "testid": "nav-agent",
+     "name": "Copilot",
+     "box": [
+      233,
+      789,
+      76,
+      48
+     ],
+     "centre": [
+      271,
+      813
+     ],
+     "centre_above_floor": false,
+     "hit_strict": true,
+     "hit_loose": true,
+     "hit_test": true,
+     "hit_element": "BUTTON."
+    },
+    {
+     "key": "nav-me",
+     "testid": "nav-me",
+     "name": "我的",
+     "box": [
+      309,
+      789,
+      76,
+      48
+     ],
+     "centre": [
+      347,
+      813
+     ],
+     "centre_above_floor": false,
+     "hit_strict": true,
+     "hit_loose": true,
+     "hit_test": true,
+     "hit_element": "BUTTON."
+    }
+   ]
+  },
+  "located_trip/旅行票夹": {
+   "url": "http://127.0.0.1:5470/v8/bookings",
+   "cells": {
+    "map-empty-body": null,
+    "map-empty-panel": null,
+    "bookings-no-stay": null,
+    "bookings-no-stay-sub": null,
+    "live-no-proposal": null,
+    "scroll_y": 0,
+    "document_height": 2113
+   },
+   "controls": [
+    {
+     "key": "菜单#1",
+     "testid": null,
+     "name": "菜单",
+     "box": [
+      17,
+      19,
+      46,
+      27
+     ],
+     "centre": [
+      40,
+      33
+     ],
+     "centre_above_floor": true,
+     "hit_strict": true,
+     "hit_loose": true,
+     "hit_test": true,
+     "hit_element": "BUTTON.v8-mobile-menu"
+    },
+    {
+     "key": "topbar-theme",
+     "testid": "topbar-theme",
+     "name": "跟随系统",
+     "box": [
+      191,
+      17,
+      65,
+      44
+     ],
+     "centre": [
+      224,
+      39
+     ],
+     "centre_above_floor": true,
+     "hit_strict": true,
+     "hit_loose": true,
+     "hit_test": true,
+     "hit_element": "BUTTON.v9-language"
+    },
+    {
+     "key": "topbar-language",
+     "testid": "topbar-language",
+     "name": "EN",
+     "box": [
+      264,
+      17,
+      65,
+      44
+     ],
+     "centre": [
+      297,
+      39
+     ],
+     "centre_above_floor": true,
+     "hit_strict": true,
+     "hit_loose": true,
+     "hit_test": true,
+     "hit_element": "BUTTON.v9-language"
+    },
+    {
+     "key": "TI#1",
+     "testid": null,
+     "name": "TI",
+     "box": [
+      345,
+      25,
+      28,
+      28
+     ],
+     "centre": [
+      359,
+      39
+     ],
+     "centre_above_floor": true,
+     "hit_strict": true,
+     "hit_loose": true,
+     "hit_test": true,
+     "hit_element": "BUTTON.v8-avatar"
+    },
+    {
+     "key": "bookings-json-input",
+     "testid": "bookings-json-input",
+     "name": "{\"reservation_type\":\"RAIL\", \"confirmation_ref\":\"…\"}",
+     "box": [
+      93,
+      672,
+      162,
+      176
+     ],
+     "centre": [
+      174,
+      760
+     ],
+     "centre_above_floor": true,
+     "hit_strict": false,
+     "hit_loose": false,
+     "hit_test": false,
+     "hit_element": "SPAN."
+    },
+    {
+     "key": "审核并保护#1",
+     "testid": null,
+     "name": "审核并保护",
+     "box": [
+      40,
+      852,
+      114,
+      44
+     ],
+     "centre": [
+      97,
+      874
+     ],
+     "centre_above_floor": false,
+     "hit_strict": false,
+     "hit_loose": false,
+     "hit_test": false,
+     "hit_element": null
+    },
+    {
+     "key": "打开扫描器#1",
+     "testid": null,
+     "name": "打开扫描器",
+     "box": [
+      34,
+      873,
+      104,
+      44
+     ],
+     "centre": [
+      86,
+      895
+     ],
+     "centre_above_floor": false,
+     "hit_strict": false,
+     "hit_loose": false,
+     "hit_test": false,
+     "hit_element": null
+    },
+    {
+     "key": "journey-link-copy",
+     "testid": "journey-link-copy",
+     "name": "复制行程链接",
+     "box": [
+      34,
+      1076,
+      322,
+      44
+     ],
+     "centre": [
+      195,
+      1098
+     ],
+     "centre_above_floor": false,
+     "hit_strict": false,
+     "hit_loose": false,
+     "hit_test": false,
+     "hit_element": null
+    },
+    {
+     "key": "inbox-tab-paste",
+     "testid": "inbox-tab-paste",
+     "name": "粘贴确认信息",
+     "box": [
+      34,
+      1148,
+      157,
+      44
+     ],
+     "centre": [
+      113,
+      1170
+     ],
+     "centre_above_floor": false,
+     "hit_strict": false,
+     "hit_loose": false,
+     "hit_test": false,
+     "hit_element": null
+    },
+    {
+     "key": "inbox-tab-manual",
+     "testid": "inbox-tab-manual",
+     "name": "手动填写",
+     "box": [
+      199,
+      1148,
+      157,
+      44
+     ],
+     "centre": [
+      278,
+      1170
+     ],
+     "centre_above_floor": false,
+     "hit_strict": false,
+     "hit_loose": false,
+     "hit_test": false,
+     "hit_element": null
+    },
+    {
+     "key": "粘贴铁路、航班、酒店或场地确认文本#1",
+     "testid": null,
+     "name": "粘贴铁路、航班、酒店或场地确认文本",
+     "box": [
+      34,
+      1251,
+      322,
+      122
+     ],
+     "centre": [
+      195,
+      1312
+     ],
+     "centre_above_floor": false,
+     "hit_strict": false,
+     "hit_loose": false,
+     "hit_test": false,
+     "hit_element": null
+    },
+    {
+     "key": "提取文本草稿#1",
+     "testid": null,
+     "name": "提取文本草稿",
+     "box": [
+      34,
+      1392,
+      134,
+      44
+     ],
+     "centre": [
+      101,
+      1414
+     ],
+     "centre_above_floor": false,
+     "hit_strict": false,
+     "hit_loose": false,
+     "hit_test": false,
+     "hit_element": null
+    },
+    {
+     "key": "(no label)#1",
+     "testid": null,
+     "name": "(no label)",
+     "box": [
+      34,
+      1477,
+      322,
+      64
+     ],
+     "centre": [
+      195,
+      1509
+     ],
+     "centre_above_floor": false,
+     "hit_strict": false,
+     "hit_loose": false,
+     "hit_test": false,
+     "hit_element": null
+    },
+    {
+     "key": "提取图片草稿#1",
+     "testid": null,
+     "name": "提取图片草稿",
+     "box": [
+      34,
+      1584,
+      134,
+      44
+     ],
+     "centre": [
+      101,
+      1606
+     ],
+     "centre_above_floor": false,
+     "hit_strict": false,
+     "hit_loose": false,
+     "hit_test": false,
+     "hit_element": null
+    },
+    {
+     "key": "✦CityNexus Copilot#1",
+     "testid": null,
+     "name": "✦CityNexus Copilot",
+     "box": [
+      238,
+      718,
+      165,
+      42
+     ],
+     "centre": [
+      321,
+      739
+     ],
+     "centre_above_floor": true,
+     "hit_strict": false,
+     "hit_loose": false,
+     "hit_test": false,
+     "hit_element": "B."
+    },
+    {
+     "key": "nav-hub",
+     "testid": "nav-hub",
+     "name": "今天",
+     "box": [
+      5,
+      789,
+      76,
+      48
+     ],
+     "centre": [
+      43,
+      813
+     ],
+     "centre_above_floor": false,
+     "hit_strict": true,
+     "hit_loose": true,
+     "hit_test": true,
+     "hit_element": "BUTTON."
+    },
+    {
+     "key": "nav-trips",
+     "testid": "nav-trips",
+     "name": "行程",
+     "box": [
+      81,
+      789,
+      76,
+      48
+     ],
+     "centre": [
+      119,
+      813
+     ],
+     "centre_above_floor": false,
+     "hit_strict": true,
+     "hit_loose": true,
+     "hit_test": true,
+     "hit_element": "BUTTON."
+    },
+    {
+     "key": "nav-map",
+     "testid": "nav-map",
+     "name": "地图",
+     "box": [
+      157,
+      789,
+      76,
+      48
+     ],
+     "centre": [
+      195,
+      813
+     ],
+     "centre_above_floor": false,
+     "hit_strict": true,
+     "hit_loose": true,
+     "hit_test": true,
+     "hit_element": "BUTTON."
+    },
+    {
+     "key": "nav-agent",
+     "testid": "nav-agent",
+     "name": "Copilot",
+     "box": [
+      233,
+      789,
+      76,
+      48
+     ],
+     "centre": [
+      271,
+      813
+     ],
+     "centre_above_floor": false,
+     "hit_strict": true,
+     "hit_loose": true,
+     "hit_test": true,
+     "hit_element": "BUTTON."
+    },
+    {
+     "key": "nav-me",
+     "testid": "nav-me",
+     "name": "我的",
+     "box": [
+      309,
+      789,
+      76,
+      48
+     ],
+     "centre": [
+      347,
+      813
+     ],
+     "centre_above_floor": false,
+     "hit_strict": true,
+     "hit_loose": true,
+     "hit_test": true,
+     "hit_element": "BUTTON."
+    }
+   ]
+  },
+  "unlocatable_trip/今天": {
+   "url": "http://127.0.0.1:5470/v8/hub",
+   "cells": {
+    "map-empty-body": {
+     "box": [
+      34,
+      538,
+      322,
+      38
+     ],
+     "bottom": 575,
+     "text": "这个行程还没有可信的坐标。「添加活动地点」这扇门，这一版没有（NOT_AVAILABLE）。",
+     "controls_inside": 0
+    },
+    "map-empty-panel": {
+     "box": [
+      17,
+      493,
+      356,
+      97
+     ],
+     "bottom": 590,
+     "text": "尚未获取地图位置这个行程还没有可信的坐标。「添加活动地点」这扇门，这一版没有（NOT_AVAILABLE）。",
+     "controls_inside": 0
+    },
+    "bookings-no-stay": null,
+    "bookings-no-stay-sub": null,
+    "live-no-proposal": null,
+    "scroll_y": 0,
+    "document_height": 1230
+   },
+   "controls": [
+    {
+     "key": "菜单#1",
+     "testid": null,
+     "name": "菜单",
+     "box": [
+      17,
+      19,
+      46,
+      27
+     ],
+     "centre": [
+      40,
+      33
+     ],
+     "centre_above_floor": true,
+     "hit_strict": true,
+     "hit_loose": true,
+     "hit_test": true,
+     "hit_element": "BUTTON.v8-mobile-menu"
+    },
+    {
+     "key": "topbar-theme",
+     "testid": "topbar-theme",
+     "name": "跟随系统",
+     "box": [
+      191,
+      17,
+      65,
+      44
+     ],
+     "centre": [
+      224,
+      39
+     ],
+     "centre_above_floor": true,
+     "hit_strict": true,
+     "hit_loose": true,
+     "hit_test": true,
+     "hit_element": "BUTTON.v9-language"
+    },
+    {
+     "key": "topbar-language",
+     "testid": "topbar-language",
+     "name": "EN",
+     "box": [
+      264,
+      17,
+      65,
+      44
+     ],
+     "centre": [
+      297,
+      39
+     ],
+     "centre_above_floor": true,
+     "hit_strict": true,
+     "hit_loose": true,
+     "hit_test": true,
+     "hit_element": "BUTTON.v9-language"
+    },
+    {
+     "key": "XI#1",
+     "testid": null,
+     "name": "XI",
+     "box": [
+      345,
+      25,
+      28,
+      28
+     ],
+     "centre": [
+      359,
+      39
+     ],
+     "centre_above_floor": true,
+     "hit_strict": true,
+     "hit_loose": true,
+     "hit_test": true,
+     "hit_element": "BUTTON.v8-avatar"
+    },
+    {
+     "key": "hub-plan-with-ai",
+     "testid": "hub-plan-with-ai",
+     "name": "AI 帮我规划",
+     "box": [
+      17,
+      205,
+      68,
+      44
+     ],
+     "centre": [
+      51,
+      227
+     ],
+     "centre_above_floor": true,
+     "hit_strict": true,
+     "hit_loose": true,
+     "hit_test": true,
+     "hit_element": "BUTTON.v8-quiet-button"
+    },
+    {
+     "key": "试用其他城市#1",
+     "testid": null,
+     "name": "试用其他城市",
+     "box": [
+      101,
+      205,
+      78,
+      44
+     ],
+     "centre": [
+      140,
+      227
+     ],
+     "centre_above_floor": true,
+     "hit_strict": true,
+     "hit_loose": true,
+     "hit_test": true,
+     "hit_element": "BUTTON.v8-quiet-button"
+    },
+    {
+     "key": "打开行程工作台#1",
+     "testid": null,
+     "name": "打开行程工作台",
+     "box": [
+      195,
+      205,
+      91,
+      44
+     ],
+     "centre": [
+      241,
+      227
+     ],
+     "centre_above_floor": true,
+     "hit_strict": true,
+     "hit_loose": true,
+     "hit_test": true,
+     "hit_element": "BUTTON.v8-quiet-button"
+    },
+    {
+     "key": "journey-link-copy",
+     "testid": "journey-link-copy",
+     "name": "复制行程链接",
+     "box": [
+      17,
+      251,
+      78,
+      44
+     ],
+     "centre": [
+      56,
+      273
+     ],
+     "centre_above_floor": true,
+     "hit_strict": true,
+     "hit_loose": true,
+     "hit_test": true,
+     "hit_element": "BUTTON.v8-quiet-button"
+    },
+    {
+     "key": "pretrip-empty-action",
+     "testid": "pretrip-empty-action",
+     "name": "去看这一代方案",
+     "box": [
+      195,
+      804,
+      119,
+      44
+     ],
+     "centre": [
+      255,
+      826
+     ],
+     "centre_above_floor": false,
+     "hit_strict": false,
+     "hit_loose": false,
+     "hit_test": false,
+     "hit_element": "SPAN."
+    },
+    {
+     "key": "对比住宿 →#1",
+     "testid": null,
+     "name": "对比住宿 →",
+     "box": [
+      291,
+      905,
+      82,
+      44
+     ],
+     "centre": [
+      332,
+      927
+     ],
+     "centre_above_floor": false,
+     "hit_strict": false,
+     "hit_loose": false,
+     "hit_test": false,
+     "hit_element": null
+    },
+    {
+     "key": "✦CityNexus Copilot#1",
+     "testid": null,
+     "name": "✦CityNexus Copilot",
+     "box": [
+      215,
+      718,
+      165,
+      42
+     ],
+     "centre": [
+      298,
+      739
+     ],
+     "centre_above_floor": true,
+     "hit_strict": false,
+     "hit_loose": false,
+     "hit_test": false,
+     "hit_element": "DIV."
+    },
+    {
+     "key": "nav-hub",
+     "testid": "nav-hub",
+     "name": "今天",
+     "box": [
+      5,
+      789,
+      76,
+      48
+     ],
+     "centre": [
+      43,
+      813
+     ],
+     "centre_above_floor": false,
+     "hit_strict": true,
+     "hit_loose": true,
+     "hit_test": true,
+     "hit_element": "BUTTON.active"
+    },
+    {
+     "key": "nav-trips",
+     "testid": "nav-trips",
+     "name": "行程",
+     "box": [
+      81,
+      789,
+      76,
+      48
+     ],
+     "centre": [
+      119,
+      813
+     ],
+     "centre_above_floor": false,
+     "hit_strict": true,
+     "hit_loose": true,
+     "hit_test": true,
+     "hit_element": "BUTTON."
+    },
+    {
+     "key": "nav-map",
+     "testid": "nav-map",
+     "name": "地图",
+     "box": [
+      157,
+      789,
+      76,
+      48
+     ],
+     "centre": [
+      195,
+      813
+     ],
+     "centre_above_floor": false,
+     "hit_strict": true,
+     "hit_loose": true,
+     "hit_test": true,
+     "hit_element": "BUTTON."
+    },
+    {
+     "key": "nav-agent",
+     "testid": "nav-agent",
+     "name": "Copilot",
+     "box": [
+      233,
+      789,
+      76,
+      48
+     ],
+     "centre": [
+      271,
+      813
+     ],
+     "centre_above_floor": false,
+     "hit_strict": true,
+     "hit_loose": true,
+     "hit_test": true,
+     "hit_element": "BUTTON."
+    },
+    {
+     "key": "nav-me",
+     "testid": "nav-me",
+     "name": "我的",
+     "box": [
+      309,
+      789,
+      76,
+      48
+     ],
+     "centre": [
+      347,
+      813
+     ],
+     "centre_above_floor": false,
+     "hit_strict": true,
+     "hit_loose": true,
+     "hit_test": true,
+     "hit_element": "BUTTON."
+    },
+    {
+     "key": "sim-ball",
+     "testid": "sim-ball",
+     "name": "模拟舞台（暂无场景）：正在读服务器上的场景状态…",
+     "box": [
+      330,
+      646,
+      48,
+      48
+     ],
+     "centre": [
+      354,
+      670
+     ],
+     "centre_above_floor": true,
+     "hit_strict": true,
+     "hit_loose": true,
+     "hit_test": true,
+     "hit_element": "SPAN.cn-sim-ball-dot"
+    }
+   ]
+  },
+  "unlocatable_trip/实时行程": {
+   "url": "http://127.0.0.1:5470/v8/live",
+   "cells": {
+    "map-empty-body": {
+     "box": [
+      34,
+      386,
+      322,
+      38
+     ],
+     "bottom": 424,
+     "text": "这个行程还没有可信的坐标。「添加活动地点」这扇门，这一版没有（NOT_AVAILABLE）。",
+     "controls_inside": 0
+    },
+    "map-empty-panel": {
+     "box": [
+      17,
+      342,
+      356,
+      97
+     ],
+     "bottom": 439,
+     "text": "尚未获取地图位置这个行程还没有可信的坐标。「添加活动地点」这扇门，这一版没有（NOT_AVAILABLE）。",
+     "controls_inside": 0
+    },
+    "bookings-no-stay": null,
+    "bookings-no-stay-sub": null,
+    "live-no-proposal": {
+     "box": [
+      17,
+      455,
+      356,
+      21
+     ],
+     "bottom": 476,
+     "text": "当前没有需要你决定的调整。",
+     "controls_inside": 0
+    },
+    "scroll_y": 0,
+    "document_height": 2070
+   },
+   "controls": [
+    {
+     "key": "菜单#1",
+     "testid": null,
+     "name": "菜单",
+     "box": [
+      17,
+      19,
+      46,
+      27
+     ],
+     "centre": [
+      40,
+      33
+     ],
+     "centre_above_floor": true,
+     "hit_strict": true,
+     "hit_loose": true,
+     "hit_test": true,
+     "hit_element": "BUTTON.v8-mobile-menu"
+    },
+    {
+     "key": "topbar-theme",
+     "testid": "topbar-theme",
+     "name": "跟随系统",
+     "box": [
+      191,
+      17,
+      65,
+      44
+     ],
+     "centre": [
+      224,
+      39
+     ],
+     "centre_above_floor": true,
+     "hit_strict": true,
+     "hit_loose": true,
+     "hit_test": true,
+     "hit_element": "BUTTON.v9-language"
+    },
+    {
+     "key": "topbar-language",
+     "testid": "topbar-language",
+     "name": "EN",
+     "box": [
+      264,
+      17,
+      65,
+      44
+     ],
+     "centre": [
+      297,
+      39
+     ],
+     "centre_above_floor": true,
+     "hit_strict": true,
+     "hit_loose": true,
+     "hit_test": true,
+     "hit_element": "BUTTON.v9-language"
+    },
+    {
+     "key": "XI#1",
+     "testid": null,
+     "name": "XI",
+     "box": [
+      345,
+      25,
+      28,
+      28
+     ],
+     "centre": [
+      359,
+      39
+     ],
+     "centre_above_floor": true,
+     "hit_strict": true,
+     "hit_loose": true,
+     "hit_test": true,
+     "hit_element": "BUTTON.v8-avatar"
+    },
+    {
+     "key": "live-update-location",
+     "testid": "live-update-location",
+     "name": "更新位置",
+     "box": [
+      17,
+      490,
+      52,
+      44
+     ],
+     "centre": [
+      43,
+      512
+     ],
+     "centre_above_floor": true,
+     "hit_strict": true,
+     "hit_loose": true,
+     "hit_test": true,
+     "hit_element": "BUTTON.v8-quiet-button"
+    },
+    {
+     "key": "live-report-rain",
+     "testid": "live-report-rain",
+     "name": "报告降雨",
+     "box": [
+      85,
+      490,
+      79,
+      44
+     ],
+     "centre": [
+      125,
+      512
+     ],
+     "centre_above_floor": true,
+     "hit_strict": true,
+     "hit_loose": true,
+     "hit_test": true,
+     "hit_element": "BUTTON.v8-quiet-button"
+    },
+    {
+     "key": "mode-walk",
+     "testid": "mode-walk",
+     "name": "步行",
+     "box": [
+      36,
+      636,
+      318,
+      44
+     ],
+     "centre": [
+      195,
+      658
+     ],
+     "centre_above_floor": true,
+     "hit_strict": true,
+     "hit_loose": true,
+     "hit_test": true,
+     "hit_element": "BUTTON."
+    },
+    {
+     "key": "mode-bicycle",
+     "testid": "mode-bicycle",
+     "name": "骑行",
+     "box": [
+      36,
+      697,
+      318,
+      44
+     ],
+     "centre": [
+      195,
+      719
+     ],
+     "centre_above_floor": true,
+     "hit_strict": true,
+     "hit_loose": true,
+     "hit_test": true,
+     "hit_element": "BUTTON."
+    },
+    {
+     "key": "mode-transit",
+     "testid": "mode-transit",
+     "name": "公交地铁",
+     "box": [
+      36,
+      758,
+      318,
+      44
+     ],
+     "centre": [
+      195,
+      780
+     ],
+     "centre_above_floor": false,
+     "hit_strict": false,
+     "hit_loose": false,
+     "hit_test": false,
+     "hit_element": "NAV.v8-mobile-nav"
+    },
+    {
+     "key": "mode-auto",
+     "testid": "mode-auto",
+     "name": "驾车",
+     "box": [
+      36,
+      819,
+      318,
+      44
+     ],
+     "centre": [
+      195,
+      841
+     ],
+     "centre_above_floor": false,
+     "hit_strict": false,
+     "hit_loose": false,
+     "hit_test": false,
+     "hit_element": "NAV.v8-mobile-nav"
+    },
+    {
+     "key": "mode-ride_hail",
+     "testid": "mode-ride_hail",
+     "name": "网约车",
+     "box": [
+      36,
+      880,
+      318,
+      44
+     ],
+     "centre": [
+      195,
+      902
+     ],
+     "centre_above_floor": false,
+     "hit_strict": false,
+     "hit_loose": false,
+     "hit_test": false,
+     "hit_element": null
+    },
+    {
+     "key": "对比所有方式#1",
+     "testid": null,
+     "name": "对比所有方式",
+     "box": [
+      36,
+      938,
+      120,
+      44
+     ],
+     "centre": [
+      96,
+      960
+     ],
+     "centre_above_floor": false,
+     "hit_strict": false,
+     "hit_loose": false,
+     "hit_test": false,
+     "hit_element": null
+    },
+    {
+     "key": "对比#1",
+     "testid": null,
+     "name": "对比",
+     "box": [
+      73,
+      1346,
+      279,
+      44
+     ],
+     "centre": [
+      213,
+      1368
+     ],
+     "centre_above_floor": false,
+     "hit_strict": false,
+     "hit_loose": false,
+     "hit_test": false,
+     "hit_element": null
+    },
+    {
+     "key": "✦CityNexus Copilot#1",
+     "testid": null,
+     "name": "✦CityNexus Copilot",
+     "box": [
+      215,
+      718,
+      165,
+      42
+     ],
+     "centre": [
+      298,
+      739
+     ],
+     "centre_above_floor": true,
+     "hit_strict": true,
+     "hit_loose": true,
+     "hit_test": true,
+     "hit_element": "SPAN."
+    },
+    {
+     "key": "nav-hub",
+     "testid": "nav-hub",
+     "name": "今天",
+     "box": [
+      5,
+      789,
+      76,
+      48
+     ],
+     "centre": [
+      43,
+      813
+     ],
+     "centre_above_floor": false,
+     "hit_strict": true,
+     "hit_loose": true,
+     "hit_test": true,
+     "hit_element": "BUTTON."
+    },
+    {
+     "key": "nav-trips",
+     "testid": "nav-trips",
+     "name": "行程",
+     "box": [
+      81,
+      789,
+      76,
+      48
+     ],
+     "centre": [
+      119,
+      813
+     ],
+     "centre_above_floor": false,
+     "hit_strict": true,
+     "hit_loose": true,
+     "hit_test": true,
+     "hit_element": "BUTTON."
+    },
+    {
+     "key": "nav-map",
+     "testid": "nav-map",
+     "name": "地图",
+     "box": [
+      157,
+      789,
+      76,
+      48
+     ],
+     "centre": [
+      195,
+      813
+     ],
+     "centre_above_floor": false,
+     "hit_strict": true,
+     "hit_loose": true,
+     "hit_test": true,
+     "hit_element": "BUTTON.active"
+    },
+    {
+     "key": "nav-agent",
+     "testid": "nav-agent",
+     "name": "Copilot",
+     "box": [
+      233,
+      789,
+      76,
+      48
+     ],
+     "centre": [
+      271,
+      813
+     ],
+     "centre_above_floor": false,
+     "hit_strict": true,
+     "hit_loose": true,
+     "hit_test": true,
+     "hit_element": "BUTTON."
+    },
+    {
+     "key": "nav-me",
+     "testid": "nav-me",
+     "name": "我的",
+     "box": [
+      309,
+      789,
+      76,
+      48
+     ],
+     "centre": [
+      347,
+      813
+     ],
+     "centre_above_floor": false,
+     "hit_strict": true,
+     "hit_loose": true,
+     "hit_test": true,
+     "hit_element": "BUTTON."
+    }
+   ]
+  },
+  "unlocatable_trip/地图": {
+   "url": "http://127.0.0.1:5470/v8/map",
+   "cells": {
+    "map-empty-body": {
+     "box": [
+      34,
+      367,
+      322,
+      38
+     ],
+     "bottom": 404,
+     "text": "这个行程还没有可信的坐标。「添加活动地点」这扇门，这一版没有（NOT_AVAILABLE）。",
+     "controls_inside": 0
+    },
+    "map-empty-panel": {
+     "box": [
+      17,
+      323,
+      356,
+      97
+     ],
+     "bottom": 419,
+     "text": "尚未获取地图位置这个行程还没有可信的坐标。「添加活动地点」这扇门，这一版没有（NOT_AVAILABLE）。",
+     "controls_inside": 0
+    },
+    "bookings-no-stay": null,
+    "bookings-no-stay-sub": null,
+    "live-no-proposal": null,
+    "scroll_y": 0,
+    "document_height": 924
+   },
+   "controls": [
+    {
+     "key": "菜单#1",
+     "testid": null,
+     "name": "菜单",
+     "box": [
+      17,
+      19,
+      46,
+      27
+     ],
+     "centre": [
+      40,
+      33
+     ],
+     "centre_above_floor": true,
+     "hit_strict": true,
+     "hit_loose": true,
+     "hit_test": true,
+     "hit_element": "BUTTON.v8-mobile-menu"
+    },
+    {
+     "key": "topbar-theme",
+     "testid": "topbar-theme",
+     "name": "跟随系统",
+     "box": [
+      191,
+      17,
+      65,
+      44
+     ],
+     "centre": [
+      224,
+      39
+     ],
+     "centre_above_floor": true,
+     "hit_strict": true,
+     "hit_loose": true,
+     "hit_test": true,
+     "hit_element": "BUTTON.v9-language"
+    },
+    {
+     "key": "topbar-language",
+     "testid": "topbar-language",
+     "name": "EN",
+     "box": [
+      264,
+      17,
+      65,
+      44
+     ],
+     "centre": [
+      297,
+      39
+     ],
+     "centre_above_floor": true,
+     "hit_strict": true,
+     "hit_loose": true,
+     "hit_test": true,
+     "hit_element": "BUTTON.v9-language"
+    },
+    {
+     "key": "XI#1",
+     "testid": null,
+     "name": "XI",
+     "box": [
+      345,
+      25,
+      28,
+      28
+     ],
+     "centre": [
+      359,
+      39
+     ],
+     "centre_above_floor": true,
+     "hit_strict": true,
+     "hit_loose": true,
+     "hit_test": true,
+     "hit_element": "BUTTON.v8-avatar"
+    },
+    {
+     "key": "对比出行方式#1",
+     "testid": null,
+     "name": "对比出行方式",
+     "box": [
+      17,
+      250,
+      130,
+      44
+     ],
+     "centre": [
+      82,
+      272
+     ],
+     "centre_above_floor": true,
+     "hit_strict": true,
+     "hit_loose": true,
+     "hit_test": true,
+     "hit_element": "BUTTON.v8-primary"
+    },
+    {
+     "key": "✦CityNexus Copilot#1",
+     "testid": null,
+     "name": "✦CityNexus Copilot",
+     "box": [
+      215,
+      718,
+      165,
+      42
+     ],
+     "centre": [
+      298,
+      739
+     ],
+     "centre_above_floor": true,
+     "hit_strict": true,
+     "hit_loose": true,
+     "hit_test": true,
+     "hit_element": "SPAN."
+    },
+    {
+     "key": "nav-hub",
+     "testid": "nav-hub",
+     "name": "今天",
+     "box": [
+      5,
+      789,
+      76,
+      48
+     ],
+     "centre": [
+      43,
+      813
+     ],
+     "centre_above_floor": false,
+     "hit_strict": true,
+     "hit_loose": true,
+     "hit_test": true,
+     "hit_element": "BUTTON."
+    },
+    {
+     "key": "nav-trips",
+     "testid": "nav-trips",
+     "name": "行程",
+     "box": [
+      81,
+      789,
+      76,
+      48
+     ],
+     "centre": [
+      119,
+      813
+     ],
+     "centre_above_floor": false,
+     "hit_strict": true,
+     "hit_loose": true,
+     "hit_test": true,
+     "hit_element": "BUTTON."
+    },
+    {
+     "key": "nav-map",
+     "testid": "nav-map",
+     "name": "地图",
+     "box": [
+      157,
+      789,
+      76,
+      48
+     ],
+     "centre": [
+      195,
+      813
+     ],
+     "centre_above_floor": false,
+     "hit_strict": true,
+     "hit_loose": true,
+     "hit_test": true,
+     "hit_element": "BUTTON.active"
+    },
+    {
+     "key": "nav-agent",
+     "testid": "nav-agent",
+     "name": "Copilot",
+     "box": [
+      233,
+      789,
+      76,
+      48
+     ],
+     "centre": [
+      271,
+      813
+     ],
+     "centre_above_floor": false,
+     "hit_strict": true,
+     "hit_loose": true,
+     "hit_test": true,
+     "hit_element": "BUTTON."
+    },
+    {
+     "key": "nav-me",
+     "testid": "nav-me",
+     "name": "我的",
+     "box": [
+      309,
+      789,
+      76,
+      48
+     ],
+     "centre": [
+      347,
+      813
+     ],
+     "centre_above_floor": false,
+     "hit_strict": true,
+     "hit_loose": true,
+     "hit_test": true,
+     "hit_element": "BUTTON."
+    }
+   ]
+  },
+  "unlocatable_trip/旅行票夹": {
+   "url": "http://127.0.0.1:5470/v8/bookings",
+   "cells": {
+    "map-empty-body": null,
+    "map-empty-panel": null,
+    "bookings-no-stay": {
+     "box": [
+      17,
+      287,
+      356,
+      166
+     ],
+     "bottom": 453,
+     "text": "住宿证据未选择住宿这趟行程目前还没有可选的住宿。到「住宿选择」里找一间可订的房",
+     "controls_inside": 1
+    },
+    "bookings-no-stay-sub": {
+     "box": [
+      101,
+      369,
+      240,
+      15
+     ],
+     "bottom": 384,
+     "text": "这趟行程目前还没有可选的住宿。",
+     "controls_inside": 0
+    },
+    "live-no-proposal": null,
+    "scroll_y": 0,
+    "document_height": 2104
+   },
+   "controls": [
+    {
+     "key": "菜单#1",
+     "testid": null,
+     "name": "菜单",
+     "box": [
+      17,
+      19,
+      46,
+      27
+     ],
+     "centre": [
+      40,
+      33
+     ],
+     "centre_above_floor": true,
+     "hit_strict": true,
+     "hit_loose": true,
+     "hit_test": true,
+     "hit_element": "BUTTON.v8-mobile-menu"
+    },
+    {
+     "key": "topbar-theme",
+     "testid": "topbar-theme",
+     "name": "跟随系统",
+     "box": [
+      191,
+      17,
+      65,
+      44
+     ],
+     "centre": [
+      224,
+      39
+     ],
+     "centre_above_floor": true,
+     "hit_strict": true,
+     "hit_loose": true,
+     "hit_test": true,
+     "hit_element": "BUTTON.v9-language"
+    },
+    {
+     "key": "topbar-language",
+     "testid": "topbar-language",
+     "name": "EN",
+     "box": [
+      264,
+      17,
+      65,
+      44
+     ],
+     "centre": [
+      297,
+      39
+     ],
+     "centre_above_floor": true,
+     "hit_strict": true,
+     "hit_loose": true,
+     "hit_test": true,
+     "hit_element": "BUTTON.v9-language"
+    },
+    {
+     "key": "XI#1",
+     "testid": null,
+     "name": "XI",
+     "box": [
+      345,
+      25,
+      28,
+      28
+     ],
+     "centre": [
+      359,
+      39
+     ],
+     "centre_above_floor": true,
+     "hit_strict": true,
+     "hit_loose": true,
+     "hit_test": true,
+     "hit_element": "BUTTON.v8-avatar"
+    },
+    {
+     "key": "bookings-no-stay-action",
+     "testid": "bookings-no-stay-action",
+     "name": "到「住宿选择」里找一间可订的房",
+     "box": [
+      101,
+      390,
+      240,
+      44
+     ],
+     "centre": [
+      221,
+      412
+     ],
+     "centre_above_floor": true,
+     "hit_strict": true,
+     "hit_loose": true,
+     "hit_test": true,
+     "hit_element": "BUTTON.v8-quiet-button"
+    },
+    {
+     "key": "bookings-json-input",
+     "testid": "bookings-json-input",
+     "name": "{\"reservation_type\":\"RAIL\", \"confirmation_ref\":\"…\"}",
+     "box": [
+      93,
+      660,
+      162,
+      176
+     ],
+     "centre": [
+      174,
+      748
+     ],
+     "centre_above_floor": true,
+     "hit_strict": false,
+     "hit_loose": false,
+     "hit_test": false,
+     "hit_element": "SPAN."
+    },
+    {
+     "key": "审核并保护#1",
+     "testid": null,
+     "name": "审核并保护",
+     "box": [
+      40,
+      840,
+      114,
+      44
+     ],
+     "centre": [
+      97,
+      862
+     ],
+     "centre_above_floor": false,
+     "hit_strict": false,
+     "hit_loose": false,
+     "hit_test": false,
+     "hit_element": null
+    },
+    {
+     "key": "打开扫描器#1",
+     "testid": null,
+     "name": "打开扫描器",
+     "box": [
+      34,
+      862,
+      104,
+      44
+     ],
+     "centre": [
+      86,
+      884
+     ],
+     "centre_above_floor": false,
+     "hit_strict": false,
+     "hit_loose": false,
+     "hit_test": false,
+     "hit_element": null
+    },
+    {
+     "key": "journey-link-copy",
+     "testid": "journey-link-copy",
+     "name": "复制行程链接",
+     "box": [
+      34,
+      1065,
+      322,
+      44
+     ],
+     "centre": [
+      195,
+      1087
+     ],
+     "centre_above_floor": false,
+     "hit_strict": false,
+     "hit_loose": false,
+     "hit_test": false,
+     "hit_element": null
+    },
+    {
+     "key": "inbox-tab-paste",
+     "testid": "inbox-tab-paste",
+     "name": "粘贴确认信息",
+     "box": [
+      34,
+      1137,
+      157,
+      44
+     ],
+     "centre": [
+      113,
+      1159
+     ],
+     "centre_above_floor": false,
+     "hit_strict": false,
+     "hit_loose": false,
+     "hit_test": false,
+     "hit_element": null
+    },
+    {
+     "key": "inbox-tab-manual",
+     "testid": "inbox-tab-manual",
+     "name": "手动填写",
+     "box": [
+      199,
+      1137,
+      157,
+      44
+     ],
+     "centre": [
+      278,
+      1159
+     ],
+     "centre_above_floor": false,
+     "hit_strict": false,
+     "hit_loose": false,
+     "hit_test": false,
+     "hit_element": null
+    },
+    {
+     "key": "粘贴铁路、航班、酒店或场地确认文本#1",
+     "testid": null,
+     "name": "粘贴铁路、航班、酒店或场地确认文本",
+     "box": [
+      34,
+      1240,
+      322,
+      122
+     ],
+     "centre": [
+      195,
+      1301
+     ],
+     "centre_above_floor": false,
+     "hit_strict": false,
+     "hit_loose": false,
+     "hit_test": false,
+     "hit_element": null
+    },
+    {
+     "key": "提取文本草稿#1",
+     "testid": null,
+     "name": "提取文本草稿",
+     "box": [
+      34,
+      1381,
+      134,
+      44
+     ],
+     "centre": [
+      101,
+      1403
+     ],
+     "centre_above_floor": false,
+     "hit_strict": false,
+     "hit_loose": false,
+     "hit_test": false,
+     "hit_element": null
+    },
+    {
+     "key": "(no label)#1",
+     "testid": null,
+     "name": "(no label)",
+     "box": [
+      34,
+      1466,
+      322,
+      64
+     ],
+     "centre": [
+      195,
+      1498
+     ],
+     "centre_above_floor": false,
+     "hit_strict": false,
+     "hit_loose": false,
+     "hit_test": false,
+     "hit_element": null
+    },
+    {
+     "key": "提取图片草稿#1",
+     "testid": null,
+     "name": "提取图片草稿",
+     "box": [
+      34,
+      1573,
+      134,
+      44
+     ],
+     "centre": [
+      101,
+      1595
+     ],
+     "centre_above_floor": false,
+     "hit_strict": false,
+     "hit_loose": false,
+     "hit_test": false,
+     "hit_element": null
+    },
+    {
+     "key": "✦CityNexus Copilot#1",
+     "testid": null,
+     "name": "✦CityNexus Copilot",
+     "box": [
+      284,
+      718,
+      165,
+      42
+     ],
+     "centre": [
+      367,
+      739
+     ],
+     "centre_above_floor": true,
+     "hit_strict": false,
+     "hit_loose": false,
+     "hit_test": false,
+     "hit_element": "DIV.v8-no-payment"
+    },
+    {
+     "key": "nav-hub",
+     "testid": "nav-hub",
+     "name": "今天",
+     "box": [
+      5,
+      789,
+      76,
+      48
+     ],
+     "centre": [
+      43,
+      813
+     ],
+     "centre_above_floor": false,
+     "hit_strict": true,
+     "hit_loose": true,
+     "hit_test": true,
+     "hit_element": "BUTTON."
+    },
+    {
+     "key": "nav-trips",
+     "testid": "nav-trips",
+     "name": "行程",
+     "box": [
+      81,
+      789,
+      76,
+      48
+     ],
+     "centre": [
+      119,
+      813
+     ],
+     "centre_above_floor": false,
+     "hit_strict": true,
+     "hit_loose": true,
+     "hit_test": true,
+     "hit_element": "BUTTON."
+    },
+    {
+     "key": "nav-map",
+     "testid": "nav-map",
+     "name": "地图",
+     "box": [
+      157,
+      789,
+      76,
+      48
+     ],
+     "centre": [
+      195,
+      813
+     ],
+     "centre_above_floor": false,
+     "hit_strict": true,
+     "hit_loose": true,
+     "hit_test": true,
+     "hit_element": "BUTTON."
+    },
+    {
+     "key": "nav-agent",
+     "testid": "nav-agent",
+     "name": "Copilot",
+     "box": [
+      233,
+      789,
+      76,
+      48
+     ],
+     "centre": [
+      271,
+      813
+     ],
+     "centre_above_floor": false,
+     "hit_strict": true,
+     "hit_loose": true,
+     "hit_test": true,
+     "hit_element": "BUTTON."
+    },
+    {
+     "key": "nav-me",
+     "testid": "nav-me",
+     "name": "我的",
+     "box": [
+      309,
+      789,
+      76,
+      48
+     ],
+     "centre": [
+      347,
+      813
+     ],
+     "centre_above_floor": false,
+     "hit_strict": true,
+     "hit_loose": true,
+     "hit_test": true,
+     "hit_element": "BUTTON."
+    }
+   ]
+  }
+ },
+ "hit_floor": 768,
+ "unlocatable_journey": {
+  "journey_id": "fec69d82-6f96-49ed-8643-1873db844012",
+  "server_says": {
+   "city_code": "CN-XIAMEN",
+   "has_active_plan": false,
+   "activities_len": 0,
+   "options_len": 0,
+   "offers_len": 0,
+   "experience_catalog_state": null,
+   "experience_top_level_keys": [
+    "active_plan",
+    "experience_flags",
+    "journey",
+    "mobility_facts",
+    "offers",
+    "options",
+    "provider_mesh",
+    "recovery",
+    "selected_option_id",
+    "traveler_twin",
+    "trip"
+   ]
+  }
+ },
+ "repo_head": "",
+ "nodeid": "D:\\moodle\\_qoder_n3_ord0357\\frontend\\e2e\\qoder-ord0407-empty-state-actions.spec.ts:227 > C1 the five cells and every control, measured screen by screen",
+ "test_status": "passed"
+}

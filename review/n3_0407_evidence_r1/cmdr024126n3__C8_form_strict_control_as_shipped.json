@@ -1,0 +1,16 @@
+{
+ "form": "strict",
+ "arm": "control_as_shipped",
+ "predicate_source": "frontend/e2e/qoder-ord0407-empty-state-actions.spec.ts:183",
+ "definition": "elementFromPoint(centre) is the control or one of its descendants",
+ "verbatim_screen_text": "到「住宿选择」里找一间可订的房",
+ "point_resolved_to": "BUTTON.v8-quiet-button",
+ "is_own_ancestor": true,
+ "centre": [
+  221,
+  412
+ ],
+ "centre_above_floor": true,
+ "strict_form": true,
+ "loose_form": true
+}
