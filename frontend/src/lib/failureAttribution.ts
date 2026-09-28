@@ -334,8 +334,8 @@ export function copyFor(
         kicker: zh ? "连接正常" : "Connection is fine",
         title: zh ? "这台服务器上没有这一趟行程了" : "This trip is not on this server",
         body: zh
-          ? `这台设备还记得行程 ${id}，但服务器明确回答它不存在（HTTP ${attribution.http_status}）。这不是网络问题：服务器刚才答得出来。你的其它行程没有受影响。`
-          : `This device remembered trip ${id}, and the server answered plainly that it does not exist (HTTP ${attribution.http_status}). This is not a network problem: the server just answered. Your other trips are untouched.`,
+          ? `这台设备还记得行程 ${id}，但服务器明确回答它不存在（http_status=${attribution.http_status}）。这不是网络问题：服务器刚才答得出来。你的其它行程没有受影响。`
+          : `This device remembered trip ${id}, and the server answered plainly that it does not exist (http_status=${attribution.http_status}). This is not a network problem: the server just answered. Your other trips are untouched.`,
       };
     case "failure.networkUnavailable":
       return {
@@ -355,15 +355,15 @@ export function copyFor(
             kicker: zh ? "服务器" : "Server",
             title: zh ? "服务暂时不可用" : "The service is temporarily unavailable",
             body: zh
-              ? `服务器刚才答了你，但它自己报错了（HTTP ${attribution.http_status}）。这是服务暂时不可用，不是你填错了什么。这台设备上还留着你已保存的行程，用下面的按钮可以只读查看这份本地快照；也可以稍后重试。`
-              : `The server did answer, and answered with an error of its own (HTTP ${attribution.http_status}). The service is unavailable for now — nothing you typed caused it. This device still holds your saved trip; the button below opens that read-only snapshot. Retrying is safe.`,
+              ? `服务器刚才答了你，但它自己报错了（http_status=${attribution.http_status}）。这是服务暂时不可用，不是你填错了什么。这台设备上还留着你已保存的行程，用下面的按钮可以只读查看这份本地快照；也可以稍后重试。`
+              : `The server did answer, and answered with an error of its own (http_status=${attribution.http_status}). The service is unavailable for now — nothing you typed caused it. This device still holds your saved trip; the button below opens that read-only snapshot. Retrying is safe.`,
           }
         : {
             kicker: zh ? "服务器" : "Server",
             title: zh ? "服务器这次没能把行程读出来" : "The server could not read your trip",
             body: zh
-              ? `服务器自己报错了（HTTP ${attribution.http_status}）。这是它那边的问题，不是你填错了什么。可以重试；如果一直这样，稍后再来。`
-              : `The server reported an error of its own (HTTP ${attribution.http_status}). That is on its side, not something you typed. Retry; if it persists, come back later.`,
+              ? `服务器自己报错了（http_status=${attribution.http_status}）。这是它那边的问题，不是你填错了什么。可以重试；如果一直这样，稍后再来。`
+              : `The server reported an error of its own (http_status=${attribution.http_status}). That is on its side, not something you typed. Retry; if it persists, come back later.`,
           };
     /* ORD-0263 fifth state: an answer arrived, so the sentence may not claim one did not.  The status
        and media type quoted here are the ones this response actually carried. */
@@ -372,20 +372,20 @@ export function copyFor(
         ? {
             kicker: zh ? "服务器" : "The origin",
             title: zh
-              ? `服务器答了 ${attribution.http_status ?? "2xx"}，可带回来的不是这一屏能用的数据`
-              : `The origin answered ${attribution.http_status ?? "2xx"}, but not with data this screen can use`,
+              ? `服务器答了 http_status=${attribution.http_status ?? "2xx"}，可带回来的不是这一屏能用的数据`
+              : `The origin answered http_status=${attribution.http_status ?? "2xx"}, but not with data this screen can use`,
             body: zh
-              ? `它确实回了话（HTTP ${attribution.http_status ?? "2xx"}，Content-Type: ${attribution.content_type ?? "未知"}），只是那不是一个可解析的行程响应。这属于服务暂时不可用的一种，不是你填错了什么。这台设备上还留着你已保存的行程，用下面的按钮可以只读查看这份本地快照；也可以稍后重试。`
-              : `It did reply (HTTP ${attribution.http_status ?? "2xx"}, Content-Type: ${attribution.content_type ?? "unknown"}) — the answer simply was not a journey response that could be parsed. The service is unavailable for now; nothing you typed caused it. This device still holds your saved trip, and the button below opens that read-only snapshot. Retrying is safe.`,
+              ? `它确实回了话（http_status=${attribution.http_status ?? "2xx"}，content_type=${attribution.content_type ?? "未知"}），只是那不是一个可解析的行程响应。这属于服务暂时不可用的一种，不是你填错了什么。这台设备上还留着你已保存的行程，用下面的按钮可以只读查看这份本地快照；也可以稍后重试。`
+              : `It did reply (http_status=${attribution.http_status ?? "2xx"}, content_type=${attribution.content_type ?? "unknown"}) — the answer simply was not a journey response that could be parsed. The service is unavailable for now; nothing you typed caused it. This device still holds your saved trip, and the button below opens that read-only snapshot. Retrying is safe.`,
           }
         : {
             kicker: zh ? "服务器" : "The origin",
             title: zh
-              ? `服务器答了 ${attribution.http_status ?? "2xx"}，可带回来的不是这一屏能用的数据`
-              : `The origin answered ${attribution.http_status ?? "2xx"}, but not with data this screen can use`,
+              ? `服务器答了 http_status=${attribution.http_status ?? "2xx"}，可带回来的不是这一屏能用的数据`
+              : `The origin answered http_status=${attribution.http_status ?? "2xx"}, but not with data this screen can use`,
             body: zh
-              ? `它确实回了话（HTTP ${attribution.http_status ?? "2xx"}，Content-Type: ${attribution.content_type ?? "未知"}），只是那不是一个可解析的行程响应。这属于服务暂时不可用的一种，不是你填错了什么。这台设备上还没有可只读查看的本地副本，所以现在没有内容可显示；可以稍后重试。`
-              : `It did reply (HTTP ${attribution.http_status ?? "2xx"}, Content-Type: ${attribution.content_type ?? "unknown"}) — the answer simply was not a journey response that could be parsed. The service is unavailable for now; nothing you typed caused it. This device holds no local copy to show either, so there is nothing to display right now. Retrying is safe.`,
+              ? `它确实回了话（http_status=${attribution.http_status ?? "2xx"}，content_type=${attribution.content_type ?? "未知"}），只是那不是一个可解析的行程响应。这属于服务暂时不可用的一种，不是你填错了什么。这台设备上还没有可只读查看的本地副本，所以现在没有内容可显示；可以稍后重试。`
+              : `It did reply (http_status=${attribution.http_status ?? "2xx"}, content_type=${attribution.content_type ?? "unknown"}) — the answer simply was not a journey response that could be parsed. The service is unavailable for now; nothing you typed caused it. This device holds no local copy to show either, so there is nothing to display right now. Retrying is safe.`,
           };
     /* ORD-0263 V2: a read that hit its own deadline.  The measured fact is "no answer arrived";
        whether the request travelled is not something this screen knows, so the sentence does not
@@ -411,16 +411,16 @@ export function copyFor(
         kicker: zh ? "身份" : "Identity",
         title: zh ? "这一趟需要重新登录才能读" : "This trip needs a fresh sign-in",
         body: zh
-          ? `服务器拒绝了这次读取（HTTP ${attribution.http_status}）。登录之后这一趟还在。`
-          : `The server refused this read (HTTP ${attribution.http_status}). Your trip is still there once you sign in.`,
+          ? `服务器拒绝了这次读取（http_status=${attribution.http_status}）。登录之后这一趟还在。`
+          : `The server refused this read (http_status=${attribution.http_status}). Your trip is still there once you sign in.`,
       };
     case "failure.forbidden":
       return {
         kicker: zh ? "权限" : "Permission",
         title: zh ? "这一步这台服务器不允许" : "This server will not allow this step",
         body: zh
-          ? `服务器认得你是谁，但明确拒绝了这一步（HTTP ${attribution.http_status}${attribution.server_code ? `：${attribution.server_code}` : ""}）。这不是网络问题，也不是登录问题——重新登录不会改变它的回答。你可以换一趟行程，或回到选择页。`
-          : `The server knows who you are and still refused this step (HTTP ${attribution.http_status}${attribution.server_code ? `: ${attribution.server_code}` : ""}). This is not a network problem and not a sign-in problem -- signing in again will not change its answer. Choose another trip, or go back to the picker.`,
+          ? `服务器认得你是谁，但明确拒绝了这一步（http_status=${attribution.http_status}${attribution.server_code ? `：${attribution.server_code}` : ""}）。这不是网络问题，也不是登录问题——重新登录不会改变它的回答。你可以换一趟行程，或回到选择页。`
+          : `The server knows who you are and still refused this step (http_status=${attribution.http_status}${attribution.server_code ? `: ${attribution.server_code}` : ""}). This is not a network problem and not a sign-in problem -- signing in again will not change its answer. Choose another trip, or go back to the picker.`,
       };
     default:
       return {

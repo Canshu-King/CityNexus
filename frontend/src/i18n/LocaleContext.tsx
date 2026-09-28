@@ -741,7 +741,7 @@ const en: Dict = {
   "studio.gate.MOBILITY_DATA_UNAVAILABLE": "live route data is unavailable for {n} leg(s) of the new order",
   "studio.gate.unknown": "{n} further refusal(s) this screen cannot name — the server's own words are in the technical detail",
   "studio.technicalDetail": "Technical detail",
-  "studio.requestRefused": "The server refused this request (HTTP {status}). The draft on this screen is unchanged.",
+  "studio.requestRefused": "The server refused this request (http_status={status}). The draft on this screen is unchanged.",
   "studio.costDelta": "Est. cost Δ {v}",
   "studio.timeDelta": "Est. time Δ {n} min",
 
@@ -1520,7 +1520,7 @@ const zhCN: Dict = {
   "studio.gate.MOBILITY_DATA_UNAVAILABLE": "新顺序里有 {n} 段路程拿不到实时路线数据",
   "studio.gate.unknown": "还有 {n} 条这个界面叫不出名字的拒绝，原文在技术详情里",
   "studio.technicalDetail": "技术详情",
-  "studio.requestRefused": "服务器拒绝了这次请求（HTTP {status}）。这个屏幕上的草稿没有变化。",
+  "studio.requestRefused": "服务器拒绝了这次请求（http_status={status}）。这个屏幕上的草稿没有变化。",
   "studio.costDelta": "成本变化约{v}",
   "studio.timeDelta": "时间变化约{n}分钟",
 
