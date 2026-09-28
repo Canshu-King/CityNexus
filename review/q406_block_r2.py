@@ -410,9 +410,9 @@ A("   形 320x653 的地图改前就在折叠外（map_y %d px > innerHeight %d 
     BEFORE[("zh", 320, 653)]["map"]["y"], BEFORE[("zh", 320, 653)]["innerHeight"], AFTER[("zh", 320, 653)]["map"]["y"]))
 A("   但我把它又推远 %s px（判据行 %s ，同一对证据文件的 after 侧）：" % (
     "、".join(str(x) for x in MAP_SHIFT), JUDGE_HIT))
-A("   改后 map_y 仍 > hit_line %d px。集合没变大：map_out_shapes_before=%s ，" % (
-    AFTER[("zh", 320, 653)]["hitLine"], "、".join(MAP_OUT_BEFORE) or "无"))
-A("   map_out_shapes_after=%s（八格逐格的 map.y 与 hitLine 在上面点名的证据文件里）。" % ("、".join(MAP_OUT) or "无",))
+A("   改后 map_y 仍 > hit_line %d px。集合没变大：map_out_shapes_before=%s ，map_out_shapes_after=%s ，" % (
+    AFTER[("zh", 320, 653)]["hitLine"], "、".join(MAP_OUT_BEFORE) or "无", "、".join(MAP_OUT) or "无"))
+A("   这两串的分子就是八格各自的 map.y 对 innerHeight（证据 %s/before/zh_320x653.json ，判据行 %s ）。" % (EV, JUDGE_HIT))
 A("   地图顶边落在底栏带下的形：after_map_under_bar=%s（两形本来就整块在折叠外，要救得缩 hero/intro 高度，不在本单授权里；" % (
     "、".join(MAP_UNDER_BAR)))
 A("   hit_line 与 map.y 同一枚证据文件里就有，例如 %s/after/zh_320x653.json ，判据行 %s 。)" % (EV, JUDGE_HIT))
