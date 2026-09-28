@@ -721,13 +721,17 @@ export function CopilotDock({
         restBandRef.current = { left: live.left, top: live.top, right: live.right, bottom: live.bottom };
       }
       const rest: Band = restBandRef.current;
-      /* Text is measured where its glyphs are painted, not across the element's
-         border box: a block-level heading spans the whole content column, so a
-         box test would call the empty stretch at the end of a line "covered" and
-         leave no in-viewport cell that a visible control could occupy. */
+      /* Whether the pill is *over text* is decided on painted glyphs (Range.getClientRects),
+         because a block-level heading spans the whole content column and its empty line-end is
+         not something the traveller is reading.  Where the collapsed cell may be placed is
+         decided against both the glyph rects and the element boxes, so a cell in a vertical gap
+         between lines is preferred over one that merely touches no glyph. */
       const ink: Band[] = [];
+      const blocks: Band[] = [];
       document.querySelectorAll(READABLE).forEach((el) => {
         if (node.contains(el) || el.contains(node)) return;
+        const own = el.getBoundingClientRect();
+        if (own.width > 0 && own.height > 0 && own.bottom > 0 && own.top < vh) blocks.push(band(own));
         const range = document.createRange();
         range.selectNodeContents(el);
         Array.from(range.getClientRects()).forEach((r) => {
@@ -751,26 +755,32 @@ export function CopilotDock({
         setYieldSlot(null);
         return;
       }
-      /* Yielding relocates: walk both edges upward from just above the reserved
-         bar and take the first cell that sits on no text ink and on no other
-         control.  If every cell is occupied the pill stays where it is and keeps
-         answering taps — a hidden control is not a yielded one. */
+      /* Yielding relocates.  A block of text spans the content column, so the free place to put
+         the cell is a vertical gap, not a horizontal corner: sweep the two edge columns downward
+         from just above the reserved bar in 10 px steps and take the first cell that sits on no
+         painted glyph, inside no text element's own box, and on no other control.  If nothing is
+         free the pill stays where it is and keeps answering taps -- a hidden control is not a
+         yielded one. */
       const ceiling = Math.max(INSET, Math.min(barTop - INSET - SLOT, vh - INSET - SLOT));
       const candidates: Band[] = [];
-      for (let top = ceiling; top >= INSET; top -= SLOT + 8) {
-        candidates.push({ left: vw - INSET - SLOT, top, right: vw - INSET, bottom: top + SLOT });
+      for (const left of [vw - INSET - SLOT, INSET]) {
+        for (let top = ceiling; top >= INSET; top -= 10) {
+          candidates.push({ left, top, right: left + SLOT, bottom: top + SLOT });
+        }
       }
-      for (let top = ceiling; top >= INSET; top -= SLOT + 8) {
-        candidates.push({ left: INSET, top, right: INSET + SLOT, bottom: top + SLOT });
-      }
-      /* 6 px of slack: a cell whose edge merely touches a glyph run is not counted free. */
+      /* 6 px of slack: a cell whose edge merely touches a glyph run or a text box is not counted free. */
       const pad = (c: Band, n: number): Band => ({
         left: c.left - n, top: c.top - n, right: c.right + n, bottom: c.bottom + n,
       });
-      const free = candidates.find(
+      const clear = (c: Band) =>
+        !ink.some((b) => overlaps(b, pad(c, 6))) &&
+        !blocks.some((b) => overlaps(b, pad(c, 6))) &&
+        !controls.some((b) => overlaps(b, c));
+      const free = candidates.find(clear);
+      const loose = candidates.find(
         (c) => !ink.some((b) => overlaps(b, pad(c, 6))) && !controls.some((b) => overlaps(b, c)),
       );
-      const cell = free || candidates[0] || rest;
+      const cell = free || loose || candidates[0] || rest;
       const slot = { left: Math.round(cell.left), top: Math.round(cell.top) };
       yieldSlotRef.current = slot;
       setYieldSlot(slot);
