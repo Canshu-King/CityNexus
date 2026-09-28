@@ -1,0 +1,11 @@
+evidence/ai-ord0430-20260929/build_log_after_r3_arm.json
+evidence/ai-ord0430-20260929/build_log_counter_r2_arm.json
+evidence/ai-ord0430-20260929/ord0430_build_counter_r2.py
+evidence/ai-ord0430-20260929/ord0430_cell_height_probe_r1.js
+evidence/ai-ord0430-20260929/ord0430_pill_yield_r3.js
+evidence/ai-ord0430-20260929/r3_read_after.json
+evidence/ai-ord0430-20260929/r3_read_before.json
+evidence/ai-ord0430-20260929/r3_read_counter.json
+evidence/ai-ord0430-20260929/r3_readings_summary.json
+frontend/src/design-tokens.css
+frontend/src/features/agent/CopilotDock.tsx

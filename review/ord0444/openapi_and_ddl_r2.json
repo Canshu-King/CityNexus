@@ -1,0 +1,62 @@
+{
+ "r2_openapi_json": {
+  "add_item_response_codes": [
+   "201",
+   "422"
+  ],
+  "collection_paths_found": [
+   "/api/v1/collections",
+   "/api/v1/collections/{folder_id}/items"
+  ],
+  "http": 200,
+  "methods_by_path": {
+   "/api/v1/collections": [
+    "get",
+    "post"
+   ],
+   "/api/v1/collections/{folder_id}/items": [
+    "post"
+   ]
+  },
+  "operation_ids": [
+   "list_collections_api_v1_collections_get",
+   "create_collection_api_v1_collections_post",
+   "add_collection_item_api_v1_collections__folder_id__items_post"
+  ],
+  "total_runtime_paths": 143
+ },
+ "r3_after_ensure_schema": {
+  "collection_items_columns": [
+   "id",
+   "folder_id",
+   "place_id",
+   "note",
+   "added_at"
+  ],
+  "collection_items_indexes": [
+   "idx_collection_items_folder_added",
+   "sqlite_autoindex_collection_items_1",
+   "sqlite_autoindex_collection_items_2"
+  ],
+  "collection_tables_present": [
+   "collection_folders",
+   "collection_items"
+  ],
+  "fresh_copy_tables_total": 57
+ },
+ "r3_before_ensure_schema": {
+  "collection_tables_absent": [
+   "collection_folders",
+   "collection_items"
+  ],
+  "collection_tables_present": [],
+  "fresh_copy_tables_total": 55,
+  "places_rows": 16,
+  "preview_db_sha1_before": "462da61a3d81be690b496ee1e2aa21e01ec8ba15"
+ },
+ "r3_preview_db_untouched": {
+  "equal": true,
+  "sha1_after": "462da61a3d81be690b496ee1e2aa21e01ec8ba15",
+  "sha1_before": "462da61a3d81be690b496ee1e2aa21e01ec8ba15"
+ }
+}

@@ -1,0 +1,59 @@
+{
+ "preview": "http://localhost:60149",
+ "backend": "http://127.0.0.1:60148",
+ "frames": {
+  "f1_empty_state": {
+   "panel_heading": "我的收藏",
+   "empty_sentence": "还没有收藏。可以在上面的「城市探索」里挑一枚地点，或者先在这儿建一个收藏夹，之后再往里放。",
+   "action_label": "建一个收藏夹",
+   "action_enabled": true,
+   "empty_state_present": true,
+   "shelf_rows": 0,
+   "panel_inner_text": "我的收藏\n\n这台服务器报出的收藏夹，以及它说每个夹里放着哪些地点。这一屏没有在设备上存任何东西。\n\n还没有收藏。可以在上面的「城市探索」里挑一枚地点，或者先在这儿建一个收藏夹，之后再往里放。\n\n建一个收藏夹"
+  },
+  "f2_after_the_action": {
+   "outcome_text": "已建好：默认收藏夹。这台服务器把它读回来了，里面还没有地点。",
+   "shelf_count_line": "这台服务器上有 1 个收藏夹",
+   "shelf_names": [
+    "默认收藏夹"
+   ],
+   "shelf_badges": [
+    "这一夹里有 0 个地点"
+   ],
+   "empty_state_gone": true
+  },
+  "f3_shelf_with_no_rows": {
+   "shelf_empty_sentence": "这个夹里还没有地点。"
+  },
+  "f4_door_add_then_screen_reread": {
+   "add_http": 201,
+   "folder_id": "8aa90287-fd85-4797-95a0-79613a9732d1",
+   "item_id": "2b2a91b2-d8d1-4ae9-8f59-0ac8a0218f18",
+   "row_texts": [],
+   "note_lines": [],
+   "row_count_before_refresh": 0,
+   "row_texts_after_refresh": [
+    "Houhai Lake Bar Street (后海酒吧街) | nightlife · CN-BEIJING · 39.941, 116.383（WGS84） | 备注：傍晚去，日落最好"
+   ],
+   "count_badge_after_refresh": "这一夹里有 1 个地点"
+  },
+  "f5_independent_door_read": {
+   "http": 200,
+   "shelf_count": 1,
+   "item_count": 1,
+   "items_len": 1,
+   "row_place_ids": [
+    "place-beijing-houhai"
+   ],
+   "row_notes": [
+    "傍晚去，日落最好"
+   ]
+  },
+  "f6_sidebar_honesty": {
+   "nav_shows_raw_key": false,
+   "discover_nav_label": true
+  }
+ },
+ "started_at": "2026-09-28T22:16:08.577Z",
+ "finished_at": "2026-09-28T22:16:11.553Z"
+}

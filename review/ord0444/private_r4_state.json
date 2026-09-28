@@ -1,0 +1,9 @@
+{
+ "dst": "scratch/private_r4.db",
+ "bytes": 7213056,
+ "sha1": "c8b44a7aa77cd3a4a66a6f89f639073f69a9a65d",
+ "total_tables": 55,
+ "collection_tables_present": [],
+ "places_rows": 16,
+ "preview_sha1": "462da61a3d81be690b496ee1e2aa21e01ec8ba15"
+}

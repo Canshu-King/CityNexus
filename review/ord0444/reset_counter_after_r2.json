@@ -1,0 +1,41 @@
+{
+ "0_health": {
+  "http": 200
+ },
+ "1_create_shelf": {
+  "http": 201,
+  "id": "7d49e583-4d8d-497c-b8f9-c571eca39185"
+ },
+ "2_add_place": {
+  "http": 201,
+  "item_id": "73eae441-6391-4e94-a46a-e5c16e1261da"
+ },
+ "3_shelf_holds_a_place_before_reset": {
+  "http": 200,
+  "item_count": 1,
+  "shelf_present": true
+ },
+ "4_demo_reset_with_a_non_empty_shelf": {
+  "body_head": "{\"status\":\"reset\",\"traveler_id\":\"11111111-1111-4111-8111-111111111111\",\"journey_id\":\"22222222-2222-4222-8222-222222222222\",\"city_code\":\"CNX-DEMO\"}",
+  "code": "reset",
+  "http": 200,
+  "is_500": false,
+  "message_key": null,
+  "reason_code": null,
+  "reset_credential_char_count": 32,
+  "reset_env_field_name": "CITYNEXUS_DEMO_RESET_TOKEN",
+  "reset_header_name": "X-Demo-Reset-Token"
+ },
+ "5_collections_after_the_reset_attempt": {
+  "body_head": "[]",
+  "http": 200
+ },
+ "6_server_log_attribution": {
+  "five_hundred_lines": [],
+  "foreign_key_lines": [],
+  "integrity_error_lines": []
+ },
+ "base": "http://127.0.0.1:60148",
+ "finished_at_utc": "2026-09-28T22:03:35.893986+00:00",
+ "started_at_utc": "2026-09-28T22:03:35.760950+00:00"
+}
