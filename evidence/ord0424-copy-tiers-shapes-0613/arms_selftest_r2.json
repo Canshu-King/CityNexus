@@ -1,0 +1,169 @@
+{
+ "schema": "CNX_S4_ORD0424_SELFTEST_R2",
+ "tool": "cnx_copy_tiers_r2.py",
+ "tool_bytes": 90342,
+ "families": {
+  "K4_published_nullish_face": {
+   "total": 6,
+   "passed": 6,
+   "failed": [],
+   "rows": [
+    {
+     "label": "K4a_dictionary_read_quiet",
+     "pass": true,
+     "detail": "0 hit(s) as expected"
+    },
+    {
+     "label": "K4b_tier_A_language_branch",
+     "pass": true,
+     "detail": "2 hit(s) as expected"
+    },
+    {
+     "label": "K4c_tier_B_bare_literal",
+     "pass": true,
+     "detail": "1 hit(s) as expected"
+    },
+    {
+     "label": "K4d_machine_token_quiet",
+     "pass": true,
+     "detail": "0 hit(s) as expected"
+    },
+    {
+     "label": "K4e_split_across_lines",
+     "pass": true,
+     "detail": "2 hit(s) as expected"
+    },
+    {
+     "label": "K4i_media_type_ternary_quiet",
+     "pass": true,
+     "detail": "0 hit(s) as expected"
+    }
+   ]
+  },
+  "K7_published_render_tiers": {
+   "total": 9,
+   "passed": 9,
+   "failed": [],
+   "rows": [
+    {
+     "label": "K7a_jsx_child_is_tier1",
+     "pass": true,
+     "detail": "tier 1 via JSX_CHILD as expected"
+    },
+    {
+     "label": "K7c_data_attr_is_undetermined",
+     "pass": true,
+     "detail": "tier 2 via DATA_ATTR as expected"
+    },
+    {
+     "label": "K7d_react_key_cannot_render",
+     "pass": true,
+     "detail": "tier 3 via REACT_KEY as expected"
+    },
+    {
+     "label": "K7e_placeholder_is_visible",
+     "pass": true,
+     "detail": "tier 1 via ATTR_VISIBLE as expected"
+    },
+    {
+     "label": "K7f_jsx_child_behind_lang_guard",
+     "pass": true,
+     "detail": "tier 2 via JSX_CHILD as expected"
+    },
+    {
+     "label": "K7g_template_interpolation_undetermined",
+     "pass": true,
+     "detail": "tier 2 via OTHER as expected"
+    },
+    {
+     "label": "K7h_symbol_in_jsx_child_not_actionable",
+     "pass": true,
+     "detail": "tier 2 via JSX_CHILD as expected"
+    },
+    {
+     "label": "K7i_dotted_key_not_copy",
+     "pass": true,
+     "detail": "tier 2 via JSX_CHILD as expected"
+    },
+    {
+     "label": "K7j_control_block_is_not_jsx_child",
+     "pass": true,
+     "detail": "tier 2 via OTHER as expected"
+    }
+   ]
+  },
+  "K8_ord0424_three_shapes": {
+   "total": 13,
+   "passed": 13,
+   "failed": [],
+   "rows": [
+    {
+     "label": "K8a_jsx_text_caught",
+     "pass": true,
+     "detail": "1 hit(s) of shape JSX_TEXT_NODE as expected"
+    },
+    {
+     "label": "K8b_jsx_text_wrapped_lines_caught",
+     "pass": true,
+     "detail": "1 hit(s) of shape JSX_TEXT_NODE as expected"
+    },
+    {
+     "label": "K8c_generic_is_not_an_element",
+     "pass": true,
+     "detail": "0 hit(s) of shape - as expected"
+    },
+    {
+     "label": "K8d_template_tail_caught",
+     "pass": true,
+     "detail": "1 hit(s) of shape TERNARY_BRANCH as expected"
+    },
+    {
+     "label": "K8e_ternary_false_branch_caught",
+     "pass": true,
+     "detail": "1 hit(s) of shape TERNARY_BRANCH as expected"
+    },
+    {
+     "label": "K8f_state_default_caught",
+     "pass": true,
+     "detail": "1 hit(s) of shape STATE_DEFAULT as expected"
+    },
+    {
+     "label": "K8g_state_default_without_generic_caught",
+     "pass": true,
+     "detail": "1 hit(s) of shape STATE_DEFAULT as expected"
+    },
+    {
+     "label": "K8h_cjk_element_quiet",
+     "pass": true,
+     "detail": "0 hit(s) of shape - as expected"
+    },
+    {
+     "label": "K8i_jsx_comment_not_text",
+     "pass": true,
+     "detail": "0 hit(s) of shape - as expected"
+    },
+    {
+     "label": "K8j_locale_tag_quiet",
+     "pass": true,
+     "detail": "0 hit(s) of shape - as expected"
+    },
+    {
+     "label": "K8k_machine_token_ternary_quiet",
+     "pass": true,
+     "detail": "0 hit(s) of shape - as expected"
+    },
+    {
+     "label": "K8l_brand_word_excluded",
+     "pass": true,
+     "detail": "0 hit(s) of shape - as expected"
+    },
+    {
+     "label": "K8m_single_uppercase_label_caught",
+     "pass": true,
+     "detail": "1 hit(s) of shape JSX_TEXT_NODE as expected"
+    }
+   ]
+  }
+ },
+ "all_arms_pass": true
+}
