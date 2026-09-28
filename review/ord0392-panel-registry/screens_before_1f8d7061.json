@@ -1,9 +1,9 @@
 {
- "base": "http://127.0.0.1:4192",
+ "base": "http://127.0.0.1:4193",
  "tag": "before",
  "frozen_ms": 1790544600000,
  "clock_api": "context.clock",
- "clock_now": 1790544719217,
+ "clock_now": 1790544715755,
  "screens": {
   "390/hub": {
    "text": "菜单 / 今天 跟随系统 EN GU 早上好 广州之旅 9月21日 10:00 — 9月22日 18:00 · 1 位旅行者 · 2 天 AI 帮我规划 试用其他城市 打开行程工作台 复制行程链接 现在 广州南站 接下来 14:00 Check in · 7天酒店 今天还有 3 项安排 查看实时行程 “现在”取自服务器场景（执行游标）：9月21日 10:00 · 现在/接下来由服务器的执行投影给出 1 2 3 4 5 单指拖动地图 · 双指缩放 · 想翻这一页就拖地图以外的地方 路线上下文 4 段路程 供应商支持的路线 · WGS84 底图数据 © OpenStreetMap 贡献者 · 瓦片服务 tile.openstreetmap.org 住宿 7天酒店 到达 9月21日 10:00 出发 9月22日 18:00 一切正常 方案概览 每一天，紧密相连。 对比住宿 → 第 1 天 星期一 广州南站 · Check in · 7天酒店 · Overnight · 7天酒店 公交地铁 抵达锚点 第 2 天 星期二 Check out · 7天酒店 · 广州南站 驾车 离开锚点 今天 行程 地图 Copilot 我的",
@@ -257,7 +257,7 @@
    "url": "/v8/discover"
   },
   "390/live": {
-   "text": "菜单 / 实时行程 跟随系统 EN GU 实时行程 · 已保存 9月20日 20:05 选择你的下一段路程。 当前步骤、下一个受保护时刻、最晚出发指引，以及一条清晰的恢复路径。 现在 广州南站 下一步 · Check in · 7天酒店 · 驾车 · 12 min 10:00 1 2 3 4 5 单指拖动地图 · 双指缩放 · 想翻这一页就拖地图以外的地方 路线上下文 4 段路程 供应商支持的路线 · WGS84 底图数据 © OpenStreetMap 贡献者 · 瓦片服务 tile.openstreetmap.org 当前没有需要你决定的调整。 更新位置 报告降雨 下一段路程方式 选择平稳路线 步行 骑行 公交地铁 驾车 网约车 对比所有方式 下一步 · 最晚出发 Check in · 7天酒店 9月21日 14:00 前到达 · 余量约297分钟 14:00 预计到达 · 驾车 开始导航 → 风险 低 · 路线证据有效 证据 供应商路线、时效、费用和可行性 实时状态 当前正在发生什么 刚刚更新 时钟 15:53 Asia/Shanghai 当前步骤 进行中 行程状态 离线 只读就绪 未来 24 小时已保存 0 个来源 暂无记录 ✦ CityNexus Copilot 今天 行程 地图 Copilot 我的",
+   "text": "菜单 / 实时行程 跟随系统 EN GU 实时行程 · 已保存 9月20日 20:05 选择你的下一段路程。 当前步骤、下一个受保护时刻、最晚出发指引，以及一条清晰的恢复路径。 现在 广州南站 下一步 · Check in · 7天酒店 · 驾车 · 12 min 10:00 1 2 3 4 5 单指拖动地图 · 双指缩放 · 想翻这一页就拖地图以外的地方 路线上下文 4 段路程 供应商支持的路线 · WGS84 底图数据 © OpenStreetMap 贡献者 · 瓦片服务 tile.openstreetmap.org 当前没有需要你决定的调整。 更新位置 报告降雨 下一段路程方式 选择平稳路线 步行 骑行 公交地铁 驾车 网约车 对比所有方式 下一步 · 最晚出发 Check in · 7天酒店 9月21日 14:00 前到达 · 余量约297分钟 14:00 预计到达 · 驾车 开始导航 → 风险 低 · 路线证据有效 证据 供应商路线、时效、费用和可行性 实时状态 当前正在发生什么 刚刚更新 时钟 16:58 Asia/Shanghai 当前步骤 进行中 行程状态 离线 只读就绪 未来 24 小时已保存 0 个来源 暂无记录 ✦ CityNexus Copilot 今天 行程 地图 Copilot 我的",
    "chars": 576,
    "testids": [
     "topbar-theme",
@@ -338,8 +338,8 @@
    "url": "/v8/live"
   },
   "390/map": {
-   "text": "菜单 / 地图 跟随系统 EN GU 地图 · 一目了然 整座城市，行程叠加其上。 采集的路线几何和供应商事实在你穿越行程时始终可见。 对比出行方式 1 2 3 4 5 单指拖动地图 · 双指缩放 · 想翻这一页就拖地图以外的地方 路线上下文 4 段路程 供应商支持的路线 · WGS84 底图数据 © OpenStreetMap 贡献者 · 瓦片服务 tile.openstreetmap.org 下一段路程 Check in · 7天酒店 驾车 约12分钟 · 步行 2 分钟 ¥12.00 骑行 约17分钟 · 步行 5 分钟 ¥6.00 网约车 约13分钟 · 步行 2 分钟 — 未知费用保持未知。 ✦ CityNexus Copilot 今天 行程 地图 Copilot 我的",
-   "chars": 350,
+   "text": "菜单 / 地图 跟随系统 EN GU 地图 · 一目了然 整座城市，行程叠加其上。 采集的路线几何和供应商事实在你穿越行程时始终可见。 对比出行方式 1 2 3 4 5 单指拖动地图 · 双指缩放 · 想翻这一页就拖地图以外的地方 路线上下文 4 段路程 供应商支持的路线 · WGS84 底图数据 © OpenStreetMap 贡献者 · 瓦片服务 tile.openstreetmap.org 下一段路程 Check in · 7天酒店 这一天去的地点 广州南站 Check in · 7天酒店 Overnight · 7天酒店 Check out · 7天酒店 广州南站 驾车 约12分钟 · 步行 2 分钟 ¥12.00 骑行 约17分钟 · 步行 5 分钟 ¥6.00 网约车 约13分钟 · 步行 2 分钟 — 未知费用保持未知。 ✦ CityNexus Copilot 今天 行程 地图 Copilot 我的",
+   "chars": 418,
    "testids": [
     "topbar-theme",
     "topbar-language",
@@ -347,6 +347,13 @@
     "v8-maplibre-canvas",
     "v8-map-gesture-hint",
     "v8-map-attribution",
+    "map-selected-stop",
+    "map-stops",
+    "map-stop-0ae511a0-2cde-4dc4-83a4-498a770f0213",
+    "map-stop-2d453f45-cacf-426d-90a6-ad189817168f",
+    "map-stop-d6d6b285-191b-4f8e-ab1a-bed492dd3a07",
+    "map-stop-65160496-a0e7-4a26-87b4-5862b60f8f01",
+    "map-stop-95d805b4-635b-4c7f-836e-a238d2655fcf",
     "v18-copilot-dock",
     "nav-hub",
     "nav-trips",
@@ -378,6 +385,11 @@
     "div|-|Overnight · 7天酒店|button|3",
     "div|-|Check out · 7天酒店|button|4",
     "div|-|广州南站|button|5",
+    "button|map-stop-0ae511a0-2cde-4dc4-83a4-498a770f0213|在地图上定位 广州南站|-|广州南站",
+    "button|map-stop-2d453f45-cacf-426d-90a6-ad189817168f|在地图上定位 Check in · 7天酒店|-|Check in · 7天酒店",
+    "button|map-stop-d6d6b285-191b-4f8e-ab1a-bed492dd3a07|在地图上定位 Overnight · 7天酒店|-|Overnight · 7天酒店",
+    "button|map-stop-65160496-a0e7-4a26-87b4-5862b60f8f01|在地图上定位 Check out · 7天酒店|-|Check out · 7天酒店",
+    "button|map-stop-95d805b4-635b-4c7f-836e-a238d2655fcf|在地图上定位 广州南站|-|广州南站",
     "button|-|CityNexus Copilot|-|✦ CityNexus Copilot",
     "button|nav-hub|-|-|今天",
     "button|nav-trips|-|-|行程",
@@ -1413,7 +1425,7 @@
    "url": "/v8/discover"
   },
   "360/live": {
-   "text": "菜单 / 实时行程 跟随系统 EN GU 实时行程 · 已保存 9月20日 20:05 选择你的下一段路程。 当前步骤、下一个受保护时刻、最晚出发指引，以及一条清晰的恢复路径。 现在 广州南站 下一步 · Check in · 7天酒店 · 驾车 · 12 min 10:00 1 2 3 4 5 单指拖动地图 · 双指缩放 · 想翻这一页就拖地图以外的地方 路线上下文 4 段路程 供应商支持的路线 · WGS84 底图数据 © OpenStreetMap 贡献者 · 瓦片服务 tile.openstreetmap.org 当前没有需要你决定的调整。 更新位置 报告降雨 下一段路程方式 选择平稳路线 步行 骑行 公交地铁 驾车 网约车 对比所有方式 下一步 · 最晚出发 Check in · 7天酒店 9月21日 14:00 前到达 · 余量约297分钟 14:00 预计到达 · 驾车 开始导航 → 风险 低 · 路线证据有效 证据 供应商路线、时效、费用和可行性 实时状态 当前正在发生什么 刚刚更新 时钟 15:54 Asia/Shanghai 当前步骤 进行中 行程状态 离线 只读就绪 未来 24 小时已保存 0 个来源 暂无记录 ✦ CityNexus Copilot 今天 行程 地图 Copilot 我的",
+   "text": "菜单 / 实时行程 跟随系统 EN GU 实时行程 · 已保存 9月20日 20:05 选择你的下一段路程。 当前步骤、下一个受保护时刻、最晚出发指引，以及一条清晰的恢复路径。 现在 广州南站 下一步 · Check in · 7天酒店 · 驾车 · 12 min 10:00 1 2 3 4 5 单指拖动地图 · 双指缩放 · 想翻这一页就拖地图以外的地方 路线上下文 4 段路程 供应商支持的路线 · WGS84 底图数据 © OpenStreetMap 贡献者 · 瓦片服务 tile.openstreetmap.org 当前没有需要你决定的调整。 更新位置 报告降雨 下一段路程方式 选择平稳路线 步行 骑行 公交地铁 驾车 网约车 对比所有方式 下一步 · 最晚出发 Check in · 7天酒店 9月21日 14:00 前到达 · 余量约297分钟 14:00 预计到达 · 驾车 开始导航 → 风险 低 · 路线证据有效 证据 供应商路线、时效、费用和可行性 实时状态 当前正在发生什么 刚刚更新 时钟 16:59 Asia/Shanghai 当前步骤 进行中 行程状态 离线 只读就绪 未来 24 小时已保存 0 个来源 暂无记录 ✦ CityNexus Copilot 今天 行程 地图 Copilot 我的",
    "chars": 576,
    "testids": [
     "topbar-theme",
@@ -1494,8 +1506,8 @@
    "url": "/v8/live"
   },
   "360/map": {
-   "text": "菜单 / 地图 跟随系统 EN GU 地图 · 一目了然 整座城市，行程叠加其上。 采集的路线几何和供应商事实在你穿越行程时始终可见。 对比出行方式 1 2 3 4 5 单指拖动地图 · 双指缩放 · 想翻这一页就拖地图以外的地方 路线上下文 4 段路程 供应商支持的路线 · WGS84 底图数据 © OpenStreetMap 贡献者 · 瓦片服务 tile.openstreetmap.org 下一段路程 Check in · 7天酒店 驾车 约12分钟 · 步行 2 分钟 ¥12.00 骑行 约17分钟 · 步行 5 分钟 ¥6.00 网约车 约13分钟 · 步行 2 分钟 — 未知费用保持未知。 ✦ CityNexus Copilot 今天 行程 地图 Copilot 我的",
-   "chars": 350,
+   "text": "菜单 / 地图 跟随系统 EN GU 地图 · 一目了然 整座城市，行程叠加其上。 采集的路线几何和供应商事实在你穿越行程时始终可见。 对比出行方式 1 2 3 4 5 单指拖动地图 · 双指缩放 · 想翻这一页就拖地图以外的地方 路线上下文 4 段路程 供应商支持的路线 · WGS84 底图数据 © OpenStreetMap 贡献者 · 瓦片服务 tile.openstreetmap.org 下一段路程 Check in · 7天酒店 这一天去的地点 广州南站 Check in · 7天酒店 Overnight · 7天酒店 Check out · 7天酒店 广州南站 驾车 约12分钟 · 步行 2 分钟 ¥12.00 骑行 约17分钟 · 步行 5 分钟 ¥6.00 网约车 约13分钟 · 步行 2 分钟 — 未知费用保持未知。 ✦ CityNexus Copilot 今天 行程 地图 Copilot 我的",
+   "chars": 418,
    "testids": [
     "topbar-theme",
     "topbar-language",
@@ -1503,6 +1515,13 @@
     "v8-maplibre-canvas",
     "v8-map-gesture-hint",
     "v8-map-attribution",
+    "map-selected-stop",
+    "map-stops",
+    "map-stop-0ae511a0-2cde-4dc4-83a4-498a770f0213",
+    "map-stop-2d453f45-cacf-426d-90a6-ad189817168f",
+    "map-stop-d6d6b285-191b-4f8e-ab1a-bed492dd3a07",
+    "map-stop-65160496-a0e7-4a26-87b4-5862b60f8f01",
+    "map-stop-95d805b4-635b-4c7f-836e-a238d2655fcf",
     "v18-copilot-dock",
     "nav-hub",
     "nav-trips",
@@ -1534,6 +1553,11 @@
     "div|-|Overnight · 7天酒店|button|3",
     "div|-|Check out · 7天酒店|button|4",
     "div|-|广州南站|button|5",
+    "button|map-stop-0ae511a0-2cde-4dc4-83a4-498a770f0213|在地图上定位 广州南站|-|广州南站",
+    "button|map-stop-2d453f45-cacf-426d-90a6-ad189817168f|在地图上定位 Check in · 7天酒店|-|Check in · 7天酒店",
+    "button|map-stop-d6d6b285-191b-4f8e-ab1a-bed492dd3a07|在地图上定位 Overnight · 7天酒店|-|Overnight · 7天酒店",
+    "button|map-stop-65160496-a0e7-4a26-87b4-5862b60f8f01|在地图上定位 Check out · 7天酒店|-|Check out · 7天酒店",
+    "button|map-stop-95d805b4-635b-4c7f-836e-a238d2655fcf|在地图上定位 广州南站|-|广州南站",
     "button|-|CityNexus Copilot|-|✦ CityNexus Copilot",
     "button|nav-hub|-|-|今天",
     "button|nav-trips|-|-|行程",
@@ -2569,7 +2593,7 @@
    "url": "/v8/discover"
   },
   "412/live": {
-   "text": "菜单 / 实时行程 跟随系统 EN GU 实时行程 · 已保存 9月20日 20:05 选择你的下一段路程。 当前步骤、下一个受保护时刻、最晚出发指引，以及一条清晰的恢复路径。 现在 广州南站 下一步 · Check in · 7天酒店 · 驾车 · 12 min 10:00 1 2 3 4 5 单指拖动地图 · 双指缩放 · 想翻这一页就拖地图以外的地方 路线上下文 4 段路程 供应商支持的路线 · WGS84 底图数据 © OpenStreetMap 贡献者 · 瓦片服务 tile.openstreetmap.org 当前没有需要你决定的调整。 更新位置 报告降雨 下一段路程方式 选择平稳路线 步行 骑行 公交地铁 驾车 网约车 对比所有方式 下一步 · 最晚出发 Check in · 7天酒店 9月21日 14:00 前到达 · 余量约297分钟 14:00 预计到达 · 驾车 开始导航 → 风险 低 · 路线证据有效 证据 供应商路线、时效、费用和可行性 实时状态 当前正在发生什么 刚刚更新 时钟 15:54 Asia/Shanghai 当前步骤 进行中 行程状态 离线 只读就绪 未来 24 小时已保存 0 个来源 暂无记录 ✦ CityNexus Copilot 今天 行程 地图 Copilot 我的",
+   "text": "菜单 / 实时行程 跟随系统 EN GU 实时行程 · 已保存 9月20日 20:05 选择你的下一段路程。 当前步骤、下一个受保护时刻、最晚出发指引，以及一条清晰的恢复路径。 现在 广州南站 下一步 · Check in · 7天酒店 · 驾车 · 12 min 10:00 1 2 3 4 5 单指拖动地图 · 双指缩放 · 想翻这一页就拖地图以外的地方 路线上下文 4 段路程 供应商支持的路线 · WGS84 底图数据 © OpenStreetMap 贡献者 · 瓦片服务 tile.openstreetmap.org 当前没有需要你决定的调整。 更新位置 报告降雨 下一段路程方式 选择平稳路线 步行 骑行 公交地铁 驾车 网约车 对比所有方式 下一步 · 最晚出发 Check in · 7天酒店 9月21日 14:00 前到达 · 余量约297分钟 14:00 预计到达 · 驾车 开始导航 → 风险 低 · 路线证据有效 证据 供应商路线、时效、费用和可行性 实时状态 当前正在发生什么 刚刚更新 时钟 16:59 Asia/Shanghai 当前步骤 进行中 行程状态 离线 只读就绪 未来 24 小时已保存 0 个来源 暂无记录 ✦ CityNexus Copilot 今天 行程 地图 Copilot 我的",
    "chars": 576,
    "testids": [
     "topbar-theme",
@@ -2650,8 +2674,8 @@
    "url": "/v8/live"
   },
   "412/map": {
-   "text": "菜单 / 地图 跟随系统 EN GU 地图 · 一目了然 整座城市，行程叠加其上。 采集的路线几何和供应商事实在你穿越行程时始终可见。 对比出行方式 1 2 3 4 5 单指拖动地图 · 双指缩放 · 想翻这一页就拖地图以外的地方 路线上下文 4 段路程 供应商支持的路线 · WGS84 底图数据 © OpenStreetMap 贡献者 · 瓦片服务 tile.openstreetmap.org 下一段路程 Check in · 7天酒店 驾车 约12分钟 · 步行 2 分钟 ¥12.00 骑行 约17分钟 · 步行 5 分钟 ¥6.00 网约车 约13分钟 · 步行 2 分钟 — 未知费用保持未知。 ✦ CityNexus Copilot 今天 行程 地图 Copilot 我的",
-   "chars": 350,
+   "text": "菜单 / 地图 跟随系统 EN GU 地图 · 一目了然 整座城市，行程叠加其上。 采集的路线几何和供应商事实在你穿越行程时始终可见。 对比出行方式 1 2 3 4 5 单指拖动地图 · 双指缩放 · 想翻这一页就拖地图以外的地方 路线上下文 4 段路程 供应商支持的路线 · WGS84 底图数据 © OpenStreetMap 贡献者 · 瓦片服务 tile.openstreetmap.org 下一段路程 Check in · 7天酒店 这一天去的地点 广州南站 Check in · 7天酒店 Overnight · 7天酒店 Check out · 7天酒店 广州南站 驾车 约12分钟 · 步行 2 分钟 ¥12.00 骑行 约17分钟 · 步行 5 分钟 ¥6.00 网约车 约13分钟 · 步行 2 分钟 — 未知费用保持未知。 ✦ CityNexus Copilot 今天 行程 地图 Copilot 我的",
+   "chars": 418,
    "testids": [
     "topbar-theme",
     "topbar-language",
@@ -2659,6 +2683,13 @@
     "v8-maplibre-canvas",
     "v8-map-gesture-hint",
     "v8-map-attribution",
+    "map-selected-stop",
+    "map-stops",
+    "map-stop-0ae511a0-2cde-4dc4-83a4-498a770f0213",
+    "map-stop-2d453f45-cacf-426d-90a6-ad189817168f",
+    "map-stop-d6d6b285-191b-4f8e-ab1a-bed492dd3a07",
+    "map-stop-65160496-a0e7-4a26-87b4-5862b60f8f01",
+    "map-stop-95d805b4-635b-4c7f-836e-a238d2655fcf",
     "v18-copilot-dock",
     "nav-hub",
     "nav-trips",
@@ -2690,6 +2721,11 @@
     "div|-|Overnight · 7天酒店|button|3",
     "div|-|Check out · 7天酒店|button|4",
     "div|-|广州南站|button|5",
+    "button|map-stop-0ae511a0-2cde-4dc4-83a4-498a770f0213|在地图上定位 广州南站|-|广州南站",
+    "button|map-stop-2d453f45-cacf-426d-90a6-ad189817168f|在地图上定位 Check in · 7天酒店|-|Check in · 7天酒店",
+    "button|map-stop-d6d6b285-191b-4f8e-ab1a-bed492dd3a07|在地图上定位 Overnight · 7天酒店|-|Overnight · 7天酒店",
+    "button|map-stop-65160496-a0e7-4a26-87b4-5862b60f8f01|在地图上定位 Check out · 7天酒店|-|Check out · 7天酒店",
+    "button|map-stop-95d805b4-635b-4c7f-836e-a238d2655fcf|在地图上定位 广州南站|-|广州南站",
     "button|-|CityNexus Copilot|-|✦ CityNexus Copilot",
     "button|nav-hub|-|-|今天",
     "button|nav-trips|-|-|行程",
@@ -3725,7 +3761,7 @@
    "url": "/v8/discover"
   },
   "320/live": {
-   "text": "菜单 / 实时行程 跟随系统 EN GU 实时行程 · 已保存 9月20日 20:05 选择你的下一段路程。 当前步骤、下一个受保护时刻、最晚出发指引，以及一条清晰的恢复路径。 现在 广州南站 下一步 · Check in · 7天酒店 · 驾车 · 12 min 10:00 1 2 3 4 5 单指拖动地图 · 双指缩放 · 想翻这一页就拖地图以外的地方 路线上下文 4 段路程 供应商支持的路线 · WGS84 底图数据 © OpenStreetMap 贡献者 · 瓦片服务 tile.openstreetmap.org 当前没有需要你决定的调整。 更新位置 报告降雨 下一段路程方式 选择平稳路线 步行 骑行 公交地铁 驾车 网约车 对比所有方式 下一步 · 最晚出发 Check in · 7天酒店 9月21日 14:00 前到达 · 余量约297分钟 14:00 预计到达 · 驾车 开始导航 → 风险 低 · 路线证据有效 证据 供应商路线、时效、费用和可行性 实时状态 当前正在发生什么 刚刚更新 时钟 15:54 Asia/Shanghai 当前步骤 进行中 行程状态 离线 只读就绪 未来 24 小时已保存 0 个来源 暂无记录 今天 行程 地图 Copilot 我的",
+   "text": "菜单 / 实时行程 跟随系统 EN GU 实时行程 · 已保存 9月20日 20:05 选择你的下一段路程。 当前步骤、下一个受保护时刻、最晚出发指引，以及一条清晰的恢复路径。 现在 广州南站 下一步 · Check in · 7天酒店 · 驾车 · 12 min 10:00 1 2 3 4 5 单指拖动地图 · 双指缩放 · 想翻这一页就拖地图以外的地方 路线上下文 4 段路程 供应商支持的路线 · WGS84 底图数据 © OpenStreetMap 贡献者 · 瓦片服务 tile.openstreetmap.org 当前没有需要你决定的调整。 更新位置 报告降雨 下一段路程方式 选择平稳路线 步行 骑行 公交地铁 驾车 网约车 对比所有方式 下一步 · 最晚出发 Check in · 7天酒店 9月21日 14:00 前到达 · 余量约297分钟 14:00 预计到达 · 驾车 开始导航 → 风险 低 · 路线证据有效 证据 供应商路线、时效、费用和可行性 实时状态 当前正在发生什么 刚刚更新 时钟 17:00 Asia/Shanghai 当前步骤 进行中 行程状态 离线 只读就绪 未来 24 小时已保存 0 个来源 暂无记录 今天 行程 地图 Copilot 我的",
    "chars": 556,
    "testids": [
     "topbar-theme",
@@ -3806,8 +3842,8 @@
    "url": "/v8/live"
   },
   "320/map": {
-   "text": "菜单 / 地图 跟随系统 EN GU 地图 · 一目了然 整座城市，行程叠加其上。 采集的路线几何和供应商事实在你穿越行程时始终可见。 对比出行方式 1 2 3 4 5 单指拖动地图 · 双指缩放 · 想翻这一页就拖地图以外的地方 路线上下文 4 段路程 供应商支持的路线 · WGS84 底图数据 © OpenStreetMap 贡献者 · 瓦片服务 tile.openstreetmap.org 下一段路程 Check in · 7天酒店 驾车 约12分钟 · 步行 2 分钟 ¥12.00 骑行 约17分钟 · 步行 5 分钟 ¥6.00 网约车 约13分钟 · 步行 2 分钟 — 未知费用保持未知。 ✦ CityNexus Copilot 今天 行程 地图 Copilot 我的",
-   "chars": 350,
+   "text": "菜单 / 地图 跟随系统 EN GU 地图 · 一目了然 整座城市，行程叠加其上。 采集的路线几何和供应商事实在你穿越行程时始终可见。 对比出行方式 1 2 3 4 5 单指拖动地图 · 双指缩放 · 想翻这一页就拖地图以外的地方 路线上下文 4 段路程 供应商支持的路线 · WGS84 底图数据 © OpenStreetMap 贡献者 · 瓦片服务 tile.openstreetmap.org 下一段路程 Check in · 7天酒店 这一天去的地点 广州南站 Check in · 7天酒店 Overnight · 7天酒店 Check out · 7天酒店 广州南站 驾车 约12分钟 · 步行 2 分钟 ¥12.00 骑行 约17分钟 · 步行 5 分钟 ¥6.00 网约车 约13分钟 · 步行 2 分钟 — 未知费用保持未知。 ✦ CityNexus Copilot 今天 行程 地图 Copilot 我的",
+   "chars": 418,
    "testids": [
     "topbar-theme",
     "topbar-language",
@@ -3815,6 +3851,13 @@
     "v8-maplibre-canvas",
     "v8-map-gesture-hint",
     "v8-map-attribution",
+    "map-selected-stop",
+    "map-stops",
+    "map-stop-0ae511a0-2cde-4dc4-83a4-498a770f0213",
+    "map-stop-2d453f45-cacf-426d-90a6-ad189817168f",
+    "map-stop-d6d6b285-191b-4f8e-ab1a-bed492dd3a07",
+    "map-stop-65160496-a0e7-4a26-87b4-5862b60f8f01",
+    "map-stop-95d805b4-635b-4c7f-836e-a238d2655fcf",
     "v18-copilot-dock",
     "nav-hub",
     "nav-trips",
@@ -3846,6 +3889,11 @@
     "div|-|Overnight · 7天酒店|button|3",
     "div|-|Check out · 7天酒店|button|4",
     "div|-|广州南站|button|5",
+    "button|map-stop-0ae511a0-2cde-4dc4-83a4-498a770f0213|在地图上定位 广州南站|-|广州南站",
+    "button|map-stop-2d453f45-cacf-426d-90a6-ad189817168f|在地图上定位 Check in · 7天酒店|-|Check in · 7天酒店",
+    "button|map-stop-d6d6b285-191b-4f8e-ab1a-bed492dd3a07|在地图上定位 Overnight · 7天酒店|-|Overnight · 7天酒店",
+    "button|map-stop-65160496-a0e7-4a26-87b4-5862b60f8f01|在地图上定位 Check out · 7天酒店|-|Check out · 7天酒店",
+    "button|map-stop-95d805b4-635b-4c7f-836e-a238d2655fcf|在地图上定位 广州南站|-|广州南站",
     "button|-|CityNexus Copilot|-|✦ CityNexus Copilot",
     "button|nav-hub|-|-|今天",
     "button|nav-trips|-|-|行程",
