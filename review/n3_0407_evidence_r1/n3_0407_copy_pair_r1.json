@@ -1,0 +1,64 @@
+{
+ "tree_head": "2832ffb8a6809e9139764fe8a46b29f38cf38816",
+ "dist_asset": "/assets/index-Rk6mPaC8.js",
+ "bundle_bytes": 1295766,
+ "denominators": {
+  "dictionary_pairs": 629,
+  "distinct_keys": 519,
+  "values_checked": 629
+ },
+ "values_found_in_built_bundle": 629,
+ "values_not_found": 0,
+ "misses": [],
+ "touched_keys": [
+  {
+   "file": "frontend/src/i18n/LocaleContext.tsx",
+   "key": "bookings.noStaySub",
+   "arms_found": [
+    "en",
+    "zh"
+   ],
+   "both_arms_present": true,
+   "in_bundle": {
+    "en": true,
+    "zh": true
+   },
+   "counted_by_the_rulers_regex": {
+    "en": true,
+    "zh": true
+   }
+  },
+  {
+   "file": "frontend/src/i18n/LocaleContext.tsx",
+   "key": "bookings.noStayAction",
+   "arms_found": [
+    "en",
+    "zh"
+   ],
+   "both_arms_present": true,
+   "in_bundle": {
+    "en": true,
+    "zh": true
+   },
+   "counted_by_the_rulers_regex": {
+    "en": true,
+    "zh": true
+   }
+  },
+  {
+   "file": "frontend/src/i18n/mapPanelCopy.ts",
+   "key": "noLocationBody",
+   "note": "outside LocaleContext.tsx, so the commander's ruler does not count it; checked here against the same bundle",
+   "arms_found": [
+    "en",
+    "zh"
+   ],
+   "both_arms_present": true,
+   "in_bundle": {
+    "zh": true,
+    "en": true
+   }
+  }
+ ],
+ "touched_both_arms_ship": true
+}

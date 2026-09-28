@@ -45,9 +45,11 @@ const COPY: Record<MapCopyKey, { zh: string; en: string }> = {
        - the contract declares 5 write paths whose own path contains `/activities`
          (arrive/begin/complete/depart/skip); all five take an `{activity_id}` that must already exist,
          and there is no collection-level POST/PUT to `/…/activities`;
-       - the backend inserts an Activity row in 4 places only, inside plan composition
-         (`services.py:1212`, `services.py:1770`), trip-studio accept of ids that already exist
-         (`main.py:5957`) and replan accept (`main.py:9965`) -- none takes a traveller-named place;
+       - the backend inserts an Activity row at 6 points, none of which takes a traveller-named place:
+         plan composition (`services.py:1212`, `services.py:1770`, `planning/authoritative_v12.py:1347`),
+         stay-option materialisation (`operations/v9.py:631`), trip-studio accept of ids that already
+         exist (`main.py:5957`) and replan accept (`main.py:9965`) -- see
+         `review/n3_0407_write_door_inventory_r1.py`;
        - `POST /journeys/{id}/location` does exist (`main.py:4521`) and the shell does call it
          (`V8Experience.tsx:1270`), but `tripHasNoCoordinates` (this component, :17) and `points` (:113)
          read activity and stay-offer coordinates only, so sharing a position cannot clear this state.
