@@ -25,6 +25,8 @@ def main() -> int:
     ap.add_argument("--receipt", required=True)
     ap.add_argument("--head", required=True)
     ap.add_argument("--out", required=True)
+    ap.add_argument("--commit-while-measured", default="", dest="commit")
+    ap.add_argument("--run-log", default="", dest="runlog")
     a = ap.parse_args()
 
     raw = json.loads(Path(a.receipt).read_text(encoding="utf-8"))
@@ -63,6 +65,11 @@ def main() -> int:
     out = {
         "measured_from_receipt": Path(a.receipt).name,
         "tree_head": a.head,
+        # The bytes measured belong to `tree_head`, but the *commit* the run started from can differ:
+        # re-freezing a baseline on a newer tip means checking that tip's product files back out over a
+        # lane head, so HEAD stays the lane's.  Both are recorded instead of one being glossed.
+        "commit_head_while_measuring": a.commit,
+        "run_log": a.runlog.replace("\\", "/"),
         "hit_floor_px": FLOOR,
         "viewport": [390, 844],
         "screens": screens,

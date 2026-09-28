@@ -46,13 +46,18 @@ const COPY: Record<MapCopyKey, { zh: string; en: string }> = {
          (arrive/begin/complete/depart/skip); all five take an `{activity_id}` that must already exist,
          and there is no collection-level POST/PUT to `/…/activities`;
        - the backend inserts an Activity row at 6 points, none of which takes a traveller-named place:
-         plan composition (`services.py:1212`, `services.py:1770`, `planning/authoritative_v12.py:1347`),
-         stay-option materialisation (`operations/v9.py:631`), trip-studio accept of ids that already
-         exist (`main.py:5957`) and replan accept (`main.py:9965`) -- see
-         `review/n3_0407_write_door_inventory_r1.py`;
-       - `POST /journeys/{id}/location` does exist (`main.py:4521`) and the shell does call it
-         (`V8Experience.tsx:1270`), but `tripHasNoCoordinates` (this component, :17) and `points` (:113)
-         read activity and stay-offer coordinates only, so sharing a position cannot clear this state.
+         plan composition (`services.py:1212` in `generate_plans`/`_generic_compose_plans`,
+         `services.py:1770`, `planning/authoritative_v12.py:1347` in `compose_authoritative_multiday`),
+         stay-option materialisation (`operations/v9.py:631` in `materialize_stay_option`), trip-studio
+         accept of ids that already exist (`main.py:5970` in `_trip_studio_accept_impl`) and replan
+         accept (`main.py:9978`) -- re-measure with
+         `review/n3_0407_write_door_inventory_r1.py`, which names the enclosing function with each line
+         so a moved line number is catchable rather than silently stale;
+       - `POST /journeys/{id}/location` does exist (`main.py:4534`, `post_foreground_location`) and the
+         shell does call it (`V8Experience.tsx:1270`), but `tripHasNoCoordinates` (this component, :38)
+         and `points` (:134) decide on the plan's located activities and the stay offers' coordinates --
+         by ORD-0394 that is `activityCoordinate` at :20 reading `location`, joined off the place row --
+         so sharing a position cannot clear this state.
      So the cell now says which tier it is in, in the ORD-0359 word (`NOT_AVAILABLE`), and says nothing
      about a remedy the screen cannot offer. The opening clause is verbatim as before, because
      `e2e/qoder-today-follows-the-stage.spec.ts` reads it to keep the attention band and the map from

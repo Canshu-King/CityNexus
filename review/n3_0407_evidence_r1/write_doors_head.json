@@ -1,6 +1,6 @@
 {
-  "command": "review/n3_0407_write_door_inventory_r1.py --out review/n3_0407_evidence_r1/write_doors_head.json --sha 2832ffb8a6809e9139764fe8a46b29f38cf38816",
-  "repo_head": "2832ffb8a6809e9139764fe8a46b29f38cf38816",
+  "command": "review/n3_0407_write_door_inventory_r1.py --out review/evidence/n3_0407_write_doors_rebase.json --sha dd5619dc471024d3b5693869857276ab2d1cdc29",
+  "repo_head": "dd5619dc471024d3b5693869857276ab2d1cdc29",
   "denominators": {
     "contract_paths": 141,
     "contract_operations": 153,
@@ -401,7 +401,7 @@
     },
     {
       "file": "frontend/src/features/trash/journeyTrash.ts",
-      "line": 72,
+      "line": 57,
       "method": "POST",
       "url": "/journeys/{p}/${encodeURIComponent(journeyId",
       "context": "{ method: \"POST\" },",
@@ -617,14 +617,14 @@
     },
     {
       "file": "backend/app/main.py",
-      "line": 5957,
+      "line": 5970,
       "kind": "row_insert_point",
-      "enclosing_function": "main.py:5866 def _trip_studio_accept_impl(",
-      "nearest_route_decorator_above": "main.py:5854 @app.post(\"/api/v1/journeys/{journey_id}/plans/preview-reorder\")"
+      "enclosing_function": "main.py:5879 def _trip_studio_accept_impl(",
+      "nearest_route_decorator_above": "main.py:5867 @app.post(\"/api/v1/journeys/{journey_id}/plans/preview-reorder\")"
     },
     {
       "file": "backend/app/main.py",
-      "line": 9965,
+      "line": 9978,
       "kind": "row_insert_point",
       "enclosing_function": null,
       "nearest_route_decorator_above": null
