@@ -1,0 +1,21 @@
+{
+ "rev": "7399f59ccdb2dfe3cdf04477d4e4ffcc077e214a",
+ "served_asset": "/assets/index-BKwMWjc7.js",
+ "pairs": 842,
+ "values_not_found_with_the_rulers_unescape": 1,
+ "values_not_found_with_a_unicode_aware_unescape": 0,
+ "dictionary_values_carrying_a_unicode_escape": 1,
+ "missed_strict": [
+  [
+   "rank.loading",
+   "Reading the plansu2026"
+  ]
+ ],
+ "missed_wide": [],
+ "escaped_examples": [
+  [
+   "rank.loading",
+   "Reading the plans\\u2026"
+  ]
+ ]
+}
