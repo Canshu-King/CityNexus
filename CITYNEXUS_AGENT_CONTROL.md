@@ -16588,6 +16588,36 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### 8e5245f0（道0369）· ORD-0439 行程排序与多方案对比：一屏摆开，排序只用我们自己算得出的维度，分不开的维度明说不用
+
+- 分支 `review/Q-ord0439-plan-ranking`，tip=a07075c9e0a2a5a7428fa4468a8883d7d40a16e4，`git ls-remote origin` 回读与本地逐字符相同；基线=现尖 8d038b21f09477b933cff3b1c7b09845c542373b，`git merge-tree --write-tree` 对它回 rc=0。
+- 两笔提交：4fd09b7d8dd0d17d413d7f15c305d01c46429eba 排序模块+屏，a07075c9e0a2a5a7428fa4468a8883d7d40a16e4 走注册表挂载。外壳 `frontend/src/app/V8Experience.tsx` 一字未动（这就是 ORD-0392 那张表买到的东西）。
+- 新件：`frontend/src/features/planning/planRanking.ts`（blob 9486eacd1ce1c1da16410bc0929f29a8b77ca0a9）、`PlanRankingPanel.tsx`（blob 3ab66d37755ad8508cfb0668f4247dfde660a92b）、`planRankingCopy.ts`、`planRanking.css`；注册表项在 `frontend/src/app/v8PanelRegistry.tsx`（blob 23fd65322d5d3d44f08280381f1e0afa787930b7）hub 那条之后。文案不写 `LocaleContext.tsx`，样式不写 `styles.css`。
+
+**屏上真读了什么**（车道私有 `vite preview :4192` + 私有后端 `:8713`，库=车道自己那份 `q0386.db` 导出副本；headless Chrome 390x844；读数件在车道目录 `D:/moodle/_qoder_q_ord0369_wk/o0439_rank_read.json`（未入库的本机文件，不是 git 对象，故此处不写它的摘要值，避免一枚取不回的 40 位）；本块里可 cat-file 的坐标是上面那枚注册表 blob 23fd65322d5d3d44f08280381f1e0afa787930b7）
+
+- 有 21 份真生成 CANDIDATE 的那趟：标题逐字「把这趟能选的方案摆在一屏上比」，行数=21，面板内可交互元素数=0。
+- 四维度的可比性标记实测为：预算=true、步行时长=false、硬可用证据段数=false、受保护锚点=false（`data-comparable` 逐列读的原文）。
+- 因此屏上那句排序依据逐字是「按这些维度排：预算。」——只有真分得开的维度被用来排序，其余三列照实列出但标着不可比。
+- 两列的"没数据"写法：步行时长列每格是「没量到」，受保护锚点列每格是「没标受保护项」，都不是 0（载荷里 `mobility_evidence.facts[].walking_min` 与 `activities[].protected` 在这 21 份上确实为 null/缺失，我先读载荷再写屏）。
+- 证据那一列每格是 `9/56`，注释逐字「这一版 56 段里有 9 段的证据是闸门认可能当硬依据的，其余是 SYNTHETIC_DEFAULT。」——合成默认值按它自己的名字出现，没写成供应商结果。
+- 0 份可比方案的那趟（封存演示那 9 版全是 SUPERSEDED/ACTIVE）：屏上只有一句「现在没有可比的方案。」，行数=0，没有为了有对比而造方案。
+
+**一条我自己的错，写在入账之前**：提交 4fd09b7d8dd0d17d413d7f15c305d01c46429eba 的信息里我写了「排序由预算与硬可用证据段数承担」，而上面同一次读数的 `data-comparable` 显示证据列是 false（那 21 份共用同一枚快照，段数全等，分不开）。枝已推，按 Q57 我不回写它，正确口径以本块为准：**这一屏的排序实际只由预算承担。**
+
+**没做/没验的部分（请号令者按这几格判）**
+
+1. 雨天替代这一维**没上屏**，因为算不出来：全仓 `grep -riE 'rainy|rain_alternative|indoor_alternative|wet_day|backup_plan'` 在 `backend/app`、`contracts/openapi.yaml`、`frontend/src` 上只有 2 处命中，一处是 `.pyc`，另一处是 mock 引擎里的 `INDOOR_ALTERNATIVE`（`backend/app/replanning/mock_replan_engine.py:473`）；`onRain` 是 UI 动作（`frontend/src/app/V8Experience.tsx:1169` 起），`weather_exposure` 只挂在 mobility fact 上（`backend/app/db/models.py:905`），都不是 per-plan 可比字段。要这一维得先有后端字段，那是另一单。
+2. 受保护锚点这一维在屏上但**不参与排序**：载荷里 `activities[].protected` 在这两趟上都是 null（实测 keys 列表里没有 protected），只有 `locked`。所以它只能显示「没标受保护项」。
+3. **这一屏没有自动门禁**：我没写完 e2e 规格里那四臂（维度集合、absent 不许是 0、证据具名、空态不造方案），本回合预算不够，宁可交"人肉读过的两屏 + 缺门"这一格，不交半套绿的。下一回合点名我就补，或交给有 e2e 热车道的会话更快。
+4. `score_breakdown` 那九维我**没用**：`backend/app/services.py:662` 起对 legacy 行会把九维全部用同一个 aggregate 合成，拿它排序等于把同一个数复读九遍；这条如果要用，得先有"哪些行是真算的"标记。
+5. 排序方向我按"钱少优先、硬证据多优先"写死在 `RANK_DIMS` 里（`frontend/src/features/planning/planRanking.ts:22`），屏上会把实际用到的维度念出来；号令者若要换优先级，改那一行即可，屏与门都会跟着说。
+
+环境自证：git 全程 `git -c http.proxy= -c https.proxy=`；HTTP 清代理；没跑 `demo/reset`、没碰 `_preview.db`、没依赖 `:8000`、`:4781/:4782/:8693` 未操作；量完车道进程自报拆除。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### ORD-0422 补交 · 车道 Q（会话 904a042d）· 十一处逐条给"怎么走到 + 两臂读数"，并对 `V14 · REALITY CHANGED` 下判断 · 本块零产品字节
 
 **先说性质**：本轮没改一个产品字节，没推枝，没碰 `frontend/src/styles.css` 与
