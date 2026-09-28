@@ -3,6 +3,7 @@ import { Fragment, type ReactNode } from "react";
 import { ActivityDetail } from "../features/trip/ActivityDetail";
 import { AgentComposer } from "../features/agent/AgentComposer";
 import { BookingArtifactScanner } from "../features/inbox/BookingArtifactScanner";
+import { CollectionPanel } from "../features/collections/CollectionPanel";
 import { ControlTowerPanel } from "../features/intelligence/ControlTowerPanel";
 import { DestinationPreparationPanel } from "../features/discovery/DestinationPreparationPanel";
 import { HotelsPanel } from "../features/stay/HotelsPanel";
@@ -158,6 +159,22 @@ export const routePanels: V8PanelEntry<RouteScope>[] = [
         />
       </>
     ),
+  },
+  {
+    /* ORD-0444: 我的收藏 -- the collection container's read-only list screen.
+       It shares the 城市探索 route instead of getting a key of its own, and the reason is measured
+       rather than taste: the nav strip resolves a label as `t("nav." + item.key)`
+       (`app/V8Experience.tsx:1731`), and `t()` falls back to the key itself when the dictionary has
+       no entry (`i18n/LocaleContext.tsx:1825` -- `dictionaries.en[key] ?? key`). Adding a key to
+       `routes/v8Routes.ts` would therefore put the literal `nav.collections` in the sidebar, and
+       `LocaleContext.tsx` is a file this order may not open. Sitting under the two discovery panels
+       is also where the empty state points: 「在上面的「城市探索」里挑一枚地点」 names the block
+       that is actually on the screen above it. */
+    id: "collections",
+    surface: "route",
+    testId: "collection-panel",
+    when: (s) => s.route === "discover",
+    render: () => <CollectionPanel />,
   },
   {
     id: "live",
