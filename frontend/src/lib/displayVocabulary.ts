@@ -81,11 +81,13 @@ export function planSourceLabel(value: unknown, zh?: boolean | string | null): s
 }
 
 /** The clock's zone is a fact the traveller may need to check against the server, so the IANA id
- *  stays visible next to the human words rather than being replaced by them. */
+ *  stays visible next to the human words rather than being replaced by them. Zone ids carry a
+ *  slash and mixed case (`Asia/Shanghai`), so they are looked up verbatim before the upper-cased
+ *  enum normalisation -- normalising first is exactly how `Asia/Shanghai` fell through to the raw
+ *  channel on the first candidate build. */
 export function clockZoneLabel(value: unknown, zh?: boolean | string | null): string {
-  const key = keyOf(value);
   const raw = String(value ?? "").trim();
-  const entry = TIME_ZONE[key];
+  const entry = TIME_ZONE[raw] || TIME_ZONE[keyOf(raw)];
   if (!entry || !raw) return rawChannel(value, zh);
   return wantsChinese(zh) ? `${entry.zh}（${raw}）` : `${entry.en} (${raw})`;
 }
