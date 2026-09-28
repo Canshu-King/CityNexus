@@ -370,6 +370,9 @@ from app.schemas import (
     Event as EventSchema,
 )
 from app.schemas import (
+    Journey as JourneySchema,
+)
+from app.schemas import (
     JourneyTwin as JourneyTwinSchema,
 )
 from app.schemas import (
@@ -2876,6 +2879,71 @@ def create_journey(payload: JourneyCreate, session: Session = Depends(get_sessio
     )
     session.commit()
     return journey_schema(journey)
+
+
+@app.get("/api/v1/journeys", response_model=list[JourneySchema])
+def list_journeys(session: Session = Depends(get_session)):
+    """Every trip on this server that a traveller has not put in the recycle bin.
+
+    ORD-0383 slice 1 keeps this door to one rule - `deleted_at IS NULL` - so it has no
+    pagination, no per-traveller scope and no bin listing; those are the next slices' orders.
+    A deleted trip stays readable at `GET /api/v1/journeys/{journey_id}` and behind it at the
+    sub-resource doors: the query below is the only place on this tree that filters the column,
+    and no other module under `backend/app` reads it.  Slice 1 removes a trip from the list,
+    not from the store, and the row is what a recycle bin will have to show.
+    """
+
+    items = session.scalars(
+        select(Journey)
+        .where(Journey.deleted_at.is_(None))
+        .order_by(Journey.created_at, Journey.id)
+    ).all()
+    return [journey_schema(item) for item in items]
+
+
+@app.delete("/api/v1/journeys/{journey_id}", status_code=204)
+def delete_journey(journey_id: UUID, session: Session = Depends(get_session)):
+    """Soft delete: record the moment in `journeys.deleted_at`, keep the row.
+
+    The two refusals carry their own names because a screen must not say one sentence for
+    both: `JOURNEY_NOT_FOUND` (404) - there is no such row; `JOURNEY_ALREADY_DELETED` (409) -
+    the row is already in the bin, and its original moment is left alone rather than
+    overwritten, so a second tap cannot make a trip look more recently deleted than it is.
+
+    `status` is not touched.  It answers what the trip was doing, and its closed CHECK
+    (`backend/db/schema.sql:125`) has no word for "in the bin" - inventing one would rebuild
+    the table for a fact that now has a column of its own.
+    """
+
+    journey = session.get(Journey, str(journey_id))
+    if journey is None:
+        return error(
+            "JOURNEY_NOT_FOUND",
+            f"Journey {journey_id} was not found",
+            status=404,
+            details={"journey_id": str(journey_id)},
+            message_key="journey.not_found",
+        )
+    if journey.deleted_at is not None:
+        return error(
+            "JOURNEY_ALREADY_DELETED",
+            f"Journey {journey_id} is already deleted",
+            status=409,
+            details={"journey_id": str(journey_id), "deleted_at": journey.deleted_at},
+            message_key="journey.already_deleted",
+        )
+    before = journey_schema(journey).model_dump(mode="json")
+    journey.deleted_at = datetime.now(timezone.utc).isoformat()
+    session.commit()
+    record_audit(
+        session,
+        action="journey.deleted",
+        entity_type="Journey",
+        entity_id=journey.id,
+        journey_id=journey.id,
+        before=before,
+    )
+    session.commit()
 
 
 @app.get("/api/v1/journeys/{journey_id}")

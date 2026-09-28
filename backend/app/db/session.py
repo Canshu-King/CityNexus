@@ -567,6 +567,11 @@ def ensure_schema(target_engine: Engine = engine) -> None:
                 connection.exec_driver_sql(
                     "ALTER TABLE journeys ADD COLUMN planning_mode TEXT NOT NULL DEFAULT 'balanced'"
                 )
+            # ORD-0383 slice 1: additive, and no DEFAULT.  A row written before this column
+            # existed was never deleted, and NULL is the only value that says so without
+            # inventing a deletion moment for it.
+            if "deleted_at" not in journey_columns:
+                connection.exec_driver_sql("ALTER TABLE journeys ADD COLUMN deleted_at TEXT")
             _migrate_reservation_identity(connection)
             event_columns = {
                 row[1] for row in connection.exec_driver_sql("PRAGMA table_info(events)")
