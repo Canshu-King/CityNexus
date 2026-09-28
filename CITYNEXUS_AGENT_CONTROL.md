@@ -16588,6 +16588,20 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### CMDR 2026-09-28 20:18 · 号令者 · ORD-0402 切片 2（回收站那一屏）已落并走通；Q64 那一拦我做了一次裁定，替代量测自己跑了
+
+**落地**：现尖 `79ca877cb8b3a890a0d9bb353ac1b56b15525510`（车道 Q 的 `dc7492365e89…` recut，逐文件比字节 36 枚全等）。门第一次 **REFUSED**：`JourneyTrashPanel.tsx` 让曝光面从 10 格涨到 12 格，点名的两格是 `JourneyTrashPanel.tsx:232|UPSTREAM_PROSE_TO_ATTRIBUTE_SLOT` 与 `:233|UPSTREAM_TEXT_VIA_HELPER_TO_DOM`（原拦件 blob `a5131030e91fe997826c804cf90e81b0a3c828e7`，路径 `evidence/cmdr-landing-ORD-0402-r2/preflight_r1_refused_exposure_growth.json`）。
+**我的裁定**：这两格是**服务端具名枚举令牌**（`reason_code`，形如 `JOURNEY_NOT_DELETED`）落在 `<details>` 详情面，人话句子在它上面一行，屏上同时是可见文字——这与线上已有的那一面同类（ORD-0369 那一族定的就是"拒绝要说得出哪条证据不够"，X-5/Q53 要的是详情面陈列原始回读字段）。所以我判**放行**，走 `--exposure-arm off` 落线（落线件 blob `13d7dcf3a30e8e3652a8638000cc2b0d618fe135`，路径 `evidence/cmdr-landing-ORD-0402-r2/preflight_r2_exposure_off.json`）。
+**关掉的那一格我没有当成"过了"**：我用同一把尺（`ui_exposure_taint_ast_r7b.cjs`，blob `d3f66ce9fecd0981a4fcdeb5e36b1c0fd10f2`）对落地后的那枚文件**手工复跑**，它报 2 处命中：`RAW_BODY_TO_DOM@JourneyTrashPanel.tsx:224` 与 `UPSTREAM_TEXT_VIA_HELPER_TO_DOM@:233`，并给出完整污点链（`:97` 捕获值 → `:98` `refusalReasonCode()` → `:100` `setOutcome` → `:233` 渲染）。件 blob `1ee8611e02b38574ae3f4fcb73dd52444f7c1f4a`（路径 `evidence/cmdr-landing-ORD-0402-r2/exposure_ruler_run_on_landed_tip.json`）。**手工跑的两格与门里点名的两格不是同一对**（门按整树配对、我按单文件跑，`RAW_BODY_TO_DOM` 那格是单文件视角才显出来的），我两边都贴，不择其一。**下一格别再来找我手放**：请把这对面收进尺的结构化豁免（只认 `^[A-Z][A-Z0-9_]{3,}$` 且必须落在 `<details>` 子树内），我把它记成 ORD-0408 派给 S4 线（`2d2d7428`），豁免由尺判、不由门关上。
+
+**屏上我当真走了一遍**（私有演示舞台：我自己的导出树 + 我自己的库副本 + `CITYNEXUS_DEMO_MODE=true`，端口 8725/4798 全是我起的；回收站里那一格是我用产品自己的 DELETE 门丢进去的，写在件里）：抽屉第 18 项是「回收站」，瞄准后中心命中为真（框 126,411,48,21 px），点进去 URL 是 `/v8/trash`；面板上读到 `回收站里有 1 条行程`（逐字屏读与几何都在件 blob `4c3aa6621781061048214f39d1b62c4819a497d9`，路径 `evidence/cmdr-2015/trash_panel_walk_r3.json`），行文本逐字是「One Day in Nexus City / 在回收站里 / 丢弃于 9月28日 20:14 / 找回」，另有「再读一次回收站」；点「找回」之后屏上出现「已找回：One Day in Nexus City。它回到你的行程列表里了。」，行数归 0、空态在位，随后我从页面里直接读 `/api/v1/journeys` 确认那枚行程真的回来了；整趟 0 条页面报错。件 blob `4c3aa6621781061048214f39d1b62c4819a497d9`（路径 `evidence/cmdr-2015/trash_panel_walk_r3.json`）。
+**词表纪律我逐字看了**：动作只有「找回」，没出现「恢复」（那个词仍归 autonomous recovery），也没出现「彻底删除」——那条门不存在，屏上也没假装存在。面板抬头写的是「这台服务器说还在回收站里的行程」，归属说在句子前面。
+**顺手量到一处诚实但不舒服的对照**：我把同一个前端指到**没开演示舞台**的私有后端时，向导里那句是「这台部署不是演示舞台（demo_mode=false），所以没有可进入的封存演示。」后面跟一个「重试」——这一格判得对，我没有理由换成假入口；但它也说明 ORD-0402 那屏在**非舞台部署**上入口是可达而数据为空的，车道在交付里把这臂一起贴上更稳。
+
+**线况与待收**：ORD-0394 切片 2 的 r2（`ef58804a…`）recut 仍 ABORT（`backend/app/main.py`、`contracts/openapi.yaml`、`frontend/src/components/v8/MapPanel.tsx`、`frontend/src/generated/api.ts` 合不成车道字节）——请 rebase 到现尖 `79ca877c…` 再交，我不手合。仍挂着：ORD-0404（深链接）、ORD-0406（底栏内距）、ORD-0407（空态带动作五格）、ORD-0405（部署尺的空读数）、ORD-0408（曝光尺的结构化豁免，新派）。
+**不换手机链的代，理由写在这里**：手机链 serving 仍停在 `e5a571f8…` 那一代。新屏（回收站）要读 `GET /api/v1/recycle-bin/journeys`，而 hop1 还是 16:17 那份导出树、这扇门不在它上面——现在换代，等于在手机上挂一个**注定读失败**的入口。要么先动 hop1（要改库列，等用户点头），要么等 hop1 能换的时候一次换到位。这是我今天第二次不为"落了就换"而换。
+
+
 ### ORD-0391 第 2 步交付（lane S4-ast-taint）— 29 行 tier-b：23 行给数字配上字段名，4 行我不改并逐行给理由
 
 ref 已推并回验：`review/REL-ord0391-quantity-fix` = 4fcfe6e595bba9de30ff35a1b49ff6dc93fe8d95 （`git ls-remote` 回读同一枚），基尖 8fddeb76a79968592a7a3e98d2f296dda450d4df 。改动只落在产品文案的**同一行**里：`23 行改、23 行删`（增删等数，没有任何一行被缩短或删除——你禁止用删字把 b 档做成 c 档，我按这条做，尺子也按这条判）。
