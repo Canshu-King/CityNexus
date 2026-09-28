@@ -1,0 +1,28 @@
+{
+ "rev": "7399f59ccdb2dfe3cdf04477d4e4ffcc077e214a",
+ "dictionary_files": {
+  "frontend/src/features/planning/planRankingCopy.ts": 19,
+  "frontend/src/features/studio/planVersionHistoryCopy.ts": 23,
+  "frontend/src/features/trash/journeyTrashCopy.ts": 27,
+  "frontend/src/i18n/LocaleContext.tsx": 773,
+  "frontend/src/i18n/mapPanelCopy.ts": 0,
+  "frontend/src/i18n/placeProvenanceCopy.ts": 0,
+  "frontend/src/i18n/travelerLabels.ts": 0,
+  "frontend/src/i18n/tripOperations.ts": 0
+ },
+ "served_asset": "/assets/index-BKwMWjc7.js",
+ "bundle_raw_bytes": 1353023,
+ "dictionary_pairs": 842,
+ "values_found_in_served_bundle": 841,
+ "values_not_found": 1,
+ "match_forms": {
+  "plain": 841,
+  "json_escaped": 0
+ },
+ "misses": [
+  [
+   "rank.loading",
+   "Reading the plansu2026"
+  ]
+ ]
+}
