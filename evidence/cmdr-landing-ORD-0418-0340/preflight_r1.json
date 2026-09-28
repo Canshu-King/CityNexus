@@ -1,0 +1,177 @@
+{
+ "schema": "CNX_CMDR_LANDING_PREFLIGHT_V1_R7",
+ "lane": "commander 494abfd7",
+ "at_local": "2026-09-29T03:40:37+0800",
+ "mode": "LAND",
+ "authoritative_line": "mirror/integration-frontend-apple-pass1",
+ "tip_re_read_from_github_before": "3543928ea1b7a0466871b6fbc3c3d24f64b14044",
+ "candidate_ref": "review/cmdr-recut-ORD-0418-r1",
+ "candidate_tip": "8d038b21f09477b933cff3b1c7b09845c542373b",
+ "genealogy": {
+  "ff_possible_rc": 0,
+  "ff_possible": true,
+  "merge_base": "3543928ea1b7a0466871b6fbc3c3d24f64b14044",
+  "line_only_commits": 0,
+  "candidate_only_commits": 3
+ },
+ "file_sets": {
+  "line_side_since_base": [],
+  "candidate_side_since_base": [
+   "frontend/src/components/v8/MapPanel.tsx",
+   "frontend/src/i18n/LocaleContext.tsx",
+   "review/ord0418/CLAIM_R2.txt",
+   "review/ord0418/claim_after_r2.json",
+   "review/ord0418/claim_before_r2.json",
+   "review/ord0418/claim_mutant_r2.json",
+   "review/ord0418/cmdr_map_route_claim_r1.js",
+   "review/ord0418/server_fields_r2.json"
+  ],
+  "intersection": [],
+  "product_introduced_by_candidate": [
+   "frontend/src/components/v8/MapPanel.tsx",
+   "frontend/src/i18n/LocaleContext.tsx"
+  ]
+ },
+ "merge_tree": {
+  "exit": 0,
+  "first_line": "e68381b0935d6db983ee96d101ae3707154b4bb2",
+  "conflict_reported": false,
+  "stderr_head": ""
+ },
+ "gate_run": {
+  "requested": [],
+  "collect_exit": null,
+  "collected": null,
+  "test_exit": null,
+  "summary": null,
+  "export": "D:/moodle/_qoder_cmdr_ref_20260921/snap_preflight_033911",
+  "blob_equality": [
+   {
+    "path": "frontend/src/components/v8/MapPanel.tsx",
+    "candidate_blob": "53828f1299c05832b6b22a83025fe573ff6ee21d",
+    "export_blob": "53828f1299c05832b6b22a83025fe573ff6ee21d",
+    "equal": true
+   },
+   {
+    "path": "frontend/src/i18n/LocaleContext.tsx",
+    "candidate_blob": "28a7e1228ee148fcfd0cc3a9e1fe6bb6e5a2c172",
+    "export_blob": "28a7e1228ee148fcfd0cc3a9e1fe6bb6e5a2c172",
+    "equal": true
+   },
+   {
+    "path": "review/ord0418/CLAIM_R2.txt",
+    "candidate_blob": "c663dbd08a0f58a9824a15c4905aceff66a32903",
+    "export_blob": "c663dbd08a0f58a9824a15c4905aceff66a32903",
+    "equal": true
+   },
+   {
+    "path": "review/ord0418/claim_after_r2.json",
+    "candidate_blob": "42c6fd1ad638b6c6943119a3d9d9a3684e7a132c",
+    "export_blob": "42c6fd1ad638b6c6943119a3d9d9a3684e7a132c",
+    "equal": true
+   },
+   {
+    "path": "review/ord0418/claim_before_r2.json",
+    "candidate_blob": "c36c6cd46505a18bb71a480ff834e6e45d2abc6c",
+    "export_blob": "c36c6cd46505a18bb71a480ff834e6e45d2abc6c",
+    "equal": true
+   },
+   {
+    "path": "review/ord0418/claim_mutant_r2.json",
+    "candidate_blob": "1431d26354bce64012e33ef787c957dc2cf621ad",
+    "export_blob": "1431d26354bce64012e33ef787c957dc2cf621ad",
+    "equal": true
+   },
+   {
+    "path": "review/ord0418/cmdr_map_route_claim_r1.js",
+    "candidate_blob": "1815ba0d15c35c4c90ed9a7862153e15ece753c6",
+    "export_blob": "1815ba0d15c35c4c90ed9a7862153e15ece753c6",
+    "equal": true
+   },
+   {
+    "path": "review/ord0418/server_fields_r2.json",
+    "candidate_blob": "1aa05f85a5737bb2ba67817ecbf113adf5a3facd",
+    "export_blob": "1aa05f85a5737bb2ba67817ecbf113adf5a3facd",
+    "equal": true
+   }
+  ],
+  "whole_suite": {
+   "collect_exit": 0,
+   "collected": 1436,
+   "interrupted": false,
+   "error_lines": [
+    "tests/test_qoder_ord0332_error_receipt.py::test_R7_the_envelope_keeps_every_field_it_already_had",
+    "tests/test_qoder_ord0332_error_receipt.py::test_R8_the_seed_is_read_off_the_real_request_not_just_the_dataclass",
+    "tests/test_solver_runtime_policy.py::test_unexpected_solver_programming_error_is_not_silently_hidden"
+   ],
+   "tail": [
+    "    _PortalFactoryType = Callable[[], AbstractContextManager[anyio.abc.BlockingPortal]]",
+    "-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html",
+    "1436 tests collected in 16.70s"
+   ],
+   "cmd": "D:/moodle/CityNexus/.venv/Scripts/python.exe -m pytest --collect-only -q tests  (cwd=<export>/backend, PYTHONPATH=<export>)"
+  },
+  "deletions": {
+   "deleted_by_candidate": [],
+   "still_present_in_export": []
+  },
+  "interpreter": "Python 3.12.14 (main, Aug 25 2026, 14:01:42) [MSC v.1944 64 bit (AMD64)]",
+  "exposure": {
+   "ruler_blob": "d3f66ce9fecd0790981a4fcdeb5e36b1c0fd10f2",
+   "ruler_blob_computed": null,
+   "ruler_file": "ui_exposure_taint_ast_r7b.cjs",
+   "candidate_files_in_view": 2,
+   "tip_cells": 12,
+   "cand_cells": 12,
+   "growth_by_file_and_rule": {},
+   "unpaired_added": [],
+   "added_line_exact": [],
+   "shifted_only": false,
+   "removed_count": 0,
+   "removed": [],
+   "disclosed_slip": "a same-file, same-rule relocation with equal counts reads as a shift; the AST ruler has no cell identity"
+  },
+  "frontend_build": {
+   "builder_rc": 0,
+   "vite_build_rc": 0,
+   "dist_exists": true,
+   "index_exists": true,
+   "asset_refs": [
+    "/assets/index-ChWUjpBx.js",
+    "/assets/index-B70T0Sqi.css"
+   ],
+   "live_tree": "e68381b0935d6db983ee96d101ae3707154b4bb2",
+   "info_file": "D:\\moodle\\_qoder_cmdr_ref_20260921\\live_checks\\_build_8d038b2_info.json",
+   "build_tail": [
+    "files generated",
+    "  dist/v10-sw.js",
+    "  dist/workbox-6923124b.js",
+    "\u001b[33m",
+    "(!) Some chunks are larger than 500 kB after minification. Consider:",
+    "- Using dynamic import() to code-split the application",
+    "- Use build.rollupOptions.output.manualChunks to improve chunking: https://rollupjs.org/configuration-options/#output-manualchunks",
+    "- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.\u001b[39m"
+   ]
+  }
+ },
+ "problems": [],
+ "verdict": "READY_TO_LAND",
+ "landing": {
+  "http": 200,
+  "response_head": "{'ref': 'refs/heads/mirror/integration-frontend-apple-pass1', 'node_id': 'REF_kwDOUhlJJ9oAMnJlZnMvaGVhZHMvbWlycm9yL2ludGVncmF0aW9uLWZyb250ZW5kLWFwcGxlLXBhc3Mx', 'url': 'https://api.github.com/repos/Ca",
+  "tip_after": "8d038b21f09477b933cff3b1c7b09845c542373b",
+  "branches_route": "8d038b21f09477b933cff3b1c7b09845c542373b",
+  "both_routes_agree": true,
+  "landed": true
+ },
+ "discipline": {
+  "evidence_paths_overwritten": 0,
+  "databases_opened": 0,
+  "surfaces_started_or_stopped": 0,
+  "credential_values_printed": 0,
+  "candidate_refs_pushed_by_commander": 0
+ },
+ "claim_kind": "git_and_pytest_determined",
+ "claimed_result": null,
+ "derived_result": null
+}
