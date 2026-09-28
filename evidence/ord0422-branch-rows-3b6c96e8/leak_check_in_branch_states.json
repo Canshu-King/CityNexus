@@ -1,0 +1,32 @@
+{
+ "authoritative": {
+  "zh_arm_leaves": 81,
+  "en_arm_leaves": 81,
+  "inventory_leaking_on_zh": 0,
+  "leaked": [],
+  "inventory_readable_on_en": 9,
+  "bottom": [
+   true,
+   true
+  ],
+  "paths": [
+   "/v8/authoritative",
+   "/v8/authoritative"
+  ]
+ },
+ "twin": {
+  "zh_arm_leaves": 37,
+  "en_arm_leaves": 37,
+  "inventory_leaking_on_zh": 0,
+  "leaked": [],
+  "inventory_readable_on_en": 6,
+  "bottom": [
+   true,
+   true
+  ],
+  "paths": [
+   "/v8/twin",
+   "/v8/twin"
+  ]
+ }
+}
