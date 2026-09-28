@@ -216,6 +216,13 @@ export function PoiImportPanel({
               <p data-testid="poi-import-char-count">
                 {t("poiImport.charCount", { n: text.length })}
               </p>
+              {/* The reference input box states its supported scope in the hint (map_findings.md Q3:
+                  小红书笔记 / 公众号内容 / 已公开权限的飞书文档). Saying it here is what keeps an
+                  unread link from reading as a failure of the traveller's paste -- and the sentence has
+                  to say we do not open those pages, or the list would be a promise this build breaks. */}
+              <p className="v8-sheet-note" data-testid="poi-import-scope-hint">
+                {t("poiImport.scopeHint")}
+              </p>
             </>
           )}
           <div className="v8-agent-toolbar">
