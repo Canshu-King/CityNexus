@@ -1,0 +1,142 @@
+{
+ "base": "http://127.0.0.1:4822",
+ "errors": [],
+ "screens": {
+  "twin": {
+   "dock": {
+    "present": true,
+    "rect": {
+     "x": 336,
+     "y": 714,
+     "w": 44,
+     "h": 56
+    },
+    "in_viewport": true,
+    "styles": {
+     "opacity": "1",
+     "visibility": "visible",
+     "pointer_events": "auto",
+     "transform": "none"
+    },
+    "hit_is_dock_or_child": true,
+    "hit_tag": "SPAN",
+    "overlapping_text": [
+     {
+      "text": "无障碍硬性需求不会从行为里推断出来。",
+      "ox": 12,
+      "oy": 5
+     },
+     {
+      "text": "✦",
+      "ox": 25,
+      "oy": 25
+     }
+    ],
+    "yield_class": "cn-copilot-dock collapsed idle-compact yield-at-rest"
+   },
+   "click": {
+    "clicked": true,
+    "hit_tag": "SPAN"
+   },
+   "after_click": {
+    "candidate_testid": "v18-copilot-dock",
+    "body_len": 424,
+    "has_input": true
+   },
+   "reached_route": "/v8/twin"
+  },
+  "discover": {
+   "dock": {
+    "present": true,
+    "rect": {
+     "x": 336,
+     "y": 662,
+     "w": 44,
+     "h": 56
+    },
+    "in_viewport": true,
+    "styles": {
+     "opacity": "1",
+     "visibility": "visible",
+     "pointer_events": "auto",
+     "transform": "none"
+    },
+    "hit_is_dock_or_child": true,
+    "hit_tag": "SPAN",
+    "overlapping_text": [
+     {
+      "text": "塑造城市停留",
+      "ox": 17,
+      "oy": 22
+     },
+     {
+      "text": "描述偏好、心情或约束。模型可选择语义方向，但只有服务端已知的地点才能到达权威方案。",
+      "ox": 17,
+      "oy": 21
+     },
+     {
+      "text": "✦",
+      "ox": 25,
+      "oy": 25
+     }
+    ],
+    "yield_class": "cn-copilot-dock collapsed idle-compact yield-at-rest"
+   },
+   "click": {
+    "clicked": true,
+    "hit_tag": "SPAN"
+   },
+   "after_click": {
+    "candidate_testid": "v13-discovery-goal",
+    "body_len": 422,
+    "has_input": true
+   },
+   "reached_route": "/v8/discover"
+  },
+  "hub": {
+   "dock": {
+    "present": true,
+    "rect": {
+     "x": 336,
+     "y": 714,
+     "w": 44,
+     "h": 56
+    },
+    "in_viewport": true,
+    "styles": {
+     "opacity": "1",
+     "visibility": "visible",
+     "pointer_events": "auto",
+     "transform": "none"
+    },
+    "hit_is_dock_or_child": true,
+    "hit_tag": "SPAN",
+    "overlapping_text": [
+     {
+      "text": "单指拖动地图 · 双指缩放 · 想翻这一页就拖地图以外的地方",
+      "ox": 37,
+      "oy": 11
+     },
+     {
+      "text": "✦",
+      "ox": 25,
+      "oy": 25
+     }
+    ],
+    "yield_class": "cn-copilot-dock collapsed idle-compact yield-at-rest"
+   },
+   "click": {
+    "clicked": true,
+    "hit_tag": "SPAN"
+   },
+   "after_click": {
+    "candidate_testid": "v18-copilot-dock",
+    "body_len": 643,
+    "has_input": true
+   },
+   "reached_route": "/v8/hub"
+  }
+ },
+ "entry_used": true,
+ "verdict": "PILL_STILL_COVERS_OR_UNHITTABLE_ON:twin,discover,hub"
+}
