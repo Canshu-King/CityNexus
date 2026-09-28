@@ -1,0 +1,106 @@
+{
+  "instrument": "cmdr_drawer_group_headings_r1",
+  "base": "http://127.0.0.1:4805/",
+  "viewport": "390x844",
+  "arms": {
+    "zh": {
+      "locale": "zh",
+      "entryAssets": [
+        "/assets/index-CGSMsxT2.js"
+      ],
+      "sealClicked": true,
+      "hamburgerFound": 1,
+      "drawerOpen": 1,
+      "documentElementLang": "zh-CN",
+      "sealText": "使用封存的演示行程",
+      "groupHeadings": [
+        "TODAY",
+        "PLAN",
+        "TRAVEL",
+        "SYSTEM"
+      ],
+      "headKicker": [
+        "全部路由"
+      ],
+      "rowLabels": [
+        "今天",
+        "实时行程",
+        "地图",
+        "行程工作台",
+        "住宿选择",
+        "城市探索",
+        "旅行票夹",
+        "Copilot",
+        "恢复与执行",
+        "智能守护",
+        "旅行者画像",
+        "回收站",
+        "行程",
+        "我的"
+      ],
+      "closeLabel": [
+        "关闭"
+      ]
+    },
+    "en": {
+      "locale": "en",
+      "entryAssets": [
+        "/assets/index-CGSMsxT2.js"
+      ],
+      "sealClicked": true,
+      "hamburgerFound": 1,
+      "drawerOpen": 1,
+      "documentElementLang": "en",
+      "sealText": "Use the sealed demo trip",
+      "groupHeadings": [
+        "TODAY",
+        "PLAN",
+        "TRAVEL",
+        "SYSTEM"
+      ],
+      "headKicker": [
+        "All routes"
+      ],
+      "rowLabels": [
+        "Today",
+        "Live Journey",
+        "Map",
+        "Trip Studio",
+        "Stay Explorer",
+        "City Discovery",
+        "Travel Wallet",
+        "Copilot",
+        "Recovery",
+        "Intelligence",
+        "Traveler Twin",
+        "Recycle bin",
+        "Trips",
+        "Me"
+      ],
+      "closeLabel": [
+        "Close"
+      ]
+    }
+  },
+  "finding": {
+    "zhHeadingsRendered": [
+      "TODAY",
+      "PLAN",
+      "TRAVEL",
+      "SYSTEM"
+    ],
+    "zhHeadingsLatinOnlyCount": 4,
+    "zhRowLabelsCjk": {
+      "total": 14,
+      "withCjk": 13,
+      "withLatinOnly": 1
+    },
+    "zhKicker": [
+      "全部路由"
+    ],
+    "note": "if zhHeadingsLatinOnlyCount > 0 while zhRowLabelsCjk.withCjk == row count, the headings bypass the dictionary",
+    "sourceLineClaimed": "frontend/src/app/V8Experience.tsx:1983 renders item.group without t()",
+    "enArmDrawerReachable": true,
+    "enArmNote": "the hamburger is only mounted on the shell routes; the en arm stops on onboarding because the seal entry text differs, so the en arm of the heading check is NOT_REACHED_BY_CMDR"
+  }
+}
