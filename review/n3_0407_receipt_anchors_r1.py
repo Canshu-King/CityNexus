@@ -17,6 +17,34 @@ import re
 from pathlib import Path
 
 # (receipt arm, top-level key path) -- dotted, list indices as numbers.
+ROOT = Path(__file__).resolve().parents[1]
+
+# (file, needle) -- every source line the delivery block cites is found this way, so a landing that
+# shifts a line shifts the citation too instead of leaving a stale number in the ledger.
+SOURCE_NEEDLES = [
+    ("frontend/src/i18n/mapPanelCopy.ts", 'noLocationBody: { zh: "这个行程还没有可信的坐标'),
+    ("frontend/src/components/v8/MapPanel.tsx", "data-cnx-activity-entry"),
+    ("frontend/src/components/v8/MapPanel.tsx", "export function tripHasNoCoordinates"),
+    ("frontend/src/components/v8/MapPanel.tsx", "export function activityCoordinate"),
+    ("frontend/src/components/v8/MapPanel.tsx", "const points = useMemo"),
+    ("frontend/src/app/V8Experience.tsx", 'data-testid="bookings-no-stay-action"'),
+    ("frontend/src/app/V8Experience.tsx", "const shareForegroundLocation"),
+    ("frontend/src/i18n/LocaleContext.tsx", '"bookings.noStayAction": "Open Stay Explorer'),
+    ("frontend/src/i18n/LocaleContext.tsx", '"bookings.noStayAction": "到「住宿选择」'),
+    ("frontend/src/i18n/LocaleContext.tsx", '"nav.stay": "Stay Explorer"'),
+    ("frontend/src/i18n/LocaleContext.tsx", '"nav.stay": "住宿选择"'),
+    ("frontend/src/features/execution/LiveRecovery.tsx", "ORD-0407 ③"),
+    ("contracts/openapi.yaml", "/journeys/{journey_id}/activities/{activity_id}/complete:"),
+    ("contracts/openapi.yaml", "/journeys/{journey_id}/activities/{activity_id}/depart:"),
+    ("contracts/openapi.yaml", "/journeys/{journey_id}/activities/{activity_id}/arrive:"),
+    ("contracts/openapi.yaml", "/journeys/{journey_id}/activities/{activity_id}/begin:"),
+    ("contracts/openapi.yaml", "/journeys/{journey_id}/activities/{activity_id}/skip:"),
+    ("backend/app/main.py", '@app.post("/api/v1/journeys/{journey_id}/location"'),
+    ("frontend/e2e/qoder-ord0407-empty-state-actions.spec.ts", 'test("C2 '),
+    ("frontend/e2e/qoder-ord0407-empty-state-actions.spec.ts", 'test("C4 '),
+    ("frontend/e2e/qoder-ord0407-empty-state-actions.spec.ts", 'test("C6 '),
+]
+
 WANTED = [
     ("C1", "unlocatable_journey.journey_id"),
     ("C1", "unlocatable_journey.server_says.city_code"),
@@ -113,6 +141,16 @@ def main() -> int:
         out.append(f"- `{k}={v}` -> n3_0407_copy_pair_r1.json:{line}")
     line = next((i + 1 for i, l in enumerate(ctext.splitlines()) if '"values_not_found"' in l), 0)
     out.append(f"- `values_not_found={json.loads(ctext)['values_not_found']}` -> n3_0407_copy_pair_r1.json:{line}")
+
+    out.append("\n## source lines (re-measured by needle, never hand-typed)\n")
+    for path, needle in SOURCE_NEEDLES:
+        try:
+            lines = (ROOT / path).read_text(encoding="utf-8").splitlines()
+        except OSError:
+            out.append(f"- {path}: MISSING")
+            continue
+        hit = next((i + 1 for i, l in enumerate(lines) if needle in l), 0)
+        out.append(f"- `{path}:{hit}` <- needle `{needle[:48]}`")
 
     out.append("\n## instruments and product lines\n")
     for p in INSTRUMENTS:
