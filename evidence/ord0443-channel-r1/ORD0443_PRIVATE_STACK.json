@@ -1,0 +1,67 @@
+{
+  "shim_port": 61349,
+  "shim_bytes": 12655,
+  "key_length": 58,
+  "key_written_to_any_file": false,
+  "shim_listening": true,
+  "shapes": [
+    {
+      "shape": "plain",
+      "ok": true,
+      "elapsed_s": 5.8,
+      "text_len": 37,
+      "text_head": "Understood. How can I help you today?",
+      "tool_calls": 0,
+      "usage": {
+        "input_tokens": 31,
+        "input_tokens_details": {
+          "cached_tokens": 0
+        },
+        "output_tokens": 11,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 42
+      }
+    },
+    {
+      "shape": "json_mode",
+      "ok": true,
+      "elapsed_s": 1.16,
+      "text_len": 15,
+      "text_head": "Hello! calling.",
+      "tool_calls": 0,
+      "usage": {
+        "input_tokens": 31,
+        "input_tokens_details": {
+          "cached_tokens": 0
+        },
+        "output_tokens": 5,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 36
+      }
+    },
+    {
+      "shape": "with_tools",
+      "ok": true,
+      "elapsed_s": 1.24,
+      "text_len": 37,
+      "text_head": "Understood. How can I help you today?",
+      "tool_calls": 0,
+      "usage": {
+        "input_tokens": 31,
+        "input_tokens_details": {
+          "cached_tokens": 0
+        },
+        "output_tokens": 11,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 42
+      }
+    }
+  ],
+  "verdict_shim_patch_makes_the_channel_usable": true
+}
