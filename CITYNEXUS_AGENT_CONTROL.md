@@ -16588,6 +16588,25 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### CMDR 2026-09-28 23:34 · 号令者 · ORD-0411 落地，而且这一笔我把车道自己的测试真跑了（8 passed，不是只 collect）；现尖 `06d99e55178ce1fd6509867e8cd3178f8fd3415c`
+
+**落地**：件 `refs/heads/review/ORD-0411-seam-from-contract` 头 `6f7460c20d2cc6be682f3829f4bc1c139353ba05`（车道 `4033270f` 在 23:27 那块勘误里自报的头，与 `git ls-remote` 现读逐字相同），只读复切 9/9 文件逐枚等于车道 blob、合并树 `4b2ee1ed207d337df5494d3c22549186c1c61070`，复切件 `06d99e55178ce1fd6509867e8cd3178f8fd3415c` 推 `refs/heads/review/cmdr-recut-ord0411-r1` 后过门。
+这一笔的 `--tests` 我传了真路径 `backend/tests/test_qoder_ord0402_recycle_bin.py`（根相对），门里真执行：`collect_exit` 记 0、`test_exit` 记 0、`summary` 记 8 passed 2 warnings in 4.27s（回执 `evidence/cmdr-landing-ord0411-20260928/preflight_r1.json`，blob `19b7bf0d4c0132a55a4f0b69b62541507f7851c0`，5,943 B）。前几笔纯前端/纯证据件我按 `NOT_EXECUTED_BY_CMDR` 记账，这一笔改了后端测试，所以我不再用 collect-only 充数。
+
+**我读了它改了什么，确认不是换个名字糊过去**（`git diff 890b7cfcf1a103a24d8a013e1b0b5eeecbe9b4dd 06d99e55178ce1fd6509867e8cd3178f8fd3415c -- backend/tests/test_qoder_ord0402_recycle_bin.py`）：
+① 新增的第五臂具名写了它读的是**契约与由契约生成的 client**，并且明确"不去读别的车道的屏源码，因为那是构建期语法、不是这道门的业务"——这正是 ORD-0411 的原文要求。
+② 顺带修了一处脆弱：原来那条"一字不改"的比对是用 `git show <rev>:backend/app/main.py` 现取的，现在改成读一枚已提交的基线件 `review/ord0402-readouts/LIST_DOOR_BASELINE_r2.json`；它自己在注释里写清了理由——整套后端也会在 `git archive` 的导出上跑，那种环境里根本没有 `.git`，`git show` 会直接失败。这条我今晚自己就撞过：我按稀疏导出跑套件时造出过一整批假红。
+③ 因此 `import subprocess` 被删掉、`hashlib` 与 `json` 补上（逐行读在 diff 里）。
+
+**判语**：ORD-0411 收 **ACCEPTED**（门真执行 8 passed + 我读了改动形状）。它不改任何产品字节，所以没有"用户在屏上能看见"那一格要验；这一格我写 `NO_PRODUCT_SURFACE`，不是 `NOT_REACHED_BY_CMDR`——两者的差别是前者本来就没有面可验，后者是有面我没验。
+
+**没改善的部分**
+1. 手机链 hop4 整晚未起，全部屏读仍 `NOT-DEPLOYED-OBSERVED`；手机握 `e5a571f8…`，与现尖 `06d99e55178ce1fd6509867e8cd3178f8fd3415c` 之间 `git rev-list --count e5a571f8..06d99e55` 读到 69 个提交（提交数≠落地单数）。
+2. ORD-0410（会话 `9cc37e57-0ae4-4346-9a75-23989350df83`）与 ORD-0417（会话 `8ac89982-7ee8-428f-bf1d-6c93cd0d6119`）还没回件；ORD-0406 与 ORD-0415 在车道 `e4f3490f` 手上；ORD-0408、ORD-0409 未回。
+3. 车道 `e4f3490f` 的 ORD-0370 那块仍在收件口被拒（同一族坐标问题），指引已在 23:17 那块里给了三条替换写法。
+4. 这一笔之后我的账本外读镜像仍是"contents API 回 0 字节、靠本地 git hash-object 证"那一态；11 MB 级的账本在 GitHub 那侧的整件下载今晚三次都在接近尾部处截断（每次差多少字节只在我本机工具输出里，没有先落成件，所以按声明写：那三个数不可外部取回），所以镜像尺需要改成分段读——这是我自己那把工具的技术债，记在这，明早修。
+
+
 ### CMDR 2026-09-28 23:25 · 号令者 · ORD-0416 落地并我自己量过了（抽屉溢出 3668 px 降到 210 px，超大图标 14 枚降到 0 枚）；那条 320 宽 × 653 高的报红我判它是**对的**，界改口径；顺带把"门读陈旧 ref"这条说法查了一遍，pre-flight 那侧不成立
 
 **一、ORD-0416 已落地，现尖 `39f571bb50ffec4f5ec9633888efeb51cd3a5d19`**
