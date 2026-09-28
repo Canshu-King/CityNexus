@@ -1,0 +1,54 @@
+ORD-0439 · plan-ranking e2e gate · run r1 (the only run whose numbers are quoted in the ledger)
+
+WHAT WAS RUN
+  command : CITYNEXUS_ORD0386_MATCH=qoder-ord0439 python run_e2e_0386_r1.py e2e
+            (the runner starts nothing itself; it refuses unless both lane listeners are up)
+  runner  : D:/moodle/_qoder_q_ord0369_wk\run_e2e_0386_r1.py
+  config  : playwright.ord0386-Q.config.ts --workers=1  (lane config, not playwright.config.ts)
+  tree    : D:/moodle/_qoder_q_ord0439   branch review/Q-ord0439-plan-ranking   HEAD a07075c9e0a2a5a7428fa4468a8883d7d40a16e4
+  spec    : frontend/e2e/qoder-ord0439-plan-ranking.spec.ts  10828 bytes   本机 sha1 644c23f8f7e0d63b172661ca0e3753860d7b7854   git blob 32ce23037d0ce74f7bafa84fe599854cc3706282
+  export  : D:/moodle/_qoder_q_ord0369_wk\build\frontend  (source-only worktree + dependency export; gate.py synced 236 files)
+
+WHAT ANSWERED (two proofs, both read before the browser started)
+  backend : http://127.0.0.1:8713  uvicorn app.main:app, pid 16436, started 2026-09-29 05:15:39
+            database = D:/moodle/_qoder_q_ord0369_wk\q0386.db -- this lane's own copy, NOT backend/data/*.db and not _preview.db
+  front   : http://127.0.0.1:4192  vite preview --outDir D:/moodle/_qoder_q_ord0369_wk\dist_cand, pid 36992
+            (a built bundle, not `npm run dev`)
+  ownership proof : scene journey 9c6c3d73-8b8e-4f71-beaf-32bc87aba035: in MY copy=1 versions=9; probe versions=21
+                    the scene journey is readable from THIS copy with 9 versions and the probe journey holds 21,
+                    so the listener is answering from this lane's file and not a neighbour's
+  bundle  : dist index asset: <script type="module" crossorigin src="/assets/index-UmfpLgYI.js">
+            same asset name before and after the spec header was rewritten -- the header is not in the bundle,
+            and that is the reading that says so
+
+TOOLCHAIN
+  node v24.14.0 · @playwright/test 1.63.0 · python 3.12.14 (D:/moodle/CityNexus/.venv)
+
+RESULT
+  playwright rc = 0
+  stats: {'expected': 4, 'unexpected': 0, 'skipped': 0, 'flaky': 0, 'duration': 7737.964}
+  P1 屏上的维度集合就是表里声明的那四个，排序只念真分得开的那几维                      passed 1822ms
+  P2 载荷里没有的那一维不许被写成 0：价格与步行各自要说出自己缺什么                    passed 1369ms
+  P3 合成默认值的路段不会被说成供应商结果                                  passed 1237ms
+  P4 没有可比方案时说实话，不为屏上有东西造一版                               passed 1721ms
+
+  report file: D:/moodle/_qoder_q_ord0369_wk\report-ord0386-1790630728.json was the same suite one run earlier
+  (expected=4 unexpected=0, spec bytes identical except the header comment); the run above is the one
+  quoted everywhere.
+
+THE DATA THE ARMS ACTUATE (real rows, no response stubbing anywhere in this spec)
+  each of P1/P2/P3 creates its own traveller + journey (title 'ORD-0439 Pn') and calls
+  POST /api/v1/journeys/{id}/plans/generate -- the product's own door, city CNX-DEMO.
+  From D:/moodle/_qoder_q_ord0369_wk\q0386.db, read back after the run:
+    P1: journeys.id=5375c535-5b5b-4668-8901-62117293f2ab created_at=2026-09-28T21:31:29.760648+00:00  plan_versions rows=3 rowid 61..63
+    P2: journeys.id=12783683-b4bc-434b-ba3d-dc346071a861 created_at=2026-09-28T21:31:31.447770+00:00  plan_versions rows=2 rowid 64..65
+    P3: journeys.id=2bb7be63-3e47-49c9-88cc-9840b75d1783 created_at=2026-09-28T21:31:32.882864+00:00  plan_versions rows=2 rowid 66..67
+    P4: deliberately NOT generated -- it opens the staged scene journey 9c6c3d73-8b8e-4f71-beaf-32bc87aba035, whose
+        plan_versions status distribution in this copy is [('ACTIVE', 1), ('SUPERSEDED', 8)], i.e. 0 CANDIDATE rows.
+        The arm skips itself (test.skip, with the count in the reason) if that ever stops being true,
+        so a green P4 means the empty state was really on screen.
+
+WHAT THIS DOES NOT COVER
+  mainline collection was measured, not executed: `--config playwright.config.ts --list` reports
+  456 tests in 108 files and includes these four arms by name.  They were never run through that
+  config, because it would describe whichever backend that config starts.  See READINGS_R1.md.

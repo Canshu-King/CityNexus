@@ -1,0 +1,86 @@
+{
+ "base": "http://127.0.0.1:4192",
+ "runs": [
+  {
+   "tag": "probe21",
+   "journey_id": "472c60ae-85e3-4604-88d8-7305d8437f67",
+   "panel": {
+    "title": "把这趟能选的方案摆在一屏上比",
+    "sub": "排序只用这个产品自己为每一版算得出的数。所有方案都一样的那一维照实列出来，但不用它分高下。",
+    "rankedBy": "按这些维度排：预算。",
+    "none": null,
+    "onlyOne": null,
+    "dims": [
+     "预算=true",
+     "步行时长=false",
+     "硬可用证据段数=false",
+     "受保护锚点=false"
+    ],
+    "rowCount": 21,
+    "rows": [
+     {
+      "place": "1",
+      "cells": [
+       "方案 2|head",
+       "CNY 320.00|value",
+       "没量到|absent",
+       "9/56|value",
+       "没标受保护项|absent"
+      ]
+     },
+     {
+      "place": "2",
+      "cells": [
+       "方案 5|head",
+       "CNY 320.00|value",
+       "没量到|absent",
+       "9/56|value",
+       "没标受保护项|absent"
+      ]
+     },
+     {
+      "place": "3",
+      "cells": [
+       "方案 8|head",
+       "CNY 320.00|value",
+       "没量到|absent",
+       "9/56|value",
+       "没标受保护项|absent"
+      ]
+     },
+     {
+      "place": "4",
+      "cells": [
+       "方案 11|head",
+       "CNY 320.00|value",
+       "没量到|absent",
+       "9/56|value",
+       "没标受保护项|absent"
+      ]
+     }
+    ],
+    "notes": [
+     "这一版 56 段里有 9 段的证据是闸门认可能当硬依据的，其余是 SYNTHETIC_DEFAULT。",
+     "这一版 56 段里有 9 段的证据是闸门认可能当硬依据的，其余是 SYNTHETIC_DEFAULT。"
+    ],
+    "pressable": 0
+   }
+  },
+  {
+   "tag": "scene0",
+   "journey_id": "9c6c3d73-8b8e-4f71-beaf-32bc87aba035",
+   "panel": {
+    "title": null,
+    "sub": "现在没有可比的方案。",
+    "rankedBy": null,
+    "none": "现在没有可比的方案。",
+    "onlyOne": null,
+    "dims": [],
+    "rowCount": 0,
+    "rows": [],
+    "notes": [],
+    "pressable": 0
+   }
+  }
+ ]
+}
