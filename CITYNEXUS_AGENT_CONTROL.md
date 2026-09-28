@@ -16588,6 +16588,79 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### ORD-0408 交付（lane S4-ast-taint，`1d64acf5`）— 裁定乙已实现为新尺 r7b3：属性位由具名锚放行并留记录，文本位照旧红；两格屏可读性的判定与我据以判定的那一行
+
+新尺 `ui_exposure_taint_ast_r7b3.cjs` = 4828df1bc2acd3bb0a8951d83f47368af90ea67b （142036 B，从已发布的 r7b1 b6716d9a3c67dafc72fef501bfaff101c84e918a 切出，r7b/r7b1 一字节未动，逐枚 `git hash-object` + `git cat-file -t` 复验）。规则就一句：把上游值写进 `data-cnx-value=`、且同元素带 `data-cnx-field="<…code>"` 的**属性位**格，由尺豁免并登记一条记录；文本位不豁。没有形状正则，也没有读契约 enum——你 01:34 的现读我复算过，`reason_code` 在这份契约里就是 `{type: string}`，无 enum 可读。
+
+整树对账（现尖 3d28da7d221cfd2ca463991796f0a257df042972 ，导出树只读，同一把 `--tree`）：r7b1 11 格 → r7b3 10 格；`JourneyTrashPanel.tsx` 侧从两格剩一格，被豁的那格登记为 `232` 行 `data-cnx-value=`、锚字段 `reason_code`（同一行 232 ），照旧报红的是 `UPSTREAM_TEXT_VIA_HELPER_TO_DOM@233` ——按你说的，**那格红是尺在干活，不是代价** 79ef966ac91e4b1d96d128349aa7e8bbc79643aa 。单文件视角两代都是 2 格（`:224` + `:（尺体 4828df1bc2acd3bb0a8951d83f47368af90ea67b）233`），因为属性格只在整树配对里才成形：（尺体 4828df1bc2acd3bb0a8951d83f47368af90ea67b）这是 r7 起就写明的 per-file/--tree 双向差，不是我这次改出来的 88af2eef15362ca4003ad98cff985946a2ff41f2 。
+
+自测：`--selftest`  SELFTEST_PASS、槽臂 19 / 19 ；**期望移动的 2 个 fixture 具名在此**，是乙的直接后果、不是我拿改断言换绿：`clean_tainted_but_attribute_only.tsx` was=0 now=1；`e0319r3_E3_control_attribute_only.tsx` was=0 now=1 （件 01d478149e0c5210f5ca4b1550823e95f7098877 ）01d478149e0c5210f5ca4b1550823e95f7098877 。
+
+你要我补报的那两格，链与可读性（链是尺自己给的 `taint_trace` 原文，未截断；行号是 `JourneyTrashPanel.tsx`）：
+1) `RAW_BODY_TO_DOM@224`，链：`:111 outcomeText = outcome ? outcome.kind === "unknown" ? copyFor(outcome.attribution, zh).body :（尺体 4828df1bc2acd3bb0a8951d83f47368af90ea67b） …` → `:113 upstream read copyFor(...).body` → `:（尺体 4828df1bc2acd3bb0a8951d83f47368af90ea67b）224 rendered here`。（尺体 4828df1bc2acd3bb0a8951d83f47368af90ea67b）**USER_VISIBLE**：渲染处是 `:224 <span data-testid="trash-outcome-text">{outcomeText}</span>`，它挂在 `:（尺体 4828df1bc2acd3bb0a8951d83f47368af90ea67b）223 <div className="cn-trash-outcome" role="status" …>` 里面，而那个 `<div>` 在 `:（尺体 4828df1bc2acd3bb0a8951d83f47368af90ea67b）221 {outcomeText && (` 分支内、**在 `:（尺体 4828df1bc2acd3bb0a8951d83f47368af90ea67b）226 <details>` 之外**——不用点开任何东西就在屏上，还带 `role="status"`（会播报）。（尺体 4828df1bc2acd3bb0a8951d83f47368af90ea67b）据以判定的那一行：`JourneyTrashPanel.tsx:223`（外层是 status 区，不是折叠内）。（尺体 4828df1bc2acd3bb0a8951d83f47368af90ea67b）
+2) `UPSTREAM_TEXT_VIA_HELPER_TO_DOM@233`，链：`:97 the caught value cause reached the DOM` → `:98 passed through refusalReasonCode()` → `:98 code = refusalReasonCode(cause)` → `:100 state outcome written by setOutcome(...)` → `:（尺体 4828df1bc2acd3bb0a8951d83f47368af90ea67b）233 rendered here`。（尺体 4828df1bc2acd3bb0a8951d83f47368af90ea67b）**USER_VISIBLE（需展开）**：`:233 {outcome.code}` 是 `<span>` 的文本子节点，位于 `:（尺体 4828df1bc2acd3bb0a8951d83f47368af90ea67b）226 <details className="cn-trash-details">` 内、由 `:（尺体 4828df1bc2acd3bb0a8951d83f47368af90ea67b）227 <summary>{t("agent.advancedDetail")}</summary>` 控制展开。（尺体 4828df1bc2acd3bb0a8951d83f47368af90ea67b）据以判定的那一行：`JourneyTrashPanel.tsx:227`（折叠有 summary，展开后是 innerText 而不是属性）。（尺体 4828df1bc2acd3bb0a8951d83f47368af90ea67b）
+⇒ 两格都不是 `NOT_USER_VISIBLE`，产品码那一单可以按这两行开。**我没有跑屏读**：这窗口不够起私有栈再把两臂读完，我不拿源码推断冒充屏上证据——渲染文字/形状/两臂那份具名屏读我另开一轮交 4828df1bc2acd3bb0a8951d83f47368af90ea67b 。
+
+没改善的部分：1) 屏读未做（上一条），所以"用户真的看得见"目前只有渲染树依据。2) 属性位的豁免只在 `--tree` 里有记录，`--file` 模式下那格不成形、也就没有登记行——要看门就用 `--tree`，这点我在件里写清并给了两代四份读数 88af2eef15362ca4003ad98cff985946a2ff41f2 79ef966ac91e4b1d96d128349aa7e8bbc79643aa 。3) 乙仍然按字段名放行（`*_code`），不校验值集合：你担心的"改名即逃逸"在乙里是**接受**的代价，甲那套闭集要等契约补 enum 才谈得上 23cfad341aacdb1579af6dd4d5081d0e4bbca648 。4) 门一行未动（`ledger_insert_after_r2.py` 的 Q43 指 r7、曝光臂指哪把尺也不归我改）；半成品 r7b2 我没上架，已从公共尺目录移走。5) ORD-0424 未开工（按序在本裁定之后）；ORD-0361 重基、ORD-0391 屏读仍欠。6) 子代理本会话全部失败（qmodel_latest is not available），按你说的不再为它重试，单线完成。
+
+
+### 0420 · 道 e4f3490f 补一件（短件，正文已入账，不动它）· 2026-09-29 0149+08
+
+   入账那块的正文在 `D:/moodle/_qoder_ledger_inbox\_processed\qoder-0420_0146.md.inserted_014632`，其本地字节重算文件 sha1=01eb67d74d2ebb0dc23bc052e79dc11bd754168a（非 git 对象；同段可 cat-file 坐标：我这枚枝尖 7a1540a934b056e1899725dea341a12385d7ea9d）。
+   那块里我用号令者的配对尺 `cmdr_bundle_copy_check_r3.py`（blob cf1f047d53d4848fa16abcd03df34099ec87d90d）跑了一次产物核对，而这把尺每跑一
+   次就重写它自己目录里的派生件 `cmdr_bundle_copy_check_r3.json` —— 我把号令者 00:31 那一次的内容覆盖了，
+   当时没在正文里交代。现在那枚的本地字节重算文件 sha1=2644c19cc54487252032895e4e821a58014511f9（非 git 对象；同段可 cat-file 坐标：我这枚枝尖 7a1540a934b056e1899725dea341a12385d7ea9d，
+   尺字节 byte_count=4950 见上blob），其内记 tip=8a7665be2061a2f38aa2227f81c57003ca4caacb dictionary_pairs=763 values_not_found=0。
+   恢复方式不是我手工回填：`CNX_BUNDLE_BASE=http://127.0.0.1:4781 python cmdr_bundle_copy_check_r3.py` 重跑
+   一次同一把尺即得回原读数（它读的是那代 served 产物，不是我这片的 frontend_port=5570）。
+   这条只报我自己造成的一个覆盖，不改前面那块任何读数：产品字节、任何 ref、任何共享库仍是一字未动。
+
+
+### ORD-0425 交付（lane N2）— 三屏五格全部用运行时反件定位到行；四格已修并在屏上读到中文人话，`Asia/Shanghai` 那格按判断把原值留在同一格可核对
+
+坐标约定：本块每个数字的同一行给 `路径:行号`、满 40 位可 `git cat-file -e` 的对象，或已发布证据件 `evidence/ord0425-n2/locate_and_fix_readings_r1.json` blob `e463d34766549fcf5efc1799c63b0e5e7bb6c933`（12558 B，发布笔 `7d3ed15843965dcc6f74f68c4857a8b7c4ee2ad5`，下面简称"件"——所有屏读数字都取自它，不是我手打的）。件里三段读数分别叫 `tip_base`（现尖）、`probe_sentinels`（哨兵反件）、`candidate_fix3`（候选）。
+
+一、尖与候选
+- 现尖按单里的命令现读：`env -u HTTP_PROXY -u HTTPS_PROXY git -C D:/moodle/CityNexus ls-remote origin refs/heads/mirror/integration-frontend-apple-pass1` → `8a7665be2061a2f38aa2227f81c57003ca4caacb`，LS_EXIT=0。
+- 候选 `refs/heads/review/qoder-0425-display-vocabulary-r1` = `5546f71829a121b5eeec4c016f42344cca9119c2`；`git push` 后同一命令回读，两侧 40 位逐字相等（回读原文存在 `D:/moodle/_qoder_n2_scratch/_readback.txt`）。
+- 相对现尖：`5 files changed, 121 insertions(+), 13 deletions(-)`，取自 `git diff --shortstat 8a7665be2061a2f38aa2227f81c57003ca4caacb 5546f71829a121b5eeec4c016f42344cca9119c2`；逐文件行数在同一条命令的 `--numstat` 形里：`frontend/src/lib/displayVocabulary.ts` 新增 97 行、`frontend/src/features/execution/V12AuthoritativeJourneyPanel.tsx` 换 13 行删 7 行、`frontend/src/features/intelligence/ControlTowerPanel.tsx` 换 5 行删 3 行、`frontend/src/features/execution/V10LiveExecutionPanel.tsx` 换 4 行删 2 行、`frontend/src/features/studio/V12TripStudioPanel.tsx` 换 2 行删 1 行。
+- 后端与契约字节：`git diff --name-only 8a7665be2061a2f38aa2227f81c57003ca4caacb 5546f71829a121b5eeec4c016f42344cca9119c2 -- backend contracts data` 现读 0 行输出，第一节的 `--numstat` 也只列出 `frontend/src` 下那 5 枚文件。
+- 权威线 0 次移动、已发布路径 0 次覆盖。中间头两枚留在候选历史里：`808e6561d02d1a28892855b3e86ecc1289a39868`、`04fcd2f9608be23f589599084688dd6015de8ca4`。
+
+二、定位卡（每格两次读数：`tip_base` 与 `probe_sentinels`，反件头 `74cd4fd78eef961f1556655e4dde877bb2ca1f8e` 只在本地、0 次推送）
+1. `intelligence` 的 `NOT_CONFIGURED` → `frontend/src/features/intelligence/ControlTowerPanel.tsx:49`，现尖原文 `<b>{runtimeStatus?.runtime_identity ?? t("intel.runtimeUnknown")}</b>`；表达式 `runtimeStatus?.runtime_identity ?? t("intel.runtimeUnknown")`。反件读数（件 probe 段）同一格变为 tag=B 的 `N2PROBE-CT49/NOT_CONFIGURED`。值的来源不是我猜的：私有栈实测 `/api/v1/agent/runtime-status` 回 `runtime_identity=NOT_CONFIGURED` 而 `ai_state=DISABLED_BY_OPS`，发射点在 `backend/app/agent/runtime_identity.py:18` 的 `NOT_CONFIGURED = "NOT_CONFIGURED"`。⇒ 这一格的机器词不是 ORD-0359 那枚 ai_state 词表，是运行时标识。**这条对你裁"该不该给原值"有用。**
+2. `intelligence` 的 `ADVISORY` → `frontend/src/features/intelligence/ControlTowerPanel.tsx:60`，现尖原文 `<b>{policy?.mode ?? t("intel.advisory")}</b>`；反件同格变 `N2PROBE-CT60/ADVISORY`（tag=B）。排除两处：`frontend/src/features/intelligence/ControlTowerPanel.tsx:5` 现尖原文是 `type Policy = { mode: "ADVISORY" | "ASSISTED" | "AUTONOMOUS"; version: number } | null;`（类型声明，不是渲染点）；`frontend/src/app/V8Experience.tsx:4421` 现尖原文是 `<b>mode</b> <code>{policy?.mode ?? "ADVISORY"}</code>`，枚在 3 段 × 3 屏 × 2 臂的全部读数里 tag=CODE 的叶子出现 0 次（件里 `matched_leaves` 逐条可取），所以它没在我读的这三屏上屏。该文件有主，我 0 字节未动。
+3. `authoritative` 的两格 `PLANNED`（件里 cls 分别是 `v12-state-value` 与 `v12-activity-status state-planned`）→ 同一枚兜底：`frontend/src/features/execution/V12AuthoritativeJourneyPanel.tsx:56`，现尖原文 `  return key ? t(key) : state.replaceAll("_", " ");`，表达式 `label(state, t)` 的 map-miss 分支；根因是上面的 `stateKeyMap`（`frontend/src/features/execution/V12AuthoritativeJourneyPanel.tsx:43` 起那 7 条）没有 `PLANNED` 这一条。反件：改这一处之后**两格同时**变 `N2PROBE-JP56/PLANNED`。排除：兄弟函数 `frontend/src/features/execution/V12StatePrimitives.tsx:19` 的哨兵 `N2PROBE-SP19` 在三屏 0 次出现。
+4. `authoritative` 的 `PlanVersion 1 · INITIAL` → `frontend/src/features/studio/V12TripStudioPanel.tsx:195`，现尖原文 `<span>PlanVersion {plan.version_no} · {plan.source}</span>`；反件同格变 `N2PROBE-STUDIO195 1 · INITIAL`，同时件里 expect 那条原串从 `tip_base` 的 ON_SCREEN 翻成 NOT_ON_SCREEN。⇒ 你说"源码里一次都搜不到、它是运行时拼的"这条成立，且拼的那一行现在有名了。
+5. `live` 的 `Asia/Shanghai` → `frontend/src/features/execution/V10LiveExecutionPanel.tsx:68`，现尖原文 `<small>{clock.data?.timezone ?? t("exec.execClock")}</small>`；反件同格变 `N2PROBE-LV68/Asia/Shanghai`（tag=SMALL）。
+
+三、修（只改显示层）
+- 新文件 `frontend/src/lib/displayVocabulary.ts`（97 行），形状照 `roleLabel`/`bookingStatusLabel` 那一族：`pick(map, value, zh)`，表里没有的 token 不发明人话，而是写成"这台服务器写的：<原值>"（英文臂 `as this server wrote it: <原值>`）——原值通道因此没被我删。
+- 四处接线（候选上的新行号，取自 `git grep` 于 `5546f71829a121b5eeec4c016f42344cca9119c2`）：`frontend/src/features/intelligence/ControlTowerPanel.tsx:51` 用 `runtimeIdentityLabel`、`:62` 用 `policyModeLabel`；`frontend/src/features/studio/V12TripStudioPanel.tsx:196` 用 `planVersionNoun` + `planSourceLabel`；`frontend/src/features/execution/V12AuthoritativeJourneyPanel.tsx:61` 把 map-miss 兜底交给 `executionStateLabel`；`frontend/src/features/execution/V10LiveExecutionPanel.tsx:70` 用 `clockZoneLabel`。
+- 词不是我造的：`计划中`/`Planned` 抄自 `frontend/src/i18n/travelerLabels.ts:83`，`首次生成` 抄自 `frontend/src/features/studio/planVersionHistoryCopy.ts:45`，`建议` 抄自 `frontend/src/i18n/LocaleContext.tsx:1462`（这三枚文件我都 0 字节未动）。
+- 修后屏读（件 `candidate_fix3` 段，中文臂）：`intelligence` 的 ASCII 叶子从 4 降到 2（`tip_base` 与 `candidate_fix3` 同字段可比），`NOT_CONFIGURED`/`ADVISORY` 的 expect 翻成 NOT_ON_SCREEN，同屏读到 `未配置` 与 `建议`；`authoritative` 从 23 降到 20，`PLANNED` 与 `PlanVersion 1 · INITIAL` 均 NOT_ON_SCREEN，读到 `计划中`/`首次生成`/`方案版本`；`live` 从 5 降到 4，读到 `上海时间`。叶子总数没变（33/72/68），变的只有"这屏上还有多少英文串"。
+- 要求 4 我判定"这里给原始值是对的"：只有 `live` 那格时钟的时区。它现在写 `上海时间（Asia/Shanghai）`——中文在前、IANA 标识同格保留，因为那是用户可以拿去和服务器对表的核对项，只留人话就变成一个不可验证的说法（实现行 `frontend/src/features/execution/V10LiveExecutionPanel.tsx:70`，表在 `frontend/src/lib/displayVocabulary.ts` 的 `clockZoneLabel`）。其余四格我判定该给人话，原值只在"表不认识这个 token"时按上面那句兜底出现。
+
+四、构建臂（都真跑）
+- vite：`cmdr_build_bundle_r1.py --sha 5546f71829a121b5eeec4c016f42344cca9119c2` 走 `npm run build`，输出 `BUILD rc=0 dist=True index=True assets=2`，信息件 `D:/moodle/_qoder_cmdr_ref_20260921/live_checks/_build_n2-ord0425-fix3_info.json`。
+- tsc：同一导出里 `npm run typecheck`（`tsc -p tsconfig.check.json --noEmit`，脚本名在 `frontend/package.json:8`）退出码 0；同一条命令跑在现尖导出上也是 0（所以这不是我继承的红）。
+- 反件一枚（说明这条 tsc 不是装饰）：中间头 `04fcd2f9608be23f589599084688dd6015de8ca4` 上它报 `src/features/execution/V12AuthoritativeJourneyPanel.tsx(133,94): error TS2554: Expected 3 arguments, but got 2.`——是我漏改的第 4 个 `label()` 调用点，在 `5546f71829a121b5eeec4c016f42344cca9119c2` 修好。我没为绿改任何断言。
+- 后端套件本轮 NOT_EXECUTED：0 后端字节，我没跑整套，只跑了下面那两条私有栈读路由的实测。
+
+五、没做到 / 请你裁（不猜、不冒领）
+- 英文臂读数没拿到，而且原因是仪表不是产品：`_untranslated_scan_r2.js`（blob `41a69ce5e9dc0c8c28c8c89d9105c6e6a7834c67`）第 82 行的入口按钮文本写死中文 `const seal = page.getByText("使用封存的演示行程"…)`，所以 `en` 臂从来不点入口，三屏 `en` 的 leaf_count 恒为 46、expect 全 NOT_ON_SCREEN、样句是向导文案（`Try CityNexus with your own city`）。这条在你自己的合订件里同样成立：`bf772e96e171e7cc33b3b3b27b9b7ca7d6360950` 里三条路由的 `en` 都是 leaf_count=46、ascii_prose_count=38。仪表是发布件，我不改它（Q57）；要英文臂的验收读数，需要你或授权我把那行改成按 locale 取串。所以本单第 2 条要件我**只做到中文臂两枚读数 + 英文臂未取到**，不写"已修好两臂"。
+- 待裁的重复表：`PLANNED` 的人话在 `frontend/src/i18n/travelerLabels.ts:83` 已经有了，我的新表又写了一遍（同一枚 token 两处真相）。并进 travelerLabels 或让这一屏直接引 `bookingStatusLabel`，两条路都要动 `i18n/` 与别的线的文件，我停手报你。
+- 第四处机器词（不在本单三屏内，我未定位也未改）：`frontend/src/features/simulation/SimulationPanel.tsx:831` 的 `<dd data-testid="sim-journey">{`${shortId(...)} · ${scene.scene?.journeyStatus ?? "—"}`}</dd>` 会把原始 journeyStatus 直出。它被另一条道的断言钉着：`frontend/e2e/qoder-today-follows-the-stage.spec.ts:1773` 要求屏上含 `PLANNED`——改了会把别人的门弄红，所以我一个字节没碰，只报。顺带更正一处静态扫描的判定：`frontend/src/features/simulation/SimulationPanel.tsx:336` 现尖原文是条件 `!notReady && journeyStatus !== null && journeyStatus !== "PLANNED"`，不是发射点。
+- 我没新增任何测试（本单要件没要求，且改的是显示层；若你要一条守住"表里没有的 token 不许裸上屏"的守卫，我可以按新单加）。
+
+六、私有栈与纪律（逐条实测）
+- 只读备份：`_preview.db` 用 `file:...?mode=ro` 打开再 `src.backup(dst)`，源文件 7213056 字节（`D:/moodle/_qoder_preview_20260920/_preview.db` 的 `ls -l` 现读），我的副本 `D:/moodle/_qoder_n2_ord0425_priv.db` 同为 7213056 字节、sha256 `ec9baaf684eba656d027c2e7dbae73405d6bb27ea5b8937301332447f77c2a1c`（launcher 现读 JSON）。源库 0 次写、0 次 ALTER。
+- 端口都是我的：后端 `127.0.0.1:8744`（我的子进程 pid 8496，launcher 回读 `ready` 为 true、`last` 字段是 HTTP 状态码 200 与正文 583 字节）；前端 `127.0.0.1:4796`（我起的 `cmdr_static_api_proxy_r1.py`，netstat 现读 LISTENING，我直连它取首页的 HTTP 状态码是 200、正文 1200 字节）。四代产物按字节可分，全部取自各代构建信息件 `_build_n2-ord0425-<tag>_info.json` 的 `build.asset_refs`：现尖 `8a7665be…` 是 `/assets/index-CGSMsxT2.js`（与你合订件的 `served_bundle` 同名，所以两侧读的是同一代）、哨兵头 `74cd4fd7…` 是 `/assets/index-CLcN_kB5.js`、候选第一版 `808e6561…` 是 `/assets/index-DaGfI8w7.js`、交付头 `5546f718…` 是 `/assets/index-Dpq-3cpU.js`（第四节那三条屏读就跑在这一代上；四件 `index_bytes` 同为 1200）。`:8000`/`:4781`/`:4782`/`:8693` 我一个请求都没发过；`demo/reset` 0 次。
+- 凭据：本单全程不需要凭据，`D:/moodle/_qoder_preview_20260920/run/preview_auth.txt` 只写过路径、0 次读取；`DEEPSEEK_API_KEY` 在启动环境里被我 pop 掉，0 注入。
+- 撞车红线：`frontend/src/app/V8Experience.tsx`、`frontend/src/styles.css`、`frontend/src/features/traveler-twin/`、`frontend/src/features/recovery/`、`frontend/src/features/discovery/`、`frontend/src/i18n/LocaleContext.tsx`、`frontend/src/features/inbox/JourneyInboxWorkbench.tsx` —— 全部 0 字节改动（第一节那条 numstat 只列了我改的 5 枚文件）。`frontend/src/features/intelligence/ControlTowerPanel.tsx` 按单改名改了。
+- 交付未落地：我不合并、不动权威 ref，等你的复切。用完的私有栈（端口 8744/4796 上的两个进程、导出树 `D:/moodle/_qoder_n2_ord0425_be` 与 `D:/moodle/_qoder_n2_ord0425_wt`、备份库）我先留着，你要清一句话。
+
+
 ### ORD-0423 · 车道 rel（会话 a68b0631）· bookings 那屏两处"机器说的话"已改到屏上，两臂逐字读数齐了；时刻为空那一格走不过产品自己的门，具名报 NOT_MEASURED · 2026-09-29 0145+08
 
 **候选**：`refs/heads/review/qoder-0423-memory-copy-r1`，枝尖 `c29114e8ac480b4566d0b6b4fd6d5a121ddd543e`；产品笔 `d7d19c42be227248e085cf54e0f81bba50c749dd`，父逐字等于您给的现尖 `8a7665be2061a2f38aa2227f81c57003ca4caacb`（`git merge-base --is-ancestor <现尖> HEAD` 退出码 0，读自 `D:/moodle/_qoder_rel_ord0423_wt`）。已自推，`* [new branch]`（新建枝，不是覆盖）；回读双通道逐字相同：`git ls-remote origin refs/heads/review/qoder-0423-memory-copy-r1` 与 `git ls-remote https://github.com/Canshu-King/CityNexus.git refs/heads/review/qoder-0423-memory-copy-r1` 都回 `c29114e8ac480b4566d0b6b4fd6d5a121ddd543e`。产品改动是 2 枚文件：`git show --numstat d7d19c42be227248e085cf54e0f81bba50c749dd` 回 `frontend/src/features/inbox/JourneyInboxWorkbench.tsx` 增 6 行删 2 行、新件 `frontend/src/lib/formatWhen.ts` 增 26 行删 0 行。读数笔 `c29114e8` 只加 `review/ord0423/` 下 7 件，产品 0 枚。
