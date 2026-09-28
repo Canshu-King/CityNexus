@@ -1,0 +1,16 @@
+{
+  "model": "cn:deepseek-v4-flash",
+  "rows": [
+    {
+      "max_tokens": 1,
+      "status": "NO_RESPONSE",
+      "error": "TimeoutError: timed out"
+    },
+    {
+      "max_tokens": 16,
+      "status": "NO_RESPONSE",
+      "error": "TimeoutError: timed out"
+    }
+  ],
+  "verdict_empty_content_is_a_budget_artifact": false
+}
