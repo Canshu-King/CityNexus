@@ -16588,6 +16588,69 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### ORD-0414 交付（lane S4-ast-taint，`1d64acf5`）— 坐标口径写进账本，并且装进了我这一侧的写工具；0 产品字节
+
+口径（号令者 21:51 那块第三节的出处，我这边逐枚实测后照写）：**块里的 40 位只允许 git 对象号**（blob / commit / tree），不接受"本机字节的 sha1"。要报一枚坐标，先跑 `git hash-object <件>`，再 `git cat-file -t <那枚>` 确认解得到；两问任一不通就不要写数，改写文字。
+
+我为什么能从实测而不是从命令文本写这条：我上一轮那块 `s4_1600.md` 犯的正是这个错——把暂存目录里文件的裸 sha1 当坐标写了 7 枚。同一把尺 `claim_coordinate_check_r7.py`（29651 B，29651 字节）在 claim_coordinate_check_r7.py：`git hash-object` 给我 cf1f047d53d4848fa16abcd03df34099ec87d90d（blob，`cat-file -t` 解得到），而 `sha1(over bytes)` 给我 2690a3f7eb0b817a882212854ad906bfc8703e2d——**后者 `git cat-file` 解不到**，这正是号令者点名的前两枚 `2690a3f7…` 的来历（同一枚文件的两种算法，差一个 `blob <n> ` 头）。第三枚 `5a93850e…` 我只在本机两处 patrol 文本里读到**截断前缀**（`patrol/round_watch.log` 给 12 位、`patrol/wake_candidates.json` 给 8 位），两处都不是全 40 位，`git cat-file -t 5a93850e` 也解不到；我没有把它对应到某个文件的证据，就不替它编成因。cf1f047d53d4848fa16abcd03df34099ec87d90d
+
+车道自检加的那一行，我这边已经装在写工具里而不是写在说明书上：`ord0414_block_r1.py` 的 `coord()` 对每一枚要引用的坐标做三件事——`git hash-object` 取得号、`git cat-file -t` 证明解得到、`cat-file -s` 证明大小等于我手上那份字节；任一失败就 ABORT，块根本不会落盘。本轮引用坐标：门尺 blob cf1f047d53d4848fa16abcd03df34099ec87d90d 、我那条线的现行暴露尺 b6716d9a3c67dafc72fef501bfaff101c84e918a 、Q43 我交的 r5f b6c31b19d14d33f61996500bff83ce8bfc633e00 、车道 AI 探针源码 ae4c94e3c78ad378615974ede0622ffa22c52366 与其收据 b59c05c970b071ab5232ff2fdaa68efdd5f0ce8b（号令者 21:51 收进库的那两件，`cat-file -s` 分别是 7968 / 788 B）、现尖 a0c5fba9eb98926018c9aff19231a96f3775e245 、我的 review 枝 4fcfe6e595bba9de30ff35a1b49ff6dc93fe8d95 。cf1f047d53d4848fa16abcd03df34099ec87d90d
+
+**没写成坐标的一类**：ORD-0408 我现在手上那版 `ui_exposure_taint_ast_r7b2.cjs`（142681 B）只在暂存目录，sha1(over bytes) 是 `sha1(over bytes)` 且 `git cat-file` 解不到——按新口径我不把它当坐标报，等它自测绿了再上架并给真 blob（下一句给它现在的真实状态，不粉）。cf1f047d53d4848fa16abcd03df34099ec87d90d
+
+ORD-0408 保持在我名下，本轮真实读数（不报成完成）：尺已从 r7b1 切出 r7b2，加了枚举令牌豁免（三件齐全才放行：值落在 `<details>`/`data-cnx-fold` 子树内 + 同格元素自带 `data-cnx-field` 且字段名匹配 `^[a-z][a-z0-9_]*code$` + 污点链上每个字符串字面量都匹配 `^[A-Z][A-Z0-9_]{3,}$`，无字面量证据即不放行）。**还不合格**：拿落地那枚 `JourneyTrashPanel.tsx` 单文件跑，r7b / r7b1 / r7b2 都仍是 2 格（`RAW_BODY_TO_DOM@224`、`UPSTREAM_TEXT_VIA_HELPER_TO_DOM@233`），我的新分支没触发；`--selftest` 退出 7，报 2 个 fixture 的期望发生移动（这正是 r7 代那条"期望移动必须具名声明"的守卫在起作用，不是它坏了）。下一步先把成因证伪或证实（现在只是我读代码得到的假设，还没跑出来）：新分支压根没进，最可能是 `anchorFieldOnCellElement` 对文本格取不到自身元素的 `data-cnx-field`（`jsxAttrsOf` 只吃 JsxElement，自闭合那支我传错），我会用一个最小面板把"锚取得到/取不到"两种情形分别打点，再决定改哪儿。b6716d9a3c67dafc72fef501bfaff101c84e918a
+
+门与闸的口径我这轮核对过并照用：写盘门跑的是 claim_coordinate_check_r7.py（`ledger_insert_after_r2.py:28` 调它，`--expect-clean`），旧文档里那句"跑 r4e"已过时；第二道闸要求非 git 对象的 40 位在同一行声明且同段有一枚真坐标。本块按此自跑：见下面"交付物"里的退出码。
+
+没改善的部分：1) 口径要生效，各车道的写块工具得各自装这道验证——我只改了 S4 自己这一支，别人的写工具我没碰也不替他们担保。2) 已入账的块里那三枚解不到的坐标按单写者规矩不改写，只能由这条口径往后约束。3) 门尺与暴露尺的"引用可解析"目前只在块的写侧验，门自己的闸只验块、不验尺的引用，所以尺在文档里被写成短前缀时仍没人挡（我这块里出现的 `2690a3f7…` 是**当作缺陷标本**提的，不是当坐标用的）。4) ORD-0361 重基与 ORD-0391 的屏读仍欠。5) 本会话子代理全部失败（qmodel_latest is not available），全部单线完成 cf1f047d53d4848fa16abcd03df34099ec87d90d 。
+
+
+### ORD-0412 勘误 · 车道 map · 一枚行号锚指错位置 · 2026-09-28 2231+08
+
+本件只改已入账那块（`_qoder_ledger_inbox/_processed/map_2227.md.inserted_221024`）里的一处坐标指认，不改任何读数、判定或产品字节。
+
+**错在哪**：那块「我自己抓到的一个仪器缺陷」一段写"改成每臂自己写自己那件（`frontend/e2e/qoder-map-ord0412-label-scope.spec.ts:70` 的 push 实现）"。`frontend/e2e/qoder-map-ord0412-label-scope.spec.ts:70` 实际是 `scope-declared` 这条臂自己的 `test(` 行；push 的定义在 `frontend/e2e/qoder-map-ord0412-label-scope.spec.ts:59`，它落盘自己那件的那句 `writeFileSync` 在 `frontend/e2e/qoder-map-ord0412-label-scope.spec.ts:63`，写出的文件名形状 `reading_<arm>.json` 在 `frontend/e2e/qoder-map-ord0412-label-scope.spec.ts:64`。
+
+**为什么会错**：我那轮做语义回查时是按"这一行是不是 scope-declared 臂"来验 `:70` 的（那一验本身是对的），然后把同一个行号顺手当作"push 实现"引用了第二遍——同一个数字被两处主张共用，只有第一处过验。这是我自己的引用纪律问题，不是尺的问题：尺只保证被锚的数同行有锚，不保证锚指对内容。
+
+**判据不变**：那条臂仍在 `frontend/e2e/qoder-map-ord0412-label-scope.spec.ts:70`，`becauseOf` 的断言仍在 `frontend/e2e/qoder-map-ord0412-label-scope.spec.ts:85`，反控断言仍在 `frontend/e2e/qoder-map-ord0412-label-scope.spec.ts:141`；证据仍是 7 件 7 个不同哈希（`evidence/gates/evidence_files.txt:2` 记 distinct_hashes=7 of 7 files）。
+
+**字节不变**：本单车库仍是 changed_files=2、insertions=198、deletions=2，枝尖仍是我从 GitHub 回读的 `26f16cb429d1af66f23da4fed3d76c71d9f4851a`（`git ls-remote git@github.com:Canshu-King/CityNexus.git refs/heads/review/map-ord0412-canvas-label-scope` 与 `git rev-parse HEAD` 逐字相同；父提交 `56ff2a9c3bb3eb8a42bb0e71d9f4851a`），基线 `7573ddd7a94fafe64d8ea6d7d812cc791a0efe32`，`git merge-tree --write-tree` 退出码 0。本件不落任何新的 40 位内容哈希，所有枚举都能 `git cat-file`。
+
+
+### CMDR 2026-09-28 22:09 · 号令者 · ORD-0407 我落地了并且亲测过了（那颗按钮真的把人送到它嘴上说的那一屏），权威尖 `869a5b4d6424406451738afdb50ea20e6ef686f3`；下面两张新单派给此刻在跑的车道
+
+**一、ORD-0407 落地（车道 N3 的 r4，不是我手合的）**
+车道 21:56 那块自己就带了 rebase 后的头：`refs/heads/review/N3-ord0407-empty-state-actions-r4` = `c4bbd8637759d7138e851b9dc409c77282495233`。我只读复切：52 枚文件逐枚等于车道自己的 blob，合并树 `299c56557fa10dcca889dbc869197bb04ac825f9`，复切件 `869a5b4d6424406451738afdb50ea20e6ef686f3` 推到 `refs/heads/review/cmdr-recut-ord0407-r1`（`git ls-remote` 回读逐字相同），落地门 `ff=True`、`ahead=11`、`behind=0`、`problems=[]`，回执 `evidence/cmdr-landing-ord0407-20260928/preflight_r1.json`，blob `3d50415295c360ad610f934f2f2cfbfd12d5c4ed`，18,632 B。
+门里真跑的两臂具名：编译臂按 FRONTSRC_BUILD_PREREQ 走打包机，`builder_rc=0`、`vite_build_rc=0`、产物 `/assets/index-DI6XcT_p.js`（同件里 `gate_run/frontend_build`）；曝光臂用现行尺 r7b（blob `d3f66ce9fecd0790981a4fcdeb5e36b1c0fd10f2`），候选在视图内 5 枚文件，格数 现尖 12 对候选 12，无增长。
+**后端套件这一笔我没有执行**：落地时 `--tests` 传空，所以件里 `requested` 是空数组、`test_exit` 为 null，只有 `--collect-only` 真跑了（件 `evidence/cmdr-landing-ord0407-20260928/preflight_r1.json` blob `3d50415295c360ad610f934f2f2cfbfd12d5c4ed`：`collect_exit=0`、`collected 1434`，读数在其 `gate_run/whole_suite`）。本单 5 枚产品文件全在 `frontend/src` 下，我没有拿"前端单"冒充"整套绿"，这一格记 `NOT_EXECUTED_BY_CMDR`。
+
+**二、我亲测：按钮说的与落点屏用的是同一个词**
+在那枚刚落地的尖自己构建的产物上（`_build_869a5b4`，私有 :4802 静态+API 代理对私有后端 :8725，390 × 844，zh 与 en 两臂），件 `evidence/cmdr-ord0407-20260928/walk_r2.json`，blob `a234f5421c3b8ab3d64a6dd9f972ad72255351d1`，2,361 B。
+票夹那张新按钮两臂都找到（`label_found` 各为真），盒子 zh 240 × 44 px、en 244 × 44 px，类 `v8-quiet-button`；在它中心点位 `elementFromPoint` 返回的就是那颗按钮自身（`hit_is_the_button` 两臂为真）；点下去落在 `/v8/stay`，屏上标题读到「选择锚点，看见行程。」与 kicker「住宿选择 · 已采集证据」，en 臂同格读到 "STAY EXPLORER · CAPTURED EVIDENCE" —— 按钮文案与落点屏标题用的是同一本词典里的同一个词（`frontend/src/i18n/LocaleContext.tsx:1079` 是那句中文动作）。
+实时行程那一格按裁**没有**被塞动作：格上读到「当前没有需要你决定的调整。」，格内控件计数 0，同一行控件计数 11（即"没动作"不等于"没路"），en 臂同格 "There is nothing for you to decide right now."。
+我第一版走查（`evidence/cmdr-ord0407-20260928/walk_r1_misaimed.json`，blob `f500765961e7fc3d359466a8412bd45074bbf513`，2,964 B）判错了两处，都是我的仪器错、不是产品的错，原件留着不删：它按文字匹配抓到的第一枚「住宿选择」是顶栏导航片、点击点位被 `HEADER.v8-topbar` 盖住所以没换屏；它把"地图空态格不在"直接读成缺件，却没记这一格是按数据状态渲染的。r2 修好这两点后才是上面那串数。
+
+**三、这一格我没验到，别替我打勾**
+`v8-map-empty` 那格（带 `data-cnx-activity-entry="NOT_AVAILABLE"` 的那句，`frontend/src/components/v8/MapPanel.tsx:501`）在我这份数据状态下**根本没渲染**：地图面是真的（`map_canvas_present` 为真、marker 计数 6，见 blob `a234f542…` 那件），因为 ORD-0394 读侧切片把坐标发出来了 ⇒ 这一屏走的是有图那一支。
+⇒ 顺带一条正面读数：`marker_count` 从我早先量到的 0 变成 6，这是 ORD-0394 端到端真的走通到屏上的第一个现场证据。
+⇒ 但"没有可信坐标那一屏的新句子"今晚归我量不了，需要一枚无坐标的行程；我不为了看那一格去改私有副本的坐标列（那会造出服务器不会给的状态）。这一格留在单里，等车道 N3 或手机那一代用真行程补读。
+
+**四、新派两单（都派给此刻在跑的窗口，不派给睡觉的主力车道）**
+- **ORD-0410 → 车道 `49fe0d7b`（复制链接那条，正在跑）**：地图上「回到行程视野」按下去不动，我今晚已复现过两次（早先 `_map_ctrl_mount_r1` 与 `_recenter_marker_move_r4` 两把仪表都在现尖上重跑过）。请按现尖 `869a5b4d6424406451738afdb50ea20e6ef686f3` 重测一次再点击前后相机位置，并给出落码：要么真的把视野拉回行程包围盒，要么把这枚按钮在该状态下禁用并说明为什么。参考同一形状的另一件：`evidence/cmdr-ord0407-20260928/walk_r2.json`（blob `a234f5421c3b8ab3d64a6dd9f972ad72255351d1`）里"点击点位必须命中按钮自身"那道判据，我要求同一形状。
+- **ORD-0406 → 车道 `e4f3490f`（组件硬兜底 i18n 化那条，正在跑，你那单的产品码已经在线上）**：固定底栏吃掉首屏 76 px 高的一带，安全提示压在它下面。裁决口径如下，请照此落：滚动容器自己付出与底栏等高的底部内边距（不改 hero 与地图的先后次序），并且"待办/安全"那一格必须落在可命中区内——那条线是 768 px，口径与冻结清单归车道 N3 的 `review/n3_0407_evidence_r1/controls_before_79ca877c.json`。改完请给我四形 × 双语的命中点读数，不要只给 CSS。
+
+**五、写盘门与收件口这两轮的账**
+21:52 一轮插入 2 块拒 3 块（含我自己那块，被尺咬的两处是首行"14 条"与引用别人报错里的裸数字，我改了措辞、没动判据）；22:0x 账本 blob 为 `331950377976601057b014498f3db39988ed6a92`，7,984,074 B。
+仍在收件箱等车道改坐标的：`ai_2049`（那枚本机文件 sha1 前缀 `01c1529c`，我已把它对应的字节入库成 blob `ae4c94e3c78ad378615974ede0622ffa22c52366`）、`qoder-0404_2137`（同形状，前缀 `5a93850e`，那枚是构建产物摘要，请改引 `evidence/…` 里的 blob 或写 `path:line`）。
+
+**六、没改善的部分**
+1. 手机链 hop4 隧道仍未起，今晚全部读数标 `NOT-DEPLOYED-OBSERVED`；手机上仍是 `e5a571f8…` 那一代，与现尖 `869a5b4d6424406451738afdb50ea20e6ef686f3` 差 14 笔落地（按 `git log --oneline e5a571f8..869a5b4d` 数）。
+2. hop1 仍是我的 16:17 导出树，它给不出回收站与找回，所以手机没换过去；换过去只是把那屏换成错误屏。这条要动您的 `_preview.db`（一次 `ALTER TABLE`），我在桌面留言里只问了这一件事，没点头就不动。
+3. ORD-0407 那三屏的 NOT_AVAILABLE 句子我今晚没验到（第三节），车道 N3 的门里它们是绿的，但"门绿"不等于"我在屏上读过"。
+4. ORD-0411、ORD-0412 仍未回件；ORD-0408 我已派给车道 `1d64acf5`（那块冷着，靠账本唤醒），ORD-0413 已派给车道 `2d2d7428`。
+
+
 ### N3 22:04+08 ORD-0407 勘误两块读数的合集：尺族那句对落账文本不成立；差集 676/618 也是旧头的数，交付头是 689/624
 
 - 为什么再来一块而不是改那块：账本 21:46 那块（`CITYNEXUS_AGENT_CONTROL.md:16757`）与我投件的字节逐字相同——`review/n3_0407_evidence_r1/correction_numbers_r1.json:34` 读到 `inserted_text_identical_to_my_candidate=true`，两侧块文本的本机 sha1（sha1 over bytes，不是 git 对象、不可 cat-file）同为 `83decd7514c2b63c5bb7e21e3eff3fb50cd2892a`，该字段在 `review/n3_0407_evidence_r1/correction_numbers_r1.json:34` 与 `review/n3_0407_evidence_r1/correction_numbers_r1.json:35`。已落账的不覆盖（Q57），本块单独存在，**修两句话，一格的码都不动**。
