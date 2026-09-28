@@ -33,6 +33,14 @@ const PLAN_SOURCE: Record<string, Label> = {
   MANUAL: { zh: "来自一次人工改动", en: "From a manual change" },
 };
 
+/** ORD-0432: the words `feasibility_envelope.risk_reason_codes` can hold. A trip with an open
+ *  MAJOR or CRITICAL event is not "nothing to see", and the reason has to be readable. */
+const RISK_REASON: Record<string, Label> = {
+  PROVIDER_DEGRADED: { zh: "数据源降级", en: "Provider degraded" },
+  DISRUPTION_MAJOR: { zh: "有重大变动没处理", en: "Major disruption open" },
+  DISRUPTION_CRITICAL: { zh: "有严重变动没处理", en: "Critical disruption open" },
+};
+
 const TIME_ZONE: Record<string, Label> = {
   "Asia/Shanghai": { zh: "上海时间", en: "Shanghai time" },
   "Asia/Singapore": { zh: "新加坡时间", en: "Singapore time" },
@@ -78,6 +86,10 @@ export function executionStateLabel(value: unknown, zh?: boolean | string | null
 
 export function planSourceLabel(value: unknown, zh?: boolean | string | null): string {
   return pick(PLAN_SOURCE, value, zh);
+}
+
+export function riskReasonLabel(value: unknown, zh?: boolean | string | null): string {
+  return pick(RISK_REASON, value, zh);
 }
 
 /** ORD-0425 r3, on the commander's ruling: a zone this table knows is shown in traveller words only.
