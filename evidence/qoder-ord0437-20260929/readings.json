@@ -4,14 +4,15 @@
   {
    "arm": "day-before",
    "disclosure": "Day it would land on 2026-10-09 — Leaving the day empty puts these places on the plan's first day. It is said now, not after.",
+   "scopeHint": "This reads the text you paste. Links to Xiaohongshu notes, WeChat Official Account posts or Feishu docs are named back as unread -- this build opens nobody else's page.",
    "cardPhaseBeforeAnyPress": null,
    "planState": "already",
    "steps": {
-    "after_viewport": 860,
-    "after_enter_import": 4546,
-    "after_ensure_active_plan": 4640,
-    "after_reading_disclosure": 4696,
-    "after_reading_phase": 6705
+    "after_viewport": 12305,
+    "after_enter_import": 15342,
+    "after_ensure_active_plan": 15429,
+    "after_reading_disclosure": 15435,
+    "after_reading_phase": 17456
    }
   },
   {
@@ -22,13 +23,13 @@
    "arm": "link-named-and-states",
    "planState": "already",
    "slack": {
-    "id": "5e160395-a613-4334-9276-c39704aad98a",
+    "id": "d4de0f9a-2192-4a8b-a4f5-f6312d0cac75",
     "city": "CNX-DEMO",
     "generate_status": 201,
     "candidates": 1
    },
    "catalogue": {
-    "id": "5e160395-a613-4334-9276-c39704aad98a",
+    "id": "d4de0f9a-2192-4a8b-a4f5-f6312d0cac75",
     "city": "CNX-DEMO",
     "rows": 8,
     "providers": [
@@ -77,7 +78,12 @@
     "UNRESOLVED",
     "UNRESOLVED"
    ],
-   "selectedCount": "2 of 2 matched places selected"
+   "selectedCount": "2 of 2 matched places selected",
+   "pickedHook": {
+    "with_data_picked": 4,
+    "total": 4
+   },
+   "pickBoxes": 2
   },
   {
    "arm": "error-state",
@@ -91,13 +97,13 @@
    "arm": "added-and-replay",
    "planState": "already",
    "slack": {
-    "id": "3fdff734-a4ce-4439-b983-94f4fcb791d1",
+    "id": "6474eb03-2dd9-4e7d-90b0-cda5402228f6",
     "city": "CNX-DEMO",
     "generate_status": 201,
     "candidates": 1
    },
    "catalogue": {
-    "id": "3fdff734-a4ce-4439-b983-94f4fcb791d1",
+    "id": "6474eb03-2dd9-4e7d-90b0-cda5402228f6",
     "city": "CNX-DEMO",
     "rows": 8,
     "providers": [
@@ -139,8 +145,8 @@
    "addedSource": "JOURNEY_FIRST_DAY",
    "readBackFailure": null,
    "steps": {
-    "after_slack_journey_and_catalogue": 5624,
-    "after_add_accepted": 7427
+    "after_slack_journey_and_catalogue": 5544,
+    "after_add_accepted": 7156
    },
    "addedAfterReload": null,
    "replayAdded": null,
@@ -175,7 +181,7 @@
    "arm": "chinese-arm",
    "planState": "already",
    "slack": {
-    "id": "6fa56fcb-2553-4602-b5dc-5e7c54c7636c",
+    "id": "eec9c630-9f1c-473d-aac2-41274f2988f5",
     "city": "CNX-DEMO",
     "generate_status": 201,
     "candidates": 1
@@ -187,6 +193,7 @@
    "warning": "这些对照是我们对你写的东西的猜测。加进去之前请逐行核对——放错的日子由你删除，不由我们藏起来。",
    "disclosure": "会落到哪一天 2026-12-05 — 不填日子就会放进这个计划的第一天。这句话现在说，不是做完再说。",
    "unsupported": "未读取的形态 LINK_ONLY 看到链接但没有打开：mp.weixin.qq.com",
+   "scopeHint": "这里读你粘贴的文字。小红书笔记、公众号内容、飞书文档的链接只会被点名说没有读——这一版不打开别人的页面。",
    "titleHead": "把你已经写下的东西贴进来 从文本导入地点 贴一段笔记、一个清单或一条链接。我们只读本地能读的文字，逐行告诉你读成了什么，"
   }
  ]
