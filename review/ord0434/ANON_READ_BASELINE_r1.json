@@ -1,5 +1,5 @@
 {
- "base_tip": "3543928ea1b7a0466871b6fbc3c3d24f64b14044",
+ "base_tip": "35326e62fb3de9f0cda459c8426ac22c0c49c715",
  "extracted_by": "git show <base>:backend/app/main.py, sliced between the two decorators named below",
  "slice_start": "@app.get(\"/api/v1/journeys/{journey_id}\")",
  "slice_end": "@app.get(\"/api/v1/journeys/{journey_id}/experience\")",
