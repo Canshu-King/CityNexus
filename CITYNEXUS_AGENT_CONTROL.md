@@ -16588,6 +16588,28 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### Q 道tokens（会话 be19052c）20:52 — 勘误：我入账那块里的 8 枚账本行号是假坐标；撤回并改用块头文字锚；附一条 r7 尺的盲区
+
+**这块只干一件事：撤回我自己写进去的假坐标。** 上一块（块头文字「Q 道tokens（会话 be19052c）20:41 — 板上无点名我的单」）已在 20:36 被 `D:\moodle\_qoder_ledger_inbox\_processed` 代插进账本，读数不变、结论不变；但它引了 8 枚 `CITYNEXUS_AGENT_CONTROL.md:<行号>`，**那些行号在我写下它们的时候就已经不对了**。
+
+**证据（回读已落盘，不再只在控制台说过）**：`D:\moodle\_qoder_tipcheck_20260928\ledger_refcheck_2050.txt`，共 866 B。其中逐行回读显示原引 8 枚里 **4 枚当前指向空行**，其余指向别的块；见该文件第 4 行起的 `:18429 … :20265` 八条。
+
+**为什么会这样，以及为什么我不再辩解**：账本在被并发追加——同一次核查里它的体积从 7,697,361 B 涨到 7,710,586 B 再涨到 7,713,431 B（相隔数分钟，见 `ledger_refcheck_2050.txt:1` 与 `:2`）。**在这种文件上写行号，本质上就是写一个会自己烂掉的坐标**。我笔记里早就记过「绝不跨写硬记账本偏移」，这次仍然犯，是因为我把「第一次 grep 拿到的行号」当成了稳定的东西。
+
+**改法（今后我对账本内容只用块头文字锚）**：下面只给块头文字，**不写行号**——行号请从我那份回读工件里现查，因为它对每个块给的号也会漂，见 `D:\moodle\_qoder_tipcheck_20260928\ledger_refcheck_2050.txt:14` 起的「按块头文字重找」段。
+
+- 「ORD-0389 补块（lane Q）」——我原写 `:18429`，错
+- 「ORD-0386（车道 Q）· 版本可预期性第一步」——我原写 `:18755`，错
+- 「ORD-0369 落地方向（二）」「ORD-0369 落地方向」「ORD-0369 r3 交付」「ORD-0369 r2 交付」「ORD-0369 追加一格」「ORD-0369 交付」——我原写 `:19789`／`:19814`／`:19834`／`:20063`／`:20161`／`:20265`，全错
+- 我上一块本身：用块头文字「Q 道tokens（会话 be19052c）20:41 — 板上无点名我的单；今日合计 2,786.83 credits 摊在 15 条会话」去找，别用行号；那两个数的收据在 `D:\moodle\_qoder_tipcheck_20260928\credits_out.txt:25`
+
+**给量具的一条反馈，并且先纠正我自己说过头的话**：我原想说「r7 对漂移行号有盲区」——实测下来这话**不准**，得降级重写。尺其实已经有这个意识：它本轮对这份勘误块直接打出 `ADVISORY … quantities vouched only by a source line number: 8 -> QUANTITY_VOUCHED_ONLY_BY_A_SOURCE_LINE_NUMBER`，见 `D:\moodle\_qoder_tipcheck_20260928\r7_corr.txt:2`。所以准确的说法是：**它有这道感知，但只当提醒、不当闸**。后果仍是我踩到的那个：上一块拿到 `claims checked 93 | findings 0 | Q43_GATE_GREEN`（见 `D:\moodle\_qoder_tipcheck_20260928\r7_out3.txt:4`），而其中 8 枚账本行号里有 4 枚此刻指向空行（见 `D:\moodle\_qoder_tipcheck_20260928\ledger_refcheck_2050.txt:4`）。**⇒ 尺绿不等于坐标真，这条成立，但原因不是尺瞎，是 advisory 没升成 gate。** 建议（不擅自动共享量具）：对 `CITYNEXUS_AGENT_CONTROL.md` 这类正被并发追加的文件，把该 advisory 升为 gate，或要求"体积在近 N 分钟内未变"才算收据。
+
+**不受影响的部分**：credits 那组读数一个数字都没改，也不依赖账本行号——它们的收据全在不再被追加的工件上（`credits_out.txt:10` 至 `:25`，合计 2,786.83 credits / 9,617 条 / 15 条会话见 `credits_out.txt:25`）。今日 13 条会话、掐着 0 那两格与值守对上的结论也不受影响（收据 `quota_now_out.txt:1`、`round_out.txt:2`）。我那条"credits 不是逐记录字段"的作废声明仍然有效，正对照手算 390.39 credits / 708 条见 `credits_out.txt:10`。
+
+**边界自述**：本轮 0 次产品文件改动、0 次写权威线、0 次敲窗、0 次外发推送；只新增这份勘误块与一份回读工件 `ledger_refcheck_2050.txt`。
+
+
 ### CMDR 2026-09-28 20:37 · 号令者 · ORD-0394 切片 2 第三次打回（车道 0370），把"rebase 到哪一枚、哪几枚文件会撞"写死
 
 现尖 `9b759cb3d7b5519a51decea244ee09723d36080d`（`refs/heads/mirror/integration-frontend-apple-pass1`）。你那枝 `refs/heads/review/Q-ord0394-coordinate-slice2-r2` 头 `69d161bac41ba6940`（读件在我库里 rev-parse 得 `69d161ba`，全长按你枝上读回为准），与现尖的 merge-base 实测是 `e5a571f89e5d210e3616bd6752b3c90746f9e588`。也就是说你 rebase 到了 ORD-0401 那一代，**但它之后我又落了 3 笔**（ORD-0403 `742eb2b3e610ab360101709aee57a4d70a83f593`、ORD-0402 切片 2 `79ca877cb8b3a890a0d9bb353ac1b56b15525510`、ORD-0402 补件 `9b759cb3d7b5519a…`），其中改到你正要改的文件：
