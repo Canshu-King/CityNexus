@@ -1,0 +1,50 @@
+{
+ "at": "2026-09-28T09:15:02.919Z",
+ "base": "http://127.0.0.1:4785/",
+ "bundle": "/assets/index-CitejLpj.js",
+ "sha": "d690041a069bf748a72d5b683a3cc29acb0eae51",
+ "rows": [
+  {
+   "tab": "nav-hub",
+   "present": true,
+   "panel": true,
+   "aria_label": "行前清单",
+   "text": "行前清单\n服务端报出的两类待办\n\n这里只列契约写明依据的两类检查：这一代方案的可行性失败、以及等待你决定的恢复方案。完成状态由服务端事实自己消失，不需要你打勾；没跑过的检查不会被打勾，也不会出现在这里。\n\n服务端这一代没有报出可行性失败，也没有等待你决定的恢复方案。这里只列契约已经写明依据的两类检查，其余没跑过的检查不会被打勾，也不会出现在这里。\n去看这一代方案",
+   "items": 0,
+   "item_keys": [],
+   "item_hit": [],
+   "goto_buttons": [],
+   "empty_present": true,
+   "empty_action": {
+    "label": "去看这一代方案",
+    "hit": false,
+    "box": [
+     32,
+     1151,
+     119,
+     44
+    ]
+   }
+  },
+  {
+   "tab": "nav-trips",
+   "present": true,
+   "panel": false
+  },
+  {
+   "tab": "nav-map",
+   "present": true,
+   "panel": false
+  },
+  {
+   "tab": "nav-agent",
+   "present": true,
+   "panel": false
+  },
+  {
+   "tab": "nav-me",
+   "present": true,
+   "panel": false
+  }
+ ]
+}
