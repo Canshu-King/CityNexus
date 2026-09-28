@@ -1,0 +1,541 @@
+{
+ "schema": "CNX_CMDR_LANDING_PREFLIGHT_V1",
+ "lane": "commander 494abfd7",
+ "at_local": "2026-09-28T19:26:14+0800",
+ "mode": "LAND",
+ "authoritative_line": "mirror/integration-frontend-apple-pass1",
+ "tip_re_read_from_github_before": "8f4ddfa9feffe4233b48cbf608caf8e1bbb76291",
+ "candidate_ref": "refs/heads/review/cmdr-recut-ord0401-r1",
+ "candidate_tip": "e5a571f89e5d210e3616bd6752b3c90746f9e588",
+ "genealogy": {
+  "ff_possible_rc": 0,
+  "ff_possible": true,
+  "merge_base": "8f4ddfa9feffe4233b48cbf608caf8e1bbb76291",
+  "line_only_commits": 0,
+  "candidate_only_commits": 4
+ },
+ "file_sets": {
+  "line_side_since_base": [],
+  "candidate_side_since_base": [
+   "frontend/src/features/checklist/PretripChecklistPanel.tsx",
+   "frontend/src/lib/pretripChecklist.ts",
+   "review/evidence/ord0401/MANIFEST.json",
+   "review/evidence/ord0401/candidate-8b0ea597-en-320px-after-scroll.png",
+   "review/evidence/ord0401/candidate-8b0ea597-en-320px-before-scroll.png",
+   "review/evidence/ord0401/candidate-8b0ea597-en-360px-after-scroll.png",
+   "review/evidence/ord0401/candidate-8b0ea597-en-360px-before-scroll.png",
+   "review/evidence/ord0401/candidate-8b0ea597-en-390px-after-scroll.png",
+   "review/evidence/ord0401/candidate-8b0ea597-en-390px-before-scroll.png",
+   "review/evidence/ord0401/candidate-8b0ea597-en-414px-after-scroll.png",
+   "review/evidence/ord0401/candidate-8b0ea597-en-414px-before-scroll.png",
+   "review/evidence/ord0401/candidate-8b0ea597-zh_CN-320px-after-scroll.png",
+   "review/evidence/ord0401/candidate-8b0ea597-zh_CN-320px-before-scroll.png",
+   "review/evidence/ord0401/candidate-8b0ea597-zh_CN-360px-after-scroll.png",
+   "review/evidence/ord0401/candidate-8b0ea597-zh_CN-360px-before-scroll.png",
+   "review/evidence/ord0401/candidate-8b0ea597-zh_CN-390px-after-scroll.png",
+   "review/evidence/ord0401/candidate-8b0ea597-zh_CN-390px-before-scroll.png",
+   "review/evidence/ord0401/candidate-8b0ea597-zh_CN-414px-after-scroll.png",
+   "review/evidence/ord0401/candidate-8b0ea597-zh_CN-414px-before-scroll.png",
+   "review/evidence/ord0401/compare_arms_r1.py",
+   "review/evidence/ord0401/copy_pair_candidate-8b0ea597.json",
+   "review/evidence/ord0401/copy_pair_tip-e7286dfd.json",
+   "review/evidence/ord0401/first_screen_budget_r1.json",
+   "review/evidence/ord0401/first_screen_rect_r1.json",
+   "review/evidence/ord0401/hub-390-first-screen.png",
+   "review/evidence/ord0401/hub_reachability_390x844.json",
+   "review/evidence/ord0401/hub_reachability_candidate-8b0ea597.json",
+   "review/evidence/ord0401/hub_reachability_tip-e7286dfd.json",
+   "review/evidence/ord0401/items-open-en-390px.png",
+   "review/evidence/ord0401/items-open-zh-CN-390px.png",
+   "review/evidence/ord0401/items_open_counterarm_r1.json",
+   "review/evidence/ord0401/make_manifest_r1.py",
+   "review/evidence/ord0401/measure_budget_r1.mjs",
+   "review/evidence/ord0401/measure_first_screen_r1.mjs",
+   "review/evidence/ord0401/measure_placements_r1.mjs",
+   "review/evidence/ord0401/measure_shapes_r1.mjs",
+   "review/evidence/ord0401/measure_shapes_r2.mjs",
+   "review/evidence/ord0401/placement_options_r1.json",
+   "review/evidence/ord0401/probe_0401_r1.mjs",
+   "review/evidence/ord0401/probe_items_arm_r1.mjs",
+   "review/evidence/ord0401/serve_candidate_r1.mjs",
+   "review/evidence/ord0401/shape_budget_r1.json",
+   "review/evidence/ord0401/shape_budget_r2.json",
+   "review/evidence/ord0401/tip-e7286dfd-en-320px-after-scroll.png",
+   "review/evidence/ord0401/tip-e7286dfd-en-320px-before-scroll.png",
+   "review/evidence/ord0401/tip-e7286dfd-en-360px-after-scroll.png",
+   "review/evidence/ord0401/tip-e7286dfd-en-360px-before-scroll.png",
+   "review/evidence/ord0401/tip-e7286dfd-en-390px-after-scroll.png",
+   "review/evidence/ord0401/tip-e7286dfd-en-390px-before-scroll.png",
+   "review/evidence/ord0401/tip-e7286dfd-en-414px-after-scroll.png",
+   "review/evidence/ord0401/tip-e7286dfd-en-414px-before-scroll.png",
+   "review/evidence/ord0401/tip-e7286dfd-zh-CN-320px-after-scroll.png",
+   "review/evidence/ord0401/tip-e7286dfd-zh-CN-320px-before-scroll.png",
+   "review/evidence/ord0401/tip-e7286dfd-zh-CN-360px-after-scroll.png",
+   "review/evidence/ord0401/tip-e7286dfd-zh-CN-360px-before-scroll.png",
+   "review/evidence/ord0401/tip-e7286dfd-zh-CN-390px-after-scroll.png",
+   "review/evidence/ord0401/tip-e7286dfd-zh-CN-390px-before-scroll.png",
+   "review/evidence/ord0401/tip-e7286dfd-zh-CN-414px-after-scroll.png",
+   "review/evidence/ord0401/tip-e7286dfd-zh-CN-414px-before-scroll.png",
+   "review/ord0401/copy_pair_check_r1.py"
+  ],
+  "intersection": [],
+  "product_introduced_by_candidate": [
+   "frontend/src/features/checklist/PretripChecklistPanel.tsx",
+   "frontend/src/lib/pretripChecklist.ts"
+  ]
+ },
+ "merge_tree": {
+  "exit": 0,
+  "first_line": "2e0ee8bdaf07fd3d0bc27d7b45eaf91fee5f1a48",
+  "conflict_reported": false,
+  "stderr_head": ""
+ },
+ "gate_run": {
+  "requested": [],
+  "collect_exit": null,
+  "collected": null,
+  "test_exit": null,
+  "summary": null,
+  "export": "D:/moodle/_qoder_cmdr_ref_20260921/snap_preflight_192526",
+  "blob_equality": [
+   {
+    "path": "frontend/src/features/checklist/PretripChecklistPanel.tsx",
+    "candidate_blob": "dcf7228fd69178971e2101c12b14c2aa25c828cc",
+    "export_blob": "dcf7228fd69178971e2101c12b14c2aa25c828cc",
+    "equal": true
+   },
+   {
+    "path": "frontend/src/lib/pretripChecklist.ts",
+    "candidate_blob": "97db9ba81ef3430ba36a73b85c60d144592099a6",
+    "export_blob": "97db9ba81ef3430ba36a73b85c60d144592099a6",
+    "equal": true
+   },
+   {
+    "path": "review/evidence/ord0401/MANIFEST.json",
+    "candidate_blob": "0ab4b7872de21254c3d6e35f230d25d3ba46feed",
+    "export_blob": "0ab4b7872de21254c3d6e35f230d25d3ba46feed",
+    "equal": true
+   },
+   {
+    "path": "review/evidence/ord0401/candidate-8b0ea597-en-320px-after-scroll.png",
+    "candidate_blob": "c08faa6963ce3beb3e3acc738c161b7a406c09b7",
+    "export_blob": "c08faa6963ce3beb3e3acc738c161b7a406c09b7",
+    "equal": true
+   },
+   {
+    "path": "review/evidence/ord0401/candidate-8b0ea597-en-320px-before-scroll.png",
+    "candidate_blob": "b676010ca793b31a6dc5d1a37dd4446e3400b9c2",
+    "export_blob": "b676010ca793b31a6dc5d1a37dd4446e3400b9c2",
+    "equal": true
+   },
+   {
+    "path": "review/evidence/ord0401/candidate-8b0ea597-en-360px-after-scroll.png",
+    "candidate_blob": "5e63ced04b486c9fc1f850fd813c2959fe1ba690",
+    "export_blob": "5e63ced04b486c9fc1f850fd813c2959fe1ba690",
+    "equal": true
+   },
+   {
+    "path": "review/evidence/ord0401/candidate-8b0ea597-en-360px-before-scroll.png",
+    "candidate_blob": "b03aa251af0b3411264b55cff324703a3ce12c1d",
+    "export_blob": "b03aa251af0b3411264b55cff324703a3ce12c1d",
+    "equal": true
+   },
+   {
+    "path": "review/evidence/ord0401/candidate-8b0ea597-en-390px-after-scroll.png",
+    "candidate_blob": "827ca600624f3d50e0ecc4ec594174bae2d316c9",
+    "export_blob": "827ca600624f3d50e0ecc4ec594174bae2d316c9",
+    "equal": true
+   },
+   {
+    "path": "review/evidence/ord0401/candidate-8b0ea597-en-390px-before-scroll.png",
+    "candidate_blob": "a163d87a48c081b5a594cc52aeb1cabafc58b84e",
+    "export_blob": "a163d87a48c081b5a594cc52aeb1cabafc58b84e",
+    "equal": true
+   },
+   {
+    "path": "review/evidence/ord0401/candidate-8b0ea597-en-414px-after-scroll.png",
+    "candidate_blob": "2bc2c2bf62209d703bddd33b160984876ccffc35",
+    "export_blob": "2bc2c2bf62209d703bddd33b160984876ccffc35",
+    "equal": true
+   },
+   {
+    "path": "review/evidence/ord0401/candidate-8b0ea597-en-414px-before-scroll.png",
+    "candidate_blob": "0fc424b030ab6d1b36acd0f9c32d708e3164b928",
+    "export_blob": "0fc424b030ab6d1b36acd0f9c32d708e3164b928",
+    "equal": true
+   },
+   {
+    "path": "review/evidence/ord0401/candidate-8b0ea597-zh_CN-320px-after-scroll.png",
+    "candidate_blob": "0fbe1277be0ca283e554dd438ce6941f72d326a5",
+    "export_blob": "0fbe1277be0ca283e554dd438ce6941f72d326a5",
+    "equal": true
+   },
+   {
+    "path": "review/evidence/ord0401/candidate-8b0ea597-zh_CN-320px-before-scroll.png",
+    "candidate_blob": "e9432f31ac4a98e3374e77e85647e126c9cd5d21",
+    "export_blob": "e9432f31ac4a98e3374e77e85647e126c9cd5d21",
+    "equal": true
+   },
+   {
+    "path": "review/evidence/ord0401/candidate-8b0ea597-zh_CN-360px-after-scroll.png",
+    "candidate_blob": "43ebe8bf29201093e17d87201926b48f6f852a7c",
+    "export_blob": "43ebe8bf29201093e17d87201926b48f6f852a7c",
+    "equal": true
+   },
+   {
+    "path": "review/evidence/ord0401/candidate-8b0ea597-zh_CN-360px-before-scroll.png",
+    "candidate_blob": "5088ffda6049b9e955d04c24112a39a9ae590bc8",
+    "export_blob": "5088ffda6049b9e955d04c24112a39a9ae590bc8",
+    "equal": true
+   },
+   {
+    "path": "review/evidence/ord0401/candidate-8b0ea597-zh_CN-390px-after-scroll.png",
+    "candidate_blob": "2fe775fa239149db715f0628cef0c425afc3410e",
+    "export_blob": "2fe775fa239149db715f0628cef0c425afc3410e",
+    "equal": true
+   },
+   {
+    "path": "review/evidence/ord0401/candidate-8b0ea597-zh_CN-390px-before-scroll.png",
+    "candidate_blob": "66ebee7a4e8172f5499e249a23774279101dc00a",
+    "export_blob": "66ebee7a4e8172f5499e249a23774279101dc00a",
+    "equal": true
+   },
+   {
+    "path": "review/evidence/ord0401/candidate-8b0ea597-zh_CN-414px-after-scroll.png",
+    "candidate_blob": "31e10f69ba51c161e932c2ec0f0dd0212521692d",
+    "export_blob": "31e10f69ba51c161e932c2ec0f0dd0212521692d",
+    "equal": true
+   },
+   {
+    "path": "review/evidence/ord0401/candidate-8b0ea597-zh_CN-414px-before-scroll.png",
+    "candidate_blob": "0179555f4097fbfd7c6ea727890027b4ea7fb33c",
+    "export_blob": "0179555f4097fbfd7c6ea727890027b4ea7fb33c",
+    "equal": true
+   },
+   {
+    "path": "review/evidence/ord0401/compare_arms_r1.py",
+    "candidate_blob": "28909ff0cf8424a2a739232f5c350eecfed4b27e",
+    "export_blob": "28909ff0cf8424a2a739232f5c350eecfed4b27e",
+    "equal": true
+   },
+   {
+    "path": "review/evidence/ord0401/copy_pair_candidate-8b0ea597.json",
+    "candidate_blob": "c6a3195afa91d3d295902091567cf420e20daa53",
+    "export_blob": "c6a3195afa91d3d295902091567cf420e20daa53",
+    "equal": true
+   },
+   {
+    "path": "review/evidence/ord0401/copy_pair_tip-e7286dfd.json",
+    "candidate_blob": "6185fbed2069113a6a293a63eba6aed27a2b2981",
+    "export_blob": "6185fbed2069113a6a293a63eba6aed27a2b2981",
+    "equal": true
+   },
+   {
+    "path": "review/evidence/ord0401/first_screen_budget_r1.json",
+    "candidate_blob": "0cf8f6310eda7b5fb423a6895f556127aee79eea",
+    "export_blob": "0cf8f6310eda7b5fb423a6895f556127aee79eea",
+    "equal": true
+   },
+   {
+    "path": "review/evidence/ord0401/first_screen_rect_r1.json",
+    "candidate_blob": "b40888ca3bb26ea5f6061ce73b43fc5eb943184e",
+    "export_blob": "b40888ca3bb26ea5f6061ce73b43fc5eb943184e",
+    "equal": true
+   },
+   {
+    "path": "review/evidence/ord0401/hub-390-first-screen.png",
+    "candidate_blob": "66ebee7a4e8172f5499e249a23774279101dc00a",
+    "export_blob": "66ebee7a4e8172f5499e249a23774279101dc00a",
+    "equal": true
+   },
+   {
+    "path": "review/evidence/ord0401/hub_reachability_390x844.json",
+    "candidate_blob": "908c35c360ac82024028a38dadf44915d3a3ebb0",
+    "export_blob": "908c35c360ac82024028a38dadf44915d3a3ebb0",
+    "equal": true
+   },
+   {
+    "path": "review/evidence/ord0401/hub_reachability_candidate-8b0ea597.json",
+    "candidate_blob": "4db7d7661bb660160d24bd34b5ca8b2ec94708be",
+    "export_blob": "4db7d7661bb660160d24bd34b5ca8b2ec94708be",
+    "equal": true
+   },
+   {
+    "path": "review/evidence/ord0401/hub_reachability_tip-e7286dfd.json",
+    "candidate_blob": "48d23dee6bacde100e56fea172892f18a901d8a9",
+    "export_blob": "48d23dee6bacde100e56fea172892f18a901d8a9",
+    "equal": true
+   },
+   {
+    "path": "review/evidence/ord0401/items-open-en-390px.png",
+    "candidate_blob": "a163d87a48c081b5a594cc52aeb1cabafc58b84e",
+    "export_blob": "a163d87a48c081b5a594cc52aeb1cabafc58b84e",
+    "equal": true
+   },
+   {
+    "path": "review/evidence/ord0401/items-open-zh-CN-390px.png",
+    "candidate_blob": "66ebee7a4e8172f5499e249a23774279101dc00a",
+    "export_blob": "66ebee7a4e8172f5499e249a23774279101dc00a",
+    "equal": true
+   },
+   {
+    "path": "review/evidence/ord0401/items_open_counterarm_r1.json",
+    "candidate_blob": "e142df52f6eec5f00c338e08c82e5cdaf2d52e22",
+    "export_blob": "e142df52f6eec5f00c338e08c82e5cdaf2d52e22",
+    "equal": true
+   },
+   {
+    "path": "review/evidence/ord0401/make_manifest_r1.py",
+    "candidate_blob": "5d3e2be5221989bddbeb70bcc8214a1daad6e374",
+    "export_blob": "5d3e2be5221989bddbeb70bcc8214a1daad6e374",
+    "equal": true
+   },
+   {
+    "path": "review/evidence/ord0401/measure_budget_r1.mjs",
+    "candidate_blob": "aaf970bfd3f59b4399b4ed270d7cda572caf93ca",
+    "export_blob": "aaf970bfd3f59b4399b4ed270d7cda572caf93ca",
+    "equal": true
+   },
+   {
+    "path": "review/evidence/ord0401/measure_first_screen_r1.mjs",
+    "candidate_blob": "bdfbad0704144b5dcb92f5b0e467500c87367de0",
+    "export_blob": "bdfbad0704144b5dcb92f5b0e467500c87367de0",
+    "equal": true
+   },
+   {
+    "path": "review/evidence/ord0401/measure_placements_r1.mjs",
+    "candidate_blob": "b28d19e882e335e49dd03b5df1364edc1b039355",
+    "export_blob": "b28d19e882e335e49dd03b5df1364edc1b039355",
+    "equal": true
+   },
+   {
+    "path": "review/evidence/ord0401/measure_shapes_r1.mjs",
+    "candidate_blob": "6afcae30e64de082db1c003c17c91dd4993a3516",
+    "export_blob": "6afcae30e64de082db1c003c17c91dd4993a3516",
+    "equal": true
+   },
+   {
+    "path": "review/evidence/ord0401/measure_shapes_r2.mjs",
+    "candidate_blob": "02babfe4a71d2603dd0d0e7da583064859a5c20a",
+    "export_blob": "02babfe4a71d2603dd0d0e7da583064859a5c20a",
+    "equal": true
+   },
+   {
+    "path": "review/evidence/ord0401/placement_options_r1.json",
+    "candidate_blob": "9df32d01dfd9b989f7da55f7d4c9e73cbbc61683",
+    "export_blob": "9df32d01dfd9b989f7da55f7d4c9e73cbbc61683",
+    "equal": true
+   },
+   {
+    "path": "review/evidence/ord0401/probe_0401_r1.mjs",
+    "candidate_blob": "b7b82bef4546a3da6dbc0d526ea0f540308d35a3",
+    "export_blob": "b7b82bef4546a3da6dbc0d526ea0f540308d35a3",
+    "equal": true
+   },
+   {
+    "path": "review/evidence/ord0401/probe_items_arm_r1.mjs",
+    "candidate_blob": "9274c2ea4eb4478e2b155090e7680366f12d5fe3",
+    "export_blob": "9274c2ea4eb4478e2b155090e7680366f12d5fe3",
+    "equal": true
+   },
+   {
+    "path": "review/evidence/ord0401/serve_candidate_r1.mjs",
+    "candidate_blob": "22ed43a90c4745af022b6ddf5f244f98bea22c7e",
+    "export_blob": "22ed43a90c4745af022b6ddf5f244f98bea22c7e",
+    "equal": true
+   },
+   {
+    "path": "review/evidence/ord0401/shape_budget_r1.json",
+    "candidate_blob": "4ad04242442289e84420a29e3243020ed93bfdf7",
+    "export_blob": "4ad04242442289e84420a29e3243020ed93bfdf7",
+    "equal": true
+   },
+   {
+    "path": "review/evidence/ord0401/shape_budget_r2.json",
+    "candidate_blob": "28dcfc546bb42af532dc57f4a8b7d7e300c80913",
+    "export_blob": "28dcfc546bb42af532dc57f4a8b7d7e300c80913",
+    "equal": true
+   },
+   {
+    "path": "review/evidence/ord0401/tip-e7286dfd-en-320px-after-scroll.png",
+    "candidate_blob": "41a53580a26929a2a1b2d2e9a09d496e8ed89694",
+    "export_blob": "41a53580a26929a2a1b2d2e9a09d496e8ed89694",
+    "equal": true
+   },
+   {
+    "path": "review/evidence/ord0401/tip-e7286dfd-en-320px-before-scroll.png",
+    "candidate_blob": "b676010ca793b31a6dc5d1a37dd4446e3400b9c2",
+    "export_blob": "b676010ca793b31a6dc5d1a37dd4446e3400b9c2",
+    "equal": true
+   },
+   {
+    "path": "review/evidence/ord0401/tip-e7286dfd-en-360px-after-scroll.png",
+    "candidate_blob": "cc593a9198e6658400947509375e6789d0bf0344",
+    "export_blob": "cc593a9198e6658400947509375e6789d0bf0344",
+    "equal": true
+   },
+   {
+    "path": "review/evidence/ord0401/tip-e7286dfd-en-360px-before-scroll.png",
+    "candidate_blob": "b03aa251af0b3411264b55cff324703a3ce12c1d",
+    "export_blob": "b03aa251af0b3411264b55cff324703a3ce12c1d",
+    "equal": true
+   },
+   {
+    "path": "review/evidence/ord0401/tip-e7286dfd-en-390px-after-scroll.png",
+    "candidate_blob": "9ce12364cac38c1afa364c6d10e31d18db9e3e7b",
+    "export_blob": "9ce12364cac38c1afa364c6d10e31d18db9e3e7b",
+    "equal": true
+   },
+   {
+    "path": "review/evidence/ord0401/tip-e7286dfd-en-390px-before-scroll.png",
+    "candidate_blob": "a163d87a48c081b5a594cc52aeb1cabafc58b84e",
+    "export_blob": "a163d87a48c081b5a594cc52aeb1cabafc58b84e",
+    "equal": true
+   },
+   {
+    "path": "review/evidence/ord0401/tip-e7286dfd-en-414px-after-scroll.png",
+    "candidate_blob": "17767848ac6ed3b0ef113cd718e4d5859bdbce4e",
+    "export_blob": "17767848ac6ed3b0ef113cd718e4d5859bdbce4e",
+    "equal": true
+   },
+   {
+    "path": "review/evidence/ord0401/tip-e7286dfd-en-414px-before-scroll.png",
+    "candidate_blob": "0fc424b030ab6d1b36acd0f9c32d708e3164b928",
+    "export_blob": "0fc424b030ab6d1b36acd0f9c32d708e3164b928",
+    "equal": true
+   },
+   {
+    "path": "review/evidence/ord0401/tip-e7286dfd-zh-CN-320px-after-scroll.png",
+    "candidate_blob": "5e28e127692d0b66a762191906c925ca7a69b275",
+    "export_blob": "5e28e127692d0b66a762191906c925ca7a69b275",
+    "equal": true
+   },
+   {
+    "path": "review/evidence/ord0401/tip-e7286dfd-zh-CN-320px-before-scroll.png",
+    "candidate_blob": "e9432f31ac4a98e3374e77e85647e126c9cd5d21",
+    "export_blob": "e9432f31ac4a98e3374e77e85647e126c9cd5d21",
+    "equal": true
+   },
+   {
+    "path": "review/evidence/ord0401/tip-e7286dfd-zh-CN-360px-after-scroll.png",
+    "candidate_blob": "dcb237e557ed5f8dbb94dc130f56f5284c4083b2",
+    "export_blob": "dcb237e557ed5f8dbb94dc130f56f5284c4083b2",
+    "equal": true
+   },
+   {
+    "path": "review/evidence/ord0401/tip-e7286dfd-zh-CN-360px-before-scroll.png",
+    "candidate_blob": "5088ffda6049b9e955d04c24112a39a9ae590bc8",
+    "export_blob": "5088ffda6049b9e955d04c24112a39a9ae590bc8",
+    "equal": true
+   },
+   {
+    "path": "review/evidence/ord0401/tip-e7286dfd-zh-CN-390px-after-scroll.png",
+    "candidate_blob": "101cbe3b33cdced66cf5a29f3d33e51355d94087",
+    "export_blob": "101cbe3b33cdced66cf5a29f3d33e51355d94087",
+    "equal": true
+   },
+   {
+    "path": "review/evidence/ord0401/tip-e7286dfd-zh-CN-390px-before-scroll.png",
+    "candidate_blob": "66ebee7a4e8172f5499e249a23774279101dc00a",
+    "export_blob": "66ebee7a4e8172f5499e249a23774279101dc00a",
+    "equal": true
+   },
+   {
+    "path": "review/evidence/ord0401/tip-e7286dfd-zh-CN-414px-after-scroll.png",
+    "candidate_blob": "37cce4d5e3bea17aa7a776fbfcf43b0baa890ec9",
+    "export_blob": "37cce4d5e3bea17aa7a776fbfcf43b0baa890ec9",
+    "equal": true
+   },
+   {
+    "path": "review/evidence/ord0401/tip-e7286dfd-zh-CN-414px-before-scroll.png",
+    "candidate_blob": "0179555f4097fbfd7c6ea727890027b4ea7fb33c",
+    "export_blob": "0179555f4097fbfd7c6ea727890027b4ea7fb33c",
+    "equal": true
+   },
+   {
+    "path": "review/ord0401/copy_pair_check_r1.py",
+    "candidate_blob": "97efe0f1b87e9a7019ce708b8fc0fc24f7fd365b",
+    "export_blob": "97efe0f1b87e9a7019ce708b8fc0fc24f7fd365b",
+    "equal": true
+   }
+  ],
+  "whole_suite": {
+   "collect_exit": 0,
+   "collected": 1426,
+   "interrupted": false,
+   "error_lines": [
+    "tests/test_qoder_ord0332_error_receipt.py::test_R7_the_envelope_keeps_every_field_it_already_had",
+    "tests/test_qoder_ord0332_error_receipt.py::test_R8_the_seed_is_read_off_the_real_request_not_just_the_dataclass",
+    "tests/test_solver_runtime_policy.py::test_unexpected_solver_programming_error_is_not_silently_hidden"
+   ],
+   "tail": [
+    "    _PortalFactoryType = Callable[[], AbstractContextManager[anyio.abc.BlockingPortal]]",
+    "-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html",
+    "1426 tests collected in 8.69s"
+   ],
+   "cmd": "D:/moodle/CityNexus/.venv/Scripts/python.exe -m pytest --collect-only -q tests  (cwd=<export>/backend, PYTHONPATH=<export>)"
+  },
+  "deletions": {
+   "deleted_by_candidate": [],
+   "still_present_in_export": []
+  },
+  "interpreter": "Python 3.12.14 (main, Aug 25 2026, 14:01:42) [MSC v.1944 64 bit (AMD64)]",
+  "exposure": {
+   "ruler_blob": "d3f66ce9fecd0790981a4fcdeb5e36b1c0fd10f2",
+   "ruler_blob_computed": null,
+   "ruler_file": "ui_exposure_taint_ast_r7b.cjs",
+   "candidate_files_in_view": 2,
+   "tip_cells": 10,
+   "cand_cells": 10,
+   "growth_by_file_and_rule": {},
+   "unpaired_added": [],
+   "added_line_exact": [],
+   "shifted_only": false,
+   "removed_count": 0,
+   "removed": [],
+   "disclosed_slip": "a same-file, same-rule relocation with equal counts reads as a shift; the AST ruler has no cell identity"
+  },
+  "frontend_build": {
+   "builder_rc": 0,
+   "vite_build_rc": 0,
+   "dist_exists": true,
+   "index_exists": true,
+   "asset_refs": [
+    "/assets/index-BDf7HG58.js",
+    "/assets/index-tCROZ2r8.css"
+   ],
+   "live_tree": "2e0ee8bdaf07fd3d0bc27d7b45eaf91fee5f1a48",
+   "info_file": "D:\\moodle\\_qoder_cmdr_ref_20260921\\live_checks\\_build_e5a571f_info.json",
+   "build_tail": [
+    "files generated",
+    "  dist/v10-sw.js",
+    "  dist/workbox-6923124b.js",
+    "\u001b[33m",
+    "(!) Some chunks are larger than 500 kB after minification. Consider:",
+    "- Using dynamic import() to code-split the application",
+    "- Use build.rollupOptions.output.manualChunks to improve chunking: https://rollupjs.org/configuration-options/#output-manualchunks",
+    "- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.\u001b[39m"
+   ]
+  }
+ },
+ "problems": [],
+ "verdict": "READY_TO_LAND",
+ "landing": {
+  "http": 200,
+  "response_head": "{'ref': 'refs/heads/mirror/integration-frontend-apple-pass1', 'node_id': 'REF_kwDOUhlJJ9oAMnJlZnMvaGVhZHMvbWlycm9yL2ludGVncmF0aW9uLWZyb250ZW5kLWFwcGxlLXBhc3Mx', 'url': 'https://api.github.com/repos/Ca",
+  "tip_after": "e5a571f89e5d210e3616bd6752b3c90746f9e588",
+  "branches_route": "e5a571f89e5d210e3616bd6752b3c90746f9e588",
+  "both_routes_agree": true,
+  "landed": true
+ },
+ "discipline": {
+  "evidence_paths_overwritten": 0,
+  "databases_opened": 0,
+  "surfaces_started_or_stopped": 0,
+  "credential_values_printed": 0,
+  "candidate_refs_pushed_by_commander": 0
+ },
+ "claim_kind": "git_and_pytest_determined",
+ "claimed_result": null,
+ "derived_result": null
+}
