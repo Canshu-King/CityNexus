@@ -127,6 +127,10 @@ CREATE TABLE IF NOT EXISTS journeys (
     current_activity_id TEXT REFERENCES activities(id) ON DELETE SET NULL,
     created_at TEXT NOT NULL,
     updated_at TEXT NOT NULL,
+    -- ORD-0383 slice 1: additive and deliberately without a DEFAULT.  A row that was never
+    -- deleted is NULL, which is what every pre-existing row already is; a default would have
+    -- to invent a deletion moment.  See `deleted_at` in `app/db/models.py`.
+    deleted_at TEXT,
     CHECK (end_at > start_at)
 );
 

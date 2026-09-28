@@ -194,6 +194,10 @@ class Journey(Base):
     )
     created_at: Mapped[str] = mapped_column(String)
     updated_at: Mapped[str] = mapped_column(String)
+    # ORD-0383 slice 1: NULL means this trip was never deleted.  A deletion records the moment
+    # here rather than adding a word to `status`, whose CHECK is closed and whose values say
+    # what the trip was doing, not whether a recycle bin still shows it.
+    deleted_at: Mapped[str | None] = mapped_column(String, nullable=True)
 
 
 class JourneyMission(Base):
