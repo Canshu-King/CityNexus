@@ -1,0 +1,750 @@
+{
+ "base": "http://127.0.0.1:4806",
+ "route": "twin",
+ "shapes": [
+  [
+   390,
+   844
+  ],
+  [
+   360,
+   800
+  ],
+  [
+   414,
+   896
+  ],
+  [
+   320,
+   653
+  ]
+ ],
+ "locales": [
+  "zh",
+  "en"
+ ],
+ "generated_by": "_header_fit_r2.js",
+ "runs": [
+  {
+   "vw": 390,
+   "vh": 844,
+   "header_found": true,
+   "header_selector_used": "HEADER|v8-topbar",
+   "header_box": [
+    0,
+    0,
+    390,
+    66
+   ],
+   "doc_scroll_width": 390,
+   "client_width": 390,
+   "horizontal_overflow": false,
+   "controls": [
+    {
+     "label": "菜单",
+     "testid": null,
+     "tag": "BUTTON",
+     "box": [
+      17,
+      19,
+      46,
+      27
+     ],
+     "text_line_boxes": 1,
+     "text_only": "菜单",
+     "wrapped": false,
+     "clipped_right": false,
+     "clipped_left": false
+    },
+    {
+     "label": "跟随系统",
+     "testid": "topbar-theme",
+     "tag": "BUTTON",
+     "box": [
+      191,
+      17,
+      65,
+      44
+     ],
+     "text_line_boxes": 2,
+     "text_only": "跟随系统",
+     "wrapped": true,
+     "clipped_right": false,
+     "clipped_left": false
+    },
+    {
+     "label": "EN",
+     "testid": "topbar-language",
+     "tag": "BUTTON",
+     "box": [
+      264,
+      17,
+      65,
+      44
+     ],
+     "text_line_boxes": 1,
+     "text_only": "EN",
+     "wrapped": false,
+     "clipped_right": false,
+     "clipped_left": false
+    },
+    {
+     "label": "DE",
+     "testid": null,
+     "tag": "BUTTON",
+     "box": [
+      345,
+      25,
+      28,
+      28
+     ],
+     "text_line_boxes": 1,
+     "text_only": "DE",
+     "wrapped": false,
+     "clipped_right": false,
+     "clipped_left": false
+    }
+   ],
+   "wrapped_controls": [
+    "跟随系统"
+   ],
+   "clipped_controls": [],
+   "status": "MEASURED",
+   "locale": "zh",
+   "shape": "390x844",
+   "entry_used": "使用封存的演示行程",
+   "reached_route": "/v8/twin"
+  },
+  {
+   "vw": 360,
+   "vh": 800,
+   "header_found": true,
+   "header_selector_used": "HEADER|v8-topbar",
+   "header_box": [
+    0,
+    0,
+    360,
+    66
+   ],
+   "doc_scroll_width": 360,
+   "client_width": 360,
+   "horizontal_overflow": false,
+   "controls": [
+    {
+     "label": "菜单",
+     "testid": null,
+     "tag": "BUTTON",
+     "box": [
+      17,
+      19,
+      46,
+      27
+     ],
+     "text_line_boxes": 1,
+     "text_only": "菜单",
+     "wrapped": false,
+     "clipped_right": false,
+     "clipped_left": false
+    },
+    {
+     "label": "跟随系统",
+     "testid": "topbar-theme",
+     "tag": "BUTTON",
+     "box": [
+      161,
+      17,
+      65,
+      44
+     ],
+     "text_line_boxes": 2,
+     "text_only": "跟随系统",
+     "wrapped": true,
+     "clipped_right": false,
+     "clipped_left": false
+    },
+    {
+     "label": "EN",
+     "testid": "topbar-language",
+     "tag": "BUTTON",
+     "box": [
+      234,
+      17,
+      65,
+      44
+     ],
+     "text_line_boxes": 1,
+     "text_only": "EN",
+     "wrapped": false,
+     "clipped_right": false,
+     "clipped_left": false
+    },
+    {
+     "label": "DE",
+     "testid": null,
+     "tag": "BUTTON",
+     "box": [
+      315,
+      25,
+      28,
+      28
+     ],
+     "text_line_boxes": 1,
+     "text_only": "DE",
+     "wrapped": false,
+     "clipped_right": false,
+     "clipped_left": false
+    }
+   ],
+   "wrapped_controls": [
+    "跟随系统"
+   ],
+   "clipped_controls": [],
+   "status": "MEASURED",
+   "locale": "zh",
+   "shape": "360x800",
+   "entry_used": "使用封存的演示行程",
+   "reached_route": "/v8/twin"
+  },
+  {
+   "vw": 414,
+   "vh": 896,
+   "header_found": true,
+   "header_selector_used": "HEADER|v8-topbar",
+   "header_box": [
+    0,
+    0,
+    414,
+    66
+   ],
+   "doc_scroll_width": 414,
+   "client_width": 414,
+   "horizontal_overflow": false,
+   "controls": [
+    {
+     "label": "菜单",
+     "testid": null,
+     "tag": "BUTTON",
+     "box": [
+      17,
+      19,
+      46,
+      27
+     ],
+     "text_line_boxes": 1,
+     "text_only": "菜单",
+     "wrapped": false,
+     "clipped_right": false,
+     "clipped_left": false
+    },
+    {
+     "label": "跟随系统",
+     "testid": "topbar-theme",
+     "tag": "BUTTON",
+     "box": [
+      215,
+      17,
+      65,
+      44
+     ],
+     "text_line_boxes": 2,
+     "text_only": "跟随系统",
+     "wrapped": true,
+     "clipped_right": false,
+     "clipped_left": false
+    },
+    {
+     "label": "EN",
+     "testid": "topbar-language",
+     "tag": "BUTTON",
+     "box": [
+      288,
+      17,
+      65,
+      44
+     ],
+     "text_line_boxes": 1,
+     "text_only": "EN",
+     "wrapped": false,
+     "clipped_right": false,
+     "clipped_left": false
+    },
+    {
+     "label": "DE",
+     "testid": null,
+     "tag": "BUTTON",
+     "box": [
+      369,
+      25,
+      28,
+      28
+     ],
+     "text_line_boxes": 1,
+     "text_only": "DE",
+     "wrapped": false,
+     "clipped_right": false,
+     "clipped_left": false
+    }
+   ],
+   "wrapped_controls": [
+    "跟随系统"
+   ],
+   "clipped_controls": [],
+   "status": "MEASURED",
+   "locale": "zh",
+   "shape": "414x896",
+   "entry_used": "使用封存的演示行程",
+   "reached_route": "/v8/twin"
+  },
+  {
+   "vw": 320,
+   "vh": 653,
+   "header_found": true,
+   "header_selector_used": "HEADER|v8-topbar",
+   "header_box": [
+    0,
+    0,
+    320,
+    66
+   ],
+   "doc_scroll_width": 347,
+   "client_width": 320,
+   "horizontal_overflow": true,
+   "controls": [
+    {
+     "label": "菜单",
+     "testid": null,
+     "tag": "BUTTON",
+     "box": [
+      17,
+      9,
+      43,
+      48
+     ],
+     "text_line_boxes": 1,
+     "text_only": "菜单",
+     "wrapped": false,
+     "clipped_right": false,
+     "clipped_left": false
+    },
+    {
+     "label": "跟随系统",
+     "testid": "topbar-theme",
+     "tag": "BUTTON",
+     "box": [
+      131,
+      17,
+      60,
+      44
+     ],
+     "text_line_boxes": 2,
+     "text_only": "跟随系统",
+     "wrapped": true,
+     "clipped_right": false,
+     "clipped_left": false
+    },
+    {
+     "label": "EN",
+     "testid": "topbar-language",
+     "tag": "BUTTON",
+     "box": [
+      199,
+      17,
+      60,
+      44
+     ],
+     "text_line_boxes": 1,
+     "text_only": "EN",
+     "wrapped": false,
+     "clipped_right": false,
+     "clipped_left": false
+    },
+    {
+     "label": "DE",
+     "testid": null,
+     "tag": "BUTTON",
+     "box": [
+      275,
+      25,
+      28,
+      28
+     ],
+     "text_line_boxes": 1,
+     "text_only": "DE",
+     "wrapped": false,
+     "clipped_right": false,
+     "clipped_left": false
+    }
+   ],
+   "wrapped_controls": [
+    "跟随系统"
+   ],
+   "clipped_controls": [],
+   "status": "MEASURED",
+   "locale": "zh",
+   "shape": "320x653",
+   "entry_used": "使用封存的演示行程",
+   "reached_route": "/v8/twin"
+  },
+  {
+   "vw": 390,
+   "vh": 844,
+   "header_found": true,
+   "header_selector_used": "HEADER|v8-topbar",
+   "header_box": [
+    0,
+    0,
+    390,
+    66
+   ],
+   "doc_scroll_width": 390,
+   "client_width": 390,
+   "horizontal_overflow": false,
+   "controls": [
+    {
+     "label": "Menu",
+     "testid": null,
+     "tag": "BUTTON",
+     "box": [
+      17,
+      19,
+      55,
+      27
+     ],
+     "text_line_boxes": 1,
+     "text_only": "Menu",
+     "wrapped": false,
+     "clipped_right": false,
+     "clipped_left": false
+    },
+    {
+     "label": "System",
+     "testid": "topbar-theme",
+     "tag": "BUTTON",
+     "box": [
+      195,
+      17,
+      63,
+      44
+     ],
+     "text_line_boxes": 1,
+     "text_only": "System",
+     "wrapped": false,
+     "clipped_right": false,
+     "clipped_left": false
+    },
+    {
+     "label": "中文",
+     "testid": "topbar-language",
+     "tag": "BUTTON",
+     "box": [
+      266,
+      17,
+      63,
+      44
+     ],
+     "text_line_boxes": 1,
+     "text_only": "中文",
+     "wrapped": false,
+     "clipped_right": false,
+     "clipped_left": false
+    },
+    {
+     "label": "DE",
+     "testid": null,
+     "tag": "BUTTON",
+     "box": [
+      345,
+      25,
+      28,
+      28
+     ],
+     "text_line_boxes": 1,
+     "text_only": "DE",
+     "wrapped": false,
+     "clipped_right": false,
+     "clipped_left": false
+    }
+   ],
+   "wrapped_controls": [],
+   "clipped_controls": [],
+   "status": "MEASURED",
+   "locale": "en",
+   "shape": "390x844",
+   "entry_used": "sealed demo",
+   "reached_route": "/v8/twin"
+  },
+  {
+   "vw": 360,
+   "vh": 800,
+   "header_found": true,
+   "header_selector_used": "HEADER|v8-topbar",
+   "header_box": [
+    0,
+    0,
+    360,
+    66
+   ],
+   "doc_scroll_width": 360,
+   "client_width": 360,
+   "horizontal_overflow": false,
+   "controls": [
+    {
+     "label": "Menu",
+     "testid": null,
+     "tag": "BUTTON",
+     "box": [
+      17,
+      19,
+      55,
+      27
+     ],
+     "text_line_boxes": 1,
+     "text_only": "Menu",
+     "wrapped": false,
+     "clipped_right": false,
+     "clipped_left": false
+    },
+    {
+     "label": "System",
+     "testid": "topbar-theme",
+     "tag": "BUTTON",
+     "box": [
+      165,
+      17,
+      63,
+      44
+     ],
+     "text_line_boxes": 1,
+     "text_only": "System",
+     "wrapped": false,
+     "clipped_right": false,
+     "clipped_left": false
+    },
+    {
+     "label": "中文",
+     "testid": "topbar-language",
+     "tag": "BUTTON",
+     "box": [
+      236,
+      17,
+      63,
+      44
+     ],
+     "text_line_boxes": 1,
+     "text_only": "中文",
+     "wrapped": false,
+     "clipped_right": false,
+     "clipped_left": false
+    },
+    {
+     "label": "DE",
+     "testid": null,
+     "tag": "BUTTON",
+     "box": [
+      315,
+      25,
+      28,
+      28
+     ],
+     "text_line_boxes": 1,
+     "text_only": "DE",
+     "wrapped": false,
+     "clipped_right": false,
+     "clipped_left": false
+    }
+   ],
+   "wrapped_controls": [],
+   "clipped_controls": [],
+   "status": "MEASURED",
+   "locale": "en",
+   "shape": "360x800",
+   "entry_used": "sealed demo",
+   "reached_route": "/v8/twin"
+  },
+  {
+   "vw": 414,
+   "vh": 896,
+   "header_found": true,
+   "header_selector_used": "HEADER|v8-topbar",
+   "header_box": [
+    0,
+    0,
+    414,
+    66
+   ],
+   "doc_scroll_width": 414,
+   "client_width": 414,
+   "horizontal_overflow": false,
+   "controls": [
+    {
+     "label": "Menu",
+     "testid": null,
+     "tag": "BUTTON",
+     "box": [
+      17,
+      19,
+      55,
+      27
+     ],
+     "text_line_boxes": 1,
+     "text_only": "Menu",
+     "wrapped": false,
+     "clipped_right": false,
+     "clipped_left": false
+    },
+    {
+     "label": "System",
+     "testid": "topbar-theme",
+     "tag": "BUTTON",
+     "box": [
+      219,
+      17,
+      63,
+      44
+     ],
+     "text_line_boxes": 1,
+     "text_only": "System",
+     "wrapped": false,
+     "clipped_right": false,
+     "clipped_left": false
+    },
+    {
+     "label": "中文",
+     "testid": "topbar-language",
+     "tag": "BUTTON",
+     "box": [
+      290,
+      17,
+      63,
+      44
+     ],
+     "text_line_boxes": 1,
+     "text_only": "中文",
+     "wrapped": false,
+     "clipped_right": false,
+     "clipped_left": false
+    },
+    {
+     "label": "DE",
+     "testid": null,
+     "tag": "BUTTON",
+     "box": [
+      369,
+      25,
+      28,
+      28
+     ],
+     "text_line_boxes": 1,
+     "text_only": "DE",
+     "wrapped": false,
+     "clipped_right": false,
+     "clipped_left": false
+    }
+   ],
+   "wrapped_controls": [],
+   "clipped_controls": [],
+   "status": "MEASURED",
+   "locale": "en",
+   "shape": "414x896",
+   "entry_used": "sealed demo",
+   "reached_route": "/v8/twin"
+  },
+  {
+   "vw": 320,
+   "vh": 653,
+   "header_found": true,
+   "header_selector_used": "HEADER|v8-topbar",
+   "header_box": [
+    0,
+    0,
+    320,
+    66
+   ],
+   "doc_scroll_width": 347,
+   "client_width": 320,
+   "horizontal_overflow": true,
+   "controls": [
+    {
+     "label": "Menu",
+     "testid": null,
+     "tag": "BUTTON",
+     "box": [
+      17,
+      19,
+      55,
+      27
+     ],
+     "text_line_boxes": 1,
+     "text_only": "Menu",
+     "wrapped": false,
+     "clipped_right": false,
+     "clipped_left": false
+    },
+    {
+     "label": "System",
+     "testid": "topbar-theme",
+     "tag": "BUTTON",
+     "box": [
+      135,
+      17,
+      58,
+      44
+     ],
+     "text_line_boxes": 1,
+     "text_only": "System",
+     "wrapped": false,
+     "clipped_right": false,
+     "clipped_left": false
+    },
+    {
+     "label": "中文",
+     "testid": "topbar-language",
+     "tag": "BUTTON",
+     "box": [
+      201,
+      17,
+      58,
+      44
+     ],
+     "text_line_boxes": 1,
+     "text_only": "中文",
+     "wrapped": false,
+     "clipped_right": false,
+     "clipped_left": false
+    },
+    {
+     "label": "DE",
+     "testid": null,
+     "tag": "BUTTON",
+     "box": [
+      275,
+      25,
+      28,
+      28
+     ],
+     "text_line_boxes": 1,
+     "text_only": "DE",
+     "wrapped": false,
+     "clipped_right": false,
+     "clipped_left": false
+    }
+   ],
+   "wrapped_controls": [],
+   "clipped_controls": [],
+   "status": "MEASURED",
+   "locale": "en",
+   "shape": "320x653",
+   "entry_used": "sealed demo",
+   "reached_route": "/v8/twin"
+  }
+ ],
+ "summary": {
+  "runs": 8,
+  "runs_measured": 8,
+  "runs_not_measured": 0,
+  "wrapped_controls": 4,
+  "clipped_controls": 0,
+  "runs_with_horizontal_overflow": 2,
+  "verdict": "HEADER_OVERFLOW_OR_WRAPS"
+ }
+}
