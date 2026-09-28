@@ -16588,6 +16588,149 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### ORD-0422 补交 · 车道 Q（会话 904a042d）· 十一处逐条给"怎么走到 + 两臂读数"，并对 `V14 · REALITY CHANGED` 下判断 · 本块零产品字节
+
+**先说性质**：本轮没改一个产品字节，没推枝，没碰 `frontend/src/styles.css` 与
+`frontend/src/app/V8Experience.tsx`（工作树 `D:/moodle/_qoder_q_ord0422/wt` 干净、改动行数 0，
+尖仍是 `8e2bd025d58687b7cf45c7371d253cc6ecac6071`）。下面每一枚键与坐标都来自命令输出。
+
+### 一、十一处分支受限字面量，逐条
+
+逐条表（怎么走到、两臂各读到什么叶、走不到的为什么）在
+`evidence/ord0422-branch-rows-3b6c96e8/eleven_rows_answer_r1.txt` blob
+`2363c051b65c255959c478d1bef1a7ac260ba56b`；匹配法是**整枚渲染叶子相等**（不是 class、不是 data 属性、
+也不是子串），视口 390×844、每屏滚到底。汇总：11 处中读到 10 处，`NOT_REACHED` 1 处。
+
+- 只走产品门就读到的 3 处（无私有造行）：`Confirmed by traveler` 读作「已由旅行者确认」，走的是封存演示
+  入口加产品自己的 `POST /api/v1/travelers/{id}/capabilities/confirm`；`No explicit preferences` 读作
+  「没有明确偏好」，走另建的一趟无画像事实行程；带计数的 `hard need(s) remain explicit and are never
+  learned.` 读作「1 项硬性需求仍按明确声明保留，不会被习得。」（`{n}` 由服务端计数代入，计数为 1）。
+  逐条布尔在同一 blob `2363c051b65c255959c478d1bef1a7ac260ba56b`，两臂原始件在
+  `.../with_unconfirmed_capability_twin.json` blob `58b63908f2d9c3c90b6e35ea84429f8f770b57b2`。
+- 只有在本车道私有数据库副本里造行才读到的 7 处：`Stated; confirmation needed` 读作「已声明，尚待确认」
+  （造 `traveler_capabilities.confirmed = 0` 一行；产品那枚能力门对我按 `confirmed: false` 送出的记录
+  回了 `confirmed: true`，所以公开门留不下这个状态）；`CHANGED` 读作「已变化」、`PROTECTED` 读作「受保护」、
+  `Baseline evidence` 读作「基线证据」、`Incident evidence` 读作「事发证据」、`Deterministic gate` 读作
+  「确定性闸门」、`Delegation policy` 读作「授权策略」——造法是 `replan_proposals` 插一行 status=PRESENTED
+  并补一行它需要的 CANDIDATE `plan_versions`（该表有 `CHECK (base_plan_version_id <> proposed_plan_version_id)`，
+  我先按这个约束补的，第一次插失败就是撞在这条约束上），读门
+  `GET /api/v1/journeys/{id}/replans` 回读出这行、行数从 0 变 1，逐次行数与门回读在
+  `.../branch_fixtures_log.json` blob `06f0ae498f7f1ce1f28417220433fa704f2ae049`（同件逐次行数与门回读），原始两臂件在
+  `.../with_proposal_authoritative.json` blob `26414eb67e5b00f028ecc62fc6b4aadbd271a4d9`。
+  这三句话要说清：**这是"面板在这种情况下读到什么"的证据，不是"旅行者能走到这种情况"的证据**；
+  公开门走不到的原因是量的：`POST /api/v1/journeys/{id}/replans` 答 422 `VALIDATION_ERROR` /
+  `MOBILITY_DATA_UNAVAILABLE`（本机无可达的实名路线供应商，主线既有事实）。
+  写只落在我自己的库 `D:/moodle/_qoder_q_ord0422/q0422_private.db`；
+  `D:/moodle/_qoder_preview_20260920/_preview.db` 全程 `mode=ro`。
+- `NOT_REACHED` 的 1 处：`policy unavailable · confirmation required`（字典帧「策略不可读 · 需要你确认」）。
+  造法我也试到底了：把 `traveler_agent_policies` 那行删掉，然后 `GET
+  /api/v1/travelers/{id}/agent-policy` 仍答 200、`mode` 回 `ADVISORY`，且删后计数又回到 1——
+  读门把默认策略写了回来，所以注册表 `app/v8PanelRegistry.tsx` 第 417 行传下去的 `policy` 在本路由上
+  不可能为空，这一行字面在本代没有任何数据能把它放上屏。读数在
+  `.../no_policy_row_authoritative.json` blob `5f9bd329e1299a45bb7019b1f69475b4823b8a72`，
+  那次删除前后的行数与门答话在同一 blob `06f0ae498f7f1ce1f28417220433fa704f2ae049`。
+- 这些深状态下负判据仍然成立：中文臂在 authoritative 读到 81 枚叶、twin 读到 37 枚叶，清单 22 条
+  在中文臂泄漏 0 条；英文臂同两屏分别仍读到 9 条与 6 条。逐件
+  `.../leak_check_in_branch_states.json` blob `b8c0bce2b0bd0dff9f341023338c38d19e500847`，
+  原始件 `.../all_branch_states_authoritative.json` blob `3d160c72cad5f0cf530c0168d5e75cc95f73f054`、
+  `.../all_branch_states_twin.json` blob `be14308c6407cd8beaa08632fed13fd0e7b32e9f`。
+  另注一处仪器该修的之处：`Deterministic gate` 这个英文值在同本字典里挂在两枚键下
+  （`v14.deterministicGate` 中文「确定性闸门」与 `discovery.detGate` 中文「确定性门控」），
+  第一版按"先碰到的键"归键，把中文侧误判成没读到；现在尺列出全部同值键并按任一命中判，
+  这个歧义本身在表里点名，不靠手挑键名。
+
+### 二、`V14 · REALITY CHANGED` 那枚 kicker：判为"版本号当品牌保留"，不是漏翻
+
+量的依据不是我的口味：现读最新尖 `8d038b21f09477b933cff3b1c7b09845c542373b` 的字典里，取值含 `V1x`
+形态的键共 2 枚，中文侧同样含该 token 的也是 2 枚，"英文有、中文被丢掉"的键 0 枚——两枚分别是既存的
+`auth.kicker`（`V12 · plan, mobile, Edge, and twin` 对 `V12 · 方案、移动端、Edge 与画像`，不是我写的）
+和我这单的 `v14.kicker`（对 `V14 · 现实变了`）；同一屏中文臂另一条 kicker 实读就是
+`V12 · 方案、移动端、Edge 与画像`，供应商词 `Edge` 也在 2 个中文取值里保留。计数与键名在
+`evidence/ord0422-branch-rows-3b6c96e8/vtoken_convention_r1.json` blob `9f0c5096215777466178383cd92026997a1dd13a`，
+实读叶在同一 blob `2363c051b65c255959c478d1bef1a7ac260ba56b` 的中文清单里。
+所以把 `V14` 翻掉会让它成为字典里唯一一条"中文侧丢世代号"的键，并与同屏那条不一致——**保留**。
+若号令者判要翻：改动量是一枚键的两份取值成对（`v14.kicker`），面板字节不动。
+
+### 三、读数取在两代，且两代一致
+
+代一 = 落地我那笔的尖 `3b6c96e8a9f986672ddaa764f5f2ae69534ceff1`（产物 `/assets/index-oR3PVCYW.js`
+1343017 字节，sha256 `ec9823cf7ed76162c854a38c53dff88c3d8d31a34086a59b63b052da7af8e22a`）；
+代二 = 本轮 04:00 现读的尖 `8d038b21f09477b933cff3b1c7b09845c542373b`（产物
+`/assets/index-ChWUjpBx.js` 1343964 字节，收据 `.../build_receipt_q0422tip.json` blob
+`30018628e9caaacc2cc7f09f15f188e88d2a7319`，`ls-remote` 原行 `.../ls_remote_tip_live.txt`）。
+字典存活审计：我那代携带的 766 枚键在代二缺失 0 枚、被改值 0 枚，代二多出 2 枚是别人的
+`mapComp.noRouteNoProvider` 与 `mapComp.noRouteNotRouted`，读数
+`.../dictionary_survival_r1.json` blob `7170d74d1cf975d1518a1a4f561c9aa36baae27d`；
+三枚面板文件在代二与我交的 blob 逐枚相同（`f825fe0ea78ef949ff5ed64e5f30961699be7986`、
+`24d5fc868bd8a3f8d8d1d46d88efbb26cbc29e5a`、`e9dd9f9c992aa8854a49206eabf70ba15e798b37`）。
+两代屏读用同一把 r3（外读 blob `3dad6f0e70c2a0dcce936499f277313618d6b807`，一字节未改）：
+中文臂 ASCII 都是 2、16、2，英文臂都是 23、55、18，`arms_comparable` 两代三屏都真，
+清单 22 条中文臂命中两代都是 0，英文臂两代都是 6、5、1。代二汇总
+`.../r3_tip_summary.json` blob `ecdcd3754e54ac7971e9ca1b4154cbc4064a67d0`，
+代二 twin 中文臂截图与代一同字节（blob `80462e2c0045c157779eca236cb39205e1cf5a43`）。
+配对尺在代二：`dictionary_pairs` 820、`values_not_found` 0、退出码 0，读数
+`.../cmdr_bundle_copy_check_r3__8d038b21__lane_run.json` blob `91f6c465f2f40888dd193bf1265e378b2723c437`。
+
+### 四、还欠着的、要号令者点头的
+
+私有副本造行只是"屏读证据"，若要把这 7 处变成**产品可达**，缺的不是前端而是数据门：
+要么给本机一枚可达的路线供应商让 `POST /replans` 不再答 `MOBILITY_DATA_UNAVAILABLE`，
+要么让能力门接受并保留 `confirmed: false` 的声明行——两件都在后端/供应商面上，不在我这一单里，
+我没有替谁改它们。`policy unavailable` 那行则要求 `agent-policy` 读门不再把默认策略写回，
+同样是一条后端行为。这三条要不要开单由你定，本块只把"走到/走不到"如实分开。
+
+**私有栈**：api 口 8734、ui 口 4314，导出自 commit `8d038b21f09477b933cff3b1c7b09845c542373b`，
+库 `D:/moodle/_qoder_q_ord0422/q0422_private.db`；未跑 `demo/reset`；未重启 8000 / 4781 / 4782 / 8693；
+拆栈与卸 junction 的回验写在本块之后。本块不落地，也无新候选可落。
+
+
+### CMDR 04:34 · ORD-0418 已落地并亲测通过（两臂逐字屏读）· 后端套件第一次真跑完（十二枚具名红，开 ORD-0442）· 本地 AI 网关接入开 ORD-0443 · 我的一台仪表自记一处瞎读
+
+## 1. ORD-0418 = LANDED + 亲测通过（判 CLOSED 的那半格我量到了，另一半如实标注）
+
+权威尖 `8d038b21f09477b933cff3b1c7b09845c542373b`。我自己起了一套私有栈（只读备份共享预览库到我的私有文件，未写未 ALTER 源库，未跑 demo/reset，未重启 8000/4781/4782/8693），静态口服务我自己构建的那一代（入口名 `index-ChWUjpBx.js`，与我构建信息里的资源名逐字相同，构建信息件 `D:/moodle/_qoder_cmdr_ref_20260921/live_checks/_build_8d038b2_info.json`），然后自己当用户走一遍，读的是渲染文字不是 data 属性。
+
+中文臂那行 caption 逐字：「路线上下文 0 段路程 这里没有画路线：这台部署没有配置算路服务，所以这一版计划一条路段都没有。 底图数据 © OpenStreetMap 贡献者 · 瓦片服务 tile.openstreetmap.org」（读数件 blob 7beb707c53bd81092f58bb4156a4751e91e60f6e）。
+
+英文臂同一格逐字：`Route context 0 legs No route is drawn: this deployment has no routing provider configured, so this plan holds no legs at all. Basemap data © OpenStreetMap contributors · tiles: tile.openstreetmap.org`（同一件 blob 7beb707c53bd81092f58bb4156a4751e91e60f6e）。
+
+两臂都没有再出现那句主张（判据 `claim_present` 两臂皆假，verdict `CLAIM_WITHDRAWN_AND_REASON_SPOKEN`，同件同 blob 7beb707c53bd81092f58bb4156a4751e91e60f6e）。车道那侧的三臂证据（修前两格红、修后零红、把判据换成恒真的 mutant 红回到两格）在枝内 `review/ord0418/CLAIM_R2.txt:44`，判据行 `frontend/src/components/v8/MapPanel.tsx:611`，两枚新键 `frontend/src/i18n/LocaleContext.tsx:813`。
+
+**没改善的部分，说清楚**：我这台私有库里只有"零路段"那一程，所以"真有几段可画的腿时那句仍要说供应商路线"这一格我**没有亲测**，记 `NOT_REACHED_BY_CMDR`，它目前只有车道那一臂的读数。
+
+## 2. 我自己的仪表先瞎了一次，这条记在账上
+
+第一版仪表用 `page.goto("/v8/map")` 进那一屏，两臂都报告"路由到达"，我差点就此下结论。实际读下去那页正文只有一百六十八个字符——重新加载会重启单页应用，而封存演示的行程不会从一个光秃秃的 `/v8/map` 地址被收养，所以那两臂量的是空壳。修法是在应用内点导航（`[data-testid=nav-map]`）而不是二次 goto，改完才有上面那两行逐字。仪表现版外读 blob 96ed9aab47cb623f658ebe82a664d10e123e3d7c（被瞎的那一版没有发布，我不发一个已知错的件出去占位）。
+
+## 3. 后端套件第一次真跑完（DSH 那侧"能用上的"就是这一件）
+
+我把权威尖整棵导出（配方 `git archive <尖> backend data contracts tools scripts agent-mcp frontend/src frontend/e2e`，导出根 `D:/moodle/_qoder_cmdr_suite_0418`），用仓库自带的那枚 venv 解释器执行整套，不再只 collect：**十二枚失败、一千四百零八枚通过、十五枚跳过、一枚预期失败，耗时三百八十二秒**（完整日志外读 blob 2fbed5eba27abcafa9d8e91995cf1c7827fa1267，本地同文 `D:/moodle/_qoder_cmdr_suite_0418_run.log`）。
+
+今晚我落了二十笔左右，整套后端此前一直只到 collect 就记 `NOT_EXECUTED_BY_CMDR`——这笔账现在有了真数字，而且它是**执行**出来的，不是推断的。
+
+十二枚红的逐枚 nodeid 在那份日志末尾的 short test summary info 那一段（同 blob 2fbed5eba27abcafa9d8e91995cf1c7827fa1267），其中六枚属 `test_qoder_anywhere_*` 那一族。开 **ORD-0442**（车道 `49fe0d7b`）：先逐枚归因成三类——真缺陷 / 环境不可产生（具名 `ENVIRONMENT_NOT_PRODUCIBLE_ON_LINE`）/ 尺过期（上游形状变了，不许改断言凑绿）——再只修判为真缺陷的那几枚，修完在同一枚尖上复跑那十二条并逐枚报前后状态。
+
+## 4. ORD-0443：本地 AI 网关（用户 04:20 供给），我已量的两臂与不下的结论
+
+面板 `http://127.0.0.1:7863/panel/` 在剥掉代理变量后答 http 200、正文 51,501 B；`netstat` 现读 `0.0.0.0:7863` 由 pid 21056 监听并带一批 CLOSE_WAIT；但 `/v1/models`、`/models`、`/panel/api/state` 三枚路由在十五秒内都不答（第一次还带着代理变量，剥掉后仍不答），配置文件里的 chat_base 与 billing_base 都是空串（配置路径 `C:/Users/仓鼠王/WorkBuddy/2026-09-15-15-47-27/wb2api/config.json`，字段 `global.enabled`）。
+
+所以我不写"网关可用"也不写"网关死了"：面板活着、OpenAI 形状那条路由未证实。派 **ORD-0443** 给车道 `a6b95d59`：读出真实 chat 路由与逐枚模型 id、发一次最小补全并报状态码/字节数/耗时、429 就按用户裁定切主通道并留两枚状态码作切换证据，然后把 `CITYNEXUS_AI_ENABLED=true` 那条通道接进产品，把我此前因环境收不了的格子重取（含 ORD-0432 那格）。
+
+密钥纪律不因放宽而变：**值不进任何文件、日志、收据、账本块、消息或提交**，只写配置路径与字段名，运行时从配置文件读。我这套私有栈今天没有注入那枚 key（路由未证实时注入会让 AI 调用挂住我自己的探针），这一点写在栈脚本的注释里，脚本 `D:/moodle/_qoder_cmdr_ref_20260921/live_checks/_cmdr_stack_0418_r1.py`。
+
+## 5. 编号规则我自己改一次，理由说清
+
+我 03:45 那块写过"另一个实例从 ORD-0442 起"，但 ORD-0442 与 ORD-0443 是本轮事实需要（十二枚红与一枚网关），我占用它们。**改法：号段按"写账本前现读最大号"取，不按谁的口头预留**；另一实例请从 ORD-0444 起，开单前重读一次最大号。撞过三次号之后我不再相信"我说过归你"这种软约定。
+
+## 6. 现在在跑的（便于任何人对表）
+
+ORD-0430 重做（`bac10f40`）、ORD-0433（`9759f1ac`）、ORD-0434 关系层框架（`a68b0631`）、ORD-0435 POI 多选（`be19052c`）、ORD-0436 关系层交互（`4033270f`）、ORD-0437 导入链路（`9cc37e57`）、ORD-0438 进度合同（`e4f3490f`，排在它 ORD-0406 与 ORD-0415 之后）、ORD-0439 多方案排序（`8e5245f0`）、ORD-0440 破坏动作前置问卷（`49fe0d7b`，排在 ORD-0442 之后）、ORD-0441 视觉档位数值（`2d2d7428`）、ORD-0442 十二枚红归因（`49fe0d7b`）、ORD-0443 网关接入（`a6b95d59`）。
+
+另有两块车道件仍卡在写盘门外，原因与改法都已回给车道，我不替它们改词：`ai_0320`（第 3 行三枚裸端口要写成带冒号的形式、第 34 行那枚文档滚动数同行要有件 blob）、`s4_0338`（第 34 行引的那枚 40 位在仓库里 cat-file 取不到，坐标写错了）。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### S4-ast-taint 2026-09-29 03:48 · 会话 1d64acf5 · ORD-0408 甲落地：`*_code` 那一格只由契约的具名闭集放行，绝不由字段名放行；契约没写 enum 就是一格具名红
 
 尺：`ui_exposure_taint_ast_r7b4.cjs` blob cefcb38c8d01a5996f3f705531a127c85f16c0b3，154410 B，`path=evidence/ord0408-ruling-A-contract-enum-0328/ui_exposure_taint_ast_r7b4.cjs`（本地字节 `git hash-object` 与远端回读逐字节等，回执 df7b9945901423352b561fd03b98fb12423f2a27）。
