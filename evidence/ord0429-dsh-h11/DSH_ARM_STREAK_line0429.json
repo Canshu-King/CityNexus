@@ -1,0 +1,328 @@
+{
+  "instrument": "dsh_arm_streak.py (lane runner, NOT the fleet ruler)",
+  "fleet_ruler_status": "BROKEN: gate_streak_v2.py:468 and :664 use undefined PENDING_CLEANUP",
+  "tag": "line0429",
+  "candidate": "D:\\moodle\\_qoder_ai_ord0429_20260929\\wt",
+  "port": 8513,
+  "predicates": [
+    "P0_event_written_into_my_own_db",
+    "P1_single_active_before_after",
+    "P2_active_flipped",
+    "P3_new_proposal_accepted",
+    "P4_no_booking_or_cancel",
+    "P5_dsh_exit_zero",
+    "P6_full_loop_hit",
+    "P7_policy_actually_assisted_auto",
+    "P8_started_from_advisory"
+  ],
+  "runs_requested": 5,
+  "runs_green": 5,
+  "consecutive_from_first": 5,
+  "runs": [
+    {
+      "run": 1,
+      "listener_pid": "47024",
+      "my_child_pid": 34904,
+      "event_id": "d8fceab4-1cb9-4a9d-b983-28e643100b68",
+      "dsh_rc": 0,
+      "wall_s": 20.1,
+      "policy": {
+        "before": {
+          "mode": "ADVISORY",
+          "auto_accept_replan": false,
+          "version": 1
+        },
+        "after": {
+          "mode": "ASSISTED",
+          "auto_accept_replan": true,
+          "version": 2
+        }
+      },
+      "tools_hit": [
+        "inspect_journey",
+        "request_replan",
+        "accept_replan",
+        "inspect_journey"
+      ],
+      "counts": {
+        "accept_replan": 1,
+        "inspect_journey": 2,
+        "request_replan": 1
+      },
+      "before": {
+        "active_ids": [
+          "55523d40-cafe-5bd2-b30a-de057ec7a839"
+        ],
+        "accepted": 0,
+        "events": [
+          "d8fceab4-1cb9-4a9d-b983-28e643100b68"
+        ],
+        "bookings": 0
+      },
+      "after": {
+        "active_ids": [
+          "d038107a-4437-4e71-bf15-ea516f3935b8"
+        ],
+        "accepted": 1,
+        "events": [
+          "d8fceab4-1cb9-4a9d-b983-28e643100b68"
+        ],
+        "bookings": 0
+      },
+      "P0_event_written_into_my_own_db": true,
+      "P1_single_active_before_after": true,
+      "P2_active_flipped": true,
+      "P3_new_proposal_accepted": true,
+      "P4_no_booking_or_cancel": true,
+      "P5_dsh_exit_zero": true,
+      "P6_full_loop_hit": true,
+      "P7_policy_actually_assisted_auto": true,
+      "P8_started_from_advisory": true,
+      "answer_tail": "CEPTED。\n4) 再次 inspect_journey：decision 原文 \"ALLOW_AUTO\"；ACTIVE 版本 id = d038107a-4437-4e71-bf15-ea516f3935b8。\n结论：ACTIVE 版本 id 已变，从 55523d40-cafe-5bd2-b30a-de057ec7a839 改为 d038107a-4437-4e71-bf15-ea516f3935b8，改判真实落地。\n未调用 list_replans；全程仅使用 mcp__citynexus__ 前缀工具。\n"
+    },
+    {
+      "run": 2,
+      "listener_pid": "19176",
+      "my_child_pid": 37020,
+      "event_id": "7a5160e1-5cbd-41e4-935b-c876f0312b20",
+      "dsh_rc": 0,
+      "wall_s": 18.7,
+      "policy": {
+        "before": {
+          "mode": "ADVISORY",
+          "auto_accept_replan": false,
+          "version": 1
+        },
+        "after": {
+          "mode": "ASSISTED",
+          "auto_accept_replan": true,
+          "version": 2
+        }
+      },
+      "tools_hit": [
+        "inspect_journey",
+        "request_replan",
+        "accept_replan",
+        "inspect_journey"
+      ],
+      "counts": {
+        "accept_replan": 1,
+        "inspect_journey": 2,
+        "request_replan": 1
+      },
+      "before": {
+        "active_ids": [
+          "55523d40-cafe-5bd2-b30a-de057ec7a839"
+        ],
+        "accepted": 0,
+        "events": [
+          "7a5160e1-5cbd-41e4-935b-c876f0312b20"
+        ],
+        "bookings": 0
+      },
+      "after": {
+        "active_ids": [
+          "1aff15d9-359e-4b8f-879b-db6be0defe10"
+        ],
+        "accepted": 1,
+        "events": [
+          "7a5160e1-5cbd-41e4-935b-c876f0312b20"
+        ],
+        "bookings": 0
+      },
+      "P0_event_written_into_my_own_db": true,
+      "P1_single_active_before_after": true,
+      "P2_active_flipped": true,
+      "P3_new_proposal_accepted": true,
+      "P4_no_booking_or_cancel": true,
+      "P5_dsh_exit_zero": true,
+      "P6_full_loop_hit": true,
+      "P7_policy_actually_assisted_auto": true,
+      "P8_started_from_advisory": true,
+      "answer_tail": "MINISTIC_GATE_VERIFIED），executed=true，proposal 状态转为 ACCEPTED。\n4) 再次 inspect_journey decision 原文：「ALLOW_AUTO」；ACTIVE 版本 id = 1aff15d9-359e-4b8f-879b-db6be0defe10。\n5) 结论：ACTIVE 版本 id 已改变（55523d40…→1aff15d9…），改判真实落地。\n6) 全程仅用 mcp__citynexus__ 工具，未调用 list_replans。\n"
+    },
+    {
+      "run": 3,
+      "listener_pid": "18224",
+      "my_child_pid": 16584,
+      "event_id": "5bf71316-47bc-49a4-88a1-e6cd6f17b513",
+      "dsh_rc": 0,
+      "wall_s": 18.2,
+      "policy": {
+        "before": {
+          "mode": "ADVISORY",
+          "auto_accept_replan": false,
+          "version": 1
+        },
+        "after": {
+          "mode": "ASSISTED",
+          "auto_accept_replan": true,
+          "version": 2
+        }
+      },
+      "tools_hit": [
+        "inspect_journey",
+        "request_replan",
+        "accept_replan",
+        "inspect_journey"
+      ],
+      "counts": {
+        "accept_replan": 1,
+        "inspect_journey": 2,
+        "request_replan": 1
+      },
+      "before": {
+        "active_ids": [
+          "55523d40-cafe-5bd2-b30a-de057ec7a839"
+        ],
+        "accepted": 0,
+        "events": [
+          "5bf71316-47bc-49a4-88a1-e6cd6f17b513"
+        ],
+        "bookings": 0
+      },
+      "after": {
+        "active_ids": [
+          "2f78163e-4b94-44dd-8377-31f763df8327"
+        ],
+        "accepted": 1,
+        "events": [
+          "5bf71316-47bc-49a4-88a1-e6cd6f17b513"
+        ],
+        "bookings": 0
+      },
+      "P0_event_written_into_my_own_db": true,
+      "P1_single_active_before_after": true,
+      "P2_active_flipped": true,
+      "P3_new_proposal_accepted": true,
+      "P4_no_booking_or_cancel": true,
+      "P5_dsh_exit_zero": true,
+      "P6_full_loop_hit": true,
+      "P7_policy_actually_assisted_auto": true,
+      "P8_started_from_advisory": true,
+      "answer_tail": "on「ALLOW_AUTO」，reason_codes「DELEGATION_POLICY_MATCHED」「DETERMINISTIC_GATE_VERIFIED」，executed=true。\n5) 再次 inspect_journey：decision「ALLOW_AUTO」。\n6) ACTIVE 版本已变：55523d40…→ 2f78163e-4b94-44dd-8377-31f763df8327，改判真实落地。\n7) 全程仅用 mcp__citynexus__ 工具，未调用 list_replans。\n"
+    },
+    {
+      "run": 4,
+      "listener_pid": "35640",
+      "my_child_pid": 20800,
+      "event_id": "12d634a9-9318-45b6-bc3a-fead2af39436",
+      "dsh_rc": 0,
+      "wall_s": 18.6,
+      "policy": {
+        "before": {
+          "mode": "ADVISORY",
+          "auto_accept_replan": false,
+          "version": 1
+        },
+        "after": {
+          "mode": "ASSISTED",
+          "auto_accept_replan": true,
+          "version": 2
+        }
+      },
+      "tools_hit": [
+        "inspect_journey",
+        "request_replan",
+        "accept_replan",
+        "inspect_journey"
+      ],
+      "counts": {
+        "accept_replan": 1,
+        "inspect_journey": 2,
+        "request_replan": 1
+      },
+      "before": {
+        "active_ids": [
+          "55523d40-cafe-5bd2-b30a-de057ec7a839"
+        ],
+        "accepted": 0,
+        "events": [
+          "12d634a9-9318-45b6-bc3a-fead2af39436"
+        ],
+        "bookings": 0
+      },
+      "after": {
+        "active_ids": [
+          "f8674dfc-b739-41fd-82c9-9120abb9d059"
+        ],
+        "accepted": 1,
+        "events": [
+          "12d634a9-9318-45b6-bc3a-fead2af39436"
+        ],
+        "bookings": 0
+      },
+      "P0_event_written_into_my_own_db": true,
+      "P1_single_active_before_after": true,
+      "P2_active_flipped": true,
+      "P3_new_proposal_accepted": true,
+      "P4_no_booking_or_cancel": true,
+      "P5_dsh_exit_zero": true,
+      "P6_full_loop_hit": true,
+      "P7_policy_actually_assisted_auto": true,
+      "P8_started_from_advisory": true,
+      "answer_tail": "VE 计划版本 id = f8674dfc-b739-41fd-82c9-9120abb9d059。\n5. 结论：ACTIVE 版本 id 已变，从 55523d40-…-de057ec7a839 改判为 f8674dfc-…-9120abb9d059，改判真实落地。\n6. 变化内容：移除 place-tech-art、加入 place-design-library，费用 -3000、行程 -5 分钟，硬约束与承诺均通过。\n7. 全程未调用 list_replans；每步 request_id 均为新 uuid。\n"
+    },
+    {
+      "run": 5,
+      "listener_pid": "11620",
+      "my_child_pid": 22372,
+      "event_id": "b6fdbef5-639d-42e0-b638-6cec43261655",
+      "dsh_rc": 0,
+      "wall_s": 17.6,
+      "policy": {
+        "before": {
+          "mode": "ADVISORY",
+          "auto_accept_replan": false,
+          "version": 1
+        },
+        "after": {
+          "mode": "ASSISTED",
+          "auto_accept_replan": true,
+          "version": 2
+        }
+      },
+      "tools_hit": [
+        "inspect_journey",
+        "request_replan",
+        "accept_replan",
+        "inspect_journey"
+      ],
+      "counts": {
+        "accept_replan": 1,
+        "inspect_journey": 2,
+        "request_replan": 1
+      },
+      "before": {
+        "active_ids": [
+          "55523d40-cafe-5bd2-b30a-de057ec7a839"
+        ],
+        "accepted": 0,
+        "events": [
+          "b6fdbef5-639d-42e0-b638-6cec43261655"
+        ],
+        "bookings": 0
+      },
+      "after": {
+        "active_ids": [
+          "b7a1efef-788e-4e24-a1da-d9495a5d8a6a"
+        ],
+        "accepted": 1,
+        "events": [
+          "b6fdbef5-639d-42e0-b638-6cec43261655"
+        ],
+        "bookings": 0
+      },
+      "P0_event_written_into_my_own_db": true,
+      "P1_single_active_before_after": true,
+      "P2_active_flipped": true,
+      "P3_new_proposal_accepted": true,
+      "P4_no_booking_or_cancel": true,
+      "P5_dsh_exit_zero": true,
+      "P6_full_loop_hit": true,
+      "P7_policy_actually_assisted_auto": true,
+      "P8_started_from_advisory": true,
+      "answer_tail": "「ALLOW_AUTO」（reason_codes: DELEGATION_POLICY_MATCHED、DETERMINISTIC_GATE_VERIFIED），executed=true。\n4) inspect_journey：decision「ALLOW_AUTO」，ACTIVE 版本 = b7a1efef-788e-4e24-a1da-d9495a5d8a6a。\n结论：ACTIVE 计划版本 id 已改变（55523d40… → b7a1efef…），改判真实落地。\n全程未调用 list_replans。\n"
+    }
+  ]
+}
