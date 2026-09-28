@@ -1,0 +1,32 @@
+{
+ "base": "http://127.0.0.1:4821",
+ "generated_by": "_cmdr_caption_0418_r1.js",
+ "arms": {
+  "zh-CN": {
+   "locale": "zh-CN",
+   "errors": [],
+   "entry_used": "使用封存的演示行程",
+   "reached_route": "/v8/map",
+   "caption": "路线上下文 0 段路程 这里没有画路线：这台部署没有配置算路服务，所以这一版计划一条路段都没有。 底图数据 © OpenStreetMap 贡献者 · 瓦片服务 tile.openstreetmap.org",
+   "nav_map_present": true,
+   "hub_caption_present_before_nav": null,
+   "caption_present": true,
+   "claim_present": false,
+   "locale_read": "zh-CN"
+  },
+  "en": {
+   "locale": "en",
+   "errors": [],
+   "entry_used": "sealed demo",
+   "reached_route": "/v8/map",
+   "caption": "Route context 0 legs No route is drawn: this deployment has no routing provider configured, so this plan holds no legs at all. Basemap data © OpenStreetMap contributors · tiles: tile.openstreetmap.org",
+   "nav_map_present": true,
+   "hub_caption_present_before_nav": null,
+   "caption_present": true,
+   "claim_present": false,
+   "locale_read": "en"
+  }
+ },
+ "arms_comparable": true,
+ "verdict": "CLAIM_WITHDRAWN_AND_REASON_SPOKEN"
+}
