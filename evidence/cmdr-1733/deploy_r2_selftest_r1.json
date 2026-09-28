@@ -1,0 +1,15 @@
+proxy guard: {'proxy_env_before': {'HTTPS_PROXY': 'http://127.0.0.1:7892', 'HTTP_PROXY': 'http://127.0.0.1:7892'}, 'refused': ['HTTPS_PROXY=127.0.0.1:7892', 'HTTP_PROXY=127.0.0.1:7892'], 'action': 'PROXY_CLEARED_AND_DIRECT'}
+{
+ "checks": {
+  "A1_declared_transport_fail_allows_named_gap": true,
+  "A2_undeclared_same_case_fails_closed": true,
+  "A3_wrong_answer_never_forgiven": true,
+  "A4_all_green_stays_green": true,
+  "A5_unset_base_unchanged": true,
+  "A6_repeated_verdict_names_transport_only": true,
+  "A7_html_answer_still_RED": true,
+  "A8_green_still_green": true
+ },
+ "overall_pass": true,
+ "note": "no network is touched by this tester; A6-A8 inject the probe answers"
+}
