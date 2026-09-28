@@ -13,6 +13,7 @@ import { PlanRankingPanel } from "../features/planning/PlanRankingPanel";
 import { PretripChecklistPanel } from "../features/checklist/PretripChecklistPanel";
 import { PlanVersionHistoryPanel } from "../features/studio/PlanVersionHistoryPanel";
 import { RealCityDiscoveryPanel } from "../features/discovery/RealCityDiscoveryPanel";
+import { PoiImportPanel } from "../features/poiimport/PoiImportPanel";
 import { RecoveryRequiredPanel } from "../features/recovery/RecoveryRequiredPanel";
 import { StayExplorer } from "../features/stay/StayExplorer";
 import { TwinPanel } from "../features/traveler-twin/TwinPanel";
@@ -158,6 +159,27 @@ export const routePanels: V8PanelEntry<RouteScope>[] = [
         />
       </>
     ),
+  },
+  {
+    /* ORD-0437: the import screen reads the plan's own first day out of the same projection the
+       trips list uses, because the automatic landing has to be said before it happens. */
+    id: "poi-import",
+    surface: "route",
+    testId: "poi-import",
+    when: (s) => s.route === "import",
+    render: (s) => {
+      const dates = (s.data.active_plan?.activities ?? [])
+        .map((item) => (item.start_at || "").slice(0, 10))
+        .filter(Boolean)
+        .sort();
+      return (
+        <PoiImportPanel
+          journeyId={s.data.journey.id}
+          firstDay={dates[0] ?? (s.data.journey.start_at || "").slice(0, 10) ?? null}
+          onOpenPlan={() => s.navigate("authoritative")}
+        />
+      );
+    },
   },
   {
     id: "live",

@@ -5,6 +5,9 @@ export const desktopRoutes = [
   { key: "studio", label: "Trip Studio", icon: "calendar", group: "PLAN" },
   { key: "stay", label: "Stay Explorer", icon: "bed", group: "PLAN" },
   { key: "discover", label: "City Discovery", icon: "map", group: "PLAN" },
+  /* ORD-0437: the paste-a-note door. KNOWN_ROUTES is built from these two tables, so the key
+     here is what makes `/v8/import` a screen instead of a URL that bounces to Today. */
+  { key: "import", label: "Import places", icon: "map", group: "PLAN" },
   { key: "bookings", label: "Travel Wallet", icon: "ticket", group: "TRAVEL" },
   { key: "agent", label: "Copilot", icon: "spark", group: "TRAVEL" },
   { key: "authoritative", label: "Recovery", icon: "spark", group: "SYSTEM" },
