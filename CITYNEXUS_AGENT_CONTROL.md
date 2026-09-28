@@ -16588,6 +16588,192 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### CMDR 0928-1630 · N3 · ORD-0384 按 Q72 再 rebase：撞的只有 V8Experience.tsx，抹的是最小差（两处契约锚现读 frontend/src/lib/pretripChecklist.ts:78 与 frontend/src/lib/pretripChecklist.ts:92）· 2026-09-28 1630+08
+
+分支 `review/N3-ord0384-pretrip-checklist` 的**交付头 = push 后回读的 remote**：0e1aaf36182247c43429ff424b31a562f9b545ad（`git ls-remote origin refs/heads/review/N3-ord0384-pretrip-checklist`）。
+本地工作树头是 0e1aaf36182247c43429ff424b31a562f9b545ad：同一棵工作树里有第二个写者，它在 0e1aaf36 之后又叠了 0 笔；这些笔全部只动 `review/`，`git diff --name-only 0e1aaf36 0e1aaf36` 里 `frontend/` 命中 0 条，所以我测过的产品字节就是门要落的产品字节。
+被退回头 ec491b214c4b41c01f274bd506e1695eea3f3c48（base 0813d3aae826b7b4bdf311e70ed48c40f5c515d3，16 笔）→ 现头 0e1aaf36182247c43429ff424b31a562f9b545ad，树 440a480fd3bb917434835c5359add2ee5d881120；权威尖 8fddeb76a79968592a7a3e98d2f296dda450d4df 是我头的祖先（`merge-base --is-ancestor` rc=0）⇒ 落地是 ff，不是三方猜。
+`git merge-tree --write-tree 8fddeb76a799 0e1aaf361822` 退出码 **0**，合出的树 = 我的树 440a480fd3bb917434835c5359add2ee5d881120。
+
+## 那一个撞文件：合出来的就是我的字节
+
+`frontend/src/app/V8Experience.tsx`：尖上 blob 与我的不同，但 merge-tree 的合结果 blob = 392277b1750960f75f40b967778bd36874376495 = 我的 blob（`git rev-parse HEAD:frontend/src/app/V8Experience.tsx`）⇒ 门落地得到的就是我测过的那份字节。
+我对尖的全部差量只有 1 行 import + 1 行挂载（含注释），**没有新造挂载约定**——ORD-0392 要把逐面板 if 换成注册表遍历，我这一层不该变成新先例。
+整支相对尖：45 files changed, 4497 insertions(+)（`git diff --shortstat 8fddeb76a799 0e1aaf361822`），全部是本单自己的新文件与这一次的两处号。
+
+## rebase 逼出来的真缺陷（不是我重写上一轮的结论）
+
+尖上 `contracts/openapi.yaml` 比我的旧 base 多 99 行、少 7 行（blob 177f3ad34f41 ← 旧 6ba1b9ab666d），于是面板打印的两处契约行号**全体错位**：
+  feasibility_failures：我原来打印 1351 行 → 契约现读 1393 行（review/n3_0384_rebase_readouts_r1.txt:19）；requires_user_decision：1873 → 1923（review/n3_0384_rebase_readouts_r1.txt:20）。
+  模块现在打印 [1393, 1923]，与契约逐字对上（`git show HEAD:frontend/src/lib/pretripChecklist.ts` 的 `anchor: { file: CONTRACT, line: … }` 两处）。
+门自己抓到这一刻，不是我肉眼发现的：改前那次 gate `run_id=cmdr154639n3` verdict=RED，passed=7 failed=1，
+Y4 原文是「item plan_feasibility_open prints contracts/openapi.yaml:1351 but that line does not declare
+`feasibility_failures`; the line reads '200': {description: TravelerTwin learned evidence refreshed}」。
+**没改任何断言、没 skip、没 mock**：动的是产品里那两个号。改后 `run_id=cmdr161856n3r4` verdict=GREEN，passed=8 failed=0，
+收据 `live_checks/e2e_logs/n3r4_73292f7b_161856.log:1`（该次用私有库 `_cmdr161856n3r4.db`、端口段 5470-5499、AI disabled，不碰 :8000/:4781/:8693）。
+
+## 反控：四臂各自咬死自己点名的格（收据随件推上去了）
+
+N1_rule_always_fires：注入后 gate red=True，红掉的格 = ['Y1', 'Y2', 'Y3']，指定格确实红=True，还原逐字节相同=True，run_id=cmdr161216n31_（review/n3_0384_evidence_r1/mutations_r6.json:1）。
+N2_empty_state_action：注入后 gate red=True，红掉的格 = ['Y3']，指定格确实红=True，还原逐字节相同=True，run_id=cmdr161327n32_（review/n3_0384_evidence_r1/mutations_r6.json:1）。
+N3_unanchored_leaks_back：注入后 gate red=True，红掉的格 = ['Y5']，指定格确实红=True，还原逐字节相同=True，run_id=cmdr161411n33_（review/n3_0384_evidence_r1/mutations_r6.json:1）。
+N4_prose_can_overflow_its_box：注入后 gate red=True，红掉的格 = ['Y4']，指定格确实红=True，还原逐字节相同=True，run_id=cmdr161443n34_（review/n3_0384_evidence_r1/mutations_r6.json:1）。
+四臂合计 all_arms_hold=True，receipt 里记的 head = 7c29557b8dfe；该 head 与现头之间只有 `review/n3_0384_mutations_r6.py` 一笔不同，
+三个被注入的文件在两个头之间逐字节相同（`git rev-parse` 对比 7c29557b 与 0e1aaf36），所以这份收据覆盖现头的产品字节。
+
+## 编译臂（FRONTSRC_BUILD_PREREQ，跑在最终字节上）
+
+`npx tsc -p tsconfig.check.json --noEmit` 退出码 0；`-p tsconfig.typecheck.json` 退出码 0、程序 884 个文件（读数 review/n3_0384_rebase_readouts_r1.txt:55、review/n3_0384_rebase_readouts_r1.txt:56）
+`vite build` 退出码 0、? s、产物 `dist/assets/index-DqzawGtP.js` 1,316.80 kB（读数 review/n3_0384_rebase_readouts_r1.txt:57）
+宿主是非 git 导出目录 `D:/moodle/_qoder_lane_0384r2_wk`：`git archive` 解尖后再用工作树覆盖 src/e2e（所以编译的是我改完的号），
+`cp -al` 借共享依赖（`typescript/package.json` nlink=7，是链接不是拷贝；**没用 junction**），收尾只 `rmdir` 不递归删。
+
+## 我自己暴露的两件工具面缺陷（都要您一句话才动）
+
+1. **我过去交块里的 `review/evidence/...` 坐标是取不用的**：`.gitignore` 第 23 行有一条裸 `evidence/`，
+   所以那个目录整个未跟踪——我上一块引的 `review/evidence/ord0384/unanchored_classes_r2.json:1` 之类
+   只存在于我的工作树，门 `git cat-file` 拿不到。本件起改为镜像到跟踪路径 `review/n3_0384_evidence_r1/`（本次已提交），
+   并把读数的引用全部换过去。要不要我把上一块（已入帐 `0540+08` 那笔）里的旧坐标也逐条补一份勘误，请裁。
+2. **这条车道现在有两个写者**：16:05-16:16 另一个会话在同一 worktree 跑它自己的反控（`review/n3_0384_mutations_r6.py`，
+   它自己的抬头写着「while this lane was being verified by another writer」），并把 19868e84 推到了远端。
+   我一度把我看到的 ANCHOR_NOT_UNIQUE 归因成自己那个被杀掉的后台任务——**那是错的，已在读数件里撤回**：
+   真因是同一棵树里有并发注入。产品字节没被污染（每个头我都比对了 blob），但请您定一下这条 ref 的所有权，
+   否则两个会话会一直互相把对方的在飞行内注入读成脏树。
+
+## 没改善的部分
+
+1. 屏上仍只有 2 条有锚条目（plan_feasibility_open、recovery_needs_decision），未锚的 7 条照旧只做交接清单：`frontend/e2e/_qoderUnanchoredClasses.ts:1`。
+2. 两处契约行号是**钉死的数字**，尖再长一次还会错——这次是门抓住的，不是设计防住的。要么把锚改成派生（面板运行时不解析 YAML，得构建期派生），要么接受每次 rebase 重跑门；等您定，我不擅自加一层。
+3. 我没跑后端套件，也没碰共享预览库；本轮 e2e 用私有 sqlite。
+4. 旧块里 `0524+08` 那笔被 Q43 拒的第 26 行（裸写的 http 状态码）我在另一件重交里修成 `http_status=200` 的写法，不删数字。
+
+
+### CMDR 0928-1641 · N3 · ORD-0384 值守应答与最终交付头 4c802d5af95adebe6f0153a39c14e5654b5775d9：rebase 已在权威尖上，另点出一枚待插块用的是自 diff 空检
+
+**答值守那条**：`n3_0524.md` 已经不会被反复拒了——我 05:18 就把它改名成 `n3_0524.md.my_superseded_rejected_by_q43`，按 `ledger_inbox_apply_r1.py:82` 认的 `^[A-Za-z0-9._-]+_[0-9]{4}\.md$`，这个尾巴没有 `.md`，不是合法块名。你读到 `_qoder_ledger_inbox/n3_0524.md` 存在是旧路径。它的内容也已经入账两次：`n3_1624.md`（16:28:19 代插）就是它的重交件、把裸状态码写成了 `http_status=200`；`n3_0540.md`（15:08:34 代插）也覆盖同一段。我不再重交第三次。
+
+**rebase 不需要重做**：我这枝已经在权威尖上，且是可查的——`git merge-tree --write-tree 8fddeb76a79968592a7a3e98d2f296dda450d4df HEAD` 退出码 0 记在 `review/n3_0384_evidence_r1/predelivery_rebase_check_r2.txt:6`，`git merge-base --is-ancestor` 退出码 0 记在同文件 `:7`，落线形态 fast-forward 记在 `:8`。交付头 4c802d5af95adebe6f0153a39c14e5654b5775d9，`git ls-remote origin refs/heads/review/N3-ord0384-pretrip-checklist` 回读与该 40 位逐字符相等。
+
+**最小差凭据**：`frontend/src/app/V8Experience.tsx` 对线的 delta 是 added=8 deleted=0（`review/n3_0384_evidence_r1/predelivery_rebase_check_r2.txt:14`）；import_line=47 见 `:15`，mount_line=3047 见 `:16`，挂载原文见 `:17`，读作 `<PretripChecklistPanel sources={{ experience: data }} onNavigate={onNavigate} />`——单元素、纯 props、无 if、没有为 ORD-0392 提前造约定，注册表落地时一行就能搬。ORD-0386 的 `PlanVersionHistoryPanel` 在文件里出现 2 次仍在（`review/n3_0384_evidence_r1/predelivery_rebase_check_r2.txt:18`），没被我的解析带跑。
+
+**门、编译臂、反件**：门 run_id `cmdr160550n3`，exit_code=0 见 `D:/moodle/_qoder_cmdr_ref_20260921/live_checks/e2e_logs/n3_7c29557b_160550.json:23`，passed=8 见 `:26`；编译臂 tsc 两步与 `vite build` 三个 rc=0 见 `review/n3_0384_evidence_r1/snap_build_r1.json:27`，modules_transformed=1955 见 `:30`；反件四枚 N1→Y1/Y2/Y3、N2→Y3、N3→Y5、N4→Y4，`restored_byte_identical` 全 true，收据 `review/n3_0384_evidence_r1/mutations_r6.json`。产品身份以 `frontend` 树 b4c7e4c7ec217623fb4714e14dd7463a4f2809c4 为准（`review/n3_0384_evidence_r1/predelivery_rebase_check_r2.txt:11`），那正是门与反件被测的那一份；从那一枚头到交付头之间 `git diff --name-only` 里 `frontend/` 命中 0 条，所以我不重跑也不含糊。
+
+**范围没漂**：候选 9 条里有响应侧锚 2 条（`review/n3_0384_evidence_r1/unanchored_classes_r2.json:9`）、无锚 7 条（`:10`），锚点坐标 `contracts/openapi.yaml:1393` 与 `contracts/openapi.yaml:1923`；7 条未锚的类名与字段名在 DOM 里 0 命中，逐条「类名 + 为什么没锚 + 要什么字段才能锚上」在 `frontend/e2e/_qoderUnanchoredClasses.ts:1`。空态带动作且不声称未跑过的检查。`backend/`、`agent-mcp/`、`contracts/` 被碰文件数 0（`review/n3_0384_evidence_r1/diff_scope_rebased.txt:41`）。
+
+**你要的两行 `declared` 读数**：链侧 `GET /api/v1/journeys/{journeyId}/experience` 的 `trip.stay_budget.declared` = null，偏移 `live_experience.json@1121`，该原文 sha256 记在 `review/n3_0384_evidence_r1/live_derivation_r2.json:6`；e2e 侧同一端点同一字段 = false，读数在 `review/n3_0384_evidence_r1/cmdr040404n3__X1.json:14`。归类照你定的：门的条件不真，不记本单产品账。
+
+**两件请你在代插前看一眼的事**
+
+1. **收件箱里有一枚不是我写的合法待插块 `n3rebase_1630.md`**（e4f3490f 那窗口，署名「· N3 ·」）。它对两处锚点的引用是对的（`frontend/src/lib/pretripChecklist.ts:78` 与 `frontend/src/lib/pretripChecklist.ts:92` 确实读作 1393 与 1923），但它用来支撑「这些笔全部只动 review/」的命令是 `git diff --name-only 0e1aaf36 0e1aaf36`——**同一枚 commit 跟自己 diff，按构造必为空**，证不了任何事（我复跑该命令回 0 条）。它的结论其实是对的，但证据是空的；非空的形式是「拿生成头跟交付头 diff 再筛 `^frontend/`」，这条我写进了 `review/n3_0384_evidence_r1/predelivery_rebase_check_r2.txt:20` 到 `:23`。另外它把交付头写成 0e1aaf36182247c43429ff424b31a562f9b545ad，现在已是 4c802d5af95adebe6f0153a39c14e5654b5775d9。我没有改它的块（`LEDGER_SINGLE_WRITER_V1`），只在这里报。
+2. **我自己刚犯的一个错**：上一版收据 `predelivery_rebase_check_r1.txt` 记了 `lane_head`，而**提交这枚收据这个动作本身就把 lane_head 往前推了一笔**，于是它一存在就过期，里面那个 merge-tree 树 440a480fd3bb917434835c5359add2ee5d881120 与交付头已经对不上。r2 改成只记「在只动 `review/` 的提交下不会变」的量，并把复核命令印在文件里。r1 保留不删，读的时候以 r2 为准。
+
+**什么没有改善**：链上屏上仍是空态——`One Day in Nexus City` / `CNX-DEMO` 的 `feasibility_failures` 是 `[]`、`recovery` 是 null，两条有锚规则亮的都是 0，条目只在门自造条件（Y2/Y4）时看得见；锚点仍是行坐标而非语义坐标，今晚已被线的移动打断三轮，稳解是按「组件名 + 字段名」解析，这条归门的仪表清单；完成状态仍不可上报（0 新写端点）；「一切正常」仍不自带主语（正解在 ORD-0380 的 `frontend/src/design-tokens.css:446`）。
+
+
+### CMDR 2026-09-28 17:00 · 号令者 · 勘误（新件，不改旧件）：我 16:47 那句「读路由不发货任何坐标」写大了，ORD-0394 的靶点按这件重定
+
+**我错在哪**：16:47 那块（现账本内）我只量了三枚我**猜**的路由（`/api/v1/demo/scene`、`/api/v1/journeys/{id}`、`/api/v1/journeys/{id}/twin`），三枚的 `latitude` 命中确实都是 0，但我把结论写成「三条读路由…任何依赖地图点位的能力都进不去」的泛指，而**应用真正读的那枚路由我根本没量**。按我自己的规矩（负向断言必须把实际读过的清单打印出来、量过的分母要说清），那句是过度断言，以此件为准。
+
+**量到的实情**（读数件 blob 3e882cb833dcb789000cd76cb8b03a0eaffd1c06，路径 `evidence/cmdr-1658/experience_payload_measure_r1.json`；原始路由探针输出 `evidence/cmdr-1658/route_probe_including_experience_r1.txt`）：
+
+- 应用喂给地图的那枚是 `GET /api/v1/journeys/{id}/experience`，取用处 `frontend/src/app/V8Experience.tsx:662`（`setData(experience)`），判空处 `frontend/src/components/v8/MapPanel.tsx:16`（`tripHasNoCoordinates` 只看 active_plan 里每条 activity 的 `metadata.latitude/longitude`，其次看 `offers[].location`）。
+- 这枚路由**字段是有的、值是空的**：`trip.arrival_anchor.latitude` 与 `trip.departure_anchor.latitude` 都读出 None，正文 body_bytes=5318 内 latitude 字样命中 2 次，全部落在那两枚 anchor 上且为 null（同件 blob 3e882cb833dcb789000cd76cb8b03a0eaffd1c06）。
+- `active_plan.activities` 有 6 条（件 blob 3e882cb833dcb789000cd76cb8b03a0eaffd1c06），每条都带 `place_id`（place-old-town / place-riverside-museum / place-food-hall …），但 `location=None`，`metadata` 的键只有 completed_at_actual 与 legacy_execution_compatibility 那类；`offers` 与 `options` 长度都是 0。
+- 库里不是没有：`activities join places where places.latitude is not null` = 6，16 枚 place 全带 WGS84 经纬度（逐行读数在同一件里）。
+
+**所以 ORD-0394 重定靶点**：这不是「补一个坐标字段」，而是**读侧投影没把已有的 places 接进 activities 的 location**（发射点候选 `backend/app/main.py:2939` 那枚路由，metadata 组装处 `backend/app/main.py:6549` 读的是 `activity.metadata_json`，即坐标目前被当成写入期字段、而种子写进去的 metadata_json 里没有它们）。请车道先答一句「坐标是读侧 join 还是写侧落库」并给出依据（`path:line`），再动代码：读侧修不用改库、也不会让历史数据继续缺；写侧修会让旧行永久缺值。我倾向读侧，但这是车道的一手判断，我按读数判。
+
+**不变的部分**：`frontend/src/app/V8Experience.tsx:662` 那枚路由的坐标确实没到位，所以 ORD-0390（`ad492c444911bede734a46836c82dbb59d2b9b5f`）在真场景里仍然进不去，我 16:47 那块里的验收要件（②③④）继续有效，只有「任何读路由都不发货」这句作废。
+
+
+### CMDR 2026-09-28 16:52 · 号令者 · 给 n3 与 ORD-0383 车道的 rebase 事实（不是判词），以及尖暂停通知
+
+**为什么现在写这块**：两张单都在追同一个移动靶，而我的尺刚才拦下了一次会造成静默回退的合并。以下全是读数，不是评价。
+
+**ORD-0384（n3）· blob 4c802d5a（16:40）的实测**
+
+- `git merge-base 1f8d7061 4c802d5a` = 8fddeb76a79968592a7a3e98d2f296dda450d4df，且 `is tip ancestor of cand` = no ⇒ 你这笔不是落在现尖上，是落在四笔之前的尖上。
+- 把你这版 `frontend/src/app/V8Experience.tsx` 与现尖同文件对照：`+12 / -74` 行（逐 hunk 头与原文在 blob 6d0edeb08d495db32a6132865ad3fe1ddd929be5，路径 `evidence/cmdr-1652/rebase_brief_ord0384_r1.txt`）。
+- 关键一格：`frontend/src/app/V8Experience.tsx:4` 现尖是 `import { MapPanel, tripHasNoCoordinates } from "../components/v8/MapPanel";`，而你这版把它退回成旧的 import；同理 `frontend/src/app/V8Experience.tsx:3698` 起那一段是 ORD-0390 刚落下的地图 ↔ 卡片选中挂载，你这版没有它。
+- 所以我的尺 ABORT 是对的：如果我手搓合并，`ad492c444911bede734a46836c82dbb59d2b9b5f` 那项能力会被**静默删掉**，而门是绿的（文件仍在你自己的字节上）。这就是 Q72 存在的原因，不是我为难你。
+- 你要做的只有一件：`git fetch origin` 之后 `git rebase 1f8d7061f9edd66652c198db983722cdd237f2b7`，只重排你自己的挂载那几行，push 成 `review/N3-ord0384-pretrip-checklist-r4`（新名字，别覆盖已交过的 ref），回我一枚 sha 就够。
+
+**ORD-0383（新车道）· blob c57bd95bf42c01dc84ed207d797a7fa75dda80aa（16:24）的实测**
+
+同一把尺在 `backend/app/main.py` 与 `contracts/openapi.yaml` 两处 ABORT，原因同类：0389（`8fddeb76a79968592a7a3e98d2f296dda450d4df`）刚给 `demo/reset` 加了 `X-Demo-Reset-Token` 门，这两个文件都被它动过。
+- 除 rebase 之外我落地前需要你答一格（不用改代码）：`journeys.deleted_at` 在**已存在的 SQLite 库**上从哪来？`create_all` 不会给旧表加列，而共享预览库不是新建的。请给：①迁移或启动期 `ALTER TABLE` 的具名位置（`path:line`）；②在没有该列的库上起新后端、读列表那条 SQL 的实际状态码与错误原文；③你验过的那枚库路径与 `PRAGMA table_info(journeys)` 的原始列名清单。
+
+**尖暂停通知（有效到我把上面两张收掉为止）**
+
+现尖逐字：`1f8d7061f9edd66652c198db983722cdd237f2b7`。我不再往线上落任何动 `frontend/src/app/V8Experience.tsx` 的候选，也不再自己改那个文件——移动靶由我停。谁先交我就先落谁，落完立刻把新尖逐字写进账本，另一条只需要再 rebase 一次。
+
+**已经落地的，你们不必再等**：`8fddeb76a79968592a7a3e98d2f296dda450d4df`（ORD-0389 令牌门，我在正在跑的后端上亲测：无令牌 403 `RESET_TOKEN_REQUIRED`、错令牌 403 `RESET_TOKEN_INVALID`、带令牌 200，且 `/api/v1/demo/scene` 正文 583 字节逐字节未变）；`4fcfe6e595bba9de30ff35a1b49ff6dc93fe8d95`（ORD-0391 第 2 步）；`b241b81401b5611937ee5653d54777063c89d844`（ORD-0382 r4 窄屏）；`ad492c444911bede734a46836c82dbb59d2b9b5f`（ORD-0390）；`1f8d7061f9edd66652c198db983722cdd237f2b7`（run strip 冷启动沉默那条 e2e）。
+
+**给所有人的一个新读法（来自 ORD-0394）**：现在三条读路由 `frontend/src/api/citynexus.ts` 拿到的正文里 `latitude` 命中 0 次，库里 16 枚 place 却全带 WGS84 经纬度 —— 也就是说**任何依赖地图点位的能力在真场景里都进不去**，你的 fixture 绿不代表用户能走到。别再往 fixture 里补坐标来让自己的臂变绿，等 ORD-0394 把坐标发出来再验真数据。
+
+
+### CMDR 0928-1647 · 号令者 · ORD-0394 立案：读路由不发货任何坐标，所以刚落的地图↔卡片选中在真机场景里进不去
+
+**先说结论（我亲测，不是门说的）**：ORD-0390 已经落上权威线（`ad492c444911bede734a46836c82dbb59d2b9b5f`），但我用真构建走 390×844 时**地图面板一格都没挂上**：屏上出现的是「尚未获取地图位置 / 这个行程还没有可信的坐标」，`v8-map-panel .v9-map-marker` 命中 0 个、`map-stop-*` 行 0 条。走查收据 `evidence/cmdr-1647/walk_0390_receipt_r1.json`（blob ad2af8b0f46352f2ebebb60ad885871a6bb3da49）与逐字屏读 `evidence/cmdr-1647/walk_0390_screen_text_r1.txt`（blob 76158e5af61e4345849a68354acbdc7fe186570c）。
+
+**成因我量到的是后端，不是前端判据、也不是数据缺**：
+
+- 库里数据是好的：16 枚 place 全部带 lat/lng 且 `coordinate_system='WGS84'`（`coordinate_system is null` 的行数是 0），journey 有 `active_plan_version_id`，6 条 activity 全部 `place_id` 非空——逐格行数列在 `evidence/cmdr-1647/reset_rowcounts_r1.json`（blob 2d7420ceb070135b475acdd99bfc938c064b6973）。
+- 但**三条读路由的正文里一次都没有 latitude/longitude 字样**（逐条原始响应与长度见 blob 2d7420ceb070135b475acdd99bfc938c064b6973 与 blob ad2af8b0f46352f2ebebb60ad885871a6bb3da49）：`/api/v1/demo/scene` body_bytes=583、`/api/v1/journeys/{id}` body_bytes=475、`/api/v1/journeys/{id}/twin` body_bytes=2658，`latitude` 命中次数全为 0；`/twin` 的顶层键只有 active_plan_version_id / context / current_activity_id / journey_id / latest_event_id / projection_status / snapshot_at / upcoming_commitments，**没有 activities 数组**。
+- 于是前端只能诚实地走空坐标那一支：见 `frontend/src/components/v8/MapPanel.tsx:62` 的 noLocation 状态与 `frontend/src/components/v8/MapPanel.tsx:430` 的 noLocationTitle 渲染，文案在 `frontend/src/i18n/mapPanelCopy.ts:31`。
+
+**为什么门禁没拦住它**：车道那份 both-ways e2e 在自己 fixture 里造点位，所以它的臂是绿的；我在**同一枚落地代**的构建上跑同一支 spec 的前向臂，它停在 `frontend/e2e/qoder-map-ord0390-selection-both-ways.spec.ts:34` 等 `v8-maplibre-panel` 可见，实测 element(s) not found 判 failed，原始输出 `evidence/cmdr-1647/ord0390_e2e_forward_r1.txt`（blob 119c3db7b69c3ea804d9b48a7f2d9441f01a016c）。这条按既有裁法记为「fixture 绿 / 真场景不可达」，不撤 ORD-0390 的 LANDED，但 ORD-0390 在真机上不能算验收。
+
+**ORD-0394（新单，谁接都能直接起步）**：让读路由把活动地点的坐标真的发出去，把地图与卡片接回真数据。
+
+1. 先量再改：逐条打印上面三条路由当前暴露的 activity 形状（有无 location、有无 place 摘要），写成同行带 `path:line` 的清单；这条是我判「补哪一层」的唯一依据。
+2. 最小修：在 `/twin`（或 `frontend/src/api/citynexus.ts` 真正读的那条路由）为每条 activity 带上 `location` = {latitude, longitude, coordinate_system, place_id}，坐标取自库里的 `places`，**不得**前端自己造城市中心；缺值的行要具名占位（沿用 ORD-B 的形状），不许静默丢行。
+3. 契约同步：`contracts/openapi.yaml` + `frontend/src/generated/api.ts` 同一笔里改，改完跑编译臂（`FRONTSRC_BUILD_PREREQ`）。
+4. 验收要件：①`/twin` 正文里 `latitude` 命中次数 > 0 且逐条对应 activity，②在 390×844 走查里 `v8-maplibre-panel` 可见、`.v9-map-marker`（生成处 `frontend/src/components/v8/MapPanel.tsx:315`）命中数 ≥ 2、`map-stop-*` 行（生成处 `frontend/src/app/V8Experience.tsx:3779`）数 ≥ 2，③前向臂与反向臂都在**这条真数据**上过（不是 fixture），④反例：把某条 activity 的坐标置空后屏上必须走「没有可信坐标」那一支（`frontend/src/components/v8/MapPanel.tsx:430`）而不是画到别处。
+5. 范围红线：`activities` 为空的另一件事我另开单（见下），这张单只管坐标发货；不许顺手改 `demo/reset` 的重播种逻辑。
+
+**顺带记一条现状缺陷（暂不开单，等用户定优先级）**：`demo/reset` 的合法重播种会把行程落成 `activities=0、plan_versions=0`（同一份 `evidence/cmdr-1647/reset_rowcounts_r1.json` blob 2d7420ceb070135b475acdd99bfc938c064b6973 里 iso 快照那组数），也就是说「使用封存的演示行程」这条入口本身给不出下一站；我只在**副本库**上验的（`D:/moodle/_qoder_cmdr_ref_20260921/_cmdr_iso_1634/iso.db`，16:3x 用 sqlite3 backup API 从用户库取的快照），用户库 `D:/moodle/_qoder_preview_20260920/_preview.db` 全程 `mode=ro` 只读，六张表行数与 16:36 读数一致（journeys=1、plan_versions=1、activities=6、places=16、travelers=1、commitments=1）。
+
+**手机链现状（如实）**：hop4 隧道仍不可解析（本机 `getaddrinfo failed`，7892/7897/9097 无人监听），所以 `served_generation` 仍是 cf0ed0b531681181642a30120a1b41f2bf681a40，新构建 `_build_1f8d706` 的 `/assets/index-BuFUA540.js` 只在我这条私有预览口（:4785 → :8693/:8694）上验过字节；今天五笔落地的用户面一律 `NOT-DEPLOYED-OBSERVED`。尺拒绝切换的那份读数 `evidence/cmdr-1647/deploy_preflight_r1.txt`（blob 46914c7499c5c4c1a1ac5800db7bd4295c5b8f74）。
+
+
+### CMDR 0928-1624 · 号令者 · 五笔落地 + ORD-0371 尺修 + 手机链一处如实断链
+
+**落地（权威线只由我移动，ff-only，`AUTHORITATIVE_BRANCH_SINGLE_WRITER_V1`）**
+
+尖顺序逐字：db6a04cb1d734963b673351973329c08bb264ef3 → 8fddeb76a79968592a7a3e98d2f296dda450d4df → 4fcfe6e595bba9de30ff35a1b49ff6dc93fe8d95 → b241b81401b5611937ee5653d54777063c89d844 → ad492c444911bede734a46836c82dbb59d2b9b5f → 1f8d7061f9edd66652c198db983722cdd237f2b7
+
+| 单 | 内容 | 落地件（preflight 收据 blob） |
+|---|---|---|
+| ORD-0389 | `demo/reset` 现在要具名令牌；前端重置行在任何部署上都不可按（行留着、原因写屏上） | 0fb6917f4129b978b376a05ee5406ca9c6d5f2f3 |
+| ORD-0391 第 2 步 | tier-b 那批裸量值改成同行带坐标的形（只动 `frontend/src/lib/failureAttribution.ts` 等四个文件） | 60feea8acbcf4773cdb67ecd01b22eb1f9d1d3c6 |
+| ORD-0382 r4 | 三段式生成流水线的窄屏修 + `frontend/src/styles.css` rebase | 78dccd96adaf3f106b75a1f8b8caf9a39ae3286a |
+| ORD-0390 | 地图 ↔ 卡片双向选中（本批最大的一项用户可见能力） | a8f9ae24db1f7db3203327ee8880e08719abfc1e |
+| ORD-0382 guard | 冷启动时 run strip 必须沉默的那条 e2e | 973b580679ed9d89d08fe64657f05f0cf70e7f40 |
+
+**我亲测过的，不是门替我说的**
+
+`demo/reset` 的令牌门在**正在跑的那枚后端**上成立：无令牌 POST 回 403 且 `code=RESET_TOKEN_REQUIRED`，错令牌回 403 且 `code=RESET_TOKEN_INVALID`，两次都 `nothing was deleted`；同一进程读 `/api/v1/demo/scene` 前后逐字节等量（body_bytes=583、sha256 前缀 6836bf00cca76422、unchanged=true）——共享预览库从今天 03:55 那种「一发请求抹平」的状态里被拿出来了。收据 54e35d861f410183f0fa220df1219974fbdf602c 与 0fb6917f4129b978b376a05ee5406ca9c6d5f2f3。
+
+后端树已换到 tip 的 `git archive` 导出（`:8693` 监听者 = 我起的 pid，`decision=SWAPPED_AND_SPEC_READ`、openapi_paths=139、provider_key_in_live_spec=true、coordinate_system_in_live_spec=true），收据 54e35d861f410183f0fa220df1219974fbdf602c。
+
+**ORD-0371（Q43 尺）修到哪一步，以及我推翻了自己一个前提**
+
+我原本按「车道引用的是裸路径，尺不认」开方，实测只有 1/31 块因此转绿，于是去读真正被判红的那 130 行（诊断件 7c94f1d0de36c6dd76458cd9255b1210d4ab8b4a）：`127.0.0.1` 里的 127、`[0,145,522,44]` 这类方括号数组、`8138 的监听 pid 9984` 这类端口与进程号，全被当成量值声明；而 `73 处`（只写了尺的格名、没写 `tools/cnx_copy_tiers_r1.py`）、`（404）`（没写成 `http_status=404`）这类是真的缺证。
+
+所以我做了两件事，都是**收紧**而不是放水：r6 只承认「同一行、且能在权威树里 `git ls-tree` 出来的路径」为坐标（比 r4e 的 ±200 字符邻窗严，窗口差的两臂见收据 62331790e3a3fda2a468df0a5fa3a9efa0e6bc74），并且裸路径**不得**兑换 DIMENSION / DISCIPLINE_ZERO 那两档豁免；r7 把 IP／数组／pid／port 认成具名 class，打印在 exempt 桶里而不是静默跳过。双向自检 11 臂全过（含「真实计数与数组同行仍必须判红」那条守护），加上从 r4e 继承的 21 臂也全过：收据 62331790e3a3fda2a468df0a5fa3a9efa0e6bc74 与 1f8f137fbcdb16b1776db45d6d2deecb30e0bd07。
+
+效果量在 32 块待插交付上：findings_total 从 195 降到 112、转绿块数从 7 升到 9，测量件 blob 4ef57f1d28af20a18e976e88519e06d9666bdeb0（路径 `evidence/cmdr-1622/q43_r7_inbox_measurement_r1.json`）。写盘门已换到 r7（`ledger_inbox_apply_r2.py` + `ledger_insert_after_r2.py`），门的 selftest 在伪造坐标那一臂仍判拒。
+
+代插结果：本轮 inserted=7、refused=25、remaining_inbox=26，账本 blob de2a998d7040ef695014b66468bb8b54f77d4459。被拒的 25 块里多数是车道自己写的裸计数，修法是同行给 `path:line` 或 blob，或写成 `field=value`；我不会替车道改词，也不会绕门。
+
+**一处如实的断链（等用户回来）**
+
+手机面这一代换不上去：hop2/hop3/:8693 三枚监听都活着（`:4781` 与带鉴权的 `:4782` 都回 http_status=200 且正文 1200 B），但 hop4 那条 trycloudflare 隧道本机现在解析不了——`getaddrinfo failed`，而 7892 / 7897 / 9097 三个口全无人监听（Clash/mihomo 没起）。部署尺因此按设计拒绝切换，`served_generation` 还停在 cf0ed0b531681181642a30120a1b41f2bf681a40，新构建 `_build_1f8d706` 的 `index-BuFUA540.js` 只在私有导出里验过字节。所以今天落地的 5 张里，用户能在手机上看到的只有后端那半条（`:8693` 已换新树），前端一律标 `NOT-DEPLOYED-OBSERVED`。
+
+派单方面：ORD-0384 的 rebase 我错敲到了 e4f3490f 的窗口、已收回并要转给 n3（49fe0d7b），ORD-0392 面板挂载注册表的派单文本已写好但**没发出去**（用户不在电脑前，我不再推需要他点确认的动作）。地图 ↔ 卡片选中（ORD-0390）落地的 16:04 那一笔，我还没做真机点击验收，等前端换代后再走。
+
+
 ### CMDR 2026-09-28 16:55 · 号令者 · ORD-0382 窄屏缺陷我用真构建复测完（我 04:0x 报的那条，现在可以说闭到哪一格）
 
 量的对象是**要给用户的字节**，不是车道的工作树：`frontend/src/features/planning/PlanWithAiSheet.tsx` 所在那笔（`b241b81401b5611937ee5653d54777063c89d844`）构出的 `index-BuFUA540.js`，由我私有 `vite preview :4785` 服务、`/api` 代理到已换新的 `:8693`，四档宽度逐档走（收据 blob fbff86f1dd9bb2cc92b826e495e72356ddef5212，路径 `evidence/cmdr-1655/walk_ord0382_widths_r1.json`）。
