@@ -45,7 +45,6 @@ import { V10LiveExecutionPanel } from "../features/execution/V10LiveExecutionPan
 import { BookingArtifactScanner } from "../features/inbox/BookingArtifactScanner";
 import { JourneyInboxWorkbench, fieldLabel } from "../features/inbox/JourneyInboxWorkbench";
 import { JourneyLinkAction } from "../features/inbox/JourneyLinkAction";
-import { PretripChecklistPanel } from "../features/checklist/PretripChecklistPanel";
 import { PushCapabilityCard } from "../features/notifications/PushCapabilityCard";
 import { TwinPanel } from "../features/traveler-twin/TwinPanel";
 import { SortableActivityList } from "../features/studio/SortableActivityList";
@@ -59,6 +58,7 @@ import { V12TripStudioPanel } from "../features/studio/V12TripStudioPanel";
 import { PlanVersionHistoryPanel } from "../features/studio/PlanVersionHistoryPanel";
 import {
   authoritativePanels,
+  hubAnchorPanels,
   renderPanels,
   routePanels,
   tripsTabPanels,
@@ -2989,13 +2989,10 @@ function Hub({
           </button>
         )}
       </section>
-      {/* ORD-0384: the two outstanding things the contract can anchor, read from the payload this
-          screen already holds -- the panel issues no second read of its own. It sits *after* the
-          attention band on purpose: in the clear state the band hides its own kicker
-          (design-tokens.css `.cn-attention-band[data-attention="clear"] .v8-kicker{display:none}`), so a
-          bare "一切正常" rendered directly under a list of open items reads as a denial of the list above
-          it. Live status answers first; the pre-trip list follows. */}
-      <PretripChecklistPanel sources={{ experience: data }} onNavigate={onNavigate} />
+      {/* ORD-0392: this anchor is a table now (`hubAnchorPanels` in app/v8PanelRegistry.tsx), so a
+          lane that wants something under Today's attention band adds an entry there and never opens
+          this file. ORD-0384's own comment about *why* it sits here travelled with the entry. */}
+      {renderPanels(hubAnchorPanels, { data, onNavigate })}
       <div className="v8-section-heading">
         <div>
           <p className="v8-kicker">{t("hub.planGlance")}</p>

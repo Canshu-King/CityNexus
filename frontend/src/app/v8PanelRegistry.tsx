@@ -9,6 +9,7 @@ import { HotelsPanel } from "../features/stay/HotelsPanel";
 import { JourneyInboxWorkbench } from "../features/inbox/JourneyInboxWorkbench";
 import { LiveRecovery } from "../features/execution/LiveRecovery";
 import { PlanComparison } from "../features/planning/PlanComparison";
+import { PretripChecklistPanel } from "../features/checklist/PretripChecklistPanel";
 import { PlanVersionHistoryPanel } from "../features/studio/PlanVersionHistoryPanel";
 import { RealCityDiscoveryPanel } from "../features/discovery/RealCityDiscoveryPanel";
 import { RecoveryRequiredPanel } from "../features/recovery/RecoveryRequiredPanel";
@@ -53,7 +54,7 @@ import { V14RecoveryTruthPanel } from "../features/recovery/V14RecoveryTruthPane
  * tightening the props of 24 mount sites would be a second change hiding inside the first.
  */
 
-export type V8PanelSurface = "route" | "trips-tab" | "authoritative";
+export type V8PanelSurface = "route" | "trips-tab" | "authoritative" | "hub-anchor";
 
 export type V8PanelEntry<S> = {
   id: string;
@@ -68,6 +69,7 @@ export type V8PanelEntry<S> = {
 export type RouteScope = any;
 export type TripsTabScope = any;
 export type AuthoritativeScope = any;
+export type HubAnchorScope = any;
 
 /** The shell's route chain: one entry per `{route === "…" && …}` block it used to hold. */
 export const routePanels: V8PanelEntry<RouteScope>[] = [
@@ -406,6 +408,34 @@ export const authoritativePanels: V8PanelEntry<AuthoritativeScope>[] = [
         onAccepted={s.onRefresh}
       />
     ),
+  },
+];
+
+/**
+ * Panels that mount *inside* a page shell at a named anchor, rather than as a route sibling.
+ *
+ * This is the fourth surface, and it exists because "the page shells stay in the file that defines
+ * them" (see the header of this file) otherwise left no way for a lane to add a panel *between* two
+ * blocks of a shell without opening the shell.  The shell contributes one traversal at the anchor;
+ * everything below it is table data.
+ *
+ * First entry: ORD-0384's pre-trip checklist, which the shell mounted directly under Today's
+ * attention band.  Its position is load-bearing and its own comment said why, so the comment
+ * travels with the entry instead of being left behind in a 4 500-line file.
+ */
+export const hubAnchorPanels: V8PanelEntry<HubAnchorScope>[] = [
+  {
+    id: "hub-pretrip-checklist",
+    surface: "hub-anchor",
+    testId: "pretrip-checklist",
+    when: () => true,
+    /* ORD-0384: the two outstanding things the contract can anchor, read from the payload this
+       screen already holds -- the panel issues no second read of its own. It sits *after* the
+       attention band on purpose: in the clear state the band hides its own kicker
+       (design-tokens.css `.cn-attention-band[data-attention="clear"] .v8-kicker{display:none}`), so a
+       bare "一切正常" rendered directly under a list of open items reads as a denial of the list above
+       it. Live status answers first; the pre-trip list follows. */
+    render: (s) => <PretripChecklistPanel sources={{ experience: s.data }} onNavigate={s.onNavigate} />,
   },
 ];
 
