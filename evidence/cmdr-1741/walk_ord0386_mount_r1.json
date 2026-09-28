@@ -1,0 +1,142 @@
+{
+ "at": "2026-09-28T09:41:01.302Z",
+ "bundle": "/assets/index-CitejLpj.js",
+ "tabs": [
+  "nav-hub",
+  "nav-trips",
+  "nav-map",
+  "nav-agent",
+  "nav-me"
+ ],
+ "bundle_hits": [
+  {
+   "id": "plan-version-history",
+   "in_bundle": 5
+  },
+  {
+   "id": "history-list",
+   "in_bundle": 2
+  },
+  {
+   "id": "history-retention",
+   "in_bundle": 2
+  }
+ ],
+ "rows": [
+  {
+   "where": "nav-hub",
+   "hits": [
+    {
+     "id": "plan-version-history",
+     "dom": 0,
+     "visible": false,
+     "box": null
+    },
+    {
+     "id": "history-list",
+     "dom": 0,
+     "visible": false,
+     "box": null
+    },
+    {
+     "id": "history-retention",
+     "dom": 0,
+     "visible": false,
+     "box": null
+    }
+   ]
+  },
+  {
+   "where": "nav-trips",
+   "hits": [
+    {
+     "id": "plan-version-history",
+     "dom": 0,
+     "visible": false,
+     "box": null
+    },
+    {
+     "id": "history-list",
+     "dom": 0,
+     "visible": false,
+     "box": null
+    },
+    {
+     "id": "history-retention",
+     "dom": 0,
+     "visible": false,
+     "box": null
+    }
+   ]
+  },
+  {
+   "where": "nav-map",
+   "hits": [
+    {
+     "id": "plan-version-history",
+     "dom": 0,
+     "visible": false,
+     "box": null
+    },
+    {
+     "id": "history-list",
+     "dom": 0,
+     "visible": false,
+     "box": null
+    },
+    {
+     "id": "history-retention",
+     "dom": 0,
+     "visible": false,
+     "box": null
+    }
+   ]
+  },
+  {
+   "where": "nav-agent",
+   "hits": [
+    {
+     "id": "plan-version-history",
+     "dom": 0,
+     "visible": false,
+     "box": null
+    },
+    {
+     "id": "history-list",
+     "dom": 0,
+     "visible": false,
+     "box": null
+    },
+    {
+     "id": "history-retention",
+     "dom": 0,
+     "visible": false,
+     "box": null
+    }
+   ]
+  },
+  {
+   "where": "nav-me",
+   "hits": [
+    {
+     "id": "plan-version-history",
+     "dom": 0,
+     "visible": false,
+     "box": null
+    },
+    {
+     "id": "history-list",
+     "dom": 0,
+     "visible": false,
+     "box": null
+    },
+    {
+     "id": "history-retention",
+     "dom": 0,
+     "visible": false,
+     "box": null
+    }
+   ]
+  }
+ ]
+}
