@@ -1,0 +1,56 @@
+[
+ {
+  "route": "twin",
+  "zh_inventory_hits_before": 6,
+  "zh_inventory_hits_after": 0,
+  "en_inventory_hits_before": 6,
+  "en_inventory_hits_after": 6,
+  "zh_ascii_before": 11,
+  "zh_ascii_after": 2,
+  "zh_leaked_rows_before": [
+   "Capability needs",
+   "Confirmed by traveler",
+   "Learned capability state",
+   "No learned signals",
+   "Unknown accessibility evidence is not accessible.",
+   "hard need(s) remain explicit and are never learned."
+  ],
+  "base_asset": "/assets/index-ChP6V0Vj.js",
+  "candidate_asset": "/assets/index-oR3PVCYW.js",
+  "arms_comparable_both": true
+ },
+ {
+  "route": "authoritative",
+  "zh_inventory_hits_before": 5,
+  "zh_inventory_hits_after": 0,
+  "en_inventory_hits_before": 5,
+  "en_inventory_hits_after": 5,
+  "zh_ascii_before": 20,
+  "zh_ascii_after": 16,
+  "zh_leaked_rows_before": [
+   "CHANGED",
+   "Grounded adaptive recovery",
+   "No recovery proposal is waiting on this Journey.",
+   "Refresh recovery",
+   "V14 · REALITY CHANGED"
+  ],
+  "base_asset": "/assets/index-ChP6V0Vj.js",
+  "candidate_asset": "/assets/index-oR3PVCYW.js",
+  "arms_comparable_both": true
+ },
+ {
+  "route": "discover",
+  "zh_inventory_hits_before": 1,
+  "zh_inventory_hits_after": 0,
+  "en_inventory_hits_before": 1,
+  "en_inventory_hits_after": 1,
+  "zh_ascii_before": 2,
+  "zh_ascii_after": 2,
+  "zh_leaked_rows_before": [
+   "I prefer quiet indoor culture, low walking, and rain-friendly places near my protected Journey moments."
+  ],
+  "base_asset": "/assets/index-ChP6V0Vj.js",
+  "candidate_asset": "/assets/index-oR3PVCYW.js",
+  "arms_comparable_both": true
+ }
+]
