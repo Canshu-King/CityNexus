@@ -1,0 +1,38 @@
+[
+ {
+  "port": 4795,
+  "url": "/v8/hub",
+  "canvas_present": false,
+  "canvas_box": null,
+  "markers": 0,
+  "marker_sample": [],
+  "panel_box": [
+   17,
+   664,
+   356,
+   97
+  ],
+  "panel_text": "尚未获取地图位置\n\n这个行程还没有可信的坐标。添加活动地点或开启定位后，地图会显示正确的城市。",
+  "no_loc": 2,
+  "ctrl": false,
+  "errors": []
+ },
+ {
+  "port": 4796,
+  "url": "/v8/hub",
+  "canvas_present": false,
+  "canvas_box": null,
+  "markers": 0,
+  "marker_sample": [],
+  "panel_box": [
+   17,
+   664,
+   356,
+   97
+  ],
+  "panel_text": "尚未获取地图位置\n\n这个行程还没有可信的坐标。添加活动地点或开启定位后，地图会显示正确的城市。",
+  "no_loc": 2,
+  "ctrl": false,
+  "errors": []
+ }
+]
