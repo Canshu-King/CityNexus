@@ -1,0 +1,5 @@
+[citynexus e2e] suite=current-product authoritative=false python=D:/moodle/CityNexus/.venv/Scripts/python.exe frontend=:4836 backend=:4837 db=sqlite:///D:/moodle/_qoder_b_ord0417_20260928/db/e2e_ord0417r24interactiveB.db ai=inherited from the environment reuseExistingServer=true
+[citynexus e2e] suite=current-product authoritative=false python=D:/moodle/CityNexus/.venv/Scripts/python.exe frontend=:4836 backend=:4837 db=sqlite:///D:/moodle/_qoder_b_ord0417_20260928/db/e2e_ord0417r24interactiveB.db ai=inherited from the environment reuseExistingServer=true
+[citynexus e2e] suite=current-product authoritative=false python=D:/moodle/CityNexus/.venv/Scripts/python.exe frontend=:4836 backend=:4837 db=sqlite:///D:/moodle/_qoder_b_ord0417_20260928/db/e2e_ord0417r24interactiveB.db ai=inherited from the environment reuseExistingServer=true
+e2e/qoder-map-ord0390-selection-both-ways.spec.ts :: interactive-drag-moves-camera — {"before":{"lng":117.2385,"lat":39.081349},"after":{"lng":117.317314,"lat":39.041912},"moved":true}
+  2 passed (31.1s)
