@@ -1,0 +1,488 @@
+{
+ "schema": "CNX_CMDR_LANDING_PREFLIGHT_V1",
+ "lane": "commander 494abfd7",
+ "at_local": "2026-09-28T21:55:56+0800",
+ "mode": "LAND",
+ "authoritative_line": "mirror/integration-frontend-apple-pass1",
+ "tip_re_read_from_github_before": "7573ddd7a94fafe64d8ea6d7d812cc791a0efe32",
+ "candidate_ref": "refs/heads/review/cmdr-recut-ord0407-r1",
+ "candidate_tip": "869a5b4d6424406451738afdb50ea20e6ef686f3",
+ "genealogy": {
+  "ff_possible_rc": 0,
+  "ff_possible": true,
+  "merge_base": "7573ddd7a94fafe64d8ea6d7d812cc791a0efe32",
+  "line_only_commits": 0,
+  "candidate_only_commits": 11
+ },
+ "file_sets": {
+  "line_side_since_base": [],
+  "candidate_side_since_base": [
+   "frontend/e2e/qoder-ord0407-empty-state-actions.spec.ts",
+   "frontend/src/app/V8Experience.tsx",
+   "frontend/src/components/v8/MapPanel.tsx",
+   "frontend/src/features/execution/LiveRecovery.tsx",
+   "frontend/src/i18n/LocaleContext.tsx",
+   "frontend/src/i18n/mapPanelCopy.ts",
+   "review/n3_0407_baseline_r1.py",
+   "review/n3_0407_copy_pair_check_r1.py",
+   "review/n3_0407_evidence_r1/LEDGER_ANCHORS_r1.md",
+   "review/n3_0407_evidence_r1/cmdr205343n3__C1.json",
+   "review/n3_0407_evidence_r1/cmdr205343n3__C2.json",
+   "review/n3_0407_evidence_r1/cmdr205343n3__C3.json",
+   "review/n3_0407_evidence_r1/cmdr205343n3__C4.json",
+   "review/n3_0407_evidence_r1/cmdr205343n3__C5.json",
+   "review/n3_0407_evidence_r1/cmdr205343n3__C6.json",
+   "review/n3_0407_evidence_r1/cmdr205343n3__C7.json",
+   "review/n3_0407_evidence_r1/cmdr205716n3__C1.json",
+   "review/n3_0407_evidence_r1/cmdr205716n3__C2.json",
+   "review/n3_0407_evidence_r1/cmdr205716n3__C3.json",
+   "review/n3_0407_evidence_r1/cmdr205716n3__C4.json",
+   "review/n3_0407_evidence_r1/cmdr205716n3__C5.json",
+   "review/n3_0407_evidence_r1/cmdr205716n3__C6.json",
+   "review/n3_0407_evidence_r1/cmdr205716n3__C7.json",
+   "review/n3_0407_evidence_r1/cmdr212016n3__C1.json",
+   "review/n3_0407_evidence_r1/cmdr212016n3__C2.json",
+   "review/n3_0407_evidence_r1/cmdr212016n3__C3.json",
+   "review/n3_0407_evidence_r1/cmdr212016n3__C4.json",
+   "review/n3_0407_evidence_r1/cmdr212016n3__C5.json",
+   "review/n3_0407_evidence_r1/cmdr212016n3__C6.json",
+   "review/n3_0407_evidence_r1/cmdr212016n3__C7.json",
+   "review/n3_0407_evidence_r1/cmdr213019n3__C1.json",
+   "review/n3_0407_evidence_r1/cmdr213805n3__C1.json",
+   "review/n3_0407_evidence_r1/cmdr213805n3__C2.json",
+   "review/n3_0407_evidence_r1/cmdr213805n3__C3.json",
+   "review/n3_0407_evidence_r1/cmdr213805n3__C4.json",
+   "review/n3_0407_evidence_r1/cmdr213805n3__C5.json",
+   "review/n3_0407_evidence_r1/cmdr213805n3__C6.json",
+   "review/n3_0407_evidence_r1/cmdr213805n3__C7.json",
+   "review/n3_0407_evidence_r1/controls_before_79ca877c.json",
+   "review/n3_0407_evidence_r1/controls_before_890b7cfc.json",
+   "review/n3_0407_evidence_r1/controls_before_cbb6f160.json",
+   "review/n3_0407_evidence_r1/hunk_scope_r1.txt",
+   "review/n3_0407_evidence_r1/mutations_r1.json",
+   "review/n3_0407_evidence_r1/mutations_r2.json",
+   "review/n3_0407_evidence_r1/mutations_r3.json",
+   "review/n3_0407_evidence_r1/mutations_r4.json",
+   "review/n3_0407_evidence_r1/n3_0407_copy_pair_r1.json",
+   "review/n3_0407_evidence_r1/q43_family_r1.txt",
+   "review/n3_0407_evidence_r1/write_doors_head.json",
+   "review/n3_0407_mutations_r1.py",
+   "review/n3_0407_receipt_anchors_r1.py",
+   "review/n3_0407_write_door_inventory_r1.py"
+  ],
+  "intersection": [],
+  "product_introduced_by_candidate": [
+   "frontend/src/app/V8Experience.tsx",
+   "frontend/src/components/v8/MapPanel.tsx",
+   "frontend/src/features/execution/LiveRecovery.tsx",
+   "frontend/src/i18n/LocaleContext.tsx",
+   "frontend/src/i18n/mapPanelCopy.ts"
+  ]
+ },
+ "merge_tree": {
+  "exit": 0,
+  "first_line": "299c56557fa10dcca889dbc869197bb04ac825f9",
+  "conflict_reported": false,
+  "stderr_head": ""
+ },
+ "gate_run": {
+  "requested": [],
+  "collect_exit": null,
+  "collected": null,
+  "test_exit": null,
+  "summary": null,
+  "export": "D:/moodle/_qoder_cmdr_ref_20260921/snap_preflight_215453",
+  "blob_equality": [
+   {
+    "path": "frontend/e2e/qoder-ord0407-empty-state-actions.spec.ts",
+    "candidate_blob": "309eb78622998ece3da279e90bc21dc255e886ab",
+    "export_blob": "309eb78622998ece3da279e90bc21dc255e886ab",
+    "equal": true
+   },
+   {
+    "path": "frontend/src/app/V8Experience.tsx",
+    "candidate_blob": "f1c8358248fd6bf0d8fff6d6a51cb97be5ec63fc",
+    "export_blob": "f1c8358248fd6bf0d8fff6d6a51cb97be5ec63fc",
+    "equal": true
+   },
+   {
+    "path": "frontend/src/components/v8/MapPanel.tsx",
+    "candidate_blob": "a178acd299b6e3c90ed04b48acfb2fd3f5c19a04",
+    "export_blob": "a178acd299b6e3c90ed04b48acfb2fd3f5c19a04",
+    "equal": true
+   },
+   {
+    "path": "frontend/src/features/execution/LiveRecovery.tsx",
+    "candidate_blob": "b39e68b887d34c49b738f71589a870f6d013f149",
+    "export_blob": "b39e68b887d34c49b738f71589a870f6d013f149",
+    "equal": true
+   },
+   {
+    "path": "frontend/src/i18n/LocaleContext.tsx",
+    "candidate_blob": "cae397e923da7cb6edd5a6f3f629761bdc61011b",
+    "export_blob": "cae397e923da7cb6edd5a6f3f629761bdc61011b",
+    "equal": true
+   },
+   {
+    "path": "frontend/src/i18n/mapPanelCopy.ts",
+    "candidate_blob": "b24e4327ccd6259764ecdad6eda33e152306c1c4",
+    "export_blob": "b24e4327ccd6259764ecdad6eda33e152306c1c4",
+    "equal": true
+   },
+   {
+    "path": "review/n3_0407_baseline_r1.py",
+    "candidate_blob": "e7801a482c9a8026718f0d7695c2bf18687017aa",
+    "export_blob": "e7801a482c9a8026718f0d7695c2bf18687017aa",
+    "equal": true
+   },
+   {
+    "path": "review/n3_0407_copy_pair_check_r1.py",
+    "candidate_blob": "f5e9ddc6d9c6c1a45cf55179a82d657bdab6dd45",
+    "export_blob": "f5e9ddc6d9c6c1a45cf55179a82d657bdab6dd45",
+    "equal": true
+   },
+   {
+    "path": "review/n3_0407_evidence_r1/LEDGER_ANCHORS_r1.md",
+    "candidate_blob": "ee5f3cb842acab059189bfbe79f0703f4cc452bb",
+    "export_blob": "ee5f3cb842acab059189bfbe79f0703f4cc452bb",
+    "equal": true
+   },
+   {
+    "path": "review/n3_0407_evidence_r1/cmdr205343n3__C1.json",
+    "candidate_blob": "8a27783aca7991833fccd3195ee321d3c85774c4",
+    "export_blob": "8a27783aca7991833fccd3195ee321d3c85774c4",
+    "equal": true
+   },
+   {
+    "path": "review/n3_0407_evidence_r1/cmdr205343n3__C2.json",
+    "candidate_blob": "cc5360e660c3a642205546955cfca1d368fb5123",
+    "export_blob": "cc5360e660c3a642205546955cfca1d368fb5123",
+    "equal": true
+   },
+   {
+    "path": "review/n3_0407_evidence_r1/cmdr205343n3__C3.json",
+    "candidate_blob": "b65c6d902a5cc259623351cff5d4d8809229b602",
+    "export_blob": "b65c6d902a5cc259623351cff5d4d8809229b602",
+    "equal": true
+   },
+   {
+    "path": "review/n3_0407_evidence_r1/cmdr205343n3__C4.json",
+    "candidate_blob": "07170dadfa02548ef20879837ccad59d64433796",
+    "export_blob": "07170dadfa02548ef20879837ccad59d64433796",
+    "equal": true
+   },
+   {
+    "path": "review/n3_0407_evidence_r1/cmdr205343n3__C5.json",
+    "candidate_blob": "74933e37f05389b1373c70d10ad5ced8f0799ee8",
+    "export_blob": "74933e37f05389b1373c70d10ad5ced8f0799ee8",
+    "equal": true
+   },
+   {
+    "path": "review/n3_0407_evidence_r1/cmdr205343n3__C6.json",
+    "candidate_blob": "1243c2dcb14ae5bb685d104cda0afc3b3c2c8941",
+    "export_blob": "1243c2dcb14ae5bb685d104cda0afc3b3c2c8941",
+    "equal": true
+   },
+   {
+    "path": "review/n3_0407_evidence_r1/cmdr205343n3__C7.json",
+    "candidate_blob": "beeae49523ee76bff94d8c3349328ae4eb8d34ed",
+    "export_blob": "beeae49523ee76bff94d8c3349328ae4eb8d34ed",
+    "equal": true
+   },
+   {
+    "path": "review/n3_0407_evidence_r1/cmdr205716n3__C1.json",
+    "candidate_blob": "deed59c624cec018ed3b175052ce0ccd1e9d9a59",
+    "export_blob": "deed59c624cec018ed3b175052ce0ccd1e9d9a59",
+    "equal": true
+   },
+   {
+    "path": "review/n3_0407_evidence_r1/cmdr205716n3__C2.json",
+    "candidate_blob": "8975d05d2e31f033524d9a5c621f1672a753f1ce",
+    "export_blob": "8975d05d2e31f033524d9a5c621f1672a753f1ce",
+    "equal": true
+   },
+   {
+    "path": "review/n3_0407_evidence_r1/cmdr205716n3__C3.json",
+    "candidate_blob": "fa15ae0253e9e3029a06d8f64f00b570adabdddb",
+    "export_blob": "fa15ae0253e9e3029a06d8f64f00b570adabdddb",
+    "equal": true
+   },
+   {
+    "path": "review/n3_0407_evidence_r1/cmdr205716n3__C4.json",
+    "candidate_blob": "6dfce210507c1f32563860885718407ce5d2d5ae",
+    "export_blob": "6dfce210507c1f32563860885718407ce5d2d5ae",
+    "equal": true
+   },
+   {
+    "path": "review/n3_0407_evidence_r1/cmdr205716n3__C5.json",
+    "candidate_blob": "e5fdaf168134218fe7a757c78767d05fee0299ec",
+    "export_blob": "e5fdaf168134218fe7a757c78767d05fee0299ec",
+    "equal": true
+   },
+   {
+    "path": "review/n3_0407_evidence_r1/cmdr205716n3__C6.json",
+    "candidate_blob": "16c37b76eb3968fe2e5133e6528d8e4e9af6b213",
+    "export_blob": "16c37b76eb3968fe2e5133e6528d8e4e9af6b213",
+    "equal": true
+   },
+   {
+    "path": "review/n3_0407_evidence_r1/cmdr205716n3__C7.json",
+    "candidate_blob": "8e6bcdfa2fe79a1b318a4a70aad6ce0aefb46662",
+    "export_blob": "8e6bcdfa2fe79a1b318a4a70aad6ce0aefb46662",
+    "equal": true
+   },
+   {
+    "path": "review/n3_0407_evidence_r1/cmdr212016n3__C1.json",
+    "candidate_blob": "a3e17c84e526d13ddfc43c363ee84188430d0426",
+    "export_blob": "a3e17c84e526d13ddfc43c363ee84188430d0426",
+    "equal": true
+   },
+   {
+    "path": "review/n3_0407_evidence_r1/cmdr212016n3__C2.json",
+    "candidate_blob": "f9b0b539be6f9dd04f80a4484b450fef78a6ef6c",
+    "export_blob": "f9b0b539be6f9dd04f80a4484b450fef78a6ef6c",
+    "equal": true
+   },
+   {
+    "path": "review/n3_0407_evidence_r1/cmdr212016n3__C3.json",
+    "candidate_blob": "7b150489cb8f2d524305062d0183b16a77e77d4c",
+    "export_blob": "7b150489cb8f2d524305062d0183b16a77e77d4c",
+    "equal": true
+   },
+   {
+    "path": "review/n3_0407_evidence_r1/cmdr212016n3__C4.json",
+    "candidate_blob": "0587ec80570ba8c9c957229b2961c25fdab32c3e",
+    "export_blob": "0587ec80570ba8c9c957229b2961c25fdab32c3e",
+    "equal": true
+   },
+   {
+    "path": "review/n3_0407_evidence_r1/cmdr212016n3__C5.json",
+    "candidate_blob": "e31b1f3c5d508662095faa6b8c3960badc8b020f",
+    "export_blob": "e31b1f3c5d508662095faa6b8c3960badc8b020f",
+    "equal": true
+   },
+   {
+    "path": "review/n3_0407_evidence_r1/cmdr212016n3__C6.json",
+    "candidate_blob": "b3e1a10a8f079815790c6ce3b15e7ade472c6644",
+    "export_blob": "b3e1a10a8f079815790c6ce3b15e7ade472c6644",
+    "equal": true
+   },
+   {
+    "path": "review/n3_0407_evidence_r1/cmdr212016n3__C7.json",
+    "candidate_blob": "132ef9b26e0c2c4ab36a62d463210e4f66fe607e",
+    "export_blob": "132ef9b26e0c2c4ab36a62d463210e4f66fe607e",
+    "equal": true
+   },
+   {
+    "path": "review/n3_0407_evidence_r1/cmdr213019n3__C1.json",
+    "candidate_blob": "101f9f9507752151d9cb9608acb77593c2814114",
+    "export_blob": "101f9f9507752151d9cb9608acb77593c2814114",
+    "equal": true
+   },
+   {
+    "path": "review/n3_0407_evidence_r1/cmdr213805n3__C1.json",
+    "candidate_blob": "0b8194245a698c63c51f27d030d79e8f9449ca9c",
+    "export_blob": "0b8194245a698c63c51f27d030d79e8f9449ca9c",
+    "equal": true
+   },
+   {
+    "path": "review/n3_0407_evidence_r1/cmdr213805n3__C2.json",
+    "candidate_blob": "a959deef3d26fbca088fdce80ad501e32080837a",
+    "export_blob": "a959deef3d26fbca088fdce80ad501e32080837a",
+    "equal": true
+   },
+   {
+    "path": "review/n3_0407_evidence_r1/cmdr213805n3__C3.json",
+    "candidate_blob": "1f10b8cd62cd365f1491e103f80b4b21976a2ef8",
+    "export_blob": "1f10b8cd62cd365f1491e103f80b4b21976a2ef8",
+    "equal": true
+   },
+   {
+    "path": "review/n3_0407_evidence_r1/cmdr213805n3__C4.json",
+    "candidate_blob": "3c479204a30146f55ea961144c6d8ed75d877329",
+    "export_blob": "3c479204a30146f55ea961144c6d8ed75d877329",
+    "equal": true
+   },
+   {
+    "path": "review/n3_0407_evidence_r1/cmdr213805n3__C5.json",
+    "candidate_blob": "a97b6522816f3954d5e1eb8fb7a19a7d6dbf1ed3",
+    "export_blob": "a97b6522816f3954d5e1eb8fb7a19a7d6dbf1ed3",
+    "equal": true
+   },
+   {
+    "path": "review/n3_0407_evidence_r1/cmdr213805n3__C6.json",
+    "candidate_blob": "eeff89ad069ab8f0808f1da8e840c14266fd47ce",
+    "export_blob": "eeff89ad069ab8f0808f1da8e840c14266fd47ce",
+    "equal": true
+   },
+   {
+    "path": "review/n3_0407_evidence_r1/cmdr213805n3__C7.json",
+    "candidate_blob": "7e0df31213a3dc687d946d1ec0611241515b46ba",
+    "export_blob": "7e0df31213a3dc687d946d1ec0611241515b46ba",
+    "equal": true
+   },
+   {
+    "path": "review/n3_0407_evidence_r1/controls_before_79ca877c.json",
+    "candidate_blob": "5bd1fe669a1a7f9fbcae4c9d63852969983650ae",
+    "export_blob": "5bd1fe669a1a7f9fbcae4c9d63852969983650ae",
+    "equal": true
+   },
+   {
+    "path": "review/n3_0407_evidence_r1/controls_before_890b7cfc.json",
+    "candidate_blob": "8d0d346d1fc1901ce21a16aa2a76df8c818d7152",
+    "export_blob": "8d0d346d1fc1901ce21a16aa2a76df8c818d7152",
+    "equal": true
+   },
+   {
+    "path": "review/n3_0407_evidence_r1/controls_before_cbb6f160.json",
+    "candidate_blob": "217b6cae7044ec7e3655f728d9776f728b8ebb46",
+    "export_blob": "217b6cae7044ec7e3655f728d9776f728b8ebb46",
+    "equal": true
+   },
+   {
+    "path": "review/n3_0407_evidence_r1/hunk_scope_r1.txt",
+    "candidate_blob": "464c8f58073843c6c76c37c8182aaf58f05b8e7c",
+    "export_blob": "464c8f58073843c6c76c37c8182aaf58f05b8e7c",
+    "equal": true
+   },
+   {
+    "path": "review/n3_0407_evidence_r1/mutations_r1.json",
+    "candidate_blob": "bfb01408d02924c5e20a5d0d41d0e5e107d8f361",
+    "export_blob": "bfb01408d02924c5e20a5d0d41d0e5e107d8f361",
+    "equal": true
+   },
+   {
+    "path": "review/n3_0407_evidence_r1/mutations_r2.json",
+    "candidate_blob": "7c2ff9541c156b351f0efefe37334c836e6aa0e2",
+    "export_blob": "7c2ff9541c156b351f0efefe37334c836e6aa0e2",
+    "equal": true
+   },
+   {
+    "path": "review/n3_0407_evidence_r1/mutations_r3.json",
+    "candidate_blob": "2e5f88d7b4c96084da7e08ed4b734d4c88b2084e",
+    "export_blob": "2e5f88d7b4c96084da7e08ed4b734d4c88b2084e",
+    "equal": true
+   },
+   {
+    "path": "review/n3_0407_evidence_r1/mutations_r4.json",
+    "candidate_blob": "18e40378334315a430eb070c60241fe8b5800b78",
+    "export_blob": "18e40378334315a430eb070c60241fe8b5800b78",
+    "equal": true
+   },
+   {
+    "path": "review/n3_0407_evidence_r1/n3_0407_copy_pair_r1.json",
+    "candidate_blob": "2fea5f8c6a3a0f452756a039606d7f49cad05cf6",
+    "export_blob": "2fea5f8c6a3a0f452756a039606d7f49cad05cf6",
+    "equal": true
+   },
+   {
+    "path": "review/n3_0407_evidence_r1/q43_family_r1.txt",
+    "candidate_blob": "35d043ebf81479aa8660616a25ff35a44b66f474",
+    "export_blob": "35d043ebf81479aa8660616a25ff35a44b66f474",
+    "equal": true
+   },
+   {
+    "path": "review/n3_0407_evidence_r1/write_doors_head.json",
+    "candidate_blob": "3c2f0bf5adfee62aa13812a28acb1e1ae4a65371",
+    "export_blob": "3c2f0bf5adfee62aa13812a28acb1e1ae4a65371",
+    "equal": true
+   },
+   {
+    "path": "review/n3_0407_mutations_r1.py",
+    "candidate_blob": "892a53fb4543217e092e6df236ee6c1935217171",
+    "export_blob": "892a53fb4543217e092e6df236ee6c1935217171",
+    "equal": true
+   },
+   {
+    "path": "review/n3_0407_receipt_anchors_r1.py",
+    "candidate_blob": "597098a1aa590af319c5b300099e0fe2577494d2",
+    "export_blob": "597098a1aa590af319c5b300099e0fe2577494d2",
+    "equal": true
+   },
+   {
+    "path": "review/n3_0407_write_door_inventory_r1.py",
+    "candidate_blob": "b68159afcac29bc587eb035acc69c44bf092f438",
+    "export_blob": "b68159afcac29bc587eb035acc69c44bf092f438",
+    "equal": true
+   }
+  ],
+  "whole_suite": {
+   "collect_exit": 0,
+   "collected": 1434,
+   "interrupted": false,
+   "error_lines": [
+    "tests/test_qoder_ord0332_error_receipt.py::test_R7_the_envelope_keeps_every_field_it_already_had",
+    "tests/test_qoder_ord0332_error_receipt.py::test_R8_the_seed_is_read_off_the_real_request_not_just_the_dataclass",
+    "tests/test_solver_runtime_policy.py::test_unexpected_solver_programming_error_is_not_silently_hidden"
+   ],
+   "tail": [
+    "    _PortalFactoryType = Callable[[], AbstractContextManager[anyio.abc.BlockingPortal]]",
+    "-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html",
+    "1434 tests collected in 13.68s"
+   ],
+   "cmd": "D:/moodle/CityNexus/.venv/Scripts/python.exe -m pytest --collect-only -q tests  (cwd=<export>/backend, PYTHONPATH=<export>)"
+  },
+  "deletions": {
+   "deleted_by_candidate": [],
+   "still_present_in_export": []
+  },
+  "interpreter": "Python 3.12.14 (main, Aug 25 2026, 14:01:42) [MSC v.1944 64 bit (AMD64)]",
+  "exposure": {
+   "ruler_blob": "d3f66ce9fecd0790981a4fcdeb5e36b1c0fd10f2",
+   "ruler_blob_computed": null,
+   "ruler_file": "ui_exposure_taint_ast_r7b.cjs",
+   "candidate_files_in_view": 5,
+   "tip_cells": 12,
+   "cand_cells": 12,
+   "growth_by_file_and_rule": {},
+   "unpaired_added": [],
+   "added_line_exact": [],
+   "shifted_only": false,
+   "removed_count": 0,
+   "removed": [],
+   "disclosed_slip": "a same-file, same-rule relocation with equal counts reads as a shift; the AST ruler has no cell identity"
+  },
+  "frontend_build": {
+   "builder_rc": 0,
+   "vite_build_rc": 0,
+   "dist_exists": true,
+   "index_exists": true,
+   "asset_refs": [
+    "/assets/index-DI6XcT_p.js",
+    "/assets/index-BFTMjFS_.css"
+   ],
+   "live_tree": "299c56557fa10dcca889dbc869197bb04ac825f9",
+   "info_file": "D:\\moodle\\_qoder_cmdr_ref_20260921\\live_checks\\_build_869a5b4_info.json",
+   "build_tail": [
+    "files generated",
+    "  dist/v10-sw.js",
+    "  dist/workbox-6923124b.js",
+    "\u001b[33m",
+    "(!) Some chunks are larger than 500 kB after minification. Consider:",
+    "- Using dynamic import() to code-split the application",
+    "- Use build.rollupOptions.output.manualChunks to improve chunking: https://rollupjs.org/configuration-options/#output-manualchunks",
+    "- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.\u001b[39m"
+   ]
+  }
+ },
+ "problems": [],
+ "verdict": "READY_TO_LAND",
+ "landing": {
+  "http": 200,
+  "response_head": "{'ref': 'refs/heads/mirror/integration-frontend-apple-pass1', 'node_id': 'REF_kwDOUhlJJ9oAMnJlZnMvaGVhZHMvbWlycm9yL2ludGVncmF0aW9uLWZyb250ZW5kLWFwcGxlLXBhc3Mx', 'url': 'https://api.github.com/repos/Ca",
+  "tip_after": "869a5b4d6424406451738afdb50ea20e6ef686f3",
+  "branches_route": "869a5b4d6424406451738afdb50ea20e6ef686f3",
+  "both_routes_agree": true,
+  "landed": true
+ },
+ "discipline": {
+  "evidence_paths_overwritten": 0,
+  "databases_opened": 0,
+  "surfaces_started_or_stopped": 0,
+  "credential_values_printed": 0,
+  "candidate_refs_pushed_by_commander": 0
+ },
+ "claim_kind": "git_and_pytest_determined",
+ "claimed_result": null,
+ "derived_result": null
+}
