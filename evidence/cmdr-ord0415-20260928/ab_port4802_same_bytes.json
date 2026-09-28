@@ -1,0 +1,88 @@
+{
+ "base": "http://127.0.0.1:4802/",
+ "rows": [
+  {
+   "final_url": "/v8/hub",
+   "panels": {
+    "pretrip-checklist": {
+     "present": true,
+     "box": [
+      356,
+      143
+     ],
+     "inside_viewport": false,
+     "centre": [
+      195,
+      1107
+     ],
+     "hit": null,
+     "inside_panel": false,
+     "text_chars": 33
+    },
+    "v8-maplibre-panel": {
+     "present": true,
+     "box": [
+      356,
+      247
+     ],
+     "inside_viewport": true,
+     "centre": [
+      195,
+      788
+     ],
+     "hit": "NAV#[]",
+     "inside_panel": false,
+     "text_chars": 135
+    },
+    "journey-trash-panel": {
+     "present": false
+    },
+    "hotels-panel": {
+     "present": false
+    }
+   },
+   "body_chars": 519,
+   "text_head": "菜单\n/\n今天\n跟随系统\nEN\nDE\n\n晚上好\n\nDemo之旅\n\n10月10日 09:00 — 10月10日 19:00 · 1 位旅行者 · 1 天\n\nAI 帮我规划\n试用其他城市\n打开行程工作台\n复制行程链接\n现在\nTech Art Center\n接下来\n15:30 Nexus River Cruise Pier\n今天还有 6 项安排\n查看实时行程\n“现在”取自服务器场景（执行游标）：10月10日 13:20 · 现在/接下来由服务器的执行投影给出\n1\n2\n3\n4\n5\n6\n回到行程视野\n\n单指拖动地图 · 双指",
+   "route_requested": "hub",
+   "pageerrors": [],
+   "stayed_on_route": true,
+   "screenshot": "D:/moodle/_qoder_cmdr_ref_20260921/live_checks/_walk_ab4802/deeplink_hub.png"
+  },
+  {
+   "final_url": "/v8/map",
+   "panels": {
+    "pretrip-checklist": {
+     "present": false
+    },
+    "v8-maplibre-panel": {
+     "present": true,
+     "box": [
+      356,
+      392
+     ],
+     "inside_viewport": true,
+     "centre": [
+      195,
+      514
+     ],
+     "hit": "DIV#[]",
+     "inside_panel": true,
+     "text_chars": 135
+    },
+    "journey-trash-panel": {
+     "present": false
+    },
+    "hotels-panel": {
+     "present": false
+    }
+   },
+   "body_chars": 412,
+   "text_head": "菜单\n/\n地图\n跟随系统\nEN\nDE\n\n地图 · 一目了然\n\n整座城市，行程叠加其上。\n\n采集的路线几何和供应商事实在你穿越行程时始终可见。\n\n对比出行方式\n1\n2\n3\n4\n5\n6\n回到行程视野\n\n单指拖动地图 · 双指缩放 · 想翻这一页就拖地图以外的地方\n\n路线上下文\n0 段路程\n供应商支持的路线 · WGS84\n底图数据 © OpenStreetMap 贡献者 · 瓦片服务 tile.openstreetmap.org\n下一段路程\nNexus River Cruise Pier\n这一天去的地点\nOld Tow",
+   "route_requested": "map",
+   "pageerrors": [],
+   "stayed_on_route": true,
+   "screenshot": "D:/moodle/_qoder_cmdr_ref_20260921/live_checks/_walk_ab4802/deeplink_map.png"
+  }
+ ],
+ "verdict": "ALL_ROUTES_HOLD"
+}
