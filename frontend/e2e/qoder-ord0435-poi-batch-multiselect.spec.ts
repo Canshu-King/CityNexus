@@ -154,6 +154,32 @@ test("Q1_the_tick_is_its_own_state_and_not_the_feasibility_class — 勾选态�
   await page.locator(TICK).first().click();
   await page.waitForTimeout(300);
   const backAgain = await page.locator(`${TICK}[aria-checked="false"]`).count();
+
+  /* The tick has to fit beside the name it belongs to. `src/styles.css:47` is a bare
+     `button { display: block; width: 100%; margin-top: 12px }`, and a class that overrides only
+     `display` inherits that width: measured at 272 px inside a 358 px card, the control took 76 % of
+     the card and pushed the place name into a column next to the eligibility badge. These two
+     numbers are the regression guard for that, and they are read from the same layout the traveller
+     sees -- not from the stylesheet. */
+  const squeeze = await page.locator(CARDS).first().evaluate((card) => {
+    const h3 = card.querySelector("h3");
+    const badge = card.querySelector(".v8-selected-label");
+    const tick = card.querySelector('[data-testid="v13-pick-candidate"]');
+    if (!h3 || !badge || !tick) return { error: "MISSING_PARTS" };
+    const a = h3.getBoundingClientRect();
+    const b = badge.getBoundingClientRect();
+    const t = tick.getBoundingClientRect();
+    const c = card.getBoundingClientRect();
+    const wide = Math.min(a.right, b.right) - Math.max(a.left, b.left);
+    const tall = Math.min(a.bottom, b.bottom) - Math.max(a.top, b.top);
+    return {
+      card_width: Math.round(c.width),
+      tick_width: Math.round(t.width),
+      tick_share_pct: Math.round((t.width / c.width) * 100),
+      name_badge_overlap_area: wide > 0 && tall > 0 ? Math.round(wide * tall) : 0,
+      name_line_boxes: h3.getClientRects().length,
+    };
+  });
   await page.screenshot({ path: evidencePath(`ord0435/${RUN}__Q1.png`), fullPage: true });
 
   readings[arm] = {
@@ -167,6 +193,7 @@ test("Q1_the_tick_is_its_own_state_and_not_the_feasibility_class — 勾选态�
     cards_unpicked_at_start: unpickedCards,
     after_one_tick: after,
     unchecked_after_untick: backAgain,
+    squeeze,
   };
 
   expect(boot.cards, node(arm, "no result card reached the screen")).toBeGreaterThan(0);
@@ -182,6 +209,12 @@ test("Q1_the_tick_is_its_own_state_and_not_the_feasibility_class — 勾选态�
      tell "the traveller chose this" from "this place passed the gate" again. */
   expect(after.feasibility, node(arm, `the feasibility class moved from ${feasibilityBefore} to ${after.feasibility} on a tick -- the two states are not independent`)).toBe(feasibilityBefore);
   expect(backAgain, node(arm, "unticking did not return the control to its unselected twin")).toBe(boot.cards);
+  /* The layout guard for the `styles.css:47` inheritance trap described above: a tick that eats the
+     card is as unusable as a tick that is missing, and only the second one shows up in a count. */
+  const sq = squeeze as { card_width?: number; tick_share_pct?: number; name_badge_overlap_area?: number };
+  expect(sq.card_width, node(arm, `the card could not be measured (${JSON.stringify(squeeze)})`)).toBeGreaterThan(0);
+  expect(sq.name_badge_overlap_area, node(arm, `the place name and the eligibility badge overlap by ${sq.name_badge_overlap_area} px2 -- the tick has taken their row`)).toBe(0);
+  expect(sq.tick_share_pct, node(arm, `the tick takes ${sq.tick_share_pct}% of the card width; the bare \`button { width: 100% }\` at src/styles.css:47 is winning again`)).toBeLessThan(40);
 });
 
 test("Q2_the_count_the_empty_state_and_the_twin_states_move_together — 计数、空态与成对态要一起动", async ({ page }) => {
