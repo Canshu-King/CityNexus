@@ -1,0 +1,112 @@
+{
+  "instrument": "cmdr_ord0406_band_hit_r1",
+  "base": "http://127.0.0.1:49600/",
+  "shapes": [
+    "390x844",
+    "360x800",
+    "414x896",
+    "320x653"
+  ],
+  "arms": [
+    "zh",
+    "en"
+  ],
+  "cells": [
+    {
+      "shape": "390x844",
+      "locale": "zh",
+      "entry": [
+        "/assets/index-CsZvVhdg.js"
+      ],
+      "found": false,
+      "navPresent": true,
+      "pageErrors": 0
+    },
+    {
+      "shape": "360x800",
+      "locale": "zh",
+      "entry": [
+        "/assets/index-CsZvVhdg.js"
+      ],
+      "found": false,
+      "navPresent": true,
+      "pageErrors": 0
+    },
+    {
+      "shape": "414x896",
+      "locale": "zh",
+      "entry": [
+        "/assets/index-CsZvVhdg.js"
+      ],
+      "found": false,
+      "navPresent": true,
+      "pageErrors": 0
+    },
+    {
+      "shape": "320x653",
+      "locale": "zh",
+      "entry": [
+        "/assets/index-CsZvVhdg.js"
+      ],
+      "found": false,
+      "navPresent": true,
+      "pageErrors": 0
+    },
+    {
+      "shape": "390x844",
+      "locale": "en",
+      "entry": [
+        "/assets/index-CsZvVhdg.js"
+      ],
+      "found": false,
+      "navPresent": true,
+      "pageErrors": 0
+    },
+    {
+      "shape": "360x800",
+      "locale": "en",
+      "entry": [
+        "/assets/index-CsZvVhdg.js"
+      ],
+      "found": false,
+      "navPresent": true,
+      "pageErrors": 0
+    },
+    {
+      "shape": "414x896",
+      "locale": "en",
+      "entry": [
+        "/assets/index-CsZvVhdg.js"
+      ],
+      "found": false,
+      "navPresent": true,
+      "pageErrors": 0
+    },
+    {
+      "shape": "320x653",
+      "locale": "en",
+      "entry": [
+        "/assets/index-CsZvVhdg.js"
+      ],
+      "found": false,
+      "navPresent": true,
+      "pageErrors": 0
+    }
+  ],
+  "summary": {
+    "cellsExpected": 8,
+    "cellsWithMessageFound": 0,
+    "cellsWithoutMessage": [
+      "390x844/zh",
+      "360x800/zh",
+      "414x896/zh",
+      "320x653/zh",
+      "390x844/en",
+      "360x800/en",
+      "414x896/en",
+      "320x653/en"
+    ],
+    "cellsReachableAboveNav": 0,
+    "verdict": "MESSAGE_NOT_RENDERED_IN_8_CELLS"
+  }
+}
