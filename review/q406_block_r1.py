@@ -266,9 +266,9 @@ for arm in ("zh", "en"):
                            v["band"][1], v["band"][2], v["band"][3], v["hero"][0], v["hero"][1], v["hero"][2],
                            v["hero"][3], v["map"][0], v["map"][1], v["map"][2], v["map"][3], v["hit"]))
 A("   基线有两件事要交代：① zh 390×844 那格第一次跑撞上 chromium 启动超时（launch timeout），没有读数；")
-A("   ② 我改文件时 dev 服务器在热重载，基线那轮跑到一半被我污染 —— 受污染的三格（%s）我不用，")
-A("      把文件还原回去单独补跑了 run_id=%s。上面这张表 8 格全是「改前」的真读数。" % (
-    "、".join("%s %dx%d" % c for c in sorted(CONTAMINATED)), str(base2.get("run_id"))))
+A("   ② 我改文件时 dev 服务器在热重载，基线那轮跑到一半被我污染 —— 受污染的三格（%s）我不用，" % (
+    "、".join("%s %dx%d" % c for c in sorted(CONTAMINATED))))
+A("      把文件还原回去单独补跑了 run_id=%s。上面这张表 8 格全是「改前」的真读数。" % str(base2.get("run_id")))
 A("")
 A("## 改之后：同一套格，滚动前就命中（run_id=%s verdict=%s passed=%d，tree=%s）" % (
     aft["run_id"], aft["verdict"], aft["counts"]["passed"], str(aft["tree"])[:12]))
