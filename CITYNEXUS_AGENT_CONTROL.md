@@ -16588,6 +16588,34 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### CMDR 2026-09-28 23:38 · 号令者 · 新开 ORD-0418：地图那行说明无条件说"供应商支持的路线"，而这一枚计划一段路都没有（6 站全有坐标、legs 为空、provenance 为 null）——这是一句会被屏读念出来的过强主张
+
+**怎么发现的**：我今晚第一次拿到"图上有真标记"的舞台（marker 6 枚），顺手把地图那屏的说明区读了一遍，屏上原文是「路线上下文 0 段路程供应商支持的路线 · WGS84底图数据 © OpenStreetMap 贡献者 · 瓦片服务 tile.openstreetmap.org」（件 `evidence/cmdr-ord0417-20260928/map_tap_names_stop_r1.json`，blob `aeaf82eb1753362ea2bc0aeb45a55550b6451384`，`before.overlay` 与 `before.caption` 两栏）。前半段"0 段路程"是诚实的，后半段"供应商支持的路线"是**无条件**跟着念的。
+
+**服务器那一侧我直接读了**（我的私有后端 :8725，库是我自己的只读备份副本，不是您的），全部读数落成了件 `evidence/cmdr-ord0418-20260928/route_context_legs_zero_r1.json`，blob `e1058fd8737c9216c92e9e097bc74003a45d5b63`，946 B（下面每个数都在这一件里）：`GET /api/v1/journeys/22222222-2222-4222-8222-222222222222/experience` 答 200、5,794 B，`activities` 那栏读到 6 枚、`activities_with_ready_location` 那栏也读到 6 枚，即 6 枚全带 `location.state = READY` 与真坐标（第一枚的 `title`、`latitude`、`longitude`、`coordinate_system` 逐值记在同件 `first_activity` 那一栏，`coordinate_system` 是 WGS84），而 `legs` 那栏读到 0 枚、`mobility_facts` 读到空数组、`active_plan.mobility_evidence.aggregate_provenance` 读到 null（只有 `snapshot_id` 与 `replayable: true` 两栏有值）。
+⇒ 也就是说：这一枚计划**有 6 个定位好的站、没有一条路段、没有可归属的路网来源**，而屏上那句仍在说"供应商支持的路线"。
+
+**它长在哪儿（逐行读过，不是猜）**
+- 文案本体：`frontend/src/i18n/LocaleContext.tsx:1588`，键 `mapComp.providerRoute`，中文值就是「供应商支持的路线 · WGS84」。
+- 渲染点：`frontend/src/components/v8/MapPanel.tsx:552`，包在 `<span className="v8-sr-only">` 里，**没有任何条件**（同一枚 caption 里 `mapComp.legs` 那一段是带 `route.length` 的，`frontend/src/components/v8/MapPanel.tsx:551`）。
+- `route` 的来源：`frontend/src/components/v8/MapPanel.tsx:114` 只在 `data?.active_plan?.legs.length` 为真时才产生线段，所以 legs 为空时 `route.length` 就是 0，而那句主张照发。
+- 它是 `v8-sr-only`：视觉上看不见，**屏读会念到**。所以这不是一句装饰文案，是给不看屏的人也发了一个服务器没给的主张。
+
+**ORD-0418 → 车道 `2d2d7428`（你刚交完 ORD-0416，手上有现成的私有栈与四形两臂的仪表）**
+形状我给死，别自己发挥：
+1. 那句 `mapComp.providerRoute` 必须变成有条件的：只在真的存在路段时念（判据用 `route.length > 0`，与 `frontend/src/components/v8/MapPanel.tsx:114` 那条同源，不要另起一个判据）。
+2. legs 为空时要念的替代句必须**具名说出为什么是 0**，不许写成"暂无路线"这种把服务器的状态说成产品的沉默。可用的事实我已经在上面量好了：`legs` 空 + `aggregate_provenance` null + `mobility_facts` 空 ⇒ 这一版没有算路，或者算路来源不可归属；请你自己去读服务器这两栏、按真值选一句，并把"我读的是哪两栏"写进件里。
+3. 中英两臂同档同改（配对尺会查：新键两臂都要落进产物，长度别写在正则窗口外）。
+4. 门要断**渲染出来的可见/可念文字**，不许只断 data 属性；反件至少一枚：把条件去掉，门必须红，并说清红在哪条断言。
+5. 这一单不许动 ORD-0412 那条 `MAP_LABEL_FORBIDDEN` 的范围，也不许动 ORD-A 的署名（`frontend/src/components/v8/MapPanel.tsx:553` 起那段注释就是它的理由）——署名是合规义务，与本单那句主张是两件事。
+
+**给别的车道的一句话（避免重复劳动）**：ORD-0417 那位（会话 `8ac89982-7ee8-428f-bf1d-6c93cd0d6119`）在做"点一站要看得见站名"，它也会读这枚 caption；**caption 那一段归 ORD-0418，不要两边同时改 `MapPanel.tsx:551` 附近**，否则我复切必然 ABORT。ORD-0417 只做标记可见名与双向联动。
+
+**没改善的部分**
+1. 我今晚读到的 `legs` 为空是在**我这台私有库**上（我的只读备份副本，行程 `22222222-…` 那枚，`source` 读到 INITIAL、`status` 读到 ACTIVE、`cursor_status` 读到 VALID）。它能不能代表您手机上那枚行程，我没有验过：手机链 hop4 整晚未起，所以这一格是 `REPRODUCED_ON_PRIVATE_COPY`、不是 `REPRODUCED_ON_PHONE`。
+2. 这一族"计划有站没有路段"的上游原因（live 算路默认关、无 Valhalla 时不生成 legs）我今晚没有去改，也没派：那是数据面/供应商面的事，归另外的单，我不在夜里顺手开一条大改。
+
+
 ### CMDR 2026-09-28 23:34 · 号令者 · ORD-0411 落地，而且这一笔我把车道自己的测试真跑了（8 passed，不是只 collect）；现尖 `06d99e55178ce1fd6509867e8cd3178f8fd3415c`
 
 **落地**：件 `refs/heads/review/ORD-0411-seam-from-contract` 头 `6f7460c20d2cc6be682f3829f4bc1c139353ba05`（车道 `4033270f` 在 23:27 那块勘误里自报的头，与 `git ls-remote` 现读逐字相同），只读复切 9/9 文件逐枚等于车道 blob、合并树 `4b2ee1ed207d337df5494d3c22549186c1c61070`，复切件 `06d99e55178ce1fd6509867e8cd3178f8fd3415c` 推 `refs/heads/review/cmdr-recut-ord0411-r1` 后过门。
