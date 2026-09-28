@@ -569,6 +569,8 @@ function humanAction(value: string, zh: boolean): string {
   return entry ? (zh ? entry.zh : entry.en) : (zh ? "继续" : "Continue");
 }
 
+type Band = { left: number; top: number; right: number; bottom: number };
+
 export function CopilotDock({
   data,
   onNavigate,
@@ -680,14 +682,20 @@ export function CopilotDock({
   const dockRef = useRef<HTMLElement | null>(null);
   const [restOverlap, setRestOverlap] = useState(false);
   const [yieldSlot, setYieldSlot] = useState<{ left: number; top: number } | null>(null);
+  /* The band the pill rests in, remembered from a frame when it was at rest.  Once it has
+     relocated, offsetLeft/offsetTop report the relocated box, and a trigger that reads its own
+     output flips back every frame: the pill would slide in and out forever. */
+  const restBandRef = useRef<{ left: number; top: number; right: number; bottom: number } | null>(null);
+  const yieldSlotRef = useRef<{ left: number; top: number } | null>(null);
 
   useEffect(() => {
     if (!idleCompact) {
+      restBandRef.current = null;
+      yieldSlotRef.current = null;
       setRestOverlap(false);
       setYieldSlot(null);
       return;
     }
-    type Band = { left: number; top: number; right: number; bottom: number };
     const READABLE = "h1,h2,h3,h4,h5,p,li,dt,dd,th,td,label,figcaption,summary";
     const ACTIONABLE = 'button, a[href], input, select, textarea, [role="button"]';
     const SLOT = 44;
@@ -701,16 +709,18 @@ export function CopilotDock({
       if (!node) return;
       const vh = window.innerHeight;
       const vw = window.innerWidth;
-      /* The resting band, not the current painted rectangle: once the pill has
-         stepped aside, getBoundingClientRect() would report it as clear, the
-         state would flip back, and the pill would slide in and out forever.  For
-         a position:fixed element the layout box is where it rests. */
-      const rest: Band = {
-        left: node.offsetLeft,
-        top: node.offsetTop,
-        right: node.offsetLeft + node.offsetWidth,
-        bottom: node.offsetTop + node.offsetHeight,
-      };
+      /* The resting band, not the current painted rectangle: while the pill sits at rest its
+         layout box is where it rests.  Once it has relocated, its own layout box has moved too
+         -- relocating changes left/top, not just a transform -- so the band is remembered from
+         the last frame at rest.  A trigger that measured its own output would flip back every
+         frame and the pill would slide in and out forever. */
+      if (yieldSlotRef.current && restBandRef.current) {
+        // at rest elsewhere; keep the remembered band
+      } else {
+        const live = node.getBoundingClientRect();
+        restBandRef.current = { left: live.left, top: live.top, right: live.right, bottom: live.bottom };
+      }
+      const rest: Band = restBandRef.current;
       /* Text is measured where its glyphs are painted, not across the element's
          border box: a block-level heading spans the whole content column, so a
          box test would call the empty stretch at the end of a line "covered" and
@@ -737,6 +747,7 @@ export function CopilotDock({
         ink.some((b) => overlaps(b, rest)) || controls.some((b) => overlaps(b, rest));
       setRestOverlap(covered);
       if (!covered) {
+        yieldSlotRef.current = null;
         setYieldSlot(null);
         return;
       }
@@ -756,7 +767,9 @@ export function CopilotDock({
         (c) => !ink.some((b) => overlaps(b, c)) && !controls.some((b) => overlaps(b, c)),
       );
       const cell = free || candidates[0] || rest;
-      setYieldSlot({ left: Math.round(cell.left), top: Math.round(cell.top) });
+      const slot = { left: Math.round(cell.left), top: Math.round(cell.top) };
+      yieldSlotRef.current = slot;
+      setYieldSlot(slot);
     };
     /* Measure once the scroll has settled, not during it: while the page is
        moving, content passing under a floating accessory is not the defect. */
@@ -765,13 +778,21 @@ export function CopilotDock({
       window.clearTimeout(timer);
       timer = window.setTimeout(measure, 220);
     };
+    /* A resize changes where the pill rests, so forget the remembered band and let the next
+       at-rest measurement re-derive it; the pill returns to rest for that one frame. */
+    const onResize = () => {
+      restBandRef.current = null;
+      yieldSlotRef.current = null;
+      setYieldSlot(null);
+      schedule();
+    };
     measure();
     window.addEventListener("scroll", schedule, { passive: true });
-    window.addEventListener("resize", schedule);
+    window.addEventListener("resize", onResize);
     return () => {
       window.clearTimeout(timer);
       window.removeEventListener("scroll", schedule);
-      window.removeEventListener("resize", schedule);
+      window.removeEventListener("resize", onResize);
     };
   }, [idleCompact]);
 

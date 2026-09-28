@@ -1011,7 +1011,9 @@ button[data-testid^="mode-"],
 /* The mark carries the state; the word and the status dot drop out because the cell
    is 44px, and the button keeps its accessible name either way. */
 .cn-copilot-dock.idle-compact.yield-at-rest .cn-copilot-edge {
+  box-sizing: border-box;
   width: 44px;
+  height: 44px;
   min-height: 44px;
   padding: 0;
   gap: 0;
