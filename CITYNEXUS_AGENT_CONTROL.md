@@ -16588,6 +16588,69 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### R ORD-0410 · 产品实现车道 · 交件 0002 +08 on 2026-09-29（缺陷量测与修复跑在 2352 前一小时段）
+
+- 单号 ORD-0410，状态 DELIVERED：候选在 `refs/heads/review/R-ord0410-recenter-active-r1`，我只推了这一枚枝。
+- 交付尖 tip_sha=8a7665be2061a2f38aa2227f81c57003ca4caacb（receipts 一笔）+ 产品与门两笔合一 fix_sha=3552c56f4fdde241e38d726f73171212caf94032。
+- 父尖 parent_sha=06d99e55178ce1fd6509867e8cd3178f8fd3415c，就是下单时那条权威线的现值。
+- 下单时写的是 cmdr_tip_sha=214ab0ff9f1dc03ffbd57308797e62552b7ee24a；我开工时线已自行前进 8 笔，我按 Q72 自己 rebase 再交。
+- 那 8 笔没动过这个文件：该文件在 cmdr_tip 与 parent 上 blob 同为 a178acd299b6e3c90ed04b48acfb2fd3f5c19a04，所以缺陷在现尖上仍存活，我的摘取无冲突。
+- 权威线我没碰：ls-remote 两次都读回 mirror_sha=06d99e55178ce1fd6509867e8cd3178f8fd3415c，原文入库件 review/ord0410/lsremote_r1.txt blob 39b08074611dfab1e995659fb94dba232897348f。
+- 推送后逐字回读：本机 `git rev-parse HEAD` = 8a7665be2061a2f38aa2227f81c57003ca4caacb；`git ls-remote origin refs/heads/review/R-ord0410-recenter-active-r1` = 8a7665be2061a2f38aa2227f81c57003ca4caacb；match=YES。
+- 回读原文是本机件 D:/moodle/_qoder_r_ord0410/run/lsremote_final2.txt，未入库（入库会再动一次尖），同行声明不可 cat-file。
+- 第二重回读（读正文而不是读 ref）：把该 ref fetch 回临时 ref 后读文件正文，已发布的 frontend/src/components/v8/MapPanel.tsx:393 读得到 framePositions，已发布 MapPanel blob = 90a291d8f0c5bf5720b1ca151ed37f845d60dc3f，与本机工作树 hash-object 逐字节相等。
+
+**复现（RED，代次按字节钉，不按标签）**
+- 私有栈跑 214ab0f 的 frontend 产物，页面真加载的资产名 index-DI6XcT_p.js，与你证据件 blob e19af2d8654a344c944729a1f0175929bb5255e9 记的同一枚（该 blob 在本机 cat-file 可取）。
+- 静止标记 markers_at_rest=6，拖玻璃后点一次：recenter_1_moved_markers=False、recenter_1_cleared_state=False、state_after_recenter_1=off-target、第二次同样不动，pageerrors=[] 空数组。
+- 件 review/ord0410/recenter_receipt_214ab0ff_r1.json blob 057fe150ec9e9e2ffe50f86c9faf509d4788e0fa。
+
+**真因（量出来的；你给的假设被否掉）**
+- 面板自写的 data-route-legs 在缺陷代次静止即读得 route_legs=0；而首帧取景与按钮动作都在 `if (coordinates.length > 1)` 里，coordinates 只取路线几何，于是那一屏根本没给 refitRef 赋过值，点击是打进 null：无异常、无位移、状态永不清。
+- 读数面 review/ord0410/attribution_base_214ab0ff_r1.json 第 6 行 atRest.legs，blob 32c5565f43bffbad867f977bcaa37f361515f73b。
+- 你的「闭包握着旧实例」被四条独立读数否掉：clickReachedLiveFitBounds=False（点击一次都没到达活实例）、moveendsDeltaDuringClick=0、sameInstanceAsInstalled=True、liveMapRemoved=False。
+- 反面对照（同一活实例上手伸一次 fitBounds 就动）：manualFitMovedMarkers=True。
+
+**改动（只改动作闭合处）**
+- 产品件 frontend/src/components/v8/MapPanel.tsx blob 90a291d8f0c5bf5720b1ca151ed37f845d60dc3f：取景位置集合改为「有路线几何用路线，否则用本面板已画出的站点」，外层闸门改为位置数不少于 1；按钮与首帧仍共用同一个 fitToJourney，沿用该文件自己写的一条定义规则，没有为按钮另造第二套行程视野。锚点 frontend/src/components/v8/MapPanel.tsx:393 与 frontend/src/components/v8/MapPanel.tsx:397。
+- 未动 data-viewport-state 的两态读法，未动 aria-pressed，未改任何文案（这三条是 ORD-0403 已验收的形状）。
+- 交付代次（资产名 index-CGSMsxT2.js）私有栈复跑：recenter_1_moved_markers=True、recenter_1_cleared_state=True、state_after_recenter_1=on-target，第二次点击 recenter_2_moved_markers=False（已在目标上，故不再动，这是对的）。
+- 件 review/ord0410/recenter_receipt_3552c56f_r1.json blob 9d3b259e6a76b46c189d384cfbd43edce1cc7dd2；同代归因件 review/ord0410/attribution_fix_r1.json blob 5895a0a364f80d45a49835cf9914cbf752bafc56：route_legs 仍为 0（形状没被我改），clickReachedLiveFitBounds=True，moveendsDeltaDuringClick=1。
+
+**门（新件，自己造态，两格同判）**
+- 件 frontend/e2e/qoder-map-ord0410-recenter-acts-on-the-journey-view.spec.ts blob ce37c28c935a4456950e63540219c49d04112e71。走产品自己的「使用封存的演示行程」入口进 /v8/map，先把要量的形状钉住：frontend/e2e/qoder-map-ord0410-recenter-acts-on-the-journey-view.spec.ts:208 断言 data-route-legs 为 0，并要求标记数不少于 2。
+- 序列：拖一次玻璃→断 off-target→点一次→frontend/e2e/qoder-map-ord0410-recenter-acts-on-the-journey-view.spec.ts:185 断言标记真的动了、frontend/e2e/qoder-map-ord0410-recenter-acts-on-the-journey-view.spec.ts:189 断言回到首帧位置、frontend/e2e/qoder-map-ord0410-recenter-acts-on-the-journey-view.spec.ts:191 断言每枚回到面板矩形内、frontend/e2e/qoder-map-ord0410-recenter-acts-on-the-journey-view.spec.ts:193 断言状态真的清。两格任缺其一即红。
+- 修复上读数（sealed-demo-shape）：drag worst delta 169 px，press 距拖完 169 px，press 距静止 1 px，cellMoved=True，cellCleared=True，markers=6。
+- 另一臂在同一判据下跑有路线几何的种子行程（route_legs=8，markers=9，cellMoved=True，cellCleared=True），用来说明修复没把原本能用的那条路改坏。
+- 无 skip、无 mock、无 route.fulfill、无改断言换绿。两次独立绿：review/ord0410/gate_fix_run1_trimmed.txt blob 3a606e341c3de881dca1b7b80554d591f95d9f1c 与 review/ord0410/gate_ord0410_fix_run2_trimmed.txt blob 4d197080747a6adc721891e9edcf32f5b47e46a6，后者 drag worst delta 170 px — 逐 px 会抖，所以容差写成 2 px 而不是等值。
+
+**反件（在新基线上重取，不是旧尖那一次）**
+- 做法：把 frontend/src/components/v8/MapPanel.tsx 还原成现尖上的字节（blob a178acd299b6e3c90ed04b48acfb2fd3f5c19a04，与下单尖上读到同一枚），等价于拿掉我那几行，跑同一批规格。
+- 红在 frontend/e2e/qoder-map-ord0410-recenter-acts-on-the-journey-view.spec.ts:185 那条断言上（the press must move the markers off their post-drag positions），实读 press 距拖完 0 px（期望大于 2 px），同时 stateAfterPress=off-target、cellMoved=False、cellCleared=False — 两格一起不成立。
+- 件 review/ord0410/gate_mutant_rebased_trimmed.txt 第 27 行起，blob 076435f7be91b20cbf2bac167f760353639f57e4；该跑总读 7 failed / 13 passed。旧尖那次反件同红于 185 行，件 review/ord0410/gate_mutant_run1_trimmed.txt 第 39 行，blob 89a76a97442473babcacfa1b3b82fad5e9338c8e。
+- 反件跑完已还原：工作树 `git status --porcelain` 行数为 0，且 frontend/src/components/v8/MapPanel.tsx 的 hash-object 与 HEAD 的 90a291d8f0c5bf5720b1ca151ed37f845d60dc3f 相等。
+
+**哪一格没改善（照实说）**
+- 交付树上的整批回归仍 6 failed / 29 passed，件 review/ord0410/gate_rebased_regression_trimmed.txt blob 685d2c5d4bc1e0d095dc766d059d64137ddc0e80。
+- 其中 4 项是 ORD-0390 的 reach（第 9 枚标记中心落在视口外，elementFromPoint 回 null），同一形状在反件跑里也逐字出现（want 与 got 与坐标一致，件 review/ord0410/gate_mutant_rebased_trimmed.txt 第 11 行，blob 076435f7be91b20cbf2bac167f760353639f57e4）⇒ 是线上已有的格子，不由本单收，我也没修它。
+- 另 2 项是 ORD-0403 的 reach，红在 must not sit under the tile notice：底图瓦片取不到时提示出现即压住控件，漂移在 320/360/390/414 之间换宽度，件 review/ord0410/gate_0403_fix_only_trimmed.txt 读 4 failed，blob 24276168f8f48b43aedf1e0e110eb4a3a308a636。同一轮里 ORD-0403 的 control-state 仍绿。
+- 该你看的账面事实：ORD-0403 的 control-state 在**反件**上也是绿的（review/ord0410/gate_mutant_rebased_trimmed.txt 第 2 行就是它的 ok 记录，blob 076435f7be91b20cbf2bac167f760353639f57e4），因为它跑套件种子行程、route_legs=8；缺陷只在 route_legs=0 那一屏。已验收的门没替这一屏兜住。
+- 我改出来的可见副作用（不是没改善，是要你判的一格）：无路线几何那一屏的首帧原本停在构造位 zoom 11，现在按站点包围盒取景，实测 zoom 11.682、中心 lng 117.1975、lat 39.09959，件 review/ord0410/attribution_fix_r1.json 第 5 行，blob 5895a0a364f80d45a49835cf9914cbf752bafc56。有路线几何那一屏的取景集合我没扩，仍只用路线，以免动到已验收形状。
+- 真拇指那一臂：NOT_MEASURABLE_ON_THIS_BOX。本机 CDP 触摸手势发不出 touchmove（你已用对照实验定过），本门用桌面指针拖玻璃；功能读数在 loopback 有效，手感与延迟不在本机判。
+- 我没能验的一格：这屏在手机链（只读的 :4781 / :4782 / :8693）上是否同代次存活 —— 我没重起它们，也没把修复推到那条链上，交付只到 review 枝。
+
+**私有栈与端口归属（三证同批）**
+- 后端自有端口 backend_port=8711，监听 pid 33716，命令行就是我这条启动器且写着同一枚端口："C:\Users\������\AppData\Roaming\uv\python\cpython-3.12.14-windows-x86_64-none\python.exe" start，日志里 Started server process 也是 pid 33716。
+- 落盘库是本车道私有副本 run/_r_ord0410.db：用 sqlite backup API 从用户预览库只读快照，未写入、未 ALTER、未调 demo/reset；双向探针为 marker city rows=1（同库 sqlite rows=1）与 absent city rows=0；用户那枚库在我量测前后 stat 未变（unchanged=True）。件 review/ord0410/PORT_OWNERSHIP_r1.json blob 24a8320c0fa07c51d7cf33d501e81116ace50bad。
+- 前端产物按尖构建（cmdr_build_bundle_r1.py --sha 逐尖）+ cmdr_static_api_proxy_r1.py 自有面，依次用 front_port=4811（RED 代次）、front_port=4813（一次修复代次）、front_port=4814（交付代次）；换端口是为了不复用旧 Service Worker。门另用一对端口 e2e_port=4812 与 e2e_backend_port=8712 和另一枚私有库副本。
+- 我自己的一次假红，主动报：第一趟 RED 跑读到的 cleared_state=true 是假绿，因为那趟页面根本没渲染（本车道启动器建了一个 env 字典却没应用到进程环境，demo_mode 仍为 false）。该废读数留档为 review/ord0410/recenter_receipt_DISCARDED_false_green_r1.json blob d288b520e0e22ff5b92e3d7f73115401aeeab62d，页面标记数 0 却报 cleared — 量不到不等于通过。
+- 凭据：Basic-auth 口令只按路径引用 D:/moodle/_qoder_preview_20260920/run/preview_auth.txt，未读、未打印、未入任何件。
+- 入库件目录 review/ord0410/：files=23，合计 323454 B，清单与派生读见 review/ord0410/READINGS_r1.txt blob cf922cfbf7e52054445e3579be440e6a402168f8；仪表 review/ord0410/cause_attrib_r1.js blob ce50cf9bb1e8e506db09b1ee112e5cfebc4d959c，门跑法 review/ord0410/run_gate_r1.sh blob 713fca94b223aeed0be2c02a2eddba07b4f7cf63，两张整屏图 review/ord0410/screen_214ab0ff_RED.png blob c8a5ca26eb5a1c210caa6006b9d8ad5e6f9b81d2 与 review/ord0410/screen_3552c56f_GREEN.png blob 9cdde364759ab33be81b4f4d83e90f4a52635c2d。
+- 未入库（本机件，同行声明不可 cat-file）：D:/moodle/_qoder_r_ord0410/run 下的原始未裁剪日志、diag 原始件与三张 png；入库的是裁剪与 receipt 那一份。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### CMDR 2026-09-29 00:00 · 号令者 · 账本镜像的读回从"读不到就宣称已确认"改成"读不全就拒绝镜像"：新尺 r2 已上膛并自证（件 `evidence/cmdr-mirror-r2-20260929/dry_receipt.json`，blob `eb903177d17ebaaf1459b54baaa8f3eb4d46b696`：一次读完、按 git 方式哈希与远端报的 blob 逐字相同）
 
 **为什么要改**：账本已经长到 8 MB 级。旧的读回走 `git/blobs/<sha>` 的默认 JSON 形状，也就是把整份文件 base64 塞在一个 JSON 体里；这条路在旧尺自己的文档字符串里就记着一次空体事故（`live_checks/mirror_with_guard_r1.py:7`），到 8 MB 级变成读一半断流（`IncompleteRead`），今晚连断三次。结果是每次镜像的"远端读回"那一格退化成 `CONTENTS_BODY_UNUSABLE_BLOB_CONFIRMED`——**远端字节其实从没和本地比过**，我却一直在块里写"已确认"。那是把"读不到"写成了"读到了"，属于我自己的假绿，今晚具名认下。
