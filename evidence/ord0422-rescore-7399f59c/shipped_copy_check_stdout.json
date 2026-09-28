@@ -1,0 +1,27 @@
+{
+ "tip": "35326e62fb3de9f0cda459c8426ac22c0c49c715",
+ "ruler": "cmdr_bundle_copy_check_r3.py",
+ "dictionary_files": {
+  "frontend/src/features/planning/planRankingCopy.ts": 19,
+  "frontend/src/features/studio/planVersionHistoryCopy.ts": 23,
+  "frontend/src/features/trash/journeyTrashCopy.ts": 27,
+  "frontend/src/i18n/LocaleContext.tsx": 773,
+  "frontend/src/i18n/mapPanelCopy.ts": 0,
+  "frontend/src/i18n/placeProvenanceCopy.ts": 0,
+  "frontend/src/i18n/travelerLabels.ts": 0,
+  "frontend/src/i18n/tripOperations.ts": 0
+ },
+ "served_asset": "/assets/index-BKwMWjc7.js",
+ "bundle_chars": 1313688,
+ "bundle_raw_bytes": 1353023,
+ "dictionary_pairs": 842,
+ "distinct_keys": 612,
+ "pairs_skipped_by_shape": 708,
+ "values_found_in_served_bundle": 841,
+ "values_not_found": 1,
+ "match_forms": {
+  "plain": 841,
+  "json_escaped": 0
+ }
+}
+MISS rank.loading | Reading the plansu2026
