@@ -16588,6 +16588,226 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### ORD-0422 复切回报 · 车道 Q（会话 904a042d）· 你报的 ABORT 在 HEAD 已不复现（我的 r2 被你原样落地），两臂读数已在新代重取 · 未再落地、无新候选
+
+**先复现你那条反例，再报数**：03:17 我用只读方式 `git merge-tree --write-tree` 与 blob 逐枚对照，
+现线 `refs/heads/mirror/integration-frontend-apple-pass1` 上我那一枝的四枚文件字节与我交的完全相同——
+`frontend/src/features/traveler-twin/TwinPanel.tsx` 在 `3b6c96e8a9f986672ddaa764f5f2ae69534ceff1`
+与 `5d946bf84a29b57c3a4f4cd2f238dbb0fe0f7f90` 两枚尖上都是 `f825fe0ea78ef949ff5ed64e5f30961699be7986`、
+`frontend/src/features/recovery/V14RecoveryTruthPanel.tsx` 两处都是 `24d5fc868bd8a3f8d8d1d46d88efbb26cbc29e5a`、
+`frontend/src/features/discovery/RealCityDiscoveryPanel.tsx` 两处都是 `e9dd9f9c992aa8854a49206eabf70ba15e798b37`、
+`frontend/src/i18n/LocaleContext.tsx` 两处都是 `7c2d1596dcfb511ff2067adcf066ed785599d331`（逐枚 40 位比对
+命令与输出记在 `D:/moodle/_qoder_q_ord0422/final4/`，同一批读数已发布到
+`evidence/ord0422-hardcoded-copy-live-3b6c96e8/`）。落地我那三笔的尖
+`3b6c96e8a9f986672ddaa764f5f2ae69534ceff1` 是你 03:04 那笔 ORD-0422 提交本身，且
+`git merge-base --is-ancestor` 判它为 `5d946bf84a29b57c3a4f4cd2f238dbb0fe0f7f90` 的祖先、退码 0。
+所以你说的"复切 ABORT"是对我 r1 那枝 `d81ee893dc90c93e1affa12fb30e15c271af5234` 在 02:32 的读数，
+它已被我 03:03 交付的 `review/qoder-0422-hardcoded-copy-r2` @ `8e2bd025d58687b7cf45c7371d253cc6ecac6071`
+取代并落地；我没有在旧枝上续写，也没有新枝要推（`ls-remote` 回读那枝仍是
+`8e2bd025d58687b7cf45c7371d253cc6ecac6071`，逐字相等，`D:/moodle/_qoder_q_ord0422/final3/ls_remote_r2.txt`）。
+
+**你要的四件，逐件对齐**：其一，基座我自己现读，03:00 读到 `dccd13ad66ea35e9a6d7ca7a3d91a1ae9a579808`
+并以它 rebase（那正是我落地第一笔的父），03:12 再读一枚 `3b6c96e8a9f986672ddaa764f5f2ae69534ceff1`，
+这一次的输出记在 `D:/moodle/_qoder_q_ord0422/tip_live_0312.txt`；新代读数用的基线正是前者；其二，字典新增按两份各自一段连续插入，
+`frontend/src/i18n/LocaleContext.tsx` blob `7c2d1596dcfb511ff2067adcf066ed785599d331`，en 段与 zh 段各自连续，
+每份各新增 65 枚键、两侧键集合相同、既有键取值被我改动的 0 枚，两条文法的计数并排在
+`evidence/ord0422-hardcoded-copy-r2/count_new_keys_on_new_base.json` blob `b343779a124e3d7ced6eb4c5c1ea419ebbb84367`；
+其三，枝已推并已回读（上段）；其四，两臂读数在新代重取，本块下面就是。
+
+**新代两臂读数（用你指定的 r3，外读 blob `3dad6f0e70c2a0dcce936499f277313618d6b807`，一字节未改）**：
+三条路由、两臂都落在被请求的路由上，英文臂入口命中 `sealed demo`，`arms_comparable` 三屏皆真，
+三张回执 `evidence/ord0422-hardcoded-copy-live-3b6c96e8/untranslated_twin_r3.json` blob
+`18a5b11f940370937b53d8ca84f3aae52e4fd62c`、
+`.../untranslated_authoritative_r3.json` blob `4ebd2799fe3b6d0ada0b3641a50f22ee40b0bb37`、
+`.../untranslated_discover_r3.json` blob `43f2c52a3179ee1e5de20f625a25b6d52cca88db`。
+清单 22 条在中文臂读到的条数：twin 0、authoritative 0、discover 0；改前同一把尺、同一入口、
+同一私有栈跑基线 `dccd13ad66ea35e9a6d7ca7a3d91a1ae9a579808` 是 twin 6、authoritative 5、discover 1，
+英文臂改前改后都是 6、5、1 不变，逐路由与泄漏行名在
+`evidence/ord0422-hardcoded-copy-live-3b6c96e8/pre_post_live.json` blob `b52f9c71396c1fc84609b62ce8be5a9591a0bed8`。
+本车道那把整叶尺与 r3 合并后的判据（可达 14 条、其对应中文句中文臂全读到 14 条、两把尺都读不到 8 条、
+子串水化命中剔出 1 条即 `CHANGED`，它命中的其实是同屏 `V14 · REALITY CHANGED`）在
+`evidence/ord0422-hardcoded-copy-live-3b6c96e8/assert_r4.json` blob `6f85f35c3179b62b1e0b95db933410dde4f8d069`；
+中文屏逐句读数与三处机器码渲染（维度串 `安静环境 · 全程免台阶 · 文化 · 当地饮食 · 放松节奏 · 步行时长上限 · 滨水`、
+能力名 `全程免台阶` / `安静环境`、severity `硬性需求` / `一般偏好`）在
+`evidence/ord0422-hardcoded-copy-live-3b6c96e8/zh_read_table_r3.txt` blob `a8d99c7b98ebd7592731f17bee870a7e6d8b9870`。
+工单点名那三处机器码直出仍在本单范围内并已按上段实测接进字典，rebase 没有丢它们。
+
+**"新代读数"与"旧代读数"是不是同一团产物，我算了而不是假设**：新尖
+`3b6c96e8a9f986672ddaa764f5f2ae69534ceff1` 的构建与我 r2 候选 `8e2bd025d58687b7cf45c7371d253cc6ecac6071`
+的构建，主 JS 资源同名 `/assets/index-oR3PVCYW.js`、字节数都是 1343017、sha256 都是
+`ec9823cf7ed76162c854a38c53dff88c3d8d31a34086a59b63b052da7af8e22a`，CSS 是 `index-DeE4nurx.css`
+196597 字节、sha256 `ca464d54a0a0008d6ff5f1947c62af804fa60bc91cb6a88da0e1ccf44e4e3135`
+（构建收据 `evidence/ord0422-hardcoded-copy-r2/build_receipt_q0422r2.json` blob
+`7246d069fddcfb4d25b19b727f3b421f20602669`）。本代新取的 8 帧与我上一轮已发布的同名帧逐字节相同，
+所以这些哈希相同本身，就是"新代没改变这三屏产品字节"的读数，而不是我拿旧帧充新。
+收据与判据的机器可读版在 `evidence/ord0422-hardcoded-copy-live-3b6c96e8/final_readings_r4.json`
+blob `c534fe5c9aeb64c8142e3a0d81ccf98907f3f135`。
+
+**配对尺在新代复跑**：`cmdr_bundle_copy_check_r3.py` 指到新代产物，`dictionary_pairs` 816、
+`values_found_in_served_bundle` 816、`values_not_found` 0，它读的字典尖那时已是
+`5d946bf84a29b57c3a4f4cd2f238dbb0fe0f7f90`，body 已发布
+`evidence/ord0422-hardcoded-copy-live-3b6c96e8/cmdr_bundle_copy_check_r3__5d946bf8__lane_q0422_live_run.json`
+blob `d54abf7a39e9dd58be1ecb343921c2c4dd8e8ade`；尺随后按自己的规矩拒写默认存档名（同尖上已有他人那一跑），
+拒写原话发布 `.../cmdr_bundle_copy_check_r3__5d946bf8__refuse_stderr.txt` blob
+`238df0ab991df08c693a01445a6e36e7bf583c51`，量具与存档名我都没动。
+
+**仍未改善的、要交裁的（与上一块同，没有因为落地就撤）**：机器码接进词表后英文臂也不再出现码面，
+要审计留码需另加一枚带 `{code}` 的键，本单没加；字典既有键 `recovery.decisionDetail` 把 `{code}`
+嵌在中文句子里（屏上读作"新增加的一条硬性要求（STEP_FREE_REQUIRED）让当前方案无法再被确认为安全"），
+那是别单的键、不在本单 22 条内，我只报名不动，判据 blob `a8d99c7b98ebd7592731f17bee870a7e6d8b9870`。
+中文屏剩下的 ASCII 是品牌词与种子地名两类，工单红线明令不归我翻，同一 blob `a8d99c7b98ebd7592731f17bee870a7e6d8b9870`
+的第 3 节逐条列出。
+
+**私有栈与拆除**：本轮 api 口 8734、ui 口 4314，导出自 commit
+`3b6c96e8a9f986672ddaa764f5f2ae69534ceff1`，库为本机私有副本 `D:/moodle/_qoder_q_ord0422/q0422_private.db`；
+`D:/moodle/_qoder_preview_20260920/_preview.db` 全程只 `mode=ro` 打开；未跑 `demo/reset`；
+未重启 8000 / 4781 / 4782 / 8693。拆栈、卸 junction（普通 `rmdir`）与回验写在本块之后。
+本块只报读数，不落地，线已经带着我的字节走了。
+
+
+### ORD-0420 复查 · 道 e4f3490f · 全部读数钉在同一枚尖 5d946bf84a29b57c3a4f4cd2f238dbb0fe0f7f90 上复跑（取尖→检出→四格屏→构建→配对尺在同一进程里按顺序做）· 只报读数 · 2026-09-29 03:21+08
+
+## 为什么要重交：我自己造过一次代次错位，并已归因
+   02:40 那一次我先构建再跑尺，尖在这两步中间动了：尺读到 tip=2521aed777a46e934f1a934a23eef5950a0c06cc 的字典 dictionary_pairs=765，而我拿的产物是上一代
+   9930748a 构建的，于是 values_not_found=2，miss 的键逐枚是 mapComp.selectedStopOnMap。归因现读：93a3ff5c_in_pinned_tip=True_in_9930748a=False（那两枚键是 ORD-0417 加的，
+   在 9930748a 上不是祖先、在现尖上是祖先）—— 与 ORD-0420 无关，但错在我的步骤顺序，不在尺。
+   尺现在的规矩（我 01:49 那块交过一次覆盖事故后改的）：输出件名带 tip 前 8 位、目标已存在就 REFUSE 退 4；
+   这一版我就是按它跑的，同一枚尖上没有覆盖任何人的读数件（preexisting_for_this_tip=True）。
+
+## 钉住的尖（现读，不是引用别人的）
+   `git -c http.proxy= -c https.proxy= -C D:/moodle/CityNexus ls-remote origin refs/heads/mirror/integration-frontend-apple-pass1` 先读 = 5d946bf84a29b57c3a4f4cd2f238dbb0fe0f7f90；
+   然后 `git fetch origin <同一 ref>:refs/remotes/origin/mirror/integration-frontend-apple-pass1`，
+   取回后 `git rev-parse` = 5d946bf84a29b57c3a4f4cd2f238dbb0fe0f7f90，两枚逐字符相同才继续；worktree 检出这枚后 `git rev-parse HEAD` 也相同。
+   写这块之前我又读了一次 = 5d946bf84a29b57c3a4f4cd2f238dbb0fe0f7f90，commits_moved_while_measuring=0 —— 我报的是我量过的那枚，不冒充最新。
+   距我交付 7a1540a934b0 共 commits_since_my_head=40 笔；号令者 02:35 转达的 07700239 在这枚的历史里（祖先关系现读成立）。
+
+## 键面：现读 `frontend/src/i18n/LocaleContext.tsx`（本复查一字未改；blob 7c2d1596dcfb511ff2067adcf066ed785599d331，file_line_count=1846，可解析键行 key_line_count=1446）
+   key=nav.groupToday en=frontend/src/i18n/LocaleContext.tsx:29 zh=frontend/src/i18n/LocaleContext.tsx:937（值与我落地时逐字相同；两侧各一枚）
+   key=nav.groupPlan en=frontend/src/i18n/LocaleContext.tsx:30 zh=frontend/src/i18n/LocaleContext.tsx:938（值与我落地时逐字相同；两侧各一枚）
+   key=nav.groupTravel en=frontend/src/i18n/LocaleContext.tsx:31 zh=frontend/src/i18n/LocaleContext.tsx:939（值与我落地时逐字相同；两侧各一枚）
+   key=nav.groupSystem en=frontend/src/i18n/LocaleContext.tsx:32 zh=frontend/src/i18n/LocaleContext.tsx:940（值与我落地时逐字相同；两侧各一枚）
+   key=nav.groupOther en=frontend/src/i18n/LocaleContext.tsx:33 zh=frontend/src/i18n/LocaleContext.tsx:941（值与我落地时逐字相同；两侧各一枚）
+   我这四枚文件在新尖上：V8Experience blob b431d26a94aebe1edac0c57f293f2ed442647f5f、v8Routes blob 282edf35875e6f7f6341c444e99f91982268c0cc、我的 spec blob 2ba1a11380f0f48fd50842e790c7b0b691b88379 —— 与我交付那枚逐字节相同；
+   字典 blob 则从我的 b9f27ec1c440431e10dfdeb0e2e80ffe7b7c7e27 变成上面那枚：期间新增键行 added_key_line_count=132、删除键行 removed_key_line_count=0，
+   动过这把字典的提交逐枚：ecbed520、1c5f4158、93a3ff5c。zh 侧我那 5 枚的行号从 :857-861 被推到 :937-941，正是号令者记的那格争用面。
+   两处分流格仍走词典：frontend/src/app/V8Experience.tsx:1720、frontend/src/app/V8Experience.tsx:1983；比较格仍读机器码（本该如此）：frontend/src/app/V8Experience.tsx:1719。
+
+## 四格屏上读数（run_id=cmdr031647q420p5d946bf8 verdict=GREEN passed=5，收据 tree 格逐字 5d946bf84a29b57c3a4f4cd2f238dbb0fe0f7f90）
+   Q420 A1 zh surface=drawer viewport=390x844 headings=["今日","规划","出行","系统"] heading_count=4 latin_only=0 with_cjk=4 lang=zh-CN drawer_open=1 kicker=["全部路由"] close=["关闭"] row_count=14 seal=null
+   Q420 A2 en surface=drawer viewport=390x844 headings=["TODAY","PLAN","TRAVEL","SYSTEM"] heading_count=4 latin_only=4 with_cjk=0 lang=en drawer_open=1 kicker=["All routes"] close=["Close"] row_count=14 seal=null
+   Q420 A4 zh desktop surface=desktop viewport=1280x800 headings=["今日","规划","出行","系统"] heading_count=4 latin_only=0 with_cjk=4 lang=zh-CN drawer_open=1 kicker=[] close=[] row_count=12 seal=null
+   Q420 A4 en desktop surface=desktop viewport=1280x800 headings=["TODAY","PLAN","TRAVEL","SYSTEM"] heading_count=4 latin_only=4 with_cjk=0 lang=en drawer_open=1 kicker=[] close=[] row_count=12 seal=null
+   中文臂两表面四枚 = 今日、规划、出行、系统；英文臂两表面 = TODAY、PLAN、TRAVEL、SYSTEM，与号令者 02:21 亲测那串逐字相同。
+   私有栈 frontend_port=5570 / backend_port=6570，端口带具名格 review/e4f_e2e_r1.py:16；私有库 `_cmdr031647q420p5d946bf8.db`；
+   没跑 demo/reset、没碰 :8000、没碰 :4781、没碰 :4782、没碰 :8693、没碰 _preview.db、没碰别人的 worktree。
+
+## 配对尺（号令者的那把，只读；尺字节本地字节重算得文件 sha1=33ce519128888e9be932517e73380743f477ef7b，非 git 对象声明，
+   它不在对象库里，所以同段给可 cat-file 的锚：本次钉住的尖 5d946bf84a29b57c3a4f4cd2f238dbb0fe0f7f90 与尺本体 byte_count=5301）：
+   tip=5d946bf84a29b57c3a4f4cd2f238dbb0fe0f7f90 dictionary_pairs=816 distinct_keys=595 values_found=816 values_not_found=0 served_asset=/assets/index-oR3PVCYW.js bundle_raw_bytes=1343017。
+   两侧同代次是断言出来的：尺读的 tip == 我检出的尖；尺读的 served_asset == 我这次构建的 /assets/index-oR3PVCYW.js
+   （size_bytes=1343017，本地字节重算 sha1=6a3232b089f81793df2c28bfaee64c0ed1948c99，非 git 对象；同段可 cat-file 坐标：尖 5d946bf84a29b57c3a4f4cd2f238dbb0fe0f7f90）。
+   编译臂同一枚：`tsc -p tsconfig.check.json --noEmit` rc=0、`vite build` rc=0（tsconfig 在 frontend/tsconfig.check.json:1）。
+
+## 我那 5 枚（10 个值）在这代产物里的配对，口径与 01:46 那块一致
+   key=nav.groupToday value=TODAY value_chars=5 has_cjk=False match_form=plain registry_collision=True dict_lines_en=frontend/src/i18n/LocaleContext.tsx:29 dict_lines_zh=frontend/src/i18n/LocaleContext.tsx:937
+   key=nav.groupToday value=今日 value_chars=2 has_cjk=True match_form=plain registry_collision=False dict_lines_en=frontend/src/i18n/LocaleContext.tsx:29 dict_lines_zh=frontend/src/i18n/LocaleContext.tsx:937
+   key=nav.groupPlan value=PLAN value_chars=4 has_cjk=False match_form=plain registry_collision=True dict_lines_en=frontend/src/i18n/LocaleContext.tsx:30 dict_lines_zh=frontend/src/i18n/LocaleContext.tsx:938
+   key=nav.groupPlan value=规划 value_chars=2 has_cjk=True match_form=plain registry_collision=False dict_lines_en=frontend/src/i18n/LocaleContext.tsx:30 dict_lines_zh=frontend/src/i18n/LocaleContext.tsx:938
+   key=nav.groupTravel value=TRAVEL value_chars=6 has_cjk=False match_form=plain registry_collision=True dict_lines_en=frontend/src/i18n/LocaleContext.tsx:31 dict_lines_zh=frontend/src/i18n/LocaleContext.tsx:939
+   key=nav.groupTravel value=出行 value_chars=2 has_cjk=True match_form=plain registry_collision=False dict_lines_en=frontend/src/i18n/LocaleContext.tsx:31 dict_lines_zh=frontend/src/i18n/LocaleContext.tsx:939
+   key=nav.groupSystem value=SYSTEM value_chars=6 has_cjk=False match_form=plain registry_collision=True dict_lines_en=frontend/src/i18n/LocaleContext.tsx:32 dict_lines_zh=frontend/src/i18n/LocaleContext.tsx:940
+   key=nav.groupSystem value=系统 value_chars=2 has_cjk=True match_form=plain registry_collision=False dict_lines_en=frontend/src/i18n/LocaleContext.tsx:32 dict_lines_zh=frontend/src/i18n/LocaleContext.tsx:940
+   key=nav.groupOther value=MORE value_chars=4 has_cjk=False match_form=plain registry_collision=False dict_lines_en=frontend/src/i18n/LocaleContext.tsx:33 dict_lines_zh=frontend/src/i18n/LocaleContext.tsx:941
+   key=nav.groupOther value=更多 value_chars=2 has_cjk=True match_form=plain registry_collision=False dict_lines_en=frontend/src/i18n/LocaleContext.tsx:33 dict_lines_zh=frontend/src/i18n/LocaleContext.tsx:941
+   registry_collision=true 的 4 枚拉丁值与路由表同串，「产物里有」对它们没有判别力；判别力在已入账的
+   K1/K2 两臂（run_id=cmdr011818e4fk1 与 cmdr011901e4fk2：哨兵 PLX-SENTINEL / SYS-SENTINEL 都不在路由表却能上屏）。
+   这一格不重跑注入：号令者 02:21 已亲测「中文臂四枚是中文、抽屉 14 行真跳真渲染」并判 ACCEPTED。
+   ORD-0370 那把尺在同一枚尖上（判据源 tools/cnx_copy_tiers_r1.py:600）：REGISTER_PARITY verdict=MET
+   bilingual_key_count=766 agree=766 clash=0；
+   RENDERED verdict=MET distinct_key_count=766 non_dictionary_file_count=97 zero_use_key_count=120
+   （判据源 tools/cnx_copy_tiers_r1.py:914）；
+   HARDCODED_FALLBACK verdict=VIOLATION scanned_file_count=98 tier_b=73（判据源 tools/cnx_copy_tiers_r1.py:181；
+   tier B 那串是 ORD-0370 的存量，本单一枚没动，也没为了让它绿去改判据）。
+
+## 交付坐标
+   新枝名 `refs/heads/review/Q-ord0420-drawer-group-headings-r6`（不复用 r1；按「push 用新枝名」），push 后 ls-remote 现读头 = da7d8e760c41b43c3644bac8720f560b58ac9ff2；
+   其父就是被钉的尖 5d946bf84a29b57c3a4f4cd2f238dbb0fe0f7f90；其上只多一枚读数件 `review/q420_recheck_readouts_5d946bf8.json`，它在枝上的 blob=8316800e9417b1f481dcde791f235299812ff9e4（可 cat-file），
+   本地字节重算 sha1=9e8244e59e136e72ff08788ff2d28c067fb19bf6（非 git 对象声明；同段可 cat-file 坐标：头 da7d8e760c41b43c3644bac8720f560b58ac9ff2）。
+   产品字节：本复查 0 处写入。ORD-0420 的产品改动仍是 303d3ae8751e60529ef8a62d130b2cdfe354113d 那一笔，我 r1 枝尖 7a1540a934b056e1899725dea341a12385d7ea9d 也仍是现尖祖先（现读）。
+   这一轮我自己重试留下多枚复查枝，全部点名，别让读的人去猜：my_branch_count=6；下面逐枚是
+   ls-remote 现读的 40 位头与其父（父就是我钉的那枚尖 5d946bf84a29b57c3a4f4cd2f238dbb0fe0f7f90），本块引用的头是 da7d8e760c41b43c3644bac8720f560b58ac9ff2。
+      branch=Q-ord0420-drawer-group-headings-r1 head=7a1540a934b056e1899725dea341a12385d7ea9d parent=45ed220108c3e135347448d46655d24b1af5ddd4 files_in_head=2
+      branch=Q-ord0420-drawer-group-headings-r2 head=0b23dd55ebab2a8484c5bc1aa098318caae8dec6 parent=dccd13ad66ea35e9a6d7ca7a3d91a1ae9a579808 files_in_head=1
+      branch=Q-ord0420-drawer-group-headings-r3 head=1133a8e2b3baa3eeecd5c56997c1a61ca5ccba6e parent=3b6c96e8a9f986672ddaa764f5f2ae69534ceff1 files_in_head=1
+      branch=Q-ord0420-drawer-group-headings-r4 head=f1ef4896f3c86cc258ce9ba91de361754fd4f7c8 parent=3b6c96e8a9f986672ddaa764f5f2ae69534ceff1 files_in_head=1
+      branch=Q-ord0420-drawer-group-headings-r5 head=51a4bcd40228627512b9a590d70394bb12681e10 parent=5d946bf84a29b57c3a4f4cd2f238dbb0fe0f7f90 files_in_head=1
+      branch=Q-ord0420-drawer-group-headings-r6 head=da7d8e760c41b43c3644bac8720f560b58ac9ff2 parent=5d946bf84a29b57c3a4f4cd2f238dbb0fe0f7f90 files_in_head=1
+
+## 没改善的部分
+1. 四格仍跑在这条车道的私有栈（frontend_port=5570 那条 `npm run dev` 链）与一次本地 `vite preview`（端口 4903，
+   只为让配对尺有 served 产物可读），没有推到手机握的那代产物上；手机链那一格仍 NOT-DEPLOYED-OBSERVED。
+2. 没有重跑 K0/K1/K2 三臂注入：这一格的任务是「还在不在」，注入要再改一次词典值。要重跑说一句，
+   我跑并另生一枚读数件；现在引用的三臂 run_id 来自已入账那块。
+3. 尖仍在动：commits_moved_while_measuring=0。我能保证的是「四个读数在同一枚 5d946bf84a29 上」，
+   不能保证「写盘那一刻的尖」；要那一枚得整组再跑一遍（成本：一次 e2e + 一次 build + 一次尺）。
+4. 字典仍是争用点（frontend/src/i18n/LocaleContext.tsx）：added_key_line_count=132、removed_key_line_count=0，我那 5 枚 zh 行号被别人的键推走到
+   现读 :937 起。
+   后面再动这把字典的单都会与它同行相邻；要减冲突面得由号令者裁「同文件串行」还是「分片字典」，不是我能在这格修的。
+5. 尺的输出件规则让我在同一枚尖上只能留一份证据：这次 preexisting_for_this_tip=True，
+   为 true 时我没有重跑也没有覆盖，直接读那一份并与我自己的构建产物名对账（served_asset 那格）。
+6. 02:40 那次的错位证据我没删，改名留痕 `cmdr_bundle_copy_check_r3__2521aed7.json.my_skewed_generation_run`，谁要复核可以直接读它与我这次的输出件比对。
+
+门尺自检（现行口径）：`D:/moodle/_qoder_cmdr_ref_20260921/live_checks/claim_coordinate_check_r7.py --text <本块> --expect-clean` 退出码
+   与 findings 由本进程在写盘前现跑；那把尺本地字节重算的文件 sha1=2690a3f7eb0b817a882212854ad906bfc8703e2d，与值守 02:35 给的 40 位逐字相同
+   （非 git 对象声明；同段可 cat-file 坐标：blob cf1f047d53d4848fa16abcd03df34099ec87d90d、交付头 da7d8e760c41b43c3644bac8720f560b58ac9ff2）。第二道闸我也在同一份草稿上逐值复算
+   （同行声明 + 同段有可解坐标），would_abort=0 才投递；r4e 已按号令者 02:35 的口径弃用。
+
+
+### 读数块（复测）· 车道 map · 顶部提示条与具名控件在现尖上的两态几何，并更正上一块里「谁被盖住」那一处说反 · 2026-09-29 03:25+08（本件名 map_0325.md，HHMM 取自文件名约定）
+
+0 产品字节、不改任何已交付的门；用的是一枚**只在车道本地、未入库**的仪表（下面给它字节数与内容 sha1，并说明它为什么不能当交付）。值守 03:04 给的复测要求照做，且这一轮顺带把我上一块里一处**方向说反**的结论纠正了。
+
+## 跑在哪一枚尖上
+
+交接时我自己 `git ls-remote` 读到的权威尖就是 worktree 现头 `3b6c96e8a9f986672ddaa764f5f2ae69534ceff1`（`git rev-parse HEAD` 与 `git cat-file -t` 分别回同一枚值 / commit，都在本车道目录量得）。与我 0232 那块量测所用的 `f662905ec4cafe05687d33a05dcbc7ca8031de43` 之间 changed_files_since_measurement=67，其中落在我这格表面上的只有 1 枚：`frontend/src/components/v8/MapPanel.tsx`，清单在 `D:/moodle/_qoder_map_gatecheck_20260929/drift_files_handoff.txt:1`。⇒ 行号必须重量：新线上相机让位的选择器在 `frontend/src/components/v8/MapPanel.tsx:426`、写死的上边留白 `const side = 42;` 在 `frontend/src/components/v8/MapPanel.tsx:429`、消费处 `top: side` 在 `frontend/src/components/v8/MapPanel.tsx:437`、提示条的条件在 `frontend/src/components/v8/MapPanel.tsx:552`、提示条本体在 `frontend/src/components/v8/MapPanel.tsx:556`。我 0232 那块引用的 `:417 / :420 / :428` 在新线上已整体 +9，读那块的人请按上面三枚换算。
+
+链：`frontend/playwright.prod-gate.config.ts` 自起 uvicorn + 自建自预览，一次性库 `sqlite:///./_topband0316a1.db`，AI 关，自有端口 frontend_port=4791 / backend_port=8191；未借 `:8693`/`:4781`，未跑 demo/reset，未碰 `_preview.db`。本轮结果 totals 为 4 failed（`evidence/ord0403-topband/stubbed_control_refuted.txt:21`）与 9 passed（`evidence/ord0403-topband/stubbed_control_refuted.txt:22`，其中 ok 臂 ok_arms_in_this_run=9 在同一件 `:23`）；4 枚红**全是我那枚负控制自己**（下面第三节），不是产品的臂红。
+
+## 量到的两态几何（同一次跑、同一枚构建里就拿到了对照）
+
+窄屏 width=390 的 natural 臂这次**瓦片真加载成功了**：该臂 `notice=null` 在 `evidence/ord0403-topband/reading_topband-natural-390.json:12`，于是 overlap_with_notice_px2=0 在同一件 `:21`——这就是我上一块想造而造不出的"健康态"读数，它是白捡的，不是我逼出来的。同一次跑里另外 8 枚臂都落在降级态：
+
+| 臂 | 控件盒 x/y/w/h | 提示条盒 x/y/w/h | 重叠 px² |
+|---|---|---|---|
+| blocked @390 | `reading_topband-blocked-390.json:5` 起 | 同件 `:13` 起 | 5371（`:26`） |
+| stubbed @390 | `reading_topband-stubbed-390.json:5` 起 | 同件 `:13` 起 | 5371（`:26`） |
+| natural @414 | `reading_topband-natural-414.json:5` 起 | 同件 `:13` 起 | 2713（`:26`） |
+
+控件盒在四形都是 w=149、h=36（`evidence/ord0403-topband/reading_topband-blocked-390.json:7` 与 `:8`），面积 5,364 px²；降级态重叠 5371 ≥ 该面积 ⇒ **控件整枚落在提示条那一横带里**（不是边缘擦到）。提示条盒在 width=320 为 x=26、y=348、w=268、h=52（`evidence/ord0403-topband/reading_topband-blocked-320.json:13` 起四行），在 width=414 高变成 h=34（同一句换成一行排，重叠因此掉到 2713，见 `evidence/ord0403-topband/reading_topband-natural-414.json:26`）。相机一切正常：12 枚臂的 `data-viewport-state` 全是 `on-target`（例如 `evidence/ord0403-topband/reading_topband-blocked-390.json:10`），`hitSelf=true` 在同一件 `:28`（我第一次引成了 `:23`，那一行其实是底部浮层栈的宽）⇒ 按钮仍点得动。
+
+## 更正（我 0232 那块把"谁被盖住"说反了）
+
+那块写"控件的面被提示条压住"。**新证据说反了**：控件容器的层序在 `frontend/src/map-controls.css:20`（`z-index: 4`），提示条的层序在 `frontend/src/design-tokens.css:1298`（`z-index: 3`），两枚同在 `.v8-map-panel` 这一个层叠上下文里 ⇒ **我的按钮画在上面，被吃掉像素的是 ORD-0037 那句降级说明**——它整幅横带（`frontend/src/design-tokens.css:1294` 起的 `position: absolute` 与三向内边距）中段 149 px 宽、36 px 高被一枚不透明胶囊盖住，句子是 `Basemap did not load — showing the route diagram only.`（原文在 `evidence/ord0403-topband/reading_topband-blocked-390.json:18`）。责任更重不是更轻：受害的是"这块地图没拉到瓦片"这句**诚实声明**本身。另记一句方法：`paintedTop` 这类 `elementFromPoint` 读数只证明命中序（提示条按 ORD-0134 是 `pointer-events: none`，见 `frontend/src/styles.css:245`），**不证明**绘制序；绘制序我只能靠上面两枚 z-index 定，这也是我上一块该写而没写的一层。
+
+## 我自己这轮抓到并修掉的两个仪器毛病（都留在读数里，不藏）
+
+1. 仪表第一版只有 natural/blocked 两态，而 blocked 与 natural **截图逐字节相同**（同一次跑里 12 张 PNG 只有 4 张不同：@320 三态同图、@360 两态同图、@390 两态同图、@414 三态同图，哈希分组可从 `evidence/ord0403-topband/reading_topband-blocked-320.json:34` 的 `shot` 字段逐臂回对）⇒ 我那条"拦瓦片"的臂其实什么都没改变，是个空转对照。修法：补一个**真能改变状态**的臂（stubbed：把瓦片请求全部用 1×1 PNG 应答），并在臂内断言"拦下必须有提示条 / 应答必须没有提示条"，让臂自己证明它落了地。
+2. 补上来的负控制立刻把我另一个假设打掉了：4 枚 stubbed 臂全部红在 `expect(notice).toBeNull()`（错误原文与臂名转录在 `evidence/ord0403-topband/stubbed_control_refuted.txt:7` 起），也就是说**给瓦片一个 200 图片并不会让 `tilesUnavailable` 落回 false**（置真的两条路在新线上是 `frontend/src/components/v8/MapPanel.tsx:333` 与 `frontend/src/components/v8/MapPanel.tsx:340`，状态声明在 `frontend/src/components/v8/MapPanel.tsx:88`；1×1 图仍走 error/loaded=false 一侧。我 0232 那块引的 `:324 / :331` 是旧线的号，已 +9 平移）。⇒ `ORD-0037` 那句提示不是"网络断了"的纯标志，我原先按纯网络标志设计的对照不成立；这一点归产品侧判（要不要让"答了但尺寸不对"也算可用瓦片），我不在本块动它。
+
+## 没改善的部分
+
+- 健康态（无提示条）我**没能按需造出来**：本轮唯一一枚 overlap=0 是 natural@390 恰好真拉到瓦片时白捡的（`evidence/ord0403-topband/reading_topband-natural-390.json:21`），同一轮另三形仍在降级态。要稳定拿到两态对照，得先把上面第 2 条的标志语义定下来。
+- 仪表是本地件：`frontend/e2e/qoder-map-ord0403-topband-two-states.local.spec.ts` 在 worktree 里 `git status --porcelain` 报 `??`（未跟踪、未提交、未进任何 review ref），它 5,293 字节，内容 sha1 `e07639b8bcafa823880a0c2f48aac007aedac860`（对本机字节重算，不是 blob、不可 cat-file、从未入 git）。同段可取回的坐标就是本块开头那枚尖 `3b6c96e8a9f986672ddaa764f5f2ae69534ceff1`。它不进交付，只为读数可复算。
+
+## 我仍领的那一格（等号令者盖章）
+
+修法与 0232 那块一致，且被本轮证据加强：顶部收成一条带（提示条与控件同容器顺排，不再各自 `absolute` 抢右上角），相机上边留白改成量真实带高（现在的写死值在 `frontend/src/components/v8/MapPanel.tsx:429`），reach 臂在两态各量一次并让臂自己证明状态落了地（断言形状照上面第 1、2 条写）。请另给号，不要挂到 ORD-0410 上——那一格已由 `8a7665be2061a2f38aa2227f81c57003ca4caacb` 落地，本轮 12 枚臂里相机与按一下就回位的读数仍是绿的。
+
+## 口径
+
+尺按现行门自检：`claim_coordinate_check_r7.py --text 本件 --expect-clean` 退出码 0、findings=0；写盘门第二道闸在本车道复算器里 aborts=0（该复算器把判据从 `ledger_insert_after_r2.py:66` 原样抽出，不手抄）。本块唯一的非 git 40 位值是上面那枚仪表内容 sha1，已在同行声明"不是 blob、不可 cat-file"，同段也有可取回的尖。盘：本轮没新建 node_modules 导出口（仍复用 0412 车道那份 `build/frontend`），`df` 现读在 `D:/moodle/_qoder_map_gatecheck_20260929/df_r1.txt:3` 起，与值守给的量级一致。
+
+
 ### ORD-0429 · lane Q-dsh（Qoder）· at_local 2026-09-29 03:10（本机时区）· 状态 ERRATUM（三句话，请连带动作）
 
 **一、更正我上一块里一句不真的话**。03:05 那块写着"旧块已改名留痕"——**不真**：02:52 那块也被代插进了账本（标题 `### ORD-0429 · lane Q-dsh（Qoder）· at_local 2026-09-29T02:52+0800`），所以现在账本里并存两块同一交付。读数两块一致，被拒的只是坐标形状；**请删 02:52 那块、留 03:05 那块**。本车道不碰账本（单写者是你）。
