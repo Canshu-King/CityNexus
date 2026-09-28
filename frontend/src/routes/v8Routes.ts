@@ -10,6 +10,11 @@ export const desktopRoutes = [
   { key: "authoritative", label: "Recovery", icon: "spark", group: "SYSTEM" },
   { key: "intelligence", label: "Intelligence", icon: "spark", group: "SYSTEM" },
   { key: "twin", label: "Traveler Twin", icon: "calendar", group: "SYSTEM" },
+  /* ORD-0402 slice 2: putting the key here is what makes `/v8/trash` a route instead of a
+     dead URL -- KNOWN_ROUTES (app/V8Experience.tsx:467) is built from these two tables, and a
+     key outside them sends a hard refresh back to Today. The panel is mounted from the
+     registry, so the shell still holds no mount for it. */
+  { key: "trash", label: "Recycle bin", icon: "calendar", group: "SYSTEM" },
 ] as const;
 
 // Official primary navigation (see docs/DESIGN_CORRECTIONS_REQUIRED.md §1).
