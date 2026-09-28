@@ -1,0 +1,20 @@
+{
+ "at_local": "2026-09-28T17:26:36+0800",
+ "tree": "D:/moodle/_qoder_cmdr_snap_full_0598 (git archive of 0598e4d17202fd0619592a40e617c67b2108afd3)",
+ "database": "D:/moodle/_qoder_cmdr_ref_20260921/_cmdr_iso_1725/iso.db  (sqlite3 backup of the shared preview, mode=ro source; user DB untouched)",
+ "journeys_columns_after_boot": 16,
+ "deleted_at_column_present": true,
+ "journey_id_under_test": "22222222-2222-4222-8222-222222222222",
+ "observed": {
+  "GET_journeys_list_status": 200,
+  "DELETE_status": 204,
+  "list_length_after_delete": 0,
+  "second_DELETE_status": 409
+ },
+ "table_state_after": {
+  "journeys_rows": 1,
+  "soft_deleted_rows": 1,
+  "activities_rows": 6
+ },
+ "user_preview_db": "D:/moodle/_qoder_preview_20260920/_preview.db  opened read-only, never by the new backend"
+}
