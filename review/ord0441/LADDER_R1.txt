@@ -1,0 +1,79 @@
+ORD-0441 -- the reference app's numeric ladders, measured rather than assumed, and what was aligned
+
+Lane 2d2d7428, 2026-09-29 ~04:1x +08. Order: copy the reference app's numeric ladders (spacing, radius,
+font size, shadow, divider weight) into our tokens with our own names, brand colours may be adopted, and
+keep the dark pairing arm green -- the ruler's predicate unchanged, only the numbers move.
+
+WHAT THE REFERENCE ACTUALLY EXPOSES (measured, and it is not a ladder)
+  resources.arsc has 1030 dimen entries; after the dump's own library-name filter 291 remain and 246 parse to dp.
+  What is left there is library plumbing (cardview_default_radius, ucrop_*, tooltip_*), not a design
+  system: the font-size bucket holds 0 entries. So the sizes are not in the resource table at all.
+  Measured instead where the View layer writes them: 830 product layout XMLs walked with aapt2 xmltree
+  (local read of the APK on this machine; no extracted file is git-added, no artefact was sent anywhere).
+    spacing   distinct values=127 most-used: 20dp x828, 16dp x557, 8dp x536, 12dp x535, 4dp x394, 10dp x366, 24dp x235, 6dp x194
+    radius    distinct values=38  most-used: 32dp x63, 16dp x57, 24dp x57, 20dp x49, 12dp x35, 8dp x29, 10dp x20, 4dp x17
+    font_size distinct values=38  most-used: 14sp x305, 12sp x208, 16sp x200, 20sp x55, 12dp x54, 24sp x47, 13sp x39, 15sp x36
+    shadow    distinct values=31  most-used: 2dp x74, 0dp x66, 4dp x37, 20dp x32, 1dp x27, 10dp x25, 5dp x18, 8dp x18
+    divider   distinct values=7   most-used: 1dp x12, 3dp x11, 2dp x9, 4dp x6, 0.5dp x3, 0dp x2, 1.25dp x2
+  That is a frequency histogram, not an enforced scale: the reference draws 127 different spacing values,
+  including 0.55dp and 3.37997dp. Taking 'the whole ladder' literally would import the noise, so what was
+  aligned is the top of each distribution -- the tiers the app actually paints most -- and the count behind
+  every chosen value is printed above so the choice can be argued with rather than trusted.
+
+THE ALIGNMENT (frontend/src/design-tokens.css blob 3c0551a4cca92b35a8b91a6b1dbc0dc067433b4c -> dcee02d1a92573fbe103b3cf2ad907dd9c7938ae, frontend/src/styles.css blob 6c4efbc6d5454004ffaa993ea5432a094caf3319 -> a8be124ccf8afbae9c199e933f5056e048a6fada)
+  --cn-fs-card             17px           -> 16px             consumers in frontend/src:   2  because the reference measures: font_size 16sp x200 / 17 is not a top tier
+  --cn-fs-body             17px           -> 16px             consumers in frontend/src:  43  because the reference measures: same
+  --cn-fs-meta             (none)         -> 14px             consumers in frontend/src:  11  because the reference measures: font_size 14sp x305 -- the reference's single most-used size, which we had no name for
+  --cn-r-control           11px           -> 12px             consumers in frontend/src:  35  because the reference measures: radius 12dp x35; 11 appears nowhere in the measured set
+  --cn-r-button            13px           -> 16px             consumers in frontend/src:   4  because the reference measures: radius 16dp x57; 13 appears nowhere
+  --cn-s-2 / -4 / -6 / -10 (none)         -> 2 / 4 / 6 / 10 px consumers in frontend/src: 153  because the reference measures: spacing 2dp x140, 4dp x394, 6dp x194, 10dp x366
+  --cn-divider-w           (literal 1px)  -> 1px token        consumers in frontend/src:  12  because the reference measures: divider 1dp x12 is their most-used -- the value did not change, it only got a name
+  Deliberately NOT changed, with the reason: the shadow tiers already sit on measured reference values
+  (blur 2/8/28/40 all appear in the shadow distribution), and --cn-gutter 20px is their single most-used
+  spacing (20dp x828). Two accepted rulings are also untouched on purpose: --cn-nav-icon-size stays 17px
+  (ORD-0416's accepted reading) and --cn-touch-min stays 44px (the Amendment F floor) -- moving them would
+  spend a delivered acceptance for a tier alignment, and that is your call, not mine.
+
+THE DARK ARM, PROVEN NOT TO HAVE MOVED (tools/cnx_token_night_pairing_r1.py --tokens, run before and after)
+  before  colour tokens in scope=40  NEUTRAL_BY_NAME=13  PAIRED_INHERITED=10  PAIRED_IN_DARK=17  UNACCOUNTED mentions=0  declarations=100  non-colour tokens=43
+  after   colour tokens in scope=40  NEUTRAL_BY_NAME=13  PAIRED_INHERITED=10  PAIRED_IN_DARK=17  UNACCOUNTED mentions=0  declarations=106  non-colour tokens=49
+  The colour classification is identical in both runs; what moved is the declaration count
+  (+6: the new tiers) and the non-colour count (+6). N3's three cells stay 0/0/0, so no token was
+  re-declared in dark with a value equal to light -- the failure mode that ruler was written to catch.
+
+RENDERED PROOF THAT THE NUMBERS REACH THE SCREEN (cmdr_ladder_reach_r1.js, 16 cells per arm)
+  arms: before = the line's own build (index-27A-LsuK.js on :60082), after = this branch's build (index-cfWo-DIr.js on :49151),
+  screens /v8/hub /v8/live /v8/stay /v8/discover x 390x844 and 414x896 x zh and en; every reading is
+  getComputedStyle, and the distribution counts painted elements, not source lines.
+  hub, 390x844, zh: resolved --cn-fs-body 17px -> 16px ; painted 17px elements 7 -> 0 ; painted 16px 14 -> 21
+  hub radius: painted 11px 9 -> 0 ; 12px 0 -> 9 ; 13px 0 -> 0 ; 16px 1 -> 1 (the two re-pointed tiers)
+  cells with no page error and no fatal: 16 of 16 on this arm
+
+REGRESSION CHECK AGAINST THE ORDERS THAT ALREADY LANDED
+  ORD-0427's two dimensions, re-read on this build, 8 cells (4 shapes x 2 arms): rows 13 plain + 1 pill,
+  head 32 px zh / 38 px en on rgb(10, 92, 214) 16px, kicker client rects 1, icon 17px -- all 8 cells hold: True
+  ORD-0416's first-screen floor (lane N3's frozen 768 px 口径, cmdr_drawer_grouping_r1.js unchanged):
+    zh-CN@390x844  items 14 -> 14, hittable at the 768 px floor 10 -> 10, drawer overflow 154 -> 154 px
+    zh-CN@320x844  items 14 -> 14, hittable at the 768 px floor 10 -> 10, drawer overflow 154 -> 154 px
+    en@390x844     items 14 -> 14, hittable at the 768 px floor 10 -> 10, drawer overflow 154 -> 154 px
+    en@320x844     items 14 -> 14, hittable at the 768 px floor 10 -> 10, drawer overflow 154 -> 154 px
+  Nothing that was delivered earlier moved: the floor reading is identical in both arms, and the
+  accepted 10-of-14 hittable count is not spent.
+
+GATES
+  npx tsc -p tsconfig.typecheck.json --noEmit  exit 0
+  npx vite build  exit 0, entry index-cfWo-DIr.js
+  python tools/cnx_token_night_pairing_r1.py --tokens frontend/src/design-tokens.css  exit 0, see above
+
+NOT CLAIMED, NAMED AS THE NEXT SLICE
+  * Colours were not touched. The reference's alpha axis is 0/10/15/25/50 while our tint ladder is
+    4/6/8/10/40/50/60, so four of our seven tint tiers sit off their axis; moving them changes hairline
+    and shadow strength, which is a contrast question, not a naming one, and it needs the contrast gate
+    decided first -- this file is the measurement for that decision, not the decision.
+  * Only the View layer was measured. Sizes written in compiled code (the Compose side) were not
+    extracted, so 'the whole ladder' here means the 127 values the layouts actually paint.
+  * The 347 off-ladder spacing literals named here (167 on the four new tiers alone) were migrated only
+    where the value was unchanged: 12 divider sites and 11 font sites now read the token, 167 padding /
+    margin / gap literals now read --cn-s-2/4/6/10. Any further migration changes geometry and is its own order.
+  * No screenshot is shipped: the reading is computed style, and a picture cannot show a resolved token.
+
