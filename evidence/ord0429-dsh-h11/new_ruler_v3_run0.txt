@@ -1,0 +1,167 @@
+[line0429_whole-ladder_ALL] run 1: green=True exit=0 aborted=None verdicts={'H4': True, 'H5': True, 'H6': True, 'H7': True, 'H8a': True, 'H9': True, 'H10a': True, 'H10b': True}
+{
+  "generated": "2026-09-29T02:37:37+0800",
+  "lane": "HERMES_REVIVAL / 9baacb24",
+  "policy": "GATE_ACCEPTANCE_STREAK (arbiter 5773071703 @15:58) + amendment conds 9/10 (arbiter 5773588112 @16:40)",
+  "command": "tools/streak_ruler_v3_ord0429.py --tree line0429 --shape whole-ladder --runs 1 --first-port 8580",
+  "tree": "line0429",
+  "tree_root": "D:\\moodle\\_qoder_ai_ord0429_20260929\\wt\\backend",
+  "run_shape": "whole-ladder",
+  "target_node": null,
+  "in_scope_nodes": [
+    "H4",
+    "H5",
+    "H6",
+    "H7",
+    "H8a",
+    "H9",
+    "H10a",
+    "H10b"
+  ],
+  "node_ordering": [
+    "H4",
+    "H5",
+    "H6",
+    "H7",
+    "H8a",
+    "H9",
+    "H10a",
+    "H10b"
+  ],
+  "preconditions_per_run": [
+    "seed via the product's own ensure_schema+seed_demo",
+    "build_active_plan (ACTIVE plan required by H6/H10)",
+    "PUT /travelers/{id}/agent-policy via the product API"
+  ],
+  "interpreters": {
+    "backend": "D:\\moodle\\CityNexus\\.venv\\Scripts\\python.exe",
+    "backend_version": "3.12.14",
+    "ladder": "D:\\moodle\\CityNexus-Hermes-Revival\\mcp-server\\.venv\\Scripts\\python.exe"
+  },
+  "instruments": {
+    "seeder": "seed_lane_db.py",
+    "driver": "streak_ruler_v3_ord0429.py",
+    "ladder": "h4_h10_ladder.py",
+    "ladder_sha256_12": "e2a8d917d1c5",
+    "driver_sha256_12": "857aadd0cdec",
+    "seeder_sha256_12": "7ec8fd779d59"
+  },
+  "cond1_same_provenance_across_runs": true,
+  "cond5_all_runs_green": true,
+  "cond6_sleep_sites_in_instruments": [
+    {
+      "file": "streak_ruler_v3_ord0429.py",
+      "line": 380,
+      "call": "time.sleep",
+      "purpose": "backend boot-readiness poll"
+    }
+  ],
+  "cond6_boot_readiness_polls": [
+    {
+      "run": 1,
+      "polls": 2,
+      "seconds": 5.0
+    }
+  ],
+  "cond6_gate_retries": 0,
+  "cond6_expectation_relaxation": "none - out-of-scope nodes are nulled, never forced true (checked per run: out_of_scope_nulled_not_forced)",
+  "cond3_freshness": {
+    "every_run_path_did_not_exist_before_this_run": true,
+    "every_run_inherited_no_preexisting_rows": true,
+    "every_run_path_source_is_app_printed": true,
+    "per_run": [
+      {
+        "run": 1,
+        "did_not_exist_before": true,
+        "cleared": [],
+        "inherited_no_preexisting_rows": true,
+        "initial_row_counts": {
+          "journeys": 1,
+          "plan_versions": 0,
+          "travelers": 1,
+          "replan_proposals": 0,
+          "activities": 0
+        },
+        "path_source": "app_printed_receipt_line"
+      }
+    ],
+    "rule": "any false here => HARNESS_INVALID for closure purposes: a streak over pre-existing databases is an observation, per the arbiter's 18:58 audit"
+  },
+  "closure_allowed": false,
+  "closure_denied_because": [
+    "no reverse-mutation evidence attached (NOT_ATTACHED)"
+  ],
+  "cond3_pre_clean_swept_files": [],
+  "cond3_sweep_authorized_by_flag": false,
+  "cond7_distinct_db_paths": 1,
+  "cond7_no_shared_db_path": true,
+  "cond8_note": "an isolated GREEN here is an observation; closure needs the classification below",
+  "cond9_shape_named": true,
+  "cond10_classification_per_node": {
+    "H4": {
+      "green_runs": 1,
+      "red_runs": 0,
+      "no_verdict_runs": 0,
+      "classification": "STABLE_GREEN(whole-ladder)"
+    },
+    "H5": {
+      "green_runs": 1,
+      "red_runs": 0,
+      "no_verdict_runs": 0,
+      "classification": "STABLE_GREEN(whole-ladder)"
+    },
+    "H6": {
+      "green_runs": 1,
+      "red_runs": 0,
+      "no_verdict_runs": 0,
+      "classification": "STABLE_GREEN(whole-ladder)"
+    },
+    "H7": {
+      "green_runs": 1,
+      "red_runs": 0,
+      "no_verdict_runs": 0,
+      "classification": "STABLE_GREEN(whole-ladder)"
+    },
+    "H8a": {
+      "green_runs": 1,
+      "red_runs": 0,
+      "no_verdict_runs": 0,
+      "classification": "STABLE_GREEN(whole-ladder)"
+    },
+    "H9": {
+      "green_runs": 1,
+      "red_runs": 0,
+      "no_verdict_runs": 0,
+      "classification": "STABLE_GREEN(whole-ladder)"
+    },
+    "H10a": {
+      "green_runs": 1,
+      "red_runs": 0,
+      "no_verdict_runs": 0,
+      "classification": "STABLE_GREEN(whole-ladder)"
+    },
+    "H10b": {
+      "green_runs": 1,
+      "red_runs": 0,
+      "no_verdict_runs": 0,
+      "classification": "STABLE_GREEN(whole-ladder)"
+    }
+  },
+  "reverse_mutation": {
+    "reverse_mutation_required": true,
+    "reverse_mutation_result": "NOT_ATTACHED"
+  },
+  "verdict_ceiling": "STREAK_GREEN",
+  "streak_green_runs": 1,
+  "runs_requested": 1,
+  "runs_completed": 1,
+  "canary_untouched": [
+    true
+  ],
+  "green_db_files_left_by_handle_race": [
+    "D:\\moodle\\CityNexus-Hermes-Revival\\evidence\\0212\\_st2_line0429_whole-ladder_ALL_1.db",
+    "D:\\moodle\\CityNexus-Hermes-Revival\\evidence\\0212\\_st2_line0429_whole-ladder_ALL_1.db-wal",
+    "D:\\moodle\\CityNexus-Hermes-Revival\\evidence\\0212\\_st2_line0429_whole-ladder_ALL_1.db-shm"
+  ]
+}
+WROTE D:\moodle\CityNexus-Hermes-Revival\evidence\0212\STREAK_V2_line0429_whole-ladder_ALL.json
