@@ -20,6 +20,10 @@ What the four hard constraints became in code, and which arm proves each:
 4. no pagination, no per-traveller scope, no filter: an arm reads the contract's parameter list
    for this path and asserts it is empty, so the copy cannot promise a filter the door lacks.
 
+A fifth arm covers the seam between this door and whatever renders it (ORD-0411): it reads the
+contract and the client generated from it, and deliberately does not read another lane's screen
+source, because that source is build-time syntax and its shape is not this door's business.
+
 The two doors partition the store - live rows plus bin rows equal every row - which is the
 reading that makes "it is in the bin" and "it is in the list" one fact instead of two guesses.
 """
@@ -299,46 +303,118 @@ def test_the_generated_client_carries_every_operation_the_contract_declares() ->
     )
 
 
-# ------------------------------------------------------ the cross-lane seam, pinned both ways
+# ------------------------- the seam, read from the contract and the client generated from it
 
-PANEL = ROOT / "frontend/src/features/trash/journeyTrash.ts"
+RECYCLE_BIN_PATH = "/recycle-bin/journeys"
+UNDELETE_PATH = "/journeys/{journey_id}/undelete"
+
+
+def _contract_fields(spec: dict, component: str) -> set[str]:
+    """One schema's field names, with its `allOf` bases resolved."""
+
+    node = spec["components"]["schemas"][component]
+    fields: set[str] = set()
+    for part in node.get("allOf", [node]):
+        if "$ref" in part:
+            fields |= _contract_fields(spec, part["$ref"].rsplit("/", 1)[1])
+        else:
+            fields |= set(part.get("properties", {}))
+    return fields
+
+
+def _contract_word(spec: dict, component: str) -> str:
+    """The single value `bin_state` may have, read out of the contract."""
+
+    node = spec["components"]["schemas"][component]
+    for part in node.get("allOf", [{}]):
+        enum = part.get("properties", {}).get("bin_state", {}).get("enum")
+        if enum:
+            assert len(enum) == 1, enum
+            return str(enum[0])
+    raise AssertionError(f"{component} declares no bin_state enum: {node}")
+
+
+def _generated_fields(text: str, component: str, seen: tuple[str, ...] = ()) -> set[str]:
+    """The field names openapi-typescript gives a component, intersections followed."""
+
+    assert component not in seen, f"cyclic component reference: {(*seen, component)}"
+    head = re.search(rf"^        {component}: ", text, re.MULTILINE)
+    assert head, f"{component} is not declared in frontend/src/generated/api.ts"
+    brace = text.index("{", head.end())
+    depth, index, start = 0, brace, brace + 1
+    while True:
+        char = text[index]
+        if char == "{":
+            depth += 1
+        elif char == "}":
+            depth -= 1
+            if depth == 0:
+                break
+        index += 1
+    own = set(re.findall(r"^ {12}(\w+)\??:", text[start:index], re.MULTILINE))
+    for base in set(re.findall(r'components\["schemas"\]\["(\w+)"\]', text[head.end() : brace])):
+        own |= _generated_fields(text, base, (*seen, component))
+    return own
 
 
 def test_the_panels_one_constant_and_field_names_match_the_route_that_was_landed() -> None:
-    """Slice 2 reaches this door through one TS literal, and nothing checked the two agree.
+    """ORD-0411 - the seam is judged from the contract and the generation, not from a screen's source.
 
-    The panel was written against a door that was not on the line when it was cut, and it names
-    the path and the row fields itself in `frontend/src/features/trash/journeyTrash.ts`.  This arm
-    reads those literals out of that file and holds them against the live route table and a real
-    answer, so a rename on either side goes red here rather than surfacing as a silently empty bin
-    on a phone.  It is a seam, not a copy: it asserts only what the two files already promise.
+    What this arm used to do was regex two literals out of
+    `frontend/src/features/trash/journeyTrash.ts`: a hand-written row type and a sentence naming the
+    state word.  That file then typed its rows from the generated component instead, both literals
+    went away, and the arm died on `'NoneType' object has no attribute 'group'` - a message that
+    named neither file and read as though the door had broken.
+
+    Reading that file was the wrong instrument in two ways.  A screen's TypeScript is erased at
+    build time, so a rename there cannot reach the bundle and cannot be caught from the server side
+    at all; and the agreement the arm exists to protect has three copies that do ship -
+    `contracts/openapi.yaml`, the `frontend/src/generated/api.ts` generated from it, and the door
+    that answers.  This arm now holds those three against each other: both doors declared with the
+    method the screen uses, the field names taken from the contract schema and compared with what
+    the generated client declares, and a real row checked against both.  What giving up the screen
+    file costs is stated plainly: nothing here notices someone editing `journeyTrash.ts`.  The
+    commander's own screen walk covers that half, and its readings are cited in the delivery.
     """
 
-    source = PANEL.read_text(encoding="utf-8")
-    declared_path = re.search(r'TRASH_LIST_PATH = "([^"]+)"', source).group(1)
-    block = re.search(r"export type DiscardedJourney = \{(.*?)\n\};", source, re.DOTALL).group(1)
-    declared_fields = re.findall(r"^\s*(\w+)\??:", block, re.MULTILINE)
-    expected_word = re.search(r"`(IN_[A-Z_]+)` is what this file expects", source).group(1)
+    methods: dict[str, set[str]] = {}
+    for route in app.routes:
+        path = getattr(route, "path", "")
+        for method in getattr(route, "methods", None) or ():
+            methods.setdefault(path, set()).add(method)
+    assert "GET" in methods.get(f"/api/v1{RECYCLE_BIN_PATH}", set()), sorted(methods)
+    assert "POST" in methods.get(f"/api/v1{UNDELETE_PATH}", set()), sorted(methods)
 
-    paths = {getattr(route, "path", "") for route in app.routes}
-    assert "/api/v1" + declared_path in paths, sorted(path for path in paths if "journey" in path)
-    assert {"/api/v1" + declared_path, "/api/v1/journeys"} <= paths, sorted(paths)
+    spec = yaml.safe_load(CONTRACT.read_text(encoding="utf-8"))
+    assert "get" in spec["paths"][RECYCLE_BIN_PATH], sorted(spec["paths"][RECYCLE_BIN_PATH])
+    assert "post" in spec["paths"][UNDELETE_PATH], sorted(spec["paths"][UNDELETE_PATH])
+    answered = spec["paths"][RECYCLE_BIN_PATH]["get"]["responses"]["200"]["content"]["application/json"]
+    assert answered["schema"]["items"]["$ref"].endswith("/RecycleBinJourney"), answered["schema"]
+
+    declared = _contract_fields(spec, "RecycleBinJourney")
+    assert {"id", "deleted_at", "bin_state"} <= declared, sorted(declared)
+    generated = GENERATED.read_text(encoding="utf-8")
+    in_the_client = _generated_fields(generated, "RecycleBinJourney")
+    assert declared == in_the_client, sorted(declared ^ in_the_client)
 
     journey_id = _journey()
     assert client.delete(f"/api/v1/journeys/{journey_id}").status_code == 204
     row = next(item for item in _bin_rows() if str(item["id"]) == journey_id)
-    absent = [name for name in declared_fields if name not in row]
-    assert absent == [], f"the panel declares fields this door does not send: {absent}"
+    absent = sorted(declared - set(row))
+    assert absent == [], f"the contract promises fields this door does not send: {absent}"
+    expected_word = _contract_word(spec, "RecycleBinJourney")
     assert str(row["bin_state"]) == expected_word, (row["bin_state"], expected_word)
-    # The raw column value, because the panel treats a null there as "the server did not answer".
+    # The raw column value, because a screen treats a null there as "the server did not answer".
     stored, _rowid = _stored_deleted_at(journey_id)
     assert datetime.fromisoformat(str(row["deleted_at"])) == datetime.fromisoformat(stored), (
         row["deleted_at"],
         stored,
     )
+    # The other door the contract promises the screen: bringing it back really does answer.
+    back = client.post(f"/api/v1/journeys/{journey_id}/undelete")
+    assert back.status_code == 200, back.text
     print(
-        f"[ord0402][seam] panel=frontend/src/features/trash/journeyTrash.ts "
-        f"declared_path={declared_path} declared_field_count={len(declared_fields)} "
-        f"missing_from_the_row={len(absent)} expected_bin_state={expected_word} "
-        f"route_table_contains_the_path=True"
+        f"[ord0402][seam] declared_by_contract={len(declared)} declared_in_generated_api_ts="
+        f"{len(in_the_client)} missing_from_the_row={len(absent)} expected_bin_state={expected_word} "
+        f"undelete_answered={back.status_code} panel_source_file_read=0"
     )
