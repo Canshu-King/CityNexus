@@ -1,0 +1,75 @@
+{
+ "at_local": "2026-09-28T16:59:10+0800",
+ "command": "GET /api/v1/journeys/{id}/experience on :8693 (authoritative tip tree 1f8d7061, shared preview data)",
+ "route": "/api/v1/journeys/22222222-2222-4222-8222-222222222222/experience",
+ "body_bytes": 5318,
+ "top_keys": [
+  "active_plan",
+  "experience_flags",
+  "journey",
+  "mobility_facts",
+  "offers",
+  "options",
+  "provider_mesh",
+  "recovery",
+  "selected_option_id",
+  "traveler_twin",
+  "trip"
+ ],
+ "trip_anchor_latitude": null,
+ "trip_anchor_longitude": null,
+ "active_plan_activities": 6,
+ "first_three_activities": [
+  {
+   "name": null,
+   "place_id": "place-old-town",
+   "location": null,
+   "metadata_keys": [
+    "completed_at_actual",
+    "legacy_execution_compatibility"
+   ]
+  },
+  {
+   "name": null,
+   "place_id": "place-riverside-museum",
+   "location": null,
+   "metadata_keys": [
+    "completed_at_actual",
+    "legacy_execution_compatibility"
+   ]
+  },
+  {
+   "name": null,
+   "place_id": "place-food-hall",
+   "location": null,
+   "metadata_keys": [
+    "completed_at_actual",
+    "legacy_execution_compatibility"
+   ]
+  }
+ ],
+ "offers_len": 0,
+ "options_len": 0,
+ "store_places_sample": [
+  {
+   "id": "place-beijing-forbidden-city",
+   "latitude": 39.9163,
+   "longitude": 116.3972,
+   "coordinate_system": "WGS84"
+  },
+  {
+   "id": "place-beijing-houhai",
+   "latitude": 39.941,
+   "longitude": 116.383,
+   "coordinate_system": "WGS84"
+  },
+  {
+   "id": "place-beijing-huguo-si-snacks",
+   "latitude": 39.934,
+   "longitude": 116.375,
+   "coordinate_system": "WGS84"
+  }
+ ],
+ "store_activities_joined_to_lat": 6,
+ "conclusion": "route ships the FIELDS but every coordinate value that MapPanel reads is null; the store has the values and the join is not made"
+}
