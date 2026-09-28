@@ -1,0 +1,392 @@
+{
+  "instrument": "cmdr_drawer_button_scope_r1",
+  "base": "http://127.0.0.1:4805/",
+  "entryAsset": [
+    "/assets/index-CGSMsxT2.js"
+  ],
+  "viewport": "390x844",
+  "locale": "zh",
+  "drawerButtonsTotal": 15,
+  "buttonsDirectlyUnderDrawer": 0,
+  "buttonsWrappedInOtherTag": 15,
+  "parentTagsSeen": [
+    "div"
+  ],
+  "rowsWithUaDefaultBackground": 0,
+  "bgColorsDistinct": [
+    "rgba(0, 0, 0, 0)",
+    "rgb(66, 89, 216)"
+  ],
+  "radiusDistinct": [
+    "10px"
+  ],
+  "fontSizeDistinct": [
+    "16px"
+  ],
+  "heightDistinct": [
+    44,
+    45
+  ],
+  "svgWidthPxSeen": [
+    null,
+    17
+  ],
+  "rowHeightSum": 674,
+  "rows": [
+    {
+      "label": "关闭",
+      "parentTag": "div",
+      "parentIsDrawer": false,
+      "directChildOfDrawer": false,
+      "bgColor": "rgba(0, 0, 0, 0)",
+      "color": "rgb(10, 92, 214)",
+      "padding": "5px 0px",
+      "borderRadius": "10px",
+      "fontSize": "16px",
+      "borderWidth": "0px/none",
+      "rectTop": 18,
+      "rectHeight": 44,
+      "rectWidth": 32,
+      "offsetHeight": 44,
+      "svgWidthPx": null,
+      "pixel": {
+        "rgb": [
+          255,
+          255,
+          255
+        ],
+        "hex": "#ffffff"
+      }
+    },
+    {
+      "label": "今天",
+      "parentTag": "div",
+      "parentIsDrawer": false,
+      "directChildOfDrawer": false,
+      "bgColor": "rgb(66, 89, 216)",
+      "color": "rgb(255, 255, 255)",
+      "padding": "12px 14px",
+      "borderRadius": "10px",
+      "fontSize": "16px",
+      "borderWidth": "0px/none",
+      "rectTop": 114,
+      "rectHeight": 45,
+      "rectWidth": 271,
+      "offsetHeight": 45,
+      "svgWidthPx": 17,
+      "pixel": {
+        "rgb": [
+          66,
+          89,
+          216
+        ],
+        "hex": "#4259d8"
+      }
+    },
+    {
+      "label": "实时行程",
+      "parentTag": "div",
+      "parentIsDrawer": false,
+      "directChildOfDrawer": false,
+      "bgColor": "rgb(66, 89, 216)",
+      "color": "rgb(255, 255, 255)",
+      "padding": "12px 14px",
+      "borderRadius": "10px",
+      "fontSize": "16px",
+      "borderWidth": "0px/none",
+      "rectTop": 175,
+      "rectHeight": 45,
+      "rectWidth": 271,
+      "offsetHeight": 45,
+      "svgWidthPx": 17,
+      "pixel": {
+        "rgb": [
+          182,
+          229,
+          255
+        ],
+        "hex": "#b6e5ff"
+      }
+    },
+    {
+      "label": "地图",
+      "parentTag": "div",
+      "parentIsDrawer": false,
+      "directChildOfDrawer": false,
+      "bgColor": "rgb(66, 89, 216)",
+      "color": "rgb(255, 255, 255)",
+      "padding": "12px 14px",
+      "borderRadius": "10px",
+      "fontSize": "16px",
+      "borderWidth": "0px/none",
+      "rectTop": 236,
+      "rectHeight": 45,
+      "rectWidth": 271,
+      "offsetHeight": 45,
+      "svgWidthPx": 17,
+      "pixel": {
+        "rgb": [
+          66,
+          89,
+          216
+        ],
+        "hex": "#4259d8"
+      }
+    },
+    {
+      "label": "行程工作台",
+      "parentTag": "div",
+      "parentIsDrawer": false,
+      "directChildOfDrawer": false,
+      "bgColor": "rgb(66, 89, 216)",
+      "color": "rgb(255, 255, 255)",
+      "padding": "12px 14px",
+      "borderRadius": "10px",
+      "fontSize": "16px",
+      "borderWidth": "0px/none",
+      "rectTop": 323,
+      "rectHeight": 45,
+      "rectWidth": 271,
+      "offsetHeight": 45,
+      "svgWidthPx": 17,
+      "pixel": {
+        "rgb": [
+          66,
+          89,
+          216
+        ],
+        "hex": "#4259d8"
+      }
+    },
+    {
+      "label": "住宿选择",
+      "parentTag": "div",
+      "parentIsDrawer": false,
+      "directChildOfDrawer": false,
+      "bgColor": "rgb(66, 89, 216)",
+      "color": "rgb(255, 255, 255)",
+      "padding": "12px 14px",
+      "borderRadius": "10px",
+      "fontSize": "16px",
+      "borderWidth": "0px/none",
+      "rectTop": 384,
+      "rectHeight": 45,
+      "rectWidth": 271,
+      "offsetHeight": 45,
+      "svgWidthPx": 17,
+      "pixel": {
+        "rgb": [
+          255,
+          255,
+          255
+        ],
+        "hex": "#ffffff"
+      }
+    },
+    {
+      "label": "城市探索",
+      "parentTag": "div",
+      "parentIsDrawer": false,
+      "directChildOfDrawer": false,
+      "bgColor": "rgb(66, 89, 216)",
+      "color": "rgb(255, 255, 255)",
+      "padding": "12px 14px",
+      "borderRadius": "10px",
+      "fontSize": "16px",
+      "borderWidth": "0px/none",
+      "rectTop": 445,
+      "rectHeight": 45,
+      "rectWidth": 271,
+      "offsetHeight": 45,
+      "svgWidthPx": 17,
+      "pixel": {
+        "rgb": [
+          66,
+          89,
+          240
+        ],
+        "hex": "#4259f0"
+      }
+    },
+    {
+      "label": "旅行票夹",
+      "parentTag": "div",
+      "parentIsDrawer": false,
+      "directChildOfDrawer": false,
+      "bgColor": "rgb(66, 89, 216)",
+      "color": "rgb(255, 255, 255)",
+      "padding": "12px 14px",
+      "borderRadius": "10px",
+      "fontSize": "16px",
+      "borderWidth": "0px/none",
+      "rectTop": 532,
+      "rectHeight": 45,
+      "rectWidth": 271,
+      "offsetHeight": 45,
+      "svgWidthPx": 17,
+      "pixel": {
+        "rgb": [
+          255,
+          245,
+          245
+        ],
+        "hex": "#fff5f5"
+      }
+    },
+    {
+      "label": "Copilot",
+      "parentTag": "div",
+      "parentIsDrawer": false,
+      "directChildOfDrawer": false,
+      "bgColor": "rgb(66, 89, 216)",
+      "color": "rgb(255, 255, 255)",
+      "padding": "12px 14px",
+      "borderRadius": "10px",
+      "fontSize": "16px",
+      "borderWidth": "0px/none",
+      "rectTop": 593,
+      "rectHeight": 45,
+      "rectWidth": 271,
+      "offsetHeight": 45,
+      "svgWidthPx": 17,
+      "pixel": {
+        "rgb": [
+          255,
+          229,
+          240
+        ],
+        "hex": "#ffe5f0"
+      }
+    },
+    {
+      "label": "恢复与执行",
+      "parentTag": "div",
+      "parentIsDrawer": false,
+      "directChildOfDrawer": false,
+      "bgColor": "rgb(66, 89, 216)",
+      "color": "rgb(255, 255, 255)",
+      "padding": "12px 14px",
+      "borderRadius": "10px",
+      "fontSize": "16px",
+      "borderWidth": "0px/none",
+      "rectTop": 680,
+      "rectHeight": 45,
+      "rectWidth": 271,
+      "offsetHeight": 45,
+      "svgWidthPx": 17,
+      "pixel": {
+        "rgb": [
+          66,
+          89,
+          216
+        ],
+        "hex": "#4259d8"
+      }
+    },
+    {
+      "label": "智能守护",
+      "parentTag": "div",
+      "parentIsDrawer": false,
+      "directChildOfDrawer": false,
+      "bgColor": "rgb(66, 89, 216)",
+      "color": "rgb(255, 255, 255)",
+      "padding": "12px 14px",
+      "borderRadius": "10px",
+      "fontSize": "16px",
+      "borderWidth": "0px/none",
+      "rectTop": 741,
+      "rectHeight": 45,
+      "rectWidth": 271,
+      "offsetHeight": 45,
+      "svgWidthPx": 17,
+      "pixel": {
+        "rgb": [
+          66,
+          89,
+          216
+        ],
+        "hex": "#4259d8"
+      }
+    },
+    {
+      "label": "旅行者画像",
+      "parentTag": "div",
+      "parentIsDrawer": false,
+      "directChildOfDrawer": false,
+      "bgColor": "rgb(66, 89, 216)",
+      "color": "rgb(255, 255, 255)",
+      "padding": "12px 14px",
+      "borderRadius": "10px",
+      "fontSize": "16px",
+      "borderWidth": "0px/none",
+      "rectTop": 802,
+      "rectHeight": 45,
+      "rectWidth": 271,
+      "offsetHeight": 45,
+      "svgWidthPx": 17,
+      "pixel": {
+        "rgb": [
+          66,
+          163,
+          245
+        ],
+        "hex": "#42a3f5"
+      }
+    },
+    {
+      "label": "回收站",
+      "parentTag": "div",
+      "parentIsDrawer": false,
+      "directChildOfDrawer": false,
+      "bgColor": "rgb(66, 89, 216)",
+      "color": "rgb(255, 255, 255)",
+      "padding": "12px 14px",
+      "borderRadius": "10px",
+      "fontSize": "16px",
+      "borderWidth": "0px/none",
+      "rectTop": 863,
+      "rectHeight": 45,
+      "rectWidth": 271,
+      "offsetHeight": 45,
+      "svgWidthPx": 17,
+      "pixel": null
+    },
+    {
+      "label": "行程",
+      "parentTag": "div",
+      "parentIsDrawer": false,
+      "directChildOfDrawer": false,
+      "bgColor": "rgb(66, 89, 216)",
+      "color": "rgb(255, 255, 255)",
+      "padding": "12px 14px",
+      "borderRadius": "10px",
+      "fontSize": "16px",
+      "borderWidth": "0px/none",
+      "rectTop": 924,
+      "rectHeight": 45,
+      "rectWidth": 271,
+      "offsetHeight": 45,
+      "svgWidthPx": 17,
+      "pixel": null
+    },
+    {
+      "label": "我的",
+      "parentTag": "div",
+      "parentIsDrawer": false,
+      "directChildOfDrawer": false,
+      "bgColor": "rgb(66, 89, 216)",
+      "color": "rgb(255, 255, 255)",
+      "padding": "12px 14px",
+      "borderRadius": "10px",
+      "fontSize": "16px",
+      "borderWidth": "0px/none",
+      "rectTop": 985,
+      "rectHeight": 45,
+      "rectWidth": 271,
+      "offsetHeight": 45,
+      "svgWidthPx": 17,
+      "pixel": null
+    }
+  ],
+  "pageErrors": []
+}
