@@ -1,0 +1,22 @@
+{
+ "group_supported": {
+  "chars": 63,
+  "head": "已支持：服务器认得它，而且目录里有东西\n\nREADY / 有 canonical 身份且有目录行\n\n这一轮没有名字落在这一组。",
+  "present": true
+ },
+ "group_needs": {
+  "chars": 58,
+  "head": "需联网才能解析：服务器现在认不出这个名字\n\nNO_CANONICAL_IDENTITY\n\n这一轮没有名字落在这一组。",
+  "present": true
+ },
+ "group_unknown": {
+  "chars": 372,
+  "head": "未知或无数据：这一轮拿不出可规划的判定\n\nHYDRATABLE 无目录行 / UNKNOWN_RETRYABLE / 没读到\n\n厦门\n身份还没读到\n还没问过服务器\nnot-asked\n北京\n身份还没读到\n还没问过服务器\nnot-asked\n上海\n身份还没读到\n还没问过服务器\nnot-asked\n天津\n身份还没读到\n还没问过服务器\nnot-asked\n福州\n身份还没读到\n还没问过服务器\nnot-asked\n广州\n身份还没读到\n还没问过服务器\nnot-asked\n深圳\n身份还没读到\n还没问过服务器\nnot-asked\n成都\n身份还没读到\n还没问过服务器\nnot-asked\n杭州\n身份还没读到\n还没",
+  "present": true
+ },
+ "none_supported": {
+  "chars": 13,
+  "head": "这一轮没有名字落在这一组。",
+  "present": true
+ }
+}
