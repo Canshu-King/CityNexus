@@ -1,0 +1,31 @@
+command: git diff -U0 1f8d7061:frontend/src/app/V8Experience.tsx 4c802d5a:frontend/src/app/V8Experience.tsx
+at: 2026-09-28T16:51:47+0800
+merge-base: 8fddeb76a79968592a7a3e98d2f296dda450d4df
+is tip ancestor of cand: no
+ frontend/src/app/V8Experience.tsx | 86 ++++++---------------------------------
+ 1 file changed, 12 insertions(+), 74 deletions(-)
+--- hunk headers ---
+@@ -4 +3,0 @@ import { MapPanel, tripHasNoCoordinates } from "../components/v8/MapPanel";
+@@ -47,0 +47 @@ import { JourneyLinkAction } from "../features/inbox/JourneyLinkAction";
+@@ -1783,2 +1782,0 @@ export function V8Experience() {
+@@ -1793,4 +1791 @@ export function V8Experience() {
+@@ -3045,0 +3041,7 @@ function Hub({
+@@ -3698,2 +3699,0 @@ function MapPage({
+@@ -3705,4 +3704,0 @@ function MapPage({
+@@ -3712,19 +3707,0 @@ function MapPage({
+@@ -3744,6 +3721 @@ function MapPage({
+@@ -3752,9 +3724,2 @@ function MapPage({
+@@ -3762,27 +3726,0 @@ function MapPage({
+--- the lines tip has that cand would delete (first 12) ---
+--- a/frontend/src/app/V8Experience.tsx
+-import { mapCopy } from "../i18n/mapPanelCopy";
+-              selectedActivityId={detailActivityId}
+-              onSelectActivity={setDetailActivityId}
+-                /* ORD-0390: this used to clear `detailActivityId` and then navigate to the map —
+-                   it threw away the very id the map needs to centre on, so 「在地图上显示」
+-                   could only ever land on a generic midpoint.  The selection is the payload of
+-                   this action, so it now survives it. */
+-  selectedActivityId,
+-  onSelectActivity,
+-  /** ORD-0390: the shell's one and only selection variable, threaded through rather than
+-      duplicated — a second "selected stop" state here is how two surfaces start disagreeing. */
