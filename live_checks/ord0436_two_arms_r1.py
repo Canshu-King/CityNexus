@@ -12,10 +12,12 @@ The screen is served by `vite preview` against the production bundle, with `CITY
 pointed at proof 1 -- `vite preview` does not inherit the dev proxy, so leaving that variable unset
 would quietly send the reading to port 8000 and report on somebody else's product.
 
-Two of the activity rows come from the product's own doors (DELETE and 找回 write them). The other
-two are written straight into this lane's private database: one member action, because the door that
-would write it is ORD-0434's and does not exist yet, and one action name nothing knows, which is the
-case the screen must refuse to dress up. Both are marked `fixture` in the readout.
+Three of the activity rows come from the product's own doors, in this order: POST /journeys writes
+`journey.created`, DELETE writes `journey.deleted`, and 找回 writes `journey.undeleted`. The other
+two go in through the product's own audit writer against this lane's private database: one member
+action, because the door that would write it is ORD-0434's and does not exist yet, and one action
+name nothing knows, which is the case the screen must refuse to dress up. Both are marked `fixture`
+in the readout.
 """
 
 from __future__ import annotations
@@ -102,7 +104,8 @@ def wait_for_port(port: int, timeout: float = 60.0) -> int | None:
 
 
 def seed(created_journey_id: str) -> dict[str, object]:
-    """Two real rows from the product's own doors, two fixtures, all in this lane's database."""
+    """Three rows from the product's own doors, two written by its own audit writer, all in this
+    lane's private database."""
 
     import httpx
 
