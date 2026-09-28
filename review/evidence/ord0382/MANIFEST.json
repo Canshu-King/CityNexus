@@ -232,6 +232,85 @@
     "primary_weight_after": "750",
     "hit_test_all_true_after": true
    }
+  },
+  "rebase_remeasure": {
+   "why": "Q24: a runtime reading does not migrate across the generation it depends on. The candidate was re-cut onto the line again (ORD-0386 version panel, ORD-0387 named ai_state enum, ORD-0389 reset gate), so all four shapes were re-measured on the new bundle rather than inherited.",
+   "files": {
+    "layout/measurements_after_rebase_r4.json": {
+     "sha256": "5792ef19acc266c4acf992ab56891b80fe69757a7adc82aea37fb0fbb20ea0cd",
+     "bytes": 10811
+    },
+    "layout/rebased-320.png": {
+     "sha256": "9039cd72852565b9550984fe92c40d0d6fa56d594a907e9245da6eeb9b5390de",
+     "bytes": 44387
+    },
+    "layout/rebased-360.png": {
+     "sha256": "6f3bf66e9a078167b4a5c79322a1b5dc32cfb68382e9a9fbd5f31b0e66f5c548",
+     "bytes": 47155
+    },
+    "layout/rebased-390.png": {
+     "sha256": "6a533c7f3b7d3963a038443d7877f99490fff64445836ea9bb653fcbcea731be",
+     "bytes": 48143
+    },
+    "layout/rebased-414.png": {
+     "sha256": "3b0e8b0bd14b3108ffe0ce82c2fb7be6ad8656591bc1e0c9e1b849ceb8f6a11a",
+     "bytes": 48703
+    }
+   },
+   "per_width": {
+    "320": {
+     "close_width": 44,
+     "title_column_previous": 232,
+     "title_column_rebased": 232,
+     "subtitle_lines": 2,
+     "chip_label_equals_submitted": true,
+     "footer_heights": [
+      44,
+      44
+     ],
+     "hit_test_all_self": true,
+     "all_in_viewport": true
+    },
+    "360": {
+     "close_width": 44,
+     "title_column_previous": 272,
+     "title_column_rebased": 272,
+     "subtitle_lines": 2,
+     "chip_label_equals_submitted": true,
+     "footer_heights": [
+      44,
+      44
+     ],
+     "hit_test_all_self": true,
+     "all_in_viewport": true
+    },
+    "390": {
+     "close_width": 44,
+     "title_column_previous": 302,
+     "title_column_rebased": 302,
+     "subtitle_lines": 2,
+     "chip_label_equals_submitted": true,
+     "footer_heights": [
+      44,
+      44
+     ],
+     "hit_test_all_self": true,
+     "all_in_viewport": true
+    },
+    "414": {
+     "close_width": 44,
+     "title_column_previous": 326,
+     "title_column_rebased": 326,
+     "subtitle_lines": 1,
+     "chip_label_equals_submitted": true,
+     "footer_heights": [
+      44,
+      44
+     ],
+     "hit_test_all_self": true,
+     "all_in_viewport": true
+    }
+   }
   }
  }
 }
