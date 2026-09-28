@@ -14,9 +14,10 @@
  *       markers are painted, at least two stop rows are hit-testable, and selecting works in both
  *       directions (row -> pin, pin -> row).
  *
- * The counter-example for "a place whose coordinate is gone" is NOT here: `places.latitude` is NOT NULL,
- * so the honest unjoinable state is a place row that is absent, and that needs a real store. It runs as
- * `review/e4f_ord0394_unjoinable_r1.py` against this lane's own backend and its own sqlite file.
+ * The counter-example for "a place whose coordinate is gone" is not a fixture: `places.latitude` is NOT
+ * NULL in the model and in the live schema, so the honest unjoinable state is a place row that is
+ * absent while an activity still names it. Z3 deletes that row from this attempt's own `_cmdr<run>.db`
+ * through `e2e/tools/ord0394_store_edit.py`, which refuses any other path.
  */
 import { expect, test, type Page } from "@playwright/test";
 import { spawnSync } from "node:child_process";
@@ -171,6 +172,12 @@ test("Z2_phone_arms_paint_and_select_on_real_data - 390x844 里标点与双向�
   const stops = page.locator('[data-testid^="map-stop-"]');
   const stopCount = await stops.count();
   expect(stopCount, "fewer than two stop rows are offered").toBeGreaterThanOrEqual(2);
+  /* Requirement 3 asks for these two counts by name, and a passing assertion prints nothing, so the
+     numbers have to be said out loud or the cell proves itself to nobody but the runner. */
+  console.log(
+    `Z2 phone 390x844: panel_visible=${await page.getByTestId("v8-maplibre-panel").first().isVisible()}` +
+      ` markers=${await markers.count()} stops=${stopCount}`,
+  );
 
   // forward: a row selects its pin.  A pin carries no "selected" class -- it answers with
   // aria-pressed (MapPanel.tsx:347), which is also what a screen reader is told.
@@ -229,6 +236,12 @@ test("Z3_a_place_without_a_row_answers_named_and_the_rest_keep_working - 反例�
   expect(now.latitude, "and carry no number").toBeNull();
   const stillLocated = after.filter((r) => r.latitude != null).length;
   expect(stillLocated, "only the victim may lose its coordinate").toBe(locatedBefore.length - 1);
+  /* The four fields the contract promises for a place that will not join, printed rather than only
+     asserted, so the named placeholder is a reading and not just a green check mark. */
+  console.log(
+    `Z3 wire answer for the lost place: state=${now.state} reason=${now.reason}` +
+      ` latitude=${now.latitude} longitude=${now.longitude} coordinate_system=${now.coordinate_system}`,
+  );
 
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto("/");
