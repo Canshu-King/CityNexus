@@ -1,0 +1,8 @@
+FF.                                                                      [100%]
+================================== FAILURES ===================================
+D:\moodle\_qoder_cmdr_snap_parent_e7286dfd\backend\tests\test_qoder_ord0307_credential_gate.py:50: AssertionError: ['qoder-handoff']
+C:\Users\≤÷ ÛÕı\AppData\Roaming\uv\python\cpython-3.12.14-windows-x86_64-none\Lib\pathlib.py:1013: FileNotFoundError: [Errno 2] No such file or directory: 'D:\\moodle\\_qoder_cmdr_snap_parent_e7286dfd\\PACKAGE-MANIFEST.json'
+=========================== short test summary info ===========================
+FAILED tests/test_qoder_ord0307_credential_gate.py::test_C01_the_scanned_set_is_named_and_actually_present
+FAILED tests/test_v18_3_convergence.py::test_release_metadata_and_map_entrypoint_are_converged
+2 failed, 1 passed in 6.40s
