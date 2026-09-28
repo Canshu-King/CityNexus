@@ -1,0 +1,67 @@
+ORD-0422  the eleven branch-gated rows: how each was reached and what each arm reads
+build under test: live tip 3b6c96e8a9f986672ddaa764f5f2ae69534ceff1, and its main JS asset is
+byte-equal to the delivered candidate's build -- /assets/index-oR3PVCYW.js, 1343017 bytes,
+sha256 ec9823cf7ed76162c854a38c53dff88c3d8d31a34086a59b63b052da7af8e22a
+matcher: whole rendered leaf equality, both arms, 390x844, scrolled to bottom
+
+== per row ==
+REACHED  "Confirmed by traveler"                                     reached in 2 case(s): with_unconfirmed_capability(/v8/twin), sealed_demo(/v8/twin)
+   [with_unconfirmed_capability] en=["Confirmed by traveler"]  zh=["已由旅行者确认"]  keys=["twin.confirmedByTraveler"]
+   [with_unconfirmed_capability] state: fixture: a traveler_capabilities row with confirmed = 0; the product's only capability door POST /api/v1/travelers/{id}/capabilities/confirm answered confirmed: true for a row sent with confirmed false, so no public door leaves that state
+   [sealed_demo] en=["Confirmed by traveler"]  zh=["已由旅行者确认"]  keys=[]  (interpolated, count widened)
+   [sealed_demo] state: product path only: the sealed demo entry button and, for the empty state, a second journey with no twin facts; the confirmed capability behind 已由旅行者确认 was written through the product's own POST /api/v1/travelers/{id}/capabilities/confirm, not by a database write
+REACHED  "Stated; confirmation needed"                               reached in 1 case(s): with_unconfirmed_capability(/v8/twin)
+   [with_unconfirmed_capability] en=["Stated; confirmation needed"]  zh=["已声明，尚待确认"]  keys=["twin.statedNeedsConfirm"]
+   [with_unconfirmed_capability] state: fixture: a traveler_capabilities row with confirmed = 0; the product's only capability door POST /api/v1/travelers/{id}/capabilities/confirm answered confirmed: true for a row sent with confirmed false, so no public door leaves that state
+REACHED  "No explicit preferences"                                   reached in 1 case(s): sealed_demo(/v8/twin)
+   [sealed_demo] en=["No explicit preferences"]  zh=["没有明确偏好"]  keys=[]  (interpolated, count widened)
+   [sealed_demo] state: product path only: the sealed demo entry button and, for the empty state, a second journey with no twin facts; the confirmed capability behind 已由旅行者确认 was written through the product's own POST /api/v1/travelers/{id}/capabilities/confirm, not by a database write
+REACHED  "hard need(s) remain explicit and are never learned."       reached in 2 case(s): with_unconfirmed_capability(/v8/twin), sealed_demo(/v8/twin)
+   [with_unconfirmed_capability] en=["{n} hard need(s) remain explicit and are never learned."]  zh=["{n} 项硬性需求仍按明确声明保留，不会被习得。"]  keys=["twin.hardNeedsRemain"]  (interpolated, count widened)
+   [with_unconfirmed_capability] state: fixture: a traveler_capabilities row with confirmed = 0; the product's only capability door POST /api/v1/travelers/{id}/capabilities/confirm answered confirmed: true for a row sent with confirmed false, so no public door leaves that state
+   [sealed_demo] en=["1 hard need(s) remain explicit and are never learned."]  zh=["1 项硬性需求仍按明确声明保留，不会被习得。"]  keys=[]  (interpolated, count widened)
+   [sealed_demo] state: product path only: the sealed demo entry button and, for the empty state, a second journey with no twin facts; the confirmed capability behind 已由旅行者确认 was written through the product's own POST /api/v1/travelers/{id}/capabilities/confirm, not by a database write
+NOT_REACHED "policy unavailable · confirmation required"           
+   tried on /v8/authoritative [case=with_proposal] en=False zh=False -- fixture: a PRESENTED replan_proposals row and its CANDIDATE plan_versions row, written only into this lane's private database copy; POST /api/v1/journeys/{id}/replans refuses to create one here (422 MOBILITY_DATA_UNAVAILABLE, no reachable routing provider on this box)
+   tried on /v8/twin [case=with_unconfirmed_capability] en=False zh=False -- fixture: a traveler_capabilities row with confirmed = 0; the product's only capability door POST /api/v1/travelers/{id}/capabilities/confirm answered confirmed: true for a row sent with confirmed false, so no public door leaves that state
+   tried on /v8/authoritative [case=no_policy_row] en=False zh=False -- fixture: the traveler_agent_policies row deleted, and the read door STILL answered 200 with a synthesised default, so the shell's policy prop is never null on this route
+REACHED  "CHANGED"                                                   reached in 2 case(s): with_proposal(/v8/authoritative), no_policy_row(/v8/authoritative)
+   [with_proposal] en=["CHANGED"]  zh=["已变化"]  keys=["v14.kickerChanged"]
+   [with_proposal] state: fixture: a PRESENTED replan_proposals row and its CANDIDATE plan_versions row, written only into this lane's private database copy; POST /api/v1/journeys/{id}/replans refuses to create one here (422 MOBILITY_DATA_UNAVAILABLE, no reachable routing provider on this box)
+   [no_policy_row] en=["CHANGED"]  zh=["已变化"]  keys=["v14.kickerChanged"]
+   [no_policy_row] state: fixture: the traveler_agent_policies row deleted, and the read door STILL answered 200 with a synthesised default, so the shell's policy prop is never null on this route
+REACHED  "PROTECTED"                                                 reached in 2 case(s): with_proposal(/v8/authoritative), no_policy_row(/v8/authoritative)
+   [with_proposal] en=["PROTECTED"]  zh=["受保护"]  keys=["v14.kickerProtected"]
+   [with_proposal] state: fixture: a PRESENTED replan_proposals row and its CANDIDATE plan_versions row, written only into this lane's private database copy; POST /api/v1/journeys/{id}/replans refuses to create one here (422 MOBILITY_DATA_UNAVAILABLE, no reachable routing provider on this box)
+   [no_policy_row] en=["PROTECTED"]  zh=["受保护"]  keys=["v14.kickerProtected"]
+   [no_policy_row] state: fixture: the traveler_agent_policies row deleted, and the read door STILL answered 200 with a synthesised default, so the shell's policy prop is never null on this route
+REACHED  "Baseline evidence"                                         reached in 2 case(s): with_proposal(/v8/authoritative), no_policy_row(/v8/authoritative)
+   [with_proposal] en=["Baseline evidence"]  zh=["基线证据"]  keys=["v14.baselineEvidence"]
+   [with_proposal] state: fixture: a PRESENTED replan_proposals row and its CANDIDATE plan_versions row, written only into this lane's private database copy; POST /api/v1/journeys/{id}/replans refuses to create one here (422 MOBILITY_DATA_UNAVAILABLE, no reachable routing provider on this box)
+   [no_policy_row] en=["Baseline evidence"]  zh=["基线证据"]  keys=["v14.baselineEvidence"]
+   [no_policy_row] state: fixture: the traveler_agent_policies row deleted, and the read door STILL answered 200 with a synthesised default, so the shell's policy prop is never null on this route
+REACHED  "Incident evidence"                                         reached in 2 case(s): with_proposal(/v8/authoritative), no_policy_row(/v8/authoritative)
+   [with_proposal] en=["Incident evidence"]  zh=["事发证据"]  keys=["v14.incidentEvidence"]
+   [with_proposal] state: fixture: a PRESENTED replan_proposals row and its CANDIDATE plan_versions row, written only into this lane's private database copy; POST /api/v1/journeys/{id}/replans refuses to create one here (422 MOBILITY_DATA_UNAVAILABLE, no reachable routing provider on this box)
+   [no_policy_row] en=["Incident evidence"]  zh=["事发证据"]  keys=["v14.incidentEvidence"]
+   [no_policy_row] state: fixture: the traveler_agent_policies row deleted, and the read door STILL answered 200 with a synthesised default, so the shell's policy prop is never null on this route
+REACHED  "Deterministic gate"                                        reached in 2 case(s): with_proposal(/v8/authoritative), no_policy_row(/v8/authoritative)
+   [with_proposal] en=["Deterministic gate", "Deterministic gate"]  zh=["确定性门控", "确定性闸门"]  keys=["discovery.detGate", "v14.deterministicGate"]
+   [with_proposal] state: fixture: a PRESENTED replan_proposals row and its CANDIDATE plan_versions row, written only into this lane's private database copy; POST /api/v1/journeys/{id}/replans refuses to create one here (422 MOBILITY_DATA_UNAVAILABLE, no reachable routing provider on this box)
+   [no_policy_row] en=["Deterministic gate", "Deterministic gate"]  zh=["确定性门控", "确定性闸门"]  keys=["discovery.detGate", "v14.deterministicGate"]
+   [no_policy_row] state: fixture: the traveler_agent_policies row deleted, and the read door STILL answered 200 with a synthesised default, so the shell's policy prop is never null on this route
+REACHED  "Delegation policy"                                         reached in 2 case(s): with_proposal(/v8/authoritative), no_policy_row(/v8/authoritative)
+   [with_proposal] en=["Delegation policy"]  zh=["授权策略"]  keys=["v14.delegationPolicy"]
+   [with_proposal] state: fixture: a PRESENTED replan_proposals row and its CANDIDATE plan_versions row, written only into this lane's private database copy; POST /api/v1/journeys/{id}/replans refuses to create one here (422 MOBILITY_DATA_UNAVAILABLE, no reachable routing provider on this box)
+   [no_policy_row] en=["Delegation policy"]  zh=["授权策略"]  keys=["v14.delegationPolicy"]
+   [no_policy_row] state: fixture: the traveler_agent_policies row deleted, and the read door STILL answered 200 with a synthesised default, so the shell's policy prop is never null on this route
+
+counts: rows=11 REACHED=10 NOT_REACHED=1
+REACHED through product doors with no stored-row fixture: ["Confirmed by traveler", "No explicit preferences", "hard need(s) remain explicit and are never learned."]
+REACHED only because this lane wrote a row into its OWN private database copy: ["Stated; confirmation needed", "CHANGED", "PROTECTED", "Baseline evidence", "Incident evidence", "Deterministic gate", "Delegation policy"]
+
+== the fixture log: rows written, and what the read doors answered ==
+{"mode": "proposal", "database": "D:/moodle/_qoder_q_ord0422/q0422_private.db", "rows_before": {"replan_proposals": 0, "traveler_capabilities": 0, "traveler_agent_policies": 1, "plan_versions": 1}, "rows_after": {"replan_proposals": 1, "traveler_capabilities": 0, "traveler_agent_policies": 1, "plan_versions": 2}, "verdict": "the read door serves the row, so the panel's proposal branch renders", "door_reading": [{"id": "4686d502-e4b1-43b5-8c11-4406c640b7d8", "journey_id": "22222222-2222-4222-8222-222222222222", "trigger_event_id": null, "base_plan_version_id": "55523d40-cafe-5bd2-b30a-de057ec7a839", "proposed_plan_version_id": "72a5eff6-aa98-4f04-a4ac-61f93abcddbd", "status": "PRESENTED", "hard_constraints_passed": true, "locked_commitments_preserved": true, "utility_score": 0.62, "score_breakdown": {"cost": -1200}, "diff": {"removed": ["09:30 Harbour Market walk"], "added": ["11:10 Riverside Museum slot"], "cost_delta_minor": -1200, "travel_delta_min": 8, "verified_evidence": {"baseline_plan_evidence": {"snapshot_id": "snap-baseline-01"}, "incident_recovery_evidence": {"route_provenance": "frozen_matrix", "source_provider": "citynexus-mobility", "mobility_snapshot": {"snapshot_id":
+{"mode": "capability", "database": "D:/moodle/_qoder_q_ord0422/q0422_private.db", "rows_before": {"replan_proposals": 1, "traveler_capabilities": 0, "traveler_agent_policies": 1, "plan_versions": 2}, "rows_after": {"replan_proposals": 1, "traveler_capabilities": 2, "traveler_agent_policies": 1, "plan_versions": 2}, "verdict": "the twin payload carries a confirmed=false row, which the /confirm door refuses to leave", "door_reading": [{"code": "QUIET_ENVIRONMENT", "severity": "SOFT", "confirmed": false}, {"code": "STEP_FREE_REQUIRED", "severity": "HARD", "confirmed": true}]}
+{"mode": "nopolicy", "database": "D:/moodle/_qoder_q_ord0422/q0422_private.db", "rows_before": {"replan_proposals": 1, "traveler_capabilities": 2, "traveler_agent_policies": 1, "plan_versions": 2}, "rows_after": {"replan_proposals": 1, "traveler_capabilities": 2, "traveler_agent_policies": 1, "plan_versions": 2}, "verdict": "with no stored policy the shell's policy prop is null, which is the only state the v14.policyUnavailable line renders in", "door_reading": {"policy_door_answer": {"mode": "ADVISORY", "auto_accept_replan": false, "max_auto_replan_cost_delta_minor": 0, "max_auto_loss_minor": 0, "max_auto_schedule_drift_min": 0, "allowed_activity_types": [], "allowed_booking_types": [], "protected_commitment_levels": ["C3_Guaranteed", "C4_Anchored"], "allow_auto_commitment_management": false, "allow_auto_when_provider_degraded": false, "allow_auto_on_critical_event": false, "traveler_id": "11111111-1111-4111-8111-111111111111", "version": 1, "created_at": "2026-09-28T19:40:15.695883Z", "updated_at": "2026-09-28T19:40:15.695883Z"}}}
+   DERIVED, and it refutes the verdict sentence above: the stored policy row count is 1 after the read door was called (it was 1 before), and the door answered with mode=ADVISORY, so reading the door materialises a default policy. There is no data state on this route that makes the shell's policy prop null, which is why v14.policyUnavailable stays NOT_REACHED.
