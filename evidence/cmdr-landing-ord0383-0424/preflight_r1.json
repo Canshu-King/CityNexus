@@ -1,0 +1,151 @@
+{
+ "schema": "CNX_CMDR_LANDING_PREFLIGHT_V1",
+ "lane": "commander 494abfd7",
+ "at_local": "2026-09-29T04:29:42+0800",
+ "mode": "LAND",
+ "authoritative_line": "mirror/integration-frontend-apple-pass1",
+ "tip_re_read_from_github_before": "8d038b21f09477b933cff3b1c7b09845c542373b",
+ "candidate_ref": "refs/heads/review/cmdr-recut-ord0383-r1",
+ "candidate_tip": "123fabb637fefe9e1be442b67f2da4be7e95ac74",
+ "genealogy": {
+  "ff_possible_rc": 0,
+  "ff_possible": true,
+  "merge_base": "8d038b21f09477b933cff3b1c7b09845c542373b",
+  "line_only_commits": 0,
+  "candidate_only_commits": 2
+ },
+ "file_sets": {
+  "line_side_since_base": [],
+  "candidate_side_since_base": [
+   "backend/app/main.py",
+   "backend/tests/test_qoder_ord0383_undelete_write_lock.py",
+   "backend/tests/test_qoder_ord0399_journey_undelete.py",
+   "review/ord0383-undelete-lock/READINGS_r1.json",
+   "review/ord0383-undelete-lock/READINGS_r1.md",
+   "review/ord0383-undelete-lock/readout_r1.py"
+  ],
+  "intersection": [],
+  "product_introduced_by_candidate": [
+   "backend/app/main.py"
+  ]
+ },
+ "merge_tree": {
+  "exit": 0,
+  "first_line": "1371c1e6c0afd43af8bfbfec48ab093ab3908849",
+  "conflict_reported": false,
+  "stderr_head": ""
+ },
+ "gate_run": {
+  "requested": [
+   "backend/tests/test_qoder_ord0383_undelete_write_lock.py",
+   "backend/tests/test_qoder_ord0399_journey_undelete.py"
+  ],
+  "collect_exit": 0,
+  "collected": null,
+  "test_exit": 0,
+  "summary": [
+   "11 passed, 2 warnings in 9.43s"
+  ],
+  "export": "D:/moodle/_qoder_cmdr_ref_20260921/snap_preflight_042824",
+  "blob_equality": [
+   {
+    "path": "backend/app/main.py",
+    "candidate_blob": "f6f259bfccab959b0882622e116278a0124d7aa6",
+    "export_blob": "f6f259bfccab959b0882622e116278a0124d7aa6",
+    "equal": true
+   },
+   {
+    "path": "backend/tests/test_qoder_ord0383_undelete_write_lock.py",
+    "candidate_blob": "2cd2cb82c8dcd04a2a4d30c68653916a85977f1d",
+    "export_blob": "2cd2cb82c8dcd04a2a4d30c68653916a85977f1d",
+    "equal": true
+   },
+   {
+    "path": "backend/tests/test_qoder_ord0399_journey_undelete.py",
+    "candidate_blob": "69c2e3199fe696c76848e8d3cd4c8f540ed80eb4",
+    "export_blob": "69c2e3199fe696c76848e8d3cd4c8f540ed80eb4",
+    "equal": true
+   },
+   {
+    "path": "review/ord0383-undelete-lock/READINGS_r1.json",
+    "candidate_blob": "e26e725062eb091ccfbd9efec4867ebfbc985d61",
+    "export_blob": "e26e725062eb091ccfbd9efec4867ebfbc985d61",
+    "equal": true
+   },
+   {
+    "path": "review/ord0383-undelete-lock/READINGS_r1.md",
+    "candidate_blob": "2480fc60a7cf861408df77a236c7692532e6b2e1",
+    "export_blob": "2480fc60a7cf861408df77a236c7692532e6b2e1",
+    "equal": true
+   },
+   {
+    "path": "review/ord0383-undelete-lock/readout_r1.py",
+    "candidate_blob": "5cbb2efe9444ab483bb4dd2a0eff0ccd9f73a056",
+    "export_blob": "5cbb2efe9444ab483bb4dd2a0eff0ccd9f73a056",
+    "equal": true
+   }
+  ],
+  "whole_suite": {
+   "collect_exit": 0,
+   "collected": 1440,
+   "interrupted": false,
+   "error_lines": [
+    "tests/test_qoder_ord0332_error_receipt.py::test_R7_the_envelope_keeps_every_field_it_already_had",
+    "tests/test_qoder_ord0332_error_receipt.py::test_R8_the_seed_is_read_off_the_real_request_not_just_the_dataclass",
+    "tests/test_solver_runtime_policy.py::test_unexpected_solver_programming_error_is_not_silently_hidden"
+   ],
+   "tail": [
+    "    _PortalFactoryType = Callable[[], AbstractContextManager[anyio.abc.BlockingPortal]]",
+    "-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html",
+    "1440 tests collected in 21.07s"
+   ],
+   "cmd": "D:/moodle/CityNexus/.venv/Scripts/python.exe -m pytest --collect-only -q tests  (cwd=<export>/backend, PYTHONPATH=<export>)"
+  },
+  "deletions": {
+   "deleted_by_candidate": [],
+   "still_present_in_export": []
+  },
+  "collect_stdout_tail": [
+   "",
+   "-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html",
+   "11 tests collected in 6.06s"
+  ],
+  "rooted_tests": {
+   "paths": [
+    "backend/tests/test_qoder_ord0383_undelete_write_lock.py",
+    "backend/tests/test_qoder_ord0399_journey_undelete.py"
+   ],
+   "exit": 0,
+   "summary": [
+    "11 passed, 2 warnings in 9.75s"
+   ]
+  },
+  "interpreter": "Python 3.12.14 (main, Aug 25 2026, 14:01:42) [MSC v.1944 64 bit (AMD64)]",
+  "exposure": {
+   "skipped": "no frontend/src file changed"
+  },
+  "frontend_build": {
+   "skipped": "no frontend/src file in this candidate"
+  }
+ },
+ "problems": [],
+ "verdict": "READY_TO_LAND",
+ "landing": {
+  "http": 200,
+  "response_head": "{'ref': 'refs/heads/mirror/integration-frontend-apple-pass1', 'node_id': 'REF_kwDOUhlJJ9oAMnJlZnMvaGVhZHMvbWlycm9yL2ludGVncmF0aW9uLWZyb250ZW5kLWFwcGxlLXBhc3Mx', 'url': 'https://api.github.com/repos/Ca",
+  "tip_after": "123fabb637fefe9e1be442b67f2da4be7e95ac74",
+  "branches_route": "123fabb637fefe9e1be442b67f2da4be7e95ac74",
+  "both_routes_agree": true,
+  "landed": true
+ },
+ "discipline": {
+  "evidence_paths_overwritten": 0,
+  "databases_opened": 0,
+  "surfaces_started_or_stopped": 0,
+  "credential_values_printed": 0,
+  "candidate_refs_pushed_by_commander": 0
+ },
+ "claim_kind": "git_and_pytest_determined",
+ "claimed_result": null,
+ "derived_result": null
+}
