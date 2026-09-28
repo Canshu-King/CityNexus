@@ -3149,12 +3149,12 @@ def get_journey(journey_id: UUID, session: Session = Depends(get_session)):
 # there is no member data to check a holder against; failing closed beats reading as "open".
 LINK_READABLE_VISIBILITIES = {"LINK_READ", "PUBLIC"}
 
-_SHARE_STATE_CODES = {
-    "REVOKED": ("SHARE_GRANT_REVOKED", 403),
-    "EXPIRED": ("SHARE_GRANT_EXPIRED", 403),
-    "NOT_LINK_READABLE": ("SHARE_GRANT_NOT_LINK_READABLE", 403),
-    "EXPIRY_UNREADABLE": ("SHARE_GRANT_EXPIRY_UNREADABLE", 403),
-}
+def _share_refusal(status: int, message: str, reason_code: str, details: dict) -> HTTPException:
+    """One shape for every grant refusal: the status picks the code, the name rides in reason_code."""
+    refused = HTTPException(status, message)
+    refused.reason_code = reason_code
+    refused.error_details = details
+    return refused
 
 
 def _share_grant_state(grant: JourneyShareGrant, now: datetime) -> str:
@@ -3196,11 +3196,11 @@ def create_share_grant(
     require(session, Journey, str(journey_id), "Journey")
     creator = payload.created_by.strip()
     if not creator:
-        return error(
-            "SHARE_GRANT_CREATOR_EMPTY",
+        raise _share_refusal(
+            422,
             "A share grant needs the person or device that created it.",
-            status=422,
-            details={"field": "created_by"},
+            "SHARE_GRANT_CREATOR_EMPTY",
+            {"field": "created_by"},
         )
     expires_at: str | None = None
     if payload.expires_at is not None:
@@ -3208,18 +3208,18 @@ def create_share_grant(
         try:
             parsed = datetime.fromisoformat(raw)
         except ValueError:
-            return error(
-                "SHARE_GRANT_EXPIRY_UNREADABLE",
+            raise _share_refusal(
+                422,
                 "The expiry sent cannot be read as an instant.",
-                status=422,
-                details={"field": "expires_at"},
+                "SHARE_GRANT_EXPIRY_UNREADABLE",
+                {"field": "expires_at"},
             )
         if parsed.tzinfo is None:
-            return error(
-                "SHARE_GRANT_EXPIRY_NO_OFFSET",
+            raise _share_refusal(
+                422,
                 "An expiry without an offset would be a guess about whose clock it is.",
-                status=422,
-                details={"field": "expires_at"},
+                "SHARE_GRANT_EXPIRY_NO_OFFSET",
+                {"field": "expires_at"},
             )
         expires_at = parsed.astimezone(timezone.utc).isoformat()
     stamp = datetime.now(timezone.utc).isoformat()
@@ -3259,18 +3259,18 @@ def list_share_grants(journey_id: UUID, session: Session = Depends(get_session))
 def revoke_share_grant(journey_id: UUID, grant_id: str, session: Session = Depends(get_session)):
     grant = session.get(JourneyShareGrant, grant_id)
     if grant is None or grant.journey_id != str(journey_id):
-        return error(
-            "SHARE_GRANT_UNKNOWN",
+        raise _share_refusal(
+            404,
             "No share grant of this journey carries that id.",
-            status=404,
-            details={"field": "grant_id"},
+            "SHARE_GRANT_UNKNOWN",
+            {"field": "grant_id", "journey_id": str(journey_id)},
         )
     if grant.revoked_at:
-        return error(
-            "SHARE_GRANT_ALREADY_REVOKED",
+        raise _share_refusal(
+            409,
             "This grant was already withdrawn; withdrawing it again is not a new fact.",
-            status=409,
-            details={"field": "revoked_at", "journey_id": grant.journey_id},
+            "SHARE_GRANT_ALREADY_REVOKED",
+            {"revoked_at": grant.revoked_at, "grant_id": grant.id},
         )
     stamp = datetime.now(timezone.utc).isoformat()
     grant.revoked_at = stamp
@@ -3296,35 +3296,33 @@ def read_shared_journey(token: str, session: Session = Depends(get_session)):
         select(JourneyShareGrant).where(JourneyShareGrant.token == token)
     ).first()
     if grant is None:
-        return error(
-            "SHARE_GRANT_UNKNOWN",
-            "No share grant carries that token.",
-            status=404,
-            details={"field": "token"},
+        # "never existed" answers 404; a grant that stopped working answers 409.  Two different facts
+        # cannot share one number, or a client collapses them into the same sentence.
+        raise _share_refusal(
+            404, "No share grant carries that token.", "SHARE_GRANT_UNKNOWN", {"field": "token"}
         )
     state = _share_grant_state(grant, datetime.now(timezone.utc))
     if state != "READABLE":
-        code, status = _SHARE_STATE_CODES[state]
         details: dict[str, str] = {"grant_id": grant.id, "state": state}
         if state == "REVOKED":
             details["revoked_at"] = str(grant.revoked_at)
-        elif state == "EXPIRED":
+        elif state in ("EXPIRED", "EXPIRY_UNREADABLE"):
             details["expires_at"] = str(grant.expires_at)
         elif state == "NOT_LINK_READABLE":
             details["visibility"] = grant.visibility
-        return error(
-            code,
+        raise _share_refusal(
+            409,
             "This share grant does not allow a read right now.",
-            status=status,
-            details=details,
+            f"SHARE_GRANT_{state}",
+            details,
         )
     journey = session.get(Journey, grant.journey_id)
     if journey is None:
-        return error(
-            "SHARE_GRANT_JOURNEY_GONE",
+        raise _share_refusal(
+            404,
             "The journey behind this grant is no longer readable.",
-            status=404,
-            details={"grant_id": grant.id},
+            "SHARE_GRANT_JOURNEY_GONE",
+            {"grant_id": grant.id},
         )
     return journey_schema(journey)
 

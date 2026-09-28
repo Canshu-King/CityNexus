@@ -98,8 +98,9 @@ def _create(journey_id: str, visibility: str = "LINK_READ", expires_at: str | No
     return response.json()
 
 
-def _code(payload: dict) -> str:
-    return str((payload.get("error") or {}).get("code"))
+def _reason(payload: dict) -> str:
+    """The named fact rides in `error.reason_code`; `error.code` stays the one existing family."""
+    return str((payload.get("error") or {}).get("reason_code"))
 
 
 # ---------------------------------------------------------------- grant as a server fact
@@ -144,7 +145,7 @@ def test_an_expiry_without_an_offset_is_refused_rather_than_guessed() -> None:
         json={"visibility": "LINK_READ", "created_by": "lane-rel", "expires_at": naive},
     )
     assert response.status_code == 422, response.text
-    assert _code(response.json()) == "SHARE_GRANT_EXPIRY_NO_OFFSET"
+    assert _reason(response.json()) == "SHARE_GRANT_EXPIRY_NO_OFFSET"
 
 
 # ---------------------------------------------------------------- the two-way readings
@@ -159,7 +160,7 @@ def test_revoke_then_the_same_request_gives_a_different_answer() -> None:
     assert first.json()["already_revoked"] is False
     second = client.post(same_request)
     assert second.status_code != first.status_code, "the same request must not answer the same twice"
-    assert _code(second.json()) == "SHARE_GRANT_ALREADY_REVOKED"
+    assert _reason(second.json()) == "SHARE_GRANT_ALREADY_REVOKED"
 
 
 def test_a_revoked_token_stops_working_on_the_next_read() -> None:
@@ -171,8 +172,8 @@ def test_a_revoked_token_stops_working_on_the_next_read() -> None:
 
     assert client.post(REVOKE_PATH.format(journey_id=journey_id, grant_id=grant["id"])).status_code == 200
     after = client.get(TOKEN_PATH.format(token=grant["token"]))
-    assert after.status_code == 403, after.text
-    assert _code(after.json()) == "SHARE_GRANT_REVOKED"
+    assert after.status_code == 409, after.text
+    assert _reason(after.json()) == "SHARE_GRANT_REVOKED"
     assert after.json()["error"]["details"]["grant_id"] == grant["id"]
 
 
@@ -181,14 +182,14 @@ def test_expired_and_never_existed_are_different_named_codes() -> None:
     past = (datetime.now(timezone.utc) - timedelta(minutes=5)).isoformat()
     grant = _create(journey_id, "LINK_READ", past)
     expired = client.get(TOKEN_PATH.format(token=grant["token"]))
-    assert expired.status_code == 403, expired.text
-    assert _code(expired.json()) == "SHARE_GRANT_EXPIRED"
+    assert expired.status_code == 409, expired.text
+    assert _reason(expired.json()) == "SHARE_GRANT_EXPIRED"
     assert expired.json()["error"]["details"]["expires_at"] == grant["expires_at"]
 
     absent = client.get(TOKEN_PATH.format(token="not-a-grant-" + uuid4().hex))
-    assert _code(absent.json()) == "SHARE_GRANT_UNKNOWN"
+    assert _reason(absent.json()) == "SHARE_GRANT_UNKNOWN"
     assert absent.status_code == 404, "an unknown token is not the same fact as an expired one"
-    assert _code(absent.json()) != _code(expired.json())
+    assert _reason(absent.json()) != _reason(expired.json())
 
 
 def test_visibility_without_a_member_store_fails_closed() -> None:
@@ -196,8 +197,8 @@ def test_visibility_without_a_member_store_fails_closed() -> None:
     for visibility in ("PRIVATE", "INVITEES_ONLY"):
         grant = _create(journey_id, visibility)
         response = client.get(TOKEN_PATH.format(token=grant["token"]))
-        assert response.status_code == 403, f"{visibility} must not read as open: {response.text}"
-        assert _code(response.json()) == "SHARE_GRANT_NOT_LINK_READABLE"
+        assert response.status_code == 409, f"{visibility} must not read as open: {response.text}"
+        assert _reason(response.json()) == "SHARE_GRANT_NOT_LINK_READABLE"
         assert response.json()["error"]["details"]["visibility"] == visibility
 
 

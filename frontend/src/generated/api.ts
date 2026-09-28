@@ -477,7 +477,7 @@ export interface paths {
             };
             cookie?: never;
         };
-        /** @description The door a grant token is presented at, so that a deadline and a withdrawal can mean something.  A successful read answers with the same Journey shape as `/journeys/{journey_id}` - one shape, not a second one that can drift.  Three endings are three different named codes: SHARE_GRANT_UNKNOWN (404, never existed), SHARE_GRANT_EXPIRED (403), SHARE_GRANT_REVOKED (403).  PRIVATE and INVITEES_ONLY fail closed as SHARE_GRANT_NOT_LINK_READABLE until step 2 gives the server member data to check a holder against. */
+        /** @description The door a grant token is presented at, so that a deadline and a withdrawal can mean something.  A successful read answers with the same Journey shape as `/journeys/{journey_id}` - one shape, not a second one that can drift.  The named facts ride in `error.reason_code`, inside the one envelope every door already uses: never existed is 404 NOT_FOUND / SHARE_GRANT_UNKNOWN, while withdrawn, out of date and not-link-readable are 409 CONFLICT with their own reason_code.  PRIVATE and INVITEES_ONLY fail closed as SHARE_GRANT_NOT_LINK_READABLE until step 2 gives the server member data to check a holder against. */
         get: operations["readSharedJourney"];
         put?: never;
         post?: never;
@@ -4321,7 +4321,7 @@ export interface operations {
                 };
             };
             404: components["responses"]["NotFound"];
-            /** @description error.code = VALIDATION_ERROR, or SHARE_GRANT_CREATOR_EMPTY / SHARE_GRANT_EXPIRY_UNREADABLE / SHARE_GRANT_EXPIRY_NO_OFFSET */
+            /** @description error.code = VALIDATION_ERROR with error.reason_code = SHARE_GRANT_CREATOR_EMPTY / SHARE_GRANT_EXPIRY_UNREADABLE / SHARE_GRANT_EXPIRY_NO_OFFSET */
             422: {
                 headers: {
                     [name: string]: unknown;
@@ -4353,7 +4353,7 @@ export interface operations {
                     "application/json": components["schemas"]["ShareGrantRevoked"];
                 };
             };
-            /** @description error.code = SHARE_GRANT_UNKNOWN - no grant of this journey carries that id */
+            /** @description error.code = NOT_FOUND with error.reason_code = SHARE_GRANT_UNKNOWN - no grant of this journey carries that id */
             404: {
                 headers: {
                     [name: string]: unknown;
@@ -4362,7 +4362,7 @@ export interface operations {
                     "application/json": components["schemas"]["ErrorEnvelope"];
                 };
             };
-            /** @description error.code = SHARE_GRANT_ALREADY_REVOKED - this grant was withdrawn earlier */
+            /** @description error.code = CONFLICT with error.reason_code = SHARE_GRANT_ALREADY_REVOKED - this grant was withdrawn earlier */
             409: {
                 headers: {
                     [name: string]: unknown;
@@ -4393,8 +4393,8 @@ export interface operations {
                     "application/json": components["schemas"]["Journey"];
                 };
             };
-            /** @description error.code is one of SHARE_GRANT_REVOKED / SHARE_GRANT_EXPIRED / SHARE_GRANT_NOT_LINK_READABLE / SHARE_GRANT_EXPIRY_UNREADABLE */
-            403: {
+            /** @description error.code = NOT_FOUND with error.reason_code = SHARE_GRANT_UNKNOWN (never existed) or SHARE_GRANT_JOURNEY_GONE - a different number from the one above, on purpose */
+            404: {
                 headers: {
                     [name: string]: unknown;
                 };
@@ -4402,8 +4402,8 @@ export interface operations {
                     "application/json": components["schemas"]["ErrorEnvelope"];
                 };
             };
-            /** @description error.code = SHARE_GRANT_UNKNOWN (no such token) or SHARE_GRANT_JOURNEY_GONE */
-            404: {
+            /** @description error.code = CONFLICT with error.reason_code = SHARE_GRANT_REVOKED / SHARE_GRANT_EXPIRED / SHARE_GRANT_NOT_LINK_READABLE / SHARE_GRANT_EXPIRY_UNREADABLE - a grant that exists but no longer allows a read */
+            409: {
                 headers: {
                     [name: string]: unknown;
                 };
