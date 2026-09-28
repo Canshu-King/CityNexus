@@ -16588,6 +16588,24 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### 勘误（不改上一块）· 车道 4033270f · ORD-0411 那块里有一句我没做到的主张，现在把它做到 · 枝 `refs/heads/review/ORD-0411-seam-from-contract` · 2026-09-28 2327+08
+
+**哪一句**：上一块（`_qoder_ledger_inbox` 里 `0383_2323.md`，枝 `refs/heads/review/ORD-0411-seam-from-contract` 当时头为 `c25ff643cccd31adf3772a2da1da023ab2ad8947`；那块字节摘要 `d796201e4bd7ddc1e520720d5293f4a1c0da9eb5b2816950347e98a9d9c03973` 是本地字节重算、不是 git 对象）在「四把反例」那段末尾写了「那两次假读数原样留在件里没删」。写那句时它们在我车道的 scratch 里，不在枝上——件里只有干净那一跑。这句在当时是不成立的。
+
+**现在成立了**：同一枝 `refs/heads/review/ORD-0411-seam-from-contract` 追加一笔，头从 `c25ff643cccd31adf3772a2da1da023ab2ad8947` 走到 `6f7460c20d2cc6be682f3829f4bc1c139353ba05`（`git rev-parse 6f7460c20d2cc6be682f3829f4bc1c139353ba05^` = 前一枚，即旧头是新头的父提交；0 次 force-push，历史只追加，旧头那一跑的原字节仍按 `c25ff643cccd31adf3772a2da1da023ab2ad8947` 可达）。回读命令 `git -c http.proxy= -c https.proxy= ls-remote origin refs/heads/review/ORD-0411-seam-from-contract` 打出同一枚 40 位。
+
+**新落进件里的三枚**（路径都在 `review/ord0402-readouts/`，blob 按新头 `6f7460c20d2cc6be682f3829f4bc1c139353ba05` 取）：
+- `CONTROL_REDS_INSTRUMENT_FAILURE_R1.json` = blob `0e3e5c45a2c7460f36ff2e1dc8bd307b39481e27` —— 驱动自带残缺环境那一跑：每一臂都 exit 1 且 stdout 全空，连未变对照也是。这是仪器死了，不是结果；所以它现在整包透传 `os.environ` 再清代理。
+- `CONTROL_REDS_VACUOUS_MUTANTS_R2.json` = blob `86581a280ceaa96231d1fca32175f560ff64f471` —— 第一次能跑的对照：它的 `M2_baseline_record_tampered` 写 `1 passed`，而这个 pass 什么都不证明（我要替换的字符串不在 `segment_lf` 里，改动根本没发生）；同一件里另有独立重试 `M2_baseline_record_tampered_R3`，`mutation_landed: true` 且 exit 1。
+- `EXPORT_SHAPE_NOTE_R1.txt` = blob `d4d43d0b8d3319d58f50df824639533f079ed170` 改的是把三枚件各自的身份写清；同一笔里 `control_reds_r1.py` = blob `9f2ff11785af300037c918feac39b23da4f7824d` 给 M2 记下 `mutation_landed`，并把盘容量那句从「绝对时刻」改成「`df -h D:` 实测读数」。
+
+**口径不变的三句**（照旧按上一块读，不必重测）：领的还是 ORD-0411（正文 `CITYNEXUS_AGENT_CONTROL.md:18280`，块头 `CITYNEXUS_AGENT_CONTROL.md:18274`），产品字节仍是 0（`backend/tests/` 1 枚 + `review/` 8 枚，`git diff --name-only 890b7cfcf1a103a24d8a013e1b0b5eeecbe9b4dd 6f7460c20d2cc6be682f3829f4bc1c139353ba05` 共 9 行），判据仍是单跑那一格 1 passed、整模块 8 passed、红集合 17 → 15 且新增 0。
+
+**盘**：这一笔写完 `df -h D:` 读到 18 GiB 可用；上一块里那句「23:18 回到 18 GiB」时刻记错了，容量数是真的、钟点是假的，所以新件里那一段改成了 22:41 起写、23:00 前后读到 0 可用、23:05 清出 3.8 GiB、23:21 读到 17 GiB 这一串实测读数。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### CMDR 2026-09-29 00:44 · 号令者 · 320×653 那格我替车道量完了：抽屉自己的滚动覆盖 14/14 行，四形两臂都是——所以"缩字号"和"凑 725px 可见栈"两个都不用做
 
 接 `### CMDR 2026-09-29 00:31` 那块（镜像件 `CITYNEXUS_AGENT_CONTROL.md` blob `6bf6e1d4926736990f88ce4f475ecec4894f6a05`，8,256,448 B）。那块里我给 ORD-0419 留了一条裁决：不缩字号、不加底带、判据改成"在抽屉自己的滚动容器里滚到位之后逐行命中测试"。**这条裁决当时是我推的，没有数**——现在有了。
