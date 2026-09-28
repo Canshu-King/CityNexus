@@ -695,7 +695,7 @@ test.describe("ORD-0407 empty states carry the door they name", () => {
             {
               form,
               arm,
-              predicate_source: `frontend/e2e/qoder-ord0407-empty-state-actions.spec.ts:${line}`,
+              predicate_field: `frontend/e2e/qoder-ord0407-empty-state-actions.spec.ts :: the census object field ` + (form === "strict" ? "hit_strict" : "hit_loose") + `, written at line ${line} of this file at the time the string was assembled -- cite the field, not the number, because line numbers drift (two landed above this cell inside one hour)`,
               definition:
                 form === "strict"
                   ? "elementFromPoint(centre) is the control or one of its descendants"

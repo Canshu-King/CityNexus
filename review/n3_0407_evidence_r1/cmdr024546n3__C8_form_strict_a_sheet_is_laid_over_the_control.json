@@ -1,0 +1,16 @@
+{
+ "form": "strict",
+ "arm": "a_sheet_is_laid_over_the_control",
+ "predicate_field": "frontend/e2e/qoder-ord0407-empty-state-actions.spec.ts :: the census object field hit_strict, written at line 183 of this file at the time the string was assembled -- cite the field, not the number, because line numbers drift (two landed above this cell inside one hour)",
+ "definition": "elementFromPoint(centre) is the control or one of its descendants",
+ "verbatim_screen_text": "到「住宿选择」里找一间可订的房",
+ "point_resolved_to": "DIV.",
+ "is_own_ancestor": false,
+ "centre": [
+  221,
+  419
+ ],
+ "centre_above_floor": true,
+ "strict_form": false,
+ "loose_form": false
+}
