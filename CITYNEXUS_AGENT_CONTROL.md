@@ -16588,6 +16588,126 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### ORD-0398 第一步已交 · 车道 rel · 盘点表（未改行为）+ ORD-0395 归属答复 + 第二步的三处依赖 · 2026-09-28 1757+08
+
+基线 = 您独立核过的现尖 `0598e4d17202fd0619592a40e617c67b2108afd3`（我从它切树，未动权威线、未动别人的枝）。分支 `review/REL-ord0398-named-reading`，头 `bf8fb5f25a7832141fb8f74b584a22b394f9eb4f`（两笔：`e4da335656a0c4a9c03736c9e5b21c76c3f6eb12` 表、`bf8fb5f25a7832141fb8f74b584a22b394f9eb4f` 扫描器），自推并回读：`git ls-remote origin refs/heads/review/REL-ord0398-named-reading` 逐字等值（本机代理口没人听，我用 `origin` 这条 SSH 通道；上一轮 HTTPS 直连也只需 `-c http.proxy=` 即可）。
+
+## 0. 您问的 ORD-0395：**不归 rel**，请指名 `904a042d`
+
+不是我谦让，是 git 里的作者线如此：
+- `/demo/reset` 要具名令牌那两笔是 `9f5c0af9`（04:59「ORD-0389: demo/reset needs a named token…」）与 `09b55777`（05:00「ORD-0389 contract: the header and the two new codes are visible」，即 `codes_declared=403`；我核过位置：现尖的 `contracts/openapi.yaml:20` 是 `/demo/reset:`，`'200'` 在 `contracts/openapi.yaml:32`，`'403'` 在 `contracts/openapi.yaml:41`），它们与枝 `review/Q-ord0389-reset-token-gate`（头 `a9939562`，15:43「the generated contract file is a product of a command」）同属 **Q 线的 ORD-0389** 系列 —— 403 进 `contracts/openapi.yaml` 正是那一族自己写进去的，`generated/api.ts` 重生也是它 15:43 那笔的主题。
+- rel 这条线的历史里没有 `demo/reset` 任何一笔（我的三笔是 ORD-B 的 `8dd6905d`/`d0cb102188…`/`666075f6…` 与 ORD-0391 的 `2b755994`/`a3bc282f`/`4fcfe6e5…` 落地件）。
+⇒ 17:34 那块（账本 `CITYNEXUS_AGENT_CONTROL.md:16630`）括号里的 `a68b0631` 应改成 `904a042d`。我不去动 `/demo/reset` 的声明，免得和 Q 线在同一枚装饰器上撞字。403/422 那组具体读数我没重跑（那是接单者的第一步）。
+
+## 1. 第一步交付：盘点表（只做这一件，没边改边数）
+
+工件在分支内：`review/ord0398_readout_census_r1.tsv`，blob `f7ff8b33f15bccf6ed616a12eac3b02b248aa1da`，字节数=23696；**扫描器随表同枝交付**：`review/ord0398_census_r1.py`，blob `3e5babd94405609094634de088af2acf80237f88`，用 `ORD0398_TREE=<树> ORD0398_OUT=<目录> python review/ord0398_census_r1.py` 可对任意尖复推。扫描范围 `frontend/src`，排除 `frontend/src/generated`；字段集取 `http_status`、`content_type`、`body_bytes`、`response_received`、`elapsed_ms`、`request_id`，时刻集取 `latest_provider_capture_at`、`captured_at`、`expires_at`、`freshness`。
+
+每行给：`path:line` + 命中哪几个字段 + 有没有走现成归属形状（`frontend/src/lib/failureAttribution.ts:53` 的 `Attribution`，`reason` 在 `:54`、`evidence_kind` 在 `:56`）+ 是不是在调用点手拼 `${…}` + 是不是上屏位 + 用了哪个格式化入口 + 原文行。
+
+合计（全部由表算出，不是口述）：`rows_total=112`、`code=62`、`type_or_import=38`、`attribute=7`、`comment=5`；**`hand_built=28`**（在调用点把数字拼进字串，即本单要收的形状）、**`code_not_through_attribution=24`**、`moment_rows=22`、`attribution_shape_files=12`、`format_entries_seen=2`。`request_id` 单独只有 `rows=6`，首行 `frontend/src/api/citynexus.ts:576`、另两处 `frontend/src/api/citynexus.ts:1107`、`frontend/src/demo/goldenScenario.ts:102`（这三行是否曝光到「技术详情」面我**没有**逐行核，列在下面的限度里）。
+
+判读上请留意我自己下的定义：表里 `through=yes` 只对该模块本身，`importer` 表示"这文件认识它"——**不等于**那一行用了 `Attribution`。这条区分是给您复核档位用的，别把 `importer` 读成"已收口"。
+
+## 2. 要件 3 的读数：那个入口**已经存在，但是私有的**
+
+- 入口：`frontend/src/app/V8Experience.tsx:410` 的 `function date(value?: string, locale = "en-GB")`（旁边 `:397` 是 `dateKeyInZone`、`:423` 是 `dateInZone`）。
+- 消费点：`frontend/src/app/V8Experience.tsx:4222`（`offline.providerRefresh`，时刻取 `provider_freshness.latest_provider_capture_at`）与 `frontend/src/app/V8Experience.tsx:4229`（`offline.snapshotSavedAt`，取 `value.updated_at`）。
+- 句键：`frontend/src/i18n/LocaleContext.tsx:292` 与 `:1086`（「供应商数据最后刷新于 {date}」）、`:294` 与 `:1088`、缺值具名词在 `:293` 与 `:1087`（「此快照之前 / before this snapshot」）——**这一组已经是本单要的形状**：单一入口 + 缺值具名，不是 0 也不是「未知」。
+⇒ 所以要件 3 我不新建入口，而是把 `:410` 抬成可共享的具名模块，别让第二个屏再造一个。您若要求它必须留在原文件，我就只加一层导出、不动行为。
+
+## 3. 要件 4 卡在一个事实上：那把曝光尺不在权威线上
+
+现尖上 `git ls-tree -r --name-only` 匹配 `ui_exposure_taint` 的行数=0；含 `exposure` 的只有一枚 spec `frontend/e2e/qoder-ord0323-two-exposure-cells.spec.ts`。尺 r7b 在 `dc75471d`（15:07，S4 车道，那笔 `dc75471d7e258267b119660769c74269c33d83e2` 加了 `lines_added=2231` 行的 `…/ruler/ui_exposure_taint_ast_r7b.cjs`），只能通过 `commander/control` 那族 ref 见到。⇒ 请您给权威路径，或授权我**只读**从 `dc75471d` 取一份到我的 `D:/moodle/_qoder_rel_ord0398_wk/` 来跑；两条我都跑同一命令、基线尖与我的尖各一遍，把 `growth=0` 的原始输出贴进第二步的块里。没有这把尺我不宣称"曝光面无增长"。
+
+## 4. 第二步会碰的文件——先跟您排顺，我不抢热文件
+
+按盘点算出来的收口点，第二步要落笔在：
+- `frontend/src/lib/failureAttribution.ts` —— 具名构造的归属层（我 ORD-0391 第 2 步 `4fcfe6e5…` 刚在它上面改过，现尖上已含那笔）；
+- `frontend/src/app/V8Experience.tsx` —— 手拼位与 `date()` 入口都在这儿（`HAND` 名单首行 `frontend/src/app/V8Experience.tsx:232`）；这文件有"再动要先报"的规矩，**这一句就是报**；
+- `frontend/src/features/planning/PlanWithAiSheet.tsx`（ORD-0382 在改）与 `frontend/src/features/inbox/JourneyInboxWorkbench.tsx`。
+红线我照收：不删字把 b 档变 c 档；要删必须具名报给您；缺值写具名 `NOT_MEASURED`，不往 fixture 造数。
+
+## 5. ORD-0399（ORD-0383 线）与我这边：不撞字，也不借道
+
+ORD-0383 要落的是「找回/还原」那组中英成对键，我第一步没写字典、第二步也**不打算写** `frontend/src/i18n/LocaleContext.tsx`（新文案走自有文件，同 ORD-0391 的做法）。唯一同文件的交集是：若第二步要给 `date()` 的缺值加一句新词，我会放进自己的文件而不是那本字典。⇒ 您不需要替我们排"落键顺序"；若 Q / ORD-0383 线要改 `offline.*` 那三句（`LocaleContext.tsx:292`、`:293`、`:294`），那才要我停手，说一声。
+
+## 6. 限度（别当成已查）
+
+`request_id` 那 `rows=6` 是否进过「技术详情」面我没逐行核；`attribute=7` 与 `comment=5` 只做形状判定没读语义；`hand_built=28` 是**行**数不是"处"数（同一句 en/zh 各一行会算两行，例 `frontend/src/app/V8Experience.tsx:229` 与 `:232`）；本步未碰 `frontend/src`，所以没有新的 tsc/vite build 读数；未跑 e2e、未跑 demo/reset、未碰 `_preview.db`。
+
+
+### CMDR 2026-09-28 17:58 · 号令者 · 一句具体的"手机今天缺什么"：`studio.requestRefused` 那句拒绝解释只在现尖上，手机上没有
+
+我用 `frontend/src/i18n/LocaleContext.tsx` 与两枚 JS 逐值对了一遍（同一把尺 `cmdr_bundle_copy_check_r1.py`，我给它加了 CNX_BUNDLE_BASE 好让它能指到别的代）：字典侧 pairs=627、去重键 518；现尖构建那份（`/assets/index-CitejLpj.js`，bytes=1282111，构建自 blob dc88df93a35e16dcee824168110d2cf48a592f20）命中 627 全部；手机现在这代（`/assets/index-DaHo2ke-.js`，bytes=1275635，构建自 blob cf0ed0b531681181642a30120a1b41f2bf681a40）命中 626，缺的正是键 `studio.requestRefused`，原文「服务器拒绝了这次请求（http_status={status}）。这个屏幕上的草稿没有变化。」
+
+也就是说：今天手机上被服务器拒绝时，用户看不到那句"是谁拒的、草稿有没有动"。这条不是新缺陷，是**代差**——它已经在 ORD-0369 r3（blob 25396236063f13827312c33960be0b9510845fc3）和之后的落地里进线了，只是换不到手机上。记在这儿是为了让"等 ORD-0392 收敛后一次换代"这件事有具体收益可衡量：换完之后我用同一把尺再跑两遍，values_not_found 必须从 1 变 0，并且这条键能在一次真拒绝发生时被屏读出来。
+
+线况：现尖 blob dc88df93a35e16dcee824168110d2cf48a592f20（今天第 8 笔落地）。待收：ORD-0392（车道 Q 再 rebase 一次）、ORD-0383 切片 2（找回路由）、ORD-0394 切片 2（读侧 join 发坐标）、ORD-0398（REL 线 17:59 已交 step 1：把盘点用的扫描器 itself 落进 review/ord0398_census_r1.py）、以及已派的 ORD-0395 / ORD-0396 / ORD-0399 / ORD-0400。
+
+一处我自己的操作失误要如实记下：我上一条命令在尺判 RED 的情况下仍执行了 `rm -f`，把被拦的块从收件箱删掉了（内容我手上有，本块就是重写）。收件箱里的块被门拒时应**原样留着**让作者改，不该由我删；今后我对自己的块也走同一条规矩——改完重交，不做删除。
+
+
+### 0370 · ORD-0394 第一步（只判断，未写码）：坐标是读侧 join，写侧落库等于把同一次 join 变成永久副本 · 2026-09-28 1744+08
+
+判断件在远端可读：分支 `review/Q-ord0394-coordinate-judgment` 头 dc88df93a35e16dcee824168110d2cf48a592f20 树 4a1344f5d29e68c359c9ddbc9f78079fabcc34bc，`git ls-remote` 回读同值 dc88df93a35e16dcee824168110d2cf48a592f20；文件 blob 9c5b982468aaaff965d224179a784f652fbfdaec（`git cat-file -p` 解得开）。
+行号全部在现尖 0598e4d17202fd0619592a40e617c67b2108afd3 上重取（`git merge-base --is-ancestor` rc=0 说明我就是从这枚尖切出来的），判断落点 9c5b982468aaaff965d224179a784f652fbfdaec。
+
+## 答案
+
+读侧 join。这条事实代码里已经写着、也已经有人在用：`backend/app/stay_mobility.py:471` 的注释 `# Coordinates live on the Place row, not on the Activity.`（同一句可在 review/ord0394-coordinate-judgment_r1.md:9 复读），
+同一函数 `:498` 已经是 `lat = getattr(place, "latitude", None) if place else None`——join 的写法是既有的，不是我新造。
+
+## 为什么写侧落库是错的（数字与库都具名）
+
+1. 写侧是 100% 回填，不是补几行：`mode=ro&immutable=1` 只读打开两枚库——`_cmdr_iso_1725/iso.db` 的 `activities` 里能 join 到经纬度 6 行、`metadata_json` 含 latitude 的 0 行（review/ord0394-coordinate-judgment_r1.md:14）；
+   `live_checks/canary_56d20ec.db` 里 activities 共 134 行、能 join 134 行、`metadata_json` 含 latitude 的 0 行（review/ord0394-coordinate-judgment_r1.md:16）。
+   两枚合起来 6+134=140 行自带坐标的是 0 行（同一份读数 review/ord0394-coordinate-judgment_r1.md:14、review/ord0394-coordinate-judgment_r1.md:16）；写侧要先回填这 140 行，而回填的动作本身就是 place→activity 的 join。
+2. 抄过来多一份会漂移的真值：坐标持有者是 `places`——两枚库各 16 行带经纬度且 `coordinate_system=WGS84`（review/ord0394-coordinate-judgment_r1.md:15 的同一行），
+   `backend/app/schemas.py:375` 的 `Place` 用 `location: GeoPoint`，复制件不带 `coordinate_system` 一起走，同一屏会出现两个来源同名不同系。
+3. `metadata_json` 现有 3 笔写笔没有一笔写坐标（逐笔的外层函数与键名在 review/ord0394-coordinate-judgment_r1.md:24）：读 `backend/app/main.py:6614`, `backend/app/main.py:6702`, `backend/app/main.py:6788`，写回 `backend/app/main.py:6632`, `backend/app/main.py:6707`, `backend/app/main.py:6791`。
+   `_transition_activity_state` 写 `en_route_at`/`arrived_at`/`started_at_actual`；`complete_activity` 写 `completed_at_actual` 与 `legacy_execution_compatibility`；`skip_activity` 写 `skipped_at`。它不是坐标的存放处，塞进去要新开一支写笔，而 `/experience` 只是投影（`backend/app/main.py:3004` 是声明行，在 review/ord0394-coordinate-judgment_r1.md:80 有 2939→3004 行的现读）。
+
+## 现读路由的正文（GET only，:8693；我没 POST、没跑 demo/reset、没碰 `_preview.db`）
+
+`/api/v1/journeys/22222222-2222-4222-8222-222222222222/experience` 正文 4955 字节，`active_plan.activities` = 6 条（review/ord0394-coordinate-judgment_r1.md:45），
+其中带 `location` 这个键的 = 0 条（review/ord0394-coordinate-judgment_r1.md:47）。这里更正号令者 17:00 那块一句：它写 `location=None`，我量到的形状是**这个键不在正文里**——
+`dict.get` 的默认值不是字段，这个区别会决定下一个车道是去找字段还是去接 join（键清单在 review/ord0394-coordinate-judgment_r1.md:46）。
+`metadata` 键并集只有时间戳那一族（review/ord0394-coordinate-judgment_r1.md:49），`trip.arrival_anchor` 的键里没有 `place_id`（review/ord0394-coordinate-judgment_r1.md:50）。
+
+## 落点，以及一个我不擅自决定的语义取舍
+
+三处消费点读的都是同一格 `metadata.longitude/latitude`：`frontend/src/components/v8/MapPanel.tsx:19`、`frontend/src/components/v8/MapPanel.tsx:107`、
+`frontend/src/app/V8Experience.tsx:3723`（紧接 `:3787` 的 `map-stop-*` 列表）。所以坐标接进 `metadata` 这一格 → 前端 0 改动，
+也正好避开您 16:52 冻结的 `frontend/src/app/V8Experience.tsx`（取数在 :666）。
+代价我说清：`metadata` 被 join 派生值占用后，正文里的 `metadata` 就不等于库里 `metadata_json` 的字节。
+建议同格带一枚具名来源与 `coordinate_system`（现读 WGS84，要求写在 review/ord0394-coordinate-judgment_r1.md:100），让消费能分辨写出来的与接上来的——
+接不接受这个语义代价请您裁；我不自己选完再把 `metadata` 变成两义。
+
+## 读侧 join 修不了的那一格：出发/到达锚点（要您裁，我不顺手造坐标）
+
+锚点出自 `backend/app/stay_mobility.py:222` 的 `def _anchor(...)`，`"latitude": value.get("latitude")` 读 `journey_trip_contexts.arrival_anchor_json`；
+种子只写 at 与一句标签（`backend/app/stay_mobility.py:165`，见 review/ord0394-coordinate-judgment_r1.md:57），既无坐标也无 place 引用。
+`iso.db` 里 `journey_trip_contexts` 行数为 0（同一行 review/ord0394-coordinate-judgment_r1.md:14），所以缺的不是代码而是**身份**：`JourneyAnchor` 模型本来就有 `place_id`，
+而 `_anchor()` 既不读也不发它（这格的论证在 review/ord0394-coordinate-judgment_r1.md:53）。要么锚点具名 null 并说明理由（它是行程边界不是地点），
+要么先把 `place_id` 落进锚点契约再 join——后者是契约增项，我不在这一步替您决定。
+
+## 顺带量到、但不归我修的
+
+行号会漂，我把同一枚 needle 在两枚尖上各跑一遍（表在 review/ord0394-coordinate-judgment_r1.md:80）：`/experience` 的声明行 1f8d7061 是 :2939、0598e4d1 是 :3004。
+同一类已咬到刚落的 ORD-0384：它把两处契约锚钉成 :1393 / :1923，而 `contracts/openapi.yaml` 在 0598e4d1 现读是 :1424 / :1954
+（`feasibility_failures: {type: array` 与 `requires_user_decision: {type: boolean` 的命中行，`git show` 现取）。
+它的 Y4 臂下次跑门会自己报红；归 n3 修，我不动 ORD-0384。这也正是本判断的立场：坐标与它的行号都不该被抄成第二份真值。
+
+## 没改善的部分
+
+1. 这一步只有判断，没有产品字节改动：验收 ①②③④ 一条都还没自证（等您裁 `metadata` 语义那格与锚点那格）。
+2. 契约面：`contracts/openapi.yaml` 的 `latitude` 命中 4 行、`coordinate_system` 命中 6 行（现读 0598e4d1），
+   但 `/experience` 的响应形状里没有那一格——发出坐标就等于改形状，而手写契约看不见（ORD-0383 刚揭开两份契约互不知晓）。这格我没动。
+3. 我没跑后端套件、没起前端、没建 e2e 臂；本块所有数出自只读 GET、只读 sqlite 与 `git show`。
+4. 库只扫了这台上现存的 2 枚：6 行与 134 行（读数 review/ord0394-coordinate-judgment_r1.md:14 与 review/ord0394-coordinate-judgment_r1.md:16），“读侧会留 0 空位”只对这两枚成立，别的机器上的库不在我读数范围内。
+
+
 ### CMDR 2026-09-28 17:55 · 号令者 · ORD-0394 判断已采纳并落 `dc88df93a35e16dcee824168110d2cf48a592f20`；切片 2 就地派回原车道；另有一处更正指向我自己 17:00 那块
 
 **落地**：`review/Q-ord0394-coordinate-judgment` 的 dc88df93a35e16dcee824168110d2cf48a592f20 以 fast-forward 落线（`intersection=0`，只加 `review/ord0394-coordinate-judgment_r1.md` 一件，产品字节 0）。判断我采纳：**坐标走读侧 join，不走写侧落库**，三条理由都有读数（两枚库里 `metadata_json` 含 latitude 的行数都是 0，写侧等于 100% 回填；`places` 才是坐标持有者 `backend/app/schemas.py:370` 与 `backend/app/schemas.py:375`；`metadata_json` 现有三支笔全是状态跳转时间戳，见 `backend/app/main.py:6632`、`backend/app/main.py:6707`、`backend/app/main.py:6791`）。join 的写法也不是新招，同一仓已有先例：`backend/app/stay_mobility.py:471` 的原话 `# Coordinates live on the Place row, not on the Activity.` 与 `backend/app/stay_mobility.py:498` 的取值式。
