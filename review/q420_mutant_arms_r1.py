@@ -22,6 +22,7 @@ import sys
 WT = r"D:/moodle/_qoder_lane_q0420"
 VENV = r"D:/moodle/CityNexus/.venv/Scripts/python.exe"
 SPEC = "e2e/qoder-ord0420-drawer-group-headings.spec.ts"
+SELF = "q420_mutant_arms_r1.py"
 LC = "frontend/src/i18n/LocaleContext.tsx"
 V8 = "frontend/src/app/V8Experience.tsx"
 LIVE = r"D:/moodle/_qoder_cmdr_ref_20260921/live_checks"
@@ -56,28 +57,39 @@ def restore(rel):
     if wt_blob(rel) != committed_blob(rel):
         bad.append("%s did not restore byte-identically" % rel)
     rc, out, _ = sh("git", "status", "--porcelain", "-uno")
-    if out:
-        bad.append("a tracked file is still dirty after restore: %r" % out[:200])
+    others = [l for l in out.split("\n") if l.strip() and SELF not in l]
+    if others:
+        bad.append("a tracked file is still dirty after restore: %r" % others[:2])
 
 
 def run(tag):
     env = dict(os.environ)
     for k in ("HTTP_PROXY", "HTTPS_PROXY", "http_proxy", "https_proxy"):
         env.pop(k, None)
+    before = set(os.listdir(os.path.join(LIVE, "e2e_logs")))
     r = subprocess.run([VENV, "-X", "utf-8", os.path.join(WT, "review", "e4f_e2e_r1.py"),
                         "--wt", WT, "--target", SPEC, "--tag", tag],
                        capture_output=True, text=True, encoding="utf-8", errors="replace", env=env)
     out = r.stdout + r.stderr
-    m = re.search(r'"verdict":\s*"(\w+)"', out) or re.search(r"verdict=(\w+)", out)
-    logs = sorted([f for f in os.listdir(os.path.join(LIVE, "e2e_logs"))
-                   if f.startswith(tag + "_") and f.endswith(".json")])
-    j = json.load(open(os.path.join(LIVE, "e2e_logs", logs[-1]), encoding="utf-8")) if logs else {}
+    # Pair the run with the receipt it wrote, not with the newest file name: names sort by the tree
+    # stamp, so after a commit an older receipt can sort last and a stale verdict gets reported as
+    # this run's. That is exactly how this driver first mis-read K0/K1/K2.
+    new = sorted([f for f in os.listdir(os.path.join(LIVE, "e2e_logs"))
+                  if f.startswith(tag + "_") and f.endswith(".json") and f not in before])
+    logs = new[-1:]
     txt = ""
+    j = {}
     if logs:
-        lf = logs[-1].replace(".json", ".log")
-        txt = open(os.path.join(LIVE, "e2e_logs", lf), encoding="utf-8", errors="replace").read()
-    return {"tag": tag, "receipt": os.path.basename(logs[-1]) if logs else None,
-            "log": os.path.basename(logs[-1]).replace(".json", ".log") if logs else None,
+        txt = open(os.path.join(LIVE, "e2e_logs", logs[-1].replace(".json", ".log")),
+                   encoding="utf-8", errors="replace").read()
+        j = json.load(open(os.path.join(LIVE, "e2e_logs", logs[-1]), encoding="utf-8"))
+    head = sh("git", "rev-parse", "HEAD")[1]
+    if not logs:
+        bad.append("%s wrote no receipt" % tag)
+    elif j.get("tree") != head:
+        bad.append("%s receipt is stamped %s, this run is on %s" % (tag, j.get("tree"), head))
+    return {"tag": tag, "receipt": logs[0] if logs else None,
+            "log": logs[0].replace(".json", ".log") if logs else None,
             "tree": j.get("tree"), "run_id": j.get("run_id"), "verdict": j.get("verdict"),
             "counts": j.get("counts"), "ports": j.get("ports"), "db": j.get("db"),
             "readings": [l.strip() for l in txt.split("\n") if l.strip().startswith("Q420")],
