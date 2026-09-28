@@ -1680,6 +1680,42 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/journeys/{journey_id}/poi-import/parse": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                journey_id: components["parameters"]["JourneyId"];
+            };
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["poiImportParse"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/journeys/{journey_id}/poi-import/add": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                journey_id: components["parameters"]["JourneyId"];
+            };
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["poiImportAdd"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/journeys/{journey_id}/operations/stream": {
         parameters: {
             query?: never;
@@ -6228,6 +6264,77 @@ export interface operations {
         responses: {
             /** @description DeepSeek-curated */
             201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            422: components["responses"]["ValidationError"];
+        };
+    };
+    poiImportParse: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                journey_id: components["parameters"]["JourneyId"];
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": Record<string, never>;
+            };
+        };
+        responses: {
+            /** @description Places extracted by this deployment's own local parser */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Journey not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            422: components["responses"]["ValidationError"];
+        };
+    };
+    poiImportAdd: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                journey_id: components["parameters"]["JourneyId"];
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": Record<string, never>;
+            };
+        };
+        responses: {
+            /** @description Places appended to the active plan */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Journey not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description The journey has no active plan to append to */
+            409: {
                 headers: {
                     [name: string]: unknown;
                 };
