@@ -16588,6 +16588,19 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### CMDR 2026-09-28 20:27 · 号令者 · ORD-0402 的补充件落线（现尖 `9b759cb3…`）；我自己的探针连错两次，第三条判据改对了——读侧坐标在最新尖上仍是"字段全 null"
+
+**落线**：车道 Q 追加的那枚证据件（`a6983d53…` 里 1 个文件、31 行，`review/ord0402/E2E_HELPER_COUNT_r1.txt`）recut 后逐字节等值，门 `READY_TO_LAND`、产品文件新增 0 枚，现尖 `9b759cb3d7b5519a51decea244ee09723d36080d`。
+
+**我的探针连错两次，这条必须写下来**：判"读侧有没有发坐标"用的是 `cmdr_probes/route_coordinate_probe_r1.py`，它拿**字符串出现次数**当判据——在最新尖上，`"latitude": null` 出现了 4 次（两枚 anchor 各 lat/lon），于是 r1 把判词翻成了 `COORDINATES_SHIPPED`。**这是一枚假绿，出在我自己手里**（同一条命令的原始输出在件 blob `3a7928b8a37b157882208d085471e83582d88e09` 那一族里，路径 `evidence/cmdr-2025/experience_shape_demo_backend_r1.txt` 记的是我手工读正文那一步：`trip.arrival_anchor.latitude = null`、`departure_anchor.latitude = null`，全文没有一处 `coordinate_system`）。我写了 r2：第一版又错——它按"值非 null"来收集字段，把所有 null 的字段整个跳过，于是报成 `NO_COORDINATE_FIELDS`（把"发了但没值"和"根本没这个字段"混成一格，正是这探针存在的意义）。第二版按**键在不在**判有无、按**值是不是数**判有没有内容，两臂复跑：私有演示舞台（:8725，树 `1e3f9479aa27270c4f497c90ef0d21e32694812c`）与共享 hop1（:8693，16:17 那份树）判词都是 `COORDINATE_FIELDS_ALL_NULL`。两臂逐路原始读数在件 blob `7570207709139a926dc533600e052808bb7b1477`（路径 `evidence/cmdr-2025/coordinate_probe_r2_AB_demo_and_hop1.txt`）。
+**给 ORD-0394 那条线的具体靶子**（都在上面那件里，不是我推的）：`/api/v1/journeys/{id}/experience` 正文 4,955 字节、`active_plan.activities` 有 6 条、`activities[].metadata` 里 lat/lon 同为数的条数为 0、整个正文只剩 2 处坐标字段（这三格同在此件：`7570207709139a926dc533600e052808bb7b1477`），路径是 `.trip.arrival_anchor` 与 `.trip.departure_anchor`，其键集合是 `at / latitude / location / longitude / reservation_id`——**lat/lon 是发射端读出来的空位，写侧只存了 `at` 与 `location`**，这正是我在派单里指的那处错配；全文 `coordinate_system` 出现 0 次（同件 `7570207709139a926dc533600e052808bb7b1477`）。
+**还有一条今天新量的负结果**：我把同一个前端指到**开了演示舞台**的私有后端（`CITYNEXUS_DEMO_MODE=true`，我自己的库副本），地图那屏仍然没有 canvas、没有标记、`map-viewport-controls` 不挂载。也就是说 **ORD-0394 切片 2 是地图这一族唯一的堵点**，与数据舞台、与车道新加的控件都无关；ORD-0403 的验收（点标记改卡片选中）在它落地之前任何人都验不了，包括车道的 e2e 绿灯。
+
+**待收（重申，不改口径）**：ORD-0394 切片 2 的 `ef58804a…` recut 仍 ABORT（`backend/app/main.py`、`contracts/openapi.yaml`、`frontend/src/components/v8/MapPanel.tsx`、`frontend/src/generated/api.ts` 四枚合不成车道字节），请 rebase 到现尖 `9b759cb3…` 再交；同批还挂着 ORD-0404（深链接）、ORD-0406（底栏内距 76 px）、ORD-0407（空态带动作五格）、ORD-0405（部署尺 `--live-tree` 的空读数）、ORD-0408（曝光尺的结构化豁免）。
+
+**桌面留言已更新**：`C:/Users/仓鼠王/Desktop/CityNexus_包工头留言.txt` 在 20:22 前置了同一条请求（把 hop1 换到最新导出树需要对你那份 `_preview.db` 执行一条**加列**语句；我动手前会先用只读备份 API 复制整库含 WAL，并把字节数与 sha256 记进账本）。**没点头之前我不换**，所以手机链上的数据面仍是 16:17 那份树，`recycle-bin`、`undelete` 都不在它上面，今晚所有生命周期类屏读仍标 `NOT-DEPLOYED-OBSERVED`。
+
+
 ### CMDR 2026-09-28 20:18 · 号令者 · ORD-0402 切片 2（回收站那一屏）已落并走通；Q64 那一拦我做了一次裁定，替代量测自己跑了
 
 **落地**：现尖 `79ca877cb8b3a890a0d9bb353ac1b56b15525510`（车道 Q 的 `dc7492365e89…` recut，逐文件比字节 36 枚全等）。门第一次 **REFUSED**：`JourneyTrashPanel.tsx` 让曝光面从 10 格涨到 12 格，点名的两格是 `JourneyTrashPanel.tsx:232|UPSTREAM_PROSE_TO_ATTRIBUTE_SLOT` 与 `:233|UPSTREAM_TEXT_VIA_HELPER_TO_DOM`（原拦件 blob `a5131030e91fe997826c804cf90e81b0a3c828e7`，路径 `evidence/cmdr-landing-ORD-0402-r2/preflight_r1_refused_exposure_growth.json`）。
