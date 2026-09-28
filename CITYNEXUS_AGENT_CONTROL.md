@@ -16588,6 +16588,17 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### CMDR 2026-09-28 20:34 · 号令者 · 晚间套件的回归判语：今晚 6 笔落地的产品回归记 0，两格新增红各有归属，都不算在落地头上
+
+**跑的是一整棵树**（不是部分导出）：整树导出后跑全套，判语 `11 failed / 1406 passed / 15 skipped / 1 xfailed`，原始日志件 blob `65241a2130f8c574e2b1804f8f049f236c513e68`（路径 `evidence/cmdr-2032/suite_tip_9b759cb3_full_r1.log`）。**具名基线**用同一把口径的整树跑（tip `8d7652ea…`，件 blob `52661b1787214f3debcde2b966b04c2978e47cf5`，路径 `evidence/cmdr-verify-ORD-0399/suite_full_export_r2.log`）：那一跑是 9 红。逐 nodeid 比：**新增 2 格、消失 0 格**。
+**两格新增各有归属，我都不记在今晚的落地头上，理由是可跑的**：
+- `test_qoder_ord0402_recycle_bin.py::test_the_existing_list_door_was_not_touched_down_to_its_bytes` —— 它在自己内部 `git show` 取祖先正文，而我的导出没有 `.git`，于是 rc 128 的 `not a git repository`。它要断言的事我用仓库 git 独立比过：`list_journeys` 整段在候选前后同为 971 字节（件 blob `c8e487d22f7c926a3ee346ca16df228a0ca94c8b`，路径 `evidence/cmdr-landing-ORD-0402-r1/list_door_body_check.txt`）。归"导出环境"，修它的责任在车道的第二笔（已并入 ORD-0402 尾巴上）。
+- `test_qoder_ord0310_keyless_leg_receipts.py::test_t1b_landed_error_row_reports_the_status_the_client_saw` —— **单跑在两枚尖上都通过**：父尖 `e7286dfd…` 那棵导出里 1 passed，现尖 `9b759cb3…` 的同一棵导出里也 1 passed。整套里才红，所以它属 ORD-0396 那一族（顺序/隔离敏感）。我不把它算成回归，也不去改它的断言。
+**所以今晚这一档我写死的判语**：现尖 `9b759cb3d7b5519a51decea244ee09723d36080d`；傍晚 18:10 之后落地的 9 笔（ORD-0392 注册表、ORD-0399 两笔、ORD-0398 步 2、ORD-0401、ORD-0402 三笔、ORD-0403 在内，逐笔的 recut 件都点过名）带来的**产品回归 0**；红集合与具名基线比是**子集关系**（同一批 9 格仍在，多出的 2 格各有上面对应归属）。
+
+**还挂着**：ORD-0394 切片 2（请 rebase 到 `9b759cb3…`）、ORD-0404、ORD-0406、ORD-0407、ORD-0405、ORD-0408。手机链 serving 停在 `e5a571f8…` 那一代，理由与那条"要不要给 `_preview.db` 加一列"的问话都在桌面留言里（20:22 前置），**没点头我就不换 hop1，也不为已落的后端门换代**。
+
+
 ### CMDR 2026-09-28 20:27 · 号令者 · ORD-0402 的补充件落线（现尖 `9b759cb3…`）；我自己的探针连错两次，第三条判据改对了——读侧坐标在最新尖上仍是"字段全 null"
 
 **落线**：车道 Q 追加的那枚证据件（`a6983d53…` 里 1 个文件、31 行，`review/ord0402/E2E_HELPER_COUNT_r1.txt`）recut 后逐字节等值，门 `READY_TO_LAND`、产品文件新增 0 枚，现尖 `9b759cb3d7b5519a51decea244ee09723d36080d`。
