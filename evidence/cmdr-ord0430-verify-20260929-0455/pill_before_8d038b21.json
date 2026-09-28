@@ -1,0 +1,136 @@
+{
+ "base": "http://127.0.0.1:4821",
+ "errors": [],
+ "screens": {
+  "twin": {
+   "dock": {
+    "present": true,
+    "rect": {
+     "x": 215,
+     "y": 706,
+     "w": 165,
+     "h": 54
+    },
+    "in_viewport": true,
+    "styles": {
+     "opacity": "1",
+     "visibility": "visible",
+     "pointer_events": "auto",
+     "transform": "none"
+    },
+    "hit_is_dock_or_child": true,
+    "hit_tag": "SPAN",
+    "overlapping_text": [
+     {
+      "text": "无障碍硬性需求不会从行为里推断出来。",
+      "ox": 133,
+      "oy": 13
+     },
+     {
+      "text": "✦",
+      "ox": 25,
+      "oy": 25
+     },
+     {
+      "text": "CityNexus Copilot",
+      "ox": 87,
+      "oy": 15
+     }
+    ],
+    "yield_class": "cn-copilot-dock collapsed idle-compact"
+   },
+   "click": {
+    "clicked": true,
+    "hit_tag": "SPAN"
+   },
+   "after_click": {
+    "candidate_testid": "v18-copilot-dock",
+    "body_len": 424,
+    "has_input": true
+   },
+   "reached_route": "/v8/twin"
+  },
+  "discover": {
+   "dock": {
+    "present": true,
+    "rect": {
+     "x": 215,
+     "y": 706,
+     "w": 165,
+     "h": 54
+    },
+    "in_viewport": true,
+    "styles": {
+     "opacity": "1",
+     "visibility": "visible",
+     "pointer_events": "auto",
+     "transform": "none"
+    },
+    "hit_is_dock_or_child": true,
+    "hit_tag": "SPAN",
+    "overlapping_text": [
+     {
+      "text": "描述偏好、心情或约束。模型可选择语义方向，但只有服务端已知的地点才能到达权威方案。",
+      "ox": 138,
+      "oy": 31
+     },
+     {
+      "text": "✦",
+      "ox": 25,
+      "oy": 25
+     },
+     {
+      "text": "CityNexus Copilot",
+      "ox": 87,
+      "oy": 15
+     }
+    ],
+    "yield_class": "cn-copilot-dock collapsed idle-compact"
+   },
+   "click": {
+    "clicked": true,
+    "hit_tag": "SPAN"
+   },
+   "after_click": {
+    "candidate_testid": "v13-discovery-goal",
+    "body_len": 422,
+    "has_input": true
+   },
+   "reached_route": "/v8/discover"
+  },
+  "hub": {
+   "dock": {
+    "present": true,
+    "rect": {
+     "x": 396,
+     "y": 706,
+     "w": 165,
+     "h": 54
+    },
+    "in_viewport": false,
+    "styles": {
+     "opacity": "0",
+     "visibility": "hidden",
+     "pointer_events": "none",
+     "transform": "matrix(1, 0, 0, 1, 180.688, 0)"
+    },
+    "hit_is_dock_or_child": false,
+    "hit_tag": null,
+    "overlapping_text": [],
+    "yield_class": "cn-copilot-dock collapsed idle-compact yield-at-rest"
+   },
+   "click": {
+    "clicked": false,
+    "hit_tag": null
+   },
+   "after_click": {
+    "candidate_testid": "v18-copilot-dock",
+    "body_len": 557,
+    "has_input": false
+   },
+   "reached_route": "/v8/hub"
+  }
+ },
+ "entry_used": true,
+ "verdict": "PILL_STILL_COVERS_OR_UNHITTABLE_ON:twin,discover,hub"
+}
