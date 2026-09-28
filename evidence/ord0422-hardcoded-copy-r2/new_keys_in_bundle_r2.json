@@ -1,0 +1,16 @@
+{
+ "candidate": "8e2bd025d58687b7cf45c7371d253cc6ecac6071",
+ "mirror_tip": "dccd13ad66ea35e9a6d7ca7a3d91a1ae9a579808",
+ "dictionary_path": "frontend/src/i18n/LocaleContext.tsx",
+ "served_base": "http://127.0.0.1:4314",
+ "served_asset": "/assets/index-oR3PVCYW.js",
+ "bundle_chars": 1304284,
+ "mirror_pairs": 714,
+ "candidate_pairs": 765,
+ "new_key_values": 51,
+ "distinct_new_keys": 36,
+ "keys_dropped_from_mirror": [],
+ "new_values_found_in_served_bundle": 51,
+ "new_values_not_found": 0,
+ "misses": []
+}
