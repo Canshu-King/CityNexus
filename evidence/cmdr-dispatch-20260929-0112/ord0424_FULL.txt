@@ -1,0 +1,34 @@
+[CMDR 派单 ORD-0424] 把 `HARDCODED_FALLBACK` 那面尺从"只看 `??` 槽位"扩到也看另外三种形状。**0 产品字节，只改工具与它自己的反件。** 你手上 ORD-0408 优先，这一单排在它之后；ORD-0408 没交完之前不要动这单。
+
+== 为什么要扩（我跑了现行那面尺，不是我推的）==
+ORD-0370 已经落地的 `tools/cnx_copy_tiers_r1.py` 里有一面叫 `HARDCODED_FALLBACK`。我在现尖上原样跑了它，输出件已发布：`evidence/cmdr-ord0419-20260929-0051/ord0370_tierface_at_tip_8a7665be_r1.txt` blob `4765e5f8053fa078e04cff05a549568d5cb06ea6`。它扫了 96 个文件，tier A 零处、tier B 七十三处、按机器 token 排除一百五十七处。
+把那七十三处逐条看：全部是 `??` 槽位里的字面量，内容基本是 `—`、`unknown`、`none`、`not-asked` 这一类。`frontend/src/features/traveler-twin/TwinPanel.tsx` 一次都没出现；`frontend/src/features/recovery/V14RecoveryTruthPanel.tsx` 出现四次，全是 `—` 与 `CityNexus`，没有一处是「Grounded adaptive recovery」这类句子。
+原因是结构性的：那面尺只看 `??` 槽位，而真实存在的写死英文是另外三种形状——JSX 文本节点（`<h3>Capability needs</h3>`，连字面量都没有）、三元分支的裸字面量、`useState` 的默认值。所以"这面尺绿"和"中文屏上没有英文"现在是两件事。
+
+== 范围（只改工具，不碰产品）==
+只改 `tools/cnx_copy_tiers_r1.py` 与它自己的自证/夹具。**不改任何 `frontend/src/**` 产品字节。**
+这枚工具是 ORD-0370 那条线（车道 `e4f3490f-a55f-4fcb-b7af-227e41018656`）写的。**动手前先 `env -u HTTP_PROXY -u HTTPS_PROXY git -C D:/moodle/CityNexus ls-remote origin refs/heads/review/Q-ord0370-hardcoded-fallbacks` 与 `... 'refs/heads/review/*'` 各看一遍，确认没有新的 `*ord0370*` 枝在动这枚文件；有就停手报我，不要跟它抢同一枚文件。**
+
+== 验收要件 ==
+1. 新尺在现尖上必须**报红**并逐条命中那二十二处。清单已发布：`evidence/cmdr-ord0419-20260929-0051/ord0419_inventory_r1.json` blob `353d1c4f96945de517cacf1ef1c8856345d812f8`（文字版 blob `c3576490ae5b8549450f3b3771be236d447a4262`，生成脚本 blob `3fd18286a17431df33f7d5442b93f914da0e8d24`）。把新尺的命中集与它逐条对齐，**缺哪条列哪条**，不许只报一个总数。
+2. **不许丢掉原来那七十三处 `??` 槽位命中**（旧读数 blob `4765e5f8053fa078e04cff05a549568d5cb06ea6`）。给出新尺在同一尖上的完整输出，并具名说明 tier A / tier B / 排除 三档各自变成多少。
+3. 排除规则要具名、可复跑。以下**不算命中**：品牌词 `Copilot`、`CityNexus Copilot`、`CN / AI`；种子数据里的地点名 `Tech Art Center`、`Nexus River Cruise Pier`、`Central Food Hall`、`Riverside Museum`、`Skyline Dinner House`（出处 `data/mock/places.json` 与 `backend/app/services.py`）。分类依据的件 blob `a225e6a7f6770356577531211c58af44259ce86b`。
+4. 反件：如果 ORD-0422 已经先落地，就用它落地前后两份源码各跑一遍新尺——落地前必须红、落地后必须绿，两份读数都交。如果 ORD-0422 还没落地，就先交"现尖红"加一份你自己造的夹具（三种形状各一条，夹具要能单独复跑），并说明为什么这一组能判别；**不许用"改断言"换新绿**。
+5. 每个数自己从工件重算，不许写字面量计数；不许把 `hashlib.sha1(bytes)` 当 git blob id（blob id = sha1("blob " + 长度 + NUL + 正文)，今晚已经有车道因为这个被写盘门拒了）。坐标一律从命令输出里复制，不要手打。
+
+== 环境与纪律（每条都适用，请逐条照做）==
+- 你现在是 CityNexus 的一条实现车道，号令者会话是 494abfd7-5a79-4cc1-8487-e873818a2db3。用户不在电脑前：**不要请求任何人类点击或回答**，也不要向外仲裁汇报。
+- 仓库：`D:/moodle/CityNexus`（工作树是冻结的 a9c2504，**不要**在它上面改产品码）。权威线只在远端：`refs/heads/mirror/integration-frontend-apple-pass1`，仓库 `Canshu-King/CityNexus`。
+- 现尖读法（每次都现读，不要引用记忆里的尖）：
+  `env -u HTTP_PROXY -u HTTPS_PROXY git -C D:/moodle/CityNexus ls-remote origin refs/heads/mirror/integration-frontend-apple-pass1`
+- 本机代理 `127.0.0.1:7892` 常没人监听，会造出假的"不可达/连接被拒"。所有网络与 git 远端命令前面一律加 `env -u HTTP_PROXY -u HTTPS_PROXY`。
+- 造自己的工作树：`git -C D:/moodle/CityNexus -c core.autocrlf=false archive <现尖40位> backend data contracts tools scripts agent-mcp frontend/src frontend/e2e | tar -x -C <你的目录>`。**必须含 `data` 与 `contracts` 与 `scripts` 与 `agent-mcp`**，少一个会造出假红。
+- 交付方式：把候选推到 `refs/heads/review/<你的名字>-ord04xx-r1`，然后 `ls-remote` 回读核对两侧 40 位逐字相等。**不要自己合并、不要动权威 ref。**
+- 交完写一块账本块：`D:/moodle/_qoder_ledger_inbox/<你的名字>_<HHMM>.md`，首行以 `### ` 开头。**每个数字同一行给可取回坐标**（`path:line` 或能 `cat-file` 的 40 位 git blob；尺寸每个数字带单位；订单号一律写 ORD-04xx 带前缀形）。**坐标从命令输出里复制，不要手打**（手打过一位就会被写盘门拒，今晚已经拒过好几块）。证据先发布后引用：`env -u HTTP_PROXY -u HTTPS_PROXY python D:/moodle/_qoder_cmdr_ref_20260921/live_checks/publish_evidence_gated_r1.py --local <文件> --path evidence/<新路径>`，已发布路径不许重写，改版走新文件名。
+- 不许假绿：禁止 skip、mock、改断言凑绿。门绿不等于用户在屏上看得见的东西对了——判据要断**渲染后的文字或计算样式**，不要断 class、不要断 data 属性。
+- 私有验证栈（跑屏上用）：`git archive <尖> ... frontend/src frontend/e2e` 导出 → 造产物 `python D:/moodle/_qoder_cmdr_ref_20260921/live_checks/cmdr_build_bundle_r1.py --sha <尖>` → 只读备份共享库（`sqlite3.connect` 用 `file:...?mode=ro` 再 `src.backup(dst)`，参考 `live_checks/_launch_priv_backend_r1.py`）→ 起自己的后端（`CITYNEXUS_DATABASE_URL` 指到你自己的备份库、`CITYNEXUS_DEMO_MODE=true`、**不要**给 `DEEPSEEK_API_KEY`）→ `python cmdr_static_api_proxy_r1.py --dist <dist> --port <你自己的端口> --api <你后端端口>`。**先探到自己的端口真的在答再跑仪表。**
+- 绝对不许：写或 ALTER `D:/moodle/_qoder_preview_20260920/_preview.db`（只能 `mode=ro`）；跑 `demo/reset`；重启 :8000 / :4781 / :4782 / :8693；读或打印 `D:/moodle/_qoder_preview_20260920/run/preview_auth.txt` 里的口令值（只写路径）。
+- 本机三个 python 只有那一个 venv 解释器能跑后端套件；`python3` 在这台机器上没有。做较大改动前先 `ast.parse` 一遍你生成的脚本再跑。
+- 做完把交付块写好就停，等号令者复切落地；不要替号令者落地。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
