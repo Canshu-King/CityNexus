@@ -1,0 +1,196 @@
+ORD-0422  candidate d81ee893dc90c93e1affa12fb30e15c271af5234  branch review/qoder-0422-hardcoded-copy-r1
+rendered from final_readings_r2.json (390x844, Chrome headless, localStorage citynexus.locale)
+
+== 1. the 22 inventory rows: English literal -> what the Chinese screen now reads ==
+[ZH READ]  twin:13     No explicit capability facts recorded.                                    ->  没有记录到明确的能力事实。
+[ZH READ]  twin:14     Confirmed by traveler                                                     ->  已由旅行者确认
+[ZH READ]  twin:24     No explicit preferences                                                   ->  没有明确偏好
+[ZH READ]  twin:24     Capability needs                                                          ->  能力需求
+[ZH READ]  twin:24     No learned signals                                                        ->  没有习得信号
+[ZH READ]  twin:24     Learned capability state                                                  ->  习得的能力状态
+[ZH READ]  twin:24     hard need(s) remain explicit and are never learned.                       ->  {n} 项硬性需求仍按明确声明保留，不会被习得。
+[ZH READ]  twin:24     Hard accessibility needs are never inferred from behavior.                ->  无障碍硬性需求不会从行为里推断出来。
+[ZH READ]  twin:24     Unknown accessibility evidence is not accessible.                         ->  来源不明的无障碍证据，不作为无障碍依据。
+[ZH READ]  authoritative:125  V14 · REALITY CHANGED                                                     ->  V14 · 现实变了
+[ZH READ]  authoritative:126  Grounded adaptive recovery                                                ->  有据可依的自适应恢复
+[ZH READ]  authoritative:129  Refresh recovery                                                          ->  重新读取恢复方案
+[ZH READ]  authoritative:132  No recovery proposal is waiting on this Journey.                          ->  这趟行程没有等待你决定的恢复方案。
+[ZH READ]  discover:110  I prefer quiet indoor culture, low walking, and rain-friendly places near my protected Journey moments.  ->  我偏好安静的室内文化场所，少步行，雨天友好的地方，靠近我受保护的行程时刻。
+[NOT_REACHED] twin:14     Stated; confirmation needed
+[NOT_REACHED] authoritative:120  policy unavailable · confirmation required
+[NOT_REACHED] authoritative:137  CHANGED
+[NOT_REACHED] authoritative:144  PROTECTED
+[NOT_REACHED] authoritative:153  Baseline evidence
+[NOT_REACHED] authoritative:157  Incident evidence
+[NOT_REACHED] authoritative:163  Deterministic gate
+[NOT_REACHED] authoritative:167  Delegation policy
+
+ruler counts: inventory_rows=22  zh_literals_readable=0  en_reachable_rows=14  reached_with_zh_pair_readable=14  not_reached=8  verdict=PASS
+
+== 2. the three machine-code renders, read as rendered leaves ==
+twin_demo:
+  joined strips, zh arm (was raw codes joined by ' . '):
+     ZH '旅行者画像 · 软上下文'
+     ZH '安静环境 · 全程免台阶 · 文化 · 当地饮食 · 放松节奏 · 步行时长上限 · 滨水'
+     ZH '仅用于排序 · 随证据新鲜度过期。'
+  same strips, en arm -- listed independently, not paired by index, because the two arms'
+  leaf arrays are paint order and paint order is not a join key:
+     EN 'Traveler Twin · soft context'
+     EN 'Quiet environment · Step-free required · culture · local food · relaxed pace · walking minutes cap · waterfront'
+     EN 'Ranking input only · expires with evidence freshness.'
+  raw codes visible on the English arm: []
+  severity renders  zh=["一般偏好", "硬性需求"]  en=[]
+  leaves that ARE a twin.cap.* dictionary value: ["安静环境", "全程免台阶"]
+  leaves that ARE a twin.sev.* dictionary value: ["一般偏好", "硬性需求"]
+  twin.dim.* values in play: ["当地饮食", "放松节奏", "文化", "步行时长上限", "滨水"]
+twin_no_preferences:
+  joined strips, zh arm (was raw codes joined by ' . '):
+     ZH '旅行者画像 · 软上下文'
+     ZH '仅用于排序 · 随证据新鲜度过期。'
+  same strips, en arm -- listed independently, not paired by index, because the two arms'
+  leaf arrays are paint order and paint order is not a join key:
+     EN 'Traveler Twin · soft context'
+     EN 'Ranking input only · expires with evidence freshness.'
+  raw codes visible on the English arm: []
+  severity renders  zh=[]  en=[]
+  leaves that ARE a twin.cap.* dictionary value: []
+  leaves that ARE a twin.sev.* dictionary value: []
+  twin.dim.* values in play: ["当地饮食", "放松节奏", "文化", "步行时长上限", "滨水"]
+
+== 3. every Chinese leaf the three panels rendered, in paint order ==
+-- twin_demo [zh-CN] path=/v8/twin leaves=36 cjk=30
+   菜单
+   旅行者画像
+   跟随系统
+   旅行者画像 · 软上下文
+   有边界的个性化。
+   显式意图优先。学习到的证据帮助排序方案，但永远不会扩展预算、支付、承诺或自主权限。
+   显式
+   安静环境 · 全程免台阶 · 文化 · 当地饮食 · 放松节奏 · 步行时长上限 · 滨水
+   来自此次行程请求
+   直接应用于当前方案目标。
+   能力需求
+   安静环境
+   一般偏好
+   已由旅行者确认
+   全程免台阶
+   硬性需求
+   学习到的软信号
+   没有习得信号
+   来自已完成的行程结果
+   仅用于排序 · 随证据新鲜度过期。
+   习得的能力状态
+   1 项硬性需求仍按明确声明保留，不会被习得。
+   今天
+   行程
+   地图
+   我的
+   权限边界
+   你的偏好可改善路线或酒店排名，但不会创建预订、花费金钱或削弱已确认的预订。
+   可检查的溯源可用
+   来源不明的无障碍证据，不作为无障碍依据。
+-- twin_no_preferences [zh-CN] path=/v8/twin leaves=32 cjk=26
+   菜单
+   旅行者画像
+   跟随系统
+   旅行者画像 · 软上下文
+   有边界的个性化。
+   显式意图优先。学习到的证据帮助排序方案，但永远不会扩展预算、支付、承诺或自主权限。
+   显式
+   没有明确偏好
+   来自此次行程请求
+   直接应用于当前方案目标。
+   能力需求
+   没有记录到明确的能力事实。
+   学习到的软信号
+   没有习得信号
+   来自已完成的行程结果
+   仅用于排序 · 随证据新鲜度过期。
+   习得的能力状态
+   无障碍硬性需求不会从行为里推断出来。
+   权限边界
+   你的偏好可改善路线或酒店排名，但不会创建预订、花费金钱或削弱已确认的预订。
+   今天
+   行程
+   地图
+   我的
+   可检查的溯源可用
+   来源不明的无障碍证据，不作为无障碍依据。
+-- authoritative_demo [zh-CN] path=/v8/authoritative leaves=73 cjk=48
+   菜单
+   恢复与执行
+   跟随系统
+   V12 · 方案、移动端、Edge 与画像
+   权威行程执行。
+   你选定的方案是今天、地图、离线使用和所有建议变更的唯一事实来源。
+   刷新真相
+   你的行程需要你做一个决定
+   新增加的一条硬性要求（STEP_FREE_REQUIRED）让当前方案无法再被确认为安全。你原有的方案没有被改动。
+   服务器针对这一版列出了 12 条拒绝，原文在技术详情里。
+   技术详情
+   服务器给出的原因
+   重新生成可选方案
+   我知道了这条提醒
+   这趟行程的方案版本
+   服务器上还留着的每一份版本，按写入先后排。这一屏只读。
+   共列出 1 份版本
+   这台服务器没有设保留上限：目前这趟共有 1 份版本，这里全部列出。写新版本不会丢掉旧的。
+   版本 1
+   首次生成
+   9月28日 04:41
+   没有父版本
+   行程正在跑这一份
+   这里故意不做还原。回到旧版本会替换你正在执行的方案，所以它不是一张列表上的一下点击。
+   今天
+   行程
+   地图
+   我的
+   权威行程
+   从方案到边缘的单一真相
+   活跃
+   已完成
+   服务端执行真相 · 可审计
+   标记 出发中
+   行程工作台 · 起草后接受
+   调整权威行程
+   在相同的冻结出行矩阵上重排普通活动。受保护锚点保持不动。
+   6 个活动
+   1 个受保护锚点
+   无草稿变更
+   按住一项活动，拖到新的位置，就是一次草稿改动。
+   预览无状态；接受将重新检查活跃方案和证据
+   预览影响
+   接受编辑
+   V14 · 现实变了
+   有据可依的自适应恢复
+   重新读取恢复方案
+   这趟行程没有等待你决定的恢复方案。
+-- discover_demo [zh-CN] path=/v8/discover leaves=29 cjk=24
+   菜单
+   城市探索
+   跟随系统
+   准备目的地
+   先看这座城能不能规划
+   输入一个目的地，服务器会告诉我们它现在能规划到什么程度；不能的话，缺什么、下一步是什么，都由服务器说了算。
+   目的地
+   看看能不能规划
+   真实依据城市探索
+   说出你真正想要的城市一天。
+   直接告诉 CityNexus 你想做什么。它会找出符合你行程和已确认预订的真实地点。
+   CN / 探索
+   塑造城市停留
+   描述偏好、心情或约束。模型可选择语义方向，但只有服务端已知的地点才能到达权威方案。
+   边界
+   供应商坐标、营业时间、费用、出行和受保护承诺保持为确定性事实。
+   今天
+   行程
+   地图
+   我的
+   旅行者意图
+   我偏好安静的室内文化场所，少步行，雨天友好的地方，靠近我受保护的行程时刻。
+   探索并组合
+   我偏好安静的室内文化场所，少步行，雨天友好的地方，靠近我受保护的行程时刻。
+
+== 4. the eight rows the demo cannot walk, and what was tried ==
+{"door": "POST /api/v1/travelers/{id}/capabilities/confirm", "status": 200, "severities_sent": ["HARD confirmed=true", "SOFT confirmed=false"], "confirmed_flags_returned": [{"code": "QUIET_ENVIRONMENT", "severity": "SOFT", "confirmed": true}, {"code": "STEP_FREE_REQUIRED", "severity": "HARD", "confirmed": true}], "conclusion": "both capability doors are /confirm, so no public door leaves a capability unconfirmed -- the `Stated; confirmation needed` half of TwinPanel.tsx:14 has no reachable state on this server"}
+{"door": "POST /api/v1/journeys/{id}/replans", "event_status": 201, "status": 422, "server_answer": {"error": {"code": "VALIDATION_ERROR", "message": "MOBILITY_DATA_UNAVAILABLE", "message_key": "request.invalid", "trace_id": "4016d41d-0a48-4e8c-97f3-e6bba085fdc0", "details": {"gaps": [{"from_place_id": "place-food-hall", "to_place_id": "place-river-cruise", "reason_code": "MOBILITY_EVIDENCE_NOT_HARD_ELIGIBLE", "evidence_state": "FACT_PRESENT_BUT_NOT_HARD_ELIGIBLE", "fact_quality": "SYNTHETIC_DEFAULT"}], "gaps_total": 1, "legs_required": 1, "reason_codes": ["MOBILITY_EVIDENCE_NOT_HARD_ELIGIBLE"]}, "reason_code": "MOBILITY_EVIDENCE_NOT_HARD_ELIGIBLE", "error_receipt_id": "CNX-4HW8GENB"}}, "conclusion": "the deterministic replan refuses with its own named gap, so no PRESENTED proposal can be produced for this journey on this data -- the six proposal-gated V14 rows stay NOT_REACHED"}
