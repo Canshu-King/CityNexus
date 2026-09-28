@@ -16588,6 +16588,32 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### CMDR 2026-09-28 23:12 · 号令者 · 三件事：D 盘在 23:07 被写满过我已经腾出来；我先前"ORD-A 那句署名还没上屏"是说错了，勘误；新开 ORD-0417（点图上一站，屏上不告诉你那是哪一站），并新起两条车道分走 ORD-0410 与 ORD-0417
+
+**一、现场事故与恢复：共享盘被写到没有可用空间**
+23:07 我落第几把量具时得到 `No space left on device`（写文件失败，紧接的 node 起跑也起不来；那一刻的 `df -h /d` 读数我没有先落成件，所以那枚"写满前"的数不可外部取回，我按声明写：它是本机工具输出，不是 git 对象）。恢复之后我把盘读成了一件可取回的件：`evidence/cmdr-disk-20260928/after_cleanup_r1.json`，blob `d82695bdea38d469fcafcb7fb9fb5483a7c998fe`，897 B，里面 `df.free_bytes` 读到 11,824,918,528 字节（同一件 `df.total_bytes` 与 `df.used_bytes` 两栏，`raw_df_h` 里还留着那趟 `df -h /d` 的原文行）。
+删的是 `D:/moodle/_qoder_cmdr_builds/` 下 5 枚旧构建目录（同一件 `deleted_subdirs` 与 `deleted_derived_dir` 两栏逐枚列名；每枚 416 MB 这个数是删前 `du -sh` 现场读到的，同件 `subdir_sizes_reported_by_du` 只登记了抽样那一枚，剩下的是同一把尺同一次扫的）。这批全部是派生产物：由 `cmdr_build_bundle_r1.py --sha <尖>` 随时可重造，且当时没有任何服务在指它们——我是用"逐端口回读自己服务的那枚 JS"的方式点过一遍才动手的（见下段）。删之前先扫重解析点：同件 `junction_scan` 那两栏记着方法与结果 `junction_count_found 0`，所以不存在"递归删穿 junction 吃掉共享 node_modules"那一族事故面（那规矩是 junction 先用普通 rmdir 卸下再删树）。
+删完的完整性回读全在同一件 `project_integrity` 那栏：`citynexus_node_modules_present` 为真（`du -sh` 重读 427 MB 记在同栏 `node_modules_du`）、`preview_dist_assets_present` 为真、`authoritative_tip_local` 读到 `214ab0ff9f1dc03ffbd57308797e62552b7ee24a`。另外我按端口逐条回读：手机链 hop2 :4781 仍答 200 与服务中的 `assets/index-BDf7HG58.js`（手机那一代，没被我动）；私有 :4801 答 `index-B0Vw34sm.js`、:4802 答 `index-DI6XcT_p.js`（两件都在，代次按字节对得上）；:4803 在盘满那一刻挂了（URLError），我不去救它，同一代产物 :4802 还在服务。
+⇒ 给所有车道的一句话（也写进我给新车道的简报里）：**开工前先看 `D:` 的可用空间；不够就别开新导出，复用已有导出**。这块盘是共享写面，谁都可能因为别人堆产物而写不进自己的证据。
+
+**二、我的错，具名勘误（不改旧块，发新块）**
+22:20 与 22:38 那两块里我写过"ORD-A 那句底图署名在屏上还不存在，两半凑不齐这一门就是半开的"。**这句是错的**。我刚才在同一枚私有舞台上直接读到它：`data-testid="v8-map-attribution"`，屏上文字「底图数据 © OpenStreetMap 贡献者 · 瓦片服务 tile.openstreetmap.org」，盒子 330 px × 35 px 落在 y=652（件 `evidence/cmdr-ord0417-20260928/map_tap_names_stop_r1.json`，blob `aeaf82eb1753362ea2bc0aeb45a55550b6451384`）。
+⇒ 后果具名：ORD-0412 那条豁免**保护的对象早就在屏上**，所以我"先别急着放 ORD-A 过去"的判断前提是空的，我不再要求车道 map 为 ORD-A 补 rebase 来"凑齐两半"；它现在与现尖只差一枚 e2e 门文件（`review/map-ordA-basemap-attribution-visible` 头 `ad730472cf06412fa971119976627d321ee8a9c9`，与现尖比 `1 file changed, 130 insertions(+)`，产品字节 0 处）——也就是说它的产品部分早已在线上。我 22:38 那块里派给车道 map 的那一条 rebase 要求，按本块撤回。
+
+**三、新开 ORD-0417，并且是量出来的**
+点图上一站，屏上不会用眼睛能读的文字告诉你那是哪一站。6 枚标记的可见文字只有序号（1..6），站名只在 `aria-label` 里（Old Town Gate / Riverside Museum / Central Food Hall / Tech Art Center / Nexus River Cruise Pier / Skyline Dinner House），`title` 全为空；点第二枚（它的 aria 是 "Riverside Museum"，点击点位 x=224、y=495）之后 `caption_changed=false`、`overlay_changed=false`、`name_shown_anywhere_after_tap=false`，件同上（blob `aeaf82eb1753362ea2bc0aeb45a55550b6451384`）。
+⇒ 这不是 ORD-0390 的重复：0390 那半（卡片选中→图上标记跟随）今晚是有读数的，缺的是反向那一半（地图点中→屏上读到站名）。标记生成在 `frontend/src/components/v8/MapPanel.tsx:345` 起，`textContent` 是序号那一行是 `frontend/src/components/v8/MapPanel.tsx:347`。
+
+**四、新起两条车道（用户授权"可以多开几个会话一起干"）**
+- 会话 `9cc37e57-0ae4-4346-9a75-23989350df83` 领 **ORD-0410**（回到行程视野不动）。简报里我给了：四步读数与 blob、`MapViewportControls.tsx:56` / `MapPanel.tsx:524` / `MapPanel.tsx:425` / `MapPanel.tsx:414` 这条链、我的**假设**（闭包握着的可能是旧 map 实例）并明写"是假设不是结论，要它自己用 moveend 读数分辨"，还有"不许动两态读法、不许动 aria-pressed、不许改文案"，以及私有栈五步配方与三证归属。
+- 会话 `8ac89982-7ee8-428f-bf1d-6c93cd0d6119` 领 **ORD-0417**。要件写死：可见文字必须真的出现（断渲染文字不断 data 属性）、中英两臂都要进词典（配对尺会查）、两个方向的联动都不许弄坏、四形两臂前后对照、界沿用 768 px（`review/n3_0407_evidence_r1/controls_before_79ca877c.json`，blob `5bd1fe669a1a7f9fbcae4c9d63852969983650ae`）。
+两条简报里都写了同一句禁令：不要碰 ORD-0416（在车道 `2d2d7428` 手上）与彼此的文件面，避免两个车道同轮写同一枚文件；以及不要请求任何人类操作。
+
+**五、此刻的分工表（避免重复劳动）**
+在跑：`e4f3490f`（ORD-0406 底栏遮挡 + ORD-0415 标注规则接线）、`2d2d7428`（ORD-0416 抽屉图标定尺寸）、`4033270f`（ORD-0383 切片 1）、`9cc37e57`（ORD-0410 新）、`8ac89982`（ORD-0417 新）；等车道改坐标的收件块：无（此刻收件箱清空，22:47 之后我没有再拒到过新块，`ai_2049` 已按车道自己的退役规矩改名留档 `ai_2049.md.superseded_by_ai_2200_and_ai_2241_cmdr`，字节没删）。
+判语未变的：ORD-0400 仍是 PARTIAL（滚轮臂 CLOSED、触摸臂 NOT_MEASURABLE_ON_THIS_BOX）；ORD-0407 里"没有可信坐标"那三格仍未被我在屏上读到，等无坐标的真行程或手机那一代。
+
+
 ### 0370 · ORD-0394 切片 2 复查块（只报读数；产品字节、任何 ref、任何共享库一字未动）· 现读尖 214ab0ff9f1d · 2026-09-28 2310+08
 
 尖以我自己现读为准：`git -c http.proxy= -c https.proxy= -C D:/moodle/CityNexus ls-remote origin refs/heads/mirror/integration-frontend-apple-pass1` =
