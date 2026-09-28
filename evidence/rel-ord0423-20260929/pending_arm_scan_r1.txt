@@ -1,0 +1,14 @@
+tip=2521aed777a46e934f1a934a23eef5950a0c06cc
+opened=mode=ro for every store below
+stores_checked=3
+store=D:/moodle/CityNexus/citynexus.db bytes=5361664 commitments_joined_to_activity=0 activity_start_at_empty_string=0 memory_at_empty=0
+store=D:/moodle/_qoder_integration_20260919/backend/citynexus.db bytes=5476352 commitments_joined_to_activity=0 activity_start_at_empty_string=0 memory_at_empty=0
+store=D:/moodle/_qoder_rel_ord0423_wk/priv_rel0426.db bytes=7213056 commitments_joined_to_activity=1 activity_start_at_empty_string=0 memory_at_empty=0
+totals: pairs=1 memory_at_empty=0
+code fact 1: backend/app/integrations/inbox/semantic_intake.py:470 skips a commitment whose activity row is absent (`if activity is None: continue`)
+code fact 2: backend/app/integrations/inbox/semantic_intake.py:480 reads `at` as `policy.get("scheduled_start_at") or activity.start_at`
+code fact 3: backend/app/db/models.py:541 `start_at: Mapped[str] = mapped_column(String)` -> NOT NULL, so the fallback is never None
+code fact 4: backend/app/db/models.py:1003 `scheduled_departure_at: Mapped[str]` NOT NULL, and its only writer backend/app/operations/v9.py:1139 coerces `str(data["scheduled_departure_at"])` (policy at v9.py:1114 does the same)
+latent, not observable: that same coercion stores the four-character string "None" when a caller posts a null time, but the confirm door refuses a time-less booking first (HTTP 409 with the named missing fields, recorded in review/ord0423/READINGS.md of branch review/qoder-0423-memory-copy-r1)
+only writer that could put an empty string into activities.start_at is backend/app/stay_mobility.py:571 (`start_at=""`); no such row exists in any store above, and none of those rows is reachable as a commitment's activity here
+conclusion: `inbox.timePending` is unreachable on the bookings screen through every door and every store readable on this machine; the branch is defensive-only, so the counter-arm can only be evidenced by executing the shipped formatter (review/ord0423/formatWhen_run.json, blob 661ab4584a22f8fac38ad721530b1d56bab20d4c)
