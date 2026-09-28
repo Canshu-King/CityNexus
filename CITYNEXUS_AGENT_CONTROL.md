@@ -16588,6 +16588,115 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### CMDR 2026-09-29 01:57 · 车道 `2d2d7428` · ORD-0418 交了：地图那句「供应商支持的路线」现在只在真有线的时候念；0 路段那一支按服务器真给的字段具名说原因；三臂（before/after/mutant）各一件
+
+件：`review/Q-ord0418-map-route-claim-r1` 远端回读 = `c1296632567cd4b9e79695111c10836aa5a94767`；基点 = `git merge-base <现尖> <件头>` = `3d28da7d221cfd2ca463991796f0a257df042972`，现尖 = `fb6131f359e85deb18a2194494dc9a96e328cdee`；
+`git merge-tree --write-tree <现尖> <件头>` 退出码=0，合并树 = `b7a779f5e6f829e60b62de386b42767feb5af7ac`。产品文件全清单（`git diff --name-only 3d28da7d221cfd2ca463991796f0a257df042972 c1296632567cd4b9e79695111c10836aa5a94767 -- frontend`）：
+  frontend/src/components/v8/MapPanel.tsx
+  frontend/src/i18n/LocaleContext.tsx
+改动前后本体（四枚均可 cat-file）：`MapPanel.tsx` blob `90a291d8f0c5bf5720b1ca151ed37f845d60dc3f` → `e1cbd080d52d9886a87094a9a4a21c994630cabc`；`LocaleContext.tsx` blob `cae397e923da7cb6edd5a6f3f629761bdc61011b` → `fa22c6e76a5aa6e7f5f42351f116f1826d6bfdd8`。
+
+**判据照你三条要求写死，没自己发挥**：① 条件用 `route.length > 0`，与 `frontend/src/components/v8/MapPanel.tsx:114` 那条画线用的同一个 memo（`:99`）同源，不另起第二个真值；
+② 0 路段那句必须具名说原因，我读的字段是 `active_plan.legs`、`mobility_facts`、`provider_mesh.mobility.*.status` 三样（逐次读数在 `review/ord0418/server_fields.json` blob `23d7233b4894c864eed78a962ea9392e7c020782`）；
+③ 中英两臂同改，配对尺 `tools/cnx_copy_tiers_r1.py` 现读：REGISTER_PARITY 697 键 697 同意 0 冲突、DICTIONARY_COVERAGE 折行 0 行、RENDERED 697（两枚新键都在产物里被读到）。
+
+**服务器那一侧我读到什么**（我自己那台只读备份库上的 uvicorn，未碰你的 :4805）：
+  legs-zero 行程 22222222-2222-4222-8222-222222222222：active_plan.legs=0、mobility_facts=0（带几何 0）、options=0 ｜ 见 `review/ord0418/server_fields.json:3`
+  legs-seven 行程 6cbdbc65-904a-40c7-a778-f981690f25d0：active_plan.legs=0、mobility_facts=35（带几何 35）、options=1，第一个 option 的 leg_mode_map 有 7 段能对上带几何的 fact ⇒ 这一格 route.length=7
+  provider_mesh.mobility 状态：legs-zero 读到 {"amap": "NOT_CONFIGURED", "valhalla": "NOT_CONFIGURED", "transit_realtime": "UNKNOWN_REALTIME", "ride_hail": "UNKNOWN_COST"}；legs-seven 读到 {"amap": "NOT_CONFIGURED", "valhalla": "NOT_CONFIGURED", "transit_realtime": "UNKNOWN_REALTIME", "ride_hail": "UNKNOWN_COST"} ｜ 见 `review/ord0418/server_fields.json:3`
+
+**一处与你 23:41 那节不同，具名写出来不糊过去**：那块说 `aggregate_provenance` 读到 null。我这台副本上计划层没有这个键，真正存在的同名字段在 `active_plan.mobility_evidence` 里，读到的是 'RUNTIME_CAPTURE'，不是 null。
+  所以替代句**没有**建在 provenance 上，而建在你我读数一致的两栏上：`active_plan.legs` 为空 + 没有任何算路服务商被配置（`mobility.valhalla` 与 `mobility.amap` 都是 NOT_CONFIGURED）。
+  另外我特意不把 `transit_realtime`/`ride_hail` 当算路服务商（它们读到 UNKNOWN_REALTIME / UNKNOWN_COST）：第一版按「全部 mobility 条目都要 NOT_CONFIGURED」判，实测那句更具体的替代文永远走不到（after 臂 which_sentence 全是 noRouteNotRouted），收到只看 valhalla/amap 之后才落到 noRouteNoProvider。
+
+**三臂三件，同一仪表同一判据，只换构建**（断的是可念文本 + 元素确实可读；全程没断 data 属性，也没断 class）：
+  before 臂 base=http://127.0.0.1:51313 failing=2/4 ｜ 见 `review/ord0418/CLAIM_R1.txt:47`
+      legs-zero  zh-CN legs_said=0  claim=True   which=none
+      legs-zero  en    legs_said=0  claim=True   which=none
+      legs-seven zh-CN legs_said=7  claim=True   which=none
+      legs-seven en    legs_said=7  claim=True   which=none
+  after 臂 base=http://127.0.0.1:60292 failing=0/4 ｜ 见 `review/ord0418/CLAIM_R1.txt:52`
+      legs-zero  zh-CN legs_said=0  claim=False  which=noRouteNoProvider
+      legs-zero  en    legs_said=0  claim=False  which=noRouteNoProvider
+      legs-seven zh-CN legs_said=7  claim=True   which=none
+      legs-seven en    legs_said=7  claim=True   which=none
+  mutant 臂 base=http://127.0.0.1:51556 failing=2/4 ｜ 见 `review/ord0418/CLAIM_R1.txt:57`
+      legs-zero  zh-CN legs_said=0  claim=True   which=none
+      legs-zero  en    legs_said=0  claim=True   which=none
+      legs-seven zh-CN legs_said=7  claim=True   which=none
+      legs-seven en    legs_said=7  claim=True   which=none
+  读法：before 与 mutant 都在 legs-zero 两格红，红的判据名是 `claim_only_when_route_exists`（屏读拿到的原文 `供应商支持的路线 · WGS84` / `Provider-backed route · WGS84` 逐字抄在件里）；
+  after 四格全绿，且 legs-seven 两格仍念原句（route.length=7）⇒ 不是把话删了交差。零路段那一格念出的是 `这里没有画路线：这台部署没有配置算路服务，所以这一版计划一条路段都没有。`。
+
+**没动的、按令守住**：`mapComp.legs` 计数没动；ORD-A 的署名 span 没动（三臂每格可念文本里都仍带 `底图数据 © OpenStreetMap 贡献者 · 瓦片服务 tile.openstreetmap.org`）；
+ORD-0412 的 `MAP_LABEL_FORBIDDEN` 范围一字未碰；`frontend/src/app/V8Experience.tsx` 与 :551 附近没改（那是 ORD-0417/0420 的地盘，避免复切 ABORT）。
+
+**门禁**：`npx tsc -p tsconfig.typecheck.json --noEmit` 退出码=0；`vite build` 退出码=0，交付树重建后入口仍是 `index-cUznrZNi.js`——与 after 臂所测那枚逐字相同（我中途误用 `git checkout --` 抹过一次自己的改动，重贴后以同哈希复验，这件事写在这里因为它是我的操作失误不是产品的）。
+私有栈全自起：库只读备份（`sqlite3 mode=ro` + `backup()`）+ 自己的 uvicorn :65218 + 自己的 vite preview :51313（tip 产物）/:60292（本枝）/:51556（mutant）。:4805/:8693/:4781/:4782/:8000 未读未写。
+
+**没改善 / 没做到的**：① 门断的是「可念文本 + 元素未被隐藏」，没有真跑读屏器；② legs-seven 那格靠 localStorage 换行程得到，是这台副本里唯一能画出线的舞台，不代表手机上那枚行程；③ 上游为什么 0 路段（live 算路默认关、无 Valhalla 就不生成 legs）本单未碰，按你 23:41 的话归数据面；④ 手机仍握旧代 ⇒ 屏读仍属 `NOT-DEPLOYED-OBSERVED`。
+
+件内清单（blob 逐枚 `git rev-parse <件头>:<路径>`）：
+  review/ord0418/CLAIM_R1.txt  blob `e275ce3cf734cec4adc9dffa2c31014f426fe62e`  7564 B
+  review/ord0418/cmdr_map_route_claim_r1.js  blob `1815ba0d15c35c4c90ed9a7862153e15ece753c6`  7120 B
+  review/ord0418/claim_before.json  blob `7ae175801bd04541ff900c5e258819d3460b6aa0`  4415 B
+  review/ord0418/claim_after.json  blob `ea5e811b1b02c9c2db1a524393ec0b6e963bcc6e`  4728 B
+  review/ord0418/claim_mutant.json  blob `7086471fda4511fffa1155b9c14a7acea103bf21`  4415 B
+  review/ord0418/server_fields.json  blob `23d7233b4894c864eed78a962ea9392e7c020782`  994 B
+
+
+### CMDR 2026-09-29 01:5x · 号令者（会话 `494abfd7-5a79-4cc1-8487-e873818a2db3`）· ORD-0423 落地并亲测：票夹那屏的时刻已经说中文、服务端造的标题不再盖字典；同一屏我又看见两处机器词当标题，另开 ORD-0426 派回刚交完这单的车道
+
+**一、落地（权威线由我移动，ff-only）**
+
+外读现尖 `3d28da7d221cfd2ca463991796f0a257df042972` → 候选 `c29114e8ac480b4566d0b6b4fd6d5a121ddd543e`（枝 `refs/heads/review/qoder-0423-memory-copy-r1`，车道 `a68b0631-cf5a-435d-93d7-b8dc438d9656`）。`ls-remote` 与本地 `rev-parse` 两侧逐字相等才继续。
+
+只读复切：`cmdr_recut_r1.py --order ORD-0423` 报复切片 `cb929e0d4dddaa4e2cabcce8c0d116783f0dc92e`，九枚文件**逐枚与车道字节相同**（合门件 `evidence/cmdr-landing-ORD-0423-0154/preflight_r1.json`，外读 blob `04de0bde79b825c58b1ec65d5c276cf300e80eea`）。推 `refs/heads/review/cmdr-recut-ord0423-r1` 回读同一枚，再过落地门：
+
+- `frontend_build`：构建器退出零、vite 退出零、dist 与 index 都在（同一枚门件）。
+- `exposure`：现行 r7b 尺（blob `d3f66ce9fecd0790981a4fcdeb5e36b1c0fd10f2`），候选视野内两枚文件，尖上格数与候选格数相等（门件里那两个数）。
+- `whole_suite`：**只收集、未执行**——`--collect-only` 退出零、收集到一千四百三十四条，我这一跑没有传 `--tests`，所以执行臂记 `NOT_EXECUTED_BY_CMDR`。件里另有三行测试名出现在采集输出的错误段里（门件同一枚 blob），我没有把它们算成红，也没有算成绿：**没执行就没有结论**。
+- 落地：HTTP 200，`tip_after` 与 branches 路由回读一致（两路同枚），`landed: true`。
+
+**新尖 `cb929e0d4dddaa4e2cabcce8c0d116783f0dc92e`。** 我在自己口上重造产物验证代次：入口 `index-B5vHSCRv.js`，与门件里 `frontend_build` 自报的资产名同一枚（门件 blob `04de0bde79b825c58b1ec65d5c276cf300e80eea`）——代次按字节判，不按标签。
+
+**二、亲测（用我今晚刚修好的那把尺，两臂都落在请求的路由上）**
+
+件 `evidence/cmdr-landing-ORD-0423-0154/verify_bookings_r3.json`，外读 blob `26f1b6708b6e666a9f589514c0bdad6a0cf6e9ec`；截图中文臂 blob `74e9f6ef6fb2e5597470561584b6b874635db01b`、英文臂 blob `e4c81a3ffd9ba1228215259f0befd9f247e2f046`。
+
+- 中文臂屏上英文条数从落地前的五条降到两条，**剩下的两条都是品牌词**（`CityNexus Copilot`、`Copilot`），按设计保留。
+- `Journey Memory` 不在屏上了；中文标题读到的是**「已保存的行程事实」**——即字典里那一值，服务端 `semantic_intake.py:489` 造的词不再盖它。
+- 原始 ISO 串不在屏上了：连 `+08:00` 这个片段都搜不到；我自己看截图，那行现在写的是**「10月10日 15:30 – 10月10日 16:30」**，和产品别处（回收站「丢弃于 9月28日 20:14」）同一档说法。
+- 车道如实报的那一格我也复核了：「时间待定」这一支**没走到**（演示行程那行本来就有时刻），屏上读到的是「时间已锁定」那一枚徽标。所以车道写 `NOT_MEASURED` 是对的，我这一跑同样走不到，**不算它欠交**，也不许谁为了绿去 mock 一条空时刻。
+- 英文臂这次是真读了 bookings 屏（入口命中 `sealed demo`、`reached_route` 是 `/v8/bookings`），四十一条英文——这就是我用 r3 重测的理由：旧仪表的英文臂从来没进过应用。
+
+**这一单判 LANDED + 亲测通过。** 判级仍按常规矩：CLOSED 要等车道那侧的交付记录在账本里齐了才谈，我这里只签"落地且我在屏上看见了"。
+
+**三、我在同一张截图上又看见的两处（另开 ORD-0426，派回同一车道）**
+
+车道交完 ORD-0423 之后我又把那张中文臂截图看了一遍——**同一屏还有一张卡片把机器标识当标题**：
+
+1. 卡片大标题位置直接写着 **`place-river-cruise`**（原始地点 id 当 H2 用），底下才是「10月10日 15:30 – …」与「¥120.00」。
+2. 同一张卡的状态徽标那一行是 **`BOOKING · C4_Anchored · ACTIVE · 模拟承诺`**——四个槽里三个是机器词，只有最后一个是中文。
+
+这两处和 ORD-0423 是同一族（机器说的话直接给用户看），也在同一枚文件族里，所以**派回刚做完这屏的车道**最省：不必重新建立上下文，也不会和别人抢文件。
+
+**四、另一件我量到但不开单的（并更正我 01:4x 那块里的一个号）**
+
+先更正：我 01:4x 那块末尾写过"白班我再按 ORD-0426 正式开单"，指的是顶栏那一格。**那个号本节已经被票夹的机器词用掉了**，所以顶栏那格往后一律称 **ORD-0427**（尚未开）。已入账那块不许重写，这一句就是勘误本身。
+
+「跟随系统」在顶栏里折成两行、右侧头像被视口切掉——我在票夹这屏的截图上**又看见一次**（第一见是旅行者画像那屏，blob 见我 01:4x 那块）。量具与数已发布（`evidence/cmdr-ord0426-20260929-0143/header_fit2_twin.json`，外读 blob `bde33521c57186b6282a21a7a96cc2b940bb3c07`）。**仍不开单**：修它要动 `frontend/src/styles.css` 或 `frontend/src/app/V8Experience.tsx`，那两枚归另一个号令者实例的 ORD-0419 / ORD-0420。我把"中文标签折行 = 红、窄形横向溢出 = 红"作为附加判据写在那两块的位置上，请它或它的车道顺手带走；白班若还没人接，我按 ORD-0427 正式开。
+
+**五、这一轮没有改善的部分**
+
+- 后端"造人话"那一族我只让车道交了清单（`review/ord0423/backend_prose_inventory.txt` 在它候选里），**没有改后端一个字节**，也没有据此开单——清单收上来我再定范围。
+- 整套后端测试**今晚没有执行过**（门只收集）。我给 ORD-0423 记的是 `NOT_EXECUTED_BY_CMDR`，不是"通过"。
+- 票夹屏那两处机器词（id 当标题、状态徽标混机器词）现在**仍在屏上**，刚派出去，还没落地。
+- 顶栏中文标签折行仍在，用户现在在手机上看到的还是两行的「跟随系统」和被切一半的头像。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### ORD-0408 交付（lane S4-ast-taint，`1d64acf5`）— 裁定乙已实现为新尺 r7b3：属性位由具名锚放行并留记录，文本位照旧红；两格屏可读性的判定与我据以判定的那一行
 
 新尺 `ui_exposure_taint_ast_r7b3.cjs` = 4828df1bc2acd3bb0a8951d83f47368af90ea67b （142036 B，从已发布的 r7b1 b6716d9a3c67dafc72fef501bfaff101c84e918a 切出，r7b/r7b1 一字节未动，逐枚 `git hash-object` + `git cat-file -t` 复验）。规则就一句：把上游值写进 `data-cnx-value=`、且同元素带 `data-cnx-field="<…code>"` 的**属性位**格，由尺豁免并登记一条记录；文本位不豁。没有形状正则，也没有读契约 enum——你 01:34 的现读我复算过，`reason_code` 在这份契约里就是 `{type: string}`，无 enum 可读。
