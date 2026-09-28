@@ -1,0 +1,33 @@
+{
+ "at": "2026-09-28T12:03:28.307Z",
+ "base": "http://127.0.0.1:4796/",
+ "service_worker": {
+  "registrations": 1,
+  "scopes": [
+   "http://127.0.0.1:4796/"
+  ],
+  "cache_keys": [
+   "workbox-precache-v2-http://127.0.0.1:4796/"
+  ],
+  "entries": {
+   "workbox-precache-v2-http://127.0.0.1:4796/": 8
+  }
+ },
+ "reload_ok": true,
+ "reload_error": null,
+ "screen": {
+  "url": "/v8/hub",
+  "body_chars": 91,
+  "text": "连接\n\n网络不可用\n\n这一发请求没能出去，也没有收到任何回答，所以这是网络问题。你的行程数据没有丢失，已保存的只读副本还能看。请检查网络后重试。\n\n看已保存的只读副本\n重试\n归因详情",
+  "has_saved_copy_entry": true,
+  "offline_words": true,
+  "buttons": [
+   "看已保存的只读副本",
+   "重试"
+  ]
+ },
+ "asset_from_cache": {
+  "cache": "workbox-precache-v2-http://127.0.0.1:4796/",
+  "matched": true
+ }
+}
