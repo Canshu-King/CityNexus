@@ -6,6 +6,7 @@ import hashlib
 import hmac
 import logging
 import os
+import secrets
 import time
 from collections.abc import Mapping
 from dataclasses import dataclass
@@ -126,6 +127,7 @@ from app.db.models import (
     JourneyLeg,
     JourneyConstraint,
     JourneyMission,
+    JourneyShareGrant,
     JourneyOutcomeEvent,
     JourneyTripContext,
     MobilityFact,
@@ -344,6 +346,9 @@ from app.schemas import (
     ReservationVisionRequest,
     ResilienceRefreshRequest,
     ScheduleChangeRequest,
+    ShareGrant,
+    ShareGrantCreate,
+    ShareGrantRevoked,
     StayAutopilotRecoveryRequest,
     StayModeChangeRequest,
     StayPlanGenerateRequest,
@@ -3135,6 +3140,193 @@ def list_recycle_bin_journeys(session: Session = Depends(get_session)):
 @app.get("/api/v1/journeys/{journey_id}")
 def get_journey(journey_id: UUID, session: Session = Depends(get_session)):
     return journey_schema(require(session, Journey, str(journey_id), "Journey"))
+
+
+# ORD-0434 step 1: a share grant becomes a server fact instead of a URL the client assembles
+# (`frontend/src/lib/journeyLink.ts:34`).  The anonymous read above is deliberately untouched - the
+# phone demo chain and every existing e2e walk it, and tightening what it accepts is step 2, decided
+# with the user.  `PRIVATE` and `INVITEES_ONLY` are storable here but not link-readable yet, because
+# there is no member data to check a holder against; failing closed beats reading as "open".
+LINK_READABLE_VISIBILITIES = {"LINK_READ", "PUBLIC"}
+
+_SHARE_STATE_CODES = {
+    "REVOKED": ("SHARE_GRANT_REVOKED", 403),
+    "EXPIRED": ("SHARE_GRANT_EXPIRED", 403),
+    "NOT_LINK_READABLE": ("SHARE_GRANT_NOT_LINK_READABLE", 403),
+    "EXPIRY_UNREADABLE": ("SHARE_GRANT_EXPIRY_UNREADABLE", 403),
+}
+
+
+def _share_grant_state(grant: JourneyShareGrant, now: datetime) -> str:
+    """One place decides what this token may do right now, and it fails closed."""
+    if grant.revoked_at:
+        return "REVOKED"
+    if grant.expires_at:
+        try:
+            expires = datetime.fromisoformat(grant.expires_at)
+        except ValueError:
+            return "EXPIRY_UNREADABLE"
+        if expires.tzinfo is None:
+            return "EXPIRY_UNREADABLE"
+        if expires <= now:
+            return "EXPIRED"
+    if grant.visibility not in LINK_READABLE_VISIBILITIES:
+        return "NOT_LINK_READABLE"
+    return "READABLE"
+
+
+def _share_grant_payload(grant: JourneyShareGrant) -> ShareGrant:
+    return ShareGrant(
+        id=grant.id,
+        journey_id=grant.journey_id,
+        visibility=grant.visibility,
+        created_by=grant.created_by,
+        expires_at=grant.expires_at,
+        revoked_at=grant.revoked_at,
+        created_at=grant.created_at,
+        updated_at=grant.updated_at,
+        token=grant.token,
+    )
+
+
+@app.post("/api/v1/journeys/{journey_id}/share-grants", status_code=201, response_model=ShareGrant)
+def create_share_grant(
+    journey_id: UUID, payload: ShareGrantCreate, session: Session = Depends(get_session)
+):
+    require(session, Journey, str(journey_id), "Journey")
+    creator = payload.created_by.strip()
+    if not creator:
+        return error(
+            "SHARE_GRANT_CREATOR_EMPTY",
+            "A share grant needs the person or device that created it.",
+            status=422,
+            details={"field": "created_by"},
+        )
+    expires_at: str | None = None
+    if payload.expires_at is not None:
+        raw = payload.expires_at.strip()
+        try:
+            parsed = datetime.fromisoformat(raw)
+        except ValueError:
+            return error(
+                "SHARE_GRANT_EXPIRY_UNREADABLE",
+                "The expiry sent cannot be read as an instant.",
+                status=422,
+                details={"field": "expires_at"},
+            )
+        if parsed.tzinfo is None:
+            return error(
+                "SHARE_GRANT_EXPIRY_NO_OFFSET",
+                "An expiry without an offset would be a guess about whose clock it is.",
+                status=422,
+                details={"field": "expires_at"},
+            )
+        expires_at = parsed.astimezone(timezone.utc).isoformat()
+    stamp = datetime.now(timezone.utc).isoformat()
+    grant = JourneyShareGrant(
+        id=str(uuid4()),
+        journey_id=str(journey_id),
+        token=secrets.token_urlsafe(24),
+        visibility=payload.visibility,
+        created_by=creator,
+        expires_at=expires_at,
+        revoked_at=None,
+        created_at=stamp,
+        updated_at=stamp,
+    )
+    session.add(grant)
+    session.commit()
+    return _share_grant_payload(grant)
+
+
+@app.get("/api/v1/journeys/{journey_id}/share-grants", response_model=list[ShareGrant])
+def list_share_grants(journey_id: UUID, session: Session = Depends(get_session)):
+    require(session, Journey, str(journey_id), "Journey")
+    rows = session.scalars(
+        select(JourneyShareGrant)
+        .where(JourneyShareGrant.journey_id == str(journey_id))
+        .order_by(JourneyShareGrant.created_at, JourneyShareGrant.id)
+    ).all()
+    # Revoked grants stay in the list: an owner must be able to see that a link was withdrawn,
+    # and a silently filtered row is indistinguishable from one that never existed.
+    return [_share_grant_payload(row) for row in rows]
+
+
+@app.post(
+    "/api/v1/journeys/{journey_id}/share-grants/{grant_id}/revoke",
+    response_model=ShareGrantRevoked,
+)
+def revoke_share_grant(journey_id: UUID, grant_id: str, session: Session = Depends(get_session)):
+    grant = session.get(JourneyShareGrant, grant_id)
+    if grant is None or grant.journey_id != str(journey_id):
+        return error(
+            "SHARE_GRANT_UNKNOWN",
+            "No share grant of this journey carries that id.",
+            status=404,
+            details={"field": "grant_id"},
+        )
+    if grant.revoked_at:
+        return error(
+            "SHARE_GRANT_ALREADY_REVOKED",
+            "This grant was already withdrawn; withdrawing it again is not a new fact.",
+            status=409,
+            details={"field": "revoked_at", "journey_id": grant.journey_id},
+        )
+    stamp = datetime.now(timezone.utc).isoformat()
+    grant.revoked_at = stamp
+    grant.updated_at = stamp
+    session.commit()
+    return ShareGrantRevoked(
+        id=grant.id,
+        journey_id=grant.journey_id,
+        visibility=grant.visibility,
+        revoked_at=stamp,
+        already_revoked=False,
+    )
+
+
+@app.get("/api/v1/shared/journeys/{token}")
+def read_shared_journey(token: str, session: Session = Depends(get_session)):
+    """The door a grant token is actually presented at, so expiry and revocation can mean something.
+
+    The body on success is the same `journey_schema` the anonymous route returns: one journey shape,
+    not a second one that can drift.
+    """
+    grant = session.scalars(
+        select(JourneyShareGrant).where(JourneyShareGrant.token == token)
+    ).first()
+    if grant is None:
+        return error(
+            "SHARE_GRANT_UNKNOWN",
+            "No share grant carries that token.",
+            status=404,
+            details={"field": "token"},
+        )
+    state = _share_grant_state(grant, datetime.now(timezone.utc))
+    if state != "READABLE":
+        code, status = _SHARE_STATE_CODES[state]
+        details: dict[str, str] = {"grant_id": grant.id, "state": state}
+        if state == "REVOKED":
+            details["revoked_at"] = str(grant.revoked_at)
+        elif state == "EXPIRED":
+            details["expires_at"] = str(grant.expires_at)
+        elif state == "NOT_LINK_READABLE":
+            details["visibility"] = grant.visibility
+        return error(
+            code,
+            "This share grant does not allow a read right now.",
+            status=status,
+            details=details,
+        )
+    journey = session.get(Journey, grant.journey_id)
+    if journey is None:
+        return error(
+            "SHARE_GRANT_JOURNEY_GONE",
+            "The journey behind this grant is no longer readable.",
+            status=404,
+            details={"grant_id": grant.id},
+        )
+    return journey_schema(journey)
 
 
 @app.get("/api/v1/journeys/{journey_id}/experience")

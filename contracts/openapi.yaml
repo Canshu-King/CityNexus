@@ -504,6 +504,106 @@ paths:
               schema:
                 type: array
                 items: {$ref: '#/components/schemas/RecycleBinJourney'}
+  /journeys/{journey_id}/share-grants:
+    parameters:
+      - {$ref: '#/components/parameters/JourneyId'}
+    post:
+      operationId: createShareGrant
+      description: >-
+        ORD-0434 step 1: a share grant becomes a server fact instead of a URL the client assembles.
+        One journey can hold many grants; each carries a named visibility, an optional deadline, the
+        moment it was withdrawn, and the creator the creating device asserted - not authenticated in
+        this step, because the anonymous read is still the product's default.  An `expires_at` without
+        an offset is refused: reading a bare instant against the server's own clock would be a guess
+        about the traveller's.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: {$ref: '#/components/schemas/ShareGrantCreate'}
+      responses:
+        '201':
+          description: The grant, with the token its holder needs
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/ShareGrant'}
+        '404': {$ref: '#/components/responses/NotFound'}
+        '422':
+          description: "error.code = VALIDATION_ERROR, or SHARE_GRANT_CREATOR_EMPTY / SHARE_GRANT_EXPIRY_UNREADABLE / SHARE_GRANT_EXPIRY_NO_OFFSET"
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/ErrorEnvelope'}
+    get:
+      operationId: listShareGrants
+      description: >-
+        Every grant of this journey, withdrawn ones included: a row that vanished from the list would
+        be indistinguishable from one that never existed.
+      responses:
+        '200':
+          description: The grants of this journey, oldest first
+          content:
+            application/json:
+              schema:
+                type: array
+                items: {$ref: '#/components/schemas/ShareGrant'}
+        '404': {$ref: '#/components/responses/NotFound'}
+
+  /journeys/{journey_id}/share-grants/{grant_id}/revoke:
+    parameters:
+      - {$ref: '#/components/parameters/JourneyId'}
+      - {name: grant_id, in: path, required: true, schema: {type: string}}
+    post:
+      operationId: revokeShareGrant
+      description: >-
+        Withdrawal takes effect on the token's next read.  A second withdrawal is a different answer,
+        not a repeat of the first.
+      responses:
+        '200':
+          description: Withdrawn now
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/ShareGrantRevoked'}
+        '404':
+          description: "error.code = SHARE_GRANT_UNKNOWN - no grant of this journey carries that id"
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/ErrorEnvelope'}
+        '409':
+          description: "error.code = SHARE_GRANT_ALREADY_REVOKED - this grant was withdrawn earlier"
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/ErrorEnvelope'}
+
+  /shared/journeys/{token}:
+    parameters:
+      - {name: token, in: path, required: true, schema: {type: string}}
+    get:
+      operationId: readSharedJourney
+      description: >-
+        The door a grant token is presented at, so that a deadline and a withdrawal can mean
+        something.  A successful read answers with the same Journey shape as
+        `/journeys/{journey_id}` - one shape, not a second one that can drift.  Three endings are
+        three different named codes: SHARE_GRANT_UNKNOWN (404, never existed), SHARE_GRANT_EXPIRED
+        (403), SHARE_GRANT_REVOKED (403).  PRIVATE and INVITEES_ONLY fail closed as
+        SHARE_GRANT_NOT_LINK_READABLE until step 2 gives the server member data to check a holder
+        against.
+      responses:
+        '200':
+          description: The journey this grant lets its holder read
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/Journey'}
+        '403':
+          description: "error.code is one of SHARE_GRANT_REVOKED / SHARE_GRANT_EXPIRED / SHARE_GRANT_NOT_LINK_READABLE / SHARE_GRANT_EXPIRY_UNREADABLE"
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/ErrorEnvelope'}
+        '404':
+          description: "error.code = SHARE_GRANT_UNKNOWN (no such token) or SHARE_GRANT_JOURNEY_GONE"
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/ErrorEnvelope'}
+
   /journeys/{journey_id}/constraints:
     parameters:
       - {$ref: '#/components/parameters/JourneyId'}
@@ -2271,6 +2371,58 @@ components:
           properties:
             deleted_at: {type: string, format: date-time}
             bin_state: {type: string, enum: [IN_RECYCLE_BIN]}
+    ShareVisibility:
+      type: string
+      description: >-
+        The store checks this list too (`backend/db/schema.sql`).  PRIVATE and INVITEES_ONLY are
+        storable but not link-readable in this step - there is no member data to check a holder
+        against yet - so a token for either answers SHARE_GRANT_NOT_LINK_READABLE rather than
+        reading as open.
+      enum: [PRIVATE, LINK_READ, INVITEES_ONLY, PUBLIC]
+    ShareGrantCreate:
+      type: object
+      additionalProperties: false
+      required: [visibility, created_by]
+      properties:
+        visibility: {$ref: '#/components/schemas/ShareVisibility'}
+        created_by: {type: string, minLength: 1, maxLength: 120}
+        expires_at: {type: [string, 'null'], format: date-time}
+    ShareGrant:
+      type: object
+      required: [id, journey_id, visibility, created_by, expires_at, revoked_at, created_at, updated_at, token]
+      properties:
+        id: {type: string, format: uuid}
+        journey_id: {type: string, format: uuid}
+        visibility: {$ref: '#/components/schemas/ShareVisibility'}
+        created_by: {type: string}
+        expires_at:
+          type: [string, 'null']
+          format: date-time
+          description: null means no deadline was ever set - not a far-future date, not the server's clock.
+        revoked_at:
+          type: [string, 'null']
+          format: date-time
+          description: null means this grant has never been withdrawn.
+        created_at: {type: string, format: date-time}
+        updated_at: {type: string, format: date-time}
+        token:
+          type: string
+          description: >-
+            The whole capability a holder needs.  It is a random value the server minted, not the
+            journey id, so withdrawing a grant cannot be worked around by knowing a trip's address.
+    ShareGrantRevoked:
+      type: object
+      required: [id, journey_id, visibility, revoked_at, already_revoked]
+      properties:
+        id: {type: string, format: uuid}
+        journey_id: {type: string, format: uuid}
+        visibility: {$ref: '#/components/schemas/ShareVisibility'}
+        revoked_at: {type: string, format: date-time}
+        already_revoked:
+          type: boolean
+          description: >-
+            False on the withdrawal that did it.  A repeat withdrawal is refused with
+            SHARE_GRANT_ALREADY_REVOKED instead of answering the same thing twice.
     Money:
       type: object
       required: [amount_minor, currency]

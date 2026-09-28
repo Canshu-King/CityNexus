@@ -428,6 +428,65 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/journeys/{journey_id}/share-grants": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                journey_id: components["parameters"]["JourneyId"];
+            };
+            cookie?: never;
+        };
+        /** @description Every grant of this journey, withdrawn ones included: a row that vanished from the list would be indistinguishable from one that never existed. */
+        get: operations["listShareGrants"];
+        put?: never;
+        /** @description ORD-0434 step 1: a share grant becomes a server fact instead of a URL the client assembles. One journey can hold many grants; each carries a named visibility, an optional deadline, the moment it was withdrawn, and the creator the creating device asserted - not authenticated in this step, because the anonymous read is still the product's default.  An `expires_at` without an offset is refused: reading a bare instant against the server's own clock would be a guess about the traveller's. */
+        post: operations["createShareGrant"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/journeys/{journey_id}/share-grants/{grant_id}/revoke": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                journey_id: components["parameters"]["JourneyId"];
+                grant_id: string;
+            };
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** @description Withdrawal takes effect on the token's next read.  A second withdrawal is a different answer, not a repeat of the first. */
+        post: operations["revokeShareGrant"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/shared/journeys/{token}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                token: string;
+            };
+            cookie?: never;
+        };
+        /** @description The door a grant token is presented at, so that a deadline and a withdrawal can mean something.  A successful read answers with the same Journey shape as `/journeys/{journey_id}` - one shape, not a second one that can drift.  Three endings are three different named codes: SHARE_GRANT_UNKNOWN (404, never existed), SHARE_GRANT_EXPIRED (403), SHARE_GRANT_REVOKED (403).  PRIVATE and INVITEES_ONLY fail closed as SHARE_GRANT_NOT_LINK_READABLE until step 2 gives the server member data to check a holder against. */
+        get: operations["readSharedJourney"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/journeys/{journey_id}/constraints": {
         parameters: {
             query?: never;
@@ -2774,6 +2833,52 @@ export interface components {
             /** @enum {string} */
             bin_state: "IN_RECYCLE_BIN";
         };
+        /**
+         * @description The store checks this list too (`backend/db/schema.sql`).  PRIVATE and INVITEES_ONLY are storable but not link-readable in this step - there is no member data to check a holder against yet - so a token for either answers SHARE_GRANT_NOT_LINK_READABLE rather than reading as open.
+         * @enum {string}
+         */
+        ShareVisibility: "PRIVATE" | "LINK_READ" | "INVITEES_ONLY" | "PUBLIC";
+        ShareGrantCreate: {
+            visibility: components["schemas"]["ShareVisibility"];
+            created_by: string;
+            /** Format: date-time */
+            expires_at?: string | null;
+        };
+        ShareGrant: {
+            /** Format: uuid */
+            id: string;
+            /** Format: uuid */
+            journey_id: string;
+            visibility: components["schemas"]["ShareVisibility"];
+            created_by: string;
+            /**
+             * Format: date-time
+             * @description null means no deadline was ever set - not a far-future date, not the server's clock.
+             */
+            expires_at: string | null;
+            /**
+             * Format: date-time
+             * @description null means this grant has never been withdrawn.
+             */
+            revoked_at: string | null;
+            /** Format: date-time */
+            created_at: string;
+            /** Format: date-time */
+            updated_at: string;
+            /** @description The whole capability a holder needs.  It is a random value the server minted, not the journey id, so withdrawing a grant cannot be worked around by knowing a trip's address. */
+            token: string;
+        };
+        ShareGrantRevoked: {
+            /** Format: uuid */
+            id: string;
+            /** Format: uuid */
+            journey_id: string;
+            visibility: components["schemas"]["ShareVisibility"];
+            /** Format: date-time */
+            revoked_at: string;
+            /** @description False on the withdrawal that did it.  A repeat withdrawal is refused with SHARE_GRANT_ALREADY_REVOKED instead of answering the same thing twice. */
+            already_revoked: boolean;
+        };
         Money: {
             amount_minor: number;
             currency: string;
@@ -4164,6 +4269,146 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["RecycleBinJourney"][];
+                };
+            };
+        };
+    };
+    listShareGrants: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                journey_id: components["parameters"]["JourneyId"];
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description The grants of this journey, oldest first */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ShareGrant"][];
+                };
+            };
+            404: components["responses"]["NotFound"];
+        };
+    };
+    createShareGrant: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                journey_id: components["parameters"]["JourneyId"];
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ShareGrantCreate"];
+            };
+        };
+        responses: {
+            /** @description The grant, with the token its holder needs */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ShareGrant"];
+                };
+            };
+            404: components["responses"]["NotFound"];
+            /** @description error.code = VALIDATION_ERROR, or SHARE_GRANT_CREATOR_EMPTY / SHARE_GRANT_EXPIRY_UNREADABLE / SHARE_GRANT_EXPIRY_NO_OFFSET */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+        };
+    };
+    revokeShareGrant: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                journey_id: components["parameters"]["JourneyId"];
+                grant_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Withdrawn now */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ShareGrantRevoked"];
+                };
+            };
+            /** @description error.code = SHARE_GRANT_UNKNOWN - no grant of this journey carries that id */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+            /** @description error.code = SHARE_GRANT_ALREADY_REVOKED - this grant was withdrawn earlier */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+        };
+    };
+    readSharedJourney: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                token: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description The journey this grant lets its holder read */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Journey"];
+                };
+            };
+            /** @description error.code is one of SHARE_GRANT_REVOKED / SHARE_GRANT_EXPIRED / SHARE_GRANT_NOT_LINK_READABLE / SHARE_GRANT_EXPIRY_UNREADABLE */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+            /** @description error.code = SHARE_GRANT_UNKNOWN (no such token) or SHARE_GRANT_JOURNEY_GONE */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
                 };
             };
         };

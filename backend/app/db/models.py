@@ -1225,3 +1225,24 @@ class CatalogHydrationOperation(Base):
     finished_at: Mapped[str | None] = mapped_column(String, nullable=True)
     abandon_requested_at: Mapped[str | None] = mapped_column(String, nullable=True)
     updated_at: Mapped[str] = mapped_column(String)
+
+
+class JourneyShareGrant(Base):
+    """One share grant: a token, a visibility, and the two moments that end it.
+
+    `expires_at` / `revoked_at` are NULL when that end was never set.  They are not given a
+    DEFAULT and never carry a placeholder instant, so "no deadline" is not stored as a date.
+    """
+
+    __tablename__ = "journey_share_grants"
+    id: Mapped[str] = mapped_column(String, primary_key=True)
+    journey_id: Mapped[str] = mapped_column(
+        ForeignKey("journeys.id", ondelete="CASCADE")
+    )
+    token: Mapped[str] = mapped_column(String, unique=True)
+    visibility: Mapped[str] = mapped_column(String)
+    created_by: Mapped[str] = mapped_column(String)
+    expires_at: Mapped[str | None] = mapped_column(String, nullable=True)
+    revoked_at: Mapped[str | None] = mapped_column(String, nullable=True)
+    created_at: Mapped[str] = mapped_column(String)
+    updated_at: Mapped[str] = mapped_column(String)

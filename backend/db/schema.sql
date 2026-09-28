@@ -1045,3 +1045,27 @@ CREATE INDEX IF NOT EXISTS idx_catalog_hydration_destination_recent
 
 CREATE INDEX IF NOT EXISTS idx_catalog_hydration_journey_recent
     ON catalog_hydration_operations(journey_id, queued_at);
+
+-- ORD-0434 step 1: a share grant is a server fact, not a URL the client assembles.
+-- One journey can hold many grants.  `expires_at` and `revoked_at` carry no DEFAULT and no
+-- sentinel: a NULL means that moment was never set, which is the only honest way to say
+-- "this grant has no deadline" and "this grant was never revoked" without inventing either.
+-- `created_by` is what the creating device asserted; this step does not authenticate it,
+-- because the anonymous read path is still the product's default (tightening it is step 2).
+CREATE TABLE IF NOT EXISTS journey_share_grants (
+    id TEXT PRIMARY KEY,
+    journey_id TEXT NOT NULL REFERENCES journeys(id) ON DELETE CASCADE,
+    token TEXT NOT NULL,
+    visibility TEXT NOT NULL CHECK (visibility IN ('PRIVATE','LINK_READ','INVITEES_ONLY','PUBLIC')),
+    created_by TEXT NOT NULL,
+    expires_at TEXT,
+    revoked_at TEXT,
+    created_at TEXT NOT NULL,
+    updated_at TEXT NOT NULL
+);
+
+CREATE UNIQUE INDEX IF NOT EXISTS uq_journey_share_grants_token
+    ON journey_share_grants(token);
+
+CREATE INDEX IF NOT EXISTS idx_journey_share_grants_journey
+    ON journey_share_grants(journey_id, created_at);
