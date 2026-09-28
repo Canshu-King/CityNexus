@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Icon } from "../components/v8/Icon";
-import { MapPanel, tripHasNoCoordinates } from "../components/v8/MapPanel";
+import { activityCoordinate, MapPanel, tripHasNoCoordinates } from "../components/v8/MapPanel";
 import { mapCopy } from "../i18n/mapPanelCopy";
 import { AgentComposer } from "../features/agent/AgentComposer";
 import { CopilotDock } from "../features/agent/CopilotDock";
@@ -3483,11 +3483,13 @@ function LiveSecondary({
   const disruptions = planDisruptions.filter(
     (item) => !isHandledDisruption(item),
   );
-  const destination =
-    next?.metadata.longitude != null && next?.metadata.latitude != null
+  /* ORD-0394: the link target is the same joined coordinate the map paints, so the pin and the
+     external navigation app cannot disagree about where a stop is. */
+  const nextAt = next ? activityCoordinate(next) : null;
+  const destination = nextAt != null
       ? data.journey.city_code.startsWith("CN-")
-        ? `https://uri.amap.com/navigation?to=${next.metadata.longitude},${next.metadata.latitude},${encodeURIComponent(next.title)}&mode=walk&coordinate=wgs84&callnative=1`
-        : `https://www.google.com/maps/dir/?api=1&destination=${next.metadata.latitude},${next.metadata.longitude}`
+        ? `https://uri.amap.com/navigation?to=${nextAt.longitude},${nextAt.latitude},${encodeURIComponent(next.title)}&mode=walk&coordinate=wgs84&callnative=1`
+        : `https://www.google.com/maps/dir/?api=1&destination=${nextAt.latitude},${nextAt.longitude}`
       : null;
   return (
     <section className="v8-page" data-testid="v8-live-secondary">
@@ -3647,7 +3649,7 @@ function MapPage({
   /* Only stops the map can actually stand on are offered as rows — the same coordinate test
      `MapPanel` uses to build its markers, so a row can never name a stop with no pin. */
   const planStops = (data.active_plan?.activities ?? []).filter(
-    (item) => item.metadata?.longitude != null && item.metadata?.latitude != null,
+    (item) => activityCoordinate(item) != null,
   );
   const selectedActivity =
     planStops.find((item) => item.id === selectedActivityId) ?? null;
