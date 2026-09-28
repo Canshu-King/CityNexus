@@ -1,5 +1,5 @@
 {
- "base": "http://127.0.0.1:4832",
+ "base": "http://127.0.0.1:4837",
  "arm": "counter",
  "criterion": "covering reaches zero AND relocated centre hit returns the pill AND panel opens on every arm",
  "screens": [
@@ -10,7 +10,7 @@
      "path": "/v8/twin",
      "pill_present": true,
      "served_bundle": [
-      "/assets/index-Bl6Q6t4E.js"
+      "/assets/index-B3J0u8te.js"
      ],
      "viewport": {
       "w": 390,
@@ -29,31 +29,31 @@
       {
        "scrollTop": 0,
        "painted": {
-        "left": 215,
-        "top": 706,
-        "right": 380,
-        "bottom": 760,
-        "w": 165,
-        "h": 54
+        "left": 336,
+        "top": 534,
+        "right": 418,
+        "bottom": 576,
+        "w": 82,
+        "h": 42
        },
        "attrs": {
         "yield_to_surface": "false",
-        "rest_overlap": "false",
+        "rest_overlap": "true",
         "idle_compact": "true",
-        "yield_slot": "none",
-        "classes": "cn-copilot-dock collapsed idle-compact"
+        "yield_slot": "336,534,44",
+        "classes": "cn-copilot-dock collapsed idle-compact yield-at-rest"
        },
-       "ink_covered": 1,
-       "box_covered": 1,
+       "ink_covered": 0,
+       "box_covered": 0,
        "controls_covered": 0,
-       "max_ink_overlap_px": 325,
-       "max_box_overlap_px": 1729,
-       "first_ink_covered": "P 无障碍硬性需求不会从行为里推断出来。",
-       "first_box_covered": "P 无障碍硬性需求不会从行为里推断出来。",
+       "max_ink_overlap_px": 0,
+       "max_box_overlap_px": 0,
+       "first_ink_covered": null,
+       "first_box_covered": null,
        "hit_at_centre": "SPAN.",
        "hit_is_pill": true,
        "visible_witnesses": {
-        "in_viewport": true,
+        "in_viewport": false,
         "opacity": "1",
         "visibility": "visible",
         "pointer_events": "auto",
@@ -64,31 +64,31 @@
       {
        "scrollTop": 164,
        "painted": {
-        "left": 215,
-        "top": 706,
-        "right": 380,
-        "bottom": 760,
-        "w": 165,
-        "h": 54
+        "left": 336,
+        "top": 634,
+        "right": 418,
+        "bottom": 676,
+        "w": 82,
+        "h": 42
        },
        "attrs": {
         "yield_to_surface": "false",
-        "rest_overlap": "false",
+        "rest_overlap": "true",
         "idle_compact": "true",
-        "yield_slot": "none",
-        "classes": "cn-copilot-dock collapsed idle-compact"
+        "yield_slot": "336,634,44",
+        "classes": "cn-copilot-dock collapsed idle-compact yield-at-rest"
        },
-       "ink_covered": 1,
-       "box_covered": 1,
+       "ink_covered": 0,
+       "box_covered": 0,
        "controls_covered": 0,
-       "max_ink_overlap_px": 508,
-       "max_box_overlap_px": 3325,
-       "first_ink_covered": "P 你的偏好可改善路线或酒店排名，但不会创建预订、花费金钱或削弱已确认的预订。",
-       "first_box_covered": "P 你的偏好可改善路线或酒店排名，但不会创建预订、花费金钱或削弱已确认的预订。",
+       "max_ink_overlap_px": 0,
+       "max_box_overlap_px": 0,
+       "first_ink_covered": null,
+       "first_box_covered": null,
        "hit_at_centre": "SPAN.",
        "hit_is_pill": true,
        "visible_witnesses": {
-        "in_viewport": true,
+        "in_viewport": false,
         "opacity": "1",
         "visibility": "visible",
         "pointer_events": "auto",
@@ -144,7 +144,7 @@
      "path": "/v8/twin",
      "pill_present": true,
      "served_bundle": [
-      "/assets/index-Bl6Q6t4E.js"
+      "/assets/index-B3J0u8te.js"
      ],
      "viewport": {
       "w": 390,
@@ -163,31 +163,31 @@
       {
        "scrollTop": 0,
        "painted": {
-        "left": 215,
-        "top": 706,
-        "right": 380,
-        "bottom": 760,
-        "w": 165,
-        "h": 54
+        "left": 336,
+        "top": 654,
+        "right": 418,
+        "bottom": 696,
+        "w": 82,
+        "h": 42
        },
        "attrs": {
         "yield_to_surface": "false",
-        "rest_overlap": "false",
+        "rest_overlap": "true",
         "idle_compact": "true",
-        "yield_slot": "none",
-        "classes": "cn-copilot-dock collapsed idle-compact"
+        "yield_slot": "336,654,44",
+        "classes": "cn-copilot-dock collapsed idle-compact yield-at-rest"
        },
-       "ink_covered": 1,
-       "box_covered": 2,
+       "ink_covered": 0,
+       "box_covered": 0,
        "controls_covered": 0,
-       "max_ink_overlap_px": 2268,
-       "max_box_overlap_px": 4256,
-       "first_ink_covered": "H2 No learned signals",
-       "first_box_covered": "H2 No learned signals",
+       "max_ink_overlap_px": 0,
+       "max_box_overlap_px": 0,
+       "first_ink_covered": null,
+       "first_box_covered": null,
        "hit_at_centre": "SPAN.",
        "hit_is_pill": true,
        "visible_witnesses": {
-        "in_viewport": true,
+        "in_viewport": false,
         "opacity": "1",
         "visibility": "visible",
         "pointer_events": "auto",
@@ -198,31 +198,31 @@
       {
        "scrollTop": 236,
        "painted": {
-        "left": 215,
-        "top": 706,
-        "right": 380,
-        "bottom": 760,
-        "w": 165,
-        "h": 54
+        "left": 336,
+        "top": 694,
+        "right": 418,
+        "bottom": 736,
+        "w": 82,
+        "h": 42
        },
        "attrs": {
         "yield_to_surface": "false",
-        "rest_overlap": "false",
+        "rest_overlap": "true",
         "idle_compact": "true",
-        "yield_slot": "none",
-        "classes": "cn-copilot-dock collapsed idle-compact"
+        "yield_slot": "336,694,44",
+        "classes": "cn-copilot-dock collapsed idle-compact yield-at-rest"
        },
-       "ink_covered": 1,
-       "box_covered": 1,
+       "ink_covered": 0,
+       "box_covered": 0,
        "controls_covered": 0,
-       "max_ink_overlap_px": 1624,
-       "max_box_overlap_px": 1995,
-       "first_ink_covered": "P Your preferences can improve a route or hotel rank",
-       "first_box_covered": "P Your preferences can improve a route or hotel rank",
+       "max_ink_overlap_px": 0,
+       "max_box_overlap_px": 0,
+       "first_ink_covered": null,
+       "first_box_covered": null,
        "hit_at_centre": "SPAN.",
        "hit_is_pill": true,
        "visible_witnesses": {
-        "in_viewport": true,
+        "in_viewport": false,
         "opacity": "1",
         "visibility": "visible",
         "pointer_events": "auto",
@@ -283,7 +283,7 @@
      "path": "/v8/discover",
      "pill_present": true,
      "served_bundle": [
-      "/assets/index-Bl6Q6t4E.js"
+      "/assets/index-B3J0u8te.js"
      ],
      "viewport": {
       "w": 390,
@@ -302,31 +302,31 @@
       {
        "scrollTop": 0,
        "painted": {
-        "left": 215,
-        "top": 706,
-        "right": 380,
-        "bottom": 760,
-        "w": 165,
-        "h": 54
+        "left": 336,
+        "top": 594,
+        "right": 418,
+        "bottom": 636,
+        "w": 82,
+        "h": 42
        },
        "attrs": {
         "yield_to_surface": "false",
-        "rest_overlap": "false",
+        "rest_overlap": "true",
         "idle_compact": "true",
-        "yield_slot": "none",
-        "classes": "cn-copilot-dock collapsed idle-compact"
+        "yield_slot": "336,594,44",
+        "classes": "cn-copilot-dock collapsed idle-compact yield-at-rest"
        },
-       "ink_covered": 2,
-       "box_covered": 1,
+       "ink_covered": 0,
+       "box_covered": 0,
        "controls_covered": 0,
-       "max_ink_overlap_px": 1206,
-       "max_box_overlap_px": 4278,
-       "first_ink_covered": "P 描述偏好、心情或约束。模型可选择语义方向，但只有服务端已知的地点才能到达权威方案。",
-       "first_box_covered": "P 描述偏好、心情或约束。模型可选择语义方向，但只有服务端已知的地点才能到达权威方案。",
+       "max_ink_overlap_px": 0,
+       "max_box_overlap_px": 0,
+       "first_ink_covered": null,
+       "first_box_covered": null,
        "hit_at_centre": "SPAN.",
        "hit_is_pill": true,
        "visible_witnesses": {
-        "in_viewport": true,
+        "in_viewport": false,
         "opacity": "1",
         "visibility": "visible",
         "pointer_events": "auto",
@@ -337,23 +337,23 @@
       {
        "scrollTop": 256,
        "painted": {
-        "left": 215,
-        "top": 706,
-        "right": 380,
-        "bottom": 760,
-        "w": 165,
-        "h": 54
+        "left": 336,
+        "top": 554,
+        "right": 418,
+        "bottom": 596,
+        "w": 82,
+        "h": 42
        },
        "attrs": {
         "yield_to_surface": "false",
-        "rest_overlap": "false",
+        "rest_overlap": "true",
         "idle_compact": "true",
-        "yield_slot": "none",
-        "classes": "cn-copilot-dock collapsed idle-compact"
+        "yield_slot": "336,554,44",
+        "classes": "cn-copilot-dock collapsed idle-compact yield-at-rest"
        },
        "ink_covered": 0,
        "box_covered": 0,
-       "controls_covered": 1,
+       "controls_covered": 0,
        "max_ink_overlap_px": 0,
        "max_box_overlap_px": 0,
        "first_ink_covered": null,
@@ -361,7 +361,7 @@
        "hit_at_centre": "SPAN.",
        "hit_is_pill": true,
        "visible_witnesses": {
-        "in_viewport": true,
+        "in_viewport": false,
         "opacity": "1",
         "visibility": "visible",
         "pointer_events": "auto",
@@ -417,7 +417,7 @@
      "path": "/v8/discover",
      "pill_present": true,
      "served_bundle": [
-      "/assets/index-Bl6Q6t4E.js"
+      "/assets/index-B3J0u8te.js"
      ],
      "viewport": {
       "w": 390,
@@ -436,31 +436,31 @@
       {
        "scrollTop": 0,
        "painted": {
-        "left": 215,
-        "top": 706,
-        "right": 380,
-        "bottom": 760,
-        "w": 165,
-        "h": 54
+        "left": 336,
+        "top": 654,
+        "right": 418,
+        "bottom": 696,
+        "w": 82,
+        "h": 42
        },
        "attrs": {
         "yield_to_surface": "false",
-        "rest_overlap": "false",
+        "rest_overlap": "true",
         "idle_compact": "true",
-        "yield_slot": "none",
-        "classes": "cn-copilot-dock collapsed idle-compact"
+        "yield_slot": "336,654,44",
+        "classes": "cn-copilot-dock collapsed idle-compact yield-at-rest"
        },
-       "ink_covered": 2,
-       "box_covered": 2,
+       "ink_covered": 0,
+       "box_covered": 0,
        "controls_covered": 0,
-       "max_ink_overlap_px": 2405,
-       "max_box_overlap_px": 4416,
-       "first_ink_covered": "H2 Shape the city stop",
-       "first_box_covered": "H2 Shape the city stop",
+       "max_ink_overlap_px": 0,
+       "max_box_overlap_px": 0,
+       "first_ink_covered": null,
+       "first_box_covered": null,
        "hit_at_centre": "SPAN.",
        "hit_is_pill": true,
        "visible_witnesses": {
-        "in_viewport": true,
+        "in_viewport": false,
         "opacity": "1",
         "visibility": "visible",
         "pointer_events": "auto",
@@ -471,23 +471,23 @@
       {
        "scrollTop": 296,
        "painted": {
-        "left": 215,
-        "top": 706,
-        "right": 380,
-        "bottom": 760,
-        "w": 165,
-        "h": 54
+        "left": 336,
+        "top": 594,
+        "right": 418,
+        "bottom": 636,
+        "w": 82,
+        "h": 42
        },
        "attrs": {
         "yield_to_surface": "false",
-        "rest_overlap": "false",
+        "rest_overlap": "true",
         "idle_compact": "true",
-        "yield_slot": "none",
-        "classes": "cn-copilot-dock collapsed idle-compact"
+        "yield_slot": "336,594,44",
+        "classes": "cn-copilot-dock collapsed idle-compact yield-at-rest"
        },
        "ink_covered": 0,
        "box_covered": 0,
-       "controls_covered": 1,
+       "controls_covered": 0,
        "max_ink_overlap_px": 0,
        "max_box_overlap_px": 0,
        "first_ink_covered": null,
@@ -495,7 +495,7 @@
        "hit_at_centre": "SPAN.",
        "hit_is_pill": true,
        "visible_witnesses": {
-        "in_viewport": true,
+        "in_viewport": false,
         "opacity": "1",
         "visibility": "visible",
         "pointer_events": "auto",
@@ -556,7 +556,7 @@
      "path": "/v8/intelligence",
      "pill_present": true,
      "served_bundle": [
-      "/assets/index-Bl6Q6t4E.js"
+      "/assets/index-B3J0u8te.js"
      ],
      "viewport": {
       "w": 390,
@@ -690,7 +690,7 @@
      "path": "/v8/intelligence",
      "pill_present": true,
      "served_bundle": [
-      "/assets/index-Bl6Q6t4E.js"
+      "/assets/index-B3J0u8te.js"
      ],
      "viewport": {
       "w": 390,
