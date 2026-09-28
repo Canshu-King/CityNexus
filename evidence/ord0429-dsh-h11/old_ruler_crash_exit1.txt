@@ -1,0 +1,22 @@
+sweep authorized by --allow-sweep: 7 artefact(s) removed, recorded in the receipt
+Traceback (most recent call last):
+  File "D:\moodle\CityNexus-Hermes-Revival\evidence\0212\gate_streak_v2.py", line 466, in run_once
+    f.unlink()
+  File "C:\Users\仓鼠王\AppData\Roaming\uv\python\cpython-3.12.14-windows-x86_64-none\Lib\pathlib.py", line 1342, in unlink
+    os.unlink(self)
+PermissionError: [WinError 32] 另一个程序正在使用此文件，进程无法访问。: 'D:\\moodle\\CityNexus-Hermes-Revival\\evidence\\0212\\_st2_integration_whole-ladder_ALL_1.db'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "D:\moodle\CityNexus-Hermes-Revival\evidence\0212\gate_streak_v2.py", line 678, in <module>
+    raise SystemExit(main())
+                     ^^^^^^
+  File "D:\moodle\CityNexus-Hermes-Revival\evidence\0212\gate_streak_v2.py", line 544, in main
+    r = run_once(root, args.shape, args.target, i, args.first_port + i - 1, tag,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\moodle\CityNexus-Hermes-Revival\evidence\0212\gate_streak_v2.py", line 468, in run_once
+    PENDING_CLEANUP.append(str(f))
+    ^^^^^^^^^^^^^^^
+NameError: name 'PENDING_CLEANUP' is not defined
+REAL_EXIT_CODE=1
