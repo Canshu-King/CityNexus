@@ -1,0 +1,9 @@
+proxy guard: {'proxy_env_before': {'HTTPS_PROXY': 'http://127.0.0.1:7892', 'HTTP_PROXY': 'http://127.0.0.1:7892'}, 'refused': ['HTTPS_PROXY=127.0.0.1:7892', 'HTTP_PROXY=127.0.0.1:7892'], 'action': 'PROXY_CLEARED_AND_DIRECT'}
+[pre] served index.html references: ['/assets/index-Doj2alof.js', '/assets/index-tCROZ2r8.css']
+[pre] build references          : ['/assets/index-DQeW-4E8.js', '/assets/index-tCROZ2r8.css']
+[union] added 3 new asset(s); 1 already byte-identical; 137 name->digest bindings written
+[gate] 2 new asset(s) reachable x2, real bytes vs the build export, no HTML fallback
+[preflight] BLOCKED / promotion=PENDING_POST_SWITCH  (B_pre/C_pre/G_pre/I_pre/F_pre/A_pre; reds=1)
+  RED: ? :: [None]
+REFUSED: pre-flight is BLOCKED, so the old generation stays live and nothing is switched: ? :: [None]
+[receipt] D:\moodle\_qoder_cmdr_ref_20260921\live_checks\receipts\deploy_refused_preflight_0928_191558.json
