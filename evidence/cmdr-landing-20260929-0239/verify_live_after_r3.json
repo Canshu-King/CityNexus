@@ -1,0 +1,458 @@
+{
+ "base": "http://127.0.0.1:4809",
+ "route": "live",
+ "generated_by": "_untranslated_scan_r3.js",
+ "expect_list_size": 8,
+ "zh": {
+  "locale": "zh",
+  "entry_used": "使用封存的演示行程",
+  "reached_route": "/v8/live",
+  "on_requested_route": true,
+  "path": "/v8/live",
+  "locale_read": "zh",
+  "scroll_steps": 10,
+  "scrollables": 2,
+  "scroll_reached": [
+   {
+    "tag": "HTML",
+    "cls": "",
+    "max": 1447,
+    "deepest_scrollTop_reached": 1447,
+    "bottom_reached": true
+   },
+   {
+    "tag": "HTML",
+    "cls": "",
+    "max": 1447,
+    "deepest_scrollTop_reached": 1447,
+    "bottom_reached": true
+   }
+  ],
+  "leaf_count": 68,
+  "ascii_prose_count": 4,
+  "ascii_prose": [
+   {
+    "text": "Tech Art Center",
+    "tag": "H2",
+    "cls": "",
+    "testid": "live-journey-current",
+    "y": 257
+   },
+   {
+    "text": "CityNexus Copilot",
+    "tag": "SPAN",
+    "cls": "",
+    "testid": null,
+    "y": 732
+   },
+   {
+    "text": "Copilot",
+    "tag": "SPAN",
+    "cls": "",
+    "testid": "nav-agent",
+    "y": 816
+   },
+   {
+    "text": "Nexus River Cruise Pier",
+    "tag": "H3",
+    "cls": "",
+    "testid": null,
+    "y": 799
+   }
+  ],
+  "expect": [
+   {
+    "text": "NOT_CONFIGURED",
+    "on_screen": false
+   },
+   {
+    "text": "ADVISORY",
+    "on_screen": false
+   },
+   {
+    "text": "PLANNED",
+    "on_screen": false
+   },
+   {
+    "text": "Asia/Shanghai",
+    "on_screen": false
+   },
+   {
+    "text": "place-river-cruise",
+    "on_screen": false
+   },
+   {
+    "text": "C4_Anchored",
+    "on_screen": false
+   },
+   {
+    "text": "已保存的行程事实",
+    "on_screen": false
+   },
+   {
+    "text": "Capability needs",
+    "on_screen": false
+   }
+  ]
+ },
+ "en": {
+  "locale": "en",
+  "entry_used": "sealed demo",
+  "reached_route": "/v8/live",
+  "on_requested_route": true,
+  "path": "/v8/live",
+  "locale_read": "en",
+  "scroll_steps": 10,
+  "scrollables": 2,
+  "scroll_reached": [
+   {
+    "tag": "HTML",
+    "cls": "",
+    "max": 1484,
+    "deepest_scrollTop_reached": 1484,
+    "bottom_reached": true
+   },
+   {
+    "tag": "HTML",
+    "cls": "",
+    "max": 1484,
+    "deepest_scrollTop_reached": 1484,
+    "bottom_reached": true
+   }
+  ],
+  "leaf_count": 68,
+  "ascii_prose_count": 42,
+  "ascii_prose": [
+   {
+    "text": "Live Journey",
+    "tag": "STRONG",
+    "cls": "",
+    "testid": null,
+    "y": 25
+   },
+   {
+    "text": "System",
+    "tag": "BUTTON",
+    "cls": "v9-language",
+    "testid": "topbar-theme",
+    "y": 17
+   },
+   {
+    "text": "Live Journey · saved 28 Sept, 04:41",
+    "tag": "P",
+    "cls": "v8-kicker",
+    "testid": null,
+    "y": 93
+   },
+   {
+    "text": "Choose your next leg.",
+    "tag": "H1",
+    "cls": "",
+    "testid": null,
+    "y": 117
+   },
+   {
+    "text": "Tech Art Center",
+    "tag": "H2",
+    "cls": "",
+    "testid": "live-journey-current",
+    "y": 257
+   },
+   {
+    "text": "NEXT · Nexus River Cruise Pier · Transit · duration pending",
+    "tag": "P",
+    "cls": "",
+    "testid": null,
+    "y": 293
+   },
+   {
+    "text": "Fit to my journey",
+    "tag": "SPAN",
+    "cls": "v8-map-viewport-control-label",
+    "testid": "map-viewport-reset",
+    "y": 388
+   },
+   {
+    "text": "Basemap did not load — showing the route diagram only.",
+    "tag": "P",
+    "cls": "v8-map-tile-notice",
+    "testid": "v8-map-tile-notice",
+    "y": 362
+   },
+   {
+    "text": "One finger drags the map · two fingers zoom · to move the page, drag outside the map",
+    "tag": "P",
+    "cls": "v8-map-gesture-hint",
+    "testid": "v8-map-gesture-hint",
+    "y": 440
+   },
+   {
+    "text": "0 legs",
+    "tag": "B",
+    "cls": "",
+    "testid": null,
+    "y": 512
+   },
+   {
+    "text": "Basemap data © OpenStreetMap contributors · tiles: tile.openstreetmap.org",
+    "tag": "SPAN",
+    "cls": "v8-map-attribution",
+    "testid": "v8-map-attribution",
+    "y": 534
+   },
+   {
+    "text": "There is nothing for you to decide right now.",
+    "tag": "P",
+    "cls": "v8-muted",
+    "testid": "live-no-proposal",
+    "y": 609
+   },
+   {
+    "text": "Update location",
+    "tag": "BUTTON",
+    "cls": "v8-quiet-button",
+    "testid": "live-update-location",
+    "y": 646
+   },
+   {
+    "text": "Report rain",
+    "tag": "BUTTON",
+    "cls": "v8-quiet-button",
+    "testid": "live-report-rain",
+    "y": 646
+   },
+   {
+    "text": "Mode for next leg",
+    "tag": "SPAN",
+    "cls": "",
+    "testid": null,
+    "y": 731
+   },
+   {
+    "text": "Choose a calm route",
+    "tag": "B",
+    "cls": "",
+    "testid": null,
+    "y": 749
+   },
+   {
+    "text": "CityNexus Copilot",
+    "tag": "SPAN",
+    "cls": "",
+    "testid": null,
+    "y": 732
+   },
+   {
+    "text": "Copilot",
+    "tag": "SPAN",
+    "cls": "",
+    "testid": "nav-agent",
+    "y": 816
+   },
+   {
+    "text": "Transit",
+    "tag": "BUTTON",
+    "cls": "active",
+    "testid": "mode-transit",
+    "y": 491
+   },
+   {
+    "text": "Compare all modes",
+    "tag": "BUTTON",
+    "cls": "v8-compare-button",
+    "testid": null,
+    "y": 671
+   },
+   {
+    "text": "NEXT · LEAVE BY",
+    "tag": "SPAN",
+    "cls": "",
+    "testid": null,
+    "y": 771
+   },
+   {
+    "text": "Nexus River Cruise Pier",
+    "tag": "H3",
+    "cls": "",
+    "testid": null,
+    "y": 799
+   },
+   {
+    "text": "Arrive by 10 Oct, 15:30 · Est. 0 min slack",
+    "tag": "P",
+    "cls": "",
+    "testid": "live-leave-by",
+    "y": 831
+   },
+   {
+    "text": "ETA · Transit",
+    "tag": "SPAN",
+    "cls": "",
+    "testid": null,
+    "y": 466
+   },
+   {
+    "text": "NAVIGATE →",
+    "tag": "A",
+    "cls": "v9-navigate",
+    "testid": null,
+    "y": 502
+   },
+   {
+    "text": "LOW · route evidence current",
+    "tag": "SPAN",
+    "cls": "",
+    "testid": null,
+    "y": 579
+   },
+   {
+    "text": "EVIDENCE",
+    "tag": "SPAN",
+    "cls": "",
+    "testid": null,
+    "y": 654
+   },
+   {
+    "text": "Provider route, freshness, cost and feasibility",
+    "tag": "SMALL",
+    "cls": "",
+    "testid": null,
+    "y": 658
+   },
+   {
+    "text": "ROUTE EVIDENCE",
+    "tag": "SPAN",
+    "cls": "",
+    "testid": null,
+    "y": 723
+   },
+   {
+    "text": "Compare",
+    "tag": "BUTTON",
+    "cls": "",
+    "testid": null,
+    "y": 719
+   },
+   {
+    "text": "Provider facts · unknown costs never become zero",
+    "tag": "SMALL",
+    "cls": "",
+    "testid": null,
+    "y": 779
+   },
+   {
+    "text": "LIVE STATUS",
+    "tag": "SPAN",
+    "cls": "v8-kicker",
+    "testid": null,
+    "y": 731
+   },
+   {
+    "text": "What is happening now",
+    "tag": "H3",
+    "cls": "",
+    "testid": null,
+    "y": 751
+   },
+   {
+    "text": "Shanghai time",
+    "tag": "SMALL",
+    "cls": "",
+    "testid": null,
+    "y": 521
+   },
+   {
+    "text": "CURRENT STEP",
+    "tag": "SPAN",
+    "cls": "",
+    "testid": null,
+    "y": 576
+   },
+   {
+    "text": "in progress",
+    "tag": "STRONG",
+    "cls": "",
+    "testid": "v10-current-step",
+    "y": 596
+   },
+   {
+    "text": "journey status",
+    "tag": "SMALL",
+    "cls": "",
+    "testid": null,
+    "y": 621
+   },
+   {
+    "text": "OFFLINE",
+    "tag": "SPAN",
+    "cls": "",
+    "testid": null,
+    "y": 676
+   },
+   {
+    "text": "available offline",
+    "tag": "STRONG",
+    "cls": "",
+    "testid": null,
+    "y": 696
+   },
+   {
+    "text": "next 24 hours saved",
+    "tag": "SMALL",
+    "cls": "",
+    "testid": null,
+    "y": 721
+   },
+   {
+    "text": "none recorded yet",
+    "tag": "SPAN",
+    "cls": "",
+    "testid": null,
+    "y": 778
+   },
+   {
+    "text": "No web observation is authoritative. Search evidence appears here only after server capture.",
+    "tag": "P",
+    "cls": "v10-muted",
+    "testid": null,
+    "y": 836
+   }
+  ],
+  "expect": [
+   {
+    "text": "NOT_CONFIGURED",
+    "on_screen": false
+   },
+   {
+    "text": "ADVISORY",
+    "on_screen": false
+   },
+   {
+    "text": "PLANNED",
+    "on_screen": false
+   },
+   {
+    "text": "Asia/Shanghai",
+    "on_screen": false
+   },
+   {
+    "text": "place-river-cruise",
+    "on_screen": false
+   },
+   {
+    "text": "C4_Anchored",
+    "on_screen": false
+   },
+   {
+    "text": "已保存的行程事实",
+    "on_screen": false
+   },
+   {
+    "text": "Capability needs",
+    "on_screen": false
+   }
+  ]
+ },
+ "arms_comparable": true,
+ "verdict": "ZH_SCREEN_CARRIES_ENGLISH_PROSE"
+}
