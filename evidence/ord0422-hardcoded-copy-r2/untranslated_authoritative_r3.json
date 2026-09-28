@@ -1,0 +1,745 @@
+{
+ "base": "http://127.0.0.1:4314",
+ "route": "authoritative",
+ "generated_by": "_untranslated_scan_r3.js",
+ "expect_list_size": 22,
+ "zh": {
+  "locale": "zh",
+  "entry_used": "使用封存的演示行程",
+  "reached_route": "/v8/authoritative",
+  "on_requested_route": true,
+  "path": "/v8/authoritative",
+  "locale_read": "zh",
+  "scroll_steps": 12,
+  "scrollables": 2,
+  "scroll_reached": [
+   {
+    "tag": "HTML",
+    "cls": "",
+    "max": 1747,
+    "deepest_scrollTop_reached": 1747,
+    "bottom_reached": true
+   },
+   {
+    "tag": "HTML",
+    "cls": "",
+    "max": 1747,
+    "deepest_scrollTop_reached": 1747,
+    "bottom_reached": true
+   }
+  ],
+  "leaf_count": 72,
+  "ascii_prose_count": 16,
+  "ascii_prose": [
+   {
+    "text": "Tech Art Center",
+    "tag": "STRONG",
+    "cls": "",
+    "testid": null,
+    "y": 770
+   },
+   {
+    "text": "CityNexus Copilot",
+    "tag": "SPAN",
+    "cls": "",
+    "testid": null,
+    "y": 732
+   },
+   {
+    "text": "Copilot",
+    "tag": "SPAN",
+    "cls": "",
+    "testid": "nav-agent",
+    "y": 816
+   },
+   {
+    "text": "Nexus River Cruise Pier",
+    "tag": "STRONG",
+    "cls": "",
+    "testid": null,
+    "y": 512
+   },
+   {
+    "text": "Old Town Gate",
+    "tag": "SPAN",
+    "cls": "v12-activity-title",
+    "testid": null,
+    "y": 632
+   },
+   {
+    "text": "Riverside Museum",
+    "tag": "SPAN",
+    "cls": "v12-activity-title",
+    "testid": null,
+    "y": 677
+   },
+   {
+    "text": "Central Food Hall",
+    "tag": "SPAN",
+    "cls": "v12-activity-title",
+    "testid": null,
+    "y": 722
+   },
+   {
+    "text": "Tech Art Center",
+    "tag": "SPAN",
+    "cls": "v12-activity-title",
+    "testid": null,
+    "y": 767
+   },
+   {
+    "text": "Nexus River Cruise Pier",
+    "tag": "SPAN",
+    "cls": "v12-activity-title",
+    "testid": null,
+    "y": 811
+   },
+   {
+    "text": "Skyline Dinner House",
+    "tag": "SPAN",
+    "cls": "v12-activity-title",
+    "testid": null,
+    "y": 434
+   },
+   {
+    "text": "Old Town Gate",
+    "tag": "SPAN",
+    "cls": "",
+    "testid": null,
+    "y": 801
+   },
+   {
+    "text": "Riverside Museum",
+    "tag": "SPAN",
+    "cls": "",
+    "testid": null,
+    "y": 429
+   },
+   {
+    "text": "Central Food Hall",
+    "tag": "SPAN",
+    "cls": "",
+    "testid": null,
+    "y": 479
+   },
+   {
+    "text": "Tech Art Center",
+    "tag": "SPAN",
+    "cls": "",
+    "testid": null,
+    "y": 529
+   },
+   {
+    "text": "Nexus River Cruise Pier",
+    "tag": "SPAN",
+    "cls": "",
+    "testid": null,
+    "y": 579
+   },
+   {
+    "text": "Skyline Dinner House",
+    "tag": "SPAN",
+    "cls": "",
+    "testid": null,
+    "y": 629
+   }
+  ],
+  "expect": [
+   {
+    "text": "Baseline evidence",
+    "on_screen": false
+   },
+   {
+    "text": "CHANGED",
+    "on_screen": false
+   },
+   {
+    "text": "Capability needs",
+    "on_screen": false
+   },
+   {
+    "text": "Confirmed by traveler",
+    "on_screen": false
+   },
+   {
+    "text": "Delegation policy",
+    "on_screen": false
+   },
+   {
+    "text": "Deterministic gate",
+    "on_screen": false
+   },
+   {
+    "text": "Grounded adaptive recovery",
+    "on_screen": false
+   },
+   {
+    "text": "Hard accessibility needs are never inferred from behavior.",
+    "on_screen": false
+   },
+   {
+    "text": "I prefer quiet indoor culture, low walking, and rain-friendly places near my protected Journey moments.",
+    "on_screen": false
+   },
+   {
+    "text": "Incident evidence",
+    "on_screen": false
+   },
+   {
+    "text": "Learned capability state",
+    "on_screen": false
+   },
+   {
+    "text": "No explicit capability facts recorded.",
+    "on_screen": false
+   },
+   {
+    "text": "No explicit preferences",
+    "on_screen": false
+   },
+   {
+    "text": "No learned signals",
+    "on_screen": false
+   },
+   {
+    "text": "No recovery proposal is waiting on this Journey.",
+    "on_screen": false
+   },
+   {
+    "text": "PROTECTED",
+    "on_screen": false
+   },
+   {
+    "text": "Refresh recovery",
+    "on_screen": false
+   },
+   {
+    "text": "Stated; confirmation needed",
+    "on_screen": false
+   },
+   {
+    "text": "Unknown accessibility evidence is not accessible.",
+    "on_screen": false
+   },
+   {
+    "text": "V14 · REALITY CHANGED",
+    "on_screen": false
+   },
+   {
+    "text": "hard need(s) remain explicit and are never learned.",
+    "on_screen": false
+   },
+   {
+    "text": "policy unavailable · confirmation required",
+    "on_screen": false
+   }
+  ]
+ },
+ "en": {
+  "locale": "en",
+  "entry_used": "sealed demo",
+  "reached_route": "/v8/authoritative",
+  "on_requested_route": true,
+  "path": "/v8/authoritative",
+  "locale_read": "en",
+  "scroll_steps": 12,
+  "scrollables": 2,
+  "scroll_reached": [
+   {
+    "tag": "HTML",
+    "cls": "",
+    "max": 2037,
+    "deepest_scrollTop_reached": 2037,
+    "bottom_reached": true
+   },
+   {
+    "tag": "HTML",
+    "cls": "",
+    "max": 2037,
+    "deepest_scrollTop_reached": 2037,
+    "bottom_reached": true
+   }
+  ],
+  "leaf_count": 72,
+  "ascii_prose_count": 55,
+  "ascii_prose": [
+   {
+    "text": "Recovery",
+    "tag": "STRONG",
+    "cls": "",
+    "testid": null,
+    "y": 25
+   },
+   {
+    "text": "System",
+    "tag": "BUTTON",
+    "cls": "v9-language",
+    "testid": "topbar-theme",
+    "y": 17
+   },
+   {
+    "text": "V12 · plan, mobile, Edge, and twin",
+    "tag": "P",
+    "cls": "v8-kicker",
+    "testid": null,
+    "y": 93
+   },
+   {
+    "text": "Authoritative trip execution.",
+    "tag": "H1",
+    "cls": "",
+    "testid": null,
+    "y": 117
+   },
+   {
+    "text": "Your chosen plan is the single source of truth for today, the map, offline use, and every change we suggest.",
+    "tag": "P",
+    "cls": "v8-lede",
+    "testid": null,
+    "y": 208
+   },
+   {
+    "text": "Refresh truth",
+    "tag": "BUTTON",
+    "cls": "v8-outline-button",
+    "testid": null,
+    "y": 268
+   },
+   {
+    "text": "Plan versions on this trip",
+    "tag": "SPAN",
+    "cls": "v8-kicker",
+    "testid": null,
+    "y": 366
+   },
+   {
+    "text": "1 versions listed",
+    "tag": "P",
+    "cls": "v8-muted",
+    "testid": "history-count",
+    "y": 439
+   },
+   {
+    "text": "No retention limit is applied: this trip currently holds 1 versions and all of them are listed here. Nothing is dropped as newer versions are written.",
+    "tag": "P",
+    "cls": "plan-version-history-retention",
+    "testid": "history-retention",
+    "y": 476
+   },
+   {
+    "text": "Version 1",
+    "tag": "B",
+    "cls": "",
+    "testid": "history-version",
+    "y": 549
+   },
+   {
+    "text": "first generation",
+    "tag": "SPAN",
+    "cls": "",
+    "testid": "history-source",
+    "y": 549
+   },
+   {
+    "text": "28 Sept, 04:41",
+    "tag": "SPAN",
+    "cls": "",
+    "testid": "history-created",
+    "y": 549
+   },
+   {
+    "text": "no parent version",
+    "tag": "SPAN",
+    "cls": "",
+    "testid": "history-parent",
+    "y": 570
+   },
+   {
+    "text": "the trip runs this one",
+    "tag": "EM",
+    "cls": "",
+    "testid": "history-current",
+    "y": 570
+   },
+   {
+    "text": "There is no revert here on purpose. Going back to an older version would replace the plan you are travelling on, so it is not offered as a tap on a list.",
+    "tag": "P",
+    "cls": "v8-muted plan-version-history-norestore",
+    "testid": "history-no-restore",
+    "y": 603
+   },
+   {
+    "text": "AUTHORITATIVE JOURNEY",
+    "tag": "SPAN",
+    "cls": "v8-kicker",
+    "testid": null,
+    "y": 707
+   },
+   {
+    "text": "One truth from plan to edge",
+    "tag": "H2",
+    "cls": "",
+    "testid": null,
+    "y": 726
+   },
+   {
+    "text": "CityNexus Copilot",
+    "tag": "SPAN",
+    "cls": "",
+    "testid": null,
+    "y": 732
+   },
+   {
+    "text": "Copilot",
+    "tag": "SPAN",
+    "cls": "",
+    "testid": "nav-agent",
+    "y": 816
+   },
+   {
+    "text": "Tech Art Center",
+    "tag": "STRONG",
+    "cls": "",
+    "testid": null,
+    "y": 424
+   },
+   {
+    "text": "ACTIVE",
+    "tag": "SPAN",
+    "cls": "v12-state-value",
+    "testid": null,
+    "y": 453
+   },
+   {
+    "text": "Nexus River Cruise Pier",
+    "tag": "STRONG",
+    "cls": "",
+    "testid": null,
+    "y": 589
+   },
+   {
+    "text": "Planned",
+    "tag": "SPAN",
+    "cls": "v12-state-value",
+    "testid": null,
+    "y": 618
+   },
+   {
+    "text": "Old Town Gate",
+    "tag": "SPAN",
+    "cls": "v12-activity-title",
+    "testid": null,
+    "y": 709
+   },
+   {
+    "text": "COMPLETED",
+    "tag": "SPAN",
+    "cls": "v12-activity-status state-completed",
+    "testid": null,
+    "y": 712
+   },
+   {
+    "text": "Riverside Museum",
+    "tag": "SPAN",
+    "cls": "v12-activity-title",
+    "testid": null,
+    "y": 753
+   },
+   {
+    "text": "Central Food Hall",
+    "tag": "SPAN",
+    "cls": "v12-activity-title",
+    "testid": null,
+    "y": 798
+   },
+   {
+    "text": "Tech Art Center",
+    "tag": "SPAN",
+    "cls": "v12-activity-title",
+    "testid": null,
+    "y": 843
+   },
+   {
+    "text": "ACTIVE",
+    "tag": "SPAN",
+    "cls": "v12-activity-status state-active",
+    "testid": null,
+    "y": 424
+   },
+   {
+    "text": "Nexus River Cruise Pier",
+    "tag": "SPAN",
+    "cls": "v12-activity-title",
+    "testid": null,
+    "y": 466
+   },
+   {
+    "text": "Planned",
+    "tag": "SPAN",
+    "cls": "v12-activity-status state-planned",
+    "testid": null,
+    "y": 469
+   },
+   {
+    "text": "Skyline Dinner House",
+    "tag": "SPAN",
+    "cls": "v12-activity-title",
+    "testid": null,
+    "y": 511
+   },
+   {
+    "text": "Server execution truth · auditable",
+    "tag": "SPAN",
+    "cls": "",
+    "testid": null,
+    "y": 561
+   },
+   {
+    "text": "Mark EN ROUTE",
+    "tag": "BUTTON",
+    "cls": "v8-primary",
+    "testid": null,
+    "y": 593
+   },
+   {
+    "text": "TRIP STUDIO · DRAFT THEN ACCEPT",
+    "tag": "SPAN",
+    "cls": "v8-kicker",
+    "testid": null,
+    "y": 685
+   },
+   {
+    "text": "Adjust the authoritative journey",
+    "tag": "H2",
+    "cls": "",
+    "testid": null,
+    "y": 704
+   },
+   {
+    "text": "Reorder ordinary activities against the same frozen mobility matrix. Protected anchors stay in place.",
+    "tag": "P",
+    "cls": "v8-muted",
+    "testid": null,
+    "y": 815
+   },
+   {
+    "text": "6 activities",
+    "tag": "SPAN",
+    "cls": "",
+    "testid": null,
+    "y": 509
+   },
+   {
+    "text": "1 protected anchors",
+    "tag": "SPAN",
+    "cls": "",
+    "testid": null,
+    "y": 509
+   },
+   {
+    "text": "No draft changes",
+    "tag": "SPAN",
+    "cls": "",
+    "testid": null,
+    "y": 549
+   },
+   {
+    "text": "Old Town Gate",
+    "tag": "SPAN",
+    "cls": "",
+    "testid": null,
+    "y": 601
+   },
+   {
+    "text": "Riverside Museum",
+    "tag": "SPAN",
+    "cls": "",
+    "testid": null,
+    "y": 651
+   },
+   {
+    "text": "Central Food Hall",
+    "tag": "SPAN",
+    "cls": "",
+    "testid": null,
+    "y": 701
+   },
+   {
+    "text": "Tech Art Center",
+    "tag": "SPAN",
+    "cls": "",
+    "testid": null,
+    "y": 751
+   },
+   {
+    "text": "Nexus River Cruise Pier",
+    "tag": "SPAN",
+    "cls": "",
+    "testid": null,
+    "y": 801
+   },
+   {
+    "text": "Skyline Dinner House",
+    "tag": "SPAN",
+    "cls": "",
+    "testid": null,
+    "y": 429
+   },
+   {
+    "text": "Hold an activity and drag it to a new position to draft a change.",
+    "tag": "P",
+    "cls": "v8-muted",
+    "testid": "v12-studio-drag-hint",
+    "y": 486
+   },
+   {
+    "text": "Preview is stateless; accept rechecks the live plan and evidence",
+    "tag": "SPAN",
+    "cls": "",
+    "testid": null,
+    "y": 588
+   },
+   {
+    "text": "Plan version 1 · First generation",
+    "tag": "SPAN",
+    "cls": "",
+    "testid": null,
+    "y": 639
+   },
+   {
+    "text": "Preview impact",
+    "tag": "BUTTON",
+    "cls": "v8-outline-button",
+    "testid": "v12-preview-impact",
+    "y": 671
+   },
+   {
+    "text": "Accept edit",
+    "tag": "BUTTON",
+    "cls": "v8-primary",
+    "testid": "v12-accept-edit",
+    "y": 671
+   },
+   {
+    "text": "V14 · REALITY CHANGED",
+    "tag": "SPAN",
+    "cls": "v8-kicker",
+    "testid": null,
+    "y": 763
+   },
+   {
+    "text": "Grounded adaptive recovery",
+    "tag": "H2",
+    "cls": "",
+    "testid": null,
+    "y": 781
+   },
+   {
+    "text": "Refresh recovery",
+    "tag": "BUTTON",
+    "cls": "v8-outline-button",
+    "testid": null,
+    "y": 795
+   },
+   {
+    "text": "No recovery proposal is waiting on this Journey.",
+    "tag": "P",
+    "cls": "v8-muted",
+    "testid": "v14-recovery-truth",
+    "y": 561
+   }
+  ],
+  "expect": [
+   {
+    "text": "Baseline evidence",
+    "on_screen": false
+   },
+   {
+    "text": "CHANGED",
+    "on_screen": true
+   },
+   {
+    "text": "Capability needs",
+    "on_screen": false
+   },
+   {
+    "text": "Confirmed by traveler",
+    "on_screen": false
+   },
+   {
+    "text": "Delegation policy",
+    "on_screen": false
+   },
+   {
+    "text": "Deterministic gate",
+    "on_screen": false
+   },
+   {
+    "text": "Grounded adaptive recovery",
+    "on_screen": true
+   },
+   {
+    "text": "Hard accessibility needs are never inferred from behavior.",
+    "on_screen": false
+   },
+   {
+    "text": "I prefer quiet indoor culture, low walking, and rain-friendly places near my protected Journey moments.",
+    "on_screen": false
+   },
+   {
+    "text": "Incident evidence",
+    "on_screen": false
+   },
+   {
+    "text": "Learned capability state",
+    "on_screen": false
+   },
+   {
+    "text": "No explicit capability facts recorded.",
+    "on_screen": false
+   },
+   {
+    "text": "No explicit preferences",
+    "on_screen": false
+   },
+   {
+    "text": "No learned signals",
+    "on_screen": false
+   },
+   {
+    "text": "No recovery proposal is waiting on this Journey.",
+    "on_screen": true
+   },
+   {
+    "text": "PROTECTED",
+    "on_screen": false
+   },
+   {
+    "text": "Refresh recovery",
+    "on_screen": true
+   },
+   {
+    "text": "Stated; confirmation needed",
+    "on_screen": false
+   },
+   {
+    "text": "Unknown accessibility evidence is not accessible.",
+    "on_screen": false
+   },
+   {
+    "text": "V14 · REALITY CHANGED",
+    "on_screen": true
+   },
+   {
+    "text": "hard need(s) remain explicit and are never learned.",
+    "on_screen": false
+   },
+   {
+    "text": "policy unavailable · confirmation required",
+    "on_screen": false
+   }
+  ]
+ },
+ "arms_comparable": true,
+ "verdict": "ZH_SCREEN_CARRIES_ENGLISH_PROSE"
+}
