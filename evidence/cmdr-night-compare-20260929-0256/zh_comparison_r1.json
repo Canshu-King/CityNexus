@@ -1,0 +1,195 @@
+{
+ "generated_by": "night comparison, zh arm only",
+ "before": {
+  "tip": "8a7665be2061a2f38aa2227f81c57003ca4caacb",
+  "instrument": "_untranslated_scan_r2.js",
+  "blob": "41a69ce5e9dc0c8c28c8c89d9105c6e6a7834c67"
+ },
+ "after": {
+  "tip": "2521aed777a46e934f1a934a23eef5950a0c06cc",
+  "instrument": "_untranslated_scan_r3.js",
+  "blob": "3dad6f0e70c2a0dcce936499f277313618d6b807"
+ },
+ "comparable_scope": "zh arm only. The en arm is NOT comparable: r2's en arm never entered the app, so every r2 en reading was the onboarding screen.",
+ "screens": 14,
+ "total_zh_before": 82,
+ "total_zh_after": 72,
+ "total_delta": -10,
+ "rows": [
+  {
+   "route": "agent",
+   "before_tip_8a7665be": 4,
+   "after_tip_2521aed7": 4,
+   "delta": 0,
+   "still_english_after": [
+    "CN / AI",
+    "CityNexus Copilot",
+    "Copilot"
+   ]
+  },
+  {
+   "route": "authoritative",
+   "before_tip_8a7665be": 23,
+   "after_tip_2521aed7": 20,
+   "delta": -3,
+   "still_english_after": [
+    "Central Food Hall",
+    "CityNexus Copilot",
+    "Copilot",
+    "Grounded adaptive recovery",
+    "Nexus River Cruise Pier",
+    "No recovery proposal is waiting on this Journey.",
+    "Old Town Gate",
+    "Refresh recovery",
+    "Riverside Museum",
+    "Skyline Dinner House",
+    "Tech Art Center",
+    "V14 · REALITY CHANGED"
+   ]
+  },
+  {
+   "route": "bookings",
+   "before_tip_8a7665be": 5,
+   "after_tip_2521aed7": 2,
+   "delta": -3,
+   "still_english_after": [
+    "CityNexus Copilot",
+    "Copilot"
+   ]
+  },
+  {
+   "route": "discover",
+   "before_tip_8a7665be": 3,
+   "after_tip_2521aed7": 2,
+   "delta": -1,
+   "still_english_after": [
+    "CityNexus Copilot",
+    "Copilot"
+   ]
+  },
+  {
+   "route": "hub",
+   "before_tip_8a7665be": 4,
+   "after_tip_2521aed7": 4,
+   "delta": 0,
+   "still_english_after": [
+    "15:30 Nexus River Cruise Pier",
+    "CityNexus Copilot",
+    "Copilot",
+    "Tech Art Center"
+   ]
+  },
+  {
+   "route": "intelligence",
+   "before_tip_8a7665be": 4,
+   "after_tip_2521aed7": 2,
+   "delta": -2,
+   "still_english_after": [
+    "CityNexus Copilot",
+    "Copilot"
+   ]
+  },
+  {
+   "route": "live",
+   "before_tip_8a7665be": 5,
+   "after_tip_2521aed7": 4,
+   "delta": -1,
+   "still_english_after": [
+    "CityNexus Copilot",
+    "Copilot",
+    "Nexus River Cruise Pier",
+    "Tech Art Center"
+   ]
+  },
+  {
+   "route": "map",
+   "before_tip_8a7665be": 9,
+   "after_tip_2521aed7": 9,
+   "delta": 0,
+   "still_english_after": [
+    "Central Food Hall",
+    "CityNexus Copilot",
+    "Copilot",
+    "Nexus River Cruise Pier",
+    "Old Town Gate",
+    "Riverside Museum",
+    "Skyline Dinner House",
+    "Tech Art Center"
+   ]
+  },
+  {
+   "route": "me",
+   "before_tip_8a7665be": 2,
+   "after_tip_2521aed7": 2,
+   "delta": 0,
+   "still_english_after": [
+    "CityNexus Copilot",
+    "Copilot"
+   ]
+  },
+  {
+   "route": "stay",
+   "before_tip_8a7665be": 2,
+   "after_tip_2521aed7": 2,
+   "delta": 0,
+   "still_english_after": [
+    "CityNexus Copilot",
+    "Copilot"
+   ]
+  },
+  {
+   "route": "studio",
+   "before_tip_8a7665be": 2,
+   "after_tip_2521aed7": 2,
+   "delta": 0,
+   "still_english_after": [
+    "CityNexus Copilot",
+    "Copilot"
+   ]
+  },
+  {
+   "route": "trash",
+   "before_tip_8a7665be": 2,
+   "after_tip_2521aed7": 2,
+   "delta": 0,
+   "still_english_after": [
+    "CityNexus Copilot",
+    "Copilot"
+   ]
+  },
+  {
+   "route": "trips",
+   "before_tip_8a7665be": 8,
+   "after_tip_2521aed7": 8,
+   "delta": 0,
+   "still_english_after": [
+    "Central Food Hall",
+    "CityNexus Copilot",
+    "Copilot",
+    "Nexus River Cruise Pier",
+    "Old Town Gate",
+    "Riverside Museum",
+    "Skyline Dinner House",
+    "Tech Art Center"
+   ]
+  },
+  {
+   "route": "twin",
+   "before_tip_8a7665be": 9,
+   "after_tip_2521aed7": 9,
+   "delta": 0,
+   "still_english_after": [
+    "Capability needs",
+    "CityNexus Copilot",
+    "Copilot",
+    "Hard accessibility needs are never inferred from behavior.",
+    "Learned capability state",
+    "No explicit capability facts recorded.",
+    "No learned signals",
+    "Unknown accessibility evidence is not accessible.",
+    "culture · local_food · relaxed · walking_minutes_max · waterfront"
+   ]
+  }
+ ],
+ "verdict": "IMPROVED"
+}
