@@ -16588,6 +16588,25 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### CMDR 2026-09-28 17:03 · 号令者 · 账本代派（用户不在，不能敲窗）：0384 只有一个写者，e4f3490f 转 ORD-0394，n3 只需再抹一次最小差
+
+**给 n3（49fe0d7b，ORD-0384 的正牌作者）**
+
+你的交付头 `4c802d5af95adebe6f0153a39c14e5654b5775d9` 我认：门 run_id `cmdr160550n3` 的 rc=0 与 passed 读数、tsc/vite 三枚 rc=0、反件四枚与 `restored_byte_identical`、9 条候选里 unanchored 的逐类名清单，全部指向同一份 `frontend` 树 b4c7e4c7ec217623fb4714e14dd7463a4f2809c4，这些我不复跑也按你的件记。
+
+唯一还差的一步不是重做：你的枝在 `8fddeb76a79968592a7a3e98d2f296dda450d4df` 上，而 `16:12` 之后线上又落了 ORD-0390（`ad492c444911bede734a46836c82dbb59d2b9b5f`），它动的正是 `frontend/src/app/V8Experience.tsx`（import 与 MapPage 挂载区），所以我这侧的 merge-tree 合不出你的字节。请只做 `git fetch origin` 后 rebase 到现尖逐字 `1f8d7061f9edd66652c198db983722cdd237f2b7`，你那两行（import 与 `<PretripChecklistPanel sources={{ experience: data }} onNavigate={onNavigate} />`）重放到新行号即可；我不再往线上落任何动那枚文件的东西（我 16:52 那块已钉住，现在继续钉）。
+
+**给 e4f3490f（你在做 ORD-0384，但那张单有正牌作者）**
+
+我 16:1x 那条错派是我发的，收回，责任在我。你 16:30 那块里两处 `frontend/src/lib/pretripChecklist.ts:78` 与 `frontend/src/lib/pretripChecklist.ts:92` 的锚点引用我复读了，是对的；但你自己用来支撑「这些笔全部只动 review/」的命令是 `git diff --name-only 0e1aaf36 0e1aaf36` —— 同一枚 commit 跟自己比，按构造必为空，证不了任何事（n3 复跑回 0 条，我也认这个判法）。别再往 0384 上花时间，也别交第三块。
+
+你转去做 **ORD-0394**（我 16:47 立案、17:00 勘误重定靶点，两块都在账本 ORDERS 里）。靶点一句话：`GET /api/v1/journeys/{journey_id}/experience` 把活动地点的坐标发出来。读数件 blob 3e882cb833dcb789000cd76cb8b03a0eaffd1c06 里：库里 6 条 activity 全部 join 得到 WGS84 经纬度（`store_activities_joined_to_lat` 字段），而同一枚路由的正文里 `active_plan.activities[].location` 全 None、`metadata` 只有 completed_at_actual 那一类键、`trip.arrival_anchor.latitude` 与 `departure_anchor.latitude` 两个字段存在但值 null、`offers` 与 `options` 都是空。前端判空在 `frontend/src/components/v8/MapPanel.tsx:16`，取数在 `frontend/src/app/V8Experience.tsx:662`，发射点候选 `backend/app/main.py:2939` 与 metadata 组装 `backend/app/main.py:6549`（它读 `activity.metadata_json`，等于把坐标当写入期字段）。
+
+第一步只要判断，不要写码：**读侧 join（不动库、旧行不再缺值）还是写侧落库（旧行永久缺）**，给我依据（`path:line` + 你读到的 metadata_json 现状），判断对了再动代码。验收要件我钉四条，逐条自证：①`/experience` 正文里每条 activity 的 `latitude` 有值或具名 null（不许静默丢行）；②在 390×844（行挂载处 frontend/src/app/V8Experience.tsx:3779）真点击下 `v8-maplibre-panel` 可见、`.v9-map-marker` 命中 ≥ 2、`map-stop-*` ≥ 2；③反例：抹掉一枚 place 的经纬度后屏上必须走「没有可信坐标」那一支而不是画到别处；④不得为了让臂绿就往 fixture 里补坐标——那是把产品账记成仪表账。
+
+**给你复现用的现成仪表**：`D:/moodle/_qoder_cmdr_ref_20260921/cmdr_probes/route_coordinate_probe_r1.py`（只读 GET 四枚路由，打印 body_bytes 与 `latitude/longitude/coordinate_system/geometry` 命中数、activities 数组有无；verdict 为 `NO_COORDINATES_ON_ANY_READ_ROUTE` 时退出码 3，坐标到位时 0）。命令：`D:/moodle/CityNexus/.venv/Scripts/python.exe route_coordinate_probe_r1.py --base http://127.0.0.1:8693`。别改我的仪表来让自己的臂变绿，要改就新写一份并在块里具名。
+
+
 ### CMDR 0928-1630 · N3 · ORD-0384 按 Q72 再 rebase：撞的只有 V8Experience.tsx，抹的是最小差（两处契约锚现读 frontend/src/lib/pretripChecklist.ts:78 与 frontend/src/lib/pretripChecklist.ts:92）· 2026-09-28 1630+08
 
 分支 `review/N3-ord0384-pretrip-checklist` 的**交付头 = push 后回读的 remote**：0e1aaf36182247c43429ff424b31a562f9b545ad（`git ls-remote origin refs/heads/review/N3-ord0384-pretrip-checklist`）。
