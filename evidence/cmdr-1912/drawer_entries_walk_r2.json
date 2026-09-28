@@ -1,0 +1,438 @@
+{
+ "at": "2026-09-28T11:11:45.742Z",
+ "base": "http://127.0.0.1:4789/",
+ "results": [
+  {
+   "label": "城市探索",
+   "aim": {
+    "found": 3,
+    "box": [
+     118,
+     411,
+     64,
+     21
+    ],
+    "centre": [
+     150,
+     422
+    ],
+    "hittable": true,
+    "drawer_scrollTop": 1528,
+    "drawer_clientH": 844,
+    "drawer_scrollH": 4204
+   },
+   "clicked": true,
+   "found": {
+    "prep-panel": {
+     "present": true,
+     "chars": 85,
+     "text_head": "准备目的地\n\n先看这座城能不能规划\n\n输入一个目的地，服务器会告诉我们它现在能规划到什么程度；不能的话，缺什么、下一步是什么，都由服务器说了算。\n\n目的地\n看看能不能规划",
+     "box": [
+      17,
+      93,
+      356,
+      291
+     ],
+     "in_viewport": true,
+     "hittable": true,
+     "raw_facts": [],
+     "not_measured": 0
+    },
+    "recovery-required-panel": {
+     "present": false
+    },
+    "pretrip-checklist": {
+     "present": false
+    },
+    "plan-version-history": {
+     "present": false
+    },
+    "hotels-panel": {
+     "present": false
+    },
+    "v12-authoritative-panel": {
+     "present": false
+    },
+    "v8-maplibre-panel": {
+     "present": false
+    },
+    "trips-commitments": {
+     "present": false
+    },
+    "v8-trip-studio": {
+     "present": false
+    },
+    "v8-stay-explorer": {
+     "present": false
+    },
+    "hub-glance-empty": {
+     "present": false
+    },
+    "today-strip": {
+     "present": false
+    }
+   },
+   "url": "/v8/discover",
+   "body_chars": 356,
+   "errors": []
+  },
+  {
+   "label": "恢复与执行",
+   "aim": {
+    "found": 2,
+    "box": [
+     110,
+     411,
+     80,
+     21
+    ],
+    "centre": [
+     150,
+     422
+    ],
+    "hittable": true,
+    "drawer_scrollTop": 2504,
+    "drawer_clientH": 844,
+    "drawer_scrollH": 4204
+   },
+   "clicked": true,
+   "found": {
+    "prep-panel": {
+     "present": false
+    },
+    "recovery-required-panel": {
+     "present": false
+    },
+    "pretrip-checklist": {
+     "present": false
+    },
+    "plan-version-history": {
+     "present": true,
+     "chars": 181,
+     "text_head": "这趟行程的方案版本\n\n服务器上还留着的每一份版本，按写入先后排。这一屏只读。\n\n共列出 1 份版本\n\n这台服务器没有设保留上限：目前这趟共有 1 份版本，这里全部列出。写新版本不会丢掉旧的。\n\n版本 1\n首次生成\n9月28日 04:41\n没有父版本\n行程正在跑这一份\n\n这里故意不做还原。回到旧版本会替换你正在执行的方案，所以它不是一张列表上的一下点击。\n\nzh",
+     "box": [
+      17,
+      301,
+      356,
+      303
+     ],
+     "in_viewport": true,
+     "hittable": true,
+     "raw_facts": [],
+     "not_measured": 0
+    },
+    "hotels-panel": {
+     "present": false
+    },
+    "v12-authoritative-panel": {
+     "present": true,
+     "chars": 253,
+     "text_head": "权威行程\n从方案到边缘的单一真相\n冻结证据\n现在\nTech Art Center\n活跃\n下一步\nNexus River Cruise Pier\nPLANNED\n15:30\nOld Town Gate\n已完成\nRiverside Museum\n已完成\nCentral Food Hall\n已完成\n4\nTech Art Center\n活跃\n5\nNexus River Cruise Pier\nPLANNED\n6\nSkyline Dinner House\nPLANNED\n服务端执行真相",
+     "box": [
+      17,
+      604,
+      356,
+      822
+     ],
+     "in_viewport": false,
+     "hittable": false,
+     "raw_facts": [],
+     "not_measured": 0
+    },
+    "v8-maplibre-panel": {
+     "present": false
+    },
+    "trips-commitments": {
+     "present": false
+    },
+    "v8-trip-studio": {
+     "present": false
+    },
+    "v8-stay-explorer": {
+     "present": false
+    },
+    "hub-glance-empty": {
+     "present": false
+    },
+    "today-strip": {
+     "present": false
+    }
+   },
+   "url": "/v8/authoritative",
+   "body_chars": 980,
+   "errors": []
+  },
+  {
+   "label": "行程工作台",
+   "aim": {
+    "found": 2,
+    "box": [
+     110,
+     411,
+     80,
+     21
+    ],
+    "centre": [
+     150,
+     422
+    ],
+    "hittable": true,
+    "drawer_scrollTop": 912,
+    "drawer_clientH": 844,
+    "drawer_scrollH": 4204
+   },
+   "clicked": true,
+   "found": {
+    "prep-panel": {
+     "present": false
+    },
+    "recovery-required-panel": {
+     "present": false
+    },
+    "pretrip-checklist": {
+     "present": false
+    },
+    "plan-version-history": {
+     "present": false
+    },
+    "hotels-panel": {
+     "present": false
+    },
+    "v12-authoritative-panel": {
+     "present": false
+    },
+    "v8-maplibre-panel": {
+     "present": false
+    },
+    "trips-commitments": {
+     "present": false
+    },
+    "v8-trip-studio": {
+     "present": true,
+     "chars": 203,
+     "text_head": "行程工作台 · 多日方案\n\n围绕重要的事塑造行程。\n\n更换酒店或路段出行方式，CityNexus 会在相同的硬约束下重新计算出行影响。\n\n报告降雨中断\n尚未选择住宿\n选择住宿\n住宿总计\n尚未选择\n日均出行\n尚未选择\n步行暴露\n尚未选择\n方案健康度\n受保护 · 约0分钟余量\n行程约束检查通过，费用证据不完整\n到达、出发和受保护承诺已验证。预算未验证：还有 1 项缺少已验证的供应商价格，因此不给出总价结论。",
+     "box": [
+      17,
+      93,
+      356,
+      587
+     ],
+     "in_viewport": true,
+     "hittable": true,
+     "raw_facts": [],
+     "not_measured": 0
+    },
+    "v8-stay-explorer": {
+     "present": false
+    },
+    "hub-glance-empty": {
+     "present": false
+    },
+    "today-strip": {
+     "present": false
+    }
+   },
+   "url": "/v8/studio",
+   "body_chars": 266,
+   "errors": []
+  },
+  {
+   "label": "住宿选择",
+   "aim": {
+    "found": 3,
+    "box": [
+     118,
+     411,
+     64,
+     21
+    ],
+    "centre": [
+     150,
+     422
+    ],
+    "hittable": true,
+    "drawer_scrollTop": 1220,
+    "drawer_clientH": 844,
+    "drawer_scrollH": 4204
+   },
+   "clicked": true,
+   "found": {
+    "prep-panel": {
+     "present": false
+    },
+    "recovery-required-panel": {
+     "present": false
+    },
+    "pretrip-checklist": {
+     "present": false
+    },
+    "plan-version-history": {
+     "present": false
+    },
+    "hotels-panel": {
+     "present": false
+    },
+    "v12-authoritative-panel": {
+     "present": false
+    },
+    "v8-maplibre-panel": {
+     "present": false
+    },
+    "trips-commitments": {
+     "present": false
+    },
+    "v8-trip-studio": {
+     "present": false
+    },
+    "v8-stay-explorer": {
+     "present": true,
+     "chars": 83,
+     "text_head": "住宿选择 · 已采集证据\n\n选择锚点，看见行程。\n还没有可用的住宿候选\n\n我们还没有拿到真实住宿数据，所以不会给你看一张假的价格卡片。可以先选好行程，再回来搜索住宿。",
+     "box": [
+      17,
+      93,
+      356,
+      190
+     ],
+     "in_viewport": true,
+     "hittable": true,
+     "raw_facts": [],
+     "not_measured": 0
+    },
+    "hub-glance-empty": {
+     "present": false
+    },
+    "today-strip": {
+     "present": false
+    }
+   },
+   "url": "/v8/stay",
+   "body_chars": 146,
+   "errors": []
+  },
+  {
+   "label": "智能守护",
+   "aim": {
+    "found": 3,
+    "box": [
+     118,
+     411,
+     64,
+     21
+    ],
+    "centre": [
+     150,
+     422
+    ],
+    "hittable": true,
+    "drawer_scrollTop": 2812,
+    "drawer_clientH": 844,
+    "drawer_scrollH": 4204
+   },
+   "clicked": true,
+   "found": {
+    "prep-panel": {
+     "present": false
+    },
+    "recovery-required-panel": {
+     "present": false
+    },
+    "pretrip-checklist": {
+     "present": false
+    },
+    "plan-version-history": {
+     "present": false
+    },
+    "hotels-panel": {
+     "present": false
+    },
+    "v12-authoritative-panel": {
+     "present": false
+    },
+    "v8-maplibre-panel": {
+     "present": false
+    },
+    "trips-commitments": {
+     "present": false
+    },
+    "v8-trip-studio": {
+     "present": false
+    },
+    "v8-stay-explorer": {
+     "present": false
+    },
+    "hub-glance-empty": {
+     "present": false
+    },
+    "today-strip": {
+     "present": false
+    }
+   },
+   "url": "/v8/intelligence",
+   "body_chars": 393,
+   "errors": []
+  },
+  {
+   "label": "旅行票夹",
+   "aim": {
+    "found": 2,
+    "box": [
+     118,
+     411,
+     64,
+     21
+    ],
+    "centre": [
+     150,
+     422
+    ],
+    "hittable": true,
+    "drawer_scrollTop": 1862,
+    "drawer_clientH": 844,
+    "drawer_scrollH": 4204
+   },
+   "clicked": true,
+   "found": {
+    "prep-panel": {
+     "present": false
+    },
+    "recovery-required-panel": {
+     "present": false
+    },
+    "pretrip-checklist": {
+     "present": false
+    },
+    "plan-version-history": {
+     "present": false
+    },
+    "hotels-panel": {
+     "present": false
+    },
+    "v12-authoritative-panel": {
+     "present": false
+    },
+    "v8-maplibre-panel": {
+     "present": false
+    },
+    "trips-commitments": {
+     "present": false
+    },
+    "v8-trip-studio": {
+     "present": false
+    },
+    "v8-stay-explorer": {
+     "present": false
+    },
+    "hub-glance-empty": {
+     "present": false
+    },
+    "today-strip": {
+     "present": false
+    }
+   },
+   "url": "/v8/bookings",
+   "body_chars": 655,
+   "errors": []
+  }
+ ]
+}
