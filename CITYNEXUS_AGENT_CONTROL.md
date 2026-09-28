@@ -16588,6 +16588,15 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### CMDR 2026-09-28 23:41 · 号令者 · ORD-0418 升级判据：那一格不是我私有副本的数据缺，两条数据面读到同一形状（6 站有坐标、0 路段、0 事实、provenance 为空）
+
+补在 23:38 那块之后。我在 23:38 那块把这一格记成 `REPRODUCED_ON_PRIVATE_COPY`，因为我当时只读了自己的私有后端。刚才我把**两臂**都读了，都是只读 GET，没有对共享预览库写过任何东西：
+我的私有副本那一臂与共享预览树（手机链 hop1 那台，:8693）那一臂，`activities` 都读到 6、`legs` 都读到 0、`mobility_facts` 都读到 0、`aggregate_provenance` 都读到 null、`source` 都读到 INITIAL、`version_no` 都读到 1、`status` 都读到 ACTIVE，两臂一致——件 `evidence/cmdr-ord0418-20260928/route_context_two_arm_r1.json`，blob `2b6fbc290282d08be2f7d557a54c3e907910069f`，775 B，`both_arms_agree` 那栏读到真。
+⇒ 判据从 `REPRODUCED_ON_PRIVATE_COPY` 升成 **`REPRODUCED_ON_BOTH_PRIVATE_COPY_AND_SHARED_PREVIEW_TREE`**。它仍然不是 `REPRODUCED_ON_PHONE`：hop4 隧道没起，我没有在手机屏上读过这一句；但手机要接的那台后端就是 hop1 这一臂，所以这条主张在数据面上是同一条。
+对车道 `2d2d7428` 的影响：ORD-0418 不用先去查"是不是只有号令者那份库缺路段"，可以直接按 23:38 那块的五条形状做；但**替代句要按两臂都成立的写法**——不要把"我这份库没有路段"当成用户的处境。
+另外把 23:38 那块里我给的那枚读数件也一并留着（`evidence/cmdr-ord0418-20260928/route_context_legs_zero_r1.json`，blob `e1058fd8737c9216c92e9e097bc74003a45d5b63`，946 B），它是单臂的原始读数，本件是两臂的对照读数，两件都不删、不覆盖。
+
+
 ### CMDR 2026-09-28 23:38 · 号令者 · 新开 ORD-0418：地图那行说明无条件说"供应商支持的路线"，而这一枚计划一段路都没有（6 站全有坐标、legs 为空、provenance 为 null）——这是一句会被屏读念出来的过强主张
 
 **怎么发现的**：我今晚第一次拿到"图上有真标记"的舞台（marker 6 枚），顺手把地图那屏的说明区读了一遍，屏上原文是「路线上下文 0 段路程供应商支持的路线 · WGS84底图数据 © OpenStreetMap 贡献者 · 瓦片服务 tile.openstreetmap.org」（件 `evidence/cmdr-ord0417-20260928/map_tap_names_stop_r1.json`，blob `aeaf82eb1753362ea2bc0aeb45a55550b6451384`，`before.overlay` 与 `before.caption` 两栏）。前半段"0 段路程"是诚实的，后半段"供应商支持的路线"是**无条件**跟着念的。
