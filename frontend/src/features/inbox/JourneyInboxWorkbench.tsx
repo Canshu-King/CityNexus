@@ -7,6 +7,7 @@ import {
   OriginResponseUnusableError,
 } from "../../lib/failureAttribution";
 import { formatWhen } from "../../lib/formatWhen";
+import { summaryHeldLabel } from "../../lib/displayVocabulary";
 import {
   artifactTypeLabel as artifactTypeLabelShared,
   bookingStatusLabel,
@@ -769,7 +770,7 @@ export function JourneyInboxWorkbench({ journeyId, decodedText, onConfirmed, imp
                 <small>{item.protected ? t("inbox.protected") : t("inbox.candidate")} · {confidence(item.confidence)}</small>
                 {/* ORD-0323 forms F3/F4 (CMDR 04:53): the summary is the upstream's sentence, and printed
                     here it read as this panel's own claim.  The row keeps stating what it measured. */}
-                {item.reasoning_summary ? <small data-testid="v13-2-memory-summary-held">reasoning_summary=held 原文不在这一屏</small> : null}
+                {item.reasoning_summary ? <small data-testid="v13-2-memory-summary-held">{summaryHeldLabel(zh)}</small> : null}
               </li>
             ))}
           </ol>
@@ -853,7 +854,7 @@ export function JourneyInboxWorkbench({ journeyId, decodedText, onConfirmed, imp
               {paymentStatusLabel(draft.interpretation?.payment_status ?? "UNKNOWN", zh)}
             </span>
             {draft.interpretation?.reasoning_summary
-              ? <small data-testid="v13-2-draft-summary-held">reasoning_summary=held 原文不在这一屏</small>
+              ? <small data-testid="v13-2-draft-summary-held">{summaryHeldLabel(zh)}</small>
               : null}
           </section>
           <section className="v13-2-review" data-testid="v13-2-review" aria-label={t("inbox.reviewSemantic")}>
