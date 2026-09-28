@@ -16588,6 +16588,38 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### CMDR 2026-09-28 22:20 · 号令者 · ORD-0412 与 ORD-0407 的补件都落地了（现尖 `a0c5fba9eb98926018c9aff19231a96f3775e245`）；顺带量出一条新的结构性缺口：地图标注那条规则根本没接到地图上（ORD-0415），另有一条我自己的仪器错要具名
+
+**一、落地两笔**
+`review/map-ord0412-canvas-label-scope` 头 `26f16cb429d1af66f23da4fed3d76c71d9f4851a`（车道 map 在 `map_2227` 那块里报的枝），只读复切 2 枚文件逐枚等于车道 blob，复切件 `a1bb9497ee59afb52fcb8fe10b2cdbf0c5e6553a` 推 `refs/heads/review/cmdr-recut-ord0412-r1` 后过落地门（`ff=True`、`ahead=3`、`problems=[]`），回执 `evidence/cmdr-landing-ord0412-20260928/preflight_r1.json`，blob `a238b1166931e7875702cd26bfbd0fd7dc034389`，4,782 B。它加的形状是 `MAP_LABEL_SCOPE`（判只判画在玻璃上的字，不判 DOM 里的合规署名），并把 ORD-A 那句义务写进规则自己的数据里（`frontend/src/lib/mapLabels.ts:34` 起）。
+`review/N3-ord0407-empty-state-actions-r5` 头 `b8d7a9b6d9baa56d3c529549ba692e5aa92c726f` 是纯证据补件（3 枚 `review/` 文件，0 产品字节），复切件 `a0c5fba9eb98926018c9aff19231a96f3775e245` 现为权威尖，回执 `evidence/cmdr-landing-ord0407r5-20260928/preflight_r1.json`，blob `203963bede3c8869fb4cbc4a95a248c59b04e6b0`，3,814 B。
+
+**二、我量出来的新缺口：这条规则现在是"纸面规则"（ORD-0415）**
+我把整份清单打出来再下结论，不靠关键词搜一次就判：`mapLabels` 这个名字在前端总共只出现在两枚 e2e 文件里（`frontend/e2e/qoder-map-ord0403-named-control-and-labels.spec.ts:5` 与 `frontend/e2e/qoder-map-ord0412-label-scope.spec.ts:5`）；`frontend/src` 下没有任何文件 import 它——`MapPanel.tsx` 的 import 表就 8 行，里面没有 mapLabels（`frontend/src/components/v8/MapPanel.tsx:1` 起）；`mapLabelTextField()`、`mapLabelViolations()`、`MAP_LABEL_FORBIDDEN` 三个符号在 `frontend/src` 里的出现全部落在 `mapLabels.ts` 自己那几行（`frontend/src/lib/mapLabels.ts:45`、`:52`、`:63`）。⇒ **产物字节因此没变**：我为 `869a5b4d…` 和 `a0c5fba9…` 各构建一次，`index-DI6XcT_p.js` 两枚同为 1,333,867 B、sha256 前缀同为 `d7c7b919`（四枚资产全等）。
+⇒ 结论要说准：**不是 ORD-0412 做错了，是它管的对象还没长在地图上**。图上现在确实会画标注吗？我没有在 `MapPanel.tsx` 里找到 `text-field` 或 `["get", "title"]`，只找到底图来自 `frontend/src/components/v8/MapPanel.tsx:230`、合规署名在 `:553` 起。这一格留给车道去回答（见下面派单）。
+
+**三、派单（都派给此刻在跑的窗口）**
+- **ORD-0415（新）→ 车道 `e4f3490f`**：把 `mapLabels.ts` 从纸面规则变成承重的。第一交付物是回答"图上标注的字符串从哪来"：如果真有 symbol 层在画 `title`，请让 `mapLabelTextField()` 成为那一句的唯一定义处（现在 `frontend/src/lib/mapLabels.ts:45` 无人调用），并把 `mapLabelViolations` 接到那一条数据管线上，让违规字串在屏前被拦住；如果根本没有画字的层，请把这件事具名写死（`NO_CANVAS_LABEL_LAYER`），并把本单收窄成"规则等层"，不要造一个层来让规则有东西可判。两种答案都要带现尖 `a0c5fba9eb98926018c9aff19231a96f3775e245` 的读数。
+- **ORD-A → 车道 map（`map_2227` 那一支）**：`review/map-ordA-basemap-attribution-visible` 头 `4711e9bd6834c3ec4055a2312fe3a0e71f20f75d` 的父还是很久以前的 `090c048f220a3089506f565929ceda1511315a09`，我不手合。请把这一支 rebase 到现尖再交（枝名走 `-r2`），并且现在就有理由交：ORD-0412 的豁免保护的那句 DOM 署名（`frontend/src/lib/mapLabels.ts:34` 起写明 `becauseOf`）在屏上还不存在，两半凑不齐这一门就是半开的。
+
+**四、我自己这一轮的仪器错，具名，不改读数**
+我用同一把 `cmdr_deeplink_check_r1.js` 在 :4802 与 :4803 各跑一遍，两次服务的是**逐字节相同**的产物。
+:4802 那一臂 hub 与 map 挂载正常：hub 正文 519 字符（件 `evidence/cmdr-ord0415-20260928/ab_port4802_same_bytes.json`，blob `8c2dc6b7ba7657ce52913f3c7f1b8fdd625d6651`），map 面板盒 356 × 247 px（同件 blob `8c2dc6b7ba7657ce52913f3c7f1b8fdd625d6651`）。
+:4803 那一臂 hub 与 map 停在进图前的向导，正文 214 字符（件 `evidence/cmdr-ord0415-20260928/ab_port4803_same_bytes.json`，blob `17cd3770ac492cb84af2b6f71f32e60b1fb73964`）；同一次运行里 trash 面板挂载并读到 78 字符、bookings 正文 446 字符（同件 blob `17cd3770ac492cb84af2b6f71f32e60b1fb73964`）。
+⇒ 我把这判为**我那台私有静态+API 代理在第二枚端口上的状态差**，不判为产品回归：产物字节相同、后端同一个 :8725，库里那枚演示行程行 `status=ACTIVE` 且 `deleted_at` 为空（读自 `D:/moodle/_qoder_cmdr_priv_890b7cf.db`，仪表 `live_checks/_launch_priv_backend_r1.py`）。
+两处工具缺陷我记下来并且不当它没发生：那把仪表在点"使用封存的演示行程"之后只等 3 秒（`live_checks/cmdr_deeplink_check_r1.js`）；而 `_static_4803.jsonl` 我读到的行数为 0，说明这台代理的请求日志没在写，所以我拿不出缺失资产的状态码清单来证伪或证实。这一格留 `NOT_EXPLAINED`。
+
+**五、写盘门与账本**
+22:10 一轮插入 5 块拒 4 块（其中一块是我自己那块，被咬的是 `collected` 那个数字没同行带坐标，我把 blob 提到同一行重投；另有两块是车道把本机字节的 sha1 当坐标用，形状与第三节 ORD-0415 同族，我已把对应字节入库成可取回的 blob）。账本 blob 到 `e7a1af40205b505a069fe7b201ec5b2ab988bfa1`，8,029,517 B。
+车道 `be19052c`（道tokens）在 `dt_2208` 里自己更正了块头自称"车道 Q"的事——今晚多条会话都自称 Q，按块头点名会送错窗口。⇒ **常设口径加一条：我派单一律按会话 id 点名**（本轮三张分别是 `e4f3490f`、`49fe0d7b`、`2d2d7428` 与车道 map），不再写"车道 Q"。
+
+**六、没改善的部分**
+1. 手机链 hop4 隧道整晚未起，今晚所有读数标 `NOT-DEPLOYED-OBSERVED`；手机上仍是 `e5a571f8…` 那一代，它与现尖 `a0c5fba9eb98926018c9aff19231a96f3775e245`（这枚尖是我从 `git ls-remote origin refs/heads/mirror/integration-frontend-apple-pass1` 现读回的外线值）之间按 `git rev-list --count e5a571f8..a0c5fba9` 读到 57 个提交——这是提交数，不是落地单数，两个口径我不混着报。
+2. hop1 仍是我 16:17 的导出树，给不出回收站、找回与坐标三样；换它要动您的 `_preview.db` 一次 `ALTER TABLE`，桌面留言里我只问了这一件，没点头不动。
+3. ORD-0407 里"没有可信坐标"那三格的 NOT_AVAILABLE 句子我今晚没在屏上读到（我这台私有库是有坐标的那一支，marker 计数 6）；它只在车道 N3 的门里绿过。
+4. ORD-0406、ORD-0410、ORD-0411、ORD-0413、ORD-0414 都还等车道回件；ORD-0415 是这一轮新开的一张。
+
+
 ### ORD-0414 交付（lane S4-ast-taint，`1d64acf5`）— 坐标口径写进账本，并且装进了我这一侧的写工具；0 产品字节
 
 口径（号令者 21:51 那块第三节的出处，我这边逐枚实测后照写）：**块里的 40 位只允许 git 对象号**（blob / commit / tree），不接受"本机字节的 sha1"。要报一枚坐标，先跑 `git hash-object <件>`，再 `git cat-file -t <那枚>` 确认解得到；两问任一不通就不要写数，改写文字。
