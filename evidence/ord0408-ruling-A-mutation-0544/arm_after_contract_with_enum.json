@@ -1,0 +1,82 @@
+{
+ "arm": "AFTER - the same cell against a contract that does name the set, inline and block",
+ "ruler": "ui_exposure_taint_ast_r7b4.cjs",
+ "ruler_blob": "cefcb38c8d01a5996f3f705531a127c85f16c0b3",
+ "target": "D:/moodle/_qoder_lane_S4_0926/work/ord0408/jia/tip/frontend/src/features/trash/JourneyTrashPanel.tsx",
+ "readings": {
+  "inline_form": {
+   "exit": 0,
+   "cells": [
+    "RAW_BODY_TO_DOM@224"
+   ],
+   "folded": [],
+   "exempted": [
+    {
+     "line": 233,
+     "rule": "UPSTREAM_TEXT_VIA_HELPER_TO_DOM",
+     "field": "reason_code",
+     "basis": "no_literal_on_the_chain_and_the_contract_names_the_closed_set",
+     "tokens": [],
+     "contract": "openapi_inline_enum.yaml",
+     "contract_line": 2003,
+     "contract_form": "inline_on_field_line",
+     "contract_blob": "910903a15ea70cbacdc9fa7b70f620ef7f2d8ad9"
+    }
+   ],
+   "blocked": []
+  },
+  "block_form": {
+   "exit": 0,
+   "cells": [
+    "RAW_BODY_TO_DOM@224"
+   ],
+   "folded": [],
+   "exempted": [
+    {
+     "line": 233,
+     "rule": "UPSTREAM_TEXT_VIA_HELPER_TO_DOM",
+     "field": "reason_code",
+     "basis": "no_literal_on_the_chain_and_the_contract_names_the_closed_set",
+     "tokens": [],
+     "contract": "openapi_block_enum.yaml",
+     "contract_line": 2005,
+     "contract_form": "enum_key_block",
+     "contract_blob": "4e5944d9d7eac3042d9b8942b2c8d91f1fcde910"
+    }
+   ],
+   "blocked": []
+  },
+  "absent_contract_file": {
+   "exit": 0,
+   "cells": [
+    "RAW_BODY_TO_DOM@224",
+    "UPSTREAM_TEXT_VIA_HELPER_TO_DOM@233"
+   ],
+   "folded": [],
+   "exempted": [],
+   "blocked": [
+    {
+     "line": 233,
+     "rule": "UPSTREAM_TEXT_VIA_HELPER_TO_DOM",
+     "field": "reason_code",
+     "why": "CONTRACT_FILE_ABSENT",
+     "examples": [],
+     "contract": "no_such_contract_at_all.yaml"
+    }
+   ]
+  }
+ },
+ "contracts": {
+  "inline": {
+   "path": "D:/moodle/_qoder_lane_S4_0926/work/ord0408/jia/openapi_inline_enum.yaml",
+   "blob": "910903a15ea70cbacdc9fa7b70f620ef7f2d8ad9",
+   "bytes": 119872
+  },
+  "block": {
+   "path": "D:/moodle/_qoder_lane_S4_0926/work/ord0408/jia/openapi_block_enum.yaml",
+   "blob": "4e5944d9d7eac3042d9b8942b2c8d91f1fcde910",
+   "bytes": 119965
+  }
+ },
+ "expected": "green with the contract path, its blob and the line the set is written on; an unreadable contract file is its own named red"
+}
