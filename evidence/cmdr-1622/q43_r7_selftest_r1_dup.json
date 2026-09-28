@@ -1,0 +1,101 @@
+{
+ "committed_path_arm": {
+  "available": true,
+  "ref": "refs/remotes/origin/mirror/integration-frontend-apple-pass1",
+  "paths": 7267,
+  "why": "ok"
+ },
+ "checks": {
+  "POS_committed_path_vouchers_count": [
+   true
+  ],
+  "NEG1_unvouched_count_still_red": [
+   true
+  ],
+  "NEG2_uncertain_path_still_red": [
+   true
+  ],
+  "NEG3_next_line_path_still_red": [
+   true
+  ],
+  "R7_ip_literal_exempt": [
+   true,
+   "NO_CLAIM_FOUND",
+   0,
+   0,
+   [
+    [
+     "IP_PART",
+     1
+    ],
+    [
+     "PORT",
+     1
+    ]
+   ]
+  ],
+  "R7_bare_127_count_still_red": [
+   true,
+   1,
+   1,
+   [
+    [
+     "HTTP_STATUS",
+     1
+    ]
+   ]
+  ],
+  "R7_array_exempt": [
+   true,
+   "NO_CLAIM_FOUND",
+   0,
+   0,
+   [
+    [
+     "ARRAY_LITERAL",
+     1
+    ]
+   ]
+  ],
+  "R7_count_145_still_red": [
+   true,
+   2,
+   2,
+   []
+  ],
+  "R7_pid_port_prose_exempt": [
+   true,
+   "NO_CLAIM_FOUND",
+   0,
+   0,
+   [
+    [
+     "PID",
+     2
+    ],
+    [
+     "PORT",
+     1
+    ]
+   ]
+  ],
+  "R7_23992_without_pid_word_still_red": [
+   true,
+   1,
+   1,
+   []
+  ],
+  "R7_count_next_to_literals_still_red": [
+   true,
+   1,
+   1,
+   [
+    [
+     "ARRAY_LITERAL",
+     1
+    ]
+   ]
+  ]
+ },
+ "overall_pass": true
+}
