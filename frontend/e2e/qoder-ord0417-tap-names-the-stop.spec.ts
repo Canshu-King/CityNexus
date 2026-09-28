@@ -299,9 +299,13 @@ for (const arm of ARMS) {
     expect(pressedAfter, node("A1", `tapping pin "${target.painted}" at ${JSON.stringify(target.centre)} must leave that pin pressed, got ${pressedAfter}`)).toBe(
       "true",
     );
-    if (!glass.present) {
-      expect(false, node("A1", `nothing painted a name on the glass after tapping "${target.aria}"; the panel's whole rendered text is: ${glass.panel_text}`));
-    }
+    /* First assertion, and it aborts the arm: `expect(false, msg)` without a matcher is a no-op, so
+       the first cut of this file let the mutant slip past to the next line and report Playwright's own
+       "received value must not be null" instead of naming what a traveller cannot see. */
+    expect(
+      glass.present,
+      node("A1", `nothing painted a name on the glass after tapping "${target.aria}"; the panel's whole rendered text is: ${glass.panel_text}`),
+    ).toBe(true);
     expect(glass.painted, node("A1", `the painted glass sentence must contain the tapped stop's name "${target.aria}"`)).toContain(
       target.aria,
     );
@@ -349,9 +353,10 @@ for (const arm of ARMS) {
     expect(pressedAfter, node("A2", `this arm must be reading the pin it tapped; pin "${target.painted}" ended pressed=${pressedAfter}`)).toBe(
       "true",
     );
-    if (!glass.present) {
-      expect(false, node("A2", `no visible cell carries the name after tapping "${target.aria}" — an aria-label alone does not close ORD-0417`));
-    }
+    expect(
+      glass.present,
+      node("A2", `no visible cell carries the name after tapping "${target.aria}" — an aria-label alone does not close ORD-0417`),
+    ).toBe(true);
     expect(glass.display, node("A2", "the cell must be laid out")).not.toBe("none");
     expect(glass.visibility, node("A2", "the cell must not be hidden")).toBe("visible");
     expect(glass.opacity, node("A2", "the cell must not be faded out")).toBeGreaterThan(0);
