@@ -1,0 +1,565 @@
+{
+ "tree": "D:/moodle/_qoder_rel_ord0391",
+ "branch": "review/REL-ord0391-quantity-fix",
+ "tip": "8fddeb76a79968592a7a3e98d2f296dda450d4df",
+ "dirty_under_frontend_src": true,
+ "command": "python ord0391_gauge_r1.py <tree>",
+ "rows": 29,
+ "tally": {
+  "fixed": 25,
+  "still_bare": 0,
+  "held": 2,
+  "census_row_wrong": 2
+ },
+ "rows_detail": [
+  {
+   "file": "frontend/src/app/V8Experience.tsx",
+   "line": 229,
+   "fields": "content_type",
+   "state": "HELD",
+   "interpolations": 0,
+   "quantity_interpolations": 0,
+   "bare_prose_values": 0,
+   "field_named_values": 0,
+   "quantity_fields_shown": [],
+   "unlabelled_fields": [],
+   "interp_before": 2,
+   "sentence_kept": false,
+   "census_why": "template literal carrying the number",
+   "held_reason": "ORD-0343 standing rule: V8Experience.tsx is reported-before-touched; the order named the row but did not lift the rule, so it is delivered HELD with the exact edit I would make",
+   "line_head": "return zh"
+  },
+  {
+   "file": "frontend/src/app/V8Experience.tsx",
+   "line": 230,
+   "fields": "content_type",
+   "state": "HELD",
+   "interpolations": 2,
+   "quantity_interpolations": 2,
+   "bare_prose_values": 2,
+   "field_named_values": 0,
+   "quantity_fields_shown": [
+    "content_type"
+   ],
+   "unlabelled_fields": [
+    "content_type"
+   ],
+   "interp_before": 2,
+   "sentence_kept": true,
+   "census_why": "template literal carrying the number",
+   "held_reason": "ORD-0343 standing rule: V8Experience.tsx is reported-before-touched; the order named the row but did not lift the rule, so it is delivered HELD with the exact edit I would make",
+   "line_head": "? `服务器答了 HTTP ${error.status}，可带回来的不是这一屏能用的数据（Content-Type: ${error.content_type ?? \"未知\"}）。`"
+  },
+  {
+   "file": "frontend/src/features/discovery/DestinationPreparationPanel.tsx",
+   "line": 237,
+   "fields": "elapsed_ms",
+   "state": "fixed",
+   "interpolations": 3,
+   "quantity_interpolations": 2,
+   "bare_prose_values": 0,
+   "field_named_values": 1,
+   "quantity_fields_shown": [
+    "elapsed_ms"
+   ],
+   "unlabelled_fields": [],
+   "interp_before": 2,
+   "sentence_kept": true,
+   "census_why": "template literal carrying the number",
+   "held_reason": null,
+   "line_head": "? `服务器说现在在「${job.phase}」这一步，已经跑了 ${Math.round(job.elapsed_ms / 1000)} 秒（elapsed_ms=${Math.round(job.elapsed_ms"
+  },
+  {
+   "file": "frontend/src/features/discovery/DestinationPreparationPanel.tsx",
+   "line": 238,
+   "fields": "elapsed_ms",
+   "state": "fixed",
+   "interpolations": 3,
+   "quantity_interpolations": 2,
+   "bare_prose_values": 0,
+   "field_named_values": 1,
+   "quantity_fields_shown": [
+    "elapsed_ms"
+   ],
+   "unlabelled_fields": [],
+   "interp_before": 2,
+   "sentence_kept": true,
+   "census_why": "template literal carrying the number",
+   "held_reason": null,
+   "line_head": ": `The server reports it is inside \"${job.phase}\", running ${Math.round(job.elapsed_ms / 1000)}s (elapsed_ms=$"
+  },
+  {
+   "file": "frontend/src/features/inbox/JourneyInboxWorkbench.tsx",
+   "line": 312,
+   "fields": "http_status,content_type",
+   "state": "already_labelled",
+   "interpolations": 3,
+   "quantity_interpolations": 1,
+   "bare_prose_values": 0,
+   "field_named_values": 2,
+   "quantity_fields_shown": [
+    "http_status"
+   ],
+   "unlabelled_fields": [],
+   "interp_before": 3,
+   "sentence_kept": true,
+   "census_why": "template literal carrying the number",
+   "held_reason": null,
+   "line_head": "return `http_status=${a.http_status ?? \"none\"} content_type=${ct || \"none\"} evidence=${a.evidence_kind}`;"
+  },
+  {
+   "file": "frontend/src/features/planning/PlanWithAiSheet.tsx",
+   "line": 976,
+   "fields": "http_status",
+   "state": "census_row_wrong",
+   "interpolations": 0,
+   "quantity_interpolations": 0,
+   "bare_prose_values": 0,
+   "field_named_values": 0,
+   "quantity_fields_shown": [],
+   "unlabelled_fields": [],
+   "interp_before": 1,
+   "sentence_kept": false,
+   "census_why": "template literal carrying the number",
+   "held_reason": null,
+   "line_head": "data-raw-content-type={result.rawReading.content_type}"
+  },
+  {
+   "file": "frontend/src/features/planning/PlanWithAiSheet.tsx",
+   "line": 977,
+   "fields": "content_type",
+   "state": "census_row_wrong",
+   "interpolations": 0,
+   "quantity_interpolations": 0,
+   "bare_prose_values": 0,
+   "field_named_values": 0,
+   "quantity_fields_shown": [],
+   "unlabelled_fields": [],
+   "interp_before": 1,
+   "sentence_kept": false,
+   "census_why": "template literal carrying the number",
+   "held_reason": null,
+   "line_head": "data-raw-bytes={result.rawReading.bytes ?? \"\"}"
+  },
+  {
+   "file": "frontend/src/features/recovery/RecoveryRequiredPanel.tsx",
+   "line": 81,
+   "fields": "http_status",
+   "state": "fixed",
+   "interpolations": 1,
+   "quantity_interpolations": 1,
+   "bare_prose_values": 0,
+   "field_named_values": 1,
+   "quantity_fields_shown": [
+    "http_status"
+   ],
+   "unlabelled_fields": [],
+   "interp_before": 1,
+   "sentence_kept": true,
+   "census_why": "template literal carrying the number",
+   "held_reason": null,
+   "line_head": "`http_status=${refusal.http_status}`;"
+  },
+  {
+   "file": "frontend/src/features/studio/V12TripStudioPanel.tsx",
+   "line": 210,
+   "fields": "http_status",
+   "state": "fixed_at_copy",
+   "interpolations": 0,
+   "quantity_interpolations": 0,
+   "bare_prose_values": 0,
+   "field_named_values": 0,
+   "quantity_fields_shown": [],
+   "unlabelled_fields": [],
+   "interp_before": 0,
+   "sentence_kept": true,
+   "census_why": "JSX text position",
+   "held_reason": null,
+   "line_head": "<AlertTriangle size={14} /> {t(\"studio.requestRefused\", { status: requestFacts?.http_status ?? 0 })}"
+  },
+  {
+   "file": "frontend/src/lib/failureAttribution.ts",
+   "line": 133,
+   "fields": "http_status",
+   "state": "fixed",
+   "interpolations": 1,
+   "quantity_interpolations": 1,
+   "bare_prose_values": 0,
+   "field_named_values": 1,
+   "quantity_fields_shown": [
+    "http_status"
+   ],
+   "unlabelled_fields": [],
+   "interp_before": 1,
+   "sentence_kept": true,
+   "census_why": "template literal carrying the number",
+   "held_reason": null,
+   "line_head": "`http_status=${http_status ?? \"none\"}`,"
+  },
+  {
+   "file": "frontend/src/lib/failureAttribution.ts",
+   "line": 140,
+   "fields": "content_type",
+   "state": "fixed",
+   "interpolations": 1,
+   "quantity_interpolations": 1,
+   "bare_prose_values": 0,
+   "field_named_values": 1,
+   "quantity_fields_shown": [
+    "content_type"
+   ],
+   "unlabelled_fields": [],
+   "interp_before": 1,
+   "sentence_kept": true,
+   "census_why": "template literal carrying the number",
+   "held_reason": null,
+   "line_head": "...(content_type ? [`content_type=${content_type}`] : []),"
+  },
+  {
+   "file": "frontend/src/lib/failureAttribution.ts",
+   "line": 337,
+   "fields": "http_status",
+   "state": "fixed",
+   "interpolations": 2,
+   "quantity_interpolations": 1,
+   "bare_prose_values": 0,
+   "field_named_values": 1,
+   "quantity_fields_shown": [
+    "http_status"
+   ],
+   "unlabelled_fields": [],
+   "interp_before": 2,
+   "sentence_kept": true,
+   "census_why": "template literal carrying the number",
+   "held_reason": null,
+   "line_head": "? `这台设备还记得行程 ${id}，但服务器明确回答它不存在（http_status=${attribution.http_status}）。这不是网络问题：服务器刚才答得出来。你的其它行程没有受影响。`"
+  },
+  {
+   "file": "frontend/src/lib/failureAttribution.ts",
+   "line": 338,
+   "fields": "http_status",
+   "state": "fixed",
+   "interpolations": 2,
+   "quantity_interpolations": 1,
+   "bare_prose_values": 0,
+   "field_named_values": 1,
+   "quantity_fields_shown": [
+    "http_status"
+   ],
+   "unlabelled_fields": [],
+   "interp_before": 2,
+   "sentence_kept": true,
+   "census_why": "template literal carrying the number",
+   "held_reason": null,
+   "line_head": ": `This device remembered trip ${id}, and the server answered plainly that it does not exist (http_status=${at"
+  },
+  {
+   "file": "frontend/src/lib/failureAttribution.ts",
+   "line": 358,
+   "fields": "http_status",
+   "state": "fixed",
+   "interpolations": 1,
+   "quantity_interpolations": 1,
+   "bare_prose_values": 0,
+   "field_named_values": 1,
+   "quantity_fields_shown": [
+    "http_status"
+   ],
+   "unlabelled_fields": [],
+   "interp_before": 1,
+   "sentence_kept": true,
+   "census_why": "template literal carrying the number",
+   "held_reason": null,
+   "line_head": "? `服务器刚才答了你，但它自己报错了（http_status=${attribution.http_status}）。这是服务暂时不可用，不是你填错了什么。这台设备上还留着你已保存的行程，用下面的按钮可以只读查看这份本"
+  },
+  {
+   "file": "frontend/src/lib/failureAttribution.ts",
+   "line": 359,
+   "fields": "http_status",
+   "state": "fixed",
+   "interpolations": 1,
+   "quantity_interpolations": 1,
+   "bare_prose_values": 0,
+   "field_named_values": 1,
+   "quantity_fields_shown": [
+    "http_status"
+   ],
+   "unlabelled_fields": [],
+   "interp_before": 1,
+   "sentence_kept": true,
+   "census_why": "template literal carrying the number",
+   "held_reason": null,
+   "line_head": ": `The server did answer, and answered with an error of its own (http_status=${attribution.http_status}). The "
+  },
+  {
+   "file": "frontend/src/lib/failureAttribution.ts",
+   "line": 365,
+   "fields": "http_status",
+   "state": "fixed",
+   "interpolations": 1,
+   "quantity_interpolations": 1,
+   "bare_prose_values": 0,
+   "field_named_values": 1,
+   "quantity_fields_shown": [
+    "http_status"
+   ],
+   "unlabelled_fields": [],
+   "interp_before": 1,
+   "sentence_kept": true,
+   "census_why": "template literal carrying the number",
+   "held_reason": null,
+   "line_head": "? `服务器自己报错了（http_status=${attribution.http_status}）。这是它那边的问题，不是你填错了什么。可以重试；如果一直这样，稍后再来。`"
+  },
+  {
+   "file": "frontend/src/lib/failureAttribution.ts",
+   "line": 366,
+   "fields": "http_status",
+   "state": "fixed",
+   "interpolations": 1,
+   "quantity_interpolations": 1,
+   "bare_prose_values": 0,
+   "field_named_values": 1,
+   "quantity_fields_shown": [
+    "http_status"
+   ],
+   "unlabelled_fields": [],
+   "interp_before": 1,
+   "sentence_kept": true,
+   "census_why": "template literal carrying the number",
+   "held_reason": null,
+   "line_head": ": `The server reported an error of its own (http_status=${attribution.http_status}). That is on its side, not "
+  },
+  {
+   "file": "frontend/src/lib/failureAttribution.ts",
+   "line": 375,
+   "fields": "http_status",
+   "state": "fixed",
+   "interpolations": 1,
+   "quantity_interpolations": 1,
+   "bare_prose_values": 0,
+   "field_named_values": 1,
+   "quantity_fields_shown": [
+    "http_status"
+   ],
+   "unlabelled_fields": [],
+   "interp_before": 1,
+   "sentence_kept": true,
+   "census_why": "template literal carrying the number",
+   "held_reason": null,
+   "line_head": "? `服务器答了 http_status=${attribution.http_status ?? \"2xx\"}，可带回来的不是这一屏能用的数据`"
+  },
+  {
+   "file": "frontend/src/lib/failureAttribution.ts",
+   "line": 376,
+   "fields": "http_status",
+   "state": "fixed",
+   "interpolations": 1,
+   "quantity_interpolations": 1,
+   "bare_prose_values": 0,
+   "field_named_values": 1,
+   "quantity_fields_shown": [
+    "http_status"
+   ],
+   "unlabelled_fields": [],
+   "interp_before": 1,
+   "sentence_kept": true,
+   "census_why": "template literal carrying the number",
+   "held_reason": null,
+   "line_head": ": `The origin answered http_status=${attribution.http_status ?? \"2xx\"}, but not with data this screen can use`"
+  },
+  {
+   "file": "frontend/src/lib/failureAttribution.ts",
+   "line": 378,
+   "fields": "http_status,content_type",
+   "state": "fixed",
+   "interpolations": 2,
+   "quantity_interpolations": 2,
+   "bare_prose_values": 0,
+   "field_named_values": 2,
+   "quantity_fields_shown": [
+    "content_type",
+    "http_status"
+   ],
+   "unlabelled_fields": [],
+   "interp_before": 2,
+   "sentence_kept": true,
+   "census_why": "template literal carrying the number",
+   "held_reason": null,
+   "line_head": "? `它确实回了话（http_status=${attribution.http_status ?? \"2xx\"}，content_type=${attribution.content_type ?? \"未知\"}），只是"
+  },
+  {
+   "file": "frontend/src/lib/failureAttribution.ts",
+   "line": 379,
+   "fields": "http_status,content_type",
+   "state": "fixed",
+   "interpolations": 2,
+   "quantity_interpolations": 2,
+   "bare_prose_values": 0,
+   "field_named_values": 2,
+   "quantity_fields_shown": [
+    "content_type",
+    "http_status"
+   ],
+   "unlabelled_fields": [],
+   "interp_before": 2,
+   "sentence_kept": true,
+   "census_why": "template literal carrying the number",
+   "held_reason": null,
+   "line_head": ": `It did reply (http_status=${attribution.http_status ?? \"2xx\"}, content_type=${attribution.content_type ?? \""
+  },
+  {
+   "file": "frontend/src/lib/failureAttribution.ts",
+   "line": 384,
+   "fields": "http_status",
+   "state": "fixed",
+   "interpolations": 1,
+   "quantity_interpolations": 1,
+   "bare_prose_values": 0,
+   "field_named_values": 1,
+   "quantity_fields_shown": [
+    "http_status"
+   ],
+   "unlabelled_fields": [],
+   "interp_before": 1,
+   "sentence_kept": true,
+   "census_why": "template literal carrying the number",
+   "held_reason": null,
+   "line_head": "? `服务器答了 http_status=${attribution.http_status ?? \"2xx\"}，可带回来的不是这一屏能用的数据`"
+  },
+  {
+   "file": "frontend/src/lib/failureAttribution.ts",
+   "line": 385,
+   "fields": "http_status",
+   "state": "fixed",
+   "interpolations": 1,
+   "quantity_interpolations": 1,
+   "bare_prose_values": 0,
+   "field_named_values": 1,
+   "quantity_fields_shown": [
+    "http_status"
+   ],
+   "unlabelled_fields": [],
+   "interp_before": 1,
+   "sentence_kept": true,
+   "census_why": "template literal carrying the number",
+   "held_reason": null,
+   "line_head": ": `The origin answered http_status=${attribution.http_status ?? \"2xx\"}, but not with data this screen can use`"
+  },
+  {
+   "file": "frontend/src/lib/failureAttribution.ts",
+   "line": 387,
+   "fields": "http_status,content_type",
+   "state": "fixed",
+   "interpolations": 2,
+   "quantity_interpolations": 2,
+   "bare_prose_values": 0,
+   "field_named_values": 2,
+   "quantity_fields_shown": [
+    "content_type",
+    "http_status"
+   ],
+   "unlabelled_fields": [],
+   "interp_before": 2,
+   "sentence_kept": true,
+   "census_why": "template literal carrying the number",
+   "held_reason": null,
+   "line_head": "? `它确实回了话（http_status=${attribution.http_status ?? \"2xx\"}，content_type=${attribution.content_type ?? \"未知\"}），只是"
+  },
+  {
+   "file": "frontend/src/lib/failureAttribution.ts",
+   "line": 388,
+   "fields": "http_status,content_type",
+   "state": "fixed",
+   "interpolations": 2,
+   "quantity_interpolations": 2,
+   "bare_prose_values": 0,
+   "field_named_values": 2,
+   "quantity_fields_shown": [
+    "content_type",
+    "http_status"
+   ],
+   "unlabelled_fields": [],
+   "interp_before": 2,
+   "sentence_kept": true,
+   "census_why": "template literal carrying the number",
+   "held_reason": null,
+   "line_head": ": `It did reply (http_status=${attribution.http_status ?? \"2xx\"}, content_type=${attribution.content_type ?? \""
+  },
+  {
+   "file": "frontend/src/lib/failureAttribution.ts",
+   "line": 414,
+   "fields": "http_status",
+   "state": "fixed",
+   "interpolations": 1,
+   "quantity_interpolations": 1,
+   "bare_prose_values": 0,
+   "field_named_values": 1,
+   "quantity_fields_shown": [
+    "http_status"
+   ],
+   "unlabelled_fields": [],
+   "interp_before": 1,
+   "sentence_kept": true,
+   "census_why": "template literal carrying the number",
+   "held_reason": null,
+   "line_head": "? `服务器拒绝了这次读取（http_status=${attribution.http_status}）。登录之后这一趟还在。`"
+  },
+  {
+   "file": "frontend/src/lib/failureAttribution.ts",
+   "line": 415,
+   "fields": "http_status",
+   "state": "fixed",
+   "interpolations": 1,
+   "quantity_interpolations": 1,
+   "bare_prose_values": 0,
+   "field_named_values": 1,
+   "quantity_fields_shown": [
+    "http_status"
+   ],
+   "unlabelled_fields": [],
+   "interp_before": 1,
+   "sentence_kept": true,
+   "census_why": "template literal carrying the number",
+   "held_reason": null,
+   "line_head": ": `The server refused this read (http_status=${attribution.http_status}). Your trip is still there once you si"
+  },
+  {
+   "file": "frontend/src/lib/failureAttribution.ts",
+   "line": 422,
+   "fields": "http_status",
+   "state": "fixed",
+   "interpolations": 3,
+   "quantity_interpolations": 1,
+   "bare_prose_values": 0,
+   "field_named_values": 1,
+   "quantity_fields_shown": [
+    "http_status"
+   ],
+   "unlabelled_fields": [],
+   "interp_before": 3,
+   "sentence_kept": true,
+   "census_why": "template literal carrying the number",
+   "held_reason": null,
+   "line_head": "? `服务器认得你是谁，但明确拒绝了这一步（http_status=${attribution.http_status}${attribution.server_code ? `：${attribution.server"
+  },
+  {
+   "file": "frontend/src/lib/failureAttribution.ts",
+   "line": 423,
+   "fields": "http_status",
+   "state": "fixed",
+   "interpolations": 3,
+   "quantity_interpolations": 1,
+   "bare_prose_values": 0,
+   "field_named_values": 1,
+   "quantity_fields_shown": [
+    "http_status"
+   ],
+   "unlabelled_fields": [],
+   "interp_before": 2,
+   "sentence_kept": true,
+   "census_why": "template literal carrying the number",
+   "held_reason": null,
+   "line_head": ": `The server knows who you are and still refused this step (http_status=${attribution.http_status}${attributi"
+  }
+ ]
+}
