@@ -16588,6 +16588,32 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### CMDR 2026-09-28 16:52 · 号令者 · 给 n3 与 ORD-0383 车道的 rebase 事实（不是判词），以及尖暂停通知
+
+**为什么现在写这块**：两张单都在追同一个移动靶，而我的尺刚才拦下了一次会造成静默回退的合并。以下全是读数，不是评价。
+
+**ORD-0384（n3）· blob 4c802d5a（16:40）的实测**
+
+- `git merge-base 1f8d7061 4c802d5a` = 8fddeb76a79968592a7a3e98d2f296dda450d4df，且 `is tip ancestor of cand` = no ⇒ 你这笔不是落在现尖上，是落在四笔之前的尖上。
+- 把你这版 `frontend/src/app/V8Experience.tsx` 与现尖同文件对照：`+12 / -74` 行（逐 hunk 头与原文在 blob 6d0edeb08d495db32a6132865ad3fe1ddd929be5，路径 `evidence/cmdr-1652/rebase_brief_ord0384_r1.txt`）。
+- 关键一格：`frontend/src/app/V8Experience.tsx:4` 现尖是 `import { MapPanel, tripHasNoCoordinates } from "../components/v8/MapPanel";`，而你这版把它退回成旧的 import；同理 `frontend/src/app/V8Experience.tsx:3698` 起那一段是 ORD-0390 刚落下的地图 ↔ 卡片选中挂载，你这版没有它。
+- 所以我的尺 ABORT 是对的：如果我手搓合并，`ad492c444911bede734a46836c82dbb59d2b9b5f` 那项能力会被**静默删掉**，而门是绿的（文件仍在你自己的字节上）。这就是 Q72 存在的原因，不是我为难你。
+- 你要做的只有一件：`git fetch origin` 之后 `git rebase 1f8d7061f9edd66652c198db983722cdd237f2b7`，只重排你自己的挂载那几行，push 成 `review/N3-ord0384-pretrip-checklist-r4`（新名字，别覆盖已交过的 ref），回我一枚 sha 就够。
+
+**ORD-0383（新车道）· blob c57bd95bf42c01dc84ed207d797a7fa75dda80aa（16:24）的实测**
+
+同一把尺在 `backend/app/main.py` 与 `contracts/openapi.yaml` 两处 ABORT，原因同类：0389（`8fddeb76a79968592a7a3e98d2f296dda450d4df`）刚给 `demo/reset` 加了 `X-Demo-Reset-Token` 门，这两个文件都被它动过。
+- 除 rebase 之外我落地前需要你答一格（不用改代码）：`journeys.deleted_at` 在**已存在的 SQLite 库**上从哪来？`create_all` 不会给旧表加列，而共享预览库不是新建的。请给：①迁移或启动期 `ALTER TABLE` 的具名位置（`path:line`）；②在没有该列的库上起新后端、读列表那条 SQL 的实际状态码与错误原文；③你验过的那枚库路径与 `PRAGMA table_info(journeys)` 的原始列名清单。
+
+**尖暂停通知（有效到我把上面两张收掉为止）**
+
+现尖逐字：`1f8d7061f9edd66652c198db983722cdd237f2b7`。我不再往线上落任何动 `frontend/src/app/V8Experience.tsx` 的候选，也不再自己改那个文件——移动靶由我停。谁先交我就先落谁，落完立刻把新尖逐字写进账本，另一条只需要再 rebase 一次。
+
+**已经落地的，你们不必再等**：`8fddeb76a79968592a7a3e98d2f296dda450d4df`（ORD-0389 令牌门，我在正在跑的后端上亲测：无令牌 403 `RESET_TOKEN_REQUIRED`、错令牌 403 `RESET_TOKEN_INVALID`、带令牌 200，且 `/api/v1/demo/scene` 正文 583 字节逐字节未变）；`4fcfe6e595bba9de30ff35a1b49ff6dc93fe8d95`（ORD-0391 第 2 步）；`b241b81401b5611937ee5653d54777063c89d844`（ORD-0382 r4 窄屏）；`ad492c444911bede734a46836c82dbb59d2b9b5f`（ORD-0390）；`1f8d7061f9edd66652c198db983722cdd237f2b7`（run strip 冷启动沉默那条 e2e）。
+
+**给所有人的一个新读法（来自 ORD-0394）**：现在三条读路由 `frontend/src/api/citynexus.ts` 拿到的正文里 `latitude` 命中 0 次，库里 16 枚 place 却全带 WGS84 经纬度 —— 也就是说**任何依赖地图点位的能力在真场景里都进不去**，你的 fixture 绿不代表用户能走到。别再往 fixture 里补坐标来让自己的臂变绿，等 ORD-0394 把坐标发出来再验真数据。
+
+
 ### CMDR 0928-1647 · 号令者 · ORD-0394 立案：读路由不发货任何坐标，所以刚落的地图↔卡片选中在真机场景里进不去
 
 **先说结论（我亲测，不是门说的）**：ORD-0390 已经落上权威线（`ad492c444911bede734a46836c82dbb59d2b9b5f`），但我用真构建走 390×844 时**地图面板一格都没挂上**：屏上出现的是「尚未获取地图位置 / 这个行程还没有可信的坐标」，`v8-map-panel .v9-map-marker` 命中 0 个、`map-stop-*` 行 0 条。走查收据 `evidence/cmdr-1647/walk_0390_receipt_r1.json`（blob ad2af8b0f46352f2ebebb60ad885871a6bb3da49）与逐字屏读 `evidence/cmdr-1647/walk_0390_screen_text_r1.txt`（blob 76158e5af61e4345849a68354acbdc7fe186570c）。
