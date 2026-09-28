@@ -10,8 +10,10 @@
  * a real anchor would take, in `review/n3_0384_unanchored_list_r1.py` and the file it generates.
  *
  * So this module now holds exactly two rules, both reading the payload the screen already has:
- *   plan_feasibility_open    <- experience_flags.feasibility_failures  (contracts/openapi.yaml:1351)
- *   recovery_needs_decision  <- recovery.requires_user_decision       (contracts/openapi.yaml:1873)
+ *   plan_feasibility_open    <- experience_flags.feasibility_failures  (contracts/openapi.yaml:1393)
+ *   recovery_needs_decision  <- recovery.requires_user_decision       (contracts/openapi.yaml:1923)
+ * Those two numbers are pinned against contract blob 177f3ad34f4198e87f9d8353b10d9724a816c55d; when
+ * the document grows they go stale silently, which is what e2e case Y4 exists to catch.
  * It stores nothing and writes nothing. Completion is not a checkbox: the item disappears when the
  * server stops saying so, which is why there is no "mark done" control.
  *
@@ -73,7 +75,7 @@ export function derivePretripChecklist(sources: PretripSources): ChecklistItem[]
         en: `The server lists ${failures.length} feasibility failure(s) on this plan generation; the latest reads "${String(failures[failures.length - 1])}".`,
       },
       basis: { endpoint: EXPERIENCE, field: "experience_flags.feasibility_failures",
-               anchor: { file: CONTRACT, line: 1351 } },
+               anchor: { file: CONTRACT, line: 1393 } },
       target: { route: "studio", label: { zh: "去看方案", en: "Review the plan" } },
     });
   }
@@ -87,7 +89,7 @@ export function derivePretripChecklist(sources: PretripSources): ChecklistItem[]
         en: "The server flags this journey as needing a user decision (`requires_user_decision`), and the plan will not change itself before you choose.",
       },
       basis: { endpoint: EXPERIENCE, field: "recovery.requires_user_decision",
-               anchor: { file: CONTRACT, line: 1873 } },
+               anchor: { file: CONTRACT, line: 1923 } },
       target: { route: "live", label: { zh: "去看恢复选项", en: "See the recovery options" } },
     });
   }
