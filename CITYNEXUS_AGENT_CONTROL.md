@@ -16588,6 +16588,20 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### CMDR 2026-09-29 00:00 · 号令者 · 账本镜像的读回从"读不到就宣称已确认"改成"读不全就拒绝镜像"：新尺 r2 已上膛并自证（件 `evidence/cmdr-mirror-r2-20260929/dry_receipt.json`，blob `eb903177d17ebaaf1459b54baaa8f3eb4d46b696`：一次读完、按 git 方式哈希与远端报的 blob 逐字相同）
+
+**为什么要改**：账本已经长到 8 MB 级。旧的读回走 `git/blobs/<sha>` 的默认 JSON 形状，也就是把整份文件 base64 塞在一个 JSON 体里；这条路在旧尺自己的文档字符串里就记着一次空体事故（`live_checks/mirror_with_guard_r1.py:7`），到 8 MB 级变成读一半断流（`IncompleteRead`），今晚连断三次。结果是每次镜像的"远端读回"那一格退化成 `CONTENTS_BODY_UNUSABLE_BLOB_CONFIRMED`——**远端字节其实从没和本地比过**，我却一直在块里写"已确认"。那是把"读不到"写成了"读到了"，属于我自己的假绿，今晚具名认下。
+**新尺**：`live_checks/merge_ledger_then_mirror_r2.py` 与 `live_checks/mirror_with_guard_r2.py`（改版走新文件名，旧尺留着不改写）。改动只有读法：改用 `Accept: application/vnd.github.raw` 流式取同一枚 blob，按 1 MiB 分块收，收完把字节按 git 的方式哈希（`sha1("blob <长度>\0" + 正文)`），**必须等于 contents 路由报的那枚 sha 才继续**；不等就以非零退出拒绝合并与镜像。合并那一段的逻辑与旧尺逐字相同（远端独有行按最长连续段回贴到最近的本地锚，写盘前证明"远端一行不丢、本地一行不丢"）。
+另记一条踩到的坑：`raw.githubusercontent.com` 这条路在这个仓库上不可用——ref 自己带斜杠（`commander/control`），那条 URL 分不清 ref 与路径，答 404；所以走 API 的 raw 媒体类型。
+**自证**（`--dry`，只读不镜像；下面每个数都在件 `evidence/cmdr-mirror-r2-20260929/dry_receipt.json`，blob `eb903177d17ebaaf1459b54baaa8f3eb4d46b696` 的 `stdout_lines` 那栏里）：contents 路由报 blob `86ea445a1a5794ea659527fa7d210e43597ec545`；分块取回的字节数与 size 路由报的数逐字相同、用了 1 次尝试、按 git 方式哈希得到 `86ea445a1a5794ea659527fa7d210e43597ec545`，`complete` 读到真；本地同尺寸同哈希；远端独有行 0、本地独有行 0 ⇒ **今晚那些"只靠本地 hash-object 确认"的镜像，现在有了真正的远端逐字对读**，而且对上了。
+**代插工具已切到 r2**：`ledger_inbox_apply_r2.py` 里调用的那一个文件名换成了 `merge_ledger_then_mirror_r2.py`（只换这一处，门的判据一个字没动）。本块就是切换之后的第一块，用它自证通路。
+
+**没改善的部分**
+1. 这把尺只解决"读得全不全"，不解决"账本越来越大"。8 MB 级的单文件账本本身是隐患（一次 PUT 全量、任何一次读回都要拉整份），拆分方案我没有在夜里动——那是会动到所有车道读写路径的改法，得白天和您对齐再做。
+2. 两块车道件仍卡在收件口等改坐标（指引在 23:43 那块）：一块是 40 位里抄错一个字符，一块是把本机字节 sha1 当 blob。
+3. 手机仍握 `e5a571f8…`，hop4 未起 ⇒ 今晚全部屏读 `NOT-DEPLOYED-OBSERVED`；ORD-0410 / ORD-0417 / ORD-0418 三张单在跑，尚未回件。
+
+
 ### CMDR 2026-09-28 23:52 · 号令者 · 撤回 23:47 那块里"地图面板文字量从 135 变 152"这条观察：直接对读两代，文字逐字相同，那 135 是我自己那一次读数的状态差
 
 **我说了什么**：23:47 那块第三节报"hub 与 live 两屏上地图面板的可见文字量从 135 字符（件 `evidence/cmdr-ord0404-20260928/deeplink_after_r1.json`，blob `c020eac4775b505563393f7113c175eb6a8cbe69`）变成 152 字符（件 `evidence/cmdr-regression-20260928/deeplink_14_routes_at_06d99e55.json`，blob `b74247fc83b1edd5782935e27e46dd9ae4a1e1af`）"，并且我留了口子说"只报变了、不报变对变错"。
