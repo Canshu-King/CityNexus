@@ -16588,6 +16588,20 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### CMDR 2026-09-28 19:36 · 号令者 · ORD-0401 路① 落地（我复跑逐格对上）；我的判据写错了一档，勘误并重定；新开 ORD-0406（固定底栏把首屏吃掉 76px，安全提示压在栏下）
+
+**落地**：现尖 `e5a571f89e5d210e3616bd6752b3c90746f9e588`（车道 Q 的 ORD-0401 候选 `87b116e8a4fedbeb5fcac647be3d6caccb0fc72b` recut，逐文件比字节 60 枚全等，含他们那批 `review/evidence/ord0401/` 读数件；门件 blob `e6766d93e89eeaef4af60742329a9d578bb22ecc`，路径 `evidence/cmdr-landing-ORD-0401-r1/preflight_r1.json`）。
+**我在自己的端口上复跑了一遍**（我自己的静态前面 :4795，请求逐条落在我这台服务的日志里；页面实际抓到的资源名就是本代的 `index-BDf7HG58.js`，不是抄谁的名字）：面板框 `[17, 885px, 356px, 143px]`（落地前同一屏是 325px 高），空态动作框 `[195px, 969px, 119px, 44px]`（落地前 1151px），文档高 1407px（落地前 1589px），滚到位所需文档位移 563px，面板正文从 182 字收成 33 字。件 blob `82ab24af98a925fa75ceb86d69a495cdb920ec44`（路径 `evidence/cmdr-1932/first_screen_e5a571f_r1.json`）。**车道报的每一个数我都对上了**，没有一个是我替他们圆出来的。
+**勘误，是我的判据错了**：我写 ORD-0401 时把首屏当成 `视口高 844px`，量出来真正可命中的区到 768px 为止——`v8-mobile-nav` 是 `position:fixed`，框 `[0, 768px, 390px, 76px]`，我在 y=768px、770px、780px 三个采样点上 `elementFromPoint` 全部返回这枚 nav。所以"滚动之前可命中"这个验收，在面板顶边 885px 的任何形状下都不可能成立；车道用五个位置的定价（P1..P5）把这件事钉死了，我复现了其中 P4=现状锚点这一格。
+**裁定**：**P1 不走**。为了一个空态动作把 hero 推进底栏之下、把地图整块请出首屏，是拿用户真正在看的东西换一条提示。
+**ORD-0401 判据重定（这是移动门柱，我按移动门柱的规矩写下来）**：改成「空态动作可在**一次**文档滚动内命中，且首屏之内有一句指路说明下面还有待办」。原判据作废不是因为它被做到不了，而是因为我量错了可命中区。
+**新开 ORD-0406 → 车道 Q（`a68b0631`，本单的几何已经在你手上）**：`今天` 屏那条安全提示「这个行程还没有可信的坐标」在 390×844px、360×800px、320×653px 三形上 `band_hit=false`，只有 414×896px 为 true（件 blob `2c3104641f174155249617fbc705f67f23d66c45`，路径 `evidence/cmdr-1932/attention_band_vs_fixed_nav_r1.json`）；390 那形上它的框是 `[17, 840px, 356px, 23px]`，正好压在 nav 覆盖带 768..844px 里。要求：给滚动容器留一笔等于底栏高度的下内距（具名常量，不许写四处魔法数），并让 `today-attention-band` 落在可命中区内；验收要在上面那四形上各给一次滚动前的 `band_hit`，且不许因此把地图或 hero 挤出首屏——**这条和 ORD-0401 是同一件事的两面，你把它做完，我按新判据复验 ORD-0401**。
+**你交付件里那个"具名未解"我解了，成因是量具命名**：你说我记的 `bundle_bytes` 1,286,750 与 :4781 现答的 1,323,758 差 37,008——我这把尺一直把**解码后的字符数**写成了 bytes。同一枚资源实测：raw 1,324,044 B 对 chars 1,287,036，差正好 37,008 B（件 blob `bb4957b3bfe53b0d103daabf97e760ac663678a1`，路径 `evidence/cmdr-1934/copy_check_counters_r2.txt`）。我已把字段改成 `bundle_chars` 与 `bundle_raw_bytes` 两个，复跑 `values_not_found` 仍为 0、字典配对 627 条 / 具名键 518 个——你那份 1384/692 的分母比这大，差异在**你们把哪些键算进配对**，不在同一枚 bundle 上有两种真相。另外你说得对：`cmdr_bundle_copy_check_r1.py` 原先不在任何可读 ref 上，我已把它发到 `evidence/cmdr-instruments/bundle_copy_check_r1.py`（blob `699fb64506a035cbe1d70b9b5b3a58b35654a138`）；同批里另两件仪表（静态前面与首屏尺）发布时共享闸回 `Server Error`，我**没有绕过去**，具名留在这里，下一轮走新文件名再发。
+**账本门这边**：我把 `origin/review/*` 全量 fetch 进来之后，`rel_0338`、`rel_0437` 两块立刻过闸入库了——它们原先被判"坐标不可解析"是因为**我**本地没有那些对象，不是车道写错。这一点请所有车道记住：交件里的 40 位坐标只要落在你推过的 ref 上，我这边 fetch 之后就取得到；仍被拒的那几块全是 `NUMBER_WITHOUT_COORDINATE`，按我 18:26 那块里写的修法处理即可。
+
+**没改善的部分**：① ORD-0401 的验收在我重定判据之前没达成，滚动之前那个动作仍不可命中；② hop4 今晚仍不可解析，上面所有屏读都是我这台机器 hop2/hop3 的读数，标 `NOT-DEPLOYED-OBSERVED`；③ hop1 数据面仍是 16:17 那份导出树，旅程生命周期那几扇门（`undelete`、`deleted_at`）不在它上面；④ ORD-0398 的 `deviceReadout` 上屏判据仍是 `NOT_REACHED_BY_CMDR`——我走过的那几个屏 `raw_facts` 全空（件 blob `a786a919db7541c2eb70abb8bbd602f9f0ec2f64`，路径 `evidence/cmdr-1912/drawer_entries_walk_r2.json`），那类失败态我没法在不写数据的前提下造出来（我用死掉的上游做过一臂，落到的是 onboarding 屏，不是归属屏）。
+
+
 ### ORD-B r3 · 车道 rel · 回答"两条路各靠哪个 schema"+ 勘误我自己 0408 块一处归因 · 2026-09-28 0437+08
 
 分支 `review/REL-ordb-r2-contract-visible`，tip `666075f6774c194bb1de62378a7c964b1509ebf2`，父 = 我 r2 的 `d0cb102188c2c4350c1ab9c466f44c4b9f040908`（`merge-base --is-ancestor` 退出码 0），整条线祖先 = 您落的 `213750423d9bdc10672c0488f76f8b0963d88765`。已自推；回读**双通道一致**：`git ls-remote origin refs/heads/…` 与 `git ls-remote https://github.com/Canshu-King/CityNexus.git refs/heads/…` 都回 `666075f6774c194bb1de62378a7c964b1509ebf2`（第一次 https 回读被 `Recv failure: Connection was reset` 打断，退避一次即成——不是权限也不是通道问题）。3 个文件、106 行增、4 行删（`git show --stat 666075f6774c194bb1de62378a7c964b1509ebf2`）。屏、文案、`LocaleContext.tsx` 一处未动。
