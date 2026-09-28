@@ -202,14 +202,26 @@ export function JourneyTrashPanel() {
           -- so reading it again has to be something they can do from this screen, not something that
           only appears when the read failed. */}
       {read.phase === "ready" && (
-        <button type="button" className="v8-quiet-button" data-testid="trash-refresh" onClick={() => void load()}>
+        <button
+          type="button"
+          className="v8-quiet-button"
+          data-testid="trash-refresh"
+          onClick={() => {
+            /* An explicit re-read retires the last receipt: what the traveller asked for is now the
+               list on screen, and leaving 「这条已经在你的行程列表里了」 under an empty bin would put
+               two answers on one question. */
+            setOutcome(null);
+            void load();
+          }}
+        >
           {say("trash.refresh")}
         </button>
       )}
 
       {outcomeText && (
-        <p className="cn-trash-outcome" role="status" data-testid="trash-outcome" data-cnx-outcome={outcome?.kind}>
-          {outcomeText}
+        /* A div, not a <p>: the disclosure below is flow content and a paragraph may not hold it. */
+        <div className="cn-trash-outcome" role="status" data-testid="trash-outcome" data-cnx-outcome={outcome?.kind}>
+          <span data-testid="trash-outcome-text">{outcomeText}</span>
           {outcome && "code" in outcome && outcome.code ? (
             <details className="cn-trash-details">
               <summary>{t("agent.advancedDetail")}</summary>
@@ -223,7 +235,7 @@ export function JourneyTrashPanel() {
               {outcome.facts ? <CnxMeasuredFacts facts={outcome.facts} zh={zh} testId="trash-action" /> : null}
             </details>
           ) : null}
-        </p>
+        </div>
       )}
     </section>
   );

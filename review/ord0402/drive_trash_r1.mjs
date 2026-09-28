@@ -44,7 +44,10 @@ const api = async (method, path) => {
 const READ_SCREEN = () => {
   const panel = document.querySelector('[data-testid="journey-trash-panel"]');
   const rows = [...document.querySelectorAll('[data-testid="trash-row"]')];
-  const buttons = [...document.querySelectorAll('[data-testid="trash-bring-back"]')];
+  /* "every button hit-tested" means every button the screen puts up, not only the action this order
+     named: the read-again control and each refusal's disclosure are buttons a traveller can be asked to
+     press on the same surface. */
+  const buttons = panel ? [...panel.querySelectorAll("button")] : [];
   const describe = (el) => {
     if (!el) return null;
     const r = el.getBoundingClientRect();
@@ -88,7 +91,11 @@ const READ_SCREEN = () => {
       deleted_at: describe(li.querySelector('[data-testid="trash-row-deleted-at"]')),
       button: describe(li.querySelector('[data-testid="trash-bring-back"]')),
     })),
-    button_hits: buttons.map(hit),
+    button_hits: buttons.map((b) => ({
+      testid: b.getAttribute("data-testid"),
+      label: (b.innerText || "").replace(/\s+/g, " ").trim().slice(0, 24),
+      ...hit(b),
+    })),
     scrollable_ancestors_of_first_button: scrollers,
     document_scroll_height: document.scrollingElement.scrollHeight,
     document_scroll_top: document.scrollingElement.scrollTop,
@@ -117,7 +124,7 @@ for (const locale of ["zh-CN", "en"]) {
   const step = async (name, extra = {}) => {
     const reading = await page.evaluate(READ_SCREEN);
     steps.push({ name, ...extra, screen: reading });
-    await page.screenshot({ path: `${OUT}/trash-${locale}-${steps.length}-${name}.png` });
+    await page.screenshot({ path: `${OUT}/trash-${locale}-${name}.png` });
     return reading;
   };
 
