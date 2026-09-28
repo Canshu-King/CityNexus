@@ -1,0 +1,112 @@
+{
+ "base": "http://127.0.0.1:4801/",
+ "arms": [
+  {
+   "arm": "touch",
+   "errors": [],
+   "sealed_entry_found": true,
+   "menu_button_count": 1,
+   "state": {
+    "present": true,
+    "box": [
+     0,
+     0,
+     300,
+     844
+    ],
+    "centre": [
+     150,
+     422
+    ],
+    "scroll_top": 0,
+    "scroll_height": 4512,
+    "client_height": 844,
+    "overflow_px": 3668,
+    "touch_action": "auto",
+    "overflow_y": "auto",
+    "overscroll": "auto"
+   },
+   "gesture_sent": true,
+   "result": {
+    "scroll_top": 0,
+    "events": {
+     "touchstart": 1,
+     "touchmove": 0,
+     "touchmove_cancelled": 0,
+     "wheel": 0,
+     "wheel_cancelled": 0,
+     "pointerdown": 0,
+     "target_desc": [
+      "BUTTON#.",
+      "DIV#.",
+      "NAV#v8-nav-drawer.",
+      "DIV#.v8-product-shell",
+      "DIV#root.",
+      "BODY#."
+     ],
+     "scrim_over_drawer": false,
+     "scrim_nodes": [
+      "DIV.v8-map-overlay-stack@330x139",
+      "BUTTON.v8-drawer-backdrop@390x832"
+     ]
+    }
+   },
+   "moved_px": 0,
+   "screenshot": "D:/moodle/_qoder_cmdr_ref_20260921/live_checks/_drawer_r3/drawer_touch.png"
+  },
+  {
+   "arm": "mouse",
+   "errors": [],
+   "sealed_entry_found": true,
+   "menu_button_count": 1,
+   "state": {
+    "present": true,
+    "box": [
+     0,
+     0,
+     300,
+     844
+    ],
+    "centre": [
+     150,
+     422
+    ],
+    "scroll_top": 0,
+    "scroll_height": 4512,
+    "client_height": 844,
+    "overflow_px": 3668,
+    "touch_action": "auto",
+    "overflow_y": "auto",
+    "overscroll": "auto"
+   },
+   "gesture_sent": true,
+   "result": {
+    "scroll_top": 500,
+    "events": {
+     "touchstart": 0,
+     "touchmove": 0,
+     "touchmove_cancelled": 0,
+     "wheel": 76,
+     "wheel_cancelled": 0,
+     "pointerdown": 0,
+     "target_desc": [
+      "BUTTON#.",
+      "DIV#.",
+      "NAV#v8-nav-drawer.",
+      "DIV#.v8-product-shell",
+      "DIV#root.",
+      "BODY#."
+     ],
+     "scrim_over_drawer": false,
+     "scrim_nodes": [
+      "DIV.v8-map-overlay-stack@330x139",
+      "BUTTON.v8-drawer-backdrop@390x832"
+     ]
+    }
+   },
+   "moved_px": 500,
+   "screenshot": "D:/moodle/_qoder_cmdr_ref_20260921/live_checks/_drawer_r3/drawer_mouse.png"
+  }
+ ],
+ "verdict": "TOUCH_DOES_NOT_SCROLL_MOUSE_DOES"
+}
