@@ -1,0 +1,73 @@
+{
+ "at": "2026-09-28T19:42:34+0800",
+ "line": "refs/heads/mirror/integration-frontend-apple-pass1",
+ "tip": "1e3f9479aa27270c4f497c90ef0d21e32694812c",
+ "private_db": "D:\\moodle\\_qoder_cmdr_0402_walk\\private_0402.db",
+ "rows_before": 1,
+ "child_pid": 43472,
+ "listener_pid": "17064",
+ "listener_parent": 43472,
+ "ready": true,
+ "L0": {
+  "status": 200,
+  "count": 1,
+  "chosen": "22222222-2222-4222-8222-222222222222"
+ },
+ "D1": {
+  "status": 204
+ },
+ "L1": {
+  "status": 200,
+  "count": 0,
+  "still_listed": false
+ },
+ "B1": {
+  "status": 200,
+  "content_type": "application/json",
+  "count": 1,
+  "shows_the_binned_trip": true,
+  "row": {
+   "id": "22222222-2222-4222-8222-222222222222",
+   "traveler_id": "11111111-1111-4111-8111-111111111111",
+   "title": "One Day in Nexus City",
+   "city_code": "CNX-DEMO",
+   "timezone": "Asia/Shanghai",
+   "start_at": "2026-10-10T09:00:00+08:00",
+   "end_at": "2026-10-10T19:00:00+08:00",
+   "budget": {
+    "amount_minor": 50000,
+    "currency": "CNY"
+   },
+   "planning_mode": "balanced",
+   "status": "ACTIVE",
+   "active_plan_version_id": "55523d40-cafe-5bd2-b30a-de057ec7a839",
+   "current_activity_id": "98af0be5-966b-5f49-b699-5dfdceea8ab6",
+   "deleted_at": "2026-09-28T11:42:34.038229Z",
+   "bin_state": "IN_RECYCLE_BIN"
+  }
+ },
+ "U1": {
+  "status": 200
+ },
+ "B2": {
+  "status": 200,
+  "count": 0,
+  "binned_trip_gone_from_bin": true
+ },
+ "O1_openapi": {
+  "status": 200,
+  "declares_the_door": true
+ },
+ "verdicts": {
+  "list_shrank_after_delete": true,
+  "bin_answers_200": true,
+  "bin_shows_the_trip": true,
+  "bin_row_carries_its_own_moment": true,
+  "empty_bin_is_200_not_404": true,
+  "undelete_returned_200": true,
+  "app_generated_spec_declares_it": true,
+  "listener_is_my_child": true
+ },
+ "overall": "GREEN",
+ "child_exit": 1
+}
