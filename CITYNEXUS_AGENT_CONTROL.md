@@ -16588,6 +16588,31 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### CMDR 0928-1647 · 号令者 · ORD-0394 立案：读路由不发货任何坐标，所以刚落的地图↔卡片选中在真机场景里进不去
+
+**先说结论（我亲测，不是门说的）**：ORD-0390 已经落上权威线（`ad492c444911bede734a46836c82dbb59d2b9b5f`），但我用真构建走 390×844 时**地图面板一格都没挂上**：屏上出现的是「尚未获取地图位置 / 这个行程还没有可信的坐标」，`v8-map-panel .v9-map-marker` 命中 0 个、`map-stop-*` 行 0 条。走查收据 `evidence/cmdr-1647/walk_0390_receipt_r1.json`（blob ad2af8b0f46352f2ebebb60ad885871a6bb3da49）与逐字屏读 `evidence/cmdr-1647/walk_0390_screen_text_r1.txt`（blob 76158e5af61e4345849a68354acbdc7fe186570c）。
+
+**成因我量到的是后端，不是前端判据、也不是数据缺**：
+
+- 库里数据是好的：16 枚 place 全部带 lat/lng 且 `coordinate_system='WGS84'`（`coordinate_system is null` 的行数是 0），journey 有 `active_plan_version_id`，6 条 activity 全部 `place_id` 非空——逐格行数列在 `evidence/cmdr-1647/reset_rowcounts_r1.json`（blob 2d7420ceb070135b475acdd99bfc938c064b6973）。
+- 但**三条读路由的正文里一次都没有 latitude/longitude 字样**（逐条原始响应与长度见 blob 2d7420ceb070135b475acdd99bfc938c064b6973 与 blob ad2af8b0f46352f2ebebb60ad885871a6bb3da49）：`/api/v1/demo/scene` body_bytes=583、`/api/v1/journeys/{id}` body_bytes=475、`/api/v1/journeys/{id}/twin` body_bytes=2658，`latitude` 命中次数全为 0；`/twin` 的顶层键只有 active_plan_version_id / context / current_activity_id / journey_id / latest_event_id / projection_status / snapshot_at / upcoming_commitments，**没有 activities 数组**。
+- 于是前端只能诚实地走空坐标那一支：见 `frontend/src/components/v8/MapPanel.tsx:62` 的 noLocation 状态与 `frontend/src/components/v8/MapPanel.tsx:430` 的 noLocationTitle 渲染，文案在 `frontend/src/i18n/mapPanelCopy.ts:31`。
+
+**为什么门禁没拦住它**：车道那份 both-ways e2e 在自己 fixture 里造点位，所以它的臂是绿的；我在**同一枚落地代**的构建上跑同一支 spec 的前向臂，它停在 `frontend/e2e/qoder-map-ord0390-selection-both-ways.spec.ts:34` 等 `v8-maplibre-panel` 可见，实测 element(s) not found 判 failed，原始输出 `evidence/cmdr-1647/ord0390_e2e_forward_r1.txt`（blob 119c3db7b69c3ea804d9b48a7f2d9441f01a016c）。这条按既有裁法记为「fixture 绿 / 真场景不可达」，不撤 ORD-0390 的 LANDED，但 ORD-0390 在真机上不能算验收。
+
+**ORD-0394（新单，谁接都能直接起步）**：让读路由把活动地点的坐标真的发出去，把地图与卡片接回真数据。
+
+1. 先量再改：逐条打印上面三条路由当前暴露的 activity 形状（有无 location、有无 place 摘要），写成同行带 `path:line` 的清单；这条是我判「补哪一层」的唯一依据。
+2. 最小修：在 `/twin`（或 `frontend/src/api/citynexus.ts` 真正读的那条路由）为每条 activity 带上 `location` = {latitude, longitude, coordinate_system, place_id}，坐标取自库里的 `places`，**不得**前端自己造城市中心；缺值的行要具名占位（沿用 ORD-B 的形状），不许静默丢行。
+3. 契约同步：`contracts/openapi.yaml` + `frontend/src/generated/api.ts` 同一笔里改，改完跑编译臂（`FRONTSRC_BUILD_PREREQ`）。
+4. 验收要件：①`/twin` 正文里 `latitude` 命中次数 > 0 且逐条对应 activity，②在 390×844 走查里 `v8-maplibre-panel` 可见、`.v9-map-marker`（生成处 `frontend/src/components/v8/MapPanel.tsx:315`）命中数 ≥ 2、`map-stop-*` 行（生成处 `frontend/src/app/V8Experience.tsx:3779`）数 ≥ 2，③前向臂与反向臂都在**这条真数据**上过（不是 fixture），④反例：把某条 activity 的坐标置空后屏上必须走「没有可信坐标」那一支（`frontend/src/components/v8/MapPanel.tsx:430`）而不是画到别处。
+5. 范围红线：`activities` 为空的另一件事我另开单（见下），这张单只管坐标发货；不许顺手改 `demo/reset` 的重播种逻辑。
+
+**顺带记一条现状缺陷（暂不开单，等用户定优先级）**：`demo/reset` 的合法重播种会把行程落成 `activities=0、plan_versions=0`（同一份 `evidence/cmdr-1647/reset_rowcounts_r1.json` blob 2d7420ceb070135b475acdd99bfc938c064b6973 里 iso 快照那组数），也就是说「使用封存的演示行程」这条入口本身给不出下一站；我只在**副本库**上验的（`D:/moodle/_qoder_cmdr_ref_20260921/_cmdr_iso_1634/iso.db`，16:3x 用 sqlite3 backup API 从用户库取的快照），用户库 `D:/moodle/_qoder_preview_20260920/_preview.db` 全程 `mode=ro` 只读，六张表行数与 16:36 读数一致（journeys=1、plan_versions=1、activities=6、places=16、travelers=1、commitments=1）。
+
+**手机链现状（如实）**：hop4 隧道仍不可解析（本机 `getaddrinfo failed`，7892/7897/9097 无人监听），所以 `served_generation` 仍是 cf0ed0b531681181642a30120a1b41f2bf681a40，新构建 `_build_1f8d706` 的 `/assets/index-BuFUA540.js` 只在我这条私有预览口（:4785 → :8693/:8694）上验过字节；今天五笔落地的用户面一律 `NOT-DEPLOYED-OBSERVED`。尺拒绝切换的那份读数 `evidence/cmdr-1647/deploy_preflight_r1.txt`（blob 46914c7499c5c4c1a1ac5800db7bd4295c5b8f74）。
+
+
 ### CMDR 0928-1624 · 号令者 · 五笔落地 + ORD-0371 尺修 + 手机链一处如实断链
 
 **落地（权威线只由我移动，ff-only，`AUTHORITATIVE_BRANCH_SINGLE_WRITER_V1`）**
