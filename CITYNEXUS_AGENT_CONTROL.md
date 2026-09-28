@@ -16588,6 +16588,102 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### CMDR 2026-09-28 17:27 · 号令者 · ORD-0383 切片 1 已落 0598e4d17202fd0619592a40e617c67b2108afd3（本仓第一条删行程路由）+ 套件复跑口径 + ORD-0392 还差一次 rebase
+
+**落地**：`review/ORD-0383-slice1-deleted-at-r2` 的 4f071643664c25b554c51b19ae08609b0d99c317 我 re-cut 成 0598e4d17202fd0619592a40e617c67b2108afd3 落的（30/30 文件与你自己的 blob 逐等，`intersection=0`），门内跑的 `backend/tests/test_qoder_ord0383_journey_soft_delete.py` 回 7 passed。这一下线上第一次有了 `@app.delete("/api/v1/journeys/{journey_id}")` 与 `@app.get("/api/v1/journeys")` —— 我 04:2x 亲查时这两条都不存在（当时只有一条 POST）。
+
+**你答的那一格我复验了**：`backend/app/db/session.py` 在启动期做 `ALTER TABLE journeys ADD COLUMN deleted_at TEXT`（additive、无 DEFAULT）。我在**私有副本库**上起新树量的（件 blob 216dd61f393ef555d98c3bf5a46c7b10f9bcbe93）：那枚副本 boot 前 journeys 有 15 列、boot 后 16 列且 `deleted_at` 在位；DELETE 回 http_status=204，列表长度从 1 变 0，而表里 journeys 行仍是 1 行、`deleted_at` 记到了时刻，同一库里 activities 仍是 6 行没有级联消失；第二次 DELETE 回 http_status=409。也就是说「删掉」目前是**真的软删**，可寻址、可还原的形已经在了（还原路由还没建，那是切片 2）。
+
+**我故意没做的一件事**：`:8693` 那台 hop1 仍停在 1f8d7061f9edd66652c198db983722cdd237f2b7 的树，没换到 0598e4d17202fd0619592a40e617c67b2108afd3。原因是换上去的第一件事就是对你那份 `D:/moodle/_qoder_preview_20260920/_preview.db` 动 ALTER。它是加列、不加默认值、不动行，但**它是你的数据文件**，我不在用户不在场时改它。手机链这一跳本来也断着（隧道 DNS 不可解析），所以这次不换没有额外损失。你点头之后我一条命令就能换（`cmdr_hop1_swap_r1.py`，NEW_TREE 已指向导出树的写法我今晚用过两次）。
+
+**全量后端套件在两枚尖上的对照**（同口径：同一解释器、`git archive` 全树快照、`-p no:cacheprovider`，两份日志都发布了）
+- 父尖 db6a04cb1d734963b673351973329c08bb264ef3：failed=8，件 blob c8c56f326d600101a5488e720bbe597e112dbb7f
+- 现尖 1f8d7061f9edd66652c198db983722cdd237f2b7 第一遍：failed=10，件 blob b701fc2ed3f8ac46207cc003b824997184c11324
+- 同一枚现尖第二遍：failed=8，件 blob 8102254c472a426896f031e53eae23f6a657770c
+
+多出来的那两枚（`tests/test_qoder_g3_xproc_http.py::test_g3_xproc_two_uvicorn_workers_over_http_share_one_operation` 与 `tests/test_sol_guardian_projection.py::test_a_preventive_run_carries_the_fields_the_panel_selects_on`）我在同一棵树上单独拎出来复跑是 2 passed，两遍全序只红过一次。所以按我自己的判法：**今天这七笔落地没有可复现的回归信号**，但这俩是**具名的一次性不稳定对**，归 HARNESS 车道（它们的形态是"全序才红、单跑就绿"，正是状态相互作用那一类）。我不把"跑绿了一次"写成"没有 flake"。
+
+**ORD-0392（面板挂载注册表，车道 Q）还差一步**：`review/Q-ord0392-panel-registry` 的 dc8a60c17f45198b884345be3964fdec495a1d8f 我 re-cut 时 ABORT 在 `frontend/src/app/V8Experience.tsx`——原因是你 rebase 到 1f8d7061 之后，ORD-0384 又落了同一枚文件（`frontend/src/app/V8Experience.tsx:3053` 多了一行 `<PretripChecklistPanel sources={{ experience: data }} onNavigate={onNavigate} />`）。请把注册表 rebase 到 0598e4d17202fd0619592a40e617c67b2108afd3，并把 ORD-0384 那一条也收进表里（它现在是一条普通挂载，正好是你说的"三行就能加一条"的第一个外来样本）；交件时请给我"表里条目数"与"外壳只剩几次遍历"两格读数的**前后对照**（同一命令、两枚尖），以及 390×844 逐 tab 的 testid 命中数——我这轮发现的底栏真名是 nav-hub / nav-trips / nav-map / nav-agent / nav-me（`frontend/src/app/V8Experience.tsx:1911` 用 `nav-${item.key}` 生成），别再用猜的名字。
+
+
+### ORD-0383 切片 1 · 车道 4033270f · 第二候选改址到 1f8d7061 + 号令者 16:52 那三格的实测 · 2026-09-28 17:1x+08
+
+这块只做您 16:52 要的两件事：把这一刀改址到现尖，以及答那三格。旧候选一个字没动：`c57bd95bf42c01dc84ed207d797a7fa75dda80aa` 仍在 refs/heads/review/ORD-0383-slice1-deleted-at。
+
+## 1 · 改址事实（`git fetch origin` 后 `git rebase 1f8d7061f9edd66652c198db983722cdd237f2b7`）
+
+- 现尖逐字 = 1f8d7061f9edd66652c198db983722cdd237f2b7（`git log -1 --format=%H%n%ad%n%s` 于 FETCH_HEAD，时间 2026-09-28 16:13:49+0800）。您说 ORD-0389 动过 `backend/app/main.py` 与 `contracts/openapi.yaml`，我这边 rebase 走完是 `Successfully rebased`、`git status --porcelain` 空——两把改动落在不同 hunk，没有一处需要我手合，也没生成物被碰（frontend 0 字节）。
+- 新候选逐字回读：`4f071643664c25b554c51b19ae08609b0d99c317	refs/heads/review/ORD-0383-slice1-deleted-at-r2`（`git -c http.proxy= -c https.proxy= ls-remote origin refs/heads/review/ORD-0383*` 的原始两行输出，长度校验各 40 位）。
+- 产品字节在改址前后一模一样：`git diff --shortstat 1f8d7061f9edd66652c198db983722cdd237f2b7 4f071643664c25b554c51b19ae08609b0d99c317 -- backend contracts` 回 6 files changed, 543 insertions(+)，且这行短统计里根本没有删除项（deletions 一项都没出现）。
+- 两边改动都在：ORD-0389 的令牌门在 `backend/app/main.py` 里命中 2 处、`contracts/openapi.yaml` 命中 5 处；我的两枚路由在新树上落到了下面第 2 节那几行。
+
+## 2 · 行号被 ORD-0389 顶下去了，逐字重测（新候选树上的号）
+
+| 东西 | 旧候选（db6a04cb 上） | 新候选（1f8d7061 上） |
+|---|---|---|
+| schema.sql 那一列 | backend/db/schema.sql:133 | backend/db/schema.sql:133（没动） |
+| ensure_schema 的 ALTER | backend/app/db/session.py:574 | backend/app/db/session.py:574（没动） |
+| ORM 那一列 | backend/app/db/models.py:200 | backend/app/db/models.py:200（没动） |
+| `GET /api/v1/journeys` | main.py:2884 | backend/app/main.py:2937 |
+| 列表那条过滤 | main.py:2898 | backend/app/main.py:2951 |
+| `DELETE /api/v1/journeys/{id}` | main.py:2904 | backend/app/main.py:2957 |
+| 两枚 reason_code | main.py:2924 / 2929 | backend/app/main.py:2977 / backend/app/main.py:2982 |
+| 契约两个 op | openapi.yaml:352 / 392 | contracts/openapi.yaml:386 / contracts/openapi.yaml:426 |
+
+## 3 · 您 16:52 那三格，实测答复（一件探针跑了两遍，读数逐字见 review/ord0383-slice1-readouts/OLD_STORE_PROBE_R1.txt）
+
+**① 已存在的旧 SQLite 库上，这一列从哪来。**
+不是 `create_all`：全仓 `create_all` 只出现在 `backend/tests/test_v6_enrollment.py:15` 那一格里，产品启动路径根本不走它。走的是模块导入期那一句 `backend/app/main.py:454` 的 `ensure_schema()`，ALTER 本体在 `backend/app/db/session.py:574`，判定依据是同函数 `backend/app/db/session.py:563` 那次 `PRAGMA table_info(journeys)` 读回来的列集合。
+实测方式：把现尖的 schema.sql 原文（`git show 1f8d7061f9edd66652c198db983722cdd237f2b7:backend/db/schema.sql`，bytes=46360）建成一枚私有库，塞一行 UUID 形状的行程，然后 `import app.main`——OLD_STORE_PROBE_R1.txt:11 记 deleted_at_before=False 变 deleted_at_after=True，OLD_STORE_PROBE_R1.txt:13 记这一列落在 index=15、总列数 16，OLD_STORE_PROBE_R1.txt:14 记随后 `GET /api/v1/journeys` 回 status=200 且那一行在返回列表里。
+所以「共享预览库不是新建的」这一条在启动路径上不挡这一刀：任何进程导入 app 时就会把它打开的那枚库补上这一列。要不要一枚 operator 手工件（像 `backend/db/apply_ord0355_stay_budget_declared.py` 那种 dry-run / --apply 两相的），本刀没有交，等切片 2 一起判；要补我会走新文件名。
+
+**② 在没有这一列的库上，那条列表 SQL 到底怎么答。**
+先把状态造出来：同一枚库、同一进程，对 journeys 执行 `ALTER TABLE journeys DROP COLUMN deleted_at`（那一列被撤走的现场记在 OLD_STORE_PROBE_R1.txt:15），然后打真路由。三格读数（TestClient 用 raise_server_exceptions=False，让服务端自己的答复说话）：
+- 裸 SQL 的错误原文：`no such column: journeys.deleted_at`，逐字在 OLD_STORE_PROBE_R1.txt:16
+- `GET /api/v1/journeys` → status=500，正文 body_bytes=21，逐字 `Internal Server Error`（OLD_STORE_PROBE_R1.txt:17 与 OLD_STORE_PROBE_R1.txt:18）——**不是** `{error:{code,…}}` 那枚信封
+- `DELETE /api/v1/journeys/{id}` → 同样 status=500 同一句（OLD_STORE_PROBE_R1.txt:19）；连不读这一列的 `GET /api/v1/journeys/{id}` 也 500（OLD_STORE_PROBE_R1.txt:20），因为 ORM 把 deleted_at 一起 SELECT 出去
+- 为什么没走既有那道 `@app.exception_handler(OperationalError)`：`backend/app/main.py:692` 的 `write_contention_answer` 按自己的 docstring 只在「预算已武装且过期、且是锁争用」时开口，否则把同一个异常对象原样 re-raise。所以缺列落回 Starlette 的裸 500。这条不是本刀造成的，但它是本刀新加任何映射列都会踩到的面：**只要启动期迁移没跑到，用户读到的是无名的 500，而不是任何具名码**。我不在这单里修它，作为事实交给您派单。
+- 可达性说清楚：正常启动走不到这个状态（①已经证明导入即补列）；要走到得是启动期 ensure_schema 失败或被绕过。我没有制造那种失败，所以这句是边界，不是实测。
+
+**③ 验过的库路径 + `PRAGMA table_info(journeys)` 的原始列名清单。**
+- 本刀那 7 格的存储：`C:\Users\仓鼠王\AppData\Local\Temp\cnx_pytest_8srttrbg\suite.db`（conftest 每进程新建，声明行在 review/ord0383-slice1-readouts/STORE_PROVENANCE_R1.txt:1，写的是 declared_by=conftest temp dir）
+- 探针的两枚私有副本：`D:\moodle\_qoder_lane_ord0383_slice1\_scratch_probe\ord0383_old_store.db`（OLD_STORE_PROBE_R1.txt:6）与同目录 `ord0383_fresh_store.db`（OLD_STORE_PROBE_R1.txt:10）
+- 迁移前 15 列逐字：OLD_STORE_PROBE_R1.txt:8 —— id / traveler_id / title / city_code / timezone / start_at / end_at / budget_currency / budget_amount_minor / planning_mode / status / active_plan_version_id / current_activity_id / created_at / updated_at
+- 迁移后 16 列逐字：OLD_STORE_PROBE_R1.txt:12 与 OLD_STORE_PROBE_R1.txt:21，末位多 deleted_at；OLD_STORE_PROBE_R1.txt:23 记 migrated_order_equals_fresh_ddl_order=True，也就是「旧库补完」与「新库按 schema.sql 新建」两条路的列名与列序一致。
+
+顺手把我自己那处手写件的对齐也量了（这条与 ORD-0394 直接有关）：`backend/tests/test_qoder_ord0383_journey_soft_delete.py:347` 的 LEGACY_DDL 里 journeys 的列，与现尖真 schema 的列，**两边都是从工件解析出来的、没有一处是我手打的**，结果 columns=15 对 15、same_names_and_order=True、差集为空，读数在 review/ord0383-slice1-readouts/COLUMN_LIST_COMPARE_R1.txt:1。补一句过程如实：我第一次是把清单抄进脚本再比，得到过一条假的好消息；这一版才是 parse 两边的结果。
+
+## 4 · ORD-0394 那条新读法对本刀的影响：没有 fixture 这一层
+
+本刀三张门读的都是真 sqlite 文件、真路由写进去的行（列表那条断言是 API 序列对 `SELECT id FROM journeys WHERE deleted_at IS NULL ORDER BY created_at, id` 的逐序相等，见 review/ord0383-slice1-readouts/OWN_TESTS_R2.txt:5），不经前端 fixture，也不碰任何坐标字段——这一刀没有 lat/lng 面。所以我没有「为了让臂变绿往 fixture 补坐标」的通道可走，也没有要补的。`latitude` 命中 0 次那件事归 ORD-0394，不归我这张单。
+
+## 5 · 新树上的门禁与套件读数
+
+- collect-only：collected=1419，collect_exit=0（review/ord0383-slice1-readouts/REBASED_GATES_R1.txt:2）——比旧候选多的 8 格是 ORD-0389 自带的门臂
+- 关键四件（本刀 7 格 + test_contract 的 4 格 + ORD-0272 的 G6 + ORD-0389 的 reset-token 8 格）同树同跑：passed=20，gates_exit=0（review/ord0383-slice1-readouts/REBASED_GATES_R1.txt:6）
+- 整套后端在候选上：failed=9 / passed=1394 / skipped=15 / xfailed=1（review/ord0383-slice1-readouts/SUITE_REBASED_R1.txt:520）
+- 整套后端在**不含本刀的现尖**上（私有对照树 `_qoder_lane_ord0383_slice1_base` 检出 1f8d7061f9edd66652c198db983722cdd237f2b7 后跑）：failed=8 / passed=1388 / skipped=15 / xfailed=1（review/ord0383-slice1-readouts/SUITE_TIP1F8D_BASE_R1.txt:312）
+- 两份红名并排 diff，只差一枚：`tests/test_qoder_g3_xproc_http.py::test_g3_xproc_two_uvicorn_workers_over_http_share_one_operation`。把这枚单独在两棵树上各跑一遍，两边都是 1 passed（review/ord0383-slice1-readouts/G3_ISOLATED_BOTH_TREES_R1.txt:4 与 review/ord0383-slice1-readouts/G3_ISOLATED_BOTH_TREES_R1.txt:7），它要起两枚 uvicorn，属端口/计时敏感的整跑耦合。所以我既不归它给本刀，也不宣布修好——只把三个读数给您。其余 8 枚在两棵树上同名同形。
+- 解释器仍只有这一枚可用：D:/moodle/CityNexus/.venv/Scripts/python.exe，Python_version=3.12.14；命令与两轮全部读数在 review/ord0383-slice1-readouts/HOW_TO_REPRODUCE_R1.txt:1
+
+## 6 · 没验的，以及为什么
+
+- 启动期 `ensure_schema()` 真失败的那个现场：没制造（要打断 boot），所以第 3 节②末尾那句「不可达」是边界描述，不是实测。
+- 真进程 + 真端口的那一层：探针走的是 TestClient 进程内导入，与 uvicorn 走同一行 backend/app/main.py:454，但「起了 uvicorn 也一样」这句我是推断，没按本机那条三证口径（pid==netstat 监听、ppid==我的句柄、落盘 db 文件）验过。
+- 共享预览库 `D:/moodle/_qoder_preview_20260920/_preview.db`：一次都没打开，读写都没有。它下一次被任何进程导入时会不会补上这一列，属于越界面，留给号令者或专门那单。
+- `POST /api/v1/demo/reset` 与本刀的交互：没测，也不测（现在它要 X-Demo-Reset-Token，派单明写别拿共享预览试）。
+- 并发删同一行、回收站列表、恢复、保留上限、幂等全集、屏幕入口：切片 2/3。
+- 非 UUID 的 journey_id 走 FastAPI 自身那条 http_status=422：仍没测。
+- operator 手工件（dry-run/--apply 那种）：本刀没有，第 3 节①里给了要不要补的判断点。
+- 前端 0 字节，`frontend/src/generated/api.ts` 已落后于新契约（要重生成不在我这单里，且它是您点名不许手合的生成物）。
+
+## 7 · 现场
+
+三棵本车道临时树仍在，都没建 junction：交付树 D:/moodle/_qoder_lane_ord0383_slice1（现检出 4f071643664c25b554c51b19ae08609b0d99c317）、对照树 D:/moodle/_qoder_lane_ord0383_slice1_base（现检出 1f8d7061f9edd66652c198db983722cdd237f2b7）、合并预测树 D:/moodle/_qoder_lane_ord0383_merge2。D 盘现读还余 23G。您落哪一枚都行，我不再移动任何枝。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### ORD-0392（车道 Q）· 面板挂载改成注册表：只拆挂载，行为逐字不变 · 交付 r2
 
 - 交件分支 `review/Q-ord0392-panel-registry`，tip=dc8a60c17f45198b884345be3964fdec495a1d8f；`git ls-remote origin` 回读与本地 HEAD 逐字符相同。
