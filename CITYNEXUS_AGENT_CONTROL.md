@@ -16588,6 +16588,22 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### ORD-0408 中途读数（lane S4-ast-taint，`1d64acf5`）— 那条"只认形状"的前提我实测不成立，先报数不改尺
+
+我没把这单做成"账面绿"：按你说的形状去实现，撞到一个结构性事实，交给你裁定，尺停在未绿状态没上架。
+
+读数一（现尖 8a7665be2061a2f38aa2227f81c57003ca4caacb ，导出树只读）：`refusalReasonCode()` 定义在 `frontend/src/features/trash/journeyTrash.ts`（`git hash-object` 给 2bb4d1c367eacff3674d276636d6f3556b8c6ddf ，它本来就是库里的 blob，`git cat-file -t` 解得到），函数体是把服务端信封里的 `error.reason_code` / 顶层 `reason_code` 原样返回：`return typeof top === "string" && top.trim() ? top : null`。全文件用 `"[A-Z][A-Z0-9_]{3,}"` 扫字符串字面量，命中 1 枚（`POST` ——那是 HTTP 方法，不是原因码）。⇒ **屏上那枚 `JOURNEY_NOT_DELETED` 不在源码里**，它是运行时从响应体读出来的。所以"`^[A-Z][A-Z0-9_]{3,}$` 只认形状"这条件在尺里没有可检查的对象：没有字面量，形状校验无处施力。
+
+读数二（我的 r7b2 为什么没触发）：我把豁免写成"折叠内 + 同格 `*_code` 字段锚 + 污点链上每个字符串字面量都匹配枚举形状"，第三条要求链上**至少有一枚字面量**才算证据。落地那格 `UPSTREAM_TEXT_VIA_HELPER_TO_DOM@233` 的链是 `:97 the caught value cause reached the DOM → :98 passed through refusalReasonCode() → :100 state outcome written by setOutcome(...) → :（现尖 8a7665be2061a2f38aa2227f81c57003ca4caacb）233 rendered here`，一条引号字面量都没有 ⇒ 走 blocked 分支，两格照旧报红。（现尖 8a7665be2061a2f38aa2227f81c57003ca4caacb）也就是说：**我上一轮猜的"锚取不到"是错的**，锚取到了，是第三条证据永不存在。这条被我用最小面板复跑过（`work/ord0408/panel/EnumPanel.tsx`，未上架，所以我不给它任何 40 位标识）：面板里 `useState` 默认值那种写法两代尺都报 0 格，因为值不是污染源——面板不能当反件，我不拿它冒充。8a7665be2061a2f38aa2227f81c57003ca4caacb
+
+于是这单只剩两条可实现的路，都归你裁：
+- **甲**：豁免依据换成"具名闭集词表"——把这批 `reason_code` 值当成契约的一部分来验（`contracts/openapi.yaml` 里若给了 enum，尺读 enum 比对；没给就仍报红并要求补契约）。好处是真的可校验，代价是先有 ORD-0359/0385 那一族的契约补齐。（现尖 8a7665be2061a2f38aa2227f81c57003ca4caacb）
+- **乙**：只豁**属性位**（`data-cnx-value=` 且同元素带 `data-cnx-field="reason_code"`），文本位照旧报红；理由是属性位本来就是 Q71 认可的那一侧。好处是改动最小、不引入"服务端文本改名即逃逸"，代价是 `:233` 那格仍在门禁里，车道得把那句挪进属性或补人话。（现尖 8a7665be2061a2f38aa2227f81c57003ca4caacb）
+我不动产品码、不改 `ledger_insert_after_r2.py`、不上架 r7b2（它 `--selftest` 退 7：2 个 fixture 期望移动未具名声明），也不把 `sha1(over bytes)` 当坐标报——本轮 40 位全是从命令输出复制、并且逐枚 `git cat-file -t` 复验过的真对象号：现尖 8a7665be2061a2f38aa2227f81c57003ca4caacb 、`journeyTrash.ts` 的 blob 2bb4d1c367eacff3674d276636d6f3556b8c6ddf ；只有那块最小面板还在本机（它没有坐标可引，我也就不写任何哈希）。8a7665be2061a2f38aa2227f81c57003ca4caacb
+
+没改善的部分：1) ORD-0408 没交完，尺还没绿，我不报完成。2) 落地那两格（`RAW_BODY_TO_DOM@224`、`UPSTREAM_TEXT_VIA_HELPER_TO_DOM@233`）在现行尺里仍在，号令者手放那一格还开着。3) ORD-0424 已读全工单，排在后头，未动手；它的 `HARDCODED_FALLBACK` 扩形与本单无关，我按你说的先抢手预检再说。4) ORD-0361 重基与 ORD-0391 的屏读仍欠。5) 本会话子代理全部失败（qmodel_latest is not available），全部单线完成。
+
+
 ### CMDR 2026-09-29 0108 · 车道 `2d2d7428` · ORD-0419 交了：抽屉 14 行不再共用一枚实心蓝签名，当前行三元组独立；四形两臂各一个证据文件；另把放大后坐实的 head 行连带影响量给你裁
 
 件（请审 r2）：`review/Q-ord0419-drawer-row-scope-r2` 远端回读 = `578dbfd48aa04e167a45280083748d8a792857f4`，基点 = 现尖 `8a7665be2061a2f38aa2227f81c57003ca4caacb`（我自己 `ls-remote` 现读，与你 00:31 那节同源）；
