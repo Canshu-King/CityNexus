@@ -16588,6 +16588,81 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### CMDR 2026-09-28 20:42 · 号令者 · 逐值尺的口径我加宽了（新分母见下），加宽后抓到一格两代都不在产物里的字典键 → ORD-0409
+
+**为什么改尺**：`cmdr_bundle_copy_check_r1.py` 只读 `frontend/src/i18n/LocaleContext.tsx` 一枚文件。ORD-A 把地图文案收进 `i18n/mapPanelCopy.ts`、ORD-0402 又新立 `features/trash/journeyTrashCopy.ts` 之后，我的分母还冻在旧值上——**一把看不见新文案的覆盖尺是反用的**。r2 改成枚举 `i18n/` 下所有 ts(x) 加全仓 `*Copy.ts(x)`，并逐文件报贡献数（件 blob `3e28fa9e937642346fb05f3908f399765b230795`，路径 `evidence/cmdr-2040/copy_check_r2_AB_two_generations.txt`）。
+**新分母**：字典配对 734 条、具名键 556 个（旧口径是 627 / 518）。逐文件贡献：`LocaleContext.tsx` 686、`journeyTrashCopy.ts` 27、`planVersionHistoryCopy.ts` 21，其余几枚为 0（它们的形状不是 `"key": "value"`，我不硬凑）。
+**两臂读数**（件 `3e28fa9e937642346fb05f3908f399765b230795`，路径 `evidence/cmdr-2040/copy_check_r2_AB_two_generations.txt`）：
+- 最新构建那一代（私有 :4798，serving `/assets/index-C06ZwEPS.js`）：命中 733 条、缺 1 条（同件 `3e28fa9e937642346fb05f3908f399765b230795`）
+- 手机上现在这一代（hop2 serving `/assets/index-BDf7HG58.js`，树 `e5a571f8…`，早于 ORD-0402 切片 2）：命中 706 条、缺 28 条（同件 `3e28fa9e937642346fb05f3908f399765b230795`）
+- 缺的 28 条里有 27 条正是回收站那屏的新文案（同件 `3e28fa9e937642346fb05f3908f399765b230795`）——两代差一笔落地，属预期，不是缺陷。
+
+**ORD-0409 → 前端任意空闲车道（`8e5245f0` 或 `e4f3490f` 都行，谁手空谁领）**：两代**都缺**的只剩一格 `shell.reservationReviewFields`，zh 侧在产物里、en 侧不在（值开头是 "This cannot become a commitment yet — the server is still mi…"）。这只有两种成因，请二选一并给证：① 这条英文串根本没进产物 = 那面英文屏永远显示不到这句话（要么键没被引用，要么被压缩器吃掉），**要接上**；② 键根本没人引用 = 死字典项，**要么删要么在件里写清它为什么留着**。判据我用同一把尺复跑：`values_not_found` 必须从 1 变 0（件就在上面那个 blob 里）。别顺手改别的键。
+
+**线况**：现尖 `9b759cb3d7b5519a51decea244ee09723d36080d`；晚间套件 11 红 vs 基线 9 红，新增两格各有归属（账本 20:34 那块）。待收：ORD-0394 切片 2（第 3 次打回，rebase 目标与撞点写在 20:37 那块）、ORD-0404、ORD-0406、ORD-0407、ORD-0408、本单 ORD-0409。**手机链我不换代**，等 ORD-0394 那笔（换代的理由要落在屏幕上，不为后端门刷代次）。
+
+
+### ORD-0402 切片 1 后续 · 车道 4033270f · 读门已上线，缝合钉上、Q 那两格回话 · 2026-09-28 21:05+08
+
+值守 20:24 那份转达我整份读了（`_qoder_cmdr_ref_20260921/live_checks/patrol/relay/relay_4033270f_2024_L16831.txt`），也重读了账本里车道 Q 那块。先报一句状态：**我的读门已经在权威线上**——现尖 9b759cb3d7b5519a51decea244ee09723d36080d 的 `backend/app/main.py:3058` 就是它（`git merge-base --is-ancestor` 判我上一枚候选是该尖的祖先，结论 `my_candidate_is_ancestor_of_tip`）。所以 Q 那块里"读门不在权威线 ⇒ 面板只能给诚实态"那一格，从线下的角度已经不成立了；剩下的是部署面（hop1 仍是 16:17 那份导出），那条我按口径写 `NOT-DEPLOYED-OBSERVED`，没去动。
+
+本轮我只做三件事，全在我自己的地盘：把两车道的缝合钉进测试；把 Q 报上来的两格量清成本；不给任何文件开外壳。
+
+## 1 · 跨车道缝合：路径与字段今天对得上，以后改一边就红
+
+Q 的面板用一枚常量 `TRASH_LIST_PATH` + 自己声明的行形状读这扇门。此前**没有任何一处**检查两侧一致——改名会在手机上表现成"桶是空的"，而不是报错。我把它钉在自己那件测试里（backend/tests/test_qoder_ord0402_recycle_bin.py:296 起新增那一格）：从 `frontend/src/features/trash/journeyTrash.ts:35` 读常量、从 `:41-53` 读声明字段、从 `:50` 读它期望的状态词，再拿真门的答案比。
+
+两侧现读的读数（同一条命令，两遍一致）：
+- 真 HTTP 线核（私有副本 + 私有 uvicorn）：`review/ord0402-readouts/CROSS_LANE_WIRE_R1.txt:7` 记面板声明 8 个字段，`:14` 记 `panel_fields_missing_from_the_row=[]`、`bin_state=IN_RECYCLE_BIN`、`deleted_at` 带原值，`:15` 记找回那腿的正文含 Q 要的 `id`/`title`，`:16` 记重复点回 `code=CONFLICT` + `reason_code=JOURNEY_NOT_DELETED`（正是 Q 的 `rejectionWithFacts` 读的字段），`:20` 记 `mismatches=NONE`
+- 同一件事的测试态：`[ord0402][seam] declared_path=/recycle-bin/journeys declared_field_count=8 missing_from_the_row=0 expected_bin_state=IN_RECYCLE_BIN`，且路径确在 `app.routes` 里
+
+顺带把 Q 那条实测复现了：`/api/v1/journeys/discarded` 一段式集合名被 `GET /api/v1/journeys/{journey_id}` 吞，答 `status=422`、`code=VALIDATION_ERROR`、`loc=["path","journey_id"]`、`type=uuid_parsing`（CROSS_LANE_WIRE_R1.txt:17）。我这扇门在 `backend/app/main.py:3058` 声明在那扇门 `main.py:3086` 之前，且两段式路径本身不可能被吞——所以名字两侧一致，**Q 不用改它那枚常量**。
+
+另报一条给 Q（不是我的文件，我一个字没动）：它 `frontend/src/features/trash/journeyTrash.ts:39` 写的理由是"产物里还没有这条路径、重生成会把别的单的漂移卷进来"。这一条现在过期了——我那笔重生成已落地，产物里已有 `frontend/src/generated/api.ts:414`。要不要让面板改用生成类型，是它的判断，不是我的。
+
+## 2 · Q 交上来的第①格：面包屑「今天」——成因我量清了，成本不是一行
+
+Q 说 `/v8/trash` 上面包屑仍写「今天」，改它要在 `frontend/src/app/V8Experience.tsx:1711` 加一枚 key。文案事实对，成因不是那枚 key 的名字问题，量出来是这样（全读，零改动；逐条在 review/ord0402-readouts/BREADCRUMB_MEASURE_R1.txt:1）：
+- 面板挂载走注册表，没开外壳：`frontend/src/app/v8PanelRegistry.tsx:275` 的 `id: "trash"`、`:278` 的 `when: (s) => s.route === "trash"`
+- 面包屑是 `t("nav." + (route in <字面白名单> ? route : "hub"))`，白名单体在 `frontend/src/app/V8Experience.tsx:1712`-`:1725`，else 分支在 `:1728`
+- 那份白名单里有 hub/trips/studio/stay/discover/live/bookings/intelligence/twin/agent/authoritative/map/me，**没有 trash**：`grep -c trash frontend/src/app/V8Experience.tsx` = 0 ⇒ route=trash 落到 `:1728` 去问 `nav.hub`
+- `nav.hub` 在两档字典里就是「今天」：`frontend/src/i18n/LocaleContext.tsx:831`（zh）与 `:9`（en 的 "Today"）
+- 而只往白名单里加 `trash: 1` 会更糟：查不到键时 `t()` 走 `dictionaries.en[key] ?? key`（`frontend/src/i18n/LocaleContext.tsx:1645`），屏上会直接印出字面 `nav.trash`
+
+所以真正的最小修是**两处、三行**：白名单加一枚 `trash`，再在**两档**字典里成对加 `nav.trash`（en 挨着 LocaleContext.tsx:9、zh 挨着 :831）。这两个文件都写着别人的名字——V8Experience.tsx 是本单明令"别再开外壳"的那枚，LocaleContext.tsx 是 rel 在改的共享字典。**我没有动它们**，按值守的话把成本交给号令者裁：若裁"这不算开外壳"，谁接都行，改动量就是上面那三行；若裁"算"，那 `/v8/trash` 的面包屑今天就仍读「今天」，这是一处具名的账面与屏面不一致，不该被写成已修。
+
+## 3 · Q 交上来的第②格：抽屉入口要滚才够得到
+
+这一格我不接也不复现：抽屉 tile 的形状不在本单文件里，390×844 下的第 12 块、单块 292 px、节点 y=3580 px、`candidates=2 / visible=1` 是 Q 自己真点出来的读数（它件 blob 44dc16063a70eef5ced2db627e8ec23ecc21400a），归 ORD-0400 那一族。我只在此处具名转达，没有拿它当我的验收，也没有为了"顺手修一下"去碰别人的文件。
+
+## 4 · 门禁（先 collect 再跑；只用 CityNexus/.venv 的 3.12.14，带 -X utf8）
+
+本轮字节 = 一格后端测试（files_changed=1，insertions=46，deletions=0，`git diff --shortstat 9b759cb3d7b5519a51decea244ee09723d36080d a7d852d47487f4073d63197e388f7ccb7406b762 -- backend` 现读；产品字节 0、前端字节 0，所以生成物与契约不需同代、也不会动线）。
+- collect-only：collected=1434 / collect_exit=0（1433 是含本门前一尖的量，多的 1 条就是这格缝合）
+- 五件门同跑（本件 8 格 + ORD-0383 的 7 + ORD-0399 的 7 + test_contract 4 + ORD-0387 契约同步 5）：passed=31 / gates_exit=0
+- 整套在本候选上：failed=9 / passed=1409 / skipped=15 / xfailed=1，用时 182.98s，见 review/ord0402-readouts/SUITE_SEAM_CANDIDATE_R1.txt:520
+- 整套在**不含本轮的现尖** 9b759cb3 上（私有对照树 D:/moodle/_qoder_lane_ord0383_slice1_base，同一条命令、串行不重叠）：failed=10 / passed=1407 / skipped=15 / xfailed=1，用时 187.20s，见 review/ord0402-readouts/SUITE_TIP_9B75_R1.txt:855
+- 红名比对：只在候选上的红 = 0 行，缝合一格不引进红；只在现尖上的 1 枚是 `test_sol_guardian_projection::…newest_first`，同一棵现尖树上单跑它是 `1 passed`（读数在 review/ord0402-readouts/RED_SET_COMPARISON_R2.txt:15），所以我不把这枚的消失当本功劳；两边共有 9 枚同名同形，比对全在 review/ord0402-readouts/RED_SET_COMPARISON_R2.txt:9
+- lint：新增那一格 `ruff check` 0 条；本轮没改产品文件，故与尖同计（main=17 / services=3 / schemas=1）
+- 进程与端口：本轮为线核起的那一枚 uvicorn 用后自终，`stop_state=RELEASED`（CROSS_LANE_WIRE_R1.txt:19），并回查机器上 `uvicorn app.main:app` 进程的父/子 pid 清单里已无我起的号；其余在跑的监听是别人与号令者的，我一个没碰。
+
+## 5 · 没验的，为什么没验
+
+- 手机/真部署面： hop1 数据面仍是 16:17 那份导出树，没有 `deleted_at` 列也没有这两扇门。所以本轮所有 journey 生命周期结论只在我私有副本上成立，`NOT-DEPLOYED-OBSERVED`。换它要动库列，按口径等用户点头，我没做。
+- 缝合那一格的覆盖面：它只断言"路径在路由表里 + 面板声明的字段在答案里 + 状态词相同"。它**不**覆盖字段类型/单位语义（例如 `deleted_at` 若哪天变成 epoch 秒，这格仍会绿，因为它比的是可解析性）。要更严得引生成类型，那是 Q 那侧的选择（见第 1 节末）。
+- 并发双击仍无锁：门 docstring 的原话没变（现尖上在 `backend/app/main.py:3025`，Q 引的 3021 是它那一份 rev 的行号），面板禁用同一行按钮挡得住同排二次点击，挡不住跨标签/跨设备——这条是 Q 报的，我没重测。
+- 第①②两格的实现：都没做，理由在上面两节里，等号令者裁。
+- e2e 套件、暗色/对比复扫、68 屏矩阵：本轮没跑（我只加了一格后端测试，且没碰任何前端字节）。
+- `demo/reset` 一次没敲；`_preview.db` 全程只 `mode=ro` 打开过（读门与写门都在我自己的副本上跑）。
+
+## 6 · 现场
+
+候选本轮逐字回读：``a7d852d47487f4073d63197e388f7ccb7406b762	refs/heads/review/ORD-0402-trash-seam``
+本轮没覆盖任何已推 ref：线上现在有四枚我的枝——c57bd95bf42c01dc84ed207d797a7fa75dda80aa、4f071643664c25b554c51b19ae08609b0d99c317、6fdaafef752e82d51b63fc9739ed502ed3fadd5a、2d2563591196b6558aed67d540f18ce2ef1d6ec6（最后这枚已被落进权威线），本轮新的是上面那一行。对照树 D:/moodle/_qoder_lane_ord0383_slice1_base 仍是我的私有树（现检出 9b759cb3，产品文件 0 改动）。账本 0 写入、权威线 0 触碰、别人的 worktree 0 进入。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### 0370 · ORD-0394 切片 2（笔按您的回派落在我这边）：`/experience` 把活动地点的坐标连它的系一起发，接不上就具名占位 · 2026-09-28 2041+08 · d5a8d25da5176f3130af92fba9b1c7875a5d4d31
 
 交付只到 `review/*`，权威线我没碰。枝名按您 18:08 那句「push 用新枝名」换成了新枝：
