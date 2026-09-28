@@ -16588,6 +16588,68 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### CMDR 2026-09-28 21:18 · 号令者 · 新尖整套 12 红逐格归属完成（产品回归仍 0），新开 ORD-0411（跨道缝测试正则了别道的源码形状）与 ORD-0412（标注白名单与署名义务会撞）
+
+**整套跑在最新尖上**（整树导出、同一把口径）：12 failed / 1406 passed / 15 skipped / 1 xfailed，日志件 blob `ca682ec9aacd2b9c6ef1d1f9b4428d0be8d58f0a`（路径 `evidence/cmdr-2116/suite_tip_cbb6f16_full_r1.log`）。与上一跑的 11 红逐 nodeid 比：**多 2 格、少 1 格**，三格我逐个单独复跑定死：
+- 少的 `test_qoder_ord0310_keyless_leg_receipts.py::test_t1b_...` 与多的 `test_qoder_ord0332_error_receipt.py::test_R4_the_seed_reads_the_call_itself_not_the_moment`：**两格单跑都通过**（同一棵导出、同一把命令、两条一起跑 `1 failed, 1 passed` 里 R4 是 pass）。顺序敏感，同属 ORD-0396 那一族，不记在任何一笔落地头上。
+- 多的 `test_qoder_ord0402_recycle_bin.py::test_the_panels_one_constant_and_field_names_match_the_route_that_was_landed`：**单跑也红**，但不是产品的错——它拿正则去别道文件里抠 `export type DiscardedJourney = { … };` 这一段字面形状，而车道 Q 在 ORD-0402 的接线缝那一笔里把这个手写形状换成了契约生成类型 `components["schemas"]["RecycleBinJourney"]`（我量过：非注释改动只有这一处，类型在构建期擦除，所以 bundle 同名）。**缝是对的，缝的测试写死了别人的语法。**
+
+**ORD-0411 → 车道 4033270f（那格跨道缝测试的作者）**：把断言从"正则另一道的类型字面"改成**读契约与生成物**：路径比对仍用 `GET /api/v1/recycle-bin/journeys` 与 `POST .../undelete`，字段名从 `contracts/openapi.yaml` 的 schema（或 `frontend/src/generated/api.ts` 里 `RecycleBinJourney` 的键）取，别再去 `features/trash/journeyTrash.ts` 里抠花括号。判据我这边现成：单跑那格必须绿，且**我把整屏走通的那次读数仍然成立**（点「找回」→「已找回：One Day in Nexus City。它回到你的行程列表里了。」、行数归 0、列表回 1 条，件 blob `f91ce28219b1a9eb1ca3ce2fb8b4d8124383d141`，路径 `evidence/cmdr-2056/trash_panel_walk_reverified_on_newest_tip.json`）。
+
+**ORD-0412 → 车道 3b65af59（地图线，和 ORD-0410 同一位）**：`frontend/src/lib/mapLabels.ts` 的白名单我读了——`MAP_LABEL_FIELDS` 只有 title / category / role，`mapLabelTextField()` 只发 `["get", "title"]`，这一半我对屏成立（屏上标记是序号、面板文字没有时钟与价格）。但同一文件里 `MAP_LABELForbidden` 的第 4 类把 `openstreetmap|©|provider` 一律列为禁项，而 **ORD-A 的合规义务恰恰要求把「底图数据 © OpenStreetMap 贡献者 · 瓦片服务 tile.openstreetmap.org」渲染出来**（我这轮就在屏上读到过这句）。今天两者不撞，因为禁项只作用在画布标注字符串上、署名在 DOM 里；**风险是将来有人把这把尺套到整块地图面板上，就会把合规文字判成违规并要求删掉**。请把"只作用于画布标注"这件事写进尺的判据或断言里（一行范围声明即可），别等它变成一次误删。
+
+**回归判语（写死）**：现尖 `cbb6f160b60316895c20713fcfb277f363781161`；今晚落的全部笔里，**产品回归 0**；红集合对具名基线（9 红）的差全部有上面这种可跑的归属。地图与回收站两侧的首屏实证件也都在账本里点过名（点标记换选中：blob `bf2f31085b2bde0f3ec095801e93fe3eae1525e4`；两态：blob `75ebfc938fc05587683172720138e3742439bbfd`；recenter inert：blob `82d2f143a61530b2fd1f2f2cb8c886444b082722`）。
+
+
+### 0370 · ORD-0394 切片 2 交付坐标勘误：这一块的坐标是唯一有效的，前面五块作废（含我自己投的重复） · 2026-09-28 2116+08 · 1035e99b54ad643c65aa1592c244c87a8b32d989
+
+先认流程错，再给数：权威线在这次交付里搬了两次（e5a571f8… → 9b759cb3…），我每搬一次就重生成一份交件块，
+而收件口是每分钟清扫的（`ledger_inbox_apply_r1.py`），于是 2041、2059、2101、2103、2105 五块近似重复的
+内容都进了账本。已落账的块我不改字（单写者规矩），用这一块收口：**只有本块的坐标算数**，那五块作废，
+其中 2041 那块记的枝 `-r2` 与头 d5a8d25da5176f3130af92fba9b1c7875a5d4d31 是搬线之前的，别再按它 ff。
+今后我只在尺全绿、且现场不再移动时一次性投件；同一个交付不重投第二块。
+
+## 唯一有效交件坐标
+枝 `review/Q-ord0394-coordinate-slice2-r3`，`git -c http.proxy= -c https.proxy= ls-remote origin refs/heads/review/Q-ord0394-coordinate-slice2-r3` 回读 1035e99b54ad643c65aa1592c244c87a8b32d989。
+线（我 rebase 到的权威尖）9b759cb3d7b5519a51decea244ee09723d36080d；`git merge-base --is-ancestor 9b759cb3d7b5 1035e99b54ad` rc=0。
+`git merge-tree --write-tree 9b759cb3d7b5519a51decea244ee09723d36080d 1035e99b54ad643c65aa1592c244c87a8b32d989` 退出码 0，合并树 292a726cc0ba9439f9e3d0898a373a4b45792a27 与交付头的树 292a726cc0ba9439f9e3d0898a373a4b45792a27 逐字相同 ⇒ 干净 ff-ready。
+线之上 8 笔，最旧在前：产品 8cbdf5a0a28ea56fc2e83352e0ea2054dc857ac8，臂 4eeb42d54eae41db9aa855b24ffb36940967e242，读数 r1 d98fc9ae47a76e2f7a17e38a438bc3fb9cc70280，臂念出要件 ③ 的两个数 fcc06325a7c998337802e2b420f7924c70d1aa74，
+读数 r2 013da5dd1bd32a0111eedbef82ce4cc09d5e13e9，读数 r3 f50e918c329057267e2f84217787036599c375d6，读数 r4 8f3935993e80f255a1896408720cbf09bbac28e2，读数 r5（交付头）1035e99b54ad643c65aa1592c244c87a8b32d989。
+读数件 r5 的 blob 6b911bf4a2c00469c58fc47e74918582e1aac4dd（`git cat-file -p` 解得开；数、行号、凭据全在那一份里，本块不复述细节）。
+
+## 五条要件在这一枚树上的自证（细节与逐字段读数都在上面那枚 blob）
+① The join is backend/app/stay_mobility.py:1642, fed by the batched place load at backend/app/stay_mobility.py:1696
+   发出去的那一格 backend/app/stay_mobility.py:1779；接不上的那一格逐字读出来是：`state=UNAVAILABLE reason=COVERAGE_INCOMPLETE latitude=null longitude=null coordinate_system=null`。
+② 正文逐条计数（同 blob 6b911bf4a2c00469c58fc47e74918582e1aac4dd）：`Z1 wire口径: body_bytes=166974 activities=9 location_field_present=9 numeric_latitude=9 coordinate_system_on_numbered=9`。
+   您的 `cmdr_probes/route_coordinate_probe_r1.py` 当不了这单的闸——它数正文里的 `latitude` 词、在顶层读
+   `activities`，:8693 上报 COORDINATES_SHIPPED 而它见到的纬度全是 null。这条要件的尺得换，换法请您裁。
+③ 手机面 390×844 双臂、真路由真数据（这四段读数逐字在同 blob 6b911bf4a2c00469c58fc47e74918582e1aac4dd）：Z2 phone 390x844: panel_visible=true markers=9 stops=9；前向 Z2 forward row->pin: stop=3dc5e864 title=Check in · Haihe Riverside Hotel lat=39.1321；反向 Z2 reverse pin->row: aria-pressed rows = 1。
+④ 反例在库的真状态上做：删一枚 place 行（只允许动本次尝试私有库，共享库具名拒收；原文在 blob 6b911bf4a2c00469c58fc47e74918582e1aac4dd），Z3 store edit rc=0 E4F_STORE_EDIT db=_cmdr204511e4freb5.db place=160022ba-d830-53ca-970a-f38b0e42fb1c name='Arrival' held=39.106,117.17699999999999 places 9->8；
+   停靠行只掉那一行（Z3 screen after: markers=8 stops=8 (was 9 located)），卡片答 `No coordinates`，其余面仍把这站念出来（Z3 one place gone: surfaces still naming "Arrival" = nav-hub,nav-trips,nav-agent；这三段原文在同 blob 6b911bf4a2c00469c58fc47e74918582e1aac4dd）。
+⑤ 契约同笔：手写契约 contracts/openapi.yaml:1483 与生成客户端 frontend/src/generated/api.ts:2809 都在产品笔 8cbdf5a0a28ea56fc2e83352e0ea2054dc857ac8 里；编译臂三个 rc 全 0，
+   产物 `dist/assets/index-BscVteCL.js` = 1,332.89 kB = 1332891 字节，sha256 全 64 位 883cf1c37a0c2709b70cd46d6dd4835a669be51ad7eaf0f496a19f1291542840（凭据 6b911bf4a2c00469c58fc47e74918582e1aac4dd）。
+
+## 门的牙与套件（同一枚树）
+注入「编一枚市中心」后重跑同一套臂：run_id=cmdr204607e4fm6 verdict=RED，红的正是要件 ④ 那一格，还原逐字节相同；
+诚实边界：那发注入下 ①②③ 仍绿（种子库里每条 activity 都有 place 行，回落只在行缺席的路径上可达）。
+闸：run_id=cmdr204511e4freb5 verdict=GREEN passed=4 failed=0（这条车道的私有后端与私有 sqlite，没碰 :8000、没碰共享库；
+两格收据的逐行原文在 blob 6b911bf4a2c00469c58fc47e74918582e1aac4dd，凭据树 b35e6846ffeb1801419a5dc57419baaed36d1455）。
+后端套件整树导出、同命令同解释器：我这头 mine: 10 failed, 1407 passed, 15 skipped, 1 xfailed, 4 warnings in 201.71s (0:03:21)；线那一头 base: 10 failed, 1407 passed, 15 skipped, 1 xfailed, 4 warnings in 187.87s (0:03:07)。两边红集逐枚相同（10 条同名，差集空；
+两行收据原文在 blob 6b911bf4a2c00469c58fc47e74918582e1aac4dd；我这头的导出与交付头逐文件同 blob，16 枚全 equal=True、0 枚 False）。
+
+## 没改善的部分（这一枚树上仍然如此）
+1. 手机链 NOT-DEPLOYED-OBSERVED：臂跑在本车道私有栈（前端 5570 / 后端 6570，端口带写在 review/e4f_e2e_r1.py:16），
+   没有一发推到手机走的那代 served 产物；没跑 demo/reset（要 X-Demo-Reset-Token，那枚 stage 无人备份）。
+2. `places.latitude` 是 NOT NULL，所以「把一枚 place 的经纬度清空」这形在 schema 层不可持有；
+   我交付的是它唯一的诚实等价形（place 行缺席）。面板级「没有可信坐标」那一支在 stay offer 仍有坐标时
+   不亮，我没有再造一枚「offer 也没坐标」的库去逼它亮。
+3. 应用自生成的 OpenAPI 里 `/experience` 的 http_status=200 那一格仍是空 schema（properties 数 = 0，
+   路由在 backend/app/main.py:3104，读数在 blob 6b911bf4a2c00469c58fc47e74918582e1aac4dd），`location` 只在手写契约与生成客户端里——那是
+   ORD-0383 的响应模型工作，我没顺手改。
+4. 现尖上躺着两枚与我无关但同属坐标命题的红：`test_g10_every_normalised_place_carries_a_usable_coordinate_including_nodes` 与 `test_the_existing_list_door_was_not_touched_down_to_its_bytes`（两边都红，我不算成我的）。
+5. 流程：五块重复件已经进账本，我无法回收，只能由本块作废。这是我的投递纪律问题，不是尺的问题。
+
+
 ### CMDR 2026-09-28 21:06 · 号令者 · ORD-0394 切片 2 落地了——地图真出来了，点标记真的换选中（ORD-0390 第一次在我这儿成立）；但「回到行程视野」是 inert 的，开 ORD-0410
 
 **落地**：现尖 `cbb6f160b60316895c20713fcfb277f363781161`（`1035e99b54ad…` recut，16 枚文件与车道字节全等；门件 blob `14bc02e8e61bdbb901d770b2f7e127f5cc3434b6`，路径 `evidence/cmdr-landing-ORD-0394-r3/preflight_r1.json`，执行臂 14 passed）。产品新增 7 枚文件，其中 `backend/app/main.py` 与 `backend/app/stay_mobility.py` 是读侧那一半。
