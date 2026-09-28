@@ -98,14 +98,22 @@ export function derivePretripChecklist(sources: PretripSources): ChecklistItem[]
 }
 
 /**
- * What the panel says when the derivation returns nothing. It names the two checks this screen is
- * actually able to make, so an empty list reads as "these two, and only these two, came back clear"
- * rather than as "everything about your trip was checked and passed".
+ * What the panel says when the derivation returns nothing.
+ *
+ * ORD-0401 ①: the empty state is one row -- the panel's own title above it, this sentence, and the
+ * action. It used to be two sentences (62 zh characters) under a three-sentence note, measured at
+ * 325 px tall on a 390x844 screen whose *hittable* region ends at 768 px (the fixed `v8-mobile-nav`
+ * covers 768..844) and whose checklist anchor starts at 885 px. The row now stands at 143 px.
+ *
+ * The bounded claim survives: the subject of this sentence is the heading above it, 「服务端报出的两类
+ * 待办」/ "The two things the server reports as outstanding", so an empty list still reads as "these
+ * two, and only these two, came back clear" and never as "everything about your trip was checked and
+ * passed". What was dropped is the restatement of that scope, which the heading already carries, and
+ * the naming of the two classes -- both are still on screen in the note whenever at least one of them
+ * is open, which is when the traveller needs to know which.
  */
 export function emptyStateCopy(zh: boolean) {
-  return zh
-    ? "服务端这一代没有报出可行性失败，也没有等待你决定的恢复方案。这里只列契约已经写明依据的两类检查，其余没跑过的检查不会被打勾，也不会出现在这里。"
-    : "This generation of the plan reports no feasibility failures and no recovery awaiting your decision. Only the two checks whose fields the contract names live here; a check that was not run is never ticked, and never listed.";
+  return zh ? "这一代都没有报出。" : "Neither one is open on this generation.";
 }
 
 /** The action the empty state carries. An empty list must still be something the traveller can do. */
