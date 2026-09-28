@@ -1,0 +1,132 @@
+{
+ "present": true,
+ "scroll_height": 1054,
+ "client_height": 844,
+ "overflow_px": 210,
+ "direct_children": [
+  {
+   "tag": "DIV",
+   "cls": "v8-nav-drawer-head",
+   "h": 44,
+   "text": "全部路由 关闭"
+  },
+  {
+   "tag": "DIV",
+   "cls": "",
+   "h": 83,
+   "text": "TODAY 今天"
+  },
+  {
+   "tag": "DIV",
+   "cls": "",
+   "h": 57,
+   "text": "实时行程"
+  },
+  {
+   "tag": "DIV",
+   "cls": "",
+   "h": 57,
+   "text": "地图"
+  },
+  {
+   "tag": "DIV",
+   "cls": "",
+   "h": 83,
+   "text": "PLAN 行程工作台"
+  },
+  {
+   "tag": "DIV",
+   "cls": "",
+   "h": 57,
+   "text": "住宿选择"
+  },
+  {
+   "tag": "DIV",
+   "cls": "",
+   "h": 57,
+   "text": "城市探索"
+  },
+  {
+   "tag": "DIV",
+   "cls": "",
+   "h": 83,
+   "text": "TRAVEL 旅行票夹"
+  },
+  {
+   "tag": "DIV",
+   "cls": "",
+   "h": 57,
+   "text": "Copilot"
+  },
+  {
+   "tag": "DIV",
+   "cls": "",
+   "h": 83,
+   "text": "SYSTEM 恢复与执行"
+  },
+  {
+   "tag": "DIV",
+   "cls": "",
+   "h": 57,
+   "text": "智能守护"
+  },
+  {
+   "tag": "DIV",
+   "cls": "",
+   "h": 57,
+   "text": "旅行者画像"
+  },
+  {
+   "tag": "DIV",
+   "cls": "",
+   "h": 57,
+   "text": "回收站"
+  },
+  {
+   "tag": "DIV",
+   "cls": "",
+   "h": 57,
+   "text": "行程"
+  },
+  {
+   "tag": "DIV",
+   "cls": "",
+   "h": 57,
+   "text": "我的"
+  }
+ ],
+ "tallest_descendants": [
+  {
+   "tag": "DIV",
+   "cls": "",
+   "h": 83,
+   "w": 271,
+   "text": "TODAY 今天",
+   "bg": "none"
+  },
+  {
+   "tag": "DIV",
+   "cls": "",
+   "h": 83,
+   "w": 271,
+   "text": "PLAN 行程工作台",
+   "bg": "none"
+  },
+  {
+   "tag": "DIV",
+   "cls": "",
+   "h": 83,
+   "w": 271,
+   "text": "TRAVEL 旅行票夹",
+   "bg": "none"
+  },
+  {
+   "tag": "DIV",
+   "cls": "",
+   "h": 83,
+   "w": 271,
+   "text": "SYSTEM 恢复与执行",
+   "bg": "none"
+  }
+ ]
+}
