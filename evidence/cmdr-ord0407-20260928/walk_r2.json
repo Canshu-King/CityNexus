@@ -1,0 +1,108 @@
+{
+ "base": "http://127.0.0.1:4802/",
+ "arms": [
+  {
+   "locale": "zh",
+   "cells": {
+    "map": {
+     "empty_cell_present": false,
+     "empty_text": null,
+     "empty_controls": null,
+     "activity_entry_flag": null,
+     "map_canvas_present": true,
+     "marker_count": 6
+    },
+    "hub": {
+     "attention_text": "一切正常",
+     "attention_controls": 0,
+     "hub_map_empty_present": false,
+     "hub_map_empty_text": null
+    },
+    "live": {
+     "present": true,
+     "text": "当前没有需要你决定的调整。",
+     "controls_in_cell": 0,
+     "controls_in_row": 11
+    }
+   },
+   "action": {
+    "label_found": 1,
+    "button_box": {
+     "x": 101,
+     "y": 383,
+     "w": 240,
+     "h": 44,
+     "cx": 221,
+     "cy": 405,
+     "cls": "v8-quiet-button",
+     "tag": "BUTTON"
+    },
+    "hit_at_point": "BUTTON.v8-quiet-button",
+    "hit_is_the_button": true,
+    "after_click": {
+     "path": "/v8/stay",
+     "heading": "选择锚点，看见行程。",
+     "kicker": "住宿选择 · 已采集证据"
+    }
+   },
+   "pageerrors": []
+  },
+  {
+   "locale": "en",
+   "cells": {
+    "map": {
+     "empty_cell_present": false,
+     "empty_text": null,
+     "empty_controls": null,
+     "activity_entry_flag": null,
+     "map_canvas_present": true,
+     "marker_count": 6
+    },
+    "hub": {
+     "attention_text": "All clear",
+     "attention_controls": 0,
+     "hub_map_empty_present": false,
+     "hub_map_empty_text": null
+    },
+    "live": {
+     "present": true,
+     "text": "There is nothing for you to decide right now.",
+     "controls_in_cell": 0,
+     "controls_in_row": 11
+    }
+   },
+   "action": {
+    "label_found": 1,
+    "button_box": {
+     "x": 101,
+     "y": 383,
+     "w": 244,
+     "h": 44,
+     "cx": 223,
+     "cy": 405,
+     "cls": "v8-quiet-button",
+     "tag": "BUTTON"
+    },
+    "hit_at_point": "BUTTON.v8-quiet-button",
+    "hit_is_the_button": true,
+    "after_click": {
+     "path": "/v8/stay",
+     "heading": "Choose the anchor, see the journey.",
+     "kicker": "STAY EXPLORER · CAPTURED EVIDENCE"
+    }
+   },
+   "pageerrors": []
+  }
+ ],
+ "verdict": {
+  "action_button_found_both_locales": true,
+  "action_click_lands_on_stay": true,
+  "action_hit_test_is_the_button": true,
+  "map_empty_cell_face": [
+   "REAL_MAP",
+   "REAL_MAP"
+  ],
+  "live_cell_has_no_action": true,
+  "pageerrors_zero": true
+ }
+}
