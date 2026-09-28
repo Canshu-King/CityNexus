@@ -16588,6 +16588,19 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### CMDR 2026-09-28 22:38 · 号令者 · ORD-0413 落地（现尖 `b9ba6336a299119c8607da48bb4aa54a64322679`），并且我把它的答案变成了裁决：抽屉那一屏不是要折叠，是一枚没定尺寸的图标把每行撑到 292 px——修它只要一条 CSS，我开了 ORD-0416 并派下去了
+
+**车道交的是什么**：`review/Q-ord0413-drawer-grouping` 头 `8961751d46e719551c1dff43b9bed536915bdf94`，产品字节 0 处，五枚 `review/` 件。我只读复切：5/5 文件逐枚等于车道 blob，合并树 `a025b42ec79fb85cc556bb433816c3515c3ddb05` 与车道自己预测的那枚逐字相同，复切件 `b9ba6336a299119c8607da48bb4aa54a64322679` 推 `refs/heads/review/cmdr-recut-ord0413-r1` 后过落地门（`ff=True`、`product introduced: (none)`），回执 `evidence/cmdr-landing-ord0413-20260928/preflight_r1.json`，blob `8cacf6e6d4f4e7e65ead0dc6c1fa9f8c31d9a90e`，4,282 B。
+
+**我复核了它的成因，没有直接采信**（这是"别人给的成因是假设"那条规矩）。我自己的仪表 `_drawer_tall_items_r1.js` 在同一枚私有舞台上读到的抽屉结构是：直接子元素 15 枚（头 44 px + 14 组 304/330 px 的行），溢出 `overflow_px` 3668（件 `evidence/cmdr-ord0413-20260928/cmdr_counter_reading_tall_items.json`，blob `5099218a3404319c78f33bee4b264f71fd7cf77f`，2,458 B）。车道那把读到的行高是 292 px 一行、14 行，首屏内只放得下 2 行（同件 `review/ord0413/cause_r1.receipt.json`，blob `304e2996b24baa844abce07b192d03b216ec07ce`）。两个数是同一件事：我读的是含内距的盒高，它读的是行本体高度，差的就是按钮的 padding——**不是我不同意它，是我原本以为要分组，它拿出证据说不用**。
+真正的元凶在两把仪表里都指到同一处：行里那枚 `svg` 的 `viewBox` 是 `0 0 24 24`、没有 width/height 属性，CSS 也没给它定尺寸，于是它按可用宽度长到 243 × 243 px，把每一行顶到约 292 px 高。车道在**只改这次会话的活 DOM**（0 改 `frontend/src` 的文件）下试了一条 `#v8-nav-drawer button svg { width: 17px; height: 17px }`，读数立刻变成：滚动高 1054、溢出 210、行高 45、首屏内放得下 10 行（同件 blob `304e2996b24baa844abce07b192d03b216ec07ce`）。⇒ 这一格从"要拖四次多才到底"变成"一屏看全"，代价是一行 CSS。
+
+**裁决 ORD-0416 → 车道 `2d2d7428`（你这套仪表现成，别再另起一把）**：把那条规则落成产品改动，别把 `17px` 这个探测值当成品数——请和抽屉里其它文字档位同源（用一个具名的尺寸常量或既有 token），并在改动说明里写清它治的是"无尺寸 SVG 被 flex 拉满"这一族，不是"这一枚图标"。验收界沿用 `hit_floor_px`：768 px（口径冻在件 `review/n3_0407_evidence_r1/controls_before_79ca877c.json` 的第 4 行，blob `5bd1fe669a1a7f9fbcae4c9d63852969983650ae`），判据是 `elementFromPoint(中心)` 落在元素内 且 中心 y 不越过那条界。逐形要交 `rows_within_floor`，要求不低于 10，四形分别按 390 宽 × 844 高、360 宽 × 800 高、320 宽 × 653 高、414 宽 × 896 高各跑一遍（zh 与 en 两臂）。同时给 `overflow_px` 前后对照，并**保留你现在这把的 before 臂**（不许为了好看只交 after）。若某一条形下 `rows_within_floor` 反而降了，就具名报红交回来，不要调规则去凑数。
+顺带把 ORD-0413 剩下的那一半收掉：图标定尺寸之后，是否还需要分组/折叠，用新的 `overflow_px` 判，而不是用现在这个被撑爆的数判。我预判"不需要"，但你得量出来。
+
+**今晚的账（截至这一笔）**：权威尖 `b9ba6336a299119c8607da48bb4aa54a64322679`（外读 `git ls-remote origin refs/heads/mirror/integration-frontend-apple-pass1`）；本轮我从 21:30 到现在落了 6 笔（0404 读数批、0405、0409、0404 二批、0407 r4+r5、0412、0413），派单 5 张（0406、0410、0413→已成 0416、0414 已被车道 `1d64acf5` 交掉、0415），车道响应最快的两张在 5-10 分钟内回来并入了账本。手机那一代仍是 `e5a571f8…`，hop4 未起 ⇒ 今晚全部屏读 `NOT-DEPLOYED-OBSERVED`；:4781 答 200（1,200 B 的 index.html），:4782 按预期答 401（带鉴权那一跳正常工作），:8693 与我的私有 :8725 都在监听。
+
+
 ### CMDR 2026-09-28 2235 · 车道 `2d2d7428` · ORD-0404 交了：地址点名的那一屏现在过得了演示门，认不出的地址自己说清楚
 
 件：`review/Q-ord0404-deeplink-screen-r2` 远端回读 = `4cfe52ecbc6bf4787d28d8b8673ddf0fdc541e95`（`git ls-remote origin refs/heads/review/Q-ord0404-deeplink-screen-r2` 的原文，与本机 `git rev-parse` 逐字相同）；
