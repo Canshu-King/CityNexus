@@ -1,0 +1,187 @@
+{
+ "at": "2026-09-28T13:01:56.871Z",
+ "base": "http://127.0.0.1:4800/",
+ "errors": [],
+ "before": {
+  "url": "/v8/map",
+  "controls": [],
+  "markers": [
+   {
+    "cls": "v9-map-marker",
+    "testid": null,
+    "text": "1",
+    "box": [
+     178,
+     497,
+     34,
+     34
+    ],
+    "hit": true
+   },
+   {
+    "cls": "v9-map-marker",
+    "testid": null,
+    "text": "2",
+    "box": [
+     207,
+     478,
+     34,
+     34
+    ],
+    "hit": true
+   },
+   {
+    "cls": "v9-map-marker",
+    "testid": null,
+    "text": "3",
+    "box": [
+     222,
+     459,
+     34,
+     34
+    ],
+    "hit": true
+   },
+   {
+    "cls": "v9-map-marker",
+    "testid": null,
+    "text": "4",
+    "box": [
+     251,
+     441,
+     34,
+     34
+    ],
+    "hit": true
+   },
+   {
+    "cls": "v9-map-marker",
+    "testid": null,
+    "text": "5",
+    "box": [
+     265,
+     422,
+     34,
+     34
+    ],
+    "hit": true
+   },
+   {
+    "cls": "v9-map-marker",
+    "testid": null,
+    "text": "6",
+    "box": [
+     280,
+     403,
+     34,
+     34
+    ],
+    "hit": true
+   }
+  ],
+  "canvas_present": true,
+  "canvas_box": [
+   18,
+   319,
+   354,
+   390
+  ],
+  "canvas_parent_pointer_events": "auto",
+  "panel_text": "1\n2\n3\n4\n5\n6\n回到行程视野\n\n单指拖动地图 · 双指缩放 · 想翻这一页就拖地图以外的地方\n\n路线上下文\n0 段路程\n供应商支持的路线 · WGS84\n底图数据 © OpenStreetMap 贡献者 · 瓦片服务 tile.openstreetmap.org",
+  "selection_text": "Nexus River Cruise Pier",
+  "interactiveFalse": "no-dom-marker"
+ },
+ "after_marker_tap": {
+  "url": "/v8/map",
+  "controls": [],
+  "markers": [
+   {
+    "cls": "v9-map-marker",
+    "testid": null,
+    "text": "1",
+    "box": [
+     178,
+     125,
+     34,
+     34
+    ],
+    "hit": true
+   },
+   {
+    "cls": "v9-map-marker",
+    "testid": null,
+    "text": "2",
+    "box": [
+     207,
+     106,
+     34,
+     34
+    ],
+    "hit": true
+   },
+   {
+    "cls": "v9-map-marker",
+    "testid": null,
+    "text": "3",
+    "box": [
+     222,
+     87,
+     34,
+     34
+    ],
+    "hit": true
+   },
+   {
+    "cls": "v9-map-marker",
+    "testid": null,
+    "text": "4",
+    "box": [
+     251,
+     69,
+     34,
+     34
+    ],
+    "hit": true
+   },
+   {
+    "cls": "v9-map-marker",
+    "testid": null,
+    "text": "5",
+    "box": [
+     265,
+     50,
+     34,
+     34
+    ],
+    "hit": true
+   },
+   {
+    "cls": "v9-map-marker",
+    "testid": null,
+    "text": "6",
+    "box": [
+     280,
+     31,
+     34,
+     34
+    ],
+    "hit": true
+   }
+  ],
+  "canvas_present": true,
+  "canvas_box": [
+   18,
+   -53,
+   354,
+   390
+  ],
+  "canvas_parent_pointer_events": "auto",
+  "panel_text": "1\n2\n3\n4\n5\n6\n回到行程视野\n\n单指拖动地图 · 双指缩放 · 想翻这一页就拖地图以外的地方\n\n路线上下文\n0 段路程\n供应商支持的路线 · WGS84\n底图数据 © OpenStreetMap 贡献者 · 瓦片服务 tile.openstreetmap.org",
+  "selection_text": "已选中 · Old Town Gate",
+  "interactiveFalse": "no-dom-marker"
+ },
+ "after_recenter": null,
+ "selection_changed_by_marker": true,
+ "marker_count": 6,
+ "control_count": 0
+}
