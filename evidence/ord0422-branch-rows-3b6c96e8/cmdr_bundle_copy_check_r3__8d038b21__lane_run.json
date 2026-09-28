@@ -1,0 +1,25 @@
+{
+ "tip": "8d038b21f09477b933cff3b1c7b09845c542373b",
+ "ruler": "cmdr_bundle_copy_check_r3.py",
+ "dictionary_files": {
+  "frontend/src/features/studio/planVersionHistoryCopy.ts": 23,
+  "frontend/src/features/trash/journeyTrashCopy.ts": 27,
+  "frontend/src/i18n/LocaleContext.tsx": 770,
+  "frontend/src/i18n/mapPanelCopy.ts": 0,
+  "frontend/src/i18n/placeProvenanceCopy.ts": 0,
+  "frontend/src/i18n/travelerLabels.ts": 0,
+  "frontend/src/i18n/tripOperations.ts": 0
+ },
+ "served_asset": "/assets/index-ChWUjpBx.js",
+ "bundle_chars": 1305087,
+ "bundle_raw_bytes": 1343964,
+ "dictionary_pairs": 820,
+ "distinct_keys": 597,
+ "pairs_skipped_by_shape": 700,
+ "values_found_in_served_bundle": 820,
+ "values_not_found": 0,
+ "match_forms": {
+  "plain": 820,
+  "json_escaped": 0
+ }
+}
