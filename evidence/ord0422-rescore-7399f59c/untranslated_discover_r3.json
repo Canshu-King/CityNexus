@@ -1,0 +1,374 @@
+{
+ "base": "http://127.0.0.1:4314",
+ "route": "discover",
+ "generated_by": "_untranslated_scan_r3.js",
+ "expect_list_size": 22,
+ "zh": {
+  "locale": "zh",
+  "entry_used": "使用封存的演示行程",
+  "reached_route": "/v8/discover",
+  "on_requested_route": true,
+  "path": "/v8/discover",
+  "locale_read": "zh",
+  "scroll_steps": 6,
+  "scrollables": 2,
+  "scroll_reached": [
+   {
+    "tag": "HTML",
+    "cls": "",
+    "max": 512,
+    "deepest_scrollTop_reached": 512,
+    "bottom_reached": true
+   },
+   {
+    "tag": "HTML",
+    "cls": "",
+    "max": 512,
+    "deepest_scrollTop_reached": 512,
+    "bottom_reached": true
+   }
+  ],
+  "leaf_count": 28,
+  "ascii_prose_count": 1,
+  "ascii_prose": [
+   {
+    "text": "Copilot",
+    "tag": "SPAN",
+    "cls": "",
+    "testid": "nav-agent",
+    "y": 816
+   }
+  ],
+  "expect": [
+   {
+    "text": "Baseline evidence",
+    "on_screen": false
+   },
+   {
+    "text": "CHANGED",
+    "on_screen": false
+   },
+   {
+    "text": "Capability needs",
+    "on_screen": false
+   },
+   {
+    "text": "Confirmed by traveler",
+    "on_screen": false
+   },
+   {
+    "text": "Delegation policy",
+    "on_screen": false
+   },
+   {
+    "text": "Deterministic gate",
+    "on_screen": false
+   },
+   {
+    "text": "Grounded adaptive recovery",
+    "on_screen": false
+   },
+   {
+    "text": "Hard accessibility needs are never inferred from behavior.",
+    "on_screen": false
+   },
+   {
+    "text": "I prefer quiet indoor culture, low walking, and rain-friendly places near my protected Journey moments.",
+    "on_screen": false
+   },
+   {
+    "text": "Incident evidence",
+    "on_screen": false
+   },
+   {
+    "text": "Learned capability state",
+    "on_screen": false
+   },
+   {
+    "text": "No explicit capability facts recorded.",
+    "on_screen": false
+   },
+   {
+    "text": "No explicit preferences",
+    "on_screen": false
+   },
+   {
+    "text": "No learned signals",
+    "on_screen": false
+   },
+   {
+    "text": "No recovery proposal is waiting on this Journey.",
+    "on_screen": false
+   },
+   {
+    "text": "PROTECTED",
+    "on_screen": false
+   },
+   {
+    "text": "Refresh recovery",
+    "on_screen": false
+   },
+   {
+    "text": "Stated; confirmation needed",
+    "on_screen": false
+   },
+   {
+    "text": "Unknown accessibility evidence is not accessible.",
+    "on_screen": false
+   },
+   {
+    "text": "V14 · REALITY CHANGED",
+    "on_screen": false
+   },
+   {
+    "text": "hard need(s) remain explicit and are never learned.",
+    "on_screen": false
+   },
+   {
+    "text": "policy unavailable · confirmation required",
+    "on_screen": false
+   }
+  ]
+ },
+ "en": {
+  "locale": "en",
+  "entry_used": "sealed demo",
+  "reached_route": "/v8/discover",
+  "on_requested_route": true,
+  "path": "/v8/discover",
+  "locale_read": "en",
+  "scroll_steps": 6,
+  "scrollables": 2,
+  "scroll_reached": [
+   {
+    "tag": "HTML",
+    "cls": "",
+    "max": 592,
+    "deepest_scrollTop_reached": 592,
+    "bottom_reached": true
+   },
+   {
+    "tag": "HTML",
+    "cls": "",
+    "max": 592,
+    "deepest_scrollTop_reached": 592,
+    "bottom_reached": true
+   }
+  ],
+  "leaf_count": 28,
+  "ascii_prose_count": 17,
+  "ascii_prose": [
+   {
+    "text": "City Discovery",
+    "tag": "STRONG",
+    "cls": "",
+    "testid": null,
+    "y": 25
+   },
+   {
+    "text": "System",
+    "tag": "BUTTON",
+    "cls": "v9-language",
+    "testid": "topbar-theme",
+    "y": 17
+   },
+   {
+    "text": "Prepare a destination",
+    "tag": "P",
+    "cls": "v8-kicker",
+    "testid": null,
+    "y": 93
+   },
+   {
+    "text": "First, whether this city can be planned",
+    "tag": "H1",
+    "cls": "",
+    "testid": null,
+    "y": 117
+   },
+   {
+    "text": "Type a destination and the server says how far it can plan it right now; if it cannot, what is missing and what to do next come from the server.",
+    "tag": "P",
+    "cls": "v8-lede",
+    "testid": null,
+    "y": 208
+   },
+   {
+    "text": "Destination",
+    "tag": "SPAN",
+    "cls": "",
+    "testid": null,
+    "y": 299
+   },
+   {
+    "text": "Check this destination",
+    "tag": "BUTTON",
+    "cls": "v8-primary-button",
+    "testid": "prep-check",
+    "y": 400
+   },
+   {
+    "text": "Grounded city discovery",
+    "tag": "P",
+    "cls": "v8-kicker",
+    "testid": null,
+    "y": 444
+   },
+   {
+    "text": "Ask for the kind of city day you actually want.",
+    "tag": "H1",
+    "cls": "",
+    "testid": null,
+    "y": 468
+   },
+   {
+    "text": "Tell CityNexus what you feel like doing. It finds real places that fit your trip and your confirmed bookings.",
+    "tag": "P",
+    "cls": "v8-lede",
+    "testid": null,
+    "y": 558
+   },
+   {
+    "text": "CN / DISCOVERY",
+    "tag": "SPAN",
+    "cls": "v8-agent-mark",
+    "testid": null,
+    "y": 669
+   },
+   {
+    "text": "Shape the city stop",
+    "tag": "H2",
+    "cls": "",
+    "testid": null,
+    "y": 712
+   },
+   {
+    "text": "Copilot",
+    "tag": "SPAN",
+    "cls": "",
+    "testid": "nav-agent",
+    "y": 816
+   },
+   {
+    "text": "Boundary",
+    "tag": "B",
+    "cls": "",
+    "testid": null,
+    "y": 436
+   },
+   {
+    "text": "Provider coordinates, opening hours, cost, travel time and your protected plans are verified facts.",
+    "tag": "SPAN",
+    "cls": "",
+    "testid": null,
+    "y": 457
+   },
+   {
+    "text": "Traveler intent",
+    "tag": "LABEL",
+    "cls": "",
+    "testid": null,
+    "y": 520
+   },
+   {
+    "text": "Discover and compose",
+    "tag": "BUTTON",
+    "cls": "v8-primary",
+    "testid": "v13-discover-submit",
+    "y": 746
+   }
+  ],
+  "expect": [
+   {
+    "text": "Baseline evidence",
+    "on_screen": false
+   },
+   {
+    "text": "CHANGED",
+    "on_screen": false
+   },
+   {
+    "text": "Capability needs",
+    "on_screen": false
+   },
+   {
+    "text": "Confirmed by traveler",
+    "on_screen": false
+   },
+   {
+    "text": "Delegation policy",
+    "on_screen": false
+   },
+   {
+    "text": "Deterministic gate",
+    "on_screen": false
+   },
+   {
+    "text": "Grounded adaptive recovery",
+    "on_screen": false
+   },
+   {
+    "text": "Hard accessibility needs are never inferred from behavior.",
+    "on_screen": false
+   },
+   {
+    "text": "I prefer quiet indoor culture, low walking, and rain-friendly places near my protected Journey moments.",
+    "on_screen": true
+   },
+   {
+    "text": "Incident evidence",
+    "on_screen": false
+   },
+   {
+    "text": "Learned capability state",
+    "on_screen": false
+   },
+   {
+    "text": "No explicit capability facts recorded.",
+    "on_screen": false
+   },
+   {
+    "text": "No explicit preferences",
+    "on_screen": false
+   },
+   {
+    "text": "No learned signals",
+    "on_screen": false
+   },
+   {
+    "text": "No recovery proposal is waiting on this Journey.",
+    "on_screen": false
+   },
+   {
+    "text": "PROTECTED",
+    "on_screen": false
+   },
+   {
+    "text": "Refresh recovery",
+    "on_screen": false
+   },
+   {
+    "text": "Stated; confirmation needed",
+    "on_screen": false
+   },
+   {
+    "text": "Unknown accessibility evidence is not accessible.",
+    "on_screen": false
+   },
+   {
+    "text": "V14 · REALITY CHANGED",
+    "on_screen": false
+   },
+   {
+    "text": "hard need(s) remain explicit and are never learned.",
+    "on_screen": false
+   },
+   {
+    "text": "policy unavailable · confirmation required",
+    "on_screen": false
+   }
+  ]
+ },
+ "arms_comparable": true,
+ "verdict": "ZH_SCREEN_CARRIES_ENGLISH_PROSE"
+}
