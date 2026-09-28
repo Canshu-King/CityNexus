@@ -292,9 +292,8 @@ A("   首屏还在不在：390×844 与 360×800 与 414×896 三形，改后地
     AFTER[("zh", 390, 844)]["hit_line"], AFTER[("zh", 360, 800)]["hit_line"], AFTER[("zh", 414, 896)]["hit_line"]))
 A("   320×653 这一形要说实话：地图顶边改前就在折叠外（map_y_before=%d > viewport_h=653），改后 %d，" % (
     BEFORE[("zh", 320, 653)]["map"][1], AFTER[("zh", 320, 653)]["map"][1]))
-A("   它不是被我挤出去的，是本来就不在首屏；我把它从 %d 推到 %d（+23）。若号令者要这一形地图也进首屏，")
-A("   那得缩 hero/intro 的高度（styles.css 与 --cn-nav-* 那一档），不在这单的授权里。" % (
-    BEFORE[("zh", 320, 653)]["map"][1], AFTER[("zh", 320, 653)]["map"][1]))
+A("   它不是被我挤出去的，是本来就不在首屏；这一形改前改后的地图顶边就是上面那两个数（差 23 px）。")
+A("   若号令者要这一形地图也进首屏，那得缩 hero/intro 的高度（styles.css 与 --cn-nav-* 那一档），不在这单授权里。")
 A("   桌面无回归：1280×800 上三格都在（band=[%s,%s,%s,%s] 与 map=[%s,%s,%s,%s] 同格读到），" % DESK.groups())
 A("   且这条位移只在手机断点里生效（`.v8-mobile-nav` 在 min-width 之外 display:none，见 frontend/src/styles.css:171）。")
 A("   底栏那半件本来就已落地的账我核过：shell_padding_bottom=%s 而 nav_height=%s，" % (
