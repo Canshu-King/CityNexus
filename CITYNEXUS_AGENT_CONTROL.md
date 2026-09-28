@@ -16588,6 +16588,128 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### ORD-0423 残余 · 车道 rel（会话 a68b0631）· 那一格我不再"再试一次"，改成推导闭合：`timePending` 在这屏不可达；顺手给 ORD-0428 槽二添一条会影响选路的读数 · 2026-09-29 0245+08
+
+**基座现读**：`git -c http.proxy= -c https.proxy= ls-remote origin refs/heads/mirror/integration-frontend-apple-pass1` 回 `2521aed777a46e934f1a934a23eef5950a0c06cc`（`git cat-file -t` 回 `commit`，提交时刻 02:35）。20 分钟内我读到三枚不同尖（值守给的 `077002399665743d52568f53f6cd380650cad3f7`、我上一块的 `fb6131f359e85deb18a2194494dc9a96e328cdee`、现在这枚），所以下面每条行号只指 `2521aed7…`。
+
+值守给的选项②我接了，但做的不是"再走一遍门"——0423 那趟我已经走过三道（UI 确认键被 `draft.unresolved_fields` 挡住、服务器确认门回 409 并点名缺 `scheduled_departure_at`、我这副本里 `transport_reservations` 行数为 0）。这次把"我走不到"换成"按列类型与写方推导它到不了"，这样这一格不再挂在我名下等一次复测。
+
+## 扫描（全 `mode=ro`，没写一行数据）
+
+三枚库逐张开：`D:/moodle/CityNexus/citynexus.db`、`D:/moodle/_qoder_integration_20260919/backend/citynexus.db`、我自己那份 `priv_rel0426.db`。join 到 activity 的 commitment 行数与其中"投影算出来时刻为空"的行数，逐行记在已发布件 `evidence/rel-ord0423-20260929/pending_arm_scan_r1.txt` 的 `:4`、`:5`、`:6`，合计在 `:7` 记 `totals: pairs=1 memory_at_empty=0`。件 blob `2a9ca8f0ab357a71b1b2cdb764b1fcd7ae2645ef`，发布闸回 `decision=CREATED`、`readback_blob` 与提交 blob 逐字相同；重算命令 `D:/moodle/CityNexus/.venv/Scripts/python.exe D:/moodle/_qoder_rel_ord0423_wk/ord0423_pending_scan_r1.py`。
+
+四条码事实（同一件 `:8`–`:11`，行号指 `2521aed7…`）：
+
+1. `backend/app/integrations/inbox/semantic_intake.py:470` —— 没有 activity 行的 commitment 被 `if activity is None: continue` 直接跳过，所以它进不了 memory 列表。
+2. `backend/app/integrations/inbox/semantic_intake.py:480` —— 时刻取的是 `policy.get("scheduled_start_at") or activity.start_at`，兜底就是上一条那个 activity 的列。
+3. `backend/app/db/models.py:541` —— 那一列写的是 `start_at: Mapped[str] = mapped_column(String)`，非空 ⇒ 兜底不会是 `None`。
+4. `backend/app/db/models.py:1003` 的 `scheduled_departure_at` 同为非空 `Mapped[str]`，而它唯一的写方 `backend/app/operations/v9.py:1139` 是 `scheduled_departure_at=str(data["scheduled_departure_at"])`（policy 里同一兜法在 `backend/app/operations/v9.py:1114`）⇒ 这一支也拿不到空值。
+
+唯一能往 `activities.start_at` 写空串的产地是 `backend/app/stay_mobility.py:571` 的 `start_at=""`（同件 `:13`），但这台机三枚库里 `activity_start_at_empty_string=0`，而且它不是任何 commitment 的 activity。⇒ **结论（同件 `:14`）**：`inbox.timePending` 在票夹这一屏经我所能到达的每一扇门、每一枚库都不会上屏；那一支是防御性的。所以 0423 的反件仍然只有代码级执行读数那一份证据（枝 `review/qoder-0423-memory-copy-r1` 里 `review/ord0423/formatWhen_run.json`，blob `661ab4584a22f8fac38ad721530b1d56bab20d4c`：`null`、空串、`undefined`、纯空格四种入参都回「时间待定」/`time pending`），我不再为它挂账。
+
+## 顺手量到一枚同族潜伏缺陷（只报，`backend_bytes_changed=0`）
+
+上面第 4 条那个 `str(...)` 兜法有个后果：调用方真传 null 时，列里存的不是 NULL 而是 4 个字符的 `"None"`，投影原样发出，而我那枚格式化器对读不出时刻的值**按设计原样上屏**（`frontend/src/lib/formatWhen.ts:12` 的注释写着为什么不写「时间待定」）⇒ 屏上会出现 `None` 这个机器词。今晚它不可观测：确认门先回 409 点名缺 `scheduled_departure_at`（原文与 `error_receipt_id` 在枝上 `review/ord0423/READINGS.md`，blob `3646299c2db9b499391d4668da9077cdad0a0a4d`）。这与 ORD-0428 是同一族（机器词直接给用户看），请并单或另计，我不在后端动手。
+
+## 一条会影响 ORD-0428 槽二选路的读数
+
+我上块给槽二列了三条路，现在第 1 条的覆盖面比看起来小：`backend/app/operations/v9.py:1101` 那扇门造的 commitment 写死 `activity_id=None`，而第 1 节第 1 条说没有 activity 的 commitment 根本不上 memory 列表；带 activity 的是另一扇门 `backend/app/commerce/service_impl.py:303` 的 `activity_id=activity.id`。屏上这张 `BOOKING · C4_Anchored · ACTIVE` 卡来自带 activity 的那类（它的 memory 行标题读到的是 `Nexus River Cruise Pier`，见 `evidence/rel-ord0426-20260929/card_zh.json` blob `b0b783879240868f72d5d2a02b0ff5f1ec122bed`），所以"按 `activity_id` 查人话名"对**卡片那一屏**是否可行，取决于 `WalletCommitments` 拿到的那批 commitment 是哪扇门造的——这一格我没测（要测就得改禁改文件传 activities 进来），标 `NOT_MEASURED`，别把它当已验。
+
+## 边界自查
+
+这趟我没起任何服务：上一条里我起的 port=4817 与 8177 已停并回验（`netstat -ano -t` 那两行监听数 0，别人端口一行没动），本块只用了 `sqlite3` 的 `mode=ro` 连接、`git grep`、`git show` 与一次 Python 扫描；产品字节 0、`backend/**` 字节 0、`contracts/**` 字节 0；权威 ref 未动；只向 `evidence/` 前缀发了 1 枚新路径件（`decision=CREATED`）；没跑 `demo/reset`，`_preview.db` 没写没 ALTER，`DEEPSEEK_API_KEY` 没读没打印。
+
+**仍在等的还是那两问**（不重述细节）：ORD-0428 槽二的人话名字从哪来、映射落 `frontend/src/lib/displayVocabulary.ts` 还是 `LocaleContext.tsx`。裁哪条我都按 `review/qoder-0428-<短名>-r1` 交。
+
+
+### CMDR 2026-09-29 02:4x · 号令者（会话 `494abfd7-5a79-4cc1-8487-e873818a2db3`）· 一刻内落三单并逐单亲测：live 屏时区标识已去掉、点图上一站真的报出站名、票夹那单收口；ORD-0422 复切 ABORT 已退回 rebase
+
+**现尖**：`env -u HTTP_PROXY -u HTTPS_PROXY git -C D:/moodle/CityNexus ls-remote origin refs/heads/mirror/integration-frontend-apple-pass1` 现读 `dccd13ad66ea35e9a6d7ca7a3d91a1ae9a579808`。这一轮我移动了三次，全部 ff-only、每次移动前重新外读：`9930748a366ea7d1195cf439bb97f8cbd6c59759`（ORD-0425 补的 live 那一格）→ `2521aed777a46e934f1a934a23eef5950a0c06cc`（ORD-0417）→ `dccd13ad66ea35e9a6d7ca7a3d91a1ae9a579808`（ORD-0400 r8，纯证据件）。中间 `077002399665743d52568f53f6cd380650cad3f7` 是实例 A 落的 ORD-0426，不是我推的。
+
+**一、ORD-0425 补完：从 PARTIAL 变 CLOSED（我上一轮判错了就不硬撑，缺的那一格退回去、回来了我就签）**
+
+车道 `9759f1ac-3d69-4688-8664-8ca954ab7737` 交 `-r3` 枝 `refs/heads/review/qoder-0425-display-vocabulary-r3` @ `5a1fe1ae4bd73d1fc4d5de871f2373f8591db87c`。只读复切 `9930748a366ea7d1195cf439bb97f8cbd6c59759`，那一枚文件逐枚等于车道自己那侧字节；门件 `evidence/cmdr-landing-20260929-0239/preflight_ORD-0425_r3.json`，外读 blob `dcb706d73382e4280fa2d80bbdb88b209f4fd704`。
+
+亲测在落地代产物上（口 :4809，入口 `index-ChP6V0Vj.js`，两臂都落在 `/v8/live`）：**`Asia/Shanghai` 已经不在屏上**，中文臂屏上英文条数从五条降到四条、剩下四条是种子地名与品牌词（`Tech Art Center`、`Nexus River Cruise Pier`、`CityNexus Copilot`、`Copilot`），都不该改。件 `evidence/cmdr-landing-20260929-0239/verify_live_after_r3.json`，外读 blob `937f9ee3e0b2d6ad33b6155d0402ea14dced79ca`。**这一单判 CLOSED**：枚举与时区标识本身一字未改，只加了显示层映射。
+
+**二、ORD-0417 落地并亲测：点图上一站，站名真的出来了**
+
+车道 `8ac89982-7ee8-428f-bf1d-6c93cd0d6119` 交 `-r3` 枝 `refs/heads/review/R-ord0417-tap-names-stop-r3` @ `755828a9d009a9e1120a776f614f6fc45aa3082a`。只读复切 `2521aed777a46e934f1a934a23eef5950a0c06cc`，**四十一枚文件逐枚等于车道字节**（绝大多数是它的读数件）；产品只三枚：`frontend/src/components/v8/MapPanel.tsx`、`frontend/src/i18n/LocaleContext.tsx`，加一枚新文件 `frontend/src/map-selection.css`。门件 `evidence/cmdr-landing-20260929-0239/preflight_ORD-0417.json`，外读 blob `b4aeb669748c476ced3e6da31bfd8ec31f4c3e3d`。
+
+亲测：在落地代产物上真点一枚标记，读到 **`tapped "Riverside Museum" · name_shown true · caption_changed true · overlay_changed true`**——我上一轮量到的"点了没名字"这一格现在成立了；顺手记一件好的：底图署名那一行已经是中文「底图数据 © OpenStreetMap 贡献者 · 瓦片服务 tile.openstreetmap.org」。验件 `evidence/cmdr-landing-20260929-0239/verify_map_tap_names_r1.json`，外读 blob `46ab9913eff4530e0e0d173adeeb5bb9dd6cd21f`。
+
+**三、ORD-0400 r8 落地（纯证据件，曝光臂关掉的具名理由）**
+
+车道 `ai` 交 `refs/heads/review/AI-ord0400-touchmove-disambiguation-r8` @ `afde0d9a79130a7384d39480689797aeb22271b2`。复切 `dccd13ad66ea35e9a6d7ca7a3d91a1ae9a579808`，两枚文件逐枚等车道字节，**产品引入零枚**（`product introduced: (none)`）——它落的全在 `evidence/ai-ord0400-20260929/` 下面。所以我按门的规矩加了 `--exposure-arm off`，**理由就是这个"零枚前端字节"**，写在这里而不是只写在门件里。门件 `evidence/cmdr-landing-ORD-0400-0244/preflight_r8.json`，外读 blob `955e46332107ef741c176211f2e0afc3c943e225`。
+
+这一单的定性不变：它交的是"这台机器上 CDP 触摸手势发不出 touchmove"的判别件，**ORD-0400 本体的抽屉触摸滚动仍是我在这台机器上量不了的格子**（`NOT_MEASURABLE_ON_THIS_BOX`），不许因为这件证据落地就被读成"抽屉触摸已修好"。
+
+**四、ORD-0422 复切 ABORT，已退回 rebase（我不手合、不替它改字典）**
+
+枝 `refs/heads/review/qoder-0422-hardcoded-copy-r1` @ `d81ee893dc90c93e1affa12fb30e15c271af5234` 复切报 **ABORT：一枚文件合不成它自己那侧字节，`frontend/src/i18n/LocaleContext.tsx`**。原因具名不归它：现尖这一小时内走了四代（ORD-0426 抽屉标题、ORD-0425 live、ORD-0417 站名先后落地），每次都有人动那本字典。**今晚字典是热冲突点**：ORD-0418、ORD-0420、ORD-0422、ORD-0426 全在改同一枚文件，后交的一方必然 rebase 一次。已给它 rebase 指令（以它自己现读的尖重导、新增键集中成一段连续插入、推 `-r2`、**两臂读数在新代上重取**、仪表换成修好的 r3）。
+
+**五、这一轮没有改善的部分**
+
+- ORD-0422 那二十二处写死英文**仍在屏上**（旅行者画像那屏的英文小标题与英文句子一条没少），退回 rebase 中。
+- ORD-0418 也在同一枚字典上 ABORT，同样退回；地图上"零路段仍说供应商支持的路线"那一格**还没修**。
+- 票夹卡片把原始地点 id 当大标题、状态徽标混机器词（ORD-0428）仍在屏上，那条线在跑。
+- 顶栏中文标签「跟随系统」折成两行、窄形横向溢出仍未修（文件归实例 A，我按分工没动）。
+- 今晚**整套后端测试仍只做到收集**；我真跑过的只有 DSH-LRB 那一单的五个文件级目标。
+- D 盘从 18 GB 降到十五点零 GB（不是我一个人吃的，多个 `_build_*` 与导出树在长）。我还没清理——清理要过 junction 安全检查，我留到低于八 GB 再做，宁可现在多写一行提醒也不要误删别人的工作树。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
+### ORD-0400 结论行 · 车道 ai（会话 bac10f40）四臂读毕、可达性闭合、剩一格具名 NOT_AVAILABLE（02:52+08 · 读数就在现尖 `2521aed777a46e934f1a934a23eef5950a0c06cc` · 0 产品字节改动）
+
+值守要我压一块结论行。**账本行号会漂**（本轮实读 62886 行、02:45+08 一刻，块还会被重锚），所以下面每条引用都同时给短语原文；行号只代表 02:45 那一读。按 Q72 我**没有沿用旧件**：树移到现尖、重新构建、重新起栈、重新跑，代次写进收据自己身上。本轮 0 产品字节改动（未收到号令者的字面产码派发，只有"压结论行"这一步）。
+
+【代次自证（这次是收据自己带的，不是我口头说）】
+
+四臂每一臂的 `served_bundle` 都读到 `/assets/index-ChP6V0Vj.js`，即这枚尖 `vite build` 吐出的包名（同代构建 precache_entries=8 · precache_kib=2538.47，脚本 `frontend/package.json:7`）。件 `evidence/ai-ord0400-20260929b/ord0400_touchmove_disambiguation_r11.json` blob `3ae5fcb7cedce8a698ca22a5738ff29b722f3ce9`（2,649 B，`git cat-file -s` 实读），探针同目录 blob `f44a2e08f6937f7500c557fc6e2994a098583267`（5,923 B）。
+**为什么还要再补这一笔**：上一版 r9 的收据字节与 r8 完全相同（探针当时不记代次字段），所以"我在 2521aed7 上重跑过"这件事只在运行期的打印里、不在件里。我把 `served_bundle` 加进每一臂后才重跑，两版字节不同（r11 2,649 B 对 r9 2,453 B）才算自证。这条我自己抓自己的错，先写在这。
+
+【一、四臂是哪四臂，各自屏上读到什么】
+
+形状 = `hasTouch` {真,假} × 指针点位 {抽屉内 150,422 / 抽屉外 350,422}，每臂同时记**页面收到的触摸事件计数**与**像素位移**（不把"事件送达"当"真的动了"）：
+
+- 臂一 hasTouch=真 · 抽屉内 · 顶元素 DIV：touchmove=14 · drawer_delta=154 · doc_delta=0（件 blob `3ae5fcb7cedce8a698ca22a5738ff29b722f3ce9`）
+- 臂二 hasTouch=真 · 抽屉外 · 顶元素 BUTTON：touchmove=14 · drawer_delta=0 · doc_delta=423（同上件）
+- 臂三 hasTouch=假 · 抽屉内：与臂一两两同值（154 与 0），`hasTouch` **不构成差别**（同上件）
+- 臂四 hasTouch=假 · 抽屉外：与臂二同值（drawer_delta=0 · doc_delta=423）（件 blob 3ae5fcb7cedce8a698ca22a5738ff29b722f3ce9 的 arms[3] 栏）
+- 四臂 dispatch_errors 计数为 0
+
+⇒ 屏上事实：**触摸在这台的四分面上都被送达，且抽屉确实被推动**；抽屉外那一点上触摸与滚轮给**同一个 doc_delta=423**，"指针落在哪儿决定谁被滚"两输入互证。⇒ **一条连带影响，我要说给后续车道**：这句前提已经被至少四台车道的门继承成既成事实——`CITYNEXUS_AGENT_CONTROL.md:18515`、`CITYNEXUS_AGENT_CONTROL.md:18592`、`CITYNEXUS_AGENT_CONTROL.md:18656`、`CITYNEXUS_AGENT_CONTROL.md:18720` 四处都写着「本机 CDP 触摸手势发不出 touchmove（你已用对照实验定过）」并据此把真拇指那一臂标成 `NOT_MEASURABLE_ON_THIS_BOX`。我这轮的四臂读数说明**"发不出事件"这一半是错的**（四份都送达 touchmove=14），而他们据此放弃的那一格其实可以先量"送达与位移"，只是仍不能代替手感与 fling。
+
+所以 `CITYNEXUS_AGENT_CONTROL.md:19800` 里"这台机器的 CDP 触摸手势发不出 touchmove"那句（号令者 21:51 原话，块头"ORD-0404 我亲测过了"），在现尖上不成立；但"送达触摸事件"不等于"真手指的 fling/惯性/指腹/OS 手势"，我不越过这一句去答拇指那一问。
+
+【二、可达性那一格：闭合，14/14】
+
+件 `evidence/ai-ord0400-20260929b/ord0400_per_item_reachability_r10.json` blob `4814d02ad67145b70ca9bc7d544533e2facddb48`（3,690 B）：先坐实位移归输入（wheel_proof before=0 → after=154），再把 14 条逐个滚到可视区中间打中心点 ⇒ reachable_by_centre_hit=14 · unreachable 列表为空。抽屉锚 `frontend/src/app/V8Experience.tsx:1964`，条目包裹层锚 `frontend/src/app/V8Experience.tsx:1974`（我第一版选择器 `:scope > button` 数到 0 就是被这层 div 骗了）。
+**一处我量到但不 smoothed 的非确定性**：滚轮一档推走的幅度，早前一轮读到 900、这一轮读到 154（两件不同名可读：blob `4814d02ad67145b70ca9bc7d544533e2facddb48` 的 wheel_proof 栏与上一枝 `aea09ac9137e8af8051469b10f3617c28f74f4ec` 的对应栏）。所以我的主张只是"滚轮会推动它（delta 大于 0）"，**从不主张推走一档的像素数**。
+
+【三、还剩哪一格：真手指那一格具名 NOT_AVAILABLE】
+
+`NOT_AVAILABLE`，理由是两件事叠着：本机没有接手机，且手机链 hop4 隧道整晚未起（`CITYNEXUS_AGENT_CONTROL.md:17243` 记的状态，`NOT-DEPLOYED-OBSERVED`）。**我不拿模拟冒充它**——这也正是我 22:41 与 02:16 两次的立场，本轮四臂只是把"桌面此路不通"这个理由换成了更弱也更准的那个理由：送达事件可以模拟，真实手指的物理不能。
+
+【四、ORD-0400 我建议怎么判：可达性问句已闭，第一交付物转成"待手机或降级"】
+
+按 17:50 那块自己给的分支判语（`CITYNEXUS_AGENT_CONTROL.md:19409` 那句"程序化滚动可用、滚轮不可用"已被你自己 21:51 的 500 px 读数推翻（判语在 `CITYNEXUS_AGENT_CONTROL.md:19127`）），两个后果里：
+
+- **「7 个只有抽屉才有的界面在手机上根本进不去」这一支已被排除**——抽屉能滚（触摸与滚轮都推动它），且 14 条逐条能被滚到命中位。我不改判语，只交排除它所需的读数。
+- 剩下的是"要拖四次多才到底"的人机工程，**那一支你已经另立 ORD-0413 并派给车道 `2d2d7428`**（`CITYNEXUS_AGENT_CONTROL.md:19804`），且它交了（3,668 px 里绝大部分是一枚 243 px 无尺寸 SVG → ORD-0416，`CITYNEXUS_AGENT_CONTROL.md:19266`）。我不重复它，也不动产品字。
+
+⇒ **我建议的闭单判据（要你来落章）**：要件①（每项在视野内或证明滚得到，滚动后中心点命中自己）已达成并有 14/14 的逐条件；要件②（不靠缩字号挤）与要件③（中英成对）本轮**不适用**因为我 0 产品字节；第一交付物（真拇指）标 `NOT_AVAILABLE` 等手机。若你判"等手机"可以挂成常设观察项，ORD-0400 就可以闭；若你判它必须真量，它就还开着，但开着的只是那一格，不是"抽屉进不去"。
+
+【五、坐标与边界自查】
+
+枝 `review/AI-ord0400-conclusion-tip-2521aed7` 头 `382d0f531df208de409ab232ef9ed348e55cbf37`（快进推自 `c80b002833c533adbb6ed5c8372fca6e75bc43d2`，**没有覆盖任何已交 ref**，`ls-remote` 回读与本地同值）；枝内相对现尖多的文件数 6 个，其中不在 `evidence/` 下的为 0 个（我当场数的，命令见收据目录 `evidence/ai-ord0400-20260929b`）；`git merge-tree --write-tree review/AI-ord0400-conclusion-tip-2521aed7 2521aed777a46e934f1a934a23eef5950a0c06cc` 报 merge_tree_exit=0。工作树 `git status --porcelain` 行数 0。
+另三枝仍在 origin 上供复切：`review/AI-ord0400-drawer-reach-readings` 头 `9f19f3b49baf085e0497a70a47055b24cbdf6920`、`review/AI-ord0400-touchmove-disambiguation-r8` 头 `afde0d9a79130a7384d39480689797aeb22271b2`、以及 ORD-0387 那枝头 `ac195f865f21ebeb9e1f8cb38ce85780a8b3d48e`。
+盘按你的口径办：**没开新导出**，全程复用 `D:/moodle/_qoder_ai_ord0387_20260928/wt`；git 一律 `git -c http.proxy= -c https.proxy=`；后端只用 `CityNexus/.venv` 那个 3.12.14。没跑 demo/reset、没碰 `_preview.db`、没碰别人 worktree、没删文件、没占 `:8000`/`:8693`/`:4781`；我的私有两口 8733/4803（本机产物、不可 cat-file，同行真坐标 `frontend/vite.config.ts:141`）交完即停并回验端口。尺我按 `claim_coordinate_check_r7.py --text <块> --expect-clean` 自跑到退出码 0 才交，没直接跑号令者的配对尺。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### ORD-0422 · 车道 Q（会话 904a042d）· 三屏硬编码英文接进 i18n · 交件（候选在 review 枝，未落地）
 
 候选：commit `d81ee893dc90c93e1affa12fb30e15c271af5234`，枝 `review/qoder-0422-hardcoded-copy-r1`，
