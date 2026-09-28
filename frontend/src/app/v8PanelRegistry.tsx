@@ -9,6 +9,7 @@ import { HotelsPanel } from "../features/stay/HotelsPanel";
 import { JourneyInboxWorkbench } from "../features/inbox/JourneyInboxWorkbench";
 import { LiveRecovery } from "../features/execution/LiveRecovery";
 import { PlanComparison } from "../features/planning/PlanComparison";
+import { PlanRankingPanel } from "../features/planning/PlanRankingPanel";
 import { PretripChecklistPanel } from "../features/checklist/PretripChecklistPanel";
 import { PlanVersionHistoryPanel } from "../features/studio/PlanVersionHistoryPanel";
 import { RealCityDiscoveryPanel } from "../features/discovery/RealCityDiscoveryPanel";
@@ -98,6 +99,20 @@ export const routePanels: V8PanelEntry<RouteScope>[] = [
         )}
         {s.slots.hub()}
       </>
+    ),
+  },
+  /* ORD-0439: the comparison screen sits under Today, where the candidate list already lives. It is
+     a registry entry, not a shell edit -- which is the point of this table. */
+  {
+    id: "plan-ranking",
+    surface: "route",
+    testId: "plan-ranking",
+    when: (s) => s.route === "hub",
+    render: (s) => (
+      <PlanRankingPanel
+        budgetMinor={s.data.journey.budget.amount_minor}
+        currency={s.data.journey.budget.currency}
+      />
     ),
   },
   {
