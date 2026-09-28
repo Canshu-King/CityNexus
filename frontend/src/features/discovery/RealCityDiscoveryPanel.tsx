@@ -107,7 +107,11 @@ export function RealCityDiscoveryPanel({
   const t = useT();
   const { locale } = useLocale();
   const supportsTianjinReplay = ["CN-TIANJIN", "TIANJIN", "TSN", "CNX-DEMO"].includes(cityCode.toUpperCase().replaceAll("_", "-"));
-  const [goal, setGoal] = useState("I prefer quiet indoor culture, low walking, and rain-friendly places near my protected Journey moments.");
+  /* ORD-0422: this used to be a hardcoded English sentence sitting in a Chinese screen's input
+     box. It is the example the traveller can edit, so it follows the language the screen opened
+     in. `useState` evaluates once, so switching language mid-visit deliberately leaves their
+     in-progress text alone rather than overwriting what they typed. */
+  const [goal, setGoal] = useState(t("discovery.exampleIntent"));
   const [mode, setMode] = useState<"captured_replay" | "live" | "replay">(supportsTianjinReplay ? "captured_replay" : "live");
   const [result, setResult] = useState<DiscoveryResponse | null>(null);
   const [busy, setBusy] = useState(false);
