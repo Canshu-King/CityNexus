@@ -763,8 +763,12 @@ export function CopilotDock({
       for (let top = ceiling; top >= INSET; top -= SLOT + 8) {
         candidates.push({ left: INSET, top, right: INSET + SLOT, bottom: top + SLOT });
       }
+      /* 6 px of slack: a cell whose edge merely touches a glyph run is not counted free. */
+      const pad = (c: Band, n: number): Band => ({
+        left: c.left - n, top: c.top - n, right: c.right + n, bottom: c.bottom + n,
+      });
       const free = candidates.find(
-        (c) => !ink.some((b) => overlaps(b, c)) && !controls.some((b) => overlaps(b, c)),
+        (c) => !ink.some((b) => overlaps(b, pad(c, 6))) && !controls.some((b) => overlaps(b, c)),
       );
       const cell = free || candidates[0] || rest;
       const slot = { left: Math.round(cell.left), top: Math.round(cell.top) };
