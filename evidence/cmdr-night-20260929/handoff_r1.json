@@ -1,0 +1,35 @@
+{
+ "at_local": "2026-09-28 23:17:33 +0800",
+ "df": [
+  "Filesystem      Size  Used Avail Use% Mounted on",
+  "D:              308G  291G   18G  95% /d"
+ ],
+ "free_bytes": 18324365312,
+ "citynexus_node_modules_du": "427M",
+ "junctions_detached": 40,
+ "junction_failures": 0,
+ "removed_build_dirs": 39,
+ "kept_build_dirs": 7,
+ "ports_still_serving": [
+  {
+   "port": 4781,
+   "asset": "index-BDf7HG58.js"
+  },
+  {
+   "port": 4801,
+   "asset": "index-B0Vw34sm.js"
+  },
+  {
+   "port": 4802,
+   "asset": "index-DI6XcT_p.js"
+  }
+ ],
+ "authoritative_tip": "214ab0ff9f1dc03ffbd57308797e62552b7ee24a",
+ "night_cron_job": "571681e1-29a2-433b-97ff-047e93170003",
+ "cron_every_ms": 3600000,
+ "cron_expires_at": "2026-09-29T11:00:00+08:00",
+ "new_lanes": {
+  "ORD-0410": "9cc37e57-0ae4-4346-9a75-23989350df83",
+  "ORD-0417": "8ac89982-7ee8-428f-bf1d-6c93cd0d6119"
+ }
+}
