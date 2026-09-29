@@ -1,0 +1,45 @@
+    # ---- ternary branches and useState defaults: per line, plus ONE bounded cross-line window ----
+    # ORD-0424 residual 3 said a branch whose literal sits on a different line than its operator is missed. The
+    # narrow shape that is real: the operator ends a line and the next line carries a whole quoted literal. The
+    # wide version (join the statement) was measured and rejected -- `multiline_blind_spot_r2.json`.
+    for i, line in enumerate(lines):
+        if line.strip().startswith(("//", "*", "/*")):
+            continue
+        for rx, shape in ((TERN_TRUE, "TERNARY_BRANCH"), (TERN_FALSE, "TERNARY_BRANCH"),
+                          (STATE_DEFAULT, "STATE_DEFAULT")):
+            for m in rx.finditer(line):
+                # one word in a branch is a machine value (`? "empty"`, `? "html" : "not_json"`),
+                # which is exactly what the published face's K4i arm exists to keep quiet
+                lit = unquote(first_group(m) or "")
+                if not copy_candidate(lit, allow_single_label=False):
+                    continue
+                push(shape, i + 1, lit, starts[i] + (m.start(1) if m.start(1) >= 0 else m.start()))
+        if i + 1 >= len(lines):
+            continue
+        op = _stranded_operator(line)
+        nxt = lines[i + 1]
+        if not op or nxt.strip().startswith(("//", "*", "/*", "}")):
+            continue
+        # A stranded `:` is also how an object property is written, so the false branch is accepted only when
+        # the same expression really carries a stranded `?` above it. Without that guard `title:` plus a string
+        # on the next line would be reported as a ternary branch: same shape, different thing.
+        if op == ":" and not any(_stranded_operator(lines[j]) == "?"
+                                 for j in range(max(0, i - 12), i)):
+            continue
+        m = _LEADING_TOKEN.match(nxt) if op == ":" else _first_token_on(nxt)
+        if not m:
+            continue
+        lit = unquote(_decoded(m))
+        if not lit or not copy_candidate(lit, allow_single_label=False):
+            continue
+        if not (_quoted_forms(lit) & _whole_tokens_on(nxt)):
+            continue            # a fragment of a longer literal, which nobody wrote as a branch
+        owned = False
+        for rx in ((STATE_DEFAULT,) if op == "(" else (TERN_TRUE, TERN_FALSE)):
+            for m2 in rx.finditer(nxt):
+                if unquote(first_group(m2) or "") == lit:
+                    owned = True                    # the same-line reading owns it; never double-count
+        if owned:
+            continue
+        push("STATE_DEFAULT" if op == "(" else "TERNARY_BRANCH",
+             i + 2, lit, starts[i + 1] + m.start())
