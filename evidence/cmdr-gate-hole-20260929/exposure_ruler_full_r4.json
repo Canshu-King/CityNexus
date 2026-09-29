@@ -1,0 +1,193 @@
+{
+ "schema": "CNX_CMDR_UI_EVIDENCE_EXPOSURE_GATE_V1_R7",
+ "ruler": {
+  "name": "ui_exposure_taint_ast_r7b.cjs",
+  "supersedes": "ui_exposure_taint_ast_r7.cjs (blob 3272a4336f60ddd183875000c11e5b5ead6be2be), which superseded r6 = ui_exposure_taint_ast_r3.cjs (blob 6a251d3a6bea70329e06581384a81d5ef54c96a6)",
+  "supersedes_blob": "3272a4336f60ddd183875000c11e5b5ead6be2be",
+  "also_supersedes_r4": {
+   "file": "ui_exposure_taint_ast_r1.cjs",
+   "blob": "eb262f59e54d5142ad0e8041704e751eac473ace"
+  },
+  "rule_lineage": "r1 regex -> r2 regex -> r3 regex -> r4 AST per-file -> r5 module graph -> r6 scope+prose/structure -> r7 attribute slot (Q71) + attributed-fold exoneration (Q67=1 / Q75) -> r7b a cell identity that does not move when the file's lines move",
+  "order": "ORD-0354 (attribute slot + line-independent cell identity) + ORD-0348 (fold exoneration)",
+  "also_supersedes": {
+   "r3": "ui_exposure_field_check_r3.py",
+   "r3_blob": "44e062e6ce9c7b5d97d78e09e432072da102292c"
+  },
+  "generation": "r7b / AST taint, module graph, both DOM surfaces, one auditable exception, stable cell ids",
+  "naming": "local file name == published generation name from r7 onward"
+ },
+ "typescript": "5.9.3",
+ "scope": "per-file: no module graph is built here (--file / --ref --path)",
+ "scope_note": "a per-file count is neither an upper nor a lower bound on --tree: a call into an imported helper is opaque, so a value the helper actually returns as device wording is still reported here (over-report); and poison that arrives through an import has no edge to follow, so the screen reads clean here (under-report). Both directions are pinned by selftest arms F and G, and the split measured on generation 821a0eb54cca1b305a4aa75c1ca8d46a95d51bba is 1 cell only per-file, 3 cells only in --tree.",
+ "upper_bound_claim": "REFUTED on the live generation: 1 cell here does not exist under --tree and 3 cells under --tree do not exist here; see selftest arms F and G",
+ "method": "per-file AST taint through the TypeScript compiler API: poison source, spread along assignment / object-property value / destructure / template hole / call argument by position / return / useState setter, property-path sensitive, fixpoint over the call graph. No regular expression decides anything.",
+ "standing_rule": "Q64=1 (arbiter): data reaching UI / screenshot / evidence artifacts must pass source classification -> allowed fields -> render. mask is a helper, never the first gate.",
+ "allowed_fields": [
+  "http_status",
+  "content_type",
+  "body_bytes",
+  "response_received",
+  "elapsed_ms",
+  "request_id"
+ ],
+ "forbidden": [
+  "raw body",
+  "raw detail",
+  "raw exception",
+  "the answer's own words reaching the DOM by any route, including a forwarding helper"
+ ],
+ "rules_fired": [
+  "UPSTREAM_EXCEPTION_TO_DOM"
+ ],
+ "per_rule": {
+  "UPSTREAM_EXCEPTION_TO_DOM": 3
+ },
+ "files_scanned": 1,
+ "files_failed": 0,
+ "parse_diagnostics_total": 0,
+ "per_file": [
+  {
+   "file": "527f471b6d00:frontend/src/features/discovery/DestinationPreparationPanel.tsx",
+   "hits": 3,
+   "parse_diagnostics": 0,
+   "attributed_in_fold": 0,
+   "depth_cut_lookups": 52,
+   "graph": {
+    "bindings": 82,
+    "functions": 29,
+    "call_sites": 105,
+    "state_pairs": [
+     "query/setQuery",
+     "query/setQuery",
+     "capability/setCapability",
+     "capability/setCapability",
+     "capabilityError/setCapabilityError",
+     "capabilityError/setCapabilityError",
+     "checking/setChecking",
+     "checking/setChecking",
+     "job/setJob",
+     "job/setJob",
+     "actionError/setActionError",
+     "actionError/setActionError",
+     "busy/setBusy",
+     "busy/setBusy",
+     "surveyOpen/setSurveyOpen",
+     "surveyOpen/setSurveyOpen"
+    ],
+    "sinks": 62
+   }
+  }
+ ],
+ "cells_by_slot": {
+  "text_position": 3,
+  "attribute_position": 0,
+  "markup": 0,
+  "dom_write": 0
+ },
+ "cells_total": 3,
+ "attributed_in_fold": [],
+ "attributed_in_fold_count": 0,
+ "fold_without_anchor": [],
+ "fold_without_anchor_count": 0,
+ "resolution_depth_cap": 150,
+ "resolution_truncated_total": 52,
+ "truncated_meaning": "how many times a lookup ran out of depth and had to answer \"unknown\" - a clean verdict with a nonzero value here is NOT a proven clean verdict",
+ "targets_scanned": [
+  "527f471b6d00:frontend/src/features/discovery/DestinationPreparationPanel.tsx"
+ ],
+ "hits": [
+  {
+   "rule": "UPSTREAM_EXCEPTION_TO_DOM",
+   "line": 421,
+   "sink": "jsx-text",
+   "origin_kind": "exception",
+   "structural": {
+    "sink_shape": "text-in:p testid=p:prep-check-error",
+    "origin_kind": "exception",
+    "member": null,
+    "helpers": [
+     "setCapabilityError"
+    ],
+    "hops": [
+     "upstream read error.message off error",
+     "state `capabilityError` written by setCapabilityError(...)"
+    ]
+   },
+   "function_boundaries": 0,
+   "snippet": "{capabilityError}",
+   "taint_trace": [
+    ":114 upstream read error.message off error",
+    ":113 state `capabilityError` written by setCapabilityError(...)",
+    ":421 rendered here"
+   ],
+   "taint_chain": ":114 upstream read error.message off error -> :113 state `capabilityError` written by setCapabilityError(...) -> :421 rendered here",
+   "file": "527f471b6d00:frontend/src/features/discovery/DestinationPreparationPanel.tsx",
+   "cell_identity": "UPSTREAM_EXCEPTION_TO_DOM :: frontend/src/features/discovery/DestinationPreparationPanel.tsx :: text-in:p testid=p:prep-check-error :: exception :: - :: setCapabilityError :: upstream read error.message off error | state `capabilityError` written by setCapabilityError(...)",
+   "cell_id": "092cb054a1c92ec2"
+  },
+  {
+   "rule": "UPSTREAM_EXCEPTION_TO_DOM",
+   "line": 544,
+   "sink": "jsx-text",
+   "origin_kind": "exception",
+   "structural": {
+    "sink_shape": "text-in:p testid=p:prep-server-message",
+    "origin_kind": "exception",
+    "member": null,
+    "helpers": [],
+    "hops": [
+     "upstream read (serverError as { message?: unknown }).message off serverError",
+     "passed through String()",
+     "`serverMessage` = serverError && typeof serverError === \"object\" ? String((serverError as { mess..."
+    ]
+   },
+   "function_boundaries": 0,
+   "snippet": "{serverMessage}",
+   "taint_trace": [
+    ":327 upstream read (serverError as { message?: unknown }).message off serverError",
+    ":327 passed through String()",
+    ":325 `serverMessage` = serverError && typeof serverError === \"object\" ? String((serverError as { mess...",
+    ":544 rendered here"
+   ],
+   "taint_chain": ":327 upstream read (serverError as { message?: unknown }).message off serverError -> :327 passed through String() -> :325 `serverMessage` = serverError && typeof serverError === \"object\" ? String((serverError as { mess... -> :544 rendered here",
+   "file": "527f471b6d00:frontend/src/features/discovery/DestinationPreparationPanel.tsx",
+   "cell_identity": "UPSTREAM_EXCEPTION_TO_DOM :: frontend/src/features/discovery/DestinationPreparationPanel.tsx :: text-in:p testid=p:prep-server-message :: exception :: - :: :: upstream read (serverError as { message?: unknown }).message off serverError | passed through String() | `serverMessage` = serverError && typeof serverError === \"object\" ? String((serverError as { mess...",
+   "cell_id": "164f09e9df5312e6"
+  },
+  {
+   "rule": "UPSTREAM_EXCEPTION_TO_DOM",
+   "line": 597,
+   "sink": "jsx-text",
+   "origin_kind": "exception",
+   "structural": {
+    "sink_shape": "text-in:p testid=p:prep-action-error",
+    "origin_kind": "exception",
+    "member": null,
+    "helpers": [
+     "setActionError"
+    ],
+    "hops": [
+     "upstream read error.message off error",
+     "state `actionError` written by setActionError(...)"
+    ]
+   },
+   "function_boundaries": 0,
+   "snippet": "{actionError}",
+   "taint_trace": [
+    ":152 upstream read error.message off error",
+    ":151 state `actionError` written by setActionError(...)",
+    ":597 rendered here"
+   ],
+   "taint_chain": ":152 upstream read error.message off error -> :151 state `actionError` written by setActionError(...) -> :597 rendered here",
+   "file": "527f471b6d00:frontend/src/features/discovery/DestinationPreparationPanel.tsx",
+   "cell_identity": "UPSTREAM_EXCEPTION_TO_DOM :: frontend/src/features/discovery/DestinationPreparationPanel.tsx :: text-in:p testid=p:prep-action-error :: exception :: - :: setActionError :: upstream read error.message off error | state `actionError` written by setActionError(...)",
+   "cell_id": "54f9f5901f30273c"
+  }
+ ],
+ "verdict": "EXPOSURE_SHAPE_FOUND",
+ "interpretation_limit": "a hit names a shape to justify, not a defect verdict",
+ "claim_kind": "pattern_determined",
+ "claimed_result": "EXPOSURE_SHAPE_FOUND across 1 scanned file(s): 3 hit(s) [\"UPSTREAM_EXCEPTION_TO_DOM@DestinationPreparationPanel.tsx:421\",\"UPSTREAM_EXCEPTION_TO_DOM@DestinationPreparationPanel.tsx:544\",\"UPSTREAM_EXCEPTION_TO_DOM@DestinationPreparationPanel.tsx:597\"]",
+ "derived_result": null
+}
