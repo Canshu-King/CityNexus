@@ -850,6 +850,20 @@ def ensure_schema(target_engine: Engine = engine) -> None:
                     connection.exec_driver_sql(
                         f"ALTER TABLE mobility_facts ADD COLUMN {column} {declaration}"
                     )
+            # ORD-0466: version-scoped share grants. A nullable column with no DEFAULT, because the
+            # rows this table already holds are journey-level grants, and "no version" is their real
+            # shape -- a DEFAULT of '' or a back-filled id would invent a scope nobody granted.  No
+            # foreign key either, and `models.py:1248` says why: every ON DELETE option there would
+            # either delete the grant with its version (collapsing the 409 into a 404) or widen the
+            # scope to the whole journey.
+            share_grant_columns = {
+                row[1]
+                for row in connection.exec_driver_sql("PRAGMA table_info(journey_share_grants)")
+            }
+            if share_grant_columns and "plan_version_id" not in share_grant_columns:
+                connection.exec_driver_sql(
+                    "ALTER TABLE journey_share_grants ADD COLUMN plan_version_id TEXT"
+                )
             _reconcile_commitment_strength_check(connection)
             _reconcile_activity_status_check(connection)
 
