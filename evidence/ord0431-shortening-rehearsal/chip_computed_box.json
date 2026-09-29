@@ -1,0 +1,43 @@
+[
+ {
+  "text": "系统",
+  "box_w": 49,
+  "box_h": 44,
+  "client_w": 47,
+  "padding": [
+   "10px",
+   "10px"
+  ],
+  "border": "1px",
+  "font_size": "16px",
+  "letter_spacing": "normal",
+  "white_space": "normal",
+  "flex_shrink": "1",
+  "min_width": "44px",
+  "inner_content_px": 27,
+  "rects": [
+   16,
+   16
+  ]
+ },
+ {
+  "text": "EN",
+  "box_w": 49,
+  "box_h": 44,
+  "client_w": 47,
+  "padding": [
+   "10px",
+   "10px"
+  ],
+  "border": "1px",
+  "font_size": "16px",
+  "letter_spacing": "normal",
+  "white_space": "normal",
+  "flex_shrink": "1",
+  "min_width": "44px",
+  "inner_content_px": 27,
+  "rects": [
+   20
+  ]
+ }
+]
