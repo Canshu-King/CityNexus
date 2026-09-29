@@ -797,7 +797,7 @@ export function JourneyTrialSetup({
     draft.partySize >= ENTRY_FIELDS.party.min
       ? null
       : { label: entryFieldName("party", zh), target: ENTRY_FIELDS.party.testId },
-    draft.budgetMajor > ENTRY_FIELDS.budget.min
+    draft.budgetMajor >= ENTRY_FIELDS.budget.min
       ? null
       : { label: entryFieldName("budget", zh), target: ENTRY_FIELDS.budget.testId },
   ].filter(Boolean) as MissingField[];

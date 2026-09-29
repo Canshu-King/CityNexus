@@ -18,7 +18,8 @@ export const PARTY_SIZE_MAX = 20;
 export const ROOMS_MIN = 1;
 /** The same ceiling as party size: one room per traveller is the upper bound the form offers. */
 export const ROOMS_MAX = 20;
-export const BUDGET_MINOR_MIN = 0;
+/** The review step blocks on a budget of zero, so a 0 here would be a label promising what the form refuses. */
+export const BUDGET_MINOR_MIN = 1;
 
 type EntryField = {
   zh: string;
