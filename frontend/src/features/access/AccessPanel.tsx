@@ -9,6 +9,7 @@ import {
   readActivity,
   readJourneys,
   readMembers,
+  readRoleRules,
   readShareGrants,
   readSharingDoors,
   RejectionWithFacts,
@@ -19,6 +20,7 @@ import {
   type DoorProbe,
   type JourneyMemberRow,
   type JourneySummary,
+  type RoleRule,
   type ShareGrant,
 } from "./accessDoors";
 import {
@@ -28,13 +30,16 @@ import {
 } from "./accessCopy";
 import {
   actionNamesAMember,
+  isScopeKey,
   memberActionKey,
+  roleLabelKey,
   ROLE_COLLABORATOR,
   ROLE_OWNER,
   VISIBILITY_LINK_READ,
   VISIBILITY_PRIVATE,
   VISIBILITY_PUBLIC,
   permissionConfirmationKey,
+  refusalSentenceKey,
   removalConfirmationKey,
   ROLE_LADDER,
   VISIBILITY_LADDER,
@@ -121,6 +126,7 @@ export function AccessPanel() {
   const [access, setAccess] = useState<AccessRead>({ phase: "loading" });
   const [members, setMembers] = useState<JourneyMemberRow[]>([]);
   const [grants, setGrants] = useState<ShareGrant[]>([]);
+  const [roleRules, setRoleRules] = useState<RoleRule[] | null>(null);
   const [rosterFailed, setRosterFailed] = useState<Attribution | null>(null);
   const [pending, setPending] = useState<{ kind: "grant" | "member"; id: string } | null>(null);
   const [writeState, setWriteState] = useState<{ busy: boolean; refused: string | null }>({
@@ -150,9 +156,14 @@ export function AccessPanel() {
   const loadRoster = useCallback(async (journeyId: string) => {
     setRosterFailed(null);
     try {
-      const [memberRows, grantRows] = await Promise.all([readMembers(journeyId), readShareGrants(journeyId)]);
+      const [memberRows, grantRows, rules] = await Promise.all([
+        readMembers(journeyId),
+        readShareGrants(journeyId),
+        readRoleRules(journeyId),
+      ]);
       setMembers(memberRows);
       setGrants(grantRows);
+      setRoleRules(rules);
     } catch (cause) {
       setRosterFailed(classifyReadFailure(cause));
     }
@@ -168,15 +179,13 @@ export function AccessPanel() {
     [loadRoster],
   );
 
+  /** The refusal is named by `error.reason_code` in the body, not by the status code and not by a
+   *  guess from `details`. The status alone cannot tell "already withdrawn" from "no such row". */
   const refusalKey = (cause: unknown): string => {
     if (!(cause instanceof RejectionWithFacts)) return "other";
-    const envelope = cause.envelope as { error?: { details?: unknown } } | undefined;
-    const details = envelope?.error?.details;
-    if (cause.http_status === 409 && details && typeof details === "object" && "revoked_at" in details) {
-      return "already";
-    }
-    if (cause.http_status === 404) return "missing";
-    return "other";
+    const envelope = cause.envelope as { error?: { reason_code?: unknown } } | undefined;
+    const code = envelope?.error?.reason_code;
+    return typeof code === "string" && code.length > 0 ? code : `http_${cause.http_status}`;
   };
 
   const issueInvitation = useCallback(async () => {
@@ -254,8 +263,25 @@ export function AccessPanel() {
   const quotaKey = invitationQuotaKey({ used: sharing?.rosterSize ?? null, cap: null });
 
   const roleLabel = (role: string): string => {
-    const entry = ROLE_LADDER.find((row) => row.role === role);
-    return entry ? say(entry.labelKey) : say("access.roleUnread", { role });
+    const key = roleLabelKey(role);
+    return key ? say(key) : say("access.roleUnread", { role });
+  };
+
+  /** The ACL row carries a dictionary key, not a sentence (`member.scope.*`, seeded at
+   *  `backend/app/db/session.py`). Looking it up here is the whole point: the words live in the one
+   *  dictionary the server is allowed to name, and a key it invents is reported as unreadable
+   *  rather than answered with a string this file happens to hold. */
+  const scopeSentence = (key: string): string => {
+    if (!isScopeKey(key)) return say("access.scopeKeyUnread", { key });
+    const words = t(key);
+    return words === key ? say("access.scopeKeyUnread", { key }) : words;
+  };
+
+  /** The scope sentence for a member's role, taken from the ACL rows the same trip just answered.
+   *  No row, no sentence -- the screen does not fall back to a role name it read off a member row. */
+  const scopeForRole = (role: string): string | null => {
+    const rule = (roleRules ?? []).find((row) => row.role === role);
+    return rule ? scopeSentence(rule.scope_message_key) : null;
   };
 
   const grantLabel = (visibility: string): string => {
@@ -269,9 +295,11 @@ export function AccessPanel() {
     if (member.removed_at !== null) {
       return say("access.memberStateRemoved", { removed: formatV8Date(member.removed_at, locale) });
     }
-    if (member.member_state === "ACTIVE") return say("access.memberStateActive");
-    if (member.member_state === "EXPIRED") return say("access.memberStateExpired");
-    if (member.member_state === "REMOVED") return say("access.memberStateRemoved", { removed: member.removed_at ?? "" });
+    if (member.member_state === "MEMBER_IN_FORCE") return say("access.memberStateActive");
+    if (member.member_state === "MEMBER_EXPIRED") return say("access.memberStateExpired");
+    if (member.member_state === "MEMBER_WITHDRAWN") {
+      return say("access.memberStateRemoved", { removed: formatV8Date(member.removed_at ?? "", locale) });
+    }
     return say("access.memberStateUnknown", { state: member.member_state });
   };
 
@@ -392,16 +420,27 @@ export function AccessPanel() {
                 : say("access.doorPresent")}
       </p>
 
-      <section className="cn-access-block" aria-label={say("access.ladderHeading")}>
-        <h3 className="cn-access-h">{say("access.ladderHeading")}</h3>
-        <ul className="cn-access-ladder" data-testid="access-role-ladder">
-          {ROLE_LADDER.map((entry) => (
-            <li key={entry.role} className="cn-access-ladder-row" data-role={entry.role}>
-              <span className="cn-access-role">{say(entry.labelKey)}</span>
-              <span className="cn-access-scope">{say(entry.scopeKey)}</span>
-            </li>
-          ))}
-        </ul>
+      <section className="cn-access-block" aria-label={say("access.roleLadderHeading")}>
+        <h3 className="cn-access-h">{say("access.roleLadderHeading")}</h3>
+        {roleRules === null ? (
+          <p data-testid="access-role-ladder-empty">{say("access.scopeDoorSilent")}</p>
+        ) : (
+          <ul className="cn-access-ladder" data-testid="access-role-ladder">
+            {roleRules.map((rule) => (
+              <li className="cn-access-ladder-row" data-role={rule.role} key={rule.role}>
+                <span className="cn-access-role">{roleLabel(rule.role)}</span>
+                <span className="cn-access-scope" data-testid="access-role-scope">
+                  {scopeSentence(rule.scope_message_key)}{" "}
+                  {say("access.roleCapabilityCount", { count: rule.capabilities.length })}
+                </span>
+                <details className="cn-access-details">
+                  <summary>{say("access.capabilityTokens")}</summary>
+                  <p>{rule.capabilities.join(", ")}</p>
+                </details>
+              </li>
+            ))}
+          </ul>
+        )}
         <details className="cn-access-details" data-testid="access-role-details">
           <summary>{say("access.roleDetails")}</summary>
           <p>{say("access.roleDetailsBody")}</p>
@@ -503,11 +542,10 @@ export function AccessPanel() {
         </button>
         {writeState.refused !== null && writeState.refused !== "nosigner" ? (
           <p className="cn-access-refusal" data-testid="access-write-refused">
-            {writeState.refused === "already"
-              ? say("access.refuseAlreadyRevoked")
-              : writeState.refused === "missing"
-                ? say("access.refuseNotFound")
-                : say("access.writeRefusedUnknown", { code: writeState.refused })}
+            {(() => {
+              const key = refusalSentenceKey(writeState.refused);
+              return key ? say(key) : say("access.writeRefusedUnknown", { code: writeState.refused });
+            })()}
           </p>
         ) : null}
       </section>
@@ -577,7 +615,39 @@ export function AccessPanel() {
                       id: member.traveler_id,
                     })}{" "}
                     · {memberStateSentence(member)}
+                    {scopeForRole(member.role) === null ? null : (
+                      <>
+                        <br />
+                        {say("access.memberScopeLine")}
+                        {scopeForRole(member.role)}
+                      </>
+                    )}
                   </span>
+                  {/* Two controls whose doors are not on the line yet. They are short-labelled and
+                      disabled, and the reason is a sentence beside them -- a button that carries its
+                      own paragraph is both unreadable and, at 390 px, what pushed this panel into a
+                      horizontal overflow. */}
+                  <button
+                    className="cn-access-row-action"
+                    data-disabled-reason="role-change-door"
+                    data-testid="access-member-role-change"
+                    disabled
+                    type="button"
+                  >
+                    {say("access.roleChangeButton")}
+                  </button>
+                  <button
+                    className="cn-access-row-action"
+                    data-disabled-reason="self-exit-door"
+                    data-testid="access-member-self-exit"
+                    disabled
+                    type="button"
+                  >
+                    {say("access.selfExitButton")}
+                  </button>
+                  <p className="cn-access-muted" data-testid="access-disabled-reasons">
+                    {say("access.roleChangeDisabled")} {say("access.selfExitDisabled")}
+                  </p>
                   {member.removed_at === null ? (
                     <button
                       className="cn-access-row-action"

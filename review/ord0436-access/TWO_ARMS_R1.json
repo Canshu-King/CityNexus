@@ -1,7 +1,7 @@
 {
-  "started_at": "2026-09-29T12:35:40+08:00",
+  "started_at": "2026-09-29T15:17:43+08:00",
   "backend_identity": {
-    "listener_pid": 30948,
+    "listener_pid": 58284,
     "listener_is_spawned_or_its_child": true,
     "listener_command": "\"C:\\Users\\������\\AppData\\Roaming\\uv\\python\\cpython-3.12.14-windows-x86_64-none\\python.exe\" -X utf8 -m uvicorn app.main:app --host 127.0.0.1 --port 4731 --log-level warning",
     "command_names_this_app_and_port": true,
@@ -10,16 +10,22 @@
     "shared_stores_named_by_this_run": []
   },
   "seed": {
-    "journey_id": "87fa76a2-6644-4f6a-b359-61444da5a5ed",
+    "journey_id": "952922d1-ac25-416f-90bf-8df0f1f40b42",
     "journey_ids": [
-      "87fa76a2-6644-4f6a-b359-61444da5a5ed",
-      "0c0af76b-bbd8-4ef5-b62b-7b90e5e11b57"
+      "952922d1-ac25-416f-90bf-8df0f1f40b42",
+      "93736893-1f97-4201-b574-d9e392b1b84d"
+    ],
+    "member_ids": [
+      "718fed42-ee0d-4e58-bcc5-b85533b83515",
+      "86fc0130-31bb-4865-8959-fd448dbd415a"
     ],
     "delete_door_status": {
       "delete_0": 204,
       "undelete_0": 200,
+      "member_add_0": 201,
       "delete_1": 204,
-      "undelete_1": 200
+      "undelete_1": 200,
+      "member_add_1": 201
     },
     "actions_in_this_lane_database": [
       "journey.created",
@@ -49,14 +55,14 @@
       "doorState": "这台服务器三扇共享门都答了。下面的名单与邀请是这几扇的答案，档位表和确认句仍是这一屏自己的话。",
       "roleRows": 3,
       "roleText": [
-        "所有者 全部权限：改可见性、请人、移除成员、删除行程。",
-        "管理员 管理协作者、编辑地点。",
-        "协作者 编辑地点。"
+        "管理员 能读这条行程、管成员、编辑地点。 这台服务器给这一档 3 项能力。 能力编号（服务器原样叫法）",
+        "协作者 能读这条行程、编辑地点。 这台服务器给这一档 2 项能力。 能力编号（服务器原样叫法）",
+        "所有者 能读这条行程、改它、管成员、编辑地点，也能管共享链接。 这台服务器给这一档 5 项能力。 能力编号（服务器原样叫法）"
       ],
       "roleAttributes": [
-        "OWNER",
         "ADMIN",
-        "COLLABORATOR"
+        "COLLABORATOR",
+        "OWNER"
       ],
       "visibilityRows": [
         "仅个人 别人打不开，拿到链接也打不开。",
@@ -111,7 +117,7 @@
         }
       ],
       "inviteTtl": "这台服务器没有给出邀请的有效期，所以这里不声称有一个。",
-      "inviteQuota": "这台服务器给了成员数（0），没给上限，所以这里不说这条行程满没满。",
+      "inviteQuota": "这台服务器给了成员数（1），没给上限，所以这里不说这条行程满没满。",
       "activityLines": [
         "新建了这条行程",
         "把这条行程丢进了回收站",
@@ -142,18 +148,39 @@
         "before": "empty",
         "afterCreate": "获得链接者可见 · 到 12月6日 08:00 之前可开。",
         "confirmSaid": "撤销后，拿这条链接的人就打不开了。你自己的权限不变。 确认撤销 撤销",
-        "afterRevoke": "获得链接者可见 · 已于 9月29日 12:36 撤销。拿这条链接的人再也打不开了。",
+        "afterRevoke": "获得链接者可见 · 已于 9月29日 15:19 撤销。拿这条链接的人再也打不开了。",
         "stillOpenAfterAsk": "false",
         "confirmStillVisible": true,
-        "confirmButtonPresent": true
+        "confirmButtonPresent": true,
+        "pastRefusal": "那个到期时刻已经过去了，服务器没有发出这条邀请。",
+        "grantRowsAfterRefusal": 1
       },
-      "rosterLine": "成员门答了，名单是空的——这是它的答案，不是没读到。",
+      "rosterLine": "协作者 · 令牌 b9605625-a903-4546-84c9-bbe859bcc356 · 已在 9月29日 15:19 撤回 这一档能做什么：能读这条行程、编辑地点。 改角色 我自己退出 改角色要等这台服务器给出改角色的写门，这一屏不自己改。 「我自己退出」要等一扇自己的门，而且这台服务器目前还不知道请求上的「我」是谁。",
       "activityCaveat": "成员与邀请这类动作，这台服务器还没往活动流里写，所以上面只有这条行程自己的动作。",
+      "member": {
+        "rows": 1,
+        "scopeSaid": "协作者 · 令牌 b9605625-a903-4546-84c9-bbe859bcc356 · 还在生效 这一档能做什么：能读这条行程、编辑地点。",
+        "statesBefore": "MEMBER_IN_FORCE",
+        "afterWithdraw": "协作者 · 令牌 b9605625-a903-4546-84c9-bbe859bcc356 · 已在 9月29日 15:19 撤回 这一档能做什么：能读这条行程、编辑地点。",
+        "afterReload": "协作者 · 令牌 b9605625-a903-4546-84c9-bbe859bcc356 · 已在 9月29日 15:19 撤回 这一档能做什么：能读这条行程、编辑地点。"
+      },
+      "disabledReasons": {
+        "roleChange": "改角色",
+        "selfExit": "我自己退出",
+        "roleChangeDisabledAttr": "",
+        "selfExitDisabledAttr": "",
+        "reasonsOnScreen": "改角色要等这台服务器给出改角色的写门，这一屏不自己改。 「我自己退出」要等一扇自己的门，而且这台服务器目前还不知道请求上的「我」是谁。"
+      },
+      "roleScopes": [
+        "能读这条行程、管成员、编辑地点。 这台服务器给这一档 3 项能力。",
+        "能读这条行程、编辑地点。 这台服务器给这一档 2 项能力。",
+        "能读这条行程、改它、管成员、编辑地点，也能管共享链接。 这台服务器给这一档 5 项能力。"
+      ],
       "rawKeyLeak": false,
       "unfilledPlaceholders": [],
-      "cjkChars": 783,
-      "latinWords": 15,
-      "wholePageCjkChars": 799,
+      "cjkChars": 945,
+      "latinWords": 18,
+      "wholePageCjkChars": 961,
       "doorStillLoading": false,
       "overflowX": 0,
       "pageErrors": [],
@@ -166,14 +193,14 @@
       "doorState": "This server answered all three sharing doors. The roster and the invitations below are its answers; the ladders and the confirmation lines are still this screen's own words.",
       "roleRows": 3,
       "roleText": [
-        "Owner Everything: change visibility, invite people, remove members, delete the trip.",
-        "Admin Manage collaborators and edit places.",
-        "Collaborator Edit places."
+        "Admin Can read this trip, manage members and edit places. This server grants this role 3 capabilities. The capability codes, as the server names them",
+        "Collaborator Can read this trip and edit places. This server grants this role 2 capabilities. The capability codes, as the server names them",
+        "Owner Can read this trip, change it, manage members, edit places, and manage share links. This server grants this role 5 capabilities. The capability codes, as the server names them"
       ],
       "roleAttributes": [
-        "OWNER",
         "ADMIN",
-        "COLLABORATOR"
+        "COLLABORATOR",
+        "OWNER"
       ],
       "visibilityRows": [
         "Only me No one else can open it, not even holding the link.",
@@ -228,20 +255,20 @@
         }
       ],
       "inviteTtl": "This server gave no expiry for an invitation, so none is claimed here.",
-      "inviteQuota": "This server gave a member count (0) and no limit, so nothing here says whether the trip is full.",
+      "inviteQuota": "This server gave a member count (1) and no limit, so nothing here says whether the trip is full.",
       "activityLines": [
         "created this trip",
         "put this trip in the recycle bin",
         "brought this trip back from the recycle bin",
-        "added a member this server did not name to this trip",
-        "This server reported an action this screen has no sentence for: journey.unlisted_share_change."
+        "This server reported an action this screen has no sentence for: journey.unlisted_share_change.",
+        "added a member this server did not name to this trip"
       ],
       "activityAttributes": [
         "journey.created",
         "journey.deleted",
         "journey.undeleted",
-        "journey.member_added",
-        "journey.unlisted_share_change"
+        "journey.unlisted_share_change",
+        "journey.member_added"
       ],
       "activityEmpty": false,
       "activityFailed": false,
@@ -259,17 +286,38 @@
         "before": "empty",
         "afterCreate": "Anyone with the link · Open until 6 Dec, 08:00.",
         "confirmSaid": "After this, whoever holds the link can no longer open it. Your own access does not change. Confirm withdrawal Withdraw",
-        "afterRevoke": "Anyone with the link · Withdrawn at 29 Sept, 12:36. Whoever held this link can no longer open it.",
+        "afterRevoke": "Anyone with the link · Withdrawn at 29 Sept, 15:19. Whoever held this link can no longer open it.",
         "stillOpenAfterAsk": "false",
         "confirmStillVisible": true,
-        "confirmButtonPresent": true
+        "confirmButtonPresent": true,
+        "pastRefusal": "That expiry moment is already behind us, so the server did not issue the invitation.",
+        "grantRowsAfterRefusal": 1
       },
-      "rosterLine": "The member door answered with nobody in the list -- that is its answer, not a load failure.",
+      "rosterLine": "Collaborator · token b9605625-a903-4546-84c9-bbe859bcc356 · withdrawn at 29 Sept, 15:19 What this role can do: Can read this trip and edit places. Change role Leave this trip Changing a role waits for this server's own write door; this screen will not change one by itself. Leaving this trip by yourself waits for a door of its own, and this server does not yet know who ‘I’ is on a request.",
       "activityCaveat": "Member and invitation actions are not written into this trip's activity stream by this server yet, so the list above holds only the trip's own actions.",
+      "member": {
+        "rows": 1,
+        "scopeSaid": "Collaborator · token b9605625-a903-4546-84c9-bbe859bcc356 · still in force What this role can do: Can read this trip and edit places.",
+        "statesBefore": "MEMBER_IN_FORCE",
+        "afterWithdraw": "Collaborator · token b9605625-a903-4546-84c9-bbe859bcc356 · withdrawn at 29 Sept, 15:19 What this role can do: Can read this trip and edit places.",
+        "afterReload": "Collaborator · token b9605625-a903-4546-84c9-bbe859bcc356 · withdrawn at 29 Sept, 15:19 What this role can do: Can read this trip and edit places."
+      },
+      "disabledReasons": {
+        "roleChange": "Change role",
+        "selfExit": "Leave this trip",
+        "roleChangeDisabledAttr": "",
+        "selfExitDisabledAttr": "",
+        "reasonsOnScreen": "Changing a role waits for this server's own write door; this screen will not change one by itself. Leaving this trip by yourself waits for a door of its own, and this server does not yet know who ‘I’ is on a request."
+      },
+      "roleScopes": [
+        "Can read this trip, manage members and edit places. This server grants this role 3 capabilities.",
+        "Can read this trip and edit places. This server grants this role 2 capabilities.",
+        "Can read this trip, change it, manage members, edit places, and manage share links. This server grants this role 5 capabilities."
+      ],
       "rawKeyLeak": false,
       "unfilledPlaceholders": [],
       "cjkChars": 0,
-      "latinWords": 518,
+      "latinWords": 619,
       "wholePageCjkChars": 2,
       "doorStillLoading": false,
       "overflowX": 0,
@@ -290,7 +338,7 @@
       {
         "name": "three roles, each with one scope sentence",
         "verdict": "PASS",
-        "detail": "OWNER,ADMIN,COLLABORATOR :: 所有者 全部权限：改可见性、请人、移除成员、删除行程。 | 管理员 管理协作者、编辑地点。 | 协作者 编辑地点。"
+        "detail": "ADMIN,COLLABORATOR,OWNER :: 管理员 能读这条行程、管成员、编辑地点。 这台服务器给这一档 3 项能力。 能力编号（服务器原样叫法） | 协作者 能读这条行程、编辑地点。 这台服务器给这一档 2 项能力。 能力编号（服务器原样叫法） | 所有者 能读这条行程、改它、管成员、编辑地点，也能管共享链接。 这台服务器给这一档 5 项能力。 能力编号（服务器原样叫法）"
       },
       {
         "name": "every visibility level carries its consequence",
@@ -330,7 +378,7 @@
       {
         "name": "the invitation counts, or says it was given no numbers",
         "verdict": "PASS",
-        "detail": "这台服务器给了成员数（0），没给上限，所以这里不说这条行程满没满。 || This server gave a member count (0) and no limit, so nothing here says whether the trip is full."
+        "detail": "这台服务器给了成员数（1），没给上限，所以这里不说这条行程满没满。 || This server gave a member count (1) and no limit, so nothing here says whether the trip is full."
       },
       {
         "name": "activity rows the screen has words for read as sentences, not as the server's token",
@@ -360,12 +408,12 @@
       {
         "name": "the Chinese arm reads Chinese",
         "verdict": "PASS",
-        "detail": "cjk=783"
+        "detail": "cjk=945"
       },
       {
         "name": "the English arm reads English",
         "verdict": "PASS",
-        "detail": "panelCjk=0 latin=518"
+        "detail": "panelCjk=0 latin=619"
       },
       {
         "name": "the one control is under the finger at 390x844",
@@ -390,12 +438,37 @@
       {
         "name": "after the confirmation the row says withdrawn, in the language the device is in",
         "verdict": "PASS",
-        "detail": "{\"zh\":\"获得链接者可见 · 已于 9月29日 12:36 撤销。拿这条链接的人再也打不开了。\",\"en\":\"Anyone with the link · Withdrawn at 29 Sept, 12:36. Whoever held this link can no longer open it.\"}"
+        "detail": "{\"zh\":\"获得链接者可见 · 已于 9月29日 15:19 撤销。拿这条链接的人再也打不开了。\",\"en\":\"Anyone with the link · Withdrawn at 29 Sept, 15:19. Whoever held this link can no longer open it.\"}"
       },
       {
         "name": "the member door's answer is read out, empty included, and the activity caveat is on screen",
         "verdict": "PASS",
-        "detail": "{\"roster\":\"成员门答了，名单是空的——这是它的答案，不是没读到。\",\"caveat\":\"成员与邀请这类动作，这台服务器还没往活动流里写，所以上面只有这条行程自己的动作。\"}"
+        "detail": "{\"roster\":\"协作者 · 令牌 b9605625-a903-4546-84c9-bbe859bcc356 · 已在 9月29日 15:19 撤回 这一档能做什么：能读这条行程、编辑地点。 改角色 我自己退出 改角色要等这台服务器给出改角色的写门，这一屏不自己改。 「我自己退出」要等一扇自己的门，而且这台服务器目前还不知道请求上的「我」是谁。\",\"caveat\":\"成员与邀请这类动作，这台服务器还没往活动流里写，所以上面只有这条行程自己的动作。\"}"
+      },
+      {
+        "name": "the role ladder is the door's three rows, each with the dictionary's own sentence for its key",
+        "verdict": "PASS",
+        "detail": "{\"zh\":[\"能读这条行程、管成员、编辑地点。 这台服务器给这一档 3 项能力。\",\"能读这条行程、编辑地点。 这台服务器给这一档 2 项能力。\",\"能读这条行程、改它、管成员、编辑地点，也能管共享链接。 这台服务器给这一档 5 项能力。\"],\"en\":[\"Can read this trip, manage members and edit places. This server grants this role 3 capabilities.\",\"Can read this trip and edit places. This server grants this role 2 capabilities.\",\"Can read"
+      },
+      {
+        "name": "a member row carries its scope sentence, and removing it is the server's answer, not the screen's",
+        "verdict": "PASS",
+        "detail": "{\"zh\":{\"rows\":1,\"scopeSaid\":\"协作者 · 令牌 b9605625-a903-4546-84c9-bbe859bcc356 · 还在生效 这一档能做什么：能读这条行程、编辑地点。\",\"statesBefore\":\"MEMBER_IN_FORCE\",\"afterWithdraw\":\"协作者 · 令牌 b9605625-a903-4546-84c9-bbe859bcc356 · 已在 9月29日 15:19 撤回 这一档能做什么：能读这条行程、编辑地点。\",\"afterReload\":\"协作者 · 令牌 b9605625-a903-4546-84c9-bbe859bcc356 · 已在 9月29日 15:19 "
+      },
+      {
+        "name": "the withdrawal is still there after a reload (it came from the server, not from component state)",
+        "verdict": "PASS",
+        "detail": "{\"zh\":\"协作者 · 令牌 b9605625-a903-4546-84c9-bbe859bcc356 · 已在 9月29日 15:19 撤回 这一档能做什么：能读这条行程、编辑地点。\",\"en\":\"Collaborator · token b9605625-a903-4546-84c9-bbe859bcc356 · withdrawn at 29 Sept, 15:19 What this role can do: Can read this trip and edit places.\"}"
+      },
+      {
+        "name": "the two controls with no door are disabled and say why, in the language of the device",
+        "verdict": "PASS",
+        "detail": "{\"zh\":{\"roleChange\":\"改角色\",\"selfExit\":\"我自己退出\",\"roleChangeDisabledAttr\":\"\",\"selfExitDisabledAttr\":\"\",\"reasonsOnScreen\":\"改角色要等这台服务器给出改角色的写门，这一屏不自己改。 「我自己退出」要等一扇自己的门，而且这台服务器目前还不知道请求上的「我」是谁。\"},\"en\":{\"roleChange\":\"Change role\",\"selfExit\":\"Leave this trip\",\"roleChangeDisabledAttr\":\"\",\"selfExitDisabledAttr\":\"\",\"reasonsOnScreen"
+      },
+      {
+        "name": "a refusal the traveller can cause is named by its code's sentence, and issues nothing",
+        "verdict": "PASS",
+        "detail": "{\"zh\":\"那个到期时刻已经过去了，服务器没有发出这条邀请。\",\"en\":\"That expiry moment is already behind us, so the server did not issue the invitation.\",\"rows\":[1,1]}"
       },
       {
         "name": "neither arm threw a page error",
@@ -408,7 +481,7 @@
   },
   "server_readback": {
     "zh": {
-      "journey_id": "87fa76a2-6644-4f6a-b359-61444da5a5ed",
+      "journey_id": "952922d1-ac25-416f-90bf-8df0f1f40b42",
       "grants_http": 200,
       "grants": 1,
       "with_expiry": 1,
@@ -416,7 +489,7 @@
       "members_http": 200
     },
     "en": {
-      "journey_id": "0c0af76b-bbd8-4ef5-b62b-7b90e5e11b57",
+      "journey_id": "93736893-1f97-4201-b574-d9e392b1b84d",
       "grants_http": 200,
       "grants": 1,
       "with_expiry": 1,
