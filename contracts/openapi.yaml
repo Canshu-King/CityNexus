@@ -735,6 +735,100 @@ paths:
                 items: {$ref: '#/components/schemas/JourneyRoleRule'}
         '404': {$ref: '#/components/responses/NotFound'}
 
+  /collections:
+    get:
+      operationId: listCollections
+      description: >-
+        ORD-0444: every collection shelf this server holds, each with the rows on it.  The 收藏 exit
+        of the POI capture chain needed a container to land in; before this order the product had no
+        such object at all (`collection`/`favorite`/收藏 named nothing but GeoJSON FeatureCollection).
+        One door answers both halves because a screen that had to ask per shelf could not tie a
+        count to the rows beneath it: `item_count` here is the length of that same answer's `items`
+        array (`backend/app/services.py` -- `collection_folder_schema`).
+        Unscoped, and said rather than implied: no traveller, journey or plan owns a shelf in this
+        version, and there is no pagination, filter or sort parameter.  「我的收藏」 is a name a
+        screen puts on a shelf, not a column.  An empty store answers `[]` -- absence is a list, not
+        a 404.
+      responses:
+        '200':
+          description: Shelves, oldest created first, each carrying its own rows in add order
+          content:
+            application/json:
+              schema:
+                type: array
+                items: {$ref: '#/components/schemas/CollectionFolder'}
+    post:
+      operationId: createCollection
+      description: >-
+        ORD-0444: name a shelf.  The only input is `name`, bounded exactly as
+        `TravelerCreate.display_name` is (1..120 characters) and stored verbatim -- there is no
+        rename door on this server yet, so what is written here is what the shelf reads for as long
+        as it exists.  Two shelves may share a name; the id addresses one.
+        The body is the shelf as `listCollections` answers it, read back through the same helper
+        (`backend/app/main.py` -- `_collection_rows_by_folder`), so a new shelf reports
+        `item_count` 0 because the read found no rows, not because the door typed a zero.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: {$ref: '#/components/schemas/CollectionFolderCreate'}
+      responses:
+        '201':
+          description: The shelf as this server now holds it, with no rows on it yet
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/CollectionFolder'}
+        '422':
+          description: Name missing or outside 1..120 characters
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/ErrorEnvelope'}
+  /collections/{folder_id}/items:
+    parameters:
+      - {$ref: '#/components/parameters/CollectionFolderId'}
+    post:
+      operationId: addCollectionItem
+      description: >-
+        ORD-0444: put one place on one shelf.  The row stores a *reference* to `places`, not a copy:
+        the name, category, city code and coordinate in the answer are resolved from that row on
+        every read, so a shelf cannot show a place the store no longer holds under it.  No plan,
+        activity or day is written -- that is the 加进计划 door's job, and the reason 收藏 is a
+        separate exit at all.
+        `folder_id` is a plain string rather than a uuid-formatted parameter, and that is what makes
+        the counter-case answerable: a shelf this server does not hold is
+        `404 COLLECTION_FOLDER_NOT_FOUND`, a place it does not hold is `404 PLACE_NOT_FOUND`, and a
+        place already on that shelf is `409 PLACE_ALREADY_IN_COLLECTION` naming the row that won.
+        None of the three is a 500 and none is the generic `require()` not-found, because the three
+        conditions need three different sentences on a screen.
+        One shelf holds a place once, enforced by `UNIQUE(folder_id, place_id)`
+        (`backend/db/schema.sql`) so two workers taking two taps of the same place cannot both
+        write.  There is no remove-from-shelf door on this server yet; nothing here may imply one.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: {$ref: '#/components/schemas/CollectionItemCreate'}
+      responses:
+        '201':
+          description: The row as this server now holds it, with the place resolved
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/CollectionItem'}
+        '404':
+          description: COLLECTION_FOLDER_NOT_FOUND, or PLACE_NOT_FOUND -- which one is in `reason_code`
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/ErrorEnvelope'}
+        '409':
+          description: PLACE_ALREADY_IN_COLLECTION; `details` names the row that is already there
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/ErrorEnvelope'}
+        '422':
+          description: Body outside the declared bounds
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/ErrorEnvelope'}
   /journeys/{journey_id}/constraints:
     parameters:
       - {$ref: '#/components/parameters/JourneyId'}
@@ -2134,6 +2228,16 @@ components:
       in: path
       required: true
       schema: {type: string, format: uuid}
+    CollectionFolderId:
+      # ORD-0444: a shelf id, and deliberately NOT `format: uuid`.  The door reads the string as it
+      # arrived and answers a shelf this server does not hold with `404 COLLECTION_FOLDER_NOT_FOUND`.
+      # Declaring a uuid here would turn that same traveller action into a transport-level 422 and
+      # take the named refusal away -- the ids this door hands out are uuid4 strings, but the shape
+      # of a wrong one is a 404 with a name, not a parse error.
+      name: folder_id
+      in: path
+      required: true
+      schema: {type: string, minLength: 1, maxLength: 64}
     ActivityId:
       name: activity_id
       in: path
@@ -2647,6 +2751,62 @@ components:
         # and a null value is the server answering "never recorded", which is not the
         # same fact as WGS84 and is therefore typed nullable rather than defaulted.
         source_coordinate_system: {type: [string, 'null']}
+    CollectionFolderCreate:
+      # ORD-0444: the whole of creating a shelf.  The bounds are copied from `TravelerCreate`'s
+      # `display_name` rather than invented, and the name is stored verbatim -- there is no rename
+      # door yet, so this is the name the shelf reads for its whole life.
+      type: object
+      required: [name]
+      properties:
+        name: {type: string, minLength: 1, maxLength: 120}
+    CollectionItemCreate:
+      # `place_id` is a plain string because `places.id` is a string column, not a UUID: a
+      # uuid-formatted parameter would answer a real place with `validation.not_an_id`.
+      type: object
+      required: [place_id]
+      properties:
+        place_id: {type: string, minLength: 1, maxLength: 64}
+        note: {type: [string, 'null'], maxLength: 280}
+    CollectionItem:
+      # One shelf row with the place behind it resolved from `places` at answer time.
+      # There is no `address` and no cover image, and that is a measured gap rather than an
+      # omission: `places` has no address column among its 14, and its `metadata_json` holds
+      # `cost_minor` / `duration_min` / `accessibility_evidence` and nothing address-shaped.
+      # A screen that printed 「地址」 would be printing a label over nothing.
+      type: object
+      required: [id, folder_id, place_id, name, category, city_code, location,
+                 provider_key, coordinate_system, note, added_at]
+      properties:
+        id: {type: string}
+        folder_id: {type: string}
+        place_id: {type: string}
+        name: {type: string}
+        category: {type: string}
+        city_code: {type: string}
+        location: {$ref: '#/components/schemas/GeoPoint'}
+        provider_key: {type: string}
+        coordinate_system: {type: string}
+        # null means no note was ever written -- a different fact from an empty one.
+        note: {type: [string, 'null']}
+        added_at: {type: string}
+    CollectionFolder:
+      # A shelf and its rows in one answer.  `item_count` is the length of this same payload's
+      # `items` array (`backend/app/services.py` -- `collection_folder_schema`), so the number and
+      # the rows beneath it cannot describe two different reads.
+      # Unscoped on purpose and said here: no traveller, journey or plan owns a shelf in this
+      # version, and there is no pagination, filter or sort parameter on `listCollections`.
+      type: object
+      required: [id, name, created_at, updated_at, item_count, items]
+      properties:
+        id: {type: string}
+        name: {type: string}
+        # Written equal at creation and left alone afterwards: adding a row writes
+        # `collection_items`, not this row, so `updated_at` stays "when this shelf row was last
+        # written" instead of becoming a second, contradicting account of the shelf.
+        created_at: {type: string}
+        updated_at: {type: string}
+        item_count: {type: integer}
+        items: {type: array, items: {$ref: '#/components/schemas/CollectionItem'}}
     RealCityDiscoveryCandidate:
       type: object
       x-fastapi-extra: allow

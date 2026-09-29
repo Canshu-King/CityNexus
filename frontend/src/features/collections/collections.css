@@ -1,0 +1,59 @@
+/* ORD-0444 -- the collection shelf. Its own file, same reason as ORD-0402's `journeyTrash.css`:
+   the shared sheets (`styles.css`, `design-tokens.css`) are hot and other lanes edit them the same
+   night, and every value here is read from the token sheet, never redefined by it. */
+.cn-collections {
+  display: grid;
+  gap: 10px;
+  margin-top: 22px;
+  padding: 16px 18px 18px;
+  border: 1px solid var(--cn-hairline);
+  border-radius: var(--cn-r-card);
+  background: var(--v8-panel);
+}
+.cn-collections-head { display: grid; gap: 6px; }
+.cn-collections-list { display: grid; gap: 12px; margin: 0; padding: 0; list-style: none; }
+.cn-collections-shelf {
+  display: grid;
+  gap: 8px;
+  padding: 12px;
+  border: 1px solid var(--cn-hairline);
+  border-radius: var(--cn-r-control);
+  background: var(--v8-panel);
+}
+.cn-collections-shelf-name { color: var(--v8-ink); font-size: var(--cn-fs-body); overflow-wrap: anywhere; }
+.cn-collections-shelf-count,
+.cn-collections-empty-shelf {
+  color: var(--cn-ink-tertiary);
+  font-size: var(--cn-fs-caption);
+  /* A shelf name is whatever the traveller typed and a coordinate pair is two long decimals; both
+     can be one unbroken token, so these wrap anywhere rather than clipping the row. */
+  overflow-wrap: anywhere;
+}
+.cn-collections-rows { display: grid; gap: 8px; margin: 0; padding: 0; list-style: none; }
+.cn-collections-row { display: grid; gap: 3px; padding-left: 10px; border-left: 2px solid var(--cn-hairline); }
+.cn-collections-row-name { color: var(--v8-ink); font-size: var(--cn-fs-body); overflow-wrap: anywhere; }
+.cn-collections-row-meta,
+.cn-collections-row-note {
+  color: var(--cn-ink-tertiary);
+  font-size: var(--cn-fs-caption);
+  overflow-wrap: anywhere;
+}
+.cn-collections-notice { display: grid; gap: 8px; }
+.cn-collections-empty { display: grid; gap: 10px; }
+.cn-collections-action { width: fit-content; }
+.cn-collections-outcome {
+  margin: 0;
+  color: var(--v8-ink);
+  font-size: var(--cn-fs-body);
+  overflow-wrap: anywhere;
+}
+.cn-collections-details { margin-top: 6px; }
+.cn-collections-details summary { color: var(--cn-ink-tertiary); font-size: var(--cn-fs-caption); }
+@media (max-width: 680px) {
+  .cn-collections { padding: 14px; }
+  /* Amendment F-2: the >=44px contract belongs to the touch layer, and on a phone the empty
+     state's 「建一个收藏夹」 is the only way forward from this screen -- it must be tappable at
+     the touch minimum, not a text-sized link. */
+  .cn-collections-action,
+  .cn-collections-notice .v8-quiet-button { min-height: var(--cn-touch-min); }
+}
