@@ -10,7 +10,7 @@
 - used-edge projection repair commit: `f7cc3d45888035a9abbb9b88397c70b149251333`
 - selected-plan experience projection repair commit: `86d2f27a`
 - truthful live-navigation repair commit: `91cbf629`
-- final product/evidence commit before this receipt update: `0a7a6346`
+- final product/evidence commit before this receipt update: `62c006ec`
 - clean before product calls: yes (`git status --porcelain` empty)
 - authority/mainline merge: none
 
@@ -276,6 +276,15 @@ the actual next `active_plan.legs[*]` entry when the comparison collection is em
 The row is the persisted frozen leg; it does not infer a mode from duration, turn the
 unknown cost into zero, or relabel the route as synthetic.
 
+The map surface now uses the same fallback. Its clean readback is:
+
+```text
+未提供出行方式 · 约42分钟 · 费用未知
+选中方案冻结路线证据 · valhalla-http · LIVE_PROVIDER_CAPTURE
+```
+
+This keeps the live and map evidence consumers aligned on the same selected-plan leg.
+
 Captured artifacts:
 
 - `frontend/output/playwright/r77-suzhou-user-visible-clean.png`
@@ -287,6 +296,7 @@ Captured artifacts:
 - `frontend/output/playwright/r77-suzhou-map-mobility-unavailable-clean.png`
 - `frontend/output/playwright/r77-suzhou-map-no-route-title-clean.png`
 - `frontend/output/playwright/r77-suzhou-live-frozen-evidence-clean.png`
+- `frontend/output/playwright/r77-suzhou-map-frozen-evidence-clean.png`
 
 The final frontend gates after this repair were:
 
