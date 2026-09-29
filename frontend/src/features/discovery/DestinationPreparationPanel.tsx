@@ -20,6 +20,10 @@
  *     choose another destination, retry, or go and plan -- and the action comes from the server's
  *     `recommended_action` where it exists.
  */
+/* ORD-0440 second half: three of this panel's cells were `catch { setX(error.message) }` and the
+   message is built out of the answer's body, so upstream prose reached the screen. The failure now
+   carries a dictionary key chosen by *this file*, plus the status this device saw -- `http_status` is
+   one of the fields the exposure rule allows. Nothing from the body is rendered. */
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useLocale, useT } from "../../i18n/LocaleContext";
 import { deviceReadout } from "../../lib/failureAttribution";
@@ -27,9 +31,18 @@ import { PrepAbandonSurvey } from "./PrepAbandonSurvey";
 import { STOP_ACTION_KEY, SURVEY_COPY, appendSurveyLog } from "./prepAbandonSurveyCopy";
 import {
   cityNexusApi,
+  CityNexusApiError,
   type CatalogHydrationOperation,
   type DestinationCapability,
 } from "../../api/citynexus";
+
+/** A failure this screen may show: a sentence from the dictionary, plus the status this device read.
+ *  The answer's own wording is never part of it. */
+type PrepFailure = { key: string; status: number | null };
+
+function toPrepFailure(key: string, error: unknown): PrepFailure {
+  return { key, status: error instanceof CityNexusApiError ? error.status : null };
+}
 
 type Props = {
   journeyId?: string | null;
@@ -48,10 +61,10 @@ export function DestinationPreparationPanel({ journeyId, onOpenPlan, initialQuer
 
   const [query, setQuery] = useState(initialQuery);
   const [capability, setCapability] = useState<DestinationCapability | null>(null);
-  const [capabilityError, setCapabilityError] = useState<string | null>(null);
+  const [capabilityError, setCapabilityError] = useState<PrepFailure | null>(null);
   const [checking, setChecking] = useState(false);
   const [job, setJob] = useState<CatalogHydrationOperation | null>(null);
-  const [actionError, setActionError] = useState<string | null>(null);
+  const [actionError, setActionError] = useState<PrepFailure | null>(null);
   const [busy, setBusy] = useState(false);
   const [surveyOpen, setSurveyOpen] = useState(false);
 
@@ -86,9 +99,7 @@ export function DestinationPreparationPanel({ journeyId, onOpenPlan, initialQuer
           }
         } catch (error) {
           /* A read that failed is not a job that failed: name it and keep the last real reading. */
-          setActionError(
-            error instanceof Error ? error.message : zh ? "读取准备进度失败。" : "Reading the job failed.",
-          );
+          setActionError(toPrepFailure("discovery.prepErrJobRead", error));
         }
       };
       void tick();
@@ -110,9 +121,7 @@ export function DestinationPreparationPanel({ journeyId, onOpenPlan, initialQuer
       setCapability(await cityNexusApi.getDestinationCapability(wanted));
     } catch (error) {
       setCapability(null);
-      setCapabilityError(
-        error instanceof Error ? error.message : zh ? "这次没有读到能力判定。" : "The capability read failed.",
-      );
+      setCapabilityError(toPrepFailure("discovery.prepErrCapabilityRead", error));
     } finally {
       setChecking(false);
     }
@@ -130,9 +139,7 @@ export function DestinationPreparationPanel({ journeyId, onOpenPlan, initialQuer
          than answering 409, so the screen says "already preparing" instead of pretending to start. */
       if (!started.terminal) watch(started.operation_id);
     } catch (error) {
-      setActionError(
-        error instanceof Error ? error.message : zh ? "没能开始准备。" : "Could not start preparing.",
-      );
+      setActionError(toPrepFailure("discovery.prepErrStart", error));
     } finally {
       setBusy(false);
     }
@@ -148,9 +155,7 @@ export function DestinationPreparationPanel({ journeyId, onOpenPlan, initialQuer
       setJob(stopped);
       return true;
     } catch (error) {
-      setActionError(
-        error instanceof Error ? error.message : zh ? "没能停止这次准备。" : "Could not stop this preparation.",
-      );
+      setActionError(toPrepFailure("discovery.prepErrStop", error));
       return false;
     } finally {
       setBusy(false);
@@ -322,6 +327,11 @@ export function DestinationPreparationPanel({ journeyId, onOpenPlan, initialQuer
   };
 
   const serverError = job?.error ?? null;
+  /* ORD-0440 second half, third cell. The reading line used to carry `serverError.message` behind the
+     label "服务器的原话". ORD-0369 settled the shape for this a month ago -- relocation, not deletion: the
+     sentence moves into a technical detail fold, and the fold carries the `data-cnx-field` anchor that
+     says what this device actually measured (`response_received`), which is the one condition the
+     exposure rule exonerates a text-position cell on. */
   const serverMessage =
     serverError && typeof serverError === "object"
       ? String((serverError as { message?: unknown }).message ?? "")
@@ -418,7 +428,10 @@ export function DestinationPreparationPanel({ journeyId, onOpenPlan, initialQuer
 
       {capabilityError && (
         <p className="role-alert" role="alert" data-testid="prep-check-error">
-          {capabilityError}
+          {t(capabilityError.key)}
+          {capabilityError.status !== null ? (
+            <small data-testid="prep-check-error-status">HTTP {capabilityError.status}</small>
+          ) : null}
         </p>
       )}
 
@@ -538,12 +551,27 @@ export function DestinationPreparationPanel({ journeyId, onOpenPlan, initialQuer
           <span className="v8-kicker">{zh ? "准备进度" : "Preparation"} · {job.status}</span>
           <h3 data-testid="prep-job-title">{jobCopy().title}</h3>
           <p data-testid="prep-job-body">{jobCopy().body}</p>
-          {serverMessage && (
-            <p className="prep-server" data-testid="prep-server-message">
-              {zh ? "服务器的原话：" : "The server's own words: "}
-              {serverMessage}
-            </p>
-          )}
+          {serverError ? (
+            <>
+              <p className="prep-server" data-testid="prep-server-message">
+                {t("discovery.prepErrServer")}
+              </p>
+              {serverMessage ? (
+                <details
+                  className="v8-advanced"
+                  data-cnx-fold
+                  data-cnx-field="response_received"
+                  data-cnx-value="true"
+                  data-testid="prep-server-detail"
+                >
+                  <summary data-testid="prep-server-summary">
+                    {zh ? "技术详情" : "Technical detail"}
+                  </summary>
+                  <p data-testid="prep-server-words">{serverMessage}</p>
+                </details>
+              ) : null}
+            </>
+          ) : null}
           <div className="prep-actions">
             {!job.terminal && !surveyOpen && (
               <button
@@ -594,7 +622,10 @@ export function DestinationPreparationPanel({ journeyId, onOpenPlan, initialQuer
 
       {actionError && (
         <p className="role-alert" role="alert" data-testid="prep-action-error">
-          {actionError}
+          {t(actionError.key)}
+          {actionError.status !== null ? (
+            <small data-testid="prep-action-error-status">HTTP {actionError.status}</small>
+          ) : null}
         </p>
       )}
     </section>
