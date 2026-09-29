@@ -113,6 +113,30 @@ The agent correctly declined to request a replan because no server-owned
 disruption trigger exists. Native MCP remains unproven; this run is recorded as
 the configured Hermes compatibility runtime, not as native Hermes.
 
+## Execution-state rerun
+
+The selected plan was then started through the real product endpoint on the same
+disposable Journey:
+
+```text
+POST /api/v1/journeys/9b11e4cd-c1b5-43e6-aedf-6402a0cfddd2/start -> HTTP 200
+Journey.status = ACTIVE
+Journey.current_activity_id = ba2a6cbe-eb29-58e8-a6bb-2e137de36ff2
+active PlanVersion.status = ACTIVE
+active_plan_version_id = e311ab50-5e61-5520-92fa-15ad977a565d
+Twin.cursor_status = VALID
+Twin.next_mode = WALK
+Twin.next_eta_min = 42
+```
+
+A second real PLAN_ONLY inspection in that execution state completed as
+`441a39bb-0c9d-491e-9b74-2047b0ee31e8`. Its actual tool sequence was
+`inspect_journey -> inspect_twin -> list_replans`; all returned
+`COMPLETED / ALLOW_AUTO`, with no mutation. It reported the current activity as
+`ACTIVE`, the next activity as `PLANNED`, the same used edge and the same live
+Valhalla provenance. It also honestly reported `latest_event_id = null` and an
+empty TravelerTwin; neither was filled from route evidence.
+
 ## DeepSeek Builder execution
 
 The WorkBuddy OpenAI-compatible endpoint was called in process memory with no credential persisted or printed:
@@ -481,7 +505,9 @@ Captured artifacts:
 - `frontend/output/playwright/r77-suzhou-live-evidence-mode-clean.png`
 - `frontend/output/playwright/r77-suzhou-map-live-mode-clean.png`
 - `frontend/output/playwright/r77-suzhou-live-final-twin-clean.png`
+- `frontend/output/playwright/r77-suzhou-live-executing-clean.png`
 - `evidence/revolution-realtrip/r77_agent_plan_only_rerun.json`
+- `evidence/revolution-realtrip/r77_agent_execution_plan_only.json`
 
 The final frontend gates after this repair were:
 

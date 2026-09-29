@@ -40,6 +40,8 @@ structured facts; search was unconfigured.
 - `POST /plans/e311ab50-5e61-5520-92fa-15ad977a565d/select`: HTTP 200.
 - Reload: Journey `PLANNED`, `active_plan_version_id=e311ab50-5e61-5520-92fa-15ad977a565d`,
   plan `SELECTED`, `selectable=true`, `is_current=true`, `stale=false`.
+- Real `/api/v1/journeys/{journey_id}/start`: HTTP 200; Journey became `ACTIVE`,
+  the first activity became `ACTIVE`, and the active PlanVersion became `ACTIVE`.
 - `/experience`, `/twin`, `/v8/live`, and `/v8/map` agree on `WALK`, 42 minutes,
   `valhalla-http`, and `LIVE_PROVIDER_CAPTURE`.
 
@@ -52,6 +54,10 @@ The real same-Journey `PLAN_ONLY` run is recorded in
 with no mutation. After the Twin repair, the agent saw
 `next_leg_id=plan-evidence:e311ab50-5e61-5520-92fa-15ad977a565d:0`,
 `next_mode=WALK`, and `next_eta_min=42`.
+
+After `/start`, the execution-state run is recorded in
+`evidence/revolution-realtrip/r77_agent_execution_plan_only.json`; it saw
+`cursor_status=VALID`, current `网师园=ACTIVE`, and the same real next edge.
 
 DeepSeek Builder activity remains the earlier WorkBuddy-compatible proposal
 recorded in `R77_HERMES_TRUTH_REPAIR.md`; current product authority came from
@@ -66,11 +72,14 @@ advisory remains.
 
 ## Remaining truth gaps
 
-- The Journey has no persisted execution cursor yet, so `ABSENT_FALLBACK` is the
-  honest pre-execution state.
+- The pre-start Journey correctly used `ABSENT_FALLBACK`; after `/start`, the
+  persisted cursor is `VALID` and points to the first activity.
 - This one-day plan has one used mobility edge; the 72 captured Valhalla facts
   are not all used edges.
 - No replan was requested because there is no server-owned disruption event.
+- The execution run still has no device-side `latest_event_id`, and the
+  TravelerTwin has no preference/capability evidence; route evidence was not
+  used to fill either gap.
 
 Replay evidence and screenshots are under `evidence/revolution-realtrip/` and
-`frontend/output/playwright/`.
+`frontend/output/playwright/`, including `r77-suzhou-live-executing-clean.png`.
