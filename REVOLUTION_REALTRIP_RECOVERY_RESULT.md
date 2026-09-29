@@ -13,7 +13,8 @@
 - Starting commit: `4ee14229f80691cf8e5ea913375c0caf83ac02ee`
 - Latest product code commit: `c352bacd`
 - R77 recovery repair commit: `f03f3f053c7566200ac75c6e7441a228ffe89eee`
-- Final evidence commit: the final `git rev-parse HEAD` reported with this handoff
+- Final material experimental/evidence snapshot commit: `c0cd28baef04300b4cabe1e19a3c9332923c1532`
+- The final handoff metadata commit may contain only this explicit commit annotation; the material R77 source/evidence snapshot is the commit above.
 - Branch: `codex/revolution-realtrip-recovery`
 - Worktree: `D:\moodle\CityNexus-Revolution-RealTrip-Recovery`
 - Database: `backend/r77_selectable_probe.db` (disposable lab DB)
