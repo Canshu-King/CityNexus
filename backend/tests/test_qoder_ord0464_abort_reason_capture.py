@@ -1,9 +1,8 @@
 """ORD-0464 - a trip that gets binned carries the reason the traveller gave, in one of three named states.
 
-First measured at the authoritative tip `45513fc7957214dc385b4dffea9a662a0d8b1d1c`, and re-measured on the
-base this branch now sits on, `4037cb331ea00b83124316d40329762fa1131689` (the door moved from `:2984` to
-`:3006` underneath the rebase, so the citations below are pinned to that commit rather than to a bare line
-number that the next landing would move).  At both readings
+First measured at the authoritative tip `45513fc7957214dc385b4dffea9a662a0d8b1d1c`, and re-measured on each
+base this branch has been rebased onto.  The door moved from `:2984` to `:3006` under the first rebase, so the
+citations below are pinned to a commit rather than to a bare line number the next landing would move.
 `DELETE /api/v1/journeys/{journey_id}` (`4037cb331ea00b83124316d40329762fa1131689:backend/app/main.py:3006`) took no request body at all
 (`contracts/openapi.yaml` declared `'204'/'404'/'409'` and nothing else), wrote no
 `journey_outcome_events` row - only `record_audit(action="journey.deleted")` - and the vocabulary that
