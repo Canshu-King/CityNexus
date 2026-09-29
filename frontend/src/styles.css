@@ -1854,3 +1854,11 @@ button { display: block; width: 100%; margin-top: 12px; border: 0; border-radius
     min-height: var(--cn-touch-min);
   }
 }
+
+.v8-mode-chips button:disabled,
+.v8-compare-button:disabled {
+  border-color: #e5e8ee;
+  color: #a0a9b5;
+  background: #f5f6f8;
+  cursor: not-allowed;
+}

@@ -1599,6 +1599,7 @@ export function V8Experience() {
         data={data}
         selected={selected}
         mode={mode}
+        canChangeMode={Boolean(selected)}
         comparison={comparison}
         isHandledDisruption={isHandledDisruption}
         onMode={changeMode}
@@ -3551,6 +3552,7 @@ function LiveSecondary({
   data,
   selected,
   mode,
+  canChangeMode,
   comparison,
   isHandledDisruption,
   onMode,
@@ -3561,6 +3563,7 @@ function LiveSecondary({
   data: V8Data;
   selected: V8Data["options"][number] | null;
   mode: V8Mode;
+  canChangeMode: boolean;
   comparison: V8Data["mobility_facts"];
   isHandledDisruption: (
     item: NonNullable<V8Data["active_plan"]>["disruptions"][number],
@@ -3633,23 +3636,34 @@ function LiveSecondary({
         <div className="v8-mode-chooser">
           <div>
             <span>{t("live.modeForLeg")}</span>
-            <b>{t("live.chooseRoute")}</b>
+            <b>{canChangeMode ? t("live.chooseRoute") : t("live.modeUnavailable")}</b>
           </div>
           <div className="v8-mode-chips">
             {v8Modes.map((item) => (
               <button
+                type="button"
                 data-testid={`mode-${item.toLowerCase()}`}
                 key={item}
-                className={mode === item ? "active" : ""}
-                data-contrast-role={mode === item ? "state" : "control"}
+                className={canChangeMode && mode === item ? "active" : ""}
+                data-contrast-role={canChangeMode && mode === item ? "state" : "control"}
+                disabled={!canChangeMode}
+                aria-disabled={!canChangeMode}
+                title={!canChangeMode ? t("live.modeUnavailable") : undefined}
                 onClick={() => void onMode(item)}
               >
                 {modeLabel(item, zh)}
               </button>
             ))}
           </div>
-          <button className="v8-compare-button" onClick={onSheet}>
-            {t("live.compareAll")}
+          <button
+            type="button"
+            className="v8-compare-button"
+            disabled={!canChangeMode}
+            aria-disabled={!canChangeMode}
+            title={!canChangeMode ? t("live.compareUnavailable") : undefined}
+            onClick={onSheet}
+          >
+            {canChangeMode ? t("live.compareAll") : t("live.compareUnavailable")}
           </button>
         </div>
         <div className="v8-live-side">
