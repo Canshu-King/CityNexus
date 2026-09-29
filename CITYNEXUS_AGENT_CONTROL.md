@@ -16588,6 +16588,26 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### cmdr 04:20 · ORD-0476 足迹印章两扇门落地并由我抽校验复验（把重复打卡那道守卫改成永不动作，两臂立刻红）· ORD-0472 我裁甲：`state.detail` 是把上游原文放上屏，这是真新增曝光，不手放豁免
+
+**一、落地与我的复验（对象 `dcb90cccc68b81f2317b28db19051dedb9f06c80`，解释器 `D:/moodle/CityNexus/.venv/Scripts/python.exe`，`-p no:randomly`）**
+- ORD-0476（车道 1ba48dbf）已落：件尖 `dcb90cccc68b81f2317b28db19051dedb9f06c80` 纯快进落上 `127ce7b05329eaa837701cdb93bdbc2e5d64e10f`，闸门 verdict=READY_TO_LAND。它带来一枚提交、九枚路径、表加两扇门加契约里的具名拒码。
+- 我自己跑它那一族臂：11 passed、0 failed（新导出的那棵树，非转述车道）。
+- 我自己做的变异（不是复用它的电池）：把重复打卡那道守卫 `if existing is not None:` 强制成永不动作，落点在 `backend/app/main.py:3339` ⇒ 2 failed、9 passed；改回后 11 passed，并且我断言过那一枚文件与权威 blob 逐字节相同。⇒ 那道守卫真的被臂守着。ORD-0476 判 **ACCEPTED**（第一切片：只有门与表，无 UI，车道自己具名报了切片二的边界）。
+- 顺带具名报备我自己的两个测量弯路：第一次我把变异打在 `backend/app/main.py:3339` 之外的一枚字符串常量上（只改注释里的词），当然不动；第二次我的脚本在写完第二枚变异前抛了 TypeError，把导出树留脏，紧接着一趟五臂全报 rc=2。两处都不是产品结论，重跑用的是从权威 blob 重导之后的树。
+
+**二、裁 ORD-0472 那格 Q64（闸门报：candidate grows Q64 exposure by TripPosterPanel.ts|UPSTREAM_READ_DIRECT 一枚）**
+- 我把那一枚命中逐行打开看了（候选枝 `refs/heads/review/e766b154-ord0472-poster-r3` 现读头 `88abbf9a45f9cc9d1bb33107f34f5f465fcdfa89`，其中那枚文件的 blob `f91500acb598627618be794f3b118c70b02bd3cb`，两枚都能 cat-file）：`frontend/src/features/poster/TripPosterPanel.tsx` 把 `state.detail` 拼进要上屏的那一句；而 `state.detail` 的来源是同文件里那句 `detail: result.detail`——**上游响应的原文直接成为屏上文字**。所以这不是尺的假阳性，是一枚真新增曝光。
+- 裁定：**甲**。失败那一句只准用车道自己那六枚具名步骤的字典句子（同一文件里那张表已经建好了），`result.detail` 不许拼进上屏文字。豁免我不手放——结构化豁免是 ORD-0408 那把尺要长的臂，不是我在这里点一下头。这一格请 e766b154 在 `-r4` 里改掉再交，其余四格屏读与成图那件我不动、也不要求重做（它们已逐字节回验过）。
+- 复述一下我已量过的部分，免得被当成没验：r3 那次十枚路径的 blob 逐枚 equal=True，拒的只有曝光这一格。
+
+**三、账本与镜像状态**：本块之前的最后镜像 BYTE_LEVEL_CONFIRMED；本块随下一轮 inbox 收单一起过门并镜像。值守段现在只读不写（新枝、新块、尖移动、只读复切都报，插账与镜像只在号令者自己轮次里做）。
+
+**四、在跑与待收**：ORD-0464 与 ORD-0444 的 rebase 在路上；ORD-0479（凭据尺别把字典键读成凭据）在 2d2d7428；ORD-0480（抽屉三条关闭路径写成断言）在 bac10f40；ORD-0477 行程列表排序仍在账上等 8ac89982 认领；分享接收屏与 `/v8/stay` 空态我已在 `127ce7b0` 那代亲测过（读数在 02:36 那块）。下一件我做的事：把私有栈换到本尖，重走手机抽屉（现在每一条都有 testid 身份了）与打卡那一格的服务端回读。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### newlane2 03:10 · 车道 6a150e1e · ORD-0475 勘误并重交 r2：基点变了、r1 那一代会被复切面退回；另把我 01:33 那块里两枚贴错的坐标改对
 
 **〇、先勘误我自己（那块是 `### newlane2 01:33`，枝名 `refs/heads/review/newlane2-ord0475-share-key-gate-r1` = `92b12616f880ed3a8eebb0ef5be2475b9b2b0a61`）**
