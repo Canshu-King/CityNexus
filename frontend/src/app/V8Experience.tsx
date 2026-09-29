@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import {
   cityCodeLabel,
   commitmentKindLabel,
@@ -3701,6 +3701,10 @@ function LiveSecondary({
   );
 }
 
+/* How many stop rows the pressed-down list keeps in view. Small enough that the capture control is
+   on the first screen at 320 px, large enough that the list is not a tease. */
+const COLLAPSED_STOP_ROWS = 4;
+
 function MapPage({
   data,
   selected,
@@ -3725,6 +3729,49 @@ function MapPage({
   const planStops = (data.active_plan?.activities ?? []).filter(
     (item) => activityCoordinate(item) != null,
   );
+  /* ORD-0453 — the third state. A long list on a short screen used to be called reachable because it
+     scrolled, but nothing on the screen said so: the rows past the fold were simply off the edge of a
+     clipped box. Here the clip is admitted — the box is pressed down to the top edge of the chip after
+     the last one it shows, a fade marks that edge, and one persistent capture control names the whole
+     list and opens the rest.
+
+     Pressing is done by height, not by leaving rows out of the DOM. Two accepted arms of this lane's
+     own gates count stop rows as "every pinned stop has a row here" —
+     `e2e/qoder-map-ord0390-selection-both-ways.spec.ts:284` (4 counted against 9 pins) and
+     `e2e/qoder-ord0394-map-coordinates.spec.ts:261` — and both read through
+     `getByTestId(/^map-stop-/).count()`, which counts nodes, not sight. A collapse that deleted nodes
+     would pass for as long as those arms stop earlier on their own preconditions and go red the moment
+     either precondition clears. */
+  const [stopsExpanded, setStopsExpanded] = useState(false);
+  const [pressHeight, setPressHeight] = useState<number | null>(null);
+  const stopsBoxRef = useRef<HTMLDivElement | null>(null);
+  const stopIds = planStops.map((item) => item.id).join(",");
+  /* The clip line is the bottom of the last chip that must stay whole, read off the laid-out chip
+     rather than computed from a height: `styles.css:47` gives every bare `button` `width: 100%`, so a
+     stop chip takes a line to itself -- measured, the pressed height came out 244 px at 320, 360, 390
+     and 414 alike -- and the right number is "where the fifth chip ends", which a row count cannot say
+     if a long name ever wraps. Taking the TOP of the next chip instead would cut the shown chips too
+     whenever it shares their line. */
+  const measurePressed = () => {
+    const box = stopsBoxRef.current;
+    if (!box) return;
+    const chips = Array.from(box.querySelectorAll<HTMLElement>("[data-testid^='map-stop-']"));
+    if (chips.length <= COLLAPSED_STOP_ROWS) {
+      setPressHeight(null);
+      return;
+    }
+    const keep = chips[COLLAPSED_STOP_ROWS - 1];
+    setPressHeight(Math.max(0, keep.offsetTop + keep.offsetHeight));
+  };
+  useLayoutEffect(measurePressed, [stopIds, locale, selectedActivityId, stopsExpanded]);
+  useEffect(() => {
+    const box = stopsBoxRef.current;
+    if (!box || typeof ResizeObserver === "undefined") return;
+    const observer = new ResizeObserver(() => measurePressed());
+    observer.observe(box);
+    return () => observer.disconnect();
+  }, [stopIds, locale]);
+  const stopsPressed = !stopsExpanded && pressHeight != null;
   const selectedActivity =
     planStops.find((item) => item.id === selectedActivityId) ?? null;
   /* ORD-0390 ①: selection has to be readable on both halves of the screen, and on a phone the card
@@ -3780,21 +3827,67 @@ function MapPage({
           {/* The reverse half: a row here selects the stop, which pans the map and presses its
               marker.  Name only — times and money stay off the map affordance. */}
           {planStops.length > 0 && (
-            <div className="v8-map-stops" data-testid="map-stops">
-              <span className="v8-kicker">{mapCopy(locale, "stopsKicker")}</span>
-              {planStops.map((stop) => (
+            <div
+              className="v8-map-stops-wrap"
+              data-testid="map-stops"
+              data-stops-expanded={stopsExpanded ? "true" : "false"}
+              data-stops-pressed={stopsPressed ? "true" : "false"}
+            >
+              <div
+                className="v8-map-stops"
+                data-testid="map-stops-box"
+                data-press-height={pressHeight ?? "none"}
+                ref={stopsBoxRef}
+                style={stopsPressed ? { maxHeight: pressHeight! } : undefined}
+              >
+                <span className="v8-kicker">{mapCopy(locale, "stopsKicker")}</span>
+                {planStops.map((stop) => (
+                  <button
+                    className={stop.id === selectedActivityId ? "v8-map-stop selected" : "v8-map-stop"}
+                    key={stop.id}
+                    type="button"
+                    data-testid={`map-stop-${stop.id}`}
+                    aria-label={mapCopy(locale, "stopLocateAria").replace("%s", stop.title)}
+                    aria-pressed={stop.id === selectedActivityId}
+                    onClick={() => onSelectActivity(stop.id)}
+                  >
+                    {stop.title}
+                  </button>
+                ))}
+              </div>
+              {/* The capture layer: a real button that exists in both states, so a centre hit lands on
+                  something that answers in either. Pressed, it names the whole list; open, it offers
+                  the way back. It is the only opener.
+
+                  The order also allowed "tap the map to expand", and I measured why that is not free:
+                  binding maplibre's click event to this setter made the geometry arm of
+                  `e2e/qoder-ord0417-tap-names-the-stop.spec.ts` read 26 controls becoming 31, because
+                  that arm taps the glass on purpose and the tap changed what it was counting in the
+                  middle of its own measurement (run `ord0453reg1`, 8 failures on that spec). A tap on
+                  the map keeps meaning only what the map says it means. A DOM layer across the glass
+                  is also out -- that is the ORD-0134 failure this panel already shipped once: it takes
+                  the drag and the pins with it. If tap-to-open is still wanted, ORD-0417's arm has to
+                  move with it, and that is a ruling rather than a side effect of this one. */}
+              {stopsPressed || stopsExpanded ? (
                 <button
-                  className={stop.id === selectedActivityId ? "v8-map-stop selected" : "v8-map-stop"}
-                  key={stop.id}
+                  className="v8-map-stops-capture"
                   type="button"
-                  data-testid={`map-stop-${stop.id}`}
-                  aria-label={mapCopy(locale, "stopLocateAria").replace("%s", stop.title)}
-                  aria-pressed={stop.id === selectedActivityId}
-                  onClick={() => onSelectActivity(stop.id)}
+                  data-testid="map-stops-capture"
+                  aria-expanded={stopsExpanded}
+                  aria-label={mapCopy(locale, "stopsCaptureAria")}
+                  onClick={() => setStopsExpanded((open) => !open)}
                 >
-                  {stop.title}
+                  <span className="v8-map-stops-mask" aria-hidden="true" />
+                  <span className="v8-map-stops-capture-text">
+                    {stopsExpanded
+                      ? mapCopy(locale, "stopsCollapseCta")
+                      : mapCopy(locale, "stopsShowAllTotal").replace(
+                          "%s",
+                          String(planStops.length),
+                        )}
+                  </span>
                 </button>
-              ))}
+              ) : null}
             </div>
           )}
           {comparison.slice(0, 3).map((fact) => (

@@ -34,7 +34,10 @@ export type MapCopyKey =
   | "stopSelectedLead"
   | "viewportResetToJourney"
   | "viewportOnTarget"
-  | "viewportOffTarget";
+  | "viewportOffTarget"
+  | "stopsShowAllTotal"
+  | "stopsCollapseCta"
+  | "stopsCaptureAria";
 
 const COPY: Record<MapCopyKey, { zh: string; en: string }> = {
   noLocationTitle: { zh: "尚未获取地图位置",
@@ -85,6 +88,15 @@ const COPY: Record<MapCopyKey, { zh: string; en: string }> = {
   viewportOnTarget: { zh: "视野正落在这段行程上", en: "The view is on your journey" },
   viewportOffTarget: { zh: "已移出行程视野，点按回到全程", en: "Moved off the journey — tap to fit it all" },
   stopSelectedLead: { zh: "已选中", en: "Selected" },
+  /* ORD-0453 — the third state of a long stop list on a small screen.
+     Borrowed shape only (`layout/layout_ai_center_poi_recommend_v2`: a list container, a mask and a
+     click-capture over it): the sentences below are ours, and no asset from that package is in this
+     repository. `stopsShowAllTotal` names the WHOLE count rather than the number of rows left out,
+     because pressing the list down by height keeps every row in the document and reachable — a
+     sentence claiming rows are "not shown" would go false the moment the pressed box is scrolled. */
+  stopsShowAllTotal: { zh: "查看全部 %s 个地点", en: "Show all %s places" },
+  stopsCollapseCta: { zh: "收起清单", en: "Collapse list" },
+  stopsCaptureAria: { zh: "展开或收起地点清单", en: "Expand or collapse the stop list" },
 };
 
 /** Same locale rule the component used inline: anything starting with zh takes the Chinese arm. */
