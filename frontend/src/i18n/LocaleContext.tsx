@@ -93,7 +93,7 @@ const en: Dict = {
   "shell.workspace": "Workspace",
   "shell.workspaceSub": "Trip operations",
   "shell.factsSynced": "Journey facts synced",
-  "shell.plansModes": "{plans} plans · 5 modes",
+  "shell.plansModes": "{plans} plans · {modes} modes",
   "shell.plansModesPending": "{plans} plans · route mode pending",
   "shell.travelers": "{n} {plural:traveler}",
 
@@ -1026,7 +1026,7 @@ const zhCN: Dict = {
   "shell.workspace": "工作区",
   "shell.workspaceSub": "行程运营",
   "shell.factsSynced": "行程事实已同步",
-  "shell.plansModes": "{plans} 个方案 · 5 种模式",
+  "shell.plansModes": "{plans} 个方案 · {modes} 种模式",
   "shell.plansModesPending": "{plans} 个方案 · 出行方式待补充",
   "shell.travelers": "{n} 位旅行者",
 

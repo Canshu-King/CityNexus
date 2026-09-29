@@ -1547,9 +1547,15 @@ export function V8Experience() {
       </div>
     );
 
-  const hasKnownRouteMode =
-    data.options.some((item) => item.leg_modes.some(Boolean)) ||
-    Boolean(data.active_plan?.legs.some((leg) => Boolean(leg.mode)));
+  const routeModes = new Set<string>();
+  data.options.forEach((item) => {
+    item.leg_modes.filter(Boolean).forEach((itemMode) => routeModes.add(itemMode));
+  });
+  data.active_plan?.legs.forEach((leg) => {
+    if (leg.mode) routeModes.add(leg.mode);
+  });
+  const routeModeCount = routeModes.size;
+  const hasKnownRouteMode = routeModeCount > 0;
 
   /* ORD-0392: the fourteen `{route === "x" && <Panel/>}` blocks that used to sit in the content
      area are now one table in `app/v8PanelRegistry.tsx`. This file keeps only what it owns: the
@@ -1749,6 +1755,7 @@ export function V8Experience() {
             <div>
               {t(hasKnownRouteMode ? "shell.plansModes" : "shell.plansModesPending", {
                 plans: data.options.length || (data.active_plan ? 1 : 0),
+                modes: routeModeCount,
               })}
             </div>
           </div>
