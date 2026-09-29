@@ -1,0 +1,65 @@
+{
+ "door_file": "D:\\moodle\\_qoder_cmdr_ref_20260921\\live_checks\\preflight_and_land_r5.py",
+ "door_sha1_over_bytes": "33dadab10386",
+ "revs": {
+  "tip_at_the_time": "0fee131d02b7c7c85f59aab8307f28594bf0d65f",
+  "candidate_r3": "6c466ce267bf196827054584afeb3f533677fe7b",
+  "candidate_r4": "6336b0e4e1bab3ae17e4ce4b1a96e2696541ef56",
+  "r4_as_landed": "527f471b6d009d8ef8fead5d32ad455005ac281b"
+ },
+ "P1_two_runs_same_pair": {
+  "runs": [
+   {
+    "run": 1,
+    "tip_cells": 12,
+    "cand_cells": 12,
+    "growth_by_file_and_rule": {},
+    "panel_count_tip": 3,
+    "panel_count_cand": 3
+   },
+   {
+    "run": 2,
+    "tip_cells": 12,
+    "cand_cells": 12,
+    "growth_by_file_and_rule": {},
+    "panel_count_tip": 3,
+    "panel_count_cand": 3
+   }
+  ],
+  "identical": true,
+  "second_run_treated_first_as_tip": false
+ },
+ "P2_planted_decoy": {
+  "decoy_written_before_the_run": true,
+  "decoy_still_there_after_the_run": false,
+  "cells_with_decoy_present": 12,
+  "cells_from_a_clean_dir": 12,
+  "wiped_and_reextracted": true,
+  "decoy_would_have_added_a_cell_because": "the planted file is an upstream exception reaching a <p> exactly like the ones this order is about"
+ },
+ "cell_identity_table": {
+  "tip_ids_sorted": [
+   "69089b117b4151f1",
+   "99744f615f602330",
+   "e893bc679cefe90f"
+  ],
+  "r3_ids_sorted": [
+   "69089b117b4151f1",
+   "99744f615f602330",
+   "e893bc679cefe90f",
+   "e893bc679cefe90f"
+  ],
+  "r4_ids_sorted": [
+   "69089b117b4151f1",
+   "99744f615f602330",
+   "e893bc679cefe90f"
+  ],
+  "per_identity_count_growth_r3_vs_tip": {
+   "e893bc679cefe90f": 1
+  },
+  "per_identity_count_growth_r4_vs_tip": {},
+  "set_difference_r3_minus_tip": [],
+  "set_difference_r4_minus_tip": [],
+  "note": "r3 carries the SAME three identities as the tip but one of them twice (the duplicate render block the lane deleted in r4). An arm that compared identity SETS would have passed r3; the door's count arm caught it, and a per-identity COUNT arm catches r3 and still passes r4."
+ }
+}
