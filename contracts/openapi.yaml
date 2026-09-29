@@ -1632,6 +1632,31 @@ paths:
       responses:
         '201': {description: DeepSeek-curated, deterministic, authoritative city intelligence result}
         '422': {$ref: '#/components/responses/ValidationError'}
+  /journeys/{journey_id}/poi-import/parse:
+    parameters: [{$ref: '#/components/parameters/JourneyId'}]
+    post:
+      operationId: poiImportParse
+      requestBody:
+        required: true
+        content:
+          application/json: {schema: {type: object}}
+      responses:
+        '200': {description: Places extracted by this deployment's own local parser, with the forms it refused to read named}
+        '404': {description: Journey not found}
+        '422': {$ref: '#/components/responses/ValidationError'}
+  /journeys/{journey_id}/poi-import/add:
+    parameters: [{$ref: '#/components/parameters/JourneyId'}]
+    post:
+      operationId: poiImportAdd
+      requestBody:
+        required: true
+        content:
+          application/json: {schema: {type: object}}
+      responses:
+        '201': {description: Places appended to the active plan, with the day they landed on and where to read them back}
+        '404': {description: Journey not found}
+        '409': {description: The journey has no active plan to append to}
+        '422': {$ref: '#/components/responses/ValidationError'}
   /journeys/{journey_id}/operations/stream:
     parameters: [{$ref: '#/components/parameters/JourneyId'}]
     get:
