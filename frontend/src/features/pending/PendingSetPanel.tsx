@@ -7,12 +7,23 @@ import type { RawFacts } from "../../lib/rawFacts";
 import { RejectionWithFacts, type Door } from "./pendingSetReads";
 import { readCapturedPlaces, readCityPlaces } from "./pendingSetReads";
 import {
+  composeInputFor,
+  daysOfReadback,
   derivePendingSet,
   facetsOf,
   rowsForFilter,
   type PendingCandidate,
   type PendingPlaceRow,
+  type PendingRow,
+  type PendingWriteBlock,
 } from "./pendingSet";
+import {
+  adoptComposedPlan,
+  composeRefusal,
+  placeOnADay,
+  type ComposeFamily,
+  type ComposeRefusal,
+} from "./pendingPlaceWrites";
 import { fillPending, pendingCopy, type PendingSetCopyKey } from "./pendingSetCopy";
 import "./pendingSet.css";
 
@@ -55,12 +66,30 @@ function failed(cause: unknown): DoorState<never> {
   };
 }
 
+const BLOCKED_KEY: Record<Exclude<PendingWriteBlock, null>, PendingSetCopyKey> = {
+  NOTHING_PICKED: "pending.blocked.NOTHING_PICKED",
+  PICK_HAS_NO_PLACE_ROW: "pending.blocked.PICK_HAS_NO_PLACE_ROW",
+  SET_TOO_SMALL: "pending.blocked.SET_TOO_SMALL",
+  SET_TOO_LARGE: "pending.blocked.SET_TOO_LARGE",
+};
+
+const REFUSE_KEY: Record<ComposeFamily, PendingSetCopyKey> = {
+  WINDOW: "pending.refuse.WINDOW",
+  COMMITMENT: "pending.refuse.COMMITMENT",
+  NO_PLAN: "pending.refuse.NO_PLAN",
+  OTHER: "pending.refuse.other",
+};
+
 export function PendingSetPanel({
   data,
   onNavigate,
+  onReload,
 }: {
   data: Parameters<typeof derivePendingSet>[0]["data"];
   onNavigate?: (route: string) => void;
+  /** The shell's own reload of the trip payload.  Adoption changes which plan is current, and this
+   *  screen's set is defined against that plan, so the reload is part of the write -- not a courtesy. */
+  onReload?: () => void;
 }) {
   const { locale } = useLocale();
   const zh = locale.startsWith("zh");
@@ -119,6 +148,22 @@ export function PendingSetPanel({
   const [draft, setDraft] = useState("all");
   const [sheetOpen, setSheetOpen] = useState(false);
 
+  /* ORD-0450 -- the batch, and the two writes that already exist for it. */
+  const [pickedKeys, setPickedKeys] = useState<string[]>([]);
+  const [writeBusy, setWriteBusy] = useState(false);
+  const [writeRefusal, setWriteRefusal] = useState<ComposeRefusal | null>(null);
+  const [writeFacts, setWriteFacts] = useState<RawFacts | null>(null);
+  const [receipt, setReceipt] = useState<{
+    plan_id: string;
+    version_no: number | null;
+    status: string | null;
+    stop_count: number;
+    landed_count: number;
+    days: string;
+    missing_names: string[];
+  } | null>(null);
+  const [adoptState, setAdoptState] = useState<"idle" | "busy" | "done" | "refused">("idle");
+
   /* A facet can vanish when a read comes back; the committed choice then falls back to 全部 rather
      than holding a filter that names nothing. */
   useEffect(() => {
@@ -139,6 +184,77 @@ export function PendingSetPanel({
      does, this screen has no number to show -- and printing a 0 there would be exactly the ORD-0263
      mistake: an unread door dressed up as an empty shelf. */
   const setKnown = candidateDoor.phase === "ready" && candidateDoor.door.kind === "list";
+
+  const pickedRows = derived.rows.filter((row) => pickedKeys.includes(row.key));
+  const writeInput = composeInputFor({ data, picked: pickedRows });
+
+  const clearWriteOutcome = () => {
+    setReceipt(null);
+    setWriteRefusal(null);
+    setWriteFacts(null);
+    setAdoptState("idle");
+  };
+
+  const togglePick = (row: PendingRow) => {
+    setPickedKeys((current) =>
+      current.includes(row.key) ? current.filter((key) => key !== row.key) : [...current, row.key],
+    );
+    /* The receipt describes the batch that produced it; once the ticks change it is a statement
+       about a set nobody asked for.  Same rule ORD-0435 set for its own batch bar. */
+    clearWriteOutcome();
+  };
+
+  const runPlace = async () => {
+    if (!journeyId || !writeInput.ok || writeBusy) return;
+    setWriteBusy(true);
+    clearWriteOutcome();
+    try {
+      const placed = await placeOnADay(journeyId, writeInput.place_ids);
+      const outcome = daysOfReadback(
+        placed.readback.activities ?? [],
+        writeInput.picked_place_ids,
+        derived.timezone,
+      );
+      const nameByPlaceId = new Map(
+        pickedRows.map((row) => [row.placeId ?? "", row.name] as const),
+      );
+      setReceipt({
+        plan_id: placed.composed.plan_id,
+        version_no: placed.composed.version_no,
+        status: placed.composed.status,
+        stop_count: placed.composed.stop_count,
+        landed_count: outcome.landed.length,
+        days: outcome.days.length
+          ? outcome.days.join(zh ? "\u3001" : ", ")
+          : say("pending.receiptNoDay"),
+        missing_names: outcome.missing.map((id) => nameByPlaceId.get(id) ?? id),
+      });
+    } catch (cause) {
+      setWriteRefusal(composeRefusal(cause));
+      setWriteFacts(cause instanceof RejectionWithFacts ? cause.facts : null);
+    } finally {
+      setWriteBusy(false);
+    }
+  };
+
+  const runAdopt = async () => {
+    if (!journeyId || !receipt || adoptState !== "idle") return;
+    setAdoptState("busy");
+    try {
+      await adoptComposedPlan(journeyId, receipt.plan_id);
+      setAdoptState("done");
+      /* Re-read both this screen's doors and let the shell re-read the trip: until the plan this
+         screen measures itself against is the one the server now names, the list would be a
+         description of the past. */
+      onReload?.();
+      setAttempt((n) => n + 1);
+      setPickedKeys([]);
+    } catch (cause) {
+      setAdoptState("refused");
+      setWriteFacts(cause instanceof RejectionWithFacts ? cause.facts : null);
+      setWriteRefusal(null);
+    }
+  };
 
   return (
     <section className="cn-pending" data-testid="pending-set" aria-label={say("pending.title")}>
@@ -287,9 +403,28 @@ export function PendingSetPanel({
           <ul className="cn-pending-list">
             {shown.map((row) => (
               <li key={row.key} className="cn-pending-row" data-testid="pending-row">
-                <p className="cn-pending-row-name" data-testid="pending-row-name">
-                  {row.name}
-                </p>
+                <button
+                  type="button"
+                  className={
+                    pickedKeys.includes(row.key)
+                      ? "cn-pending-tick cn-pending-tick--on"
+                      : "cn-pending-tick"
+                  }
+                  role="checkbox"
+                  aria-checked={pickedKeys.includes(row.key)}
+                  aria-label={`${row.name} · ${
+                    pickedKeys.includes(row.key) ? say("pending.tickOff") : say("pending.tickOn")
+                  }`}
+                  data-testid="pending-tick"
+                  data-contrast-role="control"
+                  disabled={writeBusy || adoptState === "busy"}
+                  onClick={() => togglePick(row)}
+                >
+                  <span className="cn-pending-tick-box" aria-hidden="true" />
+                  <span className="cn-pending-row-name" data-testid="pending-row-name">
+                    {row.name}
+                  </span>
+                </button>
                 <p className="cn-pending-row-cause" data-testid="pending-row-cause">
                   {say("pending.noDay")}
                   {row.capturedDay ? ` · ${say("pending.capturedOn", { day: row.capturedDay })}` : ""}
@@ -302,6 +437,116 @@ export function PendingSetPanel({
               </li>
             ))}
           </ul>
+          <div className="cn-pending-batch">
+            <p className="cn-pending-batch-count" data-testid="pending-selected">
+              {say("pending.selected", { n: pickedRows.length })}
+            </p>
+            <button
+              type="button"
+              className="v8-primary-button"
+              data-testid="pending-place-action"
+              data-contrast-role="control"
+              disabled={!writeInput.ok || writeBusy || adoptState === "busy"}
+              onClick={() => void runPlace()}
+            >
+              {writeBusy ? say("pending.busy") : say("pending.action")}
+            </button>
+            {writeInput.ok ? (
+              <p className="cn-pending-batch-line" data-testid="pending-batch-line">
+                {say("pending.batchLine", {
+                  planned: writeInput.planned_place_ids.length,
+                  picked: writeInput.picked_place_ids.length,
+                })}
+              </p>
+            ) : (
+              /* A disabled action has to say why, in the same breath: "grey until you do something"
+                 is the shape that leaves a traveller guessing which thing is missing. */
+              <p className="cn-pending-batch-blocked" role="status" data-testid="pending-blocked">
+                {say(
+                  BLOCKED_KEY[writeInput.blocked_by ?? "NOTHING_PICKED"],
+                  { max: writeInput.max_places },
+                )}
+              </p>
+            )}
+          </div>
+
+          {writeRefusal && (
+            <div className="cn-pending-notice" role="alert" data-testid="pending-write-refused">
+              <p>{say(REFUSE_KEY[writeRefusal.family])}</p>
+              {writeFacts && (
+                <details className="cn-pending-details" data-testid="pending-write-facts-open">
+                  <summary>{say("pending.details")}</summary>
+                  {/* The condition gets a sentence of its own above; the token belongs down here,
+                      where it is quotable and not required reading. */}
+                  <p className="cn-pending-token">
+                    reason_token={writeRefusal.token ?? say("pending.noToken")}
+                  </p>
+                  <CnxMeasuredFacts facts={writeFacts} zh={zh} testId="pending-write-facts" />
+                </details>
+              )}
+            </div>
+          )}
+
+          {receipt && (
+            <div className="cn-pending-receipt" data-testid="pending-receipt">
+              <p data-testid="pending-receipt-line">
+                {say("pending.receipt", {
+                  n: receipt.landed_count,
+                  days: receipt.days,
+                  version: receipt.version_no ?? "\u2014",
+                  stops: receipt.stop_count,
+                })}
+              </p>
+              {receipt.missing_names.length > 0 && (
+                <p data-testid="pending-receipt-missing">
+                  {say("pending.missing", {
+                    names: receipt.missing_names.join(zh ? "\u3001" : ", "),
+                  })}
+                </p>
+              )}
+              {adoptState === "done" ? (
+                <>
+                  <p data-testid="pending-adopted">
+                    {say("pending.adopted", { version: receipt.version_no ?? "\u2014" })}
+                  </p>
+                  {onNavigate && (
+                    <button
+                      type="button"
+                      className="v8-quiet-button"
+                      data-testid="pending-view-days"
+                      data-contrast-role="control"
+                      onClick={() => onNavigate("trips")}
+                    >
+                      {say("pending.viewDays")}
+                    </button>
+                  )}
+                </>
+              ) : (
+                <>
+                  <p data-testid="pending-not-selected">{say("pending.notSelected")}</p>
+                  <p className="cn-pending-batch-line" data-testid="pending-adopt-warn">
+                    {say("pending.adoptWarn")}
+                  </p>
+                  <button
+                    type="button"
+                    className="v8-quiet-button"
+                    data-testid="pending-adopt"
+                    data-contrast-role="control"
+                    disabled={adoptState === "busy"}
+                    onClick={() => void runAdopt()}
+                  >
+                    {adoptState === "busy" ? say("pending.busy") : say("pending.adopt")}
+                  </button>
+                  {adoptState === "refused" && (
+                    <p role="alert" data-testid="pending-adopt-refused">
+                      {say("pending.adoptRefused")}
+                    </p>
+                  )}
+                </>
+              )}
+            </div>
+          )}
+
           <p className="cn-pending-rule" data-testid="pending-delete-day-rule">
             {say("pending.deleteDayRule")}
           </p>

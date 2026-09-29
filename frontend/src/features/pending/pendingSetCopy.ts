@@ -59,6 +59,38 @@ export const pendingSetCopy = {
     "pending.placed": "places a day already holds",
     "pending.candidatesPlaced": "captures a day already holds",
     "pending.stateMissing": "this server gave no state for this row",
+
+    /* ORD-0450 -- putting a ticked place on a day, through ORD-0435's landed doors. */
+    "pending.tickOn": "Add to this batch",
+    "pending.tickOff": "Take out of this batch",
+    "pending.selected": "{n} ticked",
+    "pending.action": "Put on a day",
+    "pending.busy": "Placing them…",
+    "pending.batchLine":
+      "This batch carries the {planned} places your chosen plan already holds plus the {picked} you ticked, so nothing that is planned gets dropped.",
+    "pending.blocked.NOTHING_PICKED": "Tick at least one place first.",
+    "pending.blocked.PICK_HAS_NO_PLACE_ROW":
+      "One ticked place has no place row on this server, so it cannot be placed on a day.",
+    "pending.blocked.SET_TOO_SMALL":
+      "The batch has fewer than 2 places, and the planner's door needs 2.",
+    "pending.blocked.SET_TOO_LARGE": "The batch has more than {max} places, which is the server's bound.",
+    "pending.receipt":
+      "The server placed {n} of them on {days}. This is candidate version {version}, {stops} stops in it.",
+    "pending.receiptNoDay": "no day was given",
+    "pending.missing": "Not placed: {names}.",
+    "pending.notSelected": "Nothing you are running has changed yet.",
+    "pending.adopt": "Use this version",
+    "pending.adoptWarn": "Using it retires the version you are running.",
+    "pending.adopted": "Now on version {version}. Your ticked places are in the day-by-day plan.",
+    "pending.viewDays": "See the day-by-day plan",
+    "pending.refuse.WINDOW":
+      "The planner could not fit this batch inside the trip's day. Nothing was written.",
+    "pending.refuse.COMMITMENT":
+      "A protected commitment is what blocks this batch: it cannot be reached in time, or it was left out. Nothing was written.",
+    "pending.refuse.NO_PLAN": "The planner produced no version from this batch. Nothing was written.",
+    "pending.refuse.other": "The server refused this attempt. Your plan is unchanged.",
+    "pending.noToken": "none this device could read",
+    "pending.adoptRefused": "That version could not be adopted. The one you were running stays.",
   },
   "zh-CN": {
     "pending.title": "待规划",
@@ -96,6 +128,32 @@ export const pendingSetCopy = {
     "pending.placed": "已有某天猫住",
     "pending.candidatesPlaced": "已被某天排上的捕获",
     "pending.stateMissing": "服务器没给这一行的状态",
+
+    /* ORD-0450 -- 把勾上的地点排进某一天，走 ORD-0435 已落地的两扇门。 */
+    "pending.tickOn": "加入这一批",
+    "pending.tickOff": "移出这一批",
+    "pending.selected": "已勾 {n} 个",
+    "pending.action": "排进某一天",
+    "pending.busy": "正在排…",
+    "pending.batchLine": "这一批带上当前方案已有的 {planned} 个地点，再加你勾的 {picked} 个，已有的一个都不会掉。",
+    "pending.blocked.NOTHING_PICKED": "先勾至少一个地点。",
+    "pending.blocked.PICK_HAS_NO_PLACE_ROW": "你勾的地点里有一个服务器还没有地点行，排不进去。",
+    "pending.blocked.SET_TOO_SMALL": "这一批不足 2 个地点，排期门最少要 2 个。",
+    "pending.blocked.SET_TOO_LARGE": "这一批超过 {max} 个地点，这是服务器给的上限。",
+    "pending.receipt": "服务器把 {n} 个地点排到了 {days}。这是候选第 {version} 版，共 {stops} 个地点。",
+    "pending.receiptNoDay": "没给出那一天",
+    "pending.missing": "没排进去：{names}。",
+    "pending.notSelected": "你正在执行的方案还没变。",
+    "pending.adopt": "改用这版方案",
+    "pending.adoptWarn": "改用会退出你正在执行的那一版。",
+    "pending.adopted": "已改用第 {version} 版。你勾的地点现在在逐日安排里。",
+    "pending.viewDays": "去看逐日安排",
+    "pending.refuse.WINDOW": "排期门没能把这一批放进本程的那一天。什么都没写入。",
+    "pending.refuse.COMMITMENT": "卡住这一批的是受保护的承诺：它来不及排上，或没被带进这一批。什么都没写入。",
+    "pending.refuse.NO_PLAN": "排期门没有从这一批产出一版。什么都没写入。",
+    "pending.refuse.other": "服务器拒绝了这次排期。你的方案没有变化。",
+    "pending.noToken": "这台设备没读到词",
+    "pending.adoptRefused": "这一版没能改成。你原来那版还在执行。",
   },
 } as const;
 

@@ -537,6 +537,185 @@ test.describe("ORD-0445 待规划 set, filter sheet and empty state", () => {
   });
 });
 
+const API = `http://127.0.0.1:${Number(process.env.CITYNEXUS_BACKEND_PORT ?? 8000)}`;
+
+async function apiGet(path: string): Promise<{ status: number; json: any }> {
+  /* Node's own fetch, not the browser's: this is a second pair of eyes on the server, taken outside
+     the page so a screen cannot be graded on the evidence it chose to show. */
+  const response = await fetch(API + path, { headers: { Accept: "application/json" } });
+  const text = await response.text();
+  let json: any = null;
+  try {
+    json = JSON.parse(text);
+  } catch {
+    json = null;
+  }
+  return { status: response.status, json };
+}
+
+test.describe("ORD-0450 putting the pending set onto a day, through the doors that already exist", () => {
+  test("A11 the tick is local state, the batch says what it carries, and a disabled action says why", async ({
+    page,
+  }) => {
+    const panel = await openHub(page, SET_JOURNEY, "zh-CN");
+    const blocked = panel.getByTestId("pending-blocked");
+    await expect(
+      blocked,
+      node("A11", "with nothing ticked the action gave no named reason"),
+    ).toHaveCount(1);
+    expect(
+      (await blocked.innerText()).includes("先勾至少一个地点"),
+      node("A11", `the reason is not the named one: ${await blocked.innerText()}`),
+    ).toBe(true);
+    await expect(panel.getByTestId("pending-place-action")).toBeDisabled();
+
+    const experienceBefore = await apiGet(
+      `/api/v1/journeys/${SET_JOURNEY}/experience`,
+    );
+    const plannedStops = (experienceBefore.json?.active_plan?.activities ?? []).filter(
+      (item: any) => item.place_id,
+    ).length;
+
+    await panel.getByTestId("pending-tick").first().click();
+    const selected = await panel.getByTestId("pending-selected").innerText();
+    expect(selected.includes("已勾 1 个"), node("A11", `tick did not read back: ${selected}`)).toBe(
+      true,
+    );
+    const batchLine = await panel.getByTestId("pending-batch-line").innerText();
+    /* The batch has to carry every place the chosen plan already holds, or "add a place" is also
+       "lose four".  The number on the line is compared against the server's own plan, not a belief. */
+    expect(
+      batchLine.includes(`已有的 ${plannedStops} 个地点`) && batchLine.includes("你勾的 1 个"),
+      node(
+        "A11",
+        `the batch line does not match the server's plan (${plannedStops} placed stops): ${batchLine}`,
+      ),
+    ).toBe(true);
+    await expect(panel.getByTestId("pending-place-action")).toBeEnabled();
+
+    await panel.getByTestId("pending-tick").first().click();
+    expect(
+      (await panel.getByTestId("pending-selected").innerText()).includes("已勾 0 个"),
+      node("A11", "the second press did not take the tick back off"),
+    ).toBe(true);
+    readings.A11 = { planned_stops_from_server: plannedStops, batch_line: batchLine, selected };
+    await page.screenshot({ path: evidencePath(`ord0445/${RUN}__A11_tick_zh.png`) });
+  });
+
+  test("A12 one real press: the answer is a named condition, and nothing was written", async ({
+    page,
+  }) => {
+    const panel = await openHub(page, SET_JOURNEY, "zh-CN");
+    const before = await apiGet(`/api/v1/journeys/${SET_JOURNEY}`);
+    const plansBefore = await apiGet(`/api/v1/journeys/${SET_JOURNEY}/plans`);
+
+    await panel.getByTestId("pending-tick").first().click();
+    await panel.getByTestId("pending-place-action").click();
+    const refused = panel.getByTestId("pending-write-refused");
+    await expect(
+      refused,
+      node("A12", "the press produced neither a receipt nor a named refusal"),
+    ).toHaveCount(1);
+    const text = (await refused.innerText()).replace(/\s+/g, " ");
+    const named = [
+      "排期门没能把这一批放进本程的那一天",
+      "卡住这一批的是受保护的承诺",
+      "排期门没有从这一批产出一版",
+    ].some((sentence) => text.includes(sentence));
+    expect(named, node("A12", `the refusal is generic, not a named condition: "${text}"`)).toBe(true);
+    for (const forbidden of ["操作失败", "网络不可用", "暂无数据"]) {
+      expect(text, node("A12", `the refusal fell back to ${forbidden}`)).not.toContain(forbidden);
+    }
+    /* The token stays on the details face, where it is quotable and not required reading. */
+    await panel.getByTestId("pending-write-facts-open").click();
+    const tokenLine = (await panel.getByTestId("pending-write-refused").innerText()).replace(
+      /\s+/g,
+      " ",
+    );
+    expect(
+      /reason_token=V13_[A-Z_]+/.test(tokenLine),
+      node("A12", `no server token reached the details face: ${tokenLine.slice(0, 220)}`),
+    ).toBe(true);
+
+    await expect(
+      panel.getByTestId("pending-receipt"),
+      node("A12", "a refused write still showed a receipt, i.e. claimed a day"),
+    ).toHaveCount(0);
+    await expect(
+      panel.getByTestId("pending-adopt"),
+      node("A12", "an adoption button appeared with nothing to adopt"),
+    ).toHaveCount(0);
+
+    const after = await apiGet(`/api/v1/journeys/${SET_JOURNEY}`);
+    const plansAfter = await apiGet(`/api/v1/journeys/${SET_JOURNEY}/plans`);
+    readings.A12 = {
+      refusal_line: text,
+      active_plan_before: before.json?.active_plan_version_id ?? null,
+      active_plan_after: after.json?.active_plan_version_id ?? null,
+      plan_rows_before: Array.isArray(plansBefore.json) ? plansBefore.json.length : null,
+      plan_rows_after: Array.isArray(plansAfter.json) ? plansAfter.json.length : null,
+    };
+    expect(
+      readings.A12.active_plan_after,
+      node("A12", "the refusal still moved which plan the trip runs"),
+    ).toBe(readings.A12.active_plan_before);
+    expect(
+      readings.A12.plan_rows_after,
+      node("A12", "the refusal still persisted a plan version"),
+    ).toBe(readings.A12.plan_rows_before);
+    await page.screenshot({ path: evidencePath(`ord0445/${RUN}__A12_named_refusal_zh.png`) });
+  });
+
+  test("A13 the English arm names the same condition in its own words", async ({ page }) => {
+    const panel = await openHub(page, SET_JOURNEY, "en");
+    await panel.getByTestId("pending-tick").first().click();
+    const batchLine = await panel.getByTestId("pending-batch-line").innerText();
+    expect(
+      batchLine.toLowerCase().includes("places your chosen plan already holds"),
+      node("A13", `en batch line lost its meaning: ${batchLine}`),
+    ).toBe(true);
+    await panel.getByTestId("pending-place-action").click();
+    const refused = panel.getByTestId("pending-write-refused");
+    await expect(refused, node("A13", "no refusal rendered in the English arm")).toHaveCount(1);
+    const text = (await refused.innerText()).replace(/\s+/g, " ");
+    expect(/[\u4e00-\u9fff]/.test(text), node("A13", `en arm renders CJK: ${text}`)).toBe(false);
+    const named = [
+      "could not fit this batch inside the trip's day",
+      "protected commitment is what blocks this batch",
+      "produced no version from this batch",
+    ].some((sentence) => text.includes(sentence));
+    expect(named, node("A13", `en refusal is generic: "${text}"`)).toBe(true);
+    readings.A13 = { batch_line: batchLine, refusal_line: text };
+    await page.screenshot({ path: evidencePath(`ord0445/${RUN}__A13_named_refusal_en.png`) });
+  });
+
+  test("A14 the write path is the landed door: the screen posts compose and nothing else", async ({
+    page,
+  }) => {
+    const seen: string[] = [];
+    await boot(page, SET_JOURNEY, "zh-CN");
+    page.on("request", (request) => {
+      if (request.method() !== "GET") seen.push(`${request.method()} ${request.url()}`);
+    });
+    await page.goto("/v8/hub", { waitUntil: "load" });
+    const panel = page.getByTestId("pending-set");
+    await expect(panel).toHaveCount(1);
+    await panel.getByTestId("pending-tick").first().click();
+    await panel.getByTestId("pending-place-action").click();
+    await expect(panel.getByTestId("pending-write-refused")).toHaveCount(1);
+    const writes = seen.filter((line) => !line.includes("offline-snapshot"));
+    readings.A14 = { writes };
+    expect(
+      writes.some((line) => line.includes("/plans/authoritative-compose")),
+      node("A14", `the press did not go through the landed compose door: ${JSON.stringify(writes)}`),
+    ).toBe(true);
+    expect(
+      writes.filter((line) => /\/api\/v1\//.test(line)).length,
+      node("A14", `this screen opened more than the one door it is allowed to: ${JSON.stringify(writes)}`),
+    ).toBe(1);
+  });
+});
+
 function firstDifference(a: string, b: string): { at: number; before: string; after: string } {
   let i = 0;
   while (i < a.length && i < b.length && a[i] === b[i]) i += 1;

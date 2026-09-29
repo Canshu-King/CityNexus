@@ -121,11 +121,81 @@
   overflow-wrap: anywhere;
 }
 
+/* ORD-0450 -- the tick, the batch bar and the receipt.
+   The tick is a button, and the shared sheet has a bare `button { width: 100% }` rule (the trap
+   ORD-0435 hit), so its own geometry is declared here rather than inherited. */
+.cn-pending-tick {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: start;
+  gap: 10px;
+  width: 100%;
+  padding: 0;
+  text-align: left;
+  color: var(--v8-ink);
+  background: transparent;
+  border: 0;
+  font-size: var(--cn-fs-body);
+}
+.cn-pending-tick-box {
+  width: 20px;
+  height: 20px;
+  margin-top: 2px;
+  border: 1px solid var(--cn-ink-tertiary);
+  border-radius: var(--cn-r-control);
+}
+.cn-pending-tick--on .cn-pending-tick-box {
+  border-color: var(--v8-ink);
+  background: var(--v8-ink);
+}
+.cn-pending-tick:disabled { opacity: 0.5; }
+
+.cn-pending-batch {
+  display: grid;
+  gap: 8px;
+  padding-top: 2px;
+}
+.cn-pending-batch-count {
+  margin: 0;
+  color: var(--v8-ink);
+  font-size: var(--cn-fs-body);
+  font-variant-numeric: tabular-nums;
+}
+.cn-pending-batch-line,
+.cn-pending-batch-blocked {
+  margin: 0;
+  color: var(--cn-ink-tertiary);
+  font-size: var(--cn-fs-caption);
+  overflow-wrap: anywhere;
+}
+.cn-pending-batch [data-testid="pending-place-action"] { width: fit-content; }
+
+.cn-pending-receipt {
+  display: grid;
+  gap: 6px;
+  padding: 12px;
+  border: 1px solid var(--cn-hairline);
+  border-radius: var(--cn-r-control);
+  background: var(--v8-panel);
+}
+.cn-pending-receipt p {
+  margin: 0;
+  color: var(--v8-ink);
+  font-size: var(--cn-fs-body);
+  overflow-wrap: anywhere;
+}
+.cn-pending-receipt [data-testid="pending-adopt"],
+.cn-pending-receipt [data-testid="pending-view-days"] { width: fit-content; }
+
 @media (max-width: 680px) {
   .cn-pending { padding: 14px; }
-  /* Amendment F-2: the >=44px contract belongs to the touch layer, and 筛选 / 完成 / 去发现地点 are
-     the primary actions of this screen on a phone. */
+  /* Amendment F-2: the >=44px contract belongs to the touch layer, and 筛选 / 完成 / 排进某一天 /
+     改用这版 / 去城市探索 are the primary actions of this screen on a phone. The tick row is a
+     control too -- its own line box is what the thumb hits. */
   .cn-pending-filter-open,
+  .cn-pending-tick,
+  .cn-pending-batch button,
+  .cn-pending-receipt button,
   .cn-pending-unknown button,
   .cn-pending-chip,
   .cn-pending-sheet-actions button,

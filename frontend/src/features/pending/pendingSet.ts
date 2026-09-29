@@ -203,3 +203,114 @@ export function rowsForFilter(rows: PendingRow[], choice: string): PendingRow[] 
   if (choice === "all") return rows;
   return rows.filter((row) => row.categoryToken === choice);
 }
+
+/* ------------------------------------------------------------------ ORD-0450: putting a pick on a day
+ *
+ * The write itself is not invented here.  It is the channel ORD-0435 landed:
+ * `POST /api/v1/journeys/{journey_id}/plans/authoritative-compose` (`backend/app/main.py:5762`) taking
+ * `AuthoritativeComposeRequest` (`backend/app/schemas.py:560` -- `place_ids`, 2..12), followed by
+ * `GET /api/v1/plans/{plan_version_id}` to read back what the planner actually wrote.  Adoption is the
+ * other door that already exists, `POST /journeys/{id}/plans/{version}/select`
+ * (`frontend/src/api/citynexus.ts:856` calls it today).  This order opens neither.
+ *
+ * What the two functions below decide is only *which place ids go in*, and the rule is "lose nothing":
+ * every place the chosen plan already holds travels with the batch, plus the ticks the traveller made.
+ * Sending protected commitments alone -- which is what the discovery batch does, because it is building
+ * a plan from scratch -- would quietly drop the ordinary stops of a plan that already exists, and a
+ * screen that adds a place must not be able to remove five.
+ */
+
+export type PendingWriteBlock =
+  | "NOTHING_PICKED"
+  | "PICK_HAS_NO_PLACE_ROW"
+  | "SET_TOO_SMALL"
+  | "SET_TOO_LARGE"
+  | null;
+
+export interface PendingWriteInput {
+  /** What `AuthoritativeComposeRequest.place_ids` will carry, in plan order then tick order. */
+  place_ids: string[];
+  picked_place_ids: string[];
+  planned_place_ids: string[];
+  protected_place_ids: string[];
+  ok: boolean;
+  blocked_by: PendingWriteBlock;
+  /** The server's own bound, read from the schema rather than repeated as a local belief. */
+  max_places: number;
+}
+
+function uniqueOrdered(values: string[]): string[] {
+  const seen = new Set<string>();
+  const out: string[] = [];
+  for (const value of values) {
+    if (!seen.has(value)) {
+      seen.add(value);
+      out.push(value);
+    }
+  }
+  return out;
+}
+
+export function composeInputFor(args: { data: V8Data | null; picked: PendingRow[] }): PendingWriteInput {
+  const activities = args.data?.active_plan?.activities ?? [];
+  const planned: string[] = [];
+  const protectedPlaces: string[] = [];
+  for (const activity of activities) {
+    const id = typeof activity.place_id === "string" && activity.place_id.trim() ? activity.place_id : null;
+    if (!id) continue;
+    planned.push(id);
+    if (activity.protected) protectedPlaces.push(id);
+  }
+  const pickedPlaces: string[] = [];
+  let pickWithoutRow = false;
+  for (const row of args.picked) {
+    if (row.placeId) pickedPlaces.push(row.placeId);
+    else pickWithoutRow = true;
+  }
+
+  const placeIds = uniqueOrdered([...planned, ...pickedPlaces]);
+  let blocked: PendingWriteBlock = null;
+  if (args.picked.length === 0) blocked = "NOTHING_PICKED";
+  else if (pickWithoutRow) blocked = "PICK_HAS_NO_PLACE_ROW";
+  else if (placeIds.length < 2) blocked = "SET_TOO_SMALL";
+  else if (placeIds.length > MAX_COMPOSE_PLACES) blocked = "SET_TOO_LARGE";
+
+  return {
+    place_ids: placeIds,
+    picked_place_ids: uniqueOrdered(pickedPlaces),
+    planned_place_ids: uniqueOrdered(planned),
+    protected_place_ids: uniqueOrdered(protectedPlaces),
+    ok: blocked === null,
+    blocked_by: blocked,
+    max_places: MAX_COMPOSE_PLACES,
+  };
+}
+
+/** `max_length=12` on the request model (`backend/app/schemas.py:563`); the screen names this number
+ *  as the server's bound and refuses locally rather than letting a 422 arrive as a surprise. */
+export const MAX_COMPOSE_PLACES = 12;
+
+/** Which day a read-back stop carries, in the traveller's own zone -- the same derivation the
+ *  itinerary uses, so the day named here is the day that screen will draw. */
+export function daysOfReadback(
+  activities: Array<{ place_id?: string | null; start_at: string; title?: string }>,
+  wanted: string[],
+  timezone: string | null,
+): { landed: Array<{ place_id: string; title: string; day: string | null }>; missing: string[]; days: string[] } {
+  const landed: Array<{ place_id: string; title: string; day: string | null }> = [];
+  for (const activity of activities) {
+    const id = activity.place_id ? String(activity.place_id) : null;
+    if (!id || !wanted.includes(id)) continue;
+    landed.push({
+      place_id: id,
+      title: activity.title ?? "",
+      day: timezone ? localDateKey(activity.start_at, timezone) : null,
+    });
+  }
+  const held = new Set(landed.map((item) => item.place_id));
+  return {
+    landed,
+    missing: wanted.filter((id) => !held.has(id)),
+    days: uniqueOrdered(landed.map((item) => item.day).filter((day): day is string => !!day)).sort(),
+  };
+}
