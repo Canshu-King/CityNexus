@@ -329,6 +329,13 @@ def test_prt09_twin_reports_selected_plan_frozen_mobility_without_c4_commitment(
     assert mobility["used_edge_ids"] == [[activities[0].place_id, activities[1].place_id]]
     assert mobility["used_edges"][0]["mode"] == "WALK"
     assert mobility["used_edges"][0]["minutes"] == 42
+    execution = twin.json()["context"]["execution"]
+    assert execution["cursor_status"] == "ABSENT_FALLBACK"
+    assert execution["now_activity_id"] == activities[0].id
+    assert execution["next_activity_id"] == activities[1].id
+    assert execution["next_leg_id"] == f"plan-evidence:{plan_id}:0"
+    assert execution["next_mode"] == "WALK"
+    assert execution["next_eta_min"] == 42
 
     experience = client.get(f"/api/v1/journeys/{jid}/experience")
     assert experience.status_code == 200, experience.text

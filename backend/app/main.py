@@ -7032,6 +7032,35 @@ def _twin_snapshot(
                 "degraded": bool(fact.get("degraded", False)),
             }
         )
+    # A real-trip PlanVersion may carry its frozen provider route in
+    # mobility_evidence_json without materialising JourneyLeg rows.  The
+    # experience projection already exposes that evidence, but the Twin's
+    # execution window used to leave next_mode/next_eta at NONE/0.  When the
+    # persisted Now and Next are consecutive activities, bind the execution
+    # fields to the exact evidence pair as well.  Unknown mode or duration
+    # stays unknown; this branch never turns incomplete evidence into a leg.
+    if not active_plan_legs and execution.get("now_activity_id") and execution.get("next_activity_id"):
+        now_activity = active_plan_activity_by_id.get(str(execution["now_activity_id"]))
+        next_activity = active_plan_activity_by_id.get(str(execution["next_activity_id"]))
+        pair = (
+            str(now_activity.place_id or "").strip() if now_activity is not None else "",
+            str(next_activity.place_id or "").strip() if next_activity is not None else "",
+        )
+        if all(pair):
+            for evidence_index, edge in enumerate(selected_plan_used_edges):
+                if (
+                    edge.get("origin_key") == pair[0]
+                    and edge.get("destination_key") == pair[1]
+                    and edge.get("mode")
+                    and isinstance(edge.get("minutes"), (int, float))
+                ):
+                    execution = {
+                        **execution,
+                        "next_mode": edge["mode"],
+                        "next_eta_min": int(edge["minutes"]),
+                        "next_leg_id": f"plan-evidence:{selected_plan.id}:{evidence_index}",
+                    }
+                    break
     selected_plan_source = str(selected_plan_evidence.get("source_provider") or "").strip()
     selected_plan_snapshot_id = str(
         (selected_plan.mobility_snapshot_id if selected_plan is not None else None)
