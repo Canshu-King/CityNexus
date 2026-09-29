@@ -1,0 +1,721 @@
+{
+ "order": "ORD-0446",
+ "revision": "r2",
+ "lane": "N2",
+ "at_local": "2026-09-29T10:39:46+0800",
+ "why": "the sentence stored in n2_0754.md was overtaken by 6ca105db; re-anchored and re-measured",
+ "rev": {
+  "candidate_r1": "8451df87fa09a7280eeaeffef79b4da3d05331fe",
+  "candidate_r2": "030265e13abb4bb8359248fb9769d821f0a67e9a",
+  "base_r1": "35326e62fb3de9f0cda459c8426ac22c0c49c715",
+  "live_tip": "0fee131d02b7c7c85f59aab8307f28594bf0d65f",
+  "ref_r2": "refs/heads/review/Q-ord0446-machine-speech-residue-r2",
+  "ref_r2_readback": "030265e13abb4bb8359248fb9769d821f0a67e9a",
+  "ref_r1_readback": "8451df87fa09a7280eeaeffef79b4da3d05331fe",
+  "r2_parent_equals_tip": true,
+  "overtaking_commit": "6ca105db103d83132e591af3c608b543df4602b0|2026-09-29T04:39:05|ORD-0406: Today's attention row moves above the hero grid, so it is hittable before scrolling",
+  "overtaking_is_ancestor_of_r1_tip": false,
+  "overtaking_is_ancestor_of_live_tip": true
+ },
+ "blobs_v8experience": {
+  "base_r1": "b431d26a94aebe1edac0c57f293f2ed442647f5f",
+  "r1": "6cc591b2bddeeb9adf47dd56d5dd4e153559f053",
+  "live_tip": "c04374702dbed5a41d1ee00733694d19c6a6562a",
+  "r2": "5202a1738a672807d156934b8fcd0fc854b6196d"
+ },
+ "rebase_proof": {
+  "added_lines_r1": 87,
+  "added_lines_r2": 87,
+  "removed_lines_r1": 13,
+  "removed_lines_r2": 13,
+  "multisets_equal": true,
+  "ord0406_markers_r2": 4,
+  "ord0406_markers_tip": 4,
+  "my_lines_at_r2": {
+   "three_label": "                {commitmentKindLabel(item.kind, zh)} · {commitmentLevelLabel(item.level, zh)} ·{\" \"}",
+   "city_fallback": " \"en\"] ?? cityCodeLabel(data.journey.city_code, zh);",
+   "profile_strong": "          <strong>{cityLabel}</strong>"
+  }
+ },
+ "ruler": {
+  "blob": "e18d65e19fa001762f318dcaf0a6d53a43391952",
+  "local_copy_hash": "e18d65e19fa001762f318dcaf0a6d53a43391952",
+  "usage": "node cmdr_machine_speech_sweep_r1.js <base> <out> <locale>",
+  "viewport_hardcoded": "cmdr_machine_speech_sweep_r1.js:31"
+ },
+ "baseline": {
+  "blob": "8be887766f1a67d917d8f1cef242d12e01a6187d",
+  "hits": 6,
+  "bytes": 3921
+ },
+ "port_proofs_live": {
+  "before": {
+   "port": 4851,
+   "dist": "D:/moodle/_qoder_cmdr_ref_20260921/live_checks/_build_n2-0446r2-tip/frontend/dist",
+   "asset": "assets/index-CsZvVhdg.js",
+   "asset_disk_sha1": "7a890f082a385c1485f0d68d42d64e68071f339c",
+   "asset_served_sha1": "7a890f082a385c1485f0d68d42d64e68071f339c",
+   "index_disk_sha1": "9ab9f0d6f85517cd7c364b4dda2b031162c302d5",
+   "index_served_sha1": "9ab9f0d6f85517cd7c364b4dda2b031162c302d5",
+   "equal": true
+  },
+  "after": {
+   "port": 4850,
+   "dist": "D:/moodle/_qoder_cmdr_ref_20260921/live_checks/_build_n2-0446r2-cand/frontend/dist",
+   "asset": "assets/index-1m6M5KYW.js",
+   "asset_disk_sha1": "ae5ac9c7f385fe39da7c8a9aad75b5eaf47a85b5",
+   "asset_served_sha1": "ae5ac9c7f385fe39da7c8a9aad75b5eaf47a85b5",
+   "index_disk_sha1": "d03588ac1539c9000c01435cf64d7497c74bc4f7",
+   "index_served_sha1": "d03588ac1539c9000c01435cf64d7497c74bc4f7",
+   "equal": true
+  }
+ },
+ "runs": {
+  "before_zh": {
+   "pass": "before_zh",
+   "entryAssets": [
+    "/assets/index-CsZvVhdg.js"
+   ],
+   "viewport": "390x844",
+   "totalPaintedHits": 6,
+   "distinctTokens": 5,
+   "machine_words": [
+    "ACTIVE",
+    "BOOKING",
+    "DEMO",
+    "JSON",
+    "JSON",
+    "reasoning_summary"
+   ],
+   "hits": [
+    {
+     "route": "/v8/bookings",
+     "kind": "ALLCAPS_WORD",
+     "machine_word": "JSON",
+     "tag": "p",
+     "cls": "v8-lede",
+     "text_head": "粘贴结构化预订 JSON，审核后，将确认的事实绑定为行程的持久承诺。"
+    },
+    {
+     "route": "/v8/bookings",
+     "kind": "ALLCAPS_WORD",
+     "machine_word": "BOOKING",
+     "tag": "span",
+     "cls": "v8-selected-label",
+     "text_head": "BOOKING"
+    },
+    {
+     "route": "/v8/bookings",
+     "kind": "ALLCAPS_WORD",
+     "machine_word": "ACTIVE",
+     "tag": "span",
+     "cls": "v8-selected-label",
+     "text_head": "ACTIVE"
+    },
+    {
+     "route": "/v8/bookings",
+     "kind": "ALLCAPS_WORD",
+     "machine_word": "JSON",
+     "tag": "p",
+     "cls": "v8-lede",
+     "text_head": "结构化导入在这里：展开下方「高级」粘贴 JSON 确认单。确认单文本与截图走行程收件箱。"
+    },
+    {
+     "route": "/v8/bookings",
+     "kind": "LOWER_SNAKE_KEY",
+     "machine_word": "reasoning_summary",
+     "tag": "small",
+     "cls": "",
+     "text_head": "reasoning_summary=held 原文不在这一屏"
+    },
+    {
+     "route": "/v8/me",
+     "kind": "ALLCAPS_WORD",
+     "machine_word": "DEMO",
+     "tag": "strong",
+     "cls": "",
+     "text_head": "DEMO"
+    }
+   ],
+   "kinds": {
+    "ALLCAPS_WORD": 5,
+    "LOWER_SNAKE_KEY": 1
+   },
+   "routes_with_hits": [
+    "/v8/bookings",
+    "/v8/me"
+   ],
+   "pageErrors": [],
+   "bookings_doc_chars": 634,
+   "me_doc_chars": 309,
+   "thin_routes": [
+    "/v8/agent",
+    "/v8/authoritative",
+    "/v8/bookings",
+    "/v8/discover",
+    "/v8/hub",
+    "/v8/intelligence",
+    "/v8/live",
+    "/v8/map",
+    "/v8/me",
+    "/v8/stay",
+    "/v8/studio",
+    "/v8/trash",
+    "/v8/trips",
+    "/v8/twin"
+   ]
+  },
+  "after_zh": {
+   "pass": "after_zh",
+   "entryAssets": [
+    "/assets/index-1m6M5KYW.js"
+   ],
+   "viewport": "390x844",
+   "totalPaintedHits": 2,
+   "distinctTokens": 1,
+   "machine_words": [
+    "JSON",
+    "JSON"
+   ],
+   "hits": [
+    {
+     "route": "/v8/bookings",
+     "kind": "ALLCAPS_WORD",
+     "machine_word": "JSON",
+     "tag": "p",
+     "cls": "v8-lede",
+     "text_head": "粘贴结构化预订 JSON，审核后，将确认的事实绑定为行程的持久承诺。"
+    },
+    {
+     "route": "/v8/bookings",
+     "kind": "ALLCAPS_WORD",
+     "machine_word": "JSON",
+     "tag": "p",
+     "cls": "v8-lede",
+     "text_head": "结构化导入在这里：展开下方「高级」粘贴 JSON 确认单。确认单文本与截图走行程收件箱。"
+    }
+   ],
+   "kinds": {
+    "ALLCAPS_WORD": 2
+   },
+   "routes_with_hits": [
+    "/v8/bookings"
+   ],
+   "pageErrors": [],
+   "bookings_doc_chars": 604,
+   "me_doc_chars": 309,
+   "thin_routes": [
+    "/v8/agent",
+    "/v8/authoritative",
+    "/v8/bookings",
+    "/v8/discover",
+    "/v8/hub",
+    "/v8/intelligence",
+    "/v8/live",
+    "/v8/map",
+    "/v8/me",
+    "/v8/stay",
+    "/v8/studio",
+    "/v8/trash",
+    "/v8/trips",
+    "/v8/twin"
+   ]
+  },
+  "after_en": {
+   "pass": "after_en",
+   "entryAssets": [
+    "/assets/index-1m6M5KYW.js"
+   ],
+   "viewport": "390x844",
+   "totalPaintedHits": 33,
+   "distinctTokens": 25,
+   "machine_words": [
+    "ACTIVE",
+    "ACTIVE",
+    "ARRIVAL",
+    "AUTHORITATIVE",
+    "AUTHORITATIVE",
+    "CLOCK",
+    "COMMITMENT",
+    "COMPLETED",
+    "COMPLETED",
+    "COMPLETED",
+    "CURRENT",
+    "DEPARTURE",
+    "DISCOVERY",
+    "EXPLICIT",
+    "JSON",
+    "JSON",
+    "LEARNED_SOFT",
+    "LIVE",
+    "MULTIMODAL",
+    "NAVIGATE",
+    "NEXT",
+    "NEXT",
+    "NEXT",
+    "NOTIFICATIONS",
+    "OFFLINE",
+    "POLICY",
+    "POST",
+    "REALITY",
+    "RISK",
+    "ROUTE",
+    "STAY",
+    "STAY",
+    "TRIP"
+   ],
+   "hits": [
+    {
+     "route": "/v8/hub",
+     "kind": "ALLCAPS_WORD",
+     "machine_word": "ARRIVAL",
+     "tag": "span",
+     "cls": "",
+     "text_head": "ARRIVAL"
+    },
+    {
+     "route": "/v8/hub",
+     "kind": "ALLCAPS_WORD",
+     "machine_word": "DEPARTURE",
+     "tag": "span",
+     "cls": "",
+     "text_head": "DEPARTURE"
+    },
+    {
+     "route": "/v8/live",
+     "kind": "ALLCAPS_WORD",
+     "machine_word": "NEXT",
+     "tag": "p",
+     "cls": "",
+     "text_head": "NEXT · Nexus River Cruise Pier · Transit · duration pending"
+    },
+    {
+     "route": "/v8/live",
+     "kind": "ALLCAPS_WORD",
+     "machine_word": "NEXT",
+     "tag": "span",
+     "cls": "",
+     "text_head": "NEXT · LEAVE BY"
+    },
+    {
+     "route": "/v8/live",
+     "kind": "ALLCAPS_WORD",
+     "machine_word": "NAVIGATE",
+     "tag": "a",
+     "cls": "v9-navigate",
+     "text_head": "NAVIGATE →"
+    },
+    {
+     "route": "/v8/live",
+     "kind": "ALLCAPS_WORD",
+     "machine_word": "RISK",
+     "tag": "b",
+     "cls": "",
+     "text_head": "RISK"
+    },
+    {
+     "route": "/v8/live",
+     "kind": "ALLCAPS_WORD",
+     "machine_word": "LIVE",
+     "tag": "span",
+     "cls": "v8-kicker",
+     "text_head": "LIVE STATUS"
+    },
+    {
+     "route": "/v8/live",
+     "kind": "ALLCAPS_WORD",
+     "machine_word": "CLOCK",
+     "tag": "span",
+     "cls": "",
+     "text_head": "CLOCK"
+    },
+    {
+     "route": "/v8/live",
+     "kind": "ALLCAPS_WORD",
+     "machine_word": "CURRENT",
+     "tag": "span",
+     "cls": "",
+     "text_head": "CURRENT STEP"
+    },
+    {
+     "route": "/v8/live",
+     "kind": "ALLCAPS_WORD",
+     "machine_word": "OFFLINE",
+     "tag": "span",
+     "cls": "",
+     "text_head": "OFFLINE"
+    },
+    {
+     "route": "/v8/studio",
+     "kind": "ALLCAPS_WORD",
+     "machine_word": "STAY",
+     "tag": "span",
+     "cls": "",
+     "text_head": "NO STAY SELECTED"
+    },
+    {
+     "route": "/v8/discover",
+     "kind": "ALLCAPS_WORD",
+     "machine_word": "DISCOVERY",
+     "tag": "span",
+     "cls": "v8-agent-mark",
+     "text_head": "CN / DISCOVERY"
+    },
+    {
+     "route": "/v8/bookings",
+     "kind": "ALLCAPS_WORD",
+     "machine_word": "JSON",
+     "tag": "p",
+     "cls": "v8-lede",
+     "text_head": "Paste structured reservation JSON, review it, then bind confirmed fact"
+    },
+    {
+     "route": "/v8/bookings",
+     "kind": "ALLCAPS_WORD",
+     "machine_word": "STAY",
+     "tag": "span",
+     "cls": "v8-selected-label",
+     "text_head": "STAY EVIDENCE"
+    },
+    {
+     "route": "/v8/bookings",
+     "kind": "ALLCAPS_WORD",
+     "machine_word": "JSON",
+     "tag": "p",
+     "cls": "v8-lede",
+     "text_head": "Structured import lives here - expand Advanced below to paste a JSON c"
+    },
+    {
+     "route": "/v8/bookings",
+     "kind": "ALLCAPS_WORD",
+     "machine_word": "MULTIMODAL",
+     "tag": "span",
+     "cls": "v8-kicker",
+     "text_head": "MULTIMODAL INBOX"
+    },
+    {
+     "route": "/v8/bookings",
+     "kind": "ALLCAPS_WORD",
+     "machine_word": "AUTHORITATIVE",
+     "tag": "span",
+     "cls": "v8-kicker",
+     "text_head": "AUTHORITATIVE MEMORY"
+    },
+    {
+     "route": "/v8/authoritative",
+     "kind": "ALLCAPS_WORD",
+     "machine_word": "AUTHORITATIVE",
+     "tag": "span",
+     "cls": "v8-kicker",
+     "text_head": "AUTHORITATIVE JOURNEY"
+    },
+    {
+     "route": "/v8/authoritative",
+     "kind": "ALLCAPS_WORD",
+     "machine_word": "ACTIVE",
+     "tag": "span",
+     "cls": "v12-state-value",
+     "text_head": "ACTIVE"
+    },
+    {
+     "route": "/v8/authoritative",
+     "kind": "ALLCAPS_WORD",
+     "machine_word": "NEXT",
+     "tag": "span",
+     "cls": "v12-state-kicker",
+     "text_head": "NEXT"
+    },
+    {
+     "route": "/v8/authoritative",
+     "kind": "ALLCAPS_WORD",
+     "machine_word": "COMPLETED",
+     "tag": "span",
+     "cls": "v12-activity-status state-completed",
+     "text_head": "COMPLETED"
+    },
+    {
+     "route": "/v8/authoritative",
+     "kind": "ALLCAPS_WORD",
+     "machine_word": "COMPLETED",
+     "tag": "span",
+     "cls": "v12-activity-status state-completed",
+     "text_head": "COMPLETED"
+    },
+    {
+     "route": "/v8/authoritative",
+     "kind": "ALLCAPS_WORD",
+     "machine_word": "COMPLETED",
+     "tag": "span",
+     "cls": "v12-activity-status state-completed",
+     "text_head": "COMPLETED"
+    },
+    {
+     "route": "/v8/authoritative",
+     "kind": "ALLCAPS_WORD",
+     "machine_word": "ACTIVE",
+     "tag": "span",
+     "cls": "v12-activity-status state-active",
+     "text_head": "ACTIVE"
+    },
+    {
+     "route": "/v8/authoritative",
+     "kind": "ALLCAPS_WORD",
+     "machine_word": "ROUTE",
+     "tag": "button",
+     "cls": "v8-primary",
+     "text_head": "Mark EN ROUTE"
+    },
+    {
+     "route": "/v8/authoritative",
+     "kind": "ALLCAPS_WORD",
+     "machine_word": "TRIP",
+     "tag": "span",
+     "cls": "v8-kicker",
+     "text_head": "TRIP STUDIO · DRAFT THEN ACCEPT"
+    },
+    {
+     "route": "/v8/authoritative",
+     "kind": "ALLCAPS_WORD",
+     "machine_word": "REALITY",
+     "tag": "span",
+     "cls": "v8-kicker",
+     "text_head": "V14 · REALITY CHANGED"
+    },
+    {
+     "route": "/v8/intelligence",
+     "kind": "ALLCAPS_WORD",
+     "machine_word": "POLICY",
+     "tag": "span",
+     "cls": "",
+     "text_head": "POLICY"
+    },
+    {
+     "route": "/v8/intelligence",
+     "kind": "ALLCAPS_WORD",
+     "machine_word": "POST",
+     "tag": "span",
+     "cls": "",
+     "text_head": "POST-ACTION GATE"
+    },
+    {
+     "route": "/v8/intelligence",
+     "kind": "ALLCAPS_WORD",
+     "machine_word": "COMMITMENT",
+     "tag": "span",
+     "cls": "",
+     "text_head": "COMMITMENT"
+    },
+    {
+     "route": "/v8/twin",
+     "kind": "ALLCAPS_WORD",
+     "machine_word": "EXPLICIT",
+     "tag": "span",
+     "cls": "v8-twin-label explicit",
+     "text_head": "EXPLICIT"
+    },
+    {
+     "route": "/v8/twin",
+     "kind": "UPPER_SNAKE",
+     "machine_word": "LEARNED_SOFT",
+     "tag": "span",
+     "cls": "v8-twin-label learned",
+     "text_head": "LEARNED_SOFT"
+    },
+    {
+     "route": "/v8/me",
+     "kind": "ALLCAPS_WORD",
+     "machine_word": "NOTIFICATIONS",
+     "tag": "span",
+     "cls": "v8-kicker",
+     "text_head": "NOTIFICATIONS"
+    }
+   ],
+   "kinds": {
+    "ALLCAPS_WORD": 32,
+    "UPPER_SNAKE": 1
+   },
+   "routes_with_hits": [
+    "/v8/hub",
+    "/v8/live",
+    "/v8/studio",
+    "/v8/discover",
+    "/v8/bookings",
+    "/v8/authoritative",
+    "/v8/intelligence",
+    "/v8/twin",
+    "/v8/me"
+   ],
+   "pageErrors": [],
+   "bookings_doc_chars": 1479,
+   "me_doc_chars": 624,
+   "thin_routes": [
+    "/v8/agent",
+    "/v8/discover",
+    "/v8/intelligence",
+    "/v8/map",
+    "/v8/me",
+    "/v8/stay",
+    "/v8/studio",
+    "/v8/trash",
+    "/v8/trips",
+    "/v8/twin"
+   ]
+  }
+ },
+ "passes_missing_this_round": [
+  "before_en"
+ ],
+ "self_fault_concurrent_pass": {
+  "before_zh": {
+   "totalPaintedHits": 3,
+   "machine_words": [
+    "DEMO",
+    "JSON",
+    "JSON"
+   ],
+   "bookings_doc_chars": 442,
+   "me_doc_chars": 279
+  },
+  "after_zh": {
+   "totalPaintedHits": 2,
+   "machine_words": [
+    "JSON",
+    "JSON"
+   ],
+   "bookings_doc_chars": 442,
+   "me_doc_chars": 309
+  },
+  "after_en": {
+   "totalPaintedHits": 30,
+   "machine_words": [
+    "ACTIVE",
+    "ACTIVE",
+    "ARRIVAL",
+    "AUTHORITATIVE",
+    "AUTHORITATIVE",
+    "CLOCK",
+    "COMPLETED",
+    "COMPLETED",
+    "COMPLETED",
+    "CURRENT",
+    "DEPARTURE",
+    "DISCOVERY",
+    "EXPLICIT",
+    "JSON",
+    "JSON",
+    "LEARNED_SOFT",
+    "LIVE",
+    "MULTIMODAL",
+    "NAVIGATE",
+    "NEXT",
+    "NEXT",
+    "NEXT",
+    "NOTIFICATIONS",
+    "OFFLINE",
+    "REALITY",
+    "RISK",
+    "ROUTE",
+    "STAY",
+    "STAY",
+    "TRIP"
+   ],
+   "bookings_doc_chars": 1246,
+   "me_doc_chars": 624
+  },
+  "before_en": {
+   "totalPaintedHits": 35,
+   "machine_words": [
+    "ACTIVE",
+    "ACTIVE",
+    "ADVISORY",
+    "ARRIVAL",
+    "AUTHORITATIVE",
+    "AUTHORITATIVE",
+    "CLOCK",
+    "COMMITMENT",
+    "COMPLETED",
+    "COMPLETED",
+    "COMPLETED",
+    "CURRENT",
+    "DEMO",
+    "DEPARTURE",
+    "DISCOVERY",
+    "EXPLICIT",
+    "JSON",
+    "JSON",
+    "LEARNED_SOFT",
+    "LIVE",
+    "MULTIMODAL",
+    "NAVIGATE",
+    "NEXT",
+    "NEXT",
+    "NEXT",
+    "NOTIFICATIONS",
+    "OFFLINE",
+    "POLICY",
+    "POST",
+    "REALITY",
+    "RISK",
+    "ROUTE",
+    "STAY",
+    "STAY",
+    "TRIP"
+   ],
+   "bookings_doc_chars": 1246,
+   "me_doc_chars": 619
+  }
+ },
+ "comparison": {
+  "before_zh_hits": 6,
+  "after_zh_hits": 2,
+  "removed_words_zh": [
+   "ACTIVE",
+   "BOOKING",
+   "DEMO",
+   "reasoning_summary"
+  ],
+  "added_words_zh": [],
+  "survivors_after_zh": [
+   {
+    "route": "/v8/bookings",
+    "kind": "ALLCAPS_WORD",
+    "machine_word": "JSON",
+    "tag": "p",
+    "cls": "v8-lede",
+    "text_head": "粘贴结构化预订 JSON，审核后，将确认的事实绑定为行程的持久承诺。"
+   },
+   {
+    "route": "/v8/bookings",
+    "kind": "ALLCAPS_WORD",
+    "machine_word": "JSON",
+    "tag": "p",
+    "cls": "v8-lede",
+    "text_head": "结构化导入在这里：展开下方「高级」粘贴 JSON 确认单。确认单文本与截图走行程收件箱。"
+   }
+  ],
+  "survivor_shapes": [
+   "p.v8-lede"
+  ],
+  "after_en_hits": 33,
+  "after_en_kinds": {
+   "ALLCAPS_WORD": 32,
+   "UPPER_SNAKE": 1
+  },
+  "after_en_machine_shaped": {
+   "UPPER_SNAKE": 1
+  },
+  "en_minus_zh": 31
+ },
+ "gates": {
+  "n2-0446r2-tip": {
+   "vite_build": 0,
+   "sha": "0fee131d02b7c7c85f59aab8307f28594bf0d65f"
+  },
+  "n2-0446r2-cand": {
+   "vite_build": 0,
+   "sha": "030265e13abb4bb8359248fb9769d821f0a67e9a"
+  },
+  "typecheck_rc": 0,
+  "typecheck_log": "D:/moodle/_qoder_n2_scratch/_tsc_0446r2.log"
+ }
+}
