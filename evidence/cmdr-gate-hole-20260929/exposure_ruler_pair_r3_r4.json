@@ -1,0 +1,44 @@
+{
+  "purpose": "commander: the landing gate accepted r4 while the exposure ruler still calls it EXPOSURE_SHAPE_FOUND - both runs pasted verbatim from the same ruler",
+  "ruler": "ui_exposure_taint_ast_r7b.cjs",
+  "runs": {
+    "6c466ce267bf": {
+      "verdict": "EXPOSURE_SHAPE_FOUND",
+      "rules_fired": [
+        "UPSTREAM_EXCEPTION_TO_DOM"
+      ],
+      "cells_total": 4,
+      "per_file_hits": 4,
+      "hit_lines": [
+        367,
+        426,
+        549,
+        602
+      ],
+      "hit_helpers": [
+        "setActionError",
+        "setCapabilityError",
+        null,
+        "setActionError"
+      ]
+    },
+    "527f471b6d009d8ef8fead5d32ad455005ac281b": {
+      "verdict": "EXPOSURE_SHAPE_FOUND",
+      "rules_fired": [
+        "UPSTREAM_EXCEPTION_TO_DOM"
+      ],
+      "cells_total": 3,
+      "per_file_hits": 3,
+      "hit_lines": [
+        421,
+        544,
+        597
+      ],
+      "hit_helpers": [
+        "setCapabilityError",
+        null,
+        "setActionError"
+      ]
+    }
+  }
+}
