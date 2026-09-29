@@ -2255,6 +2255,40 @@ components:
         application/json:
           schema: {$ref: '#/components/schemas/ErrorEnvelope'}
   schemas:
+    V13NamedRejection:
+      type: string
+      description: >-
+        ORD-0467. The named rejection codes this product answers with, as one closed
+        vocabulary. Each is raised by name in the doors listed below and reaches a client
+        as the first token of the error detail (`CODE` or `CODE: argument`), which is why
+        `frontend/src/features/pending/pendingPlaceWrites.ts` and
+        `frontend/src/features/discovery/RealCityDiscoveryPanel.tsx` match on it rather
+        than reading a structured field -- they read what the server actually sent.
+        Emission sites, read from this tree: .
+        The credential gate (backend/app/security/credential_literals.py) may exempt a
+        literal only when it is byte-identical to one of these members; a value shaped like
+        a provider key is never exempted by contract membership.
+      enum:
+        - V13_ACTIVITY_OUTSIDE_DEPARTURE_WINDOW
+        - V13_AUTHORITATIVE_BOUNDED_MULTIDAY
+        - V13_C4_ANCHOR_NOT_IN_INPUT
+        - V13_C4_ANCHOR_OUTSIDE_JOURNEY
+        - V13_CHECK_OUT_DEPARTURE_BUFFER
+        - V13_COMMITMENT_ANCHOR_DAY_CONFLICT
+        - V13_COMMITMENT_ANCHOR_TOO_EARLY
+        - V13_COMMITMENT_ANCHOR_TRAVEL_BUFFER
+        - V13_COMMITMENT_OUTSIDE_OPENING_HOURS
+        - V13_DAY_TRIP_CANNOT_SELECT_STAY
+        - V13_DISCOVERY_COMPOSE_EMPTY
+        - V13_DISCOVERY_NO_FEASIBLE_PLACE_SET
+        - V13_DISCOVERY_NO_FEASIBLE_PLAN
+        - V13_FULL_GROUNDING_MISSING_MOBILITY_PAIR
+        - V13_INVALID_ANCHOR_WINDOW
+        - V13_INVALID_C4_ANCHOR_TIME
+        - V13_JOURNEY_DAYS_OUT_OF_BOUNDS
+        - V13_STAY_CANDIDATE_UNAVAILABLE
+        - V13_STAY_CHECK_IN_OUTSIDE_JOURNEY
+
     PlanningMode:
       type: string
       enum: [balanced, budget, explore, strict_schedule]
