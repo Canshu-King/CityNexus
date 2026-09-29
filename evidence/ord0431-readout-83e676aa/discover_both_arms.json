@@ -1,0 +1,361 @@
+{
+ "ui": "http://127.0.0.1:4314",
+ "route": "discover",
+ "widths": [
+  390
+ ],
+ "arms": {
+  "zh-CN": [
+   {
+    "path": "/v8/discover",
+    "viewport": {
+     "w": 390,
+     "h": 844
+    },
+    "bar_box": {
+     "top": 0,
+     "h": 66,
+     "left": 0,
+     "right": 390
+    },
+    "bar_overflow_x": 0,
+    "controls": [
+     {
+      "text": "菜单",
+      "tag": "BUTTON",
+      "cls": "v8-mobile-menu",
+      "box": {
+       "left": 17,
+       "right": 63,
+       "top": 19,
+       "bottom": 46,
+       "w": 46,
+       "h": 27
+      },
+      "rect_count": 1,
+      "line_boxes": [
+       {
+        "w": 32,
+        "h": 21,
+        "top": 24
+       }
+      ],
+      "font_size": "16px"
+     },
+     {
+      "text": "城市探索",
+      "tag": "STRONG",
+      "cls": "",
+      "box": {
+       "left": 110,
+       "right": 158,
+       "top": 25,
+       "bottom": 41,
+       "w": 48,
+       "h": 16
+      },
+      "rect_count": 1,
+      "line_boxes": [
+       {
+        "w": 48,
+        "h": 16,
+        "top": 25
+       }
+      ],
+      "font_size": "12px"
+     },
+     {
+      "text": "跟随系统",
+      "tag": "BUTTON",
+      "cls": "v9-language",
+      "box": {
+       "left": 191,
+       "right": 256,
+       "top": 17,
+       "bottom": 61,
+       "w": 65,
+       "h": 44
+      },
+      "rect_count": 2,
+      "line_boxes": [
+       {
+        "w": 32,
+        "h": 21,
+        "top": 18
+       },
+       {
+        "w": 32,
+        "h": 21,
+        "top": 39
+       }
+      ],
+      "font_size": "16px"
+     },
+     {
+      "text": "EN",
+      "tag": "BUTTON",
+      "cls": "v9-language",
+      "box": {
+       "left": 264,
+       "right": 329,
+       "top": 17,
+       "bottom": 61,
+       "w": 65,
+       "h": 44
+      },
+      "rect_count": 1,
+      "line_boxes": [
+       {
+        "w": 20,
+        "h": 21,
+        "top": 28
+       }
+      ],
+      "font_size": "16px"
+     },
+     {
+      "text": "DE",
+      "tag": "BUTTON",
+      "cls": "v8-avatar",
+      "box": {
+       "left": 345,
+       "right": 373,
+       "top": 25,
+       "bottom": 53,
+       "w": 28,
+       "h": 28
+      },
+      "rect_count": 1,
+      "line_boxes": [
+       {
+        "w": 20,
+        "h": 21,
+        "top": 37
+       }
+      ],
+      "font_size": "16px"
+     }
+    ],
+    "chip_present": true,
+    "chip_text": "跟随系统",
+    "chip_rect_count": 2,
+    "chip_box_h_px": 44,
+    "chip_font_size": "16px",
+    "chip_line_boxes": [
+     {
+      "w": 32,
+      "h": 21,
+      "top": 18
+     },
+     {
+      "w": 32,
+      "h": 21,
+      "top": 39
+     }
+    ],
+    "chip_vs_neighbours": [
+     {
+      "with": "菜单",
+      "overlap_px2": 0,
+      "gap_px": 128,
+      "same_row": true
+     },
+     {
+      "with": "城市探索",
+      "overlap_px2": 0,
+      "gap_px": 33,
+      "same_row": true
+     },
+     {
+      "with": "EN",
+      "overlap_px2": 0,
+      "gap_px": 8,
+      "same_row": true
+     },
+     {
+      "with": "DE",
+      "overlap_px2": 0,
+      "gap_px": 89,
+      "same_row": true
+     }
+    ],
+    "wrapped_texts": [
+     "跟随系统"
+    ],
+    "width": 390,
+    "page_errors": 0,
+    "page_error_samples": []
+   }
+  ],
+  "en": [
+   {
+    "path": "/v8/discover",
+    "viewport": {
+     "w": 390,
+     "h": 844
+    },
+    "bar_box": {
+     "top": 0,
+     "h": 66,
+     "left": 0,
+     "right": 390
+    },
+    "bar_overflow_x": 0,
+    "controls": [
+     {
+      "text": "Menu",
+      "tag": "BUTTON",
+      "cls": "v8-mobile-menu",
+      "box": {
+       "left": 17,
+       "right": 72,
+       "top": 19,
+       "bottom": 46,
+       "w": 55,
+       "h": 27
+      },
+      "rect_count": 1,
+      "line_boxes": [
+       {
+        "w": 41,
+        "h": 21,
+        "top": 24
+       }
+      ],
+      "font_size": "16px"
+     },
+     {
+      "text": "City Discovery",
+      "tag": "STRONG",
+      "cls": "",
+      "box": {
+       "left": 100,
+       "right": 181,
+       "top": 25,
+       "bottom": 41,
+       "w": 81,
+       "h": 16
+      },
+      "rect_count": 1,
+      "line_boxes": [
+       {
+        "w": 81,
+        "h": 16,
+        "top": 25
+       }
+      ],
+      "font_size": "12px"
+     },
+     {
+      "text": "System",
+      "tag": "BUTTON",
+      "cls": "v9-language",
+      "box": {
+       "left": 195,
+       "right": 258,
+       "top": 17,
+       "bottom": 61,
+       "w": 63,
+       "h": 44
+      },
+      "rect_count": 1,
+      "line_boxes": [
+       {
+        "w": 50,
+        "h": 21,
+        "top": 28
+       }
+      ],
+      "font_size": "16px"
+     },
+     {
+      "text": "中文",
+      "tag": "BUTTON",
+      "cls": "v9-language",
+      "box": {
+       "left": 266,
+       "right": 329,
+       "top": 17,
+       "bottom": 61,
+       "w": 63,
+       "h": 44
+      },
+      "rect_count": 1,
+      "line_boxes": [
+       {
+        "w": 32,
+        "h": 21,
+        "top": 28
+       }
+      ],
+      "font_size": "16px"
+     },
+     {
+      "text": "DE",
+      "tag": "BUTTON",
+      "cls": "v8-avatar",
+      "box": {
+       "left": 345,
+       "right": 373,
+       "top": 25,
+       "bottom": 53,
+       "w": 28,
+       "h": 28
+      },
+      "rect_count": 1,
+      "line_boxes": [
+       {
+        "w": 20,
+        "h": 21,
+        "top": 37
+       }
+      ],
+      "font_size": "16px"
+     }
+    ],
+    "chip_present": true,
+    "chip_text": "System",
+    "chip_rect_count": 1,
+    "chip_box_h_px": 44,
+    "chip_font_size": "16px",
+    "chip_line_boxes": [
+     {
+      "w": 50,
+      "h": 21,
+      "top": 28
+     }
+    ],
+    "chip_vs_neighbours": [
+     {
+      "with": "Menu",
+      "overlap_px2": 0,
+      "gap_px": 123,
+      "same_row": true
+     },
+     {
+      "with": "City Discovery",
+      "overlap_px2": 0,
+      "gap_px": 14,
+      "same_row": true
+     },
+     {
+      "with": "中文",
+      "overlap_px2": 0,
+      "gap_px": 8,
+      "same_row": true
+     },
+     {
+      "with": "DE",
+      "overlap_px2": 0,
+      "gap_px": 87,
+      "same_row": true
+     }
+    ],
+    "wrapped_texts": [],
+    "width": 390,
+    "page_errors": 0,
+    "page_error_samples": []
+   }
+  ]
+ }
+}
