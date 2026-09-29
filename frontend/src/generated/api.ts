@@ -3390,6 +3390,16 @@ export interface components {
             event_ids: string[];
             created_event_ids: string[];
         };
+        /** @description What this journey can still honour, recomputed on every twin read. ORD-0432: an event whose severity is MAJOR or CRITICAL and whose status is still DETECTED or ACKNOWLEDGED has to appear in `risk_reason_codes`, and `robust` is false while any risk code is present -- an open disruption must never read as nothing-to-see. `next_commitment_buffer_min` is null when no later commitment is scheduled, so the field simply does not gate that trip. */
+        FeasibilityEnvelope: {
+            next_commitment_buffer_min?: number | null;
+            journey_end_slack_min: number;
+            budget_remaining_minor: number;
+            preserved_commitment_count: number;
+            degraded_providers: string[];
+            risk_reason_codes: ("PROVIDER_DEGRADED" | "DISRUPTION_MAJOR" | "DISRUPTION_CRITICAL")[];
+            robust: boolean;
+        };
         JourneyTwin: {
             /** Format: uuid */
             journey_id: string;
@@ -3405,6 +3415,8 @@ export interface components {
             snapshot_at: string;
             upcoming_commitments?: components["schemas"]["Commitment"][];
             context?: {
+                feasibility_envelope?: components["schemas"]["FeasibilityEnvelope"];
+            } & {
                 [key: string]: unknown;
             };
         };
