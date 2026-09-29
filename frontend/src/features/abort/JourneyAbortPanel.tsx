@@ -119,7 +119,7 @@ export function JourneyAbortPanel({
     return (
       <section className="journey-abort" data-testid="journey-abort">
         <p className="v8-muted" data-testid="abort-loading">
-          {say("abort.busy")}
+          {say("abort.loading")}
         </p>
       </section>
     );
