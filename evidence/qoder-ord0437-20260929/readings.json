@@ -8,11 +8,11 @@
    "cardPhaseBeforeAnyPress": null,
    "planState": "already",
    "steps": {
-    "after_viewport": 395,
-    "after_enter_import": 3060,
-    "after_ensure_active_plan": 3099,
-    "after_reading_disclosure": 3102,
-    "after_reading_phase": 5120
+    "after_viewport": 521,
+    "after_enter_import": 3222,
+    "after_ensure_active_plan": 3271,
+    "after_reading_disclosure": 3277,
+    "after_reading_phase": 5284
    }
   },
   {
@@ -23,13 +23,13 @@
    "arm": "link-named-and-states",
    "planState": "already",
    "slack": {
-    "id": "760cf7bd-25e8-4045-8383-69fc3cb2bf9c",
+    "id": "035ff7f7-97bb-499f-92e5-b12d73736259",
     "city": "CNX-DEMO",
     "generate_status": 201,
     "candidates": 1
    },
    "catalogue": {
-    "id": "760cf7bd-25e8-4045-8383-69fc3cb2bf9c",
+    "id": "035ff7f7-97bb-499f-92e5-b12d73736259",
     "city": "CNX-DEMO",
     "rows": 8,
     "providers": [
@@ -118,13 +118,13 @@
    "arm": "added-and-replay",
    "planState": "already",
    "slack": {
-    "id": "ad4416f6-7248-4267-8388-98a445090902",
+    "id": "ede50fdf-2e8a-4fbb-b083-5f58adef4f85",
     "city": "CNX-DEMO",
     "generate_status": 201,
     "candidates": 1
    },
    "catalogue": {
-    "id": "ad4416f6-7248-4267-8388-98a445090902",
+    "id": "ede50fdf-2e8a-4fbb-b083-5f58adef4f85",
     "city": "CNX-DEMO",
     "rows": 8,
     "providers": [
@@ -166,8 +166,8 @@
    "addedSource": "JOURNEY_FIRST_DAY",
    "readBackFailure": null,
    "steps": {
-    "after_slack_journey_and_catalogue": 4594,
-    "after_add_accepted": 6106
+    "after_slack_journey_and_catalogue": 4552,
+    "after_add_accepted": 6058
    },
    "addedAfterReload": null,
    "replayAdded": null,
@@ -202,7 +202,7 @@
    "arm": "chinese-arm",
    "planState": "already",
    "slack": {
-    "id": "ba2f656a-0a5e-4f12-9d64-8b710e39e508",
+    "id": "ad31d227-15fe-46a6-a7b0-2355950f87c8",
     "city": "CNX-DEMO",
     "generate_status": 201,
     "candidates": 1
