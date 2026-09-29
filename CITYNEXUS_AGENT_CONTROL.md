@@ -16588,6 +16588,137 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### ORD-0450 交付 · 新车道二（Qoder 会话 6a150e1e）· 待规划批次落到某一天（走已落地的两扇门）· 候选 de1aaf321ab5950fa73876697ec029dcaac63a65
+
+一句话：勾选、批次、一次真压都接好了，用的全是线上已有的门；但这台服务器的排期门在这份数据上双向卡死，所以"成功落进某一天"这一臂我没有绿，量出来的原因写在下面，不猜也不绕。
+
+- 现读现尖：`env -u HTTP_PROXY -u HTTPS_PROXY git ls-remote origin refs/heads/mirror/integration-frontend-apple-pass1` 两次等值，落在 `D:/moodle/_qoder_n2b_ord0445_20260929/chain_drift_0450.txt:2`；我 12:09 读到的是同文件 `:5` 那一枚，之后线又前进 commits=2（同文件 `:7`），其中一笔就是我自己的 ORD-0445 r2 落地件。权威分支我没有移动过。
+- 候选与父：`D:/moodle/_qoder_n2b_ord0445_20260929/chain_drift_0450.txt:3` 记候选 = `de1aaf321ab5950fa73876697ec029dcaac63a65`，父 = `b09e96f647d23ea2312350ff3c5189a37e369490`（同文件 `:4`，它已在线上，祖先判据 rc=0 见同文件 `:6`）。枝名回读逐字相等：`refs/heads/review/newlane2-ord0450-place-on-a-day-r1`。
+- 只读复切预测：`git merge-tree --write-tree 57ff5d1c2f8540d498d945ed591c36689fc0f39e de1aaf321ab5950fa73876697ec029dcaac63a65` 给出树 `d82f76882d856e227f7721f4e7f1a9925c5250cf`，无冲突输出（`D:/moodle/_qoder_n2b_ord0445_20260929/chain_drift_0450.txt:11`）；上游那两笔没有动过我这个单的任何文件（同文件 `:8` 的 `git diff --name-only` 为空输出），所以"合完逐字节等于车道自己那份"这一条成立。
+- 复用了什么、没新造什么：写只走 `POST /api/v1/journeys/{journey_id}/plans/authoritative-compose`（`backend/app/main.py:5762`，请求体 `backend/app/schemas.py:560`），落点回读只走 `GET /api/v1/plans/{plan_version_id}`；采用那一步走已经活了很久的 `.../plans/{version}/select`（`frontend/src/api/citynexus.ts:856` 今天就在调）。没有新端点、没有新表、没有第二套日期状态——那一天是从 `start_at` 推出来的同一个值（`frontend/src/features/trip/TripItinerary.tsx:98`）。
+- 批法（这条是本单的产品判断）：批次带上**当前方案已有的全部地点**再加勾选，屏上那行把两个数都写出来；服务器侧实测这一批带 6 个已排点 + 1 个勾选（`D:/moodle/_qoder_n2b_ord0445_20260929/e2e_evidence/ord0445/ord0450_r1__A11.json:6` 记服务器给的已排点数，`:7` 记屏上原句，`:8` 记勾选回读）。理由：只带"受保护承诺 + 勾选"（ORD-0435 从空方案建版时的规则）会让"加一个地点"同时变成"掉四个地点"。
+- 没写成就不许声称写成：只有 compose 点名了一个版本，屏上才会出现回执与"改用这版"；被拒时三句可行动的因（窗口放不下 / 受保护承诺卡住 / 产不出一版）各配一句人话，服务器那个词只进技术详情（`D:/moodle/_qoder_n2b_ord0445_20260929/e2e_evidence/ord0445/ord0450_r1__A12.json:6` 记屏上原句）。
+- 门禁：`D:/moodle/_qoder_n2b_ord0445_20260929/tsc_rc_0450.txt:1` 记 tsc 退出码 rc=0 且诊断字节数为 0；`D:/moodle/_qoder_n2b_ord0445_20260929/build_0450_r2.txt:11` 记 `vite build` 产物入口；车道门 passed=14 failed=0（`D:/moodle/_qoder_n2b_ord0445_20260929/suite_0450_r1.txt:19`），其中 ORD-0445 原有十臂一臂未减、全部仍绿。
+- 中文臂仍然没有比修前多字：摘掉本面板后与反件逐字相等 before_chars=558 = after_chars_minus_panel=558、equal=true（`D:/moodle/_qoder_n2b_ord0445_20260929/e2e_evidence/ord0445/ord0450_r1__A6.json:10`），面板自身 panel_chars=344（同文件 `:8`，比 r2 那次的 321 多的正是这单加的句子）。
+- 一次真压之后什么都没落库：正在执行的方案 id 压前压后同一枚（`D:/moodle/_qoder_n2b_ord0445_20260929/e2e_evidence/ord0445/ord0450_r1__A12.json:7` 与 `:8`），方案行数压前压后都是 1（同文件 `:9`、`:10`）；这一屏一次只开那一扇门，抓到的非 GET 请求就一条 POST compose（`D:/moodle/_qoder_n2b_ord0445_20260929/e2e_evidence/ord0445/ord0450_r1__A14.json:6`）。
+- 英文臂同一条件用自己的话说，且不混汉字（`D:/moodle/_qoder_n2b_ord0445_20260929/e2e_evidence/ord0445/ord0450_r1__A13.json:7`）。
+
+要号令者裁的一条（这单我没能闭环，因是量出来的）：
+
+- 演示行程上这条排期门双向卡死，四种批法全部实测：带受保护承诺 → `V13_COMMITMENT_ANCHOR_TRAVEL_BUFFER:place-river-cruise`；不带它 → `V13_C4_ANCHOR_NOT_IN_INPUT:place-river-cruise`；只喂它自己城内两个已排点也一样拒；只喂待规划的两个点也拒。四条读数与回执号 CNX-32XRW8GQ 逐条在 `D:/moodle/_qoder_n2b_ord0445_20260929/compose_catch22_r1.txt:2`、`:3`、`:4`、`:5`。多日行程另撞 `V13_STAY_CANDIDATE_UNAVAILABLE`（回执号 CNX-NKXMVDDD，读数在 `D:/moodle/_qoder_n2b_ord0445_20260929/compose_mark.json:1` 同批探测里）。⇒ 成功臂写 NOT_REACHABLE_BY_THIS_DOOR_ON_THIS_DATA，我没有改断言、没有 mock、没有为了绿换路径。
+- 顺手报一条数据真值缺陷（值得单开一张，它也是上面卡死的因之一）：`mode=replay` 的发现门给 CNX-DEMO 的行程返回的是天津的 POI（名字与坐标都是），materialize 时 `city_code` 又按行程写成 CNX-DEMO ⇒ 待规划集合里列的是"另一座城的点"，既让 ORD-0445 那屏在"Nexus City 的行程"下列出天津地名，也让排期门的旅行缓冲永远算不过去。三条候选的实测名与 id 在 `D:/moodle/_qoder_n2b_ord0445_20260929/disc_mark.json:1`。
+
+未做与未量（与 r1 相同）：地图侧开关 NOT_DONE（注册表到不了地图图层）；"答了但没带清单"那一格 NOT_MEASURED（要重写响应才能触发，我没重写）；反向对照仍缺——`:8000` 依旧拒绝连接（`D:/moodle/_qoder_n2b_ord0445_20260929/prep_receipt_r2.json:17` 记该读数），私有栈归属改用监听者命令行 + marker 行两证。
+
+边界与现场：库副本从共享预览库 mode=ro 快照，共享 `_preview.db` 未写、未 ALTER、未跑 demo/reset，未重启任何共享端口；空集合那一臂用的是本车道通过公共门新建的行程（id 记在 `D:/moodle/_qoder_n2b_ord0445_20260929/empty_journey_r2.txt:1`）。我这侧还挂着供你亲测：后端 :8012、这单的门面 :4794、反件口 :4793。
+
+
+### 车道 dt（会话 be19052c）ORD-0435 三件齐：修后屏读两臂、写入后服务端读回、计数句单复数两形逐字（第三件照出一枚真缺陷，已修）（2026-09-29 12:56 +08）
+
+基座就是号令者给的现尖：`git rev-parse HEAD` 前 `git merge --ff-only` 到
+`57ff5d1c2f8540d498d945ed591c36689fc0f39e`，我这一笔 `84cc98efcd10096cfd55374b4c6e7d555451b5b1`
+落在枝 `refs/heads/review/ord0435-poi-batch-multiselect-r3`，`ls-remote` 现读该枝 =
+`84cc98efcd10096cfd55374b4c6e7d555451b5b1`、`refs/heads/mirror/integration-frontend-apple-pass1` 仍是
+`57ff5d1c2f8540d498d945ed591c36689fc0f39e`（权威线我没动）。目的地用的是已准备好的 CNX-DEMO，
+`GET /api/v1/demo/scene` 直接给 journey，不经 `demo/reset`——号令者那台撞的是 `HYDRATABLE`
+缺 food/nightlife/lodging/mobility 四类事实那道门，我没有绕过它，是走的另一个目的地。
+
+**一、修后屏读两臂（多选框、计数、目标容器、完成与新建并列）**。`12 passed`（real-seed setup 一枚 + 11 臂），
+退出码 0，证据 11 枚 json 全部入库在 `review/ord0435/arms/`。逐臂逐字：
+- 多选框：两臂各结果卡 3 张、勾选控件 3 枚、未选态 3 枚、勾选后 `.selected`（服务端 eligibility）仍 3 处不随勾选变，
+  取消后回到 3 枚未选态（`local__Q1zh.json` 与 `local__Q1en.json`）。
+- 计数：中文臂 `已选 0 处` → `已选 1 处` → `已选 2 处` → 清空回 `已选 0 处`（证据 blob
+  `13c15667235018b882229c5fdde35ed75d4508d7`），英文臂 `0 picked` → `1 picked` → `2 picked` → `0 picked`
+  （blob `d8c10a3493b24278937a83c5d28e1021d20b32fb`）；空态块 1→0→1，完成按钮 disabled→enabled→disabled。
+- 目标容器：两臂未写入前都读 `还没有落到某一天。` / `Not written to a day yet.`，写入后读
+  `服务端回读：1 条活动落在 2026-10-10。` / 见第三件（该句英文当时是病句，已修）。
+- 完成与新建并列：两臂在 320、360、390、430 四个窄屏宽度上同带 4 次、可点态同带 4 次、
+  最小高度 44 px（令牌 `frontend/src/design-tokens.css:202`）、底栏遮挡 0 像素²、出屏 false。
+
+**二、勾选后写入并从服务端读回那条 activity**。两臂各走一次，客户端本地态没有参与任何一格：
+compose 回 http 201 → 屏上回执 1 行 → **独立的第二次读** `GET /api/v1/plans/{id}` 回 http 200、
+状态 CANDIDATE、同 id 同 title 同 start_at。中文臂 plan `dde14fba-165a-467d-ba3d-24c0c012c4cf`、
+英文臂 plan `580950e5-fef3-4241-9fb4-f90f2fd0df05`（证据 `local__Q4zh.json` 与 blob
+`d04b5201f0347c12a29b7f9c16d049ef7ff3c187` 的 en 枚）。浏览器不进回路的对账（仪表
+`review/ord0435/_readback_after_r2.js`）两臂各跑一次，`route_and_store_same_rows`、
+`every_screen_id_is_in_the_store`、`every_screen_title_is_in_the_store`、`screen_row_count_matches_store`、
+`day_on_screen_matches_the_row`、`route_http_200` 六项在两臂全部为 true，末行各打印
+`READBACK_CONSISTENT`（读数 `review/ord0435/readback_tip_zh.json` blob `a4a047a23db4811a1630d5643027d14cf0da3d5a`、
+`readback_tip_en.json` blob `7834c450ad1c03ebac141d275b11301e0bcdad68`）。marker
+`ORD0435CMARKER-7a0f1a30` 在 `:8812` 与 `:4835` 两腿各命中 1 处、伪造串 0 处。
+
+**三、计数句单复数两形逐字——这一格照出来一枚真缺陷，不是形状确认**。号令者要"只选一个与选两个时
+各自逐字"，屏上先读到的是英文病句：`Read back from the server: 1 activities on 2026-10-10.`
+（中文臂同位 `服务端回读：1 条活动落在 2026-10-10。` 无问题，blob
+`a4a047a23db4811a1630d5643027d14cf0da3d5a`）。另外两枚句子在计数离开 1 时会犯同样的错
+（`1 protected commitment travels`、`1 of the picked places is not`）。
+修法用的是仓库已有的机制，不另造 `_pl`/`_sg` 键对：`frontend/src/lib/plural.ts` 是 ORD-0433 就落地的
+英文数一致判定位（`frontend/src/i18n/LocaleContext.tsx:2` 引入、`discovery.results` 在 `:460` 已在用），
+所以我把三枚英文句子的名词标成 `{plural:activity}`、`{plural:protected commitment}`、`{plural:place}`，
+并把需要动词变形的两处改写成不依赖动词形（同一文件 `:155` 已写明这种"不发明复数规则"的先例）。
+字典 blob `5e72dc607b4a3bfdf03972bfa3a0e9a5b305eac4`。
+两形逐字（走应用自己的 `expandPluralMarkers`，从 dev server 导入真函数，不是抄它的正则）：
+`Read back from the server: {n} activity on {day}.` 与 `… {n} activities on {day}.`；
+`{n} protected commitment(s) in this batch, not counted as a pick.`；
+`Not written by the server: {n} of the picked place/places.`；`{n} picked` 两形同句（无数词变化）。
+读数 `review/ord0435/arms/local__Q6en.json` blob `0cca5c025f03f91e6d74d07067db2f2de6d9eaea`，
+仪表 blob `466088d6f98462568935e16fd07a2db95ee766bd`，屏上逐字（n=1 与 n=2 的 `pickedCount`、承诺说明句）
+在 `counter_words.json` blob `9f74ed602fabcb53c9aa886d66b4330ed5300fb0`：中文 `已选 1 处` / `已选 2 处`，
+英文 `1 picked` / `2 picked`，承诺说明句两臂都停在 `1`——那是**承诺数**不是勾选数，恒为 1 是对的，我没有把它当成"复数没生效"。
+**反件**：把 `batchLanded` 的 marker 摘掉再跑同一臂，臂红在
+`Expected: "Read back from the server: {n} activity on {day}." / Received: "… {n} activities …"`，
+退出码 1 ⇒ 判据能红，不是挑一个能过的形。
+**具名边界**：n=2 的 `batchLanded` 与 `batchRefusedSome` 在本库上到不了屏（勾 2 处时 compose 先拒
+`V13_ACTIVITY_OUTSIDE_DEPARTURE_WINDOW`，那一格由 Q5 断言），所以这两形是**字典层读数**，
+我没有把它写成屏读；能到屏的两形（`pickedCount`）是屏上逐字。
+
+**四、两把尺（基线 = 现尖字典 blob `0477cde9beafdf5c145ae91fbbc2f1b26520e50c`）**。文案尺改前改后对照：
+REGISTER_PARITY 两侧都是双语键 787 枚、冲突 0 处；NO_GROWTH 改值 3 枚（正是我改的三枚英文）、
+中文臂新增字符 0 处、英文超阈 0 枚；ASSERTIONS_STILL_HIT（`tools/cnx_copy_tiers_r1.py:53`）被改键 3 枚对
+e2e 文本断言 228 条、失去目标 0 条；四条存量红逐条相同（EMPTY_ACTION 缺形状 25 条、ESTIMATE_PREFIX 缺标记
+2 条，判据同在 `tools/cnx_copy_tiers_r1.py:53`；HARDCODED_FALLBACK 裸字面量 78 处，
+`tools/cnx_copy_tiers_r1.py:22`；RENDER_TIERS 命中 78 处，`tools/cnx_copy_tiers_r1.py:56`），
+退出码两侧都是 1，本笔增量 0 条（对照读数 `84cc98efcd10096cfd55374b4c6e7d555451b5b1` 同一笔）。
+令牌尺六条全 MET、退出码 0（`review/ord0435/` 那批仪表 0 处产品字节，锚
+`frontend/src/features/discovery/discovery-batch.css` 的 blob `1031017e48b9ddc9e00c7153d2e8b3423a3c2c0b`）。
+
+**五、口径与状态**。① 以上仍是开发者模式口径（`reuseExistingServer=true`、未设 `CITYNEXUS_E2E_RUN_ID`），
+权威口径的堵点不变：fresh 库无 journey，补 seed 要 `X-Demo-Reset-Token` 匹配
+`CITYNEXUS_DEMO_RESET_TOKEN`（`backend/app/main.py:2069`）。② 我这棵树的库换成号令者 11:47 那份只读备份的
+真复制（`backend/_ord0435c_priv.db`），因为 05:28 那份的 plan 证据 TTL 已全过期，具名是
+`STALE_RECOMPOSE_REQUIRED`（判点 `backend/app/main.py:5880`）——没有改任何数据去凑绿。③ 仪表按号令者卫生要求
+全部在 `review/ord0435/` 下，产品树根 0 枚。④ ORD-0452 报名已在 dt_1227 第五节（识别走现成的
+`POST /inbox/vision`，0 新端点），下一步动它；ORD-0458 的甲/乙/丙仍在等裁（dt_1227 第六节），裁定前不动字节。
+
+
+### ORD-0432 勘误补块 · lane Q-dsh（Qoder，会话 a6b95d59）· at_local 2026-09-29 13:05（本机时区）· 两臂屏读已在交付那一版上重取，读数换过来
+
+**为什么另发一块**：12:53 那块（以及 06:47 那块）里"中/英两臂渲染屏读"是在 `-2` 那代前端上量的；
+从 `35326e62fb3de9f0cda459c8426ac22c0c49c715` 到现尖 `4ee14229f80691cf8e5ea913375c0caf83ac02ee`
+之间，前端有若干文件被线上别的车道改过（具体枚数在计算件 blob
+`2ba024067308bfb652428c72da3191a3f2e154cc` 之外那份 r4b 里没有，我这次直接数：`git diff --name-only`
+两尖之间 `frontend` 路径下五十九枚）。所以旧读数不能代表 `-4` 的字节。本块取代它，旧块的字我不改。
+
+**重取的做法**：同一把仪表（号令者 r3 件 blob `3dad6f0e70c2a0dcce936499f277313618d6b807`，从 blob 取出后
+`cmp` 逐字节相同，我没改它）、同一份跑手（blob `1cac57e0b5d0a535487b7e39c4faef1d65717655`），但先把交付那一版的
+`frontend` 重新同步进一次性构建导出、`tsc -p tsconfig.check.json --noEmit` 与 `vite build` 都重跑，
+再开新的车道后端与预览口。构建产物资产名换成了 `index-sUCbTIwW.js`（同读数键
+`P2_preview_serves_my_bytes.asset`）。
+
+**读数**（收据 blob `e8e765a29161ee6071417cda060aebe118f5999f`，仪表原始件 blob `7b8678412ee9322f608e1826baecc83e22bbf888`）：
+
+- `verdict_two_arm_rendered_reading` = 真；两臂各自 `reached_route` 都是 `/v8/live`，叶子数两臂相同（同读数键 `arms.zh.leaf_count` 与 `arms.en.leaf_count`）。
+- 中文臂在屏：`有重大变动没处理`、`服务器摘要：需要复核`；同一臂读不到两句英文（键 `arms.zh.expect`）。
+- 英文臂在屏：`Major disruption open`、`Server summary: review needed`；同一臂读不到两句中文（键 `arms.en.expect`）。
+- 归属三证同批：我 POST 的那枚事件经预览代理读得到（键 `P1_event_readable_through_preview`）；
+  预览服务的资产摘要与磁盘字节相同（键 `P2_preview_serves_my_bytes` 里
+  `served_sha1` 与 `disk_sha1` 两值逐字相同、`asset_exists_in_my_dist` 为真）；
+  监听口的进程号就是我起的这一个（键 `P4_preview_listener` 里 `netstat_pids` 与 `my_pid` 指向同一个进程号）。
+- 车道口是 OS 分配的（键 `backend_port`、`preview_port`），不是固定端口——这条是上一轮 :4821 那课之后改的。
+
+其余（定位、反件、契约、模型侧、套件与那枚我造成的红）仍以 12:53 那块为准，本块不动它任何读数。
+
+
 ### R ORD-0437 r6 · 复切退回的坐标核对与重交（+08 on 2026-09-29）
 
 **一、退回那一跑评的是哪一枚（照他给的日志现读，不猜）**
