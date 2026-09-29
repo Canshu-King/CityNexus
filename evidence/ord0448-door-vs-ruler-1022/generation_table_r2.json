@@ -1,0 +1,368 @@
+{
+ "cells_by_generation": {
+  "r7b": {
+   "ruler_file": "ui_exposure_taint_ast_r7b.cjs",
+   "cells_total_reported": 12,
+   "hits": 12,
+   "attributed_in_fold_count": 1,
+   "union_size": 13,
+   "parse_diagnostics_total": 0
+  },
+  "r7b1": {
+   "ruler_file": "ui_exposure_taint_ast_r7b1.cjs",
+   "cells_total_reported": 11,
+   "hits": 11,
+   "attributed_in_fold_count": 2,
+   "union_size": 13,
+   "parse_diagnostics_total": 0
+  },
+  "r7b4": {
+   "ruler_file": "ui_exposure_taint_ast_r7b4.cjs",
+   "cells_total_reported": 11,
+   "hits": 11,
+   "attributed_in_fold_count": 2,
+   "union_size": 13,
+   "parse_diagnostics_total": 0
+  }
+ },
+ "per_cell_provenance": {
+  "ActivityDetail.tsx:216|RAW_BODY_TO_DOM": {
+   "r7b": {
+    "filed": "hits",
+    "cell_id": "1f8bfb4f2b900363",
+    "sink_shape": "text-in:dd testid=dd:activity-hours"
+   },
+   "r7b1": {
+    "filed": "hits",
+    "cell_id": "1f8bfb4f2b900363",
+    "sink_shape": "text-in:dd testid=dd:activity-hours"
+   },
+   "r7b4": {
+    "filed": "hits",
+    "cell_id": "1f8bfb4f2b900363",
+    "sink_shape": "text-in:dd testid=dd:activity-hours"
+   }
+  },
+  "CnxMeasuredFacts.tsx:57|UPSTREAM_TEXT_VIA_HELPER_TO_DOM": {
+   "r7b": {
+    "filed": "hits",
+    "cell_id": "cdfe4dfe298f1093",
+    "sink_shape": "text-in:span testid=span:{computed}"
+   },
+   "r7b1": {
+    "filed": "hits",
+    "cell_id": "cdfe4dfe298f1093",
+    "sink_shape": "text-in:span testid=span:{computed}"
+   },
+   "r7b4": {
+    "filed": "hits",
+    "cell_id": "cdfe4dfe298f1093",
+    "sink_shape": "text-in:span testid=span:{computed}"
+   }
+  },
+  "DestinationPreparationPanel.tsx:421|UPSTREAM_EXCEPTION_TO_DOM": {
+   "r7b": {
+    "filed": "hits",
+    "cell_id": "69089b117b4151f1",
+    "sink_shape": "text-in:p testid=p:prep-check-error"
+   },
+   "r7b1": {
+    "filed": "hits",
+    "cell_id": "69089b117b4151f1",
+    "sink_shape": "text-in:p testid=p:prep-check-error"
+   },
+   "r7b4": {
+    "filed": "hits",
+    "cell_id": "69089b117b4151f1",
+    "sink_shape": "text-in:p testid=p:prep-check-error"
+   }
+  },
+  "DestinationPreparationPanel.tsx:544|UPSTREAM_EXCEPTION_TO_DOM": {
+   "r7b": {
+    "filed": "hits",
+    "cell_id": "99744f615f602330",
+    "sink_shape": "text-in:p testid=p:prep-server-message"
+   },
+   "r7b1": {
+    "filed": "hits",
+    "cell_id": "99744f615f602330",
+    "sink_shape": "text-in:p testid=p:prep-server-message"
+   },
+   "r7b4": {
+    "filed": "hits",
+    "cell_id": "99744f615f602330",
+    "sink_shape": "text-in:p testid=p:prep-server-message"
+   }
+  },
+  "DestinationPreparationPanel.tsx:597|UPSTREAM_EXCEPTION_TO_DOM": {
+   "r7b": {
+    "filed": "hits",
+    "cell_id": "e893bc679cefe90f",
+    "sink_shape": "text-in:p testid=p:prep-action-error"
+   },
+   "r7b1": {
+    "filed": "hits",
+    "cell_id": "e893bc679cefe90f",
+    "sink_shape": "text-in:p testid=p:prep-action-error"
+   },
+   "r7b4": {
+    "filed": "hits",
+    "cell_id": "e893bc679cefe90f",
+    "sink_shape": "text-in:p testid=p:prep-action-error"
+   }
+  },
+  "JourneyTrashPanel.tsx:232|UPSTREAM_PROSE_TO_ATTRIBUTE_SLOT": {
+   "r7b": {
+    "filed": "hits",
+    "cell_id": "863b577aaae8b6e9",
+    "sink_shape": "attribute:data-cnx-value"
+   },
+   "r7b1": {
+    "filed": "hits",
+    "cell_id": "863b577aaae8b6e9",
+    "sink_shape": "attribute:data-cnx-value"
+   },
+   "r7b4": {
+    "filed": "hits",
+    "cell_id": "863b577aaae8b6e9",
+    "sink_shape": "attribute:data-cnx-value"
+   }
+  },
+  "JourneyTrashPanel.tsx:233|UPSTREAM_TEXT_VIA_HELPER_TO_DOM": {
+   "r7b": {
+    "filed": "hits",
+    "cell_id": "0e2fd6823141b44f",
+    "sink_shape": "text-in:span testid=div:trash-outcome"
+   },
+   "r7b1": {
+    "filed": "hits",
+    "cell_id": "0e2fd6823141b44f",
+    "sink_shape": "text-in:span testid=div:trash-outcome"
+   },
+   "r7b4": {
+    "filed": "hits",
+    "cell_id": "0e2fd6823141b44f",
+    "sink_shape": "text-in:span testid=div:trash-outcome"
+   }
+  },
+  "PlanWithAiSheet.tsx:884|UPSTREAM_PROSE_TO_ATTRIBUTE_SLOT": {
+   "r7b": {
+    "filed": "hits",
+    "cell_id": "3da2ddc1783bb8e4",
+    "sink_shape": "attribute:data-result-status"
+   },
+   "r7b1": {
+    "filed": "hits",
+    "cell_id": "3da2ddc1783bb8e4",
+    "sink_shape": "attribute:data-result-status"
+   },
+   "r7b4": {
+    "filed": "hits",
+    "cell_id": "3da2ddc1783bb8e4",
+    "sink_shape": "attribute:data-result-status"
+   }
+  },
+  "PlanWithAiSheet.tsx:909|UPSTREAM_TEXT_VIA_HELPER_TO_DOM": {
+   "r7b": {
+    "filed": "hits",
+    "cell_id": "fec78ea862b50245",
+    "sink_shape": "text-in:p testid=div:plan-ai-result"
+   },
+   "r7b1": {
+    "filed": "hits",
+    "cell_id": "fec78ea862b50245",
+    "sink_shape": "text-in:p testid=div:plan-ai-result"
+   },
+   "r7b4": {
+    "filed": "hits",
+    "cell_id": "fec78ea862b50245",
+    "sink_shape": "text-in:p testid=div:plan-ai-result"
+   }
+  },
+  "PlanWithAiSheet.tsx:982|UPSTREAM_TEXT_VIA_HELPER_TO_DOM": {
+   "r7b": {
+    "filed": "hits",
+    "cell_id": "fd20c87a2369a807",
+    "sink_shape": "text-in:code testid=code:plan-ai-reason"
+   },
+   "r7b1": {
+    "filed": "hits",
+    "cell_id": "fd20c87a2369a807",
+    "sink_shape": "text-in:code testid=code:plan-ai-reason"
+   },
+   "r7b4": {
+    "filed": "hits",
+    "cell_id": "fd20c87a2369a807",
+    "sink_shape": "text-in:code testid=code:plan-ai-reason"
+   }
+  },
+  "RecoveryRequiredPanel.tsx:299|UPSTREAM_TEXT_VIA_HELPER_TO_DOM": {
+   "r7b": {
+    "filed": "hits",
+    "cell_id": "7feb812a1e486a9d",
+    "sink_shape": "text-in:code testid=code:recovery-reason"
+   },
+   "r7b1": {
+    "filed": "attributed_in_fold",
+    "anchor_field": "dynamic:notice.field",
+    "anchor_line": 297,
+    "fold_container": "details",
+    "fold_container_line": 288,
+    "snippet": "{notice.quote}"
+   },
+   "r7b4": {
+    "filed": "attributed_in_fold",
+    "anchor_field": "dynamic:notice.field",
+    "anchor_line": 297,
+    "fold_container": "details",
+    "fold_container_line": 288,
+    "snippet": "{notice.quote}"
+   }
+  },
+  "SimulationPanel.tsx:937|UPSTREAM_TEXT_VIA_HELPER_TO_DOM": {
+   "r7b": {
+    "filed": "hits",
+    "cell_id": "fca34cf42fe474c4",
+    "sink_shape": "text-in:p testid=p:sim-outcome"
+   },
+   "r7b1": {
+    "filed": "hits",
+    "cell_id": "fca34cf42fe474c4",
+    "sink_shape": "text-in:p testid=p:sim-outcome"
+   },
+   "r7b4": {
+    "filed": "hits",
+    "cell_id": "fca34cf42fe474c4",
+    "sink_shape": "text-in:p testid=p:sim-outcome"
+   }
+  },
+  "V8Experience.tsx:2711|UPSTREAM_TEXT_VIA_HELPER_TO_DOM": {
+   "r7b": {
+    "filed": "attributed_in_fold",
+    "anchor_field": "http_status",
+    "anchor_line": 2718,
+    "fold_container": "details",
+    "fold_container_line": 2705,
+    "snippet": "{resumeOutcome.serverReason}"
+   },
+   "r7b1": {
+    "filed": "attributed_in_fold",
+    "anchor_field": "http_status",
+    "anchor_line": 2718,
+    "fold_container": "details",
+    "fold_container_line": 2705,
+    "snippet": "{resumeOutcome.serverReason}"
+   },
+   "r7b4": {
+    "filed": "attributed_in_fold",
+    "anchor_field": "http_status",
+    "anchor_line": 2718,
+    "fold_container": "details",
+    "fold_container_line": 2705,
+    "snippet": "{resumeOutcome.serverReason}"
+   }
+  }
+ },
+ "locations": {
+  "ActivityDetail.tsx:216|RAW_BODY_TO_DOM": {
+   "r7b": "hits",
+   "r7b1": "hits",
+   "r7b4": "hits"
+  },
+  "CnxMeasuredFacts.tsx:57|UPSTREAM_TEXT_VIA_HELPER_TO_DOM": {
+   "r7b": "hits",
+   "r7b1": "hits",
+   "r7b4": "hits"
+  },
+  "DestinationPreparationPanel.tsx:421|UPSTREAM_EXCEPTION_TO_DOM": {
+   "r7b": "hits",
+   "r7b1": "hits",
+   "r7b4": "hits"
+  },
+  "DestinationPreparationPanel.tsx:544|UPSTREAM_EXCEPTION_TO_DOM": {
+   "r7b": "hits",
+   "r7b1": "hits",
+   "r7b4": "hits"
+  },
+  "DestinationPreparationPanel.tsx:597|UPSTREAM_EXCEPTION_TO_DOM": {
+   "r7b": "hits",
+   "r7b1": "hits",
+   "r7b4": "hits"
+  },
+  "JourneyTrashPanel.tsx:232|UPSTREAM_PROSE_TO_ATTRIBUTE_SLOT": {
+   "r7b": "hits",
+   "r7b1": "hits",
+   "r7b4": "hits"
+  },
+  "JourneyTrashPanel.tsx:233|UPSTREAM_TEXT_VIA_HELPER_TO_DOM": {
+   "r7b": "hits",
+   "r7b1": "hits",
+   "r7b4": "hits"
+  },
+  "PlanWithAiSheet.tsx:884|UPSTREAM_PROSE_TO_ATTRIBUTE_SLOT": {
+   "r7b": "hits",
+   "r7b1": "hits",
+   "r7b4": "hits"
+  },
+  "PlanWithAiSheet.tsx:909|UPSTREAM_TEXT_VIA_HELPER_TO_DOM": {
+   "r7b": "hits",
+   "r7b1": "hits",
+   "r7b4": "hits"
+  },
+  "PlanWithAiSheet.tsx:982|UPSTREAM_TEXT_VIA_HELPER_TO_DOM": {
+   "r7b": "hits",
+   "r7b1": "hits",
+   "r7b4": "hits"
+  },
+  "RecoveryRequiredPanel.tsx:299|UPSTREAM_TEXT_VIA_HELPER_TO_DOM": {
+   "r7b": "hits",
+   "r7b1": "attributed_in_fold",
+   "r7b4": "attributed_in_fold"
+  },
+  "SimulationPanel.tsx:937|UPSTREAM_TEXT_VIA_HELPER_TO_DOM": {
+   "r7b": "hits",
+   "r7b1": "hits",
+   "r7b4": "hits"
+  },
+  "V8Experience.tsx:2711|UPSTREAM_TEXT_VIA_HELPER_TO_DOM": {
+   "r7b": "attributed_in_fold",
+   "r7b1": "attributed_in_fold",
+   "r7b4": "attributed_in_fold"
+  }
+ },
+ "cells_read_by_all_three": 13,
+ "cells_absent_from_every_list": {
+  "r7b": [],
+  "r7b1": [],
+  "r7b4": []
+ },
+ "target_row": {
+  "r7b": {
+   "filed": "hits",
+   "cell_id": "7feb812a1e486a9d",
+   "sink_shape": "text-in:code testid=code:recovery-reason"
+  },
+  "r7b1": {
+   "filed": "attributed_in_fold",
+   "anchor_field": "dynamic:notice.field",
+   "anchor_line": 297,
+   "fold_container": "details",
+   "fold_container_line": 288,
+   "snippet": "{notice.quote}"
+  },
+  "r7b4": {
+   "filed": "attributed_in_fold",
+   "anchor_field": "dynamic:notice.field",
+   "anchor_line": 297,
+   "fold_container": "details",
+   "fold_container_line": 288,
+   "snippet": "{notice.quote}"
+  }
+ },
+ "target_location_row": {
+  "r7b": "hits",
+  "r7b1": "attributed_in_fold",
+  "r7b4": "attributed_in_fold"
+ },
+ "r1_defect_named": "r1's provenance column was built from `hits` only, so a cell filed in attributed_in_fold printed MISSING. This version files the location per generation; the union over both lists is the same set in every generation read here: 13 cells."
+}
