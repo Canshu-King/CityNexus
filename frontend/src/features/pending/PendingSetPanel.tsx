@@ -476,10 +476,10 @@ export function PendingSetPanel({
               {writeFacts && (
                 <details className="cn-pending-details" data-testid="pending-write-facts-open">
                   <summary>{say("pending.details")}</summary>
-                  {/* The condition gets a sentence of its own above; the token belongs down here,
-                      where it is quotable and not required reading. */}
+                  {/* The condition gets a sentence of its own above; the code the server answered with
+                      belongs down here, where it is quotable and not required reading. */}
                   <p className="cn-pending-token">
-                    reason_token={writeRefusal.token ?? say("pending.noToken")}
+                    reason_code={writeRefusal.rejection_code ?? say("pending.noToken")}
                   </p>
                   <CnxMeasuredFacts facts={writeFacts} zh={zh} testId="pending-write-facts" />
                 </details>

@@ -633,7 +633,7 @@ test.describe("ORD-0450 putting the pending set onto a day, through the doors th
       " ",
     );
     expect(
-      /reason_token=V13_[A-Z_]+/.test(tokenLine),
+      /reason_code=V13_[A-Z0-9_]+/.test(tokenLine),
       node("A12", `no server token reached the details face: ${tokenLine.slice(0, 220)}`),
     ).toBe(true);
 

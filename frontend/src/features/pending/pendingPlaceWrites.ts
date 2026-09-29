@@ -41,8 +41,11 @@ const COMPOSE_CODES = Object.keys(CODE_FAMILY);
 
 export type ComposeFamily = "WINDOW" | "COMMITMENT" | "NO_PLAN" | "OTHER";
 
-/** The token itself, as this device read it -- for the technical-details face only. */
-export type ComposeRefusal = { family: ComposeFamily; token: string | null };
+/** Which named condition refused, as this device read it -- for the technical-details face only.
+ *  It is a rejection code from the contract's `V13NamedRejection`, not a credential, so the field
+ *  says `rejection_code` (ORD-0467: it used to be called `token`, which is what made the credential
+ *  gate read this line as a secret). */
+export type ComposeRefusal = { family: ComposeFamily; rejection_code: string | null };
 
 /** Compose answered without naming a plan. Carries no HTTP facts because there were none to read. */
 export class ComposeEmptyError extends Error {}
@@ -114,14 +117,14 @@ export async function adoptComposedPlan(journeyId: string, planVersionId: string
   );
 }
 
-/** Which of the four things a traveller can act on refused, plus the server's own token for the
- *  details face.  Both envelope shapes are scanned (`error.code`, and a token prefixed inside the
- *  message), because the two raise sites differ. */
+/** Which of the four things a traveller can act on refused, plus the server's own named
+ *  rejection for the details face.  Both envelope shapes are scanned (`error.code`, and a code
+ *  prefixed inside the message), because the two raise sites differ. */
 export function composeRefusal(cause: unknown): ComposeRefusal {
   if (cause instanceof ComposeEmptyError) {
-    return { family: "NO_PLAN", token: "V13_DISCOVERY_COMPOSE_EMPTY" };
+    return { family: "NO_PLAN", rejection_code: "V13_DISCOVERY_COMPOSE_EMPTY" };
   }
-  if (!(cause instanceof RejectionWithFacts)) return { family: "OTHER", token: null };
+  if (!(cause instanceof RejectionWithFacts)) return { family: "OTHER", rejection_code: null };
   const envelope = cause.envelope;
   const parts: string[] = [];
   if (typeof envelope === "object" && envelope !== null) {
@@ -136,9 +139,9 @@ export function composeRefusal(cause: unknown): ComposeRefusal {
     if (typeof record.detail === "string") parts.push(record.detail);
   }
   const found = namedCodeIn(parts.join(" "), COMPOSE_CODES);
-  if (!found) return { family: "OTHER", token: null };
+  if (!found) return { family: "OTHER", rejection_code: null };
   const family = CODE_FAMILY[found as keyof typeof CODE_FAMILY];
-  return { family, token: found };
+  return { family, rejection_code: found };
 }
 
 export { RejectionWithFacts };
