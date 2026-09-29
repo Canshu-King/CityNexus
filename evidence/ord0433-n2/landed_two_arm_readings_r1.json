@@ -1,0 +1,214 @@
+{
+ "order": "ORD-0433",
+ "kind": "post-landing two-arm verification",
+ "lane": "N2",
+ "tip": {
+  "rev": "4ee14229f80691cf8e5ea913375c0caf83ac02ee",
+  "read_by": "git ls-remote origin refs/heads/mirror/integration-frontend-apple-pass1",
+  "plural_ts_blob": "0dff8a06adaa85e815efcd7ec6cc21dbf6a68e98",
+  "locale_blob": "0477cde9beafdf5c145ae91fbbc2f1b26520e50c",
+  "marked_english_lines_on_tip": 12,
+  "example_lines": [
+   "frontend/src/i18n/LocaleContext.tsx:98",
+   "frontend/src/i18n/LocaleContext.tsx:829",
+   "frontend/src/i18n/LocaleContext.tsx:828"
+  ],
+  "tip_marked_lines": [
+   [
+    97,
+    "\"shell.travelers\": \"{n} {plural:traveler}\","
+   ],
+   [
+    380,
+    "\"agent.protectedCount\": \"{n} {plural:protected commitment}\","
+   ],
+   [
+    416,
+    "\"agent.aiRunScope\": \"Your trip right now: {days} {plural:day:days}, {a"
+   ]
+  ]
+ },
+ "bundle": {
+  "built_from": "4ee14229f80691cf8e5ea913375c0caf83ac02ee",
+  "served_asset": "assets/index-DbA8xyvx.js",
+  "asset_disk_sha1": "b272811048f1d94655c22355c1f5a04131cd99e5",
+  "asset_served_sha1": "b272811048f1d94655c22355c1f5a04131cd99e5",
+  "index_disk_sha1": "52bc69e9eee434ab3451e1a1f8b753c2ec6ff5e0",
+  "index_served_sha1": "52bc69e9eee434ab3451e1a1f8b753c2ec6ff5e0",
+  "port": "field=port=4852",
+  "static": "cmdr_static_api_proxy_r1.py",
+  "instrument_blob": "3dad6f0e70c2a0dcce936499f277313618d6b807"
+ },
+ "backend": {
+  "port": "field=api=8751",
+  "plans_route": "/api/v1/journeys/22222222-2222-4222-8222-222222222222/plans"
+ },
+ "flip": {
+  "locked_before_flip": [
+   1,
+   6
+  ],
+  "after": [
+   2,
+   6
+  ],
+  "restored": [
+   1,
+   6
+  ],
+  "column": "activities.locked",
+  "db": "D:/moodle/_qoder_n2_ord0433_priv.db"
+ },
+ "readings": [
+  {
+   "route": "hub",
+   "rc": 0,
+   "reading": {
+    "en": {
+     "reached": "/v8/hub",
+     "on_route": true,
+     "entry": "sealed demo",
+     "leaves": [
+      "10 Oct, 09:00 — 10 Oct, 19:00 · 1 traveler · 1 days",
+      "0 legs"
+     ],
+     "expect": {
+      "1 traveler": true,
+      "2 travelers": false,
+      "1 位旅行者": false,
+      "2 位旅行者": false,
+      "1 protected anchor": false,
+      "2 protected anchors": false,
+      "1 个受保护锚点": false,
+      "2 个受保护锚点": false,
+      "6 activities": false,
+      "1 versions listed": false,
+      "共列出 1 份版本": false
+     }
+    },
+    "zh": {
+     "reached": "/v8/hub",
+     "on_route": true,
+     "entry": "使用封存的演示行程",
+     "leaves": [],
+     "expect": {
+      "1 traveler": false,
+      "2 travelers": false,
+      "1 位旅行者": true,
+      "2 位旅行者": false,
+      "1 protected anchor": false,
+      "2 protected anchors": false,
+      "1 个受保护锚点": false,
+      "2 个受保护锚点": false,
+      "6 activities": false,
+      "1 versions listed": false,
+      "共列出 1 份版本": false
+     }
+    },
+    "arms_comparable": true
+   }
+  },
+  {
+   "route": "authoritative",
+   "rc": 0,
+   "reading": {
+    "en": {
+     "reached": "/v8/authoritative",
+     "on_route": true,
+     "entry": "sealed demo",
+     "leaves": [
+      "1 versions listed",
+      "No retention limit is applied: this trip currently holds 1 versions and all of t",
+      "6 activities",
+      "1 protected anchor"
+     ],
+     "expect": {
+      "1 traveler": false,
+      "2 travelers": false,
+      "1 位旅行者": false,
+      "2 位旅行者": false,
+      "1 protected anchor": true,
+      "2 protected anchors": false,
+      "1 个受保护锚点": false,
+      "2 个受保护锚点": false,
+      "6 activities": true,
+      "1 versions listed": true,
+      "共列出 1 份版本": false
+     }
+    },
+    "zh": {
+     "reached": "/v8/authoritative",
+     "on_route": true,
+     "entry": "使用封存的演示行程",
+     "leaves": [],
+     "expect": {
+      "1 traveler": false,
+      "2 travelers": false,
+      "1 位旅行者": false,
+      "2 位旅行者": false,
+      "1 protected anchor": false,
+      "2 protected anchors": false,
+      "1 个受保护锚点": true,
+      "2 个受保护锚点": false,
+      "6 activities": false,
+      "1 versions listed": false,
+      "共列出 1 份版本": true
+     }
+    },
+    "arms_comparable": true
+   }
+  },
+  {
+   "route": "authoritative",
+   "phase": "n2",
+   "rc": 0,
+   "dir": "D:/moodle/_qoder_n2_scratch/_0433_landed_twoarm/n2/",
+   "reading": {
+    "en": {
+     "reached": "/v8/authoritative",
+     "on_route": true,
+     "entry": "sealed demo",
+     "leaves": [
+      "1 versions listed",
+      "No retention limit is applied: this trip currently holds 1 versions and all of t",
+      "6 activities",
+      "2 protected anchors"
+     ],
+     "expect": {
+      "1 traveler": false,
+      "2 travelers": false,
+      "1 位旅行者": false,
+      "2 位旅行者": false,
+      "1 protected anchor": false,
+      "2 protected anchors": true,
+      "1 个受保护锚点": false,
+      "2 个受保护锚点": false,
+      "6 activities": true,
+      "1 versions listed": true,
+      "共列出 1 份版本": false
+     }
+    },
+    "zh": {
+     "reached": "/v8/authoritative",
+     "on_route": true,
+     "entry": "使用封存的演示行程",
+     "leaves": [],
+     "expect": {
+      "1 traveler": false,
+      "2 travelers": false,
+      "1 位旅行者": false,
+      "2 位旅行者": false,
+      "1 protected anchor": false,
+      "2 protected anchors": false,
+      "1 个受保护锚点": false,
+      "2 个受保护锚点": true,
+      "6 activities": false,
+      "1 versions listed": false,
+      "共列出 1 份版本": true
+     }
+    },
+    "arms_comparable": true
+   }
+  }
+ ]
+}
