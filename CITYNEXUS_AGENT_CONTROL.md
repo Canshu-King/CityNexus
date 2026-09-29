@@ -16588,6 +16588,42 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### CMDR 2026-09-29 08:27 · 号令者（实例 A，会话 `6efab655`）· ORD-0440 被我的落地门**拒了**（它新增一处上游异常原话上屏），我裁"必须改、不改不落"；ORD-0415 第二半我裁**不接线、把纸面规则请出产品树**；ORD-0436 复切 ABORT 退回 rebase
+
+**现尖**：`env -u HTTP_PROXY -u HTTPS_PROXY git -C D:/moodle/CityNexus ls-remote origin refs/heads/mirror/integration-frontend-apple-pass1` 我 08:22 现读 = `0fee131d02b7c7c85f59aab8307f28594bf0d65f`。**本块之后权威线没有动**（下面第一件是被门挡回去的，不是被我校掉的）。
+
+**一、ORD-0440（车道 N3，新面板 4 枚产品文件）—— 门判 REFUSED，我维持拒**
+申报头 `6c466ce267bf`（枝 `refs/heads/review/N3-ord0440-destructive-action-survey-r3`，它 07:15 那块申报）。只读复切是**干净**的：`RECUT 8ac0e7cc94b5d045410876524de8ddf883baaec6`、`files 52/52 identical-to-lane-blob`；推 `refs/heads/review/cmdr-recut-ord0440-r1` 后 ls-remote 回读逐字相同。但落地门 `verdict=REFUSED`，原文一条：`candidate grows Q64 exposure by {"DestinationPreparationPanel.tsx|UPSTREAM_EXCEPTION_TO_DOM": 1} over the tip - that is a ruling question (Q64/Q67/Q70/Q71), not a landing`。回执 `evidence/cmdr-landing-ord0440-0822/preflight_r1.json`，blob `ca236ca6cb7c2aebe95b45d4ea08d3e3b804060f`，19,324 B。
+**我自己去看了那处曝光，门判得对**：`frontend/src/features/discovery/DestinationPreparationPanel.tsx` 有四处 `catch` 写成同一个形状——`error instanceof Error ? error.message : (中文句)`，见 `frontend/src/features/discovery/DestinationPreparationPanel.tsx:90`、`:114`、`:134`、`:152`；另有 `frontend/src/features/discovery/DestinationPreparationPanel.tsx:327` 把 `job.error.message` 直接 `String(...)` 取用。⇒ **异常/上游原话才是会被画出来的那一支，本地词典句只是"抛的不是 Error"时的兜底**——这跟 Q64/Q71/R14 的方向正好反过来。
+**裁定（这是裁定，所以只写在账本）**：
+1. **不落，直到改完**。改的方向不是"少画点"，是把**说话的那一支换成本地词典**：屏上句子一律由 `t(...)` 出，上游只允许以**名字码**（`code` / `reason_code` / `message_key`，件里第 8 行注释已经列了这四个字段）进 Q71 认可的属性位。
+2. 若确实要让技术人看到原话，必须放进**真的会渲染的 `<details>`**（X-5 那格的教训：屏上写"原文见技术详情"而 details 计数 0 是缺陷，不是豁免）。
+3. 四臂里 `zh ? ... : ...` 那两支英文兜底句也一并进词典，别留组件内硬编码（那是 ORD-0370/ORD-0422 那条线，别再新增）。
+4. 改完重交 `-r4`，并**自己先跑一次曝光尺**再申报；我不接受"先落地再补"。
+
+**二、ORD-0436（车道 `4033270f`，访问屏）—— 复切 ABORT，退回 rebase，我没手合**
+申报头 `3f825053bbcd6a8478a5716e057c6ee1f3f1b170`（枝 `refs/heads/review/qoder-0436-access-screen-r2`，07:11 那块申报，与远端逐字相同）。复切器报 **ABORT: 1 file(s) did not merge to the lane's own bytes — `frontend/src/i18n/LocaleContext.tsx`**。成因不在它：词典文件在我 07:21 落 ORD-0415、07:23 落 ORD-0406 之后又动了。⇒ 请 rebase 到现尖、以 `-r3` 重交；**词典这一枚文件已经连续咬过 ORD-0418、ORD-0436 两单**（ORD-0420/ORD-0422/ORD-0425 也都动过它），我把这条写在账本上，不再只在派单里顺口提。
+
+**三、ORD-0415 第二半我裁了：不接线，把纸面规则请出产品树**
+我 07:34 那块说这一半下一轮裁，现在就裁。依据全在已入线的件 `review/q415_label_string_origin_r1.json`（随头 `01c3d411c76b074cf0925d4b83425f924ddd2fa4` 可取）：
+- 字符串来源被量出来了：`arm1_legacy.judged` 逐条给出每枚标题的出处，形如 `{"title":"Arrival","from":"payload[0].active_plan.activities[0]"}` ⇒ **画在图上的标注文字来自服务端 payload 的 `active_plan.activities[*]`**，不是我原先猜的前端拼串。
+- 分母与结论一起给：`title_count` 27、`distinct_title_count` 8、`titles_with_violations` **0**，四条禁形是 `forbidden_rule_names` 里那四个（clock-time / duration / money / source）。
+- 它同时诚实标了量不到的那一格：`not_measured` = 真正在玻璃上栅格化的字符串（maplibre 不在容器上留句柄，车道**拒绝为了测量往产品里加 window 钩子**）。这一条我采信并且**支持它的取舍**：量具不该改产品。
+- 而这把尺本身在产品树里是死的：`mapLabelTextField` 定义在 `frontend/src/lib/mapLabels.ts:45`，importer 只有 `frontend/e2e/qoder-map-ord0403-named-control-and-labels.spec.ts:5` ⇒ **产品码零引用**。
+⇒ **裁定**：**不要**把 `mapLabels.ts` 接成运行时承重件（它要管的东西刚被量出 0 违规，而它管不到的那一层——栅格化后的字——恰恰需要往产品里加钩子才量得到，我不为量具开这个口）；改为**把这枚模块从 `frontend/src/lib/` 挪到 e2e 侧**（或直接删），因为它现在只是把一具量具的源码打进了产品包。判据：挪完之后 `frontend/src` 下对 `mapLabelTextField` 的引用数为 0（本来就是 0），且 `frontend/e2e` 那两把 spec 仍跑绿。这单归车道 `e4f3490f`（它交的这半），枝名 `review/Q-ord0415-label-rule-out-of-product-r1`。
+
+**四、本轮我发出的动作**：账本收 1 块（零拒绝）；落地门**拒了 1 单、复切退回 1 单、我裁了 1 单**；权威线一次都没动（`0fee131d02b7c7c85f59aab8307f28594bf0d65f` 起于我 07:23 那次落地）。
+
+**没改善的部分**
+1. **ORD-0440 那一屏没上线**：新面板（目的地准备进度）此刻对用户不存在，因为它把上游原话当主说话者；改完之前它就该是不存在。
+2. ORD-0436 停在 rebase 前，**词典文件是当前的串行点**，两单因它退回。
+3. ORD-0415 第二半我裁了但**还没人做**，那枚死模块仍被打进产品包。
+4. ORD-0406 的八格屏上判据仍 `NOT_REACHED_BY_CMDR`（我 07:34 那块要的"怎么臂起这条提示"配方还没回）。
+5. ORD-0435 仍 `SCREEN_NOT_ACCEPTED`；ORD-0446 仍无枝无件，那四处机器话还在屏上。
+6. 本轮所有动作都没有测试证据：ORD-0440 的门在曝光面前就停了，连 collect 都没到（`collect_exit=null`）——我**没有**宣称它"测试通过"或"整套绿"。
+7. 手机链 hop4 未起，手机仍握 `e5a571f8…`；盘 11 GiB（97%）未改善，我仍没删任何东西。
+
+
 ### ORD-0446 · 车道 N2 · 四处机器话改从 ORD-0425 那张共享显示词表出，画出来的命中 6 降到 2
 
 #### 收件人歧义，先报名
