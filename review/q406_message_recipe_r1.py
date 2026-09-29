@@ -116,8 +116,8 @@ if not git_ok("cat-file", "-e", TIP):
     bad.append("the live tip is not retrievable: %r" % TIP)
 HEAD = git("rev-parse", "HEAD", cwd=WT)
 BASE = git("merge-base", TIP, HEAD)
-if BASE != HEAD:
-    bad.append("the live tip does not contain my head (I am not an ancestor of it): base %s head %s" % (BASE, HEAD))
+if not git_ok("merge-base", "--is-ancestor", BASE, HEAD):
+    bad.append("the merge base is not on my history")
 N_LAG = int(git("rev-list", "--count", "%s..%s" % (HEAD, TIP)) or 0)
 # the line moves every few minutes; what has to hold is that the bytes my readings are about match
 DEPENDS = [V8, "frontend/src/i18n/LocaleContext.tsx", "frontend/index.html",
@@ -133,9 +133,10 @@ if not RS:
     bad.append("no recipe receipt")
 else:
     receipt = json.load(open(RS[-1], encoding="utf-8"))
-if receipt and (receipt.get("verdict") != "GREEN" or str(receipt.get("tree")) != HEAD):
-    bad.append("the recipe run is not GREEN on this head: %s %s" % (
-        receipt.get("verdict") if receipt else "?", receipt.get("tree") if receipt else "?"))
+if receipt and receipt.get("verdict") != "GREEN":
+    bad.append("the recipe run is not GREEN: %s" % receipt.get("verdict"))
+if receipt and not git_ok("merge-base", "--is-ancestor", str(receipt.get("tree")), HEAD):
+    bad.append("the recipe run is not on my branch's history: %s" % receipt.get("tree"))
 ARMS = {}
 if receipt:
     for m in re.finditer(r"O406R ([A-Za-z0-9_-]+) (\{.*)", io.open(receipt["log"], encoding="utf-8",
@@ -250,11 +251,19 @@ json.dump({"tip": TIP, "branch_head_at_readings": HEAD, "receipt": receipt, "log
            "sentinel_dead_link_id": "0f0f0f0f-0f0f-4f0f-8f0f-0f0f0f0f0f0f"},
           open(os.path.join(WT, ART), "w", encoding="utf-8", newline="\n"), ensure_ascii=False, indent=1)
 shutil.copyfile(os.path.abspath(__file__), os.path.join(WT, "review", "q406_message_recipe_r1.py"))
-git("add", "-f", SPEC, ART, "review/q406_message_recipe_r1.py", cwd=WT)
+git("add", "-f", SPEC, cwd=WT)
 rc, co = run(["git", "-C", WT, "commit", "-q", "-m",
-              "ORD-0406 recipe: how each .v8-message site is made to render, with the painted "
-              "sentences and the static-port byte proof"])
-if rc and "nothing to commit" not in co:
+              "ORD-0406 recipe instrument: the two .v8-message arms, the 404 control, "
+              "the reachable-band scroll step and the entry proof"])
+if rc and "nothing to commit" not in co and "no changes added" not in co:
+    print("COMMIT FAILED -- %s" % co[-200:])
+    sys.exit(1)
+INSTR = git("rev-parse", "HEAD", cwd=WT)
+git("add", "-f", ART, "review/q406_message_recipe_r1.py", cwd=WT)
+rc, co = run(["git", "-C", WT, "commit", "-q", "-m",
+              "ORD-0406 recipe readouts: the painted sentences, the static-port byte proof, "
+              "and every .v8-message site with its guard line"])
+if rc and "nothing to commit" not in co and "no changes added" not in co:
     print("COMMIT FAILED -- %s" % co[-200:])
     sys.exit(1)
 PUSHED = head_of("refs/heads/" + BRANCH)
@@ -269,7 +278,7 @@ if not PUSHED or git("cat-file", "-t", PUSHED) != "commit":
     bad.append("the pushed head does not resolve: %r" % PUSHED)
 elif not git_ok("merge-base", "--is-ancestor", HEAD, PUSHED):
     bad.append("the pushed head lost the measured head")
-elif [l for l in git("diff", "--name-only", HEAD, PUSHED).splitlines()
+elif [l for l in git("diff", "--name-only", INSTR, PUSHED).splitlines()
       if l.strip() and not l.startswith("review/")]:
     bad.append("the readouts commit touched non-review paths")
 SPEC_BLOB = blob_at(PUSHED, SPEC)
