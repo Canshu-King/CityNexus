@@ -8,11 +8,11 @@
    "cardPhaseBeforeAnyPress": null,
    "planState": "already",
    "steps": {
-    "after_viewport": 12305,
-    "after_enter_import": 15342,
-    "after_ensure_active_plan": 15429,
-    "after_reading_disclosure": 15435,
-    "after_reading_phase": 17456
+    "after_viewport": 395,
+    "after_enter_import": 3060,
+    "after_ensure_active_plan": 3099,
+    "after_reading_disclosure": 3102,
+    "after_reading_phase": 5120
    }
   },
   {
@@ -23,13 +23,13 @@
    "arm": "link-named-and-states",
    "planState": "already",
    "slack": {
-    "id": "d4de0f9a-2192-4a8b-a4f5-f6312d0cac75",
+    "id": "760cf7bd-25e8-4045-8383-69fc3cb2bf9c",
     "city": "CNX-DEMO",
     "generate_status": 201,
     "candidates": 1
    },
    "catalogue": {
-    "id": "d4de0f9a-2192-4a8b-a4f5-f6312d0cac75",
+    "id": "760cf7bd-25e8-4045-8383-69fc3cb2bf9c",
     "city": "CNX-DEMO",
     "rows": 8,
     "providers": [
@@ -86,6 +86,27 @@
    "pickBoxes": 2
   },
   {
+   "arm": "link-named-paint",
+   "firstBoxHeight": 44,
+   "afterOneDeselected": "1 of 2 matched places selected",
+   "pickedCard": {
+    "border": "rgb(10, 102, 255)",
+    "shadow": "rgb(10, 102, 255) 3px 0px 0px 0px inset"
+   },
+   "unpickedCard": {
+    "border": "rgba(0, 0, 0, 0.08)",
+    "shadow": "none"
+   },
+   "checkedBox": {
+    "border": "rgb(10, 102, 255)",
+    "shadow": "none"
+   },
+   "plainBox": {
+    "border": "rgb(125, 135, 151)",
+    "shadow": "none"
+   }
+  },
+  {
    "arm": "error-state",
    "phase": "error",
    "error": "The text could not be read. Your words are still here; try again.Failed to fetch",
@@ -97,13 +118,13 @@
    "arm": "added-and-replay",
    "planState": "already",
    "slack": {
-    "id": "6474eb03-2dd9-4e7d-90b0-cda5402228f6",
+    "id": "ad4416f6-7248-4267-8388-98a445090902",
     "city": "CNX-DEMO",
     "generate_status": 201,
     "candidates": 1
    },
    "catalogue": {
-    "id": "6474eb03-2dd9-4e7d-90b0-cda5402228f6",
+    "id": "ad4416f6-7248-4267-8388-98a445090902",
     "city": "CNX-DEMO",
     "rows": 8,
     "providers": [
@@ -145,8 +166,8 @@
    "addedSource": "JOURNEY_FIRST_DAY",
    "readBackFailure": null,
    "steps": {
-    "after_slack_journey_and_catalogue": 5544,
-    "after_add_accepted": 7156
+    "after_slack_journey_and_catalogue": 4594,
+    "after_add_accepted": 6106
    },
    "addedAfterReload": null,
    "replayAdded": null,
@@ -181,7 +202,7 @@
    "arm": "chinese-arm",
    "planState": "already",
    "slack": {
-    "id": "eec9c630-9f1c-473d-aac2-41274f2988f5",
+    "id": "ba2f656a-0a5e-4f12-9d64-8b710e39e508",
     "city": "CNX-DEMO",
     "generate_status": 201,
     "candidates": 1
