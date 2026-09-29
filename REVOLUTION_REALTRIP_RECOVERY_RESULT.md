@@ -77,9 +77,10 @@ advisory remains.
 - This one-day plan has one used mobility edge; the 72 captured Valhalla facts
   are not all used edges.
 - No replan was requested because there is no server-owned disruption event.
-- The execution run still has no device-side `latest_event_id`, and the
-  TravelerTwin has no preference/capability evidence; route evidence was not
-  used to fill either gap.
+- `JourneyTwin.latest_event_id=null` is the separate disruption-Event lane, not
+  an assertion that execution history is absent. `/outcomes` contains the real
+  `ACTIVITY_STARTED` event for the current activity. TravelerTwin preference/
+  capability evidence is still empty; route evidence was not used to fill it.
 
 Replay evidence and screenshots are under `evidence/revolution-realtrip/` and
 `frontend/output/playwright/`, including `r77-suzhou-live-executing-clean.png`.

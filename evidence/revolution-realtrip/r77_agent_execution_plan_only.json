@@ -20,6 +20,17 @@
     "current_activity_state": "ACTIVE",
     "mutation": "none"
   },
+  "event_lanes": {
+    "journey_twin_latest_event_id": null,
+    "journey_twin_latest_event_meaning": "no disruption Event row",
+    "outcomes_latest": {
+      "id": "8c339987-6b03-4128-8a55-cd2e9bc5ff49",
+      "event_type": "ACTIVITY_STARTED",
+      "activity_id": "ba2a6cbe-eb29-58e8-a6bb-2e137de36ff2",
+      "actor_type": "SYSTEM",
+      "occurred_at_actual": "2026-09-30T05:50:20.182045+08:00"
+    }
+  },
   "twin_execution": {
     "cursor_status": "VALID",
     "now_title": "网师园",
@@ -45,6 +56,6 @@
     "degraded": false
   },
   "replans": {"total": 0, "returned": 0, "truncated": false},
-  "remaining_gaps": ["latest_event_id=null", "TravelerTwin evidence_count=0", "no protected commitments"],
+  "remaining_gaps": ["TravelerTwin evidence_count=0", "no protected commitments"],
   "native_mcp_proven": false
 }

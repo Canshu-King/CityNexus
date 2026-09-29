@@ -134,8 +134,10 @@ A second real PLAN_ONLY inspection in that execution state completed as
 `inspect_journey -> inspect_twin -> list_replans`; all returned
 `COMPLETED / ALLOW_AUTO`, with no mutation. It reported the current activity as
 `ACTIVE`, the next activity as `PLANNED`, the same used edge and the same live
-Valhalla provenance. It also honestly reported `latest_event_id = null` and an
-empty TravelerTwin; neither was filled from route evidence.
+Valhalla provenance. The Twin's `latest_event_id = null` is the separate
+disruption-Event lane; the real `/outcomes` readback contains
+`ACTIVITY_STARTED` (`8c339987-6b03-4128-8a55-cd2e9bc5ff49`). TravelerTwin
+preference/capability evidence remains empty and was not filled from route facts.
 
 ## DeepSeek Builder execution
 
