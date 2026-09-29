@@ -16588,6 +16588,126 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### ORD-0454 成对态尺 STATE_PAIR：接进现有文案尺（新文件名 r3），现尖 4ee14229… 七枚选中格全部成对，删掉真孪生则绝对与增量两向都报红（车道 S4-ast-taint，会话 1d64acf5-3f5f-48e8-a7b4-9d7a37996edb，13:13 交）
+
+边界：0 产品字节；`live_checks/preflight_and_land_r5.py` 与已发布的 `tools/cnx_copy_tiers_r2.py` 一字未改（枝相对尖 57ff5d1c2f8540d498d945ed591c36689fc0f39e 的改动里这两类文件 0 枚、产品文件 0 枚）。文案尺 r3 的本机字节 sha1 2168c9f3ff0467e8a02bbb8d711a17b1bf2f5a9b 是本机字节 sha1、不是 blob、不可 cat-file；入库后的服务端 blob 为 53391b2b82e95b844e1419df8400428a66bb8f5f。
+
+**① 词表是从这棵树量出来的，不是照抄竞品。** F5/F10 的成对是「选中/未选中一律成对条目」，我们树里同一承诺有四种写法，所以孪生四种都认、并且**报出是哪一种答的话**：bare base 规则、`:not(.state)`、显式 `.unselected`、同基类的 `[data-k="false"]`。纳入的态：selected, picked, checked, pressed（旅客能切换）；点名不纳入的态：active, approval, blocked, busy, chosen, cn-agent-step, cn-native-status, compact, current, disrupted, done, explicit, failed, large, learned, muted, near, neutral, next, ok, protected, stay, timeline-item, trip-stop, user, v12-activity-row, v8-mode-option, v8-quiet-button, v9-map-marker（那是「当前哪一行」，没人切换）；点名不纳入的属性：aria-disabled, data-current, data-decision-active（它们的「关」就是不额外加样式，逼一条 false 规则才是真误伤）。词表件 blob f80308497a708caad362b837b5f76a24a3f3fbac。
+
+**② 现尖读数（MET）。** 14 stylesheet(s) read, 7 on-state cell(s): 7 paired, 0 unpaired; 1 attribute-on cell(s), 0 without an off-side rule; 614 bare base rule(s) known; left out of scope on purpose -- states: active, current | attributes: aria-disabled, data-current, data-decision-active（逐格清单来自 af8dd11e06075a6a6e8f176106e1e90f6c0e0051 这件，跑它的脚本 blob c107bd5270c94eb12ba74094dcf6b97a176932f2）：七格分别是 features/discovery/discovery-batch.css:37 .v8-pick-box.checked  state .checked on base .v8-pick-；features/discovery/discovery-batch.css:38 .v8-pick-box.checked  state .checked on base .v8-pick-；map-selection.css:20 .v9-map-marker.selected  state .selected on base .v9-map-marker  twin: base；map-selection.css:49 .v8-map-stop.selected  state .selected on base .v8-map-stop  twin: base_rul；styles.css:64 .family-chip.selected  state .selected on base .family-chip  twin: base_rule(.fami；styles.css:172 .v8-stay-card.selected  state .selected on base .v8-stay-card  twin: attribute_fa；styles.css:301 .v8-booking-card.selected  state .selected on base .v8-booking-card  twin: base_r。
+
+**③ 反例做在真字节上，不是夹具。** 只删 `styles.css` 第 64 行那条 `.family-chip { … }` 的 bare 规则（`.family-chip.selected` 仍在树上：True），两代口径同时跑：绝对口径 VIOLATION、增量口径（--state-base 用未改的尖） VIOLATION，报出的行是 [UNPAIRED] styles.css:63 .family-chip.selected  state .selected on base .family-chip  twin: NONE；同一棵树与自身比则 MET、`adds 0 new`（件 blob ad1a091b95904073732d656f58b709859ccdc416，脚本 blob 072f355362b7c3e7b9d16ccef9d19a6d79796b3f）。
+
+**④ 我踩过的一个假绿，留成了臂。** 第一版把 `.family-chip:disabled` 与 `.family-chip.neutral` 也算未选中孪生，于是删掉真基础规则它照样绿；收紧成「化合物正好是裸基类」之后，K9o 报红、K9p 报绿（K9a_on_state_without_a_twin_is_caught, K9f_attribute_true_with_no_off_side_is_caught, K9i_the_state_alone_without_a_base_is_caught, K9o_a_disabled_or_variant_rule_is_not_an_unselected_twin 这四枚是必须报红的臂；K9l_disabled_and_current_attributes_stay_quiet, K9m_decision_active_attribute_stays_quiet 这三枚是必须不许报的臂）。16 臂全 MET（`arms_all_met` True，件同上）。
+
+**⑤ 回归：面只多不减，旧判定一字未动。** r2 与 r3 在同一棵树上并跑，面集合差 ['STATE_PAIR']，判定变化 {}；两边 exit 都是 1，红面是既有四张（LADDER④⑥、HARDCODED_FALLBACK、RENDER_TIERS），与 r2 相同，不是我这次改出来的。
+
+**⑥ 门的接法我留给你裁，门我一动没动。** r3 有两种读法：不给 `--state-base` 就是「整棵树都要求成对」（现尖绿）；给就是「只怨候选新增的那几枚」。你的门现在没有任何一处读样式表（`live_checks/preflight_and_land_r5.py:151` 只把 AST 尺的 hits 折成键集），要接就在曝光臂旁加一次 r3 调用并把 `STATE_PAIR` 的 measure 原样进收据；选哪种口径、要不要闩，归你。
+
+
+**⑦ 号外：单开出来之后线又动了，所以两枚尖都读。** 派单写的是尖 4ee14229f80691cf8e5ea913375c0caf83ac02ee；我交这刀时 `ls-remote` 读到 57ff5d1c2f8540d498d945ed591c36689fc0f39e。同一把 r3 在两枚尖各自的导出上跑：格数、逐格行、孪生种类全相同（`identical_counts` True、`identical_rows` True），因为这两枚尖之间改动的样式表是 0 枚（件 blob a7b619b3f43e12b8e64a6f6ba69a4518a8e6b72b，脚本 blob d0eadcf17eca9d11b39649254b4b9f60e9ddc995）。候选枝两枚：`review/S4-ord0454-state-pair-face-1303` = cd64bbc3c82b185759891d6446adfb21e9fa11d4 与 `review/S4-ord0454-state-pair-face-1303-b2` = 7743dc60721927813816d20fdbf256dafcd20d2b，各自相对尖改 9 枚与 2 枚，产品文件 0 枚。
+**没改善 / NOT_DONE（具名）**
+1. 写入侧那一半没做进面：TSX 里 `aria-pressed={x ? "true" : undefined}` 这种「关就不说话」的形状我只量了一部分（写 aria-pressed 的文件 4 枚：件 blob f80308497a708caad362b837b5f76a24a3f3fbac 的 `written_side`），判定式没写进 STATE_PAIR；下一枝名 `review/qoder-0454-write-side-toggle`。
+2. F10 的「打卡 / 取消打卡」是动作标签对，不是样式态，本面不管；要做该落在文案尺的注册表对上，我没有顺手扩。
+3. `.active` 三处（styles.css:50 styles.css:399 styles.css:1783 那族）在当前口径下不纳入；你要纳入说一句，我改词表并先报存量再闩。
+4. ORD-0391 那 23 行的屏上逐字读回仍欠；ORD-0361 rebase 仍 pending（枝 `review/S4-ord0361-map-tap-selection` 停在 11eee48da2b117a2c0aafb2d71c50b0104b7d1fb）。
+5. 关于「s4_0338 仍卡在门外」这条转达：与本机读数不符，我按读数办。那块已在账本里（`_processed/s4_0338.md.inserted_053655`；账本 `CITYNEXUS_AGENT_CONTROL.md:19855` 那段带的是 blob 29fddea527ebee1095fb9b12d211467469f34aff），`5b8ba3a3…` 现在只出现在你自己 `CITYNEXUS_AGENT_CONTROL.md:20390` 的拒因记录里；我收件箱里没有待插的 0338 件。
+
+**交付坐标** 证据 8 件在 commander/control 的 `evidence/ord0454-state-pair-1303/`，逐件 blob：53391b2b82e95b844e1419df8400428a66bb8f5f、2b46410ff80ecae4657f636aba071602b86622fc、5fb93a85246dc39415f2eab9a1684d5983074904、f80308497a708caad362b837b5f76a24a3f3fbac、072f355362b7c3e7b9d16ccef9d19a6d79796b3f、ad1a091b95904073732d656f58b709859ccdc416、c107bd5270c94eb12ba74094dcf6b97a176932f2、af8dd11e06075a6a6e8f176106e1e90f6c0e0051；候选枝 review/S4-ord0454-state-pair-face-1303 的 ls-remote 回读 cd64bbc3c82b185759891d6446adfb21e9fa11d4 与我建的 commit cd64bbc3c82b185759891d6446adfb21e9fa11d4 相同（True），相对尖改 9 枚文件。
+
+
+### ORD-0450 勘误 · 这单不在尖上（复切复到的是我的 ORD-0445 r2）· 候选仍在枝上 de1aaf321ab5950fa73876697ec029dcaac63a65
+
+我不改号令者那块旧件，另发这一件。结论一句话：**账本 13:22 那块记的"ORD-0450 已落地、落地尖 57ff5d1c…"实测不成立，那笔是我 ORD-0445 的锚点重交件，ORD-0450 的字节还没进线。**
+
+- 现读现尖：`57ff5d1c2f8540d498d945ed591c36689fc0f39e`，两次 ls-remote 等值，其提交标题就写着 ORD-0445 follow-up（`D:/moodle/_qoder_n2b_ord0445_20260929/ord0450_not_in_tip_r1.txt:2`）。
+- 测量一（祖先关系）：`git merge-base --is-ancestor de1aaf321ab5950fa73876697ec029dcaac63a65 57ff5d1c2f8540d498d945ed591c36689fc0f39e` 退出码 rc=1 ⇒ 我这单不在尖上，读数在 `D:/moodle/_qoder_n2b_ord0445_20260929/ord0450_not_in_tip_r1.txt:3`。
+- 测量二（文件存在性）：尖上 `frontend/src/features/pending` 只有 5 枚文件（`D:/moodle/_qoder_n2b_ord0445_20260929/ord0450_not_in_tip_r1.txt:4` 起逐枚列到 `:9`），本单新增的 `pendingPlaceWrites.ts` 不在其中。
+- 测量三（符号命中）：同一棵尖树里 `pending-place-action`、`pendingPlaceWrites`、`composeInputFor`、`pending-tick` 四个符号命中数各为 0（`D:/moodle/_qoder_n2b_ord0445_20260929/ord0450_not_in_tip_r1.txt:11`、`:12`、`:13`、`:14`）。
+- 成因归到具体一步：那块 §1 写"复切四枚文件逐枚等车道字节"。我 r2 那笔正好改 4 枚（`D:/moodle/_qoder_n2b_ord0445_20260929/ord0450_not_in_tip_r1.txt:16` 列出这 4 枚），而 ORD-0450 改 7 枚（同文件 `:17` 列出这 7 枚，含新文件与 spec）。⇒ 复切对象是 r2，件数本身就是指纹。
+- 请撤回一条推论：那块 §4 把"两个不同尖的构建产物字节完全相同"解释成"应当如此"，理由是挂载这面板的注册表代码在更早的 ORD-0445 就进线了。注册表那行确实早就在（尖上 `frontend/src/app/v8PanelRegistry.tsx:125` 是本单之前落的挂载），但产物相同的成因是**这单根本没进线**：他看到的那枚入口 `index-DbA8xyvx.js` 正是我 r2 的构建件，我 ORD-0450 的构建件是另一枚（`D:/moodle/_qoder_n2b_ord0445_20260929/build_0450_r2.txt:11`）。他 §2 逐字读到的那段屏上文字里没有"已勾 1 个""排进某一天"，也正好是这个缺口的形状——那不是 ORD-0450 的屏。
+- 我这侧不需要重做：候选仍在枝上并按 40 位回读相等（`refs/heads/review/newlane2-ord0450-place-on-a-day-r1` = `de1aaf321ab5950fa73876697ec029dcaac63a65`）；只读复切预测树 `d82f76882d856e227f7721f4e7f1a9925c5250cf`、无冲突输出（`D:/moodle/_qoder_n2b_ord0445_20260929/chain_drift_0450.txt:11`）；上游自从我父提交以来没有碰过这单的任一文件（同文件 `:8` 的 `git diff --name-only` 为空输出）；车道门 passed=14 failed=0（`D:/moodle/_qoder_n2b_ord0445_20260929/suite_0450_r1.txt:19`）。
+- 请号令者做的动作：把这单按 `de1aaf321ab5950fa73876697ec029dcaac63a65` 复切（判据仍是"合完逐枚等车道字节"，枚数应为 7 不是 4），或者告诉我你要哪一侧先动。我不自己碰权威线。
+- 我自己该认的一条：12:59 那块我把"枝已推 + 门绿 + 复切预测干净"当成交付完成，没有再量一次"是否真进线"；而"他报的枚数 4"与"我这单 7 枚"这个不一致，我交付时就能对出来。已补测量件 `D:/moodle/_qoder_n2b_ord0445_20260929/ord0450_not_in_tip_r1.txt:1`。
+- 这单另外两件事不变，仍等他判：排期门在这份数据上双向卡死（四条读数 `D:/moodle/_qoder_n2b_ord0445_20260929/compose_catch22_r1.txt:2`、`:3`、`:4`、`:5`，回执号 CNX-32XRW8GQ），以及发现门给 CNX-DEMO 的行程返回天津 POI 这条数据真值缺陷。
+
+
+### ORD-0456 · 车道 N2 · 入口标签写明必填与区间，数字只有一处来源（`-r2` 已推）
+
+- 派单原话在 `CITYNEXUS_AGENT_CONTROL.md:16609`（号令者 12:00 块第 1 节）：必填写进入口标签、上限一律参数化成文。底料两处正文我按行读了：F14 在 `D:/moodle/_apk_analysis_pi_travel/MAP/map_findings.md:112`，F25 在同件 `:174`。
+
+交付：
+
+- 分支基点＝我现读的权威尖 `57ff5d1c2f8540d498d945ed591c36689fc0f39e`（`git ls-remote` 亲读）；枝名 `refs/heads/review/Q-ord0456-entry-limits-r2`，回读 `48d16fc7f34acc08dc911e6c7479ec63e5e587c5`；`git merge-tree --write-tree 现尖 头` 退 0，合出树 `b6f62f43989c4e3dbaf751a6b354133207e306a6`。
+- 改动只有两枚文件（`git diff --numstat` 现算）：新建 `frontend/src/lib/entryLimits.ts`（blob `5bf3f42388d0d012ee5f46abc997e35e0c6f5960`，130 增 0 删）与 `frontend/src/features/setup/JourneyTrialSetup.tsx`（`bfdbfbecc064802e1959a80b0dfc9e9010276c88` -> `0c344167dc71900d81b960baddfd2d08a9277166`，13 增 14 删）。
+- 一处来源：区间与必填都住在 `entryLimits.ts` 的 `ENTRY_FIELDS` 里，标签与控件同读这一份——`entryFieldLabel` 给文字，`entryFieldBounds` 给 `min`/`max` 属性，`missingStep2` 的字段名与跳转 testid 也取自同一条目（原先「旅行人数 / 总预算」在提示语与标签里各写一份、`min="1" max="20"` 在两个控件里各写一份）。上限的出处标在文件里：`backend/app/schemas.py:221` 的 `ge=1, le=20`。
+- 改完向导里再无写死的区间属性：`git grep -cE` 在 `48d16fc7` 上对 `JourneyTrialSetup.tsx` 数 `min="数字"` / `max="数字"` = 0 命中（`field=literal_bounds=0`）。
+
+两臂屏读（同一次取标签与属性，两代 bundle 各自自建、静态口先按字节认领）：
+
+| 字段 | 中文臂（改前 -> 改后） | 英文臂（改后） | 控件属性 |
+| --- | --- | --- | --- |
+| 旅行人数 | `旅行人数` -> `旅行人数（必填 · 1-20 人）` | `Travellers（required · 1-20 people）` | `field=min=1` `field=max=20` |
+| 房间数 | `房间数（建议值，可调整）` -> 同名加 `（选填 · 1-20 间）` | `Rooms (suggested)（optional · 1-20 rooms）` | `field=min=1` `field=max=20` |
+| 总预算 | `总预算` -> `总预算（必填 · 1 元起）` | `Total budget（required · from 1 CNY）` | `field=min=1` 无上限 |
+| 住宿预算 | `住宿预算` -> `住宿预算（选填 · 0 元起）` | `Stay budget（optional · from 0 CNY）` | `field=min=0` 无上限 |
+
+- 我自己当场纠的两处：① 第一版把「总预算」写成「0 元起」而表单要求大于 0——标签承诺了控件不认的值，于是把下限挪进同一条目（`1 元起` + `min=1`）；② 挪的时候顺手把可选的「住宿预算」也抬到 1，而 0 在那里是旅行者说「不设住宿预算」的意思，下一笔改回 `min=0`。两处都在屏读里被自己的读数逮住，不是审代码审出来的。
+- 还纠了一处自己的笔误：我第一版提交把整枚向导文件从 LF 写成 CRLF（那笔对现尖的 `git diff --numstat` 报 1607 与 1608，提交 `67558a22cd091a63985512eac055ce8f5341d2cd`），所以有了 `-r1`；下一笔把行尾放回去，差回到 13/14，请合 `-r2`。另外证据件 r1 里 `ref_readback` 那格存成了枝名（我 split 取错列），改后的是 r2。
+
+边界与没做的：
+
+- `vite build` 两侧退零、`npm run typecheck`（`tsc -p tsconfig.check.json --noEmit`）退零；页面异常 0 条。这一步进第 2 屏用的是向导自己的存储键 `citynexus.v8.trial_draft`（`JourneyTrialSetup.tsx:22`），不是替身组件。
+- 反件里最硬的那件没做：`field=NOT_DONE` —— 没有开一支临时枝把某枚上限从 20 改成 24、同屏证明「文字与控件一起动」；本轮证的只是标签与属性同批读自同一条目、且向导里再无写死的区间。
+- 范围没扩到别的入口：`field=NOT_DONE` —— 收件箱粘贴导入与 POI 批量选择的必填/上限措辞仍是各写各的，本单只做了行前设置第 2 屏这四格。
+- 没量到的：小屏以外的形状与第 1/3 屏标签 `field=NOT_MEASURED`。
+- 0 后端字节、0 契约字节、0 枚举改写、0 权威线移动、0 落地动作、0 别人 worktree 触碰；本块首行不是 CMDR。
+- 证据先发布后引用：`evidence/ord0456-n2/entry_labels_r2.json`，外读 blob `f415f48584e02c918b6cc1de81482c24dc476f54`（5261 字节，BYTE-LEVEL MATCH）。两把尺：`claim_coordinate_check_r7.py --text` 对本块实测；第二道闸按它自己的正则只读复算＝预测（它的两道只在 `--apply` 那跑执行）。
+
+
+### 车道 dt（会话 be19052c）ORD-0435 回号令者 12:30 那两个条件：① 基座是已准备好的目的地（屏上无 HYDRATABLE 具名），② 读回证据补到"跨刷新"这一层（2026-09-29 13:02 +08）
+
+先回值守的 rebase 提醒（现读）：`git ls-remote origin` 我 13:02 现读
+`refs/heads/mirror/integration-frontend-apple-pass1` = `57ff5d1c2f8540d498d945ed591c36689fc0f39e`，
+与我这一枝的基座逐字相同 ⇒ 不存在两侧都改过词典的情形，无需 rebase。`refs/heads/review/ord0435-poi-batch-multiselect-r3` = `b4bb6c065a3ede46bb36f94e84f86c3caed0a7ac`
+（push 为 fast-forward `84cc98ef..b4bb6c06`），对现尖的产品字节差只有词典 3 行
+（`git diff --stat 57ff5d1c HEAD -- frontend/src` 只列 `frontend/src/i18n/LocaleContext.tsx`，
+3 增 3 删，正是 dt_1256 第三件那三枚单复数修正），本笔 r7 是 0 产品字节、只加仪表与读数。
+
+**条件①「基座选已准备好的目的地，别拿 HYDRATABLE 那一屏去跑」——已满足，并且现在有了屏上凭据**。
+我用的是 CNX-DEMO：`GET /api/v1/demo/scene` 回 http 200、basis JOURNEY_START、
+evidence_state REFERENCED，`GET /plans` 回 104 枚方案版本、`is_current` 为 true 的 1 枚、
+状态含 SUPERSEDED/REJECTED/CANDIDATE/SELECTED。刚在同一屏做了双臂屏读：中文臂
+`/v8/discover` 的屏上正文里 `HYDRATABLE` 出现 0 次、「开始准备」按钮 0 枚，同批截图 blob
+`27a80c48ba81eb91dd15c83c1c7f33cd7b4ee50f`（文件 `review/ord0435/prepared_destination_prep_panel.png`），
+也就是这屏根本没走到那道拒绝门；
+号令者那台看到的「开始准备 / 换一个目的地」两个出口在这份目的地上不出现。
+我不绕过他那道门，也不拿这份屏冒充那份屏——两枚读数各自成立，具名分开记。
+
+**条件②「反件要带上选中后从服务端读回那条 activity 的读数，不是只截多选态」——补到跨刷新这一层**。
+新仪表 `review/ord0435/_persistence_across_reload_r1.js`（blob `3f9b905488a6c173f2cccf6a8951100f8b0d3022`），
+读数 `review/ord0435/persistence_across_reload.json`（blob `3e49871a2cc77d491f26a9d395b5009237773c64`）。
+一次真实链路：勾 1 处 → 点完成 → compose http 201 → 屏上回执 1 块、1 行
+`2026-10-10 16:36 Haihe Riverside Design Library 64d04570-08ee-4d30-92cc-d2306023d964`。
+然后**真的 reload 这一屏**，四项判据全为 true：
+`row_still_written`（屏上回执 0 块、行 0 块、结果区 0 块，而库里那行仍在）、
+`screen_ids_all_survive_reload_via_route`（同一个 id 仍由 `GET /plans/{id}` 答出，状态 CANDIDATE、
+同 title 同 `2026-10-10T16:36:00+08:00`）、`route_and_store_same_rows`（路由侧与 sqlite 只读侧逐字段相同）、
+`receipt_is_component_state_only`。
+这一格的意义写在仪表头部：屏上那块回执**不是**凭据，它是 UI 的记忆；凭据在库里那一行，
+所以我不拿一个 div 主张持久性——reload 之后 div 没了、行还在，正是"没拿客户端态假装已加入"的证明。
+两臂各跑过同样的读回（`review/ord0435/readback_tip_zh.json` blob
+`a4a047a23db4811a1630d5643027d14cf0da3d5a`、`readback_tip_en.json` blob
+`7834c450ad1c03ebac141d275b11301e0bcdad68`，各六项 true、末行各 `READBACK_CONSISTENT`）。
+
+**两件状态**：① 上一条三件齐的块 `dt_1256.md`（7,825 字节）还在收件口未入账——现读账本里搜不到它的块头，
+`_qoder_ledger_inbox` 里只剩它与我这一枚；cron 已到期，代插要号令者手动跑，块不会自己动。
+② 本笔 0 产品字节，所以两把尺无需重跑：令牌尺与文案尺的读数仍以 dt_1256 第四节那两行为准
+（双语键 787 枚、冲突 0 处；改值 3 枚、中文臂新增字符 0 处；四条存量红 25 / 2 / 78 / 78 与基线逐条相同）。
+ORD-0452 按 dt_1227 第五节的报名接着做（识别走现成 `POST /api/v1/journeys/{journey_id}/inbox/vision`，
+`backend/app/main.py:4528`，0 新端点）；ORD-0458 的甲/乙/丙仍在等裁（dt_1227 第六节），裁定前不动它的字节。
+
+
 ### ORD-0450 交付 · 新车道二（Qoder 会话 6a150e1e）· 待规划批次落到某一天（走已落地的两扇门）· 候选 de1aaf321ab5950fa73876697ec029dcaac63a65
 
 一句话：勾选、批次、一次真压都接好了，用的全是线上已有的门；但这台服务器的排期门在这份数据上双向卡死，所以"成功落进某一天"这一臂我没有绿，量出来的原因写在下面，不猜也不绕。
