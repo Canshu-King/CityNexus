@@ -105,11 +105,11 @@ export function MapPanel({
        the fallback colour and nothing on screen would say the style had degraded. */
     const tag = (
       feature: { type: "Feature"; properties?: Record<string, unknown>; geometry: { type: "LineString"; coordinates: number[][] } },
-      mode: string,
+      mode: string | null | undefined,
       index: number,
     ) => ({
       ...feature,
-      properties: { ...(feature.properties ?? {}), mode, leg_index: index },
+      properties: { ...(feature.properties ?? {}), mode: mode ?? "", leg_index: index },
     });
     if (data?.active_plan?.legs.length)
       return data.active_plan.legs.map((leg, index) => tag(leg.geometry, leg.mode, index));

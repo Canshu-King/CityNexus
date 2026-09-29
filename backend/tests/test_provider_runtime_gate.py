@@ -305,6 +305,7 @@ def test_prt09_twin_reports_selected_plan_frozen_mobility_without_c4_commitment(
                 "provider": "valhalla-http",
                 "fact_quality": LIVE_PROVIDER_CAPTURE,
                 "route_provenance": LIVE_PROVIDER_CAPTURE,
+                "route_geometry": [[117.0, 39.0], [117.01, 39.01]],
             }
         ],
     }
@@ -326,6 +327,23 @@ def test_prt09_twin_reports_selected_plan_frozen_mobility_without_c4_commitment(
     assert mobility["route_provenance"] == [LIVE_PROVIDER_CAPTURE]
     assert mobility["used_edge_ids"] == [[activities[0].place_id, activities[1].place_id]]
     assert mobility["used_edges"][0]["minutes"] == 42
+
+    experience = client.get(f"/api/v1/journeys/{jid}/experience")
+    assert experience.status_code == 200, experience.text
+    active_plan = experience.json()["active_plan"]
+    assert active_plan["id"] == plan_id
+    assert active_plan["mobility_evidence"]["used_edge_ids"] == [
+        [activities[0].place_id, activities[1].place_id]
+    ]
+    assert len(active_plan["legs"]) == 1
+    assert active_plan["legs"][0]["duration_min"] == 42
+    assert active_plan["legs"][0]["mode"] is None
+    assert active_plan["legs"][0]["cost_amount_minor"] is None
+    assert active_plan["legs"][0]["geometry"]["geometry"]["coordinates"] == [
+        [117.0, 39.0],
+        [117.01, 39.01],
+    ]
+    assert experience.json()["provider_mesh"]["mobility"]["valhalla"]["status"] == "CAPTURED"
 
 
 def test_prt07_offline_golden_replan_remains_operational():

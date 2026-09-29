@@ -1681,6 +1681,134 @@ def activity_coordinate(place_id: str | None, places: dict[str, Place]) -> dict[
     }
 
 
+def _plan_mobility_projection(
+    plan: PlanVersion, activities: list[Activity]
+) -> tuple[dict[str, Any], list[dict[str, Any]]]:
+    """Project the selected plan's own frozen route facts onto the experience read.
+
+    Direct real-city plans do not create ``StayJourneyOption`` or ``JourneyLeg`` rows.  Their
+    route is still authoritative evidence: it is sealed on the PlanVersion that the Journey
+    selected.  The experience endpoint must read that evidence rather than quietly reporting an
+    empty route.  Only an exact consecutive activity pair is projected; there is no fallback edge,
+    city-centre route, or synthetic duration here.
+    """
+
+    evidence = _load(plan.mobility_evidence_json, {})
+    raw_facts = evidence.get("facts") if isinstance(evidence, dict) else None
+    facts = [item for item in raw_facts if isinstance(item, dict)] if isinstance(raw_facts, list) else []
+    by_pair = {
+        (str(item.get("origin_key")), str(item.get("destination_key"))): item
+        for item in facts
+        if item.get("origin_key") and item.get("destination_key")
+    }
+    used: list[tuple[int, Activity, Activity, dict[str, Any]]] = []
+    for index, (origin, destination) in enumerate(zip(activities, activities[1:])):
+        if not origin.place_id or not destination.place_id:
+            continue
+        fact = by_pair.get((str(origin.place_id), str(destination.place_id)))
+        if fact is not None:
+            used.append((index, origin, destination, fact))
+
+    used_edge_ids = [
+        [str(origin.place_id), str(destination.place_id)]
+        for _index, origin, destination, _fact in used
+    ]
+    used_edges: list[dict[str, Any]] = []
+    fact_quality: set[str] = set()
+    route_provenance: set[str] = set()
+    source_providers: set[str] = set()
+    for _index, origin, destination, fact in used:
+        provider = str(fact.get("provider") or evidence.get("source_provider") or "") or None
+        quality = str(fact.get("fact_quality") or "") or None
+        provenance = str(fact.get("route_provenance") or "") or None
+        if provider:
+            source_providers.add(provider)
+        if quality:
+            fact_quality.add(quality)
+        if provenance:
+            route_provenance.add(provenance)
+        used_edges.append(
+            {
+                "origin_key": str(origin.place_id),
+                "destination_key": str(destination.place_id),
+                "minutes": fact.get("minutes"),
+                "provider": provider,
+                "route_provenance": provenance,
+                "fact_quality": quality,
+                "degraded": bool(fact.get("degraded", evidence.get("degraded", False))),
+            }
+        )
+
+    derived_legs: list[dict[str, Any]] = []
+    for index, origin, destination, fact in used:
+        coordinates = fact.get("route_geometry") or []
+        minutes = fact.get("minutes")
+        if not coordinates or not isinstance(minutes, (int, float)):
+            continue
+        provider = str(fact.get("provider") or evidence.get("source_provider") or "") or None
+        provenance = str(
+            fact.get("route_provenance") or fact.get("fact_quality") or ""
+        ) or None
+        derived_legs.append(
+            {
+                "id": f"plan-evidence:{plan.id}:{index}",
+                "sequence_no": index,
+                "from_activity_id": origin.id,
+                "to_activity_id": destination.id,
+                "from_key": str(origin.place_id),
+                "to_key": str(destination.place_id),
+                # The capture does not provide a mode for this Valhalla route.  Null keeps that
+                # omission visible; it must not be converted into TRANSIT/AUTO by the UI.
+                "mode": fact.get("mode"),
+                "depart_at": None,
+                "arrive_at": None,
+                "duration_min": minutes,
+                "distance_m": fact.get("distance_m"),
+                "cost_amount_minor": None,
+                "currency": None,
+                "cost_status": "UNKNOWN",
+                "walking_min": fact.get("walking_min"),
+                "transfers": None,
+                "reliability_score": None,
+                "weather_exposure": None,
+                "geometry": {
+                    "type": "Feature",
+                    "properties": {
+                        "source": "PLAN_MOBILITY_EVIDENCE",
+                        "provider_key": provider,
+                        "provenance": provenance,
+                        "fact_quality": fact.get("fact_quality"),
+                    },
+                    "geometry": {"type": "LineString", "coordinates": coordinates},
+                },
+                "crs": fact.get("crs") or "WGS84",
+                "provider_key": provider,
+                "provenance": provenance,
+                "captured_at": fact.get("captured_at") or evidence.get("captured_at"),
+                "expires_at": fact.get("expires_at") or evidence.get("expires_at"),
+                "source": "PLAN_MOBILITY_EVIDENCE",
+            }
+        )
+
+    aggregate = ";".join(sorted(route_provenance)) or evidence.get("aggregate_provenance")
+    summary = {
+        "snapshot_id": plan.mobility_snapshot_id or evidence.get("snapshot_id"),
+        "expires_at": evidence.get("expires_at"),
+        "aggregate_provenance": aggregate,
+        "source_provider": next(iter(sorted(source_providers)), None)
+        or evidence.get("source_provider"),
+        "degraded": any(edge["degraded"] for edge in used_edges),
+        "fact_count": len(facts),
+        "fact_quality": sorted(fact_quality),
+        "route_provenance": sorted(route_provenance),
+        "used_edge_ids": used_edge_ids,
+        "used_edges": used_edges,
+        "source": "selected-plan-frozen-evidence",
+        "replayable": bool(plan.mobility_evidence_json),
+    }
+    return summary, derived_legs
+
+
 def _active_plan_payload(session: Session, journey: Journey) -> dict[str, Any] | None:
     if not journey.active_plan_version_id:
         return None
@@ -1705,6 +1833,8 @@ def _active_plan_payload(session: Session, journey: Journey) -> dict[str, Any] |
         .where(JourneyLeg.plan_version_id == plan.id)
         .order_by(JourneyLeg.sequence_no)
     ).all()
+    mobility_evidence, evidence_legs = _plan_mobility_projection(plan, activities)
+    projected_legs = [journey_leg_payload(item) for item in legs] or evidence_legs
     protected_activity_ids = set(
         session.scalars(
             select(Commitment.activity_id).where(
@@ -1743,12 +1873,7 @@ def _active_plan_payload(session: Session, journey: Journey) -> dict[str, Any] |
         "status": plan.status,
         "source": plan.source,
         "mobility_snapshot_id": plan.mobility_snapshot_id,
-        "mobility_evidence": {
-            "snapshot_id": plan.mobility_snapshot_id,
-            "expires_at": _load(plan.mobility_evidence_json, {}).get("expires_at"),
-            "aggregate_provenance": _load(plan.mobility_evidence_json, {}).get("aggregate_provenance"),
-            "replayable": bool(plan.mobility_evidence_json),
-        },
+        "mobility_evidence": mobility_evidence,
         "current_activity_id": journey.current_activity_id,
         "cursor_status": cursor_status,
         "activities": [
@@ -1780,7 +1905,7 @@ def _active_plan_payload(session: Session, journey: Journey) -> dict[str, Any] |
             }
             for item in activities
         ],
-        "legs": [journey_leg_payload(item) for item in legs],
+        "legs": projected_legs,
         "user_location": {
             "latitude": location.latitude,
             "longitude": location.longitude,
@@ -1839,6 +1964,29 @@ def experience_payload(session: Session, journey: Journey) -> dict[str, Any]:
         budget_currency=journey.budget_currency,
         party_size=context.party_size,
     )
+    active_plan = _active_plan_payload(session, journey)
+    active_mobility = (
+        active_plan.get("mobility_evidence", {})
+        if isinstance(active_plan, dict)
+        else {}
+    )
+    selected_plan_valhalla = {
+        "status": "CAPTURED"
+        if active_mobility.get("used_edge_ids") and active_mobility.get("source_provider")
+        else "NOT_CONFIGURED"
+    }
+    if selected_plan_valhalla["status"] == "CAPTURED":
+        selected_plan_valhalla.update(
+            {
+                "provider_key": active_mobility.get("source_provider"),
+                "snapshot_id": active_mobility.get("snapshot_id"),
+                "provenance": active_mobility.get("aggregate_provenance"),
+                "fact_quality": active_mobility.get("fact_quality", []),
+                "route_provenance": active_mobility.get("route_provenance", []),
+                "source": active_mobility.get("source"),
+                "degraded": active_mobility.get("degraded", False),
+            }
+        )
     return {
         "journey": {
             "id": journey.id,
@@ -1883,7 +2031,7 @@ def experience_payload(session: Session, journey: Journey) -> dict[str, Any]:
         "options": [option_payload(item, offers) for item in options],
         "selected_option_id": selected.id if selected else None,
         "mobility_facts": [fact_payload(item) for item in facts],
-        "active_plan": _active_plan_payload(session, journey),
+        "active_plan": active_plan,
         "traveler_twin": {
             "explicit_dimensions": sorted(
                 {
@@ -1923,7 +2071,7 @@ def experience_payload(session: Session, journey: Journey) -> dict[str, Any]:
                     else "UNAVAILABLE_FOR_CITY",
                     "coordinate_crs": "GCJ02 at provider boundary; canonical domain WGS84",
                 },
-                "valhalla": {"status": "NOT_CONFIGURED"},
+                "valhalla": selected_plan_valhalla,
                 "transit_realtime": {"status": "UNKNOWN_REALTIME"},
                 "ride_hail": {"status": "UNKNOWN_COST"},
             },

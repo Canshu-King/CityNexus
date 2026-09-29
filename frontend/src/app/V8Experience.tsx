@@ -1741,7 +1741,11 @@ export function V8Experience() {
           <div className="v8-sync">
             <span className="status-dot" />
             {t("shell.factsSynced")}
-            <div>{t("shell.plansModes", { plans: data.options.length })}</div>
+            <div>
+              {t("shell.plansModes", {
+                plans: data.options.length || (data.active_plan ? 1 : 0),
+              })}
+            </div>
           </div>
           <button className="v8-user" onClick={() => navigate("me")}>
             <span>{initialsFrom(cityName)}</span>
@@ -3087,7 +3091,24 @@ function Hub({
             : `Preview of one candidate option — you have not chosen a plan yet.`}
         </p>
       )}
-      {!selected && (
+      {!selected && data.active_plan ? (
+        <div className="v8-empty-state" data-testid="hub-active-plan">
+          <b>{zh ? "已选行程" : "Selected plan"}</b>
+          <p>
+            {zh
+              ? "下面是已采用的真实行程；住宿方案仍未选择。"
+              : "This is the selected real itinerary; no stay option has been chosen."}
+          </p>
+          <p data-testid="hub-active-plan-stops">
+            {activities
+              .map(
+                (item) =>
+                  `${clockInZone(item.start_at, data.journey.timezone || "UTC")} ${item.title}`,
+              )
+              .join(" · ")}
+          </p>
+        </div>
+      ) : !selected ? (
         <div className="v8-empty-state" data-testid="hub-glance-empty">
           <b>{zh ? "还没有可以预览的行程" : "Nothing to preview yet"}</b>
           <p>
@@ -3096,7 +3117,7 @@ function Hub({
               : "Choose a plan and the day-by-day plan appears here."}
           </p>
         </div>
-      )}
+      ) : null}
       <div className="v8-day-row">
         {selected?.days.map((day) => (
           <button
@@ -3498,7 +3519,7 @@ function Live({
                   ? t("live.nextLeg", {
                       title: next.title,
                       mode: modeLabel(
-                        nextLeg?.mode ?? mode,
+                        nextLeg?.mode,
                         locale.startsWith("zh"),
                       ),
                       duration:
@@ -3635,7 +3656,7 @@ function LiveSecondary({
                   ? clockInZone(next.start_at, data.journey.timezone || "UTC")
                   : "—"}
               </strong>
-              <span>{t("live.eta", { mode: modeLabel(nextLeg?.mode ?? mode, zh) })}</span>
+              <span>{t("live.eta", { mode: modeLabel(nextLeg?.mode, zh) })}</span>
             </div>
             {destination && (
               <a
@@ -4485,7 +4506,8 @@ function hardRuleLabel(code: string | null, zh: boolean, unknown: string): strin
   return entry ? (zh ? entry.zh : entry.en) : unknown;
 }
 
-function modeLabel(mode: string, zh: boolean): string {
+function modeLabel(mode: string | null | undefined, zh: boolean): string {
+  if (!mode) return zh ? "未提供出行方式" : "Mode not provided";
   const key = String(mode).toUpperCase();
   const labels: Record<string, { zh: string; en: string }> = {
     WALK: { zh: "步行", en: "Walk" },

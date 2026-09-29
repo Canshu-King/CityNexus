@@ -59,6 +59,9 @@ export function PlanRankingPanel({ budgetMinor, currency }: { budgetMinor: numbe
   const candidates = ((plans.data ?? []) as unknown as Row[]).filter(
     (plan) => plan.status === "CANDIDATE" && !plan.stale && plan.selectable !== false,
   );
+  const selectedPlan = ((plans.data ?? []) as unknown as Row[]).find(
+    (plan) => plan.status === "SELECTED" || plan.status === "ACTIVE",
+  );
   const { rows, comparable, usedDims } = rankPlans(candidates);
 
   if (plans.isPending && !plans.isError) {
@@ -78,7 +81,9 @@ export function PlanRankingPanel({ budgetMinor, currency }: { budgetMinor: numbe
   if (rows.length === 0) {
     return (
       <section className="plan-ranking" data-testid="plan-ranking">
-        <p className="v8-muted" data-testid="rank-none">{say("rank.none")}</p>
+        <p className="v8-muted" data-testid={selectedPlan ? "rank-selected" : "rank-none"}>
+          {say(selectedPlan ? "rank.selected" : "rank.none")}
+        </p>
       </section>
     );
   }
