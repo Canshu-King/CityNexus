@@ -169,5 +169,43 @@ The combined focused backend gates passed `73 passed, 1 warning`; the warning
 is the existing Starlette/httpx deprecation. `P7=false`, `MOCK != LIVE`, and
 no authority/mainline merge were introduced.
 
+## Live DeepSeek tool-loop continuation
+
+After the system-supported `HKCU` `DEEPSEEK_API_KEY` presence was confirmed
+without exposing its value, the isolated backend was restarted with that key
+only in the child-process environment and `CITYNEXUS_AI_ENABLED=true`. No
+credential was written to the worktree, database, logs, receipt, or archive.
+The runtime endpoint reported `NATIVE_DEEPSEEK_TOOL_LOOP`,
+`deepseek_configured=true`, and `native_mcp_proven=false`.
+
+Two real same-Journey native DeepSeek runs then completed in `PLAN_ONLY`:
+
+- `ecd49946-d11f-461b-aa9e-0264e319da52` / mission
+  `bd32c6a6-e82a-4e54-9864-31c33ea322fb`: `inspect_journey → inspect_twin →
+  list_replans`, all `COMPLETED`/`ALLOW_AUTO`, no Event created.
+- `78d4d483-b944-40a8-a148-ef02202d9b26` / mission
+  `924199e4-573c-44ed-8b8f-2069d6f0e7bb`: the stricter authority/route
+  cross-check used the same three read tools, all completed, and found the
+  Journey/Twin plan pointers equal, one `ACCEPTED` proposal plus two
+  `INVALIDATED` proposals, no pending proposal, and no synthetic mobility
+  marker. The actual edge remained Valhalla WALK/38 minutes with
+  `LIVE_PROVIDER_CAPTURE`.
+
+Both runs observed the single preserved diagnostic event only; the repaired
+status-inspection guard continued to return `event_id=null`. This is actual
+DeepSeek execution evidence, not model prose substituted for product state.
+
+The repository Hermes H11 probe was also attempted with the same supported
+registry credential path in a separate temporary runtime. Its exact blocker
+was `RESET/SEED HTTP 403: DEMO_MODE_REQUIRED`; the probe's own backend sets
+`CITYNEXUS_DEMO_MODE=false`, and the product gate correctly refused the demo
+reset. The probe reported `nothing was deleted`; no source or R77 database was
+changed. Native Hermes execution is therefore not claimed for this continuation;
+the earlier real compatibility run `d66bc824-888d-41cc-816d-c0995f7f5403`
+remains separately recorded.
+
+The live agent receipt is
+`evidence/revolution-realtrip/r77_live_agent_loop_receipt.json`.
+
 Replay evidence and screenshots are under `evidence/revolution-realtrip/` and
 `frontend/output/playwright/`, including `r77-suzhou-live-executing-clean.png`.
