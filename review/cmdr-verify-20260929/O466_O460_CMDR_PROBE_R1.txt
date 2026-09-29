@@ -1,0 +1,15 @@
+# CMDR 亲测收据 · ORD-0466 版本级共享 与 ORD-0460 过期时刻 · 对着现尖 8eb72e5579900f5f315e4d0d65a52e727494d199 的私有栈
+# 栈：api :8741（导出 v_8eb72e55，PYTHONPATH 指向该导出），门面 :4827；归属两证：入口名 index-DZWC-A_B.js 与我磁盘 index.html 同名，服务字节 sha1 等于磁盘字节 sha1（本机 sha1，不是 git 物件）
+# 库：D:/moodle/_qoder_cmdr_priv_o417tip.db（共享 _preview.db 只 mode=ro 复制，未写）
+
+一 · 带 plan_version_id 的授权：http 201，回体键名 created_at/created_by/expires_at/id/journey_id/plan_version_id/revoked_at/token/updated_at/visibility
+二 · 对照臂（同一行程、不带 plan_version_id）：http 201，同一批键名
+三 · 用臂一的 token 读 /api/v1/shared/journeys/{token}：http 200，键名含 grant_scope 与 shared_plan；grant_scope 读到的是 PLAN_VERSION
+四 · 用臂二的 token 读同一路由：http 200，键名含 grant_scope，无 shared_plan ⇒ 版本字段真的改变了返回形状，不是被忽略
+五 · expires_at 不带偏移：http 422，error.reason_code=SHARE_GRANT_EXPIRY_NO_OFFSET，message="An expiry without an offset would be a guess about whose clock it is."
+六 · expires_at 带偏移且在过去：http 422，error.reason_code=SHARE_GRANT_EXPIRY_IN_PAST，message="That expiry is already in the past, so no token would work."
+七 · plan_version_id 是服务器没有的 id：http 422，error.reason_code=SHARE_GRANT_VERSION_UNKNOWN
+八 · visibility 用了词表外的值：http 422，FastAPI literal_error（无 reason_code，只有 error_receipt_id 与 message_key）
+
+九 · 五屏亲测（同一构建，390x844，zh-CN）：/v8/hub、/v8/trips、/v8/map、/v8/agent、/v8/me 全部实到，pageerror 计数为零
+十 · /v8/stay 走通路径：hub 的 pretrip-empty-action 进 /v8/studio，再点 button 形状的选择住宿进 /v8/stay，屏上 v8-stay-explorer 与 stay-no-options；estimation-ladder 在该空态不渲染（ORD-0468）
