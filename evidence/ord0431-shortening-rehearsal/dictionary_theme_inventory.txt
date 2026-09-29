@@ -1,0 +1,9 @@
+grep 跟随系统 in LocaleContext.tsx: 0 hits
+keys whose NAME mentions theme/system/lang: 3
+    hub.planGlance | Plan at a glance || 方案概览
+    nav.groupSystem | SYSTEM || 系统
+    nav.language | 中文 || EN
+keys whose CHINESE value contains 系统/主题/跟随: 3
+    discovery.genericCityLiveNote | This city has no sealed replay. Live provide || 这个城市没有封存回放。系统已选择实时数据源模式，避免把别的城市的演示数据写进行程。
+    nav.groupSystem | SYSTEM || 系统
+    trial.liveNote | For cities without a sealed replay, use live || 没有封存回放的城市应使用实时数据源。若数据源不可用，系统会明确告诉你，而不是编造这座城市
