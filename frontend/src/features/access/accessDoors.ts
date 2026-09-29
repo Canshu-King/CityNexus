@@ -152,6 +152,19 @@ export function readShareGrants(journeyId: string): Promise<ShareGrant[]> {
   return request<ShareGrant[]>(`/journeys/${encodeURIComponent(journeyId)}/share-grants`);
 }
 
+/** One ACL row as the server answers it: the role, the capabilities it grants, and the dictionary
+ *  key for the sentence that says what the role may do. The key is the server's, so the words stay
+ *  in the dictionary that owns them. */
+export type RoleRule = {
+  role: string;
+  capabilities: string[];
+  scope_message_key: string;
+};
+
+export function readRoleRules(journeyId: string): Promise<RoleRule[]> {
+  return request<RoleRule[]>(`/journeys/${encodeURIComponent(journeyId)}/acl/roles`);
+}
+
 export function readMembers(journeyId: string): Promise<JourneyMemberRow[]> {
   return request<JourneyMemberRow[]>(`/journeys/${encodeURIComponent(journeyId)}/members`);
 }

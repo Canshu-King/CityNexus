@@ -184,3 +184,14 @@
 .cn-access-muted {
   margin: 6px 0;
 }
+
+/* ORD-0462 (Amendment F): 44px is the touch target, 30px is what a desktop pointer needs. The
+   reading runs at 390x844, so the 44px rule is the one that arm measures; the desktop rule below it
+   is the one a keyboard traveller gets. */
+@media (min-width: 768px) {
+  .cn-access-row-action,
+  .cn-access-field select,
+  .cn-access-field input {
+    min-height: 30px;
+  }
+}

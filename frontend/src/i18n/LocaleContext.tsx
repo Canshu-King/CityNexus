@@ -27,6 +27,9 @@ const en: Dict = {
      (app/V8Experience.tsx:1672). */
   "nav.trash": "Recycle bin",
   "nav.access": "Members and access",
+  "member.scope.owner": "Can read this trip, change it, manage members, edit places, and manage share links.",
+  "member.scope.admin": "Can read this trip, manage members and edit places.",
+  "member.scope.collaborator": "Can read this trip and edit places.",
   // Drawer group headings; the en values are the words already on screen, so the English arm cannot move.
   "nav.groupToday": "TODAY",
   "nav.groupPlan": "PLAN",
@@ -974,6 +977,9 @@ const zhCN: Dict = {
   "nav.trips": "行程",
   "nav.trash": "回收站",
   "nav.access": "成员与权限",
+  "member.scope.owner": "能读这条行程、改它、管成员、编辑地点，也能管共享链接。",
+  "member.scope.admin": "能读这条行程、管成员、编辑地点。",
+  "member.scope.collaborator": "能读这条行程、编辑地点。",
   "nav.groupToday": "今日",
   "nav.groupPlan": "规划",
   "nav.groupTravel": "出行",
