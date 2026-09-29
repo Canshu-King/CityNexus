@@ -4,10 +4,10 @@ WHAT WAS RUN
   command : CITYNEXUS_ORD0386_MATCH=qoder-ord0464 python run_e2e_0386_r1.py e2e
   runner  : D:/moodle/_qoder_q_ord0369_wk\run_e2e_0386_r1.py (refuses unless both lane listeners are up)
   lane    : review/ord0464-abort-reason/lane_r1.py -- started both legs and proved them before any browser ran
-  tree    : D:/moodle/_qoder_q_ord0464  branch review/Q-ord0464-abort-reason  HEAD 73425a41c1d629f4d0ddf167ed9501e4fceab165
+  tree    : D:/moodle/_qoder_q_ord0464  branch review/Q-ord0464-abort-reason  HEAD e778d53f1a88e76df4b3280603d93f1d37bc3cd6
   base    : 45513fc7957214dc385b4dffea9a662a0d8b1d1c (the authoritative line the commander's 13:55 block read)
   spec    : frontend/e2e/qoder-ord0464-abort-reason.spec.ts  19406 bytes  git blob cf924f8b764f52996e95e932e35504a6b8ff23fa  335 lines
-  shape   : git diff --shortstat 45513fc7957214dc385b4dffea9a662a0d8b1d1c 73425a41c1d629f4d0ddf167ed9501e4fceab165  ->  11 files changed, 1555 insertions(+), 6 deletions(-)
+  shape   : git diff --shortstat 45513fc7957214dc385b4dffea9a662a0d8b1d1c e778d53f1a88e76df4b3280603d93f1d37bc3cd6  ->  21 files changed, 2388 insertions(+), 6 deletions(-)
   export  : D:/moodle/_qoder_q_ord0369_wk\build\frontend (gate.py synced 266 files; the worktree stays source-only)
 
 WHAT ANSWERED
@@ -109,6 +109,15 @@ FIRST RUNS OF THIS GATE WERE RED FOR INSTRUMENT REASONS, AND THOSE READINGS ARE 
   The screen reader (`review/ord0464-abort-reason/screens_r1.mjs`) also mis-read once, and that miss is
   what surfaced a real wording defect: the panel rendered "正在丢进回收站…" while it was *reading*.
   It now has its own `abort.loading` sentence.
+
+BACKEND COLLECTION, BOTH SIDES OF THE COMPARISON (verbatim last lines of
+`python -m pytest tests --collect-only -q -p no:randomly`)
+  this tree:  1419 tests collected, 20 errors in 8.66s
+  sparse copy of the base tip:  1406 tests collected, 20 errors in 8.06s
+  the two error file lists have an empty symmetric difference: 20 files, all `tests/test_v18_hermes_*.py`
+  generated-client control: regenerating `api.ts` from the BASE contract with the installed
+  openapi-typescript 7.13.0 diffed 0 lines against the committed `api.ts` at that same base, so the
+  33 insertions / 3 deletions in the delivered client come only from this order's contract edit.
 
 WHAT THIS DOES NOT COVER
   `playwright.config.ts` was not executed. The arms are discovered by it (same `testDir`, the only
