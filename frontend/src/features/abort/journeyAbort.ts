@@ -43,6 +43,61 @@ export function abortJourney(journeyId: string, answer: AbortAnswer): Promise<vo
   });
 }
 
+/** What the server actually holds as this trip's binning reason, or `null` when it holds none.
+ *
+ *  The screen renders from this rather than from what the traveller just pressed, so "刷新后还在" is
+ *  the same code path as "按下之后": the sentence is read off `GET .../outcomes`, not remembered in
+ *  React state.  Three answers, kept three:
+ *    reason_state DECLARED           -> the codes the traveller ticked, in the traveller's order
+ *    reason_state SKIPPED_BY_TRAVELER -> an answer: they were asked and chose not to say
+ *    reason_state NOT_ASKED          -> this server never got the question, which is not a saying-no
+ *    no reason_state at all (ABSENT)  -> a row written before this order existed: no cause is held
+ *  `ABSENT` is deliberately its own arm rather than a `null`: a legacy row whose payload carries no
+ *  `reason_state` is what a pre-ORD-0464 binning looks like, and the screen must not upgrade it into
+ *  "the traveller declined to answer" (ORD-0355's `NULL` rule again).  It is named, not nullable,
+ *  because this project type-checks with `strict: false` (`frontend/tsconfig.typecheck.json`), where a
+ *  `null` discriminant collapses the union and stops narrowing the other arms.
+ */
+export type AbortRecord =
+  | { state: "DECLARED"; codes: JourneyAbortCode[] }
+  | { state: "SKIPPED_BY_TRAVELER" }
+  | { state: "NOT_ASKED" }
+  | { state: "ABSENT" };
+
+async function readOutcomes(journeyId: string): Promise<AbortRecord | null> {
+  const response = await fetch(`/api/v1/journeys/${encodeURIComponent(journeyId)}/outcomes`, {
+    headers: { Accept: "application/json" },
+  });
+  if (!response.ok) throw await rejectionWithFacts(response);
+  const body = (await response.json()) as { events?: unknown[] };
+  const events = Array.isArray(body.events) ? body.events : [];
+  let latest: AbortRecord | null = null;
+  for (const raw of events) {
+    if (typeof raw !== "object" || raw === null) continue;
+    const event = raw as Record<string, unknown>;
+    if (event.event_type !== "JOURNEY_DELETED") continue;
+    const payload = (typeof event.payload === "object" && event.payload !== null
+      ? event.payload
+      : {}) as Record<string, unknown>;
+    const state = payload.reason_state;
+    if (state === "DECLARED") {
+      const codes = Array.isArray(payload.codes) ? (payload.codes as JourneyAbortCode[]) : [];
+      latest = { state: "DECLARED", codes };
+    } else if (state === "SKIPPED_BY_TRAVELER") {
+      latest = { state: "SKIPPED_BY_TRAVELER" };
+    } else if (state === "NOT_ASKED") {
+      latest = { state: "NOT_ASKED" };
+    } else {
+      latest = { state: "ABSENT" };
+    }
+  }
+  return latest;
+}
+
+export function readAbortRecord(journeyId: string): Promise<AbortRecord | null> {
+  return readOutcomes(journeyId);
+}
+
 /** Which named refusal this device was answered with, or `null` when the answer carried no name.
  *  A 422 from this door puts the name in `error.details.errors[].type`, not in `error.reason_code`,
  *  because it is pydantic's cross-field validator answering (`abort_answer_without_codes` /
