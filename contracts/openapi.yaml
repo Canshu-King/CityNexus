@@ -623,12 +623,23 @@ paths:
         against.
       responses:
         '200':
-          description: The journey this grant lets its holder read
+          description: >-
+            The journey this grant lets its holder read, plus what this grant covers.  A
+            journey-level grant adds `grant_scope: JOURNEY` and no plan; a version-scoped one (ORD-0466)
+            adds `grant_scope: PLAN_VERSION` and `shared_plan`, which is the same PlanVersion shape
+            `/journeys/{journey_id}/plans` answers with - one shape, not a second one that can drift.
           content:
             application/json:
-              schema: {$ref: '#/components/schemas/Journey'}
+              schema:
+                allOf:
+                  - {$ref: '#/components/schemas/Journey'}
+                  - type: object
+                    required: [grant_scope]
+                    properties:
+                      grant_scope: {type: string, enum: [JOURNEY, PLAN_VERSION]}
+                      shared_plan: {$ref: '#/components/schemas/PlanVersion'}
         '409':
-          description: "error.code = CONFLICT with error.reason_code = SHARE_GRANT_REVOKED / SHARE_GRANT_EXPIRED / SHARE_GRANT_NOT_LINK_READABLE / SHARE_GRANT_EXPIRY_UNREADABLE - a grant that exists but no longer allows a read"
+          description: "error.code = CONFLICT with error.reason_code = SHARE_GRANT_REVOKED / SHARE_GRANT_EXPIRED / SHARE_GRANT_NOT_LINK_READABLE / SHARE_GRANT_EXPIRY_UNREADABLE / SHARE_GRANT_VERSION_GONE - a grant that exists but no longer allows a read, or names a version this journey no longer holds"
           content:
             application/json:
               schema: {$ref: '#/components/schemas/ErrorEnvelope'}
@@ -2569,13 +2580,29 @@ components:
         visibility: {$ref: '#/components/schemas/ShareVisibility'}
         created_by: {type: string, minLength: 1, maxLength: 120}
         expires_at: {type: [string, 'null'], format: date-time}
+        # ORD-0466: cut the grant for one plan version instead of for the journey.  Absent or null
+        # means a journey-level grant, which is what every grant this table already holds is.
+        plan_version_id:
+          type: [string, 'null']
+          format: uuid
+          description: >-
+            The one version this grant opens.  Three named answers on this door: an id that cannot be
+            read is 422 SHARE_GRANT_VERSION_ID_UNREADABLE, an id no version carries is 422
+            SHARE_GRANT_VERSION_UNKNOWN, and a version that belongs to another journey is 409
+            SHARE_GRANT_VERSION_NOT_IN_JOURNEY - no token is minted on any of those three paths.
     ShareGrant:
       type: object
-      required: [id, journey_id, visibility, created_by, expires_at, revoked_at, created_at, updated_at, token]
+      required: [id, journey_id, visibility, created_by, expires_at, revoked_at, created_at, updated_at, token, plan_version_id]
       properties:
         id: {type: string, format: uuid}
         journey_id: {type: string, format: uuid}
         visibility: {$ref: '#/components/schemas/ShareVisibility'}
+        plan_version_id:
+          type: [string, 'null']
+          format: uuid
+          description: >-
+            null is the journey-level grant, not an unfinished choice: it is the shape every row
+            written before ORD-0466 already had.
         created_by: {type: string}
         expires_at:
           type: [string, 'null']

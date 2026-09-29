@@ -801,6 +801,9 @@ class ShareGrantCreate(BaseModel):
     # What the creating device says it is.  Not authenticated in this step; see the table comment.
     created_by: str = Field(min_length=1, max_length=120)
     expires_at: str | None = None
+    # ORD-0466: cut the grant for one plan version.  Absent means a journey-level grant, which is
+    # what every grant this table already holds is; it is not an unfinished choice.
+    plan_version_id: str | None = None
 
 
 class ShareGrant(BaseModel):
@@ -812,6 +815,7 @@ class ShareGrant(BaseModel):
     revoked_at: str | None
     created_at: str
     updated_at: str
+    plan_version_id: str | None = None
     # The token is returned only where it can be acted on: list answers carry it so the owner can
     # build or revoke the link, and the create answer carries it once, at creation.
     token: str

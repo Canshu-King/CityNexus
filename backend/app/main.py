@@ -3221,6 +3221,7 @@ def _share_grant_payload(grant: JourneyShareGrant) -> ShareGrant:
         revoked_at=grant.revoked_at,
         created_at=grant.created_at,
         updated_at=grant.updated_at,
+        plan_version_id=grant.plan_version_id,
         token=grant.token,
     )
 
@@ -3269,12 +3270,47 @@ def create_share_grant(
                 "SHARE_GRANT_EXPIRY_IN_PAST",
                 {"field": "expires_at", "expires_at": expires_at},
             )
+    # ORD-0466: a grant may be cut for one plan version.  Three named answers, because "the id is
+    # malformed", "there is no such version" and "that version is somebody else's journey" are three
+    # different things for the caller to say back to a traveller.
+    plan_version_id: str | None = None
+    if payload.plan_version_id is not None:
+        try:
+            version_uuid = str(UUID(payload.plan_version_id.strip()))
+        except ValueError:
+            raise _share_refusal(
+                422,
+                "The plan version sent cannot be read as an id.",
+                "SHARE_GRANT_VERSION_ID_UNREADABLE",
+                {"field": "plan_version_id"},
+            ) from None
+        plan_row = session.get(PlanVersion, version_uuid)
+        if plan_row is None:
+            raise _share_refusal(
+                422,
+                "No plan version on this server carries that id.",
+                "SHARE_GRANT_VERSION_UNKNOWN",
+                {"field": "plan_version_id", "plan_version_id": version_uuid},
+            )
+        if plan_row.journey_id != str(journey_id):
+            raise _share_refusal(
+                409,
+                "That plan version belongs to a different journey, so this door will not open it.",
+                "SHARE_GRANT_VERSION_NOT_IN_JOURNEY",
+                {
+                    "field": "plan_version_id",
+                    "plan_version_id": version_uuid,
+                    "journey_id": str(journey_id),
+                },
+            )
+        plan_version_id = plan_row.id
     stamp = datetime.now(timezone.utc).isoformat()
     grant = JourneyShareGrant(
         id=str(uuid4()),
         journey_id=str(journey_id),
         token=secrets.token_urlsafe(24),
         visibility=payload.visibility,
+        plan_version_id=plan_version_id,
         created_by=creator,
         expires_at=expires_at,
         revoked_at=None,
@@ -3419,7 +3455,25 @@ def read_shared_journey(
             "SHARE_GRANT_JOURNEY_GONE",
             {"grant_id": grant.id},
         )
-    return journey_schema(journey)
+    body = journey_schema(journey).model_dump(mode="json")
+    # ORD-0466: a grant cut for one version reads that version and nothing else.  The scope is said
+    # in the body rather than left for the caller to infer from which keys happen to be present, and
+    # the plan itself is the same `plan_schema` every other plan door returns -- one shape, not a
+    # second one that can drift away from the owner's own view of the version.
+    if grant.plan_version_id:
+        plan = session.get(PlanVersion, grant.plan_version_id)
+        if plan is None or plan.journey_id != journey.id:
+            raise _share_refusal(
+                409,
+                "The plan version this grant was cut for is no longer readable.",
+                "SHARE_GRANT_VERSION_GONE",
+                {"grant_id": grant.id, "plan_version_id": grant.plan_version_id},
+            )
+        body["grant_scope"] = "PLAN_VERSION"
+        body["shared_plan"] = plan_schema(session, plan)
+    else:
+        body["grant_scope"] = "JOURNEY"
+    return body
 
 
 # ORD-0434 step 2: membership is one set per journey, and what a role may do is a table the server
