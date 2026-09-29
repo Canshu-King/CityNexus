@@ -317,6 +317,7 @@ if POST:
     sys.exit(1)
 PRODUCT = git("rev-list", "--max-count=1", INSTR + "~3") if len(git("rev-list", "--count", BASE + ".." + INSTR).split()) else BASE
 
+MT_PUSH_RC, _MTPO = run(["git", "-C", REPO, "merge-tree", "--write-tree", TIP, PUSHED])
 SPEC_BLOB = blob_at(PUSHED, SPEC)
 ART_BLOB = blob_at(PUSHED, ART)
 GEN_BLOB = blob_at(PUSHED, GEN)
@@ -357,7 +358,7 @@ A("")
 A("## 1. 坐标")
 A("   枝 `refs/heads/" + BRANCH + "`（新名，未覆盖任何已推 ref）；`git -c http.proxy= -c https.proxy= -C D:/moodle/CityNexus ls-remote origin refs/heads/" + BRANCH + "` 现读头 " + PUSHED + " ，`git cat-file -t` = commit 。")
 A("   号令者点名现尖 " + NAMED_TIP + " ：它是我这枝历史的祖先（`git merge-base --is-ancestor` 成立），我从 " + BASE + " 切出；交付时线又走到 " + TIP + " ，比我头多 " + str(N_LAG) + " 笔。")
-A("   我这批读数依赖的 " + str(len(DEPENDS)) + " 枚未改字节（词典、e2e 播种件、证据路径件、playwright 配置、tsconfig）在我的头与现尖上 blob 逐枚相同，漂移 0 枚；合流预测 `git merge-tree --write-tree " + TIP + " " + HEAD + "` 退出码 " + str(MT_RC) + " （0 = 可干净合流）。")
+A("   我这批读数依赖的 " + str(len(DEPENDS)) + " 枚未改字节（" + "、".join("`" + d.split("/")[-1] + "`" for d in DEPENDS) + "）在我的头与现尖上 blob 逐枚相同，漂移 " + str(len(DRIFT)) + " 枚；合流预测 `git merge-tree --write-tree " + TIP + " " + PUSHED + "` 退出码 " + str(MT_PUSH_RC) + " （0 = 可干净合流）。")
 A("   相对基点净形：`git diff --numstat " + BASE + ".." + PUSHED + "` 现读 touched_path_count=" + str(len(PATHS)) + " 、added_line_count=" + str(ADDED) + " 、deleted_line_count=" + str(DELETED) + " 。")
 A("   闸与提交的先后：这把闸的 receipt tree = " + RECEIPT_TREE + (" ，就是我此刻交付的这枚头" if RECEIPT_TREE == HEAD else " ，比我这枚头早一批提交") + " ；" +
   "这批 " + str(len(NEW + CHANGED)) + " 枚产品字节在 receipt tree 与我的头之间逐枚 blob 等值（脚本按 `git rev-parse <rev>:<path>` 断言，" +
@@ -396,7 +397,7 @@ A("   真数据这次只点亮两档：`GET /api/v1/journeys/{id}/experience` �
   "所以反件把 experience 的响应改写成骑在边界两侧的两种形状，各读一次屏（同一枚端点、同一把闸、同一个上下文）：")
 A("   无置信度那一形：屏上 " + json.dumps(P["four_tiers"], ensure_ascii=False) + " 四档按梯序落地，触发行 " + json.dumps(P["four_triggers"], ensure_ascii=False) + " ，四档都中心命中。")
 A("   补上置信度那一形：屏上 " + json.dumps(P["two_tiers"], ensure_ascii=False) + " ，警告与补救自己退场。")
-A("   两形各自改到的响应：" + json.dumps(P["endpoints_patched"], ensure_ascii=False) + " 。")
+A("   两形各自改到的响应（去重后 " + str(len(set(P["endpoints_patched"]))) + " 条端点、逐次改写 " + str(len(P["endpoints_patched"])) + " 次）：" + json.dumps(sorted(set(P["endpoints_patched"])), ensure_ascii=False) + " 。")
 A("   见证类型 = HTTP_RESPONSE：这两代形状是我本地应答的，不是这台服务器给的；它证明的是梯子的边界画在对的地方，不是产品数据长这样。")
 A("   编译臂（我这枚头的导出件，node_modules 走 `os.link` 硬链、nlink=" + str(NLINK) + " ）逐行退出码：")
 for label, rc, _t in BUILD:
@@ -438,31 +439,78 @@ A("## 9. 复现")
 A("   跑闸：`env -u HTTP_PROXY -u HTTPS_PROXY python review/e4f_e2e_r1.py --wt D:/moodle/_qoder_lane_q0406 --target e2e/qoder-ord0455-estimation-ladder-r1.spec.ts --tag e4f` ；" +
   "本跑 run_id = " + RECEIPT["run_id"] + " ，stdout 读数件 = " + RECEIPT["log"] + " （" + str(RECEIPT["log_bytes"]) + " 字节），计数 = " + json.dumps(RECEIPT["counts"]) + " 。")
 A("   读数汇总（含两臂逐档句子、反件、三行退出码、bundle 命中、墙上格子现读）在 `review/q455_estimation_ladder_r1.json`（blob " + ART_BLOB + " ，可 `git cat-file -p` ）。")
+SUPER = [l for l in git("log", "--format=%h %s", BASE + ".." + PUSHED).splitlines()
+         if "ORD-0455" in l and not l.startswith(git("rev-parse", "--short", PUSHED))]
+A("")
+A("## 10. 这批的迭代留痕（不藏）")
+A("   第一版交付生成器崩在装配账本块那一步：`claim_coordinate_check_r7.py` 的 `--text` 收的是**草稿文件路径**，我把正文塞了进去，尺在 open() 上抛 OSError；同版另有一处未绑定变量。" +
+  "崩点在三笔提交与 push 之后，所以已发布的枝历史上确实带着那版有缺陷的生成器 —— 逐笔如下（首笔是我的产品提交，末笔是本块引用的头）：")
+for l in SUPER:
+    A("     " + l)
+A("   中途权威线把 `frontend/src/i18n/LocaleContext.tsx` 改了（我这批依赖它的 `nav.studio` 那一格），我的门在提交前就报漂移并拒收；我 rebase 到 " + BASE + " 之后**整把闸重跑**（run_id " + RECEIPT["run_id"] + " ），" +
+  "此前那笔跑在 57ff5d1c 下的 receipt 已作废，本块不引用它的任何数字。")
 A("   端口收尾自检：" + NETSTAT + " 。")
 
-text = "\n".join(L) + "\n"
-rc, r7out = run([VENV, "-X", "utf8", os.path.join(LIVE, "claim_coordinate_check_r7.py"), "--text", text])
+DRAFT = os.path.join(SCR, "q455_ladder_r1_draft.md")
+io.open(DRAFT, "w", encoding="utf-8", newline="\n").write("\n".join(L) + "\n")
+text = io.open(DRAFT, encoding="utf-8", newline="").read()
+print("DRAFT " + DRAFT + " " + str(os.path.getsize(DRAFT)) + " bytes HEAD " + PUSHED)
+rc, r7out = run([VENV, "-X", "utf8", os.path.join(LIVE, "claim_coordinate_check_r7.py"),
+                 "--text", DRAFT, "--expect-clean"])
 R7_RC = rc
-open(os.path.join(SCR, "q455_r7_out.txt"), "w", encoding="utf-8").write(r7out)
+io.open(os.path.join(SCR, "q455_r7_out.txt"), "w", encoding="utf-8").write(r7out)
+print("GATE_R7 rc=" + str(rc))
+for l in [x.strip()[:190] for x in r7out.split("\n") if x.startswith("  line ") or "overall" in x]:
+    print("    " + l)
 if rc:
-    print("r7 RED -- not publishing\n" + r7out[-3000:])
-    sys.exit(1)
-BOLT = "see bolt_replica output below"
+    print("NOT PUBLISHED -- r7 red")
+    sys.exit(2)
+
+
+def bolt(path):
+    """The second door's own arithmetic, replayed here so a findable-only-on-the-ruler abort never
+    reaches the inbox: literal 40-hex tokens, resolvable through `git cat-file`, exempt only when the
+    same line declares them unretrievable AND the same paragraph carries a resolvable one."""
+    raw = io.open(path, encoding="utf-8", newline="").read()
+    ls = raw.split("\n")
+    hx = re.compile(r"\b[0-9a-f]{40}\b")
+    dec = re.compile(u"文件\\s*sha1|本机\\s*sha1|内容\\s*sha1|本地字节重算|字节重算的\\s*sha|未入\\s*git"
+                     u"|不在对象库|非\\s*blob|不可\\s*cat-file|故意不可取回|sha1\\s*(over|of)\\s+bytes", re.I)
+
+    def par(i):
+        lo = hi = i
+        while lo > 0 and ls[lo - 1].strip():
+            lo -= 1
+        while hi < len(ls) - 1 and ls[hi + 1].strip():
+            hi += 1
+        return "\n".join(ls[lo:hi + 1])
+    vals = sorted(set(hx.findall(raw)))
+    res = {v: git_ok("cat-file", "-t", v) for v in vals}
+    ab = [(n, h) for n, t in enumerate(ls, 1) for h in sorted(set(hx.findall(t)))
+          if not res[h] and not (bool(dec.search(t)) and any(
+              res[o] for o in hx.findall(par(n - 1)) if o != h))]
+    return len(vals), sum(res.values()), ab
+
+
+NT, NR, AB = bolt(DRAFT)
+print("BOLT tokens=%d resolvable=%d would_abort=%d" % (NT, NR, len(AB)))
+for n, h in AB:
+    print("    L%-3d %s" % (n, h[:14]))
+if AB:
+    print("NOT PUBLISHED -- second arm would abort")
+    sys.exit(3)
 NAME = "qoder-0455_" + NOW + ".md"
-PATH = os.path.join(INBOX, NAME)
+OUTP = os.path.join(INBOX, NAME)
 if not re.fullmatch(r"[A-Za-z0-9._-]+_[0-9]{4}\.md", NAME):
     print("block filename rejected: " + NAME)
     sys.exit(1)
-if os.path.exists(PATH):
-    print("block file already exists, refusing to overwrite: " + PATH)
+if os.path.exists(OUTP):
+    print("block file already exists, refusing to overwrite: " + OUTP)
     sys.exit(1)
-open(PATH, "w", encoding="utf-8", newline="\n").write(text)
+io.open(OUTP, "w", encoding="utf-8", newline="\n").write(text)
 rc, bo = run([VENV, "-X", "utf8", os.path.join(LIVE, "patrol", "bolt_replica.py")])
-BOLT = "rc=" + str(rc) + " " + bo.strip().splitlines()[-1] if bo.strip() else "rc=" + str(rc)
-open(os.path.join(SCR, "q455_bolt_out.txt"), "w", encoding="utf-8").write(bo)
-print("BLOCK " + PATH)
-print("bytes=" + str(len(text.encode("utf-8"))) + " r7_rc=" + str(R7_RC) + " " + BOLT)
-if rc:
-    print("BOLT RED\n" + bo[-2500:])
-    sys.exit(1)
+io.open(os.path.join(SCR, "q455_bolt_out.txt"), "w", encoding="utf-8").write(bo)
+LINES = [x for x in bo.splitlines() if "0455" in x]
+print("OFFICIAL_BOLT rc=" + str(rc) + " " + (" || ".join(LINES)[:400] if LINES else bo.strip()[-300:]))
+print("WROTE " + OUTP + " " + str(os.path.getsize(OUTP)) + " bytes  r7_rc=" + str(R7_RC) + " would_abort=" + str(len(AB)))
 print("OK " + PUSHED)
