@@ -42,6 +42,16 @@ def blob(rel: str) -> str:
     return cat40(git("rev-parse", f"HEAD:{rel}"))
 
 
+def remote_head(branch: str) -> str:
+    """Local refs drift while batch landing is running, so a delivered ref is read from origin."""
+    ref = f"refs/heads/{branch}"
+    for line in git("-c", "http.proxy=", "-c", "https.proxy=", "ls-remote", "origin", ref).splitlines():
+        parts = line.split()
+        if len(parts) == 2 and parts[1] == ref:
+            return cat40(parts[0])
+    raise AssertionError(f"{ref} is not on origin")
+
+
 def load(rel: str) -> dict:
     return json.loads(io.open(ROOT / rel, encoding="utf-8").read())
 
@@ -63,11 +73,9 @@ def main() -> int:
     tip = cat40(git("rev-parse", LINE_TIP))
     prev = cat40(git("rev-parse", "703e00d10dd9132e27343c63f7641a1b5fa02673"))
     remote_ref = "refs/heads/review/N3-ord0457-named-failure-exits-r3"
-    pushed = cat40([l.split()[0] for l in git("-c", "http.proxy=", "-c", "https.proxy=",
-                                              "ls-remote", "origin", remote_ref).splitlines()
-                    if l.split()[-1] == remote_ref][0])
-    r1 = cat40(git("rev-parse", "review/N3-ord0457-named-failure-exits-r1"))
-    r2 = cat40(git("rev-parse", "review/N3-ord0457-named-failure-exits-r2"))
+    pushed = remote_head("review/N3-ord0457-named-failure-exits-r3")
+    r1 = remote_head("review/N3-ord0457-named-failure-exits-r1")
+    r2 = remote_head("review/N3-ord0457-named-failure-exits-r2")
     tip_v8 = cat40(git("rev-parse", f"{tip}:frontend/src/app/V8Experience.tsx"))
     tip_cls = cat40(git("rev-parse", f"{tip}:frontend/src/lib/failureAttribution.ts"))
     my_v8 = blob("frontend/src/app/V8Experience.tsx")
@@ -78,13 +86,16 @@ def main() -> int:
         tag = arm["name"].split()[0]
         reds = ", ".join(r.split()[1] for r in arm["red_checks"])
         arm_lines.append(
-            f"  - {tag}（证据目录 `{Path(arm['walk_out']).name}`）：walk_summary={arm['walk_summary']}，"
+            f"- {tag}（证据目录 `{Path(arm['walk_out']).name}`）：walk_summary={arm['walk_summary']}，"
             f"红在 {reds}；applied={arm['applied']} restored_byte_identical={arm['restored_byte_identical']}")
 
     between = git("diff", "--name-only", f"{prev}..{tip}", "--", "frontend/src").splitlines()
     mine = {"frontend/src/app/V8Experience.tsx", "frontend/src/lib/failureAttribution.ts"}
     touched = [f for f in between if f not in mine]
     overlap = [f for f in between if f in mine]
+
+    arms_r1_at_r2 = cat40(git("rev-parse", f"{r2}:review/ord0457/named_exit_arms_r1.py"))
+    arms_r1_at_head = blob("review/ord0457/named_exit_arms_r1.py")
 
     block = f"""### ORD-0457 复跑勘误：枝先 rebase 到线尖 {tip}，屏读、反件、exposure、编译臂全部在新尖重做（r3）
 
@@ -114,7 +125,7 @@ def main() -> int:
 {chr(10).join(arm_lines)}
 
 - 汇总 all_arms_applied={arms['all_arms_applied']}、all_restored={arms['all_restored']}、clean_rebuild_after_restoring={arms['clean_rebuild_after_restoring']}、every_file_back_at_starting_bytes={arms['every_file_back_at_starting_bytes']}；件 `{E}named_exit_arms_r3.json` blob {blob(E + "named_exit_arms_r3.json")}。
-- r1 那把尺 `review/ord0457/named_exit_arms_r1.py` 字节未动（blob {blob("review/ord0457/named_exit_arms_r1.py")}）；本轮跑的是新文件名的 `review/ord0457/named_exit_arms_r2.py` blob {blob("review/ord0457/named_exit_arms_r2.py")}，差别只有每臂一个证据目录、并记下所在线尖。发本块的脚本是 `review/ord0457/make_block_r3.py`。
+- r1 那把尺 `review/ord0457/named_exit_arms_r1.py` 字节未动：在 r2 件尖上 blob {arms_r1_at_r2}，在本件尖上 blob {arms_r1_at_head}，equal={arms_r1_at_r2 == arms_r1_at_head}；本轮跑的是新文件名的 `review/ord0457/named_exit_arms_r2.py` blob {blob("review/ord0457/named_exit_arms_r2.py")}，差别只有每臂一个证据目录、并记下所在线尖。发本块的脚本是 `review/ord0457/make_block_r3.py`。
 
 ## 5. Q64 exposure 与编译臂
 
