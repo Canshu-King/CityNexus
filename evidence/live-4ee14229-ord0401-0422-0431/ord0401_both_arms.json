@@ -1,0 +1,229 @@
+{
+ "journey": "cdc43216-f708-45db-aaac-5368ad478414",
+ "traveler": "2b8cc2b3-7998-4177-9393-25185c697961",
+ "ui": "http://127.0.0.1:4314",
+ "arms": [
+  {
+   "locale": "zh-CN",
+   "before": {
+    "path": "/v8/hub",
+    "scrollTop": 0,
+    "scrollMax": 971,
+    "viewport": {
+     "w": 390,
+     "h": 844
+    },
+    "empty_present": true,
+    "empty_box": {
+     "top": 825,
+     "bottom": 869,
+     "left": 32,
+     "w": 326,
+     "h": 44
+    },
+    "action_present": true,
+    "action_label": "去看这一代方案",
+    "action_box": {
+     "top": 825,
+     "bottom": 869,
+     "left": 186,
+     "w": 112,
+     "h": 44
+    },
+    "action_centre": {
+     "x": 242,
+     "y": 847
+    },
+    "hit_owner": null,
+    "hit_is_action": false,
+    "fixed_on_screen": [
+     {
+      "tag": "ASIDE",
+      "cls": "cn-copilot-dock collapsed idle-compact",
+      "top": 706,
+      "bottom": 760
+     },
+     {
+      "tag": "NAV",
+      "cls": "v8-mobile-nav",
+      "top": 768,
+      "bottom": 844
+     },
+     {
+      "tag": "DIV",
+      "cls": "cn-sim-float",
+      "top": 634,
+      "bottom": 694
+     }
+    ],
+    "hint_leaves": [],
+    "scrollable_ancestors": []
+   },
+   "after_one_scroll": {
+    "path": "/v8/hub",
+    "scrollTop": 760,
+    "scrollMax": 971,
+    "viewport": {
+     "w": 390,
+     "h": 844
+    },
+    "empty_present": true,
+    "empty_box": {
+     "top": 65,
+     "bottom": 109,
+     "left": 32,
+     "w": 326,
+     "h": 44
+    },
+    "action_present": true,
+    "action_label": "去看这一代方案",
+    "action_box": {
+     "top": 65,
+     "bottom": 109,
+     "left": 186,
+     "w": 112,
+     "h": 44
+    },
+    "action_centre": {
+     "x": 242,
+     "y": 87
+    },
+    "hit_owner": "BUTTON.v8-quiet-button",
+    "hit_is_action": true,
+    "fixed_on_screen": [
+     {
+      "tag": "ASIDE",
+      "cls": "cn-copilot-dock collapsed idle-compact y",
+      "top": 414,
+      "bottom": 458
+     },
+     {
+      "tag": "NAV",
+      "cls": "v8-mobile-nav",
+      "top": 768,
+      "bottom": 844
+     },
+     {
+      "tag": "DIV",
+      "cls": "cn-sim-float",
+      "top": 342,
+      "bottom": 402
+     }
+    ],
+    "hint_leaves": [],
+    "scrollable_ancestors": []
+   }
+  },
+  {
+   "locale": "en",
+   "before": {
+    "path": "/v8/hub",
+    "scrollTop": 0,
+    "scrollMax": 1142,
+    "viewport": {
+     "w": 390,
+     "h": 844
+    },
+    "empty_present": true,
+    "empty_box": {
+     "top": 895,
+     "bottom": 970,
+     "left": 32,
+     "w": 326,
+     "h": 75
+    },
+    "action_present": true,
+    "action_label": "Review this plan generation",
+    "action_box": {
+     "top": 926,
+     "bottom": 970,
+     "left": 32,
+     "w": 194,
+     "h": 44
+    },
+    "action_centre": {
+     "x": 129,
+     "y": 948
+    },
+    "hit_owner": null,
+    "hit_is_action": false,
+    "fixed_on_screen": [
+     {
+      "tag": "ASIDE",
+      "cls": "cn-copilot-dock collapsed idle-compact",
+      "top": 706,
+      "bottom": 760
+     },
+     {
+      "tag": "NAV",
+      "cls": "v8-mobile-nav",
+      "top": 768,
+      "bottom": 844
+     },
+     {
+      "tag": "DIV",
+      "cls": "cn-sim-float",
+      "top": 634,
+      "bottom": 694
+     }
+    ],
+    "hint_leaves": [],
+    "scrollable_ancestors": []
+   },
+   "after_one_scroll": {
+    "path": "/v8/hub",
+    "scrollTop": 760,
+    "scrollMax": 1142,
+    "viewport": {
+     "w": 390,
+     "h": 844
+    },
+    "empty_present": true,
+    "empty_box": {
+     "top": 135,
+     "bottom": 210,
+     "left": 32,
+     "w": 326,
+     "h": 75
+    },
+    "action_present": true,
+    "action_label": "Review this plan generation",
+    "action_box": {
+     "top": 166,
+     "bottom": 210,
+     "left": 32,
+     "w": 194,
+     "h": 44
+    },
+    "action_centre": {
+     "x": 129,
+     "y": 188
+    },
+    "hit_owner": "BUTTON.v8-quiet-button",
+    "hit_is_action": true,
+    "fixed_on_screen": [
+     {
+      "tag": "ASIDE",
+      "cls": "cn-copilot-dock collapsed idle-compact y",
+      "top": 564,
+      "bottom": 608
+     },
+     {
+      "tag": "NAV",
+      "cls": "v8-mobile-nav",
+      "top": 768,
+      "bottom": 844
+     },
+     {
+      "tag": "DIV",
+      "cls": "cn-sim-float",
+      "top": 492,
+      "bottom": 552
+     }
+    ],
+    "hint_leaves": [],
+    "scrollable_ancestors": []
+   }
+  }
+ ]
+}
