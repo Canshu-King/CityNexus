@@ -13,7 +13,7 @@
 - live routing mode binding commit: `b24975b0`
 - cross-projection mode binding commit: `570c7eff`
 - actual-mode count UI commit: `bb8ca6f5`
-- final product/evidence commit before this receipt update: `e25f47d0` (`revolution lab: capture live mobility mode receipt`)
+- final product/evidence commit before this receipt update: `4dd565d9` (`revolution lab: capture live mode product receipt`)
 - clean before product calls: yes (`git status --porcelain` empty)
 - authority/mainline merge: none
 
@@ -209,7 +209,11 @@ user-visible summary on one fact rather than claiming unsupported alternatives.
 lodging alternatives; it is not projected as “zero plans”. The selected plan remains
 visible and authoritative in the experience projection.
 
-### User-visible real-trip readback
+### User-visible real-trip readback (before live mode binding)
+
+This block is the earlier readback, before the provider's explicit Valhalla
+costing was carried through to the PlanVersion projections. It is retained as
+the before/after evidence rather than being presented as the current state.
 
 The clean Playwright page at `/v8/live` showed:
 
@@ -231,6 +235,35 @@ https://uri.amap.com/marker?position=120.6247266,31.3264725&name=拙政园&coord
 The previous UI emitted `mode=walk` even though the selected provider fact had no
 mode. That behavior is removed. A provider mode is used only when it exists; otherwise
 the UI opens the exact destination marker and says `打开目的地 →`.
+
+### User-visible real-trip readback (after live mode binding)
+
+The same Journey was rerun after the live Valhalla costing was bound to the
+provider evidence and selected PlanVersion. The current clean Playwright page
+at `/v8/live` showed:
+
+```text
+1 个方案 · 1 种模式
+当前：网师园
+下一步 · 拙政园 · 步行 · 42 min
+1 段路程 · 供应商支持的路线 · WGS84
+预计到达 · 步行
+风险：低 · 路线证据有效
+``` 
+
+The current navigation link is now derived from the captured WALK fact:
+
+```text
+https://uri.amap.com/navigation?to=120.6247266,31.3264725,%E6%8B%99%E6%94%BF%E5%9C%92&mode=walk&coordinate=wgs84&callnative=1
+```
+
+The map and evidence drawer were also reread from this same selected PlanVersion:
+
+```text
+1 段路程 · 供应商支持的路线 · WGS84
+步行 · 约42分钟 · 费用未知
+选中方案冻结路线证据 · valhalla-http · LIVE_PROVIDER_CAPTURE
+```
 
 ### Unsupported mode control readback
 
@@ -257,15 +290,15 @@ option; it does not infer or invent a route mode. `TRANSIT` is no longer present
 an active mode for this plan.
 
 The shell count was corrected in the same bounded follow-up. It now reads the actual
-option `leg_modes` and selected plan `legs[*].mode` fields. The clean page consequently
-shows:
+option `leg_modes` and selected plan `legs[*].mode` fields. When no provider mode is
+present it remains pending; with the current WALK evidence the clean page shows:
 
 ```text
-1 个方案 · 出行方式待补充
+1 个方案 · 1 种模式
 ```
 
-instead of `1 个方案 · 5 种模式`. The supported-mode count is retained only when a
-real option or plan leg supplies a mode.
+instead of the fixed `1 个方案 · 5 种模式`. The supported-mode count is retained only
+when a real option or plan leg supplies a mode.
 
 The execution status card had a separate wording defect: it labeled the saved offline
 copy as `离线`, even on the same page that had just read the live API and displayed
@@ -370,6 +403,7 @@ Captured artifacts:
 - `frontend/output/playwright/r77-suzhou-live-frozen-evidence-clean.png`
 - `frontend/output/playwright/r77-suzhou-map-frozen-evidence-clean.png`
 - `frontend/output/playwright/r77-suzhou-hub-truth-clean.png`
+- `frontend/output/playwright/r77-suzhou-live-mode-clean.png`
 
 The final frontend gates after this repair were:
 
