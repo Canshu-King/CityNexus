@@ -18,7 +18,81 @@ from app.fact_acquisition import (
     _acquire_overpass_payload,
     acquire_place_facts,
 )
-from app.services import _catalogue_templates, _mobility_catalogue_place_ids
+from app.services import (
+    SEALED_DEMO_AUTHORITY_ENVELOPE,
+    UNRESOLVED_ACTIVITY_FACTS,
+    _catalogue_templates,
+    _mobility_catalogue_place_ids,
+    plan_authority_blocker,
+)
+
+
+def test_live_replan_candidate_with_unknown_place_facts_cannot_cross_authority_boundary():
+    place = Place(
+        id="real-place-unknown-facts",
+        provider_key="overpass",
+        external_id="overpass:node/123456",
+        city_code="CN-TEST",
+        name="Live unknown place",
+        category="attraction",
+        latitude=31.0,
+        longitude=120.0,
+        opening_hours_json=json.dumps({"status": "UNKNOWN"}),
+        tags_json="[]",
+        metadata_json=json.dumps(
+            {
+                "cost_evidence": {"status": "UNKNOWN", "amount_minor": None},
+                "cost_minor": 0,
+                "price_known": False,
+            }
+        ),
+        updated_at="2026-09-30T00:00:00+00:00",
+    )
+    plan = SimpleNamespace(
+        id="candidate-with-unknown-facts",
+        explanation_json=json.dumps({"reason": "replan candidate"}),
+        mobility_evidence_json=json.dumps({"snapshot_id": "live-snapshot", "facts": []}),
+    )
+
+    assert (
+        plan_authority_blocker(
+            plan,
+            {place.id: place},
+            used_place_ids=[place.id],
+        )
+        == UNRESOLVED_ACTIVITY_FACTS
+    )
+
+
+def test_explicit_sealed_demo_envelope_keeps_its_existing_authority_contract():
+    place = Place(
+        id="demo-place-sealed-envelope",
+        provider_key="mock-city",
+        external_id="demo:fixture/1",
+        city_code="CNX-DEMO",
+        name="Sealed demo place",
+        category="attraction",
+        latitude=31.0,
+        longitude=120.0,
+        opening_hours_json=json.dumps({"status": "UNKNOWN"}),
+        tags_json="[]",
+        metadata_json=json.dumps(
+            {
+                "cost_evidence": {"status": "UNKNOWN", "amount_minor": None},
+                "cost_minor": 0,
+                "price_known": False,
+                "authority_envelope": SEALED_DEMO_AUTHORITY_ENVELOPE,
+            }
+        ),
+        updated_at="2026-09-30T00:00:00+00:00",
+    )
+    plan = SimpleNamespace(
+        id="sealed-demo-plan",
+        explanation_json=json.dumps({"reason": "explicit sealed demo fixture"}),
+        mobility_evidence_json=json.dumps({"snapshot_id": "demo-snapshot", "facts": []}),
+    )
+
+    assert plan_authority_blocker(plan, {place.id: place}, used_place_ids=[place.id]) is None
 
 
 class _Response:

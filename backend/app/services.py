@@ -553,6 +553,9 @@ def _plan_staleness(item: PlanVersion) -> tuple[bool, str | None]:
 # compatibility storage value, but it is never evidence that an attraction is
 # free.  A place is cost-complete only when the evidence object says so.
 KNOWN_COST_EVIDENCE_STATUSES = frozenset({"KNOWN", "VERIFIED_PROVIDER"})
+KNOWN_OPENING_EVIDENCE_STATUSES = frozenset(
+    {"NORMALIZED_VALID", "OFFICIAL_WEB_VERIFIED", "VERIFIED_PROVIDER", "CLOSED"}
+)
 
 SYNTHETIC_LIVE_SELECTION_BLOCKED = "SYNTHETIC_MOBILITY_NOT_AUTHORITATIVE_FOR_LIVE_CONTENT"
 UNRESOLVED_ACTIVITY_FACTS = "UNRESOLVED_ACTIVITY_FACTS"
@@ -592,6 +595,26 @@ def _place_verified_cost(place: Place) -> int | None:
             return int(legacy_cost)
         return None
     return int(amount)
+
+
+def _place_has_unresolved_visit_facts(place: Place) -> bool:
+    """Return whether a used provider Place still lacks opening or cost truth.
+
+    Compatibility ``cost_minor=0`` is intentionally ignored here.  A live
+    provider Place may enter a provisional/catalogue path with UNKNOWN facts,
+    but those facts cannot cross the selection authority boundary.
+    """
+
+    opening = json.loads(place.opening_hours_json or "{}") if place.opening_hours_json else {}
+    opening_status = str(opening.get("status") or "UNKNOWN").upper()
+    if opening_status not in KNOWN_OPENING_EVIDENCE_STATUSES:
+        return True
+    metadata = _place_metadata(place)
+    evidence = metadata.get("cost_evidence")
+    if not isinstance(evidence, Mapping):
+        return True
+    cost_status = str(evidence.get("status") or "UNKNOWN").upper()
+    return cost_status not in KNOWN_COST_EVIDENCE_STATUSES or evidence.get("amount_minor") is None
 
 
 def _catalogue_visit_eligible(place: Place) -> bool:
@@ -635,11 +658,33 @@ def plan_authority_blocker(
     if explanation.get("authority_state") == "PROVISIONAL_UNRESOLVED_FACTS":
         return UNRESOLVED_ACTIVITY_FACTS
 
+    # Replan candidates can be materialised by a different composition path
+    # and therefore may not carry the provisional explanation marker.  The
+    # used Place rows are still the authoritative content boundary: live or
+    # provider-backed UNKNOWN opening/cost facts remain non-selectable.  An
+    # explicit sealed demo/replay envelope is the only exception, so fixtures
+    # and captured replay tests keep their existing contract.
+    used = [str(value) for value in (used_place_ids or ()) if value]
+    used_content_places = [
+        places_by_id[place_id]
+        for place_id in dict.fromkeys(used)
+        if place_id in places_by_id
+        and places_by_id[place_id].provider_key != ANCHOR_PROVIDER_KEY
+    ]
+    sealed = bool(used_content_places) and all(
+        str(_place_metadata(place).get("authority_envelope") or "").upper()
+        in SEALED_AUTHORITY_ENVELOPES
+        for place in used_content_places
+    )
+    if used_content_places and not sealed and any(
+        _place_has_unresolved_visit_facts(place) for place in used_content_places
+    ):
+        return UNRESOLVED_ACTIVITY_FACTS
+
     evidence = json.loads(item.mobility_evidence_json or "{}")
     if not isinstance(evidence, Mapping):
         return None
     facts = [fact for fact in evidence.get("facts", []) if isinstance(fact, Mapping)]
-    used = [str(value) for value in (used_place_ids or ()) if value]
     used_edges = set(zip(used, used[1:]))
     used_facts = [
         fact for fact in facts
