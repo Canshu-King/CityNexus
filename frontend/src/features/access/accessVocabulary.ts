@@ -21,19 +21,28 @@ export const ROLE_COLLABORATOR = "COLLABORATOR" as const;
 
 /** The ladder, in the order a traveller reads it (widest first). Each entry carries the key of the
  *  one sentence that says what the role can do -- the shape's "角色档位到一句作用域". */
-export const ROLE_LADDER: readonly {
-  role: typeof ROLE_OWNER | typeof ROLE_ADMIN | typeof ROLE_COLLABORATOR;
-  labelKey: AccessCopyKey;
-  scopeKey: AccessCopyKey;
-}[] = [
-  { role: ROLE_OWNER, labelKey: "access.roleOwner", scopeKey: "access.roleOwnerScope" },
-  { role: ROLE_ADMIN, labelKey: "access.roleAdmin", scopeKey: "access.roleAdminScope" },
-  {
-    role: ROLE_COLLABORATOR,
-    labelKey: "access.roleCollaborator",
-    scopeKey: "access.roleCollaboratorScope",
-  },
+/** Only the role's *name* is this screen's word. What a role may do is no longer written here at
+ *  all: the server's ACL row carries `scope_message_key`, and the sentence lives in the shared
+ *  dictionary under exactly that key. Two homes for one utterance is what this replaces. */
+export const ROLE_LADDER: readonly { role: string; labelKey: AccessCopyKey }[] = [
+  { role: ROLE_OWNER, labelKey: "access.roleOwner" },
+  { role: ROLE_ADMIN, labelKey: "access.roleAdmin" },
+  { role: ROLE_COLLABORATOR, labelKey: "access.roleCollaborator" },
 ];
+
+/** The scope keys this product's seeded ACL table is allowed to name (`backend/app/db/session.py`).
+ *  Anything else the door sends is reported as unreadable rather than looked up blindly. */
+export const SCOPE_KEYS = ["member.scope.owner", "member.scope.admin", "member.scope.collaborator"] as const;
+
+export function isScopeKey(value: unknown): value is string {
+  return typeof value === "string" && (SCOPE_KEYS as readonly string[]).includes(value);
+}
+
+/** The label this screen uses for a role name the door sent. */
+export function roleLabelKey(role: string | null | undefined): AccessCopyKey | null {
+  const entry = ROLE_LADDER.find((row) => row.role === role);
+  return entry ? entry.labelKey : null;
+}
 
 /** Standing, highest first. `null` is "this server named no role", which is lower-bounded at zero
  *  so a missing field can never make a change look self-harming. */
@@ -216,4 +225,28 @@ export function memberActionKey(action: string | null | undefined): AccessCopyKe
 
 export function actionNamesAMember(action: string | null | undefined): boolean {
   return !!action && ACTION_NAMES_A_MEMBER.includes(action);
+}
+
+/**
+ * The named refusals this screen can actually be answered with, read off `error.reason_code` in the
+ * body -- the standing rule is that a refusal is identified by that field, not by the status code
+ * and not by the shape of `details`. Codes with no entry here fall through to the "the server
+ * refused and this screen cannot name it" line with the code quoted.
+ */
+export const REFUSAL_SENTENCES: Record<string, AccessCopyKey> = {
+  MEMBER_ALREADY_WITHDRAWN: "access.refuseMemberAlreadyWithdrawn",
+  MEMBER_UNKNOWN: "access.refuseMemberUnknown",
+  SHARE_GRANT_ALREADY_REVOKED: "access.refuseGrantAlreadyRevoked",
+  SHARE_GRANT_CREATOR_EMPTY: "access.refuseExpiryUnreadable",
+  SHARE_GRANT_EXPIRY_IN_PAST: "access.refuseExpiryInPast",
+  SHARE_GRANT_EXPIRY_NO_OFFSET: "access.refuseExpiryNoOffset",
+  SHARE_GRANT_EXPIRY_UNREADABLE: "access.refuseExpiryUnreadable",
+  SHARE_GRANT_JOURNEY_GONE: "access.refuseJourneyGone",
+  SHARE_GRANT_NOT_A_MEMBER: "access.refuseNotLinkReadable",
+  SHARE_GRANT_NOT_LINK_READABLE: "access.refuseNotLinkReadable",
+  SHARE_GRANT_UNKNOWN: "access.refuseGrantUnknown",
+};
+
+export function refusalSentenceKey(code: string | null): AccessCopyKey | null {
+  return code === null ? null : REFUSAL_SENTENCES[code] ?? null;
 }

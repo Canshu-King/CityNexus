@@ -36,8 +36,23 @@ WORK = pathlib.Path("D:/moodle/_qoder_ord0436_build")
 DIST = WORK / "frontend" / "dist"
 OUT = REPO / "review" / "ord0436-access"
 PY = r"D:/moodle/CityNexus/.venv/Scripts/python.exe"
-BACKEND_PORT = 4731
-FRONTEND_PORT = 4802
+def free_port() -> int:
+    """Ask the operating system for a port nobody is holding.
+
+    Hard-coded ports were wrong twice over on the run that produced this: another lane's
+    `uvicorn --port 4802` was already listening, so this lane's `vite preview --strictPort` exited
+    without binding, and the reading then spent twenty seconds waiting for a panel from a backend
+    that serves no HTML at all. A free port plus the identity proof below is the pair that works.
+    """
+    import socket
+
+    with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as sock:
+        sock.bind(("127.0.0.1", 0))
+        return int(sock.getsockname()[1])
+
+
+BACKEND_PORT = free_port()
+FRONTEND_PORT = free_port()
 DB = pathlib.Path("D:/moodle/_qoder_ord0436_stack/cnx.db")
 FORBIDDEN_STORES = ("_preview.db", "_live.db")
 
@@ -117,6 +132,7 @@ def seed(_unused: str = "") -> dict[str, object]:
     base = f"http://127.0.0.1:{BACKEND_PORT}/api/v1"
     now = datetime.now(timezone.utc).isoformat()
     journey_ids: list[str] = []
+    member_ids: list[str | None] = []
     door_status: dict[str, int] = {}
     with httpx.Client(base_url=base, trust_env=False, timeout=30) as client:
         traveler = client.post(
@@ -130,6 +146,12 @@ def seed(_unused: str = "") -> dict[str, object]:
         )
         if traveler.status_code >= 400:
             raise SystemExit(f"the traveller door answered {traveler.status_code}: {traveler.text[:200]}")
+        colleague = client.post(
+            "/travelers",
+            json={"display_name": "被请进来的人", "email": None, "locale": "zh-CN", "timezone": "Asia/Shanghai"},
+        )
+        if colleague.status_code >= 400:
+            raise SystemExit(f"the second traveller door answered {colleague.status_code}")
         for index in range(2):
             created = client.post(
                 "/journeys",
@@ -149,6 +171,18 @@ def seed(_unused: str = "") -> dict[str, object]:
             journey_ids.append(journey_id)
             door_status[f"delete_{index}"] = client.delete(f"/journeys/{journey_id}").status_code
             door_status[f"undelete_{index}"] = client.post(f"/journeys/{journey_id}/undelete").status_code
+            # A member row, added through the product's own door rather than by hand, so the member
+            # card on screen has something real to render and something real to withdraw.
+            member = client.post(
+                f"/journeys/{journey_id}/members",
+                json={
+                    "traveler_id": colleague.json()["id"],
+                    "role": "COLLABORATOR",
+                    "invited_by": traveler.json()["id"],
+                },
+            )
+            door_status[f"member_add_{index}"] = member.status_code
+            member_ids.append(member.json()["id"] if member.status_code == 201 else None)
     # The two fixture rows go in through the product's own audit writer, in this process, against
     # this lane's database: `audit_logs.trace_id` is NOT NULL and the writer owns that value, so
     # hand-written SQL would have been testing my guess at the schema rather than the screen.
@@ -199,6 +233,7 @@ def seed(_unused: str = "") -> dict[str, object]:
     return {
         "journey_id": journey_ids[0],
         "journey_ids": journey_ids,
+        "member_ids": member_ids,
         "delete_door_status": door_status,
         "actions_in_this_lane_database": feeds[journey_ids[0]],
         "fixture_rows_written_by": "app.core.audit.record_audit (the product's own writer)",
@@ -212,6 +247,19 @@ def seed(_unused: str = "") -> dict[str, object]:
 def main() -> None:
     if not (DIST / "index.html").is_file():
         raise SystemExit(f"no production bundle at {DIST}; run vite build before this reading")
+    # A reading taken against a bundle older than the sources it is supposed to prove is worse than
+    # no reading: it says "29 of 29 pass" about code that is not on the line. Refuse instead.
+    bundle_mtime = max(p.stat().st_mtime for p in DIST.rglob("*") if p.is_file())
+    stale = [
+        p.relative_to(REPO).as_posix()
+        for p in list((REPO / "frontend/src/features/access").rglob("*"))
+        + [REPO / "frontend/src/i18n/LocaleContext.tsx", REPO / "frontend/src/app/v8PanelRegistry.tsx"]
+        if p.is_file() and p.stat().st_mtime > bundle_mtime
+    ]
+    if stale:
+        raise SystemExit(
+            "BUNDLE IS OLDER THAN THESE SOURCES -- rebuild before reading: " + ", ".join(sorted(stale)[:6])
+        )
     OUT.mkdir(parents=True, exist_ok=True)
     DB.parent.mkdir(parents=True, exist_ok=True)
     if DB.exists():
@@ -253,6 +301,9 @@ def main() -> None:
         assert report["backend_identity"]["command_names_this_app_and_port"], report["backend_identity"]
         assert not report["backend_identity"]["shared_stores_named_by_this_run"]
 
+        import httpx
+
+        httpx_client = httpx.Client(base_url=f"http://127.0.0.1:{FRONTEND_PORT}", trust_env=False, timeout=30)
         seeded = seed("")
         report["seed"] = seeded
 
@@ -267,6 +318,26 @@ def main() -> None:
             stderr=subprocess.STDOUT,
         )
         assert wait_for_port(FRONTEND_PORT, 90.0), "vite preview never took its port"
+        front_pid = listener_pid(FRONTEND_PORT)
+        front_info = process_info(front_pid) if front_pid else {}
+        front_command = str(front_info.get("CommandLine", ""))
+        report["frontend_identity"] = {
+            "listener_pid": front_pid,
+            "listener_is_spawned_or_its_child": front_pid == frontend.pid
+            or front_info.get("ParentProcessId") == frontend.pid,
+            "listener_command": front_command[:200],
+            "command_names_preview_and_this_port": "preview" in front_command and f"--port {FRONTEND_PORT}" in front_command,
+        }
+        assert report["frontend_identity"]["listener_is_spawned_or_its_child"], report["frontend_identity"]
+        assert report["frontend_identity"]["command_names_preview_and_this_port"], report["frontend_identity"]
+        # The bytes it serves have to be the bytes this lane built: a different tree's preview on a
+        # recycled port would otherwise be reported as this screen.
+        entry = sorted((DIST / "assets").glob("index-*.js"))
+        served = httpx_client.get("/" + str(entry[-1].relative_to(DIST)).replace("\\", "/"))
+        report["frontend_identity"]["served_entry"] = entry[-1].name
+        report["frontend_identity"]["served_matches_disk_bytes"] = served.content == entry[-1].read_bytes()
+        report["frontend_identity"]["served_bytes"] = len(served.content)
+        assert report["frontend_identity"]["served_matches_disk_bytes"], report["frontend_identity"]
         # Node resolves a bare package name from the importing file's own directory upward, so the
         # reader has to sit next to the tree that has `node_modules`; running it out of the repo's
         # `live_checks/` gave `Cannot find package 'playwright'` with nothing else wrong.
@@ -347,6 +418,10 @@ def main() -> None:
             print(f"{check['verdict']:5s} {check['name']} :: {str(check['detail'])[:150]}")
         print("all_pass:", (report.get("reading") or {}).get("all_pass"), "| readout:", OUT / "TWO_ARMS_R1.json")
     finally:
+        try:
+            httpx_client.close()
+        except Exception:
+            pass
         for process in (frontend, backend):
             if process is None:
                 continue

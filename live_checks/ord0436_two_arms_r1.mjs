@@ -15,6 +15,18 @@ import { chromium } from "playwright";
 // The ladder's domain is read from the artifacts the server publishes, not from a remembered
 // list: `contracts/openapi.yaml` and the generated client, through `ord0436_contract_domain.mjs`.
 import { contractDomain } from "./ord0436_contract_domain.mjs";
+import { readFileSync } from "node:fs";
+
+/** The shared dictionary's sentences for the scope keys the ACL door names. Read from the file
+* the server's key indexes, so a screen that rendered a lane-local copy of the words would fail.
+ */
+function dictionaryScopes() {
+  const body = readFileSync(`${REPO}/frontend/src/i18n/LocaleContext.tsx`, "utf8");
+  const arms = { en: body.slice(body.indexOf("const en: Dict"), body.indexOf("const zhCN: Dict")), zh: body.slice(body.indexOf("const zhCN: Dict")) };
+  const grab = (block) => Object.fromEntries([...block.matchAll(/^  \"member\.scope\.(\w+)\": \"([^\"]+)\",$/gm)].map((m) => [m[1], m[2]]));
+  return { en: grab(arms.en), zh: grab(arms.zh) };
+}
+
 
 const BASE = process.env.CNX_BASE || "http://127.0.0.1:4802";
 // Each arm reads its own trip. The invitation one arm issues is a server-side fact, and letting
@@ -54,11 +66,11 @@ async function arm(browser, locale) {
     title: squeeze(await page.locator('[data-testid="access-panel"] .v8-kicker').first().innerText()),
     pickerPresent: (await page.locator('[data-testid="access-journey-picker"]').count()) > 0,
     doorState: squeeze(await page.locator('[data-testid="access-door-state"]').first().innerText()),
-    roleRows: await page.locator('[data-testid="access-role-ladder"] li').count(),
-    roleText: (await page.locator('[data-testid="access-role-ladder"] li').allInnerTexts()).map(squeeze),
-    roleAttributes: await page
-      .locator('[data-testid="access-role-ladder"] li')
-      .evaluateAll((rows) => rows.map((row) => row.getAttribute("data-role"))),
+    // Captured after the trip is chosen: the ladder is the ACL door's answer, and at first paint
+     // there is no answer yet.
+    roleRows: 0,
+    roleText: [],
+    roleAttributes: [],
     visibilityRows: (await page.locator('[data-testid="access-visibility-ladder"] li').allInnerTexts()).map(squeeze),
     visibilityAttributes: await page
       .locator('[data-testid="access-visibility-ladder"] li')
@@ -99,6 +111,9 @@ async function arm(browser, locale) {
     },
     rosterLine: null,
     activityCaveat: null,
+    member: { rows: 0, scopeSaid: null, statesBefore: null, afterWithdraw: null, afterReload: null },
+    disabledReasons: {},
+    roleScopes: [],
   };
 
   if (read.pickerPresent && JOURNEY) {
@@ -199,6 +214,95 @@ async function arm(browser, locale) {
         .first()
         .innerText(),
     );
+    // ---- ORD-0462: the member card, the sentence beside it, and what survives a reload ---------
+    // A refusal the traveller can really bring about: an expiry in the past. The named code is
+    // `SHARE_GRANT_EXPIRY_IN_PAST`; the screen must answer with the sentence for that code, not with
+    // a status number, and it must not have issued anything.
+    await page.fill('[data-testid="access-invite-expiry"]', "2020-01-01T08:00");
+    await page.click('[data-testid="access-invite-submit"]');
+    await page
+      .locator('[data-testid="access-write-refused"]')
+      .first()
+      .waitFor({ state: "visible", timeout: 20000 });
+    read.walk.pastRefusal = squeeze(
+      await page.locator('[data-testid="access-write-refused"]').first().innerText(),
+    );
+    read.walk.grantRowsAfterRefusal = await page.locator('[data-testid="access-grant-row"]').count();
+
+    read.member = { rows: 0, scopeSaid: null, statesBefore: null, afterWithdraw: null, afterReload: null };
+    read.member.rows = await page.locator('[data-testid="access-member-row"]').count();
+    read.member.scopeSaid = squeeze(
+      await page.locator('[data-testid="access-member-row"] .cn-access-row-what').first().innerText(),
+    );
+    read.member.statesBefore = await page
+      .locator('[data-testid="access-member-row"]')
+      .first()
+      .getAttribute("data-state");
+    read.disabledReasons = {
+      roleChange: squeeze(
+        await page.locator('[data-testid="access-member-role-change"]').first().innerText(),
+      ),
+      selfExit: squeeze(
+        await page.locator('[data-testid="access-member-self-exit"]').first().innerText(),
+      ),
+      roleChangeDisabledAttr: await page
+        .locator('[data-testid="access-member-role-change"]')
+        .first()
+        .getAttribute("disabled"),
+      selfExitDisabledAttr: await page
+        .locator('[data-testid="access-member-self-exit"]')
+        .first()
+        .getAttribute("disabled"),
+      reasonsOnScreen: squeeze(
+        await page.locator('[data-testid="access-disabled-reasons"]').first().innerText(),
+      ),
+      // Greyed is part of the claim: a disabled control that looks enabled is a bug the DOM
+      // attribute alone cannot show, so the computed style is what gets read.
+      look: await page
+        .locator('[data-testid="access-member-role-change"]')
+        .first()
+        .evaluate((element) => {
+          const style = getComputedStyle(element);
+          return { opacity: Number(style.opacity), cursor: style.cursor };
+        }),
+    };
+    await page.click('[data-testid="access-member-withdraw"]');
+    await page.click('[data-testid="access-confirm-yes"]');
+    await page
+      .locator('[data-testid="access-member-row"][data-state="MEMBER_WITHDRAWN"]')
+      .first()
+      .waitFor({ state: "visible", timeout: 20000 });
+    read.member.afterWithdraw = squeeze(
+      await page
+        .locator('[data-testid="access-member-row"][data-state="MEMBER_WITHDRAWN"] .cn-access-row-what')
+        .first()
+        .innerText(),
+    );
+    // 刷新后还在: the withdrawn membership has to come back from the server, not from React state.
+    await page.reload({ waitUntil: "networkidle" });
+    await page.locator('[data-testid="access-panel"]').first().waitFor({ state: "visible", timeout: 20000 });
+    await page.selectOption('[data-testid="access-journey-picker"]', JOURNEY);
+    await page
+      .locator('[data-testid="access-member-row"][data-state="MEMBER_WITHDRAWN"]')
+      .first()
+      .waitFor({ state: "visible", timeout: 20000 });
+    read.member.afterReload = squeeze(
+      await page
+        .locator('[data-testid="access-member-row"][data-state="MEMBER_WITHDRAWN"] .cn-access-row-what')
+        .first()
+        .innerText(),
+    );
+    read.roleScopes = (
+      await page
+        .locator('[data-testid="access-role-ladder"] [data-testid="access-role-scope"]')
+        .allInnerTexts()
+    ).map(squeeze);
+    read.roleRows = await page.locator('[data-testid="access-role-ladder"] li').count();
+    read.roleText = (await page.locator('[data-testid="access-role-ladder"] li').allInnerTexts()).map(squeeze);
+    read.roleAttributes = await page
+      .locator('[data-testid="access-role-ladder"] li')
+      .evaluateAll((rows) => rows.map((row) => row.getAttribute("data-role")));
+
     read.rosterLine = squeeze(
       await page
         .locator('[data-testid="access-roster-empty"], [data-testid="access-member-row"]')
@@ -296,7 +400,7 @@ add("the trip list came from the server", zh.pickerPresent && en.pickerPresent, 
 add(
   "three roles, each with one scope sentence",
   zh.roleRows === 3 &&
-    zh.roleAttributes.join(",") === "OWNER,ADMIN,COLLABORATOR" &&
+    zh.roleAttributes.slice().sort().join(",") === "ADMIN,COLLABORATOR,OWNER" &&
     zh.roleText.every((line) => line.length > 6),
   `${zh.roleAttributes} :: ${zh.roleText.join(" | ")}`.slice(0, 240),
 );
@@ -428,6 +532,64 @@ add(
     /not written into this trip's activity stream|还没往活动流里写/.test(en.activityCaveat ?? ""),
   JSON.stringify({ roster: zh.rosterLine, caveat: zh.activityCaveat }).slice(0, 260),
 );
+const scopes = dictionaryScopes();
+const scopeOf = (arm) => (arm === "zh-CN" ? scopes.zh : scopes.en);
+add(
+  "the role ladder is the door's three rows, each with the dictionary's own sentence for its key",
+  zh.roleScopes.length === 3 &&
+    en.roleScopes.length === 3 &&
+    Object.keys(scopeOf("zh-CN")).length === 3 &&
+    zh.roleScopes.every((line, i) => Object.values(scopeOf("zh-CN")).some((words) => line.startsWith(words)) && !line.includes("member.scope.")) &&
+    en.roleScopes.every((line, i) => Object.values(scopeOf("en")).some((words) => line.startsWith(words)) && !line.includes("member.scope.")),
+  JSON.stringify({ zh: zh.roleScopes, en: en.roleScopes, dictionary_keys: Object.keys(scopeOf("en")) }).slice(0, 320),
+);
+add(
+  "a member row carries its scope sentence, and removing it is the server's answer, not the screen's",
+  zh.member.rows >= 1 &&
+    /能读这条行程、编辑地点。/.test(zh.member.scopeSaid ?? "") &&
+    /Can read this trip and edit places./.test(en.member.scopeSaid ?? "") &&
+    zh.member.statesBefore === "MEMBER_IN_FORCE" &&
+    en.member.statesBefore === "MEMBER_IN_FORCE" &&
+    /已在 .* 撤回|[Ww]ithdrawn at/.test(zh.member.afterWithdraw ?? "") &&
+    /已在 .* 撤回|[Ww]ithdrawn at/.test(en.member.afterWithdraw ?? ""),
+  JSON.stringify({ zh: zh.member, en: en.member }).slice(0, 320),
+);
+add(
+  "the withdrawal is still there after a reload (it came from the server, not from component state)",
+  /已在 .* 撤回|[Ww]ithdrawn at/.test(zh.member.afterReload ?? "") &&
+    /已在 .* 撤回|[Ww]ithdrawn at/.test(en.member.afterReload ?? "") &&
+    zh.member.afterReload === zh.member.afterWithdraw &&
+    en.member.afterWithdraw.includes("MEMBER") === false,
+  JSON.stringify({ zh: zh.member.afterReload, en: en.member.afterReload }).slice(0, 260),
+);
+add(
+  "the two controls with no door are disabled and say why, in the language of the device",
+  zh.disabledReasons.roleChangeDisabledAttr === "" &&
+    zh.disabledReasons.selfExitDisabledAttr === "" &&
+    zh.disabledReasons.roleChange === "改角色" &&
+    zh.disabledReasons.selfExit === "我自己退出" &&
+    zh.disabledReasons.reasonsOnScreen.length > 12 &&
+    zh.disabledReasons.look.opacity < 1 &&
+    zh.disabledReasons.look.cursor === "not-allowed" &&
+    en.disabledReasons.look.opacity < 1 &&
+    /改角色要等|我自己退出/.test(zh.disabledReasons.reasonsOnScreen) &&
+    /waits for this server|door of its own/.test(en.disabledReasons.reasonsOnScreen),
+  JSON.stringify({ zh: zh.disabledReasons, en: en.disabledReasons }).slice(0, 320),
+);
+
+add(
+  "a refusal the traveller can cause is named by its code's sentence, and issues nothing",
+  /那个到期时刻已经过去了/.test(zh.walk.pastRefusal ?? "") &&
+    /already behind us/.test(en.walk.pastRefusal ?? "") &&
+    zh.walk.grantRowsAfterRefusal === 1 &&
+    en.walk.grantRowsAfterRefusal === 1,
+  JSON.stringify({
+    zh: zh.walk.pastRefusal,
+    en: en.walk.pastRefusal,
+    rows: [zh.walk.grantRowsAfterRefusal, en.walk.grantRowsAfterRefusal],
+  }).slice(0, 300),
+);
+
 add(
   "neither arm threw a page error",
   zh.pageErrors.length === 0 && en.pageErrors.length === 0,
