@@ -120,6 +120,16 @@ def test_v16_recovery_status_inspection_does_not_reopen_the_trigger_event() -> N
     assert classify_copilot_message(message).intent != "DISRUPTION_REPORT"
 
 
+def test_v16_new_replan_request_with_current_disruption_is_not_old_recovery_inspection() -> None:
+    message = (
+        "诊断实验：狮子林现在闭馆了。请检查当前苏州行程，提出一个保持已确认安排不变的替代方案；"
+        "只生成重规划提案，不要接受、预订或修改。"
+    )
+    assert is_status_inspection_reference(message) is False
+    assert disruption_event_type(message) == "CLOSURE"
+    assert classify_copilot_message(message).intent == "DISRUPTION_REPORT"
+
+
 @pytest.mark.skipif(settings.ai_api_key, reason="legacy command would invoke the configured live agent")
 def test_v16_legacy_command_uses_the_same_boundary() -> None:
     journey_id = client.post("/api/v1/demo/reset", headers=demo_reset_headers()).json()["journey_id"]

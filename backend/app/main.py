@@ -11634,6 +11634,18 @@ def _copilot_fallback_or_ai(message: str, context: dict[str, Any]) -> CopilotInt
         if envelope is None:
             return fallback
         decision = apply_semantic_policy(envelope)
+        # A clear, current disruption report is a server boundary fact.  A
+        # model may enrich its meaning, but it must not downgrade the report
+        # into a read-only or unrelated route.  This is deliberately narrow:
+        # hypothetical, historical, negated, and unverified text returns no
+        # deterministic event and remains model-routable.
+        deterministic_event_type = disruption_event_type(message)
+        if deterministic_event_type is not None and (
+            decision.route_intent != "DISRUPTION_REPORT"
+            or decision.event_type != deterministic_event_type
+            or not decision.create_event
+        ):
+            return fallback
         entities = dict(envelope.entities)
         if decision.event_type is not None:
             entities["event_type"] = decision.event_type

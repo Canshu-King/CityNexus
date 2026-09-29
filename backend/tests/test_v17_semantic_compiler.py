@@ -103,7 +103,7 @@ def test_compiler_calls_deepseek_with_the_semantic_schema():
     assert fake.calls[0]["response_schema_name"] == "citynexus_semantic_envelope"
 
 
-def test_valid_deepseek_envelope_wins_over_disagreeing_fallback(monkeypatch):
+def test_valid_deepseek_envelope_wins_when_deterministic_boundary_has_no_event(monkeypatch):
     fake = FakeSemanticClient(
         _envelope(
             intent="VERIFY_FACT",
@@ -116,13 +116,34 @@ def test_valid_deepseek_envelope_wins_over_disagreeing_fallback(monkeypatch):
     )
     monkeypatch.setattr(main_module, "_deepseek_client", lambda: fake)
 
-    result = main_module._copilot_fallback_or_ai("现在堵车了", _context())
+    result = main_module._copilot_fallback_or_ai("我想少走路", _context())
 
     assert result.intent == "VERIFY_FACT"
     assert result.provider_key == "deepseek"
     assert result.degraded is False
     assert result.semantic_envelope["assertion_status"] == "UNVERIFIED"
     assert result.semantic_envelope["effective_time"] == "FUTURE"
+
+
+def test_current_disruption_cannot_be_downgraded_by_model_route(monkeypatch):
+    fake = FakeSemanticClient(
+        _envelope(
+            intent="VERIFY_FACT",
+            assertion_status="UNVERIFIED",
+            effective_time="FUTURE",
+            event_type="CLOSURE",
+            requested_action="VERIFY_EVIDENCE",
+            reasoning_summary="The closure claim is not verified yet.",
+        )
+    )
+    monkeypatch.setattr(main_module, "_deepseek_client", lambda: fake)
+
+    result = main_module._copilot_fallback_or_ai("狮子林现在闭馆了", _context())
+
+    assert result.intent == "DISRUPTION_REPORT"
+    assert result.entities["event_type"] == "CLOSURE"
+    assert result.provider_key == "deterministic"
+    assert result.degraded is True
 
 
 def test_recovery_status_inspection_stays_read_only_before_model_compilation(monkeypatch):

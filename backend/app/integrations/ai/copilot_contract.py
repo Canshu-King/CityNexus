@@ -121,7 +121,11 @@ _STATUS_INSPECTION_MARKERS = (
     "confirm", "review", "report", "verify",
 )
 _RECOVERY_REFERENCE_MARKERS = (
-    "恢复提案", "恢复方案", "重规划提案", "重规划结果", "权威计划", "已处理", "已经处理",
+    # A request to *create* a recovery proposal is not an inspection of an
+    # existing recovery.  Keep only markers that establish a prior result or
+    # an already-authoritative state; the caller may still ask the agent to
+    # inspect the current Journey while reporting a new disruption.
+    "重规划结果", "权威计划", "已处理", "已经处理",
     "处理好", "已成为", "闭馆后的", "关门后的", "after the closure", "recovery proposal",
     "recovery plan", "replan proposal", "authoritative plan", "already handled",
     "already processed", "active plan", "accepted proposal",
