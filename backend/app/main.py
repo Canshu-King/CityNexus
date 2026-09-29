@@ -6999,7 +6999,44 @@ def _twin_snapshot(
                 active_c4.append((start, policy))
     active_c4.sort(key=lambda item: (item[0], str(item[1].get("semantic_key", ""))))
     persisted_mobility = _latest_replan_mobility_snapshot(session, journey.id)
-    mobility_context: dict[str, Any] = {
+    selected_plan = session.get(PlanVersion, active_plan_id) if active_plan_id else None
+    selected_plan_evidence = _json_object(
+        selected_plan.mobility_evidence_json if selected_plan is not None else None
+    )
+    selected_plan_facts = selected_plan_evidence.get("facts")
+    if not isinstance(selected_plan_facts, list):
+        selected_plan_facts = []
+    selected_plan_source = str(selected_plan_evidence.get("source_provider") or "").strip()
+    selected_plan_snapshot_id = str(
+        (selected_plan.mobility_snapshot_id if selected_plan is not None else None)
+        or selected_plan_evidence.get("snapshot_id")
+        or ""
+    ).strip()
+    frozen_plan_mobility: dict[str, Any] | None = None
+    if selected_plan_source and selected_plan_snapshot_id and selected_plan_facts:
+        frozen_plan_mobility = {
+            "provider": selected_plan_source,
+            "source_provider": selected_plan_source,
+            "snapshot_id": selected_plan_snapshot_id,
+            "degraded": bool(selected_plan_evidence.get("degraded", False)),
+            "source": "selected-plan-frozen-evidence",
+            "fact_count": len(selected_plan_facts),
+            "fact_quality": sorted(
+                {
+                    str(item.get("fact_quality"))
+                    for item in selected_plan_facts
+                    if isinstance(item, dict) and item.get("fact_quality")
+                }
+            ),
+            "route_provenance": sorted(
+                {
+                    str(item.get("route_provenance"))
+                    for item in selected_plan_facts
+                    if isinstance(item, dict) and item.get("route_provenance")
+                }
+            ),
+        }
+    mobility_context: dict[str, Any] = frozen_plan_mobility or {
         "provider": "mock-mobility",
         "snapshot_id": None,
         "degraded": False,
