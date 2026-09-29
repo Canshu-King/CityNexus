@@ -1,0 +1,59 @@
+== ORD-0461 r2 readings, every line parsed out of a command result ==
+rebased_onto=0dabe64223036391a6c25561a6b606e1533f3704
+commits_on_branch=2
+diff_against_tip=16 files changed, 1272 insertions(+), 35 deletions(-)
+del_col_total=35
+numstat:
+  244	13	backend/app/main.py
+  9	0	backend/app/schemas.py
+  44	7	backend/tests/test_qoder_ord0434_share_grants.py
+  12	5	backend/tests/test_qoder_ord0460_expiry_in_past.py
+  295	0	backend/tests/test_qoder_ord0461_member_writes.py
+  107	4	contracts/openapi.yaml
+  180	6	frontend/src/generated/api.ts
+  1	0	review/ord0461/collect_r1.txt
+  1	0	review/ord0461/collect_r2.txt
+  12	0	review/ord0461/doors_r3.txt
+  1	0	review/ord0461/parity_r1.txt
+  1	0	review/ord0461/parity_r2.txt
+  143	0	review/ord0461/transcript_r1.py
+  159	0	review/ord0461/transcript_r2.py
+  29	0	review/ord0461/two_way_transcript_r1.txt
+  34	0	review/ord0461/two_way_transcript_r2.txt
+
+== doors (named selection, this generation) ==
+run=57 passed, 2 warnings in 11.41s
+collected_per_file=ord0461_member_writes=9,ord0460_expiry_in_past=7,ord0434_share_grants=17,ord0272_continuation=8,ord0402_recycle_bin=8,contract=4,anywhere_contract_parity=4
+
+== collection ==
+mine=1512 tests collected in 5.07s
+base_tip_collected=see fullsuite comparison note (a full worktree of the commit this branch was cut from)
+
+== contract parity ==
+run=OpenAPI 3.1.0; formal 166; runtime 166; missing 0; extra 0
+generated_api_ts_blob=93718d115552bbd9d31d8d46240e4260512dc387
+
+== frontend gates (each exit code captured by the command that produced it) ==
+tsc_check_rc=0
+tsc_typecheck_rc=0
+vite_rc=0 built in 12.31s
+gate_cwd=npx tsc -p tsconfig.check.json --noEmit / tsconfig.typecheck.json, npx vite build, in D:/moodle/_qoder_rel_ord0461_wt/frontend
+
+== whole backend suite, one run on this delivered tree, two on the commit it was cut from ==
+delivered_base_tip=0dabe64223036391a6c25561a6b606e1533f3704
+delivered_run summary=12 failed, 1484 passed, 15 skipped, 1 xfailed, 4 warnings in 216.27s (0:03:36)
+earlier_generation_run_1 summary=13 failed, 1443 passed, 15 skipped, 1 xfailed, 2 warnings in 504.85s (0:08:24)
+earlier_generation_run_2 summary=12 failed, 1444 passed, 15 skipped, 1 xfailed, 2 warnings in 559.48s (0:09:19)
+base_run_a summary=10 failed, 1438 passed, 15 skipped, 1 xfailed, 2 warnings in 564.51s (0:09:24) (full worktree of the commit, untouched)
+base_run_b summary=10 failed, 1438 passed, 15 skipped, 1 xfailed, 2 warnings in 561.86s (0:09:21) (same tree, second run)
+base_two_runs_identical=True base_red_count=10
+delivered_red=12 delivered_extras_vs_base=2
+all_base_reds_still_present_in_delivered=True
+extras_listed:
+  tests/test_qoder_ord0466_version_share.py::test_v1_journey_level_grant_keeps_its_shape_and_names_its_scope
+  tests/test_sol_guardian_projection.py::test_a_preventive_run_carries_the_fields_the_panel_selects_on
+
+== the two controls run on those extras ==
+control_1 both arms alone on the delivered tree: 1 failed, 1 passed, 2 warnings in 4.69s
+control_2 the ORD-0466 arm alone at the untouched base tip: 1 failed, 2 warnings in 3.37s
+diff_lines_in_this_branch_mentioning_guardian=0
