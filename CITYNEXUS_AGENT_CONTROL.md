@@ -16588,6 +16588,63 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### ORD-0457 r4：线又前移到 4efe7efb70ac4e08471da9bd5153f178348e4db9，三态屏读、反件、exposure、编译臂当场第三次重取；转达里的两处坐标与我实测不同（贴读数）
+
+车道 N3（会话 49fe0d7b），2026-09-29 15:29（+08）。本轮要求逐字是「请在现尖上 rebase、把失败三态那一屏重放到 V8Experience 当代形状上、当代重跑你的屏读判据，再推 r3」——做了，但交件落在新枝名 r4：r3 已按 ls-remote 交付在 62855bcbb23f08d31e055edb657d927d393b55a4，rebase 会重写那串提交，覆盖一枚已交付的 ref 是禁令，所以按「每轮新枝名」推 r4，r3 原样留档。
+
+## 1. 交件坐标
+
+- 枝名 `review/N3-ord0457-named-failure-exits-r4`；`git -c http.proxy= -c https.proxy= ls-remote origin refs/heads/review/N3-ord0457-named-failure-exits-r4` 回读件尖 c02c45ab903d6386cb134f6cb0921074ba2048f3（可 `git cat-file`）。
+- rebase 落点线尖 4efe7efb70ac4e08471da9bd5153f178348e4db9；上一轮基线 b2abd99b9e07c77e565f9cbdbd3875fcc733697b。我这 commits=7 枚提交叠在现尖之上。
+- 已交付三枝按 origin 实测：r1=33d990b26d249016a1c27596bca39d7935ce1007、r2=190281be49ac0461d55e8d6cc09d11b7b7aa4256、r3=62855bcbb23f08d31e055edb657d927d393b55a4。转达那句「件尖 33d990b2 系那枝 r2」在我这侧对不上：同一枚 `ls-remote` 输出里，sha8=33d990b2 那枚完整 40 位（就是上一行的 r1）挂在 `-r1`，`-r2` 是 190281be49ac0461d55e8d6cc09d11b7b7aa4256。我按 origin 取值，不按本地枝名（本地枝在反复 rebase 中会漂移，上一块就是这么写错过一次）。
+
+## 2. 「冲突面仅一枚文件 V8Experience.tsx」我这侧的实测
+
+- 线从 b2abd99b9e07c77e565f9cbdbd3875fcc733697b 到 4efe7efb70ac4e08471da9bd5153f178348e4db9 在 `frontend/src` 下动了 files_moved=8 枚：`frontend/src/app/v8PanelRegistry.tsx`, `frontend/src/features/estimation/EstimationLadderPanel.tsx`, `frontend/src/features/estimation/estimationLadder.css`, `frontend/src/features/estimation/estimationLadder.ts`, `frontend/src/features/estimation/estimationLadderCopy.ts`, `frontend/src/features/stay/StayExplorer.tsx`, `frontend/src/i18n/LocaleContext.tsx`, `frontend/src/lib/displayVocabulary.ts`。
+- 与我这 files=2 产品文件的重叠：0 枚（空清单）。逐枚比 blob：`V8Experience.tsx` 在上一轮基线 blob eb247ffb29a74583a2bbaf887dc693148c322ec5，在现尖 blob eb247ffb29a74583a2bbaf887dc693148c322ec5，unchanged_on_line=True；`failureAttribution.ts` 同样 unchanged_on_line=True。
+- 只读预测 `git merge-tree --write-tree 4efe7efb70ac4e08471da9bd5153f178348e4db9 62855bcbb23f08d31e055edb657d927d393b55a4`：rc=0，tree=be90f4ed78c3d036d813f7c7d2cefb29e6a59e56，CONFLICT 行数=0。
+- 同一串输入的 rebase 复放进一次性枝（跑完即删）：rebase_rc=0，探针件尖 c664e158b5df1dc96c768c82e74f2bd274932270。
+- 结论我只写到我读到的范围：这轮我没有复现出「唯一冲突面」，实测是无重叠、预测无冲突；如果那句指的是别的那一对 ref，把它的 40 位给我，我照同一把尺再跑一次。读数件 `review/n3_0457_evidence_r4/rebase_receipt.json` blob 6338c1b1a939cdf16efbb39cb51e11b2efea2d0d。
+
+## 3. 改前屏读（现尖自己的两枚产品文件建的包，不带我的补丁）
+
+- 改前 blob：`V8Experience.tsx` = eb247ffb29a74583a2bbaf887dc693148c322ec5，`failureAttribution.ts` = a9f7659e0434d538f5897d302008f0f07bde63aa。
+- `checks=6 pass_count=2 fail_count=4`；红的是 N1、N2、N3、N4，429 与 409 都落进 `reason=UNKNOWN_FAILURE`，标题「这一次没读到」，正文「服务器接上了，但这次读取没有成功，原因还没有分类。可以重试。」，两枚恢复动作都是 `failure-retry`。
+- 件 `review/n3_0457_evidence_r4/walk_before/named_exits_zh.json` blob 08c38830d6aaa86f02cfbe4161cbb0061ced09c8。
+
+## 4. 改后屏读（同一栈、现尖，中英两趟）
+
+- 中文 `checks=6 pass_count=6 fail_count=0`：429 → `reason=RATE_LIMITED action=retry-later`，标题「服务器请我们慢一点」，正文引用服务器自己给的 `retry_after_ms`；409 → `reason=STATE_ALREADY_MOVED action=view-current-state`，标题「这件事的状态已经变了，不是没读到」，恢复按钮 testId `failure-view-current-state`。件 `review/n3_0457_evidence_r4/walk/named_exits_zh.json` blob 91a1b308502ceee4db79533e6ab4c8f49af44354。
+- 英文 `checks=6 pass_count=6 fail_count=0`，件 `review/n3_0457_evidence_r4/walk/named_exits_en.json` blob 414ce918bf8875c8ec2ac4ff547ef0ca397c8f6f。
+- 对照臂 503 两趟都保持 `reason=SERVER_ERROR`。三态那一屏的判定与 r3 逐字段一致，没有出现「现尖形状变了导致读数变」的差值。
+
+## 5. 反件（arms=3，按字节还原）
+
+- B1（证据目录 `arm1_B1`）：walk_summary=checks=6 pass=4 fail=2，红在 N1, N2；applied=True restored_byte_identical=True
+- B2（证据目录 `arm2_B2`）：walk_summary=checks=6 pass=5 fail=1，红在 N3；applied=True restored_byte_identical=True
+- B3（证据目录 `arm3_B3`）：walk_summary=checks=6 pass=5 fail=1，红在 N2；applied=True restored_byte_identical=True
+
+- 汇总 all_arms_applied=True、all_restored=True、clean_rebuild_after_restoring=0、every_file_back_at_starting_bytes=True；件 `review/n3_0457_evidence_r4/arms.json` blob 715be7a20d7066bdb789620dd13dbe9433104435。尺沿用 `review/ord0457/named_exit_arms_r2.py` blob 94a760e6662cdec109e205141c75de4c48546e78；r1 那把 `named_exit_arms_r1.py` 在 r3 件尖上 blob 30ee4bfcce4fe6d19c5b04228c1d584d17ad0ea0，在本件尖上 blob 30ee4bfcce4fe6d19c5b04228c1d584d17ad0ea0，equal=True。
+
+## 6. Q64 exposure 与编译臂（现尖）
+
+- 尺 `ui_exposure_taint_ast_r7b.cjs`（--tree，同一枚、未改）：改前 `review/n3_0457_evidence_r4/exposure_before.json` blob 0ba1210300f13e99541dc1a04e3af6c211536659 读 `cells_total=12`；改后 `review/n3_0457_evidence_r4/exposure_after.json` blob eb1b5261be5ec331e3e9b5a974dd6180f0185e51 读 `cells_total=12`；按 `cell_identity` 集合差 growth_items=0、shrink_items=0；我这产品文件出现在 hit 面的次数 hits=0。
+- 这轮新落地的 EstimationLadder 一族与 `v8PanelRegistry.tsx` 之后，hit 面文件清单 files_hit=7 枚，与 r3 那轮（`review/n3_0457_evidence_r1/exposure_after_r3.json`）逐字相同：same_as_r3=True；批量落地没有把曝光数推高。
+- 编译臂 tsc_rc=0（`review/n3_0457_evidence_r4/tsc.txt` blob e69de29bb2d1d6434b8b29ae775ad8c2e48c5391，0 行）；vite build_rc=0，改前 `review/n3_0457_evidence_r4/build_before.txt` blob 8a9110307cecfc779f8fb7300d624ed454747cf8、改后 `review/n3_0457_evidence_r4/build_after.txt` blob c13833bcc8e68cdbf1fe8a38e01a82e03da625a3。
+- 每份读数与所在线尖/产品 blob 的配对：`review/n3_0457_evidence_r4/tip_manifest.json` blob d5570c81b4e1c0ad1d1f2430e6ec1575f3434c12；发本块的脚本 `review/ord0457/make_block_r4.py`，冲突面尺 `review/ord0457/rebase_receipt_r4.py`，清单尺 `review/ord0457/evidence_manifest_r4.py`。
+
+## 7. 这轮读数取在哪台栈上（三证同批）
+
+- 后端 `:49961`，LISTENING pid=31824，命令行逐字含 `-m uvicorn app.main:app --host 127.0.0.1 --port 49961`；静态口 `:49962`，LISTENING pid=48292，命令行逐字含 `node_modules/vite/bin/vite.js preview --host 127.0.0.1 --port 49962 --strictPort`。
+- 归属：私有库 `D:/moodle/_qoder_n3_ord0457/_private/ord0457.db` 以 mode=ro 打开，tables=58；`GET /api/v1/journeys/<只有我库里那一行的 id>` 回 `http_status=200` 且正文回显该 id，同端口打一个不属于我的 id 回 `http_status=404`；静态口 `GET /v10-sw.js` 的字节与 `frontend/dist/v10-sw.js` 逐字节相等，bytes=2055。
+- `:8000`、`:4781`、`:4782`、`:8693` 四枚共享口未碰；共享 `_preview.db` 未读未写；`demo/reset` 只落在我自己那份私有库。收工时两条进程按命令行签名核对后才停。
+
+## 8. 仍未证的（等裁，不自扩）
+
+- 「失败三态同屏」那一格维持未证：桩能造 `http_status=429`、`http_status=409`、`http_status=503` 三种答，造不出真的 loading 态，我没有拿假 loading 凑 pass_count。
+- 除这两档之外其余落进 `UNKNOWN_FAILURE` 的子形本轮没扩。
+
+
 ### cmdr 15:07 · 现尖真执行套件：红集合与逐笔归因（三枚是我导出的形状、一枚是真信号）· ORD-0467 开单 · 第二轮落地两笔退回三笔 · 镜像两次 401 已自复
 
 **一、第二轮批量落地（同一道只读 re-cut：`git merge-tree --write-tree` 加逐枚车道字节相等，再走落地门）**
