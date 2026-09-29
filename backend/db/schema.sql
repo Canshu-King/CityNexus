@@ -1107,3 +1107,37 @@ CREATE TABLE IF NOT EXISTS journey_role_capabilities (
     created_at TEXT NOT NULL,
     PRIMARY KEY (role, capability)
 );
+
+-- ORD-0444: the collection container -- the 「收藏」 exit of the POI capture chain.
+-- Two tables, both new; no existing table or column is touched.  A folder is the named shelf,
+-- an item is one place laid on it.  Nothing here belongs to a plan: adding a place to a folder
+-- writes no activity and no plan version, which is exactly the difference between this door and
+-- the 「加进计划」 one.
+CREATE TABLE IF NOT EXISTS collection_folders (
+    id TEXT PRIMARY KEY,
+    -- The name a traveller reads on the shelf.  Not unique on purpose: two shelves may both be
+    -- called 「周末」, and it is the id that addresses one of them.
+    name TEXT NOT NULL,
+    created_at TEXT NOT NULL,
+    updated_at TEXT NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS collection_items (
+    id TEXT PRIMARY KEY,
+    folder_id TEXT NOT NULL REFERENCES collection_folders(id) ON DELETE CASCADE,
+    -- A reference to `places`, not a copy of its fields: the shelf holds the place, and its name,
+    -- category and coordinates are read from that row when the shelf is answered.  No cascade --
+    -- a place that disappears must not silently take a traveller's note with it.
+    place_id TEXT NOT NULL REFERENCES places(id),
+    -- NULL means no note was ever written, which is a different fact from an empty one.
+    note TEXT,
+    added_at TEXT NOT NULL,
+    -- One shelf holds a place once.  The second add is refused by name at the door
+    -- (`PLACE_ALREADY_IN_COLLECTION`), and this index is what makes that refusal hold across two
+    -- uvicorn workers, where a read-then-write check in one process would not.
+    UNIQUE (folder_id, place_id)
+);
+
+-- The shelf reads its own items in the order they were put on it; this is that scan.
+CREATE INDEX IF NOT EXISTS idx_collection_items_folder_added
+    ON collection_items(folder_id, added_at);
