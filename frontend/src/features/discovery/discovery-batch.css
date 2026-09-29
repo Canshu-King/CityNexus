@@ -34,7 +34,7 @@
 .v8-stay-card[data-picked="false"] { border-color: var(--cn-hairline); }
 .v8-stay-card[data-picked="true"] { border-color: var(--cn-accent); box-shadow: inset 3px 0 0 var(--cn-accent); }
 .v8-pick-box { display: inline-flex; flex: none; width: auto; margin-top: 0; align-items: center; gap: 5px; padding: 4px 7px; border: 1px solid var(--cn-control-border); border-radius: var(--cn-r-pill); color: var(--cn-ink-secondary); background: var(--cn-surface); font-size: 10px; font-weight: 700; cursor: pointer; transition: color var(--cn-t-state) var(--cn-ease-standard), border-color var(--cn-t-state) var(--cn-ease-standard), background var(--cn-t-state) var(--cn-ease-standard); }
-.v8-pick-box > span[aria-hidden] { display: inline-grid; place-items: center; width: 14px; height: 14px; border: 1px solid var(--cn-control-border); border-radius: 4px; color: transparent; font-size: 10px; line-height: 1; }
+.v8-pick-box > span[aria-hidden] { display: inline-grid; place-items: center; width: 14px; height: 14px; border: 1px solid var(--cn-control-border); border-radius: var(--cn-r-4); color: transparent; font-size: 10px; line-height: 1; }
 .v8-pick-box.checked { color: var(--cn-accent-text); border-color: var(--cn-accent); }
 .v8-pick-box.checked > span[aria-hidden] { color: var(--cn-surface); border-color: var(--cn-accent); background: var(--cn-accent); }
 .v8-batch-receipt { display: grid; gap: var(--cn-s-8); padding: var(--cn-s-12); border: 1px solid var(--cn-hairline); border-radius: var(--cn-r-control); background: var(--cn-surface); }

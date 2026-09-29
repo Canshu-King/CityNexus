@@ -111,15 +111,29 @@
   --cn-s-48: 48px;
   --cn-gutter: 20px;
 
-  /* Radii (unified, no coin-flip). control 11 -> 12 and button 13 -> 16 so every radius sits on a tier
-     the reference app actually draws: measured radius tiers by frequency are 32dp x63, 16dp x57,
-     24dp x57, 20dp x49, 12dp x35, 8dp x29 -- 11 and 13 appear nowhere in that set. */
-  --cn-r-control: 12px;
-  --cn-r-button: 16px;
-  --cn-r-card: 16px;
-  --cn-r-hero: 20px;
-  --cn-r-sheet: 24px;
+  /* Radii: one numeric ladder, and the semantic names alias into it. ORD-0459 step 2 moved every
+     component rule onto this table, so a radius that is not one of these values cannot be written
+     without adding a tier first. Snap rule used for the migration: nearest tier, ties to the larger
+     tier -- tightening a corner can clip content, loosening one cannot.
+     Where the tiers come from: not the resource table (its radius bucket holds 6 names and three
+     values, 2dp/10dp/30dp), but the reference app's own painted corners, counted out of its layout
+     dump -- 32dp x63, 16dp x57, 24dp x57, 20dp x49, 12dp x35, 8dp x29 are the six most-used, and 11
+     and 13, which our step-1 rules used to carry, appear nowhere in that set.
+     Source: D:/moodle/_apk_analysis_pi_travel/out/layout_tiers_r1.json, buckets.radius. */
+  --cn-r-0: 0px;
+  --cn-r-4: 4px;
+  --cn-r-8: 8px;
+  --cn-r-12: 12px;
+  --cn-r-16: 16px;
+  --cn-r-20: 20px;
+  --cn-r-24: 24px;
+  --cn-r-circle: 50%;
   --cn-r-pill: 999px;
+  --cn-r-control: var(--cn-r-12);
+  --cn-r-button: var(--cn-r-16);
+  --cn-r-card: var(--cn-r-16);
+  --cn-r-hero: var(--cn-r-20);
+  --cn-r-sheet: var(--cn-r-24);
 
   /* Divider weight. Their measured divider tiers are 1dp x12, 3dp x11, 2dp x9, 4dp x6, 0.5dp x3 --
      the most-used one is the value our rules already drew, so this names it instead of changing it. */
@@ -312,7 +326,7 @@
   gap: var(--cn-s-8);
   padding: 24px;
   border: 1px solid var(--cn-hairline);
-  border-radius: 20px;
+  border-radius: var(--cn-r-20);
   background: var(--cn-surface);
   box-shadow: var(--cn-shadow-card);
   min-height: 0;
