@@ -1,0 +1,268 @@
+{
+ "schema": "CNX_CMDR_LANDING_PREFLIGHT_V1",
+ "lane": "commander 494abfd7",
+ "at_local": "2026-09-29T11:24:25+0800",
+ "mode": "LAND",
+ "authoritative_line": "mirror/integration-frontend-apple-pass1",
+ "tip_re_read_from_github_before": "1a472f0d0bd616735b77184db983d492109bdca3",
+ "candidate_ref": "refs/heads/review/cmdr-recut-ord0430-r1",
+ "candidate_tip": "c6a0ef6fdb5ca830c67720e43b8d59bc508ab0ef",
+ "genealogy": {
+  "ff_possible_rc": 0,
+  "ff_possible": true,
+  "merge_base": "1a472f0d0bd616735b77184db983d492109bdca3",
+  "line_only_commits": 0,
+  "candidate_only_commits": 7
+ },
+ "file_sets": {
+  "line_side_since_base": [],
+  "candidate_side_since_base": [
+   "evidence/ai-ord0430-20260929/build_log_boxaware_arm.json",
+   "evidence/ai-ord0430-20260929/build_log_counter_r3_arm.json",
+   "evidence/ai-ord0430-20260929/census_after_boxaware.json",
+   "evidence/ai-ord0430-20260929/census_counter_no_collapse.json",
+   "evidence/ai-ord0430-20260929/census_previous_generation.json",
+   "evidence/ai-ord0430-20260929/collapse_summary_r1.json",
+   "evidence/ai-ord0430-20260929/ord0430_build_counter_r3.py",
+   "evidence/ai-ord0430-20260929/ord0430_collapse_census_r4.js",
+   "evidence/ai-ord0430-20260929/ord0430_nav_exits_probe_r1.js",
+   "evidence/ai-ord0430-20260929/r2_build_log_rebased_arm.json",
+   "evidence/ai-ord0430-20260929/r2_build_log_tip_arm.json",
+   "evidence/ai-ord0430-20260929/r2_census_rebased_arm.json",
+   "evidence/ai-ord0430-20260929/r2_census_tip_arm.json",
+   "evidence/ai-ord0430-20260929/r2_summary.json",
+   "evidence/ai-ord0430-20260929/r2_yield_rebased_arm.json",
+   "evidence/ai-ord0430-20260929/r2_yield_tip_arm.json",
+   "evidence/ai-ord0430-20260929/r3_nav_exits_before_arm.json",
+   "evidence/ai-ord0430-20260929/r3_read_after.json",
+   "evidence/ai-ord0430-20260929/r3_read_counter.json",
+   "frontend/src/design-tokens.css",
+   "frontend/src/features/agent/CopilotDock.tsx"
+  ],
+  "intersection": [],
+  "product_introduced_by_candidate": [
+   "frontend/src/design-tokens.css",
+   "frontend/src/features/agent/CopilotDock.tsx"
+  ]
+ },
+ "merge_tree": {
+  "exit": 0,
+  "first_line": "e930cc2d6bda8228e09a88066ec297a613cc4829",
+  "conflict_reported": false,
+  "stderr_head": ""
+ },
+ "gate_run": {
+  "requested": [],
+  "collect_exit": null,
+  "collected": null,
+  "test_exit": null,
+  "summary": null,
+  "export": "D:/moodle/_qoder_cmdr_ref_20260921/snap_preflight_112346",
+  "blob_equality": [
+   {
+    "path": "evidence/ai-ord0430-20260929/build_log_boxaware_arm.json",
+    "candidate_blob": "efd9f88e60550dca9d73c401baf2cf19bda17e47",
+    "export_blob": "efd9f88e60550dca9d73c401baf2cf19bda17e47",
+    "equal": true
+   },
+   {
+    "path": "evidence/ai-ord0430-20260929/build_log_counter_r3_arm.json",
+    "candidate_blob": "91552e1cacdd16668f735ac4b9e79655df567e79",
+    "export_blob": "91552e1cacdd16668f735ac4b9e79655df567e79",
+    "equal": true
+   },
+   {
+    "path": "evidence/ai-ord0430-20260929/census_after_boxaware.json",
+    "candidate_blob": "6827575086dae9c3fd8de5c015e87bdda29ffd6a",
+    "export_blob": "6827575086dae9c3fd8de5c015e87bdda29ffd6a",
+    "equal": true
+   },
+   {
+    "path": "evidence/ai-ord0430-20260929/census_counter_no_collapse.json",
+    "candidate_blob": "e6444441fd33c9480e4a7c7b43a96270c9e778bb",
+    "export_blob": "e6444441fd33c9480e4a7c7b43a96270c9e778bb",
+    "equal": true
+   },
+   {
+    "path": "evidence/ai-ord0430-20260929/census_previous_generation.json",
+    "candidate_blob": "fe1ecd8b6591ad6cb0388647323646630bb84ef6",
+    "export_blob": "fe1ecd8b6591ad6cb0388647323646630bb84ef6",
+    "equal": true
+   },
+   {
+    "path": "evidence/ai-ord0430-20260929/collapse_summary_r1.json",
+    "candidate_blob": "a7ad2acfc93defdaa5a5e1bcdc489634695d465d",
+    "export_blob": "a7ad2acfc93defdaa5a5e1bcdc489634695d465d",
+    "equal": true
+   },
+   {
+    "path": "evidence/ai-ord0430-20260929/ord0430_build_counter_r3.py",
+    "candidate_blob": "b3041a462dc80302459a0def6de6b78180b25449",
+    "export_blob": "b3041a462dc80302459a0def6de6b78180b25449",
+    "equal": true
+   },
+   {
+    "path": "evidence/ai-ord0430-20260929/ord0430_collapse_census_r4.js",
+    "candidate_blob": "2a1435c4cea386500b43beb57643483d1d39bf88",
+    "export_blob": "2a1435c4cea386500b43beb57643483d1d39bf88",
+    "equal": true
+   },
+   {
+    "path": "evidence/ai-ord0430-20260929/ord0430_nav_exits_probe_r1.js",
+    "candidate_blob": "5fe033a68106d00ce2750f1ff160a2989d625e14",
+    "export_blob": "5fe033a68106d00ce2750f1ff160a2989d625e14",
+    "equal": true
+   },
+   {
+    "path": "evidence/ai-ord0430-20260929/r2_build_log_rebased_arm.json",
+    "candidate_blob": "4a8426675f6c5512cdb159989e1bd1c33837b465",
+    "export_blob": "4a8426675f6c5512cdb159989e1bd1c33837b465",
+    "equal": true
+   },
+   {
+    "path": "evidence/ai-ord0430-20260929/r2_build_log_tip_arm.json",
+    "candidate_blob": "8167207a42a5f1c497b11ce7b05c9222f2f53edf",
+    "export_blob": "8167207a42a5f1c497b11ce7b05c9222f2f53edf",
+    "equal": true
+   },
+   {
+    "path": "evidence/ai-ord0430-20260929/r2_census_rebased_arm.json",
+    "candidate_blob": "771e5ad29f1346896cefc9baf9ae9c50c53e5b7f",
+    "export_blob": "771e5ad29f1346896cefc9baf9ae9c50c53e5b7f",
+    "equal": true
+   },
+   {
+    "path": "evidence/ai-ord0430-20260929/r2_census_tip_arm.json",
+    "candidate_blob": "7524aa7731f7f3767b01c0c755a0c9dcd48f0650",
+    "export_blob": "7524aa7731f7f3767b01c0c755a0c9dcd48f0650",
+    "equal": true
+   },
+   {
+    "path": "evidence/ai-ord0430-20260929/r2_summary.json",
+    "candidate_blob": "14ba27db247720c880b34137eac398a35dee5c4f",
+    "export_blob": "14ba27db247720c880b34137eac398a35dee5c4f",
+    "equal": true
+   },
+   {
+    "path": "evidence/ai-ord0430-20260929/r2_yield_rebased_arm.json",
+    "candidate_blob": "9d0b3c76b25eaf369cacdb84f4c20e49596d0f3d",
+    "export_blob": "9d0b3c76b25eaf369cacdb84f4c20e49596d0f3d",
+    "equal": true
+   },
+   {
+    "path": "evidence/ai-ord0430-20260929/r2_yield_tip_arm.json",
+    "candidate_blob": "f318b402ddc15beb2fab04838d8d952c87fb259d",
+    "export_blob": "f318b402ddc15beb2fab04838d8d952c87fb259d",
+    "equal": true
+   },
+   {
+    "path": "evidence/ai-ord0430-20260929/r3_nav_exits_before_arm.json",
+    "candidate_blob": "f34301d1a34d854a5c830abfd8d3a46f6cf9ff60",
+    "export_blob": "f34301d1a34d854a5c830abfd8d3a46f6cf9ff60",
+    "equal": true
+   },
+   {
+    "path": "evidence/ai-ord0430-20260929/r3_read_after.json",
+    "candidate_blob": "0d4acd5554ee8cb71a4a0068504005616859a6c8",
+    "export_blob": "0d4acd5554ee8cb71a4a0068504005616859a6c8",
+    "equal": true
+   },
+   {
+    "path": "evidence/ai-ord0430-20260929/r3_read_counter.json",
+    "candidate_blob": "dfcc159c19a1b636840d41b6040b32077f684765",
+    "export_blob": "dfcc159c19a1b636840d41b6040b32077f684765",
+    "equal": true
+   },
+   {
+    "path": "frontend/src/design-tokens.css",
+    "candidate_blob": "790068bfea8dd10a37f0c82a4dc7c67bb8f3f860",
+    "export_blob": "790068bfea8dd10a37f0c82a4dc7c67bb8f3f860",
+    "equal": true
+   },
+   {
+    "path": "frontend/src/features/agent/CopilotDock.tsx",
+    "candidate_blob": "83dc76378bae3dd4cb980bd7fa891dc35ca57b26",
+    "export_blob": "83dc76378bae3dd4cb980bd7fa891dc35ca57b26",
+    "equal": true
+   }
+  ],
+  "whole_suite": {
+   "collect_exit": 0,
+   "collected": 1457,
+   "interrupted": false,
+   "error_lines": [
+    "tests/test_qoder_ord0332_error_receipt.py::test_R7_the_envelope_keeps_every_field_it_already_had",
+    "tests/test_qoder_ord0332_error_receipt.py::test_R8_the_seed_is_read_off_the_real_request_not_just_the_dataclass",
+    "tests/test_solver_runtime_policy.py::test_unexpected_solver_programming_error_is_not_silently_hidden"
+   ],
+   "tail": [
+    "    _PortalFactoryType = Callable[[], AbstractContextManager[anyio.abc.BlockingPortal]]",
+    "-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html",
+    "1457 tests collected in 7.50s"
+   ],
+   "cmd": "D:/moodle/CityNexus/.venv/Scripts/python.exe -m pytest --collect-only -q tests  (cwd=<export>/backend, PYTHONPATH=<export>)"
+  },
+  "deletions": {
+   "deleted_by_candidate": [],
+   "still_present_in_export": []
+  },
+  "interpreter": "Python 3.12.14 (main, Aug 25 2026, 14:01:42) [MSC v.1944 64 bit (AMD64)]",
+  "exposure": {
+   "ruler_blob": "d3f66ce9fecd0790981a4fcdeb5e36b1c0fd10f2",
+   "ruler_blob_computed": null,
+   "ruler_file": "ui_exposure_taint_ast_r7b.cjs",
+   "candidate_files_in_view": 2,
+   "tip_cells": 12,
+   "cand_cells": 12,
+   "growth_by_file_and_rule": {},
+   "unpaired_added": [],
+   "added_line_exact": [],
+   "shifted_only": false,
+   "removed_count": 0,
+   "removed": [],
+   "disclosed_slip": "a same-file, same-rule relocation with equal counts reads as a shift; the AST ruler has no cell identity"
+  },
+  "frontend_build": {
+   "builder_rc": 0,
+   "vite_build_rc": 0,
+   "dist_exists": true,
+   "index_exists": true,
+   "asset_refs": [
+    "/assets/index-DbA8xyvx.js",
+    "/assets/index-D1cth6A1.css"
+   ],
+   "live_tree": "e930cc2d6bda8228e09a88066ec297a613cc4829",
+   "info_file": "D:\\moodle\\_qoder_cmdr_ref_20260921\\live_checks\\_build_c6a0ef6_info.json",
+   "build_tail": [
+    "files generated",
+    "  dist/v10-sw.js",
+    "  dist/workbox-6923124b.js",
+    "\u001b[33m",
+    "(!) Some chunks are larger than 500 kB after minification. Consider:",
+    "- Using dynamic import() to code-split the application",
+    "- Use build.rollupOptions.output.manualChunks to improve chunking: https://rollupjs.org/configuration-options/#output-manualchunks",
+    "- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.\u001b[39m"
+   ]
+  }
+ },
+ "problems": [],
+ "verdict": "READY_TO_LAND",
+ "landing": {
+  "http": 200,
+  "response_head": "{'ref': 'refs/heads/mirror/integration-frontend-apple-pass1', 'node_id': 'REF_kwDOUhlJJ9oAMnJlZnMvaGVhZHMvbWlycm9yL2ludGVncmF0aW9uLWZyb250ZW5kLWFwcGxlLXBhc3Mx', 'url': 'https://api.github.com/repos/Ca",
+  "tip_after": "c6a0ef6fdb5ca830c67720e43b8d59bc508ab0ef",
+  "branches_route": "c6a0ef6fdb5ca830c67720e43b8d59bc508ab0ef",
+  "both_routes_agree": true,
+  "landed": true
+ },
+ "discipline": {
+  "evidence_paths_overwritten": 0,
+  "databases_opened": 0,
+  "surfaces_started_or_stopped": 0,
+  "credential_values_printed": 0,
+  "candidate_refs_pushed_by_commander": 0
+ },
+ "claim_kind": "git_and_pytest_determined",
+ "claimed_result": null,
+ "derived_result": null
+}
