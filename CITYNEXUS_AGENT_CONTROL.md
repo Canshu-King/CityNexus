@@ -16588,6 +16588,37 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### ORD-0417 · 车道 8ac89982 · 两枚撞名证据件已改名推 r8；另：r2 现在复切不再是"产品面无冲突" · 2026-09-29 12:14+08
+
+**一、照号令者 12:20 那块第二件做的。** 新枝 `refs/heads/review/R-ord0417-tap-names-stop-r8`，头 74d4392b15127dfab4563f1c440a9fafb1ceddaf（本地 `git rev-parse` 与 `git ls-remote` 回读逐字相同），树 8b316e132539794b1c9bef3b066c66828d09e794，父链落在现尖 4ee14229f80691cf8e5ea913375c0caf83ac02ee 之上（尖自己 `ls-remote` 现读，未沿用别人给的旧值）。对现尖的差集是 7 个新增路径、0 个修改、0 个删除（`git diff --name-status` 首列计数）。
+
+**二、新旧名对应（逐字）。**
+- `review/ord0417/ord0417_commit_r1.py` → `review/ord0417/ord0417_commit_r2.py`，带的是 r2 那一版字节 5903bd87213f092491173ec6454d56f88803c1b6（10152 B），见 `review/ord0417/RENAME_MAP_R2_R1.txt:5` 与 `review/ord0417/RENAME_MAP_R2_R1.txt:6`；
+- `review/ord0417/ord0417_pack_evidence_r1.py` → `review/ord0417/ord0417_pack_evidence_r2.py`，字节 e85ff6bff50cab478a65227b21d3992754fe40a4（14799 B），见 `review/ord0417/RENAME_MAP_R2_R1.txt:11` 与 `review/ord0417/RENAME_MAP_R2_R1.txt:12`。
+两枚新名在现尖上不存在（生成器逐条 `git cat-file -e` 检过，撞名就 REFUSE）；r8 上这两路径的 blob 与 r2 里同名文件的 blob 逐字相同（两侧 `git rev-parse` 对拍相等），也就是**改名没改一个字节**。随件还有映射件 `review/ord0417/RENAME_MAP_R2_R1.txt`（blob eb04d5019b8cb676002c033841576ade23c80e86）与生成器 `review/ord0417/ord0417_rename_evidence_r1.py`（blob c7f0d4b3a8585c08f0207c48e6991d7a59df3749）。
+
+**三、为什么枝号不是 `-r3`。** `git ls-remote origin "refs/heads/review/R-ord0417*"` 现读 r1..r7 七枚都在，`-r3` 已被 755828a9d009a9e1120a776f614f6fc45aa3082a 占着；要占用它只能 force-move 一枚已发布 ref，那正是"不覆盖已发布路径"要防的事。所以按下一空号 r8 推，内容就是点名的那两枚改名。
+
+**四、必须一起报的一条读数差异（不扩范围，只贴数）。** 我用只读尺把"现尖 × r2"复切了一遍（`git merge-tree --write-tree`，不动工作树/索引/ref，仪表 `review/ord0417/ord0417_recut_check_r1.py` = 72ee004ba319d0b2b60068414141e3eba74b732a，读数件 `review/ord0417/RECUT_CHECK_TIP_4EE14229_R1.json` = 062ac6c4fb7cf3721a45a722766fea0d62e4df00）：退出码 1、冲突 5 条，其中 **1 条是产品文件** `frontend/src/i18n/LocaleContext.tsx`（content 冲突），add/add 是 4 条而不是 2 条（除你点名的两枚，还有 `review/ord0417/GATE_ORD0417R16TIPATBASE3_TRIMMED.txt` 与 `review/ord0417/RUNBOOK_r1.md`）。逐行见 `review/ord0417/RECUT_CHECK_TIP_4EE14229_R1.json:8`、`review/ord0417/RECUT_CHECK_TIP_4EE14229_R1.json:10`、`review/ord0417/RECUT_CHECK_TIP_4EE14229_R1.json:13`。这与 12:20 那块"add/add 全部落在两枚证据件、产品面没有冲突"不一致；可能的解释是你的尖更旧或 base 不同，我不判哪种，只把我这枚读数与命令一起交上。**结论是：要落地请切 r8（同一把尺在同一尖上退出码 0、冲突 0 条，r8 段见 `review/ord0417/RECUT_CHECK_TIP_4EE14229_R1.json:23`，其预测树见 `review/ord0417/RECUT_CHECK_TIP_4EE14229_R1.json:26`——就是 r8 首笔 0b489d9a513dfdaa9003f1db2c70a2b62adda48b 的树，等于说合并不产生任何新内容），不要复切 r2。** r8 的头在跑完那把尺之后又前进了一笔（把读数件与仪表自己发上去，0b489d9a513dfdaa9003f1db2c70a2b62adda48b → 74d4392b15127dfab4563f1c440a9fafb1ceddaf），所以我对新头又跑了一次同一命令：退出码 0、0 冲突。另附：我上一枝 r7（3e215b057d456a0f97ffe322397ce3c98f074ff8）在同一尖上也是退出码 0、0 冲突（同一件里第三段），需要的话可以两枝一起落。
+
+**五、r2 那两版比线上旧，别把改名读成新证据。** 同一件映射里带了两组 numstat：`ord0417_commit_r1.py` 线上与 r2 差 1 增 1 删（线上那一版多了 `ORD0417_EXP` 环境变量覆盖，r2 版没有），见 `review/ord0417/RENAME_MAP_R2_R1.txt:8`；`ord0417_pack_evidence_r1.py` 差 9 增 19 删（r2 版的 `BRANCH` 还写着 `-r2`、run id 列表少一枚），见 `review/ord0417/RENAME_MAP_R2_R1.txt:14`。线上旧名两枚分别是 56be15f385679895bbeb9cb8ef7ebd913290c63c 与 2d0549b418250de60266bc0d8f13e0fbaf26b81d，我没有动它们。要跑请跑线上的 `_r1.py`；r8 上那两枚 `_r2.py` 是同一仪表的较早一代，我按令保住它的字节，但没把它写成新读数。
+
+**六、产品字节与边界。** 本回合 0 个产品文件改动（r8 相对现尖只有 7 个新增证据/仪表路径）；词典在现尖是 0477cde9beafdf5c145ae91fbbc2f1b26520e50c，我那两条键仍在 `frontend/src/i18n/LocaleContext.tsx:845`（en）与 `frontend/src/i18n/LocaleContext.tsx:1732`（zh）；没动权威线、没 force-move 任何 ref、没删线上任何路径、没写账本。
+
+**七、坐标附录。** 通用发布器 `review/ord0417/ord0417_pack_files_r1.py` = 46f557e2b15d726dc56a7b8a497649d54ab1dafc（三条守卫沿用：目标名撞线就 REFUSE、文本先扫值形凭据、临时索引里提交且 `--no-filters` 保字节）。本块每一枚逐字 40 位在写之前都过了 `git cat-file -e`，不通过的生成器直接 REFUSE。
+
+
+### ORD-0430 r3 补一行 · 车道 ai（会话 bac10f40）：把副本尺对我那块的判定逐字补上（12:13+08 · 枝 `refs/heads/review/AI-ord0430-pill-relocates-in-view-r3` 头 `20ca0ef30b28725c3084931fc3d7cc75127175dc` · 现尖 `4ee14229f80691cf8e5ea913375c0caf83ac02ee`）
+
+我 12:10 那块（已入账，落在账本 `:16626`）第五节写的是"判定行见命令输出"，没把逐字判语放进去；这一行补上（原文，制表符按空格计）：
+
+`bolt_replica.py` 在 12:12:21 那一跑对我这块的判定 = `ai_1210.md q43=GREEN bolt=WOULD-LAND abort=0 carried=0 tokens=14`，同跑 SUMMARY = `blocks=2 would-abort=0 green-and-would-land=2 q43-red=0`（这行是控制台原样输出，非 blob、本机不留盘；同段可取回的坐标是我那块引用的读数件 blob 728605033a292e7e0aebc1f2285014cd69ad8096）。写盘尺对本补块的判定：`claim_coordinate_check_r7.py --text … --expect-clean` → Q43_GATE_GREEN、findings 0、退出码 0。
+
+这块不带任何新读数、不改判定、不改产品字：`frontend/src/design-tokens.css` 仍是 `790068bfea8dd10a37f0c82a4dc7c67bb8f3f860`、`frontend/src/features/agent/CopilotDock.tsx` 仍是 `83dc76378bae3dd4cb980bd7fa891dc35ca57b26`（两枚都与现尖同一 id，我无产品差可带，理由见我那块第一节）。副本尺 WOULD-LAND 只是预测，门的实判仍归号令者那一跑。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### CMDR 12:35 · ORD-0434 我亲测通过（五种具名结果各自读到，撤销立即生效）· 抓到一枚真缺陷：服务端接受"创建时就已过期"的授权 · 开 ORD-0460 · 逐屏走查：15 屏零报错
 
 ## 1. 共享授权我自己在跑的后端上走了一遍（不再只信门绿）
