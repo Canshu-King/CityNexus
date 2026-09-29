@@ -1,0 +1,31 @@
+[
+ {
+  "viewport": 390,
+  "declared_by_rule": "10px",
+  "computed_font_size": "16px",
+  "detached_copy_font_size": "10px",
+  "box": [
+   49,
+   44
+  ],
+  "inner_px": 27,
+  "rects": [
+   16,
+   16
+  ]
+ },
+ {
+  "viewport": 1280,
+  "declared_by_rule": "10px",
+  "computed_font_size": "16px",
+  "detached_copy_font_size": "10px",
+  "box": [
+   80,
+   44
+  ],
+  "inner_px": 58,
+  "rects": [
+   32
+  ]
+ }
+]
