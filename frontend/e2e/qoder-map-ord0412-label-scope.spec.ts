@@ -1,8 +1,8 @@
 import { expect, test, type Page } from "@playwright/test";
-import { readFileSync, writeFileSync } from "node:fs";
+import { existsSync, readFileSync, writeFileSync } from "node:fs";
 import { ensureDemoJourney, openScreen } from "./_qoderShellSeed";
 import { evidencePath } from "./_qoderEvidence";
-import { MAP_LABEL_FORBIDDEN, MAP_LABEL_SCOPE, mapLabelViolations } from "../src/lib/mapLabels";
+import { MAP_LABEL_FORBIDDEN, MAP_LABEL_SCOPE, mapLabelViolations } from "./_mapLabelRules";
 import { mapCopy } from "../src/i18n/mapPanelCopy";
 
 /**
@@ -11,7 +11,7 @@ import { mapCopy } from "../src/i18n/mapPanelCopy";
  * `MAP_LABEL_FORBIDDEN`'s `source` class matches `openstreetmap`, `©` and `provider`, which is
  * exactly what the basemap licence obliges the screen to show.  Today the two never touch because
  * the list judges strings painted on the glass while the sentence is DOM text -- but that is a
- * fact about the DOM, not a stated rule, so the first arm reads the rule off `src/lib/mapLabels.ts`
+ * fact about the DOM, not a stated rule, so the first arm reads the rule off `e2e/_mapLabelRules.ts`
  * itself and the on-screen arms prove the two surfaces really are disjoint:
  *
  *   scope-declared  — the module names the judged surface and the exempt one, and says why.
@@ -77,7 +77,7 @@ test("scope-declared — the rule itself says which surface it judges and why", 
     becauseOf: MAP_LABEL_SCOPE.becauseOf,
     forbiddenNames: MAP_LABEL_FORBIDDEN.map((r) => r.name),
     // one list, two consumers: the labels gate must import it rather than keep its own copy
-    ord0403ImportsThisModule: gate.includes('from "../src/lib/mapLabels"'),
+    ord0403ImportsThisModule: gate.includes('from "./_mapLabelRules"'),
   });
   expect(judged, "only canvas-painted label text is in scope").toEqual(["canvas-label-strings"]);
   expect(notJudged, "the DOM attribution surface must be named as exempt").toContain("dom-attribution");
@@ -88,8 +88,10 @@ test("scope-declared — the rule itself says which surface it judges and why", 
   expect(MAP_LABEL_SCOPE.becauseOf).toMatch(/attribution/i);
   expect(MAP_LABEL_FORBIDDEN.map((r) => r.name), "the `source` class is the one that collides")
     .toContain("source");
-  expect(gate.includes('from "../src/lib/mapLabels"'),
+  expect(gate.includes('from "./_mapLabelRules"'),
     "the labels gate must read this list, not keep its own copy").toBe(true);
+  expect(existsSync("src/lib/mapLabels.ts"),
+    "ORD-0415: this rule is not consulted by any product code, so it must not sit in the product tree").toBe(false);
 });
 
 for (const arm of [{ locale: "en", toggle: false }, { locale: "zh", toggle: true }] as const) {

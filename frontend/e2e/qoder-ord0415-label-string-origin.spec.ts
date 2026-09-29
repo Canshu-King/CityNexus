@@ -1,7 +1,7 @@
 /**
  * ORD-0415 — where do the strings painted on the map glass come from?
  *
- * The rule module `src/lib/mapLabels.ts` owns `mapLabelTextField()` and `mapLabelViolations()`, and the
+ * The rule module (now `e2e/_mapLabelRules.ts`; ORD-0415 took it out of `src/lib/` on this branch) owns
  * order asks whether anything on the product path actually consults them. Two arms, both read off the
  * running screen rather than off a grep:
  *
@@ -20,7 +20,7 @@ import { mkdirSync, writeFileSync } from "node:fs";
 import { dirname } from "node:path";
 import { ensureDemoJourney, openScreen } from "./_qoderShellSeed";
 import { evidencePath } from "./_qoderEvidence";
-import { MAP_LABEL_FORBIDDEN, mapLabelViolations } from "../src/lib/mapLabels";
+import { MAP_LABEL_FORBIDDEN, mapLabelViolations } from "./_mapLabelRules";
 
 const HOST = "tile.openstreetmap.org";
 const out: Record<string, unknown> = {};
