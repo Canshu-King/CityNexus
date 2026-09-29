@@ -79,6 +79,18 @@ const CITY_CODE: Record<string, Label> = {
   CNX_DEMO: { zh: "演示城市", en: "Demo city" },
 };
 
+/* ORD-0455: the estimation ladder's 说方法 rung has to name where a figure came from, and the cell
+   it reads is `stay.evidence_json.source`, which `backend/app/stay_mobility.py:435` writes as
+   `provider.provenance`. The three values below are the provenances that module's own provider
+   classes declare (`:111` CAPTURED_REPLAY, `:136` UNAVAILABLE, `:1323` SYNTHETIC_FIXTURE) -- nothing
+   else is listed, so a fourth provenance reaches the screen through the labelled raw channel and
+   reads as a gap in this table rather than as a claim we invented about a provider. */
+const EVIDENCE_SOURCE: Record<string, Label> = {
+  CAPTURED_REPLAY: { zh: "一次采回来的报价回放", en: "a captured replay of a provider quote" },
+  UNAVAILABLE: { zh: "这台服务器说没有可用来源", en: "the server says no source is available" },
+  SYNTHETIC_FIXTURE: { zh: "演示夹具造的数，不是供应商给的", en: "a demo fixture value, not a provider rate" },
+};
+
 const SUMMARY_HELD: Label = {
   zh: "上游那句摘要的原文不在这一屏",
   en: "The upstream summary's own words are not on this screen",
@@ -164,4 +176,10 @@ export function cityCodeLabel(value: unknown, zh?: boolean | string | null): str
 
 export function summaryHeldLabel(zh?: boolean | string | null): string {
   return wantsChinese(zh) ? SUMMARY_HELD.zh : SUMMARY_HELD.en;
+}
+
+/** Words for `stay.evidence_json.source` (ORD-0455). An unlisted provenance keeps its own value,
+ *  labelled as the server's word: a method we cannot name is not a method we may describe. */
+export function evidenceSourceLabel(value: unknown, zh?: boolean | string | null): string {
+  return pick(EVIDENCE_SOURCE, value, zh);
 }
