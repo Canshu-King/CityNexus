@@ -1,0 +1,134 @@
+{
+ "rulers": {
+  "r7b": {
+   "file": "ui_exposure_taint_ast_r7b.cjs",
+   "blob": "d3f66ce9fecd0790981a4fcdeb5e36b1c0fd10f2",
+   "bytes": 129082,
+   "local_bytes_sha1": "829c077b0b2c14d72b59dfa8292f1b280020ab33"
+  },
+  "r7b4": {
+   "file": "ui_exposure_taint_ast_r7b4.cjs",
+   "blob": "cefcb38c8d01a5996f3f705531a127c85f16c0b3",
+   "bytes": 154410,
+   "local_bytes_sha1": "23b07aeb1d3d9918b564250e41bed916f2e317c8"
+  }
+ },
+ "trees": {
+  "before_tip4037": "D:\\moodle\\_qoder_lane_S4_0926\\work\\ord0428\\tip4037\\frontend",
+  "after_ord0428r1": "D:\\moodle\\_qoder_lane_S4_0926\\wt0428\\frontend"
+ },
+ "per_generation": {
+  "r7b": {
+   "before": {
+    "receipt": "exp_before_r7b.json",
+    "cells_total_reported": 6,
+    "hits": 6,
+    "attributed_in_fold": 2,
+    "union": 8,
+    "parse_diagnostics_total": 0
+   },
+   "after": {
+    "receipt": "exp_after_r7b.json",
+    "cells_total_reported": 6,
+    "hits": 6,
+    "attributed_in_fold": 2,
+    "union": 8,
+    "parse_diagnostics_total": 0
+   },
+   "hits_disappeared": [],
+   "hits_appeared": [],
+   "union_disappeared": [
+    "src/app/V8Experience.tsx:2807|UPSTREAM_TEXT_VIA_HELPER_TO_DOM"
+   ],
+   "union_appeared": [
+    "src/app/V8Experience.tsx:2815|UPSTREAM_TEXT_VIA_HELPER_TO_DOM"
+   ],
+   "re_filed_into_fold_not_removed": [],
+   "union_by_file_and_rule_before": {
+    "src/app/V8Experience.tsx|UPSTREAM_TEXT_VIA_HELPER_TO_DOM": 1,
+    "src/components/CnxMeasuredFacts.tsx|UPSTREAM_TEXT_VIA_HELPER_TO_DOM": 1,
+    "src/features/planning/PlanWithAiSheet.tsx|UPSTREAM_PROSE_TO_ATTRIBUTE_SLOT": 1,
+    "src/features/planning/PlanWithAiSheet.tsx|UPSTREAM_TEXT_VIA_HELPER_TO_DOM": 2,
+    "src/features/recovery/RecoveryRequiredPanel.tsx|UPSTREAM_TEXT_VIA_HELPER_TO_DOM": 1,
+    "src/features/simulation/SimulationPanel.tsx|UPSTREAM_TEXT_VIA_HELPER_TO_DOM": 1,
+    "src/features/trip/ActivityDetail.tsx|RAW_BODY_TO_DOM": 1
+   },
+   "union_by_file_and_rule_after": {
+    "src/app/V8Experience.tsx|UPSTREAM_TEXT_VIA_HELPER_TO_DOM": 1,
+    "src/components/CnxMeasuredFacts.tsx|UPSTREAM_TEXT_VIA_HELPER_TO_DOM": 1,
+    "src/features/planning/PlanWithAiSheet.tsx|UPSTREAM_PROSE_TO_ATTRIBUTE_SLOT": 1,
+    "src/features/planning/PlanWithAiSheet.tsx|UPSTREAM_TEXT_VIA_HELPER_TO_DOM": 2,
+    "src/features/recovery/RecoveryRequiredPanel.tsx|UPSTREAM_TEXT_VIA_HELPER_TO_DOM": 1,
+    "src/features/simulation/SimulationPanel.tsx|UPSTREAM_TEXT_VIA_HELPER_TO_DOM": 1,
+    "src/features/trip/ActivityDetail.tsx|RAW_BODY_TO_DOM": 1
+   },
+   "union_by_file_and_rule_equal": true,
+   "verdict": "NO_CHANGE_LINE_SHIFT_ONLY"
+  },
+  "r7b4": {
+   "before": {
+    "receipt": "exp_before_r7b4.json",
+    "cells_total_reported": 5,
+    "hits": 5,
+    "attributed_in_fold": 3,
+    "union": 8,
+    "parse_diagnostics_total": 0
+   },
+   "after": {
+    "receipt": "exp_after_r7b4.json",
+    "cells_total_reported": 5,
+    "hits": 5,
+    "attributed_in_fold": 3,
+    "union": 8,
+    "parse_diagnostics_total": 0
+   },
+   "hits_disappeared": [],
+   "hits_appeared": [],
+   "union_disappeared": [
+    "src/app/V8Experience.tsx:2807|UPSTREAM_TEXT_VIA_HELPER_TO_DOM"
+   ],
+   "union_appeared": [
+    "src/app/V8Experience.tsx:2815|UPSTREAM_TEXT_VIA_HELPER_TO_DOM"
+   ],
+   "re_filed_into_fold_not_removed": [],
+   "union_by_file_and_rule_before": {
+    "src/app/V8Experience.tsx|UPSTREAM_TEXT_VIA_HELPER_TO_DOM": 1,
+    "src/components/CnxMeasuredFacts.tsx|UPSTREAM_TEXT_VIA_HELPER_TO_DOM": 1,
+    "src/features/planning/PlanWithAiSheet.tsx|UPSTREAM_PROSE_TO_ATTRIBUTE_SLOT": 1,
+    "src/features/planning/PlanWithAiSheet.tsx|UPSTREAM_TEXT_VIA_HELPER_TO_DOM": 2,
+    "src/features/recovery/RecoveryRequiredPanel.tsx|UPSTREAM_TEXT_VIA_HELPER_TO_DOM": 1,
+    "src/features/simulation/SimulationPanel.tsx|UPSTREAM_TEXT_VIA_HELPER_TO_DOM": 1,
+    "src/features/trip/ActivityDetail.tsx|RAW_BODY_TO_DOM": 1
+   },
+   "union_by_file_and_rule_after": {
+    "src/app/V8Experience.tsx|UPSTREAM_TEXT_VIA_HELPER_TO_DOM": 1,
+    "src/components/CnxMeasuredFacts.tsx|UPSTREAM_TEXT_VIA_HELPER_TO_DOM": 1,
+    "src/features/planning/PlanWithAiSheet.tsx|UPSTREAM_PROSE_TO_ATTRIBUTE_SLOT": 1,
+    "src/features/planning/PlanWithAiSheet.tsx|UPSTREAM_TEXT_VIA_HELPER_TO_DOM": 2,
+    "src/features/recovery/RecoveryRequiredPanel.tsx|UPSTREAM_TEXT_VIA_HELPER_TO_DOM": 1,
+    "src/features/simulation/SimulationPanel.tsx|UPSTREAM_TEXT_VIA_HELPER_TO_DOM": 1,
+    "src/features/trip/ActivityDetail.tsx|RAW_BODY_TO_DOM": 1
+   },
+   "union_by_file_and_rule_equal": true,
+   "verdict": "NO_CHANGE_LINE_SHIFT_ONLY"
+  }
+ },
+ "v8experience": {
+  "r7b": {
+   "before_v8_cells": [
+    "src/app/V8Experience.tsx:2807|UPSTREAM_TEXT_VIA_HELPER_TO_DOM"
+   ],
+   "after_v8_cells": [
+    "src/app/V8Experience.tsx:2815|UPSTREAM_TEXT_VIA_HELPER_TO_DOM"
+   ]
+  },
+  "r7b4": {
+   "before_v8_cells": [
+    "src/app/V8Experience.tsx:2807|UPSTREAM_TEXT_VIA_HELPER_TO_DOM"
+   ],
+   "after_v8_cells": [
+    "src/app/V8Experience.tsx:2815|UPSTREAM_TEXT_VIA_HELPER_TO_DOM"
+   ]
+  }
+ }
+}
