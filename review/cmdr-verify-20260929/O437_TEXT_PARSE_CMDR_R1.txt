@@ -1,0 +1,13 @@
+# CMDR 亲测收据 · ORD-0437 POI 文本导入链 · 代 14e005ef… 之前那代 ffd84dc480832c29bb4f43b14dc654cd4c02e57a
+# 私有栈 api :8744、门面 :4829（入口名与磁盘 index.html 同名、服务字节 sha1 等于磁盘字节 sha1——本机 sha1，不是 git 物件）
+# 请求：POST /api/v1/journeys/{id}/poi-import/parse，正文只带 text（我先带了 source_channel 得 http 422，那是我多给了契约外的键，不是产品缺陷）
+
+回体 http 200；键名：char_count, counts, forms, items, link_hosts, source_channel, unsupported_forms
+counts：{"extracted": 3, "resolved": 3, "ambiguous": 0, "unresolved": 0, "addable": 3}
+items 枚数：3；逐枚 status：RESOLVED, RESOLVED, RESOLVED
+   - {"status": "RESOLVED"}
+   - {"status": "RESOLVED"}
+   - {"status": "RESOLVED"}
+
+判语：文本→地点候选池这一格在落地代成立（extracted / resolved / ambiguous / unresolved / addable 五档都在，认出的都 RESOLVED）。
+未成立的是入口：`frontend/src/app/v8PanelRegistry.tsx:186` 注册了 poi-import，但屏上没有一扇门走到它（ORD-0470，排在 ORD-0473 那扇死掉的“菜单”门之后）。
