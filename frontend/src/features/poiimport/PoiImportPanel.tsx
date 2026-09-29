@@ -1,5 +1,7 @@
 import { useState } from "react";
 import { useT } from "../../i18n/LocaleContext";
+import { namedCodeIn } from "../../lib/rawFacts";
+import { rejectionWithFacts, RejectionWithFacts } from "../../lib/rejectionFacts";
 import { PoiCandidateCard } from "../../components/PoiCandidateCard";
 
 /**
@@ -60,16 +62,64 @@ type AddResponse = {
 
 type Phase = "idle" | "loading" | "error" | "success";
 
+/* ORD-0437 r4 (commander's ruling of 11:27, section 3): the two `<small>` details below used to print
+   `cause.message`, and my own `call()` built that message out of the answer's body text -- so an
+   upstream sentence reached the traveller twice. The house carrier is `rejectionWithFacts`: it parses
+   the body for machine tokens and the contract receipt field, keeps what this device measured, and
+   drops the prose. The exposure ruler counts that as 12 cells on the line and 14 on my branch; this
+   edit is what brings it back to 12 by adding none. */
+const REFUSAL_CODES = [
+  "JOURNEY_NOT_FOUND",
+  "NO_ACTIVE_PLAN",
+  "IMPORT_DAY_REQUIRED",
+  "IMPORT_PLACE_UNKNOWN",
+  "IMPORT_PLACE_NOT_VISITABLE",
+] as const;
+
+type RefusalCode = (typeof REFUSAL_CODES)[number];
+
+/** What the screen may show: a named condition, and this device's own reading of the status. Never a
+ * sentence that arrived in the answer. */
+type Failure = { code: RefusalCode | "NO_RESPONSE_FROM_ORIGIN" | "UNNAMED_REFUSAL"; status: number | null };
+
+function describeRejection(cause: unknown): Failure {
+  if (cause instanceof RejectionWithFacts) {
+    const envelope = (cause.envelope as { error?: { reason_code?: string } } | null)?.error;
+    const fromEnvelope = typeof envelope?.reason_code === "string" ? envelope.reason_code : null;
+    const scanned = namedCodeIn(cause.message, REFUSAL_CODES);
+    // `namedCodeIn` answers `string | null`; the union is what the dictionary lookup needs.
+    const code: RefusalCode | null =
+      (fromEnvelope && (REFUSAL_CODES as readonly string[]).includes(fromEnvelope)
+        ? (fromEnvelope as RefusalCode)
+        : null) ??
+      ((REFUSAL_CODES as readonly string[]).includes(scanned ?? "") ? (scanned as RefusalCode) : null);
+    return { code: code ?? "UNNAMED_REFUSAL", status: cause.http_status };
+  }
+  return { code: "NO_RESPONSE_FROM_ORIGIN", status: null };
+}
+
+/** One sentence per named condition, all of them ours. A condition with no dictionary line does not
+ * get to borrow the answer's wording -- it gets `errUnnamed`, and the machine token stays visible in
+ * the detail so the screen is still diagnosable. */
+const FAILURE_SENTENCE: Record<Failure["code"], string> = {
+  JOURNEY_NOT_FOUND: "poiImport.errJourneyNotFound",
+  NO_ACTIVE_PLAN: "poiImport.errNoActivePlan",
+  IMPORT_DAY_REQUIRED: "poiImport.errDayRequired",
+  IMPORT_PLACE_UNKNOWN: "poiImport.errPlaceUnknown",
+  IMPORT_PLACE_NOT_VISITABLE: "poiImport.errPlaceNotVisitable",
+  NO_RESPONSE_FROM_ORIGIN: "poiImport.errNoResponse",
+  UNNAMED_REFUSAL: "poiImport.errUnnamed",
+};
+
 async function call<T>(path: string, init?: RequestInit): Promise<T> {
   const response = await fetch(path, {
     headers: { "Content-Type": "application/json", ...(init?.headers ?? {}) },
     ...init,
   });
-  const text = await response.text();
   if (!response.ok) {
-    throw new Error(`${response.status} ${text.slice(0, 200)}`);
+    throw await rejectionWithFacts(response);
   }
-  return JSON.parse(text) as T;
+  return (await response.json()) as T;
 }
 
 export function PoiImportPanel({
@@ -87,13 +137,13 @@ export function PoiImportPanel({
   const [text, setText] = useState("");
   const [phase, setPhase] = useState<Phase>("idle");
   const [parsed, setParsed] = useState<ParseResponse | null>(null);
-  const [failure, setFailure] = useState<string | null>(null);
+  const [failure, setFailure] = useState<Failure | null>(null);
   const [selected, setSelected] = useState<string[]>([]);
   const [day, setDay] = useState("");
   const [adding, setAdding] = useState(false);
   const [added, setAdded] = useState<{ ids: string[]; day: string; daySource: string } | null>(null);
   const [alreadyPresent, setAlreadyPresent] = useState<string[]>([]);
-  const [readBackFailure, setReadBackFailure] = useState<string | null>(null);
+  const [readBackFailure, setReadBackFailure] = useState<Failure | "MISMATCH" | null>(null);
 
   const addableIds = parsed?.items.filter((i) => i.addable && i.place_id).map((i) => i.place_id as string) ?? [];
   const chosen = selected.filter((id) => addableIds.includes(id));
@@ -113,7 +163,7 @@ export function PoiImportPanel({
       setSelected(next.items.filter((i) => i.addable && i.place_id).map((i) => i.place_id as string));
       setPhase("success");
     } catch (cause) {
-      setFailure(cause instanceof Error ? cause.message : String(cause));
+      setFailure(describeRejection(cause));
       setPhase("error");
     }
   };
@@ -134,14 +184,14 @@ export function PoiImportPanel({
       const serverIds = new Set((projected?.active_plan?.activities ?? []).map((a) => a.id));
       const confirmed = written.added.filter((a) => serverIds.has(a.id)).map((a) => a.id);
       if (written.added.length && confirmed.length !== written.added.length) {
-        setReadBackFailure(t("poiImport.readBackFailed"));
+        setReadBackFailure("MISMATCH");
         setAdded(null);
       } else {
         setAdded({ ids: confirmed, day: written.day, daySource: written.day_source });
       }
       setAlreadyPresent(written.already_present);
     } catch (cause) {
-      setReadBackFailure(cause instanceof Error ? cause.message : String(cause));
+      setReadBackFailure(describeRejection(cause));
     } finally {
       setAdding(false);
     }
@@ -262,10 +312,17 @@ export function PoiImportPanel({
             {phase === "loading" ? (
               <p data-testid="poi-import-loading-text">{t("poiImport.loadingWhere")}</p>
             ) : null}
-            {phase === "error" ? (
+            {phase === "error" && failure ? (
               <p role="alert" data-testid="poi-import-error">
                 {t("poiImport.loadFailed")}
-                <small data-testid="poi-import-error-detail">{failure}</small>
+                {/* The condition is this screen's own sentence; the detail is a machine token and, when
+                    there was an answer, the status this device saw. No prose from the answer survives
+                    to the screen at all. */}
+                <span data-testid="poi-import-error-why">{t(FAILURE_SENTENCE[failure.code])}</span>
+                <small data-testid="poi-import-error-detail">{failure.code}</small>
+                {failure.status ? (
+                  <small data-testid="poi-import-error-status">HTTP {failure.status}</small>
+                ) : null}
               </p>
             ) : null}
             {phase === "success" ? (
@@ -402,10 +459,12 @@ export function PoiImportPanel({
               ) : null}
               {readBackFailure ? (
                 <p role="alert" data-testid="poi-import-readback-failed">
-                  {readBackFailure === t("poiImport.readBackFailed")
+                  {readBackFailure === "MISMATCH"
                     ? t("poiImport.readBackFailed")
-                    : t("poiImport.readBackError")}
-                  <small>{readBackFailure}</small>
+                    : t(FAILURE_SENTENCE[readBackFailure.code])}
+                  {readBackFailure !== "MISMATCH" ? (
+                    <small data-testid="poi-import-readback-detail">{readBackFailure.code}</small>
+                  ) : null}
                 </p>
               ) : null}
             </aside>
