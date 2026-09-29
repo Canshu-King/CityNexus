@@ -1,0 +1,183 @@
+{
+  "mission": "R77 Revolution Lab real-trip recovery",
+  "milestone": "REAL_SELECTABLE",
+  "starting_commit": "4ee14229f80691cf8e5ea913375c0caf83ac02ee",
+  "final_experimental_commit": "8c05fb4373efc866fbcc30e49e6177be4e07721a",
+  "branch": "codex/revolution-realtrip-recovery",
+  "worktree": "D:/moodle/CityNexus-Revolution-RealTrip-Recovery",
+  "clean_before_product_calls": true,
+  "runtime": {
+    "python": "3.13",
+    "database": "backend/r77_selectable_probe.db",
+    "database_scope": "disposable_lab_database",
+    "deepseek": {
+      "configured": false,
+      "execution": "NOT_CONFIGURED",
+      "model": "deepseek-v4-flash"
+    },
+    "hermes": {
+      "configured": false,
+      "reachable": false,
+      "ready": false,
+      "execution": "NOT_CONFIGURED"
+    }
+  },
+  "destination": {
+    "display_name": "苏州市",
+    "city_code": "CN-SUZHOU",
+    "journey_id": "9b11e4cd-c1b5-43e6-aedf-6402a0cfddd2",
+    "journey_title": "R77 Suzhou verified garden candidate 2"
+  },
+  "real_catalogue": [
+    {
+      "place_id": "real-place-8bc850f117297987997c87cf",
+      "provider_entity": "overpass:way/44679452",
+      "name": "网师园",
+      "category": "attraction",
+      "coordinates": [31.3004105, 120.6297906],
+      "opening_hours": "Mo-Su 07:30-17:00",
+      "cost_evidence": {
+        "status": "KNOWN",
+        "amount_minor": 3000,
+        "currency": "CNY",
+        "source": "overpass"
+      },
+      "discovery_mode": "live"
+    },
+    {
+      "place_id": "real-place-ba7377353c422c39dfd752b7",
+      "provider_entity": "overpass:way/468359738",
+      "name": "拙政园",
+      "category": "attraction",
+      "coordinates": [31.3264725, 120.6247266],
+      "opening_hours": "Mo-Su 07:30-17:30",
+      "cost_evidence": {
+        "status": "KNOWN",
+        "amount_minor": 9000,
+        "currency": "CNY",
+        "source": "overpass"
+      },
+      "discovery_mode": "live"
+    }
+  ],
+  "provider_evidence": {
+    "catalog_fact_refresh": {
+      "http_status": 200,
+      "primary_provider": "overpass",
+      "answered_source": "https://overpass-api.de/api/interpreter",
+      "nominatim_lookup": {
+        "source": "https://nominatim.openstreetmap.org/lookup",
+        "exact_match_count": 2,
+        "requested_entities": [
+          "overpass:way/44679452",
+          "overpass:way/468359738"
+        ]
+      },
+      "official_web": "attempted; no additional structured facts",
+      "search_source": "UNCONFIGURED",
+      "authority_notation": "opening and cost claims are provider-backed Overpass/Nominatim observations; no UNKNOWN value was converted to free"
+    },
+    "mobility": {
+      "provider": "valhalla-http",
+      "source_url": "https://valhalla1.openstreetmap.de",
+      "snapshot_id": "52541f63-1d56-49c7-b371-73984268e0c5",
+      "route_provenance": "LIVE_PROVIDER_CAPTURE",
+      "fact_quality": "LIVE_PROVIDER_CAPTURE",
+      "degraded": false,
+      "used_edge_minutes": 42
+    }
+  },
+  "product_execution": {
+    "generate": {
+      "executed_commit": "8c05fb4373efc866fbcc30e49e6177be4e07721a",
+      "http_status": 201,
+      "plan_id": "fbb534a5-b307-5597-a5e7-65a91a4c163c",
+      "plan_status_before_select": "CANDIDATE",
+      "selectable_before_select": true,
+      "activities": [
+        {
+          "sequence_no": 1,
+          "place_id": "real-place-8bc850f117297987997c87cf",
+          "title": "网师园",
+          "start_at": "2026-10-04T09:00:00+08:00",
+          "end_at": "2026-10-04T10:00:00+08:00",
+          "estimated_cost_minor": 3000,
+          "cost_status": "KNOWN_PAID"
+        },
+        {
+          "sequence_no": 2,
+          "place_id": "real-place-ba7377353c422c39dfd752b7",
+          "title": "拙政园",
+          "start_at": "2026-10-04T10:42:00+08:00",
+          "end_at": "2026-10-04T11:42:00+08:00",
+          "travel_from_prev_min": 42,
+          "estimated_cost_minor": 9000,
+          "cost_status": "KNOWN_PAID"
+        }
+      ],
+      "total_cost_minor": 12000
+    },
+    "select": {
+      "http_status": 200,
+      "plan_status_after_select": "SELECTED",
+      "journey_status_after_select": "PLANNED",
+      "active_plan_version_id": "fbb534a5-b307-5597-a5e7-65a91a4c163c"
+    },
+    "api_readback": {
+      "journey_get_http_status": 200,
+      "journey_active_plan_version_id": "fbb534a5-b307-5597-a5e7-65a91a4c163c",
+      "plans_get_http_status": 200,
+      "plan_status": "SELECTED",
+      "selectable": true,
+      "is_current": true,
+      "stale": false
+    }
+  },
+  "actual_used_edge_ids": [
+    [
+      "real-place-8bc850f117297987997c87cf",
+      "real-place-ba7377353c422c39dfd752b7"
+    ]
+  ],
+  "eligibility_receipts": [
+    {
+      "from": "real-place-8bc850f117297987997c87cf",
+      "to": "real-place-ba7377353c422c39dfd752b7",
+      "hard_eligible": true,
+      "minutes": 42,
+      "basis": "persisted PlanVersion mobility evidence has route_provenance=LIVE_PROVIDER_CAPTURE and fact_quality=LIVE_PROVIDER_CAPTURE; authoritative select returned HTTP 200"
+    }
+  ],
+  "before_after": {
+    "before_commit": "c2c63b937060d63018e3081d4adebccd257ca31b",
+    "before": "AUTO returned HTTP 422 CATALOG_INSUFFICIENT after three candidate sequences were rejected because UNKNOWN-cost rows were packed into otherwise valid schedules",
+    "repair": "strict catalogue templates now exclude rows whose cost_evidence.status is not KNOWN/VERIFIED_PROVIDER; UNKNOWN rows remain in the catalog and provisional lane",
+    "after": "the same Journey produced a real candidate, then authoritative select succeeded and the Journey pointer named that plan"
+  },
+  "focused_tests": {
+    "command": "py -3.13 -m pytest -q tests/test_revolution_r77_recovery.py tests/test_qoder_beijing_catalogue.py tests/test_qoder_catalog_reason_code.py tests/test_qoder_generic_compose_reason_codes.py tests/test_qoder_mobility_evidence_sources.py",
+    "result": "33 passed, 1 warning",
+    "warning": "existing Starlette/httpx deprecation warning",
+    "python310_note": "Python 3.10 collection cannot import enum.StrEnum; the product/test gate was rerun successfully on the installed Python 3.13 runtime"
+  },
+  "replay": {
+    "environment": [
+      "CITYNEXUS_DATABASE_URL=sqlite:///./r77_selectable_probe.db",
+      "CITYNEXUS_REAL_CITY_ENABLED=true",
+      "CITYNEXUS_LIVE_VALHALLA_URL=https://valhalla1.openstreetmap.de"
+    ],
+    "sequence": [
+      "verify git status --porcelain is empty",
+      "POST /api/v1/journeys/9b11e4cd-c1b5-43e6-aedf-6402a0cfddd2/plans/generate with {candidate_count:1}",
+      "POST /api/v1/journeys/9b11e4cd-c1b5-43e6-aedf-6402a0cfddd2/plans/fbb534a5-b307-5597-a5e7-65a91a4c163c/select",
+      "GET /api/v1/journeys/9b11e4cd-c1b5-43e6-aedf-6402a0cfddd2 and /plans; assert active_plan_version_id, SELECTED, selectable=true, is_current=true"
+    ]
+  },
+  "truth_boundaries": {
+    "p7": false,
+    "mock_is_live": false,
+    "unknown_cost_is_free": false,
+    "authority_mainline_merged": false,
+    "result": "REAL_SELECTABLE"
+  }
+}
