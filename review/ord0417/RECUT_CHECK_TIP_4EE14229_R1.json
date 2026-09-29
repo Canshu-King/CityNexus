@@ -1,0 +1,41 @@
+{
+ "tool": "git merge-tree --write-tree (read-only: no worktree, no index, no ref is written)",
+ "tip": "4ee14229f80691cf8e5ea913375c0caf83ac02ee",
+ "runs": [
+  {
+   "label": "r2",
+   "commit": "6020871f0452cc4b1844dd8cc78b4acbeb294595",
+   "exit_code": 1,
+   "predicted_tree": "c5281e98b1cf51cddc787411dbd2fc0379673d40",
+   "conflict_count": 5,
+   "conflicts": [
+    "CONFLICT (content): Merge conflict in frontend/src/i18n/LocaleContext.tsx",
+    "CONFLICT (add/add): Merge conflict in review/ord0417/GATE_ORD0417R16TIPATBASE3_TRIMMED.txt",
+    "CONFLICT (add/add): Merge conflict in review/ord0417/RUNBOOK_r1.md",
+    "CONFLICT (add/add): Merge conflict in review/ord0417/ord0417_commit_r1.py",
+    "CONFLICT (add/add): Merge conflict in review/ord0417/ord0417_pack_evidence_r1.py"
+   ],
+   "product_conflicts": [
+    "CONFLICT (content): Merge conflict in frontend/src/i18n/LocaleContext.tsx"
+   ]
+  },
+  {
+   "label": "r8",
+   "commit": "0b489d9a513dfdaa9003f1db2c70a2b62adda48b",
+   "exit_code": 0,
+   "predicted_tree": "a4187b62559d8f1c7c7f19bf45387c4cced11bc0",
+   "conflict_count": 0,
+   "conflicts": [],
+   "product_conflicts": []
+  },
+  {
+   "label": "r7",
+   "commit": "3e215b057d456a0f97ffe322397ce3c98f074ff8",
+   "exit_code": 0,
+   "predicted_tree": "81c096a696da535ca16bcbd1ce8cf69826a22dcc",
+   "conflict_count": 0,
+   "conflicts": [],
+   "product_conflicts": []
+  }
+ ]
+}
