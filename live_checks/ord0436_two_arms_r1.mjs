@@ -17,7 +17,11 @@ import { chromium } from "playwright";
 import { contractDomain } from "./ord0436_contract_domain.mjs";
 
 const BASE = process.env.CNX_BASE || "http://127.0.0.1:4802";
-const JOURNEY = process.env.CNX_JOURNEY || "";
+// Each arm reads its own trip. The invitation one arm issues is a server-side fact, and letting
+// the other arm look at the same trip made its first row arrive already withdrawn -- a leaked
+// precondition rather than a finding.
+const journeyFor = (locale) =>
+  process.env[`CNX_JOURNEY_${locale.toUpperCase().replace("-", "_")}`] || process.env.CNX_JOURNEY || "";
 const OUT = process.env.CNX_OUT || ".";
 const REPO = process.env.CNX_REPO || ".";
 const VIEWPORT = { width: 390, height: 844 };
@@ -25,6 +29,7 @@ const VIEWPORT = { width: 390, height: 844 };
 const squeeze = (value) => (value ?? "").replace(/\s+/g, " ").trim();
 
 async function arm(browser, locale) {
+  const JOURNEY = journeyFor(locale);
   const context = await browser.newContext({ viewport: VIEWPORT, locale });
   const page = await context.newPage();
   const errors = [];
@@ -83,6 +88,17 @@ async function arm(browser, locale) {
     activityEmpty: false,
     activityFailed: false,
     pickerHit: null,
+    walk: {
+      before: null,
+      afterCreate: null,
+      confirmSaid: null,
+      stillOpenAfterAsk: null,
+      confirmStillVisible: null,
+      confirmButtonPresent: null,
+      afterRevoke: null,
+    },
+    rosterLine: null,
+    activityCaveat: null,
   };
 
   if (read.pickerPresent && JOURNEY) {
@@ -133,6 +149,66 @@ async function arm(browser, locale) {
       );
       read.pickerHit = { box, ...hit };
     }
+
+    // ---- ORD-0449: the step a traveller actually has to be able to take ---------------------
+    // Issue an invitation with an expiry, watch the row come back from the server, then withdraw
+    // it -- and prove the screen asks first: the row must still be un-revoked after the first tap.
+    read.walk = { before: null, afterCreate: null, confirmSaid: null, afterRevoke: null };
+    read.walk.before = (await page.locator('[data-testid="access-grant-row"]').count()) === 0
+      ? "empty"
+      : (await page.locator('[data-testid="access-grant-row"]').count());
+    await page.fill('[data-testid="access-invite-expiry"]', "2026-12-06T08:00");
+    await page.click('[data-testid="access-invite-submit"]');
+    await page
+      .locator('[data-testid="access-grant-row"]')
+      .first()
+      .waitFor({ state: "visible", timeout: 20000 });
+    read.walk.afterCreate = squeeze(
+      await page.locator('[data-testid="access-grant-row"] .cn-access-row-what').first().innerText(),
+    );
+    await page.click('[data-testid="access-grant-revoke"]');
+    read.walk.confirmSaid = squeeze(
+      await page.locator('[data-testid="access-confirm-pending"]').first().innerText(),
+    );
+    // The first tap only asks. Waiting before reading is the whole point of this arm: the first cut
+    // read the attribute immediately after the tap and passed even against a mutant that withdrew at
+    // once, because the write had not landed yet -- it was timing a race, not testing a rule. The
+    // settle window is long enough for a local round trip (measured: the write answers in ~15 ms),
+    // so a row that flips during it means the screen never asked.
+    await page.waitForTimeout(1500);
+    read.walk.stillOpenAfterAsk = await page
+      .locator('[data-testid="access-grant-row"]')
+      .first()
+      .getAttribute("data-revoked");
+    read.walk.confirmStillVisible =
+      (await page.locator('[data-testid="access-confirm-pending"]').count()) > 0;
+    // If the screen stopped asking, there is no confirmation to click. Reporting that as a failed
+    // arm is the point; crashing the whole reading over it would leave the other arms with no
+    // reading at all, which is how the first mutant run of this control ended up unattributable.
+    read.walk.confirmButtonPresent =
+      (await page.locator('[data-testid="access-confirm-yes"]').count()) > 0;
+    if (read.walk.confirmButtonPresent) {
+      await page.click('[data-testid="access-confirm-yes"]');
+    }
+    await page
+      .locator('[data-testid="access-grant-row"][data-revoked="true"]')
+      .first()
+      .waitFor({ state: "visible", timeout: 20000 });
+    read.walk.afterRevoke = squeeze(
+      await page.locator('[data-testid="access-grant-row"][data-revoked="true"] .cn-access-row-what')
+        .first()
+        .innerText(),
+    );
+    read.rosterLine = squeeze(
+      await page
+        .locator('[data-testid="access-roster-empty"], [data-testid="access-member-row"]')
+        .first()
+        .innerText(),
+    );
+    read.activityCaveat = squeeze(
+      await page.locator('[data-testid="access-activity-caveat"]').first().innerText(),
+    );
+
   }
 
   const bodyText = squeeze(await page.locator("body").innerText());
@@ -321,6 +397,36 @@ add(
   "no ladder row is covered by something outside this panel",
   zh.coveredRows.length === 0 && en.coveredRows.length === 0,
   JSON.stringify({ zh: zh.coveredRows, en: en.coveredRows }).slice(0, 300),
+);
+add(
+  "the invitation the traveller created comes back with an expiry the server was given",
+  /到 .* 之前可开|Open until/.test(zh.walk.afterCreate ?? "") &&
+    /到 .* 之前可开|Open until/.test(en.walk.afterCreate ?? ""),
+  JSON.stringify({ zh: zh.walk.afterCreate, en: en.walk.afterCreate }).slice(0, 260),
+);
+add(
+  "the screen asks before it withdraws anything, and the first tap changes nothing",
+  /你自己的权限不变|Your own access does not change/.test(zh.walk.confirmSaid ?? "") &&
+    zh.walk.stillOpenAfterAsk === "false" &&
+    en.walk.stillOpenAfterAsk === "false" &&
+    zh.walk.confirmStillVisible === true &&
+    en.walk.confirmStillVisible === true &&
+    zh.walk.confirmButtonPresent === true &&
+    en.walk.confirmButtonPresent === true,
+  JSON.stringify({ zh_confirm: zh.walk.confirmSaid, stillOpen: [zh.walk.stillOpenAfterAsk, en.walk.stillOpenAfterAsk], stillAsked: [zh.walk.confirmStillVisible, en.walk.confirmStillVisible] }).slice(0, 290),
+);
+add(
+  "after the confirmation the row says withdrawn, in the language the device is in",
+  /已于 .* 撤销|Withdrawn at/.test(zh.walk.afterRevoke ?? "") &&
+    /已于 .* 撤销|Withdrawn at/.test(en.walk.afterRevoke ?? ""),
+  JSON.stringify({ zh: zh.walk.afterRevoke, en: en.walk.afterRevoke }).slice(0, 260),
+);
+add(
+  "the member door's answer is read out, empty included, and the activity caveat is on screen",
+  (zh.rosterLine ?? "").length > 6 &&
+    /还没往活动流里写|not written into this trip's activity stream/.test(zh.activityCaveat ?? "") &&
+    /not written into this trip's activity stream|还没往活动流里写/.test(en.activityCaveat ?? ""),
+  JSON.stringify({ roster: zh.rosterLine, caveat: zh.activityCaveat }).slice(0, 260),
 );
 add(
   "neither arm threw a page error",

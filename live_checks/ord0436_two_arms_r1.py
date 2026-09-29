@@ -103,19 +103,26 @@ def wait_for_port(port: int, timeout: float = 60.0) -> int | None:
     return None
 
 
-def seed(created_journey_id: str) -> dict[str, object]:
-    """Three rows from the product's own doors, two written by its own audit writer, all in this
-    lane's private database."""
+def seed(_unused: str = "") -> dict[str, object]:
+    """Two trips, each with three rows from the product's own doors and two rows written by its own
+    audit writer, all in this lane's private database.
+
+    One trip per reading arm: the invitation the Chinese arm issues and withdraws is a server-side
+    fact, and letting the English arm read the same trip made its first row arrive already
+    withdrawn. That is a leaked precondition, not a finding.
+    """
 
     import httpx
 
     base = f"http://127.0.0.1:{BACKEND_PORT}/api/v1"
     now = datetime.now(timezone.utc).isoformat()
+    journey_ids: list[str] = []
+    door_status: dict[str, int] = {}
     with httpx.Client(base_url=base, trust_env=False, timeout=30) as client:
         traveler = client.post(
             "/travelers",
             json={
-                "display_name": "ORD-0436 probe",
+                "display_name": "ORD-0449 probe",
                 "email": None,
                 "locale": "zh-CN",
                 "timezone": "Asia/Shanghai",
@@ -123,23 +130,25 @@ def seed(created_journey_id: str) -> dict[str, object]:
         )
         if traveler.status_code >= 400:
             raise SystemExit(f"the traveller door answered {traveler.status_code}: {traveler.text[:200]}")
-        journey = client.post(
-            "/journeys",
-            json={
-                "traveler_id": traveler.json()["id"],
-                "title": "ORD-0436 access probe",
-                "city_code": "CN-XIAMEN",
-                "timezone": "Asia/Shanghai",
-                "start_at": "2026-11-03T09:00:00+08:00",
-                "end_at": "2026-11-05T17:00:00+08:00",
-                "budget": {"amount_minor": 90000, "currency": "CNY"},
-                "planning_mode": "balanced",
-            },
-        )
-        journey.raise_for_status()
-        journey_id = journey.json()["id"]
-        deleted = client.delete(f"/journeys/{journey_id}")
-        undeleted = client.post(f"/journeys/{journey_id}/undelete")
+        for index in range(2):
+            created = client.post(
+                "/journeys",
+                json={
+                    "traveler_id": traveler.json()["id"],
+                    "title": f"ORD-0449 access probe {index}",
+                    "city_code": "CN-XIAMEN",
+                    "timezone": "Asia/Shanghai",
+                    "start_at": "2026-11-03T09:00:00+08:00",
+                    "end_at": "2026-11-05T17:00:00+08:00",
+                    "budget": {"amount_minor": 90000, "currency": "CNY"},
+                    "planning_mode": "balanced",
+                },
+            )
+            created.raise_for_status()
+            journey_id = created.json()["id"]
+            journey_ids.append(journey_id)
+            door_status[f"delete_{index}"] = client.delete(f"/journeys/{journey_id}").status_code
+            door_status[f"undelete_{index}"] = client.post(f"/journeys/{journey_id}/undelete").status_code
     # The two fixture rows go in through the product's own audit writer, in this process, against
     # this lane's database: `audit_logs.trace_id` is NOT NULL and the writer owns that value, so
     # hand-written SQL would have been testing my guess at the schema rather than the screen.
@@ -151,46 +160,50 @@ def seed(created_journey_id: str) -> dict[str, object]:
     from app.db.session import SessionLocal  # noqa: E402
 
     with SessionLocal() as session:
-        record_audit(
-            session,
-            action="journey.member_added",
-            entity_type="Journey",
-            entity_id="ord0436-fixture-member",
-            journey_id=journey_id,
-            actor_type="traveller",
-            actor_id="ord0436-probe",
-            after={"member": "fixture"},
-        )
-        record_audit(
-            session,
-            action="journey.unlisted_share_change",
-            entity_type="Journey",
-            entity_id="ord0436-fixture-unknown",
-            journey_id=journey_id,
-            actor_type="traveller",
-            actor_id="ord0436-probe",
-            after={"note": "no sentence exists for this action"},
-        )
+        for journey_id in journey_ids:
+            record_audit(
+                session,
+                action="journey.member_added",
+                entity_type="Journey",
+                entity_id=f"ord0436-fixture-member-{journey_id}",
+                journey_id=journey_id,
+                actor_type="traveller",
+                actor_id="ord0436-probe",
+                after={"member": "fixture"},
+            )
+            record_audit(
+                session,
+                action="journey.unlisted_share_change",
+                entity_type="Journey",
+                entity_id=f"ord0436-fixture-unknown-{journey_id}",
+                journey_id=journey_id,
+                actor_type="traveller",
+                actor_id="ord0436-probe",
+                after={"note": "no sentence exists for this action"},
+            )
         session.commit()
 
     import sqlite3
 
     with sqlite3.connect(DB) as connection:
-        feed = [
-            row[0]
-            for row in connection.execute(
-                "SELECT action FROM audit_logs WHERE journey_id = ? ORDER BY created_at, id",
-                (journey_id,),
-            )
-        ]
+        feeds = {
+            journey_id: [
+                row[0]
+                for row in connection.execute(
+                    "SELECT action FROM audit_logs WHERE journey_id = ? ORDER BY created_at, id",
+                    (journey_id,),
+                )
+            ]
+            for journey_id in journey_ids
+        }
     return {
-        "journey_id": journey_id,
-        "delete_door_status": deleted.status_code,
-        "undelete_door_status": undeleted.status_code,
-        "actions_in_this_lane_database": feed,
+        "journey_id": journey_ids[0],
+        "journey_ids": journey_ids,
+        "delete_door_status": door_status,
+        "actions_in_this_lane_database": feeds[journey_ids[0]],
         "fixture_rows_written_by": "app.core.audit.record_audit (the product's own writer)",
         "fixture_rows": [
-            {"action": "journey.member_added", "why": "ORD-0434 has no writer for it yet; the screen's sentence for it is what is being read"},
+            {"action": "journey.member_added", "why": "no sharing door writes it; the screen's sentence for it is what is being read"},
             {"action": "journey.unlisted_share_change", "why": "an action no sentence exists for, to prove the screen says so instead of inventing one"},
         ],
     }
@@ -267,7 +280,9 @@ def main() -> None:
             cwd=str(WORK / "frontend"),
             env=clean_env(
                 CNX_BASE=f"http://127.0.0.1:{FRONTEND_PORT}",
-                CNX_JOURNEY=seeded["journey_id"],
+                CNX_JOURNEY=seeded["journey_ids"][0],
+                CNX_JOURNEY_ZH_CN=seeded["journey_ids"][0],
+                CNX_JOURNEY_EN=seeded["journey_ids"][1],
                 CNX_OUT=str(OUT),
                 # The seam arm reads the contract from the lane tree: the bundle this reading runs
                 # against lives in a separate export directory that holds no `contracts/`.
@@ -281,6 +296,51 @@ def main() -> None:
         except ValueError:
             report["reading_unparsed"] = reading.stdout[-4000:]
             report["reader_stderr"] = reading.stderr[-2000:]
+        import httpx
+
+        readback: dict[str, object] = {}
+        with httpx.Client(base_url=f"http://127.0.0.1:{BACKEND_PORT}/api/v1", trust_env=False, timeout=30) as probe:
+            for arm_name, journey_id in (("zh", seeded["journey_ids"][0]), ("en", seeded["journey_ids"][1])):
+                grants_response = probe.get(f"/journeys/{journey_id}/share-grants")
+                members_response = probe.get(f"/journeys/{journey_id}/members")
+                grants = grants_response.json() if grants_response.status_code == 200 else []
+                readback[arm_name] = {
+                    "journey_id": journey_id,
+                    "grants_http": grants_response.status_code,
+                    "grants": len(grants),
+                    "with_expiry": sum(1 for grant in grants if grant.get("expires_at")),
+                    "revoked": sum(1 for grant in grants if grant.get("revoked_at")),
+                    "members_http": members_response.status_code,
+                }
+        report["server_readback"] = readback
+        # Both arms must have really written: one issued grant carrying the expiry the traveller
+        # typed, and that same grant withdrawn at the server -- not just painted so in the browser.
+        report["server_readback_ok"] = all(
+            cell["grants"] >= 1 and cell["with_expiry"] >= 1 and cell["revoked"] >= 1
+            for cell in readback.values()
+        )
+        print(
+            "[ord0436][readback] "
+            + json.dumps(readback, ensure_ascii=False)
+            + " | ok="
+            + str(report["server_readback_ok"])
+        )
+
+        if report["server_readback_ok"] is not True:
+            # A green DOM with a server that recorded nothing is exactly what this arm is for.
+            report["reading"] = {
+                **(report.get("reading") or {}),
+                "checks": [
+                    *(report.get("reading", {}).get("checks") or []),
+                    {
+                        "name": "the withdrawal the screen shows is the withdrawal the server recorded",
+                        "verdict": "FAIL",
+                        "detail": json.dumps(report["server_readback"], ensure_ascii=False)[:300],
+                    },
+                ],
+                "all_pass": False,
+            }
+
         (OUT / "TWO_ARMS_R1.json").write_text(json.dumps(report, ensure_ascii=False, indent=2) + "\n", "utf-8", newline="\n")
         checks = (report.get("reading") or {}).get("checks", [])
         for check in checks:

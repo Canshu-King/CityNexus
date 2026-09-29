@@ -5,14 +5,21 @@ import { classifyReadFailure, copyFor, type Attribution } from "../../lib/failur
 import type { RawFacts } from "../../lib/rawFacts";
 import { formatV8Date } from "../../lib/v8Formatting";
 import {
+  createShareGrant,
   readActivity,
   readJourneys,
+  readMembers,
+  readShareGrants,
   readSharingDoors,
   RejectionWithFacts,
+  revokeShareGrant,
   SHARING_DOOR_SUFFIXES,
+  withdrawMember,
   type ActivityEvent,
   type DoorProbe,
+  type JourneyMemberRow,
   type JourneySummary,
+  type ShareGrant,
 } from "./accessDoors";
 import {
   accessCopyFor,
@@ -24,6 +31,7 @@ import {
   memberActionKey,
   ROLE_COLLABORATOR,
   ROLE_OWNER,
+  VISIBILITY_LINK_READ,
   VISIBILITY_PRIVATE,
   VISIBILITY_PUBLIC,
   permissionConfirmationKey,
@@ -111,6 +119,16 @@ export function AccessPanel() {
   const [chosen, setChosen] = useState<string | null>(null);
   const [activity, setActivity] = useState<ActivityState>({ phase: "idle" });
   const [access, setAccess] = useState<AccessRead>({ phase: "loading" });
+  const [members, setMembers] = useState<JourneyMemberRow[]>([]);
+  const [grants, setGrants] = useState<ShareGrant[]>([]);
+  const [rosterFailed, setRosterFailed] = useState<Attribution | null>(null);
+  const [pending, setPending] = useState<{ kind: "grant" | "member"; id: string } | null>(null);
+  const [writeState, setWriteState] = useState<{ busy: boolean; refused: string | null }>({
+    busy: false,
+    refused: null,
+  });
+  const [pickVisibility, setPickVisibility] = useState<string>(VISIBILITY_LINK_READ);
+  const [pickExpiry, setPickExpiry] = useState<string>("");
 
   const loadTrips = useCallback(async () => {
     setTrips({ phase: "loading" });
@@ -128,6 +146,74 @@ export function AccessPanel() {
   useEffect(() => {
     void loadTrips();
   }, [loadTrips]);
+
+  const loadRoster = useCallback(async (journeyId: string) => {
+    setRosterFailed(null);
+    try {
+      const [memberRows, grantRows] = await Promise.all([readMembers(journeyId), readShareGrants(journeyId)]);
+      setMembers(memberRows);
+      setGrants(grantRows);
+    } catch (cause) {
+      setRosterFailed(classifyReadFailure(cause));
+    }
+  }, []);
+
+  /** Every write path ends by re-reading the doors. The screen never edits its own copy of a row to
+   *  look like the write succeeded: what appears after a tap is what the server answered next. */
+  const afterWrite = useCallback(
+    async (journeyId: string) => {
+      setPending(null);
+      await Promise.all([loadRoster(journeyId), readActivity(journeyId).then((events) => setActivity({ phase: "ready", rows: events })).catch(() => undefined)]);
+    },
+    [loadRoster],
+  );
+
+  const refusalKey = (cause: unknown): string => {
+    if (!(cause instanceof RejectionWithFacts)) return "other";
+    const envelope = cause.envelope as { error?: { details?: unknown } } | undefined;
+    const details = envelope?.error?.details;
+    if (cause.http_status === 409 && details && typeof details === "object" && "revoked_at" in details) {
+      return "already";
+    }
+    if (cause.http_status === 404) return "missing";
+    return "other";
+  };
+
+  const issueInvitation = useCallback(async () => {
+    if (chosen === null) return;
+    const signer = (trips.phase === "ready" ? trips.rows : []).find((row) => row.id === chosen)?.traveler_id ?? null;
+    if (signer === null || signer === undefined) {
+      // The list door did not name an owner for this trip, so there is no signature this device is
+      // willing to invent for it.
+      setWriteState({ busy: false, refused: "nosigner" });
+      return;
+    }
+    setWriteState({ busy: true, refused: null });
+    try {
+      await createShareGrant(chosen, {
+        visibility: pickVisibility,
+        created_by: signer,
+        expires_at: pickExpiry === "" ? null : new Date(pickExpiry).toISOString(),
+      });
+      setWriteState({ busy: false, refused: null });
+      await afterWrite(chosen);
+    } catch (cause) {
+      setWriteState({ busy: false, refused: refusalKey(cause) });
+    }
+  }, [afterWrite, chosen, pickExpiry, pickVisibility, trips]);
+
+  const confirmWithdrawal = useCallback(async () => {
+    if (chosen === null || pending === null) return;
+    setWriteState({ busy: true, refused: null });
+    try {
+      if (pending.kind === "grant") await revokeShareGrant(chosen, pending.id);
+      else await withdrawMember(chosen, pending.id);
+      setWriteState({ busy: false, refused: null });
+      await afterWrite(chosen);
+    } catch (cause) {
+      setWriteState({ busy: false, refused: refusalKey(cause) });
+    }
+  }, [afterWrite, chosen, pending]);
 
   const openTrip = useCallback(async (journeyId: string) => {
     setChosen(journeyId);
@@ -154,7 +240,8 @@ export function AccessPanel() {
         attribution: classifyReadFailure(cause),
       });
     }
-  }, []);
+    await loadRoster(journeyId);
+  }, [loadRoster]);
 
   const rows = trips.phase === "ready" ? trips.rows : [];
   const chosenTitle =
@@ -165,6 +252,28 @@ export function AccessPanel() {
   // No door in this product carries a member limit, so `cap` stays null and the quota line says so
   // instead of dividing the roster by a number nobody sent.
   const quotaKey = invitationQuotaKey({ used: sharing?.rosterSize ?? null, cap: null });
+
+  const roleLabel = (role: string): string => {
+    const entry = ROLE_LADDER.find((row) => row.role === role);
+    return entry ? say(entry.labelKey) : say("access.roleUnread", { role });
+  };
+
+  const grantLabel = (visibility: string): string => {
+    const entry = VISIBILITY_LADDER.find((row) => row.level === visibility);
+    return entry ? say(entry.labelKey) : visibility;
+  };
+
+  /** `member_state` is the server's word for where this row stands. Each one it can send gets its
+   *  own sentence; anything else is reported as unreadable rather than dressed up as "active". */
+  const memberStateSentence = (member: JourneyMemberRow): string => {
+    if (member.removed_at !== null) {
+      return say("access.memberStateRemoved", { removed: formatV8Date(member.removed_at, locale) });
+    }
+    if (member.member_state === "ACTIVE") return say("access.memberStateActive");
+    if (member.member_state === "EXPIRED") return say("access.memberStateExpired");
+    if (member.member_state === "REMOVED") return say("access.memberStateRemoved", { removed: member.removed_at ?? "" });
+    return say("access.memberStateUnknown", { state: member.member_state });
+  };
 
   return (
     <section
@@ -237,6 +346,9 @@ export function AccessPanel() {
       {activity.phase === "ready" && (
         <section className="cn-access-block" aria-label={say("access.activityHeading")}>
           <h3 className="cn-access-h">{say("access.activityHeading")}</h3>
+          <p className="cn-access-muted" data-testid="access-activity-caveat">
+            {say("access.activityNoSharingWriter")}
+          </p>
           {activities.length === 0 ? (
             <p data-testid="access-activity-empty">{say("access.activityEmpty")}</p>
           ) : (
@@ -352,6 +464,150 @@ export function AccessPanel() {
               : say("access.inviteQuotaMissing")}
         </p>
       </section>
+
+      <section className="cn-access-block" aria-label={say("access.inviteFormHeading")}>
+        <h3 className="cn-access-h">{say("access.inviteFormHeading")}</h3>
+        <label className="cn-access-field">
+          <span className="cn-access-picker-label">{say("access.inviteFormPick")}</span>
+          <select
+            data-testid="access-invite-visibility"
+            value={pickVisibility}
+            onChange={(event) => setPickVisibility(event.target.value)}
+          >
+            {VISIBILITY_LADDER.map((entry) => (
+              <option key={entry.level} value={entry.level}>
+                {say(entry.labelKey)}
+              </option>
+            ))}
+          </select>
+        </label>
+        <label className="cn-access-field">
+          <span className="cn-access-picker-label">{say("access.inviteFormExpiry")}</span>
+          <input
+            data-testid="access-invite-expiry"
+            type="datetime-local"
+            value={pickExpiry}
+            onChange={(event) => setPickExpiry(event.target.value)}
+          />
+        </label>
+        <p className="cn-access-muted" data-testid="access-invite-signer">
+          {say("access.inviteFormSigner")}
+        </p>
+        <button
+          data-testid="access-invite-submit"
+          type="button"
+          disabled={chosen === null || writeState.busy}
+          onClick={() => void issueInvitation()}
+        >
+          {writeState.busy ? say("access.inviteFormBusy") : say("access.inviteFormSubmit")}
+        </button>
+        {writeState.refused !== null && writeState.refused !== "nosigner" ? (
+          <p className="cn-access-refusal" data-testid="access-write-refused">
+            {writeState.refused === "already"
+              ? say("access.refuseAlreadyRevoked")
+              : writeState.refused === "missing"
+                ? say("access.refuseNotFound")
+                : say("access.writeRefusedUnknown", { code: writeState.refused })}
+          </p>
+        ) : null}
+      </section>
+
+      {chosen !== null ? (
+        <section className="cn-access-block" aria-label={say("access.grantHeading")}>
+          <h3 className="cn-access-h">{say("access.grantHeading")}</h3>
+          {grants.length === 0 ? (
+            <p data-testid="access-grant-empty">{say("access.grantEmpty")}</p>
+          ) : (
+            <ul className="cn-access-rows" data-testid="access-grant-list">
+              {grants.map((grant) => (
+                <li
+                  className="cn-access-row"
+                  data-revoked={grant.revoked_at !== null}
+                  data-testid="access-grant-row"
+                  key={grant.id}
+                >
+                  <span className="cn-access-row-what">
+                    {grant.revoked_at !== null
+                      ? `${grantLabel(grant.visibility)} · ${say("access.grantRevoked", {
+                          revoked: formatV8Date(grant.revoked_at, locale),
+                        })}`
+                      : grant.expires_at === null
+                        ? `${grantLabel(grant.visibility)} · ${say("access.grantNoExpiry")}`
+                        : `${grantLabel(grant.visibility)} · ${say("access.grantActive", {
+                            expires: formatV8Date(grant.expires_at, locale),
+                          })}`}
+                  </span>
+                  {grant.revoked_at === null ? (
+                    <button
+                      className="cn-access-row-action"
+                      data-testid="access-grant-revoke"
+                      type="button"
+                      onClick={() => setPending({ kind: "grant", id: grant.id })}
+                    >
+                      {pending?.kind === "grant" && pending.id === grant.id
+                        ? say("access.revokeConfirmButton")
+                        : say("access.revokeButton")}
+                    </button>
+                  ) : null}
+                  <details className="cn-access-details">
+                    <summary>{say("access.grantTokenSummary")}</summary>
+                    <p>{fillAccess(say("access.grantToken"), { token: grant.token })}</p>
+                  </details>
+                </li>
+              ))}
+            </ul>
+          )}
+        </section>
+      ) : null}
+
+      {chosen !== null ? (
+        <section className="cn-access-block" aria-label={say("access.rosterHeading")}>
+          <h3 className="cn-access-h">{say("access.rosterHeading")}</h3>
+          {rosterFailed !== null ? (
+            <p data-testid="access-roster-failed">{copyFor(rosterFailed, zh).body}</p>
+          ) : members.length === 0 ? (
+            <p data-testid="access-roster-empty">{say("access.rosterEmpty")}</p>
+          ) : (
+            <ul className="cn-access-rows" data-testid="access-member-list">
+              {members.map((member) => (
+                <li className="cn-access-row" data-state={member.member_state} data-testid="access-member-row" key={member.id}>
+                  <span className="cn-access-row-what">
+                    {fillAccess(say("access.memberRow"), {
+                      role: roleLabel(member.role),
+                      id: member.traveler_id,
+                    })}{" "}
+                    · {memberStateSentence(member)}
+                  </span>
+                  {member.removed_at === null ? (
+                    <button
+                      className="cn-access-row-action"
+                      data-testid="access-member-withdraw"
+                      type="button"
+                      onClick={() => setPending({ kind: "member", id: member.id })}
+                    >
+                      {pending?.kind === "member" && pending.id === member.id
+                        ? say("access.revokeConfirmButton")
+                        : say("access.revokeButton")}
+                    </button>
+                  ) : null}
+                </li>
+              ))}
+            </ul>
+          )}
+        </section>
+      ) : null}
+
+      {pending !== null ? (
+        <p className="cn-access-refusal" data-testid="access-confirm-pending">
+          {pending.kind === "grant" ? say("access.confirmRevokeGrant") : say("access.confirmRevokeMember")}
+          <button data-testid="access-confirm-yes" type="button" onClick={() => void confirmWithdrawal()}>
+            {say("access.revokeConfirmButton")}
+          </button>
+          <button data-testid="access-confirm-no" type="button" onClick={() => setPending(null)}>
+            {say("access.revokeButton")}
+          </button>
+        </p>
+      ) : null}
     </section>
   );
 }
