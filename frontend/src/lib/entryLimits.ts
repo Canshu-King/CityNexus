@@ -20,6 +20,8 @@ export const ROOMS_MIN = 1;
 export const ROOMS_MAX = 20;
 /** The review step blocks on a budget of zero, so a 0 here would be a label promising what the form refuses. */
 export const BUDGET_MINOR_MIN = 1;
+/** An optional money field still accepts 0, because 0 there is the traveller saying "no lodging budget". */
+export const OPTIONAL_MONEY_MIN = 0;
 
 type EntryField = {
   zh: string;
@@ -70,7 +72,7 @@ export const ENTRY_FIELDS = {
     unitZh: "元",
     unitEn: "CNY",
     testId: "trial-stay-budget",
-    min: BUDGET_MINOR_MIN,
+    min: OPTIONAL_MONEY_MIN,
     max: null,
     required: false,
   },
