@@ -16,6 +16,7 @@ from app.fact_acquisition import (
     _validate_public_http_url,
     _search_fact_candidates,
     _acquire_overpass_payload,
+    _official_web_facts,
     acquire_place_facts,
 )
 from app.services import (
@@ -107,6 +108,125 @@ class _Response:
 
     def json(self):
         return self._payload
+
+
+def test_official_html_parser_promotes_date_applicable_opening_and_cost(monkeypatch):
+    from app import fact_acquisition
+
+    body = """
+    <html><script>ignore opening hours 00:00-00:01</script>
+      <div>开放时间：7:30-17:30 (3月1日-10月31日)，7:30-17:00 (11月1日-次年2月底)</div>
+      <div>价格：淡季30元（1月-3月、6月、11月-12月）；旺季40元（4月-5月、7月-10月）</div>
+    </html>
+    """
+    body = (
+        "<div>&#x5f00;&#x653e;&#x65f6;&#x95f4;&#xff1a;7:30-17:30 (3&#x6708;1&#x65e5;-10&#x6708;31&#x65e5;)，"
+        "7:30-17:00 (11&#x6708;1&#x65e5;-&#x6b21;&#x5e74;2&#x6708;&#x5e95;)</div>"
+        "<div>&#x4ef7;&#x683c;&#xff1a;&#x6de1;&#x5b63;30&#x5143;&#xff08;1&#x6708;-3&#x6708;&#x3001;6&#x6708;&#x3001;11&#x6708;-12&#x6708;&#xff09;;&#x65fa;&#x5b63;40&#x5143;&#xff08;4&#x6708;-5&#x6708;&#x3001;7&#x6708;-10&#x6708;&#xff09;</div>"
+    )
+
+    class Response:
+        text = body
+        status_code = 200
+
+    monkeypatch.setattr(
+        fact_acquisition,
+        "_safe_get",
+        lambda *_args, **_kwargs: (Response(), "https://visitsz.example/detail"),
+    )
+    result = _official_web_facts(
+        object(),
+        "https://visitsz.example/detail",
+        retrieved_at="2026-10-04T00:00:00+00:00",
+        reference_at="2026-10-04T09:00:00+08:00",
+    )
+
+    assert result["status"] == "ACQUIRED"
+    assert result["opening_hours"]["status"] == "OFFICIAL_WEB_VERIFIED"
+    assert (result["opening_hours"]["open"], result["opening_hours"]["close"]) == ("07:30", "17:30")
+    assert result["cost_evidence"]["status"] == "VERIFIED_PROVIDER"
+    assert result["cost_evidence"]["amount_minor"] == 4000
+    assert len(result["cost_evidence"]["seasonal_amounts"]) == 2
+
+
+def test_official_html_parser_keeps_verified_free_and_all_day_distinct_from_unknown(monkeypatch):
+    from app import fact_acquisition
+
+    body = "<div>开放时间：全天开放</div><div>价格：免费</div>"
+    body = "<div>&#x5f00;&#x653e;&#x65f6;&#x95f4;&#xff1a;&#x5168;&#x5929;&#x5f00;&#x653e;</div><div>&#x4ef7;&#x683c;&#xff1a;&#x514d;&#x8d39;</div>"
+
+    class Response:
+        text = body
+        status_code = 200
+
+    monkeypatch.setattr(
+        fact_acquisition,
+        "_safe_get",
+        lambda *_args, **_kwargs: (Response(), "https://visitsz.example/detail"),
+    )
+    result = _official_web_facts(object(), "https://visitsz.example/detail", retrieved_at="now")
+
+    assert result["opening_hours"]["status"] == "OFFICIAL_WEB_VERIFIED"
+    assert result["opening_hours"]["always_available"] is True
+    assert result["cost_evidence"]["status"] == "VERIFIED_PROVIDER"
+    assert result["cost_evidence"]["amount_minor"] == 0
+
+
+def test_official_price_label_with_full_width_spacing_is_parsed_as_cost(monkeypatch):
+    from app import fact_acquisition
+
+    body = (
+        "<div>&#x4ef7;&#x3000;&#x3000;&#x683c;&#xff1a;30&#x5143;"
+        "&#xff08;1&#x6708;-3&#x6708;&#xff09;</div>"
+    )
+
+    class Response:
+        text = body
+        status_code = 200
+
+    monkeypatch.setattr(
+        fact_acquisition,
+        "_safe_get",
+        lambda *_args, **_kwargs: (Response(), "https://visitsz.example/detail"),
+    )
+    result = _official_web_facts(
+        object(),
+        "https://visitsz.example/detail",
+        retrieved_at="2026-01-10T00:00:00+00:00",
+        reference_at="2026-01-10T09:00:00+08:00",
+    )
+
+    assert result["cost_evidence"]["status"] == "VERIFIED_PROVIDER"
+    assert result["cost_evidence"]["amount_minor"] == 3000
+
+
+def test_fact_source_binding_requires_exact_provider_identity():
+    from app.fact_acquisition import _fact_source_binding
+
+    place = SimpleNamespace(external_id="overpass:way/46")
+    assert _fact_source_binding(
+        place,
+        {
+            "fact_source_binding": {
+                "provider_entity": "overpass:way/other",
+                "source_url": "https://official.example/46",
+                "source_class": "MUNICIPAL_AUTHORITY",
+                "identity_basis": {"matched_provider_entity": True, "provider_entity": "overpass:way/other"},
+            }
+        },
+    ) is None
+    binding = _fact_source_binding(
+        place,
+        {
+            "fact_source_binding": {
+                "provider_entity": "overpass:way/46",
+                "source_url": "https://official.example/46",
+                "source_class": "MUNICIPAL_AUTHORITY",
+                "identity_basis": {"matched_provider_entity": True, "provider_entity": "overpass:way/46"},
+            }
+        },
+    )
+    assert binding["source_url"] == "https://official.example/46"
 
 
 def test_fact_acquisition_keeps_one_live_client_for_secondary_and_official_phases(monkeypatch):

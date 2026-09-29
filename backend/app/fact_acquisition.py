@@ -13,7 +13,7 @@ import ipaddress
 import json
 import re
 import socket
-from datetime import datetime, timezone
+from datetime import date, datetime, timezone
 from typing import Any
 from urllib.parse import urljoin, urlparse
 
@@ -45,6 +45,14 @@ _BLOCKED_HOSTNAMES = {
     "localhost", "localhost.localdomain", "metadata", "metadata.google.internal",
     "instance-data.ec2.internal",
 }
+_OFFICIAL_SOURCE_CLASSES = frozenset(
+    {
+        "OFFICIAL_WEB",
+        "OFFICIAL_OPERATOR",
+        "OFFICIAL_TICKETING",
+        "MUNICIPAL_AUTHORITY",
+    }
+)
 
 
 def _element_ref(place: Place) -> tuple[str, str] | None:
@@ -286,14 +294,313 @@ def _official_source_url(tags: dict[str, Any]) -> str | None:
     return None
 
 
-def _official_web_facts(client: httpx.Client, source_url: str, *, retrieved_at: str) -> dict[str, Any]:
+
+def _fact_source_binding(place: Place, metadata: dict[str, Any]) -> dict[str, Any] | None:
+    """Return an operator-approved source bound to this exact provider entity."""
+
+    binding = metadata.get("fact_source_binding")
+    if not isinstance(binding, dict):
+        return None
+    provider_entity = str(binding.get("provider_entity") or "")
+    source_class = str(binding.get("source_class") or "").upper()
+    source_url = str(binding.get("source_url") or "").strip()
+    identity = binding.get("identity_basis")
+    if provider_entity != str(place.external_id or ""):
+        return None
+    if source_class not in _OFFICIAL_SOURCE_CLASSES or not source_url.startswith(("http://", "https://")):
+        return None
+    if not isinstance(identity, dict) or identity.get("matched_provider_entity") is not True:
+        return None
+    if str(identity.get("provider_entity") or provider_entity) != provider_entity:
+        return None
+    return {
+        "provider_entity": provider_entity,
+        "source_url": source_url,
+        "source_class": source_class,
+        "identity_basis": identity,
+        "approval": str(binding.get("approval") or "OPERATOR_VERIFIED"),
+    }
+
+
+def _visible_html_text(body: str) -> str:
+    without_non_content = re.sub(
+        r"<(script|style|noscript|template)\b[^>]*>.*?</\1>",
+        " ",
+        body,
+        flags=re.IGNORECASE | re.DOTALL,
+    )
+    text = re.sub(r"<!--.*?-->", " ", without_non_content, flags=re.DOTALL)
+    text = re.sub(r"<[^>]+>", " ", text)
+    text = html.unescape(text).replace("\xa0", " ")
+    return re.sub(r"\s+", " ", text).strip()
+
+
+def _reference_date(reference_at: str | datetime | date | None) -> date | None:
+    if isinstance(reference_at, datetime):
+        return reference_at.date()
+    if isinstance(reference_at, date):
+        return reference_at
+    if not reference_at:
+        return None
+    try:
+        return datetime.fromisoformat(str(reference_at).replace("Z", "+00:00")).date()
+    except ValueError:
+        return None
+
+
+def _period_text(value: str) -> str:
+    return str(value).translate(
+        str.maketrans(
+            {
+                "\u3001": ",",
+                "\uff0c": ",",
+                "\uff1b": ";",
+                "\uff08": "(",
+                "\uff09": ")",
+            }
+        )
+    )
+
+
+_MONTH_TOKEN = re.compile(
+    r"(?P<month>\d{1,2})\s*"
+    + re.escape("\u6708")
+    + r"(?:\s*(?P<day>\d{1,2})\s*"
+    + re.escape("\u65e5")
+    + r"?)?"
+)
+
+
+def _period_matches(period: str, reference_at: str | datetime | date | None) -> bool:
+    reference = _reference_date(reference_at)
+    period = _period_text(period)
+    if reference is None or not period.strip():
+        return True
+    for segment in re.split(r"[,;]", period):
+        tokens = list(_MONTH_TOKEN.finditer(segment))
+        if not tokens:
+            continue
+        first = tokens[0]
+        start_month = int(first.group("month"))
+        start_day = int(first.group("day") or 1)
+        range_chars = re.escape("-" + "\u2013" + "\u2014" + "\u81f3" + "\u5230")
+        if len(tokens) == 1 or not re.search("[" + range_chars + "]", segment):
+            if reference.month == start_month:
+                return True
+            continue
+        last = tokens[-1]
+        end_month = int(last.group("month"))
+        end_day = int(last.group("day") or 31)
+        start_value = (start_month, start_day)
+        end_value = (end_month, end_day)
+        current_value = (reference.month, reference.day)
+        if "\u6b21\u5e74" in segment or end_value < start_value:
+            if current_value >= start_value or current_value <= end_value:
+                return True
+        elif start_value <= current_value <= end_value:
+            return True
+    return False
+
+
+def _clock_value(value: str) -> str:
+    text = str(value).strip()
+    if ":" not in text:
+        return f"{int(text):02d}:00"
+    hour, minute = text.split(":", 1)
+    return f"{int(hour):02d}:{int(minute):02d}"
+
+
+def _plain_text_opening(
+    text: str,
+    source_url: str,
+    *,
+    reference_at: str | datetime | date | None,
+) -> dict[str, Any]:
+    label_pattern = (
+        "(?:"
+        + "\u5f00\u653e\u65f6\u95f4"
+        + "|"
+        + "\u8425\u4e1a\u65f6\u95f4"
+        + r"|opening\s+hours?|hours?)"
+        + r"\s*["
+        + re.escape(":\uFF1A")
+        + r"]?"
+    )
+    label = re.search(label_pattern, text, re.IGNORECASE)
+    if not label:
+        return {"status": "UNKNOWN", "raw": None, "intervals": []}
+    excerpt = text[label.end() : label.end() + 260].translate(
+        str.maketrans({"\uff08": "(", "\uff09": ")"})
+    )
+    if re.search("\u5168\u5929\u5f00\u653e" + r"|all\s*day|24\s*hours?", excerpt, re.IGNORECASE):
+        return {
+            "status": "OFFICIAL_WEB_VERIFIED",
+            "raw": excerpt,
+            "open": "00:00",
+            "close": "24:00",
+            "always_available": True,
+            "intervals": [{"open": "00:00", "close": "24:00"}],
+            "source": "official_web",
+            "source_url": source_url,
+        }
+    range_pattern = re.compile(
+        r"(?P<open>\d{1,2}(?::\d{2})?)\s*["
+        + re.escape("-\u2013\u2014")
+        + r"]\s*(?P<close>\d{1,2}(?::\d{2})?)"
+        + r"\s*(?:\(\s*(?P<period>[^)]{1,80})\))?"
+    )
+    seasonal: list[dict[str, Any]] = []
+    for match in range_pattern.finditer(excerpt):
+        normalized = normalize_opening_hours(
+            f"{_clock_value(match.group('open'))}-{_clock_value(match.group('close'))}"
+        )
+        if normalized.get("status") != "NORMALIZED_VALID":
+            continue
+        seasonal.append(
+            {
+                "period": _period_text(match.group("period") or "").strip(),
+                "open": normalized["open"],
+                "close": normalized["close"],
+            }
+        )
+    if not seasonal:
+        return {"status": "UNKNOWN", "raw": excerpt, "intervals": []}
+    chosen = next(
+        (item for item in seasonal if _period_matches(item["period"], reference_at)),
+        seasonal[0],
+    )
+    normalized = normalize_opening_hours(f"{chosen['open']}-{chosen['close']}")
+    normalized.update(
+        {
+            "status": "OFFICIAL_WEB_VERIFIED",
+            "source": "official_web",
+            "source_url": source_url,
+            "raw": excerpt,
+            "seasonal_periods": seasonal,
+        }
+    )
+    return normalized
+
+
+def _plain_text_cost(
+    text: str,
+    source_url: str,
+    *,
+    reference_at: str | datetime | date | None,
+) -> dict[str, Any]:
+    label_pattern = (
+        "(?:"
+        + "\u4ef7" + r"\s*" + "\u683c"
+        + "|"
+        + "\u7968" + r"\s*" + "\u4ef7"
+        + "|"
+        + "\u95e8" + r"\s*" + "\u7968" + r"(?:\s*" + "\u4ef7" + r"\s*" + "\u683c)?"
+        + r"|admission\s+fee|entrance\s+fee|ticket)"
+        + r"\s*["
+        + re.escape(":\uFF1A")
+        + r"]?"
+    )
+    label = re.search(label_pattern, text, re.IGNORECASE)
+    if not label:
+        return {
+            "status": "UNKNOWN",
+            "amount_minor": None,
+            "currency": "CNY",
+            "source": "official_web",
+            "source_url": source_url,
+        }
+    excerpt = text[label.end() : label.end() + 300]
+    next_label = re.search(
+        "\u5f00\u653e\u65f6\u95f4|\u8425\u4e1a\u65f6\u95f4|\u7535\u8bdd|\u5730\u5740|\u7b80\u4ecb"
+        + r"|opening\s+hours?|hours?|address",
+        excerpt,
+        re.IGNORECASE,
+    )
+    if next_label:
+        excerpt = excerpt[: next_label.start()]
+    excerpt = excerpt.translate(
+        str.maketrans({"\uff08": "(", "\uff09": ")"})
+    )
+    if re.search("\u514d\u8d39" + r"|free", excerpt, re.IGNORECASE):
+        return {
+            "status": "VERIFIED_PROVIDER",
+            "amount_minor": 0,
+            "currency": "CNY",
+            "source": "official_web",
+            "source_url": source_url,
+            "raw": excerpt,
+        }
+    price_pattern = re.compile(
+        r"(?P<amount>\d+(?:\.\d{1,2})?)\s*(?P<currency>"
+        + re.escape("\u5143")
+        + r"|CNY|RMB|"
+        + re.escape("\u00a5")
+        + r")?\s*(?:\(\s*(?P<period>[^)]{1,100})\))?",
+        re.IGNORECASE,
+    )
+    seasonal: list[dict[str, Any]] = []
+    for match in price_pattern.finditer(excerpt):
+        raw_currency = (match.group("currency") or "CNY").upper()
+        currency = "CNY" if raw_currency in {"\u5143", "RMB", "\u00a5"} else raw_currency
+        seasonal.append(
+            {
+                "period": _period_text(match.group("period") or "").strip(),
+                "amount_minor": round(float(match.group("amount")) * 100),
+                "currency": currency,
+            }
+        )
+    if not seasonal:
+        return {
+            "status": "UNKNOWN",
+            "amount_minor": None,
+            "currency": "CNY",
+            "source": "official_web",
+            "source_url": source_url,
+            "raw": excerpt,
+        }
+    chosen = next(
+        (item for item in seasonal if _period_matches(item["period"], reference_at)),
+        seasonal[0],
+    )
+    return {
+        "status": "VERIFIED_PROVIDER",
+        "amount_minor": chosen["amount_minor"],
+        "currency": chosen["currency"],
+        "source": "official_web",
+        "source_url": source_url,
+        "raw": excerpt,
+        "seasonal_amounts": seasonal,
+    }
+
+
+def _official_web_facts(
+    client: httpx.Client,
+    source_url: str,
+    *,
+    retrieved_at: str,
+    reference_at: str | datetime | date | None = None,
+    source_binding: dict[str, Any] | None = None,
+) -> dict[str, Any]:
     response, final_url = _safe_get(client, source_url, retrieved_at=retrieved_at)
     body = response.text[:1_000_000]
     nodes = _json_ld_nodes(body)
     opening = _official_opening(nodes, final_url)
     cost = _official_cost(nodes, final_url)
+    visible_text = _visible_html_text(body)
+    if opening.get("status") == "UNKNOWN":
+        opening = _plain_text_opening(visible_text, final_url, reference_at=reference_at)
+    if cost.get("status") == "UNKNOWN":
+        cost = _plain_text_cost(visible_text, final_url, reference_at=reference_at)
     status = "ACQUIRED" if opening.get("status") != "UNKNOWN" or cost.get("status") != "UNKNOWN" else "NO_STRUCTURED_FACTS"
-    return {"provider": "official_web", "source": final_url, "retrieved_at": retrieved_at, "status": status, "opening_hours": opening, "cost_evidence": cost}
+    return {
+        "provider": "official_web",
+        "source": final_url,
+        "retrieved_at": retrieved_at,
+        "status": status,
+        "opening_hours": opening,
+        "cost_evidence": cost,
+        "source_binding": source_binding,
+    }
 
 
 def _search_fact_candidates(
@@ -454,6 +761,7 @@ def acquire_place_facts(session: Session, journey: Journey, *, place_ids: list[s
             tags = dict(element.get("tags") or {})
             nominatim_row = nominatim_rows.get(ref) or {}
             nominatim_tags = dict(nominatim_row.get("extratags") or {})
+            metadata = json.loads(place.metadata_json or "{}") if place.metadata_json else {}
             opening = normalize_opening_hours(tags.get("opening_hours"))
             cost = cost_evidence_from_tags(tags, source="overpass")
             if opening.get("status") == "UNKNOWN" and nominatim_tags.get("opening_hours"):
@@ -464,11 +772,22 @@ def acquire_place_facts(session: Session, journey: Journey, *, place_ids: list[s
                 if candidate.get("status") != "UNKNOWN":
                     cost = candidate
             official = {"status": "NO_SOURCE_URL"}
-            source_url = _official_source_url({**tags, **nominatim_tags})
+            source_binding = _fact_source_binding(place, metadata)
+            source_url = (
+                str(source_binding["source_url"])
+                if source_binding
+                else _official_source_url({**tags, **nominatim_tags})
+            )
             if source_url:
                 receipt["official_web"]["attempted"] += 1
                 try:
-                    official = _official_web_facts(client, source_url, retrieved_at=retrieved_at)
+                    official = _official_web_facts(
+                        client,
+                        source_url,
+                        retrieved_at=retrieved_at,
+                        reference_at=journey.start_at,
+                        source_binding=source_binding,
+                    )
                     receipt["official_web"]["status"] = official["status"]
                     if official["status"] == "ACQUIRED":
                         receipt["official_web"]["acquired"] += 1
@@ -491,7 +810,6 @@ def acquire_place_facts(session: Session, journey: Journey, *, place_ids: list[s
                 receipt["known_opening_count"] += 1
             if str(cost.get("status") or "UNKNOWN").upper() in KNOWN_COST_STATUSES and cost.get("amount_minor") is not None:
                 receipt["known_cost_count"] += 1
-            metadata = json.loads(place.metadata_json or "{}") if place.metadata_json else {}
             metadata["fact_acquisition"] = {
                 "source": endpoint, "provider": "overpass", "retrieved_at": retrieved_at,
                 "provider_entity": place.external_id,

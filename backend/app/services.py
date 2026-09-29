@@ -930,6 +930,8 @@ def _place_window(place: Place) -> tuple[int, int] | None:
     """A place's own open/close as minutes-of-day, or None if it never says."""
 
     hours = json.loads(place.opening_hours_json or "{}") if place.opening_hours_json else {}
+    if hours.get("always_available") is True:
+        return 0, 24 * 60
     opened = _hm_to_minutes(hours.get("open"))
     closed = _hm_to_minutes(hours.get("close"))
     if opened is None or closed is None or closed <= opened:
