@@ -1,7 +1,7 @@
 {
-  "started_at": "2026-09-29T08:45:09+08:00",
+  "started_at": "2026-09-29T10:24:48+08:00",
   "backend_identity": {
-    "listener_pid": 49280,
+    "listener_pid": 4760,
     "listener_is_spawned_or_its_child": true,
     "listener_command": "\"C:\\Users\\������\\AppData\\Roaming\\uv\\python\\cpython-3.12.14-windows-x86_64-none\\python.exe\" -X utf8 -m uvicorn app.main:app --host 127.0.0.1 --port 4731 --log-level warning",
     "command_names_this_app_and_port": true,
@@ -10,7 +10,7 @@
     "shared_stores_named_by_this_run": []
   },
   "seed": {
-    "journey_id": "738fabd6-cbf1-4062-a35a-ea778662594e",
+    "journey_id": "55d9c7f9-98f2-4682-9b6e-d9b5f7395e28",
     "delete_door_status": 204,
     "undelete_door_status": 200,
     "actions_in_this_lane_database": [
@@ -38,7 +38,7 @@
       "locale": "zh-CN",
       "title": "成员与权限",
       "pickerPresent": true,
-      "doorState": "这台服务器 /members、/share-grants、/acl/roles 一扇都没答，所以这一屏今天没有任何一项能真改。下面写的是那几扇门答话之后每一档意味着什么，不是对这条行程下的结论。",
+      "doorState": "这台服务器三扇共享门都答了。下面几档仍是这一屏自己说每一档意味着什么的话；成员名单这一格还没画出来，所以名单为空是这扇门的答案，不是这一屏的结论。",
       "roleRows": 3,
       "roleText": [
         "所有者 全部权限：改可见性、请人、移除成员、删除行程。",
@@ -103,7 +103,7 @@
         }
       ],
       "inviteTtl": "这台服务器没有给出邀请的有效期，所以这里不声称有一个。",
-      "inviteQuota": "这台服务器没有给出这条行程的成员数与上限，所以这里不计数。",
+      "inviteQuota": "这台服务器给了成员数（0），没给上限，所以这里不说这条行程满没满。",
       "activityLines": [
         "新建了这条行程",
         "把这条行程丢进了回收站",
@@ -132,9 +132,9 @@
       },
       "rawKeyLeak": false,
       "unfilledPlaceholders": [],
-      "cjkChars": 587,
-      "latinWords": 15,
-      "wholePageCjkChars": 603,
+      "cjkChars": 597,
+      "latinWords": 10,
+      "wholePageCjkChars": 613,
       "doorStillLoading": false,
       "overflowX": 0,
       "pageErrors": [],
@@ -144,7 +144,7 @@
       "locale": "en",
       "title": "MEMBERS AND ACCESS",
       "pickerPresent": true,
-      "doorState": "This server answered none of /members, /share-grants, /acl/roles, so nothing on this screen can be changed today. The ladders say what each level will mean once those doors answer -- they are not a claim about this trip.",
+      "doorState": "This server answered all three sharing doors. The ladders below are still this screen's words about what each level means -- the member list itself is not drawn here yet, so an empty roster is this door's answer, not this screen's.",
       "roleRows": 3,
       "roleText": [
         "Owner Everything: change visibility, invite people, remove members, delete the trip.",
@@ -209,7 +209,7 @@
         }
       ],
       "inviteTtl": "This server gave no expiry for an invitation, so none is claimed here.",
-      "inviteQuota": "This server gave no member count or limit for this trip, so nothing is counted here.",
+      "inviteQuota": "This server gave a member count (0) and no limit, so nothing here says whether the trip is full.",
       "activityLines": [
         "created this trip",
         "put this trip in the recycle bin",
@@ -239,7 +239,7 @@
       "rawKeyLeak": false,
       "unfilledPlaceholders": [],
       "cjkChars": 0,
-      "latinWords": 387,
+      "latinWords": 390,
       "wholePageCjkChars": 2,
       "doorStillLoading": false,
       "overflowX": 0,
@@ -270,7 +270,7 @@
       {
         "name": "the ladder offers exactly the levels the server's own domain has",
         "verdict": "PASS",
-        "detail": "{\"seam_state\":\"NOT_YET_CHECKABLE_no_ShareVisibility_in_contract_or_client\",\"read_from\":null,\"domain_levels\":[],\"screen_levels\":[\"PRIVATE\",\"LINK_READ\",\"INVITEES_ONLY\",\"PUBLIC\"]}"
+        "detail": "{\"seam_state\":\"CHECKED\",\"read_from\":\"contracts/openapi.yaml\",\"domain_levels\":[\"PRIVATE\",\"LINK_READ\",\"INVITEES_ONLY\",\"PUBLIC\"],\"screen_levels\":[\"PRIVATE\",\"LINK_READ\",\"INVITEES_ONLY\",\"PUBLIC\"]}"
       },
       {
         "name": "the confirmation split is two different sentences",
@@ -300,7 +300,7 @@
       {
         "name": "the invitation counts, or says it was given no numbers",
         "verdict": "PASS",
-        "detail": "这台服务器没有给出这条行程的成员数与上限，所以这里不计数。 || This server gave no member count or limit for this trip, so nothing is counted here."
+        "detail": "这台服务器给了成员数（0），没给上限，所以这里不说这条行程满没满。 || This server gave a member count (0) and no limit, so nothing here says whether the trip is full."
       },
       {
         "name": "activity rows the screen has words for read as sentences, not as the server's token",
@@ -315,7 +315,7 @@
       {
         "name": "the sharing door's absence is named on screen, after the server answered",
         "verdict": "PASS",
-        "detail": "这台服务器 /members、/share-grants、/acl/roles 一扇都没答，所以这一屏今天没有任何一项能真改。下面写的是那几扇门答话之后每一档意味着什么，不是对这条行程下的结论。 || This server answered none of /members, /share-grants, /acl/roles, so nothing on this screen can be changed today. The ladders say what each level will mean onc"
+        "detail": "这台服务器三扇共享门都答了。下面几档仍是这一屏自己说每一档意味着什么的话；成员名单这一格还没画出来，所以名单为空是这扇门的答案，不是这一屏的结论。 || This server answered all three sharing doors. The ladders below are still this screen's words about what each level means -- the member list itself is not drawn here yet, so an empty "
       },
       {
         "name": "no raw copy key reached either arm",
@@ -330,12 +330,12 @@
       {
         "name": "the Chinese arm reads Chinese",
         "verdict": "PASS",
-        "detail": "cjk=587"
+        "detail": "cjk=597"
       },
       {
         "name": "the English arm reads English",
         "verdict": "PASS",
-        "detail": "panelCjk=0 latin=387"
+        "detail": "panelCjk=0 latin=390"
       },
       {
         "name": "the one control is under the finger at 390x844",

@@ -96,7 +96,8 @@ export const accessCopy = {
       "This server answered none of {paths}, so nothing on this screen can be changed today. The ladders say what each level will mean once those doors answer -- they are not a claim about this trip.",
     "access.doorPartial":
       "This server answered some but not all of the sharing doors; the ones still silent are {paths}. Read the ladders as what each level will mean, not as this trip's state.",
-    "access.doorPresent": "This server answered who can reach this trip; the rows below are its answer.",
+    "access.doorPresent":
+      "This server answered all three sharing doors. The ladders below are still this screen's words about what each level means -- the member list itself is not drawn here yet, so an empty roster is this door's answer, not this screen's.",
   },
   "zh-CN": {
     "access.title": "成员与权限",
@@ -164,7 +165,8 @@ export const accessCopy = {
       "这台服务器 {paths} 一扇都没答，所以这一屏今天没有任何一项能真改。下面写的是那几扇门答话之后每一档意味着什么，不是对这条行程下的结论。",
     "access.doorPartial":
       "这台服务器只答了共享那几扇门里的一部分，还没答的是 {paths}。下面写的是每档将要意味着什么，不是这条行程现在的状态。",
-    "access.doorPresent": "这台服务器答了谁能到达这条行程；下面几行就是它的答案。",
+    "access.doorPresent":
+      "这台服务器三扇共享门都答了。下面几档仍是这一屏自己说每一档意味着什么的话；成员名单这一格还没画出来，所以名单为空是这扇门的答案，不是这一屏的结论。",
   },
 } as const;
 

@@ -104,6 +104,13 @@ async function arm(browser, locale) {
     read.doorState = squeeze(
       await page.locator('[data-testid="access-door-state"]').first().innerText(),
     );
+    // Same reason as above: the two invitation lines are answered by the sharing doors, so reading
+    // them at first paint captured the loading state and reported "the server gave nothing" about a
+    // server that had not been asked yet.
+    read.inviteTtl = squeeze(await page.locator('[data-testid="access-invite-ttl"]').first().innerText());
+    read.inviteQuota = squeeze(
+      await page.locator('[data-testid="access-invite-quota"]').first().innerText(),
+    );
     read.activityLines = (
       await page.locator('[data-testid="access-activity-list"] li .cn-access-what').allInnerTexts()
     ).map(squeeze);
