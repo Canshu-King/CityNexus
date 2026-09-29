@@ -17,7 +17,7 @@
  * spinner, and in both cases the zeros looked exactly like the finding.
  */
 import { expect, test, type APIRequestContext, type Page } from "@playwright/test";
-import { writeFileSync } from "node:fs";
+import { readFileSync, writeFileSync } from "node:fs";
 import { evidencePath } from "./_qoderEvidence";
 
 const FILE = "e2e/qoder-ord0435-poi-batch-multiselect.spec.ts";
@@ -488,3 +488,70 @@ for (const [locale, tag] of LOCALES) {
     await q5(page, locale, tag);
   });
 }
+
+/* The commander's third cell: "只选一个与选两个时计数句的单复数形各自逐字".
+ *
+ * Two of these sentences cannot be reached on screen with n=2 on this store -- composing two picks
+ * is refused (`V13_ACTIVITY_OUTSIDE_DEPARTURE_WINDOW`, asserted in Q5), so a screen read of
+ * "2 activities" is not available here and pretending otherwise would be the same empty-denominator
+ * mistake this file already caught once. What is available is the real mechanism: the dictionary
+ * bytes are read from the file, and the expansion is done by the application's own
+ * `src/lib/plural.ts` served by vite, so the two forms below are produced by the code that ships,
+ * not by a copy of its regex. The sentences that *do* reach the screen at n=2 (`pickedCount`) are
+ * read there by Q2 and by `review/ord0435/_counter_words_r1.js`.
+ */
+test("Q6en_the_counted_sentences_decline_in_both_forms — 计数句单复数两形逐字（英文臂，走应用自己的展开函数）", async ({ page }) => {
+  test.setTimeout(180_000);
+  const arm = "Q6en";
+  const dictPath = new URL("../src/i18n/LocaleContext.tsx", import.meta.url);
+  const dict = readFileSync(dictPath, "utf8");
+  const keys = [
+    "discovery.pickedCount",
+    "discovery.batchLanded",
+    "discovery.batchCommitmentNote",
+    "discovery.batchRefusedSome",
+  ];
+  const raw: Record<string, string> = {};
+  for (const key of keys) {
+    /* Only the English half: the file holds two dictionaries and the first occurrence belongs to `en`.
+       Parsed line by line rather than with a RegExp built from a template string -- that is how this
+       arm first died, with `Unterminated character class` from an escaping level nobody could see. */
+    const line = dict.split("\n").find((l) => l.trim().startsWith(`"${key}":`));
+    expect(line, node(arm, `${key} is not readable in the dictionary file`)).toBeTruthy();
+    const head = `"${key}": "`;
+    const start = String(line).indexOf(head);
+    expect(start, node(arm, `${key} has no value opening on its line`)).toBeGreaterThanOrEqual(0);
+    raw[key] = String(line).slice(start + head.length).replace(/",\s*$/, "");
+  }
+
+  await page.goto("/v8/hub", { waitUntil: "load" });
+  const forms = await page.evaluate(async (entries) => {
+    /* The real mechanism, imported from the dev server rather than copied: a re-typed regex is how a
+       gauge starts agreeing with itself. */
+    // @ts-expect-error vite serves this path at run time; it is not on the type root
+    const mod = (await import(/* @vite-ignore */ "/src/lib/plural.ts")) as {
+      expandPluralMarkers: (t: string, p?: Record<string, string | number>) => string;
+    };
+    const out: Record<string, { one: string; two: string }> = {};
+    for (const [key, value] of entries) {
+      out[key] = {
+        one: mod.expandPluralMarkers(value, { n: 1, day: "2026-10-10" }),
+        two: mod.expandPluralMarkers(value, { n: 2, day: "2026-10-10" }),
+      };
+    }
+    return out;
+  }, Object.entries(raw));
+  readings[arm] = { dictionary_bytes: raw, forms, mechanism: "src/lib/plural.ts, imported from the dev server" };
+
+  /* `expandPluralMarkers` declines the noun; interpolating `{n}` is the other half of `t()`. So these
+     are the two *forms* of each sentence with the number still standing in its slot -- the numbers
+     themselves are read off the screen by Q2 (`1 picked` / `2 picked`) and Q4 (`1 activity`). */
+  expect(forms["discovery.pickedCount"].one).toBe("{n} picked");
+  expect(forms["discovery.pickedCount"].two).toBe("{n} picked");
+  expect(forms["discovery.batchLanded"].one).toBe("Read back from the server: {n} activity on {day}.");
+  expect(forms["discovery.batchLanded"].two).toBe("Read back from the server: {n} activities on {day}.");
+  expect(forms["discovery.batchCommitmentNote"].one).toBe("{n} protected commitment in this batch, not counted as a pick.");
+  expect(forms["discovery.batchCommitmentNote"].two).toBe("{n} protected commitments in this batch, not counted as a pick.");
+  expect(forms["discovery.batchRefusedSome"].one).toBe("Not written by the server: {n} of the picked place.");
+  expect(forms["discovery.batchRefusedSome"].two).toBe("Not written by the server: {n} of the picked places.");
+});

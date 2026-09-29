@@ -1,0 +1,53 @@
+{
+ "base": "http://127.0.0.1:8812",
+ "database": "D:/moodle/_qoder_b_ord0435b_20260929/backend/_ord0435c_priv.db",
+ "evidence": "D:/moodle/_qoder_b_ord0435b_20260929/_r2_evidence/ord0435/local__Q4en.json",
+ "plan_id": "ee0de157-684f-4f88-86b9-0da32333e215",
+ "route": {
+  "http_status": 200,
+  "plan_status": "CANDIDATE",
+  "version_no": 93,
+  "activity_rows": 4,
+  "picked": [
+   {
+    "id": "fe23ff2c-3f6f-42bf-950b-7fe28fb9813e",
+    "title": "Tianjin Italian Style Town Indoor Gallery",
+    "place_id": "real-place-7836d8cd2e948d6d1a0773e7",
+    "start_at": "2026-10-10T16:37:00+08:00"
+   }
+  ]
+ },
+ "store": {
+  "activity_rows": 4,
+  "picked": [
+   {
+    "id": "fe23ff2c-3f6f-42bf-950b-7fe28fb9813e",
+    "title": "Tianjin Italian Style Town Indoor Gallery",
+    "place_id": "real-place-7836d8cd2e948d6d1a0773e7",
+    "start_at": "2026-10-10T16:37:00+08:00"
+   }
+  ]
+ },
+ "screen": {
+  "row_count": 1,
+  "activity_ids": [
+   "fe23ff2c-3f6f-42bf-950b-7fe28fb9813e"
+  ],
+  "rows": [
+   "2026-10-10 16:37 Tianjin Italian Style Town Indoor Gallery fe23ff2c-3f6f-42bf-950b-7fe28fb9813e"
+  ]
+ },
+ "agrees": {
+  "route_http_200": true,
+  "route_and_store_same_rows": true,
+  "every_screen_id_is_in_the_store": true,
+  "every_screen_title_is_in_the_store": true,
+  "screen_row_count_matches_store": true,
+  "day_on_screen_matches_the_row": true
+ },
+ "ownership": {
+  "marker": "ORD0435CMARKER-7a0f1a30",
+  "marker_rows_found": 1,
+  "plan_versions_for_this_journey": 101
+ }
+}

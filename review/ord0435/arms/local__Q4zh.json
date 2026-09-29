@@ -11,20 +11,20 @@
  ],
  "row_count": 1,
  "row_texts": [
-  "2026-10-10 16:37 Tianjin Italian Style Town Indoor Gallery 629d23f7-4349-4ec5-8427-02fe4df22460"
+  "2026-10-10 16:37 Tianjin Italian Style Town Indoor Gallery 1a9e2d06-af73-484e-b26f-e8e0bdd7e1b2"
  ],
  "target_text": "服务端回读：1 条活动落在 2026-10-10。",
- "plan_line": "方案编号 bac46dd2-304f-42b2-8a0b-b518d2090af7",
- "plan_id": "bac46dd2-304f-42b2-8a0b-b518d2090af7",
+ "plan_line": "方案编号 60bd9dab-e09c-4b5e-8179-1f4d74b1c1d8",
+ "plan_id": "60bd9dab-e09c-4b5e-8179-1f4d74b1c1d8",
  "activity_ids_on_screen": [
-  "629d23f7-4349-4ec5-8427-02fe4df22460"
+  "1a9e2d06-af73-484e-b26f-e8e0bdd7e1b2"
  ],
  "second_read": {
   "status": 200,
   "plan_status": "CANDIDATE",
   "picked_rows": [
    {
-    "id": "629d23f7-4349-4ec5-8427-02fe4df22460",
+    "id": "1a9e2d06-af73-484e-b26f-e8e0bdd7e1b2",
     "title": "Tianjin Italian Style Town Indoor Gallery",
     "start_at": "2026-10-10T16:37:00+08:00"
    }

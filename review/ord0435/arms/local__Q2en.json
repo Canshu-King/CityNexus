@@ -16,7 +16,7 @@
  "one": {
   "count": "1 picked",
   "empty": 0,
-  "note": "1 protected commitment travels with this batch and is not counted as a pick.",
+  "note": "1 protected commitment in this batch, not counted as a pick.",
   "finishDisabled": false
  },
  "two": {
