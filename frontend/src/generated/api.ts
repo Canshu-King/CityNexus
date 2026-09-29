@@ -445,6 +445,33 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/journeys/{journey_id}/checkins": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                journey_id: components["parameters"]["JourneyId"];
+            };
+            cookie?: never;
+        };
+        /**
+         * @description ORD-0476 slice 1: this trip's footprints, oldest stamp first, each carrying its target read back from the row it points at.  Nothing is copied into a stamp: `activity_title`, `activity_type`, `place_name` and `place_category` resolve from `activities` and `places` on every read (`backend/app/services.py` -- `checkin_schema`), so a stamp cannot show a name its target no longer holds.  Those four are nullable and the null is a fact rather than a blank: both target rows can be deleted underneath a live stamp (`ON DELETE SET NULL` in `backend/db/schema.sql`, triggered in practice by the replan path at `backend/app/main.py:11190`), and the footprint is the traveller's own history, so it outlives them and says so instead of inventing a title.
+         *     A trip with no stamps answers `[]` -- absence is a list, not a 404.  No pagination, no filter, no date window, and there is no permanent-delete door for a stamp on this server.
+         */
+        get: operations["listJourneyCheckins"];
+        put?: never;
+        /**
+         * @description ORD-0476 slice 1: stamp one target of this trip.  Exactly one of `activity_id` / `place_id` must be named, and both ways of getting that wrong are refused by name (`CHECKIN_TARGET_REQUIRED`, `CHECKIN_TARGET_AMBIGUOUS`) rather than guessed, because the target is what the duplicate promise is keyed on.
+         *     `stamped_at` is the server's instant and the request body has no time field at all: a device clock must not arrive dressed as a store fact.  An offline queue that carries its own moment is a named input requiring an offset, not this door widening its own.  `source` carries one value today (`FOREGROUND_WEB`) and the store CHECKs it, so a second channel has to arrive as a contract change instead of free text.
+         *     A replayed tap is not a second success.  The door names the row that already won (`CHECKIN_DUPLICATE_STAMP` with `existing_checkin_id` and `existing_stamped_at`), and `UNIQUE (journey_id, target_key)` is the durable half of that sentence across workers -- the loser of the race is converted into the same named refusal, not a 500.  No idempotency key is taken here because the target already is one.  Nothing else is written: no activity completed, no plan version touched, no day moved, which is what separates this door from 完成 and 加进计划.
+         */
+        post: operations["createJourneyCheckin"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/journeys/{journey_id}/share-grants": {
         parameters: {
             query?: never;
@@ -2968,6 +2995,29 @@ export interface components {
             /** Format: date-time */
             expires_at?: string | null;
         };
+        JourneyCheckinCreate: {
+            activity_id?: string;
+            place_id?: string;
+            note?: string | null;
+        };
+        JourneyCheckin: {
+            id: string;
+            journey_id: string;
+            activity_id: string | null;
+            place_id: string | null;
+            /** @enum {string} */
+            target_kind: "ACTIVITY" | "PLACE";
+            target_key: string;
+            /** Format: date-time */
+            stamped_at: string;
+            note: string | null;
+            /** @enum {string} */
+            source: "FOREGROUND_WEB";
+            activity_title: string | null;
+            activity_type: string | null;
+            place_name: string | null;
+            place_category: string | null;
+        };
         JourneyMember: {
             /** Format: uuid */
             id: string;
@@ -4514,6 +4564,90 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["RecycleBinJourney"][];
+                };
+            };
+        };
+    };
+    listJourneyCheckins: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                journey_id: components["parameters"]["JourneyId"];
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description This trip's stamps in the order they were taken */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["JourneyCheckin"][];
+                };
+            };
+            /** @description error.reason_code = CHECKIN_JOURNEY_IN_RECYCLE_BIN -- the trip is in the bin, and the same rule holds at the write door so a screen cannot read footprints of a trip `GET /api/v1/journeys` refuses to list */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+        };
+    };
+    createJourneyCheckin: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                journey_id: components["parameters"]["JourneyId"];
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["JourneyCheckinCreate"];
+            };
+        };
+        responses: {
+            /** @description The stamp as this server now holds it, with its target resolved */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["JourneyCheckin"];
+                };
+            };
+            /** @description error.reason_code = CHECKIN_ACTIVITY_UNKNOWN / CHECKIN_PLACE_UNKNOWN -- no row of that kind carries the id; kept apart from "not yours" because the two facts deserve two sentences */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+            /** @description error.reason_code = CHECKIN_JOURNEY_IN_RECYCLE_BIN / CHECKIN_ACTIVITY_NOT_IN_JOURNEY / CHECKIN_DUPLICATE_STAMP -- the trip is in the bin (409, not 404: the row exists and 找回 puts it back), the activity lives under another trip's plan version, or that target is already stamped here */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
+                };
+            };
+            /** @description error.reason_code = CHECKIN_TARGET_REQUIRED / CHECKIN_TARGET_AMBIGUOUS when the body names neither or both; the framework's own validation shape when a named id or note is outside its bounds */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorEnvelope"];
                 };
             };
         };

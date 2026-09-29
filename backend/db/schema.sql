@@ -1107,3 +1107,45 @@ CREATE TABLE IF NOT EXISTS journey_role_capabilities (
     created_at TEXT NOT NULL,
     PRIMARY KEY (role, capability)
 );
+
+-- ORD-0476 slice 1: the trip footprint -- a stamp saying the traveller was at one target of one
+-- journey.  Built from zero: the only `check_in` reading on the model layer before this order was
+-- `backend/app/db/models.py:837` (`Stay.check_in_at`, an accommodation arrival time), and no route,
+-- table or contract path named a check-in.
+--
+-- Why `activity_id` and `place_id` are `ON DELETE SET NULL` rather than RESTRICT or CASCADE.  Both
+-- are deleted by doors that already exist: `backend/app/main.py:11190` and
+-- `backend/app/operations/v9.py:732` remove `activities` rows when a plan version is superseded, and
+-- the catalog prunes `places`.  A footpoint is the traveller's own history, so it must outlive the
+-- row it pointed at -- a RESTRICT would turn those two replan doors into failures, which is the same
+-- class of defect this project already had once with `demo/reset` and a new table's foreign key.
+--
+-- `target_key` is the half that carries the 重复打卡 promise durably, and it is deliberately NOT
+-- derived from the two nullable columns: `UNIQUE (journey_id, activity_id)` with a NULL in that
+-- column is not a constraint SQLite enforces (NULLs are distinct), and a SET NULL cascade could
+-- mint or erase a duplicate after the fact.  The door writes one immutable key -- `activity:<id>` or
+-- `place:<id>` -- and this index makes two workers tapping the same target twice impossible without
+-- any read-then-write check inside a process.
+CREATE TABLE IF NOT EXISTS journey_checkins (
+    id TEXT PRIMARY KEY,
+    journey_id TEXT NOT NULL REFERENCES journeys(id) ON DELETE CASCADE,
+    activity_id TEXT REFERENCES activities(id) ON DELETE SET NULL,
+    place_id TEXT REFERENCES places(id) ON DELETE SET NULL,
+    -- Which column the stamp was taken against, as the door decided it -- not re-derived at read
+    -- time, because after a cascade there is nothing left to derive it from.
+    target_kind TEXT NOT NULL CHECK (target_kind IN ('ACTIVITY','PLACE')),
+    target_key TEXT NOT NULL,
+    -- The moment the server recorded the stamp.  This slice takes no caller-supplied instant: an
+    -- offline queue's device clock is a different fact and would arrive as its own named field.
+    stamped_at TEXT NOT NULL,
+    -- NULL means no note was written, which a screen must tell apart from an empty one.
+    note TEXT,
+    -- One channel exists today: the traveller's own front-end tap.  A CHECK rather than free text,
+    -- so a second channel has to arrive as a contract change instead of smuggling a value in.
+    source TEXT NOT NULL DEFAULT 'FOREGROUND_WEB' CHECK (source IN ('FOREGROUND_WEB')),
+    UNIQUE (journey_id, target_key)
+);
+
+-- The read door answers one journey's stamps oldest-stamped first; this is that scan.
+CREATE INDEX IF NOT EXISTS idx_journey_checkins_journey_stamped
+    ON journey_checkins(journey_id, stamped_at);

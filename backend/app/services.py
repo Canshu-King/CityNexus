@@ -18,6 +18,7 @@ from app.db.models import (
     CityService,
     Commitment,
     Journey,
+    JourneyCheckin,
     JourneyConstraint,
     Place,
     PlanVersion,
@@ -52,6 +53,7 @@ from app.schemas import Activity as ActivitySchema
 from app.schemas import CityService as CityServiceSchema
 from app.schemas import Constraint as ConstraintSchema
 from app.schemas import Journey as JourneySchema
+from app.schemas import JourneyCheckin as JourneyCheckinSchema
 from app.schemas import Money, ScoreBreakdown
 from app.schemas import Place as PlaceSchema
 from app.schemas import PlanVersion as PlanSchema
@@ -109,6 +111,9 @@ def deterministic_id(label: str) -> str:
 def reset_all(session: Session) -> None:
     # Delete children first because the package schema intentionally enables FKs.
     for table in (
+        # ORD-0476: a footprint points at a journey, an activity and a place, so it has to go before
+        # all three -- otherwise `demo/reset` hits a foreign key and answers 500 with nothing deleted.
+        "journey_checkins",
         "edge_actions",
         "edge_observations",
         "edge_devices",
@@ -1829,3 +1834,33 @@ def generate_plans(
     )
     session.commit()
     return created
+
+
+def checkin_schema(
+    row: JourneyCheckin, activity: Activity | None, place: Place | None
+) -> JourneyCheckinSchema:
+    """One stamp, with its target resolved from the rows rather than copied into the stamp.
+
+    The four `activity_*` / `place_*` fields are read from whatever the target row still holds, so a
+    stamp never shows a name its target has changed or lost.  They are nullable because losing the
+    target is a state the store allows on purpose (`ON DELETE SET NULL`,
+    `backend/db/schema.sql`): a replan removes the activity a traveller stamped, and the footprint is
+    the traveller's own history, so it stays and reads as "the row is gone" rather than as an empty
+    title or an invented one.
+    """
+
+    return JourneyCheckinSchema(
+        id=row.id,
+        journey_id=row.journey_id,
+        activity_id=row.activity_id,
+        place_id=row.place_id,
+        target_kind=row.target_kind,
+        target_key=row.target_key,
+        stamped_at=row.stamped_at,
+        note=row.note,
+        source=row.source,
+        activity_title=activity.title if activity is not None else None,
+        activity_type=activity.activity_type if activity is not None else None,
+        place_name=place.name if place is not None else None,
+        place_category=place.category if place is not None else None,
+    )

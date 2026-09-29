@@ -1292,3 +1292,48 @@ class JourneyRoleCapability(Base):
     capability: Mapped[str] = mapped_column(String, primary_key=True)
     scope_message_key: Mapped[str] = mapped_column(String)
     created_at: Mapped[str] = mapped_column(String)
+
+
+class JourneyCheckin(Base):
+    """ORD-0476: one footprint stamp -- a traveller was at one target of one journey.
+
+    Built from zero.  The word `check_in` existed on this layer only as
+    :attr:`Stay.check_in_at` -- an accommodation arrival time, a different fact about a different
+    thing -- so nothing here inherits a shape.
+
+    The two target columns are nullable *and* cascade to NULL, and that pair of choices is the
+    measured one: `activities` rows are deleted when a plan version is superseded
+    (`backend/app/main.py:11190`, `backend/app/operations/v9.py:732`) and `places` rows are pruned by
+    the catalog.  A RESTRICT would have made those doors fail, and a CASCADE would have let a replan
+    erase the traveller's own history.  So the stamp outlives its target and keeps saying which one
+    it was, through `target_kind` and `target_key`, which the door writes once and nothing later
+    re-derives -- after a cascade there is no row left to derive from.
+
+    `target_key` is also what makes 重复打卡 durable.  A `UNIQUE (journey_id, activity_id)` over a
+    NULL-able column is not a constraint SQLite enforces, because NULLs are distinct, and a SET NULL
+    cascade could mint or remove a duplicate long after the tap.  One immutable key per stamp,
+    unique per journey, is the half a second uvicorn worker cannot race past.
+    """
+
+    __tablename__ = "journey_checkins"
+    id: Mapped[str] = mapped_column(String, primary_key=True)
+    journey_id: Mapped[str] = mapped_column(
+        ForeignKey("journeys.id", ondelete="CASCADE")
+    )
+    activity_id: Mapped[str | None] = mapped_column(
+        ForeignKey("activities.id", ondelete="SET NULL"), nullable=True
+    )
+    place_id: Mapped[str | None] = mapped_column(
+        ForeignKey("places.id", ondelete="SET NULL"), nullable=True
+    )
+    target_kind: Mapped[str] = mapped_column(String)
+    target_key: Mapped[str] = mapped_column(String)
+    stamped_at: Mapped[str] = mapped_column(String)
+    note: Mapped[str | None] = mapped_column(String, nullable=True)
+    source: Mapped[str] = mapped_column(
+        String, default="FOREGROUND_WEB", server_default="FOREGROUND_WEB"
+    )
+
+    # Only the UNIQUE is declared here, as on the sibling container tables: the scan index belongs
+    # to `backend/db/schema.sql`, which is what `ensure_schema()` actually applies.
+    __table_args__ = (UniqueConstraint("journey_id", "target_key"),)

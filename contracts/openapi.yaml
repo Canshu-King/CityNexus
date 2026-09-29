@@ -526,6 +526,97 @@ paths:
               schema:
                 type: array
                 items: {$ref: '#/components/schemas/RecycleBinJourney'}
+  /journeys/{journey_id}/checkins:
+    parameters:
+      - {$ref: '#/components/parameters/JourneyId'}
+    get:
+      operationId: listJourneyCheckins
+      description: >-
+        ORD-0476 slice 1: this trip's footprints, oldest stamp first, each carrying its target read
+        back from the row it points at.  Nothing is copied into a stamp: `activity_title`,
+        `activity_type`, `place_name` and `place_category` resolve from `activities` and `places` on
+        every read (`backend/app/services.py` -- `checkin_schema`), so a stamp cannot show a name its
+        target no longer holds.  Those four are nullable and the null is a fact rather than a blank:
+        both target rows can be deleted underneath a live stamp (`ON DELETE SET NULL` in
+        `backend/db/schema.sql`, triggered in practice by the replan path at
+        `backend/app/main.py:11190`), and the footprint is the traveller's own history, so it outlives
+        them and says so instead of inventing a title.
+
+        A trip with no stamps answers `[]` -- absence is a list, not a 404.  No pagination, no filter,
+        no date window, and there is no permanent-delete door for a stamp on this server.
+      responses:
+        '200':
+          description: This trip's stamps in the order they were taken
+          content:
+            application/json:
+              schema:
+                type: array
+                items: {$ref: '#/components/schemas/JourneyCheckin'}
+        '409':
+          description: >-
+            error.reason_code = CHECKIN_JOURNEY_IN_RECYCLE_BIN -- the trip is in the bin, and the same
+            rule holds at the write door so a screen cannot read footprints of a trip
+            `GET /api/v1/journeys` refuses to list
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/ErrorEnvelope'}
+    post:
+      operationId: createJourneyCheckin
+      description: >-
+        ORD-0476 slice 1: stamp one target of this trip.  Exactly one of `activity_id` / `place_id`
+        must be named, and both ways of getting that wrong are refused by name
+        (`CHECKIN_TARGET_REQUIRED`, `CHECKIN_TARGET_AMBIGUOUS`) rather than guessed, because the
+        target is what the duplicate promise is keyed on.
+
+        `stamped_at` is the server's instant and the request body has no time field at all: a device
+        clock must not arrive dressed as a store fact.  An offline queue that carries its own moment is
+        a named input requiring an offset, not this door widening its own.  `source` carries one value
+        today (`FOREGROUND_WEB`) and the store CHECKs it, so a second channel has to arrive as a
+        contract change instead of free text.
+
+        A replayed tap is not a second success.  The door names the row that already won
+        (`CHECKIN_DUPLICATE_STAMP` with `existing_checkin_id` and `existing_stamped_at`), and
+        `UNIQUE (journey_id, target_key)` is the durable half of that sentence across workers -- the
+        loser of the race is converted into the same named refusal, not a 500.  No idempotency key is
+        taken here because the target already is one.  Nothing else is written: no activity completed,
+        no plan version touched, no day moved, which is what separates this door from 完成 and
+        加进计划.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: {$ref: '#/components/schemas/JourneyCheckinCreate'}
+      responses:
+        '201':
+          description: The stamp as this server now holds it, with its target resolved
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/JourneyCheckin'}
+        '404':
+          description: >-
+            error.reason_code = CHECKIN_ACTIVITY_UNKNOWN / CHECKIN_PLACE_UNKNOWN -- no row of that
+            kind carries the id; kept apart from "not yours" because the two facts deserve two
+            sentences
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/ErrorEnvelope'}
+        '409':
+          description: >-
+            error.reason_code = CHECKIN_JOURNEY_IN_RECYCLE_BIN / CHECKIN_ACTIVITY_NOT_IN_JOURNEY /
+            CHECKIN_DUPLICATE_STAMP -- the trip is in the bin (409, not 404: the row exists and 找回
+            puts it back), the activity lives under another trip's plan version, or that target is
+            already stamped here
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/ErrorEnvelope'}
+        '422':
+          description: >-
+            error.reason_code = CHECKIN_TARGET_REQUIRED / CHECKIN_TARGET_AMBIGUOUS when the body names
+            neither or both; the framework's own validation shape when a named id or note is outside
+            its bounds
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/ErrorEnvelope'}
   /journeys/{journey_id}/share-grants:
     parameters:
       - {$ref: '#/components/parameters/JourneyId'}
@@ -2622,6 +2713,38 @@ components:
         role: {$ref: '#/components/schemas/MemberRole'}
         invited_by: {type: string, minLength: 1, maxLength: 120}
         expires_at: {type: [string, 'null'], format: date-time}
+    JourneyCheckinCreate:
+      # ORD-0476: what stamping a footprint asks for.  Exactly one of the two ids must be present, and
+      # the door refuses both readings of that with a name -- the contract says it here because the
+      # shape cannot: JSON Schema `oneOf` over two optional properties would still accept `{}`.
+      # `stamped_at` is absent on purpose; the server owns that instant.
+      type: object
+      properties:
+        activity_id: {type: string, minLength: 1, maxLength: 64}
+        place_id: {type: string, minLength: 1, maxLength: 64}
+        note: {type: [string, 'null'], maxLength: 280}
+    JourneyCheckin:
+      # One stamp as the store holds it, with the target resolved at read time rather than copied.
+      # `target_kind` / `target_key` are the door's own decision, written once and never re-derived,
+      # so they still say what was stamped after the target row has been deleted underneath it.
+      type: object
+      required:
+        [id, journey_id, activity_id, place_id, target_kind, target_key, stamped_at, note, source,
+         activity_title, activity_type, place_name, place_category]
+      properties:
+        id: {type: string}
+        journey_id: {type: string}
+        activity_id: {type: [string, 'null']}
+        place_id: {type: [string, 'null']}
+        target_kind: {type: string, enum: [ACTIVITY, PLACE]}
+        target_key: {type: string}
+        stamped_at: {type: string, format: date-time}
+        note: {type: [string, 'null']}
+        source: {type: string, enum: [FOREGROUND_WEB]}
+        activity_title: {type: [string, 'null']}
+        activity_type: {type: [string, 'null']}
+        place_name: {type: [string, 'null']}
+        place_category: {type: [string, 'null']}
     JourneyMember:
       type: object
       required: [id, journey_id, traveler_id, role, invited_by, expires_at, joined_at, removed_at, created_at, updated_at, member_state]

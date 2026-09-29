@@ -1016,3 +1016,50 @@ class PoiImportAddResponse(BaseModel):
     already_present: list[str] = Field(default_factory=list)
     # Where the client must read back from before anything may say 已加入.
     readback_path: str
+
+
+class JourneyCheckinCreate(BaseModel):
+    """ORD-0476: what stamping a footprint asks for -- one target, optionally a note.
+
+    Exactly one of `activity_id` / `place_id` must be present, and the door refuses both readings of
+    that with a name (`CHECKIN_TARGET_REQUIRED`, `CHECKIN_TARGET_AMBIGUOUS`): the target is what the
+    duplicate promise is keyed on, so "neither" would be a stamp about nothing and "both" would be
+    two stamps pretending to be one.
+
+    There is deliberately no `stamped_at` here.  The moment is recorded by the server; a caller-supplied
+    instant would be the traveller's device clock presented as a store fact, which is the shape this
+    project has had to fix more than once.  An offline queue that carries its own device time is a
+    different input and arrives as its own named field, with an offset.
+    """
+
+    activity_id: str | None = Field(default=None, min_length=1, max_length=64)
+    place_id: str | None = Field(default=None, min_length=1, max_length=64)
+    note: str | None = Field(default=None, max_length=280)
+
+
+class JourneyCheckin(BaseModel):
+    """One stamp as the server holds it, with the target resolved at read time and never copied.
+
+    `activity_title` / `place_name` come from the rows the stamp points at
+    (`checkin_schema` in `backend/app/services.py`), so a stamp cannot show a name the target no
+    longer carries.  Both are nullable, and that null is a real fact rather than a placeholder:
+    either row can be deleted underneath a stamp (`ON DELETE SET NULL`), and the footprint survives
+    its target by design.
+
+    `target_kind` and `target_key` are the stored decision the door made, not a re-derivation, so
+    they still say what was stamped after the target is gone.
+    """
+
+    id: str
+    journey_id: str
+    activity_id: str | None
+    place_id: str | None
+    target_kind: Literal["ACTIVITY", "PLACE"]
+    target_key: str
+    stamped_at: str
+    note: str | None
+    source: Literal["FOREGROUND_WEB"]
+    activity_title: str | None
+    activity_type: str | None
+    place_name: str | None
+    place_category: str | None

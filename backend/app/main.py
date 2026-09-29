@@ -124,6 +124,7 @@ from app.db.models import (
     IdempotencyKey,
     ImpactAssessment,
     Journey,
+    JourneyCheckin,
     JourneyLeg,
     JourneyConstraint,
     JourneyMission,
@@ -354,6 +355,8 @@ from app.schemas import (
     SharedActivityCoordinate,
     SharedPlan,
     SharedStop,
+    JourneyCheckin as JourneyCheckinSchema,
+    JourneyCheckinCreate,
     JourneyMember,
     JourneyMemberCreate,
     JourneyRoleRule,
@@ -426,6 +429,7 @@ from app.poi_import import (
 )
 from app.services import (
     _journey_constraints_with_capabilities,
+    checkin_schema,
     constraint_schema,
     generate_plans,
     journey_schema,
@@ -3167,6 +3171,283 @@ def list_recycle_bin_journeys(session: Session = Depends(get_session)):
 @app.get("/api/v1/journeys/{journey_id}")
 def get_journey(journey_id: UUID, session: Session = Depends(get_session)):
     return journey_schema(require(session, Journey, str(journey_id), "Journey"))
+
+
+# ORD-0476 slice 1: the trip footprint.  A stamp says the traveller was at one target of one
+# journey; nothing here plans, moves or completes anything, which is what separates this door from
+# the 完成 and 加进计划 ones.
+
+
+def _checkin_target(payload: JourneyCheckinCreate) -> tuple[str, str]:
+    """Which target this tap names, as the one immutable key the duplicate promise is keyed on.
+
+    Exactly one of the two fields may be named, and both ways of getting that wrong are refused by
+    name rather than guessed: a stamp naming nothing is a footprint of nothing, and one naming both
+    would be two stamps arriving as one, after which neither duplicate rule could be stated.
+
+    The key is written here, once, and is never re-derived when the stamp is read.  That is not
+    tidiness -- either target column can go NULL underneath a live stamp (`ON DELETE SET NULL`, and
+    the replan path at `backend/app/main.py:11190` and `backend/app/operations/v9.py:732` is what
+    triggers it), so a key derived from the columns would change or vanish after the fact and the
+    重复打卡 promise would end up depending on rows that no longer exist.
+    """
+
+    activity_id = (payload.activity_id or "").strip()
+    place_id = (payload.place_id or "").strip()
+    if activity_id and place_id:
+        raise _share_refusal(
+            422,
+            "One footprint names one target: an activity or a place, not both.",
+            "CHECKIN_TARGET_AMBIGUOUS",
+            {"activity_id": activity_id, "place_id": place_id},
+        )
+    if activity_id:
+        return "ACTIVITY", "activity:" + activity_id
+    if place_id:
+        return "PLACE", "place:" + place_id
+    raise _share_refusal(
+        422,
+        "A footprint has to name what was visited.",
+        "CHECKIN_TARGET_REQUIRED",
+        {"fields": ["activity_id", "place_id"]},
+    )
+
+
+def _checkin_journey_read(session: Session, journey_id: str) -> Journey:
+    """One rule at both doors: a trip in the recycle bin is neither stampable nor stamp-readable.
+
+    409 rather than 404 because the row exists and 找回 puts it back, which is the same reasoning
+    `SHARE_GRANT_JOURNEY_IN_RECYCLE_BIN` records at `backend/app/main.py:3852`.  The bin is applied to
+    the read door on purpose too: `GET /api/v1/journeys` keeps its `deleted_at IS NULL` promise, so a
+    screen that could read a binned trip's footprints would be showing the history of a trip the
+    product refuses to list -- and one rule at both doors is cheaper to state than two that differ.
+    """
+
+    journey = require(session, Journey, str(journey_id), "Journey")
+    if journey.deleted_at is not None:
+        raise _share_refusal(
+            409,
+            "This trip is in the recycle bin. 找回 it before stamping or reading its footprints.",
+            "CHECKIN_JOURNEY_IN_RECYCLE_BIN",
+            {"journey_id": journey.id, "deleted_at": journey.deleted_at},
+        )
+    return journey
+
+
+def _checkin_resolve_targets(
+    session: Session, journey: Journey, kind: str, target_key: str
+) -> tuple[str | None, str | None]:
+    """The target has to exist, and an activity has to belong to this journey.
+
+    Two refusals on the activity leg rather than one, because they are two different facts and the
+    traveller hears a different sentence for each: a row that does not exist at all
+    (`CHECKIN_ACTIVITY_UNKNOWN`) and a row that exists under somebody else's plan version
+    (`CHECKIN_ACTIVITY_NOT_IN_JOURNEY`).  Collapsing them would answer "not yours" about a row that
+    was never here, which is the kind of claim this project has had to take back before.
+
+    The link is walked through `plan_versions` because that is where it lives: `activities` carries
+    `plan_version_id`, not `journey_id` (`backend/app/db/models.py` -- `Activity`).
+    """
+
+    identifier = target_key.split(":", 1)[1]
+    if kind == "ACTIVITY":
+        activity = session.get(Activity, identifier)
+        if activity is None:
+            raise _share_refusal(
+                404,
+                "No activity on this server carries that id.",
+                "CHECKIN_ACTIVITY_UNKNOWN",
+                {"activity_id": identifier},
+            )
+        plan = session.get(PlanVersion, activity.plan_version_id)
+        if plan is None or plan.journey_id != journey.id:
+            raise _share_refusal(
+                409,
+                "That activity belongs to a different trip's plan, so it cannot be stamped here.",
+                "CHECKIN_ACTIVITY_NOT_IN_JOURNEY",
+                {
+                    "activity_id": identifier,
+                    "plan_version_id": activity.plan_version_id,
+                    "plan_journey_id": plan.journey_id if plan is not None else None,
+                    "asked_journey_id": journey.id,
+                },
+            )
+        return identifier, None
+    place = session.get(Place, identifier)
+    if place is None:
+        raise _share_refusal(
+            404,
+            "No place on this server carries that id.",
+            "CHECKIN_PLACE_UNKNOWN",
+            {"place_id": identifier},
+        )
+    return None, identifier
+
+
+@app.post(
+    "/api/v1/journeys/{journey_id}/checkins",
+    response_model=JourneyCheckinSchema,
+    status_code=201,
+    responses={
+        404: {
+            "description": "error.reason_code = CHECKIN_ACTIVITY_UNKNOWN / CHECKIN_PLACE_UNKNOWN"
+        },
+        409: {
+            "description": "error.reason_code = CHECKIN_JOURNEY_IN_RECYCLE_BIN / "
+            "CHECKIN_ACTIVITY_NOT_IN_JOURNEY / CHECKIN_DUPLICATE_STAMP"
+        },
+    },
+)
+def create_journey_checkin(
+    journey_id: UUID,
+    payload: JourneyCheckinCreate,
+    session: Session = Depends(get_session),
+):
+    """ORD-0476: stamp one target of this journey, and answer the stamp the store now holds.
+
+    `stamped_at` is the server's instant, not the caller's: the request shape carries no time field
+    at all, so a device clock cannot arrive dressed as a store fact.  An offline queue that carries
+    its own moment is a named input with an offset requirement, not this door widening its own.
+
+    A replayed tap is not a second success.  The door looks its own key up first -- before asking
+    whether the target row still exists, for the reason recorded below -- and answers
+    `CHECKIN_DUPLICATE_STAMP` naming the row that already won (its id and its moment), and the
+    `UNIQUE (journey_id, target_key)` index in `backend/db/schema.sql` is the durable half of that
+    sentence -- two workers taking two taps at the same target cannot both win, and the loser is
+    converted into the same named refusal instead of a 500.  There is no idempotency key here because
+    the target already is one.
+
+    Nothing else is written: no activity is completed, no plan version touched, no day moved.  That is
+    what makes this the 打卡 door rather than a second copy of 完成.
+    """
+
+    journey = _checkin_journey_read(session, str(journey_id))
+    kind, target_key = _checkin_target(payload)
+
+    # The duplicate answer comes first, before the target row is looked up, and that order is a fact
+    # about which row is being spoken of rather than a preference.  Whether this trip already holds a
+    # stamp for `target_key` is a statement about *this* table, and it stays true after the target is
+    # deleted (`ON DELETE SET NULL`); asking the other table first would tell a traveller who re-taps
+    # a superseded stop that the stop never existed -- a claim about a row that has nothing to do with
+    # the footprint already on file, and one that would vanish as soon as the catalog moved on.
+    existing = session.scalars(
+        select(JourneyCheckin).where(
+            JourneyCheckin.journey_id == journey.id,
+            JourneyCheckin.target_key == target_key,
+        )
+    ).first()
+    if existing is not None:
+        raise _share_refusal(
+            409,
+            "That target is already stamped on this trip.",
+            "CHECKIN_DUPLICATE_STAMP",
+            {
+                "target_key": target_key,
+                "existing_checkin_id": existing.id,
+                "existing_stamped_at": existing.stamped_at,
+            },
+        )
+
+    activity_id, place_id = _checkin_resolve_targets(session, journey, kind, target_key)
+    identifier = str(uuid4())
+    now = datetime.now(timezone.utc).isoformat()
+    try:
+        session.add(
+            JourneyCheckin(
+                id=identifier,
+                journey_id=journey.id,
+                activity_id=activity_id,
+                place_id=place_id,
+                target_kind=kind,
+                target_key=target_key,
+                stamped_at=now,
+                note=payload.note if payload.note is not None else None,
+                source="FOREGROUND_WEB",
+            )
+        )
+        session.commit()
+    except IntegrityError as exc:
+        # The index caught a race the read above could not see: the same fact, said the same way.
+        session.rollback()
+        raced = session.scalars(
+            select(JourneyCheckin).where(
+                JourneyCheckin.journey_id == journey.id,
+                JourneyCheckin.target_key == target_key,
+            )
+        ).first()
+        raise _share_refusal(
+            409,
+            "That target is already stamped on this trip.",
+            "CHECKIN_DUPLICATE_STAMP",
+            {
+                "target_key": target_key,
+                "existing_checkin_id": raced.id if raced is not None else None,
+                "existing_stamped_at": raced.stamped_at if raced is not None else None,
+                "caught_by": "unique_index",
+            },
+        ) from exc
+
+    record_audit(
+        session,
+        action="journey.checkin.stamped",
+        entity_type="JourneyCheckin",
+        entity_id=identifier,
+        after={"journey_id": journey.id, "target_key": target_key, "stamped_at": now},
+    )
+    session.commit()
+    stored = session.get(JourneyCheckin, identifier)
+    return checkin_schema(
+        stored,
+        session.get(Activity, stored.activity_id) if stored.activity_id else None,
+        session.get(Place, stored.place_id) if stored.place_id else None,
+    )
+
+
+@app.get(
+    "/api/v1/journeys/{journey_id}/checkins",
+    response_model=list[JourneyCheckinSchema],
+    responses={
+        409: {"description": "error.reason_code = CHECKIN_JOURNEY_IN_RECYCLE_BIN"}
+    },
+)
+def list_journey_checkins(journey_id: UUID, session: Session = Depends(get_session)):
+    """ORD-0476: this trip's footprints, oldest stamp first, each with its target read back.
+
+    Two statements whatever the count, not one per stamp: the activity titles and place names come
+    back in `in_()` batches and are matched in memory.  A screen that had to ask per stamp could not
+    tie what it renders to one read, and a stamp whose target has since been deleted resolves to
+    nulls that mean "the row is gone" -- never to a title invented to fill the cell.
+
+    A trip with no stamps answers `[]`.  Absence is a list, not a 404: the journey resolved and there
+    is nothing on it yet, which is a different fact from the trip not existing.
+    """
+
+    journey = _checkin_journey_read(session, str(journey_id))
+    rows = session.scalars(
+        select(JourneyCheckin)
+        .where(JourneyCheckin.journey_id == journey.id)
+        .order_by(JourneyCheckin.stamped_at, JourneyCheckin.id)
+    ).all()
+    activity_ids = [r.activity_id for r in rows if r.activity_id]
+    place_ids = [r.place_id for r in rows if r.place_id]
+    activities = (
+        {a.id: a for a in session.scalars(select(Activity).where(Activity.id.in_(activity_ids))).all()}
+        if activity_ids
+        else {}
+    )
+    places = (
+        {p.id: p for p in session.scalars(select(Place).where(Place.id.in_(place_ids))).all()}
+        if place_ids
+        else {}
+    )
+    return [
+        checkin_schema(
+            r,
+            activities.get(r.activity_id) if r.activity_id else None,
+            places.get(r.place_id) if r.place_id else None,
+        )
+        for r in rows
+    ]
 
 
 # ORD-0434: a share grant is a server fact instead of a URL the client assembles
