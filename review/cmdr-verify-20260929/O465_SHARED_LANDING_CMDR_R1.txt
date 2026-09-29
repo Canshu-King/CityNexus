@@ -1,0 +1,21 @@
+# CMDR 亲测收据 · ORD-0465 分享接收屏 · 代 14e005ef1bbf6eb32badbab7986264888a66f73c
+# 私有栈：api :8745、门面 :4831；服务入口名 index-DZLLFMy5.js 等于磁盘 index.html、服务字节 sha1 等于磁盘字节 sha1（本机 sha1，不是 git 物件）
+# 进屏方式是直接访问 /v8/shared/<token>（陌生人点开链接的真实路径），不走应用内导航
+
+## 有效 token（服务端 http 201 授权回体带 plan_version_id 与 token）
+route=/v8/shared/0Q-iCSyjjq-9y-TwxOVFuz7erLVqAeF_ 正文字数=434 页面错误=0
+渲染文字：从别人分享的链接打开 EN One Day in Nexus City 10月10日周六 09:00 至 10月10日周六 19:00 第 1 版方案 · 首次生成 共 1 天 这一天 · 10月10日周六 Old Town Gate 09:00 Riverside Museum 10:30 Central Food Hall 12:00 Tech Art Center 13:20 Nexus River Cruise Pier 15:30 Skyline Dinner House 17:00 这些站在图上的位置 1 2 3 4 5 6 回到行程视野 底图未加载，显示的是路线示意。 单指拖动地
+实挂面：shared-screen, shared-language, shared-title, shared-window, shared-plan-line, shared-day-count, shared-day, shared-stop, shared-stop-name, shared-stop-meta, shared-stop, shared-stop-name
+
+## 无效 token
+route=/v8/shared/not-a-real-token-xyz 正文字数=54
+具名拒绝：从别人分享的链接打开 EN 这台服务器从来没有过这条链接，所以它背后没有可以打开的行程。 高级详情 再读一次
+细节三行的渲染文字（逐枚，空就是空）：
+   shared-refusal-code = []
+   shared-refused-content_type = []
+   shared-refused-body_bytes = []
+   shared-refused-receipt-fold = []
+
+## 由这份读数得出的判断
+接收屏本身判通过：标题、时间窗、第几版方案、天数、当天站名与时间、图上位置那一块、拒绝态的具名说法都在，pageerror 为零。
+缺陷一格：details 面里 shared-refusal-code / shared-refused-content_type / shared-refused-body_bytes 三行渲染出来是空字符串——面板承诺陈列原始回读字段却没陈列（X-5 那一族的同一个形）。另开 ORD-0474。
