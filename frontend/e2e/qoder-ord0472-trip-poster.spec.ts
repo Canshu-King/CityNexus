@@ -264,6 +264,90 @@ test("ORD-0472 A3 after a reload the entry is still there and still makes a pict
   await context.close();
 });
 
+test("ORD-0472 A5 the poster follows the dark tokens and still clears contrast", async ({ browser }) => {
+  const context = await browser.newContext({ viewport: { width: 390, height: 844 }, hasTouch: true, locale: "zh-CN" });
+  await context.addInitScript(() => localStorage.setItem("citynexus.theme", "dark"));
+  const page = await context.newPage();
+  await landOnTrips(page, "zh-CN");
+  await page.getByTestId("poster-open").click();
+  await expect(page.getByTestId("trip-poster")).toBeVisible({ timeout: 20_000 });
+
+  /* The picture is painted from `getComputedStyle(document.documentElement)`, so the reading that
+     matters here is what those tokens resolve to on this page. Measured off the rendered elements
+     rather than the token text: a token is `#1d1d1f` while a computed colour is `rgb(...)`, and
+     comparing the two forms with one parser is how this arm first reported a ratio of exactly 1 --
+     both sides decoded to black because neither parsed, not because the theme was flat. */
+  const colours = await page.evaluate(() => {
+    const css = getComputedStyle(document.documentElement);
+    const title = document.querySelector('[data-testid="poster-title"]')!;
+    const card = document.querySelector(".cn-poster-day")!;
+    const asRgb = (value: string) => {
+      const hex = /^#([0-9a-f]{3}|[0-9a-f]{6})$/i.exec(value.trim());
+      if (hex) {
+        const digits =
+          hex[1].length === 3 ? hex[1].split("").map((c) => c + c).join("") : hex[1];
+        const packed = Number.parseInt(digits, 16);
+        return `rgb(${(packed >> 16) & 255}, ${(packed >> 8) & 255}, ${packed & 255})`;
+      }
+      return value.trim();
+    };
+    return {
+      theme: document.documentElement.getAttribute("data-theme"),
+      token_ink: css.getPropertyValue("--cn-ink").trim(),
+      token_surface: css.getPropertyValue("--cn-surface").trim(),
+      token_canvas: css.getPropertyValue("--cn-canvas").trim(),
+      rendered_title: getComputedStyle(title).color,
+      rendered_card_background: getComputedStyle(card).backgroundColor,
+      /* What the canvas will actually be handed for the two colours it fills with. */
+      poster_ink: asRgb(css.getPropertyValue("--cn-ink")),
+      poster_surface: asRgb(css.getPropertyValue("--cn-surface")),
+    };
+  });
+  const ratio = (a: string, b: string) => {
+    const lum = (value: string) => {
+      const m = /rgba?\((\d+)[,\s]+(\d+)[,\s]+(\d+)/.exec(value);
+      if (!m) return Number.NaN;
+      const [r, g, bl] = [Number(m[1]), Number(m[2]), Number(m[3])];
+      const channel = (c: number) => {
+        const s = c / 255;
+        return s <= 0.03928 ? s / 12.92 : ((s + 0.055) / 1.055) ** 2.4;
+      };
+      return 0.2126 * channel(r) + 0.7152 * channel(g) + 0.0722 * channel(bl);
+    };
+    const x = lum(a);
+    const y = lum(b);
+    expect(Number.isNaN(x) || Number.isNaN(y), `both sides must produce a reading: ${a} vs ${b}`).toBe(false);
+    return Number(((Math.max(x, y) + 0.05) / (Math.min(x, y) + 0.05)).toFixed(2));
+  };
+  const inkOnSurface = ratio(colours.poster_ink, colours.poster_surface);
+  const renderedInkOnCard = ratio(colours.rendered_title, colours.rendered_card_background);
+  expect(colours.theme, "the theme choice has to have landed before this reading means anything")
+    .toBe("dark");
+  expect(inkOnSurface, "the poster's ink against its own card surface, dark theme").toBeGreaterThanOrEqual(4.5);
+  expect(renderedInkOnCard, "the same pair as the screen renders it").toBeGreaterThanOrEqual(4.5);
+
+  const downloadPromise = page.waitForEvent("download", { timeout: 60_000 });
+  await page.getByTestId("poster-download").click();
+  const download = await downloadPromise;
+  const saved = `${EVIDENCE_DIR}/A5_dark_${download.suggestedFilename()}`;
+  await download.saveAs(saved);
+  const file = pngNumbers(saved);
+  const line = (await page.getByTestId("poster-result").innerText()).trim();
+  expect(file.bytes, "a dark-theme poster is still a real file").toBeGreaterThan(10_000);
+  expect(file.signature).toBe("PNG");
+  expect(line).toContain("已存为 PNG");
+  write("A5_dark_tokens", {
+    ...colours,
+    poster_ink_on_surface_ratio: inkOnSurface,
+    rendered_ink_on_card_ratio: renderedInkOnCard,
+    file_bytes: file.bytes,
+    width: file.width,
+    height: file.height,
+    screen_line: line,
+  });
+  await context.close();
+});
+
 test("ORD-0472 A4 when the canvas is refused the sheet names the step and hands over no file", async ({ browser }) => {
   const context = await browser.newContext({ viewport: { width: 390, height: 844 }, hasTouch: true, locale: "zh-CN" });
   await context.addInitScript(() => {
