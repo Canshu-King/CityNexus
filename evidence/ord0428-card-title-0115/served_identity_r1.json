@@ -1,0 +1,48 @@
+{
+ "base_url": "http://localhost:4473",
+ "dist": "D:\\moodle\\_qoder_lane_S4_0926\\wt0428\\frontend\\dist",
+ "index": {
+  "http": "200",
+  "served_bytes": 1200,
+  "disk_bytes": 1200,
+  "served_sha1": "8a0c11291469f7b26b473d87860b895668dcaded",
+  "disk_sha1": "8a0c11291469f7b26b473d87860b895668dcaded",
+  "equal": true
+ },
+ "assets": [
+  {
+   "path": "/assets/index-B4ZuCsnm.js",
+   "http": "200",
+   "served_bytes": 1483830,
+   "served_sha1": "bdc7e4d12b27df9fad64fbb72b5f5f0c56ef0cb4",
+   "disk_exists": true,
+   "disk_sha1": "bdc7e4d12b27df9fad64fbb72b5f5f0c56ef0cb4",
+   "equal": true
+  },
+  {
+   "path": "/assets/index-C0oYCLVI.css",
+   "http": "200",
+   "served_bytes": 215394,
+   "served_sha1": "0a64b149274594b1f12fc79112d3daaeb57eeb91",
+   "disk_exists": true,
+   "disk_sha1": "0a64b149274594b1f12fc79112d3daaeb57eeb91",
+   "equal": true
+  }
+ ],
+ "assets_all_equal": true,
+ "spa_fallback_control": {
+  "http": "200",
+  "bytes": 1200,
+  "is_html": true,
+  "equals_index_html": true
+ },
+ "listener_command_lines": [
+  "9288|\"C:\\Program Files\\Git\\usr\\bin\\bash.exe\" \"/c/Program Files/nodejs/npx\" vite preview --port 4473 --strictPort",
+  "17300|\"C:\\Program Files\\Git\\usr\\bin\\bash.exe\" \"/c/Program Files/nodejs/npx\" vite preview --port 4473 --strictPort",
+  "32576|\"C:\\Program Files\\nodejs\\node.exe\" \"C:\\Program Files\\nodejs/node_modules/npm/bin/npx-cli.js\" vite preview --port 4473 --strictPort",
+  "32552|C:\\WINDOWS\\system32\\cmd.exe /d /s /c vite preview --port 4473 --strictPort"
+ ],
+ "netstat_lines_for_port": [
+  "TCP    [::1]:4473             [::]:0                 LISTENING       24876\tInHost"
+ ]
+}
