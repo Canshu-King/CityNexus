@@ -1,0 +1,65 @@
+{
+ "what_lands": "one commit of product bytes; the evidence in this directory rides a separate ref",
+ "product_ref": "refs/heads/review/newlane-ord0444-prod-r1",
+ "product_commit": "b59f5ed18fd1ab69c1d6a2c7260fc4d14929b3f1",
+ "product_commit_tree": "6695a459a5234e27d6a6f1be2d366003b4dd5c08",
+ "stood_on_tip": "4037cb331ea00b83124316d40329762fa1131689",
+ "tip_is_parent_of_product": true,
+ "merge_tree_predicted_readonly": "6695a459a5234e27d6a6f1be2d366003b4dd5c08",
+ "merge_tree_equals_product_tree": true,
+ "files_in_the_product_commit": 13,
+ "backend_pytest": {
+  "rc": 0,
+  "summary": [
+   "15 passed, 2 warnings in 6.33s"
+  ],
+  "collect_only_note": "this file is the order's own arms; the whole backend suite was NOT run by this lane -- NOT_EXECUTED_BY_LANE"
+ },
+ "openapi_parity": {
+  "rc": 0,
+  "line": "OpenAPI 3.1.0; formal 167; runtime 167; missing 0; extra 0"
+ },
+ "generated_types": {
+  "tool": "openapi-typescript 7.13.0",
+  "regenerated_from": "contracts/openapi.yaml at this commit",
+  "same_generation_arm": "test_the_generated_client_is_the_same_generation_as_the_contract"
+ },
+ "tsc": "TSC_RC=0",
+ "vite_build": {
+  "tail": "BUILD_RC=0",
+  "entry": [
+   "dist/assets/index-Ct8Abxd_.js        1,487.34 kB │ gzip: 454.64 kB"
+  ]
+ },
+ "q64_exposure": {
+  "ruler_blob": "d3f66ce9fecd0790981a4fcdeb5e36b1c0fd10f2",
+  "method": "git archive <rev> frontend/src into its own directory, then --tree on the snapshot",
+  "tip_cells": 6,
+  "tip_modules": 123,
+  "product_cells": 6,
+  "product_modules": 126,
+  "added": [],
+  "removed": [],
+  "cells_in_this_orders_files": [],
+  "growth": "NONE"
+ },
+ "member_ownership": {
+  "column": "collection_folders.owner_traveler_id",
+  "not_null_and_fk_arm": "test_the_two_tables_and_the_durability_index_are_in_the_store",
+  "refusal_reused_not_invented": "MEMBER_TRAVELER_UNKNOWN, the same name and shape POST /api/v1/journeys/{journey_id}/members raises",
+  "scope_arms": [
+   "test_a_shelf_is_answered_to_its_owner_and_to_nobody_else",
+   "test_a_shelf_for_an_id_no_traveller_carries_is_named_and_is_not_a_five_hundred",
+   "test_absence_is_a_list_and_the_list_door_has_no_way_to_404"
+  ]
+ },
+ "instrument_defects_named_this_round": [
+  "the startup poll raised on connection-refused after I made `call` report its own exceptions; refused-while-booting is a state of the wait, now counted separately.",
+  "a leftover uvicorn from a crashed run held :60181 and answered my reads from its own database, which my probe then mis-read as 'no such table' in the file it did own. The receipt is now aborted unless the listening pid matches the child this script launched (ABORT_NOT_OWNED), and a stale listener on the port is killed before the child starts."
+ ],
+ "not_measured": [
+  "the face has not been walked on a rendered screen this round -- see the walk receipt if a later commit adds one",
+  "PNG evidence: NATIVE_BROWSER_VIEWPORT_UNAVAILABLE",
+  "the whole backend suite: NOT_EXECUTED_BY_LANE"
+ ]
+}
