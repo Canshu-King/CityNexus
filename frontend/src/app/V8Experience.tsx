@@ -1849,6 +1849,7 @@ export function V8Experience() {
             aria-label={t("shell.openNav")}
             aria-expanded={navOpen}
             aria-controls="v8-nav-drawer"
+            data-testid="v8-mobile-menu"
             onClick={() => setNavOpen(true)}
           >
             {t("shell.menu")}
@@ -2056,7 +2057,7 @@ export function V8Experience() {
             aria-label={t("shell.closeNav")}
             onClick={() => setNavOpen(false)}
           />
-          <nav id="v8-nav-drawer" aria-label="Product navigation">
+          <nav id="v8-nav-drawer" aria-label="Product navigation" data-testid="v8-nav-drawer">
             <div className="v8-nav-drawer-head">
               <span className="v8-kicker">{t("shell.allRoutes")}</span>
               <button
@@ -2080,6 +2081,7 @@ export function V8Experience() {
                   )}
                 <button
                   className={route === item.key ? "active" : ""}
+                  data-testid={"v8-drawer-entry-" + item.key}
                   onClick={() => navigate(item.key)}
                 >
                   <Icon name={item.icon} />
