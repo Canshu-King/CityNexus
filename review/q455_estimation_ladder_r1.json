@@ -4,20 +4,23 @@
  "branch": "review/Q-ord0455-estimation-ladder-r1",
  "named_tip_in_the_order": "4ee14229f80691cf8e5ea913375c0caf83ac02ee",
  "my_base": "17dff25a095a7f0899977816fb18a91ab5c050b5",
- "head_at_readings": "bff0f6efd96dd4c2f460a35d8cb1a1009d6ebf11",
- "live_tip_at_delivery": "17dff25a095a7f0899977816fb18a91ab5c050b5",
- "n_commits_tip_past_my_head": 0,
+ "head_at_readings": "c90c1ac1ef8ba2d7318bc9eb78d753113fba956d",
+ "live_tip_at_delivery": "0b7167369e685ac4b7a3d19143de985799e71eb8",
+ "n_commits_tip_past_my_head": 6,
  "named_tip_is_ancestor_of_my_head": true,
  "depends_blob_drift": [],
  "merge_tree_prediction_rc": 0,
  "touched_paths": [
+  "frontend/e2e/qoder-ord0455-estimation-ladder-r1.spec.ts",
   "frontend/src/app/v8PanelRegistry.tsx",
   "frontend/src/features/estimation/EstimationLadderPanel.tsx",
   "frontend/src/features/estimation/estimationLadder.css",
   "frontend/src/features/estimation/estimationLadder.ts",
   "frontend/src/features/estimation/estimationLadderCopy.ts",
   "frontend/src/features/stay/StayExplorer.tsx",
-  "frontend/src/lib/displayVocabulary.ts"
+  "frontend/src/lib/displayVocabulary.ts",
+  "review/q455_estimation_ladder_r1.json",
+  "review/q455_ladder_r1.py"
  ],
  "walled_files_touched": [],
  "receipt": {

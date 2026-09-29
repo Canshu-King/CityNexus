@@ -363,7 +363,7 @@ A("   闸与提交的先后：这把闸的 receipt tree = " + RECEIPT_TREE + (" 
   "这批 " + str(len(NEW + CHANGED)) + " 枚产品字节在 receipt tree 与我的头之间逐枚 blob 等值（脚本按 `git rev-parse <rev>:<path>` 断言，" +
   str(len([p for p in NEW + CHANGED if blob_at(RECEIPT_TREE, p) == blob_at(HEAD, p)])) + "/" + str(len(NEW + CHANGED)) + " 枚相同），" +
   "所以报的是「量过的那批字节」。磁盘字节与提交后的 blob 也逐枚回算（`git hash-object` 头部式，" +
-  str(len([v for _r, _g, _w, o in VERIFY if o])) + "/" + str(len(VERIFY)) + " 枚 match）。")
+  str(len([1 for _r, _g, _w, o in VERIFY if o])) + "/" + str(len(VERIFY)) + " 枚 match）。")
 A("")
 A("## 2. 这批交了什么（一句话）")
 A("   四档梯子在树上是一枚推导 + 一枚文案模块 + 一屏挂载：`frontend/src/features/estimation/estimationLadder.ts`（触发条件）、" +
