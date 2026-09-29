@@ -117,6 +117,7 @@ def seed(_unused: str = "") -> dict[str, object]:
     base = f"http://127.0.0.1:{BACKEND_PORT}/api/v1"
     now = datetime.now(timezone.utc).isoformat()
     journey_ids: list[str] = []
+    member_ids: list[str | None] = []
     door_status: dict[str, int] = {}
     with httpx.Client(base_url=base, trust_env=False, timeout=30) as client:
         traveler = client.post(
@@ -130,6 +131,12 @@ def seed(_unused: str = "") -> dict[str, object]:
         )
         if traveler.status_code >= 400:
             raise SystemExit(f"the traveller door answered {traveler.status_code}: {traveler.text[:200]}")
+        colleague = client.post(
+            "/travelers",
+            json={"display_name": "被请进来的人", "email": None, "locale": "zh-CN", "timezone": "Asia/Shanghai"},
+        )
+        if colleague.status_code >= 400:
+            raise SystemExit(f"the second traveller door answered {colleague.status_code}")
         for index in range(2):
             created = client.post(
                 "/journeys",
@@ -149,6 +156,18 @@ def seed(_unused: str = "") -> dict[str, object]:
             journey_ids.append(journey_id)
             door_status[f"delete_{index}"] = client.delete(f"/journeys/{journey_id}").status_code
             door_status[f"undelete_{index}"] = client.post(f"/journeys/{journey_id}/undelete").status_code
+            # A member row, added through the product's own door rather than by hand, so the member
+            # card on screen has something real to render and something real to withdraw.
+            member = client.post(
+                f"/journeys/{journey_id}/members",
+                json={
+                    "traveler_id": colleague.json()["id"],
+                    "role": "COLLABORATOR",
+                    "invited_by": traveler.json()["id"],
+                },
+            )
+            door_status[f"member_add_{index}"] = member.status_code
+            member_ids.append(member.json()["id"] if member.status_code == 201 else None)
     # The two fixture rows go in through the product's own audit writer, in this process, against
     # this lane's database: `audit_logs.trace_id` is NOT NULL and the writer owns that value, so
     # hand-written SQL would have been testing my guess at the schema rather than the screen.
@@ -199,6 +218,7 @@ def seed(_unused: str = "") -> dict[str, object]:
     return {
         "journey_id": journey_ids[0],
         "journey_ids": journey_ids,
+        "member_ids": member_ids,
         "delete_door_status": door_status,
         "actions_in_this_lane_database": feeds[journey_ids[0]],
         "fixture_rows_written_by": "app.core.audit.record_audit (the product's own writer)",
@@ -212,6 +232,19 @@ def seed(_unused: str = "") -> dict[str, object]:
 def main() -> None:
     if not (DIST / "index.html").is_file():
         raise SystemExit(f"no production bundle at {DIST}; run vite build before this reading")
+    # A reading taken against a bundle older than the sources it is supposed to prove is worse than
+    # no reading: it says "29 of 29 pass" about code that is not on the line. Refuse instead.
+    bundle_mtime = max(p.stat().st_mtime for p in DIST.rglob("*") if p.is_file())
+    stale = [
+        p.relative_to(REPO).as_posix()
+        for p in list((REPO / "frontend/src/features/access").rglob("*"))
+        + [REPO / "frontend/src/i18n/LocaleContext.tsx", REPO / "frontend/src/app/v8PanelRegistry.tsx"]
+        if p.is_file() and p.stat().st_mtime > bundle_mtime
+    ]
+    if stale:
+        raise SystemExit(
+            "BUNDLE IS OLDER THAN THESE SOURCES -- rebuild before reading: " + ", ".join(sorted(stale)[:6])
+        )
     OUT.mkdir(parents=True, exist_ok=True)
     DB.parent.mkdir(parents=True, exist_ok=True)
     if DB.exists():
