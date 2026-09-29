@@ -914,7 +914,7 @@ const en: Dict = {
   "poster.barNote": "One long picture of this trip, made of the days already on this screen.",
   "poster.action": "Open the trip poster",
   "poster.close": "Close the poster",
-  "poster.cityAndDays": "{city} · {days} {plural:day}",
+  "poster.cityAndDays": "{city} · {days} {plural:day:days}",
   "poster.daysUnknown": "{city} · trip length unknown",
   "poster.dayStops": "{n} {plural:stop}",
   "poster.attributionLabel": "Source",

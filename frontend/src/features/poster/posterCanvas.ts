@@ -86,9 +86,15 @@ const COLOR_TOKENS = [
 ] as const;
 
 type Scale = Record<(typeof SIZE_TOKENS)[number], number>;
-type Palette = Record<(typeof COLOR_TOKENS)[number], [number, number, number]>;
+/* Painted with the token's own text, never with a re-built `rgb(...)`: `--cn-hairline` is
+   `rgba(0, 0, 0, 0.08)`, and dropping that alpha is what made every card outline come out solid
+   black in the first drawn picture. Only the background is parsed into numbers, and only because
+   the blank-canvas check compares pixel values against it. */
+type Palette = Record<(typeof COLOR_TOKENS)[number], string>;
 
-function cssPalette(): { scale: Scale; palette: Palette; family: string } | { missing: number } {
+function cssPalette():
+  | { scale: Scale; palette: Palette; family: string; background: [number, number, number] }
+  | { missing: number } {
   const css = getComputedStyle(document.documentElement);
   const scale = {} as Scale;
   const palette = {} as Palette;
@@ -99,13 +105,15 @@ function cssPalette(): { scale: Scale; palette: Palette; family: string } | { mi
     else missing += 1;
   }
   for (const token of COLOR_TOKENS) {
-    const rgb = toRgb(css.getPropertyValue(token).trim());
-    if (rgb) palette[token] = rgb;
+    const value = css.getPropertyValue(token).trim();
+    if (value) palette[token] = value;
     else missing += 1;
   }
   const family = css.getPropertyValue("--cn-font").trim();
   if (!family) missing += 1;
-  return missing > 0 ? { missing } : { scale, palette, family };
+  const background = toRgb(palette["--cn-canvas"] ?? "");
+  if (!background) missing += 1;
+  return missing > 0 ? { missing } : { scale, palette, family, background };
 }
 
 function toRgb(color: string): [number, number, number] | null {
@@ -120,10 +128,6 @@ function toRgb(color: string): [number, number, number] | null {
   const functional = /^rgba?\(\s*(\d+)[\s,]+(\d+)[\s,]+(\d+)/i.exec(value);
   if (functional) return [Number(functional[1]), Number(functional[2]), Number(functional[3])];
   return null;
-}
-
-function cssColor(rgb: [number, number, number]): string {
-  return `rgb(${rgb[0]}, ${rgb[1]}, ${rgb[2]})`;
 }
 
 /**
@@ -182,7 +186,7 @@ type Run = {
   y: number;
   size: number;
   weight: number;
-  color: [number, number, number];
+  color: string;
 };
 
 type Card = { top: number; bottom: number };
@@ -217,7 +221,7 @@ function layoutPoster(
     text: string,
     size: number,
     weight: number,
-    color: [number, number, number],
+    color: string,
     x: number,
     maxWidth: number,
   ): number => {
@@ -350,7 +354,7 @@ export async function drawTripPoster(
   if ("missing" in read) {
     return { ok: false, step: "MissingTokens", detail: `${read.missing}` };
   }
-  const { scale, palette, family } = read;
+  const { scale, palette, family, background } = read;
 
   canvas.width = width * DEVICE_SCALE;
   canvas.height = 1;
@@ -367,7 +371,7 @@ export async function drawTripPoster(
   canvas.height = plan.height * DEVICE_SCALE;
   /* The resize clears the context, so every style below is set again after it. */
   ctx.setTransform(DEVICE_SCALE, 0, 0, DEVICE_SCALE, 0, 0);
-  ctx.fillStyle = cssColor(palette["--cn-canvas"]);
+  ctx.fillStyle = palette["--cn-canvas"];
   ctx.fillRect(0, 0, width, plan.height);
 
   for (const card of plan.cards) {
@@ -379,9 +383,9 @@ export async function drawTripPoster(
       card.bottom - card.top,
       scale["--cn-r-card"],
     );
-    ctx.fillStyle = cssColor(palette["--cn-surface"]);
+    ctx.fillStyle = palette["--cn-surface"];
     ctx.fill();
-    ctx.strokeStyle = cssColor(palette["--cn-hairline"]);
+    ctx.strokeStyle = palette["--cn-hairline"];
     ctx.lineWidth = 1;
     ctx.stroke();
   }
@@ -389,12 +393,11 @@ export async function drawTripPoster(
   ctx.textBaseline = "alphabetic";
   for (const run of plan.runs) {
     ctx.font = `${run.weight} ${run.size}px ${family}`;
-    ctx.fillStyle = cssColor(run.color);
+    ctx.fillStyle = run.color;
     ctx.fillText(run.text, run.x, run.y);
   }
 
   const pixels = ctx.getImageData(0, 0, canvas.width, canvas.height).data;
-  const background = palette["--cn-canvas"];
   let painted = 0;
   for (let i = 0; i < pixels.length; i += 4) {
     if (
