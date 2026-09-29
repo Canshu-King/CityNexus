@@ -341,7 +341,9 @@ The final hardening commit `ab34e04c` binds every individual mode tile to the sa
 `canChoose` predicate as the bottom action. Even if facts are later present while the
 selected plan target is absent, no tile can invoke the no-op selection callback.
 
-The realtime evidence drawer was then exercised after the clean commit. It now projects
+### Evidence surfaces before live mode binding
+
+The realtime evidence drawer was exercised before the live mode binding. It projected
 the actual next `active_plan.legs[*]` entry when the comparison collection is empty:
 
 ```text
@@ -352,18 +354,36 @@ the actual next `active_plan.legs[*]` entry when the comparison collection is em
 The row is the persisted frozen leg; it does not infer a mode from duration, turn the
 unknown cost into zero, or relabel the route as synthetic.
 
-The map surface now uses the same fallback. Its clean readback is:
+The map surface used the same fallback in that intermediate state. Its clean readback
+was:
 
 ```text
 未提供出行方式 · 约42分钟 · 费用未知
 选中方案冻结路线证据 · valhalla-http · LIVE_PROVIDER_CAPTURE
 ```
 
+### Evidence surfaces after live mode binding
+
+The same surfaces were reread after the selected PlanVersion contained the explicit
+Valhalla WALK mode:
+
+```text
+步行 · 约42分钟 · 费用未知
+选中方案冻结路线证据 · valhalla-http · LIVE_PROVIDER_CAPTURE
+```
+
+The map route context simultaneously showed:
+
+```text
+1 段路程 · 供应商支持的路线 · WGS84
+```
+
 This keeps the live and map evidence consumers aligned on the same selected-plan leg.
 
-### Hub surface readback
+### Hub surface readback (intermediate no-mode state)
 
-After the final Hub wording repair, the clean page at `/v8/hub` was reloaded from
+After the final Hub wording repair, before the live mode binding, the clean page at
+`/v8/hub` was reloaded from
 the same disposable journey and captured after commit `6f21c8ce`:
 
 ```text
@@ -404,6 +424,8 @@ Captured artifacts:
 - `frontend/output/playwright/r77-suzhou-map-frozen-evidence-clean.png`
 - `frontend/output/playwright/r77-suzhou-hub-truth-clean.png`
 - `frontend/output/playwright/r77-suzhou-live-mode-clean.png`
+- `frontend/output/playwright/r77-suzhou-live-evidence-mode-clean.png`
+- `frontend/output/playwright/r77-suzhou-map-live-mode-clean.png`
 
 The final frontend gates after this repair were:
 
