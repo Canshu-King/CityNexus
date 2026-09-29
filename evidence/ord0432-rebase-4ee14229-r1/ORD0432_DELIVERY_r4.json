@@ -1,0 +1,214 @@
+{
+  "suite": {
+    "tip_baseline_4ee14229": {
+      "source_log": "bambmj7c2.output",
+      "parsed": true,
+      "failed": 9,
+      "passed": 1432,
+      "skipped": 15,
+      "xfailed": 1,
+      "seconds": 450.58,
+      "total_from_counts": 1457,
+      "red_nodeids": [
+        "tests/test_qoder_anywhere_gates.py::test_g5_an_ai_run_that_changed_must_say_which_it_was",
+        "tests/test_qoder_anywhere_lock_duration.py::test_g9b_provider_http_never_runs_inside_an_open_write_transaction",
+        "tests/test_qoder_anywhere_matrix_truth.py::test_g14a_an_oversized_matrix_fails_closed_and_invents_no_facts",
+        "tests/test_qoder_anywhere_matrix_truth.py::test_g14c_the_verdict_must_not_depend_on_the_providers_wording",
+        "tests/test_qoder_anywhere_provider_independence.py::test_g8a_default_suite_contains_no_live_provider_calls",
+        "tests/test_qoder_anywhere_provider_truth.py::test_g10_every_normalised_place_carries_a_usable_coordinate_including_nodes",
+        "tests/test_qoder_city_failure_reasons.py::test_a_live_failure_arrives_named_and_carries_the_stage_it_broke_at",
+        "tests/test_qoder_g3_xproc_http.py::test_g3_xproc_two_uvicorn_workers_over_http_share_one_operation",
+        "tests/test_qoder_ord0296_write_deadline.py::test_G4_the_lock_wait_is_written_in_exactly_one_place"
+      ]
+    },
+    "candidate_before_teardown": {
+      "source_log": "b9l1ga220.output",
+      "parsed": true,
+      "failed": 13,
+      "passed": 1433,
+      "skipped": 15,
+      "xfailed": 1,
+      "seconds": 380.07,
+      "total_from_counts": 1462,
+      "red_nodeids": [
+        "tests/test_qoder_anywhere_gates.py::test_g5_an_ai_run_that_changed_must_say_which_it_was",
+        "tests/test_qoder_anywhere_lock_duration.py::test_g9b_provider_http_never_runs_inside_an_open_write_transaction",
+        "tests/test_qoder_anywhere_matrix_truth.py::test_g14a_an_oversized_matrix_fails_closed_and_invents_no_facts",
+        "tests/test_qoder_anywhere_matrix_truth.py::test_g14c_the_verdict_must_not_depend_on_the_providers_wording",
+        "tests/test_qoder_anywhere_provider_independence.py::test_g8a_default_suite_contains_no_live_provider_calls",
+        "tests/test_qoder_anywhere_provider_truth.py::test_g10_every_normalised_place_carries_a_usable_coordinate_including_nodes",
+        "tests/test_qoder_city_failure_reasons.py::test_a_live_failure_arrives_named_and_carries_the_stage_it_broke_at",
+        "tests/test_qoder_g3_xproc_http.py::test_g3_xproc_two_uvicorn_workers_over_http_share_one_operation",
+        "tests/test_qoder_ord0296_write_deadline.py::test_G4_the_lock_wait_is_written_in_exactly_one_place",
+        "tests/test_qoder_ord0332_error_receipt.py::test_R4_the_seed_reads_the_call_itself_not_the_moment",
+        "tests/test_qoder_ord197_four_class_receipt.py::test_r3_an_empty_answer_proves_it_came_from_a_reply_and_not_from_an_outage",
+        "tests/test_qoder_ord197_four_class_receipt.py::test_r4_a_failed_source_is_named_retryable_and_never_becomes_no_match",
+        "tests/test_v5_autopilot.py::test_v5_provider_fixture_wakes_autopilot_and_semantically_deduplicates"
+      ]
+    },
+    "candidate_my_file_ignored": {
+      "source_log": "b440brt09.output",
+      "parsed": true,
+      "failed": 9,
+      "passed": 1432,
+      "skipped": 15,
+      "xfailed": 1,
+      "seconds": 425.99,
+      "total_from_counts": 1457,
+      "red_nodeids": [
+        "tests/test_qoder_anywhere_gates.py::test_g5_an_ai_run_that_changed_must_say_which_it_was",
+        "tests/test_qoder_anywhere_lock_duration.py::test_g9b_provider_http_never_runs_inside_an_open_write_transaction",
+        "tests/test_qoder_anywhere_matrix_truth.py::test_g14a_an_oversized_matrix_fails_closed_and_invents_no_facts",
+        "tests/test_qoder_anywhere_matrix_truth.py::test_g14c_the_verdict_must_not_depend_on_the_providers_wording",
+        "tests/test_qoder_anywhere_provider_independence.py::test_g8a_default_suite_contains_no_live_provider_calls",
+        "tests/test_qoder_anywhere_provider_truth.py::test_g10_every_normalised_place_carries_a_usable_coordinate_including_nodes",
+        "tests/test_qoder_city_failure_reasons.py::test_a_live_failure_arrives_named_and_carries_the_stage_it_broke_at",
+        "tests/test_qoder_g3_xproc_http.py::test_g3_xproc_two_uvicorn_workers_over_http_share_one_operation",
+        "tests/test_qoder_ord0296_write_deadline.py::test_G4_the_lock_wait_is_written_in_exactly_one_place"
+      ]
+    },
+    "candidate_with_teardown": {
+      "source_log": "bd5numls9.output",
+      "parsed": true,
+      "failed": 10,
+      "passed": 1436,
+      "skipped": 15,
+      "xfailed": 1,
+      "seconds": 537.94,
+      "total_from_counts": 1462,
+      "red_nodeids": [
+        "tests/test_qoder_anywhere_gates.py::test_g5_an_ai_run_that_changed_must_say_which_it_was",
+        "tests/test_qoder_anywhere_lock_duration.py::test_g9b_provider_http_never_runs_inside_an_open_write_transaction",
+        "tests/test_qoder_anywhere_matrix_truth.py::test_g14a_an_oversized_matrix_fails_closed_and_invents_no_facts",
+        "tests/test_qoder_anywhere_matrix_truth.py::test_g14c_the_verdict_must_not_depend_on_the_providers_wording",
+        "tests/test_qoder_anywhere_provider_independence.py::test_g8a_default_suite_contains_no_live_provider_calls",
+        "tests/test_qoder_anywhere_provider_truth.py::test_g10_every_normalised_place_carries_a_usable_coordinate_including_nodes",
+        "tests/test_qoder_city_failure_reasons.py::test_a_live_failure_arrives_named_and_carries_the_stage_it_broke_at",
+        "tests/test_qoder_g3_xproc_http.py::test_g3_xproc_two_uvicorn_workers_over_http_share_one_operation",
+        "tests/test_qoder_ord0296_write_deadline.py::test_G4_the_lock_wait_is_written_in_exactly_one_place",
+        "tests/test_sol_guardian_projection.py::test_guardian_status_lists_runs_newest_first"
+      ]
+    }
+  },
+  "regression_check": {
+    "candidate_only_nodeids": [
+      "tests/test_sol_guardian_projection.py::test_guardian_status_lists_runs_newest_first"
+    ],
+    "baseline_only_nodeids": [],
+    "candidate_is_subset_of_baseline": false,
+    "my_new_file_in_either_red_set": []
+  },
+  "witness_pair": {
+    "unfixed_tip_4ee14229": {
+      "verdict_envelope_blind": true,
+      "after_major": {
+        "robust": true,
+        "risk_reason_codes": []
+      },
+      "control_event_after": {
+        "robust": false,
+        "risk_reason_codes": [
+          "PROVIDER_DEGRADED"
+        ]
+      },
+      "flags": {
+        "W1_major_event_visible_in_twin": true,
+        "W2_robust_still_true": true,
+        "W3_risk_codes_still_empty": true,
+        "W3b_projection_status_still_READY": true,
+        "W4_control_robust_flipped_false": true,
+        "W5_control_risk_codes_named": true
+      }
+    },
+    "rebased_candidate_be98c7d9": {
+      "verdict_envelope_blind": false,
+      "after_major": {
+        "robust": false,
+        "risk_reason_codes": [
+          "DISRUPTION_MAJOR"
+        ]
+      },
+      "control_event_after": {
+        "robust": false,
+        "risk_reason_codes": [
+          "PROVIDER_DEGRADED",
+          "DISRUPTION_MAJOR"
+        ]
+      },
+      "flags": {
+        "W1_major_event_visible_in_twin": true,
+        "W2_robust_still_true": false,
+        "W3_risk_codes_still_empty": false,
+        "W3b_projection_status_still_READY": true,
+        "W4_control_robust_flipped_false": true,
+        "W5_control_risk_codes_named": false
+      }
+    }
+  },
+  "reverse_arms": {
+    "round0_unmutated_exit": 0,
+    "arm_exits": {
+      "A_twin_drops_the_disruption_codes": 1,
+      "B_minor_counts_as_a_disruption": 1,
+      "C_ordering_dropped": 1
+    },
+    "red_lists_disjoint_pairs": {
+      "A_twin_drops_the_disruption_codes|B_minor_counts_as_a_disruption": [],
+      "A_twin_drops_the_disruption_codes|C_ordering_dropped": [],
+      "B_minor_counts_as_a_disruption|C_ordering_dropped": []
+    },
+    "mutated_files": [
+      " ",
+      " ",
+      " ",
+      "a",
+      "c",
+      "e",
+      "e",
+      "e",
+      "e",
+      "e",
+      "i",
+      "k",
+      "m",
+      "p",
+      "r",
+      "r",
+      "s",
+      "s",
+      "t",
+      "y"
+    ]
+  },
+  "landing_shape": {
+    "tip": "4ee14229f80691cf8e5ea913375c0caf83ac02ee",
+    "tip_is_ancestor_of_candidate_rc": 0,
+    "ref": "refs/heads/review/Q-ord0432-robust-blind-to-major-3",
+    "ref_readback": [
+      "be98c7d9acadf5d062742cddc664c28ea3f15b99"
+    ]
+  },
+  "candidate_commits": [
+    "4c7caed59e3ffeb3cccb7b546ddb1a80aed62906 2026-09-29 12:45:07 +0800 ORD-0432: the new module restores the stage it mutated, so it cannot feed later tests",
+    "be98c7d9acadf5d062742cddc664c28ea3f15b99 2026-09-29 04:33:03 +0800 ORD-0432: say what the summary decided, in the traveller's own language"
+  ],
+  "product_files_changed": [
+    "backend/app/intelligence/feasibility_envelope.py",
+    "backend/app/intelligence/reason_codes.py",
+    "backend/app/main.py",
+    "backend/tests/test_dsh_twin_disruption_risk.py",
+    "contracts/openapi.yaml",
+    "frontend/src/features/execution/LiveRecovery.tsx",
+    "frontend/src/lib/displayVocabulary.ts"
+  ],
+  "diff_numstat": [
+    "17\t0\tbackend/app/intelligence/feasibility_envelope.py",
+    "2\t0\tbackend/app/intelligence/reason_codes.py",
+    "13\t2\tbackend/app/main.py",
+    "133\t0\tbackend/tests/test_dsh_twin_disruption_risk.py",
+    "27\t1\tcontracts/openapi.yaml",
+    "17\t0\tfrontend/src/features/execution/LiveRecovery.tsx",
+    "12\t0\tfrontend/src/lib/displayVocabulary.ts"
+  ],
+  "worktree_dirty_entries": 0
+}
