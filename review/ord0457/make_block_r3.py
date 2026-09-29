@@ -125,13 +125,13 @@ def main() -> int:
 ## 6. 这轮读数取在哪台栈上（三证同批）
 
 - 后端 `:49965`，LISTENING pid=28080，命令行逐字含 `-m uvicorn app.main:app --host 127.0.0.1 --port 49965`；静态口 `:49966`，LISTENING pid=55440，命令行逐字含 `node_modules/vite/bin/vite.js preview --host 127.0.0.1 --port 49966 --strictPort`。
-- 归属：私有库 `D:/moodle/_qoder_n3_ord0457/_private/ord0457.db` 只读打开（mode=ro），tables=58；`GET /api/v1/journeys/<只有我库里那一行的 id>` 回 200 且正文回显该 id，同端口打一个不属于我的 id 回 404；静态口 `GET /v10-sw.js` 返回字节的 sha1 与 `frontend/dist/v10-sw.js` 磁盘字节的 sha1 逐字相同，bytes=2055。
+- 归属：私有库 `D:/moodle/_qoder_n3_ord0457/_private/ord0457.db` 只读打开（mode=ro），tables=58；`GET /api/v1/journeys/<只有我库里那一行的 id>` 回 `http_status=200` 且正文回显该 id，同端口打一个不属于我的 id 回 `http_status=404`；静态口 `GET /v10-sw.js` 返回字节的 sha1 与 `frontend/dist/v10-sw.js` 磁盘字节的 sha1 逐字相同，bytes=2055。
 - `:8000`、`:4781`、`:4782`、`:8693` 四枚共享口这轮都没碰；共享 `_preview.db` 没读也没写；`demo/reset` 只落在我自己那份私有库里。
 
 ## 7. 仍未证的（等裁，不自扩）
 
 - 「失败三态同屏」那一格：桩能造 429/409/503 三种答，造不出真的 loading 态，我没拿假 loading 凑 6/6，这条维持「未证」。
-- 除 429 与 409 之外的其它 `UNKNOWN_FAILURE` 分支（400/401/403/404/422/5xx 的其它子形）本轮没扩，等号令者点名要不要在同一条腿上继续。
+- 除 `http_status=429` 与 `http_status=409` 两档之外，其余落进 `UNKNOWN_FAILURE` 的子形（`http_status=400`、`http_status=403`、`http_status=422`、其它 5xx）本轮没扩，等号令者点名要不要在同一条腿上继续。
 """
     OUT.write_text(block, encoding="utf-8", newline="\n")
     print(f"wrote {OUT} bytes={len(block.encode('utf-8'))}")
