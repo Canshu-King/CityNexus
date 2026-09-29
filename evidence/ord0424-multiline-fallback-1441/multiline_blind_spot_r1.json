@@ -1,0 +1,165 @@
+{
+ "tip": "57ff5d1c2f8540d498d945ed591c36689fc0f39e",
+ "files_scanned": 112,
+ "per_line_hits": 289,
+ "logical_line_hits": 466,
+ "distinct_literals_per_line": 275,
+ "distinct_literals_logical": 463,
+ "blind_spot_literals_only_the_logical_reading_finds": 190,
+ "line_number_drift_only": 276,
+ "blind_spot_by_shape": {
+  "TERNARY_BRANCH": 190
+ },
+ "samples": [
+  [
+   "app/V8Experience.tsx",
+   "TERNARY_BRANCH",
+   237,
+   "). Your trip is unchanged; check the details and try again."
+  ],
+  [
+   "app/V8Experience.tsx",
+   "TERNARY_BRANCH",
+   237,
+   "Could not reach the server. Try again."
+  ],
+  [
+   "app/V8Experience.tsx",
+   "TERNARY_BRANCH",
+   348,
+   "The providers returned nothing comparable this round. That failure is on their side; searching again usually brings results."
+  ],
+  [
+   "app/V8Experience.tsx",
+   "TERNARY_BRANCH",
+   348,
+   "There were candidates, but none of them met this trip's hard constraints (budget, timing or reachability)."
+  ],
+  [
+   "app/V8Experience.tsx",
+   "TERNARY_BRANCH",
+   348,
+   "This trip has no overnight stay, so there is nothing to search for."
+  ],
+  [
+   "app/V8Experience.tsx",
+   "TERNARY_BRANCH",
+   348,
+   "Your trip is created and its dates are intact — this search returned nothing to compare, and the server gave no reason. We will not invent hotels."
+  ],
+  [
+   "app/V8Experience.tsx",
+   "TERNARY_BRANCH",
+   568,
+   "The server currently names no usable sealed demo journey, so this entry is closed. Try again later, or create your own trip."
+  ],
+  [
+   "app/V8Experience.tsx",
+   "TERNARY_BRANCH",
+   568,
+   "Trip created. Tell the AI how you like to travel and it will build candidate plans."
+  ],
+  [
+   "app/V8Experience.tsx",
+   "TERNARY_BRANCH",
+   2024,
+   "; the active plan has"
+  ],
+  [
+   "app/V8Experience.tsx",
+   "TERNARY_BRANCH",
+   2024,
+   "No stay chosen yet"
+  ],
+  [
+   "app/V8Experience.tsx",
+   "TERNARY_BRANCH",
+   2024,
+   "Price unknown (no provider rate)"
+  ],
+  [
+   "app/V8Experience.tsx",
+   "TERNARY_BRANCH",
+   2223,
+   ", not a final cost. Real prices come from providers."
+  ],
+  [
+   "app/V8Experience.tsx",
+   "TERNARY_BRANCH",
+   2223,
+   "This is your own budget averaged out, not a final cost. Real prices come from providers."
+  ],
+  [
+   "app/V8Experience.tsx",
+   "TERNARY_BRANCH",
+   2223,
+   "per person per day"
+  ],
+  [
+   "app/V8Experience.tsx",
+   "TERNARY_BRANCH",
+   2269,
+   ". The server gave no execution cursor for this minute, so this screen reads time by the journey's window"
+  ],
+  [
+   "app/V8Experience.tsx",
+   "TERNARY_BRANCH",
+   2269,
+   "All clear"
+  ],
+  [
+   "app/V8Experience.tsx",
+   "TERNARY_BRANCH",
+   2269,
+   "Choose a plan and the day-by-day plan appears here."
+  ],
+  [
+   "app/V8Experience.tsx",
+   "TERNARY_BRANCH",
+   2269,
+   "No stay options came back this time"
+  ],
+  [
+   "app/V8Experience.tsx",
+   "TERNARY_BRANCH",
+   2269,
+   "Not chosen yet"
+  ],
+  [
+   "app/V8Experience.tsx",
+   "TERNARY_BRANCH",
+   2269,
+   "Nothing scheduled"
+  ],
+  [
+   "app/V8Experience.tsx",
+   "TERNARY_BRANCH",
+   2269,
+   "Open Live to review these changes."
+  ],
+  [
+   "app/V8Experience.tsx",
+   "TERNARY_BRANCH",
+   2269,
+   "Preview of one candidate option — you have not chosen a plan yet."
+  ],
+  [
+   "app/V8Experience.tsx",
+   "TERNARY_BRANCH",
+   2269,
+   "The earlier change has been handled."
+  ],
+  [
+   "app/V8Experience.tsx",
+   "TERNARY_BRANCH",
+   2269,
+   "The scenario is still being read; this screen uses this device's own time"
+  ],
+  [
+   "app/V8Experience.tsx",
+   "TERNARY_BRANCH",
+   2269,
+   "The server reports nothing until it finishes, so this is measured waiting time. A city's first search can take a minute or two."
+  ]
+ ]
+}
