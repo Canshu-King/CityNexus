@@ -10,7 +10,10 @@
 - used-edge projection repair commit: `f7cc3d45888035a9abbb9b88397c70b149251333`
 - selected-plan experience projection repair commit: `86d2f27a`
 - truthful live-navigation repair commit: `91cbf629`
-- final product/evidence commit before this receipt update: `80189a43` (`revolution lab: capture hub truth receipt`)
+- live routing mode binding commit: `b24975b0`
+- cross-projection mode binding commit: `570c7eff`
+- actual-mode count UI commit: `bb8ca6f5`
+- final product/evidence commit before this receipt update: `e25f47d0` (`revolution lab: capture live mobility mode receipt`)
 - clean before product calls: yes (`git status --porcelain` empty)
 - authority/mainline merge: none
 
@@ -21,7 +24,7 @@ The same disposable R77 Journey was used throughout:
 - destination: `苏州市`
 - city: `CN-SUZHOU`
 - journey: `9b11e4cd-c1b5-43e6-aedf-6402a0cfddd2`
-- selected plan: `fbb534a5-b307-5597-a5e7-65a91a4c163c`
+- selected plan: `e311ab50-5e61-5520-92fa-15ad977a565d`
 - real provider-backed places: `real-place-8bc850f117297987997c87cf` and `real-place-ba7377353c422c39dfd752b7`
 - disposable database: `backend/r77_selectable_probe.db`
 
@@ -161,6 +164,46 @@ leg_minutes = 42
 valhalla_status = CAPTURED
 valhalla_source = selected-plan-frozen-evidence
 ```
+
+### Same-Journey live mode rerun
+
+After the mode repair, the same disposable Suzhou Journey was rerun on a clean
+worktree. `POST /plans/generate` returned HTTP 201 and created candidate
+`e311ab50-5e61-5520-92fa-15ad977a565d`. Its newly captured Valhalla evidence
+contained `mode=WALK` for the real route facts. The real selection endpoint then
+returned HTTP 200 and made that PlanVersion current; no mode was injected into
+the database by the probe.
+
+```text
+GET /api/v1/journeys/9b11e4cd-c1b5-43e6-aedf-6402a0cfddd2/experience -> HTTP 200
+active_plan = e311ab50-5e61-5520-92fa-15ad977a565d
+active_plan.legs[0].mode = WALK
+active_plan.legs[0].provider_key = valhalla-http
+active_plan.legs[0].provenance = LIVE_PROVIDER_CAPTURE
+active_plan.mobility_evidence.used_edge_ids = [[
+  real-place-8bc850f117297987997c87cf,
+  real-place-ba7377353c422c39dfd752b7
+]]
+active_plan.mobility_evidence.used_edges[0].mode = WALK
+
+GET /api/v1/journeys/9b11e4cd-c1b5-43e6-aedf-6402a0cfddd2/twin -> HTTP 200
+context.mobility.provider = valhalla-http
+context.mobility.used_edges[0].mode = WALK
+context.mobility.used_edges[0].route_provenance = LIVE_PROVIDER_CAPTURE
+```
+
+The frontend previously converted “some mode exists” into a fixed “5 modes”.
+It now counts the actual distinct modes in the API facts. The clean Hub readback
+is:
+
+```text
+1 个方案 · 1 种模式
+已记录供应商支持的出行方式。
+09:00 网师园 · 10:42 拙政园
+```
+
+This keeps the live provider mode, Twin projection, Experience projection, and
+user-visible summary on one fact rather than claiming unsupported alternatives.
 
 `options = 0` means this direct selected PlanVersion has no `StayJourneyOption`
 lodging alternatives; it is not projected as “zero plans”. The selected plan remains
@@ -312,6 +355,7 @@ mode evidence remains visible and is not upgraded to a selectable mobility choic
 Hub screenshot receipt:
 
 - `frontend/output/playwright/r77-suzhou-hub-truth-clean.png`
+- `frontend/output/playwright/r77-suzhou-hub-live-mode-clean.png`
 
 Captured artifacts:
 
