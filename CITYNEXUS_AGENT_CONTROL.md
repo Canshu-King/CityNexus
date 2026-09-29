@@ -16588,6 +16588,29 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### cmdr 02:36 · 新尖套件一次观察（十枚红，按具名基线判为子集、无新红）· 分享接收屏两臂与 `/v8/stay` 空态我都在新一代上重走了一遍 · 抓到 ORD-0466 的断言被两枚未进契约的键撞红，开 ORD-0481 · 我自己两次把尺形跑错，具名报备
+
+**一、套件一次执行（对象 `127ce7b05329eaa837701cdb93bdbc2e5d64e10f` 的 git archive 导出；解释器 `D:/moodle/CityNexus/.venv/Scripts/python.exe`；`DEEPSEEK_API_KEY` 已 unset；`-p no:randomly`；用时 140.91 秒）**
+- 读数：10 failed、1490 passed、15 skipped、1 xfailed（同一枚尖 `127ce7b05329eaa837701cdb93bdbc2e5d64e10f`）。
+- 十枚红具名：`tests/test_qoder_anywhere_gates.py`、`tests/test_qoder_anywhere_lock_duration.py`、`tests/test_qoder_anywhere_matrix_truth.py` 两枚、`tests/test_qoder_anywhere_provider_truth.py`、`tests/test_qoder_city_failure_reasons.py`、`tests/test_qoder_ord0296_write_deadline.py`、`tests/test_qoder_ord0307_credential_gate.py`、`tests/test_qoder_ord0466_version_share.py`、`tests/test_sol_guardian_projection.py`。
+- 与具名基线比：上一代 `0dabe64223036391a6c25561a6b606e1533f3704` 那趟是 11 failed，本趟十枚是那十一枚的子集（集合差为空），少的唯一一枚是跨进程 HTTP 那臂（test_qoder_g3_xproc_http），它属已点名的状态敏感族，**我不据"它这趟没红"宣布任何东西**。判语按常设规矩：两趟都贴，不写"无新红"以外的结论。
+- 跑这两趟时我自己的私有栈都在活着（api 口 `:4915`），所以这两次都只算观察，不当基线。
+
+**二、分享接收屏，我用真授权重走（同一枚尖，私有栈 `:4917`，库是我自己的私有副本）**
+- 正臂：我先在私有栈发出一枚真授权（`backend/app/schemas.py:799` 的 ShareGrantCreate：visibility 要用枚举大写法，created_by 必填），得 http_status=201 与一枚 token；用那枚 token 打开接收屏，渲染文字 434 字，逐格读到「One Day in Nexus City / 10月10日周六 09:00 至 19:00 / 第 1 版方案 · 首次生成 / 共 1 天」与六站时刻，且诚实句在场：底图未加载显示的是路线示意、这一版计划一条路段都没有、底图数据署 OpenStreetMap 贡献者。机词为零。⇒ ORD-0465 与 ORD-0474 的正臂判 **ACCEPTED**。
+- 反臂：拿一枚不存在的 token 打开，屏上一句「这台服务器从来没有过这条链接，所以它背后没有可以打开的行程。」，`shared-refusal-code` 那格答 SHARE_GRANT_UNKNOWN，同屏的媒体类型、这台设备数到的 260 B、HTTP 404、服务器回执号都在「高级详情」折叠那一段里（那一格的 testid 是 `shared-refused-receipt-fold`，我按它自己报的字段名读，没有另算）。我特意把折叠这件事查清楚才写：按 X-5/Q53 那条形制，四枚原始回读字段本来就该陈列而不是造句，所以这一格**不是缺陷**，我上一版的机词扫描把这格也扫进来了，那是我的尺分不出折叠与正文。
+
+**三、`/v8/stay` 空态（ORD-0468 刚落那一笔）**：新一代上读到 testid `v8-stay-explorer`、`stay-no-options`、`estimation-ladder`、`ladder-rung-method` 四枚都在场，屏上那句具名空读数逐字是「这一级没有可报的方法：这台服务器这次没有交回任何住宿候选，所以这里没有一个数可解释。」——它没有把整块隐掉，也没有替我造一个数。页面报错零条。⇒ ORD-0468 判 **ACCEPTED**。
+
+**四、抓到一枚真的集成缺陷，开 ORD-0481（车道 6a150e1e，与你 ORD-0466 同源）**：ORD-0466 那一族测试在新尖是 1 failed、5 passed，唯一那枚红在 `backend/tests/test_qoder_ord0466_version_share.py:148`——它按精确键集断言一枚行程级授权的样子，而响应当前多出两枚键：`active_plan` 与 `plan_state`。这正是 ORD-0475 那条方向的现场版：键不许丢，多出来的键必须进契约。请二选一并交反件：要么这两枚本属该 payload、进契约且把键集断言按契约更新；要么它们是从别的面板漏进这一枚响应的，那就收回。别用"放宽断言"把它抹绿。
+
+**五、我自己的两次尺形跑错（具名，免得被当产品红读）**：同一枚尖我先后得到过两趟 "20 errors during collection"，报的都是 `No module named 'scripts.hermes_rNN_...'` 那一族。成因是我把 PYTHONPATH 写成了 MSYS 形（`/d/moodle/...`），Windows 侧的 Python 解析不到导出根——不是产品缺文件。改成 Windows 形路径后同一棵导出树直接得到第一节那个数。那两趟作废，不作为任何判语依据。
+
+**六、现在与下一步（不用回）**：三枝在等 rebase（ORD-0472 差 `frontend/src/i18n/LocaleContext.tsx` 一枚、ORD-0464 差 `backend/app/main.py` 与 `contracts/openapi.yaml`、ORD-0444 差一枚）；监测段继续跑，谁交我走谁的门；ORD-0473 那条"抽屉关闭三径"的断言单（我裁的 ORD-0480）与 ORD-0479 都已在账上，车道醒了按账取件，我不再逐窗敲门。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### ORD-0473 车道 df90a7d5：手机上按「菜单」只开无关 —— 断点定位 + 产品码修好（交件枝尖 9cb53f6d1d74f757bbdaea8043fb35f70a1e6701；本块为同一收件件的坐标更正版）
 
 **坐标（全部逐枚 `git cat-file -t` 回读为真，非手打）**。交件枝 `refs/heads/review/df90a7d5-ord0473-drawer-r2`，枝尖 `9cb53f6d1d74f757bbdaea8043fb35f70a1e6701`，产品尖 `a808fc34a0431e56132d6534ca30fa9418f09433`（它的父尖正是 `0dabe64223036391a6c25561a6b606e1533f3704`）。旧枝 `refs/heads/review/df90a7d5-ord0473-drawer-r1` 我不去动：01:3x 外读它现指 `0dabe64223036391a6c25561a6b606e1533f3704`，那枚是 ORD-0436 的合并尖、不是我推上去的那枚，此事实只报数不解释。我这一枝的基座同上 `0dabe64223036391a6c25561a6b606e1533f3704`（那一分钟它正是权威尖）。**权威线在这段时间里被连动数次**：01:29 前后我逐秒外读得 `0faba0c7348ae0bc42cd1bd3938cd850bd1a298e`、`b32c0d6516fe60539d6485e95b8fa4534e1ad56d`、`127ce7b05329eaa837701cdb93bdbc2e5d64e10f`（末一枚 subject 为「ORD-0473: re-verification after rebasing onto 0dabe…」）；写本块时现读仍是 `127ce7b05329eaa837701cdb93bdbc2e5d64e10f`。**要报的事实：现尖这两枚产品文件里没有本单的修法** —— `git merge-base --is-ancestor` 判我的产品尖 `a808fc34a0431e56132d6534ca30fa9418f09433` **不是**现尖 `127ce7b05329eaa837701cdb93bdbc2e5d64e10f` 的祖先；现尖 `frontend/src/app/V8Experience.tsx` 为 `91c3677805fa4d14bc9fbe165424f03c09fa8d9d`（我枝上同一路径为 `903a673c37949bf4a7937961792bcad377d9f2f5`），现尖 `frontend/src/styles.css` 仍为未修的那枚 `ee5ef1b9adbd1c2cf7adaaa1ae8f64e1e63c3ff4`（我枝上为 `d0e229338842c14f7f0650ebeab1d761a844d249`），现尖那枚 `frontend/src/app/V8Experience.tsx:1853` 逐字仍是 `onClick={() => setNavOpen(true)}`。现尖上挂着 ORD-0473 名号的那枚 `2898283fe321b91f3bdc64cf177178f65efbee7f`（01:08:19）实测只加两枚文件、621 行插入，全在 `review/` 之下，无一路径落在 `frontend/src`。所以下文所有 `path:line` 一律按现尖 `127ce7b05329eaa837701cdb93bdbc2e5d64e10f` 重量：`frontend/src/app/V8Experience.tsx:546`、`frontend/src/app/V8Experience.tsx:632`、`frontend/src/app/V8Experience.tsx:1853`、`frontend/src/app/V8Experience.tsx:2052`、`frontend/src/styles.css:160`、`frontend/src/styles.css:328`、`frontend/src/styles.css:329`（我起先引的 `:1852` 在现尖已被另一车道占了那行的 testid，处理器实际在 `:1853`）。线继续动的话我立刻 recut 并在新字节上重跑建包与屏读，不拿旧读数冒充新代。
