@@ -16588,6 +16588,193 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### ORD-0455 交付 · 道0370（会话 e4f3490f-a55f-4fcb-b7af-227e41018656）· 估算四级梯：说方法 → 事前警告 → 事后核对 → 给补救 · 2026-09-29 14:41+08
+
+## 0. 为什么这枝叫 -r2
+   `-r1` 的头 28a414a1caf1934c39e23487fa1aa834c8d2386e 我已经推出去了（那时它还和线同线）。之后权威线又走了几批，我把这枝 rebase 到现尖 —— 已发布 ref 冻结，我不覆盖它，所以换新名重交，`-r1` 原样留在那枚 40 位上。两枝之间产品字节 0 差：这 8/8 枚（4 枚新件 + 3 枚改动 + 仪表）在 `-r1` 与本头上 blob 逐枚相同（脚本按 `git rev-parse <rev>:<path>` 断言，不同即拒收）。仪表文件名仍带 `-r1`：文件名不是枝名，改它会让已入账那笔 receipt 的 target 对不上。
+
+## 1. 坐标
+   枝 `refs/heads/review/Q-ord0455-estimation-ladder-r2`（新名，未覆盖任何已推 ref）；`git -c http.proxy= -c https.proxy= -C D:/moodle/CityNexus ls-remote origin refs/heads/review/Q-ord0455-estimation-ladder-r2` 现读头 005af555e5265c79081b0311ddf2c812cc483170 ，`git cat-file -t` = commit 。
+   号令者点名现尖 4ee14229f80691cf8e5ea913375c0caf83ac02ee ：它是我这枝历史的祖先（`git merge-base --is-ancestor` 成立），我从 b2abd99b9e07c77e565f9cbdbd3875fcc733697b 切出；交付时线又走到 b2abd99b9e07c77e565f9cbdbd3875fcc733697b ，比我头多 0 笔。
+   我这批读数依赖的 3 枚未改字节（`LocaleContext.tsx`、`_qoderShellSeed.ts`、`_qoderEvidence.ts`）在我的头与现尖上 blob 逐枚相同，漂移 0 枚；合流预测 `git merge-tree --write-tree b2abd99b9e07c77e565f9cbdbd3875fcc733697b 005af555e5265c79081b0311ddf2c812cc483170` 退出码 0 （0 = 可干净合流）。
+   相对基点净形：`git diff --numstat b2abd99b9e07c77e565f9cbdbd3875fcc733697b..005af555e5265c79081b0311ddf2c812cc483170` 现读 touched_path_count=10 、added_line_count=2039 、deleted_line_count=2 。
+   闸与提交的先后：这把闸的 receipt tree = f206cba09d44a216416564905daf7951040c65e0 ，比我这枚头早一批提交 ；这批 7 枚产品字节在 receipt tree 与我的头之间逐枚 blob 等值（脚本按 `git rev-parse <rev>:<path>` 断言，7/7 枚相同），所以报的是「量过的那批字节」。磁盘字节与提交后的 blob 也逐枚回算（`git hash-object` 头部式，7/7 枚 match）。
+
+## 2. 这批交了什么（一句话）
+   四档梯子在树上是一枚推导 + 一枚文案模块 + 一屏挂载：`frontend/src/features/estimation/estimationLadder.ts`（触发条件）、`estimationLadderCopy.ts`（两套语言的 10 枚措辞 + 4 枚档位名）、`EstimationLadderPanel.tsx` + `estimationLadder.css`（挂载与形制），落在住处明细那一屏（`StayExplorer` 明细面板，紧跟 总价/退改/来源 那三行之下）。
+   逐文件 blob（同段可 `git cat-file -e` 的 40 位）：
+     frontend/src/features/estimation/estimationLadder.ts = ae1828e315e8f5c8dacb1ae8c2363fc1181a8b8f
+     frontend/src/features/estimation/estimationLadderCopy.ts = 25b2a792c88c6b1433d1fdb854144ebe359f1a3e
+     frontend/src/features/estimation/EstimationLadderPanel.tsx = 3caa503a759b4ae31b0322b53ebbce41dc41f995
+     frontend/src/features/estimation/estimationLadder.css = a77c7a964e8cc5953eae6da5da56cc36bb1921a8
+     frontend/src/features/stay/StayExplorer.tsx = e055486e162f17ec875995ae69b087fde983be7c
+     frontend/src/app/v8PanelRegistry.tsx = c1782a31717050f965d8da08cf929152518ce780
+     frontend/src/lib/displayVocabulary.ts = 3ffe3cf87f9d2e57fbccc298c95ae209bf9fcce6
+     frontend/e2e/qoder-ord0455-estimation-ladder-r1.spec.ts = 3c05c2dcb2c0f1d5597e4931b2ce345bc95b6bc6
+     review/q455_estimation_ladder_r1.json = 7253dc72f1b7a80c452cb11b54f738f579a653c5
+     review/q455_ladder_r1.py = ffe724682e734b1c42e0004b5803fb4bdc265d09
+
+## 3. 四档与它们各自的触发条件（这是本单要求的两件事之一）
+   档位不是措辞的别名，是 `estimationFacts()` 的谓词组合。全部触发条件与实测计数：
+   ① 说方法：只有当屏幕上真有一个数时才允许说话。触发 = `amount>0 且宿主给出的金额文字非空`；再按 来源/置信度 两格分三种措辞（两格都有 / 缺置信度 / 缺来源）。
+   ② 事前警告：`无数` 或 `有数无置信度` 各一种措辞。
+   ③ 事后核对：有数才说；`refundable === false` 时换成点名后果的那一句。
+   ④ 给补救：只在警告出现过时出现，并三门挑一（可换候选 / 只能去重算 / 明确说没有门）。
+   反证不变量在 288 例全组合上跑（那七重循环在 frontend/e2e/qoder-ord0455-estimation-ladder-r1.spec.ts:128 ，计数同读 `arms.m2_invariants.cases`）：警告与补救必成对、无数时不许出现①③、有数时①③各且仅一次、档位顺序不得倒挂 —— 违反 0 例（`O455 m2_invariants`，取字处 frontend/e2e/qoder-ord0455-estimation-ladder-r1.spec.ts:128）。
+   四档全部点得亮，且没有一枚措辞无人引用：`rung_keys_derived=10` 、`unreachable=[]` 、`orphan_copy_keys=[]` 。
+
+## 4. 屏上读到的是句子本身（本单要求的第二件事）
+   两臂都是 390x844 （视口写在 frontend/e2e/qoder-ord0455-estimation-ladder-r1.spec.ts:348 ）、底栏顶边 hit_line=768 （那一格读法在 frontend/e2e/qoder-ord0455-estimation-ladder-r1.spec.ts:224 ），先 `scrollIntoViewIfNeeded()` 再命中。
+   中文臂实读到 2 档，逐档中心命中且末行在底栏之上：["一次采回来的报价回放：¥360.00，置信度 96%。这是报回来的一条价，不是结算单，实付以供应商的最终价格为准。", "下单前请向供应商核对这个价格与取消条款。"] （两句里的价格是明细行 frontend/src/features/stay/StayExplorer.tsx:184 的读数；原文取字处 frontend/e2e/qoder-ord0455-estimation-ladder-r1.spec.ts:224）
+   英文臂实读到 2 档：["a captured replay of a provider quote: CN¥360.00 at 96% confidence. It is a quote handed back to us, not a settlement -- the provider's own final price is what you pay.", "Check this rate and its cancellation terms with the provider before you book."] （同一取字处 frontend/e2e/qoder-ord0455-estimation-ladder-r1.spec.ts:224）
+   两臂的屏上档位与「按 DOM 事实独立重算」的结果逐字相等（`painted == predicted_from_dom_facts`），漏出的占位符 0 枚（`leaked_placeholder=[]`）。
+   权威口径：这两臂跑在 `npm run dev` 上（闸的既有口径），证的是**措辞与触发条件落到了屏上**；产物字节另由第 5 节那三行退出码与 bundle 命中给，dev 的响应字节与磁盘字节不等，我不主张等值。
+
+## 5. 反件（四档同屏的边界就在置信度那一格）
+   真数据这次只点亮两档：`GET /api/v1/journeys/{id}/experience` 交回的住处证据是「有数 + 有来源 + 置信度 0.96」，②④ 的触发条件是「无数」或「有数无置信度」，这台服务器这次没有给出这两种形状。所以反件把 experience 的响应改写成骑在边界两侧的两种形状，各读一次屏（同一枚端点、同一把闸、同一个上下文）：
+   无置信度那一形（下面那句里的金额写在 frontend/e2e/qoder-ord0455-estimation-ladder-r1.spec.ts:390 ，取字处 frontend/e2e/qoder-ord0455-estimation-ladder-r1.spec.ts:224）：屏上 ["一次采回来的报价回放：¥1,560.00。这台服务器没有随这条回答给出置信度。", "先别拿它和别家比：这个数背后没有供应商置信度。", "这一档不可取消 —— 下单前请向供应商核对最终价格与取消条款。", "想拿到能比价的数：可以在这里换另一家（共 3 家候选），或打开行程工作台更换酒店、改某一段的出行方式，那里会按同一套硬约束重算。"] 四档按梯序落地，触发行 ["amount+source,no_confidence", "amount,no_confidence", "amount,non_refundable", "door_switch"] ，四档都中心命中。
+   补上置信度那一形（同一写入处 frontend/e2e/qoder-ord0455-estimation-ladder-r1.spec.ts:390 ，同一取字处 frontend/e2e/qoder-ord0455-estimation-ladder-r1.spec.ts:224）：屏上 ["一次采回来的报价回放：¥1,560.00，置信度 62%。这是报回来的一条价，不是结算单，实付以供应商的最终价格为准。", "这一档不可取消 —— 下单前请向供应商核对最终价格与取消条款。"] ，警告与补救自己退场。
+   两形各自改到的响应（去重后 1 条端点、逐次改写 6 次，判据行 review/q455_ladder_r1.py:340）：["/api/v1/journeys/51cf0165-a4c4-4013-8827-a582e9a5d720/experience options=4"] 。
+   见证类型 = HTTP_RESPONSE：这两代形状是我本地应答的，不是这台服务器给的；它证明的是梯子的边界画在对的地方，不是产品数据长这样。
+   编译臂（我这枚头的导出件，node_modules 走 `os.link` 硬链、nlink=19 ）逐行退出码：
+     npx tsc -p tsconfig.check.json --noEmit rc=0
+     npx tsc -p tsconfig.typecheck.json --noEmit rc=0
+     npx vite build --outDir dist --emptyOutDir rc=0
+   入口 asset ["index-eTK7XYRt.js"] ，本机字节 sha1 over bytes = 56f5154d05eb31f8972371c516c2b780c06e1092 （非 git 对象声明；同段可 cat-file 的 40 位：仪表 3c05c2dcb2c0f1d5597e4931b2ce345bc95b6bc6 、读数件 7253dc72f1b7a80c452cb11b54f738f579a653c5 ）；bundle 里逐串命中（三串：两枚措辞 + 一枚 key）：[["这台服务器没有随这条回答给出置信度", true], ["We do not print 0 as if it were a price", true], ["ladder.remedy.absent", true]] 。
+
+## 6. 我没动的东西，以及动不了的格子（具名 + 读数）
+   禁改墙：["frontend/src/styles.css", "frontend/src/app/V8Experience.tsx"] 在本批 `git diff --name-only` 的 touched 集合里 0 命中（脚本断言 `walled_files_touched=[]`）。
+   墙上有两格本来就属于这架梯子，我只交读数、不开改不完的口子（这两行读数取自我这一代 a00d387a ；现尖 b2abd99b9e07 上这枚外壳的字节 与我这代逐字节相同）：
+     frontend/src/app/V8Experience.tsx :: 每人每天约 现读 frontend/src/app/V8Experience.tsx:2253 ，blob eb247ffb29a74583a2bbaf887dc693148c322ec5 。
+     frontend/src/app/V8Experience.tsx :: map.unknownCosts 现读 frontend/src/app/V8Experience.tsx:3914 ，blob eb247ffb29a74583a2bbaf887dc693148c322ec5 。
+     前一格是「每天约 X」那句：它已经自带 说方法（按你的预算平均下来的参考值）+ 事前警告（TIGHT_CAVEAT_ZH，frontend/src/app/V8Experience.tsx:2218）+ 给补救（那句里的「可以先调整预算」）三档，而且 `frontend/e2e/qoder-budget-advisory-tiers.spec.ts` 把句子按字符钉住 —— 要接第四档得连那把闸一起改，不在我这单的范围。
+     后一格 `map.unknownCosts` 现读 frontend/src/app/V8Experience.tsx:3914 ：屏上那句「未知费用保持未知。」只声明了立场，四档一档都没有。这是墙后唯一一处「该挂梯子、现在只有一句口号」的格子，交号令者定夺。
+   另外两格不在墙上、已在树上，我复用了没有另造：`lib/budgetEvidence.ts` 的 NONE/PARTIAL/FULL（frontend/src/lib/budgetEvidence.ts:20）是警告档的判据出处；`features/agent/CopilotDock.tsx` 的 VERIFICATION_LABELS（frontend/src/features/agent/CopilotDock.tsx:512）是核对档的词表出处。`features/trip/ActivityDetail.tsx` frontend/src/features/trip/ActivityDetail.tsx:285 那句「按直线距离排列」是本产品已有的一句「说方法」。
+   来源那一格（`stay.evidence.source`）我走的是 ORD-0425 那条共享显示层：在 `lib/displayVocabulary.ts` 上加了一枚 `EVIDENCE_SOURCE` 表 + `evidenceSourceLabel()`，表里只列 `backend/app/stay_mobility.py` 自己声明的三枚 provenance（CAPTURED_REPLAY / UNAVAILABLE / SYNTHETIC_FIXTURE），没列到的值仍落回「这台服务器写的：原值」那一条带标签的通道，不是我替它编一个名字。
+
+## 7. 一条我自己量出来的既有分叉（不改，只报）
+   住处明细那一屏同时印着两个「合计」：卡片行 `pricePair(item.stay_total_minor, …)` 与明细行 `priceLabel(selected.stay.total_amount_minor, …)` 读的是两枚字段。
+   反件里我把后者写成 156000（¥1,560.00），卡片仍印 ¥360.00 —— 同屏两个总数不同源。我的梯子挂在明细行下，`{amount}` 与 `data-ladder-amount-field = stay.total_amount_minor` 逐格点名它说的是哪一行（frontend/src/features/estimation/EstimationLadderPanel.tsx:57）。
+   这一格归属不在本单（要统一得动 `stay_total_minor` 的出处），具名交回：`frontend/src/features/stay/StayExplorer.tsx` frontend/src/features/stay/StayExplorer.tsx:134 与 frontend/src/features/stay/StayExplorer.tsx:184 。
+
+## 8. 尺与边界
+   门尺自检：`D:/moodle/_qoder_cmdr_ref_20260921/live_checks/claim_coordinate_check_r7.py --text <本块> --expect-clean` 要 rc=0 —— 退出码与 findings 由本进程在写进收件口之前对这份草稿现跑，跑红就不投递；
+   那把尺本机字节重算文件 sha1 = 2690a3f7eb0b817a882212854ad906bfc8703e2d （非 git 对象声明；同段可 `git cat-file` 的 40 位：入库 blob cf1f047d53d4848fa16abcd03df34099ec87d90d 、byte_count=29651 与我运行的字节数相同、交付头 005af555e5265c79081b0311ddf2c812cc483170 ）。
+   第二道闸对同一份草稿逐值复算：只扫逐字 40 位，免除要同一行写明不可取回且同段另有一枚能 cat-file 的 40 位，`path:line` 不算数；abort 非空不投递。官方回放件 `D:/moodle/_qoder_cmdr_ref_20260921/live_checks/patrol/bolt_replica.py` 的读数随本块投递后的回读一并给出。
+   边界：权威线 0 次移动（`AUTHORITATIVE_BRANCH_SINGLE_WRITER_V1`）；账本 0 次直写（本块走收件口）；`D:/moodle/_qoder_preview_20260920/_preview.db` 一次未开；`demo/reset` 0 次；别人 worktree 0 次进入；闸用的库与端口是本跑自己新建自起的（前端 5570 、后端 6570 ，库 _cmdr142731e4f.db ），收尾 netstat 回读见第 9 节；D 盘可用 8.5G 。
+
+## 9. 复现
+   跑闸：`env -u HTTP_PROXY -u HTTPS_PROXY python review/e4f_e2e_r1.py --wt D:/moodle/_qoder_lane_q0406 --target e2e/qoder-ord0455-estimation-ladder-r1.spec.ts --tag e4f` ；本跑 run_id = cmdr142731e4f ，stdout 读数件 = D:/moodle/_qoder_cmdr_ref_20260921/live_checks/e2e_logs/e4f_f206cba0_142731.log （29244 字节），计数 = {"passed": 7} 。
+   读数汇总（含两臂逐档句子、反件、三行退出码、bundle 命中、墙上格子现读）在 `review/q455_estimation_ladder_r1.json`（blob 7253dc72f1b7a80c452cb11b54f738f579a653c5 ，可 `git cat-file -p` ）。
+
+
+## 10. 这批的迭代留痕（不藏）
+   第一版交付生成器崩在装配账本块那一步：`claim_coordinate_check_r7.py` 的 `--text` 收的是**草稿文件路径**，我把正文塞了进去，尺在 open() 上抛 OSError；同版另有一处未绑定变量。崩点在三笔提交与 push 之后，所以已发布的枝历史上确实带着那版有缺陷的生成器 —— 逐笔如下（首笔是我的产品提交，末笔是本块引用的头）：
+     a00d387ae3621b19134f1bfb3429265e50b8e9e8 ORD-0455 readouts: the painted rungs in both arms, the compile arm on a hardlinked export, and the wall cells this batch could only read
+     8625488cc5c538cc8a6ec5b49f70682581bf2ece ORD-0455 readouts: the painted rungs in both arms, the compile arm on a hardlinked export, and the wall cells this batch could only read
+     f206cba09d44a216416564905daf7951040c65e0 ORD-0455 readouts: the painted rungs in both arms, the compile arm on a hardlinked export, and the wall cells this batch could only read
+     7a3a9b758bf1f77515b6d4fc0b30fb514b856934 ORD-0455 readouts: the painted rungs in both arms, the compile arm on a hardlinked export, and the wall cells this batch could only read
+     9064942383f5c89beaa28e0fe7afbd4c29ee5acd ORD-0455 readouts: the painted rungs in both arms, the compile arm on a hardlinked export, and the wall cells this batch could only read
+     e1ac813329e0c7a48e9eec169e3f7d35c1e2ad9d ORD-0455 instrument: the ladder's trigger truth table, both locale arms, and the confidence-boundary control pair
+     992267161c44a2cbc6e5d623d64b6104f5991ff7 ORD-0455: the four-tier estimation ladder on the stay quote -- triggers derived from the cells the server sent, wording in one module, source words through the shared display layer
+   中途权威线把 `frontend/src/i18n/LocaleContext.tsx` 改了（我这批依赖它的 `nav.studio` 那一格），我的门在提交前就报漂移并拒收；我 rebase 到 b2abd99b9e07c77e565f9cbdbd3875fcc733697b 之后**整把闸重跑**（run_id cmdr142731e4f ），此前那笔跑在 57ff5d1c 下的 receipt 已作废，本块不引用它的任何数字。
+   端口收尾自检：`netstat -ano` 现读对前端 5570 与后端 6570 两枚端口 0 命中（残留监听 0 枚） 。
+
+
+### R ORD-0440 后半 · 我自申报撞了 N3 在跑的同一单 · 建议落 N3、我这二枚枝不要落（+08 on 2026-09-29）
+
+**一、结论先说**
+
+- 我按号令者 11:35 那块（`ORD-0440 的后半：现尖上还有 4 处既有的上游原文上屏`，走"车道自申报"）动了手，做完才发现**这一单 N3 车道早在 12:28 就在跑**：`review/N3-ord0440-exposure-cells-r1` = `ab171b0c407ad13e570d81b70b69ca95a65f7bae`（`git log -1` 时间 2026-09-29 12:28:24 +0800，作者同样是这台机器的账号，会话 `1d64acf5`，账本里那枚 ORD-0448 块也是它交的）。
+- 两枝改的是同一枚文件：它们动 `frontend/src/features/discovery/DestinationPreparationPanel.tsx`、`frontend/src/components/CnxMeasuredFacts.tsx`，并新增 `frontend/src/features/discovery/prepFailureCopy.ts`；我动同一枚面板 + `frontend/src/i18n/LocaleContext.tsx`。**同一枚面板不可能两枝都合**，所以我建议：**落 N3 那一枚，我这二枚枝不落**（`review/ord0440-prep-exposure-cells-r1` = `8696424f0cd568fe9faf2b73bc38213dba912b9f`、`review/ord0440-prep-exposure-cells-r2` = `7d4c3142dfd91c4aeb5e4595944099f587858254`，都已在远端，逐字回读过；我不擅自删远端枝，等号令者一句话我再清）。
+- 我的流程过错，不遮：自申报前我只读了账本的 11:35 与 11:47 两块，**没有先 `git ls-remote --heads origin | grep 0440` 看在跑的枝**。号令者 11:47 那块写的"车道全部处于 cold"是那一刹的状态，而 N3 在 12:28 已经醒了。下一次我自申报任何单之前，先把远端 `review/` 名单过一遍再动手。
+
+**二、我这枚枝到底做成了什么（留作读数与形制参考，不是要落的件）**
+
+- 三格（面板的 `:421`、`:544`、`:597`）原本是 `catch { setX(error.message) }` 再把 state 直接渲染；现在存的是"本屏自己挑的字典键 + 这台设备量到的状态"，屏上只准出现字典句与 `HTTP <status>`（`http_status` 在尺的六枚允许字段里）。字典每臂加 5 句（`frontend/src/i18n/LocaleContext.tsx:457`-`:461` 英、`:1377`-`:1381` 中）。
+- 服务器那句失败原话是**搬进带锚技术详情、不是删**（`frontend/src/features/discovery/DestinationPreparationPanel.tsx:563` 挂 `data-cnx-field="response_received"`、`:570` 才是原话），依据是尺自己的豁免条款：文本位的格子只有当最近的折叠元素带 `data-cnx-field` 且指向那六枚允许字段之一才免，属性位永不免。这也正是 ORD-0369 对同类格子定过的形。
+- 尺的同件正反两读（同一把 `ui_exposure_taint_ast_r7b.cjs`、`git hash-object` = `d3f66ce9fecd0790981a4fcdeb5e36b1c0fd10f2`，同一模式 `--tree`）：把我那两个文件换回现尖自己的版本 ⇒ `cells_total` 12、面板那三行 `[421, 544, 597]` 全数回来；装回我的版本 ⇒ 9、面板 0 格；装回的 blob 哈希逐枚核对为 match=YES（面板 `df6d34a12ffc9561c6bad983e440e37cf6a101da`、字典 `bcacb6a13a8dbff40d40f0feeb2d52201eba268f`）。收据 `evidence/ord0440-20260929/exp0440_reverted.json` 与 `evidence/ord0440-20260929/exp0440_restored.json`。
+- 我这屏的门两臂（`frontend/e2e/qoder-ord0440-prep-exposure-cells.spec.ts`）：臂 A 植一枚 500，屏上句子必须是字典那句、状态显示 `HTTP 500`、植入的那句在整页文本里 0 命中；臂 B 把真 hydration 的轮询记录钉成失败并植入一句中文原话，断言**两向**：折叠前阅读行不含它、点开之后必须还在（`proseOnReadingLineBeforeOpening: false`、`wordsInFold` 含植入句、`anchor = response_received`）。在 `17dff25a…` 那一代上：3 passed、退码 0、3.2 m。
+- 复切判据我这边量过：`merge_base_equals_tip=YES`（对 13:27 那枚尖）、本单自有路径 3 枚、`different=0`、conflict 0。
+
+**三、留给号令者的两格事实（与 N3 那枚枝有关，我不替它判）**
+
+- 你 11:35 列的第四格 `components/CnxMeasuredFacts.tsx:57` 是服务端自有的可复述编号（契约字段 `error_receipt_id`，`RECEIPT_SHAPE` 形如 `CNX-` 加八字 Crockford 字母、不匹配就塌成 `NOT-EMITTED`）。我**故意没动**它：藏起来会让六枚屏（`PlaceProvenance`、`AccessPanel`、`RealCityDiscoveryPanel`、`PendingSetPanel`、`V14RecoveryTruthPanel`、`JourneyTrashPanel`）少掉一个能念出来的号，而同一个形还在 `features/trash/JourneyTrashPanel.tsx:232` 以属性位存在——属性位尺说不豁免，所以拿掉共享组件那一行也去不掉这一类格子。N3 那枚枝直接改了这枚组件，是否走到"六枚屏仍可复述"的效果，要它自己的读数判。
+- 另外两枚红不是 ORD-0440 造成的，且我做了双向对照：`e2e/qoder-not-answered-cell.spec.ts:82` 与 `:234`（一枚 300 秒超时、一枚 5.0 分钟），把补丁反向装回现尖版本跑 ⇒ `2 failed / 1 passed (11.2m)`；装回我的版本跑 ⇒ `2 failed / 1 passed (10.5m)`。同一两枚、同一形失败，所以是先存的；同时 `e2e/qoder-destination-preparation.spec.ts` 的六臂在我的改动上全绿。日志 `run/attr0440_base.log` 与 `run/attr0440_after.log`（车道目录，未入库，路径可取回）。
+
+**四、我不再做的事**
+
+- 不再往 ORD-0440 上加码、不再重基那二枚枝去追线（追不上，今天 07:23→10:08→11:42→12:15→12:21→13:27→14:23 已跳七次）。要落哪一枚由号令者定；若他判"落 N3 的、清掉我的"，回一句我就把远端那二枚删掉并留勘误块。
+- ORD-0437 不在本块范围：它的现尖候选是 `review/R-ord0437-link-import-r7`，申报另见同批那块。
+
+
+### 车道 dt（会话 be19052c）ORD-0435 r8：已 rebase 到当代尖、只重放尖上没有的两件事，四格屏读在新基座上重跑完（2026-09-29 14:42 +08）
+
+**一、rebase 完成，基座是现读的**。三枚尖都逐字贴出，避免又拿一份过期快照：
+指令给的 `45513fc7957214dc385b4dffea9a662a0d8b1d1c`（`git log -1` 得 2026-09-29 14:15:53 +0800
+「ORD-0430 r4: per-screen map and h…」）；我实际落的基座
+`9110db281ca7706bb78e8e1f2dbad04a08705d88`（14:21:05 +0800「ORD-0456: put the wizard file back to the
+line endings」）；写这块时 14:41 再读 `refs/heads/mirror/integration-frontend-apple-pass1` =
+`b2abd99b9e07c77e565f9cbdbd3875fcc733697b`（14:23:55「S4-ast-taint ORD-0454: STATE_PAIR face added…」）。
+`git merge-base --is-ancestor` 两问都成立：`45513fc7` 是 `9110db28` 的祖先、`9110db28` 是 `b2abd99b` 的祖先
+⇒ 我这枝包含指令那枚尖，且没有落在别人后面；若落地窗口再前进，我继续 rebase，不手合。
+新枝名 `refs/heads/review/ord0435-poi-batch-multiselect-r4`，头
+`1603bffb0ce24ea650304ff6ff4d6387ead7a5ed`，`ls-remote` 现读同值（`* [new branch]`，不是改名不换字节）。
+
+**二、只重放尖上没有的两件事，其余一律取权威线**。对基座的 `git diff --cached --stat` 只有两枚文件：
+`frontend/src/i18n/LocaleContext.tsx`（3 枚英文值，blob `2c8c538b9b27d3ea9008bb567aaa53401374a599`）与
+`frontend/e2e/qoder-ord0435-poi-batch-multiselect.spec.ts`（每臂按 locale 各注册一次，blob
+`3664d03ebfaf41a47823f72b912fc7727037f17c`）。
+面板不必重放——基座上它已是 `8ef92f699b5e18942a554376ac48242aa4d54a36`，就是我那版。
+**样式那枚我特意不覆盖回去**：基座上
+`frontend/src/features/discovery/discovery-batch.css` = `9c596740d5b74626eddb19061f40c009a4ba07ec`，
+比我枝上那版多一处更正——有人把我写的裸 `border-radius: 4px` 换成 `var(--cn-r-4)`。
+那是权威线对我一次正确改口，我用它的字节，不用我的旧字节。
+字典侧我核过基座上 18 枚键都在（`grep -c` 命中 6 处 = 3 枚键 × 两语言），但值仍是旧病句
+`"discovery.batchLanded": "Read back from the server: {n} activities on {day}."`（基座 `:507`），
+所以重放的正是那三枚值；`b2abd99b` 上该值仍是旧的（现读 `:507` 同句），说明这一格仍未落地、由本枝带进去。
+
+**三、四格屏读在新基座上重跑完，两臂各自逐字**。仪表
+`review/ord0435/cmdr_four_cells_r1.js`，读数 `review/ord0435/four_cells_after.json`（blob
+`93e09a138f7db416ee0af970cd2802d1e92e426c`）：
+C1 两臂 `present: true`、`nodes: 1`，同行分母「结果卡 3 张」；
+C2 中文臂 `已选 0 处` → `已选 1 处`、英文臂 `0 picked` → `1 picked`，两臂 `changed: true`；
+C3 两臂 `.v8-mobile-nav` 顶边实测 768 px、条压底栏 0 px、条中心与"完成"中心都 `HITS_OWN_BAR`；
+C4 两臂条内 SCREAMING token 0 枚（中文条读「已选 0 处 还没有落到某一天。 新建一批 完成」，
+英文条读「0 picked Not written to a day yet. New batch Done」）。
+**一枚可复核的旁证**：这轮的 `four_cells_after.json` 与 rebase 前那轮 blob 逐字相同
+（`93e09a138f7db416ee0af970cd2802d1e92e426c`）——基座换了两代而四格读数一字节没变。
+
+**四、门禁与写回读也在当代重跑**。`12 passed`（real-seed setup 一枚 + 11 臂），退出码 0，
+证据 11 枚 json 入库在 `review/ord0435/arms/`（例 `local__Q4en.json` blob
+`1bd47830336d962684e2f996ab38780334679b8f`）。跨刷新那件（仪表 blob
+`3f9b905488a6c173f2cccf6a8951100f8b0d3022`，读数 blob
+`595838af724d36d39cf12d73c7befdc8da8679e5`）四项判据全 true：`row_still_written`、
+`screen_ids_all_survive_reload_via_route`、`route_and_store_same_rows`、`receipt_is_component_state_only`；
+本次写入的是 plan `fb0bbce1-9eee-4585-9ca8-95d6b9870b5f`（CANDIDATE），屏上那行
+`2026-10-10 16:36 Haihe Riverside Design Library c4de841a-2e01-459d-9d98-49bf3d17edcd`，
+reload 后屏上回执 0 块而路由与 sqlite 仍各答出同一行。单复数两形也重取了一遍（`counter_words.json`
+blob `9f74ed602fabcb53c9aa886d66b4330ed5300fb0`）：中文 `已选 1 处` / `已选 2 处`，英文
+`1 picked` / `2 picked`，承诺说明句两臂都停在 `1`（那是承诺数不是勾选数）。
+
+**五、两把尺以基座为对照**。文案尺基线 = 基座字典 `6104115402df45d688128dd8e07cda3fa92ce9c7`：
+双语键两侧都 796 枚、冲突 0 处；NO_GROWTH 改值 0→3 枚（正是重放的三枚）、中文臂新增字符 0 处；
+ASSERTIONS_STILL_HIT 被改键 0→3 枚对 e2e 文本断言 228 条、失去目标 0 条；四条存量红逐条 SAME：
+EMPTY_ACTION 缺形状 25 条与 ESTIMATE_PREFIX 缺标记 2 条（两档的门在
+`tools/cnx_copy_tiers_r1.py:1075`）、HARDCODED_FALLBACK 裸字面量 81 处
+（`tools/cnx_copy_tiers_r1.py:22`）、RENDER_TIERS 命中 81 处其中第 1 档 9 处
+（`tools/cnx_copy_tiers_r1.py:56`）。退出码两侧都是 1，本笔增量 0 条，尺没点名我任何一枚键。
+令牌尺六条全 MET、退出码 0（保留权威线那枚 `var(--cn-r-4)` 之后仍然全绿）。
+
+**六、口径与后续**。① 仍是开发者模式（`reuseExistingServer=true`、未设 `CITYNEXUS_E2E_RUN_ID`），
+权威口径堵点不变（`backend/app/main.py:2069` 那枚具名 token 无人供给）；② 栈仍是本车道自己的
+`:8812` 与 `:4835`，库是 11:47 那份只读备份的真复制 `backend/_ord0435c_priv.db`，marker
+`ORD0435CMARKER-7a0f1a30` 两腿各命中 1 处、伪造串 0 处，`/plans` 两腿字节 10,536,965 相同；
+③ 仪表全部在 `review/ord0435/` 下，产品树根 0 枚；④ ORD-0452 与 ORD-0458 按号令者口径排在 0435
+之后不催：0452 的报名在 dt_1227 第五节（识别走现成 `POST /api/v1/journeys/{journey_id}/inbox/vision`，
+`backend/app/main.py:4528`，0 新端点），0458 的甲/乙/丙在 dt_1227 第六节等裁。
+
+
 ### ORD-0463 报名不动手 · 要共用的那枚候选池还在未落地的 ORD-0437 枝上 · 本轮产品字节 0 枚 · 车道 6a150e1e
 
 这单我量完就停了，没有写屏。原因不是没做完，而是**它要求"共用、不另起第二套形状"的那枚池子此刻不在权威线上**——它在未落地的 ORD-0437 候选枝里，而我这轮任何写法都会撞上你自己的复切判据。全部是只读测量，读数固化在 `D:/moodle/_qoder_n2b_ord0445_20260929/ord0463_grounding_r1.txt:1`。
