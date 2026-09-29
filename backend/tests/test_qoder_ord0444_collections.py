@@ -499,6 +499,28 @@ def test_the_generated_client_is_the_same_generation_as_the_contract():
     assert "address" not in generated_item.split("        }", 1)[0], "api.ts grew an address cell"
 
 
+def test_the_face_fetches_the_runtime_prefix_not_the_contract_path():
+    """The contract's paths omit `/api/v1`; the server's do not.  Fetching the former is a silent miss.
+
+    This arm exists because the first cut of the face did exactly that: `COLLECTIONS_LIST_PATH` was
+    the contract's `/collections`, so the browser asked the static server for a route it answers with
+    `index.html`, `JSON.parse` threw, and the screen showed its own failure line while the door
+    answered 200 to the same query.  The contract file and the runtime disagree by design
+    (`tools/verify_openapi_parity.py` maps one onto the other), so the agreement has to be pinned in
+    a test rather than trusted from a comment in the module.
+    """
+
+    text = (ROOT / "frontend/src/features/collections/collections.ts").read_text(encoding="utf-8")
+    declared = [l.split("=", 1)[1].split('"')[1] for l in text.splitlines()
+                if l.startswith("export const COLLECTIONS_LIST_PATH")]
+    assert len(declared) == 1, declared
+    assert declared[0] == "/api/v1/collections", declared
+    contract_paths = _contract()["paths"]
+    assert declared[0].startswith("/api/v1"), "the runtime prefix is what the server mounts"
+    assert declared[0] not in contract_paths, (
+        "the contract's own path is not a fetchable route on this server", declared[0])
+
+
 def test_demo_reset_can_empty_the_container_and_does_it_in_the_right_order():
     """`services.reset_all` names the two tables, and names them before `places`.
 
