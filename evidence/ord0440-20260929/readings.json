@@ -1,0 +1,20 @@
+{
+ "file": "e2e/qoder-ord0440-prep-exposure-cells.spec.ts",
+ "rows": [
+  {
+   "arm": "A",
+   "sentence": "This destination's capability was not read back. Nothing was changed.HTTP 500",
+   "status": "HTTP 500",
+   "locale": null,
+   "plantedPresentInBody": false
+  },
+  {
+   "arm": "B",
+   "readingLine": "The server marked this preparation as failed. Only the fields it named are shown here.",
+   "anchor": "response_received",
+   "wordsInFold": "服务器原话：这次准备在抓取阶段失败",
+   "proseOnReadingLineBeforeOpening": false,
+   "staging": "the polled job record's own fields were pinned on top of a real hydration, the way qoder-destination-preparation.spec.ts does; body.error is planted"
+  }
+ ]
+}
