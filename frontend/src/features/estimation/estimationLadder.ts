@@ -15,9 +15,11 @@
  * Three rules keep the ladder from becoming a disclaimer generator:
  *  - A rung is derived from cells the server sent, never from a mood. `estimationFacts` is the whole
  *    predicate set, so every rung can be traced to the field that lit it.
- *  - `method` and `post_verify` refuse to fire when there is no figure. A number that was never
- *    produced has no method to describe and nothing to verify -- the absence belongs to
- *    `pre_warning`, so an empty amount cannot buy two extra sentences.
+ *  - `method` and `post_verify` refuse to fire when there is no figure -- on a screen that has a
+ *    candidate. A number that was never produced has no method to describe and nothing to verify, so
+ *    the absence belongs to `pre_warning` and an empty amount cannot buy two extra sentences. The one
+ *    exception is ORD-0468's named empty reading, where there is no candidate either: see the
+ *    `no_candidates` branch below, which says the absence in the 说方法 slot and stops there.
  *  - `remedy` fires exactly where a warning fired. A warning with no door is a dead end, so the rung
  *    names the door that exists; when none does, it says that and stops.
  *
@@ -48,6 +50,10 @@ export type EstimateReading = {
   /** The traveller's own word for that door (`t("nav.studio"` on every host), passed in so the
    *  remedy rung names the door the nav strip shows instead of a name this file invented. */
   doorLabel: string;
+  /** ORD-0468 -- how many candidates this screen was given at all. Omitted means "this is a reading
+   *  about a candidate that exists", which is every host that shipped before this order. 0 is a
+   *  different question: there is no candidate, so there is no figure whose method could be named. */
+  candidates?: number;
 };
 
 /** The predicate set every rung is read from, so a trigger condition is a reading and not a
@@ -59,6 +65,7 @@ export type EstimationFacts = {
   binding: boolean;
   can_switch: boolean;
   can_recompute: boolean;
+  has_candidates: boolean;
 };
 
 /** One rung this reading owes: which tier, which words, and the named condition that lit it. */
@@ -83,6 +90,8 @@ export function estimationFacts(reading: EstimateReading): EstimationFacts {
     binding: Boolean(reading.binding),
     can_switch: reading.alternatives > 0,
     can_recompute: Boolean(reading.canRecompute),
+    // An omitted `candidates` is not a zero: it means the host is describing a candidate it has.
+    has_candidates: reading.candidates === undefined || reading.candidates > 0,
   };
 }
 
@@ -106,6 +115,18 @@ export function estimationLadder(reading: EstimateReading): EstimationLadder {
     door: word(reading.doorLabel),
   };
   const rungs: LadderRung[] = [];
+
+  // ORD-0468 -- the screen has no candidate at all. That is not a figure with an absent cell; it is
+  // no figure and no candidate. The ladder says its own name there ("这一级无可报的方法") instead of
+  // disappearing, because an absent block teaches the traveller nothing about which question went
+  // unanswered. Only this one rung fires: there is nothing to warn about comparing, nothing to
+  // verify with a provider, and the empty state's own sentence above already names the door.
+  if (!facts.has_candidates) {
+    return {
+      facts,
+      rungs: [{ tier: "method", key: "ladder.method.noCandidates", trigger: "no_candidates", vars: {} }],
+    };
+  }
 
   // ① 说方法 -- about the figure that exists, and only about that one.
   if (shown && facts.has_source && facts.has_confidence) {

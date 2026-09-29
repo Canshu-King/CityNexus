@@ -41,6 +41,11 @@ export function StayExplorer({
               ? "我们还没有拿到真实住宿数据，所以不会给你看一张假的价格卡片。可以先选好行程，再回来搜索住宿。"
               : "We have no real accommodation data yet, so we will not show you an invented price card. Choose your plan first, then come back to search stays."}
           </p>
+          {/* ORD-0468: the ladder keeps its own name here instead of going with the missing cards. */}
+          <EstimationLadderPanel
+            estimate={emptyScreenEstimate(Boolean(onNavigate), t("nav.studio"))}
+            sourceToken={null}
+          />
         </div>
       </section>
     );
@@ -123,6 +128,29 @@ function stayEstimate(
     alternatives: Math.max(0, candidates - 1),
     canRecompute,
     doorLabel,
+    candidates,
+  };
+}
+
+/**
+ * ORD-0468 -- the reading for a screen with no candidate on it.
+ *
+ * This is not "a stay whose price is missing": there is no stay. `candidates: 0` is the only cell
+ * that carries the fact, and the ladder answers it with one named rung in the 说方法 slot -- no
+ * amount, no source, no confidence and no invented zero, because a number here would be read as the
+ * server having measured something.
+ */
+function emptyScreenEstimate(canRecompute: boolean, doorLabel: string): EstimateReading {
+  return {
+    amountMinor: null,
+    amountLabel: "",
+    source: "",
+    confidence: null,
+    binding: false,
+    alternatives: 0,
+    canRecompute,
+    doorLabel,
+    candidates: 0,
   };
 }
 

@@ -54,6 +54,8 @@ export function EstimationLadderPanel({
       data-ladder-binding={flag(facts.binding)}
       data-ladder-can-switch={flag(facts.can_switch)}
       data-ladder-can-recompute={flag(facts.can_recompute)}
+      data-ladder-has-candidates={flag(facts.has_candidates)}
+      data-ladder-candidates={estimate.candidates === undefined ? "" : String(estimate.candidates)}
       data-ladder-amount-field="stay.total_amount_minor"
       data-ladder-amount-value={estimate.amountMinor === null ? "" : String(estimate.amountMinor)}
       data-cnx-field="stay.evidence.source"
