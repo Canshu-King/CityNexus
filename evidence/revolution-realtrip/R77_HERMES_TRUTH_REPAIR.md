@@ -10,7 +10,7 @@
 - used-edge projection repair commit: `f7cc3d45888035a9abbb9b88397c70b149251333`
 - selected-plan experience projection repair commit: `86d2f27a`
 - truthful live-navigation repair commit: `91cbf629`
-- final product/evidence commit before this receipt update: `ab34e04c`
+- final product/evidence commit before this receipt update: `0a7a6346`
 - clean before product calls: yes (`git status --porcelain` empty)
 - authority/mainline merge: none
 
@@ -265,6 +265,17 @@ The final hardening commit `ab34e04c` binds every individual mode tile to the sa
 `canChoose` predicate as the bottom action. Even if facts are later present while the
 selected plan target is absent, no tile can invoke the no-op selection callback.
 
+The realtime evidence drawer was then exercised after the clean commit. It now projects
+the actual next `active_plan.legs[*]` entry when the comparison collection is empty:
+
+```text
+未提供出行方式 · 约42分钟 · 费用未知
+选中方案冻结路线证据 · valhalla-http · LIVE_PROVIDER_CAPTURE
+```
+
+The row is the persisted frozen leg; it does not infer a mode from duration, turn the
+unknown cost into zero, or relabel the route as synthetic.
+
 Captured artifacts:
 
 - `frontend/output/playwright/r77-suzhou-user-visible-clean.png`
@@ -275,6 +286,7 @@ Captured artifacts:
 - `frontend/output/playwright/r77-suzhou-live-web-source-label-clean.png`
 - `frontend/output/playwright/r77-suzhou-map-mobility-unavailable-clean.png`
 - `frontend/output/playwright/r77-suzhou-map-no-route-title-clean.png`
+- `frontend/output/playwright/r77-suzhou-live-frozen-evidence-clean.png`
 
 The final frontend gates after this repair were:
 
