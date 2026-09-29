@@ -3,6 +3,7 @@ import { useT } from "../../i18n/LocaleContext";
 import { namedCodeIn } from "../../lib/rawFacts";
 import { rejectionWithFacts, RejectionWithFacts } from "../../lib/rejectionFacts";
 import { PoiCandidateCard } from "../../components/PoiCandidateCard";
+import "./poi-import.css";
 
 /**
  * ORD-0437 — the second step of the POI entry chain: paste text or links, get places.
@@ -438,7 +439,7 @@ export function PoiImportPanel({
               >
                 {t("poiImport.favorite")}
               </button>
-              <small id="poi-import-favorite-why" data-testid="poi-import-favorite-why">
+              <small id="poi-import-favorite-why" className="poi-import-exit-why" data-testid="poi-import-favorite-why">
                 {t("poiImport.favoriteNotWired")}
               </small>
               <button
@@ -449,7 +450,7 @@ export function PoiImportPanel({
               >
                 {t("poiImport.newJourney")}
               </button>
-              <small id="poi-import-new-journey-why" data-testid="poi-import-new-journey-why">
+              <small id="poi-import-new-journey-why" className="poi-import-exit-why" data-testid="poi-import-new-journey-why">
                 {t("poiImport.newJourneyNotWired")}
               </small>
               <button className="v8-quiet-button" data-testid="poi-import-open-plan" onClick={onOpenPlan}>

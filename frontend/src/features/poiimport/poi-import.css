@@ -1,0 +1,10 @@
+/* The exits column of the import screen. `.v8-boundary-card` blockifies b, p and span but not small,
+   so two stacked reasons glued onto one line -- "…cannot promise a save.Create as a new plan" -- which
+   is what the 390x844 screenshot taken by the exits arm showed. */
+.poi-import-exit-why {
+  display: block;
+  margin-top: 4px;
+  color: #786d99;
+  font-size: 11px;
+  line-height: 1.5;
+}

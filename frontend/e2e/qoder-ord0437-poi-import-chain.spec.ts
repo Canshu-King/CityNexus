@@ -595,11 +595,31 @@ test("exits — the three destinations, and what each one is allowed to promise"
   const njWhy = await painted(page, "poi-import-new-journey-why");
   const favDisabled = await disabledNow("poi-import-favorite");
   const njDisabled = await disabledNow("poi-import-new-journey");
+  /* Bring the exits column into view first: the last untick left the page parked at the bottom of the
+     candidate list, so the previous PNG showed four cards and none of what this arm judges, and an
+     evidence file of the wrong region is not a reading. Rects are taken after this so the numbers in
+     the reading are the numbers the screenshot shows. */
+  await page.getByTestId("poi-import-add").first().scrollIntoViewIfNeeded();
+  await page.waitForTimeout(200);
+  /* Geometry, because text being present is not the same as text being readable. The first version of
+     this fix put both reasons in `<small>` inside `.v8-boundary-card`, which blockifies b/p/span but
+     not small -- the screenshot showed "…cannot promise a save.Create as a new plan" on one line. Rects
+     come from getBoundingClientRect() in the page: Playwright's boundingBox() has no width/height, so
+     arithmetic on it yields NaN and a check that can never fail. */
+  const rects = await page.evaluate(() => {
+    const r = (id: string) => {
+      const el = document.querySelector(`[data-testid="${id}"]`);
+      if (!el) return null;
+      const b = el.getBoundingClientRect();
+      return { top: Math.round(b.top), bottom: Math.round(b.bottom), left: Math.round(b.left), right: Math.round(b.right) };
+    };
+    return { favWhy: r("poi-import-favorite-why"), njButton: r("poi-import-new-journey"), njWhy: r("poi-import-new-journey-why") };
+  });
   await page.screenshot({ path: evidencePath("ord0437", "exits_arm.png") });
   push("exits", {
     names: built.names, cardsWithSelect: n, countShown, selectedOnParse: shown,
     doorOpenOnParse: addDisabledShown === false, countEmpty, doorDisabledAtZero: addEmptyDisabled,
-    addWords, favWords, favWhy, favDisabled, njWords, njWhy, njDisabled,
+    addWords, favWords, favWhy, favDisabled, njWords, njWhy, njDisabled, rects,
   });
 
   expect(addWords, "加进计划 is the exit this screen actually performs").toBeTruthy();
@@ -621,6 +641,14 @@ test("exits — the three destinations, and what each one is allowed to promise"
   expect(njWhy, "an exit that is off has to say why in the open").toBeTruthy();
   expect(favWhy).toMatch(/收藏|favourite|favorite/i);
   expect(njWhy).toMatch(/计划|plan|录入/i);
+  expect(rects.favWhy, "两处原因都得在屏上有自己的位置").not.toBeNull();
+  expect(rects.njWhy, "两处原因都得在屏上有自己的位置").not.toBeNull();
+  expect(rects.njButton).not.toBeNull();
+  expect(
+    rects.favWhy!.bottom,
+    "收藏那句不许和 新建计划 那一行重叠 -- 重叠就是首版那个 run-on 缺陷",
+  ).toBeLessThanOrEqual(rects.njButton!.top + 1);
+  expect(rects.njButton!.bottom, "新建计划 那句也得在它自己那一行").toBeLessThanOrEqual(rects.njWhy!.top + 1);
 });
 
 test.afterAll(() => {
