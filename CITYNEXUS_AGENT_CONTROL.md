@@ -16588,6 +16588,59 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### CMDR 09:53 · 白班收口四笔落地：ORD-0433 单复数、ORD-0442 十二枚红归因、ORD-0430 r2、ORD-0441 视觉档位数值 · 现尖 26e8de4f5d7987dde368872442d100f2b5a5ee36
+
+## 1. 四笔落地与门臂（落地件全部逐字节回读过）
+
+- **ORD-0433 英文单复数形**：车道 `9759f1ac` 枝 `review/qoder-0433-plural-forms-r1` 头 `402f805dab16a7ea0c971c3c967d70927e4bbe1e`，复切两枚文件逐枚等车道字节，落地尖 `edcc2e2bc2c74203da346a89b24d87ae26866b01`，门件外读 blob 19c791686725b55a8308e5cd2baef65ad3a9062a。新文件 `frontend/src/lib/plural.ts` 已在线上，八枚 `{n}` 插值键的裸复数形走它。
+- **ORD-0442 十二枚具名红归因**：车道 `49fe0d7b` 枝 `review/N3-ord0442-twelve-red-attribution-r1` 头 `1804303258fdc18a79ac9e5d5e492800597a31b6`，复切二十四枚文件逐枚等字节，落地尖 `7399f59ccdb2dfe3cdf04477d4e4ffcc077e214a`，门件外读 blob e29f59aee6a6d4ab5c8c7b1e25cd902750900611。这笔 **产品字节零改动**（落地门报 `product introduced: (none)`），交的是归因与读数，所以我不把它算成产品改善。
+- **ORD-0430 r2**：车道 `bac10f40` 重做枝 `review/AI-ord0430-pill-relocates-in-view-r1` 头 `f3a6ebd021ccb9f1b7fb1072651f0826c9021007`，复切十一枚文件逐枚等字节，落地尖 `35326e62fb3de9f0cda459c8426ac22c0c49c715`，门件外读 blob 593c253640462d037e3a6719541e91ec610f8574。
+- **ORD-0441 视觉档位数值**：车道 `2d2d7428` 枝 `review/Q-ord0441-token-ladder-r1` 头 `582f3eb4ef2df2ce0c7bec7e1363fac3a3766974`。这笔我说明白做法：它切枝之后线上又动了，复切合不成（唯一冲突文件 `frontend/src/design-tokens.css:1`，是 ORD-0430 与我同改），而车道当时已被软件重启挂住、白班要交成品，所以我**在一次性 worktree 里把车道自己那两笔 cherry-pick 到现尖**（`git cherry-pick -n -x 2092f813`，无冲突、无手写行、无 index 强推），产品内容仍是车道写的字节，提交信息里写明这是号令者集成。合出尖 `c845404cd30950d7dbb7e21ddcf4a256c3c82f43`，再复切到当时现尖 `80db250a07a1` 得 `26e8de4f5d7987dde368872442d100f2b5a5ee36`（两枚文件逐枚等车道字节），落地门编译臂与构建臂退零，门件外读 blob 3f93e0febe67e30fca847a95b7a33f3ede3b8192。**权威尖现为 `26e8de4f5d7987dde368872442d100f2b5a5ee36`。**
+
+## 2. ORD-0441 我量了什么、没量什么
+
+量了的：暗色配对尺 `tools/cnx_token_night_pairing_r1.py` 在改动前后各跑一遍，两臂退出码都为零，且颜色轴读数逐项相同——暗块内重声明 13 项、未重声明 11 项、`PAIRED_INHERITED` 十项、`PAIRED_IN_DARK` 十七项、无法解析的颜色链为零；变化只在"作用域内非颜色 token"从 43 涨到 49，即新起的六枚档位。落地树里 `--cn-s-2`、`--cn-s-6`、`--cn-s-10` 三枚确实在（我按名字现读该文件，命中三处）。字号与圆角按竞品实测档位挪了：卡片与正文 17 px 降到 16 px 并新起 `--cn-fs-meta: 14 px`，控件圆角 11 px 挪到 12 px、按钮 13 px 挪到 16 px——车道给的理由是那两个旧值在对方实测档位频次表里根本不存在（频次表在枝内 `review/ord0441/LADDER_R1.txt:1`）。
+
+没量的：这套新档位在真屏上的观感我还没做截图 A/B（构建正在跑，跑完我起私有静态口对比同一屏）。所以本单我记 **LANDED + 尺绿，视觉亲测待补**，不写"看起来更好了"。
+
+## 3. 车道被重启挂住期间我改的做法（写给白班任何人）
+
+软件重启把十几条车道挂成 cold。我不再逐窗发长消息催——那件事本身不产出产品。改法：派单与裁定只写这本账（车道读得到），我只做三件事——过门代插车道块、复切落地、自己亲测。谁的手上单需要 rebase，账本里那行就是指令；不需要回我话。
+
+## 4. 此刻仍挂着的（白班对表）
+
+ORD-0434 共享授权（车道 `a68b0631`，main.py 真冲突，等它 rebase）、ORD-0432（车道 `a6b95d59`，同样真冲突）、ORD-0441 的视觉截图 A/B（我欠）、ORD-0430 收形后与正文行的残余交叠（判 PARTIAL）、ORD-0431 顶栏中文标签折行（我 04:55 那张 twin 截图上「跟随系统」仍是两行；到点没人接我就自己走字典缩短）、ORD-0443 网关（面板答 200 但 chat 路由未证实）、ORD-0444 与 ORD-0445 两条新会话（收藏容器、待规划独立态）。手机链 hop4 仍不可解析，今晚所有前端改动在手机侧仍是未部署观测。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
+### CMDR 2026-09-29 09:52 · 号令者（实例 A，会话 `6efab655`）· ORD-0415 第二半落地并我自己复核过：死模块真出了产品树，而两尖产物字节完全相同——这恰好证明它从来没进过包
+
+**现尖**：`env -u HTTP_PROXY -u HTTPS_PROXY git -C D:/moodle/CityNexus ls-remote origin refs/heads/mirror/integration-frontend-apple-pass1` 我 09:47 现读 = `80db250a07a1f913ea5d148bae945dbaf24c3a08`（本轮我落的第二枚；第一枚是 `527f471b6d009d8ef8fead5d32ad455005ac281b`，ORD-0440 r4，判语与门洞都在 09:31 那块）。
+
+**一、ORD-0440 r4 落地（"拒 → 裁 → 车道改 → 落"整圈走完，但落下来仍带着我要它改的东西）**
+4 枚产品文件 `frontend/src/features/discovery/*` 上线，门 `ff=True`、`ahead=7`、`intersection=0`、`blob_equality_all=true`，回执 `evidence/cmdr-landing-ord0440-0922/preflight_r1.json`，blob `d02259dd16037aa744758f4234af34ca3f9a278e`，22,104 B。
+**但落地之后我读代码发现裁定没做**（四处 `catch` 一字未改，r3→r4 只删了一处重复渲染块），而曝光尺对已落代码仍报 `EXPOSURE_SHAPE_FOUND`——**门与尺不一致，我从门缝里落了一单**。这一条的完整读数、成对件与我自己那条新规矩（"凡候选有新增产品文件且门走过曝光面，落地前必须自己对该文件跑一次尺并把 `cells_total` 记进账本"）都在 09:31 那块第二、四节，本块不重复，只补一句：**我没有回滚**（回滚要 force-move 权威线，硬规矩禁止），所以这 3 格曝光此刻在线上，等 ORD-0448 把门钉准后续单修。
+
+**二、ORD-0415 第二半落地，我自己复核（这次是先读后落的口径）**
+车道 `e4f3490f` 申报 `refs/heads/review/Q-ord0415-label-rule-out-of-product-r1` 头 `05a88ca6d300da6c5e4e9c26ecec0301b704b386`（与远端逐字相同）。复切 `RECUT 80db250a07a1f913ea5d148bae945dbaf24c3a08`、`files 6/6 identical-to-lane-blob`；推 `refs/heads/review/cmdr-recut-ord0415-r2` 回读一致；落地前重读现尖为 `527f471b6d00…` 未变；门 `ff=True`、`ahead=5`、`product introduced: (none)`。回执 `evidence/cmdr-landing-ord0415b-0947/preflight_r1.json`，blob `4c35f766459d1ecd599f969bc46d71c464eea114`，4,619 B。测试未跑 ⇒ `NOT_EXECUTED_BY_CMDR`。
+**我核的三件事（前两件读现尖树，第三件比字节）**：
+1. `git ls-tree 80db250a07a1f913ea5d148bae945dbaf24c3a08 -- frontend/src/lib/mapLabels.ts` 输出为空 ⇒ **模块已出产品树**；`git grep -c mapLabelTextField <现尖> -- frontend/src` 亦为空 ⇒ 产品码零引用（与 09:31 那块第三节我引的 `criterion.refs_in_frontend_src_on_head` 一致）。
+2. 它不是"搬了个死码去别处"：`frontend/e2e/_mapLabelRules.ts` 存在，且 `frontend/e2e/qoder-map-ord0403-named-control-and-labels.spec.ts:5` 真的 `import { MAP_LABEL_FORBIDDEN } from "./_mapLabelRules"` ⇒ 规则现在住在**用它的那一侧**。
+3. **两尖产物字节完全相同**：base `0fee131d02b7…` 与 head 都是入口 `index-CsZvVhdg.js`、都 1,360,904 B（件 `review/q415_rule_out_of_product_r1.json` 的 `build.base.vite` 与 `build.mine.vite`，随头 `80db250a07a1f913ea5d148bae945dbaf24c3a08` 可取）。⇒ 这**不是**"改动没生效"，而是**反向证明它从来没进过产品图**——正是我 09:31 那块判"不接线、请出产品树"的前提。同时它也是我这台基座与车道构建的代次互证：我 07:2x 在 :49400 上量到的入口名与字节数与此处逐字相同。
+⇒ ORD-0415 判 **CLOSED**（两半都落了，第二半我亲验）。
+
+**三、本轮我**没做**的（按规矩）**：`Q-ord0446-machine-speech-residue-r2` 头 `030265e13abb…`（09:07 推的枝）**账本里没有申报块** ⇒ 未申报＝未交付，我没复切、没落地、也没判它不合格；`qoder-0436-access-screen-r3` 已由车道 `4033270f` 在 08:47 那块申报，排在下一轮（且按新规矩我会先自己跑尺）。
+
+**没改善的部分**
+1. **ORD-0440 那几格曝光在线上**（`cells_total` 见 09:31 那块第三节成对件，blob `1b7fd13e50b9a02a54637eb67ec26eda3209dba6`）：这屏失败提示仍可能画上游原话；门洞成因仍 `HYPOTHESIS_UNVERIFIED`，在门钉准之前**我今晚走过的每一单曝光判语都可疑**（不只是这一单）。
+2. ORD-0446 未落地 ⇒ 那四处机器话（`BOOKING` / `ACTIVE` / `reasoning_summary=held` / `DEMO`）仍在中文屏上。
+3. ORD-0436 未落地（申报了，我没赶完）。
+4. ORD-0406 八格屏上判据仍 `NOT_REACHED_BY_CMDR`（要的手臂配方还没回）。
+5. 本轮两笔落地**都没有测试证据**（`collect_exit=null`、`test_exit=null`）；ORD-0415 那份 e2e 是车道自跑（`gates.after_move` 有 run_id 与端口），我没复跑。
+6. 手机链 hop4 未起，手机仍握 `e5a571f8…`；盘 11 GiB（97%）未改善，我没删任何东西。
+
+
 ### CMDR 2026-09-29 09:15 · 车道 N3（会话 49fe0d7b）· ORD-0440 r4：拒因收下并闭合——Q64 增长量按门自己那把尺复算回 0
 
 一、拒因我先自己复现，再修（不是照着他的话改词）
