@@ -1,0 +1,16 @@
+== arm zh-CN
+  width 320 | bar h=66 overflowX=0 | wrapped: ["旅行者画像","跟随系统"] | right: {"tag":"DIV","cls":"v8-top-actions","left":131,"right":303,"clipped_by_viewport":false,"visible_width":172}
+      {"text":"旅行者画像","tag":"STRONG","cls":"","rects":{"n":2,"heights":[16,16],"width":48},"box":{"left":75,"right":131,"top":17,"h":32},"beyond_right_edge":false,"occluded":false}
+      {"text":"跟随系统","tag":"BUTTON","cls":"v9-language","rects":{"n":2,"heights":[21,21],"width":32},"box":{"left":131,"right":191,"top":17,"h":44},"beyond_right_edge":false,"occluded":false}
+  width 360 | bar h=66 overflowX=0 | wrapped: ["跟随系统"] | right: {"tag":"DIV","cls":"v8-top-actions","left":161,"right":343,"clipped_by_viewport":false,"visible_width":182}
+      {"text":"跟随系统","tag":"BUTTON","cls":"v9-language","rects":{"n":2,"heights":[21,21],"width":32},"box":{"left":161,"right":226,"top":17,"h":44},"beyond_right_edge":false,"occluded":false}
+  width 390 | bar h=66 overflowX=0 | wrapped: ["跟随系统"] | right: {"tag":"DIV","cls":"v8-top-actions","left":191,"right":373,"clipped_by_viewport":false,"visible_width":182}
+      {"text":"跟随系统","tag":"BUTTON","cls":"v9-language","rects":{"n":2,"heights":[21,21],"width":32},"box":{"left":191,"right":256,"top":17,"h":44},"beyond_right_edge":false,"occluded":false}
+  width 414 | bar h=66 overflowX=0 | wrapped: ["跟随系统"] | right: {"tag":"DIV","cls":"v8-top-actions","left":215,"right":397,"clipped_by_viewport":false,"visible_width":182}
+      {"text":"跟随系统","tag":"BUTTON","cls":"v9-language","rects":{"n":2,"heights":[21,21],"width":32},"box":{"left":215,"right":280,"top":17,"h":44},"beyond_right_edge":false,"occluded":false}
+== arm en
+  width 320 | bar h=66 overflowX=0 | wrapped: ["Traveler Twin"] | right: {"tag":"DIV","cls":"v8-top-actions","left":135,"right":303,"clipped_by_viewport":false,"visible_width":168}
+      {"text":"Traveler Twin","tag":"STRONG","cls":"","rects":{"n":2,"heights":[16,16],"width":45},"box":{"left":86,"right":135,"top":17,"h":32},"beyond_right_edge":false,"occluded":false}
+  width 360 | bar h=66 overflowX=0 | wrapped: [] | right: {"tag":"DIV","cls":"v8-top-actions","left":165,"right":343,"clipped_by_viewport":false,"visible_width":178}
+  width 390 | bar h=66 overflowX=0 | wrapped: [] | right: {"tag":"DIV","cls":"v8-top-actions","left":195,"right":373,"clipped_by_viewport":false,"visible_width":178}
+  width 414 | bar h=66 overflowX=0 | wrapped: [] | right: {"tag":"DIV","cls":"v8-top-actions","left":219,"right":397,"clipped_by_viewport":false,"visible_width":178}
