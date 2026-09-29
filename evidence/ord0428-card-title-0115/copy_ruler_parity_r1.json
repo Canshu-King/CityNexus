@@ -1,0 +1,98 @@
+{
+ "ruler": {
+  "file": "cnx_copy_tiers_r1_tip.py",
+  "blob": "8f1b40022fcba770ac6ec6ce501aab2ecb93882b",
+  "bytes": 71637,
+  "provenance": "git show <tip>:tools/cnx_copy_tiers_r1.py, not a lane copy"
+ },
+ "reports": {
+  "before_tip4037": {
+   "exit_code": 1,
+   "rows": 83,
+   "report": "copy_before_tip4037_r1.txt",
+   "face_line": "[VIOLATION] HARDCODED_FALLBACK       123 files scanned: tier A (language branch in the slot) 0, tier B (bare literal) 83, excluded as machine tokens 174; inline bilingual pairs anywhere = 691 (denominator only -- most are legitimate inline pairs, NOT a defect count)"
+  },
+  "after_ord0428r1": {
+   "exit_code": 1,
+   "rows": 83,
+   "report": "copy_after_ord0428r1_r1.txt",
+   "face_line": "[VIOLATION] HARDCODED_FALLBACK       123 files scanned: tier A (language branch in the slot) 0, tier B (bare literal) 83, excluded as machine tokens 177; inline bilingual pairs anywhere = 691 (denominator only -- most are legitimate inline pairs, NOT a defect count)"
+  }
+ },
+ "comparison": {
+  "rows_before": 83,
+  "rows_after": 83,
+  "row_lists_equal_when_line_ignored": true,
+  "rows_with_a_different_line_number": 8,
+  "shift_detail": [
+   {
+    "file": "V8Experience.tsx",
+    "before_line": 252,
+    "after_line": 256,
+    "delta": 4,
+    "tier": "B T2",
+    "literal": "'unknown'"
+   },
+   {
+    "file": "V8Experience.tsx",
+    "before_line": 2045,
+    "after_line": 2049,
+    "delta": 4,
+    "tier": "B T2",
+    "literal": "'nav.'"
+   },
+   {
+    "file": "V8Experience.tsx",
+    "before_line": 2674,
+    "after_line": 2682,
+    "delta": 8,
+    "tier": "B T2",
+    "literal": "'unknown'"
+   },
+   {
+    "file": "V8Experience.tsx",
+    "before_line": 2862,
+    "after_line": 2870,
+    "delta": 8,
+    "tier": "B T2",
+    "literal": "'unresolved'"
+   },
+   {
+    "file": "V8Experience.tsx",
+    "before_line": 2863,
+    "after_line": 2871,
+    "delta": 8,
+    "tier": "B T2",
+    "literal": "'unresolved'"
+   },
+   {
+    "file": "V8Experience.tsx",
+    "before_line": 3127,
+    "after_line": 3135,
+    "delta": 8,
+    "tier": "B T2",
+    "literal": "'unknown'"
+   },
+   {
+    "file": "V8Experience.tsx",
+    "before_line": 3937,
+    "after_line": 3945,
+    "delta": 8,
+    "tier": "B T2",
+    "literal": "'none'"
+   },
+   {
+    "file": "V8Experience.tsx",
+    "before_line": 4621,
+    "after_line": 4674,
+    "delta": 53,
+    "tier": "B T2",
+    "literal": "'—'"
+   }
+  ],
+  "all_shifts_inside": [
+   "V8Experience.tsx"
+  ],
+  "verdict": "NO_NEW_COPY_FACE_LINE_SHIFTS_ONLY"
+ }
+}
