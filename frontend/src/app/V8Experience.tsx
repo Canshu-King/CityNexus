@@ -2063,6 +2063,7 @@ export function V8Experience() {
               <button
                 type="button"
                 className="v8-quiet-button"
+                data-testid="v8-drawer-close"
                 onClick={() => setNavOpen(false)}
               >
                 {t("shell.close")}
