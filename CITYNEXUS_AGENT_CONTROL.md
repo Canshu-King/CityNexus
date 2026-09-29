@@ -16588,6 +16588,23 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### ORD-0428 补件 · 车道 1d64acf5：交付枝尖那一代产物上把修后两臂重读了一遍，并附上「第二枚提交只改注释」这句话的逐行依据
+
+补哪一块：账本里标题为「ORD-0428 车道 1d64acf5：票夹卡片大标题里的原始地点 id 已收口」那一块（由收件口 `s4_0131.md` 入账）。那块交完即被吃掉，我不改已入账的块，只在这里补三件它当时没有的事实。
+
+**一、修后两臂重读在交付枝尖那一代产物上。** 上一块的修后两臂读的是第一枚提交构建的产物；之后我又提交了一枚只动注释的提交（把两处后端 path:line 重钉到交付尖），所以「屏读还算不算数」需要一次真重读，不需要我打包票。同一枚仪表、同一份自有只读复制库、端口 `:4473`、后端 `:6973`：中文臂大标题 `Nexus River Cruise Pier`，英文臂 `Nexus River Cruise Pier`，两臂 `h2` 里地点 id 命中 0 与 0，整卡 outerHTML 里 `place-*` 命中 0 与 0，卡数各 1 与 1 枚，控制台错误 0 与 0。读数与第一枚提交那两臂逐字相同（对照件 blob `18e5db8e56056523e766dd5db180563a4ed0a9fa`）。
+
+**二、那台端口是我这棵树的字节。** `served_identity_r1.json`（blob 8c2aac4ed1f282ba0bc14d311e53f1ee038d96a3）逐枚比过：`/v8/trips` 回的 `index.html` 与服务字节等于 `dist/index.html`，入口两枚资产也各等于磁盘字节。下面这几枚 sha1 全是**本机字节重算的sha、不是 blob、不可 cat-file**（同段可 cat-file 的坐标是上面那枚 blob 与末尾那两枚证据件 blob）：`index.html` `8a0c11291469f7b26b473d87860b895668dcaded`；`/assets/index-B4ZuCsnm.js` `bdc7e4d12b27df9fad64fbb72b5f5f0c56ef0cb4` equal=True、`/assets/index-C0oYCLVI.css` `0a64b149274594b1f12fc79112d3daaeb57eeb91` equal=True。同件里留了一枚对照——要一个不存在的路径，回的仍是 1,200 B 那份 HTML（http 200），所以状态码不是证据，字节相等才算。新读的两臂证据件：中文臂 `fa22ee74e4a36e6b8615a7acde462bdc8d16b94c`（图 `3e2316b3db00a2c05dabf698c307edde55074f2e`）、英文臂 `9383bf35a9f28ab6f972468ab0be5d214b16d359`（图 `e7c9305ae0ea5882de2d625d8d2524cb7d81ed4a`）。
+
+**三、「只改注释」这句话的逐行依据，含分类器不认的那两行。** `commit_pair_diff_r1.json`（blob f6464f20e08ae3349729d1b148c52e4f1ca7955b）把两枚提交之间的 `git diff -U0` 逐行分类：共 6 增 6 删，`added_comment_lines=5`、`added_non_comment_lines=1`。**那 1 行我没抹成 0**：`-U0` 不给上下文，分类器看不出它们其实在 `/* … */` 块内，两行原文逐字存在同件的 `non_comment_lines_verbatim` 里，打开就是那两句注释的下半行。所以这句话不是靠分类器成立的，是靠上面那一遍重读、加上两次构建的入口资产同名同字节（`index-B4ZuCsnm.js`，1,483,830 B，本机字节 sha1 `bdc7e4d12b27df9fad64fbb72b5f5f0c56ef0cb4`——这是本机字节的 sha1、不是 blob、不可 cat-file；同段可 cat-file 的坐标是本段那枚 blob 与下面那两枚提交号），以及其后重跑的两套 `tsc` 各 0 行错误、`vite build` 退出码零。
+
+**坐标更新**：枝 `review/qoder-0428-wallet-card-title-join-r1` 现读 `638935d12320894ff0448894f6e150de6fd6a5fa`（本机 `rev-parse` 同值），基座仍是 `4037cb331ea00b83124316d40329762fa1131689`；本件写之前再外读一次现尖为 `127ce7b05329eaa837701cdb93bdbc2e5d64e10f`，`git merge-tree --write-tree` 只读预测退出 0、预测树 `5093a79b60d9b0780fdf792e64f23db69f5e1f92`。证据目录 `evidence/ord0428-card-title-0115/` 现共 41 件、逐件 byte_equal 真；回执 `publish_receipt_r1.json` 是第二次写同一路径（旧版记 33 件，旧版内容还能从 `commander/control` 的历史翻到，但我没把旧版 blob 记进任何件，所以这里不引用它），新版 blob `3e1354ceb30bf3e13a2a5885084cd6485bde796b`。
+
+**顺带一条上架器的事实**（不是我的读数，但影响别人复现）：`cmdr_git_mirror_r1.py` 两轮各丢过一件，退出码 7、连读回记录都没有；第一轮我手工补投、第二轮脚本内置一次重试后 41 件全真。「推送返回成功」与「读回 blob 相等」是两件事，这里只认后者。
+
+本件不改上一块的任何读数，只把交付枝尖那一代产物的屏读补进去。上一块末尾仍欠的三件（ORD-0361 rebase、ORD-0408 值级数据流、ORD-0391 那批改写文案的逐字屏读）与 `main.tsx` 那格 `/legacy` 面的同族词面，状态不变。
+
+
 ### cmdr 02:36 · 新尖套件一次观察（十枚红，按具名基线判为子集、无新红）· 分享接收屏两臂与 `/v8/stay` 空态我都在新一代上重走了一遍 · 抓到 ORD-0466 的断言被两枚未进契约的键撞红，开 ORD-0481 · 我自己两次把尺形跑错，具名报备
 
 **一、套件一次执行（对象 `127ce7b05329eaa837701cdb93bdbc2e5d64e10f` 的 git archive 导出；解释器 `D:/moodle/CityNexus/.venv/Scripts/python.exe`；`DEEPSEEK_API_KEY` 已 unset；`-p no:randomly`；用时 140.91 秒）**
