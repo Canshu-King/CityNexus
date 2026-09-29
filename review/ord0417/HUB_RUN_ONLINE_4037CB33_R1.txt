@@ -1,0 +1,284 @@
+  ok  1 [real-seed] › e2e\_qoderRealSeed.setup.ts:110:1 › seed a real journey through the product API (28.4s)
+  ok  2 [chromium] › e2e\qoder-ord0417-hub-tap-names-the-stop.spec.ts:218:3 › hub-tap-named-zh — a tap on a hub pin names that stop on the hub's own glass (39.4s)
+  ok  3 [chromium] › e2e\qoder-ord0417-hub-tap-names-the-stop.spec.ts:218:3 › hub-tap-named-en — a tap on a hub pin names that stop on the hub's own glass (6.3s)
+  ok  4 [chromium] › e2e\qoder-ord0417-hub-tap-names-the-stop.spec.ts:257:3 › hub-not-aria-zh — the hub names the stop where the eye can see it (6.9s)
+  ok  5 [chromium] › e2e\qoder-ord0417-hub-tap-names-the-stop.spec.ts:257:3 › hub-not-aria-en — the hub names the stop where the eye can see it (6.2s)
+  ok  6 [chromium] › e2e\qoder-ord0417-hub-tap-names-the-stop.spec.ts:299:3 › hub-unpicked-zh — before a tap the hub glass names no stop (4.0s)
+  ok  7 [chromium] › e2e\qoder-ord0417-hub-tap-names-the-stop.spec.ts:299:3 › hub-unpicked-en — before a tap the hub glass names no stop (4.0s)
+  ok  8 [chromium] › e2e\qoder-ord0417-hub-tap-names-the-stop.spec.ts:318:3 › hub-pressed-zh — the pin that was tapped says so in its own state (5.8s)
+  ok  9 [chromium] › e2e\qoder-ord0417-hub-tap-names-the-stop.spec.ts:318:3 › hub-pressed-en — the pin that was tapped says so in its own state (5.9s)
+  x  10 [chromium] › e2e\qoder-ord0417-hub-tap-names-the-stop.spec.ts:351:5 › hub-geometry-390x844-zh — the linkage costs the hub no reachable control (6.8s)
+  x  11 [chromium] › e2e\qoder-ord0417-hub-tap-names-the-stop.spec.ts:351:5 › hub-geometry-390x844-en — the linkage costs the hub no reachable control (7.0s)
+  x  12 [chromium] › e2e\qoder-ord0417-hub-tap-names-the-stop.spec.ts:351:5 › hub-geometry-320x653-zh — the linkage costs the hub no reachable control (4.1s)
+  x  13 [chromium] › e2e\qoder-ord0417-hub-tap-names-the-stop.spec.ts:351:5 › hub-geometry-320x653-en — the linkage costs the hub no reachable control (4.0s)
+--- rows ---
+[
+ {
+  "arm": "hub-tap-named-zh",
+  "glass": {
+   "present": true,
+   "painted": "图上选中的这一站 · Departure",
+   "text_content": "图上选中的这一站 · Departure",
+   "box": [
+    30,
+    854,
+    136,
+    14
+   ],
+   "display": "inline",
+   "visibility": "visible",
+   "opacity": 1,
+   "clip": "none",
+   "sr_only": false,
+   "in_panel": true,
+   "caption_box": [
+    18,
+    844,
+    354,
+    77
+   ],
+   "inside_caption": true,
+   "panel_text": "1 2 3 4 5 6 7 8 9 回到行程视野 底图未加载，显示的是路线示意。 单指拖动地图 · 双指缩放 · 想翻这一页就拖地图以外的地方 图上选中的这一站 · Departure路线上下文 8 段路程 供应商支持的路线 · WGS84 底图数据 © OpenStreetMap 贡献者 · 瓦片服务 tile.openstreetmap.org"
+  }
+ },
+ {
+  "arm": "hub-tap-named-en",
+  "glass": {
+   "present": true,
+   "painted": "Selected on the map · Departure",
+   "text_content": "Selected on the map · Departure",
+   "box": [
+    30,
+    873,
+    152,
+    14
+   ],
+   "display": "inline",
+   "visibility": "visible",
+   "opacity": 1,
+   "clip": "none",
+   "sr_only": false,
+   "in_panel": true,
+   "caption_box": [
+    18,
+    863,
+    354,
+    77
+   ],
+   "inside_caption": true,
+   "panel_text": "1 2 3 4 5 6 7 8 9 Fit to my journey Basemap did not load — showing the route diagram only. One finger drags the map · two fingers zoom · to move the page, drag outside the map Selected on the map · DepartureRoute context 8 legs Provider-backed route · WGS84 Basemap data © OpenStreetMap contributors · tiles: tile.openstreetmap.org"
+  }
+ },
+ {
+  "arm": "hub-not-aria-zh",
+  "cell": {
+   "found": true,
+   "leaves": 1,
+   "tag": "span",
+   "box": [
+    30,
+    854,
+    136,
+    14
+   ],
+   "display": "inline",
+   "visibility": "visible",
+   "opacity": "1",
+   "screen_reader_only": false,
+   "inside_panel": true,
+   "text": "图上选中的这一站 · Departure"
+  }
+ },
+ {
+  "arm": "hub-not-aria-en",
+  "cell": {
+   "found": true,
+   "leaves": 1,
+   "tag": "span",
+   "box": [
+    30,
+    873,
+    152,
+    14
+   ],
+   "display": "inline",
+   "visibility": "visible",
+   "opacity": "1",
+   "screen_reader_only": false,
+   "inside_panel": true,
+   "text": "Selected on the map · Departure"
+  }
+ },
+ {
+  "arm": "hub-unpicked-zh",
+  "glass": {
+   "present": false,
+   "panel_text": "1 2 3 4 5 6 7 8 9 回到行程视野 底图未加载，显示的是路线示意。 单指拖动地图 · 双指缩放 · 想翻这一页就拖地图以外的地方 路线上下文 8 段路程 供应商支持的路线 · WGS84 底图数据 © OpenStreetMap 贡献者 · 瓦片服务 tile.openstreetmap.org"
+  }
+ },
+ {
+  "arm": "hub-unpicked-en",
+  "glass": {
+   "present": false,
+   "panel_text": "1 2 3 4 5 6 7 8 9 Fit to my journey Basemap did not load — showing the route diagram only. One finger drags the map · two fingers zoom · to move the page, drag outside the map Route context 8 legs Provider-backed route · WGS84 Basemap data © OpenStreetMap contributors · tiles: tile.openstreetmap.org"
+  }
+ },
+ {
+  "arm": "hub-pressed-zh",
+  "states": [
+   {
+    "painted": "1",
+    "aria": "Arrival",
+    "pressed": "false"
+   },
+   {
+    "painted": "2",
+    "aria": "Check in · Haihe Riverside Hotel",
+    "pressed": "false"
+   },
+   {
+    "painted": "3",
+    "aria": "Overnight · Haihe Riverside Hotel",
+    "pressed": "false"
+   },
+   {
+    "painted": "4",
+    "aria": "Five Great Avenues",
+    "pressed": "false"
+   },
+   {
+    "painted": "5",
+    "aria": "Tianjin Museum",
+    "pressed": "false"
+   },
+   {
+    "painted": "6",
+    "aria": "Tianjin Eye",
+    "pressed": "false"
+   },
+   {
+    "painted": "7",
+    "aria": "Overnight · Haihe Riverside Hotel",
+    "pressed": "false"
+   },
+   {
+    "painted": "8",
+    "aria": "Check out · Haihe Riverside Hotel",
+    "pressed": "false"
+   },
+   {
+    "painted": "9",
+    "aria": "Departure",
+    "pressed": "true"
+   }
+  ]
+ },
+ {
+  "arm": "hub-pressed-en",
+  "states": [
+   {
+    "painted": "1",
+    "aria": "Arrival",
+    "pressed": "false"
+   },
+   {
+    "painted": "2",
+    "aria": "Check in · Haihe Riverside Hotel",
+    "pressed": "false"
+   },
+   {
+    "painted": "3",
+    "aria": "Overnight · Haihe Riverside Hotel",
+    "pressed": "false"
+   },
+   {
+    "painted": "4",
+    "aria": "Five Great Avenues",
+    "pressed": "false"
+   },
+   {
+    "painted": "5",
+    "aria": "Tianjin Museum",
+    "pressed": "false"
+   },
+   {
+    "painted": "6",
+    "aria": "Tianjin Eye",
+    "pressed": "false"
+   },
+   {
+    "painted": "7",
+    "aria": "Overnight · Haihe Riverside Hotel",
+    "pressed": "false"
+   },
+   {
+    "painted": "8",
+    "aria": "Check out · Haihe Riverside Hotel",
+    "pressed": "false"
+   },
+   {
+    "painted": "9",
+    "aria": "Departure",
+    "pressed": "true"
+   }
+  ]
+ },
+ {
+  "arm": "hub-geometry-390x844-zh",
+  "cell": {
+   "box": [
+    30,
+    854,
+    136,
+    14
+   ],
+   "scroll_w": 0,
+   "client_w": 0,
+   "outside_caption": false
+  },
+  "band_box_idle": [
+   30,
+   782,
+   330,
+   139
+  ],
+  "lost": [
+   "9#1"
+  ],
+  "name_painted": true,
+  "reachable_idle": 13,
+  "viewport": [
+   390,
+   844
+  ]
+ },
+ {
+  "arm": "hub-geometry-390x844-en",
+  "cell": {
+   "box": [
+    30,
+    873,
+    152,
+    14
+   ],
+   "scroll_w": 0,
+   "client_w": 0,
+   "outside_caption": false
+  },
+  "band_box_idle": [
+   30,
+   801,
+   330,
+   139
+  ],
+  "lost": [
+   "9#1"
+  ],
+  "name_painted": true,
+  "reachable_idle": 13,
+  "viewport": [
+   390,
+   844
+  ]
+ }
+]

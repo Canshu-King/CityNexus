@@ -11,9 +11,9 @@ import { evidencePath } from "./_qoderEvidence";
  * a tap on marker 1 at (192, 736), `changed_markers: []`, `visible_name_leaves_delta: 0`, verdict
  * MAP_CLICK_CHANGED_NOTHING_ON_SCREEN) while the same tap on `/v8/map` names the stop on the glass.
  * The cause was in the code, not in the browser: `MapPanel` binds the pin to
- * `selectRef.current?.(point.id ?? null)` (`frontend/src/components/v8/MapPanel.tsx:382`), and the hub's
+ * `selectRef.current?.(point.id ?? null)` (`frontend/src/components/v8/MapPanel.tsx:427`), and the hub's
  * call site passed `data`, `option` and `onNoLocationChange` only
- * (`frontend/src/app/V8Experience.tsx:3069`) — so the optional call discarded the tap in silence while
+ * (`frontend/src/app/V8Experience.tsx:3137`) — so the optional call discarded the tap in silence while
  * the marker still advertised `role="button"`, `tabindex="0"` and an `aria-pressed` state.  A control
  * that looks focusable, answers a hit-test and then does nothing is the same defect ORD-0417 was opened
  * for, one screen over.  Nothing anywhere declared the hub map an overview: no comment at the call
@@ -281,6 +281,8 @@ for (const arm of ARMS) {
         opacity: cs.opacity,
         screen_reader_only: String(cls).includes("v8-sr-only"),
         inside_panel: !!el.closest(".v8-map-panel"),
+        inside_viewport: r.top >= 0 && r.bottom <= window.innerHeight,
+        inner_h: window.innerHeight,
         text: (el.innerText ?? "").replace(/\s+/g, " ").trim().slice(0, 120),
       };
     }, target!.aria);
@@ -292,6 +294,11 @@ for (const arm of ARMS) {
     expect([cell.display, cell.visibility, Number(cell.opacity)], node("H2", `${arm.locale}: the naming element is not visible: ${JSON.stringify(cell)}`)).toEqual(["inline", "visible", 1]);
     expect(cell.box![2], node("H2", `${arm.locale}: zero-width naming element: ${JSON.stringify(cell.box)}`)).toBeGreaterThan(0);
     expect(cell.inside_panel, node("H2", `${arm.locale}: the name is painted outside the map panel: ${JSON.stringify(cell)}`)).toBe(true);
+    /* The whole point of this order is a name the traveller READS.  On the hub the caption sits at the
+       bottom of a panel that starts below the fold, so "visible" in the computed-style sense is not
+       enough: the box has to be inside the viewport the finger is looking at.  Asserting this is what
+       caught that the sentence was painted at y=854 on a 844 px viewport. */
+    expect(cell.inside_viewport, node("H2", `${arm.locale}: the name is painted but below the fold — box ${JSON.stringify(cell.box)} in a ${cell.inner_h} px viewport: ${JSON.stringify(cell)}`)).toBe(true);
   });
 }
 

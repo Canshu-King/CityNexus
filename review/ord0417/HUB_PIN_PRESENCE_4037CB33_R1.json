@@ -1,0 +1,182 @@
+{
+ "tip_measured": "4037cb331ea00b83124316d40329762fa1131689",
+ "runs": {
+  "v1_gate_as_landed": {
+   "arms": {
+    "hub-tap-named-zh": "passed",
+    "hub-tap-named-en": "passed",
+    "hub-not-aria-zh": "passed",
+    "hub-not-aria-en": "passed",
+    "hub-unpicked-zh": "passed",
+    "hub-unpicked-en": "passed",
+    "hub-pressed-zh": "passed",
+    "hub-pressed-en": "passed",
+    "hub-geometry-390x844-zh": "failed",
+    "hub-geometry-390x844-en": "failed",
+    "hub-geometry-320x653-zh": "failed",
+    "hub-geometry-320x653-en": "failed"
+   },
+   "tally": {
+    "passed": 8,
+    "failed": 4
+   },
+   "hub_markers_observed": [
+    9,
+    9
+   ],
+   "hub_markers_reporting_selected": [
+    1,
+    1
+   ],
+   "name_painted_on_hub": [
+    true,
+    true
+   ],
+   "sentences": [
+    "图上选中的这一站 · Departure",
+    "Selected on the map · Departure"
+   ],
+   "naming_cell_box_px": [
+    [
+     30,
+     854,
+     136,
+     14
+    ],
+    [
+     30,
+     873,
+     152,
+     14
+    ]
+   ],
+   "viewport_height_px": [],
+   "geometry": [
+    {
+     "arm_lost": [
+      "9#1"
+     ],
+     "reachable_idle": 13,
+     "reachable_with_selection": 12,
+     "band_growth_px": 0,
+     "cell_box": [
+      30,
+      854,
+      136,
+      14
+     ],
+     "fatal": null
+    },
+    {
+     "arm_lost": [
+      "9#1"
+     ],
+     "reachable_idle": 13,
+     "reachable_with_selection": 12,
+     "band_growth_px": 0,
+     "cell_box": [
+      30,
+      873,
+      152,
+      14
+     ],
+     "fatal": null
+    }
+   ]
+  },
+  "v2_gate_viewport_assertion_reapplied": {
+   "arms": {
+    "hub-tap-named-zh": "passed",
+    "hub-tap-named-en": "passed",
+    "hub-not-aria-zh": "failed",
+    "hub-not-aria-en": "failed",
+    "hub-unpicked-zh": "passed",
+    "hub-unpicked-en": "passed",
+    "hub-pressed-zh": "passed",
+    "hub-pressed-en": "passed",
+    "hub-geometry-390x844-zh": "failed",
+    "hub-geometry-390x844-en": "failed",
+    "hub-geometry-320x653-zh": "failed",
+    "hub-geometry-320x653-en": "failed"
+   },
+   "tally": {
+    "passed": 6,
+    "failed": 6
+   },
+   "hub_markers_observed": [
+    9,
+    9
+   ],
+   "hub_markers_reporting_selected": [
+    1,
+    1
+   ],
+   "name_painted_on_hub": [
+    true,
+    true
+   ],
+   "sentences": [
+    "图上选中的这一站 · Departure",
+    "Selected on the map · Departure"
+   ],
+   "naming_cell_box_px": [
+    [
+     30,
+     854,
+     136,
+     14
+    ],
+    [
+     30,
+     873,
+     152,
+     14
+    ]
+   ],
+   "viewport_height_px": [
+    844,
+    844
+   ],
+   "geometry": [
+    {
+     "arm_lost": [
+      "9#1"
+     ],
+     "reachable_idle": 13,
+     "reachable_with_selection": 12,
+     "band_growth_px": 0,
+     "cell_box": [
+      30,
+      854,
+      136,
+      14
+     ],
+     "fatal": null
+    },
+    {
+     "arm_lost": [
+      "9#1"
+     ],
+     "reachable_idle": 13,
+     "reachable_with_selection": 12,
+     "band_growth_px": 0,
+     "cell_box": [
+      30,
+      873,
+      152,
+      14
+     ],
+     "fatal": null
+    }
+   ]
+  }
+ },
+ "code_facts_on_this_tip": {
+  "pins_are_emitted_by": "frontend/src/components/v8/MapPanel.tsx:416 (class v9-map-marker, role=button at :424)",
+  "the_optional_call_that_ate_hub_taps_before_the_fix": "frontend/src/components/v8/MapPanel.tsx:427",
+  "map_stops_and_map_stop_ids_belong_to_map_page_only": "frontend/src/app/V8Experience.tsx:3930 and :3947, inside `function MapPage` at :3806",
+  "hub_map_panel_call_site": "frontend/src/app/V8Experience.tsx:3137",
+  "the_only_path_to_zero_markers_on_any_map_panel": "MapPanel's points memo returns active-plan activities with coordinates, else falls back to data.offers.slice(0,1); with neither a located plan nor an offer it yields no markers"
+ },
+ "reading_of_the_relayed_claim": "The relayed observation was `no map-stops and no map-stop-* on /v8/hub`. Those two testids are emitted only inside MapPage's stop list (anchors above), so their absence on the hub is the expected shape of the code and says nothing about pins. Pins are `.v9-map-marker` nodes, and both runs below count them on the hub directly."
+}
