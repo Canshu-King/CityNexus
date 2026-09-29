@@ -1,0 +1,36 @@
+{
+ "run_id": "local",
+ "arm": "Q4zh",
+ "spec": "e2e/qoder-ord0435-poi-batch-multiselect.spec.ts",
+ "cards": 3,
+ "seed_route": "GET /api/v1/demo/scene",
+ "scene_status": 200,
+ "card_name": "Tianjin Italian Style Town Indoor Gallery",
+ "compose_statuses": [
+  201
+ ],
+ "row_count": 1,
+ "row_texts": [
+  "2026-10-10 16:37 Tianjin Italian Style Town Indoor Gallery 629d23f7-4349-4ec5-8427-02fe4df22460"
+ ],
+ "target_text": "服务端回读：1 条活动落在 2026-10-10。",
+ "plan_line": "方案编号 bac46dd2-304f-42b2-8a0b-b518d2090af7",
+ "plan_id": "bac46dd2-304f-42b2-8a0b-b518d2090af7",
+ "activity_ids_on_screen": [
+  "629d23f7-4349-4ec5-8427-02fe4df22460"
+ ],
+ "second_read": {
+  "status": 200,
+  "plan_status": "CANDIDATE",
+  "picked_rows": [
+   {
+    "id": "629d23f7-4349-4ec5-8427-02fe4df22460",
+    "title": "Tianjin Italian Style Town Indoor Gallery",
+    "start_at": "2026-10-10T16:37:00+08:00"
+   }
+  ]
+ },
+ "day_on_screen": "2026-10-10",
+ "nodeid": "D:\\moodle\\_qoder_b_ord0435b_20260929\\frontend\\e2e\\qoder-ord0435-poi-batch-multiselect.spec.ts:437 > Q4zh_zh-CN — 完成走真实写路由，屏上显示的是第二次读",
+ "test_status": "passed"
+}
