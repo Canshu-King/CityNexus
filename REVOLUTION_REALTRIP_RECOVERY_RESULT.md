@@ -1,10 +1,58 @@
 # Revolution real-trip recovery result
 
+## R77-R4 latest authority-gate checkpoint
+
+The latest clean-source experiment supersedes the earlier recovery candidate's
+selection claim where its live Place facts were still `UNKNOWN`.  The earlier
+known-fact baseline remains historical evidence; it is not evidence that this
+new candidate may be selected.
+
+- Round start commit: `e0ef44c5615055fefb2107fe37fb75a288e03cff`.
+- Final experimental commit: `a71d0c249170d8e232ba93e8f23ef896e49ddfe7`.
+- Branch: `codex/revolution-realtrip-recovery`.
+- Worktree: `D:\moodle\CityNexus-Revolution-RealTrip-Recovery`.
+- Clean disposable clone: `C:\Users\仓鼠王\AppData\Local\Temp\citynexus-r77-authority-gate-r4-20260930.sqlite3`.
+- Destination: `苏州市 / CN-SUZHOU`, Journey
+  `9b11e4cd-c1b5-43e6-aedf-6402a0cfddd2`.
+
+DeepSeek ran through the supported native tool loop:
+`inspect_journey → inspect_twin → list_replans → search_city_services →
+request_replan`.  It produced proposal
+`d2b9d02f-fcc0-459e-a72c-7023691ee6e7`, candidate PlanVersion
+`fd914ff8-3699-4d6c-90d7-6c4feeaaf60b`, and live Valhalla evidence with
+87 captured facts, `LIVE_PROVIDER_CAPTURE`, `degraded=false`, and zero
+synthetic facts.
+
+The exact candidate Places were then refreshed through Overpass plus exact
+Nominatim lookup.  Both provider entities matched, but the machine receipt
+reported `known_opening_count=0` and `known_cost_count=0`; both Places remain
+`opening=UNKNOWN` and `cost_evidence.status=UNKNOWN`.  This is honest fact
+absence, not free/always-open inference.
+
+Selection was tested against the real product endpoint.  The pre-repair clone
+accepted an equivalent unresolved candidate with HTTP 200, exposing the
+authority defect.  On the clean `a71d0c24` source, the same boundary returns
+HTTP 409 with `reason_code=UNRESOLVED_ACTIVITY_FACTS` and the actual used Place
+IDs, while Journey `active_plan_version_id` remains
+`3c176241-de74-47af-9c3c-7018e52ef56b` and the new candidate remains
+`CANDIDATE`.  Therefore the current R77 recovery result is:
+
+`REAL_DRAFT_CLOSED` + `REAL_AGENT_CLOSED`;
+`REAL_SELECTABLE_CLOSED` is not claimed for this unresolved-facts candidate.
+
+The complete machine receipt is
+`evidence/revolution-realtrip/r77_authority_gate_r4_receipt.json`.
+The focused gates passed `108 passed, 1 warning`; the warning is the existing
+Starlette/httpx deprecation.  Native Hermes is not claimed: its current probe
+still stops at `RESET/SEED HTTP 403: DEMO_MODE_REQUIRED`.
+
 ## Milestones
 
 - `REAL_DRAFT_CLOSED`: closed on the unseeded disposable Suzhou journey.
-- `REAL_SELECTABLE_CLOSED`: closed; the selected plan survived API reload and its
-  Journey pointer remained authoritative.
+- `REAL_SELECTABLE_CLOSED`: closed only for the earlier known-fact baseline;
+  the latest R77 recovery candidate is correctly blocked until its own live
+  opening/cost facts are resolved.  The earlier HTTP 200 on an equivalent
+  unresolved recovery candidate is recorded as a product defect, not success.
 - `REAL_AGENT_CLOSED`: closed for the supported Hermes compatibility runtime in
   `PLAN_ONLY`; native MCP is not claimed.
 
