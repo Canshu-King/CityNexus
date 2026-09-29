@@ -149,12 +149,12 @@ type Wallet = {
     kind: string;
     external_ref: string | null;
     status: string;
-    /* `_commitment_payload` (backend/app/main.py:7046) puts the money under `monetary_value` and says
+    /* `_commitment_payload` (backend/app/main.py:7047) puts the money under `monetary_value` and says
        how much is actually known in `monetary_value_status`; the schedule it protects is under `policy`.
        Declaring less than this is how a committed booking ended up with no honest way to render. */
-    /* ORD-0428: the same payload names the plan row this promise was bound to (`:7050`, written by the
-       selection path at `:6144`).  It was not declared here, so the card had no way to reach a name and
-       printed the join key instead. */
+    /* ORD-0428: the same payload names the plan row this promise was bound to (its `activity_id` entry,
+       backend/app/main.py:7051, written for ACTIVE C3/C4 rows by the selection path at :6144).  It was
+       not declared here, so the card had no way to reach a name and printed the join key instead. */
     activity_id?: string | null;
     monetary_value?: {
       amount_minor?: number | null;
@@ -4057,8 +4057,8 @@ function realtimeLabel(value: string | null | undefined, zh: boolean): string {
  * join key the backend matches on (`backend/app/main.py:6128-6144`), not a name, so on the
  * traveller's 预订 tab the title of a confirmed promise read `place-river-cruise` while every other
  * line on the card was already human.  The name comes from the plan this screen already holds: the
- * wallet payload names the bound row in `activity_id` (`_commitment_payload`,
- * `backend/app/main.py:7050`, written for ACTIVE C3/C4 commitments at `:6144`), and a commitment
+ * wallet payload names the bound row in its `activity_id` entry (`_commitment_payload`,
+ * `backend/app/main.py:7051`, written for ACTIVE C3/C4 commitments at `:6144`), and a commitment
  * that carries no binding is matched on the same three fields the backend's own binding used --
  * `place_id`, `city_service_id`, `metadata.semantic_key` including its `<place>:<key>` form.
  * Nothing is invented: an unjoined card falls back to the localised wording it already had, and the
