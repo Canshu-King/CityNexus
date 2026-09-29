@@ -1,0 +1,32 @@
+# CMDR 落地种类尺首轮读数 · 今天每一笔快进到底带没带产品字节
+# 尺：cmdr_landing_kind_r1.py 的区间版；产品面 = frontend/src, backend/app, contracts, frontend/e2e；证据面 = review/, evidence/, live_checks/, backend/tests/
+# 对象：17dff25a095a7f0899977816fb18a91ab5c050b5 到 10dc3654aeffbe791ca213f1359533c7e2938250 之间我推动的十六笔快进
+
+区间                       产品面  证据面  那笔的头一行说什么
+17dff25a->0b716736         3       13      ORD-0460 过期时刻的拒绝
+0b716736->4736ab86         8       36      ORD-0459 圆角档位第二步
+4736ab86->45513fc7         1       24      ORD-0430 pill 让位 r4
+45513fc7->703e00d1         4       0       ORD-0453 站点列表第三态
+703e00d1->9110db28         2       0       ORD-0456 向导行尾
+9110db28->b2abd99b         0       2       ORD-0454 STATE_PAIR 面（本单自己声明 0 产品字节）
+b2abd99b->9d3607d0         2       32      ORD-0435 批量多选 r8
+9d3607d0->4efe7efb         8       2       ORD-0455 估算四级梯
+4efe7efb->8f7172ee         2       53      ORD-0457 r3
+8f7172ee->3927704c         0       4       ORD-0424 尺扩展（本单声明 0 产品字节）
+3927704c->98e3c7f4         7       1       ORD-0432 具名中断进可行性摘要
+98e3c7f4->ea9ff7d8         0       35      ORD-0457 r4 —— 只有证据
+ea9ff7d8->6425e20f         0       9       ORD-0444 r4 —— 只有证据：收藏容器的产品码从未进线
+6425e20f->a879fbba         6       1       ORD-0466 版本级共享甲片
+a879fbba->6185ae70         3       50      ORD-0440 r3
+6185ae70->8eb72e55         2       18      ORD-0417 点图显名
+8eb72e55->10dc3654         12      74      ORD-0437 POI 导入链（backend/app/poi_import.py 等）
+
+合计：产品面 48 枚（截至 8eb72e55 那一段）+ ORD-0437 那一段 12 枚；证据与测试面 280 枚 + 74 枚。
+
+# 由这张表得出的两条结论（不是话说，是上面逐行读的）
+1. ORD-0444 落了四笔，全部产品面为 0，所以"收藏容器已落地"这句是错的，已在 19:26 那块具名更正。
+2. ORD-0437 的产品面里有 `frontend/src/features/poiimport/PoiImportPanel.tsx` 与注册表面 `frontend/src/app/v8PanelRegistry.tsx:186`，
+   但我在同一尖上以词面检索 frontend/src 的 navigate 调用，指向这枚面板的入口是零枚；
+   我在私有栈上（门面 :4828、api :8743，入口名 index-6rUskjBj.js 与我磁盘 index.html 同名、服务字节 sha1 等于磁盘字节 sha1——本机 sha1，不是 git 物件）
+   逐屏走 nav-trips / nav-map / nav-agent / nav-me / nav-hub 与预订页的粘贴页，屏上没有一枚 poi-import testid；页面错误为零。
+   ⇒ 开单 ORD-0470：给这一屏接一个真入口，可达性按老规矩用视口内命中证明，不许用路由存在当到达。
