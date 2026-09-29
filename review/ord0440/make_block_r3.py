@@ -69,7 +69,11 @@ def main() -> int:
     moved = [f for f in git("diff", "--name-only", f"{prev}..{tip}", "--", "frontend/src").splitlines() if f]
     overlap = sorted(set(moved) & set(MINE))
     hot_named = "frontend/src/i18n/LocaleContext.tsx"
-    blobs = {f: {"tip": cat40(git("rev-parse", f"{tip}:{f}")), "head": blob(f)} for f in MINE}
+    def tip_blob(f: str) -> str:
+        v = git("rev-parse", f"{tip}:{f}")
+        return cat40(v) if re.fullmatch(r"[0-9a-f]{40}", v or "") else "NOT_ON_TIP"
+
+    blobs = {f: {"tip": tip_blob(f), "head": blob(f)} for f in MINE}
     dict_tip_prev = cat40(git("rev-parse", f"{prev}:{hot_named}"))
     dict_tip_now = cat40(git("rev-parse", f"{tip}:{hot_named}"))
 
