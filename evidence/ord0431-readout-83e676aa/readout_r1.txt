@@ -1,0 +1,24 @@
+== /v8/twin  (build of the evening tip, asset /assets/index-DZLLFMy5.js)
+   zh-CN width 320 | bar h 66 px | chip '跟随系统' rect_count 2 | chip box h 44 px | font 16px | line boxes 32x21@18 32x21@39 | wrapped leaves ['旅行者画像', '跟随系统'] | errors 0
+         overlap with row neighbours: 菜单:+0px2/gap 71px, 旅行者画像:+0px2/gap 0px, EN:+0px2/gap 8px, DE:+0px2/gap 84px
+   zh-CN width 360 | bar h 66 px | chip '跟随系统' rect_count 2 | chip box h 44 px | font 16px | line boxes 32x21@18 32x21@39 | wrapped leaves ['跟随系统'] | errors 0
+         overlap with row neighbours: 菜单:+0px2/gap 98px, 旅行者画像:+0px2/gap 12px, EN:+0px2/gap 8px, DE:+0px2/gap 89px
+   zh-CN width 390 | bar h 66 px | chip '跟随系统' rect_count 2 | chip box h 44 px | font 16px | line boxes 32x21@18 32x21@39 | wrapped leaves ['跟随系统'] | errors 0
+         overlap with row neighbours: 菜单:+0px2/gap 128px, 旅行者画像:+0px2/gap 27px, EN:+0px2/gap 8px, DE:+0px2/gap 89px
+   zh-CN width 414 | bar h 66 px | chip '跟随系统' rect_count 2 | chip box h 44 px | font 16px | line boxes 32x21@18 32x21@39 | wrapped leaves ['跟随系统'] | errors 0
+         overlap with row neighbours: 菜单:+0px2/gap 152px, 旅行者画像:+0px2/gap 39px, EN:+0px2/gap 8px, DE:+0px2/gap 89px
+   en    width 320 | bar h 66 px | chip 'System' rect_count 1 | chip box h 44 px | font 16px | line boxes 50x21@28 | wrapped leaves ['Traveler Twin'] | errors 0
+         overlap with row neighbours: Menu:+0px2/gap 63px, Traveler Twin:+0px2/gap 0px, 中文:+0px2/gap 8px, DE:+0px2/gap 82px
+   en    width 360 | bar h 66 px | chip 'System' rect_count 1 | chip box h 44 px | font 16px | line boxes 50x21@28 | wrapped leaves [] | errors 0
+         overlap with row neighbours: Menu:+0px2/gap 93px, Traveler Twin:+0px2/gap 2px, 中文:+0px2/gap 8px, DE:+0px2/gap 87px
+   en    width 390 | bar h 66 px | chip 'System' rect_count 1 | chip box h 44 px | font 16px | line boxes 50x21@28 | wrapped leaves [] | errors 0
+         overlap with row neighbours: Menu:+0px2/gap 123px, Traveler Twin:+0px2/gap 17px, 中文:+0px2/gap 8px, DE:+0px2/gap 87px
+   en    width 414 | bar h 66 px | chip 'System' rect_count 1 | chip box h 44 px | font 16px | line boxes 50x21@28 | wrapped leaves [] | errors 0
+         overlap with row neighbours: Menu:+0px2/gap 147px, Traveler Twin:+0px2/gap 29px, 中文:+0px2/gap 8px, DE:+0px2/gap 87px
+
+== /v8/discover  (build of the evening tip, asset /assets/index-DZLLFMy5.js)
+   zh-CN width 390 | bar h 66 px | chip '跟随系统' rect_count 2 | chip box h 44 px | font 16px | line boxes 32x21@18 32x21@39 | wrapped leaves ['跟随系统'] | errors 0
+         overlap with row neighbours: 菜单:+0px2/gap 128px, 城市探索:+0px2/gap 33px, EN:+0px2/gap 8px, DE:+0px2/gap 89px
+   en    width 390 | bar h 66 px | chip 'System' rect_count 1 | chip box h 44 px | font 16px | line boxes 50x21@28 | wrapped leaves [] | errors 0
+         overlap with row neighbours: Menu:+0px2/gap 123px, City Discovery:+0px2/gap 14px, 中文:+0px2/gap 8px, DE:+0px2/gap 87px
+
