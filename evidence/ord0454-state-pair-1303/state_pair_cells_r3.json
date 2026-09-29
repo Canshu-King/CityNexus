@@ -1,0 +1,289 @@
+{
+ "rev": "4ee14229f80691cf8e5ea913375c0caf83ac02ee",
+ "css_files": 14,
+ "source_files_measured": 112,
+ "toggle_vocabulary": [
+  "selected",
+  "picked",
+  "checked",
+  "pressed"
+ ],
+ "on_state_cells": 7,
+ "paired": 7,
+ "unpaired": [],
+ "cells": [
+  {
+   "file": "frontend/src/features/discovery/discovery-batch.css",
+   "line": 37,
+   "compound": ".v8-pick-box.checked",
+   "state": "checked",
+   "base": "v8-pick-box",
+   "twins": [
+    "base_rule(.v8-pick-box)"
+   ],
+   "paired": true
+  },
+  {
+   "file": "frontend/src/features/discovery/discovery-batch.css",
+   "line": 38,
+   "compound": ".v8-pick-box.checked",
+   "state": "checked",
+   "base": "v8-pick-box",
+   "twins": [
+    "base_rule(.v8-pick-box)"
+   ],
+   "paired": true
+  },
+  {
+   "file": "frontend/src/map-selection.css",
+   "line": 20,
+   "compound": ".v9-map-marker.selected",
+   "state": "selected",
+   "base": "v9-map-marker",
+   "twins": [
+    "base_rule(.v9-map-marker)"
+   ],
+   "paired": true
+  },
+  {
+   "file": "frontend/src/map-selection.css",
+   "line": 49,
+   "compound": ".v8-map-stop.selected",
+   "state": "selected",
+   "base": "v8-map-stop",
+   "twins": [
+    "base_rule(.v8-map-stop)"
+   ],
+   "paired": true
+  },
+  {
+   "file": "frontend/src/styles.css",
+   "line": 64,
+   "compound": ".family-chip.selected",
+   "state": "selected",
+   "base": "family-chip",
+   "twins": [
+    "base_rule(.family-chip)"
+   ],
+   "paired": true
+  },
+  {
+   "file": "frontend/src/styles.css",
+   "line": 172,
+   "compound": ".v8-stay-card.selected",
+   "state": "selected",
+   "base": "v8-stay-card",
+   "twins": [
+    "base_rule(.v8-stay-card)"
+   ],
+   "paired": true
+  },
+  {
+   "file": "frontend/src/styles.css",
+   "line": 301,
+   "compound": ".v8-booking-card.selected",
+   "state": "selected",
+   "base": "v8-booking-card",
+   "twins": [
+    "base_rule(.v8-booking-card)"
+   ],
+   "paired": true
+  }
+ ],
+ "base_only_classes": 655,
+ "attribute_sites": {
+  "data-theme=dark": [
+   "frontend/src/design-tokens.css:143",
+   "frontend/src/design-tokens.css:549",
+   "frontend/src/design-tokens.css:566",
+   "frontend/src/design-tokens.css:566",
+   "frontend/src/design-tokens.css:566",
+   "frontend/src/design-tokens.css:569",
+   "frontend/src/design-tokens.css:570",
+   "frontend/src/design-tokens.css:571",
+   "frontend/src/design-tokens.css:575",
+   "frontend/src/design-tokens.css:576",
+   "frontend/src/design-tokens.css:577",
+   "frontend/src/design-tokens.css:583",
+   "frontend/src/design-tokens.css:583",
+   "frontend/src/design-tokens.css:590",
+   "frontend/src/design-tokens.css:590",
+   "frontend/src/design-tokens.css:590",
+   "frontend/src/design-tokens.css:590",
+   "frontend/src/design-tokens.css:590",
+   "frontend/src/design-tokens.css:596",
+   "frontend/src/design-tokens.css:596",
+   "frontend/src/design-tokens.css:596",
+   "frontend/src/design-tokens.css:596",
+   "frontend/src/design-tokens.css:596",
+   "frontend/src/design-tokens.css:596",
+   "frontend/src/design-tokens.css:596",
+   "frontend/src/design-tokens.css:596",
+   "frontend/src/design-tokens.css:596",
+   "frontend/src/design-tokens.css:596",
+   "frontend/src/design-tokens.css:603",
+   "frontend/src/design-tokens.css:608",
+   "frontend/src/design-tokens.css:608",
+   "frontend/src/design-tokens.css:612",
+   "frontend/src/design-tokens.css:616",
+   "frontend/src/design-tokens.css:620",
+   "frontend/src/design-tokens.css:626",
+   "frontend/src/design-tokens.css:626",
+   "frontend/src/design-tokens.css:626",
+   "frontend/src/design-tokens.css:626",
+   "frontend/src/design-tokens.css:626",
+   "frontend/src/design-tokens.css:626",
+   "frontend/src/design-tokens.css:626",
+   "frontend/src/design-tokens.css:626",
+   "frontend/src/design-tokens.css:626",
+   "frontend/src/design-tokens.css:631",
+   "frontend/src/design-tokens.css:632",
+   "frontend/src/design-tokens.css:633",
+   "frontend/src/design-tokens.css:639",
+   "frontend/src/design-tokens.css:652",
+   "frontend/src/design-tokens.css:653",
+   "frontend/src/design-tokens.css:653",
+   "frontend/src/design-tokens.css:653",
+   "frontend/src/design-tokens.css:653",
+   "frontend/src/design-tokens.css:656",
+   "frontend/src/design-tokens.css:657",
+   "frontend/src/design-tokens.css:661",
+   "frontend/src/design-tokens.css:661",
+   "frontend/src/design-tokens.css:665",
+   "frontend/src/design-tokens.css:666",
+   "frontend/src/design-tokens.css:670",
+   "frontend/src/design-tokens.css:671",
+   "frontend/src/design-tokens.css:672",
+   "frontend/src/design-tokens.css:673",
+   "frontend/src/design-tokens.css:676",
+   "frontend/src/design-tokens.css:677",
+   "frontend/src/design-tokens.css:677",
+   "frontend/src/design-tokens.css:677",
+   "frontend/src/design-tokens.css:681",
+   "frontend/src/design-tokens.css:682",
+   "frontend/src/design-tokens.css:691",
+   "frontend/src/design-tokens.css:696",
+   "frontend/src/design-tokens.css:696",
+   "frontend/src/design-tokens.css:697",
+   "frontend/src/design-tokens.css:697",
+   "frontend/src/design-tokens.css:697",
+   "frontend/src/design-tokens.css:698",
+   "frontend/src/design-tokens.css:699",
+   "frontend/src/design-tokens.css:700",
+   "frontend/src/design-tokens.css:711"
+  ],
+  "data-attention=handled": [
+   "frontend/src/design-tokens.css:434",
+   "frontend/src/design-tokens.css:442",
+   "frontend/src/design-tokens.css:445",
+   "frontend/src/design-tokens.css:448"
+  ],
+  "data-attention=clear": [
+   "frontend/src/design-tokens.css:453",
+   "frontend/src/design-tokens.css:463",
+   "frontend/src/design-tokens.css:466",
+   "frontend/src/design-tokens.css:469",
+   "frontend/src/design-tokens.css:793"
+  ],
+  "data-attention=open": [
+   "frontend/src/design-tokens.css:473",
+   "frontend/src/design-tokens.css:481"
+  ],
+  "data-state=accepting": [
+   "frontend/src/design-tokens.css:495"
+  ],
+  "data-testid=live-message": [
+   "frontend/src/design-tokens.css:503"
+  ],
+  "data-testid=live-recovery": [
+   "frontend/src/design-tokens.css:511"
+  ],
+  "data-decision-active=true": [
+   "frontend/src/design-tokens.css:534"
+  ],
+  "data-picked=false": [
+   "frontend/src/features/discovery/discovery-batch.css:33"
+  ],
+  "data-picked=true": [
+   "frontend/src/features/discovery/discovery-batch.css:34"
+  ],
+  "data-state=STAGE_LIVE": [
+   "frontend/src/features/simulation/SimulationPanel.css:53"
+  ],
+  "data-state=CHECKING": [
+   "frontend/src/features/simulation/SimulationPanel.css:59"
+  ],
+  "data-state=UNREADABLE": [
+   "frontend/src/features/simulation/SimulationPanel.css:59"
+  ],
+  "data-state=NO_STAGE": [
+   "frontend/src/features/simulation/SimulationPanel.css:59"
+  ],
+  "aria-disabled=true": [
+   "frontend/src/features/simulation/SimulationPanel.css:239",
+   "frontend/src/styles.css:703",
+   "frontend/src/styles.css:703"
+  ],
+  "data-viewport-state=on-target": [
+   "frontend/src/map-controls.css:53"
+  ],
+  "data-viewport-state=off-target": [
+   "frontend/src/map-controls.css:62"
+  ],
+  "data-current=true": [
+   "frontend/src/styles.css:1783"
+  ]
+ },
+ "written_side": {
+  "aria-pressed": {
+   "true_sites": 0,
+   "false_sites": 0,
+   "one_sided": [],
+   "files": [
+    "JourneyTrialSetup.tsx",
+    "MapViewportControls.tsx",
+    "PendingSetPanel.tsx",
+    "V8Experience.tsx"
+   ]
+  },
+  "data-picked": {
+   "true_sites": 2,
+   "false_sites": 2,
+   "one_sided": [],
+   "files": [
+    "RealCityDiscoveryPanel.tsx"
+   ]
+  }
+ },
+ "state_names_left_out_of_scope": [
+  "active",
+  "approval",
+  "blocked",
+  "busy",
+  "chosen",
+  "cn-agent-step",
+  "cn-native-status",
+  "compact",
+  "current",
+  "disrupted",
+  "done",
+  "explicit",
+  "failed",
+  "large",
+  "learned",
+  "muted",
+  "near",
+  "neutral",
+  "next",
+  "ok",
+  "protected",
+  "stay",
+  "timeline-item",
+  "trip-stop",
+  "user",
+  "v12-activity-row",
+  "v8-mode-option",
+  "v8-quiet-button",
+  "v9-map-marker"
+ ]
+}
