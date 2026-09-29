@@ -4,7 +4,7 @@
  "branch": "review/Q-ord0455-estimation-ladder-r2",
  "named_tip_in_the_order": "4ee14229f80691cf8e5ea913375c0caf83ac02ee",
  "my_base": "b2abd99b9e07c77e565f9cbdbd3875fcc733697b",
- "head_at_readings": "8625488cc5c538cc8a6ec5b49f70682581bf2ece",
+ "head_at_readings": "a00d387ae3621b19134f1bfb3429265e50b8e9e8",
  "live_tip_at_delivery": "b2abd99b9e07c77e565f9cbdbd3875fcc733697b",
  "n_commits_tip_past_my_head": 0,
  "named_tip_is_ancestor_of_my_head": true,

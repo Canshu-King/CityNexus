@@ -422,8 +422,9 @@ A("")
 A("## 5. 反件（四档同屏的边界就在置信度那一格）")
 A("   真数据这次只点亮两档：`GET /api/v1/journeys/{id}/experience` 交回的住处证据是「有数 + 有来源 + 置信度 0.96」，②④ 的触发条件是「无数」或「有数无置信度」，这台服务器这次没有给出这两种形状。" +
   "所以反件把 experience 的响应改写成骑在边界两侧的两种形状，各读一次屏（同一枚端点、同一把闸、同一个上下文）：")
-A("   无置信度那一形：屏上 " + json.dumps(P["four_tiers"], ensure_ascii=False) + " 四档按梯序落地，触发行 " + json.dumps(P["four_triggers"], ensure_ascii=False) + " ，四档都中心命中（那枚金额是反件写进 " + COORD["control_amount"] + " 的一格，取字处 " + COORD["hit_probe"] + "）。")
-A("   补上置信度那一形：屏上 " + json.dumps(P["two_tiers"], ensure_ascii=False) + " ，警告与补救自己退场（同一取字处 " + COORD["hit_probe"] + " ，同一写入处 " + COORD["control_amount"] + "）。")
+A("   无置信度那一形（下面那句里的金额写在 " + COORD["control_amount"] + " ，取字处 " + COORD["hit_probe"] + "）：屏上 " + json.dumps(P["four_tiers"], ensure_ascii=False) +
+  " 四档按梯序落地，触发行 " + json.dumps(P["four_triggers"], ensure_ascii=False) + " ，四档都中心命中。")
+A("   补上置信度那一形（同一写入处 " + COORD["control_amount"] + " ，同一取字处 " + COORD["hit_probe"] + "）：屏上 " + json.dumps(P["two_tiers"], ensure_ascii=False) + " ，警告与补救自己退场。")
 A("   两形各自改到的响应（去重后 " + str(len(set(P["endpoints_patched"]))) + " 条端点、逐次改写 " + str(len(P["endpoints_patched"])) + " 次，判据行 " + COORD["endpoint_line"] + "）：" + json.dumps(sorted(set(P["endpoints_patched"])), ensure_ascii=False) + " 。")
 A("   见证类型 = HTTP_RESPONSE：这两代形状是我本地应答的，不是这台服务器给的；它证明的是梯子的边界画在对的地方，不是产品数据长这样。")
 A("   编译臂（我这枚头的导出件，node_modules 走 `os.link` 硬链、nlink=" + str(NLINK) + " ）逐行退出码：")
