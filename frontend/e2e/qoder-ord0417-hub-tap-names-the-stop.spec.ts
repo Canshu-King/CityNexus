@@ -281,6 +281,8 @@ for (const arm of ARMS) {
         opacity: cs.opacity,
         screen_reader_only: String(cls).includes("v8-sr-only"),
         inside_panel: !!el.closest(".v8-map-panel"),
+        inside_viewport: r.top >= 0 && r.bottom <= window.innerHeight,
+        inner_h: window.innerHeight,
         text: (el.innerText ?? "").replace(/\s+/g, " ").trim().slice(0, 120),
       };
     }, target!.aria);
@@ -292,6 +294,11 @@ for (const arm of ARMS) {
     expect([cell.display, cell.visibility, Number(cell.opacity)], node("H2", `${arm.locale}: the naming element is not visible: ${JSON.stringify(cell)}`)).toEqual(["inline", "visible", 1]);
     expect(cell.box![2], node("H2", `${arm.locale}: zero-width naming element: ${JSON.stringify(cell.box)}`)).toBeGreaterThan(0);
     expect(cell.inside_panel, node("H2", `${arm.locale}: the name is painted outside the map panel: ${JSON.stringify(cell)}`)).toBe(true);
+    /* The whole point of this order is a name the traveller READS.  On the hub the caption sits at the
+       bottom of a panel that starts below the fold, so "visible" in the computed-style sense is not
+       enough: the box has to be inside the viewport the finger is looking at.  Asserting this is what
+       caught that the sentence was painted at y=854 on a 844 px viewport. */
+    expect(cell.inside_viewport, node("H2", `${arm.locale}: the name is painted but below the fold — box ${JSON.stringify(cell.box)} in a ${cell.inner_h} px viewport: ${JSON.stringify(cell)}`)).toBe(true);
   });
 }
 

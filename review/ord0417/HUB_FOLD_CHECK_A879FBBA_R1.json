@@ -1,0 +1,82 @@
+[
+ {
+  "arm": "hub-not-aria-zh",
+  "box": [
+   30,
+   854,
+   136,
+   14
+  ],
+  "inside_panel": true,
+  "inside_viewport": false,
+  "inner_h": 844,
+  "text": "图上选中的这一站 · Departure"
+ },
+ {
+  "arm": "hub-not-aria-en",
+  "box": [
+   30,
+   873,
+   152,
+   14
+  ],
+  "inside_panel": true,
+  "inside_viewport": false,
+  "inner_h": 844,
+  "text": "Selected on the map · Departure"
+ },
+ {
+  "arm": "hub-geometry-390x844-zh",
+  "viewport": [
+   390,
+   844
+  ],
+  "cell_box": [
+   30,
+   854,
+   136,
+   14
+  ],
+  "band_idle": [
+   30,
+   782,
+   330,
+   139
+  ],
+  "lost": [
+   "9#1"
+  ],
+  "name_painted": true,
+  "reachable": [
+   13,
+   12
+  ]
+ },
+ {
+  "arm": "hub-geometry-390x844-en",
+  "viewport": [
+   390,
+   844
+  ],
+  "cell_box": [
+   30,
+   873,
+   152,
+   14
+  ],
+  "band_idle": [
+   30,
+   801,
+   330,
+   139
+  ],
+  "lost": [
+   "9#1"
+  ],
+  "name_painted": true,
+  "reachable": [
+   13,
+   12
+  ]
+ }
+]
