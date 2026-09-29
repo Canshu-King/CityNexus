@@ -5,6 +5,7 @@ import { classifyReadFailure } from "../../lib/failureAttribution";
 import { RawFactsPanel } from "../../components/RawFactsPanel";
 import type { RawFacts } from "../../lib/rawFacts";
 import { useElapsedSeconds } from "../../lib/waitClock";
+import { ENTRY_FIELDS, entryFieldBounds, entryFieldLabel, entryFieldName, entryFieldSuffix } from "../../lib/entryLimits";
 
 /**
  * ORD-0036 (d) -- where the wizard's state lives.
@@ -793,12 +794,12 @@ export function JourneyTrialSetup({
   /* ORD-0066: step 2 can block too, and a blocked primary button that names the anchors on
      step 1 then falls silent one step later is the same defect moved down the wizard. */
   const missingStep2 = [
-    draft.partySize >= 1
+    draft.partySize >= ENTRY_FIELDS.party.min
       ? null
-      : { label: zh ? "旅行人数" : "the number of travellers", target: "trial-party" },
-    draft.budgetMajor > 0
+      : { label: entryFieldName("party", zh), target: ENTRY_FIELDS.party.testId },
+    draft.budgetMajor > ENTRY_FIELDS.budget.min
       ? null
-      : { label: zh ? "总预算" : "the total budget", target: "trial-budget" },
+      : { label: entryFieldName("budget", zh), target: ENTRY_FIELDS.budget.testId },
   ].filter(Boolean) as MissingField[];
   /* ORD-0135 ③ (step 3): the review step already prints 「抵达 未填写 · 必填」 but computed no missing
      list at all, so 确认创建 stayed fully pressable, the `trial-next-reason` slot was empty and no
@@ -1141,12 +1142,11 @@ export function JourneyTrialSetup({
         <div className="v8-card trial-card" data-testid="trial-step2-body">
           <div className="trial-row">
             <label className="trial-field">
-              <span>{zh ? "旅行人数" : "Travellers"}</span>
+              <span data-testid="trial-party-label">{entryFieldLabel("party", zh)}</span>
               <input
                 data-testid="trial-party"
                 type="number"
-                min="1"
-                max="20"
+                {...entryFieldBounds("party")}
                 value={draft.partySize}
                 onChange={(event) => {
                   const partySize = Number(event.target.value);
@@ -1159,12 +1159,11 @@ export function JourneyTrialSetup({
               />
             </label>
             <label className="trial-field">
-              <span>{t("trial.rooms")}</span>
+              <span data-testid="trial-rooms-label">{`${t("trial.rooms")}${entryFieldSuffix("rooms", zh)}`}</span>
               <input
                 data-testid="trial-rooms"
                 type="number"
-                min="1"
-                max="20"
+                {...entryFieldBounds("rooms")}
                 value={draft.rooms}
                 onChange={(event) => {
                   setRoomsTouched(true);
@@ -1176,21 +1175,21 @@ export function JourneyTrialSetup({
 
           <div className="trial-row">
             <label className="trial-field">
-              <span>{zh ? "总预算" : "Total budget"}</span>
+              <span data-testid="trial-budget-label">{entryFieldLabel("budget", zh)}</span>
               <input
                 data-testid="trial-budget"
                 type="number"
-                min="0"
+                {...entryFieldBounds("budget")}
                 value={draft.budgetMajor}
                 onChange={(event) => update("budgetMajor", Number(event.target.value))}
               />
             </label>
             <label className="trial-field">
-              <span>{t("trial.stayBudget")}</span>
+              <span data-testid="trial-stay-budget-label">{`${t("trial.stayBudget")}${entryFieldSuffix("stayBudget", zh)}`}</span>
               <input
                 data-testid="trial-stay-budget"
                 type="number"
-                min="0"
+                {...entryFieldBounds("stayBudget")}
                 value={draft.stayBudgetMajor}
                 onChange={(event) => update("stayBudgetMajor", Number(event.target.value))}
               />
