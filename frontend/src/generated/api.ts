@@ -2969,6 +2969,11 @@ export interface components {
             created_by: string;
             /** Format: date-time */
             expires_at?: string | null;
+            /**
+             * Format: uuid
+             * @description The one version this grant opens.  Three named answers on this door: an id that cannot be read is 422 SHARE_GRANT_VERSION_ID_UNREADABLE, an id no version carries is 422 SHARE_GRANT_VERSION_UNKNOWN, and a version that belongs to another journey is 409 SHARE_GRANT_VERSION_NOT_IN_JOURNEY - no token is minted on any of those three paths.
+             */
+            plan_version_id?: string | null;
         };
         ShareGrant: {
             /** Format: uuid */
@@ -2976,6 +2981,11 @@ export interface components {
             /** Format: uuid */
             journey_id: string;
             visibility: components["schemas"]["ShareVisibility"];
+            /**
+             * Format: uuid
+             * @description null is the journey-level grant, not an unfinished choice: it is the shape every row written before ORD-0466 already had.
+             */
+            plan_version_id: string | null;
             created_by: string;
             /**
              * Format: date-time
@@ -4536,13 +4546,17 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description The journey this grant lets its holder read */
+            /** @description The journey this grant lets its holder read, plus what this grant covers.  A journey-level grant adds `grant_scope: JOURNEY` and no plan; a version-scoped one (ORD-0466) adds `grant_scope: PLAN_VERSION` and `shared_plan`, which is the same PlanVersion shape `/journeys/{journey_id}/plans` answers with - one shape, not a second one that can drift. */
             200: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["Journey"];
+                    "application/json": components["schemas"]["Journey"] & {
+                        /** @enum {string} */
+                        grant_scope: "JOURNEY" | "PLAN_VERSION";
+                        shared_plan?: components["schemas"]["PlanVersion"];
+                    };
                 };
             };
             /** @description error.code = NOT_FOUND with error.reason_code = SHARE_GRANT_UNKNOWN (never existed) or SHARE_GRANT_JOURNEY_GONE - a different number from the one above, on purpose */
@@ -4554,7 +4568,7 @@ export interface operations {
                     "application/json": components["schemas"]["ErrorEnvelope"];
                 };
             };
-            /** @description error.code = CONFLICT with error.reason_code = SHARE_GRANT_REVOKED / SHARE_GRANT_EXPIRED / SHARE_GRANT_NOT_LINK_READABLE / SHARE_GRANT_EXPIRY_UNREADABLE - a grant that exists but no longer allows a read */
+            /** @description error.code = CONFLICT with error.reason_code = SHARE_GRANT_REVOKED / SHARE_GRANT_EXPIRED / SHARE_GRANT_NOT_LINK_READABLE / SHARE_GRANT_EXPIRY_UNREADABLE / SHARE_GRANT_VERSION_GONE - a grant that exists but no longer allows a read, or names a version this journey no longer holds */
             409: {
                 headers: {
                     [name: string]: unknown;

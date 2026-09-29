@@ -1241,6 +1241,18 @@ class JourneyShareGrant(Base):
     )
     token: Mapped[str] = mapped_column(String, unique=True)
     visibility: Mapped[str] = mapped_column(String)
+    # ORD-0466: a grant can be cut for one plan version instead of for the journey as it stands.
+    # NULL is not "no version picked yet" -- it is the journey-level grant every pre-ORD-0466 row
+    # already is, so no old row has to be re-read as an unfinished choice.
+    #
+    # Deliberately a plain column, not a ForeignKey: each thing a foreign key would do here breaks a
+    # promise the share doors already keep.  ON DELETE CASCADE deletes the grant with the version, so
+    # a holder presenting the link is told 404 "never existed" when the real fact is 409 "the version
+    # behind it is gone" -- the two-number rule ORD-0434 set (`backend/app/main.py`, the token read).
+    # ON DELETE SET NULL silently widens a version grant into a whole-journey grant.  NO ACTION lets a
+    # grant block somebody deleting a version.  So the id is checked where it is created, named where
+    # it stops resolving, and the row survives to be revoked.
+    plan_version_id: Mapped[str | None] = mapped_column(String, nullable=True)
     created_by: Mapped[str] = mapped_column(String)
     expires_at: Mapped[str | None] = mapped_column(String, nullable=True)
     revoked_at: Mapped[str | None] = mapped_column(String, nullable=True)
