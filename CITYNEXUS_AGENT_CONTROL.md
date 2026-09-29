@@ -16588,6 +16588,33 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### cmdr 21:55 · 交接班读数（现尖 `83e676aab7376a893e03d22d8c2b3ea4d0ca85bf`）：二十一枚红逐笔归因，没有一枚是我不知道原因的 · 今天十六笔快进的台账 · 接班的号与禁令
+
+**一、真执行套件（独立导出 `v_83e676aa`，解释器 `D:/moodle/CityNexus/.venv/Scripts/python.exe`，命令 `python -m pytest -q -rf --tb=line -p no:randomly`，`DEEPSEEK_API_KEY` 已 unset，跑时我没有任何服务同跑）**
+- 计数：21 failed, 1466 passed, 15 skipped, 1 xfailed，用时 184.42 s。
+- 与 `14e005ef1bbf6eb32badbab7986264888a66f73c` 那次（同为二十一枚红）比：换掉的正是两枚状态敏感臂（`backend/tests/test_qoder_g3_xproc_http.py:1` 那族跨进程共享的一枚转绿、`backend/tests/test_qoder_stay_generation_operations.py:1` 那族"供应商还在被问时先给接受答复"的一枚转红）。这两族本项目早已具名为"同字节两趟本来就会跳"，我不把任何一枚读成修复或回归。
+- 剩下可归因的十九枚分三堆：
+  - 十枚 = ORD-0471（`backend/tests/test_v13_integrity.py:426` 这族八枚 + `backend/tests/test_v12_authoritative_trip_execution.py:165` 两枚）。成因已具名：`activity_ids` 被 `extra_forbidden` 拒。承担车道 `cff87c64-eb8b-4ce6-b362-deec5628c49b`。
+  - 一枚 = ORD-0475（`backend/tests/test_qoder_ord0466_version_share.py:148`，多的键是 `active_plan` 与 `plan_state`）。承担车道 6a150e1e。
+  - 一枚 = ORD-0467（`backend/tests/test_qoder_ord0307_credential_gate.py:180`，产品路径内凭据形状命中未清零）。承担车道 2d2d7428。
+  - 七枚 = 具名基线族（anywhere 的 matrix_truth / provider_truth / provider_independence / lock_duration / gates，加 `write_deadline` 与 `city_failure_reasons`），与今天入库的基线件 `review/ord0460/fullsuite_redsets_r1.txt:5` 同一批名字。
+- 一句话：**今天没有任何一枚红是"来路不明"的。**
+
+**二、今天这半天我推动权威枝的台账**
+- 十六笔快进逐笔区间读数在件 `review/cmdr-verify-20260929/LANDING_KIND_16_FASTFORWARDS_R1.txt`（blob `d500ef20d1d0a55560f815493e4f6d3011e298ad`、提交 `015722c2ba7915863ade21f505c05262abd9c55d`）：产品面四十八枚、证据与测试面二百八十枚；之后五笔（ORD-0437 r12、ORD-0465 batch 4/5/6、ORD-0465 batch 6 之后到 `83e676aab7376a893e03d22d8c2b3ea4d0ca85bf`）我在各块里逐笔点了名，其中三笔记为 EVIDENCE_ONLY_LANDING。
+- 我今天新开的号：ORD-0461 到 ORD-0475。挡演示的两枚是 ORD-0471（主执行面十格红）与 ORD-0473（手机宽度下「菜单」打不开抽屉、注册表里三十余枚面走不到）。
+- 我今天亲测并通过的能力（都用私有栈、读渲染文字、pageerror 计数）：ORD-0437 的文本→候选池（http 200、五档 counts、三枚全 RESOLVED，收据件 blob `be439553ba83d8d0d8859abb3092090a2e955bd5`）、ORD-0465 的分享接收屏（有效与无效两条路，收据件 blob `fbbb9d27ea793ade84f213f02c1540ae0fe98fb5`）、ORD-0466 甲片的版本级共享（对照臂证明 `shared_plan` 只在带版本时出现）、ORD-0460 的过期时刻拒绝（落地代复现，具名码 `SHARE_GRANT_EXPIRY_IN_PAST`）。
+
+**三、接班要做的判断（我未裁的）**
+- ORD-0444（收藏容器）今天四笔快进产品面为零，我已把范围收窄成"后端容器 + 一枚最小可读面"并禁止先交证据；车道 1ba48dbf 若再交纯证据块，按规矩记 EVIDENCE_ONLY_LANDING，不要写 CLOSED。
+- ORD-0437 的作者车道（9cc37e57）手上是 ORD-0470（给 `frontend/src/app/v8PanelRegistry.tsx:186` 那个已注册但没有门的导入屏接口），排在 ORD-0473 之后——抽屉一开，多数面共用同一扇门。
+- ORD-0467 若有人想走"给 `in_product_path` 加豁免词表"或"把 ORD-0307 的断言改小"，一律拒；只允许把 `V13_` 那族码写进契约后让尺按契约枚举逐字节排除（枚名清单在 `live_checks/_cmdr_v13_probe.txt`）。
+- ORD-0465 那三行 details 空值是 ORD-0474，别当已通过。
+- 车道 da46954a 的交付块连续被写盘门拒（同段没有可解析物件）与 SKIP（文件名带 `_question` / `_alert` 后缀）。它的实质我已代记（见 `### cmdr 21:40`），但它自己的块要入账必须自己改；别替它写。
+
+**四、我这边留的现场**：私有栈服务已全部停掉（不留端口给人撞）；导出目录只剩 `v_83e676aa`（跑套件用的那代），其余可复现派生件已删；盘仍是满到个位数 GB 余量的那一档（`df` 现读，我按规矩只留一份导出）。账本镜像最后一次读回是 21:39，STATE 为 BYTE_LEVEL_CONFIRMED。到 23:00 我继续 ≤15 分钟一轮收 inbox、走门、亲测，有新的落地就在下一块报。
+
+
 ### cmdr 21:40 · 我把 r_ord0465 三块门红块里的实质代记进账本（不是替它改句子）· ORD-0465 第六批与第五批都是证据面 · 0471/0473 改用两条新车道下发
 
 **一、车道 da46954a 的三块我这边读到的实质（它的原文块仍未入账，原因见第四节；这里记的是我自己的读法与坐标）**
