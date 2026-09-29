@@ -51,6 +51,54 @@ PLACEHOLDER_MARKERS: tuple[str, ...] = ("redacted", "example", "placeholder", "d
                                         "notreal", "changeme", "instrument-selftest", "aaaaaaaa")
 MIN_ENTROPY_BITS_PER_CHAR = 3.2
 
+#: ORD-0467. A named product code is exempted **only** because the contract says so, byte for byte.
+#: The exemption is read out of `contracts/openapi.yaml` at scan time: there is deliberately no
+#: vocabulary kept here, because a list in this file is exactly the "豁免词表洗绿" the order forbids.
+#: Three things bound it so it cannot launder a real key:
+#:   * only a value shaped like an UPPER_SNAKE code can be exempted at all;
+#:   * the five provider-shaped patterns are never exempted, contract member or not;
+#:   * an unreadable contract yields no members, so the gate fails closed, not open.
+CONTRACT_SPEC_REL = "contracts/openapi.yaml"
+NAMED_CODE_SHAPE = re.compile(r"^[A-Z][A-Z0-9]*(?:_[A-Z0-9]+)+$")
+NEVER_EXEMPT_PATTERNS = frozenset({"provider_key_shape", "aws_access_key", "github_token",
+                                   "google_api_key", "bearer_or_basic_literal"})
+_CONTRACT_CACHE: dict = {}
+
+
+def contract_named_codes(root: Path = REPO) -> dict[str, str]:
+    """Every enum member the contract names as an UPPER_SNAKE code, mapped to its schema name.
+
+    The value is never compared for similarity: a literal is exempt only when some enum member in
+    the file is the same string. Returns {} when the contract cannot be read or parsed.
+    """
+
+    path = Path(root) / CONTRACT_SPEC_REL
+    try:
+        stamp = path.stat().st_mtime_ns, path.stat().st_size
+    except OSError:
+        return {}
+    cached = _CONTRACT_CACHE.get(str(path))
+    if cached and cached[0] == stamp:
+        return cached[1]
+    try:
+        import yaml
+
+        spec = yaml.safe_load(path.read_text(encoding="utf-8", errors="replace"))
+    except Exception:
+        return {}
+    out: dict[str, str] = {}
+    schemas = (spec or {}).get("components", {}).get("schemas", {}) or {}
+    for name, schema in schemas.items():
+        members = schema.get("enum") if isinstance(schema, dict) else None
+        if not isinstance(members, list):
+            continue
+        for value in members:
+            if isinstance(value, str) and NAMED_CODE_SHAPE.match(value):
+                out.setdefault(value, str(name))
+    _CONTRACT_CACHE[str(path)] = (stamp, out)
+    return out
+
+
 #: D-2=甲：**申报看内容摘要，不看路径**。桩一改指纹就不吻合 ⇒ 声明作废并回到"未申报 ⇒ 红"。
 DECLARED_SAMPLES: tuple[dict, ...] = (
     {"at": "frontend/e2e/qoder-e2e-config-guard.spec.ts:140", "token_fp": "faca4b0049a4",
@@ -159,6 +207,7 @@ def _tokens_in(line: str) -> Iterable[tuple[str, str]]:
 
 def find_literals(paths: list[str], root: Path = REPO) -> list[dict]:
     hits: list[dict] = []
+    named = contract_named_codes(root)
     for rp in paths:
         try:
             text = (root / rp).read_text(encoding="utf-8", errors="replace")
@@ -173,19 +222,27 @@ def find_literals(paths: list[str], root: Path = REPO) -> list[dict]:
                     continue
                 fp = token_fp(tok)
                 declared = next((d for d in DECLARED_SAMPLES if d["token_fp"] == fp), None)
+                schema = named.get(tok) if (name not in NEVER_EXEMPT_PATTERNS
+                                            and NAMED_CODE_SHAPE.match(tok)) else None
                 hits.append({"path": rp, "line": no, "pattern": name, "length": len(tok),
                              "entropy_bits_per_char": round(ent, 2), "token_fp": fp,
                              "position_fp": position_fp(rp, no),
                              "in_product_path": rp.startswith(PRODUCT_ROOTS),
                              "declared": declared is not None,
-                             "declared_at": declared["at"] if declared else None})
+                             "declared_at": declared["at"] if declared else None,
+                             # the contract schema that names this exact string, or None
+                             "contract_named": schema})
     return hits
 
 
 def scan(root: Path = REPO) -> dict:
     files = candidate_files(root)
     hits = find_literals(files, root)
-    undeclared = [h for h in hits if not h["declared"]]
+    undeclared_all = [h for h in hits if not h["declared"]]
+    #: ORD-0467: a literal the contract itself names is vocabulary, not a secret. It stays in `hits`
+    #: so a reader can see the exemption and which schema granted it; it leaves the live set.
+    contract_named = [h for h in undeclared_all if h["contract_named"]]
+    undeclared = [h for h in undeclared_all if not h["contract_named"]]
     product = [h for h in undeclared if h["in_product_path"]]
     verdict = (CODE_OFF if policy() == "off" else CODE_IN_PRODUCT_PATH if product
                else CODE_OUTSIDE_PRODUCT_PATH if undeclared else CODE_OK)
@@ -197,7 +254,13 @@ def scan(root: Path = REPO) -> dict:
             "roots_missing": [r for r in SCAN_ROOTS if not (root / r).exists()],
             "scanned_files": len(files), "hits_total": len(hits),
             "hits_undeclared": len(undeclared), "hits_in_product_path": len(product),
-            "hits_declared": len(hits) - len(undeclared), "hits": hits,
+            "hits_declared": len(hits) - len(undeclared_all),
+            "hits_contract_named": len(contract_named),
+            "contract_named_schemas": sorted({h["contract_named"] for h in contract_named}),
+            "contract_named_positions": [{"path": h["path"], "line": h["line"],
+                                          "position_fp": h["position_fp"],
+                                          "schema": h["contract_named"]} for h in contract_named],
+            "hits": hits,
             "env_present": len(env), "env_undeclared": len(env_undeclared),
             "env_fingerprints": [{k: h[k] for k in ("var", "length", "token_fp", "declared")}
                                  for h in env],
