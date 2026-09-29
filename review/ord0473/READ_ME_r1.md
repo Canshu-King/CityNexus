@@ -94,4 +94,4 @@ Left alone on purpose, and named rather than hidden:
 * both bundles built by `cmdr_build_bundle_r1.py --sha <40 hex>` from `git archive`, so the tree
   other lanes have dirty never enters the build. `npm run typecheck`
   (`tsc -p tsconfig.check.json --noEmit`) exits 0 on the delivered bytes —
-  `readings/typecheck_after.log`.
+  `readings/typecheck_after_r1.txt`.
