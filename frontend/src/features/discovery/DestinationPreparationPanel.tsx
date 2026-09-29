@@ -23,6 +23,8 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useLocale, useT } from "../../i18n/LocaleContext";
 import { deviceReadout } from "../../lib/failureAttribution";
+import { PrepAbandonSurvey } from "./PrepAbandonSurvey";
+import { STOP_ACTION_KEY, SURVEY_COPY, appendSurveyLog } from "./prepAbandonSurveyCopy";
 import {
   cityNexusApi,
   type CatalogHydrationOperation,
@@ -51,6 +53,15 @@ export function DestinationPreparationPanel({ journeyId, onOpenPlan, initialQuer
   const [job, setJob] = useState<CatalogHydrationOperation | null>(null);
   const [actionError, setActionError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
+  const [surveyOpen, setSurveyOpen] = useState(false);
+
+  /* A survey belongs to the job it was opened for, so a *new* operation closes it. It does not close
+     when the job terminalises underneath: the probe measured the server answering 云和县 ~4 s after
+     the sheet opened, and dropping the sheet there would throw away an answer half-written. The stop
+     request is idempotent (`POST /catalog-hydrations/{id}/abandon`), so finishing the answer is safe. */
+  useEffect(() => {
+    setSurveyOpen(false);
+  }, [job?.operation_id]);
   const pollTimer = useRef<number | null>(null);
 
   const stopPolling = useCallback(() => {
@@ -127,21 +138,42 @@ export function DestinationPreparationPanel({ journeyId, onOpenPlan, initialQuer
     }
   };
 
-  const abandon = async () => {
-    if (!job) return;
+  const abandon = async (): Promise<boolean> => {
+    if (!job) return false;
     setBusy(true);
     setActionError(null);
     try {
       const stopped = await cityNexusApi.abandonCatalogHydration(job.operation_id);
       stopPolling();
       setJob(stopped);
+      return true;
     } catch (error) {
       setActionError(
         error instanceof Error ? error.message : zh ? "没能停止这次准备。" : "Could not stop this preparation.",
       );
+      return false;
     } finally {
       setBusy(false);
     }
+  };
+
+  /* ORD-0440: the survey sits in front of the stop, and the stop is still the stop. The record is
+     written after the server answered, because an answer recorded against a stop that never landed
+     would be a report about our own widget. */
+  const stopAfterSurvey = async (reasons: string[], note: string) => {
+    const operationId = job?.operation_id ?? "";
+    const stopped = await abandon();
+    setSurveyOpen(false);
+    if (!operationId) return;
+    appendSurveyLog({
+      at: new Date().toISOString(),
+      operation_id: operationId,
+      reasons,
+      note,
+      note_chars: note.length,
+      skipped: reasons.length === 0 && note.trim() === "",
+      stopped,
+    });
   };
 
   const reasonCode = capability?.reason_code ?? "";
@@ -299,6 +331,52 @@ export function DestinationPreparationPanel({ journeyId, onOpenPlan, initialQuer
      rather than deciding for itself that retrying is reasonable. */
   const action = capability?.recommended_action ?? "";
   const retryable = Boolean(capability?.retryable);
+
+  /* ORD-0440: once the traveller has asked to stop, the sheet is the screen. With the page intro and
+     the verdict still stacked above it, the walk measured the exit at centre y=1145 in a 390x844
+     viewport - past the 768 first-screen line and past the viewport itself, which a tap that auto-
+     scrolls would never have shown. `review/n3_0440_evidence_r1/walk/walk_zh.json` carries that
+     reading; this branch is the fix it asked for.
+     The poll is held while the sheet is open: the shell re-measures by ~10 px on every tick
+     (`review/ord0440/_shift_source_probe.cjs`, kicker top 93 <-> 103 with a stable 66 px topbar), so a
+     row under the finger moved each time the server answered. Stopping the read for the length of one
+     answer is ours to do; the header's own re-measure is named in the delivery for its owner. */
+  const openSurvey = () => {
+    stopPolling();
+    setSurveyOpen(true);
+  };
+
+  const closeSurvey = () => {
+    setSurveyOpen(false);
+    if (job && !job.terminal) watch(job.operation_id);
+  };
+
+  if (surveyOpen && job) {
+    return (
+      <section
+        className="v8-page"
+        data-testid="prep-panel"
+        data-job-id={job.operation_id}
+        data-focus="stop-survey"
+      >
+        <p className="v8-kicker" data-testid="prep-survey-context">
+          {zh ? "准备进度" : "Preparation"} · {job.status}
+        </p>
+        {actionError && (
+          <p className="role-alert" role="alert" data-testid="prep-action-error">
+            {actionError}
+          </p>
+        )}
+        <PrepAbandonSurvey
+          zh={zh}
+          operationId={job.operation_id}
+          busy={busy}
+          onExit={(reasons, note) => void stopAfterSurvey(reasons, note)}
+          onBack={closeSurvey}
+        />
+      </section>
+    );
+  }
 
   return (
     <section
@@ -472,15 +550,15 @@ export function DestinationPreparationPanel({ journeyId, onOpenPlan, initialQuer
             </p>
           )}
           <div className="prep-actions">
-            {!job.terminal && (
+            {!job.terminal && !surveyOpen && (
               <button
                 type="button"
                 className="v8-outline-button"
                 data-testid="prep-abandon"
                 disabled={busy}
-                onClick={() => void abandon()}
+                onClick={openSurvey}
               >
-                {zh ? "停止这次准备" : "Stop this preparation"}
+                {zh ? SURVEY_COPY.zh[STOP_ACTION_KEY] : SURVEY_COPY.en[STOP_ACTION_KEY]}
               </button>
             )}
             {job.terminal && job.retryable && (
