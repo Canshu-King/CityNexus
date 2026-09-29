@@ -1547,6 +1547,10 @@ export function V8Experience() {
       </div>
     );
 
+  const hasKnownRouteMode =
+    data.options.some((item) => item.leg_modes.some(Boolean)) ||
+    Boolean(data.active_plan?.legs.some((leg) => Boolean(leg.mode)));
+
   /* ORD-0392: the fourteen `{route === "x" && <Panel/>}` blocks that used to sit in the content
      area are now one table in `app/v8PanelRegistry.tsx`. This file keeps only what it owns: the
      page components defined here and the state they already read, handed to the table as `slots`.
@@ -1743,7 +1747,7 @@ export function V8Experience() {
             <span className="status-dot" />
             {t("shell.factsSynced")}
             <div>
-              {t("shell.plansModes", {
+              {t(hasKnownRouteMode ? "shell.plansModes" : "shell.plansModesPending", {
                 plans: data.options.length || (data.active_plan ? 1 : 0),
               })}
             </div>
