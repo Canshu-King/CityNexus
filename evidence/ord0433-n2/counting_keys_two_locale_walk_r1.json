@@ -1,0 +1,2224 @@
+{
+ "at_local": "2026-09-30T01:18:00+0800",
+ "lane": "N2",
+ "session": "9759f1ac-3d69-4688-8664-8ca954ab7737",
+ "ask": "Two-locale screen reading of the counting interpolation keys on the live tip (the reading ORD-0433's commander owed), plus the ORD-0467 alignment facts. No product byte was changed by this run.",
+ "measured_on": {
+  "tip": "0dabe64223036391a6c25561a6b606e1533f3704",
+  "tip_subject": "0dabe642 Wed Sep 30 00:54:27 2026 +0800 ORD-0436: the reading's own port was somebody else's backend -- identity proofs on the front door too",
+  "ref": "refs/heads/mirror/integration-frontend-apple-pass1",
+  "tip_read_at": "2026-09-30T01:01:48+0800",
+  "backend_tree": "de8ee0421b873b7262346d6b79fa45e4427c7b5b",
+  "frontend_tree": "4438a0496bebbfdee8e9ee65169b79f1818c0c92",
+  "dictionary_blob": "8308d542c41d1396e688aab318953a84a0ca1518",
+  "plural_blob": "0dff8a06adaa85e815efcd7ec6cc21dbf6a68e98",
+  "dictionary_lines": 2115
+ },
+ "stack": {
+  "tip_read_at_note": "the tip was re-read by ls-remote before the walk and again before hand-in; n2_0433_handin_check_r1.json carries the second reading",
+  "backend_export": "D:/moodle/_qoder_n2_0433be_0dabe642",
+  "export_command": "git archive 0dabe64223036391a6c25561a6b606e1533f3704 backend data contracts tools scripts agent-mcp | tar -x -C D:/moodle/_qoder_n2_0433be_0dabe642",
+  "sqlite_copy": {
+   "path": "D:/moodle/_qoder_n2_0433_0dabe642.db",
+   "bytes": 7213056,
+   "sha256": "ec9baaf684eba656d027c2e7dbae73405d6bb27ea5b8937301332447f77c2a1c",
+   "tables": 58,
+   "share_grant_rows_after_this_run": [
+    [
+     "22222222-2222-4222-8222-222222222222",
+     "LINK_READ",
+     "lane-N2-ord0433-reading"
+    ]
+   ],
+   "source": "D:/moodle/_qoder_preview_20260920/_preview.db opened mode=ro and copied with the SQLite backup API; the source is never opened for write"
+  },
+  "backend": {
+   "port": 8763,
+   "log_tail": [
+    "INFO:     127.0.0.1:58853 - \"GET /api/v1/journeys/22222222-2222-4222-8222-222222222222/twin HTTP/1.1\" 200 OK",
+    "INFO:     127.0.0.1:62456 - \"GET /api/v1/journeys/22222222-2222-4222-8222-222222222222/twin HTTP/1.1\" 200 OK",
+    "INFO:     127.0.0.1:50136 - \"GET /api/v1/health HTTP/1.1\" 200 OK",
+    "INFO:     127.0.0.1:51192 - \"GET /api/v1/health HTTP/1.1\" 200 OK"
+   ],
+   "health_body": "{\"status\":\"ok\",\"database\":\"ok\",\"ai\":\"disabled\",\"ai_state\":\"NOT_CONFIGURED\",\"e2e_run_id\":\"\",\"e2e_database_id\":\"\"}",
+   "credential_note": "DEEPSEEK_API_KEY is popped in this lane's launcher, so the AI run receipt cannot be produced here; the health body above is the field that says so"
+  },
+  "static": {
+   "port": 4857,
+   "dist": "D:/moodle/_qoder_cmdr_ref_20260921/live_checks/_build_n2-0433t2/frontend/dist",
+   "asset": "assets/index-DmHYey4y.js",
+   "index_disk_sha1": "a74c095c4534dde3c8e98692e6b2500455b66f2f",
+   "asset_disk_sha1": "63d64f884ea849b5de6db3e289591a1861e36224",
+   "asset_served_sha1": "63d64f884ea849b5de6db3e289591a1861e36224",
+   "served_equals_disk": true,
+   "asset_bytes": 1488860,
+   "build": {
+    "sha": "0dabe64223036391a6c25561a6b606e1533f3704",
+    "tag": "n2-0433t2",
+    "at": "2026-09-30T01:00:06+0800",
+    "vite_build_rc": [
+     0
+    ],
+    "blob_equality": {
+     "frontend/package.json": true,
+     "frontend/vite.config.ts": true,
+     "frontend/src/features/planning/PlanWithAiSheet.tsx": true,
+     "frontend/src/components/ProductErrorBoundary.tsx": true,
+     "frontend/src/features/inbox/JourneyInboxWorkbench.tsx": true,
+     "frontend/src/features/setup/JourneyTrialSetup.tsx": true
+    }
+   }
+  },
+  "share_grant_first_attempt": {
+   "journey_id": null,
+   "grant_value": null,
+   "http": "NO_GRANT_CREATED",
+   "endpoint": "backend/app/main.py:3251"
+  },
+  "share_grant": {
+   "journey_id": "22222222-2222-4222-8222-222222222222",
+   "grant_id": "05e7b2b2-0e5a-4c3c-80fb-a95052dd4a0d",
+   "visibility": "LINK_READ",
+   "grant_length": 32,
+   "grant_bytes_sha1": "c8e558c2c435f36cbb32baf8fd6b213edbe3f0b1",
+   "endpoint": "backend/app/main.py:3251",
+   "static": {
+    "port": 4858,
+    "asset": "/assets/index-DmHYey4y.js",
+    "equal": true,
+    "index_disk_sha1": "a74c095c4534dde3c8e98692e6b2500455b66f2f",
+    "asset_disk_sha1": "63d64f884ea849b5de6db3e289591a1861e36224",
+    "asset_served_sha1": "63d64f884ea849b5de6db3e289591a1861e36224"
+   },
+   "runs": [
+    {
+     "arm": "zh",
+     "rc": 0,
+     "lines": 3,
+     "stderr": ""
+    },
+    {
+     "arm": "en",
+     "rc": 0,
+     "lines": 3,
+     "stderr": ""
+    }
+   ],
+   "route_masked": "shared/<granted>"
+  },
+  "supplementary_walks": {
+   "shared_screen": {
+    "journey_id": "22222222-2222-4222-8222-222222222222",
+    "grant_id": "05e7b2b2-0e5a-4c3c-80fb-a95052dd4a0d",
+    "visibility": "LINK_READ",
+    "grant_length": 32,
+    "grant_bytes_sha1": "c8e558c2c435f36cbb32baf8fd6b213edbe3f0b1",
+    "endpoint": "backend/app/main.py:3251",
+    "static": {
+     "port": 4858,
+     "asset": "/assets/index-DmHYey4y.js",
+     "equal": true,
+     "index_disk_sha1": "a74c095c4534dde3c8e98692e6b2500455b66f2f",
+     "asset_disk_sha1": "63d64f884ea849b5de6db3e289591a1861e36224",
+     "asset_served_sha1": "63d64f884ea849b5de6db3e289591a1861e36224"
+    },
+    "runs": [
+     {
+      "arm": "zh",
+      "rc": 0,
+      "lines": 3,
+      "stderr": ""
+     },
+     {
+      "arm": "en",
+      "rc": 0,
+      "lines": 3,
+      "stderr": ""
+     }
+    ],
+    "route_masked": "shared/<granted>"
+   },
+   "discovery_batch": {
+    "at_local": "2026-09-30T01:10:23+0800",
+    "port": 4859,
+    "routes": [
+     "discover"
+    ],
+    "suffix": "discover",
+    "static": {
+     "asset": "/assets/index-DmHYey4y.js",
+     "index_bytes": 1200,
+     "index_disk_sha1": "a74c095c4534dde3c8e98692e6b2500455b66f2f",
+     "asset_disk_sha1": "63d64f884ea849b5de6db3e289591a1861e36224",
+     "asset_served_sha1": "63d64f884ea849b5de6db3e289591a1861e36224",
+     "served_equals_disk": true
+    },
+    "runs": [
+     {
+      "arm": "zh",
+      "rc": 0,
+      "lines": 6,
+      "stderr": ""
+     },
+     {
+      "arm": "en",
+      "rc": 0,
+      "lines": 6,
+      "stderr": ""
+     }
+    ]
+   }
+  },
+  "grant_note": "A share grant value is a bearer string: only its length and the sha1 of its bytes are carried here, and the route is written as shared/<granted>."
+ },
+ "instrument": {
+  "reader_file": "n2_0433_read_node.js",
+  "reader_local_bytes_sha1": "04fc7e632d1df574d9f8b15dc427edb6528dc8bd",
+  "painted_rule": "an element with a non-zero client rect inside the viewport, after a scroll union over every scrollable; both a childless element's text and a container's own direct text nodes are kept, because a `<summary>` that holds a sentence and one nested span paints words no childless element carries",
+  "viewport": "390x844",
+  "pattern_selftest": {
+   "command": "TIP=0dabe6422303 python n2_0433_shape_selftest_r1.py",
+   "exit": 0,
+   "checked": 32,
+   "failures": 0,
+   "report_line": "checked 32 failures 0"
+  },
+  "cmdr_r3_status": "CMDR's r3 (blob 3dad6f0e70c2a0dcce936499f277313618d6b807) was not re-run for this reading; its entry labels, painted-leaf rule and scroll union were copied into the reader named above, and that copy is what produced these rows"
+ },
+ "walk": {
+  "runs": [
+   {
+    "arm": "zh",
+    "rc": 0,
+    "secs": 150,
+    "lines": 26,
+    "stdout": "done zh D:/moodle/_qoder_n2_scratch/_0433_tip_walk_zh.jsonl\n",
+    "stderr": ""
+   },
+   {
+    "arm": "en",
+    "rc": 0,
+    "secs": 150,
+    "lines": 26,
+    "stdout": "done en D:/moodle/_qoder_n2_scratch/_0433_tip_walk_en.jsonl\n",
+    "stderr": ""
+   }
+  ],
+  "routes_read": [
+   "hub",
+   "live",
+   "map",
+   "studio",
+   "stay",
+   "discover",
+   "import",
+   "bookings",
+   "agent",
+   "authoritative",
+   "intelligence",
+   "twin",
+   "trash",
+   "access",
+   "trips",
+   "me"
+  ],
+  "entry": {
+   "zh": [
+    {
+     "kind": "entry",
+     "locale": "zh",
+     "entry_used": "使用封存的演示行程",
+     "path": "/v8/hub",
+     "nav_ids": [
+      "nav-hub",
+      "nav-trips",
+      "nav-map",
+      "nav-agent",
+      "nav-me"
+     ]
+    },
+    {
+     "kind": "entry",
+     "locale": "zh",
+     "entry_used": "使用封存的演示行程",
+     "path": "/v8/hub",
+     "nav_ids": [
+      "nav-hub",
+      "nav-trips",
+      "nav-map",
+      "nav-agent",
+      "nav-me"
+     ]
+    },
+    {
+     "kind": "entry",
+     "locale": "zh",
+     "entry_used": "使用封存的演示行程",
+     "path": "/v8/hub",
+     "nav_ids": [
+      "nav-hub",
+      "nav-trips",
+      "nav-map",
+      "nav-agent",
+      "nav-me"
+     ]
+    }
+   ],
+   "en": [
+    {
+     "kind": "entry",
+     "locale": "en",
+     "entry_used": "sealed demo",
+     "path": "/v8/hub",
+     "nav_ids": [
+      "nav-hub",
+      "nav-trips",
+      "nav-map",
+      "nav-agent",
+      "nav-me"
+     ]
+    },
+    {
+     "kind": "entry",
+     "locale": "en",
+     "entry_used": "sealed demo",
+     "path": "/v8/hub",
+     "nav_ids": [
+      "nav-hub",
+      "nav-trips",
+      "nav-map",
+      "nav-agent",
+      "nav-me"
+     ]
+    },
+    {
+     "kind": "entry",
+     "locale": "en",
+     "entry_used": "sealed demo",
+     "path": "/v8/hub",
+     "nav_ids": [
+      "nav-hub",
+      "nav-trips",
+      "nav-map",
+      "nav-agent",
+      "nav-me"
+     ]
+    }
+   ]
+  },
+  "page_errors": {
+   "zh": [
+    {
+     "kind": "tail",
+     "locale": "zh",
+     "pageErrors": 0,
+     "errs": []
+    },
+    {
+     "kind": "tail",
+     "locale": "zh",
+     "pageErrors": 0,
+     "errs": []
+    },
+    {
+     "kind": "tail",
+     "locale": "zh",
+     "pageErrors": 0,
+     "errs": []
+    }
+   ],
+   "en": [
+    {
+     "kind": "tail",
+     "locale": "en",
+     "pageErrors": 0,
+     "errs": []
+    },
+    {
+     "kind": "tail",
+     "locale": "en",
+     "pageErrors": 0,
+     "errs": []
+    },
+    {
+     "kind": "tail",
+     "locale": "en",
+     "pageErrors": 0,
+     "errs": []
+    }
+   ]
+  },
+  "routes_seen": {
+   "zh": [
+    {
+     "where": "discover/plain",
+     "path": "/v8/discover",
+     "painted_leaves": 30,
+     "layout_chars": 327,
+     "note": null,
+     "details_open": "0/0",
+     "secs": 7,
+     "error": null
+    },
+    {
+     "where": "discover/checked",
+     "path": "/v8/discover",
+     "painted_leaves": 39,
+     "layout_chars": 507,
+     "note": "clicked=1",
+     "details_open": "0/0",
+     "secs": null,
+     "error": null
+    },
+    {
+     "where": "discover/picked",
+     "path": "/v8/discover",
+     "painted_leaves": 39,
+     "layout_chars": 507,
+     "note": "clicked=0",
+     "details_open": "0/0",
+     "secs": null,
+     "error": null
+    },
+    {
+     "where": "discover/receipt",
+     "path": "/v8/discover",
+     "painted_leaves": 39,
+     "layout_chars": 507,
+     "note": "clicked=0",
+     "details_open": "0/0",
+     "secs": null,
+     "error": null
+    },
+    {
+     "where": "shared/<granted>/plain",
+     "path": "/v8/shared/<granted>",
+     "painted_leaves": 34,
+     "layout_chars": 434,
+     "note": null,
+     "details_open": "0/0",
+     "secs": 7,
+     "error": null
+    },
+    {
+     "where": "hub/plain",
+     "path": "/v8/hub",
+     "painted_leaves": 66,
+     "layout_chars": 657,
+     "note": null,
+     "details_open": "0/1",
+     "secs": 7,
+     "error": null
+    },
+    {
+     "where": "hub/details_opened",
+     "path": "/v8/hub",
+     "painted_leaves": 67,
+     "layout_chars": 727,
+     "note": null,
+     "details_open": "1/1",
+     "secs": null,
+     "error": null
+    },
+    {
+     "where": "hub/ai_sheet",
+     "path": "/v8/hub",
+     "painted_leaves": 76,
+     "layout_chars": 925,
+     "note": "clicked=1",
+     "details_open": "1/1",
+     "secs": null,
+     "error": null
+    },
+    {
+     "where": "live/plain",
+     "path": "/v8/live",
+     "painted_leaves": 72,
+     "layout_chars": 628,
+     "note": null,
+     "details_open": "0/2",
+     "secs": 7,
+     "error": null
+    },
+    {
+     "where": "live/details_opened",
+     "path": "/v8/live",
+     "painted_leaves": 71,
+     "layout_chars": 637,
+     "note": null,
+     "details_open": "1/2",
+     "secs": null,
+     "error": null
+    },
+    {
+     "where": "map/plain",
+     "path": "/v8/map",
+     "painted_leaves": 41,
+     "layout_chars": 453,
+     "note": null,
+     "details_open": "0/0",
+     "secs": 7,
+     "error": null
+    },
+    {
+     "where": "studio/plain",
+     "path": "/v8/studio",
+     "painted_leaves": 27,
+     "layout_chars": 262,
+     "note": null,
+     "details_open": "0/0",
+     "secs": 7,
+     "error": null
+    },
+    {
+     "where": "stay/plain",
+     "path": "/v8/stay",
+     "painted_leaves": 17,
+     "layout_chars": 142,
+     "note": null,
+     "details_open": "0/0",
+     "secs": 7,
+     "error": null
+    },
+    {
+     "where": "discover/plain",
+     "path": "/v8/discover",
+     "painted_leaves": 30,
+     "layout_chars": 327,
+     "note": null,
+     "details_open": "0/0",
+     "secs": 7,
+     "error": null
+    },
+    {
+     "where": "discover/picked",
+     "path": "/v8/discover",
+     "painted_leaves": 30,
+     "layout_chars": 327,
+     "note": "clicked=0",
+     "details_open": "0/0",
+     "secs": null,
+     "error": null
+    },
+    {
+     "where": "discover/receipt",
+     "path": "/v8/discover",
+     "painted_leaves": 30,
+     "layout_chars": 327,
+     "note": "clicked=0",
+     "details_open": "0/0",
+     "secs": null,
+     "error": null
+    },
+    {
+     "where": "import/plain",
+     "path": "/v8/import",
+     "painted_leaves": 30,
+     "layout_chars": 347,
+     "note": null,
+     "details_open": "0/0",
+     "secs": 7,
+     "error": null
+    },
+    {
+     "where": "bookings/plain",
+     "path": "/v8/bookings",
+     "painted_leaves": 56,
+     "layout_chars": 592,
+     "note": null,
+     "details_open": "0/1",
+     "secs": 7,
+     "error": null
+    },
+    {
+     "where": "bookings/details_opened",
+     "path": "/v8/bookings",
+     "painted_leaves": 57,
+     "layout_chars": 652,
+     "note": null,
+     "details_open": "1/1",
+     "secs": null,
+     "error": null
+    },
+    {
+     "where": "agent/plain",
+     "path": "/v8/agent",
+     "painted_leaves": 32,
+     "layout_chars": 356,
+     "note": null,
+     "details_open": "0/0",
+     "secs": 7,
+     "error": null
+    },
+    {
+     "where": "authoritative/plain",
+     "path": "/v8/authoritative",
+     "painted_leaves": 76,
+     "layout_chars": 858,
+     "note": null,
+     "details_open": "0/0",
+     "secs": 7,
+     "error": null
+    },
+    {
+     "where": "intelligence/plain",
+     "path": "/v8/intelligence",
+     "painted_leaves": 35,
+     "layout_chars": 351,
+     "note": null,
+     "details_open": "0/0",
+     "secs": 7,
+     "error": null
+    },
+    {
+     "where": "twin/plain",
+     "path": "/v8/twin",
+     "painted_leaves": 31,
+     "layout_chars": 326,
+     "note": null,
+     "details_open": "0/0",
+     "secs": 7,
+     "error": null
+    },
+    {
+     "where": "trash/plain",
+     "path": "/v8/trash",
+     "painted_leaves": 17,
+     "layout_chars": 134,
+     "note": null,
+     "details_open": "0/0",
+     "secs": 7,
+     "error": null
+    },
+    {
+     "where": "access/plain",
+     "path": "/v8/access",
+     "painted_leaves": 48,
+     "layout_chars": 708,
+     "note": null,
+     "details_open": "0/1",
+     "secs": 7,
+     "error": null
+    },
+    {
+     "where": "access/details_opened",
+     "path": "/v8/access",
+     "painted_leaves": 48,
+     "layout_chars": 780,
+     "note": null,
+     "details_open": "1/1",
+     "secs": null,
+     "error": null
+    },
+    {
+     "where": "trips/plain",
+     "path": "/v8/trips",
+     "painted_leaves": 47,
+     "layout_chars": 395,
+     "note": null,
+     "details_open": "0/0",
+     "secs": 7,
+     "error": null
+    },
+    {
+     "where": "me/plain",
+     "path": "/v8/me",
+     "painted_leaves": 39,
+     "layout_chars": 295,
+     "note": null,
+     "details_open": "0/1",
+     "secs": 7,
+     "error": null
+    },
+    {
+     "where": "me/details_opened",
+     "path": "/v8/me",
+     "painted_leaves": 46,
+     "layout_chars": 391,
+     "note": null,
+     "details_open": "1/1",
+     "secs": null,
+     "error": null
+    }
+   ],
+   "en": [
+    {
+     "where": "discover/plain",
+     "path": "/v8/discover",
+     "painted_leaves": 30,
+     "layout_chars": 910,
+     "note": null,
+     "details_open": "0/0",
+     "secs": 7,
+     "error": null
+    },
+    {
+     "where": "discover/checked",
+     "path": "/v8/discover",
+     "painted_leaves": 39,
+     "layout_chars": 1242,
+     "note": "clicked=1",
+     "details_open": "0/0",
+     "secs": null,
+     "error": null
+    },
+    {
+     "where": "discover/picked",
+     "path": "/v8/discover",
+     "painted_leaves": 39,
+     "layout_chars": 1242,
+     "note": "clicked=0",
+     "details_open": "0/0",
+     "secs": null,
+     "error": null
+    },
+    {
+     "where": "discover/receipt",
+     "path": "/v8/discover",
+     "painted_leaves": 39,
+     "layout_chars": 1242,
+     "note": "clicked=0",
+     "details_open": "0/0",
+     "secs": null,
+     "error": null
+    },
+    {
+     "where": "hub/plain",
+     "path": "/v8/hub",
+     "painted_leaves": 66,
+     "layout_chars": 1409,
+     "note": null,
+     "details_open": "0/1",
+     "secs": 7,
+     "error": null
+    },
+    {
+     "where": "hub/details_opened",
+     "path": "/v8/hub",
+     "painted_leaves": 67,
+     "layout_chars": 1550,
+     "note": null,
+     "details_open": "1/1",
+     "secs": null,
+     "error": null
+    },
+    {
+     "where": "hub/ai_sheet",
+     "path": "/v8/hub",
+     "painted_leaves": 76,
+     "layout_chars": 2051,
+     "note": "clicked=1",
+     "details_open": "1/1",
+     "secs": null,
+     "error": null
+    },
+    {
+     "where": "live/plain",
+     "path": "/v8/live",
+     "painted_leaves": 72,
+     "layout_chars": 1240,
+     "note": null,
+     "details_open": "0/2",
+     "secs": 7,
+     "error": null
+    },
+    {
+     "where": "live/details_opened",
+     "path": "/v8/live",
+     "painted_leaves": 72,
+     "layout_chars": 1312,
+     "note": null,
+     "details_open": "1/2",
+     "secs": null,
+     "error": null
+    },
+    {
+     "where": "map/plain",
+     "path": "/v8/map",
+     "painted_leaves": 41,
+     "layout_chars": 805,
+     "note": null,
+     "details_open": "0/0",
+     "secs": 7,
+     "error": null
+    },
+    {
+     "where": "studio/plain",
+     "path": "/v8/studio",
+     "painted_leaves": 27,
+     "layout_chars": 632,
+     "note": null,
+     "details_open": "0/0",
+     "secs": 7,
+     "error": null
+    },
+    {
+     "where": "stay/plain",
+     "path": "/v8/stay",
+     "painted_leaves": 17,
+     "layout_chars": 317,
+     "note": null,
+     "details_open": "0/0",
+     "secs": 7,
+     "error": null
+    },
+    {
+     "where": "discover/plain",
+     "path": "/v8/discover",
+     "painted_leaves": 30,
+     "layout_chars": 910,
+     "note": null,
+     "details_open": "0/0",
+     "secs": 7,
+     "error": null
+    },
+    {
+     "where": "discover/picked",
+     "path": "/v8/discover",
+     "painted_leaves": 30,
+     "layout_chars": 910,
+     "note": "clicked=0",
+     "details_open": "0/0",
+     "secs": null,
+     "error": null
+    },
+    {
+     "where": "discover/receipt",
+     "path": "/v8/discover",
+     "painted_leaves": 30,
+     "layout_chars": 910,
+     "note": "clicked=0",
+     "details_open": "0/0",
+     "secs": null,
+     "error": null
+    },
+    {
+     "where": "import/plain",
+     "path": "/v8/import",
+     "painted_leaves": 30,
+     "layout_chars": 897,
+     "note": null,
+     "details_open": "0/0",
+     "secs": 7,
+     "error": null
+    },
+    {
+     "where": "bookings/plain",
+     "path": "/v8/bookings",
+     "painted_leaves": 56,
+     "layout_chars": 1467,
+     "note": null,
+     "details_open": "0/1",
+     "secs": 7,
+     "error": null
+    },
+    {
+     "where": "bookings/details_opened",
+     "path": "/v8/bookings",
+     "painted_leaves": 57,
+     "layout_chars": 1604,
+     "note": null,
+     "details_open": "1/1",
+     "secs": null,
+     "error": null
+    },
+    {
+     "where": "agent/plain",
+     "path": "/v8/agent",
+     "painted_leaves": 31,
+     "layout_chars": 850,
+     "note": null,
+     "details_open": "0/0",
+     "secs": 7,
+     "error": null
+    },
+    {
+     "where": "authoritative/plain",
+     "path": "/v8/authoritative",
+     "painted_leaves": 76,
+     "layout_chars": 1807,
+     "note": null,
+     "details_open": "0/0",
+     "secs": 7,
+     "error": null
+    },
+    {
+     "where": "intelligence/plain",
+     "path": "/v8/intelligence",
+     "painted_leaves": 36,
+     "layout_chars": 905,
+     "note": null,
+     "details_open": "0/0",
+     "secs": 7,
+     "error": null
+    },
+    {
+     "where": "twin/plain",
+     "path": "/v8/twin",
+     "painted_leaves": 31,
+     "layout_chars": 899,
+     "note": null,
+     "details_open": "0/0",
+     "secs": 7,
+     "error": null
+    },
+    {
+     "where": "trash/plain",
+     "path": "/v8/trash",
+     "painted_leaves": 17,
+     "layout_chars": 257,
+     "note": null,
+     "details_open": "0/0",
+     "secs": 7,
+     "error": null
+    },
+    {
+     "where": "access/plain",
+     "path": "/v8/access",
+     "painted_leaves": 48,
+     "layout_chars": 2107,
+     "note": null,
+     "details_open": "0/1",
+     "secs": 7,
+     "error": null
+    },
+    {
+     "where": "access/details_opened",
+     "path": "/v8/access",
+     "painted_leaves": 48,
+     "layout_chars": 2293,
+     "note": null,
+     "details_open": "1/1",
+     "secs": null,
+     "error": null
+    },
+    {
+     "where": "trips/plain",
+     "path": "/v8/trips",
+     "painted_leaves": 47,
+     "layout_chars": 516,
+     "note": null,
+     "details_open": "0/0",
+     "secs": 7,
+     "error": null
+    },
+    {
+     "where": "me/plain",
+     "path": "/v8/me",
+     "painted_leaves": 38,
+     "layout_chars": 610,
+     "note": null,
+     "details_open": "0/1",
+     "secs": 7,
+     "error": null
+    },
+    {
+     "where": "me/details_opened",
+     "path": "/v8/me",
+     "painted_leaves": 46,
+     "layout_chars": 845,
+     "note": null,
+     "details_open": "1/1",
+     "secs": null,
+     "error": null
+    },
+    {
+     "where": "shared/<granted>/plain",
+     "path": "/v8/shared/<granted>",
+     "painted_leaves": 34,
+     "layout_chars": 694,
+     "note": null,
+     "details_open": "0/0",
+     "secs": 7,
+     "error": null
+    }
+   ]
+  }
+ },
+ "denominators": {
+  "keys_with_plural_marker_at_tip": 16,
+  "those_keys": [
+   "agent.aiRunLanded",
+   "agent.aiRunScope",
+   "agent.aiRunUnits",
+   "agent.protectedCount",
+   "discovery.results",
+   "exec.evidenceTrail",
+   "fmt.activities",
+   "fmt.protectedAnchors",
+   "inbox.protectedFacts",
+   "mapComp.legs",
+   "shell.travelers",
+   "studio.allProtected"
+  ],
+  "derivation": "git show 0dabe6422303:frontend/src/i18n/LocaleContext.tsx | grep -c '{plural:'",
+  "keys_changed_by_the_ORD-0433_landing": 12,
+  "landing_subject": "edcc2e2b Tue Sep 29 05:03:49 2026 +0800 ORD-0433: one English plural rule, applied where the dictionary counts a noun",
+  "plural_marker_keys_added_since_by_others": [
+   "discovery.batchCommitmentNote",
+   "discovery.batchLanded",
+   "discovery.batchRefusedSome",
+   "shared.dayCount"
+  ],
+  "n_interp_lines_without_the_marker": 19,
+  "those_keys_with_lines": [
+   "poiImport.charCount = frontend/src/i18n/LocaleContext.tsx:36",
+   "poiImport.selectedCount = frontend/src/i18n/LocaleContext.tsx:65",
+   "poiImport.addedCount = frontend/src/i18n/LocaleContext.tsx:74",
+   "poiImport.alreadyPresent = frontend/src/i18n/LocaleContext.tsx:75",
+   "shell.notifActive = frontend/src/i18n/LocaleContext.tsx:172",
+   "shell.locationUpdated = frontend/src/i18n/LocaleContext.tsx:195",
+   "studio.protected = frontend/src/i18n/LocaleContext.tsx:271",
+   "studio.feasibilityPartialSub = frontend/src/i18n/LocaleContext.tsx:276",
+   "discovery.pickedCount = frontend/src/i18n/LocaleContext.tsx:570",
+   "exec.min = frontend/src/i18n/LocaleContext.tsx:628",
+   "studio.gate.MOBILITY_DATA_UNAVAILABLE = frontend/src/i18n/LocaleContext.tsx:863",
+   "studio.gate.unknown = frontend/src/i18n/LocaleContext.tsx:864",
+   "studio.timeDelta = frontend/src/i18n/LocaleContext.tsx:868",
+   "fmt.minWalk = frontend/src/i18n/LocaleContext.tsx:907",
+   "fmt.minSlack = frontend/src/i18n/LocaleContext.tsx:908",
+   "mapComp.yourLocation = frontend/src/i18n/LocaleContext.tsx:914",
+   "recovery.failureCount = frontend/src/i18n/LocaleContext.tsx:947",
+   "twin.hardNeedsRemain = frontend/src/i18n/LocaleContext.tsx:968",
+   "v14.routeDelta = frontend/src/i18n/LocaleContext.tsx:1006"
+  ],
+  "parenthesis_plural_lines_at_tip": 5,
+  "paren_lines": [
+   {
+    "key": "studio.feasibilityPartialSub",
+    "line": "frontend/src/i18n/LocaleContext.tsx:276",
+    "en": "Arrival, departure, and protected commitments verified. Budget not verified: {n} item(s) lack a verified provider price, so no total is claimed.",
+    "zh": "到达、出发和受保护承诺已验证。预算未验证：还有 {n} 项缺少已验证的供应商价格，因此不给出总价结论。"
+   },
+   {
+    "key": "studio.gate.MOBILITY_DATA_UNAVAILABLE",
+    "line": "frontend/src/i18n/LocaleContext.tsx:863",
+    "en": "live route data is unavailable for {n} leg(s) of the new order",
+    "zh": "新顺序里有 {n} 段路程拿不到实时路线数据"
+   },
+   {
+    "key": "studio.gate.unknown",
+    "line": "frontend/src/i18n/LocaleContext.tsx:864",
+    "en": "{n} further refusal(s) this screen cannot name — the server's own words are in the technical detail",
+    "zh": "还有 {n} 条这个界面叫不出名字的拒绝，原文在技术详情里"
+   },
+   {
+    "key": "recovery.failureCount",
+    "line": "frontend/src/i18n/LocaleContext.tsx:947",
+    "en": "The server listed {n} refusal(s) against this plan; its own words are in the technical detail.",
+    "zh": "服务器针对这一版列出了 {n} 条拒绝，原文在技术详情里。"
+   },
+   {
+    "key": "twin.hardNeedsRemain",
+    "line": "frontend/src/i18n/LocaleContext.tsx:968",
+    "en": "{n} hard need(s) remain explicit and are never learned.",
+    "zh": "{n} 项硬性需求仍按明确声明保留，不会被习得。"
+   }
+  ]
+ },
+ "keys": [
+  {
+   "key": "shared.dayCount",
+   "en_line": "frontend/src/i18n/LocaleContext.tsx:1051",
+   "en_text": "{n} {plural:day}",
+   "zh_line": "frontend/src/i18n/LocaleContext.tsx:2044",
+   "zh_text": "共 {n} 天",
+   "sites": [
+    "frontend/src/features/shared/SharedJourneyPanel.tsx:274"
+   ],
+   "call_site_count": 1,
+   "en": {
+    "state": "PAINTED",
+    "hits": [
+     {
+      "where": "shared/<granted>/plain",
+      "path": "/v8/shared/<granted>",
+      "tag": "P",
+      "cls": "v8-muted",
+      "testid": "shared-day-count",
+      "text": "1 day",
+      "note": null,
+      "leaf_kind": "childless_element",
+      "tier": "whole_line_is_the_leaf"
+     },
+     {
+      "where": "hub/plain",
+      "path": "/v8/hub",
+      "tag": "P",
+      "cls": "v8-lede",
+      "testid": "today-when",
+      "text": "10 Oct, 09:00 — 10 Oct, 19:00 · 1 traveler · 1 days",
+      "note": null,
+      "leaf_kind": "childless_element",
+      "tier": "inside_a_longer_line",
+      "span": "1 days",
+      "also_matches_keys": [
+       "shell.travelers"
+      ]
+     },
+     {
+      "where": "hub/details_opened",
+      "path": "/v8/hub",
+      "tag": "P",
+      "cls": "v8-lede",
+      "testid": "today-when",
+      "text": "10 Oct, 09:00 — 10 Oct, 19:00 · 1 traveler · 1 days",
+      "note": null,
+      "leaf_kind": "childless_element",
+      "tier": "inside_a_longer_line",
+      "span": "1 days",
+      "also_matches_keys": [
+       "shell.travelers"
+      ]
+     },
+     {
+      "where": "hub/ai_sheet",
+      "path": "/v8/hub",
+      "tag": "P",
+      "cls": "v8-lede",
+      "testid": "today-when",
+      "text": "10 Oct, 09:00 — 10 Oct, 19:00 · 1 traveler · 1 days",
+      "note": "clicked=1",
+      "leaf_kind": "childless_element",
+      "tier": "inside_a_longer_line",
+      "span": "1 days",
+      "also_matches_keys": [
+       "shell.travelers"
+      ]
+     }
+    ],
+    "painted_count": 4,
+    "whole_leaf_count": 1,
+    "inside_leaf_count": 3,
+    "layout_routes": [
+     "hub/plain",
+     "hub/details_opened",
+     "hub/ai_sheet",
+     "shared/<granted>/plain"
+    ]
+   },
+   "zh": {
+    "state": "PAINTED",
+    "hits": [
+     {
+      "where": "shared/<granted>/plain",
+      "path": "/v8/shared/<granted>",
+      "tag": "P",
+      "cls": "v8-muted",
+      "testid": "shared-day-count",
+      "text": "共 1 天",
+      "note": null,
+      "leaf_kind": "childless_element",
+      "tier": "whole_line_is_the_leaf"
+     },
+     {
+      "where": "trips/plain",
+      "path": "/v8/trips",
+      "tag": "P",
+      "cls": "v8-lede",
+      "testid": "trip-progress-contract",
+      "text": "第 1 天 / 共 1 天。已完成 3/6 站。",
+      "note": null,
+      "leaf_kind": "childless_element",
+      "tier": "inside_a_longer_line",
+      "span": "共 1 天",
+      "also_matches_keys": []
+     }
+    ],
+    "painted_count": 2,
+    "whole_leaf_count": 1,
+    "inside_leaf_count": 1,
+    "layout_routes": [
+     "shared/<granted>/plain",
+     "trips/plain"
+    ]
+   }
+  },
+  {
+   "key": "shell.travelers",
+   "en_line": "frontend/src/i18n/LocaleContext.tsx:166",
+   "en_text": "{n} {plural:traveler}",
+   "zh_line": "frontend/src/i18n/LocaleContext.tsx:1201",
+   "zh_text": "{n} 位旅行者",
+   "sites": [
+    "frontend/src/app/V8Experience.tsx:1839",
+    "frontend/src/app/V8Experience.tsx:2882",
+    "frontend/src/app/V8Experience.tsx:4502"
+   ],
+   "call_site_count": 3,
+   "en": {
+    "state": "PAINTED",
+    "hits": [
+     {
+      "where": "hub/plain",
+      "path": "/v8/hub",
+      "tag": "P",
+      "cls": "v8-lede",
+      "testid": "today-when",
+      "text": "10 Oct, 09:00 — 10 Oct, 19:00 · 1 traveler · 1 days",
+      "note": null,
+      "leaf_kind": "childless_element",
+      "tier": "inside_a_longer_line",
+      "span": "1 traveler",
+      "also_matches_keys": [
+       "shared.dayCount"
+      ]
+     },
+     {
+      "where": "hub/details_opened",
+      "path": "/v8/hub",
+      "tag": "P",
+      "cls": "v8-lede",
+      "testid": "today-when",
+      "text": "10 Oct, 09:00 — 10 Oct, 19:00 · 1 traveler · 1 days",
+      "note": null,
+      "leaf_kind": "childless_element",
+      "tier": "inside_a_longer_line",
+      "span": "1 traveler",
+      "also_matches_keys": [
+       "shared.dayCount"
+      ]
+     },
+     {
+      "where": "hub/ai_sheet",
+      "path": "/v8/hub",
+      "tag": "P",
+      "cls": "v8-lede",
+      "testid": "today-when",
+      "text": "10 Oct, 09:00 — 10 Oct, 19:00 · 1 traveler · 1 days",
+      "note": "clicked=1",
+      "leaf_kind": "childless_element",
+      "tier": "inside_a_longer_line",
+      "span": "1 traveler",
+      "also_matches_keys": [
+       "shared.dayCount"
+      ]
+     },
+     {
+      "where": "me/plain",
+      "path": "/v8/me",
+      "tag": "P",
+      "cls": "",
+      "testid": null,
+      "text": "1 traveler · CN¥500.00",
+      "note": null,
+      "leaf_kind": "childless_element",
+      "tier": "inside_a_longer_line",
+      "span": "1 traveler",
+      "also_matches_keys": []
+     }
+    ],
+    "painted_count": 5,
+    "whole_leaf_count": 0,
+    "inside_leaf_count": 5,
+    "layout_routes": [
+     "hub/plain",
+     "hub/details_opened",
+     "hub/ai_sheet",
+     "me/plain",
+     "me/details_opened"
+    ]
+   },
+   "zh": {
+    "state": "PAINTED",
+    "hits": [
+     {
+      "where": "hub/plain",
+      "path": "/v8/hub",
+      "tag": "P",
+      "cls": "v8-lede",
+      "testid": "today-when",
+      "text": "10月10日 09:00 — 10月10日 19:00 · 1 位旅行者 · 1 天",
+      "note": null,
+      "leaf_kind": "childless_element",
+      "tier": "inside_a_longer_line",
+      "span": "1 位旅行者",
+      "also_matches_keys": []
+     },
+     {
+      "where": "hub/details_opened",
+      "path": "/v8/hub",
+      "tag": "P",
+      "cls": "v8-lede",
+      "testid": "today-when",
+      "text": "10月10日 09:00 — 10月10日 19:00 · 1 位旅行者 · 1 天",
+      "note": null,
+      "leaf_kind": "childless_element",
+      "tier": "inside_a_longer_line",
+      "span": "1 位旅行者",
+      "also_matches_keys": []
+     },
+     {
+      "where": "hub/ai_sheet",
+      "path": "/v8/hub",
+      "tag": "P",
+      "cls": "v8-lede",
+      "testid": "today-when",
+      "text": "10月10日 09:00 — 10月10日 19:00 · 1 位旅行者 · 1 天",
+      "note": "clicked=1",
+      "leaf_kind": "childless_element",
+      "tier": "inside_a_longer_line",
+      "span": "1 位旅行者",
+      "also_matches_keys": []
+     },
+     {
+      "where": "me/plain",
+      "path": "/v8/me",
+      "tag": "P",
+      "cls": "",
+      "testid": null,
+      "text": "1 位旅行者 · ¥500.00",
+      "note": null,
+      "leaf_kind": "childless_element",
+      "tier": "inside_a_longer_line",
+      "span": "1 位旅行者",
+      "also_matches_keys": []
+     }
+    ],
+    "painted_count": 5,
+    "whole_leaf_count": 0,
+    "inside_leaf_count": 5,
+    "layout_routes": [
+     "hub/plain",
+     "hub/details_opened",
+     "hub/ai_sheet",
+     "me/plain",
+     "me/details_opened"
+    ]
+   }
+  },
+  {
+   "key": "agent.protectedCount",
+   "en_line": "frontend/src/i18n/LocaleContext.tsx:449",
+   "en_text": "{n} {plural:protected commitment}",
+   "zh_line": "frontend/src/i18n/LocaleContext.tsx:1467",
+   "zh_text": "{n} 个受保护承诺",
+   "sites": [
+    "frontend/src/features/agent/AgentComposer.tsx:239"
+   ],
+   "call_site_count": 1,
+   "en": {
+    "state": "NOT_ON_ANY_ROUTE_THIS_WALK_COVERED",
+    "hits": [],
+    "painted_count": 0,
+    "whole_leaf_count": 0,
+    "inside_leaf_count": 0,
+    "layout_routes": []
+   },
+   "zh": {
+    "state": "NOT_ON_ANY_ROUTE_THIS_WALK_COVERED",
+    "hits": [],
+    "painted_count": 0,
+    "whole_leaf_count": 0,
+    "inside_leaf_count": 0,
+    "layout_routes": []
+   },
+   "reason": {
+    "surface": "agent/plain",
+    "guards": [
+     {
+      "line": "frontend/src/features/agent/AgentComposer.tsx:199",
+      "source_read_at_this_tip": "{messages.map((item, index) => ("
+     },
+     {
+      "line": "frontend/src/features/agent/AgentComposer.tsx:218",
+      "source_read_at_this_tip": "{item.response.what_if && ("
+     }
+    ],
+    "painted_instead": {
+     "en": [],
+     "zh": []
+    }
+   }
+  },
+  {
+   "key": "agent.aiRunScope",
+   "en_line": "frontend/src/i18n/LocaleContext.tsx:485",
+   "en_text": "Your trip right now: {days} {plural:day:days}, {activities} {plural:arrangement:activities}.",
+   "zh_line": "frontend/src/i18n/LocaleContext.tsx:1498",
+   "zh_text": "你现在生效的方案：{days} 天、{activities} 个安排。",
+   "sites": [
+    "frontend/src/features/planning/PlanWithAiSheet.tsx:792"
+   ],
+   "call_site_count": 1,
+   "en": {
+    "state": "NOT_ON_ANY_ROUTE_THIS_WALK_COVERED",
+    "hits": [],
+    "painted_count": 0,
+    "whole_leaf_count": 0,
+    "inside_leaf_count": 0,
+    "layout_routes": []
+   },
+   "zh": {
+    "state": "NOT_ON_ANY_ROUTE_THIS_WALK_COVERED",
+    "hits": [],
+    "painted_count": 0,
+    "whole_leaf_count": 0,
+    "inside_leaf_count": 0,
+    "layout_routes": []
+   },
+   "reason": {
+    "surface": "hub/ai_sheet",
+    "guards": [
+     {
+      "line": "frontend/src/features/planning/PlanWithAiSheet.tsx:789",
+      "source_read_at_this_tip": "{run.current && ("
+     }
+    ],
+    "painted_instead": {
+     "en": [
+      {
+       "where": "hub/ai_sheet",
+       "testid": "plan-ai-preflight",
+       "text": "This server has no AI credential configured. Something is missing on the server — not in what you wrote, not your budget, not your connection. Your tr"
+      }
+     ],
+     "zh": [
+      {
+       "where": "hub/ai_sheet",
+       "testid": "plan-ai-preflight",
+       "text": "这台服务没有配置 AI 凭据。这是服务器少了一样东西，与你写了什么、你的预算或你的网络都无关；行程不会被改动。"
+      }
+     ]
+    }
+   }
+  },
+  {
+   "key": "agent.aiRunUnits",
+   "en_line": "frontend/src/i18n/LocaleContext.tsx:487",
+   "en_text": "This run produced {landed} {plural:plan:landed}: {activities} {plural:arrangement:activities} over {days} {plural:day:days}.",
+   "zh_line": "frontend/src/i18n/LocaleContext.tsx:1500",
+   "zh_text": "这次产出 {landed} 个方案：{activities} 个安排，跨 {days} 天。",
+   "sites": [
+    "frontend/src/features/planning/PlanWithAiSheet.tsx:916"
+   ],
+   "call_site_count": 1,
+   "en": {
+    "state": "NOT_ON_ANY_ROUTE_THIS_WALK_COVERED",
+    "hits": [],
+    "painted_count": 0,
+    "whole_leaf_count": 0,
+    "inside_leaf_count": 0,
+    "layout_routes": []
+   },
+   "zh": {
+    "state": "NOT_ON_ANY_ROUTE_THIS_WALK_COVERED",
+    "hits": [],
+    "painted_count": 0,
+    "whole_leaf_count": 0,
+    "inside_leaf_count": 0,
+    "layout_routes": []
+   },
+   "reason": {
+    "surface": "hub/ai_sheet",
+    "guards": [
+     {
+      "line": "frontend/src/features/planning/PlanWithAiSheet.tsx:914",
+      "source_read_at_this_tip": "{result?.units && ("
+     }
+    ],
+    "painted_instead": {
+     "en": [
+      {
+       "where": "hub/ai_sheet",
+       "testid": "plan-ai-preflight",
+       "text": "This server has no AI credential configured. Something is missing on the server — not in what you wrote, not your budget, not your connection. Your tr"
+      }
+     ],
+     "zh": [
+      {
+       "where": "hub/ai_sheet",
+       "testid": "plan-ai-preflight",
+       "text": "这台服务没有配置 AI 凭据。这是服务器少了一样东西，与你写了什么、你的预算或你的网络都无关；行程不会被改动。"
+      }
+     ]
+    }
+   }
+  },
+  {
+   "key": "agent.aiRunLanded",
+   "en_line": "frontend/src/i18n/LocaleContext.tsx:492",
+   "en_text": "What was produced is still there: {n} {plural:plan} were added.",
+   "zh_line": "frontend/src/i18n/LocaleContext.tsx:1505",
+   "zh_text": "已经生成的部分还在：新增了 {n} 个方案。",
+   "sites": [
+    "frontend/src/features/planning/PlanWithAiSheet.tsx:374"
+   ],
+   "call_site_count": 1,
+   "en": {
+    "state": "NOT_ON_ANY_ROUTE_THIS_WALK_COVERED",
+    "hits": [],
+    "painted_count": 0,
+    "whole_leaf_count": 0,
+    "inside_leaf_count": 0,
+    "layout_routes": []
+   },
+   "zh": {
+    "state": "NOT_ON_ANY_ROUTE_THIS_WALK_COVERED",
+    "hits": [],
+    "painted_count": 0,
+    "whole_leaf_count": 0,
+    "inside_leaf_count": 0,
+    "layout_routes": []
+   },
+   "reason": {
+    "surface": "hub/ai_sheet",
+    "guards": [
+     {
+      "line": "frontend/src/features/planning/PlanWithAiSheet.tsx:374",
+      "source_read_at_this_tip": "? { key: \"agent.aiRunLanded\", params: { n: aftermath.landedNewPlanIds.length } }"
+     }
+    ],
+    "painted_instead": {
+     "en": [
+      {
+       "where": "hub/ai_sheet",
+       "testid": "plan-ai-preflight",
+       "text": "This server has no AI credential configured. Something is missing on the server — not in what you wrote, not your budget, not your connection. Your tr"
+      }
+     ],
+     "zh": [
+      {
+       "where": "hub/ai_sheet",
+       "testid": "plan-ai-preflight",
+       "text": "这台服务没有配置 AI 凭据。这是服务器少了一样东西，与你写了什么、你的预算或你的网络都无关；行程不会被改动。"
+      }
+     ]
+    }
+   }
+  },
+  {
+   "key": "discovery.results",
+   "en_line": "frontend/src/i18n/LocaleContext.tsx:529",
+   "en_text": "{n} {plural:result}",
+   "zh_line": "frontend/src/i18n/LocaleContext.tsx:1542",
+   "zh_text": "{n} 个结果",
+   "sites": [],
+   "call_site_count": 0,
+   "en": {
+    "state": "KEY_HAS_NO_CALL_SITE_OUTSIDE_THE_DICTIONARY",
+    "hits": [],
+    "painted_count": 0,
+    "whole_leaf_count": 0,
+    "inside_leaf_count": 0,
+    "layout_routes": []
+   },
+   "zh": {
+    "state": "KEY_HAS_NO_CALL_SITE_OUTSIDE_THE_DICTIONARY",
+    "hits": [],
+    "painted_count": 0,
+    "whole_leaf_count": 0,
+    "inside_leaf_count": 0,
+    "layout_routes": []
+   },
+   "reason": {
+    "why": "the key exists only as a dictionary line; the quoted-key grep at this tip returns these files and nothing else",
+    "grep_count_per_file": [
+     "frontend/src/i18n/LocaleContext.tsx:2"
+    ]
+   }
+  },
+  {
+   "key": "discovery.batchCommitmentNote",
+   "en_line": "frontend/src/i18n/LocaleContext.tsx:574",
+   "en_text": "{n} {plural:protected commitment} in this batch, not counted as a pick.",
+   "zh_line": "frontend/src/i18n/LocaleContext.tsx:1584",
+   "zh_text": "{n} 处受保护承诺随这一批一起提交，不计入勾选数。",
+   "sites": [
+    "frontend/src/features/discovery/RealCityDiscoveryPanel.tsx:475"
+   ],
+   "call_site_count": 1,
+   "en": {
+    "state": "NOT_ON_ANY_ROUTE_THIS_WALK_COVERED",
+    "hits": [],
+    "painted_count": 0,
+    "whole_leaf_count": 0,
+    "inside_leaf_count": 0,
+    "layout_routes": []
+   },
+   "zh": {
+    "state": "NOT_ON_ANY_ROUTE_THIS_WALK_COVERED",
+    "hits": [],
+    "painted_count": 0,
+    "whole_leaf_count": 0,
+    "inside_leaf_count": 0,
+    "layout_routes": []
+   },
+   "reason": {
+    "surface": "discover/picked",
+    "guards": [
+     {
+      "line": "frontend/src/features/discovery/RealCityDiscoveryPanel.tsx:469",
+      "source_read_at_this_tip": "{picked.length === 0 ? ("
+     }
+    ],
+    "painted_instead": {
+     "en": [
+      {
+       "where": "discover/picked",
+       "testid": "prep-verdict",
+       "text": "Server verdict · HYDRATABLE"
+      },
+      {
+       "where": "discover/picked",
+       "testid": "prep-verdict-body",
+       "text": "The server reports 4 categories missing (food, nightlife, lodging, mobility), so planning now would lack evidence. You can prepare it first."
+      }
+     ],
+     "zh": [
+      {
+       "where": "discover/picked",
+       "testid": "prep-verdict",
+       "text": "服务器判定 · HYDRATABLE"
+      },
+      {
+       "where": "discover/picked",
+       "testid": "prep-verdict-body",
+       "text": "服务器说还缺 4 类事实（food、nightlife、lodging、mobility），所以现在直接规划会缺依据。可以先准备。"
+      }
+     ]
+    }
+   }
+  },
+  {
+   "key": "discovery.batchLanded",
+   "en_line": "frontend/src/i18n/LocaleContext.tsx:576",
+   "en_text": "Read back from the server: {n} {plural:activity} on {day}.",
+   "zh_line": "frontend/src/i18n/LocaleContext.tsx:1586",
+   "zh_text": "服务端回读：{n} 条活动落在 {day}。",
+   "sites": [
+    "frontend/src/features/discovery/RealCityDiscoveryPanel.tsx:440"
+   ],
+   "call_site_count": 1,
+   "en": {
+    "state": "NOT_ON_ANY_ROUTE_THIS_WALK_COVERED",
+    "hits": [],
+    "painted_count": 0,
+    "whole_leaf_count": 0,
+    "inside_leaf_count": 0,
+    "layout_routes": []
+   },
+   "zh": {
+    "state": "NOT_ON_ANY_ROUTE_THIS_WALK_COVERED",
+    "hits": [],
+    "painted_count": 0,
+    "whole_leaf_count": 0,
+    "inside_leaf_count": 0,
+    "layout_routes": []
+   },
+   "reason": {
+    "surface": "discover/receipt",
+    "guards": [
+     {
+      "line": "frontend/src/features/discovery/RealCityDiscoveryPanel.tsx:437",
+      "source_read_at_this_tip": "{!batchReceipt"
+     }
+    ],
+    "painted_instead": {
+     "en": [
+      {
+       "where": "discover/receipt",
+       "testid": "prep-verdict",
+       "text": "Server verdict · HYDRATABLE"
+      },
+      {
+       "where": "discover/receipt",
+       "testid": "prep-verdict-body",
+       "text": "The server reports 4 categories missing (food, nightlife, lodging, mobility), so planning now would lack evidence. You can prepare it first."
+      }
+     ],
+     "zh": [
+      {
+       "where": "discover/receipt",
+       "testid": "prep-verdict",
+       "text": "服务器判定 · HYDRATABLE"
+      },
+      {
+       "where": "discover/receipt",
+       "testid": "prep-verdict-body",
+       "text": "服务器说还缺 4 类事实（food、nightlife、lodging、mobility），所以现在直接规划会缺依据。可以先准备。"
+      }
+     ]
+    }
+   }
+  },
+  {
+   "key": "discovery.batchRefusedSome",
+   "en_line": "frontend/src/i18n/LocaleContext.tsx:579",
+   "en_text": "Not written by the server: {n} of the picked {plural:place}.",
+   "zh_line": "frontend/src/i18n/LocaleContext.tsx:1589",
+   "zh_text": "勾选里有 {n} 处不在这份方案里，服务器没有写入。",
+   "sites": [
+    "frontend/src/features/discovery/RealCityDiscoveryPanel.tsx:534"
+   ],
+   "call_site_count": 1,
+   "en": {
+    "state": "NOT_ON_ANY_ROUTE_THIS_WALK_COVERED",
+    "hits": [],
+    "painted_count": 0,
+    "whole_leaf_count": 0,
+    "inside_leaf_count": 0,
+    "layout_routes": []
+   },
+   "zh": {
+    "state": "NOT_ON_ANY_ROUTE_THIS_WALK_COVERED",
+    "hits": [],
+    "painted_count": 0,
+    "whole_leaf_count": 0,
+    "inside_leaf_count": 0,
+    "layout_routes": []
+   },
+   "reason": {
+    "surface": "discover/receipt",
+    "guards": [
+     {
+      "line": "frontend/src/features/discovery/RealCityDiscoveryPanel.tsx:532",
+      "source_read_at_this_tip": "{batchReceipt.missing.length > 0 && ("
+     }
+    ],
+    "painted_instead": {
+     "en": [
+      {
+       "where": "discover/receipt",
+       "testid": "prep-verdict",
+       "text": "Server verdict · HYDRATABLE"
+      },
+      {
+       "where": "discover/receipt",
+       "testid": "prep-verdict-body",
+       "text": "The server reports 4 categories missing (food, nightlife, lodging, mobility), so planning now would lack evidence. You can prepare it first."
+      }
+     ],
+     "zh": [
+      {
+       "where": "discover/receipt",
+       "testid": "prep-verdict",
+       "text": "服务器判定 · HYDRATABLE"
+      },
+      {
+       "where": "discover/receipt",
+       "testid": "prep-verdict-body",
+       "text": "服务器说还缺 4 类事实（food、nightlife、lodging、mobility），所以现在直接规划会缺依据。可以先准备。"
+      }
+     ]
+    }
+   }
+  },
+  {
+   "key": "exec.evidenceTrail",
+   "en_line": "frontend/src/i18n/LocaleContext.tsx:602",
+   "en_text": "{n} {plural:source}",
+   "zh_line": "frontend/src/i18n/LocaleContext.tsx:1612",
+   "zh_text": "{n} 个来源",
+   "sites": [
+    "frontend/src/features/execution/V10LiveExecutionPanel.tsx:89",
+    "frontend/src/features/execution/V10LiveExecutionPanel.tsx:92"
+   ],
+   "call_site_count": 2,
+   "en": {
+    "state": "PAINTED",
+    "hits": [
+     {
+      "where": "live/plain",
+      "path": "/v8/live",
+      "tag": "SUMMARY",
+      "cls": "",
+      "testid": null,
+      "text": "0 sources",
+      "note": null,
+      "leaf_kind": "own_text_of_a_container",
+      "tier": "whole_line_is_the_leaf"
+     },
+     {
+      "where": "live/details_opened",
+      "path": "/v8/live",
+      "tag": "SUMMARY",
+      "cls": "",
+      "testid": null,
+      "text": "0 sources",
+      "note": null,
+      "leaf_kind": "own_text_of_a_container",
+      "tier": "whole_line_is_the_leaf"
+     }
+    ],
+    "painted_count": 2,
+    "whole_leaf_count": 2,
+    "inside_leaf_count": 0,
+    "layout_routes": [
+     "live/plain",
+     "live/details_opened"
+    ]
+   },
+   "zh": {
+    "state": "PAINTED",
+    "hits": [
+     {
+      "where": "live/plain",
+      "path": "/v8/live",
+      "tag": "SUMMARY",
+      "cls": "",
+      "testid": null,
+      "text": "0 个来源",
+      "note": null,
+      "leaf_kind": "own_text_of_a_container",
+      "tier": "whole_line_is_the_leaf"
+     },
+     {
+      "where": "live/details_opened",
+      "path": "/v8/live",
+      "tag": "SUMMARY",
+      "cls": "",
+      "testid": null,
+      "text": "0 个来源",
+      "note": null,
+      "leaf_kind": "own_text_of_a_container",
+      "tier": "whole_line_is_the_leaf"
+     }
+    ],
+    "painted_count": 2,
+    "whole_leaf_count": 2,
+    "inside_leaf_count": 0,
+    "layout_routes": [
+     "live/plain",
+     "live/details_opened"
+    ]
+   }
+  },
+  {
+   "key": "inbox.protectedFacts",
+   "en_line": "frontend/src/i18n/LocaleContext.tsx:719",
+   "en_text": "{n} {plural:protected fact}",
+   "zh_line": "frontend/src/i18n/LocaleContext.tsx:1727",
+   "zh_text": "{n} 个受保护事实",
+   "sites": [
+    "frontend/src/features/inbox/JourneyInboxWorkbench.tsx:762"
+   ],
+   "call_site_count": 1,
+   "en": {
+    "state": "PAINTED",
+    "hits": [
+     {
+      "where": "bookings/plain",
+      "path": "/v8/bookings",
+      "tag": "SMALL",
+      "cls": "",
+      "testid": null,
+      "text": "1 protected fact",
+      "note": null,
+      "leaf_kind": "childless_element",
+      "tier": "whole_line_is_the_leaf"
+     },
+     {
+      "where": "bookings/details_opened",
+      "path": "/v8/bookings",
+      "tag": "SMALL",
+      "cls": "",
+      "testid": null,
+      "text": "1 protected fact",
+      "note": null,
+      "leaf_kind": "childless_element",
+      "tier": "whole_line_is_the_leaf"
+     }
+    ],
+    "painted_count": 2,
+    "whole_leaf_count": 2,
+    "inside_leaf_count": 0,
+    "layout_routes": [
+     "bookings/plain",
+     "bookings/details_opened"
+    ]
+   },
+   "zh": {
+    "state": "PAINTED",
+    "hits": [
+     {
+      "where": "bookings/plain",
+      "path": "/v8/bookings",
+      "tag": "SMALL",
+      "cls": "",
+      "testid": null,
+      "text": "1 个受保护事实",
+      "note": null,
+      "leaf_kind": "childless_element",
+      "tier": "whole_line_is_the_leaf"
+     },
+     {
+      "where": "bookings/details_opened",
+      "path": "/v8/bookings",
+      "tag": "SMALL",
+      "cls": "",
+      "testid": null,
+      "text": "1 个受保护事实",
+      "note": null,
+      "leaf_kind": "childless_element",
+      "tier": "whole_line_is_the_leaf"
+     }
+    ],
+    "painted_count": 2,
+    "whole_leaf_count": 2,
+    "inside_leaf_count": 0,
+    "layout_routes": [
+     "bookings/plain",
+     "bookings/details_opened"
+    ]
+   }
+  },
+  {
+   "key": "studio.allProtected",
+   "en_line": "frontend/src/i18n/LocaleContext.tsx:855",
+   "en_text": "All {n} {plural:activity} on this plan are protected anchors, so no reorder here can be accepted. Nothing has been changed.",
+   "zh_line": "frontend/src/i18n/LocaleContext.tsx:1853",
+   "zh_text": "这一版 {n} 个活动全部是受保护锚点，所以在这里无论怎么重排都不会被接受。什么也没有被改动。",
+   "sites": [
+    "frontend/src/features/studio/V12TripStudioPanel.tsx:140"
+   ],
+   "call_site_count": 1,
+   "en": {
+    "state": "NOT_ON_ANY_ROUTE_THIS_WALK_COVERED",
+    "hits": [],
+    "painted_count": 0,
+    "whole_leaf_count": 0,
+    "inside_leaf_count": 0,
+    "layout_routes": []
+   },
+   "zh": {
+    "state": "NOT_ON_ANY_ROUTE_THIS_WALK_COVERED",
+    "hits": [],
+    "painted_count": 0,
+    "whole_leaf_count": 0,
+    "inside_leaf_count": 0,
+    "layout_routes": []
+   },
+   "reason": {
+    "surface": "studio/plain",
+    "guards": [
+     {
+      "line": "frontend/src/features/studio/V12TripStudioPanel.tsx:60",
+      "source_read_at_this_tip": "const nothingToMove = plan.activities.length > 0 && protectedCount === plan.activities.length;"
+     }
+    ],
+    "painted_instead": {
+     "en": [
+      {
+       "where": "studio/plain",
+       "testid": "studio-stay-total",
+       "text": "Not chosen yet"
+      }
+     ],
+     "zh": [
+      {
+       "where": "studio/plain",
+       "testid": "studio-stay-total",
+       "text": "尚未选择"
+      }
+     ]
+    }
+   }
+  },
+  {
+   "key": "fmt.activities",
+   "en_line": "frontend/src/i18n/LocaleContext.tsx:909",
+   "en_text": "{n} {plural:activity}",
+   "zh_line": "frontend/src/i18n/LocaleContext.tsx:1907",
+   "zh_text": "{n} 个活动",
+   "sites": [
+    "frontend/src/features/studio/V12TripStudioPanel.tsx:119"
+   ],
+   "call_site_count": 1,
+   "en": {
+    "state": "PAINTED",
+    "hits": [
+     {
+      "where": "authoritative/plain",
+      "path": "/v8/authoritative",
+      "tag": "SPAN",
+      "cls": "",
+      "testid": null,
+      "text": "6 activities",
+      "note": null,
+      "leaf_kind": "childless_element",
+      "tier": "whole_line_is_the_leaf"
+     }
+    ],
+    "painted_count": 1,
+    "whole_leaf_count": 1,
+    "inside_leaf_count": 0,
+    "layout_routes": [
+     "authoritative/plain"
+    ]
+   },
+   "zh": {
+    "state": "PAINTED",
+    "hits": [
+     {
+      "where": "authoritative/plain",
+      "path": "/v8/authoritative",
+      "tag": "SPAN",
+      "cls": "",
+      "testid": null,
+      "text": "6 个活动",
+      "note": null,
+      "leaf_kind": "childless_element",
+      "tier": "whole_line_is_the_leaf"
+     }
+    ],
+    "painted_count": 1,
+    "whole_leaf_count": 1,
+    "inside_leaf_count": 0,
+    "layout_routes": [
+     "authoritative/plain"
+    ]
+   }
+  },
+  {
+   "key": "fmt.protectedAnchors",
+   "en_line": "frontend/src/i18n/LocaleContext.tsx:910",
+   "en_text": "{n} {plural:protected anchor}",
+   "zh_line": "frontend/src/i18n/LocaleContext.tsx:1908",
+   "zh_text": "{n} 个受保护锚点",
+   "sites": [
+    "frontend/src/features/studio/V12TripStudioPanel.tsx:120"
+   ],
+   "call_site_count": 1,
+   "en": {
+    "state": "PAINTED",
+    "hits": [
+     {
+      "where": "authoritative/plain",
+      "path": "/v8/authoritative",
+      "tag": "SPAN",
+      "cls": "",
+      "testid": null,
+      "text": "1 protected anchor",
+      "note": null,
+      "leaf_kind": "childless_element",
+      "tier": "whole_line_is_the_leaf"
+     }
+    ],
+    "painted_count": 1,
+    "whole_leaf_count": 1,
+    "inside_leaf_count": 0,
+    "layout_routes": [
+     "authoritative/plain"
+    ]
+   },
+   "zh": {
+    "state": "PAINTED",
+    "hits": [
+     {
+      "where": "authoritative/plain",
+      "path": "/v8/authoritative",
+      "tag": "SPAN",
+      "cls": "",
+      "testid": null,
+      "text": "1 个受保护锚点",
+      "note": null,
+      "leaf_kind": "childless_element",
+      "tier": "whole_line_is_the_leaf"
+     }
+    ],
+    "painted_count": 1,
+    "whole_leaf_count": 1,
+    "inside_leaf_count": 0,
+    "layout_routes": [
+     "authoritative/plain"
+    ]
+   }
+  },
+  {
+   "key": "mapComp.legs",
+   "en_line": "frontend/src/i18n/LocaleContext.tsx:917",
+   "en_text": "{n} {plural:leg}",
+   "zh_line": "frontend/src/i18n/LocaleContext.tsx:1915",
+   "zh_text": "{n} 段路程",
+   "sites": [
+    "frontend/src/components/v8/MapPanel.tsx:651"
+   ],
+   "call_site_count": 1,
+   "en": {
+    "state": "PAINTED",
+    "hits": [
+     {
+      "where": "hub/plain",
+      "path": "/v8/hub",
+      "tag": "B",
+      "cls": "",
+      "testid": null,
+      "text": "0 legs",
+      "note": null,
+      "leaf_kind": "childless_element",
+      "tier": "whole_line_is_the_leaf"
+     },
+     {
+      "where": "hub/details_opened",
+      "path": "/v8/hub",
+      "tag": "B",
+      "cls": "",
+      "testid": null,
+      "text": "0 legs",
+      "note": null,
+      "leaf_kind": "childless_element",
+      "tier": "whole_line_is_the_leaf"
+     },
+     {
+      "where": "hub/ai_sheet",
+      "path": "/v8/hub",
+      "tag": "B",
+      "cls": "",
+      "testid": null,
+      "text": "0 legs",
+      "note": "clicked=1",
+      "leaf_kind": "childless_element",
+      "tier": "whole_line_is_the_leaf"
+     },
+     {
+      "where": "live/plain",
+      "path": "/v8/live",
+      "tag": "B",
+      "cls": "",
+      "testid": null,
+      "text": "0 legs",
+      "note": null,
+      "leaf_kind": "childless_element",
+      "tier": "whole_line_is_the_leaf"
+     }
+    ],
+    "painted_count": 7,
+    "whole_leaf_count": 7,
+    "inside_leaf_count": 0,
+    "layout_routes": [
+     "hub/plain",
+     "hub/details_opened",
+     "hub/ai_sheet",
+     "live/plain",
+     "live/details_opened",
+     "map/plain"
+    ]
+   },
+   "zh": {
+    "state": "PAINTED",
+    "hits": [
+     {
+      "where": "shared/<granted>/plain",
+      "path": "/v8/shared/<granted>",
+      "tag": "B",
+      "cls": "",
+      "testid": null,
+      "text": "0 段路程",
+      "note": null,
+      "leaf_kind": "childless_element",
+      "tier": "whole_line_is_the_leaf"
+     },
+     {
+      "where": "hub/plain",
+      "path": "/v8/hub",
+      "tag": "B",
+      "cls": "",
+      "testid": null,
+      "text": "0 段路程",
+      "note": null,
+      "leaf_kind": "childless_element",
+      "tier": "whole_line_is_the_leaf"
+     },
+     {
+      "where": "hub/details_opened",
+      "path": "/v8/hub",
+      "tag": "B",
+      "cls": "",
+      "testid": null,
+      "text": "0 段路程",
+      "note": null,
+      "leaf_kind": "childless_element",
+      "tier": "whole_line_is_the_leaf"
+     },
+     {
+      "where": "hub/ai_sheet",
+      "path": "/v8/hub",
+      "tag": "B",
+      "cls": "",
+      "testid": null,
+      "text": "0 段路程",
+      "note": "clicked=1",
+      "leaf_kind": "childless_element",
+      "tier": "whole_line_is_the_leaf"
+     }
+    ],
+    "painted_count": 7,
+    "whole_leaf_count": 7,
+    "inside_leaf_count": 0,
+    "layout_routes": [
+     "shared/<granted>/plain",
+     "hub/plain",
+     "hub/details_opened",
+     "hub/ai_sheet",
+     "live/plain",
+     "live/details_opened"
+    ]
+   }
+  }
+ ],
+ "ord0467_alignment": {
+  "v13_codes_emitted_under_backend_app": [
+   "V13_ACTIVITY_OUTSIDE_DEPARTURE_WINDOW",
+   "V13_AUTHORITATIVE_BOUNDED_MULTIDAY",
+   "V13_C4_ANCHOR_NOT_IN_INPUT",
+   "V13_C4_ANCHOR_OUTSIDE_JOURNEY",
+   "V13_CHECK_OUT_DEPARTURE_BUFFER",
+   "V13_COMMITMENT_ANCHOR_DAY_CONFLICT",
+   "V13_COMMITMENT_ANCHOR_TOO_EARLY",
+   "V13_COMMITMENT_ANCHOR_TRAVEL_BUFFER",
+   "V13_COMMITMENT_OUTSIDE_OPENING_HOURS",
+   "V13_DAY_TRIP_CANNOT_SELECT_STAY",
+   "V13_DISCOVERY_COMPOSE_EMPTY",
+   "V13_DISCOVERY_NO_FEASIBLE_PLACE_SET",
+   "V13_DISCOVERY_NO_FEASIBLE_PLAN",
+   "V13_FULL_GROUNDING_MISSING_MOBILITY_PAIR",
+   "V13_INVALID_ANCHOR_WINDOW",
+   "V13_INVALID_C4_ANCHOR_TIME",
+   "V13_JOURNEY_DAYS_OUT_OF_BOUNDS",
+   "V13_STAY_CANDIDATE_UNAVAILABLE",
+   "V13_STAY_CHECK_IN_OUTSIDE_JOURNEY"
+  ],
+  "v13_code_count": 19,
+  "the_frontend_keeps_a_second_code_list": {
+   "file_line": "frontend/src/features/studio/V12TripStudioPanel.tsx:22",
+   "codes": [
+    "PROTECTED_ACTIVITY_REORDER",
+    "FROZEN_ROUTE_EVIDENCE_MISSING",
+    "FROZEN_EVIDENCE_INTEGRITY_MISMATCH",
+    "STALE_FROZEN_EVIDENCE",
+    "INVALID_FROZEN_EVIDENCE_EXPIRY",
+    "MOBILITY_DATA_UNAVAILABLE"
+   ],
+   "lookup_line": "frontend/src/features/studio/V12TripStudioPanel.tsx:100",
+   "unknown_code_behaviour": "counted into studio.gate.unknown instead of painting the raw key (frontend/src/features/studio/V12TripStudioPanel.tsx:102)"
+  },
+  "dictionary_gate_lines": [
+   "frontend/src/i18n/LocaleContext.tsx:frontend/src/i18n/LocaleContext.tsx",
+   "frontend/src/i18n/LocaleContext.tsx:frontend/src/i18n/LocaleContext.tsx",
+   "frontend/src/i18n/LocaleContext.tsx:frontend/src/i18n/LocaleContext.tsx",
+   "frontend/src/i18n/LocaleContext.tsx:frontend/src/i18n/LocaleContext.tsx",
+   "frontend/src/i18n/LocaleContext.tsx:frontend/src/i18n/LocaleContext.tsx",
+   "frontend/src/i18n/LocaleContext.tsx:frontend/src/i18n/LocaleContext.tsx",
+   "frontend/src/i18n/LocaleContext.tsx:frontend/src/i18n/LocaleContext.tsx",
+   "frontend/src/i18n/LocaleContext.tsx:frontend/src/i18n/LocaleContext.tsx",
+   "frontend/src/i18n/LocaleContext.tsx:frontend/src/i18n/LocaleContext.tsx",
+   "frontend/src/i18n/LocaleContext.tsx:frontend/src/i18n/LocaleContext.tsx",
+   "frontend/src/i18n/LocaleContext.tsx:frontend/src/i18n/LocaleContext.tsx",
+   "frontend/src/i18n/LocaleContext.tsx:frontend/src/i18n/LocaleContext.tsx",
+   "frontend/src/i18n/LocaleContext.tsx:frontend/src/i18n/LocaleContext.tsx",
+   "frontend/src/i18n/LocaleContext.tsx:frontend/src/i18n/LocaleContext.tsx"
+  ],
+  "refusal_counting_lines": [
+   "frontend/src/i18n/LocaleContext.tsx:864",
+   "frontend/src/i18n/LocaleContext.tsx:947"
+  ],
+  "refusal_counting_call_site": "frontend/src/features/recovery/RecoveryRequiredPanel.tsx:228",
+  "position": "The two lines that count the server's refusals each carry the noun in their own sentence, so the word is written twice and pluralised nowhere. When ORD-0467 puts the family into the contract, the noun should come from that enum through one shared place - this lane's `frontend/src/lib/displayVocabulary.ts` for the code labels and `{plural:…}` for the count - and the frontend's own six-code list should become a projection of the contract list, not a second source. Nothing was edited here to pre-empt that order."
+ },
+ "not_measured": {
+  "viewports_other_than_390x844": "NOT_MEASURED",
+  "ai_run_receipt": "NOT_MEASURED - this stack runs with no credential (see stack.backend.note)",
+  "server_refused_batch": "NOT_MEASURED - discovery.batchRefusedSome needs a receipt where the server wrote some and refused some; the discover panel on this journey painted no candidate rows, so no batch could be submitted (see walk.routes_seen)"
+ }
+}
