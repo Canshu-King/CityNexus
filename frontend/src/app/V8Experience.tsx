@@ -2321,6 +2321,9 @@ function Hub({
   const t = useT();
   const { locale, switchLocale } = useLocale();
   const zh = locale.startsWith("zh");
+  const activePlanHasKnownMode = Boolean(
+    data.active_plan?.legs.some((leg) => Boolean(leg.mode)),
+  );
   /* ORD-0232: "fewer stops than I asked for" needs its reason on the same screen that shows the
      stops.  An empty list is also what a still-running or failed read gives: no rows, no claims. */
   const dropped = useCandidateRejections(data.journey.id, data.journey.city_code).data ?? [];
@@ -3104,6 +3107,11 @@ function Hub({
             {zh
               ? "下面是已采用的真实行程；住宿方案仍未选择。"
               : "This is the selected real itinerary; no stay option has been chosen."}
+          </p>
+          <p data-testid="hub-active-plan-mode">
+            {activePlanHasKnownMode
+              ? t("hub.routeModeReady")
+              : t("hub.routeModePending")}
           </p>
           <p data-testid="hub-active-plan-stops">
             {activities
