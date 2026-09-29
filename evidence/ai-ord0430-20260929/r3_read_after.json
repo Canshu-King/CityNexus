@@ -1,5 +1,5 @@
 {
- "base": "http://127.0.0.1:4830",
+ "base": "http://127.0.0.1:4834",
  "arm": "after",
  "criterion": "covering reaches zero AND relocated centre hit returns the pill AND panel opens on every arm",
  "screens": [
@@ -10,7 +10,7 @@
      "path": "/v8/twin",
      "pill_present": true,
      "served_bundle": [
-      "/assets/index-aBwW9RyI.js"
+      "/assets/index-CJVRlvVQ.js"
      ],
      "viewport": {
       "w": 390,
@@ -30,9 +30,9 @@
        "scrollTop": 0,
        "painted": {
         "left": 336,
-        "top": 714,
+        "top": 534,
         "right": 380,
-        "bottom": 758,
+        "bottom": 578,
         "w": 44,
         "h": 44
        },
@@ -40,16 +40,16 @@
         "yield_to_surface": "false",
         "rest_overlap": "true",
         "idle_compact": "true",
-        "yield_slot": "336,714,44",
+        "yield_slot": "336,534,44",
         "classes": "cn-copilot-dock collapsed idle-compact yield-at-rest"
        },
        "ink_covered": 0,
-       "box_covered": 1,
+       "box_covered": 0,
        "controls_covered": 0,
        "max_ink_overlap_px": 0,
-       "max_box_overlap_px": 60,
+       "max_box_overlap_px": 0,
        "first_ink_covered": null,
-       "first_box_covered": "P 无障碍硬性需求不会从行为里推断出来。",
+       "first_box_covered": null,
        "hit_at_centre": "SPAN.cn-copilot-edge-ma",
        "hit_is_pill": true,
        "visible_witnesses": {
@@ -65,9 +65,9 @@
        "scrollTop": 164,
        "painted": {
         "left": 336,
-        "top": 610,
+        "top": 634,
         "right": 380,
-        "bottom": 654,
+        "bottom": 678,
         "w": 44,
         "h": 44
        },
@@ -75,7 +75,7 @@
         "yield_to_surface": "false",
         "rest_overlap": "true",
         "idle_compact": "true",
-        "yield_slot": "336,610,44",
+        "yield_slot": "336,634,44",
         "classes": "cn-copilot-dock collapsed idle-compact yield-at-rest"
        },
        "ink_covered": 0,
@@ -144,7 +144,7 @@
      "path": "/v8/twin",
      "pill_present": true,
      "served_bundle": [
-      "/assets/index-aBwW9RyI.js"
+      "/assets/index-CJVRlvVQ.js"
      ],
      "viewport": {
       "w": 390,
@@ -164,9 +164,9 @@
        "scrollTop": 0,
        "painted": {
         "left": 336,
-        "top": 714,
+        "top": 654,
         "right": 380,
-        "bottom": 758,
+        "bottom": 698,
         "w": 44,
         "h": 44
        },
@@ -174,16 +174,16 @@
         "yield_to_surface": "false",
         "rest_overlap": "true",
         "idle_compact": "true",
-        "yield_slot": "336,714,44",
+        "yield_slot": "336,654,44",
         "classes": "cn-copilot-dock collapsed idle-compact yield-at-rest"
        },
        "ink_covered": 0,
-       "box_covered": 2,
+       "box_covered": 0,
        "controls_covered": 0,
        "max_ink_overlap_px": 0,
-       "max_box_overlap_px": 312,
+       "max_box_overlap_px": 0,
        "first_ink_covered": null,
-       "first_box_covered": "H2 No learned signals",
+       "first_box_covered": null,
        "hit_at_centre": "SPAN.cn-copilot-edge-ma",
        "hit_is_pill": true,
        "visible_witnesses": {
@@ -199,9 +199,9 @@
        "scrollTop": 236,
        "painted": {
         "left": 336,
-        "top": 714,
+        "top": 694,
         "right": 380,
-        "bottom": 758,
+        "bottom": 738,
         "w": 44,
         "h": 44
        },
@@ -209,16 +209,16 @@
         "yield_to_surface": "false",
         "rest_overlap": "true",
         "idle_compact": "true",
-        "yield_slot": "336,714,44",
+        "yield_slot": "336,694,44",
         "classes": "cn-copilot-dock collapsed idle-compact yield-at-rest"
        },
        "ink_covered": 0,
-       "box_covered": 1,
+       "box_covered": 0,
        "controls_covered": 0,
        "max_ink_overlap_px": 0,
-       "max_box_overlap_px": 156,
+       "max_box_overlap_px": 0,
        "first_ink_covered": null,
-       "first_box_covered": "P Your preferences can improve a route or hotel rank",
+       "first_box_covered": null,
        "hit_at_centre": "SPAN.cn-copilot-edge-ma",
        "hit_is_pill": true,
        "visible_witnesses": {
@@ -283,7 +283,7 @@
      "path": "/v8/discover",
      "pill_present": true,
      "served_bundle": [
-      "/assets/index-aBwW9RyI.js"
+      "/assets/index-CJVRlvVQ.js"
      ],
      "viewport": {
       "w": 390,
@@ -303,9 +303,9 @@
        "scrollTop": 0,
        "painted": {
         "left": 336,
-        "top": 610,
+        "top": 594,
         "right": 380,
-        "bottom": 654,
+        "bottom": 638,
         "w": 44,
         "h": 44
        },
@@ -313,16 +313,16 @@
         "yield_to_surface": "false",
         "rest_overlap": "true",
         "idle_compact": "true",
-        "yield_slot": "336,610,44",
+        "yield_slot": "336,594,44",
         "classes": "cn-copilot-dock collapsed idle-compact yield-at-rest"
        },
        "ink_covered": 0,
-       "box_covered": 1,
+       "box_covered": 0,
        "controls_covered": 0,
        "max_ink_overlap_px": 0,
-       "max_box_overlap_px": 34,
+       "max_box_overlap_px": 0,
        "first_ink_covered": null,
-       "first_box_covered": "H2 塑造城市停留",
+       "first_box_covered": null,
        "hit_at_centre": "SPAN.cn-copilot-edge-ma",
        "hit_is_pill": true,
        "visible_witnesses": {
@@ -338,9 +338,9 @@
        "scrollTop": 256,
        "painted": {
         "left": 336,
-        "top": 558,
+        "top": 554,
         "right": 380,
-        "bottom": 602,
+        "bottom": 598,
         "w": 44,
         "h": 44
        },
@@ -348,7 +348,7 @@
         "yield_to_surface": "false",
         "rest_overlap": "true",
         "idle_compact": "true",
-        "yield_slot": "336,558,44",
+        "yield_slot": "336,554,44",
         "classes": "cn-copilot-dock collapsed idle-compact yield-at-rest"
        },
        "ink_covered": 0,
@@ -417,7 +417,7 @@
      "path": "/v8/discover",
      "pill_present": true,
      "served_bundle": [
-      "/assets/index-aBwW9RyI.js"
+      "/assets/index-CJVRlvVQ.js"
      ],
      "viewport": {
       "w": 390,
@@ -437,9 +437,9 @@
        "scrollTop": 0,
        "painted": {
         "left": 336,
-        "top": 662,
+        "top": 654,
         "right": 380,
-        "bottom": 706,
+        "bottom": 698,
         "w": 44,
         "h": 44
        },
@@ -447,7 +447,7 @@
         "yield_to_surface": "false",
         "rest_overlap": "true",
         "idle_compact": "true",
-        "yield_slot": "336,662,44",
+        "yield_slot": "336,654,44",
         "classes": "cn-copilot-dock collapsed idle-compact yield-at-rest"
        },
        "ink_covered": 0,
@@ -472,9 +472,9 @@
        "scrollTop": 296,
        "painted": {
         "left": 336,
-        "top": 610,
+        "top": 594,
         "right": 380,
-        "bottom": 654,
+        "bottom": 638,
         "w": 44,
         "h": 44
        },
@@ -482,16 +482,16 @@
         "yield_to_surface": "false",
         "rest_overlap": "true",
         "idle_compact": "true",
-        "yield_slot": "336,610,44",
+        "yield_slot": "336,594,44",
         "classes": "cn-copilot-dock collapsed idle-compact yield-at-rest"
        },
        "ink_covered": 0,
-       "box_covered": 1,
+       "box_covered": 0,
        "controls_covered": 0,
        "max_ink_overlap_px": 0,
-       "max_box_overlap_px": 136,
+       "max_box_overlap_px": 0,
        "first_ink_covered": null,
-       "first_box_covered": "LABEL Traveler intent",
+       "first_box_covered": null,
        "hit_at_centre": "SPAN.cn-copilot-edge-ma",
        "hit_is_pill": true,
        "visible_witnesses": {
@@ -556,7 +556,7 @@
      "path": "/v8/intelligence",
      "pill_present": true,
      "served_bundle": [
-      "/assets/index-aBwW9RyI.js"
+      "/assets/index-CJVRlvVQ.js"
      ],
      "viewport": {
       "w": 390,
@@ -690,7 +690,7 @@
      "path": "/v8/intelligence",
      "pill_present": true,
      "served_bundle": [
-      "/assets/index-aBwW9RyI.js"
+      "/assets/index-CJVRlvVQ.js"
      ],
      "viewport": {
       "w": 390,
