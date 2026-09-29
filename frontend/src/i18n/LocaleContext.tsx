@@ -255,6 +255,7 @@ const en: Dict = {
   "live.selectPlan": "Select a plan to calculate your route",
   "live.eta": "ETA · {mode}",
   "live.routeDuration": "Est. {duration} min · {walking} min walk",
+  "live.routeDurationOnly": "Est. {duration} min",
   "live.slack": "Est. {minutes} min slack",
   "studio.walkingMinutes": "Est. {minutes} min",
   "live.navigate": "NAVIGATE →",
@@ -266,6 +267,7 @@ const en: Dict = {
   "live.routeEvidence": "ROUTE EVIDENCE",
   "live.compare": "Compare",
   "live.providerFacts": "Provider facts · unknown costs never become zero",
+  "live.frozenRouteEvidence": "Selected-plan frozen route evidence · {provider} · {provenance}",
   "live.durationPending": "duration pending",
 
   // ── Map ──
@@ -1170,6 +1172,7 @@ const zhCN: Dict = {
   "live.selectPlan": "选择方案以计算路线",
   "live.eta": "预计到达 · {mode}",
   "live.routeDuration": "约{duration}分钟 · 步行 {walking} 分钟",
+  "live.routeDurationOnly": "约{duration}分钟",
   "live.slack": "余量约{minutes}分钟",
   "studio.walkingMinutes": "约{minutes}分钟",
   "live.navigate": "开始导航 →",
@@ -1181,6 +1184,7 @@ const zhCN: Dict = {
   "live.routeEvidence": "路线证据",
   "live.compare": "对比",
   "live.providerFacts": "供应商事实 · 未知费用不会被视为零",
+  "live.frozenRouteEvidence": "选中方案冻结路线证据 · {provider} · {provenance}",
   "live.durationPending": "时长待定",
 
   // ── Map ──

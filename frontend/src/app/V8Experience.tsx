@@ -3725,33 +3725,57 @@ function LiveSecondary({
               <span>{t("live.routeEvidence")}</span>
               <button onClick={onSheet}>{t("live.compare")}</button>
             </div>
-            {comparison.slice(0, 2).map((fact) => (
-              <div
-                className="v8-route-row"
-                key={`${fact.from_key}-${fact.to_key}-${fact.mode}`}
-              >
-                {/* ORD-0222 1/②: `fact.mode` is a provider enum and the duration words were
-                    hardcoded English, so a Chinese traveller read "TRANSIT 12 min · 5 min walk"
-                    on the same row. */}
-                <b>{modeLabel(fact.mode, zh)}</b>
-                <span>
-                  {t("live.routeDuration", {
-                    duration: fact.duration_min,
-                    walking: fact.walking_min,
-                  })}
-                </span>
-                <strong>
-                  {fact.cost_amount_minor == null
-                    ? "—"
-                    : money(
-                        fact.cost_amount_minor,
-                        fact.currency ?? "CNY",
-                        locale,
-                      )}
-                </strong>
-              </div>
-            ))}
-            <small>{t("live.providerFacts")}</small>
+            {comparison.length
+              ? comparison.slice(0, 2).map((fact) => (
+                  <div
+                    className="v8-route-row"
+                    key={`${fact.from_key}-${fact.to_key}-${fact.mode}`}
+                  >
+                    {/* ORD-0222 1/②: `fact.mode` is a provider enum and the duration words were
+                        hardcoded English, so a Chinese traveller read "TRANSIT 12 min · 5 min walk"
+                        on the same row. */}
+                    <b>{modeLabel(fact.mode, zh)}</b>
+                    <span>
+                      {t("live.routeDuration", {
+                        duration: fact.duration_min,
+                        walking: fact.walking_min,
+                      })}
+                    </span>
+                    <strong>
+                      {fact.cost_amount_minor == null
+                        ? t("mobility.costUnknown")
+                        : money(
+                            fact.cost_amount_minor,
+                            fact.currency ?? "CNY",
+                            locale,
+                          )}
+                    </strong>
+                  </div>
+                ))
+              : nextLeg && (
+                  <div
+                    className="v8-route-row"
+                    data-testid="live-frozen-route-evidence"
+                  >
+                    <b>{modeLabel(nextLeg.mode, zh)}</b>
+                    <span>
+                      {t("live.routeDurationOnly", {
+                        duration: nextLeg.duration_min,
+                      })}
+                    </span>
+                    <strong>{t("mobility.costUnknown")}</strong>
+                  </div>
+                )}
+            <small>
+              {comparison.length
+                ? t("live.providerFacts")
+                : nextLeg
+                  ? t("live.frozenRouteEvidence", {
+                      provider: nextLeg.provider_key ?? "unknown",
+                      provenance: nextLeg.provenance ?? "unknown",
+                    })
+                  : t("live.providerFacts")}
+            </small>
           </details>
         </div>
       </div>
