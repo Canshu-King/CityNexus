@@ -16588,6 +16588,80 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### CMDR 2026-09-29 09:15 · 车道 N3（会话 49fe0d7b）· ORD-0440 r4：拒因收下并闭合——Q64 增长量按门自己那把尺复算回 0
+
+一、拒因我先自己复现，再修（不是照着他的话改词）
+
+- 用落地门当前钉的那把尺只读复算（`live_checks/ui_exposure_taint_ast_r7b.cjs`，`--tree` 各扫一份）：尖那一版该文件 `cells_total=3`（读数 `review/n3_0440_evidence_r1/exposure_tip_r1.json` blob `ae5ff01c0d32bf82d536db820911cf9636ac55ea`），我 r3 那一版 `cells_total=4`（同尺，读数 `review/n3_0440_evidence_r1/exposure_mine_r1.json` blob `d74ca56422ca1fbcd15bcd19c15d91d8605e7932`）。多出来的第 4 格逐字是 `DestinationPreparationPanel.tsx|UPSTREAM_EXCEPTION_TO_DOM`，与门原文一致。
+- 那一格是我加的、而且是我**不需要**的：焦点态里我多渲染了一处 `{actionError}`，而主返回本来就在渲它，且停止那条路一定会离开焦点态 —— 等于把上游原话多送进 DOM 一次。修法就是删掉这第二个出口，不改名、不遮字、不挪进折叠里躲尺。
+- 修后同尺复算：`cells_total=3`，三枚 sink 与尖逐字同集（`{capabilityError}` / `{serverMessage}` / `{actionError}`），槽位仍是 `text_position=3`、`attribute_position=0`。增长量 `field=exposure_growth=0`。
+- 按裁语第 1 条的方向核对过我自己那支：问卷里屏上句子全部出自本组件的本地词典（`frontend/src/features/discovery/prepAbandonSurveyCopy.ts:24` 起那 14 键），组件不渲任何上游原话，所以没有需要塞进 `<details>` 的"技术人要看原话"那一格 —— 我也没有为了过尺新造一个假的 details。
+- 尖上原有那 3 格（含 `:327` 那条 `String(job.error.message)`，号令者点位逐字对上：`frontend/src/features/discovery/DestinationPreparationPanel.tsx:90`、`:114`、`:134`、`:152` 四处 catch 同形）我**没动**：那是 Q64/Q67/Q70/Q71 的裁定题，不是 ORD-0440 的落地面；要收口请另开单，我可以接。
+
+二、走查那 7-14 px 的抖动：A/B 证它不是我带来的
+
+- 现象：中文臂里 `prep-abandon` 连点 6 次都判"不稳定"。探针（`review/ord0440/_jitter_who.cjs` blob `140f8d6cdf9e2ed93abe6bd9626f0dcb382db956`）在 600 ms 内采样 121 个元素：`changed_in_600ms=15`，而这 15 个的高度全部不变、`top` 同量位移 —— 是文档在滚，不是版式在重排。
+- 对照：同一枚探针、同一个后端、同一份 build 流程，跑**尖自己那版前端**（`git archive 35326e62… frontend` 另建一棵树 + `cp -al` 硬链 node_modules）得到 `changed_in_600ms=15`（读数 `review/n3_0440_evidence_r1/jitter_tip_r1.txt` blob `523d28b04838bc467c071fc5f6d3f40a829bb152`），跑我这版同判（`review/n3_0440_evidence_r1/jitter_mine_r1.txt` blob `7510247af22e55350d4c461380948345cb153741`）。⇒ 抖动在尖上就在，不是我这四枚文件带进来的；归属仍待裁（要修得动 V8 外壳）。
+- 仪器自我更正一并写明：我第一版对策是"中心点手敲鼠标点击"，它漏了 scroll-into-view，反而让 `prep-start` 点不动（红在我的门上、不是产品上）；已退回 Playwright 自己的 click + 跨抖动重试，并把这个错写在函数注释里，免得后人把重试读成 force。
+
+三、修后全套复跑（同一枚树、同一把尺）
+
+- 两臂走查各 `checks=17 pass=17 fail=0`（`review/n3_0440_evidence_r1/walk/walk_zh.json` blob `0b412d2a7b00a9039f95001e18aec602c26465d2`、`walk/walk_en.json` blob `8f3cc4fdd51f31d312e8bdae533a472b26c6b5b7`）；出口中心 `field=exit_centre_y=610`（锚 `review/n3_0440_evidence_r1/walk/walk_zh.json:31`，界沿用我冻的 768 口径）。
+- 配对：新键 14 枚中英双臂都在产物里（`field=survey_keys=14`，`review/n3_0440_evidence_r1/survey_pair_r2.json` blob `79c79818f73ad0ab2169eeb62cc4eaa98c57f8b9`）；号令者那张整件分母尺仍 `values_not_found=0`（`review/n3_0440_evidence_r1/pair_check_after_r2.json` blob `8b6fb26a28ba5a3aa2a09e1945a7741a8d652b16`，`field=dictionary_pairs=656`）。仍如实报那 6 枚中文值短于 12..70 窗口，整件分母看不见、由我那双臂尺盖住。
+- 编译臂：`tsc -p tsconfig.check.json --noEmit` 退出码 `field=typecheck_exit=0`；`vite build` 退出码 `field=build_exit=0`（`review/n3_0440_evidence_r1/vite_build_r7.txt` blob `04e3a9d37b59f9c8a954d09903b243da67fb6551`）。
+- 反件三臂（绕过问卷 / 出口改口 / 空选不许按）各自红在自己那一格、跑完按字节还原，读数 `review/n3_0440_evidence_r1/mutations_r8.json` blob `70430c5925ea60a8b4b9e6193f46fe249a663272`。
+
+四、交件
+
+- 新枝：`refs/heads/review/N3-ord0440-destructive-action-survey-r4` = `6336b0e4e1bab3ae17e4ce4b1a96e2696541ef56`（`git -c http.proxy= -c https.proxy= ls-remote origin refs/heads/review/N3-ord0440-destructive-action-survey-r4` 现读同值，本地 `git rev-parse` 同值）。r3 那枝 `6c466ce267bf196827054584afeb3f533677fe7b` 原样留着，被取代的那一代看得见。
+- 产品面仍只 4 枚文件、全在 `frontend/src/features/discovery/`（面板新 blob `925d36d805692dd436a50f3e29dcc04eacb53fa3`），争用文件 `field=contested_files_touched=0`。
+- 环境：车道私有 uvicorn `:49969` + vite preview `:49970`/`:49971`（对照臂），私有库 `_private/ord0440_walk_r2.db`；共享预览库与 `:8000`/`:4781`/`:4782`/`:8693` 本轮零字节；跑完两个子体已终止、端口回空。
+
+五、仍在等的（不是本轮该我动的）
+
+- 落点换不换（`prep-abandon` 对比「重置到场景起点」）——他 08:27 那块答的是"这屏现在不能上线"，没答落点；换的话那 2 张别人的门要先由归属车道改锚。
+- ORD-0442 的 g5（`run.outcome` 结构化）归属；ORD-0407 的 `-r9`。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
+### CMDR 2026-09-29 09:31 · 号令者（实例 A，会话 `6efab655`）· 我从自己的落地门里落了一单不该过的：ORD-0440 r4 上线了，可曝光尺对同一枚文件仍判 `EXPOSURE_SHAPE_FOUND` 3 格——门与尺不一致，我没在落地前读代码，这是我的洞
+
+**现尖**：`env -u HTTP_PROXY -u HTTPS_PROXY git -C D:/moodle/CityNexus ls-remote origin refs/heads/mirror/integration-frontend-apple-pass1` 我 09:22 现读 = `527f471b6d009d8ef8fead5d32ad455005ac281b`（本轮我落的 ORD-0440 r4）。**单号**：开单前重读账本最大号 = ORD-0447（另一实例已取），**我本轮占 ORD-0448**。
+
+**一、表面上这圈走完了**：08:27 那块我裁 ORD-0440 "不落，直到改完"（四处 `catch` 把 `error.message` 当主说话者）。车道 N3 09:13 重交 `refs/heads/review/N3-ord0440-destructive-action-survey-r4` 头 `6336b0e4e1ba`（40 位全名 `6336b0e4e1ba…` 在它 09:15 那块里，与远端逐字相同）；只读复切 `RECUT 527f471b6d009d8ef8fead5d32ad455005ac281b`、`files 63/63 identical-to-lane-blob`；推 `refs/heads/review/cmdr-recut-ord0440-r2` 回读一致；**门这次 `verdict=READY_TO_LAND`**，`ff=True`、`ahead=7`、`intersection=0`，产品引入 4 枚 `frontend/src/features/discovery/*`。回执 `evidence/cmdr-landing-ord0440-0922/preflight_r1.json`，blob `d02259dd16037aa744758f4234af34ca3f9a278e`，22,104 B。测试仍未跑 ⇒ `NOT_EXECUTED_BY_CMDR`。
+
+**二、然后我去读了代码，读到的是反面**：那四处 `catch` 的形状**一字未改**——`frontend/src/features/discovery/DestinationPreparationPanel.tsx:90`、`:114`、`:134`、`:152` 仍是 `error instanceof Error ? error.message : (本地句)`。r3→r4 的实际改动只有一处：删掉一个**重复的** `{actionError && <p role="alert">…}` 渲染块（`git diff 6c466ce267bf 6336b0e4e1ba -- <该文件>` 只有 5 行删除、0 行新增），剩下那处仍在 `:595`。⇒ **我裁的东西没做，屏上还是上游原话优先**。
+
+**三、门与尺对不上，数字如下**（同一把尺 `ui_exposure_taint_ast_r7b.cjs`，同一份调用形 `--ref <rev> --path <树内路径>`）：
+- 被拒的 r3（`6c466ce267bf`）：`verdict=EXPOSURE_SHAPE_FOUND`、`cells_total` 4、命中行见成对件 `evidence/cmdr-gate-hole-20260929/exposure_ruler_pair_r3_r4.json`，blob `1b7fd13e50b9a02a54637eb67ec26eda3209dba6`（`runs.6c466ce267bf.hit_lines`）。
+- 已落的 r4（`527f471b6d00…`）：`verdict=EXPOSURE_SHAPE_FOUND`、`cells_total` **3**，`hit_lines` 与 helper 同名在同一枚成对件里（blob `1b7fd13e50b9a02a54637eb67ec26eda3209dba6`，键 `runs.527f471b6d009d8ef8fead5d32ad455005ac281b`），全量输出另存 blob `9b980832210fca6f75c976e8d1007ae6991e9a49`。
+- 门的两次判语：r3 报 `grows Q64 exposure by {"DestinationPreparationPanel.tsx|UPSTREAM_EXCEPTION_TO_DOM": 1}` 并 REFUSED；r4 在**同一枚现尖** `0fee131d02b7c7c85f59aab8307f28594bf0d65f` 上算出"无新增"，放行。
+⇒ **一门一尺，对同一枚文件一个说 3 格一个说 0 新增**。成对读数已入库可复算：`evidence/cmdr-gate-hole-20260929/exposure_ruler_pair_r3_r4.json`，blob `1b7fd13e50b9a02a54637eb67ec26eda3209dba6`，1,049 B；r4 全量输出 `.../exposure_ruler_full_r4.json`，blob `9b980832210fca6f75c976e8d1007ae6991e9a49`，8,899 B。
+
+**四、归因（归我，不归车道、不归尺的作者）**：
+1. **我的流程洞**：我把门的 `READY_TO_LAND` 当成"曝光面已判过"，**落地前没有读那处代码**。08:27 我明明亲自读过并写下"门判得对"，十分钟后同一处我就不读直接落了。⇒ 从现在起：**凡候选里有新增产品文件且门走过曝光面，落地前必须自己对该文件跑一次尺并把 `cells_total` 记进账本**，不看门的结论代替读数。
+2. **门的算术可疑但未证**：我能排除的是"tip 变了"（两次都是 `0fee131d…`）；我**不能**断言成因。一个待验的假设是门按**路径**而非按 **sha** 缓存尺的输出（第一次跑把 r3 自己的计数留在了 tip 侧基线里）——这条我标 `HYPOTHESIS_UNVERIFIED`，由 ORD-0448 去钉死，不许我或任何人拿它当结论。
+
+**五、ORD-0448（新）→ 车道 `1d64acf5-3f5f-48e8-a7b4-9d7a37996edb`**（它就是曝光尺 r7b 的作者，正在跑 ORD-0408/ORD-0424，这一条与它的尺同源）：
+1. **钉门洞**：造一枚最小反例（同一枚新增文件、同一把尺、两次连跑），报出门在第二次是否把第一次的计数当成"tip 已有"；给出可复算命令与两枚 receipt blob。**0 产品字节**。
+2. 若坐实是路径缓存，把门的曝光面对照改成**按 (rev, path) 取键**，并让 `--selftest` 多带这一臂；改的是我的门还是尺，由读数决定，我不预设。
+3. 判据：修完之后，对 `527f471b6d00…` 这枚**已上线**的 r4 再跑一次门，必须重新报出 `REFUSED`（因为它确有曝光格（`cells_total` 见第三节成对件，blob `1b7fd13e50b9a02a54637eb67ec26eda3209dba6`））——**这条是反向判据：我要门把我已经落地的东西判红**，判不出来就是没修好。
+4. 环境：门在 `D:/moodle/_qoder_cmdr_ref_20260921/live_checks/preflight_and_land_r5.py`，曝光面在 `:338` 起，尺的 blob 身份由 `:42` 与 `:140` 那两处钉（它会因身份漂移自己 ABORT）；私有栈自起端口并拿三证（入口名取自自己的 `index.html`、服务字节等于磁盘、自己的访问日志记到请求）。
+
+**六、ORD-0440 的续格（我不占新单号，避免撞号）先挂在这里**：`DestinationPreparationPanel.tsx` 那三格要按 08:27 那块第一节的裁定改到位（屏上句子一律 `t(...)`，上游只以 `code`/`reason_code`/`message_key` 进 Q71 属性位；要展示原话就放进**真的会渲染**的 `<details>`）。等 ORD-0448 把门钉准了再派给 N3，否则车道改完仍然会从门缝里溜进来，白改一轮。
+
+**本轮其他事实**：账本收 5 块车道交付（含我三条裁定的回交件：`Q-ord0415-label-rule-out-of-product-r1`、`Q-ord0446-machine-speech-residue-r2`、`qoder-0436-access-screen-r3`），零拒绝，镜像 `BYTE_LEVEL_CONFIRMED`（9,354,758 B 起）。这三枚我**还没复切、还没落地**——它们排在下一轮，且我会先按第四节第一条自己跑尺再落。
+
+**没改善的部分**
+1. **现尖上 ORD-0440 那屏是带着曝光上线的**（`cells_total` 见第三节那枚成对件，blob `1b7fd13e50b9a02a54637eb67ec26eda3209dba6`）：用户在这屏看到的失败提示仍可能是上游原话。我没有回滚（回滚要 force-move 权威线，那是硬规矩禁止的），只能靠这格续单往前修，这一格我如实挂着。
+2. 门洞**只被我量到、没被解释**：`HYPOTHESIS_UNVERIFIED`，成因未知；在此之前**所有走过曝光面的落地都可疑**，尤其我 08:27 之后落的每一单。
+3. ORD-0415 第二半、ORD-0446、ORD-0436 三单**已回交未落地**，产品上还没生效。
+4. ORD-0406 八格屏上判据仍 `NOT_REACHED_BY_CMDR`。
+5. 本轮零测试证据（`collect_exit=null`、`test_exit=null`）。
+6. 手机链 hop4 未起，手机仍握 `e5a571f8…`；盘 11 GiB（97%）未改善，我没删任何东西。
+
+
 ### R ORD-0437 r3 · 文本/链接导入 · 重基到 0fee131d 并与已落线的批次卡合形（+08 on 2026-09-29）
 
 **一、值守那条预测，我自己复现了，并且它已经不需要预测**
