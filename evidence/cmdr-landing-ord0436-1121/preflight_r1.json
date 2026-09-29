@@ -1,0 +1,295 @@
+{
+ "schema": "CNX_CMDR_LANDING_PREFLIGHT_V1",
+ "lane": "commander 494abfd7",
+ "at_local": "2026-09-29T11:21:27+0800",
+ "mode": "LAND",
+ "authoritative_line": "mirror/integration-frontend-apple-pass1",
+ "tip_re_read_from_github_before": "fa4352cb2e965688b489fa1262dc97db3f3de8b8",
+ "candidate_ref": "refs/heads/review/cmdr-recut-ord0436-r1",
+ "candidate_tip": "1a472f0d0bd616735b77184db983d492109bdca3",
+ "genealogy": {
+  "ff_possible_rc": 0,
+  "ff_possible": true,
+  "merge_base": "fa4352cb2e965688b489fa1262dc97db3f3de8b8",
+  "line_only_commits": 0,
+  "candidate_only_commits": 10
+ },
+ "file_sets": {
+  "line_side_since_base": [],
+  "candidate_side_since_base": [
+   "frontend/src/app/v8PanelRegistry.tsx",
+   "frontend/src/features/access/AccessPanel.tsx",
+   "frontend/src/features/access/access.css",
+   "frontend/src/features/access/accessCopy.ts",
+   "frontend/src/features/access/accessDoors.ts",
+   "frontend/src/features/access/accessVocabulary.ts",
+   "frontend/src/i18n/LocaleContext.tsx",
+   "frontend/src/routes/v8Routes.ts",
+   "live_checks/ord0436_contract_domain.mjs",
+   "live_checks/ord0436_domain_seam_control_r1.py",
+   "live_checks/ord0436_two_arms_r1.mjs",
+   "live_checks/ord0436_two_arms_r1.py",
+   "review/ord0436-access/CONTRACT_DOMAIN_R1.json",
+   "review/ord0436-access/COPY_TIERS_BASE_0fee131d_r3.txt",
+   "review/ord0436-access/COPY_TIERS_BASE_35326e62_r2.txt",
+   "review/ord0436-access/COPY_TIERS_BASE_4f5dda12_r4.txt",
+   "review/ord0436-access/COPY_TIERS_BASE_8d038b21_r1.txt",
+   "review/ord0436-access/COPY_TIERS_HEAD_r2.txt",
+   "review/ord0436-access/COPY_TIERS_HEAD_r4.txt",
+   "review/ord0436-access/COPY_TIERS_HEAD_r5.txt",
+   "review/ord0436-access/COPY_TIERS_HEAD_r6.txt",
+   "review/ord0436-access/TWO_ARMS_R1.json",
+   "review/ord0436-access/access_en_r1.png",
+   "review/ord0436-access/access_zh_CN_r1.png"
+  ],
+  "intersection": [],
+  "product_introduced_by_candidate": [
+   "frontend/src/app/v8PanelRegistry.tsx",
+   "frontend/src/features/access/AccessPanel.tsx",
+   "frontend/src/features/access/access.css",
+   "frontend/src/features/access/accessCopy.ts",
+   "frontend/src/features/access/accessDoors.ts",
+   "frontend/src/features/access/accessVocabulary.ts",
+   "frontend/src/i18n/LocaleContext.tsx",
+   "frontend/src/routes/v8Routes.ts"
+  ]
+ },
+ "merge_tree": {
+  "exit": 0,
+  "first_line": "3d9bae96b3965609e9558d39db1412187dc4b14c",
+  "conflict_reported": false,
+  "stderr_head": ""
+ },
+ "gate_run": {
+  "requested": [],
+  "collect_exit": null,
+  "collected": null,
+  "test_exit": null,
+  "summary": null,
+  "export": "D:/moodle/_qoder_cmdr_ref_20260921/snap_preflight_112044",
+  "blob_equality": [
+   {
+    "path": "frontend/src/app/v8PanelRegistry.tsx",
+    "candidate_blob": "6e977fb5bd9299469a32650d864eed8c0c4b1707",
+    "export_blob": "6e977fb5bd9299469a32650d864eed8c0c4b1707",
+    "equal": true
+   },
+   {
+    "path": "frontend/src/features/access/AccessPanel.tsx",
+    "candidate_blob": "5b8d1efd96d7f285511801559280ab5b5be68dbd",
+    "export_blob": "5b8d1efd96d7f285511801559280ab5b5be68dbd",
+    "equal": true
+   },
+   {
+    "path": "frontend/src/features/access/access.css",
+    "candidate_blob": "ae5562f28fc9cee9dee64219cfb3793431da4335",
+    "export_blob": "ae5562f28fc9cee9dee64219cfb3793431da4335",
+    "equal": true
+   },
+   {
+    "path": "frontend/src/features/access/accessCopy.ts",
+    "candidate_blob": "465b551f0168f23f960aef027b00ffdeac458a63",
+    "export_blob": "465b551f0168f23f960aef027b00ffdeac458a63",
+    "equal": true
+   },
+   {
+    "path": "frontend/src/features/access/accessDoors.ts",
+    "candidate_blob": "5c3f26a94723617bc7b3d7118241d281443902cf",
+    "export_blob": "5c3f26a94723617bc7b3d7118241d281443902cf",
+    "equal": true
+   },
+   {
+    "path": "frontend/src/features/access/accessVocabulary.ts",
+    "candidate_blob": "b462d8890ffee9d0b0fba6b793f91e0dac8aacab",
+    "export_blob": "b462d8890ffee9d0b0fba6b793f91e0dac8aacab",
+    "equal": true
+   },
+   {
+    "path": "frontend/src/i18n/LocaleContext.tsx",
+    "candidate_blob": "0477cde9beafdf5c145ae91fbbc2f1b26520e50c",
+    "export_blob": "0477cde9beafdf5c145ae91fbbc2f1b26520e50c",
+    "equal": true
+   },
+   {
+    "path": "frontend/src/routes/v8Routes.ts",
+    "candidate_blob": "ffb53b4044444d2c46918aa258854d7a81a163af",
+    "export_blob": "ffb53b4044444d2c46918aa258854d7a81a163af",
+    "equal": true
+   },
+   {
+    "path": "live_checks/ord0436_contract_domain.mjs",
+    "candidate_blob": "c99c9deb07761722b0c09be25828df7c6c64a1ca",
+    "export_blob": "c99c9deb07761722b0c09be25828df7c6c64a1ca",
+    "equal": true
+   },
+   {
+    "path": "live_checks/ord0436_domain_seam_control_r1.py",
+    "candidate_blob": "0fac68fbf8da8236a3273639b6773eb0718343e0",
+    "export_blob": "0fac68fbf8da8236a3273639b6773eb0718343e0",
+    "equal": true
+   },
+   {
+    "path": "live_checks/ord0436_two_arms_r1.mjs",
+    "candidate_blob": "11b8fe82b3a3b4a80d02b95ff5e057d42899c3e7",
+    "export_blob": "11b8fe82b3a3b4a80d02b95ff5e057d42899c3e7",
+    "equal": true
+   },
+   {
+    "path": "live_checks/ord0436_two_arms_r1.py",
+    "candidate_blob": "405c9b185329687e1b9e7c783a7be44b5fc19145",
+    "export_blob": "405c9b185329687e1b9e7c783a7be44b5fc19145",
+    "equal": true
+   },
+   {
+    "path": "review/ord0436-access/CONTRACT_DOMAIN_R1.json",
+    "candidate_blob": "b486c811798aa073a7478759568ccedfb6f90f44",
+    "export_blob": "b486c811798aa073a7478759568ccedfb6f90f44",
+    "equal": true
+   },
+   {
+    "path": "review/ord0436-access/COPY_TIERS_BASE_0fee131d_r3.txt",
+    "candidate_blob": "27f19801922ab896a7dc45b4da0a8ea3f4a71c39",
+    "export_blob": "27f19801922ab896a7dc45b4da0a8ea3f4a71c39",
+    "equal": true
+   },
+   {
+    "path": "review/ord0436-access/COPY_TIERS_BASE_35326e62_r2.txt",
+    "candidate_blob": "30a9b1be7d9f4d5e4ad71138ac915c9609e80f91",
+    "export_blob": "30a9b1be7d9f4d5e4ad71138ac915c9609e80f91",
+    "equal": true
+   },
+   {
+    "path": "review/ord0436-access/COPY_TIERS_BASE_4f5dda12_r4.txt",
+    "candidate_blob": "539a52690c1e48683ae762cb511afb47b90e8c27",
+    "export_blob": "539a52690c1e48683ae762cb511afb47b90e8c27",
+    "equal": true
+   },
+   {
+    "path": "review/ord0436-access/COPY_TIERS_BASE_8d038b21_r1.txt",
+    "candidate_blob": "0279b0ec2cccf7922446895f547d1c53b6ac0e3d",
+    "export_blob": "0279b0ec2cccf7922446895f547d1c53b6ac0e3d",
+    "equal": true
+   },
+   {
+    "path": "review/ord0436-access/COPY_TIERS_HEAD_r2.txt",
+    "candidate_blob": "5ff46dce97c0a8ed3da803711bf9c28fbf376f1c",
+    "export_blob": "5ff46dce97c0a8ed3da803711bf9c28fbf376f1c",
+    "equal": true
+   },
+   {
+    "path": "review/ord0436-access/COPY_TIERS_HEAD_r4.txt",
+    "candidate_blob": "c0105aa0b9263bbcf92443f137631585feb5cafb",
+    "export_blob": "c0105aa0b9263bbcf92443f137631585feb5cafb",
+    "equal": true
+   },
+   {
+    "path": "review/ord0436-access/COPY_TIERS_HEAD_r5.txt",
+    "candidate_blob": "345b8c4a6be0e343ae569712e4d7bae9eea61d32",
+    "export_blob": "345b8c4a6be0e343ae569712e4d7bae9eea61d32",
+    "equal": true
+   },
+   {
+    "path": "review/ord0436-access/COPY_TIERS_HEAD_r6.txt",
+    "candidate_blob": "f1f876e3be2d957f4e5a467bead15720c611fa7a",
+    "export_blob": "f1f876e3be2d957f4e5a467bead15720c611fa7a",
+    "equal": true
+   },
+   {
+    "path": "review/ord0436-access/TWO_ARMS_R1.json",
+    "candidate_blob": "d5b0751c165b65c08a73ac30dcc6a951f86f2727",
+    "export_blob": "d5b0751c165b65c08a73ac30dcc6a951f86f2727",
+    "equal": true
+   },
+   {
+    "path": "review/ord0436-access/access_en_r1.png",
+    "candidate_blob": "82e282a2847a89e60954d104e6b9efee27621cfc",
+    "export_blob": "82e282a2847a89e60954d104e6b9efee27621cfc",
+    "equal": true
+   },
+   {
+    "path": "review/ord0436-access/access_zh_CN_r1.png",
+    "candidate_blob": "0ee7c3fda9831844a44cec9702dff7aa071c086c",
+    "export_blob": "0ee7c3fda9831844a44cec9702dff7aa071c086c",
+    "equal": true
+   }
+  ],
+  "whole_suite": {
+   "collect_exit": 0,
+   "collected": 1457,
+   "interrupted": false,
+   "error_lines": [
+    "tests/test_qoder_ord0332_error_receipt.py::test_R7_the_envelope_keeps_every_field_it_already_had",
+    "tests/test_qoder_ord0332_error_receipt.py::test_R8_the_seed_is_read_off_the_real_request_not_just_the_dataclass",
+    "tests/test_solver_runtime_policy.py::test_unexpected_solver_programming_error_is_not_silently_hidden"
+   ],
+   "tail": [
+    "    _PortalFactoryType = Callable[[], AbstractContextManager[anyio.abc.BlockingPortal]]",
+    "-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html",
+    "1457 tests collected in 8.49s"
+   ],
+   "cmd": "D:/moodle/CityNexus/.venv/Scripts/python.exe -m pytest --collect-only -q tests  (cwd=<export>/backend, PYTHONPATH=<export>)"
+  },
+  "deletions": {
+   "deleted_by_candidate": [],
+   "still_present_in_export": []
+  },
+  "interpreter": "Python 3.12.14 (main, Aug 25 2026, 14:01:42) [MSC v.1944 64 bit (AMD64)]",
+  "exposure": {
+   "ruler_blob": "d3f66ce9fecd0790981a4fcdeb5e36b1c0fd10f2",
+   "ruler_blob_computed": null,
+   "ruler_file": "ui_exposure_taint_ast_r7b.cjs",
+   "candidate_files_in_view": 8,
+   "tip_cells": 12,
+   "cand_cells": 12,
+   "growth_by_file_and_rule": {},
+   "unpaired_added": [],
+   "added_line_exact": [],
+   "shifted_only": false,
+   "removed_count": 0,
+   "removed": [],
+   "disclosed_slip": "a same-file, same-rule relocation with equal counts reads as a shift; the AST ruler has no cell identity"
+  },
+  "frontend_build": {
+   "builder_rc": 0,
+   "vite_build_rc": 0,
+   "dist_exists": true,
+   "index_exists": true,
+   "asset_refs": [
+    "/assets/index-_nIP0kqW.js",
+    "/assets/index-D1cth6A1.css"
+   ],
+   "live_tree": "3d9bae96b3965609e9558d39db1412187dc4b14c",
+   "info_file": "D:\\moodle\\_qoder_cmdr_ref_20260921\\live_checks\\_build_1a472f0_info.json",
+   "build_tail": [
+    "files generated",
+    "  dist/v10-sw.js",
+    "  dist/workbox-6923124b.js",
+    "\u001b[33m",
+    "(!) Some chunks are larger than 500 kB after minification. Consider:",
+    "- Using dynamic import() to code-split the application",
+    "- Use build.rollupOptions.output.manualChunks to improve chunking: https://rollupjs.org/configuration-options/#output-manualchunks",
+    "- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.\u001b[39m"
+   ]
+  }
+ },
+ "problems": [],
+ "verdict": "READY_TO_LAND",
+ "landing": {
+  "http": 200,
+  "response_head": "{'ref': 'refs/heads/mirror/integration-frontend-apple-pass1', 'node_id': 'REF_kwDOUhlJJ9oAMnJlZnMvaGVhZHMvbWlycm9yL2ludGVncmF0aW9uLWZyb250ZW5kLWFwcGxlLXBhc3Mx', 'url': 'https://api.github.com/repos/Ca",
+  "tip_after": "1a472f0d0bd616735b77184db983d492109bdca3",
+  "branches_route": "1a472f0d0bd616735b77184db983d492109bdca3",
+  "both_routes_agree": true,
+  "landed": true
+ },
+ "discipline": {
+  "evidence_paths_overwritten": 0,
+  "databases_opened": 0,
+  "surfaces_started_or_stopped": 0,
+  "credential_values_printed": 0,
+  "candidate_refs_pushed_by_commander": 0
+ },
+ "claim_kind": "git_and_pytest_determined",
+ "claimed_result": null,
+ "derived_result": null
+}
