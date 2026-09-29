@@ -1,0 +1,111 @@
+[citynexus e2e] suite=current-product authoritative=true python=D:/moodle/CityNexus/.venv/Scripts/python.exe frontend=:4183 backend=:6982 db=sqlite:///D:/moodle/_qoder_lane_S4_0926/work/ord0428/_e2e_ord0428r1.db ai=disabled reuseExistingServer=false
+[WebServer] INFO:     Started server process [42596]
+[WebServer] INFO:     Waiting for application startup.
+[WebServer] INFO:     Application startup complete.
+[WebServer] INFO:     Uvicorn running on http://127.0.0.1:6982 (Press CTRL+C to quit)
+[WebServer] INFO:     127.0.0.1:60486 - "GET /api/v1/health HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:51947 - "GET /api/v1/health HTTP/1.1" 200 OK
+[citynexus e2e] provenance ok: run=ord0428r1 frontend=:4183 -> backend=:6982 ai=disabled db=_e2e_ord0428r1.db
+
+Running 6 tests using 1 worker
+
+[citynexus e2e] suite=current-product authoritative=true python=D:/moodle/CityNexus/.venv/Scripts/python.exe frontend=:4183 backend=:6982 db=sqlite:///D:/moodle/_qoder_lane_S4_0926/work/ord0428/_e2e_ord0428r1.db ai=disabled reuseExistingServer=false
+[WebServer] INFO:     127.0.0.1:52025 - "POST /api/v1/travelers HTTP/1.1" 201 Created
+[WebServer] INFO:     127.0.0.1:52031 - "POST /api/v1/journeys HTTP/1.1" 201 Created
+[WebServer] INFO:     127.0.0.1:52025 - "POST /api/v1/journeys/55f2edcf-2b8f-4664-aabd-6992e2056dc1/stay-options/generate HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:52031 - "GET /api/v1/journeys/55f2edcf-2b8f-4664-aabd-6992e2056dc1/stay-options HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:52025 - "POST /api/v1/journeys/55f2edcf-2b8f-4664-aabd-6992e2056dc1/stay-options/8346e1c1-54c9-4adc-a2b5-c12c8a88de07/select HTTP/1.1" 200 OK
+[qoder-real-seed] journey=55f2edcf-2b8f-4664-aabd-6992e2056dc1 options=4 chosen=8346e1c1-54c9-4adc-a2b5-c12c8a88de07 (Haihe Riverside Hotel)
+[WebServer] INFO:     127.0.0.1:50480 - "GET /api/v1/journeys/55f2edcf-2b8f-4664-aabd-6992e2056dc1/experience HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:50515 - "GET /api/v1/journeys/55f2edcf-2b8f-4664-aabd-6992e2056dc1/replans HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:58628 - "GET /api/v1/journeys/55f2edcf-2b8f-4664-aabd-6992e2056dc1/replans HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:58630 - "GET /api/v1/journeys/55f2edcf-2b8f-4664-aabd-6992e2056dc1/execution-clock HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:58627 - "GET /api/v1/journeys/55f2edcf-2b8f-4664-aabd-6992e2056dc1/plans HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:50562 - "GET /api/v1/journeys/55f2edcf-2b8f-4664-aabd-6992e2056dc1/twin HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:56200 - "GET /api/v1/journeys/55f2edcf-2b8f-4664-aabd-6992e2056dc1/web-observations HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:56203 - "GET /api/v1/journeys/55f2edcf-2b8f-4664-aabd-6992e2056dc1/offline-snapshot HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:56202 - "GET /api/v1/journeys/55f2edcf-2b8f-4664-aabd-6992e2056dc1/wallet HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:58629 - "GET /api/v1/journeys/55f2edcf-2b8f-4664-aabd-6992e2056dc1/experience HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:56201 - "GET /api/v1/travelers/d55abc1f-d132-4182-a2dc-8f5ee6773069/agent-policy HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:50110 - "GET /api/v1/journeys/55f2edcf-2b8f-4664-aabd-6992e2056dc1/experience HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:57106 - "GET /api/v1/agent/runtime-status HTTP/1.1" 200 OK
+[qoder-real-seed] trialWizard=false live-journey-current=true
+  ok 1 [real-seed] › e2e\_qoderRealSeed.setup.ts:110:1 › seed a real journey through the product API (5.2s)
+[citynexus e2e] suite=current-product authoritative=true python=D:/moodle/CityNexus/.venv/Scripts/python.exe frontend=:4183 backend=:6982 db=sqlite:///D:/moodle/_qoder_lane_S4_0926/work/ord0428/_e2e_ord0428r1.db ai=disabled reuseExistingServer=false
+[WebServer] INFO:     127.0.0.1:60941 - "GET /api/v1/demo/scene HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:60952 - "GET /api/v1/journeys/55f2edcf-2b8f-4664-aabd-6992e2056dc1 HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:60951 - "GET /api/v1/journeys/55f2edcf-2b8f-4664-aabd-6992e2056dc1/replans HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:60950 - "GET /api/v1/plans/771f41c8-6c3d-482e-a348-2d3d9aa32f0a HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:60947 - "GET /api/v1/journeys/55f2edcf-2b8f-4664-aabd-6992e2056dc1/twin HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:60955 - "GET /api/v1/city-services?city_code=CN-TIANJIN HTTP/1.1" 200 OK
+  x  2 [chromium] › e2e\qoder-wallet-commitments.spec.ts:91:1 › ord0087-booked-commitment-is-on-the-wallet-screen — 真链路建出来的承诺要在 Wallet 上看得见 (1.5s)
+[citynexus e2e] suite=current-product authoritative=true python=D:/moodle/CityNexus/.venv/Scripts/python.exe frontend=:4183 backend=:6982 db=sqlite:///D:/moodle/_qoder_lane_S4_0926/work/ord0428/_e2e_ord0428r1.db ai=disabled reuseExistingServer=false
+[WebServer] INFO:     127.0.0.1:61002 - "POST /api/v1/travelers HTTP/1.1" 201 Created
+[WebServer] INFO:     127.0.0.1:61015 - "POST /api/v1/journeys HTTP/1.1" 201 Created
+[WebServer] INFO:     127.0.0.1:61017 - "GET /api/v1/journeys/c690eb83-575c-4777-9d09-25a00556acb1/experience HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:61018 - "GET /api/v1/journeys/c690eb83-575c-4777-9d09-25a00556acb1/replans HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:61021 - "GET /api/v1/journeys/c690eb83-575c-4777-9d09-25a00556acb1/plans HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:61019 - "GET /api/v1/journeys/c690eb83-575c-4777-9d09-25a00556acb1/memory HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:61020 - "GET /api/v1/journeys/c690eb83-575c-4777-9d09-25a00556acb1/inbox HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:59011 - "GET /api/v1/journeys/c690eb83-575c-4777-9d09-25a00556acb1/offline-snapshot HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:59010 - "GET /api/v1/travelers/eda1c990-1a69-4268-b4f6-17535e8d4c69/agent-policy HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:56936 - "GET /api/v1/journeys/c690eb83-575c-4777-9d09-25a00556acb1/twin HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:54661 - "GET /api/v1/agent/runtime-status HTTP/1.1" 200 OK
+  ok 3 [chromium] › e2e\qoder-wallet-commitments.spec.ts:396:1 › ord0087-unknown-price-is-said-unknown — 不知道价格就不许显示 0 (1.2s)
+[WebServer] INFO:     127.0.0.1:54666 - "POST /api/v1/travelers HTTP/1.1" 201 Created
+[WebServer] INFO:     127.0.0.1:54668 - "POST /api/v1/journeys HTTP/1.1" 201 Created
+[WebServer] INFO:     127.0.0.1:61740 - "GET /api/v1/journeys/c1d06e64-2c88-410f-81f4-ef699600c0ba/experience HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:61742 - "GET /api/v1/journeys/c1d06e64-2c88-410f-81f4-ef699600c0ba/replans HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:61754 - "GET /api/v1/journeys/c1d06e64-2c88-410f-81f4-ef699600c0ba/inbox HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:61756 - "GET /api/v1/journeys/c1d06e64-2c88-410f-81f4-ef699600c0ba/plans HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:61752 - "GET /api/v1/journeys/c1d06e64-2c88-410f-81f4-ef699600c0ba/memory HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:51656 - "GET /api/v1/travelers/ed3442dc-3fe9-4380-9bce-6115bf3cf30b/agent-policy HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:61758 - "GET /api/v1/journeys/c1d06e64-2c88-410f-81f4-ef699600c0ba/twin HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:60816 - "GET /api/v1/journeys/c1d06e64-2c88-410f-81f4-ef699600c0ba/offline-snapshot HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:50268 - "GET /api/v1/agent/runtime-status HTTP/1.1" 200 OK
+  ok 4 [chromium] › e2e\qoder-wallet-commitments.spec.ts:428:1 › ord0087-simulated-label-comes-from-the-field — 真供应商不许被误标 (1.0s)
+[WebServer] INFO:     127.0.0.1:50288 - "POST /api/v1/travelers HTTP/1.1" 201 Created
+[WebServer] INFO:     127.0.0.1:57022 - "POST /api/v1/journeys HTTP/1.1" 201 Created
+[WebServer] INFO:     127.0.0.1:64394 - "GET /api/v1/journeys/4e92d4fc-048d-4aaf-8472-2abb4bbf05ec/experience HTTP/1.1" 200 OK
+  ok 5 [chromium] › e2e\qoder-wallet-commitments.spec.ts:463:1 › ord0087-empty-list-is-not-labelled-mock — 没有承诺时不该有任何“模拟承诺” (897ms)
+[WebServer] INFO:     127.0.0.1:64412 - "POST /api/v1/travelers HTTP/1.1" 201 Created
+[WebServer] INFO:     127.0.0.1:64414 - "POST /api/v1/journeys HTTP/1.1" 201 Created
+[WebServer] INFO:     127.0.0.1:52221 - "GET /api/v1/journeys/fbf04bb7-ebbc-4b1a-a7ad-d0ff0cc3865d/experience HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:52227 - "GET /api/v1/journeys/fbf04bb7-ebbc-4b1a-a7ad-d0ff0cc3865d/replans HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:52257 - "GET /api/v1/journeys/fbf04bb7-ebbc-4b1a-a7ad-d0ff0cc3865d/memory HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:52261 - "GET /api/v1/journeys/fbf04bb7-ebbc-4b1a-a7ad-d0ff0cc3865d/inbox HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:52263 - "GET /api/v1/journeys/fbf04bb7-ebbc-4b1a-a7ad-d0ff0cc3865d/plans HTTP/1.1" 200 OK
+[WebServer] JourneyTwin cache write skipped during transient SQLite contention: (sqlite3.OperationalError) database is locked
+[WebServer] [SQL: INSERT INTO journey_twins (journey_id, active_plan_version_id, current_activity_id, latest_event_id, projection_status, snapshot_at, context_json, upcoming_commitments_json, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)]
+[WebServer] [parameters: ('fbf04bb7-ebbc-4b1a-a7ad-d0ff0cc3865d', None, None, None, 'READY', '2026-09-29T17:07:39.139931+00:00', '{"degraded_providers": [], "execution": {"cursor_status": "ABSENT_FALLBACK", "next": null, "next_activity_id": null, "next_eta_min": 0, "next_leg_id" ... (410 characters truncated) ... raded": false, "provider": "mock-mobility", "snapshot_id": null, "source": "deterministic-offline"}, "opportunity_window": null, "provider_level": 1}', '[]', '2026-09-29T17:07:39.139931+00:00')]
+[WebServer] (Background on this error at: https://sqlalche.me/e/20/e3q8)
+[WebServer] INFO:     127.0.0.1:52265 - "GET /api/v1/journeys/fbf04bb7-ebbc-4b1a-a7ad-d0ff0cc3865d/twin HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:63625 - "GET /api/v1/journeys/fbf04bb7-ebbc-4b1a-a7ad-d0ff0cc3865d/offline-snapshot HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:63624 - "GET /api/v1/travelers/b65504ab-4b7a-43c1-a375-1a050a665053/agent-policy HTTP/1.1" 200 OK
+[WebServer] INFO:     127.0.0.1:53271 - "GET /api/v1/agent/runtime-status HTTP/1.1" 200 OK
+  ok 6 [chromium] › e2e\qoder-wallet-commitments.spec.ts:491:1 › ord0428-headline-is-a-name-not-the-join-key — 卡片大标题不许是内部地点 id (899ms)
+
+
+  1) [chromium] › e2e\qoder-wallet-commitments.spec.ts:91:1 › ord0087-booked-commitment-is-on-the-wallet-screen — 真链路建出来的承诺要在 Wallet 上看得见 
+
+    Error: e2e/qoder-wallet-commitments.spec.ts :: ord0087-booked-commitment-is-on-the-wallet-screen — the stage could not be re-seeded: {"pressed":false,"reason":"这一步会删掉整库（52 张表），现在还要服务器自己的环境变量里的令牌；浏览器拿不到它，也不该拿到。所以这里不给按——要重播种行程，请由运行服务器的人来做。"}
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: true
+    Received: false
+
+      115 |     reseeded.pressed,
+      116 |     node("ord0087-booked-commitment-is-on-the-wallet-screen", `the stage could not be re-seeded: ${JSON.stringify(reseeded)}`),
+    > 117 |   ).toBe(true);
+          |     ^
+      118 |   await expect(page.getByTestId("today-hero")).toBeVisible({ timeout: 60_000 });
+      119 |
+      120 |   let scene = await readScene(page);
+        at D:\moodle\_qoder_lane_S4_0926\wt0428\frontend\e2e\qoder-wallet-commitments.spec.ts:117:5
+
+    Error Context: test-results\qoder-wallet-commitments-o-e8e12-n-—-真链路建出来的承诺要在-Wallet-上看得见-chromium\error-context.md
+
+  1 failed
+    [chromium] › e2e\qoder-wallet-commitments.spec.ts:91:1 › ord0087-booked-commitment-is-on-the-wallet-screen — 真链路建出来的承诺要在 Wallet 上看得见 
+  5 passed (20.8s)
