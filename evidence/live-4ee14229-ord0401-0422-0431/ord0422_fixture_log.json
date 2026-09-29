@@ -1,0 +1,144 @@
+{
+ "mode": "proposal",
+ "database": "D:/moodle/_qoder_q_ord0422/q0422_private.db",
+ "rows_before": {
+  "replan_proposals": 0,
+  "traveler_capabilities": 2,
+  "traveler_agent_policies": 4,
+  "plan_versions": 1
+ },
+ "rows_after": {
+  "replan_proposals": 1,
+  "traveler_capabilities": 2,
+  "traveler_agent_policies": 4,
+  "plan_versions": 2
+ },
+ "door_reading": [
+  {
+   "id": "f985289f-bbe8-4c07-a1fe-e6e137d2d918",
+   "journey_id": "22222222-2222-4222-8222-222222222222",
+   "trigger_event_id": null,
+   "base_plan_version_id": "55523d40-cafe-5bd2-b30a-de057ec7a839",
+   "proposed_plan_version_id": "2deb8ab4-0169-46ec-a559-07ff26ca7535",
+   "status": "PRESENTED",
+   "hard_constraints_passed": true,
+   "locked_commitments_preserved": true,
+   "utility_score": 0.62,
+   "score_breakdown": {
+    "cost": -1200
+   },
+   "diff": {
+    "removed": [
+     "09:30 Harbour Market walk"
+    ],
+    "added": [
+     "11:10 Riverside Museum slot"
+    ],
+    "cost_delta_minor": -1200,
+    "travel_delta_min": 8,
+    "verified_evidence": {
+     "baseline_plan_evidence": {
+      "snapshot_id": "snap-baseline-01"
+     },
+     "incident_recovery_evidence": {
+      "route_provenance": "frozen_matrix",
+      "source_provider": "citynexus-mobility",
+      "mobility_snapshot": {
+       "snapshot_id": "snap-mobility-07",
+       "source_provider": "citynexus-mobility",
+       "degraded": false
+      }
+     },
+     "impact_resolution": {
+      "semantic_reason": "TRAFFIC_DELAY",
+      "semantic_explanation": "a simulated delay moved the morning slot"
+     }
+    }
+   },
+   "explanation": {
+    "impact_model": "deterministic-gate-v1",
+    "impact_provider": "citynexus-solver"
+   }
+  }
+ ],
+ "verdict": "the read door serves the row, so the panel's proposal branch renders"
+}
+{
+ "mode": "capability",
+ "database": "D:/moodle/_qoder_q_ord0422/q0422_private.db",
+ "rows_before": {
+  "replan_proposals": 1,
+  "traveler_capabilities": 2,
+  "traveler_agent_policies": 4,
+  "plan_versions": 2
+ },
+ "rows_after": {
+  "replan_proposals": 1,
+  "traveler_capabilities": 4,
+  "traveler_agent_policies": 4,
+  "plan_versions": 2
+ },
+ "door_reading": [
+  {
+   "code": "QUIET_ENVIRONMENT",
+   "severity": "SOFT",
+   "confirmed": true
+  },
+  {
+   "code": "QUIET_ENVIRONMENT",
+   "severity": "SOFT",
+   "confirmed": false
+  },
+  {
+   "code": "STEP_FREE_REQUIRED",
+   "severity": "HARD",
+   "confirmed": true
+  },
+  {
+   "code": "STEP_FREE_REQUIRED",
+   "severity": "HARD",
+   "confirmed": true
+  }
+ ],
+ "verdict": "the twin payload carries a confirmed=false row, which the /confirm door refuses to leave"
+}
+{
+ "mode": "nopolicy",
+ "database": "D:/moodle/_qoder_q_ord0422/q0422_private.db",
+ "rows_before": {
+  "replan_proposals": 1,
+  "traveler_capabilities": 4,
+  "traveler_agent_policies": 4,
+  "plan_versions": 2
+ },
+ "rows_after": {
+  "replan_proposals": 1,
+  "traveler_capabilities": 4,
+  "traveler_agent_policies": 1,
+  "plan_versions": 2
+ },
+ "door_reading": {
+  "policy_door_answer": {
+   "mode": "ADVISORY",
+   "auto_accept_replan": false,
+   "max_auto_replan_cost_delta_minor": 0,
+   "max_auto_loss_minor": 0,
+   "max_auto_schedule_drift_min": 0,
+   "allowed_activity_types": [],
+   "allowed_booking_types": [],
+   "protected_commitment_levels": [
+    "C3_Guaranteed",
+    "C4_Anchored"
+   ],
+   "allow_auto_commitment_management": false,
+   "allow_auto_when_provider_degraded": false,
+   "allow_auto_on_critical_event": false,
+   "traveler_id": "11111111-1111-4111-8111-111111111111",
+   "version": 1,
+   "created_at": "2026-09-29T04:14:43.231367Z",
+   "updated_at": "2026-09-29T04:14:43.231367Z"
+  },
+  "rows_right_after_delete": 1
+ },
+ "verdict": "deleting the stored row did not make the policy prop null: the read door answered and the row count after the call is 1"
+}
