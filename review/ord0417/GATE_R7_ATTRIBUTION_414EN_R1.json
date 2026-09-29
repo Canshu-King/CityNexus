@@ -1,0 +1,52 @@
+{
+ "tip": {
+  "controls_idle": 30,
+  "controls_with_band": 30,
+  "reachable_idle": 12,
+  "reachable_with_band": 12,
+  "lost": [
+   "✦CityNexus Copilot#1"
+  ],
+  "band_growth_px": 0,
+  "band_box_idle": [
+   30,
+   579,
+   354,
+   139
+  ],
+  "band_box_with_selection": [
+   30,
+   579,
+   354,
+   139
+  ],
+  "glass_painted": "Selected on the map · Five Great Avenues",
+  "pins_below_floor": [],
+  "pins_unhittable": []
+ },
+ "ctrl": {
+  "controls_idle": 30,
+  "controls_with_band": 30,
+  "reachable_idle": 12,
+  "reachable_with_band": 12,
+  "lost": [
+   "✦CityNexus Copilot#1"
+  ],
+  "band_growth_px": 0,
+  "band_box_idle": [
+   30,
+   579,
+   354,
+   139
+  ],
+  "band_box_with_selection": [
+   30,
+   579,
+   354,
+   139
+  ],
+  "glass_painted": null,
+  "pins_below_floor": [],
+  "pins_unhittable": []
+ }
+}

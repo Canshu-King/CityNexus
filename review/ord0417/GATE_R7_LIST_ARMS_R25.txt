@@ -1,0 +1,18 @@
+[chromium] › qoder-ord0417-tap-names-the-stop.spec.ts:271:3 › tap-named-zh — a tap on a pin paints that stop's name on the glass
+[chromium] › qoder-ord0417-tap-names-the-stop.spec.ts:271:3 › tap-named-en — a tap on a pin paints that stop's name on the glass
+[chromium] › qoder-ord0417-tap-names-the-stop.spec.ts:324:3 › not-aria-zh — the name is painted, not an attribute a reader recites
+[chromium] › qoder-ord0417-tap-names-the-stop.spec.ts:324:3 › not-aria-en — the name is painted, not an attribute a reader recites
+[chromium] › qoder-ord0417-tap-names-the-stop.spec.ts:380:3 › unpicked-zh — before a tap the glass names no stop, so the other arms cannot borrow a label
+[chromium] › qoder-ord0417-tap-names-the-stop.spec.ts:380:3 › unpicked-en — before a tap the glass names no stop, so the other arms cannot borrow a label
+[chromium] › qoder-ord0417-tap-names-the-stop.spec.ts:413:1 › both-ways — row to camera and marker to card both survive the new band
+[chromium] › qoder-ord0417-tap-names-the-stop.spec.ts:485:3 › copy-zh — the glass sentence is the dictionary's, verbatim
+[chromium] › qoder-ord0417-tap-names-the-stop.spec.ts:485:3 › copy-en — the glass sentence is the dictionary's, verbatim
+[chromium] › qoder-ord0417-tap-names-the-stop.spec.ts:520:5 › geometry-390x844-zh — the band costs no reachable control and covers no pin
+[chromium] › qoder-ord0417-tap-names-the-stop.spec.ts:520:5 › geometry-390x844-en — the band costs no reachable control and covers no pin
+[chromium] › qoder-ord0417-tap-names-the-stop.spec.ts:520:5 › geometry-360x800-zh — the band costs no reachable control and covers no pin
+[chromium] › qoder-ord0417-tap-names-the-stop.spec.ts:520:5 › geometry-360x800-en — the band costs no reachable control and covers no pin
+[chromium] › qoder-ord0417-tap-names-the-stop.spec.ts:520:5 › geometry-320x653-zh — the band costs no reachable control and covers no pin
+[chromium] › qoder-ord0417-tap-names-the-stop.spec.ts:520:5 › geometry-320x653-en — the band costs no reachable control and covers no pin
+[chromium] › qoder-ord0417-tap-names-the-stop.spec.ts:520:5 › geometry-414x896-zh — the band costs no reachable control and covers no pin
+[chromium] › qoder-ord0417-tap-names-the-stop.spec.ts:520:5 › geometry-414x896-en — the band costs no reachable control and covers no pin
+count=17

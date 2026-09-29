@@ -1,0 +1,47 @@
+{
+ "arm": "414x896-en",
+ "lost": "✦CityNexus Copilot#1",
+ "idle": {
+  "key": "✦CityNexus Copilot#1",
+  "name": "✦CityNexus Copilot",
+  "centre": [
+   382,
+   632
+  ],
+  "in_viewport": true,
+  "centre_above_floor": true,
+  "hit_test": true
+ },
+ "live": {
+  "key": "✦CityNexus Copilot#1",
+  "name": "✦CityNexus Copilot",
+  "centre": [
+   382,
+   788
+  ],
+  "in_viewport": true,
+  "centre_above_floor": false,
+  "hit_test": true
+ },
+ "dom": [
+  {
+   "key": "✦CityNexus Copilot#1",
+   "box": [
+    360,
+    766,
+    44,
+    44
+   ],
+   "centre": [
+    382,
+    788
+   ],
+   "inner_h": 896,
+   "scroll_y": 0,
+   "position": "static",
+   "z": "auto",
+   "top_el": "span.cn-copilot-edge-mark",
+   "top_is_self": true
+  }
+ ]
+}

@@ -1,0 +1,82 @@
+{
+ "arms": [
+  {
+   "arm": "tap-named-zh — a tap on a pin paints that stop's name on the glass",
+   "status": "passed"
+  },
+  {
+   "arm": "tap-named-en — a tap on a pin paints that stop's name on the glass",
+   "status": "passed"
+  },
+  {
+   "arm": "not-aria-zh — the name is painted, not an attribute a reader recites",
+   "status": "passed"
+  },
+  {
+   "arm": "not-aria-en — the name is painted, not an attribute a reader recites",
+   "status": "passed"
+  },
+  {
+   "arm": "unpicked-zh — before a tap the glass names no stop, so the other arms cannot borrow a label",
+   "status": "passed"
+  },
+  {
+   "arm": "unpicked-en — before a tap the glass names no stop, so the other arms cannot borrow a label",
+   "status": "passed"
+  },
+  {
+   "arm": "both-ways — row to camera and marker to card both survive the new band",
+   "status": "passed"
+  },
+  {
+   "arm": "copy-zh — the glass sentence is the dictionary's, verbatim",
+   "status": "passed"
+  },
+  {
+   "arm": "copy-en — the glass sentence is the dictionary's, verbatim",
+   "status": "passed"
+  },
+  {
+   "arm": "geometry-390x844-zh — the band costs no reachable control and covers no pin",
+   "status": "passed"
+  },
+  {
+   "arm": "geometry-390x844-en — the band costs no reachable control and covers no pin",
+   "status": "passed"
+  },
+  {
+   "arm": "geometry-360x800-zh — the band costs no reachable control and covers no pin",
+   "status": "passed"
+  },
+  {
+   "arm": "geometry-360x800-en — the band costs no reachable control and covers no pin",
+   "status": "passed"
+  },
+  {
+   "arm": "geometry-320x653-zh — the band costs no reachable control and covers no pin",
+   "status": "passed"
+  },
+  {
+   "arm": "geometry-320x653-en — the band costs no reachable control and covers no pin",
+   "status": "passed"
+  },
+  {
+   "arm": "geometry-414x896-zh — the band costs no reachable control and covers no pin",
+   "status": "passed"
+  },
+  {
+   "arm": "geometry-414x896-en — the band costs no reachable control and covers no pin",
+   "status": "failed"
+  }
+ ],
+ "summary": {
+  "arms_listed": 17,
+  "arms_reported": 17,
+  "passed": 16,
+  "failed": 1,
+  "skipped": 0,
+  "listed_but_never_ran": [],
+  "ran_but_not_listed": [],
+  "verdict": "ALL_ARMS_ACCOUNTED"
+ }
+}
