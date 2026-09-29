@@ -398,21 +398,53 @@ test("error-state — the same region carries the failure and keeps 重试", asy
   await enterImport(page);
   test.setTimeout(180_000);
   const planState = await ensureActivePlan(page);
-  /* Transport fault injection: the request is aborted, nothing is fabricated in its place. This arm
-     grades how the card reacts to a failed call, and the reading says so out loud. */
+  /* Two refusal shapes, because the ruling this arm now grades is "the screen may not wear the
+     answer's own sentence":
+       (a) transport -- `route.abort`, so nothing answers at all and the machine token has to be ours;
+       (b) a real named refusal -- 409 with `reason_code: NO_ACTIVE_PLAN`, where the sentence must
+           still come from the dictionary and only the token and the status may be painted. */
   await page.route("**/poi-import/parse", (route) => route.abort());
   await parse(page, "Riverside Museum");
   await page.waitForTimeout(1_200);
   const phase = await phaseOf(page);
   const error = await painted(page, "poi-import-error");
+  const transportDetail = await painted(page, "poi-import-error-detail");
   const retry = await painted(page, "poi-import-retry");
   const cardText = await painted(page, "poi-import-card");
   await page.screenshot({ path: evidencePath("ord0437", "error_arm.png") });
   await page.unroute("**/poi-import/parse");
-  push("error-state", { phase, error, retryWords: retry, cardText, fault: "route.abort on /poi-import/parse" });
+
+  await page.route("**/poi-import/parse", (route) =>
+    route.fulfill({
+      status: 409,
+      contentType: "application/json",
+      body: JSON.stringify({
+        detail: { error: { reason_code: "NO_ACTIVE_PLAN" }, message: "UPSTREAM PROSE THAT MUST NOT APPEAR" },
+      }),
+    }),
+  );
+  await parse(page, "Riverside Museum");
+  await page.waitForTimeout(1_200);
+  const refusalDetail = await painted(page, "poi-import-error-detail");
+  const refusalStatus = await painted(page, "poi-import-error-status");
+  const refusalWhy = await painted(page, "poi-import-error-why");
+  const refusalCard = await painted(page, "poi-import-card");
+  await page.screenshot({ path: evidencePath("ord0437", "error_refusal_arm.png") });
+  await page.unroute("**/poi-import/parse");
+
+  push("error-state", {
+    phase, error, transportDetail, refusalDetail, refusalStatus, refusalWhy, retryWords: retry,
+    cardText, refusalCardText: refusalCard,
+    fault: "arm (a) route.abort on /poi-import/parse; arm (b) route.fulfill 409 reason_code=NO_ACTIVE_PLAN",
+  });
   expect(phase).toBe("error");
   expect(error, "the failure has to be a sentence the traveller can act on").toBeTruthy();
   expect(retry, "the retry is what makes the error arm survivable in place").toBeTruthy();
+  expect(transportDetail, "no answer means our own token, not an engine sentence").toBe("NO_RESPONSE_FROM_ORIGIN");
+  expect(refusalDetail, "a named refusal is answered by its machine token").toBe("NO_ACTIVE_PLAN");
+  expect(refusalStatus, "what this device saw is the status, and that is allowed to be shown").toContain("409");
+  expect(refusalWhy, "the sentence comes from the dictionary, not from the answer").not.toContain("UPSTREAM");
+  expect(refusalCard, "no fragment of the answer's prose may reach the card").not.toContain("PROSE THAT MUST NOT APPEAR");
 });
 
 test("added and replay — 已加入 means the server gave the record back", async ({ page }) => {
