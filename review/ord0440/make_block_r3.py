@@ -123,7 +123,7 @@ def main() -> int:
 
 - 尺 `ui_exposure_taint_ast_r7b.cjs` --tree：现尖自己 `{E}exposure_tip.json` blob {blob(E + "exposure_tip.json")} 读 `cells_total={exp_tip['cells_total']}`；本枝 `{E}exposure_after.json` blob {blob(E + "exposure_after.json")} 读 `cells_total={exp_after['cells_total']}`。
 - 按 `cell_identity` 集合差：growth_items={len(growth)}（空），shrink_items={len(removed)}。被消掉的就是门点名的四格：{removed_str}。
-- 槽位构成同步变化：现尖 `{json.dumps(exp_tip['cells_by_slot'], ensure_ascii=False)}` → 本枝 `{json.dumps(exp_after['cells_by_slot'], ensure_ascii=False)}`，attribute_position={exp_after['cells_by_slot']['attribute_position']} 未动（消掉的都在 text_position）。
+- 槽位构成同步变化：text_position={exp_tip['cells_by_slot']['text_position']} → {exp_after['cells_by_slot']['text_position']}，attribute_position={exp_after['cells_by_slot']['attribute_position']} 未动，markup={exp_after['cells_by_slot']['markup']}、dom_write={exp_after['cells_by_slot']['dom_write']}（消掉的四格全在 text_position）。
 
 ## 4. 反件：四格各归各自那一格（arms={len(arm_lines)}，按字节还原）
 
