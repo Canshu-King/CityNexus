@@ -1,0 +1,120 @@
+{
+ "tip_rev": "0fee131d02b7c7c85f59aab8307f28594bf0d65f",
+ "export_tsx_files": 102,
+ "generations": [
+  {
+   "generation": "r7b",
+   "file": "ui_exposure_taint_ast_r7b.cjs",
+   "bytes": 129082,
+   "blob_declared_by_lane": "d3f66ce9fecd0790981a4fcdeb5e36b1c0fd10f2",
+   "blob_measured": "d3f66ce9fecd0790981a4fcdeb5e36b1c0fd10f2",
+   "blob_matches": true,
+   "status": "ok",
+   "cells_total": 12,
+   "hits": 12,
+   "keys": [
+    "ActivityDetail.tsx:216|RAW_BODY_TO_DOM",
+    "CnxMeasuredFacts.tsx:57|UPSTREAM_TEXT_VIA_HELPER_TO_DOM",
+    "DestinationPreparationPanel.tsx:348|UPSTREAM_EXCEPTION_TO_DOM",
+    "DestinationPreparationPanel.tsx:471|UPSTREAM_EXCEPTION_TO_DOM",
+    "DestinationPreparationPanel.tsx:524|UPSTREAM_EXCEPTION_TO_DOM",
+    "JourneyTrashPanel.tsx:232|UPSTREAM_PROSE_TO_ATTRIBUTE_SLOT",
+    "JourneyTrashPanel.tsx:233|UPSTREAM_TEXT_VIA_HELPER_TO_DOM",
+    "PlanWithAiSheet.tsx:884|UPSTREAM_PROSE_TO_ATTRIBUTE_SLOT",
+    "PlanWithAiSheet.tsx:909|UPSTREAM_TEXT_VIA_HELPER_TO_DOM",
+    "PlanWithAiSheet.tsx:982|UPSTREAM_TEXT_VIA_HELPER_TO_DOM",
+    "RecoveryRequiredPanel.tsx:299|UPSTREAM_TEXT_VIA_HELPER_TO_DOM",
+    "SimulationPanel.tsx:937|UPSTREAM_TEXT_VIA_HELPER_TO_DOM"
+   ]
+  },
+  {
+   "generation": "r7b1",
+   "file": "ui_exposure_taint_ast_r7b1.cjs",
+   "bytes": 139058,
+   "blob_declared_by_lane": "b6716d9a3c67dafc72fef501bfaff101c84e918a",
+   "blob_measured": "b6716d9a3c67dafc72fef501bfaff101c84e918a",
+   "blob_matches": true,
+   "status": "ok",
+   "cells_total": 11,
+   "hits": 11,
+   "keys": [
+    "ActivityDetail.tsx:216|RAW_BODY_TO_DOM",
+    "CnxMeasuredFacts.tsx:57|UPSTREAM_TEXT_VIA_HELPER_TO_DOM",
+    "DestinationPreparationPanel.tsx:348|UPSTREAM_EXCEPTION_TO_DOM",
+    "DestinationPreparationPanel.tsx:471|UPSTREAM_EXCEPTION_TO_DOM",
+    "DestinationPreparationPanel.tsx:524|UPSTREAM_EXCEPTION_TO_DOM",
+    "JourneyTrashPanel.tsx:232|UPSTREAM_PROSE_TO_ATTRIBUTE_SLOT",
+    "JourneyTrashPanel.tsx:233|UPSTREAM_TEXT_VIA_HELPER_TO_DOM",
+    "PlanWithAiSheet.tsx:884|UPSTREAM_PROSE_TO_ATTRIBUTE_SLOT",
+    "PlanWithAiSheet.tsx:909|UPSTREAM_TEXT_VIA_HELPER_TO_DOM",
+    "PlanWithAiSheet.tsx:982|UPSTREAM_TEXT_VIA_HELPER_TO_DOM",
+    "SimulationPanel.tsx:937|UPSTREAM_TEXT_VIA_HELPER_TO_DOM"
+   ]
+  },
+  {
+   "generation": "r7b4",
+   "file": "ui_exposure_taint_ast_r7b4.cjs",
+   "bytes": 154410,
+   "blob_declared_by_lane": "cefcb38c8d01a5996f3f705531a127c85f16c0b3",
+   "blob_measured": "cefcb38c8d01a5996f3f705531a127c85f16c0b3",
+   "blob_matches": true,
+   "status": "ok",
+   "cells_total": 11,
+   "hits": 11,
+   "keys": [
+    "ActivityDetail.tsx:216|RAW_BODY_TO_DOM",
+    "CnxMeasuredFacts.tsx:57|UPSTREAM_TEXT_VIA_HELPER_TO_DOM",
+    "DestinationPreparationPanel.tsx:348|UPSTREAM_EXCEPTION_TO_DOM",
+    "DestinationPreparationPanel.tsx:471|UPSTREAM_EXCEPTION_TO_DOM",
+    "DestinationPreparationPanel.tsx:524|UPSTREAM_EXCEPTION_TO_DOM",
+    "JourneyTrashPanel.tsx:232|UPSTREAM_PROSE_TO_ATTRIBUTE_SLOT",
+    "JourneyTrashPanel.tsx:233|UPSTREAM_TEXT_VIA_HELPER_TO_DOM",
+    "PlanWithAiSheet.tsx:884|UPSTREAM_PROSE_TO_ATTRIBUTE_SLOT",
+    "PlanWithAiSheet.tsx:909|UPSTREAM_TEXT_VIA_HELPER_TO_DOM",
+    "PlanWithAiSheet.tsx:982|UPSTREAM_TEXT_VIA_HELPER_TO_DOM",
+    "SimulationPanel.tsx:937|UPSTREAM_TEXT_VIA_HELPER_TO_DOM"
+   ]
+  },
+  {
+   "generation": "r7b4_with_contract",
+   "file": "ui_exposure_taint_ast_r7b4.cjs",
+   "blob_measured": "cefcb38c8d01a5996f3f705531a127c85f16c0b3",
+   "contract_bytes": 119781,
+   "status": "ok",
+   "cells_total": 11,
+   "hits": 11,
+   "keys": [
+    "ActivityDetail.tsx:216|RAW_BODY_TO_DOM",
+    "CnxMeasuredFacts.tsx:57|UPSTREAM_TEXT_VIA_HELPER_TO_DOM",
+    "DestinationPreparationPanel.tsx:348|UPSTREAM_EXCEPTION_TO_DOM",
+    "DestinationPreparationPanel.tsx:471|UPSTREAM_EXCEPTION_TO_DOM",
+    "DestinationPreparationPanel.tsx:524|UPSTREAM_EXCEPTION_TO_DOM",
+    "JourneyTrashPanel.tsx:232|UPSTREAM_PROSE_TO_ATTRIBUTE_SLOT",
+    "JourneyTrashPanel.tsx:233|UPSTREAM_TEXT_VIA_HELPER_TO_DOM",
+    "PlanWithAiSheet.tsx:884|UPSTREAM_PROSE_TO_ATTRIBUTE_SLOT",
+    "PlanWithAiSheet.tsx:909|UPSTREAM_TEXT_VIA_HELPER_TO_DOM",
+    "PlanWithAiSheet.tsx:982|UPSTREAM_TEXT_VIA_HELPER_TO_DOM",
+    "SimulationPanel.tsx:937|UPSTREAM_TEXT_VIA_HELPER_TO_DOM"
+   ],
+   "differs_from_door_scope": false
+  }
+ ],
+ "pairwise": [
+  {
+   "older": "r7b",
+   "newer": "r7b1",
+   "lost_from_newer": [
+    "RecoveryRequiredPanel.tsx:299|UPSTREAM_TEXT_VIA_HELPER_TO_DOM"
+   ],
+   "gained_by_newer": []
+  },
+  {
+   "older": "r7b",
+   "newer": "r7b4",
+   "lost_from_newer": [
+    "RecoveryRequiredPanel.tsx:299|UPSTREAM_TEXT_VIA_HELPER_TO_DOM"
+   ],
+   "gained_by_newer": []
+  }
+ ]
+}
