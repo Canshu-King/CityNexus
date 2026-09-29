@@ -1,0 +1,60 @@
+{
+  "off": {
+    "db": "D:\\moodle\\CityNexus-Hermes-Revival\\evidence\\0443\\_ab_off.db",
+    "rows_journey_missions": 0,
+    "rows_agent_runs": 0,
+    "rows_agent_run_steps": 0,
+    "rows_events": 0,
+    "rows_audit_logs": 4,
+    "mission": null,
+    "agent_run": null
+  },
+  "on": {
+    "db": "D:\\moodle\\CityNexus-Hermes-Revival\\evidence\\0443\\_ab_on.db",
+    "rows_journey_missions": 1,
+    "rows_agent_runs": 1,
+    "rows_agent_run_steps": 0,
+    "rows_events": 0,
+    "rows_audit_logs": 10,
+    "mission": {
+      "id": "09c0b90b-80b2-4568-a37b-c849ecdc11de",
+      "user_text_head": "The river cruise stop is closed this afternoon. What should I move, and what stays untouched?",
+      "status": "COMPLETED",
+      "compiler_provider_key": "deterministic",
+      "compiler_model_key": "mission-compiler-v2-fallback",
+      "allowed_action_classes": [
+        "REQUEST_REPLAN",
+        "ACCEPT_REPLAN"
+      ],
+      "failure_reason": null
+    },
+    "agent_run": {
+      "id": "3be162e1-cc44-42de-88d0-2ed9e0b8b527",
+      "provider_key": "deepseek",
+      "model_key": "global:glm-5.2",
+      "status": "COMPLETED",
+      "outcome_head": "I'd be happy to help you figure out what needs to change and what can stay. However, I need your **journey ID** to look into your itinerary and assess the impact of the river cruise stop closure. Could you please share i",
+      "failure_reason": null
+    }
+  },
+  "durable_difference": {
+    "journey_missions": {
+      "off": 0,
+      "on": 1
+    },
+    "agent_runs": {
+      "off": 0,
+      "on": 1
+    },
+    "audit_logs": {
+      "off": 4,
+      "on": 10
+    }
+  },
+  "verdict_channel_writes_product_state": true,
+  "open_gaps_measured": {
+    "mission_compiler_fell_back": "mission-compiler-v2-fallback",
+    "agent_run_steps_rows_with_completed_run": 0,
+    "events_rows_created_by_the_model_turn": 0
+  }
+}
