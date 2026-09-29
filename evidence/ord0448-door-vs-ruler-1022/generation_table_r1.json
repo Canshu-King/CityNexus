@@ -1,0 +1,164 @@
+{
+ "rev": "c6a0ef6fdb5ca830c67720e43b8d59bc508ab0ef",
+ "tsx_files": 112,
+ "door_pinned_ruler_blob": "d3f66ce9fecd0790981a4fcdeb5e36b1c0fd10f2",
+ "generations": [
+  {
+   "file": "ui_exposure_taint_ast_r7b.cjs",
+   "bytes": 129082,
+   "blob": "d3f66ce9fecd0790981a4fcdeb5e36b1c0fd10f2",
+   "cells_total_reported": 12,
+   "verdict": "EXPOSURE_SHAPE_FOUND",
+   "parse_diagnostics_total": 0
+  },
+  {
+   "file": "ui_exposure_taint_ast_r7b1.cjs",
+   "bytes": 139058,
+   "blob": "b6716d9a3c67dafc72fef501bfaff101c84e918a",
+   "cells_total_reported": 11,
+   "verdict": "EXPOSURE_SHAPE_FOUND",
+   "parse_diagnostics_total": 0
+  },
+  {
+   "file": "ui_exposure_taint_ast_r7b4.cjs",
+   "bytes": 154410,
+   "blob": "cefcb38c8d01a5996f3f705531a127c85f16c0b3",
+   "cells_total_reported": 11,
+   "verdict": "EXPOSURE_SHAPE_FOUND",
+   "parse_diagnostics_total": 0
+  }
+ ],
+ "anchor_is_the_door_pinned_ruler": true,
+ "per_cell_provenance": {
+  "ActivityDetail.tsx:216|RAW_BODY_TO_DOM": {
+   "cell": "ActivityDetail.tsx:216|RAW_BODY_TO_DOM",
+   "in_door_pinned": true,
+   "ui_exposure_taint_ast_r7b.cjs": "1f8bfb4f2b900363",
+   "ui_exposure_taint_ast_r7b1.cjs": "1f8bfb4f2b900363",
+   "ui_exposure_taint_ast_r7b4.cjs": "1f8bfb4f2b900363",
+   "cell_id_agrees_with_door_pinned_ui_exposure_taint_ast_r7b.cjs": true,
+   "cell_id_agrees_with_door_pinned_ui_exposure_taint_ast_r7b1.cjs": true,
+   "cell_id_agrees_with_door_pinned_ui_exposure_taint_ast_r7b4.cjs": true
+  },
+  "CnxMeasuredFacts.tsx:57|UPSTREAM_TEXT_VIA_HELPER_TO_DOM": {
+   "cell": "CnxMeasuredFacts.tsx:57|UPSTREAM_TEXT_VIA_HELPER_TO_DOM",
+   "in_door_pinned": true,
+   "ui_exposure_taint_ast_r7b.cjs": "cdfe4dfe298f1093",
+   "ui_exposure_taint_ast_r7b1.cjs": "cdfe4dfe298f1093",
+   "ui_exposure_taint_ast_r7b4.cjs": "cdfe4dfe298f1093",
+   "cell_id_agrees_with_door_pinned_ui_exposure_taint_ast_r7b.cjs": true,
+   "cell_id_agrees_with_door_pinned_ui_exposure_taint_ast_r7b1.cjs": true,
+   "cell_id_agrees_with_door_pinned_ui_exposure_taint_ast_r7b4.cjs": true
+  },
+  "DestinationPreparationPanel.tsx:421|UPSTREAM_EXCEPTION_TO_DOM": {
+   "cell": "DestinationPreparationPanel.tsx:421|UPSTREAM_EXCEPTION_TO_DOM",
+   "in_door_pinned": true,
+   "ui_exposure_taint_ast_r7b.cjs": "69089b117b4151f1",
+   "ui_exposure_taint_ast_r7b1.cjs": "69089b117b4151f1",
+   "ui_exposure_taint_ast_r7b4.cjs": "69089b117b4151f1",
+   "cell_id_agrees_with_door_pinned_ui_exposure_taint_ast_r7b.cjs": true,
+   "cell_id_agrees_with_door_pinned_ui_exposure_taint_ast_r7b1.cjs": true,
+   "cell_id_agrees_with_door_pinned_ui_exposure_taint_ast_r7b4.cjs": true
+  },
+  "DestinationPreparationPanel.tsx:544|UPSTREAM_EXCEPTION_TO_DOM": {
+   "cell": "DestinationPreparationPanel.tsx:544|UPSTREAM_EXCEPTION_TO_DOM",
+   "in_door_pinned": true,
+   "ui_exposure_taint_ast_r7b.cjs": "99744f615f602330",
+   "ui_exposure_taint_ast_r7b1.cjs": "99744f615f602330",
+   "ui_exposure_taint_ast_r7b4.cjs": "99744f615f602330",
+   "cell_id_agrees_with_door_pinned_ui_exposure_taint_ast_r7b.cjs": true,
+   "cell_id_agrees_with_door_pinned_ui_exposure_taint_ast_r7b1.cjs": true,
+   "cell_id_agrees_with_door_pinned_ui_exposure_taint_ast_r7b4.cjs": true
+  },
+  "DestinationPreparationPanel.tsx:597|UPSTREAM_EXCEPTION_TO_DOM": {
+   "cell": "DestinationPreparationPanel.tsx:597|UPSTREAM_EXCEPTION_TO_DOM",
+   "in_door_pinned": true,
+   "ui_exposure_taint_ast_r7b.cjs": "e893bc679cefe90f",
+   "ui_exposure_taint_ast_r7b1.cjs": "e893bc679cefe90f",
+   "ui_exposure_taint_ast_r7b4.cjs": "e893bc679cefe90f",
+   "cell_id_agrees_with_door_pinned_ui_exposure_taint_ast_r7b.cjs": true,
+   "cell_id_agrees_with_door_pinned_ui_exposure_taint_ast_r7b1.cjs": true,
+   "cell_id_agrees_with_door_pinned_ui_exposure_taint_ast_r7b4.cjs": true
+  },
+  "JourneyTrashPanel.tsx:232|UPSTREAM_PROSE_TO_ATTRIBUTE_SLOT": {
+   "cell": "JourneyTrashPanel.tsx:232|UPSTREAM_PROSE_TO_ATTRIBUTE_SLOT",
+   "in_door_pinned": true,
+   "ui_exposure_taint_ast_r7b.cjs": "863b577aaae8b6e9",
+   "ui_exposure_taint_ast_r7b1.cjs": "863b577aaae8b6e9",
+   "ui_exposure_taint_ast_r7b4.cjs": "863b577aaae8b6e9",
+   "cell_id_agrees_with_door_pinned_ui_exposure_taint_ast_r7b.cjs": true,
+   "cell_id_agrees_with_door_pinned_ui_exposure_taint_ast_r7b1.cjs": true,
+   "cell_id_agrees_with_door_pinned_ui_exposure_taint_ast_r7b4.cjs": true
+  },
+  "JourneyTrashPanel.tsx:233|UPSTREAM_TEXT_VIA_HELPER_TO_DOM": {
+   "cell": "JourneyTrashPanel.tsx:233|UPSTREAM_TEXT_VIA_HELPER_TO_DOM",
+   "in_door_pinned": true,
+   "ui_exposure_taint_ast_r7b.cjs": "0e2fd6823141b44f",
+   "ui_exposure_taint_ast_r7b1.cjs": "0e2fd6823141b44f",
+   "ui_exposure_taint_ast_r7b4.cjs": "0e2fd6823141b44f",
+   "cell_id_agrees_with_door_pinned_ui_exposure_taint_ast_r7b.cjs": true,
+   "cell_id_agrees_with_door_pinned_ui_exposure_taint_ast_r7b1.cjs": true,
+   "cell_id_agrees_with_door_pinned_ui_exposure_taint_ast_r7b4.cjs": true
+  },
+  "PlanWithAiSheet.tsx:884|UPSTREAM_PROSE_TO_ATTRIBUTE_SLOT": {
+   "cell": "PlanWithAiSheet.tsx:884|UPSTREAM_PROSE_TO_ATTRIBUTE_SLOT",
+   "in_door_pinned": true,
+   "ui_exposure_taint_ast_r7b.cjs": "3da2ddc1783bb8e4",
+   "ui_exposure_taint_ast_r7b1.cjs": "3da2ddc1783bb8e4",
+   "ui_exposure_taint_ast_r7b4.cjs": "3da2ddc1783bb8e4",
+   "cell_id_agrees_with_door_pinned_ui_exposure_taint_ast_r7b.cjs": true,
+   "cell_id_agrees_with_door_pinned_ui_exposure_taint_ast_r7b1.cjs": true,
+   "cell_id_agrees_with_door_pinned_ui_exposure_taint_ast_r7b4.cjs": true
+  },
+  "PlanWithAiSheet.tsx:909|UPSTREAM_TEXT_VIA_HELPER_TO_DOM": {
+   "cell": "PlanWithAiSheet.tsx:909|UPSTREAM_TEXT_VIA_HELPER_TO_DOM",
+   "in_door_pinned": true,
+   "ui_exposure_taint_ast_r7b.cjs": "fec78ea862b50245",
+   "ui_exposure_taint_ast_r7b1.cjs": "fec78ea862b50245",
+   "ui_exposure_taint_ast_r7b4.cjs": "fec78ea862b50245",
+   "cell_id_agrees_with_door_pinned_ui_exposure_taint_ast_r7b.cjs": true,
+   "cell_id_agrees_with_door_pinned_ui_exposure_taint_ast_r7b1.cjs": true,
+   "cell_id_agrees_with_door_pinned_ui_exposure_taint_ast_r7b4.cjs": true
+  },
+  "PlanWithAiSheet.tsx:982|UPSTREAM_TEXT_VIA_HELPER_TO_DOM": {
+   "cell": "PlanWithAiSheet.tsx:982|UPSTREAM_TEXT_VIA_HELPER_TO_DOM",
+   "in_door_pinned": true,
+   "ui_exposure_taint_ast_r7b.cjs": "fd20c87a2369a807",
+   "ui_exposure_taint_ast_r7b1.cjs": "fd20c87a2369a807",
+   "ui_exposure_taint_ast_r7b4.cjs": "fd20c87a2369a807",
+   "cell_id_agrees_with_door_pinned_ui_exposure_taint_ast_r7b.cjs": true,
+   "cell_id_agrees_with_door_pinned_ui_exposure_taint_ast_r7b1.cjs": true,
+   "cell_id_agrees_with_door_pinned_ui_exposure_taint_ast_r7b4.cjs": true
+  },
+  "RecoveryRequiredPanel.tsx:299|UPSTREAM_TEXT_VIA_HELPER_TO_DOM": {
+   "cell": "RecoveryRequiredPanel.tsx:299|UPSTREAM_TEXT_VIA_HELPER_TO_DOM",
+   "in_door_pinned": true,
+   "ui_exposure_taint_ast_r7b.cjs": "7feb812a1e486a9d",
+   "ui_exposure_taint_ast_r7b1.cjs": "MISSING",
+   "ui_exposure_taint_ast_r7b4.cjs": "MISSING",
+   "cell_id_agrees_with_door_pinned_ui_exposure_taint_ast_r7b.cjs": true
+  },
+  "SimulationPanel.tsx:937|UPSTREAM_TEXT_VIA_HELPER_TO_DOM": {
+   "cell": "SimulationPanel.tsx:937|UPSTREAM_TEXT_VIA_HELPER_TO_DOM",
+   "in_door_pinned": true,
+   "ui_exposure_taint_ast_r7b.cjs": "fca34cf42fe474c4",
+   "ui_exposure_taint_ast_r7b1.cjs": "fca34cf42fe474c4",
+   "ui_exposure_taint_ast_r7b4.cjs": "fca34cf42fe474c4",
+   "cell_id_agrees_with_door_pinned_ui_exposure_taint_ast_r7b.cjs": true,
+   "cell_id_agrees_with_door_pinned_ui_exposure_taint_ast_r7b1.cjs": true,
+   "cell_id_agrees_with_door_pinned_ui_exposure_taint_ast_r7b4.cjs": true
+  }
+ },
+ "lost_from_newer_than_the_door_pinned_ruler": {
+  "ui_exposure_taint_ast_r7b1.cjs": [
+   "RecoveryRequiredPanel.tsx:299|UPSTREAM_TEXT_VIA_HELPER_TO_DOM"
+  ],
+  "ui_exposure_taint_ast_r7b4.cjs": [
+   "RecoveryRequiredPanel.tsx:299|UPSTREAM_TEXT_VIA_HELPER_TO_DOM"
+  ]
+ },
+ "only_the_door_pinned_ruler_misses": {
+  "ui_exposure_taint_ast_r7b1.cjs": [],
+  "ui_exposure_taint_ast_r7b4.cjs": []
+ }
+}
