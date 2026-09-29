@@ -1,0 +1,52 @@
+{
+ "line_ref": "mirror/integration-frontend-apple-pass1",
+ "line_sha_readback": "4f5dda12f6ae8fdbfbc0d78dba3af14f24f2d6bb",
+ "tsx_files": 108,
+ "rulers": {
+  "r7b": {
+   "file": "ui_exposure_taint_ast_r7b.cjs",
+   "cells_total": 12,
+   "hits": 12,
+   "keys": [
+    "ActivityDetail.tsx:216|RAW_BODY_TO_DOM",
+    "CnxMeasuredFacts.tsx:57|UPSTREAM_TEXT_VIA_HELPER_TO_DOM",
+    "DestinationPreparationPanel.tsx:421|UPSTREAM_EXCEPTION_TO_DOM",
+    "DestinationPreparationPanel.tsx:544|UPSTREAM_EXCEPTION_TO_DOM",
+    "DestinationPreparationPanel.tsx:597|UPSTREAM_EXCEPTION_TO_DOM",
+    "JourneyTrashPanel.tsx:232|UPSTREAM_PROSE_TO_ATTRIBUTE_SLOT",
+    "JourneyTrashPanel.tsx:233|UPSTREAM_TEXT_VIA_HELPER_TO_DOM",
+    "PlanWithAiSheet.tsx:884|UPSTREAM_PROSE_TO_ATTRIBUTE_SLOT",
+    "PlanWithAiSheet.tsx:909|UPSTREAM_TEXT_VIA_HELPER_TO_DOM",
+    "PlanWithAiSheet.tsx:982|UPSTREAM_TEXT_VIA_HELPER_TO_DOM",
+    "RecoveryRequiredPanel.tsx:299|UPSTREAM_TEXT_VIA_HELPER_TO_DOM",
+    "SimulationPanel.tsx:937|UPSTREAM_TEXT_VIA_HELPER_TO_DOM"
+   ],
+   "recovery_cells": [
+    "RecoveryRequiredPanel.tsx:299|UPSTREAM_TEXT_VIA_HELPER_TO_DOM"
+   ]
+  },
+  "r7b4": {
+   "file": "ui_exposure_taint_ast_r7b4.cjs",
+   "cells_total": 11,
+   "hits": 11,
+   "keys": [
+    "ActivityDetail.tsx:216|RAW_BODY_TO_DOM",
+    "CnxMeasuredFacts.tsx:57|UPSTREAM_TEXT_VIA_HELPER_TO_DOM",
+    "DestinationPreparationPanel.tsx:421|UPSTREAM_EXCEPTION_TO_DOM",
+    "DestinationPreparationPanel.tsx:544|UPSTREAM_EXCEPTION_TO_DOM",
+    "DestinationPreparationPanel.tsx:597|UPSTREAM_EXCEPTION_TO_DOM",
+    "JourneyTrashPanel.tsx:232|UPSTREAM_PROSE_TO_ATTRIBUTE_SLOT",
+    "JourneyTrashPanel.tsx:233|UPSTREAM_TEXT_VIA_HELPER_TO_DOM",
+    "PlanWithAiSheet.tsx:884|UPSTREAM_PROSE_TO_ATTRIBUTE_SLOT",
+    "PlanWithAiSheet.tsx:909|UPSTREAM_TEXT_VIA_HELPER_TO_DOM",
+    "PlanWithAiSheet.tsx:982|UPSTREAM_TEXT_VIA_HELPER_TO_DOM",
+    "SimulationPanel.tsx:937|UPSTREAM_TEXT_VIA_HELPER_TO_DOM"
+   ],
+   "recovery_cells": []
+  }
+ },
+ "lost_on_the_current_line": [
+  "RecoveryRequiredPanel.tsx:299|UPSTREAM_TEXT_VIA_HELPER_TO_DOM"
+ ],
+ "gained_on_the_current_line": []
+}
