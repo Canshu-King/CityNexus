@@ -1,0 +1,116 @@
+ORD-0464 · abort-reason gate · run r1
+
+WHAT WAS RUN
+  command : CITYNEXUS_ORD0386_MATCH=qoder-ord0464 python run_e2e_0386_r1.py e2e
+  runner  : D:/moodle/_qoder_q_ord0369_wk\run_e2e_0386_r1.py (refuses unless both lane listeners are up)
+  lane    : review/ord0464-abort-reason/lane_r1.py -- started both legs and proved them before any browser ran
+  tree    : D:/moodle/_qoder_q_ord0464  branch review/Q-ord0464-abort-reason  HEAD 73425a41c1d629f4d0ddf167ed9501e4fceab165
+  base    : 45513fc7957214dc385b4dffea9a662a0d8b1d1c (the authoritative line the commander's 13:55 block read)
+  spec    : frontend/e2e/qoder-ord0464-abort-reason.spec.ts  19406 bytes  git blob cf924f8b764f52996e95e932e35504a6b8ff23fa  335 lines
+  shape   : git diff --shortstat 45513fc7957214dc385b4dffea9a662a0d8b1d1c 73425a41c1d629f4d0ddf167ed9501e4fceab165  ->  11 files changed, 1555 insertions(+), 6 deletions(-)
+  export  : D:/moodle/_qoder_q_ord0369_wk\build\frontend (gate.py synced 266 files; the worktree stays source-only)
+
+WHAT ANSWERED
+  backend : uvicorn app.main:app on :8713, started by lane_r1 from THIS tree's backend/
+            database = D:/moodle/_qoder_q_ord0369_wk\q0386.db (this lane's own copy; not backend/data/*.db, not _preview.db)
+  front   : vite preview on :4192 over D:/moodle/_qoder_q_ord0369_wk\dist_cand -- a built bundle, not `npm run dev`
+  proof 1 : scene journey 9c6c3d73-8b8e-4f71-beaf-32bc87aba035: in MY copy=1 versions=9; probe versions=21
+  proof 2 : lane_r1 prints "served==disk: True" -- the bytes :4192 serves are the bytes this tree built
+  bundle  : assets/index-CZv-0a3I.js
+            this is the generation the arms ran against and the kill table was re-run against; after all
+            six mutants were restored byte-for-byte and rebuilt, the same asset name came back and the
+            eight arms ran green again
+
+RESULT
+  playwright rc = 0
+  stats: {'expected': 8, 'unexpected': 0, 'skipped': 0, 'flaky': 0, 'duration': 20107.539}
+  A1 屏上八项就是契约那八项，机器词面不上屏                                 passed 3255ms
+  A2 勾了就走真门：一行记录、旅客的顺序、刷新后还说同样的话                         passed 3589ms
+  A3 跳过是它自己那一格，不是「没原因」也不是「说了原因」                          passed 1633ms
+  A4 输入框上限就是那扇门真的上限                                      passed 1449ms
+  A5 什么都没勾时，等待的那枚按钮自己说明为什么                               passed 1605ms
+  A6 服务器具名的拒绝上屏时说的是人话，带的是那张回执                            passed 1730ms
+  A8 没人问过的丢弃，屏上说的是没问过，不是旅客答了「不答」                         passed 1388ms
+  A7 手机上这一屏真的点得到：滚进视口、按中心命中                              passed 1545ms
+
+THE ROWS THE ARMS ACTUATED (no response stubbing anywhere in this spec)
+  every journey is created through POST /travelers + POST /journeys and binned through the real DELETE
+  door. Read back out of D:/moodle/_qoder_q_ord0369_wk\q0386.db after the run:
+    ORD-0464 A2            journeys.id=8cc8a1a1-e033-4a76-bc94-4a38b3af7976 journey_outcome_events.rowid=1 occurred_at_actual=2026-09-29T07:22:48.341489+00:00
+      payload={"codes": ["DATES_OR_PLACE_CHANGED", "BUDGET_DOES_NOT_FIT"], "note": "住宿那一晚超了", "reason_state": "DECLARED"}
+    ORD-0464 A3            journeys.id=3cf4d4d1-d716-4266-8810-683bc4676a47 journey_outcome_events.rowid=2 occurred_at_actual=2026-09-29T07:22:51.051902+00:00
+      payload={"codes": [], "note": null, "reason_state": "SKIPPED_BY_TRAVELER"}
+    ORD-0464 A2            journeys.id=06171c89-5fd8-40e2-a66c-2eb3d69dbd59 journey_outcome_events.rowid=3 occurred_at_actual=2026-09-29T07:24:23.738650+00:00
+      payload={"codes": ["DATES_OR_PLACE_CHANGED", "BUDGET_DOES_NOT_FIT"], "note": "住宿那一晚超了", "reason_state": "DECLARED"}
+    ORD-0464 A3            journeys.id=1d39086c-d5bf-4303-9f8b-f653f7b0103a journey_outcome_events.rowid=4 occurred_at_actual=2026-09-29T07:24:25.985455+00:00
+      payload={"codes": [], "note": null, "reason_state": "SKIPPED_BY_TRAVELER"}
+    ORD-0464 A4-accepts    journeys.id=e2edf41f-33d5-49b6-8f2b-659e7a191e8a journey_outcome_events.rowid=5 occurred_at_actual=2026-09-29T07:24:27.450812+00:00
+      payload={"codes": ["OTHER"], "note": "字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字", "reason_state": "DECLARED"}
+    ORD-0464 A2            journeys.id=ed758b5b-e844-41c1-91e3-80a40ce650b4 journey_outcome_events.rowid=6 occurred_at_actual=2026-09-29T07:26:48.742865+00:00
+      payload={"codes": ["DATES_OR_PLACE_CHANGED", "BUDGET_DOES_NOT_FIT"], "note": "住宿那一晚超了", "reason_state": "DECLARED"}
+    ORD-0464 A3            journeys.id=39ca92c9-1077-4fce-b1d7-9ff5081a1a08 journey_outcome_events.rowid=7 occurred_at_actual=2026-09-29T07:26:50.913886+00:00
+      payload={"codes": [], "note": null, "reason_state": "SKIPPED_BY_TRAVELER"}
+    ORD-0464 A4-accepts    journeys.id=d34b27cb-5284-4c4c-b210-e85ef8ad494a journey_outcome_events.rowid=8 occurred_at_actual=2026-09-29T07:26:54.126326+00:00
+      payload={"codes": ["OTHER"], "note": "字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字", "reason_state": "DECLARED"}
+    ORD-0464 A2            journeys.id=a214fed6-fc93-4f97-bf6e-2906c123cb47 journey_outcome_events.rowid=9 occurred_at_actual=2026-09-29T07:28:27.743172+00:00
+      payload={"codes": ["DATES_OR_PLACE_CHANGED", "BUDGET_DOES_NOT_FIT"], "note": "住宿那一晚超了", "reason_state": "DECLARED"}
+    ORD-0464 A3            journeys.id=fe3ad7ab-2a18-41a4-976b-e29cd61453d5 journey_outcome_events.rowid=10 occurred_at_actual=2026-09-29T07:28:30.121013+00:00
+      payload={"codes": [], "note": null, "reason_state": "SKIPPED_BY_TRAVELER"}
+    ORD-0464 A4-accepts    journeys.id=d68e5917-d9f1-4551-a108-76b7eb0a7fa2 journey_outcome_events.rowid=11 occurred_at_actual=2026-09-29T07:28:31.784302+00:00
+      payload={"codes": ["OTHER"], "note": "字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字", "reason_state": "DECLARED"}
+    ORD-0464 A8            journeys.id=d10c8ced-16f5-49d6-a986-44b26ff6590e journey_outcome_events.rowid=12 occurred_at_actual=2026-09-29T07:28:35.740844+00:00
+      payload={"codes": [], "note": null, "reason_state": "NOT_ASKED"}
+    ORD-0464 A8            journeys.id=be6656bc-abe2-4963-888b-d013e99dd804 journey_outcome_events.rowid=13 occurred_at_actual=2026-09-29T07:32:27.222186+00:00
+      payload={"codes": [], "note": null, "reason_state": "NOT_ASKED"}
+    ORD-0464 A3            journeys.id=3bf0af25-e9dd-40f8-a029-8ee0efd8840d journey_outcome_events.rowid=14 occurred_at_actual=2026-09-29T07:34:01.736830+00:00
+      payload={"codes": [], "note": null, "reason_state": "SKIPPED_BY_TRAVELER"}
+    ORD-0464 A2            journeys.id=9d7ecccc-4ef8-4780-ac79-5e65f9f62ec2 journey_outcome_events.rowid=15 occurred_at_actual=2026-09-29T07:38:08.345959+00:00
+      payload={"codes": ["BUDGET_DOES_NOT_FIT", "DATES_OR_PLACE_CHANGED"], "note": "住宿那一晚超了", "reason_state": "DECLARED"}
+    ORD-0464 A2            journeys.id=24b3644d-7046-4c68-9795-ed4d61a853eb journey_outcome_events.rowid=16 occurred_at_actual=2026-09-29T07:41:36.757734+00:00
+      payload={"codes": ["DATES_OR_PLACE_CHANGED", "BUDGET_DOES_NOT_FIT"], "note": "住宿那一晚超了", "reason_state": "DECLARED"}
+    ORD-0464 A3            journeys.id=5cb1ce86-a628-4206-9a42-64c8443f3e56 journey_outcome_events.rowid=17 occurred_at_actual=2026-09-29T07:41:39.819012+00:00
+      payload={"codes": [], "note": null, "reason_state": "SKIPPED_BY_TRAVELER"}
+    ORD-0464 A4-accepts    journeys.id=0e8cd144-fd93-4337-99b7-eb9624296be1 journey_outcome_events.rowid=18 occurred_at_actual=2026-09-29T07:41:41.560600+00:00
+      payload={"codes": ["OTHER"], "note": "字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字", "reason_state": "DECLARED"}
+    ORD-0464 A8            journeys.id=d89fc7dd-428f-4a32-a050-54493da7e738 journey_outcome_events.rowid=19 occurred_at_actual=2026-09-29T07:41:45.154795+00:00
+      payload={"codes": [], "note": null, "reason_state": "NOT_ASKED"}
+    ORD-0464 A2            journeys.id=55680ea8-ae9c-4984-9f16-d5d92c04a416 journey_outcome_events.rowid=23 occurred_at_actual=2026-09-29T10:38:32.502986+00:00
+      payload={"codes": ["DATES_OR_PLACE_CHANGED", "BUDGET_DOES_NOT_FIT"], "note": "住宿那一晚超了", "reason_state": "DECLARED"}
+    ORD-0464 A3            journeys.id=49279a17-e92e-4106-9a11-66db638f3c22 journey_outcome_events.rowid=24 occurred_at_actual=2026-09-29T10:38:34.775242+00:00
+      payload={"codes": [], "note": null, "reason_state": "SKIPPED_BY_TRAVELER"}
+    ORD-0464 A4-accepts    journeys.id=02422f21-113f-4d85-aae7-9615865fea56 journey_outcome_events.rowid=25 occurred_at_actual=2026-09-29T10:38:36.285875+00:00
+      payload={"codes": ["OTHER"], "note": "字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字", "reason_state": "DECLARED"}
+    ORD-0464 A8            journeys.id=0a566fb5-ff94-40d8-814f-076ea9f58003 journey_outcome_events.rowid=26 occurred_at_actual=2026-09-29T10:38:39.784863+00:00
+      payload={"codes": [], "note": null, "reason_state": "NOT_ASKED"}
+    ORD-0464 A8            journeys.id=aaec0b0d-7dd3-4d01-b10b-d4c011ed4011 journey_outcome_events.rowid=27 occurred_at_actual=2026-09-29T10:39:39.240805+00:00
+      payload={"codes": [], "note": null, "reason_state": "NOT_ASKED"}
+    ORD-0464 A3            journeys.id=4d278e56-8991-49d5-8d04-f7f960ea5ea0 journey_outcome_events.rowid=28 occurred_at_actual=2026-09-29T10:40:29.360783+00:00
+      payload={"codes": [], "note": null, "reason_state": "SKIPPED_BY_TRAVELER"}
+    ORD-0464 A2            journeys.id=76e12283-81ae-4011-9def-ddca0194fc0b journey_outcome_events.rowid=29 occurred_at_actual=2026-09-29T10:45:08.894030+00:00
+      payload={"codes": ["BUDGET_DOES_NOT_FIT", "DATES_OR_PLACE_CHANGED"], "note": "住宿那一晚超了", "reason_state": "DECLARED"}
+    ORD-0464 A2            journeys.id=219fcc72-75aa-4b52-80b4-3fab4b220e2d journey_outcome_events.rowid=30 occurred_at_actual=2026-09-29T10:48:35.954620+00:00
+      payload={"codes": ["DATES_OR_PLACE_CHANGED", "BUDGET_DOES_NOT_FIT"], "note": "住宿那一晚超了", "reason_state": "DECLARED"}
+    ORD-0464 A3            journeys.id=e9568061-af8c-40ec-b32d-93bfbee8d002 journey_outcome_events.rowid=31 occurred_at_actual=2026-09-29T10:48:38.007192+00:00
+      payload={"codes": [], "note": null, "reason_state": "SKIPPED_BY_TRAVELER"}
+    ORD-0464 A4-accepts    journeys.id=8aaf322c-434e-4ce9-b2c8-2dbe3fc7a08c journey_outcome_events.rowid=32 occurred_at_actual=2026-09-29T10:48:39.655519+00:00
+      payload={"codes": ["OTHER"], "note": "字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字", "reason_state": "DECLARED"}
+    ORD-0464 A8            journeys.id=ef4b26e9-fd00-4e6d-b23a-00f0cd5edbc8 journey_outcome_events.rowid=33 occurred_at_actual=2026-09-29T10:48:43.499650+00:00
+      payload={"codes": [], "note": null, "reason_state": "NOT_ASKED"}
+
+FIRST RUNS OF THIS GATE WERE RED FOR INSTRUMENT REASONS, AND THOSE READINGS ARE KEPT
+  1. the lane's `vite preview` was first started without CITYNEXUS_BACKEND_PORT, so its proxy used the
+     default target in `frontend/vite.config.ts:142` (:8000, nothing listening). Every arm's first step
+     got a proxy 500 -- `Content-Type: text/plain`, no `error.code` envelope -- and that run reported
+     `stats: {'expected': 0, 'unexpected': 7}`. It is an instrument failure, not a product reading.
+  2. `page.request.request` is not a Playwright method; the arms use `page.request.delete`.
+  3. A1 counted the checkboxes before opening the sheet. Its "屏上=0" was the truth about a closed screen.
+  4. one rerun was launched with a typo'd match name (`qoder-od0464`), which matched 0 tests and exited
+     non-zero -- an empty denominator never reads as green here.
+  The screen reader (`review/ord0464-abort-reason/screens_r1.mjs`) also mis-read once, and that miss is
+  what surfaced a real wording defect: the panel rendered "正在丢进回收站…" while it was *reading*.
+  It now has its own `abort.loading` sentence.
+
+WHAT THIS DOES NOT COVER
+  `playwright.config.ts` was not executed. The arms are discovered by it (same `testDir`, the only
+  `testIgnore` is `e2e/legacy`), but a reading through that config would describe whichever backend it
+  starts, so nothing here is quoted from it.
