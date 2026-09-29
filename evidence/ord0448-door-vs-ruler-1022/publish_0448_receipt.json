@@ -1,0 +1,233 @@
+{
+ "schema": "CNX_S4_ORD0448_PUBLISH_R1",
+ "slug": "evidence/ord0448-door-vs-ruler-1022",
+ "stamp": "1022",
+ "evidence_files": [
+  {
+   "path": "evidence/ord0448-door-vs-ruler-1022/cache_probe_r1.py",
+   "bytes": 7883,
+   "local_blob": "9d9954a8dabd010c0cbe1bf15a5e7650df30ca21",
+   "readback_blob": "9d9954a8dabd010c0cbe1bf15a5e7650df30ca21",
+   "byte_equal": true,
+   "pushed_commit": "9effcdf6d4989aae14d087641d741525bd557f16",
+   "exit": 0,
+   "tail": "receipt -> patrol/git_mirror_20260929_102238.json",
+   "verified": true
+  },
+  {
+   "path": "evidence/ord0448-door-vs-ruler-1022/cache_probe_r1.json",
+   "bytes": 2054,
+   "local_blob": "988b71da6989193fbbd23a28fafacf60ade4f73a",
+   "readback_blob": "988b71da6989193fbbd23a28fafacf60ade4f73a",
+   "byte_equal": true,
+   "pushed_commit": "a96926441eea743d72f0f78d1941d0595ebc42f4",
+   "exit": 0,
+   "tail": "receipt -> patrol/git_mirror_20260929_102259.json",
+   "verified": true
+  },
+  {
+   "path": "evidence/ord0448-door-vs-ruler-1022/exposure_arm_proposal_r1.py",
+   "bytes": 10209,
+   "local_blob": "2f3a073de193aa57f46bcdb77d49a26b46a41ecc",
+   "readback_blob": "2f3a073de193aa57f46bcdb77d49a26b46a41ecc",
+   "byte_equal": true,
+   "pushed_commit": "a8690f8f39da6c25e5d9d8a98589ce6a0c05fb08",
+   "exit": 0,
+   "tail": "receipt -> patrol/git_mirror_20260929_102319.json",
+   "verified": true
+  },
+  {
+   "path": "evidence/ord0448-door-vs-ruler-1022/arm_selftest.json",
+   "bytes": 30622,
+   "local_blob": "0ddb1a000d323fe5dfc6a4de6d8bd3aad3e964bd",
+   "readback_blob": "0ddb1a000d323fe5dfc6a4de6d8bd3aad3e964bd",
+   "byte_equal": true,
+   "pushed_commit": "a578f34f5476417e160c776e3a4eaa531e2cc696",
+   "exit": 0,
+   "tail": "receipt -> patrol/git_mirror_20260929_102339.json",
+   "verified": true
+  },
+  {
+   "path": "evidence/ord0448-door-vs-ruler-1022/arm_verdicts_real_pair.json",
+   "bytes": 11268,
+   "local_blob": "355373e9e42c25a41e61face364843a23d9ac7c1",
+   "readback_blob": "355373e9e42c25a41e61face364843a23d9ac7c1",
+   "byte_equal": true,
+   "pushed_commit": "4922867839a33c986dfb636d53448df000e6b426",
+   "exit": 0,
+   "tail": "receipt -> patrol/git_mirror_20260929_102403.json",
+   "verified": true
+  },
+  {
+   "path": "evidence/ord0448-door-vs-ruler-1022/cells_tip.json",
+   "bytes": 3433,
+   "local_blob": "ba1912daa7c782213a7149faff09e097042b9e00",
+   "readback_blob": "ba1912daa7c782213a7149faff09e097042b9e00",
+   "byte_equal": true,
+   "pushed_commit": "e6f3eb281813570fd662db26286090feed797310",
+   "exit": 0,
+   "tail": "receipt -> patrol/git_mirror_20260929_102425.json",
+   "verified": true
+  },
+  {
+   "path": "evidence/ord0448-door-vs-ruler-1022/cells_r3.json",
+   "bytes": 3711,
+   "local_blob": "d4e3920dc83d5b86a050aa23c8ffa44954416bc1",
+   "readback_blob": "d4e3920dc83d5b86a050aa23c8ffa44954416bc1",
+   "byte_equal": true,
+   "pushed_commit": "4c81a51989c04b80ab2699d865a675fee263f781",
+   "exit": 0,
+   "tail": "receipt -> patrol/git_mirror_20260929_102450.json",
+   "verified": true
+  },
+  {
+   "path": "evidence/ord0448-door-vs-ruler-1022/cells_r4.json",
+   "bytes": 3432,
+   "local_blob": "6fd3d128cf4299e035c154ba28ef0552fbf34156",
+   "readback_blob": "6fd3d128cf4299e035c154ba28ef0552fbf34156",
+   "byte_equal": true,
+   "pushed_commit": "e5e06a10aa942d985b073430240db83b3584b3de",
+   "exit": 0,
+   "tail": "receipt -> patrol/git_mirror_20260929_102509.json",
+   "verified": true
+  },
+  {
+   "path": "evidence/ord0448-door-vs-ruler-1022/generation_reconciliation_r1.py",
+   "bytes": 6203,
+   "local_blob": "51953033e2537bad174c3df03f723646661bacdf",
+   "readback_blob": "51953033e2537bad174c3df03f723646661bacdf",
+   "byte_equal": true,
+   "pushed_commit": "68436f1e594bd0fb3b3f42859e3348dc1b36b9ab",
+   "exit": 0,
+   "tail": "receipt -> patrol/git_mirror_20260929_102530.json",
+   "verified": true
+  },
+  {
+   "path": "evidence/ord0448-door-vs-ruler-1022/generation_reconciliation_r1.json",
+   "bytes": 4746,
+   "local_blob": "64379a7b31a2a0efec8d574bb613509286c9b76c",
+   "readback_blob": "64379a7b31a2a0efec8d574bb613509286c9b76c",
+   "byte_equal": true,
+   "pushed_commit": "7864f32ea1de57fcc0a59b3bf6d2fea0d59dd40a",
+   "exit": 0,
+   "tail": "receipt -> patrol/git_mirror_20260929_102551.json",
+   "verified": true
+  },
+  {
+   "path": "evidence/ord0448-door-vs-ruler-1022/spread_isolation_r1.py",
+   "bytes": 10084,
+   "local_blob": "7bc8689459f55277481afc1eaa701ff5838b7751",
+   "readback_blob": "7bc8689459f55277481afc1eaa701ff5838b7751",
+   "byte_equal": true,
+   "pushed_commit": "960d9b1bc11d3062b752854aae8f5117e36417fa",
+   "exit": 0,
+   "tail": "receipt -> patrol/git_mirror_20260929_102613.json",
+   "verified": true
+  },
+  {
+   "path": "evidence/ord0448-door-vs-ruler-1022/spread_isolation_r1.json",
+   "bytes": 5343,
+   "local_blob": "286825ab4e22cf7a5560a681479b3960212a585b",
+   "readback_blob": "286825ab4e22cf7a5560a681479b3960212a585b",
+   "byte_equal": true,
+   "pushed_commit": "36d733ff0327be5dd2b2a6df3ee9265637b35c80",
+   "exit": 0,
+   "tail": "receipt -> patrol/git_mirror_20260929_102635.json",
+   "verified": true
+  }
+ ],
+ "all_evidence_verified": true,
+ "review_branch": {
+  "branch": "review/S4-ord0448-exposure-arm-cell-identity-1022",
+  "base_tip": "4f5dda12f6ae8fdbfbc0d78dba3af14f24f2d6bb",
+  "commit_built": "6f3c176007f78880e3d2d2942667440d12c9eb34",
+  "ls_remote_readback": "6f3c176007f78880e3d2d2942667440d12c9eb34",
+  "readback_equals_built": true,
+  "commit_subject": "6f3c176007f78880e3d2d2942667440d12c9eb34|2026-09-29T10:27:01+08:00|S4-ast-taint ORD-0448: candidate arm cnx_exposure_identity_arm_r1.py (per-cell_id count growth plus the pre-existing-cell report) and the readings that produced it. Not installed; preflight_and_land_r5.py is byte-identical to the commander's. 0 product bytes.",
+  "files_vs_tip_count": 13,
+  "files_vs_tip": [
+   "evidence/ord0448-door-vs-ruler-1022/arm_selftest.json",
+   "evidence/ord0448-door-vs-ruler-1022/arm_verdicts_real_pair.json",
+   "evidence/ord0448-door-vs-ruler-1022/cache_probe_r1.json",
+   "evidence/ord0448-door-vs-ruler-1022/cache_probe_r1.py",
+   "evidence/ord0448-door-vs-ruler-1022/cells_r3.json",
+   "evidence/ord0448-door-vs-ruler-1022/cells_r4.json",
+   "evidence/ord0448-door-vs-ruler-1022/cells_tip.json",
+   "evidence/ord0448-door-vs-ruler-1022/exposure_arm_proposal_r1.py",
+   "evidence/ord0448-door-vs-ruler-1022/generation_reconciliation_r1.json",
+   "evidence/ord0448-door-vs-ruler-1022/generation_reconciliation_r1.py",
+   "evidence/ord0448-door-vs-ruler-1022/spread_isolation_r1.json",
+   "evidence/ord0448-door-vs-ruler-1022/spread_isolation_r1.py",
+   "live_checks/cnx_exposure_identity_arm_r1.py"
+  ],
+  "product_files_touched": [],
+  "door_files_touched": [],
+  "entries": [
+   {
+    "path": "live_checks/cnx_exposure_identity_arm_r1.py",
+    "blob": "2f3a073de193aa57f46bcdb77d49a26b46a41ecc",
+    "bytes": 10209
+   },
+   {
+    "path": "evidence/ord0448-door-vs-ruler-1022/cache_probe_r1.py",
+    "blob": "9d9954a8dabd010c0cbe1bf15a5e7650df30ca21",
+    "bytes": 7883
+   },
+   {
+    "path": "evidence/ord0448-door-vs-ruler-1022/cache_probe_r1.json",
+    "blob": "988b71da6989193fbbd23a28fafacf60ade4f73a",
+    "bytes": 2054
+   },
+   {
+    "path": "evidence/ord0448-door-vs-ruler-1022/exposure_arm_proposal_r1.py",
+    "blob": "2f3a073de193aa57f46bcdb77d49a26b46a41ecc",
+    "bytes": 10209
+   },
+   {
+    "path": "evidence/ord0448-door-vs-ruler-1022/arm_selftest.json",
+    "blob": "0ddb1a000d323fe5dfc6a4de6d8bd3aad3e964bd",
+    "bytes": 30622
+   },
+   {
+    "path": "evidence/ord0448-door-vs-ruler-1022/arm_verdicts_real_pair.json",
+    "blob": "355373e9e42c25a41e61face364843a23d9ac7c1",
+    "bytes": 11268
+   },
+   {
+    "path": "evidence/ord0448-door-vs-ruler-1022/cells_tip.json",
+    "blob": "ba1912daa7c782213a7149faff09e097042b9e00",
+    "bytes": 3433
+   },
+   {
+    "path": "evidence/ord0448-door-vs-ruler-1022/cells_r3.json",
+    "blob": "d4e3920dc83d5b86a050aa23c8ffa44954416bc1",
+    "bytes": 3711
+   },
+   {
+    "path": "evidence/ord0448-door-vs-ruler-1022/cells_r4.json",
+    "blob": "6fd3d128cf4299e035c154ba28ef0552fbf34156",
+    "bytes": 3432
+   },
+   {
+    "path": "evidence/ord0448-door-vs-ruler-1022/generation_reconciliation_r1.py",
+    "blob": "51953033e2537bad174c3df03f723646661bacdf",
+    "bytes": 6203
+   },
+   {
+    "path": "evidence/ord0448-door-vs-ruler-1022/generation_reconciliation_r1.json",
+    "blob": "64379a7b31a2a0efec8d574bb613509286c9b76c",
+    "bytes": 4746
+   },
+   {
+    "path": "evidence/ord0448-door-vs-ruler-1022/spread_isolation_r1.py",
+    "blob": "7bc8689459f55277481afc1eaa701ff5838b7751",
+    "bytes": 10084
+   },
+   {
+    "path": "evidence/ord0448-door-vs-ruler-1022/spread_isolation_r1.json",
+    "blob": "286825ab4e22cf7a5560a681479b3960212a585b",
+    "bytes": 5343
+   }
+  ]
+ }
+}
