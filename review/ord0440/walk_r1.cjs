@@ -42,6 +42,33 @@ function check(name, pass, detail) {
   readings.checks.push({ name, pass, detail });
 }
 
+/* The page's scroll position moves 7-14 px every few hundred milliseconds on this screen, measured
+   identically on the tip's own build and on mine (`review/ord0440/_jitter_who.cjs`, A/B in
+   `review/n3_0440_evidence_r1/jitter_ab_r1.json`): element heights unchanged, every `top` shifted by
+   the same amount, so it is the document scrolling, not the layout reflowing. Playwright's
+   actionability wait gives up inside that jitter. This taps the centre with the mouse only after two
+   consecutive samples of the box agree - a real tap at a real coordinate, just not issued mid-move. */
+async function clickStable(page, locator, attempts = 8) {
+  /* Playwright's own click (which scrolls into view and hit-tests) retried across the scroll jitter.
+     A hand-rolled mouse tap at boundingBox centre was tried first and was worse: it missed the
+     control when the page moved between the two samples, and it silently skipped the scroll-into-view
+     that a below-the-fold button needs. The jitter itself is measured as pre-existing on the tip's own
+     build in review/n3_0440_evidence_r1/jitter_ab_r1.json, so retrying - not forcing - is the honest
+     instrument response: if the control is genuinely unreachable, every attempt fails by name. */
+  await locator.scrollIntoViewIfNeeded().catch(() => {});
+  let lastError = null;
+  for (let i = 0; i < attempts; i += 1) {
+    try {
+      await locator.click({ timeout: 2500 });
+      return { clicked: true, attempt: i + 1 };
+    } catch (error) {
+      lastError = String(error).split("\n")[0].slice(0, 140);
+      await new Promise((res) => setTimeout(res, 300));
+    }
+  }
+  return { clicked: false, attempt: attempts, last_error: lastError };
+}
+
 async function api(page, method, path, body) {
   return page.evaluate(
     async ([m, p, b, tok]) => {
@@ -147,7 +174,8 @@ async function hitCensus(page, selector) {
     await page.screenshot({ path: `${OUT}/${TAG}_no_start.png`, fullPage: true });
     readings.shots.push(`${TAG}_no_start.png`);
   } else {
-    await start.first().click();
+    const startClick = await clickStable(page, start.first());
+    check("G1 the start control takes a tap", startClick.clicked, startClick);
     const abandon = page.locator('[data-testid="prep-abandon"]');
     await abandon.waitFor({ state: "visible", timeout: 20000 });
     const labelBefore = (await abandon.first().textContent() || "").trim();
@@ -165,7 +193,8 @@ async function hitCensus(page, selector) {
 
     /* ---- G2: before the sheet, and still before it after opening the sheet ---- */
     if (abandonRequests.length === 0) {
-      await abandon.first().click();
+      const openClick = await clickStable(page, abandon.first());
+      check("G2 the stop control takes a tap", openClick.clicked, openClick);
     }
     let mounted = true;
     try {
@@ -273,7 +302,8 @@ async function hitCensus(page, selector) {
       await browser.close();
       process.exit(1);
     }
-    await page.click('[data-testid="prep-survey-exit"]');
+    const exitClick = await clickStable(page, page.locator('[data-testid="prep-survey-exit"]'));
+    check("G5 the exit takes a tap", exitClick.clicked, exitClick);
     await page.waitForTimeout(2500);
     const after = opId ? (await api(page, "GET", `/catalog-hydrations/${opId}`)).json : null;
     check("G5 exactly one abandon request left the device", abandonRequests.length === 1, {

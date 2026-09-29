@@ -13,7 +13,7 @@
     },
     {
       "step": "job state read at sheet open",
-      "operation_id": "f0b129fc-38c2-4397-9e20-35cb4db750d2",
+      "operation_id": "42cf486b-89a2-4790-89e3-2fdee9c3d4cf",
       "status": "UNAVAILABLE",
       "terminal": true
     },
@@ -383,8 +383,8 @@
       "step": "survey log",
       "entries": 1,
       "last": {
-        "at": "2026-09-28T23:04:18.138Z",
-        "operation_id": "f0b129fc-38c2-4397-9e20-35cb4db750d2",
+        "at": "2026-09-29T01:08:55.675Z",
+        "operation_id": "42cf486b-89a2-4790-89e3-2fdee9c3d4cf",
         "reasons": [
           "TOO_SLOW",
           "WE_WERE_UNCLEAR"
@@ -423,11 +423,27 @@
       }
     },
     {
+      "name": "G1 the start control takes a tap",
+      "pass": true,
+      "detail": {
+        "clicked": true,
+        "attempt": 1
+      }
+    },
+    {
       "name": "G3 the button's own words are unchanged after the change",
       "pass": true,
       "detail": {
         "label_before": "停止这次准备",
         "expected": "停止这次准备"
+      }
+    },
+    {
+      "name": "G2 the stop control takes a tap",
+      "pass": true,
+      "detail": {
+        "clicked": true,
+        "attempt": 1
       }
     },
     {
@@ -484,6 +500,14 @@
       }
     },
     {
+      "name": "G5 the exit takes a tap",
+      "pass": true,
+      "detail": {
+        "clicked": true,
+        "attempt": 1
+      }
+    },
+    {
       "name": "G5 exactly one abandon request left the device",
       "pass": true,
       "detail": {
@@ -503,8 +527,8 @@
       "pass": true,
       "detail": {
         "record": {
-          "at": "2026-09-28T23:04:18.138Z",
-          "operation_id": "f0b129fc-38c2-4397-9e20-35cb4db750d2",
+          "at": "2026-09-29T01:08:55.675Z",
+          "operation_id": "42cf486b-89a2-4790-89e3-2fdee9c3d4cf",
           "reasons": [
             "TOO_SLOW",
             "WE_WERE_UNCLEAR"
@@ -523,6 +547,6 @@
     "zh_final.png"
   ],
   "abandon_request_count": 1,
-  "pass_count": 14,
+  "pass_count": 17,
   "fail_count": 0
 }

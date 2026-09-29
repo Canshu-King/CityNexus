@@ -362,11 +362,6 @@ export function DestinationPreparationPanel({ journeyId, onOpenPlan, initialQuer
         <p className="v8-kicker" data-testid="prep-survey-context">
           {zh ? "准备进度" : "Preparation"} · {job.status}
         </p>
-        {actionError && (
-          <p className="role-alert" role="alert" data-testid="prep-action-error">
-            {actionError}
-          </p>
-        )}
         <PrepAbandonSurvey
           zh={zh}
           operationId={job.operation_id}

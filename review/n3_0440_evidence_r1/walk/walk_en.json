@@ -13,9 +13,9 @@
     },
     {
       "step": "job state read at sheet open",
-      "operation_id": "6ec96701-aea8-40f3-a3f1-07cf7a1fd2a5",
-      "status": "UNAVAILABLE",
-      "terminal": true
+      "operation_id": "b7a2d3ea-751e-4a46-af60-4019cbbd4f4d",
+      "status": "RUNNING",
+      "terminal": false
     },
     {
       "step": "sheet hit census",
@@ -35,7 +35,7 @@
           "strict": true,
           "ancestor_only": false,
           "within_floor": true,
-          "text": "Preparation · RUNNING"
+          "text": "Preparation · QUEUED"
         },
         {
           "testid": "prep-survey",
@@ -383,8 +383,8 @@
       "step": "survey log",
       "entries": 1,
       "last": {
-        "at": "2026-09-28T22:54:36.511Z",
-        "operation_id": "6ec96701-aea8-40f3-a3f1-07cf7a1fd2a5",
+        "at": "2026-09-29T01:10:22.607Z",
+        "operation_id": "b7a2d3ea-751e-4a46-af60-4019cbbd4f4d",
         "reasons": [
           "TOO_SLOW",
           "WE_WERE_UNCLEAR"
@@ -423,11 +423,27 @@
       }
     },
     {
+      "name": "G1 the start control takes a tap",
+      "pass": true,
+      "detail": {
+        "clicked": true,
+        "attempt": 1
+      }
+    },
+    {
       "name": "G3 the button's own words are unchanged after the change",
       "pass": true,
       "detail": {
         "label_before": "Stop this preparation",
         "expected": "Stop this preparation"
+      }
+    },
+    {
+      "name": "G2 the stop control takes a tap",
+      "pass": true,
+      "detail": {
+        "clicked": true,
+        "attempt": 1
       }
     },
     {
@@ -484,6 +500,14 @@
       }
     },
     {
+      "name": "G5 the exit takes a tap",
+      "pass": true,
+      "detail": {
+        "clicked": true,
+        "attempt": 1
+      }
+    },
+    {
       "name": "G5 exactly one abandon request left the device",
       "pass": true,
       "detail": {
@@ -503,8 +527,8 @@
       "pass": true,
       "detail": {
         "record": {
-          "at": "2026-09-28T22:54:36.511Z",
-          "operation_id": "6ec96701-aea8-40f3-a3f1-07cf7a1fd2a5",
+          "at": "2026-09-29T01:10:22.607Z",
+          "operation_id": "b7a2d3ea-751e-4a46-af60-4019cbbd4f4d",
           "reasons": [
             "TOO_SLOW",
             "WE_WERE_UNCLEAR"
@@ -523,6 +547,6 @@
     "en_final.png"
   ],
   "abandon_request_count": 1,
-  "pass_count": 14,
+  "pass_count": 17,
   "fail_count": 0
 }
