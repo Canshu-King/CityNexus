@@ -16588,6 +16588,32 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### cmdr 15:07 · 现尖真执行套件：红集合与逐笔归因（三枚是我导出的形状、一枚是真信号）· ORD-0467 开单 · 第二轮落地两笔退回三笔 · 镜像两次 401 已自复
+
+**一、第二轮批量落地（同一道只读 re-cut：`git merge-tree --write-tree` 加逐枚车道字节相等，再走落地门）**
+- ORD-0435 批量多选落 `9d3607d004725704a2cdf9e24f301c33215a3a80`，件内 `frontend/e2e/qoder-ord0435-poi-batch-multiselect.spec.ts:1` 与 `frontend/src/i18n/LocaleContext.tsx:1` 各改一处，逐枚字节与车道自己的 blob 相等。
+- ORD-0455 估算四级梯落 `4efe7efb70ac4e08471da9bd5153f178348e4db9`，面板本体是 `frontend/src/features/estimation/EstimationLadderPanel.tsx:1`，这是今天单批产品字节最大的一笔。
+- 退回三笔，具名冲突面：ORD-0444 含 `backend/app/main.py:1`（件尖 `e016bea70c3f2260c39f28b8a0a4a510df70f889`）、ORD-0437 含 `backend/app/main.py`（件尖 `be34831df4746080d232fa06f0ca4e4ce38b895f` 系 r7）、ORD-0440 含 `frontend/src/i18n/LocaleContext.tsx`（件尖 `7d4c3142dfd91c4aeb5e4595944099f587858254`）。三条都已按会话 id 敲过；裁定只落账本，窗口里我只报事实与尖位。
+- `backend/app/main.py` 与 `frontend/src/i18n/LocaleContext.tsx` 现在是每落一笔就会超一代的热面，交件前请前一秒重读尖位。
+
+**二、真执行套件（不是 collect-only）**
+- 对象 = 现尖 `4efe7efb70ac4e08471da9bd5153f178348e4db9`；导出目录 `v_4efe7efb`；解释器 `D:/moodle/CityNexus/.venv/Scripts/python.exe`；命令 = `python -m pytest -q -rf --tb=line -p no:randomly`（cwd 在 `backend`，`DEEPSEEK_API_KEY` 已 unset，`PYTHONPATH` 指向该导出，无其它进程同跑）。
+- 结果（同一枚尖 `4efe7efb70ac4e08471da9bd5153f178348e4db9`）= 14 failed, 1434 passed, 15 skipped, 1 xfailed，用时 552 s，输出件在 `live_checks/_fullsuite_4efe7efb_r1.out`。
+- 与具名基线对照：基线是 ORD-0460 随件入库那份两次跑，`review/ord0460/fullsuite_redsets_r1.txt:5` 记 run_1 为 10 failed 与 1438 passed。本次十四枚红把那十枚全部覆盖（集合差为空），另新出四枚，逐笔归因见下；判语按上午定的规矩写——两趟都贴，不写"无新红"。
+- 新出四枚里三枚是**我的导出形状造成的假红**，不是产品的红，具名如下：`backend/tests/test_qoder_ord0402_recycle_bin.py:146` 自己就写着 "a partial export that drops review/ cannot judge this door"；`backend/tests/test_v18_3_convergence.py:59` 找不到根上的 `PACKAGE-MANIFEST.json`，我把根文件补进导出后它改报缺 `CURRENT_STATUS.md`。补齐 `review`（六十余 MB）与根文件后单跑，ORD-0434 的匿名读回与 ORD-0402 的列表门都转绿——这条归因是复跑复现的，不是推理出来的。
+- 记下这条仪表缺陷并立规矩：我以后自己起真执行套件时，导出集合固定为 `backend data contracts tools scripts agent-mcp frontend qoder-handoff review` 加根文件；缺任一枚都会造出假红。
+
+**三、第四枚是真信号，开单 ORD-0467（车道 2d2d7428）**
+- `backend/tests/test_qoder_ord0307_credential_gate.py:180` 断言产品路径内的命中为零，实测读到一枚，位置 `frontend/src/features/pending/pendingPlaceWrites.ts:122`：形如 `token:` 后接一枚 `V13_` 家族名，尺按 "labeled_assignment" 命中（我在这块里不贴任何凭据形状的字面，也不贴那枚摘要）。
+- 判读：那是一枚**具名拒绝码**，不是凭据；但它被放在一个叫 `token` 的字段上，并原样陈列在 details 面 `frontend/src/features/pending/PendingSetPanel.tsx:482`（那一行按 X-5 的裁法陈列原始字段，本身没错）。尺命中它可以理解，但不能就这么留着——误判的根因在产品面把拒绝码叫 token。
+- 工单 ORD-0467：先把具名拒绝码的词表请进契约。现尖 `contracts/openapi.yaml:1` 里以 `V13_` 检索是零条枚举，我实读到的只有 `backend/app/main.py` 发射加两枚前端引用（`frontend/src/features/discovery/RealCityDiscoveryPanel.tsx:1` 与上面那枚 pending 文件）；枚名清单我原样落在 `live_checks/_cmdr_v13_probe.txt`。要求：这族码写进契约成一枚 enum，凭据尺**只按契约枚举逐字节比对**才排除；反例双向自证——真凭据形状仍红、长得像这族但契约里没有的串仍红。
+- 不许走的路（提前钉死，交了这种件我一律拒）：不许给 `in_product_path` 加豁免词表把它洗绿，不许把 ORD-0307 那把门的断言改小，也不许只把屏上那行 `reason_token=` 的文案改掉而留着字段名说谎。
+
+**四、账本镜像两次红与自复**：14:36 与 14:47 两轮代插的 mirror PUT 各报一次 `Bad credentials`；同刻我用同一枚 token 只读 `api.github.com` 的用户面得 http 200 并读回用户名（token 本体不打印），据此判它不是凭据失效。14:54 在没有并发 `git push` 的空档重跑镜像，PUT 得 http 200，远端 blob 回读 9707609 B 逐字节相等，STATE 为 BYTE_LEVEL_CONFIRMED。落成一条规矩：**镜像不与产品枝推送并发**；红了一次就退到空档重跑，不许跳过读回。
+
+**五、接下来我做什么（不用你回）**：现尖私有栈换代与多屏亲测（估算四级梯、批量多选、待规划池、站点列表第三态、pill 让位、圆角档位、单复数屏读）我自己走一遍并另块交读数；ORD-0466 版本级共享与 ORD-0461 三只写门在车道手上；ORD-0444、ORD-0437、ORD-0440 三枝等 rebase 回来我继续排队落地。
+
+
 ### ORD-0424 续刀：补我 06:24 那块具名的最后一条欠账（账本 `CITYNEXUS_AGENT_CONTROL.md:20443`），跨行三元与 `useState` 默认值按有界窗口纳入；同一棵树上零丢零增，夹具里注入的全抓到（车道 S4-ast-taint，会话 1d64acf5-3f5f-48e8-a7b4-9d7a37996edb，14:57 交）
 
 边界：0 产品字节。新面 `tools/cnx_copy_tiers_multiline_fallback_r1.py` 由已发布 r2 的字节切出（blob c41afdb42a1df67a1fbd1239bedb871d46590609，94887 字节），切它的两份片段也一并上架（片段本身就是证据）；`cnx_copy_tiers_r1.py`、`cnx_copy_tiers_r2.py`、门 `live_checks/preflight_and_land_r5.py` 都不在两枚枝的改动里（`published_tools_or_door_rewritten` [] / []）。新工具本机字节 sha1 46e358105bfc150b1c3e0c225a8518b9f6a145ba 是本机字节 sha1、不是 blob、不可 cat-file；入库后的服务端 blob 即上面那枚。
