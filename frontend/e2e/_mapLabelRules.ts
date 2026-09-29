@@ -1,4 +1,20 @@
 /**
+ * ORD-0415 (ruling, 09-29 08:27) -- this rule lives on the gate side, not in `src/lib/`.
+ *
+ * Measured on the tip this branch was cut from: `mapLabelTextField()` had one mention in the whole
+ * repo -- its own definition -- and the module's only importers were `e2e/qoder-map-ord0403-*.spec.ts`
+ * and `e2e/qoder-map-ord0412-*.spec.ts`.  No product code consulted it, so keeping it under
+ * `frontend/src/lib/` claimed a runtime authority it did not have: the strings painted on the glass are
+ * written literally in `components/JourneyMap.tsx` (`"text-field": ["get", "title"]`), and the v8 map
+ * panel paints numbered DOM markers with no symbol layer at all.  Moving the file is the ruling's
+ * option (乙); the list itself is unchanged, so the two gates still read one shared definition.
+ *
+ * If a later order wires a canvas label layer to `mapLabelTextField()`, that is the moment to move this
+ * back -- and the `scope-declared` arm in `qoder-map-ord0412-label-scope.spec.ts` fails when someone
+ * re-adds `src/lib/mapLabels.ts` without doing that.
+ */
+
+/**
  * ORD-0403 — one named producer for what may be painted on the map glass.
  *
  * The rule the order sets: on the map itself only the stop's name, its category, and its role in

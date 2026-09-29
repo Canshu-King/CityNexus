@@ -2,7 +2,7 @@ import { expect, test, type Page } from "@playwright/test";
 import { writeFileSync } from "node:fs";
 import { ensureDemoJourney, openScreen } from "./_qoderShellSeed";
 import { evidencePath } from "./_qoderEvidence";
-import { MAP_LABEL_FORBIDDEN } from "../src/lib/mapLabels";
+import { MAP_LABEL_FORBIDDEN } from "./_mapLabelRules";
 
 /**
  * ORD-0403 — one named map control, and the labels that may be painted on the glass.
@@ -17,8 +17,9 @@ import { MAP_LABEL_FORBIDDEN } from "../src/lib/mapLabels";
  *                    map has to change the card's selected state, and it is read out of the card's
  *                    painted text.
  *   labels         — every string painted inside the canvas is tested against
- *                    `MAP_LABEL_FORBIDDEN` from `src/lib/mapLabels.ts`, so the gate and the product
- *                    read the same list rather than the gate keeping its own copy.
+ *                    `MAP_LABEL_FORBIDDEN` from `e2e/_mapLabelRules.ts` (ORD-0415 moved the rule out
+ *                    of `src/lib/`), so the gate and the labels check read the same list rather than
+ *                    the gate keeping its own copy.
  *   reach-<width>  — the control is found by `elementFromPoint` at its own centre at 320/360/390/414
  *                    and must not overlap the tile notice or the gesture bubble. No arm in this file
  *                    reads `scrolled>0`.
