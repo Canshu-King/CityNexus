@@ -1,0 +1,198 @@
+{
+ "schema": "CNX_CMDR_LANDING_PREFLIGHT_V1_R7",
+ "lane": "commander 494abfd7",
+ "at_local": "2026-09-29T05:13:19+0800",
+ "mode": "LAND",
+ "authoritative_line": "mirror/integration-frontend-apple-pass1",
+ "tip_re_read_from_github_before": "7399f59ccdb2dfe3cdf04477d4e4ffcc077e214a",
+ "candidate_ref": "review/cmdr-recut-ORD-0430-r2",
+ "candidate_tip": "35326e62fb3de9f0cda459c8426ac22c0c49c715",
+ "genealogy": {
+  "ff_possible_rc": 0,
+  "ff_possible": true,
+  "merge_base": "7399f59ccdb2dfe3cdf04477d4e4ffcc077e214a",
+  "line_only_commits": 0,
+  "candidate_only_commits": 7
+ },
+ "file_sets": {
+  "line_side_since_base": [],
+  "candidate_side_since_base": [
+   "evidence/ai-ord0430-20260929/build_log_after_r3_arm.json",
+   "evidence/ai-ord0430-20260929/build_log_counter_r2_arm.json",
+   "evidence/ai-ord0430-20260929/ord0430_build_counter_r2.py",
+   "evidence/ai-ord0430-20260929/ord0430_cell_height_probe_r1.js",
+   "evidence/ai-ord0430-20260929/ord0430_pill_yield_r3.js",
+   "evidence/ai-ord0430-20260929/r3_read_after.json",
+   "evidence/ai-ord0430-20260929/r3_read_before.json",
+   "evidence/ai-ord0430-20260929/r3_read_counter.json",
+   "evidence/ai-ord0430-20260929/r3_readings_summary.json",
+   "frontend/src/design-tokens.css",
+   "frontend/src/features/agent/CopilotDock.tsx"
+  ],
+  "intersection": [],
+  "product_introduced_by_candidate": [
+   "frontend/src/design-tokens.css",
+   "frontend/src/features/agent/CopilotDock.tsx"
+  ]
+ },
+ "merge_tree": {
+  "exit": 0,
+  "first_line": "aa35f0f934c316af9042efd87f96186bd4b8635f",
+  "conflict_reported": false,
+  "stderr_head": ""
+ },
+ "gate_run": {
+  "requested": [],
+  "collect_exit": null,
+  "collected": null,
+  "test_exit": null,
+  "summary": null,
+  "export": "D:/moodle/_qoder_cmdr_ref_20260921/snap_preflight_051200",
+  "blob_equality": [
+   {
+    "path": "evidence/ai-ord0430-20260929/build_log_after_r3_arm.json",
+    "candidate_blob": "d25917a8b262a5f2033f40aa09e587d73b018d8b",
+    "export_blob": "d25917a8b262a5f2033f40aa09e587d73b018d8b",
+    "equal": true
+   },
+   {
+    "path": "evidence/ai-ord0430-20260929/build_log_counter_r2_arm.json",
+    "candidate_blob": "ea89f2e6f877a16b37fe0e98f10ecbac02dafaab",
+    "export_blob": "ea89f2e6f877a16b37fe0e98f10ecbac02dafaab",
+    "equal": true
+   },
+   {
+    "path": "evidence/ai-ord0430-20260929/ord0430_build_counter_r2.py",
+    "candidate_blob": "73747a19b10174155eaf34f60b793cc38a41d5ec",
+    "export_blob": "73747a19b10174155eaf34f60b793cc38a41d5ec",
+    "equal": true
+   },
+   {
+    "path": "evidence/ai-ord0430-20260929/ord0430_cell_height_probe_r1.js",
+    "candidate_blob": "9989f796d2bed10d0574c339656f4ebffd67b9e9",
+    "export_blob": "9989f796d2bed10d0574c339656f4ebffd67b9e9",
+    "equal": true
+   },
+   {
+    "path": "evidence/ai-ord0430-20260929/ord0430_pill_yield_r3.js",
+    "candidate_blob": "15246e74a5e6c16143fd7ae3e7b8bc919820959a",
+    "export_blob": "15246e74a5e6c16143fd7ae3e7b8bc919820959a",
+    "equal": true
+   },
+   {
+    "path": "evidence/ai-ord0430-20260929/r3_read_after.json",
+    "candidate_blob": "ed9d1cbefde7aa12a0287150d4dfbd9fadf2dfb5",
+    "export_blob": "ed9d1cbefde7aa12a0287150d4dfbd9fadf2dfb5",
+    "equal": true
+   },
+   {
+    "path": "evidence/ai-ord0430-20260929/r3_read_before.json",
+    "candidate_blob": "50ec9186896f3764be675f7c6f8241fe87e6463e",
+    "export_blob": "50ec9186896f3764be675f7c6f8241fe87e6463e",
+    "equal": true
+   },
+   {
+    "path": "evidence/ai-ord0430-20260929/r3_read_counter.json",
+    "candidate_blob": "adc7c05acf97e2dd5e56dd1a4cbc9ccfe9182fe5",
+    "export_blob": "adc7c05acf97e2dd5e56dd1a4cbc9ccfe9182fe5",
+    "equal": true
+   },
+   {
+    "path": "evidence/ai-ord0430-20260929/r3_readings_summary.json",
+    "candidate_blob": "0571809557e1605aea1a59ff3b8d1339f0691b04",
+    "export_blob": "0571809557e1605aea1a59ff3b8d1339f0691b04",
+    "equal": true
+   },
+   {
+    "path": "frontend/src/design-tokens.css",
+    "candidate_blob": "efe751527bb69a2e7e65431420e4dd76655b4c13",
+    "export_blob": "efe751527bb69a2e7e65431420e4dd76655b4c13",
+    "equal": true
+   },
+   {
+    "path": "frontend/src/features/agent/CopilotDock.tsx",
+    "candidate_blob": "cf9a78869af66e779c5d17e56714b424f82b2bdb",
+    "export_blob": "cf9a78869af66e779c5d17e56714b424f82b2bdb",
+    "equal": true
+   }
+  ],
+  "whole_suite": {
+   "collect_exit": 0,
+   "collected": 1440,
+   "interrupted": false,
+   "error_lines": [
+    "tests/test_qoder_ord0332_error_receipt.py::test_R7_the_envelope_keeps_every_field_it_already_had",
+    "tests/test_qoder_ord0332_error_receipt.py::test_R8_the_seed_is_read_off_the_real_request_not_just_the_dataclass",
+    "tests/test_solver_runtime_policy.py::test_unexpected_solver_programming_error_is_not_silently_hidden"
+   ],
+   "tail": [
+    "    _PortalFactoryType = Callable[[], AbstractContextManager[anyio.abc.BlockingPortal]]",
+    "-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html",
+    "1440 tests collected in 12.84s"
+   ],
+   "cmd": "D:/moodle/CityNexus/.venv/Scripts/python.exe -m pytest --collect-only -q tests  (cwd=<export>/backend, PYTHONPATH=<export>)"
+  },
+  "deletions": {
+   "deleted_by_candidate": [],
+   "still_present_in_export": []
+  },
+  "interpreter": "Python 3.12.14 (main, Aug 25 2026, 14:01:42) [MSC v.1944 64 bit (AMD64)]",
+  "exposure": {
+   "ruler_blob": "d3f66ce9fecd0790981a4fcdeb5e36b1c0fd10f2",
+   "ruler_blob_computed": null,
+   "ruler_file": "ui_exposure_taint_ast_r7b.cjs",
+   "candidate_files_in_view": 2,
+   "tip_cells": 12,
+   "cand_cells": 12,
+   "growth_by_file_and_rule": {},
+   "unpaired_added": [],
+   "added_line_exact": [],
+   "shifted_only": false,
+   "removed_count": 0,
+   "removed": [],
+   "disclosed_slip": "a same-file, same-rule relocation with equal counts reads as a shift; the AST ruler has no cell identity"
+  },
+  "frontend_build": {
+   "builder_rc": 0,
+   "vite_build_rc": 0,
+   "dist_exists": true,
+   "index_exists": true,
+   "asset_refs": [
+    "/assets/index-CkeYfY1U.js",
+    "/assets/index-CqaW2A5H.css"
+   ],
+   "live_tree": "aa35f0f934c316af9042efd87f96186bd4b8635f",
+   "info_file": "D:\\moodle\\_qoder_cmdr_ref_20260921\\live_checks\\_build_35326e6_info.json",
+   "build_tail": [
+    "files generated",
+    "  dist/v10-sw.js",
+    "  dist/workbox-6923124b.js",
+    "\u001b[33m",
+    "(!) Some chunks are larger than 500 kB after minification. Consider:",
+    "- Using dynamic import() to code-split the application",
+    "- Use build.rollupOptions.output.manualChunks to improve chunking: https://rollupjs.org/configuration-options/#output-manualchunks",
+    "- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.\u001b[39m"
+   ]
+  }
+ },
+ "problems": [],
+ "verdict": "READY_TO_LAND",
+ "landing": {
+  "http": 200,
+  "response_head": "{'ref': 'refs/heads/mirror/integration-frontend-apple-pass1', 'node_id': 'REF_kwDOUhlJJ9oAMnJlZnMvaGVhZHMvbWlycm9yL2ludGVncmF0aW9uLWZyb250ZW5kLWFwcGxlLXBhc3Mx', 'url': 'https://api.github.com/repos/Ca",
+  "tip_after": "35326e62fb3de9f0cda459c8426ac22c0c49c715",
+  "branches_route": "35326e62fb3de9f0cda459c8426ac22c0c49c715",
+  "both_routes_agree": true,
+  "landed": true
+ },
+ "discipline": {
+  "evidence_paths_overwritten": 0,
+  "databases_opened": 0,
+  "surfaces_started_or_stopped": 0,
+  "credential_values_printed": 0,
+  "candidate_refs_pushed_by_commander": 0
+ },
+ "claim_kind": "git_and_pytest_determined",
+ "claimed_result": null,
+ "derived_result": null
+}
