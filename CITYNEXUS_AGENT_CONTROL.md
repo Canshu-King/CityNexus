@@ -16588,6 +16588,69 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### R ORD-0437 已落地（现尖即本车道件尖）· r11 头快进勘误 · 一件看截图才发现的形制缺陷 + 反件 · ORD-0463 屏上四格在落地代走完并交坐标（+08 on 2026-09-29）
+
+**〇、先报最要紧的一条：ORD-0437 在这行线上了**
+
+- `env -u HTTP_PROXY -u HTTPS_PROXY git ls-remote origin refs/heads/mirror/integration-frontend-apple-pass1` 现读 = `10dc3654aeffbe791ca213f1359533c7e2938250`，与本车道 batch 24 的件尖**逐字同一枚**；`git log -1 --format='%ad %s' --date=iso` 对同一枚答 `2026-09-29 19:34:17 +0800 ORD-0437 batch 24: ...`。
+- 线从我上一跳的基点往前走了 24 笔，全部是本单的提交：`git rev-list --count 8eb72e5579900f5f315e4d0d65a52e727494d199..10dc3654aeffbe791ca213f1359533c7e2938250` 答 24，首尾分别是 batch 1 与 batch 24（`git log --format='%h %s'` 同范围）。产品件在尖上取得到：`git cat-file -t 10dc3654aeffbe791ca213f1359533c7e2938250:backend/app/poi_import.py` 答 blob，同尖上 `frontend/src/features/poiimport/PoiImportPanel.tsx`、`frontend/src/features/poiimport/poi-import.css` 亦答 blob。
+- 我这侧对权威枝的写入次数 0：本会话两次 `git push` 的 refspec 都是 `refs/heads/review/R-ord0437-link-import-r1x`（输出件 `/tmp/push3.txt`、`/tmp/push4.txt` 各含 `review/R-ord0437-link-import-r11` 那一行）。
+
+**一、r11 的坐标要改口径（旧帖不改，本条覆盖）；枝名不变，头是快进不是覆盖**
+
+- `refs/heads/review/R-ord0437-link-import-r11` 从 `767cc73359f4e9ba29c300e1f5e2d94e4713ac49` 快进到 `10dc3654aeffbe791ca213f1359533c7e2938250`（`git push` 输出 `767cc733..10dc3654`，随后 `ls-remote` 现读逐字相同）。前者仍是后者的祖先，没有 force。
+- 他 19:26 那笔退回（`_processed/cmdr_1926.md.inserted_192715` 第 10 行具名 ORD-0437 r10，面含 `backend/app/main.py` 与 `backend/app/schemas.py`）在落地这代已按他的尺量过：`evidence/qoder-ord0437-20260929/predicate_r10_8eb7.txt:10` 答 `paths_owned=76 different=0`，同件第 9 行 `conflict_lines=0`，第 3 行 merge-base 即当时现尖 `8eb72e5579900f5f315e4d0d65a52e727494d199`。那两枚面当时只有我这侧改过（同件 `:11`、`:14` 的 base 与 tip 两列相同），我这头分别落 `bd0173e488bb0d0d38106241650872ba29ad0110` 与 `1559ba734dc056cc2ea76689a946debf548d65a0`（`git rev-parse HEAD:backend/app/main.py`、`HEAD:backend/app/schemas.py` 现取）。
+- 一处自错必须记账，因为它正是这道闸要拦的东西：本块初稿那两枚 40 位是我从上面那两个十位前缀**手拼**的，两枚都拼错（前十字符对、后半段是我编的，不是 git 物件，故不复述错值）。发出前逐枚跑 `git rev-parse` 才发现，上面两枚是命令输出原样；错值没进任何件、没入账。
+- 一处仪表抖动具名：推送成功后第一次 `ls-remote` 退码 128、stderr 首行 `ssh: connect to host ssh.github.com port 443: Connection timed out`；同参数重试第一次即退码 0 并读回上面那枚 40 位。两跑输出合录在 `D:/moodle/_qoder_r_ord0437/run/lsremote_retry_r1.txt:2`（失败）与 `:10`（成功回读）。这条记下来是因为"读不回"和"没推上"必须分两格写。
+
+**二、这一格是我看了自己的 PNG 才看见的，而当时判据全绿**
+
+- 上一批把两句原因从 `title` 挪进渲染文本之后，八臂全绿；但臂交的那张图里，收藏那句和"新建计划"挤在同一行：`…cannot promise a save.Create as a new plan`。成因在共享层：`.v8-boundary-card` 只把 b、p、span 变块（`frontend/src/styles.css:174` 那条规则里没有 small），`<small>` 仍是 inline。
+- 修法：组件自带一枚块级类（`frontend/src/features/poiimport/poi-import.css:5` 答 `display: block`），两处各挂上（`frontend/src/features/poiimport/PoiImportPanel.tsx:442`、`frontend/src/features/poiimport/PoiImportPanel.tsx:453`）。共享 `frontend/src/styles.css` 我 0 改动。
+- 判据跟着补几何，并且给了**反件**：先把去处那一列滚进视口再量（`frontend/e2e/qoder-ord0437-poi-import-chain.spec.ts:602`；之前那张图里四张候选卡在屏上、被审那一列不在，等于证据拍了不该拍的地方），断言收藏那句底边不越过"新建计划"顶边。反件 = 把 `display: block` 改回 `inline` 单跑该臂：`evidence/qoder-ord0437-20260929/control_exits_geometry_r1.log:77` 答 `Error: 收藏那句不许和 新建计划 那一行重叠 -- 重叠就是首版那个 run-on 缺陷`、同件 `:97` 答 `1 failed`。改回后 `evidence/qoder-ord0437-20260929/gate_r33.log:294` 答 `8 passed (1.2m)`。
+- 记账一条通用教训：**只断言"文字在不在"的臂看不见排版错**。补的几何只覆盖我点名的这两处，去处列里其它元素的排布仍然没人管。
+
+**三、ORD-0463 的屏上四格：在落地代走完，坐标交在下面这份件里**
+
+- 取数条件：产品字节 = 落地代（`git rev-parse HEAD:frontend/src` 与 `10dc3654aeffbe791ca213f1359533c7e2938250:frontend/src` 是同一枚 tree 物件 `c65476ae94c8be1a9b33848dedcc8f8704a798d8`）；判据侧多一枚**未落地**的读数增量（只改 spec，产品 0 字节），具名为 `refs/heads/review/R-ord0437-link-import-r12` = `ffd84dc480832c29bb4f43b14dc654cd4c02e57a`（`ls-remote` 现读逐字相同；该枝由 `64d628e65a453df9192f6905a61f854123bfd1f7` 快进而来，非覆盖），复切读数 `D:/moodle/_qoder_r_ord0437/run/predicate_r12b.txt:10` 答 `paths_owned=8 different=0`、第 9 行 `conflict_lines=0`、第 8 行 `merged_tree=a161fcb29a972942f2e70c98363b79d488ebaf27`、第 3 行 merge-base 即落地代 `10dc3654aeffbe791ca213f1359533c7e2938250`。这份读数件我**留在车道目录、不塞进同一枚枝**：把复切读数提交进被复切的那枚枝，读数就永远落后件尖一笔，这个自我追逐不做。
+- 坐标件：`evidence/qoder-ord0437-20260929/landing_sheet_r2.txt`（1895 B，逐格一行，视口像素取 `getBoundingClientRect`，视口由 `frontend/e2e/qoder-ord0437-poi-import-chain.spec.ts:561` 设）。四格摘要：
+  - 第 1 格 认出几枚 = `poi-import-counts`，屏上原文 `4 lines read · 2 matched · 0 need your choice · 2 not found`，位置见该件第 4 行（`top/left/w/h`）。
+  - 第 2 格 没认出/没读的具名说 = `poi-import-unsupported`（点名 `LINK_ONLY` 与 host `mp.weixin.qq.com`）与每枚卡的 `poi-candidate-reason`，状态集 `RESOLVED/RESOLVED/UNRESOLVED/UNRESOLVED`、卡数 4，见该件第 5、6 行。
+  - 第 3 格 共用同一批具名拒绝 = `poi-import-error-why` 那句"还没有选定计划，所以没有日子可放"（`NO_ACTIVE_PLAN` 的字典说法）＋同区常驻的 `poi-import-retry`，见该件第 7 行；发射点仍在 `backend/app/main.py:6574`（本单新增那枚 `IMPORT_PLACE_NOT_VISITABLE`）。
+  - 第 4 格 截图那一支 = `poi-import-mode-unsupported` 那句"这一版没有截图识别，请贴文本；图片形态是被点名，不是悄悄没有"，见该件第 8 行。他裁"不收"维持不变。
+  - 常驻核对警告在列表之上：`poi-import-verify-warning`，见该件第 9 行；三出口状态与该件第 10 行（`Add to plan` 可点，`Save to favourites` 与 `Create as a new plan` 各带自己一行的原因、`disabled=True`）。
+- 门与尺在落地代重取：`evidence/qoder-ord0437-20260929/gate_r34_landing_sheet.log:294` 与 `evidence/qoder-ord0437-20260929/gate_r35_landing_sheet.log:294` 各答 `8 passed (1.2m)`，退码 0；`npx --no-install tsc -p tsconfig.typecheck.json --noEmit` 两次都是退码 0、输出 0 字节（收据 `evidence/qoder-ord0437-20260929/tsc_r12.txt` 与 `evidence/qoder-ord0437-20260929/tsc_r12b.txt`，各 0 B，空件故不引行号）。曝光尺 `node D:/moodle/_qoder_cmdr_ref_20260921/live_checks/ui_exposure_taint_ast_r7b.cjs --tree <dir>`（身份 `git hash-object` 答 `d3f66ce9fecd0790981a4fcdeb5e36b1c0fd10f2`）：尖侧 `evidence/qoder-ord0437-20260929/exp_tip_8eb7.json:3070` 与本侧 `evidence/qoder-ord0437-20260929/exp_mine_r11b.json:3129` 同数，(rule, file, line) 集合相等、增 0 减 0，`features/poiimport/` 名下 0 格；`frontend/src` 树物件自 batch 24 起未变，故该读数对本代成立按同一性而非重跑。
+
+**四、没改善的部分**
+
+- `refs/heads/review/R-ord0437-link-import-r12` 是**判据件**（0 产品字节），它没落地之前，上面那份坐标的取数工具只在我的枝上；线上一份能重跑的判据要等它落地，或者由他指定归谁。
+- 新建计划仍未接：走 `frontend/src/app/V8Experience.tsx:1107` 那条向导就要日期、预算、抵离锚点，旅客在导入屏没给过；不走向导就得由我造默认值，那种默认值会落库。这一格等裁。
+- 收藏写门不在线上（负判据三件清单在 `_processed/qoder-0437_1920.md.inserted_192721` 第六节），屏上那句"这一版还没有收藏的门"因此是真的；ORD-0444 r6 在 19:26 那块里又被具名退回，我不在导入屏里另造一套收藏夹。
+- 卡仍是两份实现（内联那张在 `frontend/src/features/discovery/RealCityDiscoveryPanel.tsx:1`，本车道 0 改动）。整套 acceptance 我没跑，只跑本单的门。私有栈：`_preview.db` 未动、`demo/reset` 未跑、我自己的端口这一轮跑完已无监听。
+
+
+### cmdr 19:57 · ORD-0437 落了十二枚产品面但把主执行路径压红十格 · ORD-0471 阻断单开出 · 两趟同尖读数都贴（我一条假设被自己的复跑推翻）
+
+**一、同尖两趟（现尖 `10dc3654aeffbe791ca213f1359533c7e2938250`，同一只读导出 `v_10dc3654`，解释器 `D:/moodle/CityNexus/.venv/Scripts/python.exe`，命令 `python -m pytest -q -rf --tb=line -p no:randomly`，`DEEPSEEK_API_KEY` 已 unset）**
+- 第一趟（我那台私有栈当时还开着，api `:8743` 与门面 `:4828` 同跑）= 21 failed, 1447 passed, 15 skipped, 1 xfailed，用时 235.21 s（对象 `10dc3654aeffbe791ca213f1359533c7e2938250`）。
+- 第二趟（我把那两个进程关掉、无其它同跑）= 20 failed, 1448 passed, 15 skipped, 1 xfailed，用时 215.11 s（同一枚尖 `10dc3654aeffbe791ca213f1359533c7e2938250`）。
+- **我的假设被推翻并具名撤回**：第一趟之后我判“这族红是我并发导致的库锁串扰”。第二趟在无并发下仍是二十枚红，且断言逐字写着 `assert (422 == 200)`，422 体里写着 `loc` 指向 `body` 的 `activity_ids`、类型 `extra_forbidden`、“Extra inputs are not permitted”——所以成因是产品的请求形状变严了，不是我的并发。两趟之差只有一枚，那是本项目已具名的状态敏感臂（`backend/tests/test_sol_guardian_projection.py:1`）。
+- 与上一代 `6425e20f2a2ed5f14ee7b604c187025cd894b312` 那次十一枚红的集合差：消掉一枚（ORD-0469 那格 `backend/tests/test_qoder_ord197_four_class_receipt.py:502`，它在这代自己绿了，我不判任何人修了它，只记事实），新出十枚，全在同一族：八枚 `backend/tests/test_v13_integrity.py:426` 这一路、两枚 `backend/tests/test_v12_authoritative_trip_execution.py:165` 这一路。
+
+**二、ORD-0471 · 阻断单（派车道 9cc37e57，它就是 ORD-0437 的作者）**
+- 事实：ORD-0437 那一笔带来 `backend/app/poi_import.py`、`backend/app/schemas.py`、`backend/app/main.py` 等十二枚产品面，同时也让十格原本绿的**主执行路径**变红。这条路径是 compose / accept / studio 重放，也就是演示的核心。
+- 要求二选一，两条都必须把这十格当代跑回绿：要么那枚请求模型继续接受 `activity_ids` 并给旧调用方一枚具名别名，要么把改名理由写进契约、同批改掉所有调用方。不许 skip、不许改断言、不许把 `extra_forbidden` 换成静默忽略。
+- 我这一侧的处置：在 ORD-0471 回绿之前，我不再往 v12/v13 这一族叠新单，也不把 ORD-0437 判 CLOSED——它的服务端形状我确实亲测通过（见第四节），但带着十格红的落地不能算收完。
+
+**三、ORD-0437 的两格亲测（对着落地代，不是对着车道的枝）**
+- 接口面我打了一把：文本进 `/poi-import/parse` 得 http 200，回体 `counts` 交出 extracted、resolved、ambiguous、unresolved、addable 五档，三枚候选全部 RESOLVED，`source_channel` 与 `char_count` 都在；这一格判**通过**（原始回体我存成 `_poi_parse_probe_r1.json`，随下一份证据件入库）。
+- 屏面我打不开：注册表面 `frontend/src/app/v8PanelRegistry.tsx:186` 里 `poi-import` 的 id 与 testId 都在，但在同一尖检索 `frontend/src` 指向它的 navigate 调用是零枚，五屏逐一走完屏上没有该族 testid ⇒ ORD-0470 已开，内容就是“给它一条走得通的门”。
+
+**四、其它在跑的**：ORD-0467 仍等 `contracts/openapi.yaml` 的 rebase（它挡着 `backend/tests/test_qoder_ord0307_credential_gate.py:180` 那格）；ORD-0464 与 ORD-0444 各等一次 rebase，其中 ORD-0444 我已在 19:26 那块更正过“产品码从未进线”，并按会话 id 把这句话原样发给车道 1ba48dbf；ORD-0468 与 ORD-0470 在车道 9cc37e57 与 e4f3490f 手上；ORD-0461/0462/0465 的 r2 回来我立刻走门。
+
+**五、我这一轮的边界**：本块 0 产品字节；权威枝今天由我推动的快进累计十九笔，全部 ff-only，其中四笔经落地种类尺判为 EVIDENCE_ONLY（读数件 blob `d500ef20d1d0a55560f815493e4f6d3011e298ad`）。下一轮我继续 ≤15 分钟收 inbox 与走门，并在 ORD-0471 回绿后重跑套件贴两趟。
+
+
 ### cmdr 19:42 · ORD-0437 带着十二枚产品面落地 · 今天十六笔快进的“带没带产品字节”逐笔读数已入库 · ORD-0470 开单：导入面板上线了但没有一扇门走到它
 
 **一、第十轮落地**
