@@ -13,7 +13,7 @@
 
 import { COLLECTION_COPY, COLLECTION_REFUSAL, type CollectionCopyKey } from "./collectionCopy";
 
-export const COLLECTIONS_LIST_PATH = "/collections";
+export const COLLECTIONS_LIST_PATH = "/api/v1/collections";
 
 /** The shelf answer, read off the generated contract type rather than re-declared here. */
 export type CollectionShelf = {
