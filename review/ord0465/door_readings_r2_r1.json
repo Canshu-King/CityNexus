@@ -1,0 +1,41 @@
+{
+  "valid": {
+    "http_status": 200,
+    "plan_state": "PLAN_PRESENT",
+    "stops": 3,
+    "grant_scope": "JOURNEY",
+    "shared_plan_present": false
+  },
+  "revoked": {
+    "http_status": 409,
+    "reason_code": "SHARE_GRANT_REVOKED",
+    "server_receipt": "CNX-3T9FPQ3H"
+  },
+  "expired": {
+    "http_status": 409,
+    "reason_code": "SHARE_GRANT_EXPIRED",
+    "server_receipt": "CNX-8G6E7B57"
+  },
+  "binned": {
+    "http_status": 409,
+    "reason_code": "SHARE_GRANT_JOURNEY_IN_RECYCLE_BIN",
+    "server_receipt": "CNX-DJ4MA9DF"
+  },
+  "no_plan": {
+    "http_status": 200,
+    "plan_state": "NO_PLAN",
+    "stops": 0,
+    "grant_scope": "JOURNEY",
+    "shared_plan_present": false
+  },
+  "private": {
+    "http_status": 409,
+    "reason_code": "SHARE_GRANT_NOT_LINK_READABLE",
+    "server_receipt": "CNX-JAG66WQG"
+  },
+  "unknown_token": {
+    "http_status": 404,
+    "reason_code": "SHARE_GRANT_UNKNOWN",
+    "server_receipt": "CNX-S2DVJK2A"
+  }
+}
