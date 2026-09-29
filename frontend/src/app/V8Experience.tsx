@@ -3807,6 +3807,7 @@ function MapPage({
   const planStops = (data.active_plan?.activities ?? []).filter(
     (item) => activityCoordinate(item) != null,
   );
+  const { nextLeg } = liveActivityWindow(data.active_plan ?? null);
   const selectedActivity =
     planStops.find((item) => item.id === selectedActivityId) ?? null;
   /* ORD-0390 ①: selection has to be readable on both halves of the screen, and on a phone the card
@@ -3900,7 +3901,21 @@ function MapPage({
               </strong>
             </div>
           ))}
-          <small>{t("map.unknownCosts")}</small>
+          {!comparison.length && nextLeg && (
+            <div className="v8-route-row" data-testid="map-frozen-route-evidence">
+              <b>{modeLabel(nextLeg.mode, locale.startsWith("zh"))}</b>
+              <span>{t("live.routeDurationOnly", { duration: nextLeg.duration_min })}</span>
+              <strong>{t("mobility.costUnknown")}</strong>
+            </div>
+          )}
+          <small>
+            {!comparison.length && nextLeg
+              ? t("live.frozenRouteEvidence", {
+                  provider: nextLeg.provider_key ?? "unknown",
+                  provenance: nextLeg.provenance ?? "unknown",
+                })
+              : t("map.unknownCosts")}
+          </small>
         </div>
       </div>
     </section>
