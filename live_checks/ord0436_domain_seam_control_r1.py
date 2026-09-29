@@ -5,7 +5,7 @@ publishes. At this tip neither artifact names that domain, so the arm's `CHECKED
 run -- an arm that cannot fail is not an arm. This file makes it fail on purpose, three ways, using
 only real text:
 
-  A  this tip's `contracts/openapi.yaml` + `frontend/src/generated/api.ts`   -> no domain (null)
+  A  the tree under test: `contracts/openapi.yaml` + `frontend/src/generated/api.ts`   -> no domain (null)
   B  ORD-0434's candidate, both artifacts                                    -> its four levels
   C  B's contract with one level renamed                                     -> a domain that
      disagrees with the screen, so the same comparison must come out false
@@ -73,14 +73,17 @@ def probe(cell: pathlib.Path) -> dict[str, object]:
 
 
 def main() -> int:
-    tip = git("rev-parse", "HEAD").stdout.strip()
+    tree_read = git("rev-parse", "HEAD").stdout.strip()
+    # The base is named separately: after a re-cut `HEAD` is this lane's own commit, and a readout
+    # that calls it "tip" pins nothing useful.
+    base = git("merge-base", "HEAD", "refs/remotes/origin/mirror/integration-frontend-apple-pass1").stdout.strip()
     upstream = git("rev-parse", UPSTREAM_REF).stdout.strip()
     resolved = git("rev-parse", "--verify", "--quiet", UPSTREAM_REF).returncode == 0
     rows: list[dict[str, object]] = []
     with tempfile.TemporaryDirectory(prefix="ord0436-domain-") as raw:
         root = pathlib.Path(raw)
-        cell_a = fixture(root, "A", show(tip, "contracts/openapi.yaml"),
-                         show(tip, "frontend/src/generated/api.ts"))
+        cell_a = fixture(root, "A", show(tree_read, "contracts/openapi.yaml"),
+                         show(tree_read, "frontend/src/generated/api.ts"))
         cell_b = fixture(root, "B", show(upstream, "contracts/openapi.yaml"),
                          show(upstream, "frontend/src/generated/api.ts")) if resolved else None
         mutated = (show(upstream, "contracts/openapi.yaml") or "").replace(
@@ -88,8 +91,8 @@ def main() -> int:
             "enum: [PRIVATE, LINK_READ, INVITEES, PUBLIC]",
         )
         cell_c = fixture(root, "C", mutated, None) if resolved else None
-        landed = (show(tip, "contracts/openapi.yaml") or "") + (show(tip, "frontend/src/generated/api.ts") or "")
-        rows.append({"case": "A_tip", "parsed": probe(cell_a)})
+        landed = (show(tree_read, "contracts/openapi.yaml") or "") + (show(tree_read, "frontend/src/generated/api.ts") or "")
+        rows.append({"case": "A_tree_under_test", "parsed": probe(cell_a)})
         if resolved:
             rows.append({"case": "B_upstream", "parsed": probe(cell_b)})
             rows.append({"case": "C_mutant_one_level_renamed", "parsed": probe(cell_c)})
@@ -110,7 +113,8 @@ def main() -> int:
                   if r["case"] == "C_mutant_one_level_renamed")
     readout = {
         "what": "control on the contract-seam arm of the ORD-0436 reading",
-        "tip": tip,
+        "tree_read": tree_read,
+        "authoritative_base": base,
         "upstream_ref": UPSTREAM_REF,
         "upstream_sha": upstream or None,
         "upstream_resolves": resolved,
