@@ -1,0 +1,1190 @@
+{
+ "ui": "http://127.0.0.1:4315",
+ "widths": [
+  320,
+  360,
+  390,
+  414
+ ],
+ "arms": {
+  "zh-CN": [
+   {
+    "path": "/v8/twin",
+    "viewport": 320,
+    "bar_box": {
+     "top": 0,
+     "height": 66,
+     "left": 0,
+     "right": 320
+    },
+    "bar_overflow_x": 0,
+    "bar_scrollWidth": 320,
+    "bar_clientWidth": 320,
+    "rightmost_child": {
+     "tag": "DIV",
+     "cls": "v8-top-actions",
+     "left": 153,
+     "right": 303,
+     "clipped_by_viewport": false,
+     "visible_width": 150
+    },
+    "wrapped_leaves": [
+     "系统"
+    ],
+    "leaves": [
+     {
+      "text": "菜单",
+      "tag": "BUTTON",
+      "cls": "v8-mobile-menu",
+      "rects": {
+       "n": 1,
+       "heights": [
+        21
+       ],
+       "width": 32
+      },
+      "box": {
+       "left": 17,
+       "right": 63,
+       "top": 19,
+       "h": 27
+      },
+      "beyond_right_edge": false,
+      "occluded": false
+     },
+     {
+      "text": "/",
+      "tag": "B",
+      "cls": "",
+      "rects": {
+       "n": 1,
+       "heights": [
+        16
+       ],
+       "width": 5
+      },
+      "box": {
+       "left": 71,
+       "right": 75,
+       "top": 25,
+       "h": 16
+      },
+      "beyond_right_edge": false,
+      "occluded": false
+     },
+     {
+      "text": "旅行者画像",
+      "tag": "STRONG",
+      "cls": "",
+      "rects": {
+       "n": 1,
+       "heights": [
+        16
+       ],
+       "width": 60
+      },
+      "box": {
+       "left": 85,
+       "right": 145,
+       "top": 25,
+       "h": 16
+      },
+      "beyond_right_edge": false,
+      "occluded": false
+     },
+     {
+      "text": "系统",
+      "tag": "BUTTON",
+      "cls": "v9-language",
+      "rects": {
+       "n": 2,
+       "heights": [
+        21,
+        21
+       ],
+       "width": 16
+      },
+      "box": {
+       "left": 153,
+       "right": 202,
+       "top": 17,
+       "h": 44
+      },
+      "beyond_right_edge": false,
+      "occluded": false
+     },
+     {
+      "text": "EN",
+      "tag": "BUTTON",
+      "cls": "v9-language",
+      "rects": {
+       "n": 1,
+       "heights": [
+        21
+       ],
+       "width": 20
+      },
+      "box": {
+       "left": 210,
+       "right": 259,
+       "top": 17,
+       "h": 44
+      },
+      "beyond_right_edge": false,
+      "occluded": false
+     },
+     {
+      "text": "DE",
+      "tag": "BUTTON",
+      "cls": "v8-avatar",
+      "rects": {
+       "n": 1,
+       "heights": [
+        21
+       ],
+       "width": 20
+      },
+      "box": {
+       "left": 275,
+       "right": 303,
+       "top": 25,
+       "h": 28
+      },
+      "beyond_right_edge": false,
+      "occluded": false
+     }
+    ],
+    "width": 320
+   },
+   {
+    "path": "/v8/twin",
+    "viewport": 360,
+    "bar_box": {
+     "top": 0,
+     "height": 66,
+     "left": 0,
+     "right": 360
+    },
+    "bar_overflow_x": 0,
+    "bar_scrollWidth": 360,
+    "bar_clientWidth": 360,
+    "rightmost_child": {
+     "tag": "DIV",
+     "cls": "v8-top-actions",
+     "left": 193,
+     "right": 343,
+     "clipped_by_viewport": false,
+     "visible_width": 150
+    },
+    "wrapped_leaves": [
+     "系统"
+    ],
+    "leaves": [
+     {
+      "text": "菜单",
+      "tag": "BUTTON",
+      "cls": "v8-mobile-menu",
+      "rects": {
+       "n": 1,
+       "heights": [
+        21
+       ],
+       "width": 32
+      },
+      "box": {
+       "left": 17,
+       "right": 63,
+       "top": 19,
+       "h": 27
+      },
+      "beyond_right_edge": false,
+      "occluded": false
+     },
+     {
+      "text": "/",
+      "tag": "B",
+      "cls": "",
+      "rects": {
+       "n": 1,
+       "heights": [
+        16
+       ],
+       "width": 5
+      },
+      "box": {
+       "left": 91,
+       "right": 95,
+       "top": 25,
+       "h": 16
+      },
+      "beyond_right_edge": false,
+      "occluded": false
+     },
+     {
+      "text": "旅行者画像",
+      "tag": "STRONG",
+      "cls": "",
+      "rects": {
+       "n": 1,
+       "heights": [
+        16
+       ],
+       "width": 60
+      },
+      "box": {
+       "left": 105,
+       "right": 165,
+       "top": 25,
+       "h": 16
+      },
+      "beyond_right_edge": false,
+      "occluded": false
+     },
+     {
+      "text": "系统",
+      "tag": "BUTTON",
+      "cls": "v9-language",
+      "rects": {
+       "n": 2,
+       "heights": [
+        21,
+        21
+       ],
+       "width": 16
+      },
+      "box": {
+       "left": 193,
+       "right": 242,
+       "top": 17,
+       "h": 44
+      },
+      "beyond_right_edge": false,
+      "occluded": false
+     },
+     {
+      "text": "EN",
+      "tag": "BUTTON",
+      "cls": "v9-language",
+      "rects": {
+       "n": 1,
+       "heights": [
+        21
+       ],
+       "width": 20
+      },
+      "box": {
+       "left": 250,
+       "right": 299,
+       "top": 17,
+       "h": 44
+      },
+      "beyond_right_edge": false,
+      "occluded": false
+     },
+     {
+      "text": "DE",
+      "tag": "BUTTON",
+      "cls": "v8-avatar",
+      "rects": {
+       "n": 1,
+       "heights": [
+        21
+       ],
+       "width": 20
+      },
+      "box": {
+       "left": 315,
+       "right": 343,
+       "top": 25,
+       "h": 28
+      },
+      "beyond_right_edge": false,
+      "occluded": false
+     }
+    ],
+    "width": 360
+   },
+   {
+    "path": "/v8/twin",
+    "viewport": 390,
+    "bar_box": {
+     "top": 0,
+     "height": 66,
+     "left": 0,
+     "right": 390
+    },
+    "bar_overflow_x": 0,
+    "bar_scrollWidth": 390,
+    "bar_clientWidth": 390,
+    "rightmost_child": {
+     "tag": "DIV",
+     "cls": "v8-top-actions",
+     "left": 223,
+     "right": 373,
+     "clipped_by_viewport": false,
+     "visible_width": 150
+    },
+    "wrapped_leaves": [
+     "系统"
+    ],
+    "leaves": [
+     {
+      "text": "菜单",
+      "tag": "BUTTON",
+      "cls": "v8-mobile-menu",
+      "rects": {
+       "n": 1,
+       "heights": [
+        21
+       ],
+       "width": 32
+      },
+      "box": {
+       "left": 17,
+       "right": 63,
+       "top": 19,
+       "h": 27
+      },
+      "beyond_right_edge": false,
+      "occluded": false
+     },
+     {
+      "text": "/",
+      "tag": "B",
+      "cls": "",
+      "rects": {
+       "n": 1,
+       "heights": [
+        16
+       ],
+       "width": 5
+      },
+      "box": {
+       "left": 106,
+       "right": 110,
+       "top": 25,
+       "h": 16
+      },
+      "beyond_right_edge": false,
+      "occluded": false
+     },
+     {
+      "text": "旅行者画像",
+      "tag": "STRONG",
+      "cls": "",
+      "rects": {
+       "n": 1,
+       "heights": [
+        16
+       ],
+       "width": 60
+      },
+      "box": {
+       "left": 120,
+       "right": 180,
+       "top": 25,
+       "h": 16
+      },
+      "beyond_right_edge": false,
+      "occluded": false
+     },
+     {
+      "text": "系统",
+      "tag": "BUTTON",
+      "cls": "v9-language",
+      "rects": {
+       "n": 2,
+       "heights": [
+        21,
+        21
+       ],
+       "width": 16
+      },
+      "box": {
+       "left": 223,
+       "right": 272,
+       "top": 17,
+       "h": 44
+      },
+      "beyond_right_edge": false,
+      "occluded": false
+     },
+     {
+      "text": "EN",
+      "tag": "BUTTON",
+      "cls": "v9-language",
+      "rects": {
+       "n": 1,
+       "heights": [
+        21
+       ],
+       "width": 20
+      },
+      "box": {
+       "left": 280,
+       "right": 329,
+       "top": 17,
+       "h": 44
+      },
+      "beyond_right_edge": false,
+      "occluded": false
+     },
+     {
+      "text": "DE",
+      "tag": "BUTTON",
+      "cls": "v8-avatar",
+      "rects": {
+       "n": 1,
+       "heights": [
+        21
+       ],
+       "width": 20
+      },
+      "box": {
+       "left": 345,
+       "right": 373,
+       "top": 25,
+       "h": 28
+      },
+      "beyond_right_edge": false,
+      "occluded": false
+     }
+    ],
+    "width": 390
+   },
+   {
+    "path": "/v8/twin",
+    "viewport": 414,
+    "bar_box": {
+     "top": 0,
+     "height": 66,
+     "left": 0,
+     "right": 414
+    },
+    "bar_overflow_x": 0,
+    "bar_scrollWidth": 414,
+    "bar_clientWidth": 414,
+    "rightmost_child": {
+     "tag": "DIV",
+     "cls": "v8-top-actions",
+     "left": 247,
+     "right": 397,
+     "clipped_by_viewport": false,
+     "visible_width": 150
+    },
+    "wrapped_leaves": [
+     "系统"
+    ],
+    "leaves": [
+     {
+      "text": "菜单",
+      "tag": "BUTTON",
+      "cls": "v8-mobile-menu",
+      "rects": {
+       "n": 1,
+       "heights": [
+        21
+       ],
+       "width": 32
+      },
+      "box": {
+       "left": 17,
+       "right": 63,
+       "top": 19,
+       "h": 27
+      },
+      "beyond_right_edge": false,
+      "occluded": false
+     },
+     {
+      "text": "/",
+      "tag": "B",
+      "cls": "",
+      "rects": {
+       "n": 1,
+       "heights": [
+        16
+       ],
+       "width": 5
+      },
+      "box": {
+       "left": 118,
+       "right": 122,
+       "top": 25,
+       "h": 16
+      },
+      "beyond_right_edge": false,
+      "occluded": false
+     },
+     {
+      "text": "旅行者画像",
+      "tag": "STRONG",
+      "cls": "",
+      "rects": {
+       "n": 1,
+       "heights": [
+        16
+       ],
+       "width": 60
+      },
+      "box": {
+       "left": 132,
+       "right": 192,
+       "top": 25,
+       "h": 16
+      },
+      "beyond_right_edge": false,
+      "occluded": false
+     },
+     {
+      "text": "系统",
+      "tag": "BUTTON",
+      "cls": "v9-language",
+      "rects": {
+       "n": 2,
+       "heights": [
+        21,
+        21
+       ],
+       "width": 16
+      },
+      "box": {
+       "left": 247,
+       "right": 296,
+       "top": 17,
+       "h": 44
+      },
+      "beyond_right_edge": false,
+      "occluded": false
+     },
+     {
+      "text": "EN",
+      "tag": "BUTTON",
+      "cls": "v9-language",
+      "rects": {
+       "n": 1,
+       "heights": [
+        21
+       ],
+       "width": 20
+      },
+      "box": {
+       "left": 304,
+       "right": 353,
+       "top": 17,
+       "h": 44
+      },
+      "beyond_right_edge": false,
+      "occluded": false
+     },
+     {
+      "text": "DE",
+      "tag": "BUTTON",
+      "cls": "v8-avatar",
+      "rects": {
+       "n": 1,
+       "heights": [
+        21
+       ],
+       "width": 20
+      },
+      "box": {
+       "left": 369,
+       "right": 397,
+       "top": 25,
+       "h": 28
+      },
+      "beyond_right_edge": false,
+      "occluded": false
+     }
+    ],
+    "width": 414
+   }
+  ],
+  "en": [
+   {
+    "path": "/v8/twin",
+    "viewport": 320,
+    "bar_box": {
+     "top": 0,
+     "height": 66,
+     "left": 0,
+     "right": 320
+    },
+    "bar_overflow_x": 0,
+    "bar_scrollWidth": 320,
+    "bar_clientWidth": 320,
+    "rightmost_child": {
+     "tag": "DIV",
+     "cls": "v8-top-actions",
+     "left": 135,
+     "right": 303,
+     "clipped_by_viewport": false,
+     "visible_width": 168
+    },
+    "wrapped_leaves": [
+     "Traveler Twin"
+    ],
+    "leaves": [
+     {
+      "text": "Menu",
+      "tag": "BUTTON",
+      "cls": "v8-mobile-menu",
+      "rects": {
+       "n": 1,
+       "heights": [
+        21
+       ],
+       "width": 41
+      },
+      "box": {
+       "left": 17,
+       "right": 72,
+       "top": 19,
+       "h": 27
+      },
+      "beyond_right_edge": false,
+      "occluded": false
+     },
+     {
+      "text": "/",
+      "tag": "B",
+      "cls": "",
+      "rects": {
+       "n": 1,
+       "heights": [
+        16
+       ],
+       "width": 5
+      },
+      "box": {
+       "left": 72,
+       "right": 76,
+       "top": 25,
+       "h": 16
+      },
+      "beyond_right_edge": false,
+      "occluded": false
+     },
+     {
+      "text": "Traveler Twin",
+      "tag": "STRONG",
+      "cls": "",
+      "rects": {
+       "n": 2,
+       "heights": [
+        16,
+        16
+       ],
+       "width": 45
+      },
+      "box": {
+       "left": 86,
+       "right": 135,
+       "top": 17,
+       "h": 32
+      },
+      "beyond_right_edge": false,
+      "occluded": false
+     },
+     {
+      "text": "System",
+      "tag": "BUTTON",
+      "cls": "v9-language",
+      "rects": {
+       "n": 1,
+       "heights": [
+        21
+       ],
+       "width": 50
+      },
+      "box": {
+       "left": 135,
+       "right": 193,
+       "top": 17,
+       "h": 44
+      },
+      "beyond_right_edge": false,
+      "occluded": false
+     },
+     {
+      "text": "中文",
+      "tag": "BUTTON",
+      "cls": "v9-language",
+      "rects": {
+       "n": 1,
+       "heights": [
+        21
+       ],
+       "width": 32
+      },
+      "box": {
+       "left": 201,
+       "right": 259,
+       "top": 17,
+       "h": 44
+      },
+      "beyond_right_edge": false,
+      "occluded": false
+     },
+     {
+      "text": "DE",
+      "tag": "BUTTON",
+      "cls": "v8-avatar",
+      "rects": {
+       "n": 1,
+       "heights": [
+        21
+       ],
+       "width": 20
+      },
+      "box": {
+       "left": 275,
+       "right": 303,
+       "top": 25,
+       "h": 28
+      },
+      "beyond_right_edge": false,
+      "occluded": false
+     }
+    ],
+    "width": 320
+   },
+   {
+    "path": "/v8/twin",
+    "viewport": 360,
+    "bar_box": {
+     "top": 0,
+     "height": 66,
+     "left": 0,
+     "right": 360
+    },
+    "bar_overflow_x": 0,
+    "bar_scrollWidth": 360,
+    "bar_clientWidth": 360,
+    "rightmost_child": {
+     "tag": "DIV",
+     "cls": "v8-top-actions",
+     "left": 165,
+     "right": 343,
+     "clipped_by_viewport": false,
+     "visible_width": 178
+    },
+    "wrapped_leaves": [],
+    "leaves": [
+     {
+      "text": "Menu",
+      "tag": "BUTTON",
+      "cls": "v8-mobile-menu",
+      "rects": {
+       "n": 1,
+       "heights": [
+        21
+       ],
+       "width": 41
+      },
+      "box": {
+       "left": 17,
+       "right": 72,
+       "top": 19,
+       "h": 27
+      },
+      "beyond_right_edge": false,
+      "occluded": false
+     },
+     {
+      "text": "/",
+      "tag": "B",
+      "cls": "",
+      "rects": {
+       "n": 1,
+       "heights": [
+        16
+       ],
+       "width": 5
+      },
+      "box": {
+       "left": 73,
+       "right": 78,
+       "top": 25,
+       "h": 16
+      },
+      "beyond_right_edge": false,
+      "occluded": false
+     },
+     {
+      "text": "Traveler Twin",
+      "tag": "STRONG",
+      "cls": "",
+      "rects": {
+       "n": 1,
+       "heights": [
+        16
+       ],
+       "width": 75
+      },
+      "box": {
+       "left": 88,
+       "right": 163,
+       "top": 25,
+       "h": 16
+      },
+      "beyond_right_edge": false,
+      "occluded": false
+     },
+     {
+      "text": "System",
+      "tag": "BUTTON",
+      "cls": "v9-language",
+      "rects": {
+       "n": 1,
+       "heights": [
+        21
+       ],
+       "width": 50
+      },
+      "box": {
+       "left": 165,
+       "right": 228,
+       "top": 17,
+       "h": 44
+      },
+      "beyond_right_edge": false,
+      "occluded": false
+     },
+     {
+      "text": "中文",
+      "tag": "BUTTON",
+      "cls": "v9-language",
+      "rects": {
+       "n": 1,
+       "heights": [
+        21
+       ],
+       "width": 32
+      },
+      "box": {
+       "left": 236,
+       "right": 299,
+       "top": 17,
+       "h": 44
+      },
+      "beyond_right_edge": false,
+      "occluded": false
+     },
+     {
+      "text": "DE",
+      "tag": "BUTTON",
+      "cls": "v8-avatar",
+      "rects": {
+       "n": 1,
+       "heights": [
+        21
+       ],
+       "width": 20
+      },
+      "box": {
+       "left": 315,
+       "right": 343,
+       "top": 25,
+       "h": 28
+      },
+      "beyond_right_edge": false,
+      "occluded": false
+     }
+    ],
+    "width": 360
+   },
+   {
+    "path": "/v8/twin",
+    "viewport": 390,
+    "bar_box": {
+     "top": 0,
+     "height": 66,
+     "left": 0,
+     "right": 390
+    },
+    "bar_overflow_x": 0,
+    "bar_scrollWidth": 390,
+    "bar_clientWidth": 390,
+    "rightmost_child": {
+     "tag": "DIV",
+     "cls": "v8-top-actions",
+     "left": 195,
+     "right": 373,
+     "clipped_by_viewport": false,
+     "visible_width": 178
+    },
+    "wrapped_leaves": [],
+    "leaves": [
+     {
+      "text": "Menu",
+      "tag": "BUTTON",
+      "cls": "v8-mobile-menu",
+      "rects": {
+       "n": 1,
+       "heights": [
+        21
+       ],
+       "width": 41
+      },
+      "box": {
+       "left": 17,
+       "right": 72,
+       "top": 19,
+       "h": 27
+      },
+      "beyond_right_edge": false,
+      "occluded": false
+     },
+     {
+      "text": "/",
+      "tag": "B",
+      "cls": "",
+      "rects": {
+       "n": 1,
+       "heights": [
+        16
+       ],
+       "width": 5
+      },
+      "box": {
+       "left": 88,
+       "right": 93,
+       "top": 25,
+       "h": 16
+      },
+      "beyond_right_edge": false,
+      "occluded": false
+     },
+     {
+      "text": "Traveler Twin",
+      "tag": "STRONG",
+      "cls": "",
+      "rects": {
+       "n": 1,
+       "heights": [
+        16
+       ],
+       "width": 75
+      },
+      "box": {
+       "left": 103,
+       "right": 178,
+       "top": 25,
+       "h": 16
+      },
+      "beyond_right_edge": false,
+      "occluded": false
+     },
+     {
+      "text": "System",
+      "tag": "BUTTON",
+      "cls": "v9-language",
+      "rects": {
+       "n": 1,
+       "heights": [
+        21
+       ],
+       "width": 50
+      },
+      "box": {
+       "left": 195,
+       "right": 258,
+       "top": 17,
+       "h": 44
+      },
+      "beyond_right_edge": false,
+      "occluded": false
+     },
+     {
+      "text": "中文",
+      "tag": "BUTTON",
+      "cls": "v9-language",
+      "rects": {
+       "n": 1,
+       "heights": [
+        21
+       ],
+       "width": 32
+      },
+      "box": {
+       "left": 266,
+       "right": 329,
+       "top": 17,
+       "h": 44
+      },
+      "beyond_right_edge": false,
+      "occluded": false
+     },
+     {
+      "text": "DE",
+      "tag": "BUTTON",
+      "cls": "v8-avatar",
+      "rects": {
+       "n": 1,
+       "heights": [
+        21
+       ],
+       "width": 20
+      },
+      "box": {
+       "left": 345,
+       "right": 373,
+       "top": 25,
+       "h": 28
+      },
+      "beyond_right_edge": false,
+      "occluded": false
+     }
+    ],
+    "width": 390
+   },
+   {
+    "path": "/v8/twin",
+    "viewport": 414,
+    "bar_box": {
+     "top": 0,
+     "height": 66,
+     "left": 0,
+     "right": 414
+    },
+    "bar_overflow_x": 0,
+    "bar_scrollWidth": 414,
+    "bar_clientWidth": 414,
+    "rightmost_child": {
+     "tag": "DIV",
+     "cls": "v8-top-actions",
+     "left": 219,
+     "right": 397,
+     "clipped_by_viewport": false,
+     "visible_width": 178
+    },
+    "wrapped_leaves": [],
+    "leaves": [
+     {
+      "text": "Menu",
+      "tag": "BUTTON",
+      "cls": "v8-mobile-menu",
+      "rects": {
+       "n": 1,
+       "heights": [
+        21
+       ],
+       "width": 41
+      },
+      "box": {
+       "left": 17,
+       "right": 72,
+       "top": 19,
+       "h": 27
+      },
+      "beyond_right_edge": false,
+      "occluded": false
+     },
+     {
+      "text": "/",
+      "tag": "B",
+      "cls": "",
+      "rects": {
+       "n": 1,
+       "heights": [
+        16
+       ],
+       "width": 5
+      },
+      "box": {
+       "left": 100,
+       "right": 105,
+       "top": 25,
+       "h": 16
+      },
+      "beyond_right_edge": false,
+      "occluded": false
+     },
+     {
+      "text": "Traveler Twin",
+      "tag": "STRONG",
+      "cls": "",
+      "rects": {
+       "n": 1,
+       "heights": [
+        16
+       ],
+       "width": 75
+      },
+      "box": {
+       "left": 115,
+       "right": 190,
+       "top": 25,
+       "h": 16
+      },
+      "beyond_right_edge": false,
+      "occluded": false
+     },
+     {
+      "text": "System",
+      "tag": "BUTTON",
+      "cls": "v9-language",
+      "rects": {
+       "n": 1,
+       "heights": [
+        21
+       ],
+       "width": 50
+      },
+      "box": {
+       "left": 219,
+       "right": 282,
+       "top": 17,
+       "h": 44
+      },
+      "beyond_right_edge": false,
+      "occluded": false
+     },
+     {
+      "text": "中文",
+      "tag": "BUTTON",
+      "cls": "v9-language",
+      "rects": {
+       "n": 1,
+       "heights": [
+        21
+       ],
+       "width": 32
+      },
+      "box": {
+       "left": 290,
+       "right": 353,
+       "top": 17,
+       "h": 44
+      },
+      "beyond_right_edge": false,
+      "occluded": false
+     },
+     {
+      "text": "DE",
+      "tag": "BUTTON",
+      "cls": "v8-avatar",
+      "rects": {
+       "n": 1,
+       "heights": [
+        21
+       ],
+       "width": 20
+      },
+      "box": {
+       "left": 369,
+       "right": 397,
+       "top": 25,
+       "h": 28
+      },
+      "beyond_right_edge": false,
+      "occluded": false
+     }
+    ],
+    "width": 414
+   }
+  ]
+ }
+}
