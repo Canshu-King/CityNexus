@@ -10,7 +10,7 @@
 - used-edge projection repair commit: `f7cc3d45888035a9abbb9b88397c70b149251333`
 - selected-plan experience projection repair commit: `86d2f27a`
 - truthful live-navigation repair commit: `91cbf629`
-- final product/evidence commit before this receipt update: `751d7e21`
+- final product/evidence commit before this receipt update: `97ea0663`
 - clean before product calls: yes (`git status --porcelain` empty)
 - authority/mainline merge: none
 
@@ -246,6 +246,18 @@ Valhalla route evidence shown above. The clean page now says:
 This keeps an empty web-observation lane from contradicting the live provider route
 lane or implying that all route evidence is absent.
 
+The map entry point was then exercised on the same clean journey. Its diagnostic sheet
+still opens so the missing mobility evidence is visible, but its mutation-looking bottom
+action is now closed honestly:
+
+```text
+WALK/BICYCLE/TRANSIT/AUTO/RIDE HAIL -> disabled · 无供应商证据
+当前没有可选择的供应商路线方式 -> disabled
+```
+
+No POST is possible from that empty sheet. This keeps the map's evidence diagnosis
+available without presenting a no-op “let CityNexus choose” action.
+
 Captured artifacts:
 
 - `frontend/output/playwright/r77-suzhou-user-visible-clean.png`
@@ -254,6 +266,7 @@ Captured artifacts:
 - `frontend/output/playwright/r77-suzhou-live-pending-mode-count-clean.png`
 - `frontend/output/playwright/r77-suzhou-live-offline-copy-clean.png`
 - `frontend/output/playwright/r77-suzhou-live-web-source-label-clean.png`
+- `frontend/output/playwright/r77-suzhou-map-mobility-unavailable-clean.png`
 
 The final frontend gates after this repair were:
 
