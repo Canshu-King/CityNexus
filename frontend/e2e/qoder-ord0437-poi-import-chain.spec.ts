@@ -339,6 +339,49 @@ test("link-named and states — a link is named while the text next to it is sti
      words instead of just being inert. */
   const pickable = statuses.filter((s) => s === "RESOLVED").length;
   expect(pickBoxes, "the shared .v8-pick-box control appears once per pickable card").toBe(pickable);
+  /* Importing ORD-0435's sheet is only a claim until the paint is measured: at this 390 px width the
+     line's own narrow-screen rule gives the control `min-height: var(--cn-touch-min)` = 44 px
+     (design-tokens.css:202). A class that reached no rule would still count as one pick box, so the
+     box is measured, not named. */
+  const firstBox = await page.locator(".v8-pick-box").first().boundingBox();
+  /* Un-picking one card is what makes the comparison honest: the panel starts with every matched place
+     selected, so without this click there is no unchecked control on screen to compare against, and a
+     "differs" assertion would pass simply because one side was missing. The click is also the only
+     place this gate grades that the tick actually answers. */
+  await page.locator(".v8-pick-box").first().click();
+  await page.waitForTimeout(600);
+  const afterOneDeselected = await painted(page, "poi-import-selection-count");
+  const paint = await page.evaluate(() => {
+    const read = (sel: string) => {
+      const el = document.querySelector(sel) as HTMLElement | null;
+      if (!el) return null;
+      const s = getComputedStyle(el);
+      return { border: s.borderColor, shadow: s.boxShadow };
+    };
+    return {
+      pickedCard: read('.v8-stay-card[data-picked="true"]'),
+      unpickedCard: read('.v8-stay-card[data-picked="false"]'),
+      checkedBox: read(".v8-pick-box.checked"),
+      plainBox: read(".v8-pick-box:not(.checked)"),
+    };
+  });
+  push("link-named-paint", { firstBoxHeight: firstBox?.height ?? null, afterOneDeselected, ...paint });
+  expect(firstBox?.height ?? 0, "勾选控件在窄屏要有 44 px 的可点高度").toBeGreaterThanOrEqual(44);
+  expect(afterOneDeselected, "点掉一枚之后计数要跟着减").toMatch(/1/);
+  expect(paint.unpickedCard, "取消勾选的那张要留在屏上").not.toBeNull();
+  expect(paint.plainBox, "取消勾选的那枚控件要留在屏上").not.toBeNull();
+  /* "has some box-shadow" would be true even if the shared sheet never reached this screen, so the
+     claim pinned here is the difference: a picked card must be painted differently from an unpicked
+     one, and a checked box differently from a plain one. Those two pairs are exactly what
+     ORD-0435's sheet writes twins for. */
+  expect(paint.pickedCard?.border, "选中与未选的卡片必须看得出不同")
+    .not.toEqual(paint.unpickedCard?.border);
+  expect(paint.checkedBox?.border, "勾上与没勾的控件必须看得出不同")
+    .not.toEqual(paint.plainBox?.border);
+  /* The stronger half: the picked card must carry the shared sheet's inset accent line, which is a
+     rule only `discovery-batch.css` writes. If a local class were still winning, the border would
+     differ but this would be `none`. */
+  expect(paint.pickedCard?.shadow, "选中态要由共享样式表那条内侧强调线来画").toContain("inset");
   expect(pickedHook.with_data_picked, "每张卡都带共享的 [data-picked] 钩子").toBe(pickedHook.total);
   const inertWithoutReason = await page.getByTestId("poi-candidate-card").evaluateAll((els) =>
     els.filter(
