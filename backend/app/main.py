@@ -17,7 +17,7 @@ from uuid import NAMESPACE_URL, UUID, uuid4, uuid5
 from zoneinfo import ZoneInfo, ZoneInfoNotFoundError
 
 import httpx
-from fastapi import Depends, FastAPI, Header, HTTPException, Query, Request, Response
+from fastapi import Body, Depends, FastAPI, Header, HTTPException, Query, Request, Response
 from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse, StreamingResponse
 from sqlalchemy import delete, func, insert, select, update
@@ -330,6 +330,7 @@ from app.schemas import (
     AuthoritativeComposeRequest,
     CatalogHydrationRequest,
     GuardianAutopilotStart,
+    JourneyAbortRequest,
     JourneyCreate,
     JourneyPatch,
     LocationObservationRequest,
@@ -2982,7 +2983,11 @@ def list_journeys(session: Session = Depends(get_session)):
 
 
 @app.delete("/api/v1/journeys/{journey_id}", status_code=204)
-def delete_journey(journey_id: UUID, session: Session = Depends(get_session)):
+def delete_journey(
+    journey_id: UUID,
+    session: Session = Depends(get_session),
+    abort: JourneyAbortRequest | None = Body(default=None),
+):
     """Soft delete: record the moment in `journeys.deleted_at`, keep the row.
 
     The two refusals carry their own name in `error.reason_code` - `JOURNEY_NOT_FOUND` on the
@@ -2996,6 +3001,22 @@ def delete_journey(journey_id: UUID, session: Session = Depends(get_session)):
     `status` is not touched.  It answers what the trip was doing, and its closed CHECK
     (`backend/db/schema.sql:125`) has no word for "in the bin" - inventing one would rebuild
     the table for a fact that now has a column of its own.
+
+    ORD-0464 added the optional reason object.  It arrives as a body on this same door rather than
+    as a second call, because two calls can fail independently: a screen that recorded a reason and
+    then lost the delete would leave a trip with a stated cause nobody acted on, and a screen that
+    deleted and then failed to record would look like the traveller left without a word.  One
+    request, one transaction, one outcome row - the same `journey_outcome_events` table the
+    execution timeline already writes, with `event_type = "JOURNEY_DELETED"`, which this door is the
+    only producer of (`OutcomeEventCreate` does not list it, so a client cannot file the fact of a
+    deletion through the generic outcomes door).
+
+    Three states travel, and none of them is a default.  A body whose `answered` is false is the
+    traveller declining to say (`SKIPPED_BY_TRAVELER`); a body naming reasons is `DECLARED`; and no
+    body at all is `NOT_ASKED`, which is what every client that predates this order sent.  That
+    third one cannot be claimed in a payload on purpose: `answered` is a required field, so a caller
+    that never showed the question records the absence, not a word the traveller never said - the
+    `stay_budget_declared` rule from ORD-0355 applied to a question this server asks once per trip.
     """
 
     journey = session.get(Journey, str(journey_id))
@@ -3011,6 +3032,14 @@ def delete_journey(journey_id: UUID, session: Session = Depends(get_session)):
         raise refused
     before = journey_schema(journey).model_dump(mode="json")
     journey.deleted_at = datetime.now(timezone.utc).isoformat()
+    if abort is None:
+        reason_state = "NOT_ASKED"
+        codes: list[str] = []
+        note: str | None = None
+    else:
+        reason_state = "DECLARED" if abort.answered else "SKIPPED_BY_TRAVELER"
+        codes = abort.unique_codes() if abort.answered else []
+        note = abort.note
     session.commit()
     record_audit(
         session,
@@ -3019,6 +3048,21 @@ def delete_journey(journey_id: UUID, session: Session = Depends(get_session)):
         entity_id=journey.id,
         journey_id=journey.id,
         before=before,
+    )
+    _record_outcome_event(
+        session,
+        journey,
+        activity=None,
+        event_type="JOURNEY_DELETED",
+        actor_type="USER",
+        occurred_at_actual=journey.deleted_at,
+        payload={
+            "reason_state": reason_state,
+            # `codes` means anything only beside DECLARED; the empty list in the other two states is
+            # the shape of the question going unanswered, not a reason that happens to be blank.
+            "codes": codes,
+            "note": note,
+        },
     )
     session.commit()
 

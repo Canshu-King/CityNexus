@@ -634,6 +634,80 @@ class OutcomeEventCreate(BaseModel):
     related_agent_run_id: UUID | None = None
 
 
+#: ORD-0464: why a traveller put a trip in the recycle bin.  One token per reason, each one naming a
+#: surface this product actually has -- there is no token for a feature the traveller could not have
+#: hit, which is why none of them mentions a supplier by name or an offline mode the app never offers.
+JourneyAbortCode = Literal[
+    "ITINERARY_NOT_USEFUL",
+    "BUDGET_DOES_NOT_FIT",
+    "DATES_OR_PLACE_CHANGED",
+    "EVIDENCE_UNAVAILABLE",
+    "PROTECTED_ITEM_DROPPED",
+    "ARRANGED_ELSEWHERE",
+    "TEST_OR_DEMO_DATA",
+    "OTHER",
+]
+
+#: How the question itself was answered.  ``SKIPPED_BY_TRAVELER`` is a real answer the traveller gave
+#: ("I was asked and chose not to say"), and ``NOT_ASKED`` is what the server records when no answer
+#: object arrived at all.  The two are never interchangeable and neither is a default: see
+#: ``JourneyAbortRequest.answered``, which follows the ``stay_budget_declared`` rule from ORD-0355 --
+#: a value written by a process that never asked the question must not look like the traveller's "no".
+JourneyAbortState = Literal["DECLARED", "SKIPPED_BY_TRAVELER", "NOT_ASKED"]
+
+#: The competitor's survey caps the free-text at 200 characters (剖析件 §1.7).  The cap is ours too
+#: because a note this column has to carry is a sentence, not an essay.
+ABORT_NOTE_MAX_LENGTH = 200
+
+
+class JourneyAbortRequest(BaseModel):
+    """ORD-0464: the reason object ``DELETE /api/v1/journeys/{journey_id}`` accepts.
+
+    ``extra="forbid"`` and the two cross-field refusals below exist because the honest distinction is
+    between three things a caller might mean, and a lenient parser would collapse them: an answered
+    survey, a declined survey, and a client that never asked.  ``codes`` is a set in the traveller's
+    own order -- more than one may apply, and picking one of them as "the" reason would be this
+    server inventing a primary cause the traveller did not claim.
+    """
+
+    model_config = ConfigDict(extra="forbid")
+
+    answered: bool
+    codes: list[JourneyAbortCode] = Field(default_factory=list, max_length=8)
+    note: str | None = Field(default=None, min_length=1, max_length=ABORT_NOTE_MAX_LENGTH)
+
+    @model_validator(mode="after")
+    def _refuse_collapsed_states(self) -> "JourneyAbortRequest":
+        if self.answered and not self.codes:
+            raise PydanticCustomError(
+                "abort_answer_without_codes",
+                "ABORT_ANSWER_WITHOUT_CODES: answered=true names no reason, and an empty list is not "
+                "an answer -- say which reason applies or say you are skipping it",
+                {"answered": str(self.answered)},
+            )
+        if not self.answered and self.codes:
+            raise PydanticCustomError(
+                "abort_skip_with_codes",
+                "ABORT_SKIP_WITH_CODES: skipping the question cannot also carry reasons, or the record "
+                "would claim both at once",
+                {"codes": ",".join(str(code) for code in self.codes)},
+            )
+        return self
+
+    def unique_codes(self) -> list[str]:
+        """The traveller's own order with repeats dropped.
+
+        A double tap sending the same reason twice is not two reasons, and storing the repeat would
+        let one reason count twice in anything that ever tallies these rows.
+        """
+
+        seen: list[str] = []
+        for code in self.codes:
+            if code not in seen:
+                seen.append(code)
+        return seen
+
+
 class TravelerTwinClearRequest(BaseModel):
     confirm: bool = True
 
