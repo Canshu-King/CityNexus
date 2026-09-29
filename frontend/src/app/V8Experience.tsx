@@ -214,17 +214,22 @@ class V8Rejection extends Error {
   /** What this device measured on the refusing answer, carried with the refusal so the screen that
    *  shows the rejection can show *that* instead of the server's sentence (Q64=1). */
   readonly facts: RawFacts;
+  /** ORD-0457: the wait a 429 carried, in the server's own milliseconds. Null means it never said,
+   *  which the copy has to respect - a screen that picks a delay is inventing a server policy. */
+  readonly retry_after_ms: number | null;
   constructor(
     message: string,
     status: number,
     code: string | null,
     facts: RawFacts,
+    retry_after_ms: number | null = null,
   ) {
     super(message);
     this.name = "V8Rejection";
     this.status = status;
     this.code = code;
     this.facts = facts;
+    this.retry_after_ms = retry_after_ms;
   }
 }
 
@@ -293,6 +298,7 @@ async function v8RequestInner<T>(path: string, init?: RequestInit): Promise<T> {
       response.status,
       typeof body?.error?.code === "string" ? body.error.code : null,
       measureRawFacts(response, raw),
+      typeof body?.error?.retry_after_ms === "number" ? body.error.retry_after_ms : null,
     );
   }
   /* ORD-0263 fifth state: a 2xx that reached us and still gives this screen nothing is an answered
@@ -1401,7 +1407,29 @@ export function V8Experience() {
                 window.location.reload();
               },
             }
-          : action === "read-only-cached"
+          : action === "retry-later"
+            /* ORD-0457: the pace is the server's, so the button says wait and then press. It still
+               reloads - "later" is a recommendation about timing, not a refusal to act. */
+            ? {
+                testId: "failure-retry-later",
+                label: locale.startsWith("zh") ? "等一会儿再问一次" : "Wait, then ask again",
+                run: () => {
+                  setFailure(null);
+                  setBusy(true);
+                  window.location.reload();
+                },
+              }
+            : action === "view-current-state"
+              ? {
+                  testId: "failure-view-current-state",
+                  label: locale.startsWith("zh") ? "看它现在是什么状态" : "Look at what it is now",
+                  run: () => {
+                    setFailure(null);
+                    setBusy(true);
+                    window.location.reload();
+                  },
+                }
+              : action === "read-only-cached"
             ? {
                 testId: "failure-read-cached",
                 label: locale.startsWith("zh") ? "看已保存的只读副本" : "Read the saved copy",
