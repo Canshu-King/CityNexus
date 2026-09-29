@@ -1,0 +1,168 @@
+{
+ "order": "ORD-0456",
+ "lane": "N2",
+ "rev": {
+  "live_tip_read": "57ff5d1c2f8540d498d945ed591c36689fc0f39e",
+  "head": "48d16fc7f34acc08dc911e6c7479ec63e5e587c5",
+  "chain": [
+   "48d16fc7|ORD-0456: put the wizard file back to the line endings the line carries; no other byte changed",
+   "67558a22|ORD-0456: keep 0 admissible on the optional lodging budget, where it means 'no lodging budget'",
+   "f88bed27|ORD-0456: the budget floor the label states is the floor the form enforces",
+   "936c6272|ORD-0456: the setup form's required marks and accepted ranges come from one declared source"
+  ],
+  "parent_of_first": "57ff5d1c2f8540d498d945ed591c36689fc0f39e",
+  "ref": "refs/heads/review/Q-ord0456-entry-limits-r2",
+  "ref_r1": "refs/heads/review/Q-ord0456-entry-limits-r1",
+  "ref_readback": "refs/heads/review/Q-ord0456-entry-limits-r2",
+  "merge_tree_rc_vs_tip": 0,
+  "merged_tree": "b6f62f43989c4e3dbaf751a6b354133207e306a6"
+ },
+ "blobs": {
+  "frontend/src/lib/entryLimits.ts": "5bf3f42388d0d012ee5f46abc997e35e0c6f5960",
+  "frontend/src/features/setup/JourneyTrialSetup.tsx_before": "bfdbfbecc064802e1959a80b0dfc9e9010276c88",
+  "frontend/src/features/setup/JourneyTrialSetup.tsx_after": "0c344167dc71900d81b960baddfd2d08a9277166"
+ },
+ "diff": [
+  "13 14 frontend/src/features/setup/JourneyTrialSetup.tsx",
+  "130 0 frontend/src/lib/entryLimits.ts"
+ ],
+ "self_fault_line_endings": "my first commit rewrote every line of the wizard (LF to CRLF); fixed by a following commit, so the diff is 13/14 plus the new file. That is why -r1 exists and why -r2 is the one to merge.",
+ "one_source_check": {
+  "literal_min_max_left_in_wizard": "0 (no match)",
+  "limits_declared_at": [
+   "frontend/src/lib/entryLimits.ts:AX",
+   "see entryLimits.ts head"
+  ]
+ },
+ "server_anchors": {
+  "party_size": "backend/app/schemas.py:221",
+  "rooms_suggested_from_party": "frontend/src/features/setup/JourneyTrialSetup.tsx:329"
+ },
+ "bundles": {
+  "tip": {
+   "side": "tip",
+   "port": 4854,
+   "asset": "assets/index-DbA8xyvx.js",
+   "equal": true,
+   "disk_sha1": "b272811048f1d94655c22355c1f5a04131cd99e5"
+  },
+  "cand": {
+   "side": "cand",
+   "port": 4855,
+   "asset": "assets/index-F0hbJ_Pl.js",
+   "equal": true,
+   "disk_sha1": "5d829e54f9de4b23827bdc2c1e68667ce8c25363"
+  }
+ },
+ "gates": {
+  "vite_build_rc_cand3": 0,
+  "typecheck_rc": 0,
+  "typecheck_log": "D:/moodle/_qoder_n2_scratch/_tsc_0456b.log"
+ },
+ "state_seed": "the wizard's own localStorage key citynexus.v8.trial_draft at step 2 (JourneyTrialSetup.tsx:22), read back by the app itself",
+ "labels": {
+  "zh/party": {
+   "before": "旅行人数",
+   "after": "旅行人数（必填 · 1-20 人）",
+   "min_attr": "1",
+   "max_attr": "20"
+  },
+  "zh/rooms": {
+   "before": "房间数（建议值，可调整）",
+   "after": "房间数（建议值，可调整）（选填 · 1-20 间）",
+   "min_attr": "1",
+   "max_attr": "20"
+  },
+  "zh/budget": {
+   "before": "总预算",
+   "after": "总预算（必填 · 1 元起）",
+   "min_attr": "1",
+   "max_attr": null
+  },
+  "zh/stayBudget": {
+   "before": "住宿预算",
+   "after": "住宿预算（选填 · 0 元起）",
+   "min_attr": "0",
+   "max_attr": null
+  },
+  "en/party": {
+   "before": "Travellers",
+   "after": "Travellers（required · 1-20 people）",
+   "min_attr": "1",
+   "max_attr": "20"
+  },
+  "en/rooms": {
+   "before": "Rooms (suggested)",
+   "after": "Rooms (suggested)（optional · 1-20 rooms）",
+   "min_attr": "1",
+   "max_attr": "20"
+  },
+  "en/budget": {
+   "before": "Total budget",
+   "after": "Total budget（required · from 1 CNY）",
+   "min_attr": "1",
+   "max_attr": null
+  },
+  "en/stayBudget": {
+   "before": "Stay budget",
+   "after": "Stay budget（optional · from 0 CNY）",
+   "min_attr": "0",
+   "max_attr": null
+  }
+ },
+ "labels_before": {
+  "zh/party": {
+   "label": "旅行人数",
+   "min": "1",
+   "max": "20",
+   "painted": true
+  },
+  "zh/rooms": {
+   "label": "房间数（建议值，可调整）",
+   "min": "1",
+   "max": "20",
+   "painted": true
+  },
+  "zh/budget": {
+   "label": "总预算",
+   "min": "0",
+   "max": null,
+   "painted": true
+  },
+  "zh/stayBudget": {
+   "label": "住宿预算",
+   "min": "0",
+   "max": null,
+   "painted": true
+  },
+  "en/party": {
+   "label": "Travellers",
+   "min": "1",
+   "max": "20",
+   "painted": true
+  },
+  "en/rooms": {
+   "label": "Rooms (suggested)",
+   "min": "1",
+   "max": "20",
+   "painted": true
+  },
+  "en/budget": {
+   "label": "Total budget",
+   "min": "0",
+   "max": null,
+   "painted": true
+  },
+  "en/stayBudget": {
+   "label": "Stay budget",
+   "min": "0",
+   "max": null,
+   "painted": true
+  }
+ },
+ "label_and_control_agree": true,
+ "not_done": {
+  "probe_branch_demo": "changing one constant and watching both the words and the control move is NOT_DONE this round; what is measured is that no literal min/max remains in the wizard and that the painted label and the DOM attribute were read in the same pass",
+  "other_entry_forms": "only the trip-setup step 2 fields were touched; the inbox and POI batch entries still carry their own wording -- named NOT_DONE"
+ }
+}
