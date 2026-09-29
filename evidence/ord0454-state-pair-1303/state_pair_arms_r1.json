@@ -1,0 +1,146 @@
+{
+ "tool": "D:\\moodle\\_qoder_cmdr_ref_20260921\\tools\\cnx_copy_tiers_r3.py",
+ "arms": [
+  {
+   "arm": "K9a_on_state_without_a_twin_is_caught",
+   "verdict": "MET",
+   "measured": "on=1 paired=0 unpaired=1 attr_unpaired=0, expected RED"
+  },
+  {
+   "arm": "K9b_base_rule_answers",
+   "verdict": "MET",
+   "measured": "on=1 paired=1 unpaired=0 attr_unpaired=0, expected quiet"
+  },
+  {
+   "arm": "K9c_not_pseudo_twin_answers",
+   "verdict": "MET",
+   "measured": "on=2 paired=2 unpaired=0 attr_unpaired=0, expected quiet"
+  },
+  {
+   "arm": "K9d_named_unselected_twin_answers",
+   "verdict": "MET",
+   "measured": "on=1 paired=1 unpaired=0 attr_unpaired=0, expected quiet"
+  },
+  {
+   "arm": "K9e_attribute_true_and_false_answer",
+   "verdict": "MET",
+   "measured": "on=0 paired=0 unpaired=0 attr_unpaired=0, expected quiet"
+  },
+  {
+   "arm": "K9f_attribute_true_with_no_off_side_is_caught",
+   "verdict": "MET",
+   "measured": "on=0 paired=0 unpaired=0 attr_unpaired=1, expected RED"
+  },
+  {
+   "arm": "K9g_a_name_holding_the_word_selected_stays_quiet",
+   "verdict": "MET",
+   "measured": "on=0 paired=0 unpaired=0 attr_unpaired=0, expected quiet"
+  },
+  {
+   "arm": "K9h_current_row_state_is_out_of_scope_not_enforced",
+   "verdict": "MET",
+   "measured": "on=0 paired=0 unpaired=0 attr_unpaired=0, expected quiet"
+  },
+  {
+   "arm": "K9i_the_state_alone_without_a_base_is_caught",
+   "verdict": "MET",
+   "measured": "on=1 paired=0 unpaired=1 attr_unpaired=0, expected RED"
+  },
+  {
+   "arm": "K9l_disabled_and_current_attributes_stay_quiet",
+   "verdict": "MET",
+   "measured": "on=0 paired=0 unpaired=0 attr_unpaired=0, expected quiet"
+  },
+  {
+   "arm": "K9m_decision_active_attribute_stays_quiet",
+   "verdict": "MET",
+   "measured": "on=0 paired=0 unpaired=0 attr_unpaired=0, expected quiet"
+  },
+  {
+   "arm": "K9n_a_toggle_attribute_named_by_content_is_still_caught",
+   "verdict": "MET",
+   "measured": "on=0 paired=0 unpaired=0 attr_unpaired=1, expected RED"
+  },
+  {
+   "arm": "K9o_a_disabled_or_variant_rule_is_not_an_unselected_twin",
+   "verdict": "MET",
+   "measured": "on=1 paired=0 unpaired=1 attr_unpaired=0, expected RED"
+  },
+  {
+   "arm": "K9p_bare_base_rule_is_the_twin",
+   "verdict": "MET",
+   "measured": "on=1 paired=1 unpaired=0 attr_unpaired=0, expected quiet"
+  },
+  {
+   "arm": "K9j_growth_mode_blames_only_what_the_candidate_added",
+   "verdict": "MET",
+   "measured": "ok=False measure=growth mode against C:\\Users\\仓鼠王\\AppData\\Local\\Temp\\cnx-sp-base-td5wg1rq: that tree already carries 1 unpaired"
+  },
+  {
+   "arm": "K9k_growth_mode_is_zero_when_nothing_was_added",
+   "verdict": "MET",
+   "measured": "ok=True adds 0 new: True"
+  }
+ ],
+ "faces": {
+  "STATE_PAIR": {
+   "verdict": "MET",
+   "measure": "14 stylesheet(s) read, 7 on-state cell(s): 7 paired, 0 unpaired; 1 attribute-on cell(s), 0 without an off-side rule; 614 bare base rule(s) known; left out of scope on purpose -- states: active, current | attributes: aria-disabled, data-current, data-decision-active"
+  }
+ },
+ "regression_check": {
+  "r2_faces": {
+   "REGISTER_PARITY": "MET",
+   "NO_GROWTH": "MET",
+   "ASSERTIONS_STILL_HIT": "MET",
+   "REMAINDER_REPORT": "MET",
+   "DICTIONARY_COVERAGE_REPORT": "MET",
+   "LADDER_TIER④_EMPTY_ACTION": "VIOLATION",
+   "LADDER_TIER⑥_ESTIMATE_PREFIX": "VIOLATION",
+   "HARDCODED_FALLBACK": "VIOLATION",
+   "RENDER_TIERS": "VIOLATION",
+   "RENDERED": "MET"
+  },
+  "r3_faces": {
+   "REGISTER_PARITY": "MET",
+   "NO_GROWTH": "MET",
+   "ASSERTIONS_STILL_HIT": "MET",
+   "REMAINDER_REPORT": "MET",
+   "DICTIONARY_COVERAGE_REPORT": "MET",
+   "LADDER_TIER④_EMPTY_ACTION": "VIOLATION",
+   "LADDER_TIER⑥_ESTIMATE_PREFIX": "VIOLATION",
+   "HARDCODED_FALLBACK": "VIOLATION",
+   "RENDER_TIERS": "VIOLATION",
+   "RENDERED": "MET",
+   "STATE_PAIR": "MET"
+  },
+  "faces_only_in_r3": [
+   "STATE_PAIR"
+  ],
+  "verdict_changed": {}
+ },
+ "mutant_exit": 1,
+ "arms_expected_red": [
+  "K9a_on_state_without_a_twin_is_caught",
+  "K9f_attribute_true_with_no_off_side_is_caught",
+  "K9i_the_state_alone_without_a_base_is_caught",
+  "K9o_a_disabled_or_variant_rule_is_not_an_unselected_twin"
+ ],
+ "arms_all_met": true,
+ "tip_cells_listing": [
+  "[PAIRED  ] features/discovery/discovery-batch.css:37 .v8-pick-box.checked  state .checked on base .v8-pick-box  twin: base_rule(.v8-pick-box)",
+  "[PAIRED  ] features/discovery/discovery-batch.css:38 .v8-pick-box.checked  state .checked on base .v8-pick-box  twin: base_rule(.v8-pick-box)",
+  "[PAIRED  ] map-selection.css:20 .v9-map-marker.selected  state .selected on base .v9-map-marker  twin: base_rule(.v9-map-marker)",
+  "[PAIRED  ] map-selection.css:49 .v8-map-stop.selected  state .selected on base .v8-map-stop  twin: base_rule(.v8-map-stop)",
+  "[PAIRED  ] styles.css:64 .family-chip.selected  state .selected on base .family-chip  twin: base_rule(.family-chip)",
+  "[PAIRED  ] styles.css:172 .v8-stay-card.selected  state .selected on base .v8-stay-card  twin: attribute_false_twin, base_rule(.v8-stay-card)",
+  "[PAIRED  ] styles.css:301 .v8-booking-card.selected  state .selected on base .v8-booking-card  twin: base_rule(.v8-booking-card)",
+  "[PAIRED  ] features/discovery/discovery-batch.css:33 .v8-stay-card[data-picked=\"false\"]  data-picked=\"false\"  twin: attribute_data-picked_has_true_and_false",
+  "[PAIRED  ] features/discovery/discovery-batch.css:34 .v8-stay-card[data-picked=\"true\"]  data-picked=\"true\"  twin: attribute_data-picked_has_true_and_false"
+ ],
+ "tip_state_pair_face": {
+  "verdict": "MET",
+  "measure": "14 stylesheet(s) read, 7 on-state cell(s): 7 paired, 0 unpaired; 1 attribute-on cell(s), 0 without an off-side rule; 614 bare base rule(s) known; left out of scope on purpose -- states: active, current | attributes: aria-disabled, data-current, data-decision-active"
+ },
+ "tip_exit": 1
+}
