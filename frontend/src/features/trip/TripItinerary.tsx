@@ -12,6 +12,11 @@
 import { useMemo, useState } from "react";
 import { useLocale } from "../../i18n/LocaleContext";
 import { roleLabel, disruptionLabel } from "../../i18n/travelerLabels";
+import {
+  dayOfGapCopy,
+  journeyProgress,
+  progressContractCopy,
+} from "../progress/journeyProgress";
 import type { V8Data } from "../../app/v8Types";
 
 type Activity = V8Data["active_plan"] extends null
@@ -102,6 +107,21 @@ export function TripItinerary({
     }));
   }, [plan, tz, locale]);
 
+  /* ORD-0438: one owner for the two counts a traveller reads as progress.  The day total comes from the
+     server's projection, the same number Today quotes, so this screen no longer re-derives a second one
+     from its own grouping; the grouping stays in charge of what it was always the only reader of --
+     which day holds the cursor. */
+  const progress = useMemo(
+    () =>
+      journeyProgress({
+        serverDayCount: data.journey.temporal_shape?.day_count ?? null,
+        days: days.map((day) => ({ key: day.key, activityIds: day.activities.map((a) => a.id) })),
+        activities: (plan?.activities ?? []).map((a) => ({ id: a.id, status: a.status })),
+        currentActivityId: plan?.current_activity_id ?? null,
+      }),
+    [data.journey.temporal_shape, days, plan],
+  );
+
   const [activeDay, setActiveDay] = useState(0);
 
   if (!plan || days.length === 0) {
@@ -136,12 +156,28 @@ export function TripItinerary({
       <div className="v8-page-intro compact">
         <div>
           <p className="v8-kicker">{zh ? "行程" : "Trips"}</p>
-          <h1>{zh ? `${days.length} 天行程` : `${days.length}-day itinerary`}</h1>
+          <h1 data-testid="trip-day-total">
+            {progress.day_total === null
+              ? zh
+                ? "天数未知"
+                : "length unknown"
+              : zh
+                ? `${progress.day_total} 天行程`
+                : `${progress.day_total}-day itinerary`}
+          </h1>
           <p className="v8-lede">
             {zh
               ? "逐日安排。已确认的预订会被标记为受保护。"
               : "Day by day. Confirmed bookings are marked as protected."}
           </p>
+          <p className="v8-lede" data-testid="trip-progress-contract">
+            {progressContractCopy(progress, zh)}
+          </p>
+          {dayOfGapCopy(progress, zh) && (
+            <p className="v8-lede" data-testid="trip-progress-daygap">
+              {dayOfGapCopy(progress, zh)}
+            </p>
+          )}
         </div>
       </div>
 
