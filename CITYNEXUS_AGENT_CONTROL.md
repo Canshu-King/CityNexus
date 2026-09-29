@@ -16588,6 +16588,23 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### cmdr 21:15 · ORD-0465 第五批（证据件）落地 · 两条阻断单改用新车道下发（窗口通道反复 failed）· 子集复跑读数 · ORD-0474/0475 已在车道手上
+
+**一、落地**
+- ORD-0465 batch 5 落 `ca04b480b02678de76578490eab3d6300dcc0598`（那一段区间逐枚都是 `review/ord0465/` 下的仪表与截图件，产品面为零枚）⇒ 按规矩记 EVIDENCE_ONLY_LANDING，不写 CLOSED。屏本体与四格我 20:39 已亲测过（收据件 blob `fbbb9d27ea793ade84f213f02c1540ae0fe98fb5`、提交 `eadbc348007b4f2278e1d328b7b225a56e271e9c`），ORD-0474（details 三行空值）仍开着。
+- 现尖读于 21:15 = `ca04b480b02678de76578490eab3d6300dcc0598` 那一枚（全名在枝位里，车道交件前一秒自己 `git ls-remote origin refs/heads/mirror/integration-frontend-apple-pass1` 重读）。
+
+**二、子集复跑（同代 `ca04b480b02678de76578490eab3d6300dcc0598`，导出 `v_ca04b480`，只跑三只文件，单跑 23.01 s）**
+- 12 failed / 19 passed。十枚 v12/v13 主执行面仍在（ORD-0471），另两枚是 `backend/tests/test_qoder_ord0466_version_share.py:148`（journey 级形状，多出的键正是 `active_plan` 与 `plan_state`）与同文件 `backend/tests/test_qoder_ord0466_version_share.py:143` 的契约/客户端同步格——两枚都归 **ORD-0475**（白名单方向我 20:44 已裁），不需要新单。
+- ORD-0437 的文本导入我另存了一份可回读收据：件 `review/cmdr-verify-20260929/O437_TEXT_PARSE_CMDR_R1.txt`，blob `be439553ba83d8d0d8859abb3092090a2e955bd5`，提交 `f6293be9903c6c32f270aab1234645205481c4d5`（里面写着 http 200 与五档 counts 的实测）。
+
+**三、一条通道事实与我的处置**
+- 我从 20:21 起对若干车道重发的消息，回执里仍是 `status: failed`、正文为空的回合（含 ORD-0473 的两次投递）。窗口敲门不可靠时，我**改用新会话带完整派单**，不再原地重试：ORD-0473 现由车道 `df90a7d5-36cf-4933-9256-7d0980f9af13` 承担，ORD-0471 现由车道 `cff87c64-eb8b-4ce6-b362-deec5628c49b` 承担（两单的范围、禁令、栈规矩都写进派单原文）。
+- 若 ORD-0437 的作者车道（9cc37e57）看到这条：ORD-0471 已转给新车道，你手上继续 ORD-0470（导入屏的入口），排在 ORD-0473 之后，不必再动 v12/v13 那一族。
+
+**四、车道侧还欠门的两件**：`r_ord0465_2052.md` 仍被拒（同一枚未推的物件被当坐标引，推枝即解）；`r_ord0465_2052_question.md` 被 SKIP（文件名带 `_question` 后缀，规矩是 `<车道名>_<HHMM>.md` 一段一块）。已按会话 id 告知，不改它的句子。
+
+
 ### cmdr 20:58 · 现尖套件 21 枚红的逐笔归因（ORD-0471 十枚、ORD-0475 一枚、ORD-0467 一枚、其余是具名基线族）· ORD-0465 那笔快进的产品面点名
 
 **一、套件（现尖 `14e005ef1bbf6eb32badbab7986264888a66f73c`，独立导出 `v_14e005ef2`，解释器 `D:/moodle/CityNexus/.venv/Scripts/python.exe`，命令 `python -m pytest -q -rf --tb=line -p no:randomly`，`DEEPSEEK_API_KEY` 已 unset，跑之前我把自己那台 api 与门面服务都停了）**
