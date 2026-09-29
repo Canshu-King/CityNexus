@@ -72,9 +72,27 @@ const painted = (page: Page, testId: string) =>
   page.getByTestId(testId).first().innerText({ timeout: 2_000 })
     .then((t) => t.replace(/\s+/g, " ").trim()).catch(() => null);
 
+/* ORD-0463 asks for coordinates, not only words. One page.evaluate over the named ids: a locator-based
+   reader would auto-wait on a cell that is absent by design (that trap cost 176.5 s in arm day-before),
+   whereas this returns null for whatever is not on screen right now. Rects are viewport pixels from
+   getBoundingClientRect, with width and height, so a later reader can re-check the placement itself. */
+const rectsOf = (page: Page, ids: string[]) =>
+  page.evaluate((want) => {
+    const out: Record<string, { top: number; left: number; w: number; h: number } | null> = {};
+    for (const id of want) {
+      const el = document.querySelector(`[data-testid="${id}"]`);
+      if (!el) {
+        out[id] = null;
+        continue;
+      }
+      const b = el.getBoundingClientRect();
+      out[id] = { top: Math.round(b.top), left: Math.round(b.left), w: Math.round(b.width), h: Math.round(b.height) };
+    }
+    return out;
+  }, ids);
+
 const phaseOf = (page: Page) =>
-  page.locator("[data-testid='poi-import-card']").first()
-    .getAttribute("data-phase", { timeout: 2_000 }).catch(() => null);
+  page.locator("[data-testid='poi-import-card']").first()    .getAttribute("data-phase", { timeout: 2_000 }).catch(() => null);
 
 /** The plan as the server holds it, read straight off the projection. Used wherever the arm has to
  * tell "the component said 已加入" apart from "the record is on the plan". */
@@ -276,8 +294,9 @@ test("screenshot-mode — the second input form is refused in words", async ({ p
   await page.getByTestId("poi-import-mode-screenshot").click();
   await page.waitForTimeout(400);
   const words = await painted(page, "poi-import-mode-unsupported");
+  const rects = await rectsOf(page, ["poi-import-mode-unsupported", "poi-import-mode-screenshot"]);
   await page.screenshot({ path: evidencePath("ord0437", "screenshot_mode.png") });
-  push("screenshot-mode", { words });
+  push("screenshot-mode", { words, rects });
   expect(words, "a mode that is not built has to say so").not.toBeNull();
   expect(words).toMatch(/截图|screenshot/i);
 });
@@ -320,10 +339,16 @@ test("link-named and states — a link is named while the text next to it is sti
   }));
   const pickBoxes = await page.locator(".v8-pick-box").count();
   const selectedCount = await painted(page, "poi-import-selection-count");
+  /* The four cells ORD-0463 lists: how many were read, what was not read and why, the shared refusal
+     sentence, and the second input form. Coordinates go with the words so the sheet can be re-taken. */
+  const rects = await rectsOf(page, [
+    "poi-import-counts", "poi-import-unsupported", "poi-import-empty", "poi-candidate-reason",
+    "poi-import-verify-warning",
+  ]);
   await page.screenshot({ path: evidencePath("ord0437", "success_arm.png") });
   push("link-named-and-states", {
     planState, slack: slack.seen, catalogue: built.why, phaseSeen: seen, finalPhase: phase, counts, unsupported, verifyWarning: warning,
-    retryWords: retry, cards, statuses, selectedCount, pickedHook, pickBoxes,
+    retryWords: retry, cards, statuses, selectedCount, pickedHook, pickBoxes, rects,
   });
   expect(phase).toBe("success");
   expect(unsupported, "the link must come back named with its host, not swallowed").toContain("mp.weixin.qq.com");
@@ -436,12 +461,15 @@ test("error-state — the same region carries the failure and keeps 重试", asy
   const refusalDetail = await painted(page, "poi-import-error-detail");
   const refusalWhy = await painted(page, "poi-import-error-why");
   const refusalCard = await painted(page, "poi-import-card");
+  const rects = await rectsOf(page, [
+    "poi-import-error", "poi-import-error-why", "poi-import-error-detail", "poi-import-retry",
+  ]);
   await page.screenshot({ path: evidencePath("ord0437", "error_refusal_arm.png") });
   await page.unroute("**/poi-import/parse");
 
   push("error-state", {
     phase, error, transportDetail, refusalDetail, refusalWhy, retryWords: retry,
-    cardText, refusalCardText: refusalCard,
+    cardText, refusalCardText: refusalCard, rects,
     fault: "arm (a) route.abort on /poi-import/parse; arm (b) route.fulfill 409 reason_code=NO_ACTIVE_PLAN",
   });
   expect(phase).toBe("error");
