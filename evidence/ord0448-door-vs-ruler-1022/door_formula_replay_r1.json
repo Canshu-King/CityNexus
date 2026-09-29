@@ -1,0 +1,27 @@
+{
+ "door_lines_used": {
+  "exposure_counts": "107-115",
+  "growth_expression": "353",
+  "growth_text": "growth = {k: cc[k] - ct.get(k, 0) for k in cc if cc[k] > ct.get(k, 0)}"
+ },
+ "arm_module": "exposure_arm_proposal_r1.py",
+ "pairs": [
+  {
+   "pair": "tip_vs_r3",
+   "arm_growth": {
+    "DestinationPreparationPanel.tsx|UPSTREAM_EXCEPTION_TO_DOM": 1
+   },
+   "door_growth": {
+    "DestinationPreparationPanel.tsx|UPSTREAM_EXCEPTION_TO_DOM": 1
+   },
+   "equal": true
+  },
+  {
+   "pair": "tip_vs_r4",
+   "arm_growth": {},
+   "door_growth": {},
+   "equal": true
+  }
+ ],
+ "all_equal": true
+}
