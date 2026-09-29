@@ -1,0 +1,658 @@
+{
+ "viewport": [
+  390,
+  844
+ ],
+ "entry": "http://127.0.0.1:4831/v8/hub",
+ "steps": [
+  {
+   "step": "landing",
+   "snap": {
+    "path": "/v8/hub",
+    "probe_present": false,
+    "probe_text": null,
+    "menu_present": false,
+    "menu_text": null,
+    "menu_expanded": null,
+    "menu_box": null,
+    "drawer_present": false,
+    "drawer_sentinel": [],
+    "drawer_rows": [],
+    "backdrop_present": false,
+    "backdrop_text": null,
+    "testid_visible": 70,
+    "wizard_present": true,
+    "journey_id": null,
+    "hit": null
+   }
+  },
+  {
+   "step": "after_demo_door",
+   "snap": {
+    "path": "/v8/hub",
+    "probe_present": true,
+    "probe_text": "C1GEN-A1|navOpen=C2FALSE|clicks=0|esc=0|B7NAV:hub|mount=1|ov=sheet0,setup0,ai0,alerts0,det0",
+    "menu_present": true,
+    "menu_text": "A1BTNX菜单",
+    "menu_expanded": "false",
+    "menu_box": {
+     "x": 17,
+     "y": 19,
+     "w": 103,
+     "h": 27
+    },
+    "drawer_present": false,
+    "drawer_sentinel": [],
+    "drawer_rows": [],
+    "backdrop_present": false,
+    "backdrop_text": null,
+    "testid_visible": 47,
+    "wizard_present": false,
+    "journey_id": "22222222-2222-4222-8222-222222222222",
+    "hit": {
+     "point": [
+      68,
+      33
+     ],
+     "stack": [
+      {
+       "tag": "BUTTON",
+       "cls": "v8-mobile-menu",
+       "id": null,
+       "z": "auto",
+       "box": [
+        103,
+        27
+       ],
+       "pe": "auto"
+      },
+      {
+       "tag": "HEADER",
+       "cls": "v8-topbar",
+       "id": null,
+       "z": "auto",
+       "box": [
+        390,
+        66
+       ],
+       "pe": "auto"
+      },
+      {
+       "tag": "MAIN",
+       "cls": "v8-main",
+       "id": null,
+       "z": "auto",
+       "box": [
+        390,
+        1998
+       ],
+       "pe": "auto"
+      },
+      {
+       "tag": "DIV",
+       "cls": "v8-product-shell",
+       "id": null,
+       "z": "auto",
+       "box": [
+        390,
+        2078
+       ],
+       "pe": "auto"
+      },
+      {
+       "tag": "DIV",
+       "cls": "",
+       "id": "root",
+       "z": "auto",
+       "box": [
+        390,
+        2078
+       ],
+       "pe": "auto"
+      }
+     ]
+    }
+   }
+  },
+  {
+   "step": "after_menu_click",
+   "snap": {
+    "path": "/v8/hub",
+    "probe_present": true,
+    "probe_text": "C1GEN-A1|navOpen=C2TRUE|clicks=1|esc=0|B7NAV:hub|mount=1|ov=sheet0,setup0,ai0,alerts0,det0",
+    "menu_present": true,
+    "menu_text": "A1BTNX菜单",
+    "menu_expanded": "true",
+    "menu_box": {
+     "x": 17,
+     "y": 19,
+     "w": 103,
+     "h": 27
+    },
+    "drawer_present": true,
+    "drawer_sentinel": [
+     "D3DWR|D4ROWS=16"
+    ],
+    "drawer_rows": [
+     {
+      "text": "关闭",
+      "vis": true
+     },
+     {
+      "text": "今天",
+      "vis": true
+     },
+     {
+      "text": "实时行程",
+      "vis": true
+     },
+     {
+      "text": "地图",
+      "vis": true
+     },
+     {
+      "text": "行程工作台",
+      "vis": true
+     },
+     {
+      "text": "住宿选择",
+      "vis": true
+     },
+     {
+      "text": "城市探索",
+      "vis": true
+     },
+     {
+      "text": "导入地点",
+      "vis": true
+     },
+     {
+      "text": "旅行票夹",
+      "vis": true
+     },
+     {
+      "text": "Copilot",
+      "vis": true
+     },
+     {
+      "text": "恢复与执行",
+      "vis": true
+     },
+     {
+      "text": "智能守护",
+      "vis": true
+     },
+     {
+      "text": "旅行者画像",
+      "vis": true
+     },
+     {
+      "text": "回收站",
+      "vis": true
+     },
+     {
+      "text": "成员与权限",
+      "vis": true
+     },
+     {
+      "text": "行程",
+      "vis": true
+     },
+     {
+      "text": "我的",
+      "vis": true
+     }
+    ],
+    "backdrop_present": true,
+    "backdrop_text": "D5BDP",
+    "testid_visible": 47,
+    "wizard_present": false,
+    "journey_id": "22222222-2222-4222-8222-222222222222",
+    "hit": {
+     "point": [
+      68,
+      33
+     ],
+     "stack": [
+      {
+       "tag": "DIV",
+       "cls": "v8-nav-drawer-head",
+       "id": null,
+       "z": "auto",
+       "box": [
+        271,
+        52
+       ],
+       "pe": "auto"
+      },
+      {
+       "tag": "NAV",
+       "cls": "",
+       "id": "v8-nav-drawer",
+       "z": "46",
+       "box": [
+        300,
+        844
+       ],
+       "pe": "auto"
+      },
+      {
+       "tag": "BUTTON",
+       "cls": "v8-drawer-backdrop",
+       "id": null,
+       "z": "45",
+       "box": [
+        390,
+        832
+       ],
+       "pe": "auto"
+      },
+      {
+       "tag": "BUTTON",
+       "cls": "v8-mobile-menu",
+       "id": null,
+       "z": "auto",
+       "box": [
+        103,
+        27
+       ],
+       "pe": "auto"
+      },
+      {
+       "tag": "HEADER",
+       "cls": "v8-topbar",
+       "id": null,
+       "z": "auto",
+       "box": [
+        390,
+        66
+       ],
+       "pe": "auto"
+      }
+     ]
+    }
+   }
+  },
+  {
+   "step": "after_menu_click_2nd",
+   "snap": {
+    "path": "/v8/hub",
+    "probe_present": true,
+    "probe_text": "C1GEN-A1|navOpen=C2TRUE|clicks=1|esc=0|B7NAV:hub|mount=1|ov=sheet0,setup0,ai0,alerts0,det0",
+    "menu_present": true,
+    "menu_text": "A1BTNX菜单",
+    "menu_expanded": "true",
+    "menu_box": {
+     "x": 17,
+     "y": 19,
+     "w": 103,
+     "h": 27
+    },
+    "drawer_present": true,
+    "drawer_sentinel": [
+     "D3DWR|D4ROWS=16"
+    ],
+    "drawer_rows": [
+     {
+      "text": "关闭",
+      "vis": true
+     },
+     {
+      "text": "今天",
+      "vis": true
+     },
+     {
+      "text": "实时行程",
+      "vis": true
+     },
+     {
+      "text": "地图",
+      "vis": true
+     },
+     {
+      "text": "行程工作台",
+      "vis": true
+     },
+     {
+      "text": "住宿选择",
+      "vis": true
+     },
+     {
+      "text": "城市探索",
+      "vis": true
+     },
+     {
+      "text": "导入地点",
+      "vis": true
+     },
+     {
+      "text": "旅行票夹",
+      "vis": true
+     },
+     {
+      "text": "Copilot",
+      "vis": true
+     },
+     {
+      "text": "恢复与执行",
+      "vis": true
+     },
+     {
+      "text": "智能守护",
+      "vis": true
+     },
+     {
+      "text": "旅行者画像",
+      "vis": true
+     },
+     {
+      "text": "回收站",
+      "vis": true
+     },
+     {
+      "text": "成员与权限",
+      "vis": true
+     },
+     {
+      "text": "行程",
+      "vis": true
+     },
+     {
+      "text": "我的",
+      "vis": true
+     }
+    ],
+    "backdrop_present": true,
+    "backdrop_text": "D5BDP",
+    "testid_visible": 47,
+    "wizard_present": false,
+    "journey_id": "22222222-2222-4222-8222-222222222222",
+    "hit": {
+     "point": [
+      68,
+      33
+     ],
+     "stack": [
+      {
+       "tag": "DIV",
+       "cls": "v8-nav-drawer-head",
+       "id": null,
+       "z": "auto",
+       "box": [
+        271,
+        52
+       ],
+       "pe": "auto"
+      },
+      {
+       "tag": "NAV",
+       "cls": "",
+       "id": "v8-nav-drawer",
+       "z": "46",
+       "box": [
+        300,
+        844
+       ],
+       "pe": "auto"
+      },
+      {
+       "tag": "BUTTON",
+       "cls": "v8-drawer-backdrop",
+       "id": null,
+       "z": "45",
+       "box": [
+        390,
+        832
+       ],
+       "pe": "auto"
+      },
+      {
+       "tag": "BUTTON",
+       "cls": "v8-mobile-menu",
+       "id": null,
+       "z": "auto",
+       "box": [
+        103,
+        27
+       ],
+       "pe": "auto"
+      },
+      {
+       "tag": "HEADER",
+       "cls": "v8-topbar",
+       "id": null,
+       "z": "auto",
+       "box": [
+        390,
+        66
+       ],
+       "pe": "auto"
+      }
+     ]
+    }
+   }
+  },
+  {
+   "step": "after_menu_click_3rd",
+   "snap": {
+    "path": "/v8/hub",
+    "probe_present": true,
+    "probe_text": "C1GEN-A1|navOpen=C2TRUE|clicks=1|esc=0|B7NAV:hub|mount=1|ov=sheet0,setup0,ai0,alerts0,det0",
+    "menu_present": true,
+    "menu_text": "A1BTNX菜单",
+    "menu_expanded": "true",
+    "menu_box": {
+     "x": 17,
+     "y": 19,
+     "w": 103,
+     "h": 27
+    },
+    "drawer_present": true,
+    "drawer_sentinel": [
+     "D3DWR|D4ROWS=16"
+    ],
+    "drawer_rows": [
+     {
+      "text": "关闭",
+      "vis": true
+     },
+     {
+      "text": "今天",
+      "vis": true
+     },
+     {
+      "text": "实时行程",
+      "vis": true
+     },
+     {
+      "text": "地图",
+      "vis": true
+     },
+     {
+      "text": "行程工作台",
+      "vis": true
+     },
+     {
+      "text": "住宿选择",
+      "vis": true
+     },
+     {
+      "text": "城市探索",
+      "vis": true
+     },
+     {
+      "text": "导入地点",
+      "vis": true
+     },
+     {
+      "text": "旅行票夹",
+      "vis": true
+     },
+     {
+      "text": "Copilot",
+      "vis": true
+     },
+     {
+      "text": "恢复与执行",
+      "vis": true
+     },
+     {
+      "text": "智能守护",
+      "vis": true
+     },
+     {
+      "text": "旅行者画像",
+      "vis": true
+     },
+     {
+      "text": "回收站",
+      "vis": true
+     },
+     {
+      "text": "成员与权限",
+      "vis": true
+     },
+     {
+      "text": "行程",
+      "vis": true
+     },
+     {
+      "text": "我的",
+      "vis": true
+     }
+    ],
+    "backdrop_present": true,
+    "backdrop_text": "D5BDP",
+    "testid_visible": 47,
+    "wizard_present": false,
+    "journey_id": "22222222-2222-4222-8222-222222222222",
+    "hit": {
+     "point": [
+      68,
+      33
+     ],
+     "stack": [
+      {
+       "tag": "DIV",
+       "cls": "v8-nav-drawer-head",
+       "id": null,
+       "z": "auto",
+       "box": [
+        271,
+        52
+       ],
+       "pe": "auto"
+      },
+      {
+       "tag": "NAV",
+       "cls": "",
+       "id": "v8-nav-drawer",
+       "z": "46",
+       "box": [
+        300,
+        844
+       ],
+       "pe": "auto"
+      },
+      {
+       "tag": "BUTTON",
+       "cls": "v8-drawer-backdrop",
+       "id": null,
+       "z": "45",
+       "box": [
+        390,
+        832
+       ],
+       "pe": "auto"
+      },
+      {
+       "tag": "BUTTON",
+       "cls": "v8-mobile-menu",
+       "id": null,
+       "z": "auto",
+       "box": [
+        103,
+        27
+       ],
+       "pe": "auto"
+      },
+      {
+       "tag": "HEADER",
+       "cls": "v8-topbar",
+       "id": null,
+       "z": "auto",
+       "box": [
+        390,
+        66
+       ],
+       "pe": "auto"
+      }
+     ]
+    }
+   }
+  }
+ ],
+ "door": {
+  "error": null
+ },
+ "menu_locator_count": 1,
+ "click1": {
+  "error": null,
+  "ms": 33
+ },
+ "click2": {
+  "error": "TimeoutError: locator.click: Timeout 8000ms exceeded."
+ },
+ "click3": {
+  "error": "TimeoutError: locator.click: Timeout 8000ms exceeded."
+ },
+ "row_walk": [
+  {
+   "i": 0,
+   "label": "今天",
+   "box": {
+    "x": 14,
+    "y": 122,
+    "width": 271,
+    "height": 41
+   },
+   "error": null,
+   "path_before": "/v8/hub",
+   "path_after": "/v8/hub",
+   "drawer_still": false,
+   "probe_after": "C1GEN-A1|navOpen=C2FALSE|clicks=1|esc=0|B7NAV:hub|mount=1|ov=sheet0,setup0,ai0,alerts0,det0"
+  },
+  {
+   "i": 1,
+   "label": "实时行程",
+   "box": {
+    "x": 14,
+    "y": 179,
+    "width": 271,
+    "height": 41
+   },
+   "error": null,
+   "path_before": "/v8/hub",
+   "path_after": "/v8/live",
+   "drawer_still": false,
+   "probe_after": "C1GEN-A1|navOpen=C2FALSE|clicks=2|esc=0|B7NAV:live|mount=1|ov=sheet0,setup0,ai0,alerts0,det0"
+  },
+  {
+   "i": 2,
+   "label": "地图",
+   "box": {
+    "x": 14,
+    "y": 236,
+    "width": 271,
+    "height": 41
+   },
+   "error": null,
+   "path_before": "/v8/live",
+   "path_after": "/v8/map",
+   "drawer_still": false,
+   "probe_after": "C1GEN-A1|navOpen=C2FALSE|clicks=3|esc=0|B7NAV:map|mount=1|ov=sheet0,setup0,ai0,alerts0,det0"
+  }
+ ],
+ "pageerrors": [],
+ "console_errors": []
+}

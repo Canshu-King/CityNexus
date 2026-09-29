@@ -1,0 +1,56 @@
+{
+ "base": "http://127.0.0.1:4832",
+ "cells": {
+  "rows_rendered": [
+   "今天",
+   "实时行程",
+   "地图",
+   "行程工作台",
+   "住宿选择",
+   "城市探索",
+   "导入地点",
+   "旅行票夹",
+   "Copilot",
+   "恢复与执行",
+   "智能守护",
+   "旅行者画像",
+   "回收站",
+   "成员与权限",
+   "行程",
+   "我的"
+  ],
+  "row_count": 16,
+  "scroll_before": 0,
+  "scroll_after": 268,
+  "scroll_height": 1112,
+  "client_height": 844,
+  "bottom_nav": {
+   "top": 768,
+   "h": 76,
+   "z": "10"
+  },
+  "drawer_z": "46",
+  "last_row_before_scroll": {
+   "y": 1047,
+   "bottom": 1088,
+   "h": 41
+  },
+  "last_hit_before_scroll": null
+ },
+ "afterScroll": {
+  "last_row_after_scroll": {
+   "y": 779,
+   "bottom": 820,
+   "h": 41,
+   "point": [
+    150,
+    800
+   ]
+  },
+  "last_hit_after_scroll": "SELF",
+  "bottom_nav_top_after_scroll": 768,
+  "overlap_with_nav": 52
+ },
+ "screaming_snake_hits": 0,
+ "screaming_snake_tokens": []
+}

@@ -6,9 +6,9 @@ Lane `df90a7d5`. Authoritative tip this work is against: `4037cb331ea00b83124316
 Product bytes delivered: `bc1c643ff279ec4800b873c40d71a71a5e03bfb2` on
 `refs/heads/review/df90a7d5-ord0473-drawer-r1`; this evidence commit is the branch tip after it and
 carries zero product bytes (`frontend/src` blobs are identical between the two — see
-`evidence/blob_parity_r1.txt`).
+`readings/blob_parity_r1.txt`).
 
-## 1. Locating arm — six sentinels, one build (`evidence/sentinel_probe_390_r2.json`)
+## 1. Locating arm — six sentinels, one build (`readings/sentinel_probe_390_r2.json`)
 
 One bundle built from `4af2780ac05aea35a6accc2df52db9a3d66d111f` (tip + probe only) carrying six
 *different* tokens, one per suspect link, at 390 px x 844 px:
@@ -27,7 +27,7 @@ after the drawer opens, `document.elementFromPoint` at the toggle's own centre
 (`[40, 33]`) returns the drawer's `.v8-kicker`, not the button (`self=false`), and a second press
 times out. The handler only ever passed `true`, so it had no close path to begin with.
 
-## 2. Before / after at 390 px x 844 px (`evidence/compare_390_r1.txt`)
+## 2. Before / after at 390 px x 844 px (`readings/compare_390_r1.txt`)
 
 | reading | before `4037cb3…` | after `bc1c643f…` |
 |---|---|---|
@@ -56,12 +56,12 @@ The single non-changing row is `今天` while already on `/v8/hub` — the same 
 4. machine tokens inside the drawer screen: 0 SCREAMING_SNAKE matches in the rendered body text.
 
 Toggle glyph, read as computed `::after` content and rendered words
-(`evidence/glyphs_summary_r1.txt`): closed `≡` / 菜单 / `打开导航` → open `×` / 菜单 / `关闭导航` →
+(`readings/glyphs_summary_r1.txt`): closed `≡` / 菜单 / `打开导航` → open `×` / 菜单 / `关闭导航` →
 closed again `≡`. Both directions announce themselves.
 
 ## 4. Desktop arm and what this order did not touch
 
-At 1280 px x 720 px (`evidence/desktop_before_1280.json`, `evidence/desktop_after_1280.json`) the
+At 1280 px x 720 px (`readings/desktop_before_1280.json`, `readings/desktop_after_1280.json`) the
 toggle is `display: none` with box 0 px x 0 px and the drawer is absent on both generations, and the
 sidebar's 14 rows behave identically before and after (3 of 4 change route or heading; the fourth is
 `今天`, already current).
@@ -82,7 +82,7 @@ Left alone on purpose, and named rather than hidden:
 
 ## 5. Stack this was measured on
 
-* backend `:8745` — `evidence/stack_backend.json`: spawned pid 38744, the listening pid is its
+* backend `:8745` — `readings/stack_backend.json`: spawned pid 38744, the listening pid is its
   child 38756 (`uv` venv stub re-execs `cpython-3.12.14`), command line names this port and the
   module path, `GET /api/v1/journeys` answered `http 200` with 477 bytes, database
   `D:/moodle/_qoder_n4_ord0473_20260930/n4_ord0473.db` — my own 7,213,056-byte backup taken from the
@@ -90,8 +90,8 @@ Left alone on purpose, and named rather than hidden:
   called.
 * before arm facade `:4832` serving `/assets/index-DZLLFMy5.js`, after arm facade `:4833` serving
   `/assets/index-1Pu11QLU.js` — entry names taken from each arm's own `index.html`, and for both
-  arms the served bytes' sha1 equals the disk file's sha1 (`evidence/facade_identity_arms_r1.json`).
+  arms the served bytes' sha1 equals the disk file's sha1 (`readings/facade_identity_arms_r1.json`).
 * both bundles built by `cmdr_build_bundle_r1.py --sha <40 hex>` from `git archive`, so the tree
   other lanes have dirty never enters the build. `npm run typecheck`
   (`tsc -p tsconfig.check.json --noEmit`) exits 0 on the delivered bytes —
-  `evidence/typecheck_after.log`.
+  `readings/typecheck_after.log`.

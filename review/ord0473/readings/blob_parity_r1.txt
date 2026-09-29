@@ -1,0 +1,13 @@
+authoritative tip   4037cb331ea00b83124316d40329762fa1131689
+product commit      bc1c643ff279ec4800b873c40d71a71a5e03bfb2
+read back with: git -C D:/moodle/CityNexus rev-parse <rev>:<path>
+
+frontend/src/app/V8Experience.tsx          tip=3c03ec82b11931c9d7927423234113188c42c1ae  fix=903a673c37949bf4a7937961792bcad377d9f2f5  CHANGED BY THIS ORDER
+frontend/src/styles.css                    tip=ee5ef1b9adbd1c2cf7adaaa1ae8f64e1e63c3ff4  fix=d0e229338842c14f7f0650ebeab1d761a844d249  CHANGED BY THIS ORDER
+frontend/src/i18n/LocaleContext.tsx        tip=f9499c7c4befad482760c08c1490a0c2df05df58  fix=f9499c7c4befad482760c08c1490a0c2df05df58  unchanged
+frontend/src/routes/v8Routes.ts            tip=c4dec26e2b2c4eb551d7f46b8b4bcfe29fe1418c  fix=c4dec26e2b2c4eb551d7f46b8b4bcfe29fe1418c  unchanged
+frontend/src/app/v8PanelRegistry.tsx       tip=3503da5054bfd916a54b8e4de6408ab9d7834cad  fix=3503da5054bfd916a54b8e4de6408ab9d7834cad  unchanged
+frontend/src/design-tokens.css             tip=133cf2e6bc3a3fefe50f09ff9219eba199e65480  fix=133cf2e6bc3a3fefe50f09ff9219eba199e65480  unchanged
+
+The evidence commit that follows adds paths under review/ord0473/ only; verify with
+`git show --stat --format=%H%n <branch tip>` -- no path outside review/ appears in it.
