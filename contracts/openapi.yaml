@@ -1732,10 +1732,6 @@ paths:
         '200': {description: Actual Journey outcome timeline}
     post:
       operationId: recordJourneyOutcome
-      description: >-
-        ORD-0464 boundary, stated rather than implied: `JOURNEY_DELETED` is not one of the tokens this
-        door accepts.  The fact of a binning is written by `DELETE /journeys/{journey_id}` alone, so a
-        client cannot file a deletion -- or a reason for one -- without deleting anything.
       requestBody:
         required: true
         content:
@@ -2620,6 +2616,18 @@ components:
           type: array
           items: {$ref: '#/components/schemas/JourneyAbortCode'}
         note: {type: [string, 'null']}
+    JourneyAbortBoundary:
+      type: string
+      enum: [JOURNEY_DELETED]
+      description: >-
+        ORD-0464, stated here so this order's contract additions stay one contiguous block instead of
+        three scattered hunks in a file two other lanes are editing tonight: `JOURNEY_DELETED` is written
+        by `DELETE /journeys/{journey_id}` and by nothing else.  `POST /journeys/{journey_id}/outcomes`
+        does not accept the token -- its `event_type` Literal in `app/schemas.py` omits it -- so a client
+        cannot file the fact of a binning, or a reason for one, without binning anything.  The outcomes
+        door's own request body is still the pre-existing `{type: object}` on the line above this block;
+        widening that is not this order's to do, and the guard is pinned by
+        `backend/tests/test_qoder_ord0464_abort_reason_capture.py::test_r10_the_generic_outcomes_door_cannot_file_a_deletion`.
     JourneyCreate:
       type: object
       required: [traveler_id, title, city_code, timezone, start_at, end_at, budget]
